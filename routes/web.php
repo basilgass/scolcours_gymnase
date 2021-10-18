@@ -1,6 +1,10 @@
 <?php
 
+use App\Http\Controllers\ChaptersController;
+use App\Http\Controllers\ThemesController;
+use App\Models\Theme;
 use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,5 +18,20 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    $themes = Theme::all();
+    return Inertia::render('Welcome', [
+        'canLogin' => Route::has('login'),
+        'canRegister' => Route::has('register'),
+        'themes' => $themes
+    ]);
 });
+
+Route::resource('chapter', ChaptersController::class);
+
+Route::get('/dashboard', function () {
+    return Inertia::render('Dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
+
+require __DIR__ . '/auth.php';
+
+Route::get('{theme:slug}/', [ThemesController::class, 'show']);

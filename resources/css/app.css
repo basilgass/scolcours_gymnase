@@ -1,0 +1,42 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+/*Bootstrap icons font*/
+@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css");
+
+/* Custom imports */
+@import 'scolcours/inputs.css';
+@import "scolcours/typo.css";
+
+/* alpine cloak */
+[x-cloak] { display: none !important; }
+
+/* Just adding the color for JIT */
+.scolcours-main{background-color: chocolate}
+.scolcours-algebre{@apply bg-blue-500}
+.scolcours-analyse{@apply bg-amber-500}
+.scolcours-geometrie{@apply bg-purple-500}
+.scolcours-statistiques{@apply bg-cyan-500}
+.scolcours-jeux{@apply bg-orange-500}
+.scolcours-tools{@apply bg-pink-400}
+
+.katex-left > .katex-display > .katex > .katex-html {
+    @apply text-left;
+}
+@layer base {
+    .btn {
+        @apply border px-5 py-2 rounded-2xl hover:bg-gray-100 hover:shadow inline-block text-center
+    }
+    .btn-primary {
+        @apply btn bg-blue-500 text-white hover:bg-blue-600;
+    }
+
+    .btn-success {
+        @apply btn bg-green-500 text-white hover:bg-green-600;
+    }
+
+    .btn-form {
+        @apply btn-primary uppercase font-semibold text-xs;
+    }
+}
