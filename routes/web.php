@@ -24,7 +24,7 @@ Route::get('/', function () {
         'canRegister' => Route::has('register'),
         'themes' => $themes
     ]);
-});
+})->name('home');
 
 Route::resource('chapter', ChaptersController::class);
 
@@ -34,4 +34,5 @@ Route::get('/dashboard', function () {
 
 require __DIR__ . '/auth.php';
 
-Route::get('{theme:slug}/', [ThemesController::class, 'show']);
+Route::get('{theme:slug}/', [ThemesController::class, 'show'])->name('theme');
+Route::get('{theme:slug}/{chapter:slug}', [ThemesController::class, 'chapter'])->name('theme.chapter');

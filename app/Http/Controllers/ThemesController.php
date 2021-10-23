@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Chapter;
 use App\Models\Theme;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -31,6 +32,14 @@ class ThemesController extends Controller
         ]);
     }
 
+    public function chapter(Theme $theme, Chapter $chapter)
+    {
+        return Inertia::render('Chapter', [
+            "theme" => $theme,
+            "chapter" => $chapter,
+            "hasChapterComponent" => file_exists(resource_path('js/Chapters/'.$theme->slug.'/'.$chapter->slug.'.vue'))
+        ]);
+    }
     public function edit(Theme $theme)
     {
         //

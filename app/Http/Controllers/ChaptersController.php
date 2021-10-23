@@ -24,12 +24,7 @@ class ChaptersController extends Controller
 
     public function show(Chapter $chapter)
     {
-        return Inertia::render(
-            "Chapter",
-            [
-                "chapter" => $chapter
-            ]
-        );
+        return redirect(route('theme.chapter', [$chapter->theme, $chapter]));
     }
 
     public function edit(Chapter $chapter)

@@ -1,17 +1,32 @@
 <template>
-    Something here
+  <div class="space-y-5">
+    <div
+      v-for="chapter in chapters"
+      :key="`chapter-${chapter.slug}`"
+    >
+      <a
+        :href="route('theme.chapter', [$page.props.theme.slug, chapter.slug])"
+        class="text-3xl"
+      >{{
+        chapter.title
+      }}</a>
+      <p>{{ chapter.body }}</p>
+    </div>
+  </div>
 </template>
+
 <script>
-import MainHeader from "@/Components/MainHeader";
-import Layout from "@/Pages/Layout";
+import Layout from '@/Pages/Layout'
 
 export default {
-    name: "Theme",
+    name: 'Theme',
     layout: Layout,
-    components: {MainHeader},
     props: {
-        theme: Object,
-        chapters: Array
+        theme: {
+            type: Object, default: () => {
+            }
+        },
+        chapters: {type: Array, default: () => []}
     }
 }
 </script>

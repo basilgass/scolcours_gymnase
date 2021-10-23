@@ -1,7 +1,7 @@
 <template>
-    <MainHeader :theme="theme">{{ theme.title }}</MainHeader>
+    <MainHeader :theme="theme"/>
     <div class="min-h-screen flex flex-col bg-gray-100 pb-36">
-        <main class="container mx-auto flex-1">
+        <main class="scolcours-container">
             <slot/>
         </main>
     </div>

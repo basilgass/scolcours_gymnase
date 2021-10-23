@@ -10,11 +10,19 @@ createInertiaApp({
     title: (title) => `${title} - ${appName}`,
     resolve: (name) => require(`./Pages/${name}.vue`),
     setup({ el, app, props, plugin }) {
-        return createApp({ render: () => h(app, props) })
+        const vueApp = createApp(
+            { render: () => h(app, props) })
             .use(plugin)
             .mixin({ methods: { route } })
-            .mount(el);
-    },
+
+        vueApp.directive('highlight', {
+            beforeMount(el, binding, vnode) {
+                el.style.background = binding.value
+            }
+        })
+
+        return vueApp.mount(el)
+       },
 });
 
 InertiaProgress.init({ color: '#4B5563' });

@@ -20,7 +20,6 @@ class DatabaseSeeder extends Seeder
             'name' => 'Basil',
             'email' => 'basil@scolcours.ch',
             'password' => Hash::make('semidieu'),
-            'role' => 'admin'
         ]);
     }
 }
