@@ -1,33 +1,43 @@
 module.exports = {
-    'env': {
-        'browser': true,
-        'es2021': true
-    },
-    'extends': [
-        'eslint:recommended',
-        'plugin:vue/vue3-recommended',
-    ],
-    'parserOptions': {
-        'ecmaVersion': 13,
-        'sourceType': 'module'
-    },
-    'plugins': [
-        'vue'
-    ],
-    'rules': {
-        'indent': [
-            'error', 4
-        ],
-        'linebreak-style': [
-            'error', 'unix'
-        ],
-        'quotes': [
-            'error', 'single'
-        ],
-        'semi': [
-            'error', 'never'
-        ],
-        'vue/require-default-prop': 'off',
-        'vue/order-in-components': ['error']
-    }
+	"env": {
+		"browser": true,
+		"es2021": true
+	},
+	"extends": [
+		"eslint:recommended",
+		"plugin:vue/vue3-recommended",
+	],
+	"parserOptions": {
+		"ecmaVersion": 13,
+		"sourceType": "module"
+	},
+	"plugins": [
+		"vue"
+	],
+	"rules": {
+		"indent": [
+			"error", "tab"
+		],
+		"linebreak-style": [
+			"error", "unix"
+		],
+		"quotes": [
+			"error", "double"
+		],
+		"semi": [
+			"error", "never"
+		],
+		"vue/require-default-prop": "off",
+		"vue/html-indent": ["warn", "tab",{"attribute": 2, "closeBracket": 1}],
+		"vue/script-indent": ["error", "tab", { "baseIndent": 1 }],
+		"vue/order-in-components": ["error"]
+	},
+	"overrides": [
+		{
+			"files": ["*.vue"],
+			"rules": {
+				"indent": "off"
+			}
+		}
+	]
 }

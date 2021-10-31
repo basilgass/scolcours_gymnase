@@ -1,11 +1,14 @@
 <template>
-Hello world test here !
+	<Panel>Du contenu ici</Panel>
 </template>
 
 <script>
-export default {
-    name: "test"
-}
+	import Panel from "@/Components/Ui/Panel"
+
+	export default {
+		name: "Test",
+		components: {Panel}
+	}
 </script>
 
 <style scoped>

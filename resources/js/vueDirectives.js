@@ -1,0 +1,24 @@
+import katex from "katex/dist/katex.mjs"
+import AsciiMathParser from "asciimath2tex"
+
+export const katexDirective = {
+	mounted(el, binding, vnode) {
+		const tex = binding.modifiers.ascii?new AsciiMathParser().parse(binding.value):binding.value
+
+		if(binding.modifiers.left){
+			el.classList.add("katex-left")
+		}
+		el.innerHTML = katex.renderToString(tex,{
+			throwOnError: false,
+			displayMode: !binding.modifiers.inline
+		})
+	},
+	updated(el, binding,vnode) {
+		const tex = binding.modifiers.ascii?new AsciiMathParser().parse(binding.value):binding.value
+
+		el.innerHTML = katex.renderToString(tex,{
+			throwOnError: false,
+			displayMode: !binding.modifiers.inline
+		})
+	}
+}

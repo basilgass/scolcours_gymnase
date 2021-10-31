@@ -1,28 +1,28 @@
-require('./bootstrap');
+require("./bootstrap")
 
-import { createApp, h } from 'vue';
-import { createInertiaApp } from '@inertiajs/inertia-vue3';
-import { InertiaProgress } from '@inertiajs/progress';
+import {createApp, h} from "vue"
+import {createInertiaApp, Head, Link} from "@inertiajs/inertia-vue3"
+import {InertiaProgress} from "@inertiajs/progress"
 
-const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'ScolCours';
+// Custom directives
+import {katexDirective} from "@/vueDirectives"
 
+const appName = window.document.getElementsByTagName("title")[0]?.innerText || "ScolCours"
 createInertiaApp({
-    title: (title) => `${title} - ${appName}`,
-    resolve: (name) => require(`./Pages/${name}.vue`),
-    setup({ el, app, props, plugin }) {
-        const vueApp = createApp(
-            { render: () => h(app, props) })
-            .use(plugin)
-            .mixin({ methods: { route } })
+	title: (title) => `${title} - ${appName}`,
+	resolve: (name) => require(`./Pages/${name}.vue`),
+	setup({ el, app, props, plugin }) {
+		const vueApp = createApp(
+			{ render: () => h(app, props) })
+			.component("Link", Link)
+			.component("Head", Head)
+			.use(plugin)
+			.directive("katex", katexDirective)
+			.mixin({ methods: { route } })
 
-        vueApp.directive('highlight', {
-            beforeMount(el, binding, vnode) {
-                el.style.background = binding.value
-            }
-        })
 
-        return vueApp.mount(el)
-       },
-});
+		return vueApp.mount(el)
+	},
+})
 
-InertiaProgress.init({ color: '#4B5563' });
+InertiaProgress.init({ color: "#4B5563" })

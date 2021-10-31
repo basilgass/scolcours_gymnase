@@ -9,49 +9,53 @@ use Inertia\Inertia;
 
 class ThemesController extends Controller
 {
-    public function index()
-    {
-        //
-    }
+	public function index()
+	{
+		//
+	}
 
-    public function create()
-    {
-        //
-    }
+	public function create()
+	{
+		//
+	}
 
-    public function store(Request $request)
-    {
-        //
-    }
+	public function store(Request $request)
+	{
+		//
+	}
 
-    public function show(Theme $theme)
-    {
-        return Inertia::render('Theme', [
-            "theme" => $theme,
-            "chapters" => $theme->chapters()->get(['slug', 'title', 'body'])
-        ]);
-    }
+	public function show(Theme $theme)
+	{
+		return Inertia::render('Theme', [
+			"theme" => $theme,
+			"chapters" => $theme->chapters()->get(['slug', 'title', 'body'])
+		]);
+	}
 
-    public function chapter(Theme $theme, Chapter $chapter)
-    {
-        return Inertia::render('Chapter', [
-            "theme" => $theme,
-            "chapter" => $chapter,
-            "hasChapterComponent" => file_exists(resource_path('js/Chapters/'.$theme->slug.'/'.$chapter->slug.'.vue'))
-        ]);
-    }
-    public function edit(Theme $theme)
-    {
-        //
-    }
+	public function chapter(Theme $theme, Chapter $chapter)
+	{
+		// fetch all exercises from this chapter.
+		$exercises = $chapter->exercises;
 
-    public function update(Request $request, Theme $theme)
-    {
-        //
-    }
+		return Inertia::render('Chapter', [
+			"theme" => $theme,
+			"chapter" => $chapter,
+			"hasChapterComponent" => file_exists(resource_path('js/Chapters/' . $theme->slug . '/' . $chapter->slug . '.vue')),
+		]);
+	}
 
-    public function destroy(Theme $theme)
-    {
-        //
-    }
+	public function edit(Theme $theme)
+	{
+		//
+	}
+
+	public function update(Request $request, Theme $theme)
+	{
+		//
+	}
+
+	public function destroy(Theme $theme)
+	{
+		//
+	}
 }
