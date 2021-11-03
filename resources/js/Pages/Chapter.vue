@@ -27,28 +27,21 @@
 		</div>
 	</div>
 </template>
-<script>
-	import Layout from "@/Pages/Layout"
-	import {defineAsyncComponent} from "vue"
+<script setup>
+	import {computed, defineAsyncComponent} from "vue"
 	import Exercise from "@/Components/Exercise/Exercise"
 
-	export default {
-		name: "Chapter",
-		components: {Exercise},
-		layout: Layout,
-		props: {
-			chapter: {
-				type: Object, default: () => {}
-			},
-			hasChapterComponent: {type: Boolean, default: false},
-		},
-		computed: {
-			chapterComponent() {
-				if (this.hasChapterComponent) {
-					return defineAsyncComponent(() => import(`@/Chapters/${this.$page.props.theme.slug}/${this.chapter.slug}`))
-				}
-			}
-		}
-	}
+	const props = defineProps({
+		theme: {type: Object, default: ()=>{}},
+		chapter: {type: Object, default: () => {}},
+		hasChapterComponent: {type: Boolean, default: false},
+	})
+
+	const chapterComponent = computed(
+		()=> defineAsyncComponent(
+			() => import(`@/Chapters/${props.theme.slug}/${props.chapter.slug}`)
+		)
+	)
+
 </script>
 

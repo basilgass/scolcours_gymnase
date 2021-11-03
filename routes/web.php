@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ChaptersController;
+use App\Http\Controllers\ExercisesController;
 use App\Http\Controllers\ThemesController;
 use App\Models\Theme;
 use Illuminate\Support\Facades\Route;
@@ -18,18 +19,19 @@ use Inertia\Inertia;
 */
 
 Route::get('/', function () {
-    $themes = Theme::all();
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'themes' => $themes
-    ]);
+	$themes = Theme::all();
+	return Inertia::render('Welcome', [
+		'canLogin' => Route::has('login'),
+		'canRegister' => Route::has('register'),
+		'themes' => $themes
+	]);
 })->name('home');
 
 Route::resource('chapter', ChaptersController::class);
+Route::resource('exercise', ExercisesController::class);
 
 Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
+	return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 require __DIR__ . '/auth.php';

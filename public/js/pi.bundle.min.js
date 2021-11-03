@@ -23,7 +23,7 @@ function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symb
 
 function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
 
-function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e56) { throw _e56; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e57) { didErr = true; err = _e57; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
+function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e65) { throw _e65; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e66) { didErr = true; err = _e66; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
 
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 
@@ -171,21 +171,21 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
                 _h,
                 l,
                 a,
-                u = _this._polynom.monomByDegree(2, t).coefficient,
-                c = _this._polynom.monomByDegree(1, t).coefficient,
+                c = _this._polynom.monomByDegree(2, t).coefficient,
+                u = _this._polynom.monomByDegree(1, t).coefficient,
                 m = _this._polynom.monomByDegree(0, t).coefficient,
-                _ = o.Numeric.lcm(u.denominator, c.denominator, m.denominator),
-                f = u.multiply(_).value,
-                d = c.multiply(_).value;
+                f = o.Numeric.lcm(c.denominator, u.denominator, m.denominator),
+                _ = c.multiply(f).value,
+                d = u.multiply(f).value;
 
-            if (e = d * d - 4 * f * m.multiply(_).value, e > 0) {
-              if (s = (-d - Math.sqrt(e)) / (2 * f), _h = (-d + Math.sqrt(e)) / (2 * f), e > 1e5) _this._solutions = [((-d - Math.sqrt(e)) / (2 * f)).toFixed(5), ((-d + Math.sqrt(e)) / (2 * f)).toFixed(5)];else if (i = new r.Nthroot().parse(e).reduce(), i.hasRadical()) {
-                var _t2 = o.Numeric.gcd(d, 2 * f, i.coefficient);
+            if (e = d * d - 4 * _ * m.multiply(f).value, e > 0) {
+              if (s = (-d - Math.sqrt(e)) / (2 * _), _h = (-d + Math.sqrt(e)) / (2 * _), e > 1e5) _this._solutions = [((-d - Math.sqrt(e)) / (2 * _)).toFixed(5), ((-d + Math.sqrt(e)) / (2 * _)).toFixed(5)];else if (i = new r.Nthroot().parse(e).reduce(), i.hasRadical()) {
+                var _t2 = o.Numeric.gcd(d, 2 * _, i.coefficient);
 
-                i.coefficient = i.coefficient / _t2, _this._solutions = 0 !== d ? 2 * f / _t2 == 1 ? ["".concat(-d / _t2, " - ").concat(i.tex), "".concat(-d / _t2, " + ").concat(i.tex)] : ["\\dfrac{".concat(-d / _t2, " - ").concat(i.tex, " }{ ").concat(2 * f / _t2, " }"), "\\dfrac{".concat(-d / _t2, " + ").concat(i.tex, " }{ ").concat(2 * f / _t2, " }")] : 2 * f / _t2 == 1 ? ["- ".concat(i.tex), "".concat(i.tex)] : ["\\dfrac{- ".concat(i.tex, " }{ ").concat(2 * f / _t2, " }"), "\\dfrac{".concat(i.tex, " }{ ").concat(2 * f / _t2, " }")];
-              } else _this._solutions = [new n.Fraction(-d - i.coefficient, 2 * f).reduce().dfrac, new n.Fraction(-d + i.coefficient, 2 * f).reduce().dfrac];
-            } else _this._solutions = 0 === e ? [new n.Fraction(-d, 2 * f).reduce().dfrac] : [_this._varnothing];
-            return _this.isStrictEqual() || (2 === _this._solutions.length ? (l = s < _h ? _this._solutions[0] : _this._solutions[1], a = s < _h ? _this._solutions[1] : _this._solutions[0], _this.isGreater() && 1 === u.sign() || !_this.isGreater() && -1 === u.sign() ? _this._solutions = ["\\left]-\\infty ; ".concat(l, "\\right").concat(_this.isAlsoEqual() ? "]" : "[", " \\cup \\left").concat(_this.isAlsoEqual() ? "[" : "]").concat(a, ";+\\infty\\right[")] : _this._solutions = ["\\left".concat(_this.isAlsoEqual() ? "[" : "]").concat(l, " ; ").concat(a, "\\right").concat(_this.isAlsoEqual() ? "]" : "[")]) : 1 === _this._solutions.length && _this._solutions[0] !== _this._varnothing ? _this.isAlsoEqual() ? (_this.isGreater() && 1 === u.sign() || !_this.isGreater() && -1 === u.sign()) && (_this._solutions = [_this._real]) : _this.isGreater() && 1 === u.sign() || !_this.isGreater() && -1 === u.sign() ? _this._solutions = ["\\left]-\\infty ; ".concat(_this._solutions[0], "\\right[ \\cup \\left]").concat(_this._solutions[0], ";+\\infty\\right[")] : _this._solutions = [_this._varnothing] : _this.isGreater() ? _this._solutions = [1 === u.sign() ? _this._real : _this._varnothing] : _this._solutions = [-1 === u.sign() ? _this._real : _this._varnothing]), _this._solutions;
+                i.coefficient = i.coefficient / _t2, _this._solutions = 0 !== d ? 2 * _ / _t2 == 1 ? ["".concat(-d / _t2, " - ").concat(i.tex), "".concat(-d / _t2, " + ").concat(i.tex)] : ["\\dfrac{".concat(-d / _t2, " - ").concat(i.tex, " }{ ").concat(2 * _ / _t2, " }"), "\\dfrac{".concat(-d / _t2, " + ").concat(i.tex, " }{ ").concat(2 * _ / _t2, " }")] : 2 * _ / _t2 == 1 ? ["- ".concat(i.tex), "".concat(i.tex)] : ["\\dfrac{- ".concat(i.tex, " }{ ").concat(2 * _ / _t2, " }"), "\\dfrac{".concat(i.tex, " }{ ").concat(2 * _ / _t2, " }")];
+              } else _this._solutions = [new n.Fraction(-d - i.coefficient, 2 * _).reduce().dfrac, new n.Fraction(-d + i.coefficient, 2 * _).reduce().dfrac];
+            } else _this._solutions = 0 === e ? [new n.Fraction(-d, 2 * _).reduce().dfrac] : [_this._varnothing];
+            return _this.isStrictEqual() || (2 === _this._solutions.length ? (l = s < _h ? _this._solutions[0] : _this._solutions[1], a = s < _h ? _this._solutions[1] : _this._solutions[0], _this.isGreater() && 1 === c.sign() || !_this.isGreater() && -1 === c.sign() ? _this._solutions = ["\\left]-\\infty ; ".concat(l, "\\right").concat(_this.isAlsoEqual() ? "]" : "[", " \\cup \\left").concat(_this.isAlsoEqual() ? "[" : "]").concat(a, ";+\\infty\\right[")] : _this._solutions = ["\\left".concat(_this.isAlsoEqual() ? "[" : "]").concat(l, " ; ").concat(a, "\\right").concat(_this.isAlsoEqual() ? "]" : "[")]) : 1 === _this._solutions.length && _this._solutions[0] !== _this._varnothing ? _this.isAlsoEqual() ? (_this.isGreater() && 1 === c.sign() || !_this.isGreater() && -1 === c.sign()) && (_this._solutions = [_this._real]) : _this.isGreater() && 1 === c.sign() || !_this.isGreater() && -1 === c.sign() ? _this._solutions = ["\\left]-\\infty ; ".concat(_this._solutions[0], "\\right[ \\cup \\left]").concat(_this._solutions[0], ";+\\infty\\right[")] : _this._solutions = [_this._varnothing] : _this.isGreater() ? _this._solutions = [1 === c.sign() ? _this._real : _this._varnothing] : _this._solutions = [-1 === c.sign() ? _this._real : _this._varnothing]), _this._solutions;
           }, this._solveDegree3plus = function (t) {
             return _this._solutions = [t], _this._solutions;
           }, this._left = new s.Polynom().zero(), this._right = new s.Polynom().zero(), this._sign = "=", 1 === t.length) {
@@ -615,6 +615,203 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
       e.LinearSystem = h;
     },
+    236: function _(t, e, i) {
+      Object.defineProperty(e, "__esModule", {
+        value: !0
+      }), e.Logicalset = void 0;
+      var s = i(505);
+
+      e.Logicalset = /*#__PURE__*/function () {
+        function _class(t) {
+          var _this3 = this;
+
+          _classCallCheck(this, _class);
+
+          return this.parse = function (t) {
+            return _this3._rpn = new s.Shutingyard("set").parse(t).rpn, _this3;
+          }, this._rawString = t, this.parse(t), this;
+        }
+
+        _createClass(_class, [{
+          key: "isLogicalset",
+          get: function get() {
+            return !0;
+          }
+        }, {
+          key: "evaluate",
+          value: function evaluate(t, e) {
+            var i = [],
+                s = new Set();
+
+            if (void 0 === e) {
+              s = new Set();
+
+              for (var _e7 in t) {
+                s = new Set([].concat(_toConsumableArray(s), _toConsumableArray(t[_e7])));
+              }
+            } else s = new Set(e);
+
+            var _iterator11 = _createForOfIteratorHelper(this._rpn),
+                _step11;
+
+            try {
+              for (_iterator11.s(); !(_step11 = _iterator11.n()).done;) {
+                var _e8 = _step11.value;
+                if ("variable" === _e8.tokenType) void 0 === t[_e8.token] ? i.push(new Set()) : i.push(new Set(t[_e8.token]));else switch (_e8.token) {
+                  case "&":
+                    if (i.length >= 2) {
+                      (function () {
+                        var t = i.pop(),
+                            e = i.pop();
+                        i.push(new Set(_toConsumableArray(e).filter(function (e) {
+                          return t.has(e);
+                        })));
+                      })();
+                    }
+
+                    break;
+
+                  case "|":
+                    if (i.length >= 2) {
+                      var _t6 = i.pop(),
+                          _e9 = i.pop();
+
+                      i.push(new Set([].concat(_toConsumableArray(_e9), _toConsumableArray(_t6))));
+                    }
+
+                    break;
+
+                  case "-":
+                    if (i.length >= 2) {
+                      (function () {
+                        var t = i.pop(),
+                            e = i.pop();
+                        i.push(new Set(_toConsumableArray(e).filter(function (e) {
+                          return !t.has(e);
+                        })));
+                      })();
+                    }
+
+                    break;
+
+                  case "!":
+                    if (i.length >= 1) {
+                      (function () {
+                        var t = i.pop();
+                        i.push(new Set(_toConsumableArray(s).filter(function (e) {
+                          return !t.has(e);
+                        })));
+                      })();
+                    }
+
+                }
+              }
+            } catch (err) {
+              _iterator11.e(err);
+            } finally {
+              _iterator11.f();
+            }
+
+            return _toConsumableArray(i[0]).sort();
+          }
+        }, {
+          key: "vennAB",
+          value: function vennAB() {
+            return this.evaluate({
+              A: ["A", "AB"],
+              B: ["B", "AB"]
+            }, ["A", "B", "AB", "E"]);
+          }
+        }, {
+          key: "vennABC",
+          value: function vennABC() {
+            return this.evaluate({
+              A: ["A", "AB", "AC", "ABC"],
+              B: ["B", "AB", "BC", "ABC"],
+              C: ["C", "AC", "BC", "ABC"]
+            }, ["A", "B", "C", "AB", "AC", "BC", "E"]);
+          }
+        }, {
+          key: "rpn",
+          get: function get() {
+            return this._rpn;
+          }
+        }, {
+          key: "tex",
+          get: function get() {
+            var t = [];
+
+            var _iterator12 = _createForOfIteratorHelper(this._rpn),
+                _step12;
+
+            try {
+              for (_iterator12.s(); !(_step12 = _iterator12.n()).done;) {
+                var _e10 = _step12.value;
+                if ("variable" === _e10.tokenType) t.push(_e10);else switch (_e10.token) {
+                  case "&":
+                    if (t.length >= 2) {
+                      var _e11 = t.pop(),
+                          _i7 = t.pop();
+
+                      "mix" === _i7.tokenType && (_i7.token = "( ".concat(_i7.token, " )")), "mix" === _e11.tokenType && (_e11.token = "( ".concat(_e11.token, " )")), t.push({
+                        token: "".concat(_i7.token, " \\cap ").concat(_e11.token),
+                        tokenType: "mix"
+                      });
+                    }
+
+                    break;
+
+                  case "|":
+                    if (t.length >= 2) {
+                      var _e12 = t.pop(),
+                          _i8 = t.pop();
+
+                      "mix" === _i8.tokenType && (_i8.token = "( ".concat(_i8.token, " )")), "mix" === _e12.tokenType && (_e12.token = "( ".concat(_e12.token, " )")), t.push({
+                        token: "".concat(_i8.token, " \\cup ").concat(_e12.token),
+                        tokenType: "mix"
+                      });
+                    }
+
+                    break;
+
+                  case "-":
+                    if (t.length >= 2) {
+                      var _e13 = t.pop(),
+                          _i9 = t.pop();
+
+                      "mix" === _i9.tokenType && (_i9.token = "( ".concat(_i9.token, " )")), "mix" === _e13.tokenType && (_e13.token = "( ".concat(_e13.token, " )")), t.push({
+                        token: "".concat(_i9.token, " \\setminus ").concat(_e13.token),
+                        tokenType: "mix"
+                      });
+                    }
+
+                    break;
+
+                  case "!":
+                    if (t.length >= 1) {
+                      var _e14 = t.pop();
+
+                      t.push({
+                        token: "\\overline{ ".concat(_e14.token, " }"),
+                        tokenType: "variable"
+                      });
+                    }
+
+                }
+              }
+            } catch (err) {
+              _iterator12.e(err);
+            } finally {
+              _iterator12.f();
+            }
+
+            return t[0].token;
+          }
+        }]);
+
+        return _class;
+      }();
+    },
     937: function _(t, e, i) {
       Object.defineProperty(e, "__esModule", {
         value: !0
@@ -624,165 +821,165 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
       var r = /*#__PURE__*/function () {
         function r(t) {
-          var _this3 = this;
+          var _this4 = this;
 
           _classCallCheck(this, r);
 
           return this.parse = function (t) {
-            _this3.literalStr = t, _this3._coefficient = new s.Fraction();
+            _this4.literalStr = t, _this4._coefficient = new s.Fraction();
 
-            for (var _i7 = 0, _arr = _toConsumableArray(t.replace(/([a-z])|(\^[+-]?[0-9]+)/g, ",").split(",")); _i7 < _arr.length; _i7++) {
-              var _e7 = _arr[_i7];
-              "" !== _e7.trim() && _this3._coefficient.multiply(new s.Fraction(_e7.trim()));
+            for (var _i10 = 0, _arr = _toConsumableArray(t.replace(/([a-z])|(\^[+-]?[0-9]+)/g, ",").split(",")); _i10 < _arr.length; _i10++) {
+              var _e15 = _arr[_i10];
+              "" !== _e15.trim() && _this4._coefficient.multiply(new s.Fraction(_e15.trim()));
             }
 
-            return _this3;
+            return _this4;
           }, this.clone = function () {
             var t = new r();
-            t.coefficient = _this3._coefficient.clone();
+            t.coefficient = _this4._coefficient.clone();
 
-            for (var _e8 in _this3._literal) {
-              t.setLetter(_e8, _this3._literal[_e8]);
+            for (var _e16 in _this4._literal) {
+              t.setLetter(_e16, _this4._literal[_e16]);
             }
 
             return t;
           }, this.zero = function () {
-            return _this3._coefficient = new s.Fraction().zero(), _this3._literal = {}, _this3;
+            return _this4._coefficient = new s.Fraction().zero(), _this4._literal = {}, _this4;
           }, this.one = function () {
-            return _this3._coefficient = new s.Fraction().one(), _this3._literal = {}, _this3;
+            return _this4._coefficient = new s.Fraction().one(), _this4._literal = {}, _this4;
           }, this.clean = function () {
-            for (var _t6 in _this3._literal) {
-              0 === _this3._literal[_t6] && delete _this3._literal[_t6];
+            for (var _t7 in _this4._literal) {
+              0 === _this4._literal[_t7] && delete _this4._literal[_t7];
             }
 
-            return _this3;
+            return _this4;
           }, this.random = function () {
             var t = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "x";
             var e = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
             var i = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : !1;
             var s = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : !1;
 
-            _this3.coefficient.parse(n.Numeric.randomIntSym(10, s), i ? n.Numeric.randomInt(1, 10) : 1);
+            _this4.coefficient.parse(n.Numeric.randomIntSym(10, s), i ? n.Numeric.randomInt(1, 10) : 1).reduce();
 
-            var _iterator11 = _createForOfIteratorHelper(t.split("")),
-                _step11;
+            var _iterator13 = _createForOfIteratorHelper(t.split("")),
+                _step13;
 
             try {
-              for (_iterator11.s(); !(_step11 = _iterator11.n()).done;) {
-                var _i8 = _step11.value;
+              for (_iterator13.s(); !(_step13 = _iterator13.n()).done;) {
+                var _i11 = _step13.value;
 
-                _this3.setLetter(_i8, t.length > 1 ? n.Numeric.randomInt(e) : e);
+                _this4.setLetter(_i11, t.length > 1 ? n.Numeric.randomInt(e) : e);
               }
             } catch (err) {
-              _iterator11.e(err);
+              _iterator13.e(err);
             } finally {
-              _iterator11.f();
+              _iterator13.f();
             }
 
-            return _this3;
+            return _this4;
           }, this.opposed = function () {
-            return _this3._coefficient.opposed(), _this3;
+            return _this4._coefficient.opposed(), _this4;
           }, this.add = function () {
             for (var _len8 = arguments.length, t = new Array(_len8), _key8 = 0; _key8 < _len8; _key8++) {
               t[_key8] = arguments[_key8];
             }
 
-            for (var _i9 = 0, _t7 = t; _i9 < _t7.length; _i9++) {
-              var _e9 = _t7[_i9];
-              _this3.isSameAs(_e9) ? _this3._coefficient.add(_e9.coefficient) : console.log("Add: Is not similar: ", _e9.display);
+            for (var _i12 = 0, _t8 = t; _i12 < _t8.length; _i12++) {
+              var _e17 = _t8[_i12];
+              _this4.isSameAs(_e17) ? _this4._coefficient.add(_e17.coefficient) : console.log("Add: Is not similar: ", _e17.display);
             }
 
-            return _this3;
+            return _this4;
           }, this.subtract = function () {
             for (var _len9 = arguments.length, t = new Array(_len9), _key9 = 0; _key9 < _len9; _key9++) {
               t[_key9] = arguments[_key9];
             }
 
-            for (var _i10 = 0, _t8 = t; _i10 < _t8.length; _i10++) {
-              var _e10 = _t8[_i10];
-              _this3.isSameAs(_e10) ? _this3._coefficient.add(_e10.coefficient.clone().opposed()) : console.log("Subtract: Is not similar: ", _e10.display);
+            for (var _i13 = 0, _t9 = t; _i13 < _t9.length; _i13++) {
+              var _e18 = _t9[_i13];
+              _this4.isSameAs(_e18) ? _this4._coefficient.add(_e18.coefficient.clone().opposed()) : console.log("Subtract: Is not similar: ", _e18.display);
             }
 
-            return _this3;
+            return _this4;
           }, this.multiply = function () {
             for (var _len10 = arguments.length, t = new Array(_len10), _key10 = 0; _key10 < _len10; _key10++) {
               t[_key10] = arguments[_key10];
             }
 
-            for (var _i11 = 0, _t9 = t; _i11 < _t9.length; _i11++) {
-              var _e11 = _t9[_i11];
+            for (var _i14 = 0, _t10 = t; _i14 < _t10.length; _i14++) {
+              var _e19 = _t10[_i14];
 
-              _this3._coefficient.multiply(_e11.coefficient);
+              _this4._coefficient.multiply(_e19.coefficient);
 
-              for (var _t10 in _e11.literal) {
-                _this3._literal[_t10] = void 0 === _this3._literal[_t10] ? _e11.literal[_t10] : _this3._literal[_t10] + _e11.literal[_t10];
+              for (var _t11 in _e19.literal) {
+                _this4._literal[_t11] = void 0 === _this4._literal[_t11] ? _e19.literal[_t11] : _this4._literal[_t11] + _e19.literal[_t11];
               }
             }
 
-            return _this3;
+            return _this4;
           }, this.multiplyByNumber = function (t) {
-            return _this3._coefficient.multiply(t), _this3;
+            return _this4._coefficient.multiply(t), _this4;
           }, this.divide = function () {
             for (var _len11 = arguments.length, t = new Array(_len11), _key11 = 0; _key11 < _len11; _key11++) {
               t[_key11] = arguments[_key11];
             }
 
-            for (var _i12 = 0, _t11 = t; _i12 < _t11.length; _i12++) {
-              var _e12 = _t11[_i12];
+            for (var _i15 = 0, _t12 = t; _i15 < _t12.length; _i15++) {
+              var _e20 = _t12[_i15];
 
-              _this3._coefficient.divide(_e12.coefficient);
+              _this4._coefficient.divide(_e20.coefficient);
 
-              for (var _t12 in _e12.literal) {
-                _this3._literal[_t12] = void 0 === _this3._literal[_t12] ? -_e12.literal[_t12] : _this3._literal[_t12] - _e12.literal[_t12], 0 === _this3._literal[_t12] && delete _this3._literal[_t12];
+              for (var _t13 in _e20.literal) {
+                _this4._literal[_t13] = void 0 === _this4._literal[_t13] ? -_e20.literal[_t13] : _this4._literal[_t13] - _e20.literal[_t13], 0 === _this4._literal[_t13] && delete _this4._literal[_t13];
               }
             }
 
-            return _this3;
+            return _this4;
           }, this.pow = function (t) {
-            _this3._coefficient.pow(t);
+            _this4._coefficient.pow(t);
 
-            for (var _e13 in _this3._literal) {
-              _this3._literal[_e13] *= t;
+            for (var _e21 in _this4._literal) {
+              _this4._literal[_e21] *= t;
             }
 
-            return _this3;
+            return _this4;
           }, this.root = function (t) {
-            return _this3;
+            return _this4;
           }, this.sqrt = function () {
-            if (_this3.isSquare()) {
-              _this3._coefficient.sqrt();
+            if (_this4.isSquare()) {
+              _this4._coefficient.sqrt();
 
-              for (var _t13 in _this3._literal) {
-                _this3._literal[_t13] /= 2;
+              for (var _t14 in _this4._literal) {
+                _this4._literal[_t14] /= 2;
               }
             }
 
-            return _this3.root(2);
+            return _this4.root(2);
           }, this.compare = function (t, e) {
             switch (void 0 === e && (e = "="), e) {
               case "=":
-                return !!_this3.compare(t, "same") && _this3._coefficient.isEqual(t.coefficient);
+                return !!_this4.compare(t, "same") && _this4._coefficient.isEqual(t.coefficient);
 
               case "same":
-                var _e14 = _this3.variables,
-                    _i13 = t.variables,
-                    _s3 = _e14.concat(_i13.filter(function (t) {
-                  return _e14.indexOf(t) < 0;
+                var _e22 = _this4.variables,
+                    _i16 = t.variables,
+                    _s3 = _e22.concat(_i16.filter(function (t) {
+                  return _e22.indexOf(t) < 0;
                 }));
 
-                var _iterator12 = _createForOfIteratorHelper(_s3),
-                    _step12;
+                var _iterator14 = _createForOfIteratorHelper(_s3),
+                    _step14;
 
                 try {
-                  for (_iterator12.s(); !(_step12 = _iterator12.n()).done;) {
-                    var _e15 = _step12.value;
-                    if (void 0 === _this3._literal[_e15] || void 0 === t.literal[_e15]) return !1;
-                    if (_this3._literal[_e15] !== t.literal[_e15]) return !1;
+                  for (_iterator14.s(); !(_step14 = _iterator14.n()).done;) {
+                    var _e23 = _step14.value;
+                    if (void 0 === _this4._literal[_e23] || void 0 === t.literal[_e23]) return !1;
+                    if (_this4._literal[_e23] !== t.literal[_e23]) return !1;
                   }
                 } catch (err) {
-                  _iterator12.e(err);
+                  _iterator14.e(err);
                 } finally {
-                  _iterator12.f();
+                  _iterator14.f();
                 }
 
                 return !0;
@@ -791,46 +988,59 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
                 return !1;
             }
           }, this.isEqual = function (t) {
-            return _this3.compare(t, "=");
+            return _this4.compare(t, "=");
           }, this.isSameAs = function (t) {
-            return _this3.compare(t, "same");
+            return _this4.compare(t, "same");
           }, this.isSquare = function () {
-            return !!_this3.coefficient.isSquare() && _this3.isLitteralSquare();
+            return !!_this4.coefficient.isSquare() && _this4.isLitteralSquare();
           }, this.isLitteralSquare = function () {
-            for (var _t14 in _this3.literal) {
-              if (_this3.literal[_t14] % 2 != 0) return !1;
+            for (var _t15 in _this4.literal) {
+              if (_this4.literal[_t15] % 2 != 0) return !1;
             }
 
             return !0;
           }, this.hasLetter = function (t) {
-            return _this3._literal[void 0 === t ? "x" : t] > 0;
+            return _this4._literal[void 0 === t ? "x" : t] > 0;
           }, this.setLetter = function (t, e) {
-            e <= 0 || !Number.isSafeInteger(e) ? void 0 !== _this3._literal[t] && delete _this3._literal[t] : _this3._literal[t] = e;
+            e <= 0 || !Number.isSafeInteger(e) ? void 0 !== _this4._literal[t] && delete _this4._literal[t] : _this4._literal[t] = e;
           }, this.degree = function (t) {
-            return 0 === _this3.variables.length ? 0 : void 0 === t ? Object.values(_this3._literal).reduce(function (t, e) {
+            return 0 === _this4.variables.length ? 0 : void 0 === t ? Object.values(_this4._literal).reduce(function (t, e) {
               return t + e;
-            }) : void 0 === _this3._literal[t] ? 0 : _this3._literal[t];
+            }) : void 0 === _this4._literal[t] ? 0 : _this4._literal[t];
           }, this.evaluate = function (t) {
-            var e = _this3.coefficient.clone();
+            var e = _this4.coefficient.clone();
 
-            for (var _i14 in _this3._literal) {
-              if (void 0 === t[_i14]) return new s.Fraction().zero();
-              e.multiply(t[_i14].clone().pow(_this3._literal[_i14]));
+            if ("number" == typeof t || t instanceof s.Fraction) {
+              var _e24 = {};
+              return _e24[_this4.variables[0]] = new s.Fraction(t), _this4.evaluate(_e24);
             }
 
+            if ("object" == _typeof(t)) for (var _i17 in _this4._literal) {
+              if (void 0 === t[_i17]) return new s.Fraction().zero();
+
+              var _n = new s.Fraction(t[_i17]);
+
+              e.multiply(_n.pow(_this4._literal[_i17]));
+            }
             return e;
           }, this.derivative = function (t) {
-            if (void 0 === t && (t = "x"), _this3.hasLetter(t)) {
-              var _e16 = +_this3._literal[t],
-                  _i15 = _this3.clone();
+            if (void 0 === t && (t = "x"), _this4.hasLetter(t)) {
+              var _e25 = +_this4._literal[t],
+                  _i18 = _this4.clone();
 
-              return _i15._literal[t] -= 1, _i15._coefficient.multiply(new s.Fraction("" + _e16)), _i15;
+              return _i18._literal[t] -= 1, _i18._coefficient.multiply(new s.Fraction("" + _e25)), _i18;
             }
 
             return new r().zero();
+          }, this.primitive = function (t) {
+            void 0 === t && (t = "x");
+
+            var e = _this4.clone();
+
+            return e.hasLetter(t) ? (e.coefficient = e.coefficient.clone().divide(e.degree(t) + 1), e.setLetter(t, e.degree(t) + 1)) : (e.coefficient.isZero() && (e.coefficient = new s.Fraction().one()), e.setLetter(t, 1)), e;
           }, this.areSameAs = function () {
-            for (var _e17 = 0; _e17 < arguments.length; _e17++) {
-              if (!_this3.isSameAs(_e17 < 0 || arguments.length <= _e17 ? undefined : arguments[_e17])) return !1;
+            for (var _e26 = 0; _e26 < arguments.length; _e26++) {
+              if (!_this4.isSameAs(_e26 < 0 || arguments.length <= _e26 ? undefined : arguments[_e26])) return !1;
             }
 
             return !0;
@@ -839,11 +1049,11 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
               t[_key12] = arguments[_key12];
             }
 
-            if (!_this3.areSameAs.apply(_this3, t)) return !1;
+            if (!_this4.areSameAs.apply(_this4, t)) return !1;
 
-            for (var _i16 = 0, _t15 = t; _i16 < _t15.length; _i16++) {
-              var _e18 = _t15[_i16];
-              if (!_this3._coefficient.isEqual(_e18.coefficient)) return !1;
+            for (var _i19 = 0, _t16 = t; _i19 < _t16.length; _i19++) {
+              var _e27 = _t16[_i19];
+              if (!_this4._coefficient.isEqual(_e27.coefficient)) return !1;
             }
 
             return !0;
@@ -875,13 +1085,13 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
           key: "literalSqrt",
           get: function get() {
             if (this.isLitteralSquare()) {
-              var _t16 = {};
+              var _t17 = {};
 
-              for (var _e19 in this._literal) {
-                _t16[_e19] = this._literal[_e19] / 2;
+              for (var _e28 in this._literal) {
+                _t17[_e28] = this._literal[_e28] / 2;
               }
 
-              return _t16;
+              return _t17;
             }
 
             return this._literal;
@@ -889,14 +1099,14 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
         }, {
           key: "literalStr",
           set: function set(t) {
-            for (var _i17 = 0, _arr2 = _toConsumableArray(t.matchAll(/([a-z])\^([+-]?[0-9]+)/g)); _i17 < _arr2.length; _i17++) {
-              var _e20 = _arr2[_i17];
-              _e20[1] in this._literal || (this._literal[_e20[1]] = 0), this._literal[_e20[1]] += +_e20[2];
+            for (var _i20 = 0, _arr2 = _toConsumableArray(t.matchAll(/([a-z])\^([+-]?[0-9]+)/g)); _i20 < _arr2.length; _i20++) {
+              var _e29 = _arr2[_i20];
+              _e29[1] in this._literal || (this._literal[_e29[1]] = 0), this._literal[_e29[1]] += +_e29[2];
             }
 
-            for (var _i18 = 0, _arr3 = _toConsumableArray(t.matchAll(/([a-z](?!\^))/g)); _i18 < _arr3.length; _i18++) {
-              var _e21 = _arr3[_i18];
-              _e21[1] in this._literal || (this._literal[_e21[1]] = 0), this._literal[_e21[1]] += 1;
+            for (var _i21 = 0, _arr3 = _toConsumableArray(t.matchAll(/([a-z](?!\^))/g)); _i21 < _arr3.length; _i21++) {
+              var _e30 = _arr3[_i21];
+              _e30[1] in this._literal || (this._literal[_e30[1]] = 0), this._literal[_e30[1]] += 1;
             }
           }
         }, {
@@ -909,8 +1119,8 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
           get: function get() {
             var t = "";
 
-            for (var _e22 in this._literal) {
-              0 !== this._literal[_e22] && (t += "".concat(_e22), this._literal[_e22] > 1 && (t += "^".concat(this._literal[_e22])));
+            for (var _e31 in this._literal) {
+              0 !== this._literal[_e31] && (t += "".concat(_e31), this._literal[_e31] > 1 && (t += "^".concat(this._literal[_e31])));
             }
 
             return "" === t ? 0 != this._coefficient.value ? "".concat(this._coefficient.display) : "" : 1 === this._coefficient.value ? t : -1 === this._coefficient.value ? "-".concat(t) : 0 === this._coefficient.value ? "0" : "".concat(this._coefficient.display).concat(t);
@@ -923,75 +1133,75 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
             var t = n.Numeric.dividers(Math.abs(this.coefficient.numerator));
             var e = [];
 
-            for (var _t17 in this.literal) {
-              e = this._getLitteralDividers(e, _t17);
+            for (var _t18 in this.literal) {
+              e = this._getLitteralDividers(e, _t18);
             }
 
             var i = [];
 
             if (e.length > 0 && t.length > 0) {
-              var _iterator13 = _createForOfIteratorHelper(t),
-                  _step13;
-
-              try {
-                for (_iterator13.s(); !(_step13 = _iterator13.n()).done;) {
-                  var _n = _step13.value;
-
-                  var _iterator14 = _createForOfIteratorHelper(e),
-                      _step14;
-
-                  try {
-                    for (_iterator14.s(); !(_step14 = _iterator14.n()).done;) {
-                      var _t18 = _step14.value;
-
-                      var _e23 = new r();
-
-                      _e23.coefficient = new s.Fraction(_n), _e23.literal = _t18, i.push(_e23);
-                    }
-                  } catch (err) {
-                    _iterator14.e(err);
-                  } finally {
-                    _iterator14.f();
-                  }
-                }
-              } catch (err) {
-                _iterator13.e(err);
-              } finally {
-                _iterator13.f();
-              }
-            } else if (0 === t.length) {
-              var _iterator15 = _createForOfIteratorHelper(e),
+              var _iterator15 = _createForOfIteratorHelper(t),
                   _step15;
 
               try {
                 for (_iterator15.s(); !(_step15 = _iterator15.n()).done;) {
-                  var _t19 = _step15.value;
+                  var _n2 = _step15.value;
 
-                  var _e24 = new r();
+                  var _iterator16 = _createForOfIteratorHelper(e),
+                      _step16;
 
-                  _e24.coefficient = new s.Fraction().one(), _e24.literal = _t19, i.push(_e24);
+                  try {
+                    for (_iterator16.s(); !(_step16 = _iterator16.n()).done;) {
+                      var _t19 = _step16.value;
+
+                      var _e32 = new r();
+
+                      _e32.coefficient = new s.Fraction(_n2), _e32.literal = _t19, i.push(_e32);
+                    }
+                  } catch (err) {
+                    _iterator16.e(err);
+                  } finally {
+                    _iterator16.f();
+                  }
                 }
               } catch (err) {
                 _iterator15.e(err);
               } finally {
                 _iterator15.f();
               }
-            } else {
-              var _iterator16 = _createForOfIteratorHelper(t),
-                  _step16;
+            } else if (0 === t.length) {
+              var _iterator17 = _createForOfIteratorHelper(e),
+                  _step17;
 
               try {
-                for (_iterator16.s(); !(_step16 = _iterator16.n()).done;) {
-                  var _e25 = _step16.value;
+                for (_iterator17.s(); !(_step17 = _iterator17.n()).done;) {
+                  var _t20 = _step17.value;
 
-                  var _t20 = new r();
+                  var _e33 = new r();
 
-                  _t20.coefficient = new s.Fraction(_e25), i.push(_t20);
+                  _e33.coefficient = new s.Fraction().one(), _e33.literal = _t20, i.push(_e33);
                 }
               } catch (err) {
-                _iterator16.e(err);
+                _iterator17.e(err);
               } finally {
-                _iterator16.f();
+                _iterator17.f();
+              }
+            } else {
+              var _iterator18 = _createForOfIteratorHelper(t),
+                  _step18;
+
+              try {
+                for (_iterator18.s(); !(_step18 = _iterator18.n()).done;) {
+                  var _e34 = _step18.value;
+
+                  var _t21 = new r();
+
+                  _t21.coefficient = new s.Fraction(_e34), i.push(_t21);
+                }
+              } catch (err) {
+                _iterator18.e(err);
+              } finally {
+                _iterator18.f();
               }
             }
 
@@ -1004,27 +1214,27 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
             for (var _s4 = 0; _s4 <= this.literal[e]; _s4++) {
               if (0 === t.length) {
-                var _t21 = {};
-                _t21[e] = _s4, i.push(_t21);
+                var _t22 = {};
+                _t22[e] = _s4, i.push(_t22);
               } else {
-                var _iterator17 = _createForOfIteratorHelper(t),
-                    _step17;
+                var _iterator19 = _createForOfIteratorHelper(t),
+                    _step19;
 
                 try {
-                  for (_iterator17.s(); !(_step17 = _iterator17.n()).done;) {
-                    var _n2 = _step17.value;
-                    var _t22 = {};
+                  for (_iterator19.s(); !(_step19 = _iterator19.n()).done;) {
+                    var _n3 = _step19.value;
+                    var _t23 = {};
 
-                    for (var _e26 in _n2) {
-                      _t22[_e26] = _n2[_e26];
+                    for (var _e35 in _n3) {
+                      _t23[_e35] = _n3[_e35];
                     }
 
-                    _t22[e] = _s4, i.push(_t22);
+                    _t23[e] = _s4, i.push(_t23);
                   }
                 } catch (err) {
-                  _iterator17.e(err);
+                  _iterator19.e(err);
                 } finally {
-                  _iterator17.f();
+                  _iterator19.f();
                 }
               }
             }
@@ -1042,8 +1252,8 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
           get: function get() {
             var t = "";
 
-            for (var _e27 in this._literal) {
-              0 !== this._literal[_e27] && (t += "".concat(_e27), this._literal[_e27] > 1 && (t += "^".concat(this._literal[_e27])));
+            for (var _e36 in this._literal) {
+              0 !== this._literal[_e36] && (t += "".concat(_e36), this._literal[_e36] > 1 && (t += "^".concat(this._literal[_e36])));
             }
 
             return "" === t ? 0 != this._coefficient.value ? "".concat(this._coefficient.dfrac) : "0" : 1 === this._coefficient.value ? t : -1 === this._coefficient.value ? "-".concat(t) : 0 === this._coefficient.value ? "0" : "".concat(this._coefficient.dfrac).concat(t);
@@ -1082,15 +1292,15 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
         e.coefficient = new s.Fraction(h, l).reduce();
 
-        for (var _i19 = 0, _t23 = t; _i19 < _t23.length; _i19++) {
-          var _i20 = _t23[_i19];
+        for (var _i22 = 0, _t24 = t; _i22 < _t24.length; _i22++) {
+          var _i23 = _t24[_i22];
 
-          for (var _t24 in e.literal) {
-            _t24 in _i20.literal || (e.literal[_t24] = 0);
+          for (var _t25 in e.literal) {
+            _t25 in _i23.literal || (e.literal[_t25] = 0);
           }
 
-          for (var _t25 in _i20.literal) {
-            void 0 === e.literal[_t25] && _i20.literal[_t25] > 0 ? e.literal[_t25] = _i20.literal[_t25] : e.literal[_t25] = Math.min(_i20.literal[_t25], e.literal[_t25]);
+          for (var _t26 in _i23.literal) {
+            void 0 === e.literal[_t26] && _i23.literal[_t26] > 0 ? e.literal[_t26] = _i23.literal[_t26] : e.literal[_t26] = Math.min(_i23.literal[_t26], e.literal[_t26]);
           }
         }
 
@@ -1102,9 +1312,9 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
           t[_key14] = arguments[_key14];
         }
 
-        for (var _i21 = 0, _t26 = t; _i21 < _t26.length; _i21++) {
-          var _i22 = _t26[_i21];
-          e.multiply(_i22);
+        for (var _i24 = 0, _t27 = t; _i24 < _t27.length; _i24++) {
+          var _i25 = _t27[_i24];
+          e.multiply(_i25);
         }
 
         return e;
@@ -1121,7 +1331,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
       var h = /*#__PURE__*/function () {
         function h(t) {
-          var _this4 = this;
+          var _this5 = this;
 
           _classCallCheck(this, h);
 
@@ -1132,158 +1342,154 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
           return this.genDisplay = function (t, e, i) {
             var s = "";
 
-            var _iterator18 = _createForOfIteratorHelper(_this4._monoms),
-                _step18;
+            var _iterator20 = _createForOfIteratorHelper(_this5._monoms),
+                _step20;
 
             try {
-              for (_iterator18.s(); !(_step18 = _iterator18.n()).done;) {
-                var _i23 = _step18.value;
-                0 !== _i23.coefficient.value && (s += "".concat(1 !== _i23.coefficient.sign() || "" === s && !0 !== e ? "" : "+").concat("tex" === t ? _i23.tex : _i23.display));
+              for (_iterator20.s(); !(_step20 = _iterator20.n()).done;) {
+                var _i26 = _step20.value;
+                0 !== _i26.coefficient.value && (s += "".concat(1 !== _i26.coefficient.sign() || "" === s && !0 !== e ? "" : "+").concat("tex" === t ? _i26.tex : _i26.display));
               }
             } catch (err) {
-              _iterator18.e(err);
+              _iterator20.e(err);
             } finally {
-              _iterator18.f();
+              _iterator20.f();
             }
 
-            return !0 === i && _this4.length > 1 && (s = "tex" === t ? "\\left( ".concat(s, " \\right)") : "(".concat(s, ")")), "" === s && (s = "0"), s;
+            return !0 === i && _this5.length > 1 && (s = "tex" === t ? "\\left( ".concat(s, " \\right)") : "(".concat(s, ")")), "" === s && (s = "0"), s;
           }, this.parse = function (t) {
             for (var _len16 = arguments.length, e = new Array(_len16 > 1 ? _len16 - 1 : 0), _key16 = 1; _key16 < _len16; _key16++) {
               e[_key16 - 1] = arguments[_key16];
             }
 
             if (void 0 === e || 0 === e.length) {
-              if (t = "" + t, _this4._rawString = t, "" !== t && !isNaN(Number(t))) {
-                _this4.empty();
+              if (t = "" + t, _this5._rawString = t, "" !== t && !isNaN(Number(t))) {
+                _this5.empty();
 
-                var _e28 = new s.Monom();
+                var _e37 = new s.Monom();
 
-                return _e28.coefficient = new o.Fraction(t), _e28.literalStr = "", _this4.add(_e28), _this4;
+                return _e37.coefficient = new o.Fraction(t), _e37.literalStr = "", _this5.add(_e37), _this5;
               }
 
-              return _this4.shutingYardToReducedPolynom(t);
+              return _this5.shutingYardToReducedPolynom(t);
             }
 
             if (/^[a-z]/.test(t)) {
-              _this4.empty();
+              _this5.empty();
 
-              var _i24 = e.map(function (t) {
+              var _i27 = e.map(function (t) {
                 return new o.Fraction(t);
               });
 
               if (t.length > 1) {
-                var _e29 = t.split(""),
-                    _n3 = 0;
+                var _e38 = t.split(""),
+                    _n4 = 0;
 
-                var _iterator19 = _createForOfIteratorHelper(_i24),
-                    _step19;
+                var _iterator21 = _createForOfIteratorHelper(_i27),
+                    _step21;
 
                 try {
-                  for (_iterator19.s(); !(_step19 = _iterator19.n()).done;) {
-                    var _t27 = _step19.value;
+                  for (_iterator21.s(); !(_step21 = _iterator21.n()).done;) {
+                    var _t28 = _step21.value;
 
-                    var _i25 = new s.Monom();
+                    var _i28 = new s.Monom();
 
-                    _i25.coefficient = _t27.clone(), _i25.literalStr = _e29[_n3] || "", _this4.add(_i25), _n3++;
+                    _i28.coefficient = _t28.clone(), _i28.literalStr = _e38[_n4] || "", _this5.add(_i28), _n4++;
                   }
                 } catch (err) {
-                  _iterator19.e(err);
+                  _iterator21.e(err);
                 } finally {
-                  _iterator19.f();
+                  _iterator21.f();
                 }
               } else {
-                var _e30 = _i24.length - 1;
+                var _e39 = _i27.length - 1;
 
-                var _iterator20 = _createForOfIteratorHelper(_i24),
-                    _step20;
+                var _iterator22 = _createForOfIteratorHelper(_i27),
+                    _step22;
 
                 try {
-                  for (_iterator20.s(); !(_step20 = _iterator20.n()).done;) {
-                    var _n4 = _step20.value;
+                  for (_iterator22.s(); !(_step22 = _iterator22.n()).done;) {
+                    var _n5 = _step22.value;
 
-                    var _i26 = new s.Monom();
+                    var _i29 = new s.Monom();
 
-                    _i26.coefficient = _n4.clone(), _i26.literalStr = "".concat(t, "^").concat(_e30), _this4.add(_i26), _e30--;
+                    _i29.coefficient = _n5.clone(), _i29.literalStr = "".concat(t, "^").concat(_e39), _this5.add(_i29), _e39--;
                   }
                 } catch (err) {
-                  _iterator20.e(err);
+                  _iterator22.e(err);
                 } finally {
-                  _iterator20.f();
+                  _iterator22.f();
                 }
               }
 
-              return _this4;
+              return _this5;
             }
 
-            return _this4.zero();
+            return _this5.zero();
           }, this.shutingYardToReducedPolynom = function (t) {
-            var e = new n.Shutingyard().parse(t),
-                i = e.rpn,
-                r = [];
-            var o,
-                l,
+            var e = new n.Shutingyard().parse(t).rpn;
+            var i,
+                r,
+                o,
+                l = [],
                 a = null;
 
-            var _iterator21 = _createForOfIteratorHelper(i),
-                _step21;
+            var _iterator23 = _createForOfIteratorHelper(e),
+                _step23;
 
             try {
-              for (_iterator21.s(); !(_step21 = _iterator21.n()).done;) {
-                var _t28 = _step21.value;
+              for (_iterator23.s(); !(_step23 = _iterator23.n()).done;) {
+                var _t29 = _step23.value;
+                if ("coefficient" === _t29.tokenType || "variable" === _t29.tokenType) o = new h().zero(), o.monoms = [new s.Monom(_t29.token)], l.push(o.clone());else if ("operation" === _t29.tokenType) switch (r = l.pop() || new h().zero(), i = l.pop() || new h().zero(), _t29.token) {
+                  case "+":
+                    l.push(i.add(r));
+                    break;
 
-                if (e.isOperation(_t28)) {
-                  switch (l = r.pop() || new h().zero(), "^" !== _t28[0] ? o = r.length > 0 && r.pop() || new h().zero() : a = Number(_t28.substr(1)), _t28) {
-                    case "+":
-                      o.add(l);
-                      break;
+                  case "-":
+                    l.push(i.subtract(r));
+                    break;
 
-                    case "-":
-                      o.subtract(l);
-                      break;
+                  case "*":
+                    l.push(i.multiply(r));
+                    break;
 
-                    case "*":
-                      o.multiply(l);
-                      break;
-
-                    default:
-                      null !== a ? "^" === _t28[0] && (o = l.clone().pow(a)) : console.log("Token not recognized in shuting yard to reduce polynom: ", _t28);
-                  }
-
-                  r.push(o);
-                } else r.push(new h().add(new s.Monom(_t28)));
+                  case "^":
+                    l.push(i.pow(+a));
+                }
+                a = _t29.token;
               }
             } catch (err) {
-              _iterator21.e(err);
+              _iterator23.e(err);
             } finally {
-              _iterator21.f();
+              _iterator23.f();
             }
 
-            return _this4._monoms = r[0].monoms, _this4;
+            return _this5._monoms = l[0].monoms, _this5;
           }, this.clone = function () {
             var t = new h(),
                 e = [];
 
-            var _iterator22 = _createForOfIteratorHelper(_this4._monoms),
-                _step22;
+            var _iterator24 = _createForOfIteratorHelper(_this5._monoms),
+                _step24;
 
             try {
-              for (_iterator22.s(); !(_step22 = _iterator22.n()).done;) {
-                var _t29 = _step22.value;
-                e.push(_t29.clone());
+              for (_iterator24.s(); !(_step24 = _iterator24.n()).done;) {
+                var _t30 = _step24.value;
+                e.push(_t30.clone());
               }
             } catch (err) {
-              _iterator22.e(err);
+              _iterator24.e(err);
             } finally {
-              _iterator22.f();
+              _iterator24.f();
             }
 
             return t.monoms = e, t;
           }, this.zero = function () {
-            return _this4._monoms = [], _this4._monoms.push(new s.Monom().zero()), _this4._rawString = "0", _this4;
+            return _this5._monoms = [], _this5._monoms.push(new s.Monom().zero()), _this5._rawString = "0", _this5;
           }, this.one = function () {
-            return _this4._monoms = [], _this4._monoms.push(new s.Monom().one()), _this4._rawString = "1", _this4;
+            return _this5._monoms = [], _this5._monoms.push(new s.Monom().one()), _this5._rawString = "1", _this5;
           }, this.empty = function () {
-            return _this4._monoms = [], _this4._rawString = "", _this4;
+            return _this5._monoms = [], _this5._rawString = "", _this5;
           }, this._randomizeDefaults = {
             degree: 2,
             unit: !0,
@@ -1296,8 +1502,8 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
             var e = new h();
             void 0 === t && (t = {});
 
-            for (var _e31 in _this4._randomizeDefaults) {
-              void 0 === t[_e31] && (t[_e31] = _this4._randomizeDefaults[_e31]);
+            for (var _e40 in _this5._randomizeDefaults) {
+              void 0 === t[_e40] && (t[_e40] = _this5._randomizeDefaults[_e40]);
             }
 
             return e;
@@ -1312,104 +1518,87 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
             var l = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : -1;
             var a;
 
-            _this4.empty();
+            _this5.empty();
 
             for (var _r3 = t; _r3 >= 0; _r3--) {
-              a = new s.Monom().random(n, _r3, i, _r3 !== t && _h5), e && _r3 === t && (a.coefficient = new o.Fraction().one()), _this4.add(a);
+              a = new s.Monom().random(n, _r3, i, _r3 !== t && _h5), e && _r3 === t && (a.coefficient = new o.Fraction().one()), _this5.add(a);
             }
 
-            if (l > 0 && l < _this4.length) for (_this4.reorder(); _this4.length > l;) {
-              _this4._monoms.splice(r.Numeric.randomInt(1, _this4.length - 1), 1);
+            if (l > 0 && l < _this5.length) for (_this5.reorder(); _this5.length > l;) {
+              _this5._monoms.splice(r.Numeric.randomInt(1, _this5.length - 1), 1);
             }
-            return _this4;
+            return _this5;
           }, this.rndFactorable = function () {
             var t = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 2;
             var e = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : !1;
             var i = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "x";
-            _this4._factors = [];
+            _this5._factors = [];
 
             for (var _s5 = 0; _s5 < t; _s5++) {
-              var _t30 = !0 === e || _s5 >= e,
-                  _n5 = new h().rndSimple(1, _t30, !1, i);
+              var _t31 = !0 === e || _s5 >= e,
+                  _n6 = new h().rndSimple(1, _t31, !1, i);
 
-              _this4._factors.push(_n5);
+              _this5._factors.push(_n6);
             }
 
-            _this4.empty().monoms = _this4._factors[0].monoms;
+            _this5.empty().monoms = _this5._factors[0].monoms;
 
-            for (var _t31 = 1; _t31 < _this4._factors.length; _t31++) {
-              _this4.multiply(_this4._factors[_t31]);
+            for (var _t32 = 1; _t32 < _this5._factors.length; _t32++) {
+              _this5.multiply(_this5._factors[_t32]);
             }
 
-            return _this4;
+            return _this5;
           }, this.opposed = function () {
-            return _this4._monoms = _this4._monoms.map(function (t) {
+            return _this5._monoms = _this5._monoms.map(function (t) {
               return t.opposed();
-            }), _this4;
+            }), _this5;
           }, this.add = function () {
             for (var _len17 = arguments.length, t = new Array(_len17), _key17 = 0; _key17 < _len17; _key17++) {
               t[_key17] = arguments[_key17];
             }
 
-            for (var _i27 = 0, _t32 = t; _i27 < _t32.length; _i27++) {
-              var _e32 = _t32[_i27];
-              _e32.isPolynom ? _this4._monoms = _this4._monoms.concat(_e32.monoms) : _e32.isMonom ? _this4._monoms.push(_e32.clone()) : Number.isSafeInteger(_e32) ? _this4._monoms.push(new s.Monom(_e32.toString())) : _this4._monoms.push(new s.Monom(_e32));
+            for (var _i30 = 0, _t33 = t; _i30 < _t33.length; _i30++) {
+              var _e41 = _t33[_i30];
+              _e41.isPolynom ? _this5._monoms = _this5._monoms.concat(_e41.monoms) : _e41.isMonom ? _this5._monoms.push(_e41.clone()) : Number.isSafeInteger(_e41) ? _this5._monoms.push(new s.Monom(_e41.toString())) : _this5._monoms.push(new s.Monom(_e41));
             }
 
-            return _this4.reduce();
+            return _this5.reduce();
           }, this.subtract = function () {
             for (var _len18 = arguments.length, t = new Array(_len18), _key18 = 0; _key18 < _len18; _key18++) {
               t[_key18] = arguments[_key18];
             }
 
-            for (var _i28 = 0, _t33 = t; _i28 < _t33.length; _i28++) {
-              var _e33 = _t33[_i28];
-              _e33.isPolynom ? _this4._monoms = _this4._monoms.concat(_e33.clone().opposed().monoms) : _e33.isMonom ? _this4._monoms.push(_e33.clone().opposed()) : Number.isSafeInteger(_e33) ? _this4._monoms.push(new s.Monom(_e33.toString()).opposed()) : _this4._monoms.push(new s.Monom(_e33).opposed());
+            for (var _i31 = 0, _t34 = t; _i31 < _t34.length; _i31++) {
+              var _e42 = _t34[_i31];
+              _e42.isPolynom ? _this5._monoms = _this5._monoms.concat(_e42.clone().opposed().monoms) : _e42.isMonom ? _this5._monoms.push(_e42.clone().opposed()) : Number.isSafeInteger(_e42) ? _this5._monoms.push(new s.Monom(_e42.toString()).opposed()) : _this5._monoms.push(new s.Monom(_e42).opposed());
             }
 
-            return _this4.reduce();
+            return _this5.reduce();
           }, this.multiply = function (t) {
-            return t.isPolynom ? _this4.multiplyByPolynom(t) : t.isFraction ? _this4.multiplyByFraction(t) : t.isMonom ? _this4.multiplyByMonom(t) : Number.isSafeInteger(t) ? _this4.multiplyByInteger(t) : _this4;
+            return t.isPolynom ? _this5.multiplyByPolynom(t) : t.isFraction ? _this5.multiplyByFraction(t) : t.isMonom ? _this5.multiplyByMonom(t) : Number.isSafeInteger(t) ? _this5.multiplyByInteger(t) : _this5;
           }, this.multiplyByPolynom = function (t) {
             var e = [];
 
-            var _iterator23 = _createForOfIteratorHelper(_this4._monoms),
-                _step23;
-
-            try {
-              for (_iterator23.s(); !(_step23 = _iterator23.n()).done;) {
-                var _i29 = _step23.value;
-
-                var _iterator24 = _createForOfIteratorHelper(t.monoms),
-                    _step24;
-
-                try {
-                  for (_iterator24.s(); !(_step24 = _iterator24.n()).done;) {
-                    var _n6 = _step24.value;
-                    e.push(s.Monom.xmultiply(_i29, _n6));
-                  }
-                } catch (err) {
-                  _iterator24.e(err);
-                } finally {
-                  _iterator24.f();
-                }
-              }
-            } catch (err) {
-              _iterator23.e(err);
-            } finally {
-              _iterator23.f();
-            }
-
-            return _this4._monoms = e, _this4.reduce();
-          }, this.multiplyByFraction = function (t) {
-            var _iterator25 = _createForOfIteratorHelper(_this4._monoms),
+            var _iterator25 = _createForOfIteratorHelper(_this5._monoms),
                 _step25;
 
             try {
               for (_iterator25.s(); !(_step25 = _iterator25.n()).done;) {
-                var _e34 = _step25.value;
+                var _i32 = _step25.value;
 
-                _e34.coefficient.multiply(t);
+                var _iterator26 = _createForOfIteratorHelper(t.monoms),
+                    _step26;
+
+                try {
+                  for (_iterator26.s(); !(_step26 = _iterator26.n()).done;) {
+                    var _n7 = _step26.value;
+                    e.push(s.Monom.xmultiply(_i32, _n7));
+                  }
+                } catch (err) {
+                  _iterator26.e(err);
+                } finally {
+                  _iterator26.f();
+                }
               }
             } catch (err) {
               _iterator25.e(err);
@@ -1417,30 +1606,47 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
               _iterator25.f();
             }
 
-            return _this4.reduce();
-          }, this.multiplyByInteger = function (t) {
-            return _this4.multiplyByFraction(new o.Fraction(t));
-          }, this.multiplyByMonom = function (t) {
-            var _iterator26 = _createForOfIteratorHelper(_this4._monoms),
-                _step26;
+            return _this5._monoms = e, _this5.reduce();
+          }, this.multiplyByFraction = function (t) {
+            var _iterator27 = _createForOfIteratorHelper(_this5._monoms),
+                _step27;
 
             try {
-              for (_iterator26.s(); !(_step26 = _iterator26.n()).done;) {
-                var _e35 = _step26.value;
+              for (_iterator27.s(); !(_step27 = _iterator27.n()).done;) {
+                var _e43 = _step27.value;
 
-                _e35.multiply(t);
+                _e43.coefficient.multiply(t);
               }
             } catch (err) {
-              _iterator26.e(err);
+              _iterator27.e(err);
             } finally {
-              _iterator26.f();
+              _iterator27.f();
             }
 
-            return _this4.reduce();
+            return _this5.reduce();
+          }, this.multiplyByInteger = function (t) {
+            return _this5.multiplyByFraction(new o.Fraction(t));
+          }, this.multiplyByMonom = function (t) {
+            var _iterator28 = _createForOfIteratorHelper(_this5._monoms),
+                _step28;
+
+            try {
+              for (_iterator28.s(); !(_step28 = _iterator28.n()).done;) {
+                var _e44 = _step28.value;
+
+                _e44.multiply(t);
+              }
+            } catch (err) {
+              _iterator28.e(err);
+            } finally {
+              _iterator28.f();
+            }
+
+            return _this5.reduce();
           }, this.euclidian = function (t) {
             var e = t.variables[0],
                 i = new h().zero(),
-                s = _this4.clone().reorder(e);
+                s = _this5.clone().reorder(e);
 
             if (0 === t.variables.length) return {
               quotient: i,
@@ -1450,7 +1656,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
                 r = t.degree(e);
 
             var o,
-                l = 2 * _this4.degree(e);
+                l = 2 * _this5.degree(e);
 
             for (; s.degree(e) >= r && l >= 0 && (l--, o = s.monomByDegree(void 0, e).clone().divide(n), !o.isZero());) {
               i.add(o), s.subtract(t.clone().multiply(o));
@@ -1461,67 +1667,67 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
               reminder: s
             };
           }, this.divide = function (t) {
-            if (t.isFraction) _this4.divideByFraction(t);else if (Number.isSafeInteger(t)) return _this4.divideByInteger(t);
+            if (t.isFraction) _this5.divideByFraction(t);else if (Number.isSafeInteger(t)) return _this5.divideByInteger(t);
           }, this.divideByInteger = function (t) {
             var e = new o.Fraction(t);
 
-            var _iterator27 = _createForOfIteratorHelper(_this4._monoms),
-                _step27;
+            var _iterator29 = _createForOfIteratorHelper(_this5._monoms),
+                _step29;
 
             try {
-              for (_iterator27.s(); !(_step27 = _iterator27.n()).done;) {
-                var _t34 = _step27.value;
+              for (_iterator29.s(); !(_step29 = _iterator29.n()).done;) {
+                var _t35 = _step29.value;
 
-                _t34.coefficient.divide(e);
+                _t35.coefficient.divide(e);
               }
             } catch (err) {
-              _iterator27.e(err);
+              _iterator29.e(err);
             } finally {
-              _iterator27.f();
+              _iterator29.f();
             }
 
-            return _this4;
+            return _this5;
           }, this.divideByFraction = function (t) {
-            var _iterator28 = _createForOfIteratorHelper(_this4._monoms),
-                _step28;
+            var _iterator30 = _createForOfIteratorHelper(_this5._monoms),
+                _step30;
 
             try {
-              for (_iterator28.s(); !(_step28 = _iterator28.n()).done;) {
-                var _e36 = _step28.value;
+              for (_iterator30.s(); !(_step30 = _iterator30.n()).done;) {
+                var _e45 = _step30.value;
 
-                _e36.coefficient.divide(t);
+                _e45.coefficient.divide(t);
               }
             } catch (err) {
-              _iterator28.e(err);
+              _iterator30.e(err);
             } finally {
-              _iterator28.f();
+              _iterator30.f();
             }
 
-            return _this4;
+            return _this5;
           }, this.pow = function (t) {
-            if (!Number.isSafeInteger(t)) return _this4.zero();
-            if (t < 0) return _this4.zero();
+            if (!Number.isSafeInteger(t)) return _this5.zero();
+            if (t < 0) return _this5.zero();
             if (0 === t) return new h();
 
-            var e = _this4.clone();
+            var e = _this5.clone();
 
-            for (var _i30 = 1; _i30 < t; _i30++) {
-              _this4.multiply(e);
+            for (var _i33 = 1; _i33 < t; _i33++) {
+              _this5.multiply(e);
             }
 
-            return _this4.reduce();
+            return _this5.reduce();
           }, this.compare = function (t, e) {
             void 0 === e && (e = "=");
 
-            var i = _this4.clone().reduce().reorder(),
+            var i = _this5.clone().reduce().reorder(),
                 s = t.clone().reduce().reorder();
 
             switch (e) {
               case "=":
                 if (i.length !== s.length || i.degree() !== s.degree()) return !1;
 
-                for (var _t35 in i.monoms) {
-                  if (!i.monoms[_t35].isEqual(s.monoms[_t35])) return !1;
+                for (var _t36 in i.monoms) {
+                  if (!i.monoms[_t36].isEqual(s.monoms[_t36])) return !1;
                 }
 
                 return !0;
@@ -1529,8 +1735,8 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
               case "same":
                 if (i.length !== s.length || i.degree() !== s.degree()) return !1;
 
-                for (var _t36 in i.monoms) {
-                  if (!i.monoms[_t36].isSameAs(s.monoms[_t36])) return !1;
+                for (var _t37 in i.monoms) {
+                  if (!i.monoms[_t37].isSameAs(s.monoms[_t37])) return !1;
                 }
 
                 return !0;
@@ -1539,90 +1745,36 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
                 return !1;
             }
           }, this.isEqual = function (t) {
-            return _this4.compare(t, "=");
+            return _this5.compare(t, "=");
           }, this.isSameAs = function (t) {
-            return _this4.compare(t, "same");
+            return _this5.compare(t, "same");
           }, this.isOpposedAt = function (t) {
-            return _this4.compare(t.clone().opposed(), "=");
+            return _this5.compare(t.clone().opposed(), "=");
           }, this.isFactorized = function (t) {
-            var e = new h(t);
-            if (!_this4.isEqual(e)) return !1;
+            var e;
+            if (t.match(/\(/g).length !== t.match(/\)/g).length) return !1;
+
+            try {
+              e = new h(t);
+            } catch (t) {
+              return !1;
+            }
+
+            if (!_this5.isEqual(e)) return !1;
             var i = t.replaceAll("*", ""),
                 s = "" + i,
                 n = [];
 
-            var _iterator29 = _createForOfIteratorHelper(i.matchAll(/\(([a-z0-9+\-]+)\)(\^[0-9]*)?/g)),
-                _step29;
-
-            try {
-              for (_iterator29.s(); !(_step29 = _iterator29.n()).done;) {
-                var _t37 = _step29.value;
-                if (void 0 !== _t37[2]) for (var _e37 = 0; _e37 < +_t37[2].substr(1); _e37++) {
-                  n.push(_t37[1]);
-                } else n.push(_t37[1]);
-                s = s.replaceAll(_t37[0], "");
-              }
-            } catch (err) {
-              _iterator29.e(err);
-            } finally {
-              _iterator29.f();
-            }
-
-            "" !== s && n.push(s);
-            var r = n.map(function (t) {
-              return new h(t);
-            });
-
-            _this4.factorize();
-
-            var o = 1;
-            r.length;
-
-            var _iterator30 = _createForOfIteratorHelper(_this4.factors),
-                _step30;
-
-            try {
-              for (_iterator30.s(); !(_step30 = _iterator30.n()).done;) {
-                var _t38 = _step30.value;
-
-                for (var _e38 = 0; _e38 < r.length; _e38++) {
-                  if (_t38.isEqual(r[_e38])) {
-                    r.splice(_e38, 1);
-                    break;
-                  }
-
-                  if (_t38.isOpposedAt(r[_e38])) {
-                    r.splice(_e38, 1), o = -o;
-                    break;
-                  }
-                }
-              }
-            } catch (err) {
-              _iterator30.e(err);
-            } finally {
-              _iterator30.f();
-            }
-
-            return 0 === r.length && 1 === o;
-          }, this.reduce = function () {
-            for (var _t39 = 0; _t39 < _this4._monoms.length; _t39++) {
-              for (var _e39 = _t39 + 1; _e39 < _this4._monoms.length; _e39++) {
-                _this4._monoms[_t39].isSameAs(_this4.monoms[_e39]) && (_this4._monoms[_t39].add(_this4.monoms[_e39]), _this4._monoms.splice(_e39, 1));
-              }
-            }
-
-            _this4._monoms = _this4._monoms.filter(function (t) {
-              return 0 !== t.coefficient.value;
-            });
-
-            var _iterator31 = _createForOfIteratorHelper(_this4._monoms),
+            var _iterator31 = _createForOfIteratorHelper(i.matchAll(/\(([a-z0-9+\-]+)\)(\^[0-9]*)?/g)),
                 _step31;
 
             try {
               for (_iterator31.s(); !(_step31 = _iterator31.n()).done;) {
-                var _t40 = _step31.value;
-
-                _t40.coefficient.reduce();
+                var _t38 = _step31.value;
+                if (void 0 !== _t38[2]) for (var _e46 = 0; _e46 < +_t38[2].substr(1); _e46++) {
+                  n.push(_t38[1]);
+                } else n.push(_t38[1]);
+                s = s.replaceAll(_t38[0], "");
               }
             } catch (err) {
               _iterator31.e(err);
@@ -1630,22 +1782,34 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
               _iterator31.f();
             }
 
-            return 0 === _this4.length ? new h().zero() : _this4;
-          }, this.reorder = function () {
-            var t = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "x";
-            return _this4._monoms.sort(function (e, i) {
-              return i.degree(t) - e.degree(t);
-            }), _this4.reduce();
-          }, this.degree = function (t) {
-            var e = 0;
+            "" !== s && n.push(s);
+            var r = n.map(function (t) {
+              return new h(t);
+            });
 
-            var _iterator32 = _createForOfIteratorHelper(_this4._monoms),
+            _this5.factorize();
+
+            var o = 1;
+            r.length;
+
+            var _iterator32 = _createForOfIteratorHelper(_this5.factors),
                 _step32;
 
             try {
               for (_iterator32.s(); !(_step32 = _iterator32.n()).done;) {
-                var _i31 = _step32.value;
-                e = Math.max(_i31.degree(t), e);
+                var _t39 = _step32.value;
+
+                for (var _e47 = 0; _e47 < r.length; _e47++) {
+                  if (_t39.isEqual(r[_e47])) {
+                    r.splice(_e47, 1);
+                    break;
+                  }
+
+                  if (_t39.isOpposedAt(r[_e47])) {
+                    r.splice(_e47, 1), o = -o;
+                    break;
+                  }
+                }
               }
             } catch (err) {
               _iterator32.e(err);
@@ -1653,17 +1817,37 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
               _iterator32.f();
             }
 
-            return e;
-          }, this.letters = function () {
-            var t = new Set();
+            return 0 === r.length && 1 === o;
+          }, this.isDeveloped = function (t) {
+            var e;
+            if (t.match(/\(/g).length + t.match(/\)/g).length) return !1;
 
-            var _iterator33 = _createForOfIteratorHelper(_this4._monoms),
+            try {
+              e = new h(t);
+            } catch (t) {
+              return !1;
+            }
+
+            return !!_this5.isEqual(e) && t.replaceAll("[*s]", "") === e.reduce().reorder().display;
+          }, this.reduce = function () {
+            for (var _t40 = 0; _t40 < _this5._monoms.length; _t40++) {
+              for (var _e48 = _t40 + 1; _e48 < _this5._monoms.length; _e48++) {
+                _this5._monoms[_t40].isSameAs(_this5.monoms[_e48]) && (_this5._monoms[_t40].add(_this5.monoms[_e48]), _this5._monoms.splice(_e48, 1));
+              }
+            }
+
+            _this5._monoms = _this5._monoms.filter(function (t) {
+              return 0 !== t.coefficient.value;
+            });
+
+            var _iterator33 = _createForOfIteratorHelper(_this5._monoms),
                 _step33;
 
             try {
               for (_iterator33.s(); !(_step33 = _iterator33.n()).done;) {
-                var _e40 = _step33.value;
-                t = new Set([].concat(_toConsumableArray(t), _toConsumableArray(_e40.variables)));
+                var _t41 = _step33.value;
+
+                _t41.coefficient.reduce();
               }
             } catch (err) {
               _iterator33.e(err);
@@ -1671,18 +1855,22 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
               _iterator33.f();
             }
 
-            return _toConsumableArray(t);
-          }, this.replaceBy = function (t, e) {
-            var i;
-            var s = new h().zero();
+            return 0 === _this5.length ? new h().zero() : _this5;
+          }, this.reorder = function () {
+            var t = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "x";
+            return _this5._monoms.sort(function (e, i) {
+              return i.degree(t) - e.degree(t);
+            }), _this5.reduce();
+          }, this.degree = function (t) {
+            var e = 0;
 
-            var _iterator34 = _createForOfIteratorHelper(_this4.monoms),
+            var _iterator34 = _createForOfIteratorHelper(_this5._monoms),
                 _step34;
 
             try {
               for (_iterator34.s(); !(_step34 = _iterator34.n()).done;) {
-                var _n7 = _step34.value;
-                void 0 === _n7.literal[t] || 0 === _n7.literal[t] ? s.add(_n7.clone()) : (i = +_n7.literal[t], delete _n7.literal[t], s.add(e.clone().pow(i).multiply(_n7)));
+                var _i34 = _step34.value;
+                e = Math.max(_i34.degree(t), e);
               }
             } catch (err) {
               _iterator34.e(err);
@@ -1690,22 +1878,17 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
               _iterator34.f();
             }
 
-            return _this4._monoms = s.reduce().reorder().monoms, _this4;
-          }, this.evaluate = function (t) {
-            var e = new o.Fraction().zero();
-            return _this4._monoms.forEach(function (i) {
-              e.add(i.evaluate(t));
-            }), e;
-          }, this.derivative = function (t) {
-            var e = new h();
+            return e;
+          }, this.letters = function () {
+            var t = new Set();
 
-            var _iterator35 = _createForOfIteratorHelper(_this4._monoms),
+            var _iterator35 = _createForOfIteratorHelper(_this5._monoms),
                 _step35;
 
             try {
               for (_iterator35.s(); !(_step35 = _iterator35.n()).done;) {
-                var _i32 = _step35.value;
-                e.add(_i32.derivative(t));
+                var _e49 = _step35.value;
+                t = new Set([].concat(_toConsumableArray(t), _toConsumableArray(_e49.variables)));
               }
             } catch (err) {
               _iterator35.e(err);
@@ -1713,49 +1896,116 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
               _iterator35.f();
             }
 
-            return e;
-          }, this.factorize_OLD = function (t) {
-            _this4._factors = [];
+            return _toConsumableArray(t);
+          }, this.replaceBy = function (t, e) {
+            var i;
+            var s = new h().zero();
 
-            var e = _this4.clone(),
+            var _iterator36 = _createForOfIteratorHelper(_this5.monoms),
+                _step36;
+
+            try {
+              for (_iterator36.s(); !(_step36 = _iterator36.n()).done;) {
+                var _n8 = _step36.value;
+                void 0 === _n8.literal[t] || 0 === _n8.literal[t] ? s.add(_n8.clone()) : (i = +_n8.literal[t], delete _n8.literal[t], s.add(e.clone().pow(i).multiply(_n8)));
+              }
+            } catch (err) {
+              _iterator36.e(err);
+            } finally {
+              _iterator36.f();
+            }
+
+            return _this5._monoms = s.reduce().reorder().monoms, _this5;
+          }, this.evaluate = function (t) {
+            var e = new o.Fraction().zero();
+            return _this5._monoms.forEach(function (i) {
+              e.add(i.evaluate(t));
+            }), e;
+          }, this.derivative = function (t) {
+            var e = new h();
+
+            var _iterator37 = _createForOfIteratorHelper(_this5._monoms),
+                _step37;
+
+            try {
+              for (_iterator37.s(); !(_step37 = _iterator37.n()).done;) {
+                var _i35 = _step37.value;
+                e.add(_i35.derivative(t));
+              }
+            } catch (err) {
+              _iterator37.e(err);
+            } finally {
+              _iterator37.f();
+            }
+
+            return e;
+          }, this.primitive = function (t) {
+            var e = new h();
+
+            var _iterator38 = _createForOfIteratorHelper(_this5._monoms),
+                _step38;
+
+            try {
+              for (_iterator38.s(); !(_step38 = _iterator38.n()).done;) {
+                var _i36 = _step38.value;
+                e.add(_i36.primitive(t));
+              }
+            } catch (err) {
+              _iterator38.e(err);
+            } finally {
+              _iterator38.f();
+            }
+
+            return e;
+          }, this.integrate = function (t, e, i) {
+            var s = _this5.primitive(i);
+
+            void 0 === i && (i = "x");
+            var n = {},
+                r = {};
+            return n[i] = t, r[i] = e, s.evaluate(r).subtract(s.evaluate(n));
+          }, this.factorize_OLD = function (t) {
+            _this5._factors = [];
+
+            var e = _this5.clone(),
                 i = 0;
 
-            e.monomByDegree().coefficient.numerator < 0 && _this4._factors.push(new h("-1"));
+            e.monomByDegree().coefficient.numerator < 0 && _this5._factors.push(new h("-1"));
             var s = e.commonMonom();
 
             if (!s.isOne()) {
-              var _t41 = new h();
+              var _t42 = new h();
 
-              _t41.monoms = [s], 0 === _this4._factors.length ? _this4._factors.push(_t41) : (_this4._factors = [], _this4._factors.push(_t41.opposed())), e = e.euclidian(_t41).quotient, i = _t41.degree();
+              _t42.monoms = [s], 0 === _this5._factors.length ? _this5._factors.push(_t42) : (_this5._factors = [], _this5._factors.push(_t42.opposed())), e = e.euclidian(_t42).quotient, i = _t42.degree();
             }
 
-            if (e.degree() <= 1) _this4._factors.push(e.clone());else {
+            if (e.degree() <= 1) _this5._factors.push(e.clone());else {
               var _s6,
-                  _n8 = new o.Fraction(),
+                  _n9 = new o.Fraction(),
                   _r4 = e.degree();
 
               t = void 0 === t ? 20 : t;
 
               for (var _o = 1; _o <= t; _o++) {
                 for (var l = -t; l <= t; l++) {
-                  if (_n8.parse(-l, _o), e.evaluate({
-                    x: _n8
+                  if (_n9.parse(-l, _o), e.evaluate({
+                    x: _n9
                   })) for (_s6 = new h("".concat(_o, "x+").concat(l)); 0 === e.evaluate({
-                    x: _n8
+                    x: _n9
                   }).value;) {
-                    _this4._factors.push(_s6.clone()), i++, e = e.euclidian(_s6).quotient;
+                    _this5._factors.push(_s6.clone()), i++, e = e.euclidian(_s6).quotient;
                   }
-                  if (i > _r4) return _this4;
+                  if (i > _r4) return _this5;
                 }
               }
 
-              if (e.degree() > 1) return _this4._factors.push(e.clone()), _this4;
+              if (e.degree() > 1) return _this5._factors.push(e.clone()), _this5;
             }
-            return _this4;
+            return _this5;
           }, this.factorize = function (t) {
             var e,
                 i = [],
-                s = _this4.clone().reorder(),
+                s = _this5.clone().reorder(),
                 n = s.commonMonom();
 
             n.isOne() || (e = new h(), e.monoms = [n], i = [e.clone()], s = s.euclidian(e).quotient);
@@ -1768,124 +2018,32 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
               }
 
               {
-                var _t42 = s.monoms[0].dividers,
-                    _e41 = s.monoms[s.monoms.length - 1].dividers;
+                var _t43 = s.monoms[0].dividers,
+                    _e50 = s.monoms[s.monoms.length - 1].dividers;
 
-                var _iterator36 = _createForOfIteratorHelper(_t42),
-                    _step36;
-
-                try {
-                  for (_iterator36.s(); !(_step36 = _iterator36.n()).done;) {
-                    var _n9 = _step36.value;
-
-                    var _iterator37 = _createForOfIteratorHelper(_e41),
-                        _step37;
-
-                    try {
-                      for (_iterator37.s(); !(_step37 = _iterator37.n()).done;) {
-                        var _t43 = _step37.value;
-
-                        var _e42 = void 0,
-                            _r5 = new h();
-
-                        _r5.monoms = [_n9.clone(), _t43.clone()], _e42 = s.euclidian(_r5), _e42.reminder.isZero() ? (s = _e42.quotient.clone(), i.push(_r5)) : (_r5.monoms = [_n9.clone(), _t43.clone().opposed()], _e42 = s.euclidian(_r5), _e42.reminder.isZero() && (s = _e42.quotient.clone(), i.push(_r5)));
-                      }
-                    } catch (err) {
-                      _iterator37.e(err);
-                    } finally {
-                      _iterator37.f();
-                    }
-                  }
-                } catch (err) {
-                  _iterator36.e(err);
-                } finally {
-                  _iterator36.f();
-                }
-              }
-            }
-
-            return _this4.factors = i, i;
-          }, this._factorize2ndDegree = function (t) {
-            var e, i, s, n, r, o, l, a, u;
-            if (1 === _this4.numberOfVars) return s = _this4.monomByDegree(2, t).coefficient, n = _this4.monomByDegree(1, t).coefficient, r = _this4.monomByDegree(0, t).coefficient, o = n.clone().pow(2).subtract(s.clone().multiply(r).multiply(4)), o.isZero() ? (l = n.clone().opposed().divide(s.clone().multiply(2)), e = new h(t).subtract(l.display).multiply(l.denominator), i = new h(t).subtract(l.display).multiply(l.denominator), u = s.divide(l.denominator).divide(l.denominator), u.isOne() ? [e, i] : [new h(u.display), e, i]) : o.isPositive() && o.isSquare() ? (l = n.clone().opposed().add(o.clone().sqrt()).divide(s.clone().multiply(2)), a = n.clone().opposed().subtract(o.clone().sqrt()).divide(s.clone().multiply(2)), u = s.divide(l.denominator).divide(a.denominator), u.isOne() ? [new h(t).subtract(l.display).multiply(l.denominator), new h(t).subtract(a.display).multiply(a.denominator)] : [new h(u.display), new h(t).subtract(l.display).multiply(l.denominator), new h(t).subtract(a.display).multiply(a.denominator)]) : [_this4.clone()];
-
-            if (s = _this4.monomByDegree(2, t), n = _this4.monomByDegree(1, t), r = _this4.monomByDegree(0, t), s.isLitteralSquare() && r.isLitteralSquare() && n.clone().pow(2).isSameAs(s.clone().multiply(r))) {
-              var _t44,
-                  _e43 = new h("x", s.coefficient, n.coefficient, r.coefficient)._factorize2ndDegree("x"),
-                  _i33 = [];
-
-              if (_e43.length >= 2) {
-                var _iterator38 = _createForOfIteratorHelper(_e43),
-                    _step38;
-
-                try {
-                  for (_iterator38.s(); !(_step38 = _iterator38.n()).done;) {
-                    var _n10 = _step38.value;
-                    0 === _n10.degree() ? _i33.push(_n10.clone()) : (_t44 = _n10.clone(), _t44.monoms[0].literal = s.literalSqrt, _t44.monoms[1].literal = r.literalSqrt, _i33.push(_t44.clone()));
-                  }
-                } catch (err) {
-                  _iterator38.e(err);
-                } finally {
-                  _iterator38.f();
-                }
-
-                return _i33;
-              }
-            }
-
-            return [_this4.clone()];
-          }, this._factorizeByGroups = function () {
-            return [];
-          }, this.getZeroes = function () {
-            switch (_this4.degree()) {
-              case 0:
-                return 0 === _this4._monoms[0].coefficient.value ? [!0] : [!1];
-
-              case 1:
-                if (1 === _this4._monoms.length) return [new o.Fraction().zero()];
-                {
-                  var _t46 = _this4.clone().reduce().reorder();
-
-                  return [_t46.monoms[1].coefficient.opposed().divide(_t46.monoms[0].coefficient)];
-                }
-
-              default:
-                0 === _this4._factors.length && _this4.factorize();
-                var _t45 = [],
-                    _e44 = [];
-
-                var _iterator39 = _createForOfIteratorHelper(_this4._factors),
+                var _iterator39 = _createForOfIteratorHelper(_t43),
                     _step39;
 
                 try {
                   for (_iterator39.s(); !(_step39 = _iterator39.n()).done;) {
-                    var _i34 = _step39.value;
-                    if (_i34.degree() > 2) ;else if (2 === _i34.degree()) {
-                      var _e45 = _i34.monomByDegree(2).coefficient,
-                          _s7 = _i34.monomByDegree(1).coefficient,
-                          _n11 = _i34.monomByDegree(0).coefficient,
-                          _r6 = _s7.clone().pow(2).subtract(_e45.clone().multiply(_n11).multiply(4));
+                    var _n10 = _step39.value;
 
-                      if (_r6.value > 0) {
-                        var _i35 = (-_s7.value + Math.sqrt(_r6.value)) / (2 * _e45.value),
-                            _n12 = (-_s7.value - Math.sqrt(_r6.value)) / (2 * _e45.value);
+                    var _iterator40 = _createForOfIteratorHelper(_e50),
+                        _step40;
 
-                        _t45.push(new o.Fraction(_i35.toFixed(3)).reduce()), _t45.push(new o.Fraction(_n12.toFixed(3)).reduce());
-                      } else 0 === _r6.value || console.log("No zero for ", _i34.tex);
-                    } else {
-                      var _iterator40 = _createForOfIteratorHelper(_i34.getZeroes()),
-                          _step40;
+                    try {
+                      for (_iterator40.s(); !(_step40 = _iterator40.n()).done;) {
+                        var _t44 = _step40.value;
 
-                      try {
-                        for (_iterator40.s(); !(_step40 = _iterator40.n()).done;) {
-                          var _s8 = _step40.value;
-                          !1 !== _s8 && !0 !== _s8 && -1 === _e44.indexOf(_s8.frac) && (_t45.push(_s8), _e44.push(_s8.frac));
-                        }
-                      } catch (err) {
-                        _iterator40.e(err);
-                      } finally {
-                        _iterator40.f();
+                        var _e51 = void 0,
+                            _r5 = new h();
+
+                        _r5.monoms = [_n10.clone(), _t44.clone()], _e51 = s.euclidian(_r5), _e51.reminder.isZero() ? (s = _e51.quotient.clone(), i.push(_r5)) : (_r5.monoms = [_n10.clone(), _t44.clone().opposed()], _e51 = s.euclidian(_r5), _e51.reminder.isZero() && (s = _e51.quotient.clone(), i.push(_r5)));
                       }
+                    } catch (err) {
+                      _iterator40.e(err);
+                    } finally {
+                      _iterator40.f();
                     }
                   }
                 } catch (err) {
@@ -1893,80 +2051,115 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
                 } finally {
                   _iterator39.f();
                 }
+              }
+            }
 
-                return _t45;
+            return _this5.factors = i, i;
+          }, this._factorize2ndDegree = function (t) {
+            var e, i, s, n, r, o, l, a, c;
+            if (1 === _this5.numberOfVars) return s = _this5.monomByDegree(2, t).coefficient, n = _this5.monomByDegree(1, t).coefficient, r = _this5.monomByDegree(0, t).coefficient, o = n.clone().pow(2).subtract(s.clone().multiply(r).multiply(4)), o.isZero() ? (l = n.clone().opposed().divide(s.clone().multiply(2)), e = new h(t).subtract(l.display).multiply(l.denominator), i = new h(t).subtract(l.display).multiply(l.denominator), c = s.divide(l.denominator).divide(l.denominator), c.isOne() ? [e, i] : [new h(c.display), e, i]) : o.isPositive() && o.isSquare() ? (l = n.clone().opposed().add(o.clone().sqrt()).divide(s.clone().multiply(2)), a = n.clone().opposed().subtract(o.clone().sqrt()).divide(s.clone().multiply(2)), c = s.divide(l.denominator).divide(a.denominator), c.isOne() ? [new h(t).subtract(l.display).multiply(l.denominator), new h(t).subtract(a.display).multiply(a.denominator)] : [new h(c.display), new h(t).subtract(l.display).multiply(l.denominator), new h(t).subtract(a.display).multiply(a.denominator)]) : [_this5.clone()];
+
+            if (s = _this5.monomByDegree(2, t), n = _this5.monomByDegree(1, t), r = _this5.monomByDegree(0, t), s.isLitteralSquare() && r.isLitteralSquare() && n.clone().pow(2).isSameAs(s.clone().multiply(r))) {
+              var _t45,
+                  _e52 = new h("x", s.coefficient, n.coefficient, r.coefficient)._factorize2ndDegree("x"),
+                  _i37 = [];
+
+              if (_e52.length >= 2) {
+                var _iterator41 = _createForOfIteratorHelper(_e52),
+                    _step41;
+
+                try {
+                  for (_iterator41.s(); !(_step41 = _iterator41.n()).done;) {
+                    var _n11 = _step41.value;
+                    0 === _n11.degree() ? _i37.push(_n11.clone()) : (_t45 = _n11.clone(), _t45.monoms[0].literal = s.literalSqrt, _t45.monoms[1].literal = r.literalSqrt, _i37.push(_t45.clone()));
+                  }
+                } catch (err) {
+                  _iterator41.e(err);
+                } finally {
+                  _iterator41.f();
+                }
+
+                return _i37;
+              }
+            }
+
+            return [_this5.clone()];
+          }, this._factorizeByGroups = function () {
+            return [];
+          }, this.getZeroes = function () {
+            switch (_this5.degree()) {
+              case 0:
+                return 0 === _this5._monoms[0].coefficient.value ? [!0] : [!1];
+
+              case 1:
+                if (1 === _this5._monoms.length) return [new o.Fraction().zero()];
+                {
+                  var _t47 = _this5.clone().reduce().reorder();
+
+                  return [_t47.monoms[1].coefficient.opposed().divide(_t47.monoms[0].coefficient)];
+                }
+
+              default:
+                0 === _this5._factors.length && _this5.factorize();
+                var _t46 = [],
+                    _e53 = [];
+
+                var _iterator42 = _createForOfIteratorHelper(_this5._factors),
+                    _step42;
+
+                try {
+                  for (_iterator42.s(); !(_step42 = _iterator42.n()).done;) {
+                    var _i38 = _step42.value;
+                    if (_i38.degree() > 2) ;else if (2 === _i38.degree()) {
+                      var _e54 = _i38.monomByDegree(2).coefficient,
+                          _s7 = _i38.monomByDegree(1).coefficient,
+                          _n12 = _i38.monomByDegree(0).coefficient,
+                          _r6 = _s7.clone().pow(2).subtract(_e54.clone().multiply(_n12).multiply(4));
+
+                      if (_r6.value > 0) {
+                        var _i39 = (-_s7.value + Math.sqrt(_r6.value)) / (2 * _e54.value),
+                            _n13 = (-_s7.value - Math.sqrt(_r6.value)) / (2 * _e54.value);
+
+                        _t46.push(new o.Fraction(_i39.toFixed(3)).reduce()), _t46.push(new o.Fraction(_n13.toFixed(3)).reduce());
+                      } else 0 === _r6.value || console.log("No zero for ", _i38.tex);
+                    } else {
+                      var _iterator43 = _createForOfIteratorHelper(_i38.getZeroes()),
+                          _step43;
+
+                      try {
+                        for (_iterator43.s(); !(_step43 = _iterator43.n()).done;) {
+                          var _s8 = _step43.value;
+                          !1 !== _s8 && !0 !== _s8 && -1 === _e53.indexOf(_s8.frac) && (_t46.push(_s8), _e53.push(_s8.frac));
+                        }
+                      } catch (err) {
+                        _iterator43.e(err);
+                      } finally {
+                        _iterator43.f();
+                      }
+                    }
+                  }
+                } catch (err) {
+                  _iterator42.e(err);
+                } finally {
+                  _iterator42.f();
+                }
+
+                return _t46;
             }
 
             return [];
           }, this.monomByDegree = function (t, e) {
-            if (void 0 === t) return _this4.monomByDegree(_this4.degree(e), e);
+            if (void 0 === t) return _this5.monomByDegree(_this5.degree(e), e);
 
-            var i = _this4.clone().reduce();
+            var i = _this5.clone().reduce();
 
-            var _iterator41 = _createForOfIteratorHelper(i._monoms),
-                _step41;
-
-            try {
-              for (_iterator41.s(); !(_step41 = _iterator41.n()).done;) {
-                var _s9 = _step41.value;
-                if (_s9.degree(e) === t) return _s9.clone();
-              }
-            } catch (err) {
-              _iterator41.e(err);
-            } finally {
-              _iterator41.f();
-            }
-
-            return new s.Monom().zero();
-          }, this.monomsByDegree = function (t, e) {
-            if (void 0 === t) return _this4.monomsByDegree(_this4.degree(e));
-            var i = [];
-
-            var s = _this4.clone().reduce();
-
-            var _iterator42 = _createForOfIteratorHelper(s._monoms),
-                _step42;
-
-            try {
-              for (_iterator42.s(); !(_step42 = _iterator42.n()).done;) {
-                var _n13 = _step42.value;
-                _n13.degree(e) === t && i.push(_n13.clone());
-              }
-            } catch (err) {
-              _iterator42.e(err);
-            } finally {
-              _iterator42.f();
-            }
-
-            return i;
-          }, this.monomByLetter = function (t) {
-            var e = _this4.clone().reduce();
-
-            var _iterator43 = _createForOfIteratorHelper(e._monoms),
-                _step43;
-
-            try {
-              for (_iterator43.s(); !(_step43 = _iterator43.n()).done;) {
-                var _i36 = _step43.value;
-                if (_i36.hasLetter(t)) return _i36.clone();
-              }
-            } catch (err) {
-              _iterator43.e(err);
-            } finally {
-              _iterator43.f();
-            }
-
-            return new s.Monom().zero();
-          }, this.getDenominators = function () {
-            var t = [];
-
-            var _iterator44 = _createForOfIteratorHelper(_this4._monoms),
+            var _iterator44 = _createForOfIteratorHelper(i._monoms),
                 _step44;
 
             try {
               for (_iterator44.s(); !(_step44 = _iterator44.n()).done;) {
-                var _e46 = _step44.value;
-                t.push(_e46.coefficient.denominator);
+                var _s9 = _step44.value;
+                if (_s9.degree(e) === t) return _s9.clone();
               }
             } catch (err) {
               _iterator44.e(err);
@@ -1974,17 +2167,20 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
               _iterator44.f();
             }
 
-            return t;
-          }, this.getNumerators = function () {
-            var t = [];
+            return new s.Monom().zero();
+          }, this.monomsByDegree = function (t, e) {
+            if (void 0 === t) return _this5.monomsByDegree(_this5.degree(e));
+            var i = [];
 
-            var _iterator45 = _createForOfIteratorHelper(_this4._monoms),
+            var s = _this5.clone().reduce();
+
+            var _iterator45 = _createForOfIteratorHelper(s._monoms),
                 _step45;
 
             try {
               for (_iterator45.s(); !(_step45 = _iterator45.n()).done;) {
-                var _e47 = _step45.value;
-                t.push(_e47.coefficient.numerator);
+                var _n14 = _step45.value;
+                _n14.degree(e) === t && i.push(_n14.clone());
               }
             } catch (err) {
               _iterator45.e(err);
@@ -1992,52 +2188,17 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
               _iterator45.f();
             }
 
-            return t;
-          }, this.lcmDenominator = function () {
-            var _r$Numeric;
+            return i;
+          }, this.monomByLetter = function (t) {
+            var e = _this5.clone().reduce();
 
-            return (_r$Numeric = r.Numeric).lcm.apply(_r$Numeric, _toConsumableArray(_this4.getDenominators()));
-          }, this.gcdDenominator = function () {
-            var _r$Numeric2;
-
-            return (_r$Numeric2 = r.Numeric).gcd.apply(_r$Numeric2, _toConsumableArray(_this4.getDenominators()));
-          }, this.lcmNumerator = function () {
-            var _r$Numeric3;
-
-            return (_r$Numeric3 = r.Numeric).lcm.apply(_r$Numeric3, _toConsumableArray(_this4.getNumerators()));
-          }, this.gcdNumerator = function () {
-            var _r$Numeric4;
-
-            return (_r$Numeric4 = r.Numeric).gcd.apply(_r$Numeric4, _toConsumableArray(_this4.getNumerators()));
-          }, this.commonMonom = function () {
-            var t,
-                e,
-                i = new s.Monom().one(),
-                n = _this4.degree();
-
-            t = _this4.gcdNumerator(), e = _this4.gcdDenominator(), i.coefficient = new o.Fraction(t, e);
-
-            var _iterator46 = _createForOfIteratorHelper(_this4.variables),
+            var _iterator46 = _createForOfIteratorHelper(e._monoms),
                 _step46;
 
             try {
               for (_iterator46.s(); !(_step46 = _iterator46.n()).done;) {
-                var _t47 = _step46.value;
-                i.setLetter(_t47, n);
-
-                var _iterator47 = _createForOfIteratorHelper(_this4._monoms),
-                    _step47;
-
-                try {
-                  for (_iterator47.s(); !(_step47 = _iterator47.n()).done;) {
-                    var _e48 = _step47.value;
-                    if (i.setLetter(_t47, Math.min(_e48.degree(_t47), i.degree(_t47))), 0 === i.degree(_t47)) break;
-                  }
-                } catch (err) {
-                  _iterator47.e(err);
-                } finally {
-                  _iterator47.f();
-                }
+                var _i40 = _step46.value;
+                if (_i40.hasLetter(t)) return _i40.clone();
               }
             } catch (err) {
               _iterator46.e(err);
@@ -2045,32 +2206,121 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
               _iterator46.f();
             }
 
+            return new s.Monom().zero();
+          }, this.getDenominators = function () {
+            var t = [];
+
+            var _iterator47 = _createForOfIteratorHelper(_this5._monoms),
+                _step47;
+
+            try {
+              for (_iterator47.s(); !(_step47 = _iterator47.n()).done;) {
+                var _e55 = _step47.value;
+                t.push(_e55.coefficient.denominator);
+              }
+            } catch (err) {
+              _iterator47.e(err);
+            } finally {
+              _iterator47.f();
+            }
+
+            return t;
+          }, this.getNumerators = function () {
+            var t = [];
+
+            var _iterator48 = _createForOfIteratorHelper(_this5._monoms),
+                _step48;
+
+            try {
+              for (_iterator48.s(); !(_step48 = _iterator48.n()).done;) {
+                var _e56 = _step48.value;
+                t.push(_e56.coefficient.numerator);
+              }
+            } catch (err) {
+              _iterator48.e(err);
+            } finally {
+              _iterator48.f();
+            }
+
+            return t;
+          }, this.lcmDenominator = function () {
+            var _r$Numeric;
+
+            return (_r$Numeric = r.Numeric).lcm.apply(_r$Numeric, _toConsumableArray(_this5.getDenominators()));
+          }, this.gcdDenominator = function () {
+            var _r$Numeric2;
+
+            return (_r$Numeric2 = r.Numeric).gcd.apply(_r$Numeric2, _toConsumableArray(_this5.getDenominators()));
+          }, this.lcmNumerator = function () {
+            var _r$Numeric3;
+
+            return (_r$Numeric3 = r.Numeric).lcm.apply(_r$Numeric3, _toConsumableArray(_this5.getNumerators()));
+          }, this.gcdNumerator = function () {
+            var _r$Numeric4;
+
+            return (_r$Numeric4 = r.Numeric).gcd.apply(_r$Numeric4, _toConsumableArray(_this5.getNumerators()));
+          }, this.commonMonom = function () {
+            var t,
+                e,
+                i = new s.Monom().one(),
+                n = _this5.degree();
+
+            t = _this5.gcdNumerator(), e = _this5.gcdDenominator(), i.coefficient = new o.Fraction(t, e);
+
+            var _iterator49 = _createForOfIteratorHelper(_this5.variables),
+                _step49;
+
+            try {
+              for (_iterator49.s(); !(_step49 = _iterator49.n()).done;) {
+                var _t48 = _step49.value;
+                i.setLetter(_t48, n);
+
+                var _iterator50 = _createForOfIteratorHelper(_this5._monoms),
+                    _step50;
+
+                try {
+                  for (_iterator50.s(); !(_step50 = _iterator50.n()).done;) {
+                    var _e57 = _step50.value;
+                    if (i.setLetter(_t48, Math.min(_e57.degree(_t48), i.degree(_t48))), 0 === i.degree(_t48)) break;
+                  }
+                } catch (err) {
+                  _iterator50.e(err);
+                } finally {
+                  _iterator50.f();
+                }
+              }
+            } catch (err) {
+              _iterator49.e(err);
+            } finally {
+              _iterator49.f();
+            }
+
             return i;
           }, this.makeItComplicate = function () {
             var t = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
-            if (_this4._texString = "", _this4.degree() < 1) return _this4;
+            if (_this5._texString = "", _this5.degree() < 1) return _this5;
 
-            var e = r.Numeric.randomInt(0, _this4.degree() - 1),
+            var e = r.Numeric.randomInt(0, _this5.degree() - 1),
                 i = new h().rndSimple(e, !1, t > 1, "x", !1, t > 1 ? -1 : 1),
                 s = new h().rndSimple(1, !1, t > 1),
-                n = _this4.clone().subtract(i.clone().multiply(s));
+                n = _this5.clone().subtract(i.clone().multiply(s));
 
-            return n.factorizePartial(!0), _this4._texString = "".concat(i.genDisplay("tex", !1, !0), " \\cdot ").concat(s.genDisplay("tex", !1, !0), " ").concat(n.texString, " "), _this4;
+            return n.factorizePartial(!0), _this5._texString = "".concat(i.genDisplay("tex", !1, !0), " \\cdot ").concat(s.genDisplay("tex", !1, !0), " ").concat(n.texString, " "), _this5;
           }, this.factorizePartial = function (t) {
-            if (_this4._texString = "", _this4.length <= 1) return _this4;
+            if (_this5._texString = "", _this5.length <= 1) return _this5;
             var e, i, n, o, l, a;
 
-            for (var u = 0; u < _this4.length; u++) {
-              e = _this4._monoms[u].clone();
+            for (var c = 0; c < _this5.length; c++) {
+              e = _this5._monoms[c].clone();
 
-              for (var c = u + 1; c < _this4.length; c++) {
-                if (i = _this4._monoms[c].clone(), l = r.Numeric.gcd(e.coefficient.numerator, i.coefficient.numerator), 1 !== l) return n = s.Monom.lcm(e, i), a = 1 === e.coefficient.sign() ? "+" : "-", _this4._texString = "".concat(!0 === t ? a : "+" === a ? "" : a).concat(n.tex), o = new h().add(e.divide(n)).add(i.divide(n)), _this4._texString += o.genDisplay("tex", !1, !0), _this4._texString += _this4.clone().subtract(o.clone().multiply(n)).genDisplay("tex", !0, !1), _this4;
+              for (var u = c + 1; u < _this5.length; u++) {
+                if (i = _this5._monoms[u].clone(), l = r.Numeric.gcd(e.coefficient.numerator, i.coefficient.numerator), 1 !== l) return n = s.Monom.lcm(e, i), a = 1 === e.coefficient.sign() ? "+" : "-", _this5._texString = "".concat(!0 === t ? a : "+" === a ? "" : a).concat(n.tex), o = new h().add(e.divide(n)).add(i.divide(n)), _this5._texString += o.genDisplay("tex", !1, !0), _this5._texString += _this5.clone().subtract(o.clone().multiply(n)).genDisplay("tex", !0, !1), _this5;
               }
             }
 
-            return _this4._texString = _this4.genDisplay("tex", t), _this4;
+            return _this5._texString = _this5.genDisplay("tex", t), _this5;
           }, this.minify = function () {
-            return _this4.multiply(_this4.lcmDenominator()).divide(_this4.gcdNumerator()).reduce(), _this4.reduce();
+            return _this5.multiply(_this5.lcmDenominator()).divide(_this5.gcdNumerator()).reduce(), _this5.reduce();
           }, this.canDivide = function (t) {
             var e = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "x";
             var i = t.degree(),
@@ -2078,9 +2328,9 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
             if (0 === i) return !t.isZero;
 
             if (1 === i) {
-              var _i37 = t.getZeroes();
+              var _i41 = t.getZeroes();
 
-              return !0 !== _i37[0] && !1 !== _i37[0] && (s[e] = _i37[0], 0 === _this4.evaluate(s).value);
+              return !0 !== _i41[0] && !1 !== _i41[0] && (s[e] = _i41[0], 0 === _this5.evaluate(s).value);
             }
 
             return i > 1 && (console.log("Currently, only first degree polynom are supported"), !1);
@@ -2114,18 +2364,18 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
             this.factorize();
             var t = "";
 
-            var _iterator48 = _createForOfIteratorHelper(this.factors),
-                _step48;
+            var _iterator51 = _createForOfIteratorHelper(this.factors),
+                _step51;
 
             try {
-              for (_iterator48.s(); !(_step48 = _iterator48.n()).done;) {
-                var _e49 = _step48.value;
-                _e49.monoms.length > 1 ? t += "(".concat(_e49.tex, ")") : t = _e49.tex + t;
+              for (_iterator51.s(); !(_step51 = _iterator51.n()).done;) {
+                var _e58 = _step51.value;
+                _e58.monoms.length > 1 ? t += "(".concat(_e58.tex, ")") : t = _e58.tex + t;
               }
             } catch (err) {
-              _iterator48.e(err);
+              _iterator51.e(err);
             } finally {
-              _iterator48.f();
+              _iterator51.f();
             }
 
             return t;
@@ -2158,18 +2408,18 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
         }, {
           key: "isMultiVariable",
           get: function get() {
-            var _iterator49 = _createForOfIteratorHelper(this._monoms),
-                _step49;
+            var _iterator52 = _createForOfIteratorHelper(this._monoms),
+                _step52;
 
             try {
-              for (_iterator49.s(); !(_step49 = _iterator49.n()).done;) {
-                var _t48 = _step49.value;
-                if (_t48.variables.length > 1) return !0;
+              for (_iterator52.s(); !(_step52 = _iterator52.n()).done;) {
+                var _t49 = _step52.value;
+                if (_t49.variables.length > 1) return !0;
               }
             } catch (err) {
-              _iterator49.e(err);
+              _iterator52.e(err);
             } finally {
-              _iterator49.f();
+              _iterator52.f();
             }
 
             return !1;
@@ -2179,18 +2429,18 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
           get: function get() {
             var t = [];
 
-            var _iterator50 = _createForOfIteratorHelper(this._monoms),
-                _step50;
+            var _iterator53 = _createForOfIteratorHelper(this._monoms),
+                _step53;
 
             try {
-              for (_iterator50.s(); !(_step50 = _iterator50.n()).done;) {
-                var _e50 = _step50.value;
-                t = t.concat(_e50.variables);
+              for (_iterator53.s(); !(_step53 = _iterator53.n()).done;) {
+                var _e59 = _step53.value;
+                t = t.concat(_e59.variables);
               }
             } catch (err) {
-              _iterator50.e(err);
+              _iterator53.e(err);
             } finally {
-              _iterator50.f();
+              _iterator53.f();
             }
 
             return t = _toConsumableArray(new Set(t)), t;
@@ -2232,62 +2482,76 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
       var s = i(38);
 
       e.Rational = /*#__PURE__*/function () {
-        function _class(t, e) {
-          var _this5 = this;
+        function _class2(t, e) {
+          var _this6 = this;
 
-          _classCallCheck(this, _class);
+          _classCallCheck(this, _class2);
 
           this.clone = function () {
-            return _this5._numerator = _this5._numerator.clone(), _this5._denominator = _this5._denominator.clone(), _this5;
+            return _this6._numerator = _this6._numerator.clone(), _this6._denominator = _this6._denominator.clone(), _this6;
           }, this.domain = function () {
-            var t = _this5._denominator.getZeroes();
+            var t = _this6._denominator.getZeroes();
 
             return 0 === t.length || !1 === t[0] ? "\\mathbb{R}" : !0 === t[0] ? "\\varnothing" : "\\mathbb{R}\\setminus\\left{" + t.map(function (t) {
               return "boolean" == typeof t ? "" : t.frac;
             }).join(";") + "\\right}";
           }, this.amplify = function (t) {
-            return _this5._numerator.multiply(t), _this5._denominator.multiply(t), _this5;
+            return _this6._numerator.multiply(t), _this6._denominator.multiply(t), _this6;
           }, this.simplify = function (t) {
-            var e = _this5._numerator.euclidian(t);
+            var e = _this6._numerator.euclidian(t);
 
-            if (!e.reminder.isZero()) return _this5;
+            if (!e.reminder.isZero()) return _this6;
 
-            var i = _this5._denominator.euclidian(t);
+            var i = _this6._denominator.euclidian(t);
 
-            return i.reminder.isZero() ? (_this5._numerator = e.quotient, _this5._denominator = i.quotient, _this5) : _this5;
+            return i.reminder.isZero() ? (_this6._numerator = e.quotient, _this6._denominator = i.quotient, _this6) : _this6;
           }, this.reduce = function () {
-            console.log(_this5._numerator.tex), _this5._numerator.factorize(), console.log(_this5._numerator.factors.map(function (t) {
+            console.log(_this6._numerator.tex), _this6._numerator.factorize(), console.log(_this6._numerator.factors.map(function (t) {
               return t.tex;
             }));
 
-            var _iterator51 = _createForOfIteratorHelper(_this5._numerator.factors),
-                _step51;
+            var _iterator54 = _createForOfIteratorHelper(_this6._numerator.factors),
+                _step54;
 
             try {
-              for (_iterator51.s(); !(_step51 = _iterator51.n()).done;) {
-                var _t49 = _step51.value;
+              for (_iterator54.s(); !(_step54 = _iterator54.n()).done;) {
+                var _t50 = _step54.value;
 
-                _this5.simplify(_t49);
+                _this6.simplify(_t50);
               }
             } catch (err) {
-              _iterator51.e(err);
+              _iterator54.e(err);
             } finally {
-              _iterator51.f();
+              _iterator54.f();
             }
 
-            return _this5;
+            return _this6;
           }, this.opposed = function () {
-            return _this5._numerator.opposed(), _this5;
+            return _this6._numerator.opposed(), _this6;
           }, this.add = function (t) {
-            var e = _this5._denominator.clone();
+            var e = _this6._denominator.clone();
 
-            return _this5.amplify(t._denominator), _this5._numerator.add(t._numerator.clone().multiply(e)), _this5;
+            return _this6.amplify(t._denominator), _this6._numerator.add(t._numerator.clone().multiply(e)), _this6;
           }, this.subtract = function (t) {
-            return _this5.add(t.clone().opposed());
+            return _this6.add(t.clone().opposed());
+          }, this.limits = function (t, e) {
+            if (t !== 1 / 0 && t !== -1 / 0) return _this6._numerator.evaluate({
+              letter: t
+            }).divide(_this6._denominator.evaluate({
+              letter: t
+            }));
+            {
+              var _i42 = _this6._numerator.monomByDegree(_this6._numerator.degree(e), e),
+                  _s10 = _this6._denominator.monomByDegree(_this6._denominator.degree(e), e);
+
+              if (_i42.divide(_s10), _i42.degree(e) > 0) return _i42.coefficient.sign() * Math.pow(t > 0 ? 1 : -1, _i42.degree(e) % 2) == 1 ? 1 / 0 : -1 / 0;
+              if (0 === _i42.degree(e)) return _i42.coefficient;
+              if (_i42.degree(e) > 0) return _i42.coefficient.sign() * Math.pow(-1, _i42.degree(e) % 2) == 1 ? 0 : -0;
+            }
           }, this._numerator = t ? t.clone() : new s.Polynom(), this._denominator = e ? e.clone() : new s.Polynom();
         }
 
-        _createClass(_class, [{
+        _createClass(_class2, [{
           key: "tex",
           get: function get() {
             return "\\dfrac{ ".concat(this._numerator.tex, " }{ ").concat(this._denominator.tex, " }");
@@ -2309,7 +2573,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
           }
         }]);
 
-        return _class;
+        return _class2;
       }();
     },
     506: function _(t, e, i) {
@@ -2320,13 +2584,13 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
       var n = /*#__PURE__*/function () {
         function n(t, e) {
-          var _this6 = this;
+          var _this7 = this;
 
           _classCallCheck(this, n);
 
           return this.parse = function (t, e) {
             var i;
-            if (null === t) return _this6._numerator = 0, _this6._denominator = 1, _this6;
+            if (null === t) return _this7._numerator = 0, _this7._denominator = 1, _this7;
 
             switch (_typeof(t)) {
               case "string":
@@ -2334,129 +2598,129 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
                 if (i.map(function (t) {
                   return "" === t || isNaN(Number(t));
                 }).includes(!0)) throw "Not a number";
-                if (1 === i.length) return _this6.parse(+i[0]);
-                2 === i.length ? "0" === i[1] ? (_this6._numerator = NaN, _this6._denominator = 1) : (_this6._numerator = +i[0], _this6._denominator = +i[1]) : (_this6._numerator = NaN, _this6._denominator = 1);
+                if (1 === i.length) return _this7.parse(+i[0]);
+                2 === i.length ? "0" === i[1] ? (_this7._numerator = NaN, _this7._denominator = 1) : (_this7._numerator = +i[0], _this7._denominator = +i[1]) : (_this7._numerator = NaN, _this7._denominator = 1);
                 break;
 
               case "number":
-                if (Number.isSafeInteger(t)) _this6._numerator = +t, void 0 !== e && Number.isSafeInteger(e) ? _this6._denominator = +e : _this6._denominator = 1;else {
-                  var _i38 = t.toString().split(".")[1].length;
-                  void 0 === e ? (_this6._numerator = t * Math.pow(10, _i38), _this6._denominator = Math.pow(10, _i38)) : Number.isSafeInteger(e) && (_this6._numerator = t * Math.pow(10, _i38) - Math.floor(t * Math.pow(10, _i38 - e)), _this6.denominator = Math.pow(10, _i38) - Math.pow(10, _i38 - e));
+                if (Number.isSafeInteger(t)) _this7._numerator = +t, void 0 !== e && Number.isSafeInteger(e) ? _this7._denominator = +e : _this7._denominator = 1;else {
+                  var _i43 = t.toString().split(".")[1].length;
+                  void 0 === e ? (_this7._numerator = t * Math.pow(10, _i43), _this7._denominator = Math.pow(10, _i43)) : Number.isSafeInteger(e) && (_this7._numerator = t * Math.pow(10, _i43) - Math.floor(t * Math.pow(10, _i43 - e)), _this7.denominator = Math.pow(10, _i43) - Math.pow(10, _i43 - e));
                 }
                 break;
 
               case "object":
-                t.isFraction && (_this6._numerator = +t.numerator, _this6._denominator = +t.denominator);
+                t.isFraction && (_this7._numerator = +t.numerator, _this7._denominator = +t.denominator);
             }
 
-            return _this6;
+            return _this7;
           }, this.clone = function () {
             var t = new n();
-            return t.numerator = +_this6._numerator, t.denominator = +_this6._denominator, t;
+            return t.numerator = +_this7._numerator, t.denominator = +_this7._denominator, t;
           }, this.zero = function () {
-            return _this6._numerator = 0, _this6._denominator = 1, _this6;
+            return _this7._numerator = 0, _this7._denominator = 1, _this7;
           }, this.one = function () {
-            return _this6._numerator = 1, _this6._denominator = 1, _this6;
+            return _this7._numerator = 1, _this7._denominator = 1, _this7;
           }, this.infinite = function () {
-            return _this6._numerator = 1 / 0, _this6._denominator = 1, _this6;
+            return _this7._numerator = 1 / 0, _this7._denominator = 1, _this7;
           }, this.invalid = function () {
-            return _this6._numerator = NaN, _this6._denominator = 1, _this6;
+            return _this7._numerator = NaN, _this7._denominator = 1, _this7;
           }, this.opposed = function () {
-            return _this6._numerator = -_this6._numerator, _this6;
+            return _this7._numerator = -_this7._numerator, _this7;
           }, this.add = function (t) {
-            var e = _this6._numerator,
-                i = _this6._denominator;
-            return _this6._numerator = e * t.denominator + t.numerator * i, _this6._denominator = i * t.denominator, _this6.reduce();
+            var e = _this7._numerator,
+                i = _this7._denominator;
+            return _this7._numerator = e * t.denominator + t.numerator * i, _this7._denominator = i * t.denominator, _this7.reduce();
           }, this.subtract = function (t) {
-            return _this6.add(t.clone().opposed());
+            return _this7.add(t.clone().opposed());
           }, this.multiply = function (t) {
             var e = new n(t);
-            return _this6._numerator = _this6._numerator * e.numerator, _this6._denominator = _this6._denominator * e.denominator, _this6.reduce();
+            return _this7._numerator = _this7._numerator * e.numerator, _this7._denominator = _this7._denominator * e.denominator, _this7.reduce();
           }, this.divide = function (t) {
             var e = new n(t);
             if (0 === e.numerator) return new n().infinite();
-            var i = +_this6._numerator,
-                s = +_this6._denominator;
-            return _this6._numerator = i * e.denominator, _this6._denominator = s * e.numerator, _this6.reduce();
+            var i = +_this7._numerator,
+                s = +_this7._denominator;
+            return _this7._numerator = i * e.denominator, _this7._denominator = s * e.numerator, _this7.reduce();
           }, this.invert = function () {
-            var t = +_this6._numerator,
-                e = +_this6._denominator;
-            return _this6._numerator = e, _this6._denominator = t, _this6;
+            var t = +_this7._numerator,
+                e = +_this7._denominator;
+            return _this7._numerator = e, _this7._denominator = t, _this7;
           }, this.pow = function (t) {
-            return Number.isSafeInteger(t) ? (_this6.reduce(), t < 0 && _this6.invert(), _this6._numerator = Math.pow(_this6._numerator, Math.abs(t)), _this6._denominator = Math.pow(_this6._denominator, Math.abs(t)), _this6) : _this6.invalid();
+            return Number.isSafeInteger(t) ? (_this7.reduce(), t < 0 && _this7.invert(), _this7._numerator = Math.pow(_this7._numerator, Math.abs(t)), _this7._denominator = Math.pow(_this7._denominator, Math.abs(t)), _this7) : _this7.invalid();
           }, this.root = function (t) {
-            return 0 === t || (t < 0 && _this6.invert(), Math.pow(_this6._numerator, Math.abs(1 / t)), Math.pow(_this6._denominator, Math.abs(1 / t)), _this6._numerator = Math.pow(_this6._numerator, Math.abs(1 / t)), _this6._denominator = Math.pow(_this6._denominator, Math.abs(1 / t))), _this6;
+            return 0 === t || (t < 0 && _this7.invert(), Math.pow(_this7._numerator, Math.abs(1 / t)), Math.pow(_this7._denominator, Math.abs(1 / t)), _this7._numerator = Math.pow(_this7._numerator, Math.abs(1 / t)), _this7._denominator = Math.pow(_this7._denominator, Math.abs(1 / t))), _this7;
           }, this.sqrt = function () {
-            return _this6.root(2);
+            return _this7.root(2);
           }, this.abs = function () {
-            return _this6._numerator = Math.abs(_this6._numerator), _this6._denominator = Math.abs(_this6._denominator), _this6;
+            return _this7._numerator = Math.abs(_this7._numerator), _this7._denominator = Math.abs(_this7._denominator), _this7;
           }, this.reduce = function () {
-            var t = s.Numeric.gcd(_this6._numerator, _this6._denominator);
-            return _this6._numerator = _this6._numerator / t, _this6._denominator = _this6._denominator / t, _this6._denominator < 0 && (_this6._denominator = -_this6._denominator, _this6._numerator = -_this6._numerator), _this6;
+            var t = s.Numeric.gcd(_this7._numerator, _this7._denominator);
+            return _this7._numerator = _this7._numerator / t, _this7._denominator = _this7._denominator / t, _this7._denominator < 0 && (_this7._denominator = -_this7._denominator, _this7._numerator = -_this7._numerator), _this7;
           }, this.amplify = function (t) {
-            return Number.isSafeInteger(t) && (_this6._numerator *= t, _this6._denominator *= t), _this6;
+            return Number.isSafeInteger(t) && (_this7._numerator *= t, _this7._denominator *= t), _this7;
           }, this.compare = function (t, e) {
             switch (void 0 === e && (e = "="), e) {
               case ">":
-                return _this6.value > t.value;
+                return _this7.value > t.value;
 
               case ">=":
-                return _this6.value >= t.value;
+                return _this7.value >= t.value;
 
               case "<":
-                return _this6.value < t.value;
+                return _this7.value < t.value;
 
               case "<=":
-                return _this6.value <= t.value;
+                return _this7.value <= t.value;
 
               case "=":
-                return _this6.value === t.value;
+                return _this7.value === t.value;
 
               case "<>":
-                return _this6.value !== t.value;
+                return _this7.value !== t.value;
 
               default:
                 return !1;
             }
           }, this.lesser = function (t) {
-            return _this6.compare(t, "<");
+            return _this7.compare(t, "<");
           }, this.leq = function (t) {
-            return _this6.compare(t, "<=");
+            return _this7.compare(t, "<=");
           }, this.greater = function (t) {
-            return _this6.compare(t, ">");
+            return _this7.compare(t, ">");
           }, this.geq = function (t) {
-            return _this6.compare(t, ">=");
+            return _this7.compare(t, ">=");
           }, this.isEqual = function (t) {
-            return _this6.compare(t, "=");
+            return _this7.compare(t, "=");
           }, this.isDifferent = function (t) {
-            return _this6.compare(t, "<>");
+            return _this7.compare(t, "<>");
           }, this.isOpposed = function (t) {
-            return _this6.isEqual(t.clone().opposed());
+            return _this7.isEqual(t.clone().opposed());
           }, this.isInverted = function (t) {
-            return _this6.isEqual(new n().one().divide(t.clone()));
+            return _this7.isEqual(new n().one().divide(t.clone()));
           }, this.isZero = function () {
-            return 0 === _this6._numerator;
+            return 0 === _this7._numerator;
           }, this.isOne = function () {
-            return 1 === _this6._numerator && 1 === _this6._denominator;
+            return 1 === _this7._numerator && 1 === _this7._denominator;
           }, this.isPositive = function () {
-            return 1 === _this6.sign();
+            return 1 === _this7.sign();
           }, this.isNegative = function () {
-            return -1 === _this6.sign();
+            return -1 === _this7.sign();
           }, this.isNaN = function () {
-            return isNaN(_this6._numerator);
+            return isNaN(_this7._numerator);
           }, this.isInfinity = function () {
-            return _this6._numerator === 1 / 0;
+            return _this7._numerator === 1 / 0;
           }, this.isFinite = function () {
-            return !_this6.isInfinity();
+            return !_this7.isInfinity();
           }, this.isSquare = function () {
-            return Math.sqrt(_this6._numerator) % 1 == 0 && Math.sqrt(_this6._denominator) % 1 == 0;
+            return Math.sqrt(_this7._numerator) % 1 == 0 && Math.sqrt(_this7._denominator) % 1 == 0;
           }, this.isReduced = function () {
-            return 1 === Math.abs(s.Numeric.gcd(_this6._numerator, _this6._denominator));
+            return 1 === Math.abs(s.Numeric.gcd(_this7._numerator, _this7._denominator));
           }, this.sign = function () {
-            return _this6._numerator * _this6._denominator >= 0 ? 1 : -1;
+            return _this7._numerator * _this7._denominator >= 0 ? 1 : -1;
           }, this.areEquals = function () {
-            for (var _e51 = 0; _e51 < arguments.length; _e51++) {
-              if (!_this6.isEqual(_e51 < 0 || arguments.length <= _e51 ? undefined : arguments[_e51])) return !1;
+            for (var _e60 = 0; _e60 < arguments.length; _e60++) {
+              if (!_this7.isEqual(_e60 < 0 || arguments.length <= _e60 ? undefined : arguments[_e60])) return !1;
             }
 
             return !0;
@@ -2520,29 +2784,29 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
       Object.defineProperty(e, "__esModule", {
         value: !0
       }), e.Nthroot = void 0, e.Nthroot = /*#__PURE__*/function () {
-        function _class2() {
-          var _this7 = this;
+        function _class3() {
+          var _this8 = this;
 
-          _classCallCheck(this, _class2);
+          _classCallCheck(this, _class3);
 
           this.parse = function (t, e, i) {
-            return _this7._coefficient = void 0 === i ? 1 : i, _this7._nth = void 0 === e ? 2 : e, _this7._radical = void 0 === t ? 1 : t, _this7._nth % 2 == 0 && _this7._radical < 0 && (_this7._isValid = !1), _this7;
+            return _this8._coefficient = void 0 === i ? 1 : i, _this8._nth = void 0 === e ? 2 : e, _this8._radical = void 0 === t ? 1 : t, _this8._nth % 2 == 0 && _this8._radical < 0 && (_this8._isValid = !1), _this8;
           }, this.reduce = function () {
-            var t = Math.floor(Math.pow(_this7._radical, 1 / _this7._nth));
+            var t = Math.floor(Math.pow(_this8._radical, 1 / _this8._nth));
 
             for (; t > 1;) {
-              _this7._radical % Math.pow(t, _this7._nth) != 0 ? t-- : (_this7._coefficient *= t, _this7._radical = _this7._radical / Math.pow(t, _this7._nth), t = Math.floor(Math.pow(_this7._radical, 1 / _this7._nth)));
+              _this8._radical % Math.pow(t, _this8._nth) != 0 ? t-- : (_this8._coefficient *= t, _this8._radical = _this8._radical / Math.pow(t, _this8._nth), t = Math.floor(Math.pow(_this8._radical, 1 / _this8._nth)));
             }
 
-            return _this7;
+            return _this8;
           }, this.multiply = function (t) {
-            return _this7._radical *= t.radical, _this7.reduce();
+            return _this8._radical *= t.radical, _this8.reduce();
           }, this.hasRadical = function () {
-            return !(1 === _this7._radical || 0 === _this7._radical || !1 === _this7._isValid);
+            return !(1 === _this8._radical || 0 === _this8._radical || !1 === _this8._isValid);
           }, this._radical = 1, this._coefficient = 1, this._nth = 2, this._isValid = !0;
         }
 
-        _createClass(_class2, [{
+        _createClass(_class3, [{
           key: "radical",
           get: function get() {
             return this._radical;
@@ -2579,7 +2843,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
           }
         }]);
 
-        return _class2;
+        return _class3;
       }();
     },
     9: function _(t, e, i) {
@@ -2595,7 +2859,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
       var a = /*#__PURE__*/function () {
         function a() {
-          var _this8 = this;
+          var _this9 = this;
 
           _classCallCheck(this, a);
 
@@ -2608,52 +2872,52 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
               t[_key20] = arguments[_key20];
             }
 
-            if (_this8._exists = !1, 3 === t.length) return _this8.parseByCoefficient(t[0], t[1], t[2]);
+            if (_this9._exists = !1, 3 === t.length) return _this9.parseByCoefficient(t[0], t[1], t[2]);
 
             if (2 === t.length) {
-              if (t[0].isPoint && t[1].isVector) return _this8.parseByPointAndVector(t[0], t[1]);
-              if (t[0].isPoint && t[1].isPoint) return _this8.parseByPointAndVector(t[0], new n.Vector(t[0], t[1]));
+              if (t[0].isPoint && t[1].isVector) return _this9.parseByPointAndVector(t[0], t[1]);
+              if (t[0].isPoint && t[1].isPoint) return _this9.parseByPointAndVector(t[0], new n.Vector(t[0], t[1]));
             } else if (1 === t.length) {
               if (t[0].isLine) return t[0].clone();
 
-              var _e52 = new l.Equation(t[0]);
+              var _e61 = new l.Equation(t[0]);
 
-              if (_e52.isEquation) {
-                _e52.reorder(!0);
+              if (_e61.isEquation) {
+                _e61.reorder(!0);
 
-                var _t50 = new Set(_e52.letters());
+                var _t51 = new Set(_e61.letters());
 
-                if (!_t50.has("x") && !_t50.has("y")) return;
+                if (!_t51.has("x") && !_t51.has("y")) return;
 
-                for (var _i39 = 0, _arr4 = ["x", "y"]; _i39 < _arr4.length; _i39++) {
-                  var _e53 = _arr4[_i39];
-                  _t50.has(_e53) && _t50["delete"](_e53);
+                for (var _i44 = 0, _arr4 = ["x", "y"]; _i44 < _arr4.length; _i44++) {
+                  var _e62 = _arr4[_i44];
+                  _t51.has(_e62) && _t51["delete"](_e62);
                 }
 
-                return _t50.size > 0 ? (console.log("Extra variable in the equation."), _this8) : _this8.parseByCoefficient(_e52.left.monomByLetter("x").coefficient, _e52.left.monomByLetter("y").coefficient, _e52.left.monomByDegree(0).coefficient);
+                return _t51.size > 0 ? (console.log("Extra variable in the equation."), _this9) : _this9.parseByCoefficient(_e61.left.monomByLetter("x").coefficient, _e61.left.monomByLetter("y").coefficient, _e61.left.monomByDegree(0).coefficient);
               }
             }
 
-            return console.log("Someting wrong happend while creating the line"), _this8;
+            return console.log("Someting wrong happend while creating the line"), _this9;
           }, this.parseByCoefficient = function (t, e, i) {
-            return _this8._a = new s.Fraction(t), _this8._b = new s.Fraction(e), _this8._c = new s.Fraction(i), _this8._d = new n.Vector(_this8._b.clone(), _this8._a.clone().opposed()), _this8._OA = new r.Point(new s.Fraction().zero(), _this8._c.clone()), _this8._n = _this8._d.clone().normal(), _this8._exists = !0, _this8;
+            return _this9._a = new s.Fraction(t), _this9._b = new s.Fraction(e), _this9._c = new s.Fraction(i), _this9._d = new n.Vector(_this9._b.clone(), _this9._a.clone().opposed()), _this9._OA = new r.Point(new s.Fraction().zero(), _this9._c.clone()), _this9._n = _this9._d.clone().normal(), _this9._exists = !0, _this9;
           }, this.parseByPointAndVector = function (t, e) {
-            return _this8.parseByCoefficient(e.y, e.x.clone().opposed(), t.x.clone().multiply(e.y).subtract(t.y.clone().multiply(e.x)).opposed()), _this8._OA = t.clone(), _this8._d = e.clone(), _this8._n = _this8._d.clone().normal(), _this8._exists = !0, _this8;
+            return _this9.parseByCoefficient(e.y, e.x.clone().opposed(), t.x.clone().multiply(e.y).subtract(t.y.clone().multiply(e.x)).opposed()), _this9._OA = t.clone(), _this9._d = e.clone(), _this9._n = _this9._d.clone().normal(), _this9._exists = !0, _this9;
           }, this.clone = function () {
-            return _this8._a = _this8._a.clone(), _this8._b = _this8._b.clone(), _this8._c = _this8._c.clone(), _this8._d = _this8._d.clone(), _this8._OA = _this8._OA.clone(), _this8._n = _this8._n.clone(), _this8;
+            return _this9._a = _this9._a.clone(), _this9._b = _this9._b.clone(), _this9._c = _this9._c.clone(), _this9._d = _this9._d.clone(), _this9._OA = _this9._OA.clone(), _this9._n = _this9._n.clone(), _this9;
           }, this.isParellelTo = function (t) {
-            return _this8.slope.isEqual(t.slope) && _this8.height.isDifferent(t.height);
+            return _this9.slope.isEqual(t.slope) && _this9.height.isDifferent(t.height);
           }, this.isSameAs = function (t) {
-            return _this8.slope.isEqual(t.slope) && _this8.height.isEqual(t.height);
+            return _this9.slope.isEqual(t.slope) && _this9.height.isEqual(t.height);
           }, this.simplifyDirection = function () {
-            var t = h.Numeric.lcm(_this8._d.x.denominator, _this8._d.y.denominator),
-                e = h.Numeric.gcd(_this8._d.x.numerator, _this8._d.y.numerator);
-            return _this8._d.x.multiply(t).divide(e), _this8._d.y.multiply(t).divide(e), _this8;
+            var t = h.Numeric.lcm(_this9._d.x.denominator, _this9._d.y.denominator),
+                e = h.Numeric.gcd(_this9._d.x.numerator, _this9._d.y.numerator);
+            return _this9._d.x.multiply(t).divide(e), _this9._d.y.multiply(t).divide(e), _this9;
           }, this.intersection = function (t) {
             var e = new r.Point(),
                 i = !1,
                 s = !1;
-            return _this8._b.isZero() || t.b.isZero(), _this8.isParellelTo(t) ? (e.x = null, e.y = null, i = !0) : _this8.isSameAs(t) ? (e.x = null, e.y = null, s = !0) : (e.x = _this8._b.clone().multiply(t.c).subtract(_this8._c.clone().multiply(t.b)).divide(_this8._a.clone().multiply(t.b).subtract(_this8._b.clone().multiply(t.a))), e.y = _this8._a.clone().multiply(t.c).subtract(_this8._c.clone().multiply(t.a)).divide(_this8._b.clone().multiply(t.a).subtract(_this8._a.clone().multiply(t.b)))), {
+            return _this9._b.isZero() || t.b.isZero(), _this9.isParellelTo(t) ? (e.x = null, e.y = null, i = !0) : _this9.isSameAs(t) ? (e.x = null, e.y = null, s = !0) : (e.x = _this9._b.clone().multiply(t.c).subtract(_this9._c.clone().multiply(t.b)).divide(_this9._a.clone().multiply(t.b).subtract(_this9._b.clone().multiply(t.a))), e.y = _this9._a.clone().multiply(t.c).subtract(_this9._c.clone().multiply(t.a)).divide(_this9._b.clone().multiply(t.a).subtract(_this9._a.clone().multiply(t.b)))), {
               point: e,
               hasIntersection: !(i || s),
               isParallel: i,
@@ -2797,7 +3061,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
       var n = /*#__PURE__*/function () {
         function n() {
-          var _this9 = this;
+          var _this10 = this;
 
           _classCallCheck(this, n);
 
@@ -2810,27 +3074,27 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
               t[_key22] = arguments[_key22];
             }
 
-            if (_this9.zero(), 0 === t.length) return _this9;
+            if (_this10.zero(), 0 === t.length) return _this10;
 
             if (1 === t.length) {
               if (t[0].isPoint) return t.clone();
-              if (void 0 === t[0].x || void 0 === t[0].y) return _this9.zero();
-              _this9._x = new s.Fraction(t[0].x).reduce(), _this9._y = new s.Fraction(t[0].y).reduce();
+              if (void 0 === t[0].x || void 0 === t[0].y) return _this10.zero();
+              _this10._x = new s.Fraction(t[0].x).reduce(), _this10._y = new s.Fraction(t[0].y).reduce();
             }
 
-            return 2 === t.length && (_this9._x = new s.Fraction(t[0]).reduce(), _this9._y = new s.Fraction(t[1]).reduce()), _this9;
+            return 2 === t.length && (_this10._x = new s.Fraction(t[0]).reduce(), _this10._y = new s.Fraction(t[1]).reduce()), _this10;
           }, this.clone = function () {
             var t = new n();
-            return null !== _this9._x && (t.x = _this9._x.clone()), null !== _this9._y && (t.y = _this9._y.clone()), t;
+            return null !== _this10._x && (t.x = _this10._x.clone()), null !== _this10._y && (t.y = _this10._y.clone()), t;
           }, this.zero = function () {
-            return _this9._x = new s.Fraction(null), _this9._y = new s.Fraction(null), _this9;
+            return _this10._x = new s.Fraction(null), _this10._y = new s.Fraction(null), _this10;
           }, this.origin = function () {
-            return _this9.zero(), _this9;
+            return _this10.zero(), _this10;
           }, this.middleOf = function (t, e) {
-            return _this9._x = t.x.clone().add(e.x).divide(2), _this9._y = t.y.clone().add(e.y).divide(2), _this9;
+            return _this10._x = t.x.clone().add(e.x).divide(2), _this10._y = t.y.clone().add(e.y).divide(2), _this10;
           }, this.texValues = function (t) {
             var e = [];
-            return e.push(_this9._x.value.toFixed(void 0 === t ? 2 : t)), e.push(_this9._y.value.toFixed(void 0 === t ? 2 : t)), "\\left(".concat(e.join(";"), "\\right)");
+            return e.push(_this10._x.value.toFixed(void 0 === t ? 2 : t)), e.push(_this10._y.value.toFixed(void 0 === t ? 2 : t)), "\\left(".concat(e.join(";"), "\\right)");
           }, this._x = new s.Fraction().zero(), this._y = new s.Fraction().zero(), void 0 !== t && this.parse.apply(this, t);
         }
 
@@ -2881,10 +3145,10 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
           h = i(760);
 
       e.Triangle = /*#__PURE__*/function () {
-        function _class3() {
-          var _this10 = this;
+        function _class4() {
+          var _this11 = this;
 
-          _classCallCheck(this, _class3);
+          _classCallCheck(this, _class4);
 
           return this.parse = function () {
             for (var _len23 = arguments.length, t = new Array(_len23), _key23 = 0; _key23 < _len23; _key23++) {
@@ -2892,99 +3156,99 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
             }
 
             if (6 === t.length) {
-              var _e54 = t.map(function (t) {
+              var _e63 = t.map(function (t) {
                 return new n.Fraction(t);
               });
 
-              return _this10.parse(new s.Point(_e54[0], _e54[1]), new s.Point(_e54[2], _e54[3]), new s.Point(_e54[4], _e54[5]));
+              return _this11.parse(new s.Point(_e63[0], _e63[1]), new s.Point(_e63[2], _e63[3]), new s.Point(_e63[4], _e63[5]));
             }
 
             if (3 === t.length) {
               if (3 === t.filter(function (t) {
                 return "string" == typeof t;
-              }).length) return _this10.parse.apply(_this10, _toConsumableArray(t.map(function (t) {
+              }).length) return _this11.parse.apply(_this11, _toConsumableArray(t.map(function (t) {
                 return new o.Line(t);
               })));
 
               if (3 === t.filter(function (t) {
                 return !0 === t.isLine;
               }).length) {
-                _this10._lines = {
+                _this11._lines = {
                   AB: t[0],
                   BC: t[1],
                   AC: t[2]
                 };
 
-                var _e55 = t[0].intersection(t[1]);
+                var _e64 = t[0].intersection(t[1]);
 
-                if (!_e55.hasIntersection) return _this10;
-                if (_this10._B = _e55.point.clone(), _e55 = t[1].intersection(t[2]), !_e55.hasIntersection) return _this10;
-                if (_this10._C = _e55.point.clone(), _e55 = t[2].intersection(t[0]), !_e55.hasIntersection) return _this10;
-                _this10._A = _e55.point.clone();
+                if (!_e64.hasIntersection) return _this11;
+                if (_this11._B = _e64.point.clone(), _e64 = t[1].intersection(t[2]), !_e64.hasIntersection) return _this11;
+                if (_this11._C = _e64.point.clone(), _e64 = t[2].intersection(t[0]), !_e64.hasIntersection) return _this11;
+                _this11._A = _e64.point.clone();
               } else {
                 if (t.filter(function (t) {
                   return !0 === t.isPoint;
-                }).length < 3) return _this10.parse(new s.Point(t[0]), new s.Point(t[1]), new s.Point(t[2]));
-                _this10._A = t[0].clone(), _this10._B = t[1].clone(), _this10._C = t[2].clone(), _this10._lines = {
-                  AB: new o.Line(_this10._A, _this10._B),
-                  BC: new o.Line(_this10._B, _this10._C),
-                  AC: new o.Line(_this10._A, _this10._C)
+                }).length < 3) return _this11.parse(new s.Point(t[0]), new s.Point(t[1]), new s.Point(t[2]));
+                _this11._A = t[0].clone(), _this11._B = t[1].clone(), _this11._C = t[2].clone(), _this11._lines = {
+                  AB: new o.Line(_this11._A, _this11._B),
+                  BC: new o.Line(_this11._B, _this11._C),
+                  AC: new o.Line(_this11._A, _this11._C)
                 };
               }
             } else if (1 === t.length && !0 === t[0].isTriangle) return t[0].clone();
 
-            return _this10._updateTriangle(), _this10;
+            return _this11._updateTriangle(), _this11;
           }, this.clone = function () {
-            return _this10._A = _this10._A.clone(), _this10._B = _this10._B.clone(), _this10._C = _this10._C.clone(), _this10._lines = {
-              AB: _this10._lines.AB.clone(),
-              BC: _this10._lines.BC.clone(),
-              AC: _this10._lines.AC.clone()
-            }, _this10._updateTriangle(), _this10;
+            return _this11._A = _this11._A.clone(), _this11._B = _this11._B.clone(), _this11._C = _this11._C.clone(), _this11._lines = {
+              AB: _this11._lines.AB.clone(),
+              BC: _this11._lines.BC.clone(),
+              AC: _this11._lines.AC.clone()
+            }, _this11._updateTriangle(), _this11;
           }, this._updateTriangle = function () {
-            _this10._middles = {
-              AB: new s.Point().middleOf(_this10._A, _this10._B),
-              AC: new s.Point().middleOf(_this10._A, _this10._C),
-              BC: new s.Point().middleOf(_this10._B, _this10._C)
-            }, _this10._remarquables = _this10._calculateRemarquableLines();
+            _this11._middles = {
+              AB: new s.Point().middleOf(_this11._A, _this11._B),
+              AC: new s.Point().middleOf(_this11._A, _this11._C),
+              BC: new s.Point().middleOf(_this11._B, _this11._C)
+            }, _this11._remarquables = _this11._calculateRemarquableLines();
           }, this.getPointByName = function (t) {
             switch (t.toUpperCase()) {
               case "A":
-                return _this10._A;
+                return _this11._A;
 
               case "B":
-                return _this10._B;
+                return _this11._B;
 
               case "C":
-                return _this10._C;
+                return _this11._C;
             }
 
-            return _this10._A;
+            return _this11._A;
           }, this.getSegment = function (t, e) {
-            return new r.Vector(_this10.getPointByName(t), _this10.getPointByName(e));
+            return new r.Vector(_this11.getPointByName(t), _this11.getPointByName(e));
           }, this._calculateRemarquableLines = function () {
             var t = {
               medians: {
-                A: new o.Line(_this10._A, _this10._middles.BC),
-                B: new o.Line(_this10._B, _this10._middles.AC),
-                C: new o.Line(_this10._C, _this10._middles.AB),
+                A: new o.Line(_this11._A, _this11._middles.BC),
+                B: new o.Line(_this11._B, _this11._middles.AC),
+                C: new o.Line(_this11._C, _this11._middles.AB),
                 intersection: null
               },
               mediators: {
-                AB: new o.Line(_this10._middles.AB, new r.Vector(_this10._A, _this10._B).normal()),
-                AC: new o.Line(_this10._middles.AC, new r.Vector(_this10._A, _this10._C).normal()),
-                BC: new o.Line(_this10._middles.BC, new r.Vector(_this10._B, _this10._C).normal()),
+                AB: new o.Line(_this11._middles.AB, new r.Vector(_this11._A, _this11._B).normal()),
+                AC: new o.Line(_this11._middles.AC, new r.Vector(_this11._A, _this11._C).normal()),
+                BC: new o.Line(_this11._middles.BC, new r.Vector(_this11._B, _this11._C).normal()),
                 intersection: null
               },
               heights: {
-                A: new o.Line(_this10._A, new r.Vector(_this10._B, _this10._C).normal()),
-                B: new o.Line(_this10._B, new r.Vector(_this10._A, _this10._C).normal()),
-                C: new o.Line(_this10._C, new r.Vector(_this10._A, _this10._B).normal()),
+                A: new o.Line(_this11._A, new r.Vector(_this11._B, _this11._C).normal()),
+                B: new o.Line(_this11._B, new r.Vector(_this11._A, _this11._C).normal()),
+                C: new o.Line(_this11._C, new r.Vector(_this11._A, _this11._B).normal()),
                 intersection: null
               },
               bisectors: {
-                A: _this10._calculateBisectors("A"),
-                B: _this10._calculateBisectors("B"),
-                C: _this10._calculateBisectors("C"),
+                A: _this11._calculateBisectors("A"),
+                B: _this11._calculateBisectors("B"),
+                C: _this11._calculateBisectors("C"),
                 intersection: null
               }
             };
@@ -2992,15 +3256,15 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
           }, this._calculateBisectors = function (t) {
             var e,
                 i,
-                s = _this10.lines;
+                s = _this11.lines;
             "A" === t ? (e = s.AB, i = s.AC) : "B" === t ? (e = s.AB, i = s.BC) : "C" === t && (e = s.BC, i = s.AC);
             var n = new o.Line(new h.Equation(e.equation.left.clone().multiply(i.n.simplify().norm), i.equation.left.clone().multiply(e.n.simplify().norm)).reorder(!0).simplify()),
                 r = new o.Line(new h.Equation(e.equation.left.clone().multiply(i.n.simplify().norm), i.equation.left.clone().multiply(e.n.simplify().norm).opposed()).reorder(!0).simplify());
-            return "A" === t ? n.hitSegment(_this10.B, _this10.C) ? n : r : "B" === t ? n.hitSegment(_this10.A, _this10.C) ? n : r : "C" === t ? n.hitSegment(_this10.B, _this10.A) ? n : r : n;
+            return "A" === t ? n.hitSegment(_this11.B, _this11.C) ? n : r : "B" === t ? n.hitSegment(_this11.A, _this11.C) ? n : r : "C" === t ? n.hitSegment(_this11.B, _this11.A) ? n : r : n;
           }, arguments.length > 0 && this.parse.apply(this, arguments), this;
         }
 
-        _createClass(_class3, [{
+        _createClass(_class4, [{
           key: "isTriangle",
           get: function get() {
             return !0;
@@ -3077,7 +3341,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
           }
         }]);
 
-        return _class3;
+        return _class4;
       }();
     },
     586: function _(t, e, i) {
@@ -3089,7 +3353,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
       var r = /*#__PURE__*/function () {
         function r() {
-          var _this11 = this;
+          var _this12 = this;
 
           _classCallCheck(this, r);
 
@@ -3102,54 +3366,54 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
               t[_key25] = arguments[_key25];
             }
 
-            if (_this11.zero(), 0 === t.length) return _this11;
-            if (1 === t.length) return t[0].isVector ? t[0].clone() : _this11._parseString(t[0]);
+            if (_this12.zero(), 0 === t.length) return _this12;
+            if (1 === t.length) return t[0].isVector ? t[0].clone() : _this12._parseString(t[0]);
 
             if (t.length >= 2) {
-              if (t[0].isPoint && t[1].isPoint) return _this11._x = t[1].x.clone().subtract(t[0].x), _this11._y = t[1].y.clone().subtract(t[0].y), _this11;
-              !t[0].isFraction && isNaN(t[0]) || (_this11._x = new s.Fraction(t[0])), !t[1].isFraction && isNaN(t[1]) || (_this11._y = new s.Fraction(t[1]));
+              if (t[0].isPoint && t[1].isPoint) return _this12._x = t[1].x.clone().subtract(t[0].x), _this12._y = t[1].y.clone().subtract(t[0].y), _this12;
+              !t[0].isFraction && isNaN(t[0]) || (_this12._x = new s.Fraction(t[0])), !t[1].isFraction && isNaN(t[1]) || (_this12._y = new s.Fraction(t[1]));
             }
 
-            return _this11;
+            return _this12;
           }, this.clone = function () {
             var t = new r();
-            return null !== _this11._x && (t.x = _this11._x.clone()), null !== _this11._y && (t.y = _this11._y.clone()), t;
+            return null !== _this12._x && (t.x = _this12._x.clone()), null !== _this12._y && (t.y = _this12._y.clone()), t;
           }, this.reset = function () {
-            return _this11._x = null, _this11._y = null, _this11;
+            return _this12._x = null, _this12._y = null, _this12;
           }, this.zero = function () {
-            return _this11.reset(), _this11._x = new s.Fraction(null), _this11._y = new s.Fraction(null), _this11;
+            return _this12.reset(), _this12._x = new s.Fraction(null), _this12._y = new s.Fraction(null), _this12;
           }, this.one = function () {
-            return _this11._x = new s.Fraction(), _this11._y = new s.Fraction(), _this11;
+            return _this12._x = new s.Fraction(), _this12._y = new s.Fraction(), _this12;
           }, this._parseString = function (t) {
             var e = t.split(/[,;\s]/g);
-            return _this11.x = new s.Fraction(e[0] || null), _this11.y = new s.Fraction(e[1] || null), _this11;
+            return _this12.x = new s.Fraction(e[0] || null), _this12.y = new s.Fraction(e[1] || null), _this12;
           }, this.opposed = function () {
-            return _this11._x.opposed(), _this11._y.opposed(), _this11;
+            return _this12._x.opposed(), _this12._y.opposed(), _this12;
           }, this.add = function (t) {
-            return _this11._x.add(t.x), _this11._y.add(t.y), _this11;
+            return _this12._x.add(t.x), _this12._y.add(t.y), _this12;
           }, this.subtract = function (t) {
-            return _this11.add(t.clone().opposed());
+            return _this12.add(t.clone().opposed());
           }, this.scalarProductWithVector = function (t) {
-            return _this11._x.clone().multiply(t.x).add(_this11._y.clone().multiply(t.y));
+            return _this12._x.clone().multiply(t.x).add(_this12._y.clone().multiply(t.y));
           }, this.normal = function () {
-            var t = _this11.x.clone().opposed(),
-                e = _this11.y.clone();
+            var t = _this12.x.clone().opposed(),
+                e = _this12.y.clone();
 
-            return _this11._x = e, _this11._y = t, _this11;
+            return _this12._x = e, _this12._y = t, _this12;
           }, this.isNormalTo = function (t) {
-            return _this11.scalarProductWithVector(t).isZero();
+            return _this12.scalarProductWithVector(t).isZero();
           }, this.multiplyByScalar = function (t) {
             var e = new s.Fraction(t);
-            return _this11._x.multiply(e), _this11._y.multiply(e), _this11;
+            return _this12._x.multiply(e), _this12._y.multiply(e), _this12;
           }, this.divideByScalar = function (t) {
-            return _this11.multiplyByScalar(new s.Fraction(t).invert());
+            return _this12.multiplyByScalar(new s.Fraction(t).invert());
           }, this.simplify = function () {
-            return _this11.multiplyByScalar(n.Numeric.lcm(_this11._x.denominator, _this11._y.denominator)).divideByScalar(n.Numeric.gcd(_this11._x.numerator, _this11._y.numerator));
+            return _this12.multiplyByScalar(n.Numeric.lcm(_this12._x.denominator, _this12._y.denominator)).divideByScalar(n.Numeric.gcd(_this12._x.numerator, _this12._y.numerator));
           }, this.angleWith = function (t, e, i) {
-            var s = _this11.scalarProductWithVector(t).value,
+            var s = _this12.scalarProductWithVector(t).value,
                 n = i ? 1 : 180 / Math.PI;
 
-            return e && (s = Math.abs(s)), n * Math.acos(s / (_this11.norm * t.norm));
+            return e && (s = Math.abs(s)), n * Math.acos(s / (_this12.norm * t.norm));
           }, this._x = new s.Fraction().zero(), this._y = new s.Fraction().zero(), void 0 !== t && this.parse.apply(this, t);
         }
 
@@ -3225,11 +3489,11 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
           value: function dividers(t) {
             var e;
 
-            var _i40 = Math.sqrt(Math.abs(t));
+            var _i45 = Math.sqrt(Math.abs(t));
 
             e = [];
 
-            for (var s = 1; s <= _i40; s++) {
+            for (var s = 1; s <= _i45; s++) {
               t % s == 0 && (e.push(s), e.push(t / s));
             }
 
@@ -3243,7 +3507,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
             var e = function e(t, i) {
               return 0 === i ? t : e(i, t % i);
             },
-                _i41 = 1,
+                _i46 = 1,
                 s = 2;
 
             for (var _len26 = arguments.length, t = new Array(_len26), _key26 = 0; _key26 < _len26; _key26++) {
@@ -3252,13 +3516,13 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
             if (0 === t.length) return 1;
             if (1 === t.length) return 0 === t[0] ? 1 : t[0];
-            if (_i41 = e(t[0], t[1]), 1 === _i41) return 1;
+            if (_i46 = e(t[0], t[1]), 1 === _i46) return 1;
 
-            for (s = 2; s < t.length && (_i41 = e(_i41, t[s]), 1 !== _i41); s++) {
+            for (s = 2; s < t.length && (_i46 = e(_i46, t[s]), 1 !== _i46); s++) {
               ;
             }
 
-            return Math.abs(_i41);
+            return Math.abs(_i46);
           }
         }, {
           key: "lcm",
@@ -3287,6 +3551,30 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
           value: function randomIntSym(t, e) {
             return !1 === e ? i.randomBool() ? this.randomInt(1, t) : -this.randomInt(1, t) : i.randomInt(-t, t);
           }
+        }, {
+          key: "randomArray",
+          value: function randomArray(t, e) {
+            return void 0 === e && (e = 1), t.length <= 0 ? Object.values(t) : this.shuffleArray(t).slice(0, e);
+          }
+        }, {
+          key: "randomItem",
+          value: function randomItem(t) {
+            return 0 === t.length ? "" : this.randomArray(t, 1)[0];
+          }
+        }, {
+          key: "shuffleArray",
+          value: function shuffleArray(t) {
+            var e = Object.values(t);
+
+            for (var _t52 = e.length - 1; _t52 > 0; _t52--) {
+              var _i48 = Math.floor(Math.random() * (_t52 + 1)),
+                  s = e[_t52];
+
+              e[_t52] = e[_i48], e[_i48] = s;
+            }
+
+            return e;
+          }
         }]);
 
         return i;
@@ -3298,124 +3586,237 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
       Object.defineProperty(e, "__esModule", {
         value: !0
       }), e.Shutingyard = void 0, e.Shutingyard = /*#__PURE__*/function () {
-        function _class4() {
-          _classCallCheck(this, _class4);
+        function _class5(t) {
+          _classCallCheck(this, _class5);
 
-          this._rpn = [];
+          this._rpn = [], this._mode = void 0 === t ? "polynom" : t, this.tokenConfigInitialization();
         }
 
-        _createClass(_class4, [{
+        _createClass(_class5, [{
           key: "isOperation",
           value: function isOperation(t) {
-            return !!t[0].match(/[+\-*/^]/g) || !!t.match(/^sin|cos|tan/g);
+            return !!t[0].match(/[+\-*/^]/g);
+          }
+        }, {
+          key: "tokenConfigInitialization",
+          value: function tokenConfigInitialization() {
+            return "set" === this._mode ? (this._tokenConfig = {
+              "&": {
+                precedence: 3,
+                associative: "left"
+              },
+              "|": {
+                precedence: 3,
+                associative: "left"
+              },
+              "!": {
+                precedence: 4,
+                associative: "right"
+              },
+              "-": {
+                precedence: 2,
+                associative: "left"
+              }
+            }, this._uniformize = !1) : (this._tokenConfig = {
+              "^": {
+                precedence: 4,
+                associative: "right"
+              },
+              "*": {
+                precedence: 3,
+                associative: "left"
+              },
+              "/": {
+                precedence: 3,
+                associative: "left"
+              },
+              "+": {
+                precedence: 2,
+                associative: "left"
+              },
+              "-": {
+                precedence: 2,
+                associative: "left"
+              },
+              "%": {
+                precedence: 3,
+                associative: "right"
+              },
+              sin: {
+                precedence: 4,
+                associative: "right"
+              },
+              cos: {
+                precedence: 4,
+                associative: "right"
+              },
+              tab: {
+                precedence: 4,
+                associative: "right"
+              }
+            }, this._uniformize = !0), this._tokenConfig;
+          }
+        }, {
+          key: "NextToken2",
+          value: function NextToken2(t, e) {
+            var i, s;
+            if (i = "", s = "", "(" === t[e]) i = "(", s = "(";else if (")" === t[e]) i = ")", s = ")";else if ("," === t[e]) i = ",", s = "function-argument";else {
+              var n = Object.keys(this._tokenConfig).sort(function (t, e) {
+                return e.length - t.length;
+              });
+
+              var _iterator55 = _createForOfIteratorHelper(n),
+                  _step55;
+
+              try {
+                for (_iterator55.s(); !(_step55 = _iterator55.n()).done;) {
+                  var r = _step55.value;
+
+                  if (t.substr(e, r.length) === r) {
+                    i += r, s = "operation";
+                    break;
+                  }
+                }
+              } catch (err) {
+                _iterator55.e(err);
+              } finally {
+                _iterator55.f();
+              }
+
+              "" === i && (t[e].match(/[0-9]/) ? (i = t.substr(e).match(/^([0-9.,/]+)/)[0], s = "coefficient") : t[e].match(/[a-zA-Z]/) ? (i = t.substr(e).match(/^([a-zA-Z])/)[0], s = "variable") : (console.log("Unidentified token", t[e]), i = t[e], s = "monom"));
+            }
+            return [i, e + i.length, s];
           }
         }, {
           key: "NextToken",
           value: function NextToken(t, e) {
             var i, s, n;
-            return i = t.substr(e).match(/^[0-9/a-z^]+/g) || [], i.length > 0 ? (s = i[0], n = "monom") : t[e].match(/[+\-*/^]/g) ? (s = t[e], n = "operation") : "(" === t[e] ? (s = "(", n = "(") : ")" === t[e] ? (s = ")", n = ")") : "," === t[e] ? (s = ",", n = "function-argument") : t.match(/^(sin|cos|tan)/g) ? (s = ")", n = ")") : (s = i[0], n = "monom", "" === s && (s = t[e], n = "monom", console.log("SHUTING YARD - NEXT TOKEN: error at ", e))), [s, e + s.length, n];
+            return this.NextToken2(t, e), i = t.substr(e).match(/^[0-9/a-zA-Z^]+/g) || [], t.substr(e, e + 3).match(/^(sin|cos|tan)/g) ? (s = t.substr(e, 3), n = "function") : i.length > 0 ? (s = i[0], n = "monom") : t[e].match(/[+\-*/^]/g) || t[e].match(/[&|!]/g) ? (s = t[e], n = "operation") : "(" === t[e] ? (s = "(", n = "(") : ")" === t[e] ? (s = ")", n = ")") : "," === t[e] ? (s = ",", n = "function-argument") : (s = i[0], n = "monom", "" === s && (s = t[e], n = "monom", console.log("SHUTING YARD - NEXT TOKEN: error at ", e))), [s, e + s.length, n];
           }
         }, {
           key: "Uniformizer",
           value: function Uniformizer(t) {
+            if (!this._uniformize) return t;
             var e;
-            return e = t.replace(/\)\(/g, ")*("), e = e.replace(/([\da-z])(\()/g, "$1*$2"), e = e.replace(/(\))([\da-z])/g, "$1*$2"), e;
+            e = t.replace(/\)\(/g, ")*("), e = e.replace(/([\da-zA-Z])(\()/g, "$1*$2"), e = e.replace(/(\))([\da-zA-Z])/g, "$1*$2"), e = e.replace(/([0-9])([a-zA-Z])/g, "$1*$2"), e = e.replace(/([a-zA-Z])([0-9])/g, "$1*$2"), e = e.replace(/([xyz])([xyz])/g, "$1*$2");
+            var i = ["sin", "cos", "tan"];
+
+            for (var _i50 = 0, _i49 = i; _i50 < _i49.length; _i50++) {
+              var _t53 = _i49[_i50];
+              e = e.replace(new RegExp(_t53 + "\\*", "g"), _t53);
+            }
+
+            return e;
           }
         }, {
           key: "parse",
-          value: function parse(t) {
+          value: function parse(t, e) {
             var _this$NextToken, _this$NextToken2;
 
-            var e = [],
-                i = [],
-                s = {
-              "^": 4,
-              "*": 3,
-              "/": 3,
-              "+": 2,
-              "-": 2
-            },
-                n = {
-              "^": "right",
-              "*": "left",
-              "/": "left",
-              "+": "left",
-              "-": "left"
-            },
-                r = "",
-                o = 0,
-                h = "";
+            var i = [],
+                s = [],
+                n = "",
+                r = 0,
+                o = "",
+                h = 0;
             t = this.Uniformizer(t);
             var l,
                 a = 50;
 
-            for (; o < t.length;) {
+            for (; r < t.length;) {
               if (a--, 0 === a) {
                 console.log("SECURITY LEVEL 1 EXIT");
                 break;
               }
 
-              switch ((_this$NextToken = this.NextToken(t, o), _this$NextToken2 = _slicedToArray(_this$NextToken, 3), r = _this$NextToken2[0], o = _this$NextToken2[1], h = _this$NextToken2[2], _this$NextToken), h) {
+              switch ((_this$NextToken = this.NextToken2(t, r), _this$NextToken2 = _slicedToArray(_this$NextToken, 3), n = _this$NextToken2[0], r = _this$NextToken2[1], o = _this$NextToken2[2], _this$NextToken), o) {
                 case "monom":
-                  e.push(r);
+                case "coefficient":
+                case "variable":
+                  i.push({
+                    token: n,
+                    tokenType: o
+                  });
                   break;
 
                 case "operation":
-                  if (i.length > 0) {
-                    var _t51 = i[i.length - 1];
+                  if (h = s.length, s.length > 0) {
+                    var _t54 = s[s.length - 1];
 
-                    for (l = 50; _t51 in n && ("left" === n[r] && s[r] <= s[_t51] || "right" === n[r] && s[r] < s[_t51]);) {
+                    for (l = 50; _t54.token in this._tokenConfig && ("left" === this._tokenConfig[n].associative && this._tokenConfig[n].precedence <= this._tokenConfig[_t54.token].precedence || "right" === this._tokenConfig[n].associative && this._tokenConfig[n].precedence < this._tokenConfig[_t54.token].precedence);) {
                       if (l--, 0 === l) {
                         console.log("SECURITY LEVEL 2 OPERATION EXIT");
                         break;
                       }
 
-                      e.push(i.pop() || ""), _t51 = i[i.length - 1];
+                      if (i.push(s.pop() || {
+                        token: "",
+                        tokenType: "operation"
+                      }), 0 === s.length) break;
+                      _t54 = s[s.length - 1];
                     }
                   }
 
-                  i.push(r);
-                  break;
-
-                case "trigo":
-                  i.push(r);
+                  s.push({
+                    token: n,
+                    tokenType: o
+                  });
                   break;
 
                 case "function-argument":
-                  for (l = 50; "(" !== i[i.length - 1] && i.length > 0;) {
+                  for (l = 50; "(" !== s[s.length - 1].token && s.length > 0;) {
                     if (l--, 0 === l) {
                       console.log("SECURITY LEVEL 2 FUNCTION ARGUMENT EXIT");
                       break;
                     }
 
-                    e.push(i.pop() || "");
+                    i.push(s.pop() || {
+                      token: n,
+                      tokenType: o
+                    });
                   }
 
                   break;
 
                 case "(":
-                  i.push(r), "-" === t[o] && e.push("0");
+                  s.push({
+                    token: n,
+                    tokenType: o
+                  }), "-" === t[r] && i.push({
+                    token: "0",
+                    tokenType: "coefficient"
+                  });
                   break;
 
                 case ")":
-                  for (l = 50; "(" !== i[i.length - 1] && i.length > 1;) {
+                  for (l = 50; "(" !== s[s.length - 1].token && s.length > 1;) {
                     if (l--, 0 === l) {
                       console.log("SECURITY LEVEL 2 CLOSING PARENTHESE EXIT");
                       break;
                     }
 
-                    e.push(i.pop() || "");
+                    i.push(s.pop() || {
+                      token: n,
+                      tokenType: o
+                    });
                   }
 
-                  i.pop();
+                  s.pop();
+                  break;
+
+                case "function":
+                  s.push({
+                    token: n,
+                    tokenType: o
+                  });
                   break;
 
                 default:
-                  console.log("SHUTING YARD: ".concat(h, " : ").concat(r, " "));
+                  console.log("SHUTING YARD: ".concat(o, " : ").concat(n, " "));
               }
             }
 
-            return this._rpn = e.concat(i.reverse()), this;
+            return this._rpn = i.concat(s.reverse()), this;
           }
         }, {
           key: "rpn",
@@ -3424,7 +3825,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
           }
         }]);
 
-        return _class4;
+        return _class5;
       }();
     }
   },
@@ -3449,10 +3850,14 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
         h = i(554),
         l = i(107),
         a = i(586),
-        u = i(9),
-        c = i(557),
-        m = i(164);
+        c = i(9),
+        u = i(557),
+        m = i(164),
+        f = i(505),
+        _ = i(236);
+
     window.Pi = {
+      ShutingYard: f.Shutingyard,
       Numeric: e.Numeric,
       Fraction: t.Fraction,
       Root: s.Nthroot,
@@ -3461,13 +3866,14 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
       Equation: o.Equation,
       LinearSystem: h.LinearSystem,
       Rational: l.Rational,
+      Logicalset: _.Logicalset,
       Geometry: {
         Vector: a.Vector,
-        Point: c.Point,
-        Line: u.Line,
+        Point: u.Point,
+        Line: c.Line,
         Triangle: m.Triangle
       }
-    }, e.Numeric, t.Fraction, s.Nthroot, n.Monom, r.Polynom, o.Equation, h.LinearSystem, l.Rational, a.Vector, c.Point, u.Line, m.Triangle;
+    }, f.Shutingyard, e.Numeric, t.Fraction, s.Nthroot, n.Monom, r.Polynom, o.Equation, h.LinearSystem, l.Rational, _.Logicalset, a.Vector, u.Point, c.Line, m.Triangle;
   })();
 })();
 })();

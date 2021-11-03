@@ -15,11 +15,12 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $title
  * @property string $body
  * @property string $answer
- * @property int|null $checker_id
  * @property string|null $explanation
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\Chapter $chapter
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Illustration[] $illustrations
+ * @property-read int|null $illustrations_count
  * @method static \Database\Factories\ExerciseFactory factory(...$parameters)
  * @method static Builder|Exercise newModelQuery()
  * @method static Builder|Exercise newQuery()
@@ -27,7 +28,6 @@ use Illuminate\Database\Eloquent\Model;
  * @method static Builder|Exercise whereAnswer($value)
  * @method static Builder|Exercise whereBody($value)
  * @method static Builder|Exercise whereChapterId($value)
- * @method static Builder|Exercise whereCheckerId($value)
  * @method static Builder|Exercise whereCreatedAt($value)
  * @method static Builder|Exercise whereExplanation($value)
  * @method static Builder|Exercise whereId($value)
@@ -42,5 +42,9 @@ class Exercise extends Model
 	public function chapter()
 	{
 		return $this->belongsTo(Chapter::class);
+	}
+
+	public function illustrations(){
+		return $this->hasMany(Illustration::class);
 	}
 }

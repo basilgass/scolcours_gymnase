@@ -4,16 +4,20 @@ module.exports = {
 		"es2021": true
 	},
 	"extends": [
-		"eslint:recommended",
+		// "eslint:recommended",
 		"plugin:vue/vue3-recommended",
 	],
-	"parserOptions": {
-		"ecmaVersion": 13,
-		"sourceType": "module"
-	},
+	// "parserOptions": {
+	// 	"ecmaVersion": 13,
+	// 	"sourceType": "module"
+	// },
 	"plugins": [
 		"vue"
 	],
+	"globals": {
+		"defineProps": true,
+		"defineEmits": true
+	},
 	"rules": {
 		"indent": [
 			"error", "tab"

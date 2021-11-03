@@ -20269,10 +20269,10 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Components/Exercise/Exercise.vue?vue&type=script&lang=js":
-/*!***********************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Components/Exercise/Exercise.vue?vue&type=script&lang=js ***!
-  \***********************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Components/Exercise/Exercise.vue?vue&type=script&setup=true&lang=js":
+/*!**********************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Components/Exercise/Exercise.vue?vue&type=script&setup=true&lang=js ***!
+  \**********************************************************************************************************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -20281,22 +20281,330 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _Components_Ui_Panel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/Components/Ui/Panel */ "./resources/js/Components/Ui/Panel.vue");
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
+
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  name: "Exercise",
-  components: {
-    Panel: _Components_Ui_Panel__WEBPACK_IMPORTED_MODULE_0__["default"]
-  },
   props: {
     exercise: {
       type: Object,
       "default": function _default() {}
     }
   },
-  data: function data() {
-    return {
-      showAnswer: false
+  setup: function setup(__props, _ref) {
+    var expose = _ref.expose;
+    expose();
+    var props = __props;
+    var showAnswer = (0,vue__WEBPACK_IMPORTED_MODULE_1__.ref)(false),
+        showExplanation = (0,vue__WEBPACK_IMPORTED_MODULE_1__.ref)(false);
+    (0,vue__WEBPACK_IMPORTED_MODULE_1__.onMounted)(function () {
+      console.log(props.exercise);
+    });
+    var __returned__ = {
+      props: props,
+      showAnswer: showAnswer,
+      showExplanation: showExplanation,
+      Panel: _Components_Ui_Panel__WEBPACK_IMPORTED_MODULE_0__["default"],
+      onMounted: vue__WEBPACK_IMPORTED_MODULE_1__.onMounted,
+      ref: vue__WEBPACK_IMPORTED_MODULE_1__.ref
     };
+    Object.defineProperty(__returned__, '__isScriptSetup', {
+      enumerable: false,
+      value: true
+    });
+    return __returned__;
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Components/Form/FormError.vue?vue&type=script&setup=true&lang=js":
+/*!*******************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Components/Form/FormError.vue?vue&type=script&setup=true&lang=js ***!
+  \*******************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  props: {
+    message: {
+      "default": "",
+      type: String
+    }
+  },
+  setup: function setup(__props, _ref) {
+    var expose = _ref.expose;
+    expose();
+    var props = __props;
+    var __returned__ = {
+      props: props
+    };
+    Object.defineProperty(__returned__, '__isScriptSetup', {
+      enumerable: false,
+      value: true
+    });
+    return __returned__;
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Components/Form/FormFile.vue?vue&type=script&setup=true&lang=js":
+/*!******************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Components/Form/FormFile.vue?vue&type=script&setup=true&lang=js ***!
+  \******************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _Components_Form_FormField__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/Components/Form/FormField */ "./resources/js/Components/Form/FormField.vue");
+/* harmony import */ var _Components_Form_FormLabel__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/Components/Form/FormLabel */ "./resources/js/Components/Form/FormLabel.vue");
+/* harmony import */ var _Components_Form_FormError__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/Components/Form/FormError */ "./resources/js/Components/Form/FormError.vue");
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
+
+
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  props: {
+    modelValue: {
+      type: String,
+      "default": ""
+    },
+    name: {
+      type: String,
+      required: true
+    },
+    label: {
+      type: String,
+      "default": ""
+    }
+  },
+  emits: ["update:modelValue"],
+  setup: function setup(__props, _ref) {
+    var expose = _ref.expose;
+    expose();
+    var inputElement = (0,vue__WEBPACK_IMPORTED_MODULE_3__.ref)(null);
+    var __returned__ = {
+      inputElement: inputElement,
+      FormField: _Components_Form_FormField__WEBPACK_IMPORTED_MODULE_0__["default"],
+      FormLabel: _Components_Form_FormLabel__WEBPACK_IMPORTED_MODULE_1__["default"],
+      FormError: _Components_Form_FormError__WEBPACK_IMPORTED_MODULE_2__["default"],
+      ref: vue__WEBPACK_IMPORTED_MODULE_3__.ref
+    };
+    Object.defineProperty(__returned__, '__isScriptSetup', {
+      enumerable: false,
+      value: true
+    });
+    return __returned__;
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Components/Form/FormInput.vue?vue&type=script&setup=true&lang=js":
+/*!*******************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Components/Form/FormInput.vue?vue&type=script&setup=true&lang=js ***!
+  \*******************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _Components_Form_FormField__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/Components/Form/FormField */ "./resources/js/Components/Form/FormField.vue");
+/* harmony import */ var _Components_Form_FormLabel__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/Components/Form/FormLabel */ "./resources/js/Components/Form/FormLabel.vue");
+/* harmony import */ var _Components_Form_FormError__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/Components/Form/FormError */ "./resources/js/Components/Form/FormError.vue");
+
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  props: {
+    modelValue: {
+      type: String,
+      "default": ""
+    },
+    name: {
+      type: String,
+      required: true
+    },
+    label: {
+      type: String,
+      "default": ""
+    },
+    error: {
+      type: String,
+      "default": ""
+    }
+  },
+  emits: ["update:modelValue"],
+  setup: function setup(__props, _ref) {
+    var expose = _ref.expose;
+    expose();
+    var __returned__ = {
+      FormField: _Components_Form_FormField__WEBPACK_IMPORTED_MODULE_0__["default"],
+      FormLabel: _Components_Form_FormLabel__WEBPACK_IMPORTED_MODULE_1__["default"],
+      FormError: _Components_Form_FormError__WEBPACK_IMPORTED_MODULE_2__["default"]
+    };
+    Object.defineProperty(__returned__, '__isScriptSetup', {
+      enumerable: false,
+      value: true
+    });
+    return __returned__;
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Components/Form/FormLabel.vue?vue&type=script&setup=true&lang=js":
+/*!*******************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Components/Form/FormLabel.vue?vue&type=script&setup=true&lang=js ***!
+  \*******************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  props: {
+    name: {
+      type: String,
+      required: true
+    },
+    label: {
+      type: String,
+      "default": ""
+    }
+  },
+  setup: function setup(__props, _ref) {
+    var expose = _ref.expose;
+    expose();
+    var props = __props;
+    var __returned__ = {
+      props: props
+    };
+    Object.defineProperty(__returned__, '__isScriptSetup', {
+      enumerable: false,
+      value: true
+    });
+    return __returned__;
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Components/Form/FormSelect.vue?vue&type=script&setup=true&lang=js":
+/*!********************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Components/Form/FormSelect.vue?vue&type=script&setup=true&lang=js ***!
+  \********************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _Components_Form_FormField__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/Components/Form/FormField */ "./resources/js/Components/Form/FormField.vue");
+/* harmony import */ var _Components_Form_FormLabel__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/Components/Form/FormLabel */ "./resources/js/Components/Form/FormLabel.vue");
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  props: {
+    modelValue: {
+      type: String,
+      "default": ""
+    },
+    name: {
+      type: String,
+      required: true
+    },
+    label: {
+      type: String,
+      "default": ""
+    }
+  },
+  emits: ["update:modelValue"],
+  setup: function setup(__props, _ref) {
+    var expose = _ref.expose;
+    expose();
+    var props = __props;
+    var __returned__ = {
+      props: props,
+      FormField: _Components_Form_FormField__WEBPACK_IMPORTED_MODULE_0__["default"],
+      FormLabel: _Components_Form_FormLabel__WEBPACK_IMPORTED_MODULE_1__["default"]
+    };
+    Object.defineProperty(__returned__, '__isScriptSetup', {
+      enumerable: false,
+      value: true
+    });
+    return __returned__;
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Components/Form/FormTextarea.vue?vue&type=script&setup=true&lang=js":
+/*!**********************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Components/Form/FormTextarea.vue?vue&type=script&setup=true&lang=js ***!
+  \**********************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _Components_Form_FormField__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/Components/Form/FormField */ "./resources/js/Components/Form/FormField.vue");
+/* harmony import */ var _Components_Form_FormLabel__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/Components/Form/FormLabel */ "./resources/js/Components/Form/FormLabel.vue");
+/* harmony import */ var _Components_Form_FormError__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/Components/Form/FormError */ "./resources/js/Components/Form/FormError.vue");
+
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  props: {
+    modelValue: {
+      type: String,
+      "default": ""
+    },
+    name: {
+      type: String,
+      required: true
+    },
+    label: {
+      type: String,
+      "default": ""
+    },
+    error: {
+      type: String,
+      "default": ""
+    }
+  },
+  emits: ["update:modelValue"],
+  setup: function setup(__props, _ref) {
+    var expose = _ref.expose;
+    expose();
+    var props = __props;
+    var __returned__ = {
+      props: props,
+      FormField: _Components_Form_FormField__WEBPACK_IMPORTED_MODULE_0__["default"],
+      FormLabel: _Components_Form_FormLabel__WEBPACK_IMPORTED_MODULE_1__["default"],
+      FormError: _Components_Form_FormError__WEBPACK_IMPORTED_MODULE_2__["default"]
+    };
+    Object.defineProperty(__returned__, '__isScriptSetup', {
+      enumerable: false,
+      value: true
+    });
+    return __returned__;
   }
 });
 
@@ -20439,10 +20747,10 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Components/Ui/Panel.vue?vue&type=script&lang=js":
-/*!**************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Components/Ui/Panel.vue?vue&type=script&lang=js ***!
-  \**************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Components/Ui/Panel.vue?vue&type=script&setup=true&lang=js":
+/*!*************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Components/Ui/Panel.vue?vue&type=script&setup=true&lang=js ***!
+  \*************************************************************************************************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -20451,7 +20759,25 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  name: "Panel"
+  props: {
+    type: {
+      type: String,
+      "default": ''
+    }
+  },
+  setup: function setup(__props, _ref) {
+    var expose = _ref.expose;
+    expose();
+    var props = __props;
+    var __returned__ = {
+      props: props
+    };
+    Object.defineProperty(__returned__, '__isScriptSetup', {
+      enumerable: false,
+      value: true
+    });
+    return __returned__;
+  }
 });
 
 /***/ }),
@@ -20880,10 +21206,10 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Pages/Chapter.vue?vue&type=script&lang=js":
-/*!********************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Pages/Chapter.vue?vue&type=script&lang=js ***!
-  \********************************************************************************************************************************************************************************************/
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Pages/Chapter.vue?vue&type=script&setup=true&lang=js":
+/*!*******************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Pages/Chapter.vue?vue&type=script&setup=true&lang=js ***!
+  \*******************************************************************************************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -20891,19 +21217,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _Pages_Layout__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/Pages/Layout */ "./resources/js/Pages/Layout.vue");
-/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
-/* harmony import */ var _Components_Exercise_Exercise__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/Components/Exercise/Exercise */ "./resources/js/Components/Exercise/Exercise.vue");
-
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
+/* harmony import */ var _Components_Exercise_Exercise__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/Components/Exercise/Exercise */ "./resources/js/Components/Exercise/Exercise.vue");
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  name: "Chapter",
-  components: {
-    Exercise: _Components_Exercise_Exercise__WEBPACK_IMPORTED_MODULE_2__["default"]
-  },
-  layout: _Pages_Layout__WEBPACK_IMPORTED_MODULE_0__["default"],
   props: {
+    theme: {
+      type: Object,
+      "default": function _default() {}
+    },
     chapter: {
       type: Object,
       "default": function _default() {}
@@ -20913,16 +21236,27 @@ __webpack_require__.r(__webpack_exports__);
       "default": false
     }
   },
-  computed: {
-    chapterComponent: function chapterComponent() {
-      var _this = this;
-
-      if (this.hasChapterComponent) {
-        return (0,vue__WEBPACK_IMPORTED_MODULE_1__.defineAsyncComponent)(function () {
-          return __webpack_require__("./resources/js/Chapters lazy recursive ^\\.\\/.*$")("./".concat(_this.$page.props.theme.slug, "/").concat(_this.chapter.slug));
-        });
-      }
-    }
+  setup: function setup(__props, _ref) {
+    var expose = _ref.expose;
+    expose();
+    var props = __props;
+    var chapterComponent = (0,vue__WEBPACK_IMPORTED_MODULE_0__.computed)(function () {
+      return (0,vue__WEBPACK_IMPORTED_MODULE_0__.defineAsyncComponent)(function () {
+        return __webpack_require__("./resources/js/Chapters lazy recursive ^\\.\\/.*$")("./".concat(props.theme.slug, "/").concat(props.chapter.slug));
+      });
+    });
+    var __returned__ = {
+      props: props,
+      chapterComponent: chapterComponent,
+      computed: vue__WEBPACK_IMPORTED_MODULE_0__.computed,
+      defineAsyncComponent: vue__WEBPACK_IMPORTED_MODULE_0__.defineAsyncComponent,
+      Exercise: _Components_Exercise_Exercise__WEBPACK_IMPORTED_MODULE_1__["default"]
+    };
+    Object.defineProperty(__returned__, '__isScriptSetup', {
+      enumerable: false,
+      value: true
+    });
+    return __returned__;
   }
 });
 
@@ -20981,7 +21315,7 @@ __webpack_require__.r(__webpack_exports__);
     theme: {
       type: Object,
       "default": {
-        title: 'ScolCours'
+        title: "ScolCours"
       }
     }
   }
@@ -21058,6 +21392,71 @@ __webpack_require__.r(__webpack_exports__);
     canLogin: Boolean,
     canRegister: Boolean,
     themes: Array
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Pages/addExercise.vue?vue&type=script&setup=true&lang=js":
+/*!***********************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Pages/addExercise.vue?vue&type=script&setup=true&lang=js ***!
+  \***********************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _Components_Form_FormInput__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/Components/Form/FormInput */ "./resources/js/Components/Form/FormInput.vue");
+/* harmony import */ var _Components_Form_FormTextarea__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/Components/Form/FormTextarea */ "./resources/js/Components/Form/FormTextarea.vue");
+/* harmony import */ var _inertiajs_inertia_vue3__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @inertiajs/inertia-vue3 */ "./node_modules/@inertiajs/inertia-vue3/dist/index.js");
+/* harmony import */ var _Components_Form_FormFile__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/Components/Form/FormFile */ "./resources/js/Components/Form/FormFile.vue");
+/* harmony import */ var _Components_Form_FormSelect__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @/Components/Form/FormSelect */ "./resources/js/Components/Form/FormSelect.vue");
+
+
+
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  setup: function setup(__props, _ref) {
+    var expose = _ref.expose;
+    expose();
+    var Form = (0,_inertiajs_inertia_vue3__WEBPACK_IMPORTED_MODULE_2__.useForm)({
+      chapter_id: 1,
+      title: "",
+      body: "",
+      answer: "3/6",
+      explanation: "",
+      illustrations: ""
+    });
+
+    function createExercise() {
+      Form.post("/exercise", {
+        preserveScroll: true,
+        onSuccess: function onSuccess() {
+          return console.log("SUCCESS");
+        },
+        onError: function onError() {
+          return console.log(Form.errors);
+        }
+      });
+    }
+
+    var __returned__ = {
+      Form: Form,
+      createExercise: createExercise,
+      FormInput: _Components_Form_FormInput__WEBPACK_IMPORTED_MODULE_0__["default"],
+      FormTextarea: _Components_Form_FormTextarea__WEBPACK_IMPORTED_MODULE_1__["default"],
+      useForm: _inertiajs_inertia_vue3__WEBPACK_IMPORTED_MODULE_2__.useForm,
+      FormFile: _Components_Form_FormFile__WEBPACK_IMPORTED_MODULE_3__["default"],
+      FormSelect: _Components_Form_FormSelect__WEBPACK_IMPORTED_MODULE_4__["default"]
+    };
+    Object.defineProperty(__returned__, '__isScriptSetup', {
+      enumerable: false,
+      value: true
+    });
+    return __returned__;
   }
 });
 
@@ -21255,26 +21654,43 @@ __webpack_require__.r(__webpack_exports__);
 var _hoisted_1 = {
   "class": "underline font-semibold"
 };
+var _hoisted_2 = {
+  key: 0,
+  "class": "grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-2"
+};
+var _hoisted_3 = ["src"];
 
-var _hoisted_2 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("hr", {
+var _hoisted_4 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("hr", {
   "class": "text-gray-200 my-2"
 }, null, -1
 /* HOISTED */
 );
 
+var _hoisted_5 = {
+  key: 0,
+  "class": "mt-2 min-h-[3rem]"
+};
 function render(_ctx, _cache, $props, $setup, $data, $options) {
-  var _component_Panel = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("Panel");
-
-  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_Panel, null, {
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)($setup["Panel"], null, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
       return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("header", _hoisted_1, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.exercise.title), 1
       /* TEXT */
       ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("section", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.exercise.body), 1
       /* TEXT */
-      ), _hoisted_2, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("footer", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+      ), $props.exercise.illustrations.length > 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_2, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($props.exercise.illustrations, function (illustration) {
+        return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("img", {
+          key: "illustration_".concat(illustration.id),
+          src: '/storage/' + illustration.url,
+          alt: "illustration"
+        }, null, 8
+        /* PROPS */
+        , _hoisted_3);
+      }), 128
+      /* KEYED_FRAGMENT */
+      ))])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _hoisted_4, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("footer", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
         "class": "mr-2 hover:underline",
         onClick: _cache[0] || (_cache[0] = function ($event) {
-          return $data.showAnswer = !$data.showAnswer;
+          return $setup.showAnswer = !$setup.showAnswer;
         })
       }, " Réponse "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(vue__WEBPACK_IMPORTED_MODULE_0__.Transition, {
         name: "slide-right"
@@ -21284,12 +21700,288 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
             "class": "inline-block"
           }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.exercise.answer), 513
           /* TEXT, NEED_PATCH */
-          ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vShow, $data.showAnswer]])];
+          ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vShow, $setup.showAnswer]])];
         }),
         _: 1
         /* STABLE */
 
-      })])];
+      }), $props.exercise.explanation !== null ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h3", {
+        "class": "font-semibold",
+        onClick: _cache[1] || (_cache[1] = function ($event) {
+          return $setup.showExplanation = !$setup.showExplanation;
+        })
+      }, " développement / explication "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(vue__WEBPACK_IMPORTED_MODULE_0__.Transition, {
+        name: "collapse-from-top"
+      }, {
+        "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+          return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.exercise.explanation), 513
+          /* TEXT, NEED_PATCH */
+          ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vShow, $setup.showExplanation]])];
+        }),
+        _: 1
+        /* STABLE */
+
+      })])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])];
+    }),
+    _: 1
+    /* STABLE */
+
+  });
+}
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Components/Form/FormError.vue?vue&type=template&id=40db9af8":
+/*!************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Components/Form/FormError.vue?vue&type=template&id=40db9af8 ***!
+  \************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* binding */ render)
+/* harmony export */ });
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
+
+var _hoisted_1 = {
+  "class": "text-red-500 text-xs mt-0"
+};
+function render(_ctx, _cache, $props, $setup, $data, $options) {
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("p", _hoisted_1, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.message), 1
+  /* TEXT */
+  );
+}
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Components/Form/FormField.vue?vue&type=template&id=17573876":
+/*!************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Components/Form/FormField.vue?vue&type=template&id=17573876 ***!
+  \************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* binding */ render)
+/* harmony export */ });
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
+
+var _hoisted_1 = {
+  "class": "mt-6"
+};
+function render(_ctx, _cache) {
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.renderSlot)(_ctx.$slots, "default")]);
+}
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Components/Form/FormFile.vue?vue&type=template&id=2d40cbb0":
+/*!***********************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Components/Form/FormFile.vue?vue&type=template&id=2d40cbb0 ***!
+  \***********************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* binding */ render)
+/* harmony export */ });
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
+
+var _hoisted_1 = ["id", "name", "value"];
+function render(_ctx, _cache, $props, $setup, $data, $options) {
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)($setup["FormField"], null, {
+    "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["FormLabel"], {
+        label: $props.label,
+        name: $props.name
+      }, null, 8
+      /* PROPS */
+      , ["label", "name"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+        "class": "w-full border-dashed h-24 border rounded text-gray-400",
+        onClick: _cache[0] || (_cache[0] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.withModifiers)(function ($event) {
+          return $setup.inputElement.click();
+        }, ["prevent"]))
+      }, " Charger une ou plusieurs image(s) "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+        id: $props.name,
+        ref: "inputElement",
+        name: $props.name,
+        type: "file",
+        multiple: "",
+        "class": "hidden",
+        value: $props.modelValue,
+        onInput: _cache[1] || (_cache[1] = function ($event) {
+          return _ctx.$emit('update:modelValue', $event.target.files);
+        })
+      }, null, 40
+      /* PROPS, HYDRATE_EVENTS */
+      , _hoisted_1), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["FormError"], {
+        name: $props.name
+      }, null, 8
+      /* PROPS */
+      , ["name"])];
+    }),
+    _: 1
+    /* STABLE */
+
+  });
+}
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Components/Form/FormInput.vue?vue&type=template&id=31ac0746":
+/*!************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Components/Form/FormInput.vue?vue&type=template&id=31ac0746 ***!
+  \************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* binding */ render)
+/* harmony export */ });
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
+
+var _hoisted_1 = ["id", "name", "value"];
+function render(_ctx, _cache, $props, $setup, $data, $options) {
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)($setup["FormField"], null, {
+    "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["FormLabel"], {
+        label: $props.label,
+        name: $props.name
+      }, null, 8
+      /* PROPS */
+      , ["label", "name"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+        id: $props.name,
+        name: $props.name,
+        "class": "border border-gray-200 p-2 w-full rounded",
+        value: $props.modelValue,
+        onInput: _cache[0] || (_cache[0] = function ($event) {
+          return _ctx.$emit('update:modelValue', $event.target.value);
+        })
+      }, null, 40
+      /* PROPS, HYDRATE_EVENTS */
+      , _hoisted_1), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["FormError"], {
+        name: $props.name,
+        message: $props.error
+      }, null, 8
+      /* PROPS */
+      , ["name", "message"])];
+    }),
+    _: 1
+    /* STABLE */
+
+  });
+}
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Components/Form/FormLabel.vue?vue&type=template&id=b096ed20":
+/*!************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Components/Form/FormLabel.vue?vue&type=template&id=b096ed20 ***!
+  \************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* binding */ render)
+/* harmony export */ });
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
+
+var _hoisted_1 = ["for", "name"];
+function render(_ctx, _cache, $props, $setup, $data, $options) {
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("label", {
+    "for": $props.name,
+    name: $props.name,
+    "class": "block mb-2 uppercase font-bold text-xs text-gray-700"
+  }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(this.label === '' ? this.name : this.label), 9
+  /* TEXT, PROPS */
+  , _hoisted_1);
+}
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Components/Form/FormSelect.vue?vue&type=template&id=511a5430":
+/*!*************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Components/Form/FormSelect.vue?vue&type=template&id=511a5430 ***!
+  \*************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* binding */ render)
+/* harmony export */ });
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
+
+var _hoisted_1 = ["id", "value"];
+function render(_ctx, _cache, $props, $setup, $data, $options) {
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)($setup["FormField"], null, {
+    "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["FormLabel"], {
+        label: $props.label,
+        name: $props.name
+      }, null, 8
+      /* PROPS */
+      , ["label", "name"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("select", {
+        id: $props.name,
+        "class": "border border-gray-200 p-2 w-full rounded",
+        value: $props.modelValue,
+        onChange: _cache[0] || (_cache[0] = function ($event) {
+          _ctx.$emit('update:modelValue', $event.target.value);
+
+          _ctx.$log($event.target.value);
+        })
+      }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.renderSlot)(_ctx.$slots, "default")], 40
+      /* PROPS, HYDRATE_EVENTS */
+      , _hoisted_1)];
+    }),
+    _: 3
+    /* FORWARDED */
+
+  });
+}
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Components/Form/FormTextarea.vue?vue&type=template&id=7c015f24":
+/*!***************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Components/Form/FormTextarea.vue?vue&type=template&id=7c015f24 ***!
+  \***************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* binding */ render)
+/* harmony export */ });
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
+
+var _hoisted_1 = ["id", "value"];
+function render(_ctx, _cache, $props, $setup, $data, $options) {
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)($setup["FormField"], null, {
+    "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["FormLabel"], {
+        label: "label",
+        name: "name"
+      }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("textarea", {
+        id: $props.name,
+        "class": "border border-gray-200 p-2 w-full rounded",
+        value: $props.modelValue,
+        onInput: _cache[0] || (_cache[0] = function ($event) {
+          return _ctx.$emit('update:modelValue', $event.target.value);
+        })
+      }, null, 40
+      /* PROPS, HYDRATE_EVENTS */
+      , _hoisted_1), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["FormError"], {
+        name: $props.name,
+        message: $props.error
+      }, null, 8
+      /* PROPS */
+      , ["name", "message"])];
     }),
     _: 1
     /* STABLE */
@@ -21631,11 +22323,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
 
-var _hoisted_1 = {
-  "class": "bg-white px-4 py-2 rounded-xl border border-gray-300"
-};
 function render(_ctx, _cache, $props, $setup, $data, $options) {
-  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("article", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.renderSlot)(_ctx.$slots, "default")]);
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("article", {
+    "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)([{
+      'border-4 border-green-600': $props.type === 'success'
+    }, "bg-white px-4 py-2 rounded-xl border border-gray-300 transition-all"])
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.renderSlot)(_ctx.$slots, "default")], 2
+  /* CLASS */
+  );
 }
 
 /***/ }),
@@ -22650,16 +23345,14 @@ var _hoisted_5 = {
   "class": "space-y-5"
 };
 function render(_ctx, _cache, $props, $setup, $data, $options) {
-  var _component_Exercise = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("Exercise");
-
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Title "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h1", _hoisted_1, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.chapter.title), 1
   /* TEXT */
   ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Chapter description "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.chapter.body), 1
   /* TEXT */
-  ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Chapter component with or without interactivity "), ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)((0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveDynamicComponent)($options.chapterComponent))), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" exercises "), $props.chapter.exercises.length > 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_3, [_hoisted_4, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($props.chapter.exercises, function (exercise) {
+  ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Chapter component with or without interactivity "), ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)((0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveDynamicComponent)($setup.chapterComponent))), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" exercises "), $props.chapter.exercises.length > 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_3, [_hoisted_4, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($props.chapter.exercises, function (exercise) {
     return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", {
       key: "exercise-".concat(exercise.id)
-    }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Exercise, {
+    }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["Exercise"], {
       exercise: exercise
     }, null, 8
     /* PROPS */
@@ -22878,6 +23571,112 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Pages/addExercise.vue?vue&type=template&id=34334bc0":
+/*!****************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Pages/addExercise.vue?vue&type=template&id=34334bc0 ***!
+  \****************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* binding */ render)
+/* harmony export */ });
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
+
+
+var _hoisted_1 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h1", {
+  "class": "text-xl"
+}, " Ajouter un exercice ", -1
+/* HOISTED */
+);
+
+var _hoisted_2 = ["onSubmit"];
+var _hoisted_3 = ["value"];
+
+var _hoisted_4 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+  type: "submit",
+  "class": "mt-10 border-2 px-5 py-2 uppercase rounded-xl hover:bg-white"
+}, " créer un exercice ", -1
+/* HOISTED */
+);
+
+function render(_ctx, _cache, $props, $setup, $data, $options) {
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, [_hoisted_1, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("form", {
+    onSubmit: (0,vue__WEBPACK_IMPORTED_MODULE_0__.withModifiers)($setup.createExercise, ["prevent"])
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["FormSelect"], {
+    modelValue: $setup.Form.chapter_id,
+    "onUpdate:modelValue": _cache[0] || (_cache[0] = function ($event) {
+      return $setup.Form.chapter_id = $event;
+    }),
+    name: "chapter_id"
+  }, {
+    "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+      return [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)(_ctx.$page.props.themes, function (theme) {
+        return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("option", {
+          key: "theme-".concat(theme.id),
+          value: theme.id
+        }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(theme.title), 9
+        /* TEXT, PROPS */
+        , _hoisted_3);
+      }), 128
+      /* KEYED_FRAGMENT */
+      ))];
+    }),
+    _: 1
+    /* STABLE */
+
+  }, 8
+  /* PROPS */
+  , ["modelValue"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["FormInput"], {
+    modelValue: $setup.Form.title,
+    "onUpdate:modelValue": _cache[1] || (_cache[1] = function ($event) {
+      return $setup.Form.title = $event;
+    }),
+    name: "title",
+    error: $setup.Form.errors.title
+  }, null, 8
+  /* PROPS */
+  , ["modelValue", "error"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["FormTextarea"], {
+    modelValue: $setup.Form.body,
+    "onUpdate:modelValue": _cache[2] || (_cache[2] = function ($event) {
+      return $setup.Form.body = $event;
+    }),
+    name: "body",
+    error: $setup.Form.errors.body
+  }, null, 8
+  /* PROPS */
+  , ["modelValue", "error"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["FormInput"], {
+    modelValue: $setup.Form.answer,
+    "onUpdate:modelValue": _cache[3] || (_cache[3] = function ($event) {
+      return $setup.Form.answer = $event;
+    }),
+    name: "answer"
+  }, null, 8
+  /* PROPS */
+  , ["modelValue"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["FormTextarea"], {
+    modelValue: $setup.Form.explanation,
+    "onUpdate:modelValue": _cache[4] || (_cache[4] = function ($event) {
+      return $setup.Form.explanation = $event;
+    }),
+    name: "explanation",
+    error: $setup.Form.errors.explanation
+  }, null, 8
+  /* PROPS */
+  , ["modelValue", "error"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["FormFile"], {
+    name: "file",
+    onInput: _cache[5] || (_cache[5] = function ($event) {
+      return $setup.Form.illustrations = $event.target.files;
+    })
+  }), _hoisted_4], 40
+  /* PROPS, HYDRATE_EVENTS */
+  , _hoisted_2)], 64
+  /* STABLE_FRAGMENT */
+  );
+}
+
+/***/ }),
+
 /***/ "./resources/js/app.js":
 /*!*****************************!*\
   !*** ./resources/js/app.js ***!
@@ -22890,14 +23689,19 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _inertiajs_inertia_vue3__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @inertiajs/inertia-vue3 */ "./node_modules/@inertiajs/inertia-vue3/dist/index.js");
 /* harmony import */ var _inertiajs_progress__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @inertiajs/progress */ "./node_modules/@inertiajs/progress/dist/index.js");
 /* harmony import */ var _vueDirectives__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/vueDirectives */ "./resources/js/vueDirectives.js");
+/* harmony import */ var _Pages_Layout__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @/Pages/Layout */ "./resources/js/Pages/Layout.vue");
+/* harmony import */ var _Pages_LayoutFullpage__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @/Pages/LayoutFullpage */ "./resources/js/Pages/LayoutFullpage.vue");
 var _window$document$getE;
-
-__webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
 
 
  // Custom directives
 
+
+
+
+
+__webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
 var appName = ((_window$document$getE = window.document.getElementsByTagName("title")[0]) === null || _window$document$getE === void 0 ? void 0 : _window$document$getE.innerText) || "ScolCours";
 (0,_inertiajs_inertia_vue3__WEBPACK_IMPORTED_MODULE_1__.createInertiaApp)({
@@ -22905,7 +23709,10 @@ var appName = ((_window$document$getE = window.document.getElementsByTagName("ti
     return "".concat(_title, " - ").concat(appName);
   },
   resolve: function resolve(name) {
-    return __webpack_require__("./resources/js/Pages sync recursive ^\\.\\/.*\\.vue$")("./".concat(name, ".vue"));
+    var page = __webpack_require__("./resources/js/Pages sync recursive ^\\.\\/.*\\.vue$")("./".concat(name, ".vue"))["default"];
+
+    page.layout = page.layout || (name === "Welcome" ? _Pages_LayoutFullpage__WEBPACK_IMPORTED_MODULE_5__["default"] : _Pages_Layout__WEBPACK_IMPORTED_MODULE_4__["default"]);
+    return page;
   },
   setup: function setup(_ref) {
     var el = _ref.el,
@@ -22921,6 +23728,7 @@ var appName = ((_window$document$getE = window.document.getElementsByTagName("ti
         route: route
       }
     });
+    vueApp.config.globalProperties.$log = console.log;
     return vueApp.mount(el);
   }
 });
@@ -46953,14 +47761,208 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _Exercise_vue_vue_type_template_id_00f52bd8__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Exercise.vue?vue&type=template&id=00f52bd8 */ "./resources/js/Components/Exercise/Exercise.vue?vue&type=template&id=00f52bd8");
-/* harmony import */ var _Exercise_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Exercise.vue?vue&type=script&lang=js */ "./resources/js/Components/Exercise/Exercise.vue?vue&type=script&lang=js");
+/* harmony import */ var _Exercise_vue_vue_type_script_setup_true_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Exercise.vue?vue&type=script&setup=true&lang=js */ "./resources/js/Components/Exercise/Exercise.vue?vue&type=script&setup=true&lang=js");
 /* harmony import */ var C_websites_scolcours_gymnase_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
 
 
 
 
 ;
-const __exports__ = /*#__PURE__*/(0,C_websites_scolcours_gymnase_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"])(_Exercise_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_Exercise_vue_vue_type_template_id_00f52bd8__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/Components/Exercise/Exercise.vue"]])
+const __exports__ = /*#__PURE__*/(0,C_websites_scolcours_gymnase_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"])(_Exercise_vue_vue_type_script_setup_true_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_Exercise_vue_vue_type_template_id_00f52bd8__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/Components/Exercise/Exercise.vue"]])
+/* hot reload */
+if (false) {}
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__exports__);
+
+/***/ }),
+
+/***/ "./resources/js/Components/Form/FormError.vue":
+/*!****************************************************!*\
+  !*** ./resources/js/Components/Form/FormError.vue ***!
+  \****************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _FormError_vue_vue_type_template_id_40db9af8__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./FormError.vue?vue&type=template&id=40db9af8 */ "./resources/js/Components/Form/FormError.vue?vue&type=template&id=40db9af8");
+/* harmony import */ var _FormError_vue_vue_type_script_setup_true_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./FormError.vue?vue&type=script&setup=true&lang=js */ "./resources/js/Components/Form/FormError.vue?vue&type=script&setup=true&lang=js");
+/* harmony import */ var C_websites_scolcours_gymnase_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+
+
+
+
+;
+const __exports__ = /*#__PURE__*/(0,C_websites_scolcours_gymnase_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"])(_FormError_vue_vue_type_script_setup_true_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_FormError_vue_vue_type_template_id_40db9af8__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/Components/Form/FormError.vue"]])
+/* hot reload */
+if (false) {}
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__exports__);
+
+/***/ }),
+
+/***/ "./resources/js/Components/Form/FormField.vue":
+/*!****************************************************!*\
+  !*** ./resources/js/Components/Form/FormField.vue ***!
+  \****************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _FormField_vue_vue_type_template_id_17573876__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./FormField.vue?vue&type=template&id=17573876 */ "./resources/js/Components/Form/FormField.vue?vue&type=template&id=17573876");
+/* harmony import */ var C_websites_scolcours_gymnase_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+
+const script = {}
+
+;
+const __exports__ = /*#__PURE__*/(0,C_websites_scolcours_gymnase_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_1__["default"])(script, [['render',_FormField_vue_vue_type_template_id_17573876__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/Components/Form/FormField.vue"]])
+/* hot reload */
+if (false) {}
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__exports__);
+
+/***/ }),
+
+/***/ "./resources/js/Components/Form/FormFile.vue":
+/*!***************************************************!*\
+  !*** ./resources/js/Components/Form/FormFile.vue ***!
+  \***************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _FormFile_vue_vue_type_template_id_2d40cbb0__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./FormFile.vue?vue&type=template&id=2d40cbb0 */ "./resources/js/Components/Form/FormFile.vue?vue&type=template&id=2d40cbb0");
+/* harmony import */ var _FormFile_vue_vue_type_script_setup_true_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./FormFile.vue?vue&type=script&setup=true&lang=js */ "./resources/js/Components/Form/FormFile.vue?vue&type=script&setup=true&lang=js");
+/* harmony import */ var C_websites_scolcours_gymnase_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+
+
+
+
+;
+const __exports__ = /*#__PURE__*/(0,C_websites_scolcours_gymnase_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"])(_FormFile_vue_vue_type_script_setup_true_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_FormFile_vue_vue_type_template_id_2d40cbb0__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/Components/Form/FormFile.vue"]])
+/* hot reload */
+if (false) {}
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__exports__);
+
+/***/ }),
+
+/***/ "./resources/js/Components/Form/FormInput.vue":
+/*!****************************************************!*\
+  !*** ./resources/js/Components/Form/FormInput.vue ***!
+  \****************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _FormInput_vue_vue_type_template_id_31ac0746__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./FormInput.vue?vue&type=template&id=31ac0746 */ "./resources/js/Components/Form/FormInput.vue?vue&type=template&id=31ac0746");
+/* harmony import */ var _FormInput_vue_vue_type_script_setup_true_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./FormInput.vue?vue&type=script&setup=true&lang=js */ "./resources/js/Components/Form/FormInput.vue?vue&type=script&setup=true&lang=js");
+/* harmony import */ var C_websites_scolcours_gymnase_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+
+
+
+
+;
+const __exports__ = /*#__PURE__*/(0,C_websites_scolcours_gymnase_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"])(_FormInput_vue_vue_type_script_setup_true_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_FormInput_vue_vue_type_template_id_31ac0746__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/Components/Form/FormInput.vue"]])
+/* hot reload */
+if (false) {}
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__exports__);
+
+/***/ }),
+
+/***/ "./resources/js/Components/Form/FormLabel.vue":
+/*!****************************************************!*\
+  !*** ./resources/js/Components/Form/FormLabel.vue ***!
+  \****************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _FormLabel_vue_vue_type_template_id_b096ed20__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./FormLabel.vue?vue&type=template&id=b096ed20 */ "./resources/js/Components/Form/FormLabel.vue?vue&type=template&id=b096ed20");
+/* harmony import */ var _FormLabel_vue_vue_type_script_setup_true_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./FormLabel.vue?vue&type=script&setup=true&lang=js */ "./resources/js/Components/Form/FormLabel.vue?vue&type=script&setup=true&lang=js");
+/* harmony import */ var C_websites_scolcours_gymnase_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+
+
+
+
+;
+const __exports__ = /*#__PURE__*/(0,C_websites_scolcours_gymnase_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"])(_FormLabel_vue_vue_type_script_setup_true_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_FormLabel_vue_vue_type_template_id_b096ed20__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/Components/Form/FormLabel.vue"]])
+/* hot reload */
+if (false) {}
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__exports__);
+
+/***/ }),
+
+/***/ "./resources/js/Components/Form/FormSelect.vue":
+/*!*****************************************************!*\
+  !*** ./resources/js/Components/Form/FormSelect.vue ***!
+  \*****************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _FormSelect_vue_vue_type_template_id_511a5430__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./FormSelect.vue?vue&type=template&id=511a5430 */ "./resources/js/Components/Form/FormSelect.vue?vue&type=template&id=511a5430");
+/* harmony import */ var _FormSelect_vue_vue_type_script_setup_true_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./FormSelect.vue?vue&type=script&setup=true&lang=js */ "./resources/js/Components/Form/FormSelect.vue?vue&type=script&setup=true&lang=js");
+/* harmony import */ var C_websites_scolcours_gymnase_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+
+
+
+
+;
+const __exports__ = /*#__PURE__*/(0,C_websites_scolcours_gymnase_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"])(_FormSelect_vue_vue_type_script_setup_true_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_FormSelect_vue_vue_type_template_id_511a5430__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/Components/Form/FormSelect.vue"]])
+/* hot reload */
+if (false) {}
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__exports__);
+
+/***/ }),
+
+/***/ "./resources/js/Components/Form/FormTextarea.vue":
+/*!*******************************************************!*\
+  !*** ./resources/js/Components/Form/FormTextarea.vue ***!
+  \*******************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _FormTextarea_vue_vue_type_template_id_7c015f24__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./FormTextarea.vue?vue&type=template&id=7c015f24 */ "./resources/js/Components/Form/FormTextarea.vue?vue&type=template&id=7c015f24");
+/* harmony import */ var _FormTextarea_vue_vue_type_script_setup_true_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./FormTextarea.vue?vue&type=script&setup=true&lang=js */ "./resources/js/Components/Form/FormTextarea.vue?vue&type=script&setup=true&lang=js");
+/* harmony import */ var C_websites_scolcours_gymnase_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+
+
+
+
+;
+const __exports__ = /*#__PURE__*/(0,C_websites_scolcours_gymnase_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"])(_FormTextarea_vue_vue_type_script_setup_true_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_FormTextarea_vue_vue_type_template_id_7c015f24__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/Components/Form/FormTextarea.vue"]])
 /* hot reload */
 if (false) {}
 
@@ -47149,14 +48151,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _Panel_vue_vue_type_template_id_628b1f74__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Panel.vue?vue&type=template&id=628b1f74 */ "./resources/js/Components/Ui/Panel.vue?vue&type=template&id=628b1f74");
-/* harmony import */ var _Panel_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Panel.vue?vue&type=script&lang=js */ "./resources/js/Components/Ui/Panel.vue?vue&type=script&lang=js");
+/* harmony import */ var _Panel_vue_vue_type_script_setup_true_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Panel.vue?vue&type=script&setup=true&lang=js */ "./resources/js/Components/Ui/Panel.vue?vue&type=script&setup=true&lang=js");
 /* harmony import */ var C_websites_scolcours_gymnase_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
 
 
 
 
 ;
-const __exports__ = /*#__PURE__*/(0,C_websites_scolcours_gymnase_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"])(_Panel_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_Panel_vue_vue_type_template_id_628b1f74__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/Components/Ui/Panel.vue"]])
+const __exports__ = /*#__PURE__*/(0,C_websites_scolcours_gymnase_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"])(_Panel_vue_vue_type_script_setup_true_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_Panel_vue_vue_type_template_id_628b1f74__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/Components/Ui/Panel.vue"]])
 /* hot reload */
 if (false) {}
 
@@ -47429,14 +48431,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _Chapter_vue_vue_type_template_id_054de634__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Chapter.vue?vue&type=template&id=054de634 */ "./resources/js/Pages/Chapter.vue?vue&type=template&id=054de634");
-/* harmony import */ var _Chapter_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Chapter.vue?vue&type=script&lang=js */ "./resources/js/Pages/Chapter.vue?vue&type=script&lang=js");
+/* harmony import */ var _Chapter_vue_vue_type_script_setup_true_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Chapter.vue?vue&type=script&setup=true&lang=js */ "./resources/js/Pages/Chapter.vue?vue&type=script&setup=true&lang=js");
 /* harmony import */ var C_websites_scolcours_gymnase_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
 
 
 
 
 ;
-const __exports__ = /*#__PURE__*/(0,C_websites_scolcours_gymnase_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"])(_Chapter_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_Chapter_vue_vue_type_template_id_054de634__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/Pages/Chapter.vue"]])
+const __exports__ = /*#__PURE__*/(0,C_websites_scolcours_gymnase_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"])(_Chapter_vue_vue_type_script_setup_true_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_Chapter_vue_vue_type_template_id_054de634__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/Pages/Chapter.vue"]])
 /* hot reload */
 if (false) {}
 
@@ -47585,6 +48587,34 @@ if (false) {}
 
 /***/ }),
 
+/***/ "./resources/js/Pages/addExercise.vue":
+/*!********************************************!*\
+  !*** ./resources/js/Pages/addExercise.vue ***!
+  \********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _addExercise_vue_vue_type_template_id_34334bc0__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./addExercise.vue?vue&type=template&id=34334bc0 */ "./resources/js/Pages/addExercise.vue?vue&type=template&id=34334bc0");
+/* harmony import */ var _addExercise_vue_vue_type_script_setup_true_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./addExercise.vue?vue&type=script&setup=true&lang=js */ "./resources/js/Pages/addExercise.vue?vue&type=script&setup=true&lang=js");
+/* harmony import */ var C_websites_scolcours_gymnase_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+
+
+
+
+;
+const __exports__ = /*#__PURE__*/(0,C_websites_scolcours_gymnase_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"])(_addExercise_vue_vue_type_script_setup_true_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_addExercise_vue_vue_type_template_id_34334bc0__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/Pages/addExercise.vue"]])
+/* hot reload */
+if (false) {}
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__exports__);
+
+/***/ }),
+
 /***/ "./resources/js/Components/Button.vue?vue&type=script&lang=js":
 /*!********************************************************************!*\
   !*** ./resources/js/Components/Button.vue?vue&type=script&lang=js ***!
@@ -47649,18 +48679,114 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./resources/js/Components/Exercise/Exercise.vue?vue&type=script&lang=js":
-/*!*******************************************************************************!*\
-  !*** ./resources/js/Components/Exercise/Exercise.vue?vue&type=script&lang=js ***!
-  \*******************************************************************************/
+/***/ "./resources/js/Components/Exercise/Exercise.vue?vue&type=script&setup=true&lang=js":
+/*!******************************************************************************************!*\
+  !*** ./resources/js/Components/Exercise/Exercise.vue?vue&type=script&setup=true&lang=js ***!
+  \******************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_Exercise_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__["default"])
+/* harmony export */   "default": () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_Exercise_vue_vue_type_script_setup_true_lang_js__WEBPACK_IMPORTED_MODULE_0__["default"])
 /* harmony export */ });
-/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_Exercise_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./Exercise.vue?vue&type=script&lang=js */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Components/Exercise/Exercise.vue?vue&type=script&lang=js");
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_Exercise_vue_vue_type_script_setup_true_lang_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./Exercise.vue?vue&type=script&setup=true&lang=js */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Components/Exercise/Exercise.vue?vue&type=script&setup=true&lang=js");
+ 
+
+/***/ }),
+
+/***/ "./resources/js/Components/Form/FormError.vue?vue&type=script&setup=true&lang=js":
+/*!***************************************************************************************!*\
+  !*** ./resources/js/Components/Form/FormError.vue?vue&type=script&setup=true&lang=js ***!
+  \***************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_FormError_vue_vue_type_script_setup_true_lang_js__WEBPACK_IMPORTED_MODULE_0__["default"])
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_FormError_vue_vue_type_script_setup_true_lang_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./FormError.vue?vue&type=script&setup=true&lang=js */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Components/Form/FormError.vue?vue&type=script&setup=true&lang=js");
+ 
+
+/***/ }),
+
+/***/ "./resources/js/Components/Form/FormFile.vue?vue&type=script&setup=true&lang=js":
+/*!**************************************************************************************!*\
+  !*** ./resources/js/Components/Form/FormFile.vue?vue&type=script&setup=true&lang=js ***!
+  \**************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_FormFile_vue_vue_type_script_setup_true_lang_js__WEBPACK_IMPORTED_MODULE_0__["default"])
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_FormFile_vue_vue_type_script_setup_true_lang_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./FormFile.vue?vue&type=script&setup=true&lang=js */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Components/Form/FormFile.vue?vue&type=script&setup=true&lang=js");
+ 
+
+/***/ }),
+
+/***/ "./resources/js/Components/Form/FormInput.vue?vue&type=script&setup=true&lang=js":
+/*!***************************************************************************************!*\
+  !*** ./resources/js/Components/Form/FormInput.vue?vue&type=script&setup=true&lang=js ***!
+  \***************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_FormInput_vue_vue_type_script_setup_true_lang_js__WEBPACK_IMPORTED_MODULE_0__["default"])
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_FormInput_vue_vue_type_script_setup_true_lang_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./FormInput.vue?vue&type=script&setup=true&lang=js */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Components/Form/FormInput.vue?vue&type=script&setup=true&lang=js");
+ 
+
+/***/ }),
+
+/***/ "./resources/js/Components/Form/FormLabel.vue?vue&type=script&setup=true&lang=js":
+/*!***************************************************************************************!*\
+  !*** ./resources/js/Components/Form/FormLabel.vue?vue&type=script&setup=true&lang=js ***!
+  \***************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_FormLabel_vue_vue_type_script_setup_true_lang_js__WEBPACK_IMPORTED_MODULE_0__["default"])
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_FormLabel_vue_vue_type_script_setup_true_lang_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./FormLabel.vue?vue&type=script&setup=true&lang=js */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Components/Form/FormLabel.vue?vue&type=script&setup=true&lang=js");
+ 
+
+/***/ }),
+
+/***/ "./resources/js/Components/Form/FormSelect.vue?vue&type=script&setup=true&lang=js":
+/*!****************************************************************************************!*\
+  !*** ./resources/js/Components/Form/FormSelect.vue?vue&type=script&setup=true&lang=js ***!
+  \****************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_FormSelect_vue_vue_type_script_setup_true_lang_js__WEBPACK_IMPORTED_MODULE_0__["default"])
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_FormSelect_vue_vue_type_script_setup_true_lang_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./FormSelect.vue?vue&type=script&setup=true&lang=js */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Components/Form/FormSelect.vue?vue&type=script&setup=true&lang=js");
+ 
+
+/***/ }),
+
+/***/ "./resources/js/Components/Form/FormTextarea.vue?vue&type=script&setup=true&lang=js":
+/*!******************************************************************************************!*\
+  !*** ./resources/js/Components/Form/FormTextarea.vue?vue&type=script&setup=true&lang=js ***!
+  \******************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_FormTextarea_vue_vue_type_script_setup_true_lang_js__WEBPACK_IMPORTED_MODULE_0__["default"])
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_FormTextarea_vue_vue_type_script_setup_true_lang_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./FormTextarea.vue?vue&type=script&setup=true&lang=js */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Components/Form/FormTextarea.vue?vue&type=script&setup=true&lang=js");
  
 
 /***/ }),
@@ -47761,18 +48887,18 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./resources/js/Components/Ui/Panel.vue?vue&type=script&lang=js":
-/*!**********************************************************************!*\
-  !*** ./resources/js/Components/Ui/Panel.vue?vue&type=script&lang=js ***!
-  \**********************************************************************/
+/***/ "./resources/js/Components/Ui/Panel.vue?vue&type=script&setup=true&lang=js":
+/*!*********************************************************************************!*\
+  !*** ./resources/js/Components/Ui/Panel.vue?vue&type=script&setup=true&lang=js ***!
+  \*********************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_Panel_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__["default"])
+/* harmony export */   "default": () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_Panel_vue_vue_type_script_setup_true_lang_js__WEBPACK_IMPORTED_MODULE_0__["default"])
 /* harmony export */ });
-/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_Panel_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./Panel.vue?vue&type=script&lang=js */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Components/Ui/Panel.vue?vue&type=script&lang=js");
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_Panel_vue_vue_type_script_setup_true_lang_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./Panel.vue?vue&type=script&setup=true&lang=js */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Components/Ui/Panel.vue?vue&type=script&setup=true&lang=js");
  
 
 /***/ }),
@@ -47921,18 +49047,18 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./resources/js/Pages/Chapter.vue?vue&type=script&lang=js":
-/*!****************************************************************!*\
-  !*** ./resources/js/Pages/Chapter.vue?vue&type=script&lang=js ***!
-  \****************************************************************/
+/***/ "./resources/js/Pages/Chapter.vue?vue&type=script&setup=true&lang=js":
+/*!***************************************************************************!*\
+  !*** ./resources/js/Pages/Chapter.vue?vue&type=script&setup=true&lang=js ***!
+  \***************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_Chapter_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__["default"])
+/* harmony export */   "default": () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_Chapter_vue_vue_type_script_setup_true_lang_js__WEBPACK_IMPORTED_MODULE_0__["default"])
 /* harmony export */ });
-/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_Chapter_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./Chapter.vue?vue&type=script&lang=js */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Pages/Chapter.vue?vue&type=script&lang=js");
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_Chapter_vue_vue_type_script_setup_true_lang_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./Chapter.vue?vue&type=script&setup=true&lang=js */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Pages/Chapter.vue?vue&type=script&setup=true&lang=js");
  
 
 /***/ }),
@@ -48013,6 +49139,22 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_Welcome_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__["default"])
 /* harmony export */ });
 /* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_Welcome_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./Welcome.vue?vue&type=script&lang=js */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Pages/Welcome.vue?vue&type=script&lang=js");
+ 
+
+/***/ }),
+
+/***/ "./resources/js/Pages/addExercise.vue?vue&type=script&setup=true&lang=js":
+/*!*******************************************************************************!*\
+  !*** ./resources/js/Pages/addExercise.vue?vue&type=script&setup=true&lang=js ***!
+  \*******************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_addExercise_vue_vue_type_script_setup_true_lang_js__WEBPACK_IMPORTED_MODULE_0__["default"])
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_addExercise_vue_vue_type_script_setup_true_lang_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./addExercise.vue?vue&type=script&setup=true&lang=js */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Pages/addExercise.vue?vue&type=script&setup=true&lang=js");
  
 
 /***/ }),
@@ -48109,6 +49251,118 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "render": () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_Exercise_vue_vue_type_template_id_00f52bd8__WEBPACK_IMPORTED_MODULE_0__.render)
 /* harmony export */ });
 /* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_Exercise_vue_vue_type_template_id_00f52bd8__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!../../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./Exercise.vue?vue&type=template&id=00f52bd8 */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Components/Exercise/Exercise.vue?vue&type=template&id=00f52bd8");
+
+
+/***/ }),
+
+/***/ "./resources/js/Components/Form/FormError.vue?vue&type=template&id=40db9af8":
+/*!**********************************************************************************!*\
+  !*** ./resources/js/Components/Form/FormError.vue?vue&type=template&id=40db9af8 ***!
+  \**********************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_FormError_vue_vue_type_template_id_40db9af8__WEBPACK_IMPORTED_MODULE_0__.render)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_FormError_vue_vue_type_template_id_40db9af8__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!../../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./FormError.vue?vue&type=template&id=40db9af8 */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Components/Form/FormError.vue?vue&type=template&id=40db9af8");
+
+
+/***/ }),
+
+/***/ "./resources/js/Components/Form/FormField.vue?vue&type=template&id=17573876":
+/*!**********************************************************************************!*\
+  !*** ./resources/js/Components/Form/FormField.vue?vue&type=template&id=17573876 ***!
+  \**********************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_FormField_vue_vue_type_template_id_17573876__WEBPACK_IMPORTED_MODULE_0__.render)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_FormField_vue_vue_type_template_id_17573876__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!../../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./FormField.vue?vue&type=template&id=17573876 */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Components/Form/FormField.vue?vue&type=template&id=17573876");
+
+
+/***/ }),
+
+/***/ "./resources/js/Components/Form/FormFile.vue?vue&type=template&id=2d40cbb0":
+/*!*********************************************************************************!*\
+  !*** ./resources/js/Components/Form/FormFile.vue?vue&type=template&id=2d40cbb0 ***!
+  \*********************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_FormFile_vue_vue_type_template_id_2d40cbb0__WEBPACK_IMPORTED_MODULE_0__.render)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_FormFile_vue_vue_type_template_id_2d40cbb0__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!../../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./FormFile.vue?vue&type=template&id=2d40cbb0 */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Components/Form/FormFile.vue?vue&type=template&id=2d40cbb0");
+
+
+/***/ }),
+
+/***/ "./resources/js/Components/Form/FormInput.vue?vue&type=template&id=31ac0746":
+/*!**********************************************************************************!*\
+  !*** ./resources/js/Components/Form/FormInput.vue?vue&type=template&id=31ac0746 ***!
+  \**********************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_FormInput_vue_vue_type_template_id_31ac0746__WEBPACK_IMPORTED_MODULE_0__.render)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_FormInput_vue_vue_type_template_id_31ac0746__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!../../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./FormInput.vue?vue&type=template&id=31ac0746 */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Components/Form/FormInput.vue?vue&type=template&id=31ac0746");
+
+
+/***/ }),
+
+/***/ "./resources/js/Components/Form/FormLabel.vue?vue&type=template&id=b096ed20":
+/*!**********************************************************************************!*\
+  !*** ./resources/js/Components/Form/FormLabel.vue?vue&type=template&id=b096ed20 ***!
+  \**********************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_FormLabel_vue_vue_type_template_id_b096ed20__WEBPACK_IMPORTED_MODULE_0__.render)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_FormLabel_vue_vue_type_template_id_b096ed20__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!../../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./FormLabel.vue?vue&type=template&id=b096ed20 */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Components/Form/FormLabel.vue?vue&type=template&id=b096ed20");
+
+
+/***/ }),
+
+/***/ "./resources/js/Components/Form/FormSelect.vue?vue&type=template&id=511a5430":
+/*!***********************************************************************************!*\
+  !*** ./resources/js/Components/Form/FormSelect.vue?vue&type=template&id=511a5430 ***!
+  \***********************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_FormSelect_vue_vue_type_template_id_511a5430__WEBPACK_IMPORTED_MODULE_0__.render)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_FormSelect_vue_vue_type_template_id_511a5430__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!../../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./FormSelect.vue?vue&type=template&id=511a5430 */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Components/Form/FormSelect.vue?vue&type=template&id=511a5430");
+
+
+/***/ }),
+
+/***/ "./resources/js/Components/Form/FormTextarea.vue?vue&type=template&id=7c015f24":
+/*!*************************************************************************************!*\
+  !*** ./resources/js/Components/Form/FormTextarea.vue?vue&type=template&id=7c015f24 ***!
+  \*************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_FormTextarea_vue_vue_type_template_id_7c015f24__WEBPACK_IMPORTED_MODULE_0__.render)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_FormTextarea_vue_vue_type_template_id_7c015f24__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!../../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./FormTextarea.vue?vue&type=template&id=7c015f24 */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Components/Form/FormTextarea.vue?vue&type=template&id=7c015f24");
 
 
 /***/ }),
@@ -48465,6 +49719,22 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/Pages/addExercise.vue?vue&type=template&id=34334bc0":
+/*!**************************************************************************!*\
+  !*** ./resources/js/Pages/addExercise.vue?vue&type=template&id=34334bc0 ***!
+  \**************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_addExercise_vue_vue_type_template_id_34334bc0__WEBPACK_IMPORTED_MODULE_0__.render)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_addExercise_vue_vue_type_template_id_34334bc0__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./addExercise.vue?vue&type=template&id=34334bc0 */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Pages/addExercise.vue?vue&type=template&id=34334bc0");
+
+
+/***/ }),
+
 /***/ "./node_modules/vue/dist/vue.esm-bundler.js":
 /*!**************************************************!*\
   !*** ./node_modules/vue/dist/vue.esm-bundler.js ***!
@@ -48756,7 +50026,8 @@ var map = {
 	"./Layout.vue": "./resources/js/Pages/Layout.vue",
 	"./LayoutFullpage.vue": "./resources/js/Pages/LayoutFullpage.vue",
 	"./Theme.vue": "./resources/js/Pages/Theme.vue",
-	"./Welcome.vue": "./resources/js/Pages/Welcome.vue"
+	"./Welcome.vue": "./resources/js/Pages/Welcome.vue",
+	"./addExercise.vue": "./resources/js/Pages/addExercise.vue"
 };
 
 
@@ -49302,7 +50573,126 @@ var utils = {
 };
 
 /* eslint no-console:0 */
+// TODO: automatically generate documentation
+// TODO: check all properties on Settings exist
+// TODO: check the type of a property on Settings matches
+var SETTINGS_SCHEMA = {
+  displayMode: {
+    type: "boolean",
+    description: "Render math in display mode, which puts the math in " + "display style (so \\int and \\sum are large, for example), and " + "centers the math on the page on its own line.",
+    cli: "-d, --display-mode"
+  },
+  output: {
+    type: {
+      enum: ["htmlAndMathml", "html", "mathml"]
+    },
+    description: "Determines the markup language of the output.",
+    cli: "-F, --format <type>"
+  },
+  leqno: {
+    type: "boolean",
+    description: "Render display math in leqno style (left-justified tags)."
+  },
+  fleqn: {
+    type: "boolean",
+    description: "Render display math flush left."
+  },
+  throwOnError: {
+    type: "boolean",
+    default: true,
+    cli: "-t, --no-throw-on-error",
+    cliDescription: "Render errors (in the color given by --error-color) ins" + "tead of throwing a ParseError exception when encountering an error."
+  },
+  errorColor: {
+    type: "string",
+    default: "#cc0000",
+    cli: "-c, --error-color <color>",
+    cliDescription: "A color string given in the format 'rgb' or 'rrggbb' " + "(no #). This option determines the color of errors rendered by the " + "-t option.",
+    cliProcessor: color => "#" + color
+  },
+  macros: {
+    type: "object",
+    cli: "-m, --macro <def>",
+    cliDescription: "Define custom macro of the form '\\foo:expansion' (use " + "multiple -m arguments for multiple macros).",
+    cliDefault: [],
+    cliProcessor: (def, defs) => {
+      defs.push(def);
+      return defs;
+    }
+  },
+  minRuleThickness: {
+    type: "number",
+    description: "Specifies a minimum thickness, in ems, for fraction lines," + " `\\sqrt` top lines, `{array}` vertical lines, `\\hline`, " + "`\\hdashline`, `\\underline`, `\\overline`, and the borders of " + "`\\fbox`, `\\boxed`, and `\\fcolorbox`.",
+    processor: t => Math.max(0, t),
+    cli: "--min-rule-thickness <size>",
+    cliProcessor: parseFloat
+  },
+  colorIsTextColor: {
+    type: "boolean",
+    description: "Makes \\color behave like LaTeX's 2-argument \\textcolor, " + "instead of LaTeX's one-argument \\color mode change.",
+    cli: "-b, --color-is-text-color"
+  },
+  strict: {
+    type: [{
+      enum: ["warn", "ignore", "error"]
+    }, "boolean", "function"],
+    description: "Turn on strict / LaTeX faithfulness mode, which throws an " + "error if the input uses features that are not supported by LaTeX.",
+    cli: "-S, --strict",
+    cliDefault: false
+  },
+  trust: {
+    type: ["boolean", "function"],
+    description: "Trust the input, enabling all HTML features such as \\url.",
+    cli: "-T, --trust"
+  },
+  maxSize: {
+    type: "number",
+    default: Infinity,
+    description: "If non-zero, all user-specified sizes, e.g. in " + "\\rule{500em}{500em}, will be capped to maxSize ems. Otherwise, " + "elements and spaces can be arbitrarily large",
+    processor: s => Math.max(0, s),
+    cli: "-s, --max-size <n>",
+    cliProcessor: parseInt
+  },
+  maxExpand: {
+    type: "number",
+    default: 1000,
+    description: "Limit the number of macro expansions to the specified " + "number, to prevent e.g. infinite macro loops. If set to Infinity, " + "the macro expander will try to fully expand as in LaTeX.",
+    processor: n => Math.max(0, n),
+    cli: "-e, --max-expand <n>",
+    cliProcessor: n => n === "Infinity" ? Infinity : parseInt(n)
+  },
+  globalGroup: {
+    type: "boolean",
+    cli: false
+  }
+};
 
+function getDefaultValue(schema) {
+  if (schema.default) {
+    return schema.default;
+  }
+
+  var type = schema.type;
+  var defaultType = Array.isArray(type) ? type[0] : type;
+
+  if (typeof defaultType !== 'string') {
+    return defaultType.enum[0];
+  }
+
+  switch (defaultType) {
+    case 'boolean':
+      return false;
+
+    case 'string':
+      return '';
+
+    case 'number':
+      return 0;
+
+    case 'object':
+      return {};
+  }
+}
 /**
  * The main Settings object
  *
@@ -49313,6 +50703,8 @@ var utils = {
  *                 math (true), meaning that the math starts in \displaystyle
  *                 and is placed in a block with vertical margin.
  */
+
+
 class Settings {
   constructor(options) {
     this.displayMode = void 0;
@@ -49331,20 +50723,16 @@ class Settings {
     this.globalGroup = void 0;
     // allow null options
     options = options || {};
-    this.displayMode = utils.deflt(options.displayMode, false);
-    this.output = utils.deflt(options.output, "htmlAndMathml");
-    this.leqno = utils.deflt(options.leqno, false);
-    this.fleqn = utils.deflt(options.fleqn, false);
-    this.throwOnError = utils.deflt(options.throwOnError, true);
-    this.errorColor = utils.deflt(options.errorColor, "#cc0000");
-    this.macros = options.macros || {};
-    this.minRuleThickness = Math.max(0, utils.deflt(options.minRuleThickness, 0));
-    this.colorIsTextColor = utils.deflt(options.colorIsTextColor, false);
-    this.strict = utils.deflt(options.strict, "warn");
-    this.trust = utils.deflt(options.trust, false);
-    this.maxSize = Math.max(0, utils.deflt(options.maxSize, Infinity));
-    this.maxExpand = Math.max(0, utils.deflt(options.maxExpand, 1000));
-    this.globalGroup = utils.deflt(options.globalGroup, false);
+
+    for (var prop in SETTINGS_SCHEMA) {
+      if (SETTINGS_SCHEMA.hasOwnProperty(prop)) {
+        // $FlowFixMe
+        var schema = SETTINGS_SCHEMA[prop]; // TODO: validate options
+        // $FlowFixMe
+
+        this[prop] = options[prop] !== undefined ? schema.processor ? schema.processor(options[prop]) : options[prop] : getDefaultValue(schema);
+      }
+    }
   }
   /**
    * Report nonstrict (non-LaTeX-compatible) input.
@@ -49934,532 +51322,6 @@ class DocumentFragment {
 
 }
 
-/**
- * These objects store the data about the DOM nodes we create, as well as some
- * extra data. They can then be transformed into real DOM nodes with the
- * `toNode` function or HTML markup using `toMarkup`. They are useful for both
- * storing extra properties on the nodes, as well as providing a way to easily
- * work with the DOM.
- *
- * Similar functions for working with MathML nodes exist in mathMLTree.js.
- *
- * TODO: refactor `span` and `anchor` into common superclass when
- * target environments support class inheritance
- */
-
-/**
- * Create an HTML className based on a list of classes. In addition to joining
- * with spaces, we also remove empty classes.
- */
-var createClass = function createClass(classes) {
-  return classes.filter(cls => cls).join(" ");
-};
-
-var initNode = function initNode(classes, options, style) {
-  this.classes = classes || [];
-  this.attributes = {};
-  this.height = 0;
-  this.depth = 0;
-  this.maxFontSize = 0;
-  this.style = style || {};
-
-  if (options) {
-    if (options.style.isTight()) {
-      this.classes.push("mtight");
-    }
-
-    var color = options.getColor();
-
-    if (color) {
-      this.style.color = color;
-    }
-  }
-};
-/**
- * Convert into an HTML node
- */
-
-
-var toNode = function toNode(tagName) {
-  var node = document.createElement(tagName); // Apply the class
-
-  node.className = createClass(this.classes); // Apply inline styles
-
-  for (var style in this.style) {
-    if (this.style.hasOwnProperty(style)) {
-      // $FlowFixMe Flow doesn't seem to understand span.style's type.
-      node.style[style] = this.style[style];
-    }
-  } // Apply attributes
-
-
-  for (var attr in this.attributes) {
-    if (this.attributes.hasOwnProperty(attr)) {
-      node.setAttribute(attr, this.attributes[attr]);
-    }
-  } // Append the children, also as HTML nodes
-
-
-  for (var i = 0; i < this.children.length; i++) {
-    node.appendChild(this.children[i].toNode());
-  }
-
-  return node;
-};
-/**
- * Convert into an HTML markup string
- */
-
-
-var toMarkup = function toMarkup(tagName) {
-  var markup = "<" + tagName; // Add the class
-
-  if (this.classes.length) {
-    markup += " class=\"" + utils.escape(createClass(this.classes)) + "\"";
-  }
-
-  var styles = ""; // Add the styles, after hyphenation
-
-  for (var style in this.style) {
-    if (this.style.hasOwnProperty(style)) {
-      styles += utils.hyphenate(style) + ":" + this.style[style] + ";";
-    }
-  }
-
-  if (styles) {
-    markup += " style=\"" + utils.escape(styles) + "\"";
-  } // Add the attributes
-
-
-  for (var attr in this.attributes) {
-    if (this.attributes.hasOwnProperty(attr)) {
-      markup += " " + attr + "=\"" + utils.escape(this.attributes[attr]) + "\"";
-    }
-  }
-
-  markup += ">"; // Add the markup of the children, also as markup
-
-  for (var i = 0; i < this.children.length; i++) {
-    markup += this.children[i].toMarkup();
-  }
-
-  markup += "</" + tagName + ">";
-  return markup;
-}; // Making the type below exact with all optional fields doesn't work due to
-// - https://github.com/facebook/flow/issues/4582
-// - https://github.com/facebook/flow/issues/5688
-// However, since *all* fields are optional, $Shape<> works as suggested in 5688
-// above.
-// This type does not include all CSS properties. Additional properties should
-// be added as needed.
-
-
-/**
- * This node represents a span node, with a className, a list of children, and
- * an inline style. It also contains information about its height, depth, and
- * maxFontSize.
- *
- * Represents two types with different uses: SvgSpan to wrap an SVG and DomSpan
- * otherwise. This typesafety is important when HTML builders access a span's
- * children.
- */
-class Span {
-  constructor(classes, children, options, style) {
-    this.children = void 0;
-    this.attributes = void 0;
-    this.classes = void 0;
-    this.height = void 0;
-    this.depth = void 0;
-    this.width = void 0;
-    this.maxFontSize = void 0;
-    this.style = void 0;
-    initNode.call(this, classes, options, style);
-    this.children = children || [];
-  }
-  /**
-   * Sets an arbitrary attribute on the span. Warning: use this wisely. Not
-   * all browsers support attributes the same, and having too many custom
-   * attributes is probably bad.
-   */
-
-
-  setAttribute(attribute, value) {
-    this.attributes[attribute] = value;
-  }
-
-  hasClass(className) {
-    return utils.contains(this.classes, className);
-  }
-
-  toNode() {
-    return toNode.call(this, "span");
-  }
-
-  toMarkup() {
-    return toMarkup.call(this, "span");
-  }
-
-}
-/**
- * This node represents an anchor (<a>) element with a hyperlink.  See `span`
- * for further details.
- */
-
-class Anchor {
-  constructor(href, classes, children, options) {
-    this.children = void 0;
-    this.attributes = void 0;
-    this.classes = void 0;
-    this.height = void 0;
-    this.depth = void 0;
-    this.maxFontSize = void 0;
-    this.style = void 0;
-    initNode.call(this, classes, options);
-    this.children = children || [];
-    this.setAttribute('href', href);
-  }
-
-  setAttribute(attribute, value) {
-    this.attributes[attribute] = value;
-  }
-
-  hasClass(className) {
-    return utils.contains(this.classes, className);
-  }
-
-  toNode() {
-    return toNode.call(this, "a");
-  }
-
-  toMarkup() {
-    return toMarkup.call(this, "a");
-  }
-
-}
-/**
- * This node represents an image embed (<img>) element.
- */
-
-class Img {
-  constructor(src, alt, style) {
-    this.src = void 0;
-    this.alt = void 0;
-    this.classes = void 0;
-    this.height = void 0;
-    this.depth = void 0;
-    this.maxFontSize = void 0;
-    this.style = void 0;
-    this.alt = alt;
-    this.src = src;
-    this.classes = ["mord"];
-    this.style = style;
-  }
-
-  hasClass(className) {
-    return utils.contains(this.classes, className);
-  }
-
-  toNode() {
-    var node = document.createElement("img");
-    node.src = this.src;
-    node.alt = this.alt;
-    node.className = "mord"; // Apply inline styles
-
-    for (var style in this.style) {
-      if (this.style.hasOwnProperty(style)) {
-        // $FlowFixMe
-        node.style[style] = this.style[style];
-      }
-    }
-
-    return node;
-  }
-
-  toMarkup() {
-    var markup = "<img  src='" + this.src + " 'alt='" + this.alt + "' "; // Add the styles, after hyphenation
-
-    var styles = "";
-
-    for (var style in this.style) {
-      if (this.style.hasOwnProperty(style)) {
-        styles += utils.hyphenate(style) + ":" + this.style[style] + ";";
-      }
-    }
-
-    if (styles) {
-      markup += " style=\"" + utils.escape(styles) + "\"";
-    }
-
-    markup += "'/>";
-    return markup;
-  }
-
-}
-var iCombinations = {
-  'î': '\u0131\u0302',
-  'ï': '\u0131\u0308',
-  'í': '\u0131\u0301',
-  // 'ī': '\u0131\u0304', // enable when we add Extended Latin
-  'ì': '\u0131\u0300'
-};
-/**
- * A symbol node contains information about a single symbol. It either renders
- * to a single text node, or a span with a single text node in it, depending on
- * whether it has CSS classes, styles, or needs italic correction.
- */
-
-class SymbolNode {
-  constructor(text, height, depth, italic, skew, width, classes, style) {
-    this.text = void 0;
-    this.height = void 0;
-    this.depth = void 0;
-    this.italic = void 0;
-    this.skew = void 0;
-    this.width = void 0;
-    this.maxFontSize = void 0;
-    this.classes = void 0;
-    this.style = void 0;
-    this.text = text;
-    this.height = height || 0;
-    this.depth = depth || 0;
-    this.italic = italic || 0;
-    this.skew = skew || 0;
-    this.width = width || 0;
-    this.classes = classes || [];
-    this.style = style || {};
-    this.maxFontSize = 0; // Mark text from non-Latin scripts with specific classes so that we
-    // can specify which fonts to use.  This allows us to render these
-    // characters with a serif font in situations where the browser would
-    // either default to a sans serif or render a placeholder character.
-    // We use CSS class names like cjk_fallback, hangul_fallback and
-    // brahmic_fallback. See ./unicodeScripts.js for the set of possible
-    // script names
-
-    var script = scriptFromCodepoint(this.text.charCodeAt(0));
-
-    if (script) {
-      this.classes.push(script + "_fallback");
-    }
-
-    if (/[îïíì]/.test(this.text)) {
-      // add ī when we add Extended Latin
-      this.text = iCombinations[this.text];
-    }
-  }
-
-  hasClass(className) {
-    return utils.contains(this.classes, className);
-  }
-  /**
-   * Creates a text node or span from a symbol node. Note that a span is only
-   * created if it is needed.
-   */
-
-
-  toNode() {
-    var node = document.createTextNode(this.text);
-    var span = null;
-
-    if (this.italic > 0) {
-      span = document.createElement("span");
-      span.style.marginRight = this.italic + "em";
-    }
-
-    if (this.classes.length > 0) {
-      span = span || document.createElement("span");
-      span.className = createClass(this.classes);
-    }
-
-    for (var style in this.style) {
-      if (this.style.hasOwnProperty(style)) {
-        span = span || document.createElement("span"); // $FlowFixMe Flow doesn't seem to understand span.style's type.
-
-        span.style[style] = this.style[style];
-      }
-    }
-
-    if (span) {
-      span.appendChild(node);
-      return span;
-    } else {
-      return node;
-    }
-  }
-  /**
-   * Creates markup for a symbol node.
-   */
-
-
-  toMarkup() {
-    // TODO(alpert): More duplication than I'd like from
-    // span.prototype.toMarkup and symbolNode.prototype.toNode...
-    var needsSpan = false;
-    var markup = "<span";
-
-    if (this.classes.length) {
-      needsSpan = true;
-      markup += " class=\"";
-      markup += utils.escape(createClass(this.classes));
-      markup += "\"";
-    }
-
-    var styles = "";
-
-    if (this.italic > 0) {
-      styles += "margin-right:" + this.italic + "em;";
-    }
-
-    for (var style in this.style) {
-      if (this.style.hasOwnProperty(style)) {
-        styles += utils.hyphenate(style) + ":" + this.style[style] + ";";
-      }
-    }
-
-    if (styles) {
-      needsSpan = true;
-      markup += " style=\"" + utils.escape(styles) + "\"";
-    }
-
-    var escaped = utils.escape(this.text);
-
-    if (needsSpan) {
-      markup += ">";
-      markup += escaped;
-      markup += "</span>";
-      return markup;
-    } else {
-      return escaped;
-    }
-  }
-
-}
-/**
- * SVG nodes are used to render stretchy wide elements.
- */
-
-class SvgNode {
-  constructor(children, attributes) {
-    this.children = void 0;
-    this.attributes = void 0;
-    this.children = children || [];
-    this.attributes = attributes || {};
-  }
-
-  toNode() {
-    var svgNS = "http://www.w3.org/2000/svg";
-    var node = document.createElementNS(svgNS, "svg"); // Apply attributes
-
-    for (var attr in this.attributes) {
-      if (Object.prototype.hasOwnProperty.call(this.attributes, attr)) {
-        node.setAttribute(attr, this.attributes[attr]);
-      }
-    }
-
-    for (var i = 0; i < this.children.length; i++) {
-      node.appendChild(this.children[i].toNode());
-    }
-
-    return node;
-  }
-
-  toMarkup() {
-    var markup = "<svg xmlns=\"http://www.w3.org/2000/svg\""; // Apply attributes
-
-    for (var attr in this.attributes) {
-      if (Object.prototype.hasOwnProperty.call(this.attributes, attr)) {
-        markup += " " + attr + "='" + this.attributes[attr] + "'";
-      }
-    }
-
-    markup += ">";
-
-    for (var i = 0; i < this.children.length; i++) {
-      markup += this.children[i].toMarkup();
-    }
-
-    markup += "</svg>";
-    return markup;
-  }
-
-}
-class PathNode {
-  constructor(pathName, alternate) {
-    this.pathName = void 0;
-    this.alternate = void 0;
-    this.pathName = pathName;
-    this.alternate = alternate; // Used only for \sqrt, \phase, & tall delims
-  }
-
-  toNode() {
-    var svgNS = "http://www.w3.org/2000/svg";
-    var node = document.createElementNS(svgNS, "path");
-
-    if (this.alternate) {
-      node.setAttribute("d", this.alternate);
-    } else {
-      node.setAttribute("d", path[this.pathName]);
-    }
-
-    return node;
-  }
-
-  toMarkup() {
-    if (this.alternate) {
-      return "<path d='" + this.alternate + "'/>";
-    } else {
-      return "<path d='" + path[this.pathName] + "'/>";
-    }
-  }
-
-}
-class LineNode {
-  constructor(attributes) {
-    this.attributes = void 0;
-    this.attributes = attributes || {};
-  }
-
-  toNode() {
-    var svgNS = "http://www.w3.org/2000/svg";
-    var node = document.createElementNS(svgNS, "line"); // Apply attributes
-
-    for (var attr in this.attributes) {
-      if (Object.prototype.hasOwnProperty.call(this.attributes, attr)) {
-        node.setAttribute(attr, this.attributes[attr]);
-      }
-    }
-
-    return node;
-  }
-
-  toMarkup() {
-    var markup = "<line";
-
-    for (var attr in this.attributes) {
-      if (Object.prototype.hasOwnProperty.call(this.attributes, attr)) {
-        markup += " " + attr + "='" + this.attributes[attr] + "'";
-      }
-    }
-
-    markup += "/>";
-    return markup;
-  }
-
-}
-function assertSymbolDomNode(group) {
-  if (group instanceof SymbolNode) {
-    return group;
-  } else {
-    throw new Error("Expected symbolNode but got " + String(group) + ".");
-  }
-}
-function assertSpan(group) {
-  if (group instanceof Span) {
-    return group;
-  } else {
-    throw new Error("Expected span<HtmlDomNode> but got " + String(group) + ".");
-  }
-}
-
 // This file is GENERATED by buildMetrics.sh. DO NOT MODIFY.
 var fontMetricsData = {
   "AMS-Regular": {
@@ -51044,6 +51906,7 @@ var fontMetricsData = {
     "8764": [-0.10889, 0.39111, 0, 0, 0.89444],
     "8768": [0.19444, 0.69444, 0, 0, 0.31944],
     "8771": [0.00222, 0.50222, 0, 0, 0.89444],
+    "8773": [0.027, 0.638, 0, 0, 0.894],
     "8776": [0.02444, 0.52444, 0, 0, 0.89444],
     "8781": [0.00222, 0.50222, 0, 0, 0.89444],
     "8801": [0.00222, 0.50222, 0, 0, 0.89444],
@@ -51561,7 +52424,7 @@ var fontMetricsData = {
     "8764": [-0.13313, 0.36687, 0, 0, 0.77778],
     "8768": [0.19444, 0.69444, 0, 0, 0.27778],
     "8771": [-0.03625, 0.46375, 0, 0, 0.77778],
-    "8773": [-0.022, 0.589, 0, 0, 1.0],
+    "8773": [-0.022, 0.589, 0, 0, 0.778],
     "8776": [-0.01688, 0.48312, 0, 0, 0.77778],
     "8781": [-0.03625, 0.46375, 0, 0, 0.77778],
     "8784": [-0.133, 0.673, 0, 0, 0.778],
@@ -52814,6 +53677,961 @@ function getGlobalMetrics(size) {
 }
 
 /**
+ * This file contains information about the options that the Parser carries
+ * around with it while parsing. Data is held in an `Options` object, and when
+ * recursing, a new `Options` object can be created with the `.with*` and
+ * `.reset` functions.
+ */
+var sizeStyleMap = [// Each element contains [textsize, scriptsize, scriptscriptsize].
+// The size mappings are taken from TeX with \normalsize=10pt.
+[1, 1, 1], // size1: [5, 5, 5]              \tiny
+[2, 1, 1], // size2: [6, 5, 5]
+[3, 1, 1], // size3: [7, 5, 5]              \scriptsize
+[4, 2, 1], // size4: [8, 6, 5]              \footnotesize
+[5, 2, 1], // size5: [9, 6, 5]              \small
+[6, 3, 1], // size6: [10, 7, 5]             \normalsize
+[7, 4, 2], // size7: [12, 8, 6]             \large
+[8, 6, 3], // size8: [14.4, 10, 7]          \Large
+[9, 7, 6], // size9: [17.28, 12, 10]        \LARGE
+[10, 8, 7], // size10: [20.74, 14.4, 12]     \huge
+[11, 10, 9] // size11: [24.88, 20.74, 17.28] \HUGE
+];
+var sizeMultipliers = [// fontMetrics.js:getGlobalMetrics also uses size indexes, so if
+// you change size indexes, change that function.
+0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.2, 1.44, 1.728, 2.074, 2.488];
+
+var sizeAtStyle = function sizeAtStyle(size, style) {
+  return style.size < 2 ? size : sizeStyleMap[size - 1][style.size - 1];
+}; // In these types, "" (empty string) means "no change".
+
+
+/**
+ * This is the main options class. It contains the current style, size, color,
+ * and font.
+ *
+ * Options objects should not be modified. To create a new Options with
+ * different properties, call a `.having*` method.
+ */
+class Options {
+  // A font family applies to a group of fonts (i.e. SansSerif), while a font
+  // represents a specific font (i.e. SansSerif Bold).
+  // See: https://tex.stackexchange.com/questions/22350/difference-between-textrm-and-mathrm
+
+  /**
+   * The base size index.
+   */
+  constructor(data) {
+    this.style = void 0;
+    this.color = void 0;
+    this.size = void 0;
+    this.textSize = void 0;
+    this.phantom = void 0;
+    this.font = void 0;
+    this.fontFamily = void 0;
+    this.fontWeight = void 0;
+    this.fontShape = void 0;
+    this.sizeMultiplier = void 0;
+    this.maxSize = void 0;
+    this.minRuleThickness = void 0;
+    this._fontMetrics = void 0;
+    this.style = data.style;
+    this.color = data.color;
+    this.size = data.size || Options.BASESIZE;
+    this.textSize = data.textSize || this.size;
+    this.phantom = !!data.phantom;
+    this.font = data.font || "";
+    this.fontFamily = data.fontFamily || "";
+    this.fontWeight = data.fontWeight || '';
+    this.fontShape = data.fontShape || '';
+    this.sizeMultiplier = sizeMultipliers[this.size - 1];
+    this.maxSize = data.maxSize;
+    this.minRuleThickness = data.minRuleThickness;
+    this._fontMetrics = undefined;
+  }
+  /**
+   * Returns a new options object with the same properties as "this".  Properties
+   * from "extension" will be copied to the new options object.
+   */
+
+
+  extend(extension) {
+    var data = {
+      style: this.style,
+      size: this.size,
+      textSize: this.textSize,
+      color: this.color,
+      phantom: this.phantom,
+      font: this.font,
+      fontFamily: this.fontFamily,
+      fontWeight: this.fontWeight,
+      fontShape: this.fontShape,
+      maxSize: this.maxSize,
+      minRuleThickness: this.minRuleThickness
+    };
+
+    for (var key in extension) {
+      if (extension.hasOwnProperty(key)) {
+        data[key] = extension[key];
+      }
+    }
+
+    return new Options(data);
+  }
+  /**
+   * Return an options object with the given style. If `this.style === style`,
+   * returns `this`.
+   */
+
+
+  havingStyle(style) {
+    if (this.style === style) {
+      return this;
+    } else {
+      return this.extend({
+        style: style,
+        size: sizeAtStyle(this.textSize, style)
+      });
+    }
+  }
+  /**
+   * Return an options object with a cramped version of the current style. If
+   * the current style is cramped, returns `this`.
+   */
+
+
+  havingCrampedStyle() {
+    return this.havingStyle(this.style.cramp());
+  }
+  /**
+   * Return an options object with the given size and in at least `\textstyle`.
+   * Returns `this` if appropriate.
+   */
+
+
+  havingSize(size) {
+    if (this.size === size && this.textSize === size) {
+      return this;
+    } else {
+      return this.extend({
+        style: this.style.text(),
+        size: size,
+        textSize: size,
+        sizeMultiplier: sizeMultipliers[size - 1]
+      });
+    }
+  }
+  /**
+   * Like `this.havingSize(BASESIZE).havingStyle(style)`. If `style` is omitted,
+   * changes to at least `\textstyle`.
+   */
+
+
+  havingBaseStyle(style) {
+    style = style || this.style.text();
+    var wantSize = sizeAtStyle(Options.BASESIZE, style);
+
+    if (this.size === wantSize && this.textSize === Options.BASESIZE && this.style === style) {
+      return this;
+    } else {
+      return this.extend({
+        style: style,
+        size: wantSize
+      });
+    }
+  }
+  /**
+   * Remove the effect of sizing changes such as \Huge.
+   * Keep the effect of the current style, such as \scriptstyle.
+   */
+
+
+  havingBaseSizing() {
+    var size;
+
+    switch (this.style.id) {
+      case 4:
+      case 5:
+        size = 3; // normalsize in scriptstyle
+
+        break;
+
+      case 6:
+      case 7:
+        size = 1; // normalsize in scriptscriptstyle
+
+        break;
+
+      default:
+        size = 6;
+      // normalsize in textstyle or displaystyle
+    }
+
+    return this.extend({
+      style: this.style.text(),
+      size: size
+    });
+  }
+  /**
+   * Create a new options object with the given color.
+   */
+
+
+  withColor(color) {
+    return this.extend({
+      color: color
+    });
+  }
+  /**
+   * Create a new options object with "phantom" set to true.
+   */
+
+
+  withPhantom() {
+    return this.extend({
+      phantom: true
+    });
+  }
+  /**
+   * Creates a new options object with the given math font or old text font.
+   * @type {[type]}
+   */
+
+
+  withFont(font) {
+    return this.extend({
+      font
+    });
+  }
+  /**
+   * Create a new options objects with the given fontFamily.
+   */
+
+
+  withTextFontFamily(fontFamily) {
+    return this.extend({
+      fontFamily,
+      font: ""
+    });
+  }
+  /**
+   * Creates a new options object with the given font weight
+   */
+
+
+  withTextFontWeight(fontWeight) {
+    return this.extend({
+      fontWeight,
+      font: ""
+    });
+  }
+  /**
+   * Creates a new options object with the given font weight
+   */
+
+
+  withTextFontShape(fontShape) {
+    return this.extend({
+      fontShape,
+      font: ""
+    });
+  }
+  /**
+   * Return the CSS sizing classes required to switch from enclosing options
+   * `oldOptions` to `this`. Returns an array of classes.
+   */
+
+
+  sizingClasses(oldOptions) {
+    if (oldOptions.size !== this.size) {
+      return ["sizing", "reset-size" + oldOptions.size, "size" + this.size];
+    } else {
+      return [];
+    }
+  }
+  /**
+   * Return the CSS sizing classes required to switch to the base size. Like
+   * `this.havingSize(BASESIZE).sizingClasses(this)`.
+   */
+
+
+  baseSizingClasses() {
+    if (this.size !== Options.BASESIZE) {
+      return ["sizing", "reset-size" + this.size, "size" + Options.BASESIZE];
+    } else {
+      return [];
+    }
+  }
+  /**
+   * Return the font metrics for this size.
+   */
+
+
+  fontMetrics() {
+    if (!this._fontMetrics) {
+      this._fontMetrics = getGlobalMetrics(this.size);
+    }
+
+    return this._fontMetrics;
+  }
+  /**
+   * Gets the CSS color of the current options object
+   */
+
+
+  getColor() {
+    if (this.phantom) {
+      return "transparent";
+    } else {
+      return this.color;
+    }
+  }
+
+}
+
+Options.BASESIZE = 6;
+
+/**
+ * This file does conversion between units.  In particular, it provides
+ * calculateSize to convert other units into ems.
+ */
+// Thus, multiplying a length by this number converts the length from units
+// into pts.  Dividing the result by ptPerEm gives the number of ems
+// *assuming* a font size of ptPerEm (normal size, normal style).
+
+var ptPerUnit = {
+  // https://en.wikibooks.org/wiki/LaTeX/Lengths and
+  // https://tex.stackexchange.com/a/8263
+  "pt": 1,
+  // TeX point
+  "mm": 7227 / 2540,
+  // millimeter
+  "cm": 7227 / 254,
+  // centimeter
+  "in": 72.27,
+  // inch
+  "bp": 803 / 800,
+  // big (PostScript) points
+  "pc": 12,
+  // pica
+  "dd": 1238 / 1157,
+  // didot
+  "cc": 14856 / 1157,
+  // cicero (12 didot)
+  "nd": 685 / 642,
+  // new didot
+  "nc": 1370 / 107,
+  // new cicero (12 new didot)
+  "sp": 1 / 65536,
+  // scaled point (TeX's internal smallest unit)
+  // https://tex.stackexchange.com/a/41371
+  "px": 803 / 800 // \pdfpxdimen defaults to 1 bp in pdfTeX and LuaTeX
+
+}; // Dictionary of relative units, for fast validity testing.
+
+var relativeUnit = {
+  "ex": true,
+  "em": true,
+  "mu": true
+};
+
+/**
+ * Determine whether the specified unit (either a string defining the unit
+ * or a "size" parse node containing a unit field) is valid.
+ */
+var validUnit = function validUnit(unit) {
+  if (typeof unit !== "string") {
+    unit = unit.unit;
+  }
+
+  return unit in ptPerUnit || unit in relativeUnit || unit === "ex";
+};
+/*
+ * Convert a "size" parse node (with numeric "number" and string "unit" fields,
+ * as parsed by functions.js argType "size") into a CSS em value for the
+ * current style/scale.  `options` gives the current options.
+ */
+
+var calculateSize = function calculateSize(sizeValue, options) {
+  var scale;
+
+  if (sizeValue.unit in ptPerUnit) {
+    // Absolute units
+    scale = ptPerUnit[sizeValue.unit] // Convert unit to pt
+    / options.fontMetrics().ptPerEm // Convert pt to CSS em
+    / options.sizeMultiplier; // Unscale to make absolute units
+  } else if (sizeValue.unit === "mu") {
+    // `mu` units scale with scriptstyle/scriptscriptstyle.
+    scale = options.fontMetrics().cssEmPerMu;
+  } else {
+    // Other relative units always refer to the *textstyle* font
+    // in the current size.
+    var unitOptions;
+
+    if (options.style.isTight()) {
+      // isTight() means current style is script/scriptscript.
+      unitOptions = options.havingStyle(options.style.text());
+    } else {
+      unitOptions = options;
+    } // TODO: In TeX these units are relative to the quad of the current
+    // *text* font, e.g. cmr10. KaTeX instead uses values from the
+    // comparably-sized *Computer Modern symbol* font. At 10pt, these
+    // match. At 7pt and 5pt, they differ: cmr7=1.138894, cmsy7=1.170641;
+    // cmr5=1.361133, cmsy5=1.472241. Consider $\scriptsize a\kern1emb$.
+    // TeX \showlists shows a kern of 1.13889 * fontsize;
+    // KaTeX shows a kern of 1.171 * fontsize.
+
+
+    if (sizeValue.unit === "ex") {
+      scale = unitOptions.fontMetrics().xHeight;
+    } else if (sizeValue.unit === "em") {
+      scale = unitOptions.fontMetrics().quad;
+    } else {
+      throw new ParseError("Invalid unit: '" + sizeValue.unit + "'");
+    }
+
+    if (unitOptions !== options) {
+      scale *= unitOptions.sizeMultiplier / options.sizeMultiplier;
+    }
+  }
+
+  return Math.min(sizeValue.number * scale, options.maxSize);
+};
+/**
+ * Round `n` to 4 decimal places, or to the nearest 1/10,000th em. See
+ * https://github.com/KaTeX/KaTeX/pull/2460.
+ */
+
+var makeEm = function makeEm(n) {
+  return +n.toFixed(4) + "em";
+};
+
+/**
+ * These objects store the data about the DOM nodes we create, as well as some
+ * extra data. They can then be transformed into real DOM nodes with the
+ * `toNode` function or HTML markup using `toMarkup`. They are useful for both
+ * storing extra properties on the nodes, as well as providing a way to easily
+ * work with the DOM.
+ *
+ * Similar functions for working with MathML nodes exist in mathMLTree.js.
+ *
+ * TODO: refactor `span` and `anchor` into common superclass when
+ * target environments support class inheritance
+ */
+
+/**
+ * Create an HTML className based on a list of classes. In addition to joining
+ * with spaces, we also remove empty classes.
+ */
+var createClass = function createClass(classes) {
+  return classes.filter(cls => cls).join(" ");
+};
+
+var initNode = function initNode(classes, options, style) {
+  this.classes = classes || [];
+  this.attributes = {};
+  this.height = 0;
+  this.depth = 0;
+  this.maxFontSize = 0;
+  this.style = style || {};
+
+  if (options) {
+    if (options.style.isTight()) {
+      this.classes.push("mtight");
+    }
+
+    var color = options.getColor();
+
+    if (color) {
+      this.style.color = color;
+    }
+  }
+};
+/**
+ * Convert into an HTML node
+ */
+
+
+var toNode = function toNode(tagName) {
+  var node = document.createElement(tagName); // Apply the class
+
+  node.className = createClass(this.classes); // Apply inline styles
+
+  for (var style in this.style) {
+    if (this.style.hasOwnProperty(style)) {
+      // $FlowFixMe Flow doesn't seem to understand span.style's type.
+      node.style[style] = this.style[style];
+    }
+  } // Apply attributes
+
+
+  for (var attr in this.attributes) {
+    if (this.attributes.hasOwnProperty(attr)) {
+      node.setAttribute(attr, this.attributes[attr]);
+    }
+  } // Append the children, also as HTML nodes
+
+
+  for (var i = 0; i < this.children.length; i++) {
+    node.appendChild(this.children[i].toNode());
+  }
+
+  return node;
+};
+/**
+ * Convert into an HTML markup string
+ */
+
+
+var toMarkup = function toMarkup(tagName) {
+  var markup = "<" + tagName; // Add the class
+
+  if (this.classes.length) {
+    markup += " class=\"" + utils.escape(createClass(this.classes)) + "\"";
+  }
+
+  var styles = ""; // Add the styles, after hyphenation
+
+  for (var style in this.style) {
+    if (this.style.hasOwnProperty(style)) {
+      styles += utils.hyphenate(style) + ":" + this.style[style] + ";";
+    }
+  }
+
+  if (styles) {
+    markup += " style=\"" + utils.escape(styles) + "\"";
+  } // Add the attributes
+
+
+  for (var attr in this.attributes) {
+    if (this.attributes.hasOwnProperty(attr)) {
+      markup += " " + attr + "=\"" + utils.escape(this.attributes[attr]) + "\"";
+    }
+  }
+
+  markup += ">"; // Add the markup of the children, also as markup
+
+  for (var i = 0; i < this.children.length; i++) {
+    markup += this.children[i].toMarkup();
+  }
+
+  markup += "</" + tagName + ">";
+  return markup;
+}; // Making the type below exact with all optional fields doesn't work due to
+// - https://github.com/facebook/flow/issues/4582
+// - https://github.com/facebook/flow/issues/5688
+// However, since *all* fields are optional, $Shape<> works as suggested in 5688
+// above.
+// This type does not include all CSS properties. Additional properties should
+// be added as needed.
+
+
+/**
+ * This node represents a span node, with a className, a list of children, and
+ * an inline style. It also contains information about its height, depth, and
+ * maxFontSize.
+ *
+ * Represents two types with different uses: SvgSpan to wrap an SVG and DomSpan
+ * otherwise. This typesafety is important when HTML builders access a span's
+ * children.
+ */
+class Span {
+  constructor(classes, children, options, style) {
+    this.children = void 0;
+    this.attributes = void 0;
+    this.classes = void 0;
+    this.height = void 0;
+    this.depth = void 0;
+    this.width = void 0;
+    this.maxFontSize = void 0;
+    this.style = void 0;
+    initNode.call(this, classes, options, style);
+    this.children = children || [];
+  }
+  /**
+   * Sets an arbitrary attribute on the span. Warning: use this wisely. Not
+   * all browsers support attributes the same, and having too many custom
+   * attributes is probably bad.
+   */
+
+
+  setAttribute(attribute, value) {
+    this.attributes[attribute] = value;
+  }
+
+  hasClass(className) {
+    return utils.contains(this.classes, className);
+  }
+
+  toNode() {
+    return toNode.call(this, "span");
+  }
+
+  toMarkup() {
+    return toMarkup.call(this, "span");
+  }
+
+}
+/**
+ * This node represents an anchor (<a>) element with a hyperlink.  See `span`
+ * for further details.
+ */
+
+class Anchor {
+  constructor(href, classes, children, options) {
+    this.children = void 0;
+    this.attributes = void 0;
+    this.classes = void 0;
+    this.height = void 0;
+    this.depth = void 0;
+    this.maxFontSize = void 0;
+    this.style = void 0;
+    initNode.call(this, classes, options);
+    this.children = children || [];
+    this.setAttribute('href', href);
+  }
+
+  setAttribute(attribute, value) {
+    this.attributes[attribute] = value;
+  }
+
+  hasClass(className) {
+    return utils.contains(this.classes, className);
+  }
+
+  toNode() {
+    return toNode.call(this, "a");
+  }
+
+  toMarkup() {
+    return toMarkup.call(this, "a");
+  }
+
+}
+/**
+ * This node represents an image embed (<img>) element.
+ */
+
+class Img {
+  constructor(src, alt, style) {
+    this.src = void 0;
+    this.alt = void 0;
+    this.classes = void 0;
+    this.height = void 0;
+    this.depth = void 0;
+    this.maxFontSize = void 0;
+    this.style = void 0;
+    this.alt = alt;
+    this.src = src;
+    this.classes = ["mord"];
+    this.style = style;
+  }
+
+  hasClass(className) {
+    return utils.contains(this.classes, className);
+  }
+
+  toNode() {
+    var node = document.createElement("img");
+    node.src = this.src;
+    node.alt = this.alt;
+    node.className = "mord"; // Apply inline styles
+
+    for (var style in this.style) {
+      if (this.style.hasOwnProperty(style)) {
+        // $FlowFixMe
+        node.style[style] = this.style[style];
+      }
+    }
+
+    return node;
+  }
+
+  toMarkup() {
+    var markup = "<img  src='" + this.src + " 'alt='" + this.alt + "' "; // Add the styles, after hyphenation
+
+    var styles = "";
+
+    for (var style in this.style) {
+      if (this.style.hasOwnProperty(style)) {
+        styles += utils.hyphenate(style) + ":" + this.style[style] + ";";
+      }
+    }
+
+    if (styles) {
+      markup += " style=\"" + utils.escape(styles) + "\"";
+    }
+
+    markup += "'/>";
+    return markup;
+  }
+
+}
+var iCombinations = {
+  'î': '\u0131\u0302',
+  'ï': '\u0131\u0308',
+  'í': '\u0131\u0301',
+  // 'ī': '\u0131\u0304', // enable when we add Extended Latin
+  'ì': '\u0131\u0300'
+};
+/**
+ * A symbol node contains information about a single symbol. It either renders
+ * to a single text node, or a span with a single text node in it, depending on
+ * whether it has CSS classes, styles, or needs italic correction.
+ */
+
+class SymbolNode {
+  constructor(text, height, depth, italic, skew, width, classes, style) {
+    this.text = void 0;
+    this.height = void 0;
+    this.depth = void 0;
+    this.italic = void 0;
+    this.skew = void 0;
+    this.width = void 0;
+    this.maxFontSize = void 0;
+    this.classes = void 0;
+    this.style = void 0;
+    this.text = text;
+    this.height = height || 0;
+    this.depth = depth || 0;
+    this.italic = italic || 0;
+    this.skew = skew || 0;
+    this.width = width || 0;
+    this.classes = classes || [];
+    this.style = style || {};
+    this.maxFontSize = 0; // Mark text from non-Latin scripts with specific classes so that we
+    // can specify which fonts to use.  This allows us to render these
+    // characters with a serif font in situations where the browser would
+    // either default to a sans serif or render a placeholder character.
+    // We use CSS class names like cjk_fallback, hangul_fallback and
+    // brahmic_fallback. See ./unicodeScripts.js for the set of possible
+    // script names
+
+    var script = scriptFromCodepoint(this.text.charCodeAt(0));
+
+    if (script) {
+      this.classes.push(script + "_fallback");
+    }
+
+    if (/[îïíì]/.test(this.text)) {
+      // add ī when we add Extended Latin
+      this.text = iCombinations[this.text];
+    }
+  }
+
+  hasClass(className) {
+    return utils.contains(this.classes, className);
+  }
+  /**
+   * Creates a text node or span from a symbol node. Note that a span is only
+   * created if it is needed.
+   */
+
+
+  toNode() {
+    var node = document.createTextNode(this.text);
+    var span = null;
+
+    if (this.italic > 0) {
+      span = document.createElement("span");
+      span.style.marginRight = makeEm(this.italic);
+    }
+
+    if (this.classes.length > 0) {
+      span = span || document.createElement("span");
+      span.className = createClass(this.classes);
+    }
+
+    for (var style in this.style) {
+      if (this.style.hasOwnProperty(style)) {
+        span = span || document.createElement("span"); // $FlowFixMe Flow doesn't seem to understand span.style's type.
+
+        span.style[style] = this.style[style];
+      }
+    }
+
+    if (span) {
+      span.appendChild(node);
+      return span;
+    } else {
+      return node;
+    }
+  }
+  /**
+   * Creates markup for a symbol node.
+   */
+
+
+  toMarkup() {
+    // TODO(alpert): More duplication than I'd like from
+    // span.prototype.toMarkup and symbolNode.prototype.toNode...
+    var needsSpan = false;
+    var markup = "<span";
+
+    if (this.classes.length) {
+      needsSpan = true;
+      markup += " class=\"";
+      markup += utils.escape(createClass(this.classes));
+      markup += "\"";
+    }
+
+    var styles = "";
+
+    if (this.italic > 0) {
+      styles += "margin-right:" + this.italic + "em;";
+    }
+
+    for (var style in this.style) {
+      if (this.style.hasOwnProperty(style)) {
+        styles += utils.hyphenate(style) + ":" + this.style[style] + ";";
+      }
+    }
+
+    if (styles) {
+      needsSpan = true;
+      markup += " style=\"" + utils.escape(styles) + "\"";
+    }
+
+    var escaped = utils.escape(this.text);
+
+    if (needsSpan) {
+      markup += ">";
+      markup += escaped;
+      markup += "</span>";
+      return markup;
+    } else {
+      return escaped;
+    }
+  }
+
+}
+/**
+ * SVG nodes are used to render stretchy wide elements.
+ */
+
+class SvgNode {
+  constructor(children, attributes) {
+    this.children = void 0;
+    this.attributes = void 0;
+    this.children = children || [];
+    this.attributes = attributes || {};
+  }
+
+  toNode() {
+    var svgNS = "http://www.w3.org/2000/svg";
+    var node = document.createElementNS(svgNS, "svg"); // Apply attributes
+
+    for (var attr in this.attributes) {
+      if (Object.prototype.hasOwnProperty.call(this.attributes, attr)) {
+        node.setAttribute(attr, this.attributes[attr]);
+      }
+    }
+
+    for (var i = 0; i < this.children.length; i++) {
+      node.appendChild(this.children[i].toNode());
+    }
+
+    return node;
+  }
+
+  toMarkup() {
+    var markup = "<svg xmlns=\"http://www.w3.org/2000/svg\""; // Apply attributes
+
+    for (var attr in this.attributes) {
+      if (Object.prototype.hasOwnProperty.call(this.attributes, attr)) {
+        markup += " " + attr + "='" + this.attributes[attr] + "'";
+      }
+    }
+
+    markup += ">";
+
+    for (var i = 0; i < this.children.length; i++) {
+      markup += this.children[i].toMarkup();
+    }
+
+    markup += "</svg>";
+    return markup;
+  }
+
+}
+class PathNode {
+  constructor(pathName, alternate) {
+    this.pathName = void 0;
+    this.alternate = void 0;
+    this.pathName = pathName;
+    this.alternate = alternate; // Used only for \sqrt, \phase, & tall delims
+  }
+
+  toNode() {
+    var svgNS = "http://www.w3.org/2000/svg";
+    var node = document.createElementNS(svgNS, "path");
+
+    if (this.alternate) {
+      node.setAttribute("d", this.alternate);
+    } else {
+      node.setAttribute("d", path[this.pathName]);
+    }
+
+    return node;
+  }
+
+  toMarkup() {
+    if (this.alternate) {
+      return "<path d='" + this.alternate + "'/>";
+    } else {
+      return "<path d='" + path[this.pathName] + "'/>";
+    }
+  }
+
+}
+class LineNode {
+  constructor(attributes) {
+    this.attributes = void 0;
+    this.attributes = attributes || {};
+  }
+
+  toNode() {
+    var svgNS = "http://www.w3.org/2000/svg";
+    var node = document.createElementNS(svgNS, "line"); // Apply attributes
+
+    for (var attr in this.attributes) {
+      if (Object.prototype.hasOwnProperty.call(this.attributes, attr)) {
+        node.setAttribute(attr, this.attributes[attr]);
+      }
+    }
+
+    return node;
+  }
+
+  toMarkup() {
+    var markup = "<line";
+
+    for (var attr in this.attributes) {
+      if (Object.prototype.hasOwnProperty.call(this.attributes, attr)) {
+        markup += " " + attr + "='" + this.attributes[attr] + "'";
+      }
+    }
+
+    markup += "/>";
+    return markup;
+  }
+
+}
+function assertSymbolDomNode(group) {
+  if (group instanceof SymbolNode) {
+    return group;
+  } else {
+    throw new Error("Expected symbolNode but got " + String(group) + ".");
+  }
+}
+function assertSpan(group) {
+  if (group instanceof Span) {
+    return group;
+  } else {
+    throw new Error("Expected span<HtmlDomNode> but got " + String(group) + ".");
+  }
+}
+
+/**
  * This file holds a list of all no-argument functions and single-character
  * symbols (like 'a' or ';').
  *
@@ -53773,427 +55591,6 @@ var wideCharacterFont = function wideCharacterFont(wideChar, mode) {
   }
 };
 
-/**
- * This file contains information about the options that the Parser carries
- * around with it while parsing. Data is held in an `Options` object, and when
- * recursing, a new `Options` object can be created with the `.with*` and
- * `.reset` functions.
- */
-var sizeStyleMap = [// Each element contains [textsize, scriptsize, scriptscriptsize].
-// The size mappings are taken from TeX with \normalsize=10pt.
-[1, 1, 1], // size1: [5, 5, 5]              \tiny
-[2, 1, 1], // size2: [6, 5, 5]
-[3, 1, 1], // size3: [7, 5, 5]              \scriptsize
-[4, 2, 1], // size4: [8, 6, 5]              \footnotesize
-[5, 2, 1], // size5: [9, 6, 5]              \small
-[6, 3, 1], // size6: [10, 7, 5]             \normalsize
-[7, 4, 2], // size7: [12, 8, 6]             \large
-[8, 6, 3], // size8: [14.4, 10, 7]          \Large
-[9, 7, 6], // size9: [17.28, 12, 10]        \LARGE
-[10, 8, 7], // size10: [20.74, 14.4, 12]     \huge
-[11, 10, 9] // size11: [24.88, 20.74, 17.28] \HUGE
-];
-var sizeMultipliers = [// fontMetrics.js:getGlobalMetrics also uses size indexes, so if
-// you change size indexes, change that function.
-0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.2, 1.44, 1.728, 2.074, 2.488];
-
-var sizeAtStyle = function sizeAtStyle(size, style) {
-  return style.size < 2 ? size : sizeStyleMap[size - 1][style.size - 1];
-}; // In these types, "" (empty string) means "no change".
-
-
-/**
- * This is the main options class. It contains the current style, size, color,
- * and font.
- *
- * Options objects should not be modified. To create a new Options with
- * different properties, call a `.having*` method.
- */
-class Options {
-  // A font family applies to a group of fonts (i.e. SansSerif), while a font
-  // represents a specific font (i.e. SansSerif Bold).
-  // See: https://tex.stackexchange.com/questions/22350/difference-between-textrm-and-mathrm
-
-  /**
-   * The base size index.
-   */
-  constructor(data) {
-    this.style = void 0;
-    this.color = void 0;
-    this.size = void 0;
-    this.textSize = void 0;
-    this.phantom = void 0;
-    this.font = void 0;
-    this.fontFamily = void 0;
-    this.fontWeight = void 0;
-    this.fontShape = void 0;
-    this.sizeMultiplier = void 0;
-    this.maxSize = void 0;
-    this.minRuleThickness = void 0;
-    this._fontMetrics = void 0;
-    this.style = data.style;
-    this.color = data.color;
-    this.size = data.size || Options.BASESIZE;
-    this.textSize = data.textSize || this.size;
-    this.phantom = !!data.phantom;
-    this.font = data.font || "";
-    this.fontFamily = data.fontFamily || "";
-    this.fontWeight = data.fontWeight || '';
-    this.fontShape = data.fontShape || '';
-    this.sizeMultiplier = sizeMultipliers[this.size - 1];
-    this.maxSize = data.maxSize;
-    this.minRuleThickness = data.minRuleThickness;
-    this._fontMetrics = undefined;
-  }
-  /**
-   * Returns a new options object with the same properties as "this".  Properties
-   * from "extension" will be copied to the new options object.
-   */
-
-
-  extend(extension) {
-    var data = {
-      style: this.style,
-      size: this.size,
-      textSize: this.textSize,
-      color: this.color,
-      phantom: this.phantom,
-      font: this.font,
-      fontFamily: this.fontFamily,
-      fontWeight: this.fontWeight,
-      fontShape: this.fontShape,
-      maxSize: this.maxSize,
-      minRuleThickness: this.minRuleThickness
-    };
-
-    for (var key in extension) {
-      if (extension.hasOwnProperty(key)) {
-        data[key] = extension[key];
-      }
-    }
-
-    return new Options(data);
-  }
-  /**
-   * Return an options object with the given style. If `this.style === style`,
-   * returns `this`.
-   */
-
-
-  havingStyle(style) {
-    if (this.style === style) {
-      return this;
-    } else {
-      return this.extend({
-        style: style,
-        size: sizeAtStyle(this.textSize, style)
-      });
-    }
-  }
-  /**
-   * Return an options object with a cramped version of the current style. If
-   * the current style is cramped, returns `this`.
-   */
-
-
-  havingCrampedStyle() {
-    return this.havingStyle(this.style.cramp());
-  }
-  /**
-   * Return an options object with the given size and in at least `\textstyle`.
-   * Returns `this` if appropriate.
-   */
-
-
-  havingSize(size) {
-    if (this.size === size && this.textSize === size) {
-      return this;
-    } else {
-      return this.extend({
-        style: this.style.text(),
-        size: size,
-        textSize: size,
-        sizeMultiplier: sizeMultipliers[size - 1]
-      });
-    }
-  }
-  /**
-   * Like `this.havingSize(BASESIZE).havingStyle(style)`. If `style` is omitted,
-   * changes to at least `\textstyle`.
-   */
-
-
-  havingBaseStyle(style) {
-    style = style || this.style.text();
-    var wantSize = sizeAtStyle(Options.BASESIZE, style);
-
-    if (this.size === wantSize && this.textSize === Options.BASESIZE && this.style === style) {
-      return this;
-    } else {
-      return this.extend({
-        style: style,
-        size: wantSize
-      });
-    }
-  }
-  /**
-   * Remove the effect of sizing changes such as \Huge.
-   * Keep the effect of the current style, such as \scriptstyle.
-   */
-
-
-  havingBaseSizing() {
-    var size;
-
-    switch (this.style.id) {
-      case 4:
-      case 5:
-        size = 3; // normalsize in scriptstyle
-
-        break;
-
-      case 6:
-      case 7:
-        size = 1; // normalsize in scriptscriptstyle
-
-        break;
-
-      default:
-        size = 6;
-      // normalsize in textstyle or displaystyle
-    }
-
-    return this.extend({
-      style: this.style.text(),
-      size: size
-    });
-  }
-  /**
-   * Create a new options object with the given color.
-   */
-
-
-  withColor(color) {
-    return this.extend({
-      color: color
-    });
-  }
-  /**
-   * Create a new options object with "phantom" set to true.
-   */
-
-
-  withPhantom() {
-    return this.extend({
-      phantom: true
-    });
-  }
-  /**
-   * Creates a new options object with the given math font or old text font.
-   * @type {[type]}
-   */
-
-
-  withFont(font) {
-    return this.extend({
-      font
-    });
-  }
-  /**
-   * Create a new options objects with the given fontFamily.
-   */
-
-
-  withTextFontFamily(fontFamily) {
-    return this.extend({
-      fontFamily,
-      font: ""
-    });
-  }
-  /**
-   * Creates a new options object with the given font weight
-   */
-
-
-  withTextFontWeight(fontWeight) {
-    return this.extend({
-      fontWeight,
-      font: ""
-    });
-  }
-  /**
-   * Creates a new options object with the given font weight
-   */
-
-
-  withTextFontShape(fontShape) {
-    return this.extend({
-      fontShape,
-      font: ""
-    });
-  }
-  /**
-   * Return the CSS sizing classes required to switch from enclosing options
-   * `oldOptions` to `this`. Returns an array of classes.
-   */
-
-
-  sizingClasses(oldOptions) {
-    if (oldOptions.size !== this.size) {
-      return ["sizing", "reset-size" + oldOptions.size, "size" + this.size];
-    } else {
-      return [];
-    }
-  }
-  /**
-   * Return the CSS sizing classes required to switch to the base size. Like
-   * `this.havingSize(BASESIZE).sizingClasses(this)`.
-   */
-
-
-  baseSizingClasses() {
-    if (this.size !== Options.BASESIZE) {
-      return ["sizing", "reset-size" + this.size, "size" + Options.BASESIZE];
-    } else {
-      return [];
-    }
-  }
-  /**
-   * Return the font metrics for this size.
-   */
-
-
-  fontMetrics() {
-    if (!this._fontMetrics) {
-      this._fontMetrics = getGlobalMetrics(this.size);
-    }
-
-    return this._fontMetrics;
-  }
-  /**
-   * Gets the CSS color of the current options object
-   */
-
-
-  getColor() {
-    if (this.phantom) {
-      return "transparent";
-    } else {
-      return this.color;
-    }
-  }
-
-}
-
-Options.BASESIZE = 6;
-
-/**
- * This file does conversion between units.  In particular, it provides
- * calculateSize to convert other units into ems.
- */
-// Thus, multiplying a length by this number converts the length from units
-// into pts.  Dividing the result by ptPerEm gives the number of ems
-// *assuming* a font size of ptPerEm (normal size, normal style).
-
-var ptPerUnit = {
-  // https://en.wikibooks.org/wiki/LaTeX/Lengths and
-  // https://tex.stackexchange.com/a/8263
-  "pt": 1,
-  // TeX point
-  "mm": 7227 / 2540,
-  // millimeter
-  "cm": 7227 / 254,
-  // centimeter
-  "in": 72.27,
-  // inch
-  "bp": 803 / 800,
-  // big (PostScript) points
-  "pc": 12,
-  // pica
-  "dd": 1238 / 1157,
-  // didot
-  "cc": 14856 / 1157,
-  // cicero (12 didot)
-  "nd": 685 / 642,
-  // new didot
-  "nc": 1370 / 107,
-  // new cicero (12 new didot)
-  "sp": 1 / 65536,
-  // scaled point (TeX's internal smallest unit)
-  // https://tex.stackexchange.com/a/41371
-  "px": 803 / 800 // \pdfpxdimen defaults to 1 bp in pdfTeX and LuaTeX
-
-}; // Dictionary of relative units, for fast validity testing.
-
-var relativeUnit = {
-  "ex": true,
-  "em": true,
-  "mu": true
-};
-
-/**
- * Determine whether the specified unit (either a string defining the unit
- * or a "size" parse node containing a unit field) is valid.
- */
-var validUnit = function validUnit(unit) {
-  if (typeof unit !== "string") {
-    unit = unit.unit;
-  }
-
-  return unit in ptPerUnit || unit in relativeUnit || unit === "ex";
-};
-/*
- * Convert a "size" parse node (with numeric "number" and string "unit" fields,
- * as parsed by functions.js argType "size") into a CSS em value for the
- * current style/scale.  `options` gives the current options.
- */
-
-var calculateSize = function calculateSize(sizeValue, options) {
-  var scale;
-
-  if (sizeValue.unit in ptPerUnit) {
-    // Absolute units
-    scale = ptPerUnit[sizeValue.unit] // Convert unit to pt
-    / options.fontMetrics().ptPerEm // Convert pt to CSS em
-    / options.sizeMultiplier; // Unscale to make absolute units
-  } else if (sizeValue.unit === "mu") {
-    // `mu` units scale with scriptstyle/scriptscriptstyle.
-    scale = options.fontMetrics().cssEmPerMu;
-  } else {
-    // Other relative units always refer to the *textstyle* font
-    // in the current size.
-    var unitOptions;
-
-    if (options.style.isTight()) {
-      // isTight() means current style is script/scriptscript.
-      unitOptions = options.havingStyle(options.style.text());
-    } else {
-      unitOptions = options;
-    } // TODO: In TeX these units are relative to the quad of the current
-    // *text* font, e.g. cmr10. KaTeX instead uses values from the
-    // comparably-sized *Computer Modern symbol* font. At 10pt, these
-    // match. At 7pt and 5pt, they differ: cmr7=1.138894, cmsy7=1.170641;
-    // cmr5=1.361133, cmsy5=1.472241. Consider $\scriptsize a\kern1emb$.
-    // TeX \showlists shows a kern of 1.13889 * fontsize;
-    // KaTeX shows a kern of 1.171 * fontsize.
-
-
-    if (sizeValue.unit === "ex") {
-      scale = unitOptions.fontMetrics().xHeight;
-    } else if (sizeValue.unit === "em") {
-      scale = unitOptions.fontMetrics().quad;
-    } else {
-      throw new ParseError("Invalid unit: '" + sizeValue.unit + "'");
-    }
-
-    if (unitOptions !== options) {
-      scale *= unitOptions.sizeMultiplier / options.sizeMultiplier;
-    }
-  }
-
-  return Math.min(sizeValue.number * scale, options.maxSize);
-};
-
 /* eslint no-console:0 */
 
 /**
@@ -54496,7 +55893,7 @@ var makeSvgSpan = (classes, children, options, style) => new Span(classes, child
 var makeLineSpan = function makeLineSpan(className, options, thickness) {
   var line = makeSpan$2([className], [], options);
   line.height = Math.max(thickness || options.fontMetrics().defaultRuleThickness, options.minRuleThickness);
-  line.style.borderBottomWidth = line.height + "em";
+  line.style.borderBottomWidth = makeEm(line.height);
   line.maxFontSize = 1.0;
   return line;
 };
@@ -54636,7 +56033,7 @@ var makeVList = function makeVList(params, options) {
 
   pstrutSize += 2;
   var pstrut = makeSpan$2(["pstrut"], []);
-  pstrut.style.height = pstrutSize + "em"; // Create a new list of actual children at the correct offsets
+  pstrut.style.height = makeEm(pstrutSize); // Create a new list of actual children at the correct offsets
 
   var realChildren = [];
   var minPos = depth;
@@ -54653,7 +56050,7 @@ var makeVList = function makeVList(params, options) {
       var classes = _child.wrapperClasses || [];
       var style = _child.wrapperStyle || {};
       var childWrap = makeSpan$2(classes, [pstrut, _elem], undefined, style);
-      childWrap.style.top = -pstrutSize - currPos - _elem.depth + "em";
+      childWrap.style.top = makeEm(-pstrutSize - currPos - _elem.depth);
 
       if (_child.marginLeft) {
         childWrap.style.marginLeft = _child.marginLeft;
@@ -54675,7 +56072,7 @@ var makeVList = function makeVList(params, options) {
 
 
   var vlist = makeSpan$2(["vlist"], realChildren);
-  vlist.style.height = maxPos + "em"; // A second row is used if necessary to represent the vlist's depth.
+  vlist.style.height = makeEm(maxPos); // A second row is used if necessary to represent the vlist's depth.
 
   var rows;
 
@@ -54687,7 +56084,7 @@ var makeVList = function makeVList(params, options) {
     // So we put another empty span inside the depth strut span.
     var emptySpan = makeSpan$2([], []);
     var depthStrut = makeSpan$2(["vlist"], [emptySpan]);
-    depthStrut.style.height = -minPos + "em"; // Safari wants the first row to have inline content; otherwise it
+    depthStrut.style.height = makeEm(-minPos); // Safari wants the first row to have inline content; otherwise it
     // puts the bottom of the *second* row on the baseline.
 
     var topStrut = makeSpan$2(["vlist-s"], [new SymbolNode("\u200b")]);
@@ -54714,7 +56111,7 @@ var makeGlue = (measurement, options) => {
   // Make an empty span for the space
   var rule = makeSpan$2(["mspace"], [], options);
   var size = calculateSize(measurement, options);
-  rule.style.marginRight = size + "em";
+  rule.style.marginRight = makeEm(size);
   return rule;
 }; // Takes font options, and returns the appropriate fontLookup name
 
@@ -54833,17 +56230,17 @@ var staticSvg = function staticSvg(value, options) {
   var [pathName, width, height] = svgData[value];
   var path = new PathNode(pathName);
   var svgNode = new SvgNode([path], {
-    "width": width + "em",
-    "height": height + "em",
+    "width": makeEm(width),
+    "height": makeEm(height),
     // Override CSS rule `.katex svg { width: 100% }`
-    "style": "width:" + width + "em",
+    "style": "width:" + makeEm(width),
     "viewBox": "0 0 " + 1000 * width + " " + 1000 * height,
     "preserveAspectRatio": "xMinYMin"
   });
   var span = makeSvgSpan(["overlay"], [svgNode], options);
   span.height = height;
-  span.style.height = height + "em";
-  span.style.width = width + "em";
+  span.style.height = makeEm(height);
+  span.style.width = makeEm(width);
   return span;
 };
 
@@ -55327,10 +56724,10 @@ function buildHTMLUnbreakable(children, options) {
   // falls at the depth of the expression.
 
   var strut = makeSpan$1(["strut"]);
-  strut.style.height = body.height + body.depth + "em";
+  strut.style.height = makeEm(body.height + body.depth);
 
   if (body.depth) {
-    strut.style.verticalAlign = -body.depth + "em";
+    strut.style.verticalAlign = makeEm(-body.depth);
   }
 
   body.children.unshift(strut);
@@ -55426,10 +56823,10 @@ function buildHTML(tree, options) {
 
   if (tagChild) {
     var strut = tagChild.children[0];
-    strut.style.height = htmlNode.height + htmlNode.depth + "em";
+    strut.style.height = makeEm(htmlNode.height + htmlNode.depth);
 
     if (htmlNode.depth) {
-      strut.style.verticalAlign = -htmlNode.depth + "em";
+      strut.style.verticalAlign = makeEm(-htmlNode.depth);
     }
   }
 
@@ -55629,7 +57026,7 @@ class SpaceNode {
       return document.createTextNode(this.character);
     } else {
       var node = document.createElementNS("http://www.w3.org/1998/Math/MathML", "mspace");
-      node.setAttribute("width", this.width + "em");
+      node.setAttribute("width", makeEm(this.width));
       return node;
     }
   }
@@ -55642,7 +57039,7 @@ class SpaceNode {
     if (this.character) {
       return "<mtext>" + this.character + "</mtext>";
     } else {
-      return "<mspace width=\"" + this.width + "em\"/>";
+      return "<mspace width=\"" + makeEm(this.width) + "\"/>";
     }
   }
   /**
@@ -56158,7 +57555,7 @@ var svgSpan = function svgSpan(group, options) {
       var path = new PathNode(pathName);
       var svgNode = new SvgNode([path], {
         "width": "100%",
-        "height": _height + "em",
+        "height": makeEm(_height),
         "viewBox": "0 0 " + viewBoxWidth + " " + viewBoxHeight,
         "preserveAspectRatio": "none"
       });
@@ -56198,7 +57595,7 @@ var svgSpan = function svgSpan(group, options) {
 
         var _svgNode = new SvgNode([_path], {
           "width": "400em",
-          "height": _height2 + "em",
+          "height": makeEm(_height2),
           "viewBox": "0 0 " + viewBoxWidth + " " + _viewBoxHeight,
           "preserveAspectRatio": aligns[i] + " slice"
         });
@@ -56212,7 +57609,7 @@ var svgSpan = function svgSpan(group, options) {
             height: _height2
           };
         } else {
-          _span.style.height = _height2 + "em";
+          _span.style.height = makeEm(_height2);
           spans.push(_span);
         }
       }
@@ -56234,10 +57631,10 @@ var svgSpan = function svgSpan(group, options) {
   // Any adjustments relative to the baseline must be done in buildHTML.
 
   span.height = height;
-  span.style.height = height + "em";
+  span.style.height = makeEm(height);
 
   if (minWidth > 0) {
-    span.style.minWidth = minWidth + "em";
+    span.style.minWidth = makeEm(minWidth);
   }
 
   return span;
@@ -56286,13 +57683,13 @@ var encloseSpan = function encloseSpan(inner, label, topPad, bottomPad, options)
 
     var svgNode = new SvgNode(lines, {
       "width": "100%",
-      "height": totalHeight + "em"
+      "height": makeEm(totalHeight)
     });
     img = buildCommon.makeSvgSpan([], [svgNode], options);
   }
 
   img.height = totalHeight;
-  img.style.height = totalHeight + "em";
+  img.style.height = makeEm(totalHeight);
   return img;
 };
 
@@ -56453,7 +57850,7 @@ var htmlBuilder$a = (grp, options) => {
       left -= width / 2;
     }
 
-    accentBody.style.left = left + "em"; // \textcircled uses the \bigcirc glyph, so it needs some
+    accentBody.style.left = makeEm(left); // \textcircled uses the \bigcirc glyph, so it needs some
     // vertical adjustment to match LaTeX.
 
     if (group.label === "\\textcircled") {
@@ -56485,8 +57882,8 @@ var htmlBuilder$a = (grp, options) => {
         elem: accentBody,
         wrapperClasses: ["svg-align"],
         wrapperStyle: skew > 0 ? {
-          width: "calc(100% - " + 2 * skew + "em)",
-          marginLeft: 2 * skew + "em"
+          width: "calc(100% - " + makeEm(2 * skew) + ")",
+          marginLeft: makeEm(2 * skew)
         } : undefined
       }]
     }, options);
@@ -57025,7 +58422,7 @@ defineFunction({
     var newOptions = options.havingStyle(options.style.sup());
     var label = buildCommon.wrapFragment(buildGroup$1(group.label, newOptions, options), options);
     label.classes.push("cd-label-" + group.side);
-    label.style.bottom = 0.8 - label.depth + "em"; // Zero out label height & depth, so vertical align of arrow is set
+    label.style.bottom = makeEm(0.8 - label.depth); // Zero out label height & depth, so vertical align of arrow is set
     // by the arrow height, not by the label.
 
     label.height = 0;
@@ -57245,7 +58642,7 @@ defineFunction({
       span.classes.push("newline");
 
       if (group.size) {
-        span.style.marginTop = calculateSize(group.size, options) + "em";
+        span.style.marginTop = makeEm(calculateSize(group.size, options));
       }
     }
 
@@ -57259,7 +58656,7 @@ defineFunction({
       node.setAttribute("linebreak", "newline");
 
       if (group.size) {
-        node.setAttribute("height", calculateSize(group.size, options) + "em");
+        node.setAttribute("height", makeEm(calculateSize(group.size, options)));
       }
     }
 
@@ -57565,7 +58962,7 @@ var centerSpan = function centerSpan(span, options, style) {
   var newOptions = options.havingBaseStyle(style);
   var shift = (1 - options.sizeMultiplier / newOptions.sizeMultiplier) * options.fontMetrics().axisHeight;
   span.classes.push("delimcenter");
-  span.style.top = shift + "em";
+  span.style.top = makeEm(shift);
   span.height -= shift;
   span.depth += shift;
 };
@@ -57638,20 +59035,20 @@ var makeGlyphSpan = function makeGlyphSpan(symbol, font, mode) {
 
 var makeInner = function makeInner(ch, height, options) {
   // Create a span with inline SVG for the inner part of a tall stacked delimiter.
-  var width = fontMetricsData['Size4-Regular'][ch.charCodeAt(0)] ? fontMetricsData['Size4-Regular'][ch.charCodeAt(0)][4].toFixed(3) : fontMetricsData['Size1-Regular'][ch.charCodeAt(0)][4].toFixed(3);
+  var width = fontMetricsData['Size4-Regular'][ch.charCodeAt(0)] ? fontMetricsData['Size4-Regular'][ch.charCodeAt(0)][4] : fontMetricsData['Size1-Regular'][ch.charCodeAt(0)][4];
   var path = new PathNode("inner", innerPath(ch, Math.round(1000 * height)));
   var svgNode = new SvgNode([path], {
-    "width": width + "em",
-    "height": height + "em",
+    "width": makeEm(width),
+    "height": makeEm(height),
     // Override CSS rule `.katex svg { width: 100% }`
-    "style": "width:" + width + "em",
+    "style": "width:" + makeEm(width),
     "viewBox": "0 0 " + 1000 * width + " " + Math.round(1000 * height),
     "preserveAspectRatio": "xMinYMin"
   });
   var span = buildCommon.makeSvgSpan([], [svgNode], options);
   span.height = height;
-  span.style.height = height + "em";
-  span.style.width = width + "em";
+  span.style.height = makeEm(height);
+  span.style.width = makeEm(width);
   return {
     type: "elem",
     elem: span
@@ -57860,7 +59257,7 @@ var sqrtSvg = function sqrtSvg(sqrtName, height, viewBoxHeight, extraViniculum, 
   var svg = new SvgNode([pathNode], {
     // Note: 1000:1 ratio of viewBox to document em width.
     "width": "400em",
-    "height": height + "em",
+    "height": makeEm(height),
     "viewBox": "0 0 400000 " + viewBoxHeight,
     "preserveAspectRatio": "xMinYMin slice"
   });
@@ -57929,7 +59326,7 @@ var makeSqrtImage = function makeSqrtImage(height, options) {
   }
 
   span.height = texHeight;
-  span.style.height = spanHeight + "em";
+  span.style.height = makeEm(spanHeight);
   return {
     span,
     advanceWidth,
@@ -58305,8 +59702,9 @@ defineFunction({
     }
 
     node.setAttribute("stretchy", "true");
-    node.setAttribute("minsize", delimiter.sizeToMaxHeight[group.size] + "em");
-    node.setAttribute("maxsize", delimiter.sizeToMaxHeight[group.size] + "em");
+    var size = makeEm(delimiter.sizeToMaxHeight[group.size]);
+    node.setAttribute("minsize", size);
+    node.setAttribute("maxsize", size);
     return node;
   }
 });
@@ -58553,19 +59951,19 @@ var htmlBuilder$8 = (group, options) => {
     scale = scale / newOptions.sizeMultiplier;
     var angleHeight = inner.height + inner.depth + lineWeight + clearance; // Reserve a left pad for the angle.
 
-    inner.style.paddingLeft = angleHeight / 2 + lineWeight + "em"; // Create an SVG
+    inner.style.paddingLeft = makeEm(angleHeight / 2 + lineWeight); // Create an SVG
 
     var viewBoxHeight = Math.floor(1000 * angleHeight * scale);
     var path = phasePath(viewBoxHeight);
     var svgNode = new SvgNode([new PathNode("phase", path)], {
       "width": "400em",
-      "height": viewBoxHeight / 1000 + "em",
+      "height": makeEm(viewBoxHeight / 1000),
       "viewBox": "0 0 400000 " + viewBoxHeight,
       "preserveAspectRatio": "xMinYMin slice"
     }); // Wrap it in a span with overflow: hidden.
 
     img = buildCommon.makeSvgSpan(["hide-tail"], [svgNode], options);
-    img.style.height = angleHeight + "em";
+    img.style.height = makeEm(angleHeight);
     imgShift = inner.depth + lineWeight + clearance;
   } else {
     // Add horizontal padding
@@ -58604,10 +60002,10 @@ var htmlBuilder$8 = (group, options) => {
 
     if (/fbox|boxed|fcolorbox/.test(label)) {
       img.style.borderStyle = "solid";
-      img.style.borderWidth = ruleThickness + "em";
+      img.style.borderWidth = makeEm(ruleThickness);
     } else if (label === "angl" && ruleThickness !== 0.049) {
-      img.style.borderTopWidth = ruleThickness + "em";
-      img.style.borderRightWidth = ruleThickness + "em";
+      img.style.borderTopWidth = makeEm(ruleThickness);
+      img.style.borderRightWidth = makeEm(ruleThickness);
     }
 
     imgShift = inner.depth + bottomPad;
@@ -58898,6 +60296,17 @@ function defineEnvironment(_ref) {
   }
 }
 
+/**
+ * All registered global/built-in macros.
+ * `macros.js` exports this same dictionary again and makes it public.
+ * `Parser.js` requires this dictionary via `macros.js`.
+ */
+var _macros = {}; // This function might one day accept an additional argument and do more things.
+
+function defineMacro(name, body) {
+  _macros[name] = body;
+}
+
 // Helper functions
 function getHLines(parser) {
   // Return an array. The array length = number of hlines.
@@ -58922,7 +60331,19 @@ var validateAmsEnvironmentContext = context => {
   if (!settings.displayMode) {
     throw new ParseError("{" + context.envName + "} can be used only in" + " display mode.");
   }
-};
+}; // autoTag (an argument to parseArray) can be one of three values:
+// * undefined: Regular (not-top-level) array; no tags on each row
+// * true: Automatic equation numbering, overridable by \tag
+// * false: Tags allowed on each row, but no automatic numbering
+// This function *doesn't* work with the "split" environment name.
+
+
+function getAutoTag(name) {
+  if (name.indexOf("ed") === -1) {
+    return name.indexOf("*") === -1;
+  } // return undefined;
+
+}
 /**
  * Parse the body of the environment, with rows delimited by \\ and
  * columns delimited by &, and create a nested list in row-major order
@@ -58938,7 +60359,7 @@ function parseArray(parser, _ref, style) {
     cols,
     arraystretch,
     colSeparationType,
-    addEqnNum,
+    autoTag,
     singleRow,
     emptySingleRow,
     maxNumCols,
@@ -58973,7 +60394,29 @@ function parseArray(parser, _ref, style) {
   var row = [];
   var body = [row];
   var rowGaps = [];
-  var hLinesBeforeRow = []; // Test for \hline at the top of the array.
+  var hLinesBeforeRow = [];
+  var tags = autoTag != null ? [] : undefined; // amsmath uses \global\@eqnswtrue and \global\@eqnswfalse to represent
+  // whether this row should have an equation number.  Simulate this with
+  // a \@eqnsw macro set to 1 or 0.
+
+  function beginRow() {
+    if (autoTag) {
+      parser.gullet.macros.set("\\@eqnsw", "1", true);
+    }
+  }
+
+  function endRow() {
+    if (tags) {
+      if (parser.gullet.macros.get("\\df@tag")) {
+        tags.push(parser.subparse([new Token("\\df@tag")]));
+        parser.gullet.macros.set("\\df@tag", undefined, true);
+      } else {
+        tags.push(Boolean(autoTag) && parser.gullet.macros.get("\\@eqnsw") === "1");
+      }
+    }
+  }
+
+  beginRow(); // Test for \hline at the top of the array.
 
   hLinesBeforeRow.push(getHLines(parser));
 
@@ -59014,10 +60457,11 @@ function parseArray(parser, _ref, style) {
 
       parser.consume();
     } else if (next === "\\end") {
-      // Arrays terminate newlines with `\crcr` which consumes a `\cr` if
+      endRow(); // Arrays terminate newlines with `\crcr` which consumes a `\cr` if
       // the last line is empty.  However, AMS environments keep the
       // empty row if it's the only one.
       // NOTE: Currently, `cell` is the last item added into `row`.
+
       if (row.length === 1 && cell.type === "styling" && cell.body[0].body.length === 0 && (body.length > 1 || !emptySingleRow)) {
         body.pop();
       }
@@ -59039,11 +60483,13 @@ function parseArray(parser, _ref, style) {
         size = parser.parseSizeGroup(true);
       }
 
-      rowGaps.push(size ? size.value : null); // check for \hline(s) following the row separator
+      rowGaps.push(size ? size.value : null);
+      endRow(); // check for \hline(s) following the row separator
 
       hLinesBeforeRow.push(getHLines(parser));
       row = [];
       body.push(row);
+      beginRow();
     } else {
       throw new ParseError("Expected & or \\\\ or \\cr or \\end", parser.nextToken);
     }
@@ -59064,7 +60510,7 @@ function parseArray(parser, _ref, style) {
     hskipBeforeAndAfter,
     hLinesBeforeRow,
     colSeparationType,
-    addEqnNum,
+    tags,
     leqno
   };
 } // Decides on a style for cells in an array according to whether the given
@@ -59202,20 +60648,33 @@ var htmlBuilder$7 = function htmlBuilder(group, options) {
   var cols = [];
   var colSep;
   var colDescrNum;
-  var eqnNumSpans = [];
+  var tagSpans = [];
 
-  if (group.addEqnNum) {
-    // An environment with automatic equation numbers.
-    // Create node(s) that will trigger CSS counter increment.
+  if (group.tags && group.tags.some(tag => tag)) {
+    // An environment with manual tags and/or automatic equation numbers.
+    // Create node(s), the latter of which trigger CSS counter increment.
     for (r = 0; r < nr; ++r) {
       var rw = body[r];
       var shift = rw.pos - offset;
-      var eqnTag = buildCommon.makeSpan(["eqn-num"], [], options);
-      eqnTag.depth = rw.depth;
-      eqnTag.height = rw.height;
-      eqnNumSpans.push({
+      var tag = group.tags[r];
+      var tagSpan = void 0;
+
+      if (tag === true) {
+        // automatic numbering
+        tagSpan = buildCommon.makeSpan(["eqn-num"], [], options);
+      } else if (tag === false) {
+        // \nonumber/\notag or starred environment
+        tagSpan = buildCommon.makeSpan([], [], options);
+      } else {
+        // manual \tag
+        tagSpan = buildCommon.makeSpan([], buildExpression$1(tag, options, true), options);
+      }
+
+      tagSpan.depth = rw.depth;
+      tagSpan.height = rw.height;
+      tagSpans.push({
         type: "elem",
-        elem: eqnTag,
+        elem: tagSpan,
         shift
       });
     }
@@ -59232,22 +60691,22 @@ var htmlBuilder$7 = function htmlBuilder(group, options) {
       // between them.
       if (!firstSeparator) {
         colSep = buildCommon.makeSpan(["arraycolsep"], []);
-        colSep.style.width = options.fontMetrics().doubleRuleSep + "em";
+        colSep.style.width = makeEm(options.fontMetrics().doubleRuleSep);
         cols.push(colSep);
       }
 
       if (colDescr.separator === "|" || colDescr.separator === ":") {
         var lineType = colDescr.separator === "|" ? "solid" : "dashed";
         var separator = buildCommon.makeSpan(["vertical-separator"], [], options);
-        separator.style.height = totalHeight + "em";
-        separator.style.borderRightWidth = ruleThickness + "em";
+        separator.style.height = makeEm(totalHeight);
+        separator.style.borderRightWidth = makeEm(ruleThickness);
         separator.style.borderRightStyle = lineType;
-        separator.style.margin = "0 -" + ruleThickness / 2 + "em";
+        separator.style.margin = "0 " + makeEm(-ruleThickness / 2);
 
         var _shift = totalHeight - offset;
 
         if (_shift) {
-          separator.style.verticalAlign = -_shift + "em";
+          separator.style.verticalAlign = makeEm(-_shift);
         }
 
         cols.push(separator);
@@ -59271,7 +60730,7 @@ var htmlBuilder$7 = function htmlBuilder(group, options) {
 
       if (sepwidth !== 0) {
         colSep = buildCommon.makeSpan(["arraycolsep"], []);
-        colSep.style.width = sepwidth + "em";
+        colSep.style.width = makeEm(sepwidth);
         cols.push(colSep);
       }
     }
@@ -59309,7 +60768,7 @@ var htmlBuilder$7 = function htmlBuilder(group, options) {
 
       if (sepwidth !== 0) {
         colSep = buildCommon.makeSpan(["arraycolsep"], []);
-        colSep.style.width = sepwidth + "em";
+        colSep.style.width = makeEm(sepwidth);
         cols.push(colSep);
       }
     }
@@ -59351,12 +60810,12 @@ var htmlBuilder$7 = function htmlBuilder(group, options) {
     }, options);
   }
 
-  if (!group.addEqnNum) {
+  if (tagSpans.length === 0) {
     return buildCommon.makeSpan(["mord"], [body], options);
   } else {
     var eqnNumCol = buildCommon.makeVList({
       positionType: "individualShift",
-      children: eqnNumSpans
+      children: tagSpans
     }, options);
     eqnNumCol = buildCommon.makeSpan(["tag"], [eqnNumCol], options);
     return buildCommon.makeFragment([body, eqnNumCol]);
@@ -59382,7 +60841,7 @@ var mathmlBuilder$6 = function mathmlBuilder(group, options) {
       row.push(new mathMLTree.MathNode("mtd", [buildGroup(rw[j], options)]));
     }
 
-    if (group.addEqnNum) {
+    if (group.tags && group.tags[i]) {
       row.unshift(glue);
       row.push(glue);
 
@@ -59409,7 +60868,7 @@ var mathmlBuilder$6 = function mathmlBuilder(group, options) {
 
   var gap = group.arraystretch === 0.5 ? 0.1 // {smallmatrix}, {subarray}
   : 0.16 + group.arraystretch - 1 + (group.addJot ? 0.09 : 0);
-  table.setAttribute("rowspacing", gap.toFixed(4) + "em"); // MathML table lines go only between cells.
+  table.setAttribute("rowspacing", makeEm(gap)); // MathML table lines go only between cells.
   // To place a line on an edge we'll use <menclose>, if necessary.
 
   var menclose = "";
@@ -59517,13 +60976,14 @@ var alignedHandler = function alignedHandler(context, args) {
 
   var cols = [];
   var separationType = context.envName.indexOf("at") > -1 ? "alignat" : "align";
+  var isSplit = context.envName === "split";
   var res = parseArray(context.parser, {
     cols,
     addJot: true,
-    addEqnNum: context.envName === "align" || context.envName === "alignat",
+    autoTag: isSplit ? undefined : getAutoTag(context.envName),
     emptySingleRow: true,
     colSeparationType: separationType,
-    maxNumCols: context.envName === "split" ? 2 : undefined,
+    maxNumCols: isSplit ? 2 : undefined,
     leqno: context.parser.settings.leqno
   }, "display"); // Determining number of columns.
   // 1. If the first argument is given, we use it as a number of columns,
@@ -59883,7 +61343,7 @@ defineEnvironment({
       }],
       addJot: true,
       colSeparationType: "gather",
-      addEqnNum: context.envName === "gather",
+      autoTag: getAutoTag(context.envName),
       emptySingleRow: true,
       leqno: context.parser.settings.leqno
     };
@@ -59916,7 +61376,7 @@ defineEnvironment({
   handler(context) {
     validateAmsEnvironmentContext(context);
     var res = {
-      addEqnNum: context.envName === "equation",
+      autoTag: getAutoTag(context.envName),
       emptySingleRow: true,
       singleRow: true,
       maxNumCols: 1,
@@ -59942,7 +61402,9 @@ defineEnvironment({
 
   htmlBuilder: htmlBuilder$7,
   mathmlBuilder: mathmlBuilder$6
-}); // Catch \hline outside array environment
+});
+defineMacro("\\nonumber", "\\gdef\\@eqnsw{0}");
+defineMacro("\\notag", "\\nonumber"); // Catch \hline outside array environment
 
 defineFunction({
   type: "text",
@@ -60495,7 +61957,7 @@ var mathmlBuilder$3 = (group, options) => {
     node.setAttribute("linethickness", "0px");
   } else if (group.barSize) {
     var ruleWidth = calculateSize(group.barSize, options);
-    node.setAttribute("linethickness", ruleWidth + "em");
+    node.setAttribute("linethickness", makeEm(ruleWidth));
   }
 
   var style = adjustStyle(group.size, options.style);
@@ -61358,7 +62820,6 @@ defineFunction({
 
     if (group.totalheight.number > 0) {
       depth = calculateSize(group.totalheight, options) - height;
-      depth = Number(depth.toFixed(2));
     }
 
     var width = 0;
@@ -61368,15 +62829,15 @@ defineFunction({
     }
 
     var style = {
-      height: height + depth + "em"
+      height: makeEm(height + depth)
     };
 
     if (width > 0) {
-      style.width = width + "em";
+      style.width = makeEm(width);
     }
 
     if (depth > 0) {
-      style.verticalAlign = -depth + "em";
+      style.verticalAlign = makeEm(-depth);
     }
 
     var node = new Img(group.src, group.alt, style);
@@ -61392,15 +62853,14 @@ defineFunction({
 
     if (group.totalheight.number > 0) {
       depth = calculateSize(group.totalheight, options) - height;
-      depth = depth.toFixed(2);
-      node.setAttribute("valign", "-" + depth + "em");
+      node.setAttribute("valign", makeEm(-depth));
     }
 
-    node.setAttribute("height", height + depth + "em");
+    node.setAttribute("height", makeEm(height + depth));
 
     if (group.width.number > 0) {
       var width = calculateSize(group.width, options);
-      node.setAttribute("width", width + "em");
+      node.setAttribute("width", makeEm(width));
     }
 
     node.setAttribute("src", group.src);
@@ -61508,10 +62968,10 @@ defineFunction({
     // This code resolved issue #1153
 
     var strut = buildCommon.makeSpan(["strut"]);
-    strut.style.height = node.height + node.depth + "em";
+    strut.style.height = makeEm(node.height + node.depth);
 
     if (node.depth) {
-      strut.style.verticalAlign = -node.depth + "em";
+      strut.style.verticalAlign = makeEm(-node.depth);
     }
 
     node.children.unshift(strut); // Next, prevent vertical misplacement when next to something tall.
@@ -61630,7 +63090,6 @@ defineFunction({
   }
 });
 
-// For an operator with limits, assemble the base, sup, and sub into a span.
 var assembleSupSub = (base, supGroup, subGroup, options, style, slant, baseShift) => {
   base = buildCommon.makeSpan([], [base]);
   var subIsSingleCharacter = subGroup && utils.isCharacterBox(subGroup);
@@ -61670,7 +63129,7 @@ var assembleSupSub = (base, supGroup, subGroup, options, style, slant, baseShift
       }, {
         type: "elem",
         elem: sub.elem,
-        marginLeft: -slant + "em"
+        marginLeft: makeEm(-slant)
       }, {
         type: "kern",
         size: sub.kern
@@ -61683,7 +63142,7 @@ var assembleSupSub = (base, supGroup, subGroup, options, style, slant, baseShift
       }, {
         type: "elem",
         elem: sup.elem,
-        marginLeft: slant + "em"
+        marginLeft: makeEm(slant)
       }, {
         type: "kern",
         size: options.fontMetrics().bigOpSpacing5
@@ -61704,7 +63163,7 @@ var assembleSupSub = (base, supGroup, subGroup, options, style, slant, baseShift
       }, {
         type: "elem",
         elem: sub.elem,
-        marginLeft: -slant + "em"
+        marginLeft: makeEm(-slant)
       }, {
         type: "kern",
         size: sub.kern
@@ -61728,7 +63187,7 @@ var assembleSupSub = (base, supGroup, subGroup, options, style, slant, baseShift
       }, {
         type: "elem",
         elem: sup.elem,
-        marginLeft: slant + "em"
+        marginLeft: makeEm(slant)
       }, {
         type: "kern",
         size: options.fontMetrics().bigOpSpacing5
@@ -61747,7 +63206,7 @@ var assembleSupSub = (base, supGroup, subGroup, options, style, slant, baseShift
     // A negative margin-left was applied to the lower limit.
     // Avoid an overlap by placing a spacer on the left on the group.
     var spacer = buildCommon.makeSpan(["mspace"], [], options);
-    spacer.style.marginRight = slant + "em";
+    spacer.style.marginRight = makeEm(slant);
     parts.unshift(spacer);
   }
 
@@ -61868,7 +63327,7 @@ var htmlBuilder$2 = (grp, options) => {
   } else {
     if (baseShift) {
       base.style.position = "relative";
-      base.style.top = baseShift + "em";
+      base.style.top = makeEm(baseShift);
     }
 
     return base;
@@ -62070,17 +63529,6 @@ defineFunction({
   htmlBuilder: htmlBuilder$2,
   mathmlBuilder: mathmlBuilder$1
 });
-
-/**
- * All registered global/built-in macros.
- * `macros.js` exports this same dictionary again and makes it public.
- * `Parser.js` requires this dictionary via `macros.js`.
- */
-var _macros = {}; // This function might one day accept an additional argument and do more things.
-
-function defineMacro(name, body) {
-  _macros[name] = body;
-}
 
 // NOTE: Unlike most `htmlBuilder`s, this one handles not only
 // "operatorname", but also  "supsub" since \operatorname* can
@@ -62463,6 +63911,26 @@ defineFunction({
 });
 
 defineFunction({
+  type: "internal",
+  names: ["\\relax"],
+  props: {
+    numArgs: 0,
+    allowedInText: true
+  },
+
+  handler(_ref) {
+    var {
+      parser
+    } = _ref;
+    return {
+      type: "internal",
+      mode: parser.mode
+    };
+  }
+
+});
+
+defineFunction({
   type: "rule",
   names: ["\\rule"],
   props: {
@@ -62495,9 +63963,9 @@ defineFunction({
     var height = calculateSize(group.height, options);
     var shift = group.shift ? calculateSize(group.shift, options) : 0; // Style the rule to the right size
 
-    rule.style.borderRightWidth = width + "em";
-    rule.style.borderTopWidth = height + "em";
-    rule.style.bottom = shift + "em"; // Record the height and width
+    rule.style.borderRightWidth = makeEm(width);
+    rule.style.borderTopWidth = makeEm(height);
+    rule.style.bottom = makeEm(shift); // Record the height and width
 
     rule.width = width;
     rule.height = height + shift;
@@ -62516,18 +63984,18 @@ defineFunction({
     var color = options.color && options.getColor() || "black";
     var rule = new mathMLTree.MathNode("mspace");
     rule.setAttribute("mathbackground", color);
-    rule.setAttribute("width", width + "em");
-    rule.setAttribute("height", height + "em");
+    rule.setAttribute("width", makeEm(width));
+    rule.setAttribute("height", makeEm(height));
     var wrapper = new mathMLTree.MathNode("mpadded", [rule]);
 
     if (shift >= 0) {
-      wrapper.setAttribute("height", "+" + shift + "em");
+      wrapper.setAttribute("height", makeEm(shift));
     } else {
-      wrapper.setAttribute("height", shift + "em");
-      wrapper.setAttribute("depth", "+" + -shift + "em");
+      wrapper.setAttribute("height", makeEm(shift));
+      wrapper.setAttribute("depth", makeEm(-shift));
     }
 
-    wrapper.setAttribute("voffset", shift + "em");
+    wrapper.setAttribute("voffset", makeEm(shift));
     return wrapper;
   }
 
@@ -62596,7 +64064,7 @@ defineFunction({
     // that we're passing an options parameter we should be able to fix
     // this.
 
-    node.setAttribute("mathsize", newOptions.sizeMultiplier + "em");
+    node.setAttribute("mathsize", makeEm(newOptions.sizeMultiplier));
     return node;
   }
 });
@@ -62771,7 +64239,7 @@ defineFunction({
 
 
     var imgShift = img.height - inner.height - lineClearance - ruleWidth;
-    inner.style.paddingLeft = advanceWidth + "em"; // Overlay the image and the argument.
+    inner.style.paddingLeft = makeEm(advanceWidth); // Overlay the image and the argument.
 
     var body = buildCommon.makeVList({
       positionType: "firstBaseline",
@@ -62985,7 +64453,7 @@ defineFunctionBuilders({
 
 
     var multiplier = options.sizeMultiplier;
-    var marginRight = 0.5 / metrics.ptPerEm / multiplier + "em";
+    var marginRight = makeEm(0.5 / metrics.ptPerEm / multiplier);
     var marginLeft = null;
 
     if (subm) {
@@ -62996,7 +64464,7 @@ defineFunctionBuilders({
 
       if (base instanceof SymbolNode || isOiint) {
         // $FlowFixMe
-        marginLeft = -base.italic + "em";
+        marginLeft = makeEm(-base.italic);
       }
     }
 
@@ -63710,7 +65178,7 @@ class Namespace {
 
     for (var undef in undefs) {
       if (undefs.hasOwnProperty(undef)) {
-        if (undefs[undef] === undefined) {
+        if (undefs[undef] == null) {
           delete this.current[undef];
         } else {
           this.current[undef] = undefs[undef];
@@ -63760,6 +65228,7 @@ class Namespace {
    * Local set() sets the current value and (when appropriate) adds an undo
    * operation to the undo stack.  Global set() may change the undo
    * operation at every level, so takes time linear in their number.
+   * A value of undefined means to delete existing definitions.
    */
 
 
@@ -63791,7 +65260,11 @@ class Namespace {
       }
     }
 
-    this.current[name] = value;
+    if (value == null) {
+      delete this.current[name];
+    } else {
+      this.current[name] = value;
+    }
   }
 
 }
@@ -64167,7 +65640,7 @@ defineMacro("\\varOmega", "\\mathit{\\Omega}"); //\newcommand{\substack}[1]{\sub
 defineMacro("\\substack", "\\begin{subarray}{c}#1\\end{subarray}"); // \renewcommand{\colon}{\nobreak\mskip2mu\mathpunct{}\nonscript
 // \mkern-\thinmuskip{:}\mskip6muplus1mu\relax}
 
-defineMacro("\\colon", "\\nobreak\\mskip2mu\\mathpunct{}" + "\\mathchoice{\\mkern-3mu}{\\mkern-3mu}{}{}{:}\\mskip6mu"); // \newcommand{\boxed}[1]{\fbox{\m@th$\displaystyle#1$}}
+defineMacro("\\colon", "\\nobreak\\mskip2mu\\mathpunct{}" + "\\mathchoice{\\mkern-3mu}{\\mkern-3mu}{}{}{:}\\mskip6mu\\relax"); // \newcommand{\boxed}[1]{\fbox{\m@th$\displaystyle#1$}}
 
 defineMacro("\\boxed", "\\fbox{$\\displaystyle{#1}$}"); // \def\iff{\DOTSB\;\Longleftrightarrow\;}
 // \def\implies{\DOTSB\;\Longrightarrow\;}
@@ -64411,7 +65884,7 @@ defineMacro("\\TeX", "\\textrm{\\html@mathml{" + "T\\kern-.1667em\\raisebox{-.5e
 // We compute the corresponding \raisebox when A is rendered in \normalsize
 // \scriptstyle, which has a scale factor of 0.7 (see Options.js).
 
-var latexRaiseA = fontMetricsData['Main-Regular']["T".charCodeAt(0)][1] - 0.7 * fontMetricsData['Main-Regular']["A".charCodeAt(0)][1] + "em";
+var latexRaiseA = makeEm(fontMetricsData['Main-Regular']["T".charCodeAt(0)][1] - 0.7 * fontMetricsData['Main-Regular']["A".charCodeAt(0)][1]);
 defineMacro("\\LaTeX", "\\textrm{\\html@mathml{" + ("L\\kern-.36em\\raisebox{" + latexRaiseA + "}{\\scriptstyle A}") + "\\kern-.15em\\TeX}{LaTeX}}"); // New KaTeX logo based on tweaking LaTeX logo
 
 defineMacro("\\KaTeX", "\\textrm{\\html@mathml{" + ("K\\kern-.17em\\raisebox{" + latexRaiseA + "}{\\scriptstyle A}") + "\\kern-.15em\\TeX}{KaTeX}}"); // \DeclareRobustCommand\hspace{\@ifstar\@hspacer\@hspace}
@@ -64694,8 +66167,6 @@ defineMacro("\\kaGreen", "\\textcolor{##71B307}{#1}");
 // List of commands that act like macros but aren't defined as a macro,
 // function, or symbol.  Used in `isDefined`.
 var implicitCommands = {
-  "\\relax": true,
-  // MacroExpander.js
   "^": true,
   // Parser.js
   "_": true,
@@ -65059,15 +66530,13 @@ class MacroExpander {
       var expanded = this.expandOnce(); // expandOnce returns Token if and only if it's fully expanded.
 
       if (expanded instanceof Token) {
-        // \relax stops the expansion, but shouldn't get returned (a
-        // null return value couldn't get implemented as a function).
         // the token after \noexpand is interpreted as if its meaning
         // were ‘\relax’
-        if (expanded.text === "\\relax" || expanded.treatAsRelax) {
-          this.stack.pop();
-        } else {
-          return this.stack.pop(); // === expanded
+        if (expanded.treatAsRelax) {
+          expanded.text = "\\relax";
         }
+
+        return this.stack.pop(); // === expanded
       }
     } // Flow unable to figure out that this pathway is impossible.
     // https://github.com/facebook/flow/issues/4808
@@ -65732,6 +67201,25 @@ class Parser {
     } finally {
       this.gullet.endGroups();
     }
+  }
+  /**
+   * Fully parse a separate sequence of tokens as a separate job.
+   * Tokens should be specified in reverse order, as in a MacroDefinition.
+   */
+
+
+  subparse(tokens) {
+    // Save the next token from the current job.
+    var oldToken = this.nextToken;
+    this.consume(); // Run the new job, terminating it with an excess '}'
+
+    this.gullet.pushToken(new Token("}"));
+    this.gullet.pushTokens(tokens);
+    var parse = this.parseExpression(false);
+    this.expect("}"); // Restore the next token from the current job.
+
+    this.nextToken = oldToken;
+    return parse;
   }
 
   /**
@@ -66674,12 +68162,11 @@ var parseTree = function parseTree(toParse, settings) {
       throw new ParseError("\\tag works only in display equations");
     }
 
-    parser.gullet.feed("\\df@tag");
     tree = [{
       type: "tag",
       mode: "text",
       body: tree,
-      tag: parser.parse()
+      tag: parser.subparse([new Token("\\df@tag")])
     }];
   }
 
@@ -66781,7 +68268,7 @@ var katex = {
   /**
    * Current KaTeX version
    */
-  version: "0.13.20",
+  version: "0.15.1",
 
   /**
    * Renders the given LaTeX into an HTML+MathML combination, and adds
@@ -66799,6 +68286,11 @@ var katex = {
    * KaTeX error, usually during parsing.
    */
   ParseError,
+
+  /**
+   * The shema of Settings
+   */
+  SETTINGS_SCHEMA,
 
   /**
    * Parses the given LaTeX into KaTeX's internal parse tree structure,
@@ -66875,7 +68367,7 @@ var katex = {
 /***/ ((module) => {
 
 "use strict";
-module.exports = JSON.parse('{"name":"axios","version":"0.21.4","description":"Promise based HTTP client for the browser and node.js","main":"index.js","scripts":{"test":"grunt test","start":"node ./sandbox/server.js","build":"NODE_ENV=production grunt build","preversion":"npm test","version":"npm run build && grunt version && git add -A dist && git add CHANGELOG.md bower.json package.json","postversion":"git push && git push --tags","examples":"node ./examples/server.js","coveralls":"cat coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js","fix":"eslint --fix lib/**/*.js"},"repository":{"type":"git","url":"https://github.com/axios/axios.git"},"keywords":["xhr","http","ajax","promise","node"],"author":"Matt Zabriskie","license":"MIT","bugs":{"url":"https://github.com/axios/axios/issues"},"homepage":"https://axios-http.com","devDependencies":{"coveralls":"^3.0.0","es6-promise":"^4.2.4","grunt":"^1.3.0","grunt-banner":"^0.6.0","grunt-cli":"^1.2.0","grunt-contrib-clean":"^1.1.0","grunt-contrib-watch":"^1.0.0","grunt-eslint":"^23.0.0","grunt-karma":"^4.0.0","grunt-mocha-test":"^0.13.3","grunt-ts":"^6.0.0-beta.19","grunt-webpack":"^4.0.2","istanbul-instrumenter-loader":"^1.0.0","jasmine-core":"^2.4.1","karma":"^6.3.2","karma-chrome-launcher":"^3.1.0","karma-firefox-launcher":"^2.1.0","karma-jasmine":"^1.1.1","karma-jasmine-ajax":"^0.1.13","karma-safari-launcher":"^1.0.0","karma-sauce-launcher":"^4.3.6","karma-sinon":"^1.0.5","karma-sourcemap-loader":"^0.3.8","karma-webpack":"^4.0.2","load-grunt-tasks":"^3.5.2","minimist":"^1.2.0","mocha":"^8.2.1","sinon":"^4.5.0","terser-webpack-plugin":"^4.2.3","typescript":"^4.0.5","url-search-params":"^0.10.0","webpack":"^4.44.2","webpack-dev-server":"^3.11.0"},"browser":{"./lib/adapters/http.js":"./lib/adapters/xhr.js"},"jsdelivr":"dist/axios.min.js","unpkg":"dist/axios.min.js","typings":"./index.d.ts","dependencies":{"follow-redirects":"^1.14.0"},"bundlesize":[{"path":"./dist/axios.min.js","threshold":"5kB"}]}');
+module.exports = JSON.parse('{"_from":"axios@^0.21","_id":"axios@0.21.4","_inBundle":false,"_integrity":"sha512-ut5vewkiu8jjGBdqpM44XxjuCjq9LAKeHVmoVfHVzy8eHgxxq8SbAVQNovDA8mVi05kP0Ea/n/UzcSHcTJQfNg==","_location":"/axios","_phantomChildren":{},"_requested":{"type":"range","registry":true,"raw":"axios@^0.21","name":"axios","escapedName":"axios","rawSpec":"^0.21","saveSpec":null,"fetchSpec":"^0.21"},"_requiredBy":["#DEV:/","/@inertiajs/inertia"],"_resolved":"https://registry.npmjs.org/axios/-/axios-0.21.4.tgz","_shasum":"c67b90dc0568e5c1cf2b0b858c43ba28e2eda575","_spec":"axios@^0.21","_where":"C:\\\\websites\\\\scolcours_gymnase","author":{"name":"Matt Zabriskie"},"browser":{"./lib/adapters/http.js":"./lib/adapters/xhr.js"},"bugs":{"url":"https://github.com/axios/axios/issues"},"bundleDependencies":false,"bundlesize":[{"path":"./dist/axios.min.js","threshold":"5kB"}],"dependencies":{"follow-redirects":"^1.14.0"},"deprecated":false,"description":"Promise based HTTP client for the browser and node.js","devDependencies":{"coveralls":"^3.0.0","es6-promise":"^4.2.4","grunt":"^1.3.0","grunt-banner":"^0.6.0","grunt-cli":"^1.2.0","grunt-contrib-clean":"^1.1.0","grunt-contrib-watch":"^1.0.0","grunt-eslint":"^23.0.0","grunt-karma":"^4.0.0","grunt-mocha-test":"^0.13.3","grunt-ts":"^6.0.0-beta.19","grunt-webpack":"^4.0.2","istanbul-instrumenter-loader":"^1.0.0","jasmine-core":"^2.4.1","karma":"^6.3.2","karma-chrome-launcher":"^3.1.0","karma-firefox-launcher":"^2.1.0","karma-jasmine":"^1.1.1","karma-jasmine-ajax":"^0.1.13","karma-safari-launcher":"^1.0.0","karma-sauce-launcher":"^4.3.6","karma-sinon":"^1.0.5","karma-sourcemap-loader":"^0.3.8","karma-webpack":"^4.0.2","load-grunt-tasks":"^3.5.2","minimist":"^1.2.0","mocha":"^8.2.1","sinon":"^4.5.0","terser-webpack-plugin":"^4.2.3","typescript":"^4.0.5","url-search-params":"^0.10.0","webpack":"^4.44.2","webpack-dev-server":"^3.11.0"},"homepage":"https://axios-http.com","jsdelivr":"dist/axios.min.js","keywords":["xhr","http","ajax","promise","node"],"license":"MIT","main":"index.js","name":"axios","repository":{"type":"git","url":"git+https://github.com/axios/axios.git"},"scripts":{"build":"NODE_ENV=production grunt build","coveralls":"cat coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js","examples":"node ./examples/server.js","fix":"eslint --fix lib/**/*.js","postversion":"git push && git push --tags","preversion":"npm test","start":"node ./sandbox/server.js","test":"grunt test","version":"npm run build && grunt version && git add -A dist && git add CHANGELOG.md bower.json package.json"},"typings":"./index.d.ts","unpkg":"dist/axios.min.js","version":"0.21.4"}');
 
 /***/ })
 
