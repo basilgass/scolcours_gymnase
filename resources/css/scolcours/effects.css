@@ -13,3 +13,4 @@
 .collapse-from-top-enter-active{transition: all .3s ease-out;}
 .collapse-from-top-leave-active{transition: all .3s ease-in;}
 .collapse-from-top-enter-from,.collapse-from-top-leave-to{transform: translateY(-20%);opacity: 0}
+

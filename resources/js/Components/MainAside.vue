@@ -47,10 +47,6 @@
 		</aside>
 	</transition>
 </template>
-
-<script>
-	export default {
-		name: 'MainAside',
-	}
+<script setup>
 </script>
 

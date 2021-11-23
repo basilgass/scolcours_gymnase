@@ -20,29 +20,52 @@
 		<form-input
 				v-model="Form.title"
 				name="title"
+				label="titre (optionnel)"
 				:error="Form.errors.title"
 			/>
 		<form-textarea
 				v-model="Form.body"
 				name="body"
+				label="question"
 				:error="Form.errors.body"
 			/>
 
-		<form-input
-				v-model="Form.answer"
-				name="answer"
-			/>
+		<collapse-transition>
+			<form-textarea
+					v-show="Form.body.includes('@@')"
+					v-model="Form.generators"
+					name="generators"
+					rows="10"
+					label="generateur"
+				/>
+		</collapse-transition>
 
-		<form-textarea
-				v-model="Form.explanation"
-				name="explanation"
-				:error="Form.errors.explanation"
-			/>
+		<collapse-transition>
+			<form-input
+					v-show="!Form.body.includes('@@')"
+					v-model="Form.answer"
+					name="answer"
+					label="réponse"
+				/>
+		</collapse-transition>
 
-		<form-file
-				name="file"
-				@input="Form.illustrations = $event.target.files"
-			/>
+		<collapse-transition>
+			<form-textarea
+					v-show="!Form.body.includes('@@')"
+					v-model="Form.explanation"
+					name="explanation"
+					label="développement"
+					:error="Form.errors.explanation"
+				/>
+		</collapse-transition>
+		<collapse-transition>
+			<form-file
+					v-show="!Form.body.includes('@@')"
+					name="file"
+					label="images"
+					@input="Form.illustrations = $event.target.files"
+				/>
+		</collapse-transition>
 
 		<button
 				type="submit"
@@ -56,23 +79,25 @@
 <script setup>
 	import FormInput from "@/Components/Form/FormInput"
 	import FormTextarea from "@/Components/Form/FormTextarea"
-	import {useForm} from "@inertiajs/inertia-vue3"
+	import { useForm } from "@inertiajs/inertia-vue3"
 	import FormFile from "@/Components/Form/FormFile"
 	import FormSelect from "@/Components/Form/FormSelect"
+	import CollapseTransition from "@/Components/CollapseTransition"
 
 	const Form = useForm({
 		chapter_id: 1,
 		title: "",
 		body: "",
-		answer: "3/6",
+		answer: "",
 		explanation: "",
-		illustrations: ""
+		illustrations: "",
+		generators: ""
 	})
 
 	function createExercise(){
 		Form.post("/exercise", {
 			preserveScroll: true,
-			onSuccess: () => console.log("SUCCESS"),
+			onSuccess: () => {Form.answer = ""},
 			onError: ()=>console.log(Form.errors)
 		})
 	}

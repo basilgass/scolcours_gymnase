@@ -52,20 +52,18 @@
 		</div>
 	</header>
 </template>
-<script>
+<script setup>
 	import MainAside from "@/Components/MainAside"
+	import { ref } from "vue"
 
-	export default {
-		name: "MainHeader",
-		components: {MainAside},
-		props: {
-			theme: Object,
-		},
-		data() {
-			return {
-				showMenu: false,
-				showAside: false
-			}
-		},
-	}
+	defineProps({
+		theme: Object
+	})
+
+	let showMenu = ref(false),
+		showAside = ref(false)
+
+	defineExpose({
+		showAside, showMenu
+	})
 </script>

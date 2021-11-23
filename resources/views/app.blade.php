@@ -27,9 +27,12 @@
     <link rel="stylesheet" href="{{ mix('css/app.css') }}">
 
     <!-- Scripts -->
+		<!-- Math home mode scripts -->
+{{--		<script src="{{ mix('js/pi.bundle.js') }}" defer></script>--}}
     @routes
+
+	<!-- Finally, loading the main app script -->
     <script src="{{ mix('js/app.js') }}" defer></script>
-    <script src="{{ mix('js/pi.bundle.js') }}" defer></script>
 
 
 </head>
@@ -37,6 +40,7 @@
 
 @inertia
 
+<div id="modal-dialog"></div>
 {{--@env ('local')--}}
 {{--    <script src="http://localhost:8080/js/bundle.js"></script>--}}
 {{--@endenv--}}

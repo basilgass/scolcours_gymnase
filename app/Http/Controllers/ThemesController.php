@@ -1,61 +1,68 @@
 <?php
 
-namespace App\Http\Controllers;
+	namespace App\Http\Controllers;
 
-use App\Models\Chapter;
-use App\Models\Theme;
-use Illuminate\Http\Request;
-use Inertia\Inertia;
+	use App\Models\Chapter;
+	use App\Models\Theme;
+	use App\Models\Tools;
+	use Illuminate\Http\Request;
+	use Inertia\Inertia;
 
-class ThemesController extends Controller
-{
-	public function index()
+	class ThemesController extends Controller
 	{
-		//
-	}
+		public function index()
+		{
+			//
+		}
 
-	public function create()
-	{
-		//
-	}
+		public function create()
+		{
+			//
+		}
 
-	public function store(Request $request)
-	{
-		//
-	}
+		public function store(Request $request)
+		{
+			//
+		}
 
-	public function show(Theme $theme)
-	{
-		return Inertia::render('Theme', [
-			"theme" => $theme,
-			"chapters" => $theme->chapters()->get(['slug', 'title', 'body'])
-		]);
-	}
+		public function show(Theme $theme)
+		{
+			$component = $theme->slug === 'tools' ? "Tools" : "Theme";
+			$data = [
+				"theme" => $theme,
+				"chapters" => $theme->chapters()->get(['slug', 'title', 'body'])
+			];
 
-	public function chapter(Theme $theme, Chapter $chapter)
-	{
-		// fetch all exercises from this chapter.
-		$exercises = $chapter->exercises;
+			if($theme->slug==='tools'){
+				$data['tools'] = Tools::all();
+			}
+			return Inertia::render($component, $data);
+		}
 
-		return Inertia::render('Chapter', [
-			"theme" => $theme,
-			"chapter" => $chapter,
-			"hasChapterComponent" => file_exists(resource_path('js/Chapters/' . $theme->slug . '/' . $chapter->slug . '.vue')),
-		]);
-	}
+		public function chapter(Theme $theme, Chapter $chapter)
+		{
+			// fetch all exercises from this chapter.
+			$exercises = $chapter->exercises;
 
-	public function edit(Theme $theme)
-	{
-		//
-	}
+			return Inertia::render('Chapters/Chapter', [
+				"theme" => $theme,
+				"chapter" => $chapter,
+				"hasChapterComponent" => file_exists(resource_path("js/Chapters/{$theme->slug}/{$chapter->slug}.vue")),
+			]);
+		}
 
-	public function update(Request $request, Theme $theme)
-	{
-		//
-	}
+		public function edit(Theme $theme)
+		{
+			//
+		}
 
-	public function destroy(Theme $theme)
-	{
-		//
+		public function update(Request $request, Theme $theme)
+		{
+			//
+		}
+
+		public function destroy(Theme $theme)
+		{
+			//
+		}
 	}
-}

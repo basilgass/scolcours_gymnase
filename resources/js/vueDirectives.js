@@ -8,6 +8,10 @@ export const katexDirective = {
 		if(binding.modifiers.left){
 			el.classList.add("katex-left")
 		}
+		if(binding.modifiers.nomargin){
+			el.classList.add("katex-m-0")
+		}
+		
 		el.innerHTML = katex.renderToString(tex,{
 			throwOnError: false,
 			displayMode: !binding.modifiers.inline

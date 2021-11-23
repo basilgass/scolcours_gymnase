@@ -1,0 +1,52 @@
+<template>
+	<form-input
+			label="Sélectionner l'outils"
+			name="tools"
+		/>
+
+	<table class="w-full my-5">
+		<tr
+				v-for="tool of $page.props.tools"
+				:key="tool.slug"
+				class="odd:bg-white hover:bg-amber-100"
+				@click="toolSlug = tool.slug"
+			>
+			<td class="pl-3 py-2">
+				<h2 class="text-lg">
+					{{ tool.title }}
+				</h2>
+				<div class="text-sm text-gray-400">
+					{{ tool.slug }}
+				</div>
+			</td>
+			<td class="py-2 align-text-top">
+				{{ tool.description }}
+			</td>
+		</tr>
+	</table>
+
+	<keep-alive>
+		<component :is="toolSlug===null?null:toolComponents[toolSlug]" />
+	</keep-alive>
+</template>
+
+<script setup>
+	import FormInput from "@/Components/Form/FormInput"
+	import { defineAsyncComponent, ref } from "vue"
+
+	let toolSlug = ref(null)
+	let fx = ref("")
+
+	const props = defineProps({
+		tools: {type: Object, default: ()=>{}},
+	})
+
+	let toolComponents = []
+	for(let tool of props.tools){
+		toolComponents[tool.slug] = defineAsyncComponent({
+			loader: ()=> import(`@/Components/Tools/${tool.slug}`)
+		})
+	}
+	console.log(toolComponents)
+</script>
+

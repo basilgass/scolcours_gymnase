@@ -8,7 +8,7 @@
 				{{ name }}
 			</label>
 			<span
-					class="text-xs"
+					class="text-xs cursor-pointer"
 					@click="asciiMode=!asciiMode"
 					v-text="asciiMode?'ASCII':'LaTeX'"
 				/>
@@ -16,9 +16,14 @@
 		<input
 				:name="name"
 				:value="modelValue"
-				class="border border-gray-200 w-full p-2 rounded bg-transparent
-        focus:outline-none focus:ring-2 focus:ring-blue-200"
-				@input="tex = $event.target.value;$emit('update:modelValue', $event.target.value)"
+				class="w-full p-2 rounded bg-transparent
+				border
+        		focus:outline-none"
+				:class="{
+					'border-gray-200 focus:border-gray-600': !correct,
+					'border-2 border-green-600': correct
+				}"
+				@input="$emit('update:modelValue', $event.target.value)"
 			>
 		<div class="min-h-[40px]">
 			<div
@@ -30,23 +35,32 @@
 					v-katex.left="modelValue"
 				/>
 		</div>
+		<div class="flex justify-end">
+			<button
+					class="btn"
+					:class="correct?'btn-success':'btn-primary'"
+					@click="$emit('validate', modelValue)"
+					v-text="correct?'Nouveau':'Valider'"
+				/>
+		</div>
 	</div>
 </template>
 <script setup>
-	import {onMounted} from "vue"
+	import {onMounted, ref} from "vue"
 
-	const emits = defineEmits(["update:modelValue"])
+	const emits = defineEmits(["update:modelValue","validate"])
 	const props = defineProps(
 		{
 			modelValue: {type: String, default: ""},
 			name: {type: String, default: "math"},
 			latex: {type: Boolean, default: false},
+			correct: {type: Boolean, default: false}
 		}
 	)
 
-	let asciiMode = false
+	let asciiMode = ref(false)
 	onMounted(() => {
-		asciiMode = !props.latex
+		asciiMode.value = !props.latex
 	})
 
 </script>

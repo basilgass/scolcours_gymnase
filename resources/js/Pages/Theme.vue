@@ -7,19 +7,18 @@
 			<a
 					:href="route('theme.chapter', [$page.props.theme.slug, chapter.slug])"
 					class="text-3xl"
-				>{{
-					chapter.title
-				}}</a>
+				>{{ chapter.title }}
+			</a>
 			<p>{{ chapter.body }}</p>
 		</div>
 	</div>
 </template>
 
 <script>
-	import Layout from '@/Pages/Layout'
+	import Layout from "@/Pages/Layout"
 
 	export default {
-		name: 'Theme',
+		name: "Theme",
 		layout: Layout,
 		props: {
 			theme: {

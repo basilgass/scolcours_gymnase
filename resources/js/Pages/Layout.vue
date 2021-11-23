@@ -9,11 +9,10 @@
 
 <script>
 	import MainHeader from "@/Components/MainHeader"
-	import MainAside from "@/Components/MainAside"
 
 	export default {
 		name: "Layout",
-		components: {MainAside, MainHeader},
+		components: {MainHeader},
 		props: {
 			showAside: {type: Boolean, default: true},
 			theme: {type: Object, default: {title: "ScolCours"}}
