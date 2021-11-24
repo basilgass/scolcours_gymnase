@@ -24,14 +24,11 @@
 			</td>
 		</tr>
 	</table>
-
-	<affine />
 </template>
 
 <script setup>
 	import FormInput from "@/Components/Form/FormInput"
 	import { ref } from "vue"
-	import Affine from "@/Components/Tools/affine"
 
 	let toolSlug = ref(null)
 
