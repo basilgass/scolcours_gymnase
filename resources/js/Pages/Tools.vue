@@ -25,12 +25,18 @@
 		</tr>
 	</table>
 
-	<div
-			v-for="tool of props.tools"
-			:key="tool.slug"
-		>
-		<component :is="toolComponents[tool.slug]" />
-	</div>
+	<affine />
+
+	<integrale />
+
+	<quadratique />
+
+<!--	<div-->
+<!--			v-for="tool of props.tools"-->
+<!--			:key="tool.slug"-->
+<!--		>-->
+<!--		<component :is="toolComponents[tool.slug]" />-->
+<!--	</div>-->
 
 <!--  -->
 <!--	<keep-alive>-->
@@ -41,6 +47,9 @@
 <script setup>
 	import FormInput from "@/Components/Form/FormInput"
 	import { defineAsyncComponent, ref } from "vue"
+	import Affine from "@/Components/Tools/affine"
+	import Integrale from "@/Components/Tools/integrale"
+	import Quadratique from "@/Components/Tools/quadratique"
 
 	let toolSlug = ref(null)
 	let fx = ref("")
