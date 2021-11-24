@@ -26,12 +26,8 @@
 	</table>
 
 	<affine />
-
-	<integrale />
-
-	<quadratique />
-
-<!--	<div-->
+  
+	<!--	<div-->
 <!--			v-for="tool of props.tools"-->
 <!--			:key="tool.slug"-->
 <!--		>-->
@@ -46,10 +42,8 @@
 
 <script setup>
 	import FormInput from "@/Components/Form/FormInput"
-	import { defineAsyncComponent, ref } from "vue"
+	import { ref } from "vue"
 	import Affine from "@/Components/Tools/affine"
-	import Integrale from "@/Components/Tools/integrale"
-	import Quadratique from "@/Components/Tools/quadratique"
 
 	let toolSlug = ref(null)
 	let fx = ref("")
@@ -58,12 +52,12 @@
 		tools: {type: Object, default: ()=>{}},
 	})
 
-	let toolComponents = []
-	for(let tool of props.tools){
-		console.log(tool.slug)
-		toolComponents[tool.slug] = defineAsyncComponent({
-			loader: ()=> import(/**/`@/Components/Tools/${tool.slug}`)
-		})
-	}
+	// let toolComponents = []
+	// for(let tool of props.tools){
+	// 	console.log(tool.slug)
+	// 	toolComponents[tool.slug] = defineAsyncComponent({
+	// 		loader: ()=> import(/**/`@/Components/Tools/${tool.slug}`)
+	// 	})
+	// }
 </script>
 
