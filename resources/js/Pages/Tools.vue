@@ -26,12 +26,15 @@
 	</table>
 
 	<integrale />
+
+	<quadratique />
 </template>
 
 <script setup>
 	import FormInput from "@/Components/Form/FormInput"
 	import { ref } from "vue"
 	import Integrale from "@/Components/Tools/integrale"
+	import Quadratique from "@/Components/Tools/quadratique"
 
 	let toolSlug = ref(null)
 
