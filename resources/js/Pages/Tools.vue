@@ -44,9 +44,8 @@
 	let toolComponents = []
 	for(let tool of props.tools){
 		toolComponents[tool.slug] = defineAsyncComponent({
-			loader: ()=> import(`@/Components/Tools/${tool.slug}`)
+			loader: ()=> import(/**/`@/Components/Tools/${tool.slug}`)
 		})
 	}
-	console.log(toolComponents)
 </script>
 
