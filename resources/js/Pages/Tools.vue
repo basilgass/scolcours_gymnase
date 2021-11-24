@@ -25,9 +25,12 @@
 		</tr>
 	</table>
 
-	<keep-alive>
-		<component :is="toolSlug===null?null:toolComponents[toolSlug]" />
-	</keep-alive>
+	<div
+			v-for="tool of props.tools"
+			:key="tool.slug"
+		>
+		<component :is="tool.slug" />
+	</div>
 </template>
 
 <script setup>
@@ -43,6 +46,7 @@
 
 	let toolComponents = []
 	for(let tool of props.tools){
+		console.log(tool.slug)
 		toolComponents[tool.slug] = defineAsyncComponent({
 			loader: ()=> import(/**/`@/Components/Tools/${tool.slug}`)
 		})
