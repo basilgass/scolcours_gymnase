@@ -33,6 +33,6 @@
 		"@tailwindcss/typography": "^0.4.1",
 		"asciimath2tex": "^1.1.0",
 		"katex": "^0.15.1",
-		"pimath": "^0.0.15"
+		"pimath": "^0.0.16"
 	}
 }

@@ -29,7 +29,9 @@
 	import Panel from "@/Components/Ui/Panel"
 	import FormInput from "@/Components/Form/FormInput"
 	import { computed, ref } from "vue"
-	import { Line, Point, Vector } from "pimath/esm/maths/geometry"
+	import { Line } from "pimath/esm/maths/geometry/line"
+	import { Point } from "pimath/esm/maths/geometry/point"
+	import { Vector } from "pimath/esm/maths/geometry/vector"
 
 	let A = ref("3,4"),
 		B = ref("1,2")

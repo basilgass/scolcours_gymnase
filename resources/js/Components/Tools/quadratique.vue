@@ -33,12 +33,12 @@
 	import FormInput from "@/Components/Form/FormInput"
 	import { computed, ref } from "vue"
 	import { Point } from "pimath/esm/maths/geometry"
-	import { Equation, Polynom } from "pimath/esm/maths/algebra"
+	import { Equation } from "pimath/esm/maths/algebra/equation"
+	import { Polynom } from "pimath/esm/maths/algebra/polynom"
 
 	let A = ref("1,4"),
 		B=ref("2,3"),
 		C=ref("5,8")
-
 	let quadratique = computed(()=>{
 		let P = new Equation("y = a*x^2+b*x+c"),
 			pA = new Point(A.value),

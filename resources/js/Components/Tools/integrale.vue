@@ -35,7 +35,7 @@
 	import FormInput from "@/Components/Form/FormInput"
 	import { computed, ref } from "vue"
 	import FormNumber from "@/Components/Form/FormNumber"
-	import { Polynom } from "pimath/esm/maths/algebra"
+	import { Polynom } from "pimath/esm/maths/algebra/polynom"
 
 	let fx = ref(""),
 		a = ref(0),
