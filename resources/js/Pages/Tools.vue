@@ -24,11 +24,14 @@
 			</td>
 		</tr>
 	</table>
+
+	<integrale />
 </template>
 
 <script setup>
 	import FormInput from "@/Components/Form/FormInput"
 	import { ref } from "vue"
+	import Integrale from "@/Components/Tools/integrale"
 
 	let toolSlug = ref(null)
 
