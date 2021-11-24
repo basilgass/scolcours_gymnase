@@ -11,11 +11,11 @@ const mix = require("laravel-mix")
  */
 
 mix.js("resources/js/app.js", "public/js")
-	.js([
-		// "resources/js/pi.js",
-		"resources/js/pigeometry.js",
-		"resources/js/pigraph.js",
-	], "public/js/pi.bundle.js").minify("public/js/pi.bundle.js")
+	// .js([
+// "resources/js/pi.js",
+// "resources/js/pigeometry.js",
+// "resources/js/pigraph.js",
+	// ], "public/js/pi.bundle.js").minify("public/js/pi.bundle.js")
 	.vue()
 	.postCss("resources/css/app.css", "public/css", [
 		require("postcss-import"),
