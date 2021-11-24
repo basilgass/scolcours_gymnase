@@ -26,18 +26,6 @@
 	</table>
 
 	<affine />
-  
-	<!--	<div-->
-<!--			v-for="tool of props.tools"-->
-<!--			:key="tool.slug"-->
-<!--		>-->
-<!--		<component :is="toolComponents[tool.slug]" />-->
-<!--	</div>-->
-
-<!--  -->
-<!--	<keep-alive>-->
-<!--		<component :is="toolSlug===null?null:toolComponents[toolSlug]" />-->
-<!--	</keep-alive>-->
 </template>
 
 <script setup>
@@ -46,7 +34,6 @@
 	import Affine from "@/Components/Tools/affine"
 
 	let toolSlug = ref(null)
-	let fx = ref("")
 
 	const props = defineProps({
 		tools: {type: Object, default: ()=>{}},
