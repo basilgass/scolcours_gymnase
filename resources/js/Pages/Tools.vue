@@ -25,19 +25,14 @@
 		</tr>
 	</table>
 
-	<integrale />
-
-	<quadratique />
-
-	<affine />
+	<keep-alive>
+		<component :is="toolComponents[toolSlug]" />
+	</keep-alive>
 </template>
 
 <script setup>
 	import FormInput from "@/Components/Form/FormInput"
-	import { ref } from "vue"
-	import Integrale from "@/Components/Tools/integrale"
-	import Quadratique from "@/Components/Tools/quadratique"
-	import Affine from "@/Components/Tools/affine"
+	import { defineAsyncComponent, ref } from "vue"
 
 	let toolSlug = ref(null)
 
@@ -45,12 +40,11 @@
 		tools: {type: Object, default: ()=>{}},
 	})
 
-	// let toolComponents = []
-	// for(let tool of props.tools){
-	// 	console.log(tool.slug)
-	// 	toolComponents[tool.slug] = defineAsyncComponent({
-	// 		loader: ()=> import(/**/`@/Components/Tools/${tool.slug}`)
-	// 	})
-	// }
+	let toolComponents = []
+	for(let tool of props.tools){
+		toolComponents[tool.slug] = defineAsyncComponent(
+			()=>import(`@/Components/Tools/${tool.slug}`)
+		)
+	}
 </script>
 
