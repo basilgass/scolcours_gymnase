@@ -28,6 +28,8 @@
 	<integrale />
 
 	<quadratique />
+
+	<affine />
 </template>
 
 <script setup>
@@ -35,6 +37,7 @@
 	import { ref } from "vue"
 	import Integrale from "@/Components/Tools/integrale"
 	import Quadratique from "@/Components/Tools/quadratique"
+	import Affine from "@/Components/Tools/affine"
 
 	let toolSlug = ref(null)
 
