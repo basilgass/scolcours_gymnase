@@ -7,7 +7,8 @@
 			<a
 					:href="route('theme.chapter', [$page.props.theme.slug, chapter.slug])"
 					class="text-3xl"
-				>{{ chapter.title }}
+				>
+				{{ chapter.title }}
 			</a>
 			<p>{{ chapter.body }}</p>
 		</div>
@@ -15,11 +16,9 @@
 </template>
 
 <script>
-	import Layout from "@/Pages/Layout"
 
 	export default {
 		name: "Theme",
-		layout: Layout,
 		props: {
 			theme: {
 				type: Object, default: () => {

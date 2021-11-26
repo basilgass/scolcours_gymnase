@@ -7,17 +7,12 @@
 	</div>
 </template>
 
-<script>
+<script setup>
 	import MainHeader from "@/Components/MainHeader"
 
-	export default {
-		name: "Layout",
-		components: {MainHeader},
-		props: {
-			showAside: {type: Boolean, default: true},
-			theme: {type: Object, default: {title: "ScolCours"}}
-		}
-	}
+	defineProps({
+		theme: { type: Object, default: ()=>{ return { title: "Scolcours", slug: "main" }} }
+	})
 </script>
 <style scoped>
 

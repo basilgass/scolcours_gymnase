@@ -1,6 +1,9 @@
 <template>
-	<MainAside />
-	<header :class="`scolcours-${theme.slug} shadow`">
+	<header
+			class="shadow"
+			:class="`scolcours-${theme.slug}`"
+		>
+		<MainAside />
 		<div
 				class="scolcours-container
 			text-white
@@ -11,7 +14,9 @@
 						class="bi bi-list cursor-pointer mr-2"
 						@click="showAside=!showAside"
 					/>
-				<a :href="`/${theme.slug}`">{{ theme.title }}</a>
+				<a :href="theme.slug==='main'?`/`:`/${theme.slug}`">
+					{{ theme.title }}
+				</a>
 			</div>
 
 			<div>
@@ -34,27 +39,29 @@
 								profil
 							</a>
 
-							<Link
+							<a
 									as="button"
 									class="text-left hover:bg-gray-100 px-3 py-2"
 									href="/logout"
 									method="post"
 								>
 								se déconnecter
-							</Link>
+							</a>
 						</div>
 					</div>
 				</div>
 				<div v-else>
-					<a href="/login">Se connecter</a>
+					<a href="/login">
+						Se connecter
+					</a>
 				</div>
 			</div>
 		</div>
 	</header>
 </template>
 <script setup>
-	import MainAside from "@/Components/MainAside"
 	import { ref } from "vue"
+	import MainAside from "@/Components/MainAside"
 
 	defineProps({
 		theme: Object

@@ -29,7 +29,8 @@ Route::get('/', function () {
 	]);
 })->name('home');
 
-Route::get('/quizz/{slug}', [QuizzController::class, 'quizz']);
+Route::get('/quizz', [QuizzController::class, 'index']);
+Route::get('/quizz/{slug}', [QuizzController::class, 'show']);
 
 Route::resource('chapter', ChaptersController::class);
 Route::resource('exercise', ExercisesController::class);

@@ -4,7 +4,7 @@
 	</h1>
 
 	<div>score actuel:  {{ points }}</div>
-	<div v-katex="equation.tex" />
+	<div v-katex="poly.tex" />
 	<div v-katex="factorisation" />
 
 	<div class="text-center">
@@ -40,7 +40,7 @@
 
 <script setup>
 	import { computed, ref } from "vue"
-	import { Equation, Polynom } from "pimath/esm/maths/algebra"
+	import { Polynom } from "pimath/esm/maths/algebra"
 	import { Random } from "pimath/esm/maths/random"
 
 	const props = defineProps({
@@ -48,7 +48,7 @@
 	})
 	let answer = ref([]),
 		points = ref(0),
-		equation = ref(newQuestion())
+		poly = ref(newQuestion())
   
 	let factorisation = computed(()=>{
 		if(answer.value.length===0){return "?=0"}
@@ -56,16 +56,13 @@
 	})
 
 	function newQuestion(){
-		return new Equation(
-			Random.polynom({
-				letters: "x",
-				degree: 2,
-				factorable: true,
-				unit: true,
-				allowNullMonom: false
-			}),
-			new Polynom("0")
-		)
+		return Random.polynom({
+			letters: "x",
+			degree: 2,
+			factorable: true,
+			unit: true,
+			allowNullMonom: false
+		})
 	}
 	function updateAnswer(value){
 		answer.value.push(value)
@@ -80,11 +77,11 @@
     
 		let P = new Polynom(answer.value.map(x=>`(${x})`).join(""))
     
-		if(P.isEqual(equation.value.left)){
+		if(P.isEqual(poly.value)){
 			points.value++
 			answer.value = []
 			// Generate new polynom
-			equation.value = newQuestion()
+			poly.value = newQuestion()
 		}else{
 			points.value = 0
 		}

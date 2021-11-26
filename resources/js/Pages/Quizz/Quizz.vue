@@ -9,6 +9,7 @@
 		"quizz": String,
 		"theme": Object
 	})
+
 	const quizzComponent = computed(
 		()=> defineAsyncComponent(
 			() => import(`@/Components/Quizz/${props.quizz}`)

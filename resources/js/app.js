@@ -1,9 +1,9 @@
-import {createApp, h} from "vue"
-import {createInertiaApp, Head, Link} from "@inertiajs/inertia-vue3"
-import {InertiaProgress} from "@inertiajs/progress"
+import { createApp, h } from "vue"
+import { createInertiaApp, Head, Link } from "@inertiajs/inertia-vue3"
+import { InertiaProgress } from "@inertiajs/progress"
 
 // Custom directives
-import {katexDirective} from "@/vueDirectives"
+import { katexDirective } from "@/vueDirectives"
 import Layout from "@/Pages/Layout"
 import LayoutFullpage from "@/Pages/LayoutFullpage"
 

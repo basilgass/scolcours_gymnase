@@ -7,9 +7,15 @@
 	
 	class QuizzController extends Controller
 	{
-		public function quizz(string $slug)
+		public function index()
 		{
-			return Inertia::render('Quizz', [
+			return Inertia::render('Quizz/index',[
+				'quizzes' => ['trinome', 'produits-remarquables']
+			]);
+		}
+		public function show(string $slug)
+		{
+			return Inertia::render('Quizz/Quizz', [
 				"theme" => Theme::where("slug", "=", "algebre")->first(),
 				"quizz" => $slug,
 			]);
