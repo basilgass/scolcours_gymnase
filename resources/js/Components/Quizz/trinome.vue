@@ -51,8 +51,8 @@
 		poly = ref(newQuestion())
   
 	let factorisation = computed(()=>{
-		if(answer.value.length===0){return "?=0"}
-		return answer.value.map(x=>`(${x})`).join("")+"=0"
+		if(answer.value.length===0){return "?"}
+		return answer.value.map(x=>`(${x})`).join("")
 	})
 
 	function newQuestion(){
