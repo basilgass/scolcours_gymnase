@@ -6,7 +6,6 @@
 		<slot />
 	</Link>
 </template>
-
 <script>
 
 	export default {

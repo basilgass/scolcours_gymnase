@@ -1,9 +1,9 @@
 <?php
 	
 	use App\Http\Controllers\AdminController;
+	use App\Http\Controllers\ChallengesController;
 	use App\Http\Controllers\ChaptersController;
 	use App\Http\Controllers\ExercisesController;
-	use App\Http\Controllers\QuizzController;
 	use App\Http\Controllers\ThemesController;
 	use App\Models\Theme;
 	use Illuminate\Support\Facades\Route;
@@ -29,8 +29,9 @@ Route::get('/', function () {
 	]);
 })->name('home');
 
-Route::get('/quizz', [QuizzController::class, 'index']);
-Route::get('/quizz/{slug}', [QuizzController::class, 'show']);
+Route::get('/challenge', [ChallengesController::class, 'index']);
+Route::get('/challenge/{challenge:slug}', [ChallengesController::class, 'show']);
+Route::post('/challenge/{challenge:slug}/start', [ChallengesController::class, 'start']);
 
 Route::resource('chapter', ChaptersController::class);
 Route::resource('exercise', ExercisesController::class);

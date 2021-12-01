@@ -29,7 +29,13 @@
 		<component :is="toolComponents[toolSlug]" />
 	</keep-alive>
 </template>
+<script>
+	import LayoutMain from "@/Pages/Shared/LayoutMain"
 
+	export default {
+		layout: LayoutMain
+	}
+</script>
 <script setup>
 	import FormInput from "@/Components/Form/FormInput"
 	import { defineAsyncComponent, ref } from "vue"

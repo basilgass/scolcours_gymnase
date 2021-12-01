@@ -30,6 +30,14 @@
 		</div>
 	</div>
 </template>
+
+<script>
+	import LayoutMain from "@/Pages/Shared/LayoutMain"
+
+	export default {
+		layout: LayoutMain
+	}
+</script>
 <script setup>
 	import { computed, defineAsyncComponent } from "vue"
 	import Exercise from "@/Components/Ui/Exercise"
@@ -42,7 +50,7 @@
 
 	const chapterComponent = computed(
 		()=> defineAsyncComponent(
-			() => import(`@/Pages/Chapters/${props.theme.slug}/${props.chapter.slug}`)
+			() => import(`@/Components/Chapters/${props.theme.slug}/${props.chapter.slug}`)
 		)
 	)
 

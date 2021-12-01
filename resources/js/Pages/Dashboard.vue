@@ -21,12 +21,12 @@
 </template>
 
 <script>
-	import BreezeAuthenticatedLayout from "@/Layouts/Authenticated.vue"
-	import { Head } from "@inertiajs/inertia-vue3"
+	import LayoutMain from "@/Pages/Shared/LayoutMain"
+
 	export default {
-		components: {
-			BreezeAuthenticatedLayout,
-			Head,
-		},
+		layout: LayoutMain
 	}
+</script>
+<script setup>
+	import BreezeAuthenticatedLayout from "@/Layouts/Authenticated.vue"
 </script>

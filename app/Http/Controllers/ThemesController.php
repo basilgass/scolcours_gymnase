@@ -7,7 +7,7 @@
 	use App\Models\Tools;
 	use Illuminate\Http\Request;
 	use Inertia\Inertia;
-
+	
 	class ThemesController extends Controller
 	{
 		public function index()
@@ -27,7 +27,7 @@
 
 		public function show(Theme $theme)
 		{
-			$component = $theme->slug === 'tools' ? "Tools" : "Theme";
+			$component = $theme->slug === 'tools' ? "Tools" : "Chapters/index";
 			$data = [
 				"theme" => $theme,
 				"chapters" => $theme->chapters()->get(['slug', 'title', 'body'])
@@ -35,8 +35,10 @@
 
 			if($theme->slug==='tools'){
 				$data['tools'] = Tools::all();
+				return Inertia::render("Tools", $data);
+			}else{
+				return Inertia::render("Chapters/index", $data);
 			}
-			return Inertia::render($component, $data);
 		}
 
 		public function chapter(Theme $theme, Chapter $chapter)

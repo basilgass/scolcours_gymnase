@@ -76,6 +76,13 @@
 	</form>
 </template>
 
+<script>
+	import LayoutMain from "@/Pages/Shared/LayoutMain"
+
+	export default {
+		layout: LayoutMain
+	}
+</script>
 <script setup>
 	import FormInput from "@/Components/Form/FormInput"
 	import FormTextarea from "@/Components/Form/FormTextarea"

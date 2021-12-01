@@ -10,15 +10,17 @@
 
 
 	<div class="mt-10 text-center text-lg">
-		<a href="/quizz">Vers les quizz</a>
+		<Link href="/challenge">
+			Vers les quizz / challenge
+		</Link>
 	</div>
 	<div class="mt-10">
 		<div
-				class="bg-white border rounded-3xl
+				class="
 		grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3
 		gap-6 p-6"
 			>
-			<a
+			<Link
 					v-for="(theme, index) in themes"
 					:key="theme.slug"
 					:class="'scolcours-'+theme.slug + ' ' + (index%2===0?'rotate-1':'-rotate-1')"
@@ -31,21 +33,23 @@
 				>
 				<i :class="`bi bi-${theme.icon} mr-2`" />
 				{{ theme.title }}
-			</a>
+			</Link>
 		</div>
 	</div>
 </template>
-
 <script>
-	import LayoutFullpage from "@/Pages/LayoutFullpage"
+	import LayoutFullpage from "@/Pages/Shared/LayoutFullpage"
 
 	export default {
-		name: "Welcome",
 		layout: LayoutFullpage,
-		props: {
-			canLogin: Boolean,
-			canRegister: Boolean,
-			themes: Array
-		}
 	}
+
+</script>
+<script setup>
+	defineProps(  {
+		canLogin: Boolean,
+		canRegister: Boolean,
+		themes: Array
+	}
+	)
 </script>

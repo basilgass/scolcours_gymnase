@@ -2,11 +2,12 @@
 
 	namespace App\Models;
 
+	use App\Models\Challenges\ChallengeSession;
 	use Illuminate\Database\Eloquent\Factories\HasFactory;
 	use Illuminate\Foundation\Auth\User as Authenticatable;
 	use Illuminate\Notifications\Notifiable;
 	use Laravel\Sanctum\HasApiTokens;
-
+	
 	/**
  * App\Models\User
  *
@@ -70,7 +71,11 @@
 		protected $casts = [
 			'email_verified_at' => 'datetime',
 		];
-
+		
+		public function challenges()
+		{
+			return $this->hasMany(ChallengeSession::class);
+		}
 		public function getAdminAttribute()
 		{
 			return $this->email === 'basil@scolcours.ch';

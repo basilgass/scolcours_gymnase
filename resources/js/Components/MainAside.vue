@@ -24,7 +24,7 @@
 						</h3>
 					</div>
 
-					<a
+					<Link
 							:href="route('home')"
 							class="block
 	            transition duration-300
@@ -33,9 +33,9 @@
 							@click="$parent.showAside=false"
 						>
 						accueil
-					</a>
+					</Link>
 					<hr>
-					<a
+					<Link
 							v-for="theme of $page.props.themes"
 							:key="`anchor-${theme.slug}`"
 							:href="route('theme', theme.slug)"
@@ -46,7 +46,7 @@
 								:class="`bi-${theme.icon}`"
 								class="mr-2"
 							/>{{ theme.title }}
-					</a>
+					</Link>
 					<hr>
 				</div>
 			</div>

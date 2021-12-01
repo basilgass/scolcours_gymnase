@@ -3,26 +3,34 @@ import AsciiMathParser from "asciimath2tex"
 
 export const katexDirective = {
 	mounted(el, binding, vnode) {
-		const tex = binding.modifiers.ascii?new AsciiMathParser().parse(binding.value):binding.value
-
-		if(binding.modifiers.left){
-			el.classList.add("katex-left")
+		if(binding.value.length===0){
+			el.innerHTML = ""
+		}else {
+			const tex = binding.modifiers.ascii ? new AsciiMathParser().parse(binding.value) : binding.value
+			
+			if (binding.modifiers.left) {
+				el.classList.add("katex-left")
+			}
+			if (binding.modifiers.nomargin) {
+				el.classList.add("katex-m-0")
+			}
+			
+			el.innerHTML = katex.renderToString(tex, {
+				throwOnError: false,
+				displayMode: !binding.modifiers.inline
+			})
 		}
-		if(binding.modifiers.nomargin){
-			el.classList.add("katex-m-0")
-		}
-		
-		el.innerHTML = katex.renderToString(tex,{
-			throwOnError: false,
-			displayMode: !binding.modifiers.inline
-		})
 	},
 	updated(el, binding,vnode) {
-		const tex = binding.modifiers.ascii?new AsciiMathParser().parse(binding.value):binding.value
-
-		el.innerHTML = katex.renderToString(tex,{
-			throwOnError: false,
-			displayMode: !binding.modifiers.inline
-		})
+		if(binding.value.length===0){
+			el.innerHTML = ""
+		}else {
+			const tex = binding.modifiers.ascii ? new AsciiMathParser().parse(binding.value) : binding.value
+			
+			el.innerHTML = katex.renderToString(tex, {
+				throwOnError: false,
+				displayMode: !binding.modifiers.inline
+			})
+		}
 	}
 }

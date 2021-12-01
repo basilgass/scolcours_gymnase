@@ -49,6 +49,13 @@
 	</div>
 </template>
 
+<script>
+	import LayoutMain from "@/Pages/Shared/LayoutMain"
+
+	export default {
+		layout: LayoutMain
+	}
+</script>
 <script setup>
 	const props = defineProps({
 		tools: Object
