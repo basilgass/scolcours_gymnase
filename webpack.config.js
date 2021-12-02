@@ -1,11 +1,11 @@
-const path = require("path")
+const path = require('path')
 module.exports = {
 	output: {
-		chunkFilename: "js/dynamic/[name].[contenthash].js"
+		chunkFilename: 'js/dynamic/[name].[contenthash].js'
 	},
 	resolve: {
 		alias: {
-			"@": path.resolve("resources/js"),
+			'@': path.resolve('resources/js'),
 		},
 	},
 }

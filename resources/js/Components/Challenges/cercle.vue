@@ -15,11 +15,20 @@
 	</div>
 
 	<div class="grid grid-cols-2 gap-2 max-w-lg mx-auto mt-5">
-		<div class="space-y-2">
+		<div
+				v-show="crtLetter!=='r'"
+				v-katex.inline="`${crtLetter}^2`"
+				class="border rounded-2xl bg-white hover:bg-green-100 text-center py-2 col-span-2"
+				@click="updateAnswer(0)"
+			/>
+		<div
+				class="space-y-2"
+				:class="{'col-span-2':crtLetter==='r'}"
+			>
 			<div
 					v-for="n in 10"
 					:key="`terme-${n}`"
-					v-katex.inline="crtLetter==='r'?`${n*n}`:`(${crtLetter}-${n})^2`"
+					v-katex.inline="crtLetter==='r'?`${n}`:`(${crtLetter}-${n})^2`"
 					class="border rounded-2xl bg-white hover:bg-green-100 text-center py-2"
 					@click="updateAnswer(n)"
 				/>
@@ -29,14 +38,9 @@
 				class="space-y-2"
 			>
 			<div
-					v-katex.inline="`${crtLetter}^2`"
-					class="border rounded-2xl bg-white hover:bg-green-100 text-center py-2"
-					@click="updateAnswer(0)"
-				/>
-			<div
 					v-for="n in 10"
 					:key="`terme--${n}`"
-					v-katex.inline="crtLetter==='r'?`${n*n}`:`(${crtLetter}+${n})^2`"
+					v-katex.inline="crtLetter==='r'?`${n}`:`(${crtLetter}+${n})^2`"
 					class="border rounded-2xl bg-white hover:bg-green-100 text-center py-2"
 					@click="updateAnswer(-n)"
 				/>
@@ -78,7 +82,7 @@ let displayAnswer = computed(() => {
 	tex += '='
 	
 	if(answer.value.r!==null){
-		tex += answer.value.r*answer.value.r
+		tex += answer.value.r
 	}
 	
 	return tex
@@ -97,7 +101,7 @@ function newQuestion () {
 	
 	return {
 		ca, cb, r,
-		tex: Px.clone().add(Py).add(new Polynom(`${-(r*r)}`)).reorder('y').reorder('x').tex + '=0'
+		tex: Px.clone().add(Py).add(new Polynom(`${-(r)}`)).reorder('y').reorder('x').tex + '=0'
 	}
 }
 
