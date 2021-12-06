@@ -1,7 +1,7 @@
 <template>
 	<challenge-title :title="title" />
 
-	<div>score actuel: {{ points }}</div>
+	<div>score actuel: {{ modelProp.modelValue }}</div>
 	<div v-katex="displayQuestion" />
 	<div v-katex="displayAnswer" />
 
@@ -57,7 +57,6 @@ import { Polynom } from 'pimath/esm/maths/algebra'
 const title = 'cercle'
 
 let answer = ref({x: null, y: null, r: null}),
-	points = ref(0),
 	question = ref(newQuestion()),
 	crtLetter = ref('x')
 
@@ -124,20 +123,27 @@ function updateAnswer (value) {
 	}
 }
 
-function validateAnswer () {
-	if(
-		question.value.ca === answer.value.x
+function checkAnswer() {
+	return question.value.ca === answer.value.x
 		&&
 		question.value.cb === answer.value.y
 		&&
 		question.value.r === answer.value.r
-	){
-		points.value++
+}
+
+
+// Shared data for all challenges components.
+const emit = defineEmits(['update:modelValue'])
+const modelProp = defineProps({
+	modelValue: {type: Number, default: 0},
+})
+function validateAnswer () {
+	if(checkAnswer()){
 		resetAsnwer()
 		question.value = newQuestion()
+		emit('update:modelValue', modelProp.modelValue+1)
 	} else {
-		points.value = 0
+		emit('update:modelValue', 0)
 	}
-	
 }
 </script>

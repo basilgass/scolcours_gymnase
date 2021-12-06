@@ -14,7 +14,8 @@
 			Vers les quizz / challenge
 		</Link>
 	</div>
-	<div class="mt-10">
+	
+	<div class="my-10">
 		<div
 				class="
 		grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3
@@ -38,18 +39,18 @@
 	</div>
 </template>
 <script>
-	import LayoutFullpage from "@/Pages/Shared/LayoutFullpage"
+import LayoutFullpage from '@/Pages/Shared/LayoutFullpage'
 
-	export default {
-		layout: LayoutFullpage,
-	}
+export default {
+	layout: LayoutFullpage,
+}
 
 </script>
 <script setup>
-	defineProps(  {
-		canLogin: Boolean,
-		canRegister: Boolean,
-		themes: Array
-	}
-	)
+defineProps(  {
+	canLogin: Boolean,
+	canRegister: Boolean,
+	themes: Array
+}
+)
 </script>

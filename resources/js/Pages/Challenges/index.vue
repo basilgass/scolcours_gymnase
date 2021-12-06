@@ -12,7 +12,7 @@
 					>
 					{{ challenge.title }}
 				</Link>
-
+				
 				<div
 						v-if="$page.props.auth.can.admin"
 						class="flex items-center"
@@ -31,7 +31,7 @@
 								/>
 						</div>
 					</div>
-
+					
 					<div v-if="$page.props.auth.can.admin">
 						<Link
 								:href="`/challenge/${challenge.slug}/start`"
@@ -56,9 +56,13 @@ export default {
 </script>
 <script setup>
 import Panel from '@/Components/Ui/Panel'
+import { ref } from 'vue'
+import Keyboard from '@/Components/Keyboards/Keyboard'
 
 defineProps({
 	challenges: Object
 })
+
+let test = ref('')
 </script>
 

@@ -7,28 +7,32 @@
 			<i class="bi bi-chevron-left text-xs mr-2" />retour à la liste
 		</Link>
 	</div>
-	<component :is="challengeComponent" />
+	<component
+			:is="challengeComponent"
+			v-model="score"
+		/>
 </template>
 
 <script>
-	import LayoutMain from "@/Pages/Shared/LayoutMain"
+import LayoutMain from '@/Pages/Shared/LayoutMain'
 
-	export default {
-		layout: LayoutMain
-	}
+export default {
+	layout: LayoutMain
+}
 </script>
 <script setup>
-	import { computed, defineAsyncComponent } from "vue"
+import { computed, defineAsyncComponent, ref } from 'vue'
 
-	const props = defineProps({
-		"challenge": String,
-		"theme": Object
-	})
+const props = defineProps({
+	'challenge': String,
+	'theme': Object,
+})
 
-	const challengeComponent = computed(
-		()=> defineAsyncComponent(
-			() => import(`@/Components/Challenges/${props.challenge}`)
-		)
+let score = ref(0)
+const challengeComponent = computed(
+	() => defineAsyncComponent(
+		() => import(`@/Components/Challenges/${props.challenge}`)
 	)
+)
 
 </script>
