@@ -54,9 +54,8 @@
 </template>
 
 <script setup>
-
 import { onMounted, ref } from 'vue'
-import { keyboardKeys, keyboards } from '../../keyboardKeys'
+import { keyboardKeys, keyboards } from '@/keyboards'
 
 defineEmits(['update:modelValue', 'validate'])
 const props = defineProps({

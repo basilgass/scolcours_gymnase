@@ -1,51 +1,53 @@
 <template>
-	<challenge-title :title="title" />
-
-	<div>score actuel: {{ modelProp.modelValue }}</div>
-	<div v-katex="displayQuestion" />
-	<div v-katex="displayAnswer" />
-
-	<div class="text-center">
-		<button
-				class="btn btn-success"
-				@click="validateAnswer"
-			>
-			Valider
-		</button>
-	</div>
-
-	<div class="grid grid-cols-2 gap-2 max-w-lg mx-auto mt-5">
-		<div
-				v-show="crtLetter!=='r'"
-				v-katex.inline="`${crtLetter}^2`"
-				class="border rounded-2xl bg-white hover:bg-green-100 text-center py-2 col-span-2"
-				@click="updateAnswer(0)"
-			/>
-		<div
-				class="space-y-2"
-				:class="{'col-span-2':crtLetter==='r'}"
-			>
-			<div
-					v-for="n in 10"
-					:key="`terme-${n}`"
-					v-katex.inline="crtLetter==='r'?`${n}`:`(${crtLetter}-${n})^2`"
-					class="border rounded-2xl bg-white hover:bg-green-100 text-center py-2"
-					@click="updateAnswer(n)"
-				/>
+	<article>
+		<challenge-title :title="title" />
+		
+		<div>score actuel: {{ modelProp.modelValue }}</div>
+		<div v-katex="displayQuestion" />
+		<div v-katex="displayAnswer" />
+		
+		<div class="text-center">
+			<button
+					class="btn btn-success"
+					@click="validateAnswer"
+				>
+				Valider
+			</button>
 		</div>
-		<div
-				v-show="crtLetter!=='r'"
-				class="space-y-2"
-			>
+		
+		<div class="grid grid-cols-2 gap-2 max-w-lg mx-auto mt-5">
 			<div
-					v-for="n in 10"
-					:key="`terme--${n}`"
-					v-katex.inline="crtLetter==='r'?`${n}`:`(${crtLetter}+${n})^2`"
-					class="border rounded-2xl bg-white hover:bg-green-100 text-center py-2"
-					@click="updateAnswer(-n)"
+					v-show="crtLetter!=='r'"
+					v-katex.inline="`${crtLetter}^2`"
+					class="border rounded-2xl bg-white hover:bg-green-100 text-center py-2 col-span-2"
+					@click="updateAnswer(0)"
 				/>
+			<div
+					class="space-y-2"
+					:class="{'col-span-2':crtLetter==='r'}"
+				>
+				<div
+						v-for="n in 10"
+						:key="`terme-${n}`"
+						v-katex.inline="crtLetter==='r'?`${n}`:`(${crtLetter}-${n})^2`"
+						class="border rounded-2xl bg-white hover:bg-green-100 text-center py-2"
+						@click="updateAnswer(n)"
+					/>
+			</div>
+			<div
+					v-show="crtLetter!=='r'"
+					class="space-y-2"
+				>
+				<div
+						v-for="n in 10"
+						:key="`terme--${n}`"
+						v-katex.inline="crtLetter==='r'?`${n}`:`(${crtLetter}+${n})^2`"
+						class="border rounded-2xl bg-white hover:bg-green-100 text-center py-2"
+						@click="updateAnswer(-n)"
+					/>
+			</div>
 		</div>
-	</div>
+	</article>
 </template>
 
 <script setup>

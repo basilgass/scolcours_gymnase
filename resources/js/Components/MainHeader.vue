@@ -1,13 +1,12 @@
 <template>
 	<header
-			class="shadow"
+			class="shadow text-white"
 			:class="`scolcours-${theme.slug}`"
 		>
 		<MainAside />
 		<div
-				class="scolcours-container
-			text-white
-			flex justify-between items-center"
+				class="scolcours-container py-6
+				flex justify-between items-center"
 			>
 			<div class="text-3xl">
 				<i
@@ -18,7 +17,7 @@
 					{{ theme.title }}
 				</a>
 			</div>
-
+			
 			<div>
 				<div v-if="$page.props.auth.user">
 					<div
@@ -38,7 +37,7 @@
 								>
 								profil
 							</Link>
-
+							
 							<Link
 									as="button"
 									class="text-left hover:bg-gray-100 px-3 py-2"
@@ -60,17 +59,17 @@
 	</header>
 </template>
 <script setup>
-	import { ref } from "vue"
-	import MainAside from "@/Components/MainAside"
+import { ref } from 'vue'
+import MainAside from '@/Components/MainAside'
 
-	defineProps({
-		theme: Object
-	})
+defineProps({
+	theme: Object
+})
 
-	let showMenu = ref(false),
-		showAside = ref(false)
+let showMenu = ref(false),
+	showAside = ref(false)
 
-	defineExpose({
-		showAside, showMenu
-	})
+defineExpose({
+	showAside, showMenu
+})
 </script>

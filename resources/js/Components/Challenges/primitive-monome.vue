@@ -1,37 +1,38 @@
 <template>
-	<challenge-title :title="title" />
-
-	<div>score actuel:  {{ points }}</div>
-	
-	<div class="text-center space-y-2">
-		<span
-				v-katex.inline.display="displayQuestion"
-				class="mr-2"
+	<article>
+		<challenge-title :title="title" />
+		
+		<div>score actuel: {{ points }}</div>
+		
+		<div class="text-center space-y-2">
+			<span
+					v-katex.inline.display="displayQuestion"
+					class="mr-2"
+				/>
+			<span v-katex.ascii.inline.display="answer" />
+		</div>
+		
+		<div class="text-center my-5">
+			<button
+					class="btn btn-success"
+					@click="validateAnswer"
+				>
+				Valider
+			</button>
+		</div>
+		<Keyboard
+				v-model="answer"
+				keyboard="algebra"
+				class="max-w-sm mx-auto"
 			/>
-		<span v-katex.ascii.inline.display="answer" />
-	</div>
-
-	<div class="text-center my-5">
-		<button
-				class="btn btn-success"
-				@click="validateAnswer"
-			>
-			Valider
-		</button>
-	</div>
-	<Keyboard
-			v-model="answer"
-			keyboard="algebra"
-			class="max-w-sm mx-auto"
-		/>
+	</article>
 </template>
 
 <script setup>
 import { computed, ref } from 'vue'
 import { Random } from 'pimath/esm/maths/random/random'
-import { Monom } from 'pimath/esm/maths/algebra/monom'
 import ChallengeTitle from '@/Components/Challenges/ui/challengeTitle'
-import Keyboard from '@/Components/Keyboards/Keyboard'
+import Keyboard from '@/Components/Ui/Keyboard'
 
 // Le titre
 const title = 'primitive d\'un monôme'
@@ -59,9 +60,7 @@ function resetAsnwer(){
 }
 
 function validateAnswer(){
-	const M = new Monom(answer.value)
-
-	if(M.derivative('x').isEqual(question.value)){
+	if(question.value.clone().primitive().display===answer.value){
 		points.value++
 		resetAsnwer()
 		question.value = newQuestion()

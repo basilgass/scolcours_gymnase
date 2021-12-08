@@ -11,24 +11,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Quicksand&display=swap" rel="stylesheet">
 
-	<!-- Bootstrap icon fonts -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.6.1/font/bootstrap-icons.css">
-
-    <!-- KaTeX -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.18/dist/katex.min.css"
-          integrity="sha384-zTROYFVGOfTw7JV7KUu8udsvW2fx4lWOsCEDqhBreBwlHI4ioVRtmIvEThzJHGET" crossorigin="anonymous">
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            katexAutoRender(document.body)
-        });
-    </script>
-
     <!-- Styles -->
     <link rel="stylesheet" href="{{ mix('css/app.css') }}">
 
-    <!-- Scripts -->
-		<!-- Math home mode scripts -->
-{{--		<script src="{{ mix('js/pi.bundle.js') }}" defer></script>--}}
     @routes
 
 	<!-- Finally, loading the main app script -->
@@ -41,8 +26,10 @@
 @inertia
 
 <div id="modal-dialog"></div>
-{{--@env ('local')--}}
-{{--    <script src="http://localhost:8080/js/bundle.js"></script>--}}
-{{--@endenv--}}
 </body>
+<script>
+	document.addEventListener("DOMContentLoaded", function () {
+		katexAutoRender(document.body)
+	});
+</script>
 </html>

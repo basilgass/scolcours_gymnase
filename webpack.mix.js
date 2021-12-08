@@ -9,7 +9,6 @@ const mix = require('laravel-mix')
  | file for the application as well as bundling up all the JS files.
  |
  */
-
 mix.js('resources/js/app.js', 'public/js')
 	.vue()
 	.postCss('resources/css/app.css', 'public/css', [
@@ -17,10 +16,13 @@ mix.js('resources/js/app.js', 'public/js')
 		require('tailwindcss'),
 		require('autoprefixer'),
 	])
-	.webpackConfig(require('./webpack.config'))
 
 if (mix.inProduction()) {
-	mix.version()
+	mix
+		.webpackConfig(require('./webpack.production'))
+		.version()
+}else{
+	mix.webpackConfig(require('./webpack.config'))
 }
 
 // .js([

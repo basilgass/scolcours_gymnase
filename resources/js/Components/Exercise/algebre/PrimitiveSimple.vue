@@ -14,34 +14,36 @@
 	</Panel>
 </template>
 <script setup>
-	import KatexEditor from "@/Components/Ui/KatexEditor"
-	import Panel from "@/Components/Ui/Panel"
-	import { onMounted, reactive } from "vue"
-	import { Random } from "pimath/esm/maths/random/random"
+import KatexEditor from '@/Components/Ui/KatexEditor'
+import Panel from '@/Components/Ui/Panel'
+import { onMounted, reactive } from 'vue'
+import { Random } from 'pimath/esm/maths/random/random'
 
-	let state = reactive({
-		userAnswer: "",
-		question: "",
-		answer: "",
-		correct: false
+let state = reactive({
+	userAnswer: '',
+	question: '',
+	answer: '',
+	correct: false
+})
+
+onMounted(() => {
+	newQuestion()
+})
+
+function validate () {
+	if (state.correct) {newQuestion()}
+	state.correct = state.userAnswer === state.answer
+}
+
+function newQuestion () {
+	const M = Random.monom({
+		letter: 'x',
+		degree: Random.number(1, 8),
+		fraction: true
 	})
-
-	onMounted(()=>{
-		newQuestion()
-	})
-	function validate() {
-		if(state.correct){newQuestion()}
-		state.correct = state.userAnswer===state.answer
-	}
-	function newQuestion() {
-		const M = Random.monom({
-			letter: "x",
-			degree: Random.number(1,  8),
-			fraction: true
-		})
-
-		state.userAnswer = ""
-		state.question = M.tex
-		state.answer = M.primitive().display
-	}
+	
+	state.userAnswer = ''
+	state.question = M.tex
+	state.answer = M.primitive().display
+}
 </script>

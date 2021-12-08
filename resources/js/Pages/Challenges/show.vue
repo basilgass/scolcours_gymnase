@@ -1,5 +1,5 @@
 <template>
-	<div class="mb-4 -mt-5">
+	<div class="mb-4">
 		<Link
 				href="/challenge"
 				class="text-sm text-gray-400 hover:text-gray-800 transition-colors"
