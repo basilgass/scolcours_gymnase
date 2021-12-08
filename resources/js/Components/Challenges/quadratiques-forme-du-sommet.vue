@@ -62,7 +62,7 @@ let answer = ref({
 	}),
 	currentGivenAnswer = ref('a'),
 	points = ref(0),
-	level = ref(0),
+	level = ref(5),
 	poly = ref(newQuestion())
 
 let displayAnswer = computed(() => {
