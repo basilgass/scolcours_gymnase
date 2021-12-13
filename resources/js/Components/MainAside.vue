@@ -19,9 +19,12 @@
 								class="absolute top-0 right-4 text-lg  text-gray-500 hover:text-white transition duration-300 bi bi-x-circle cursor-pointer"
 								@click="$parent.showAside=false"
 							/>
-						<h3 class="text-lg mt-5 px-4">
+						<Link
+								class="text-lg mt-5 px-4"
+								:href="route('home')"
+							>
 							ScolCours
-						</h3>
+						</Link>
 					</div>
 
 					<Link
@@ -48,11 +51,13 @@
 							/>{{ theme.title }}
 					</Link>
 					<hr>
+					<LogoutButton v-if="$page.props.auth.user" />
 				</div>
 			</div>
 		</transition>
 	</aside>
 </template>
 <script setup>
+import LogoutButton from '@/Components/Ui/LogoutButton'
 </script>
 

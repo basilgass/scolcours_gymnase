@@ -22,14 +22,14 @@
 		<div
 				ref="root"
 				class="grid gap-2 keyboard"
-				:class="keyboards[props.keyboard].grid"
+				:class="keyboardData.grid??'grid-cols-4'"
 			>
 			<button
-					v-for="(key, index) of keyboardData"
+					v-for="(key, index) of keyboardComputed"
 					:key="`key-${key.key}-${index}`"
 					class="key"
 					:class="`${key.span} ${key.visible?'invisible':''}`"
-					@click="$emit('update:modelValue', key.fn(props.modelValue))"
+					@click="ButtonKeyClick(key)"
 				>
 				<span
 						v-if="key.type==='math'"
@@ -54,61 +54,102 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref  } from 'vue'
 import { keyboardKeys, keyboards } from '@/keyboards'
 
-defineEmits(['update:modelValue', 'validate'])
+const emit = defineEmits(['update:modelValue', 'validate'])
 const props = defineProps({
 	modelValue: String,
-	keyboard: String,
+	keyboard: {type: [Object,String], default: ()=>'simple' },
 	validate: { type: Boolean, default: false },
 	mathOutput: { type: Boolean, default: false },
 	textOutput: { type: Boolean, default: false },
 })
 
 let root = ref(null),
-	keyboardData = ref([])
+	keyboardGrid = ref('grid-cols-4'),
+	keyStrokes = ref([])
 
-for(let key of keyboards[props.keyboard].keys){
-	let kkey = typeof key==='string'?key:key[0],
-		spankey = typeof key==='string'?0:key[1],
-		kdata = {}
-	
-	if(spankey===2){
-		spankey = 'col-span-2'
-	}else if(spankey===3){
-		spankey = 'col-span-3'
-	}else if(spankey===4){
-		spankey = 'col-span-4'
-	}else if(spankey===5){
-		spankey = 'col-span-5'
-	}
-	
-	kdata = {
-		key: kkey,
-		visible: kkey==='',
-		type: keyboardKeys[kkey]===undefined?false:keyboardKeys[kkey].type,
-		display: keyboardKeys[kkey]===undefined?false:keyboardKeys[kkey].display,
-		span: spankey
-	}
-	
-	if (keyboardKeys[kkey]===undefined){
-		kdata.fn = (key)=>props.modelValue+''
+let keyboardData = computed(()=>{
+	if(typeof props.keyboard==='string' && keyboards[props.keyboard]!==undefined){
+		return keyboards[props.keyboard]
 	}else{
-		if(keyboardKeys[kkey].fn===undefined){
-			kdata.fn = (value)=>value+kkey
-		}else {
-			kdata.fn = keyboardKeys[kkey].fn
-		}
+		return props.keyboard
 	}
+})
+
+let keyboardComputed = computed(()=> {
+	let data = []
 	
-	keyboardData.value.push(kdata)
+	// Loop through all keyboard keys in the layout.
+	for(let key of keyboardData.value.layout){
+		let kkey = typeof key==='string'?key:key[0],
+			spankey = typeof key==='string'?0:key[1],
+			kdata = {}
+		
+		if(spankey===2){
+			spankey = 'col-span-2'
+		}else if(spankey===3){
+			spankey = 'col-span-3'
+		}else if(spankey===4){
+			spankey = 'col-span-4'
+		}else if(spankey===5){
+			spankey = 'col-span-5'
+		}
+		
+		kdata = {
+			key: kkey,
+			visible: kkey === '',
+			type: keyboardKeys[kkey] === undefined ? false : keyboardKeys[kkey].type,
+			display: keyboardKeys[kkey] === undefined ? false : keyboardKeys[kkey].display,
+			span: spankey
+		}
+			
+		if (keyboardKeys[kkey] === undefined) {
+			kdata.fn = (key) => props.modelValue + ''
+		} else {
+			if (keyboardKeys[kkey].fn === undefined) {
+				kdata.fn = (value) => value + kkey
+			} else {
+				kdata.fn = keyboardKeys[kkey].fn
+			}
+		}
+		
+		// Overrides existing values.
+		if(keyboardData.value.keys!==undefined && keyboardData.value.keys[kkey]!==undefined){
+			kdata.type = keyboardData.value.keys[kkey].type===undefined?kdata.type:keyboardData.value.keys[kkey].type
+			kdata.display = keyboardData.value.keys[kkey].display===undefined?kdata.display:keyboardData.value.keys[kkey].display
+			kdata.fn = keyboardData.value.keys[kkey].fn===undefined?kdata.fn:keyboardData.value.keys[kkey].fn
+		}
+		
+		data.push(kdata)
+	}
+	return data
+})
+
+function resetKeyStrokes(){
+	keyStrokes.value = []
+	emit('update:modelValue', '')
 }
 
+function ButtonKeyClick(key){
+	if(key.key==='@back'){
+		keyStrokes.value.pop()
+	}else if(key.key==='@reset'){
+		resetKeyStrokes()
+	}else {
+		keyStrokes.value.push(key)
+	}
+	
+	let output = ''
+	emit('update:modelValue', keyStrokes.value.map(k=>k.fn(output)).join(''))
+}
 
 onMounted(() => {
 	katexAutoRender(root.value)
 })
+
+defineExpose({resetKeyStrokes})
 </script>
 <style scoped>
 

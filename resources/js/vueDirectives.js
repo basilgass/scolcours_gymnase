@@ -30,7 +30,7 @@ export const katexDirective = {
 			if (binding.modifiers.nomargin) {el.classList.add('katex-m-0')}
 			
 			el.innerHTML = katex.renderToString(
-				(binding.modifiers.display?'\\displaystyle':'') + tex,
+				(binding.modifiers.display?'\\displaystyle ':'') + tex,
 				{
 					throwOnError: false,
 					displayMode: !binding.modifiers.inline

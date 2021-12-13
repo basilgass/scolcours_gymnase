@@ -38,7 +38,7 @@
 		public function index()
 		{
 			// TODO: get all challenges with the "opened" sessions only...
-			$challenges = Challenge::with('sessions')->get();
+			$challenges = Challenge::with('sessions')->orderBy('title')->get();
 			return Inertia::render('Challenges/index', [
 				'challenges' => $challenges
 			]);

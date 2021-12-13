@@ -96,8 +96,8 @@
 				$content = Storage::disk('challenges')->get($file);
 				
 				// Get the title
-				if (preg_match("/const title = \"\s?(.+)\"/", $content, $title)) {
-					$title = $title[1];
+				if (preg_match("/const title = [\"']\s?(.+)[\"']/", $content, $title)) {
+					$title = Str::replace("\'", "'", $title[1]);
 				} else {
 					$title = $slug;
 				}

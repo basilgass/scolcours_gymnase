@@ -35,7 +35,7 @@
 
 @layer base {
     .btn {
-        @apply border px-5 py-2 rounded-2xl hover:bg-gray-100 hover:shadow inline-block text-center
+        @apply border px-5 py-2 rounded-2xl hover:bg-gray-100 hover:shadow inline-block text-center transition-colors
     }
     .btn-primary {
         @apply btn bg-blue-500 text-white hover:bg-blue-600;
