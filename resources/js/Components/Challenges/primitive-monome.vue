@@ -31,14 +31,19 @@
 				keyboard="algebra"
 				class="max-w-sm mx-auto"
 			/>
+		
+		<div class="text-sm text-gray-400 text-center mt-4">
+			Pas de puissance négative, pas de puissance sous forme de fraction.<br>
+			Les racines peuvent rester au dénominateur<br>
+			Pour écrire plusieurs éléments au dénominateur, il faut l'entourer par des parenthèses
+		</div>
 	</article>
 </template>
 
 <script setup>
 import { computed, ref } from 'vue'
-import { Random } from 'pimath/esm/maths/random/random'
+import { Random } from 'pimath/esm/maths/random'
 import { Fraction } from 'pimath/esm/maths/coefficients'
-import { Monom } from 'pimath/esm/maths/algebra'
 
 import ChallengeTitle from '@/Components/Challenges/ui/challengeTitle'
 import Keyboard from '@/Components/Ui/Keyboard'
@@ -52,113 +57,170 @@ let answer = ref(''),
 	keyboard = ref(null),
 	questionWrapper = ref(null)
 
-let displayAnswer = computed(()=>{
+let displayAnswer = computed(() => {
 	return 'display'
 })
-let displayQuestion = computed(()=>{
+let displayQuestion = computed(() => {
 	return '\\int \\ ' + question.value.tex + '\\ \\text{d}x = '
 })
 
-function newQuestion(){
-	let degree = Random.numberSym(6, true),
-		root = Random.bool(0.95),
-		q = Random.monom({
-			letter: 'x',
-			degree: degree,
-			fraction: true
-		}).coefficient,
-		tex = q.isOne()?'':q.tex,
-		qa, a, degree1
+function newQuestion () {
+	let degree = Random.bool(Math.min(0.1 + points.value*0.05, 0.8))?Random.number(0, 6):Random.numberSym(6, true),		// Degree of the x value
+		root = Random.bool(points.value * 0.07),	// if there is a root item.
+		q = Random.fraction({ natural: points.value < 5, zero: false }),	// random fraction
+		tex, texX, qa, a, degree1, degreeDisplay
 	
 	// Créer une racine (éventuellement, elle disparaît)
-	if(root && degree!==0){
+	if (root && degree !== 0) {
 		degree = new Fraction(degree, 2)
-	}else{
+	} else {
 		degree = new Fraction(degree, 1)
 	}
 	degree.reduce()
 	
-	// Création de la question.
-	let degreeN = degree.numerator,
-		degreeD = degree.denominator
+	// Création de la question
 	
-	if(q.value===1){
-		tex = ''
-		if(degreeN>1){
-			tex += `x^${degreeN}`
-		}
-	}else if(q.value===-1){
-		tex = '-'
-	}else{
-		tex = q.display
+	// Affichage de la question
+	// f(x) = q * x^{degree}
+	degreeDisplay = Math.abs(degree.numerator)===1?'':`^{${Math.abs(degree.numerator)}}`
+	if (degree.denominator === 1) {
+		texX = `x${degreeDisplay}`
+	} else {
+		texX = `\\sqrt{ x${degreeDisplay} }`
 	}
 	
-	
-	if(degree.denominator===1){
-		if(degree.isOne() ){
-			tex += 'x'
-		}else if(degree.value >1){
-			tex += `x^{${degree.display}}`
-		}else if(degree.value <0){
-			tex = `\\frac{${q.numerator}}{${q.denominator===1?'':q.denominator}x`
-			if(degree.value===-1){
-				tex += '}'
-			}else{
-				tex += `^{${degree.clone().opposed().display}}}`
-			}
+	if(degree.isZero()){
+		tex = q.frac
+	}else if (degree.isNegative()) {
+		if (q.denominator === 1) {
+			tex = `\\frac{${q.numerator}}{${texX}}`
+		} else {
+			tex = `\\frac{${q.numerator}}{${q.denominator}${texX}}`
 		}
-	}else{
-		if(degree.isOne() ){
-			tex += '\\sqrt{x}'
-		}else if(degree.value >0){
-			tex += `\\sqrt{x^{${degree.clone().multiply(2).display}}}`
-		}else if(degree.value <0){
-			tex = `\\frac{${q.numerator}}{${q.denominator===1?'':q.denominator}`
-			if(degree.value===-1){
-				tex += '\\sqrt{x}}'
-			}else{
-				tex += `\\sqrt{x^{${degree.clone().multiply(2).opposed().display}}}}`
+	} else if (degree.isPositive()){
+		if (q.denominator === 1) {
+			if (q.numerator === 1) {
+				tex = `${texX}`
+			} else if (q.numerator === -1) {
+				tex = `-${texX}`
+			} else {
+				tex = `${q.numerator}${texX}`
 			}
+		} else {
+			tex = `\\frac{${q.numerator}${texX}}{${q.denominator}}`
 		}
 	}
 	
+	// Mise en forme de la réponse
 	
-
+	// On ajoute un à la puissance.
 	degree1 = degree.clone().add(new Fraction().one())
 	
-	// TODO: mise en forme de la réponse avec des divisions ?
-	if(degree.value !== -1){
+	
+	if (degree.value !== -1) {
 		qa = q.clone().divide(degree1).reduce()
-		if(qa.isOne()){
-			a = `x^${degree1.display}`
-		}else {
-			a = `${qa.display}x^${degree1.display}`
+		
+		if(degree1.isPositive()){
+			degreeDisplay = degree1.numerator===1?'':`^${degree1.numerator}`
+			if ( degree.denominator===1){
+				// Pas de racine
+			
+				if (qa.isOne()) {
+					// si la fraction vaut 1, on n'affiche pas le coefficient
+					a = `x${degreeDisplay}`
+				} else if(qa.isEqual(-1)){
+					// si la fraction vaut -1, on n'affiche pas le coefficient, que le signe
+					a = `-x${degreeDisplay}`
+				} else {
+					// on affiche la fraction.
+					a = `${qa.display}x${degreeDisplay}`
+				}
+			} else{
+				// avec racine
+				if (qa.isOne()) {
+					// si la fraction vaut 1, on n'affiche pas le coefficient
+					a = `sqrtx${degreeDisplay}`
+				} else if(qa.isEqual(-1)){
+					// si la fraction vaut -1, on n'affiche pas le coefficient, que le signe
+					a = `-sqrtx${degreeDisplay}`
+				} else {
+					// on affiche la fraction.
+					a = `${qa.display}sqrtx${degreeDisplay}`
+				}
+			}
+		}else{
+			degreeDisplay = degree1.numerator===-1?'':`^${-degree1.numerator}`
+			// Sous forme de fraction car la puissance est négative.
+			if ( degree.denominator===1){
+				// Pas de racine
+				
+				if (qa.isOne()) {
+					// si la fraction vaut 1, on n'affiche pas le coefficient
+					a = `1/(x${degreeDisplay})`
+				} else if(qa.isEqual(-1)){
+					// si la fraction vaut -1, on n'affiche pas le coefficient, que le signe
+					a = `-1/(x${degreeDisplay})`
+				} else {
+					// on affiche la fraction.
+					if(qa.denominator===1){
+						a = `${qa.numerator}/(x${degreeDisplay})`
+					}else {
+						a = `${qa.numerator}/(${qa.denominator}x${degreeDisplay})`
+					}
+				}
+			} else{
+				// avec racine
+				if (qa.isOne()) {
+					// si la fraction vaut 1, on n'affiche pas le coefficient
+					a = `1/(sqrtx${degreeDisplay})`
+				} else if(qa.isEqual(-1)){
+					// si la fraction vaut -1, on n'affiche pas le coefficient, que le signe
+					a = `-1/(sqrtx${degreeDisplay})`
+				} else {
+					// on affiche la fraction.
+					if(qa.denominator===1){
+						a = `${qa.numerator}/(sqrtx${degreeDisplay})`
+					}else {
+						a = `${qa.numerator}/(${qa.denominator}sqrtx${degreeDisplay})`
+					}
+				}
+			}
 		}
-	}else{
-		a = `${q.display}ln(|x|)`
+		
+	} else {
+		// cas pariculier avec LN
+		if (q.isOne()) {
+			// si la fraction vaut 1, on n'affiche pas le coefficient
+			a = 'ln(|x|)'
+		} else if(q.isEqual(-1)){
+			// si la fraction vaut -1, on n'affiche pas le coefficient, que le signe
+			a = '-ln(|x|)'
+		} else {
+			a = `${q.display}ln(|x|)`
+		}
 	}
 	
 	console.log(a)
-	
 	return {
 		tex,
-		answer:a
+		answer: a
 	}
 }
-function resetAsnwer(){
+
+function resetAsnwer () {
 	keyboard.value.resetKeyStrokes()
 }
 
-function validateAnswer(){
-	if(question.value.answer===answer.value){
+function validateAnswer () {
+	if (question.value.answer === answer.value) {
 		points.value++
 		resetAsnwer()
 		question.value = newQuestion()
-	}else{
+	} else {
 		questionWrapper.value.style.setProperty('animation-name', 'v-shake-horizontal')
 		questionWrapper.value.style.setProperty('animation-duration', '500ms')
 		
-		setTimeout(()=>{
+		setTimeout(() => {
 			questionWrapper.value.style.setProperty('animation-name', '')
 		}, 500)
 		points.value = 0

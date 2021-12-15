@@ -31,6 +31,6 @@
 	"dependencies": {
 		"asciimath2tex": "^1.1.0",
 		"katex": "^0.15.1",
-		"pimath": "^0.0.20"
+		"pimath": "^0.0.21"
 	}
 }

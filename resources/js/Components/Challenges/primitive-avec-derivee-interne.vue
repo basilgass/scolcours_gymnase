@@ -80,7 +80,8 @@ function newQuestion(){
 	let P = Random.polynom({
 			letters: 'x',
 			degree: Random.number(2, 5),
-			numberOfMonoms: Random.number(2, 3)
+			numberOfMonoms: Random.number(2, 3),
+			fraction: false
 		}).reorder(),
 		degree = Random.number(2, 5),
 		factor = Random.numberSym(10, false),
