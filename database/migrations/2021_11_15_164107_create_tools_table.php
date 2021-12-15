@@ -12,7 +12,7 @@
 				$table->bigIncrements('id');
 				$table->string('slug')->unique();
 				$table->string('title');
-				$table->string('description')->default('');
+				$table->string('body')->default('');
 				$table->string('parameters')->default('');
 				$table->timestamps();
 			});

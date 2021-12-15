@@ -20,7 +20,7 @@
 				</div>
 			</td>
 			<td class="py-2 align-text-top">
-				{{ tool.description }}
+				{{ tool.body }}
 			</td>
 		</tr>
 	</table>
@@ -30,27 +30,27 @@
 	</keep-alive>
 </template>
 <script>
-	import LayoutMain from "@/Pages/Shared/LayoutMain"
+import LayoutMain from '@/Pages/Shared/LayoutMain'
 
-	export default {
-		layout: LayoutMain
-	}
+export default {
+	layout: LayoutMain
+}
 </script>
 <script setup>
-	import FormInput from "@/Components/Form/FormInput"
-	import { defineAsyncComponent, ref } from "vue"
+import FormInput from '@/Components/Form/FormInput'
+import { defineAsyncComponent, ref } from 'vue'
 
-	let toolSlug = ref(null)
+let toolSlug = ref(null)
 
-	const props = defineProps({
-		tools: {type: Object, default: ()=>{}},
-	})
+const props = defineProps({
+	tools: {type: Object, default: ()=>{}},
+})
 
-	let toolComponents = []
-	for(let tool of props.tools){
-		toolComponents[tool.slug] = defineAsyncComponent(
-			()=>import(`@/Components/Tools/${tool.slug}`)
-		)
-	}
+let toolComponents = []
+for(let tool of props.tools){
+	toolComponents[tool.slug] = defineAsyncComponent(
+		()=>import(`@/Components/Tools/${tool.slug}`)
+	)
+}
 </script>
 

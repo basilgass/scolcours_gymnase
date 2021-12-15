@@ -60,6 +60,10 @@
 			'challenges' => [
 				'driver' => 'local',
 				'root'   => resource_path('js/Components/Challenges'),
+			],
+			'chapters' => [
+				'driver' => 'local',
+				'root'   => resource_path('js/Components/Chapters'),
 			]
 		
 		],

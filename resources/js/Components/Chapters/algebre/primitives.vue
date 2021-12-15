@@ -21,6 +21,11 @@
 </template>
 
 <script setup>
+/** Chapter
+ * title: Primitive ou intégrale indéfinie
+ * body: calcul de primitive
+ */
+
 import Panel from '@/Components/Ui/Panel'
 import { onMounted, ref } from 'vue'
 import PrimitiveSimple from '@/Components/Exercise/algebre/PrimitiveSimple'

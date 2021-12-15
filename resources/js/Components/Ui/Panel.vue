@@ -58,6 +58,11 @@ const design = {
 		panel: 'bg-white border-2 border-purple-600',
 		title: 'text-purple-800',
 		label: 'théorème'
+	},
+	'exercise': {
+		panel: 'bg-white border-2 border-pink-600',
+		title: 'text-pink-800',
+		label: 'exercice'
 	}
 }
 </script>
