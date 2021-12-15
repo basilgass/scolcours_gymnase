@@ -77,7 +77,7 @@ let displayQuestion = computed(()=>{
 })
 
 function newQuestion(){
-	let P = new Polynom().random({
+	let P = Random.polynom({
 			letters: 'x',
 			degree: Random.number(2, 5),
 			numberOfMonoms: Random.number(2, 3)
