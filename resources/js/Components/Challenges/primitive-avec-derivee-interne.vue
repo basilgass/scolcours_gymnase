@@ -95,7 +95,7 @@ function newQuestion(){
 		k = new Fraction(factor, degree+1).reduce()
 		
 		// Result as ascii math
-		result = `${k.display}(${P.tex})^${degree+1}`
+		result = `${k.display}(${P.display})^${degree+1}`
 		
 		// Latex output
 		tex = `\\int\\ (${P.tex})^${degree}\\cdot(${Q.tex})`
@@ -113,9 +113,9 @@ function newQuestion(){
 		
 		// Result as "partial" ascii math
 		if(degree-1===1){
-			result = `${k.numerator}/${P.tex}`
+			result = `${k.numerator}/${P.display}`
 		}else{
-			result = `${k.numerator}/${kden}(${P.tex})^${degree-1}`
+			result = `${k.numerator}/${kden}(${P.display})^${degree-1}`
 		}
 		
 		// Latex output
@@ -125,6 +125,7 @@ function newQuestion(){
 		rational = true
 	}
 	
+	// console.log(result)
 	
 	// Mise à jour du clavier.
 	customKeyboard.value.keys.equ1.display = P.tex
@@ -145,6 +146,7 @@ function resetAsnwer(){
 }
 
 function validateAnswer(){
+	// console.log(answer.value)
 	if(answer.value===question.value.answer){
 		points.value++
 		resetAsnwer()
