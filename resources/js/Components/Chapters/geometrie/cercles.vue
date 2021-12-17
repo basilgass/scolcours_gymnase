@@ -117,7 +117,7 @@ function updateEx1Rnd () {
 	let position, P1, P2, M, t, Tx, T, perp1, perp2, C1x, C1, C2x, C2, r1, r2
 	
 	const nb = 20
-	position = 0 //Random.number(0, 2)
+	position = Random.number(0, 2)
 	if(position===2) {
 		P1 = new Point(
 			Random.numberSym(nb, true),
