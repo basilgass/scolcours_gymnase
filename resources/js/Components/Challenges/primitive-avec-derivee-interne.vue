@@ -1,4 +1,32 @@
 <template>
+	<challenge-wrapper :title="title">
+		<template #information>
+			Calculer une primitive de la fonction suivante
+		</template>
+		
+		<template #question>
+			<div v-katex.nomargin="displayQuestion" />
+		</template>
+		
+		<template #answer>
+			<div
+					v-katex.ascii="displayAnswer"
+					class="h-16 text-center"
+				/>
+		</template>
+		
+		<template #inputs>
+			<Keyboard
+					ref="keyboard"
+					v-model="answer"
+					:keyboard="customKeyboard"
+					class="max-w-sm mx-auto"
+				/>
+		</template>
+	</challenge-wrapper>
+	
+	
+	
 	<article>
 		<challenge-title :title="title" />
 		
