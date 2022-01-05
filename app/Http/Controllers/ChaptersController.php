@@ -45,9 +45,11 @@
 		public function latex(Request $data)
 		{
 			// TODO: modifier le nom du fichier.
+			$filename = 'fichier_PDF_LATEX.pdf';
 			return (new LaraTeX('latex.WhatToKnow'))->with([
-				                                        'name'    => 'Primitives',
-				                                        'questions' => json_decode($data->getContent())
-			                                        ])->savePdf(storage_path('app/pdf/wtk.pdf'));
+				                                               'name'      => 'Primitives',
+				                                               'questions' => json_decode($data->getContent())
+			                                               ])
+			                                        ->download($filename);
 		}
 	}

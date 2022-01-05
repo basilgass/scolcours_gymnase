@@ -7,5 +7,5 @@ return [
 		'/home/clients/ff3453ceb0d3f534299efdde49b459d5/latex/texdir/bin/x86_64-linux/pdflatex',
 
 	// Folder in your storage folder where you would like to store the temp files created by LaraTeX
-	'tempPath' => 'app/pdf/',
+	'tempPath' => 'app/temp/laratex',
 ];
