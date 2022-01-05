@@ -32,7 +32,7 @@ module.exports = {
 			'error', 'never'
 		],
 		'vue/require-default-prop': 'off',
-		'vue/html-indent': ['warn', 'tab',{'attribute': 2, 'closeBracket': 1}],
+		'vue/html-indent': ['warn', 'tab',{'attribute': 1, 'closeBracket': 0}],
 		'vue/script-indent': ['error', 'tab', { 'baseIndent': 0}],
 		'vue/order-in-components': ['error']
 	},

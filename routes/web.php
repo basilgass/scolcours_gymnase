@@ -8,6 +8,7 @@
 	use App\Models\Theme;
 	use Illuminate\Support\Facades\Route;
 	use Inertia\Inertia;
+	use Ismaelw\LaraTeX\LaraTeX;
 	
 	/*
 	|--------------------------------------------------------------------------
@@ -43,6 +44,10 @@ Route::get('/dashboard', function () {
 Route::get('/admin', [AdminController::class, 'show'])->middleware(['auth', 'verified']);
 
 require __DIR__ . '/auth.php';
+
+Route::get('latex', function (){
+	return (new LaraTeX)->dryRun();
+});
 
 Route::get('{theme:slug}/', [ThemesController::class, 'show'])->name('theme');
 Route::get('{theme:slug}/{chapter:slug}', [ThemesController::class, 'chapter'])->name('theme.chapter');

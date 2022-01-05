@@ -1,16 +1,15 @@
 <template>
 	<div class="mb-4">
 		<Link
-				href="/challenge"
-				class="text-sm text-gray-400 hover:text-gray-800 transition-colors"
-			>
+			href="/challenge"
+			class="text-sm text-gray-400 hover:text-gray-800 transition-colors"
+		>
 			<i class="bi bi-chevron-left text-xs mr-2" />retour à la liste
 		</Link>
 	</div>
 	<component
-			:is="challengeComponent"
-			v-model="score"
-		/>
+		:is="challengeComponent"
+	/>
 </template>
 
 <script>
@@ -28,7 +27,6 @@ const props = defineProps({
 	'theme': Object,
 })
 
-let score = ref(0)
 const challengeComponent = computed(
 	() => defineAsyncComponent(
 		() => import(`@/Components/Challenges/${props.challenge}`)

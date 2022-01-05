@@ -1,86 +1,106 @@
 <template>
-	<article>
-		<challenge-title :title="title" />
+	<challenge-wrapper
+		ref="root"
+		:title="title"
+		:points="points"
+		:results="results"
+		:validate="validate"
+	>
+		<template #information>
+			Donnée
+		</template>
 		
-		<div>score actuel: {{ points }}</div>
-		<div v-katex="displayQuestion" />
-		<div v-katex="displayAnswer" />
+		<template #question>
+			<div v-katex.nomargin="displayQuestion" />
+		</template>
 		
-		<div class="text-center">
-			<button
-					class="btn btn-success"
-					@click="validateAnswer"
-				>
-				Valider
-			</button>
-		</div>
+		<template #answer>
+			<div
+				v-katex.ascii="displayAnswer"
+				class="h-16 text-center"
+			/>
+		</template>
 		
-		<div class="grid grid-cols-2 gap-2 max-w-lg mx-auto mt-5">
-			<div class="space-y-2">
-				<div
-						v-for="n in 10"
-						:key="`terme-${n}`"
-						v-katex.inline="`x-${n}`"
-						class="border rounded-2xl bg-white hover:bg-green-100 text-center py-2"
-						@click="updateAnswer(`x-${n}`)"
-					/>
-			</div>
-			<div class="space-y-2">
-				<div
-						v-for="n in 10"
-						:key="`terme--${n}`"
-						v-katex.inline="`x+${n}`"
-						class="border rounded-2xl bg-white hover:bg-green-100 text-center py-2"
-						@click="updateAnswer(`x+${n}`)"
-					/>
-			</div>
-		</div>
-	</article>
+		<template #answerFormat />
+		
+		<template #inputs>
+			<Keyboard
+				ref="keyboard"
+				v-model="answer"
+				keyboard="algebre"
+				class="max-w-sm mx-auto"
+			/>
+		</template>
+	</challenge-wrapper>
 </template>
 
 <script setup>
 import { computed, ref } from 'vue'
-import ChallengeTitle from '@/Components/Challenges/ui/challengeTitle'
+import Keyboard from '@/Components/Ui/Keyboard'
+import { Fraction } from 'pimath/esm/maths/coefficients'
+import { Random } from 'pimath/esm/maths/random'
+import ChallengeWrapper from '@/Components/Challenges/ui/challengeWrapper'
 
-const title = 'titre du template'
+const title = 'titre du challenge'
 
-let answer = ref([]),
-	points = ref(0),
-	question = ref(newQuestion())
+// Active variables
+let root = ref(null),		// main reference wrapper
+	answer = ref(''),		// the answer given by the user
+	points = ref(0),			// current number of points and how to handle them
+	results = ref([]),		// list of given results - simple list display.
+	keyboard = ref(null),	// keyboard reference.
+	question = ref(newQuestion())	// question: {answer: string, tex: string, ...}
 
-let displayAnswer = computed(()=>{
-	return 'display'
-})
-let displayQuestion = computed(()=>{
-	return question.value.tex
-})
+let displayAnswer = computed(() => {
+		return answer.value
+	}),
+	displayQuestion = computed(() => {
+		return question.value.tex
+	})
 
-function newQuestion(){
-	return  {
-		tex: 'Hello'
+function newQuestion () {
+	let result = '',
+		tex = ''
+	
+	// Create the question
+	
+	return {
+		answer: result,
+		tex,
 	}
+	
 }
-function resetAsnwer(){
-	answer.value = []
-}
-function updateAnswer(value){
-	answer.value.push(value)
 
-	if (answer.value.length>2){
-		answer.value.shift()
+function reset () {
+	// Reset keyboard.
+	keyboard.value.resetKeyStrokes()
+}
+
+function validate () {
+	// Display the list of results.
+	const result = {
+		tex: question.value.tex,
+		ascii: answer.value,
+		correct: false
 	}
-}
-
-function validateAnswer(){
-	if(answer.value.length!==2){return false}
-
-	if(true){
+	
+	// Validate answer
+	if (answer.value === question.value.answer) {
+		// Answer is correct
 		points.value++
-		resetAsnwer()
+		result.correct = true
+		
+		// Reset and create new question
+		reset()
 		question.value = newQuestion()
-	}else{
+	} else {
+		// Answer is wrong
 		points.value = 0
+		root.value.shake()
 	}
-
+	
+	// Add the given answer to the result list.
+	results.value.push(result)
+	
 }
 </script>
