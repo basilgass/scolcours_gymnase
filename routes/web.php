@@ -46,6 +46,8 @@ Route::get('/admin', [AdminController::class, 'show'])->middleware(['auth', 'ver
 require __DIR__ . '/auth.php';
 
 Route::get('latex', function (){
+	$p = config('laratex.binPath');
+	dd($p, file_exists($p));
 	return (new LaraTeX)->dryRun();
 });
 
