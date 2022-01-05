@@ -48,6 +48,7 @@ require __DIR__ . '/auth.php';
 Route::get('latex', function (){
 	return (new LaraTeX)->dryRun();
 });
+Route::post('latex', [ChaptersController::class, 'latex']);
 
 Route::get('{theme:slug}/', [ThemesController::class, 'show'])->name('theme');
 Route::get('{theme:slug}/{chapter:slug}', [ThemesController::class, 'chapter'])->name('theme.chapter');

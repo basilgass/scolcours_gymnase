@@ -45,7 +45,7 @@
 		{
 			// fetch all exercises from this chapter.
 			$exercises = $chapter->exercises;
-
+			
 			return Inertia::render('Chapters/Chapter', [
 				"theme" => $theme,
 				"chapter" => $chapter,
