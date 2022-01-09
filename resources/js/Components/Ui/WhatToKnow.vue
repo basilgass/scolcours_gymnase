@@ -60,12 +60,12 @@
 		</div>
 	</Panel>
 	
-	<div
-		v-for="item in generatedQuestions"
-		:key="item.question"
-	>
-		<span v-katex="`${item.question} = ${ item.answer }`" />
-	</div>
+<!--	<div-->
+<!--		v-for="item in generatedQuestions"-->
+<!--		:key="item.question"-->
+<!--	>-->
+<!--		<span v-katex="`${item.question} = ${ item.answer }`" />-->
+<!--	</div>-->
 </template>
 
 <script setup>
