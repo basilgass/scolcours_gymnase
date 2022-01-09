@@ -1,31 +1,31 @@
-% \documentclass[12pt,aspectratio=169,usenames,dvipsnames]{beamer}
-\documentclass[12pt]{article}
+@extends('latex.common.latex-template')
 
-\usepackage{basil_header_v1.3}
-% \includeonlyframes{current}
-\toggletrue{master}
+@section('title')
+    {{ $title }}
+@endsection
 
-\title{ mwe }
-\begin{document}
-\showtitle
+@section('content')
+    \begin{multicols}{2}
+    \mathleft
+    \begin{enumerate}
+    \def\itemsep{3em}
+    @foreach($questions as $question)
+        \item \(\displaystyle {{$question->question}}\)
+    @endforeach
+    \end{enumerate}
+    \end{multicols}
 
-\mathleft
-\begin{enumerate}
-\def\itemsep{1em}
-@foreach($questions as $question)
-    \item \(\displaystyle {{$question->question}}\)
-@endforeach
-\end{enumerate}
-
-\vfill
-\scriptsize
-\textbf{Réponses}
-
-\begin{spacing}{2}
-\begin{enumerate*}[itemjoin=\hspace{1cm}]
-@foreach($questions as $question)
-    \item \({{$question->answer}}\)
-@endforeach
-\end{enumerate*}
-\end{spacing}
-\end{document}
+    \vfill
+    \scriptsize
+    \textbf{Réponses}\vspace{-0.5cm}
+    \begin{spacing}{2}
+    \begin{multicols}{4}
+    \begin{enumerate}
+    @foreach($questions as $question)
+        \item \({{$question->answer}}\)
+    @endforeach
+    \end{enumerate}
+    \end{multicols}
+    \end{spacing}
+    \vspace{-1cm}
+@endsection
