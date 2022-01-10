@@ -14,7 +14,7 @@
 	</div>
 	<Panel>
 		<div
-			class="flex items-center min-h-[80px] select-none px-10  cursor-pointer"
+			class="flex md:items-center min-h-[160px] md:min-h-[80px] select-none px-10  cursor-pointer"
 			@click="nextQuestion()"
 		>
 			<transition
@@ -23,7 +23,7 @@
 			>
 				<div
 					v-if="!showFinished"
-					class="flex items-center"
+					class="flex items-center flex-col md:flex-row"
 				>
 					<div v-katex.left="generatedQuestions[questionNo].question + '\\ = \\ '" />
 					<transition name="slide-right">
