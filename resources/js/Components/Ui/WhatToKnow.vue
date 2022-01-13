@@ -115,12 +115,13 @@ function generatePDF () {
 		'/latex',
 		{
 			questions,
+			theme: usePage().props.value.theme.slug,
 			slug: usePage().props.value.chapter.slug,
 			title: usePage().props.value.chapter.title
 		}
 	).then(res => {
 		downloadGenerating.value = false
-		document.location = '/latex/' + res.data
+		document.location = '/download/' + res.data
 	}).catch(
 		err => {console.log(err.response.data)}
 	)

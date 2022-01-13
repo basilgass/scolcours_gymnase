@@ -1,21 +1,31 @@
 <template>
 	<Panel>
 		<form-input
-				v-model="A"
-				label="Point A"
-				name="A"
-			/>
+			v-model="A"
+			label="Point A"
+			name="A"
+		>
+			Utiliser <code class="px-2 bg-gray-200">a,b</code> pour les coordonnées d'un point
+		</form-input>
 
 		<form-input
-				v-model="B"
-				:label="B[0]==='v'?'Vecteur directeur':'Point B'"
-				name="B"
-			>
+			v-model="B"
+			:label="B[0]==='v'?'Vecteur directeur':'Point B'"
+			name="B"
+		>
 			Utiliser <code class="px-2 bg-gray-200">a,b</code> pour les coordonnées d'un point ou <code class="px-2 bg-gray-200">va,b</code> pour un vecteur directeur
 		</form-input>
 
-		<div v-katex="`${affine.tex.mxh}`" />
-		<div v-katex="`${affine.tex.canonical}`" />
+		<div v-if="affine">
+			<div v-katex="`${affine.tex.mxh}`" />
+			<div v-katex="`${affine.tex.canonical}`" />
+		</div>
+		<div
+			v-else
+			class="text-red-700 text-sm"
+		>
+			Une erreur s'est produite lors de l'introduction des coordonnées.
+		</div>
 	</Panel>
 </template>
 
@@ -37,9 +47,13 @@ let A = ref('3,4'),
 	B = ref('1,2')
 
 let affine = computed(()=>{
-	return new Line(
-		new Point(A.value),
-		B.value[0]==='v'?new Vector(B.value.substring(1)):new Point(B.value)
-	)
+	try{
+		return new Line(
+			new Point(A.value),
+			B.value[0]==='v'?new Vector(B.value.substring(1)):new Point(B.value)
+		)
+	}catch (e) {
+		return false
+	}
 })
 </script>

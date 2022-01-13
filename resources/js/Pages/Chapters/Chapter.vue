@@ -1,8 +1,9 @@
 <template>
 	<!-- Title -->
-	<h1 class="text-3xl mb-1">
-		{{ chapter.title }}
-	</h1>
+	<ArticleTitle
+		:title="chapter.title"
+		:chapter="theme.title"
+	/>
 		
 	<!-- Chapter description -->
 	<div class="mb-5">
@@ -19,13 +20,13 @@
 		</h2>
 		<div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
 			<div
-					v-for="(exercise, index) of chapter.exercises"
-					:key="`exercise-${exercise.id}`"
-				>
+				v-for="(exercise, index) of chapter.exercises"
+				:key="`exercise-${exercise.id}`"
+			>
 				<Exercise
-						:exercise="exercise"
-						:exercise-number="index+1"
-					/>
+					:exercise="exercise"
+					:exercise-number="index+1"
+				/>
 			</div>
 		</div>
 	</div>
@@ -41,6 +42,7 @@ export default {
 <script setup>
 import { computed, defineAsyncComponent } from 'vue'
 import Exercise from '@/Components/Ui/Exercise'
+import ArticleTitle from '@/Components/Ui/ArticleTitle'
 
 const props = defineProps({
 	theme: {type: Object, default: ()=>{}},

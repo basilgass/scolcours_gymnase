@@ -3,7 +3,7 @@
 
 /**
  * A helper file for Laravel, to provide autocomplete information to your IDE
- * Generated for Laravel 8.75.0.
+ * Generated for Laravel 8.77.1.
  *
  * This file should not be included in your code, only analyzed by your IDE!
  *
@@ -11319,6 +11319,20 @@
                         return $instance->boolean($key, $default);
         }
                     /**
+         * Retrieve input from the request as a Carbon instance.
+         *
+         * @param string $key
+         * @param string|null $format
+         * @param string|null $tz
+         * @return \Illuminate\Support\Carbon|null 
+         * @static 
+         */ 
+        public static function date($key, $format = null, $tz = null)
+        {
+                        /** @var \Illuminate\Http\Request $instance */
+                        return $instance->date($key, $format, $tz);
+        }
+                    /**
          * Retrieve input from the request as a collection.
          *
          * @param array|string|null $key
@@ -11444,7 +11458,7 @@
                     /**
          * Dump the request items and end the script.
          *
-         * @param array|mixed $keys
+         * @param mixed $keys
          * @return void 
          * @static 
          */ 
@@ -11456,7 +11470,7 @@
                     /**
          * Dump the items.
          *
-         * @param array $keys
+         * @param mixed $keys
          * @return \Illuminate\Http\Request 
          * @static 
          */ 
@@ -13892,6 +13906,18 @@
                         return $instance->extend($driver, $callback);
         }
                     /**
+         * Set the application instance used by the manager.
+         *
+         * @param \Illuminate\Contracts\Foundation\Application $app
+         * @return \Illuminate\Filesystem\FilesystemManager 
+         * @static 
+         */ 
+        public static function setApplication($app)
+        {
+                        /** @var \Illuminate\Filesystem\FilesystemManager $instance */
+                        return $instance->setApplication($app);
+        }
+                    /**
          * Assert that the given file exists.
          *
          * @param string|array $path
@@ -14333,6 +14359,18 @@
         {
                         /** @var \Illuminate\Filesystem\FilesystemAdapter $instance */
                         return $instance->getDriver();
+        }
+                    /**
+         * Define a custom temporary URL builder callback.
+         *
+         * @param \Closure $callback
+         * @return void 
+         * @static 
+         */ 
+        public static function buildTemporaryUrlsUsing($callback)
+        {
+                        /** @var \Illuminate\Filesystem\FilesystemAdapter $instance */
+                        $instance->buildTemporaryUrlsUsing($callback);
         }
                     /**
          * Register a custom macro.
@@ -15129,6 +15167,21 @@
         {
                         /** @var \Illuminate\View\Factory $instance */
                         return $instance->renderWhen($condition, $view, $data, $mergeData);
+        }
+                    /**
+         * Get the rendered content of the view based on the negation of a given condition.
+         *
+         * @param bool $condition
+         * @param string $view
+         * @param \Illuminate\Contracts\Support\Arrayable|array $data
+         * @param array $mergeData
+         * @return string 
+         * @static 
+         */ 
+        public static function renderUnless($condition, $view, $data = [], $mergeData = [])
+        {
+                        /** @var \Illuminate\View\Factory $instance */
+                        return $instance->renderUnless($condition, $view, $data, $mergeData);
         }
                     /**
          * Get the rendered contents of a partial from a loop.
@@ -16243,6 +16296,136 @@
         {
                         /** @var \Facade\FlareClient\Flare $instance */
                         return $instance->group($groupName, $properties);
+        }
+         
+    }
+     
+}
+
+    namespace Ismaelw\LaraTeX { 
+            /**
+     * 
+     *
+     * @see \Ismaelw\LaraTeX\Skeleton\SkeletonClass
+     */ 
+        class LaraTeXFacade {
+                    /**
+         * Set name inside zip file
+         *
+         * @param string $nameInsideZip
+         * @return \LaraTeX 
+         * @static 
+         */ 
+        public static function setName($nameInsideZip)
+        {
+                        /** @var \Ismaelw\LaraTeX\LaraTeX $instance */
+                        return $instance->setName($nameInsideZip);
+        }
+                    /**
+         * Get name inside zip file
+         *
+         * @return string 
+         * @static 
+         */ 
+        public static function getName()
+        {
+                        /** @var \Ismaelw\LaraTeX\LaraTeX $instance */
+                        return $instance->getName();
+        }
+                    /**
+         * Set the with data
+         *
+         * @param array $data
+         * @return \LaraTeX 
+         * @static 
+         */ 
+        public static function with($data)
+        {
+                        /** @var \Ismaelw\LaraTeX\LaraTeX $instance */
+                        return $instance->with($data);
+        }
+                    /**
+         * Dry run
+         *
+         * @return \Illuminate\Http\Response 
+         * @static 
+         */ 
+        public static function dryRun()
+        {
+                        /** @var \Ismaelw\LaraTeX\LaraTeX $instance */
+                        return $instance->dryRun();
+        }
+                    /**
+         * Render the stub with data
+         *
+         * @return string 
+         * @throws ViewNotFoundException
+         * @static 
+         */ 
+        public static function render()
+        {
+                        /** @var \Ismaelw\LaraTeX\LaraTeX $instance */
+                        return $instance->render();
+        }
+                    /**
+         * Save generated PDF
+         *
+         * @param string $location
+         * @return boolean 
+         * @static 
+         */ 
+        public static function savePdf($location)
+        {
+                        /** @var \Ismaelw\LaraTeX\LaraTeX $instance */
+                        return $instance->savePdf($location);
+        }
+                    /**
+         * Download file as a response
+         *
+         * @param string|null $fileName
+         * @return \Illuminate\Http\Response 
+         * @static 
+         */ 
+        public static function download($fileName = null)
+        {
+                        /** @var \Ismaelw\LaraTeX\LaraTeX $instance */
+                        return $instance->download($fileName);
+        }
+                    /**
+         * Get the file as a inline response
+         *
+         * @param string|null $fileName
+         * @return \Illuminate\Http\Response 
+         * @static 
+         */ 
+        public static function inline($fileName = null)
+        {
+                        /** @var \Ismaelw\LaraTeX\LaraTeX $instance */
+                        return $instance->inline($fileName);
+        }
+                    /**
+         * Get the content of the file
+         *
+         * @param string|null $fileName
+         * @return \Illuminate\Http\Response 
+         * @static 
+         */ 
+        public static function content($type = 'raw')
+        {
+                        /** @var \Ismaelw\LaraTeX\LaraTeX $instance */
+                        return $instance->content($type);
+        }
+                    /**
+         * Convert HTML String to LaTeX String
+         *
+         * @param string $Input
+         * @param array $override
+         * @static 
+         */ 
+        public static function convertHtmlToLatex($Input, $Override = null)
+        {
+                        /** @var \Ismaelw\LaraTeX\LaraTeX $instance */
+                        return $instance->convertHtmlToLatex($Input, $Override);
         }
          
     }
@@ -17626,18 +17809,6 @@ namespace  {
             {
                                 /** @var \Illuminate\Database\Eloquent\Builder $instance */
                                 return $instance->mergeConstraintsFrom($from);
-            }
-             
-                /**
-             * Explains the query.
-             *
-             * @return \Illuminate\Support\Collection 
-             * @static 
-             */ 
-            public static function explain()
-            {
-                                /** @var \Illuminate\Database\Eloquent\Builder $instance */
-                                return $instance->explain();
             }
              
                 /**
@@ -19747,6 +19918,18 @@ namespace  {
             }
              
                 /**
+             * Explains the query.
+             *
+             * @return \Illuminate\Support\Collection 
+             * @static 
+             */ 
+            public static function explain()
+            {
+                                /** @var \Illuminate\Database\Query\Builder $instance */
+                                return $instance->explain();
+            }
+             
+                /**
              * Register a custom macro.
              *
              * @param string $name
@@ -19823,6 +20006,7 @@ namespace  {
             class Validator extends \Illuminate\Support\Facades\Validator {}
             class View extends \Illuminate\Support\Facades\View {}
             class Flare extends \Facade\Ignition\Facades\Flare {}
+            class LaraTeX extends \Ismaelw\LaraTeX\LaraTeXFacade {}
      
 }
 

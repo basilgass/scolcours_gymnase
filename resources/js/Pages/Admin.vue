@@ -10,10 +10,10 @@
 			</h2>
 			<div class="w-full">
 				<div
-						v-for="chapter in chapters"
-						:key="chapter.slug"
-						class="hover:bg-gray-200 flex justify-between px-4 py-2"
-					>
+					v-for="chapter in chapters"
+					:key="chapter.slug"
+					class="hover:bg-gray-200 flex justify-between px-4 py-2"
+				>
 					<div>
 						<h3 class="text-lg leading-6 font-medium text-gray-900">
 							{{ chapter.title }}
@@ -32,14 +32,14 @@
 		
 		<Panel>
 			<h2 class="text-lg my-2">
-				Outils
+				Challenges
 			</h2>
 			<div class="w-full">
 				<div
-						v-for="challenge in challenges"
-						:key="challenge.slug"
-						class="hover:bg-gray-200 flex justify-between px-4 py-2"
-					>
+					v-for="challenge in challenges"
+					:key="challenge.slug"
+					class="hover:bg-gray-200 flex justify-between px-4 py-2"
+				>
 					<div>
 						<h3 class="text-lg leading-6 font-medium text-gray-900">
 							{{ challenge.title }}
@@ -62,10 +62,10 @@
 			</h2>
 			<div class="w-full">
 				<div
-						v-for="tool in tools"
-						:key="tool.slug"
-						class="hover:bg-gray-200 flex justify-between px-4 py-2"
-					>
+					v-for="tool in tools"
+					:key="tool.slug"
+					class="hover:bg-gray-200 flex justify-between px-4 py-2"
+				>
 					<div>
 						<h3 class="text-lg leading-6 font-medium text-gray-900">
 							{{ tool.title }}

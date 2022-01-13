@@ -4,6 +4,7 @@
 	use App\Http\Controllers\ChallengesController;
 	use App\Http\Controllers\ChaptersController;
 	use App\Http\Controllers\ExercisesController;
+	use App\Http\Controllers\LatexController;
 	use App\Models\Theme;
 	use Illuminate\Support\Facades\Route;
 	use Inertia\Inertia;
@@ -18,40 +19,45 @@
 	| contains the "web" middleware group. Now create something great!
 	|
 	*/
-
+	
 	// Home page - no controller
-Route::get('/', function () {
-	$themes = Theme::all();
-	return Inertia::render('Welcome', [
-		'canLogin' => Route::has('login'),
-		'canRegister' => Route::has('register'),
-		'themes' => $themes
-	]);
-})->name('home');
+	Route::get('/', function () {
+		$themes = Theme::all();
+		return Inertia::render('Welcome', [
+			'canLogin'    => Route::has('login'),
+			'canRegister' => Route::has('register'),
+			'themes'      => $themes
+		]);
+	})->name('home');
 
 // Challenges
-Route::get('/challenge', [ChallengesController::class, 'index']);
-Route::get('/challenge/{challenge:slug}', [ChallengesController::class, 'show']);
-Route::post('/challenge/{challenge:slug}/start', [ChallengesController::class, 'start']);
+	Route::get('/challenge', [ChallengesController::class, 'index']);
+	Route::get('/challenge/{challenge:slug}', [ChallengesController::class, 'show']);
+	Route::post('/challenge/{challenge:slug}/start', [ChallengesController::class, 'start']);
 
 // Chapters controller - should be disabled ?
 //Route::resource('chapter', ChaptersController::class);
 // Exercises controller
-Route::resource('exercise', ExercisesController::class);
+	Route::resource('exercise', ExercisesController::class);
 
 // Auth route
-Route::get('/dashboard', function () {
-	return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+	Route::get('/dashboard', function () {
+		return Inertia::render('Dashboard');
+	})->middleware(['auth', 'verified'])->name('dashboard');
 
 // Admin controller and routes
-Route::get('/admin', [AdminController::class, 'show'])->middleware(['auth', 'verified']);
-require __DIR__ . '/auth.php';
+	Route::get('/admin', [AdminController::class, 'show'])
+	     ->middleware(['auth', 'verified'])->name('admin');
+	require __DIR__ . '/auth.php';
 
 // Latex download - migrate to custom controller
-Route::get('/latex/{filename}', [ChaptersController::class, 'download']);
-Route::post('/latex', [ChaptersController::class, 'latex']);
-
+	Route::post('/latex', [LatexController::class, 'latex']);
+	Route::get('/download/{fileID}', [LatexController::class, 'download']);
+	
+	// Developpement page
+	Route::get('dev/', [LatexController::class, 'toPng']);
+	
 // Chapter controller
-Route::get('{theme:slug}/', [ChaptersController::class, 'index'])->name('theme');
-Route::get('{theme:slug}/{chapter:slug}', [ChaptersController::class, 'show'])->name('theme.chapter');
+	Route::get('{theme:slug}/', [ChaptersController::class, 'index'])->name('theme');
+	Route::get('{theme:slug}/{chapter:slug}', [ChaptersController::class, 'show'])->name('theme.chapter');
+	

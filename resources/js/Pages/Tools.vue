@@ -1,16 +1,19 @@
 <template>
+	<Head title="Outils" />
+	
 	<form-input
-			label="Sélectionner l'outils"
-			name="tools"
-		/>
+		label="Sélectionner l'outils"
+		name="tools"
+	/>
 
+	<!-- List of all tools -->
 	<table class="w-full my-5">
 		<tr
-				v-for="tool of $page.props.tools"
-				:key="tool.slug"
-				class="odd:bg-white hover:bg-amber-100"
-				@click="toolSlug = tool.slug"
-			>
+			v-for="tool of $page.props.tools"
+			:key="tool.slug"
+			class="odd:bg-white hover:bg-amber-100"
+			@click="toolSlug = tool.slug"
+		>
 			<td class="pl-3 py-2">
 				<h2 class="text-lg">
 					{{ tool.title }}

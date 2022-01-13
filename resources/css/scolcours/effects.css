@@ -1,3 +1,10 @@
+.title-effect-enter-active {transition: all .4s ease-out; transition-delay: .1s}
+.title-effect-leave-active {transition: all .4s ease-in;; transition-delay: .1s}
+.title-effect-enter-from, .title-effect-leave-to {
+    transform: translateX(20px);
+    opacity: 0;
+}
+
 .slide-fade-enter-active {transition: all .3s ease-out;}
 .slide-fade-leave-active {transition: all .3s ease-in;}
 .slide-fade-enter-from, .slide-fade-leave-to {transform: translateX(-100%);}
