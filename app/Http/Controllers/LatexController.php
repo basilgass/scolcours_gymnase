@@ -69,7 +69,9 @@
 		
 		public function toPng()
 		{
+			$outputFile = false;
 			$latexBinFolder = dirname(config('laratex.binPath'));
+			
 			$content = "Hello world";
 			$result = (new LaraTeX('latex.standalone'))->with([
 				                                                  'standalone' => true,
@@ -86,27 +88,44 @@
 				'temp.tex'
 			];
 			
-			$convert = new Process($convertOptions, $compileFolder);
+			$home = "C:/websites/scolcours_gymnase/";
+			if(env('APP_ENV')==='local'){
+				$localEnv = [
+					'HOME'        => $home,
+					'HOMEPATH'    => $home,
+					'HOMEDRIVE'   => $home,
+					'USERPROFILE' => $home,
+				];
+			}else{
+				$localEnv = null;
+			}
+			
+			$convert = new Process($convertOptions, $compileFolder, $localEnv);
 			$convert->run();
 			
-			if($convert->isSuccessful()){
-				// Convert to png
-				$convertOptions = [
-					$latexBinFolder . '/dvipng',
-					'temp'
-				];
-				$convert = new Process($convertOptions, $compileFolder,
-				['$HOME', $compileFolder]);
-				$convert->run();
-				
-				dd(
-					'DVI Created',
-					$convertOptions,
-					$convert->isSuccessful(),
-					$convert->getErrorOutput()
-				);
-			}else{
-				dd($convertOptions, $convert->getErrorOutput());
+			if (!$convert->isSuccessful()) {
+				dd('FAILED COMPILE TO DVI', $convertOptions,
+				   $convert->getOutput(),
+				   $convert->getErrorOutput());
 			}
+			
+			
+			// Convert to png
+			$convertOptions = [
+				$latexBinFolder . '/dvipng',
+				'temp'
+			];
+			
+			$convert = new Process($convertOptions, $compileFolder,
+			                       $localEnv);
+			
+			$convert->run();
+			
+			
+			if (!$convert->isSuccessful()) {
+				dd('FAILED CONVERT TO PNG', $convertOptions, $convert->getOutput(),$convert->getErrorOutput() );
+			}
+			
+			return $compileFolder . '/temp.png';
 		}
 	}

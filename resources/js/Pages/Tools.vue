@@ -1,5 +1,6 @@
 <template>
-	<Head title="Outils" />
+	<!-- Title -->
+	<ArticleTitle title="Outils" />
 	
 	<form-input
 		label="Sélectionner l'outils"
@@ -42,6 +43,7 @@ export default {
 <script setup>
 import FormInput from '@/Components/Form/FormInput'
 import { defineAsyncComponent, ref } from 'vue'
+import ArticleTitle from '@/Components/Ui/ArticleTitle'
 
 let toolSlug = ref(null)
 

@@ -4,6 +4,10 @@
     \documentclass[10pt]{article}
     \usepackage{geometry}
     \geometry{ a4paper, total={190mm,270mm}, left=10mm, top=10mm}
+    \usepackage[frenchb]{babel}
+    \usepackage{titling}
+    \usepackage{fancyhdr}
+
 @endif
 
 \usepackage[dvipsnames]{xcolor}
@@ -13,12 +17,9 @@
 \usepackage[inline,shortlabels]{enumitem}
 \setlist[itemize,1]{label=\( \triangleright \) }
 \usepackage[T1]{fontenc}
-\usepackage[frenchb]{babel}
 \usepackage{datetime}
 \usepackage{amsmath,amsfonts,amssymb,amsthm,array}
 \usepackage{multicol}
-\usepackage{titling}
-\usepackage{fancyhdr}
 
 % Nouvelles fonctions mathématiques.
 \makeatletter

@@ -15,7 +15,6 @@
 </template>
 <script setup>
 import { computed, onMounted, ref } from 'vue'
-import chapter from '@/Pages/Chapters/Chapter'
 
 const props = defineProps({
 	title: String,
@@ -23,17 +22,17 @@ const props = defineProps({
 	chapter: String
 })
 
-let headTitle = computed(()=>{
-	if(props.head){
+let headTitle = computed(() => {
+	if (props.head) {
 		return props.head
 	}
 	let calculatedTitle = 'ScolCours'
 	
-	if(props.chapter){
-		calculatedTitle = props.chapter+'-'+calculatedTitle
+	if (props.chapter) {
+		calculatedTitle = props.chapter + '-' + calculatedTitle
 	}
 	
-	if(props.title){
+	if (props.title) {
 		calculatedTitle = props.title + '-' + calculatedTitle
 	}
 	
@@ -42,7 +41,7 @@ let headTitle = computed(()=>{
 
 let showTitle = ref(false)
 
-onMounted(()=>{
+onMounted(() => {
 	showTitle.value = true
 })
 </script>

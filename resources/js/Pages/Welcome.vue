@@ -7,8 +7,8 @@
 			powered by Scolcours
 		</div>
 	</div>
-
-
+	
+	
 	<div class="mt-10 text-center text-lg">
 		<Link href="/challenge">
 			Vers les quizz / challenge
@@ -17,21 +17,21 @@
 	
 	<div class="my-10">
 		<div
-				class="
+			class="
 		grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3
 		gap-6 p-6"
-			>
+		>
 			<Link
-					v-for="(theme, index) in themes"
-					:key="theme.slug"
-					:class="'scolcours-'+theme.slug + ' ' + (index%2===0?'rotate-1':'-rotate-1')"
-					:href="'/'+theme.slug"
-					class="text-center text-lg font-thin whitespace-nowrap
+				v-for="(theme, index) in themes"
+				:key="theme.slug"
+				:class="'scolcours-'+theme.slug + ' ' + (index%2===0?'rotate-1':'-rotate-1')"
+				:href="'/'+theme.slug"
+				class="text-center text-lg font-thin whitespace-nowrap
 			rounded border py-24
 			text-white
 			cursor-pointer
 			transform hover:scale-105 hover:rotate-0 duration-300"
-				>
+			>
 				<i :class="`bi bi-${theme.icon} mr-2`" />
 				{{ theme.title }}
 			</Link>
@@ -47,7 +47,7 @@ export default {
 
 </script>
 <script setup>
-defineProps(  {
+defineProps({
 	canLogin: Boolean,
 	canRegister: Boolean,
 	themes: Array
