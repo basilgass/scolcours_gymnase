@@ -40,7 +40,7 @@
 				</ol>
 			</div>
 			
-			<div class="col-span-2">
+			<div class="lg:col-span-2">
 				<div class="flex items-center mt-8 mb-4 space-x-10">
 					<h3 class=" font-semibold">
 						Résolution
