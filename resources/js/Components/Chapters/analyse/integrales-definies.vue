@@ -1,6 +1,8 @@
 <template>
 	<section ref="root">
-		Texte à remplire...
+		<integrales-definies-riemann v-show="false" />
+		
+		<integrales-definies-aire-borne-racine />
 	</section>
 </template>
 
@@ -10,7 +12,18 @@
  * body: Le calcul des aires d'un domaine borné.
  */
 
+/** Chapter
+ * title: intégrales définies
+ * body: Le calcul des aires d'un domaine borné.
+ */
+/** Chapter
+ * title: intégrales définies
+ * body: Le calcul des aires d'un domaine borné.
+ */
 import { onMounted, ref } from 'vue'
+import IntegralesDefiniesAireBorneRacine
+	from '@/Components/Chapters/analyse/integrales-definies/IntegralesDefiniesAireBorneRacine'
+import IntegralesDefiniesRiemann from '@/Components/Chapters/analyse/integrales-definies/IntegralesDefiniesRiemann'
 
 const root = ref(null)
 

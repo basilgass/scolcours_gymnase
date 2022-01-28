@@ -4,11 +4,14 @@
 		<main class="scolcours-container  min-h-screen">
 			<slot />
 		</main>
+		
+		<main-footer />
 	</div>
 </template>
 
 <script setup>
 import MainHeader from '@/Components/MainHeader'
+import MainFooter from '@/Components/MainFooter'
 
 defineProps({
 	theme: { type: Object, default: () => { return { title: 'Scolcours', slug: 'main' }} }
