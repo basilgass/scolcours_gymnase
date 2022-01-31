@@ -31,7 +31,7 @@
 	"dependencies": {
 		"asciimath2tex": "^1.1.0",
 		"katex": "^0.15.1",
-		"pidraw": "^0.0.3",
-		"pimath": "^0.0.29"
+		"pidraw": "^0.0.4",
+		"pimath": "^0.0.30"
 	}
 }

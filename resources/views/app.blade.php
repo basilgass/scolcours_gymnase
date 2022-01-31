@@ -25,6 +25,8 @@
 </head>
 <body class="font-sans antialiased min-h-screen">
 
+<noscript>Votre navigateur n'accepte pas les scripts... C'est triste :(</noscript>
+
 @inertia
 
 <div id="modal-dialog"></div>
@@ -34,4 +36,5 @@
 		katexAutoRender(document.body)
 	});
 </script>
+
 </html>

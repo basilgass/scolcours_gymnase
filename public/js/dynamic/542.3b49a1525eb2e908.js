@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunk=self.webpackChunk||[]).push([[542],{1542:(e,n,t)=>{t.r(n),t.d(n,{default:()=>u});var r=t(821);const u={setup:function(e){var n=(0,r.ref)(null);return(0,r.onMounted)((function(){katexAutoRender(n.value)})),function(e,t){return(0,r.openBlock)(),(0,r.createElementBlock)("section",{ref_key:"root",ref:n}," Texte à remplire... ",512)}}}}}]);

@@ -1,8 +1,6 @@
 <template>
 	<div ref="root">
-		<h2 class="text-lg">
-			Exemple
-		</h2>
+		<ExampleTitle>Aire entre deux courbes et l'axe \(O_x\)</ExampleTitle>
 		<div class="grid grid-cols-1 lg:grid-cols-2 gap-5 items-stretch">
 			<div
 				ref="graphBetweenContainer"
@@ -107,6 +105,7 @@ x^2-3x-4 &= 0\\\\
 <script setup>
 import { onMounted, ref } from 'vue'
 import { Graph } from 'pidraw/esm'
+import ExampleTitle from '@/Components/Ui/ExampleTitle'
 
 const root = ref(null),
 	graphBetweenContainer = ref(null),
@@ -130,10 +129,10 @@ function loadGraphBetween () {
 		},
 		samples: 20
 	})
-	graphBetween.point(-17 / 8, 0, 'A')
-	graphBetween.point(0.5, 0, 'B')
-	graphBetween.point(4, 0, 'C')
-	graphBetween.point(4, 7, 'D')
+	graphBetween.point(-17 / 8, 0, 'A').asCircle()
+	graphBetween.point(0.5, 0, 'B').asCircle()
+	graphBetween.point(4, 0, 'C').asCircle()
+	graphBetween.point(4, 7, 'D').asCircle()
 }
 
 onMounted(() => {
