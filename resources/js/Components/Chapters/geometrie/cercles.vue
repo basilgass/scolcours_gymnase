@@ -6,7 +6,7 @@
 			\(\Gamma_2\) un cercle centré en <span v-katex.inline="'C_2'+ex1.C2.tex" /> et
 			passant par <span v-katex.inline="'T' + ex1.T.tex" />.
 			
-			<ol class="list-decimal list-inside mt-5 space-y-3">
+			<ol class="list-decimal list-space mt-5 space-y-3">
 				<li>
 					Mettre sous forme <span class="italic">centre-rayon</span> les équations des cercles \(\Gamma_1\) et
 					\(\Gamma_2\)
@@ -21,7 +21,7 @@
 				<li>Calculer la médiatrice du sergment reliant les deux sommets</li>
 			</ol>
 			
-			<ol class="list-decimal list-inside mt-5 space-y-3 text-gray-100 hover:text-gray-600 transition-colors">
+			<ol class="list-decimal list-space mt-5 space-y-3 text-gray-100 hover:text-gray-600 transition-colors">
 				<li>
 					<div v-katex.left="'(\\Gamma_1): ' + ex1.G1.tex" />
 					<div v-katex.left="'(\\Gamma_2): ' + ex1.G2.tex" />
@@ -35,13 +35,13 @@
 				<li>
 					Intersection:
 					<div
-							v-if="ex1.P1!==false"
-							v-katex.left="`P_1${ex1.P1.tex}`"
-						/>
+						v-if="ex1.P1!==false"
+						v-katex.left="`P_1${ex1.P1.tex}`"
+					/>
 					<div
-							v-if="ex1.P2!==false"
-							v-katex.left="`P_2${ex1.P2.tex}`"
-						/>
+						v-if="ex1.P2!==false"
+						v-katex.left="`P_2${ex1.P2.tex}`"
+					/>
 				</li>
 				<li>
 					<div v-katex.left="'(d): ' + ex1.d.tex.canonical" />
@@ -52,10 +52,10 @@
 			</ol>
 			
 			<div
-					v-if="false"
-					class="btn"
-					@click="updateEx1(true)"
-				>
+				v-if="false"
+				class="btn"
+				@click="updateEx1(true)"
+			>
 				RANDOM
 			</div>
 		</Panel>

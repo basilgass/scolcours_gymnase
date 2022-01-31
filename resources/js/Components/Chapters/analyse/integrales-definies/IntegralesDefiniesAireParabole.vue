@@ -14,7 +14,7 @@
 				<h3 class="mt-8 mb-4 font-semibold">
 					Marche à suivre
 				</h3>
-				<ol class="list-decimal list-inside space-y-4">
+				<ol class="list-decimal list-space space-y-4">
 					<li>Calculer les zéros de \(f(x)\)</li>
 					<li>Calculer l'intégrale définie bornée entre les deux zéros</li>
 					<li>En déduire l'aire</li>
@@ -35,12 +35,12 @@
 					</button>
 				</div>
 				
-				<ol class="list-decimal list-inside space-y-4">
+				<ol class="list-decimal list-space space-y-4">
 					<li v-show="solutions>0">
-						\(-\dfrac{1}{2}x^2+2x+6= 0 \implies -\dfrac{1}{2}\big( x^2-4x-12 \big) = 0 \implies -\dfrac{1}{2}(x+2 )(x-6) = 0 \implies x=-2 \text{ et } x = 6\)
+						<span v-katex.boxed="'-\\dfrac{1}{2}x^2+2x+6= 0 \\implies -\\dfrac{1}{2}\\big( x^2-4x-12 \\big) = 0 \\implies -\\dfrac{1}{2}(x+2 )(x-6) = 0 \\implies x=-2 \\text{ et } x = 6'" />
 					</li>
 					<li v-show="solutions>1">
-						\( \displaystyle \int_{-2}^{6} -\frac{1}{2}x^2+2x+6 \ \text{d}x = -\frac{1}{6}x^3+x^2+6x \Big\vert_{-2}^6 = 36 - \left(-\frac{20}{3}\right) = \frac{128}{3} \approx 42.7\)
+						<span v-katex.boxed="'\\displaystyle \\int_{-2}^{6} -\\frac{1}{2}x^2+2x+6 \\ \\text{d}x = -\\frac{1}{6}x^3+x^2+6x \\Big\\vert_{-2}^6 = 36 - \\left(-\\frac{20}{3}\\right) = \\frac{128}{3} \\approx 42.7'" />
 					</li>
 					<li v-show="solutions>2">
 						L'aire entre la courbe et l'axe \(O_x\) vaut \(\approx 42.7\)
@@ -68,9 +68,11 @@ function loadGraphBetween () {
 		}
 	})
 	graphBetween.axis()
-	graphBetween.plot('-1/2*x^2+2*x+6')
+	let fx = graphBetween.plot('-1/2*x^2+2*x+6')
 	graphBetween.point(-2,0).asCircle()
 	graphBetween.point(6,0).asCircle()
+	
+	let FB = fx.fillBetween(false, -2, 6)
 }
 
 onMounted(() => {

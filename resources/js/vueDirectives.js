@@ -6,6 +6,13 @@ function katexUpdate (el, binding, vnode) {
 		el.innerHTML = ''
 	} else {
 		const tex = binding.modifiers.ascii ? new AsciiMathParser().parse(binding.value) : binding.value
+		
+		if(!binding.modifiers.clear) {
+			el.classList.add('katex-container')
+		}
+		
+		// Add boxed to the inline container
+		if(binding.modifiers.boxed){el.classList.add('katex-container-inline')}
 		if (binding.modifiers.left) {el.classList.add('katex-left')}
 		if (binding.modifiers.nomargin) {el.classList.add('katex-m-0')}
 		

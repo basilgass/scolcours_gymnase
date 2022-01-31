@@ -49,6 +49,15 @@
     @apply bg-pink-400
 }
 
+.katex-container {
+    @apply bg-amber-700/5 px-5 py-2 my-2 rounded;
+}
+.katex-container.katex-container-inline {
+    @apply px-3 inline-block
+}
+.katex-container:not(.katex-container-inline){
+    @apply overflow-x-scroll
+}
 .katex-left > .katex-display > .katex > .katex-html {
     @apply text-left;
 }
@@ -81,5 +90,12 @@
 
     .btn-form {
         @apply btn-primary uppercase font-semibold text-xs;
+    }
+
+    .list-space {
+        @apply list-outside ml-3
+    }
+    .list-space > li {
+        @apply pl-5
     }
 }
