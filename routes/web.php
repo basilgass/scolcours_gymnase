@@ -5,6 +5,7 @@
 	use App\Http\Controllers\ChaptersController;
 	use App\Http\Controllers\ExercisesController;
 	use App\Http\Controllers\LatexController;
+	use App\Http\Controllers\ToolsController;
 	use App\Models\Theme;
 	use Illuminate\Support\Facades\Route;
 	use Inertia\Inertia;
@@ -57,7 +58,10 @@
 	// Developpement page
 	Route::get('dev/', [LatexController::class, 'toPng']);
 	
-// Chapter controller
+	// Tools controller
+	Route::get('tools/', [ToolsController::class, 'index'])->name('tools');
+	Route::get('tools/{tool:slug}', [ToolsController::class, 'show'])->name('tools.tool');
+	
+	// Chapter controller
 	Route::get('{theme:slug}/', [ChaptersController::class, 'index'])->name('theme');
 	Route::get('{theme:slug}/{chapter:slug}', [ChaptersController::class, 'show'])->name('theme.chapter');
-	

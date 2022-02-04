@@ -38,7 +38,7 @@
 						accueil
 					</Link>
 					<hr>
-					<ThemeLinks />
+					<ThemeLinks @click-navigation-links="$parent.showAside=false" />
 					<hr>
 					<LogoutButton v-if="$page.props.auth.user" />
 				</div>

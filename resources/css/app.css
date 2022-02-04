@@ -52,12 +52,13 @@
 .katex-container {
     @apply bg-amber-700/5 px-5 py-2 my-2 rounded;
 }
-.katex-container.katex-container-inline {
-    @apply px-3 inline-block
+.katex-container.katex-boxed {
+    @apply px-3 inline-block align-middle max-w-full
 }
-.katex-container:not(.katex-container-inline){
-    @apply overflow-x-scroll
+.katex-container{
+    @apply overflow-x-auto
 }
+
 .katex-left > .katex-display > .katex > .katex-html {
     @apply text-left;
 }

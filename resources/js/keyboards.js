@@ -14,6 +14,11 @@ export const keyboardKeys = {
 	'*': {type: 'math', display: '\\times'},
 	'/': {type: 'math', display: '\\div'},
 	'x': {type: 'math', display: 'x'},
+	'x^2': {type: 'math', display: 'x^2'},
+	'x^3': {type: 'math', display: 'x^3'},
+	'x^4': {type: 'math', display: 'x^4'},
+	'x^5': {type: 'math', display: 'x^5'},
+	'x^6': {type: 'math', display: 'x^6'},
 	'^2': {type: 'math', display: '\\textcolor{lightgray}{x}^2'},
 	'^': {type: 'math', display: 'x^y'},
 	'sqrt': {type: 'math', display: '\\sqrt{\\phantom{x}}'},
@@ -45,6 +50,15 @@ export const keyboards = {
 			'4', '5', '6', '-', '^2','^', 'ln',
 			'7', '8', '9', '*', '|', 'sqrt', '',
 			'@reset', '@back', '0', '/', '(', ')', ''
+		]
+	},
+	'polynom': {
+		grid: 'grid-cols-6',
+		layout: [
+			'1', '2', '3', '+', 'x', 'x^2',
+			'4', '5', '6', '-', 'x^3', 'x^4',
+			'7', '8', '9', '*', 'x^5', '^',
+			'@reset', '@back', '0', '/', '(', ')'
 		]
 	}
 }

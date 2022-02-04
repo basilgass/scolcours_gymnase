@@ -22,7 +22,7 @@ module.exports = {
 				'0': '0%',
 			},
 			colors: {
-				'gray': colors.trueGray,
+				'gray': colors.neutral,
 				'lime': colors.lime,
 				'cyan': colors.cyan,
 				'amber': colors.amber,

@@ -4,7 +4,6 @@
 	
 	use App\Models\Chapter;
 	use App\Models\Theme;
-	use App\Models\Tools;
 	use Illuminate\Http\Request;
 	use Illuminate\Support\Facades\Storage;
 	use Inertia\Inertia;
@@ -15,16 +14,11 @@
 		public function index(Theme $theme)
 		{
 			$data = [
-				"theme" => $theme,
+				"theme"    => $theme,
 				"chapters" => $theme->chapters()->get(['slug', 'title', 'body'])
 			];
 			
-			if($theme->slug==='tools'){
-				$data['tools'] = Tools::all();
-				return Inertia::render("Tools", $data);
-			}else{
-				return Inertia::render("Chapters/index", $data);
-			}
+			return Inertia::render("Chapters/index", $data);
 		}
 		
 		public function create()
@@ -43,8 +37,8 @@
 			$exercises = $chapter->exercises;
 			
 			return Inertia::render('Chapters/Chapter', [
-				"theme" => $theme,
-				"chapter" => $chapter,
+				"theme"               => $theme,
+				"chapter"             => $chapter,
 				"hasChapterComponent" => file_exists(resource_path("js/Chapters/{$theme->slug}/{$chapter->slug}.vue")),
 			]);
 		}
@@ -64,21 +58,22 @@
 			//
 		}
 		
-		public function download(String $filename)
+		public function download(string $filename)
 		{
-			return Storage::disk('public')->download('/pdf/'.$filename);
+			return Storage::disk('public')->download('/pdf/' . $filename);
 		}
+		
 		public function latex(Request $data)
 		{
 			$requestData = json_decode($data->getContent());
 			
 			// TODO: modifier le nom du fichier.
-			$filename = $requestData->slug.'.pdf';
+			$filename = $requestData->slug . '.pdf';
 			(new LaraTeX('latex.WhatToKnow'))->with([
-				                                               'title'      => $requestData->title,
-				                                               'questions' => $requestData->questions
-			                                               ])
-			                                        ->savePdf(storage_path('app/public/pdf/'.$filename));
+				                                        'title'     => $requestData->title,
+				                                        'questions' => $requestData->questions
+			                                        ])
+			                                 ->savePdf(storage_path('app/public/pdf/' . $filename));
 			
 			return $filename;
 		}

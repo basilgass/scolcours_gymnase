@@ -23,13 +23,13 @@
 			>
 				<div
 					v-if="!showFinished"
-					class="flex items-center flex-col md:flex-row"
+					class="flex items-center flex-col sm:flex-row"
 				>
-					<div v-katex.left="generatedQuestions[questionNo].question + '\\ = \\ '" />
+					<div v-katex.left.clear="generatedQuestions[questionNo].question + '\\ = \\ '" />
 					<transition name="slide-right">
 						<div
 							v-if="showAnswer"
-							v-katex.left="generatedQuestions[questionNo].answer"
+							v-katex.left.clear="generatedQuestions[questionNo].answer"
 						/>
 					</transition>
 				</div>

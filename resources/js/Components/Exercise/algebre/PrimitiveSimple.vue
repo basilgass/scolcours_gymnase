@@ -3,7 +3,7 @@
 		class="max-w-md mt-4"
 	>
 		<div class="py-2 h-20 flex items-center">
-			<div>Calculer une primitive de <span v-katex.inline="`f(x)=${state.question}`" /></div>
+			<div>Calculer une primitive de <span v-katex.inline.clear="`f(x)=${state.question}`" /></div>
 		</div>
 		<KatexEditor
 			v-model="state.userAnswer"

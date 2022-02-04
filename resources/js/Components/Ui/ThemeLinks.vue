@@ -4,7 +4,7 @@
 		:key="`anchor-${theme.slug}`"
 		:href="route('theme', theme.slug)"
 		class="block transition duration-300 hover:translate-x-2 px-4 py-1"
-		@click="$parent.showAside=false"
+		@click="emit('ClickNavigationLinks')"
 	>
 		<i
 			:class="`bi-${theme.icon}`"
@@ -12,8 +12,8 @@
 		/>{{ theme.title }}
 	</Link>
 </template>
-<script>
-export default {
-	name: 'ThemeLinks'
-}
+<script setup>
+
+let emit = defineEmits(['ClickNavigationLinks'])
+
 </script>
