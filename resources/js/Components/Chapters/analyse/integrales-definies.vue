@@ -8,6 +8,8 @@
 			<integrales-definies-aire-parabole-neg />
 		
 			<integrales-definies-aire-borne-racine />
+			
+			<integralles-definies532 />
 		</div>
 	</section>
 </template>
@@ -34,6 +36,7 @@ import IntegralesDefiniesAireParabole
 	from '@/Components/Chapters/analyse/integrales-definies/IntegralesDefiniesAireParabole'
 import IntegralesDefiniesAireParaboleNeg
 	from '@/Components/Chapters/analyse/integrales-definies/IntegralesDefiniesAireParaboleNeg'
+import IntegrallesDefinies532 from '@/Components/Chapters/analyse/integrales-definies/IntegrallesDefinies532'
 
 const root = ref(null)
 

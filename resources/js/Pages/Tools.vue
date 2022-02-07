@@ -1,17 +1,25 @@
 <template>
 	<!-- Title -->
 	<div class="flex justify-between items-baseline">
-		<ArticleTitle title="Outils" />
+		<div>
+			<ArticleTitle title="Outils" />
+			<Link
+				v-if="toolSlug!==''"
+				:href="`/tools/${toolSlug}`"
+			>
+				{{ toolName }}
+			</Link>
+		</div>
 		
-		<Link
-			v-if="props.slug"
-			href="/tools"
+		<button
+			v-if="toolSlug"
+			@click="toolSlug=''"
 		>
 			Tous les outils
-		</Link>
+		</button>
 	</div>
 	
-	<div v-if="!props.slug">
+	<div v-if="!toolSlug">
 		<form-input
 			label="Sélectionner l'outils"
 			name="tools"
@@ -23,7 +31,7 @@
 				v-for="tool of $page.props.tools"
 				:key="tool.slug"
 				class="odd:bg-white hover:bg-amber-100"
-				@click="loadTool(tool.slug)"
+				@click="toolSlug=tool.slug"
 			>
 				<td class="pl-3 py-2">
 					<h2 class="text-lg">
@@ -53,7 +61,7 @@ export default {
 </script>
 <script setup>
 import FormInput from '@/Components/Form/FormInput'
-import { defineAsyncComponent, onMounted, ref } from 'vue'
+import { computed, defineAsyncComponent, onMounted, ref } from 'vue'
 import ArticleTitle from '@/Components/Ui/ArticleTitle'
 import { Inertia } from '@inertiajs/inertia'
 
@@ -61,7 +69,7 @@ let toolSlug = ref(null)
 
 const props = defineProps({
 	tools: {type: Object, default: ()=>{}},
-	slug: {type: String, default: ''}
+	tool: {type: Object, default: ()=>{}}
 })
 
 let toolComponents = []
@@ -71,12 +79,18 @@ for(let tool of props.tools){
 	)
 }
 
-function loadTool(tool){
-	Inertia.visit('/tools/' + tool)
-}
+let toolName = computed(()=>{
+	if(toolSlug.value===''){return ''}
+	for(let tool of props.tools){
+		if(tool.slug===toolSlug.value){
+			return tool.title
+		}
+	}
+	return ''
+})
 onMounted(()=> {
-	if(props.slug !== null || props.slug !== '') {
-		toolSlug.value = props.slug
+	if(props.tool !== null || props.tool.slug !== '') {
+		toolSlug.value = props.tool.slug
 	}
 })
 </script>

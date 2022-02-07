@@ -14,6 +14,7 @@
 		{
 			$data = ["theme"    => Theme::where('slug', 'tools')->first()];
 			$data['tools'] = Tools::all();
+			$data['tool'] = null;
 			return Inertia::render("Tools", $data);
 		}
 		
@@ -31,7 +32,7 @@
 		{
 			$data = ["theme"    => Theme::where('slug', 'tools')->first()];
 			$data['tools'] = Tools::all();
-			$data['slug'] = $tool->slug;
+			$data['tool'] = $tool;
 			
 			return Inertia::render("Tools", $data);
 		}
