@@ -22,7 +22,7 @@
 	*/
 	
 	// Home page - no controller
-	Route::get('.', function () {
+	Route::get('/', function () {
 		$themes = Theme::all();
 		return Inertia::render('Welcome', [
 			'canLogin'    => Route::has('login'),
