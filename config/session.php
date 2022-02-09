@@ -1,8 +1,8 @@
 <?php
-
-use Illuminate\Support\Str;
-
-return [
+	
+	use Illuminate\Support\Str;
+	
+	return [
 
     /*
     |--------------------------------------------------------------------------
@@ -155,7 +155,7 @@ return [
     |
     */
 
-    'domain' => env('SESSION_DOMAIN', null),
+    'domain' => env('SESSION_DOMAIN', env('APP_URL')),
 
     /*
     |--------------------------------------------------------------------------
