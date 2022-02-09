@@ -33918,137 +33918,148 @@ const Line_1 = __webpack_require__(6222);
 const Plot_1 = __webpack_require__(4313);
 const Axis_1 = __webpack_require__(5543);
 const enums_1 = __webpack_require__(2369);
+const Arc_1 = __webpack_require__(4052);
+const Parser_1 = __webpack_require__(2351);
 class Graph {
-    #container;
-    #svg;
-    #width;
-    #height;
-    #origin;
-    #pixelsPerUnit;
-    #figures;
-    #points;
-    #freeze;
-    #layers;
     constructor(containerID, config) {
-        this.#freeze = false;
-        this.#origin = {
+        this._freeze = false;
+        this._origin = {
             x: 50, y: 550
         };
-        this.#pixelsPerUnit = {
+        this._pixelsPerUnit = {
             x: 50, y: 50
         };
         this._initSetWidthAndHeight(config);
         this._initGetContainerId(containerID);
         this._initCreateSVG();
-        this.#figures = [];
-        this.#points = {};
+        this._figures = [];
+        this._points = {};
         if (config) {
             if (config.origin !== undefined) {
-                this.#origin = config.origin;
+                this._origin = config.origin;
             }
             if (config.grid !== undefined) {
-                this.#pixelsPerUnit = config.grid;
+                this._pixelsPerUnit = config.grid;
             }
         }
-        this.#layers = {
+        this._layers = {
             background: this.svg.group(),
             grids: this.svg.group(),
             axis: this.svg.group(),
             main: this.svg.group(),
+            plotsBG: this.svg.group(),
             plots: this.svg.group(),
+            plotsFG: this.svg.group(),
             foreground: this.svg.group(),
             points: this.svg.group()
         };
         const g = new Grid_1.Grid(this, 'MAINGRID', {
-            axisX: this.#pixelsPerUnit.x,
-            axisY: this.#pixelsPerUnit.y,
+            axisX: this._pixelsPerUnit.x,
+            axisY: this._pixelsPerUnit.y,
             type: enums_1.GRIDTYPE.ORTHOGONAL
-        });
-        this.#figures.push(g);
-        this.#layers.grids.add(g.svg);
-        this.createMarker(15);
+        }).color('lightgray');
+        this._figures.push(g);
+        this._layers.grids.add(g.svg);
+        this._markers = this.createMarker(10);
     }
+    _container;
     get container() {
-        return this.#container;
+        return this._container;
     }
+    _svg;
     get svg() {
-        return this.#svg;
+        return this._svg;
     }
+    _width;
     get width() {
-        return this.#width;
+        return this._width;
     }
+    _height;
     get height() {
-        return this.#height;
+        return this._height;
     }
+    _origin;
     get origin() {
-        return this.#origin;
+        return this._origin;
     }
     set origin(value) {
-        this.#origin = value;
+        this._origin = value;
     }
+    _pixelsPerUnit;
+    get pixelsPerUnit() {
+        return this._pixelsPerUnit;
+    }
+    _figures;
     get figures() {
-        return this.#figures;
+        return this._figures;
     }
+    _points;
+    get points() {
+        return this._points;
+    }
+    _freeze;
     get freeze() {
-        return this.#freeze;
+        return this._freeze;
+    }
+    _layers;
+    get layers() {
+        return this._layers;
+    }
+    _markers;
+    get markers() {
+        return this._markers;
     }
     get unitXDomain() {
         return {
-            min: Math.round(-this.#origin.x / this.#pixelsPerUnit.x),
-            max: Math.round((this.#width - this.#origin.x) / this.#pixelsPerUnit.x)
+            min: Math.round(-this._origin.x / this._pixelsPerUnit.x),
+            max: Math.round((this._width - this._origin.x) / this._pixelsPerUnit.x)
         };
     }
     get unitYDomain() {
         return {
-            max: Math.round(-(this.#height - this.#origin.y) / this.#pixelsPerUnit.y),
-            min: Math.round(this.#origin.y / this.#pixelsPerUnit.y)
+            max: Math.round(-(this._height - this._origin.y) / this._pixelsPerUnit.y),
+            min: Math.round(this._origin.y / this._pixelsPerUnit.y)
         };
-    }
-    get points() {
-        return this.#points;
-    }
-    get pixelsPerUnit() {
-        return this.#pixelsPerUnit;
-    }
-    get layers() {
-        return this.#layers;
     }
     distanceToPixels(distance, direction) {
         if (direction === undefined || direction === enums_1.AXIS.HORIZONTAL) {
-            return distance * this.#pixelsPerUnit.x;
+            return distance * this._pixelsPerUnit.x;
         }
         else {
-            return distance * this.#pixelsPerUnit.y;
+            return distance * this._pixelsPerUnit.y;
         }
     }
     unitsToPixels(point) {
         return {
-            x: this.origin.x + (point.x * this.#pixelsPerUnit.x),
-            y: this.origin.y - (point.y * this.#pixelsPerUnit.y)
+            x: this.origin.x + (point.x * this._pixelsPerUnit.x),
+            y: this.origin.y - (point.y * this._pixelsPerUnit.y)
         };
     }
     pixelsToUnits(point) {
         return {
-            x: (point.x - this.origin.x) / this.#pixelsPerUnit.x,
-            y: -(point.y - this.origin.y) / this.#pixelsPerUnit.y
+            x: (point.x - this.origin.x) / this._pixelsPerUnit.x,
+            y: -(point.y - this.origin.y) / this._pixelsPerUnit.y
         };
     }
     getFigure(name) {
-        for (let figure of this.#figures) {
+        for (let figure of this._figures) {
             if (figure.name === name) {
                 return figure;
             }
         }
-        return;
+        return null;
     }
     getPoint(name) {
-        return this.#points[name];
+        if (name instanceof Point_1.Point) {
+            return name;
+        }
+        return this._points[name] || null;
     }
     axis() {
-        const axisX = new Axis_1.Axis(this, 'x', enums_1.AXIS.HORIZONTAL);
-        const axisY = new Axis_1.Axis(this, 'y', enums_1.AXIS.VERTICAL);
-        this.#validateFigure(axisX, enums_1.LAYER.AXIS);
-        this.#validateFigure(axisY, enums_1.LAYER.AXIS);
+        const axisX = new Axis_1.Axis(this, 'Ox', enums_1.AXIS.HORIZONTAL);
+        const axisY = new Axis_1.Axis(this, 'Oy', enums_1.AXIS.VERTICAL);
+        this._validateFigure(axisX, enums_1.LAYER.AXIS);
+        this._validateFigure(axisY, enums_1.LAYER.AXIS);
         return {
             x: axisX,
             y: axisY
@@ -34057,85 +34068,68 @@ class Graph {
     point(x, y, name) {
         const pixels = this.unitsToPixels({ x, y });
         const figure = new Point_1.Point(this, name, pixels);
-        this.#validateFigure(figure, enums_1.LAYER.POINTS);
+        this._validateFigure(figure, enums_1.LAYER.POINTS);
+        return figure;
+    }
+    segment(A, B, name) {
+        const figure = new Line_1.Line(this, name, (A instanceof Point_1.Point) ? A : this.getPoint(A), (B instanceof Point_1.Point) ? B : this.getPoint(B));
+        figure.asSegment();
+        this._validateFigure(figure);
+        return figure;
+    }
+    vector(A, B, name) {
+        const figure = new Line_1.Line(this, name, (A instanceof Point_1.Point) ? A : this.getPoint(A), (B instanceof Point_1.Point) ? B : this.getPoint(B));
+        figure.asVector();
+        this._validateFigure(figure);
         return figure;
     }
     line(A, B, construction, name) {
         const figure = new Line_1.Line(this, name, (A instanceof Point_1.Point) ? A : this.getPoint(A), (B instanceof Point_1.Point) ? B : this.getPoint(B), construction);
-        this.#validateFigure(figure);
+        this._validateFigure(figure);
+        return figure;
+    }
+    parallel(line, P, name) {
+        const figure = new Line_1.Line(this, name, this.getPoint(P), null, {
+            rule: Line_1.LINECONSTRUCTION.PARALLEL,
+            value: line
+        });
+        this._validateFigure(figure);
+        return figure;
+    }
+    perpendicular(line, P, name) {
+        const figure = new Line_1.Line(this, name, this.getPoint(P), null, {
+            rule: Line_1.LINECONSTRUCTION.PERPENDICULAR,
+            value: line
+        });
+        this._validateFigure(figure);
         return figure;
     }
     circle(center, radius, name) {
-        if (!(center instanceof Point_1.Point)) {
+        if (typeof center === 'string') {
+            return this.circle(this.getPoint(center), radius, name);
+        }
+        else if (!(center instanceof Point_1.Point)) {
             return this.circle(this.point(center.x, center.y), radius, name);
         }
         let figure = new Circle_1.Circle(this, name, center, radius);
-        this.#validateFigure(figure);
+        this._validateFigure(figure);
         return figure;
     }
     plot(fn, config, name) {
         const figure = new Plot_1.Plot(this, name, fn, config);
-        this.#validateFigure(figure, enums_1.LAYER.PLOTS);
+        this._validateFigure(figure, enums_1.LAYER.PLOTS);
+        return figure;
+    }
+    arc(A, O, B, radius, name) {
+        const figure = new Arc_1.Arc(this, name, this.getPoint(O), this.getPoint(A), this.getPoint(B), radius);
+        this._validateFigure(figure);
         return figure;
     }
     update() {
-        for (let figure of this.#figures) {
+        for (let figure of this._figures) {
             figure.update();
         }
         return this;
-    }
-    _initSetWidthAndHeight(config) {
-        if ((0, interfaces_1.isDrawConfigWidthHeight)(config)) {
-            this.#width = config.width;
-            this.#height = config.height;
-        }
-        else if ((0, interfaces_1.isDrawConfigUnitWidthHeight)(config)) {
-            this.#width = config.dx * config.pixelsPerUnit;
-            this.#height = config.dy * config.pixelsPerUnit;
-        }
-        else if ((0, interfaces_1.isDrawConfigUnitMinMax)(config)) {
-            this.#width = (config.xMax - config.xMin) * config.pixelsPerUnit;
-            this.#height = (config.yMax - config.yMin) * config.pixelsPerUnit;
-            this.#origin.x = -config.xMin * config.pixelsPerUnit;
-            this.#origin.y = this.#height + config.yMin * config.pixelsPerUnit;
-        }
-        else {
-            this.#width = 800;
-            this.#height = 600;
-        }
-    }
-    _initGetContainerId(id) {
-        let el;
-        if (typeof id === 'string') {
-            el = document.getElementById(id);
-            if (!el) {
-                el = document.getElementById('#' + id);
-            }
-            if (!el) {
-                console.error('PiDraw: no HTML element found for ', id);
-            }
-        }
-        else if (id instanceof HTMLElement) {
-            el = id;
-        }
-        this.#container = el;
-    }
-    _initCreateSVG() {
-        const wrapper = document.createElement('DIV');
-        wrapper.style.position = 'relative';
-        wrapper.style.width = '100%';
-        wrapper.style.height = 'auto';
-        this.#container.appendChild(wrapper);
-        this.#svg = (0, svg_js_1.SVG)().addTo(wrapper).size('100%', '100%');
-        this.#svg.viewbox(0, 0, this.#width, this.#height);
-    }
-    #validateFigure(figure, layer) {
-        this.#figures.push(figure);
-        if (figure instanceof Point_1.Point) {
-            this.#points[figure.name] = figure;
-        }
-        this.#layers[layer ? layer : enums_1.LAYER.MAIN].add(figure.svg);
-        figure.draw();
     }
     createMarker(scale) {
         return {
@@ -34147,9 +34141,383 @@ class Graph {
             }).ref(scale, scale / 2)
         };
     }
+    parse(construction) {
+        let parser = new Parser_1.Parser(this, construction);
+        return parser;
+    }
+    _initSetWidthAndHeight(config) {
+        if ((0, interfaces_1.isDrawConfigWidthHeight)(config)) {
+            this._width = config.width;
+            this._height = config.height;
+        }
+        else if ((0, interfaces_1.isDrawConfigUnitWidthHeight)(config)) {
+            this._width = config.dx * config.pixelsPerUnit;
+            this._height = config.dy * config.pixelsPerUnit;
+        }
+        else if ((0, interfaces_1.isDrawConfigUnitMinMax)(config)) {
+            this._width = (config.xMax - config.xMin) * config.pixelsPerUnit;
+            this._height = (config.yMax - config.yMin) * config.pixelsPerUnit;
+            this._origin.x = -config.xMin * config.pixelsPerUnit;
+            this._origin.y = this._height + config.yMin * config.pixelsPerUnit;
+        }
+        else {
+            this._width = 800;
+            this._height = 600;
+        }
+    }
+    _initGetContainerId(id) {
+        let el;
+        if (typeof id === 'string') {
+            el = document.getElementById(id);
+            if (!el) {
+                el = document.getElementById('_' + id);
+            }
+            if (!el) {
+                console.error('PiDraw: no HTML element found for ', id);
+            }
+        }
+        else if (id instanceof HTMLElement) {
+            el = id;
+        }
+        this._container = el;
+    }
+    _initCreateSVG() {
+        const wrapper = document.createElement('DIV');
+        wrapper.style.position = 'relative';
+        wrapper.style.width = '100%';
+        wrapper.style.height = 'auto';
+        this._container.appendChild(wrapper);
+        this._svg = (0, svg_js_1.SVG)().addTo(wrapper).size('100%', '100%');
+        this._svg.viewbox(0, 0, this._width, this._height);
+    }
+    _validateFigure(figure, layer) {
+        this._figures.push(figure);
+        if (figure instanceof Point_1.Point) {
+            this._points[figure.name] = figure;
+        }
+        this._layers[layer ? layer : enums_1.LAYER.MAIN].add(figure.svg);
+        figure.draw();
+    }
 }
 exports.Graph = Graph;
 //# sourceMappingURL=Graph.js.map
+
+/***/ }),
+
+/***/ 2351:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Parser = void 0;
+const Line_1 = __webpack_require__(6222);
+class Parser {
+    figures;
+    step;
+    _graph;
+    _buildedSteps;
+    constructor(graph, construction) {
+        this._graph = graph;
+        this.update(construction);
+    }
+    update(construction) {
+        if (!this._buildedSteps) {
+            this._buildedSteps = [];
+        }
+        let steps = this._processConstruction(construction);
+        let i;
+        for (i = 0; i < this._buildedSteps.length; i++) {
+            if (this._buildedSteps[i].step !== steps[i]) {
+                for (let j = i; j < this._buildedSteps.length; j++) {
+                    for (let fig of this._buildedSteps[j].figures) {
+                        fig.remove();
+                    }
+                }
+                this._buildedSteps = this._buildedSteps.slice(0, i);
+                break;
+            }
+        }
+        this.generate(steps.slice(i));
+    }
+    generate(steps) {
+        let name, match, assign, builded;
+        for (let construct of steps) {
+            if (construct.length < 3) {
+                continue;
+            }
+            match = construct.match(/^[A-Za-z0-9_]+/g);
+            if (!match) {
+                return;
+            }
+            name = match[0].trim();
+            assign = construct.split('=');
+            if (assign.length === 1) {
+                builded = this._generatePoint(construct);
+            }
+            else if (assign.length === 2) {
+                if (this._graph.getFigure(name)) {
+                    continue;
+                }
+                let constr = assign[1].trim(), key = constr.match(/^[a-z]+\s/g);
+                if (key === null) {
+                    builded = this._generateLine(name, constr);
+                }
+                else {
+                    let constructKey = key[0].trim();
+                    if (constructKey === 'mid') {
+                        builded = this._generateMidPoint(name, constr);
+                    }
+                    else if (constructKey === 'perp') {
+                        builded = this._generatePerpendicular(name, constr);
+                    }
+                    else if (constructKey === 'para') {
+                        builded = this._generateParallel(name, constr);
+                    }
+                    else if (constructKey === 'circ') {
+                        builded = this._generateCircle(name, constr);
+                    }
+                }
+            }
+            builded.step = construct;
+            this._buildedSteps.push(builded);
+        }
+    }
+    _processConstruction(construction) {
+        return construction.split('\n').map(x => x.trim()).filter(x => x !== '');
+    }
+    _generatePoint(step) {
+        let match = [...step.matchAll(/^([A-Z]_?[0-9]?)\(([0-9.]+)[,;]([0-9.]+)\)/g)], figures;
+        if (match.length > 0) {
+            let name = match[0][1], x = +match[0][2], y = +match[0][3];
+            if (this._graph.getPoint(name)) {
+                return { step, figures };
+            }
+            if (isNaN(x) || isNaN(y)) {
+                return { step, figures };
+            }
+            figures = [this._graph.point(x, y, name)];
+        }
+        return { step, figures };
+    }
+    _generateLine(name, step) {
+        let match = [...step.matchAll(/^([A-Z]_?[0-9]?)([A-Z]_?[0-9]?)/g)], figures;
+        if (match.length > 0) {
+            let A = this._graph.getPoint(match[0][1]), B = this._graph.getPoint(match[0][2]);
+            figures = [this._graph.line(A, B, null, name)];
+        }
+        return { figures, step };
+    }
+    _generateMidPoint(name, step) {
+        let match = [...step.matchAll(/^mid ([A-Z]_?[0-9]?)([A-Z]_?[0-9]?)/g)], figures;
+        if (match.length > 0) {
+            let A = this._graph.getPoint(match[0][1]), B = this._graph.getPoint(match[0][2]);
+            figures = [this._graph.point(0, 0, name).middleOf(A, B)];
+        }
+        return { figures, step };
+    }
+    _generatePerpendicular(name, step) {
+        let match = [...step.matchAll(/^perp ([a-z]_?[0-9]?),([A-Z]_?[0-9]?)/g)], figures;
+        if (match.length > 0) {
+            let d = this._graph.getFigure(match[0][1]), P = this._graph.getPoint(match[0][2]);
+            figures = [this._graph.line(P, null, {
+                    rule: Line_1.LINECONSTRUCTION.PERPENDICULAR,
+                    value: d
+                }, name)];
+        }
+        return { figures, step };
+    }
+    _generateParallel(name, step) {
+        let match = [...step.matchAll(/^para ([a-z]_?[0-9]?),([A-Z]_?[0-9]?)/g)], figures;
+        if (match.length > 0) {
+            let d = this._graph.getFigure(match[0][1]), P = this._graph.getPoint(match[0][2]);
+            figures = [this._graph.line(P, null, {
+                    rule: Line_1.LINECONSTRUCTION.PARALLEL,
+                    value: d
+                }, name)];
+        }
+        return { figures, step };
+    }
+    _generateCircle(name, step) {
+        let match = [...step.matchAll(/^circ ([A-Z]_?[0-9]?),([0-9.]+)/g)], figures;
+        if (match.length > 0) {
+            let A = this._graph.getPoint(match[0][1]), radius = +match[0][2];
+            figures = [this._graph.circle(A, radius)];
+        }
+        return { figures, step };
+    }
+}
+exports.Parser = Parser;
+//# sourceMappingURL=Parser.js.map
+
+/***/ }),
+
+/***/ 4052:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Arc = void 0;
+const Figure_1 = __webpack_require__(4948);
+const Point_1 = __webpack_require__(5873);
+const svg_js_1 = __webpack_require__(5500);
+class Arc extends Figure_1.Figure {
+    _center;
+    _start;
+    _end;
+    _radius;
+    _radiusReference;
+    constructor(graph, name, center, start, stop, radius) {
+        super(graph, name);
+        this._center = center;
+        this._start = start;
+        this._end = stop;
+        this._square = false;
+        this._mark = false;
+        this._sector = false;
+        this._angle = null;
+        this._radius = null;
+        this._radiusReference = null;
+        if (radius === undefined) {
+            this._radiusReference = this._start;
+        }
+        else if (radius instanceof Point_1.Point) {
+            this._radiusReference = radius;
+        }
+        else {
+            this._radius = radius;
+        }
+        this.generateName();
+        this.svg = this.graph.svg.path(this.getPath()).stroke('black').fill('none');
+    }
+    _angle;
+    get angle() {
+        let { start, end } = this.getAngles();
+        this._angle = end - start;
+        return this._angle;
+    }
+    _mark;
+    get mark() {
+        return this._mark;
+    }
+    set mark(value) {
+        this._mark = value;
+        this.update();
+    }
+    _square;
+    get square() {
+        return this._square;
+    }
+    set square(value) {
+        this._square = value;
+        this.update();
+    }
+    _sector;
+    get sector() {
+        return this._sector;
+    }
+    set sector(value) {
+        this._sector = value;
+        this.update();
+    }
+    get getRadius() {
+        if (this._radiusReference !== null) {
+            return this._center.getDistanceTo(this._radiusReference);
+        }
+        else if (this._radius > 0) {
+            return this._radius;
+        }
+        return 40;
+    }
+    get isSquare() {
+        return (this._start.x - this._center.x) * (this._end.x - this._center.x) + (this._start.y - this._center.y) * (this._end.y - this._center.y) === 0;
+    }
+    generateName() {
+        if (this.name === undefined) {
+            return `a_${this._start.name}${this._center.name}${this._end.name}`;
+        }
+        return super.generateName();
+    }
+    updateFigure() {
+        if (this.svg instanceof svg_js_1.Path) {
+            this.svg.plot(this.getPath());
+        }
+        return this;
+    }
+    polarToCartesian(centerX, centerY, radius, angleInDegrees) {
+        var angleInRadians = -(angleInDegrees) * Math.PI / 180.0;
+        return {
+            x: centerX + (radius * Math.cos(angleInRadians)),
+            y: centerY + (radius * Math.sin(angleInRadians))
+        };
+    }
+    cartesianToAngle(origin, handle) {
+        let angle, dx = handle.x - origin.x, dy = -(handle.y - origin.y);
+        angle = (handle.x - origin.x === 0) ? 90 : Math.atan(dy / dx) * 180.0 / Math.PI;
+        if (dx >= 0) {
+            if (dy >= 0) {
+            }
+            else {
+                while (angle < 270) {
+                    angle += 180;
+                }
+            }
+        }
+        else {
+            if (dy >= 0) {
+                while (angle < 90) {
+                    angle += 180;
+                }
+            }
+            else {
+                while (angle < 180) {
+                    angle += 180;
+                }
+            }
+        }
+        return angle;
+    }
+    getAngles() {
+        return {
+            start: this.cartesianToAngle(this._center, this._start),
+            end: this.cartesianToAngle(this._center, this._end)
+        };
+    }
+    getPath() {
+        let { start, end } = this.getAngles(), radius = (this.isSquare && this._square) ? this.getRadius / 2 : this.getRadius, startXY = this.polarToCartesian(this._center.x, this._center.y, radius, start), endXY = this.polarToCartesian(this._center.x, this._center.y, radius, end);
+        if (this._square && this.isSquare) {
+            return this._describeSquare(this._center, startXY, endXY);
+        }
+        else {
+            return this._describeArc(this._center, startXY, endXY, radius, end - start);
+        }
+    }
+    _describeSquare(center, start, end) {
+        return [
+            "M", start.x, start.y,
+            "l", (end.x - center.x), (end.y - center.y),
+            "L", end.x, end.y
+        ].join(" ");
+    }
+    _describeArc(center, start, end, radius, angle) {
+        let largeArcFlag = (angle + 360) % 360 <= 180 ? 0 : 1, swipeFlag = 0;
+        if (this._mark && angle < 0 && angle > -180) {
+            largeArcFlag = (largeArcFlag + 1) % 2;
+            swipeFlag = 1;
+        }
+        let p = [
+            "M", start.x, start.y,
+            "A", radius, radius, 0, largeArcFlag, swipeFlag, end.x, end.y
+        ];
+        if (this._sector) {
+            p = p.concat(['L', center.x, center.y, 'L', start.x, start.y]);
+        }
+        return p.join(" ");
+    }
+}
+exports.Arc = Arc;
+//# sourceMappingURL=Arc.js.map
 
 /***/ }),
 
@@ -34204,37 +34572,37 @@ const Figure_1 = __webpack_require__(4948);
 const Point_1 = __webpack_require__(5873);
 const svg_js_1 = __webpack_require__(5500);
 class Circle extends Figure_1.Figure {
-    #center;
-    #radius;
+    _center;
+    _radius;
     constructor(graph, name, center, radius) {
         super(graph, name);
-        this.#center = center;
-        this.#radius = radius;
+        this._center = center;
+        this._radius = radius;
         this.generateName();
         this.svg = graph.svg.circle(this.getRadiusAsPixels() * 2).stroke('black').fill('none');
         return this;
     }
     get center() {
-        return this.#center;
+        return this._center;
     }
     set center(value) {
-        this.#center.x = value.x;
-        this.#center.y = value.y;
+        this._center.x = value.x;
+        this._center.y = value.y;
     }
     get radius() {
-        return this.#radius;
+        return this._radius;
     }
     set radius(value) {
-        this.#radius = value;
+        this._radius = value;
     }
     getRadiusAsPixels() {
         let radius = 100;
-        if (this.#radius instanceof Point_1.Point) {
-            radius = Math.sqrt((this.#radius.x - this.#center.x) ** 2 +
-                (this.#radius.y - this.#center.y) ** 2);
+        if (this._radius instanceof Point_1.Point) {
+            radius = Math.sqrt((this._radius.x - this._center.x) ** 2 +
+                (this._radius.y - this._center.y) ** 2);
         }
-        else if (typeof this.#radius === 'number') {
-            radius = this.graph.distanceToPixels(this.#radius);
+        else if (typeof this._radius === 'number') {
+            radius = this.graph.distanceToPixels(this._radius);
         }
         return radius;
     }
@@ -34249,13 +34617,13 @@ class Circle extends Figure_1.Figure {
         if (this.freeze || this.graph.freeze) {
             return this;
         }
-        if (!this.#center) {
+        if (!this._center) {
             return this;
         }
-        if (this.#radius <= 0) {
+        if (this._radius <= 0) {
             return this;
         }
-        this.svg.center(this.#center.x, this.#center.y);
+        this.svg.center(this._center.x, this._center.y);
         if (this.svg instanceof svg_js_1.Circle) {
             this.svg.radius(this.getRadiusAsPixels());
         }
@@ -34275,31 +34643,78 @@ exports.Circle = Circle;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Figure = void 0;
 class Figure {
-    #graph;
-    #freeze;
-    #name;
-    #label;
-    #svg;
     constructor(graph, name) {
-        this.#freeze = false;
-        this.#graph = graph;
-        this.#name = name;
+        this._freeze = false;
+        this._graph = graph;
+        this._name = name;
+    }
+    _graph;
+    get graph() {
+        return this._graph;
+    }
+    _freeze;
+    get freeze() {
+        return this._freeze;
+    }
+    set freeze(value) {
+        this._freeze = value;
+    }
+    _name;
+    get name() {
+        return this._name;
+    }
+    set name(value) {
+        this._name = value;
+    }
+    _svg;
+    get svg() {
+        return this._svg;
+    }
+    set svg(value) {
+        this._svg = value;
+    }
+    _label;
+    get label() {
+        return this._label;
+    }
+    set label(value) {
+        this._label = value;
     }
     draw() {
-        this.#freeze = false;
+        this._freeze = false;
         this.update();
     }
     update() {
-        if (this.#freeze || this.#graph.freeze) {
+        if (this._freeze || this._graph.freeze) {
             return;
         }
         this.updateFigure();
+        if (this._label) {
+            this._label.update();
+        }
     }
     updateFigure() {
         return this;
     }
+    updateLabel() {
+        return this;
+    }
+    remove() {
+        if (this.label) {
+            this.label.svg.remove();
+        }
+        this.svg.remove();
+        if (this.graph.points[this.name] !== undefined) {
+            delete this.graph.points[this.name];
+        }
+        for (let i = 0; i < this.graph.figures.length; i++) {
+            if (this.graph.figures[i].name === this.name) {
+                this.graph.figures.splice(i, 1);
+            }
+        }
+    }
     generateName() {
-        return this.#name;
+        return this._name;
     }
     dash(value) {
         if (typeof value === "number") {
@@ -34334,30 +34749,6 @@ class Figure {
         this.svg.stroke(value);
         return this;
     }
-    get freeze() {
-        return this.#freeze;
-    }
-    get name() {
-        return this.#name;
-    }
-    get label() {
-        return this.#label;
-    }
-    get graph() {
-        return this.#graph;
-    }
-    get svg() {
-        return this.#svg;
-    }
-    set freeze(value) {
-        this.#freeze = value;
-    }
-    set name(value) {
-        this.#name = value;
-    }
-    set svg(value) {
-        this.#svg = value;
-    }
 }
 exports.Figure = Figure;
 //# sourceMappingURL=Figure.js.map
@@ -34374,15 +34765,15 @@ exports.Grid = void 0;
 const Figure_1 = __webpack_require__(4948);
 const enums_1 = __webpack_require__(2369);
 class Grid extends Figure_1.Figure {
-    #config;
+    _config;
     constructor(graph, name, config) {
         super(graph, name);
         this.svg = this.graph.svg.group();
         if (config) {
-            this.#config = config;
+            this._config = config;
         }
         else {
-            this.#config = {
+            this._config = {
                 axisX: 50,
                 axisY: 50,
                 type: enums_1.GRIDTYPE.ORTHOGONAL
@@ -34391,7 +34782,7 @@ class Grid extends Figure_1.Figure {
         this.load();
     }
     load() {
-        const w = this.graph.width, h = this.graph.height, x = this.#config.axisX, y = this.#config.axisY, xOffset = this.graph.origin.x % x, yOffset = this.graph.origin.y % y;
+        const w = this.graph.width, h = this.graph.height, x = this._config.axisX, y = this._config.axisY, xOffset = this.graph.origin.x % x, yOffset = this.graph.origin.y % y;
         for (let pos = -x; pos <= w; pos += x) {
             this.svg.add(this.graph.svg.line(pos + xOffset, 0 - yOffset, pos + xOffset, h + yOffset));
         }
@@ -34411,10 +34802,10 @@ class Grid extends Figure_1.Figure {
     }
     nearestPoint = (pt) => {
         let minDistance = false, distance = 0, nearestPoint = { x: +pt.x, y: +pt.y };
-        if (this.#config.type === enums_1.GRIDTYPE.ORTHOGONAL) {
-            let nX = Math.trunc(pt.x / this.#config.axisX) * this.#config.axisX, nY = Math.trunc(pt.y / this.#config.axisY) * this.#config.axisY;
-            nearestPoint.x = pt.x < nX + this.#config.axisX / 2 ? nX : nX + this.#config.axisX;
-            nearestPoint.y = pt.y < nY + this.#config.axisY / 2 ? nY : nY + this.#config.axisY;
+        if (this._config.type === enums_1.GRIDTYPE.ORTHOGONAL) {
+            let nX = Math.trunc(pt.x / this._config.axisX) * this._config.axisX, nY = Math.trunc(pt.y / this._config.axisY) * this._config.axisY;
+            nearestPoint.x = pt.x < nX + this._config.axisX / 2 ? nX : nX + this._config.axisX;
+            nearestPoint.y = pt.y < nY + this._config.axisY / 2 ? nY : nY + this._config.axisY;
         }
         return nearestPoint;
     };
@@ -34424,69 +34815,213 @@ exports.Grid = Grid;
 
 /***/ }),
 
+/***/ 5331:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Label = exports.LABELPOS = void 0;
+const Figure_1 = __webpack_require__(4948);
+const Point_1 = __webpack_require__(5873);
+const Line_1 = __webpack_require__(6222);
+const svg_js_1 = __webpack_require__(5500);
+var LABELPOS;
+(function (LABELPOS) {
+    LABELPOS["LEFT"] = "left";
+    LABELPOS["RIGHT"] = "right";
+    LABELPOS["CENTER"] = "cener";
+    LABELPOS["TOP"] = "top";
+    LABELPOS["BOTTOM"] = "bottom";
+    LABELPOS["MIDDLE"] = "middle";
+})(LABELPOS = exports.LABELPOS || (exports.LABELPOS = {}));
+class Label extends Figure_1.Figure {
+    _config;
+    constructor(graph, name, config) {
+        super(graph, name);
+        this.generateName();
+        this._config = {
+            el: null,
+            position: {
+                horizontal: LABELPOS.RIGHT,
+                vertical: LABELPOS.BOTTOM
+            }
+        };
+        this._config = Object.assign({}, this._config, config);
+        this.svg = this.graph.svg.text(this._config.el.name).font({ 'anchor': 'middle' });
+        this.graph.layers.foreground.add(this.svg);
+        this.updateFigure();
+    }
+    generateName() {
+        this.name = `LABEL_${this.name}`;
+        return this.name;
+    }
+    updateFigure() {
+        let x = 0, y = 0, w = 0, h = 0;
+        if (this._config.el instanceof Point_1.Point) {
+            x = this._config.el.x;
+            y = this._config.el.y;
+        }
+        else if (this._config.el instanceof Line_1.Line) {
+        }
+        if (this.svg instanceof svg_js_1.Text) {
+            w = this.svg.length();
+        }
+        h = this._config.el.svg.bbox().h;
+        if (this._config.position) {
+            if (this._config.position.horizontal === LABELPOS.LEFT) {
+                x = x - w / 2;
+            }
+            else if (this._config.position.horizontal === LABELPOS.RIGHT) {
+                x = x + w;
+            }
+            else if (this._config.position.horizontal === LABELPOS.CENTER) {
+                x = +x;
+            }
+            if (this._config.position.vertical === LABELPOS.TOP) {
+                y = y - h / 2;
+            }
+            else if (this._config.position.vertical === LABELPOS.MIDDLE) {
+                y = +y;
+            }
+            else if (this._config.position.vertical === LABELPOS.BOTTOM) {
+                y = y + h / 2;
+            }
+        }
+        this.svg.center(x, y);
+        return this;
+    }
+}
+exports.Label = Label;
+//# sourceMappingURL=Label.js.map
+
+/***/ }),
+
 /***/ 6222:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.Line = void 0;
+exports.Line = exports.LINECONSTRUCTION = void 0;
 const Figure_1 = __webpack_require__(4948);
 const geometry_1 = __webpack_require__(6425);
 const svg_js_1 = __webpack_require__(5500);
+var LINECONSTRUCTION;
+(function (LINECONSTRUCTION) {
+    LINECONSTRUCTION["PARALLEL"] = "parallel";
+    LINECONSTRUCTION["PERPENDICULAR"] = "perpendicular";
+    LINECONSTRUCTION["TANGENT"] = "tangent";
+})(LINECONSTRUCTION = exports.LINECONSTRUCTION || (exports.LINECONSTRUCTION = {}));
 class Line extends Figure_1.Figure {
-    #A;
-    #B;
-    #construction;
-    #math;
-    #segment;
     constructor(graph, name, A, B, construction) {
         super(graph, name);
-        this.#A = A;
-        this.#B = B;
+        this._A = A;
+        this._B = B;
         this.generateName();
         if (construction) {
-            this.#construction = construction;
+            this._construction = construction;
         }
         this.svg = this.graph.svg.line(0, 0, 0, 0).stroke('black');
         this.updateFigure();
     }
+    _A;
+    get A() {
+        return this._A;
+    }
+    _B;
+    get B() {
+        return this._B;
+    }
+    _construction;
+    get construction() {
+        return this._construction;
+    }
+    _math;
+    get math() {
+        return this._math;
+    }
+    _segment;
     get segment() {
-        return this.#segment;
+        return this._segment;
     }
     set segment(value) {
-        this.#segment = value;
+        this._segment = value;
     }
-    get A() {
-        return this.#A;
+    asSegment(value) {
+        this._segment = value === undefined || value;
+        this.update();
     }
-    get B() {
-        return this.#B;
-    }
-    isSegment(value) {
-        this.#segment = value === undefined || value;
+    asVector(value) {
+        this._segment = value === undefined || value;
+        if (this.svg instanceof svg_js_1.Line) {
+            this.svg.marker('end', this.graph.markers.end);
+        }
         this.update();
     }
     generateName() {
         if (this.name === undefined) {
-            this.name = `d_${this.A.name + this.B.name}`;
+            if (this._B) {
+                this.name = `d_${this.A.name + this.B.name}`;
+            }
+            else if (this._construction) {
+                this.name = `p_${this._construction.value.name},${this.A.name}`;
+            }
         }
         return this.name;
     }
     updateFigure() {
-        this.#math = new geometry_1.Line(new geometry_1.Point(this.#A.x, this.#A.y), new geometry_1.Point(this.#B.x, this.#B.y));
-        if (this.#math.slope.isInfinity()) {
+        if (this._B) {
+            this._updateLineThroughAandB();
+        }
+        else {
+            this._updateLineFromConstruction();
+        }
+        return this;
+    }
+    _updateLineThroughAandB() {
+        this._math = new geometry_1.Line(new geometry_1.Point(this._A.x, this._A.y), new geometry_1.Point(this._B.x, this._B.y));
+        if (this._math.slope.isInfinity()) {
             if (this.svg instanceof svg_js_1.Line) {
-                this.svg.plot(this.#A.x, 0, this.#A.x, this.graph.height);
+                this.svg.plot(this._A.x, 0, this._A.x, this.graph.height);
             }
         }
         else {
-            let x1 = this.#segment ? this.#A.x : 0, x2 = this.#segment ? this.#B.x : this.graph.width;
+            let x1 = this._segment ? this._A.x : 0, x2 = this._segment ? this._B.x : this.graph.width;
             if (this.svg instanceof svg_js_1.Line) {
-                this.svg.plot(x1, this.#math.getValueAtX(x1).value, x2, this.#math.getValueAtX(x2).value);
+                this.svg.plot(x1, this._math.getValueAtX(x1).value, x2, this._math.getValueAtX(x2).value);
             }
         }
-        return this;
+    }
+    _updateLineFromConstruction() {
+        let x1 = 0, y1 = 0, x2 = this.graph.width, y2 = this.graph.height;
+        if (this._construction) {
+            if ((this._construction.rule === LINECONSTRUCTION.PARALLEL)) {
+                if (this._construction.value instanceof Line) {
+                    let director = this._construction.value.math.director;
+                    this._math = new geometry_1.Line(new geometry_1.Point(this._A.x, this._A.y), director, 1);
+                }
+            }
+            if ((this._construction.rule === LINECONSTRUCTION.PERPENDICULAR)) {
+                if (this._construction.value instanceof Line) {
+                    let normal = this._construction.value.math.normal;
+                    this._math = new geometry_1.Line(new geometry_1.Point(this._A.x, this._A.y), normal, 1);
+                }
+            }
+            if (this._math.slope.isInfinity()) {
+                x1 = this._A.x;
+                x2 = this._A.x;
+                y1 = 0;
+                y2 = this.graph.height;
+            }
+            else {
+                y1 = this._math.getValueAtX(0).value;
+                y2 = this._math.getValueAtX(this.graph.width).value;
+            }
+            if (this.svg instanceof svg_js_1.Line) {
+                this.svg.plot(x1, y1, x2, y2);
+            }
+        }
     }
 }
 exports.Line = Line;
@@ -34508,25 +35043,25 @@ const Riemann_1 = __webpack_require__(7876);
 const Follow_1 = __webpack_require__(9019);
 const FillBetween_1 = __webpack_require__(987);
 class Plot extends Figure_1.Figure {
-    #config;
-    #precision;
-    #fx;
-    #plugins;
-    #riemann;
+    _config;
+    _precision;
+    _fx;
+    _plugins;
+    _riemann;
     constructor(graph, name, fn, config) {
         super(graph, name);
-        this.#config = {
+        this._config = {
             samples: 20,
             domain: this.graph.unitXDomain
         };
         if (config !== undefined) {
-            this.#config = Object.assign({}, this.#config, config);
+            this._config = Object.assign({}, this._config, config);
         }
         this.generateName();
-        this.#precision = 2;
+        this._precision = 2;
         this.svg = this.graph.svg.path().fill('none').stroke({ color: 'black', width: 2 });
         this.plot(fn);
-        this.#plugins = [];
+        this._plugins = [];
     }
     generateName() {
         if (this.name === undefined) {
@@ -34539,16 +35074,16 @@ class Plot extends Figure_1.Figure {
         return this;
     }
     updatePlugins() {
-        if (this.#plugins !== undefined) {
-            for (let P of this.#plugins) {
+        if (this._plugins !== undefined) {
+            for (let P of this._plugins) {
                 P.update();
             }
         }
         return this;
     }
     plot(fn, speed) {
-        this.#fx = this.#parse(fn);
-        const { d, points } = this.#getPath(this.#config.domain.min, this.#config.domain.max, this.#config.samples);
+        this._fx = this._parse(fn);
+        const { d, points } = this._getPath(this._config.domain.min, this._config.domain.max, this._config.samples);
         if (this.svg instanceof svg_js_1.Path) {
             if (points.length !== this.svg.array().length) {
                 this.svg.plot();
@@ -34572,41 +35107,68 @@ class Plot extends Figure_1.Figure {
         this.updatePlugins();
         return this;
     }
-    riemann(from, to, rectangles, below) {
-        let R = new Riemann_1.Riemann(this, from, to, rectangles, below);
-        this.#plugins.push(R);
+    riemann(from, to, rectangles, pos) {
+        let R = new Riemann_1.Riemann(this, from, to, rectangles, pos);
+        this._plugins.push(R);
         return R;
     }
     follow(showTangent) {
         let P = new Follow_1.Follow(this, showTangent);
-        this.#plugins.push(P);
+        this._plugins.push(P);
         return P;
     }
     fillBetween(plot, from, to, samples) {
-        let P = new FillBetween_1.FillBetween(this, plot, from, to, samples === undefined ? this.#config.samples : samples);
-        this.#plugins.push(P);
+        let P = new FillBetween_1.FillBetween(this, plot, from, to, samples === undefined ? this._config.samples : samples);
+        this._plugins.push(P);
         return P;
     }
-    #parse(fn) {
+    getPartialPath(from, to, samples, reversed, firstToken) {
+        let { d, points } = this._getPath(from, to, samples === undefined ? this._config.samples : samples, firstToken);
+        if (reversed) {
+            let reversed = ((firstToken === undefined ? 'L' : firstToken) + d.substring(1, d.length)).split(' ').reverse();
+            d = reversed.join(' ');
+        }
+        return d;
+    }
+    evaluate(x) {
+        let y;
+        if (this._fx instanceof numexp_1.NumExp) {
+            y = this._fx.evaluate({ x: +x });
+            if (isNaN(y)) {
+                console.log('error calculating', this._fx.expression, ' at ', x);
+            }
+        }
+        else if (typeof this._fx === 'function') {
+            y = this._fx(x);
+        }
+        else {
+            console.log('Function type error: ', typeof this._fx);
+        }
+        return { x, y };
+    }
+    _parse(fn) {
         if (typeof fn === 'string') {
             return new numexp_1.NumExp(fn);
         }
         return fn;
     }
-    #getFlatPath(numberOfPoints) {
+    _getFlatPath(numberOfPoints) {
         if (numberOfPoints === undefined) {
-            numberOfPoints = (this.#config.domain.max - this.#config.domain.min) * this.#config.samples;
+            numberOfPoints = (this._config.domain.max - this._config.domain.min) * this._config.samples;
         }
-        let h = this.graph.origin.y, pt = this.graph.unitsToPixels({ x: this.#config.domain.min, y: 0 }), d = `M${pt.x},${pt.y}`;
+        let h = this.graph.origin.y, pt = this.graph.unitsToPixels({ x: this._config.domain.min, y: 0 }), d = `M${pt.x},${pt.y}`;
         for (let x = 1; x < numberOfPoints; x++) {
-            pt = this.graph.unitsToPixels({ x: this.#config.domain.min + x / this.#config.samples, y: 0 });
+            pt = this.graph.unitsToPixels({ x: this._config.domain.min + x / this._config.samples, y: 0 });
             d += `L${pt.x},${pt.y}`;
         }
         return d;
     }
-    #getPath(from, to, samples, firstToken) {
+    _getPath(from, to, samples, firstToken) {
         let d = '', points = [], nextToken = firstToken === undefined ? 'M' : firstToken, prevToken = '', graphHeight = this.graph.height, x = +from, y = 0;
-        while (x <= to) {
+        if (samples <= 0) {
+            samples = 20;
+        }
+        while (x <= to + 1 / samples) {
             const pt = this.graph.unitsToPixels(this.evaluate(x));
             if (prevToken === 'M' && nextToken === 'M') {
             }
@@ -34624,7 +35186,7 @@ class Plot extends Figure_1.Figure {
                 else {
                     y = pt.y;
                 }
-                d += `${pt.x.toFixed(this.#precision)},${y.toFixed(this.#precision)} `;
+                d += `${pt.x.toFixed(this._precision)},${y.toFixed(this._precision)} `;
                 points.push(pt);
             }
             if ((pt.y > -100 && pt.y < graphHeight + 100)) {
@@ -34636,30 +35198,6 @@ class Plot extends Figure_1.Figure {
             x += 1 / samples;
         }
         return { d, points };
-    }
-    getPartialPath(from, to, samples, reversed, firstToken) {
-        let { d, points } = this.#getPath(from, to, samples === undefined ? this.#config.samples : samples, firstToken);
-        if (reversed) {
-            let reversed = ((firstToken === undefined ? 'L' : firstToken) + d.substring(1, d.length)).split(' ').reverse();
-            d = reversed.join(' ');
-        }
-        return d;
-    }
-    evaluate(x) {
-        let y;
-        if (this.#fx instanceof numexp_1.NumExp) {
-            y = this.#fx.evaluate({ x: +x });
-            if (isNaN(y)) {
-                console.log('error calculating', this.#fx.expression, ' at ', x);
-            }
-        }
-        else if (typeof this.#fx === 'function') {
-            y = this.#fx(x);
-        }
-        else {
-            console.log('Function type error: ', typeof this.#fx);
-        }
-        return { x, y };
     }
 }
 exports.Plot = Plot;
@@ -34678,39 +35216,39 @@ const Figure_1 = __webpack_require__(4948);
 const Plot_1 = __webpack_require__(4313);
 const svg_js_1 = __webpack_require__(5500);
 class FillBetween extends Figure_1.Figure {
-    #plot;
-    #plot2;
-    #from;
-    #to;
-    #samples;
-    #d;
+    _plot;
+    _plot2;
+    _from;
+    _to;
+    _samples;
+    _d;
     constructor(plot, plot2, from, to, samples) {
         super(plot.graph, '');
-        this.#plot = plot;
-        this.#plot2 = plot2;
-        this.#from = from;
-        this.#to = to;
-        this.#samples = samples;
-        this.#d = '';
-        this.svg = this.graph.svg.path(this.#d)
+        this._plot = plot;
+        this._plot2 = plot2;
+        this._from = from;
+        this._to = to;
+        this._samples = samples;
+        this._d = '';
+        this.svg = this.graph.svg.path(this._d)
             .fill({ color: 'yellow', opacity: 0.2 })
             .stroke({ width: 1, color: 'black' });
-        this.graph.layers.plots.add(this.svg);
+        this.graph.layers.plotsBG.add(this.svg);
         this.updateFigure();
     }
     get plot() {
-        return this.#plot;
+        return this._plot;
     }
     clean() {
         this.svg.remove();
     }
     updateFigure() {
-        let d1 = this.#plot.getPartialPath(this.#from, this.#to, this.#samples), d2;
-        if (this.#plot2 instanceof Plot_1.Plot) {
-            d2 = this.#plot2.getPartialPath(this.#from, this.#to, this.#samples, true);
+        let d1 = this._plot.getPartialPath(this._from, this._to, this._samples), d2;
+        if (this._plot2 instanceof Plot_1.Plot) {
+            d2 = this._plot2.getPartialPath(this._from, this._to, this._samples, true);
         }
         else {
-            let pt1 = this.graph.unitsToPixels({ x: this.#to, y: 0 }), pt2 = this.graph.unitsToPixels({ x: this.#from, y: 0 });
+            let pt1 = this.graph.unitsToPixels({ x: this._to, y: 0 }), pt2 = this.graph.unitsToPixels({ x: this._from, y: 0 });
             d2 = `L${pt1.x},${pt1.y} L${pt2.x},${pt2.y}`;
         }
         if (this.svg instanceof svg_js_1.Path) {
@@ -34734,24 +35272,24 @@ exports.Follow = void 0;
 const Figure_1 = __webpack_require__(4948);
 const svg_js_1 = __webpack_require__(5500);
 class Follow extends Figure_1.Figure {
-    #plot;
-    #size;
-    #tangent;
-    #tangentVisible;
-    #tangentDX;
+    _plot;
+    _size;
+    _tangent;
+    _tangentVisible;
+    _tangentDX;
     constructor(plot, showTangent) {
         super(plot.graph, '');
-        this.#plot = plot;
-        this.#size = 10;
-        this.svg = this.graph.svg.circle(this.#size)
+        this._plot = plot;
+        this._size = 10;
+        this.svg = this.graph.svg.circle(this._size)
             .fill('white')
             .stroke({ width: 1, color: 'black' });
         this.graph.layers.points.add(this.svg);
-        this.#tangent = this.graph.svg.line()
+        this._tangent = this.graph.svg.line()
             .stroke({ color: 'black', width: 1 });
-        this.#tangentVisible = showTangent === undefined ? false : showTangent;
-        this.#tangentDX = 0.001;
-        this.graph.layers.plots.add(this.#tangent);
+        this._tangentVisible = showTangent === undefined ? false : showTangent;
+        this._tangentDX = 0.001;
+        this.graph.layers.plotsFG.add(this._tangent);
         this.updateFigure();
         this.graph.svg.on('mousemove', (handler) => {
             let clientXY = this.graph.svg.node.createSVGPoint();
@@ -34759,7 +35297,7 @@ class Follow extends Figure_1.Figure {
             clientXY.y = handler.clientY;
             clientXY = clientXY.matrixTransform(this.graph.svg.node.getScreenCTM().inverse());
             let ptInUnits1 = this.graph.pixelsToUnits(clientXY);
-            let pt = this.graph.unitsToPixels(this.#plot.evaluate(ptInUnits1.x));
+            let pt = this.graph.unitsToPixels(this._plot.evaluate(ptInUnits1.x));
             if (isNaN(pt.y)) {
                 this.svg.hide();
             }
@@ -34769,29 +35307,29 @@ class Follow extends Figure_1.Figure {
                 }
                 this.svg.center(pt.x, pt.y);
             }
-            let pt2 = this.graph.unitsToPixels(this.#plot.evaluate(+ptInUnits1.x + this.#tangentDX)), slope = (pt2.y - pt.y) / (pt2.x - pt.x), h = pt.y - slope * pt.x;
-            if (isNaN(pt.y) || isNaN(pt2.y) || this.#tangentVisible === false) {
-                this.#tangent.hide();
+            let pt2 = this.graph.unitsToPixels(this._plot.evaluate(+ptInUnits1.x + this._tangentDX)), slope = (pt2.y - pt.y) / (pt2.x - pt.x), h = pt.y - slope * pt.x;
+            if (isNaN(pt.y) || isNaN(pt2.y) || this._tangentVisible === false) {
+                this._tangent.hide();
             }
             else {
-                if (!this.#tangent.visible()) {
-                    this.#tangent.show();
+                if (!this._tangent.visible()) {
+                    this._tangent.show();
                 }
                 if (pt.y * pt.y < 0) {
-                    this.#tangent.plot(pt.x, 0, pt.x, this.graph.height);
+                    this._tangent.plot(pt.x, 0, pt.x, this.graph.height);
                 }
                 else {
-                    this.#tangent.plot(0, h, this.graph.width, slope * this.graph.width + h);
+                    this._tangent.plot(0, h, this.graph.width, slope * this.graph.width + h);
                 }
             }
         });
     }
     get plot() {
-        return this.#plot;
+        return this._plot;
     }
     clean() {
-        if (this.#tangent) {
-            this.#tangent.remove();
+        if (this._tangent) {
+            this._tangent.remove();
         }
         this.svg.remove();
     }
@@ -34805,7 +35343,7 @@ class Follow extends Figure_1.Figure {
         return this;
     }
     showTangent(value) {
-        this.#tangentVisible = value === undefined || value;
+        this._tangentVisible = value === undefined || value;
         return this;
     }
 }
@@ -34824,76 +35362,82 @@ exports.Riemann = void 0;
 const Figure_1 = __webpack_require__(4948);
 const enums_1 = __webpack_require__(2369);
 class Riemann extends Figure_1.Figure {
-    #plot;
-    #from;
-    #to;
-    #number;
-    #below;
-    #rectangles;
-    constructor(plot, from, to, rectangles, below) {
+    _plot;
+    _from;
+    _to;
+    _number;
+    _pos;
+    _rectangles;
+    constructor(plot, from, to, rectangles, pos) {
         super(plot.graph, '');
-        this.#plot = plot;
-        this.#from = from;
-        this.#to = to;
-        this.#number = rectangles;
-        this.#below = below === undefined || below;
+        this._plot = plot;
+        this._from = from;
+        this._to = to;
+        this._number = rectangles;
+        this._pos = pos === undefined ? 0 : pos;
+        if (pos < 0) {
+            pos = 0;
+        }
+        if (pos > 1) {
+            pos = 1;
+        }
         this.svg = this.graph.svg.group();
-        this.#rectangles = [];
+        this._rectangles = [];
         this.updateFigure();
     }
     get plot() {
-        return this.#plot;
+        return this._plot;
     }
     get from() {
-        return this.#from;
+        return this._from;
     }
     set from(value) {
-        this.#from = value;
+        this._from = value;
         this.update();
     }
     get to() {
-        return this.#to;
+        return this._to;
     }
     set to(value) {
-        this.#to = value;
+        this._to = value;
         this.update();
     }
     get number() {
-        return this.#number;
+        return this._number;
     }
     set number(value) {
-        this.#number = value;
+        this._number = value;
         this.update();
     }
-    get below() {
-        return this.#below;
+    get pos() {
+        return this._pos;
     }
     set below(value) {
-        this.#below = value;
+        this._pos = value;
         this.update();
     }
     get rectangles() {
-        return this.#rectangles;
+        return this._rectangles;
     }
     clean() {
-        for (let r of this.#rectangles) {
+        for (let r of this._rectangles) {
             r.remove();
         }
         this.svg.remove();
     }
     updateFigure() {
-        let x = 0, y = 0, height, step = (this.#to - this.#from) / this.#number, width = this.graph.distanceToPixels(step), pxX;
-        if (this.#rectangles !== undefined && this.#number !== this.#rectangles.length) {
+        let x = 0, y = 0, height, step = (this._to - this._from) / this._number, width = this.graph.distanceToPixels(step), pxX;
+        if (this._rectangles !== undefined && this._number !== this._rectangles.length) {
             this.clean();
         }
-        if (this.#rectangles === undefined || this.#number !== this.#rectangles.length) {
-            this.#rectangles = [];
-            for (let i = 0; i < this.#number; i++) {
-                x = +this.#from + step * i;
+        if (this._rectangles === undefined || this._number !== this._rectangles.length) {
+            this._rectangles = [];
+            for (let i = 0; i < this._number; i++) {
+                x = +this._from + step * i;
                 y = x + step;
                 pxX = this.graph.unitsToPixels({ x: x, y: 0 });
                 height = 0;
-                this.#rectangles.push(this.graph.svg.rect(width, height)
+                this._rectangles.push(this.graph.svg.rect(width, height)
                     .click(function () {
                     let event = new CustomEvent('RiemannRectangleClick', {
                         detail: this.data('values')
@@ -34915,12 +35459,12 @@ class Riemann extends Figure_1.Figure {
             });
             this.graph.layers.main.add(this.svg);
         }
-        for (let i = 0; i < this.#number; i++) {
-            x = +this.#from + step * i;
+        for (let i = 0; i < this._number; i++) {
+            x = +this._from + step * i;
             y = x + step;
             pxX = this.graph.unitsToPixels({ x: x, y: 0 });
-            height = this.graph.distanceToPixels((this.#below === undefined || this.#below) ? this.#plot.evaluate(x).y : this.#plot.evaluate(y).y, enums_1.AXIS.VERTICAL);
-            this.#rectangles[i]
+            height = this.graph.distanceToPixels(this._plot.evaluate(x + step * this._pos).y, enums_1.AXIS.VERTICAL);
+            this._rectangles[i]
                 .data('values', { x, y, height, width })
                 .animate(500)
                 .height(Math.abs(height))
@@ -34945,21 +35489,40 @@ exports.Point = void 0;
 const Figure_1 = __webpack_require__(4948);
 const Grid_1 = __webpack_require__(882);
 const enums_1 = __webpack_require__(2369);
+const Label_1 = __webpack_require__(5331);
 class Point extends Figure_1.Figure {
-    #x;
-    #y;
-    #scale;
-    #shape;
-    #constrain;
+    _scale;
+    _shape;
+    _constrain;
     constructor(graph, name, pixels) {
         super(graph, name);
-        this.#x = pixels.x;
-        this.#y = pixels.y;
+        this._x = pixels.x;
+        this._y = pixels.y;
         this.generateName();
-        this.#shape = enums_1.POINTSHAPE.CROSS;
-        this.#scale = 6;
-        this.#constrain = { type: enums_1.POINTCONSTRAIN.FIXED };
-        this.#updateShape();
+        this._shape = enums_1.POINTSHAPE.CROSS;
+        this._scale = 6;
+        this._constrain = { type: enums_1.POINTCONSTRAIN.FIXED };
+        this._updateShape();
+        this.label = new Label_1.Label(this.graph, 'LABEL', { el: this });
+    }
+    _x;
+    get x() {
+        return this._x;
+    }
+    set x(value) {
+        this._x = value;
+        this.update();
+    }
+    _y;
+    get y() {
+        return this._y;
+    }
+    set y(value) {
+        this._y = value;
+        this.update();
+    }
+    get coord() {
+        return this.graph.pixelsToUnits(this);
     }
     generateName() {
         if (this.name === undefined) {
@@ -34967,57 +35530,45 @@ class Point extends Figure_1.Figure {
         }
         return this.name;
     }
-    #updateShape() {
-        if (this.svg && this.#shape === this.svg.data('shape')) {
-            return;
-        }
-        if (this.svg && this.#shape !== this.svg.data('shape')) {
-            this.svg.remove();
-        }
-        if (this.#shape === enums_1.POINTSHAPE.CIRCLE) {
-            this.svg = this.graph.svg.circle(this.#scale).stroke('black').fill('white').data('shape', enums_1.POINTSHAPE.CIRCLE);
-        }
-        else if (this.#shape === enums_1.POINTSHAPE.CROSS) {
-            this.svg = this.graph.svg.path(`M${-this.#scale},${-this.#scale} L${+this.#scale},${+this.#scale} M${+this.#scale},${-this.#scale} L${-this.#scale},${+this.#scale}`).stroke('black').center(0, 0).data('shape', enums_1.POINTSHAPE.CROSS);
-        }
-        else if (this.#shape === enums_1.POINTSHAPE.HANDLE) {
-            this.svg = this.graph.svg.circle(20).stroke('black').fill('white').opacity(0.4).data('shape', enums_1.POINTSHAPE.HANDLE);
-        }
-    }
     asCross() {
-        this.#shape = enums_1.POINTSHAPE.CROSS;
-        this.#updateShape();
+        this._shape = enums_1.POINTSHAPE.CROSS;
+        this._updateShape();
         return this;
     }
-    asCircle() {
-        this.#shape = enums_1.POINTSHAPE.CIRCLE;
+    asCircle(size) {
+        if (size !== undefined && size > 0) {
+            this._scale = size;
+        }
+        this._shape = enums_1.POINTSHAPE.CIRCLE;
         this.update();
         return this;
     }
     setSize(value) {
-        this.#scale = value;
+        this._scale = value;
         this.svg.data('shape', null);
         this.update();
         return this;
+    }
+    getDistanceTo(value) {
+        if (value instanceof Point) {
+            return Math.sqrt((this.x - value.x) ** 2 + (this.y - value.y) ** 2);
+        }
+        return 40;
     }
     updateFigure() {
         if (this.freeze || this.graph.freeze) {
             return this;
         }
-        this.#updateShape();
-        this.#updateCoordinate();
-        this.svg.center(this.#x, this.#y);
+        this._updateShape();
+        this._updateCoordinate();
+        this.svg.center(this._x, this._y);
         return this;
     }
-    #updateCoordinate() {
-        if (this.#constrain.type === enums_1.POINTCONSTRAIN.MIDDLE) {
-            const A = this.#constrain.data[0], B = this.#constrain.data[1];
-            this.#x = (A.x + B.x) / 2;
-            this.#y = (A.y + B.y) / 2;
-        }
+    updateLabel() {
+        return this;
     }
     middleOf(A, B) {
-        this.#constrain = {
+        this._constrain = {
             type: enums_1.POINTCONSTRAIN.MIDDLE,
             data: [A, B]
         };
@@ -35025,7 +35576,7 @@ class Point extends Figure_1.Figure {
         return this;
     }
     draggable(grid) {
-        this.#shape = enums_1.POINTSHAPE.HANDLE;
+        this._shape = enums_1.POINTSHAPE.HANDLE;
         this.updateFigure();
         let point = this;
         function dragmove(e) {
@@ -35054,22 +35605,29 @@ class Point extends Figure_1.Figure {
             .on('dragmove', dragmove);
         return this;
     }
-    get x() {
-        return this.#x;
+    _updateShape() {
+        if (this.svg && this._shape === this.svg.data('shape')) {
+            return;
+        }
+        if (this.svg && this._shape !== this.svg.data('shape')) {
+            this.svg.remove();
+        }
+        if (this._shape === enums_1.POINTSHAPE.CIRCLE) {
+            this.svg = this.graph.svg.circle(this._scale).stroke('black').fill('white').data('shape', enums_1.POINTSHAPE.CIRCLE);
+        }
+        else if (this._shape === enums_1.POINTSHAPE.CROSS) {
+            this.svg = this.graph.svg.path(`M${-this._scale},${-this._scale} L${+this._scale},${+this._scale} M${+this._scale},${-this._scale} L${-this._scale},${+this._scale}`).stroke('black').center(0, 0).data('shape', enums_1.POINTSHAPE.CROSS);
+        }
+        else if (this._shape === enums_1.POINTSHAPE.HANDLE) {
+            this.svg = this.graph.svg.circle(20).stroke('black').fill('white').opacity(0.4).data('shape', enums_1.POINTSHAPE.HANDLE);
+        }
     }
-    get y() {
-        return this.#y;
-    }
-    set x(value) {
-        this.#x = value;
-        this.update();
-    }
-    set y(value) {
-        this.#y = value;
-        this.update();
-    }
-    get coord() {
-        return this.graph.pixelsToUnits(this);
+    _updateCoordinate() {
+        if (this._constrain.type === enums_1.POINTCONSTRAIN.MIDDLE) {
+            const A = this._constrain.data[0], B = this._constrain.data[1];
+            this._x = (A.x + B.x) / 2;
+            this._y = (A.y + B.y) / 2;
+        }
     }
 }
 exports.Point = Point;
@@ -35112,7 +35670,9 @@ var LAYER;
     LAYER["GRIDS"] = "grids";
     LAYER["AXIS"] = "axis";
     LAYER["MAIN"] = "main";
+    LAYER["PLOTSBG"] = "plotsBG";
     LAYER["PLOTS"] = "plots";
+    LAYER["PLOTSFG"] = "plotsFG";
     LAYER["FOREGROUND"] = "foreground";
     LAYER["POINTS"] = "points";
 })(LAYER = exports.LAYER || (exports.LAYER = {}));
