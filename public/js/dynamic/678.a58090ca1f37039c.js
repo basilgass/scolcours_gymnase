@@ -532,72 +532,72 @@ const LayoutMain_exports_ = LayoutMainvue_type_script_setup_true_lang_js;
 var map = {
 	"./cercle": [
 		4098,
-		664,
+		784,
 		98
 	],
 	"./cercle.vue": [
 		4098,
-		664,
+		784,
 		98
 	],
 	"./primitive-avec-derivee-interne": [
 		9749,
-		664,
+		784,
 		749
 	],
 	"./primitive-avec-derivee-interne.vue": [
 		9749,
-		664,
+		784,
 		749
 	],
 	"./primitive-monome": [
 		6581,
-		664,
+		784,
 		581
 	],
 	"./primitive-monome.vue": [
 		6581,
-		664,
+		784,
 		581
 	],
 	"./produits-remarquables": [
 		4686,
-		664,
+		784,
 		686
 	],
 	"./produits-remarquables.vue": [
 		4686,
-		664,
+		784,
 		686
 	],
 	"./quadratiques-forme-du-sommet": [
 		7061,
-		664,
+		784,
 		61
 	],
 	"./quadratiques-forme-du-sommet.vue": [
 		7061,
-		664,
+		784,
 		61
 	],
 	"./template-quizz": [
 		9194,
-		664,
+		784,
 		194
 	],
 	"./template-quizz.vue": [
 		9194,
-		664,
+		784,
 		194
 	],
 	"./trinome": [
 		1446,
-		664,
+		784,
 		446
 	],
 	"./trinome.vue": [
 		1446,
-		664,
+		784,
 		446
 	],
 	"./ui/challengeTitle": [
