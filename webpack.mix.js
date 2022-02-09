@@ -12,7 +12,7 @@ const path = require('path')
  */
 mix.js('resources/js/app.js', 'public/js')
 	.vue()
-	.extract(['pimath', 'pidraw', '@svgdotjs/svg.js', '@svgdotjs/svg.draggable.js'], 'bundle/pi.bundle.js')
+	// .extract(['pimath', 'pidraw', '@svgdotjs/svg.js', '@svgdotjs/svg.draggable.js'], 'bundle/pi.bundle.js')
 	.extract()
 	.postCss('resources/css/app.css', 'public/css', [
 		require('postcss-import'),
