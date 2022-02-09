@@ -1,0 +1,98 @@
+<template>
+	<Panel>
+		<form-input
+			v-model="f"
+			:active="activeInput==='fx'"
+			label="fonction"
+			name="f"
+			@input-focus="activeInput='fx'"
+		/>
+		
+		<form-input
+			v-model="x"
+			:active="activeInput==='x'"
+			label="valeur"
+			name="x"
+			@input-focus="activeInput='x'"
+		>
+			Utiliser un nombre ou une fraction
+		</form-input>
+		
+		<div class="h-24 flex items-center justify-center">
+			<div v-if="fx">
+				<div v-katex="`f\\left(${fx.x}\\right) = ${fx.fx} ${fx.value?'='+fx.value:''}`" />
+			</div>
+			<div
+				v-else
+				class="text-red-700 text-sm bg-red-100 w-full py-5 text-center"
+			>
+				Une erreur s'est produite lors de l'introduction des coordonnées.
+			</div>
+		</div>
+		
+		<div class="mt-2">
+			<keyboard
+				v-show="activeInput==='fx'"
+				v-model="f"
+				back
+				reset
+				next
+				keyboard="polynom"
+				@next="activeInput='x'"
+			/>
+			<keyboard
+				v-show="activeInput==='x'"
+				v-model="x"
+				back
+				reset
+				next
+				keyboard="fraction"
+				@next="activeInput='fx'"
+			/>
+		</div>
+	</Panel>
+</template>
+
+<script setup>
+/** Tools
+ * title: évaluation d'une fonction polynomiale
+ * body: évaluation d'une fonction polynomiale
+ * parameters: fx=Fonction (texte), b=Nombre ou Fraction
+ * tags: algebre,1M
+ */
+import Panel from '@/Components/Ui/Panel'
+import FormInput from '@/Components/Form/FormInput'
+import { computed, ref } from 'vue'
+import { Fraction } from 'pimath/esm/maths/coefficients'
+import { Polynom } from 'pimath/esm/maths/algebra'
+import Keyboard from '@/Components/Ui/Keyboard'
+
+let f = ref('3*x+1'),
+	x = ref('1'),
+	activeInput = ref('fx')
+
+let fx = computed(() => {
+	try{
+		let FX= new Polynom(f.value),
+			data = {
+				x: '',
+				fx: '',
+				value: null
+			}
+		if (x.value === '') {
+			data.x = 'x'
+			data.fx = FX.tex
+			data.value = null
+		} else {
+			let fB = new Fraction(x.value)
+			data.x = fB.tex
+			data.fx = FX.tex.replace(/x/g, `\\left(${x.value}\\right)`)
+			data.value = FX.evaluate(fB).tex
+		}
+	
+		return data
+	}catch (e) {
+		return false
+	}
+})
+</script>
