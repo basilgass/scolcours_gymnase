@@ -932,94 +932,82 @@ const LayoutMain_exports_ = LayoutMainvue_type_script_setup_true_lang_js;
 var map = {
 	"./algebre/primitives": [
 		3267,
-		784,
+		898,
 		267
 	],
 	"./algebre/primitives.vue": [
 		3267,
-		784,
+		898,
 		267
 	],
 	"./analyse/integrales-definies": [
 		1542,
-		784,
 		898,
 		542
 	],
 	"./analyse/integrales-definies.vue": [
 		1542,
-		784,
 		898,
 		542
 	],
 	"./analyse/integrales-definies/IntegralesDefiniesAireBorneRacine": [
 		7000,
-		784,
 		898,
 		0
 	],
 	"./analyse/integrales-definies/IntegralesDefiniesAireBorneRacine.vue": [
 		7000,
-		784,
 		898,
 		0
 	],
 	"./analyse/integrales-definies/IntegralesDefiniesAireParabole": [
 		4967,
-		784,
 		898,
 		967
 	],
 	"./analyse/integrales-definies/IntegralesDefiniesAireParabole.vue": [
 		4967,
-		784,
 		898,
 		967
 	],
 	"./analyse/integrales-definies/IntegralesDefiniesAireParaboleNeg": [
 		3840,
-		784,
 		898,
 		840
 	],
 	"./analyse/integrales-definies/IntegralesDefiniesAireParaboleNeg.vue": [
 		3840,
-		784,
 		898,
 		840
 	],
 	"./analyse/integrales-definies/IntegralesDefiniesRiemann": [
 		7569,
-		784,
 		898,
 		569
 	],
 	"./analyse/integrales-definies/IntegralesDefiniesRiemann.vue": [
 		7569,
-		784,
 		898,
 		569
 	],
 	"./analyse/integrales-definies/IntegrallesDefinies532": [
 		160,
-		784,
 		898,
 		160
 	],
 	"./analyse/integrales-definies/IntegrallesDefinies532.vue": [
 		160,
-		784,
 		898,
 		160
 	],
 	"./geometrie/cercles": [
 		5810,
-		784,
+		898,
 		810
 	],
 	"./geometrie/cercles.vue": [
 		5810,
-		784,
+		898,
 		810
 	]
 };
