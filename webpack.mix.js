@@ -12,6 +12,7 @@ const path = require('path')
  */
 mix.js('resources/js/app.js', 'public/js')
 	.vue()
+	.extract(['pimath', 'pidraw'], './pi.bundle.js')
 	.extract()
 	.postCss('resources/css/app.css', 'public/css', [
 		require('postcss-import'),
@@ -19,7 +20,7 @@ mix.js('resources/js/app.js', 'public/js')
 		require('autoprefixer'),
 	]).webpackConfig({
 		output: {
-			chunkFilename: mix.inProduction()?'js/dynamic/[name].[contenthash].js':'js/dev/[name].js',
+			chunkFilename: mix.inProduction()?'js/[name].[contenthash].js':'js/dev/[name].js',
 		},
 		resolve: {
 			alias: {

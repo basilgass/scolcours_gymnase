@@ -20,7 +20,7 @@
     <script src="{{ mix('js/manifest.js') }}" defer></script>
     <script src="{{ mix('js/vendor.js') }}" defer></script>
     <script src="{{ mix('js/app.js') }}" defer></script>
-
+    <script src="{{mix('js/pi.bundle.js')}}" defer></script>
 
 </head>
 <body class="font-sans antialiased min-h-screen">
