@@ -22,7 +22,7 @@
 	*/
 	
 	// Home page - no controller
-	Route::get('/', function () {
+	Route::get('.', function () {
 		$themes = Theme::all();
 		return Inertia::render('Welcome', [
 			'canLogin'    => Route::has('login'),
@@ -31,7 +31,6 @@
 		]);
 	})->name('home');
 
-	if(1===2) {
 // Challenges
 		Route::get('/challenge', [ChallengesController::class, 'index']);
 		Route::get('/challenge/{challenge:slug}', [ChallengesController::class, 'show']);
@@ -69,4 +68,3 @@
 		Route::get('{theme:slug}/', [ChaptersController::class, 'index'])->name('theme');
 		Route::get('{theme:slug}/{chapter:slug}', [ChaptersController::class, 'show'])->name('theme.chapter');
 		
-	}
