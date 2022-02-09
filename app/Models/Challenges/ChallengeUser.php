@@ -13,7 +13,7 @@
  * @property int $score
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \App\Models\Challenges\ChallengeSession $session
+ * @property-read \App\Models\Challenges\ChallengeSession|null $session
  * @method static \Illuminate\Database\Eloquent\Builder|ChallengeUser newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|ChallengeUser newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|ChallengeUser query()

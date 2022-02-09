@@ -1,4 +1,5 @@
 const mix = require('laravel-mix')
+const path = require('path')
 /*
  |--------------------------------------------------------------------------
  | Mix Asset Management
@@ -18,15 +19,19 @@ mix.js('resources/js/app.js', 'public/js')
 		require('postcss-import'),
 		require('tailwindcss'),
 		require('autoprefixer'),
-	])
+	]).webpackConfig({
+		output: {
+			chunkFilename: mix.inProduction()?'js/dynamic/[name].[contenthash].js':'js/dev/[name].js',
+		},
+		resolve: {
+			alias: {
+				'@': path.resolve('resources/js'),
+			},
+			
+		}
+	})
 
-if (mix.inProduction()) {
-	mix
-		.webpackConfig(require('./webpack.production'))
-		.version()
-}else{
-	mix.webpackConfig(require('./webpack.config'))
-}
+if (mix.inProduction()) {mix.version()}
 
 // .js([
 // "resources/js/pi.js",

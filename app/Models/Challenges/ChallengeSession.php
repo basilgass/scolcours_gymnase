@@ -17,7 +17,7 @@
  * @property int $duration
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read User $admin
+ * @property-read User|null $admin
  * @property-read Challenge $challenge
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Challenges\ChallengeUser[] $users
  * @property-read int|null $users_count

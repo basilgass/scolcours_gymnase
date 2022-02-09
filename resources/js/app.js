@@ -1,7 +1,6 @@
 import { createApp, h } from 'vue'
 import { createInertiaApp, Head, Link } from '@inertiajs/inertia-vue3'
-import { InertiaProgress } from '@inertiajs/progress'
-
+// import { InertiaProgress } from '@inertiajs/progress'
 // Custom directives
 import { katexDirective, visibleDirective } from '@/vueDirectives'
 
@@ -27,4 +26,4 @@ createInertiaApp({
 	}
 })
 
-InertiaProgress.init({ color: '#4B5563' })
+// InertiaProgress.init({ color: '#4B5563' })
