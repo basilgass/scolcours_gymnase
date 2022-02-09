@@ -2,32 +2,54 @@
 	<Panel>
 		<form-input
 			v-model="f"
+			:active="activeInput==='fx'"
 			label="fonction"
 			name="f"
+			@input-focus="activeInput='fx'"
 		/>
-
+		
 		<form-input
 			v-model="x"
+			:active="activeInput==='x'"
 			label="valeur"
 			name="x"
+			@input-focus="activeInput='x'"
 		>
 			Utiliser un nombre ou une fraction
 		</form-input>
-
-		<div v-if="fx">
-			<div v-katex="`f\\left(${fx.x.tex}\\right) = ${fx.fx} = ${fx.value}`" />
-		</div>
-		<div
-			v-else
-			class="text-red-700 text-sm"
-		>
-			Une erreur s'est produite lors de l'introduction des coordonnées.
+		
+		<div class="h-24 flex items-center justify-center">
+			<div v-if="fx">
+				<div v-katex="`f\\left(${fx.x}\\right) = ${fx.fx} ${fx.value?'='+fx.value:''}`" />
+			</div>
+			<div
+				v-else
+				class="text-red-700 text-sm bg-red-100 w-full py-5 text-center"
+			>
+				Une erreur s'est produite lors de l'introduction des coordonnées.
+			</div>
 		</div>
 		
-		<keyboard
-			v-model="f"
-			keyboard="polynom"
-		/>
+		<div class="mt-2">
+			<keyboard
+				v-show="activeInput==='fx'"
+				v-model="f"
+				back
+				reset
+				next
+				keyboard="polynom"
+				@next="activeInput='x'"
+			/>
+			<keyboard
+				v-show="activeInput==='x'"
+				v-model="x"
+				back
+				reset
+				next
+				keyboard="fraction"
+				@next="activeInput='fx'"
+			/>
+		</div>
 	</Panel>
 </template>
 
@@ -46,19 +68,29 @@ import { Polynom } from 'pimath/esm/maths/algebra'
 import Keyboard from '@/Components/Ui/Keyboard'
 
 let f = ref('3*x+1'),
-	x = ref('1')
+	x = ref('1'),
+	activeInput = ref('fx')
 
-let fx = computed(()=>{
+let fx = computed(() => {
 	try{
-		let fB = new Fraction(x.value),
-			FX = new Polynom(f.value)
-		
-		return {
-			F: FX,
-			x: fB,
-			fx: FX.tex.replace(/x/g, `\\left(${fB.tex}\\right)`),
-			value: FX.evaluate(fB).tex
+		let FX= new Polynom(f.value),
+			data = {
+				x: '',
+				fx: '',
+				value: null
+			}
+		if (x.value === '') {
+			data.x = 'x'
+			data.fx = FX.tex
+			data.value = null
+		} else {
+			let fB = new Fraction(x.value)
+			data.x = fB.tex
+			data.fx = FX.tex.replace(/x/g, `\\left(${x.value}\\right)`)
+			data.value = FX.evaluate(fB).tex
 		}
+	
+		return data
 	}catch (e) {
 		return false
 	}

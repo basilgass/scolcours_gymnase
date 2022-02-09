@@ -56,7 +56,9 @@
 	Route::get('/download/{fileID}', [LatexController::class, 'download']);
 	
 	// Developpement page
-	Route::get('dev/', [LatexController::class, 'toPng']);
+	Route::get('dev/', function (){
+		return Inertia::render("Dev");
+	});
 	
 	// Tools controller
 	Route::get('tools/', [ToolsController::class, 'index'])->name('tools');

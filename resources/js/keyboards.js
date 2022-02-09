@@ -29,11 +29,30 @@ export const keyboardKeys = {
 	'(': {type: 'math', display: '('},
 	')': {type: 'math', display: ')'},
 	' ': {type: 'math', display: '\\cdot'},
+	'.': {type: 'math', display: '.'},
 	'@reset': {type: 'icon', display: 'bi bi-trash'},
 	'@back': {type: 'icon', display: 'bi bi-backspace'}
 }
 
 export const keyboards = {
+	'number': {
+		grid: 'grid-cols-3',
+		layout: [
+			'1', '2', '3',
+			'4', '5', '6',
+			'7', '8', '9',
+			'.', '0', '-'
+		]
+	},
+	'fraction': {
+		grid: 'grid-cols-3',
+		layout: [
+			'1', '2', '3',
+			'4', '5', '6',
+			'7', '8', '9',
+			'/', '0', '-'
+		]
+	},
 	'simple': {
 		grid: 'grid-cols-4',
 		layout: [
@@ -57,8 +76,8 @@ export const keyboards = {
 		layout: [
 			'1', '2', '3', '+', 'x', 'x^2',
 			'4', '5', '6', '-', 'x^3', 'x^4',
-			'7', '8', '9', '*', 'x^5', '^',
-			'@reset', '@back', '0', '/', '(', ')'
+			'7', '8', '9', '*', 'x^5', 'x^6',
+			'(', ')', '0', '/', ['^', 2]
 		]
 	}
 }

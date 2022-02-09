@@ -34,3 +34,9 @@ export const katexDirective = {
 		el.innerHTML = ''
 	}
 }
+
+export const visibleDirective = {
+	mounted (el, binding, vnode) {
+		el.style.visibility = binding.value? 'visible': 'hidden'
+	}
+}

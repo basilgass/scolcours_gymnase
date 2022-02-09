@@ -3,7 +3,7 @@ import { createInertiaApp, Head, Link } from '@inertiajs/inertia-vue3'
 import { InertiaProgress } from '@inertiajs/progress'
 
 // Custom directives
-import { katexDirective } from '@/vueDirectives'
+import { katexDirective, visibleDirective } from '@/vueDirectives'
 
 require('./bootstrap')
 
@@ -18,6 +18,7 @@ createInertiaApp({
 			.component('Head', Head)
 			.use(plugin)
 			.directive('katex', katexDirective)
+			.directive('visible', visibleDirective)
 			.mixin({ methods: { route } })
 		
 		vueApp.config.globalProperties.$log = console.log

@@ -1,6 +1,6 @@
 <template>
 	<!-- Title -->
-	<div class="flex justify-between items-baseline">
+	<div class="flex justify-between items-baseline mb-4">
 		<div>
 			<ArticleTitle title="Outils" />
 			<Link
@@ -89,7 +89,7 @@ let toolName = computed(()=>{
 	return ''
 })
 onMounted(()=> {
-	if(props.tool !== null || props.tool.slug !== '') {
+	if(props.tool !== null && props.tool.slug !== '') {
 		toolSlug.value = props.tool.slug
 	}
 })
