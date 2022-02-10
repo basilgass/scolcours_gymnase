@@ -28,10 +28,14 @@ mix.js('resources/js/app.js', 'public/js')
 			},
 			
 		},
-		optimization: {
-			minimize: false
-		}
+		// optimization: {
+		// 	minimize: false
+		// }
 	})
+	.js([
+		'resources/js/pi.js',
+		'resources/js/pidraw.js'
+	], 'public/js/pi.bundle.js').minify('public/js/pi.bundle.js')
 
 if (mix.inProduction()) {mix.version()}
 

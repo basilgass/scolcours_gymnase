@@ -106,7 +106,6 @@
 </template>
 <script setup>
 import { onMounted, ref } from 'vue'
-import { Graph } from 'pidraw/esm'
 import ExampleTitle from '@/Components/Ui/ExampleTitle'
 
 const root = ref(null),
@@ -116,7 +115,7 @@ const root = ref(null),
 let graphBetween
 
 function loadGraphBetween () {
-	graphBetween = new Graph(graphBetweenContainer.value, {
+	graphBetween = new PiDraw(graphBetweenContainer.value, {
 		origin: {
 			x: 300,
 			y: 500

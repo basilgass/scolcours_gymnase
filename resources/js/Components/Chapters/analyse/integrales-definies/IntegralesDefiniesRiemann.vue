@@ -26,7 +26,6 @@
 </template>
 <script setup>
 import { onMounted, ref } from 'vue'
-import { Graph } from 'pidraw/esm'
 
 const root = ref(null),
 	riemann = ref(null),
@@ -37,7 +36,7 @@ let graph, riemannfx
 
 function loadRieman () {
 	// Generate the graph function
-	graph = new Graph(riemann.value)
+	graph = new PiDraw(riemann.value)
 	graph.axis()
 	// Load the function
 	riemannfx = graph.plot('(x-1)*(x-5)*(x-7)/20+3')

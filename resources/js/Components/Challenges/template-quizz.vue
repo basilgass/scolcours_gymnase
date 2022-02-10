@@ -37,8 +37,6 @@
 <script setup>
 import { computed, ref } from 'vue'
 import Keyboard from '@/Components/Ui/Keyboard'
-import { Fraction } from 'pimath/esm/maths/coefficients'
-import { Random } from 'pimath/esm/maths/random'
 import ChallengeWrapper from '@/Components/Challenges/ui/challengeWrapper'
 
 const title = 'titre du challenge'

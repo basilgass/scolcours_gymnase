@@ -63,8 +63,6 @@
 import Panel from '@/Components/Ui/Panel'
 import FormInput from '@/Components/Form/FormInput'
 import { computed, ref } from 'vue'
-import { Fraction } from 'pimath/esm/maths/coefficients'
-import { Polynom } from 'pimath/esm/maths/algebra'
 import Keyboard from '@/Components/Ui/Keyboard'
 
 let f = ref('3*x+1'),
@@ -73,7 +71,7 @@ let f = ref('3*x+1'),
 
 let fx = computed(() => {
 	try{
-		let FX= new Polynom(f.value),
+		let FX= new Pi.Polynom(f.value),
 			data = {
 				x: '',
 				fx: '',
@@ -84,7 +82,7 @@ let fx = computed(() => {
 			data.fx = FX.tex
 			data.value = null
 		} else {
-			let fB = new Fraction(x.value)
+			let fB = new Pi.Fraction(x.value)
 			data.x = fB.tex
 			data.fx = FX.tex.replace(/x/g, `\\left(${x.value}\\right)`)
 			data.value = FX.evaluate(fB).tex

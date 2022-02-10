@@ -40,45 +40,42 @@
 import Panel from '@/Components/Ui/Panel'
 import FormInput from '@/Components/Form/FormInput'
 import { computed, ref } from 'vue'
-import { Point } from 'pimath/esm/maths/geometry'
-import { Equation } from 'pimath/esm/maths/algebra/equation'
-import { Polynom } from 'pimath/esm/maths/algebra/polynom'
 
 let A = ref('1,4'),
 	B=ref('2,3'),
 	C=ref('5,8')
 let result = computed(()=>{
 	try {
-		let P = new Equation('y = a*x^2+b*x+c'),
-			pA = new Point(A.value),
-			pB = new Point(B.value),
-			pC = new Point(C.value)
+		let P = new Pi.Equation('y = a*x^2+b*x+c'),
+			pA = new Pi.Point(A.value),
+			pB = new Pi.Point(B.value),
+			pC = new Pi.Point(C.value)
 		
 		// TODO: améliorer le calcul et inclure dans PI
 		// y=ax^2+bx+c
 		let Pc = P.clone()
-				.replaceBy('x', new Polynom(pA.x.display))
-				.replaceBy('y', new Polynom(pA.y.display))
+				.replaceBy('x', new Pi.Polynom(pA.x.display))
+				.replaceBy('y', new Pi.Polynom(pA.y.display))
 				.isolate('c'),
 			Pb = P.clone()
-				.replaceBy('x', new Polynom(pB.x.display))
-				.replaceBy('y', new Polynom(pB.y.display))
+				.replaceBy('x', new Pi.Polynom(pB.x.display))
+				.replaceBy('y', new Pi.Polynom(pB.y.display))
 				.replaceBy('c', Pc.right)
 				.isolate('b'),
 			Pa
 		
 		if (C.value !== '') {
 			Pa = P.clone()
-				.replaceBy('x', new Polynom(pC.x.display))
-				.replaceBy('y', new Polynom(pC.y.display))
+				.replaceBy('x', new Pi.Polynom(pC.x.display))
+				.replaceBy('y', new Pi.Polynom(pC.y.display))
 				.replaceBy('c', Pc.right)
 				.replaceBy('b', Pb.right)
 				.isolate('a')
 		} else {
 			// Le point B est un sommet !
 			// x = -b/2a => b = -2ax
-			Pa = new Equation('b = -2a*x')
-				.replaceBy('x', new Polynom(pC.x.display))
+			Pa = new Pi.Equation('b = -2a*x')
+				.replaceBy('x', new Pi.Polynom(pC.x.display))
 			
 			Pa.left = Pb.right.clone()
 			Pa.isolate('a')

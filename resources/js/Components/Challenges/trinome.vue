@@ -8,9 +8,9 @@
 		
 		<div class="text-center">
 			<button
-					class="btn btn-success"
-					@click="validateAnswer"
-				>
+				class="btn btn-success"
+				@click="validateAnswer"
+			>
 				Valider
 			</button>
 		</div>
@@ -18,21 +18,21 @@
 		<div class="grid grid-cols-2 gap-2 max-w-lg mx-auto mt-5">
 			<div class="space-y-2">
 				<div
-						v-for="n in 10"
-						:key="`terme-${n}`"
-						v-katex.inline="`x-${n}`"
-						class="border rounded-2xl bg-white hover:bg-green-100 text-center py-2"
-						@click="updateAnswer(`x-${n}`)"
-					/>
+					v-for="n in 10"
+					:key="`terme-${n}`"
+					v-katex.inline="`x-${n}`"
+					class="border rounded-2xl bg-white hover:bg-green-100 text-center py-2"
+					@click="updateAnswer(`x-${n}`)"
+				/>
 			</div>
 			<div class="space-y-2">
 				<div
-						v-for="n in 10"
-						:key="`terme--${n}`"
-						v-katex.inline="`x+${n}`"
-						class="border rounded-2xl bg-white hover:bg-green-100 text-center py-2"
-						@click="updateAnswer(`x+${n}`)"
-					/>
+					v-for="n in 10"
+					:key="`terme--${n}`"
+					v-katex.inline="`x+${n}`"
+					class="border rounded-2xl bg-white hover:bg-green-100 text-center py-2"
+					@click="updateAnswer(`x+${n}`)"
+				/>
 			</div>
 		</div>
 	</article>
@@ -40,8 +40,6 @@
 
 <script setup>
 import { computed, ref } from 'vue'
-import { Polynom } from 'pimath/esm/maths/algebra'
-import { Random } from 'pimath/esm/maths/random'
 import ChallengeTitle from '@/Components/Challenges/ui/challengeTitle'
 
 const title = 'quadratique - décomposition du trinôme'
@@ -56,7 +54,7 @@ let factorisation = computed(()=>{
 })
 
 function newQuestion(){
-	return Random.polynom({
+	return Pi.Random.polynom({
 		letters: 'x',
 		degree: 2,
 		factorable: true,
@@ -75,7 +73,7 @@ function updateAnswer(value){
 function validateAnswer(){
 	if(answer.value.length!==2){return false}
     
-	let P = new Polynom(answer.value.map(x=>`(${x})`).join(''))
+	let P = new Pi.Polynom(answer.value.map(x=>`(${x})`).join(''))
     
 	if(P.isEqual(poly.value)){
 		points.value++

@@ -1,36 +1,36 @@
 <template>
 	<article>
 		<challenge-title
-				:title="title"
-			/>
+			:title="title"
+		/>
 		
 		<div>score actuel: {{ points }}</div>
 		
 		<div
-				ref="questionWrapper"
-				class="text-center space-y-2"
-			>
+			ref="questionWrapper"
+			class="text-center space-y-2"
+		>
 			<span
-					v-katex.inline.display="displayQuestion"
-					class="mr-2"
-				/>
+				v-katex.inline.display="displayQuestion"
+				class="mr-2"
+			/>
 			<span v-katex.ascii.inline.display="answer" />
 		</div>
 		
 		<div class="text-center my-5">
 			<button
-					class="btn btn-success"
-					@click="validateAnswer"
-				>
+				class="btn btn-success"
+				@click="validateAnswer"
+			>
 				Valider
 			</button>
 		</div>
 		<Keyboard
-				ref="keyboard"
-				v-model="answer"
-				keyboard="algebra"
-				class="max-w-sm mx-auto"
-			/>
+			ref="keyboard"
+			v-model="answer"
+			keyboard="algebra"
+			class="max-w-sm mx-auto"
+		/>
 		
 		<div class="text-sm text-gray-400 text-center mt-4">
 			Pas de puissance négative, pas de puissance sous forme de fraction.<br>
@@ -42,8 +42,6 @@
 
 <script setup>
 import { computed, ref } from 'vue'
-import { Random } from 'pimath/esm/maths/random'
-import { Fraction } from 'pimath/esm/maths/coefficients'
 
 import ChallengeTitle from '@/Components/Challenges/ui/challengeTitle'
 import Keyboard from '@/Components/Ui/Keyboard'
@@ -65,16 +63,16 @@ let displayQuestion = computed(() => {
 })
 
 function newQuestion () {
-	let degree = Random.bool(Math.min(0.1 + points.value*0.05, 0.8))?Random.number(0, 6):Random.numberSym(6, true),		// Degree of the x value
-		root = Random.bool(points.value * 0.07),	// if there is a root item.
-		q = Random.fraction({ natural: points.value < 5, zero: false }),	// random fraction
+	let degree = Pi.Random.bool(Math.min(0.1 + points.value*0.05, 0.8))?Pi.Random.number(0, 6):Pi.Random.numberSym(6, true),		// Degree of the x value
+		root = Pi.Random.bool(points.value * 0.07),	// if there is a root item.
+		q = Pi.Random.fraction({ natural: points.value < 5, zero: false }),	// random fraction
 		tex, texX, qa, a, degree1, degreeDisplay
 	
 	// Créer une racine (éventuellement, elle disparaît)
 	if (root && degree !== 0) {
-		degree = new Fraction(degree, 2)
+		degree = new Pi.Fraction(degree, 2)
 	} else {
-		degree = new Fraction(degree, 1)
+		degree = new Pi.Fraction(degree, 1)
 	}
 	degree.reduce()
 	
@@ -114,7 +112,7 @@ function newQuestion () {
 	// Mise en forme de la réponse
 	
 	// On ajoute un à la puissance.
-	degree1 = degree.clone().add(new Fraction().one())
+	degree1 = degree.clone().add(new Pi.Fraction().one())
 	
 	
 	if (degree.value !== -1) {

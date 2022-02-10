@@ -8,16 +8,16 @@
 		
 		<div class="grid grid-cols-2 gap-2 max-w-lg mx-auto mt-5">
 			<button
-					class="btn btn-primary"
-					@click="resetAnswer"
-				>
+				class="btn btn-primary"
+				@click="resetAnswer"
+			>
 				recommencer
 			</button>
 			
 			<button
-					class="btn btn-success"
-					@click="validateAnswer"
-				>
+				class="btn btn-success"
+				@click="validateAnswer"
+			>
 				valider
 			</button>
 		</div>
@@ -25,21 +25,21 @@
 		<div class="grid grid-cols-2 gap-2 max-w-lg mx-auto mt-5">
 			<div class="space-y-2">
 				<div
-						v-for="n in 10"
-						:key="`terme-${n}`"
-						v-katex.inline="`-${n}`"
-						class="border rounded-2xl bg-white hover:bg-green-100 text-center py-2"
-						@click="updateAnswer(`-${n}`)"
-					/>
+					v-for="n in 10"
+					:key="`terme-${n}`"
+					v-katex.inline="`-${n}`"
+					class="border rounded-2xl bg-white hover:bg-green-100 text-center py-2"
+					@click="updateAnswer(`-${n}`)"
+				/>
 			</div>
 			<div class="space-y-2">
 				<div
-						v-for="n in 10"
-						:key="`terme--${n}`"
-						v-katex.inline="`+${n}`"
-						class="border rounded-2xl bg-white hover:bg-green-100 text-center py-2"
-						@click="updateAnswer(`+${n}`)"
-					/>
+					v-for="n in 10"
+					:key="`terme--${n}`"
+					v-katex.inline="`+${n}`"
+					class="border rounded-2xl bg-white hover:bg-green-100 text-center py-2"
+					@click="updateAnswer(`+${n}`)"
+				/>
 			</div>
 		</div>
 	</article>
@@ -47,8 +47,6 @@
 
 <script setup>
 import { computed, ref } from 'vue'
-import { Polynom } from 'pimath/esm/maths/algebra'
-import { Random } from 'pimath/esm/maths/random'
 import ChallengeTitle from '@/Components/Challenges/ui/challengeTitle'
 
 // Valeur nécessaire pour nommer la fonction
@@ -87,11 +85,11 @@ let displayAnswer = computed(() => {
 function newQuestion () {
 	resetAnswer()
 	
-	let ra = points.value >= level.value ? Random.numberSym(6, false) : 1,
-		rb = Random.numberSym(6, false),
-		rc = Random.numberSym(10, false)
+	let ra = points.value >= level.value ? Pi.Random.numberSym(6, false) : 1,
+		rb = Pi.Random.numberSym(6, false),
+		rc = Pi.Random.numberSym(10, false)
 	
-	return new Polynom('x', ra, 2 * rb * ra, rb * rb * ra + rc)
+	return new Pi.Polynom('x', ra, 2 * rb * ra, rb * rb * ra + rc)
 }
 
 function resetAnswer( ){
@@ -122,14 +120,14 @@ function validateAnswer () {
 	let ra = +answer.value.a,
 		rb = +answer.value.b,
 		rc = +answer.value.c
-	let P = new Polynom('x', ra, 2 * rb * ra, rb * rb * ra + rc)
+	let P = new Pi.Polynom('x', ra, 2 * rb * ra, rb * rb * ra + rc)
 	
 	if (P.isEqual(poly.value)) {
 		points.value++
 		answer.value = { a: '', b: '', c: '' }
 		currentGivenAnswer.value = 'a'
 		
-		// Generate new polynom
+		// Generate new Pi.polynom
 		poly.value = newQuestion()
 	} else {
 		points.value = 0

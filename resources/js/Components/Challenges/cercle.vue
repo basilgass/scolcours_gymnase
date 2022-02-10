@@ -53,8 +53,6 @@
 <script setup>
 import { computed, ref } from 'vue'
 import ChallengeTitle from '@/Components/Challenges/ui/challengeTitle'
-import { Polynom } from 'pimath/esm/maths/algebra'
-import { Random } from 'pimath/esm/maths/random'
 
 const title = 'cercle'
 
@@ -93,16 +91,16 @@ let displayQuestion = computed(() => {
 })
 
 function newQuestion () {
-	let ca = Random.numberSym(10, true),
-		cb = Random.numberSym(10, true),
-		r = Random.number(1, 10)
+	let ca = Pi.Random.numberSym(10, true),
+		cb = Pi.Random.numberSym(10, true),
+		r = Pi.Random.number(1, 10)
 	
-	let Px = new Polynom(`x${ca<=0?'+':''}${-ca}`).pow(2),
-		Py = new Polynom(`y${cb<=0?'+':''}${-cb}`).pow(2)
+	let Px = new Pi.Polynom(`x${ca<=0?'+':''}${-ca}`).pow(2),
+		Py = new Pi.Polynom(`y${cb<=0?'+':''}${-cb}`).pow(2)
 	
 	return {
 		ca, cb, r,
-		tex: Px.clone().add(Py).add(new Polynom(`${-(r)}`)).reorder('y').reorder('x').tex + '=0'
+		tex: Px.clone().add(Py).add(new Pi.Polynom(`${-(r)}`)).reorder('y').reorder('x').tex + '=0'
 	}
 }
 
