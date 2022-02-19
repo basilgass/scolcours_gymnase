@@ -4,6 +4,7 @@
 			v-model="A"
 			label="Coordonnées du point A"
 			name="fonction"
+			focus
 		/>
 
 		<form-input
@@ -47,9 +48,9 @@ let A = ref('1,4'),
 let result = computed(()=>{
 	try {
 		let P = new Pi.Equation('y = a*x^2+b*x+c'),
-			pA = new Pi.Point(A.value),
-			pB = new Pi.Point(B.value),
-			pC = new Pi.Point(C.value)
+			pA = new Pi.Geometry.Point(A.value),
+			pB = new Pi.Geometry.Point(B.value),
+			pC = new Pi.Geometry.Point(C.value)
 		
 		// TODO: améliorer le calcul et inclure dans PI
 		// y=ax^2+bx+c

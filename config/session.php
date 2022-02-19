@@ -155,7 +155,7 @@
     |
     */
 
-    'domain' => env('SESSION_DOMAIN', env('APP_URL')),
+    'domain' => env('SESSION_DOMAIN', null),
 
     /*
     |--------------------------------------------------------------------------

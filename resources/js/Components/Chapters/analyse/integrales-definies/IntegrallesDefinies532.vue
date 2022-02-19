@@ -1,61 +1,22 @@
 <template>
 	<div ref="root">
 		<ExampleTitle>Exercice 5.32</ExampleTitle>
-		<div class="grid grid-cols-1 lg:grid-cols-2 gap-5 items-stretch">
-			<div
-				ref="graphBetweenContainer"
-				class="max-w-lg"
-			/>
-			
-			<div>
-				Calculer l'aire de la partie hachurée entre \(y=-x\) et \(y=\sqrt{2-x}\)
-				
-				<h3 class="mt-8 mb-4 font-semibold">
-					Marche à suivre
-				</h3>
-				<ol class="list-decimal list-space space-y-4">
-					<li
-						v-for="(item, index) of steps"
-						:key="`step-title-${index}`"
-						class="katex-boxed"
-					>
-						{{ item.title }}
-					</li>
-				</ol>
-			</div>
-			
-			<div class="lg:col-span-2">
-				<div class="flex items-center mt-8 mb-4 space-x-10">
-					<h3 class="font-semibold">
-						Résolution
-					</h3>
-					<button
-						v-show="solutions<4"
-						class="btn px-2 py-1"
-						@click="solutions++"
-					>
-						Etape suivante
-					</button>
-				</div>
-				
-				<ol class="list-decimal list-space space-y-4">
-					<li
-						v-for="(item, index) of steps"
-						v-show="solutions>index"
-						:key="`step-${index}`"
-						class="katex-boxed katex-left"
-					>
-						{{ item.body }}
-					</li>
-				</ol>
-			</div>
-		</div>
+		<ChapterExercise :steps="steps">
+			Calculer l'aire de la partie hachurée entre \(y=-x\) et \(y=\sqrt{2-x}\)
+			<template #illustration>
+				<div
+					ref="graphBetweenContainer"
+					class="max-w-lg"
+				/>
+			</template>
+		</ChapterExercise>
 	</div>
 </template>
 
 <script setup>
 import { onMounted, ref } from 'vue'
 import ExampleTitle from '@/Components/Ui/ExampleTitle'
+import ChapterExercise from '@/Components/Ui/ChapterExercise'
 
 const root = ref(null),
 	graphBetweenContainer = ref(null),

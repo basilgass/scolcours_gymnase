@@ -6,6 +6,7 @@
 		/>
 		<input
 			:id="name"
+			ref="inp"
 			:name="name"
 			class="p-2 w-full rounded focus:outline-none"
 			:value="modelValue"
@@ -29,15 +30,25 @@ export default {
 import FormField from '@/Components/Form/FormField'
 import FormLabel from '@/Components/Form/FormLabel'
 import FormError from '@/Components/Form/FormError'
-import { onMounted } from 'vue'
+import { onMounted, ref } from 'vue'
 
 defineEmits(['update:modelValue', 'inputFocus'])
 let props = defineProps({
 	modelValue: { type: String, default: null },
-	active: {type: Boolean, default: false},
+	active: { type: Boolean, default: false },
 	name: { type: String, required: true },
 	label: { type: String, default: '' },
 	error: { type: String, default: '' },
+	focus: { type: Boolean, default: false }
+})
+
+let inp = ref(null)
+
+onMounted(() => {
+	if (props.focus) {
+		inp.value.focus()
+		inp.value.select()
+	}
 })
 
 </script>

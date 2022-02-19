@@ -11,6 +11,7 @@ function katexUpdate (el, binding, vnode) {
 		
 		// Add boxed to the inline container
 		if(binding.modifiers.boxed){el.classList.add('katex-boxed')}
+		if(binding.modifiers.lg){el.classList.add('katex-boxed-lg')}
 		if (binding.modifiers.left) {el.classList.add('katex-left')}
 		if (binding.modifiers.nomargin) {el.classList.add('katex-m-0')}
 		

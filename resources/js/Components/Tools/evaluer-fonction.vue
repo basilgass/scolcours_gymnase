@@ -5,6 +5,7 @@
 			:active="activeInput==='fx'"
 			label="fonction"
 			name="f"
+			focus
 			@input-focus="activeInput='fx'"
 		/>
 		

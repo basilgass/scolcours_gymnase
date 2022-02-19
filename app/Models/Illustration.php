@@ -26,8 +26,10 @@ use Illuminate\Database\Eloquent\Model;
 class Illustration extends Model
 {
 	protected $guarded = [];
-	public function exercise()
+	
+	public function posts()
 	{
-		return $this->belongsTo(Exercise::class);
+		return $this->morphedByMany(Post::class, 'illustrationable');
 	}
+
 }

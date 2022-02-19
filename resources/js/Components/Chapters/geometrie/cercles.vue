@@ -240,7 +240,6 @@ function updateEx1Rnd () {
 		r2 = new Pi.Geometry.Vector(C2, T).normSquare
 	}
 	
-	
 	// Points à valeurs entières : C1, C2, T
 	if (
 		(C1.x.isNatural() && C1.y.isNatural() &&

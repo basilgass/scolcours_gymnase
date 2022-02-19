@@ -52,6 +52,9 @@
 .katex-boxed .katex-display {
     @apply bg-amber-700/5 px-5 py-4 my-2 rounded overflow-x-auto;
 }
+.katex-boxed.katex-boxed-lg .katex-display {
+    @apply py-10;
+}
 
 .katex-inline-boxed span:not(.katex-display) > .katex {
     @apply bg-amber-700/5 px-3 inline-block align-middle max-w-full py-1 rounded;

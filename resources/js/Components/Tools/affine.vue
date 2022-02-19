@@ -4,6 +4,7 @@
 			v-model="A"
 			label="Point A"
 			name="A"
+			focus
 		>
 			Utiliser <code class="px-2 bg-gray-200">a,b</code> pour les coordonnées d'un point
 		</form-input>
@@ -47,7 +48,7 @@ let affine = computed(()=>{
 	try{
 		return new Pi.Geometry.Line(
 			new Pi.Geometry.Point(A.value),
-			B.value[0]==='v'?new Pi.Geometry.Vector(B.value.substring(1)):new Point(B.value)
+			B.value[0]==='v'?new Pi.Geometry.Vector(B.value.substring(1)):new Pi.Geometry.Point(B.value)
 		)
 	}catch (e) {
 		return false

@@ -1,15 +1,15 @@
 <template>
 	<Head title="Log in" />
-
+	
 	<BreezeValidationErrors class="mb-4" />
-
+	
 	<div
 		v-if="status"
 		class="mb-4 font-medium text-sm text-green-600"
 	>
 		{{ status }}
 	</div>
-
+	
 	<form @submit.prevent="submit">
 		<div>
 			<BreezeLabel
@@ -26,7 +26,7 @@
 				autocomplete="username"
 			/>
 		</div>
-
+		
 		<div class="mt-4">
 			<BreezeLabel
 				for="password"
@@ -41,7 +41,7 @@
 				autocomplete="current-password"
 			/>
 		</div>
-
+		
 		<div class="block mt-4">
 			<label class="flex items-center">
 				<BreezeCheckbox
@@ -51,7 +51,7 @@
 				<span class="ml-2 text-sm text-gray-600">Rester connecter ?</span>
 			</label>
 		</div>
-
+		
 		<div class="flex items-center justify-end mt-4">
 			<Link
 				v-if="canResetPassword"
@@ -60,7 +60,7 @@
 			>
 				Mot de passe oublié ?
 			</Link>
-
+			
 			<BreezeButton
 				class="ml-4"
 				:class="{ 'opacity-25': form.processing }"
@@ -82,7 +82,7 @@ import BreezeValidationErrors from '@/Components/ValidationErrors.vue'
 import { Head, Link } from '@inertiajs/inertia-vue3'
 
 export default {
-
+	
 	components: {
 		BreezeButton,
 		BreezeCheckbox,
@@ -93,13 +93,13 @@ export default {
 		Link,
 	},
 	layout: BreezeGuestLayout,
-
+	
 	props: {
 		canResetPassword: Boolean,
 		status: String,
 	},
-
-	data() {
+	
+	data () {
 		return {
 			form: this.$inertia.form({
 				email: '',
@@ -108,9 +108,9 @@ export default {
 			})
 		}
 	},
-
+	
 	methods: {
-		submit() {
+		submit () {
 			this.form.post(this.route('login'), {
 				onFinish: () => this.form.reset('password'),
 			})

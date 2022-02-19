@@ -41,8 +41,4 @@ class Chapter extends Model
         return $this->belongsTo(Theme::class);
     }
 
-	public function exercises ()
-	{
-		return $this->hasMany(Exercise::class)->with('illustrations');
-	}
 }

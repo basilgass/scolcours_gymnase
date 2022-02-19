@@ -4,6 +4,7 @@
 			v-model="numerator"
 			label="numérateur"
 			name="numerator"
+			focus
 		/>
 		
 		<form-input

@@ -12,7 +12,6 @@ const path = require('path')
  */
 mix.js('resources/js/app.js', 'public/js')
 	.vue()
-	// .extract(['pimath', 'pidraw', '@svgdotjs/svg.js', '@svgdotjs/svg.draggable.js'], 'bundle/pi.bundle.js')
 	.extract()
 	.postCss('resources/css/app.css', 'public/css', [
 		require('postcss-import'),
@@ -26,21 +25,14 @@ mix.js('resources/js/app.js', 'public/js')
 			alias: {
 				'@': path.resolve('resources/js'),
 			},
-			
 		},
-		// optimization: {
-		// 	minimize: false
-		// }
+		// optimization: {minimize: false}
 	})
 	.js([
 		'resources/js/pi.js',
 		'resources/js/pidraw.js'
 	], 'public/js/pi.bundle.js').minify('public/js/pi.bundle.js')
+	.sourceMaps(true)
+	.disableNotifications()
 
 if (mix.inProduction()) {mix.version()}
-
-// .js([
-// "resources/js/pi.js",
-// "resources/js/pigeometry.js",
-// "resources/js/pigraph.js",
-// ], "public/js/pi.bundle.js").minify("public/js/pi.bundle.js")
