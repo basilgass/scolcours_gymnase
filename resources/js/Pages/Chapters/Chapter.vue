@@ -14,22 +14,22 @@
 	<component :is="chapterComponent" />
 		
 	<!-- exercises -->
-	<div v-if="chapter.exercises.length>0">
-		<h2 class="my-4 font-semibold text-lg">
-			Exercices
-		</h2>
-		<div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-			<div
-				v-for="(exercise, index) of chapter.exercises"
-				:key="`exercise-${exercise.id}`"
-			>
-				<Exercise
-					:exercise="exercise"
-					:exercise-number="index+1"
-				/>
-			</div>
-		</div>
-	</div>
+<!--	<div v-if="chapter.exercises.length>0">-->
+<!--		<h2 class="my-4 font-semibold text-lg">-->
+<!--			Exercices-->
+<!--		</h2>-->
+<!--		<div class="grid grid-cols-1 lg:grid-cols-2 gap-4">-->
+<!--			<div-->
+<!--				v-for="(exercise, index) of chapter.exercises"-->
+<!--				:key="`exercise-${exercise.id}`"-->
+<!--			>-->
+<!--				<Exercise-->
+<!--					:exercise="exercise"-->
+<!--					:exercise-number="index+1"-->
+<!--				/>-->
+<!--			</div>-->
+<!--		</div>-->
+<!--	</div>-->
 </template>
 
 <script>

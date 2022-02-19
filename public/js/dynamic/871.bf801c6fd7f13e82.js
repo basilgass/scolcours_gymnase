@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunk=self.webpackChunk||[]).push([[871],{9871:(t,e,n)=>{n.r(e),n.d(e,{default:()=>s});var l=n(821),r={class:"text-xl"};const s={props:{title:String},setup:function(t){return function(e,n){return(0,l.openBlock)(),(0,l.createElementBlock)("h1",r,(0,l.toDisplayString)(t.title),1)}}}}}]);
