@@ -125,6 +125,5 @@ function generatePDF () {
 	}).catch(
 		err => {console.error(err.response)}
 	)
-
 }
 </script>

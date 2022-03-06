@@ -14,7 +14,6 @@
 		{
 			$requestData = json_decode($data->getContent());
 
-			dd($requestData);
 			// Check if folder exists.
 			$folder = "pdf/{$requestData->theme}/{$requestData->slug}";
 			if (!Storage::disk('public')->exists($folder)) {
@@ -24,7 +23,7 @@
 			// Generate a filename
 			// TODO: Generate slug of 4 letters
 			$fileID = Str::random(4);
-			// Check if is already in the database.
+			// Check if it is already in the database.
 			while (LatexPdf::whereSlug($fileID)->first()) {
 				$fileID = Str::random(4);
 			}
@@ -39,11 +38,6 @@
 			                                                  ])
 			                                           ->savePdf(Storage::disk('public')->path($fullpath));
 
-			dd(
-				$filename,
-				$fullpath,
-				$result
-			);
 			if ($result) {
 				// Save it to the database.
 				LatexPdf::create([
