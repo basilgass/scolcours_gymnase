@@ -1,12 +1,7 @@
 window._ = require('lodash')
 
 window.axios = require('axios')
-window.axios.defaults.headers.common = {
-	'X-Requested-With': 'XMLHttpRequest',
-	'X-CSRF-TOKEN' : window.csrf_token
-}
 
-console.log(window.axios.defaults.headers)
 import renderMathInElement from 'katex/dist/contrib/auto-render.mjs'
 
 window.katexAutoRender = function (el, display) {
