@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunk=self.webpackChunk||[]).push([[6955],{6955:(e,t,l)=>{l.r(t),l.d(t,{default:()=>a});var n=l(821),r=["for"];const a={props:{name:{type:String,required:!0},label:{type:String,default:""}},setup:function(e){return function(t,l){var a;return(0,n.openBlock)(),(0,n.createElementBlock)("label",{for:e.name,class:"block mb-2 uppercase font-bold text-xs text-gray-700"},(0,n.toDisplayString)(""===e.label?e.name:null!==(a=e.label)&&void 0!==a?a:""),9,r)}}}}}]);
+//# sourceMappingURL=6955.bfdae258c7073b1a.js.map

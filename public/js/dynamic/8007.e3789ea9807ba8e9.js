@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunk=self.webpackChunk||[]).push([[8007],{8007:(e,t,l)=>{l.r(t),l.d(t,{default:()=>s});var n=l(821);const s={props:{hideLabel:{type:Boolean,default:!1}},setup:function(e){return function(t,l){return(0,n.openBlock)(),(0,n.createElementBlock)("div",{class:(0,n.normalizeClass)({"mt-6":!e.hideLabel})},[(0,n.renderSlot)(t.$slots,"default")],2)}}}}}]);
+//# sourceMappingURL=8007.e3789ea9807ba8e9.js.map
