@@ -14,6 +14,7 @@
 		{
 			$requestData = json_decode($data->getContent());
 
+			dd($requestData);
 			// Check if folder exists.
 			$folder = "pdf/{$requestData->theme}/{$requestData->slug}";
 			if (!Storage::disk('public')->exists($folder)) {
