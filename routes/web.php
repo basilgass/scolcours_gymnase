@@ -21,51 +21,51 @@ use Inertia\Inertia;
 |
 */
 
-	// Home page - no controller
-	Route::get('/', function () {
-		$themes = Theme::all();
-		return Inertia::render('Welcome', [
-			'canLogin'    => Route::has('login'),
-			'canRegister' => Route::has('register'),
-			'themes'      => $themes
-		]);
-	})->name('home');
+// Home page - no controller
+Route::get('/', function () {
+	$themes = Theme::all();
+	return Inertia::render('Welcome', [
+		'canLogin' => Route::has('login'),
+		'canRegister' => Route::has('register'),
+		'themes' => $themes
+	]);
+})->name('home');
 
 // Challenges
-	Route::get('/challenge', [ChallengesController::class, 'index']);
-	Route::get('/challenge/{challenge:slug}', [ChallengesController::class, 'show']);
-	Route::post('/challenge/{challenge:slug}/start', [ChallengesController::class, 'start']);
+Route::get('/challenge', [ChallengesController::class, 'index']);
+Route::get('/challenge/{challenge:slug}', [ChallengesController::class, 'show']);
+Route::post('/challenge/{challenge:slug}/start', [ChallengesController::class, 'start']);
 
 // Auth route
-	Route::get('/dashboard', function () {
-		return Inertia::render('Dashboard');
-	})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', function () {
+	return Inertia::render('Dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
 
 // Admin controller and routes
-	Route::get('/admin', [AdminController::class, 'show'])
-	     ->middleware(['auth', 'verified'])->name('admin');
-	require __DIR__ . '/auth.php';
+Route::get('/admin', [AdminController::class, 'show'])
+	->middleware(['auth', 'verified'])->name('admin');
+require __DIR__ . '/auth.php';
 
 // Latex download - migrate to custom controller
-Route:get('/latex/dry', [LatexController::class, 'dry']);
-	Route::post('/latex', [LatexController::class, 'latex']);
-	Route::get('/download/{fileID}', [LatexController::class, 'download']);
+Route::get('/latex/dry', [LatexController::class, 'dry']);
+Route::post('/latex', [LatexController::class, 'latex']);
+Route::get('/download/{fileID}', [LatexController::class, 'download']);
 
-	// Developpement page
-	Route::get('dev/', function () {
-		return Inertia::render("Dev");
-	});
+// Developpement page
+Route::get('dev/', function () {
+	return Inertia::render("Dev");
+});
 
-	// Post routes (for debug / dev)
-	Route::post('post/', [PostController::class, 'store']);
-	Route::get('post/create', [PostController::class, 'create']);
-	Route::get('post/{post}', [PostController::class, 'show']);
+// Post routes (for debug / dev)
+Route::post('post/', [PostController::class, 'store']);
+Route::get('post/create', [PostController::class, 'create']);
+Route::get('post/{post}', [PostController::class, 'show']);
 
-	// Tools controller
-	Route::get('tools/', [ToolsController::class, 'index'])->name('tools');
-	Route::get('tools/{tool:slug}', [ToolsController::class, 'show'])->name('tools.tool');
+// Tools controller
+Route::get('tools/', [ToolsController::class, 'index'])->name('tools');
+Route::get('tools/{tool:slug}', [ToolsController::class, 'show'])->name('tools.tool');
 
-	// Chapter controller
-	Route::get('{theme:slug}/', [ChaptersController::class, 'index'])->name('theme');
-	Route::get('{theme:slug}/{chapter:slug}', [ChaptersController::class, 'show'])->name('theme.chapter');
+// Chapter controller
+Route::get('{theme:slug}/', [ChaptersController::class, 'index'])->name('theme');
+Route::get('{theme:slug}/{chapter:slug}', [ChaptersController::class, 'show'])->name('theme.chapter');
 
