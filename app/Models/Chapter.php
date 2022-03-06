@@ -15,8 +15,6 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $body
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Exercise[] $exercises
- * @property-read int|null $exercises_count
  * @property-read \App\Models\Theme $theme
  * @method static \Database\Factories\ChapterFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|Chapter newModelQuery()
@@ -40,5 +38,9 @@ class Chapter extends Model
     {
         return $this->belongsTo(Theme::class);
     }
-
+	
+	public function posts()
+	{
+		$this->hasMany(Post::class);
+	}
 }

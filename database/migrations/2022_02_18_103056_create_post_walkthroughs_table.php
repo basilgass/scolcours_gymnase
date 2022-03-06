@@ -4,7 +4,7 @@
 	use Illuminate\Database\Schema\Blueprint;
 	use Illuminate\Support\Facades\Schema;
 	
-	class CreateTemplatesTable extends Migration
+	return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,12 @@
      */
     public function up()
     {
-        Schema::create('templates', function (Blueprint $table) {
+        Schema::create('post_walkthroughs', function (Blueprint $table) {
             $table->id();
-			$table->string('name');
-			$table->string('component');
+	        $table->foreignId('post_id')->constrained()->cascadeOnDelete();
+			$table->integer('order');
+			$table->text('step');
+			$table->text('resolution');
             $table->timestamps();
         });
     }
@@ -28,6 +30,6 @@
      */
     public function down()
     {
-        Schema::dropIfExists('templates');
+        Schema::dropIfExists('walkthroughs');
     }
-}
+};

@@ -44,12 +44,12 @@
 				</div>
 			</transition>
 		</div>
-		
+
 		<div class="text-gray-300 text-sm flex justify-between">
 			<div>
 				{{ questionNo + 1 }} / {{ generatedQuestions.length }}
 			</div>
-			
+
 			<button
 				class="btn py-0"
 				:disabled="downloadGenerating"
@@ -59,7 +59,7 @@
 			</button>
 		</div>
 	</Panel>
-	
+
 <!--	<div-->
 <!--		v-for="item in generatedQuestions"-->
 <!--		:key="item.question"-->
@@ -69,9 +69,9 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import {ref} from 'vue'
 import Panel from '@/Components/Ui/Panel'
-import { usePage } from '@inertiajs/inertia-vue3'
+import {usePage} from '@inertiajs/inertia-vue3'
 
 const props = defineProps({
 	questions: Function
@@ -88,7 +88,7 @@ generatedQuestions.value = props.questions(true)
 function nextQuestion () {
 	if (showFinished.value) {return }
 	showAnswer.value = !showAnswer.value
-	
+
 	// It's a new question
 	if (!showAnswer.value) {
 		if (generatedQuestions.value.length - 1 === questionNo.value) {
@@ -110,7 +110,7 @@ function generatePDF () {
 			answer: q.answer
 		})
 	}
-	
+
 	axios.post(
 		'/latex',
 		{
@@ -123,8 +123,8 @@ function generatePDF () {
 		downloadGenerating.value = false
 		document.location = '/download/' + res.data
 	}).catch(
-		err => {console.log(err.response.data)}
+		err => {console.error(err.response)}
 	)
-	
+
 }
 </script>

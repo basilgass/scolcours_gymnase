@@ -13,6 +13,7 @@
 				$table->string('title');
 				$table->string('type');
 				$table->string('code');
+				$table->string('parameters');
 				$table->timestamps();
 			});
 		}

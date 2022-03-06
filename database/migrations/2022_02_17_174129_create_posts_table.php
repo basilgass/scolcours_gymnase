@@ -4,8 +4,7 @@
 	use Illuminate\Database\Schema\Blueprint;
 	use Illuminate\Support\Facades\Schema;
 	
-	class CreatePostsTable extends Migration
-	{
+	return new class extends Migration {
 		/**
 		 * Run the migrations.
 		 *
@@ -15,9 +14,9 @@
 		{
 			Schema::create('posts', function (Blueprint $table) {
 				$table->id();
+				$table->foreignId('chapter_id')->constrained()->cascadeOnDelete();
 				$table->string('title');
 				$table->text('body');
-				$table->foreignId('template_id')->constrained()->cascadeOnDelete();
 				$table->timestamps();
 			});
 		}
@@ -31,4 +30,4 @@
 		{
 			Schema::dropIfExists('posts');
 		}
-	}
+	};

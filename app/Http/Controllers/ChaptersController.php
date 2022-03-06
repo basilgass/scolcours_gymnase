@@ -14,7 +14,7 @@
 		public function index(Theme $theme)
 		{
 			$data = [
-				"theme"    => $theme,
+				"theme"    => $theme->only('color', 'icon', 'slug', 'title', 'id'),
 				"chapters" => $theme->chapters()->get(['slug', 'title', 'body'])
 			];
 			
@@ -33,11 +33,8 @@
 		
 		public function show(Theme $theme, Chapter $chapter)
 		{
-			// fetch all exercises from this chapter.
-			$exercises = $chapter->exercises;
-			
 			return Inertia::render('Chapters/Chapter', [
-				"theme"               => $theme,
+				"theme"               => $theme->only('color', 'icon', 'slug', 'title', 'id'),
 				"chapter"             => $chapter,
 				"hasChapterComponent" => file_exists(resource_path("js/Chapters/{$theme->slug}/{$chapter->slug}.vue")),
 			]);

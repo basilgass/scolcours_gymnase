@@ -4,7 +4,7 @@
 	use Illuminate\Database\Schema\Blueprint;
 	use Illuminate\Support\Facades\Schema;
 	
-	class CreateIllustrationablesTable extends Migration
+	return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -15,9 +15,10 @@
     {
         Schema::create('illustrationables', function (Blueprint $table) {
             $table->id();
-			$table->foreignId('illustrationable_id')->constrained()->cascadeOnDelete();
-			$table->integer('illustrationable_type');
-            $table->timestamps();
+			$table->foreignId('illustration_id')->constrained()->cascadeOnDelete();
+	        $table->integer('illustrationable_id');
+	        $table->string('illustrationable_type');
+	        $table->timestamps();
         });
     }
 
@@ -30,4 +31,4 @@
     {
         Schema::dropIfExists('illustrationables');
     }
-}
+};

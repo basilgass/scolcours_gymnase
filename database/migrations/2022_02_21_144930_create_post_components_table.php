@@ -4,7 +4,7 @@
 	use Illuminate\Database\Schema\Blueprint;
 	use Illuminate\Support\Facades\Schema;
 	
-	class CreateWalkthroughsTable extends Migration
+	return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,12 @@
      */
     public function up()
     {
-        Schema::create('walkthroughs', function (Blueprint $table) {
+        Schema::create('post_components', function (Blueprint $table) {
             $table->id();
-			$table->integer('order');
-			$table->text('step');
-			$table->text('resolution');
-			$table->foreignId('illustration_id');
+	        $table->foreignId('post_id')->constrained()->cascadeOnDelete();
+			$table->string('name');
+			$table->string('component');
+			$table->json('parameters');
             $table->timestamps();
         });
     }
@@ -30,6 +30,6 @@
      */
     public function down()
     {
-        Schema::dropIfExists('walkthroughs');
+        Schema::dropIfExists('post_components');
     }
-}
+};

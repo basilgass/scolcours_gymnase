@@ -4,6 +4,7 @@
 	use App\Http\Controllers\ChallengesController;
 	use App\Http\Controllers\ChaptersController;
 	use App\Http\Controllers\LatexController;
+	use App\Http\Controllers\PostController;
 	use App\Http\Controllers\ToolsController;
 	use App\Models\Theme;
 	use Illuminate\Support\Facades\Route;
@@ -53,6 +54,11 @@
 	Route::get('dev/', function () {
 		return Inertia::render("Dev");
 	});
+	
+	// Post routes (for debug / dev)
+	Route::post('post/', [PostController::class, 'store']);
+	Route::get('post/create', [PostController::class, 'create']);
+	Route::get('post/{post}', [PostController::class, 'show']);
 	
 	// Tools controller
 	Route::get('tools/', [ToolsController::class, 'index'])->name('tools');

@@ -41,7 +41,15 @@ class HandleInertiaRequests extends Middleware
 								'admin' => $request->user()?->admin
 	            ]
             ],
-            'themes' => Theme::all()
+            'themes' => Theme::all()->mapWithKeys(function ($item, $key) {
+	            return [
+		            $key => [
+			            'id' => $item->id,
+			            'slug'     => $item->slug,
+			            'title'    => $item->title
+		            ]
+	            ];
+            })
         ]);
     }
 }
