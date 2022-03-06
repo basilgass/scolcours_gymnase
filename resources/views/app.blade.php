@@ -21,6 +21,9 @@
     <script src="{{ mix('js/pi.bundle.js') }}" defer></script>
     <script src="{{ mix('js/app.js') }}" defer></script>
 
+	<script type="text/javascript">
+		window.csrf_token = "{{ csrf_token() }}"
+	</script>
 </head>
 <body class="font-sans antialiased min-h-screen">
 
