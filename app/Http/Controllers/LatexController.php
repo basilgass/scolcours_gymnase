@@ -38,6 +38,11 @@
 			                                                  ])
 			                                           ->savePdf(Storage::disk('public')->path($fullpath));
 
+			dd(
+				$filename,
+				$fullpath,
+				$result
+			);
 			if ($result) {
 				// Save it to the database.
 				LatexPdf::create([
