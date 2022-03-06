@@ -6,8 +6,7 @@ window.axios.defaults.headers.common = {
 	'X-CSRF-TOKEN' : window.csrf_token
 }
 
-window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest'
-
+console.log(window.axios.defaults.headers)
 import renderMathInElement from 'katex/dist/contrib/auto-render.mjs'
 
 window.katexAutoRender = function (el, display) {
