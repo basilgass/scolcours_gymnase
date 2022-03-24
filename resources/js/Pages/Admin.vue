@@ -2,7 +2,7 @@
 	<h1 class="text-3xl pt-5 mb-10">
 		Administration
 	</h1>
-	
+
 	<div class="space-y-4">
 		<Panel>
 			<h2 class="text-lg my-2">
@@ -29,7 +29,7 @@
 				</div>
 			</div>
 		</Panel>
-		
+
 		<Panel>
 			<h2 class="text-lg my-2">
 				Challenges
@@ -55,7 +55,7 @@
 				</div>
 			</div>
 		</Panel>
-		
+
 		<Panel>
 			<h2 class="text-lg my-2">
 				Outils
@@ -85,14 +85,14 @@
 </template>
 
 <script>
-import LayoutMain from '@/Pages/Shared/LayoutMain'
+import LayoutMain from "@/Pages/Shared/LayoutMain"
 
 export default {
 	layout: LayoutMain
 }
 </script>
 <script setup>
-import Panel from '@/Components/Ui/Panel'
+import Panel from "@/Components/Ui/Panel"
 
 const props = defineProps({
 	tools: Object,
