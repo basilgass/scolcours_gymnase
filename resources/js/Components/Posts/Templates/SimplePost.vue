@@ -83,8 +83,8 @@
 
 <script setup>
 
-import {computed, defineAsyncComponent, onMounted, ref} from 'vue'
-import IllustrationDraw from '@/Components/Posts/IllustrationDraw'
+import {computed, defineAsyncComponent, onMounted, ref} from "vue"
+import IllustrationDraw from "@/Components/Posts/IllustrationDraw"
 
 let root = ref(null),
 	solutions = ref(0)

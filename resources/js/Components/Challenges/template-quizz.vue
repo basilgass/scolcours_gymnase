@@ -9,20 +9,20 @@
 		<template #information>
 			Donnée
 		</template>
-		
+
 		<template #question>
 			<div v-katex.nomargin="displayQuestion" />
 		</template>
-		
+
 		<template #answer>
 			<div
 				v-katex.ascii="displayAnswer"
 				class="h-16 text-center"
 			/>
 		</template>
-		
+
 		<template #answerFormat />
-		
+
 		<template #inputs>
 			<Keyboard
 				ref="keyboard"
@@ -35,15 +35,15 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
-import Keyboard from '@/Components/Ui/Keyboard'
-import ChallengeWrapper from '@/Components/Challenges/ui/challengeWrapper'
+import {computed, ref} from "vue"
+import Keyboard from "@/Components/Ui/Keyboard"
+import ChallengeWrapper from "@/Components/Challenges/ui/challengeWrapper"
 
-const title = 'titre du challenge'
+const title = "titre du challenge"
 
 // Active variables
 let root = ref(null),		// main reference wrapper
-	answer = ref(''),		// the answer given by the user
+	answer = ref(""),		// the answer given by the user
 	points = ref(0),			// current number of points and how to handle them
 	results = ref([]),		// list of given results - simple list display.
 	keyboard = ref(null),	// keyboard reference.
@@ -57,16 +57,16 @@ let displayAnswer = computed(() => {
 	})
 
 function newQuestion () {
-	let result = '',
-		tex = ''
-	
+	let result = "",
+		tex = ""
+
 	// Create the question
-	
+
 	return {
 		answer: result,
 		tex,
 	}
-	
+
 }
 
 function reset () {
@@ -81,13 +81,13 @@ function validate () {
 		ascii: answer.value,
 		correct: false
 	}
-	
+
 	// Validate answer
 	if (answer.value === question.value.answer) {
 		// Answer is correct
 		points.value++
 		result.correct = true
-		
+
 		// Reset and create new question
 		reset()
 		question.value = newQuestion()
@@ -96,9 +96,9 @@ function validate () {
 		points.value = 0
 		root.value.shake()
 	}
-	
+
 	// Add the given answer to the result list.
 	results.value.push(result)
-	
+
 }
 </script>

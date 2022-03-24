@@ -1,3 +1,4 @@
+<!--suppress ALL -->
 <template>
 	<div class="mb-4">
 		<Link
@@ -13,18 +14,18 @@
 </template>
 
 <script>
-import LayoutMain from '@/Pages/Shared/LayoutMain'
+import LayoutMain from "@/Pages/Shared/LayoutMain"
 
 export default {
 	layout: LayoutMain
 }
 </script>
 <script setup>
-import { computed, defineAsyncComponent, ref } from 'vue'
+import {computed, defineAsyncComponent, ref} from "vue"
 
 const props = defineProps({
-	'challenge': String,
-	'theme': Object,
+	"challenge": String,
+	"theme": Object,
 })
 
 const challengeComponent = computed(

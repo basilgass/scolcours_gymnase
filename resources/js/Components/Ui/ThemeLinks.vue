@@ -14,6 +14,6 @@
 </template>
 <script setup>
 
-let emit = defineEmits(['ClickNavigationLinks'])
+let emit = defineEmits(["ClickNavigationLinks"])
 
 </script>

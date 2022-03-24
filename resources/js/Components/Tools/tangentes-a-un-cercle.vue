@@ -42,19 +42,20 @@
  * parameters: equ=equation, valeur=Point/Fraction
  * tags: geometrie,3M
  */
-import Panel from '@/Components/Ui/Panel'
-import FormInput from '@/Components/Form/FormInput'
-import {computed, ref} from 'vue'
+import Panel from "@/Components/Ui/Panel"
+import FormInput from "@/Components/Form/FormInput"
+import {computed, ref} from "vue"
+import {Circle, Point} from "pimath/esm/maths/geometry"
 
-let equ = ref('(x-4)^2+(y-5)^2=25'),
-	value = ref('7,9')
+let equ = ref("(x-4)^2+(y-5)^2=25"),
+	value = ref("7,9")
 
-let tangentes = computed(()=>{
-	try{
-		const C = new Pi.Geometry.Circle(equ.value)
-		const P = new Pi.Geometry.Point(value.value)
+let tangentes = computed(() => {
+	try {
+		const C = new Circle(equ.value)
+		const P = new Point(value.value)
 		return C.tangents(P)
-	}catch (e) {
+	} catch (e) {
 		return false
 	}
 })
