@@ -1,22 +1,32 @@
-import katex from 'katex/dist/katex.mjs'
-import AsciiMathParser from 'asciimath2tex'
+import katex from "katex/dist/katex.mjs"
+import AsciiMathParser from "asciimath2tex"
 
-function katexUpdate (el, binding, vnode) {
+function katexUpdate(el, binding, vnode) {
 	if (binding.value.length === 0) {
-		el.innerHTML = ''
+		el.innerHTML = ""
 	} else {
 		const tex = binding.modifiers.ascii ? new AsciiMathParser().parse(binding.value) : binding.value
-		
-		if(!binding.modifiers.clear) {el.classList.add('katex-container')}
-		
+
+		if (!binding.modifiers.clear) {
+			el.classList.add("katex-container")
+		}
+
 		// Add boxed to the inline container
-		if(binding.modifiers.boxed){el.classList.add('katex-boxed')}
-		if(binding.modifiers.lg){el.classList.add('katex-boxed-lg')}
-		if (binding.modifiers.left) {el.classList.add('katex-left')}
-		if (binding.modifiers.nomargin) {el.classList.add('katex-m-0')}
-		
+		if (binding.modifiers.boxed) {
+			el.classList.add("katex-boxed")
+		}
+		if (binding.modifiers.lg) {
+			el.classList.add("katex-boxed-lg")
+		}
+		if (binding.modifiers.left) {
+			el.classList.add("katex-left")
+		}
+		if (binding.modifiers.nomargin) {
+			el.classList.add("katex-m-0")
+		}
+
 		el.innerHTML = katex.renderToString(
-			(binding.modifiers.display ? '\\displaystyle ' : '') + tex,
+			(binding.modifiers.display ? "\\displaystyle " : "") + tex,
 			{
 				throwOnError: false,
 				displayMode: !binding.modifiers.inline
@@ -32,12 +42,12 @@ export const katexDirective = {
 		katexUpdate(el, binding, vnode)
 	},
 	unmounted(el){
-		el.innerHTML = ''
+		el.innerHTML = ""
 	}
 }
 
 export const visibleDirective = {
 	mounted (el, binding, vnode) {
-		el.style.visibility = binding.value? 'visible': 'hidden'
+		el.style.visibility = binding.value ? "visible" : "hidden"
 	}
 }
