@@ -1,11 +1,11 @@
 <template>
 	<article>
 		<challenge-title :title="title" />
-		
+
 		<div>score actuel: {{ points }}</div>
 		<div v-katex="poly.tex" />
 		<div v-katex="factorisation" />
-		
+
 		<div class="text-center">
 			<button
 				class="btn btn-success"
@@ -14,7 +14,7 @@
 				Valider
 			</button>
 		</div>
-		
+
 		<div class="grid grid-cols-2 gap-2 max-w-lg mx-auto mt-5">
 			<div class="space-y-2">
 				<div
@@ -41,20 +41,22 @@
 <script setup>
 import { computed, ref } from 'vue'
 import ChallengeTitle from '@/Components/Challenges/ui/challengeTitle'
+import {Random} from "pimath/esm/maths/random";
+import {Polynom} from "pimath/esm/maths/algebra";
 
 const title = 'quadratique - décomposition du trinôme'
 
 let answer = ref([]),
 	points = ref(0),
 	poly = ref(newQuestion())
-  
+
 let factorisation = computed(()=>{
 	if(answer.value.length===0){return '?'}
 	return answer.value.map(x=>`(${x})`).join('')
 })
 
 function newQuestion(){
-	return Pi.Random.polynom({
+	return Random.polynom({
 		letters: 'x',
 		degree: 2,
 		factorable: true,
@@ -72,9 +74,9 @@ function updateAnswer(value){
 
 function validateAnswer(){
 	if(answer.value.length!==2){return false}
-    
-	let P = new Pi.Polynom(answer.value.map(x=>`(${x})`).join(''))
-    
+
+	let P = new Polynom(answer.value.map(x=>`(${x})`).join(''))
+
 	if(P.isEqual(poly.value)){
 		points.value++
 		answer.value = []
