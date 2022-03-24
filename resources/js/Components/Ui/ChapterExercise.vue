@@ -3,7 +3,7 @@
 		<slot name="illustration" />
 		<div>
 			<slot />
-			
+
 			<h3 class="mt-8 mb-4 font-semibold">
 				Marche à suivre
 			</h3>
@@ -17,7 +17,7 @@
 				</li>
 			</ol>
 		</div>
-		
+
 		<div class="lg:col-span-2">
 			<div class="flex items-center mt-8 mb-4 space-x-10">
 				<h3 class="font-semibold">
@@ -31,7 +31,7 @@
 					Etape suivante
 				</button>
 			</div>
-			
+
 			<ol class="list-decimal list-space space-y-4">
 				<li
 					v-for="(item, index) of props.steps"
@@ -47,7 +47,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import {ref} from "vue"
 
 let solutions = ref(0)
 const props = defineProps({
