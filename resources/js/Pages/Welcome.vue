@@ -7,14 +7,14 @@
 			powered by Scolcours
 		</div>
 	</div>
-	
-	
+
+
 	<div class="mt-10 text-center text-lg">
 		<Link href="/challenge">
 			Vers les quizz / challenge
 		</Link>
 	</div>
-	
+
 	<div class="my-10">
 		<div
 			class="
@@ -39,7 +39,7 @@
 	</div>
 </template>
 <script>
-import LayoutFullpage from '@/Pages/Shared/LayoutFullpage'
+import LayoutFullpage from "@/Pages/Shared/LayoutFullpage"
 
 export default {
 	layout: LayoutFullpage,

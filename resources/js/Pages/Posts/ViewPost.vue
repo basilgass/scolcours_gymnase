@@ -1,3 +1,4 @@
+<!--suppress ALL -->
 <template>
 	<div
 		ref="root"
@@ -11,7 +12,7 @@
 </template>
 
 <script>
-import LayoutMain from '@/Pages/Shared/LayoutMain'
+import LayoutMain from "@/Pages/Shared/LayoutMain"
 
 export default {
 	layout: LayoutMain
@@ -19,7 +20,7 @@ export default {
 </script>
 
 <script setup>
-import {computed, defineAsyncComponent, onMounted, ref} from 'vue'
+import {computed, defineAsyncComponent, onMounted, ref} from "vue"
 
 let root = ref(null)
 

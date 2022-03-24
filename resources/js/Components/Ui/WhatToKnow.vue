@@ -69,9 +69,9 @@
 </template>
 
 <script setup>
-import {ref} from 'vue'
-import Panel from '@/Components/Ui/Panel'
-import {usePage} from '@inertiajs/inertia-vue3'
+import {ref} from "vue"
+import Panel from "@/Components/Ui/Panel"
+import {usePage} from "@inertiajs/inertia-vue3"
 
 const props = defineProps({
 	questions: Function
@@ -112,7 +112,7 @@ function generatePDF () {
 	}
 
 	axios.post(
-		'/latex',
+		"/latex",
 		{
 			questions,
 			theme: usePage().props.value.theme.slug,
@@ -121,7 +121,7 @@ function generatePDF () {
 		}
 	).then(res => {
 		downloadGenerating.value = false
-		document.location = '/download/' + res.data
+		document.location = "/download/" + res.data
 	}).catch(
 		err => {console.error(err.response)}
 	)
