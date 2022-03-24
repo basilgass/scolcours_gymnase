@@ -3,10 +3,10 @@
 		<h1 class="text-xl">
 			{{ title }}
 		</h1>
-		
+
 		<div>score actuel: {{ points }}</div>
 	</div>
-	
+
 	<div v-bind="$attrs">
 		<!-- Information (optional) -->
 		<div
@@ -15,17 +15,17 @@
 		>
 			<slot name="information" />
 		</div>
-		
+
 		<!-- Question display - it's generated -->
 		<div ref="questionWrapper">
 			<slot name="question" />
 		</div>
-		
+
 		<!-- Answer display -->
 		<div>
 			<slot name="answer" />
 		</div>
-		
+
 		<!-- Answer format (static - optional) -->
 		<div
 			v-if="$slots.answerFormat"
@@ -37,7 +37,7 @@
 			>
 				Format des réponses
 			</div>
-			
+
 			<transition name="slide-right">
 				<div
 					v-show="showAnswerFormat"
@@ -47,7 +47,7 @@
 				</div>
 			</transition>
 		</div>
-		
+
 		<!-- Validate button TODO: Must add a "skip question" -->
 		<div class="text-center pt-1 pb-5">
 			<button
@@ -57,12 +57,12 @@
 				Valider
 			</button>
 		</div>
-		
+
 		<!-- Inputs, usually a keyboard TODO: ability to add default keyboard without using a slot -->
 		<div>
 			<slot name="inputs" />
 		</div>
-		
+
 		<!-- Display the results already given -->
 		<div>
 			<h3
@@ -99,8 +99,8 @@
 </template>
 
 <script setup>
-import Panel from '@/Components/Ui/Panel'
-import { ref } from 'vue'
+import Panel from "@/Components/Ui/Panel"
+import {ref} from "vue"
 
 defineProps({
 	title: String,
@@ -109,14 +109,14 @@ defineProps({
 	validate: Function
 })
 
-function shake(){
-	questionWrapper.value.style.setProperty('animation-name', 'v-shake-horizontal')
-	questionWrapper.value.style.setProperty('animation-duration', '500ms')
-	
+function shake() {
+	questionWrapper.value.style.setProperty("animation-name", "v-shake-horizontal")
+	questionWrapper.value.style.setProperty("animation-duration", "500ms")
+
 	setTimeout(() => {
-		questionWrapper.value.style.setProperty('animation-name', '')
+		questionWrapper.value.style.setProperty("animation-name", "")
 	}, 500)
-	
+
 }
 
 let showResults = ref(false),

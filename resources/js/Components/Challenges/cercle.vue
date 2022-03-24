@@ -1,11 +1,11 @@
 <template>
 	<article>
 		<challenge-title :title="title" />
-		
+
 		<div>score actuel: {{ modelProp.modelValue }}</div>
 		<div v-katex="displayQuestion" />
 		<div v-katex="displayAnswer" />
-		
+
 		<div class="text-center">
 			<button
 				class="btn btn-success"
@@ -14,7 +14,7 @@
 				Valider
 			</button>
 		</div>
-		
+
 		<div class="grid grid-cols-2 gap-2 max-w-lg mx-auto mt-5">
 			<div
 				v-show="crtLetter!=='r'"
@@ -51,39 +51,41 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
-import ChallengeTitle from '@/Components/Challenges/ui/challengeTitle'
+import {computed, ref} from "vue"
+import ChallengeTitle from "@/Components/Challenges/ui/challengeTitle"
+import {Random} from "pimath/esm/maths/random"
+import {Polynom} from "pimath/esm/maths/algebra"
 
-const title = 'cercle'
+const title = "cercle"
 
 let answer = ref({x: null, y: null, r: null}),
 	question = ref(newQuestion()),
-	crtLetter = ref('x')
+	crtLetter = ref("x")
 
 let displayAnswer = computed(() => {
-	let tex = ''
-	
-	if(answer.value.x!==null){
-		if(+answer.value.x===0){
-			tex += 'x^2'
-		}else {
-			tex += `(x${answer.value.x < 0 ? '+' : ''}${-answer.value.x})^2`
+	let tex = ""
+
+	if (answer.value.x !== null) {
+		if (+answer.value.x === 0) {
+			tex += "x^2"
+		} else {
+			tex += `(x${answer.value.x < 0 ? "+" : ""}${-answer.value.x})^2`
 		}
 	}
-	tex += '+'
-	if(answer.value.y!=null){
-		if(+answer.value.y===0){
-			tex += 'y^2'
-		}else {
-			tex += `(y${answer.value.y < 0 ? '+' : ''}${-answer.value.y})^2`
+	tex += "+"
+	if (answer.value.y != null) {
+		if (+answer.value.y === 0) {
+			tex += "y^2"
+		} else {
+			tex += `(y${answer.value.y < 0 ? "+" : ""}${-answer.value.y})^2`
 		}
 	}
-	tex += '='
-	
-	if(answer.value.r!==null){
+	tex += "="
+
+	if (answer.value.r !== null) {
 		tex += answer.value.r
 	}
-	
+
 	return tex
 })
 let displayQuestion = computed(() => {
@@ -91,16 +93,16 @@ let displayQuestion = computed(() => {
 })
 
 function newQuestion () {
-	let ca = Pi.Random.numberSym(10, true),
-		cb = Pi.Random.numberSym(10, true),
-		r = Pi.Random.number(1, 10)
-	
-	let Px = new Pi.Polynom(`x${ca<=0?'+':''}${-ca}`).pow(2),
-		Py = new Pi.Polynom(`y${cb<=0?'+':''}${-cb}`).pow(2)
-	
+	let ca = Random.numberSym(10, true),
+		cb = Random.numberSym(10, true),
+		r = Random.number(1, 10)
+
+	let Px = new Polynom(`x${ca <= 0 ? "+" : ""}${-ca}`).pow(2),
+		Py = new Polynom(`y${cb <= 0 ? "+" : ""}${-cb}`).pow(2)
+
 	return {
 		ca, cb, r,
-		tex: Px.clone().add(Py).add(new Pi.Polynom(`${-(r)}`)).reorder('y').reorder('x').tex + '=0'
+		tex: Px.clone().add(Py).add(new Polynom(`${-(r)}`)).reorder("y").reorder("x").tex + "=0"
 	}
 }
 
@@ -108,18 +110,18 @@ function resetAsnwer () {
 	answer.value.x = null
 	answer.value.y = null
 	answer.value.r = null
-	crtLetter.value = 'x'
+	crtLetter.value = "x"
 }
 
 function updateAnswer (value) {
 	answer.value[crtLetter.value] = value
-	
-	if(crtLetter.value==='x'){
-		crtLetter.value='y'
-	}else if(crtLetter.value==='y'){
-		crtLetter.value = 'r'
-	}else{
-		crtLetter.value = 'x'
+
+	if (crtLetter.value === "x") {
+		crtLetter.value = "y"
+	} else if (crtLetter.value === "y") {
+		crtLetter.value = "r"
+	} else {
+		crtLetter.value = "x"
 	}
 }
 
@@ -133,7 +135,7 @@ function checkAnswer() {
 
 
 // Shared data for all challenges components.
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits(["update:modelValue"])
 const modelProp = defineProps({
 	modelValue: {type: Number, default: 0},
 })
@@ -141,9 +143,9 @@ function validateAnswer () {
 	if(checkAnswer()){
 		resetAsnwer()
 		question.value = newQuestion()
-		emit('update:modelValue', modelProp.modelValue+1)
+		emit("update:modelValue", modelProp.modelValue + 1)
 	} else {
-		emit('update:modelValue', 0)
+		emit("update:modelValue", 0)
 	}
 }
 </script>
