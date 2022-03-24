@@ -25,7 +25,8 @@
 	</div>
 </template>
 <script setup>
-import { onMounted, ref } from 'vue'
+import {onMounted, ref} from "vue"
+import {Graph} from "pidraw/esm"
 
 const root = ref(null),
 	riemann = ref(null),
@@ -34,12 +35,12 @@ const root = ref(null),
 
 let graph, riemannfx
 
-function loadRieman () {
+function loadRieman() {
 	// Generate the graph function
-	graph = new PiDraw(riemann.value)
+	graph = new Graph(riemann.value)
 	graph.axis()
 	// Load the function
-	riemannfx = graph.plot('(x-1)*(x-5)*(x-7)/20+3')
+	riemannfx = graph.plot("(x-1)*(x-5)*(x-7)/20+3")
 	// Draw the rieman
 	riemannfx.riemann(2, 8, rectangles.value)
 }
@@ -47,14 +48,14 @@ function loadRieman () {
 function updateRectangles (value) {
 	if (rectangles.value <= 2 && value < 0) {return}
 	rectangles.value = rectangles.value + value
-	
+
 	// update the rectangle
 	riemannfx.riemann(2, 8, rectangles.value)
 }
 
 onMounted(() => {
 	katexAutoRender(root.value)
-	
+
 	loadRieman()
 })
 </script>

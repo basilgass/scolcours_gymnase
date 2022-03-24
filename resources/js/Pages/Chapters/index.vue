@@ -1,6 +1,6 @@
 <template>
 	<ArticleTitle :title="theme.title" />
-	
+
 	<div class="space-y-5 mt-10">
 		<div
 			v-for="chapter in chapters"
@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import LayoutMain from '@/Pages/Shared/LayoutMain'
+import LayoutMain from "@/Pages/Shared/LayoutMain"
 
 export default {
 	layout: LayoutMain,
@@ -26,7 +26,7 @@ export default {
 </script>
 
 <script setup>
-import ArticleTitle from '@/Components/Ui/ArticleTitle'
+import ArticleTitle from "@/Components/Ui/ArticleTitle"
 
 defineProps({
 	theme: { type: Object, default: () => {} },
