@@ -1,57 +1,64 @@
+<!--suppress ALL -->
 <template>
 	<!-- Title -->
 	<ArticleTitle
-		:title="chapter.title"
 		:chapter="theme.title"
+		:title="chapter.title"
 	/>
-		
+
 	<!-- Chapter description -->
 	<div class="mb-5">
 		{{ chapter.body }}
 	</div>
-		
+
 	<!-- Chapter component with or without interactivity -->
 	<component :is="chapterComponent" />
-		
+
 	<!-- exercises -->
-<!--	<div v-if="chapter.exercises.length>0">-->
-<!--		<h2 class="my-4 font-semibold text-lg">-->
-<!--			Exercices-->
-<!--		</h2>-->
-<!--		<div class="grid grid-cols-1 lg:grid-cols-2 gap-4">-->
-<!--			<div-->
-<!--				v-for="(exercise, index) of chapter.exercises"-->
-<!--				:key="`exercise-${exercise.id}`"-->
-<!--			>-->
-<!--				<Exercise-->
-<!--					:exercise="exercise"-->
-<!--					:exercise-number="index+1"-->
-<!--				/>-->
-<!--			</div>-->
-<!--		</div>-->
-<!--	</div>-->
+	<!--	<div v-if="chapter.exercises.length>0">-->
+	<!--		<h2 class="my-4 font-semibold text-lg">-->
+	<!--			Exercices-->
+	<!--		</h2>-->
+	<!--		<div class="grid grid-cols-1 lg:grid-cols-2 gap-4">-->
+	<!--			<div-->
+	<!--				v-for="(exercise, index) of chapter.exercises"-->
+	<!--				:key="`exercise-${exercise.id}`"-->
+	<!--			>-->
+	<!--				<Exercise-->
+	<!--					:exercise="exercise"-->
+	<!--					:exercise-number="index+1"-->
+	<!--				/>-->
+	<!--			</div>-->
+	<!--		</div>-->
+	<!--	</div>-->
 </template>
 
 <script>
-import LayoutMain from '@/Pages/Shared/LayoutMain'
+import LayoutMain from "@/Pages/Shared/LayoutMain"
 
 export default {
 	layout: LayoutMain
 }
 </script>
 <script setup>
-import { computed, defineAsyncComponent } from 'vue'
-import Exercise from '@/Components/Ui/Exercise'
-import ArticleTitle from '@/Components/Ui/ArticleTitle'
+import {computed, defineAsyncComponent} from "vue"
+import Exercise from "@/Components/Ui/Exercise"
+import ArticleTitle from "@/Components/Ui/ArticleTitle"
 
 const props = defineProps({
-	theme: {type: Object, default: ()=>{}},
-	chapter: {type: Object, default: () => {}},
+	theme: {
+		type: Object, default: () => {
+		}
+	},
+	chapter: {
+		type: Object, default: () => {
+		}
+	},
 	hasChapterComponent: {type: Boolean, default: false},
 })
 
 const chapterComponent = computed(
-	()=> defineAsyncComponent(
+	() => defineAsyncComponent(
 		() => import(`@/Components/Chapters/${props.theme.slug}/${props.chapter.slug}`)
 	)
 )

@@ -41,38 +41,40 @@
 </template>
 
 <script setup>
-import {computed, ref} from 'vue'
+import {computed, ref} from "vue"
 
-import ChallengeTitle from '@/Components/Challenges/ui/challengeTitle'
-import Keyboard from '@/Components/Ui/Keyboard'
+import ChallengeTitle from "@/Components/Challenges/ui/challengeTitle"
+import Keyboard from "@/Components/Ui/Keyboard"
+import {Fraction} from "pimath/esm/maths/coefficients"
+import {Random} from "pimath/esm/maths/random"
 
 // Le titre
-const title = 'primitive d\'un monôme'
+const title = "primitive d'un monôme"
 
-let answer = ref(''),
+let answer = ref(""),
 	points = ref(0),
 	question = ref(newQuestion()),
 	keyboard = ref(null),
 	questionWrapper = ref(null)
 
 let displayAnswer = computed(() => {
-	return 'display'
+	return "display"
 })
 let displayQuestion = computed(() => {
-	return '\\int \\ ' + question.value.tex + '\\ \\text{d}x = '
+	return "\\int \\ " + question.value.tex + "\\ \\text{d}x = "
 })
 
 function newQuestion () {
-	let degree = Pi.Random.bool(Math.min(0.1 + points.value*0.05, 0.8))?Pi.Random.number(0, 6):Pi.Random.numberSym(6, true),		// Degree of the x value
-		root = Pi.Random.bool(points.value * 0.07),	// if there is a root item.
-		q = Pi.Random.fraction({ natural: points.value < 5, zero: false }),	// random fraction
+	let degree = Random.bool(Math.min(0.1 + points.value * 0.05, 0.8)) ? Random.number(0, 6) : Random.numberSym(6, true),		// Degree of the x value
+		root = Random.bool(points.value * 0.07),	// if there is a root item.
+		q = Random.fraction({natural: points.value < 5, zero: false}),	// random fraction
 		tex, texX, qa, a, degree1, degreeDisplay
 
 	// Créer une racine (éventuellement, elle disparaît)
 	if (root && degree !== 0) {
-		degree = new Pi.Fraction(degree, 2)
+		degree = new Fraction(degree, 2)
 	} else {
-		degree = new Pi.Fraction(degree, 1)
+		degree = new Fraction(degree, 1)
 	}
 	degree.reduce()
 
@@ -80,7 +82,7 @@ function newQuestion () {
 
 	// Affichage de la question
 	// f(x) = q * x^{degree}
-	degreeDisplay = Math.abs(degree.numerator)===1?'':`^{${Math.abs(degree.numerator)}}`
+	degreeDisplay = Math.abs(degree.numerator) === 1 ? "" : `^{${Math.abs(degree.numerator)}}`
 	if (degree.denominator === 1) {
 		texX = `x${degreeDisplay}`
 	} else {
@@ -112,14 +114,14 @@ function newQuestion () {
 	// Mise en forme de la réponse
 
 	// On ajoute un à la puissance.
-	degree1 = degree.clone().add(new Pi.Fraction().one())
+	degree1 = degree.clone().add(new Fraction().one())
 
 
 	if (degree.value !== -1) {
 		qa = q.clone().divide(degree1).reduce()
 
 		if(degree1.isPositive()){
-			degreeDisplay = degree1.numerator===1?'':`^${degree1.numerator}`
+			degreeDisplay = degree1.numerator === 1 ? "" : `^${degree1.numerator}`
 			if ( degree.denominator===1){
 				// Pas de racine
 
@@ -147,7 +149,7 @@ function newQuestion () {
 				}
 			}
 		}else{
-			degreeDisplay = degree1.numerator===-1?'':`^${-degree1.numerator}`
+			degreeDisplay = degree1.numerator === -1 ? "" : `^${-degree1.numerator}`
 			// Sous forme de fraction car la puissance est négative.
 			if ( degree.denominator===1){
 				// Pas de racine
@@ -189,10 +191,10 @@ function newQuestion () {
 		// cas pariculier avec LN
 		if (q.isOne()) {
 			// si la fraction vaut 1, on n'affiche pas le coefficient
-			a = 'ln(|x|)'
+			a = "ln(|x|)"
 		} else if(q.isEqual(-1)){
 			// si la fraction vaut -1, on n'affiche pas le coefficient, que le signe
-			a = '-ln(|x|)'
+			a = "-ln(|x|)"
 		} else {
 			a = `${q.display}ln(|x|)`
 		}
@@ -215,11 +217,11 @@ function validateAnswer () {
 		resetAsnwer()
 		question.value = newQuestion()
 	} else {
-		questionWrapper.value.style.setProperty('animation-name', 'v-shake-horizontal')
-		questionWrapper.value.style.setProperty('animation-duration', '500ms')
+		questionWrapper.value.style.setProperty("animation-name", "v-shake-horizontal")
+		questionWrapper.value.style.setProperty("animation-duration", "500ms")
 
 		setTimeout(() => {
-			questionWrapper.value.style.setProperty('animation-name', '')
+			questionWrapper.value.style.setProperty("animation-name", "")
 		}, 500)
 		points.value = 0
 	}

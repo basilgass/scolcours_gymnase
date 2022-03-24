@@ -14,14 +14,15 @@
 	</Panel>
 </template>
 <script setup>
-import KatexEditor from '@/Components/Ui/KatexEditor'
-import Panel from '@/Components/Ui/Panel'
-import { onMounted, reactive } from 'vue'
+import KatexEditor from "@/Components/Ui/KatexEditor"
+import Panel from "@/Components/Ui/Panel"
+import {onMounted, reactive} from "vue"
+import {Random} from "pimath/esm/maths/random"
 
 let state = reactive({
-	userAnswer: '',
-	question: '',
-	answer: '',
+	userAnswer: "",
+	question: "",
+	answer: "",
 	correct: false
 })
 
@@ -35,13 +36,13 @@ function validate () {
 }
 
 function newQuestion () {
-	const M = Pi.Random.monom({
-		letter: 'x',
-		degree: Pi.Random.number(1, 8),
+	const M = Random.monom({
+		letter: "x",
+		degree: Random.number(1, 8),
 		fraction: true
 	})
-	
-	state.userAnswer = ''
+
+	state.userAnswer = ""
 	state.question = M.tex
 	state.answer = M.primitive().display
 }
