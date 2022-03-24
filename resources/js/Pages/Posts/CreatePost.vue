@@ -158,7 +158,7 @@
 </template>
 
 <script>
-import LayoutMain from '@/Pages/Shared/LayoutMain'
+import LayoutMain from "@/Pages/Shared/LayoutMain"
 
 export default {
 	layout: LayoutMain
@@ -167,19 +167,19 @@ export default {
 
 
 <script setup>
-import ArticleTitle from '@/Components/Ui/ArticleTitle'
-import FormInput from '@/Components/Form/FormInput'
-import FormTextarea from '@/Components/Form/FormTextarea'
-import FormSelect from '@/Components/Form/FormSelect'
-import { useForm } from '@inertiajs/inertia-vue3'
-import FormButton from '@/Components/Form/FormButton'
-import { ref } from 'vue'
-import { computed, defineAsyncComponent } from 'vue'
-import FormIllustration from '@/Components/Form/FormIllustration'
+import ArticleTitle from "@/Components/Ui/ArticleTitle"
+import FormInput from "@/Components/Form/FormInput"
+import FormTextarea from "@/Components/Form/FormTextarea"
+import FormSelect from "@/Components/Form/FormSelect"
+import {useForm} from "@inertiajs/inertia-vue3"
+import FormButton from "@/Components/Form/FormButton"
+import {ref} from "vue"
+import {computed, defineAsyncComponent} from "vue"
+import FormIllustration from "@/Components/Form/FormIllustration"
 
 const props = defineProps({
-	chapters: {type: Array, default: ()=>[]},
-	templates: {type: Array, default: ()=>[]}
+	chapters: {type: Array, default: () => []},
+	templates: {type: Array, default: () => []}
 })
 
 let addWalkthrough = ref(false),
@@ -187,15 +187,15 @@ let addWalkthrough = ref(false),
 
 const form = useForm({
 	chapter: null,
-	title: '',
-	body: '',
+	title: "",
+	body: "",
 	template: {
 		id: props.templates[0].id.toString(),
-		parameters: ''
+		parameters: ""
 	},
 	answer: {
-		body: '',
-		checker: ''
+		body: "",
+		checker: ""
 	},
 	walkthrough: [],
 	illustrations: []
@@ -203,7 +203,7 @@ const form = useForm({
 
 const PostTemplate = computed(
 	()=> defineAsyncComponent(
-		() => import(`@/Components/Posts/Templates/${'SimplePost'}`)
+		() => import(`@/Components/Posts/Templates/${"SimplePost"}`)
 	)
 )
 
@@ -219,9 +219,9 @@ const PostModel = computed(()=>{
 })
 
 function create_new_post(){
-	form.post('/post', {
+	form.post("/post", {
 		preserveScroll: true,
-		onError: ()=> {
+		onError: () => {
 			console.log(form.errors)
 		}
 	})

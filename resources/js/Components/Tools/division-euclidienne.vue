@@ -6,7 +6,7 @@
 			name="numerator"
 			focus
 		/>
-		
+
 		<form-input
 			v-model="denominator"
 			label="dénominateur"
@@ -22,7 +22,7 @@
 			<div
 				v-katex.display.left="`${result.numerator.tex} = \\left(${result.denominator.tex}\\right) \\cdot \\left(${result.euclidian.quotient.tex}\\right) + \\left(${result.euclidian.reminder.tex}\\right)`"
 			/>
-			
+
 			<table class="border-collapse">
 				<tr
 					v-for="(step, index) of result.table.steps"
@@ -68,56 +68,57 @@
  * parameters: numerator=Polynom, denominator=Polynom
  * tags: algebre,1M
  */
-import Panel from '@/Components/Ui/Panel'
-import FormInput from '@/Components/Form/FormInput'
-import { computed, ref } from 'vue'
+import Panel from "@/Components/Ui/Panel"
+import FormInput from "@/Components/Form/FormInput"
+import {computed, ref} from "vue"
+import {Polynom} from "pimath/esm/maths/algebra"
 
 // TODO: Rework the euclidian division output as table - it's complicated :)
 // TODO:  Make the display array of euclidian fraction as tex -> should be put in PiMath
 
-let numerator = ref('3x^2+5x-4'),
-	denominator = ref('x-5')
+let numerator = ref("3x^2+5x-4"),
+	denominator = ref("x-5")
 
-function addStep (P, degree, withParenthesis) {
+function addStep(P, degree, withParenthesis) {
 	withParenthesis = withParenthesis === undefined ? false : withParenthesis
-	
+
 	let step = [], cntMonom = 0
-	
+
 	for (let i = degree; i >= 0; i--) {
 		let M = P.monomByDegree(i)
-		
+
 		if (M.isZero()) {
-			step.push('')
+			step.push("")
 		} else {
 			if (i < degree && M.coefficient.isStrictlyPositive() && cntMonom>0) {
-				step.push('+' + M.tex)
+				step.push("+" + M.tex)
 			} else {
 				step.push(M.tex)
 			}
 			cntMonom++
 		}
 	}
-	
+
 	if(withParenthesis!==undefined) {
 		if (withParenthesis) {
 			let inside = false
 			for (let i = 0; i < step.length; i++) {
-				if (step[i] !== '' && inside === false) {
-					step.splice(i, 0, '-\\big(')
+				if (step[i] !== "" && inside === false) {
+					step.splice(i, 0, "-\\big(")
 					break
 				}
 			}
-			
+
 			inside = false
 			for (let i = step.length - 1; i >= 0; i--) {
-				if (step[i] !== '' && inside === false) {
-					step.splice(i + 1, 0, '\\big)')
+				if (step[i] !== "" && inside === false) {
+					step.splice(i + 1, 0, "\\big)")
 					break
 				}
 			}
-		}else{
-			step.unshift('')
-			step.push('')
+		}else {
+			step.unshift("")
+			step.push("")
 		}
 	}
 	return step
@@ -125,39 +126,39 @@ function addStep (P, degree, withParenthesis) {
 
 let result = computed(() => {
 	try {
-		let N = new Pi.Polynom(numerator.value),
-			D = new Pi.Polynom(denominator.value),
+		let N = new Polynom(numerator.value),
+			D = new Polynom(denominator.value),
 			euclidian = N.euclidian(D)
-		
+
 		// For the euclidian division display.
 		let steps = [],
 			degree = N.degree().value,
 			crtPolynom = N.clone(),
-			zeroPolynom = new Pi.Polynom().zero(),
+			zeroPolynom = new Polynom().zero(),
 			maxDegreeRight = Math.max(D.degree().value, euclidian.quotient.degree().value),
 			underline = []
-		
+
 		// Première ligne
 		steps.push([
 			[...addStep(crtPolynom, degree,false)],
 			[...addStep(D, maxDegreeRight)]
 		])
-		
+
 		for (let m of euclidian.quotient.monoms) {
 			let DM = D.clone().multiply(m)
-			
+
 			steps.push([
 				[...addStep(DM, degree, true)],
 				[...addStep(steps.length === 1 ? euclidian.quotient : zeroPolynom, maxDegreeRight)]
 			])
-			
+
 			// Create the underline.
 			let start, stop
 			for(let i = 0; i<steps[steps.length-1][0].length;i++){
-				if(steps[steps.length-1][0][i]==='-\\big('){
-					start = +i+1
-				}else if(steps[steps.length-1][0][i]==='\\big)'){
-					stop = +i-1
+				if (steps[steps.length - 1][0][i] === "-\\big(") {
+					start = +i + 1
+				} else if (steps[steps.length - 1][0][i] === "\\big)") {
+					stop = +i - 1
 					break
 				}
 			}
@@ -165,14 +166,14 @@ let result = computed(() => {
 				start,
 				stop
 			})
-			
+
 			crtPolynom.subtract(DM)
 			steps.push([
 				[...addStep(crtPolynom, degree,false)],
 				[...addStep(zeroPolynom, maxDegreeRight)]
 			])
 		}
-		
+
 		return {
 			numerator: N,
 			denominator: D,
@@ -182,7 +183,7 @@ let result = computed(() => {
 				underline
 			}
 		}
-		
+
 	} catch (e) {
 		console.error(e)
 		return false

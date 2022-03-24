@@ -2,7 +2,7 @@
 	<Head title="Dashboard" />
 
 	<ArticleTtile>Dashboard</ArticleTtile>
-	
+
 	<div
 		v-if="$page.props.auth.can.admin"
 	>
@@ -13,12 +13,12 @@
 </template>
 
 <script>
-import LayoutMain from '@/Pages/Shared/LayoutMain'
+import LayoutMain from "@/Pages/Shared/LayoutMain"
 
 export default {
 	layout: LayoutMain
 }
 </script>
 <script setup>
-import ArticleTtile from '@/Components/Ui/ArticleTitle'
+import ArticleTtile from "@/Components/Ui/ArticleTitle"
 </script>
