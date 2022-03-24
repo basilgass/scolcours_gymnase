@@ -26,14 +26,14 @@ export default {
 <script setup>
 import {onMounted, ref} from "vue"
 import PiDrawParser from "@/Components/Pi/PiDrawParser"
-import {Circle} from "pimath/esm/maths/geometry"
+import {PiMath} from "pimath/esm"
 
 let root = ref(null),
 	code = ref(""),
 	intersectionPoints = ref([])
 
 onMounted(() => {
-	const C = new Circle("(x-3)^2+(y+4)^2=13"),
+	const C = new PiMath.Geometry.Circle("(x-3)^2+(y+4)^2=13"),
 		pts = C.getPointsOnCircle()
 
 	code.value = `C(${C.center.x.value},${C.center.y.value})

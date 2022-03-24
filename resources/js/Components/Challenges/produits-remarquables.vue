@@ -41,8 +41,7 @@
 <script setup>
 import { computed, ref } from 'vue'
 import ChallengeTitle from '@/Components/Challenges/ui/challengeTitle'
-import {Random} from "pimath/esm/maths/random";
-import {Polynom} from "pimath/esm/maths/algebra";
+import {PiMath} from "pimath/esm";
 
 const title = 'produits remarquables du 2ème degré'
 
@@ -56,14 +55,14 @@ let factorisation = computed(()=>{
 })
 
 function newQuestion(){
-	let P = Random.polynom({
+	let P = PiMath.Random.polynom({
 		letters: 'x',
 		degree: 1,
 		unit: true,
 		allowNullMonom: false
 	})
 
-	if(Random.bool(0.40)){
+	if(PiMath.Random.bool(0.40)){
 		let Q = P.clone()
 		Q.monoms[1].opposed()
 		return P.clone().multiply(Q)
@@ -82,7 +81,7 @@ function updateAnswer(value){
 function validateAnswer(){
 	if(answer.value.length!==2){return false}
 
-	let P = new Polynom(answer.value.map(x=>`(${x})`).join(''))
+	let P = new PiMath.Polynom(answer.value.map(x=>`(${x})`).join(''))
 
 	if(P.isEqual(poly.value)){
 		points.value++

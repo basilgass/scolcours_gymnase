@@ -2,7 +2,11 @@
 
 namespace App\Models;
 
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 
 /**
  * App\Models\Illustration
@@ -12,23 +16,23 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $type
  * @property string $code
  * @property string $parameters
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Post[] $posts
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property-read Collection|Post[] $posts
  * @property-read int|null $posts_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\PostWalkthrough[] $walkthroughs
+ * @property-read Collection|PostWalkthrough[] $walkthroughs
  * @property-read int|null $walkthroughs_count
- * @method static \Illuminate\Database\Eloquent\Builder|Illustration newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Illustration newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Illustration query()
- * @method static \Illuminate\Database\Eloquent\Builder|Illustration whereCode($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Illustration whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Illustration whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Illustration whereParameters($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Illustration whereTitle($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Illustration whereType($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Illustration whereUpdatedAt($value)
- * @mixin \Eloquent
+ * @method static Builder|Illustration newModelQuery()
+ * @method static Builder|Illustration newQuery()
+ * @method static Builder|Illustration query()
+ * @method static Builder|Illustration whereCode($value)
+ * @method static Builder|Illustration whereCreatedAt($value)
+ * @method static Builder|Illustration whereId($value)
+ * @method static Builder|Illustration whereParameters($value)
+ * @method static Builder|Illustration whereTitle($value)
+ * @method static Builder|Illustration whereType($value)
+ * @method static Builder|Illustration whereUpdatedAt($value)
+ * @mixin Eloquent
  */
 class Illustration extends Model
 {

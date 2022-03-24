@@ -45,15 +45,15 @@
 import Panel from "@/Components/Ui/Panel"
 import FormInput from "@/Components/Form/FormInput"
 import {computed, ref} from "vue"
-import {Circle, Point} from "pimath/esm/maths/geometry"
+import {PiMath} from "pimath/esm"
 
 let equ = ref("(x-4)^2+(y-5)^2=25"),
 	value = ref("7,9")
 
 let tangentes = computed(() => {
 	try {
-		const C = new Circle(equ.value)
-		const P = new Point(value.value)
+		const C = new PiMath.Geometry.Circle(equ.value)
+		const P = new PiMath.Geometry.Point(value.value)
 		return C.tangents(P)
 	} catch (e) {
 		return false

@@ -47,8 +47,7 @@
 
 <script setup>
 import {computed, ref} from "vue"
-import {Random} from "pimath/esm/maths/random"
-import {Polynom} from "pimath/esm/maths/algebra"
+import {PiMath} from "pimath/esm";
 
 // Valeur nécessaire pour nommer la fonction
 const title = "quadratique - la forme du sommet"
@@ -86,11 +85,11 @@ let displayAnswer = computed(() => {
 function newQuestion () {
 	resetAnswer()
 
-	let ra = points.value >= level.value ? Random.numberSym(6, false) : 1,
-		rb = Random.numberSym(6, false),
-		rc = Random.numberSym(10, false)
+	let ra = points.value >= level.value ? PiMath.Random.numberSym(6, false) : 1,
+		rb = PiMath.Random.numberSym(6, false),
+		rc = PiMath.Random.numberSym(10, false)
 
-	return new Polynom("x", ra, 2 * rb * ra, rb * rb * ra + rc)
+	return new PiMath.Polynom("x", ra, 2 * rb * ra, rb * rb * ra + rc)
 }
 
 function resetAnswer( ){
@@ -121,7 +120,7 @@ function validateAnswer () {
 	let ra = +answer.value.a,
 		rb = +answer.value.b,
 		rc = +answer.value.c
-	let P = new Polynom("x", ra, 2 * rb * ra, rb * rb * ra + rc)
+	let P = new PiMath.Polynom("x", ra, 2 * rb * ra, rb * rb * ra + rc)
 
 	if (P.isEqual(poly.value)) {
 		points.value++

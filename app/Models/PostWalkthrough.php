@@ -2,8 +2,12 @@
 
 namespace App\Models;
 
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 
 /**
  * App\Models\PostWalkthrough
@@ -13,33 +17,33 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $order
  * @property string $step
  * @property string|null $resolution
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Illustration[] $illustrations
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property-read Collection|Illustration[] $illustrations
  * @property-read int|null $illustrations_count
- * @property-read \App\Models\Post $post
- * @method static \Illuminate\Database\Eloquent\Builder|PostWalkthrough newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|PostWalkthrough newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|PostWalkthrough query()
- * @method static \Illuminate\Database\Eloquent\Builder|PostWalkthrough whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|PostWalkthrough whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|PostWalkthrough whereOrder($value)
- * @method static \Illuminate\Database\Eloquent\Builder|PostWalkthrough wherePostId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|PostWalkthrough whereResolution($value)
- * @method static \Illuminate\Database\Eloquent\Builder|PostWalkthrough whereStep($value)
- * @method static \Illuminate\Database\Eloquent\Builder|PostWalkthrough whereUpdatedAt($value)
- * @mixin \Eloquent
+ * @property-read Post $post
+ * @method static Builder|PostWalkthrough newModelQuery()
+ * @method static Builder|PostWalkthrough newQuery()
+ * @method static Builder|PostWalkthrough query()
+ * @method static Builder|PostWalkthrough whereCreatedAt($value)
+ * @method static Builder|PostWalkthrough whereId($value)
+ * @method static Builder|PostWalkthrough whereOrder($value)
+ * @method static Builder|PostWalkthrough wherePostId($value)
+ * @method static Builder|PostWalkthrough whereResolution($value)
+ * @method static Builder|PostWalkthrough whereStep($value)
+ * @method static Builder|PostWalkthrough whereUpdatedAt($value)
+ * @mixin Eloquent
  */
 class PostWalkthrough extends Model
 {
     use HasFactory;
-	
-	
+
+
 	public function post()
 	{
 		return $this->belongsTo(Post::class);
 	}
-	
+
 	public function illustrations()
 	{
 		return $this->morphToMany(Illustration::class, 'illustrationable');

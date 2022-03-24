@@ -4,7 +4,7 @@
 
 <script setup>
 import {onMounted, ref, watch} from "vue"
-import {Graph} from "pidraw/esm"
+import {PiDraw} from "pidraw/esm"
 
 let root = ref(null)
 
@@ -19,7 +19,7 @@ let props = defineProps({
 let parser
 
 onMounted(()=>{
-	let graph = new Graph(root.value),
+	let graph = new PiDraw(root.value),
 		axis = graph.axis()
 
 	parser = graph.parse("")

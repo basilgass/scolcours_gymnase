@@ -40,7 +40,7 @@
 import Panel from "@/Components/Ui/Panel"
 import FormInput from "@/Components/Form/FormInput"
 import {computed, ref} from "vue"
-import {Line, Point, Vector} from "pimath/esm/maths/geometry"
+import {PiMath} from "pimath/esm"
 
 let A = ref("3,4"),
 	B = ref("1,2")
@@ -48,9 +48,9 @@ let A = ref("3,4"),
 
 let affine = computed(() => {
 	try {
-		return new Line(
-			new Point(A.value),
-			B.value[0] === "v" ? new Vector(B.value.substring(1)) : new Point(B.value)
+		return new PiMath.Geometry.Line(
+			new PiMath.Geometry.Point(A.value),
+			B.value[0] === "v" ? new PiMath.Geometry.Vector(B.value.substring(1)) : new PiMath.Geometry.Point(B.value)
 		)
 	} catch (e) {
 		return false

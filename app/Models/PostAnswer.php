@@ -2,8 +2,12 @@
 
 namespace App\Models;
 
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 
 /**
  * App\Models\PostAnswer
@@ -12,21 +16,21 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $post_id
  * @property string $body
  * @property string|null $checker
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Illustration[] $illustrations
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property-read Collection|Illustration[] $illustrations
  * @property-read int|null $illustrations_count
- * @property-read \App\Models\Post $post
- * @method static \Illuminate\Database\Eloquent\Builder|PostAnswer newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|PostAnswer newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|PostAnswer query()
- * @method static \Illuminate\Database\Eloquent\Builder|PostAnswer whereBody($value)
- * @method static \Illuminate\Database\Eloquent\Builder|PostAnswer whereChecker($value)
- * @method static \Illuminate\Database\Eloquent\Builder|PostAnswer whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|PostAnswer whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|PostAnswer wherePostId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|PostAnswer whereUpdatedAt($value)
- * @mixin \Eloquent
+ * @property-read Post $post
+ * @method static Builder|PostAnswer newModelQuery()
+ * @method static Builder|PostAnswer newQuery()
+ * @method static Builder|PostAnswer query()
+ * @method static Builder|PostAnswer whereBody($value)
+ * @method static Builder|PostAnswer whereChecker($value)
+ * @method static Builder|PostAnswer whereCreatedAt($value)
+ * @method static Builder|PostAnswer whereId($value)
+ * @method static Builder|PostAnswer wherePostId($value)
+ * @method static Builder|PostAnswer whereUpdatedAt($value)
+ * @mixin Eloquent
  */
 class PostAnswer extends Model
 {

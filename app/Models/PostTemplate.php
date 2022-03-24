@@ -2,8 +2,12 @@
 
 namespace App\Models;
 
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 
 /**
  * App\Models\PostTemplate
@@ -12,20 +16,20 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $name
  * @property string $component
  * @property int $parameters
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Post[] $posts
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property-read Collection|Post[] $posts
  * @property-read int|null $posts_count
- * @method static \Illuminate\Database\Eloquent\Builder|PostTemplate newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|PostTemplate newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|PostTemplate query()
- * @method static \Illuminate\Database\Eloquent\Builder|PostTemplate whereComponent($value)
- * @method static \Illuminate\Database\Eloquent\Builder|PostTemplate whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|PostTemplate whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|PostTemplate whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|PostTemplate whereParameters($value)
- * @method static \Illuminate\Database\Eloquent\Builder|PostTemplate whereUpdatedAt($value)
- * @mixin \Eloquent
+ * @method static Builder|PostTemplate newModelQuery()
+ * @method static Builder|PostTemplate newQuery()
+ * @method static Builder|PostTemplate query()
+ * @method static Builder|PostTemplate whereComponent($value)
+ * @method static Builder|PostTemplate whereCreatedAt($value)
+ * @method static Builder|PostTemplate whereId($value)
+ * @method static Builder|PostTemplate whereName($value)
+ * @method static Builder|PostTemplate whereParameters($value)
+ * @method static Builder|PostTemplate whereUpdatedAt($value)
+ * @mixin Eloquent
  */
 class PostTemplate extends Model
 {

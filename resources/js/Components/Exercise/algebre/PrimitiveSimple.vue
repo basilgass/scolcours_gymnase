@@ -17,7 +17,7 @@
 import KatexEditor from "@/Components/Ui/KatexEditor"
 import Panel from "@/Components/Ui/Panel"
 import {onMounted, reactive} from "vue"
-import {Random} from "pimath/esm/maths/random"
+import {PiMath} from "pimath/esm"
 
 let state = reactive({
 	userAnswer: "",
@@ -36,9 +36,9 @@ function validate () {
 }
 
 function newQuestion () {
-	const M = Random.monom({
+	const M = PiMath.Random.monom({
 		letter: "x",
-		degree: Random.number(1, 8),
+		degree: PiMath.Random.number(1, 8),
 		fraction: true
 	})
 

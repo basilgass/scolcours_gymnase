@@ -31,7 +31,7 @@
 import Panel from "@/Components/Ui/Panel"
 import FormInput from "@/Components/Form/FormInput"
 import {computed, ref} from "vue"
-import {Polynom} from "pimath/esm/maths/algebra"
+import {PiMath} from "pimath/esm"
 
 let polynom = ref(""),
 	firstInput = ref(null)
@@ -41,7 +41,7 @@ let result = computed(() => {
 		if (polynom.value === "") {
 			return "\\text{Aucune fonction...}"
 		}
-		const P = new Polynom(polynom.value)
+		const P = new PiMath.Polynom(polynom.value)
 
 		return {
 			tex: P.tex

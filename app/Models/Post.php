@@ -2,8 +2,12 @@
 
 namespace App\Models;
 
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 
 /**
  * App\Models\Post
@@ -14,28 +18,28 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $post_template_params
  * @property string|null $title
  * @property string $body
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \App\Models\PostAnswer|null $answer
- * @property-read \App\Models\Chapter $chapter
- * @property-read \App\Models\PostComponent|null $component
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Illustration[] $illustrations
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property-read PostAnswer|null $answer
+ * @property-read Chapter $chapter
+ * @property-read PostComponent|null $component
+ * @property-read Collection|Illustration[] $illustrations
  * @property-read int|null $illustrations_count
- * @property-read \App\Models\PostTemplate|null $template
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\PostWalkthrough[] $walkthrough
+ * @property-read PostTemplate|null $template
+ * @property-read Collection|PostWalkthrough[] $walkthrough
  * @property-read int|null $walkthrough_count
- * @method static \Illuminate\Database\Eloquent\Builder|Post newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Post newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Post query()
- * @method static \Illuminate\Database\Eloquent\Builder|Post whereBody($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Post whereChapterId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Post whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Post whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Post wherePostTemplateId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Post wherePostTemplateParams($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Post whereTitle($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Post whereUpdatedAt($value)
- * @mixin \Eloquent
+ * @method static Builder|Post newModelQuery()
+ * @method static Builder|Post newQuery()
+ * @method static Builder|Post query()
+ * @method static Builder|Post whereBody($value)
+ * @method static Builder|Post whereChapterId($value)
+ * @method static Builder|Post whereCreatedAt($value)
+ * @method static Builder|Post whereId($value)
+ * @method static Builder|Post wherePostTemplateId($value)
+ * @method static Builder|Post wherePostTemplateParams($value)
+ * @method static Builder|Post whereTitle($value)
+ * @method static Builder|Post whereUpdatedAt($value)
+ * @mixin Eloquent
  */
 class Post extends Model
 {

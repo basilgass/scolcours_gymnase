@@ -44,7 +44,7 @@ import Panel from "@/Components/Ui/Panel"
 import FormInput from "@/Components/Form/FormInput"
 import FormNumber from "@/Components/Form/FormNumber"
 import {computed, ref} from "vue"
-import {Polynom} from "pimath/esm/maths/algebra"
+import {PiMath} from "pimath/esm"
 
 let fx = ref(""),
 	a = ref(0),
@@ -55,7 +55,7 @@ let result = computed(() => {
 		if (fx.value === "") {
 			return "\\text{Aucune fonction...}"
 		}
-		let P = new Polynom(fx.value).primitive(),
+		let P = new PiMath.Polynom(fx.value).primitive(),
 			Pa = P.evaluate({x: a.value}),
 			Pb = P.evaluate({x: b.value})
 		return `\\int_{${a.value}}^{${b.value}} ${fx.value} \\ dx

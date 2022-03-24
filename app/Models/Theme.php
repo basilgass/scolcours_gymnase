@@ -2,7 +2,11 @@
 
 namespace App\Models;
 
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 
 /**
  * App\Models\Theme
@@ -13,22 +17,22 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $color
  * @property string|null $icon
  * @property int $enabled
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Chapter[] $chapters
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property-read Collection|Chapter[] $chapters
  * @property-read int|null $chapters_count
- * @method static \Illuminate\Database\Eloquent\Builder|Theme newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Theme newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Theme query()
- * @method static \Illuminate\Database\Eloquent\Builder|Theme whereColor($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Theme whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Theme whereEnabled($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Theme whereIcon($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Theme whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Theme whereSlug($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Theme whereTitle($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Theme whereUpdatedAt($value)
- * @mixin \Eloquent
+ * @method static Builder|Theme newModelQuery()
+ * @method static Builder|Theme newQuery()
+ * @method static Builder|Theme query()
+ * @method static Builder|Theme whereColor($value)
+ * @method static Builder|Theme whereCreatedAt($value)
+ * @method static Builder|Theme whereEnabled($value)
+ * @method static Builder|Theme whereIcon($value)
+ * @method static Builder|Theme whereId($value)
+ * @method static Builder|Theme whereSlug($value)
+ * @method static Builder|Theme whereTitle($value)
+ * @method static Builder|Theme whereUpdatedAt($value)
+ * @mixin Eloquent
  */
 class Theme extends Model
 {

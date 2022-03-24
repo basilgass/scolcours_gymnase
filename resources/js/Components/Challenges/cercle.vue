@@ -1,7 +1,6 @@
 <template>
 	<article>
 		<challenge-title :title="title" />
-
 		<div>score actuel: {{ modelProp.modelValue }}</div>
 		<div v-katex="displayQuestion" />
 		<div v-katex="displayAnswer" />
@@ -23,8 +22,8 @@
 				@click="updateAnswer(0)"
 			/>
 			<div
-				class="space-y-2"
 				:class="{'col-span-2':crtLetter==='r'}"
+				class="space-y-2"
 			>
 				<div
 					v-for="n in 10"
@@ -53,8 +52,7 @@
 <script setup>
 import {computed, ref} from "vue"
 import ChallengeTitle from "@/Components/Challenges/ui/challengeTitle"
-import {Random} from "pimath/esm/maths/random"
-import {Polynom} from "pimath/esm/maths/algebra"
+import {PiMath} from "pimath/esm"
 
 const title = "cercle"
 
@@ -92,28 +90,28 @@ let displayQuestion = computed(() => {
 	return question.value.tex
 })
 
-function newQuestion () {
-	let ca = Random.numberSym(10, true),
-		cb = Random.numberSym(10, true),
-		r = Random.number(1, 10)
+function newQuestion() {
+	let ca = PiMath.Random.numberSym(10, true),
+		cb = PiMath.Random.numberSym(10, true),
+		r = PiMath.Random.number(1, 10)
 
-	let Px = new Polynom(`x${ca <= 0 ? "+" : ""}${-ca}`).pow(2),
-		Py = new Polynom(`y${cb <= 0 ? "+" : ""}${-cb}`).pow(2)
+	let Px = new PiMath.Polynom(`x${ca <= 0 ? "+" : ""}${-ca}`).pow(2),
+		Py = new PiMath.Polynom(`y${cb <= 0 ? "+" : ""}${-cb}`).pow(2)
 
 	return {
 		ca, cb, r,
-		tex: Px.clone().add(Py).add(new Polynom(`${-(r)}`)).reorder("y").reorder("x").tex + "=0"
+		tex: Px.clone().add(Py).add(new PiMath.Polynom(`${-(r)}`)).reorder("y").reorder("x").tex + "=0"
 	}
 }
 
-function resetAsnwer () {
+function resetAsnwer() {
 	answer.value.x = null
 	answer.value.y = null
 	answer.value.r = null
 	crtLetter.value = "x"
 }
 
-function updateAnswer (value) {
+function updateAnswer(value) {
 	answer.value[crtLetter.value] = value
 
 	if (crtLetter.value === "x") {
@@ -139,8 +137,9 @@ const emit = defineEmits(["update:modelValue"])
 const modelProp = defineProps({
 	modelValue: {type: Number, default: 0},
 })
-function validateAnswer () {
-	if(checkAnswer()){
+
+function validateAnswer() {
+	if (checkAnswer()) {
 		resetAsnwer()
 		question.value = newQuestion()
 		emit("update:modelValue", modelProp.modelValue + 1)

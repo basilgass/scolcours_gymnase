@@ -46,8 +46,7 @@
 import {computed, ref} from "vue"
 import Keyboard from "@/Components/Ui/Keyboard"
 import ChallengeWrapper from "@/Components/Challenges/ui/challengeWrapper"
-import {Fraction} from "pimath/esm/maths/coefficients"
-import {Random} from "pimath/esm/maths/random"
+import {PiMath} from "pimath/esm"
 
 const title = "primitive avec dérivée interne"
 
@@ -93,22 +92,22 @@ let displayQuestion = computed(() => {
 })
 
 function newQuestion () {
-	let P = Random.polynom({
+	let P = PiMath.Random.polynom({
 			letters: "x",
-			degree: Random.number(2, 5),
-			numberOfMonoms: Random.number(2, 3),
+			degree: PiMath.Random.number(2, 5),
+			numberOfMonoms: PiMath.Random.number(2, 3),
 			fraction: false
 		}).reorder(),
-		degree = Random.number(2, 5),
-		factor = points.value < 3 ? 1 : Random.numberSym(10, false),
+		degree = PiMath.Random.number(2, 5),
+		factor = points.value < 3 ? 1 : PiMath.Random.numberSym(10, false),
 		Q = P.divide(P.gcdNumerator()).clone().derivative().multiply(factor),
 		k, kden, result, tex, rational
 
-	if (Random.bool()) {
+	if (PiMath.Random.bool()) {
 		// Two factors
 
 		// Constant
-		k = new Fraction(factor, degree + 1).reduce()
+		k = new PiMath.Fraction(factor, degree + 1).reduce()
 
 		// Result as ascii math
 		result = `${k.display}(${P.display})^${degree + 1}`
@@ -122,7 +121,7 @@ function newQuestion () {
 		// Rational
 
 		// Constant
-		k = new Fraction(factor, -degree + 1).reduce()
+		k = new PiMath.Fraction(factor, -degree + 1).reduce()
 
 		// Get the denominator
 		kden = k.denominator === 1 ? "" : (k.denominator === -1 ? "-" : k.denominator)

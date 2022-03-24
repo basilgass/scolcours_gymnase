@@ -4,7 +4,7 @@
 
 <script setup>
 import {onMounted, ref, watch} from "vue"
-import {Graph} from "pidraw/esm"
+import {PiDraw} from "pidraw/esm"
 
 let draw = ref(null)
 
@@ -21,7 +21,7 @@ let PiGraph, PiParser
 
 onMounted(() => {
 
-	PiGraph = new Graph(draw.value, {
+	PiGraph = new PiDraw(draw.value, {
 		width: props.width,
 		height: props.height,
 		origin: {

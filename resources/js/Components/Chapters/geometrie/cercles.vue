@@ -70,23 +70,22 @@
 
 import {computed, onMounted, ref} from "vue"
 import Panel from "@/Components/Ui/Panel"
-import {Circle, Line, Point, Vector} from "pimath/esm/maths/geometry"
-import {Random} from "pimath/esm/maths/random"
+import {PiMath} from "pimath/esm";
 
 let root = ref(null),
 	ex1 = ref({
-		C1: new Point(-5, 4),
+		C1: new PiMath.Geometry.Point(-5, 4),
 		r1: 36,
-		G1: new Circle(),
-		C2: new Point(7, -2),
-		T: new Point(2, 3),
-		G2: new Circle(),
-		t: new Line(),
-		d: new Line(),
-		m: new Line(),
-		M: new Point(0, 0),
-		P1: new Point(),
-		P2: new Point()
+		G1: new PiMath.Geometry.Circle(),
+		C2: new PiMath.Geometry.Point(7, -2),
+		T: new PiMath.Geometry.Point(2, 3),
+		G2: new PiMath.Geometry.Circle(),
+		t: new PiMath.Geometry.Line(),
+		d: new PiMath.Geometry.Line(),
+		m: new PiMath.Geometry.Line(),
+		M: new PiMath.Geometry.Point(0, 0),
+		P1: new PiMath.Geometry.Point(),
+		P2: new PiMath.Geometry.Point()
 	}),
 	count = ref(0)
 
@@ -117,125 +116,125 @@ function updateEx1Rnd () {
 	let position, P1, P2, M, t, Tx, T, perp1, perp2, C1x, C1, C2x, C2, r1, r2
 
 	const nb = 20
-	position = Random.number(0, 2)
+	position = PiMath.Random.number(0, 2)
 	if(position===2) {
-		P1 = new Point(
-			Random.numberSym(nb, true),
-			Random.numberSym(nb, true)
+		P1 = new PiMath.Geometry.Point(
+			PiMath.Random.numberSym(nb, true),
+			PiMath.Random.numberSym(nb, true)
 		)
-		P2 = new Point(
-			Random.numberSym(nb, true),
-			Random.numberSym(nb, true)
+		P2 = new PiMath.Geometry.Point(
+			PiMath.Random.numberSym(nb, true),
+			PiMath.Random.numberSym(nb, true)
 		)
 
 		// On s'assure que les deux points ne sont pas de même coordonnées
 		// On impose (artificiellement), que la coordonnées x doit être différente
 		while(P2.x.isEqual(P1.x)){
-			P2 =new Point(
-				Random.numberSym(nb, true),
-				Random.numberSym(nb, true)
+			P2 =new PiMath.Geometry.Point(
+				PiMath.Random.numberSym(nb, true),
+				PiMath.Random.numberSym(nb, true)
 			)
 		}
 
 		// On calcule ce qui sera la tangente.
-		t = new Line(P1, P2).simplify()
+		t = new PiMath.Geometry.Line(P1, P2).simplify()
 
 		// On prend un point aléatoire sur cette tangente.
-		Tx = Random.numberSym(nb, true)
-		T = new Point(Tx, t.getValueAtX(Tx))
+		Tx = PiMath.Random.numberSym(nb, true)
+		T = new PiMath.Geometry.Point(Tx, t.getValueAtX(Tx))
 
 		// Le point T ne doit pas être une des coordonnées P1, P2 (impossible), ni entre P1 et P2
 		while(T.x.value>=Math.min(P1.x.value, P2.x.value) && T.x.value<=Math.max(P1.x.value, P2.x.value)){
-			Tx = Random.numberSym(nb, true)
-			T = new Point(Tx, t.getValueAtX(Tx))
+			Tx = PiMath.Random.numberSym(nb, true)
+			T = new PiMath.Geometry.Point(Tx, t.getValueAtX(Tx))
 		}
 
 		// On recheche la droite
-		M = new Point().middleOf(P1, P2)
-		perp1 = new Line().parseByPointAndNormal(M, t.director)
-		C1x = Random.numberSym(nb, true)
-		C1 = new Point(C1x, perp1.getValueAtX(C1x))
+		M = new PiMath.Geometry.Point().middleOf(P1, P2)
+		perp1 = new PiMath.Geometry.Line().parseByPointAndNormal(M, t.director)
+		C1x = PiMath.Random.numberSym(nb, true)
+		C1 = new PiMath.Geometry.Point(C1x, perp1.getValueAtX(C1x))
 		r1 = new Vector(C1, P1).normSquare
 
-		perp2 = new Line().parseByPointAndNormal(T, t.director)
-		C2x = Random.numberSym(nb, true)
-		C2 = new Point(C2x, perp2.getValueAtX(C1x))
+		perp2 = new PiMath.Geometry.Line().parseByPointAndNormal(T, t.director)
+		C2x = PiMath.Random.numberSym(nb, true)
+		C2 = new PiMath.Geometry.Point(C2x, perp2.getValueAtX(C1x))
 		r2 = new Vector(C2, T).normSquare
 	}
 	else if(position===1) {
-		P1 = new Point(
-			Random.numberSym(nb, true),
-			Random.numberSym(nb, true)
+		P1 = new PiMath.Geometry.Point(
+			PiMath.Random.numberSym(nb, true),
+			PiMath.Random.numberSym(nb, true)
 		)
 		P2 = false
-		T = new Point(
-			Random.numberSym(nb, true),
-			Random.numberSym(nb, true)
+		T = new PiMath.Geometry.Point(
+			PiMath.Random.numberSym(nb, true),
+			PiMath.Random.numberSym(nb, true)
 		)
 		// La point T et P1 ne doivent pas être identique.
 		while(T.x.isEqual(P1.x) && T.y.isEqual(P1.y)){
-			T =new Point(
-				Random.numberSym(nb, true),
-				Random.numberSym(nb, true)
+			T =new PiMath.Geometry.Point(
+				PiMath.Random.numberSym(nb, true),
+				PiMath.Random.numberSym(nb, true)
 			)
 		}
 
 		// On calcule ce qui sera la tangente.
-		t = new Line(P1, T).simplify()
+		t = new PiMath.Geometry.Line(P1, T).simplify()
 
 
 		// On recheche la droite
-		perp1 = new Line().parseByPointAndNormal(P1, t.director)
-		C1x = Random.numberSym(nb, true)
-		C1 = new Point(C1x, perp1.getValueAtX(C1x))
+		perp1 = new PiMath.Geometry.Line().parseByPointAndNormal(P1, t.director)
+		C1x = PiMath.Random.numberSym(nb, true)
+		C1 = new PiMath.Geometry.Point(C1x, perp1.getValueAtX(C1x))
 		r1 = new Vector(C1, P1).normSquare
 
-		perp2 = new Line().parseByPointAndNormal(T, t.director)
-		C2x = Random.numberSym(nb, true)
-		C2 = new Point(C2x, perp2.getValueAtX(C1x))
+		perp2 = new PiMath.Geometry.Line().parseByPointAndNormal(T, t.director)
+		C2x = PiMath.Random.numberSym(nb, true)
+		C2 = new PiMath.Geometry.Point(C2x, perp2.getValueAtX(C1x))
 		r2 = new Vector(C2, T).normSquare
 	}
 	else{
 		P1 = false
 		P2 = false
-		T = new Point(
-			Random.numberSym(nb, true),
-			Random.numberSym(nb, true)
+		T = new PiMath.Geometry.Point(
+			PiMath.Random.numberSym(nb, true),
+			PiMath.Random.numberSym(nb, true)
 		)
-		C2 = new Point(
-			Random.numberSym(nb, true),
-			Random.numberSym(nb, true)
+		C2 = new PiMath.Geometry.Point(
+			PiMath.Random.numberSym(nb, true),
+			PiMath.Random.numberSym(nb, true)
 		)
 
 		// Le point de tangence ne peut pas être sur le centre
 		while(T.x.isEqual(C2.x)){
-			T =new Point(
-				Random.numberSym(nb, true),
-				Random.numberSym(nb, true)
+			T =new PiMath.Geometry.Point(
+				PiMath.Random.numberSym(nb, true),
+				PiMath.Random.numberSym(nb, true)
 			)
 		}
 
 		let vecteurRadius = new Vector(T, C2),
 			rayon = vecteurRadius.norm
-		t = new Line(T, vecteurRadius, Line.PERPENDICULAR)
+		t = new PiMath.Geometry.Line(T, vecteurRadius, PiMath.Geometry.Line.PERPENDICULAR)
 
 		// On recheche la droite
-		let Kx = Random.numberSym(nb, true),
-			K = new Point(Kx, t.getValueAtX(Kx))
+		let Kx = PiMath.Random.numberSym(nb, true),
+			K = new PiMath.Geometry.Point(Kx, t.getValueAtX(Kx))
 		// Le point de tangence ne peut pas être sur le centre
 		while(K.x.isEqual(T.x)){
-			Kx = Random.numberSym(nb, true)
-			K = new Point(Kx, t.getValueAtX(Kx))
+			Kx = PiMath.Random.numberSym(nb, true)
+			K = new PiMath.Geometry.Point(Kx, t.getValueAtX(Kx))
 		}
 
 
-		perp1 = new Line().parseByPointAndNormal(K, t.director)
-		C1x = Random.numberSym(nb, true)
-		C1 = new Point(C1x, perp1.getValueAtX(C1x))
+		perp1 = new PiMath.Geometry.Line().parseByPointAndNormal(K, t.director)
+		C1x = PiMath.Random.numberSym(nb, true)
+		C1 = new PiMath.Geometry.Point(C1x, perp1.getValueAtX(C1x))
 		r1 = Math.round(t.distanceTo(C1).value*0.8)
 		while(r1 >= rayon){
-			C1x = Random.numberSym(nb, true)
-			C1 = new Point(C1x, perp1.getValueAtX(C1x))
+			C1x = PiMath.Random.numberSym(nb, true)
+			C1 = new PiMath.Geometry.Point(C1x, perp1.getValueAtX(C1x))
 			r1 = Math.round(t.distanceTo(C1).value*0.8)
 		}
 
@@ -250,17 +249,17 @@ function updateEx1Rnd () {
 	) {
 		ex1.value.C1 = C1
 		ex1.value.r1 = r1
-		ex1.value.G1 = new Circle(C1, r1, true)
+		ex1.value.G1 = new PiMath.Geometry.Circle(C1, r1, true)
 
 		ex1.value.C2 = C2
 		ex1.value.T = T
-		ex1.value.G2 = new Circle(C2, r2, true)
+		ex1.value.G2 = new PiMath.Geometry.Circle(C2, r2, true)
 
 		ex1.value.t = t
 
-		ex1.value.d = new Line(C1, C2)
+		ex1.value.d = new PiMath.Geometry.Line(C1, C2)
 
-		ex1.value.m = new Line().parseByPointAndNormal(new Point().middleOf(C1, C2), ex1.value.d.director)
+		ex1.value.m = new PiMath.Geometry.Line().parseByPointAndNormal(new PiMath.Geometry.Point().middleOf(C1, C2), ex1.value.d.director)
 
 		ex1.value.P1 = P1
 		ex1.value.P2 = P2

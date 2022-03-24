@@ -71,7 +71,7 @@
 import Panel from "@/Components/Ui/Panel"
 import FormInput from "@/Components/Form/FormInput"
 import {computed, ref} from "vue"
-import {Polynom} from "pimath/esm/maths/algebra"
+import {PiMath} from "pimath/esm"
 
 // TODO: Rework the euclidian division output as table - it's complicated :)
 // TODO:  Make the display array of euclidian fraction as tex -> should be put in PiMath
@@ -126,15 +126,15 @@ function addStep(P, degree, withParenthesis) {
 
 let result = computed(() => {
 	try {
-		let N = new Polynom(numerator.value),
-			D = new Polynom(denominator.value),
+		let N = new PiMath.Polynom(numerator.value),
+			D = new PiMath.Polynom(denominator.value),
 			euclidian = N.euclidian(D)
 
 		// For the euclidian division display.
 		let steps = [],
 			degree = N.degree().value,
 			crtPolynom = N.clone(),
-			zeroPolynom = new Polynom().zero(),
+			zeroPolynom = new PiMath.Polynom().zero(),
 			maxDegreeRight = Math.max(D.degree().value, euclidian.quotient.degree().value),
 			underline = []
 

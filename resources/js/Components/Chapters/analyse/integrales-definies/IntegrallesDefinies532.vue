@@ -17,7 +17,7 @@
 import {onMounted, ref} from "vue"
 import ExampleTitle from "@/Components/Ui/ExampleTitle"
 import ChapterExercise from "@/Components/Ui/ChapterExercise"
-import {Graph} from "pidraw/esm"
+import {PiDraw} from "pidraw/esm"
 
 const root = ref(null),
 	graphBetweenContainer = ref(null),
@@ -53,7 +53,7 @@ let steps = [
 ]
 
 function loadGraphBetween () {
-	graphBetween = new Graph(graphBetweenContainer.value, {
+	graphBetween = new PiDraw(graphBetweenContainer.value, {
 		grid: {
 			x: 100,
 			y: 100

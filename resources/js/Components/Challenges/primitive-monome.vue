@@ -45,8 +45,7 @@ import {computed, ref} from "vue"
 
 import ChallengeTitle from "@/Components/Challenges/ui/challengeTitle"
 import Keyboard from "@/Components/Ui/Keyboard"
-import {Fraction} from "pimath/esm/maths/coefficients"
-import {Random} from "pimath/esm/maths/random"
+import {PiMath} from "pimath/esm"
 
 // Le titre
 const title = "primitive d'un monôme"
@@ -65,16 +64,16 @@ let displayQuestion = computed(() => {
 })
 
 function newQuestion () {
-	let degree = Random.bool(Math.min(0.1 + points.value * 0.05, 0.8)) ? Random.number(0, 6) : Random.numberSym(6, true),		// Degree of the x value
-		root = Random.bool(points.value * 0.07),	// if there is a root item.
-		q = Random.fraction({natural: points.value < 5, zero: false}),	// random fraction
+	let degree = PiMath.Random.bool(Math.min(0.1 + points.value * 0.05, 0.8)) ? PiMath.Random.number(0, 6) : PiMath.Random.numberSym(6, true),		// Degree of the x value
+		root = PiMath.Random.bool(points.value * 0.07),	// if there is a root item.
+		q = PiMath.Random.fraction({natural: points.value < 5, zero: false}),	// random fraction
 		tex, texX, qa, a, degree1, degreeDisplay
 
 	// Créer une racine (éventuellement, elle disparaît)
 	if (root && degree !== 0) {
-		degree = new Fraction(degree, 2)
+		degree = new PiMath.Fraction(degree, 2)
 	} else {
-		degree = new Fraction(degree, 1)
+		degree = new PiMath.Fraction(degree, 1)
 	}
 	degree.reduce()
 
@@ -114,7 +113,7 @@ function newQuestion () {
 	// Mise en forme de la réponse
 
 	// On ajoute un à la puissance.
-	degree1 = degree.clone().add(new Fraction().one())
+	degree1 = degree.clone().add(new PiMath.Fraction().one())
 
 
 	if (degree.value !== -1) {

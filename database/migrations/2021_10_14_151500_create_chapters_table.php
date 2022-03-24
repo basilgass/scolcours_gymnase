@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Theme;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -10,7 +11,7 @@ class CreateChaptersTable extends Migration
     {
         Schema::create('chapters', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->foreignIdFor(\App\Models\Theme::class)->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(Theme::class)->constrained()->cascadeOnDelete();
             $table->string('slug');
             $table->string('title');
             $table->text('body');

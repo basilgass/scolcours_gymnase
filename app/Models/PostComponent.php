@@ -2,8 +2,11 @@
 
 namespace App\Models;
 
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 
 /**
  * App\Models\PostComponent
@@ -13,25 +16,25 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $name
  * @property string $component
  * @property string|null $parameters
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \App\Models\Post $post
- * @method static \Illuminate\Database\Eloquent\Builder|PostComponent newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|PostComponent newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|PostComponent query()
- * @method static \Illuminate\Database\Eloquent\Builder|PostComponent whereComponent($value)
- * @method static \Illuminate\Database\Eloquent\Builder|PostComponent whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|PostComponent whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|PostComponent whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|PostComponent whereParameters($value)
- * @method static \Illuminate\Database\Eloquent\Builder|PostComponent wherePostId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|PostComponent whereUpdatedAt($value)
- * @mixin \Eloquent
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property-read Post $post
+ * @method static Builder|PostComponent newModelQuery()
+ * @method static Builder|PostComponent newQuery()
+ * @method static Builder|PostComponent query()
+ * @method static Builder|PostComponent whereComponent($value)
+ * @method static Builder|PostComponent whereCreatedAt($value)
+ * @method static Builder|PostComponent whereId($value)
+ * @method static Builder|PostComponent whereName($value)
+ * @method static Builder|PostComponent whereParameters($value)
+ * @method static Builder|PostComponent wherePostId($value)
+ * @method static Builder|PostComponent whereUpdatedAt($value)
+ * @mixin Eloquent
  */
 class PostComponent extends Model
 {
     use HasFactory;
-	
+
 	public function post()
 	{
 		return $this->belongsTo(Post::class);
