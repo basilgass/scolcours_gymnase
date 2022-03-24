@@ -7,18 +7,18 @@
 				</h3>
 				<ThemeLinks />
 			</div>
-			
+
 			<div class="md:mx-auto">
 				<h3 class="text-lg font-semibold">
 					Liens
 				</h3>
 			</div>
-			
+
 			<div class="md:mx-auto">
 				<h3 class="text-lg font-semibold">
 					Utilisateur
 				</h3>
-				
+
 				<div v-if="$page.props.auth.user">
 					<Link
 						href="/dashboard"
@@ -26,7 +26,7 @@
 					>
 						{{ $page.props.auth.user.name }}
 					</Link>
-					
+
 					<LogoutButton class="mt-10 px-0 py-0" />
 				</div>
 				<div v-else>
@@ -36,18 +36,18 @@
 				</div>
 			</div>
 		</div>
-		
+
 		<div class="pb-5 text-center text-sm text-gray-400">
 			<span>Ce site est à usage mathématiques uniquement</span>
 		</div>
 	</div>
 </template>
 <script>
-import LogoutButton from '@/Components/Ui/LogoutButton'
-import ThemeLinks from '@/Components/Ui/ThemeLinks'
+import LogoutButton from "@/Components/Ui/LogoutButton"
+import ThemeLinks from "@/Components/Ui/ThemeLinks"
 
 export default {
-	name: 'MainFooter',
-	components: { LogoutButton, ThemeLinks }
+	name: "MainFooter",
+	components: {LogoutButton, ThemeLinks}
 }
 </script>

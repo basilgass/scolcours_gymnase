@@ -5,7 +5,7 @@
 			label="polynôme"
 			name="polynom"
 		/>
-		
+
 		<div v-if="result">
 			<div v-katex="`${result.tex}`" />
 		</div>
@@ -25,16 +25,17 @@
  * parameters: polynome
  * tags: algebre,1M
  */
-import Panel from '@/Components/Ui/Panel'
-import FormInput from '@/Components/Form/FormInput'
-import { computed, ref } from 'vue'
+import Panel from "@/Components/Ui/Panel"
+import FormInput from "@/Components/Form/FormInput"
+import {computed, ref} from "vue"
+import {Polynom} from "pimath/esm/maths/algebra"
 
-let polynom = ref('')
+let polynom = ref("")
 let result = computed(() => {
 	try {
-		let P = new Pi.Polynom(polynom.value)
+		let P = new Polynom(polynom.value)
 		P.factorize()
-		
+
 		return {
 			tex: P.texFactors
 		}

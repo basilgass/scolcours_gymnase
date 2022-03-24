@@ -26,7 +26,7 @@
 							ScolCours
 						</Link>
 					</div>
-					
+
 					<Link
 						:href="route('home')"
 						class="block
@@ -47,6 +47,6 @@
 	</aside>
 </template>
 <script setup>
-import LogoutButton from '@/Components/Ui/LogoutButton'
-import ThemeLinks from '@/Components/Ui/ThemeLinks'</script>
+import LogoutButton from "@/Components/Ui/LogoutButton"
+import ThemeLinks from "@/Components/Ui/ThemeLinks"</script>
 

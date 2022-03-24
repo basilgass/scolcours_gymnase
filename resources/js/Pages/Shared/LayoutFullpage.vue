@@ -3,17 +3,17 @@
 		<main class="container mx-auto flex-1">
 			<slot />
 		</main>
-		
+
 		<MainFooter />
 	</div>
 </template>
 
 <script>
-import MainFooter from '@/Components/MainFooter'
+import MainFooter from "@/Components/MainFooter"
 
 export default {
-	name: 'LayoutFullpage',
-	components: { MainFooter}
+	name: "LayoutFullpage",
+	components: {MainFooter}
 }
 </script>
 

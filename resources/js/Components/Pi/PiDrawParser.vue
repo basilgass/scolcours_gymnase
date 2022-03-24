@@ -11,7 +11,10 @@ let draw = ref(null)
 let props = defineProps({
 	width: {type: Number, default: 400},
 	height: {type: Number, default: 300},
-	draw: {type: Object, default: ()=>{}}
+	draw: {
+		type: Object, default: () => {
+		}
+	}
 })
 
 let PiGraph, PiParser
@@ -33,16 +36,16 @@ onMounted(() => {
 
 	PiParser = PiGraph.parse("")
 
-	if(props.draw.parameters){
+	if (props.draw.parameters) {
 		PiParser.updateLayout(props.draw.parameters)
 	}
 
-	if(props.draw.code){
+	if (props.draw.code) {
 		PiParser.update(props.draw.code)
 	}
 })
 
-watch(()=> props.draw.code, (code, before)=> {
+watch(() => props.draw.code, (code, before) => {
 	PiParser.update(code)
 })
 </script>

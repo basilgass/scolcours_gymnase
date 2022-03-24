@@ -10,6 +10,6 @@
 </template>
 <script>
 export default {
-	name: 'LogoutButton'
+	name: "LogoutButton"
 }
 </script>

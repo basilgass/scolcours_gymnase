@@ -17,7 +17,7 @@
 					{{ theme.title }}
 				</a>
 			</div>
-			
+
 			<div>
 				<div v-if="$page.props.auth.user">
 					<div
@@ -37,7 +37,7 @@
 							>
 								profil
 							</Link>
-							
+
 							<LogoutButton class="hover:bg-gray-100 " />
 						</div>
 					</div>
@@ -52,9 +52,9 @@
 	</header>
 </template>
 <script setup>
-import { ref } from 'vue'
-import MainAside from '@/Components/MainAside'
-import LogoutButton from '@/Components/Ui/LogoutButton'
+import {ref} from "vue"
+import MainAside from "@/Components/MainAside"
+import LogoutButton from "@/Components/Ui/LogoutButton"
 
 defineProps({
 	theme: Object
