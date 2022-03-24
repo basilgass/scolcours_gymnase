@@ -14,7 +14,7 @@
 	</transition>
 </template>
 <script setup>
-import { computed, onMounted, ref } from 'vue'
+import {computed, onMounted, ref} from "vue"
 
 const props = defineProps({
 	title: String,
@@ -26,16 +26,16 @@ let headTitle = computed(() => {
 	if (props.head) {
 		return props.head
 	}
-	let calculatedTitle = 'ScolCours'
-	
+	let calculatedTitle = "ScolCours"
+
 	if (props.chapter) {
-		calculatedTitle = props.chapter + '-' + calculatedTitle
+		calculatedTitle = props.chapter + "-" + calculatedTitle
 	}
-	
+
 	if (props.title) {
-		calculatedTitle = props.title + '-' + calculatedTitle
+		calculatedTitle = props.title + "-" + calculatedTitle
 	}
-	
+
 	return calculatedTitle
 })
 
