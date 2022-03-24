@@ -12,9 +12,9 @@
 
 			<div v-if="$page.props.auth.can.admin">
 				<i
-						class="bi bi-trash text-gray-200 hover:text-red-500 transition-colors cursor-pointer"
-						@click="deleteExercise(exercise.id)"
-					/>
+					class="bi bi-trash text-gray-200 hover:text-red-500 transition-colors cursor-pointer"
+					@click="deleteExercise(exercise.id)"
+				/>
 			</div>
 		</header>
 
@@ -30,41 +30,41 @@
 
 		<!-- Images or components -->
 		<section
-				v-if="exercise.illustrations.length>0"
-				class="flex border-t -mx-4 px-4 py-2"
-			>
+			v-if="exercise.illustrations.length>0"
+			class="flex border-t -mx-4 px-4 py-2"
+		>
 			<div class="w-1/6">
 				Images
 			</div>
 
 			<div
-					class="w-5/6 grid grid-cols-1 gap-2"
-					:class="{
-						'md:grid-cols-2 xl:grid-cols-3':exercise.illustrations.length>2,
-						'md:grid-cols-2 xl:grid-cols-2':exercise.illustrations.length===2,
-					}"
-				>
+				:class="{
+					'md:grid-cols-2 xl:grid-cols-3':exercise.illustrations.length>2,
+					'md:grid-cols-2 xl:grid-cols-2':exercise.illustrations.length===2,
+				}"
+				class="w-5/6 grid grid-cols-1 gap-2"
+			>
 				<template
-						v-for="illustration of exercise.illustrations"
-						:key="`illustration_${illustration.id}`"
-					>
+					v-for="illustration of exercise.illustrations"
+					:key="`illustration_${illustration.id}`"
+				>
 					<img
 
-							:src="'/storage/'+illustration.url"
-							alt="illustration"
-							@click="showImage=illustration.url"
-						>
+						:src="'/storage/'+illustration.url"
+						alt="illustration"
+						@click="showImage=illustration.url"
+					>
 					<teleport to="#modal-dialog">
 						<transition name="fade">
 							<Modal
-									v-if="showImage===illustration.url"
-									@close="showImage=null"
-								>
+								v-if="showImage===illustration.url"
+								@close="showImage=null"
+							>
 								<img
-										:key="`illustration_${illustration.id}`"
-										:src="'/storage/'+illustration.url"
-										alt="illustration"
-									>
+									:key="`illustration_${illustration.id}`"
+									:src="'/storage/'+illustration.url"
+									alt="illustration"
+								>
 							</Modal>
 						</transition>
 					</teleport>
@@ -74,13 +74,13 @@
 
 		<!-- Explication -->
 		<section
-				v-if="exercise.explanation!==null"
-				class="flex border-t -mx-4 px-4 py-2"
-			>
+			v-if="exercise.explanation!==null"
+			class="flex border-t -mx-4 px-4 py-2"
+		>
 			<div
-					class="w-1/6 cursor-pointer"
-					@click="showExplanation=!showExplanation"
-				>
+				class="w-1/6 cursor-pointer"
+				@click="showExplanation=!showExplanation"
+			>
 				explications
 			</div>
 			<div class="w-5/6">
@@ -95,16 +95,16 @@
 		<!-- Answer -->
 		<footer class="flex  border-t -mx-4 px-4 py-2">
 			<div
-					class="w-1/6 cursor-pointer"
-					@click="showAnswer=!showAnswer"
-				>
+				class="w-1/6 cursor-pointer"
+				@click="showAnswer=!showAnswer"
+			>
 				réponse
 			</div>
 			<transition name="slide-right">
 				<span
-						v-show="showAnswer"
-						class="inline-block"
-					>
+					v-show="showAnswer"
+					class="inline-block"
+				>
 					{{ exercise.answer }}
 				</span>
 			</transition>
@@ -112,24 +112,28 @@
 	</Panel>
 </template>
 <script setup>
-	import Panel from "@/Components/Ui/Panel"
-	import { ref } from "vue"
-	import Modal from "@/Components/Modal"
-	import { useForm } from "@inertiajs/inertia-vue3"
+import Panel from "@/Components/Ui/Panel"
+import {ref} from "vue"
+import Modal from "@/Components/Modal"
+import {useForm} from "@inertiajs/inertia-vue3"
 
-	const props = defineProps({
-		exercise: { type: Object, default: () => {} },
-		exerciseNumber: { type: Number, default: 1, required: true }
+const props = defineProps({
+	exercise: {
+		type: Object, default: () => {
+		}
+	},
+	exerciseNumber: {type: Number, default: 1, required: true}
+})
+
+let showAnswer = ref(false),
+	showExplanation = ref(false),
+	showImage = ref(null)
+
+const form = useForm()
+
+function deleteExercise(id) {
+	form.delete(`/exercise/${id}`, {
+		preserveScroll: true
 	})
-
-	let showAnswer = ref(false),
-		showExplanation = ref(false),
-		showImage = ref(null)
-
-	const form = useForm()
-	function deleteExercise(id){
-		form.delete(`/exercise/${id}`, {
-			preserveScroll: true
-		})
-	}
+}
 </script>

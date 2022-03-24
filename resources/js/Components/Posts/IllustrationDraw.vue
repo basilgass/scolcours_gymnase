@@ -3,22 +3,26 @@
 </template>
 
 <script setup>
-import {onMounted, ref, watch} from 'vue'
+import {onMounted, ref, watch} from "vue"
+import {Graph} from "pidraw/esm"
 
 let root = ref(null)
 
 // root.value.innerHTML = 'HELLO WORLD'
 
 let props = defineProps({
-	draw: {type: Object, default: ()=>{}}
+	draw: {
+		type: Object, default: () => {
+		}
+	}
 })
 let parser
 
 onMounted(()=>{
-	let graph = new PiDraw(root.value),
+	let graph = new Graph(root.value),
 		axis = graph.axis()
 
-	parser = graph.parse('')
+	parser = graph.parse("")
 
 	if(props.draw.parameters){
 		parser.updateLayout(props.draw.parameters)

@@ -7,7 +7,7 @@
 </template>
 <script setup>
 const props = defineProps({
-	message: {default: '', type: String}
+	message: {default: "", type: String}
 })
 
 </script>

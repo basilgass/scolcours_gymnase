@@ -21,16 +21,16 @@
 	</form-field>
 </template>
 <script setup>
-import FormField from '@/Components/Form/FormField'
-import FormLabel from '@/Components/Form/FormLabel'
-import FormError from '@/Components/Form/FormError'
+import FormField from "@/Components/Form/FormField"
+import FormLabel from "@/Components/Form/FormLabel"
+import FormError from "@/Components/Form/FormError"
 
-defineEmits(['update:modelValue'])
+defineEmits(["update:modelValue"])
 const props = defineProps({
-	modelValue: {type: String, default: ''},
+	modelValue: {type: String, default: ""},
 	name: {type: String, required: true},
-	label: {type: String, default: ''},
-	error: {type: String, default: ''},
+	label: {type: String, default: ""},
+	error: {type: String, default: ""},
 	rows: {type: Number, default: 4},
 	hideLabel: {type: Boolean, default: false},
 })

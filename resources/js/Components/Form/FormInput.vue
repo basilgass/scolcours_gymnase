@@ -27,19 +27,19 @@ export default {
 }
 </script>
 <script setup>
-import FormField from '@/Components/Form/FormField'
-import FormLabel from '@/Components/Form/FormLabel'
-import FormError from '@/Components/Form/FormError'
-import { onMounted, ref } from 'vue'
+import FormField from "@/Components/Form/FormField"
+import FormLabel from "@/Components/Form/FormLabel"
+import FormError from "@/Components/Form/FormError"
+import {onMounted, ref} from "vue"
 
-defineEmits(['update:modelValue', 'inputFocus'])
+defineEmits(["update:modelValue", "inputFocus"])
 let props = defineProps({
-	modelValue: { type: String, default: null },
-	active: { type: Boolean, default: false },
-	name: { type: String, required: true },
-	label: { type: String, default: '' },
-	error: { type: String, default: '' },
-	focus: { type: Boolean, default: false }
+	modelValue: {type: String, default: null},
+	active: {type: Boolean, default: false},
+	name: {type: String, required: true},
+	label: {type: String, default: ""},
+	error: {type: String, default: ""},
+	focus: {type: Boolean, default: false}
 })
 
 let inp = ref(null)

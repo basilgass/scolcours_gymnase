@@ -53,30 +53,32 @@
 </template>
 
 <script setup>
-import FormField from '@/Components/Form/FormField'
-import FormLabel from '@/Components/Form/FormLabel'
-import {computed} from 'vue'
-import FormTextarea from '@/Components/Form/FormTextarea'
+import FormField from "@/Components/Form/FormField"
+import FormLabel from "@/Components/Form/FormLabel"
+import {computed} from "vue"
+import FormTextarea from "@/Components/Form/FormTextarea"
 
-defineEmits(['update:modelValue', 'inputFocus'])
+defineEmits(["update:modelValue", "inputFocus"])
 let props = defineProps({
-	modelValue: { type: Object, default: ()=>{
-		return {
-			title: '',
-			type: 'draw',
-			code: '',
-			parameters: ''
+	modelValue: {
+		type: Object, default: () => {
+			return {
+				title: "",
+				type: "draw",
+				code: "",
+				parameters: ""
+			}
 		}
-	} },
-	active: { type: Boolean, default: false },
-	name: { type: String, required: true },
-	label: { type: String, default: '' },
-	error: { type: String, default: '' },
-	focus: { type: Boolean, default: false }
+	},
+	active: {type: Boolean, default: false},
+	name: {type: String, required: true},
+	label: {type: String, default: ""},
+	error: {type: String, default: ""},
+	focus: {type: Boolean, default: false}
 })
 
 let theModel = computed({
 	get: ()=>props.modelValue,
-	set: (value) => emit('update:modelValue', value)
+	set: (value) => emit("update:modelValue", value)
 })
 </script>
