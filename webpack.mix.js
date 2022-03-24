@@ -1,5 +1,5 @@
-const mix = require('laravel-mix')
-const path = require('path')
+const mix = require("laravel-mix")
+const path = require("path")
 /*
  |--------------------------------------------------------------------------
  | Mix Asset Management
@@ -10,29 +10,31 @@ const path = require('path')
  | file for the application as well as bundling up all the JS files.
  |
  */
-mix.js('resources/js/app.js', 'public/js')
+mix.js("resources/js/app.js", "public/js")
 	.vue()
 	.extract()
-	.postCss('resources/css/app.css', 'public/css', [
-		require('postcss-import'),
-		require('tailwindcss'),
-		require('autoprefixer'),
+	.postCss("resources/css/app.css", "public/css", [
+		require("postcss-import"),
+		require("tailwindcss"),
+		require("autoprefixer"),
 	]).webpackConfig({
 		output: {
-			chunkFilename: mix.inProduction()?'js/dynamic/[name].[contenthash].js':'js/dev/[name].js',
+			chunkFilename: mix.inProduction() ? "js/dynamic/[name].[contenthash].js" : "js/dev/[name].js",
 		},
 		resolve: {
 			alias: {
-				'@': path.resolve('resources/js'),
+				"@": path.resolve("resources/js"),
 			},
 		},
-		// optimization: {minimize: false}
+	// optimization: {minimize: false}
 	})
-	.js([
-		'resources/js/pi.js',
-		'resources/js/pidraw.js'
-	], 'public/js/pi.bundle.js').minify('public/js/pi.bundle.js')
+	// .js([
+	// 	"resources/js/pi.js",
+	// 	"resources/js/pidraw.js"
+	// ], "public/js/pi.bundle.js").minify("public/js/pi.bundle.js")
 	.sourceMaps(true)
 	.disableNotifications()
 
-if (mix.inProduction()) {mix.version()}
+if (mix.inProduction()) {
+	mix.version()
+}

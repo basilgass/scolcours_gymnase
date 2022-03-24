@@ -3,7 +3,7 @@
 </template>
 
 <script setup>
-import {onMounted, ref} from 'vue'
+import {onMounted, ref, watch} from 'vue'
 
 let root = ref(null)
 
@@ -12,18 +12,24 @@ let root = ref(null)
 let props = defineProps({
 	draw: {type: Object, default: ()=>{}}
 })
-//
+let parser
+
 onMounted(()=>{
 	let graph = new PiDraw(root.value),
-		axis = graph.axis(),
-		parser = graph.parse('')
+		axis = graph.axis()
+
+	parser = graph.parse('')
 
 	if(props.draw.parameters){
 		parser.updateLayout(props.draw.parameters)
 	}
+
 	if(props.draw.code){
 		parser.update(props.draw.code)
 	}
+})
 
+watch(()=> props.draw.code, (code, before)=> {
+	parser.update(code)
 })
 </script>

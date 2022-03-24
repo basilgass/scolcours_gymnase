@@ -1,8 +1,8 @@
 <template>
 	<div ref="root">
-		<ExampleTitle>
+		<h2 class="text-xl font-mono mt-6 mb-2">
 			{{ props.post.title }}
-		</ExampleTitle>
+		</h2>
 
 		<div>
 			{{ props.post.body }}
@@ -22,7 +22,7 @@
 				</div>
 			</div>
 
-			<div>
+			<div v-if="props.post.walkthrough.length>0">
 				<h3 class="mt-8 mb-4 font-semibold">
 					Marche à suivre
 				</h3>
@@ -38,7 +38,10 @@
 			</div>
 
 
-			<div class="lg:col-span-2">
+			<div
+				v-if="props.post.walkthrough.length>0"
+				class="lg:col-span-2"
+			>
 				<div class="flex items-center mt-8 mb-4 space-x-10">
 					<h3 class="font-semibold">
 						Résolution
@@ -64,7 +67,10 @@
 				</ol>
 			</div>
 
-			<div class="bg-red-200 mt-10">
+			<div
+				v-if="props.post.answer"
+				class="bg-red-200 mt-10"
+			>
 				{{ props.post.answer.body }}
 			</div>
 
@@ -79,7 +85,6 @@
 
 import {computed, defineAsyncComponent, onMounted, ref} from 'vue'
 import IllustrationDraw from '@/Components/Posts/IllustrationDraw'
-import ExampleTitle from '@/Components/Ui/ExampleTitle'
 
 let root = ref(null),
 	solutions = ref(0)
@@ -89,6 +94,7 @@ const props = defineProps({
 		}
 	}
 })
+
 const PostComponent = computed(() => {
 	if (props.post.component) {
 		return defineAsyncComponent(

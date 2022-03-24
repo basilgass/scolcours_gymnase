@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $id
  * @property int $post_id
  * @property string $body
+ * @property string|null $checker
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Illustration[] $illustrations
@@ -20,6 +21,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|PostAnswer newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|PostAnswer query()
  * @method static \Illuminate\Database\Eloquent\Builder|PostAnswer whereBody($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PostAnswer whereChecker($value)
  * @method static \Illuminate\Database\Eloquent\Builder|PostAnswer whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|PostAnswer whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|PostAnswer wherePostId($value)
@@ -29,12 +31,14 @@ use Illuminate\Database\Eloquent\Model;
 class PostAnswer extends Model
 {
     use HasFactory;
-	
+
+	protected $guarded=[];
+
 	public function post()
 	{
 		return $this->belongsTo(Post::class);
 	}
-	
+
 	public function illustrations()
 	{
 		return $this->morphToMany(Illustration::class, 'illustrationable');

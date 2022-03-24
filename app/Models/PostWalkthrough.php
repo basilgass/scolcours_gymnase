@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $post_id
  * @property int $order
  * @property string $step
- * @property string $resolution
+ * @property string|null $resolution
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Illustration[] $illustrations

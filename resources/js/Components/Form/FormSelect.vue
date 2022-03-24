@@ -4,16 +4,16 @@
 			:label="label"
 			:name="name"
 		/>
-		
+
 		<select
 			:id="name"
 			class="border border-gray-200 p-2 w-full rounded"
 			:value="modelValue"
-			@change="$emit('update:modelValue', $event.target.value);$log($event.target.value)"
+			@change="$emit('update:modelValue', $event.target.value)"
 		>
 			<slot />
 		</select>
-		
+
 		<form-error
 			:name="name"
 			:message="error"

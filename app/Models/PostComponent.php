@@ -11,10 +11,10 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $id
  * @property int $post_id
  * @property string $name
- * @property string|null $component
+ * @property string $component
+ * @property string|null $parameters
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property string $parameters
  * @property-read \App\Models\Post $post
  * @method static \Illuminate\Database\Eloquent\Builder|PostComponent newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|PostComponent newQuery()

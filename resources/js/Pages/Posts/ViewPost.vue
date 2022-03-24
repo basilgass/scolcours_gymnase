@@ -19,17 +19,21 @@ export default {
 </script>
 
 <script setup>
-import { computed, defineAsyncComponent, ref } from 'vue'
+import {computed, defineAsyncComponent, onMounted, ref} from 'vue'
 
 let root = ref(null)
 
 const props = defineProps({
-	post: { type: Object, default: ()=>{} }
+	post: {
+		type: Object, default: () => {
+		}
+	}
 })
 
 const PostTemplate = computed(
-	()=> defineAsyncComponent(
+	() => defineAsyncComponent(
 		() => import(`@/Components/Posts/Templates/${props.post.template.component}`)
 	)
 )
+
 </script>

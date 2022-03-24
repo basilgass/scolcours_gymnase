@@ -10,7 +10,9 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @property int $id
  * @property int $chapter_id
- * @property string $title
+ * @property int $post_template_id
+ * @property string|null $post_template_params
+ * @property string|null $title
  * @property string $body
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
@@ -29,6 +31,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Post whereChapterId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Post whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Post whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Post wherePostTemplateId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Post wherePostTemplateParams($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Post whereTitle($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Post whereUpdatedAt($value)
  * @mixin \Eloquent
@@ -36,33 +40,34 @@ use Illuminate\Database\Eloquent\Model;
 class Post extends Model
 {
     use HasFactory;
-	
+
 	protected $with = ['answer', 'illustrations', 'walkthrough', 'component'];
-	
+
 	public function chapter()
 	{
 		return $this->belongsTo(Chapter::class);
 	}
-	
+
+	public function template()
+	{
+		return $this->belongsTo(PostTemplate::class, 'post_template_id');
+	}
+
 	public function illustrations()
 	{
 		return $this->morphToMany(Illustration::class, 'illustrationable');
 	}
-	
+
 	public function walkthrough()
 	{
 		return $this->hasMany(PostWalkthrough::class);
 	}
-	
+
 	public function answer()
 	{
 		return $this->hasOne(PostAnswer::class);
 	}
-	
-	public function template()
-	{
-		return $this->hasOne(PostTemplate::class);
-	}
+
 	public function component()
 	{
 		return $this->hasOne(PostComponent::class);

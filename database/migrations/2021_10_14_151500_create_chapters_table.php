@@ -10,7 +10,7 @@ class CreateChaptersTable extends Migration
     {
         Schema::create('chapters', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->foreignId('theme_id')->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(\App\Models\Theme::class)->constrained()->cascadeOnDelete();
             $table->string('slug');
             $table->string('title');
             $table->text('body');

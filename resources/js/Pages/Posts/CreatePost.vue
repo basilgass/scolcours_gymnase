@@ -1,6 +1,6 @@
 <template>
 	<ArticleTitle title="Nouvel article" />
-	
+
 	<div class="grid grid-cols-2 gap-4">
 		<div class="max-h-[700px] overflow-y-scroll pr-3">
 			<form
@@ -16,47 +16,58 @@
 					<option
 						v-for="(chapter, index) of props.chapters"
 						:key="'chapter-'+index"
-						:value="chapter.slug"
+						:value="chapter.id.toString()"
 					>
 						{{ chapter.title }}
 					</option>
 				</form-select>
-				
+
 				<form-select
-					v-model="form.template"
+					v-model="form.template.id"
 					label="template"
 					name="template"
 					:error="form.errors.template"
 				>
 					<option
-						value="1"
+						v-for="item in props.templates"
+						:key="'template-'+item.id"
+						:value="item.id"
 					>
-						Simple Post
+						{{ item.name }}
 					</option>
 				</form-select>
-				
+				<form-input
+					v-model="form.template.parameters"
+					label="paramètre du template"
+					name="template_parameters"
+					:error="form.errors.template"
+				/>
+
 				<form-input
 					v-model="form.title"
 					label="titre"
 					name="title"
 					:error="form.errors.title"
 				/>
-				
+
 				<form-textarea
 					v-model="form.body"
 					label="body"
 					name="body"
 					:error="form.errors.body"
 				/>
-				
-				<div v-show="addAnswer">
-					<form-input
-						v-model="form.answer"
-						name="answer"
-						label="réponse"
-					/>
-				</div>
-				
+
+				<form-input
+					v-model="form.answer.body"
+					name="answer"
+					label="réponse"
+				/>
+				<form-input
+					v-model="form.answer.checker"
+					name="answer_checker"
+					label="système de validation"
+				/>
+
 				<div v-show="addWalkthrough">
 					<h2 class="font-lg font-semibold mt-10">
 						Marche à suivre
@@ -89,21 +100,38 @@
 						/>
 					</div>
 				</div>
-				
+
 				<div v-show="addIllustrations">
 					<h2 class="font-lg font-semibold mt-10">
 						Illustrations
 					</h2>
-					
-					<form-illustration
-						v-model="illustration"
-						name="illustration"
-					/>
+
+					<button
+						type="button"
+						class="btn"
+						@click.prevent="form.illustrations.push({
+							title: '',
+							type: 'draw',
+							code: '',
+							parameters: ''
+						})"
+					>
+						+
+					</button>
+					<div
+						v-for="(walk, index) in form.illustrations"
+						:key="`illustration-${index}`"
+					>
+						<form-illustration
+							v-model="form.illustrations[index]"
+							:name="`illustration-${index}`"
+						/>
+					</div>
 				</div>
 				<form-button>Ajouter</form-button>
 			</form>
-			
-			
+
+
 			<div class="grid grid-cols-3 gap-5 mt-10">
 				<button
 					class="btn bg-white"
@@ -113,19 +141,13 @@
 				</button>
 				<button
 					class="btn bg-white"
-					@click="addAnswer=!addAnswer"
-				>
-					Réponse
-				</button>
-				<button
-					class="btn bg-white"
 					@click="addIllustrations=!addIllustrations"
 				>
 					Illustrations
 				</button>
 			</div>
 		</div>
-		
+
 		<div class="max-h-[700px] overflow-y-scroll">
 			<component
 				:is="PostTemplate"
@@ -156,19 +178,25 @@ import { computed, defineAsyncComponent } from 'vue'
 import FormIllustration from '@/Components/Form/FormIllustration'
 
 const props = defineProps({
-	chapters: {type: Array, default: ()=>[]}
+	chapters: {type: Array, default: ()=>[]},
+	templates: {type: Array, default: ()=>[]}
 })
 
-let addAnswer = ref(false),
-	addWalkthrough = ref(false),
+let addWalkthrough = ref(false),
 	addIllustrations = ref(false)
 
 const form = useForm({
 	chapter: null,
 	title: '',
 	body: '',
-	template: '',
-	answer: '',
+	template: {
+		id: props.templates[0].id.toString(),
+		parameters: ''
+	},
+	answer: {
+		body: '',
+		checker: ''
+	},
 	walkthrough: [],
 	illustrations: []
 })
@@ -183,9 +211,7 @@ const PostModel = computed(()=>{
 	let post = {
 		title: form.title,
 		body: form.body,
-		answer: {
-			body: form.answer
-		},
+		answer: form.answer,
 		walkthrough: form.walkthrough,
 		illustrations: form.illustrations
 	}
