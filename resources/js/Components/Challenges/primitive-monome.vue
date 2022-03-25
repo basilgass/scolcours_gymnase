@@ -52,7 +52,7 @@ const title = "primitive d'un monôme"
 
 let answer = ref(""),
 	points = ref(0),
-	question = ref(newQuestion()),
+	question = ref(false),
 	keyboard = ref(null),
 	questionWrapper = ref(null)
 
@@ -225,4 +225,6 @@ function validateAnswer () {
 		points.value = 0
 	}
 }
+
+question.value = newQuestion()
 </script>

@@ -39,24 +39,24 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
-import ChallengeTitle from '@/Components/Challenges/ui/challengeTitle'
-import {PiMath} from "pimath/esm";
+import {computed, ref} from "vue"
+import ChallengeTitle from "@/Components/Challenges/ui/challengeTitle"
+import {PiMath} from "pimath/esm"
 
-const title = 'produits remarquables du 2ème degré'
+const title = "produits remarquables du 2ème degré"
 
 let answer = ref([]),
 	points = ref(0),
-	poly = ref(newQuestion())
+	poly = ref(false)
 
 let factorisation = computed(()=>{
-	if(answer.value.length===0){return '?'}
-	return answer.value.map(x=>`(${x})`).join('')
+	if(answer.value.length===0){return "?"}
+	return answer.value.map(x=>`(${x})`).join("")
 })
 
 function newQuestion(){
 	let P = PiMath.Random.polynom({
-		letters: 'x',
+		letters: "x",
 		degree: 1,
 		unit: true,
 		allowNullMonom: false
@@ -81,7 +81,7 @@ function updateAnswer(value){
 function validateAnswer(){
 	if(answer.value.length!==2){return false}
 
-	let P = new PiMath.Polynom(answer.value.map(x=>`(${x})`).join(''))
+	let P = new PiMath.Polynom(answer.value.map(x=>`(${x})`).join(""))
 
 	if(P.isEqual(poly.value)){
 		points.value++
@@ -93,4 +93,6 @@ function validateAnswer(){
 	}
 
 }
+
+poly.value = newQuestion()
 </script>

@@ -55,39 +55,40 @@
 				v-if="false"
 				class="btn"
 				@click="updateEx1(true)"
-			>
-				RANDOM
-			</div>
+			/>
 		</Panel>
 	</section>
 </template>
 
 <script setup>
+import {computed, onMounted, ref} from "vue"
+import Panel from "@/Components/Ui/Panel"
+import {PiMath} from "pimath/esm"
+
 /** Chapter
  * title: équation cartésienne d'un cercle
  * body: équation d'un cercle, sous la forme centre-rayon
  */
 
-import {computed, onMounted, ref} from "vue"
-import Panel from "@/Components/Ui/Panel"
-import {PiMath} from "pimath/esm";
-
 let root = ref(null),
-	ex1 = ref({
-		C1: new PiMath.Geometry.Point(-5, 4),
-		r1: 36,
-		G1: new PiMath.Geometry.Circle(),
-		C2: new PiMath.Geometry.Point(7, -2),
-		T: new PiMath.Geometry.Point(2, 3),
-		G2: new PiMath.Geometry.Circle(),
-		t: new PiMath.Geometry.Line(),
-		d: new PiMath.Geometry.Line(),
-		m: new PiMath.Geometry.Line(),
-		M: new PiMath.Geometry.Point(0, 0),
-		P1: new PiMath.Geometry.Point(),
-		P2: new PiMath.Geometry.Point()
-	}),
+	ex1 = ref({}),
 	count = ref(0)
+
+ex1.value = {
+	C1: new PiMath.Geometry.Point(-5, 4),
+	r1: 36,
+	G1: new PiMath.Geometry.Circle(),
+	C2: new PiMath.Geometry.Point(7, -2),
+	T: new PiMath.Geometry.Point(2, 3),
+	G2: new PiMath.Geometry.Circle(),
+	t: new PiMath.Geometry.Line(),
+	d: new PiMath.Geometry.Line(),
+	m: new PiMath.Geometry.Line(),
+	M: new PiMath.Geometry.Point(0, 0),
+	P1: new PiMath.Geometry.Point(),
+	P2: new PiMath.Geometry.Point()
+}
+
 
 let relPositionSign = computed(() => {
 	const nb = ex1.value.G1.relativePosition(ex1.value.t)

@@ -47,7 +47,7 @@
 
 <script setup>
 import {computed, ref} from "vue"
-import {PiMath} from "pimath/esm";
+import {PiMath} from "pimath/esm"
 
 // Valeur nécessaire pour nommer la fonction
 const title = "quadratique - la forme du sommet"
@@ -61,7 +61,7 @@ let answer = ref({
 	currentGivenAnswer = ref("a"),
 	points = ref(0),
 	level = ref(5),
-	poly = ref(newQuestion())
+	poly = ref(false)
 
 let displayAnswer = computed(() => {
 	let texA, texB, texC
@@ -134,4 +134,6 @@ function validateAnswer () {
 	}
 
 }
+
+poly.value = newQuestion()
 </script>

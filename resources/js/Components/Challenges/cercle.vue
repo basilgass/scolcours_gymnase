@@ -57,7 +57,7 @@ import {PiMath} from "pimath/esm"
 const title = "cercle"
 
 let answer = ref({x: null, y: null, r: null}),
-	question = ref(newQuestion()),
+	question = ref(false),
 	crtLetter = ref("x")
 
 let displayAnswer = computed(() => {
@@ -147,4 +147,6 @@ function validateAnswer() {
 		emit("update:modelValue", 0)
 	}
 }
+
+question.value = newQuestion()
 </script>

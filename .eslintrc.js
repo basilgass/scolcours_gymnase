@@ -4,13 +4,8 @@ module.exports = {
 		"es2021": true
 	},
 	"extends": [
-		// "eslint:recommended",
 		"plugin:vue/vue3-recommended",
 	],
-	// "parserOptions": {
-	// 	"ecmaVersion": 13,
-	// 	"sourceType": "module"
-	// },
 	"plugins": [
 		"vue"
 	],
@@ -34,7 +29,8 @@ module.exports = {
 		"vue/require-default-prop": "off",
 		"vue/html-indent": ["warn", "tab",{"attribute": 1, "closeBracket": 0}],
 		"vue/script-indent": ["error", "tab", { "baseIndent": 0}],
-		"vue/order-in-components": ["error"]
+		"vue/order-in-components": ["error"],
+		"vue/html-quotes": [ "error", "double", { "avoidEscape": false } ]
 	},
 	"overrides": [
 		{

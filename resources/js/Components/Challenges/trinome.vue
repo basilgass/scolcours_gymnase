@@ -39,7 +39,7 @@
 </template>
 
 <script setup>
-import { computed, ref } from "vue"
+import {computed, ref} from "vue"
 import ChallengeTitle from "@/Components/Challenges/ui/challengeTitle"
 import {PiMath} from "pimath/esm"
 
@@ -47,7 +47,7 @@ const title = "quadratique - décomposition du trinôme"
 
 let answer = ref([]),
 	points = ref(0),
-	poly = ref(newQuestion())
+	poly = ref(false)
 
 let factorisation = computed(()=>{
 	if(answer.value.length===0){return "?"}
@@ -84,6 +84,7 @@ function validateAnswer(){
 	}else{
 		points.value = 0
 	}
-
 }
+
+poly.value = newQuestion()
 </script>

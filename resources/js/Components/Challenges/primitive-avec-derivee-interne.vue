@@ -73,7 +73,7 @@ let root = ref(null),		// main reference wrapper
 	answer = ref(""),		// the answer given by the user
 	results = ref([]),		// list of given results - simple list display.
 	keyboard = ref(null),		// keyboard reference.
-	question = ref(newQuestion())	// question: {answer: string, tex: string, ...}
+	question = ref(false)	// question: {answer: string, tex: string, ...}
 
 let displayAnswer = computed(() => {
 	if (question.value.rational) {
@@ -180,4 +180,6 @@ function validate () {
 	results.value.push(result)
 
 }
+
+question.value = newQuestion()
 </script>
