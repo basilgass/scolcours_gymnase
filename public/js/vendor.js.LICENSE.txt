@@ -1,6 +1,8 @@
 /* NProgress, (c) 2013, 2014 Rico Sta. Cruz - http://ricostacruz.com/nprogress
  * @license MIT */
 
+/*! https://mths.be/punycode v1.4.1 by @mathias */
+
 /**
  * @license
  * Lodash <https://lodash.com/>

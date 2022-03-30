@@ -28,5 +28,10 @@ class DatabaseSeeder extends Seeder
 			'name' => 'Article de base',
 			'component' => 'SimplePost'
 		]);
+
+		PostTemplate::create([
+			'name' => 'Quizz glisser - déposer',
+			'component' => 'QuizzPost'
+		]);
     }
 }

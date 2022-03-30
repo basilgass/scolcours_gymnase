@@ -1,5 +1,8 @@
 <template>
-	<ArticleTitle title="Nouvel article" />
+	<ArticleTitle
+		title="Nouvel article"
+		:subtitle="chapter.title"
+	/>
 
 	<div class="grid grid-cols-2 gap-4">
 		<div class="max-h-[700px] overflow-y-scroll pr-3">
@@ -7,21 +10,6 @@
 				ref="formPost"
 				@submit.prevent="create_new_post()"
 			>
-				<form-select
-					v-model="form.chapter"
-					label="chapitre"
-					name="chapter"
-					:error="form.errors.chapter"
-				>
-					<option
-						v-for="(chapter, index) of props.chapters"
-						:key="'chapter-'+index"
-						:value="chapter.id.toString()"
-					>
-						{{ chapter.title }}
-					</option>
-				</form-select>
-
 				<form-select
 					v-model="form.template.id"
 					label="template"
@@ -178,7 +166,8 @@ import {computed, defineAsyncComponent} from "vue"
 import FormIllustration from "@/Components/Form/FormIllustration"
 
 const props = defineProps({
-	chapters: {type: Array, default: () => []},
+	chapter: {type: Object, default: ()=>{}},
+	// chapters: {type: Array, default: () => []},
 	templates: {type: Array, default: () => []}
 })
 
@@ -186,7 +175,7 @@ let addWalkthrough = ref(false),
 	addIllustrations = ref(false)
 
 const form = useForm({
-	chapter: null,
+	chapter: props.chapter.id,
 	title: "",
 	body: "",
 	template: {
@@ -202,9 +191,12 @@ const form = useForm({
 })
 
 const PostTemplate = computed(
-	()=> defineAsyncComponent(
-		() => import(`@/Components/Posts/Templates/${"SimplePost"}`)
-	)
+	()=> {
+		let theTemplate = props.templates.filter(t=> t.id === +form.template.id)[0] || ""
+		return defineAsyncComponent(
+			() => import(`@/Components/Posts/Templates/${theTemplate.component}`)
+		)
+	}
 )
 
 const PostModel = computed(()=>{

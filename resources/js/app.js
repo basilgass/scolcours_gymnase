@@ -1,12 +1,14 @@
 import {createApp, h} from "vue"
 import {createInertiaApp, Head, Link} from "@inertiajs/inertia-vue3"
 import {InertiaProgress} from "@inertiajs/progress"
+
 // Custom directives
 import {katexDirective, visibleDirective} from "@/vueDirectives"
 
 require("./bootstrap")
 
 const appName = window.document.getElementsByTagName("title")[0]?.innerText || "ScolCours"
+
 createInertiaApp({
 	title: (title) => `${title} - ${appName}`,
 	resolve: name => import(`./Pages/${name}`),
@@ -20,6 +22,7 @@ createInertiaApp({
 			.directive("visible", visibleDirective)
 			.mixin({methods: {route}})
 
+		// Custom function available as 	$fnName
 		vueApp.config.globalProperties.$log = console.log
 
 		return vueApp.mount(el)

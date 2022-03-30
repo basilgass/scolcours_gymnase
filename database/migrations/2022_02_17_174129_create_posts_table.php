@@ -17,7 +17,7 @@ return new class extends Migration {
 			Schema::create('posts', function (Blueprint $table) {
 				$table->id();
 				$table->foreignIdFor(Chapter::class)->constrained()->cascadeOnDelete();
-				$table->foreignIdFor(PostTemplate::class)->constrained();
+				$table->foreignIdFor(PostTemplate::class)->constrained()->cascadeOnDelete();
 				$table->string('post_template_params')->nullable();
 				$table->string('title')->nullable();
 				$table->text('body');
@@ -32,6 +32,8 @@ return new class extends Migration {
 		 */
 		public function down()
 		{
+			Schema::disableForeignKeyConstraints();
 			Schema::dropIfExists('posts');
+			Schema::enableForeignKeyConstraints();
 		}
 	};

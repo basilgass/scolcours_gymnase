@@ -38,3 +38,6 @@ mix.js("resources/js/app.js", "public/js")
 if (mix.inProduction()) {
 	mix.version()
 }
+// else{
+// 	mix.browserSync("http://127.0.0.1:8000/")
+// }

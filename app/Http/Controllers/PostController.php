@@ -17,18 +17,16 @@ class PostController extends Controller
 //		return Inertia::render("Tools", $data);
 	}
 
-	public function create()
+	public function fetch(Chapter $chapter){
+		return $chapter->posts->load('template');
+	}
+
+	public function create(Chapter $chapter)
 	{
+		// Create a basic post
 		return Inertia::render("Posts/CreatePost", [
-			"chapters" => Chapter::all()->mapWithKeys(function ($item, $key) {
-				return [
-					$key => [
-						'theme_id' => $item->theme_id,
-						'id' => $item->id,
-						'title' => $item->title
-					]
-				];
-			}),
+			"theme" => $chapter->theme,
+			"chapter" => $chapter,
 			'templates' => PostTemplate::all()
 		]);
 	}

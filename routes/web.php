@@ -58,7 +58,9 @@ Route::get('dev/', function () {
 
 // Post routes (for debug / dev)
 Route::post('post/', [PostController::class, 'store']);
-Route::get('post/create', [PostController::class, 'create']);
+Route::get('post/create/{chapter:slug}', [PostController::class, 'create'])->name('post.create');
+//Route::get('post/create', [PostController::class, 'create']);
+Route::get('post/fetch/{chapter:slug}', [PostController::class, 'fetch']);
 Route::get('post/{post}', [PostController::class, 'show']);
 
 // Tools controller

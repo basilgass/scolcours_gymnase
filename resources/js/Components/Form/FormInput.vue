@@ -11,6 +11,7 @@
 			class="p-2 w-full rounded focus:outline-none"
 			:value="modelValue"
 			:class="{'form-active': active, 'border border-gray-200': !active}"
+			v-bind="$attrs"
 			@focus="$emit('inputFocus')"
 			@input="$emit('update:modelValue', $event.target.value)"
 		>
@@ -49,6 +50,7 @@ onMounted(() => {
 		inp.value.focus()
 		inp.value.select()
 	}
+
 })
 
 </script>

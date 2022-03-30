@@ -5,12 +5,20 @@
 		</title>
 	</Head>
 	<transition name="title-effect">
-		<h1
-			v-if="showTitle"
-			class="text-3xl pt-5 mb-2"
-		>
-			{{ title }}
-		</h1>
+		<div>
+			<h1
+				v-if="showTitle"
+				class="text-3xl pt-5 mb-2"
+			>
+				{{ title }}
+			</h1>
+			<h3
+				v-if="subtitle!==null"
+				class="text-xl mb-2"
+			>
+				{{ subtitle }}
+			</h3>
+		</div>
 	</transition>
 </template>
 <script setup>
@@ -18,6 +26,7 @@ import {computed, onMounted, ref} from "vue"
 
 const props = defineProps({
 	title: String,
+	subtitle: {type: String, default: null},
 	head: String,
 	chapter: String
 })

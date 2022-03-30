@@ -33,6 +33,7 @@
 						return [
 							'slug'=>$tool->slug,
 							'title'=>$tool->slug,
+							'theme'=>$tool->theme->slug,
 							'updated_at'=>$tool->updated_at->format('d.m.Y H:m')
 						];
 					}),

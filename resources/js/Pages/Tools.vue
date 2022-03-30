@@ -1,7 +1,9 @@
 <!--suppress ALL -->
 <template>
 	<!-- Title -->
-	<div class="flex justify-between items-baseline mb-4">
+	<div
+		class="flex justify-between items-baseline mb-4"
+	>
 		<div>
 			<ArticleTitle title="Outils" />
 			<Link
@@ -22,14 +24,17 @@
 
 	<div v-if="!toolSlug">
 		<form-input
+			v-model="toolSearch"
 			label="Sélectionner l'outils"
 			name="tools"
+			focus
+			@keyup.enter="toolSelect"
 		/>
 
 		<!-- List of all tools -->
 		<table class="w-full my-5">
 			<tr
-				v-for="tool of $page.props.tools"
+				v-for="tool of listOfTools"
 				:key="tool.slug"
 				class="odd:bg-white hover:bg-amber-100"
 				@click="toolSlug=tool.slug"
@@ -50,7 +55,10 @@
 	</div>
 
 	<keep-alive>
-		<component :is="toolComponents[toolSlug]" />
+		<component
+			:is="toolComponents[toolSlug]"
+			@keyup.esc="toolUnselect"
+		/>
 	</keep-alive>
 </template>
 <script>
@@ -66,7 +74,8 @@ import {computed, defineAsyncComponent, onMounted, ref} from "vue"
 import ArticleTitle from "@/Components/Ui/ArticleTitle"
 import {Inertia} from "@inertiajs/inertia"
 
-let toolSlug = ref(null)
+let toolSlug = ref(null),
+	toolSearch = ref("")
 
 const props = defineProps({
 	tools: {
@@ -102,5 +111,23 @@ onMounted(()=> {
 		toolSlug.value = props.tool.slug
 	}
 })
+
+let listOfTools = computed(()=>{
+	if(toolSearch.value.trim() === ""){
+		return props.tools
+	}else {
+		return props.tools.filter(tool => tool.slug.includes(toolSearch.value) || tool.title.includes(toolSearch.value))
+	}
+})
+
+function toolSelect(){
+	if(listOfTools.value.length===1){
+		toolSlug.value = listOfTools.value[0].slug
+	}
+}
+function toolUnselect(){
+	toolSearch.value = ""
+	toolSlug.value = ""
+}
 </script>
 

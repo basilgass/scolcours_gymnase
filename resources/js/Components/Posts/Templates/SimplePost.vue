@@ -4,9 +4,7 @@
 			{{ props.post.title }}
 		</h2>
 
-		<div>
-			{{ props.post.body }}
-		</div>
+		<markdown-it :text="props.post.body" />
 
 		<div class="grid grid-cols-1 lg:grid-cols-2 gap-5 items-stretch">
 			<div v-if="props.post.illustrations.length>0">
@@ -85,6 +83,7 @@
 
 import {computed, defineAsyncComponent, onMounted, ref} from "vue"
 import IllustrationDraw from "@/Components/Posts/IllustrationDraw"
+import MarkdownIt from "@/Components/Ui/MarkdownIt"
 
 let root = ref(null),
 	solutions = ref(0)

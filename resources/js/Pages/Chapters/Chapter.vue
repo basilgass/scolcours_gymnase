@@ -1,10 +1,21 @@
 <!--suppress ALL -->
 <template>
 	<!-- Title -->
-	<ArticleTitle
-		:chapter="theme.title"
-		:title="chapter.title"
-	/>
+	<div class="flex justify-between items-center">
+		<ArticleTitle
+			:chapter="theme.title"
+			:title="chapter.title"
+		/>
+
+		<Link
+			as="button"
+			type="button"
+			class="btn"
+			:href="`/post/create/${ chapter.slug }`"
+		>
+			Nouvel aricle
+		</Link>
+	</div>
 
 	<!-- Chapter description -->
 	<div class="mb-5">
