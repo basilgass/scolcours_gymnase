@@ -2,11 +2,19 @@
 	<div class="typo grid grid-cols-1 md:grid-cols-2">
 		<div>
 			<h2>exercice: tangente(s) à un cercle</h2>
-			<div>
+			<div v-if="pointOutside || pointOnCircle">
 				Calculer la(les) tangente(s) au cercle
 				<div v-katex="`\\Gamma: ${circleAsTex}`" />
 				passant par le point
 				<div v-katex="`A${pointAsTex}`" />
+			</div>
+			<div v-if="perpendicularTo||parallelTo">
+				Calculer la(les) tangente(s) au cercle
+				<div v-katex="`\\Gamma: ${circleAsTex}`" />
+				qui sont
+				<span v-text="parallelTo?'parallèles':'perpendiculaires'" />
+				à la droite d'équation
+				<div v-katex="`(d): ${lineAsTex}`" />
 			</div>
 		</div>
 		<div class="place-self-end w-full">
@@ -50,7 +58,10 @@ import {ref, watch} from "vue"
 import {PiMath} from "pimath/esm"
 
 const props = defineProps({
-	pointOnCircle: {type: Boolean, default: null}
+	pointOnCircle: {type: Boolean, default: false},
+	pointOutside: {type: Boolean, default: false},
+	parallelTo: {type: Boolean, default: false},
+	perpendicularTo: {type: Boolean, default: false}
 })
 
 let answer = ref(""),
@@ -84,11 +95,11 @@ while(securityCount < 200){
 }
 
 let point, tangents
-if(props.pointOnCircle===true){
+if(props.pointOnCircle){
 	point = PiMath.Random.array(pointsOnCircle)[0]
 	pointAsTex.value = point.tex
 	tangents = circle.tangents(point)
-}else if(props.pointOnCircle===false){
+}else if(props.pointOutside){
 	let twoPoints, tg1, tg2, intersection
 
 	securityCount = 0
@@ -107,8 +118,50 @@ if(props.pointOnCircle===true){
 	}
 
 	tangents = [tg1, tg2]
-}else{
+}else if(props.parallelTo){
 	// Tangente par rapport à une droite.
+	let pt, sympt, tg1, tg2
+	pt = PiMath.Random.array(pointsOnCircle)[0]
+
+	const CP = (new PiMath.Geometry.Vector(pt, center)).multiplyByScalar(2)
+
+	sympt = new PiMath.Geometry.Point(
+		pt.x.clone().add(CP.x),
+		pt.y.clone().add(CP.y)
+	)
+	tg1 = circle.tangents(pt)[0]
+	tg2 = circle.tangents(sympt)[0]
+
+	let rndPoint = new PiMath.Geometry.Point(
+		PiMath.Random.numberSym(10, true),
+		PiMath.Random.numberSym(10, true)
+	)
+	let d = new PiMath.Geometry.Line().parseByPointAndLine(rndPoint, tg1.clone())
+
+	lineAsTex = d.tex.canonical
+
+	tangents = [tg1, tg2]
+}else if(props.perpendicularTo){
+	// Tangente par rapport à une droite.
+	let pt, sympt, tg1, tg2
+	pt = PiMath.Random.array(pointsOnCircle)[0]
+
+	const CP = (new PiMath.Geometry.Vector(pt, center)).multiplyByScalar(2)
+
+	sympt = new PiMath.Geometry.Point(
+		pt.x.clone().add(CP.x),
+		pt.y.clone().add(CP.y)
+	)
+	tg1 = circle.tangents(pt)[0]
+	tg2 = circle.tangents(sympt)[0]
+
+	let rndPoint = new PiMath.Geometry.Point(
+		PiMath.Random.numberSym(10, true),
+		PiMath.Random.numberSym(10, true)
+	)
+	let d = new PiMath.Geometry.Line().parseByPointAndLine(rndPoint, tg1.clone(), "perpendicular")
+	lineAsTex = d.tex.canonical
+	tangents = [tg1, tg2]
 }
 
 console.log(tangents.map(tg=>tg.tex.canonical))
