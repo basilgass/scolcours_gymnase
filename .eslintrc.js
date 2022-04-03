@@ -17,9 +17,9 @@ module.exports = {
 		"indent": [
 			"error", "tab"
 		],
-		"linebreak-style": [
-			"error", "unix"
-		],
+		// "linebreak-style": [
+		// 	"error", "unix"
+		// ],
 		"quotes": [
 			"error", "double"
 		],
@@ -27,8 +27,8 @@ module.exports = {
 			"error", "never"
 		],
 		"vue/require-default-prop": "off",
-		"vue/html-indent": ["warn", "tab",{"attribute": 1, "closeBracket": 0}],
-		"vue/script-indent": ["error", "tab", { "baseIndent": 0}],
+		"vue/html-indent": ["warn", "tab", {"attribute": 1, "closeBracket": 0}],
+		"vue/script-indent": ["error", "tab", {"baseIndent": 0}],
 		"vue/order-in-components": ["error"],
 		"vue/html-quotes": [ "error", "double", { "avoidEscape": false } ]
 	},

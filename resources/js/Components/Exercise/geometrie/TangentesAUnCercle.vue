@@ -1,18 +1,21 @@
 <template>
-	<div class="typo grid grid-cols-1 md:grid-cols-2">
+	<div
+		ref="root"
+		class="typo grid grid-cols-1 md:grid-cols-2"
+	>
 		<div>
 			<h2>exercice: tangente(s) à un cercle</h2>
-			<div v-if="pointOutside || pointOnCircle">
+			<div v-if="params.pointOutside || params.pointOnCircle">
 				Calculer la(les) tangente(s) au cercle
 				<div v-katex="`\\Gamma: ${circleAsTex}`" />
 				passant par le point
 				<div v-katex="`A${pointAsTex}`" />
 			</div>
-			<div v-if="perpendicularTo||parallelTo">
+			<div v-if="params.perpendicularTo||params.parallelTo">
 				Calculer la(les) tangente(s) au cercle
 				<div v-katex="`\\Gamma: ${circleAsTex}`" />
 				qui sont
-				<span v-text="parallelTo?'parallèles':'perpendiculaires'" />
+				<span v-text="params.parallelTo?'parallèles':'perpendiculaires'" />
 				à la droite d'équation
 				<div v-katex="`(d): ${lineAsTex}`" />
 			</div>
@@ -31,8 +34,8 @@
 			<div
 				class="text-xs"
 				:class="{
-					'h-8':pointOnCircle===false,
-					'h-4': pointOnCircle===true
+					'h-8':params.pointOnCircle===false,
+					'h-4': params.pointOnCircle===true
 				}"
 			>
 				<div v-if="result.length>0">
@@ -54,17 +57,19 @@
 
 <script setup>
 import FormInput from "@/Components/Form/FormInput"
-import {ref, watch} from "vue"
+import {onMounted, ref, watch} from "vue"
 import {PiMath} from "pimath/esm"
 
 const props = defineProps({
-	pointOnCircle: {type: Boolean, default: false},
-	pointOutside: {type: Boolean, default: false},
-	parallelTo: {type: Boolean, default: false},
-	perpendicularTo: {type: Boolean, default: false}
+	params: {
+		type: Object, default: () => {
+		}
+	}
 })
 
-let answer = ref(""),
+
+let root = ref(null),
+	answer = ref(""),
 	circleAsTex = ref(""),
 	pointAsTex = ref(""),
 	lineAsTex = ref(""),
@@ -95,21 +100,21 @@ while(securityCount < 200){
 }
 
 let point, tangents
-if(props.pointOnCircle){
+if (props.params.pointOnCircle === true) {
 	point = PiMath.Random.array(pointsOnCircle)[0]
 	pointAsTex.value = point.tex
 	tangents = circle.tangents(point)
-}else if(props.pointOutside){
+} else if (props.params.pointOutside === true) {
 	let twoPoints, tg1, tg2, intersection
 
 	securityCount = 0
-	while(securityCount<100){
+	while (securityCount < 100) {
 		twoPoints = PiMath.Random.array(pointsOnCircle, 2)
 		tg1 = circle.tangents(twoPoints[0])[0]
 		tg2 = circle.tangents(twoPoints[1])[0]
 		intersection = tg1.intersection(tg2)
 
-		if(intersection.hasIntersection){
+		if (intersection.hasIntersection) {
 			pointAsTex = intersection.point.tex
 			break
 		}
@@ -118,7 +123,7 @@ if(props.pointOnCircle){
 	}
 
 	tangents = [tg1, tg2]
-}else if(props.parallelTo){
+} else if (props.params.parallelTo === true) {
 	// Tangente par rapport à une droite.
 	let pt, sympt, tg1, tg2
 	pt = PiMath.Random.array(pointsOnCircle)[0]
@@ -141,7 +146,7 @@ if(props.pointOnCircle){
 	lineAsTex = d.tex.canonical
 
 	tangents = [tg1, tg2]
-}else if(props.perpendicularTo){
+} else if (props.params.perpendicularTo === true) {
 	// Tangente par rapport à une droite.
 	let pt, sympt, tg1, tg2
 	pt = PiMath.Random.array(pointsOnCircle)[0]
@@ -164,7 +169,7 @@ if(props.pointOnCircle){
 	tangents = [tg1, tg2]
 }
 
-console.log(tangents.map(tg=>tg.tex.canonical))
+// console.log(tangents.map(tg=>tg.tex.canonical))
 
 watch(answer, (newValue, oldValue)=>{
 	if(newValue!==oldValue){
@@ -229,8 +234,6 @@ function checkResult(){
 		}
 
 		// On controle A,B vs A,B
-		console.log(givenAnswer[0], tangents[0].tex.canonical)
-		console.log(givenAnswer[1], tangents[1].tex.canonical)
 		let checkAA = checkTangent(givenAnswer[0], tangents[0].tex.canonical),
 			checkBB = checkTangent(givenAnswer[1], tangents[1].tex.canonical)
 
@@ -247,9 +250,13 @@ function checkResult(){
 	}
 
 	result.value = [{
-		result : "Votre réponse est fausse.",
+		result: "Votre réponse est fausse.",
 		correct: -1
 	}]
 }
+
+onMounted(() => {
+	katexAutoRender(root.value)
+})
 
 </script>

@@ -1,12 +1,19 @@
 <template>
-	<div ref="root">
-		<h2 class="text-xl font-mono mt-6 mb-2">
+	<div
+		ref="root"
+		class="max-w-6xl mx-auto bg-white p-3"
+	>
+		<h2 class="text-xl font-mono">
 			{{ props.post.title }}
 		</h2>
 
-		<markdown-it :text="props.post.body" />
 
 		<div class="grid grid-cols-1 lg:grid-cols-2 gap-5 items-stretch">
+			<markdown-it
+				:text="props.post.body"
+				class="my-10"
+			/>
+
 			<div v-if="props.post.illustrations.length>0">
 				<div
 					v-for="(illustration) of props.post.illustrations"
@@ -34,7 +41,6 @@
 					</li>
 				</ol>
 			</div>
-
 
 			<div
 				v-if="props.post.walkthrough.length>0"
@@ -73,7 +79,10 @@
 			</div>
 
 			<div v-if="props.post.component">
-				<component :is="PostComponent" />
+				<component
+					:is="PostComponent"
+					:params="JSON.parse(props.post.component.parameters)"
+				/>
 			</div>
 		</div>
 	</div>
@@ -87,6 +96,7 @@ import MarkdownIt from "@/Components/Ui/MarkdownIt"
 
 let root = ref(null),
 	solutions = ref(0)
+
 const props = defineProps({
 	post: {
 		type: Object, default: () => {
