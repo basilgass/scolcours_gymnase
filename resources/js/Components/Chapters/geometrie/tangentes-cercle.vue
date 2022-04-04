@@ -113,12 +113,12 @@
 				<hr class="col-span-1 md:col-span-3 lg:col-span-2 my-5">
 				<tangentes-a-un-cercle
 					class="col-span-1 md:col-span-3 lg:col-span-2"
-					:params="{pointOnCircle: false, pointOutside: false, parallelTo: true, perpendiculatTo: false}"
+					:params="{pointOnCircle: false, pointOutside: false, parallelTo: true, perpendicularTo: false}"
 				/>
 
 				<tangentes-a-un-cercle
 					class="col-span-1 md:col-span-3 lg:col-span-2"
-					:params="{pointOnCircle: false, pointOutside: false, parallelTo: false, perpendiculatTo: true}"
+					:params="{pointOnCircle: false, pointOutside: false, parallelTo: false, perpendicularTo: true}"
 				/>
 			</div>
 
