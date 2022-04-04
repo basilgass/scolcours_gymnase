@@ -40,13 +40,13 @@
 						\]
 					</div>
 					<div>
-						L'équation de la tangente est \((t): 4x+3y-20=0\)
+						L'équation de la tangente est \(\boxed{(t): 4x+3y-20=0}\)
 					</div>
 				</div>
 
 				<hr class="col-span-1 md:col-span-3 lg:col-span-2 my-5">
 				<tangentes-a-un-cercle
-					point-on-circle
+					:params="{pointOnCircle: true, pointOutside: false, parallelTo: false, perpendiculatTo: false}"
 					class="col-span-1 md:col-span-3 lg:col-span-2"
 				/>
 			</div>
@@ -113,12 +113,12 @@
 				<hr class="col-span-1 md:col-span-3 lg:col-span-2 my-5">
 				<tangentes-a-un-cercle
 					class="col-span-1 md:col-span-3 lg:col-span-2"
-					parallel-to
+					:params="{pointOnCircle: false, pointOutside: false, parallelTo: true, perpendiculatTo: false}"
 				/>
 
 				<tangentes-a-un-cercle
 					class="col-span-1 md:col-span-3 lg:col-span-2"
-					perpendicular-to
+					:params="{pointOnCircle: false, pointOutside: false, parallelTo: false, perpendiculatTo: true}"
 				/>
 			</div>
 
@@ -207,7 +207,130 @@
 
 				<hr class="col-span-1 md:col-span-3 lg:col-span-2 my-5">
 				<tangentes-a-un-cercle
-					point-outside
+					:params="{pointOnCircle: false, pointOutside: true, parallelTo: false, perpendiculatTo: false}"
+					class="col-span-1 md:col-span-3 lg:col-span-2"
+				/>
+			</div>
+
+			<div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-2 p-6 gap-6 rounded bg-white">
+				<div>
+					<h2 class="chapter-menu text-lg mb-10">
+						Coordonnées du point de tangence d'une droite à un cercle.
+					</h2>
+					<IllustrationDraw
+						class="max-w-md"
+						:draw="draw4"
+					/>
+				</div>
+				<div class="md:col-span-2 lg:col-span-1 space-y-10">
+					<div>
+						Soit \(\Gamma: (x-6)^2+(y-7)^2=25\) le cercle de centre \(C(6;7)\) et de rayon
+						\(r=\sqrt{25}=5\) et \((d): 4x+3y-20=0 \) une tangente au cercle.
+					</div>
+
+					<div class="grid grid-cols-2">
+						<h3
+							class="cursor-pointer"
+							:class="{'font-semibold': coordMethod===1, 'text-gray-400 font-thin': coordMethod===2}"
+							@click="coordMethod=1;showCoordMethod=0"
+						>
+							1ère méthode: algébrique
+						</h3>
+						<h3
+							class="cursor-pointer"
+							:class="{'font-semibold': coordMethod===2, 'text-gray-400 font-thin': coordMethod===1}"
+							@click="coordMethod=2;showCoordMethod=0"
+						>
+							2ème méthode: géométrique
+						</h3>
+					</div>
+
+					<collapse-transition @after-leave="showCoordMethod=coordMethod">
+						<div
+							v-show="showCoordMethod===1"
+							class="katex-left"
+						>
+							Il faut résoudre le système d'équation
+
+							\[
+							\left\{
+							\begin{aligned}
+							(x-6)^2+(y-7)^2=& 25 \\
+							4x+3y-20 =& 0
+							\end{aligned} \right.
+							\]
+							\[
+							\left\{
+							\begin{aligned}
+							(\textcolor{red}{x}-6)^2+(y-7)^2=& 25 \\
+							\textcolor{red}{x} =& -\frac{3}{4}y+5
+							\end{aligned} \right.
+							\]
+
+							\[
+							\begin{aligned}
+							& (-\frac{3}{4}y+5-6)^2+(y-7)^2 &=& 25 \\
+							& (-\frac{3}{4}y-1)^2+(y-7)^2 &=& 25 \\
+							& \big(\frac{9}{16}y^2+2\cdot \frac{3}{4}\cdot 1 + 1\big) + \big(y^2 - 14y + 49\big)  &=& 25 \\
+							& \frac{25}{16}y^2 - \frac{25}{2}y + 25  &=& 0 \\
+							& 25y^2 - 200y + 400  &=& 0\\
+							& (5y-20)^2  &=& 0 \\
+							\end{aligned}
+							\]
+
+							\[\implies y = 4 \text{ et } \textcolor{red}{x} = -\frac{3}{4}y+5 = -\frac{3}{4}\cdot 4 +5 = 2\]
+						</div>
+					</collapse-transition>
+
+					<collapse-transition @after-leave="showCoordMethod=coordMethod">
+						<div v-show="showCoordMethod===2">
+							<div>
+								Le point de tangence est l'intersection entre la tangente et une droite perpendiculaire
+								passant par le centre du cercle.
+							</div>
+
+							<div>
+								On calcule l'équation de la perpendiculaire. Elle est de la forme \[(p): 3x-4y+c=0\] (on inverse les coefficients de \(x\) et \(y\) et on change le signe d'un des deux coefficients.)
+							</div>
+							<div>
+								La perpendiculaire passe par le centre \[C(6;7) \implies 3\cdot 6 - 4\cdot 7 + c = 0 \implies c = 10\]
+
+								L'équation cartésienne de la perpendiculaire est \[(p): 3x-4y+10=0\]
+							</div>
+
+							<div class="katex-left">
+								Il faut résoudre le système d'équation
+								\[
+								\phantom{\implies}\left\{ \begin{aligned}
+								3x-4y+10=&0 \\
+								4x+3y-20=&0
+								\end{aligned}\right.
+								\]
+								\[
+								\implies \left\{ \begin{aligned}
+								9x-12y+30=&0 \\
+								16x+12y-80=&0
+								\end{aligned}\right.
+								\]
+								\[
+								\implies 25x - 50 = 0 \implies x = 2
+								\]
+								\[
+								\implies 3\cdot 2-4y+10=0 \implies 4y = 16 \implies y = 4
+								\]
+							</div>
+						</div>
+					</collapse-transition>
+
+					<div>
+						Les coordonnées du point de tangence sont \( (2;4) \)
+					</div>
+				</div>
+
+				<hr class="col-span-1 md:col-span-3 lg:col-span-2 my-5">
+
+				<tangentes-a-un-cercle
+					:params="{coordinates: true}"
 					class="col-span-1 md:col-span-3 lg:col-span-2"
 				/>
 			</div>
@@ -220,6 +343,7 @@ import {onMounted, ref} from "vue"
 import IllustrationDraw from "@/Components/Posts/IllustrationDraw"
 import TangentesAUnCercle from "@/Components/Exercise/geometrie/TangentesAUnCercle"
 import TableOfContents from "@/Components/Ui/TableOfContents"
+import CollapseTransition from "@/Components/CollapseTransition"
 
 /** Chapter
  * title: tangentes à un cercle
@@ -229,13 +353,16 @@ import TableOfContents from "@/Components/Ui/TableOfContents"
 let root = ref(null),
 	draw1 = ref({}),
 	draw2 = ref({}),
-	draw3 = ref({})
+	draw3 = ref({}),
+	draw4 = ref({}),
+	coordMethod = ref(1),
+	showCoordMethod = ref(1)
 
 draw1.value = {
 	type: "draw",
 	code: `C(6,7)
-	c=circ C,5,
-	T(2,4),
+	c=circ C,5
+	T(2,4)
 	t1=line 4x+3y-20=0->green`,
 	parameters: "-1,15,-1,15"
 }
@@ -260,6 +387,14 @@ draw3.value = {
 	parameters: "-1,15,-1,15"
 }
 
+draw4.value = {
+	type: "draw",
+	"code": `C(6,7)
+	c=circ C,5
+	T@(2,4)->green
+	t1=line 4x+3y-20=0`,
+	parameters: "-1,15,-1,15"
+}
 // When loaded - auto katex
 onMounted(() => {
 	katexAutoRender(root.value)

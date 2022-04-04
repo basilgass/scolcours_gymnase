@@ -1,9 +1,6 @@
 <template>
 	<div ref="root">
-		<div
-			ref="toc"
-			class="my-10"
-		>
+		<div class="my-10">
 			<h3 class="font-light text-lg my-5">
 				table des matières
 			</h3>
@@ -25,8 +22,9 @@
 			</ol>
 		</div>
 		<div
-			class="table-of-contents-data"
 			v-bind="$attrs"
+			ref="toc"
+			class="table-of-contents-data"
 		>
 			<slot />
 		</div>

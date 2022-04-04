@@ -19,16 +19,28 @@
 				à la droite d'équation
 				<div v-katex="`(d): ${lineAsTex}`" />
 			</div>
+			<div v-if="params.coordinates">
+				Calculer les coordonnées du point de tangence entre le cercle <div v-katex="`\\Gamma: ${circleAsTex}`" /> et la droite d'équation <div v-katex="`(d): ${lineAsTex}`" />
+			</div>
 		</div>
 		<div class="place-self-end w-full">
 			<form-input
 				v-model="answer"
 				name="answer"
-				label="Equation de la tangente"
+				:label="params.coordinates?'Coordonnées du point':'Equation de la tangente'"
 				@keyup.enter="checkResult"
 			/>
-			<div class="text-xs">
+			<div
+				v-if="!params.coordinates"
+				class="text-xs"
+			>
 				Donner le résultat sous la forme canonique, réduite avec le coefficient de \(x\) positif
+			</div>
+			<div
+				v-else
+				class="text-xs"
+			>
+				Donner le résultat sous la forme \(3,4\), sans parenthèse, séparé par une virgule
 			</div>
 
 			<div
@@ -104,7 +116,8 @@ if (props.params.pointOnCircle === true) {
 	point = PiMath.Random.array(pointsOnCircle)[0]
 	pointAsTex.value = point.tex
 	tangents = circle.tangents(point)
-} else if (props.params.pointOutside === true) {
+}
+else if (props.params.pointOutside === true) {
 	let twoPoints, tg1, tg2, intersection
 
 	securityCount = 0
@@ -123,7 +136,8 @@ if (props.params.pointOnCircle === true) {
 	}
 
 	tangents = [tg1, tg2]
-} else if (props.params.parallelTo === true) {
+}
+else if (props.params.parallelTo === true) {
 	// Tangente par rapport à une droite.
 	let pt, sympt, tg1, tg2
 	pt = PiMath.Random.array(pointsOnCircle)[0]
@@ -146,7 +160,8 @@ if (props.params.pointOnCircle === true) {
 	lineAsTex = d.tex.canonical
 
 	tangents = [tg1, tg2]
-} else if (props.params.perpendicularTo === true) {
+}
+else if (props.params.perpendicularTo === true) {
 	// Tangente par rapport à une droite.
 	let pt, sympt, tg1, tg2
 	pt = PiMath.Random.array(pointsOnCircle)[0]
@@ -167,6 +182,13 @@ if (props.params.pointOnCircle === true) {
 	let d = new PiMath.Geometry.Line().parseByPointAndLine(rndPoint, tg1.clone(), "perpendicular")
 	lineAsTex = d.tex.canonical
 	tangents = [tg1, tg2]
+}
+else if(props.params.coordinates === true){
+	// Do something
+	point = PiMath.Random.array(pointsOnCircle)[0]
+	console.log(point.tex)
+	const tangent = circle.tangents(point)[0]
+	lineAsTex = tangent.tex.canonical
 }
 
 // console.log(tangents.map(tg=>tg.tex.canonical))
@@ -204,49 +226,81 @@ function checkResult(){
 		return
 	}
 
-	let answerLine
-	if(tangents.length===1){
-		let check = checkTangent(answer.value, tangents[0].tex.canonical)
-		result.value = [check]
-		return
-	}
-
-	if(tangents.length===2){
-		if(answer.value===tangents.map(x=>x.tex.canonical).join(",") || answer.value===tangents.reverse().map(x=>x.tex.canonical).join(",")){
+	if(props.params.coordinates){
+		let coord = answer.value.split(",")
+		if(coord.length!==2){
 			result.value = [
 				{
-					result: "Votre réponse est correcte ! Bravo !",
-					correct: 1
-				}
-			]
-			return
-		}
-
-		let givenAnswer = answer.value.split(",")
-		if(givenAnswer.length!==2){
-			result.value = [
-				{
-					result: "Il n'y a pas deux tangentes. Séparez les équations cartésiennes des tangentes par une virgule.",
+					result: "Votre réponse ne correspond pas à des coordonnées d'un point",
 					correct: -1
 				}
 			]
 			return
 		}
 
-		// On controle A,B vs A,B
-		let checkAA = checkTangent(givenAnswer[0], tangents[0].tex.canonical),
-			checkBB = checkTangent(givenAnswer[1], tangents[1].tex.canonical)
-
-		result.value = [checkAA,checkBB]
-
-		let checkAB = checkTangent(givenAnswer[0], tangents[1].tex.canonical),
-			checkBA = checkTangent(givenAnswer[1], tangents[0].tex.canonical)
-
-
-		if(checkAB.correct+checkBA.correct>checkAA.correct+checkBB.correct){
-			result.value = [checkAB, checkBA]
+		if(point.x.value===+coord[0] && point.y.value===+coord[1]){
+			result.value =[{
+				result: "Bravo ! Votre réponse est juste !",
+				correct: 1
+			}]
+			return
+		}else if(point.x.value===+coord[0]){
+			result.value =[{
+				result: "La 1ère coordonnée est juste.",
+				correct: 0
+			}]
+			return
+		}else if(point.y.value===+coord[1]){
+			result.value =[{
+				result: "La 2ème coordonnée est juste.",
+				correct: 0
+			}]
+			return
 		}
-		return
+	}else {
+		if (tangents.length === 1) {
+			let check = checkTangent(answer.value, tangents[0].tex.canonical)
+			result.value = [check]
+			return
+		}
+
+		if (tangents.length === 2) {
+			if (answer.value === tangents.map(x => x.tex.canonical).join(",") || answer.value === tangents.reverse().map(x => x.tex.canonical).join(",")) {
+				result.value = [
+					{
+						result: "Votre réponse est correcte ! Bravo !",
+						correct: 1
+					}
+				]
+				return
+			}
+
+			let givenAnswer = answer.value.split(",")
+			if (givenAnswer.length !== 2) {
+				result.value = [
+					{
+						result: "Il n'y a pas deux tangentes. Séparez les équations cartésiennes des tangentes par une virgule.",
+						correct: -1
+					}
+				]
+				return
+			}
+
+			// On controle A,B vs A,B
+			let checkAA = checkTangent(givenAnswer[0], tangents[0].tex.canonical),
+				checkBB = checkTangent(givenAnswer[1], tangents[1].tex.canonical)
+
+			result.value = [checkAA, checkBB]
+
+			let checkAB = checkTangent(givenAnswer[0], tangents[1].tex.canonical),
+				checkBA = checkTangent(givenAnswer[1], tangents[0].tex.canonical)
+
+
+			if (checkAB.correct + checkBA.correct > checkAA.correct + checkBB.correct) {
+				result.value = [checkAB, checkBA]
+			}
+			return
+		}
 	}
 
 	result.value = [{
