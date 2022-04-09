@@ -19,15 +19,6 @@
  * title: intégrales définies
  * body: Le calcul des aires d'un domaine borné.
  */
-
-/** Chapter
- * title: intégrales définies
- * body: Le calcul des aires d'un domaine borné.
- */
-/** Chapter
- * title: intégrales définies
- * body: Le calcul des aires d'un domaine borné.
- */
 import {onMounted, ref} from "vue"
 import IntegralesDefiniesAireBorneRacine
 	from "@/Components/Chapters/analyse/integrales-definies/IntegralesDefiniesAireBorneRacine"

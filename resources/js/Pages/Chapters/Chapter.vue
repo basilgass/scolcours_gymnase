@@ -8,6 +8,7 @@
 		/>
 
 		<Link
+			v-if="$page.props.auth.can.admin"
 			as="button"
 			type="button"
 			class="btn"

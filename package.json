@@ -38,7 +38,7 @@
 		"katex": "^0.15.2",
 		"markdown-it": "^12.3.2",
 		"markdown-it-texmath": "^0.9.7",
-		"pidraw": "^0.0.12",
-		"pimath": "^0.0.38"
+		"pidraw": "^0.0.13",
+		"pimath": "^0.0.42"
 	}
 }
