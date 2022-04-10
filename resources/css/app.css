@@ -92,12 +92,40 @@
 
     .btn-form {
         @apply btn-primary uppercase font-semibold text-xs;
-    }
+	}
 
-    .list-space {
-        @apply list-outside ml-3
-    }
-    .list-space > li {
-        @apply pl-5
-    }
+	.list-space {
+		@apply list-outside ml-3
+	}
+
+	.list-space > li {
+		@apply pl-5
+	}
+}
+
+
+.tos .cell-v-line:after {
+	content: "";
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 50%;
+	border-left: 1px dashed #bbb;
+	transform: translate(-50%);
+	pointer-events: none;
+}
+
+.tos .cell-v-line-d:after {
+	content: "";
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 50%;
+	border-left: 1px double #e00c0c;
+	transform: translate(-50%);
+	pointer-events: none;
+}
+
+.tos .cell-v-line {
+	position: relative;
 }
