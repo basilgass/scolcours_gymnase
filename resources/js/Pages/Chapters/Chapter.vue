@@ -9,10 +9,10 @@
 
 		<Link
 			v-if="$page.props.auth.can.admin"
-			as="button"
-			type="button"
-			class="btn"
 			:href="`/post/create/${ chapter.slug }`"
+			as="button"
+			class="btn"
+			type="button"
 		>
 			Nouvel aricle
 		</Link>
@@ -24,7 +24,14 @@
 	</div>
 
 	<!-- Chapter component with or without interactivity -->
-	<component :is="chapterComponent" />
+	<keep-alive>
+		<suspense>
+			<component :is="chapterComponent" />
+			<template #fallback>
+				Chargement...Merci de patienter...
+			</template>
+		</suspense>
+	</keep-alive>
 
 	<!-- exercises -->
 	<!--	<div v-if="chapter.exercises.length>0">-->

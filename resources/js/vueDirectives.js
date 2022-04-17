@@ -1,11 +1,14 @@
 import katex from "katex/dist/katex.mjs"
 import AsciiMathParser from "asciimath2tex"
+import {number} from "tailwindcss/lib/util/dataTypes"
 
 function katexUpdate(el, binding, vnode) {
+	if(binding.value===undefined){return }
+
 	if (binding.value.length === 0) {
 		el.innerHTML = ""
 	} else {
-		const tex = binding.modifiers.ascii ? new AsciiMathParser().parse(binding.value) : binding.value
+		let tex = binding.modifiers.ascii ? new AsciiMathParser().parse(binding.value) : binding.value
 
 		if (!binding.modifiers.clear) {
 			el.classList.add("katex-container")
@@ -25,12 +28,16 @@ function katexUpdate(el, binding, vnode) {
 			el.classList.add("katex-m-0")
 		}
 
-		el.innerHTML = katex.renderToString(
-			(binding.modifiers.display ? "\\displaystyle " : "") + tex,
-			{
-				throwOnError: false,
-				displayMode: !binding.modifiers.inline
-			})
+		if(typeof tex === number){tex = tex.toString()}
+
+		if(tex!==undefined && tex.length>0) {
+			el.innerHTML = katex.renderToString(
+				(binding.modifiers.display ? "\\displaystyle " : "") + tex,
+				{
+					throwOnError: false,
+					displayMode: !binding.modifiers.inline
+				})
+		}
 	}
 }
 

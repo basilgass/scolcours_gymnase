@@ -11,7 +11,7 @@
 					<h2 class="chapter-menu text-lg mb-10">
 						Tangente à un point du cercle
 					</h2>
-					<IllustrationDraw
+					<pi-draw-parser
 						class="max-w-md"
 						:draw="draw1"
 					/>
@@ -56,7 +56,7 @@
 					<h2 class="chapter-menu text-lg mb-10">
 						Tangentes à un cercle, parallèles à une autre droite
 					</h2>
-					<IllustrationDraw
+					<pi-draw-parser
 						class="max-w-md"
 						:draw="draw2"
 					/>
@@ -127,7 +127,7 @@
 					<h2 class="chapter-menu text-lg mb-10">
 						Tangentes au cercle passant par un point \(A\)
 					</h2>
-					<IllustrationDraw
+					<pi-draw-parser
 						class="max-w-md"
 						:draw="draw3"
 					/>
@@ -217,7 +217,7 @@
 					<h2 class="chapter-menu text-lg mb-10">
 						Coordonnées du point de tangence d'une droite à un cercle.
 					</h2>
-					<IllustrationDraw
+					<pi-draw-parser
 						class="max-w-md"
 						:draw="draw4"
 					/>
@@ -340,10 +340,10 @@
 
 <script setup>
 import {onMounted, ref} from "vue"
-import IllustrationDraw from "@/Components/Posts/IllustrationDraw"
 import TangentesAUnCercle from "@/Components/Exercise/geometrie/TangentesAUnCercle"
 import TableOfContents from "@/Components/Ui/TableOfContents"
 import CollapseTransition from "@/Components/CollapseTransition"
+import PiDrawParser from "@/Components/Pi/PiDrawParser"
 
 /** Chapter
  * title: tangentes à un cercle

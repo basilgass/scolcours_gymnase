@@ -14,10 +14,11 @@ let props = defineProps({
 	draw: {
 		type: Object, default: () => {
 		}
-	}
+	},
+	axis: {type: Boolean, default: false}
 })
 
-let PiGraph, PiParser
+let PiGraph, PiParser, PiAxis
 
 onMounted(() => {
 
@@ -34,6 +35,10 @@ onMounted(() => {
 		}
 	})
 
+	if(props.axis){
+		PiAxis = PiGraph.axis()
+	}
+
 	PiParser = PiGraph.parse("")
 
 	if (props.draw.parameters) {
@@ -41,11 +46,19 @@ onMounted(() => {
 	}
 
 	if (props.draw.code) {
-		PiParser.update(props.draw.code)
+		try {
+			PiParser.update(props.draw.code)
+		}catch{
+			console.log("Cannot parse", props.draw.code)
+		}
 	}
 })
 
 watch(() => props.draw.code, (code, before) => {
-	PiParser.update(code)
+	try {
+		PiParser.update(code)
+	}catch{
+		console.log("Cannot parse", props.draw.code)
+	}
 })
 </script>

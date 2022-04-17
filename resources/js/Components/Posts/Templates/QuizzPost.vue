@@ -24,7 +24,7 @@
 					v-for="(illustration) of props.post.illustrations"
 					:key="'illustration-'+illustration.id"
 				>
-					<IllustrationDraw
+					<pi-draw-parser
 						v-if="illustration.type==='draw'"
 						:draw="illustration"
 						class="max-w-lg"
@@ -50,7 +50,7 @@
 // TODO: QuizzPost to be completed ans reworked
 import {computed, defineAsyncComponent, onMounted, ref} from "vue"
 import MarkdownIt from "@/Components/Ui/MarkdownIt"
-import IllustrationDraw from "@/Components/Posts/IllustrationDraw"
+import PiDrawParser from "@/Components/Pi/PiDrawParser"
 
 let root = ref(null),
 	btnItems = ref(null)
