@@ -57,24 +57,88 @@
 				</tr>
 			</tbody>
 			<tfoot class="border-t border-t-2 border-gray-400">
-				<td
-					v-katex.inline="'f(x)'"
-					class="min-w-[100px] border-r text-center border-gray-400"
-				/>
-				<td>
-					<div class="flex flex-row">
-						<div
-							v-for="(sign, n) in displaySigns(tos.signs.length-1)"
-							:key="`tos-foot-cell-${n}`"
-							v-katex.inline="n%2===0?sign:(sign==='z'?'0':'')"
-							:class="{
-								'cell-v-line-d':sign==='d',
-								'cell-v-line': n%2===1
-							}"
-							class="w-12 text-center hover:bg-white py-2"
-						/>
-					</div>
-				</td>
+				<tr
+					v-if="tos.type>0"
+					class="border-t border-t-2 border-gray-400"
+				>
+					<td
+						v-katex.inline="'f\'(x)'"
+						class="min-w-[100px] border-r text-center border-gray-400"
+					/>
+					<td>
+						<div class="flex flex-row">
+							<div
+								v-for="(sign, n) in displaySigns(tos.signs.length-2)"
+								:key="`tos-foot-cell-${n}`"
+								v-katex.inline="n%2===0?sign:(sign==='z'?'0':'')"
+								:class="{
+									'cell-v-line-d':sign==='d',
+									'cell-v-line': n%2===1
+								}"
+								class="w-12 text-center hover:bg-white py-2"
+							/>
+						</div>
+					</td>
+				</tr>
+				<tr
+					v-if="tos.type>0"
+					class="border-t border-t-2 border-gray-400"
+				>
+					<td
+						v-katex.inline="'f(x)'"
+						class="min-w-[100px] border-r text-center border-gray-400"
+					/>
+					<td>
+						<div class="flex flex-row h-16">
+							<div
+								v-for="(sign, n) in displaySigns(tos.signs.length-2)"
+								:key="`tos-foot-cell-${n}`"
+								:class="{
+									'cell-v-line-d':sign==='d',
+									'cell-v-line': n%2===1,
+								}"
+
+								class="w-12 text-center hover:bg-white py-2 relative"
+							>
+								<div
+									v-if="n%2===1"
+									v-katex.inline="n%2===0?'':(sign==='z'?displayExtremes(n):'')"
+									class="text-center translate-y-6 absolute left-1/2 -translate-x-1/2 bg-white z-50"
+								/>
+								<i
+									v-else
+
+									:class="{'bi-arrow-down-right':sign==='-','bi-arrow-up-right':sign==='+'}"
+									class="bi"
+								/>
+							</div>
+						</div>
+					</td>
+				</tr>
+
+				<tr
+					v-if="tos.type===undefined"
+					class="border-t border-t-2 border-gray-400"
+				>
+					<td
+						v-katex.inline="'f(x)'"
+						class="min-w-[100px] border-r text-center border-gray-400"
+					/>
+					<td>
+						<div class="flex flex-row">
+							<div
+								v-for="(sign, n) in displaySigns(tos.signs.length-2)"
+								:key="`tos-foot-cell-${n}`"
+								v-katex.inline="n%2===0?sign:(sign==='z'?'0':'')"
+								:class="{
+									'cell-v-line-d':sign==='d',
+									'cell-v-line': n%2===1
+								}"
+								class="w-12 text-center hover:bg-white py-2"
+							/>
+						</div>
+					</td>
+				</tr>
 			</tfoot>
 		</table>
 
@@ -94,10 +158,9 @@
 	</div>
 </template>
 <script setup>
-// TODO : Problème de mise à jour...
-
 import {ref} from "vue"
 
+// TODO: Refactor the footer.
 let props = defineProps({
 		tos: {
 			required: true, type: Object
@@ -105,11 +168,19 @@ let props = defineProps({
 	}),
 	showTex = ref(false)
 
-function displaySigns(index){
+function displaySigns(index) {
 	let signs = [...props.tos.signs[index]]
 	signs.shift()
 	signs.pop()
+
 	return signs
+}
+
+function displayExtremes(index) {
+	let zero = props.tos.zeroes[(index - 1) / 2],
+		extreme = props.tos.extremes[zero.tex]
+
+	return `\\substack{ ${extreme.type} \\\\ \\left(${extreme.tex.x}; ${extreme.tex.y}  \\right) }`
 }
 
 </script>

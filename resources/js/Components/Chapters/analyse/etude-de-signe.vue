@@ -12,7 +12,8 @@
 				@keyup.enter="updateStudy"
 			/>
 			<div class="text-sm">
-				Entrer la fonction en utilisant <code>/</code> pour la division. Il n'est pas nécessaire d'englober le numérateur ou le dénominateur dans des parenthèses supplémentaires.
+				Entrer la fonction en utilisant <code>/</code> pour la division. Il n'est pas nécessaire d'englober le
+				numérateur ou le dénominateur dans des parenthèses supplémentaires.
 			</div>
 			<div v-katex.display="fxAsTex" />
 		</div>
@@ -36,19 +37,20 @@ let root = ref(null),
 	fx = ref("(3x-4)(2x+5)/(x-4)(x+4)"),
 	doWithThisFx = ref("")
 
-function updateStudy(){
-	doWithThisFx.value=fx.value
+function updateStudy() {
+	doWithThisFx.value = fx.value
 }
-onMounted(()=>{
+
+onMounted(() => {
 	updateStudy()
 })
 
-let fxAsTex = computed(()=>{
+let fxAsTex = computed(() => {
 	let numden = fx.value.split("/")
 
-	if(numden.length===1){
+	if (numden.length === 1) {
 		return fx.value
-	}else{
+	} else {
 		return `\\frac{ ${numden[0]} }{ ${numden[1]} }`
 	}
 })
