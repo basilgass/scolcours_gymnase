@@ -56,6 +56,7 @@
 					</td>
 				</tr>
 			</tbody>
+
 			<tfoot class="border-t border-t-2 border-gray-400">
 				<tr
 					v-if="tos.type>0"
@@ -127,7 +128,7 @@
 					<td>
 						<div class="flex flex-row">
 							<div
-								v-for="(sign, n) in displaySigns(tos.signs.length-2)"
+								v-for="(sign, n) in displaySigns(tos.signs.length-1)"
 								:key="`tos-foot-cell-${n}`"
 								v-katex.inline="n%2===0?sign:(sign==='z'?'0':'')"
 								:class="{
