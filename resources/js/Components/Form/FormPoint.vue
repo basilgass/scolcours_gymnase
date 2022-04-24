@@ -14,7 +14,7 @@
 			v-bind="$attrs"
 			@focus="$emit('inputFocus')"
 			@input="$emit('update:modelValue', $event.target.value)"
-			@keyup="validateFraction"
+			@keyup="validatePoint"
 		>
 		<form-error
 			:message="errorMessage"
@@ -34,6 +34,7 @@ import FormLabel from "@/Components/Form/FormLabel"
 import FormError from "@/Components/Form/FormError"
 import {computed, onMounted, ref} from "vue"
 import {Fraction} from "pimath/esm/maths/coefficients/fraction"
+import {Point} from "pimath/esm/maths/geometry/point"
 
 defineEmits(["update:modelValue", "inputFocus"])
 let props = defineProps({
@@ -55,10 +56,10 @@ onMounted(() => {
 	}
 })
 
-function validateFraction() {
+function validatePoint() {
 	if (props.modelValue !== "") {
 		try {
-			let F = new Fraction(props.modelValue)
+			let P = new Point(props.modelValue)
 			internalError.value = ""
 		} catch {
 			internalError.value = "La valeur entrée n'est pas une valeur valide"

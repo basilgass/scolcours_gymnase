@@ -33,12 +33,14 @@ function katexUpdate(el, binding, vnode) {
 		tex = tex.toString()
 	}
 
+	let displayMode = !binding.modifiers.inline && el.tagName !== "SPAN"
+
 	if (tex !== undefined && tex.length > 0) {
 		el.innerHTML = katex.renderToString(
 			(binding.modifiers.display ? "\\displaystyle " : "") + tex,
 			{
 				throwOnError: false,
-				displayMode: !binding.modifiers.inline
+				displayMode: displayMode
 			})
 	}
 }
