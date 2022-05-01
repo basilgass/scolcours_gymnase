@@ -11,6 +11,10 @@
 @import "scolcours/typo.css";
 @import "scolcours/effects.css";
 
+body{
+	@apply font-light tracking-wide;
+}
+
 /* alpine cloak */
 [x-cloak] {
     display: none !important;
@@ -52,6 +56,7 @@
 .katex-boxed .katex-display {
     @apply bg-amber-700/5 px-5 py-4 my-2 rounded overflow-x-auto;
 }
+
 .katex-boxed.katex-boxed-lg .katex-display {
     @apply py-10;
 }

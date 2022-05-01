@@ -13,7 +13,8 @@ module.exports = {
 	theme: {
 		extend: {
 			fontFamily: {
-				sans: ["Quicksand", ...defaultTheme.fontFamily.sans],
+				// sans: ["Quicksand", ...defaultTheme.fontFamily.sans],
+				sans: ["Raleway", ...defaultTheme.fontFamily.sans],
 			},
 			zIndex: {
 				"-1": "-1"

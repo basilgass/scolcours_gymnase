@@ -26,13 +26,15 @@
 				:key="theme.slug"
 				:class="'scolcours-'+theme.slug + ' ' + (index%2===0?'rotate-1':'-rotate-1')"
 				:href="'/'+theme.slug"
-				class="text-center text-lg font-thin whitespace-nowrap
-			rounded border py-24
-			text-white
-			cursor-pointer
-			transform hover:scale-105 hover:rotate-0 duration-300"
+				class="
+				grid grid-cols-1 gap-5 place-items-center
+				text-xl font-thin whitespace-nowrap
+				rounded border py-20
+				text-white
+				cursor-pointer
+				transform hover:scale-105 hover:rotate-0 duration-300"
 			>
-				<i :class="`bi bi-${theme.icon} mr-2`" />
+				<i :class="`bi bi-${theme.icon} mr-2 text-3xl`" />
 				{{ theme.title }}
 			</Link>
 		</div>
