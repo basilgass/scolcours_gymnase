@@ -145,7 +145,7 @@
 				Calculer le nombre de mains différentes de 5 cartes avec un jeu de Jass (36 cartes).
 
 				<chapter-answer>
-					<div v-katex="`${ binomial(36, 5) } = \\frac{36!}{(36-5)!\\cdot 5!} = =376992`" />
+					<div v-katex="`${ binomial(36, 5) } = \\frac{36!}{(36-5)!\\cdot 5!} = 376992`" />
 				</chapter-answer>
 			</chapter-simple-exercise>
 

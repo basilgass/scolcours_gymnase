@@ -14,7 +14,7 @@
 				v-show="scrollY > showScrollToTop"
 				class="
 					w-10 h-10
-					fixed top-5 right-5
+					fixed bottom-5 right-5
 					flex justify-center items-center
 					bg-gray-100
 					border border-gray-400
