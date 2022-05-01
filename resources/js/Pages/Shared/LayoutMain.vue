@@ -13,7 +13,7 @@
 			<div
 				v-show="scrollY > showScrollToTop"
 				class="
-					w-10 h-10
+					w-10 h-10 z-30
 					fixed bottom-5 right-5
 					flex justify-center items-center
 					bg-gray-100
