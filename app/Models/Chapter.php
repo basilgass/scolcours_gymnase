@@ -5,9 +5,11 @@ namespace App\Models;
 use Database\Factories\ChapterFactory;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
+use URL;
 
 /**
  * App\Models\Chapter
@@ -38,6 +40,8 @@ class Chapter extends Model
 		use HasFactory;
     protected $guarded = [];
 
+	protected $with = ['theme:id,slug'];
+
     public function theme()
     {
         return $this->belongsTo(Theme::class);
@@ -47,4 +51,11 @@ class Chapter extends Model
 	{
 		return $this->hasMany(Post::class);
 	}
+
+	protected function url(): Attribute {
+		return Attribute::make(
+			get: fn()=>URL::route('theme.chapter', [$this->theme->slug, $this->slug], false)
+		);
+	}
+
 }

@@ -1,21 +1,20 @@
 <template>
-	<div class="text-center py-10">
-		<div class="text-4xl">
-			Gymnase
+	<div class="space-y-10 bg-gray-100">
+		<div class="text-center py-10">
+			<div class="text-4xl">
+				Gymnase
+			</div>
+			<div class="text-sm">
+				powered by Scolcours
+			</div>
 		</div>
-		<div class="text-sm">
-			powered by Scolcours
+
+		<div class="text-center text-lg">
+			<Link href="/challenge">
+				Vers les quizz / challenge
+			</Link>
 		</div>
-	</div>
 
-
-	<div class="mt-10 text-center text-lg">
-		<Link href="/challenge">
-			Vers les quizz / challenge
-		</Link>
-	</div>
-
-	<div class="my-10">
 		<div
 			class="
 		grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3
@@ -38,6 +37,38 @@
 				{{ theme.title }}
 			</Link>
 		</div>
+
+		<div class="space-y-10">
+			<h2 class="text-center text-xl">
+				Dernières mises à jour
+			</h2>
+			<div class="space-y-5">
+				<div
+					v-for="item of newChapters"
+					:key="item.id"
+					class="bg-white border border-gray-300 rounded py-2 px-3
+						hover:shadow hover:translate-x-1 transition-all duration-500"
+				>
+					<div class="flex justify-between items-center mb-2">
+						<h3 class="font-normal">
+							<Link
+								:href="item.href"
+								class="hover:underline"
+							>
+								{{ item.title }}
+							</Link>
+						</h3>
+
+						<div class="text-xs">
+							{{ item.modified }}
+						</div>
+					</div>
+					<div class="font-extralight">
+						{{ item.body }}
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
 </template>
 <script>
@@ -49,10 +80,14 @@ export default {
 
 </script>
 <script setup>
-defineProps({
+import {onMounted} from "vue"
+
+let props = defineProps({
 	canLogin: Boolean,
 	canRegister: Boolean,
-	themes: Array
-}
-)
+	themes: Array,
+	newChapters: Array
+})
+
+
 </script>

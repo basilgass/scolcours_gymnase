@@ -6,7 +6,6 @@ use App\Http\Controllers\ChaptersController;
 use App\Http\Controllers\LatexController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ToolsController;
-use App\Models\Theme;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -22,14 +21,7 @@ use Inertia\Inertia;
 */
 
 // Home page - no controller
-Route::get('/', function () {
-	$themes = Theme::all();
-	return Inertia::render('Welcome', [
-		'canLogin' => Route::has('login'),
-		'canRegister' => Route::has('register'),
-		'themes' => $themes
-	]);
-})->name('home');
+Route::get('/', [ChaptersController::class, 'home'])->name('home');
 
 // Challenges
 Route::get('/challenge', [ChallengesController::class, 'index']);
@@ -68,6 +60,7 @@ Route::get('tools/', [ToolsController::class, 'index'])->name('tools');
 Route::get('tools/{tool:slug}', [ToolsController::class, 'show'])->name('tools.tool');
 
 // Chapter controller
+Route::get('chapter/{chapter}', [ChaptersController::class, 'generic'])->name('chapter');
 Route::get('{theme:slug}/', [ChaptersController::class, 'index'])->name('theme');
 Route::get('{theme:slug}/{chapter:slug}', [ChaptersController::class, 'show'])->name('theme.chapter');
 

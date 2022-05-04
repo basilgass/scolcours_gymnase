@@ -64,6 +64,7 @@
 import {computed, onMounted, ref} from "vue"
 import Panel from "@/Components/Ui/Panel"
 import {PiMath} from "pimath/esm"
+import {Vector} from "pimath/esm/maths/geometry/vector"
 
 /** Chapter
  * title: équation cartésienne d'un cercle

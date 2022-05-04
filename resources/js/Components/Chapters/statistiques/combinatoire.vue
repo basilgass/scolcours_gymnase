@@ -58,7 +58,7 @@
 			<chapter-simple-exercise>
 				De combien de façon peut-on aligner trois cartes de Jass ?
 				<chapter-answer>
-					<div v-katex="`A_3^{36} = \\frac{3!}{(36 - 3)!} = 42840`" />
+					<div v-katex="`A_3^{36} = \\frac{36!}{(36 - 3)!} = 42840`" />
 				</chapter-answer>
 			</chapter-simple-exercise>
 
@@ -187,7 +187,7 @@ import ChapterAnswer from "@/Components/Ui/ChapterAnswer"
 import {computed, onMounted, ref} from "vue"
 import {listeDeMots} from "@/helpers/liste-des-mots-francais"
 import _ from "lodash"
-import UiSwitch from "@/Components/Chapters/statistiques/UiSwitch"
+import UiSwitch from "@/Components/Ui/UiSwitch"
 import ChapterSimpleExercise from "@/Components/Ui/ChapterSimpleExercise"
 
 
