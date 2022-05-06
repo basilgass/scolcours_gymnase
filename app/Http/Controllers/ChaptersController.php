@@ -19,7 +19,7 @@ class ChaptersController extends Controller
 	public function home()
 	{
 		$themes = Theme::all();
-		$newChapters = Chapter::orderBy('created_at', 'desc')
+		$newChapters = Chapter::orderBy('updated_at', 'desc')
 			->limit(5)
 			->get();
 

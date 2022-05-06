@@ -7,41 +7,46 @@ function katexUpdate(el, binding, vnode) {
 		return
 	}
 
-
 	el.innerHTML = ""
-	let tex = binding.modifiers.ascii ? new AsciiMathParser().parse(binding.value) : binding.value
 
-	if (!binding.modifiers.clear) {
-		el.classList.add("katex-container")
-	}
+	if(binding.modifiers.auto){
+		el.innerHTML = binding.value
+		katexAutoRender(el)
+	}else {
+		let tex = binding.modifiers.ascii ? new AsciiMathParser().parse(binding.value) : binding.value
 
-	// Add boxed to the inline container
-	if (binding.modifiers.boxed) {
-		el.classList.add("katex-boxed")
-	}
-	if (binding.modifiers.lg) {
-		el.classList.add("katex-boxed-lg")
-	}
-	if (binding.modifiers.left) {
-		el.classList.add("katex-left")
-	}
-	if (binding.modifiers.nomargin) {
-		el.classList.add("katex-m-0")
-	}
+		if (!binding.modifiers.clear) {
+			el.classList.add("katex-container")
+		}
 
-	if (typeof tex === number) {
-		tex = tex.toString()
-	}
+		// Add boxed to the inline container
+		if (binding.modifiers.boxed) {
+			el.classList.add("katex-boxed")
+		}
+		if (binding.modifiers.lg) {
+			el.classList.add("katex-boxed-lg")
+		}
+		if (binding.modifiers.left) {
+			el.classList.add("katex-left")
+		}
+		if (binding.modifiers.nomargin) {
+			el.classList.add("katex-m-0")
+		}
 
-	let displayMode = !binding.modifiers.inline && el.tagName !== "SPAN"
+		if (typeof tex === number) {
+			tex = tex.toString()
+		}
 
-	if (tex !== undefined && tex.length > 0) {
-		el.innerHTML = katex.renderToString(
-			(binding.modifiers.display ? "\\displaystyle " : "") + tex,
-			{
-				throwOnError: false,
-				displayMode: displayMode
-			})
+		let displayMode = !binding.modifiers.inline && el.tagName !== "SPAN"
+
+		if (tex !== undefined && tex.length > 0) {
+			el.innerHTML = katex.renderToString(
+				(binding.modifiers.display ? "\\displaystyle " : "") + tex,
+				{
+					throwOnError: false,
+					displayMode: displayMode
+				})
+		}
 	}
 }
 

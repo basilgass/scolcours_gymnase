@@ -9,7 +9,7 @@
 			</div>
 		</div>
 
-		<div class="">
+		<div v-bind="$attrs">
 			<slot />
 		</div>
 	</div>

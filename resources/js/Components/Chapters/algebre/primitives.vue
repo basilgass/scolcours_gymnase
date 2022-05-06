@@ -3,6 +3,7 @@
 		<what-to-know :questions="generateQuestions">
 			Liste des calculs à savoir
 		</what-to-know>
+		
 		<primitive-simple />
 	</section>
 </template>

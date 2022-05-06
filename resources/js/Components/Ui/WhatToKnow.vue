@@ -1,5 +1,5 @@
 <template>
-	<div class="flex justify-between flex-col sm:flex-row sm:items-end">
+	<div class="mx-auto">
 		<div>
 			<h2 class="text-xl font-semibold">
 				A savoir
@@ -8,73 +8,68 @@
 				<slot />
 			</div>
 		</div>
-		<div class="text-sm text-gray-500">
+		<Panel v-if="generatedQuestions.length>0">
+			<div
+				class="flex md:items-center min-h-[160px] md:min-h-[80px] select-none px-10  cursor-pointer"
+				@click="nextQuestion()"
+			>
+				<transition
+					name="fade"
+					mode="out-in"
+				>
+					<div
+						v-if="!showFinished"
+						class="flex items-center flex-col sm:flex-row"
+					>
+						<div v-katex.left.clear="generatedQuestions[questionNo].question + sep" />
+						<transition name="slide-right">
+							<div
+								v-if="showAnswer"
+								v-katex.left.clear="preAnswerSep + generatedQuestions[questionNo].answer"
+							/>
+						</transition>
+					</div>
+					<div v-else>
+						Terminé !
+						<button
+							class="btn"
+							@click="showFinished=false"
+						>
+							Recommencer (aléatoire)
+						</button>
+					</div>
+				</transition>
+			</div>
+
+			<div class="text-gray-300 text-sm flex justify-between">
+				<div>
+					{{ questionNo + 1 }} / {{ generatedQuestions.length }}
+				</div>
+
+				<button
+					class="btn py-0"
+					:disabled="downloadGenerating"
+					@click="generatePDF"
+				>
+					{{ downloadGenerating ? 'Patienter...' : 'Générer PDF' }}
+				</button>
+			</div>
+		</Panel>
+		<div class="text-xs text-gray-400 italic">
 			Cliquer pour afficher la <span v-text="showAnswer?'prochaine question':'réponse'" />
 		</div>
 	</div>
-	<Panel>
-		<div
-			class="flex md:items-center min-h-[160px] md:min-h-[80px] select-none px-10  cursor-pointer"
-			@click="nextQuestion()"
-		>
-			<transition
-				name="fade"
-				mode="out-in"
-			>
-				<div
-					v-if="!showFinished"
-					class="flex items-center flex-col sm:flex-row"
-				>
-					<div v-katex.left.clear="generatedQuestions[questionNo].question + '\\ = \\ '" />
-					<transition name="slide-right">
-						<div
-							v-if="showAnswer"
-							v-katex.left.clear="generatedQuestions[questionNo].answer"
-						/>
-					</transition>
-				</div>
-				<div v-else>
-					Terminé !
-					<button
-						class="btn"
-						@click="showFinished=false"
-					>
-						Recommencer (aléatoire)
-					</button>
-				</div>
-			</transition>
-		</div>
-
-		<div class="text-gray-300 text-sm flex justify-between">
-			<div>
-				{{ questionNo + 1 }} / {{ generatedQuestions.length }}
-			</div>
-
-			<button
-				class="btn py-0"
-				:disabled="downloadGenerating"
-				@click="generatePDF"
-			>
-				{{ downloadGenerating ? 'Patienter...' : 'Générer PDF' }}
-			</button>
-		</div>
-	</Panel>
-
-<!--	<div-->
-<!--		v-for="item in generatedQuestions"-->
-<!--		:key="item.question"-->
-<!--	>-->
-<!--		<span v-katex="`${item.question} = ${ item.answer }`" />-->
-<!--	</div>-->
 </template>
 
 <script setup>
-import {ref} from "vue"
+import {onMounted, ref} from "vue"
 import Panel from "@/Components/Ui/Panel"
 import {usePage} from "@inertiajs/inertia-vue3"
 
 const props = defineProps({
-	questions: Function
+	questions: Function,
+	sep: {type: String, default: "\ =\ "},
+	preAnswerSep: {type: String, default: ""}
 })
 
 let downloadGenerating = ref(false),
@@ -83,10 +78,10 @@ let downloadGenerating = ref(false),
 	showAnswer = ref(false),
 	showFinished = ref(false)
 
-generatedQuestions.value = props.questions(true)
-
-function nextQuestion () {
-	if (showFinished.value) {return }
+function nextQuestion() {
+	if (showFinished.value) {
+		return
+	}
 	showAnswer.value = !showAnswer.value
 
 	// It's a new question
@@ -101,7 +96,7 @@ function nextQuestion () {
 	}
 }
 
-function generatePDF () {
+function generatePDF() {
 	downloadGenerating.value = true
 	let questions = []
 	for (let q of props.questions(true)) {
@@ -123,7 +118,14 @@ function generatePDF () {
 		downloadGenerating.value = false
 		document.location = "/download/" + res.data
 	}).catch(
-		err => {console.error(err.response)}
+		err => {
+			console.error(err.response)
+		}
 	)
 }
+
+onMounted(()=>{
+	generatedQuestions.value = props.questions(true)
+})
+
 </script>
