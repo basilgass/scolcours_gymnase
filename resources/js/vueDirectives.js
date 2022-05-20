@@ -3,11 +3,11 @@ import AsciiMathParser from "asciimath2tex"
 import {number} from "tailwindcss/lib/util/dataTypes"
 
 function katexUpdate(el, binding, vnode) {
-	if (binding.value === undefined || binding.value.length === 0) {
+	el.innerHTML = ""
+
+	if (binding.value=== null || binding.value === undefined || binding.value.length === 0) {
 		return
 	}
-
-	el.innerHTML = ""
 
 	if(binding.modifiers.auto){
 		el.innerHTML = binding.value

@@ -23,7 +23,11 @@
 			</chapter-simple-exercise>
 
 			<chapter-simple-exercise>
-				Combien d'anagramme peut-on former avec le mot {{ mot }} ?
+				Combien d'anagramme peut-on former avec le mot
+				<input
+					v-model="mot"
+					class="border-b border-b-blue-300 focus:outline-none focus:border-b-blue-600 transition-colors"
+				> ?
 				<button
 					class="btn btn-xs ml-5"
 					@click="nouveauMot"
@@ -182,13 +186,13 @@
  * body: la combinatoire est l'art du dénombrement.
  */
 import TableOfContents from "@/Components/Ui/TableOfContents"
-import ChapterArticle from "@/Components/Ui/ChapterArticle"
-import ChapterAnswer from "@/Components/Ui/ChapterAnswer"
+import ChapterArticle from "@/Components/Ui/Chapters/ChapterArticle"
+import ChapterAnswer from "@/Components/Ui/Chapters/ChapterAnswer"
 import {computed, onMounted, ref} from "vue"
 import {listeDeMots} from "@/helpers/liste-des-mots-francais"
 import _ from "lodash"
 import UiSwitch from "@/Components/Ui/UiSwitch"
-import ChapterSimpleExercise from "@/Components/Ui/ChapterSimpleExercise"
+import ChapterSimpleExercise from "@/Components/Ui/Chapters/ChapterSimpleExercise"
 
 
 let mot = ref(""),

@@ -3,6 +3,8 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ChallengesController;
 use App\Http\Controllers\ChaptersController;
+use App\Http\Controllers\FormulaController;
+use App\Http\Controllers\FormulasController;
 use App\Http\Controllers\LatexController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ToolsController;
@@ -36,6 +38,9 @@ Route::get('/dashboard', function () {
 // Admin controller and routes
 Route::get('/admin', [AdminController::class, 'show'])
 	->middleware(['auth', 'verified'])->name('admin');
+Route::patch('/admin/chapters/{chapter:slug}', [AdminController::class, 'activate'])
+	->middleware(['auth', 'verified'])->name('toggleChapterActive');
+
 require __DIR__ . '/auth.php';
 
 // Latex download - migrate to custom controller
@@ -58,6 +63,11 @@ Route::get('post/{post}', [PostController::class, 'show']);
 // Tools controller
 Route::get('tools/', [ToolsController::class, 'index'])->name('tools');
 Route::get('tools/{tool:slug}', [ToolsController::class, 'show'])->name('tools.tool');
+
+// Formulas controller
+Route::post('formula/', [FormulaController::class, 'store']);
+Route::delete('formula/delete/{id}', [FormulaController::class, 'destroy']);
+Route::get('formula/fetch/{chapter:slug}', [FormulaController::class, 'fetch'])->name('formula.fetch');
 
 // Chapter controller
 Route::get('chapter/{chapter}', [ChaptersController::class, 'generic'])->name('chapter');

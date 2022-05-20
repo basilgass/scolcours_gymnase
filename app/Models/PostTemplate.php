@@ -18,7 +18,7 @@ use Illuminate\Support\Carbon;
  * @property int $parameters
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property-read Collection|Post[] $posts
+ * @property-read Collection|\App\Models\Post[] $posts
  * @property-read int|null $posts_count
  * @method static Builder|PostTemplate newModelQuery()
  * @method static Builder|PostTemplate newQuery()

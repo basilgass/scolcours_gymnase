@@ -16,7 +16,7 @@
 <script setup>
 import {onMounted, ref} from "vue"
 import ExampleTitle from "@/Components/Ui/ExampleTitle"
-import ChapterExercise from "@/Components/Ui/ChapterExercise"
+import ChapterExercise from "@/Components/Ui/Chapters/ChapterExercise"
 import {PiDraw} from "pidraw/esm"
 
 const root = ref(null),

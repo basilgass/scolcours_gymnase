@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunk=self.webpackChunk||[]).push([[8007],{8007:(e,l,t)=>{t.r(l),t.d(l,{default:()=>a});var n=t(821);const a={name:"FormField",props:{hideLabel:{type:Boolean,default:!1}},setup:function(e){return function(l,t){return(0,n.openBlock)(),(0,n.createElementBlock)("div",{class:(0,n.normalizeClass)({"mt-6":!e.hideLabel})},[(0,n.renderSlot)(l.$slots,"default")],2)}}}}}]);
+//# sourceMappingURL=8007.83f7011a621f934b.js.map

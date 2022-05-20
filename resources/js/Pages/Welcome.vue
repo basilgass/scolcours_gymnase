@@ -72,7 +72,7 @@
 	</div>
 </template>
 <script>
-import LayoutFullpage from "@/Pages/Shared/LayoutFullpage"
+import LayoutFullpage from "@/Layouts/LayoutFullpage"
 
 export default {
 	layout: LayoutFullpage,

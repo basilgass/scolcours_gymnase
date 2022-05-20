@@ -69,7 +69,9 @@ import {usePage} from "@inertiajs/inertia-vue3"
 const props = defineProps({
 	questions: Function,
 	sep: {type: String, default: "\ =\ "},
-	preAnswerSep: {type: String, default: ""}
+	preAnswerSep: {type: String, default: ""},
+	title: {type: String, default: usePage().props.value.chapter.title},
+	slug: {type: String, default: usePage().props.value.chapter.slug}
 })
 
 let downloadGenerating = ref(false),
@@ -111,8 +113,8 @@ function generatePDF() {
 		{
 			questions,
 			theme: usePage().props.value.theme.slug,
-			slug: usePage().props.value.chapter.slug,
-			title: usePage().props.value.chapter.title
+			slug: props.slug,
+			title: props.title
 		}
 	).then(res => {
 		downloadGenerating.value = false

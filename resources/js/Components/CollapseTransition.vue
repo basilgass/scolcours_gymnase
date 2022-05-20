@@ -21,7 +21,6 @@
 <script>
 export default {
 	name: "CollapseTransition",
-
 	props: {
 		name: {
 			type: String,
@@ -45,7 +44,7 @@ export default {
 			type: String,
 			required: false,
 			default: "ease-in-out"
-		},
+		}
 	},
 
 	data() {

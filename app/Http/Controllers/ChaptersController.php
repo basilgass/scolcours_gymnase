@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Chapter;
 use App\Models\Theme;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
@@ -21,6 +22,7 @@ class ChaptersController extends Controller
 		$themes = Theme::all();
 		$newChapters = Chapter::orderBy('updated_at', 'desc')
 			->limit(5)
+			->where('active', true)
 			->get();
 
 		$newChapters->Map(function ($item) {
@@ -48,9 +50,17 @@ class ChaptersController extends Controller
 
 	public function index(Theme $theme)
 	{
+		if (Auth::User()?->admin) {
+			$chapters = $theme->chapters()->with('challenges')->get();
+		}else{
+			$chapters = $theme->chapters()->with('challenges')->where('active', true)->get();
+		}
+
+		// Filter output.
+		// TODO: filter values passed for chapters.
 		$data = [
 			"theme" => $theme->only('color', 'icon', 'slug', 'title', 'id'),
-			"chapters" => $theme->chapters()->get(['slug', 'title', 'body'])
+			"chapters" => $chapters
 		];
 
 		return Inertia::render("Chapters/index", $data);
@@ -68,11 +78,17 @@ class ChaptersController extends Controller
 
 	public function show(Theme $theme, Chapter $chapter)
 	{
-		return Inertia::render('Chapters/Chapter', [
-			"theme" => $theme->only('color', 'icon', 'slug', 'title', 'id'),
-			"chapter" => $chapter,
-			"hasChapterComponent" => file_exists(resource_path("js/Chapters/{$theme->slug}/{$chapter->slug}.vue")),
-		]);
+		if($chapter->active or Auth::User()?->admin) {
+			return Inertia::render('Chapters/Chapter', [
+				"theme" => $theme->only('color', 'icon', 'slug', 'title', 'id'),
+				"chapter" => $chapter,
+				"hasChapterComponent" => file_exists(resource_path("js/Chapters/{$theme->slug}/{$chapter->slug}.vue")),
+			]);
+		}else{
+			return Inertia::render('Error.vue', [
+				"body"=>"La page n'est pas active - contacter l'administrateur."
+			]);
+		}
 	}
 
 	public function edit(Chapter $chapter)

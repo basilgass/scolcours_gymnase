@@ -29,7 +29,7 @@
 	</div>
 </template>
 <script>
-import LayoutMain from "@/Pages/Shared/LayoutMain"
+import LayoutMain from "@/Layouts/LayoutMain"
 
 export default {
 	layout: LayoutMain
@@ -84,7 +84,6 @@ function updateValue(){
 			}
 		}
 	}
-
 }
 onMounted(() => {
 	updateValue()

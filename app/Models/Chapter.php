@@ -19,13 +19,21 @@ use URL;
  * @property string $slug
  * @property string $title
  * @property string $body
+ * @property int $active
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property-read Theme $theme
- * @method static ChapterFactory factory(...$parameters)
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Challenge[] $challenges
+ * @property-read int|null $challenges_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Formula[] $formulas
+ * @property-read int|null $formulas_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Post[] $posts
+ * @property-read int|null $posts_count
+ * @property-read \App\Models\Theme $theme
+ * @method static \Database\Factories\ChapterFactory factory(...$parameters)
  * @method static Builder|Chapter newModelQuery()
  * @method static Builder|Chapter newQuery()
  * @method static Builder|Chapter query()
+ * @method static Builder|Chapter whereActive($value)
  * @method static Builder|Chapter whereBody($value)
  * @method static Builder|Chapter whereCreatedAt($value)
  * @method static Builder|Chapter whereId($value)
@@ -37,24 +45,36 @@ use URL;
  */
 class Chapter extends Model
 {
-		use HasFactory;
-    protected $guarded = [];
+	use HasFactory;
+
+	protected $guarded = [];
 
 	protected $with = ['theme:id,slug'];
 
-    public function theme()
-    {
-        return $this->belongsTo(Theme::class);
-    }
+	public function theme(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+	{
+		return $this->belongsTo(Theme::class);
+	}
 
-	public function posts()
+	public function posts(): \Illuminate\Database\Eloquent\Relations\HasMany
 	{
 		return $this->hasMany(Post::class);
 	}
 
-	protected function url(): Attribute {
+	public function formulas(): \Illuminate\Database\Eloquent\Relations\HasMany
+	{
+		return $this->hasMany(Formula::class);
+	}
+
+	public function challenges(): \Illuminate\Database\Eloquent\Relations\HasMany
+	{
+		return $this->hasMany(Challenge::class);
+	}
+
+	protected function url(): Attribute
+	{
 		return Attribute::make(
-			get: fn()=>URL::route('theme.chapter', [$this->theme->slug, $this->slug], false)
+			get: fn() => URL::route('theme.chapter', [$this->theme->slug, $this->slug], false)
 		);
 	}
 

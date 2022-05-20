@@ -19,7 +19,7 @@ use Illuminate\Support\Carbon;
  * @property int $enabled
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property-read Collection|Chapter[] $chapters
+ * @property-read Collection|\App\Models\Chapter[] $chapters
  * @property-read int|null $chapters_count
  * @method static Builder|Theme newModelQuery()
  * @method static Builder|Theme newQuery()
@@ -42,4 +42,5 @@ class Theme extends Model
     {
         return $this->hasMany(Chapter::class);
     }
+
 }

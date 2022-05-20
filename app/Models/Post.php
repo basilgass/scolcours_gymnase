@@ -20,13 +20,13 @@ use Illuminate\Support\Carbon;
  * @property string $body
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property-read PostAnswer|null $answer
- * @property-read Chapter $chapter
- * @property-read PostComponent|null $component
- * @property-read Collection|Illustration[] $illustrations
+ * @property-read \App\Models\PostAnswer|null $answer
+ * @property-read \App\Models\Chapter $chapter
+ * @property-read \App\Models\PostComponent|null $component
+ * @property-read Collection|\App\Models\Illustration[] $illustrations
  * @property-read int|null $illustrations_count
- * @property-read PostTemplate|null $template
- * @property-read Collection|PostWalkthrough[] $walkthrough
+ * @property-read \App\Models\PostTemplate $template
+ * @property-read Collection|\App\Models\PostWalkthrough[] $walkthrough
  * @property-read int|null $walkthrough_count
  * @method static Builder|Post newModelQuery()
  * @method static Builder|Post newQuery()

@@ -19,9 +19,9 @@ use Illuminate\Support\Carbon;
  * @property string|null $resolution
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property-read Collection|Illustration[] $illustrations
+ * @property-read Collection|\App\Models\Illustration[] $illustrations
  * @property-read int|null $illustrations_count
- * @property-read Post $post
+ * @property-read \App\Models\Post $post
  * @method static Builder|PostWalkthrough newModelQuery()
  * @method static Builder|PostWalkthrough newQuery()
  * @method static Builder|PostWalkthrough query()

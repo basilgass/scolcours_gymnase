@@ -61,4 +61,11 @@ watch(() => props.draw.code, (code, before) => {
 		console.log("Cannot parse", props.draw.code)
 	}
 })
+watch(() => props.draw.parameters, (params, before) => {
+	try {
+		PiParser.updateLayout(params)
+	}catch{
+		console.log("Cannot parse", props.draw.params)
+	}
+})
 </script>

@@ -1,284 +1,316 @@
 <template>
-	<section ref="root">
-		<Panel type="exercise">
-			Soit
-			<span v-katex.inline="'(\\Gamma_1): ' + ex1.G1.developed" /> un cercle et
-			\(\Gamma_2\) un cercle centré en <span v-katex.inline="'C_2'+ex1.C2.tex" /> et
-			passant par <span v-katex.inline="'T' + ex1.T.tex" />.
-
-			<ol class="list-decimal list-space mt-5 space-y-3">
-				<li>
-					Mettre sous forme <span class="italic">centre-rayon</span> les équations des cercles \(\Gamma_1\) et
-					\(\Gamma_2\)
-				</li>
-				<li>Calculer l'équation de la tangente \(t\) à \(\Gamma_2\) passant par \(T\)</li>
-				<li>Calculer la position relative entre la droite \(t\) et le cercle \(\Gamma_1\)</li>
-				<li>
-					Calculer, s'il y en a, le/les point(s) d'intersection entre la droite \(t\) et le cercle
-					\(\Gamma_1\)
-				</li>
-				<li>Calculer l'équation cartésienne de la droite \(d\) passant par les deux centres des cercles</li>
-				<li>Calculer la médiatrice du segment reliant les deux sommets</li>
-			</ol>
-
-			<ol class="list-decimal list-space mt-5 space-y-3 text-gray-100 hover:text-gray-600 transition-colors">
-				<li>
-					<div v-katex.left="'(\\Gamma_1): ' + ex1.G1.tex" />
-					<div v-katex.left="'(\\Gamma_2): ' + ex1.G2.tex" />
-				</li>
-				<li>
-					<div v-katex.left="'(t): ' + ex1.t.tex.canonical" />
-				</li>
-				<li>
-					La distance vaut <span v-katex.inline="relPositionSign" />
-				</li>
-				<li>
-					Intersection:
-					<div
-						v-if="ex1.P1!==false"
-						v-katex.left="`P_1${ex1.P1.tex}`"
-					/>
-					<div
-						v-if="ex1.P2!==false"
-						v-katex.left="`P_2${ex1.P2.tex}`"
-					/>
-				</li>
-				<li>
-					<div v-katex.left="'(d): ' + ex1.d.tex.canonical" />
-				</li>
-				<li>
-					<div v-katex.left="'(m): ' + ex1.m.tex.canonical" />
-				</li>
-			</ol>
+	<table-of-contents
+		ref="toc"
+		query=".chapter-menu"
+		class="space-y-10"
+	>
+		<chapter-article>
+			<template #title>
+				équations cartésiennes et équation centre-rayon
+			</template>
+			<div>
+				Un cercle est donné par les coordonnées d'un point (son centre) et son rayon.
+			</div>
 
 			<div
-				v-if="false"
-				class="btn"
-				@click="updateEx1(true)"
+				v-if="equ!==undefined"
+				class="flex flex-col divide-y"
+			>
+				<div class="flex-1 flex gap-x-10 items-center">
+					<div class="text-right flex-1">
+						équation cartésienne
+					</div>
+					<div
+						v-katex.left="equ.developed"
+						class="flex-1"
+					/>
+				</div>
+				<div class="flex-1 flex gap-x-10 items-center">
+					<div class="text-right flex-1">
+						équation centre-rayon
+					</div>
+					<div
+						v-katex.left="equ.tex"
+						class="flex-1"
+					/>
+				</div>
+				<div class="flex-1 flex gap-x-10 items-center">
+					<div class="text-right flex-1">
+						centre et rayon
+					</div>
+					<div
+						v-katex.left="`C${equ.center.tex} \\text{ et }r=${equ.radius.tex}`"
+						class="flex-1"
+					/>
+				</div>
+				<div class="grid grid-cols-2 gap-x-10">
+					<form-point
+						v-model="center"
+						name="center"
+						label="centre"
+					/>
+					<form-fraction
+						v-model="radius"
+						name="radius"
+						label="rayon"
+					/>
+				</div>
+			</div>
+
+			<h3 class="font-semibold">
+				Transformation de l'équation cartésienne à l'équation centre-rayon
+			</h3>
+
+			<div v-katex="cartesianToCenterRadius" />
+		</chapter-article>
+
+		<chapter-article>
+			<template #title>
+				équation du cercle passant par trois points
+			</template>
+			<div>
+				Pour calculer l'équation du cercle passant par 3 points \(A\), \(B\) et \(C\), il faut
+				calculer l'intersection des deux des trois médiatrices \(m_{AB}\), \(m_{AC}\) ou \(m_{BC}\).
+			</div>
+
+			<pi-draw-parser
+				class="max-w-lg mx-auto"
+				:draw="{
+					code: drawCode,
+					parameters: drawParameters
+				}"
+				axis
 			/>
-		</Panel>
-	</section>
+
+			<chapter-exercise-steps
+				:content="equationsPar3Points"
+				developed
+			/>
+		</chapter-article>
+	</table-of-contents>
 </template>
 
 <script setup>
-import {computed, onMounted, ref} from "vue"
-import Panel from "@/Components/Ui/Panel"
+import TableOfContents from "@/Components/Ui/TableOfContents"
+import ChapterArticle from "@/Components/Ui/Chapters/ChapterArticle"
+import {computed, ref} from "vue"
 import {PiMath} from "pimath/esm"
-import {Vector} from "pimath/esm/maths/geometry/vector"
+import FormPoint from "@/Components/Form/FormPoint"
+import FormFraction from "@/Components/Form/FormFraction"
+import PiDrawParser from "@/Components/Pi/PiDrawParser"
+import ChapterExerciseSteps from "@/Components/Ui/Chapters/ChapterExerciseSteps"
+import {SimpleExercise} from "@/scolcours"
 
 /** Chapter
  * title: équation cartésienne d'un cercle
  * body: équation d'un cercle, sous la forme centre-rayon
  */
 
-let root = ref(null),
-	ex1 = ref({}),
-	count = ref(0)
+let center = ref("-3,5"),
+	radius = ref("7"),
+	drawCode = ref(""),
+	drawParameters = ref("")
 
-ex1.value = {
-	C1: new PiMath.Geometry.Point(-5, 4),
-	r1: 36,
-	G1: new PiMath.Geometry.Circle(),
-	C2: new PiMath.Geometry.Point(7, -2),
-	T: new PiMath.Geometry.Point(2, 3),
-	G2: new PiMath.Geometry.Circle(),
-	t: new PiMath.Geometry.Line(),
-	d: new PiMath.Geometry.Line(),
-	m: new PiMath.Geometry.Line(),
-	M: new PiMath.Geometry.Point(0, 0),
-	P1: new PiMath.Geometry.Point(),
-	P2: new PiMath.Geometry.Point()
-}
-
-
-let relPositionSign = computed(() => {
-	const nb = ex1.value.G1.relativePosition(ex1.value.t)
-	let sign, text
-
-	if (nb === 0) {
-		sign = ">"
-		text = "externe"
-	} else if (nb === 1) {
-		sign = "="
-		text = "tangent"
-	} else {
-		sign = "<"
-		text = "sécant"
+let equ = computed(() => {
+	try {
+		let P = new PiMath.Geometry.Point(center.value),
+			r = new PiMath.Fraction(radius.value)
+		return new PiMath.Geometry.Circle(P, r)
+	} catch {
+		return undefined
+	}
+})
+let cartesianToCenterRadius = computed(() => {
+	if (equ.value === undefined) {
+		return ""
 	}
 
-	return `${ex1.value.t.distanceTo(ex1.value.G1.center).tex}${sign}${ex1.value.G1.radius.tex}\\implies \\text{${text}}`
+	function makeEquLeft(letter, value, color) {
+		let value2 = value.clone().multiply(-2),
+			valueX = value.clone().pow(2),
+			valueO = value.clone().opposed()
+
+		if (value.isNotZero()) {
+			return [
+				`${letter}^2${value2.texWithSign}${letter}`,
+				`${letter}^2 ${value2.texWithSign}${letter} \\phantom{+${valueX.tex}}`,
+				`\\underbrace{ ${letter}^2 ${value2.texWithSign}${letter} \\textcolor{${color}}{+${valueX.tex}} }_{ \\left(${letter}${valueO.texWithSign}\\right)^2 }`,
+				`\\left(${letter}${valueO.texWithSign}\\right)^2`
+			]
+		} else {
+			return [
+				`${letter}^2`,
+				`${letter}^2`,
+				`${letter}^2`,
+				`${letter}^2`
+			]
+		}
+	}
+
+	function makeEquRight(c, valueX, valueY, colorX, colorY) {
+		let co = c.clone().opposed(),
+			xx = valueX.clone().pow(2),
+			yy = valueY.clone().pow(2),
+			r = co.clone().add(xx).add(yy),
+			part1 = `${co.tex}`,
+			part2 = `${part1}`
+
+		if (valueX.isNotZero()) {
+			part2 += ` \\textcolor{${colorX}}{+${xx.tex}}`
+		}
+		if (valueY.isNotZero()) {
+			part2 += ` \\textcolor{${colorY}}{+${yy.tex}}`
+		}
+		return [
+			"0",
+			part1,
+			`${part2}`,
+			`${r.tex}`
+		]
+	}
+
+	let x = equ.value.center.x,
+		y = equ.value.center.y,
+		c = equ.value.cartesian.left.monomByDegree(0).coefficient.clone(),
+		equX = makeEquLeft("x", x, "red"),
+		equY = makeEquLeft("y", y, "blue"),
+		equRight = makeEquRight(c, x, y, "red", "blue")
+
+	return `\\begin{aligned}
+	${equX[0]}+${equY[0]}${c.texWithSign} &= ${equRight[1]} \\\\
+	${equX[1]}+${equY[1]} &= ${equRight[1]} \\\\
+	${equX[2]}+${equY[2]} &= ${equRight[2]} \\\\
+	${equX[3]}+${equY[3]} &= ${equRight[3]}
+	\\end{aligned}`
 })
 
-function updateEx1 (random) {
-	count.value = 0
-	updateEx1Rnd()
+function generateCircle(numberOfPoints) {
+	// Création d'un cercle avec au moins 6 points entiers ou plus.
+	let maxLoop = 100,
+		i = 0, targetPoints = 6,
+		x, y, r, circle, pts
+
+	while (i < maxLoop) {
+		x = PiMath.Random.number(-5, 5)
+		y = PiMath.Random.number(-5, 5)
+		r = PiMath.Random.number(5, 17)
+		circle = new PiMath.Geometry.Circle(new PiMath.Geometry.Point(x, y), r, true)
+		pts = circle.getPointsOnCircle()
+
+		if (pts.length >= targetPoints) {
+			break
+		}
+
+		if(i>maxLoop/1.5){
+			targetPoints = 4
+		}
+	}
+
+	if (numberOfPoints > 0) {
+		pts = PiMath.Random.array(pts, numberOfPoints)
+	}
+	return {circle, pts}
 }
 
-function updateEx1Rnd () {
-	let position, P1, P2, M, t, Tx, T, perp1, perp2, C1x, C1, C2x, C2, r1, r2
+function equationsPar3Points() {
+	// Création d'un cercle avec au moins 6 points entiers ou plus.
+	let x = PiMath.Random.number(-5, 5),
+		y = PiMath.Random.number(-5, 5),
+		r = PiMath.Random.number(5, 17)
 
-	const nb = 20
-	position = PiMath.Random.number(0, 2)
-	if(position===2) {
-		P1 = new PiMath.Geometry.Point(
-			PiMath.Random.numberSym(nb, true),
-			PiMath.Random.numberSym(nb, true)
-		)
-		P2 = new PiMath.Geometry.Point(
-			PiMath.Random.numberSym(nb, true),
-			PiMath.Random.numberSym(nb, true)
-		)
+	console.log(x, y, r)
+	// Création d'un cercle avec...
 
-		// On s'assure que les deux points ne sont pas de même coordonnées
-		// On impose (artificiellement), que la coordonnées x doit être différente
-		while(P2.x.isEqual(P1.x)){
-			P2 =new PiMath.Geometry.Point(
-				PiMath.Random.numberSym(nb, true),
-				PiMath.Random.numberSym(nb, true)
-			)
-		}
+	let {circle, pts} = generateCircle(3),
+		A = pts[0],
+		B = pts[1],
+		C = pts[2],
+		MAB = new PiMath.Geometry.Point().middleOf(A, B),
+		MAC = new PiMath.Geometry.Point().middleOf(A, C),
+		MBC = new PiMath.Geometry.Point().middleOf(B, C),
+		AB = new PiMath.Geometry.Vector(A, B),
+		AC = new PiMath.Geometry.Vector(A, C),
+		BC = new PiMath.Geometry.Vector(B, C),
+		dAB = new PiMath.Geometry.Line(MAB, AB, PiMath.Geometry.Line.PERPENDICULAR),
+		dAC = new PiMath.Geometry.Line(MAC, AC, PiMath.Geometry.Line.PERPENDICULAR),
+		dBC = new PiMath.Geometry.Line(MBC, BC, PiMath.Geometry.Line.PERPENDICULAR),
+		cAB = AB.x.clone().multiply(MAB.x).add(AB.y.clone().multiply(MAB.y)).opposed(),
+		cAC = AC.x.clone().multiply(MAC.x).add(AC.y.clone().multiply(MAC.y)).opposed(),
+		cBC = BC.x.clone().multiply(MBC.x).add(BC.y.clone().multiply(MBC.y)).opposed()
 
-		// On calcule ce qui sera la tangente.
-		t = new PiMath.Geometry.Line(P1, P2).simplify()
+	drawParameters.value = [
+		circle.center.x.value - 6,
+		circle.center.x.value + 6,
+		circle.center.y.value - 7,
+		circle.center.y.value + 5,
+		60
+	].join(",")
+	drawCode.value = `A(${A.x.value},${A.y.value})*
+				B(${B.x.value},${B.y.value})*
+				C(${C.x.value},${C.y.value})*
+				O(${circle.center.x.value},${circle.center.y.value})*
+			c=circ O,${circle.radius.value}
+			d1=[AC]
+			d2=[BC]
+			d3=[AB]
+			M1=mid AC
+			M2=mid BC
+			M3=mid AB
+			m1=perp d1,M1->dash,lightgray
+			m2=perp d2,M2->dash,lightgray
+			m3=perp d3,M3->dash,lightgray
+	`
 
-		// On prend un point aléatoire sur cette tangente.
-		Tx = PiMath.Random.numberSym(nb, true)
-		T = new PiMath.Geometry.Point(Tx, t.getValueAtX(Tx))
+	let EX = new SimpleExercise(
+		"",
+		`Calculer l'équation centre-rayon d'un cercle passant par \\(A${A.tex}\\), \\(B${B.tex}\\) et \\(C${C.tex}\\)`
+	)
+	EX.addData(
+		"Calculer les vecteurs \\(\\overrightarrow{AB}\\), \\(\\overrightarrow{AC}\\) et \\(\\overrightarrow{BC}\\)",
+		`\\overrightarrow{AB}=${AB.tex}\\qquad\\overrightarrow{AC}=${AC.tex}\\qquad\\overrightarrow{BC}=${BC.tex}\\qquad`
+	)
 
-		// Le point T ne doit pas être une des coordonnées P1, P2 (impossible), ni entre P1 et P2
-		while(T.x.value>=Math.min(P1.x.value, P2.x.value) && T.x.value<=Math.max(P1.x.value, P2.x.value)){
-			Tx = PiMath.Random.numberSym(nb, true)
-			T = new PiMath.Geometry.Point(Tx, t.getValueAtX(Tx))
-		}
+	EX.addData(
+		"Calculer les coordonnées des milieux des segments \\(AB\\), \\(AC\\) et \\(BC\\) en utilisant \\(M_{AB}\\left( \\frac{a_1+b_1}{2} ; \\frac{a_2+b_2}{2} \\right)\\)",
+		`M_{AB}${MAB.tex} \\qquad M_{AC}${MAC.tex} \\qquad M_{BC}${MBC.tex}`
+	)
 
-		// On recheche la droite
-		M = new PiMath.Geometry.Point().middleOf(P1, P2)
-		perp1 = new PiMath.Geometry.Line().parseByPointAndNormal(M, t.director)
-		C1x = PiMath.Random.numberSym(nb, true)
-		C1 = new PiMath.Geometry.Point(C1x, perp1.getValueAtX(C1x))
-		r1 = new Vector(C1, P1).normSquare
+	// TODO: Make it more readable and add more details at the end.
+	EX.addData(
+		"Calculer les équations cartésiennes des médiatrices du triangle. Une médiatrice est une droite perpendiculaire et passant par le milieu d'un segment. Comme le segment est porté par un vecteur normal, il est facile de calculer l'équation cartésienne de la médiatrice.\\[\\overrightarrow{AB}=\\begin{pmatrix}a\\\\b\\end{pmatrix} \\implies d: ax+by+c=0\\] Il reste à calculer le coefficient \\(c\\) en remplaçant \\(x\\) et \\(y\\) par les coordonnées du milieu du segment.",
+		`\\begin{aligned}
+		 m_{AB}: \\underbrace{${AB.x.tex}x${AB.y.texWithSign}y+c=0}_{\\overrightarrow{AB}=${AB.tex}} &\\implies \\underbrace{${AB.x.tex}\\left(${MAB.x.tex}\\right)${AB.y.texWithSign}\\left(${MAB.y.tex}\\right)+c=0}_{M_{AB}${MAB.tex}} &\\implies c=${cAB.tex} &\\implies ${dAB.equation.tex}\\\\[4em]
+		 m_{AC}: \\underbrace{${AC.x.tex}x${AC.y.texWithSign}y+c=0}_{\\overrightarrow{AC}=${AC.tex}} &\\implies \\underbrace{${AC.x.tex}\\left(${MAC.x.tex}\\right)${AC.y.texWithSign}\\left(${MAC.y.tex}\\right)+c=0}_{M_{AC}${MAC.tex}} &\\implies c=${cAC.tex} &\\implies ${dAC.equation.tex}\\\\[4em]
+		 m_{BC}: \\underbrace{${BC.x.tex}x${BC.y.texWithSign}y+c=0}_{\\overrightarrow{BC}=${BC.tex}} &\\implies \\underbrace{${BC.x.tex}\\left(${MBC.x.tex}\\right)${BC.y.texWithSign}\\left(${MBC.y.tex}\\right)+c=0}_{M_{BC}${MBC.tex}} &\\implies c=${cBC.tex} &\\implies ${dBC.equation.tex}
+		\\end{aligned}`
+	)
 
-		perp2 = new PiMath.Geometry.Line().parseByPointAndNormal(T, t.director)
-		C2x = PiMath.Random.numberSym(nb, true)
-		C2 = new PiMath.Geometry.Point(C2x, perp2.getValueAtX(C1x))
-		r2 = new Vector(C2, T).normSquare
-	}
-	else if(position===1) {
-		P1 = new PiMath.Geometry.Point(
-			PiMath.Random.numberSym(nb, true),
-			PiMath.Random.numberSym(nb, true)
-		)
-		P2 = false
-		T = new PiMath.Geometry.Point(
-			PiMath.Random.numberSym(nb, true),
-			PiMath.Random.numberSym(nb, true)
-		)
-		// La point T et P1 ne doivent pas être identique.
-		while(T.x.isEqual(P1.x) && T.y.isEqual(P1.y)){
-			T =new PiMath.Geometry.Point(
-				PiMath.Random.numberSym(nb, true),
-				PiMath.Random.numberSym(nb, true)
-			)
-		}
+	EX.addData(
+		"On calcule l'intersection de deux de ces médiatrices pour déterminer les coordonéées du centre du cercle.",
+		`\\begin{aligned}
+		AB\\cap AC:& ${new PiMath.LinearSystem(dAB.equation, dAC.equation).tex}&\\implies& O${circle.center.tex}\\\\[2em]
+		AB\\cap BC:& ${new PiMath.LinearSystem(dAB.equation, dBC.equation).tex}&\\implies& O${circle.center.tex}\\\\[2em]
+		AC\\cap BC:& ${new PiMath.LinearSystem(dAC.equation, dBC.equation).tex}&\\implies& O${circle.center.tex}
+		\\end{aligned}`
+	)
 
-		// On calcule ce qui sera la tangente.
-		t = new PiMath.Geometry.Line(P1, T).simplify()
+	let OA = new PiMath.Geometry.Vector(A, circle.center),
+		OB = new PiMath.Geometry.Vector(B, circle.center),
+		OC = new PiMath.Geometry.Vector(C, circle.center)
+	EX.addData(
+		"Il ne reste plus qu'à calculer le rayon du cercle en calculant la norme d'un des vecteurs \\(\\overrightarrow{OA}\\), \\(\\overrightarrow{OB}\\) ou \\(\\overrightarrow{OC}\\)",
+		`\\begin{aligned}
+		\\left\\Vert\\overrightarrow{OA}\\right\\Vert &= \\left\\Vert ${OA.tex} \\right\\Vert &=& \\sqrt{(${OA.x.tex})^2+(${OA.y.tex})^2} &= ${circle.radius.tex}\\\\
+		\\left\\Vert\\overrightarrow{OB}\\right\\Vert &= \\left\\Vert ${OB.tex} \\right\\Vert &=& \\sqrt{(${OB.x.tex})^2+(${OB.y.tex})^2} &= ${circle.radius.tex}\\\\
+		\\left\\Vert\\overrightarrow{OC}\\right\\Vert &= \\left\\Vert ${OC.tex} \\right\\Vert &=& \\sqrt{(${OC.x.tex})^2+(${OC.y.tex})^2} &= ${circle.radius.tex}
+		\\end{aligned}`
+	)
 
-
-		// On recheche la droite
-		perp1 = new PiMath.Geometry.Line().parseByPointAndNormal(P1, t.director)
-		C1x = PiMath.Random.numberSym(nb, true)
-		C1 = new PiMath.Geometry.Point(C1x, perp1.getValueAtX(C1x))
-		r1 = new Vector(C1, P1).normSquare
-
-		perp2 = new PiMath.Geometry.Line().parseByPointAndNormal(T, t.director)
-		C2x = PiMath.Random.numberSym(nb, true)
-		C2 = new PiMath.Geometry.Point(C2x, perp2.getValueAtX(C1x))
-		r2 = new Vector(C2, T).normSquare
-	}
-	else{
-		P1 = false
-		P2 = false
-		T = new PiMath.Geometry.Point(
-			PiMath.Random.numberSym(nb, true),
-			PiMath.Random.numberSym(nb, true)
-		)
-		C2 = new PiMath.Geometry.Point(
-			PiMath.Random.numberSym(nb, true),
-			PiMath.Random.numberSym(nb, true)
-		)
-
-		// Le point de tangence ne peut pas être sur le centre
-		while(T.x.isEqual(C2.x)){
-			T =new PiMath.Geometry.Point(
-				PiMath.Random.numberSym(nb, true),
-				PiMath.Random.numberSym(nb, true)
-			)
-		}
-
-		let vecteurRadius = new Vector(T, C2),
-			rayon = vecteurRadius.norm
-		t = new PiMath.Geometry.Line(T, vecteurRadius, PiMath.Geometry.Line.PERPENDICULAR)
-
-		// On recheche la droite
-		let Kx = PiMath.Random.numberSym(nb, true),
-			K = new PiMath.Geometry.Point(Kx, t.getValueAtX(Kx))
-		// Le point de tangence ne peut pas être sur le centre
-		while(K.x.isEqual(T.x)){
-			Kx = PiMath.Random.numberSym(nb, true)
-			K = new PiMath.Geometry.Point(Kx, t.getValueAtX(Kx))
-		}
-
-
-		perp1 = new PiMath.Geometry.Line().parseByPointAndNormal(K, t.director)
-		C1x = PiMath.Random.numberSym(nb, true)
-		C1 = new PiMath.Geometry.Point(C1x, perp1.getValueAtX(C1x))
-		r1 = Math.round(t.distanceTo(C1).value*0.8)
-		while(r1 >= rayon){
-			C1x = PiMath.Random.numberSym(nb, true)
-			C1 = new PiMath.Geometry.Point(C1x, perp1.getValueAtX(C1x))
-			r1 = Math.round(t.distanceTo(C1).value*0.8)
-		}
-
-		r2 = new Vector(C2, T).normSquare
-	}
-
-	// Points à valeurs entières : C1, C2, T
-	if (
-		(C1.x.isNatural() && C1.y.isNatural() &&
-			C2.x.isNatural() && C2.y.isNatural() &&
-			T.x.isNatural() && T.y.isNatural()) || count.value > 20
-	) {
-		ex1.value.C1 = C1
-		ex1.value.r1 = r1
-		ex1.value.G1 = new PiMath.Geometry.Circle(C1, r1, true)
-
-		ex1.value.C2 = C2
-		ex1.value.T = T
-		ex1.value.G2 = new PiMath.Geometry.Circle(C2, r2, true)
-
-		ex1.value.t = t
-
-		ex1.value.d = new PiMath.Geometry.Line(C1, C2)
-
-		ex1.value.m = new PiMath.Geometry.Line().parseByPointAndNormal(new PiMath.Geometry.Point().middleOf(C1, C2), ex1.value.d.director)
-
-		ex1.value.P1 = P1
-		ex1.value.P2 = P2
-	} else {
-		count.value++
-		updateEx1Rnd()
-	}
-
+	EX.addData(
+		"On peut finalement donner l'équation du cercle",
+		`\\Gamma:\\ ${circle.tex}`
+	)
+	return EX
 }
-
-// Load the function
-updateEx1()
-
-// When loaded - auto katex
-onMounted(() => {
-	katexAutoRender(root.value)
-})
-
 </script>
 

@@ -12,15 +12,15 @@ use Illuminate\Support\Carbon;
  * App\Models\Illustration
  *
  * @property int $id
- * @property string $title
+ * @property string|null $title
  * @property string $type
  * @property string $code
- * @property string $parameters
+ * @property string|null $parameters
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property-read Collection|Post[] $posts
+ * @property-read Collection|\App\Models\Post[] $posts
  * @property-read int|null $posts_count
- * @property-read Collection|PostWalkthrough[] $walkthroughs
+ * @property-read Collection|\App\Models\PostWalkthrough[] $walkthroughs
  * @property-read int|null $walkthroughs_count
  * @method static Builder|Illustration newModelQuery()
  * @method static Builder|Illustration newQuery()

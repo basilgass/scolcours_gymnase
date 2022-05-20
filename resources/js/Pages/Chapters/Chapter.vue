@@ -14,7 +14,7 @@
 			class="btn"
 			type="button"
 		>
-			Nouvel aricle
+			Nouvel article
 		</Link>
 	</div>
 
@@ -53,7 +53,7 @@
 </template>
 
 <script>
-import LayoutMain from "@/Pages/Shared/LayoutMain"
+import LayoutMain from "@/Layouts/LayoutMain"
 
 export default {
 	layout: LayoutMain

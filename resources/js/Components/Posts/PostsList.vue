@@ -1,14 +1,14 @@
 <template>
-	<div
-		v-for="post in posts"
-		:key="post.id"
-	>
-		<component
-			:is="getPostTemplate(post)"
-			:post="post"
-		/>
-		<p>{{ post.title }}</p>
-		<p>{{ post.body }}</p>
+	<div v-if="posts.length>0">
+		<div
+			v-for="post in posts"
+			:key="post.id"
+		>
+			<component
+				:is="getPostTemplate(post)"
+				:post="post"
+			/>
+		</div>
 	</div>
 </template>
 
