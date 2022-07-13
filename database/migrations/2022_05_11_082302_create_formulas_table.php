@@ -17,8 +17,6 @@ return new class extends Migration
         Schema::create('formulas', function (Blueprint $table) {
             $table->id();
 			$table->foreignIdFor(Chapter::class)->constrained();
-			$table->text('formula');
-			$table->text('comment')->nullable();
 			$table->integer('order')->nullable();
             $table->timestamps();
         });

@@ -10,11 +10,11 @@
   "require": {
     "php": "^8.0",
     "fruitcake/laravel-cors": "^2.0",
-    "guzzlehttp/guzzle": "^7.0.1",
-    "inertiajs/inertia-laravel": "^v0.5.4",
-    "laravel/framework": "^v9.13.0",
-    "laravel/sanctum": "^2.6",
-    "laravel/tinker": "^2.5"
+    "guzzlehttp/guzzle": "^7.4.5",
+    "inertiajs/inertia-laravel": "^v0.6.3",
+    "laravel/framework": "^v9.19.0",
+    "laravel/sanctum": "^v2.15.1",
+    "laravel/tinker": "^v2.7.2"
   },
   "require-dev": {
     "roave/security-advisories": "dev-latest",

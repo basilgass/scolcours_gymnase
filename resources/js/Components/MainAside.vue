@@ -40,7 +40,27 @@
 					<hr>
 					<ThemeLinks @click-navigation-links="$parent.showAside=false" />
 					<hr>
-					<LogoutButton v-if="$page.props.auth.user" />
+					<div v-if="$page.props.auth.user">
+						<Link
+							v-if="$page.props.auth.can.admin"
+							as="button"
+							class="block transition duration-300 hover:translate-x-2 px-0 md:px-4 py-1"
+							:href="route('admin')"
+							@click="$parent.showAside=false"
+						>
+							administration
+						</Link>
+						<LogoutButton class="block transition duration-300 hover:translate-x-2 px-0 md:px-4 py-1" />
+					</div>
+					<Link
+						v-else
+						as="button"
+						class="block transition duration-300 hover:translate-x-2 px-0 md:px-4 py-1"
+						:href="route('login')"
+						@click="$parent.showAside=false"
+					>
+						se connecter
+					</Link>
 				</div>
 			</div>
 		</transition>

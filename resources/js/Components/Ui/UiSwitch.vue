@@ -17,8 +17,8 @@ let emit = defineEmits(["update:modelValue"])
 let props = defineProps({
 	modelValue: Boolean,
 	sm: {type: Boolean, default: false},
-	disabledColor: {type: String, default: "bg-blue-700"},
-	enabledColor: {type: String, default: "bg-orange-700"},
+	disabledColor: {type: String, default: "bg-orange-700"},
+	enabledColor: {type: String, default: "bg-blue-700"},
 	circleColor: {type: String, default: "bg-white"}
 })
 

@@ -14,8 +14,7 @@ class CreateChaptersTable extends Migration
             $table->foreignIdFor(Theme::class)->constrained()->cascadeOnDelete();
             $table->string('slug');
             $table->string('title');
-            $table->text('body');
-            //
+			$table->boolean('active')->default(false);
             $table->timestamps();
         });
     }

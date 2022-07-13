@@ -1,6 +1,7 @@
 <template>
 	<form-field>
 		<form-label
+			v-if="!props.inline"
 			:label="label"
 			:name="name"
 		/>
@@ -12,8 +13,13 @@
 			:value="modelValue"
 			:class="{'form-active': active, 'border border-gray-200': !active}"
 			v-bind="$attrs"
+			:autocomplete="autocomplete===true?'on':autocomplete"
+			:placeholder="inline?label:''"
 			@focus="$emit('inputFocus')"
 			@input="$emit('update:modelValue', $event.target.value)"
+			@keyup.esc.exact="doCancel"
+			@keyup.enter.exact="doValidate"
+			@keydown="handleCtrlKey"
 		>
 		<form-error
 			:name="name"
@@ -33,18 +39,40 @@ import FormLabel from "@/Components/Form/FormLabel"
 import FormError from "@/Components/Form/FormError"
 import {onMounted, ref} from "vue"
 
-defineEmits(["update:modelValue", "inputFocus"])
+const emits = defineEmits(["update:modelValue", "inputFocus", "enter", "cancel", "save"])
 let props = defineProps({
+	inline: {type: Boolean, default: false},
 	modelValue: {type: String, default: null},
 	active: {type: Boolean, default: false},
 	name: {type: String, required: true},
 	label: {type: String, default: ""},
 	error: {type: String, default: ""},
-	focus: {type: Boolean, default: false}
+	focus: {type: Boolean, default: false},
+	autocomplete: {type: [String,Boolean], default: "off"}
 })
 
-let inp = ref(null)
+let inp = ref(null),
+	originalValue = ref(props.modelValue)
 
+function doCancel(){
+	emits("update:modelValue", originalValue.value)
+	emits("cancel")
+}
+function doValidate(){
+	emits("enter")
+}
+function handleCtrlKey(ev){
+	if(ev.ctrlKey && ev.key === "s"){
+		ev.preventDefault()
+		emits("save", ev)
+	}
+}
+function focus(select){
+	inp.value.focus()
+	if(select===true){
+		inp.value.select()
+	}
+}
 onMounted(() => {
 	if (props.focus) {
 		inp.value.focus()
@@ -52,5 +80,8 @@ onMounted(() => {
 	}
 
 })
+
+
+defineExpose({focus})
 
 </script>

@@ -54,20 +54,6 @@
 						alt="illustration"
 						@click="showImage=illustration.url"
 					>
-					<teleport to="#modal-dialog">
-						<transition name="fade">
-							<Modal
-								v-if="showImage===illustration.url"
-								@close="showImage=null"
-							>
-								<img
-									:key="`illustration_${illustration.id}`"
-									:src="'/storage/'+illustration.url"
-									alt="illustration"
-								>
-							</Modal>
-						</transition>
-					</teleport>
 				</template>
 			</div>
 		</section>
@@ -114,7 +100,6 @@
 <script setup>
 import Panel from "@/Components/Ui/Panel"
 import {ref} from "vue"
-import Modal from "@/Components/Modal"
 import {useForm} from "@inertiajs/inertia-vue3"
 
 const props = defineProps({

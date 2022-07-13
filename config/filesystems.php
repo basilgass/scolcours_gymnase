@@ -1,7 +1,7 @@
 <?php
-	
+
 	return [
-		
+
 		/*
 		|--------------------------------------------------------------------------
 		| Default Filesystem Disk
@@ -12,9 +12,9 @@
 		| based disks are available to your application. Just store away!
 		|
 		*/
-		
+
 		'default' => env('FILESYSTEM_DRIVER', 'local'),
-		
+
 		/*
 		|--------------------------------------------------------------------------
 		| Filesystem Disks
@@ -27,21 +27,21 @@
 		| Supported Drivers: "local", "ftp", "sftp", "s3"
 		|
 		*/
-		
+
 		'disks' => [
-			
+
 			'local' => [
 				'driver' => 'local',
 				'root'   => storage_path('app'),
 			],
-			
+
 			'public' => [
 				'driver'     => 'local',
 				'root'       => storage_path('app/public'),
 				'url'        => env('APP_URL') . '/storage',
 				'visibility' => 'public',
 			],
-			
+
 			's3' => [
 				'driver'                  => 's3',
 				'key'                     => env('AWS_ACCESS_KEY_ID'),
@@ -52,7 +52,7 @@
 				'endpoint'                => env('AWS_ENDPOINT'),
 				'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT', false),
 			],
-			
+
 			'tools'   => [
 				'driver' => 'local',
 				'root'   => resource_path('js/Components/Tools'),
@@ -65,9 +65,9 @@
 				'driver' => 'local',
 				'root'   => resource_path('js/Components/Chapters'),
 			]
-		
+
 		],
-		
+
 		/*
 		|--------------------------------------------------------------------------
 		| Symbolic Links
@@ -78,9 +78,9 @@
 		| the locations of the links and the values should be their targets.
 		|
 		*/
-		
+
 		'links' => [
 			public_path('storage') => storage_path('app/public'),
 		],
-	
+
 	];

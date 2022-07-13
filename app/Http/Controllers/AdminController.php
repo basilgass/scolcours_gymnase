@@ -9,24 +9,23 @@ use App\Models\Tools;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 use Inertia\Inertia;
 
 class AdminController extends Controller
 {
 	public function show()
 	{
-		$this->loadTools();
-		$this->loadChallenges();
 		$this->loadChapters();
+		$this->loadChallenges();
+		$this->loadTools();
 
 		return Inertia::render(
-			'Admin',
+			'AdminPage.vue',
 			[
 				'tools' => Tools::all()->map(function ($tool, $key) {
 					return [
 						'slug' => $tool->slug,
-						'title' => $tool->slug,
+						'title' => $tool->title,
 						'updated_at' => $tool->updated_at->format('d.m.Y H:m')
 					];
 				}),
@@ -42,12 +41,35 @@ class AdminController extends Controller
 				'challenges' => Challenge::all()->map(function ($tool, $key) {
 					return [
 						'slug' => $tool->slug,
-						'title' => $tool->slug,
+						'title' => $tool->title,
 						'updated_at' => $tool->updated_at->format('d.m.Y H:m')
 					];
 				})
 			]
 		);
+	}
+
+	public function loadChapters()
+	{
+		// Detect all chapters and create "empty one", disabled by default.
+		foreach (Theme::all() as $theme) {
+			foreach (Storage::disk('chapters')->directories($theme->slug) as $chapter) {
+				$slug = explode('/', $chapter)[1];
+
+				// Check if the chapter exists.
+				$chapter = Chapter::where('slug', $slug)->first();
+
+				if (!$chapter) {
+					$chapter = Chapter::create([
+						'theme_id'=> $theme->id,
+						'title' => $slug,
+						'slug' => $slug,
+//						'body' => 'Aucun extrait...'
+					]);
+					$chapter->blocks()->create();
+				}
+			}
+		}
 	}
 
 	public function loadTools()
@@ -109,88 +131,48 @@ class AdminController extends Controller
 
 	public function loadChallenges()
 	{
-		foreach (Storage::disk('challenges')->files() as $file) {
-			$slug = substr($file, 0, -4);
+		foreach (Theme::all() as $theme) {
+			foreach (Storage::disk('chapters')->directories($theme->slug) as $chapter) {
+				$chapter_slug = explode('/', $chapter)[1];
+				$chapter_id = Chapter::where('slug', $chapter_slug)->first()->id;
 
-			if (Str::startsWith($slug, 'template')) {
-				continue;
-			}
+				if($chapter) {
+					foreach (Storage::disk('chapters')->files($chapter . '/challenges') as $file) {
+						$slug = pathinfo($file)['filename'];
 
-			$lastModified = Storage::disk('challenges')->lastModified($file);
-			$existingTools = Tools::where('slug', $slug)->first();
+						$lastModified = Storage::disk('chapters')->lastModified($file);
+						$existingTools = Tools::where('slug', $slug)->first();
 
-			// Les informations dans la base de données sont plus récente - pas de modification à faire.
-			if ($existingTools?->updated_at->greaterThanOrEqualTo(Carbon::createFromTimestamp($lastModified))) {
-				continue;
-			}
+						// Les informations dans la base de données sont plus récente - pas de modification à faire.
+						if ($existingTools?->updated_at->greaterThanOrEqualTo(Carbon::createFromTimestamp($lastModified))) {
+							continue;
+						}
 
-			$content = Storage::disk('challenges')->get($file);
+						// Read the content to get the title.
+						$content = Storage::disk('chapters')->get($file);
 
-			// Get the title
-			if (preg_match("/const title = [\"']\s?(.+)[\"']/", $content, $title)) {
-				$title = Str::replace("\'", "'", $title[1]);
-			} else {
-				$title = $slug;
-			}
-			// Création dans la base de donnée.
-			Challenge::updateOrCreate(
-				[
-					"slug" => $slug
-				],
-				[
-					"title" => $title,
-				]
-			);
-		}
-	}
+						// Get the title
+						if (preg_match("/const title = [\"]\s?(.+)[\"]/", $content, $title)) {
+							$title = preg_replace("[\"]", "", $title[1]);
+						} else {
+							$title = $slug;
+						}
 
-	public function loadChapters()
-	{
-		foreach (Storage::disk('chapters')->directories() as $directory) {
-			$theme_id = Theme::where('slug', $directory)->first()->id;
-			foreach (Storage::disk('chapters')->files($directory) as $file) {
-				$slug = substr($file, strlen($directory) + 1, -4);
-				$lastModified = Storage::disk('chapters')->lastModified($file);
-				$existingChapters = Tools::where('slug', $slug)->first();
-
-				// Les informations dans la base de données sont plus récente - pas de modification à faire.
-				if ($existingChapters?->updated_at->greaterThanOrEqualTo(Carbon::createFromTimestamp($lastModified))) {
-					continue;
+						// Create or update the challenge
+						Challenge::updateOrCreate(
+							[
+								"chapter_id" => $chapter_id,
+								"slug" => $slug,
+								"active" => false
+							],
+							[
+								"title" => $title,
+							]
+						);
+					}
 				}
-
-
-				// Les informations dans le fichier sont plus récent... on récupère les données.
-				$content = Storage::disk('chapters')->get($file);
-
-				// Le titre
-				if (preg_match("/\*\stitle:\s?(.+)/", $content, $title)) {
-					$title = $title[1];
-				} else {
-					$title = '';
-				}
-
-				// La description
-				if (preg_match("/\*\sbody:\s?(.+)/", $content, $body)) {
-					$body = $body[1];
-				} else {
-					$body = '';
-				}
-
-
-				// Création dans la base de donnée.
-				Chapter::updateOrCreate(
-					[
-						"slug" => $slug,
-					],
-					[
-						"theme_id" => $theme_id,
-						"title" => $title,
-						"body" => $body,
-					]
-				);
 			}
 		}
-
 	}
 
 	public function activate(Chapter $chapter, Request $request)
@@ -203,7 +185,7 @@ class AdminController extends Controller
 		// Update the chapter
 		$chapter->active = $request->active;
 		$chapter->save();
-		
+
 		return redirect()->route('admin');
 
 	}

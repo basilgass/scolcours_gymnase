@@ -1,10 +1,15 @@
 <template>
-	<div class="flex justify-between flex-col md:flex-row mb-5">
-		<h1 class="text-xl">
-			{{ title }}
-		</h1>
+	<h1 class="text-xl">
+		<slot name="title" />
+	</h1>
 
-		<div>score actuel: {{ points }}</div>
+	<div v-if="$page.props.auth.can.admin">
+		Démarrer une nouvelle session.
+	</div>
+
+	<div class="flex flex-col md:flex-row justify-between my-4">
+		<div>Nombre de vie: {{ props.lives }}</div>
+		<div>score actuel: {{ props.points }}</div>
 	</div>
 
 	<div v-bind="$attrs">
@@ -22,7 +27,7 @@
 		</div>
 
 		<!-- Answer display -->
-		<div>
+		<div class="min-h-[3em]">
 			<slot name="answer" />
 		</div>
 
@@ -52,7 +57,7 @@
 		<div class="text-center pt-1 pb-5">
 			<button
 				class="btn btn-success w-64"
-				@click="validate"
+				@click="emits('validate')"
 			>
 				Valider
 			</button>
@@ -66,7 +71,7 @@
 		<!-- Display the results already given -->
 		<div>
 			<h3
-				v-show="results.length>0"
+				v-show="props.results.length>0"
 				class="max-w-2xl mx-auto text-center cursor-pointer font-semibold mt-10 mb-2"
 				@click="showResults=!showResults"
 			>
@@ -79,15 +84,17 @@
 				>
 					<div class="space-y-2">
 						<div
-							v-for="(item, index) in results"
+							v-for="(item, index) in props.results"
 							:key="`result-${index}`"
 						>
 							<span
-								v-katex.display.inline="item.tex"
+								v-if="item.ascii===true"
+								v-katex.ascii.display.inline="item.tex"
 								:class="{'text-green-600': item.correct, 'text-red-600': !item.correct}"
 							/>
 							<span
-								v-katex.ascii.display.inline="item.ascii"
+								v-else
+								v-katex.display.inline="item.tex"
 								:class="{'text-green-600': item.correct, 'text-red-600': !item.correct}"
 							/>
 						</div>
@@ -99,15 +106,34 @@
 </template>
 
 <script setup>
-import Panel from "@/Components/Ui/Panel"
-import {ref} from "vue"
+/*------------------------
+The wrapper should handle
+- counting points
+- counting lives
+- communicate with server to store results.
 
-defineProps({
-	title: String,
-	points: Number,
-	results: Array,
-	validate: Function
+The component should handle.
+- generating question
+- validating answer
+*/
+import Panel from "@/Components/Ui/Panel"
+import {inject, ref} from "vue"
+
+const emits = defineEmits(["validate", "reset"])
+
+const props = defineProps({
+	points: {type: Number, default: 0},
+	results: {type: Array, default: ()=>[]},
+	lives: {type: Number, default: 3}
 })
+
+let challenge = inject("challenge")
+
+let currentLife = ref(props.life),
+	currentPoints = ref(0),
+	maxPoints = ref(0),
+	results = ref([])
+
 
 function shake() {
 	questionWrapper.value.style.setProperty("animation-name", "v-shake-horizontal")
@@ -122,6 +148,10 @@ function shake() {
 let showResults = ref(false),
 	showAnswerFormat = ref(false),
 	questionWrapper = ref(null)
+
+function validateAnswer(){
+	props.validate()
+}
 
 defineExpose({shake})
 </script>{

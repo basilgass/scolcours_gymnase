@@ -29,6 +29,9 @@ module.exports = {
 				"amber": colors.amber,
 				"orange": colors.orange
 			},
+			maxHeight: {
+				"1/2": "50vh",
+			}
 		},
 	},
 
@@ -46,5 +49,6 @@ module.exports = {
 	plugins: [
 		// require('@tailwindcss/forms'),
 		require("@tailwindcss/typography"),
+		require("@tailwindcss/line-clamp"),
 	],
 }

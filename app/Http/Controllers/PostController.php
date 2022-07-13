@@ -5,40 +5,51 @@ namespace App\Http\Controllers;
 use App\Models\Chapter;
 use App\Models\Illustration;
 use App\Models\Post;
-use App\Models\PostTemplate;
-use App\Models\PostWalkthrough;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
 
 class PostController extends Controller
 {
-	public function index()
+	public function __construct()
 	{
-//		return Inertia::render("Tools", $data);
+		$this->middleware('auth')->except(['index', 'show']);
 	}
 
-	public function fetch(Chapter $chapter){
-		return $chapter->posts->load('template');
+	public function index()
+	{
+		// TODO : make a single post page view...
+//		return Inertia::render("Tools", $data);
 	}
 
 	public function create(Chapter $chapter)
 	{
-		// Create a basic post
-		return Inertia::render("Posts/CreatePost", [
-			"theme" => $chapter->theme,
-			"chapter" => $chapter,
-			'templates' => PostTemplate::all()
-		]);
+		// Create a post form
+//		return Inertia::render("Posts/PostForm", [
+//			"theme" => $chapter->theme,
+//			"chapter" => $chapter
+//		]);
 	}
 
-	public function store(Request $request)
+	public function store(Chapter $chapter, Request $request){
+		$validation = $request->validate([
+			'title'=>['string', 'min:2']
+		]);
+
+		// Create a new chapter and create a first block.
+		$post = $chapter->posts()->create([
+			'title'=>$validation['title'],
+			'numberOfVisibleBlocks'=>0
+		]);
+		// Load the blocks, even if it's empty :)
+		$post->blocks;
+		return $post;
+	}
+
+	public function store_OLD(Chapter $chapter, Request $request)
 	{
 		$validation = $request->validate([
 			'chapter' => ['required', 'exists:App\Models\Chapter,id'],
 			'title' => ['max:255'],
 			'body' => ['required', 'min:5'],
-			'template.id' => ['required', 'exists:App\Models\PostTemplate,id'],
-			'template.parameters' => ['string', 'nullable'],
 			'answer.body' => ['string', 'nullable'],
 			'answer.checker' => ['string', 'nullable'],
 			'walkthrough' => ['array'],
@@ -55,8 +66,6 @@ class PostController extends Controller
 		// Create the post model
 		$post = new Post();
 		$post->chapter_id = $validation["chapter"];
-		$post->post_template_id = $validation['template']['id'];
-		$post->post_template_params = $validation['template']['parameters'];
 		$post->title = $validation["title"];
 		$post->body = $validation["body"];
 		$post->save();
@@ -102,30 +111,62 @@ class PostController extends Controller
 		$post->refresh();
 
 		// Return to the main root.
-		return Inertia::render("Posts/CreatePost");
+		// Check the path as route
+		return redirect()->route('chapters.show', [$chapter->slug]);
 	}
 
 	public function show(Post $post)
 	{
-		return Inertia::render("Posts/ViewPost", [
-			'theme' => $post->chapter->theme,
-			'template' => $post->template,
-			'post' => $post
+//		return Inertia::render("Posts/PostShow", [
+//			'theme' => $post->chapter->theme,
+//			'post' => $post
+//		]);
+	}
+
+	public function edit(Post $post)
+	{
+		// Create a post form
+//		return Inertia::render("Posts/PostForm", [
+//			"theme" => $post->chapter->theme,
+//			"chapter" => $post->chapter,
+//			'edit' => $post
+//		]);
+	}
+
+	public function update(Post $post, Request $request)
+	{
+		// Validate the post.
+		$validation = $request->validate([
+			'title' => ['max:255'],
+			'script' => ['string', 'nullable'],
+			'switch' => ['string', 'nullable']
+			]);
+
+		$post->title = $validation['title'];
+		$post->script = $validation['script'] ?? '';
+		$post->switch = $validation['switch'];
+		$post->save();
+
+		return $post;
+	}
+
+	public function updateNumberOfVisibleBlocks(Post $post, Request $request)
+	{
+		// Validate the post.
+		$validation = $request->validate([
+			'numberVisibleBlocks' => ['integer','between:0,100'],
 		]);
+
+		$post->numberOfVisibleBlocks = $validation['numberVisibleBlocks'];
+		$post->save();
+
+		return $post;
 	}
 
-	public function edit(Chapter $chapter)
+	public function destroy($id)
 	{
-		//
-	}
+		Post::destroy($id);
 
-	public function update(Request $request, Chapter $chapter)
-	{
-		//
-	}
-
-	public function destroy(Chapter $chapter)
-	{
-		//
+		return true;
 	}
 }

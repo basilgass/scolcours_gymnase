@@ -15,7 +15,7 @@ let props = defineProps({
 		type: Object, default: () => {
 		}
 	},
-	axis: {type: Boolean, default: false}
+	axis: {type: Boolean, default: true}
 })
 
 let PiGraph, PiParser, PiAxis

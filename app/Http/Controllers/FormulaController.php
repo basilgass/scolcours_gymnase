@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\FormulaResource;
 use App\Models\Chapter;
 use App\Models\Formula;
 use Illuminate\Http\Request;
@@ -9,67 +10,57 @@ use Illuminate\Support\Facades\Redirect;
 
 class FormulaController extends Controller
 {
-    /**
+	public function __construct()
+	{
+		$this->middleware('auth')->except(['index', 'show']);
+	}
+
+	/**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+     * @return Formula[]|\Illuminate\Database\Eloquent\Collection
+	 */
+    public function index(Chapter $chapter)
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+		// Get the list of all formulas as JSON ?
+		return FormulaResource::collection($chapter->formulas);
     }
 
     /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+     * @return \Illuminate\Http\RedirectResponse
+	 */
+    public function store(Chapter $chapter, Request $request)
     {
-		$validation = $request->validate([
-			'chapter_id' => ['required', 'exists:App\Models\Chapter,id'],
-			'formula' => ['required', 'max:255'],
-			'comment' => []
-		]);
+//		$validation = $request->validate([
+//			'chapter_id' => ['required', 'exists:App\Models\Chapter,id'],
+//			'formula' => ['required', 'max:255'],
+//			'comment' => []
+//		]);
 
 		// Create the post model
-		$formula = Formula::create($validation);
+		$formula = $chapter->formulas()->create();
+		$formula->blocks()->create([
+			'body'=>'A modifier...'
+		]);
+
+		$formula->blocks;
 
 		// Return to the main root.
-		return Redirect::back();
+		return FormulaResource::make($formula);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
+	/**
+	 * Display the specified resource.
+	 *
+	 * @param Formula $formula
+	 * @return Formula
+	 */
+    public function show(Formula $formula)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
+        return $formula;
     }
 
     /**
@@ -77,19 +68,27 @@ class FormulaController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
+     * @return Formula
+	 */
+    public function update(Formula $formula, Request $request)
     {
-        //
+//		$validation = $request->validate([
+//			'formula' => ['required', 'max:255'],
+//			'comment' => []
+//		]);
+//
+//		$formula->update($validation);
+//		$formula->save();
+
+		return $formula;
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+     * @return \Illuminate\Http\RedirectResponse
+	 */
     public function destroy($id)
     {
         Formula::destroy($id);
@@ -97,12 +96,4 @@ class FormulaController extends Controller
 		return Redirect::back();
     }
 
-	/**
-	 * @param Chapter $chapter
-	 * @return \Illuminate\Database\Eloquent\Relations\HasMany
-	 */
-	public function fetch(Chapter $chapter)
-	{
-		return $chapter->formulas;
-	}
 }

@@ -14,66 +14,47 @@ use Illuminate\Support\Carbon;
  *
  * @property int $id
  * @property int $chapter_id
- * @property int $post_template_id
- * @property string|null $post_template_params
- * @property string|null $title
- * @property string $body
+ * @property string $title
+ * @property int $position
+ * @property int $numberOfVisibleBlocks
+ * @property int $active
+ * @property string $script
+ * @property string|null $switch
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property-read \App\Models\PostAnswer|null $answer
+ * @property-read Collection|\App\Models\Block[] $blocks
+ * @property-read int|null $blocks_count
  * @property-read \App\Models\Chapter $chapter
- * @property-read \App\Models\PostComponent|null $component
- * @property-read Collection|\App\Models\Illustration[] $illustrations
- * @property-read int|null $illustrations_count
- * @property-read \App\Models\PostTemplate $template
- * @property-read Collection|\App\Models\PostWalkthrough[] $walkthrough
- * @property-read int|null $walkthrough_count
  * @method static Builder|Post newModelQuery()
  * @method static Builder|Post newQuery()
  * @method static Builder|Post query()
- * @method static Builder|Post whereBody($value)
+ * @method static Builder|Post whereActive($value)
  * @method static Builder|Post whereChapterId($value)
  * @method static Builder|Post whereCreatedAt($value)
  * @method static Builder|Post whereId($value)
- * @method static Builder|Post wherePostTemplateId($value)
- * @method static Builder|Post wherePostTemplateParams($value)
+ * @method static Builder|Post whereNumberOfVisibleBlocks($value)
+ * @method static Builder|Post wherePosition($value)
+ * @method static Builder|Post whereScript($value)
+ * @method static Builder|Post whereSwitch($value)
  * @method static Builder|Post whereTitle($value)
  * @method static Builder|Post whereUpdatedAt($value)
  * @mixin Eloquent
  */
 class Post extends Model
 {
-    use HasFactory;
+	use HasFactory;
 
-	protected $with = ['answer', 'illustrations', 'walkthrough', 'component'];
+	protected $guarded = [];
+	protected $with = ['blocks'];
 
 	public function chapter()
 	{
 		return $this->belongsTo(Chapter::class);
 	}
 
-	public function template()
+	public function blocks()
 	{
-		return $this->belongsTo(PostTemplate::class, 'post_template_id');
+		return $this->morphMany(Block::class, 'blockable');
 	}
 
-	public function illustrations()
-	{
-		return $this->morphToMany(Illustration::class, 'illustrationable');
-	}
-
-	public function walkthrough()
-	{
-		return $this->hasMany(PostWalkthrough::class);
-	}
-
-	public function answer()
-	{
-		return $this->hasOne(PostAnswer::class);
-	}
-
-	public function component()
-	{
-		return $this->hasOne(PostComponent::class);
-	}
 }

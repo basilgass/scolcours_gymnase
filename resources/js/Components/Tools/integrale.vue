@@ -18,7 +18,10 @@
 		/>
 
 		<div v-if="result">
-			<div v-katex="result" />
+			<div
+				v-katex="result"
+				class="katex-boxed"
+			/>
 			<p
 				class="text-center text-sm font-extralight text-gray-400"
 				v-text="result"
@@ -45,6 +48,7 @@ import FormInput from "@/Components/Form/FormInput"
 import {computed, ref} from "vue"
 import {PiMath} from "pimath/esm"
 import FormFraction from "@/Components/Form/FormFraction"
+import FormTextarea from "../Form/FormTextarea.vue"
 
 let fx = ref(""),
 	a = ref(0),
@@ -55,13 +59,14 @@ let result = computed(() => {
 		if (fx.value === "") {
 			return "\\text{Aucune fonction...}"
 		}
-		let P = new PiMath.Polynom(fx.value).primitive(),
+		let p = new PiMath.Polynom(fx.value),
+			P = p.clone().primitive(),
 			Pa = P.evaluate({x: a.value}),
 			Pb = P.evaluate({x: b.value})
 
-		return `\\int_{${a.value}}^{${b.value}} ${P.tex} \\ dx
+		return `\\int_{${a.value}}^{${b.value}} ${p.tex} \\ dx
 		= \\left. ${P.tex}\\right\\vert_{${a.value}}^{${b.value}}
-		= ${Pb.frac} - ${Pa.tex} = ${Pb.subtract(Pa).tex}`
+		= ${Pb.frac} - ${Pa.tex} = ${Pb.clone().subtract(Pa).tex} = ${Pb.subtract(Pa).value}`
 	} catch (e) {
 		console.error(e)
 		return false

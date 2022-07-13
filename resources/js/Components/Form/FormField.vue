@@ -1,5 +1,5 @@
 <template>
-	<div :class="{'mt-6': !hideLabel}">
+	<div class="mt-2">
 		<slot />
 	</div>
 </template>

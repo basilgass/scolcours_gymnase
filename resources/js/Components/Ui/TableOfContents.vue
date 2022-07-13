@@ -3,12 +3,15 @@
 		ref="root"
 		class="relative"
 	>
-		<div class="mt-2 mb-10">
+		<div
+			v-if="menu.length>0"
+			class="mt-2 mb-10"
+		>
 			<h3 class="font-light text-lg my-5">
 				table des matières
 			</h3>
 			<ol
-				v-if="menu.length>0"
+
 				class="space-y-2 list list-inside list-decimal ml-5"
 			>
 				<li
@@ -26,7 +29,7 @@
 			</ol>
 		</div>
 		<div
-			ref="tableocontents"
+			ref="tableofcontents"
 			class="table-of-contents-data"
 			v-bind="$attrs"
 		>
@@ -36,7 +39,7 @@
 </template>
 <script setup>
 
-import {onMounted, onUpdated, ref} from "vue"
+import {onMounted, ref} from "vue"
 
 let props = defineProps({
 	query: {type: String, default: ".chapter-menu"},
@@ -44,18 +47,13 @@ let props = defineProps({
 })
 
 let root = ref(null),
-	tableocontents = ref(null),
+	tableofcontents = ref(null),
 	menu = ref([]),
 	parent = ref(false)
 
-onUpdated(() => {
-	katexAutoRender(root.value)
-})
 
-onMounted(()=>{
-	buildMenu()
-})
 function buildMenu() {
+	menu.value = []
 	root.value.querySelectorAll(props.query).forEach(h2 => {
 		h2.id = `${props.menuId}${menu.value.length}`
 		menu.value.push(h2.innerHTML)
@@ -63,7 +61,7 @@ function buildMenu() {
 }
 
 function menuScrollTo(id) {
-	let el = id === undefined ? document.body : tableocontents.value.querySelector(id)
+	let el = id === undefined ? document.body : tableofcontents.value.querySelector(id)
 
 	el.scrollIntoView({
 		block: "start",
@@ -71,4 +69,9 @@ function menuScrollTo(id) {
 		inline: "start"
 	})
 }
+
+onMounted(()=> {
+	buildMenu()
+})
+
 </script>

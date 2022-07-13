@@ -41,7 +41,7 @@ class CreateThemesTable extends Migration
         ] );
         Theme::create( [
             'slug'  => 'statistiques',
-            'title'  => 'statistiques',
+            'title'  => 'probabilités et statistiques',
             'color' => 'bg-cyan-500',
             'icon' => 'percent'
         ] );

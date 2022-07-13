@@ -1,7 +1,7 @@
 <template>
 	<header
 		class="shadow text-white"
-		:class="`scolcours-${theme.slug}`"
+		:class="`bg-scolcours-${theme.slug}`"
 	>
 		<MainAside />
 		<div

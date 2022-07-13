@@ -1,5 +1,5 @@
 <template>
-	<Head title="Log in" />
+	<Head title="Connection" />
 
 	<BreezeValidationErrors class="mb-4" />
 
@@ -12,13 +12,11 @@
 
 	<form @submit.prevent="submit">
 		<div>
-			<BreezeLabel
-				for="email"
-				value="Email"
-			/>
-			<BreezeInput
+			<form-input
 				id="email"
 				v-model="form.email"
+				label="email"
+				name="email"
 				type="email"
 				class="mt-1 block w-full p-2"
 				required
@@ -28,13 +26,11 @@
 		</div>
 
 		<div class="mt-4">
-			<BreezeLabel
-				for="password"
-				value="Mot de passe"
-			/>
-			<BreezeInput
+			<form-input
 				id="password"
 				v-model="form.password"
+				name="password"
+				label="mot de passe"
 				type="password"
 				class="mt-1 block w-full p-2"
 				required
@@ -61,29 +57,33 @@
 				Mot de passe oublié ?
 			</Link>
 
-			<BreezeButton
-				class="ml-4"
+			<button
+				class="btn-primary ml-4"
 				:class="{ 'opacity-25': form.processing }"
 				:disabled="form.processing"
 			>
 				Se connecter
-			</BreezeButton>
+			</button>
 		</div>
 	</form>
 </template>
 
 <script>
-import BreezeButton from "@/Components/Button.vue"
-import BreezeCheckbox from "@/Components/Checkbox.vue"
-import BreezeGuestLayout from "@/Layouts/Guest.vue"
-import BreezeInput from "@/Components/Input.vue"
-import BreezeLabel from "@/Components/Label.vue"
-import BreezeValidationErrors from "@/Components/ValidationErrors.vue"
+import BreezeButton from "@/Components/Auth/Button.vue"
+import BreezeCheckbox from "@/Components/Auth/Checkbox.vue"
+import BreezeGuestLayout from "@/Layouts/LayoutGuest.vue"
+import BreezeInput from "@/Components/Auth/Input.vue"
+import BreezeLabel from "@/Components/Auth/Label.vue"
+import BreezeValidationErrors from "@/Components/Auth/ValidationErrors.vue"
 import {Head, Link} from "@inertiajs/inertia-vue3"
+import FormInput from "@/Components/Form/FormInput"
+import FormButton from "@/Components/Form/FormButton"
 
 export default {
 
 	components: {
+		FormButton,
+		FormInput,
 		BreezeButton,
 		BreezeCheckbox,
 		BreezeInput,

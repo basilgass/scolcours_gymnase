@@ -3,7 +3,6 @@
 	namespace App\Models;
 
 	use App\Models\Challenges\ChallengeSession;
-	use Database\Factories\UserFactory;
 	use Eloquent;
 	use Illuminate\Database\Eloquent\Builder;
 	use Illuminate\Database\Eloquent\Collection;
@@ -32,6 +31,8 @@
  * @property-read mixed $admin
  * @property-read DatabaseNotificationCollection|DatabaseNotification[] $notifications
  * @property-read int|null $notifications_count
+ * @property-read Collection|\App\Models\Question[] $questions
+ * @property-read int|null $questions_count
  * @property-read Collection|PersonalAccessToken[] $tokens
  * @property-read int|null $tokens_count
  * @method static \Database\Factories\UserFactory factory(...$parameters)
@@ -85,6 +86,13 @@
 		public function challenges()
 		{
 			return $this->hasMany(ChallengeSession::class);
+		}
+
+		public function questions()
+		{
+			return $this->belongsToMany(Question::class)
+				->withTimestamps()
+				->withPivot('result', 'answer');
 		}
 		public function getAdminAttribute()
 		{

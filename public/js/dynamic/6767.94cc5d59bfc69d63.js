@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunk=self.webpackChunk||[]).push([[6767],{6767:(e,t,c)=>{c.r(t),c.d(t,{default:()=>r});var s=c(821),n={class:"text-center"},o=[(0,s.createElementVNode)("div",{class:"text-4xl"}," Gymnase ",-1),(0,s.createElementVNode)("div",{class:"text-sm"}," powered by Scolcours ",-1)];const l={name:"ScolCoursLogo"};const r=(0,c(3744).Z)(l,[["render",function(e,t,c,l,r,a){return(0,s.openBlock)(),(0,s.createElementBlock)("div",n,o)}]])}}]);
+//# sourceMappingURL=6767.94cc5d59bfc69d63.js.map

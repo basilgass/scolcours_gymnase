@@ -8,7 +8,7 @@
 </template>
 <script setup>
 const props = defineProps({
-	name: {type: String, required: true},
 	label: {type: String, default: ""},
+	name: {type: String, required: true},
 })
 </script>

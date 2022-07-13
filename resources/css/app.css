@@ -3,8 +3,10 @@
 @import 'tailwindcss/utilities';
 
 /*Bootstrap icons font*/
-@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7/font/bootstrap-icons.css");
-@import url("https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.css");
+/*@import "bootstrap-icons/font/bootstrap-icons.css";*/
+@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css");
+/*@import "katex/dist/katex.min.css";*/
+@import url("https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.css");
 
 /* Custom imports */
 @import 'scolcours/inputs.css';
@@ -13,6 +15,10 @@
 
 body{
 	@apply font-light tracking-wide;
+}
+
+.font-code{
+	font-family: 'Source Code Pro', monospace;
 }
 
 /* alpine cloak */
@@ -25,33 +31,22 @@ body{
 }
 
 /* Just adding the color for JIT */
-.scolcours-main {
+.bg-scolcours-main {
     background-color: chocolate
 }
 
-.scolcours-algebre {
-    @apply bg-blue-500
-}
-
-.scolcours-analyse {
-    @apply bg-amber-500
-}
-
-.scolcours-geometrie {
-    @apply bg-purple-500
-}
-
-.scolcours-statistiques {
-    @apply bg-cyan-500
-}
-
-.scolcours-jeux {
-    @apply bg-orange-500
-}
-
-.scolcours-tools {
-    @apply bg-pink-400
-}
+.bg-scolcours-algebre {@apply bg-blue-500}
+.bg-scolcours-analyse {@apply bg-amber-500}
+.bg-scolcours-geometrie {@apply bg-purple-500}
+.bg-scolcours-statistiques {@apply bg-cyan-500}
+.bg-scolcours-jeux {@apply bg-orange-500}
+.bg-scolcours-tools {@apply bg-pink-400}
+.border-scolcours-algebre {@apply border-blue-300}
+.border-scolcours-analyse {@apply border-amber-300}
+.border-scolcours-geometrie {@apply border-purple-300}
+.border-scolcours-statistiques {@apply border-cyan-300}
+.border-scolcours-jeux {@apply border-orange-300}
+.border-scolcours-tools {@apply border-pink-300}
 
 .katex-boxed .katex-display {
     @apply bg-amber-700/5 px-5 py-4 my-2 rounded overflow-x-auto;
@@ -95,8 +90,24 @@ body{
 		@apply btn bg-green-600 text-white hover:bg-green-700;
 	}
 
+	.btn-add {
+		@apply btn bg-teal-600 text-white hover:bg-teal-700;
+	}
+
 	.btn-delete {
 		@apply btn bg-red-600 text-white hover:bg-red-700;
+	}
+
+	.btn-cancel {
+		@apply btn bg-orange-600 text-white hover:bg-orange-700;
+	}
+
+	.btn-edit {
+		@apply btn bg-cyan-600 text-white hover:bg-cyan-700;
+	}
+
+	.btn-xl {
+		@apply border px-10 py-5 rounded-xl text-lg
 	}
 
 	.btn-xs {
@@ -104,7 +115,7 @@ body{
 	}
 
 	.btn-form {
-		@apply btn-primary uppercase font-semibold text-xs;
+		@apply uppercase font-semibold text-xs;
 	}
 
 	.list-space {
@@ -141,4 +152,9 @@ body{
 
 .tos .cell-v-line {
 	position: relative;
+}
+
+
+dialog::backdrop {
+	background: rgba(20, 20, 20, 0.2);
 }

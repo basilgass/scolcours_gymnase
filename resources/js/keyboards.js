@@ -28,6 +28,7 @@ export const keyboardKeys = {
 	"ln": {type: "math", display: "\\ln"},
 	"(": {type: "math", display: "("},
 	")": {type: "math", display: ")"},
+	"=": {type: "math", display: "="},
 	" ": {type: "math", display: "\\cdot"},
 	".": {type: "math", display: "."},
 	"@reset": {type: "icon", display: "bi bi-trash"},
@@ -68,7 +69,7 @@ export const keyboards = {
 			"1", "2", "3", "+", "x", "y", "e",
 			"4", "5", "6", "-", "^2", "^", "ln",
 			"7", "8", "9", "*", "|", "sqrt", "",
-			"@reset", "@back", "0", "/", "(", ")", ""
+			"@reset", "@back", "0", "/", "(", ")", "="
 		]
 	},
 	"polynom": {

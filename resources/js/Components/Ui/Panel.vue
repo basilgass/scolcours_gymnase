@@ -3,13 +3,14 @@
 		:class="panelClass.panel"
 		class="bg-white px-4 py-2 rounded-xl border border-gray-300 transition-all"
 	>
-		<div
-			v-if="panelTitle"
-			:class="panelClass.title"
-			class="uppercase -mt-1 mb-1"
+		<h2
+			v-if="$slots.title"
+			class="font-normal mb-4 border-b"
+			:class="`border-b border-scolcours-${$page.props.theme.slug}`"
 		>
-			{{ panelTitle }}
-		</div>
+			<slot name="title" />
+		</h2>
+
 		<slot />
 	</article>
 </template>
@@ -18,8 +19,7 @@
 import {computed} from "vue"
 
 const props = defineProps({
-	type: {type: String, default: null},
-	title: { type: String, default: null },
+	type: {type: String, default: null}
 })
 
 let panelClass = computed(()=>{

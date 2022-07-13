@@ -1,16 +1,22 @@
 <template>
 	<div>
+		<!-- Header of the page -->
 		<MainHeader :theme="theme" />
+
+		<!-- Container for the "column design" -->
 		<div class="min-h-screen bg-gray-100">
+			<!-- Main content -->
 			<main class="scolcours-container min-h-screen">
 				<slot />
 			</main>
 
+			<!-- Footer of the page -->
 			<main-footer />
 		</div>
 
+		<!-- Aside element -->
 		<transition name="slide-right">
-			<div
+			<aside
 				v-show="scrollY > showScrollToTop"
 				class="
 					w-10 h-10 z-30
@@ -26,7 +32,7 @@
 				@click="menuScrollTo()"
 			>
 				<i class="bi bi-chevron-left" />
-			</div>
+			</aside>
 		</transition>
 	</div>
 </template>
