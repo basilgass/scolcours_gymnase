@@ -45,7 +45,7 @@ class Post extends Model
 	use HasFactory;
 
 	protected $guarded = [];
-	protected $with = ['blocks'];
+	protected $with = ['blocks', 'questions'];
 
 	public function chapter()
 	{
@@ -57,4 +57,8 @@ class Post extends Model
 		return $this->morphMany(Block::class, 'blockable');
 	}
 
+	public function questions()
+	{
+		return $this->hasMany(Question::class);
+	}
 }

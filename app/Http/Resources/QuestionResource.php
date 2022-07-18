@@ -23,21 +23,24 @@ class QuestionResource extends JsonResource
 	 */
 	public function toArray($request)
 	{
+		$userAnswers = $this->users->filter(function ($value, $key) {
+			return $value->id === Auth::user()?->id;
+		})->values()->map(function ($user) {
+			return [
+				'answer' => $user->pivot->answer,
+				'result' => $user->pivot->result,
+				'when' => Carbon::parse($user->pivot->created_at)->diffForHumans()
+			];
+		});
+
 		return [
 			"id" => $this->id,
 			"body" => $this->body,
 			"answer" => $this->answer,
 			"checker" => $this->checker,
 			"updated_at" => $this->updated_at,
-			"userAnswers" => $this->users->filter(function ($value, $key) {
-				return $value->id === Auth::user()?->id;
-			})->values()->map(function ($user) {
-				return [
-					'answer' => $user->pivot->answer,
-					'result' => $user->pivot->result,
-					'when' => Carbon::parse($user->pivot->created_at)->diffForHumans()
-				];
-			})
+			"userAnswers" => $userAnswers,
+			"userHasCorrectAnswer" => count($userAnswers)>0 && $userAnswers[count($userAnswers)-1]['result']
 		];
 //        return parent::toArray($request);
 	}

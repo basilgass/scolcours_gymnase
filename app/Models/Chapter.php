@@ -52,7 +52,7 @@ class Chapter extends Model
 	protected $guarded = [];
 
 	// removed the theme:id,slug
-	protected $with = ['posts','formulas', 'exercises', 'challenges'];
+	protected $with = ['posts','formulas', 'challenges'];
 
 	public function theme(): \Illuminate\Database\Eloquent\Relations\BelongsTo
 	{
@@ -63,7 +63,7 @@ class Chapter extends Model
 	{
 		return $this->morphMany(Block::class, 'blockable');
 	}
-	
+
 	public function posts(): \Illuminate\Database\Eloquent\Relations\HasMany
 	{
 		return $this->hasMany(Post::class);
@@ -79,10 +79,6 @@ class Chapter extends Model
 		return $this->hasMany(Challenge::class);
 	}
 
-	public function exercises()
-	{
-		return $this->hasMany(Exercise::class);
-	}
 //
 //	public function questions()
 //	{

@@ -37,9 +37,10 @@ class Question extends Model
 
 	protected $guarded = [];
 	protected $with = ['users'];
-	public function exercise()
+
+	public function post()
 	{
-		$this->belongsTo(Exercise::class);
+		$this->belongsTo(Post::class);
 	}
 
 	public function users()

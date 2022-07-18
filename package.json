@@ -41,6 +41,6 @@
 		"markdown-it": "^13.0.1",
 		"markdown-it-texmath": "^1.0.0",
 		"pidraw": "^0.0.18",
-		"pimath": "^0.0.77"
+		"pimath": "^0.0.78"
 	}
 }

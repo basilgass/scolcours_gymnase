@@ -39,6 +39,7 @@ use Illuminate\Support\Carbon;
 class Challenge extends Model
 {
 	protected $guarded = [];
+	protected $with = ['blocks'];
 
 	public function chapter()
 	{
@@ -48,6 +49,11 @@ class Challenge extends Model
 	public function sessions()
 	{
 		return $this->hasMany(ChallengeSession::class);
+	}
+
+	public function blocks()
+	{
+		return $this->morphMany(Block::class, 'blockable');
 	}
 
 	public function getRunningAttribute()

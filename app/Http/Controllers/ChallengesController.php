@@ -2,6 +2,7 @@
 
 	namespace App\Http\Controllers;
 
+	use App\Http\Resources\ChallengeResource;
 	use App\Models\Challenge;
 	use App\Models\Chapter;
 	use App\Models\Theme;
@@ -13,10 +14,11 @@
 	{
 		public function show(Theme $theme, Chapter $chapter, Challenge $challenge)
 		{
+			if(count($challenge->blocks)===0){$challenge->blocks()->create();}
+
 			return Inertia::render('Challenges/ChallengesShow', [
 				"theme" => $theme->only('color', 'icon', 'slug', 'title', 'id'),
-				"challenge" => $challenge,
-				"component" => $challenge->url
+				"challenge" => ChallengeResource::make($challenge),
 			]);
 		}
 
@@ -27,12 +29,8 @@
 			if(!$theme->exists()) {
 				return redirect()->back();
 			}
-
-			return Inertia::render('Challenges/ChallengesShow', [
-				"theme" => $theme->only('color', 'icon', 'slug', 'title', 'id'),
-				"challenge" => $challenge,
-				"component" => $challenge->url
-			]);
+			
+			return redirect()->route('chapters.challenge', [$theme, $challenge->chapter, $challenge]);
 		}
 
 		public function start(Challenge $challenge)

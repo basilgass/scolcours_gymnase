@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Exercise;
+//use App\Models\Exercise;
+use App\Http\Resources\QuestionResource;
+use App\Models\Post;
 use App\Models\Question;
 use Auth;
 use Illuminate\Http\Request;
@@ -21,7 +23,7 @@ class QuestionController extends Controller
 	 * @param \Illuminate\Http\Request $request
 	 * @return array
 	 */
-	public function store(Exercise $exercise, Request $request)
+	public function store(Post $post, Request $request)
 	{
 		$validate = $request->validate(
 			[
@@ -39,14 +41,14 @@ class QuestionController extends Controller
 
 		$questions = [];
 		foreach($bodies as $key=>$body){
-			$questions[] = $exercise->questions()->create([
+			$questions[] = $post->questions()->create([
 				'body'=>$body,
 				'answer'=>$answers[$key]??null,
 				'checker'=>$checkers[$key]??$validate['checker']
 			]);
 		}
 
-		return $questions;
+		return QuestionResource::collection(collect($questions));
 	}
 
 	/**

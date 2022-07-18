@@ -4,7 +4,6 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\BlockController;
 use App\Http\Controllers\ChallengesController;
 use App\Http\Controllers\ChaptersController;
-use App\Http\Controllers\ExerciseController;
 use App\Http\Controllers\FormulaController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\QuestionController;
@@ -63,15 +62,14 @@ Route::resource('chapters.posts', PostController::class)
 	->shallow();
 Route::patch('posts/{post}/numberOfVisibleBlocks', [PostController::class, 'updateNumberOfVisibleBlocks'])->name('posts.updateNumberOfVisibleBlocks');
 
-Route::apiResource('chapters.exercises', ExerciseController::class)
-	->parameters([
-		"chapters" => "chapter:slug"
-	])
-	->shallow();
+//Route::apiResource('chapters.exercises', ExerciseController::class)
+//	->parameters([
+//		"chapters" => "chapter:slug"
+//	])
+//	->shallow();
+//Route::post('exercises/{exercise}/replicate', [ExerciseController::class, "replicate"])->name('exercises.replicate');
 
-Route::post('exercises/{exercise}/replicate', [ExerciseController::class, "replicate"])->name('exercises.replicate');
-
-Route::apiResource('exercises.questions', QuestionController::class)
+Route::apiResource('posts.questions', QuestionController::class)
 	->shallow();
 Route::post('questions/{question}/validate', [QuestionController::class, 'storeAnswer'])->name('questions.validate');
 

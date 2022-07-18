@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\PostResource;
 use App\Models\Chapter;
 use App\Models\Illustration;
 use App\Models\Post;
@@ -39,9 +40,10 @@ class PostController extends Controller
 			'title'=>$validation['title'],
 			'numberOfVisibleBlocks'=>0
 		]);
+
 		// Load the blocks, even if it's empty :)
 		$post->blocks;
-		return $post;
+		return PostResource::make($post);
 	}
 
 	public function store_OLD(Chapter $chapter, Request $request)

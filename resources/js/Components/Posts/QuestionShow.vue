@@ -120,7 +120,7 @@
 						<form-input
 
 							v-model="userAnswer"
-							:name="`question-${exerciseId}-${theQuestion.id}`"
+							:name="`question-${theQuestion.id}`"
 							label="réponse"
 							@keyup.enter="validateAnswer"
 						>
@@ -180,8 +180,7 @@ import {computed, inject, nextTick, ref} from "vue"
 import {useForm} from "@inertiajs/inertia-vue3"
 
 let props = defineProps({
-	question: {type: Object, required: true},
-	exerciseId: {type: Number, required: true}
+	question: {type: Object, required: true}
 })
 
 let emits = defineEmits(["destroy", "resolved"])
@@ -232,10 +231,10 @@ let answerDisplay = computed(()=>{
 		return "Réponse sous forme exacte"
 	}),
 	previousAnswers = computed(()=>{
-		return theQuestion.value.userAnswers.length === 0 ? [] : theQuestion.value.userAnswers
+		return theQuestion.value.userAnswers?.length === 0 ? [] : theQuestion.value.userAnswers
 	}),
 	isCorrect = computed(()=>{
-		if(theQuestion.value.userAnswers.length>0){
+		if(theQuestion.value?.userAnswers.length>0){
 			if(theQuestion.value.userAnswers[theQuestion.value.userAnswers.length-1].result){
 				return theQuestion.value.userAnswers[theQuestion.value.userAnswers.length-1]
 			}else{

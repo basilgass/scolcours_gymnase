@@ -116,9 +116,9 @@ import FormButton from "@/Components/Form/FormButton"
 import FormIllustration from "@/Components/Form/FormIllustration"
 import FormSwitch from "@/Components/Form/FormSwitch"
 import FormNumber from "@/Components/Form/FormNumber"
-import {defineExpose, ref} from "vue"
+import {ref, watch} from "vue"
 
-const emits = defineEmits(["close", "update:modelValue"])
+const emits = defineEmits(["close", "save", "update:modelValue"])
 const props = defineProps({
 	modelValue: {type: Object},
 	switch: {type: Boolean},
@@ -155,6 +155,7 @@ function update_block(){
 		}
 	).then(res=>{
 		emits("update:modelValue", form)
+		emits("save")
 		emits("close")
 	}).catch(error=>{
 		console.log(error)
@@ -164,5 +165,11 @@ function update_block(){
 function cancel_block(){
 	emits("close")
 }
+
+
+// Watch changes to the json object as it can be modified from "outside".
+watch(()=> props.modelValue.json, (newValue, oldValue)=>{
+	form.json = newValue
+})
 
 </script>

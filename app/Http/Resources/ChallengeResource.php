@@ -14,6 +14,19 @@ class ChallengeResource extends JsonResource
      */
     public function toArray($request)
     {
-        return parent::toArray($request);
+//        return parent::toArray($request);
+		if(count($this->blocks)===0){
+			$this->blocks()->create();
+			$this->blocks;
+		}
+
+		return [
+			'id'=>$this->id,
+			'slug'=>$this->slug,
+			'title'=>$this->title,
+			'chapter'=>$this->chapter,
+			'block'=>$this->blocks[0]??[],
+			'active'=>$this->active
+		];
     }
 }

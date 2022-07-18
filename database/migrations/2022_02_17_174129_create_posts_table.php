@@ -19,6 +19,8 @@ return new class extends Migration {
 				$table->foreignIdFor(Chapter::class)->constrained()->cascadeOnDelete();
 				// Title of the post - required
 				$table->string('title');
+				// Post type (null, exercise, ...)
+				$table->string('type')->nullable();
 				// Default position of the post. If not provided, ordered by id.
 				$table->integer('position')->default(0);
 				// Determine the number of "blocks" visible by default. Zero means all.

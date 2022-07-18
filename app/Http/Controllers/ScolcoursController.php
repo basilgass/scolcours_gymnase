@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Chapter;
-use App\Models\Exercise;
 use App\Models\Theme;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+
+//use App\Models\Exercise;
 
 class ScolcoursController extends Controller
 {
@@ -42,12 +43,4 @@ class ScolcoursController extends Controller
 		]);
     }
 
-
-	public function dev()
-	{
-
-		return Inertia::render("DevPage", [
-			'exercises'=>Exercise::all()
-		]);
-	}
 }
