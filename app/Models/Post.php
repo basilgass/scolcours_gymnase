@@ -15,6 +15,7 @@ use Illuminate\Support\Carbon;
  * @property int $id
  * @property int $chapter_id
  * @property string $title
+ * @property string|null $type
  * @property int $position
  * @property int $numberOfVisibleBlocks
  * @property int $active
@@ -25,6 +26,8 @@ use Illuminate\Support\Carbon;
  * @property-read Collection|\App\Models\Block[] $blocks
  * @property-read int|null $blocks_count
  * @property-read \App\Models\Chapter $chapter
+ * @property-read Collection|\App\Models\Question[] $questions
+ * @property-read int|null $questions_count
  * @method static Builder|Post newModelQuery()
  * @method static Builder|Post newQuery()
  * @method static Builder|Post query()
@@ -37,6 +40,7 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Post whereScript($value)
  * @method static Builder|Post whereSwitch($value)
  * @method static Builder|Post whereTitle($value)
+ * @method static Builder|Post whereType($value)
  * @method static Builder|Post whereUpdatedAt($value)
  * @mixin Eloquent
  */

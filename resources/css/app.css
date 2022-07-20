@@ -73,8 +73,21 @@ body{
     margin-bottom: 0;
 }
 
+.block-border-definition {
+	@apply border-l-4 border-lime-400;
+}
+.block-border-theorem {
+	@apply border-l-4 border-amber-600;
+}
+.block-border-property {
+	@apply border-l-4 border-purple-600;
+}
+
 @layer base {
-	.admin-wrapper{@apply flex justify-between items-baseline bg-amber-100 rounded border border-dashed border-amber-600 px-3 py-2 }
+	.admin-wrapper{
+		@apply flex justify-between items-baseline bg-amber-100 rounded border border-dashed border-amber-600 px-3 py-2;
+	}
+
     .btn {
         @apply border px-5 py-2 rounded-2xl
         hover:bg-gray-100 hover:shadow
@@ -126,6 +139,8 @@ body{
 	.list-space > li {
 		@apply pl-5
 	}
+
+
 }
 
 

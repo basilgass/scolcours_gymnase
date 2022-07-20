@@ -15,12 +15,13 @@
 
 		<!-- display mode of the block -->
 		<!-- display the block faded or not -->
-		<div class="relative">
+		<div
+			class="relative"
+			:class="blockTypeClass"
+		>
 			<div
-				class="transition-all"
-				:class="{
-					'blur-sm':crtBlock.blur
-				}"
+				class="transition-all "
+				:class="{ 'blur-sm':crtBlock.blur }"
 			>
 				<!-- Header of the block -->
 				<div class="flex gap-5">
@@ -136,7 +137,8 @@ const props = defineProps({
 	},
 	switch: {type: Boolean},
 	hideBlur: {type:Boolean, default:false},
-	hideDelete: {type:Boolean, default:false}
+	hideDelete: {type:Boolean, default:false},
+	hasPadding: {type: Boolean, default: false}
 })
 
 let editMode = inject("editmode")
@@ -162,12 +164,14 @@ onMounted(() => runBlockScript())
 
 
 
-
-
 let edit = ref(props.block.isNew === true),
 	crtBlock = ref(props.block),
 	dbBlur = ref(props.block.blur),
-	bForm = ref(null)
+	bForm = ref(null),
+	blockTypeClass = computed(()=>{
+		if(crtBlock.value.type===""){return props.hasPadding?"-mx-4 px-4":""}
+		return `${props.hasPadding?"-mx-4 px-4":""} block-border-${crtBlock.value.type}`
+	})
 
 
 async function toggleBlockEdition(){

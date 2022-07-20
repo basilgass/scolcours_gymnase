@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ChallengeResource extends JsonResource
+class ChapterMinResource extends JsonResource
 {
 	/**
 	 * Transform the resource into an array.
@@ -14,16 +14,10 @@ class ChallengeResource extends JsonResource
 	 */
 	public function toArray($request)
 	{
-//        return parent::toArray($request);
-		if (count($this->blocks) === 0) {
-			$this->blocks()->create();
-			$this->blocks;
-		}
-
 		return [
-			...parent::toArray($request),
-			'block' => $this->blocks[0],
-			'chapter' => ChapterMinResource::make($this->chapter)
+			'id' => $this->id,
+			'slug' => $this->slug,
+			'title' => $this->title,
 		];
 	}
 }

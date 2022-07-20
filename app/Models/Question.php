@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Model;
  * App\Models\Question
  *
  * @property int $id
- * @property int $exercise_id
+ * @property int $post_id
  * @property string $body
  * @property string|null $answer
  * @property string|null $checker
@@ -26,8 +26,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Question whereBody($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Question whereChecker($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Question whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Question whereExerciseId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Question whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Question wherePostId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Question whereUpdatedAt($value)
  * @mixin \Eloquent
  */

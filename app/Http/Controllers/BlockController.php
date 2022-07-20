@@ -147,6 +147,7 @@ class BlockController extends Controller
 		$validation = $request->validate([
 			'title'=>['nullable', 'max:255'],
 			'body' =>['required'],
+			'type' =>['string'],
 			'script'=>['string', 'nullable'],
 			'json'=>['string', 'nullable'],
 			'blur'=>['boolean'],
@@ -160,11 +161,11 @@ class BlockController extends Controller
 
 		$block->title = $validation['title'];
 		$block->body = $validation['body'];
+		$block->type = $validation['type'];
 		$block->script = $validation['script'];
 		$block->json = $validation['json'];
-		$block->switch = $validation['switch'];
-		$block->json = $validation['json'];
 		$block->blur = $validation['blur'];
+		$block->switch = $validation['switch'];
 
 		// Remove all illustrations
 		$block->illustrations()->delete();

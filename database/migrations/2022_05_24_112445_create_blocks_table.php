@@ -21,6 +21,8 @@ return new class extends Migration
 			$table->string('title')->nullable();
 			// The main body
 			$table->text('body')->nullable();
+			// The type determine the color of the block (definition, theorem, ...)
+			$table->string('type')->default('');
 			// A script code to be executed in the block scope
 			$table->text('script')->nullable();
 			// A script code to be executed in the block scope

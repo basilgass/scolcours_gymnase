@@ -78,6 +78,7 @@
 				<block-show
 					v-for="block in visibleBlocks"
 					:key="block.id"
+					has-padding
 					:switch="scriptSwitch"
 					:block="block"
 					@delete="deleteBlock(block.id)"
@@ -105,6 +106,7 @@
 						<block-show
 							v-for="block in hiddenBlocks"
 							:key="block.id"
+							has-padding
 							:switch="scriptSwitch"
 							:block="block"
 							@delete="deleteBlock(block.id)"
@@ -191,30 +193,24 @@
 		</div>
 
 
-		<!-- SHould ne deleted -->
-		<chapter-article>
-			<!-- Edit box -->
-			<dialog-modal
-				v-model="edit"
-				class="w-full md:w-[600px]"
-				@cancel="numberVisibleBlocks = props.post.numberOfVisibleBlocks"
-			>
-				<PostForm
-					:post="post"
-					@validate="refreshPost"
-					@cancel="edit=false;numberVisibleBlocks = props.post.numberOfVisibleBlocks"
-				/>
-			</dialog-modal>
-
-			<!-- footer for admin -->
-		</chapter-article>
+		<!-- Edit box -->
+		<dialog-modal
+			v-model="edit"
+			class="w-full md:w-[600px]"
+			@cancel="numberVisibleBlocks = props.post.numberOfVisibleBlocks"
+		>
+			<PostForm
+				:post="post"
+				@validate="refreshPost"
+				@cancel="edit=false;numberVisibleBlocks = props.post.numberOfVisibleBlocks"
+			/>
+		</dialog-modal>
 	</div>
 </template>
 
 <script setup>
 
 import {computed, inject, onMounted, provide, reactive, ref} from "vue"
-import ChapterArticle from "@/Components/Ui/Chapters/ChapterArticle"
 import BlockShow from "@/Components/Posts/BlockShow"
 import FormNumber from "@/Components/Form/FormNumber"
 import CollapseTransition from "@/Components/CollapseTransition"

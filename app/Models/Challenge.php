@@ -18,8 +18,22 @@ use Illuminate\Support\Carbon;
  * @property string $slug
  * @property string $title
  * @property int $active
+ * @property string $generator
+ * @property int $isMathOnly
+ * @property string $output
+ * @property int $nextLevelAfter
+ * @property string $checker
+ * @property string $keyboard
+ * @property int $duration
+ * @property int $lives
+ * @property int $bonusScoreLife
+ * @property int $bonusScoreTime
+ * @property int $bonusLevelLife
+ * @property int $bonusLevelTime
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
+ * @property-read Collection|\App\Models\Block[] $blocks
+ * @property-read int|null $blocks_count
  * @property-read \App\Models\Chapter|null $chapter
  * @property-read mixed $running
  * @property-read Collection|ChallengeSession[] $sessions
@@ -28,9 +42,21 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Challenge newQuery()
  * @method static Builder|Challenge query()
  * @method static Builder|Challenge whereActive($value)
+ * @method static Builder|Challenge whereBonusLevelLife($value)
+ * @method static Builder|Challenge whereBonusLevelTime($value)
+ * @method static Builder|Challenge whereBonusScoreLife($value)
+ * @method static Builder|Challenge whereBonusScoreTime($value)
  * @method static Builder|Challenge whereChapterId($value)
+ * @method static Builder|Challenge whereChecker($value)
  * @method static Builder|Challenge whereCreatedAt($value)
+ * @method static Builder|Challenge whereDuration($value)
+ * @method static Builder|Challenge whereGenerator($value)
  * @method static Builder|Challenge whereId($value)
+ * @method static Builder|Challenge whereIsMathOnly($value)
+ * @method static Builder|Challenge whereKeyboard($value)
+ * @method static Builder|Challenge whereLives($value)
+ * @method static Builder|Challenge whereNextLevelAfter($value)
+ * @method static Builder|Challenge whereOutput($value)
  * @method static Builder|Challenge whereSlug($value)
  * @method static Builder|Challenge whereTitle($value)
  * @method static Builder|Challenge whereUpdatedAt($value)

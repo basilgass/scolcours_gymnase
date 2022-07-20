@@ -23,7 +23,6 @@ export function useCheckers(checkerData) {
  * @constructor
  */
 function PolynomChecker(expectedAnswer, answer, options = []){
-	console.log(expectedAnswer, answer)
 	let A = new PiMath.Polynom(answer),
 		Q = new PiMath.Polynom(expectedAnswer)
 

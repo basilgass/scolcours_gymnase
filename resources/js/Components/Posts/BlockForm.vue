@@ -42,6 +42,14 @@
 				label="titre"
 				focus
 			/>
+
+			<form-input
+				v-show="!props.noTitle"
+				v-model="form.type"
+				name="type"
+				label="type du bloc"
+			/>
+
 			<form-textarea
 				ref="formBody"
 				v-model="form.body"
@@ -133,6 +141,7 @@ const form = useForm({
 	id: props.modelValue.id,
 	title: props.modelValue.title,
 	body: props.modelValue.body,
+	type: props.modelValue.type,
 	script: props.modelValue.script,
 	json: props.modelValue.json,
 	illustrations: props.modelValue.illustrations,

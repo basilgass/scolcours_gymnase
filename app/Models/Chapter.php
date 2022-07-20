@@ -25,8 +25,6 @@ use URL;
  * @property-read int|null $blocks_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Challenge[] $challenges
  * @property-read int|null $challenges_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Exercise[] $exercises
- * @property-read int|null $exercises_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Formula[] $formulas
  * @property-read int|null $formulas_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Post[] $posts

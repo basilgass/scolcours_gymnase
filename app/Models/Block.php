@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int|null $order
  * @property string|null $title
  * @property string|null $body
+ * @property string $type
  * @property string|null $script
  * @property int|null $switch
  * @property string|null $json
@@ -37,6 +38,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Block whereScript($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Block whereSwitch($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Block whereTitle($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Block whereType($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Block whereUpdatedAt($value)
  * @mixin \Eloquent
  */
