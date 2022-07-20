@@ -1,31 +1,37 @@
 <!--suppress ALL -->
 <template>
-	<article>
+	<article v-if="!editMode">
 		<!-- Header - return back -->
 		<div class="pt-4 mb-4">
 			<Link
-				:href="route('theme.chapter', [$page.props.theme.slug, props.challenge.data.chapter.slug])"
+				:href="route('theme.chapter', [$page.props.theme.slug, theChallenge.chapter.slug])"
 				class="text-sm text-gray-400 hover:text-gray-800 transition-colors"
 			>
-				<i class="bi bi-chevron-left text-xs mr-2" />retour à {{ props.challenge.data.chapter.title }}
+				<i class="bi bi-chevron-left text-xs mr-2" />retour à {{ theChallenge.chapter.title }}
 			</Link>
 		</div>
 
 		<!-- The title of the challenge -->
 		<h1 class="text-xl">
-			{{ props.challenge.data.title }}
+			{{ theChallenge.title }}
 		</h1>
 
 		<!-- the body / question of the challenge -->
 		<markdown-it
 			class="mt-3"
-			:text="theBlock.block"
+			:text="theChallenge.block.body"
 		/>
 
 		<!-- The question -->
-		<Panel class="my-10">
-			<div v-katex.auto="question" />
+		<Panel class="mt-10">
+			<div
+				v-katex.auto="question"
+			/>
 		</Panel>
+		<div
+			class="mb-10 text-red-600"
+			v-text="checkerResult.message"
+		/>
 
 		<!-- The keyboard and answer wrapper -->
 		<div>
@@ -48,6 +54,7 @@
 				v-model="answer"
 				keyboard="algebra"
 				class="max-w-xl mx-auto"
+				@key="checkerResult.message = ''"
 			/>
 		</div>
 	</article>
@@ -69,107 +76,127 @@
 				<div>question,answer,level \n ...</div>
 			</div>
 
+			<h3 class="text-lg">
+				Configuration du texte
+			</h3>
+
+			<form-input
+				v-model="theChallenge.title"
+				name="title"
+				label="titre"
+			/>
+			<form-input
+				v-model="theChallenge.slug"
+				name="slug"
+				label="url"
+			/>
+
+			<block-form
+				v-model="theChallenge.block"
+				no-title
+				no-switch
+				no-script
+				no-data
+				@save="updateChallenge"
+			/>
+
 			<div class="space-y-4">
-				<h3 class="text-lg">
-					Configuration
-				</h3>
+				<div class="flex justify-between">
+					<h3 class="text-lg">
+						Configuration du challenge
+					</h3>
+					<button
+						class="btn-primary"
+						@click="updateChallenge"
+					>
+						Enregistrer
+					</button>
+				</div>
 
 				<div class="grid grid-cols-1 md:grid-cols-2 gap-3">
 					<form-input
-						v-model="challengeJSON.checker"
+						v-model="theChallenge.output"
+						name="questionsoutput"
+						label="affichage de la question/réponse"
+					/>
+
+					<form-input
+						v-model="theChallenge.checker"
 						name="questionsChecker"
 						label="checker"
-						@input="updateJSON"
 					/>
 
 					<form-input
-						v-model="challengeJSON.keyboard"
+						v-model="theChallenge.keyboard"
 						name="questionsKeyboard"
 						label="clavier affiché"
-						@input="updateJSON"
 					/>
 				</div>
+
 				<div class="grid grid-cols-1 md:grid-cols-3 gap-3">
 					<form-number
-						v-model="challengeJSON.nextLevelAfter"
+						v-model="theChallenge.nextLevelAfter"
 						name="questionsLevelTrigger"
 						label="Prochain niveau après..."
-						@input="updateJSON"
 					/>
 
 					<form-number
-						v-model="challengeJSON.duration"
+						v-model="theChallenge.duration"
 						name="questionsDuration"
 						label="durée"
-						@input="updateJSON"
 					/>
 
 					<form-number
-						v-model="challengeJSON.lives"
+						v-model="theChallenge.lives"
 						name="questionsLives"
 						label="nombre de vie"
-						@input="updateJSON"
 					/>
 				</div>
 				<div class="grid grid-cols-1 md:grid-cols-2 gap-3">
 					<form-number
-						v-model="challengeJSON.bonuses.score.life"
+						v-model="theChallenge.bonusScoreLife"
 						name="questionsBonuses1"
 						label="Bonus de vie"
-						@input="updateJSON"
 					/>
 					<form-number
-						v-model="challengeJSON.bonuses.score.time"
+						v-model="theChallenge.bonusScoreTime"
 						name="questionsBonuses2"
 						label="Bonus de temps"
-						@input="updateJSON"
 					/>
 					<form-number
-						v-model="challengeJSON.bonuses.level.life"
+						v-model="theChallenge.bonusLevelLife"
 						name="questionsBonuses3"
-						label="Bonus de vie"
-						@input="updateJSON"
+						label="Bonus de vie par niveau"
 					/>
 					<form-number
-						v-model="challengeJSON.bonuses.level.time"
+						v-model="theChallenge.bonusLevelTime"
 						name="questionsBonuses4"
-						label="Bonus de temps"
-						@input="updateJSON"
+						label="Bonus de temps par niveau"
 					/>
 				</div>
 
+				<h3 class="text-lg">
+					Générateur (script)
+				</h3>
 
-
-				<div @input="updateJSON">
-					<div class="grid grid-cols-3 gap-3">
-						<form
-							v-for="(level, index) in questions"
-							:key="`input-questions-${index}`"
-						>
-							<form-textarea
-								v-model="questions[index]"
-								:name="`questions${index}`"
-								:label="`questions du ${index===0?'1er':(index)+'ème'} niveau`"
-								:rows="20"
-								@input="updateJSON_questions"
-							/>
-						</form>
-					</div>
-
-					<div>
-						<button
-							class="btn-primary"
-							@click="questions.push('')"
-						>
-							Ajouter un niveau
-						</button>
-					</div>
-
-					<block-form
-						v-model="theBlock"
-						no-switch
-						@save="updateChallenge"
+				<div class="grid grid-cols-1 grid-cols-2 gap-3">
+					<form-textarea
+						v-model="challengeGenerator"
+						name="questionsGenerator"
+						label="générateur de questions"
+						:rows="15"
 					/>
+
+					<div class="mt-8">
+						<div
+							class="font-code"
+							v-text="questions"
+						/>
+						<div
+							class="text-red-600"
+							v-text="challengeGeneratorError"
+						/>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -184,7 +211,7 @@ export default {
 }
 </script>
 <script setup>
-import {computed, reactive, ref} from "vue"
+import {computed, reactive, ref, watch} from "vue"
 import {provide} from "vue"
 import MarkdownIt from "@/Components/Ui/MarkdownIt"
 import Keyboard from "@/Components/Ui/Keyboard"
@@ -194,127 +221,131 @@ import FormTextarea from "@/Components/Form/FormTextarea"
 import FormNumber from "@/Components/Form/FormNumber"
 import FormInput from "@/Components/Form/FormInput"
 import {PiMath} from "pimath/esm"
+import login from "@/Pages/Auth/Login"
+import FormSwitch from "@/Components/Form/FormSwitch"
+import {useCheckers} from "@/Composables/useCheckers"
 
 const props = defineProps({
 	"challenge": {type: Object, required: true},
 	"component": {type: String, require: true}
 })
 
-let theBlock = reactive(props.challenge.data.block),
-	editMode = ref(true),
-	challengeJSON = reactive(JSON.parse(props.challenge.data.block.json)),
-	questions = ref([""])
+let theChallenge = ref(props.challenge.data),
+	challengeGenerator = ref(props.challenge.data.generator),
+	challengeGeneratorError = ref(""),
+	editMode = ref(false),
+	questions = ref([]),
+	runChallengeGenerator = async function () {
+		let crtLevel = 0
+		try {
+			crtLevel = level.value
+		} catch {
+			crtLevel = 0
+		}
 
-// prepare the questions.
-if (challengeJSON.questions !== undefined) {
-	questions.value = [...challengeJSON.questions
-		.map(questionsPerLevel => questionsPerLevel
-			.map(x => `${x.question},${x.answer}`).join("\n")
-		)
-	]
-}
-// Prepate the configurations values.
-// TODO: this should be implemented in the model of the Challenge. This way, everything coming here is automatically correct.
-if(challengeJSON.nextLevelAfter===undefined){
-	challengeJSON.nextLevelAfter = 5
-}
-if(challengeJSON.checker === undefined){
-	challengeJSON.checker = ""
-}
-if(challengeJSON.keyboard === undefined){
-	challengeJSON.keyboard = "algebra"
-}
-if(challengeJSON.duration === undefined){
-	challengeJSON.duration = 5
-}
-if(challengeJSON.lives === undefined){
-	challengeJSON.lives = 3
-}
-if(challengeJSON.bonuses === undefined){
-	challengeJSON.bonuses = {
-		score: {
-			life: 0,
-			time: 0
-		},
-		level: {
-			life: 0,
-			time: 0
+		if (challengeGenerator.value !== "") {
+			questions.value = []
+			let F = new Function("PiMath", "level", challengeGenerator.value)
+
+			// TODO: Must make the generation and check for uniqueness.
+			try {
+				for (let i = 0; i < 10; i++) {
+					questions.value.push(F(PiMath, crtLevel))
+				}
+
+				challengeGeneratorError.value = ""
+			} catch (e) {
+				challengeGeneratorError.value = e.message
+			}
 		}
 	}
-}
 
-let updateChallenge = function () {
+watch(challengeGenerator, (newValue, prevValue) => {
+	runChallengeGenerator()
+})
 
-}
-
-// Update the JSON values.
-let updateJSON_questions = function () {
-		challengeJSON.questions = [
-			...questions.value
-				.filter(questionPerLevel => questionPerLevel.length > 1)
-				.map(questionPerLevel => questionPerLevel.split("\n").map(x => {
-					const data = x.split(",")
-					if (data.length !== 2) {
-						return {question: x, answer: null}
-					}
-
-					return {question: data[0], answer: data[1]}
-				}))
-		]
-
-		theBlock.json = JSON.stringify(challengeJSON)
-	},
-	updateJSON = function () {
-		theBlock.json = JSON.stringify(challengeJSON)
+if (challengeGenerator.value === "") {
+	// Edit mode as there is no generator actually.
+	editMode.value = true
+} else {
+	runChallengeGenerator()
+	if (questions.value.length === 0) {
+		editMode.value = true
 	}
+}
+
+function updateChallenge() {
+	axios.post(
+		route("challenges.update", [theChallenge.value.id]),
+		{
+			_method: "PATCH",
+			...theChallenge.value,
+			"generator": challengeGenerator.value
+		}
+	).then(res => {
+	}).catch(res => {
+		console.log(res.response.data.message)
+	})
+}
+
 
 // Now, it's the game part.
-let listOfQuestions = PiMath.Random.shuffle([...challengeJSON.questions[0]]),
+let listOfQuestions = [],
 	questionId = ref(0),
 	answer = ref(""),
 	level = ref(0),
-	death = ref(0)
+	death = ref(0),
+	checkerResult = ref({
+		result: null,
+		message: ""
+	})
 // UI reactive
 let ValidateButton = ref(null),
 	keyboardUI = ref(null)
 
-let question = computed(()=>{
-	return listOfQuestions[questionId.value].question
-})
-let checkAnswer = function (){
-	let isCorrect = false
-
-	// Checker
-	if(listOfQuestions[questionId.value].answer === answer.value){
-		isCorrect = true
+let question = computed(() => {
+	if(listOfQuestions.length===0 || listOfQuestions.length < questionId.value){
+		listOfQuestions = PiMath.Random.shuffle(questions.value)
 	}
 
+	return theChallenge.value.output
+		.replace("question", listOfQuestions[questionId.value].question)
+		.replace("answer", answer.value)
+})
+
+const checker = useCheckers(theChallenge.value.checker)
+
+let checkAnswer = function () {
+	checkerResult.value = checker.check(listOfQuestions[questionId.value].answer, answer.value)
+	
 	// Validating the result if it's correct
-	if(isCorrect){
+	if (checkerResult.value.result) {
 		// Go to next question
 		questionId.value++
 
 		// If we reached the next level trigger and there are more levels
-		if(questionId.value >= challengeJSON.nextLevelAfter && challengeJSON.questions.length<level.value-1){
+		if (questionId.value >= theChallenge.value.nextLevelAfter) {
 			// Next level
 			level.value++
 			// Restart the question id
 			questionId.value = 0
 			// Generate the new list of question
-			listOfQuestions = PiMath.Random.shuffle([...challengeJSON.questions[level.value]])
+			listOfQuestions = PiMath.Random.shuffle(questions.value)
 		}
 
 		// Check if there is enough questions.
 		let securityLoop = 100
-		while(questionId.value >= listOfQuestions.length){
-			listOfQuestions = [...listOfQuestions, PiMath.Random.shuffle([...challengeJSON.questions[level.value]])]
+		while (questionId.value >= listOfQuestions.length) {
+			listOfQuestions = [...listOfQuestions, PiMath.Random.shuffle(questions.value)]
 			securityLoop--
-			if(securityLoop===0){break}
+			if (securityLoop === 0) {
+				break
+			}
 		}
 
 		// Flash message to say it was correct.
 		keyboardUI.value.resetKeyStrokes()
-	}else{
+	} else {
 		ValidateButton.value.style.setProperty("animation-name", "v-shake-horizontal")
 		ValidateButton.value.style.setProperty("animation-duration", "500ms")
 

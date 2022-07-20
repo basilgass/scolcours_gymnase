@@ -63,7 +63,7 @@
 import {computed, onMounted, ref} from "vue"
 import {keyboardKeys, keyboards} from "@/keyboards"
 
-const emit = defineEmits(["update:modelValue", "validate", "next"])
+const emit = defineEmits(["update:modelValue", "validate", "next", "key"])
 const props = defineProps({
 	modelValue: String,
 	keyboard: {type: [Object, String], default: () => "simple"},
@@ -238,6 +238,7 @@ function ButtonKeyClick (key) {
 
 	let output = ""
 	emit("update:modelValue", keyStrokes.value.map(k => k.fn(output)).join(""))
+	emit("key", keyStrokes.value.map(k => k.fn(output)).join(""))
 }
 
 onMounted(() => {

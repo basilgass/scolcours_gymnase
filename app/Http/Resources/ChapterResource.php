@@ -6,7 +6,13 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class ChapterResource extends JsonResource
 {
-    /**
+	public function __construct($resource, $minimal=false)
+	{
+		parent::__construct($resource);
+		$this->minimal = $minimal;
+	}
+
+	/**
      * Transform the resource into an array.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -14,23 +20,29 @@ class ChapterResource extends JsonResource
      */
     public function toArray($request)
     {
-//        return parent::toArray($request);
-		if(count($this->blocks)===0){
-			$this->blocks()->create();
-			$this->blocks;
-		}
+		if($this->minimal){
+			return [
+				'id' => $this->id,
+				'slug' => $this->slug,
+				'title' => $this->title,
+			];
+		}else {
+			if(count($this->blocks)===0){
+				$this->blocks()->create();
+				$this->blocks;
+			}
 
-		return [
-			'id'=>$this->id,
-			'slug'=>$this->slug,
-			'title'=>$this->title,
-			'block'=>$this->blocks[0],
-			'active'=>$this->active,
-			'updated_at'=>$this->updated_at,
-			'posts'=>PostResource::collection($this->posts),
-			'formulas'=>FormulaResource::collection($this->formulas),
-//			'exercises'=>collect(ExerciseResource::collection($this->exercises))->sortBy('position')->values()->all(),
-			'challenges'=>ChallengeResource::collection($this->challenges)
-		];
+			return [
+				'id' => $this->id,
+				'slug' => $this->slug,
+				'title' => $this->title,
+				'block' => $this->blocks[0],
+				'active' => $this->active,
+				'updated_at' => $this->updated_at,
+				'posts' => PostResource::collection($this->posts),
+				'formulas' => FormulaResource::collection($this->formulas),
+				'challenges' => ChallengeResource::collection($this->challenges)
+			];
+		}
     }
 }

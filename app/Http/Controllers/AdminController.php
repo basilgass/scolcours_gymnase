@@ -159,16 +159,21 @@ class AdminController extends Controller
 						}
 
 						// Create or update the challenge
-						Challenge::updateOrCreate(
-							[
-								"chapter_id" => $chapter_id,
-								"slug" => $slug,
-								"active" => false
-							],
-							[
-								"title" => $title,
-							]
-						);
+						$challenge = Challenge::where('slug', $slug)->first();
+
+						if(!$challenge) {
+							$challenge = Challenge::create(
+								[
+									"chapter_id" => $chapter_id,
+									"title" => $title,
+									"slug" => $slug,
+									"active" => false
+								]
+							);
+							$challenge->blocks()->create();
+						}
+
+
 					}
 				}
 			}
