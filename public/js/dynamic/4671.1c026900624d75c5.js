@@ -1,2 +1,0 @@
-"use strict";(self.webpackChunk=self.webpackChunk||[]).push([[4671],{4671:(e,t,n)=>{n.r(t),n.d(t,{default:()=>s});var l=n(821),o={class:"text-xl font-mono mt-6 mb-2"};const r={},s=(0,n(3744).Z)(r,[["render",function(e,t){return(0,l.openBlock)(),(0,l.createElementBlock)("h2",o,[(0,l.renderSlot)(e.$slots,"default")])}]])}}]);
-//# sourceMappingURL=4671.1c026900624d75c5.js.map

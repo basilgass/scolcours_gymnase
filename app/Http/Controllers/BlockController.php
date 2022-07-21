@@ -141,7 +141,7 @@ class BlockController extends Controller
 		$validation = $request->validate([
 			'title'=>['nullable', 'max:255'],
 			'body' =>['required'],
-			'type' =>['string'],
+			'type' =>['string', 'nullable'],
 			'script'=>['string', 'nullable'],
 			'json'=>['string', 'nullable'],
 			'blur'=>['boolean'],

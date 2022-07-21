@@ -3,7 +3,7 @@
 		<!-- Edit mode the block -->
 		<dialog-modal
 			v-model="edit"
-			class="w-full mb-2 max-h-1/2"
+			class="w-full h-full"
 		>
 			<block-form
 				ref="bForm"

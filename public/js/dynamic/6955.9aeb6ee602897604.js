@@ -1,2 +1,0 @@
-"use strict";(self.webpackChunk=self.webpackChunk||[]).push([[6955],{6955:(e,t,l)=>{l.r(t),l.d(t,{default:()=>r});var a=l(821),n=["for"];const r={__name:"FormLabel",props:{label:{type:String,default:""},name:{type:String,required:!0}},setup:function(e){return function(t,l){var r;return(0,a.openBlock)(),(0,a.createElementBlock)("label",{for:e.name,class:"block mb-2 uppercase font-bold text-xs text-gray-700"},(0,a.toDisplayString)(""===e.label?e.name:null!==(r=e.label)&&void 0!==r?r:""),9,n)}}}}}]);
-//# sourceMappingURL=6955.9aeb6ee602897604.js.map
