@@ -1,6 +1,7 @@
 <template>
-	<div class="w-full">
+	<div class="w-full max-h-[50%]">
 		<!-- header -->
+		<!-- todo: make the header of block form "fixed" at the top of the box -->
 		<div class="flex gap-3 pb-3 items-baseline border-b">
 			<button
 				class="btn-success btn-xs"

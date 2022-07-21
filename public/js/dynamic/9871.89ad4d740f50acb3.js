@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunk=self.webpackChunk||[]).push([[9871],{9871:(e,t,n)=>{n.r(t),n.d(t,{default:()=>r});var l=n(821),c={class:"text-xl"};const r={__name:"challengeTitle",props:{title:String},setup:function(e){return function(t,n){return(0,l.openBlock)(),(0,l.createElementBlock)("h1",c,(0,l.toDisplayString)(e.title),1)}}}}}]);
+//# sourceMappingURL=9871.89ad4d740f50acb3.js.map
