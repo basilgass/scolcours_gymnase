@@ -16,7 +16,7 @@ class AdminController extends Controller
 	public function show()
 	{
 		$this->loadChapters();
-		$this->loadChallenges();
+//		$this->loadChallenges();
 		$this->loadTools();
 
 		return Inertia::render(
