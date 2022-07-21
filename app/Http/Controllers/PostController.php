@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\PostResource;
 use App\Models\Chapter;
-use App\Models\Illustration;
 use App\Models\Post;
 use Illuminate\Http\Request;
 
@@ -44,77 +43,6 @@ class PostController extends Controller
 		// Load the blocks, even if it's empty :)
 		$post->blocks;
 		return PostResource::make($post);
-	}
-
-	public function store_OLD(Chapter $chapter, Request $request)
-	{
-		$validation = $request->validate([
-			'chapter' => ['required', 'exists:App\Models\Chapter,id'],
-			'title' => ['max:255'],
-			'body' => ['required', 'min:5'],
-			'answer.body' => ['string', 'nullable'],
-			'answer.checker' => ['string', 'nullable'],
-			'walkthrough' => ['array'],
-			'walkthrough.*.step' => ['string', 'min:3'],
-			'walkthrough.*.resolution' => ['string', 'min:3'],
-			'illustrations' => ['array'],
-			'illustrations.*.title' => ['string', 'nullable'],
-			'illustrations.*.type' => ['string'],
-			'illustrations.*.code' => ['string'],
-			'illustrations.*.parameters' => ['string', 'nullable'],
-		]);
-
-
-		// Create the post model
-		$post = new Post();
-		$post->chapter_id = $validation["chapter"];
-		$post->title = $validation["title"];
-		$post->body = $validation["body"];
-		$post->save();
-
-		// Add the answer
-		if ($validation['answer']['body'] !== null) {
-			$post->answer()->create([
-				'body' => $validation['answer']['body'],
-				'checker' => $validation['answer']['checker']
-			]);
-		}
-
-		// Add the image
-		foreach ($validation["illustrations"] as $item) {
-			$illustration = new Illustration();
-			$illustration->title = ''; //$item['title'];
-			$illustration->type = $item['type'];
-			$illustration->code = $item['code'];
-			$illustration->parameters = ''; //$item['parameters'];
-			$illustration->save();
-			$post->illustrations()->attach($illustration);
-		}
-
-		// Add the walkthroughs
-		foreach ($validation["walkthrough"] as $i => $step) {
-			$walkthrough = new PostWalkthrough();
-			$walkthrough->order = $i;
-			$walkthrough->step = $step['step'];
-			$walkthrough->resolution = $step['resolution'];
-			$post->walkthrough()->save($walkthrough);
-			// Eventually, add an illustration
-//			if (count($step['illustrations'])) {
-//				$illustration = new Illustration();
-//				$illustration->title = $step['illustrations']['title'];
-//				$illustration->type = $step['illustrations']['type'];
-//				$illustration->code = $step['illustrations']['code'];
-//				$illustration->parameters = $step['illustrations']['parameters'];
-//
-//				$walkthrough->illustrations()->attach($illustration);
-//			}
-		}
-
-		$post->refresh();
-
-		// Return to the main root.
-		// Check the path as route
-		return redirect()->route('chapters.show', [$chapter->slug]);
 	}
 
 	public function show(Post $post)

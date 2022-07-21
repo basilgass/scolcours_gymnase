@@ -5,8 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Block;
 use App\Models\Chapter;
 use App\Models\Post;
-use App\Models\PostAnswer;
-use App\Models\PostExample;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 
@@ -84,10 +82,6 @@ class BlockController extends Controller
 			Chapter::get($request->target_id)?->append($block);
 		} elseif ($request->target === 'Post') {
 			Post::get($request->target_id)?->append($block);
-		} elseif ($request->target === 'PostExample') {
-			PostExample::get($request->target_id)?->append($block);
-		} elseif ($request->target === 'PostAnswer') {
-			PostAnswer::get($request->target_id)?->append($block);
 		}
 
 		return $block;
@@ -161,7 +155,7 @@ class BlockController extends Controller
 
 		$block->title = $validation['title'];
 		$block->body = $validation['body'];
-		$block->type = $validation['type'];
+		$block->type = $validation['type']??'';
 		$block->script = $validation['script'];
 		$block->json = $validation['json'];
 		$block->blur = $validation['blur'];
