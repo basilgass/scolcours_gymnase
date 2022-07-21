@@ -27,6 +27,7 @@
 		</Panel>
 
 		<Panel
+			v-if="$page.props.auth.user"
 			class="cursor-pointer"
 			@click="menuScrollTo('chapter-exercises')"
 		>
@@ -77,21 +78,21 @@ let props = defineProps({
 	chapter: {type: Object, required: true}
 })
 let chapterPosts = inject("chapterPosts"),
-	chapterToc = computed(()=>chapterPosts.value.filter(post=>!post.type)),
-	chapterExercises = computed(()=>chapterPosts.value.filter(post=>post.type==="exercise")),
-	chapterQuestions = computed(()=>{
-		const questions = chapterPosts.value.reduce((sum, post)=>sum + post.questions.length, 0),
+	chapterToc = computed(() => chapterPosts.value.filter(post => !post.type)),
+	chapterExercises = computed(() => chapterPosts.value.filter(post => post.type === "exercise")),
+	chapterQuestions = computed(() => {
+		const questions = chapterPosts.value.reduce((sum, post) => sum + post.questions.length, 0),
 			answered = chapterPosts.value
-				.reduce((sum, post)=>sum + post.questions
-					.filter(question=>question.userHasCorrectAnswer).length, 0)
+				.reduce((sum, post) => sum + post.questions
+					.filter(question => question.userHasCorrectAnswer).length, 0)
 
 		return {
 			questions,
 			answered
 		}
 	}),
-	chapterQuestionsRatio = computed(()=>{
-		return chapterQuestions.value.questions>0?Math.round(chapterQuestions.value.answered/chapterQuestions.value.questions*100):0
+	chapterQuestionsRatio = computed(() => {
+		return chapterQuestions.value.questions > 0 ? Math.round(chapterQuestions.value.answered / chapterQuestions.value.questions * 100) : 0
 	})
 
 function menuScrollTo(id) {

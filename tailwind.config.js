@@ -8,6 +8,7 @@ module.exports = {
 		"./storage/framework/views/*.php",
 		"./resources/views/**/*.blade.php",
 		"./resources/js/**/*.vue",
+		"./resources/css/**/*.css",
 		"./resources/js/*.js",
 	],
 	theme: {
@@ -45,7 +46,6 @@ module.exports = {
 		fontWeight: ["hover", "focus"],
 		borderRadius: ["responsive", "hover"]
 	},
-
 	plugins: [
 		// require('@tailwindcss/forms'),
 		require("@tailwindcss/typography"),

@@ -71,6 +71,7 @@
 			</div>
 
 			<!-- Visible blocks by default -->
+			<!-- TODO : merge the hidden and visible blocks -->
 			<div
 				v-if="visibleBlocks.length>0"
 				class="space-y-10"
@@ -121,14 +122,17 @@
 			v-if="postQuestions.length>0"
 			class="questions-wrapper mt-10"
 		>
-			<h3 class="text-lg bg-gray-300 -mx-4 px-4 py-3 mt-5 mb-3">
-				Questions
-			</h3>
+			<div class="flex items-baseline justify-between border-t -mx-4 px-4 py-3 mt-5 mb-3">
+				<h3 class="text-lg">
+					Questions
+				</h3>
+				<div>content right</div>
+			</div>
 
 			<question-show
 				v-for="question in postQuestions"
 				:key="`postQuestion-${question.id}`"
-				class="-mx-4 px-4 even:bg-gray-200"
+				class="-mx-4 px-4 even:bg-gray-100"
 				:question="question"
 				@destroy="questionDestroy"
 			/>
@@ -181,6 +185,13 @@
 							label="Vérification"
 							name="checker"
 						/>
+
+						<form-input
+							v-model="questionForm.keyboard"
+							label="clavier"
+							name="clavier"
+						/>
+
 						<button
 							class=" btn-primary"
 							@click="questionStore"
@@ -221,6 +232,7 @@ import DialogModal from "@/Components/Ui/DialogModal"
 import FormLabel from "@/Components/Form/FormLabel"
 import FormTextarea from "@/Components/Form/FormTextarea"
 import QuestionShow from "@/Components/Posts/QuestionShow"
+import FormInput from "@/Components/Form/FormInput"
 
 const emits = defineEmits(["delete","updateTitle"])
 const props = defineProps({
@@ -271,6 +283,7 @@ let questionForm = reactive({
 	body: "",
 	answer: "",
 	checker: "",
+	keyboard: "",
 	rows: 1
 })
 function questionStore(){

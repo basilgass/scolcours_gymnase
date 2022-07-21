@@ -14,7 +14,7 @@ class QuestionController extends Controller
 {
 	public function __construct()
 	{
-		$this->middleware('auth')->except(['index', 'show']);
+		$this->middleware('auth')->except(['index', 'show', 'storeAnswer']);
 	}
 
 	/**
@@ -29,7 +29,8 @@ class QuestionController extends Controller
 			[
 				'body'=>['string', 'min:2'],
 				'answer'=>['nullable'],
-				'checker'=>['nullable']
+				'checker'=>['nullable'],
+				'keyboard'=>['string']
 			]
 		);
 
@@ -44,7 +45,8 @@ class QuestionController extends Controller
 			$questions[] = $post->questions()->create([
 				'body'=>$body,
 				'answer'=>$answers[$key]??null,
-				'checker'=>$checkers[$key]??$validate['checker']
+				'checker'=>$checkers[$key]??$validate['checker'],
+				'keyboard'=>$validate['keyboard']?$validate['keyboard']:''
 			]);
 		}
 
@@ -64,7 +66,8 @@ class QuestionController extends Controller
 			[
 				'body'=>['string', 'min:2'],
 				'answer'=>['nullable'],
-				'checker'=>['nullable']
+				'checker'=>['nullable'],
+				'keyboard'=>['string']
 			]
 		);
 
@@ -96,7 +99,7 @@ class QuestionController extends Controller
 
 		// User must be logged in.
 		$user = Auth::user();
-		if(!$user){return null;}
+		if(!$user){return $validate;}
 
 		// The question must not already by answered.
 		if($question->users()

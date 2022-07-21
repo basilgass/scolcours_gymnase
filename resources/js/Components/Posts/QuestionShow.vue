@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div class="py-3">
 		<!-- Admin edition mode -->
 		<div v-if="$page.props.auth.can.admin && editMode">
 			<div
@@ -26,6 +26,13 @@
 						label="Vérification"
 						name="checker"
 					/>
+
+					<form-input
+						v-model="form.keyboard"
+						label="clavier"
+						name="clavier"
+					/>
+
 					<button
 						class=" btn-add"
 						@click="patchQuestion"
@@ -50,22 +57,17 @@
 				</button>
 			</div>
 		</div>
-		<div
-			class="grid grid-cols-1"
-			:class="{'md:grid-cols-3': $page.props.auth.user}"
-		>
+		<div class="grid grid-cols-1 md:grid-cols-3">
 			<!-- the body of question -->
 			<div
 				v-katex.auto="theQuestion.body"
-				:class="{'md:col-span-2' : $page.props.auth.user}"
+				class="md:col-span-2"
 				@dblclick="toggleBlockEdition"
 			/>
 
 			<!-- Answer form - only available if the user is connected -->
-			<div
-				v-if="$page.props.auth.user"
-				class="self-end"
-			>
+			<div class="self-end">
+				<!-- Si la réponse est déjà donnée, afficher la réponse -->
 				<div
 					v-if="isCorrect.result"
 					class="flex flex-col"
@@ -118,17 +120,24 @@
 						class="max-w-md"
 					>
 						<form-input
-
 							v-model="userAnswer"
 							:name="`question-${theQuestion.id}`"
 							label="réponse"
+							inline
+							btn-class="btn-primary"
 							@keyup.enter="validateAnswer"
+							@button-click="validateAnswer"
 						>
 							<div class="text-xs text-gray-600 flex justify-between mt-1">
 								<p
 									v-katex.auto="answerFormat"
 								/>
 							</div>
+
+							<!-- Bouton valider - design à modifier -->
+							<template #button>
+								OK
+							</template>
 						</form-input>
 					</div>
 
@@ -141,20 +150,20 @@
 						<div>{{ answerChecker ? 'juste' : 'faux' }}</div>
 					</div>
 
-					<!-- Bouton valider - design à modifier -->
-					<button
-						class="btn-primary md:col-start-3"
-						@click="validateAnswer"
-					>
-						OK
-					</button>
-
 					<!-- Afficher les réponses précédentes -->
 					<div
 						v-if="previousAnswers.length>0"
 						class="text-xs"
 					>
-						<h3>Réponses précédantes</h3>
+						<div class="flex justify-between">
+							<div>Réponses précédantes</div>
+							<Link
+								v-if="!$page.props.auth.user"
+								:href="route('login')"
+							>
+								( se connecter pour mémoriser )
+							</Link>
+						</div>
 						<ul class="flex flex-wrap gap-5">
 							<li
 								v-for="answer of previousAnswers"
@@ -168,8 +177,27 @@
 							</li>
 						</ul>
 					</div>
+
+					<button
+						class="w-full text-xs text-left hover:ml-3 transition-all"
+						@click="showKeyboard=!showKeyboard"
+					>
+						<i class="text-lg bi bi-keyboard mr-3" /> Afficher le clavier
+					</button>
 				</div>
 			</div>
+		</div>
+
+		<!-- Show keyboard -->
+		<div
+			v-show="showKeyboard"
+			class="flex justify-end"
+		>
+			<Keyboard
+				v-model="userAnswer"
+				class="min-w-[33.33%]"
+				:keyboard="theQuestion.keyboard"
+			/>
 		</div>
 	</div>
 </template>
@@ -178,6 +206,7 @@
 import FormInput from "@/Components/Form/FormInput"
 import {computed, inject, nextTick, ref} from "vue"
 import {useForm} from "@inertiajs/inertia-vue3"
+import Keyboard from "@/Components/Ui/Keyboard"
 
 let props = defineProps({
 	question: {type: Object, required: true}
@@ -187,7 +216,9 @@ let emits = defineEmits(["destroy", "resolved"])
 
 let userAnswer = ref(""),
 	theQuestion = ref(props.question),
-	showAnswer = ref(false)
+	showAnswer = ref(false),
+	showKeyboard = ref(false)
+
 let editMode = inject("editmode"),
 	showEditForm = ref(false),
 	questionBodyForm = ref(null)
@@ -245,16 +276,19 @@ let answerDisplay = computed(()=>{
 	})
 
 function validateAnswer() {
+	const data = {
+		answer: userAnswer.value,
+		result: answerChecker.value
+	}
+
 	axios.post(route("questions.validate", [theQuestion.value.id]),
-		{
-			answer: userAnswer.value,
-			result: answerChecker.value
-		}
+		data
 	).then(res=>{
 		theQuestion.value.userAnswers.push({...res.data, "when": "à l'instant"})
-
 		if(res.data.result){
 			emits("resolved", theQuestion)
+			// Make sure the keyboard is now hidden
+			showKeyboard.value = false
 		}
 	})
 }

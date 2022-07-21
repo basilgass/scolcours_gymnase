@@ -5,22 +5,37 @@
 			:label="label"
 			:name="name"
 		/>
-		<input
-			:id="name"
-			ref="inp"
-			:name="name"
-			class="p-2 w-full rounded focus:outline-none"
-			:value="modelValue"
-			:class="{'form-active': active, 'border border-gray-200': !active}"
-			v-bind="$attrs"
-			:autocomplete="autocomplete===true?'on':autocomplete"
-			:placeholder="inline?label:''"
-			@focus="$emit('inputFocus')"
-			@input="$emit('update:modelValue', $event.target.value)"
-			@keyup.esc.exact="doCancel"
-			@keyup.enter.exact="doValidate"
-			@keydown="handleCtrlKey"
-		>
+		<div class="flex items-stretch">
+			<input
+				:id="name"
+				ref="inp"
+				:name="name"
+				class="p-2 w-full focus:outline-none focus:bg-blue-50 focus:border focus:border-blue-500 transition;"
+				:value="modelValue"
+				:class="{
+					'form-active': active,
+					'border border-gray-200': !active,
+					'rounded': !$slots.button,
+					'rounded-l': $slots.button
+				}"
+				v-bind="$attrs"
+				:autocomplete="autocomplete===true?'on':autocomplete"
+				:placeholder="inline?label:''"
+				@focus="$emit('inputFocus')"
+				@input="$emit('update:modelValue', $event.target.value)"
+				@keyup.esc.exact="doCancel"
+				@keyup.enter.exact="doValidate"
+				@keydown="handleCtrlKey"
+			>
+			<button
+				v-if="$slots.button"
+				class="rounded-l-none"
+				:class="btnClass"
+				@click="emits('buttonClick')"
+			>
+				<slot name="button" />
+			</button>
+		</div>
 		<form-error
 			:name="name"
 			:message="error"
@@ -39,7 +54,7 @@ import FormLabel from "@/Components/Form/FormLabel"
 import FormError from "@/Components/Form/FormError"
 import {onMounted, ref} from "vue"
 
-const emits = defineEmits(["update:modelValue", "inputFocus", "enter", "cancel", "save"])
+const emits = defineEmits(["update:modelValue", "inputFocus", "enter", "cancel", "save", "buttonClick"])
 let props = defineProps({
 	inline: {type: Boolean, default: false},
 	modelValue: {type: String, default: null},
@@ -48,7 +63,8 @@ let props = defineProps({
 	label: {type: String, default: ""},
 	error: {type: String, default: ""},
 	focus: {type: Boolean, default: false},
-	autocomplete: {type: [String,Boolean], default: "off"}
+	autocomplete: {type: [String,Boolean], default: "off"},
+	btnClass:{type: String, default: "btn"}
 })
 
 let inp = ref(null),

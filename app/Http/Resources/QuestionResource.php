@@ -38,6 +38,7 @@ class QuestionResource extends JsonResource
 			"body" => $this->body,
 			"answer" => $this->answer,
 			"checker" => $this->checker,
+			"keyboard" => $this->keyboard??'algebra',
 			"updated_at" => $this->updated_at,
 			"userAnswers" => $userAnswers,
 			"userHasCorrectAnswer" => count($userAnswers)>0 && $userAnswers[count($userAnswers)-1]['result']

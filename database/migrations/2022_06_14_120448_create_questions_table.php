@@ -19,7 +19,8 @@ return new class extends Migration
 			$table->foreignIdFor(Post::class)->constrained()->cascadeOnDelete();
 			$table->text('body');
 			$table->string('answer')->nullable();
-			$table->text('checker')->nullable();
+			$table->string('checker')->nullable();
+			$table->string('keyboard')->nullable();
             $table->timestamps();
         });
     }

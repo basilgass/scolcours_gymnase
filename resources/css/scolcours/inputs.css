@@ -1,4 +1,4 @@
-@layer base {
+@layer components {
     /* - Input design par défaut */
     .input {
         @apply rounded-sm border-b outline-none focus:outline-none focus:border-b focus:border-blue-400 px-2 py-1;
