@@ -9,6 +9,7 @@ require("./bootstrap")
 
 const appName = window.document.getElementsByTagName("title")[0]?.innerText || "ScolCours"
 
+
 createInertiaApp({
 	title: (title) => `${title} - ${appName}`,
 	resolve: name => import(`./Pages/${name}`),
@@ -21,6 +22,7 @@ createInertiaApp({
 			.directive("katex", katexDirective)
 			.directive("visible", visibleDirective)
 			.mixin({methods: {route}})
+
 
 		// Custom function available as 	$fnName
 		vueApp.config.globalProperties.$log = console.log

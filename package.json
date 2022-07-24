@@ -40,7 +40,8 @@
 		"katex": "^0.16.0",
 		"markdown-it": "^13.0.1",
 		"markdown-it-texmath": "^1.0.0",
-		"pidraw": "^0.0.18",
-		"pimath": "^0.0.82"
+		"pidraw": "^0.0.20",
+		"pimath": "^0.0.85",
+		"vue-slider-component": "4.0.0-beta.7"
 	}
 }
