@@ -96,4 +96,12 @@ class FormulaController extends Controller
 		return Redirect::back();
     }
 
+	public function duplicate(Formula $formula)
+	{
+		$newFormula = $formula->replicate();
+		$newFormula->push();
+		$newFormula->blocks()->save($formula->blocks[0]->duplicate());
+
+		return FormulaResource::make($newFormula);
+	}
 }

@@ -30,6 +30,12 @@
 							éditer <i class="bi bi-pencil" />
 						</button>
 						<button
+							class="btn-success btn-xs px-2"
+							@click="duplicateFormula(item.id)"
+						>
+							dupliquer <i class="bi bi-clipboard-plus" />
+						</button>
+						<button
 							class="btn-delete btn-xs px-2"
 							@click="delFormula(item.id)"
 						>
@@ -121,6 +127,13 @@ function addFormula() {
 	}).finally(()=>{
 		bForm.value.focus(true)
 	})
+}
+
+function duplicateFormula(id){
+	axios.post(route("formulas.duplicate", [id]), )
+		.then(res=>{
+			formulas.value.push(res.data.data)
+		}).catch(res=>console.log("duplicate error", res.data))
 }
 
 function delFormula(id) {

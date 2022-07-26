@@ -54,6 +54,7 @@ Route::apiResource('chapters.formulas', FormulaController::class)
 		'chapters' => 'chapter:slug'
 	])
 	->shallow();
+Route::post('formulas/{formula}/duplicate', [FormulaController::class, 'duplicate'])->name('formulas.duplicate');
 
 Route::resource('chapters.posts', PostController::class)
 	->parameters([

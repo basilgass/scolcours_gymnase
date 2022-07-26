@@ -16,6 +16,7 @@ class FormulaResource extends JsonResource
 	{
 //        return parent::toArray($request);
 
+		$this->blocks;
 		return [
 			'id' => $this->id,
 			'chapter_id' => $this->chapter_id,
