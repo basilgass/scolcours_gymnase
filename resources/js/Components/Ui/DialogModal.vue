@@ -8,7 +8,7 @@
 			<div
 				ref="root"
 				v-bind="$attrs"
-				class="grid items-center bg-white rounded-lg px-5 py-3 max-w-[800px] w-[90%] max-h-[90vh] overflow-scroll"
+				class="grid items-center bg-white rounded-lg px-5 py-3 max-w-[1600px] w-[90%] max-h-[90vh] overflow-scroll"
 				@close="emits('update:modelValue', false)"
 			>
 				<div>
