@@ -207,7 +207,6 @@
 		<!-- Edit box -->
 		<dialog-modal
 			v-model="edit"
-			class="w-full md:w-[600px]"
 			@cancel="numberVisibleBlocks = props.post.numberOfVisibleBlocks"
 		>
 			<PostForm

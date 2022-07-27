@@ -102,7 +102,7 @@
 				<div
 					v-for="(illustration, index) of form.illustrations"
 					:key="`illustration-${index}`"
-					class="grid grid-cols-2 gap-3 space-y-3"
+					class="grid grid-cols-1 md:grid-cols-2 gap-3 space-y-3"
 				>
 					<div>
 						<form-illustration
@@ -111,7 +111,7 @@
 							:label="`illustration ${index}`"
 						/>
 					</div>
-					<div>
+					<div class="hidden md:block">
 						<illustration-show :illustration="form.illustrations[index]" />
 						<button
 							class="btn-delete btn-xs float-right"

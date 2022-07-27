@@ -1,27 +1,30 @@
 <template>
-	<div
-		v-if="props.modelValue"
-		class="fixed inset-0 bg-gray-800/60 grid place-items-center"
-		@click.self="doCancel"
-	>
+	<Teleport to="body">
 		<div
-			ref="root"
-			class="grid items-center bg-white rounded-lg px-5 py-3 max-w-[800px] w-[80%]"
-			@close="emits('update:modelValue', false)"
+			v-if="props.modelValue"
+			class="fixed inset-0 bg-gray-800/60 grid place-items-center z-50"
+			@click.self="doCancel"
 		>
-			<div>
-				<div v-if="$slots.header">
-					<slot name="header" />
-				</div>
+			<div
+				ref="root"
+				v-bind="$attrs"
+				class="grid items-center bg-white rounded-lg px-5 py-3 max-w-[800px] w-[90%] max-h-[90vh] overflow-scroll"
+				@close="emits('update:modelValue', false)"
+			>
 				<div>
-					<slot />
-				</div>
-				<div v-if="$slots.footer">
-					<slot name="footer" />
+					<div v-if="$slots.header">
+						<slot name="header" />
+					</div>
+					<div>
+						<slot />
+					</div>
+					<div v-if="$slots.footer">
+						<slot name="footer" />
+					</div>
 				</div>
 			</div>
 		</div>
-	</div>
+	</Teleport>
 </template>
 
 <script setup>

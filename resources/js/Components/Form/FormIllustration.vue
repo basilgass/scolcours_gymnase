@@ -4,9 +4,9 @@
 			:label="label"
 			:name="name"
 		/>
-		
-		<div class="grid grid-cols-3 gap-3">
-			<div class="grid grid-flow-row gap-3 content-start">
+
+		<div class="grid grid-cols-1 gap-3">
+			<div class="w-full grid grid-cols-3 gap-3">
 				<button
 					class="btn"
 					:class="modelValue.type==='image'?'bg-amber-200':'bg-white'"
@@ -29,6 +29,7 @@
 					Component
 				</button>
 			</div>
+
 			<div
 				v-if="modelValue.type==='image'"
 				class="col-span-2 border-dashed border-gray-200 border-2 rounded h-full w-full grid grid-cols-1 text-center items-center"

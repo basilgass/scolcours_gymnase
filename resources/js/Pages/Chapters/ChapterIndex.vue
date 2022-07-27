@@ -100,19 +100,27 @@ import FormButton from "@/Components/Form/FormButton"
 import IllustrationShow from "@/Components/Posts/IllustrationShow"
 
 let props = defineProps({
-	theme: { type: Object, default: () => {} },
-	chapters: {type: Object, default: () => {}}
+	theme: {
+		type: Object, default: () => {
+		}
+	},
+	chapters: {
+		type: Object, default: () => {
+		}
+	}
 })
 
 let chaptersFilter = ref(""),
 	root = ref(null)
 
-let chaptersFiltered = computed(()=>{
-	if(chaptersFilter.value===""){return props.chapters.data}
+let chaptersFiltered = computed(() => {
+	if (chaptersFilter.value === "") {
+		return props.chapters.data
+	}
 
 	let filter = chaptersFilter.value.toLowerCase()
 
-	return props.chapters.data.filter(chapter=>
+	return props.chapters.data.filter(chapter =>
 		chapter.slug.toLowerCase().includes(chaptersFilter.value) ||
 		chapter.title.toLowerCase().includes(chaptersFilter.value) ||
 		chapter.block.body?.toLowerCase().includes(chaptersFilter.value)
@@ -121,9 +129,10 @@ let chaptersFiltered = computed(()=>{
 
 let showDialog = ref(false)
 const newChapterForm = useForm({
-	"title":"exemple"
+	"title": "exemple"
 })
-function createNewChapter(){
+
+function createNewChapter() {
 	newChapterForm.post(route("themes.chapters.store", [props.theme.slug]))
 }
 </script>
