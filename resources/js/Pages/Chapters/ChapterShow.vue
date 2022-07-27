@@ -1,5 +1,23 @@
 <template>
 	<div class="chapter-wrapper">
+		<div>
+			<div>{{ $page.props.auth }}</div>
+
+			<div v-if="$page.props.auth.can.admin">
+				If if admin
+			</div>
+			<div v-show="$page.props.auth.can.admin">
+				Show if admin
+			</div>
+			<div v-if="$page.props.auth.user">
+				If if login
+			</div>
+			<div v-show="$page.props.auth.user">
+				Show if login
+			</div>
+			<div>Alway show</div>
+		</div>
+
 		<!-- Main title -->
 		<chapter-header
 			:theme="theme"
