@@ -125,35 +125,18 @@
 					</template>
 				</block-show>
 			</div>
-			<!-- hidden blocks by default -->
-			<div v-if="hiddenBlocks.length>0">
-				<div
-					v-if="!showHiddenBlocks"
-					class="text-center mt-6 mb-4 pt-5 border-t border-gray-200"
-				>
-					<button
-						class="btn text-gray-500 italic text-xs"
-						@click="showHiddenBlocks=true"
-					>
-						Développer la suite...
-					</button>
-				</div>
 
-				<collapse-transition>
-					<div
-						v-show="showHiddenBlocks"
-						class="space-y-10"
-					>
-						<block-show
-							v-for="block in hiddenBlocks"
-							:key="block.id"
-							has-padding
-							:switch="scriptSwitch"
-							:block="block"
-							@delete="deleteBlock(block.id)"
-						/>
-					</div>
-				</collapse-transition>
+			<!-- hidden blocks by default -->
+			<div
+				v-if="hiddenBlocks.length>0 && !showHiddenBlocks"
+				class="text-center mt-6 mb-4 pt-5 border-t border-gray-200"
+			>
+				<button
+					class="btn text-gray-500 italic text-xs"
+					@click="showHiddenBlocks=true"
+				>
+					Développer la suite...
+				</button>
 			</div>
 		</div>
 
@@ -241,6 +224,10 @@
 					</div>
 				</div>
 			</div>
+
+			<div v-if="$slots.admin">
+				<slot name="admin" />
+			</div>
 		</div>
 
 
@@ -259,11 +246,11 @@
 </template>
 
 <script setup>
-
+// TODO: save the blocks order in a post
+// TODO: should also be able to make the same for the posts in a chapter.
 import {computed, inject, onMounted, provide, reactive, ref} from "vue"
 import BlockShow from "@/Components/Posts/BlockShow"
 import FormNumber from "@/Components/Form/FormNumber"
-import CollapseTransition from "@/Components/CollapseTransition"
 import PostForm from "@/Components/Posts/PostForm"
 import {PiMath} from "pimath/esm"
 import UiSwitch from "@/Components/Ui/UiSwitch"
@@ -287,7 +274,7 @@ let blocks = ref(props.post.blocks),
 		let result = []
 
 		// Get the number of visible blocks.
-		if(numberVisibleBlocks.value===0){
+		if(numberVisibleBlocks.value===0 || showHiddenBlocks.value){
 			result = blocks.value
 		}else{
 			result = [...blocks.value].splice(0, numberVisibleBlocks.value)
@@ -316,6 +303,12 @@ let blocks = ref(props.post.blocks),
 	showHiddenBlocks = ref(false),
 	moveBlockUp = function (crtIndex, targetIndex){
 		blocks.value.splice(targetIndex, 0, blocks.value.splice(crtIndex,1)[0])
+
+		// Save the new position to the database
+		axios.post(route("posts.updateBlocksOrder", [props.post.id]), {
+			_method: "patch",
+			data: blocks.value.map((block, index)=>{return {"id": block.id, "order": index}})
+		})
 	}
 
 /** Questions reactives and methods */

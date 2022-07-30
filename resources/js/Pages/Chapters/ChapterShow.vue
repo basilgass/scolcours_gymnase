@@ -40,13 +40,53 @@
 				class="space-y-10"
 			>
 				<post-show
-					v-for="post in chapterPosts"
+					v-for="(post, index) in chapterPosts"
 					:id="`post-${post.id}`"
 					:key="post.id"
 					:post="post"
 					@delete="deletePost(post.id)"
 					@updateTitle="post.title=$event"
-				/>
+				>
+					<template #admin>
+						<div class="flex flex-col md:flex-row justify-between">
+							<div>Déplacer l'article</div>
+							<div class="flex gap-3">
+								<button
+									:disabled="index===0"
+									class="btn"
+									:class="index===0?'invisible':''"
+									@click="movePostUp(index, 0)"
+								>
+									En premier
+								</button>
+								<button
+									:disabled="index===0"
+									:class="index===0?'invisible':''"
+									class="btn"
+									@click="movePostUp(index, index-1)"
+								>
+									Monter
+								</button>
+								<button
+									:disabled="index===chapterPosts.length-1"
+									class="btn"
+									:class="index===chapterPosts.length-1?'invisible':''"
+									@click="movePostUp(index, index+1)"
+								>
+									Descendre
+								</button>
+								<button
+									:disabled="index===chapterPosts.length-1"
+									class="btn"
+									:class="index===chapterPosts.length-1?'invisible':''"
+									@click="movePostUp(index, chapterPosts.length)"
+								>
+									En dernier
+								</button>
+							</div>
+						</div>
+					</template>
+				</post-show>
 			</div>
 		</section>
 
@@ -125,5 +165,15 @@ function createPost() {
 function deletePost(id) {
 	// Remove the post from the list.
 	chapterPosts.value = chapterPosts.value.filter(post => post.id !== id)
+}
+
+function movePostUp(crtIndex, targetIndex) {
+	chapterPosts.value.splice(targetIndex, 0, chapterPosts.value.splice(crtIndex,1)[0])
+
+	// Save the new position to the database
+	axios.post(route("chapters.updatePostsOrder", [props.chapter.data.id]), {
+		_method: "patch",
+		data: chapterPosts.value.map((post, index)=>{return {"id": post.id, "order": index}})
+	})
 }
 </script>

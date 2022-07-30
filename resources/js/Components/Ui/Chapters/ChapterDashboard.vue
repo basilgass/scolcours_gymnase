@@ -67,7 +67,7 @@
 				</Link>
 			</div>
 
-			<div v-if="$page.props.auth.can.admin">
+			<div v-if="$page.props.auth.can.admin && editMode">
 				<button
 					class="btn-primary w-full"
 					@click="showCreateChallenge=true"
@@ -80,8 +80,8 @@
 				>
 					<form-input
 						v-model="newChallengeForm.title"
-						label="Nouveau chapitre"
-						name="newChapter"
+						label="Nouveau challenge"
+						name="newChallenge"
 						:focus="true"
 						@enter="createNewChallenge"
 						@cancel="showCreateChallenge=false"

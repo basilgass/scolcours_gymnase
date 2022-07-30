@@ -62,7 +62,8 @@ Route::resource('chapters.posts', PostController::class)
 	])
 	->shallow();
 Route::patch('posts/{post}/numberOfVisibleBlocks', [PostController::class, 'updateNumberOfVisibleBlocks'])->name('posts.updateNumberOfVisibleBlocks');
-
+Route::patch('posts/{post}/ordering', [PostController::class, 'updateBlocksOrder'])->name('posts.updateBlocksOrder');
+Route::patch('chapters/{chapter}/ordering', [ChaptersController::class, 'updatePostsOrder'])->name('chapters.updatePostsOrder');
 //Route::apiResource('chapters.exercises', ExerciseController::class)
 //	->parameters([
 //		"chapters" => "chapter:slug"

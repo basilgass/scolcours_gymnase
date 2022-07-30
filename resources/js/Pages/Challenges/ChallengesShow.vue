@@ -36,7 +36,7 @@
 		<!-- The keyboard and answer wrapper -->
 		<div>
 			<div
-				v-katex.display="answer"
+				v-katex.display="formattedAnswer"
 				class="min-h-[3em]"
 			/>
 
@@ -52,7 +52,8 @@
 			<Keyboard
 				ref="keyboardUI"
 				v-model="answer"
-				keyboard="algebra"
+				v-model:model-formatted="formattedAnswer"
+				:keyboard="theChallenge.keyboard"
 				class="max-w-xl mx-auto"
 				@key="checkerResult.message = ''"
 			/>
@@ -224,6 +225,7 @@ import {PiMath} from "pimath/esm"
 import login from "@/Pages/Auth/Login"
 import FormSwitch from "@/Components/Form/FormSwitch"
 import {useCheckers} from "@/Composables/useCheckers"
+import {keyboards} from "@/keyboards"
 
 const props = defineProps({
 	"challenge": {type: Object, required: true},
@@ -235,7 +237,7 @@ let theChallenge = ref(props.challenge.data),
 	challengeGeneratorError = ref(""),
 	editMode = ref(false),
 	questions = ref([]),
-	runChallengeGenerator = async function () {
+	runChallengeGenerator = function () {
 		let crtLevel = 0
 		try {
 			crtLevel = level.value
@@ -290,7 +292,7 @@ function updateChallenge() {
 
 
 // Now, it's the game part.
-let listOfQuestions = [],
+let listOfQuestions = ref([]),
 	questionId = ref(0),
 	answer = ref(""),
 	level = ref(0),
@@ -304,20 +306,21 @@ let ValidateButton = ref(null),
 	keyboardUI = ref(null)
 
 let question = computed(() => {
-	if(listOfQuestions.length===0 || listOfQuestions.length < questionId.value){
-		listOfQuestions = PiMath.Random.shuffle(questions.value)
+	if(listOfQuestions.value.length===0 || listOfQuestions.value.length < questionId.value){
+		listOfQuestions.value = PiMath.Random.shuffle(questions.value)
 	}
 
 	return theChallenge.value.output
-		.replace("question", listOfQuestions[questionId.value].question)
+		.replace("question", listOfQuestions.value[questionId.value].question)
 		.replace("answer", answer.value)
 })
 
-const checker = useCheckers(theChallenge.value.checker)
+let formattedAnswer = ref("")
 
+const checker = useCheckers(theChallenge.value.checker)
 let checkAnswer = function () {
-	checkerResult.value = checker.check(listOfQuestions[questionId.value].answer, answer.value)
-	
+	checkerResult.value = checker.check(listOfQuestions.value[questionId.value].answer, answer.value)
+
 	// Validating the result if it's correct
 	if (checkerResult.value.result) {
 		// Go to next question
@@ -325,18 +328,22 @@ let checkAnswer = function () {
 
 		// If we reached the next level trigger and there are more levels
 		if (questionId.value >= theChallenge.value.nextLevelAfter) {
+
 			// Next level
 			level.value++
+
 			// Restart the question id
 			questionId.value = 0
+
 			// Generate the new list of question
-			listOfQuestions = PiMath.Random.shuffle(questions.value)
+			runChallengeGenerator()
+			listOfQuestions.value = PiMath.Random.shuffle(questions.value)
 		}
 
 		// Check if there is enough questions.
 		let securityLoop = 100
-		while (questionId.value >= listOfQuestions.length) {
-			listOfQuestions = [...listOfQuestions, PiMath.Random.shuffle(questions.value)]
+		while (questionId.value >= listOfQuestions.value.length) {
+			listOfQuestions.value = [...listOfQuestions.value, PiMath.Random.shuffle(questions.value)]
 			securityLoop--
 			if (securityLoop === 0) {
 				break

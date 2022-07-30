@@ -10,8 +10,31 @@ export function useCheckers(checkerData) {
 			case "polynom":
 				return new PolynomChecker(expectedAnswer, answer, options)
 				break
+			default:
+				return new StringChecker(expectedAnswer, answer, options)
 			}
 		}
+	}
+}
+
+/**
+ *
+ * @param expectedAnswer
+ * @param answer
+ * @param options
+ * @constructor
+ */
+function StringChecker(expectedAnswer, answer, options) {
+	if(typeof answer !== "string"){
+		answer = answer.toString()
+	}
+	if(typeof expectedAnswer !== "string"){
+		expectedAnswer = expectedAnswer.toString()
+	}
+
+	return {
+		result: expectedAnswer===answer.toString(),
+		message: ""
 	}
 }
 

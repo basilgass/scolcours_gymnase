@@ -93,6 +93,12 @@ class PostController extends Controller
 		return $post;
 	}
 
+	public function updateBlocksOrder(Post $post, Request $request){
+		foreach($request['data'] as $row){
+			$post->blocks->find($row['id'])->update(['order'=>$row['order']]);
+		}
+	}
+
 	public function destroy($id)
 	{
 		Post::destroy($id);

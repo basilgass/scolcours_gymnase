@@ -64,7 +64,7 @@ class Chapter extends Model
 
 	public function posts(): \Illuminate\Database\Eloquent\Relations\HasMany
 	{
-		return $this->hasMany(Post::class);
+		return $this->hasMany(Post::class)->orderBy('position')->orderBy('id');;
 	}
 
 	public function formulas(): \Illuminate\Database\Eloquent\Relations\HasMany

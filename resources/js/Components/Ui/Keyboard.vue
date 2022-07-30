@@ -60,12 +60,13 @@
 </template>
 
 <script setup>
-import {computed, onMounted, ref} from "vue"
+import {computed, ref} from "vue"
 import {keyboardKeys, keyboards} from "@/keyboards"
 
-const emit = defineEmits(["update:modelValue", "validate", "next", "key"])
+const emit = defineEmits(["update:modelValue", "update:modelFormatted", "validate", "next", "key"])
 const props = defineProps({
 	modelValue: String,
+	modelFormatted: String,
 	keyboard: {type: [Object, String], default: () => "simple"},
 	validate: {type: Boolean, default: null},
 	reset: {type: Boolean, default: null},
@@ -219,6 +220,7 @@ let keyboardComputed = computed(() => {
 function resetKeyStrokes () {
 	keyStrokes.value = []
 	emit("update:modelValue", "")
+	emit("update:modelFormatted", "")
 }
 
 function backKeyStrokes () {
@@ -236,14 +238,11 @@ function ButtonKeyClick (key) {
 		keyStrokes.value.push(key)
 	}
 
-	let output = ""
-	emit("update:modelValue", keyStrokes.value.map(k => k.fn(output)).join(""))
-	emit("key", keyStrokes.value.map(k => k.fn(output)).join(""))
+	let output = "", result = keyStrokes.value.map(k => k.fn(output)).join("")
+	emit("update:modelValue", result)
+	emit("update:modelFormatted", keyboards[props.keyboard].format?keyboards[props.keyboard].format(result):result)
+	emit("key", result)
 }
-
-onMounted(() => {
-	katexAutoRender(root.value)
-})
 
 defineExpose({ resetKeyStrokes })
 </script>

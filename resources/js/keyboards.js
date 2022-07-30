@@ -26,6 +26,7 @@ export const keyboardKeys = {
 	"y": {type: "math", display: "y"},
 	"e": {type: "math", display: "\\text{e}"},
 	"ln": {type: "math", display: "\\ln"},
+	"pi": {type: "math", display: "\\pi"},
 	"(": {type: "math", display: "("},
 	")": {type: "math", display: ")"},
 	"=": {type: "math", display: "="},
@@ -80,5 +81,32 @@ export const keyboards = {
 			"7", "8", "9", "*", "x^5", "x^6",
 			"(", ")", "0", "/", ["^", 2]
 		]
+	},
+	"exact": {
+		grid: "grid-cols-5",
+		layout: [
+			"1", "2", "3", "+","-",
+			"4", "5", "6", "*","/",
+			"7", "8", "9", ["sqrt", 2],"",
+			"@reset", "@back", "0", "",""
+		],
+		format: function(value){
+			// No answer actually...
+			if(value===""){return ""}
+
+			let match = value.match(/([0-9]*)?([+-]?[0-9]*)?(sqrt([0-9]+))?(\/([0-9]+))?/)
+
+			// a +b sqrt (c) / d
+			const a = match[1], b = match[2], c=match[4], d=match[6]
+			let numerator = `${a===undefined?"":a}${b===undefined?"":b}`
+			if(match.input.includes("sqrt")){
+				numerator+=`\\sqrt{ ${c===undefined?"\\quad":c} }`
+			}
+			if(match.input.includes("/")){
+				return `\\frac{ ${numerator} }{ ${ d===undefined?"\\quad":d } }`
+			}else{
+				return numerator
+			}
+		}
 	}
 }

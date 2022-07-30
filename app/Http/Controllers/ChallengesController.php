@@ -67,8 +67,8 @@ class ChallengesController extends Controller
 			'generator' => ['string', 'min:2'],
 			'output' => ['string', 'min:2'],
 			'nextLevelAfter' => ['numeric', 'min:0'],
-			'checker' => [''],
-			'keyboard' => ['string'],
+			'checker' => ['nullable', 'string'],
+			'keyboard' => ['nullable', 'string'],
 			'duration' => ['numeric', 'min:0'],
 			'lives' => ['numeric', 'min:0'],
 			'bonusScoreLife' => ['numeric', 'min:0'],
@@ -77,6 +77,8 @@ class ChallengesController extends Controller
 			'bonusLevelTime' => ['numeric', 'min:0'],
 		]);
 
+		if($validation['checker']===null){$validation['checker']='string';}
+		if($validation['keyboard']===null){$validation['keyboard']='simple';}
 		$challenge->update($validation);
 
 		return $validation;

@@ -132,6 +132,14 @@ class ChaptersController extends Controller
 	}
 
 
+
+	public function updatePostsOrder(Chapter $chapter, Request $request)
+	{
+		foreach($request['data'] as $row){
+			$chapter->posts->find($row['id'])->update(['position'=>$row['order']]);
+		}
+	}
+
 	// TO BE REMOVED
 	public function download(string $filename)
 	{
