@@ -77,13 +77,53 @@
 				class="space-y-10"
 			>
 				<block-show
-					v-for="block in visibleBlocks"
+					v-for="(block, index) in visibleBlocks"
 					:key="block.id"
 					has-padding
 					:switch="scriptSwitch"
 					:block="block"
 					@delete="deleteBlock(block.id)"
-				/>
+				>
+					<template #admin>
+						<div class="w-full flex justify-between items-baseline flex-col md:flex-row">
+							<div>Déplacer ce block (id: {{ block.id }}, pos: {{ index }} )</div>
+							<div class="flex gap-3">
+								<button
+									:disabled="index===0"
+									class="btn"
+									:class="index===0?'invisible':''"
+									@click="moveBlockUp(index, 0)"
+								>
+									En premier
+								</button>
+								<button
+									:disabled="index===0"
+									:class="index===0?'invisible':''"
+									class="btn"
+									@click="moveBlockUp(index, index-1)"
+								>
+									Monter
+								</button>
+								<button
+									:disabled="index===blocks.length-1"
+									class="btn"
+									:class="index===blocks.length-1?'invisible':''"
+									@click="moveBlockUp(index, index+1)"
+								>
+									Descendre
+								</button>
+								<button
+									:disabled="index===blocks.length-1"
+									class="btn"
+									:class="index===blocks.length-1?'invisible':''"
+									@click="moveBlockUp(index, blocks.length)"
+								>
+									En dernier
+								</button>
+							</div>
+						</div>
+					</template>
+				</block-show>
 			</div>
 			<!-- hidden blocks by default -->
 			<div v-if="hiddenBlocks.length>0">
@@ -273,8 +313,10 @@ let blocks = ref(props.post.blocks),
 			return [...blocks.value.filter(block=>props.post.switch===null || block.switch===null || Boolean(block.switch)===scriptSwitch.value)].splice(numberVisibleBlocks.value)
 		}
 	}),
-	showHiddenBlocks = ref(false)
-
+	showHiddenBlocks = ref(false),
+	moveBlockUp = function (crtIndex, targetIndex){
+		blocks.value.splice(targetIndex, 0, blocks.value.splice(crtIndex,1)[0])
+	}
 
 /** Questions reactives and methods */
 let postQuestions = ref(props.post.questions)

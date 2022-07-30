@@ -83,7 +83,11 @@ Route::get('chapters/{chapter:slug}/components', [ChaptersController::class, 'fe
 // Challenges
 Route::get('q/{challenge:slug}', [ChallengesController::class, 'quick'])->name("challenges.quick");
 Route::get('{theme:slug}/{chapter:slug}/challenges/{challenge:slug}', [ChallengesController::class, 'show'])->name('chapters.challenge');
-Route::apiResource('challenges', ChallengesController::class);
+Route::apiResource('chapters.challenges', ChallengesController::class)
+	->parameters([
+		"chapters" => "chapter:slug"
+	])
+	->shallow();
 
 //Route::get('/challenge', [ChallengesController::class, 'index']);
 //Route::get('/challenge/{challenge:slug}', [ChallengesController::class, 'show']);

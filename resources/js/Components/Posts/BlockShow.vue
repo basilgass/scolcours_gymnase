@@ -73,47 +73,56 @@
 		<!-- Admin buttons -->
 		<div
 			v-if="$page.props.auth.can.admin && editMode"
-			class="admin-wrapper mt-3 mb-5"
+			class="admin-wrapper mt-3 mb-5 flex-col"
 		>
-			<div class="space-x-3">
-				<button
-					class="btn-edit btn-xs"
-					@click="edit=true"
-				>
-					éditer <i class="bi bi-pencil" />
-				</button>
+			<div class="w-full flex flex-row justify-between">
+				<div class="space-x-3">
+					<button
+						class="btn-edit btn-xs"
+						@click="edit=true"
+					>
+						éditer <i class="bi bi-pencil" />
+					</button>
 
-				<button
-					v-if="!hideDelete"
-					class="btn-delete btn-xs"
-					@click="destroyBlock"
-				>
-					supprimer <i class="bi bi-trash" />
-				</button>
+					<button
+						v-if="!hideDelete"
+						class="btn-delete btn-xs"
+						@click="destroyBlock"
+					>
+						supprimer <i class="bi bi-trash" />
+					</button>
+				</div>
+
+				<div class="space-x-3">
+					<button
+						v-if="!hideBlur"
+						class="btn btn-xs px-5"
+						@click="blurBlock"
+					>
+						<i
+							class="bi bi-eye"
+							:class="dbBlur?'blur-sm':''"
+						/>
+					</button>
+					<button
+						v-if="props.switch"
+						class="btn-xs px-5"
+						:class="{
+							'text-white bg-orange-700': crtBlock.switch===0,
+							'text-white bg-blue-700': crtBlock.switch===1
+						}"
+						@click="switchBlock"
+					>
+						<i class="bi bi-toggle-off" />
+					</button>
+				</div>
 			</div>
 
-			<div class="space-x-3">
-				<button
-					v-if="!hideBlur"
-					class="btn btn-xs px-5"
-					@click="blurBlock"
-				>
-					<i
-						class="bi bi-eye"
-						:class="dbBlur?'blur-sm':''"
-					/>
-				</button>
-				<button
-					v-if="props.switch"
-					class="btn-xs px-5"
-					:class="{
-						'text-white bg-orange-700': crtBlock.switch===0,
-						'text-white bg-blue-700': crtBlock.switch===1
-					}"
-					@click="switchBlock"
-				>
-					<i class="bi bi-toggle-off" />
-				</button>
+			<div
+				v-if="$slots.admin"
+				class="w-full"
+			>
+				<slot name="admin" />
 			</div>
 		</div>
 	</article>
@@ -160,8 +169,6 @@ watch(postScriptResult, ()=>{
 	runBlockScript()
 })
 onMounted(() => runBlockScript())
-
-
 
 let edit = ref(props.block.isNew === true),
 	crtBlock = ref(props.block),

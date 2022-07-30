@@ -50,7 +50,7 @@
 			</div>
 		</Panel>
 
-		<Panel v-if="props.chapter.challenges.length>0">
+		<Panel v-if="props.chapter.challenges.length>0 || editMode">
 			<template #title>
 				Challenges
 			</template>
@@ -66,17 +66,57 @@
 					{{ challenge.title }}
 				</Link>
 			</div>
+
+			<div v-if="$page.props.auth.can.admin">
+				<button
+					class="btn-primary w-full"
+					@click="showCreateChallenge=true"
+				>
+					Nouveau challenge
+				</button>
+
+				<dialog-modal
+					v-model="showCreateChallenge"
+				>
+					<form-input
+						v-model="newChallengeForm.title"
+						label="Nouveau chapitre"
+						name="newChapter"
+						:focus="true"
+						@enter="createNewChallenge"
+						@cancel="showCreateChallenge=false"
+					/>
+					<form-button @click="createNewChallenge">
+						Créer un nouveau challenge
+					</form-button>
+				</dialog-modal>
+			</div>
 		</Panel>
 	</section>
 </template>
 
 <script setup>
-import {computed, inject} from "vue"
+import {computed, inject, ref} from "vue"
 import Panel from "@/Components/Ui/Panel"
+import DialogModal from "@/Components/Ui/DialogModal"
+import FormInput from "@/Components/Form/FormInput"
+import FormButton from "@/Components/Form/FormButton"
+import {useForm} from "@inertiajs/inertia-vue3"
 
 let props = defineProps({
 	chapter: {type: Object, required: true}
 })
+
+let editMode = inject("editmode"),
+	showCreateChallenge = ref(false),
+	newChallengeForm = useForm({
+		"title": "challenge"
+	})
+
+function createNewChallenge() {
+	newChallengeForm.post(route("chapters.challenges.store", [props.chapter.slug]))
+}
+
 let chapterPosts = inject("chapterPosts"),
 	chapterToc = computed(() => chapterPosts.value.filter(post => !post.type)),
 	chapterExercises = computed(() => chapterPosts.value.filter(post => post.type === "exercise")),
@@ -103,5 +143,9 @@ function menuScrollTo(id) {
 		behavior: "smooth",
 		inline: "start"
 	})
+}
+
+function newChallenge(){
+	alert("nouveau challenge")
 }
 </script>

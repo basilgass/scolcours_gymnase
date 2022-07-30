@@ -26,35 +26,6 @@ class ChallengesController extends Controller
 		]);
 	}
 
-	public function quick(Challenge $challenge)
-	{
-		// Get the theme
-		$theme = Theme::where('slug', '=', $challenge->chapter->theme->slug)->first();
-
-		if (!$theme->exists()) {
-			return redirect()->back();
-		}
-
-		return redirect()->route('chapters.challenge', [$theme, $challenge->chapter, $challenge]);
-	}
-
-	public function start(Challenge $challenge)
-	{
-		// Create new session with the user and redirect back.
-		if (Auth::User()?->admin) {
-			$challenge->sessions()->create(
-				[
-					"token" => Str::random(4),
-					"open" => true,
-					"user_id" => Auth::User()->id,
-					"duration" => 5000
-				]
-			);
-
-		}
-		$this->index();
-	}
-
 	public function index()
 	{
 		// TODO: get all challenges with the "opened" sessions only...
@@ -62,6 +33,27 @@ class ChallengesController extends Controller
 		return Inertia::render('ChallengesIndex.vue', [
 			'challenges' => $challenges
 		]);
+	}
+
+	public function store(Chapter $chapter, Request $request)
+	{
+		$validation = $request->validate([
+			'title'=>['string','min:5']
+		]);
+
+		$slug = Str::slug($request['title']);
+		if(Challenge::where('slug', $slug)->first()){
+			return redirect()->back();
+		}
+
+		$challenge = $chapter->challenges()->create([
+			'title'=>$validation['title'],
+			'slug'=>$slug
+		]);
+
+		$challenge->blocks()->create();
+
+		return \redirect()->route('challenges.quick', [$challenge->slug]);
 	}
 
 	public function update(Request $request, Challenge $challenge)
@@ -95,4 +87,36 @@ class ChallengesController extends Controller
 		Challenge::destroy($id);
 		return Redirect::back();
 	}
+
+
+	public function quick(Challenge $challenge)
+	{
+		// Get the theme
+		$theme = Theme::where('slug', '=', $challenge->chapter->theme->slug)->first();
+
+		if (!$theme->exists()) {
+			return redirect()->back();
+		}
+
+		return redirect()->route('chapters.challenge', [$theme, $challenge->chapter, $challenge]);
+	}
+
+	public function start(Challenge $challenge)
+	{
+		// Create new session with the user and redirect back.
+		if (Auth::User()?->admin) {
+			$challenge->sessions()->create(
+				[
+					"token" => Str::random(4),
+					"open" => true,
+					"user_id" => Auth::User()->id,
+					"duration" => 5000
+				]
+			);
+
+		}
+		$this->index();
+	}
+
+
 }

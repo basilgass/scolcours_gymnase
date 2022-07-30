@@ -58,7 +58,7 @@ class Post extends Model
 
 	public function blocks()
 	{
-		return $this->morphMany(Block::class, 'blockable');
+		return $this->morphMany(Block::class, 'blockable')->orderBy('order')->orderBy('id');
 	}
 
 	public function questions()
