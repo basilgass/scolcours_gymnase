@@ -196,7 +196,7 @@ let editedBody = computed(() => {
 	// Edit the output
 	let output = crtBlock.value.body
 	for (let key in scriptsResult.value) {
-		output = output.replaceAll("@" + key, scriptsResult.value[key])
+		output = output.replaceAll("$" + key, scriptsResult.value[key])
 	}
 	return output
 

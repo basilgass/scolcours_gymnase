@@ -16,18 +16,8 @@
 			</button>
 		</div>
 
-		<div v-if="editChapter===false">
-			<illustration-show
-				v-if="chapter.block.illustrations.length>0"
-				:illustration="chapter.block.illustrations[0]"
-			/>
-			<markdown-it
-				:text="chapter.block.body"
-				class="mb-5"
-			/>
-		</div>
 		<div
-			v-else
+			v-if="editChapter"
 			class="border border-gray-400 rounded-xl px-4 py-2 bg-white"
 		>
 			<chapter-edit
@@ -42,8 +32,6 @@
 import {inject, ref} from "vue"
 import ChapterEdit from "@/Components/Ui/Chapters/ChapterEdit"
 import ArticleTitle from "@/Components/Ui/ArticleTitle"
-import MarkdownIt from "@/Components/Ui/MarkdownIt"
-import IllustrationShow from "@/Components/Posts/IllustrationShow"
 
 let props = defineProps({
 	theme: {type: Object, required: true},
