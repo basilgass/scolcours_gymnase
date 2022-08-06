@@ -47,13 +47,16 @@
 					@delete="deletePost(post.id)"
 					@updateTitle="post.title=$event"
 				>
-					<template #admin>
-						<div class="flex flex-col md:flex-row justify-between">
+					<template
+						v-if="chapterPosts.length>1"
+						#admin
+					>
+						<div class="w-full flex justify-between items-baseline flex-col md:flex-row">
 							<div>Déplacer l'article</div>
 							<div class="flex gap-3">
 								<button
 									:disabled="index===0"
-									class="btn"
+									class="btn-update btn-xs"
 									:class="index===0?'invisible':''"
 									@click="movePostUp(index, 0)"
 								>
@@ -62,14 +65,14 @@
 								<button
 									:disabled="index===0"
 									:class="index===0?'invisible':''"
-									class="btn"
+									class="btn-update btn-xs"
 									@click="movePostUp(index, index-1)"
 								>
 									Monter
 								</button>
 								<button
 									:disabled="index===chapterPosts.length-1"
-									class="btn"
+									class="btn-update btn-xs"
 									:class="index===chapterPosts.length-1?'invisible':''"
 									@click="movePostUp(index, index+1)"
 								>
@@ -77,7 +80,7 @@
 								</button>
 								<button
 									:disabled="index===chapterPosts.length-1"
-									class="btn"
+									class="btn-update btn-xs"
 									:class="index===chapterPosts.length-1?'invisible':''"
 									@click="movePostUp(index, chapterPosts.length)"
 								>

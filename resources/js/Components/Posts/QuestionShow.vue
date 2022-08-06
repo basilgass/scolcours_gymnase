@@ -193,8 +193,10 @@
 			v-show="showKeyboard"
 			class="flex justify-end"
 		>
+			<div v-katex="userAnswerFormatted" />
 			<Keyboard
 				v-model="userAnswer"
+				v-model:model-formatted="userAnswerFormatted"
 				class="min-w-[33.33%]"
 				:keyboard="theQuestion.keyboard"
 			/>
@@ -215,6 +217,7 @@ let props = defineProps({
 let emits = defineEmits(["destroy", "resolved"])
 
 let userAnswer = ref(""),
+	userAnswerFormatted = ref(""),
 	theQuestion = ref(props.question),
 	showAnswer = ref(false),
 	showKeyboard = ref(false)

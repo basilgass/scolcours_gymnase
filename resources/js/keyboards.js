@@ -94,19 +94,26 @@ export const keyboards = {
 			// No answer actually...
 			if(value===""){return ""}
 
-			let match = value.match(/([0-9]*)?([+-]?[0-9]*)?(sqrt([0-9]+))?(\/([0-9]+))?/)
+			function formatFactor(value){
+				let root = value.split("sqrt")
+				if(root.length>=2){
+					if(root[0]===""){
+						return `\\sqrt{ ${root[1]} }`
+					}else {
+						return `${root[0]} \\sqrt{ ${root[1]} }`
+					}
+				}else{
+					return root[0]
+				}
+			}
 
-			// a +b sqrt (c) / d
-			const a = match[1], b = match[2], c=match[4], d=match[6]
-			let numerator = `${a===undefined?"":a}${b===undefined?"":b}`
-			if(match.input.includes("sqrt")){
-				numerator+=`\\sqrt{ ${c===undefined?"\\quad":c} }`
-			}
-			if(match.input.includes("/")){
-				return `\\frac{ ${numerator} }{ ${ d===undefined?"\\quad":d } }`
-			}else{
-				return numerator
-			}
+			let fraction = value.split("/"),
+				numerator  = formatFactor(fraction.shift()),
+				denominator = fraction.length>=1?formatFactor(fraction.join("/")):""
+
+			return fraction.length===0?
+				numerator:
+				`\\frac{ ${ numerator } }{ ${ denominator } }`
 		}
 	}
 }

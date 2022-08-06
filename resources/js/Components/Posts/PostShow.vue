@@ -84,13 +84,16 @@
 					:block="block"
 					@delete="deleteBlock(block.id)"
 				>
-					<template #admin>
+					<template
+						v-if="visibleBlocks.length>1"
+						#admin
+					>
 						<div class="w-full flex justify-between items-baseline flex-col md:flex-row">
-							<div>Déplacer ce block (id: {{ block.id }}, pos: {{ index }} )</div>
+							<div>Déplacer ce bloc (id: {{ block.id }}, pos: {{ index }} )</div>
 							<div class="flex gap-3">
 								<button
 									:disabled="index===0"
-									class="btn"
+									class="btn-update btn-xs "
 									:class="index===0?'invisible':''"
 									@click="moveBlockUp(index, 0)"
 								>
@@ -99,14 +102,14 @@
 								<button
 									:disabled="index===0"
 									:class="index===0?'invisible':''"
-									class="btn"
+									class="btn-update btn-xs"
 									@click="moveBlockUp(index, index-1)"
 								>
 									Monter
 								</button>
 								<button
 									:disabled="index===blocks.length-1"
-									class="btn"
+									class="btn-update btn-xs"
 									:class="index===blocks.length-1?'invisible':''"
 									@click="moveBlockUp(index, index+1)"
 								>
@@ -114,7 +117,7 @@
 								</button>
 								<button
 									:disabled="index===blocks.length-1"
-									class="btn"
+									class="btn-update btn-xs"
 									:class="index===blocks.length-1?'invisible':''"
 									@click="moveBlockUp(index, blocks.length)"
 								>
@@ -201,14 +204,13 @@
 						label="réponse"
 						name="answer"
 					/>
-					<div class="flex items-end gap-4">
-						<form-textarea
-							v-model="questionForm.checker"
-							:rows="questionForm.rows"
-							label="Vérification"
-							name="checker"
-						/>
-
+					<form-textarea
+						v-model="questionForm.checker"
+						:rows="questionForm.rows"
+						label="Vérification"
+						name="checker"
+					/>
+					<div class="flex items-end gap-4 justify-self-end md:col-span-4">
 						<form-input
 							v-model="questionForm.keyboard"
 							label="clavier"
@@ -225,7 +227,10 @@
 				</div>
 			</div>
 
-			<div v-if="$slots.admin">
+			<div
+				v-if="$slots.admin"
+				class="w-full"
+			>
 				<slot name="admin" />
 			</div>
 		</div>

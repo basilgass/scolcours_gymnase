@@ -110,12 +110,18 @@ let PiGraph, PiParser, PiAxis
 
 let	drawCode = computed(()=>{
 	if(sliders.value.length>0){
+		// Remove the lines starting with $ (dollar sign)
 		let code = props.draw.code.split("\n").filter(row=>row[0]!=="$")
 
+		// Modify the value of all variables ($a, $b, ...)
 		return code
 			.map(row=>{
 				sliders.value.forEach(slider => {
-					row = row.replaceAll(slider.key, `(${slider.value})`)
+					if(row.split("=")[0].includes("(x)")) {
+						row = row.replaceAll(slider.key, `(${slider.value})`)
+					}else{
+						row = row.replaceAll(slider.key, slider.value)
+					}
 				})
 				return row
 			})
@@ -160,9 +166,12 @@ onMounted(() => {
 })
 
 watch(drawCode, (code, before)=>{
+	// Watch changes from "inside"
 	PiParser.update(drawCode.value)
 })
+
 watch(()=>props.draw.code, (code, before) => {
+	// Watch changes from "outside"
 	getSliders()
 	try {
 		PiParser.update(drawCode.value)
