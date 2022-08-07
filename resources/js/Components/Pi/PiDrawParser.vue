@@ -67,37 +67,71 @@ let getSliders = function(){
 				continue
 			}
 
+			// $a=a,b,...,c/interval=default
+			// interval not giver => interval = b-a
+			// b-a: marks separation... or maybe all given manually !
+			// default value given at start.
 
 			if(rowItem!=="") {
-				let valuesData = rowItem.split("/"),
-					values = valuesData[0].split(","),
-					divider = 1
+				let marks = rowItem.match(/^([0-9.,]+)/),
+					a,b,c,marksInterval,
+					interval = rowItem.match(/\/([0-9.]+)/),
+					dft = rowItem.match(/=([0-9.]+)$/)
 
-				if(valuesData.length===2)divider = +valuesData[1]
+				if(marks){
+					marks = marks[1].split(",")
+					if(marks.includes("...")){
+						if(marks.length===3){
+							// a,...,c
+							a = +marks[0]
+							marksInterval = 1
+							c = +marks[2]
 
-				let offset = 1,
-					start = +values[0],
-					end = +values[values.length-1]
+							if(c<=a){continue}
 
-				if(values.length===4){
-					offset = +values[1]-values[0]
+							marks = []
+							for(let i=a; i<=c; i++){
+								marks.push(i)
+							}
+						}else if(marks.length===4){
+							a = +marks[0]
+							b = +marks[1]
+							marksInterval = b-a
+							c = +marks[3]
+
+							if(marksInterval<=0.01){continue}
+							marks = []
+							for(let i=a; i<=c; i+=marksInterval){
+								marks.push(PiMath.Numeric.numberCorrection(i))
+							}
+						}
+					}else{
+						marks = marks.map(x=>+x)
+					}
+				}else{
+					continue
 				}
 
-				if(offset<0.1){offset = 1}
-				let marksValues = [+start]
-				for(let i = start; i<end; i=i+offset){
-					marksValues.push(PiMath.Numeric.numberCorrection(i))
+				if(interval){
+					interval = +interval[1]
+				}else{
+					interval = PiMath.Numeric.numberCorrection(marks[1]-marks[0])
 				}
-				marksValues.push(end)
+
+				if(dft){
+					dft = +dft[1]
+				}else{
+					dft = marks[0]
+				}
 
 				sliders.value.push({
 					key: rowKey,
-					value: start,
+					value: dft,
 					options: {
-						min: start,
-						max: end,
-						interval: offset/divider,
-						marks: marksValues,
+						min: marks[0],
+						max: marks[marks.length-1],
+						interval: interval,
+						marks: marks,
 						tooltip: "none"
 					}
 				})
@@ -167,7 +201,11 @@ onMounted(() => {
 
 watch(drawCode, (code, before)=>{
 	// Watch changes from "inside"
-	PiParser.update(drawCode.value)
+	try {
+		PiParser.update(drawCode.value)
+	}catch{
+		console.log("Cannot parse", drawCode.value)
+	}
 })
 
 watch(()=>props.draw.code, (code, before) => {

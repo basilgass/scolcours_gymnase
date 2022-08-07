@@ -29,8 +29,8 @@ class QuestionController extends Controller
 			[
 				'body'=>['string', 'min:2'],
 				'answer'=>['nullable'],
-				'checker'=>['nullable'],
-				'keyboard'=>['string']
+				'checker'=>['string', 'nullable'],
+				'keyboard'=>['string', 'nullable']
 			]
 		);
 
@@ -46,7 +46,7 @@ class QuestionController extends Controller
 				'body'=>$body,
 				'answer'=>$answers[$key]??null,
 				'checker'=>$checkers[$key]??$validate['checker'],
-				'keyboard'=>$validate['keyboard']?$validate['keyboard']:''
+				'keyboard'=>$validate['keyboard']??''
 			]);
 		}
 
@@ -66,14 +66,16 @@ class QuestionController extends Controller
 			[
 				'body'=>['string', 'min:2'],
 				'answer'=>['nullable'],
-				'checker'=>['nullable'],
-				'keyboard'=>['string']
+				'checker'=>['string', 'nullable'],
+				'keyboard'=>['string', 'nullable']
 			]
 		);
+		
+		$validate['keyboard'] = $validate['keyboard']??'';
 
 		$question->update($validate);
 
-		return $question;
+		return QuestionResource::make($question);
 	}
 
 	/**

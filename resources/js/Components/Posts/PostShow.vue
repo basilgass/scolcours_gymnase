@@ -336,7 +336,7 @@ function questionStore(){
 		// questions.value.push(res.data)
 	}).catch(res=>{
 		// Show the error.
-		console.log(res.message)
+		console.log(res)
 	})
 }
 function questionDestroy(id){
