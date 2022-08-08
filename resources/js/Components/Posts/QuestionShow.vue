@@ -83,8 +83,7 @@
 					class="md:col-span-2"
 					@dblclick="toggleBlockEdition"
 				/>
-			</div>
-			<div class="self-end">
+
 				<!-- Si la réponse est déjà donnée, afficher la réponse -->
 				<div
 					v-if="isCorrect.result"
@@ -111,18 +110,7 @@
 						<p>Vous avez déjà répondu à cette question {{ isCorrect.when }}</p>
 					</div>
 				</div>
-
-				<!-- Afficher les formulaires pour répondre à la question -->
 				<div v-else>
-					<!-- Admin helper -->
-					<div
-						v-if="$page.props.auth.can.admin"
-						class="text-xs text-gray-600 flex justify-between mt-1"
-					>
-						<div>Résultat attendu: {{ props.question.answer }}</div>
-						<div>{{ answerChecker ? 'juste' : 'faux' }}</div>
-					</div>
-
 					<!-- Afficher les réponses précédentes -->
 					<div
 						v-if="previousAnswers.length>0"
@@ -155,59 +143,72 @@
 							</li>
 						</ul>
 					</div>
-				</div>
-			</div>
-		</div>
 
-		<div v-show="!isCorrect.result">
-			<!-- QCM -->
-			<div
-				v-if="answerDisplay.checker==='qcm'"
-			>
-				<div class="flex flex-wrap gap-4 w-full">
-					<button
-						v-for="(item, index) of answerDisplay.data"
-						:key="`qcm-${index}`"
-						:class="qcmButtonClass(item)"
-						@click="userAnswer = item; validateAnswer()"
+					<!-- Admin helper -->
+					<div
+						v-if="$page.props.auth.can.admin"
+						class="text-xs text-gray-600 flex justify-between mt-10 admin-wrapper"
 					>
-						{{ item }}
-					</button>
+						<div>Résultat attendu: {{ props.question.answer }}</div>
+						<div>{{ answerChecker ? 'juste' : 'faux' }}</div>
+					</div>
 				</div>
 			</div>
-			<!-- Default question -->
+
+			<!-- Afficher les formulaires pour répondre à la question -->
 			<div
-				v-else
-				class="max-w-md"
+				v-show="!isCorrect.result"
+				class="justify-self-end min-w-[80%]"
 			>
-				<form-input
-					v-model="userAnswer"
-					:name="`question-${theQuestion.id}`"
-					label="réponse"
-					inline
-					btn-class="btn-primary"
-					@keyup.enter="validateAnswer"
-					@button-click="validateAnswer"
+				<!-- QCM -->
+				<div
+					v-if="answerDisplay.checker==='qcm'"
 				>
-					<div class="text-xs text-gray-600 flex justify-between mt-1">
-						<p
-							v-katex.auto="answerFormat"
-						/>
+					<div class="flex flex-wrap gap-4 w-full">
+						<button
+							v-for="(item, index) of answerDisplay.data"
+							:key="`qcm-${index}`"
+							:class="qcmButtonClass(item)"
+							@click="userAnswer = item; validateAnswer()"
+						>
+							{{ item }}
+						</button>
 					</div>
+				</div>
+				<!-- Default question -->
+				<div
+					v-else
+					class="max-w-md"
+				>
+					<form-input
+						v-model="userAnswer"
+						:name="`question-${theQuestion.id}`"
+						label="réponse"
+						inline
+						btn-class="btn-primary"
+						@keyup.enter="validateAnswer"
+						@button-click="validateAnswer"
+					>
+						<div class="text-xs text-gray-600 flex justify-between mt-1">
+							<p
+								v-katex.auto="answerFormat"
+							/>
+						</div>
 
-					<!-- Bouton valider - design à modifier -->
-					<template #button>
-						OK
-					</template>
-				</form-input>
+						<!-- Bouton valider - design à modifier -->
+						<template #button>
+							OK
+						</template>
+					</form-input>
 
-				<Keyboard
-					v-if="theQuestion.keyboard"
-					v-model="userAnswer"
-					v-model:model-formatted="userAnswerFormatted"
-					class="mt-3"
-					:keyboard="theQuestion.keyboard"
-				/>
+					<Keyboard
+						v-if="theQuestion.keyboard"
+						v-model="userAnswer"
+						v-model:model-formatted="userAnswerFormatted"
+						class="mt-3"
+						:keyboard="theQuestion.keyboard"
+					/>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -237,8 +238,8 @@ let editMode = inject("editmode"),
 
 let form = useForm({...props.question})
 
-async function  toggleBlockEdition(){
-	if(editMode.value && !showEditForm.value){
+async function toggleBlockEdition() {
+	if (editMode.value && !showEditForm.value) {
 		showEditForm.value = true
 		await nextTick()
 		questionBodyForm.value.focus(true)
@@ -246,8 +247,8 @@ async function  toggleBlockEdition(){
 }
 
 let questionDisplay = ref(""),
-	answerDisplay = computed(()=>{
-		if(theQuestion.value.checker?.match(/qcm@(.+)/)){
+	answerDisplay = computed(() => {
+		if (theQuestion.value.checker?.match(/qcm@(.+)/)) {
 			return {
 				checker: "qcm",
 				data: theQuestion.value.checker.split("@")[1].split(",")
@@ -258,56 +259,56 @@ let questionDisplay = ref(""),
 			data: null
 		}
 	}),
-	answerChecker = computed(()=>{
-		if(theQuestion.value.checker?.match(/%d\.[0-9]+/)){
-			return userAnswer.value.length===theQuestion.value.answer.length
+	answerChecker = computed(() => {
+		if (theQuestion.value.checker?.match(/%d\.[0-9]+/)) {
+			return userAnswer.value.length === theQuestion.value.answer.length
 				&&
-				(+userAnswer.value).toFixed(+theQuestion.value.checker.split(".")[1])===theQuestion.value.answer
-		}else{
-			return userAnswer.value.toString()===theQuestion.value.answer
+				(+userAnswer.value).toFixed(+theQuestion.value.checker.split(".")[1]) === theQuestion.value.answer
+		} else {
+			return userAnswer.value.toString() === theQuestion.value.answer
 		}
 	}),
-	answerFormat = computed(()=>{
-		if(theQuestion.value.checker?.match(/%d\.[0-9]+/)) {
+	answerFormat = computed(() => {
+		if (theQuestion.value.checker?.match(/%d\.[0-9]+/)) {
 			return `Réponse avec ${+theQuestion.value.checker.split(".")[1]} chiffre(s) après la virgule.`
 		}
 
 		return "Réponse sous forme exacte"
 	}),
-	previousAnswers = computed(()=>{
+	previousAnswers = computed(() => {
 		return theQuestion.value.userAnswers?.length === 0 ? [] : theQuestion.value.userAnswers
 	}),
-	isCorrect = computed(()=>{
-		if(theQuestion.value?.userAnswers.length>0){
-			if(theQuestion.value.userAnswers[theQuestion.value.userAnswers.length-1].result){
-				return theQuestion.value.userAnswers[theQuestion.value.userAnswers.length-1]
-			}else{
+	isCorrect = computed(() => {
+		if (theQuestion.value?.userAnswers.length > 0) {
+			if (theQuestion.value.userAnswers[theQuestion.value.userAnswers.length - 1].result) {
+				return theQuestion.value.userAnswers[theQuestion.value.userAnswers.length - 1]
+			} else {
 				return false
 			}
 		}
 		return false
 	}),
-	qcmButtonClass = function(item) {
-		if(isCorrect.value.result){
+	qcmButtonClass = function (item) {
+		if (isCorrect.value.result) {
 			return "btn bg-white"
 		}
 
-		if(userAnswer.value===item){
+		if (userAnswer.value === item) {
 			return "btn-primary"
 		}
 
-		if(previousAnswers.value.filter(x=>x.answer===item).length){
+		if (previousAnswers.value.filter(x => x.answer === item).length) {
 			return "btn-error"
 		}
 
 		return "btn bg-white"
 	}
 
-let formatQuestion = function(){
+let formatQuestion = function () {
 	questionDisplay.value = theQuestion.value.body.replace("$answer", userAnswerFormatted.value)
 }
 
-watch(userAnswerFormatted, ()=>{
+watch(userAnswerFormatted, () => {
 	formatQuestion()
 })
 
@@ -319,9 +320,9 @@ function validateAnswer() {
 
 	axios.post(route("questions.validate", [theQuestion.value.id]),
 		data
-	).then(res=>{
+	).then(res => {
 		theQuestion.value.userAnswers.push({...res.data, "when": "à l'instant"})
-		if(res.data.result){
+		if (res.data.result) {
 			emits("resolved", theQuestion)
 			// Make sure the keyboard is now hidden
 			showKeyboard.value = false
@@ -329,31 +330,31 @@ function validateAnswer() {
 	})
 }
 
-function patchQuestion(ev){
+function patchQuestion(ev) {
 	axios.post(
 		route("questions.update", [theQuestion.value.id]),
 		{
 			_method: "patch",
 			...form.data()
 		}
-	).then(res=>{
+	).then(res => {
 		theQuestion.value = res.data.data
 		showEditForm.value = false
 	})
 }
 
-function destroyQuestion(){
+function destroyQuestion() {
 	axios.post(
 		route("questions.destroy", [theQuestion.value.id]),
 		{
 			_method: "delete"
 		}
-	).then(res=>{
+	).then(res => {
 		emits("destroy", theQuestion.value.id)
 	})
 }
 
-onMounted(()=>{
+onMounted(() => {
 	formatQuestion()
 })
 </script>
