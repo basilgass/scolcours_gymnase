@@ -146,7 +146,7 @@
 
 					<!-- Admin helper -->
 					<div
-						v-if="$page.props.auth.can.admin"
+						v-if="$page.props.auth.can.admin && editMode"
 						class="text-xs text-gray-600 flex justify-between mt-10 admin-wrapper"
 					>
 						<div>Résultat attendu: {{ props.question.answer }}</div>
