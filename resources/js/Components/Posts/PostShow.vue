@@ -184,6 +184,18 @@
 				/>
 			</div>
 
+			<div
+				v-if="$slots.admin"
+				class="w-full"
+			>
+				<slot name="admin" />
+			</div>
+		</div>
+
+		<div
+			v-if="$page.props.auth.can.admin && editMode"
+			class="admin-wrapper mt-10 flex-col gap-10"
+		>
 			<div>
 				<h3 class="text-lg">
 					Ajouter des questions
@@ -211,6 +223,10 @@
 						name="checker"
 					/>
 					<div class="flex items-end gap-4 justify-self-end md:col-span-4">
+						<input
+							v-model="questionForm.math"
+							type="checkbox"
+						>
 						<form-input
 							v-model="questionForm.keyboard"
 							label="clavier"
@@ -226,15 +242,7 @@
 					</div>
 				</div>
 			</div>
-
-			<div
-				v-if="$slots.admin"
-				class="w-full"
-			>
-				<slot name="admin" />
-			</div>
 		</div>
-
 
 		<!-- Edit box -->
 		<dialog-modal
@@ -265,7 +273,7 @@ import FormTextarea from "@/Components/Form/FormTextarea"
 import QuestionShow from "@/Components/Posts/QuestionShow"
 import FormInput from "@/Components/Form/FormInput"
 
-const emits = defineEmits(["delete","updateTitle"])
+const emits = defineEmits(["delete", "updateTitle"])
 const props = defineProps({
 	post: {
 		type: Object, default: () => {
@@ -275,19 +283,19 @@ const props = defineProps({
 
 /** Blocks reactives and methods */
 let blocks = ref(props.post.blocks),
-	visibleBlocks = computed(()=>{
+	visibleBlocks = computed(() => {
 		let result = []
 
 		// Get the number of visible blocks.
-		if(numberVisibleBlocks.value===0 || showHiddenBlocks.value){
+		if (numberVisibleBlocks.value === 0 || showHiddenBlocks.value) {
 			result = blocks.value
-		}else{
+		} else {
 			result = [...blocks.value].splice(0, numberVisibleBlocks.value)
 		}
 
 		// If not in edit mode, filter the blocks depending on the switch.
-		if(!editMode.value){
-			if(props.post.switch!==null) {
+		if (!editMode.value) {
+			if (props.post.switch !== null) {
 				result = result
 					.filter(block => {
 						return block.switch === null || Boolean(block.switch) === scriptSwitch.value
@@ -298,73 +306,79 @@ let blocks = ref(props.post.blocks),
 		// Return the list of blocks
 		return result
 	}),
-	hiddenBlocks = computed(()=>{
-		if(numberVisibleBlocks.value===0){
+	hiddenBlocks = computed(() => {
+		if (numberVisibleBlocks.value === 0) {
 			return []
-		}else{
-			return [...blocks.value.filter(block=>props.post.switch===null || block.switch===null || Boolean(block.switch)===scriptSwitch.value)].splice(numberVisibleBlocks.value)
+		} else {
+			return [...blocks.value.filter(block => props.post.switch === null || block.switch === null || Boolean(block.switch) === scriptSwitch.value)].splice(numberVisibleBlocks.value)
 		}
 	}),
 	showHiddenBlocks = ref(false),
-	moveBlockUp = function (crtIndex, targetIndex){
-		blocks.value.splice(targetIndex, 0, blocks.value.splice(crtIndex,1)[0])
+	moveBlockUp = function (crtIndex, targetIndex) {
+		blocks.value.splice(targetIndex, 0, blocks.value.splice(crtIndex, 1)[0])
 
 		// Save the new position to the database
 		axios.post(route("posts.updateBlocksOrder", [props.post.id]), {
 			_method: "patch",
-			data: blocks.value.map((block, index)=>{return {"id": block.id, "order": index}})
+			data: blocks.value.map((block, index) => {
+				return {"id": block.id, "order": index}
+			})
 		})
 	}
 
 /** Questions reactives and methods */
 let postQuestions = ref(props.post.questions)
 let questionForm = reactive({
+	math: true,
 	body: "",
 	answer: "",
 	checker: "",
 	keyboard: "",
 	rows: 1
 })
-function questionStore(){
+
+function questionStore() {
 	axios.post(
 		route("posts.questions.store", [props.post.id]), {
 			...questionForm
 		}
-	).then((res)=>{
+	).then((res) => {
 		// Add the question.
-		res.data.data.forEach(q=>postQuestions.value.push(q))
+		res.data.data.forEach(q => postQuestions.value.push(q))
 		// questions.value.push(res.data)
-	}).catch(res=>{
+	}).catch(res => {
 		// Show the error.
 		console.log(res)
 	})
 }
-function questionDestroy(id){
-	postQuestions.value = postQuestions.value.filter(question=>question.id!==id)
+
+function questionDestroy(id) {
+	postQuestions.value = postQuestions.value.filter(question => question.id !== id)
 }
 
 
 /** scripts / random parameters / switch*/
-function runPostScript(){
-	if(props.post.script!==null) {
+function runPostScript() {
+	if (props.post.script !== null) {
 		let F = new Function("PiMath", props.post.script)
 		postScriptResult.value = F(PiMath)
 	}
 }
+
 let postScriptResult = ref({})
-onMounted(()=>runPostScript())
+onMounted(() => runPostScript())
 provide("postScriptResult", postScriptResult)
 
 
 /** Switch display */
-let switchText = computed(()=>{
+let switchText = computed(() => {
 	let preText = "", postText = ""
 
-	if(props.post.switch.includes("@")){
-		const txt =  props.post.switch.split("@")
+	if (props.post.switch.includes("@")) {
+		const txt = props.post.switch.split("@")
 		preText = txt[0]
 		postText = txt[1]
-	}else{
+	} else {
 		preText = props.post.switch
 	}
 
@@ -379,43 +393,20 @@ let switchText = computed(()=>{
 let editMode = inject("editmode")
 
 
-
-
-let edit = ref(props.post.isNew===true),
+let edit = ref(props.post.isNew === true),
 	postTitle = ref(props.post.title),
 	numberVisibleBlocks = ref(props.post.numberOfVisibleBlocks),
-	scriptSwitch = ref(props.post.switch!==null),
+	scriptSwitch = ref(props.post.switch !== null),
 	addNBlocks = ref(1)
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-function refreshPost(item){
+function refreshPost(item) {
 	postTitle.value = item.title
 	emits("updateTitle", item.title)
 	edit.value = false
 }
 
-function updateNumberOfVisibleBlocks(){
+function updateNumberOfVisibleBlocks() {
 	axios.post(
 		route("posts.updateNumberOfVisibleBlocks", [props.post.id]),
 		{
@@ -434,7 +425,7 @@ function deletePost() {
 }
 
 function addBlock() {
-	if(addNBlocks.value>=0) {
+	if (addNBlocks.value >= 0) {
 		axios.post(
 			route("posts.blocks.store", [props.post.id]),
 			{
@@ -443,7 +434,7 @@ function addBlock() {
 		).then(res => {
 			// Set the first block in edit mode.
 			res.data[0].isNew = true
-			for(let b of res.data){
+			for (let b of res.data) {
 				blocks.value.push(b)
 			}
 		}).catch(err => {

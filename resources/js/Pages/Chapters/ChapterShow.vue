@@ -40,15 +40,15 @@
 				class="space-y-10"
 			>
 				<post-show
-					v-for="(post, index) in chapterPosts"
+					v-for="(post, index) in chapterPostsFiltered"
 					:id="`post-${post.id}`"
 					:key="post.id"
 					:post="post"
 					@delete="deletePost(post.id)"
-					@updateTitle="post.title=$event"
+					@update-title="post.title=$event"
 				>
 					<template
-						v-if="chapterPosts.length>1"
+						v-if="chapterPosts.length>1 && chapterPosts.length===chapterPostsFiltered.length"
 						#admin
 					>
 						<div class="w-full flex justify-between items-baseline flex-col md:flex-row">
@@ -141,7 +141,15 @@ const props = defineProps({
 })
 
 let chapterPosts = ref(props.chapter.data.posts),
-	editMode = ref(localStorage.getItem("ScolCoursEditMode")==="1")
+	editMode = ref(localStorage.getItem("ScolCoursEditMode")==="1"),
+	showOnlyExercises = ref(false),
+	chapterPostsFiltered = computed(()=>{
+		if(showOnlyExercises.value){
+			return chapterPosts.value.filter(post=>post.questions.length>0)
+		}
+
+		return chapterPosts.value
+	})
 
 provide("editmode", editMode)
 provide("chapterPosts", chapterPosts)

@@ -13,7 +13,14 @@
 						label="question"
 						name="body"
 						@save="patchQuestion"
-					/>
+					>
+						<template #prepend>
+							<input
+								v-model="form.math"
+								type="checkbox"
+							>
+						</template>
+					</form-input>
 				</div>
 				<form-input
 					v-model="form.answer"
@@ -65,136 +72,142 @@
 		>
 			<div>
 				<div
-					v-katex.auto="questionDisplay"
+					v-if="theQuestion.math"
+					v-katex.display.left="`${questionDisplay}`"
 					class="md:col-span-2"
 					@dblclick="toggleBlockEdition"
 				/>
+				<div
+					v-else
+					v-katex.auto.left="questionDisplay"
+					class="md:col-span-2"
+					@dblclick="toggleBlockEdition"
+				/>
+			</div>
+			<div class="self-end">
+				<!-- Si la réponse est déjà donnée, afficher la réponse -->
+				<div
+					v-if="isCorrect.result"
+					class="flex flex-col mt-3"
+				>
+					<div class="flex ">
+						<button
+							class="cursor-pointer flex gap-5"
+							@click="showAnswer=!showAnswer"
+						>
+							<div>Réponse</div>
+							<i
+								v-if="!showAnswer"
+								class="bi bi-eye"
+							/>
+							<div
+								v-else
+								v-text="props.question.answer"
+							/>
+						</button>
+					</div>
+					<div class="my-3 text-green-500 flex">
+						<i class="bi bi-check mr-4" />
+						<p>Vous avez déjà répondu à cette question {{ isCorrect.when }}</p>
+					</div>
+				</div>
 
-				<div class="self-end">
-					<!-- Si la réponse est déjà donnée, afficher la réponse -->
+				<!-- Afficher les formulaires pour répondre à la question -->
+				<div v-else>
+					<!-- Admin helper -->
 					<div
-						v-if="isCorrect.result"
-						class="flex flex-col mt-3"
+						v-if="$page.props.auth.can.admin"
+						class="text-xs text-gray-600 flex justify-between mt-1"
 					>
-						<div class="flex ">
-							<button
-								class="cursor-pointer flex gap-5"
-								@click="showAnswer=!showAnswer"
-							>
-								<div>Réponse</div>
-								<i
-									v-if="!showAnswer"
-									class="bi bi-eye"
-								/>
-								<div
-									v-else
-									v-text="props.question.answer"
-								/>
-							</button>
-						</div>
-						<div class="my-3 text-green-500 flex">
-							<i class="bi bi-check mr-4" />
-							<p>Vous avez déjà répondu à cette question {{ isCorrect.when }}</p>
-						</div>
+						<div>Résultat attendu: {{ props.question.answer }}</div>
+						<div>{{ answerChecker ? 'juste' : 'faux' }}</div>
 					</div>
 
-					<!-- Afficher les formulaires pour répondre à la question -->
-					<div v-else>
-						<!-- Admin helper -->
-						<div
-							v-if="$page.props.auth.can.admin"
-							class="text-xs text-gray-600 flex justify-between mt-1"
-						>
-							<div>Résultat attendu: {{ props.question.answer }}</div>
-							<div>{{ answerChecker ? 'juste' : 'faux' }}</div>
-						</div>
-
-						<!-- Afficher les réponses précédentes -->
-						<div
-							v-if="previousAnswers.length>0"
-							class="text-xs mt-6 border-t pt-1"
-						>
-							<div class="flex justify-between">
-								<div v-if="previousAnswers.length>1">
-									Réponses précédentes
-								</div>
-								<div v-else>
-									Réponse précédente
-								</div>
-								<Link
-									v-if="!$page.props.auth.user"
-									:href="route('login')"
-								>
-									( se connecter pour mémoriser )
-								</Link>
+					<!-- Afficher les réponses précédentes -->
+					<div
+						v-if="previousAnswers.length>0"
+						class="text-xs mt-6 border-t pt-1"
+					>
+						<div class="flex justify-between">
+							<div v-if="previousAnswers.length>1">
+								Réponses précédentes
 							</div>
-							<ul class="flex flex-wrap gap-5">
-								<li
-									v-for="answer of previousAnswers"
-									:key="answer.when"
-									:class="{
-										'text-green-600 font-bold':answer.result,
-										'text-red-600':!answer.result,
-									}"
-								>
-									{{ answer.answer }}
-								</li>
-							</ul>
+							<div v-else>
+								Réponse précédente
+							</div>
+							<Link
+								v-if="!$page.props.auth.user"
+								:href="route('login')"
+							>
+								( se connecter pour mémoriser )
+							</Link>
 						</div>
+						<ul class="flex flex-wrap gap-5">
+							<li
+								v-for="answer of previousAnswers"
+								:key="answer.when"
+								:class="{
+									'text-green-600 font-bold':answer.result,
+									'text-red-600':!answer.result,
+								}"
+							>
+								{{ answer.answer }}
+							</li>
+						</ul>
 					</div>
 				</div>
 			</div>
+		</div>
 
-			<div v-show="!isCorrect.result">
-				<!-- QCM -->
-				<div
-					v-if="answerDisplay.checker==='qcm'"
-				>
-					<div class="flex flex-wrap gap-4 w-full">
-						<button
-							v-for="(item, index) of answerDisplay.data"
-							:key="`qcm-${index}`"
-							:class="qcmButtonClass(item)"
-							@click="userAnswer = item; validateAnswer()"
-						>
-							{{ item }}
-						</button>
-					</div>
-				</div>
-				<!-- Default question -->
-				<div
-					v-else
-					class="max-w-md"
-				>
-					<form-input
-						v-model="userAnswer"
-						:name="`question-${theQuestion.id}`"
-						label="réponse"
-						inline
-						btn-class="btn-primary"
-						@keyup.enter="validateAnswer"
-						@button-click="validateAnswer"
+		<div v-show="!isCorrect.result">
+			<!-- QCM -->
+			<div
+				v-if="answerDisplay.checker==='qcm'"
+			>
+				<div class="flex flex-wrap gap-4 w-full">
+					<button
+						v-for="(item, index) of answerDisplay.data"
+						:key="`qcm-${index}`"
+						:class="qcmButtonClass(item)"
+						@click="userAnswer = item; validateAnswer()"
 					>
-						<div class="text-xs text-gray-600 flex justify-between mt-1">
-							<p
-								v-katex.auto="answerFormat"
-							/>
-						</div>
-
-						<!-- Bouton valider - design à modifier -->
-						<template #button>
-							OK
-						</template>
-					</form-input>
-
-					<Keyboard
-						v-if="theQuestion.keyboard"
-						v-model="userAnswer"
-						v-model:model-formatted="userAnswerFormatted"
-						class="mt-3"
-						:keyboard="theQuestion.keyboard"
-					/>
+						{{ item }}
+					</button>
 				</div>
+			</div>
+			<!-- Default question -->
+			<div
+				v-else
+				class="max-w-md"
+			>
+				<form-input
+					v-model="userAnswer"
+					:name="`question-${theQuestion.id}`"
+					label="réponse"
+					inline
+					btn-class="btn-primary"
+					@keyup.enter="validateAnswer"
+					@button-click="validateAnswer"
+				>
+					<div class="text-xs text-gray-600 flex justify-between mt-1">
+						<p
+							v-katex.auto="answerFormat"
+						/>
+					</div>
+
+					<!-- Bouton valider - design à modifier -->
+					<template #button>
+						OK
+					</template>
+				</form-input>
+
+				<Keyboard
+					v-if="theQuestion.keyboard"
+					v-model="userAnswer"
+					v-model:model-formatted="userAnswerFormatted"
+					class="mt-3"
+					:keyboard="theQuestion.keyboard"
+				/>
 			</div>
 		</div>
 	</div>

@@ -6,6 +6,11 @@
 			:name="name"
 		/>
 		<div class="flex items-stretch">
+			<div v-if="$slots.prepend">
+				<slot name="prepend">
+					<input type="checkbox">
+				</slot>
+			</div>
 			<input
 				:id="name"
 				ref="inp"

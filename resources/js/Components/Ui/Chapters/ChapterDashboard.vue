@@ -28,8 +28,6 @@
 
 		<Panel
 			v-if="$page.props.auth.user"
-			class="cursor-pointer"
-			@click="menuScrollTo('chapter-exercises')"
 		>
 			<template #title>
 				Exercices
@@ -119,7 +117,7 @@ function createNewChallenge() {
 
 let chapterPosts = inject("chapterPosts"),
 	chapterToc = computed(() => chapterPosts.value.filter(post => !post.type)),
-	chapterExercises = computed(() => chapterPosts.value.filter(post => post.type === "exercise")),
+	chapterExercises = computed(() => chapterPosts.value.filter(post => post.questions.length > 0)),
 	chapterQuestions = computed(() => {
 		const questions = chapterPosts.value.reduce((sum, post) => sum + post.questions.length, 0),
 			answered = chapterPosts.value
