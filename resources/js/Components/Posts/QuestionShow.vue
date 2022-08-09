@@ -401,6 +401,7 @@ function validateAnswer() {
 			showKeyboard.value = false
 		} else {
 			// Error !
+			// TODO: Must move shake in a "useEffect" javascript file
 			function shake(target) {
 				target.style.setProperty("animation-name", "v-shake-horizontal")
 				target.style.setProperty("animation-duration", "500ms")

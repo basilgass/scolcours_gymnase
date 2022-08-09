@@ -45,7 +45,7 @@
 		<div
 			v-if="keyboardCommands.length>0"
 			class="keyboard grid gap-2 w-full mt-10"
-			:class="(keyboardData.grid??keyboardGridDefault) + (small?' keyboard-sm':'')"
+			:class="`grid-cols-${keyboardCommands.length}`+ (small?' keyboard-sm':'')"
 		>
 			<button
 				v-for="(item, index) of keyboardCommands"
