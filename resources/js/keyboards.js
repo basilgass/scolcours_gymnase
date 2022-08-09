@@ -1,3 +1,10 @@
+import AsciiMathParser from "asciimath2tex"
+
+function asciiToTex(value){
+	const parser = new AsciiMathParser()
+	return parser.parse(value)
+}
+
 export const keyboardKeys = {
 	"0": {type: "math", display: "0"},
 	"1": {type: "math", display: "1"},
@@ -22,6 +29,7 @@ export const keyboardKeys = {
 	"^2": {type: "math", display: "\\textcolor{lightgray}{x}^2"},
 	"^": {type: "math", display: "x^y"},
 	"sqrt": {type: "math", display: "\\sqrt{\\phantom{x}}"},
+	"root(3)": {type: "math", display: "\\sqrt[3]{\\phantom{x}}"},
 	"|": {type: "math", display: "\\big\\vert \\textcolor{lightgray}{x} \\big\\vert"},
 	"y": {type: "math", display: "y"},
 	"e": {type: "math", display: "\\text{e}"},
@@ -44,16 +52,22 @@ export const keyboards = {
 			"4", "5", "6",
 			"7", "8", "9",
 			".", "0", "-"
-		]
+		],
+		tex(value){
+			return value
+		}
 	},
 	"fraction": {
-		grid: "grid-cols-3",
+		grid: "grid-cols-4",
 		layout: [
-			"1", "2", "3",
-			"4", "5", "6",
-			"7", "8", "9",
-			"/", "0", "-"
-		]
+			"1", "2", "3", "-",
+			"4", "5", "6","/",
+			"7", "8", "9","",
+			 ["0", 2],"@back","@reset"
+		],
+		tex(value){
+			return asciiToTex(value)
+		}
 	},
 	"simple": {
 		grid: "grid-cols-4",
@@ -62,7 +76,10 @@ export const keyboards = {
 			"4", "5", "6", "-",
 			"7", "8", "9", "*",
 			"@back", ["0", 2], "/"
-		]
+		],
+		tex(value){
+			return asciiToTex(value)
+		}
 	},
 	"algebra": {
 		grid: "grid-cols-7",
@@ -71,7 +88,10 @@ export const keyboards = {
 			"4", "5", "6", "-", "^2", "^", "ln",
 			"7", "8", "9", "*", "|", "sqrt", "",
 			"@reset", "@back", "0", "/", "(", ")", "="
-		]
+		],
+		tex(value){
+			return asciiToTex(value)
+		}
 	},
 	"polynom": {
 		grid: "grid-cols-6",
@@ -80,40 +100,24 @@ export const keyboards = {
 			"4", "5", "6", "-", "x^3", "x^4",
 			"7", "8", "9", "*", "x^5", "x^6",
 			"(", ")", "0", "/", ["^", 2]
-		]
+		],
+		tex: function(value){
+			return asciiToTex(value)
+		}
 	},
 	"exact": {
 		grid: "grid-cols-5",
 		layout: [
 			"1", "2", "3", "+","-",
 			"4", "5", "6", "*","/",
-			"7", "8", "9", ["sqrt", 2],"",
+			"7", "8", "9", "sqrt","root(3)",
 			"@reset", "@back", "0", "",""
 		],
-		format: function(value){
-			// No answer actually...
-			if(value===""){return ""}
+		tex: function(value){
+			if(!value.includes("/")){return asciiToTex(value)}
 
-			function formatFactor(value){
-				let root = value.split("sqrt")
-				if(root.length>=2){
-					if(root[0]===""){
-						return `\\sqrt{ ${root[1]} }`
-					}else {
-						return `${root[0]} \\sqrt{ ${root[1]} }`
-					}
-				}else{
-					return root[0]
-				}
-			}
-
-			let fraction = value.split("/"),
-				numerator  = formatFactor(fraction.shift()),
-				denominator = fraction.length>=1?formatFactor(fraction.join("/")):""
-
-			return fraction.length===0?
-				numerator:
-				`\\frac{ ${ numerator } }{ ${ denominator } }`
+			const numden = value.split("/")
+			return asciiToTex(numden.map(x=>`(${x})`).join("/"))
 		}
 	}
 }

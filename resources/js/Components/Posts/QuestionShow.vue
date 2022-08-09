@@ -76,13 +76,6 @@
 		<div>
 			<div>
 				<div
-					v-if="theQuestion.math"
-					v-katex.display.left="`${questionDisplay}`"
-					class="md:col-span-2"
-					@dblclick="toggleBlockEdition"
-				/>
-				<div
-					v-else
 					v-katex.auto.left="questionDisplay"
 					class="md:col-span-2"
 					@dblclick="toggleBlockEdition"
@@ -142,7 +135,7 @@
 					>
 						<Keyboard
 							v-model="userAnswer"
-							v-model:model-formatted="userAnswerFormatted"
+							v-model:tex="userAnswerAsTex"
 							key-class="bg-white"
 							class="mt-3"
 							:keyboard="theQuestion.keyboard"
@@ -168,7 +161,7 @@
 				</div>
 				<div class="flex ">
 					<button
-						class="cursor-pointer flex gap-5"
+						class="cursor-pointer flex items-center gap-5"
 						@click="showAnswer=!showAnswer"
 					>
 						<div>Réponse</div>
@@ -178,7 +171,7 @@
 						/>
 						<div
 							v-else
-							v-text="props.question.answer"
+							v-katex.display.left.nomargin="questionAnswerDisplay"
 						/>
 					</button>
 				</div>
@@ -235,6 +228,8 @@ import FormInput from "@/Components/Form/FormInput"
 import {computed, inject, nextTick, onMounted, ref, watch} from "vue"
 import {useForm} from "@inertiajs/inertia-vue3"
 import Keyboard from "@/Components/Ui/Keyboard"
+import katex from "katex/dist/katex.mjs"
+import {keyboards} from "@/keyboards"
 
 let props = defineProps({
 	question: {type: Object, required: true}
@@ -243,7 +238,7 @@ let props = defineProps({
 let emits = defineEmits(["destroy", "resolved"])
 
 let userAnswer = ref(""),
-	userAnswerFormatted = ref(""),
+	userAnswerAsTex = ref(""),
 	theQuestion = ref(props.question),
 	showAnswer = ref(false),
 	showKeyboard = ref(false)
@@ -262,11 +257,11 @@ async function toggleBlockEdition() {
 	}
 }
 
-let answerInputClick = function(ev){
-		if(theQuestion.value.keyboard){
+let answerInputClick = function (ev) {
+		if (theQuestion.value.keyboard) {
 			// If there is a keyboard, display it and prevent focus
-			showKeyboard.value=!showKeyboard.value
-		}else{
+			showKeyboard.value = !showKeyboard.value
+		} else {
 			// No keyboard is given : focus the input
 			ev.target.focus()
 		}
@@ -297,9 +292,18 @@ let answerInputClick = function(ev){
 	answerFormat = computed(() => {
 		if (theQuestion.value.checker?.match(/%d\.[0-9]+/)) {
 			return `Réponse avec ${+theQuestion.value.checker.split(".")[1]} chiffre(s) après la virgule.`
+		}else if(theQuestion.value.checker?.match(/^qcm@/)){
+			return ""
 		}
 
-		return "Réponse sous forme exacte"
+		// La réponse est sous forme exacte: le texte dépend du clavier utilisé.
+		if(theQuestion.value.keyboard==="exact") {
+			return "Réponse sous forme exacte : \\(a+sqrtb/c = \\dfrac{a+\\sqrt{b}}{c}\\)"
+		}else if(theQuestion.value.keyboard==="fraction"){
+			return "Réponse sous forme de fraction réduite \\(a/b = \\dfrac{a}{b}\\)"
+		}
+
+		return ""
 	}),
 	previousAnswers = computed(() => {
 		return theQuestion.value.userAnswers?.length === 0 ? [] : theQuestion.value.userAnswers
@@ -328,19 +332,48 @@ let answerInputClick = function(ev){
 		}
 
 		return "btn bg-white"
-	}
+	},
+	questionAnswerDisplay = computed(()=>{
+		if(theQuestion.value.keyboard){
+			const kbrd = keyboards[theQuestion.value.keyboard]
+
+			if(kbrd){
+				return kbrd.tex(props.question.answer)
+			}
+		}
+
+		return props.question.answer
+	})
 
 let formatQuestion = function () {
-	questionDisplay.value = theQuestion.value.body
+	let body = theQuestion.value.body,
+		isMath = theQuestion.value.math,
+		answer
 
-	if(questionDisplay.value.includes("$answer")){
-		questionDisplay.value = questionDisplay.value.replace("$answer", userAnswerFormatted.value)
-	}else if(theQuestion.value.math && questionDisplay.value[questionDisplay.value.length-1]==="="){
-		questionDisplay.value = questionDisplay.value + userAnswerFormatted.value
+	// Check if the answer is a correct tex value
+	try {
+		katex.renderToString(userAnswerAsTex.value)
+		answer = userAnswerAsTex.value
+	} catch {
+		answer = "\\color{red}{\\text{ ??? }}"
 	}
+
+	if (body.includes("$answer")) {
+		body = body.replace("$answer", answer)
+	}
+
+	if (isMath) {
+		if (body[body.length - 1] === "=") {
+			// Check if the output is working
+			body += answer
+		}
+		body = `\\[${body}\\]`
+	}
+
+	questionDisplay.value = body
 }
 
-watch(userAnswerFormatted, () => {
+watch(userAnswerAsTex, () => {
 	formatQuestion()
 })
 

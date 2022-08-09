@@ -63,10 +63,10 @@
 import {computed, ref} from "vue"
 import {keyboardKeys, keyboards} from "@/keyboards"
 
-const emit = defineEmits(["update:modelValue", "update:modelFormatted", "validate", "next", "key"])
+const emit = defineEmits(["update:modelValue", "update:tex", "validate", "next", "key"])
 const props = defineProps({
 	modelValue: String,
-	modelFormatted: String,
+	tex: String,
 	keyboard: {type: [Object, String], default: () => "simple"},
 	validate: {type: Boolean, default: null},
 	reset: {type: Boolean, default: null},
@@ -221,7 +221,7 @@ let keyboardComputed = computed(() => {
 function resetKeyStrokes () {
 	keyStrokes.value = []
 	emit("update:modelValue", "")
-	emit("update:modelFormatted", "")
+	emit("update:tex", "")
 }
 
 function backKeyStrokes () {
@@ -241,7 +241,7 @@ function ButtonKeyClick (key) {
 
 	let output = "", result = keyStrokes.value.map(k => k.fn(output)).join("")
 	emit("update:modelValue", result)
-	emit("update:modelFormatted", keyboards[props.keyboard].format?keyboards[props.keyboard].format(result):result)
+	emit("update:tex", keyboards[props.keyboard].tex?keyboards[props.keyboard].tex(result):result)
 	emit("key", result)
 }
 
