@@ -19,6 +19,7 @@
 					label="Nombre de blocs visibles"
 					@click.ctrl="numberVisibleBlocks=0;updateNumberOfVisibleBlocks()"
 				/>
+
 				<form-number
 					v-model="numberVisibleBlocks"
 					name="visibleBlocks"
@@ -409,14 +410,14 @@ let editMode = inject("editmode")
 
 
 let edit = ref(props.post.isNew === true),
-	postTitle = ref(props.post.title),
+	postTitle = ref(props.post.type==="exercise"?`exercice: ${props.post.title}`:props.post.title),
 	numberVisibleBlocks = ref(props.post.numberOfVisibleBlocks),
 	scriptSwitch = ref(props.post.switch !== null),
 	addNBlocks = ref(1)
 
 
 function refreshPost(item) {
-	postTitle.value = item.title
+	postTitle.value = item.type==="exercise"?`exercice: ${item.title}`:item.title
 	emits("updateTitle", item.title)
 	edit.value = false
 }

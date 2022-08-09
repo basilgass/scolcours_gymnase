@@ -25,6 +25,19 @@
 			</button>
 		</div>
 	</div>
+
+	<div class="flex gap-3 my-3">
+		<button
+			v-for="(key, name) of typeList"
+			:key="'btn-'+ name"
+			class="btn-xs"
+			:class="theType===key?'btn-primary':'btn'"
+			@click="theType = key"
+		>
+			{{ name }}
+		</button>
+	</div>
+
 	<div class="flex flex-col">
 		<form-textarea
 			v-model="theScript"
@@ -52,7 +65,11 @@ const props = defineProps({
 
 let theTitle = ref(props.post.title),
 	theScript = ref(props.post.script),
-	theSwitch = ref(props.post.switch)
+	theSwitch = ref(props.post.switch),
+	theType = ref(props.post.type??""),
+	typeList = ref({
+		"article": "", "exercice": "exercise"
+	})
 
 function doValidate(){
 	// Update the post on the server
@@ -61,7 +78,8 @@ function doValidate(){
 	emits("validate", {
 		title: theTitle.value,
 		switch: theSwitch.value,
-		script: theScript.value
+		script: theScript.value,
+		type: theType.value
 	})
 }
 
@@ -76,6 +94,7 @@ async function updatePost() {
 			title: theTitle.value,
 			script: theScript.value,
 			switch: theSwitch.value,
+			type: theType.value,
 			_method: "patch"
 		}
 	).then(res => {

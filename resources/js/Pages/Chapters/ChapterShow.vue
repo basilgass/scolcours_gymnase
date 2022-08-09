@@ -24,7 +24,10 @@
 		</div>
 
 		<!-- Header dashboard -->
-		<chapter-dashboard :chapter="chapter.data" />
+		<chapter-dashboard
+			v-model:show-exercises="showOnlyExercises"
+			:chapter="chapter.data"
+		/>
 
 		<!-- Adding all the posts -->
 		<section class="space-y-10">
@@ -145,7 +148,7 @@ let chapterPosts = ref(props.chapter.data.posts),
 	showOnlyExercises = ref(false),
 	chapterPostsFiltered = computed(()=>{
 		if(showOnlyExercises.value){
-			return chapterPosts.value.filter(post=>post.questions.length>0)
+			return chapterPosts.value.filter(post=>post.type==="exercise")
 		}
 
 		return chapterPosts.value

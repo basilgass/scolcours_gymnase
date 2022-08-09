@@ -70,12 +70,14 @@ class PostController extends Controller
 		$validation = $request->validate([
 			'title' => ['max:255'],
 			'script' => ['string', 'nullable'],
-			'switch' => ['string', 'nullable']
+			'switch' => ['string', 'nullable'],
+			'type' => ['string', 'nullable']
 		]);
 
 		$post->title = $validation['title'];
 		$post->script = $validation['script'] ?? '';
 		$post->switch = $validation['switch'];
+		$post->type = $validation['type'] ?? null;
 		$post->save();
 
 		return $post;

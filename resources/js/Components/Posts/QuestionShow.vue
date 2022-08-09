@@ -106,27 +106,33 @@
 					v-else
 					class="max-w-md"
 				>
-					<form-input
-						v-model="userAnswer"
-						:name="`question-${theQuestion.id}`"
-						label="réponse"
-						inline
-						btn-class="btn-primary"
-						@mousedown.prevent="answerInputClick"
-						@keyup.enter="validateAnswer"
-						@button-click="validateAnswer"
+					<button
+						class="btn py-1 px-2 text-left w-full bg-white"
+						@click="showKeyboard=!showKeyboard"
 					>
-						<div class="text-xs text-gray-600 flex justify-between mt-1">
-							<p
-								v-katex.auto="answerFormat"
-							/>
-						</div>
+						Donner la réponse: {{ userAnswer }}
+					</button>
+					<!--					<form-input-->
+					<!--						v-model="userAnswer"-->
+					<!--						:name="`question-${theQuestion.id}`"-->
+					<!--						label="réponse"-->
+					<!--						inline-->
+					<!--						btn-class="btn-primary"-->
+					<!--						@mousedown.prevent="answerInputClick"-->
+					<!--						@keyup.enter="validateAnswer"-->
+					<!--						@button-click="validateAnswer"-->
+					<!--					>-->
+					<!--						<div class="text-xs text-gray-600 flex justify-between mt-1">-->
+					<!--							<p-->
+					<!--								v-katex.auto="answerFormat"-->
+					<!--							/>-->
+					<!--						</div>-->
 
-						<!-- Bouton valider - design à modifier -->
-						<template #button>
-							OK
-						</template>
-					</form-input>
+					<!--						&lt;!&ndash; Bouton valider - design à modifier &ndash;&gt;-->
+					<!--						<template #button>-->
+					<!--							OK-->
+					<!--						</template>-->
+					<!--					</form-input>-->
 
 					<div
 						v-if="theQuestion.keyboard"
@@ -137,6 +143,7 @@
 							v-model="userAnswer"
 							v-model:tex="userAnswerAsTex"
 							key-class="bg-white"
+							validate
 							class="mt-3"
 							:keyboard="theQuestion.keyboard"
 						/>

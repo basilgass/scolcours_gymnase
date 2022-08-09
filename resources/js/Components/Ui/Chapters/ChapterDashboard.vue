@@ -35,6 +35,15 @@
 
 			<div class="space-y-5 justify-between">
 				<div>{{ chapterExercises.length }} exercices</div>
+
+				<button
+					class="py-2 w-full"
+					:class="showExercises?'btn-success':'btn'"
+					@click="$emit('update:showExercises', !showExercises)"
+				>
+					N'afficher que les exercices
+				</button>
+
 				<div>{{ chapterQuestions.answered }}/{{ chapterQuestions.questions }} questions répondues</div>
 				<div>
 					<div>{{ chapterQuestionsRatio }} % accompli</div>
@@ -102,8 +111,11 @@ import FormButton from "@/Components/Form/FormButton"
 import {useForm} from "@inertiajs/inertia-vue3"
 
 let props = defineProps({
-	chapter: {type: Object, required: true}
+	chapter: {type: Object, required: true},
+	showExercises: {type: Object, required: true}
 })
+
+let emits = defineEmits(["update:showExercises"])
 
 let editMode = inject("editmode"),
 	showCreateChallenge = ref(false),
