@@ -29,15 +29,16 @@ class PostController extends Controller
 //		]);
 	}
 
-	public function store(Chapter $chapter, Request $request){
+	public function store(Chapter $chapter, Request $request)
+	{
 		$validation = $request->validate([
-			'title'=>['string', 'min:2']
+			'title' => ['string', 'min:2']
 		]);
 
 		// Create a new chapter and create a first block.
 		$post = $chapter->posts()->create([
-			'title'=>$validation['title'],
-			'numberOfVisibleBlocks'=>0
+			'title' => $validation['title'],
+			'numberOfVisibleBlocks' => 0
 		]);
 
 		// Load the blocks, even if it's empty :)
@@ -70,7 +71,7 @@ class PostController extends Controller
 			'title' => ['max:255'],
 			'script' => ['string', 'nullable'],
 			'switch' => ['string', 'nullable']
-			]);
+		]);
 
 		$post->title = $validation['title'];
 		$post->script = $validation['script'] ?? '';
@@ -84,7 +85,7 @@ class PostController extends Controller
 	{
 		// Validate the post.
 		$validation = $request->validate([
-			'numberVisibleBlocks' => ['integer','between:0,100'],
+			'numberVisibleBlocks' => ['integer', 'between:0,100'],
 		]);
 
 		$post->numberOfVisibleBlocks = $validation['numberVisibleBlocks'];
@@ -93,14 +94,20 @@ class PostController extends Controller
 		return $post;
 	}
 
-	public function updateBlocksOrder(Post $post, Request $request){
-		foreach($request['data'] as $row){
-			$post->blocks->find($row['id'])->update(['order'=>$row['order']]);
+	public function updateBlocksOrder(Post $post, Request $request)
+	{
+		foreach ($request['data'] as $row) {
+			$post->blocks->find($row['id'])->update(['order' => $row['order']]);
 		}
 	}
 
 	public function destroy($id)
 	{
+		$post = Post::find($id);
+		if ($post) {
+			$post->blocks()->delete();
+		}
+
 		Post::destroy($id);
 
 		return true;

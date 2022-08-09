@@ -28,7 +28,7 @@
 				v-for="(key, index) of keyboardComputed"
 				:key="`key-${key.key}-${index}`"
 				class="key"
-				:class="`${key.span} ${key.visible?'invisible':''}`"
+				:class="`${keyClass} ${key.span===0?'':key.span} ${key.visible?'invisible':''}`"
 				@click="ButtonKeyClick(key)"
 			>
 				<span
@@ -50,7 +50,7 @@
 			<button
 				v-for="(item, index) of keyboardCommands"
 				:key="`keyboard-command-${index}`"
-				:class="`key col-span-${item.span} ${item.atEnd?'order-last':''}`"
+				:class="`key ${keyClass} col-span-${item.span} ${item.atEnd?'order-last':''}`"
 				@click="item.fn()"
 			>
 				<i :class="item.icon" /> <span class="hidden md:inline md:ml-2">{{ item.label }}</span>
@@ -74,7 +74,8 @@ const props = defineProps({
 	next: {type: Boolean, default: null},
 	mathOutput: {type: Boolean, default: false},
 	textOutput: {type: Boolean, default: false},
-	small: {type: Boolean, default: false}
+	small: {type: Boolean, default: false},
+	keyClass: {type: String, default: "bg-gray-50"}
 })
 
 let root = ref(null),

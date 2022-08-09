@@ -152,16 +152,23 @@
 				<h3 class="text-lg">
 					Questions
 				</h3>
-				<div>content right</div>
+				<div>{{ questionRemaining }} / {{ postQuestions.length }}</div>
 			</div>
 
-			<question-show
-				v-for="question in postQuestions"
-				:key="`postQuestion-${question.id}`"
-				class="-mx-4 px-4 even:bg-gray-100"
-				:question="question"
-				@destroy="questionDestroy"
-			/>
+			<div
+				class="grid grid-cols-1 gap-10"
+				:class="{
+					'md:grid-cols-2 lg:grid-cols-3':postQuestions.length>=3,
+					'md:grid-cols-2':postQuestions.length===2,
+				}"
+			>
+				<question-show
+					v-for="question in postQuestions"
+					:key="`postQuestion-${question.id}`"
+					:question="question"
+					@destroy="questionDestroy"
+				/>
+			</div>
 		</div>
 		<!-- post footer -->
 		<div
@@ -327,7 +334,15 @@ let blocks = ref(props.post.blocks),
 	}
 
 /** Questions reactives and methods */
-let postQuestions = ref(props.post.questions)
+let postQuestions = ref(props.post.questions),
+	questionRemaining = computed(()=>{
+		return postQuestions.value.filter(q=>{
+			if (q.userAnswers.length>0){
+				return q.userAnswers[q.userAnswers.length-1].result
+			}
+			return false
+		}).length
+	})
 let questionForm = reactive({
 	math: true,
 	body: "",

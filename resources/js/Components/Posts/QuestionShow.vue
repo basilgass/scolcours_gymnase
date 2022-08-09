@@ -1,44 +1,51 @@
 <template>
-	<div class="py-3">
+	<div
+		class="px-5 py-3 rounded border"
+		:class="{
+			'bg-gray-50 border-gray-200': !isCorrect.result,
+			'bg-green-50 border-green-600/60': isCorrect.result,
+		}"
+	>
 		<!-- Admin edition mode -->
 		<div v-if="$page.props.auth.can.admin && editMode">
 			<div
 				v-show="showEditForm"
-				class="grid grid-cols-1 md:grid-cols-4 gap-4 border-t bg-green-100 -mx-4 -mb-2 px-4 pb-2"
+				class="grid grid-cols-1 gap-4 border-t bg-green-100 -mx-4 -mb-2 px-4 pb-2"
 			>
-				<div class="md:col-span-2">
-					<form-input
-						ref="questionBodyForm"
-						v-model="form.body"
-						label="question"
-						name="body"
-						@save="patchQuestion"
-					>
-						<template #prepend>
-							<input
-								v-model="form.math"
-								type="checkbox"
-							>
-						</template>
-					</form-input>
-				</div>
+				<form-input
+					ref="questionBodyForm"
+					v-model="form.body"
+					label="question"
+					name="body"
+					@save="patchQuestion"
+				/>
 				<form-input
 					v-model="form.answer"
 					label="réponse"
 					name="answer"
 				/>
-				<div class="flex items-end gap-4">
-					<form-input
-						v-model="form.checker"
-						label="Vérification"
-						name="checker"
-					/>
 
-					<form-input
-						v-model="form.keyboard"
-						label="clavier"
-						name="clavier"
-					/>
+				<div class="flex items-end gap-4 w-full">
+					<input
+						v-model="form.math"
+						type="checkbox"
+					>
+
+					<div class="grow">
+						<form-input
+							v-model="form.checker"
+							label="Vérification"
+							name="checker"
+						/>
+					</div>
+
+					<div class="grow">
+						<form-input
+							v-model="form.keyboard"
+							label="clavier"
+							name="clavier"
+						/>
+					</div>
 
 					<button
 						class=" btn-add"
@@ -66,10 +73,7 @@
 		</div>
 
 		<!-- the body of question -->
-		<div
-			class="grid grid-cols-1 gap-5"
-			:class="!isCorrect.result?'md:grid-cols-2':''"
-		>
+		<div>
 			<div>
 				<div
 					v-if="theQuestion.math"
@@ -83,82 +87,11 @@
 					class="md:col-span-2"
 					@dblclick="toggleBlockEdition"
 				/>
-
-				<!-- Si la réponse est déjà donnée, afficher la réponse -->
-				<div
-					v-if="isCorrect.result"
-					class="flex flex-col mt-3"
-				>
-					<div class="flex ">
-						<button
-							class="cursor-pointer flex gap-5"
-							@click="showAnswer=!showAnswer"
-						>
-							<div>Réponse</div>
-							<i
-								v-if="!showAnswer"
-								class="bi bi-eye"
-							/>
-							<div
-								v-else
-								v-text="props.question.answer"
-							/>
-						</button>
-					</div>
-					<div class="my-3 text-green-500 flex">
-						<i class="bi bi-check mr-4" />
-						<p>Vous avez déjà répondu à cette question {{ isCorrect.when }}</p>
-					</div>
-				</div>
-				<div v-else>
-					<!-- Afficher les réponses précédentes -->
-					<div
-						v-if="previousAnswers.length>0"
-						class="text-xs mt-6 border-t pt-1"
-					>
-						<div class="flex justify-between">
-							<div v-if="previousAnswers.length>1">
-								Réponses précédentes
-							</div>
-							<div v-else>
-								Réponse précédente
-							</div>
-							<Link
-								v-if="!$page.props.auth.user"
-								:href="route('login')"
-							>
-								( se connecter pour mémoriser )
-							</Link>
-						</div>
-						<ul class="flex flex-wrap gap-5">
-							<li
-								v-for="answer of previousAnswers"
-								:key="answer.when"
-								:class="{
-									'text-green-600 font-bold':answer.result,
-									'text-red-600':!answer.result,
-								}"
-							>
-								{{ answer.answer }}
-							</li>
-						</ul>
-					</div>
-
-					<!-- Admin helper -->
-					<div
-						v-if="$page.props.auth.can.admin && editMode"
-						class="text-xs text-gray-600 flex justify-between mt-10 admin-wrapper"
-					>
-						<div>Résultat attendu: {{ props.question.answer }}</div>
-						<div>{{ answerChecker ? 'juste' : 'faux' }}</div>
-					</div>
-				</div>
 			</div>
 
 			<!-- Afficher les formulaires pour répondre à la question -->
 			<div
 				v-show="!isCorrect.result"
-				class="justify-self-end min-w-[80%]"
 			>
 				<!-- QCM -->
 				<div
@@ -186,6 +119,7 @@
 						label="réponse"
 						inline
 						btn-class="btn-primary"
+						@mousedown.prevent="answerInputClick"
 						@keyup.enter="validateAnswer"
 						@button-click="validateAnswer"
 					>
@@ -201,13 +135,95 @@
 						</template>
 					</form-input>
 
-					<Keyboard
+					<div
 						v-if="theQuestion.keyboard"
-						v-model="userAnswer"
-						v-model:model-formatted="userAnswerFormatted"
-						class="mt-3"
-						:keyboard="theQuestion.keyboard"
-					/>
+						v-show="showKeyboard"
+						class="flex flex-col"
+					>
+						<Keyboard
+							v-model="userAnswer"
+							v-model:model-formatted="userAnswerFormatted"
+							key-class="bg-white"
+							class="mt-3"
+							:keyboard="theQuestion.keyboard"
+						/>
+						<button
+							class="text-xs text-gray-600 mt-3 self-center"
+							@click="showKeyboard=false"
+						>
+							<i class="bi bi-x-lg mr-3" />fermer le clavier / annuler
+						</button>
+					</div>
+				</div>
+			</div>
+
+			<!-- Si la réponse est déjà donnée, afficher la réponse -->
+			<div
+				v-if="isCorrect.result"
+				class="flex flex-col mt-6"
+			>
+				<div class="my-3 text-green-500 flex">
+					<i class="bi bi-check mr-4" />
+					<p>Vous avez déjà répondu à cette question {{ isCorrect.when }}</p>
+				</div>
+				<div class="flex ">
+					<button
+						class="cursor-pointer flex gap-5"
+						@click="showAnswer=!showAnswer"
+					>
+						<div>Réponse</div>
+						<i
+							v-if="!showAnswer"
+							class="bi bi-eye"
+						/>
+						<div
+							v-else
+							v-text="props.question.answer"
+						/>
+					</button>
+				</div>
+			</div>
+			<div v-else>
+				<!-- Afficher les réponses précédentes -->
+				<div
+					v-if="previousAnswers.length>0"
+					class="text-xs mt-6 border-t pt-1"
+				>
+					<div class="flex justify-between">
+						<div v-if="previousAnswers.length>1">
+							Réponses précédentes
+						</div>
+						<div v-else>
+							Réponse précédente
+						</div>
+						<Link
+							v-if="!$page.props.auth.user"
+							:href="route('login')"
+						>
+							( se connecter pour mémoriser )
+						</Link>
+					</div>
+					<ul class="flex flex-wrap gap-5">
+						<li
+							v-for="answer of previousAnswers"
+							:key="answer.when"
+							:class="{
+								'text-green-600 font-bold':answer.result,
+								'text-red-600':!answer.result,
+							}"
+						>
+							{{ answer.answer }}
+						</li>
+					</ul>
+				</div>
+
+				<!-- Admin helper -->
+				<div
+					v-if="$page.props.auth.can.admin && editMode"
+					class="text-xs text-gray-600 flex justify-between mt-10 admin-wrapper"
+				>
+					<div>Résultat attendu: {{ props.question.answer }}</div>
+					<div>{{ answerChecker ? 'juste' : 'faux' }}</div>
 				</div>
 			</div>
 		</div>
@@ -246,7 +262,17 @@ async function toggleBlockEdition() {
 	}
 }
 
-let questionDisplay = ref(""),
+let answerInputClick = function(ev){
+		if(theQuestion.value.keyboard){
+			// If there is a keyboard, display it and prevent focus
+			showKeyboard.value=!showKeyboard.value
+		}else{
+			// No keyboard is given : focus the input
+			ev.target.focus()
+		}
+
+	},
+	questionDisplay = ref(""),
 	answerDisplay = computed(() => {
 		if (theQuestion.value.checker?.match(/qcm@(.+)/)) {
 			return {
@@ -305,7 +331,13 @@ let questionDisplay = ref(""),
 	}
 
 let formatQuestion = function () {
-	questionDisplay.value = theQuestion.value.body.replace("$answer", userAnswerFormatted.value)
+	questionDisplay.value = theQuestion.value.body
+
+	if(questionDisplay.value.includes("$answer")){
+		questionDisplay.value = questionDisplay.value.replace("$answer", userAnswerFormatted.value)
+	}else if(theQuestion.value.math && questionDisplay.value[questionDisplay.value.length-1]==="="){
+		questionDisplay.value = questionDisplay.value + userAnswerFormatted.value
+	}
 }
 
 watch(userAnswerFormatted, () => {
