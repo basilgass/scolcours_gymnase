@@ -40,6 +40,15 @@ export const keyboardKeys = {
 	"=": {type: "math", display: "="},
 	" ": {type: "math", display: "\\cdot"},
 	".": {type: "math", display: "."},
+	"a": {type: "math", display: "a"},
+	"b": {type: "math", display: "b"},
+	"c": {type: "math", display: "c"},
+	"d": {type: "math", display: "d"},
+	"n": {type: "math", display: "n"},
+	"m": {type: "math", display: "m"},
+	",": {type: "math", display: ","},
+	"IR": {type: "math", display: "\\mathbb{R}"},
+	"!!": {type: "math", display: "\\varnothing"},
 	"@reset": {type: "icon", display: "bi bi-trash"},
 	"@back": {type: "icon", display: "bi bi-backspace"}
 }
@@ -111,7 +120,9 @@ export const keyboards = {
 			"1", "2", "3", "+","-",
 			"4", "5", "6", "*","/",
 			"7", "8", "9", "sqrt","root(3)",
-			"@reset", "@back", "0", "",""
+			"@reset", "@back", "0", "!!",",",
+			"a", "b", "c", "d", "",
+			"n", "m", "x", "y", ""
 		],
 		tex: function(value){
 			if(!value.includes("/")){return asciiToTex(value)}

@@ -112,7 +112,7 @@ import {useForm} from "@inertiajs/inertia-vue3"
 
 let props = defineProps({
 	chapter: {type: Object, required: true},
-	showExercises: {type: Object, required: true}
+	showExercises: {type: Boolean, required: true}
 })
 
 let emits = defineEmits(["update:showExercises"])

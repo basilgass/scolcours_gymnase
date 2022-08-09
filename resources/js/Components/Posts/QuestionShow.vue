@@ -365,13 +365,26 @@ let formatQuestion = function () {
 		answer = "\\color{red}{\\text{ ??? }}"
 	}
 
-	if (body.includes("$answer")) {
-		body = body.replace("$answer", answer)
+	// The question may contain answer place holder...
+	if(body.includes("$")){
+		// variables MUST be in this order.
+		let vnames = "abcdefghijklmnopqrstuvwxyz"
+
+		answer = answer.split(",").filter(x=>x!=="")
+		for(let i=0; i<vnames.length; i++){
+			const key = "$"+vnames[i]
+			if(body.includes(key)){
+				if(i<answer.length) {
+					body = body.replaceAll(key, answer[i])
+				}else{
+					body = body.replaceAll(key, `\\textcolor{red}{\\ ${vnames[i]} \\ }`)
+				}
+			}
+		}
 	}
 
 	if (isMath) {
 		if (body[body.length - 1] === "=") {
-			// Check if the output is working
 			body += answer
 		}
 		body = `\\[${body}\\]`
