@@ -74,17 +74,16 @@
 
 		<!-- the body of question -->
 		<div>
-			<div>
-				<div
-					v-katex.auto.left="questionDisplay"
-					class="md:col-span-2"
-					@dblclick="toggleBlockEdition"
-				/>
-			</div>
+			<div
+				v-katex.auto.left="questionDisplay"
+				class="md:col-span-2"
+				@dblclick="toggleBlockEdition"
+			/>
 
 			<!-- Afficher les formulaires pour répondre à la question -->
 			<div
 				v-show="!isCorrect.result"
+				ref="questionRef"
 			>
 				<!-- QCM -->
 				<div
@@ -146,6 +145,7 @@
 							validate
 							class="mt-3"
 							:keyboard="theQuestion.keyboard"
+							@validate="validateAnswer"
 						/>
 						<button
 							class="text-xs text-gray-600 mt-3 self-center"
@@ -299,14 +299,14 @@ let answerInputClick = function (ev) {
 	answerFormat = computed(() => {
 		if (theQuestion.value.checker?.match(/%d\.[0-9]+/)) {
 			return `Réponse avec ${+theQuestion.value.checker.split(".")[1]} chiffre(s) après la virgule.`
-		}else if(theQuestion.value.checker?.match(/^qcm@/)){
+		} else if (theQuestion.value.checker?.match(/^qcm@/)) {
 			return ""
 		}
 
 		// La réponse est sous forme exacte: le texte dépend du clavier utilisé.
-		if(theQuestion.value.keyboard==="exact") {
+		if (theQuestion.value.keyboard === "exact") {
 			return "Réponse sous forme exacte : \\(a+sqrtb/c = \\dfrac{a+\\sqrt{b}}{c}\\)"
-		}else if(theQuestion.value.keyboard==="fraction"){
+		} else if (theQuestion.value.keyboard === "fraction") {
 			return "Réponse sous forme de fraction réduite \\(a/b = \\dfrac{a}{b}\\)"
 		}
 
@@ -340,11 +340,11 @@ let answerInputClick = function (ev) {
 
 		return "btn bg-white"
 	},
-	questionAnswerDisplay = computed(()=>{
-		if(theQuestion.value.keyboard){
+	questionAnswerDisplay = computed(() => {
+		if (theQuestion.value.keyboard) {
 			const kbrd = keyboards[theQuestion.value.keyboard]
 
-			if(kbrd){
+			if (kbrd) {
 				return kbrd.tex(props.question.answer)
 			}
 		}
@@ -384,6 +384,7 @@ watch(userAnswerAsTex, () => {
 	formatQuestion()
 })
 
+let questionRef = ref(null)
 function validateAnswer() {
 	const data = {
 		answer: userAnswer.value,
@@ -398,6 +399,19 @@ function validateAnswer() {
 			emits("resolved", theQuestion)
 			// Make sure the keyboard is now hidden
 			showKeyboard.value = false
+		} else {
+			// Error !
+			function shake(target) {
+				target.style.setProperty("animation-name", "v-shake-horizontal")
+				target.style.setProperty("animation-duration", "500ms")
+
+				setTimeout(() => {
+					target.style.setProperty("animation-name", "")
+				}, 500)
+
+			}
+
+			shake(questionRef.value)
 		}
 	})
 }
