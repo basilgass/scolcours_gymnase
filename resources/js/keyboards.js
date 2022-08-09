@@ -28,6 +28,7 @@ export const keyboardKeys = {
 	"x^6": {type: "math", display: "x^6"},
 	"^2": {type: "math", display: "\\textcolor{lightgray}{x}^2"},
 	"^": {type: "math", display: "x^y"},
+	"10^": {type: "math", display: "10^x"},
 	"sqrt": {type: "math", display: "\\sqrt{\\phantom{x}}"},
 	"root(3)": {type: "math", display: "\\sqrt[3]{\\phantom{x}}"},
 	"|": {type: "math", display: "\\big\\vert \\textcolor{lightgray}{x} \\big\\vert"},
@@ -46,7 +47,7 @@ export const keyboardKeys = {
 	"d": {type: "math", display: "d"},
 	"n": {type: "math", display: "n"},
 	"m": {type: "math", display: "m"},
-	",": {type: "math", display: ","},
+	",": {type: "math", display: ",\\ \\dots"},
 	"IR": {type: "math", display: "\\mathbb{R}"},
 	"!!": {type: "math", display: "\\varnothing"},
 	"@reset": {type: "icon", display: "bi bi-trash"},
@@ -90,6 +91,18 @@ export const keyboards = {
 			return asciiToTex(value)
 		}
 	},
+	"scn": {
+		grid: "grid-cols-4",
+		layout: [
+			"1", "2", "3", "-",
+			"4", "5", "6", "*",
+			"7", "8", "9", "10^",
+			"@back", "0", ".", ","
+		],
+		tex(value){
+			return asciiToTex(value)
+		}
+	},
 	"algebra": {
 		grid: "grid-cols-7",
 		layout: [
@@ -120,8 +133,8 @@ export const keyboards = {
 			"1", "2", "3", "+","-",
 			"4", "5", "6", "*","/",
 			"7", "8", "9", "sqrt","root(3)",
-			"@reset", "@back", "0", "!!",",",
-			"a", "b", "c", "d", "",
+			"@reset", "@back", "0", "!!","IR",
+			"a", "b", "c", "d", ",",
 			"n", "m", "x", "y", ""
 		],
 		tex: function(value){

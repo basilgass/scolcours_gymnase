@@ -17,12 +17,14 @@
 					v-model="form.body"
 					label="question"
 					name="body"
+					class="font-code"
 					@save="patchQuestion"
 				/>
 				<form-input
 					v-model="form.answer"
 					label="réponse"
 					name="answer"
+					class="font-code"
 				/>
 
 				<div class="flex items-end gap-4 w-full">
@@ -36,6 +38,7 @@
 							v-model="form.checker"
 							label="Vérification"
 							name="checker"
+							class="font-code"
 						/>
 					</div>
 
@@ -44,6 +47,7 @@
 							v-model="form.keyboard"
 							label="clavier"
 							name="clavier"
+							class="font-code"
 						/>
 					</div>
 
@@ -288,7 +292,17 @@ let answerInputClick = function (ev) {
 		}
 	}),
 	answerChecker = computed(() => {
-		if (theQuestion.value.checker?.match(/%d\.[0-9]+/)) {
+		if(theQuestion.value.checker?.match(/^scn,[0-9]+/)) {
+			// TODO: Make it better, using Regex ?
+			let value = userAnswer.value.toString().split("."),
+				unit = +value[0],
+				digits = value.length>1?value[1].split("*")[0].length:0
+
+			if(unit<1 || unit>9){return false}
+			if(digits !== +theQuestion.value.checker.split(",")[1]){return false}
+			return userAnswer.value.toString() === theQuestion.value.answer
+		}
+		else if (theQuestion.value.checker?.match(/^%d\.[0-9]+/)) {
 			return userAnswer.value.length === theQuestion.value.answer.length
 				&&
 				(+userAnswer.value).toFixed(+theQuestion.value.checker.split(".")[1]) === theQuestion.value.answer

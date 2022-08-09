@@ -72,6 +72,7 @@ const props = defineProps({
 	reset: {type: Boolean, default: null},
 	back: {type: Boolean, default: null},
 	next: {type: Boolean, default: null},
+	multiple: {type: Boolean, default: null},
 	mathOutput: {type: Boolean, default: false},
 	textOutput: {type: Boolean, default: false},
 	small: {type: Boolean, default: false},
