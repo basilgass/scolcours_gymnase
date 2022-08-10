@@ -97,7 +97,8 @@ class BlockController extends Controller
 		for($i=0; $i<$validation['n']; $i++){
 			$block = $post->blocks()->create([
 				'title'=>'',
-				'body' => 'sans contenu'
+				'body' => 'sans contenu',
+				'order'=> count($post->blocks)
 			]);
 
 			$createdBlocks[] = Block::find($block->id);

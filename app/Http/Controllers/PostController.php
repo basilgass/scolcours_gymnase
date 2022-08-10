@@ -35,10 +35,10 @@ class PostController extends Controller
 			'title' => ['string', 'min:2']
 		]);
 
-		// Create a new chapter and create a first block.
 		$post = $chapter->posts()->create([
 			'title' => $validation['title'],
-			'numberOfVisibleBlocks' => 0
+			'numberOfVisibleBlocks' => 0,
+			'position' => count($chapter->posts)
 		]);
 
 		// Load the blocks, even if it's empty :)

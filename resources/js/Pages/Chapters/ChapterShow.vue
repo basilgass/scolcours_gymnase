@@ -52,7 +52,7 @@
 				>
 					<template
 						v-if="chapterPosts.length>1 && chapterPosts.length===chapterPostsFiltered.length"
-						#admin
+						#adminHeader
 					>
 						<div class="w-full flex justify-between items-baseline flex-col md:flex-row">
 							<div>Déplacer l'article</div>
@@ -92,6 +92,10 @@
 							</div>
 						</div>
 					</template>
+					<template
+						v-if="chapterPosts.length>1 && chapterPosts.length===chapterPostsFiltered.length"
+						#adminFooter
+					/>
 				</post-show>
 			</div>
 		</section>

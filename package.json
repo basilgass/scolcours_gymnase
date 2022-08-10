@@ -39,6 +39,7 @@
 		"bootstrap-icons": "^1.9.1",
 		"katex": "^0.16.0",
 		"markdown-it": "^13.0.1",
+		"markdown-it-attrs": "^4.1.4",
 		"markdown-it-texmath": "^1.0.0",
 		"pidraw": "^0.0.26",
 		"pimath": "^0.0.89",

@@ -18,16 +18,19 @@ const props = defineProps({
 })
 
 const tm = require("markdown-it-texmath")
+const attr = require("markdown-it-attrs")
 const md = require("markdown-it")({html: true})
 	.use(tm, {
 		engine: require("katex"),
 		delimiters: props.delimiters,
 		katexOptions: {
 			macros: {
-				"\\RR": "\\mathbb{R}"
+				"\\IR": "\\mathbb{R}",
+				"\\IR": "\\mathbb{R}",
 			}
 		}
 	})
+	.use(attr)
 
 watchEffect(()=>{
 	if(props.text) {

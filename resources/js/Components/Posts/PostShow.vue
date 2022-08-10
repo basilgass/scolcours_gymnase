@@ -9,40 +9,43 @@
 		<!-- admin box -->
 		<div
 			v-if="$page.props.auth.can.admin && editMode"
-			class="admin-wrapper"
+			class="admin-wrapper flex-col"
 		>
-			<!-- update the number of visible blocks -->
-			<div class="flex items-baseline">
-				<form-label
-					class="mr-2"
-					name="visibleBlocks"
-					label="Nombre de blocs visibles"
-					@click.ctrl="numberVisibleBlocks=0;updateNumberOfVisibleBlocks()"
-				/>
+			<slot name="adminHeader" />
+			<div class="w-full flex items-baseline">
+				<!-- update the number of visible blocks -->
+				<div class="flex items-baseline">
+					<form-label
+						class="mr-2"
+						name="visibleBlocks"
+						label="Nombre de blocs visibles"
+						@click.ctrl="numberVisibleBlocks=0;updateNumberOfVisibleBlocks()"
+					/>
 
-				<form-number
-					v-model="numberVisibleBlocks"
-					name="visibleBlocks"
-					label="Nombre de blocs visibles"
-					inline
-					class="w-12"
-					@input="updateNumberOfVisibleBlocks"
-				/>
-			</div>
+					<form-number
+						v-model="numberVisibleBlocks"
+						name="visibleBlocks"
+						label="Nombre de blocs visibles"
+						inline
+						class="w-12"
+						@input="updateNumberOfVisibleBlocks"
+					/>
+				</div>
 
-			<div class="ml-5 flex gap-3">
-				<button
-					class="btn-edit btn-xs"
-					@click="edit=true"
-				>
-					éditer <i class="bi bi-pencil" />
-				</button>
-				<button
-					class="btn-delete btn-xs"
-					@click="deletePost"
-				>
-					Supprimer <i class="bi bi-trash" />
-				</button>
+				<div class="ml-5 flex gap-3">
+					<button
+						class="btn-edit btn-xs"
+						@click="edit=true"
+					>
+						éditer <i class="bi bi-pencil" />
+					</button>
+					<button
+						class="btn-delete btn-xs"
+						@click="deletePost"
+					>
+						Supprimer <i class="bi bi-trash" />
+					</button>
+				</div>
 			</div>
 		</div>
 
@@ -171,6 +174,7 @@
 				/>
 			</div>
 		</div>
+
 		<!-- post footer -->
 		<div
 			v-if="$page.props.auth.can.admin && editMode"
@@ -196,10 +200,11 @@
 				v-if="$slots.admin"
 				class="w-full"
 			>
-				<slot name="admin" />
+				<slot name="adminFooter" />
 			</div>
 		</div>
 
+		<!-- post footer admin -->
 		<div
 			v-if="$page.props.auth.can.admin && editMode"
 			class="admin-wrapper mt-10 flex-col gap-10"
