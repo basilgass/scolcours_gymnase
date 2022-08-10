@@ -74,6 +74,7 @@ Route::patch('chapters/{chapter}/ordering', [ChaptersController::class, 'updateP
 Route::apiResource('posts.questions', QuestionController::class)
 	->shallow();
 Route::post('questions/{question}/validate', [QuestionController::class, 'storeAnswer'])->name('questions.validate');
+Route::patch('posts/{post}/questions/reset', [QuestionController::class, 'resetAnswers'])->name('posts.questions.reset');
 
 Route::apiResource('blocks', BlockController::class);
 Route::post('posts/{post}/blocks/create', [BlockController::class, 'storeInPost'])->name('posts.blocks.store');

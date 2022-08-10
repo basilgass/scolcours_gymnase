@@ -18,9 +18,15 @@
 				<div
 					v-for="post in chapterToc"
 					:key="post.id"
-					class="cursor-pointer"
+					class="cursor-pointer flex gap-3 hover:gap-5 transition-all"
 					@click="menuScrollTo(`post-${post.id}`)"
 				>
+					<i
+						:class="{
+							'bi bi-calculator': post.type==='exercise',
+							'bi bi-text-paragraph': !post.type
+						}"
+					/>
 					{{ post.title }}
 				</div>
 			</div>
@@ -128,7 +134,7 @@ function createNewChallenge() {
 }
 
 let chapterPosts = inject("chapterPosts"),
-	chapterToc = computed(() => chapterPosts.value.filter(post => !post.type)),
+	chapterToc = computed(() => chapterPosts.value), // .filter(post => !post.type)
 	chapterExercises = computed(() => chapterPosts.value.filter(post => post.questions.length > 0)),
 	chapterQuestions = computed(() => {
 		const questions = chapterPosts.value.reduce((sum, post) => sum + post.questions.length, 0),

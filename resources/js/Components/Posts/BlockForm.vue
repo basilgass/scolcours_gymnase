@@ -71,7 +71,6 @@
 						label="corps"
 						:rows="11"
 						@keyup.ctrl.enter="update_block"
-						@keyup.esc="cancel_block"
 					/>
 				</div>
 

@@ -9,22 +9,37 @@
 		<!-- Enable edition mode for the whole chapter -->
 		<div
 			v-if="$page.props.auth.can.admin"
-			class="admin-wrapper"
+			class="admin-wrapper flex-col"
 		>
-			<h3 class="text-lg">
-				Administration
-			</h3>
+			<div class="admin-wrapper-row">
+				<h3 class="text-lg">
+					Administration
+				</h3>
 
-			<form-switch
-				v-model="editMode"
-				name="editMode"
-				label="mode édition"
-				@click="storeEditMode"
-			/>
+				<form-switch
+					v-model="editMode"
+					name="editMode"
+					label="mode édition"
+					@click="storeEditMode"
+				/>
+			</div>
+
+			<div
+				v-if="editMode"
+				class="admin-wrapper-row"
+			>
+				<button
+					:class="editAndMove?'btn-success':'btn'"
+					@click="editAndMove=!editAndMove"
+				>
+					Mode organisation
+				</button>
+			</div>
 		</div>
 
 		<!-- Header dashboard -->
 		<chapter-dashboard
+			v-show="!editAndMove"
 			v-model:show-exercises="showOnlyExercises"
 			:chapter="chapter.data"
 		/>
@@ -33,6 +48,7 @@
 		<section class="space-y-10">
 			<!-- Adding formulas as first post. -->
 			<chapter-formulas
+				v-show="!editAndMove"
 				v-if="chapter.data.formulas.length>0 || ($page.props.auth.can.admin && editMode)"
 				id="chapter-formula"
 				:chapter="chapter.data"
@@ -47,6 +63,7 @@
 					:id="`post-${post.id}`"
 					:key="post.id"
 					:post="post"
+					:show-title-only="editAndMove"
 					@delete="deletePost(post.id)"
 					@update-title="post.title=$event"
 				>
@@ -92,16 +109,15 @@
 							</div>
 						</div>
 					</template>
-					<template
-						v-if="chapterPosts.length>1 && chapterPosts.length===chapterPostsFiltered.length"
-						#adminFooter
-					/>
 				</post-show>
 			</div>
 		</section>
 
 		<!-- chapter footer -->
-		<div class="mt-10 text-center space-y-8">
+		<div
+			v-show="!editAndMove"
+			class="mt-10 text-center space-y-8"
+		>
 			<div v-if="chapterPosts.length===0">
 				Aucun article - que c'est triste
 			</div>
@@ -149,6 +165,7 @@ const props = defineProps({
 
 let chapterPosts = ref(props.chapter.data.posts),
 	editMode = ref(localStorage.getItem("ScolCoursEditMode")==="1"),
+	editAndMove = ref(false),
 	showOnlyExercises = ref(false),
 	chapterPostsFiltered = computed(()=>{
 		if(showOnlyExercises.value){

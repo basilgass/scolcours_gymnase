@@ -8,266 +8,288 @@
 
 		<!-- admin box -->
 		<div
-			v-if="$page.props.auth.can.admin && editMode"
+			v-if="$page.props.auth.can.admin && editMode && $slots.adminHeader && showTitleOnly"
 			class="admin-wrapper flex-col"
 		>
 			<slot name="adminHeader" />
-			<div class="w-full flex items-baseline">
-				<!-- update the number of visible blocks -->
-				<div class="flex items-baseline">
-					<form-label
-						class="mr-2"
-						name="visibleBlocks"
-						label="Nombre de blocs visibles"
-						@click.ctrl="numberVisibleBlocks=0;updateNumberOfVisibleBlocks()"
-					/>
-
-					<form-number
-						v-model="numberVisibleBlocks"
-						name="visibleBlocks"
-						label="Nombre de blocs visibles"
-						inline
-						class="w-12"
-						@input="updateNumberOfVisibleBlocks"
-					/>
-				</div>
-
-				<div class="ml-5 flex gap-3">
-					<button
-						class="btn-edit btn-xs"
-						@click="edit=true"
-					>
-						éditer <i class="bi bi-pencil" />
-					</button>
-					<button
-						class="btn-delete btn-xs"
-						@click="deletePost"
-					>
-						Supprimer <i class="bi bi-trash" />
-					</button>
-				</div>
-			</div>
 		</div>
 
-		<!-- all the blocks -->
-		<div class="post-wrapper">
-			<!-- Boutons générés par rapport au scritp du post -->
-			<div class="post-header flex justify-end mt-2 mb-5">
-				<button
-					v-if="postScriptResult?.random===true"
-					class="btn btn-xs bg-white hover:bg-blue-400 hover:border-blue-500 hover:text-white"
-					@click="runPostScript()"
-				>
-					<i class="bi bi-shuffle mr-2" />Rendre aléatoire
-				</button>
-				<div
-					v-if="props.post.switch"
-					class="ml-10"
-				>
-					<span v-katex.auto="switchText.pre" />
-					<ui-switch
-						v-model="scriptSwitch"
-						sm
-						class="mx-1"
-					/>
-					<span v-katex.auto="switchText.post" />
-				</div>
-			</div>
-
-			<!-- Visible blocks by default -->
-			<!-- TODO : merge the hidden and visible blocks -->
+		<div v-show="!showTitleOnly">
+			<!-- post admin block -->
 			<div
-				v-if="visibleBlocks.length>0"
-				class="space-y-10"
+				v-if="$page.props.auth.can.admin && editMode"
+				class="admin-wrapper flex-col mt-3"
 			>
-				<block-show
-					v-for="(block, index) in visibleBlocks"
-					:key="block.id"
-					has-padding
-					:switch="scriptSwitch"
-					:block="block"
-					@delete="deleteBlock(block.id)"
-				>
-					<template
-						v-if="visibleBlocks.length>1"
-						#admin
-					>
-						<div class="w-full flex justify-between items-baseline flex-col md:flex-row">
-							<div>Déplacer ce bloc (id: {{ block.id }}, pos: {{ index }} )</div>
-							<div class="flex gap-3">
-								<button
-									:disabled="index===0"
-									class="btn-update btn-xs "
-									:class="index===0?'invisible':''"
-									@click="moveBlockUp(index, 0)"
-								>
-									En premier
-								</button>
-								<button
-									:disabled="index===0"
-									:class="index===0?'invisible':''"
-									class="btn-update btn-xs"
-									@click="moveBlockUp(index, index-1)"
-								>
-									Monter
-								</button>
-								<button
-									:disabled="index===blocks.length-1"
-									class="btn-update btn-xs"
-									:class="index===blocks.length-1?'invisible':''"
-									@click="moveBlockUp(index, index+1)"
-								>
-									Descendre
-								</button>
-								<button
-									:disabled="index===blocks.length-1"
-									class="btn-update btn-xs"
-									:class="index===blocks.length-1?'invisible':''"
-									@click="moveBlockUp(index, blocks.length)"
-								>
-									En dernier
-								</button>
-							</div>
-						</div>
-					</template>
-				</block-show>
-			</div>
+				<slot name="adminHeader" />
 
-			<!-- hidden blocks by default -->
-			<div
-				v-if="hiddenBlocks.length>0 && !showHiddenBlocks"
-				class="text-center mt-6 mb-4 pt-5 border-t border-gray-200"
-			>
-				<button
-					class="btn text-gray-500 italic text-xs"
-					@click="showHiddenBlocks=true"
-				>
-					Développer la suite...
-				</button>
-			</div>
-		</div>
+				<div class="w-full flex items-baseline">
+					<!-- update the number of visible blocks -->
+					<div class="flex items-baseline">
+						<form-label
+							class="mr-2"
+							name="visibleBlocks"
+							label="Nombre de blocs visibles"
+							@click.ctrl="numberVisibleBlocks=0;updateNumberOfVisibleBlocks()"
+						/>
 
-		<!-- all the questions -->
-		<div
-			v-if="postQuestions.length>0"
-			class="questions-wrapper mt-10"
-		>
-			<div class="flex items-baseline justify-between border-t -mx-4 px-4 py-3 mt-5 mb-3">
-				<h3 class="text-lg">
-					Questions
-				</h3>
-				<div>{{ questionRemaining }} / {{ postQuestions.length }}</div>
-			</div>
-
-			<div
-				class="grid grid-cols-1 gap-10"
-				:class="{
-					'md:grid-cols-2 lg:grid-cols-3':postQuestions.length>=3,
-					'md:grid-cols-2':postQuestions.length===2,
-				}"
-			>
-				<question-show
-					v-for="question in postQuestions"
-					:key="`postQuestion-${question.id}`"
-					:question="question"
-					@destroy="questionDestroy"
-				/>
-			</div>
-		</div>
-
-		<!-- post footer -->
-		<div
-			v-if="$page.props.auth.can.admin && editMode"
-			class="admin-wrapper mt-10 flex-col gap-10"
-		>
-			<div class="flex items-end gap-3">
-				<button
-					class="btn-primary"
-					@click="addBlock"
-					v-text="`ajouter ${addNBlocks} bloc${addNBlocks>1?'s':''}`"
-				/>
-
-				<form-number
-					v-model="addNBlocks"
-					name="addNBlock"
-					label="nombre de blocs à ajouter"
-					min="1"
-					max="10"
-				/>
-			</div>
-
-			<div
-				v-if="$slots.admin"
-				class="w-full"
-			>
-				<slot name="adminFooter" />
-			</div>
-		</div>
-
-		<!-- post footer admin -->
-		<div
-			v-if="$page.props.auth.can.admin && editMode"
-			class="admin-wrapper mt-10 flex-col gap-10"
-		>
-			<div>
-				<h3 class="text-lg">
-					Ajouter des questions
-				</h3>
-				<div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-					<div class="md:col-span-2">
-						<form-textarea
-							v-model="questionForm.body"
-							:rows="questionForm.rows"
-							label="question"
-							name="body"
-							@input="questionForm.rows = questionForm.body.split('\n').length"
+						<form-number
+							v-model="numberVisibleBlocks"
+							name="visibleBlocks"
+							label="Nombre de blocs visibles"
+							inline
+							class="w-12"
+							@input="updateNumberOfVisibleBlocks"
 						/>
 					</div>
-					<form-textarea
-						v-model="questionForm.answer"
-						:rows="questionForm.rows"
-						label="réponse"
-						name="answer"
-					/>
-					<form-textarea
-						v-model="questionForm.checker"
-						:rows="questionForm.rows"
-						label="Vérification"
-						name="checker"
-					/>
-					<div class="flex items-end gap-4 justify-self-end md:col-span-4">
-						<input
-							v-model="questionForm.math"
-							type="checkbox"
-						>
-						<form-input
-							v-model="questionForm.keyboard"
-							label="clavier"
-							name="clavier"
-						/>
 
+					<div class="ml-5 flex gap-3">
 						<button
-							class=" btn-primary"
-							@click="questionStore"
+							class="btn-edit btn-xs"
+							@click="edit=true"
 						>
-							Ajouter {{ questionForm.rows }}
+							éditer <i class="bi bi-pencil" />
+						</button>
+						<button
+							class="btn-delete btn-xs"
+							@click="deletePost"
+						>
+							Supprimer <i class="bi bi-trash" />
 						</button>
 					</div>
 				</div>
 			</div>
-		</div>
 
-		<!-- Edit box -->
-		<dialog-modal
-			v-model="edit"
-			@cancel="numberVisibleBlocks = props.post.numberOfVisibleBlocks"
-		>
-			<PostForm
-				:post="post"
-				@validate="refreshPost"
-				@cancel="edit=false;numberVisibleBlocks = props.post.numberOfVisibleBlocks"
-			/>
-		</dialog-modal>
+			<!-- all the blocks -->
+			<div class="post-wrapper">
+				<!-- Boutons générés par rapport au scritp du post -->
+				<div class="post-header flex justify-end mt-2 mb-5">
+					<button
+						v-if="postScriptResult?.random===true"
+						class="btn btn-xs bg-white hover:bg-blue-400 hover:border-blue-500 hover:text-white"
+						@click="runPostScript()"
+					>
+						<i class="bi bi-shuffle mr-2" />Rendre aléatoire
+					</button>
+					<div
+						v-if="props.post.switch"
+						class="ml-10"
+					>
+						<span v-katex.auto="switchText.pre" />
+						<ui-switch
+							v-model="scriptSwitch"
+							sm
+							class="mx-1"
+						/>
+						<span v-katex.auto="switchText.post" />
+					</div>
+				</div>
+
+				<!-- Visible blocks by default -->
+				<!-- TODO : merge the hidden and visible blocks -->
+				<div
+					v-if="visibleBlocks.length>0"
+					class="space-y-10"
+				>
+					<block-show
+						v-for="(block, index) in visibleBlocks"
+						:key="block.id"
+						has-padding
+						:switch="scriptSwitch"
+						:block="block"
+						@delete="deleteBlock(block.id)"
+					>
+						<template
+							v-if="visibleBlocks.length>1"
+							#admin
+						>
+							<div class="w-full flex justify-between items-baseline flex-col md:flex-row">
+								<div>Déplacer ce bloc (id: {{ block.id }}, pos: {{ index }} )</div>
+								<div class="flex gap-3">
+									<button
+										:disabled="index===0"
+										class="btn-update btn-xs "
+										:class="index===0?'invisible':''"
+										@click="moveBlockUp(index, 0)"
+									>
+										En premier
+									</button>
+									<button
+										:disabled="index===0"
+										:class="index===0?'invisible':''"
+										class="btn-update btn-xs"
+										@click="moveBlockUp(index, index-1)"
+									>
+										Monter
+									</button>
+									<button
+										:disabled="index===blocks.length-1"
+										class="btn-update btn-xs"
+										:class="index===blocks.length-1?'invisible':''"
+										@click="moveBlockUp(index, index+1)"
+									>
+										Descendre
+									</button>
+									<button
+										:disabled="index===blocks.length-1"
+										class="btn-update btn-xs"
+										:class="index===blocks.length-1?'invisible':''"
+										@click="moveBlockUp(index, blocks.length)"
+									>
+										En dernier
+									</button>
+								</div>
+							</div>
+						</template>
+					</block-show>
+				</div>
+
+				<!-- hidden blocks by default -->
+				<div
+					v-if="hiddenBlocks.length>0 && !showHiddenBlocks"
+					class="text-center mt-6 mb-4 pt-5 border-t border-gray-200"
+				>
+					<button
+						class="btn text-gray-500 italic text-xs"
+						@click="showHiddenBlocks=true"
+					>
+						Développer la suite...
+					</button>
+				</div>
+			</div>
+
+			<!-- post footer admin -->
+			<div
+				v-if="$page.props.auth.can.admin && editMode"
+				class="admin-wrapper mt-10 flex-col gap-10"
+			>
+				<div class="flex items-end gap-3">
+					<button
+						class="btn-primary"
+						@click="addBlock"
+						v-text="`ajouter ${addNBlocks} bloc${addNBlocks>1?'s':''}`"
+					/>
+
+					<form-number
+						v-model="addNBlocks"
+						name="addNBlock"
+						label="nombre de blocs à ajouter"
+						min="1"
+						max="10"
+					/>
+				</div>
+
+				<div
+					v-if="$slots.admin"
+					class="w-full"
+				>
+					<slot name="adminFooter" />
+				</div>
+			</div>
+
+			<!-- all the questions -->
+			<div
+				v-if="postQuestions.length>0"
+				class="questions-wrapper mt-10"
+			>
+				<div class="flex items-baseline justify-between border-t -mx-4 px-4 py-3 mt-5 mb-3">
+					<h3 class="text-lg">
+						Questions
+					</h3>
+					<div class="flex gap-3 items-baseline">
+						<div>
+							{{ questionRemaining }} / {{ postQuestions.length }} questions résolues
+						</div>
+						<button
+							v-if="$page.props.auth.can.admin"
+							class="btn"
+							@click="questionResetAnswers"
+						>
+							<i class="bi bi-trash2" />effacer
+						</button>
+					</div>
+				</div>
+
+				<div
+					class="grid grid-cols-1 gap-10"
+					:class="{
+						'md:grid-cols-2 lg:grid-cols-3':postQuestions.length>=3,
+						'md:grid-cols-2':postQuestions.length===2,
+					}"
+				>
+					<question-show
+						v-for="question in postQuestions"
+						:key="`postQuestion-${question.id}`"
+						:question="question"
+						@destroy="questionDestroy"
+					/>
+				</div>
+			</div>
+
+			<!-- question footer admin -->
+			<div
+				v-if="$page.props.auth.can.admin && editMode"
+				class="admin-wrapper mt-10 flex-col gap-10"
+			>
+				<div>
+					<h3 class="text-lg">
+						Ajouter des questions
+					</h3>
+					<div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+						<div class="md:col-span-2">
+							<form-textarea
+								v-model="questionForm.body"
+								:rows="questionForm.rows"
+								label="question"
+								name="body"
+								@input="questionForm.rows = questionForm.body.split('\n').length"
+							/>
+						</div>
+						<form-textarea
+							v-model="questionForm.answer"
+							:rows="questionForm.rows"
+							label="réponse"
+							name="answer"
+						/>
+						<form-textarea
+							v-model="questionForm.checker"
+							:rows="questionForm.rows"
+							label="Vérification"
+							name="checker"
+						/>
+						<div class="flex items-end gap-4 justify-self-end md:col-span-4">
+							<input
+								v-model="questionForm.math"
+								type="checkbox"
+							>
+							<form-input
+								v-model="questionForm.keyboard"
+								label="clavier"
+								name="clavier"
+							/>
+
+							<button
+								class=" btn-primary"
+								@click="questionStore"
+							>
+								Ajouter {{ questionForm.rows }}
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Edit box -->
+			<dialog-modal
+				v-model="edit"
+				@cancel="numberVisibleBlocks = props.post.numberOfVisibleBlocks"
+			>
+				<PostForm
+					:post="post"
+					@validate="refreshPost"
+					@cancel="edit=false;numberVisibleBlocks = props.post.numberOfVisibleBlocks"
+				/>
+			</dialog-modal>
+		</div>
 	</div>
 </template>
 
@@ -291,7 +313,8 @@ const props = defineProps({
 	post: {
 		type: Object, default: () => {
 		}
-	}
+	},
+	showTitleOnly: {type: Boolean, default: false}
 })
 
 /** Blocks reactives and methods */
@@ -377,6 +400,13 @@ function questionDestroy(id) {
 	postQuestions.value = postQuestions.value.filter(question => question.id !== id)
 }
 
+function questionResetAnswers(){
+	axios.patch(
+		route("posts.questions.reset", [props.post.id], {
+			_method: "patch"
+		})
+	)
+}
 
 /** scripts / random parameters / switch*/
 function runPostScript() {

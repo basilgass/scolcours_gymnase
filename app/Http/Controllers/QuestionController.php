@@ -14,7 +14,7 @@ class QuestionController extends Controller
 {
 	public function __construct()
 	{
-		$this->middleware('auth')->except(['index', 'show', 'storeAnswer']);
+		$this->middleware('auth')->except(['index', 'show']);
 	}
 
 	/**
@@ -117,5 +117,14 @@ class QuestionController extends Controller
 		$question->users()->attach($user, $validate);
 
 		return $validate;
+	}
+
+	public function resetAnswers(Post $post)
+	{
+		$user = Auth::user();
+		if(!$user){return false;}
+
+		$questions = $user->questions()->detach($post->questions->pluck('id'));
+		return true;
 	}
 }
