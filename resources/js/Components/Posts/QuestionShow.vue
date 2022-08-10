@@ -115,6 +115,11 @@
 					>
 						Donner la réponse: {{ userAnswer }}
 					</button>
+					<div class="text-xs text-gray-600 flex justify-between mt-1">
+						<p
+							v-katex.auto="answerFormat"
+						/>
+					</div>
 					<!--					<form-input-->
 					<!--						v-model="userAnswer"-->
 					<!--						:name="`question-${theQuestion.id}`"-->
@@ -302,7 +307,7 @@ let answerInputClick = function (ev) {
 			if(digits !== +theQuestion.value.checker.split(",")[1]){return false}
 			return userAnswer.value.toString() === theQuestion.value.answer
 		}
-		else if (theQuestion.value.checker?.match(/^%d\.[0-9]+/)) {
+		else if (theQuestion.value.checker?.match(/^nb\.[0-9]+/)) {
 			return userAnswer.value.length === theQuestion.value.answer.length
 				&&
 				(+userAnswer.value).toFixed(+theQuestion.value.checker.split(".")[1]) === theQuestion.value.answer
@@ -311,7 +316,7 @@ let answerInputClick = function (ev) {
 		}
 	}),
 	answerFormat = computed(() => {
-		if (theQuestion.value.checker?.match(/%d\.[0-9]+/)) {
+		if (theQuestion.value.checker?.match(/^nb\.[0-9]+/)) {
 			return `Réponse avec ${+theQuestion.value.checker.split(".")[1]} chiffre(s) après la virgule.`
 		} else if (theQuestion.value.checker?.match(/^qcm@/)) {
 			return ""

@@ -42,8 +42,8 @@
 	.border-scolcours-jeux {@apply border-orange-300}
 	.border-scolcours-tools {@apply border-pink-300}
 
-	.post-danger {@apply bg-red-500}
-	.post-success {@apply bg-green-300}
+	.md-danger {@apply bg-red-300}
+	.md-success {@apply bg-green-300}
 
 	.katex-boxed .katex-display {
 		@apply bg-amber-700/5 px-5 py-4 my-2 rounded overflow-x-auto;
