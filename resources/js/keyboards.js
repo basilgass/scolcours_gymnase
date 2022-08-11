@@ -132,10 +132,10 @@ export const keyboards = {
 		layout: [
 			"1", "2", "3", "+","-",
 			"4", "5", "6", "*","/",
-			"7", "8", "9", "sqrt","root(3)",
-			"@reset", "@back", "0", "!!","IR",
-			"a", "b", "c", "d", "",
-			"n", "m", "x", "y", ""
+			"7", "8", "9", "^2","^",
+			"@reset", "@back", "0", "sqrt","root(3)",
+			"a", "b", "c", "d", "!!",
+			"n", "m", "x", "y", "IR"
 		],
 		tex: function(value){
 			if(!value.includes("/")){return asciiToTex(value)}
