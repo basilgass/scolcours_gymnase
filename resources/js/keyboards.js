@@ -91,6 +91,18 @@ export const keyboards = {
 			return asciiToTex(value)
 		}
 	},
+	"pow": {
+		grid: "grid-cols-4",
+		layout: [
+			"1", "2", "3", "-",
+			"4", "5", "6", "^",
+			"7", "8", "9", "/",
+			"", "0", "", ""
+		],
+		tex(value){
+			return asciiToTex(value)
+		}
+	},
 	"scn": {
 		grid: "grid-cols-4",
 		layout: [

@@ -36,11 +36,12 @@
 		<!-- The keyboard and answer wrapper -->
 		<div>
 			<div
+				v-if="showOutput"
 				v-katex.display="formattedAnswer"
-				class="min-h-[3em]"
+				class="min-h-[100px]"
 			/>
 
-			<div class="text-center pt-1 pb-5">
+			<div class=" text-center pt-1 pb-5">
 				<button
 					ref="ValidateButton"
 					class="btn btn-success w-64"
@@ -308,14 +309,21 @@ let ValidateButton = ref(null),
 	keyboardUI = ref(null)
 
 let question = computed(() => {
-	if(listOfQuestions.value.length===0 || listOfQuestions.value.length < questionId.value){
-		listOfQuestions.value = PiMath.Random.shuffle(questions.value)
-	}
+		if(listOfQuestions.value.length===0 || listOfQuestions.value.length < questionId.value){
+			listOfQuestions.value = PiMath.Random.shuffle(questions.value)
+		}
 
-	return theChallenge.value.output
-		.replace("question", listOfQuestions.value[questionId.value].question)
-		.replace("answer", formattedAnswer.value)
-})
+		return theChallenge.value.output
+			.replace("question", listOfQuestions.value[questionId.value].question)
+			.replace("answer", formattedAnswer.value)
+	}),
+	showOutput = computed(()=>{
+		if(listOfQuestions.value[questionId.value]) {
+			return !(listOfQuestions.value[questionId.value].question.includes("answer")||theChallenge.value.output.includes("answer"))
+		}
+
+		return false
+	})
 
 let formattedAnswer = ref("")
 
