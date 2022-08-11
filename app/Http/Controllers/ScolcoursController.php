@@ -43,4 +43,8 @@ class ScolcoursController extends Controller
 		]);
     }
 
+	public function dev($page)
+	{
+		return Inertia::render('Devs/'.$page);
+	}
 }

@@ -1,24 +1,28 @@
 <template>
-	<div>
-		<div
-			v-if="mathOutput"
-			class="grid grid-cols-1 min-h-[50px]"
-		>
+	<div class="keyboard-wrapper">
+		<div class="keyboard-output">
 			<div
-				v-katex.ascii.left.nomargin="props.modelValue"
-				class="self-center"
-			/>
-		</div>
-		<div
-			v-if="textOutput"
-			class="grid grid-cols-1 min-h-[40px] italic"
-		>
+				v-if="mathOutput"
+				class="grid grid-cols-1 min-h-[50px]"
+			>
+				<div
+					v-katex.ascii.left.nomargin="props.modelValue"
+					class="self-center"
+				/>
+			</div>
 			<div
+				v-if="textOutput"
+				class="grid grid-cols-1 min-h-[40px] italic"
+			>
+				<div
 
-				class="self-center"
-				v-text="props.modelValue"
-			/>
+					class="self-center"
+					v-text="props.modelValue"
+				/>
+			</div>
 		</div>
+
+		<!-- keyboard keys -->
 		<div
 			ref="root"
 			class="grid gap-2 keyboard"
@@ -42,18 +46,30 @@
 			</button>
 		</div>
 
+		<!-- keyboard commands -->
 		<div
 			v-if="keyboardCommands.length>0"
-			class="keyboard grid gap-2 w-full mt-10"
+			class="keyboard flex w-full mt-10 gap-3"
 			:class="`grid-cols-${keyboardCommands.length}`+ (small?' keyboard-sm':'')"
 		>
 			<button
 				v-for="(item, index) of keyboardCommands"
 				:key="`keyboard-command-${index}`"
-				:class="`key ${keyClass} col-span-${item.span} ${item.atEnd?'order-last':''}`"
+				:class="`key ${keyClass} grow ${item.atEnd?'order-last':''}`"
 				@click="item.fn()"
 			>
 				<i :class="item.icon" /> <span class="hidden md:inline md:ml-2">{{ item.label }}</span>
+			</button>
+		</div>
+		<div
+			v-if="validate"
+			class="keyboard w-full mt-3"
+		>
+			<button
+				:class="`key ${keyClass} w-full`"
+				@click="btnValidate.fn()"
+			>
+				<i :class="btnValidate.icon" /> <span class="hidden md:inline md:ml-2">{{ btnValidate.label }}</span>
 			</button>
 		</div>
 	</div>
@@ -69,6 +85,7 @@ const props = defineProps({
 	tex: String,
 	keyboard: {type: [Object, String], default: () => "simple"},
 	validate: {type: Boolean, default: null},
+	erase: {type: Boolean, default: null},
 	reset: {type: Boolean, default: null},
 	back: {type: Boolean, default: null},
 	next: {type: Boolean, default: null},
@@ -90,6 +107,48 @@ let keyboardData = computed(() => {
 		return props.keyboard
 	}
 })
+
+
+const btnReset = {
+		label: "tout effacer",
+		icon: "bi bi-trash",
+		span: 1,
+		fn: () => resetKeyStrokes(),
+		atEnd: false
+	},
+	btnAddResponse = {
+		label: "Ajouter",
+		icon: "bi bi-plus-circle",
+		span: 1,
+		fn: () => {
+			ButtonKeyClick({
+				key: ",",
+				fn: (value) => value + ","
+			})
+		},
+		atEnd: false
+	},
+	btnBack = {
+		label: "effacer",
+		icon: "bi bi-backspace",
+		span: 1,
+		fn: () => backKeyStrokes(),
+		atEnd: false
+	},
+	btnNext = {
+		label: "suivant",
+		icon: "bi bi-arrow-bar-right",
+		span: 1,
+		fn: () => emit("next"),
+		atEnd: false
+	},
+	btnValidate = {
+		label: "valider",
+		icon: "bi bi-check",
+		span: 3,
+		fn: () => emit("validate"),
+		atEnd: false
+	}
 
 let keyboardComputed = computed(() => {
 		let data = []
@@ -140,98 +199,39 @@ let keyboardComputed = computed(() => {
 		return data
 	}),
 	keyboardCommands = computed(() => {
-		const btnReset = {
-				label: "tout effacer",
-				icon: "bi bi-trash",
-				span: 1,
-				fn: () => resetKeyStrokes(),
-				atEnd: false
-			},
-			btnBack = {label: "effacer", icon: "bi bi-backspace", span: 1, fn: () => backKeyStrokes(), atEnd: false},
-			btnNext = {label: "suivant", icon: "bi bi-arrow-bar-right", span: 1, fn: () => emit("next"), atEnd: false},
-			btnValidate = {label: "valider", icon: "bi bi-check", span: 3, fn: () => emit("validate"), atEnd: false}
+		// Return the buttons
+		let commandsBtn = []
 
-		let grid = 3, commandsBtn = []
-		if (keyboardData.value.grid) {
-			grid = keyboardData.value.grid.split("-").pop()
-		}
-
-		let smallButtons = 0, col = 0
 		if (props.back) {
-			smallButtons++
+			commandsBtn.push(btnBack)
 		}
 		if (props.reset) {
-			smallButtons++
+			commandsBtn.push(btnReset)
+		}
+		if (props.multiple) {
+			commandsBtn.push(btnAddResponse)
 		}
 		if (props.next) {
-			smallButtons++
+			commandsBtn.push(btnNext)
 		}
 
-		if(props.validate){
-			if(smallButtons+2>grid){
-				// The grid is too small
-				if (props.reset) {commandsBtn.push(btnReset)}
-				if (props.back) {commandsBtn.push(btnBack)}
-				if (props.next) {commandsBtn.push(btnNext)}
-
-				if(commandsBtn.length===1){
-					// smallBtn + ValidateBzn
-					btnValidate.span=grid-1
-				}else {
-					// smallBtn smallBtn
-					// validateBtn (on another line)
-					btnValidate.span=grid
-				}
-				commandsBtn.push(btnValidate)
-			}else{
-				col = Math.min(2, Math.trunc((grid-2)/smallButtons))
-				btnBack.span = col
-				btnReset.span = col
-				btnNext.span = col
-				btnValidate.span = +grid
-
-				if (props.reset) {
-					commandsBtn.push(btnReset)
-					btnValidate.span -= col
-				}
-				if (props.back) {
-					commandsBtn.push(btnBack)
-					btnValidate.span -= col
-				}
-				commandsBtn.push(btnValidate)
-
-				if (props.next) {
-					commandsBtn.push(btnNext)
-					btnValidate.span -= col
-				}
-			}
-		}else if(smallButtons>0){
-			if (props.reset) {commandsBtn.push(btnReset)}
-			if (props.back) {commandsBtn.push(btnBack)}
-			if (props.next) {commandsBtn.push(btnNext)}
-
-			let col = Math.trunc(grid/commandsBtn.length)
-			btnReset.span = col
-			btnBack.span = col
-			btnNext.span = col
-			commandsBtn[commandsBtn.length-1].atEnd = true
-		}
 		return commandsBtn
+
 	})
 
-function resetKeyStrokes () {
+function resetKeyStrokes() {
 	keyStrokes.value = []
 	emit("update:modelValue", "")
 	emit("update:tex", "")
 }
 
-function backKeyStrokes () {
+function backKeyStrokes() {
 	ButtonKeyClick({
 		key: "@back"
 	})
 }
 
-function ButtonKeyClick (key) {
+function ButtonKeyClick(key) {
 	if (key.key === "@back") {
 		keyStrokes.value.pop()
 	} else if (key.key === "@reset") {
@@ -242,11 +242,11 @@ function ButtonKeyClick (key) {
 
 	let output = "", result = keyStrokes.value.map(k => k.fn(output)).join("")
 	emit("update:modelValue", result)
-	emit("update:tex", keyboards[props.keyboard].tex?keyboards[props.keyboard].tex(result):result)
+	emit("update:tex", keyboards[props.keyboard].tex ? keyboards[props.keyboard].tex(result) : result)
 	emit("key", result)
 }
 
-defineExpose({ resetKeyStrokes })
+defineExpose({resetKeyStrokes})
 </script>
 <style scoped>
 

@@ -61,20 +61,19 @@ export const keyboards = {
 			"1", "2", "3",
 			"4", "5", "6",
 			"7", "8", "9",
-			".", "0", "-",
-			"@back","","@reset"
+			"-", "0", "."
 		],
 		tex(value){
 			return value
 		}
 	},
 	"fraction": {
-		grid: "grid-cols-4",
+		grid: "grid-cols-3",
 		layout: [
-			"1", "2", "3", "-",
-			"4", "5", "6","/",
-			"7", "8", "9","",
-			 ["0", 2],"@back","@reset"
+			"1", "2", "3",
+			"4", "5", "6",
+			"7", "8", "9",
+			 "-", "0", "/"
 		],
 		tex(value){
 			return asciiToTex(value)
@@ -86,7 +85,7 @@ export const keyboards = {
 			"1", "2", "3", "+",
 			"4", "5", "6", "-",
 			"7", "8", "9", "*",
-			"@back", ["0", 2], "/"
+			"", "0", "", "/"
 		],
 		tex(value){
 			return asciiToTex(value)
@@ -98,7 +97,7 @@ export const keyboards = {
 			"1", "2", "3", "-",
 			"4", "5", "6", "*",
 			"7", "8", "9", "10^",
-			"@back", "0", ".", ","
+			"", "0", ".", ""
 		],
 		tex(value){
 			return asciiToTex(value)
@@ -109,8 +108,8 @@ export const keyboards = {
 		layout: [
 			"1", "2", "3", "+", "x", "y", "e",
 			"4", "5", "6", "-", "^2", "^", "ln",
-			"7", "8", "9", "*", "|", "sqrt", "",
-			"@reset", "@back", "0", "/", "(", ")", "="
+			"7", "8", "9", "*", "|", "sqrt", "root(3)",
+			"", "0", "", "/", "(", ")", "="
 		],
 		tex(value){
 			return asciiToTex(value)
@@ -135,7 +134,7 @@ export const keyboards = {
 			"4", "5", "6", "*","/",
 			"7", "8", "9", "sqrt","root(3)",
 			"@reset", "@back", "0", "!!","IR",
-			"a", "b", "c", "d", ",",
+			"a", "b", "c", "d", "",
 			"n", "m", "x", "y", ""
 		],
 		tex: function(value){

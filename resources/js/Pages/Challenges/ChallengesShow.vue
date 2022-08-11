@@ -52,9 +52,11 @@
 			<Keyboard
 				ref="keyboardUI"
 				v-model="answer"
-				v-model:model-formatted="formattedAnswer"
+				v-model:tex="formattedAnswer"
 				:keyboard="theChallenge.keyboard"
 				class="max-w-xl mx-auto"
+				reset
+				back
 				@key="checkerResult.message = ''"
 			/>
 		</div>
@@ -312,7 +314,7 @@ let question = computed(() => {
 
 	return theChallenge.value.output
 		.replace("question", listOfQuestions.value[questionId.value].question)
-		.replace("answer", answer.value)
+		.replace("answer", formattedAnswer.value)
 })
 
 let formattedAnswer = ref("")

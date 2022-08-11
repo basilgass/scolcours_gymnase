@@ -152,6 +152,9 @@
 							v-model:tex="userAnswerAsTex"
 							key-class="bg-white"
 							validate
+							reset
+							back
+							:multiple="multipleAnswer"
 							class="mt-3"
 							:keyboard="theQuestion.keyboard"
 							@validate="validateAnswer"
@@ -372,45 +375,48 @@ let answerInputClick = function (ev) {
 	})
 
 let formatQuestion = function () {
-	let body = theQuestion.value.body,
-		isMath = theQuestion.value.math,
-		answer
+		let body = theQuestion.value.body,
+			isMath = theQuestion.value.math,
+			answer
 
-	// Check if the answer is a correct tex value
-	try {
-		katex.renderToString(userAnswerAsTex.value)
-		answer = userAnswerAsTex.value
-	} catch {
-		answer = "\\color{red}{\\text{ ??? }}"
-	}
+		// Check if the answer is a correct tex value
+		try {
+			katex.renderToString(userAnswerAsTex.value)
+			answer = userAnswerAsTex.value
+		} catch {
+			answer = "\\color{red}{\\text{ ??? }}"
+		}
 
-	// The question may contain answer place holder...
-	if(body.includes("$")){
-		// variables MUST be in this order.
-		let vnames = "abcdefghijklmnopqrstuvwxyz"
+		// The question may contain answer place holder...
+		if(body.includes("$")){
+			// variables MUST be in this order.
+			let vnames = "abcdefghijklmnopqrstuvwxyz"
 
-		answer = answer.split(",").filter(x=>x!=="")
-		for(let i=0; i<vnames.length; i++){
-			const key = "$"+vnames[i]
-			if(body.includes(key)){
-				if(i<answer.length) {
-					body = body.replaceAll(key, answer[i])
-				}else{
-					body = body.replaceAll(key, `\\textcolor{red}{\\ ${vnames[i]} \\ }`)
+			answer = answer.split(",").filter(x=>x!=="")
+			for(let i=0; i<vnames.length; i++){
+				const key = "$"+vnames[i]
+				if(body.includes(key)){
+					if(i<answer.length) {
+						body = body.replaceAll(key, answer[i])
+					}else{
+						body = body.replaceAll(key, `\\textcolor{red}{\\ ${vnames[i]} \\ }`)
+					}
 				}
 			}
 		}
-	}
 
-	if (isMath) {
-		if (body[body.length - 1] === "=") {
-			body += answer
+		if (isMath) {
+			if (body[body.length - 1] === "=") {
+				body += answer
+			}
+			body = `\\[${body}\\]`
 		}
-		body = `\\[${body}\\]`
-	}
 
-	questionDisplay.value = body
-}
+		questionDisplay.value = body
+	},
+	multipleAnswer = computed(()=>{
+		return theQuestion.value.body.split("$").length>2
+	})
 
 watch(userAnswerAsTex, () => {
 	formatQuestion()

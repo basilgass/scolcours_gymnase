@@ -102,7 +102,7 @@ Route::apiResource('chapters.challenges', ChallengesController::class)
 //Route::get('/download/{fileID}', [LatexController::class, 'download']);
 
 // Developpement page
-Route::get('dev/', [ScolcoursController::class, 'dev']);
+Route::get('dev/{dev}', [ScolcoursController::class, 'dev']);
 
 // Post routes (for debug / dev)
 //Route::post('post/', [PostController::class, 'store']);
