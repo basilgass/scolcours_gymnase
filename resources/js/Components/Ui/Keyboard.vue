@@ -116,13 +116,16 @@ let root = ref(null),
 	keyStrokes = ref([]),
 	keyboardGridDefault = ref("grid-cols-4")
 
-let keyboardData = computed(() => {
+let theKeyboard = computed(()=>{
 		if (typeof props.keyboard === "string") {
-			const kbrd = props.keyboard.split(",")[0]
-			if(keyboards[kbrd] !== undefined) {
-				console.log(kbrd)
-				return keyboards[kbrd]
-			}
+			return props.keyboard.split(",")[0]
+		}
+
+		return props.keyboard
+	}),
+	keyboardData = computed(() => {
+		if (typeof theKeyboard.value==="string") {
+			return keyboards[theKeyboard.value]
 		}
 
 		return props.keyboard
@@ -248,7 +251,6 @@ let keyboardComputed = computed(() => {
 		let data = []
 
 		// Loop through all keyboard keys in the layout.
-		console.log(letters.value)
 		for (let kkey of letters.value) {
 			let kdata = {}
 
@@ -265,7 +267,6 @@ let keyboardComputed = computed(() => {
 			data.push(kdata)
 		}
 
-		console.log(data)
 		return data
 	})
 
@@ -292,7 +293,7 @@ function ButtonKeyClick(key) {
 
 	let output = "", result = keyStrokes.value.map(k => k.fn(output)).join("")
 	emit("update:modelValue", result)
-	emit("update:tex", keyboards[props.keyboard].tex ? keyboards[props.keyboard].tex(result) : result)
+	emit("update:tex", keyboards[theKeyboard.value].tex ? keyboards[theKeyboard.value].tex(result) : result)
 	emit("key", result)
 }
 

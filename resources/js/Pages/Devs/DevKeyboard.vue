@@ -38,8 +38,13 @@
 			<input v-model="letters">
 		</div>
 	</div>
+	<div
+		v-katex.display="tex"
+		class="katex-block"
+	/>
 	<Keyboard
 		v-model="result"
+		v-model:tex="tex"
 		:keyboard="keyboard + (letters===''?'':`,${letters}`)"
 		math-output
 		text-output
@@ -72,6 +77,7 @@ let keyboard = ref("pow"),
 	next=ref(true),
 	back=ref(true),
 	multiple=ref(true),
-	letters=ref("abcnm")
+	letters=ref("abcnm"),
+	tex = ref("")
 
 </script>
