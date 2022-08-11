@@ -31,6 +31,7 @@ export const keyboardKeys = {
 	"10^": {type: "math", display: "10^x"},
 	"sqrt": {type: "math", display: "\\sqrt{\\phantom{x}}"},
 	"root(3)": {type: "math", display: "\\sqrt[3]{\\phantom{x}}"},
+	"root(": {type: "math", display: "\\sqrt[n]{\\phantom{x}}"},
 	"|": {type: "math", display: "\\big\\vert \\textcolor{lightgray}{x} \\big\\vert"},
 	"y": {type: "math", display: "y"},
 	"e": {type: "math", display: "\\text{e}"},
@@ -145,9 +146,9 @@ export const keyboards = {
 			"1", "2", "3", "+","-",
 			"4", "5", "6", "*","/",
 			"7", "8", "9", "^2","^",
-			"@reset", "@back", "0", "sqrt","root(3)",
-			"a", "b", "c", "d", "!!",
-			"n", "m", "x", "y", "IR"
+			"@reset", "@back", "0", "sqrt","root(",
+			"a", "b", "c", "(", ")",
+			"n", "m", "x", "IR", "!!"
 		],
 		tex: function(value){
 			if(!value.includes("/")){return asciiToTex(value)}

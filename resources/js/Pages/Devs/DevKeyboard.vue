@@ -61,7 +61,7 @@ import {keyboards} from "@/keyboards"
 
 import {ref} from "vue"
 
-let keyboard = ref("algebra"),
+let keyboard = ref("exact"),
 	choices = ref(Object.keys(keyboards)),
 	result = ref(""),
 	validate=ref(true),
