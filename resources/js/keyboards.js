@@ -97,7 +97,7 @@ export const keyboards = {
 			"1", "2", "3", "-",
 			"4", "5", "6", "^",
 			"7", "8", "9", "/",
-			"", "0", "", ""
+			"", "0", "(", ")"
 		],
 		tex(value){
 			return asciiToTex(value)
