@@ -34,10 +34,13 @@
 				type="checkbox"
 			></label>
 		</div>
+		<div>
+			<input v-model="letters">
+		</div>
 	</div>
 	<Keyboard
 		v-model="result"
-		:keyboard="keyboard"
+		:keyboard="keyboard + (letters===''?'':`,${letters}`)"
 		math-output
 		text-output
 		:validate="validate"
@@ -61,13 +64,14 @@ import {keyboards} from "@/keyboards"
 
 import {ref} from "vue"
 
-let keyboard = ref("exact"),
+let keyboard = ref("pow"),
 	choices = ref(Object.keys(keyboards)),
 	result = ref(""),
 	validate=ref(true),
 	reset=ref(true),
 	next=ref(true),
 	back=ref(true),
-	multiple=ref(true)
+	multiple=ref(true),
+	letters=ref("abcnm")
 
 </script>

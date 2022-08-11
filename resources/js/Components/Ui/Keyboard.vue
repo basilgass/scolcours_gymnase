@@ -46,11 +46,26 @@
 			</button>
 		</div>
 
+		<!-- keyboard extra letters -->
+		<div
+			v-if="keyboardLetters.length>0"
+			class="keyboard flex flex-wrap w-full mt-10 gap-3"
+			:class="small?' keyboard-sm':''"
+		>
+			<button
+				v-for="(key, index) of keyboardLetters"
+				:key="`keyboard-letters-${index}`"
+				:class="`key ${keyClass} grow`"
+				@click="ButtonKeyClick(key)"
+			>
+				<span v-katex.clear="key.display" />
+			</button>
+		</div>
 		<!-- keyboard commands -->
 		<div
 			v-if="keyboardCommands.length>0"
 			class="keyboard flex w-full mt-10 gap-3"
-			:class="`grid-cols-${keyboardCommands.length}`+ (small?' keyboard-sm':'')"
+			:class="small?' keyboard-sm':''"
 		>
 			<button
 				v-for="(item, index) of keyboardCommands"
@@ -61,6 +76,7 @@
 				<i :class="item.icon" /> <span class="hidden md:inline md:ml-2">{{ item.label }}</span>
 			</button>
 		</div>
+		<!-- keyboard validate -->
 		<div
 			v-if="validate"
 			class="keyboard w-full mt-3"
@@ -101,12 +117,22 @@ let root = ref(null),
 	keyboardGridDefault = ref("grid-cols-4")
 
 let keyboardData = computed(() => {
-	if (typeof props.keyboard === "string" && keyboards[props.keyboard] !== undefined) {
-		return keyboards[props.keyboard]
-	} else {
+		if (typeof props.keyboard === "string") {
+			const kbrd = props.keyboard.split(",")[0]
+			if(keyboards[kbrd] !== undefined) {
+				console.log(kbrd)
+				return keyboards[kbrd]
+			}
+		}
+
 		return props.keyboard
-	}
-})
+	}),
+	letters = computed(()=>{
+		if (typeof props.keyboard === "string" && props.keyboard.includes(",")) {
+			return props.keyboard.split(",")[1]
+		}
+		return ""
+	})
 
 
 const btnReset = {
@@ -217,6 +243,30 @@ let keyboardComputed = computed(() => {
 
 		return commandsBtn
 
+	}),
+	keyboardLetters = computed(()=>{
+		let data = []
+
+		// Loop through all keyboard keys in the layout.
+		console.log(letters.value)
+		for (let kkey of letters.value) {
+			let kdata = {}
+
+			kdata = {
+				key: kkey,
+				visible: kkey === "",
+				type: "math",
+				display: kkey,
+				span: 0
+			}
+
+			kdata.fn = (value) => value + kkey
+
+			data.push(kdata)
+		}
+
+		console.log(data)
+		return data
 	})
 
 function resetKeyStrokes() {
