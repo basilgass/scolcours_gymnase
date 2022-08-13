@@ -86,7 +86,7 @@ export const keyboards = {
 			"1", "2", "3", "+",
 			"4", "5", "6", "-",
 			"7", "8", "9", "*",
-			"", "0", "", "/"
+			"", "0", ".", "/"
 		],
 		tex(value){
 			return asciiToTex(value)
@@ -146,9 +146,8 @@ export const keyboards = {
 			"1", "2", "3", "+","-",
 			"4", "5", "6", "*","/",
 			"7", "8", "9", "^2","^",
-			"@reset", "@back", "0", "sqrt","root(",
-			"a", "b", "c", "(", ")",
-			"n", "m", "x", "IR", "!!"
+			"0", "(", ")", "sqrt","root(",
+			"", "", "", "IR", "!!"
 		],
 		tex: function(value){
 			if(!value.includes("/")){return asciiToTex(value)}

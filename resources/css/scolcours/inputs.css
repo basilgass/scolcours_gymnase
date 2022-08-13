@@ -84,6 +84,10 @@
         @apply px-3 py-2 rounded border hover:bg-blue-100 hover:border-blue-200 transition-colors
     }
 
+	.keyboard>.key-cmd {
+		@apply px-3 py-2 border rounded-lg transition-colors
+	}
+
     .keyboard.keyboard-sm>.key {
         @apply px-1 py-1;
     }

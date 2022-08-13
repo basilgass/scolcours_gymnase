@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @property int $id
  * @property int $post_id
+ * @property int $math
  * @property string $body
  * @property string|null $answer
  * @property string|null $checker
@@ -29,6 +30,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Question whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Question whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Question whereKeyboard($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Question whereMath($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Question wherePostId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Question whereUpdatedAt($value)
  * @mixin \Eloquent

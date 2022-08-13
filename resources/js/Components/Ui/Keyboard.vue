@@ -82,7 +82,7 @@
 			class="keyboard w-full mt-3"
 		>
 			<button
-				:class="`key ${keyClass} w-full`"
+				:class="`key-cmd ${keyClass} w-full border-green-700 text-green-600 hover:bg-green-100 hover:border-green-800`"
 				@click="btnValidate.fn()"
 			>
 				<i :class="btnValidate.icon" /> <span class="hidden md:inline md:ml-2">{{ btnValidate.label }}</span>

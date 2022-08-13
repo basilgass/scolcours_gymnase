@@ -79,8 +79,8 @@
 		<!-- the body of question -->
 		<div>
 			<div
-				v-katex.auto.left="questionDisplay"
-				class="md:col-span-2"
+				v-katex.auto.left.nomargin="questionDisplay"
+				class="pt-3 pb-5 overflow-x-scroll"
 				@dblclick="toggleBlockEdition"
 			/>
 
@@ -110,37 +110,22 @@
 					class="max-w-md"
 				>
 					<button
-						class="btn py-1 px-2 text-left w-full bg-white"
+						class="btn py-1 px-2 text-left w-full bg-white min-h-[2em]"
 						@click="showKeyboard=!showKeyboard"
 					>
-						Donner la réponse: {{ userAnswer }}
+						<span v-if="!showKeyboard">Donner la réponse</span>
+						<span
+							v-else
+							class="font-code"
+							v-text="userAnswer"
+						/>
 					</button>
-					<div class="text-xs text-gray-600 flex justify-between mt-1">
+					<div class="text-xs text-gray-600 flex justify-between">
 						<p
 							v-katex.auto="answerFormat"
+							class="w-full overflow-x-scroll pt-2 pb-2 whitespace-nowrap"
 						/>
 					</div>
-					<!--					<form-input-->
-					<!--						v-model="userAnswer"-->
-					<!--						:name="`question-${theQuestion.id}`"-->
-					<!--						label="réponse"-->
-					<!--						inline-->
-					<!--						btn-class="btn-primary"-->
-					<!--						@mousedown.prevent="answerInputClick"-->
-					<!--						@keyup.enter="validateAnswer"-->
-					<!--						@button-click="validateAnswer"-->
-					<!--					>-->
-					<!--						<div class="text-xs text-gray-600 flex justify-between mt-1">-->
-					<!--							<p-->
-					<!--								v-katex.auto="answerFormat"-->
-					<!--							/>-->
-					<!--						</div>-->
-
-					<!--						&lt;!&ndash; Bouton valider - design à modifier &ndash;&gt;-->
-					<!--						<template #button>-->
-					<!--							OK-->
-					<!--						</template>-->
-					<!--					</form-input>-->
 
 					<div
 						v-if="theQuestion.keyboard"
@@ -172,7 +157,7 @@
 			<!-- Si la réponse est déjà donnée, afficher la réponse -->
 			<div
 				v-if="isCorrect.result"
-				class="flex flex-col mt-6"
+				class="flex flex-col mt-2"
 			>
 				<div class="my-3 text-green-500 flex">
 					<i class="bi bi-check mr-4" />
@@ -199,7 +184,7 @@
 				<!-- Afficher les réponses précédentes -->
 				<div
 					v-if="previousAnswers.length>0"
-					class="text-xs mt-6 border-t pt-1"
+					class="text-xs mt-4 border-t pt-1"
 				>
 					<div class="flex justify-between">
 						<div v-if="previousAnswers.length>1">
@@ -232,7 +217,7 @@
 				<!-- Admin helper -->
 				<div
 					v-if="$page.props.auth.can.admin && editMode"
-					class="text-xs text-gray-600 flex justify-between mt-10 admin-wrapper"
+					class="text-xs text-gray-600 flex justify-between mt-6 admin-wrapper"
 				>
 					<div>Résultat attendu: {{ props.question.answer }}</div>
 					<div>{{ answerChecker ? 'juste' : 'faux' }}</div>
@@ -245,7 +230,7 @@
 <script setup>
 import FormInput from "@/Components/Form/FormInput"
 import {computed, inject, nextTick, onMounted, ref, watch} from "vue"
-import {useForm} from "@inertiajs/inertia-vue3"
+import {useForm, usePage} from "@inertiajs/inertia-vue3"
 import Keyboard from "@/Components/Ui/Keyboard"
 import katex from "katex/dist/katex.mjs"
 import {keyboards} from "@/keyboards"
@@ -429,30 +414,34 @@ function validateAnswer() {
 		result: answerChecker.value
 	}
 
-	axios.post(route("questions.validate", [theQuestion.value.id]),
-		data
-	).then(res => {
-		theQuestion.value.userAnswers.push({...res.data, "when": "à l'instant"})
-		if (res.data.result) {
-			emits("resolved", theQuestion)
-			// Make sure the keyboard is now hidden
-			showKeyboard.value = false
-		} else {
-			// Error !
-			// TODO: Must move shake in a "useEffect" javascript file
-			function shake(target) {
-				target.style.setProperty("animation-name", "v-shake-horizontal")
-				target.style.setProperty("animation-duration", "500ms")
+	if(usePage().props.value.auth.user) {
+		axios.post(route("questions.validate", [theQuestion.value.id]),
+			data
+		).then(res => {
+			theQuestion.value.userAnswers.push({...res.data, "when": "à l'instant"})
+			if (res.data.result) {
+				emits("resolved", theQuestion)
+				// Make sure the keyboard is now hidden
+				showKeyboard.value = false
+			} else {
+				// Error !
+				// TODO: Must move shake in a "useEffect" javascript file
+				function shake(target) {
+					target.style.setProperty("animation-name", "v-shake-horizontal")
+					target.style.setProperty("animation-duration", "500ms")
 
-				setTimeout(() => {
-					target.style.setProperty("animation-name", "")
-				}, 500)
+					setTimeout(() => {
+						target.style.setProperty("animation-name", "")
+					}, 500)
 
+				}
+
+				shake(questionRef.value)
 			}
-
-			shake(questionRef.value)
-		}
-	})
+		})
+	}else{
+		theQuestion.value.userAnswers.push({...data, "when": "à l'instant"})
+	}
 }
 
 function patchQuestion(ev) {
