@@ -48,7 +48,6 @@ export const keyboardKeys = {
 	"d": {type: "math", display: "d"},
 	"n": {type: "math", display: "n"},
 	"m": {type: "math", display: "m"},
-	",": {type: "math", display: ",\\ \\dots"},
 	"IR": {type: "math", display: "\\mathbb{R}"},
 	"!!": {type: "math", display: "\\varnothing"},
 	"@reset": {type: "icon", display: "bi bi-trash"},
@@ -56,6 +55,13 @@ export const keyboardKeys = {
 }
 
 export const keyboards = {
+	"qcm": {
+		grid: "grid-cols-4",
+		layout: [],
+		tex(value){
+			return asciiToTex(value)
+		}
+	},
 	"number": {
 		grid: "grid-cols-3",
 		layout: [
@@ -65,7 +71,7 @@ export const keyboards = {
 			"-", "0", "."
 		],
 		tex(value){
-			return value
+			return asciiToTex(value)
 		}
 	},
 	"fraction": {

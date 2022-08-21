@@ -28,12 +28,7 @@
 			<div class="header-score flex justify-between">
 				<div>Points {{ score }}</div>
 				<div>Niveau {{ level }}</div>
-				<div v-if="level<theChallenge.maxLevel">
-					Prochain niveau: {{ theChallenge.nextLevelAfter - levelScore }} réponses
-				</div>
-				<div v-else>
-					Niveau max
-				</div>
+				<div>Prochain niveau: {{ theChallenge.nextLevelAfter - levelScore }} réponses</div>
 			</div>
 			<div
 				v-if="theChallenge.duration"
@@ -47,16 +42,54 @@
 
 			<!-- The question -->
 			<QuestionItem
-				v-if="listOfQuestions[questionId]"
-				ref="questionUI"
-				:question="theChallenge.output.replace('question', listOfQuestions[questionId].question).replace('answer', '$a')"
+				v-if="questionId!==null && listOfQuestions[questionId]"
+				:question="listOfQuestions[questionId].question"
 				:answer="`${listOfQuestions[questionId].answer}`"
-				:math="false"
+				:output="theChallenge.output"
+				:math="true"
 				:checker="theChallenge.checker"
 				:keyboard="theChallenge.keyboard"
 				:show-keyboard-output="false"
-				@validate="validateAnswer"
 			/>
+			
+			<Panel class="mt-10">
+				<div
+					v-katex.auto="question"
+				/>
+			</Panel>
+			<div
+				class="mb-10 text-red-600"
+				v-text="checkerResult.message"
+			/>
+
+			<!-- The keyboard and answer wrapper -->
+			<div>
+				<div
+					v-if="showOutput"
+					v-katex.display="formattedAnswer"
+					class="min-h-[100px]"
+				/>
+
+				<div class=" text-center pt-1 pb-5">
+					<button
+						ref="ValidateButton"
+						class="btn btn-success w-64"
+						@click="checkAnswer"
+					>
+						Valider
+					</button>
+				</div>
+				<Keyboard
+					ref="keyboardUI"
+					v-model="answer"
+					v-model:tex="formattedAnswer"
+					:keyboard="theChallenge.keyboard"
+					class="max-w-xl mx-auto"
+					reset
+					back
+					@key="checkerResult.message = ''"
+				/>
+			</div>
 		</div>
 		<div v-if="!isRunning && !isFinished">
 			<button @click="startChallenge">
@@ -333,11 +366,34 @@ let listOfQuestions = ref([]),
 	score = ref(0),
 	levelScore = ref(0),
 	lives = ref(theChallenge.value.lives),
-	death = ref(0)
+	death = ref(0),
+	checkerResult = ref({
+		result: null,
+		message: ""
+	})
 
 // UI reactive
 let ValidateButton = ref(null),
-	questionUI = ref(null)
+	keyboardUI = ref(null)
+
+let question = computed(() => {
+		if (listOfQuestions.value.length === 0 || listOfQuestions.value.length < questionId.value) {
+			listOfQuestions.value = PiMath.Random.shuffle(questions.value)
+		}
+
+		return theChallenge.value.output
+			.replace("question", listOfQuestions.value[questionId.value].question)
+			.replace("answer", formattedAnswer.value)
+	}),
+	showOutput = computed(() => {
+		if (listOfQuestions.value[questionId.value]) {
+			return !(listOfQuestions.value[questionId.value].question.includes("answer") || theChallenge.value.output.includes("answer"))
+		}
+
+		return false
+	})
+
+let formattedAnswer = ref("")
 
 const checker = useCheckers(theChallenge.value.checker),
 	timerInterval = ref(false),
@@ -354,13 +410,12 @@ let startChallenge = function () {
 		death.value = 0
 
 		// Reset the lists
-		runChallengeGenerator()
-		listOfQuestions.value = PiMath.Random.shuffle(questions.value)
+		listOfQuestions.value = []
 		listOfAnswers.value = []
 
 		// Reset the keyboard
-		if(questionUI.value) {
-			questionUI.value.keyboardUI.resetKeyStrokes()
+		if(keyboardUI.value) {
+			keyboardUI.value.resetKeyStrokes()
 		}
 
 		// Visibility
@@ -389,14 +444,17 @@ let startChallenge = function () {
 		return ellapsedTime.value / maxTimeInMinutes.value * 100
 	}),
 
-	validateAnswer = function (checkerResult) {
+	checkAnswer = function () {
+		// Check the answer
+		checkerResult.value = checker.check(listOfQuestions.value[questionId.value].answer, answer.value)
+
 		// Store the answers
 		listOfAnswers.value.push({
-			value: checkerResult.question,
-			result: checkerResult.result
+			value: `${question.value}`,
+			result: checkerResult.value.result
 		})
 
-		if (checkerResult.result) {
+		if (checkerResult.value.result) {
 			// Go to next question
 			questionId.value++
 
@@ -416,10 +474,7 @@ let startChallenge = function () {
 			}
 
 			// Increate the counter for the current level
-			if(levelScore.value<theChallenge.value.maxLevel) {
-				levelScore.value++
-			}
-
+			levelScore.value++
 			// If we reached the level trigger score, increase level.
 			if (levelScore.value >= theChallenge.value.nextLevelAfter) {
 				levelScore.value = 0
@@ -448,7 +503,11 @@ let startChallenge = function () {
 					break
 				}
 			}
-			questionUI.value.keyboardUI.resetKeyStrokes()
+
+			// TODO:  Flash message to say it was correct.
+
+			// Reset the keyboard
+			keyboardUI.value.resetKeyStrokes()
 		} else {
 			// the answer is wrong
 
@@ -457,10 +516,17 @@ let startChallenge = function () {
 			// restart the level
 			levelScore.value = 0
 
-			// Stop the game
-			if (theChallenge.value.lives && (lives.value - death.value <= 0)) {
-				stopChallenge()
-			}
+			ValidateButton.value.style.setProperty("animation-name", "v-shake-horizontal")
+			ValidateButton.value.style.setProperty("animation-duration", "500ms")
+
+			setTimeout(() => {
+				ValidateButton.value.style.setProperty("animation-name", "")
+
+				// life is zero : the challenge is finished.
+				if (theChallenge.value.lives && (lives.value - death.value <= 0)) {
+					stopChallenge()
+				}
+			}, 500)
 		}
 	}
 
@@ -476,5 +542,4 @@ async function addTabCharacter(ev) {
 	nextTick()
 	ev.target.setSelectionRange(start, start)
 }
-
 </script>

@@ -77,83 +77,31 @@
 		</div>
 
 		<!-- the body of question -->
-		<div>
-			<div
-				v-katex.auto.left.nomargin="questionDisplay"
-				class="pt-3 pb-5 overflow-x-scroll"
-				@dblclick="toggleBlockEdition"
+		<button
+			class="btn py-1 px-2 text-left w-full bg-white min-h-[2em]"
+			@click="showKeyboard=!showKeyboard"
+		>
+			<span v-if="!showKeyboard">Donner la réponse</span>
+			<span
+				v-else
+				class="font-code"
+				v-text="userAnswer"
 			/>
+		</button>
+		
+		<QuestionItem
+			ref="questionUI"
+			:question="theQuestion.body"
+			:answer="theQuestion.answer"
+			:math="theQuestion.math?true:false"
+			:checker="theQuestion.checker"
+			:keyboard="theQuestion.keyboard"
+			:show-keyboard="showKeyboard"
+			:show-keyboard-output="false"
+			@validate="validateAnswer"
+		/>
 
-			<!-- Afficher les formulaires pour répondre à la question -->
-			<div
-				v-show="!isCorrect.result"
-				ref="questionRef"
-			>
-				<!-- QCM -->
-				<div
-					v-if="answerDisplay.checker==='qcm'"
-				>
-					<div class="flex flex-wrap gap-4 w-full">
-						<button
-							v-for="(item, index) of answerDisplay.data"
-							:key="`qcm-${index}`"
-							:class="qcmButtonClass(item)"
-							@click="userAnswer = item; validateAnswer()"
-						>
-							{{ item }}
-						</button>
-					</div>
-				</div>
-				<!-- Default question -->
-				<div
-					v-else
-					class="max-w-md"
-				>
-					<button
-						class="btn py-1 px-2 text-left w-full bg-white min-h-[2em]"
-						@click="showKeyboard=!showKeyboard"
-					>
-						<span v-if="!showKeyboard">Donner la réponse</span>
-						<span
-							v-else
-							class="font-code"
-							v-text="userAnswer"
-						/>
-					</button>
-					<div class="text-xs text-gray-600 flex justify-between">
-						<p
-							v-katex.auto="answerFormat"
-							class="w-full overflow-x-scroll pt-2 pb-2 whitespace-nowrap"
-						/>
-					</div>
-
-					<div
-						v-if="theQuestion.keyboard"
-						v-show="showKeyboard"
-						class="flex flex-col"
-					>
-						<Keyboard
-							v-model="userAnswer"
-							v-model:tex="userAnswerAsTex"
-							key-class="bg-white"
-							validate
-							reset
-							back
-							:multiple="multipleAnswer"
-							class="mt-3"
-							:keyboard="theQuestion.keyboard"
-							@validate="validateAnswer"
-						/>
-						<button
-							class="text-xs text-gray-600 mt-3 self-center"
-							@click="showKeyboard=false"
-						>
-							<i class="bi bi-x-lg mr-3" />fermer le clavier / annuler
-						</button>
-					</div>
-				</div>
-			</div>
-
+		<div>
 			<!-- Si la réponse est déjà donnée, afficher la réponse -->
 			<div
 				v-if="isCorrect.result"
@@ -231,9 +179,9 @@
 import FormInput from "@/Components/Form/FormInput"
 import {computed, inject, nextTick, onMounted, ref, watch} from "vue"
 import {useForm, usePage} from "@inertiajs/inertia-vue3"
-import Keyboard from "@/Components/Ui/Keyboard"
 import katex from "katex/dist/katex.mjs"
 import {keyboards} from "@/keyboards"
+import QuestionItem from "@/Components/QuestionItem"
 
 let props = defineProps({
 	question: {type: Object, required: true}
@@ -407,11 +355,12 @@ watch(userAnswerAsTex, () => {
 	formatQuestion()
 })
 
-let questionRef = ref(null)
-function validateAnswer() {
+let questionRef = ref(null),
+	questionUI = ref(null)
+function validateAnswer(checkerResult) {
 	const data = {
-		answer: userAnswer.value,
-		result: answerChecker.value
+		answer: checkerResult.answer,
+		result: checkerResult.result
 	}
 
 	if(usePage().props.value.auth.user) {
@@ -425,18 +374,10 @@ function validateAnswer() {
 				showKeyboard.value = false
 			} else {
 				// Error !
-				// TODO: Must move shake in a "useEffect" javascript file
-				function shake(target) {
-					target.style.setProperty("animation-name", "v-shake-horizontal")
-					target.style.setProperty("animation-duration", "500ms")
-
-					setTimeout(() => {
-						target.style.setProperty("animation-name", "")
-					}, 500)
-
+				if(questionUI.value){
+					questionUI.value.keyboard.shake()
 				}
 
-				shake(questionRef.value)
 			}
 		})
 	}else{

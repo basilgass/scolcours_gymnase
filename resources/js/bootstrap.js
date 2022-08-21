@@ -5,6 +5,11 @@ window.axios.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest"
 
 import renderMathInElement from "katex/dist/contrib/auto-render.mjs"
 
+// codeInput.registerTemplate("syntax-highlighted",
+// 	codeInput.templates.prism(window.Prism, [
+// 		new codeInput.plugins.Indent()
+// 	] /* Array of plugins (see below) */))
+
 window.katexAutoRender = function (el, display) {
 	renderMathInElement(el, {
 		// customised options

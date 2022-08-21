@@ -1,5 +1,8 @@
 <template>
-	<div class="keyboard-wrapper">
+	<div
+		v-if="theKeyboard!==''"
+		class="keyboard-wrapper"
+	>
 		<div class="keyboard-output">
 			<div
 				v-if="mathOutput"
@@ -22,6 +25,19 @@
 			</div>
 		</div>
 
+		<!-- keyboard validate -->
+		<div
+			v-if="validate && !validateAtBottom"
+			class="keyboard w-full my-3"
+		>
+			<button
+				ref="validateButton"
+				:class="`key-cmd ${keyClass} w-full border-green-700 text-green-600 hover:bg-green-100 hover:border-green-800`"
+				@click="btnValidate.fn()"
+			>
+				<i :class="btnValidate.icon" /> <span class="hidden md:inline md:ml-2">{{ btnValidate.label }}</span>
+			</button>
+		</div>
 		<!-- keyboard keys -->
 		<div
 			ref="root"
@@ -46,21 +62,22 @@
 			</button>
 		</div>
 
-		<!-- keyboard extra letters -->
+		<!-- keyboard extra buttons -->
 		<div
-			v-if="keyboardLetters.length>0"
+			v-if="keyboardOptions.length>0"
 			class="keyboard flex flex-wrap w-full mt-10 gap-3"
 			:class="small?' keyboard-sm':''"
 		>
 			<button
-				v-for="(key, index) of keyboardLetters"
-				:key="`keyboard-letters-${index}`"
+				v-for="(key, index) of keyboardOptions"
+				:key="`keyboard-options-${index}`"
 				:class="`key ${keyClass} grow`"
 				@click="ButtonKeyClick(key)"
 			>
 				<span v-katex.clear="key.display" />
 			</button>
 		</div>
+
 		<!-- keyboard commands -->
 		<div
 			v-if="keyboardCommands.length>0"
@@ -78,10 +95,11 @@
 		</div>
 		<!-- keyboard validate -->
 		<div
-			v-if="validate"
-			class="keyboard w-full mt-3"
+			v-if="validate && validateAtBottom"
+			class="keyboard w-full my-3"
 		>
 			<button
+				ref="validateButton"
 				:class="`key-cmd ${keyClass} w-full border-green-700 text-green-600 hover:bg-green-100 hover:border-green-800`"
 				@click="btnValidate.fn()"
 			>
@@ -101,6 +119,7 @@ const props = defineProps({
 	tex: String,
 	keyboard: {type: [Object, String], default: () => "simple"},
 	validate: {type: Boolean, default: null},
+	validateAtBottom: {type: Boolean, default: false},
 	erase: {type: Boolean, default: null},
 	reset: {type: Boolean, default: null},
 	back: {type: Boolean, default: null},
@@ -116,27 +135,57 @@ let root = ref(null),
 	keyStrokes = ref([]),
 	keyboardGridDefault = ref("grid-cols-4")
 
-let theKeyboard = computed(()=>{
-		if (typeof props.keyboard === "string") {
-			return props.keyboard.split(",")[0]
+let theKeyboard = computed(() => {
+		if (props.keyboard === null) {
+			return ""
 		}
 
+		if (typeof props.keyboard === "string") {
+			// Parse the keyboard value
+			let tmp = props.keyboard.split("@"),
+				keyboardName = tmp[0],
+				keyboardData = tmp.length === 2 ? tmp[1] : ""
+
+			if (keyboards.hasOwnProperty(keyboardName)) {
+				return keyboardName
+			} else {
+				return ""
+			}
+		}
+
+		// It's a custom keyboard
 		return props.keyboard
 	}),
+	keyboardOptions = computed(() => {
+		let tmp = props.keyboard.split("@")
+
+		// No options
+		if (tmp.length !== 2) {
+			return []
+		}
+
+		let opts = tmp[1].split(",")
+		opts = opts.map(x => {
+			const keyDisplay = x.split("|")
+			return {
+				key: keyDisplay[0],
+				visible: true,
+				type: "math", // TODO: change it dynamically
+				display: keyDisplay.length >= 2 ? keyDisplay[1] : keyDisplay[0],
+				span: 0,
+				fn: (value) => value + keyDisplay[0]
+			}
+		})
+
+		return opts
+	}),
 	keyboardData = computed(() => {
-		if (typeof theKeyboard.value==="string") {
+		if (typeof theKeyboard.value === "string") {
 			return keyboards[theKeyboard.value]
 		}
 
 		return props.keyboard
-	}),
-	letters = computed(()=>{
-		if (typeof props.keyboard === "string" && props.keyboard.includes(",")) {
-			return props.keyboard.split(",")[1]
-		}
-		return ""
 	})
-
 
 const btnReset = {
 		label: "tout effacer",
@@ -246,28 +295,6 @@ let keyboardComputed = computed(() => {
 
 		return commandsBtn
 
-	}),
-	keyboardLetters = computed(()=>{
-		let data = []
-
-		// Loop through all keyboard keys in the layout.
-		for (let kkey of letters.value) {
-			let kdata = {}
-
-			kdata = {
-				key: kkey,
-				visible: kkey === "",
-				type: "math",
-				display: kkey,
-				span: 0
-			}
-
-			kdata.fn = (value) => value + kkey
-
-			data.push(kdata)
-		}
-
-		return data
 	})
 
 function resetKeyStrokes() {
@@ -297,7 +324,20 @@ function ButtonKeyClick(key) {
 	emit("key", result)
 }
 
-defineExpose({resetKeyStrokes})
+let validateButton = ref(null)
+
+function wrongAnswer() {
+	if (validateButton.value) {
+		validateButton.value.style.setProperty("animation-name", "v-shake-horizontal")
+		validateButton.value.style.setProperty("animation-duration", "500ms")
+
+		setTimeout(() => {
+			validateButton.value.style.setProperty("animation-name", "")
+		}, 500)
+	}
+}
+
+defineExpose({resetKeyStrokes, wrongAnswer})
 </script>
 <style scoped>
 

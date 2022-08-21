@@ -1,5 +1,10 @@
 <template>
 	<h1>Test clavier</h1>
+
+	<code-input lang="javascript">
+		let a = 3;
+	</code-input>
+
 	<div class="flex flex-col gap-3">
 		<div class="flex justify-between gap-3">
 			<button

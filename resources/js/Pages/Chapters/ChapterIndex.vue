@@ -53,10 +53,10 @@
 
 					<div class="text-xs mt-5">
 						<div>
-							Nombre de challenges: {{ chapter.challenges.length }}
+							Nombre d'exercices: {{ chapter.posts.filter(post=>post.type==='exercise').length }}
 						</div>
 						<div>
-							Nombre d'exercices:
+							Nombre de challenges: {{ chapter.challenges.length }}
 						</div>
 					</div>
 				</panel>

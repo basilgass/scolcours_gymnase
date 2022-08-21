@@ -11,12 +11,18 @@ const path = require("path")
  |
  */
 mix.js("resources/js/app.js", "public/js")
-	.vue()
+	.vue({
+		options: {
+			compilerOptions: {
+				isCustomElement: (tag) => ["code-input"].includes(tag)
+			}
+		}
+	})
 	.extract()
 	.postCss("resources/css/app.css", "public/css", [
 		require("postcss-import"),
 		require("tailwindcss"),
-		require("autoprefixer"),
+		require("autoprefixer")
 	]).webpackConfig({
 		output: {
 			chunkFilename: mix.inProduction() ? "js/dynamic/[name].[contenthash].js" : "js/dev/[name].js",
