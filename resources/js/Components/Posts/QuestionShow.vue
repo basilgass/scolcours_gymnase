@@ -77,18 +77,6 @@
 		</div>
 
 		<!-- the body of question -->
-		<button
-			class="btn py-1 px-2 text-left w-full bg-white min-h-[2em]"
-			@click="showKeyboard=!showKeyboard"
-		>
-			<span v-if="!showKeyboard">Donner la réponse</span>
-			<span
-				v-else
-				class="font-code"
-				v-text="userAnswer"
-			/>
-		</button>
-		
 		<QuestionItem
 			ref="questionUI"
 			:question="theQuestion.body"
@@ -98,6 +86,7 @@
 			:keyboard="theQuestion.keyboard"
 			:show-keyboard="showKeyboard"
 			:show-keyboard-output="false"
+			:show-keyboard-toggle="true"
 			@validate="validateAnswer"
 		/>
 

@@ -74,7 +74,14 @@
 				:class="`key ${keyClass} grow`"
 				@click="ButtonKeyClick(key)"
 			>
-				<span v-katex.clear="key.display" />
+				<span
+					v-if="key.type==='math'"
+					v-katex.clear="key.display"
+				/>
+				<span
+					v-else-if="key.type==='text'"
+					v-katex.auto="key.display"
+				/>
 			</button>
 		</div>
 
@@ -170,10 +177,13 @@ let theKeyboard = computed(() => {
 			return {
 				key: keyDisplay[0],
 				visible: true,
-				type: "math", // TODO: change it dynamically
+				type: "text", // TODO: change it dynamically
 				display: keyDisplay.length >= 2 ? keyDisplay[1] : keyDisplay[0],
 				span: 0,
-				fn: (value) => value + keyDisplay[0]
+				fn: (value) => {
+					if(theKeyboard.value==="qcm"){resetKeyStrokes()}
+					return value + keyDisplay[0]
+				}
 			}
 		})
 

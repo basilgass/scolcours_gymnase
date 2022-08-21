@@ -1,7 +1,14 @@
 <template>
-	<div class="question-wrapper overflow-x-scroll">
+	<div class="question-wrapper overflow-x-auto">
 		<div v-katex.auto="questionAsTex" />
 
+		<button
+			v-if="showKeyboardToggle"
+			class="btn bg-white w-full my-2"
+			@click="giveAnswer=!giveAnswer"
+		>
+			Donner la réponse
+		</button>
 		<div
 			v-if="checkerResult.result===false"
 			class="text-red-600"
@@ -16,7 +23,7 @@
 			/>
 
 			<Keyboard
-				v-show="showKeyboard"
+				v-show="showKeyboard || giveAnswer"
 				ref="keyboardUI"
 				v-model="answer"
 				v-model:tex="tex"
@@ -49,8 +56,11 @@ let props = defineProps({
 	checker: {type: String, default: "exact"},
 	keyboard: {type: String, default: "algebra"},
 	showKeyboard: {type: Boolean, default: true},
-	showKeyboardOutput: {type: Boolean, default: false}
+	showKeyboardOutput: {type: Boolean, default: false},
+	showKeyboardToggle: {type: Boolean, default: false}
 })
+
+let giveAnswer = ref(props.showKeyboardToggle===false)
 
 
 
