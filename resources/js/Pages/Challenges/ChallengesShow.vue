@@ -416,14 +416,14 @@ let startChallenge = function () {
 			}
 
 			// Increate the counter for the current level
-			if(levelScore.value<theChallenge.value.maxLevel) {
-				levelScore.value++
-			}
+			levelScore.value++
 
 			// If we reached the level trigger score, increase level.
 			if (levelScore.value >= theChallenge.value.nextLevelAfter) {
 				levelScore.value = 0
-				level.value++
+				if(level.value<theChallenge.value.maxLevel) {
+					level.value++
+				}
 
 				if (theChallenge.value.bonusLevelLife) {
 					lives.value += theChallenge.value.bonusLevelLife
