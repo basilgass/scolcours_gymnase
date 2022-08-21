@@ -59,7 +59,7 @@ export const keyboards = {
 		grid: "grid-cols-4",
 		layout: [],
 		tex(value){
-			return asciiToTex(value)
+			return value
 		}
 	},
 	"number": {
