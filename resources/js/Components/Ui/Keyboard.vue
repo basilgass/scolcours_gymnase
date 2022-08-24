@@ -342,7 +342,9 @@ function wrongAnswer() {
 		validateButton.value.style.setProperty("animation-duration", "500ms")
 
 		setTimeout(() => {
-			validateButton.value.style.setProperty("animation-name", "")
+			if(validateButton.value) { // the button may have already disappeared !
+				validateButton.value.style.setProperty("animation-name", "")
+			}
 		}, 500)
 	}
 }

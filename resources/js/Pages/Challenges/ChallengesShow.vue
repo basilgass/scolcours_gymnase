@@ -13,7 +13,7 @@
 			</div>
 
 			<!-- The title of the challenge -->
-			<h1 class="text-xl">
+			<h1 class="text-2xl mb-4">
 				{{ theChallenge.title }}
 			</h1>
 
@@ -24,6 +24,39 @@
 			/>
 		</header>
 
+		<!-- Avant de lancer le challenge -->
+		<div
+			v-if="!isRunning && !isFinished"
+			class="h-[40vh] grid place-items-center"
+		>
+			<div class="flex flex-col items-center gap-3">
+				<div class="w-full space-y-2">
+					<div class="flex justify-between w-full">
+						<div>Nombre de vies</div>
+						<div>{{ theChallenge.lives }}</div>
+					</div>
+
+					<div class="flex justify-between w-full">
+						<div>Niveaux de diffcultés</div>
+						<div>{{ theChallenge.maxLevel }}</div>
+					</div>
+					<div
+						v-if="theChallenge.duration>0"
+						class="flex justify-between w-full"
+					>
+						<div>Temps</div>
+						<div>{{ theChallenge.duration }}</div>
+					</div>
+				</div>
+				<button
+					class="btn-success btn-xl hover:scale-110 transition-all"
+					@click="startChallenge"
+				>
+					Commencer le challenge
+				</button>
+			</div>
+		</div>
+		<!-- le challenge est en cours -->
 		<div v-if="isRunning && !isFinished">
 			<div class="header-score flex justify-between">
 				<div>Points {{ score }}</div>
@@ -58,39 +91,67 @@
 				@validate="validateAnswer"
 			/>
 		</div>
-		<div v-if="!isRunning && !isFinished">
-			<button @click="startChallenge">
-				Commencer le challenge
-			</button>
-		</div>
+
+		<!-- résultat du challenge qui vient de se terminer -->
 		<footer v-if="isFinished">
-			Show the questions / answer<br>
-			Show the score / points / hall of fame<br>
-			Ability to restart<br>
+			<div class="grid grid-cols-3 gap-6">
+				<div class="col-span-2 bg-white rounded text-xl md:text-2xl text-center p-2 md:p-10 flex flex-col justify-between gap-4">
+					<div>Score</div>
+					<div>{{ score }}</div>
+				</div>
 
-			<button
-				class="btn"
-				@click="startChallenge"
-			>
-				Recommencer
-			</button>
+				<div class="bg-white rounded text-xl md:text-2xl text-center p-2 md:p-10 flex flex-col justify-between gap-4">
+					<div>Meilleure score</div>
+					<div> {{ localScore }} </div>
+				</div>
+
+				<div class="bg-white rounded text-xl md:text-2xl text-center p-2 md:p-10 flex flex-col justify-between gap-4">
+					<div>Vie(s)</div>
+					<div>{{ lives - death }}</div>
+				</div>
+
+				<div class="bg-white rounded text-xl md:text-2xl text-center p-2 md:p-10 flex flex-col justify-between gap-4">
+					<div>Erreur(s)</div>
+					<div>{{ death }}</div>
+				</div>
+
+				<div class="bg-white rounded text-xl md:text-2xl text-center p-2 md:p-10 flex flex-col justify-between gap-4">
+					<div>Temps restant</div>
+					<div>{{ remainingTime }}</div>
+				</div>
+			</div>
+
+			<div class="min-h-[120px] grid place-items-center my-5">
+				<button
+					class="btn-success btn-xl hover:scale-110 transition-all"
+					@click="startChallenge"
+				>
+					Recommencer
+				</button>
+			</div>
 
 
-			<ol>
-				<li
-					v-for="(item, index) of listOfAnswers"
-					:key="`answer-${index}`"
-					v-katex.auto="item.value"
-					:class="item.result?'text-green-600':'text-red-600'"
-				/>
-			</ol>
+			<div class="mt-5 border-t">
+				<div class="pt-5 mb-5 text-xl">
+					réponses données
+				</div>
+				<div class="space-y-2">
+					<div
+						v-for="(item, index) of listOfAnswers"
+						:key="`answer-${index}`"
+						v-katex.auto="item.value"
+						class="p-3 border"
+						:class="item.result?'border-green-700 bg-green-600/30':'border-red-700 bg-red-600/30'"
+					/>
+				</div>
+			</div>
 		</footer>
 	</article>
 
 	<!-- Challenge admin mode -->
 	<div
 		v-if="$page.props.auth.can.admin"
-		class="mt-10"
+		class="mt-10 admin-wrapper flex-col"
 	>
 		<h2
 			class="cursor-pointer my-3 text-xl btn"
@@ -333,8 +394,10 @@ let listOfQuestions = ref([]),
 	score = ref(0),
 	levelScore = ref(0),
 	lives = ref(theChallenge.value.lives),
-	death = ref(0)
+	death = ref(0),
+	localScore = ref(localStorage.getItem("scolcoursChallenge-"+theChallenge.value.id))
 
+if(localScore.value===null){localScore.value = "0"}
 // UI reactive
 let ValidateButton = ref(null),
 	questionUI = ref(null)
@@ -383,10 +446,25 @@ let startChallenge = function () {
 		isFinished.value = true
 
 		// Stop the counter / timer
+		clearInterval(timerInterval.value)
 		timerInterval.value = false
+
+		// Sauvegarde le score dans la session local
+		if(isNaN(localScore.value) || +localScore.value<score.value){
+			localStorage.setItem("scolcoursChallenge-"+theChallenge.value.id, score.value)
+			localScore.value = +score.value
+		}
 	},
 	timerWidth = computed(()=>{
 		return ellapsedTime.value / maxTimeInMinutes.value * 100
+	}),
+	remainingTime = computed(()=>{
+		let remaining = maxTimeInMinutes.value - ellapsedTime.value // time remaining in minutes.
+
+		const minutes = Math.trunc(remaining),
+			seconds = Math.round((remaining - minutes)*60)
+
+		return minutes>0? `${minutes}min${seconds}s`:`${seconds}s`
 	}),
 
 	validateAnswer = function (checkerResult) {

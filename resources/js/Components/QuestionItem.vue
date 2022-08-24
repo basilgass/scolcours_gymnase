@@ -91,25 +91,29 @@ let questionAsTex = computed(()=>{
 
 
 	// On transforme chaque variable `$a` par sa réponse.
+	// On récolte la liste des variables présentent dans la question.
 	if(body.includes("$")){
-		let vnames = "abcdefghijklmnopqrstuvwxyz"
+		let questionsVars = [...new Set([...body.matchAll(/\$([a-z])/g)].map(x=>x[0]))]
+		questionsVars.sort()
 
-		// La réponse donnée par l'utilisateur est avec une virgule, dans l'ordre
+		// on récupère la liste des réponses.
 		userAnswer = userAnswer.split(",")
-		const nbOfAnswers = Math.max(userAnswer.length-1, 0)
+		const crtAnswerIndex = userAnswer.length-1
 		userAnswer = userAnswer.filter(x=>x!=="")
-		for(let i=0; i<vnames.length; i++){
-			const key = "$"+vnames[i]
-			if(body.includes(key)){
-				if(i<nbOfAnswers) {
-					body = body.replaceAll(key, userAnswer[i])
-				}else if(i===nbOfAnswers){
-					body = body.replaceAll(key, `\\textcolor{blue}{ ${userAnswer[i]??vnames[i]} }`)
-				}else{
-					body = body.replaceAll(key, `\\textcolor{red}{\\ ${vnames[i]} \\ }`)
-				}
+
+		for(let i=0; i<questionsVars.length; i++){
+			let key = questionsVars[i],
+				value = userAnswer[i],
+				placeholder = questionsVars.length===1?"réponse":key[1]
+
+			if(i===crtAnswerIndex){
+				value = `\\textcolor{cornflowerblue}{ ${(value && value!=="")?value:"< "+ placeholder +" >"} }`
 			}
+			if(value===undefined){ value = `\\textcolor{red}{ <  ${placeholder} > }`}
+
+			body = body.replaceAll(key, value)
 		}
+
 	}
 
 	if (isMath) {
