@@ -1,14 +1,28 @@
 <template>
 	<Head title="Dashboard" />
 
-	<ArticleTtile>Dashboard</ArticleTtile>
+	<ArticleTitle :title="`profil de ${$page.props.auth.user.name}`" />
 
 	<div
 		v-if="$page.props.auth.can.admin"
+		class="flex flex-col gap-3 my-3 admin-wrapper"
 	>
-		<Link href="/admin">
+		<Link
+			href="/admin/"
+			class="hover:underline"
+		>
 			Administration
 		</Link>
+	</div>
+
+	<div class="space-y-4">
+		<h2 class="text-xl">
+			Cours ouvert(s)
+		</h2>
+
+		<div>
+			La liste des cours disponibles / ouverts pour {{ $page.props.auth.user.name }} s'affichera ici :)
+		</div>
 	</div>
 </template>
 
@@ -20,5 +34,5 @@ export default {
 }
 </script>
 <script setup>
-import ArticleTtile from "@/Components/Ui/ArticleTitle"
+import ArticleTitle from "@/Components/Ui/ArticleTitle"
 </script>

@@ -6,8 +6,10 @@ use App\Models\Challenge;
 use App\Models\Chapter;
 use App\Models\Theme;
 use App\Models\Tools;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
@@ -15,12 +17,17 @@ class AdminController extends Controller
 {
 	public function show()
 	{
+		return Inertia::render('Admin/AdminDashboard.vue');
+	}
+
+	public function pages()
+	{
 		$this->loadChapters();
 //		$this->loadChallenges();
 		$this->loadTools();
 
 		return Inertia::render(
-			'AdminPage.vue',
+			'Admin/AdminPagesShow.vue',
 			[
 				'tools' => Tools::all()->map(function ($tool, $key) {
 					return [
@@ -49,6 +56,39 @@ class AdminController extends Controller
 		);
 	}
 
+	public function users()
+	{
+		return Inertia::render(
+			'Admin/AdminUsersShow.vue', [
+				"users"=>User::all()
+		]);
+	}
+
+	public function createUsers(Request $request)
+	{
+		$validation = $request->validate([
+			"users"=>['required'],
+			"users.*"=>['email'],
+			'password'=>['required', 'string', 'min:6']
+		]);
+
+		foreach ($validation['users'] as $email){
+			User::create([
+				'name' => explode("@", $email)[0],
+				'email' => $email,
+				'password' => Hash::make($validation['password']),
+			]);
+		}
+
+		return redirect(route('admin.users'));
+	}
+
+	public function destroyUser(User $user)
+	{
+		$user->delete();
+		return true;
+	}
+
 	public function loadChapters()
 	{
 		// Detect all chapters and create "empty one", disabled by default.
@@ -61,7 +101,7 @@ class AdminController extends Controller
 
 				if (!$chapter) {
 					$chapter = Chapter::create([
-						'theme_id'=> $theme->id,
+						'theme_id' => $theme->id,
 						'title' => $slug,
 						'slug' => $slug,
 //						'body' => 'Aucun extrait...'
@@ -136,7 +176,7 @@ class AdminController extends Controller
 				$chapter_slug = explode('/', $chapter)[1];
 				$chapter_id = Chapter::where('slug', $chapter_slug)->first()->id;
 
-				if($chapter) {
+				if ($chapter) {
 					foreach (Storage::disk('chapters')->files($chapter . '/challenges') as $file) {
 						$slug = pathinfo($file)['filename'];
 
@@ -161,7 +201,7 @@ class AdminController extends Controller
 						// Create or update the challenge
 						$challenge = Challenge::where('slug', $slug)->first();
 
-						if(!$challenge) {
+						if (!$challenge) {
 							$challenge = Challenge::create(
 								[
 									"chapter_id" => $chapter_id,

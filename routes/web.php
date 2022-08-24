@@ -32,15 +32,21 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 // Admin controller and routes
-Route::get('/admin', [AdminController::class, 'show'])
+Route::get('/admin/', [AdminController::class, 'show'])
 	->middleware(['auth', 'verified'])->name('admin');
+Route::get('/admin/pages', [AdminController::class, 'pages'])
+	->middleware(['auth', 'verified'])->name('admin.pages');
+Route::get('/admin/users', [AdminController::class, 'users'])
+	->middleware(['auth', 'verified'])->name('admin.users');
+Route::post('/admin/users/create', [AdminController::class, 'createUsers'])->name('admin.users.create');
+Route::delete('/admin/users/${user}/destroy', [AdminController::class, 'destroyUser'])->name('admin.users.destroy');
+
 Route::patch('/admin/chapters/{chapter:slug}', [AdminController::class, 'activate'])
 	->middleware(['auth', 'verified'])->name('toggleChapterActive');
 
 require __DIR__ . '/auth.php';
 
-
-// Chapter controller
+// Chapter routes
 Route::resource('themes.chapters', ChaptersController::class)
 	->parameters([
 		'themes' => 'theme:slug',
@@ -48,7 +54,7 @@ Route::resource('themes.chapters', ChaptersController::class)
 	])
 	->shallow();
 
-// Formulas controller
+// Formulas routes
 Route::apiResource('chapters.formulas', FormulaController::class)
 	->parameters([
 		'chapters' => 'chapter:slug'
@@ -56,6 +62,7 @@ Route::apiResource('chapters.formulas', FormulaController::class)
 	->shallow();
 Route::post('formulas/{formula}/duplicate', [FormulaController::class, 'duplicate'])->name('formulas.duplicate');
 
+// Posts routes
 Route::resource('chapters.posts', PostController::class)
 	->parameters([
 		"chapters" => "chapter:slug"
@@ -64,25 +71,21 @@ Route::resource('chapters.posts', PostController::class)
 Route::patch('posts/{post}/numberOfVisibleBlocks', [PostController::class, 'updateNumberOfVisibleBlocks'])->name('posts.updateNumberOfVisibleBlocks');
 Route::patch('posts/{post}/ordering', [PostController::class, 'updateBlocksOrder'])->name('posts.updateBlocksOrder');
 Route::patch('chapters/{chapter}/ordering', [ChaptersController::class, 'updatePostsOrder'])->name('chapters.updatePostsOrder');
-//Route::apiResource('chapters.exercises', ExerciseController::class)
-//	->parameters([
-//		"chapters" => "chapter:slug"
-//	])
-//	->shallow();
-//Route::post('exercises/{exercise}/replicate', [ExerciseController::class, "replicate"])->name('exercises.replicate');
 
+// Questions routes
 Route::apiResource('posts.questions', QuestionController::class)
 	->shallow();
 Route::post('questions/{question}/validate', [QuestionController::class, 'storeAnswer'])->name('questions.validate');
 Route::patch('posts/{post}/questions/reset', [QuestionController::class, 'resetAnswers'])->name('posts.questions.reset');
 
+// Blocks routews
 Route::apiResource('blocks', BlockController::class);
 Route::post('posts/{post}/blocks/create', [BlockController::class, 'storeInPost'])->name('posts.blocks.store');
 Route::patch('blocks/{block}/blur', [BlockController::class, 'toggleblur'])->name('blocks.blur');
 Route::patch('blocks/{block}/switch', [BlockController::class, 'toggleswitch'])->name('blocks.switch');
 Route::get('chapters/{chapter:slug}/components', [ChaptersController::class, 'fetchComponents'])->name('chapters.components');
 
-// Challenges
+// Challenges routes
 Route::get('q/{challenge:slug}', [ChallengesController::class, 'quick'])->name("challenges.quick");
 Route::get('{theme:slug}/{chapter:slug}/challenges/{challenge:slug}', [ChallengesController::class, 'show'])->name('chapters.challenge');
 Route::apiResource('chapters.challenges', ChallengesController::class)
@@ -91,12 +94,9 @@ Route::apiResource('chapters.challenges', ChallengesController::class)
 	])
 	->shallow();
 
-//Route::get('/challenge', [ChallengesController::class, 'index']);
-//Route::get('/challenge/{challenge:slug}', [ChallengesController::class, 'show']);
-//Route::post('/challenge/{challenge:slug}/start', [ChallengesController::class, 'start']);
-
 
 // Latex download - migrate to custom controller
+// TODO: Implement back the PDF output.
 //Route::get('/latex/dry', [LatexController::class, 'dry']);
 //Route::post('/latex', [LatexController::class, 'latex']);
 //Route::get('/download/{fileID}', [LatexController::class, 'download']);
@@ -104,20 +104,12 @@ Route::apiResource('chapters.challenges', ChallengesController::class)
 // Developpement page
 Route::get('dev/{dev}', [ScolcoursController::class, 'dev']);
 
-// Post routes (for debug / dev)
-//Route::post('post/', [PostController::class, 'store']);
-//Route::get('post/create/{chapter:slug}', [PostController::class, 'create'])->name('post.create');
-////Route::get('post/create', [PostController::class, 'create']);
-//Route::get('post/fetch/{chapter:slug}', [PostController::class, 'fetch']);
-//Route::get('post/{post}', [PostController::class, 'show']);
 
-// Tools controller
+// Tools routes
 Route::get('tools/', [ToolsController::class, 'index'])->name('tools');
 Route::get('tools/{tool:slug}', [ToolsController::class, 'show'])->name('tools.tool');
 
-
-//Route::get('{theme:slug}/create', [ChaptersController::class, 'create'])->name('chapter.create');
-//Route::get('chapter/{chapter}', [ChaptersController::class, 'generic'])->name('chapter');
+// Themes and chapters main routes
 Route::get('{theme:slug}/', [ChaptersController::class, 'index'])->name('theme');
 Route::get('{theme:slug}/{chapter:slug}', [ChaptersController::class, 'show'])->name('theme.chapter');
 
