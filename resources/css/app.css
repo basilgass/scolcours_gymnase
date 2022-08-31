@@ -117,7 +117,7 @@
 		@apply btn bg-orange-500 text-white hover:bg-orange-700;
 	}
 
-	.btn-cancel,.btn-error {
+	.btn-cancel,.btn-error,.btn-warning {
 		@apply btn bg-orange-600 text-white hover:bg-orange-700;
 	}
 

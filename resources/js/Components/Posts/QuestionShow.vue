@@ -1,9 +1,11 @@
 <template>
 	<div
-		class="px-5 py-3 rounded border"
+		class="px-5 py-3"
 		:class="{
-			'bg-gray-50 border-gray-200': !isCorrect.result,
-			'bg-green-50 border-green-600/60': isCorrect.result,
+			'bg-gray-200 even:bg-gray-100': correctionMode,
+			'rounded border': !correctionMode,
+			'bg-gray-50 border-gray-200': !correctionMode && !isCorrect.result,
+			'bg-green-50 border-green-600/60': !correctionMode && isCorrect.result,
 		}"
 	>
 		<!-- Admin edition mode -->
@@ -87,10 +89,12 @@
 			:show-keyboard="showKeyboard"
 			:show-keyboard-output="false"
 			:show-keyboard-toggle="true"
+			:correction-mode="correctionMode"
 			@validate="validateAnswer"
 		/>
 
-		<div>
+		<!-- footer - display previous answers -->
+		<div v-if="!correctionMode">
 			<!-- Si la réponse est déjà donnée, afficher la réponse -->
 			<div
 				v-if="isCorrect.result"
@@ -173,7 +177,8 @@ import {keyboards} from "@/keyboards"
 import QuestionItem from "@/Components/QuestionItem"
 
 let props = defineProps({
-	question: {type: Object, required: true}
+	question: {type: Object, required: true},
+	correctionMode: {type: Boolean, default: false}
 })
 
 let emits = defineEmits(["destroy", "resolved"])

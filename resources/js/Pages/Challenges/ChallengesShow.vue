@@ -341,7 +341,7 @@ let theChallenge = ref(props.challenge.data),
 
 			// TODO: Must make the generation and check for uniqueness.
 			try {
-				for (let i = 0; i < 10; i++) {
+				for (let i = 0; i < 20; i++) {
 					questions.value.push(F(PiMath, crtLevel))
 				}
 

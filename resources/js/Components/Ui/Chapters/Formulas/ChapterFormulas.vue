@@ -11,50 +11,58 @@
 		<div
 			v-if="formulas.length>0"
 		>
-			<div
-				v-for="item in formulas"
-				:key="item.id"
-				class="grid grid-cols-1 gap-4 odd:bg-gray-50 px-4 py-3"
-				:class="item.block.illustrations.length>0?'grid-cols-2':''"
+			<draggable
+				:disabled="!($page.props.auth.can.admin && editMode)"
+				v-model="formulas"
+				item-key="id"
+				@end="updateFormulas"
 			>
-				<div>
-					<!-- Admin controls -->
+				<template #item="{ element }">
 					<div
-						v-if="$page.props.auth.can.admin && editMode && editingFormula===false"
-						class="flex gap-2 mb-2"
+						class="grid grid-cols-1 gap-4 odd:bg-gray-50 px-4 py-3"
+						:class="element.block.illustrations.length>0?'grid-cols-2':''"
 					>
-						<button
-							class="btn-edit btn-xs px-2"
-							@click="editingFormula = item"
-						>
-							éditer <i class="bi bi-pencil" />
-						</button>
-						<button
-							class="btn-success btn-xs px-2"
-							@click="duplicateFormula(item.id)"
-						>
-							dupliquer <i class="bi bi-clipboard-plus" />
-						</button>
-						<button
-							class="btn-delete btn-xs px-2"
-							@click="delFormula(item.id)"
-						>
-							supprimer <i class="bi bi-trash" />
-						</button>
+						<div>
+							<!-- Admin controls -->
+							<div
+								v-if="$page.props.auth.can.admin && editMode && editingFormula===false"
+								class="flex gap-2 mb-2"
+							>
+								<button
+									class="btn-edit btn-xs px-2"
+									@click="editingFormula = element"
+								>
+									éditer <i class="bi bi-pencil" />
+								</button>
+								<button
+									class="btn-success btn-xs px-2"
+									@click="duplicateFormula(element.id)"
+								>
+									dupliquer <i class="bi bi-clipboard-plus" />
+								</button>
+								<button
+									class="btn-delete btn-xs px-2"
+									@click="delFormula(element.id)"
+								>
+									supprimer <i class="bi bi-trash" />
+								</button>
+							</div>
+
+							<!-- Text -->
+							<div
+								v-katex.left.nomargin.auto="element.block.body"
+							/>
+						</div>
+
+						<!-- Illustration -->
+						<illustration-show
+							v-if="element.block.illustrations.length>0"
+							:illustration="element.block.illustrations[0]"
+						/>
 					</div>
 
-					<!-- Text -->
-					<div
-						v-katex.left.nomargin.auto="item.block.body"
-					/>
-				</div>
-
-				<!-- Illustration -->
-				<illustration-show
-					v-if="item.block.illustrations.length>0"
-					:illustration="item.block.illustrations[0]"
-				/>
-			</div>
+				</template>
+			</draggable>
 		</div>
 
 		<!-- Edit form or create button -->
@@ -87,7 +95,6 @@
 	</chapter-article>
 </template>
 <script setup>
-
 import {inject, onMounted, ref} from "vue"
 import ChapterArticle from "@/Components/Ui/Chapters/ChapterArticle"
 import BlockForm from "@/Components/Posts/BlockForm"
@@ -134,6 +141,15 @@ function duplicateFormula(id){
 		.then(res=>{
 			formulas.value.push(res.data.data)
 		}).catch(res=>console.log("duplicate error", res.data))
+}
+
+function updateFormulas(){
+	axios.post(route("formulas.updateOrder"), {
+		order: formulas.value.map((x, index)=>{return {id: x.id, order: index}})
+	}).then(res=>{
+		console.log(res.data)
+	}).catch(res=>console.log("update ordering order: ", res.data))
+
 }
 
 function delFormula(id) {

@@ -41,6 +41,7 @@
 		<chapter-dashboard
 			v-show="!editAndMove"
 			v-model:show-exercises="showOnlyExercises"
+			v-model:hide-resolved-questions="hideResolvedQuestions"
 			:chapter="chapter.data"
 		/>
 
@@ -64,6 +65,7 @@
 					:key="post.id"
 					:post="post"
 					:show-title-only="editAndMove"
+					:hide-resolved-questions="hideResolvedQuestions"
 					@delete="deletePost(post.id)"
 					@update-title="post.title=$event"
 				>
@@ -167,6 +169,7 @@ let chapterPosts = ref(props.chapter.data.posts),
 	editMode = ref(localStorage.getItem("ScolCoursEditMode")==="1"),
 	editAndMove = ref(false),
 	showOnlyExercises = ref(false),
+	hideResolvedQuestions = ref(false),
 	chapterPostsFiltered = computed(()=>{
 		if(showOnlyExercises.value){
 			return chapterPosts.value.filter(post=>post.type==="exercise")

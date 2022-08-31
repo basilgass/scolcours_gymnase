@@ -7,6 +7,7 @@
 		/>
 		<ui-switch
 			v-model="value"
+			:sm="props.sm"
 		/>
 		<form-error
 			:message="error"
@@ -28,7 +29,8 @@ const props = defineProps({
 	modelValue: {type: [Number,Boolean], default: null},
 	name: {type: String, required: true},
 	label: {type: String, default: ""},
-	error: {type: String, default: ""}
+	error: {type: String, default: ""},
+	sm: {type: Boolean, default: false}
 })
 
 // Make sure it's a boolean
@@ -42,6 +44,6 @@ let labelSwitch = computed(()=>{
 	}
 })
 watch(()=> value.value, (value) =>{
-	emit("update:modelValue", value?1:0)
+	emit("update:modelValue", value?true:false)
 })
 </script>

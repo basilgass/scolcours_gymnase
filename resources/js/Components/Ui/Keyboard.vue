@@ -330,10 +330,9 @@ function ButtonKeyClick(key) {
 
 	let output = "", result = keyStrokes.value.map(k => k.fn(output)).join("")
 	emit("update:modelValue", result)
-	emit("update:tex", keyboards[theKeyboard.value].tex ? keyboards[theKeyboard.value].tex(result) : result)
+	emit("update:tex", getTex(result))
 	emit("key", result)
 }
-
 let validateButton = ref(null)
 
 function wrongAnswer() {
@@ -349,7 +348,11 @@ function wrongAnswer() {
 	}
 }
 
-defineExpose({resetKeyStrokes, wrongAnswer})
+function getTex(value){
+	return keyboards[theKeyboard.value].tex ? keyboards[theKeyboard.value].tex(value) : value
+}
+
+defineExpose({resetKeyStrokes, wrongAnswer, getTex})
 </script>
 <style scoped>
 

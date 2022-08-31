@@ -1,47 +1,60 @@
 <template>
 	<div class="question-wrapper overflow-x-auto">
-		<div v-katex.auto="questionAsTex" />
+		<div v-if="correctionMode">
+			<div v-katex.auto.nomargin.left="questionAsTex" />
+		</div>
+		<div v-else>
+			<div v-katex.auto="questionAsTex" />
+		</div>
 
-		<button
-			v-if="showKeyboardToggle"
-			class="btn bg-white w-full my-2"
-			@click="giveAnswer=!giveAnswer"
-		>
-			Donner la réponse
-		</button>
-		<div
-			v-if="checkerResult.result===false"
-			class="text-red-600"
-			v-text="checkerResult.message"
-		/>
-
-		<div>
+		<div v-show="!correctionMode">
+			<button
+				v-if="showKeyboardToggle"
+				class="btn bg-white w-full my-2"
+				@click="giveAnswer=!giveAnswer"
+			>
+				Donner la réponse
+			</button>
 			<div
-				v-if="showKeyboardOutput"
-				v-katex.display="tex"
-				class="min-h-[100px]"
+				v-if="answerFormat"
+				v-katex.auto="answerFormat"
+				class="text-xs text-center"
+			/>
+			<div
+				v-if="checkerResult.result===false"
+				class="text-red-600"
+				v-text="checkerResult.message"
 			/>
 
-			<Keyboard
-				v-show="showKeyboard || giveAnswer"
-				ref="keyboardUI"
-				v-model="answer"
-				v-model:tex="tex"
-				:keyboard="keyboard"
-				class="max-w-xl mx-auto"
-				validate
-				reset
-				back
-				:multiple="multipleAnswer"
-				@validate="validate"
-				@key="checkerResult.message = ''"
-			/>
+			<div>
+				<div
+					v-if="showKeyboardOutput"
+					v-katex.display="tex"
+					class="min-h-[100px]"
+				/>
+
+				<Keyboard
+					v-show="showKeyboard || giveAnswer"
+					ref="keyboardUI"
+					v-model="answer"
+					v-model:tex="tex"
+					:keyboard="keyboard"
+					key-class="bg-white"
+					class="max-w-xl mx-auto"
+					validate
+					reset
+					back
+					:multiple="multipleAnswer"
+					@validate="validate"
+					@key="checkerResult.message = ''"
+				/>
+			</div>
 		</div>
 	</div>
 </template>
 
 <script setup>
-import {computed, ref} from "vue"
+import {computed, onMounted, ref, watch} from "vue"
 import Keyboard from "@/Components/Ui/Keyboard"
 import {useCheckers} from "@/Composables/useCheckers"
 import katex from "katex"
@@ -57,26 +70,27 @@ let props = defineProps({
 	keyboard: {type: String, default: "algebra"},
 	showKeyboard: {type: Boolean, default: true},
 	showKeyboardOutput: {type: Boolean, default: false},
-	showKeyboardToggle: {type: Boolean, default: false}
+	showKeyboardToggle: {type: Boolean, default: false},
+	correctionMode: {type: Boolean, defaut: false}
 })
 
-let giveAnswer = ref(props.showKeyboardToggle===false)
-
-
+const checker = useCheckers(props.checker ?? "exact")
 
 let checkerResult = ref({
 		result: null,
 		message: ""
 	}),
-	multipleAnswer = computed(()=>{
-		return props.question.split("$").length>2
+	multipleAnswer = computed(() => {
+		return props.question.split("$").length > 2
 	}),
 	answer = ref(""),
 	tex = ref(""),
 	answers = ref([]),
-	keyboardUI = ref(null)
+	keyboardUI = ref(null),
+	answerFormat = ref(checker.format),
+	giveAnswer = ref(props.showKeyboardToggle === false)
 
-let questionAsTex = computed(()=>{
+let questionAsTex = computed(() => {
 	let body = props.question,
 		isMath = props.math,
 		userAnswer
@@ -92,24 +106,26 @@ let questionAsTex = computed(()=>{
 
 	// On transforme chaque variable `$a` par sa réponse.
 	// On récolte la liste des variables présentent dans la question.
-	if(body.includes("$")){
-		let questionsVars = [...new Set([...body.matchAll(/\$([a-z])/g)].map(x=>x[0]))]
+	if (body.includes("$")) {
+		let questionsVars = [...new Set([...body.matchAll(/\$([a-z])/g)].map(x => x[0]))]
 		questionsVars.sort()
 
 		// on récupère la liste des réponses.
 		userAnswer = userAnswer.split(",")
-		const crtAnswerIndex = userAnswer.length-1
-		userAnswer = userAnswer.filter(x=>x!=="")
+		const crtAnswerIndex = userAnswer.length - 1
+		userAnswer = userAnswer.filter(x => x !== "")
 
-		for(let i=0; i<questionsVars.length; i++){
+		for (let i = 0; i < questionsVars.length; i++) {
 			let key = questionsVars[i],
 				value = userAnswer[i],
-				placeholder = questionsVars.length===1?"réponse":key[1]
+				placeholder = questionsVars.length === 1 ? "réponse" : key[1]
 
-			if(i===crtAnswerIndex){
-				value = `\\textcolor{cornflowerblue}{ ${(value && value!=="")?value:"< "+ placeholder +" >"} }`
+			if (i === crtAnswerIndex) {
+				value = `\\textcolor{cornflowerblue}{ ${(value && value !== "") ? value : "< " + placeholder + " >"} }`
 			}
-			if(value===undefined){ value = `\\textcolor{red}{ <  ${placeholder} > }`}
+			if (value === undefined) {
+				value = `\\textcolor{red}{ <  ${placeholder} > }`
+			}
 
 			body = body.replaceAll(key, value)
 		}
@@ -127,9 +143,7 @@ let questionAsTex = computed(()=>{
 
 })
 
-const checker = useCheckers(props.checker??"exact")
-
-let validate = function(){
+let validate = function () {
 	checkerResult.value = checker.check(props.answer, answer.value)
 
 	answers.value.push({
@@ -138,12 +152,14 @@ let validate = function(){
 	})
 
 	let returnedValue = {
-		...checkerResult.value, answer: answer.value, question: questionAsTex.value}
-	if(checkerResult.value.result){
+		...checkerResult.value, answer: answer.value, question: questionAsTex.value
+	}
+	if (checkerResult.value.result) {
 		// Flash message.
+		giveAnswer.value = false
 
-	}else{
-		if(keyboardUI.value) {
+	} else {
+		if (keyboardUI.value) {
 			keyboardUI.value.wrongAnswer()
 		}
 	}
@@ -152,4 +168,21 @@ let validate = function(){
 }
 
 defineExpose({keyboardUI})
+
+watch(()=>props.correctionMode, (correction, before)=>{
+	if(correction){
+		if(keyboardUI.value) {
+			tex.value = keyboardUI.value.getTex(props.answer)
+		}
+	}else{
+		tex.value = ""
+	}
+})
+onMounted(()=>{
+	if(props.correctionMode){
+		if(keyboardUI.value) {
+			tex.value = keyboardUI.value.getTex(props.answer)
+		}
+	}
+})
 </script>

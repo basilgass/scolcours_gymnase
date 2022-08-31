@@ -43,11 +43,19 @@
 				<div>{{ chapterExercises.length }} exercices</div>
 
 				<button
-					class="py-2 w-full"
+					class="py-2 w-full btn-xs"
 					:class="showExercises?'btn-success':'btn'"
 					@click="$emit('update:showExercises', !showExercises)"
 				>
 					N'afficher que les exercices
+				</button>
+
+				<button
+					class="py-2 w-full btn-xs"
+					:class="hideResolvedQuestions?'btn-warning':'btn'"
+					@click="$emit('update:hideResolvedQuestions', !hideResolvedQuestions)"
+				>
+					Cacher les questions répondues
 				</button>
 
 				<div>{{ chapterQuestions.answered }}/{{ chapterQuestions.questions }} questions répondues</div>
@@ -118,10 +126,11 @@ import {useForm} from "@inertiajs/inertia-vue3"
 
 let props = defineProps({
 	chapter: {type: Object, required: true},
-	showExercises: {type: Boolean, required: true}
+	showExercises: {type: Boolean, required: true},
+	hideResolvedQuestions: {type: Boolean, require: true}
 })
 
-let emits = defineEmits(["update:showExercises"])
+let emits = defineEmits(["update:showExercises", "update:hideResolvedQuestions"])
 
 let editMode = inject("editmode"),
 	showCreateChallenge = ref(false),

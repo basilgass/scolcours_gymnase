@@ -1,5 +1,5 @@
 <template>
-	<article>
+	<article :class="($page.props.auth.can.admin && editMode)?'border border-dashed border-amber-600 rounded -mx-4 pt-2 pb-2 px-4':''">
 		<!-- Edit mode the block -->
 		<dialog-modal
 			v-model="edit"
@@ -11,6 +11,62 @@
 				@close="edit=false"
 			/>
 		</dialog-modal>
+
+		<!-- Admin buttons -->
+		<div
+			v-if="$page.props.auth.can.admin && editMode"
+			class="admin-wrapper mb-5 flex-col"
+		>
+			<div class="w-full flex flex-row justify-between">
+				<div class="space-x-3">
+					<button
+						class="btn-edit btn-xs"
+						@click="edit=true"
+					>
+						éditer <i class="bi bi-pencil" />
+					</button>
+
+					<button
+						v-if="!hideDelete"
+						class="btn-delete btn-xs"
+						@click="destroyBlock"
+					>
+						supprimer <i class="bi bi-trash" />
+					</button>
+				</div>
+
+				<div class="space-x-3">
+					<button
+						v-if="!hideBlur"
+						class="btn btn-xs px-5"
+						@click="blurBlock"
+					>
+						<i
+							class="bi bi-eye"
+							:class="dbBlur?'blur-sm':''"
+						/>
+					</button>
+					<button
+						v-if="props.switch"
+						class="btn-xs px-5"
+						:class="{
+							'text-white bg-orange-700': crtBlock.switch===0,
+							'text-white bg-blue-700': crtBlock.switch===1
+						}"
+						@click="switchBlock"
+					>
+						<i class="bi bi-toggle-off" />
+					</button>
+				</div>
+			</div>
+
+			<div
+				v-if="$slots.admin"
+				class="w-full"
+			>
+				<slot name="admin" />
+			</div>
+		</div>
 
 		<!-- display mode of the block -->
 		<!-- display the block faded or not -->
@@ -67,62 +123,6 @@
 				>
 					<i class="bi bi-eye" />
 				</button>
-			</div>
-		</div>
-
-		<!-- Admin buttons -->
-		<div
-			v-if="$page.props.auth.can.admin && editMode"
-			class="admin-wrapper mt-3 mb-5 flex-col"
-		>
-			<div class="w-full flex flex-row justify-between">
-				<div class="space-x-3">
-					<button
-						class="btn-edit btn-xs"
-						@click="edit=true"
-					>
-						éditer <i class="bi bi-pencil" />
-					</button>
-
-					<button
-						v-if="!hideDelete"
-						class="btn-delete btn-xs"
-						@click="destroyBlock"
-					>
-						supprimer <i class="bi bi-trash" />
-					</button>
-				</div>
-
-				<div class="space-x-3">
-					<button
-						v-if="!hideBlur"
-						class="btn btn-xs px-5"
-						@click="blurBlock"
-					>
-						<i
-							class="bi bi-eye"
-							:class="dbBlur?'blur-sm':''"
-						/>
-					</button>
-					<button
-						v-if="props.switch"
-						class="btn-xs px-5"
-						:class="{
-							'text-white bg-orange-700': crtBlock.switch===0,
-							'text-white bg-blue-700': crtBlock.switch===1
-						}"
-						@click="switchBlock"
-					>
-						<i class="bi bi-toggle-off" />
-					</button>
-				</div>
-			</div>
-
-			<div
-				v-if="$slots.admin"
-				class="w-full"
-			>
-				<slot name="admin" />
 			</div>
 		</div>
 	</article>

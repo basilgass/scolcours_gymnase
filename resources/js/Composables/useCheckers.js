@@ -9,13 +9,31 @@ export function useCheckers(checkerData) {
 			switch(checker){
 			case "polynom":
 				return new PolynomChecker(expectedAnswer, answer, options)
-				break
+			// case "scn":
+			// 	return new ScnNumberChecker(expectedAnswer, answer, options)
 			default:
 				return new StringChecker(expectedAnswer, answer, options)
 			}
-		}
+		},
+		format: formatChecker(checker, options)
 	}
 }
+
+function formatChecker(checker, options){
+	switch(checker){
+	case "scn":
+		if(isNaN(options)) {
+			return "réponse en notation scientifique"
+		}else{
+			return `réponse en notation scientifique à ${options} chiffre(s) significatif(s)`
+		}
+	default:
+		return ""
+	}
+}
+
+
+
 
 /**
  *
@@ -37,6 +55,7 @@ function StringChecker(expectedAnswer, answer, options) {
 		message: ""
 	}
 }
+
 
 /**
  *

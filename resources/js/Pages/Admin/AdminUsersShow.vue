@@ -34,6 +34,17 @@
 		</button>
 	</div>
 
+	<div class="flex justify-between">
+		<h2 class="text-xl">
+			Utilisateurs
+		</h2>
+
+		<form-switch
+			v-model="deleteMode"
+			label="mode suppression"
+			name="deleteSwitch"
+		/>
+	</div>
 	<div class="bg-white">
 		<div
 			v-for="user of users"
@@ -51,7 +62,8 @@
 
 			<div class="user-wrapper-right">
 				<button
-					class="btn-delete"
+					v-if="deleteMode"
+					class="btn-delete btn-xs"
 					@click="destroyUser(user.id)"
 				>
 					Supprimer
@@ -74,6 +86,7 @@ import {computed, ref} from "vue"
 import FormInput from "@/Components/Form/FormInput"
 import {useForm} from "@inertiajs/inertia-vue3"
 import {Inertia} from "@inertiajs/inertia"
+import FormSwitch from "@/Components/Form/FormSwitch"
 
 let props = defineProps({
 	users: {type: Object}
@@ -105,6 +118,8 @@ function addUsers(){
 		})
 
 }
+
+let deleteMode = ref(false)
 function destroyUser(id){
 	axios.post(route("admin.users.destroy", [id]), {_method: "delete"}).then((res)=>{
 		if(res.data){

@@ -83,6 +83,15 @@ class FormulaController extends Controller
 		return $formula;
     }
 
+	public function updateOrder(Request $request)
+	{
+		foreach ($request['order'] as $value){
+			Formula::find($value['id'])?->update(['order'=>$value['order']]);
+		}
+
+		return true;
+	}
+
     /**
      * Remove the specified resource from storage.
      *

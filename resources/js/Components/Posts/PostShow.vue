@@ -11,7 +11,7 @@
 			v-if="$page.props.auth.can.admin && editMode && $slots.adminHeader && showTitleOnly"
 			class="admin-wrapper flex-col"
 		>
-			<slot name="adminHeader" />
+			<slot name="adminHeader"/>
 		</div>
 
 		<div v-show="!showTitleOnly">
@@ -20,7 +20,7 @@
 				v-if="$page.props.auth.can.admin && editMode"
 				class="admin-wrapper flex-col mt-3"
 			>
-				<slot name="adminHeader" />
+				<slot name="adminHeader"/>
 
 				<div class="w-full flex items-baseline">
 					<!-- update the number of visible blocks -->
@@ -47,13 +47,13 @@
 							class="btn-edit btn-xs"
 							@click="edit=true"
 						>
-							éditer <i class="bi bi-pencil" />
+							éditer <i class="bi bi-pencil"/>
 						</button>
 						<button
 							class="btn-delete btn-xs"
 							@click="deletePost"
 						>
-							Supprimer <i class="bi bi-trash" />
+							Supprimer <i class="bi bi-trash"/>
 						</button>
 					</div>
 				</div>
@@ -68,19 +68,19 @@
 						class="btn btn-xs bg-white hover:bg-blue-400 hover:border-blue-500 hover:text-white"
 						@click="runPostScript()"
 					>
-						<i class="bi bi-shuffle mr-2" />Rendre aléatoire
+						<i class="bi bi-shuffle mr-2"/>Rendre aléatoire
 					</button>
 					<div
 						v-if="props.post.switch"
 						class="ml-10"
 					>
-						<span v-katex.auto="switchText.pre" />
+						<span v-katex.auto="switchText.pre"/>
 						<ui-switch
 							v-model="scriptSwitch"
 							sm
 							class="mx-1"
 						/>
-						<span v-katex.auto="switchText.post" />
+						<span v-katex.auto="switchText.post"/>
 					</div>
 				</div>
 
@@ -182,44 +182,58 @@
 					v-if="$slots.admin"
 					class="w-full"
 				>
-					<slot name="adminFooter" />
+					<slot name="adminFooter"/>
 				</div>
 			</div>
 
 			<!-- all the questions -->
 			<div
-				v-if="postQuestions.length>0"
+				v-if="filteredQuestions.length>0"
 				class="questions-wrapper mt-10"
 			>
+				<!-- question section header -->
 				<div class="flex items-baseline justify-between border-t -mx-4 px-4 py-3 mt-5 mb-3">
-					<h3 class="text-lg">
-						Questions
-					</h3>
-					<div class="flex gap-3 items-baseline">
+					<div class="flex gap-4 items-baseline">
+						<h3 class="text-lg">
+							Questions
+						</h3>
 						<div>
-							{{ questionRemaining }} / {{ postQuestions.length }} questions résolues
+							( {{ questionRemaining }} / {{ postQuestions.length }} )
 						</div>
+					</div>
+					<div class="flex gap-5 items-baseline" v-if="$page.props.auth.can.admin">
+						<form-switch
+							v-model="correctionMode"
+							name="correctionMode"
+							label="corrections"
+							sm
+						/>
+
 						<button
-							v-if="$page.props.auth.can.admin"
-							class="btn"
+							class="btn btn-xs"
 							@click="questionResetAnswers"
 						>
-							<i class="bi bi-trash2" />effacer
+							<i class="bi bi-trash2 mr-2"/>effacer les réponses
 						</button>
+
 					</div>
 				</div>
 
+				<!-- list of questions -->
 				<div
-					class="grid grid-cols-1 gap-10"
+					class="grid grid-cols-1"
 					:class="{
-						'md:grid-cols-2 lg:grid-cols-3':postQuestions.length>=3,
-						'md:grid-cols-2':postQuestions.length===2,
+						'gap-1': correctionMode,
+						'gap-10': !correctionMode,
+						'md:grid-cols-2 lg:grid-cols-3':!correctionMode && filteredQuestions.length>=3,
+						'md:grid-cols-2':!correctionMode && filteredQuestions.length===2,
 					}"
 				>
 					<question-show
-						v-for="question in postQuestions"
+						v-for="question in filteredQuestions"
 						:key="`postQuestion-${question.id}`"
 						:question="question"
+						:correction-mode="correctionMode"
 						@destroy="questionDestroy"
 					/>
 				</div>
@@ -296,7 +310,7 @@
 <script setup>
 // TODO: save the blocks order in a post
 // TODO: should also be able to make the same for the posts in a chapter.
-import {computed, inject, onMounted, provide, reactive, ref} from "vue"
+import {computed, inject, onMounted, provide, reactive, ref, watch} from "vue"
 import BlockShow from "@/Components/Posts/BlockShow"
 import FormNumber from "@/Components/Form/FormNumber"
 import PostForm from "@/Components/Posts/PostForm"
@@ -307,6 +321,7 @@ import FormLabel from "@/Components/Form/FormLabel"
 import FormTextarea from "@/Components/Form/FormTextarea"
 import QuestionShow from "@/Components/Posts/QuestionShow"
 import FormInput from "@/Components/Form/FormInput"
+import FormSwitch from "@/Components/Form/FormSwitch"
 
 const emits = defineEmits(["delete", "updateTitle"])
 const props = defineProps({
@@ -314,7 +329,8 @@ const props = defineProps({
 		type: Object, default: () => {
 		}
 	},
-	showTitleOnly: {type: Boolean, default: false}
+	showTitleOnly: {type: Boolean, default: false},
+	hideResolvedQuestions: {type: Boolean, default: false}
 })
 
 /** Blocks reactives and methods */
@@ -364,14 +380,30 @@ let blocks = ref(props.post.blocks),
 
 /** Questions reactives and methods */
 let postQuestions = ref(props.post.questions),
-	questionRemaining = computed(()=>{
-		return postQuestions.value.filter(q=>{
-			if (q.userAnswers.length>0){
-				return q.userAnswers[q.userAnswers.length-1].result
+	filteredQuestions = ref(props.post.questions),
+	questionRemaining = computed(() => {
+		return postQuestions.value.filter(q => {
+			if (q.userAnswers.length > 0) {
+				return q.userAnswers[q.userAnswers.length - 1].result
 			}
 			return false
 		}).length
-	})
+	}),
+	correctionMode = ref(false)
+
+watch(() => props.hideResolvedQuestions, (value, before) => {
+	if (props.hideResolvedQuestions) {
+		filteredQuestions.value = postQuestions.value.filter(question => {
+			if (question.userAnswers.length > 0) {
+				return !question.userAnswers[question.userAnswers.length - 1].result
+			}
+			return true
+		})
+	} else {
+		filteredQuestions.value = postQuestions.value
+	}
+})
+
 let questionForm = reactive({
 	math: true,
 	body: "",
@@ -400,7 +432,7 @@ function questionDestroy(id) {
 	postQuestions.value = postQuestions.value.filter(question => question.id !== id)
 }
 
-function questionResetAnswers(){
+function questionResetAnswers() {
 	axios.patch(
 		route("posts.questions.reset", [props.post.id], {
 			_method: "patch"
@@ -445,14 +477,14 @@ let editMode = inject("editmode")
 
 
 let edit = ref(props.post.isNew === true),
-	postTitle = ref(props.post.type==="exercise"?`exercice: ${props.post.title}`:props.post.title),
+	postTitle = ref(props.post.type === "exercise" ? `exercice: ${props.post.title}` : props.post.title),
 	numberVisibleBlocks = ref(props.post.numberOfVisibleBlocks),
 	scriptSwitch = ref(props.post.switch !== null),
 	addNBlocks = ref(1)
 
 
 function refreshPost(item) {
-	postTitle.value = item.type==="exercise"?`exercice: ${item.title}`:item.title
+	postTitle.value = item.type === "exercise" ? `exercice: ${item.title}` : item.title
 	emits("updateTitle", item.title)
 	edit.value = false
 }

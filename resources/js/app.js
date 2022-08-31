@@ -1,5 +1,6 @@
 import {createApp, h} from "vue"
 import {createInertiaApp, Head, Link} from "@inertiajs/inertia-vue3"
+import draggableComponent from "vuedraggable/src/vuedraggable.js"
 import {InertiaProgress} from "@inertiajs/progress"
 
 // Custom directives
@@ -18,6 +19,7 @@ createInertiaApp({
 			{render: () => h(app, props)})
 			.component("Link", Link)
 			.component("Head", Head)
+			.component("draggable", draggableComponent)
 			.use(plugin)
 			.directive("katex", katexDirective)
 			.directive("visible", visibleDirective)

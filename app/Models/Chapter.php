@@ -64,12 +64,12 @@ class Chapter extends Model
 
 	public function posts(): \Illuminate\Database\Eloquent\Relations\HasMany
 	{
-		return $this->hasMany(Post::class)->orderBy('position')->orderBy('id');;
+		return $this->hasMany(Post::class)->orderBy('position')->orderBy('id');
 	}
 
 	public function formulas(): \Illuminate\Database\Eloquent\Relations\HasMany
 	{
-		return $this->hasMany(Formula::class);
+		return $this->hasMany(Formula::class)->orderBy('order')->orderBy('id');
 	}
 
 	public function challenges(): \Illuminate\Database\Eloquent\Relations\HasMany
