@@ -94,4 +94,10 @@
 				->withTimestamps()
 				->withPivot('result', 'answer');
 		}
+
+		public function getAdminAttribute()
+		{
+			return $this->email==='basil@scolcours.ch' or $this->email==='alyssia@famillegass.ch';
+		}
+
 	}
