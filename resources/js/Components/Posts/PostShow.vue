@@ -192,8 +192,8 @@
 				class="questions-wrapper mt-10"
 			>
 				<!-- question section header -->
-				<div class="flex items-baseline justify-between border-t -mx-4 px-4 py-3 mt-5 mb-3">
-					<div class="flex gap-4 items-baseline">
+				<div class="flex items-baseline flex-col md:flex-row md:justify-between border-t -mx-4 px-4 py-3 mt-5 mb-3">
+					<div class="flex gap-4 items-baseline justify-between md:justify-start">
 						<h3 class="text-lg">
 							Questions
 						</h3>
@@ -201,7 +201,7 @@
 							( {{ questionRemaining }} / {{ postQuestions.length }} )
 						</div>
 					</div>
-					<div class="flex gap-5 items-baseline" v-if="$page.props.auth.can.admin">
+					<div class="flex gap-5 items-baseline justify-between md:justify-start" v-if="$page.props.auth.can.admin">
 						<form-switch
 							v-model="correctionMode"
 							name="correctionMode"

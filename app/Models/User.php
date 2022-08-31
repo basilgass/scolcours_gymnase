@@ -94,8 +94,4 @@
 				->withTimestamps()
 				->withPivot('result', 'answer');
 		}
-		public function getAdminAttribute()
-		{
-			return $this->email === 'basil@scolcours.ch';
-		}
 	}
