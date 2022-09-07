@@ -1,11 +1,15 @@
 <template>
 	<div class="question-wrapper overflow-x-auto">
 		<div v-if="correctionMode">
-			<div v-katex.auto.nomargin.left="questionAsTex" />
+			<markdown-it
+				katex-class="katex-left"
+				:text="questionAsTex"/>
+			<div v-if="!isKeyboardComponent" v-html="tex" />
 		</div>
 		<div v-else>
-			<div v-katex.auto="questionAsTex" />
+			<markdown-it :text="questionAsTex"/>
 		</div>
+
 
 		<div v-show="!correctionMode">
 			<button
@@ -34,6 +38,7 @@
 				/>
 
 				<Keyboard
+					v-if="isKeyboardComponent"
 					v-show="showKeyboard || giveAnswer"
 					ref="keyboardUI"
 					v-model="answer"
@@ -48,16 +53,26 @@
 					@validate="validate"
 					@key="checkerResult.message = ''"
 				/>
+				<component v-else
+						   v-show="showKeyboard || giveAnswer"
+						   :is="keyboardComponent"
+						   :options="keyboardComponentProps"
+						   @validate="validate"
+						   ref="componentUI"
+						   v-model="answer"
+						   v-model:tex="tex"
+				/>
 			</div>
 		</div>
 	</div>
 </template>
 
 <script setup>
-import {computed, onMounted, ref, watch} from "vue"
+import {computed, defineAsyncComponent, onMounted, ref, watch} from "vue"
 import Keyboard from "@/Components/Ui/Keyboard"
 import {useCheckers} from "@/Composables/useCheckers"
 import katex from "katex"
+import MarkdownIt from "@/Components/Ui/MarkdownIt";
 
 let emits = defineEmits(["validate"])
 
@@ -75,6 +90,17 @@ let props = defineProps({
 })
 
 const checker = useCheckers(props.checker ?? "exact")
+let isKeyboardComponent = computed(() => {
+		return !(props.keyboard && props.keyboard[0] === '#');
+	}),
+	keyboardComponentProps = computed(()=>{
+		let kbrd = props.keyboard.split('@')
+		return kbrd.length === 2 ? kbrd[1] : null;
+	}),
+	keyboardComponent = computed(() => {
+		let kbrd = props.keyboard.split('@')
+		return defineAsyncComponent(() => import(`@/Components/Ui/Keyboards/Keyboard${kbrd[0].substring(1)}`))
+	})
 
 let checkerResult = ref({
 		result: null,
@@ -87,7 +113,8 @@ let checkerResult = ref({
 	tex = ref(""),
 	answers = ref([]),
 	keyboardUI = ref(null),
-	answerFormat = ref(checker.format),
+	componentUI = ref(null),
+	answerFormat = ref(checker.format()),
 	giveAnswer = ref(props.showKeyboardToggle === false)
 
 let questionAsTex = computed(() => {
@@ -161,27 +188,38 @@ let validate = function () {
 	} else {
 		if (keyboardUI.value) {
 			keyboardUI.value.wrongAnswer()
+		}else if(componentUI.value){
+			componentUI.value.wrongAnswer()
 		}
 	}
 
 	emits("validate", returnedValue)
 }
 
-defineExpose({keyboardUI})
+defineExpose({
+	keyboard: isKeyboardComponent.value?keyboardUI:componentUI
+})
 
-watch(()=>props.correctionMode, (correction, before)=>{
-	if(correction){
-		if(keyboardUI.value) {
+
+// Correction mode
+// TODO: correction mode for "specific components"
+watch(() => props.correctionMode, (correction, before) => {
+	if (correction) {
+		if (keyboardUI.value) {
 			tex.value = keyboardUI.value.getTex(props.answer)
+		}else if(componentUI.value) {
+			tex.value = componentUI.value.getTex(props.answer)
 		}
-	}else{
+	} else {
 		tex.value = ""
 	}
 })
-onMounted(()=>{
-	if(props.correctionMode){
-		if(keyboardUI.value) {
+onMounted(() => {
+	if (props.correctionMode) {
+		if (keyboardUI.value) {
 			tex.value = keyboardUI.value.getTex(props.answer)
+		}else if(componentUI.value){
+			tex.value = componentUI.value.getTex(props.answer)
 		}
 	}
 })

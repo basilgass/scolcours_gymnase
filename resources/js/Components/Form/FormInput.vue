@@ -12,7 +12,6 @@
 				</slot>
 			</div>
 			<input
-				:id="name"
 				ref="inp"
 				:name="name"
 				class="p-2 w-full focus:outline-none focus:bg-blue-50 focus:border focus:border-blue-500 transition;"
@@ -31,7 +30,12 @@
 				@keyup.esc.exact="doCancel"
 				@keyup.enter.exact="doValidate"
 				@keydown="handleCtrlKey"
+				:list="name"
 			>
+			<datalist :id="name" v-if="datalist.length>0"
+			>
+				<option v-for="item of datalist" :value="item">{{ item }}</option>
+			</datalist>
 			<button
 				v-if="$slots.button"
 				class="rounded-l-none"
@@ -69,7 +73,8 @@ let props = defineProps({
 	error: {type: String, default: ""},
 	focus: {type: Boolean, default: false},
 	autocomplete: {type: [String,Boolean], default: "off"},
-	btnClass:{type: String, default: "btn"}
+	btnClass:{type: String, default: "btn"},
+	datalist: {type: Array, default: []}
 })
 
 let inp = ref(null),

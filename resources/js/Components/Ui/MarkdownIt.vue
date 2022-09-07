@@ -1,7 +1,8 @@
 <template>
 	<div
 		ref="root"
-		class="prose lg:prose-lg katex-boxed max-w-full"
+		class="prose lg:prose-lg max-w-full"
+		:class="katexClass"
 		v-html="mdit"
 	/>
 </template>
@@ -14,7 +15,8 @@ let root = ref(null),
 
 const props = defineProps({
 	text: {type: String, default: ""},
-	delimiters: {type: String, default: "brackets"}
+	delimiters: {type: String, default: "brackets"},
+	katexClass: {type: String, default: 'katex-boxed'}
 })
 
 const tm = require("markdown-it-texmath")
@@ -26,7 +28,7 @@ const md = require("markdown-it")({html: true})
 		katexOptions: {
 			macros: {
 				"\\IR": "\\mathbb{R}",
-				"\\IR": "\\mathbb{R}",
+				"\\IN": "\\mathbb{N}",
 			}
 		}
 	})

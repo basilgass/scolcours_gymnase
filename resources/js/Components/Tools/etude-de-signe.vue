@@ -150,8 +150,8 @@
 						v-if="fraction_rationnelle.drawCode!==false"
 						class="max-w-3xl mx-auto"
 						axis
-						width="800"
-						height="600"
+						:width="800"
+						:height="600"
 						:draw="{
 							parameters: fraction_rationnelle.drawParameters,
 							code: fraction_rationnelle.drawCode

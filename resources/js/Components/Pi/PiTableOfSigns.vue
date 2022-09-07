@@ -21,11 +21,12 @@
 								class="w-24 text-center hover:bg-white py-2"
 							>
 								/>
-								<div
-									v-katex.inline="`+\\infty`"
-									class="w-6 text-xs mr-1"
-								/>
+
 							</div>
+							<div
+								v-katex.inline="`+\\infty`"
+								class="w-6 text-xs mr-1"
+							/>
 						</div>
 					</th>
 				</tr>
@@ -56,7 +57,6 @@
 					</td>
 				</tr>
 			</tbody>
-
 			<tfoot class="border-t border-t-2 border-gray-400">
 				<tr
 					v-if="tos.type==='grows'"
@@ -143,7 +143,7 @@
 			</tfoot>
 		</table>
 
-		<div class="text-center mt-5">
+		<div class="text-center mt-5" v-if="tos.tex && tos.tex!==''">
 			<button
 				class="text-xs"
 				@click="showTex=!showTex"
@@ -170,7 +170,6 @@ let props = defineProps({
 	}),
 	showTex = ref(false)
 
-console.log(props.tos)
 function displaySigns(index) {
 	let signs = [...props.tos.signs[index]]
 	signs.shift()

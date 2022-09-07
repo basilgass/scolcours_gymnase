@@ -214,6 +214,7 @@
 						v-model="theChallenge.checker"
 						name="questionsChecker"
 						label="checker"
+						:datalist="checkerList"
 					/>
 
 					<form-input
@@ -305,7 +306,7 @@ import {computed, nextTick, reactive, ref, watch} from "vue"
 import {provide} from "vue"
 import MarkdownIt from "@/Components/Ui/MarkdownIt"
 import Keyboard from "@/Components/Ui/Keyboard"
-import BlockForm from "@/Components/Posts/BlockForm"
+import BlockForm from "@/Components/Posts/Blocks/BlockForm"
 import Panel from "@/Components/Ui/Panel"
 import FormTextarea from "@/Components/Form/FormTextarea"
 import FormNumber from "@/Components/Form/FormNumber"
@@ -313,9 +314,9 @@ import FormInput from "@/Components/Form/FormInput"
 import {PiMath} from "pimath/esm"
 import login from "@/Pages/Auth/Login"
 import FormSwitch from "@/Components/Form/FormSwitch"
-import {useCheckers} from "@/Composables/useCheckers"
 import {keyboards} from "@/keyboards"
 import QuestionItem from "@/Components/QuestionItem"
+import {checkersList} from "@/Composables/useCheckers";
 
 const props = defineProps({
 	"challenge": {type: Object, required: true},
@@ -326,6 +327,7 @@ let theChallenge = ref(props.challenge.data),
 	challengeGenerator = ref(props.challenge.data.generator),
 	challengeGeneratorError = ref(""),
 	editMode = ref(false),
+	checkerList = ref(checkersList),
 	questions = ref([]),
 	runChallengeGenerator = function () {
 		let crtLevel = 1
@@ -402,8 +404,7 @@ if(localScore.value===null){localScore.value = "0"}
 let ValidateButton = ref(null),
 	questionUI = ref(null)
 
-const checker = useCheckers(theChallenge.value.checker),
-	timerInterval = ref(false),
+const timerInterval = ref(false),
 	timerIntervalSpeed = ref(1000)
 let startChallenge = function () {
 		questionId.value = 0
@@ -422,10 +423,9 @@ let startChallenge = function () {
 		listOfAnswers.value = []
 
 		// Reset the keyboard
-		if(questionUI.value) {
-			questionUI.value.keyboardUI.resetKeyStrokes()
+		if(questionUI.value && questionUI.value.keyboard) {
+			questionUI.value.keyboard.resetKeyStrokes()
 		}
-
 		// Visibility
 		isFinished.value = false
 		isRunning.value = true
@@ -526,7 +526,10 @@ let startChallenge = function () {
 					break
 				}
 			}
-			questionUI.value.keyboardUI.resetKeyStrokes()
+
+			if(questionUI.value && questionUI.value.keyboard) {
+				questionUI.value.keyboard.resetKeyStrokes()
+			}
 		} else {
 			// the answer is wrong
 

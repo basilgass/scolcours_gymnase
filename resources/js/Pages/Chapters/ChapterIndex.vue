@@ -97,7 +97,7 @@ import {computed, onMounted, ref} from "vue"
 import {useForm} from "@inertiajs/inertia-vue3"
 import DialogModal from "@/Components/Ui/DialogModal"
 import FormButton from "@/Components/Form/FormButton"
-import IllustrationShow from "@/Components/Posts/IllustrationShow"
+import IllustrationShow from "@/Components/Posts/Illustrations/IllustrationShow"
 
 let props = defineProps({
 	theme: {

@@ -55,7 +55,7 @@ export default {layout: LayoutMain}
 import FormInput from "@/Components/Form/FormInput"
 import {useForm} from "@inertiajs/inertia-vue3"
 import FormButton from "@/Components/Form/FormButton"
-import BlockForm from "@/Components/Posts/BlockForm"
+import BlockForm from "@/Components/Posts/Blocks/BlockForm"
 
 const $emits = defineEmits(["close"])
 const props = defineProps({

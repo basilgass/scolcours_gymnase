@@ -25,7 +25,7 @@
 			</div>
 		</div>
 
-		<!-- keyboard validate -->
+		<!-- keyboard validate (top version) -->
 		<div
 			v-if="validate && !validateAtBottom"
 			class="keyboard w-full my-3"
@@ -38,6 +38,7 @@
 				<i :class="btnValidate.icon" /> <span class="hidden md:inline md:ml-2">{{ btnValidate.label }}</span>
 			</button>
 		</div>
+
 		<!-- keyboard keys -->
 		<div
 			ref="root"
@@ -100,7 +101,8 @@
 				<i :class="item.icon" /> <span class="hidden md:inline md:ml-2">{{ item.label }}</span>
 			</button>
 		</div>
-		<!-- keyboard validate -->
+
+		<!-- keyboard validate (bottom version) -->
 		<div
 			v-if="validate && validateAtBottom"
 			class="keyboard w-full my-3"

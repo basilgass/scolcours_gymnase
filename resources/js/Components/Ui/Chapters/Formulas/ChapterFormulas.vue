@@ -97,8 +97,8 @@
 <script setup>
 import {inject, onMounted, ref} from "vue"
 import ChapterArticle from "@/Components/Ui/Chapters/ChapterArticle"
-import BlockForm from "@/Components/Posts/BlockForm"
-import IllustrationShow from "@/Components/Posts/IllustrationShow"
+import BlockForm from "@/Components/Posts/Blocks/BlockForm"
+import IllustrationShow from "@/Components/Posts/Illustrations/IllustrationShow"
 
 let props = defineProps({
 	title: {type: String, default: "formulaire"},

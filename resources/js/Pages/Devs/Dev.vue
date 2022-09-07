@@ -1,5 +1,8 @@
 <template>
 	<!-- Title -->
+
+	<confirm-button class="btn-xs" @confirm="alert('here')">HELLO WORLD</confirm-button>
+
 	<div ref="root">
 		<form-input
 			v-model="circle"
@@ -40,6 +43,8 @@ import {onMounted, ref} from "vue"
 import PiDrawParser from "@/Components/Pi/PiDrawParser"
 import {PiMath} from "pimath/esm"
 import FormInput from "@/Components/Form/FormInput"
+import DialogModal from "@/Components/Ui/DialogModal";
+import ConfirmButton from "@/Components/Ui/ConfirmButton";
 
 let root = ref(null),
 	code = ref(""),

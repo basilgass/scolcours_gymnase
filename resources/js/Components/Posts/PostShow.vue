@@ -49,12 +49,9 @@
 						>
 							éditer <i class="bi bi-pencil"/>
 						</button>
-						<button
-							class="btn-delete btn-xs"
-							@click="deletePost"
-						>
+						<confirm-button xs btn-class="btn-delete" @confirm="deletePost">
 							Supprimer <i class="bi bi-trash"/>
-						</button>
+						</confirm-button>
 					</div>
 				</div>
 			</div>
@@ -311,7 +308,7 @@
 // TODO: save the blocks order in a post
 // TODO: should also be able to make the same for the posts in a chapter.
 import {computed, inject, onMounted, provide, reactive, ref, watch} from "vue"
-import BlockShow from "@/Components/Posts/BlockShow"
+import BlockShow from "@/Components/Posts/Blocks/BlockShow"
 import FormNumber from "@/Components/Form/FormNumber"
 import PostForm from "@/Components/Posts/PostForm"
 import {PiMath} from "pimath/esm"
@@ -319,9 +316,10 @@ import UiSwitch from "@/Components/Ui/UiSwitch"
 import DialogModal from "@/Components/Ui/DialogModal"
 import FormLabel from "@/Components/Form/FormLabel"
 import FormTextarea from "@/Components/Form/FormTextarea"
-import QuestionShow from "@/Components/Posts/QuestionShow"
+import QuestionShow from "@/Components/Posts/Questions/QuestionShow"
 import FormInput from "@/Components/Form/FormInput"
 import FormSwitch from "@/Components/Form/FormSwitch"
+import ConfirmButton from "@/Components/Ui/ConfirmButton";
 
 const emits = defineEmits(["delete", "updateTitle"])
 const props = defineProps({
@@ -502,6 +500,7 @@ function updateNumberOfVisibleBlocks() {
 }
 
 function deletePost() {
+	// Confirmation dialog.
 	axios.post(route("posts.destroy", [props.post.id]),
 		{_method: "delete"})
 		.then(res => emits("delete", props.post.id))

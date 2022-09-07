@@ -1,6 +1,6 @@
 import AsciiMathParser from "asciimath2tex"
 
-function asciiToTex(value){
+export function asciiToTex(value){
 	const parser = new AsciiMathParser()
 	return parser.parse(value)
 }
@@ -39,16 +39,19 @@ export const keyboardKeys = {
 	"pi": {type: "math", display: "\\pi"},
 	"(": {type: "math", display: "("},
 	")": {type: "math", display: ")"},
+	"{": {type: "math", display: "\\{"},
+	"}": {type: "math", display: "\\}"},
+	"[": {type: "math", display: "["},
+	"]": {type: "math", display: "]"},
 	"=": {type: "math", display: "="},
 	" ": {type: "math", display: "\\cdot"},
 	".": {type: "math", display: "."},
-	"a": {type: "math", display: "a"},
-	"b": {type: "math", display: "b"},
-	"c": {type: "math", display: "c"},
-	"d": {type: "math", display: "d"},
-	"n": {type: "math", display: "n"},
-	"m": {type: "math", display: "m"},
-	"IR": {type: "math", display: "\\mathbb{R}"},
+	";": {type: "math", display: ";"},
+	"RR": {type: "math", display: "\\mathbb{R}"},
+	"^**": {type: "math", display: "\\textcolor{lightgray}{\\mathbb{R}}^*"},
+	"\\\\": {type: "math", display: "\\setminus \\textcolor{lightgray}{ E } "},
+	"uu": {type: "math", display: "\\cup"},
+	"oo": {type: "math", display: "\\infty"},
 	"!!": {type: "math", display: "\\varnothing"},
 	"@reset": {type: "icon", display: "bi bi-trash"},
 	"@back": {type: "icon", display: "bi bi-backspace"}
@@ -153,13 +156,46 @@ export const keyboards = {
 			"4", "5", "6", "*","/",
 			"7", "8", "9", "^2","^",
 			"0", "(", ")", "sqrt","root(",
-			"", "", "", "IR", "!!"
+			"", "", "", "RR", "!!"
 		],
 		tex: function(value){
 			if(!value.includes("/")){return asciiToTex(value)}
 
 			const numden = value.split("/")
 			return asciiToTex(numden.map(x=>`(${x})`).join("/"))
+		}
+	},
+	"solution": {
+		grid: "grid-cols-5",
+		layout: [
+			"1", "2", "3", "+","-",
+			"4", "5", "6", "*","/",
+			"7", "8", "9", "sqrt","root(",
+			"", "0", ";", "(",")",
+			"RR", "!!", "^**", "\\\\", "{",
+			"]", "[", "oo", "uu", "}"
+		],
+		tex: function(value){
+			//TODO: parse correctly solutions when using setminus.
+			if(value.startsWith('RR')){
+				return `\\mathcal S=${ asciiToTex(value) }`
+			}else if(value==='!!'){
+				return `\\mathcal S = \\varnothing`
+			}
+
+			function makeExactFromAscii(item){
+				if(!item.includes("/")){return asciiToTex(item)}
+
+				const numden = item.split("/")
+				return asciiToTex(numden.map(x=>`(${x})`).join("/"))
+			}
+
+			if(value.includes(']') || value.includes('[')){
+				// TODO: handle intervals : extract value.
+				return `\\mathcal S = ${ value.split(';').map(x=>makeExactFromAscii(x)).join(';') } `
+			}
+
+			return `\\mathcal S = ${ value.split(';').map(x=>makeExactFromAscii(x)).join(';') }`
 		}
 	}
 }

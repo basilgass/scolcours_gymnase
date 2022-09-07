@@ -36,7 +36,6 @@
 @inertia
 
 <div id="modal-dialog"></div>
-
 </body>
 <script>
 	document.addEventListener('DOMContentLoaded', function () {

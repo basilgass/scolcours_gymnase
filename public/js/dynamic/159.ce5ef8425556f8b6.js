@@ -1,2 +1,0 @@
-"use strict";(self.webpackChunk=self.webpackChunk||[]).push([[159],{159:(e,t,r)=>{r.r(t),r.d(t,{default:()=>a});var s=r(821),n={class:"text-red-500 text-xs mt-0"};const a={__name:"FormError",props:{message:{default:"",type:String}},setup:function(e){return function(t,r){return(0,s.openBlock)(),(0,s.createElementBlock)("p",n,(0,s.toDisplayString)(e.message),1)}}}}}]);
-//# sourceMappingURL=159.ce5ef8425556f8b6.js.map

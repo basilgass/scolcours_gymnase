@@ -152,7 +152,7 @@
 
 import {computed, inject, onMounted, ref} from "vue"
 import ChapterArticle from "@/Components/Ui/Chapters/ChapterArticle"
-import BlockShow from "@/Components/Posts/BlockShow"
+import BlockShow from "@/Components/Posts/Blocks/BlockShow"
 import FormNumber from "@/Components/Form/FormNumber"
 import CollapseTransition from "@/Components/CollapseTransition"
 import PostForm from "@/Components/Posts/PostForm"
