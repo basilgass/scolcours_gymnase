@@ -17,7 +17,7 @@
 				v-for="(question, index) of post.questions"
 				:key="`question-${question.id}`"
 			>
-				{{ index + 1 }} (id: {{ question.id }})
+				{{ index + 1 }} (id: {{ question.id }}) - {{ question.resolved }} sur {{ users }}
 
 				<progress-bar :percent="question.resolved/users*100" />
 

@@ -135,57 +135,16 @@
 		</div>
 
 		<!-- Chapter fixed bottom object -->
-		<div
+		<ChapterFloatingMenu
 			v-show="showFloatingFooter"
-			class="fixed
-				z-30 px-3 py-2
-				bottom-0 left-0
-				flex justify-center items-center gap-3
-				bg-gray-100
-				border-t border-r border-gray-400
-				hover:text-white hover:bg-blue-500 hover:border-blue-800"
+			:observe-title="observeTitle"
 		>
-			<i
-				class="bi bi-calculator cursor-pointer"
-				@click="showFormula=true"
+			<chapter-formulas
+				id="chapter-formula-aside"
+				:chapter="chapter.data"
+				class="h-full"
 			/>
-
-			<span
-				v-katex.auto="observeTitle"
-				class="text-xs"
-			/>
-
-			<i
-				class="bi bi-three-dots-vertical cursor-pointer"
-				@click="showMenu=true"
-			/>
-		</div>
-
-		<transition name="fade">
-			<div
-				v-show="showFormula"
-				class="fixed top-0 left-0 w-full h-full bg-black/60"
-				@click="showFormula=false"
-			/>
-		</transition>
-		<transition name="slide-fade">
-			<div
-				v-show="showFormula"
-				class="fixed left-0 top-0 h-full h-full w-full md:w-auto"
-			>
-				<div
-					class=" absolute right-2 top-2 cursor-pointer hover:rotate-180 hover:text-blue-700"
-					@click="showFormula=false"
-				>
-					<i class="bi bi-x-lg" />
-				</div>
-				<chapter-formulas
-					id="chapter-formula-aside"
-					class="h-full"
-					:chapter="chapter.data"
-				/>
-			</div>
-		</transition>
+		</ChapterFloatingMenu>
 	</div>
 </template>
 
@@ -205,6 +164,7 @@ import PostShow from "@/Components/Posts/PostShow"
 import FormSwitch from "@/Components/Form/FormSwitch"
 import ChapterDashboard from "@/Components/Ui/Chapters/ChapterDashboard"
 import {menuScrollTo} from "@/Composables/useHelpers"
+import ChapterFloatingMenu from "@/Components/Ui/Chapters/ChapterFloatingMenu"
 
 const props = defineProps({
 	theme: {

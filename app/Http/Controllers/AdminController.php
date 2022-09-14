@@ -269,9 +269,9 @@ class AdminController extends Controller
 						'body' => $question->body,
 						'resolved' => $filteredUsers->where('pivot.result', 1)->count(),
 						'answers' => [
-							'min'=>$answers->max(),
-							'max'=>$answers->min(),
-							'average'=>$answers->average()
+							'min' => $answers->min(),
+							'max' => $answers->max(),
+							'average' => $answers->average()
 						]
 					];
 				}

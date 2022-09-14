@@ -4,32 +4,7 @@
 			<template #title>
 				Table des matières
 			</template>
-			<div class="flex flex-col gap-3 mb-4">
-				<div
-					v-if="props.chapter.formulas.length>0"
-					class="cursor-pointer"
-					:class="`hover:border-b border-scolcours-${$page.props.theme.slug}`"
-					@click="menuScrollTo('chapter-formula')"
-				>
-					formulaire
-				</div>
-
-				<!-- list of posts titles -->
-				<div
-					v-for="post in chapterToc"
-					:key="post.id"
-					class="cursor-pointer flex gap-3 hover:gap-5 transition-all"
-					@click="menuScrollTo(`post-${post.id}`)"
-				>
-					<i
-						:class="{
-							'bi bi-calculator': post.type==='exercise',
-							'bi bi-text-paragraph': !post.type
-						}"
-					/>
-					<span v-katex.auto="post.title" />
-				</div>
-			</div>
+			<ChapterToc />
 		</Panel>
 
 		<Panel
@@ -62,7 +37,7 @@
 					class="py-2 w-full btn btn-xs"
 					@click="menuScrollToClass('unanswered')"
 				>
-					Prochaine question
+					<i class="bi bi-journal-arrow-down mr-2" /> Prochaine question
 				</button>
 
 				<div>{{ chapterQuestions.answered }}/{{ chapterQuestions.questions }} questions répondues</div>
@@ -130,7 +105,8 @@ import DialogModal from "@/Components/Ui/DialogModal"
 import FormInput from "@/Components/Form/FormInput"
 import FormButton from "@/Components/Form/FormButton"
 import {useForm} from "@inertiajs/inertia-vue3"
-import {menuScrollTo, menuScrollToClass} from "@/Composables/useHelpers"
+import {menuScrollToClass} from "@/Composables/useHelpers"
+import ChapterToc from "@/Components/Ui/Chapters/ChapterToc"
 
 let props = defineProps({
 	chapter: {type: Object, required: true},

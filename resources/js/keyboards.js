@@ -159,12 +159,15 @@ export const keyboards = {
 			"", "", "", "RR", "!!"
 		],
 		tex: function (value) {
-			if (!value.includes("/")) {
-				return asciiToTex(value)
-			}
+			// Apply this for all splited.
+			return value.split(",").map(v => {
+				if (!v.includes("/")) {
+					return asciiToTex(v)
+				}
 
-			const numden = value.split("/")
-			return asciiToTex(numden.map(x => `(${x})`).join("/"))
+				const numden = v.split("/")
+				return asciiToTex(numden.map(x => `(${x})`).join("/"))
+			}).join(",")
 		}
 	},
 	"solution": {

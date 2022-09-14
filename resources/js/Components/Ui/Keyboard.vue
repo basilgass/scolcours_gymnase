@@ -137,7 +137,11 @@ const props = defineProps({
 	mathOutput: {type: Boolean, default: false},
 	textOutput: {type: Boolean, default: false},
 	small: {type: Boolean, default: false},
-	keyClass: {type: String, default: "bg-gray-50"}
+	keyClass: {type: String, default: "bg-gray-50"},
+	customKeys: {
+		type: Object, default: () => {
+		}
+	}
 })
 
 let root = ref(null),
@@ -148,6 +152,7 @@ let theKeyboard = computed(() => {
 		if (props.keyboard === null) {
 			return ""
 		}
+
 
 		if (typeof props.keyboard === "string") {
 			// Parse the keyboard value
@@ -166,30 +171,36 @@ let theKeyboard = computed(() => {
 		return props.keyboard
 	}),
 	keyboardOptions = computed(() => {
-		let tmp = props.keyboard.split("@")
+		if (props.keyboard === "string") {
+			let tmp = props.keyboard.split("@")
 
-		// No options
-		if (tmp.length !== 2) {
-			return []
+			// No options
+			if (tmp.length !== 2) {
+				return []
+			}
+
+			let opts = tmp[1].split(",")
+			opts = opts.map(x => {
+				const keyDisplay = x.split("|")
+				return {
+					key: keyDisplay[0],
+					visible: true,
+					type: "text", // TODO: change it dynamically
+					display: keyDisplay.length >= 2 ? keyDisplay[1] : keyDisplay[0],
+					span: 0,
+					fn: (value) => {
+						if (theKeyboard.value === "qcm") {
+							resetKeyStrokes()
+						}
+						return value + keyDisplay[0]
+					}
+				}
+			})
+
+			return opts
 		}
 
-		let opts = tmp[1].split(",")
-		opts = opts.map(x => {
-			const keyDisplay = x.split("|")
-			return {
-				key: keyDisplay[0],
-				visible: true,
-				type: "text", // TODO: change it dynamically
-				display: keyDisplay.length >= 2 ? keyDisplay[1] : keyDisplay[0],
-				span: 0,
-				fn: (value) => {
-					if(theKeyboard.value==="qcm"){resetKeyStrokes()}
-					return value + keyDisplay[0]
-				}
-			}
-		})
-
-		return opts
+		return []
 	}),
 	keyboardData = computed(() => {
 		if (typeof theKeyboard.value === "string") {
@@ -259,21 +270,26 @@ let keyboardComputed = computed(() => {
 				spankey = "col-span-5"
 			}
 
+			let theKey = keyboardKeys[kkey]
+			if (props.customKeys !== undefined && props.customKeys[kkey] !== undefined) {
+				theKey = props.customKeys[kkey]
+			}
+
 			kdata = {
 				key: kkey,
 				visible: kkey === "",
-				type: keyboardKeys[kkey] === undefined ? false : keyboardKeys[kkey].type,
-				display: keyboardKeys[kkey] === undefined ? false : keyboardKeys[kkey].display,
+				type: theKey === undefined ? false : theKey.type,
+				display: theKey === undefined ? false : theKey.display,
 				span: spankey
 			}
 
-			if (keyboardKeys[kkey] === undefined) {
+			if (theKey === undefined) {
 				kdata.fn = (key) => props.modelValue + ""
 			} else {
-				if (keyboardKeys[kkey].fn === undefined) {
+				if (theKey.fn === undefined) {
 					kdata.fn = (value) => value + kkey
 				} else {
-					kdata.fn = keyboardKeys[kkey].fn
+					kdata.fn = theKey.fn
 				}
 			}
 
@@ -286,6 +302,7 @@ let keyboardComputed = computed(() => {
 
 			data.push(kdata)
 		}
+
 		return data
 	}),
 	keyboardCommands = computed(() => {
@@ -350,8 +367,12 @@ function wrongAnswer() {
 	}
 }
 
-function getTex(value){
-	return keyboards[theKeyboard.value].tex ? keyboards[theKeyboard.value].tex(value) : value
+function getTex(value) {
+	if (typeof theKeyboard.value === "string") {
+		return keyboards[theKeyboard.value].tex ? keyboards[theKeyboard.value].tex(value) : value
+	} else {
+		return theKeyboard.value.tex ? theKeyboard.value.tex(value) : value
+	}
 }
 
 defineExpose({resetKeyStrokes, wrongAnswer, getTex})

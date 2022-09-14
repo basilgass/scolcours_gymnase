@@ -193,30 +193,30 @@ let validate = function () {
 }
 
 defineExpose({
-	keyboard: isKeyboardComponent.value?keyboardUI:componentUI
+	keyboard: isKeyboardComponent.value ? keyboardUI : componentUI
 })
 
 
 // Correction mode
 // TODO: correction mode for "specific components"
+function getTexFromKeyboard() {
+	if (keyboardUI.value) {
+		return keyboardUI.value.getTex(props.answer)
+	} else if (componentUI.value) {
+		return componentUI.value.getTex(props.answer)
+	}
+}
+
 watch(() => props.correctionMode, (correction, before) => {
 	if (correction) {
-		if (keyboardUI.value) {
-			tex.value = keyboardUI.value.getTex(props.answer)
-		}else if(componentUI.value) {
-			tex.value = componentUI.value.getTex(props.answer)
-		}
+		tex.value = getTexFromKeyboard()
 	} else {
 		tex.value = ""
 	}
 })
 onMounted(() => {
 	if (props.correctionMode) {
-		if (keyboardUI.value) {
-			tex.value = keyboardUI.value.getTex(props.answer)
-		}else if(componentUI.value){
-			tex.value = componentUI.value.getTex(props.answer)
-		}
+		tex.value = getTexFromKeyboard()
 	}
 })
 </script>

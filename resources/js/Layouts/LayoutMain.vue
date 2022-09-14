@@ -20,7 +20,9 @@
 				v-show="showFloatingFooter"
 				class="
 					w-10 h-10 z-30
-					fixed bottom-5 right-5
+					fixed
+					bottom-8 right-1
+					md:bottom-5 md:right-5
 					flex justify-center items-center
 					bg-gray-100
 					border border-gray-400
