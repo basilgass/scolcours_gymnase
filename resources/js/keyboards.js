@@ -1,6 +1,6 @@
 import AsciiMathParser from "asciimath2tex"
 
-export function asciiToTex(value){
+export function asciiToTex(value) {
 	const parser = new AsciiMathParser()
 	return parser.parse(value)
 }
@@ -61,7 +61,7 @@ export const keyboards = {
 	"qcm": {
 		grid: "grid-cols-4",
 		layout: [],
-		tex(value){
+		tex(value) {
 			return value
 		}
 	},
@@ -73,7 +73,7 @@ export const keyboards = {
 			"7", "8", "9",
 			"-", "0", "."
 		],
-		tex(value){
+		tex(value) {
 			return asciiToTex(value)
 		}
 	},
@@ -83,9 +83,9 @@ export const keyboards = {
 			"1", "2", "3",
 			"4", "5", "6",
 			"7", "8", "9",
-			 "-", "0", "/"
+			"-", "0", "/"
 		],
-		tex(value){
+		tex(value) {
 			return asciiToTex(value)
 		}
 	},
@@ -97,7 +97,7 @@ export const keyboards = {
 			"7", "8", "9", "*",
 			"", "0", ".", "/"
 		],
-		tex(value){
+		tex(value) {
 			return asciiToTex(value)
 		}
 	},
@@ -109,7 +109,7 @@ export const keyboards = {
 			"7", "8", "9", "/",
 			"", "0", "(", ")"
 		],
-		tex(value){
+		tex(value) {
 			return asciiToTex(value)
 		}
 	},
@@ -121,7 +121,7 @@ export const keyboards = {
 			"7", "8", "9", "10^",
 			"", "0", ".", ""
 		],
-		tex(value){
+		tex(value) {
 			return asciiToTex(value)
 		}
 	},
@@ -133,7 +133,7 @@ export const keyboards = {
 			"7", "8", "9", "*", "|", "sqrt", "root(3)",
 			"", "0", "", "/", "(", ")", "="
 		],
-		tex(value){
+		tex(value) {
 			return asciiToTex(value)
 		}
 	},
@@ -145,57 +145,61 @@ export const keyboards = {
 			"7", "8", "9", "*", "x^5", "x^6",
 			"(", ")", "0", "/", ["^", 2]
 		],
-		tex: function(value){
+		tex: function (value) {
 			return asciiToTex(value)
 		}
 	},
 	"exact": {
 		grid: "grid-cols-5",
 		layout: [
-			"1", "2", "3", "+","-",
-			"4", "5", "6", "*","/",
-			"7", "8", "9", "^2","^",
-			"0", "(", ")", "sqrt","root(",
+			"1", "2", "3", "+", "-",
+			"4", "5", "6", "*", "/",
+			"7", "8", "9", "^2", "^",
+			"0", "(", ")", "sqrt", "root(",
 			"", "", "", "RR", "!!"
 		],
-		tex: function(value){
-			if(!value.includes("/")){return asciiToTex(value)}
+		tex: function (value) {
+			if (!value.includes("/")) {
+				return asciiToTex(value)
+			}
 
 			const numden = value.split("/")
-			return asciiToTex(numden.map(x=>`(${x})`).join("/"))
+			return asciiToTex(numden.map(x => `(${x})`).join("/"))
 		}
 	},
 	"solution": {
 		grid: "grid-cols-5",
 		layout: [
-			"1", "2", "3", "+","-",
-			"4", "5", "6", "*","/",
-			"7", "8", "9", "sqrt","root(",
-			"", "0", ";", "(",")",
+			"1", "2", "3", "+", "-",
+			"4", "5", "6", "*", "/",
+			"7", "8", "9", "sqrt", "root(",
+			"", "0", ";", "(", ")",
 			"RR", "!!", "^**", "\\\\", "{",
 			"]", "[", "oo", "uu", "}"
 		],
-		tex: function(value){
+		tex: function (value) {
 			//TODO: parse correctly solutions when using setminus.
-			if(value.startsWith('RR')){
-				return `\\mathcal S=${ asciiToTex(value) }`
-			}else if(value==='!!'){
-				return `\\mathcal S = \\varnothing`
+			if (value.startsWith("RR")) {
+				return `\\mathcal S=${asciiToTex(value)}`
+			} else if (value === "!!") {
+				return "\\mathcal S = \\varnothing"
 			}
 
-			function makeExactFromAscii(item){
-				if(!item.includes("/")){return asciiToTex(item)}
+			function makeExactFromAscii(item) {
+				if (!item.includes("/")) {
+					return asciiToTex(item)
+				}
 
 				const numden = item.split("/")
-				return asciiToTex(numden.map(x=>`(${x})`).join("/"))
+				return asciiToTex(numden.map(x => `(${x})`).join("/"))
 			}
 
-			if(value.includes(']') || value.includes('[')){
+			if (value.includes("]") || value.includes("[")) {
 				// TODO: handle intervals : extract value.
-				return `\\mathcal S = ${ value.split(';').map(x=>makeExactFromAscii(x)).join(';') } `
+				return `\\mathcal S = ${value.split(";").map(x => makeExactFromAscii(x)).join(";")} `
 			}
 
-			return `\\mathcal S = ${ value.split(';').map(x=>makeExactFromAscii(x)).join(';') }`
+			return `\\mathcal S = ${value.split(";").map(x => makeExactFromAscii(x)).join(";")}`
 		}
 	}
 }

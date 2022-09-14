@@ -27,11 +27,12 @@ function katexUpdate(el, binding, vnode) {
 		el.classList.add("katex-m-0")
 	}
 
+	let rawTex = binding.value.replaceAll(/\$[a-z]/g, "\\textcolor{red}{A}")
 	if(binding.modifiers.auto){
-		el.innerHTML = binding.value
+		el.innerHTML = rawTex
 		katexAutoRender(el)
 	}else {
-		let tex = binding.modifiers.ascii ? new AsciiMathParser().parse(binding.value) : binding.value
+		let tex = binding.modifiers.ascii ? new AsciiMathParser().parse(rawTex) : rawTex
 
 		if (typeof tex === number) {
 			tex = tex.toString()

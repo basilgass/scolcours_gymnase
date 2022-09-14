@@ -17,7 +17,7 @@
 		<!-- Aside element -->
 		<transition name="slide-right">
 			<aside
-				v-show="scrollY > showScrollToTop"
+				v-show="showFloatingFooter"
 				class="
 					w-10 h-10 z-30
 					fixed bottom-5 right-5
@@ -40,7 +40,8 @@
 <script setup>
 import MainHeader from "@/Components/MainHeader"
 import MainFooter from "@/Components/MainFooter"
-import {onMounted, onUnmounted, ref} from "vue"
+import {computed, onMounted, onUnmounted, provide, ref} from "vue"
+import {menuScrollTo} from "@/Composables/useHelpers"
 
 defineProps({
 	theme: {
@@ -51,7 +52,12 @@ defineProps({
 })
 
 let showScrollToTop = ref(400),
-	scrollY = ref(0)
+	scrollY = ref(0),
+	showFloatingFooter = computed(()=>{
+		return scrollY.value > showScrollToTop.value
+	})
+
+provide("showfloatingfooter", showFloatingFooter)
 
 onMounted(()=>{
 	window.addEventListener("scroll", handleScroll)
@@ -65,16 +71,6 @@ function handleScroll(event){
 	scrollY.value = window.scrollY
 }
 
-function menuScrollTo(id) {
-	console.log("Scroll to ", id)
-	let el = id === undefined ? document.body : tableocontents.value.querySelector(id)
-
-	el.scrollIntoView({
-		block: "start",
-		behavior: "smooth",
-		inline: "start"
-	})
-}
 </script>
 <style scoped>
 

@@ -1,24 +1,36 @@
 <template>
 	<div
-		class="px-5 py-3"
+		:id="`question-${theQuestion.id}`"
+		class="px-5 py-3 relative"
 		:class="{
+			'unanswered': !isCorrect.result,
 			'bg-gray-200 even:bg-gray-100': correctionMode,
 			'rounded border': !correctionMode,
 			'bg-gray-50 border-gray-200': !correctionMode && !isCorrect.result,
 			'bg-green-50 border-green-600/60': !correctionMode && isCorrect.result,
 		}"
 	>
+		<div
+			v-if="questionNumber!==false"
+			class="absolute -left-2 -top-2 rounded-full bg-white border w-8 h-8 text-xs flex justify-center items-center"
+		>
+			{{ questionNumber }}
+		</div>
+
 		<!-- Admin edition mode -->
 		<div v-if="$page.props.auth.can.admin && editMode && !correctionMode">
-			<QuestionForm v-model="theQuestion"/>
+			<QuestionForm
+				v-model="theQuestion"
+				@destroy="emits('destroy', $event)"
+			/>
 		</div>
 
 		<!-- the body of question -->
 		<QuestionItem
 			ref="questionUI"
+			:question-number="questionNumber"
 			:question="theQuestion.body"
 			:answer="theQuestion.answer"
-			:math="theQuestion.math?true:false"
 			:checker="theQuestion.checker"
 			:keyboard="theQuestion.keyboard"
 			:show-keyboard="showKeyboard"
@@ -31,7 +43,12 @@
 		<!-- footer - display previous answers -->
 		<div v-if="!correctionMode">
 			<!-- Si la réponse est déjà donnée, afficher la réponse -->
-			<QuestionFooter :is-correct="isCorrect" :answer="questionAnswerDisplay" :previous-answers="previousAnswers" :admin-answer="theQuestion.answer"/>
+			<QuestionFooter
+				:is-correct="isCorrect"
+				:answer="questionAnswerDisplay"
+				:previous-answers="previousAnswers"
+				:admin-answer="theQuestion.answer"
+			/>
 		</div>
 	</div>
 </template>
@@ -41,13 +58,14 @@ import {computed, inject, onMounted, ref, watch} from "vue"
 import {usePage} from "@inertiajs/inertia-vue3"
 import katex from "katex/dist/katex.mjs"
 import {keyboards} from "@/keyboards"
-import QuestionItem from "@/Components/QuestionItem"
-import QuestionForm from "@/Components/Posts/Questions/QuestionForm";
-import QuestionFooter from "@/Components/Posts/Questions/QuestionFooter";
+import QuestionItem from "@/Components/Posts/Questions/QuestionItem"
+import QuestionForm from "@/Components/Posts/Questions/QuestionForm"
+import QuestionFooter from "@/Components/Posts/Questions/QuestionFooter"
 
 let props = defineProps({
 	question: {type: Object, required: true},
-	correctionMode: {type: Boolean, default: false}
+	correctionMode: {type: Boolean, default: false},
+	questionNumber: {type: [Number, Boolean], default: false}
 })
 
 let emits = defineEmits(["destroy", "resolved"])
@@ -84,8 +102,8 @@ let questionDisplay = ref(""),
 		return props.question.answer
 	}),
 	formatQuestion = function () {
+		//TODO: is formatQuestion still usefull ? Should be removed ?
 		let body = theQuestion.value.body,
-			isMath = theQuestion.value.math,
 			answer
 
 		// Check if the answer is a correct tex value
@@ -112,13 +130,6 @@ let questionDisplay = ref(""),
 					}
 				}
 			}
-		}
-
-		if (isMath) {
-			if (body[body.length - 1] === "=") {
-				body += answer
-			}
-			body = `\\[${body}\\]`
 		}
 
 		questionDisplay.value = body

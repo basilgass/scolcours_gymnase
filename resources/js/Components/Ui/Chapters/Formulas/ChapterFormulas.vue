@@ -1,19 +1,19 @@
 <template>
-	<chapter-article
-		no-padding
-		class="divide-y divide-gray-200"
-	>
-		<template #title>
-			{{ title }}
-		</template>
+	<div class="bg-white rounded shadow px-4 py-2">
+		<h2
+			v-katex.auto="title"
+			:data-title="title"
+			class="chapter-menu text-2xl my-4 chapter-observe"
+		/>
 
 		<!-- Display all formulas -->
 		<div
 			v-if="formulas.length>0"
+			class="-mx-4"
 		>
 			<draggable
-				:disabled="!($page.props.auth.can.admin && editMode)"
 				v-model="formulas"
+				:disabled="!($page.props.auth.can.admin && editMode)"
 				item-key="id"
 				@end="updateFormulas"
 			>
@@ -60,7 +60,6 @@
 							:illustration="element.block.illustrations[0]"
 						/>
 					</div>
-
 				</template>
 			</draggable>
 		</div>
@@ -92,11 +91,10 @@
 				/>
 			</div>
 		</div>
-	</chapter-article>
+	</div>
 </template>
 <script setup>
 import {inject, onMounted, ref} from "vue"
-import ChapterArticle from "@/Components/Ui/Chapters/ChapterArticle"
 import BlockForm from "@/Components/Posts/Blocks/BlockForm"
 import IllustrationShow from "@/Components/Posts/Illustrations/IllustrationShow"
 

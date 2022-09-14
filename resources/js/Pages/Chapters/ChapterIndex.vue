@@ -33,16 +33,14 @@
 				<Panel
 					v-for="chapter in chaptersFiltered"
 					:key="`chapter-${chapter.slug}`"
-					class="panel flex flex-col justify-between"
+					class="panel flex flex-col justify-between cursor-pointer hover:scale-105 hover:shadow transition-all duration-300"
 					:class="{'border-red-500':chapter.active===0}"
+					@click="$inertia.visit(route('theme.chapter', [$page.props.theme.slug, chapter.slug]))"
 				>
 					<div>
-						<a
-							:href="route('theme.chapter', [$page.props.theme.slug, chapter.slug])"
-							class="text-2xl block hover:pl-3 transform transition-all mb-5 cursor-pointer"
-						>
+						<div class="text-2xl block  mb-5 cursor-pointer">
 							{{ chapter.title }}
-						</a>
+						</div>
 						<illustration-show
 							v-if="chapter.block.illustrations.length>0"
 							class="mb-3"

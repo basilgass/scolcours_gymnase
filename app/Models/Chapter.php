@@ -29,6 +29,8 @@ use URL;
  * @property-read int|null $formulas_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Post[] $posts
  * @property-read int|null $posts_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Question[] $questions
+ * @property-read int|null $questions_count
  * @property-read \App\Models\Theme $theme
  * @method static \Database\Factories\ChapterFactory factory(...$parameters)
  * @method static Builder|Chapter newModelQuery()
@@ -75,6 +77,11 @@ class Chapter extends Model
 	public function challenges(): \Illuminate\Database\Eloquent\Relations\HasMany
 	{
 		return $this->hasMany(Challenge::class);
+	}
+
+	public function questions()
+	{
+		return $this->hasManyThrough(Question::class, Post::class);
 	}
 
 //

@@ -27,7 +27,7 @@
 							'bi bi-text-paragraph': !post.type
 						}"
 					/>
-					{{ post.title }}
+					<span v-katex.auto="post.title" />
 				</div>
 			</div>
 		</Panel>
@@ -56,6 +56,13 @@
 					@click="$emit('update:hideResolvedQuestions', !hideResolvedQuestions)"
 				>
 					Cacher les questions répondues
+				</button>
+
+				<button
+					class="py-2 w-full btn btn-xs"
+					@click="menuScrollToClass('unanswered')"
+				>
+					Prochaine question
 				</button>
 
 				<div>{{ chapterQuestions.answered }}/{{ chapterQuestions.questions }} questions répondues</div>
@@ -123,6 +130,7 @@ import DialogModal from "@/Components/Ui/DialogModal"
 import FormInput from "@/Components/Form/FormInput"
 import FormButton from "@/Components/Form/FormButton"
 import {useForm} from "@inertiajs/inertia-vue3"
+import {menuScrollTo, menuScrollToClass} from "@/Composables/useHelpers"
 
 let props = defineProps({
 	chapter: {type: Object, required: true},
@@ -160,15 +168,7 @@ let chapterPosts = inject("chapterPosts"),
 		return chapterQuestions.value.questions > 0 ? Math.round(chapterQuestions.value.answered / chapterQuestions.value.questions * 100) : 0
 	})
 
-function menuScrollTo(id) {
-	let el = id === undefined ? document.body : document.getElementById(id)
 
-	el.scrollIntoView({
-		block: "start",
-		behavior: "smooth",
-		inline: "start"
-	})
-}
 
 function newChallenge(){
 	alert("nouveau challenge")

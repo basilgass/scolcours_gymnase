@@ -16,24 +16,26 @@
 			</confirm-button>
 		</div>
 		<div
-			class="grid grid-cols-1 gap-4 border-t bg-green-100 -mx-4 -mb-2 px-4 pb-2"
 			v-show="showEditForm"
+			class="grid grid-cols-1 gap-4 border-t bg-green-100 -mx-4 -mb-2 px-4 pb-2"
 		>
-			<form-textarea ref="questionBodyForm"
-						   v-model="form.body"
-						   label="question"
-						   name="body"
-						   class="font-code"
-						   @save="patchQuestion"/>
+			<form-textarea
+				ref="questionBodyForm"
+				v-model="form.body"
+				label="question"
+				name="body"
+				class="font-code"
+				@save="patchQuestion"
+			/>
 
-<!--			<form-input-->
-<!--				ref="questionBodyForm"-->
-<!--				v-model="form.body"-->
-<!--				label="question"-->
-<!--				name="body"-->
-<!--				class="font-code"-->
-<!--				@save="patchQuestion"-->
-<!--			/>-->
+			<!--			<form-input-->
+			<!--				ref="questionBodyForm"-->
+			<!--				v-model="form.body"-->
+			<!--				label="question"-->
+			<!--				name="body"-->
+			<!--				class="font-code"-->
+			<!--				@save="patchQuestion"-->
+			<!--			/>-->
 			<form-input
 				v-model="form.answer"
 				label="réponse"
@@ -42,11 +44,6 @@
 			/>
 
 			<div class="flex items-end gap-4 w-full">
-				<input
-					v-model="form.math"
-					type="checkbox"
-				>
-
 				<div class="grow">
 					<form-input
 						v-model="form.checker"
@@ -72,37 +69,36 @@
 					class="btn-xs btn-edit"
 					@click="patchQuestion"
 				>
-					<i class="bi bi-arrow-clockwise mr-3"/> Enregistrer
+					<i class="bi bi-arrow-clockwise mr-3" /> Enregistrer
 				</button>
 				<button
 					class="btn-xs btn-cancel"
 					@click="cancelQuestion"
 				>
-					<i class="bi bi-x-lg mr-3"/> Annuler
+					<i class="bi bi-x-lg mr-3" /> Annuler
 				</button>
 			</div>
-
 		</div>
 	</div>
 </template>
 <script setup>
 import FormInput from "@/Components/Form/FormInput"
-import {useForm} from "@inertiajs/inertia-vue3";
-import {ref} from "vue";
-import ConfirmButton from "@/Components/Ui/ConfirmButton";
-import FormTextarea from "@/Components/Form/FormTextarea";
-import {checkersList} from "@/Composables/useCheckers";
+import {useForm} from "@inertiajs/inertia-vue3"
+import {ref} from "vue"
+import ConfirmButton from "@/Components/Ui/ConfirmButton"
+import FormTextarea from "@/Components/Form/FormTextarea"
+import {checkersList} from "@/Composables/useCheckers"
 
 let props = defineProps({
 	modelValue: {type: Object, required: true},
 })
-let emits = defineEmits(['update:modelValue', 'cancel', 'updated', 'destroy'])
+let emits = defineEmits(["update:modelValue", "cancel", "updated", "destroy"])
 let form = useForm({...props.modelValue})
 let showEditForm = ref(false),
 	checkerList = ref(checkersList)
 
 function cancelQuestion(){
-	emits('cancel')
+	emits("cancel")
 	showEditForm.value = false
 }
 function patchQuestion(ev) {
@@ -113,8 +109,8 @@ function patchQuestion(ev) {
 			...form.data()
 		}
 	).then(res => {
-		emits('update:modelValue', res.data.data)
-		emits('updated')
+		emits("update:modelValue", res.data.data)
+		emits("updated")
 		showEditForm.value = false
 	})
 }

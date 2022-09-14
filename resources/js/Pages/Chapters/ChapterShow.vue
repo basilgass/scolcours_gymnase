@@ -2,8 +2,8 @@
 	<div class="chapter-wrapper">
 		<!-- Main title -->
 		<chapter-header
-			:theme="theme"
 			:chapter="chapter.data"
+			:theme="theme"
 		/>
 
 		<!-- Enable edition mode for the whole chapter -->
@@ -18,8 +18,8 @@
 
 				<form-switch
 					v-model="editMode"
-					name="editMode"
 					label="mode édition"
+					name="editMode"
 					@click="storeEditMode"
 				/>
 			</div>
@@ -40,17 +40,18 @@
 		<!-- Header dashboard -->
 		<chapter-dashboard
 			v-show="!editAndMove"
-			v-model:show-exercises="showOnlyExercises"
 			v-model:hide-resolved-questions="hideResolvedQuestions"
+			v-model:show-exercises="showOnlyExercises"
 			:chapter="chapter.data"
 		/>
 
 		<!-- Adding all the posts -->
 		<section class="space-y-10">
 			<!-- Adding formulas as first post. -->
+			<!-- TODO: Remove the chapter-formulas component -->
 			<chapter-formulas
-				v-show="!editAndMove"
 				v-if="chapter.data.formulas.length>0 || ($page.props.auth.can.admin && editMode)"
+				v-show="!editAndMove"
 				id="chapter-formula"
 				:chapter="chapter.data"
 			/>
@@ -63,9 +64,9 @@
 					v-for="(post, index) in chapterPostsFiltered"
 					:id="`post-${post.id}`"
 					:key="post.id"
+					:hide-resolved-questions="hideResolvedQuestions"
 					:post="post"
 					:show-title-only="editAndMove"
-					:hide-resolved-questions="hideResolvedQuestions"
 					@delete="deletePost(post.id)"
 					@update-title="post.title=$event"
 				>
@@ -77,33 +78,33 @@
 							<div>Déplacer l'article</div>
 							<div class="flex gap-3">
 								<button
+									:class="index===0?'invisible':''"
 									:disabled="index===0"
 									class="btn-update btn-xs"
-									:class="index===0?'invisible':''"
 									@click="movePostUp(index, 0)"
 								>
 									En premier
 								</button>
 								<button
-									:disabled="index===0"
 									:class="index===0?'invisible':''"
+									:disabled="index===0"
 									class="btn-update btn-xs"
 									@click="movePostUp(index, index-1)"
 								>
 									Monter
 								</button>
 								<button
+									:class="index===chapterPosts.length-1?'invisible':''"
 									:disabled="index===chapterPosts.length-1"
 									class="btn-update btn-xs"
-									:class="index===chapterPosts.length-1?'invisible':''"
 									@click="movePostUp(index, index+1)"
 								>
 									Descendre
 								</button>
 								<button
+									:class="index===chapterPosts.length-1?'invisible':''"
 									:disabled="index===chapterPosts.length-1"
 									class="btn-update btn-xs"
-									:class="index===chapterPosts.length-1?'invisible':''"
 									@click="movePostUp(index, chapterPosts.length)"
 								>
 									En dernier
@@ -132,6 +133,59 @@
 				Créer un article
 			</button>
 		</div>
+
+		<!-- Chapter fixed bottom object -->
+		<div
+			v-show="showFloatingFooter"
+			class="fixed
+				z-30 px-3 py-2
+				bottom-0 left-0
+				flex justify-center items-center gap-3
+				bg-gray-100
+				border-t border-r border-gray-400
+				hover:text-white hover:bg-blue-500 hover:border-blue-800"
+		>
+			<i
+				class="bi bi-calculator cursor-pointer"
+				@click="showFormula=true"
+			/>
+
+			<span
+				v-katex.auto="observeTitle"
+				class="text-xs"
+			/>
+
+			<i
+				class="bi bi-three-dots-vertical cursor-pointer"
+				@click="showMenu=true"
+			/>
+		</div>
+
+		<transition name="fade">
+			<div
+				v-show="showFormula"
+				class="fixed top-0 left-0 w-full h-full bg-black/60"
+				@click="showFormula=false"
+			/>
+		</transition>
+		<transition name="slide-fade">
+			<div
+				v-show="showFormula"
+				class="fixed left-0 top-0 h-full h-full w-full md:w-auto"
+			>
+				<div
+					class=" absolute right-2 top-2 cursor-pointer hover:rotate-180 hover:text-blue-700"
+					@click="showFormula=false"
+				>
+					<i class="bi bi-x-lg" />
+				</div>
+				<chapter-formulas
+					id="chapter-formula-aside"
+					class="h-full"
+					:chapter="chapter.data"
+				/>
+			</div>
+		</transition>
 	</div>
 </template>
 
@@ -145,11 +199,12 @@ export default {
 <script setup>
 
 import ChapterFormulas from "@/Components/Ui/Chapters/Formulas/ChapterFormulas"
-import {provide, ref, computed} from "vue"
+import {provide, ref, computed, inject, onMounted} from "vue"
 import ChapterHeader from "@/Components/Ui/Chapters/ChapterHeader"
 import PostShow from "@/Components/Posts/PostShow"
 import FormSwitch from "@/Components/Form/FormSwitch"
 import ChapterDashboard from "@/Components/Ui/Chapters/ChapterDashboard"
+import {menuScrollTo} from "@/Composables/useHelpers"
 
 const props = defineProps({
 	theme: {
@@ -166,13 +221,13 @@ const props = defineProps({
 })
 
 let chapterPosts = ref(props.chapter.data.posts),
-	editMode = ref(localStorage.getItem("ScolCoursEditMode")==="1"),
+	editMode = ref(localStorage.getItem("ScolCoursEditMode") === "1"),
 	editAndMove = ref(false),
 	showOnlyExercises = ref(false),
 	hideResolvedQuestions = ref(false),
-	chapterPostsFiltered = computed(()=>{
-		if(showOnlyExercises.value){
-			return chapterPosts.value.filter(post=>post.type==="exercise")
+	chapterPostsFiltered = computed(() => {
+		if (showOnlyExercises.value) {
+			return chapterPosts.value.filter(post => post.type === "exercise")
 		}
 
 		return chapterPosts.value
@@ -180,9 +235,10 @@ let chapterPosts = ref(props.chapter.data.posts),
 
 provide("editmode", editMode)
 provide("chapterPosts", chapterPosts)
+let showFloatingFooter = inject("showfloatingfooter")
 
-function storeEditMode(){
-	localStorage.setItem("ScolCoursEditMode", editMode.value?"1":"0")
+function storeEditMode() {
+	localStorage.setItem("ScolCoursEditMode", editMode.value ? "1" : "0")
 }
 
 function createPost() {
@@ -206,12 +262,69 @@ function deletePost(id) {
 }
 
 function movePostUp(crtIndex, targetIndex) {
-	chapterPosts.value.splice(targetIndex, 0, chapterPosts.value.splice(crtIndex,1)[0])
+	chapterPosts.value.splice(targetIndex, 0, chapterPosts.value.splice(crtIndex, 1)[0])
 
 	// Save the new position to the database
 	axios.post(route("chapters.updatePostsOrder", [props.chapter.data.id]), {
 		_method: "patch",
-		data: chapterPosts.value.map((post, index)=>{return {"id": post.id, "order": index}})
+		data: chapterPosts.value.map((post, index) => {
+			return {"id": post.id, "order": index}
+		})
 	})
 }
+
+function goToNextQuestion(){
+	let id = document.getElementsByClassName("unanswered")[0].id
+	menuScrollTo(id)
+}
+
+let observer = ref(observer),
+	observeTitle = ref(""),
+	showFormula = ref(false),
+	showMenu = ref(true)
+onMounted(()=>{
+	// Observer
+	observer.value = new IntersectionObserver((entries, observer)=>{
+		for(let entry of entries){
+			if(entry.isIntersecting){
+				entry.target.classList.add("observe-visible")
+				entry.target.classList.remove("observe-below")
+				entry.target.classList.remove("observe-above")
+			}else {
+
+				if (entry.boundingClientRect.top < 0) {
+					entry.target.classList.add("observe-above")
+					entry.target.classList.remove("observe-below")
+					entry.target.classList.remove("observe-visible")
+				} else {
+					entry.target.classList.add("observe-below")
+					entry.target.classList.remove("observe-above")
+					entry.target.classList.remove("observe-visible")
+				}
+			}
+		}
+
+		// Finally, get the title to display.
+		const visibleItems = document.getElementsByClassName("observe-visible")
+		if(visibleItems.length>0){
+			observeTitle.value = visibleItems[0].dataset.title
+		}else{
+			const aboveItems = document.getElementsByClassName("observe-above")
+			if(aboveItems.length>0){
+				observeTitle.value = aboveItems[aboveItems.length-1].dataset.title
+			}else{
+				observeTitle.value = ""
+			}
+		}
+
+	}, {})
+
+	let elements = document.getElementsByClassName("chapter-observe")
+
+	for(let element of elements){
+		observer.value.observe(element)
+	}
+})
+
+
 </script>

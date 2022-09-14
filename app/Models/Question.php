@@ -12,7 +12,6 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @property int $id
  * @property int $post_id
- * @property int $math
  * @property string $body
  * @property string|null $answer
  * @property string|null $checker
@@ -30,7 +29,6 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Question whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Question whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Question whereKeyboard($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Question whereMath($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Question wherePostId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Question whereUpdatedAt($value)
  * @mixin \Eloquent
@@ -54,26 +52,30 @@ class Question extends Model
 			->withPivot('result', 'answer');
 	}
 
-	public function answers(): Attribute
+	public function answersByUser($user)
 	{
-		$user = Auth::user()?->id;
+		$values = collect([]);
 
-		return Attribute::make(
-			get: fn () => collect($this->users()
-				->where('user_id', $user)->get()
+		if ($user) {
+			$values = collect($this->users()
+				->where('user_id', $user->id)->get()
 				->map(function ($answer) {
 					return [
 						'id' => $answer->pivot->question_id,
 						'answer' => $answer->pivot->answer,
 						'result' => $answer->pivot->result,
 					];
-				}))
+				}));
+
+		}
+		return Attribute::make(
+			get: fn () => $values
 		);
 	}
-	public function answered(): Attribute
+
+	public function answeredByUser($user)
 	{
-		$user = Auth::user();
-		$values = [];
+		$values = collect([]);
 
 		if ($user) {
 			$values = $this->users()
@@ -83,5 +85,14 @@ class Question extends Model
 		return Attribute::make(
 			get: fn () => $values
 		);
+	}
+	public function answers(): Attribute
+	{
+		return $this->answersByUser(Auth::user());
+	}
+	public function answered(): Attribute
+	{
+		return $this->answeredByUser(Auth::user());
+
 	}
 }

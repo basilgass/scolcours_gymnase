@@ -44,8 +44,7 @@ class QuestionController extends Controller
 		$questions = [];
 		foreach($bodies as $key=>$body){
 			$questions[] = $post->questions()->create([
-				'body'=>$body,
-				'math'=>$validate['math'],
+				'body'=>$validate['math']?'\\['.$body.'\\]':$body,
 				'answer'=>$answers[$key]??null,
 				'checker'=>$checkers[$key]??$validate['checker'],
 				'keyboard'=>$validate['keyboard']??''
@@ -66,7 +65,6 @@ class QuestionController extends Controller
 	{
 		$validate = $request->validate(
 			[
-				'math'=>['boolean'],
 				'body'=>['string', 'min:2'],
 				'answer'=>['nullable'],
 				'checker'=>['string', 'nullable'],

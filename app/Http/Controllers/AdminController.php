@@ -60,19 +60,19 @@ class AdminController extends Controller
 	{
 		return Inertia::render(
 			'Admin/AdminUsersShow.vue', [
-				"users"=>User::all()
+			"users" => User::all()
 		]);
 	}
 
 	public function createUsers(Request $request)
 	{
 		$validation = $request->validate([
-			"users"=>['required'],
-			"users.*"=>['email'],
-			'password'=>['required', 'string', 'min:6']
+			"users" => ['required'],
+			"users.*" => ['email'],
+			'password' => ['required', 'string', 'min:6']
 		]);
 
-		foreach ($validation['users'] as $email){
+		foreach ($validation['users'] as $email) {
 			User::create([
 				'name' => explode("@", $email)[0],
 				'email' => $email,
@@ -232,6 +232,60 @@ class AdminController extends Controller
 		$chapter->save();
 
 		return redirect()->route('admin');
+	}
 
+	public function usersStats(Chapter $chapter)
+	{
+		//TODO: usersstats : should be move somewhere else.. in a specific controller.
+
+		// Get all users that has answered a question from this chapter.
+		// 1. Filter the users to match a "classroom"
+		// 2. For all users, get the "most advanced" exercise, the percentage of resolving, ...
+		// 3. display the result
+
+		// Doit récupérer les utilisateurs du "groupe/classe"
+		$users = User::all();
+		$users_id = $users->map(fn($user) => $user->id);
+
+		$stats = [];
+		foreach ($chapter->posts as $post) {
+			$stats[$post->id] = [
+				'title' => $post->title,
+				'type' => $post->type,
+				'questions' => $post->questions->map(function ($question) use ($users_id) {
+					/** Chaque question doit contenir
+					 * id et body (pour l'affichage et l'unicité)
+					 * resolved: le nombre d'utilisateurs du groupe ayant répondu correctement
+					 * answers: le nombre de réponses moyenne par utilisateur nécessaire pour répondre à la question
+					 */
+
+					// Liste des utilisateurs du groupe qui ont répondu à cette question
+					$filteredUsers = $question->users->whereIn('id', $users_id);
+
+					$answers = $filteredUsers->countBy(function($user){return $user->id;});
+
+					return [
+						'id' => $question->id,
+						'body' => $question->body,
+						'resolved' => $filteredUsers->where('pivot.result', 1)->count(),
+						'answers' => [
+							'min'=>$answers->max(),
+							'max'=>$answers->min(),
+							'average'=>$answers->average()
+						]
+					];
+				}
+				)];
+		}
+
+		return Inertia::render(
+			'Admin/AdminStatsShow.vue',
+			[
+				"chapter" => $chapter,
+				"users" => $users->count(),
+				"questions" => $chapter->questions,
+				"stats" => $stats
+			]
+		);
 	}
 }

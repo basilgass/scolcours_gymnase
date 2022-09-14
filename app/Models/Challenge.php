@@ -21,11 +21,13 @@ use Illuminate\Support\Carbon;
  * @property string $generator
  * @property int $isMathOnly
  * @property string $output
+ * @property int $maxLevel
  * @property int $nextLevelAfter
  * @property string $checker
  * @property string $keyboard
  * @property int $duration
  * @property int $lives
+ * @property int|null $bonusScoreTrigger
  * @property int $bonusScoreLife
  * @property int $bonusScoreTime
  * @property int $bonusLevelLife
@@ -46,6 +48,7 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Challenge whereBonusLevelTime($value)
  * @method static Builder|Challenge whereBonusScoreLife($value)
  * @method static Builder|Challenge whereBonusScoreTime($value)
+ * @method static Builder|Challenge whereBonusScoreTrigger($value)
  * @method static Builder|Challenge whereChapterId($value)
  * @method static Builder|Challenge whereChecker($value)
  * @method static Builder|Challenge whereCreatedAt($value)
@@ -55,6 +58,7 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Challenge whereIsMathOnly($value)
  * @method static Builder|Challenge whereKeyboard($value)
  * @method static Builder|Challenge whereLives($value)
+ * @method static Builder|Challenge whereMaxLevel($value)
  * @method static Builder|Challenge whereNextLevelAfter($value)
  * @method static Builder|Challenge whereOutput($value)
  * @method static Builder|Challenge whereSlug($value)

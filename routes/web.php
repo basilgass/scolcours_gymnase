@@ -44,6 +44,8 @@ Route::delete('/admin/users/${user}/destroy', [AdminController::class, 'destroyU
 Route::patch('/admin/chapters/{chapter:slug}', [AdminController::class, 'activate'])
 	->middleware(['auth', 'verified'])->name('toggleChapterActive');
 
+Route::get('/admin/stats/{chapter:slug}', [AdminController::class, 'usersStats']);
+
 require __DIR__ . '/auth.php';
 
 // Chapter routes

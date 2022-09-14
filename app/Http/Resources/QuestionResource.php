@@ -35,7 +35,6 @@ class QuestionResource extends JsonResource
 
 		return [
 			"id" => $this->id,
-			"math" => $this->math,
 			"body" => $this->body,
 			"answer" => $this->answer,
 			"checker" => $this->checker,

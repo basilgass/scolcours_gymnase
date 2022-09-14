@@ -1,17 +1,17 @@
 <template>
 	<div class="bg-white rounded shadow px-4 py-2">
 		<h2
-			class="chapter-menu text-2xl my-4"
-		>
-			{{ postTitle }}
-		</h2>
+			v-katex.auto="postTitle"
+			:data-title="postTitle"
+			class="chapter-menu text-2xl my-4 chapter-observe"
+		/>
 
 		<!-- admin box -->
 		<div
 			v-if="$page.props.auth.can.admin && editMode && $slots.adminHeader && showTitleOnly"
 			class="admin-wrapper flex-col"
 		>
-			<slot name="adminHeader"/>
+			<slot name="adminHeader" />
 		</div>
 
 		<div v-show="!showTitleOnly">
@@ -20,7 +20,7 @@
 				v-if="$page.props.auth.can.admin && editMode"
 				class="admin-wrapper flex-col mt-3"
 			>
-				<slot name="adminHeader"/>
+				<slot name="adminHeader" />
 
 				<div class="w-full flex items-baseline">
 					<!-- update the number of visible blocks -->
@@ -47,10 +47,14 @@
 							class="btn-edit btn-xs"
 							@click="edit=true"
 						>
-							éditer <i class="bi bi-pencil"/>
+							éditer <i class="bi bi-pencil" />
 						</button>
-						<confirm-button xs btn-class="btn-delete" @confirm="deletePost">
-							Supprimer <i class="bi bi-trash"/>
+						<confirm-button
+							xs
+							btn-class="btn-delete"
+							@confirm="deletePost"
+						>
+							Supprimer <i class="bi bi-trash" />
 						</confirm-button>
 					</div>
 				</div>
@@ -65,19 +69,19 @@
 						class="btn btn-xs bg-white hover:bg-blue-400 hover:border-blue-500 hover:text-white"
 						@click="runPostScript()"
 					>
-						<i class="bi bi-shuffle mr-2"/>Rendre aléatoire
+						<i class="bi bi-shuffle mr-2" />Rendre aléatoire
 					</button>
 					<div
 						v-if="props.post.switch"
 						class="ml-10"
 					>
-						<span v-katex.auto="switchText.pre"/>
+						<span v-katex.auto="switchText.pre" />
 						<ui-switch
 							v-model="scriptSwitch"
 							sm
 							class="mx-1"
 						/>
-						<span v-katex.auto="switchText.post"/>
+						<span v-katex.auto="switchText.post" />
 					</div>
 				</div>
 
@@ -179,7 +183,7 @@
 					v-if="$slots.admin"
 					class="w-full"
 				>
-					<slot name="adminFooter"/>
+					<slot name="adminFooter" />
 				</div>
 			</div>
 
@@ -198,7 +202,10 @@
 							( {{ questionRemaining }} / {{ postQuestions.length }} )
 						</div>
 					</div>
-					<div class="flex gap-5 items-baseline justify-between md:justify-start" v-if="$page.props.auth.can.admin">
+					<div
+						v-if="$page.props.auth.can.admin"
+						class="flex gap-5 items-baseline justify-between md:justify-start"
+					>
 						<form-switch
 							v-model="correctionMode"
 							name="correctionMode"
@@ -210,9 +217,8 @@
 							class="btn btn-xs"
 							@click="questionResetAnswers"
 						>
-							<i class="bi bi-trash2 mr-2"/>effacer les réponses
+							<i class="bi bi-trash2 mr-2" />effacer les réponses
 						</button>
-
 					</div>
 				</div>
 
@@ -227,9 +233,10 @@
 					}"
 				>
 					<question-show
-						v-for="question in filteredQuestions"
+						v-for="(question, questionNumber) in filteredQuestions"
 						:key="`postQuestion-${question.id}`"
 						:question="question"
+						:question-number="questionNumber + 1"
 						:correction-mode="correctionMode"
 						@destroy="questionDestroy"
 					/>
@@ -241,52 +248,10 @@
 				v-if="$page.props.auth.can.admin && editMode"
 				class="admin-wrapper mt-10 flex-col gap-10"
 			>
-				<div>
-					<h3 class="text-lg">
-						Ajouter des questions
-					</h3>
-					<div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-						<div class="md:col-span-2">
-							<form-textarea
-								v-model="questionForm.body"
-								:rows="questionForm.rows"
-								label="question"
-								name="body"
-								@input="questionForm.rows = questionForm.body.split('\n').length"
-							/>
-						</div>
-						<form-textarea
-							v-model="questionForm.answer"
-							:rows="questionForm.rows"
-							label="réponse"
-							name="answer"
-						/>
-						<form-textarea
-							v-model="questionForm.checker"
-							:rows="questionForm.rows"
-							label="Vérification"
-							name="checker"
-						/>
-						<div class="flex items-end gap-4 justify-self-end md:col-span-4">
-							<input
-								v-model="questionForm.math"
-								type="checkbox"
-							>
-							<form-input
-								v-model="questionForm.keyboard"
-								label="clavier"
-								name="clavier"
-							/>
-
-							<button
-								class=" btn-primary"
-								@click="questionStore"
-							>
-								Ajouter {{ questionForm.rows }}
-							</button>
-						</div>
-					</div>
-				</div>
+				<QuestionInlineForm
+					:post="post"
+					@added="questionAdded"
+				/>
 			</div>
 
 			<!-- Edit box -->
@@ -307,7 +272,7 @@
 <script setup>
 // TODO: save the blocks order in a post
 // TODO: should also be able to make the same for the posts in a chapter.
-import {computed, inject, onMounted, provide, reactive, ref, watch} from "vue"
+import {computed, inject, onMounted, provide, ref, watch} from "vue"
 import BlockShow from "@/Components/Posts/Blocks/BlockShow"
 import FormNumber from "@/Components/Form/FormNumber"
 import PostForm from "@/Components/Posts/PostForm"
@@ -315,11 +280,10 @@ import {PiMath} from "pimath/esm"
 import UiSwitch from "@/Components/Ui/UiSwitch"
 import DialogModal from "@/Components/Ui/DialogModal"
 import FormLabel from "@/Components/Form/FormLabel"
-import FormTextarea from "@/Components/Form/FormTextarea"
 import QuestionShow from "@/Components/Posts/Questions/QuestionShow"
-import FormInput from "@/Components/Form/FormInput"
 import FormSwitch from "@/Components/Form/FormSwitch"
-import ConfirmButton from "@/Components/Ui/ConfirmButton";
+import ConfirmButton from "@/Components/Ui/ConfirmButton"
+import QuestionInlineForm from "@/Components/Posts/Questions/QuestionInlineForm"
 
 const emits = defineEmits(["delete", "updateTitle"])
 const props = defineProps({
@@ -390,6 +354,7 @@ let postQuestions = ref(props.post.questions),
 	correctionMode = ref(false)
 
 watch(() => props.hideResolvedQuestions, (value, before) => {
+	//TODO: turn the filteredQuestions to computed ?????
 	if (props.hideResolvedQuestions) {
 		filteredQuestions.value = postQuestions.value.filter(question => {
 			if (question.userAnswers.length > 0) {
@@ -402,32 +367,13 @@ watch(() => props.hideResolvedQuestions, (value, before) => {
 	}
 })
 
-let questionForm = reactive({
-	math: true,
-	body: "",
-	answer: "",
-	checker: "",
-	keyboard: "",
-	rows: 1
-})
 
-function questionStore() {
-	axios.post(
-		route("posts.questions.store", [props.post.id]), {
-			...questionForm
-		}
-	).then((res) => {
-		// Add the question.
-		res.data.data.forEach(q => postQuestions.value.push(q))
-		// questions.value.push(res.data)
-	}).catch(res => {
-		// Show the error.
-		console.log(res)
-	})
+function questionAdded(value) {
+	value.forEach(q => postQuestions.value.push(q))
 }
-
 function questionDestroy(id) {
-	postQuestions.value = postQuestions.value.filter(question => question.id !== id)
+	// TODO: reload the list of the question from the server ?
+	filteredQuestions.value = postQuestions.value.filter(question => question.id !== id)
 }
 
 function questionResetAnswers() {

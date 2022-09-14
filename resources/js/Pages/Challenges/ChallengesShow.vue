@@ -315,8 +315,8 @@ import {PiMath} from "pimath/esm"
 import login from "@/Pages/Auth/Login"
 import FormSwitch from "@/Components/Form/FormSwitch"
 import {keyboards} from "@/keyboards"
-import QuestionItem from "@/Components/QuestionItem"
-import {checkersList} from "@/Composables/useCheckers";
+import QuestionItem from "@/Components/Posts/Questions/QuestionItem"
+import {checkersList} from "@/Composables/useCheckers"
 
 const props = defineProps({
 	"challenge": {type: Object, required: true},
