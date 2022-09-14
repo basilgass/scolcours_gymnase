@@ -13,9 +13,9 @@
 					class="bi bi-list cursor-pointer mr-2"
 					@click="showAside=!showAside"
 				/>
-				<a :href="theme.slug==='main'?`/`:`/${theme.slug}`">
+				<Link :href="theme.slug==='main'?`/`:`/${theme.slug}`">
 					{{ theme.title }}
-				</a>
+				</Link>
 			</div>
 
 			<div>
