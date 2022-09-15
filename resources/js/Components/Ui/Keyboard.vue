@@ -171,7 +171,7 @@ let theKeyboard = computed(() => {
 		return props.keyboard
 	}),
 	keyboardOptions = computed(() => {
-		if (props.keyboard === "string") {
+		if (typeof props.keyboard === "string") {
 			let tmp = props.keyboard.split("@")
 
 			// No options

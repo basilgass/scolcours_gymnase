@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-//use App\Models\Exercise;
 use App\Http\Resources\QuestionResource;
 use App\Models\Post;
 use App\Models\Question;
 use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Str;
 
 class QuestionController extends Controller
 {
@@ -21,7 +21,7 @@ class QuestionController extends Controller
 	 * Store a newly created resource in storage.
 	 *
 	 * @param \Illuminate\Http\Request $request
-	 * @return array
+	 * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
 	 */
 	public function store(Post $post, Request $request)
 	{
@@ -44,7 +44,7 @@ class QuestionController extends Controller
 		$questions = [];
 		foreach($bodies as $key=>$body){
 			$questions[] = $post->questions()->create([
-				'body'=>$validate['math']?'\\['.$body.'\\]':$body,
+				'body'=>$validate['math']?'\\['.$body.(Str::endsWith($body, '=')?'$a':'').'\\]':$body,
 				'answer'=>$answers[$key]??null,
 				'checker'=>$checkers[$key]??$validate['checker'],
 				'keyboard'=>$validate['keyboard']??''

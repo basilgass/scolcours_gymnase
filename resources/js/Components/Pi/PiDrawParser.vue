@@ -31,7 +31,7 @@ let draw = ref(null)
 // Incoming props
 let props = defineProps({
 	width: {type: Number, default: 400},
-	height: {type: Number, default: 300},
+	height: {type: Number, default: 320},
 	draw: {
 		type: Object, default: () => {
 		}
@@ -68,7 +68,7 @@ let getSliders = function(){
 			}
 
 			// $a=a,b,...,c/interval=default
-			// interval not giver => interval = b-a
+			// interval not given => interval = b-a
 			// b-a: marks separation... or maybe all given manually !
 			// default value given at start.
 
@@ -171,7 +171,7 @@ onMounted(() => {
 		height: props.height,
 		origin: {
 			x: 200,
-			y: 150
+			y: 160
 		},
 		grid: {
 			x: 20,
@@ -225,4 +225,6 @@ watch(() => props.draw.parameters, (params, before) => {
 		console.log("Cannot parse", props.draw.params)
 	}
 })
+
+defineExpose({"graph": PiGraph})
 </script>
