@@ -25,6 +25,8 @@ import VueSlider from "vue-slider-component"
 import "vue-slider-component/theme/material.css"
 import {PiMath} from "pimath/esm"
 
+const emits = defineEmits(["update"])
+
 // SVG drawing container
 let draw = ref(null)
 
@@ -34,6 +36,10 @@ let props = defineProps({
 	height: {type: Number, default: 320},
 	draw: {
 		type: Object, default: () => {
+			return {
+				code: "",
+				parameters: ""
+			}
 		}
 	},
 	axis: {type: Boolean, default: true}
@@ -165,6 +171,8 @@ let	drawCode = computed(()=>{
 	}
 })
 
+let figures = ref({})
+
 onMounted(() => {
 	PiGraph = new PiDraw(draw.value, {
 		width: props.width,
@@ -193,6 +201,7 @@ onMounted(() => {
 		getSliders()
 		try {
 			PiParser.update(drawCode.value)
+			emits("update", PiGraph.figures)
 		}catch{
 			console.log("Cannot parse", drawCode.value)
 		}
@@ -203,8 +212,9 @@ watch(drawCode, (code, before)=>{
 	// Watch changes from "inside"
 	try {
 		PiParser.update(drawCode.value)
+		emits("update", PiGraph.figures)
 	}catch{
-		console.log("Cannot parse", drawCode.value)
+		console.log("Cannot parse (watch drawCode)", drawCode.value)
 	}
 })
 
@@ -213,6 +223,7 @@ watch(()=>props.draw.code, (code, before) => {
 	getSliders()
 	try {
 		PiParser.update(drawCode.value)
+		emits("update", PiGraph.figures)
 	}catch{
 		console.log("Cannot parse (watch props.draw.code) ", drawCode.value)
 	}
@@ -222,9 +233,9 @@ watch(() => props.draw.parameters, (params, before) => {
 	try {
 		PiParser.updateLayout(params)
 	}catch{
-		console.log("Cannot parse", props.draw.params)
+		console.log("Cannot parse (watch props.draw.parameters)", props.draw.params)
 	}
 })
 
-defineExpose({"graph": PiGraph})
+defineExpose({figures})
 </script>

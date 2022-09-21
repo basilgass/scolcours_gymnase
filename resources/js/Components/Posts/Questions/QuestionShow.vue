@@ -12,7 +12,8 @@
 	>
 		<div
 			v-if="questionNumber!==false"
-			class="absolute -left-2 -top-2 rounded-full bg-white border w-8 h-8 text-xs flex justify-center items-center"
+			class="absolute -left-2 -top-2 rounded-full bg-white border w-8 h-8 text-xs flex justify-center items-center draggable-handle"
+			:class="($page.props.auth.can.admin && editMode)?'cursor-move':''"
 		>
 			{{ questionNumber }}
 		</div>

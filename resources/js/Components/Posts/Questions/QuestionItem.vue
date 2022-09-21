@@ -148,7 +148,7 @@ let questionAsTex = computed(() => {
 		for (let i = 0; i < questionsVars.length; i++) {
 			let key = questionsVars[i],
 				value = userAnswer[i],
-				placeholder = questionsVars.length === 1 ? "réponse" : key[1]
+				placeholder = questionsVars.length === 1 ? "\\ ?" : key[1]
 
 			if (i === crtAnswerIndex) {
 				value = `\\textcolor{cornflowerblue}{ ${(value && value !== "") ? value : "< " + placeholder + " >"} }`

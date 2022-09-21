@@ -202,7 +202,10 @@ export const keyboards = {
 				return `\\mathcal S = ${value.split(";").map(x => makeExactFromAscii(x)).join(";")} `
 			}
 
-			return `\\mathcal S = ${value.split(";").map(x => makeExactFromAscii(x)).join(";")}`
+			// remove the braces...
+			value = value.replace("{", "").replace("}", "")
+
+			return `\\mathcal S = \\left\\{ ${value.split(";").map(x => makeExactFromAscii(x)).join(";")} \\right\\}`
 		}
 	}
 }

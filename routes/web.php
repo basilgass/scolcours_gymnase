@@ -80,6 +80,7 @@ Route::apiResource('posts.questions', QuestionController::class)
 	->shallow();
 Route::post('questions/{question}/validate', [QuestionController::class, 'storeAnswer'])->name('questions.validate');
 Route::patch('posts/{post}/questions/reset', [QuestionController::class, 'resetAnswers'])->name('posts.questions.reset');
+Route::post('questions/updateOrder', [QuestionController::class, 'updateOrder'])->name('questions.updateOrder');
 
 // Blocks routews
 Route::apiResource('blocks', BlockController::class);

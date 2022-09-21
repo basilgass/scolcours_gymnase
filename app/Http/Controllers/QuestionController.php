@@ -125,4 +125,13 @@ class QuestionController extends Controller
 		$questions = $user->questions()->detach($post->questions->pluck('id'));
 		return true;
 	}
+
+	public function updateOrder(Request $request)
+	{
+		foreach ($request['order'] as $value){
+			Question::find($value['id'])?->update(['order'=>$value['order']]);
+		}
+
+		return true;
+	}
 }

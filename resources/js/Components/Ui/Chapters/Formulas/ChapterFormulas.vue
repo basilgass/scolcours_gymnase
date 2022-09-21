@@ -13,8 +13,12 @@
 		>
 			<draggable
 				v-model="formulas"
-				:disabled="!($page.props.auth.can.admin && editMode)"
 				item-key="id"
+				handle=".draggable-handle"
+				v-bind="{
+					animation: 200,
+					disabled: !($page.props.auth.can.admin && editMode),
+				}"
 				@end="updateFormulas"
 			>
 				<template #item="{ element }">
@@ -26,26 +30,30 @@
 							<!-- Admin controls -->
 							<div
 								v-if="$page.props.auth.can.admin && editMode && editingFormula===false"
-								class="flex gap-2 mb-2"
+								class="flex justify-between gap-2 mb-2 admin-wrapper"
 							>
-								<button
-									class="btn-edit btn-xs px-2"
-									@click="editingFormula = element"
-								>
-									éditer <i class="bi bi-pencil" />
-								</button>
-								<button
-									class="btn-success btn-xs px-2"
-									@click="duplicateFormula(element.id)"
-								>
-									dupliquer <i class="bi bi-clipboard-plus" />
-								</button>
-								<button
-									class="btn-delete btn-xs px-2"
-									@click="delFormula(element.id)"
-								>
-									supprimer <i class="bi bi-trash" />
-								</button>
+								<i class="draggable-handle cursor-move bi bi-arrows-move px-3" />
+
+								<div>
+									<button
+										class="btn-edit btn-xs px-2 self-end"
+										@click="editingFormula = element"
+									>
+										éditer <i class="bi bi-pencil" />
+									</button>
+									<button
+										class="btn-success btn-xs px-2"
+										@click="duplicateFormula(element.id)"
+									>
+										dupliquer <i class="bi bi-clipboard-plus" />
+									</button>
+									<button
+										class="btn-delete btn-xs px-2"
+										@click="delFormula(element.id)"
+									>
+										supprimer <i class="bi bi-trash" />
+									</button>
+								</div>
 							</div>
 
 							<!-- Text -->

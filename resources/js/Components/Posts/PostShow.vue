@@ -223,24 +223,32 @@
 				</div>
 
 				<!-- list of questions -->
-				<div
+				<draggable
+					v-model="filteredQuestions"
+					item-key="id"
+					v-bind="{
+						animation: 200,
+						disabled: !($page.props.auth.can.admin && editMode),
+					}"
 					class="grid grid-cols-1"
+					handle=".draggable-handle"
 					:class="{
 						'gap-1': correctionMode,
 						'gap-10': !correctionMode,
 						'md:grid-cols-2 lg:grid-cols-3':!correctionMode && filteredQuestions.length>=3,
 						'md:grid-cols-2':!correctionMode && filteredQuestions.length===2,
 					}"
+					@end="updateQuestionsOrder"
 				>
-					<question-show
-						v-for="(question, questionNumber) in filteredQuestions"
-						:key="`postQuestion-${question.id}`"
-						:question="question"
-						:question-number="questionNumber + 1"
-						:correction-mode="correctionMode"
-						@destroy="questionDestroy"
-					/>
-				</div>
+					<template #item="{ element, index }">
+						<question-show
+							:question="element"
+							:question-number="index + 1"
+							:correction-mode="correctionMode"
+							@destroy="questionDestroy"
+						/>
+					</template>
+				</draggable>
 			</div>
 
 			<!-- question footer admin -->
@@ -367,7 +375,17 @@ watch(() => props.hideResolvedQuestions, (value, before) => {
 	}
 })
 
+function updateQuestionsOrder(){
+	axios.post(route("questions.updateOrder"), {
+		order: filteredQuestions.value.map((x, index)=>{return {id: x.id, order: index}})
+	}).then(res=>{
+		console.log(res.data)
+	}).catch(res=> {
+		console.log("update ordering order: ", res.data)
+		console.log(res)
+	})
 
+}
 function questionAdded(value) {
 	value.forEach(q => postQuestions.value.push(q))
 }
