@@ -203,9 +203,12 @@ export const keyboards = {
 			}
 
 			// remove the braces...
+			const beforeBrace = value.startsWith("{")?"\\left\\{":"\\left.",
+				afterBrace = value.endsWith("}")?"\\right\\}":"\\right."
+
 			value = value.replace("{", "").replace("}", "")
 
-			return `\\mathcal S = \\left\\{ ${value.split(";").map(x => makeExactFromAscii(x)).join(";")} \\right\\}`
+			return `\\mathcal S = ${beforeBrace} ${value.split(";").map(x => makeExactFromAscii(x)).join(";")} ${afterBrace}`
 		}
 	}
 }
