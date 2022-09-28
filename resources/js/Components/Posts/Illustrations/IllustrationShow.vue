@@ -1,11 +1,13 @@
 <template>
 	<div ref="root">
-		<div v-if="illustration.type==='draw'">
-			<pi-draw-parser :draw="illustration" />
-		</div>
-		<div v-if="illustration.type==='component'">
-			<component :is="IllustrationComponent" />
-		</div>
+		<pi-draw-parser
+			v-if="illustration.type==='draw'"
+			:draw="illustration"
+		/>
+		<component
+			:is="IllustrationComponent"
+			v-if="illustration.type==='component'"
+		/>
 	</div>
 </template>
 

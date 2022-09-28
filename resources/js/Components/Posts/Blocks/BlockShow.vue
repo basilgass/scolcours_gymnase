@@ -32,7 +32,6 @@
 						btn-class="btn-delete"
 						@confirm="destroyBlock"
 					>
-
 						supprimer <i class="bi bi-trash" />
 					</confirm-button>
 				</div>
@@ -105,7 +104,12 @@
 				<!-- Illustration of the block -->
 				<div
 					v-if="crtBlock.illustrations.length>0"
-					class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3"
+					class="grid grid-cols-1 mt-8 mb-4"
+					:class="{
+						'md:grid-cols-2 xl:grid-cols-3': crtBlock.illustrations.length>=2,
+						'xl:grid-cols-2': crtBlock.illustrations.length===2,
+						'max-w-lg mx-auto': crtBlock.illustrations.length===1
+					}"
 				>
 					<div
 						v-for="illustration in crtBlock.illustrations"
@@ -138,7 +142,7 @@ import IllustrationShow from "@/Components/Posts/Illustrations/IllustrationShow"
 import {PiMath} from "pimath/esm"
 import DialogModal from "@/Components/Ui/DialogModal"
 import BlockForm from "@/Components/Posts/Blocks/BlockForm"
-import ConfirmButton from "@/Components/Ui/ConfirmButton";
+import ConfirmButton from "@/Components/Ui/ConfirmButton"
 
 const $emits = defineEmits(["delete", "updated"])
 const props = defineProps({

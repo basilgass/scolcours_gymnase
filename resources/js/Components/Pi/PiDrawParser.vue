@@ -1,6 +1,9 @@
 <template>
 	<div>
+		<!-- draw graph-->
 		<div ref="draw" />
+		
+		<!-- slider(s) -->
 		<div
 			v-if="sliders.length>0"
 			class="space-y-12 mt-6"
