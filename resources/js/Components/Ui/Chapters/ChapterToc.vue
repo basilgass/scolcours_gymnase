@@ -1,5 +1,10 @@
 <template>
-	<div class="flex flex-col gap-3 mb-4">
+	<div
+		:class="{
+			'columns-1 md:columns-2 lg:columns-3 column-toc gap-8 space-y-4': !floating,
+			'flex flex-col gap-4 p-3': floating
+		}"
+	>
 		<div
 			v-for="post in chapterPosts"
 			:key="post.id"
@@ -22,6 +27,10 @@ import {inject} from "vue"
 
 const emits = defineEmits(["menuClick"])
 let chapterPosts = inject("chapterPosts")
+
+const props = defineProps({
+	"floating": {type: Boolean, default: false}
+})
 
 let tocClick = function (id) {
 	menuScrollTo(`post-${id}`)

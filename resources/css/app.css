@@ -179,3 +179,8 @@
 
 }
 
+.column-toc{
+	column-rule-style: solid;
+	column-rule-color: #e8e8e8;
+}
+

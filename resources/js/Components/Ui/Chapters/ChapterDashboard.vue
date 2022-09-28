@@ -1,6 +1,6 @@
 <template>
 	<section class="grid grid-cols-1 md:grid-cols-3 gap-4 my-10">
-		<Panel>
+		<Panel class="md:col-span-3 pb-3">
 			<template #title>
 				Table des matières
 			</template>

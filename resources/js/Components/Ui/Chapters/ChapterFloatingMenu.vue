@@ -4,18 +4,22 @@
 			class="fixed
 					z-30
 					bottom-0 left-0
-					bg-gray-100
+					bg-gray-50
 					border-t border-r border-gray-400
 	 				w-full md:w-auto md:min-w-[300px]"
 		>
 			<transition name="slide-up">
-				<div v-show="showMenu">
+				<div
+					v-show="showMenu"
+					class="grid grid-cols-1 divide-y divide-gray-200"
+				>
 					<ChapterToc
 						v-show="toc.length>0"
-						class="flex flex-col gap-2 px-3 pt-3 pb-1"
+						floating
 						@menu-click="showMenu=false"
 					/>
-					<div class="w-full flex justify-between px-3 pb-3">
+
+					<div class="w-full p-3">
 						<button
 							class="flex gap-3 hover:gap-5 transition-all"
 							title="Prochain exercice non résolu"
@@ -27,7 +31,10 @@
 					</div>
 				</div>
 			</transition>
-			<div class="px-3 py-2 flex justify-between items-center gap-3">
+			<div
+				class="px-3 py-2 flex justify-between items-center gap-3 hover:bg-gray-200"
+				:class="showMenu?'bg-gray-200':''"
+			>
 				<button
 					title="formulaire"
 					@click="show=!show"
