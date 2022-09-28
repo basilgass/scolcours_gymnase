@@ -26,7 +26,8 @@ class PostResource extends JsonResource
 			'switch'=>$this->switch,
 			'updated_at'=>$this->updated_at,
 			'blocks'=>$this->blocks,
-			'questions'=>QuestionResource::collection($this->questions)
+			'questions'=>QuestionResource::collection($this->questions),
+			'questionsGrid'=>$this->questionsGrid
 		];
     }
 }

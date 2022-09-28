@@ -230,14 +230,8 @@
 						animation: 200,
 						disabled: !($page.props.auth.can.admin && editMode),
 					}"
-					class="grid grid-cols-1"
 					handle=".draggable-handle"
-					:class="{
-						'gap-1': correctionMode,
-						'gap-10': !correctionMode,
-						'md:grid-cols-2 lg:grid-cols-3':!correctionMode && filteredQuestions.length>=3,
-						'md:grid-cols-2':!correctionMode && filteredQuestions.length===2,
-					}"
+					:class="questionsGridClass"
 					@end="updateQuestionsOrder"
 				>
 					<template #item="{ element, index }">
@@ -256,6 +250,15 @@
 				v-if="$page.props.auth.can.admin && editMode"
 				class="admin-wrapper mt-10 flex-col gap-10"
 			>
+				<div class="flex gap-3 items-baseline">
+					<span>Format de la grille</span>
+					<form-input
+						v-model="questionGrid"
+						label="format de la grille"
+						name="questionsGridFormat"
+						inline
+					/>
+				</div>
 				<QuestionInlineForm
 					:post="post"
 					@added="questionAdded"
@@ -292,6 +295,7 @@ import QuestionShow from "@/Components/Posts/Questions/QuestionShow"
 import FormSwitch from "@/Components/Form/FormSwitch"
 import ConfirmButton from "@/Components/Ui/ConfirmButton"
 import QuestionInlineForm from "@/Components/Posts/Questions/QuestionInlineForm"
+import FormInput from "@/Components/Form/FormInput"
 
 const emits = defineEmits(["delete", "updateTitle"])
 const props = defineProps({
@@ -346,7 +350,8 @@ let blocks = ref(props.post.blocks),
 				return {"id": block.id, "order": index}
 			})
 		})
-	}
+	},
+	questionGrid = ref(props.post.questionsGrid)
 
 /** Questions reactives and methods */
 let postQuestions = ref(props.post.questions),
@@ -359,7 +364,33 @@ let postQuestions = ref(props.post.questions),
 			return false
 		}).length
 	}),
-	correctionMode = ref(false)
+	correctionMode = ref(false),
+	questionsGridClass = computed(()=>{
+		let c = "grid grid-cols-1"
+		c += correctionMode.value?" gap-1": " gap-10"
+		if(!correctionMode.value){
+			if(questionGrid.value) {
+				const grid = questionGrid.value.split(",")
+				// 1 value: lg
+				// 2 values: md, xl
+
+				if(grid.length===1){
+					c += ` lg:grid-cols-${grid[0]}`
+				}else{
+					c += ` md:grid-cols-${grid[0]}`
+					if (filteredQuestions.value.length > 2) {
+						c += ` xl:grid-cols-${grid[1]}`
+					}
+				}
+			}else {
+				c += " md:grid-cols-2"
+				if (filteredQuestions.value.length > 2) {
+					c += " xl:grid-cols-3"
+				}
+			}
+		}
+		return c
+	})
 
 watch(() => props.hideResolvedQuestions, (value, before) => {
 	//TODO: turn the filteredQuestions to computed ?????
