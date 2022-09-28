@@ -30,8 +30,8 @@
 			/>
 			<div
 				v-if="checkerResult.result===false"
+				v-katex.auto="checkerResult.message"
 				class="text-red-600"
-				v-text="checkerResult.message"
 			/>
 
 			<div>

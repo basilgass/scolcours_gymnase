@@ -28,14 +28,6 @@
 				@save="patchQuestion"
 			/>
 
-			<!--			<form-input-->
-			<!--				ref="questionBodyForm"-->
-			<!--				v-model="form.body"-->
-			<!--				label="question"-->
-			<!--				name="body"-->
-			<!--				class="font-code"-->
-			<!--				@save="patchQuestion"-->
-			<!--			/>-->
 			<form-input
 				v-model="form.answer"
 				label="réponse"
@@ -50,7 +42,7 @@
 						label="Vérification"
 						name="checker"
 						class="font-code"
-						:datalist="checkerList"
+						:datalist="checkersList"
 					/>
 				</div>
 
@@ -60,6 +52,7 @@
 						label="clavier"
 						name="clavier"
 						class="font-code"
+						:datalist="keyboardsList"
 					/>
 				</div>
 			</div>
@@ -88,14 +81,15 @@ import {ref} from "vue"
 import ConfirmButton from "@/Components/Ui/ConfirmButton"
 import FormTextarea from "@/Components/Form/FormTextarea"
 import {checkersList} from "@/Composables/useCheckers"
+import {keyboardsList} from "@/keyboards"
 
 let props = defineProps({
 	modelValue: {type: Object, required: true},
 })
+
 let emits = defineEmits(["update:modelValue", "cancel", "updated", "destroy"])
 let form = useForm({...props.modelValue})
-let showEditForm = ref(false),
-	checkerList = ref(checkersList)
+let showEditForm = ref(false)
 
 function cancelQuestion(){
 	emits("cancel")

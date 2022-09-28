@@ -28,6 +28,7 @@ class QuestionController extends Controller
 		$validate = $request->validate(
 			[
 				'math'=>['boolean'],
+				'mathAppend'=>['string', 'nullable'],
 				'body'=>['string', 'min:2'],
 				'answer'=>['nullable'],
 				'checker'=>['string', 'nullable'],
@@ -37,16 +38,31 @@ class QuestionController extends Controller
 
 
 		// If there is a return line, means it's multiple.
-		$bodies = preg_split('/\r\n|\r|\n/', $validate['body']);
 		$answers = preg_split('/\r\n|\r|\n/', $validate['answer']);
 		$checkers = preg_split('/\r\n|\r|\n/', $validate['checker']);
+		$bodies = count($answers) > 1 ? preg_split('/\r\n|\r|\n/', $validate['body']) : [];
 
 		$questions = [];
-		foreach($bodies as $key=>$body){
+		foreach($answers as $key=>$answer){
+			$body = $bodies[$key]??$validate['body'];
+			$checker = $checkers[$key]??$validate['checker'];
+
+			if($validate['math']){
+				$body = '\\['.$body.(Str::endsWith($body, '=')?'$a':'').'\\]';
+			}
+
+			if($validate['mathAppend']){
+				if(Str::endsWith($body, '\\]')) {
+					$body = $body . PHP_EOL . $validate['mathAppend'];
+				}else{
+					$body = $body . PHP_EOL . PHP_EOL . $validate['mathAppend'];
+				}
+			}
+
 			$questions[] = $post->questions()->create([
-				'body'=>$validate['math']?'\\['.$body.(Str::endsWith($body, '=')?'$a':'').'\\]':$body,
-				'answer'=>$answers[$key]??null,
-				'checker'=>$checkers[$key]??$validate['checker'],
+				'body'=>$body,
+				'answer'=>$answer??null,
+				'checker'=>$checker,
 				'keyboard'=>$validate['keyboard']??''
 			]);
 		}

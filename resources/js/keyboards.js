@@ -32,6 +32,8 @@ export const keyboardKeys = {
 	"sqrt": {type: "math", display: "\\sqrt{\\phantom{x}}"},
 	"root(3)": {type: "math", display: "\\sqrt[3]{\\phantom{x}}"},
 	"root(": {type: "math", display: "\\sqrt[n]{\\phantom{x}}"},
+	"log": {type: "math", display: "\\log"},
+	"_": {type: "math", display: "\\textcolor{lightgray}{\\log}_a"},
 	"|": {type: "math", display: "\\big\\vert \\textcolor{lightgray}{x} \\big\\vert"},
 	"y": {type: "math", display: "y"},
 	"e": {type: "math", display: "\\text{e}"},
@@ -156,18 +158,12 @@ export const keyboards = {
 			"4", "5", "6", "*", "/",
 			"7", "8", "9", "^2", "^",
 			"0", "(", ")", "sqrt", "root(",
+			"log", "_", "ln", "pi", "e",
 			"", "", "", "RR", "!!"
 		],
 		tex: function (value) {
 			// Apply this for all splited.
-			return value.split(",").map(v => {
-				if (!v.includes("/")) {
-					return asciiToTex(v)
-				}
-
-				const numden = v.split("/")
-				return asciiToTex(numden.map(x => `(${x})`).join("/"))
-			}).join(",")
+			return value.split(",").map(v => makeExactFromAscii(v)).join(",")
 		}
 	},
 	"solution": {
@@ -175,10 +171,12 @@ export const keyboards = {
 		layout: [
 			"1", "2", "3", "+", "-",
 			"4", "5", "6", "*", "/",
-			"7", "8", "9", "sqrt", "root(",
-			"", "0", ";", "(", ")",
-			"RR", "!!", "^**", "\\\\", "{",
-			"]", "[", "oo", "uu", "}"
+			"7", "8", "9", "^2", "^",
+			"0", "(", ")", "sqrt", "root(",
+			"log", "_", "ln", "pi", "e",
+			"{", ";", "}", "RR", "!!",
+			"^**", "\\\\", "uu", "", "",
+			"[", "]", "oo", "", ""
 		],
 		tex: function (value) {
 			//TODO: parse correctly solutions when using setminus.
@@ -186,15 +184,6 @@ export const keyboards = {
 				return `\\mathcal S=${asciiToTex(value)}`
 			} else if (value === "!!") {
 				return "\\mathcal S = \\varnothing"
-			}
-
-			function makeExactFromAscii(item) {
-				if (!item.includes("/")) {
-					return asciiToTex(item)
-				}
-
-				const numden = item.split("/")
-				return asciiToTex(numden.map(x => `(${x})`).join("/"))
 			}
 
 			if (value.includes("]") || value.includes("[")) {
@@ -211,4 +200,32 @@ export const keyboards = {
 			return `\\mathcal S = ${beforeBrace} ${value.split(";").map(x => makeExactFromAscii(x)).join(";")} ${afterBrace}`
 		}
 	}
+}
+
+export const keyboardsList = [...Object.keys(keyboards)]
+
+function makeExactFromAscii(value) {
+	// Aucune division - pas de problème, c'est du ascii.
+	if (!value.includes("/")) {
+		return asciiToTex(value)
+	}
+
+	const numden = value.split("/")
+	let stack = [], result = [], parentheses = 0
+
+	for(let item of numden){
+		parentheses += item.split("(").length - item.split(")").length
+		if(parentheses!==0){
+			stack.push(item)
+		}else{
+			stack.push(item)
+			result.push(stack.join("/"))
+			stack = []
+		}
+	}
+	if(stack.length>0){
+		result.push(stack.join("/"))
+	}
+
+	return asciiToTex(result.length===1?result[0]:result.map(x=>`(${x})`).join("/"))
 }

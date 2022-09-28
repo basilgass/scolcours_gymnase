@@ -50,7 +50,7 @@
 	<Keyboard
 		v-model="result"
 		v-model:tex="tex"
-		:keyboard="keyboard + (letters===''?'':`,${letters}`)"
+		:keyboard="keyboard + (letters===''?'':`@${letters}`)"
 		math-output
 		text-output
 		:validate="validate"
@@ -70,19 +70,19 @@ export default {
 </script>
 <script setup>
 import Keyboard from "@/Components/Ui/Keyboard"
-import {keyboards} from "@/keyboards"
+import {keyboards, keyboardsList} from "@/keyboards"
 
 import {ref} from "vue"
 
-let keyboard = ref("exact"),
-	choices = ref(Object.keys(keyboards)),
+let keyboard = ref("solution"),
+	choices = ref(keyboardsList),
 	result = ref(""),
 	validate=ref(true),
 	reset=ref(true),
 	next=ref(true),
 	back=ref(true),
 	multiple=ref(true),
-	letters=ref("abcnm"),
+	letters=ref("a,b,c,n,m"),
 	tex = ref("")
 
 </script>

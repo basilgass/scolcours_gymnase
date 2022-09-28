@@ -25,16 +25,23 @@
 				v-bind="$attrs"
 				:autocomplete="autocomplete===true?'on':autocomplete"
 				:placeholder="inline?label:''"
+				:list="`${name}List`"
 				@focus="$emit('inputFocus')"
 				@input="$emit('update:modelValue', $event.target.value)"
 				@keyup.esc.exact="doCancel"
 				@keyup.enter.exact="doValidate"
 				@keydown="handleCtrlKey"
-				:list="name"
 			>
-			<datalist :id="name" v-if="datalist.length>0"
+			<datalist
+				v-if="datalist.length>0"
+				:id="`${name}List`"
 			>
-				<option v-for="item of datalist" :value="item">{{ item }}</option>
+				<option
+					v-for="item of datalist"
+					:value="item"
+				>
+					{{ item }}
+				</option>
 			</datalist>
 			<button
 				v-if="$slots.button"
@@ -74,7 +81,7 @@ let props = defineProps({
 	focus: {type: Boolean, default: false},
 	autocomplete: {type: [String,Boolean], default: "off"},
 	btnClass:{type: String, default: "btn"},
-	datalist: {type: Array, default: []}
+	datalist: {type: Array, default: ()=>[]}
 })
 
 let inp = ref(null),

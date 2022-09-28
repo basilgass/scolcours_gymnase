@@ -4,13 +4,12 @@
 			Ajouter des questions
 		</h3>
 		<div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-			<div class="md:col-span-2">
+			<div class="md:col-span-3">
 				<form-textarea
 					v-model="questionForm.body"
-					:rows="questionForm.rows"
+					:rows="Math.max(questionForm.rows, 5)"
 					label="question"
 					name="body"
-					@input="questionForm.rows = questionForm.body.split('\n').length"
 				/>
 			</div>
 			<form-textarea
@@ -18,22 +17,35 @@
 				:rows="questionForm.rows"
 				label="réponse"
 				name="answer"
+				@input="questionForm.rows = questionForm.answer.split('\n').length"
 			/>
-			<form-textarea
-				v-model="questionForm.checker"
-				:rows="questionForm.rows"
-				label="Vérification"
-				name="checker"
-			/>
+
 			<div class="flex items-end gap-4 justify-self-end md:col-span-4">
-				<input
-					v-model="questionForm.math"
-					type="checkbox"
-				>
+				<div class="flex">
+					<form-switch
+						v-model="questionForm.math"
+						name="mathmode"
+						label="math \[ \]"
+					/>
+					<form-input
+						v-model="questionForm.mathAppend"
+						name="mathAddLine"
+						label="ajout..."
+						placeholder="\[x=$a\]"
+						:datalist="['\\[x=$a\\]', '\\[$a\\]']"
+					/>
+				</div>
+				<form-input
+					v-model="questionForm.checker"
+					label="Vérification"
+					name="checker"
+					:datalist="checkersList"
+				/>
 				<form-input
 					v-model="questionForm.keyboard"
 					label="clavier"
 					name="clavier"
+					:datalist="keyboardsList"
 				/>
 
 				<button
@@ -51,6 +63,9 @@
 import FormInput from "@/Components/Form/FormInput"
 import FormTextarea from "@/Components/Form/FormTextarea"
 import {reactive} from "vue"
+import {keyboardsList} from "@/keyboards"
+import {checkersList} from "@/Composables/useCheckers"
+import FormSwitch from "@/Components/Form/FormSwitch"
 
 let props = defineProps({
 		post: {type: Object, required: true}
@@ -59,6 +74,7 @@ let props = defineProps({
 
 let questionForm = reactive({
 	math: true,
+	mathAppend: "",
 	body: "",
 	answer: "",
 	checker: "",
