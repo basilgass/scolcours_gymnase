@@ -258,6 +258,12 @@
 						name="questionsGridFormat"
 						inline
 					/>
+					<button
+						class="btn btn-update"
+						@click="updateQuestionsGrid"
+					>
+						Enregistrer
+					</button>
 				</div>
 				<QuestionInlineForm
 					:post="post"
@@ -415,8 +421,15 @@ function updateQuestionsOrder(){
 		console.log("update ordering order: ", res.data)
 		console.log(res)
 	})
-
 }
+
+function updateQuestionsGrid(){
+	axios.patch(route("posts.updateQuestionsGrid", [props.post.id]), {
+		_method: "patch",
+		"questionsGrid": questionGrid.value
+	})
+}
+
 function questionAdded(value) {
 	value.forEach(q => postQuestions.value.push(q))
 }

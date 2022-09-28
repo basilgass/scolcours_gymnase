@@ -103,6 +103,19 @@ class PostController extends Controller
 		}
 	}
 
+	public function updateQuestionsGrid(Post $post, Request $request)
+	{
+		$validate = $request->validate([
+			'questionsGrid'=>['string', 'nullable']
+		]);
+
+		$post->update([
+			'questionsGrid' => $validate['questionsGrid']??$validate['questionsGrid']
+		]);
+		$post->save();
+		return true;
+	}
+
 	public function destroy($id)
 	{
 		$post = Post::find($id);
