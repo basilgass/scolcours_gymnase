@@ -21,7 +21,6 @@ const props = defineProps({
 
 let root = ref(null)
 
-
 const IllustrationComponent = computed(
 	() => {
 		if(props.illustration.type==="component"){

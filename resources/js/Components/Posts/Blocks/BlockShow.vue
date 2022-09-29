@@ -104,19 +104,18 @@
 				<!-- Illustration of the block -->
 				<div
 					v-if="crtBlock.illustrations.length>0"
-					class="grid grid-cols-1 mt-8 mb-4"
+					class="grid grid-cols-1 mt-8 mb-4 gap-4"
 					:class="{
 						'md:grid-cols-2 xl:grid-cols-3': crtBlock.illustrations.length>=2,
 						'xl:grid-cols-2': crtBlock.illustrations.length===2,
 						'max-w-lg mx-auto': crtBlock.illustrations.length===1
 					}"
 				>
-					<div
+					<illustration-show
 						v-for="illustration in crtBlock.illustrations"
 						:key="illustration.id"
-					>
-						<illustration-show :illustration="illustration" />
-					</div>
+						:illustration="illustration"
+					/>
 				</div>
 			</div>
 			<div

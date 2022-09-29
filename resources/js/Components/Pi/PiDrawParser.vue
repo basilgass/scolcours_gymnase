@@ -2,10 +2,10 @@
 	<div>
 		<!-- draw graph-->
 		<div ref="draw" />
-		
+
 		<!-- slider(s) -->
 		<div
-			v-if="sliders.length>0"
+			v-if="sliders.length>0 || texCode!==''"
 			class="space-y-12 mt-6"
 		>
 			<vue-slider
