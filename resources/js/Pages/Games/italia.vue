@@ -47,15 +47,30 @@
 		</div>
 		<div
 			v-else
-			class="mt-10 flex justify-between"
+			class="mt-10 grid grid-cols-3 w-full"
 		>
-			<button
-				v-show="!gameStopped"
-				class="btn btn-xs bg-white"
-				@click="showAllCards=!showAllCards"
-			>
-				Afficher toutes les fiches
-			</button>
+			<div>
+				<button
+					class="btn btn-xs bg-white"
+					@click="showAllCards=!showAllCards"
+				>
+					Afficher toutes les fiches
+				</button>
+			</div>
+
+			<div class="text-center">
+				Mots {{ startIndex+1 }} à {{ startIndex + 1 + numberOfCards }} sur {{ availableWords.length }}
+			</div>
+
+			<div>
+				<button
+					v-show="gamePaused"
+					class="btn btn-xs bg-success"
+					@click="continueGame"
+				>
+					Continuer le jeu
+				</button>
+			</div>
 		</div>
 	</article>
 </template>
@@ -411,6 +426,7 @@ let vocabulare = [
 
 
 let availableWords = ref([]),
+	startIndex = ref(0),
 	cards = ref([]),
 	unitsSelection = ref("1"),
 	units = computed(() => {
@@ -418,12 +434,25 @@ let availableWords = ref([]),
 	}),
 	showAllCards = ref(false),
 	numberOfCards = ref(12),
+	gamePaused = ref(true),
 	gameStopped = ref(true)
 
 let startGame = function () {
+	if(availableWords.value.length===0) {
+		generateWords()
+	}else{
+		startIndex.value = startIndex.value + numberOfCards.value + 1
+	}
+
 	generateCards()
 }
-let generateCards = function () {
+let continueGame = function (){
+	generateCards()
+}
+
+let generateWords = function() {
+	// All words available
+	startIndex.value = 0
 	let words = []
 	for (let unit in vocabulare) {
 		if (units.value.includes(+unit)) {
@@ -431,10 +460,20 @@ let generateCards = function () {
 		}
 	}
 
-	availableWords.value = PiMath.Random.array(words, numberOfCards.value)
+	// availableWords.value = PiMath.Random.array(words, numberOfCards.value)
+	availableWords.value = PiMath.Random.shuffle(words)
+}
+let generateCards = function () {
+	if(startIndex.value > availableWords.value.length){
+		alert("Bravo ! Tout le voc a été révisé !")
+		availableWords.value = []
+		startIndex = -1
+		gameStopped.value = true
+		return
+	}
 
 	let cardsList = []
-	for (let word of availableWords.value) {
+	for (let word of availableWords.value.slice(startIndex.value, startIndex.value + numberOfCards.value)) {
 		cardsList.push(word[0])
 		cardsList.push(word[1])
 	}
@@ -449,6 +488,7 @@ let generateCards = function () {
 	}
 
 	gameStopped.value = false
+	gamePaused.value = false
 }
 
 let selectCard = function (card) {
@@ -480,9 +520,8 @@ let selectCard = function (card) {
 
 				// On vérifie si tout est terminé
 				if (cards.value.filter(x => x.found).length === cards.value.length) {
-					gameStopped.value = true
+					gamePaused.value = true
 				}
-
 				return
 			}
 		}
