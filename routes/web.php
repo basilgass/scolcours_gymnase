@@ -99,6 +99,11 @@ Route::apiResource('chapters.challenges', ChallengesController::class)
 	])
 	->shallow();
 
+// Games routes
+Route::get('jeux/{game}', function (String $game){
+	// TODO: check if the game exists.
+	return Inertia::render('Games/'.$game);
+});
 
 // Latex download - migrate to custom controller
 // TODO: Implement back the PDF output.

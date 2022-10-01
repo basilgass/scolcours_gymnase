@@ -53,6 +53,8 @@ export const keyboardKeys = {
 	"^**": {type: "math", display: "\\textcolor{lightgray}{\\mathbb{R}}^*"},
 	"\\\\": {type: "math", display: "\\setminus \\textcolor{lightgray}{ E } "},
 	"uu": {type: "math", display: "\\cup"},
+	"not": {type: "math", display: "\\neg"},
+	"nn": {type: "math", display: "\\cap"},
 	"oo": {type: "math", display: "\\infty"},
 	"!!": {type: "math", display: "\\varnothing"},
 	"@reset": {type: "icon", display: "bi bi-trash"},
