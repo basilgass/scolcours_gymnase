@@ -4,12 +4,12 @@
 
 		<div
 			v-if="cards.length>0"
-			class="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-6 gap-4"
+			class="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-6 gap-2 lg:gap-4"
 		>
 			<div
 				v-for="(card, index) in cards"
 				:key="index"
-				class="bg-white border rounded h-32 grid place-items-center p-3 cursor-pointer transform-all duration-300"
+				class="bg-white border rounded h-24 grid place-items-center p-3 cursor-pointer transform-all duration-300"
 				:class="{
 					'bg-green-600': card.found,
 					'bg-amber-400': card.selected
@@ -439,6 +439,7 @@ let generateCards = function () {
 		cardsList.push(word[1])
 	}
 
+	cards.value = []
 	for (let word of PiMath.Random.shuffle(cardsList)) {
 		cards.value.push({
 			text: word,
@@ -491,7 +492,7 @@ let selectCard = function (card) {
 		selectedCards.map(c => {
 			c.selected = false
 		})
-	}, 500)
+	}, 1000)
 }
 
 </script>
