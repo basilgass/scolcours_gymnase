@@ -105,6 +105,14 @@ Route::get('jeux/{game}', function (String $game){
 	return Inertia::render('Games/'.$game);
 });
 
+// ITaliano routes.
+Route::get('italiano', function (){
+	return Inertia::render('Italiano/italiano');
+});
+Route::get('italiano/{page}', function (String $page){
+	return Inertia::render('Italiano/'.$page);
+});
+
 // Latex download - migrate to custom controller
 // TODO: Implement back the PDF output.
 //Route::get('/latex/dry', [LatexController::class, 'dry']);
