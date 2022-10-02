@@ -440,13 +440,12 @@ let availableWords = ref([]),
 let startGame = function () {
 	if(availableWords.value.length===0) {
 		generateWords()
-	}else{
-		startIndex.value = startIndex.value + numberOfCards.value + 1
 	}
 
 	generateCards()
 }
 let continueGame = function (){
+	startIndex.value = startIndex.value + numberOfCards.value + 1
 	generateCards()
 }
 
