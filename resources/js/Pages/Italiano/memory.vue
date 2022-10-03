@@ -137,7 +137,7 @@ let generateCards = function () {
 	if(startIndex.value > availableWords.value.length){
 		alert("Bravo ! Tout le voc a été révisé !")
 		availableWords.value = []
-		startIndex = -1
+		startIndex.value = -1
 		gameStopped.value = true
 		return
 	}
