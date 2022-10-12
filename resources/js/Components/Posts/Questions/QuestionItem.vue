@@ -11,7 +11,14 @@
 			/>
 		</div>
 		<div v-else>
-			<markdown-it :text="questionAsTex" />
+			<illustration-show
+				v-if="block.illustrations?.length>0"
+				class="bg-white"
+				:illustration="block.illustrations[0]"
+			/>
+			<markdown-it
+				:text="questionAsTex"
+			/>
 		</div>
 
 
@@ -78,11 +85,12 @@ import Keyboard from "@/Components/Ui/Keyboard"
 import {useCheckers} from "@/Composables/useCheckers"
 import katex from "katex"
 import MarkdownIt from "@/Components/Ui/MarkdownIt"
+import IllustrationShow from "@/Components/Posts/Illustrations/IllustrationShow.vue"
 
 let emits = defineEmits(["validate"])
 
 let props = defineProps({
-	question: {type: String, required: true},
+	block: {type: Object, required: true},
 	answer: {type: String, required: true},
 	output: {type: String, default: "question = answer"},
 	checker: {type: String, default: "exact"},
@@ -111,7 +119,11 @@ let checkerResult = ref({
 		message: ""
 	}),
 	multipleAnswer = computed(() => {
-		return props.question.split("$").length > 2
+		if(props.block.body) {
+			return props.block.body.split("$").length > 2
+		}else{
+			return false
+		}
 	}),
 	answer = ref(""),
 	tex = ref(""),
@@ -122,8 +134,10 @@ let checkerResult = ref({
 	giveAnswer = ref(props.showKeyboardToggle === false)
 
 let questionAsTex = computed(() => {
-	let body = props.question,
+	let body = props.block.body,
 		userAnswer
+
+	if(body===undefined){return}
 
 	// On vérifie si la réponse est "tex-compatible"
 	try {

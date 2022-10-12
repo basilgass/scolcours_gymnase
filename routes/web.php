@@ -101,7 +101,11 @@ Route::apiResource('chapters.challenges', ChallengesController::class)
 
 // Games routes
 Route::get('jeux/{game}', function (String $game){
-	// TODO: check if the game exists.
+	if(!file_exists(resource_path('js/Pages/Games/'.$game.'.vue'))){
+		return Inertia::render('Error404', [
+			'error'=>$game
+		]);
+	}
 	return Inertia::render('Games/'.$game);
 });
 

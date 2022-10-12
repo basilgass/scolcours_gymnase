@@ -38,11 +38,16 @@ class Question extends Model
 	use HasFactory;
 
 	protected $guarded = [];
-	protected $with = ['users'];
+	protected $with = ['users', 'blocks'];
 
 	public function post()
 	{
 		$this->belongsTo(Post::class);
+	}
+
+	public function blocks()
+	{
+		return $this->morphMany(Block::class, 'blockable')->orderBy('order')->orderBy('id');
 	}
 
 	public function users()

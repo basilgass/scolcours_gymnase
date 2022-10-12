@@ -17,6 +17,10 @@ class QuestionController extends Controller
 		$this->middleware('auth')->except(['index', 'show']);
 	}
 
+	public function index(Post $post)
+	{
+		return QuestionResource::collection($post->questions);
+	}
 	/**
 	 * Store a newly created resource in storage.
 	 *
@@ -59,12 +63,19 @@ class QuestionController extends Controller
 				}
 			}
 
-			$questions[] = $post->questions()->create([
-				'body'=>$body,
+			// Create the question new way.
+			$theQuestion = $post->questions()->create([
+				'body'=>'', // Should be removed
 				'answer'=>$answer??null,
 				'checker'=>$checker,
 				'keyboard'=>$validate['keyboard']??''
 			]);
+			$theQuestion->blocks()->create([
+				"title"=>'',
+				'body'=> $body
+			]);
+
+			$questions[] = $theQuestion;
 		}
 
 		return QuestionResource::collection(collect($questions));
@@ -138,7 +149,7 @@ class QuestionController extends Controller
 		$user = Auth::user();
 		if(!$user){return false;}
 
-		$questions = $user->questions()->detach($post->questions->pluck('id'));
+		$user->questions()->detach($post->questions->pluck('id'));
 		return true;
 	}
 

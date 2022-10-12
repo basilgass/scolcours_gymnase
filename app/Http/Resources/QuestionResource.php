@@ -33,9 +33,14 @@ class QuestionResource extends JsonResource
 			];
 		});
 
+		if(count($this->blocks)===0){
+			$this->blocks()->create(['body'=>'Sans contenu']);
+		}
+
 		return [
 			"id" => $this->id,
 			"body" => $this->body,
+			"block" => $this->blocks[0],
 			"answer" => $this->answer,
 			"checker" => $this->checker,
 			"keyboard" => $this->keyboard??'algebra',

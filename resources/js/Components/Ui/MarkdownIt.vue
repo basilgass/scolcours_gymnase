@@ -16,7 +16,7 @@ let root = ref(null),
 const props = defineProps({
 	text: {type: String, default: ""},
 	delimiters: {type: String, default: "brackets"},
-	katexClass: {type: String, default: 'katex-boxed'}
+	katexClass: {type: String, default: "katex-boxed"}
 })
 
 const tm = require("markdown-it-texmath")
@@ -29,6 +29,7 @@ const md = require("markdown-it")({html: true})
 			macros: {
 				"\\IR": "\\mathbb{R}",
 				"\\IN": "\\mathbb{N}",
+				"\\ds": "\\displaystyle"
 			}
 		}
 	})

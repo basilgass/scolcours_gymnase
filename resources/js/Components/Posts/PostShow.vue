@@ -415,8 +415,6 @@ watch(() => props.hideResolvedQuestions, (value, before) => {
 function updateQuestionsOrder(){
 	axios.post(route("questions.updateOrder"), {
 		order: filteredQuestions.value.map((x, index)=>{return {id: x.id, order: index}})
-	}).then(res=>{
-		console.log(res.data)
 	}).catch(res=> {
 		console.log("update ordering order: ", res.data)
 		console.log(res)
@@ -435,7 +433,13 @@ function questionAdded(value) {
 }
 function questionDestroy(id) {
 	// TODO: reload the list of the question from the server ?
-	filteredQuestions.value = postQuestions.value.filter(question => question.id !== id)
+
+	axios.get(route("posts.questions.index", [props.post.id]))
+		.then(res=>{
+			// TODO: postQuestions vs filtreredQuestions
+			postQuestions.value = res.data.data
+			filteredQuestions.value = res.data.data
+		})
 }
 
 function questionResetAnswers() {
@@ -443,7 +447,9 @@ function questionResetAnswers() {
 		route("posts.questions.reset", [props.post.id], {
 			_method: "patch"
 		})
-	)
+	).then((res)=>{
+		postQuestions.value.map(question => question.userAnswers=[])
+	})
 }
 
 /** scripts / random parameters / switch*/

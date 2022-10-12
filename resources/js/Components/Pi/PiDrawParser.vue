@@ -1,7 +1,10 @@
 <template>
 	<div>
 		<!-- draw graph-->
-		<div ref="draw" />
+		<div
+			ref="draw"
+			@mouseup="drawMouseUp"
+		/>
 
 		<!-- slider(s) -->
 		<div
@@ -80,12 +83,13 @@ let getSliders = function(){
 			// interval not given => interval = b-a
 			// b-a: marks separation... or maybe all given manually !
 			// default value given at start.
+			//TODO: add labels to pi-draw-parser
 
 			if(rowItem!=="") {
-				let marks = rowItem.match(/^([0-9.,]+)/),
+				let marks = rowItem.match(/^([-0-9.,]+)/),
 					a,b,c,marksInterval,
 					interval = rowItem.match(/\/([0-9.]+)/),
-					dft = rowItem.match(/=([0-9.]+)$/)
+					dft = rowItem.match(/=([-0-9.]+)$/)
 
 				if(marks){
 					marks = marks[1].split(",")
@@ -211,6 +215,9 @@ onMounted(() => {
 	}
 })
 
+let drawMouseUp = function(){
+	emits("update", PiGraph.figures)
+}
 watch(drawCode, (code, before)=>{
 	// Watch changes from "inside"
 	try {

@@ -9,7 +9,7 @@
 			<pi-draw-parser
 				ref="graph"
 				:draw="draw"
-				@update="figures = $event"
+				@update="updated($event)"
 			/>
 
 			<button
@@ -52,6 +52,7 @@ export default {
 <script setup>
 import {ref} from "vue"
 import PiDrawParser from "@/Components/Pi/PiDrawParser"
+import {PiDraw} from "pidraw/esm"
 
 let root = ref(null),
 	graph = ref(null),
@@ -81,5 +82,14 @@ let root = ref(null),
 		draw.value.code += `c${idx}=A${idx}B${idx}\n`
 		AH.value.push([`A${idx}`, `B${idx}`, `c${idx}`])
 	}
+
+let updated = function(figures){
+	for(let fig of figures){
+		if(fig.constructor.name === "Line"){
+			console.log(fig.tex)
+		}
+	}
+	console.log(figures)
+}
 </script>
 

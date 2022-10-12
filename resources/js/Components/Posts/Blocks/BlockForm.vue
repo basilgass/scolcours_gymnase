@@ -2,32 +2,39 @@
 	<div class="w-full max-h-[50%]">
 		<!-- header -->
 		<!-- todo: make the header of block form "fixed" at the top of the box -->
-		<div class="flex gap-3 pb-3 items-baseline border-b">
-			<button
-				class="btn-success btn-xs"
-				@click="update_block"
-			>
-				Enregistrer
-			</button>
-			<button
-				class="btn-cancel btn-xs"
-				@click="cancel_block"
-			>
-				Annuler
-			</button>
+		<div class="flex pb-3 items-baseline border-b justify-between">
+			<div class="flex gap-3 items-baseline">
+				<button
+					class="btn-success btn-xs"
+					@click="update_block"
+				>
+					Enregistrer
+				</button>
+				<button
+					class="btn-cancel btn-xs"
+					@click="cancel_block"
+				>
+					Annuler
+				</button>
 
-			<form-switch
-				v-show="!props.noSwitch"
-				v-model="form.blur"
-				class="ml-auto"
-				label="Bloc flouté,Bloc visible"
-				name="blur"
-			/>
+				<form-switch
+					v-show="!props.noSwitch"
+					v-model="form.blur"
+					class="ml-auto"
+					label="Bloc flouté,Bloc visible"
+					name="blur"
+				/>
+			</div>
+
+			<slot name="extraBtn" />
 		</div>
 
-		<div class="overflow-y-scroll">
+		<div :class="props.overflowScroll?'overflow-y-scroll':''">
 			<!-- data to be displayed -->
-			<div class="grid grid-cols-1 gap-5 md:grid-cols-2">
+			<div
+				class="grid grid-cols-1 gap-5"
+				:class="(props.previewCol || props.noPreview )?'':'md:grid-cols-2'"
+			>
 				<div>
 					<form-number
 						v-show="!props.noSwitch"
@@ -74,10 +81,17 @@
 					/>
 				</div>
 
-				<div class="pt-8 pb-3 px-3">
-					<div>
-						<button @click="runBlockScript">Aléatoire</button>
-					</div>
+				<div
+					v-if="!props.noPreview"
+					class="pt-8 pb-3 px-3"
+				>
+					<button
+						v-if="form.script"
+						class="btn btn-xs"
+						@click="runBlockScript"
+					>
+						Aléatoire
+					</button>
 					<markdown-it
 						:text="editedBody"
 						class="p-3 bg-gray-100 border border-dashed border-gray-200 h-full"
@@ -98,7 +112,7 @@
 				</form-button>
 			</div>
 			<div
-				v-if="form.illustrations.length>0"
+				v-if="form.illustrations?.length>0"
 				class="w-full"
 			>
 				<div
@@ -162,9 +176,9 @@ import {computed, nextTick, onMounted, ref, watch} from "vue"
 import MarkdownIt from "@/Components/Ui/MarkdownIt"
 import FormSelect from "@/Components/Form/FormSelect"
 import IllustrationShow from "@/Components/Posts/Illustrations/IllustrationShow"
-import {PiMath} from "pimath/esm";
+import {PiMath} from "pimath/esm"
 
-const emits = defineEmits(["close", "save", "update:modelValue"])
+const emits = defineEmits(["close", "save", "update:modelValue", "delete"])
 const props = defineProps({
 	modelValue: {type: Object},
 	switch: {type: Boolean},
@@ -173,7 +187,9 @@ const props = defineProps({
 	noSwitch: {type: Boolean, default: false},
 	noScript: {type: Boolean, default: false},
 	noData: {type: Boolean, default: false},
-
+	noPreview: {type: Boolean, default: false},
+	previewCol: {type: Boolean, default: false},
+	overflowScroll: {type: Boolean, default: false}
 })
 
 const form = useForm({

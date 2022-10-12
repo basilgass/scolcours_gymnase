@@ -20,17 +20,31 @@
 
 		<!-- Admin edition mode -->
 		<div v-if="$page.props.auth.can.admin && editMode && !correctionMode">
-			<QuestionForm
-				v-model="theQuestion"
-				@destroy="emits('destroy', $event)"
-			/>
+			<BlockForm
+				v-model="theQuestion.block"
+				no-script
+				no-data
+				no-switch
+				no-title
+				no-type
+				no-preview
+			>
+				<template #extraBtn>
+					<confirm-button
+						class="btn-xs btn-delete"
+						@confirm="destroyQuestion"
+					>
+						<i class="bi bi-trash mr-2" />Supprimer
+					</confirm-button>
+				</template>
+			</BlockForm>
 		</div>
 
 		<!-- the body of question -->
 		<QuestionItem
 			ref="questionUI"
 			:question-number="questionNumber"
-			:question="theQuestion.body"
+			:block="theQuestion.block"
 			:answer="theQuestion.answer"
 			:checker="theQuestion.checker"
 			:keyboard="theQuestion.keyboard"
@@ -60,8 +74,9 @@ import {usePage} from "@inertiajs/inertia-vue3"
 import katex from "katex/dist/katex.mjs"
 import {keyboards} from "@/keyboards"
 import QuestionItem from "@/Components/Posts/Questions/QuestionItem"
-import QuestionForm from "@/Components/Posts/Questions/QuestionForm"
 import QuestionFooter from "@/Components/Posts/Questions/QuestionFooter"
+import BlockForm from "@/Components/Posts/Blocks/BlockForm.vue"
+import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
 
 let props = defineProps({
 	question: {type: Object, required: true},
@@ -165,6 +180,16 @@ function validateAnswer(checkerResult) {
 	}
 }
 
+function destroyQuestion() {
+	axios.post(
+		route("questions.destroy", [props.question.id]),
+		{
+			_method: "delete"
+		}
+	).then(res => {
+		emits("destroy", props.question.id)
+	})
+}
 onMounted(() => {
 	formatQuestion()
 })
