@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Chapter;
 use App\Models\Theme;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 //use App\Models\Exercise;
@@ -43,6 +44,17 @@ class ScolcoursController extends Controller
 		]);
     }
 
+	public function devIndex()
+	{
+		// Get all devs.
+		$devPages = collect(Storage::disk('devs')->files())->map(function($p) {
+			return pathinfo($p)['filename'];
+		}) ;
+
+		return Inertia::render("DevsPage.vue", [
+			'pages'=>$devPages
+		]);
+	}
 	public function dev($page)
 	{
 		return Inertia::render('Devs/'.$page);

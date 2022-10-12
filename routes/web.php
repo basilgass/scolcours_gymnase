@@ -124,7 +124,8 @@ Route::get('italiano/{page}', function (String $page){
 //Route::get('/download/{fileID}', [LatexController::class, 'download']);
 
 // Developpement page
-Route::get('dev/{dev}', [ScolcoursController::class, 'dev']);
+Route::get('dev/{dev}', [ScolcoursController::class, 'dev'])->middleware(['auth', 'verified'])->name('dev');
+Route::get('dev', [ScolcoursController::class, 'devIndex'])->middleware(['auth', 'verified']);
 
 
 // Tools routes

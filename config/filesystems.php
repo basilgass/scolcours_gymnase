@@ -57,6 +57,10 @@
 				'driver' => 'local',
 				'root'   => resource_path('js/Components/Tools'),
 			],
+			'devs'   => [
+				'driver' => 'local',
+				'root'   => resource_path('js/Pages/Devs'),
+			],
 			'challenges' => [
 				'driver' => 'local',
 				'root'   => resource_path('js/Components/Challenges'),
