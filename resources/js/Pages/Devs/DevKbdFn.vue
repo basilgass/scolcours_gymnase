@@ -55,12 +55,16 @@
 		>
 			Plot
 		</button>
-		<div v-if="asymptotesTex.length>0">
+		<div v-if="outputTex.length>0">
 			<div
-				v-for="(item, index) of asymptotesTex"
+				v-for="(item, index) of outputTex"
 				:key="index"
 				v-katex="item"
 			/>
+		</div>
+
+		<div class="font-code">
+			{{ answer }}
 		</div>
 	</div>
 </template>
@@ -78,7 +82,7 @@ import {PiDraw} from "pidraw/esm"
 import {PiMath} from "pimath/esm"
 
 let reactiveCB = function(){
-	asymptotesTex.value = asymptotes.value.map(x=>x.tex)
+	asymptotesTex.value = asymptotes.map(x=>x.tex)
 }
 let asymptote = class {
 	constructor(atype, rcb) {
@@ -262,8 +266,16 @@ let asymptote = class {
 		this.P.draggable(dragOptions)
 	}
 
+	addClickableButtons() {
+
+	}
+
 	get tex() {
-		return this.line.texMath.mxh
+		return this.line.texMath
+	}
+
+	get display() {
+		return this.line.display.mxh
 	}
 
 	get selected() {
@@ -292,6 +304,7 @@ let asymptote = class {
 		// 	}
 		// })
 	}
+
 }
 let apoint = class {
 	constructor(atype, rcb, draggable) {
@@ -336,40 +349,82 @@ let apoint = class {
 		return this.type==="extremum"?"flat":"smooth"
 	}
 	get tex() {
-		return this.point.tex
+		return this.point.coordAsTex
+	}
+
+	get display() {
+		let P = this.point.coord
+		return `(${P.x};${P.y})`
+	}
+
+	get ratio() {
+		return 0.3
 	}
 }
 
 let PiGraph
 let root = ref(null),
 	draw = ref(null),
-	asymptotes = ref([]),
-	points = ref([]),
-	dftPoints = ref([]),
+	asymptotes = [],
+	points = [],
+	dftPoints = [],
 	asymptotesTex = ref([]),
+	outputTex = ref([]),
+	answer = ref(""),
 	plots = ref([]),
 	addAV = function () {
-		asymptotes.value.push(new asymptote("av", reactiveCB))
+		asymptotes.push(new asymptote("av", reactiveCB))
 	},
 	addAH = function () {
-		asymptotes.value.push(new asymptote("ah", reactiveCB))
+		asymptotes.push(new asymptote("ah", reactiveCB))
 	},
 	addAO = function () {
-		asymptotes.value.push(new asymptote("ao", reactiveCB))
+		asymptotes.push(new asymptote("ao", reactiveCB))
 	},
 	addMinMax = function() {
-		points.value.push(new apoint("extremum", reactiveCB))
+		points.push(new apoint("extremum", reactiveCB))
 	},
 	addThrough = function() {
-		points.value.push(new apoint("through", reactiveCB))
+		points.push(new apoint("through", reactiveCB))
 	},
 	plotGraph = function() {
+		asymptotes.sort((a,b)=>{
+			return b.display<a.display
+		})
+		points.sort((a, b) => a.x-b.x)
+
+		answer.value = [
+			...asymptotes.map(x=>x.display),
+			...points.map(x=> {
+				if(x.type==="extremum") {
+					return `m${x.display}`
+				}else if(x.type==="through"){
+					return x.display
+				}
+
+			})
+		].join(",")
+		outputTex.value = [
+			...asymptotes.map(x=>x.tex),
+			...points.map(x=> {
+				if(x.type==="extremum") {
+					return `\\text{Min/Max}${x.tex}`
+				}else if(x.type==="through"){
+					return x.tex
+				}
+
+				return "?"
+			})
+		]
+
+
+
 		// Get all points through, min/max and asymptotes
-		let arr = [...points.value]
-		for(let a of asymptotes.value){
+		let arr = [...points]
+		for(let a of asymptotes){
 			arr = arr.concat(...a.selected)
 		}
-		for(let a of dftPoints.value.filter(x=>x.point.svg.fill()==="green")){
+		for(let a of dftPoints.filter(x=>x.point.svg.fill()==="green")){
 			arr.push(a)
 		}
 
@@ -433,7 +488,7 @@ onMounted(() => {
 	BL.point.svg.on("click", addBtnEvent)
 	BR.point.svg.on("click", addBtnEvent)
 
-	dftPoints.value = [TL, TR, BL, BR]
+	dftPoints = [TL, TR, BL, BR]
 })
 
 </script>
