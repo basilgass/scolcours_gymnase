@@ -14,35 +14,35 @@
 			<div class="flex gap-4 w-full">
 				<button
 					class="btn"
-					@click="addAV"
+					@click="addAV()"
 				>
 					AV
 				</button>
 
 				<button
 					class="btn"
-					@click="addAH"
+					@click="addAH()"
 				>
 					AH
 				</button>
 
 				<button
 					class="btn"
-					@click="addAO"
+					@click="addAO()"
 				>
 					AO
 				</button>
 
 				<button
 					class="btn"
-					@click="addMinMax"
+					@click="addMinMax()"
 				>
 					Min/Max
 				</button>
 
 				<button
 					class="btn"
-					@click="addThrough"
+					@click="addThrough()"
 				>
 					Point
 				</button>
@@ -55,7 +55,10 @@
 		>
 			Plot
 		</button>
-		<div v-if="outputTex.length>0">
+		<div
+			v-if="outputTex.length>0"
+			class="flex flex-wrap gap-4"
+		>
 			<div
 				v-for="(item, index) of outputTex"
 				:key="index"
@@ -63,8 +66,29 @@
 			/>
 		</div>
 
-		<div class="font-code">
+		<div class="font-code min-h-[3em]">
 			{{ answer }}
+		</div>
+
+		<div>
+			<form-input
+				v-model="genFx"
+				name="fx"
+				label="fonction à générer"
+			/>
+
+			<div class="flex w-full gap-3 mt-4">
+				<button
+					class="btn-xs btn-primary"
+					@click="generateFromFx"
+				>
+					Générer
+				</button>
+
+				<div class="font-code">
+					{{ genFxString }}
+				</div>
+			</div>
 		</div>
 	</div>
 </template>
@@ -77,16 +101,19 @@ export default {
 
 </script>
 <script setup>
-import {onMounted, ref, reactive, computed, watch} from "vue"
+import {onMounted, ref, reactive, computed, watch, nextTick} from "vue"
 import {PiDraw} from "pidraw/esm"
 import {PiMath} from "pimath/esm"
+import FormInput from "@/Components/Form/FormInput.vue"
+import {value} from "lodash/seq"
 
-let reactiveCB = function(){
-	asymptotesTex.value = asymptotes.map(x=>x.tex)
+let reactiveCB = function () {
+	asymptotesTex.value = asymptotes.map(x => x.tex)
 }
 let asymptote = class {
-	constructor(atype, rcb) {
-		const rnd = PiMath.Random.numberSym(8,false)
+	constructor(atype, rcb, defaults) {
+		const rnd = defaults === undefined ? PiMath.Random.numberSym(8, false) : defaults.value
+
 		this.P = PiGraph.point(0, 0)
 		this.Q = PiGraph.point(1, 1)
 		this.line = PiGraph.line(this.P, this.Q)
@@ -94,32 +121,32 @@ let asymptote = class {
 
 		// Adding the "clickable buttons" on the extremities of the asymptote
 		this.buttons = {
-			TL : PiGraph.point(0,0).asSquare(10).fill({color: "white", opacity:0.5}).stroke("black").hideLabel(),
-			TR : PiGraph.point(0,0).asSquare(10).fill({color: "white", opacity:0.5}).stroke("black").hideLabel(),
-			BL : PiGraph.point(0,0).asSquare(10).fill({color: "white", opacity:0.5}).stroke("black").hideLabel(),
-			BR : PiGraph.point(0,0).asSquare(10).fill({color: "white", opacity:0.5}).stroke("black").hideLabel(),
+			LT: PiGraph.point(0, 0).asSquare(10).fill({color: "white", opacity: 0.5}).stroke("black").hideLabel(),
+			LB: PiGraph.point(0, 0).asSquare(10).fill({color: "white", opacity: 0.5}).stroke("black").hideLabel(),
+			RT: PiGraph.point(0, 0).asSquare(10).fill({color: "white", opacity: 0.5}).stroke("black").hideLabel(),
+			RB: PiGraph.point(0, 0).asSquare(10).fill({color: "white", opacity: 0.5}).stroke("black").hideLabel(),
 		}
 		this.buttonsControls = {
-			TL : PiGraph.point(0,0).hide(),
-			TR : PiGraph.point(0,0).hide(),
-			BL : PiGraph.point(0,0).hide(),
-			BR : PiGraph.point(0,0).hide(),
+			LT: PiGraph.point(0, 0).hide(),
+			RT: PiGraph.point(0, 0).hide(),
+			LB: PiGraph.point(0, 0).hide(),
+			RB: PiGraph.point(0, 0).hide(),
 		}
 
 		let addClickEvt = (btn) => {
-			btn.svg.on("click", (ev)=> {
-				if(btn.svg.fill()==="white"){
+			btn.svg.on("click", (ev) => {
+				if (btn.svg.fill() === "white") {
 					btn.svg.fill("green")
-				}else{
+				} else {
 					btn.svg.fill("white")
 				}
 			})
 		}
 
-		addClickEvt(this.buttons.TL)
-		addClickEvt(this.buttons.TR)
-		addClickEvt(this.buttons.BL)
-		addClickEvt(this.buttons.BR)
+		addClickEvt(this.buttons.LT)
+		addClickEvt(this.buttons.RT)
+		addClickEvt(this.buttons.LB)
+		addClickEvt(this.buttons.RB)
 
 
 		const dragOptions = {
@@ -129,6 +156,8 @@ let asymptote = class {
 		this.P.label.hide()
 		this.Q.label.hide()
 
+		let placeButtons
+
 		// Placing objects
 		if (atype === "av")
 		{
@@ -136,29 +165,29 @@ let asymptote = class {
 			this.P.coord = {x: rnd, y: -10}
 			this.Q.coord = {x: rnd, y: 1}
 
-			this.buttons.TL.coord = {x: rnd-1, y: 19}
-			this.buttons.TR.coord = {x: rnd+1, y: 19}
-			this.buttons.BL.coord = {x: rnd-1, y: -19}
-			this.buttons.BR.coord = {x: rnd+1, y: -19}
+			this.buttons.LT.coord = {x: rnd - 1, y: 19}
+			this.buttons.LB.coord = {x: rnd - 1, y: -19}
+			this.buttons.RT.coord = {x: rnd + 1, y: 19}
+			this.buttons.RB.coord = {x: rnd + 1, y: -19}
 
-			this.buttonsControls.TL.coord = {x: rnd-0.1, y: 30}
-			this.buttonsControls.TR.coord = {x: rnd+0.1, y: 30}
-			this.buttonsControls.BL.coord = {x: rnd-0.1, y: -30}
-			this.buttonsControls.BR.coord = {x: rnd+0.1, y: -30}
+			this.buttonsControls.LT.coord = {x: rnd - 0.1, y: 30}
+			this.buttonsControls.LB.coord = {x: rnd - 0.1, y: -30}
+			this.buttonsControls.RT.coord = {x: rnd + 0.1, y: 30}
+			this.buttonsControls.RB.coord = {x: rnd + 0.1, y: -30}
 
 			this.Q.hide()
 			dragOptions.constrain = "x"
 			dragOptions.callback = (pt) => {
 				this.Q.x = pt.x
-				this.buttons.TL.x = pt.x-20
-				this.buttons.TR.x = pt.x+20
-				this.buttons.BL.x = pt.x-20
-				this.buttons.BR.x = pt.x+20
+				this.buttons.LT.x = pt.x - 20
+				this.buttons.LB.x = pt.x - 20
+				this.buttons.RT.x = pt.x + 20
+				this.buttons.RB.x = pt.x + 20
 
-				this.buttonsControls.TL.x = pt.x-2
-				this.buttonsControls.TR.x = pt.x+2
-				this.buttonsControls.BL.x = pt.x-2
-				this.buttonsControls.BR.x = pt.x+2
+				this.buttonsControls.LT.x = pt.x - 2
+				this.buttonsControls.LB.x = pt.x - 2
+				this.buttonsControls.RT.x = pt.x + 2
+				this.buttonsControls.RB.x = pt.x + 2
 
 				rcb()
 			}
@@ -168,39 +197,44 @@ let asymptote = class {
 			this.P.coord = {x: -10, y: rnd}
 			this.Q.coord = {x: 10, y: rnd}
 
-			this.buttons.TL.coord = {x: 19, y: rnd-1}
-			this.buttons.TR.coord = {x: 19, y: rnd+1}
-			this.buttons.BL.coord = {x: -19, y: rnd-1}
-			this.buttons.BR.coord = {x: -19, y: rnd+1}
+			this.buttons.LT.coord = {x: -19, y: rnd + 1}
+			this.buttons.LB.coord = {x: -19, y: rnd - 1}
+			this.buttons.RT.coord = {x: 19, y: rnd + 1}
+			this.buttons.RB.coord = {x: 19, y: rnd - 1}
 
-			this.buttonsControls.TL.coord = {x: 30, y: rnd-0.1}
-			this.buttonsControls.TR.coord = {x: 30, y: rnd+0.1}
-			this.buttonsControls.BL.coord = {x: -30, y: rnd-0.1}
-			this.buttonsControls.BR.coord = {x: -30, y: rnd+0.1}
+			this.buttonsControls.LT.coord = {x: -30, y: rnd + 0.1}
+			this.buttonsControls.LB.coord = {x: -30, y: rnd - 0.1}
+			this.buttonsControls.RT.coord = {x: 30, y: rnd + 0.1}
+			this.buttonsControls.RB.coord = {x: 30, y: rnd - 0.1}
 
 			this.Q.hide()
 			dragOptions.constrain = "y"
 			dragOptions.callback = (pt) => {
 				this.Q.y = pt.y
-				this.buttons.TL.y = pt.y-20
-				this.buttons.TR.y = pt.y+20
-				this.buttons.BL.y = pt.y-20
-				this.buttons.BR.y = pt.y+20
+				this.buttons.LT.y = pt.y - 20
+				this.buttons.LB.y = pt.y + 20
+				this.buttons.RT.y = pt.y - 20
+				this.buttons.RB.y = pt.y + 20
 
-				this.buttonsControls.TL.y = pt.y-2
-				this.buttonsControls.TR.y = pt.y+2
-				this.buttonsControls.BL.y = pt.y-2
-				this.buttonsControls.BR.y = pt.y+2
+				this.buttonsControls.LT.y = pt.y - 2
+				this.buttonsControls.LB.y = pt.y + 2
+				this.buttonsControls.RT.y = pt.y - 2
+				this.buttonsControls.RB.y = pt.y + 2
 				rcb()
 			}
 		} else if (atype === "ao")
 		{
 			this.line.stroke("blue")
-			// Do something
-			this.P.coord = {x: rnd-3, y: rnd}
-			this.Q.coord = {x: 0, y: rnd+1}
 
-			let placeButtons = (mathLine) => {
+			if (defaults === undefined) {
+				this.P.coord = {x: rnd - 3, y: rnd}
+				this.Q.coord = {x: 0, y: rnd + 1}
+			} else {
+				this.P.coord = {x: 1, y: defaults.ordonnee + defaults.value}
+				this.Q.coord = {x: 0, y: defaults.ordonnee}
+			}
+
+			placeButtons = (mathLine) => {
 				let posStart = 100,
 					posEnd = PiGraph.width - posStart,
 					normalVector = mathLine.normal
@@ -210,40 +244,43 @@ let asymptote = class {
 					startOverflow = mathLine.getValueAtX(0).value,
 					endOverflow = mathLine.getValueAtX(PiGraph.width).value
 
-				if(startOverflow<0 || startOverflow>PiGraph.height){
-					let y = startOverflow<0?posStart:posEnd
+				if (startOverflow < 0 || startOverflow > PiGraph.height) {
+					let y = startOverflow < 0 ? posStart : posEnd
 					startCoords = {x: mathLine.getValueAtY(y).value, y}
 				}
 
-				if(endOverflow<0 || endOverflow>PiGraph.height){
-					let y = endOverflow<0?posStart:posEnd
+				if (endOverflow < 0 || endOverflow > PiGraph.height) {
+					let y = endOverflow < 0 ? posStart : posEnd
 					endCoords = {x: mathLine.getValueAtY(y).value, y}
 				}
 
 				let norm = normalVector.norm,
-					sign = this.P.x>this.Q.x?-1:1,
-					dx = sign*normalVector.x.value / norm * 20,
-					dy = sign*normalVector.y.value / norm * 20
+					sign = this.P.x > this.Q.x ? -1 : 1,
+					dx = sign * normalVector.x.value / norm * 20,
+					dy = sign * normalVector.y.value / norm * 20
 
-				this.buttons.TL.x = startCoords.x - dx
-				this.buttons.TL.y = startCoords.y - dy
-				this.buttons.TR.x = startCoords.x + dx
-				this.buttons.TR.y = startCoords.y + dy
+				// Place buttons at -oo
+				this.buttons.LT.x = startCoords.x + dx
+				this.buttons.LT.y = startCoords.y + dy
+				this.buttons.LB.x = startCoords.x - dx
+				this.buttons.LB.y = startCoords.y - dy
 
-				this.buttonsControls.TL.x = startCoords.x - dx
-				this.buttonsControls.TL.y = startCoords.y - dy
-				this.buttonsControls.TR.x = startCoords.x + dx
-				this.buttonsControls.TR.y = startCoords.y + dy
+				// Place buttons at +oo
+				this.buttons.RT.x = endCoords.x + dx
+				this.buttons.RT.y = endCoords.y + dy
+				this.buttons.RB.x = endCoords.x - dx
+				this.buttons.RB.y = endCoords.y - dy
 
-				this.buttons.BL.x = endCoords.x - dx
-				this.buttons.BL.y = endCoords.y - dy
-				this.buttons.BR.x = endCoords.x + dx
-				this.buttons.BR.y = endCoords.y + dy
+				// Build the control points
+				this.buttonsControls.LT.x = 2*this.buttons.RT.x - this.buttons.LT.x - dx/10
+				this.buttonsControls.LT.y = 2*this.buttons.RT.y - this.buttons.LT.y - dy/10
+				this.buttonsControls.LB.x = 2*this.buttons.RB.x - this.buttons.LB.x + dx/10
+				this.buttonsControls.LB.y = 2*this.buttons.RB.y - this.buttons.LB.y + dy/10
 
-				this.buttonsControls.BL.x = endCoords.x - dx
-				this.buttonsControls.BL.y = endCoords.y - dy
-				this.buttonsControls.BR.x = endCoords.x + dx
-				this.buttonsControls.BR.y = endCoords.y + dy
+				this.buttonsControls.RT.x = 2*this.buttons.LT.x - this.buttons.RT.x - dx/10
+				this.buttonsControls.RT.y = 2*this.buttons.LT.y - this.buttons.RT.y - dx/10
+				this.buttonsControls.RB.x = 2*this.buttons.LB.x - this.buttons.RB.x + dx/10
+				this.buttonsControls.RB.y = 2*this.buttons.LB.y - this.buttons.RB.y + dx/10
 			}
 
 			dragOptions.callback = (pt) => {
@@ -258,10 +295,21 @@ let asymptote = class {
 		}
 
 		this.line.update()
-		this.buttons.TL.update()
-		this.buttons.TR.update()
-		this.buttons.BL.update()
-		this.buttons.BR.update()
+		this.buttons.LT.update()
+		this.buttons.RT.update()
+		this.buttons.LB.update()
+		this.buttons.RB.update()
+
+		if (defaults !== undefined) {
+			defaults.position.forEach(key => {
+				this.buttons[key].svg.fill("green")
+			})
+		}
+
+		// Update the buttons placement
+		if (placeButtons) {
+			placeButtons(this.line.math)
+		}
 
 		this.P.draggable(dragOptions)
 	}
@@ -281,57 +329,55 @@ let asymptote = class {
 	get selected() {
 		// The point for the control must be farther and more near of the line
 		let arr = []
-		for(let key in this.buttons){
-			if(this.buttons[key].svg.fill()==="green"){
+		for (let key in this.buttons) {
+			if (this.buttons[key].svg.fill() === "green") {
 				arr.push({
+					position: key,
 					x: this.buttonsControls[key].x,
 					type: "asymptote",
 					point: this.buttonsControls[key],
-					control: this.type==="ao"?"smooth":this.type,
+					control: this.type === "ao" ? "smooth" : this.type,
 					ratio: 0.5
 				})
 			}
 		}
 
-		return arr
-		// return Object.values(this.buttonsControls).filter(x=>x.svg.fill()==="green").map(pt=>{
-		// 	return {
-		// 		x: pt.x,
-		// 		type: "asymptote",
-		// 		point: pt,
-		// 		control: this.type==="ao"?"smooth":this.type,
-		// 		ratio: 0.5
-		// 	}
-		// })
+		return arr.sort((a, b) => a.position < b.position)
 	}
 
 }
 let apoint = class {
-	constructor(atype, rcb, draggable) {
-		if(typeof atype!=="string"){
+	constructor(atype, rcb, draggable, defaults) {
+		console.log(defaults)
+		if (defaults === undefined) {
 			this.point = PiGraph.point(
-				atype.x,
-				atype.y
-			).hideLabel().asSquare(10).fill({color: "white", opacity: 0.5})
-			atype = "asymptote"
-		}else{
-			this.point = PiGraph.point(
-				PiMath.Random.numberSym(8,false),
-				PiMath.Random.numberSym(8,false)
+				PiMath.Random.numberSym(8, false),
+				PiMath.Random.numberSym(8, false)
 			).hideLabel()
+		} else {
+			this.point = PiGraph.point(
+				defaults.x,
+				defaults.y
+			).hideLabel()
+
+			if (atype === "asymptote") {
+				this.point.asSquare(10).fill({color: "white", opacity: 0.5})
+			}
 		}
+
+
 		this.type = atype
 
 		this.line = PiGraph.path().stroke({color: "purple", width: 2, opacity: 0.5})
 
-		let updateLine = (pt)=>{
-			if(this.type==="extremum") {
+		let updateLine = (pt) => {
+			if (this.type === "extremum") {
 				this.line.plot(`M${pt.x - 80},${pt.y} L${pt.x + 80},${pt.y}`)
 			}
 		}
 		updateLine(this.point)
 
-		if(draggable===undefined || draggable) {
+		if (draggable === undefined || draggable) {
 			this.point.draggable({
 				grid: PiGraph.getGrid(),
 				callback: (pt) => {
@@ -342,12 +388,15 @@ let apoint = class {
 		}
 
 	}
+
 	get x() {
 		return this.point.x
 	}
+
 	get control() {
-		return this.type==="extremum"?"flat":"smooth"
+		return this.type === "extremum" ? "flat" : "smooth"
 	}
+
 	get tex() {
 		return this.point.coordAsTex
 	}
@@ -358,7 +407,7 @@ let apoint = class {
 	}
 
 	get ratio() {
-		return 0.3
+		return this.type === "extremum" ? 0.6 : 0.3
 	}
 }
 
@@ -372,44 +421,58 @@ let root = ref(null),
 	outputTex = ref([]),
 	answer = ref(""),
 	plots = ref([]),
-	addAV = function () {
-		asymptotes.push(new asymptote("av", reactiveCB))
+	genFx = ref("(x+5)(2x-10)/2x-3"),
+	genFxString = ref(""),
+	addAV = function (value) {
+		asymptotes.push(new asymptote("av", reactiveCB, value))
 	},
-	addAH = function () {
-		asymptotes.push(new asymptote("ah", reactiveCB))
+	addAH = function (value) {
+		asymptotes.push(new asymptote("ah", reactiveCB, value))
 	},
-	addAO = function () {
-		asymptotes.push(new asymptote("ao", reactiveCB))
+	addAO = function (value) {
+		asymptotes.push(new asymptote("ao", reactiveCB, value))
 	},
-	addMinMax = function() {
-		points.push(new apoint("extremum", reactiveCB))
+	addMinMax = function (value) {
+		points.push(new apoint("extremum", reactiveCB, true, value))
 	},
-	addThrough = function() {
-		points.push(new apoint("through", reactiveCB))
+	addThrough = function (value) {
+		points.push(new apoint("through", reactiveCB, true, value))
 	},
-	plotGraph = function() {
-		asymptotes.sort((a,b)=>{
-			return b.display<a.display
-		})
-		points.sort((a, b) => a.x-b.x)
+	plotGraph = function () {
+		// On arrange les valeurs dans "l'ordre"
+		asymptotes.sort((a, b) => b.display < a.display)
+		points.sort((a, b) => a.x - b.x)
 
+		// Construction de la réponse pour comparaison.
 		answer.value = [
-			...asymptotes.map(x=>x.display),
-			...points.map(x=> {
-				if(x.type==="extremum") {
+			...asymptotes.map(x => {
+				let btnSelection = x.selected.map(a => a.position).join(";")
+
+				return `${x.display};${btnSelection}`
+			}),
+			...points.map(x => {
+				if (x.type === "extremum") {
 					return `m${x.display}`
-				}else if(x.type==="through"){
+				} else if (x.type === "through") {
+					if (x.point.coord.x === 0) {
+						return `o${x.point.coord.y}`
+					}
+					if (x.point.coord.y === 0) {
+						return `z${x.point.coord.x}`
+					}
+
 					return x.display
 				}
-
 			})
-		].join(",")
+		].sort().join(",")
+
+		// Construction du visuel Tex des différents points et asymptotes.
 		outputTex.value = [
-			...asymptotes.map(x=>x.tex),
-			...points.map(x=> {
-				if(x.type==="extremum") {
-					return `\\text{Min/Max}${x.tex}`
-				}else if(x.type==="through"){
+			...asymptotes.map(x => x.tex.mxh),
+			...points.sort((a, b) => a.type !== b.type ? a.type === "through" : a.x < b.x).map(x => {
+				if (x.type === "extremum") {
+					return `\\text{extrema}${x.tex}`
+				} else if (x.type === "through") {
 					return x.tex
 				}
 
@@ -417,31 +480,30 @@ let root = ref(null),
 			})
 		]
 
-
-
+		// Construction du visuel graphique
 		// Get all points through, min/max and asymptotes
 		let arr = [...points]
-		for(let a of asymptotes){
+		for (let a of asymptotes) {
 			arr = arr.concat(...a.selected)
+			console.log(a.selected)
 		}
-		for(let a of dftPoints.filter(x=>x.point.svg.fill()==="green")){
+		for (let a of dftPoints.filter(x => x.point.svg.fill() === "green")) {
 			arr.push(a)
 		}
 
-		arr.sort((a,b)=>a.x-b.x)
-
-		for(let p of plots.value){
-			p.remove()
-		}
+		// toutes les références sont mis dans l'ordre, de gauche à droite.
+		arr.sort((a, b) => a.x - b.x)
+		// On supprime tous les "morceaux" qui ont été créé.
+		for (let p of plots.value) p.remove()
 		plots.value = []
 
-
+		// Génération des différents morceaux du graphe.
 		let plotPts = []
-		for(let pt of arr){
+		for (let pt of arr) {
 			plotPts.push(pt)
-			if(plotPts.length>1 && pt.type==="asymptote"){
+			if (plotPts.length > 1 && pt.type === "asymptote") {
 				plots.value.push(
-					PiGraph.bezier(plotPts.map(pt=>{
+					PiGraph.bezier(plotPts.map(pt => {
 						return {
 							point: pt.point,
 							control: pt.control,
@@ -454,6 +516,80 @@ let root = ref(null),
 			}
 		}
 	}
+
+function generateFromFx() {
+	// Make the rational polynom from a string
+	let numden = genFx.value.split("/"),
+		F
+
+	if (numden.length === 2) {
+		F = new PiMath.Rational(...numden)
+	} else {
+		F = new PiMath.Rational(numden[0], new PiMath.Polynom(1))
+	}
+
+	// Build the study object
+	let study = F.study()
+
+	let parts = []
+
+	// Get the asymptotes
+	// TODO: remove point through if it's already a min/max
+	parts = parts.concat(
+		study.asymptotes.map(a => `${a.display};${a.position.sort().join(";")}`),	// asymptotes
+		study.zeroes.filter(z => z.type === "z").map(z => `z${z.display}`),				// zeroes
+		Object.values(study.derivative.extremes).map(e => `m(${e.tex.x};${e.tex.y})`)	// point through asymptotes
+	)
+
+	if (!study.zeroes.filter(z => z.type === "d").map(z => z.value).includes(0)) {
+		parts.push(`o${study.fx.evaluate(0).display}`)
+	}
+
+	genFxString.value = parts.sort().join(",")
+
+	// On construit maintenant les différents points sur le graphiques.
+	for (let a of study.asymptotes) {
+		if (a.type === "ah") {
+			addAH({
+				value: a.fx.monomByDegree(0).coefficient.value,
+				position: a.position
+			})
+		} else if (a.type === "av") {
+			addAV({
+				value: a.zero.value,
+				position: a.position
+			})
+		} else if (a.type === "ao") {
+			addAO({
+				value: a.fx.monomByDegree(1).coefficient.value,
+				ordonnee: a.fx.monomByDegree(0).coefficient.value,
+				position: a.position
+			})
+		}
+	}
+	// Go through the min/max
+	for (let z of Object.values(study.derivative.extremes)) {
+		addMinMax({
+			x: z.tex.x,
+			y: z.tex.y
+		})
+	}
+	for (let z of study.zeroes) {
+		if (z.type === "d") {
+			continue
+		}
+		addThrough({
+			x: z.value,
+			y: 0
+		})
+	}
+	// Ordonnée
+	// TODO: handle much better all these stuff !
+	addThrough({
+		x: 0,
+		y: study.fx.evaluate(0).value
+	})
+}
 
 onMounted(() => {
 	PiGraph = new PiDraw(draw.value, {
@@ -471,24 +607,25 @@ onMounted(() => {
 	PiGraph.axis()
 
 	// Add the square at the corner.
-	let TL = new apoint({x: -19, y: 19}, null, false),
-		TR = new apoint({x: 19, y: 19}, null, false),
-		BL = new apoint({x: -19, y: -19}, null, false),
-		BR = new apoint({x: 19, y: -19}, null, false)
+	let LT = new apoint("asymptote", null, false, {x: -19, y: 19}),
+		RT = new apoint("asymptote", null, false, {x: 19, y: 19}),
+		LB = new apoint("asymptote", null, false, {x: -19, y: -19}),
+		RB = new apoint("asymptote", null, false, {x: 19, y: -19})
 
-	function addBtnEvent(ev){
-		if(this.fill()==="white"){
+	function addBtnEvent(ev) {
+		if (this.fill() === "white") {
 			this.fill("green")
-		}else{
+		} else {
 			this.fill("white")
 		}
 	}
-	TL.point.svg.on("click", addBtnEvent)
-	TR.point.svg.on("click", addBtnEvent)
-	BL.point.svg.on("click", addBtnEvent)
-	BR.point.svg.on("click", addBtnEvent)
 
-	dftPoints = [TL, TR, BL, BR]
+	LT.point.svg.on("click", addBtnEvent)
+	RT.point.svg.on("click", addBtnEvent)
+	LB.point.svg.on("click", addBtnEvent)
+	RB.point.svg.on("click", addBtnEvent)
+
+	dftPoints = [LT, RT, LB, RB]
 })
 
 </script>

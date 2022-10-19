@@ -19,25 +19,42 @@
 		</div>
 
 		<!-- Admin edition mode -->
-		<div v-if="$page.props.auth.can.admin && editMode && !correctionMode">
-			<BlockForm
-				v-model="theQuestion.block"
-				no-script
-				no-data
-				no-switch
-				no-title
-				no-type
-				no-preview
-			>
-				<template #extraBtn>
-					<confirm-button
-						class="btn-xs btn-delete"
-						@confirm="destroyQuestion"
-					>
-						<i class="bi bi-trash mr-2" />Supprimer
-					</confirm-button>
-				</template>
-			</BlockForm>
+		<div
+			v-if="$page.props.auth.can.admin && editMode && !correctionMode"
+			class="admin-wrapper flex-col"
+		>
+			<div class="admin-wrapper-row flex justify-between">
+				<button
+					class="btn-edit btn-xs"
+					@click="editBlock=!editBlock"
+				>
+					éditer la donnée
+				</button>
+
+				<confirm-button
+					class="btn-xs btn-delete"
+					@confirm="destroyQuestion"
+				>
+					<i class="bi bi-trash mr-2" />Supprimer
+				</confirm-button>
+			</div>
+			<div class=" admin-wrapper-row">
+				<BlockForm
+					v-show="editBlock"
+					v-model="theQuestion.block"
+					no-script
+					no-data
+					no-switch
+					no-title
+					no-type
+					no-preview
+					no-delete
+					@close="editBlock=false"
+				/>
+			</div>
+			<div class="admin-wrapper-row">
+				<QuestionForm v-model="theQuestion" />
+			</div>
 		</div>
 
 		<!-- the body of question -->
@@ -69,14 +86,15 @@
 </template>
 
 <script setup>
-import {computed, inject, onMounted, ref, watch} from "vue"
+import {computed, inject, ref} from "vue"
 import {usePage} from "@inertiajs/inertia-vue3"
-import katex from "katex/dist/katex.mjs"
 import {keyboards} from "@/keyboards"
 import QuestionItem from "@/Components/Posts/Questions/QuestionItem"
 import QuestionFooter from "@/Components/Posts/Questions/QuestionFooter"
 import BlockForm from "@/Components/Posts/Blocks/BlockForm.vue"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
+import QuestionForm from "@/Components/Posts/Questions/QuestionForm.vue"
+import Button from "@/Components/Auth/Button.vue"
 
 let props = defineProps({
 	question: {type: Object, required: true},
@@ -88,12 +106,12 @@ let emits = defineEmits(["destroy", "resolved"])
 
 let userAnswerAsTex = ref(""),
 	theQuestion = ref(props.question),
-	showKeyboard = ref(false)
+	showKeyboard = ref(false),
+	editBlock = ref(false)
 
 let editMode = inject("editmode")
 
-let questionDisplay = ref(""),
-	previousAnswers = computed(() => {
+let previousAnswers = computed(() => {
 		return theQuestion.value.userAnswers?.length === 0 ? [] : theQuestion.value.userAnswers
 	}),
 	isCorrect = computed(() => {
@@ -116,44 +134,7 @@ let questionDisplay = ref(""),
 		}
 
 		return props.question.answer
-	}),
-	formatQuestion = function () {
-		//TODO: is formatQuestion still usefull ? Should be removed ?
-		let body = theQuestion.value.body,
-			answer
-
-		// Check if the answer is a correct tex value
-		try {
-			katex.renderToString(userAnswerAsTex.value)
-			answer = userAnswerAsTex.value
-		} catch {
-			answer = "\\color{red}{\\text{ ??? }}"
-		}
-
-		// The question may contain answer place holder...
-		if(body.includes("$")){
-			// variables MUST be in this order.
-			let vnames = "abcdefghijklmnopqrstuvwxyz"
-
-			answer = answer.split(",").filter(x=>x!=="")
-			for(let i=0; i<vnames.length; i++){
-				const key = "$"+vnames[i]
-				if(body.includes(key)){
-					if(i<answer.length) {
-						body = body.replaceAll(key, answer[i])
-					}else{
-						body = body.replaceAll(key, `\\textcolor{red}{\\ ${vnames[i]} \\ }`)
-					}
-				}
-			}
-		}
-
-		questionDisplay.value = body
-	}
-
-watch(userAnswerAsTex, () => {
-	formatQuestion()
-})
+	})
 
 let questionUI = ref(null)
 function validateAnswer(checkerResult) {
@@ -190,7 +171,4 @@ function destroyQuestion() {
 		emits("destroy", props.question.id)
 	})
 }
-onMounted(() => {
-	formatQuestion()
-})
 </script>

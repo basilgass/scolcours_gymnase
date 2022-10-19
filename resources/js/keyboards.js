@@ -204,7 +204,11 @@ export const keyboards = {
 	}
 }
 
-export const keyboardsList = [...Object.keys(keyboards)]
+export const keyboardsList = [
+	...Object.keys(keyboards),
+	"#TableOfSigns",
+	"#Study"
+]
 
 function makeExactFromAscii(value) {
 	// Aucune division - pas de problème, c'est du ascii.

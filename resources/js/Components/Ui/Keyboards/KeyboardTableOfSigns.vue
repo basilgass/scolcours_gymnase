@@ -71,6 +71,7 @@ import {computed, nextTick, ref} from "vue"
 import PiTableOfSigns from "@/Components/Pi/PiTableOfSigns"
 import {keyboards} from "@/keyboards"
 import Keyboard from "@/Components/Ui/Keyboard"
+import {wrongAnswerAnimation} from "@/Composables/useHelpers"
 
 let props = defineProps({
 	modelValue: {type: String, required: true},
@@ -97,31 +98,12 @@ let zeroes = ref(""),
 			signs: [["", ...signs.value.split(""), ""]]
 		}
 	}),
-	btnValidate = function () {
-		emits("update:modelValue", `${zeroes.value}@${signs.value}`)
-		emits("update:tex", tosUI.value.$el.innerHTML)
-		emits("validate")
-	},
 	resetKeyStrokes = function () {
 		zeroes.value = ""
 		signs.value = ""
 	},
 	wrongAnswer = function () {
-		if (validateButton.value) {
-			validateButton.value.style.setProperty("animation-name", "v-shake-horizontal")
-			validateButton.value.style.setProperty("animation-duration", "500ms")
-
-			setTimeout(() => {
-				if (validateButton.value) { // the button may have already disappeared !
-					validateButton.value.style.setProperty("animation-name", "")
-				}
-			}, 500)
-		}
-	},
-	getHTML = async function(){
-		await nextTick()
-
-		return tosUI.value.$el.innerHTML
+		wrongAnswerAnimation(validateButton.value)
 	},
 	getTex = function (value) {
 		const v = value.split("@")
@@ -134,6 +116,11 @@ let zeroes = ref(""),
 		})
 
 		return ""
+	},
+	btnValidate = function () {
+		emits("update:modelValue", `${zeroes.value}@${signs.value}`)
+		emits("update:tex", tosUI.value.$el.innerHTML)
+		emits("validate")
 	}
 
 defineExpose({resetKeyStrokes, wrongAnswer, getTex})

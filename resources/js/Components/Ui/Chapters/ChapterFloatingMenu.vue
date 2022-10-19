@@ -9,7 +9,7 @@
 	 				w-full h-10 md:w-auto md:min-w-[300px]"
 		>
 			<div
-				class="px-3 py-2 flex justify-between items-center gap-3 hover:bg-gray-200"
+				class="px-3 py-2 flex items-center gap-3 hover:bg-gray-200"
 				:class="showMenu?'bg-gray-200':''"
 			>
 				<button
@@ -23,7 +23,7 @@
 
 				<span
 					v-katex.auto="observeTitle"
-					class="text-xs hover:font-semibold cursor-pointer"
+					class="text-xs hover:font-semibold cursor-pointer flex-1"
 					@click="showMenu=!showMenu"
 				/>
 

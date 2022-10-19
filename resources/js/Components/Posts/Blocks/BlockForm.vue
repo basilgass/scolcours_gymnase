@@ -2,7 +2,9 @@
 	<div class="w-full max-h-[50%]">
 		<!-- header -->
 		<!-- todo: make the header of block form "fixed" at the top of the box -->
-		<div class="flex pb-3 items-baseline border-b justify-between">
+		<div
+			class="flex pb-3 items-baseline border-b justify-between"
+		>
 			<div class="flex gap-3 items-baseline">
 				<button
 					class="btn-success btn-xs"
@@ -29,7 +31,9 @@
 			<slot name="extraBtn" />
 		</div>
 
-		<div :class="props.overflowScroll?'overflow-y-scroll':''">
+		<div
+			:class="props.overflowScroll?'overflow-y-scroll':''"
+		>
 			<!-- data to be displayed -->
 			<div
 				class="grid grid-cols-1 gap-5"

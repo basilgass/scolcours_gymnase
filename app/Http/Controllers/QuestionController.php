@@ -6,7 +6,9 @@ use App\Http\Resources\QuestionResource;
 use App\Models\Post;
 use App\Models\Question;
 use Auth;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Str;
 
@@ -24,8 +26,8 @@ class QuestionController extends Controller
 	/**
 	 * Store a newly created resource in storage.
 	 *
-	 * @param \Illuminate\Http\Request $request
-	 * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+	 * @param Request $request
+	 * @return AnonymousResourceCollection
 	 */
 	public function store(Post $post, Request $request)
 	{
@@ -65,7 +67,6 @@ class QuestionController extends Controller
 
 			// Create the question new way.
 			$theQuestion = $post->questions()->create([
-				'body'=>'', // Should be removed
 				'answer'=>$answer??null,
 				'checker'=>$checker,
 				'keyboard'=>$validate['keyboard']??''
@@ -85,14 +86,13 @@ class QuestionController extends Controller
 	 * Update the specified resource in storage.
 	 *
 	 * @param Question $question
-	 * @param \Illuminate\Http\Request $request
+	 * @param Request $request
 	 * @return Question
 	 */
 	public function update(Question $question, Request $request)
 	{
 		$validate = $request->validate(
 			[
-				'body'=>['string', 'min:2'],
 				'answer'=>['nullable'],
 				'checker'=>['string', 'nullable'],
 				'keyboard'=>['string', 'nullable']
@@ -110,7 +110,7 @@ class QuestionController extends Controller
 	 * Remove the specified resource from storage.
 	 *
 	 * @param int $id
-	 * @return \Illuminate\Http\RedirectResponse
+	 * @return RedirectResponse
 	 */
 	public function destroy($id)
 	{

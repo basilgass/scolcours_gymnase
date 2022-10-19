@@ -18,8 +18,6 @@ return new class extends Migration
 		$questions = Question::where('math', 1)->get();
 
 		foreach ($questions as $question){
-
-
 			$question->update([
 				'body'=>'\\['.$question->body.(Str::endsWith($question->body, '=')?'$a':'').'\\]',
 			]);
