@@ -365,7 +365,6 @@ let apoint = class {
 			}
 		}
 
-
 		this.type = atype
 
 		this.line = PiGraph.path().stroke({color: "purple", width: 2, opacity: 0.5})

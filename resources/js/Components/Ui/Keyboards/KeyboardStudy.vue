@@ -17,18 +17,32 @@
 				<i class="bi bi-check" /> <span class="hidden md:inline md:ml-2">Valider</span>
 			</button>
 
-			<!-- Keyboards inputs -->
+			<!-- Keyboard selection -->
 			<div class="flex gap-3 justify-center">
 				<button
 					v-for="btn of addButtons"
 					:key="btn"
 					class="py-0 px-10"
-					:class="selectedButton===btn?'btn-primary':'btn'"
-					@click="selectedButton=btn"
+					:class="selectedButton===btn?'btn-primary':'btn bg-white'"
+					@click="addItemToGraph(btn)"
 				>
 					{{ btn }}
 				</button>
 			</div>
+			<!-- Keyboard inputs -->
+			<div v-katex="tex" />
+			<div v-html="message" />
+			<Keyboard
+				ref="keyboardUI"
+				v-model="display"
+				v-model:tex="tex"
+				keyboard="algebra"
+				key-class="bg-white"
+				class="max-w-xl mx-auto"
+				validate
+				reset
+				back
+			/>
 		</div>
 	</div>
 </template>
@@ -38,6 +52,7 @@
 import {nextTick, onMounted, ref} from "vue"
 import {wrongAnswerAnimation} from "@/Composables/useHelpers"
 import {PiDraw} from "pidraw/esm"
+import Keyboard from "@/Components/Ui/Keyboard.vue"
 
 let props = defineProps({
 	modelValue: {type: String, required: true},
@@ -76,7 +91,10 @@ let PiGraph,
 	draw = ref(null),
 	theOptions = ref(props.options.toLowerCase().split(",")),
 	addButtons = ref([]),
-	selectedButton = ref("")
+	selectedButton = ref(""),
+	tex = ref(""),
+	display = ref(""),
+	message = ref("")
 
 
 onMounted(()=>{
@@ -99,8 +117,6 @@ onMounted(()=>{
 	}else{
 		addButtons.value = ["AV", "AH", "AO", "extremum", "point"]
 	}
-
-	console.log(addButtons.value)
 	PiGraph = new PiDraw(draw.value, {
 		width: 800,
 		height: 800,
@@ -117,6 +133,41 @@ onMounted(()=>{
 })
 
 function addItemToGraph(btn){
-	console.log("add", btn)
+	selectedButton.value=btn
+
+	// Checker.
+	message.value = ""
+	if(btn.startsWith("A")){
+		let equ = btn.split("=")
+
+		if(equ.length!==2){
+			message.value = "L'équation de la droite n'est pas correcte"
+		}
+
+		if(equ[1].contains("x") || equ[1].contains("y")){
+			message.value = "L'équation de la droite n'est pas correcte"
+		}
+
+		if(btn==="AO"){
+			if(equ[1].match(/x/).length!==1 && equ[1].match(/y/).length!==1){
+				message.value="Ce n'est pas une asymptote oblique"
+			}
+
+		}else if(btn==="AV"){
+			if(equ[0]!=="x"){
+				message.value="Ce n'est pas une asymptote verticale"
+			}
+
+		}else if(btn==="AH") {
+			if (equ[0]!=="y") {
+				message.value = "Ce n'est pas une asymptote horizontale"
+			}
+
+		}
+	}else if(btn==="point"){
+		
+	}else{
+		console.log("Btn not handled")
+	}
 }
 </script>
