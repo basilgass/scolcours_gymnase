@@ -193,6 +193,13 @@ onMounted(() => {
 			y: 20
 		}
 	})
+	
+	PiGraph.texConverter = {
+		toTex: katex.renderToString,
+		options: {
+			throwOnError: false
+		}
+	}
 
 	if(props.axis){
 		PiAxis = PiGraph.axis()
