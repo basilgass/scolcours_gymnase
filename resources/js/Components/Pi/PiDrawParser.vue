@@ -30,6 +30,7 @@ import {PiDraw} from "pidraw/esm"
 import VueSlider from "vue-slider-component"
 import "vue-slider-component/theme/material.css"
 import {PiMath} from "pimath/esm"
+import katex from "katex"
 
 const emits = defineEmits(["update"])
 
@@ -193,7 +194,7 @@ onMounted(() => {
 			y: 20
 		}
 	})
-	
+
 	PiGraph.texConverter = {
 		toTex: katex.renderToString,
 		options: {
