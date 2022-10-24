@@ -52,11 +52,12 @@
 		<div v-else>
 			Component keyboard
 		</div>
+		<!--		keyboard + (letters===''?'':`@${letters}`)-->
 		<Keyboard
 			v-if="isKeyboardComponent"
 			v-model="result"
 			v-model:tex="tex"
-			:keyboard="keyboard + (letters===''?'':`@${letters}`)"
+			keyboard="exact|simple"
 			math-output
 			text-output
 			:validate="validate"
@@ -90,7 +91,7 @@ import {keyboardsList} from "@/keyboards"
 
 import {computed, defineAsyncComponent, ref} from "vue"
 
-let keyboard = ref("#Study"),
+let keyboard = ref("exact"),
 	choices = ref(keyboardsList),
 	result = ref(""),
 	validate=ref(true),

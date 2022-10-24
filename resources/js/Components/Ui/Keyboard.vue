@@ -153,12 +153,21 @@ let theKeyboard = computed(() => {
 			return ""
 		}
 
-
 		if (typeof props.keyboard === "string") {
+
 			// Parse the keyboard value
-			let tmp = props.keyboard.split("@"),
-				keyboardName = tmp[0],
-				keyboardData = tmp.length === 2 ? tmp[1] : ""
+			let keyboardName = props.keyboard.split("@")[0]
+			//
+			// if(props.multiple){
+			// 	let answerNumber = keyStrokes.value.filter(item=>item.key===",").length
+			//
+			// 	let theKeyboards = props.keyboard.split("|")
+			// 	if(theKeyboards.length>=answerNumber){
+			// 		keyboardName = theKeyboards[answerNumber].split("@")[0]
+			// 	}else{
+			// 		keyboardName = theKeyboards[theKeyboards.length-1].split("@")[0]
+			// 	}
+			// }
 
 			if (keyboards.hasOwnProperty(keyboardName)) {
 				return keyboardName

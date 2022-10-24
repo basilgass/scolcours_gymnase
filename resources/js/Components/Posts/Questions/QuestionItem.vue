@@ -54,7 +54,7 @@
 					ref="keyboardUI"
 					v-model="answer"
 					v-model:tex="tex"
-					:keyboard="keyboard"
+					:keyboard="currentKeyboardName"
 					key-class="bg-white"
 					class="max-w-xl mx-auto"
 					validate
@@ -101,17 +101,46 @@ let props = defineProps({
 	correctionMode: {type: Boolean, defaut: false}
 })
 
-const checker = useCheckers(props.checker ?? "exact")
+// const checker = useCheckers(props.checker ?? "exact")
+
 let isKeyboardComponent = computed(() => {
-		return !(props.keyboard && props.keyboard[0] === "#")
+		return !(currentKeyboardName && currentKeyboardName.value[0] === "#")
 	}),
 	keyboardComponentProps = computed(()=>{
-		let kbrd = props.keyboard.split("@")
+		let kbrd = currentKeyboardName.value.split("@")
 		return kbrd.length === 2 ? kbrd[1] : null
 	}),
 	keyboardComponent = computed(() => {
-		let kbrd = props.keyboard.split("@")
+		let kbrd = currentKeyboardName.value.split("@")
 		return defineAsyncComponent(() => import(`@/Components/Ui/Keyboards/Keyboard${kbrd[0].substring(1)}`))
+	}),
+	currentChecker = computed(()=>{
+		if(multipleAnswer.value && props.keyboard.includes("|")) {
+			let chkrs = props.checker.split("|"),
+				answerNumber = answer.value.split(",").length
+
+			if (chkrs.length >= answerNumber) {
+				return useCheckers(chkrs[answerNumber - 1])
+			} else {
+				return useCheckers(chkrs[chkrs.length - 1])
+			}
+		}else{
+			return useCheckers(props.checker??"exact")
+		}
+	}),
+	currentKeyboardName = computed(()=>{
+		if(multipleAnswer.value && props.keyboard.includes("|")){
+			let kbrds = props.keyboard.split("|"),
+				answerNumber = answer.value.split(",").length
+
+			if(kbrds.length>=answerNumber){
+				return kbrds[answerNumber-1]
+			}else{
+				return kbrds[kbrds.length-1]
+			}
+		}else{
+			return props.keyboard
+		}
 	})
 
 let checkerResult = ref({
@@ -130,7 +159,9 @@ let checkerResult = ref({
 	answers = ref([]),
 	keyboardUI = ref(null),
 	componentUI = ref(null),
-	answerFormat = ref(checker.format()),
+	answerFormat = computed(()=>{
+		return currentChecker.value.format()
+	}),
 	giveAnswer = ref(props.showKeyboardToggle === false)
 
 let questionAsTex = computed(() => {
@@ -181,7 +212,7 @@ let questionAsTex = computed(() => {
 })
 
 let validate = function () {
-	checkerResult.value = checker.check(props.answer, answer.value)
+	checkerResult.value = currentChecker.value.check(props.answer, answer.value)
 
 	answers.value.push({
 		value: `${questionAsTex.value}`,
