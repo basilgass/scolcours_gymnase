@@ -1,12 +1,35 @@
 <template>
-	<div>
-		<div class="overflow-x-scroll my-5">
+	<div class="max-w-xl mx-auto">
+		<div
+			v-show="showGraph"
+			class="overflow-x-scroll my-5"
+		>
 			<!-- Visual output -->
-			<div ref="draw" />
+			<div
+				ref="draw"
+			/>
 			<div ref="outputHTML" />
 		</div>
 
-		<div class="max-w-xl mx-auto flex flex-col gap-3 keyboard">
+		<div>
+			<div class="flex gap-5 items-baseline justify-center">
+				<button
+					v-for="item in items"
+					:key="item"
+					v-katex.ascii.nomargin="item"
+					class="btn py-2 bg-white hover:bg-amber-300 transition-colors"
+					@dblclick="removeItem(item)"
+				/>
+			</div>
+			<div
+				v-show="items.length>0"
+				class="text-xs text-gray-700 text-center"
+			>
+				double-cliquer pour supprimer
+			</div>
+		</div>
+
+		<div class="flex flex-col gap-3 keyboard">
 			<button
 				ref="validateButton"
 				class="key-cmd bg-white w-full
@@ -22,16 +45,21 @@
 				<button
 					v-for="btn of addButtons"
 					:key="btn"
-					class="py-0 px-10"
-					:class="selectedButton===btn?'btn-primary':'btn bg-white'"
+					class="py-0 px-10 btn bg-white py-3"
 					@click="addItemToGraph(btn)"
 				>
 					{{ btn }}
 				</button>
 			</div>
 			<!-- Keyboard inputs -->
-			<div v-katex="tex" />
-			<div v-html="message" />
+			<div class="min-h-[4em]">
+				<div v-katex="tex" />
+				<div
+					class="text-center text-red-500 text-sm"
+					v-html="message"
+				/>
+			</div>
+
 			<Keyboard
 				ref="keyboardUI"
 				v-model="display"
@@ -39,9 +67,9 @@
 				keyboard="algebra"
 				key-class="bg-white"
 				class="max-w-xl mx-auto"
-				validate
 				reset
 				back
+				@clear="message=''"
 			/>
 		</div>
 	</div>
@@ -53,6 +81,8 @@ import {nextTick, onMounted, ref} from "vue"
 import {wrongAnswerAnimation} from "@/Composables/useHelpers"
 import {PiDraw} from "pidraw/esm"
 import Keyboard from "@/Components/Ui/Keyboard.vue"
+import katex from "katex"
+import Button from "@/Components/Auth/Button.vue"
 
 let props = defineProps({
 	modelValue: {type: String, required: true},
@@ -64,8 +94,9 @@ let emits = defineEmits(["update:modelValue", "update:tex", "validate"])
 let outputHTML = ref(null),
 	validateButton = ref(null),
 	btnValidate = function () {
-		emits("update:modelValue", "")
-		emits("update:tex", "")
+		// Get all outputs
+		emits("update:modelValue", items.value.sort().join(","))
+		emits("update:tex", items.value.sort().join(","))
 		emits("validate")
 	},
 	resetKeyStrokes = function () {
@@ -89,12 +120,14 @@ defineExpose({resetKeyStrokes, wrongAnswer, getTex})
 // Code specific to Study.
 let PiGraph,
 	draw = ref(null),
+	keyboardUI = ref(null),
 	theOptions = ref(props.options.toLowerCase().split(",")),
 	addButtons = ref([]),
-	selectedButton = ref(""),
 	tex = ref(""),
 	display = ref(""),
-	message = ref("")
+	message = ref(""),
+	showGraph = ref(true),
+	items = ref([])
 
 
 onMounted(()=>{
@@ -112,6 +145,8 @@ onMounted(()=>{
 				}
 			}else if(opt==="e"){
 				addButtons.value.push("extremum")
+			}else if(opt==="g"){
+				showGraph.value=false
 			}
 		}
 	}else{
@@ -130,44 +165,69 @@ onMounted(()=>{
 		}
 	})
 	PiGraph.axis()
+
+	PiGraph.texConverter = {
+		toTex: katex.renderToString,
+		options: {
+			throwOnError: false
+		}
+	}
 })
 
 function addItemToGraph(btn){
-	selectedButton.value=btn
 
 	// Checker.
 	message.value = ""
 	if(btn.startsWith("A")){
-		let equ = btn.split("=")
+		let equ = display.value.split("=")
+
 
 		if(equ.length!==2){
 			message.value = "L'équation de la droite n'est pas correcte"
+			return
 		}
 
-		if(equ[1].contains("x") || equ[1].contains("y")){
+		if(equ[1].includes("x") || equ[1].includes("y")){
 			message.value = "L'équation de la droite n'est pas correcte"
+			return
 		}
 
 		if(btn==="AO"){
 			if(equ[1].match(/x/).length!==1 && equ[1].match(/y/).length!==1){
 				message.value="Ce n'est pas une asymptote oblique"
+				return
 			}
 
 		}else if(btn==="AV"){
 			if(equ[0]!=="x"){
 				message.value="Ce n'est pas une asymptote verticale"
+				return
 			}
 
 		}else if(btn==="AH") {
 			if (equ[0]!=="y") {
 				message.value = "Ce n'est pas une asymptote horizontale"
+				return
 			}
 
 		}
 	}else if(btn==="point"){
-		
+		if(!(display.value.startsWith("(") && display.value.endsWith(")") && display.value.split(";").length===2)){
+			message.value="Ce n'est pas un point"
+			return
+		}
 	}else{
 		console.log("Btn not handled")
+		return
 	}
+
+	items.value.push(display.value)
+
+	// Reset the keyboard
+	keyboardUI.value.resetKeyStrokes()
+}
+
+function removeItem(item) {
+	items.value.splice(items.value.indexOf(item), 1)
 }
 </script>

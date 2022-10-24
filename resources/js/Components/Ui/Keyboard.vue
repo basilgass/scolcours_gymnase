@@ -122,7 +122,7 @@
 import {computed, ref} from "vue"
 import {keyboardKeys, keyboards} from "@/keyboards"
 
-const emit = defineEmits(["update:modelValue", "update:tex", "validate", "next", "key"])
+const emit = defineEmits(["update:modelValue", "update:tex", "validate", "next", "key", "clear"])
 const props = defineProps({
 	modelValue: String,
 	tex: String,
@@ -330,12 +330,14 @@ function resetKeyStrokes() {
 	keyStrokes.value = []
 	emit("update:modelValue", "")
 	emit("update:tex", "")
+	emit("clear", "")
 }
 
 function backKeyStrokes() {
 	ButtonKeyClick({
 		key: "@back"
 	})
+	emit("clear", "")
 }
 
 function ButtonKeyClick(key) {

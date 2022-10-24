@@ -73,7 +73,7 @@
 			v-model="result"
 			v-model:tex="tex"
 			:options="keyboardComponentProps"
-			@validate="validate"
+			@validate="checkValidation"
 		/>
 	</div>
 </template>
@@ -108,7 +108,7 @@ let isKeyboardComponent = computed(() => {
 		// let kbrd = keyboard.value.split("@")
 		// return kbrd.length === 2 ? kbrd[1] : null
 		if(keyboard.value==="#Study"){
-			return "ao,av,ah,m,z,o"
+			return "ao,av,ah,m,z,o,g"
 		}else {
 			return letters.value.length > 0 ? letters.value : null
 		}
@@ -118,4 +118,7 @@ let isKeyboardComponent = computed(() => {
 		return defineAsyncComponent(() => import(`@/Components/Ui/Keyboards/Keyboard${kbrd[0].substring(1)}`))
 	})
 
+function checkValidation() {
+	console.log(result.value)
+}
 </script>

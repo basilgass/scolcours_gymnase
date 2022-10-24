@@ -135,7 +135,7 @@ export const keyboards = {
 			"1", "2", "3", "+", "x", "y", "e",
 			"4", "5", "6", "-", "^2", "^", "ln",
 			"7", "8", "9", "*", "|", "sqrt", "root(3)",
-			"", "0", "", "/", "(", ")", "="
+			".", "0", "=", "/", "(", ")", ";"
 		],
 		tex(value) {
 			return asciiToTex(value)
@@ -161,7 +161,7 @@ export const keyboards = {
 			"7", "8", "9", "^2", "^",
 			"0", "(", ")", "sqrt", "root(",
 			"log", "_", "ln", "pi", "e",
-			"", "", "", "RR", "!!"
+			"oo", "!!", "", "RR", "!!"
 		],
 		tex: function (value) {
 			// Apply this for all splited.
