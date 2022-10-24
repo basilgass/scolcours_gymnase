@@ -94,7 +94,7 @@ import {computed, ref} from "vue"
 import {PiMath} from "pimath/esm"
 import FormInput from "@/Components/Form/FormInput.vue"
 import FormNumber from "@/Components/Form/FormNumber.vue"
-import {vocabulare} from "@/Pages/Italiano/italianoUnita"
+import {vocabulare} from "@/Pages/languages/Italiano/italianoUnita"
 
 let availableWords = ref([]),
 	startIndex = ref(0),

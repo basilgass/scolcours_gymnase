@@ -1,8 +1,8 @@
 <template>
 	<article>
-		<ArticleTitle title="Italia Unit" />
+		<ArticleTitle title="English Unit" />
 		<Link
-			href="/italiano"
+			href="/english"
 			class="hover:pl-2 transition-all duration-300"
 		>
 			<i class="bi bi-arrow-bar-left" />  retour
@@ -88,7 +88,7 @@
 				label="nombre de lettres min."
 				name="nombre de lettres"
 			/>
-
+			
 			<form-input
 				v-model="unitsSelection"
 				label="sélection des unités"
@@ -112,12 +112,13 @@ import {PiMath} from "pimath/esm"
 import FormInput from "@/Components/Form/FormInput.vue"
 import FormNumber from "@/Components/Form/FormNumber.vue"
 
-import {vocabulare} from "@/Pages/Italiano/italianoUnita"
+import {vocabulary} from "@/Pages/languages/English/englishUnits"
+import FormSwitch from "@/Components/Form/FormSwitch.vue"
 
 let availableWords = ref([]),
 	numberOfLetters = ref(2),
 	userGuess = ref(""),
-	determinants = ["il ", "la ", "le ", "lo ", "i ", "l'", "gli "],
+	determinants = [],
 	suggestions = computed(()=>{
 		if(userGuess.value.length<numberOfLetters.value){return []}
 
@@ -182,9 +183,9 @@ let generateWords = function() {
 	// All words available
 	startIndex.value = 0
 	let words = []
-	for (let unit in vocabulare) {
+	for (let unit in vocabulary) {
 		if (units.value.includes(+unit)) {
-			words = words.concat(vocabulare[unit])
+			words = words.concat(vocabulary[unit].map(item=>[item.en, item.fr]))
 		}
 	}
 
@@ -217,7 +218,6 @@ let unknownWord = function () {
 	unknownWordAnswer.value = word[0]
 	unknownCount.value++
 }
-
 
 function shake() {
 	suggestionsWrapper.value.style.setProperty("animation-name", "v-shake-horizontal")
