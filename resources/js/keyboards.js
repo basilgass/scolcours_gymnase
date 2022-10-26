@@ -183,14 +183,14 @@ export const keyboards = {
 		tex: function (value) {
 			//TODO: parse correctly solutions when using setminus.
 			if (value.startsWith("RR")) {
-				return `\\mathcal S=${asciiToTex(value)}`
+				return `${asciiToTex(value)}`
 			} else if (value === "!!") {
-				return "\\mathcal S = \\varnothing"
+				return "\\varnothing"
 			}
 
 			if (value.includes("]") || value.includes("[")) {
 				// TODO: handle intervals : extract value.
-				return `\\mathcal S = ${value.split(";").map(x => makeExactFromAscii(x)).join(";")} `
+				return `${value.split(";").map(x => makeExactFromAscii(x)).join(";")} `
 			}
 
 			// remove the braces...
@@ -199,7 +199,7 @@ export const keyboards = {
 
 			value = value.replace("{", "").replace("}", "")
 
-			return `\\mathcal S = ${beforeBrace} ${value.split(";").map(x => makeExactFromAscii(x)).join(";")} ${afterBrace}`
+			return `${beforeBrace} ${value.split(";").map(x => makeExactFromAscii(x)).join(";")} ${afterBrace}`
 		}
 	}
 }

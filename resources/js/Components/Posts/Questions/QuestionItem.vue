@@ -1,15 +1,17 @@
 <template>
 	<div class="question-wrapper overflow-x-auto relative">
+		<!-- correction mode -->
 		<div v-if="correctionMode">
 			<markdown-it
 				katex-class="katex-left"
 				:text="questionAsTex"
 			/>
 			<div
-				v-if="!isKeyboardComponent"
-				v-html="tex"
+				v-if="!isKeyboardComponent && raw!==''"
+				v-html="raw"
 			/>
 		</div>
+		<!-- Question display -->
 		<div v-else>
 			<illustration-show
 				v-if="block.illustrations?.length>0"
@@ -18,6 +20,10 @@
 			/>
 			<markdown-it
 				:text="questionAsTex"
+			/>
+			<div
+				v-if="!isKeyboardComponent && raw!==''"
+				v-html="raw"
 			/>
 		</div>
 
@@ -71,6 +77,7 @@
 					ref="componentUI"
 					v-model="answer"
 					v-model:tex="tex"
+					v-model:raw="raw"
 					:options="keyboardComponentProps"
 					@validate="validate"
 				/>
@@ -156,6 +163,7 @@ let checkerResult = ref({
 	}),
 	answer = ref(""),
 	tex = ref(""),
+	raw = ref(""),
 	answers = ref([]),
 	keyboardUI = ref(null),
 	componentUI = ref(null),
@@ -166,9 +174,38 @@ let checkerResult = ref({
 
 let questionAsTex = computed(() => {
 	let body = props.block.body,
-		userAnswer
-
+		userAnswer = tex.value
 	if(body===undefined){return}
+
+	// TODO: refactor variable changing.
+	// On effectue un premier round en supposant que les valeurs sont des valeurs HTML
+	if(!isKeyboardComponent.value){
+		if (body.includes("$")) {
+			let questionsVars = [...new Set([...body.matchAll(/\$([A-Z])/g)].map(x => x[0]))]
+			questionsVars.sort()
+
+			// on récupère la liste des réponses.
+			userAnswer = userAnswer.split(",")
+			const crtAnswerIndex = userAnswer.length - 1
+			userAnswer = userAnswer.filter(x => x !== "")
+
+			for (let i = 0; i < questionsVars.length; i++) {
+				let key = questionsVars[i],
+					value = userAnswer[i],
+					placeholder = questionsVars.length === 1 ? "?" : key[1]
+
+				if (i === crtAnswerIndex) {
+					value = `<div class="border border-blue-600 bg-blue-100 py-3 text-center">${(value && value !== "") ? value : "< " + placeholder + " >"}</div>`
+				}
+				if (value === undefined) {
+					value = `<div class="border border-red-600 bg-red-100"> ${placeholder} </div>`
+				}
+
+				body = body.replaceAll(key, value)
+			}
+		}
+	}
+
 
 	// On vérifie si la réponse est "tex-compatible"
 	try {
@@ -177,7 +214,6 @@ let questionAsTex = computed(() => {
 	} catch {
 		userAnswer = "\\color{red}{\\text{ ??? }}"
 	}
-
 
 	// On transforme chaque variable `$a` par sa réponse.
 	// On récolte la liste des variables présentent dans la question.
@@ -204,7 +240,6 @@ let questionAsTex = computed(() => {
 
 			body = body.replaceAll(key, value)
 		}
-
 	}
 
 	return body
@@ -251,17 +286,22 @@ function getTexFromKeyboard() {
 		return componentUI.value.getTex(props.answer)
 	}
 }
+function getRawFromKeyboard() {
+	if (componentUI.value) {
+		return componentUI.value.getRaw()
+	}
+}
 
 watch(() => props.correctionMode, (correction, before) => {
 	if (correction) {
-		tex.value = getTexFromKeyboard()
+		getTexFromKeyboard()
 	} else {
 		tex.value = ""
 	}
 })
 onMounted(() => {
 	if (props.correctionMode) {
-		tex.value = getTexFromKeyboard()
+		getTexFromKeyboard()
 	}
 })
 </script>

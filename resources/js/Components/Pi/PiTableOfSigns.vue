@@ -1,160 +1,164 @@
 <template>
-	<div>
-		<table
-			class="border-r tos border-gray-400 mx-auto"
-		>
-			<thead>
-				<tr>
-					<th class="border-r border-gray-400" />
-					<th>
-						<div
-							class="flex flex-row items-center"
-						>
+	<div class="table-of-sign-wrapper">
+		<div class="not-prose">
+			<table
+				class="border-r tos border-gray-400 mx-auto"
+			>
+				<thead>
+					<tr>
+						<th class="border-r border-gray-400" />
+						<th>
 							<div
-								v-katex.inline="`-\\infty`"
-								class="w-6 text-xs pl-1"
-							/>
-							<div
-								v-for="(zero, n) in tos.zeroes"
-								:key="n"
-								v-katex.inline="zero.tex"
-								class="w-24 text-center hover:bg-white py-2"
-							>
-								/>
-
-							</div>
-							<div
-								v-katex.inline="`+\\infty`"
-								class="w-6 text-xs mr-1"
-							/>
-						</div>
-					</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr
-					v-for="(factor, index) of tos.factors"
-					:key="`tos-${index}`"
-					class="border-t first:border-gray-400"
-				>
-					<td
-						v-katex.inline="factor.tex"
-						class="min-w-[100px] border-r text-center border-gray-400"
-					/>
-					<td>
-						<div class="flex flex-row">
-							<div
-								v-for="(sign, n) of displaySigns(index)"
-								:key="`tos-${index}-cell-${n}`"
-								v-katex.inline="n%2===0?sign:(sign==='z'?'0':'')"
-								:class="{
-									'cell-v-line-d':sign==='d',
-									'cell-v-line': n%2===1
-								}"
-								class="w-12 text-center hover:bg-white py-2"
-							/>
-						</div>
-					</td>
-				</tr>
-			</tbody>
-			<tfoot class="border-t border-t-2 border-gray-400">
-				<tr
-					v-if="tos.type==='grows'"
-					class="border-t border-t-2 border-gray-400"
-				>
-					<td
-						v-katex.inline="`${props.fn}'(x)`"
-						class="min-w-[100px] border-r text-center border-gray-400"
-					/>
-					<td>
-						<div class="flex flex-row">
-							<div
-								v-for="(sign, n) in displaySigns(tos.signs.length-2)"
-								:key="`tos-foot-cell-${n}`"
-								v-katex.inline="n%2===0?sign:(sign==='z'?'0':'')"
-								:class="{
-									'cell-v-line-d':sign==='d',
-									'cell-v-line': n%2===1
-								}"
-								class="w-12 text-center hover:bg-white py-2"
-							/>
-						</div>
-					</td>
-				</tr>
-				<tr
-					v-if="tos.type==='grows'"
-					class="border-t border-t-2 border-gray-400"
-				>
-					<td
-						v-katex.inline="`${props.fn}(x)`"
-						class="min-w-[100px] border-r text-center border-gray-400"
-					/>
-					<td>
-						<div class="flex flex-row h-16">
-							<div
-								v-for="(sign, n) in displaySigns(tos.signs.length-2)"
-								:key="`tos-foot-cell-${n}`"
-								:class="{
-									'cell-v-line-d':sign==='d',
-									'cell-v-line': n%2===1,
-								}"
-
-								class="w-12 text-center hover:bg-white py-2 relative"
+								class="flex flex-row items-center"
 							>
 								<div
-									v-if="n%2===1"
-									v-katex.inline="n%2===0?'':(sign==='z'?displayExtremes(n):'')"
-									class="text-center translate-y-6 absolute left-1/2 -translate-x-1/2 bg-white z-50"
+									v-katex.inline="`-\\infty`"
+									class="w-6 text-xs pl-1"
 								/>
-								<i
-									v-else
-
-									:class="{'bi-arrow-down-right':sign==='-','bi-arrow-up-right':sign==='+'}"
-									class="bi"
+								<div
+									v-for="(zero, n) in tos.zeroes"
+									:key="n"
+									v-katex.inline="zero.tex"
+									class="w-24 text-center hover:bg-white py-2"
+								>
+									/>
+								</div>
+								<div
+									v-katex.inline="`+\\infty`"
+									class="w-6 text-xs mr-1"
 								/>
 							</div>
-						</div>
-					</td>
-				</tr>
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr
+						v-for="(factor, index) of tos.factors"
+						:key="`tos-${index}`"
+						class="border-t first:border-gray-400"
+					>
+						<td
+							v-katex.inline="factor.tex"
+							class="min-w-[100px] border-r text-center border-gray-400"
+						/>
+						<td>
+							<div class="flex flex-row">
+								<div
+									v-for="(sign, n) of displaySigns(index)"
+									:key="`tos-${index}-cell-${n}`"
+									v-katex.inline="n%2===0?sign:(sign==='z'?'0':'')"
+									:class="{
+										'cell-v-line-d':sign==='d',
+										'cell-v-line': n%2===1
+									}"
+									class="w-12 text-center hover:bg-white py-2"
+								/>
+							</div>
+						</td>
+					</tr>
+				</tbody>
+				<tfoot class="border-t border-t-2 border-gray-400">
+					<tr
+						v-if="tos.type==='grows'"
+						class="border-t border-t-2 border-gray-400"
+					>
+						<td
+							v-katex.inline="`${props.fn}'(x)`"
+							class="min-w-[100px] border-r text-center border-gray-400"
+						/>
+						<td>
+							<div class="flex flex-row">
+								<div
+									v-for="(sign, n) in displaySigns(tos.signs.length-2)"
+									:key="`tos-foot-cell-${n}`"
+									v-katex.inline="n%2===0?sign:(sign==='z'?'0':'')"
+									:class="{
+										'cell-v-line-d':sign==='d',
+										'cell-v-line': n%2===1
+									}"
+									class="w-12 text-center hover:bg-white py-2"
+								/>
+							</div>
+						</td>
+					</tr>
+					<tr
+						v-if="tos.type==='grows'"
+						class="border-t border-t-2 border-gray-400"
+					>
+						<td
+							v-katex.inline="`${props.fn}(x)`"
+							class="min-w-[100px] border-r text-center border-gray-400"
+						/>
+						<td>
+							<div class="flex flex-row h-16">
+								<div
+									v-for="(sign, n) in displaySigns(tos.signs.length-2)"
+									:key="`tos-foot-cell-${n}`"
+									:class="{
+										'cell-v-line-d':sign==='d',
+										'cell-v-line': n%2===1,
+									}"
 
-				<tr
-					v-if="tos.type===undefined"
-					class="border-t border-t-2 border-gray-400"
-				>
-					<td
-						v-katex.inline="`${props.fn}(x)`"
-						class="min-w-[100px] border-r text-center border-gray-400"
-					/>
-					<td>
-						<div class="flex flex-row">
-							<div
-								v-for="(sign, n) in displaySigns(tos.signs.length-1)"
-								:key="`tos-foot-cell-${n}`"
-								v-katex.inline="n%2===0?sign:(sign==='z'?'0':'')"
-								:class="{
-									'cell-v-line-d':sign==='d',
-									'cell-v-line': n%2===1
-								}"
-								class="w-12 text-center hover:bg-white py-2"
-							/>
-						</div>
-					</td>
-				</tr>
-			</tfoot>
-		</table>
+									class="w-12 text-center hover:bg-white py-2 relative"
+								>
+									<div
+										v-if="n%2===1"
+										v-katex.inline="n%2===0?'':(sign==='z'?displayExtremes(n):'')"
+										class="text-center translate-y-6 absolute left-1/2 -translate-x-1/2 bg-white z-50"
+									/>
+									<i
+										v-else
 
-		<div class="text-center mt-5" v-if="tos.tex && tos.tex!==''">
-			<button
-				class="text-xs"
-				@click="showTex=!showTex"
+										:class="{'bi-arrow-down-right':sign==='-','bi-arrow-up-right':sign==='+'}"
+										class="bi"
+									/>
+								</div>
+							</div>
+						</td>
+					</tr>
+
+					<tr
+						v-if="tos.type===undefined"
+						class="border-t border-t-2 border-gray-400"
+					>
+						<td
+							v-katex.inline="`${props.fn}(x)`"
+							class="min-w-[100px] border-r text-center border-gray-400"
+						/>
+						<td>
+							<div class="flex flex-row">
+								<div
+									v-for="(sign, n) in displaySigns(tos.signs.length-1)"
+									:key="`tos-foot-cell-${n}`"
+									v-katex.inline="n%2===0?sign:(sign==='z'?'0':'')"
+									:class="{
+										'cell-v-line-d':sign==='d',
+										'cell-v-line': n%2===1
+									}"
+									class="w-12 text-center hover:bg-white py-2"
+								/>
+							</div>
+						</td>
+					</tr>
+				</tfoot>
+			</table>
+
+			<div
+				v-if="tos.tex && tos.tex!==''"
+				class="text-center mt-5"
 			>
-				Afficher le code TeX
-			</button>
-			<pre
-				v-show="showTex"
-				class="text-left my-2 mx-auto max-w-md bg-gray-200 border border-gray-400 overflow-x-scroll"
-				v-text="tos.tex"
-			/>
+				<button
+					class="text-xs"
+					@click="showTex=!showTex"
+				>
+					Afficher le code TeX
+				</button>
+				<pre
+					v-show="showTex"
+					class="text-left my-2 mx-auto max-w-md bg-gray-200 border border-gray-400 overflow-x-scroll"
+					v-text="tos.tex"
+				/>
+			</div>
 		</div>
 	</div>
 </template>

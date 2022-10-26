@@ -5,9 +5,7 @@
 			class="overflow-x-scroll my-5"
 		>
 			<!-- Visual output -->
-			<div
-				ref="draw"
-			/>
+			<div ref="draw" />
 			<div ref="outputHTML" />
 		</div>
 
@@ -83,24 +81,31 @@ import {PiDraw} from "pidraw/esm"
 import Keyboard from "@/Components/Ui/Keyboard.vue"
 import katex from "katex"
 import Button from "@/Components/Auth/Button.vue"
+import {PiMath} from "pimath/esm"
 
 let props = defineProps({
 	modelValue: {type: String, required: true},
 	tex: {type: String, required: true},
+	raw: {type: String, required: true},
 	options: {type: String}
 })
-let emits = defineEmits(["update:modelValue", "update:tex", "validate"])
+
+let emits = defineEmits(["update:modelValue", "update:tex", "update:raw", "validate"])
 
 let outputHTML = ref(null),
 	validateButton = ref(null),
 	btnValidate = function () {
 		// Get all outputs
 		emits("update:modelValue", items.value.sort().join(","))
-		emits("update:tex", items.value.sort().join(","))
+		emits("update:tex", "")
+		emits("update:raw", PiGraph.svg.svg())
 		emits("validate")
 	},
 	resetKeyStrokes = function () {
 		// Reset keystrokes
+		for(let item in items.value){
+			removeItem(item)
+		}
 	},
 	wrongAnswer = function () {
 		wrongAnswerAnimation(validateButton.value)
@@ -110,12 +115,18 @@ let outputHTML = ref(null),
 
 		nextTick(() => outputHTML.value.$el.innerHTML).then(resolve => {
 			emits("update:tex", resolve)
+			emits("update:raw", PiGraph.svg.svg())
 		})
 
 		return ""
+	},
+	getRaw = function () {
+		nextTick(() => outputHTML.value.$el.innerHTML).then(resolve => {
+			emits("update:raw", PiGraph.svg.svg())
+		})
 	}
 
-defineExpose({resetKeyStrokes, wrongAnswer, getTex})
+defineExpose({resetKeyStrokes, wrongAnswer, getTex, getRaw})
 
 // Code specific to Study.
 let PiGraph,
@@ -127,10 +138,20 @@ let PiGraph,
 	display = ref(""),
 	message = ref(""),
 	showGraph = ref(true),
-	items = ref([])
-
+	items = ref([]),
+	itemsGraph = ref({})
 
 onMounted(()=>{
+	let fx = null,
+		cfg = cfg = {
+			xMin: -10,
+			xMax: 10,
+			yMin: -10,
+			yMax: 10,
+			pixelsPerUnit: 40
+		},
+		cfgRaw = null
+
 	if(theOptions.value.length>0){
 		for(let opt of theOptions.value){
 			if(opt==="ah"){
@@ -147,23 +168,30 @@ onMounted(()=>{
 				addButtons.value.push("extremum")
 			}else if(opt==="g"){
 				showGraph.value=false
+			}else if(opt.startsWith("f=")){
+				fx = opt.split("f=")[1]
+			}else if(opt.startsWith("cfg=")){
+				cfgRaw = opt.split("=")[1]
 			}
 		}
 	}else{
 		addButtons.value = ["AV", "AH", "AO", "extremum", "point"]
 	}
-	PiGraph = new PiDraw(draw.value, {
-		width: 800,
-		height: 800,
-		origin: {
-			x: 400,
-			y: 400
-		},
-		grid: {
-			x: 20,
-			y: 20
+
+	if(cfgRaw!==null){
+		let d = cfgRaw.split("&")
+		if(d.length === 2){
+			cfg.xMin = +d[0].split(":")[0]
+			cfg.xMax = +d[0].split(":")[1]
+			cfg.yMin = +d[1].split(":")[0]
+			cfg.yMax = +d[1].split(":")[1]
+			cfg.pixelsPerUnit = 800 / (cfg.xMax-cfg.xMin)
 		}
-	})
+	}
+
+	PiGraph = new PiDraw(draw.value)
+	PiGraph.updateLayout(cfg, false)
+
 	PiGraph.axis()
 
 	PiGraph.texConverter = {
@@ -172,6 +200,40 @@ onMounted(()=>{
 			throwOnError: false
 		}
 	}
+
+	if(fx!==null){
+		let plotData = fx.split("&"),
+			plot = plotData.shift(),
+			domain = PiGraph.unitXDomain,
+			samples = 20,
+			color = "blue"
+
+		for(let d of plotData){
+			if(!isNaN(d)){
+				samples = +d
+			}else if(d.includes(":")){
+				const [min, max] = plotData[1].split(":").map(x => +x)
+				domain = {min, max}
+			}else{
+				color = d
+			}
+		}
+
+		const p = PiGraph.plot(plot, {
+			samples,
+			domain
+		})
+		p.stroke(color)
+
+		// TODO: remove once PiDraw has been updated witt PlotConfig.animate option
+		p.svg.attr({
+			"stroke-dasharray": "",
+			"stroke-dashoffset": ""
+		})
+	}
+
+	// Update the value
+	emits("update:raw", PiGraph.svg.svg())
 })
 
 function addItemToGraph(btn){
@@ -181,13 +243,12 @@ function addItemToGraph(btn){
 	if(btn.startsWith("A")){
 		let equ = display.value.split("=")
 
-
 		if(equ.length!==2){
 			message.value = "L'équation de la droite n'est pas correcte"
 			return
 		}
 
-		if(equ[1].includes("x") || equ[1].includes("y")){
+		if(equ[0]!=="x" && equ[0]!=="y"){
 			message.value = "L'équation de la droite n'est pas correcte"
 			return
 		}
@@ -197,18 +258,21 @@ function addItemToGraph(btn){
 				message.value="Ce n'est pas une asymptote oblique"
 				return
 			}
+			itemsGraph.value[display.value] = addAO(display.value)
 
 		}else if(btn==="AV"){
 			if(equ[0]!=="x"){
 				message.value="Ce n'est pas une asymptote verticale"
 				return
 			}
+			itemsGraph.value[display.value] = addAV(equ[1])
 
 		}else if(btn==="AH") {
 			if (equ[0]!=="y") {
 				message.value = "Ce n'est pas une asymptote horizontale"
 				return
 			}
+			itemsGraph.value[display.value] = addAH(equ[1])
 
 		}
 	}else if(btn==="point"){
@@ -221,13 +285,57 @@ function addItemToGraph(btn){
 		return
 	}
 
+	// Add the element to the list of object created...
 	items.value.push(display.value)
 
 	// Reset the keyboard
 	keyboardUI.value.resetKeyStrokes()
+
+	// Update the graph
+	emits("update:raw", PiGraph.svg.svg())
 }
 
 function removeItem(item) {
 	items.value.splice(items.value.indexOf(item), 1)
+
+	itemsGraph.value[item].remove()
+	delete itemsGraph.value[item]
+
+	// Update the graph
+	emits("update:raw", PiGraph.svg.svg())
+}
+
+function addAV(value){
+	let pos = (new PiMath.NumExp(value)).evaluate({}),
+		posX = PiGraph.unitsToPixels({
+			x: pos,
+			y: 0
+		}).x
+
+	return PiGraph.path(`M${posX},${0} L${posX},${PiGraph.height}`).color("red")
+}
+
+function addAH(value){
+	let pos = (new PiMath.NumExp(value)).evaluate({}),
+		posY = PiGraph.unitsToPixels({
+			x: 0,
+			y: pos
+		}).y
+
+	return PiGraph.path(`M${0},${posY} L${PiGraph.width},${posY}`).color("green")
+}
+
+function addAO(value){
+	let line = new PiMath.Geometry.Line(value),
+		A = PiGraph.unitsToPixels({
+			x: PiGraph.unitXDomain.min,
+			y: line.getValueAtX(PiGraph.unitXDomain.min).value
+		}),
+		B = PiGraph.unitsToPixels({
+			x: PiGraph.unitXDomain.max,
+			y: line.getValueAtX(PiGraph.unitXDomain.max).value
+		})
+
+	return PiGraph.path(`M${A.x},${A.y} L${B.x},${B.y}`).color("green")
 }
 </script>

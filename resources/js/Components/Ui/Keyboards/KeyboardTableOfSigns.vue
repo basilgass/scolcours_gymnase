@@ -1,6 +1,8 @@
 <template>
 	<div>
-		<div class="overflow-x-scroll my-5">
+		<div
+			class="overflow-x-scroll my-5 hidden"
+		>
 			<pi-table-of-signs
 				ref="tosUI"
 				:tos="tos"
@@ -45,6 +47,7 @@
 				key-class="bg-white"
 				keyboard="exact"
 				reset
+				@key="updateTos"
 			/>
 
 			<Keyboard
@@ -60,6 +63,7 @@
 					layout: ['+', '-', 'z', 'd', ['@back', 2], ['@reset', 2]]
 				}"
 				key-class="bg-white"
+				@key="updateTos"
 			/>
 		</div>
 	</div>
@@ -76,9 +80,10 @@ import {wrongAnswerAnimation} from "@/Composables/useHelpers"
 let props = defineProps({
 	modelValue: {type: String, required: true},
 	tex: {type: String, required: true},
+	raw: {type: String, required: true},
 	options: {type: String}
 })
-let emits = defineEmits(["update:modelValue", "update:tex", "validate"])
+let emits = defineEmits(["update:modelValue", "update:tex", "update:raw", "validate"])
 
 let showZeroesKeyboard = ref(true),
 	showSignsKeyboard = ref(false)
@@ -113,6 +118,15 @@ let zeroes = ref(""),
 
 		nextTick(() => tosUI.value.$el.innerHTML).then(resolve => {
 			emits("update:tex", resolve)
+			emits("update:raw", "")
+		})
+
+		return ""
+	},
+	getRaw = function () {
+
+		nextTick(() => tosUI.value.$el.innerHTML).then(resolve => {
+			emits("update:raw", "")
 		})
 
 		return ""
@@ -120,8 +134,12 @@ let zeroes = ref(""),
 	btnValidate = function () {
 		emits("update:modelValue", `${zeroes.value}@${signs.value}`)
 		emits("update:tex", tosUI.value.$el.innerHTML)
+		emits("update:raw", "")
 		emits("validate")
+	},
+	updateTos = async function(){
+		await nextTick()
+		emits("update:tex", tosUI.value.$el.innerHTML)
 	}
-
-defineExpose({resetKeyStrokes, wrongAnswer, getTex})
+defineExpose({resetKeyStrokes, wrongAnswer, getTex, getRaw})
 </script>
