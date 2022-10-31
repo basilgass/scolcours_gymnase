@@ -82,9 +82,9 @@
 			<QuestionItem
 				v-if="listOfQuestions[questionId]"
 				ref="questionUI"
-				:question="theChallenge.output.replace('question', listOfQuestions[questionId].question).replace('answer', '$a')"
 				:answer="`${listOfQuestions[questionId].answer}`"
 				:math="false"
+				:block="{body: theChallenge.output.replace('question', listOfQuestions[questionId].question).replace('answer', '$a')}"
 				:checker="theChallenge.checker"
 				:keyboard="theChallenge.keyboard"
 				:show-keyboard-output="false"
