@@ -22,7 +22,7 @@ class AdminController extends Controller
 
 	public function pages()
 	{
-		$this->loadChapters();
+//		$this->loadChapters();
 //		$this->loadChallenges();
 		$this->loadTools();
 
@@ -89,6 +89,7 @@ class AdminController extends Controller
 		return true;
 	}
 
+	// TODO Remove loadChapters from AdminController
 	public function loadChapters()
 	{
 		// Detect all chapters and create "empty one", disabled by default.
@@ -169,6 +170,7 @@ class AdminController extends Controller
 		}
 	}
 
+	// TODO Remove loadChallenges from AdminController
 	public function loadChallenges()
 	{
 		foreach (Theme::all() as $theme) {

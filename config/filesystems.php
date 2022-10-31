@@ -59,7 +59,7 @@
 			],
 			'devs'   => [
 				'driver' => 'local',
-				'root'   => resource_path('js/Pages/Devs'),
+				'root'   => resource_path('js/Components/Devs'),
 			],
 			'challenges' => [
 				'driver' => 'local',

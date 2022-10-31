@@ -305,7 +305,6 @@ export default {
 import {computed, nextTick, reactive, ref, watch} from "vue"
 import {provide} from "vue"
 import MarkdownIt from "@/Components/Ui/MarkdownIt"
-import Keyboard from "@/Components/Ui/Keyboard"
 import BlockForm from "@/Components/Posts/Blocks/BlockForm"
 import Panel from "@/Components/Ui/Panel"
 import FormTextarea from "@/Components/Form/FormTextarea"

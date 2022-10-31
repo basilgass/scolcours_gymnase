@@ -151,7 +151,7 @@
 <script setup>
 
 import {computed, inject, onMounted, ref} from "vue"
-import ChapterArticle from "@/Components/Ui/Chapters/ChapterArticle"
+import ChapterArticle from "@/Components/backup/ChapterArticle.vue"
 import BlockShow from "@/Components/Posts/Blocks/BlockShow"
 import FormNumber from "@/Components/Form/FormNumber"
 import CollapseTransition from "@/Components/CollapseTransition"

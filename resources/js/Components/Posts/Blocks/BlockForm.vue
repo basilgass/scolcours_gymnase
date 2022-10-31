@@ -61,17 +61,12 @@
 						name="type2"
 						label="type du block"
 					>
-						<option value="">
-							-
-						</option>
-						<option value="definition">
-							définition
-						</option>
-						<option value="theorem">
-							théorème
-						</option>
-						<option value="property">
-							propriété
+						<option
+							v-for="item in postType"
+							:key="item.value"
+							:value="item.value"
+						>
+							{{ item.text }}
 						</option>
 					</form-select>
 
@@ -195,6 +190,30 @@ const props = defineProps({
 	previewCol: {type: Boolean, default: false},
 	overflowScroll: {type: Boolean, default: false}
 })
+
+// TODO: make if dynamic !
+const postType = [
+	{
+		value: "",
+		text: "-"
+	},
+	{
+		value: "definition",
+		text: "définition"
+	},
+	{
+		value: "theorem",
+		text: "théorème"
+	},
+	{
+		value: "property",
+		text: "propriété"
+	},
+	{
+		value: "remark",
+		text: "remarque"
+	}
+]
 
 const form = useForm({
 	id: props.modelValue.id,

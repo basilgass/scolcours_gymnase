@@ -51,12 +51,14 @@ class ScolcoursController extends Controller
 			return pathinfo($p)['filename'];
 		}) ;
 
-		return Inertia::render("DevsPage.vue", [
+		return Inertia::render("Devs/DevsIndex.vue", [
 			'pages'=>$devPages
 		]);
 	}
 	public function dev($page)
 	{
-		return Inertia::render('Devs/'.$page);
+		return Inertia::render('Devs/DevsShow.vue', [
+			"dev"=>$page
+		]);
 	}
 }

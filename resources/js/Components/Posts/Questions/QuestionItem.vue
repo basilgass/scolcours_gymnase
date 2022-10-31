@@ -54,7 +54,7 @@
 					class="min-h-[100px]"
 				/>
 
-				<Keyboard
+				<KeyboardBase
 					v-if="isKeyboardComponent"
 					v-show="showKeyboard || giveAnswer"
 					ref="keyboardUI"
@@ -88,11 +88,11 @@
 
 <script setup>
 import {computed, defineAsyncComponent, onMounted, ref, watch} from "vue"
-import Keyboard from "@/Components/Ui/Keyboard"
 import {useCheckers} from "@/Composables/useCheckers"
 import katex from "katex"
 import MarkdownIt from "@/Components/Ui/MarkdownIt"
 import IllustrationShow from "@/Components/Posts/Illustrations/IllustrationShow.vue"
+import KeyboardBase from "@/Components/Keyboards/KeyboardBase.vue"
 
 let emits = defineEmits(["validate"])
 
@@ -119,7 +119,7 @@ let isKeyboardComponent = computed(() => {
 	}),
 	keyboardComponent = computed(() => {
 		let kbrd = currentKeyboardName.value.split("@")
-		return defineAsyncComponent(() => import(`@/Components/Ui/Keyboards/Keyboard${kbrd[0].substring(1)}`))
+		return defineAsyncComponent(() => import(`@/Components/Keyboards/Keyboard${kbrd[0].substring(1)}`))
 	}),
 	currentChecker = computed(()=>{
 		if(multipleAnswer.value && props.keyboard.includes("|")) {

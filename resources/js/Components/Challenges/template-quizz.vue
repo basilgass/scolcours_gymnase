@@ -24,7 +24,7 @@
 		<template #answerFormat />
 
 		<template #inputs>
-			<Keyboard
+			<KeyboardBase
 				ref="keyboard"
 				v-model="answer"
 				keyboard="algebre"
@@ -36,8 +36,8 @@
 
 <script setup>
 import {computed, ref} from "vue"
-import Keyboard from "@/Components/Ui/Keyboard"
 import ChallengeWrapper from "@/Components/Challenges/ui/challengeWrapper"
+import KeyboardBase from "@/Components/Keyboards/KeyboardBase.vue"
 
 const title = "titre du challenge"
 
