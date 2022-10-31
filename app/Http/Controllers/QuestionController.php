@@ -161,4 +161,13 @@ class QuestionController extends Controller
 
 		return true;
 	}
+
+	public function duplicate(Question $question)
+	{
+		$newQuestion = $question->replicate();
+		$newQuestion->push();
+		$newQuestion->blocks()->save($question->blocks[0]->duplicate());
+
+		return QuestionResource::make($newQuestion);
+	}
 }

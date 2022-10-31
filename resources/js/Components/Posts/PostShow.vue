@@ -240,6 +240,7 @@
 							:question-number="index + 1"
 							:correction-mode="correctionMode"
 							@destroy="questionDestroy"
+							@duplicate="questionDuplicated"
 						/>
 					</template>
 				</draggable>
@@ -431,9 +432,13 @@ function updateQuestionsGrid(){
 function questionAdded(value) {
 	value.forEach(q => postQuestions.value.push(q))
 }
+function questionDuplicated(value){
+	refreshQuestions()}
 function questionDestroy(id) {
-	// TODO: reload the list of the question from the server ?
+	refreshQuestions()
+}
 
+function refreshQuestions(){
 	axios.get(route("posts.questions.index", [props.post.id]))
 		.then(res=>{
 			// TODO: postQuestions vs filtreredQuestions

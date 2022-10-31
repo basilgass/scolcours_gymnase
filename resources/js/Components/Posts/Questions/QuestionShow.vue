@@ -37,6 +37,13 @@
 				>
 					<i class="bi bi-trash mr-2" />Supprimer
 				</confirm-button>
+
+				<button
+					class="btn-xs btn-add"
+					@click="duplicateQuestion(theQuestion.id)"
+				>
+					<i class="bi bi-clipboard mr-2" />Dupliquer
+				</button>
 			</div>
 			<div class=" admin-wrapper-row">
 				<BlockForm
@@ -102,7 +109,7 @@ let props = defineProps({
 	questionNumber: {type: [Number, Boolean], default: false}
 })
 
-let emits = defineEmits(["destroy", "resolved"])
+let emits = defineEmits(["destroy", "resolved", "duplicate"])
 
 let userAnswerAsTex = ref(""),
 	theQuestion = ref(props.question),
@@ -159,6 +166,14 @@ function validateAnswer(checkerResult) {
 	}else{
 		theQuestion.value.userAnswers.push({...data, "when": "à l'instant"})
 	}
+}
+
+function duplicateQuestion(id) {
+	axios.post(route("questions.duplicate", [id]), )
+		.then(res=>{
+			//
+			emits("duplicate", res.data)
+		}).catch(res=>console.log("duplicate error", res.data))
 }
 
 function destroyQuestion() {
