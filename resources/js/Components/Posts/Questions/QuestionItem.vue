@@ -205,8 +205,7 @@ let questionAsTex = computed(() => {
 			}
 		}
 	}
-
-
+	
 	// On vérifie si la réponse est "tex-compatible"
 	try {
 		katex.renderToString(tex.value)

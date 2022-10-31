@@ -194,8 +194,11 @@ export const keyboards = {
 			}
 
 			// remove the braces...
-			const beforeBrace = value.startsWith("{")?"\\left\\{":"\\left.",
-				afterBrace = value.endsWith("}")?"\\right\\}":"\\right."
+			let beforeBrace = value.startsWith("{")?"\\left\\{":"",
+				afterBrace = value.endsWith("}")?"\\right\\}":""
+
+			if(afterBrace!=="" && beforeBrace===""){beforeBrace=" \\left. "}
+			if(beforeBrace!=="" && afterBrace===""){afterBrace=" \\right. "}
 
 			value = value.replace("{", "").replace("}", "")
 
