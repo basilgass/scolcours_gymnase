@@ -37,7 +37,7 @@ let challengeLevel = ref(2),
 	questions = computed(() => {
 		let data = []
 		for (let i = 0; i < 20; i++) {
-			data.push(fractionsDeRacines(challengeLevel.value))
+			data.push(limiteEnUnPoint(challengeLevel.value))
 		}
 		return data
 	}),
@@ -239,6 +239,75 @@ function fractionsDeRacines(level) {
 	}
 
 	return {question: `\\frac{ ${a} }{ ${c} ${signCD ? "+" : "-"} ${d.tex} }`, answer}
+}
+
+function limiteEnUnPoint(level){
+	let question = "",
+		answer = ""
+	if(level===1){
+		let P = PiMath.Random.polynom({
+				letters: "x",
+				degree: PiMath.Random.number(1,2),
+				unit: true,
+				allowNullMonom: true
+			}),
+			n = PiMath.Random.numberSym(5)
+
+		question = `\\lim_{x \\to ${n} } ${P.tex} = $a`
+		answer = P.evaluate({x: n}).tex
+	}else if (level>=2){
+		const config = {
+			letters: "x",
+			degree: 1,
+			unit: false,
+			allowNullMonom: true
+		}
+		let P1 = PiMath.Random.polynom(config),
+			P2 = PiMath.Random.polynom(config),
+			Q1 = PiMath.Random.polynom(config),
+			n = PiMath.Random.numberSym(5)
+
+		// P1 = ax+b, z = -b/a
+		let z = PiMath.Random.numberSym(5),
+			a = PiMath.Random.number(1, 5),
+			b = -z*a,
+			kNum = PiMath.Random.numberSym(5, false),
+			kDen = PiMath.Random.numberSym(5, false),
+			PT = PiMath.Random.bool()?
+				(new PiMath.Polynom("x", a, b)).multiply(kNum):
+				PiMath.Random.polynom(config),
+			QT = PiMath.Random.bool()?
+				(new PiMath.Polynom("x", a, b)).multiply(kDen):
+				PiMath.Random.polynom(config),
+			underset = PiMath.Random.bool()?">":"<"
+
+		let num = PT.evaluate(z),
+			PSign = PT.monomByDegree().coefficient.sign(),
+			numSign = ((PSign===1 && underset==="<") || (PSign===-1 && underset===">"))?"-":"+",
+			den = QT.evaluate(z),
+			QSign = QT.monomByDegree().coefficient.sign(),
+			denSign = ((QSign===1 && underset==="<") || (QSign===-1 && underset===">"))?"-":"+"
+
+		if(num.isNotZero()){numSign = ""}
+		if(den.isNotZero()){denSign = ""}
+		if(level===2){
+			question = `\\lim_{x \\underset{${underset}}{\\to} ${z} } \\frac{ ${PT.tex} }{ ${QT.tex} } = \\textcolor{lightgray}{\\left[ \\frac{ ${num.tex}_{ ${numSign} } }{ ${den.tex}_{ ${denSign} } } \\right]} = $a`
+		}else{
+			question = `\\lim_{x \\underset{${underset}}{\\to} ${z} } \\frac{ ${PT.tex} }{ ${QT.tex} } = $a`
+		}
+
+		if(den.isZero()){
+			if(num.isZero()){
+				answer = (new PiMath.Fraction(kNum, kDen)).reduce().display
+			}else{
+				answer = ((num.value)*(denSign==="+"?1:-1))>0?"+oo":"-oo"
+			}
+		}else{
+			answer = num.divide(den).reduce().display
+		}
+	}
+
+	return {question, answer}
 }
 
 </script>

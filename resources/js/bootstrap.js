@@ -22,5 +22,10 @@ window.katexAutoRender = function (el, display) {
 		],
 		// • rendering keys, e.g.:
 		throwOnError: false,
+		macros: {
+			"\\IR": "\\mathbb{R}",
+			"\\IN": "\\mathbb{N}",
+			"\\ds": "\\displaystyle"
+		}
 	})
 }

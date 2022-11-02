@@ -83,6 +83,10 @@
 		@apply border-l-4 border-pink-600;
 	}
 
+	.block-flex {
+		@apply flex flex-row gap-4 list-none
+	}
+
 	.admin-wrapper{
 		@apply flex justify-between gap-3 items-baseline bg-amber-100 rounded border border-dashed border-amber-600 px-3 py-2;
 	}

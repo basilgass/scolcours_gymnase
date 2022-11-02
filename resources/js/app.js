@@ -25,7 +25,6 @@ createInertiaApp({
 			.directive("visible", visibleDirective)
 			.mixin({methods: {route}})
 
-
 		// Custom function available as 	$fnName
 		vueApp.config.globalProperties.$log = console.log
 
