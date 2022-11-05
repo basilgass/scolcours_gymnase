@@ -28,6 +28,17 @@ mix.js("resources/js/app.js", "public/js")
 			chunkFilename: mix.inProduction() ? "js/dynamic/[name].[contenthash].js" : "js/dev/[name].js",
 		},
 		resolve: {
+			// fallback: {
+			// 	http : require.resolve("stream-http"),
+			// 	https : require.resolve("https-browserify"),
+			// 	url  : require.resolve("url"),
+			// 	process: require.resolve("process/browser"),
+			// 	zlib: require.resolve("browserify-zlib"),
+			// 	stream: require.resolve("stream-browserify"),
+			// 	util: require.resolve("util"),
+			// 	buffer: require.resolve("buffer"),
+			// 	asset: require.resolve("assert"),
+			// },
 			alias: {
 				"@": path.resolve("resources/js"),
 			},

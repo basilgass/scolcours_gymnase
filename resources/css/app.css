@@ -21,7 +21,7 @@
 	}
 
 	.scolcours-container {
-		@apply max-w-7xl mx-auto px-5
+		@apply max-w-7xl mx-auto px-1 md:px-5
 	}
 
 	/* Just adding the color for JIT */

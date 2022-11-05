@@ -42,7 +42,7 @@
 		<!-- keyboard keys -->
 		<div
 			ref="root"
-			class="grid gap-2 keyboard"
+			class="grid gap-1 lg:gap-2 keyboard"
 			:class="(keyboardData.grid??keyboardGridDefault) + (small?' keyboard-sm':'')"
 		>
 			<button
@@ -120,7 +120,7 @@
 
 <script setup>
 import {computed, ref} from "vue"
-import {keyboardKeys, keyboards} from "@/keyboards"
+import {asciiToTex, keyboardKeys, keyboards} from "@/keyboards"
 
 const emit = defineEmits(["update:modelValue", "tex", "raw", "validate", "next", "key", "clear"])
 const props = defineProps({
@@ -157,17 +157,6 @@ let theKeyboard = computed(() => {
 
 			// Parse the keyboard value
 			let keyboardName = props.keyboard.split("@")[0]
-			//
-			// if(props.multiple){
-			// 	let answerNumber = keyStrokes.value.filter(item=>item.key===",").length
-			//
-			// 	let theKeyboards = props.keyboard.split("|")
-			// 	if(theKeyboards.length>=answerNumber){
-			// 		keyboardName = theKeyboards[answerNumber].split("@")[0]
-			// 	}else{
-			// 		keyboardName = theKeyboards[theKeyboards.length-1].split("@")[0]
-			// 	}
-			// }
 
 			if (keyboards.hasOwnProperty(keyboardName)) {
 				return keyboardName
@@ -190,12 +179,15 @@ let theKeyboard = computed(() => {
 
 			let opts = tmp[1].split(",")
 			opts = opts.map(x => {
-				const keyDisplay = x.split("|")
+				const keyDisplay = x.split("|"),
+					d = keyDisplay.length >= 2 ? keyDisplay[1] : keyDisplay[0],
+					isMath = d.startsWith("#") || d.startsWith("\\")
+
 				return {
 					key: keyDisplay[0],
 					visible: true,
-					type: "text", // TODO: change it dynamically
-					display: keyDisplay.length >= 2 ? keyDisplay[1] : keyDisplay[0],
+					type: isMath?"math":"text",
+					display: d.startsWith("#")?asciiToTex(d.substring(1)):d,
 					span: 0,
 					fn: (value) => {
 						if (theKeyboard.value === "qcm") {
@@ -206,6 +198,7 @@ let theKeyboard = computed(() => {
 				}
 			})
 
+			console.log(opts)
 			return opts
 		}
 

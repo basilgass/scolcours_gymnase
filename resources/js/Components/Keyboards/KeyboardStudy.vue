@@ -1,5 +1,5 @@
 <template>
-	<div class="max-w-xl mx-auto">
+	<div class="keyboard-study">
 		<div
 			v-show="showGraph"
 			class="overflow-x-scroll my-5"
@@ -9,13 +9,13 @@
 			<div ref="outputHTML" />
 		</div>
 
-		<div>
-			<div class="flex gap-5 items-baseline justify-center">
+		<div class="keyboard-study-items">
+			<div class="flex gap-1 lg:gap-2 items-baseline justify-center keyboard">
 				<button
 					v-for="item in items"
 					:key="item"
 					v-katex.ascii.nomargin="item"
-					class="btn py-2 bg-white hover:bg-amber-300 transition-colors"
+					class="key bg-white hover:bg-amber-300 transition-colors"
 					@dblclick="removeItem(item)"
 				/>
 			</div>
@@ -27,10 +27,11 @@
 			</div>
 		</div>
 
-		<div class="flex flex-col gap-3 keyboard">
+		<div class="keyboard keyboard-study-keyboard flex flex-col gap-3">
+			<!-- BValidation button -->
 			<button
 				ref="validateButton"
-				class="key-cmd bg-white w-full
+				class="key key-cmd bg-white w-full
 				border-green-700 text-green-600 hover:bg-green-100 hover:border-green-800
 				mb-3"
 				@click="btnValidate"
@@ -39,16 +40,17 @@
 			</button>
 
 			<!-- Keyboard selection -->
-			<div class="flex gap-3 justify-center">
+			<div class="keyboard flex gap-3 justify-center">
 				<button
 					v-for="btn of addButtons"
 					:key="btn"
-					class="py-0 px-10 btn bg-white py-3"
+					class="key bg-white flex-1"
 					@click="addItemToGraph(btn)"
 				>
 					{{ btn }}
 				</button>
 			</div>
+
 			<!-- Keyboard inputs -->
 			<div class="min-h-[4em]">
 				<div v-katex="tex" />
@@ -63,7 +65,6 @@
 				v-model="display"
 				keyboard="algebra"
 				key-class="bg-white"
-				class="max-w-xl mx-auto"
 				reset
 				back
 				@tex="tex = $event"
@@ -159,10 +160,14 @@ onMounted(()=>{
 				addButtons.value.push("AV")
 			}else if(opt==="ao"){
 				addButtons.value.push("AO")
-			}else if(opt==="p" || opt==="z" || opt==="o"){
-				if(addButtons.value.indexOf("point")===-1) {
-					addButtons.value.push("point")
-				}
+			}else if(opt==="p"){
+				addButtons.value.push("point")
+			}else if(opt==="o"){
+				addButtons.value.push("ordonnée")
+			}else if(opt==="z"){
+				addButtons.value.push("zéro")
+			}else if(opt==="t"){
+				addButtons.value.push("trou")
 			}else if(opt==="e"){
 				addButtons.value.push("extremum")
 			}else if(opt==="hide"){
@@ -278,16 +283,26 @@ function addItemToGraph(btn){
 				return
 			}
 			itemsGraph.value[display.value] = addAH(equ[1])
-
 		}
-	}else if(btn==="point"){
+	}
+	else{
 		if(!(display.value.startsWith("(") && display.value.endsWith(")") && display.value.split(";").length===2)){
 			message.value="Ce n'est pas un point"
 			return
 		}
-	}else{
-		console.log("Btn not handled")
-		return
+
+		let [x, y] = display.value.replace("(", "").replace(")", "").split(";")
+
+		if(btn==="zéro" && y!=="0"){
+			message.value ="Ce n'est pas un zéro"
+			return
+		}
+		if(btn==="ordonnée" && x!=="0"){
+			message.value ="Ce n'est pas une ordonnée à l'origine"
+			return
+		}
+
+		itemsGraph.value[display.value] = addPoint(btn, x, y)
 	}
 
 	// Add the element to the list of object created...
@@ -342,5 +357,17 @@ function addAO(value){
 		})
 
 	return PiGraph.path(`M${A.x},${A.y} L${B.x},${B.y}`).color("green")
+}
+
+function addPoint(type, x, y){
+	let P = PiGraph.point(x, y)
+	if(type==="trou"){
+		P.asCircle().fill("white")
+	}else if(type!=="extremum"){
+		P.asCircle().fill("black")
+	}
+	P.hideLabel()
+
+	return P
 }
 </script>

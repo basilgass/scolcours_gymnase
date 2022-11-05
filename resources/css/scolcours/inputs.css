@@ -82,12 +82,12 @@
 
     .keyboard>.key {
 		touch-action: none;
-        @apply px-3 py-2 rounded border hover:bg-blue-100 hover:border-blue-200 transition-colors
+		@apply px-1 py-1 lg:px-3 lg:py-2 rounded border hover:bg-blue-100 hover:border-blue-200 transition-colors
     }
 
 	.keyboard>.key-cmd {
 		touch-action: none;
-		@apply px-3 py-2 border rounded-lg transition-colors
+		@apply px-1 py-1 lg:px-3 lg:py-2 border rounded-lg transition-colors
 	}
 
     .keyboard.keyboard-sm>.key {

@@ -68,7 +68,7 @@ export const keyboards = {
 		grid: "grid-cols-4",
 		layout: [],
 		tex(value) {
-			return value
+			return value.startsWith("#")?asciiToTex(value.substring(1)):value
 		}
 	},
 	"number": {

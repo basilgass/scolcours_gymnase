@@ -83,6 +83,7 @@
 			v-else
 			ref="componentUI"
 			v-model="result"
+			class="max-w-xl mx-auto"
 			:options="keyboardComponentProps"
 			@tex="tex = $event"
 			@raw="raw = $event"
@@ -103,7 +104,7 @@ import {keyboardsList} from "@/keyboards"
 import {computed, defineAsyncComponent, ref} from "vue"
 import KeyboardBase from "@/Components/Keyboards/KeyboardBase.vue"
 
-let keyboard = ref("limit"),
+let keyboard = ref("#Study"),
 	choices = ref(keyboardsList),
 	result = ref(""),
 	validate=ref(true),
@@ -122,7 +123,7 @@ let isKeyboardComponent = computed(() => {
 		// let kbrd = keyboard.value.split("@")
 		// return kbrd.length === 2 ? kbrd[1] : null
 		if(keyboard.value==="#Study"){
-			return "ao,av,ah,m,z,o,g"
+			return "ao,av,ah,m,z,o,g,t,e"
 		}else {
 			return letters.value.length > 0 ? letters.value : null
 		}
