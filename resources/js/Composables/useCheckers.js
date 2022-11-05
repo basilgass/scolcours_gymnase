@@ -12,7 +12,7 @@ export const checkersList = [
 	"scn",
 	"tos",
 	"sol",
-	"exact"
+	"exact",
 ]
 
 export function useCheckers(checkerData) {

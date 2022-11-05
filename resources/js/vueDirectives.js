@@ -1,5 +1,5 @@
 import katex from "katex/dist/katex.mjs"
-import AsciiMathParser from "asciimath2tex"
+import AsciiMathParser from "./asciimath2tex"
 import {number} from "tailwindcss/lib/util/dataTypes"
 
 function katexUpdate(el, binding, vnode) {

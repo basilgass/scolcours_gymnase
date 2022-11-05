@@ -41,19 +41,18 @@
 			<KeyboardBase
 				v-show="showZeroesKeyboard"
 				v-model="zeroes"
-				v-model:tex="zeroesTex"
 				:multiple="true"
 				back
 				key-class="bg-white"
 				keyboard="exact"
 				reset
+				@tex="zeroesTex = $event"
 				@key="updateTos"
 			/>
 
 			<KeyboardBase
 				v-show="showSignsKeyboard"
 				v-model="signs"
-				v-model:tex="signsTex"
 				:custom-keys="{
 					'd': {type: 'math', display: '\\textcolor{red}{\\Vert}'},
 					'z': {type: 'math', display: '0'},
@@ -63,6 +62,7 @@
 					layout: ['+', '-', 'z', 'd', ['@back', 2], ['@reset', 2]]
 				}"
 				key-class="bg-white"
+				@tex="tex = signsTex"
 				@key="updateTos"
 			/>
 		</div>
@@ -79,11 +79,9 @@ import KeyboardBase from "@/Components/Keyboards/KeyboardBase.vue"
 
 let props = defineProps({
 	modelValue: {type: String, required: true},
-	tex: {type: String, required: true},
-	raw: {type: String, required: true},
 	options: {type: String}
 })
-let emits = defineEmits(["update:modelValue", "update:tex", "update:raw", "validate"])
+let emits = defineEmits(["update:modelValue", "tex", "raw", "validate"])
 
 let showZeroesKeyboard = ref(true),
 	showSignsKeyboard = ref(false)
@@ -117,29 +115,30 @@ let zeroes = ref(""),
 		signs.value = v[1]
 
 		nextTick(() => tosUI.value.$el.innerHTML).then(resolve => {
-			emits("update:tex", resolve)
-			emits("update:raw", "")
+			emits("tex", resolve)
+			emits("raw", "")
 		})
 
 		return ""
 	},
 	getRaw = function () {
-
 		nextTick(() => tosUI.value.$el.innerHTML).then(resolve => {
-			emits("update:raw", "")
+			emits("raw", "")
 		})
 
 		return ""
 	},
 	btnValidate = function () {
 		emits("update:modelValue", `${zeroes.value}@${signs.value}`)
-		emits("update:tex", tosUI.value.$el.innerHTML)
-		emits("update:raw", "")
+		emits("tex", "")
+		emits("raw", tosUI.value.$el.innerHTML)
 		emits("validate")
 	},
 	updateTos = async function(){
 		await nextTick()
-		emits("update:tex", tosUI.value.$el.innerHTML)
+		emits("update:modelValue", `${zeroes.value}@${signs.value}`)
+		emits("tex", "")
+		emits("raw", tosUI.value.$el.innerHTML)
 	}
 defineExpose({resetKeyStrokes, wrongAnswer, getTex, getRaw})
 </script>

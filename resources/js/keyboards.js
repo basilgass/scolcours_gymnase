@@ -1,4 +1,4 @@
-import AsciiMathParser from "asciimath2tex"
+import AsciiMathParser from "./asciimath2tex"
 
 export function asciiToTex(value) {
 	const parser = new AsciiMathParser()
@@ -56,6 +56,8 @@ export const keyboardKeys = {
 	"not": {type: "math", display: "\\neg"},
 	"nn": {type: "math", display: "\\cap"},
 	"oo": {type: "math", display: "\\infty"},
+	"+-": {type: "math", display: "\\pm"},
+	"-+": {type: "math", display: "\\mp"},
 	"!!": {type: "math", display: "\\varnothing"},
 	"@reset": {type: "icon", display: "bi bi-trash"},
 	"@back": {type: "icon", display: "bi bi-backspace"}
@@ -161,7 +163,20 @@ export const keyboards = {
 			"7", "8", "9", "^2", "^",
 			"0", "(", ")", "sqrt", "root(",
 			"log", "_", "ln", "pi", "e",
-			"oo", "!!", "", "RR", "!!"
+			"oo", "", "", "RR", "!!"
+		],
+		tex: function (value) {
+			// Apply this for all splited.
+			return value.split(",").map(v => makeExactFromAscii(v)).join(",")
+		}
+	},
+	"limit": {
+		grid: "grid-cols-5",
+		layout: [
+			"1", "2", "3", "+", "-",
+			"4", "5", "6", "*", "/",
+			"7", "8", "9", "sqrt", "root(",
+			"0", "", "+-", "-+", "oo"
 		],
 		tex: function (value) {
 			// Apply this for all splited.

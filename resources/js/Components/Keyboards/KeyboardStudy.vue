@@ -61,12 +61,12 @@
 			<KeyboardBase
 				ref="keyboardUI"
 				v-model="display"
-				v-model:tex="tex"
 				keyboard="algebra"
 				key-class="bg-white"
 				class="max-w-xl mx-auto"
 				reset
 				back
+				@tex="tex = $event"
 				@clear="message=''"
 			/>
 		</div>
@@ -85,20 +85,18 @@ import KeyboardBase from "@/Components/Keyboards/KeyboardBase.vue"
 
 let props = defineProps({
 	modelValue: {type: String, required: true},
-	tex: {type: String, required: true},
-	raw: {type: String, required: true},
 	options: {type: String}
 })
 
-let emits = defineEmits(["update:modelValue", "update:tex", "update:raw", "validate"])
+let emits = defineEmits(["update:modelValue", "tex", "raw", "validate"])
 
 let outputHTML = ref(null),
 	validateButton = ref(null),
 	btnValidate = function () {
 		// Get all outputs
 		emits("update:modelValue", items.value.sort().join(","))
-		emits("update:tex", "")
-		emits("update:raw", showRawOutput.value?PiGraph.svg.svg():"")
+		emits("tex", "")
+		emits("raw", showRawOutput.value?PiGraph.svg.svg():"")
 		emits("validate")
 	},
 	resetKeyStrokes = function () {
@@ -114,15 +112,15 @@ let outputHTML = ref(null),
 		const v = value.split("@")
 
 		nextTick(() => outputHTML.value.$el.innerHTML).then(resolve => {
-			emits("update:tex", resolve)
-			emits("update:raw", showRawOutput.value?PiGraph.svg.svg():"")
+			emits("tex", resolve)
+			emits("raw", showRawOutput.value?PiGraph.svg.svg():"")
 		})
 
 		return ""
 	},
 	getRaw = function () {
 		nextTick(() => outputHTML.value.$el.innerHTML).then(resolve => {
-			emits("update:raw", PiGraph.svg.svg())
+			emits("raw", PiGraph.svg.svg())
 		})
 	}
 
@@ -240,7 +238,7 @@ onMounted(()=>{
 	}
 
 	// Update the value
-	emits("update:raw", showRawOutput.value?PiGraph.svg.svg():"")
+	emits("raw", showRawOutput.value?PiGraph.svg.svg():"")
 })
 
 function addItemToGraph(btn){
@@ -299,7 +297,7 @@ function addItemToGraph(btn){
 	keyboardUI.value.resetKeyStrokes()
 
 	// Update the graph
-	emits("update:raw", showRawOutput.value?PiGraph.svg.svg():"")
+	emits("raw", showRawOutput.value?PiGraph.svg.svg():"")
 }
 
 function removeItem(item) {
@@ -309,7 +307,7 @@ function removeItem(item) {
 	delete itemsGraph.value[item]
 
 	// Update the graph
-	emits("update:raw", showRawOutput.value?PiGraph.svg.svg():"")
+	emits("raw", showRawOutput.value?PiGraph.svg.svg():"")
 }
 
 function addAV(value){

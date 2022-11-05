@@ -1,28 +1,18 @@
 <template>
 	<div class="question-wrapper overflow-x-auto relative">
-		<!-- correction mode -->
-		<div v-if="correctionMode">
-			<markdown-it
-				katex-class="katex-left"
-				:text="questionAsTex"
-			/>
-			<div
-				v-if="!isKeyboardComponent && raw!==''"
-				v-html="raw"
-			/>
-		</div>
 		<!-- Question display -->
-		<div v-else>
+		<div>
 			<illustration-show
-				v-if="block.illustrations?.length>0"
+				v-if="block.illustrations?.length>0 && !correctionMode"
 				class="bg-white"
 				:illustration="block.illustrations[0]"
 			/>
 			<markdown-it
+				:katex-class="correctionMode?'katex-left':''"
 				:text="questionAsTex"
 			/>
 			<div
-				v-if="!isKeyboardComponent && raw!==''"
+				v-if="raw!==''"
 				v-html="raw"
 			/>
 		</div>
@@ -59,7 +49,6 @@
 					v-show="showKeyboard || giveAnswer"
 					ref="keyboardUI"
 					v-model="answer"
-					v-model:tex="tex"
 					:keyboard="currentKeyboardName"
 					key-class="bg-white"
 					class="max-w-xl mx-auto"
@@ -67,6 +56,7 @@
 					reset
 					back
 					:multiple="multipleAnswer"
+					@tex="tex = $event"
 					@validate="validate"
 					@key="checkerResult.message = ''"
 				/>
@@ -76,9 +66,9 @@
 					v-show="showKeyboard || giveAnswer"
 					ref="componentUI"
 					v-model="answer"
-					v-model:tex="tex"
-					v-model:raw="raw"
 					:options="keyboardComponentProps"
+					@tex="tex = $event"
+					@raw="raw = $event"
 					@validate="validate"
 				/>
 			</div>
@@ -205,7 +195,7 @@ let questionAsTex = computed(() => {
 			}
 		}
 	}
-	
+
 	// On vérifie si la réponse est "tex-compatible"
 	try {
 		katex.renderToString(tex.value)
@@ -267,7 +257,6 @@ let validate = function () {
 			componentUI.value.wrongAnswer()
 		}
 	}
-
 	emits("validate", returnedValue)
 }
 
@@ -278,13 +267,15 @@ defineExpose({
 
 // Correction mode
 // TODO: correction mode for "specific components"
-function getTexFromKeyboard() {
+function getAnswerfromKeyboard() {
 	if (keyboardUI.value) {
-		return keyboardUI.value.getTex(props.answer)
+		tex.value = keyboardUI.value.getTex(props.answer)
 	} else if (componentUI.value) {
-		return componentUI.value.getTex(props.answer)
+		tex.value = componentUI.value.getTex(props.answer)
+		raw.value = componentUI.value.getRaw(props.answer)
 	}
 }
+
 function getRawFromKeyboard() {
 	if (componentUI.value) {
 		return componentUI.value.getRaw()
@@ -293,14 +284,15 @@ function getRawFromKeyboard() {
 
 watch(() => props.correctionMode, (correction, before) => {
 	if (correction) {
-		getTexFromKeyboard()
+		getAnswerfromKeyboard()
 	} else {
 		tex.value = ""
 	}
 })
+
 onMounted(() => {
 	if (props.correctionMode) {
-		getTexFromKeyboard()
+		getAnswerfromKeyboard()
 	}
 })
 </script>

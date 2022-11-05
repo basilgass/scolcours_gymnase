@@ -9,7 +9,7 @@
 				class="grid grid-cols-1 min-h-[50px]"
 			>
 				<div
-					v-katex.ascii.left.nomargin="props.modelValue"
+					v-katex.ascii.left.nomargin="getTex(props.modelValue)"
 					class="self-center"
 				/>
 			</div>
@@ -122,7 +122,7 @@
 import {computed, ref} from "vue"
 import {keyboardKeys, keyboards} from "@/keyboards"
 
-const emit = defineEmits(["update:modelValue", "update:tex", "validate", "next", "key", "clear"])
+const emit = defineEmits(["update:modelValue", "tex", "raw", "validate", "next", "key", "clear"])
 const props = defineProps({
 	modelValue: String,
 	tex: String,
@@ -338,14 +338,15 @@ let keyboardComputed = computed(() => {
 function resetKeyStrokes() {
 	keyStrokes.value = []
 	emit("update:modelValue", "")
-	emit("update:tex", "")
+	emit("tex", "")
+	emit("raw", "")
+	emit("key", "")
 	emit("clear", "")
 }
 
 function backKeyStrokes() {
-	ButtonKeyClick({
-		key: "@back"
-	})
+	ButtonKeyClick({key: "@back"})
+	emit("key", "")
 	emit("clear", "")
 }
 
@@ -360,7 +361,8 @@ function ButtonKeyClick(key) {
 
 	let output = "", result = keyStrokes.value.map(k => k.fn(output)).join("")
 	emit("update:modelValue", result)
-	emit("update:tex", getTex(result))
+	emit("tex", getTex(result))
+	emit("raw", "")
 	emit("key", result)
 }
 let validateButton = ref(null)

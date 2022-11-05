@@ -90,31 +90,32 @@ class futoshikiItem {
 
 		this.solver = {
 			possibilites: [],
-			greater: [],
-			smaller: []
+			top: [],
+			bottom: [],
+			left: [],
+			right: [],
+			column: [],
+			row: []
 		}
 
 	}
 }
 
-function generateFutoshiki(values, signs){
-	futoshiki.value = []
-	rang.value = Math.round(Math.sqrt(values.length))
-	// Size of the values
-	if(rang.value**2!==values.length){alert("Values are not correct")}
-	// Number of values
-	if(values.filter(x=>x>rang.value).length>0){alert("one number is too big.")}
-
+function generateFutoshiki(size, values, signs){
 	// Build the futoshiki data.
-	let rowData
-	for(let row=0; row<rang.value*2; row++){
+	let rowData,
+		futoshikiData = []
+	for(let row=0; row<size*2-1; row++){
 		rowData = []
-		for(let col=0; col<rang.value*2; col++){
+		for(let col=0; col<size*2-1; col++){
 			if(col%2===0 && row%2===0){
-				rowData.push(new futoshikiItem(values[row/2*rang.value+col/2]))
+				// It's a value
+				rowData.push(new futoshikiItem(values[`${row/2}-${col/2}`]))
 			}else if(col%2===1 && row%2===1){
+				// It's an intersection
 				rowData.push(new futoshikiItem(null))
 			}else{
+				// It's a sign.
 				const s = signs[`${row}-${col}`]
 				rowData.push(new futoshikiItem(
 					s===undefined?"":s
@@ -122,18 +123,34 @@ function generateFutoshiki(values, signs){
 			}
 		}
 
-		futoshiki.value.push(rowData)
+		futoshikiData.push(rowData)
 	}
 
-	console.log(futoshiki.value)
 
+	return futoshikiData
 }
+
+function solveFutoshiki(data) {
+	console.log(data)
+}
+
 onMounted(()=>{
-	generateFutoshiki([3,3,3,1,2,3,2,3,1], {
-		"0-1": ">",
-		"0-3": "<",
-		"1-2": "<",
-		"3-2": "<"
-	})
+	// Define the size of the futoshiki
+	futoshiki.value = generateFutoshiki(
+		3,
+		{
+			"0-2": 3,
+			"1-1": 2,
+			"2-2": 1
+		},
+		{
+			"0-1": ">",
+			"0-3": "<",
+			"1-2": "<",
+			"3-2": "<"
+		})
+	rang.value = 3
+
+	solveFutoshiki(futoshiki.value)
 })
 </script>

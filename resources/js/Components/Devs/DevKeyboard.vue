@@ -42,10 +42,20 @@
 				<input v-model="letters">
 			</div>
 		</div>
+
 		<div
 			v-katex.display="tex"
 			class="katex-block"
 		/>
+		<div
+			v-html="raw"
+		/>
+
+		<div
+			class="font-code border px-3 py-2 bg-amber-200 my-5"
+			v-text="result"
+		/>
+
 		<div v-if="isKeyboardComponent">
 			Regular keyboard
 		</div>
@@ -56,8 +66,7 @@
 		<KeyboardBase
 			v-if="isKeyboardComponent"
 			v-model="result"
-			v-model:tex="tex"
-			keyboard="exact|simple"
+			:keyboard="keyboard"
 			math-output
 			text-output
 			:validate="validate"
@@ -66,14 +75,17 @@
 			:next="next"
 			:multiple="multiple"
 			class="max-w-3xl mx-auto"
+			@tex="tex = $event"
+			@raw="raw = $event"
 		/>
 		<component
 			:is="keyboardComponent"
 			v-else
 			ref="componentUI"
 			v-model="result"
-			v-model:tex="tex"
 			:options="keyboardComponentProps"
+			@tex="tex = $event"
+			@raw="raw = $event"
 			@validate="checkValidation"
 		/>
 	</div>
@@ -91,7 +103,7 @@ import {keyboardsList} from "@/keyboards"
 import {computed, defineAsyncComponent, ref} from "vue"
 import KeyboardBase from "@/Components/Keyboards/KeyboardBase.vue"
 
-let keyboard = ref("exact"),
+let keyboard = ref("limit"),
 	choices = ref(keyboardsList),
 	result = ref(""),
 	validate=ref(true),
@@ -100,7 +112,8 @@ let keyboard = ref("exact"),
 	back=ref(true),
 	multiple=ref(true),
 	letters=ref("a,b,c,n,m"),
-	tex = ref("")
+	tex = ref(""),
+	raw = ref("")
 
 let isKeyboardComponent = computed(() => {
 		return !(keyboard.value[0]=== "#")
