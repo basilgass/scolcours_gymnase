@@ -121,18 +121,6 @@ class ChaptersController extends Controller
 		//
 	}
 
-	public function fetchComponents(Chapter $chapter)
-	{
-		$components = [];
-		foreach (Storage::disk('chapters')->files($chapter->theme->slug . '/' . $chapter->slug) as $file) {
-			$components[] = $file;
-		}
-
-		return $components;
-	}
-
-
-
 	public function updatePostsOrder(Chapter $chapter, Request $request)
 	{
 		foreach($request['data'] as $row){

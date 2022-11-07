@@ -7,6 +7,7 @@
 		<component
 			:is="IllustrationComponent"
 			v-if="illustration.type==='component'"
+			:illustration="illustration"
 		/>
 	</div>
 </template>
@@ -25,7 +26,7 @@ const IllustrationComponent = computed(
 	() => {
 		if(props.illustration.type==="component"){
 			return defineAsyncComponent(
-				() => import(`@/Components/Chapters/${props.illustration.code}`)
+				() => import(`@/Components/Posts/Illustrations/Custom/${props.illustration.title}.vue`)
 			)
 		}else{
 			return false

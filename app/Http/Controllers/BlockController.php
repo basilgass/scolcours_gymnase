@@ -7,6 +7,7 @@ use App\Models\Chapter;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Storage;
 
 class BlockController extends Controller
 {
@@ -70,7 +71,7 @@ class BlockController extends Controller
 		if (count($request->illustrations) > 0) {
 			foreach ($request->illustrations as $item) {
 				$block->illustrations()->create([
-					'title' => '',
+					'title' => $item['title']??'',
 					'type' => $item['type'],
 					'code' => $item['code'],
 					'parameters' => $item['parameters']
@@ -209,4 +210,14 @@ class BlockController extends Controller
 
 		return Redirect::back();
 	}
+
+	public function fetchComponents()
+	{
+		$components = [];
+		foreach (Storage::disk('illustrations')->files() as $file) {
+			$components[] =basename($file, '.vue');
+		}
+		return $components;
+	}
+
 }

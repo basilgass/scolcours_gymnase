@@ -56,21 +56,27 @@
 				v-else
 				class="col-span-2 border-dashed border-gray-200 border-2 rounded h-full w-full grid grid-cols-1 text-center items-center"
 			>
+				<ol v-if="chapterComponents.length>0">
+					<li
+						v-for="comp of chapterComponents"
+						:key="comp"
+						:class="theModel.title===comp?'btn-success':'btn'"
+						@click="theModel.title=comp"
+					>
+						{{ comp }}
+					</li>
+				</ol>
 				<form-input
 					v-model="theModel.parameters"
 					label="parametres"
 					name="drawParameters"
 				/>
-				<ol v-if="chapterComponents.length>0">
-					<li
-						v-for="comp of chapterComponents"
-						:key="comp"
-						:class="theModel.code===comp?'btn-success':'btn'"
-						@click="theModel.code=comp"
-					>
-						{{ comp }}
-					</li>
-				</ol>
+				<form-textarea
+					v-model="theModel.code"
+					:hide-label="true"
+					name="drawData"
+					:rows="10"
+				/>
 			</div>
 		</div>
 	</form-field>
@@ -82,7 +88,6 @@ import FormLabel from "@/Components/Form/FormLabel"
 import {computed, onMounted, ref} from "vue"
 import FormTextarea from "@/Components/Form/FormTextarea"
 import FormInput from "@/Components/Form/FormInput"
-import {usePage} from "@inertiajs/inertia-vue3"
 
 defineEmits(["update:modelValue", "inputFocus"])
 let props = defineProps({
@@ -107,7 +112,7 @@ let chapterComponents = ref([])
 
 function loadComponents(){
 	theModel.value.type="component"
-	axios.get(route("chapters.components", [usePage().props.value.chapter.slug]))
+	axios.get(route("illustrations.components"))
 		.then(res=> {
 			chapterComponents.value = res.data
 		})

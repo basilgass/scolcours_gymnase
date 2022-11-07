@@ -68,6 +68,10 @@
 			'chapters' => [
 				'driver' => 'local',
 				'root'   => resource_path('js/Components/Chapters'),
+			],
+			'illustrations' => [
+				'driver' => 'local',
+				'root'   => resource_path('js/Components/Posts/Illustrations/Custom'),
 			]
 
 		],
