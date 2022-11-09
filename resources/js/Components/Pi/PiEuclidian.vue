@@ -88,7 +88,7 @@ function addStep(P, degree, withParenthesis, isFirstStep) {
 		if (M.isZero()) {
 			if(isFirstStep) {
 				let litteral = i === 0 ? "" : "x"
-				litteral = litteral + (i === 1 ? "" : `^{${i}}`)
+				litteral = litteral + (i > 1 ? `^{${i}}`: "")
 				step.push(`\\textcolor{lightgrey}{+0${litteral}}`)
 			}else{
 				step.push("")
