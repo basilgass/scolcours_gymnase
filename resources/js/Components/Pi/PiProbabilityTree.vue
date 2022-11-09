@@ -1,33 +1,18 @@
 <template>
 	<div ref="root">
-		<form-textarea
-			v-model="treeData"
-			name="treeData"
-			label="Générateur d'arbre"
-			:rows="rows"
-			@keyup.ctrl.enter="updateTree"
-		/>
-		<div id="tree" />
+		<div ref="tree" />
 	</div>
 </template>
 
 <script setup>
 import {ProbabilityTree} from "@/ProbabilityTree"
-import {computed, onMounted, ref} from "vue"
-import FormTextarea from "@/Components/Form/FormTextarea"
+import {onMounted, ref, watch} from "vue"
 
-let root = ref(null),
-	treeData = ref(`A,2
-   X,3
-   Y,5
-      U,2
-      V,6
-   F,4
-B,5`)
-
-let rows = computed(() => {
-	return treeData.value.split("\n").length
+let props = defineProps({
+	treeData: {type: String, required: true}
 })
+let root = ref(null),
+	tree = ref(null)
 
 let Tree
 
@@ -93,24 +78,16 @@ function updateTree() {
 	}
 
 	// Update the katex data.
-	katexAutoRender(document.getElementById("tree"))
+	katexAutoRender(tree.value)
 }
 
 onMounted(() => {
 	// Tree = new ProbabilityTree(document.getElementById("tree"), treeData.value)
-	Tree = new ProbabilityTree(document.getElementById("tree"))
-
+	Tree = new ProbabilityTree(tree.value)
 	updateTree()
-	/*[
-		{node: "A", value: 3, leaves: [
-			{node: "X", value: 2},
-			{node: "Y", value: 17}
-		]},
-		{node: "B", value: 5, leaves: [
-			{node: "U", value: 2},
-			{node: "V", value: 10},
-			{node: "W", value: 9},
-		]},
-	]*/
+})
+
+watch(()=>props.treeData, ()=>{
+	updateTree()
 })
 </script>

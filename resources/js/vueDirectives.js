@@ -26,6 +26,9 @@ function katexUpdate(el, binding, vnode) {
 	if (binding.modifiers.nomargin) {
 		el.classList.add("katex-m-0")
 	}
+	if(binding.modifiers.dense){
+		el.classList.add("katex-m-1")
+	}
 
 	let rawTex = binding.value.replaceAll(/\$[a-z]/g, "\\textcolor{red}{A}")
 	if(binding.modifiers.auto){

@@ -69,6 +69,10 @@
 		margin-top: 0;
 		margin-bottom: 0;
 	}
+	.katex-m-1 .katex-display {
+		margin-top: 0.3em;
+		margin-bottom: 0.3em;
+	}
 
 	.block-border-definition {
 		@apply border-l-4 border-lime-400;
