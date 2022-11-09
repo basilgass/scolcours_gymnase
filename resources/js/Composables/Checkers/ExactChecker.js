@@ -5,7 +5,10 @@ export function ExactChecker(options){
 		},
 		check: (expectedAnswer, answer = []) => {
 			// Le résultat est exactement ce qui est demandé
-			if (answer.toString() === expectedAnswer.toString()) {
+			const stringAnswer = answer.toString(),
+				asciiAnswer = stringAnswer.startsWith("#")?stringAnswer.substring(1):stringAnswer
+
+			if (asciiAnswer === expectedAnswer.toString()) {
 				return {
 					result: true,
 					message: ""

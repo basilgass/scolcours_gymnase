@@ -137,7 +137,7 @@
 
 import MarkdownIt from "@/Components/Ui/MarkdownIt"
 import {computed, inject, nextTick, onMounted, ref, watch} from "vue"
-import IllustrationShow from "@/Components/Posts/Illustrations/IllustrationShow"
+import IllustrationShow from "@/Components/Posts/Illustrations/IllustrationShow.vue"
 import {PiMath} from "pimath/esm"
 import DialogModal from "@/Components/Ui/DialogModal"
 import BlockForm from "@/Components/Posts/Blocks/BlockForm"

@@ -14,7 +14,7 @@
 
 <script setup>
 import {computed, defineAsyncComponent, ref} from "vue"
-import PiDrawParser from "@/Components/Pi/PiDrawParser"
+import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"
 
 const props = defineProps({
 	illustration: {type: Object, required: true}
@@ -26,7 +26,7 @@ const IllustrationComponent = computed(
 	() => {
 		if(props.illustration.type==="component"){
 			return defineAsyncComponent(
-				() => import(`@/Components/Posts/Illustrations/Custom/${props.illustration.title}.vue`)
+				() => import(`@/Components/Posts/Illustrations/Elements/${props.illustration.title}.vue`)
 			)
 		}else{
 			return false

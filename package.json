@@ -41,7 +41,7 @@
 		"markdown-it-attrs": "^4.1.4",
 		"markdown-it-texmath": "^1.0.0",
 		"pidraw": "^0.0.45",
-		"pimath": "^0.0.96",
+		"pimath": "^0.0.98",
 		"vue-slider-component": "4.0.0-beta.7",
 		"vuedraggable": "^4.1.0"
 	}

@@ -174,7 +174,7 @@ import FormNumber from "@/Components/Form/FormNumber"
 import {computed, nextTick, onMounted, ref, watch} from "vue"
 import MarkdownIt from "@/Components/Ui/MarkdownIt"
 import FormSelect from "@/Components/Form/FormSelect"
-import IllustrationShow from "@/Components/Posts/Illustrations/IllustrationShow"
+import IllustrationShow from "@/Components/Posts/Illustrations/IllustrationShow.vue"
 import {PiMath} from "pimath/esm"
 
 const emits = defineEmits(["close", "save", "update:modelValue", "delete"])

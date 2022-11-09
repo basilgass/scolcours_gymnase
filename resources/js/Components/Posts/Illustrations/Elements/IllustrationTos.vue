@@ -1,5 +1,8 @@
 <template>
-	<pi-table-of-signs :tos="tos" />
+	<pi-table-of-signs
+		:tos="study.signs"
+		:fn="study.name"
+	/>
 </template>
 
 <script setup>
@@ -14,11 +17,10 @@ let props = defineProps({
 	params = ref(props.illustration.parameters),
 	code = ref(props.illustration.code)
 
-let tos = computed(()=>{
+let study = computed(()=>{
 	let [num, den] = code.value.split("/"),
-		p = new PiMath.Rational(num, den),
-		study = p.study()
+		p = new PiMath.Rational(num, den)
 
-	return study.makeSigns()
+	return p.study("signs" + (params.value?","+params.value:""))
 })
 </script>

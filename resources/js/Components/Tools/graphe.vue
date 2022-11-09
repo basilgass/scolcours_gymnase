@@ -13,6 +13,8 @@
 		/>
 
 		<pi-draw-parser
+			:width="800"
+			:height="800"
 			:draw="{
 				code: code,
 				parameters: params

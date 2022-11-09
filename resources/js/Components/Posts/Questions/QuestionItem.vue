@@ -237,7 +237,6 @@ let questionAsTex = computed(() => {
 
 let validate = function () {
 	checkerResult.value = currentChecker.value.check(props.answer, answer.value)
-
 	answers.value.push({
 		value: `${questionAsTex.value}`,
 		result: checkerResult.value.result
