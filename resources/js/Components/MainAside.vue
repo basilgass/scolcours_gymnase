@@ -50,6 +50,15 @@
 						>
 							administration
 						</Link>
+						<Link
+							v-if="$page.props.auth.can.admin"
+							as="button"
+							class="block transition duration-300 hover:translate-x-2 px-0 md:px-4 py-1"
+							:href="route('dev.index')"
+							@click="$parent.showAside=false"
+						>
+							développement
+						</Link>
 						<LogoutButton class="block transition duration-300 hover:translate-x-2 px-0 md:px-4 py-1" />
 					</div>
 					<Link

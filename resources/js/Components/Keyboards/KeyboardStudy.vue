@@ -318,7 +318,9 @@ function addItemToGraph(btn){
 function removeItem(item) {
 	items.value.splice(items.value.indexOf(item), 1)
 
-	itemsGraph.value[item].remove()
+	itemsGraph.value[item].forEach(el=>el.remove())
+
+	// Remove the key from the ist
 	delete itemsGraph.value[item]
 
 	// Update the graph
@@ -332,7 +334,7 @@ function addAV(value){
 			y: 0
 		}).x
 
-	return PiGraph.path(`M${posX},${0} L${posX},${PiGraph.height}`).color("red")
+	return [PiGraph.path(`M${posX},${0} L${posX},${PiGraph.height}`).color("red")]
 }
 
 function addAH(value){
@@ -342,7 +344,7 @@ function addAH(value){
 			y: pos
 		}).y
 
-	return PiGraph.path(`M${0},${posY} L${PiGraph.width},${posY}`).color("green")
+	return [PiGraph.path(`M${0},${posY} L${PiGraph.width},${posY}`).color("green")]
 }
 
 function addAO(value){
@@ -356,7 +358,7 @@ function addAO(value){
 			y: line.getValueAtX(PiGraph.unitXDomain.max).value
 		})
 
-	return PiGraph.path(`M${A.x},${A.y} L${B.x},${B.y}`).color("green")
+	return [PiGraph.path(`M${A.x},${A.y} L${B.x},${B.y}`).color("green")]
 }
 
 function addPoint(type, x, y){
@@ -368,6 +370,6 @@ function addPoint(type, x, y){
 	}
 	P.hideLabel()
 
-	return P
+	return [P]
 }
 </script>

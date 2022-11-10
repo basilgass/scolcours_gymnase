@@ -11,7 +11,7 @@
 		>
 			<div class="flex items-center gap-3">
 				<div v-katex="`${q.question} =`" />
-				<div v-katex.ascii="ascii(q.answer)" />
+				<div v-katex="asciiToTex(q.answer)" />
 			</div>
 			<div>
 				<div v-text="q.question" />
@@ -31,13 +31,14 @@ export default {
 import {computed, ref} from "vue"
 import {PiMath} from "pimath/esm"
 import {Fraction} from "pimath/esm/maths/coefficients/fraction"
+import {asciiToTex} from "@/keyboards"
 
-let challengeLevel = ref(2),
+let challengeLevel = ref(1),
 	exactFormat = ref(true),
 	questions = computed(() => {
 		let data = []
 		for (let i = 0; i < 20; i++) {
-			data.push(limiteEnUnPoint(challengeLevel.value))
+			data.push(factorisation(challengeLevel.value))
 		}
 		return data
 	}),
@@ -310,5 +311,49 @@ function limiteEnUnPoint(level){
 	return {question, answer}
 }
 
+function factorisation(level){
+	let question="", answer=""
+
+	if(level===1){
+		let P = PiMath.Random.polynom({
+			degree: 1,
+			allowNullMonom: false
+		})
+
+		P.divide(P.gcdNumerator())
+		if(PiMath.Random.bool(0.3)){
+			let M = P.monomByDegree(0),
+				Q = P.clone().subtract(M.multiplyByNumber(2))
+			P.multiply(Q)
+		}else{
+			P.pow(2)
+		}
+		question = P.tex
+		answer = P.displayFactors
+	}
+	else if(level>=2){
+		let P = PiMath.Random.polynom({
+				degree: 1,
+				allowNullMonom: false,
+				unit: level===2
+			}),
+			Q = PiMath.Random.polynom({
+				degree: 1,
+				allowNullMonom: false,
+				unit: level===2
+			})
+
+		P.divide(P.gcdNumerator())
+		Q.divide(Q.gcdNumerator())
+
+		if(level===3){
+			if(P.monomByDegree().coefficient.isNegative()){P.opposed()}
+			if(Q.monomByDegree().coefficient.isNegative()){Q.opposed()}
+		}
+		question = P.multiply(Q).tex
+		answer = P.displayFactors
+	}
+	return {question, answer}
+}
 </script>
 

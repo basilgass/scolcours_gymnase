@@ -1,16 +1,17 @@
-import {PiMath} from "pimath/esm";
+import {PiMath} from "pimath/esm"
 
 export function PolynomChecker(options) {
 	return {
 		format: () => {
 			let opts = []
-			if (options.includes('f') || options.includes('factors')) {
-				opts.push('factorisé')
-			} else if (options.includes('d') || options.includes('develop')) {
-				opts.push('développé')
+
+			if (options.includes("f") || options.includes("factors")) {
+				opts.push("factorisé")
+			} else if (options.includes("d") || options.includes("develop")) {
+				opts.push("développé")
 			}
 
-			return `polynôme ${opts.join(', ')}`
+			return `polynôme ${opts.join(", ")}`
 		},
 		check: (expectedAnswer, answer) => {
 			let A = new PiMath.Polynom(answer),
