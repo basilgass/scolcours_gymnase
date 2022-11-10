@@ -1,11 +1,11 @@
 <template>
 	<article>
-		<ArticleTitle title="Italia Unit" />
+		<ArticleTitle title="Italia Unit"/>
 		<Link
-			href="/italiano"
 			class="hover:pl-2 transition-all duration-300"
+			href="/italiano"
 		>
-			<i class="bi bi-arrow-bar-left" />  retour
+			<i class="bi bi-arrow-bar-left"/> retour
 		</Link>
 
 		<div
@@ -15,11 +15,11 @@
 			<div
 				v-for="(card, index) in cards"
 				:key="index"
-				class="bg-white border rounded h-24 grid place-items-center p-3 cursor-pointer transform-all duration-300"
 				:class="{
 					'bg-green-600': card.found,
 					'bg-amber-400': card.selected
 				}"
+				class="bg-white border rounded h-24 grid place-items-center p-3 cursor-pointer transform-all duration-300"
 				@click="showAllCards?null:selectCard(card)"
 			>
 				<span v-show="showAllCards || card.found || card.selected">
@@ -65,7 +65,7 @@
 			</div>
 
 			<div class="text-center">
-				Mots {{ startIndex+1 }} à {{ startIndex + 1 + numberOfCards }} sur {{ availableWords.length }}
+				Mots {{ startIndex + 1 }} à {{ startIndex + 1 + numberOfCards }} sur {{ availableWords.length }}
 			</div>
 
 			<div>
@@ -101,7 +101,7 @@ let availableWords = ref([]),
 	cards = ref([]),
 	unitsSelection = ref("1"),
 	units = computed(() => {
-		return unitsSelection.value.split(",").filter(x=>!isNaN(x)).map(x => +x)
+		return unitsSelection.value.split(",").filter(x => !isNaN(x)).map(x => +x)
 	}),
 	showAllCards = ref(false),
 	numberOfCards = ref(12),
@@ -109,24 +109,23 @@ let availableWords = ref([]),
 	gameStopped = ref(true)
 
 let startGame = function () {
-	if(availableWords.value.length===0) {
+	if (availableWords.value.length === 0) {
 		generateWords()
 	}
 
 	generateCards()
 }
-let continueGame = function (){
+let continueGame = function () {
 	startIndex.value = startIndex.value + numberOfCards.value + 1
 	generateCards()
 }
 
-let generateWords = function() {
+let generateWords = function () {
 	// All words available
-	startIndex.value = 0
 	let words = []
 	for (let unit in vocabulare) {
 		if (units.value.includes(+unit)) {
-			words = words.concat(vocabulare[unit])
+			words = words.concat(vocabulare[unit].map(item => [item[0], item[1]]))
 		}
 	}
 
@@ -134,7 +133,7 @@ let generateWords = function() {
 	availableWords.value = PiMath.Random.shuffle(words)
 }
 let generateCards = function () {
-	if(startIndex.value > availableWords.value.length){
+	if (startIndex.value > availableWords.value.length) {
 		alert("Bravo ! Tout le voc a été révisé !")
 		availableWords.value = []
 		startIndex.value = -1

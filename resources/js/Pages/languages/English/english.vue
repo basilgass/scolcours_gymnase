@@ -1,6 +1,6 @@
 <template>
 	<article>
-		<ArticleTitle title="Italiano" />
+		<ArticleTitle title="English" />
 
 		<div class="grid grid-cols-2 md:grid-cols-4 gap-4">
 			<Link

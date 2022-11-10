@@ -543,8 +543,8 @@ const unit2 =  [
 	["duemila","deux mille"]
 ]
 
-export const vocabulare = [
-	unit0,
-	unit1,
-	unit2
-]
+export const vocabulare ={
+	"0": unit0,
+	"1": unit1,
+	"2": unit2,
+}

@@ -15,6 +15,12 @@
 			>
 				suggestions
 			</Link>
+			<Link
+				href="/italiano/list"
+				class="bg-white border rounded hover:scale-105 h-32 grid place-items-center transition-all duration-300"
+			>
+				liste des mots
+			</Link>
 		</div>
 	</article>
 </template>
