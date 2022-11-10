@@ -1,6 +1,6 @@
 <template>
 	<article>
-		<ArticleTitle title="English Unit" />
+		<ArticleTitle title="Italiano unita" />
 		<Link
 			href="/english"
 			class="hover:pl-2 transition-all duration-300"
