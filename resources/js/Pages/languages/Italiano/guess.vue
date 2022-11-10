@@ -2,7 +2,7 @@
 	<article>
 		<ArticleTitle title="Italiano unita" />
 		<Link
-			href="/english"
+			href="/italiano"
 			class="hover:pl-2 transition-all duration-300"
 		>
 			<i class="bi bi-arrow-bar-left" />  retour
@@ -119,7 +119,7 @@ import {PiMath} from "pimath/esm"
 import FormInput from "@/Components/Form/FormInput.vue"
 import FormNumber from "@/Components/Form/FormNumber.vue"
 
-import {vocabulare} from "@/Pages/languages/Italiano/italianoUnita";
+import {vocabulare} from "@/Pages/languages/Italiano/italianoUnita"
 import FormSwitch from "@/Components/Form/FormSwitch.vue"
 
 let availableWords = ref([]),
