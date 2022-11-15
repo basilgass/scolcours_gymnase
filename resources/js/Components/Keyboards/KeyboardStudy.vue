@@ -51,6 +51,14 @@
 				</button>
 			</div>
 
+			<div>
+				<button
+					class="btn btn-primary"
+					@click="plotGraph"
+				>
+					Tracer
+				</button>
+			</div>
 			<!-- Keyboard inputs -->
 			<div class="min-h-[4em]">
 				<div v-katex="tex" />
@@ -129,6 +137,7 @@ defineExpose({resetKeyStrokes, wrongAnswer, getTex, getRaw})
 
 // Code specific to Study.
 let PiGraph,
+	plot,
 	draw = ref(null),
 	keyboardUI = ref(null),
 	theOptions = ref(props.options.toLowerCase().split(",")),
@@ -318,7 +327,12 @@ function addItemToGraph(btn){
 function removeItem(item) {
 	items.value.splice(items.value.indexOf(item), 1)
 
-	itemsGraph.value[item].forEach(el=>el.remove())
+	// Remove the control points.
+	Object.values(itemsGraph.value[item].controls||[]).forEach(el=>el.remove())
+	// Remove the bezier points.
+	Object.values(itemsGraph.value[item].bezier||[]).forEach(group=>group.forEach(el=>el.remove()))
+	// Remove the main object
+	itemsGraph.value[item].element.remove()
 
 	// Remove the key from the ist
 	delete itemsGraph.value[item]
@@ -327,14 +341,44 @@ function removeItem(item) {
 	emits("raw", showRawOutput.value?PiGraph.svg.svg():"")
 }
 
+function btnClickEvent(btn){
+	btn.svg.on("click", (ev) => {
+		if (btn.svg.fill() === "white") {
+			btn.svg.fill("green")
+		} else {
+			btn.svg.fill("white")
+		}
+	})
+
+	return btn
+}
+
 function addAV(value){
 	let pos = (new PiMath.NumExp(value)).evaluate({}),
 		posX = PiGraph.unitsToPixels({
 			x: pos,
 			y: 0
-		}).x
+		}).x,
+		y = PiGraph.unitYDomain,
+		size = PiGraph.distanceToPixels(1)/3
 
-	return [PiGraph.path(`M${posX},${0} L${posX},${PiGraph.height}`).color("red")]
+	return {
+		type: "av",
+		element: PiGraph.path(`M${posX},${0} L${posX},${PiGraph.height}`).color("red"),
+		controls: {
+			"LT": btnClickEvent(PiGraph.point(pos-0.5, y.max-0.5).asSquare(size).fill({color: "white", opacity: 0.5}).hideLabel()),
+			"RT": btnClickEvent(PiGraph.point(pos+0.5, y.max-0.5).asSquare(size).fill({color: "white", opacity: 0.5}).hideLabel()),
+			"LB": btnClickEvent(PiGraph.point(pos-0.5, y.min+0.5).asSquare(size).fill({color: "white", opacity: 0.5}).hideLabel()),
+			"RB": btnClickEvent(PiGraph.point(pos+0.5, y.min+0.5).asSquare(size).fill({color: "white", opacity: 0.5}).hideLabel()),
+		},
+		bezier: {
+			"LT": [PiGraph.point(pos-0.1, y.max), PiGraph.point(pos-0.05, y.max+5)],
+			"RT": [PiGraph.point(pos+0.1, y.max), PiGraph.point(pos+0.05, y.max+5)],
+			"LB": [PiGraph.point(pos-0.1, y.min), PiGraph.point(pos-0.05, y.min-5)],
+			"RB": [PiGraph.point(pos+0.1, y.min), PiGraph.point(pos+0.05, y.min-5)],
+		}
+	}
+
 }
 
 function addAH(value){
@@ -342,34 +386,159 @@ function addAH(value){
 		posY = PiGraph.unitsToPixels({
 			x: 0,
 			y: pos
-		}).y
+		}).y,
+		x = PiGraph.unitXDomain,
+		size = PiGraph.distanceToPixels(1)/3
 
-	return [PiGraph.path(`M${0},${posY} L${PiGraph.width},${posY}`).color("green")]
+	return {
+		type: "ah",
+		element: PiGraph.path(`M${0},${posY} L${PiGraph.width},${posY}`).color("green"),
+		controls: {
+			"LT": btnClickEvent(PiGraph.point(x.min+0.5, pos+0.5).asSquare(size).fill({color: "white", opacity: 0.5}).hideLabel()),
+			"LB": btnClickEvent(PiGraph.point(x.min+0.5, pos-0.5).asSquare(size).fill({color: "white", opacity: 0.5}).hideLabel()),
+			"RT": btnClickEvent(PiGraph.point(x.max-0.5, pos+0.5).asSquare(size).fill({color: "white", opacity: 0.5}).hideLabel()),
+			"RB": btnClickEvent(PiGraph.point(x.max-0.5, pos-0.5).asSquare(size).fill({color: "white", opacity: 0.5}).hideLabel()),
+		},
+		bezier: {
+			"LT": [PiGraph.point(x.min, pos+0.1), PiGraph.point(x.min-5, pos+0.05)],
+			"LB": [PiGraph.point(x.min, pos-0.1), PiGraph.point(x.min-5, pos-0.05)],
+			"RT": [PiGraph.point(x.max, pos+0.1), PiGraph.point(x.max+5, pos+0.05)],
+			"RB": [PiGraph.point(x.max, pos-0.1), PiGraph.point(x.max+5, pos-0.05)],
+		}
+	}
 }
 
 function addAO(value){
 	let line = new PiMath.Geometry.Line(value),
-		A = PiGraph.unitsToPixels({
-			x: PiGraph.unitXDomain.min,
-			y: line.getValueAtX(PiGraph.unitXDomain.min).value
-		}),
-		B = PiGraph.unitsToPixels({
-			x: PiGraph.unitXDomain.max,
-			y: line.getValueAtX(PiGraph.unitXDomain.max).value
-		})
+		size = PiGraph.distanceToPixels(1)/3,
+		A, B, x, y, Apixels, Bpixels
 
-	return [PiGraph.path(`M${A.x},${A.y} L${B.x},${B.y}`).color("green")]
+	x = PiGraph.unitXDomain.min
+	y = line.getValueAtX(x).value
+	if(y < PiGraph.unitYDomain.min || y > PiGraph.unitYDomain.max){
+		y = PiGraph.unitYDomain.max
+		x = line.getValueAtY(y).value
+	}
+	A = {x: +x,y: +y}
+	Apixels = PiGraph.unitsToPixels({x, y})
+
+	x = PiGraph.unitXDomain.max
+	y = line.getValueAtX(x).value
+	if(y < PiGraph.unitYDomain.min || y > PiGraph.unitYDomain.max){
+		y = PiGraph.unitYDomain.min
+		x = line.getValueAtY(y).value
+	}
+	B = {x: +x,y: +y}
+	Bpixels = PiGraph.unitsToPixels({x, y})
+
+	let dLine = line.director,
+		dLineNorm = dLine.norm,
+		pLine = line.normal,
+		pLineNorm = pLine.norm,
+		delta = 0.5,
+		dxy = {
+			x: dLine.x.value/dLineNorm,
+			y: dLine.y.value/dLineNorm,
+		},
+		pxy = {
+			x: pLine.x.value/pLineNorm*delta,
+			y: pLine.y.value/pLineNorm*delta,
+		}
+
+	return {
+		type: "ao",
+		element: PiGraph.path(`M${Apixels.x},${Apixels.y} L${Bpixels.x},${Bpixels.y}`).color("green"),
+		controls: {
+			"LT": btnClickEvent(PiGraph.point(
+				A.x + dxy.x + pxy.x,
+				A.y + dxy.y + pxy.y
+			).asSquare(size).fill({color: "white", opacity: 0.5}).hideLabel()),
+			"LB": btnClickEvent(PiGraph.point(
+				A.x + dxy.x - pxy.x,
+				A.y + dxy.y - pxy.y
+			).asSquare(size).fill({color: "white", opacity: 0.5}).hideLabel()),
+			"RT": btnClickEvent(PiGraph.point(
+				B.x - dxy.x + pxy.x,
+				B.y - dxy.y + pxy.y
+			).asSquare(size).fill({color: "white", opacity: 0.5}).hideLabel()),
+			"RB": btnClickEvent(PiGraph.point(
+				B.x - dxy.x - pxy.x,
+				B.y - dxy.y - pxy.y
+			).asSquare(size).fill({color: "white", opacity: 0.5}).hideLabel()),
+		},
+		bezier: {
+			"LT": [
+				PiGraph.point(A.x - dxy.x + pxy.x/10, A.y - dxy.y + pxy.y/10),
+				PiGraph.point(A.x - dxy.x*5 + pxy.x/20, A.y - dxy.y*5 + pxy.y/20),
+			],
+			"LB": [
+				PiGraph.point(A.x - dxy.x - pxy.x/10, A.y - dxy.y - pxy.y/10),
+				PiGraph.point(A.x - dxy.x*5 - pxy.x/20, A.y - dxy.y*5 - pxy.y/20),
+			],
+			"RT": [
+				PiGraph.point(B.x + dxy.x + pxy.x/10, A.y + dxy.y + pxy.y/10),
+				PiGraph.point(B.x + dxy.x*5 + pxy.x/20, A.y + dxy.y*5 + pxy.y/20),
+			],
+			"RB": [
+				PiGraph.point(B.x + dxy.x - pxy.x/10, A.y + dxy.y - pxy.y/10),
+				PiGraph.point(B.x + dxy.x*5 - pxy.x/20, A.y + dxy.y*5 - pxy.y/20),
+			],
+		}
+	}
 }
 
 function addPoint(type, x, y){
-	let P = PiGraph.point(x, y)
+	let P = PiGraph.point(x, y),
+		pixels = PiGraph.unitsToPixels({x, y}),
+		bar = PiGraph.path(`M${pixels.x-50},${pixels.y} L${pixels.x+50},${pixels.y}`).hide()
 	if(type==="trou"){
 		P.asCircle().fill("white")
-	}else if(type!=="extremum"){
+	}else if(type==="extremum"){
+		P.asCircle().fill("black")
+		bar.stroke("red").show()
+	}else{
 		P.asCircle().fill("black")
 	}
 	P.hideLabel()
 
-	return [P]
+	return {
+		type: "point",
+		beziercontrol: type==="extremum"?"flat":"smooth",
+		element: P,
+		controls: {
+			bar
+		}
+	}
+}
+
+function plotGraph(){
+	// Get all points
+	let ctrlPoints = []
+	for(let item of Object.values(itemsGraph.value)){
+		if(item.type==="point") {
+			ctrlPoints.push({
+				point: item.element,
+				control: item.beziercontrol,
+				ratio: 0.5
+			})
+		}else{
+			// Check the selected buttons
+			for(let key in item.controls){
+				if( item.controls[key].svg.fill()==="green" ){
+					ctrlPoints = ctrlPoints.concat(...item.bezier[key].map(pt=>{return{
+						point: pt,
+						control: item.type,
+						ratio: 0.5
+					} }))
+				}
+			}
+		}
+	}
+
+	// Sort the points.
+	ctrlPoints.sort((a,b)=>a.point.x-b.point.x)
+
+	if(plot!==undefined){}
+	plot = PiGraph.bezier(ctrlPoints)
 }
 </script>

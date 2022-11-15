@@ -35,6 +35,12 @@
 	.bg-scolcours-statistiques {@apply bg-cyan-500}
 	.bg-scolcours-jeux {@apply bg-orange-500}
 	.bg-scolcours-tools {@apply bg-pink-400}
+	.text-scolcours-algebre {@apply text-blue-500}
+	.text-scolcours-analyse {@apply text-amber-500}
+	.text-scolcours-geometrie {@apply text-purple-500}
+	.text-scolcours-statistiques {@apply text-cyan-500}
+	.text-scolcours-jeux {@apply text-orange-500}
+	.text-scolcours-tools {@apply text-pink-400}
 	.border-scolcours-algebre {@apply border-blue-300}
 	.border-scolcours-analyse {@apply border-amber-300}
 	.border-scolcours-geometrie {@apply border-purple-300}

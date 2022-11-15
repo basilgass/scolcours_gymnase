@@ -1,7 +1,7 @@
 <template>
 	<article
+		class="px-4 py-2 rounded-xl border transition-all"
 		:class="panelClass.panel"
-		class="bg-white px-4 py-2 rounded-xl border border-gray-300 transition-all"
 	>
 		<h2
 			v-if="$slots.title"
