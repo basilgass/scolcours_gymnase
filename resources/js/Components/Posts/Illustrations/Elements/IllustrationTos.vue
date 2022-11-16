@@ -2,6 +2,7 @@
 	<pi-table-of-signs
 		:tos="study.signs"
 		:fn="study.name"
+		:minimal="minimal"
 	/>
 </template>
 
@@ -18,9 +19,12 @@ let props = defineProps({
 	code = ref(props.illustration.code)
 
 let study = computed(()=>{
-	let [num, den] = code.value.split("/"),
-		p = new PiMath.Rational(num, den)
-
-	return p.study("signs" + (params.value?","+params.value:""))
-})
+		let [num, den] = code.value.split("/"),
+			p = new PiMath.Rational(num, den),
+			cfg = params.value?params.value.split(","):[]
+		return p.study("signs" + (params.value?(","+params.value):""))
+	}),
+	minimal = computed(()=>{
+		return params.value?params.value.includes("minimal"):false
+	})
 </script>

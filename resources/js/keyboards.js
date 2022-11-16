@@ -2,7 +2,9 @@ import AsciiMathParser from "./asciimath2tex"
 
 export function asciiToTex(value) {
 	const parser = new AsciiMathParser()
-	return parser.parse(value)
+
+	// Force display style
+	return "\\displaystyle" + parser.parse(value)
 }
 
 export const keyboardKeys = {

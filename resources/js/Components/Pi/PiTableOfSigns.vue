@@ -31,7 +31,7 @@
 						</th>
 					</tr>
 				</thead>
-				<tbody>
+				<tbody v-show="!minimal">
 					<tr
 						v-for="(factor, index) of tos.factors"
 						:key="`tos-${index}`"
@@ -170,7 +170,8 @@ let props = defineProps({
 		tos: {
 			required: true, type: Object
 		},
-		fn: {type: String, default: "f"}
+		fn: {type: String, default: "f"},
+		minimal: {type: Boolean, default: false}
 	}),
 	showTex = ref(false)
 
