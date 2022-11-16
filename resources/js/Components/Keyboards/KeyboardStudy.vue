@@ -51,7 +51,7 @@
 				</button>
 			</div>
 
-			<div>
+			<div v-if="showGraph">
 				<button
 					class="btn btn-primary"
 					@click="plotGraph"
@@ -140,7 +140,7 @@ let PiGraph,
 	plot,
 	draw = ref(null),
 	keyboardUI = ref(null),
-	theOptions = ref(props.options.toLowerCase().split(",")),
+	theOptions = ref(props.options?props.options.toLowerCase().split(","):[]),
 	addButtons = ref([]),
 	tex = ref(""),
 	display = ref(""),

@@ -5,6 +5,7 @@ import {StringChecker} from "@/Composables/Checkers/StringChecker"
 import {TableofsignChecker} from "@/Composables/Checkers/TableofsignChecker"
 import {SolutionChecker} from "@/Composables/Checkers/SolutionChecker"
 import {ExactChecker} from "@/Composables/Checkers/ExactChecker"
+import {StudyChecker} from "@/Composables/Checkers/StudyChecker"
 
 export const checkersList = [
 	"polynom",
@@ -30,6 +31,8 @@ export function useCheckers(checkerData) {
 		return ScientificChecker(options)
 	case "tos":
 		return TableofsignChecker(options)
+	case "study":
+		return StudyChecker(options)
 	case "sol":
 		return SolutionChecker(options)
 
