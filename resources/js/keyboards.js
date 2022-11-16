@@ -4,7 +4,7 @@ export function asciiToTex(value) {
 	const parser = new AsciiMathParser()
 
 	// Force display style
-	return "\\displaystyle" + parser.parse(value)
+	return "\\displaystyle " + parser.parse(value)
 }
 
 export const keyboardKeys = {
