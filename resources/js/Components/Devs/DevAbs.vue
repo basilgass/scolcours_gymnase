@@ -47,6 +47,12 @@
 				<div v-katex="`f(x)=${yAsTex}\\implies \\mathcal S = ${expression.solve(y).tex}`" />
 			</div>
 		</div>
+
+		<div class="max-w-lg">
+			<pi-draw-parser :draw="draw" />
+		</div>
+
+		<div v-html="draw.code" />
 	</div>
 </template>
 <script>
@@ -131,6 +137,7 @@ let root = ref(null),
 		return {
 			absTex,
 			tex: `f(x) = ${absTex} = \\begin{cases}${expr.map(x=>`${x.polynom.display} &\\text{si}\\quad ${x.condition}`).join("\\\\")}\\end{cases}`,
+			drawCode: expr.map(x=>`${x.polynom.display},${x.borders.min===null?-20:x.borders.min.value}:${x.borders.max===null?20:x.borders.max.value}`),
 			solve: function(v){
 				let zeroes = []
 				for(let e of expr) {
@@ -182,10 +189,19 @@ let root = ref(null),
 			k1 = PiMath.Random.numberSym(10, false),
 			k2 = PiMath.Random.numberSym(10, false),
 			k3 = PiMath.Random.numberSym(10)
-		
+
 		// -7abs(x+1)-abs(2x+18)+3
 
 		fx.value= `${k1}abs(${p1.display})${(k2>0?"+":"") + k2}abs(${p2.display})${k3===0?"":((k3>0?"+":"")+k3)}`
-	}
+	},
+	draw = computed(()=>{
+		let alpha = "fghijklmn"
+		return {
+			code: expression.value.drawCode.map(
+				(f, index)=>`${alpha[index]}(x)=${f.replace(/([0-9])x/, "$1*x")}`
+			).join("\n"),
+			parameters: "axis,grid,x=-20:20,y=-20:20"
+		}
+	})
 </script>
 
