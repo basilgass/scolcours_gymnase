@@ -245,6 +245,7 @@
 					</template>
 					<template #footer>
 						<button
+							v-if="$page.props.auth.can.admin && editMode"
 							class="btn px-10 px-4 min-h-[10rem] border-2 border-blue-600 border-dashed text-blue-900 bg-blue-100 hover:bg-blue-200"
 							@click="addNewQuestion"
 						>
