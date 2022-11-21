@@ -150,6 +150,13 @@
 		@apply uppercase font-semibold text-xs;
 	}
 
+	.btn-scolcours-algebre {@apply btn bg-blue-500 text-white hover:bg-blue-100 hover:text-black}
+	.btn-scolcours-analyse {@apply btn bg-amber-500 text-white hover:bg-amber-100 hover:text-black}
+	.btn-scolcours-geometrie {@apply btn bg-purple-500 text-white hover:bg-purple-100 hover:text-black}
+	.btn-scolcours-statistiques {@apply btn bg-cyan-500 text-white hover:bg-cyan-100 hover:text-black}
+	.btn-scolcours-jeux {@apply btn bg-orange-500 text-white hover:bg-orange-100 hover:text-black}
+	.btn-scolcours-tools {@apply btn bg-pink-400 text-white hover:bg-pink-100 hover:text-black}
+
 	.list-space {
 		@apply list-outside ml-3
 	}

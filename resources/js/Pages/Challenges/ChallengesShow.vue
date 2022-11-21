@@ -214,7 +214,6 @@
 						v-model="theChallenge.checker"
 						name="questionsChecker"
 						label="checker"
-						:datalist="checkerList"
 					/>
 
 					<form-input
@@ -326,7 +325,6 @@ let theChallenge = ref(props.challenge.data),
 	challengeGenerator = ref(props.challenge.data.generator),
 	challengeGeneratorError = ref(""),
 	editMode = ref(false),
-	checkerList = ref(checkersList),
 	questions = ref([]),
 	runChallengeGenerator = function () {
 		let crtLevel = 1

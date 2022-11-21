@@ -1,7 +1,9 @@
 <template>
-	<Teleport to="body">
+	<Teleport
+		v-if="props.modelValue"
+		to="body"
+	>
 		<div
-			v-if="props.modelValue"
 			class="fixed inset-0 bg-gray-800/60 grid place-items-center z-50"
 			@click.self="doCancel"
 		>

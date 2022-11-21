@@ -189,7 +189,7 @@
 
 			<!-- all the questions -->
 			<div
-				v-if="filteredQuestions.length>0"
+				v-if="filteredQuestions.length>0 || $page.props.auth.can.admin"
 				class="questions-wrapper mt-10"
 			>
 				<!-- question section header -->
@@ -242,6 +242,14 @@
 							@destroy="questionDestroy"
 							@duplicate="questionDuplicated"
 						/>
+					</template>
+					<template #footer>
+						<button
+							class="btn px-10 px-4 min-h-[10rem] border-2 border-blue-600 border-dashed text-blue-900 bg-blue-100 hover:bg-blue-200"
+							@click="addNewQuestion"
+						>
+							ajouter une question
+						</button>
 					</template>
 				</draggable>
 			</div>
@@ -397,7 +405,27 @@ let postQuestions = ref(props.post.questions),
 			}
 		}
 		return c
-	})
+	}),
+	addNewQuestion = function(){
+		axios.post(
+			route("posts.questions.store", [props.post.id]), {
+				math: false,
+				mathAppend: "",
+				body: "nouvelle question",
+				answer: "-",
+				checker: "exact",
+				keyboard: "exact"
+			}
+		).then((res) => {
+			// Add the question.
+			postQuestions.value.push(res.data.data[0])
+			// questions.value.push(res.data)
+		}).catch(res => {
+			// Show the error.
+			console.log("Question inline form")
+			console.log(res)
+		})
+	}
 
 watch(() => props.hideResolvedQuestions, (value, before) => {
 	//TODO: turn the filteredQuestions to computed ?????

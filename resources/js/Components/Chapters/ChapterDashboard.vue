@@ -18,17 +18,27 @@
 				v-if="props.chapter.challenges.length>0 || editMode"
 				class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-1 lg:gap-3"
 			>
+				<Link
+					v-for="challenge in props.chapter.challenges"
+					:key="`challenge-${challenge.id}`"
+					class="min-h-[100px] w-full h-full"
+					:class="`btn-scolcours-${$page.props.theme.slug}`"
+					as="button"
+					:href="route('chapters.challenge', [$page.props.theme.slug, props.chapter.slug, challenge.slug])"
+				>
+					{{ challenge.title }}
+				</Link>
+
 				<div
 					v-if="$page.props.auth.can.admin && editMode"
 					class="min-h-[100px] grid place-items-center"
 				>
 					<button
-						class="btn-primary w-full h-full"
+						class="btn w-full h-full border-2 border-blue-600 border-dashed text-blue-900 bg-blue-100 hover:bg-blue-200"
 						@click="showCreateChallenge=true"
 					>
 						Nouveau challenge
 					</button>
-
 					<dialog-modal
 						v-model="showCreateChallenge"
 					>
@@ -45,21 +55,57 @@
 						</form-button>
 					</dialog-modal>
 				</div>
-
-				<button
-					v-for="challenge in props.chapter.challenges"
-					:key="`challenge-${challenge.id}`"
-					class="min-h-[100px] w-full h-full btn text-white"
-					:class="`bg-scolcours-${$page.props.theme.slug} hover:text-black hover:text-scolcours-${$page.props.theme.slug}`"
-					:href="route('chapters.challenge', [$page.props.theme.slug, props.chapter.slug, challenge.slug])"
-				>
-					{{ challenge.title }}
-				</button>
 			</div>
 		</div>
 
-		<Panel
+		<div
 			v-if="$page.props.auth.user"
+			class="grid grid-cols-4 md:col-span-3 gap-3 min-h-[10em]"
+		>
+			<Panel class="grid grid-cols-1 place-items-center text-center">
+				<div class="flex flex-col gap-5">
+					<div class="text-lg text-gray-300 uppercase">
+						exercices
+					</div>
+					<div class="text-4xl font-code">
+						{{ chapterExercises.length }}
+					</div>
+				</div>
+			</Panel>
+			<Panel class="grid grid-cols-1 place-items-center text-center">
+				<div class="flex flex-col gap-5">
+					<div class="text-lg text-gray-300 uppercase">
+						questions
+					</div>
+					<div class="text-4xl font-code">
+						{{ chapterQuestions.answered }}/{{ chapterQuestions.questions }}
+					</div>
+				</div>
+			</Panel>
+			<Panel class="grid grid-cols-1 place-items-center text-center">
+				<!--				<div class="flex flex-col gap-5">-->
+				<!--					<div class="text-lg text-gray-300 uppercase">-->
+				<!--						questions-->
+				<!--					</div>-->
+				<!--					<div class="text-4xl font-code">-->
+				<!--						{{ chapterQuestions.answered }}/{{ chapterQuestions.questions }}-->
+				<!--					</div>-->
+				<!--				</div>-->
+			</Panel>
+			<Panel class="grid grid-cols-1 place-items-center text-center">
+				<!--				<div class="flex flex-col gap-5">-->
+				<!--					<div class="text-lg text-gray-300 uppercase">-->
+				<!--						questions-->
+				<!--					</div>-->
+				<!--					<div class="text-4xl font-code">-->
+				<!--						{{ chapterQuestions.answered }}/{{ chapterQuestions.questions }}-->
+				<!--					</div>-->
+				<!--				</div>-->
+			</Panel>
+		</div>
+
+		<Panel
+			v-if="$page.props.auth.user && 1===0"
 		>
 			<template #title>
 				Exercices
@@ -103,49 +149,6 @@
 				</div>
 			</div>
 		</Panel>
-
-		<!--		<Panel v-if="props.chapter.challenges.length>0 || editMode">-->
-		<!--			<template #title>-->
-		<!--				Challenges-->
-		<!--			</template>-->
-
-		<!--			<div class="flex flex-col gap-3 mb-4">-->
-		<!--				<Link-->
-		<!--					v-for="challenge in props.chapter.challenges"-->
-		<!--					:key="`challenge-${challenge.id}`"-->
-		<!--					class="line-clamp-1 transition-color duration-500"-->
-		<!--					:class="`hover:border-b border-scolcours-${$page.props.theme.slug}`"-->
-		<!--					:href="route('chapters.challenge', [$page.props.theme.slug, props.chapter.slug, challenge.slug])"-->
-		<!--				>-->
-		<!--					{{ challenge.title }}-->
-		<!--				</Link>-->
-		<!--			</div>-->
-
-		<!--			<div v-if="$page.props.auth.can.admin && editMode">-->
-		<!--				<button-->
-		<!--					class="btn-primary w-full"-->
-		<!--					@click="showCreateChallenge=true"-->
-		<!--				>-->
-		<!--					Nouveau challenge-->
-		<!--				</button>-->
-
-		<!--				<dialog-modal-->
-		<!--					v-model="showCreateChallenge"-->
-		<!--				>-->
-		<!--					<form-input-->
-		<!--						v-model="newChallengeForm.title"-->
-		<!--						label="Nouveau challenge"-->
-		<!--						name="newChallenge"-->
-		<!--						:focus="true"-->
-		<!--						@enter="createNewChallenge"-->
-		<!--						@cancel="showCreateChallenge=false"-->
-		<!--					/>-->
-		<!--					<form-button @click="createNewChallenge">-->
-		<!--						Créer un nouveau challenge-->
-		<!--					</form-button>-->
-		<!--				</dialog-modal>-->
-		<!--			</div>-->
-		<!--		</Panel>-->
 	</section>
 </template>
 

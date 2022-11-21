@@ -39,7 +39,6 @@
 					v-model="questionForm.checker"
 					label="Vérification"
 					name="checker"
-					:datalist="checkersList"
 				/>
 				<form-input
 					v-model="questionForm.keyboard"
@@ -64,7 +63,6 @@ import FormInput from "@/Components/Form/FormInput"
 import FormTextarea from "@/Components/Form/FormTextarea"
 import {reactive} from "vue"
 import {keyboardsList} from "@/keyboards"
-import {checkersList} from "@/Composables/useCheckers"
 import FormSwitch from "@/Components/Form/FormSwitch"
 
 let props = defineProps({
@@ -93,6 +91,7 @@ function questionStore() {
 		// questions.value.push(res.data)
 	}).catch(res => {
 		// Show the error.
+		console.log("Question inline form")
 		console.log(res)
 		emits("cancel")
 	})

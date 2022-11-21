@@ -7,14 +7,23 @@ import {SolutionChecker} from "@/Composables/Checkers/SolutionChecker"
 import {ExactChecker} from "@/Composables/Checkers/ExactChecker"
 import {StudyChecker} from "@/Composables/Checkers/StudyChecker"
 
-export const checkersList = [
-	"polynom",
-	"nb",
-	"scn",
-	"tos",
-	"sol",
-	"exact",
-]
+export const checkersList = {
+	"polynom": ["factors", "develop"],
+	"nb":  ["1", "2", "3", "4"],
+	"scn": ["1", "2", "3", "4"],
+	"tos": [],
+	"sol": [],
+	"exact": [],
+	"study": [],
+}
+// export const checkersList = [
+// 	"polynom",
+// 	"nb",
+// 	"scn",
+// 	"tos",
+// 	"sol",
+// 	"exact",
+// ]
 
 export function useCheckers(checkerData) {
 	const options = checkerData.split("@"),

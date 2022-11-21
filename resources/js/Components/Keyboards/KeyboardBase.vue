@@ -198,7 +198,6 @@ let theKeyboard = computed(() => {
 				}
 			})
 
-			console.log(opts)
 			return opts
 		}
 

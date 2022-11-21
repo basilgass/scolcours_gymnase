@@ -19,49 +19,100 @@
 		</div>
 
 		<!-- Admin edition mode -->
+		<dialog-modal
+			v-model="edit"
+		>
+			<BlockForm
+				v-model="theQuestion.block"
+				no-script
+				no-data
+				no-switch
+				no-title
+				no-type
+				no-delete
+				@close="edit=false"
+			/>
+		</dialog-modal>
+		<dialog-modal
+			v-model="editAnswer"
+		>
+			<div class="grid grid-cols-1 gap-5">
+				<QuestionForm
+					v-model="theQuestion"
+					@close="editAnswer=false"
+				/>
+			</div>
+		</dialog-modal>
 		<div
 			v-if="$page.props.auth.can.admin && editMode && !correctionMode"
-			class="admin-wrapper flex-col"
+			class="admin-wrapper"
 		>
-			<div class="admin-wrapper-row flex justify-between">
+			<div class="w-full flex justify-between">
 				<button
 					class="btn-edit btn-xs"
-					@click="editBlock=!editBlock"
+					@click="edit=true"
 				>
-					éditer la donnée
+					donnée <i class="bi bi-pencil" />
 				</button>
-
-				<confirm-button
-					class="btn-xs btn-delete"
-					@confirm="destroyQuestion"
+				<button
+					class="btn-edit btn-xs"
+					@click="editAnswer=true"
 				>
-					<i class="bi bi-trash mr-2" />Supprimer
-				</confirm-button>
-
+					question <i class="bi bi-pencil" />
+				</button>
 				<button
 					class="btn-xs btn-add"
 					@click="duplicateQuestion(theQuestion.id)"
 				>
 					<i class="bi bi-clipboard mr-2" />Dupliquer
 				</button>
+				<confirm-button
+					class="btn-xs btn-delete"
+					@confirm="destroyQuestion"
+				>
+					<i class="bi bi-trash mr-2" />Supprimer
+				</confirm-button>
 			</div>
-			<div class=" admin-wrapper-row">
-				<BlockForm
-					v-show="editBlock"
-					v-model="theQuestion.block"
-					no-script
-					no-data
-					no-switch
-					no-title
-					no-type
-					no-preview
-					no-delete
-					@close="editBlock=false"
-				/>
-			</div>
-			<div class="admin-wrapper-row">
-				<QuestionForm v-model="theQuestion" />
-			</div>
+
+			<!--			<div class="admin-wrapper-row flex justify-between">-->
+			<!--				<button-->
+			<!--					class="btn-edit btn-xs"-->
+			<!--					@click="editBlock=!editBlock"-->
+			<!--				>-->
+			<!--					éditer la donnée-->
+			<!--				</button>-->
+
+			<!--				<confirm-button-->
+			<!--					class="btn-xs btn-delete"-->
+			<!--					@confirm="destroyQuestion"-->
+			<!--				>-->
+			<!--					<i class="bi bi-trash mr-2" />Supprimer-->
+			<!--				</confirm-button>-->
+
+			<!--				<button-->
+			<!--					class="btn-xs btn-add"-->
+			<!--					@click="duplicateQuestion(theQuestion.id)"-->
+			<!--				>-->
+			<!--					<i class="bi bi-clipboard mr-2" />Dupliquer-->
+			<!--				</button>-->
+			<!--			</div>-->
+			<!--			<div class=" admin-wrapper-row">-->
+			<!--				<BlockForm-->
+			<!--					v-show="editBlock"-->
+			<!--					v-model="theQuestion.block"-->
+			<!--					no-script-->
+			<!--					no-data-->
+			<!--					no-switch-->
+			<!--					no-title-->
+			<!--					no-type-->
+			<!--					no-preview-->
+			<!--					no-delete-->
+			<!--					@close="editBlock=false"-->
+			<!--				/>-->
+			<!--			</div>-->
+			<!--			<div class="admin-wrapper-row">-->
+			<!--				<QuestionForm v-model="theQuestion" />-->
+			<!--			</div>-->
 		</div>
 
 		<!-- the body of question -->
@@ -102,6 +153,7 @@ import BlockForm from "@/Components/Posts/Blocks/BlockForm.vue"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
 import QuestionForm from "@/Components/Posts/Questions/QuestionForm.vue"
 import Button from "@/Components/Auth/Button.vue"
+import DialogModal from "@/Components/Ui/DialogModal.vue"
 
 let props = defineProps({
 	question: {type: Object, required: true},
@@ -114,7 +166,9 @@ let emits = defineEmits(["destroy", "resolved", "duplicate"])
 let userAnswerAsTex = ref(""),
 	theQuestion = ref(props.question),
 	showKeyboard = ref(false),
-	editBlock = ref(false)
+	editBlock = ref(false),
+	edit = ref(false),
+	editAnswer = ref(false)
 
 let editMode = inject("editmode")
 

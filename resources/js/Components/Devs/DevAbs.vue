@@ -75,10 +75,18 @@ let root = ref(null),
 	x = ref("-4"),
 	y = ref("-10"),
 	xAsTex = computed(()=>{
-		return new PiMath.Fraction(x.value).tex
+		try {
+			return new PiMath.Fraction(x.value).tex
+		}catch{
+			return ""
+		}
 	}),
 	yAsTex = computed(()=>{
-		return new PiMath.Fraction(y.value).tex
+		try {
+			return new PiMath.Fraction(y.value).tex
+		}catch{
+			return ""
+		}
 	}),
 	expression = computed(()=>{
 		let abs = [],
@@ -139,27 +147,37 @@ let root = ref(null),
 			tex: `f(x) = ${absTex} = \\begin{cases}${expr.map(x=>`${x.polynom.display} &\\text{si}\\quad ${x.condition}`).join("\\\\")}\\end{cases}`,
 			drawCode: expr.map(x=>`${x.polynom.display},${x.borders.min===null?-20:x.borders.min.value}:${x.borders.max===null?20:x.borders.max.value}`),
 			solve: function(v){
-				let zeroes = []
-				for(let e of expr) {
-					const equ = new PiMath.Equation(e.polynom, v)
-					equ.solve()
-					for(let z of equ.solutions) {
-						if (checkValue(z.value, e.borders.min, e.borders.max)) {
-							zeroes.push(z)
+				try {
+					let zeroes = []
+					for (let e of expr) {
+						const equ = new PiMath.Equation(e.polynom, v)
+						equ.solve()
+						for (let z of equ.solutions) {
+							if (checkValue(z.value, e.borders.min, e.borders.max)) {
+								zeroes.push(z)
+							}
 						}
 					}
-				}
 
-				return {
-					tex: zeroes.length>0?`\\left\\{${zeroes.map(z=>z.exact.tex).join(";")}\\right\\}`:"\\varnothing"
+					return {
+						tex: zeroes.length > 0 ? `\\left\\{${zeroes.map(z => z.exact.tex).join(";")}\\right\\}` : "\\varnothing"
+					}
+				}catch{
+					return {
+						tex: "\\text{ merci d'entrer un nombre}"
+					}
 				}
 			},
 			evaluate: function(v){
-				let Q = new PiMath.Fraction(v)
+				try {
+					let Q = new PiMath.Fraction(v)
 
-				return expr.filter(x=>{
-					return checkValue(Q.value, x.borders.min, x.borders.max)
-				})[0].polynom.evaluate(Q)
+					return expr.filter(x => {
+						return checkValue(Q.value, x.borders.min, x.borders.max)
+					})[0].polynom.evaluate(Q)
+				}catch{
+					return "\\text{merci d'entrer un nombre}"
+				}
 			}
 		}
 	}),
