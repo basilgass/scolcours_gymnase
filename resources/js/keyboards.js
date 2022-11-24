@@ -227,7 +227,8 @@ export const keyboards = {
 export const keyboardsList = [
 	...Object.keys(keyboards),
 	"#TableOfSigns",
-	"#Study"
+	"#Study",
+	"#Order"
 ]
 
 function makeExactFromAscii(value) {

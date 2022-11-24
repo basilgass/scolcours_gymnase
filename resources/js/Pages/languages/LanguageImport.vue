@@ -23,11 +23,6 @@
 			/>
 		</div>
 
-		<div class="flex gap-3">
-			<button @click="generate('it', key)" class="btn" v-for="(item, key) of vocabulare" :key="key">Italiano {{ key }}</button>
-			<button @click="generate('en', key)" class="btn" v-for="(item, key) of vocabulary" :key="key">English {{ key }}</button>
-		</div>
-
 		<div>
 			<form-textarea
 				v-model="traduction"
@@ -90,9 +85,6 @@
 <script>
 import LayoutMain from "@/Layouts/LayoutMain"
 
-import {vocabulary} from "@/Pages/languages/English/englishUnits";
-import {vocabulare} from "@/Pages/languages/Italiano/italianoUnita";
-
 export default {
 	layout: LayoutMain
 }
@@ -103,22 +95,19 @@ import {useForm} from "@inertiajs/inertia-vue3"
 import FormInput from "@/Components/Form/FormInput.vue"
 import FormTextarea from "@/Components/Form/FormTextarea.vue"
 import {computed, ref} from "vue"
-import {Inertia} from "@inertiajs/inertia"
-import {vocabulare} from "@/Pages/languages/Italiano/italianoUnita";
-import {vocabulary} from "@/Pages/languages/English/englishUnits";
 
 let traduction = ref(""),
-	traductions = computed(()=>{
+	traductions = computed(() => {
 
 		return traduction.value.split("\n")
-			.filter(x=>x.trim()!=="")
-			.map(x=>{
+			.filter(x => x.trim() !== "")
+			.map(x => {
 				const values = x.split("\t")
 				return {
 					fr: values[0],
-					foreign: values.length>=2?values[1]:"",
-					definition: values.length>=3?values[2]:"",
-					examples: values.length>=4?values[3]:"",
+					foreign: values.length >= 2 ? values[1] : "",
+					definition: values.length >= 3 ? values[2] : "",
+					examples: values.length >= 4 ? values[3] : "",
 				}
 			})
 	})
@@ -127,9 +116,9 @@ let form = useForm({
 		unit: "",
 		title: ""
 	}),
-	importerLesTraductions = function() {
+	importerLesTraductions = function () {
 		form
-			.transform((data)=>{
+			.transform((data) => {
 				return {
 					...data,
 					translations: traductions.value
@@ -139,20 +128,20 @@ let form = useForm({
 
 
 	},
-	generate = function(L, U){
-		form.language=L
+	generate = function (L, U) {
+		form.language = L
 		let TR = []
-		if(L==='it'){
+		if (L === "it") {
 			form.unit = `unità ${U}`
-			TR = vocabulare[U].map(x=>{
+			TR = vocabulare[U].map(x => {
 				return {
 					fr: x[1],
 					foreign: x[0]
 				}
 			})
-		}else{
+		} else {
 			form.unit = `Life ${U}`
-			TR = vocabulary[U].map(x=>{
+			TR = vocabulary[U].map(x => {
 				return {
 					fr: x.fr,
 					foreign: x.en,
@@ -163,7 +152,7 @@ let form = useForm({
 		}
 
 		form
-			.transform((data)=>{
+			.transform((data) => {
 				return {
 					...data,
 					translations: TR

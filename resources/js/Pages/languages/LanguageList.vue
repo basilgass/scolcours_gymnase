@@ -69,9 +69,6 @@ export default {
 import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
 import {computed, ref} from "vue"
 import {PiMath} from "pimath/esm"
-import FormInput from "@/Components/Form/FormInput.vue"
-import FormNumber from "@/Components/Form/FormNumber.vue"
-import {vocabulary} from "@/Pages/languages/English/englishUnits"
 import FormSwitch from "@/Components/Form/FormSwitch.vue"
 import LanguageUnitsSelector from "@/Pages/languages/LanguageUnitsSelector.vue"
 

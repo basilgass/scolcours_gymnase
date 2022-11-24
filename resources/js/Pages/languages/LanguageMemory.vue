@@ -6,7 +6,7 @@
 			:href="`/${language}`"
 			class="hover:pl-2 transition-all duration-300"
 		>
-			<i class="bi bi-arrow-bar-left" />  retour
+			<i class="bi bi-arrow-bar-left" /> retour
 		</Link>
 
 		<div
@@ -16,11 +16,11 @@
 			<div
 				v-for="(card, index) in cards"
 				:key="index"
-				class="bg-white border rounded h-24 grid place-items-center p-3 cursor-pointer transform-all duration-300"
 				:class="{
 					'bg-green-600': card.found,
 					'bg-amber-400': card.selected
 				}"
+				class="bg-white border rounded h-24 grid place-items-center p-3 cursor-pointer transform-all duration-300"
 				@click="showAllCards?null:selectCard(card)"
 			>
 				<span v-show="showAllCards || card.found || card.selected">
@@ -66,7 +66,7 @@
 			</div>
 
 			<div class="text-center">
-				Mots {{ startIndex+1 }} à {{ startIndex + 1 + numberOfCards }} sur {{ availableWords.length }}
+				Mots {{ startIndex + 1 }} à {{ startIndex + 1 + numberOfCards }} sur {{ availableWords.length }}
 			</div>
 
 			<div>
@@ -93,15 +93,13 @@ export default {
 import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
 import {computed, ref} from "vue"
 import {PiMath} from "pimath/esm"
-import FormInput from "@/Components/Form/FormInput.vue"
 import FormNumber from "@/Components/Form/FormNumber.vue"
-import {vocabulary} from "@/Pages/languages/English/englishUnits"
 import LanguageUnitsSelector from "@/Pages/languages/LanguageUnitsSelector.vue"
 
 let props = defineProps({
 	code: {type: String, required: true},
 	language: {type: String, required: true},
-	units: {type: Array, default: ()=>[]}
+	units: {type: Array, default: () => []}
 })
 let unitsSelection = ref([]),
 	availableWords = ref([]),
@@ -113,29 +111,29 @@ let unitsSelection = ref([]),
 	gameStopped = ref(true)
 
 let startGame = function () {
-	if(availableWords.value.length===0) {
+	if (availableWords.value.length === 0) {
 		generateWords()
 	}
 
 	generateCards()
 }
-let continueGame = function (){
+let continueGame = function () {
 	startIndex.value = startIndex.value + numberOfCards.value + 1
 	generateCards()
 }
 
-let generateWords = function() {
+let generateWords = function () {
 	// All words available
 	startIndex.value = 0
 	let words = []
-	for(let values of unitsSelection.value.map(x=>x.words)){
+	for (let values of unitsSelection.value.map(x => x.words)) {
 		words = words.concat(values)
 	}
 
 	availableWords.value = PiMath.Random.shuffle(words)
 }
 let generateCards = function () {
-	if(startIndex.value > availableWords.value.length){
+	if (startIndex.value > availableWords.value.length) {
 		alert("Bravo ! Tout le voc a été révisé !")
 		availableWords.value = []
 		startIndex.value = -1

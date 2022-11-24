@@ -139,6 +139,30 @@
 					/>
 				</div>
 			</div>
+
+			<div v-if="orderShow">
+				<h3 class="text-lg">
+					Paramètres
+				</h3>
+
+				<div class="grid grid-cols-2 gap-3">
+					<form-textarea
+						v-model="orderInput"
+						label="entrées"
+						name="entries"
+						@input="orderUpdate"
+						@focus="orderFocus"
+					/>
+					<div class="grid grid-cols-1 gap-3 mt-5">
+						<button
+							v-for="(element, index) of orderInput.split('\n')"
+							:key="index"
+							v-katex.auto="element"
+							class="btn bg-white"
+						/>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 </template>
@@ -150,6 +174,7 @@ import {checkersList} from "@/Composables/useCheckers"
 import {keyboardsList} from "@/keyboards"
 import Button from "@/Components/Auth/Button.vue"
 import FormSwitch from "@/Components/Form/FormSwitch.vue"
+import FormTextarea from "@/Components/Form/FormTextarea.vue"
 
 let props = defineProps({
 	modelValue: {type: Object, required: true},
@@ -231,9 +256,27 @@ let studyShow = computed(()=>{
 			}
 		}
 	}
+
+let orderShow = computed(()=>{
+		return form.keyboard.startsWith("#Order")
+	}),
+	orderInput = ref(""),
+	orderUpdate = function(){
+		form.keyboard = "#Order@" + orderInput.value.split("\n")
+			.join("|")
+	},
+	orderFocus = function(){
+		let options = form.keyboard.split("@")[1]
+
+		if(options){
+			orderInput.value = options.split("|").join("\n")
+		}
+	}
+
 onMounted(()=>{
 	if(qcmShow.value){qcmFocus()}
 	if(studyShow.value){studyFocus()}
+	if(orderShow.value){orderFocus()}
 })
 
 function cancelQuestion(){
