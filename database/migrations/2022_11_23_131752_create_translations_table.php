@@ -23,7 +23,7 @@ return new class extends Migration
 			$table->text('examples')->nullable();
             $table->timestamps();
 
-			$table->unique(['foreign', 'fr']);
+			$table->unique(['translation_unit_id', 'foreign', 'fr']);
         });
     }
 
