@@ -12,23 +12,25 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @property int $id
  * @property int $post_id
- * @property string $body
+ * @property int $order
  * @property string|null $answer
  * @property string|null $checker
  * @property string|null $keyboard
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Block[] $blocks
+ * @property-read int|null $blocks_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\User[] $users
  * @property-read int|null $users_count
  * @method static \Illuminate\Database\Eloquent\Builder|Question newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Question newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Question query()
  * @method static \Illuminate\Database\Eloquent\Builder|Question whereAnswer($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Question whereBody($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Question whereChecker($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Question whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Question whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Question whereKeyboard($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Question whereOrder($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Question wherePostId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Question whereUpdatedAt($value)
  * @mixin \Eloquent

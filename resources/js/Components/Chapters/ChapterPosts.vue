@@ -68,7 +68,7 @@
 			</div>
 
 			<button
-				v-if="$page.props.auth.can.admin && editMode"
+				v-if="$page.props.auth.can.admin"
 				class="btn-primary"
 				@click="createPost"
 			>
@@ -80,7 +80,7 @@
 
 <script setup>
 import PostShow from "@/Components/Posts/PostShow.vue"
-import {computed, inject, ref} from "vue"
+import {computed, ref} from "vue"
 import {usePage} from "@inertiajs/inertia-vue3"
 
 const emits = defineEmits("update:posts")
@@ -93,8 +93,7 @@ const props = defineProps({
 let thePosts = ref(props.posts),
 	postsFilter = computed(()=>{
 		return thePosts.value
-	}),
-	editMode = inject("editmode")
+	})
 
 function createPost() {
 	axios.post(

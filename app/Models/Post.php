@@ -18,6 +18,7 @@ use Illuminate\Support\Carbon;
  * @property string|null $type
  * @property int $position
  * @property int $numberOfVisibleBlocks
+ * @property string|null $questionsGrid
  * @property int $active
  * @property string $script
  * @property string|null $switch
@@ -37,6 +38,7 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Post whereId($value)
  * @method static Builder|Post whereNumberOfVisibleBlocks($value)
  * @method static Builder|Post wherePosition($value)
+ * @method static Builder|Post whereQuestionsGrid($value)
  * @method static Builder|Post whereScript($value)
  * @method static Builder|Post whereSwitch($value)
  * @method static Builder|Post whereTitle($value)

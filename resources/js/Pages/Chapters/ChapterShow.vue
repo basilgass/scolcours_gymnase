@@ -113,6 +113,7 @@ let chapterPosts = ref(props.chapter.data.posts),
 	showOnlyExercises = ref(false),
 	hideResolvedQuestions = ref(false)
 
+
 provide("editmode", editMode)
 provide("chapterPosts", chapterPosts)
 let showFloatingFooter = inject("showfloatingfooter")

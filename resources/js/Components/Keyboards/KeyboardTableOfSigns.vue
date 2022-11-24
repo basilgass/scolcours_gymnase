@@ -79,7 +79,8 @@ import KeyboardBase from "@/Components/Keyboards/KeyboardBase.vue"
 
 let props = defineProps({
 	modelValue: {type: String, required: true},
-	options: {type: String}
+	options: {type: String},
+	errorMessage: {type: String, default: ""}
 })
 let emits = defineEmits(["update:modelValue", "tex", "raw", "validate"])
 

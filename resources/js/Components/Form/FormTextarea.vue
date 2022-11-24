@@ -15,6 +15,7 @@
 			@input="$emit('update:modelValue', $event.target.value)"
 		/>
 
+		<slot></slot>
 		<form-error
 			:name="name"
 			:message="error"

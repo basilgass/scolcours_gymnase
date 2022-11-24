@@ -67,6 +67,7 @@
 					ref="componentUI"
 					v-model="answer"
 					:options="keyboardComponentProps"
+					:error-message="checkerResult.message"
 					@tex="tex = $event"
 					@raw="raw = $event"
 					@validate="validate"

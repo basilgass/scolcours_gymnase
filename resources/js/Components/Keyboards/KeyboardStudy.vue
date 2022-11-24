@@ -5,12 +5,41 @@
 			class="overflow-x-scroll my-5"
 		>
 			<!-- Visual output -->
-			<div ref="draw" />
+			<div
+				ref="draw"
+				class="min-w-[1em]"
+			/>
 			<div ref="outputHTML" />
 		</div>
+		<!-- BValidation button -->
+		<div class="keyboard mb-3">
+			<button
+				ref="validateButton"
+				class="key key-cmd bg-white w-full
+						border-green-700 text-green-600 hover:bg-green-100 hover:border-green-800"
+				@click="btnValidate"
+			>
+				<i class="bi bi-check" /> <span class="hidden md:inline md:ml-2">Valider</span>
+			</button>
+			<div class="text-red-500 text-xs text-center mt-2">
+				{{ props.errorMessage }}
+			</div>
+		</div>
 
-		<div class="keyboard-study-items">
-			<div class="flex gap-1 lg:gap-2 items-baseline justify-center keyboard">
+		<div
+			v-if="enablePlot"
+			class="text-center"
+		>
+			<button
+				class="btn btn-primary btn-xs px-10"
+				@click="plotGraph"
+			>
+				tracer le graphe
+			</button>
+		</div>
+
+		<div class="keyboard-study-items my-3">
+			<div class="flex gap-1 lg:gap-2 items-baseline justify-center keyboard min-h-[3em]">
 				<button
 					v-for="item in items"
 					:key="item"
@@ -18,54 +47,40 @@
 					class="key bg-white hover:bg-amber-300 transition-colors"
 					@dblclick="removeItem(item)"
 				/>
+
+				<!-- Keyboard inputs -->
+				<div v-katex="tex" />
 			</div>
+			<div
+				class="text-center text-red-500 text-sm"
+				v-html="message"
+			/>
 			<div
 				v-show="items.length>0"
 				class="text-xs text-gray-700 text-center"
 			>
-				double-cliquer pour supprimer
+				double-cliquer pour supprimer ou
+				<button
+					class="btn btn-xs bg-white"
+					@click="removeAllItems()"
+				>
+					<i class="bi bi-trash mr-3 text-red-800" />tout supprimer
+				</button>
 			</div>
 		</div>
 
 		<div class="keyboard keyboard-study-keyboard flex flex-col gap-3">
-			<!-- BValidation button -->
-			<button
-				ref="validateButton"
-				class="key key-cmd bg-white w-full
-				border-green-700 text-green-600 hover:bg-green-100 hover:border-green-800
-				mb-3"
-				@click="btnValidate"
-			>
-				<i class="bi bi-check" /> <span class="hidden md:inline md:ml-2">Valider</span>
-			</button>
-
 			<!-- Keyboard selection -->
-			<div class="keyboard flex gap-3 justify-center">
+			<div class="keyboard flex flex-wrap gap-3 justify-center">
 				<button
-					v-for="btn of addButtons"
-					:key="btn"
+					v-for="key of addButtons"
+					:key="key"
 					class="key bg-white flex-1"
-					@click="addItemToGraph(btn)"
+					:title="btnKeys[key].description"
+					@click="addItemToGraph(key)"
 				>
-					{{ btn }}
+					{{ btnKeys[key].label }}
 				</button>
-			</div>
-
-			<div v-if="showGraph">
-				<button
-					class="btn btn-primary"
-					@click="plotGraph"
-				>
-					Tracer
-				</button>
-			</div>
-			<!-- Keyboard inputs -->
-			<div class="min-h-[4em]">
-				<div v-katex="tex" />
-				<div
-					class="text-center text-red-500 text-sm"
-					v-html="message"
-				/>
 			</div>
 
 			<KeyboardBase
@@ -94,7 +109,8 @@ import KeyboardBase from "@/Components/Keyboards/KeyboardBase.vue"
 
 let props = defineProps({
 	modelValue: {type: String, required: true},
-	options: {type: String}
+	options: {type: String},
+	errorMessage: {type: String, default: ""},
 })
 
 let emits = defineEmits(["update:modelValue", "tex", "raw", "validate"])
@@ -102,8 +118,25 @@ let emits = defineEmits(["update:modelValue", "tex", "raw", "validate"])
 let outputHTML = ref(null),
 	validateButton = ref(null),
 	btnValidate = function () {
+		let output = ""
+
+		if(enablePlot.value){
+			let arr = []
+			for(let item of items.value){
+				arr.push(asymptoteToAnswer(item))
+			}
+			let envCtrls = asymptoteToAnswer("env")
+			if(envCtrls!=="env") {
+				arr.push(envCtrls)
+			}
+			output = arr.sort().join(",")
+
+		}else{
+			output = [...items.value].sort().join(",")
+		}
+
 		// Get all outputs
-		emits("update:modelValue", items.value.sort().join(","))
+		emits("update:modelValue", output)
 		emits("tex", "")
 		emits("raw", showRawOutput.value?PiGraph.svg.svg():"")
 		emits("validate")
@@ -132,7 +165,6 @@ let outputHTML = ref(null),
 			emits("raw", PiGraph.svg.svg())
 		})
 	}
-
 defineExpose({resetKeyStrokes, wrongAnswer, getTex, getRaw})
 
 // Code specific to Study.
@@ -145,14 +177,46 @@ let PiGraph,
 	tex = ref(""),
 	display = ref(""),
 	message = ref(""),
-	showGraph = ref(true),
+	showGraph = ref(false),
+	enablePlot = ref(false),
 	showRawOutput = ref(false),
 	items = ref([]),
 	itemsGraph = ref({})
 
+const btnKeys = {
+	"ah": {
+		label: "AH", description: "asymptote verticale"
+	},
+	"av": {
+		label: "AV", description: "asymptote horizontale"
+	},
+	"ao": {
+		label: "AO", description: "asymptote oblique"
+	},
+	"!": {
+		label: "rien", description: "aucune asymptote"
+	},
+	"p": {
+		label: "point", description: "point quelconque"
+	},
+	"z": {
+		label: "zéro", description: "zéro"
+	},
+	"o": {
+		label: "ordonnée", description: "ordonnée à l'origine"
+	},
+	"t": {
+		label: "trou", description: "trou"
+	},
+	"e": {
+		label: "extremum", description: "extremum"
+	}
+}
+
+
 onMounted(()=>{
 	let fx = null,
-		cfg = cfg = {
+		cfg = {
 			xMin: -10,
 			xMax: 10,
 			yMin: -10,
@@ -161,26 +225,17 @@ onMounted(()=>{
 		},
 		cfgRaw = null
 
+	let withButtons = []
+
 	if(theOptions.value.length>0){
 		for(let opt of theOptions.value){
-			if(opt==="ah"){
-				addButtons.value.push("AH")
-			}else if(opt==="av"){
-				addButtons.value.push("AV")
-			}else if(opt==="ao"){
-				addButtons.value.push("AO")
-			}else if(opt==="p"){
-				addButtons.value.push("point")
-			}else if(opt==="o"){
-				addButtons.value.push("ordonnée")
-			}else if(opt==="z"){
-				addButtons.value.push("zéro")
-			}else if(opt==="t"){
-				addButtons.value.push("trou")
-			}else if(opt==="e"){
-				addButtons.value.push("extremum")
-			}else if(opt==="hide"){
-				showGraph.value=false
+			if(btnKeys[opt]!==undefined){
+				withButtons.push(opt)
+			}else if(opt==="g"){
+				showGraph.value=true
+			}else if(opt==="trace"){
+				showGraph.value=true
+				enablePlot.value = true
 			}else if(opt==="raw"){
 				showRawOutput.value=true
 			}else if(opt.startsWith("f=")){
@@ -189,77 +244,93 @@ onMounted(()=>{
 				cfgRaw = opt.split("=")[1]
 			}
 		}
+	}
+
+	if(withButtons.length===0){
+		addButtons.value = ["av", "ah", "ao", "!", "p", "z", "o", "t", "e"]
 	}else{
-		addButtons.value = ["AV", "AH", "AO", "extremum", "point"]
+		addButtons.value = [...withButtons]
 	}
 
 	if(cfgRaw!==null){
 		let d = cfgRaw.split("&")
-		if(d.length === 2){
+		if(d.length >= 2){
 			cfg.xMin = +d[0].split(":")[0]
 			cfg.xMax = +d[0].split(":")[1]
 			cfg.yMin = +d[1].split(":")[0]
 			cfg.yMax = +d[1].split(":")[1]
-			cfg.pixelsPerUnit = 800 / (cfg.xMax-cfg.xMin)
+			let res = d[2]?+d[2]:800
+			cfg.pixelsPerUnit = res / (cfg.xMax-cfg.xMin)
 		}
 	}
 
 	PiGraph = new PiDraw(draw.value)
 	PiGraph.updateLayout(cfg, false)
-
 	PiGraph.axis()
-
 	PiGraph.texConverter = {
 		toTex: katex.renderToString,
 		options: {
 			throwOnError: false
 		}
 	}
-
 	if(fx!==null){
-		let plotData = fx.split("&"),
-			plot = plotData.shift(),
-			domain = PiGraph.unitXDomain,
-			samples = 20,
-			color = "blue"
-
-		for(let d of plotData){
-			if(!isNaN(d)){
-				samples = +d
-			}else if(d.includes(":")){
-				const [min, max] = plotData[1].split(":").map(x => +x)
-				domain = {min, max}
-			}else{
-				color = d
-			}
+		let fxs = fx.split("|")
+		for(let f of fxs){
+			initPlot(f)
 		}
-
-		try {
-			const p = PiGraph.plot(plot, {
-				samples,
-				domain
-			})
-			p.stroke(color)
-
-			// TODO: remove once PiDraw has been updated witt PlotConfig.animate option
-			p.svg.attr({
-				"stroke-dasharray": "",
-				"stroke-dashoffset": ""
-			})
-		}catch {
-			console.log("Error parsing", fx)
-		}
+	}
+	if(enablePlot.value){
+		itemsGraph.value["env"] =  addTracePoints()
 	}
 
 	// Update the value
 	emits("raw", showRawOutput.value?PiGraph.svg.svg():"")
+
+	// Add resize observer
+	const resizeObserver = new ResizeObserver((entries) => {
+		PiGraph.update()
+	})
+	resizeObserver.observe(draw.value)
 })
 
-function addItemToGraph(btn){
+function initPlot(fx){
+	let plotData = fx.split("&"),
+		plot = plotData.shift(),
+		domain = PiGraph.unitXDomain,
+		samples = 20,
+		color = "blue"
 
+	for(let d of plotData){
+		if(!isNaN(d)){
+			samples = +d
+		}else if(d.includes(":")){
+			const [min, max] = d.split(":").map(x => +x)
+			domain = {min, max}
+		}else{
+			color = d
+		}
+	}
+
+	try {
+		const p = PiGraph.plot(plot, {
+			samples,
+			domain
+		})
+		p.stroke(color)
+
+		// TODO: remove once PiDraw has been updated witt PlotConfig.animate option
+		p.svg.attr({
+			"stroke-dasharray": "",
+			"stroke-dashoffset": ""
+		})
+	}catch {
+		console.log("Error parsing", fx)
+	}
+}
+function addItemToGraph(btn){
 	// Checker.
 	message.value = ""
-	if(btn.startsWith("A")){
+	if(btn.startsWith("a")){
 		let equ = display.value.split("=")
 
 		if(equ.length!==2){
@@ -272,27 +343,31 @@ function addItemToGraph(btn){
 			return
 		}
 
-		if(btn==="AO"){
+		if(btn==="ao"){
 			if(equ[1].match(/x/).length!==1 && equ[1].match(/y/).length!==1){
 				message.value="Ce n'est pas une asymptote oblique"
 				return
 			}
 			itemsGraph.value[display.value] = addAO(display.value)
 
-		}else if(btn==="AV"){
+		}else if(btn==="av"){
 			if(equ[0]!=="x"){
 				message.value="Ce n'est pas une asymptote verticale"
 				return
 			}
 			itemsGraph.value[display.value] = addAV(equ[1])
 
-		}else if(btn==="AH") {
+		}else if(btn==="ah") {
 			if (equ[0]!=="y") {
 				message.value = "Ce n'est pas une asymptote horizontale"
 				return
 			}
 			itemsGraph.value[display.value] = addAH(equ[1])
 		}
+	}
+	else if (btn==="!"){
+		display.value="!!"
+		itemsGraph.value["!!"] = null
 	}
 	else{
 		if(!(display.value.startsWith("(") && display.value.endsWith(")") && display.value.split(";").length===2)){
@@ -302,16 +377,21 @@ function addItemToGraph(btn){
 
 		let [x, y] = display.value.replace("(", "").replace(")", "").split(";")
 
-		if(btn==="zéro" && y!=="0"){
+		if(btn==="z" && y!=="0"){
 			message.value ="Ce n'est pas un zéro"
 			return
 		}
-		if(btn==="ordonnée" && x!=="0"){
+		if(btn==="o" && x!=="0"){
 			message.value ="Ce n'est pas une ordonnée à l'origine"
 			return
 		}
 
 		itemsGraph.value[display.value] = addPoint(btn, x, y)
+	}
+
+	// Hide controls if necessary
+	if(!enablePlot.value){
+		removeControlsAndBezier(display.value)
 	}
 
 	// Add the element to the list of object created...
@@ -324,15 +404,32 @@ function addItemToGraph(btn){
 	emits("raw", showRawOutput.value?PiGraph.svg.svg():"")
 }
 
+function removeAllItems(){
+	let keys = [...items.value]
+	for(let item of keys){
+		removeItem(item)
+	}
+
+	if(showGraph.value){
+		if(plot){
+			plot.remove()
+			plot=null
+		}
+
+		if(enablePlot.value) {
+			removeControlsAndBezier("env")
+			itemsGraph.value["env"] = addTracePoints()
+		}
+	}
+}
 function removeItem(item) {
 	items.value.splice(items.value.indexOf(item), 1)
 
-	// Remove the control points.
-	Object.values(itemsGraph.value[item].controls||[]).forEach(el=>el.remove())
-	// Remove the bezier points.
-	Object.values(itemsGraph.value[item].bezier||[]).forEach(group=>group.forEach(el=>el.remove()))
+	removeControlsAndBezier(item)
 	// Remove the main object
-	itemsGraph.value[item].element.remove()
+	if(itemsGraph.value[item].element!==null) {
+		itemsGraph.value[item].element.remove()
+	}
 
 	// Remove the key from the ist
 	delete itemsGraph.value[item]
@@ -341,7 +438,15 @@ function removeItem(item) {
 	emits("raw", showRawOutput.value?PiGraph.svg.svg():"")
 }
 
-function btnClickEvent(btn){
+function removeControlsAndBezier(item){
+	// Remove the control points.
+	Object.values(itemsGraph.value[item].controls||[]).forEach(el=>el.remove())
+	// Remove the bezier points.
+	Object.values(itemsGraph.value[item].bezier||[]).forEach(group=>group.forEach(el=>el.remove()))
+
+}
+
+function btnClickEvent(btn) {
 	btn.svg.on("click", (ev) => {
 		if (btn.svg.fill() === "white") {
 			btn.svg.fill("green")
@@ -353,6 +458,16 @@ function btnClickEvent(btn){
 	return btn
 }
 
+function asymptoteToAnswer(item){
+	let ctrls = []
+	for(let key in itemsGraph.value[item].controls){
+		if( itemsGraph.value[item].controls[key].svg.fill()==="green" ){
+			ctrls.push(key)
+		}
+	}
+
+	return ctrls.length>0 ? `${item}&${ctrls.sort().join("&")}`:item
+}
 function addAV(value){
 	let pos = (new PiMath.NumExp(value)).evaluate({}),
 		posX = PiGraph.unitsToPixels({
@@ -372,10 +487,10 @@ function addAV(value){
 			"RB": btnClickEvent(PiGraph.point(pos+0.5, y.min+0.5).asSquare(size).fill({color: "white", opacity: 0.5}).hideLabel()),
 		},
 		bezier: {
-			"LT": [PiGraph.point(pos-0.1, y.max), PiGraph.point(pos-0.05, y.max+5)],
-			"RT": [PiGraph.point(pos+0.1, y.max), PiGraph.point(pos+0.05, y.max+5)],
-			"LB": [PiGraph.point(pos-0.1, y.min), PiGraph.point(pos-0.05, y.min-5)],
-			"RB": [PiGraph.point(pos+0.1, y.min), PiGraph.point(pos+0.05, y.min-5)],
+			"LT": [PiGraph.point(pos-0.1, y.max).hide(), PiGraph.point(pos-0.05, y.max+5).hide()],
+			"RT": [PiGraph.point(pos+0.1, y.max).hide(), PiGraph.point(pos+0.05, y.max+5).hide()],
+			"LB": [PiGraph.point(pos-0.1, y.min).hide(), PiGraph.point(pos-0.05, y.min-5).hide()],
+			"RB": [PiGraph.point(pos+0.1, y.min).hide(), PiGraph.point(pos+0.05, y.min-5).hide()],
 		}
 	}
 
@@ -400,10 +515,10 @@ function addAH(value){
 			"RB": btnClickEvent(PiGraph.point(x.max-0.5, pos-0.5).asSquare(size).fill({color: "white", opacity: 0.5}).hideLabel()),
 		},
 		bezier: {
-			"LT": [PiGraph.point(x.min, pos+0.1), PiGraph.point(x.min-5, pos+0.05)],
-			"LB": [PiGraph.point(x.min, pos-0.1), PiGraph.point(x.min-5, pos-0.05)],
-			"RT": [PiGraph.point(x.max, pos+0.1), PiGraph.point(x.max+5, pos+0.05)],
-			"RB": [PiGraph.point(x.max, pos-0.1), PiGraph.point(x.max+5, pos-0.05)],
+			"LT": [PiGraph.point(x.min, pos+0.1).hide(), PiGraph.point(x.min-5, pos+0.05).hide()],
+			"LB": [PiGraph.point(x.min, pos-0.1).hide(), PiGraph.point(x.min-5, pos-0.05).hide()],
+			"RT": [PiGraph.point(x.max, pos+0.1).hide(), PiGraph.point(x.max+5, pos+0.05).hide()],
+			"RB": [PiGraph.point(x.max, pos-0.1).hide(), PiGraph.point(x.max+5, pos-0.05).hide()],
 		}
 	}
 }
@@ -416,20 +531,29 @@ function addAO(value){
 	x = PiGraph.unitXDomain.min
 	y = line.getValueAtX(x).value
 	if(y < PiGraph.unitYDomain.min || y > PiGraph.unitYDomain.max){
-		y = PiGraph.unitYDomain.max
+		y = y < PiGraph.unitYDomain.min ? PiGraph.unitYDomain.min : PiGraph.unitYDomain.max
 		x = line.getValueAtY(y).value
 	}
-	A = {x: +x,y: +y}
-	Apixels = PiGraph.unitsToPixels({x, y})
+	let pt1 = {x: +x,y: +y}
 
 	x = PiGraph.unitXDomain.max
 	y = line.getValueAtX(x).value
 	if(y < PiGraph.unitYDomain.min || y > PiGraph.unitYDomain.max){
-		y = PiGraph.unitYDomain.min
+		y = y < PiGraph.unitYDomain.min ? PiGraph.unitYDomain.min : PiGraph.unitYDomain.max
 		x = line.getValueAtY(y).value
 	}
-	B = {x: +x,y: +y}
-	Bpixels = PiGraph.unitsToPixels({x, y})
+	let pt2 = {x: +x,y: +y}
+
+	if(pt1.x<pt2.x){
+		A = {x: +pt1.x, y: +pt1.y}
+		B = {x: +pt2.x, y: +pt2.y}
+	}else{
+		A = {x: +pt2.x, y: +pt2.y}
+		B = {x: +pt1.x, y: +pt1.y}
+	}
+
+	Apixels = PiGraph.unitsToPixels(A)
+	Bpixels = PiGraph.unitsToPixels(B)
 
 	let dLine = line.director,
 		dLineNorm = dLine.norm,
@@ -487,6 +611,29 @@ function addAO(value){
 	}
 }
 
+function addTracePoints(){
+	const dx = PiGraph.unitXDomain,
+		dy = PiGraph.unitYDomain,
+		size = PiGraph.distanceToPixels(1)/3
+
+	return {
+		type: "trace",
+		element: null,
+		controls: {
+			"LT": btnClickEvent(PiGraph.point(dx.min+0.5, dy.max-0.5).asSquare(size).fill({color: "white", opacity: 0.5}).hideLabel()),
+			"LB": btnClickEvent(PiGraph.point(dx.min+0.5, dy.min+0.5).asSquare(size).fill({color: "white", opacity: 0.5}).hideLabel()),
+			"RT": btnClickEvent(PiGraph.point(dx.max-0.5, dy.max-0.5).asSquare(size).fill({color: "white", opacity: 0.5}).hideLabel()),
+			"RB": btnClickEvent(PiGraph.point(dx.max-0.5, dy.min+0.5).asSquare(size).fill({color: "white", opacity: 0.5}).hideLabel()),
+		},
+		bezier: {
+			"LT": [PiGraph.point(dx.min, dy.max).hide()],
+			"LB": [PiGraph.point(dx.min, dy.min).hide()],
+			"RT": [PiGraph.point(dx.max, dy.max).hide()],
+			"RB": [PiGraph.point(dx.max, dy.min).hide()],
+		}
+	}
+}
+
 function addPoint(type, x, y){
 	let P = PiGraph.point(x, y),
 		pixels = PiGraph.unitsToPixels({x, y}),
@@ -514,6 +661,7 @@ function addPoint(type, x, y){
 function plotGraph(){
 	// Get all points
 	let ctrlPoints = []
+
 	for(let item of Object.values(itemsGraph.value)){
 		if(item.type==="point") {
 			ctrlPoints.push({
@@ -538,7 +686,8 @@ function plotGraph(){
 	// Sort the points.
 	ctrlPoints.sort((a,b)=>a.point.x-b.point.x)
 
-	if(plot!==undefined){}
+	if(plot){plot.remove()}
 	plot = PiGraph.bezier(ctrlPoints)
 }
+
 </script>

@@ -60,7 +60,7 @@
 
 		<div
 			v-if="$page.props.auth.user"
-			class="grid grid-cols-4 md:col-span-3 gap-3 min-h-[10em]"
+			class="grid grid-cols-2 md:grid-cols-4 md:col-span-3 gap-3 min-h-[10em]"
 		>
 			<Panel class="grid grid-cols-1 place-items-center text-center">
 				<div class="flex flex-col gap-5">

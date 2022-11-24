@@ -1,5 +1,8 @@
 <template>
-	<article :class="($page.props.auth.can.admin && editMode)?'border border-dashed border-amber-600 rounded -mx-4 pt-2 pb-2 px-4':''">
+	<article
+		class="relative"
+		:class="($page.props.auth.can.admin && editMode)?'border border-dashed border-amber-600 rounded -mx-4 pt-2 pb-2 px-4':''"
+	>
 		<!-- Edit mode the block -->
 		<dialog-modal
 			v-model="edit"
@@ -155,8 +158,7 @@ const props = defineProps({
 	hasPadding: {type: Boolean, default: false}
 })
 
-let editMode = inject("editmode")
-
+let editMode = inject("editpost")
 
 /** Script result coming from the post (random or not) */
 let postScriptResult = inject("postScriptResult"),

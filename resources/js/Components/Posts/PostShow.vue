@@ -1,5 +1,6 @@
 <template>
-	<div class="bg-white rounded shadow px-4 py-2">
+	<div class="bg-white rounded shadow px-4 py-2 relative">
+		<edit-button v-model="editMode" />
 		<h2
 			v-katex.auto="postTitle"
 			:data-title="postTitle"
@@ -299,7 +300,7 @@
 <script setup>
 // TODO: save the blocks order in a post
 // TODO: should also be able to make the same for the posts in a chapter.
-import {computed, inject, onMounted, provide, ref, watch} from "vue"
+import {computed, onMounted, provide, ref, watch} from "vue"
 import BlockShow from "@/Components/Posts/Blocks/BlockShow"
 import FormNumber from "@/Components/Form/FormNumber"
 import PostForm from "@/Components/Posts/PostForm"
@@ -312,6 +313,8 @@ import FormSwitch from "@/Components/Form/FormSwitch"
 import ConfirmButton from "@/Components/Ui/ConfirmButton"
 import QuestionInlineForm from "@/Components/Posts/Questions/QuestionInlineForm"
 import FormInput from "@/Components/Form/FormInput"
+
+import EditButton from "@/Components/Ui/EditButton.vue"
 
 const emits = defineEmits(["delete", "updateTitle"])
 const props = defineProps({
@@ -498,7 +501,6 @@ let postScriptResult = ref({})
 onMounted(() => runPostScript())
 provide("postScriptResult", postScriptResult)
 
-
 /** Switch display */
 let switchText = computed(() => {
 	let preText = "", postText = ""
@@ -519,8 +521,8 @@ let switchText = computed(() => {
 
 
 /** Edit mode and methods */
-let editMode = inject("editmode")
-
+let editMode = ref(false)
+provide("editpost", editMode)
 
 let edit = ref(props.post.isNew === true),
 	postTitle = ref(props.post.type === "exercise" ? `exercice: ${props.post.title}` : props.post.title),

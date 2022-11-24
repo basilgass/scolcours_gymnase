@@ -170,7 +170,7 @@ let userAnswerAsTex = ref(""),
 	edit = ref(false),
 	editAnswer = ref(false)
 
-let editMode = inject("editmode")
+let editMode = inject("editpost")
 
 let previousAnswers = computed(() => {
 		return theQuestion.value.userAnswers?.length === 0 ? [] : theQuestion.value.userAnswers

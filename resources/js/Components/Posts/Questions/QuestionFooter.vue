@@ -88,7 +88,7 @@ let props = defineProps({
 	adminAnswer: {type: String, required: true}
 })
 
-let editMode = inject("editmode")
+let editMode = inject("editpost")
 let showAnswer = ref(false),
 	showPreviousAnswer = ref(false),
 	labelAnswer = computed(()=>{

@@ -8,6 +8,10 @@ export function StudyChecker(options){
 				arrayExpected = expectedAnswer.split(",").sort(),
 				d = arrayExpected.length-arrayAnswer.length
 
+			console.log("ANSWER")
+			console.log(arrayAnswer)
+			console.log("EXPECTED")
+			console.log(arrayExpected)
 			if(d>0){
 				return {
 					result: false,
@@ -20,17 +24,30 @@ export function StudyChecker(options){
 				}
 			}
 
-			let erreurs = []
+			let erreurs = [],
+				traceErrors = []
 			for(let i=0; i<=arrayAnswer.length; i++){
 				if(arrayAnswer[i]!==arrayExpected[i]){
-					erreurs.push(i+1)
+
+					if(arrayExpected[i].split("&")[0] === arrayAnswer[i].split("&")[0]){
+						traceErrors.push(i+1)
+					}else {
+						erreurs.push(i + 1)
+					}
 				}
 			}
 
-			if(erreurs>0){
+			if(erreurs.length>0){
 				return {
 					result: false,
 					message: `il y a ${erreurs.length} erreur${erreurs.length>1?"s":""}`
+				}
+			}
+
+			if(traceErrors.length>0){
+				return {
+					result: false,
+					message: `il y a ${traceErrors.length} erreur${traceErrors.length>1?"s":""} dans le tracé`
 				}
 			}
 

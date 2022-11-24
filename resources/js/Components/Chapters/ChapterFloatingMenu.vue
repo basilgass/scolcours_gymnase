@@ -32,16 +32,6 @@
 					class="bi cursor-pointer"
 					@click="showMenu=!showMenu"
 				/>
-
-				<button
-					v-if="$page.props.auth.can.admin"
-					@click="editMode = !editMode"
-				>
-					<i
-						class="bi bi-pencil"
-						:class="editMode?'text-green-600':'text-amber-600'"
-					/>
-				</button>
 			</div>
 		</div>
 		<!-- background fade --->
@@ -111,8 +101,7 @@ let props = defineProps({
 	menu: {type: Array, default: () => []}
 })
 let show = ref(false),
-	showMenu = ref(false),
-	editMode = inject("editmode")
+	showMenu = ref(false)
 
 let chapterPosts = inject("chapterPosts")
 let toc = computed(() => {

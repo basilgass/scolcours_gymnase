@@ -123,7 +123,7 @@ let isKeyboardComponent = computed(() => {
 		// let kbrd = keyboard.value.split("@")
 		// return kbrd.length === 2 ? kbrd[1] : null
 		if(keyboard.value==="#Study"){
-			return "ao,av,ah,m,z,o,g,t,e"
+			return "trace,f=(2*x-3)/x&red&500|2/3*x-5&-1:10&green"
 		}else {
 			return letters.value.length > 0 ? letters.value : null
 		}

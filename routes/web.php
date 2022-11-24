@@ -9,6 +9,7 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\ScolcoursController;
 use App\Http\Controllers\ToolsController;
+use App\Http\Controllers\TranslationController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -110,20 +111,31 @@ Route::get('jeux/{game}', function (String $game){
 	return Inertia::render('Games/'.$game);
 });
 
-// Italiano routes.
-Route::get('italiano', function (){
-	return Inertia::render('languages/Italiano/italiano');
-});
-Route::get('italiano/{page}', function (String $page){
-	return Inertia::render('languages/Italiano/'.$page);
-});
-// English routes.
-Route::get('english', function (){
-	return Inertia::render('languages/English/english');
-});
-Route::get('english/{page}', function (String $page){
-	return Inertia::render('languages/English/'.$page);
-});
+// Languages routes.
+Route::get("{language}", [TranslationController::class, "index"])
+	->where('language', 'italiano|english')
+	->name('translation.index');
+Route::get("{language}/{game}", [TranslationController::class, "show"])
+	->where('language', 'italiano|english')
+	->where('game', 'memory|guess|list')
+	->name('translation.show');
+Route::get('translation', [TranslationController::class, 'import'])->name('translation.import');
+Route::get('translation/{unit}/words', [TranslationController::class, 'fetchWords'])->name('translation.words');
+Route::post('translation/word', [TranslationController::class, 'create'])->name('translation.create');
+
+//Route::get('italiano', function (){
+//	return Inertia::render('languages/Italiano/italiano');
+//});
+//Route::get('italiano/{page}', function (String $page){
+//	return Inertia::render('languages/Italiano/'.$page);
+//});
+//// English routes.
+//Route::get('english', function (){
+//	return Inertia::render('languages/English/english');
+//});
+//Route::get('english/{page}', function (String $page){
+//	return Inertia::render('languages/English/'.$page);
+//});
 
 // Latex download - migrate to custom controller
 // TODO: Implement back the PDF output.

@@ -1,5 +1,6 @@
 <template>
-	<div class="bg-white rounded shadow px-4 py-2">
+	<div class="bg-white rounded shadow px-4 py-2 relative">
+		<edit-button v-model="editMode" />
 		<h2
 			v-katex.auto="title"
 			:data-title="title"
@@ -102,9 +103,10 @@
 	</div>
 </template>
 <script setup>
-import {inject, onMounted, ref} from "vue"
+import {onMounted, ref} from "vue"
 import BlockForm from "@/Components/Posts/Blocks/BlockForm.vue"
 import IllustrationShow from "@/Components/Posts/Illustrations/IllustrationShow.vue"
+import EditButton from "@/Components/Ui/EditButton.vue"
 
 let props = defineProps({
 	title: {type: String, default: "formulaire"},
@@ -112,7 +114,7 @@ let props = defineProps({
 	filter: {type: String, default: ""}
 })
 
-let editMode = inject("editmode"),
+let editMode = ref(false),
 	editingFormula = ref(false),
 	bForm = ref(null)
 
