@@ -34,7 +34,7 @@ export function useCheckers(checkerData) {
 		return ExactChecker(options)
 	case "polynom":
 		return PolynomChecker(options)
-	case "nb":
+	case "nb" || "number":
 		return NumberChecker(options)
 	case "scn":
 		return ScientificChecker(options)

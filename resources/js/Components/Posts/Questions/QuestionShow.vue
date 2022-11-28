@@ -13,231 +13,113 @@
 		<div
 			v-if="questionNumber!==false"
 			class="absolute -left-2 -top-2 rounded-full bg-white border w-8 h-8 text-xs flex justify-center items-center draggable-handle"
-			:class="($page.props.auth.can.admin && editMode)?'cursor-move':''"
+			:class="cursorOnNumber"
+			@dblclick="editMode = $page.props.auth.can.admin?!editMode:false"
 		>
 			{{ questionNumber }}
 		</div>
 
 		<!-- Admin edition mode -->
-		<dialog-modal
-			v-model="edit"
-		>
-			<BlockForm
-				v-model="theQuestion.block"
-				no-script
-				no-data
-				no-switch
-				no-title
-				no-type
-				no-delete
-				@close="edit=false"
-			/>
-		</dialog-modal>
-		<dialog-modal
-			v-model="editAnswer"
-		>
-			<div class="grid grid-cols-1 gap-5">
-				<QuestionForm
-					v-model="theQuestion"
-					@close="editAnswer=false"
-				/>
-			</div>
-		</dialog-modal>
-		<div
-			v-if="$page.props.auth.can.admin && editMode && !correctionMode"
-			class="admin-wrapper"
-		>
-			<div class="w-full flex justify-between">
-				<button
-					class="btn-edit btn-xs"
-					@click="edit=true"
-				>
-					donnée <i class="bi bi-pencil" />
-				</button>
-				<button
-					class="btn-edit btn-xs"
-					@click="editAnswer=true"
-				>
-					question <i class="bi bi-pencil" />
-				</button>
-				<button
-					class="btn-xs btn-add"
-					@click="duplicateQuestion(theQuestion.id)"
-				>
-					<i class="bi bi-clipboard mr-2" />Dupliquer
-				</button>
-				<confirm-button
-					class="btn-xs btn-delete"
-					@confirm="destroyQuestion"
-				>
-					<i class="bi bi-trash mr-2" />Supprimer
-				</confirm-button>
-			</div>
-
-			<!--			<div class="admin-wrapper-row flex justify-between">-->
-			<!--				<button-->
-			<!--					class="btn-edit btn-xs"-->
-			<!--					@click="editBlock=!editBlock"-->
-			<!--				>-->
-			<!--					éditer la donnée-->
-			<!--				</button>-->
-
-			<!--				<confirm-button-->
-			<!--					class="btn-xs btn-delete"-->
-			<!--					@confirm="destroyQuestion"-->
-			<!--				>-->
-			<!--					<i class="bi bi-trash mr-2" />Supprimer-->
-			<!--				</confirm-button>-->
-
-			<!--				<button-->
-			<!--					class="btn-xs btn-add"-->
-			<!--					@click="duplicateQuestion(theQuestion.id)"-->
-			<!--				>-->
-			<!--					<i class="bi bi-clipboard mr-2" />Dupliquer-->
-			<!--				</button>-->
-			<!--			</div>-->
-			<!--			<div class=" admin-wrapper-row">-->
-			<!--				<BlockForm-->
-			<!--					v-show="editBlock"-->
-			<!--					v-model="theQuestion.block"-->
-			<!--					no-script-->
-			<!--					no-data-->
-			<!--					no-switch-->
-			<!--					no-title-->
-			<!--					no-type-->
-			<!--					no-preview-->
-			<!--					no-delete-->
-			<!--					@close="editBlock=false"-->
-			<!--				/>-->
-			<!--			</div>-->
-			<!--			<div class="admin-wrapper-row">-->
-			<!--				<QuestionForm v-model="theQuestion" />-->
-			<!--			</div>-->
-		</div>
+		<QuestionItemAdmin
+			v-model:question="theQuestion"
+			:correction-mode="correctionMode"
+			@destroy="emits('destroy', $event)"
+			@duplicate="emits('duplicate', $event)"
+			@updated="adminKey++"
+		/>
 
 		<!-- the body of question -->
 		<QuestionItem
-			ref="questionUI"
+			:key="`admin-${adminKey}`"
+			v-model:question="theQuestion"
 			:question-number="questionNumber"
-			:block="theQuestion.block"
-			:answer="theQuestion.answer"
-			:checker="theQuestion.checker"
-			:keyboard="theQuestion.keyboard"
-			:show-keyboard="showKeyboard"
-			:show-keyboard-output="false"
-			:show-keyboard-toggle="true"
+			:show-keyboard-toggle="!showKeyboard"
 			:correction-mode="correctionMode"
 			@validate="validateAnswer"
 		/>
 
 		<!-- footer - display previous answers -->
-		<div v-if="!correctionMode">
-			<!-- Si la réponse est déjà donnée, afficher la réponse -->
-			<QuestionFooter
-				:is-correct="isCorrect"
-				:answer="questionAnswerDisplay"
-				:previous-answers="previousAnswers"
-				:admin-answer="theQuestion.answer"
-			/>
-		</div>
+		<QuestionFooter
+			v-if="!correctionMode"
+			v-model:question="theQuestion"
+			:is-correct="isCorrect"
+		/>
 	</div>
 </template>
 
 <script setup>
-import {computed, inject, ref} from "vue"
+import {computed, inject, reactive, ref} from "vue"
 import {usePage} from "@inertiajs/inertia-vue3"
-import {keyboards} from "@/keyboards"
 import QuestionItem from "@/Components/Posts/Questions/QuestionItem"
 import QuestionFooter from "@/Components/Posts/Questions/QuestionFooter"
-import BlockForm from "@/Components/Posts/Blocks/BlockForm.vue"
-import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
-import QuestionForm from "@/Components/Posts/Questions/QuestionForm.vue"
-import Button from "@/Components/Auth/Button.vue"
-import DialogModal from "@/Components/Ui/DialogModal.vue"
+import QuestionItemAdmin from "@/Components/Posts/Questions/QuestionItemAdmin.vue"
 
 let props = defineProps({
 	question: {type: Object, required: true},
 	correctionMode: {type: Boolean, default: false},
-	questionNumber: {type: [Number, Boolean], default: false}
+	questionNumber: {type: [Number, Boolean], default: false},
+	showKeyboard: {type: Boolean, default: false}
 })
 
-let emits = defineEmits(["destroy", "resolved", "duplicate"])
+let emits = defineEmits(["destroy", "resolved", "validate", "duplicate"])
 
-let userAnswerAsTex = ref(""),
-	theQuestion = ref(props.question),
-	showKeyboard = ref(false),
-	editBlock = ref(false),
-	edit = ref(false),
-	editAnswer = ref(false)
+let theQuestion = reactive(props.question),
+	adminKey = ref(1)
 
-let editMode = inject("editpost")
+let editMode = inject("editpost", false)
 
-let previousAnswers = computed(() => {
-		return theQuestion.value.userAnswers?.length === 0 ? [] : theQuestion.value.userAnswers
-	}),
-	isCorrect = computed(() => {
-		if (theQuestion.value?.userAnswers.length > 0) {
-			if (theQuestion.value.userAnswers[theQuestion.value.userAnswers.length - 1].result) {
-				return theQuestion.value.userAnswers[theQuestion.value.userAnswers.length - 1]
-			} else {
-				return false
-			}
+let cursorOnNumber = computed(()=>{
+	if(usePage().props.value.auth.can.admin){
+		return editMode.value ? "cursor-move" : "cursor-pointer"
+	}
+	return ""
+})
+
+
+let isCorrect = computed(() => {
+	if(!theQuestion){return false}
+	if(!theQuestion.userAnswers){return false}
+
+	if (theQuestion.userAnswers.length > 0) {
+		if (theQuestion.userAnswers[theQuestion.userAnswers.length - 1].result) {
+			return theQuestion.userAnswers[theQuestion.userAnswers.length - 1]
+		} else {
+			return false
 		}
-		return false
-	}),
-	questionAnswerDisplay = computed(() => {
-		if (theQuestion.value.keyboard) {
-			const kbrd = keyboards[theQuestion.value.keyboard]
+	}
+	return false
+})
 
-			if (kbrd) {
-				return kbrd.tex(props.question.answer)
-			}
-		}
-
-		return props.question.answer
-	})
-
-let questionUI = ref(null)
 function validateAnswer(checkerResult) {
+	if(!theQuestion){return}
+
+	if(theQuestion.id===undefined){
+		emits("validate", theQuestion)
+		return
+	}
+
+	if(!theQuestion.userAnswers){return}
+
+	//TODO: maybe move validateAnswer from QuestionShow to QuestionItem. Make the component more "logical"
 	const data = {
 		answer: checkerResult.answer,
 		result: checkerResult.result
 	}
 
 	if(usePage().props.value.auth.user) {
-		axios.post(route("questions.validate", [theQuestion.value.id]),
+		axios.post(route("questions.validate", [theQuestion.id]),
 			data
 		).then(res => {
-			theQuestion.value.userAnswers.push({...res.data, "when": "à l'instant"})
+			theQuestion.userAnswers.push({...res.data, "when": "à l'instant"})
 			if (res.data.result) {
 				emits("resolved", theQuestion)
-				// Make sure the keyboard is now hidden
-				showKeyboard.value = false
 			} else {
 				// Error !
 			}
 		})
 	}else{
-		theQuestion.value.userAnswers.push({...data, "when": "à l'instant"})
+		theQuestion.userAnswers.push({...data, "when": "à l'instant"})
 	}
 }
 
-function duplicateQuestion(id) {
-	axios.post(route("questions.duplicate", [id]), )
-		.then(res=>{
-			//
-			emits("duplicate", res.data)
-		}).catch(res=>console.log("duplicate error", res.data))
-}
-
-function destroyQuestion() {
-	axios.post(
-		route("questions.destroy", [props.question.id]),
-		{
-			_method: "delete"
-		}
-	).then(res => {
-		emits("destroy", props.question.id)
-	})
-}
 </script>

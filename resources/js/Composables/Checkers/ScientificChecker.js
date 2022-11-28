@@ -20,10 +20,11 @@ export function ScientificChecker(options) {
 			}
 
 			// On vérifie que le format est bien de type scientifique.
-			const PS = +answer.split("*")[0],
-				OG = answer.split("10^")[1] || 0,
-				ePS = +expectedAnswer.split("*")[0],
-				eOG = expectedAnswer.split("10^")[1] || 0
+			const PS = +(answer.split("*")[0]),
+				OG = +(answer.split("10^")[1] || 0),
+				ePS = +(expectedAnswer.split("*")[0]),
+				eOG = +(expectedAnswer.split("10^")[1] || 0)
+
 			if (!answer.includes("*10^")) {
 				return {
 					result: false,
@@ -42,7 +43,7 @@ export function ScientificChecker(options) {
 			if (PS !== ePS) {
 				return {
 					result: false,
-					message: new NumberChecker(options).check(ePS, PS).message
+					message: "erreur dans la partie significative: " + new NumberChecker(options).check(ePS, PS).message
 				}
 			}
 
@@ -60,7 +61,7 @@ export function ScientificChecker(options) {
 			if (options.length === 0) {
 				return {
 					result: false,
-					message: ""
+					message: " ? "
 				}
 			}
 

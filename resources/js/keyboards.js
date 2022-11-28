@@ -4,7 +4,7 @@ export function asciiToTex(value) {
 	const parser = new AsciiMathParser()
 
 	// Force display style
-	return "\\displaystyle " + parser.parse(value)
+	return  parser.parse(value)
 }
 
 export const keyboardKeys = {
@@ -228,7 +228,8 @@ export const keyboardsList = [
 	...Object.keys(keyboards),
 	"#TableOfSigns",
 	"#Study",
-	"#Order"
+	"#Order",
+	"#Qcm"
 ]
 
 function makeExactFromAscii(value) {

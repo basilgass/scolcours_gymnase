@@ -78,16 +78,14 @@
 				/>
 			</div>
 
-			<!-- The question -->
 			<QuestionItem
 				v-if="listOfQuestions[questionId]"
 				ref="questionUI"
+				:question="theQuestion"
 				:answer="`${listOfQuestions[questionId].answer}`"
 				:math="false"
-				:block="{body: theChallenge.output.replace('question', listOfQuestions[questionId].question).replace('answer', '$a')}"
-				:checker="theChallenge.checker"
-				:keyboard="theChallenge.keyboard"
 				:show-keyboard-output="false"
+				:show-keyboard-toggle="false"
 				@validate="validateAnswer"
 			/>
 		</div>
@@ -315,6 +313,7 @@ import FormSwitch from "@/Components/Form/FormSwitch"
 import {keyboards} from "@/keyboards"
 import QuestionItem from "@/Components/Posts/Questions/QuestionItem"
 import {checkersList} from "@/Composables/useCheckers"
+import QuestionShow from "@/Components/Posts/Questions/QuestionShow.vue"
 
 const props = defineProps({
 	"challenge": {type: Object, required: true},
@@ -385,7 +384,7 @@ let listOfQuestions = ref([]),
 	listOfAnswers = ref([]),
 	isRunning = ref(false),
 	isFinished = ref(false),
-	questionId = ref(0),
+	questionId = ref(-1),
 	answer = ref(""),
 	maxTimeInMinutes = ref(theChallenge.value.duration),
 	ellapsedTime = ref(0),
@@ -404,6 +403,12 @@ let ValidateButton = ref(null),
 const timerInterval = ref(false),
 	timerIntervalSpeed = ref(1000)
 let startChallenge = function () {
+		// Reset the lists
+		runChallengeGenerator()
+		listOfQuestions.value = PiMath.Random.shuffle(questions.value)
+		listOfAnswers.value = []
+
+		// init the game
 		questionId.value = 0
 		answer.value = ""
 		maxTimeInMinutes.value = theChallenge.value.duration
@@ -414,15 +419,11 @@ let startChallenge = function () {
 		lives.value = theChallenge.value.lives
 		death.value = 0
 
-		// Reset the lists
-		runChallengeGenerator()
-		listOfQuestions.value = PiMath.Random.shuffle(questions.value)
-		listOfAnswers.value = []
-
 		// Reset the keyboard
 		if(questionUI.value && questionUI.value.keyboard) {
 			questionUI.value.keyboard.resetKeyStrokes()
 		}
+
 		// Visibility
 		isFinished.value = false
 		isRunning.value = true
@@ -513,7 +514,6 @@ let startChallenge = function () {
 				listOfQuestions.value = PiMath.Random.shuffle(questions.value)
 			}
 
-
 			// Check if there is enough questions.
 			let securityLoop = 100
 			while (questionId.value >= listOfQuestions.value.length) {
@@ -527,6 +527,7 @@ let startChallenge = function () {
 			if(questionUI.value && questionUI.value.keyboard) {
 				questionUI.value.keyboard.resetKeyStrokes()
 			}
+
 		} else {
 			// the answer is wrong
 
@@ -554,5 +555,21 @@ async function addTabCharacter(ev) {
 	nextTick()
 	ev.target.setSelectionRange(start, start)
 }
+
+let theQuestion = reactive({
+	block: {
+		body: "",
+		illustrations: []
+	},
+	checker: theChallenge.value.checker,
+	keyboard: theChallenge.value.keyboard,
+	parameters: theChallenge.value.parameters || "",
+	answer: ""
+})
+watch(questionId, ()=>{
+	theQuestion.block.body = theChallenge.value.output.replace("question", listOfQuestions.value[questionId.value].question).replace("answer", "$a")
+	theQuestion.block.illustrations = []
+	theQuestion.answer = listOfQuestions.value[questionId.value].answer
+})
 
 </script>

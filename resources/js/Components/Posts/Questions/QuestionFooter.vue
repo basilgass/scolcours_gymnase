@@ -19,7 +19,7 @@
 				/>
 				<div
 					v-else
-					v-katex.display.left.nomargin="answer"
+					v-katex.display.left.nomargin="questionAnswerDisplay"
 				/>
 			</button>
 		</div>
@@ -73,25 +73,47 @@
 			class="text-xs text-gray-600 flex justify-between mt-6 admin-wrapper"
 		>
 			<div>Résultat attendu</div>
-			<div>{{ adminAnswer }}</div>
+			<div>{{ theQuestion.answer }}</div>
 		</div>
 	</div>
 </template>
 <script setup>
 
-import {computed, inject, ref} from "vue"
+import {computed, inject, reactive, ref} from "vue"
+import {keyboards} from "@/keyboards"
 
+let emits = defineEmits(["update:question"])
 let props = defineProps({
-	isCorrect: {type: [Object, Boolean], required: true},
-	answer: {type: String, required: true},
-	previousAnswers: {type: Array, required: true},
-	adminAnswer: {type: String, required: true}
+	question: {type: Object, required: true },
+	isCorrect: {type: [Object, Boolean], required: true}
 })
 
-let editMode = inject("editpost")
+let editMode = inject("editpost", false),
+	theQuestion = reactive(props.question)
+
 let showAnswer = ref(false),
 	showPreviousAnswer = ref(false),
 	labelAnswer = computed(()=>{
-		return props.previousAnswers.length === 1 ? "voir la réponse précédente" : `voir les ${props.previousAnswers.length} réponses précédentes`
+		return previousAnswers.value.length === 1 ? "voir la réponse précédente" : `voir les ${previousAnswers.value.length} réponses précédentes`
 	})
+
+
+let previousAnswers = computed(() => {
+		if(!theQuestion){return []}
+		if(!theQuestion.userAnswers){return []}
+
+		return theQuestion.userAnswers?.length === 0 ? [] : theQuestion.userAnswers
+	}),
+	questionAnswerDisplay = computed(() => {
+		if (theQuestion.keyboard) {
+			const kbrd = keyboards[theQuestion.keyboard]
+
+			if (kbrd) {
+				return kbrd.tex(theQuestion.answer)
+			}
+		}
+
+		return props.question.answer
+	})
+
 </script>

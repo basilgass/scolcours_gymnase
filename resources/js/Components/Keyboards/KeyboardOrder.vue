@@ -33,57 +33,63 @@
 <script setup>
 
 import {wrongAnswerAnimation} from "@/Composables/useHelpers"
-import {nextTick, ref} from "vue"
+import {ref} from "vue"
 import {PiMath} from "pimath/esm"
 
 let props = defineProps({
-	modelValue: {type: String, required: true},
 	options: {type: String},
 	errorMessage: {type: String, default: ""}
 })
-let emits = defineEmits(["update:modelValue", "tex", "raw", "validate"])
+let emits = defineEmits(["change", "tex", "raw", "validate"])
 let validateButton = ref(null),
 	resetKeyStrokes = function () {
-		zeroes.value = ""
-		signs.value = ""
 	},
 	wrongAnswer = function () {
 		wrongAnswerAnimation(validateButton.value)
 	},
 	getTex = function (value) {
-		const v = value.split("@")
-
-		zeroes.value = v[0]
-		signs.value = v[1]
-
-		nextTick(() => tosUI.value.$el.innerHTML).then(resolve => {
-			emits("tex", resolve)
-			emits("raw", "")
-		})
-
+		emits("tex", "")
 		return ""
 	},
-	getRaw = function () {
-		nextTick(() => tosUI.value.$el.innerHTML).then(resolve => {
-			emits("raw", "")
-		})
-
-		return ""
+	getRaw = function (value) {
+		let result = props.options.split("\n").map(x=>`- ${x}`).join("\n")
+		emits("raw", result)
+		return result
 	},
 	btnValidate = function () {
-		emits("update:modelValue", sortableItems.value.map(element=>element.id).join(""))
+		let result = 0
+		for(let i=1; i<=sortableItems.value.length; i++){
+			if(sortableItems.value[i-1].id!==i){
+				result++
+			}
+		}
+
+		emits("change", `${result>0?result+" faute(s)":0}`)
 		emits("tex", "")
 		emits("raw", "")
-		emits("validate")
+		emits("validate", `${result>0?result+" faute(s)":0}`)
 	}
 defineExpose({resetKeyStrokes, wrongAnswer, getTex, getRaw})
 
 /* ------------------*/
+
 let sortableItems = ref(PiMath.Random.shuffle(
-	props.options.split("|").map((element, index)=>{return {
+	props.options.split("\n").map((element, index)=>{return {
 		id: index+1,
 		label: element
 	}})
 ))
 
+
+/*
+factoriser la fonction
+ensemble de définition \(\text{ED}_f\)
+recherche des points caractéristiques
+tableau de signes de \(f(x)\)
+recherche des asymptotes verticales
+recherche des asymptotes horizontales ou obliques
+position relative \(\delta(x)\)
+tableau de signes de la position relative
+tracer le graphe
+ */
 </script>

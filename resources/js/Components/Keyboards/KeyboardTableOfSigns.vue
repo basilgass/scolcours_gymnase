@@ -40,19 +40,17 @@
 			<!-- Add keyboard to input the zeros -->
 			<KeyboardBase
 				v-show="showZeroesKeyboard"
-				v-model="zeroes"
 				:multiple="true"
 				back
 				key-class="bg-white"
 				keyboard="exact"
 				reset
+				@change="zeroes = $event; updateTos()"
 				@tex="zeroesTex = $event"
-				@key="updateTos"
 			/>
 
 			<KeyboardBase
 				v-show="showSignsKeyboard"
-				v-model="signs"
 				:custom-keys="{
 					'd': {type: 'math', display: '\\textcolor{red}{\\Vert}'},
 					'z': {type: 'math', display: '0'},
@@ -62,8 +60,8 @@
 					layout: ['+', '-', 'z', 'd', ['@back', 2], ['@reset', 2]]
 				}"
 				key-class="bg-white"
-				@tex="tex = signsTex"
-				@key="updateTos"
+				@change="signs = $event; updateTos()"
+				@tex="signsTex = $event"
 			/>
 		</div>
 	</div>
@@ -78,11 +76,10 @@ import {wrongAnswerAnimation} from "@/Composables/useHelpers"
 import KeyboardBase from "@/Components/Keyboards/KeyboardBase.vue"
 
 let props = defineProps({
-	modelValue: {type: String, required: true},
 	options: {type: String},
 	errorMessage: {type: String, default: ""}
 })
-let emits = defineEmits(["update:modelValue", "tex", "raw", "validate"])
+let emits = defineEmits(["change", "tex", "raw", "validate"])
 
 let showZeroesKeyboard = ref(true),
 	showSignsKeyboard = ref(false)
@@ -110,34 +107,29 @@ let zeroes = ref(""),
 		wrongAnswerAnimation(validateButton.value)
 	},
 	getTex = function (value) {
+		return ""
+	},
+	getRaw = function (value) {
 		const v = value.split("@")
 
 		zeroes.value = v[0]
 		signs.value = v[1]
 
 		nextTick(() => tosUI.value.$el.innerHTML).then(resolve => {
-			emits("tex", resolve)
-			emits("raw", "")
-		})
-
-		return ""
-	},
-	getRaw = function () {
-		nextTick(() => tosUI.value.$el.innerHTML).then(resolve => {
-			emits("raw", "")
+			emits("tex", "")
+			emits("raw", resolve)
 		})
 
 		return ""
 	},
 	btnValidate = function () {
-		emits("update:modelValue", `${zeroes.value}@${signs.value}`)
+		emits("change", `${zeroes.value}@${signs.value}`)
 		emits("tex", "")
 		emits("raw", tosUI.value.$el.innerHTML)
-		emits("validate")
+		emits("validate", `${zeroes.value}@${signs.value}`)
 	},
 	updateTos = async function(){
 		await nextTick()
-		emits("update:modelValue", `${zeroes.value}@${signs.value}`)
 		emits("tex", "")
 		emits("raw", tosUI.value.$el.innerHTML)
 	}

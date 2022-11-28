@@ -38,7 +38,8 @@ class QuestionController extends Controller
 				'body'=>['string', 'min:2'],
 				'answer'=>['nullable'],
 				'checker'=>['string', 'nullable'],
-				'keyboard'=>['string', 'nullable']
+				'keyboard'=>['string', 'nullable'],
+				'parameters'=>['string', 'nullable'],
 			]
 		);
 
@@ -69,8 +70,10 @@ class QuestionController extends Controller
 			$theQuestion = $post->questions()->create([
 				'answer'=>$answer??null,
 				'checker'=>$checker,
-				'keyboard'=>$validate['keyboard']??''
+				'keyboard'=>$validate['keyboard']??'',
+				'parameters'=>$validate['parameters']??'',
 			]);
+			
 			$theQuestion->blocks()->create([
 				"title"=>'',
 				'body'=> $body
@@ -95,7 +98,8 @@ class QuestionController extends Controller
 			[
 				'answer'=>['nullable'],
 				'checker'=>['string', 'nullable'],
-				'keyboard'=>['string', 'nullable']
+				'keyboard'=>['string', 'nullable'],
+				'parameters'=>['string', 'nullable'],
 			]
 		);
 

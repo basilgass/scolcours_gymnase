@@ -75,93 +75,12 @@
 				</button>
 			</div>
 
-			<div v-if="qcmShow">
-				<div class="grid grid-cols-2">
-					<h3 class="text-lg">
-						QCM editor
-					</h3>
-					<h4 class="font-semibold">
-						résultat <span
-							class="font-code ml-5"
-							v-text="qcmResult"
-						/>
-					</h4>
-				</div>
-				<div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-					<textarea
-						v-model="qcmInput"
-						class="font-code border p-2"
-						:rows="qcmRows"
-						@input="qcmUpdate"
-						@focus="qcmFocus"
-					/>
-					<div class="grid grid-cols-1 gap-3">
-						<div
-							v-for="btn of qcmButtons"
-							:key="btn.value"
-							class="grid grid-cols-2 gap-3 items-center"
-						>
-							<button
-								class="btn"
-								@click="qcmResult=btn.value"
-							>
-								<span
-									v-if="btn.ascii"
-									v-katex.display.ascii="btn.display"
-								/>
-								<span
-									v-else
-									v-katex.display.auto="btn.display"
-								/>
-							</button>
-							<div class="font-code">
-								>> {{ btn.value }}
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-
-			<div v-if="studyShow">
-				<h3 class="text-lg">
-					Paramètres
-				</h3>
-
-				<div>
-					<form-switch
-						v-for="(item, key) of studyValues"
-						:key="key"
-						v-model="studyValues[key].selected"
-						:name="studyValues[key].display"
-						:label="studyValues[key].display"
-						label-right
-						@input="studyUpdate"
-					/>
-				</div>
-			</div>
-
-			<div v-if="orderShow">
-				<h3 class="text-lg">
-					Paramètres
-				</h3>
-
-				<div class="grid grid-cols-2 gap-3">
-					<form-textarea
-						v-model="orderInput"
-						label="entrées"
-						name="entries"
-						@input="orderUpdate"
-						@focus="orderFocus"
-					/>
-					<div class="grid grid-cols-1 gap-3 mt-5">
-						<button
-							v-for="(element, index) of orderInput.split('\n')"
-							:key="index"
-							v-katex.auto="element"
-							class="btn bg-white"
-						/>
-					</div>
-				</div>
+			<div>
+				<form-textarea
+					v-model="form.parameters"
+					name="parameters"
+					label="paramètres du clavier"
+				/>
 			</div>
 		</div>
 	</div>
@@ -169,11 +88,10 @@
 <script setup>
 import FormInput from "@/Components/Form/FormInput"
 import {useForm} from "@inertiajs/inertia-vue3"
-import {computed, onMounted, reactive, ref} from "vue"
+import {ref} from "vue"
 import {checkersList} from "@/Composables/useCheckers"
 import {keyboardsList} from "@/keyboards"
 import Button from "@/Components/Auth/Button.vue"
-import FormSwitch from "@/Components/Form/FormSwitch.vue"
 import FormTextarea from "@/Components/Form/FormTextarea.vue"
 
 let props = defineProps({
@@ -181,103 +99,9 @@ let props = defineProps({
 	hideable: {type: Boolean, default: false}
 })
 
-let emits = defineEmits(["update:modelValue", "cancel", "updated", "close"])
+let emits = defineEmits(["update:modelValue", "cancel", "updated", "save", "close"])
 let form = useForm({...props.modelValue})
-let showEditForm = ref(!props.hideable),
-	qcmShow = computed(()=>{
-		return form.keyboard.startsWith("qcm")
-	}),
-	qcmInput = ref(""),
-	qcmResult = ref(""),
-	qcmUpdate = function(){
-		form.keyboard = "qcm@" + qcmInput.value.split("\n")
-			.join(",")
-	},
-	qcmFocus = function(){
-		let options = form.keyboard.split("@")[1]
-
-		if(options){
-			qcmInput.value = options.split(",").join("\n")
-		}
-	},
-	qcmRows = computed(()=>qcmInput.value.split("\n").length+1),
-	qcmButtons = computed(()=>{
-		return qcmInput.value.split("\n").map(btn=>{
-			let [value, display] = btn.split("|"),
-				ascii = display?display.startsWith("#"):false
-
-			if(display){
-				return {
-					value,
-					display: ascii?display.substring(1):display,
-					ascii
-				}
-			}else{
-				return {
-					value,
-					display: value,
-					ascii: false
-				}
-			}
-		})
-	})
-
-let studyShow = computed(()=>{
-		return form.keyboard.startsWith("#Study")
-	}),
-	studyValues = reactive({
-		"ah": {selected: false, display: "AH"},
-		"av": {selected: false, display: "AV"},
-		"ao": {selected: false, display: "AO"},
-		"p": {selected: false, display: "point"},
-		"o": {selected: false, display: "ordonnée"},
-		"z": {selected: false, display: "zéro"},
-		"t": {selected: false, display: "trou"},
-		"e": {selected: false, display: "extremum"},
-		"hide": {selected: false, display: "sans graphique"},
-		"raw": {selected: false, display: "raw"}
-	}),
-	studyUpdate = function(){
-		let params = []
-		for (let key in studyValues) {
-			if(studyValues[key].selected){
-				params.push(key)
-			}
-		}
-		form.keyboard = "#Study@" + params.join(",")
-	},
-	studyFocus = function() {
-		if (form.keyboard.startsWith("#Study@")) {
-			let params = form.keyboard.split("#Study@")[1].split(",")
-			for (let key of params) {
-				if (studyValues[key]) {
-					studyValues[key].selected = true
-				}
-			}
-		}
-	}
-
-let orderShow = computed(()=>{
-		return form.keyboard.startsWith("#Order")
-	}),
-	orderInput = ref(""),
-	orderUpdate = function(){
-		form.keyboard = "#Order@" + orderInput.value.split("\n")
-			.join("|")
-	},
-	orderFocus = function(){
-		let options = form.keyboard.split("@")[1]
-
-		if(options){
-			orderInput.value = options.split("|").join("\n")
-		}
-	}
-
-onMounted(()=>{
-	if(qcmShow.value){qcmFocus()}
-	if(studyShow.value){studyFocus()}
-	if(orderShow.value){orderFocus()}
-})
+let showEditForm = ref(!props.hideable)
 
 function cancelQuestion(){
 	emits("cancel")
@@ -294,6 +118,7 @@ function patchQuestion(ev) {
 	).then(res => {
 		emits("update:modelValue", res.data.data)
 		emits("updated")
+		emits("save")
 		emits("close")
 		showEditForm.value = false
 	})

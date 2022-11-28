@@ -8,10 +8,6 @@ export function StudyChecker(options){
 				arrayExpected = expectedAnswer.split(",").sort(),
 				d = arrayExpected.length-arrayAnswer.length
 
-			console.log("ANSWER")
-			console.log(arrayAnswer)
-			console.log("EXPECTED")
-			console.log(arrayExpected)
 			if(d>0){
 				return {
 					result: false,

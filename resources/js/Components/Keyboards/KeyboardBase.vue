@@ -9,7 +9,7 @@
 				class="grid grid-cols-1 min-h-[50px]"
 			>
 				<div
-					v-katex.ascii.left.nomargin="getTex(props.modelValue)"
+					v-katex.ascii.left.nomargin="getTex(answerOutput)"
 					class="self-center"
 				/>
 			</div>
@@ -20,7 +20,7 @@
 				<div
 
 					class="self-center"
-					v-text="props.modelValue"
+					v-text="answerOutput"
 				/>
 			</div>
 		</div>
@@ -122,9 +122,8 @@
 import {computed, ref} from "vue"
 import {asciiToTex, keyboardKeys, keyboards} from "@/keyboards"
 
-const emit = defineEmits(["update:modelValue", "tex", "raw", "validate", "next", "key", "clear"])
+const emits = defineEmits(["tex", "raw", "validate", "next", "change", "clear"])
 const props = defineProps({
-	modelValue: String,
 	tex: String,
 	keyboard: {type: [Object, String], default: () => "simple"},
 	validate: {type: Boolean, default: null},
@@ -190,9 +189,6 @@ let theKeyboard = computed(() => {
 					display: d.startsWith("#")?asciiToTex(d.substring(1)):d,
 					span: 0,
 					fn: (value) => {
-						if (theKeyboard.value === "qcm") {
-							resetKeyStrokes()
-						}
 						return value + keyDisplay[0]
 					}
 				}
@@ -241,14 +237,14 @@ const btnReset = {
 		label: "suivant",
 		icon: "bi bi-arrow-bar-right",
 		span: 1,
-		fn: () => emit("next"),
+		fn: () => emits("next"),
 		atEnd: false
 	},
 	btnValidate = {
 		label: "valider",
 		icon: "bi bi-check",
 		span: 3,
-		fn: () => emit("validate"),
+		fn: () => emits("validate", answerOutput.value),
 		atEnd: false
 	}
 
@@ -285,7 +281,7 @@ let keyboardComputed = computed(() => {
 			}
 
 			if (theKey === undefined) {
-				kdata.fn = (key) => props.modelValue + ""
+				kdata.fn = (key) => answerOutput.value + ""
 			} else {
 				if (theKey.fn === undefined) {
 					kdata.fn = (value) => value + kkey
@@ -329,17 +325,16 @@ let keyboardComputed = computed(() => {
 
 function resetKeyStrokes() {
 	keyStrokes.value = []
-	emit("update:modelValue", "")
-	emit("tex", "")
-	emit("raw", "")
-	emit("key", "")
-	emit("clear", "")
+	emits("tex", "")
+	emits("raw", "")
+	emits("change", "")
+	emits("clear", "")
 }
 
 function backKeyStrokes() {
 	ButtonKeyClick({key: "@back"})
-	emit("key", "")
-	emit("clear", "")
+	emits("change", "")
+	emits("clear", "")
 }
 
 function ButtonKeyClick(key) {
@@ -351,11 +346,14 @@ function ButtonKeyClick(key) {
 		keyStrokes.value.push(key)
 	}
 
-	let output = "", result = keyStrokes.value.map(k => k.fn(output)).join("")
-	emit("update:modelValue", result)
-	emit("tex", getTex(result))
-	emit("raw", "")
-	emit("key", result)
+	let output = "",
+		result = keyStrokes.value
+			.map(k => k.fn(output))
+			.join("")
+
+	emits("change", result)
+	emits("tex", getTex(result))
+	emits("raw", "")
 }
 let validateButton = ref(null)
 
@@ -379,6 +377,14 @@ function getTex(value) {
 		return theKeyboard.value.tex ? theKeyboard.value.tex(value) : value
 	}
 }
+
+let answerOutput = computed(()=>{
+	let output = ""
+
+	return  keyStrokes.value
+		.map(k => k.fn(output))
+		.join("")
+})
 
 defineExpose({resetKeyStrokes, wrongAnswer, getTex})
 </script>

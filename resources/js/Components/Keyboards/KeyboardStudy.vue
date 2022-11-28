@@ -85,11 +85,11 @@
 
 			<KeyboardBase
 				ref="keyboardUI"
-				v-model="display"
 				keyboard="algebra"
 				key-class="bg-white"
 				reset
 				back
+				@change="display = $event"
 				@tex="tex = $event"
 				@clear="message=''"
 			/>
@@ -108,12 +108,11 @@ import {PiMath} from "pimath/esm"
 import KeyboardBase from "@/Components/Keyboards/KeyboardBase.vue"
 
 let props = defineProps({
-	modelValue: {type: String, required: true},
 	options: {type: String},
 	errorMessage: {type: String, default: ""},
 })
 
-let emits = defineEmits(["update:modelValue", "tex", "raw", "validate"])
+let emits = defineEmits(["change", "tex", "raw", "validate"])
 
 let outputHTML = ref(null),
 	validateButton = ref(null),
@@ -136,10 +135,10 @@ let outputHTML = ref(null),
 		}
 
 		// Get all outputs
-		emits("update:modelValue", output)
+		emits("change", output)
 		emits("tex", "")
 		emits("raw", showRawOutput.value?PiGraph.svg.svg():"")
-		emits("validate")
+		emits("validate", output)
 	},
 	resetKeyStrokes = function () {
 		// Reset keystrokes
@@ -153,15 +152,15 @@ let outputHTML = ref(null),
 	getTex = function (value) {
 		const v = value.split("@")
 
-		nextTick(() => outputHTML.value.$el.innerHTML).then(resolve => {
+		nextTick(() => outputHTML.value.innerHTML).then(resolve => {
 			emits("tex", resolve)
 			emits("raw", showRawOutput.value?PiGraph.svg.svg():"")
 		})
 
 		return ""
 	},
-	getRaw = function () {
-		nextTick(() => outputHTML.value.$el.innerHTML).then(resolve => {
+	getRaw = function (value) {
+		nextTick(() => outputHTML.value.innerHTML).then(resolve => {
 			emits("raw", PiGraph.svg.svg())
 		})
 	}
