@@ -61,10 +61,11 @@ let texOutput = computed(()=>{
 	sliders.value.forEach(slider => {
 		tex = tex.replaceAll(slider.key, slider.value)
 	})
-
+	
 	return tex.replaceAll("+-", "-")
 		.replaceAll("--", "+")
 })
+
 let getSliders = function(){
 	// All slider are like: $a=...
 	sliders.value = []

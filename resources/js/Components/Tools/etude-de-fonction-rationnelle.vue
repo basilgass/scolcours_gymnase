@@ -6,7 +6,7 @@
 		<!-- Value to modify enter -->
 		<form
 			class="max-w-md mx-auto mb-6"
-			@submit.prevent="validation_fx"
+			@submit.prevent
 		>
 			<form-input
 				v-model="fx"
@@ -15,9 +15,17 @@
 				:focus="true"
 			/>
 
-			<form-button>
-				Valider
-			</form-button>
+			<div class="flex gap-3">
+				<form-button
+					@click.prevent="validation_fx"
+				>
+					Valider
+				</form-button>
+
+				<form-button @click.prevent="generate_fx">
+					générer {{ generate_attempts > 0 ? `(${generate_attempts})`:'' }}
+				</form-button>
+			</div>
 		</form>
 
 		<hr>
@@ -33,6 +41,9 @@
 					<div
 						v-katex="fraction_rationnelle.tex"
 					/>
+					<div class="font-code text-gray-300 text-sm text-center">
+						{{ fraction_rationnelle.texDev }}
+					</div>
 				</div>
 
 				<!-- Ensemble de définition -->
@@ -165,7 +176,7 @@
 
 <script setup>
 /** Chapter
- * title: étude de signe
+ * title: étude de fonction rationnelle
  * body: étude de signe d'une fonction rationnelle.
  */
 
@@ -184,6 +195,7 @@ import TableOfContents from "@/Components/Ui/TableOfContents"
 
 let root = ref(null),
 	fx = ref("(3x-5)(x+7)/(x-3)"),
+	generate_attempts = ref(0),
 	validation = ref(false),
 	validationDescription = ref(""),
 	fraction_rationnelle = reactive({
@@ -239,6 +251,7 @@ async function validation_fx() {
 
 	// Function name
 	fraction_rationnelle.tex = `f(x) = ${study.fx.tex} = ${study.fx.texFactors}`
+	fraction_rationnelle.texDev = `f(x) = ${study.fx.tex}`
 	// Domain
 	fraction_rationnelle.domain = study.fx.domain()
 	// Signs
@@ -294,7 +307,6 @@ async function validation_fx() {
 		extremesX.min -= Math.floor((dy*4/3-dx)/2)-1
 		extremesX.max += Math.floor((dy*4/3-dx)/2)+2
 	}
-	console.log(extremesX, extremesY)
 	fraction_rationnelle.drawParameters = `axis,grid,x=${extremesX.min}:${extremesX.max},y=${extremesY.min}:${extremesY.max}`
 
 	// Draw code
@@ -304,6 +316,69 @@ async function validation_fx() {
 	validation.value = true
 }
 
+
+function generate_fx(){
+	let n = 1,
+		genFx
+	while(n<=500){
+		genFx = getFxWithControls(n<250 ? 10: 5)
+		if (Math.abs(genFx.control.oao) < 10 &&
+			Math.abs(genFx.control.slope) <= 3 &&
+			Math.abs(genFx.control.ordonnee) <=10 &&
+			!genFx.control.trou &&
+			!genFx.control.reduceable
+		){
+			fx.value = genFx.fx
+			generate_attempts.value = n
+			return
+		}
+
+		n++
+	}
+
+	fx.value = genFx.fx
+	alert("Aucune fonction intéressante générée...")
+}
+
+function getFxWithControls(maxValue){
+	let a, b, c, d, e, k, kd, kd2
+
+	d = PiMath.Random.number(1, maxValue)
+	k = PiMath.Random.numberSym(maxValue - d + 1, false)
+	kd = d*k
+	kd2 = d*d*k
+
+	e = PiMath.Random.item(
+		PiMath.Numeric.dividers(Math.abs(kd2)).filter(x=>x>=Math.sqrt(kd2))
+	)*(PiMath.Random.bool()?1:-1)
+	a = kd2/e
+
+	const kd_divider = PiMath.Random.item(PiMath.Numeric.dividers(Math.abs(kd)))*(PiMath.Random.bool()?1:-1)
+	b = PiMath.Random.numberSym(maxValue, false)
+	c = kd_divider - b
+
+	let slope = a/d,
+		oao = a*d*(b+c)-a*e/d*d,
+		ordonnee = a*b*c/e,
+		trou = b===e/d || c===e/d,
+		reduceable = d%a===0 && e%a===0
+
+	a = a===1? "": (a===-1? "-": a)
+	b = (b>0 ? "+":"")+b
+	c = (c>0 ? "+":"")+(c!==0?c:"")
+	d = d===1? "": (d===-1? "-": d)
+	e = (e>0 ? "+":"")+e
+	return {
+		fx: `${a}(x${b})(x${c})/${d}x${e}`,
+		control: {
+			slope ,
+			oao,
+			ordonnee,
+			trou,
+			reduceable
+		}
+	}
+}
 onMounted(() => {
 	validation_fx()
 })
