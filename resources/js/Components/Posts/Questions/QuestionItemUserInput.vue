@@ -144,7 +144,8 @@ let availableKeyboards = computed(()=>{
 	})
 
 watch(answer, (newValue, oldValue)=>{
-	if(newValue.split(",").length!==newValue.split(",")){
+	if(newValue.split(",").length!==newValue.split(",")
+		&& availableKeyboards.value.length>1){
 		answerIndex.value = newValue.split(",").length
 	}
 })
@@ -344,6 +345,7 @@ watch(() => props.correctionMode, (correction, before) => {
 
 onMounted(()=>{
 	updateQuestion()
+	answerIndex.value = 1
 })
 
 let keyboard = computed(()=>{

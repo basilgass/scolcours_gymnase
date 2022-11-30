@@ -129,7 +129,6 @@ let outputHTML = ref(null),
 				arr.push(envCtrls)
 			}
 			output = arr.sort().join(",")
-
 		}else{
 			output = [...items.value].sort().join(",")
 		}
@@ -504,6 +503,7 @@ function addAH(value){
 		x = PiGraph.unitXDomain,
 		size = PiGraph.distanceToPixels(1)/3
 
+	const b1ratio = 5, b2ratio = 10
 	return {
 		type: "ah",
 		element: PiGraph.path(`M${0},${posY} L${PiGraph.width},${posY}`).color("green"),
@@ -568,6 +568,7 @@ function addAO(value){
 			y: pLine.y.value/pLineNorm*delta,
 		}
 
+	const b1ratio = 5, b2ratio = 10
 	return {
 		type: "ao",
 		element: PiGraph.path(`M${Apixels.x},${Apixels.y} L${Bpixels.x},${Bpixels.y}`).color("green"),
@@ -591,20 +592,20 @@ function addAO(value){
 		},
 		bezier: {
 			"LT": [
-				PiGraph.point(A.x - dxy.x + pxy.x/10, A.y - dxy.y + pxy.y/10),
-				PiGraph.point(A.x - dxy.x*5 + pxy.x/20, A.y - dxy.y*5 + pxy.y/20),
+				PiGraph.point(A.x - dxy.x + pxy.x/b1ratio, A.y - dxy.y + pxy.y/b1ratio),
+				PiGraph.point(A.x - dxy.x*5 + pxy.x/b2ratio, A.y - dxy.y*5 + pxy.y/b2ratio),
 			],
 			"LB": [
-				PiGraph.point(A.x - dxy.x - pxy.x/10, A.y - dxy.y - pxy.y/10),
-				PiGraph.point(A.x - dxy.x*5 - pxy.x/20, A.y - dxy.y*5 - pxy.y/20),
+				PiGraph.point(A.x - dxy.x - pxy.x/b1ratio, A.y - dxy.y - pxy.y/b1ratio),
+				PiGraph.point(A.x - dxy.x*5 - pxy.x/b2ratio, A.y - dxy.y*5 - pxy.y/b2ratio),
 			],
 			"RT": [
-				PiGraph.point(B.x + dxy.x + pxy.x/10, A.y + dxy.y + pxy.y/10),
-				PiGraph.point(B.x + dxy.x*5 + pxy.x/20, A.y + dxy.y*5 + pxy.y/20),
+				PiGraph.point(B.x + dxy.x + pxy.x/b1ratio, B.y + dxy.y + pxy.y/b1ratio),
+				PiGraph.point(B.x + dxy.x*5 + pxy.x/b2ratio, B.y + dxy.y*5 + pxy.y/b2ratio),
 			],
 			"RB": [
-				PiGraph.point(B.x + dxy.x - pxy.x/10, A.y + dxy.y - pxy.y/10),
-				PiGraph.point(B.x + dxy.x*5 - pxy.x/20, A.y + dxy.y*5 - pxy.y/20),
+				PiGraph.point(B.x + dxy.x - pxy.x/b1ratio, B.y + dxy.y - pxy.y/b1ratio),
+				PiGraph.point(B.x + dxy.x*5 - pxy.x/b2ratio, B.y + dxy.y*5 - pxy.y/b2ratio),
 			],
 		}
 	}
@@ -633,7 +634,10 @@ function addTracePoints(){
 	}
 }
 
-function addPoint(type, x, y){
+function addPoint(type, xValue, yValue){
+	let x = new PiMath.Fraction(xValue).value,
+		y = new PiMath.Fraction(yValue).value
+
 	let P = PiGraph.point(x, y),
 		pixels = PiGraph.unitsToPixels({x, y}),
 		bar = PiGraph.path(`M${pixels.x-50},${pixels.y} L${pixels.x+50},${pixels.y}`).hide()

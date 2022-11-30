@@ -6,6 +6,7 @@
 			<pi-table-of-signs
 				ref="tosUI"
 				:tos="tos"
+				:fn="tosName"
 			/>
 		</div>
 
@@ -90,6 +91,12 @@ let zeroes = ref(""),
 	signsTex = ref(""),
 	validateButton = ref(null),
 	tosUI = ref(null),
+	tosName = computed(()=>{
+		let names = props.options.split("\n").filter(x=>x.includes("(x)")).map(x=>x.split("(")[0])
+
+		console.log(names)
+		return names.length===0 ? "f" : names[0]
+	}),
 	tos = computed(() => {
 		return {
 			zeroes: zeroes.value.split(",").map(x => {
