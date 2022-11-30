@@ -56,7 +56,7 @@ class BlockController extends Controller
 			'illustrations.*.title' => ['string', 'nullable'],
 			'illustrations.*.type' => ['string'],
 			'illustrations.*.code' => ['string'],
-			'illustrations.*.parameters' => ['string', 'nullable'],
+			'illustrations.*.parameters' => ['text', 'nullable'],
 		]);
 
 		$block = Block::create([
