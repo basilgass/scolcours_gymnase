@@ -17,7 +17,7 @@ import {computed, defineAsyncComponent, ref} from "vue"
 import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"
 
 const props = defineProps({
-	illustration: {type: Object, required: true}
+	illustration: {type: Object, required: true},
 })
 
 let root = ref(null)

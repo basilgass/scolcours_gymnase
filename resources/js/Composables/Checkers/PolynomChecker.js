@@ -26,7 +26,6 @@ export function PolynomChecker(options) {
 			}
 
 			/** Polynom checker options */
-
 			// Factorized
 			if (options.includes("f") || options.includes("factor")) {
 				try {

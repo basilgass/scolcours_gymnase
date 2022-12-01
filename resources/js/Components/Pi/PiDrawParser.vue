@@ -24,7 +24,7 @@
 </template>
 
 <script setup>
-import {computed, onMounted, ref, watch} from "vue"
+import {computed, inject, onMounted, ref, watch} from "vue"
 import {PiDraw} from "pidraw/esm"
 
 import VueSlider from "vue-slider-component"
@@ -33,6 +33,9 @@ import {PiMath} from "pimath/esm"
 import katex from "katex"
 
 const emits = defineEmits(["update"])
+
+// Get the script value
+let blockScriptResult = inject("blockScriptResult")
 
 // SVG drawing container
 let draw = ref(null)
@@ -61,7 +64,7 @@ let texOutput = computed(()=>{
 	sliders.value.forEach(slider => {
 		tex = tex.replaceAll(slider.key, slider.value)
 	})
-	
+
 	return tex.replaceAll("+-", "-")
 		.replaceAll("--", "+")
 })
@@ -158,12 +161,15 @@ let getSliders = function(){
 let PiGraph, PiParser, PiAxis
 
 let	drawCode = computed(()=>{
+	let outputCode = props.draw.code
+
+	// Modify the code using the local information (sliders)
 	if(sliders.value.length>0){
 		// Remove the lines starting with $ (dollar sign)
-		let code = props.draw.code.split("\n").filter(row=>row[0]!=="$")
+		let code = outputCode.split("\n").filter(row=>row[0]!=="$")
 
 		// Modify the value of all variables ($a, $b, ...)
-		return code
+		outputCode = outputCode
 			.map(row=>{
 				sliders.value.forEach(slider => {
 					if(row.split("=")[0].includes("(x)")) {
@@ -175,9 +181,16 @@ let	drawCode = computed(()=>{
 				return row
 			})
 			.join("\n")
-	}else{
-		return props.draw.code
 	}
+
+	// Modify the code according to the script level
+	if(Object.values(blockScriptResult.value).length>0){
+		for(let key in blockScriptResult.value){
+			outputCode = outputCode.replaceAll(`$${key}`, blockScriptResult.value[key])
+		}
+	}
+
+	return outputCode
 })
 
 let figures = ref({})

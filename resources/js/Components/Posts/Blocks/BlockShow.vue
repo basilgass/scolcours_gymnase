@@ -139,7 +139,7 @@
 <script setup>
 
 import MarkdownIt from "@/Components/Ui/MarkdownIt"
-import {computed, inject, nextTick, onMounted, ref, watch} from "vue"
+import {computed, inject, nextTick, onMounted, provide, ref, watch} from "vue"
 import IllustrationShow from "@/Components/Posts/Illustrations/IllustrationShow.vue"
 import {PiMath} from "pimath/esm"
 import DialogModal from "@/Components/Ui/DialogModal"
@@ -173,6 +173,8 @@ let postScriptResult = inject("postScriptResult"),
 	scriptsResult = computed(()=>{
 		return {...postScriptResult.value, ...blockScriptResult.value}
 	})
+
+provide("blockScriptResult", scriptsResult)
 watch(postScriptResult, ()=>{
 	runBlockScript()
 })
@@ -206,6 +208,16 @@ let editedBody = computed(() => {
 	for (let key in scriptsResult.value) {
 		output = output.replaceAll("$" + key, scriptsResult.value[key])
 	}
+
+	// Rename all "unwanted" double signs.
+	// - - => +
+	// + -  or  - + => -
+	// + + => +
+	output = output.replaceAll("--", "+")
+	output = output.replaceAll("++", "+")
+	output = output.replaceAll("-+", "-")
+	output = output.replaceAll("+-", "-")
+
 	return output
 })
 
