@@ -169,7 +169,7 @@ let	drawCode = computed(()=>{
 		let code = outputCode.split("\n").filter(row=>row[0]!=="$")
 
 		// Modify the value of all variables ($a, $b, ...)
-		outputCode = outputCode
+		outputCode = code
 			.map(row=>{
 				sliders.value.forEach(slider => {
 					if(row.split("=")[0].includes("(x)")) {

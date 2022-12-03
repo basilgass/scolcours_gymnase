@@ -160,33 +160,13 @@
 			</div>
 
 			<!-- post footer admin -->
-			<div
+			<button
 				v-if="$page.props.auth.can.admin && editMode"
-				class="admin-wrapper mt-10 flex-col gap-10"
+				class="btn px-10 min-h-[2rem] w-full my-5 border-2 border-blue-600 border-dashed text-blue-900 bg-blue-100 hover:bg-blue-200"
+				@click="addBlock"
 			>
-				<div class="flex items-end gap-3">
-					<button
-						class="btn-primary"
-						@click="addBlock"
-						v-text="`ajouter ${addNBlocks} bloc${addNBlocks>1?'s':''}`"
-					/>
-
-					<form-number
-						v-model="addNBlocks"
-						name="addNBlock"
-						label="nombre de blocs à ajouter"
-						min="1"
-						max="10"
-					/>
-				</div>
-
-				<div
-					v-if="$slots.admin"
-					class="w-full"
-				>
-					<slot name="adminFooter" />
-				</div>
-			</div>
+				ajouter un bloc
+			</button>
 
 			<!-- all the questions -->
 			<div

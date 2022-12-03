@@ -18,7 +18,7 @@
 					#adminHeader
 				>
 					<div class="w-full flex justify-between items-baseline flex-col md:flex-row">
-						<div>Déplacer l'article</div>
+						<div>Déplacer l'article id: ({{ post.id }})</div>
 						<div class="flex gap-3">
 							<button
 								:class="index===0?'invisible':''"

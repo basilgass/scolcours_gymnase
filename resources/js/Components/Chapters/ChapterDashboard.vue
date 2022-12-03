@@ -1,5 +1,6 @@
 <template>
 	<section class="grid grid-cols-1 md:grid-cols-3 gap-4 my-10">
+		<!-- Table of contents -->
 		<Panel class="md:col-span-3 pb-3">
 			<template #title>
 				Table des matières
@@ -7,6 +8,61 @@
 			<ChapterToc />
 		</Panel>
 
+		<!-- stats panels -->
+		<div
+			v-if="$page.props.auth.user"
+			class="grid grid-cols-2 md:grid-cols-4 md:col-span-3 gap-3 min-h-[10em]"
+		>
+			<Panel class="grid grid-cols-1 place-items-center text-center">
+				<div class="flex flex-col gap-5">
+					<div class="text-lg text-gray-300 uppercase">
+						paragraphes
+					</div>
+					<div class="text-4xl font-code">
+						{{ props.chapter.posts.length }}
+					</div>
+				</div>
+			</Panel>
+			<Panel class="grid grid-cols-1 place-items-center text-center">
+				<div class="flex flex-col gap-5">
+					<div class="text-lg text-gray-300 uppercase">
+						challenges
+					</div>
+					<div class="text-4xl font-code">
+						{{ props.chapter.challenges.length }}
+					</div>
+				</div>
+			</Panel>
+			<Panel class="grid grid-cols-1 place-items-center text-center">
+				<div class="flex flex-col gap-5">
+					<div class="text-lg text-gray-300 uppercase">
+						exercices
+					</div>
+					<div class="text-4xl font-code">
+						{{ chapterExercises.length }}
+					</div>
+				</div>
+			</Panel>
+			<Panel class="grid grid-cols-1 place-items-center text-center relative">
+				<div
+					class="absolute top-0 left-0 bg-green-100 border-r border-green-500 h-full z-0"
+					:style="`width: ${chapterQuestionsRatio}%`"
+				/>
+
+				<div class="grid grid-cols-1 place-items-center text-center z-10">
+					<div class="flex flex-col gap-5">
+						<div class="text-lg text-gray-300 uppercase">
+							questions
+						</div>
+						<div class="text-4xl font-code">
+							{{ chapterQuestions.answered }}/{{ chapterQuestions.questions }}
+						</div>
+					</div>
+				</div>
+			</Panel>
+		</div>
+
+		<!-- Challenges buttons -->
 		<div class="md:col-span-3">
 			<h3
 				class="text-xl border-b mb-3 inline-block px-1"
@@ -58,52 +114,7 @@
 			</div>
 		</div>
 
-		<div
-			v-if="$page.props.auth.user"
-			class="grid grid-cols-2 md:grid-cols-4 md:col-span-3 gap-3 min-h-[10em]"
-		>
-			<Panel class="grid grid-cols-1 place-items-center text-center">
-				<div class="flex flex-col gap-5">
-					<div class="text-lg text-gray-300 uppercase">
-						exercices
-					</div>
-					<div class="text-4xl font-code">
-						{{ chapterExercises.length }}
-					</div>
-				</div>
-			</Panel>
-			<Panel class="grid grid-cols-1 place-items-center text-center">
-				<div class="flex flex-col gap-5">
-					<div class="text-lg text-gray-300 uppercase">
-						questions
-					</div>
-					<div class="text-4xl font-code">
-						{{ chapterQuestions.answered }}/{{ chapterQuestions.questions }}
-					</div>
-				</div>
-			</Panel>
-			<Panel class="grid grid-cols-1 place-items-center text-center">
-				<!--				<div class="flex flex-col gap-5">-->
-				<!--					<div class="text-lg text-gray-300 uppercase">-->
-				<!--						questions-->
-				<!--					</div>-->
-				<!--					<div class="text-4xl font-code">-->
-				<!--						{{ chapterQuestions.answered }}/{{ chapterQuestions.questions }}-->
-				<!--					</div>-->
-				<!--				</div>-->
-			</Panel>
-			<Panel class="grid grid-cols-1 place-items-center text-center">
-				<!--				<div class="flex flex-col gap-5">-->
-				<!--					<div class="text-lg text-gray-300 uppercase">-->
-				<!--						questions-->
-				<!--					</div>-->
-				<!--					<div class="text-4xl font-code">-->
-				<!--						{{ chapterQuestions.answered }}/{{ chapterQuestions.questions }}-->
-				<!--					</div>-->
-				<!--				</div>-->
-			</Panel>
-		</div>
-
+		<!-- oldies - to be remove -->
 		<Panel
 			v-if="$page.props.auth.user && 1===0"
 		>
@@ -168,6 +179,8 @@ let props = defineProps({
 	showExercises: {type: Boolean, required: true},
 	hideResolvedQuestions: {type: Boolean, require: true}
 })
+
+console.log(props.chapter)
 
 let emits = defineEmits(["update:showExercises", "update:hideResolvedQuestions"])
 
