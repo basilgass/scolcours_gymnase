@@ -67,6 +67,9 @@ Route::post('formulas/{formula}/duplicate', [FormulaController::class, 'duplicat
 Route::post('formulas/updateOrder', [FormulaController::class, 'updateOrder'])->name('formulas.updateOrder');
 
 // Posts routes
+
+Route::get('posts/{post}', [PostController::class, "show"]);
+
 Route::resource('chapters.posts', PostController::class)
 	->parameters([
 		"chapters" => "chapter:slug"

@@ -6,6 +6,7 @@ use App\Http\Resources\PostResource;
 use App\Models\Chapter;
 use App\Models\Post;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class PostController extends Controller
 {
@@ -48,10 +49,10 @@ class PostController extends Controller
 
 	public function show(Post $post)
 	{
-//		return Inertia::render("Posts/PostShow", [
-//			'theme' => $post->chapter->theme,
-//			'post' => $post
-//		]);
+		return Inertia::render("Posts/PostShowNew", [
+			'theme' => $post->chapter->theme,
+			'post' => PostResource::make($post)
+		]);
 	}
 
 	public function edit(Post $post)
