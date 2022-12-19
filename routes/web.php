@@ -52,6 +52,7 @@ require __DIR__ . '/auth.php';
 
 // Chapter routes
 Route::resource('themes.chapters', ChaptersController::class)
+	->except('show')
 	->parameters([
 		'themes' => 'theme:slug',
 		'chapters' => 'chapter:slug'
