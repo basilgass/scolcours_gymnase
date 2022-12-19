@@ -114,6 +114,8 @@ let random = ref(1),
 	}),
 	illustrationEdited = function(illustration){
 		return {
+			id: illustration.id,
+			title: illustration.title,
 			type: illustration.type,
 			code: useFormattedBody(illustration.code, blockData),
 			parameters: illustration.parameters?useFormattedBody(illustration.parameters, blockData):""
