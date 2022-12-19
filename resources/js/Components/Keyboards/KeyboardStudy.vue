@@ -119,7 +119,10 @@ let outputHTML = ref(null),
 		useWrongAnswerAnimation(validateButton.value)
 	},
 	changeEvent = function() {
-		emits("change")
+		emits("change",{
+			tex: "",
+			raw: showRawOutput.value?PiGraph.svg.svg():""
+		})
 	},
 	validateEvent = function () {
 		let output = ""
@@ -286,10 +289,7 @@ onMounted(()=>{
 	}
 
 	// Update the value
-	emits("change",{
-		tex: "",
-		raw: showRawOutput.value?PiGraph.svg.svg():""
-	})
+	changeEvent()
 
 	// Add resize observer
 	const resizeObserver = new ResizeObserver((entries) => {
@@ -406,10 +406,7 @@ function addItemToGraph(btn){
 	keyboardUI.value.resetKeyStrokes()
 
 	// Update the graph
-	emits("change",{
-		tex: "",
-		raw: showRawOutput.value?PiGraph.svg.svg():""
-	})
+	changeEvent()
 }
 
 function removeAllItems(){
@@ -443,10 +440,7 @@ function removeItem(item) {
 	delete itemsGraph.value[item]
 
 	// Update the graph
-	emits("change",{
-		tex: "",
-		raw: showRawOutput.value?PiGraph.svg.svg():""
-	})
+	changeEvent()
 }
 
 function removeControlsAndBezier(item){

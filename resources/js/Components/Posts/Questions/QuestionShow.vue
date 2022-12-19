@@ -27,7 +27,7 @@
 			<!-- Admin edition mode -->
 
 			<!-- the body of question -->
-			<div class="px-5 py-3">
+			<div class="px-5 py-3 overflow-x-auto">
 				<illustration-show
 					v-if="theQuestion.block.illustration"
 					:illustration="theQuestion.block.illustration"

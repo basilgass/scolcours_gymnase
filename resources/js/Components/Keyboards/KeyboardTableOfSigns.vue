@@ -16,16 +16,6 @@
 		/>
 
 		<div class="max-w-xl mx-auto flex flex-col gap-3 keyboard">
-			<button
-				ref="validateButton"
-				class="key-cmd bg-white w-full
-				border-green-700 text-green-600 hover:bg-green-100 hover:border-green-800
-				mb-3"
-				@click="btnValidate"
-			>
-				<i class="bi bi-check" /> <span class="hidden md:inline md:ml-2">Valider</span>
-			</button>
-
 			<div class="flex gap-3 justify-center">
 				<button
 					:class="showZeroesKeyboard?'btn-primary':''"
@@ -148,8 +138,14 @@ let zeroes = ref(""),
 	},
 	updateTos = async function(){
 		await nextTick()
-		emits("tex", "")
-		emits("raw", tosUI.value.$el.innerHTML)
+		changeEvent()
 	}
+
+const changeEvent= function(){
+	emits("change",{
+		tex: "",
+		raw: tosUI.value.$el.innerHTML
+	})
+}
 defineExpose({resetKeyStrokes, wrongAnswer, getTex, getRaw})
 </script>

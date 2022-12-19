@@ -1,5 +1,7 @@
 <template>
-	<div ref="root">
+	<div
+		ref="root"
+	>
 		<pi-draw-parser
 			v-if="illustration.type==='draw'"
 			:draw="illustration"
