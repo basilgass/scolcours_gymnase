@@ -2,15 +2,18 @@
 
 namespace App\Http\Resources;
 
+use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use JsonSerializable;
 
 class PostResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
+     * @param  Request  $request
+     * @return array|Arrayable|JsonSerializable
      */
     public function toArray($request)
     {
@@ -19,7 +22,7 @@ class PostResource extends JsonResource
 			'chapter_id'=>$this->chapter_id,
 			'type'=>$this->type,
 			'title'=>$this->title,
-			'position'=>$this->position,
+			'order'=>$this->order,
 			'numberOfVisibleBlocks'=>$this->numberOfVisibleBlocks,
 			'active'=>$this->active,
 			'script'=>$this->script,

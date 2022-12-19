@@ -10,6 +10,11 @@
 			/>
 		</div>
 
+		<keyboard-validate-button
+			ref="validateButton"
+			@validate="validateEvent"
+		/>
+
 		<div class="max-w-xl mx-auto flex flex-col gap-3 keyboard">
 			<button
 				ref="validateButton"
@@ -39,7 +44,7 @@
 			</div>
 
 			<!-- Add keyboard to input the zeros -->
-			<KeyboardBase
+			<KeyboardElement
 				v-show="showZeroesKeyboard"
 				:multiple="true"
 				back
@@ -50,7 +55,7 @@
 				@tex="zeroesTex = $event"
 			/>
 
-			<KeyboardBase
+			<KeyboardElement
 				v-show="showSignsKeyboard"
 				:custom-keys="{
 					'd': {type: 'math', display: '\\textcolor{red}{\\Vert}'},
@@ -73,14 +78,16 @@
 import {computed, nextTick, ref} from "vue"
 import PiTableOfSigns from "@/Components/Pi/PiTableOfSigns.vue"
 import {keyboards} from "@/keyboards"
-import {wrongAnswerAnimation} from "@/Composables/useHelpers"
-import KeyboardBase from "@/Components/Keyboards/KeyboardBase.vue"
+import {useWrongAnswerAnimation} from "@/Composables/useHelpers"
+import KeyboardElement from "@/Components/Keyboards/KeyboardElement.vue"
+import KeyboardValidateButton from "@/Components/Keyboards/KeyboardValidateButton.vue"
+import {useCheckers} from "@/Composables/useCheckers"
 
 let props = defineProps({
 	options: {type: String},
-	errorMessage: {type: String, default: ""}
+	answer: {type: String}
 })
-let emits = defineEmits(["change", "tex", "raw", "validate"])
+let emits = defineEmits(["change", "validate"])
 
 let showZeroesKeyboard = ref(true),
 	showSignsKeyboard = ref(false)
@@ -94,7 +101,6 @@ let zeroes = ref(""),
 	tosName = computed(()=>{
 		let names = props.options.split("\n").filter(x=>x.includes("(x)")).map(x=>x.split("(")[0])
 
-		console.log(names)
 		return names.length===0 ? "f" : names[0]
 	}),
 	tos = computed(() => {
@@ -111,7 +117,7 @@ let zeroes = ref(""),
 		signs.value = ""
 	},
 	wrongAnswer = function () {
-		wrongAnswerAnimation(validateButton.value)
+		useWrongAnswerAnimation(validateButton.value)
 	},
 	getTex = function (value) {
 		return ""
@@ -129,11 +135,16 @@ let zeroes = ref(""),
 
 		return ""
 	},
-	btnValidate = function () {
-		emits("change", `${zeroes.value}@${signs.value}`)
-		emits("tex", "")
-		emits("raw", tosUI.value.$el.innerHTML)
-		emits("validate", `${zeroes.value}@${signs.value}`)
+	validateEvent = function () {
+		const check = useCheckers("tos").check(props.answer, `${zeroes.value}@${signs.value}`)
+
+		emits("validate", {
+			code: `${zeroes.value}@${signs.value}`,
+			tex: "",
+			raw: tosUI.value.$el.innerHTML,
+			correct: check.result,
+			message: check.message
+		})
 	},
 	updateTos = async function(){
 		await nextTick()

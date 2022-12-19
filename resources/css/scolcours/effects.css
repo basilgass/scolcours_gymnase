@@ -73,6 +73,19 @@
 	opacity: 0
 }
 
+.flash-message-enter-active {transition: all .3s ease-out}
+.flash-message-leave-active {transition: all .3s ease-in}
+
+.flash-message-enter-from {
+	transform: translateX(40%);
+	opacity: 0
+}
+
+.flash-message-leave-to {
+	transform: translateX(40%);
+	opacity: 0
+}
+
 
 .collapse-from-top-enter-active {
 	transition: all .3s ease-out;

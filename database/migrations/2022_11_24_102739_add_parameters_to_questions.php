@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Question;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -16,7 +17,7 @@ return new class extends Migration {
 			$table->text('parameters')->after('keyboard')->nullable();
 		});
 
-		$questions = \App\Models\Question::all();
+		$questions = Question::all();
 		foreach ($questions as $question) {
 			$data = explode("@", $question->keyboard);
 			$kbrd = $data[0];
@@ -36,7 +37,7 @@ return new class extends Migration {
 	 */
 	public function down()
 	{
-		$questions = \App\Models\Question::all();
+		$questions = Question::all();
 		foreach ($questions as $question) {
 			$question->update([
 				"keyboard" => $question->keyboard . ($question->parameters?'@'.$question->parameters:'')

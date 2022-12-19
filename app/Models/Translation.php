@@ -2,8 +2,11 @@
 
 namespace App\Models;
 
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 
 /**
  * App\Models\Translation
@@ -14,21 +17,21 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $fr
  * @property string|null $definition
  * @property string|null $examples
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  * @property-read \App\Models\TranslationUnit|null $unit
- * @method static \Illuminate\Database\Eloquent\Builder|Translation newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Translation newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Translation query()
- * @method static \Illuminate\Database\Eloquent\Builder|Translation whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Translation whereDefinition($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Translation whereExamples($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Translation whereForeign($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Translation whereFr($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Translation whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Translation whereTranslationUnitId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Translation whereUpdatedAt($value)
- * @mixin \Eloquent
+ * @method static Builder|Translation newModelQuery()
+ * @method static Builder|Translation newQuery()
+ * @method static Builder|Translation query()
+ * @method static Builder|Translation whereCreatedAt($value)
+ * @method static Builder|Translation whereDefinition($value)
+ * @method static Builder|Translation whereExamples($value)
+ * @method static Builder|Translation whereForeign($value)
+ * @method static Builder|Translation whereFr($value)
+ * @method static Builder|Translation whereId($value)
+ * @method static Builder|Translation whereTranslationUnitId($value)
+ * @method static Builder|Translation whereUpdatedAt($value)
+ * @mixin Eloquent
  */
 class Translation extends Model
 {

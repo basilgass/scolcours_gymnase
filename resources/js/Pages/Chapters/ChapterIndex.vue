@@ -48,15 +48,6 @@
 						/>
 						<div v-katex.auto="chapter.block.body" />
 					</div>
-
-					<div class="text-xs mt-5">
-						<div>
-							Nombre d'exercices: {{ chapter.posts.filter(post=>post.type==='exercise').length }}
-						</div>
-						<div>
-							Nombre de challenges: {{ chapter.challenges.length }}
-						</div>
-					</div>
 				</panel>
 			</transition-group>
 		</div>

@@ -1,562 +1,272 @@
 <template>
-	<div class="bg-white rounded shadow px-4 py-2 relative">
-		<edit-button v-model="editMode" />
-		<h2
-			v-katex.auto="postTitle"
-			:data-title="postTitle"
-			class="chapter-menu text-2xl my-4 chapter-observe"
-		/>
+	<section
+		v-if="thePost"
+		class="bg-white border border-gray-200 rounded shadow py-5"
+	>
+		<!-- Title of the post -->
+		<div class=" px-5 border-b border-gray-200 pb-5 flex justify-between">
+			<h2 class="text-lg md:text-xl xl:text-2xl">
+				{{ thePost.title }}
 
-		<!-- admin box -->
-		<div
-			v-if="$page.props.auth.can.admin && editMode && $slots.adminHeader && showTitleOnly"
-			class="admin-wrapper flex-col"
-		>
-			<slot name="adminHeader" />
+				<button
+					class="text-xs ml-3"
+					@click="showEditForm=true"
+				>
+					<i class="bi bi-pencil mr-2" /> {{ thePost.id }}
+				</button>
+			</h2>
+			<div>
+				<ui-switch
+					v-if="thePost.switch"
+					v-model="postSwitch"
+					:true-text="postSwitchLabel.post"
+					:false-text="postSwitchLabel.pre"
+					sm
+					class="mx-1"
+				/>
+				<button
+					v-if="thePost.script"
+					class="btn btn-xs"
+					@click="updatePostData"
+				>
+					aléatoire
+				</button>
+			</div>
 		</div>
 
-		<div v-show="!showTitleOnly">
-			<!-- post admin block -->
-			<div
-				v-if="$page.props.auth.can.admin && editMode"
-				class="admin-wrapper flex-col mt-3"
+		<!-- Header of the post (configuration, admin, ...) -->
+		<div v-if="$page.props.auth.can.admin && showEditForm">
+			<component
+				:is="editForm"
+				v-model="showEditForm"
+				:post="thePost"
+				@change="updatePost"
+				@destroy="emits('destroy', $event)"
+			/>
+		</div>
+		<!-- Displaying blocks of the post -->
+		<div
+			class="mt-5"
+		>
+			<draggable
+				v-if="thePost.blocks.length"
+				v-model="thePost.blocks"
+				class="grid grid-cols-1 gap-3 my-5"
+				item-key="id"
+				handle=".draggable-handle"
+				v-bind="{
+					animation: 200,
+					disabled: !($page.props.auth.can.admin),
+				}"
+				@end="updateBlocksOrder"
 			>
-				<slot name="adminHeader" />
-
-				<div class="w-full flex items-baseline">
-					<!-- update the number of visible blocks -->
-					<div class="flex items-baseline">
-						<form-label
-							class="mr-2"
-							name="visibleBlocks"
-							label="Nombre de blocs visibles"
-							@click.ctrl="numberVisibleBlocks=0;updateNumberOfVisibleBlocks()"
-						/>
-
-						<form-number
-							v-model="numberVisibleBlocks"
-							name="visibleBlocks"
-							label="Nombre de blocs visibles"
-							inline
-							class="w-12"
-							@input="updateNumberOfVisibleBlocks"
-						/>
-					</div>
-
-					<div class="ml-5 flex gap-3">
-						<button
-							class="btn-edit btn-xs"
-							@click="edit=true"
-						>
-							éditer <i class="bi bi-pencil" />
-						</button>
-						<confirm-button
-							xs
-							btn-class="btn-delete"
-							@confirm="deletePost"
-						>
-							Supprimer <i class="bi bi-trash" />
-						</confirm-button>
-					</div>
-				</div>
-			</div>
-
-			<!-- all the blocks -->
-			<div class="post-wrapper">
-				<!-- Boutons générés par rapport au scritp du post -->
-				<div class="post-header flex justify-end mt-2 mb-5">
-					<button
-						v-if="postScriptResult?.random===true"
-						class="btn btn-xs bg-white hover:bg-blue-400 hover:border-blue-500 hover:text-white"
-						@click="runPostScript()"
-					>
-						<i class="bi bi-shuffle mr-2" />Rendre aléatoire
-					</button>
-					<div
-						v-if="props.post.switch"
-						class="ml-10"
-					>
-						<span v-katex.auto="switchText.pre" />
-						<ui-switch
-							v-model="scriptSwitch"
-							sm
-							class="mx-1"
-						/>
-						<span v-katex.auto="switchText.post" />
-					</div>
-				</div>
-
-				<!-- Visible blocks by default -->
-				<!-- TODO : merge the hidden and visible blocks -->
-				<div
-					v-if="visibleBlocks.length>0"
-					class="space-y-10"
-				>
+				<template #item="{element}">
 					<block-show
-						v-for="(block, index) in visibleBlocks"
-						:key="block.id"
-						has-padding
-						:switch="scriptSwitch"
-						:block="block"
-						@delete="deleteBlock(block.id)"
-					>
-						<template
-							v-if="visibleBlocks.length>1"
-							#admin
-						>
-							<div class="w-full flex justify-between items-baseline flex-col md:flex-row">
-								<div>Déplacer ce bloc (id: {{ block.id }}, pos: {{ index }} )</div>
-								<div class="flex gap-3">
-									<button
-										:disabled="index===0"
-										class="btn-update btn-xs "
-										:class="index===0?'invisible':''"
-										@click="moveBlockUp(index, 0)"
-									>
-										En premier
-									</button>
-									<button
-										:disabled="index===0"
-										:class="index===0?'invisible':''"
-										class="btn-update btn-xs"
-										@click="moveBlockUp(index, index-1)"
-									>
-										Monter
-									</button>
-									<button
-										:disabled="index===blocks.length-1"
-										class="btn-update btn-xs"
-										:class="index===blocks.length-1?'invisible':''"
-										@click="moveBlockUp(index, index+1)"
-									>
-										Descendre
-									</button>
-									<button
-										:disabled="index===blocks.length-1"
-										class="btn-update btn-xs"
-										:class="index===blocks.length-1?'invisible':''"
-										@click="moveBlockUp(index, blocks.length)"
-									>
-										En dernier
-									</button>
-								</div>
-							</div>
-						</template>
-					</block-show>
-				</div>
+						:key="`post-${postId}-block-${element.id}`"
+						:block="element"
+						:switch="postSwitch"
+						@destroy="destroyBlock"
+					/>
+				</template>
+			</draggable>
 
-				<!-- hidden blocks by default -->
-				<div
-					v-if="hiddenBlocks.length>0 && !showHiddenBlocks"
-					class="text-center mt-6 mb-4 pt-5 border-t border-gray-200"
+			<div
+				v-if="$page.props.auth.can.admin"
+				class="px-5"
+			>
+				<button
+					class="btn-new"
+					@click="addBlock"
 				>
+					ajouter un bloc
+				</button>
+			</div>
+		</div>
+
+		<!-- post questions -->
+		<article v-if="thePost.questions.length">
+			<div
+				:class="thePost.blocks.length?'border-t border-gray-200 mt-5':''"
+				class="flex justify-between px-5 py-5"
+			>
+				<h3
+					class="font-extralight uppercase"
+				>
+					questions
+				</h3>
+				<div v-if="$page.props.auth.can.admin">
 					<button
-						class="btn text-gray-500 italic text-xs"
-						@click="showHiddenBlocks=true"
+						class="btn btn-xs"
+						@click="resetAnswers"
 					>
-						Développer la suite...
+						réinitialiser les réponses
 					</button>
 				</div>
 			</div>
 
-			<!-- post footer admin -->
-			<button
-				v-if="$page.props.auth.can.admin && editMode"
-				class="btn px-10 min-h-[2rem] w-full my-5 border-2 border-blue-600 border-dashed text-blue-900 bg-blue-100 hover:bg-blue-200"
-				@click="addBlock"
-			>
-				ajouter un bloc
-			</button>
-
-			<!-- all the questions -->
-			<div
-				v-if="filteredQuestions.length>0 || $page.props.auth.can.admin"
-				class="questions-wrapper mt-10"
-			>
-				<!-- question section header -->
-				<div class="flex items-baseline flex-col md:flex-row md:justify-between border-t -mx-4 px-4 py-3 mt-5 mb-3">
-					<div class="flex gap-4 items-baseline justify-between md:justify-start">
-						<h3 class="text-lg">
-							Questions
-						</h3>
-						<div>
-							( {{ questionRemaining }} / {{ postQuestions.length }} )
-						</div>
-					</div>
-					<div
-						v-if="$page.props.auth.can.admin"
-						class="flex gap-5 items-baseline justify-between md:justify-start"
-					>
-						<form-switch
-							v-model="correctionMode"
-							name="correctionMode"
-							label="corrections"
-							sm
-						/>
-
-						<button
-							class="btn btn-xs"
-							@click="questionResetAnswers"
-						>
-							<i class="bi bi-trash2 mr-2" />effacer les réponses
-						</button>
-					</div>
-				</div>
-
-				<!-- list of questions -->
+			<div>
 				<draggable
-					v-model="filteredQuestions"
+					v-if="thePost.questions.length"
+					v-model="thePost.questions"
+					class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 px-5"
 					item-key="id"
+					handle=".draggable-handle"
 					v-bind="{
 						animation: 200,
-						disabled: !($page.props.auth.can.admin && editMode),
+						disabled: !($page.props.auth.can.admin),
 					}"
-					handle=".draggable-handle"
-					:class="questionsGridClass"
 					@end="updateQuestionsOrder"
 				>
-					<template #item="{ element, index }">
+					<template #item="{element}">
 						<question-show
 							:question="element"
-							:question-number="index + 1"
-							:correction-mode="correctionMode"
-							@destroy="questionDestroy"
-							@duplicate="questionDuplicated"
+							@destroy="destroyQuestion"
 						/>
 					</template>
-					<template #footer>
-						<button
-							v-if="$page.props.auth.can.admin && editMode"
-							class="btn px-10 px-4 min-h-[10rem] border-2 border-blue-600 border-dashed text-blue-900 bg-blue-100 hover:bg-blue-200"
-							@click="addNewQuestion"
-						>
-							ajouter une question
-						</button>
-					</template>
 				</draggable>
-			</div>
-
-			<!-- question footer admin -->
-			<div
-				v-if="$page.props.auth.can.admin && editMode"
-				class="admin-wrapper mt-10 flex-col gap-10"
-			>
-				<div class="flex gap-3 items-baseline">
-					<span>Format de la grille</span>
-					<form-input
-						v-model="questionGrid"
-						label="format de la grille"
-						name="questionsGridFormat"
-						inline
-					/>
+				<div v-if="$page.props.auth.can.admin">
 					<button
-						class="btn btn-update"
-						@click="updateQuestionsGrid"
+						class="btn-new mt-10"
+						@click="addQuestion"
 					>
-						Enregistrer
+						ajouter une question
 					</button>
 				</div>
-				<QuestionInlineForm
-					:post="post"
-					@added="questionAdded"
-				/>
 			</div>
-
-			<!-- Edit box -->
-			<dialog-modal
-				v-model="edit"
-				@cancel="numberVisibleBlocks = props.post.numberOfVisibleBlocks"
-			>
-				<PostForm
-					:post="post"
-					@validate="refreshPost"
-					@cancel="edit=false;numberVisibleBlocks = props.post.numberOfVisibleBlocks"
-				/>
-			</dialog-modal>
-		</div>
+		</article>
+	</section>
+	<div
+		v-else
+		class="bg-white border rounded min-h-[400px] grid grid-cols-1 place-items-center"
+	>
+		<div>Chargement ...</div>
 	</div>
 </template>
 
 <script setup>
-// TODO: save the blocks order in a post
-// TODO: should also be able to make the same for the posts in a chapter.
-import {computed, onMounted, provide, ref, watch} from "vue"
-import BlockShow from "@/Components/Posts/Blocks/BlockShow"
-import FormNumber from "@/Components/Form/FormNumber"
-import PostForm from "@/Components/Posts/PostForm"
+import {computed, defineAsyncComponent, inject, onMounted, provide, ref} from "vue"
+import QuestionShow from "@/Components/Posts/Questions/QuestionShow.vue"
+import BlockShow from "@/Components/Posts/Blocks/BlockShow.vue"
 import {PiMath} from "pimath/esm"
-import UiSwitch from "@/Components/Ui/UiSwitch"
-import DialogModal from "@/Components/Ui/DialogModal"
-import FormLabel from "@/Components/Form/FormLabel"
-import QuestionShow from "@/Components/Posts/Questions/QuestionShow"
-import FormSwitch from "@/Components/Form/FormSwitch"
-import ConfirmButton from "@/Components/Ui/ConfirmButton"
-import QuestionInlineForm from "@/Components/Posts/Questions/QuestionInlineForm"
-import FormInput from "@/Components/Form/FormInput"
+import UiSwitch from "@/Components/Ui/UiSwitch.vue"
 
-import EditButton from "@/Components/Ui/EditButton.vue"
+let emits = defineEmits(["change", "destroy"])
+let props = defineProps({
+		postId: {type: [Number, String], required: true}
+	}),
+	thePost = ref(null)
 
-const emits = defineEmits(["delete", "updateTitle"])
-const props = defineProps({
-	post: {
-		type: Object, default: () => {
-		}
+const flash = inject("flash")
+
+let showEditForm = ref(false),
+	editForm = computed(()=>{
+		return defineAsyncComponent(
+			()=>import("@/Components/Posts/PostForm.vue")
+		)
+	}),
+	updatePost = function(p){
+		thePost.value = p
 	},
-	showTitleOnly: {type: Boolean, default: false},
-	hideResolvedQuestions: {type: Boolean, default: false}
-})
+	updateBlocksOrder = function(){
+		axios.post(route("posts.updateBlocksOrder", [props.postId]), {
+			order: thePost.value.blocks.map((x, index)=>{return {id: x.id, order: index}}),
+			_method: "PATCH"
+		}).then(res=>{
+			// TODO : flash message !
+			flash.add("les blocs ont bien été mis à jour !")
+		}).catch(res=>console.log("update ordering order: ", res.response.data.message))
+	}
 
-/** Blocks reactives and methods */
-let blocks = ref(props.post.blocks),
-	visibleBlocks = computed(() => {
-		let result = []
 
-		// Get the number of visible blocks.
-		if (numberVisibleBlocks.value === 0 || showHiddenBlocks.value) {
-			result = blocks.value
-		} else {
-			result = [...blocks.value].splice(0, numberVisibleBlocks.value)
-		}
-
-		// If not in edit mode, filter the blocks depending on the switch.
-		if (!editMode.value) {
-			if (props.post.switch !== null) {
-				result = result
-					.filter(block => {
-						return block.switch === null || Boolean(block.switch) === scriptSwitch.value
-					})
-			}
-		}
-
-		// Return the list of blocks
-		return result
-	}),
-	hiddenBlocks = computed(() => {
-		if (numberVisibleBlocks.value === 0) {
-			return []
-		} else {
-			return [...blocks.value.filter(block => props.post.switch === null || block.switch === null || Boolean(block.switch) === scriptSwitch.value)].splice(numberVisibleBlocks.value)
-		}
-	}),
-	showHiddenBlocks = ref(false),
-	moveBlockUp = function (crtIndex, targetIndex) {
-		blocks.value.splice(targetIndex, 0, blocks.value.splice(crtIndex, 1)[0])
-
-		// Save the new position to the database
-		axios.post(route("posts.updateBlocksOrder", [props.post.id]), {
-			_method: "patch",
-			data: blocks.value.map((block, index) => {
-				return {"id": block.id, "order": index}
-			})
-		})
-	},
-	questionGrid = ref(props.post.questionsGrid)
-
-/** Questions reactives and methods */
-let postQuestions = ref(props.post.questions),
-	filteredQuestions = ref(props.post.questions),
-	questionRemaining = computed(() => {
-		return postQuestions.value.filter(q => {
-			if (q.userAnswers.length > 0) {
-				return q.userAnswers[q.userAnswers.length - 1].result
-			}
-			return false
-		}).length
-	}),
-	correctionMode = ref(false),
-	questionsGridClass = computed(()=>{
-		let c = "grid grid-cols-1"
-		c += correctionMode.value?" gap-1": " gap-10"
-		if(!correctionMode.value){
-			if(questionGrid.value) {
-				const grid = questionGrid.value.split(",")
-				// 1 value: lg
-				// 2 values: md, xl
-
-				if(grid.length===1){
-					c += ` lg:grid-cols-${grid[0]}`
-				}else{
-					c += ` md:grid-cols-${grid[0]}`
-					if (filteredQuestions.value.length > 2) {
-						c += ` xl:grid-cols-${grid[1]}`
-					}
-				}
-			}else {
-				c += " md:grid-cols-2"
-				if (filteredQuestions.value.length > 2) {
-					c += " xl:grid-cols-3"
-				}
-			}
-		}
-		return c
-	}),
-	addNewQuestion = function(){
+let addBlock = function(){
 		axios.post(
-			route("posts.questions.store", [props.post.id]), {
-				math: false,
-				mathAppend: "",
-				body: "nouvelle question",
-				answer: "-",
-				checker: "exact",
-				keyboard: "exact"
-			}
-		).then((res) => {
-			// Add the question.
-			postQuestions.value.push(res.data.data[0])
-			// questions.value.push(res.data)
-		}).catch(res => {
-			// Show the error.
-			console.log("Question inline form")
-			console.log(res)
-		})
-	}
-
-watch(() => props.hideResolvedQuestions, (value, before) => {
-	//TODO: turn the filteredQuestions to computed ?????
-	if (props.hideResolvedQuestions) {
-		filteredQuestions.value = postQuestions.value.filter(question => {
-			if (question.userAnswers.length > 0) {
-				return !question.userAnswers[question.userAnswers.length - 1].result
-			}
-			return true
-		})
-	} else {
-		filteredQuestions.value = postQuestions.value
-	}
-})
-
-function updateQuestionsOrder(){
-	axios.post(route("questions.updateOrder"), {
-		order: filteredQuestions.value.map((x, index)=>{return {id: x.id, order: index}})
-	}).catch(res=> {
-		console.log("update ordering order: ", res.data)
-		console.log(res)
-	})
-}
-
-function updateQuestionsGrid(){
-	axios.patch(route("posts.updateQuestionsGrid", [props.post.id]), {
-		_method: "patch",
-		"questionsGrid": questionGrid.value
-	})
-}
-
-function questionAdded(value) {
-	value.forEach(q => postQuestions.value.push(q))
-}
-function questionDuplicated(value){
-	refreshQuestions()}
-function questionDestroy(id) {
-	refreshQuestions()
-}
-
-function refreshQuestions(){
-	axios.get(route("posts.questions.index", [props.post.id]))
-		.then(res=>{
-			// TODO: postQuestions vs filtreredQuestions
-			postQuestions.value = res.data.data
-			filteredQuestions.value = res.data.data
-		})
-}
-
-function questionResetAnswers() {
-	axios.patch(
-		route("posts.questions.reset", [props.post.id], {
-			_method: "patch"
-		})
-	).then((res)=>{
-		postQuestions.value.map(question => question.userAnswers=[])
-	})
-}
-
-/** scripts / random parameters / switch*/
-function runPostScript() {
-	if (props.post.script !== null) {
-		let F = new Function("PiMath", props.post.script)
-		postScriptResult.value = F(PiMath)
-	}
-}
-
-let postScriptResult = ref({})
-onMounted(() => runPostScript())
-provide("postScriptResult", postScriptResult)
-
-/** Switch display */
-let switchText = computed(() => {
-	let preText = "", postText = ""
-
-	if (props.post.switch.includes("@")) {
-		const txt = props.post.switch.split("@")
-		preText = txt[0]
-		postText = txt[1]
-	} else {
-		preText = props.post.switch
-	}
-
-	return {
-		pre: preText,
-		post: postText
-	}
-})
-
-
-/** Edit mode and methods */
-let editMode = ref(false)
-provide("editpost", editMode)
-
-let edit = ref(props.post.isNew === true),
-	postTitle = ref(props.post.type === "exercise" ? `exercice: ${props.post.title}` : props.post.title),
-	numberVisibleBlocks = ref(props.post.numberOfVisibleBlocks),
-	scriptSwitch = ref(props.post.switch !== null),
-	addNBlocks = ref(1)
-
-
-function refreshPost(item) {
-	postTitle.value = item.type === "exercise" ? `exercice: ${item.title}` : item.title
-	emits("updateTitle", item.title)
-	edit.value = false
-}
-
-function updateNumberOfVisibleBlocks() {
-	axios.post(
-		route("posts.updateNumberOfVisibleBlocks", [props.post.id]),
-		{
-			"numberVisibleBlocks": numberVisibleBlocks.value,
-			_method: "patch"
-		}
-	).then(res => {
-		// TODO: Send flash message ?
-	})
-}
-
-function deletePost() {
-	// Confirmation dialog.
-	axios.post(route("posts.destroy", [props.post.id]),
-		{_method: "delete"})
-		.then(res => emits("delete", props.post.id))
-}
-
-function addBlock() {
-	if (addNBlocks.value >= 0) {
-		axios.post(
-			route("posts.blocks.store", [props.post.id]),
-			{
-				n: addNBlocks.value
-			}
+			route("posts.blocks.store", [props.postId])
 		).then(res => {
 			// Set the first block in edit mode.
-			res.data[0].isNew = true
-			for (let b of res.data) {
-				blocks.value.push(b)
-			}
+			thePost.value.blocks.push({
+				...res.data.data,
+				isNew: true
+			})
 		}).catch(err => {
 			console.error(err)
 		})
+	},
+	destroyBlock = function(destroyId){
+		thePost.value.blocks = thePost.value.blocks.filter(x => x.id !== destroyId)
 	}
-}
 
-function deleteBlock(id) {
-	blocks.value = blocks.value.filter(block => block.id !== id)
-}
+let addQuestion = function () {
+		axios.post(
+			route("posts.questions.store", [props.postId]), {
+				math: false,
+				mathAppend: "",
+				body: "nouvelle question",
+				answer: "-"
+			}
+		).then((res) => {
+			// Add the question.
+			thePost.value.questions.push({
+				...res.data.data,
+				isNew: true
+			})
+		})
+	},
+	destroyQuestion = function (destroyId) {
+		thePost.value.questions = thePost.value.questions.filter(x => x.id !== destroyId)
+	},
+	updateQuestionsOrder = function(){
+		axios.post(route("questions.updateOrder", [props.postId]), {
+			order: thePost.value.questions.map((x, index)=>{return {id: x.id, order: index+1}}),
+			_method: "PATCH"
+		}).then(res=>{
+			// TODO : flash message !
+			flash.add("les questions ont bien été mis à jour !")
+		}).catch(res=>console.log("update questions order failed", res))
 
+	},
+	resetAnswers = function () {
+		axios
+			.patch(route("posts.questions.reset", [props.postId]))
+			.then(res => {
+				for(let i in thePost.value.questions){
+					thePost.value.questions[i].user.answer = []
+					thePost.value.questions[i].user.correct = false
+				}
+			})
+	}
+
+provide("postData",
+	computed(()=>{
+		// trigger the computed value on button click
+		if (thePost.value.script && thePost.value.random) {
+			let F = new Function("PiMath", thePost.value.script)
+			return F(PiMath)
+		}
+		return {}
+	})
+)
+let updatePostData = function(){
+	thePost.value.random++
+}
+let postSwitchLabel = computed(()=>{
+		if(thePost.value.switch){
+			const [pre, post] = thePost.value.switch.split("@")
+			return {
+				pre,
+				post: post??""
+			}
+		}
+		return {pre: "", post: ""}
+	}),
+	postSwitch = ref(false)
+
+
+onMounted(() => {
+	// Load asynchronously the post
+	axios.get(route("posts.show", props.postId))
+		.then((res) => {
+			thePost.value = res.data.data
+			thePost.value.random = 1
+		})
+})
 </script>

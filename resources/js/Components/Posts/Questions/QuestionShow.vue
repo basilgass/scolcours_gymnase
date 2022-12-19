@@ -1,125 +1,133 @@
 <template>
 	<div
 		:id="`question-${theQuestion.id}`"
-		class="px-5 py-3 relative"
 		:class="{
-			'unanswered': !isCorrect.result,
-			'bg-gray-200 even:bg-gray-100': correctionMode,
-			'rounded border': !correctionMode,
-			'bg-gray-50 border-gray-200': !correctionMode && !isCorrect.result,
-			'bg-green-50 border-green-600/60': !correctionMode && isCorrect.result,
+			'bg-gray-50 border-gray-200': !theQuestion.user.correct,
+			'bg-green-50 border-green-600/60': theQuestion.user.correct,
 		}"
+		class="relative rounded border h-full"
 	>
 		<div
-			v-if="questionNumber!==false"
+			v-if="theQuestion.order"
 			class="absolute -left-2 -top-2 rounded-full bg-white border w-8 h-8 text-xs flex justify-center items-center draggable-handle"
-			:class="cursorOnNumber"
-			@dblclick="editMode = $page.props.auth.can.admin?!editMode:false"
+			:class="{'draggable-handle cursor-move':$page.props.auth.can.admin}"
 		>
-			{{ questionNumber }}
+			{{ theQuestion.order }}
 		</div>
 
-		<!-- Admin edition mode -->
-		<QuestionItemAdmin
-			v-model:question="theQuestion"
-			:correction-mode="correctionMode"
-			@destroy="emits('destroy', $event)"
-			@duplicate="emits('duplicate', $event)"
-			@updated="adminKey++"
-		/>
+		<button
+			v-if="$page.props.auth.can.admin"
+			class="absolute right-2 top-0 text-xs"
+			@click="showEditForm=true"
+		>
+			<i class="bi bi-pencil mr-2" />{{ theQuestion.id }}
+		</button>
 
-		<!-- the body of question -->
-		<QuestionItem
-			:key="`admin-${adminKey}`"
-			v-model:question="theQuestion"
-			:question-number="questionNumber"
-			:show-keyboard-toggle="!showKeyboard"
-			:correction-mode="correctionMode"
-			@validate="validateAnswer"
-		/>
+		<div class="flex flex-col h-full justify-between">
+			<!-- Admin edition mode -->
 
-		<!-- footer - display previous answers -->
-		<QuestionFooter
-			v-if="!correctionMode"
-			v-model:question="theQuestion"
-			:is-correct="isCorrect"
-		/>
+			<!-- the body of question -->
+			<div class="px-5 py-3">
+				<illustration-show
+					v-if="theQuestion.block.illustration"
+					:illustration="theQuestion.block.illustration"
+					class="bg-white"
+				/>
+				<markdown-it
+					:text="theQuestionBody"
+				/>
+			</div>
+
+			<!-- the user input container -->
+			<div class="mt-5 border-t border-gray-200 px-5 py-2">
+				<!-- Open / Close user input -->
+				<div
+					v-if="!displayInput"
+					:class="showInput?'text-right':'text-center'"
+				>
+					<button
+						v-if="showInput"
+						@click="showInput=!showInput"
+					>
+						<span class="text-xs font-ultralight">Fermer </span><i class="bi bi-x-lg" />
+					</button>
+					<button
+						v-else
+						class="w-full"
+						@click="showInput=!showInput"
+					>
+						Donner la réponse
+					</button>
+				</div>
+
+				<!-- user input -->
+				<question-user-input
+					v-show="showInput"
+					:question="theQuestion"
+					@change="theQuestionBody = $event"
+					@validate="onValidate"
+				/>
+
+				<!-- footer - display previous answers -->
+			</div>
+		</div>
+
+		<div v-if="$page.props.auth.can.admin && showEditForm">
+			<component
+				:is="editForm"
+				v-model="showEditForm"
+				:question="props.question"
+				@change="updateQuestion"
+				@destroy="emits('destroy', $event)"
+			/>
+		</div>
 	</div>
 </template>
 
 <script setup>
-import {computed, inject, reactive, ref} from "vue"
-import {usePage} from "@inertiajs/inertia-vue3"
-import QuestionItem from "@/Components/Posts/Questions/QuestionItem"
-import QuestionFooter from "@/Components/Posts/Questions/QuestionFooter"
-import QuestionItemAdmin from "@/Components/Posts/Questions/QuestionItemAdmin.vue"
+import {computed, defineAsyncComponent, ref} from "vue"
+import IllustrationShow from "@/Components/Posts/Illustrations/IllustrationShow.vue"
+import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
+import QuestionUserInput from "@/Components/Posts/Questions/QuestionUserInput.vue"
 
+let emits = defineEmits(["destroy", "validate"])
 let props = defineProps({
-	question: {type: Object, required: true},
-	correctionMode: {type: Boolean, default: false},
-	questionNumber: {type: [Number, Boolean], default: false},
-	showKeyboard: {type: Boolean, default: false}
-})
-
-let emits = defineEmits(["destroy", "resolved", "validate", "duplicate"])
-
-let theQuestion = reactive(props.question),
-	adminKey = ref(1)
-
-let editMode = inject("editpost", false)
-
-let cursorOnNumber = computed(()=>{
-	if(usePage().props.value.auth.can.admin){
-		return editMode.value ? "cursor-move" : "cursor-pointer"
-	}
-	return ""
-})
-
-
-let isCorrect = computed(() => {
-	if(!theQuestion){return false}
-	if(!theQuestion.userAnswers){return false}
-
-	if (theQuestion.userAnswers.length > 0) {
-		if (theQuestion.userAnswers[theQuestion.userAnswers.length - 1].result) {
-			return theQuestion.userAnswers[theQuestion.userAnswers.length - 1]
-		} else {
-			return false
+		question: {type: Object, required: true},
+		displayInput: {type: Boolean, default :false}
+	}),
+	theQuestion = ref(props.question),
+	theQuestionBody = ref(props.question.block.body),
+	showInput = ref(props.displayInput),
+	onValidate = function (event) {
+		if (props.question.id === undefined) {
+			emits("validate", {
+				...event,
+				question: theQuestionBody.value
+			})
+			return
 		}
-	}
-	return false
-})
+		theQuestion.value.user.correct = event.result
 
-function validateAnswer(checkerResult) {
-	if(!theQuestion){return}
-
-	if(theQuestion.id===undefined){
-		emits("validate", theQuestion)
-		return
-	}
-
-	if(!theQuestion.userAnswers){return}
-
-	//TODO: maybe move validateAnswer from QuestionShow to QuestionItem. Make the component more "logical"
-	const data = {
-		answer: checkerResult.answer,
-		result: checkerResult.result
-	}
-
-	if(usePage().props.value.auth.user) {
-		axios.post(route("questions.validate", [theQuestion.id]),
-			data
-		).then(res => {
-			theQuestion.userAnswers.push({...res.data, "when": "à l'instant"})
-			if (res.data.result) {
-				emits("resolved", theQuestion)
-			} else {
-				// Error !
-			}
+		// need answer (string: min1), , result (boolean)
+		// Save the information to the database
+		axios.post(route("questions.validate", [props.question.id]), {
+			...event
+		}).then(res => {
+			emits("validate", {
+				...event,
+				question: theQuestionBody.value
+			})
 		})
-	}else{
-		theQuestion.userAnswers.push({...data, "when": "à l'instant"})
 	}
-}
 
+let showEditForm = ref(props.question.isNew === true),
+	editForm = computed(() => {
+		return defineAsyncComponent(
+			() => import("@/Components/Posts/Questions/QuestionForm")
+		)
+	}),
+	updateQuestion = function (q) {
+		theQuestion.value = q
+		theQuestionBody.value = q.block.body
+	}
 </script>

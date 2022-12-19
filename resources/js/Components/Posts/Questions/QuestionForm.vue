@@ -1,128 +1,170 @@
 <template>
-	<div class="w-full">
-		<div class="flex justify-between gap-3 mb-4">
-			<button
-				v-if="props.hideable"
-				class="btn-xs btn-edit"
-				@click="showEditForm=!showEditForm"
-			>
-				éditer la question <i class="bi bi-pencil" />
-			</button>
-
-			<div v-show="showEditForm">
-				<button
-					class="btn-xs btn-edit"
-					@click="patchQuestion"
-				>
-					<i class="bi bi-arrow-clockwise mr-3" /> Enregistrer
-				</button>
-				<button
-					class="btn-xs btn-cancel"
-					@click="cancelQuestion"
-				>
-					<i class="bi bi-x-lg mr-3" /> Annuler
-				</button>
-			</div>
-		</div>
-		<div
-			v-show="showEditForm"
-			class="grid grid-cols-1 gap-4 border-t -mx-4 -mb-2 px-4 pb-2"
-		>
-			<form-input
-				v-model="form.answer"
-				label="réponse"
-				name="answer"
-				class="font-code"
-			/>
-
-			<div class="flex items-end gap-4 w-full">
-				<div class="grow">
-					<form-input
-						v-model="form.checker"
-						label="Vérification"
-						name="checker"
-						class="font-code"
-					/>
-				</div>
-
-				<div class="grow">
-					<form-input
-						v-model="form.keyboard"
-						label="clavier"
-						name="clavier"
-						class="font-code"
-					/>
+	<dialog-modal
+		v-model="show"
+		class="bg-gray-50"
+		@cancel="emits('update:modelValue', false)"
+	>
+		<template #header>
+			<div class="bg-white flex justify-between items-baseline border-b border-gray-200 px-5 py-3 mb-5">
+				<h1>
+					<span class="text-xl md:text-2xl">édition d'une question</span>
+					<span class="text-xs font-code ml-5">(id: {{ theQuestion.id }})</span>
+				</h1>
+				<div class="flex gap-3 justify-end">
+					<button
+						class="btn-primary btn-xs"
+						@click="saveQuestion"
+					>
+						enregistrer
+					</button>
+					<button
+						class="btn-cancel btn-xs"
+						@click="emits('update:modelValue', false)"
+					>
+						fermer
+					</button>
+					<confirm-button
+						class="btn-delete btn-xs"
+						@confirm="deleteQuestion"
+					>
+						supprimer
+					</confirm-button>
 				</div>
 			</div>
-			<div>
-				<button
-					v-for="(item, key) in checkersList"
-					:key="key"
-					class="btn btn-xs"
-					@click="form.checker=key"
-				>
-					{{ `${key}${item.length>0?` @${item.join(' @')}`:''}` }}
-				</button>
-			</div>
-			<div>
-				<button
-					v-for="item of keyboardsList"
-					:key="item"
-					class="btn btn-xs"
-					@click="form.keyboard=item"
-				>
-					{{ item }}
-				</button>
-			</div>
-
-			<div>
+		</template>
+		<div class="grid grid-cols-1 md:grid-cols-2 gap-3 px-5 pb-5">
+			<form @submit.prevent>
 				<form-textarea
-					v-model="form.parameters"
+					v-model="theQuestion.block.body"
+					:label="`body (id: ${theQuestion.block.id})`"
+					name="body"
+					:rows="10"
+				/>
+
+				<!-- illustration -->
+				<!-- type, parameter, code -->
+				<form-illustration
+					v-if="theQuestion.block.illustration"
+					v-model="theQuestion.block.illustration"
+					name="illustration"
+					label="illustration"
+				/>
+				<button
+					v-else
+					class="btn btn-block"
+					@click="addIllustration"
+				>
+					Ajouter une illustration
+				</button>
+
+				<form-input
+					v-model="theQuestion.answer"
+					label="answer"
+					name="answer"
+				/>
+				<form-input
+					v-model="theQuestion.keyboard"
+					label="keyboard"
+					name="keyboard"
+				/>
+				<form-textarea
+					v-model="theQuestion.parameters"
+					label="parameters"
 					name="parameters"
-					label="paramètres du clavier"
+				/>
+
+				<div
+					v-show="errorMessage"
+					class="bg-red-200 border rounded border-red-300 py-3 px-2"
+				>
+					{{ errorMessage }}
+				</div>
+			</form>
+			<div class="bg-white border border-gray-200 rounded py-4">
+				<markdown-it
+					:text="theQuestion.block.body"
+					class="border-b border-gray-200 px-3 mb-3 pb-3"
+				/>
+
+				<QuestionUserInput
+					:question="theQuestion"
+					class="px-3"
 				/>
 			</div>
 		</div>
-	</div>
+
+		<div>{{}}</div>
+	</dialog-modal>
 </template>
 <script setup>
-import FormInput from "@/Components/Form/FormInput"
-import {useForm} from "@inertiajs/inertia-vue3"
-import {ref} from "vue"
-import {checkersList} from "@/Composables/useCheckers"
-import {keyboardsList} from "@/keyboards"
-import Button from "@/Components/Auth/Button.vue"
 import FormTextarea from "@/Components/Form/FormTextarea.vue"
+import FormInput from "@/Components/Form/FormInput.vue"
+import {reactive, ref} from "vue"
+import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
+import QuestionUserInput from "@/Components/Posts/Questions/QuestionUserInput.vue"
+import DialogModal from "@/Components/Ui/DialogModal.vue"
+import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
+import FormIllustration from "@/Components/Form/FormIllustration.vue"
 
+const emits = defineEmits(["update:modelValue", "change", "destroy"])
 let props = defineProps({
-	modelValue: {type: Object, required: true},
-	hideable: {type: Boolean, default: false}
-})
+		question: {type: Object, required: true},
+		modelValue: {type: Boolean, default: false},
+	}),
+	show = ref(props.modelValue),
+	theQuestion = reactive(props.question),
+	errorMessage = ref("")
 
-let emits = defineEmits(["update:modelValue", "cancel", "updated", "save", "close"])
-let form = useForm({...props.modelValue})
-let showEditForm = ref(!props.hideable)
-
-function cancelQuestion(){
-	emits("cancel")
-	emits("close")
-	showEditForm.value = false
-}
-function patchQuestion(ev) {
-	axios.post(
-		route("questions.update", [props.modelValue.id]),
-		{
-			_method: "patch",
-			...form.data()
+let addIllustration = function(){
+		theQuestion.block.illustration = {
+			type: "draw",
+			parameters: "",
+			code: ""
 		}
-	).then(res => {
-		emits("update:modelValue", res.data.data)
-		emits("updated")
-		emits("save")
-		emits("close")
-		showEditForm.value = false
-	})
-}
-
-
+	},
+	saveQuestion = function () {
+		let illustrations = []
+		if(theQuestion.block.illustration){
+			illustrations = [{...theQuestion.block.illustration}]
+		}
+		axios.post(route("blocks.update", [props.question.block.id]),
+			{
+				_method: "PATCH",
+				body: theQuestion.block.body,
+				illustrations
+			}
+		)
+			.then(res => {
+				axios.post(route("questions.update", [props.question.id]),
+					{
+						_method: "PATCH",
+						answer: theQuestion.answer,
+						checker: theQuestion.checker,
+						keyboard: theQuestion.keyboard,
+						parameters: theQuestion.parameters,
+					})
+					.then(res => {
+						emits("update:modelValue", false)
+						emits("change", res.data.data)
+					})
+					.catch(error=> {
+						errorMessage.value = error.response.data.message
+					})
+			})
+			.catch(error=> {
+				errorMessage.value = error.response.data.message
+			})
+	},
+	deleteQuestion = function(){
+		axios
+			.post(
+				route("questions.destroy", [props.question.id]),
+				{_method: "delete"}
+			)
+			.then((res)=>{
+				emits("update:modelValue", false)
+				emits("destroy", props.question.id)
+			})
+			.catch(err => console.log(err))
+	}
 </script>

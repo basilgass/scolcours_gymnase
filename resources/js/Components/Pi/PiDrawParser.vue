@@ -35,7 +35,7 @@ import katex from "katex"
 const emits = defineEmits(["update"])
 
 // Get the script value
-let blockScriptResult = inject("blockScriptResult")
+let blockScriptResult = inject("blockScriptResult", ref({}))
 
 // SVG drawing container
 let draw = ref(null)

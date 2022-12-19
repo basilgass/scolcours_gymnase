@@ -8,7 +8,6 @@ use App\Models\Chapter;
 use App\Models\Theme;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 
@@ -19,8 +18,7 @@ class ChallengesController extends Controller
 		if (count($challenge->blocks) === 0) {
 			$challenge->blocks()->create();
 		}
-
-		return Inertia::render('Challenges/ChallengesShow', [
+		return Inertia::render('Challenges/ChallengesPage', [
 			"theme" => $theme->only('color', 'icon', 'slug', 'title', 'id'),
 			"challenge" => ChallengeResource::make($challenge),
 		]);
@@ -56,6 +54,13 @@ class ChallengesController extends Controller
 		return \redirect()->route('challenges.quick', [$challenge->slug]);
 	}
 
+	public function edit(Challenge $challenge)
+	{
+		return Inertia::render("Devs/Edit/ChallengeEditPage", [
+			'challenge' => ChallengeResource::make($challenge)
+		]);
+	}
+
 	public function update(Request $request, Challenge $challenge)
 	{
 		unset($request['block']);
@@ -67,7 +72,7 @@ class ChallengesController extends Controller
 			'generator' => ['string', 'min:2'],
 			'output' => ['string', 'min:2'],
 			'nextLevelAfter' => ['numeric', 'min:0'],
-			'checker' => ['nullable', 'string'],
+			'parameters' => ['nullable', 'string'],
 			'keyboard' => ['nullable', 'string'],
 			'duration' => ['numeric', 'min:0'],
 			'lives' => ['numeric', 'min:0'],
@@ -77,8 +82,7 @@ class ChallengesController extends Controller
 			'bonusLevelTime' => ['numeric', 'min:0'],
 		]);
 
-		if($validation['checker']===null){$validation['checker']='string';}
-		if($validation['keyboard']===null){$validation['keyboard']='simple';}
+		if($validation['parameters']===null){$validation['parameters']='exact';}
 		$challenge->update($validation);
 
 		return $validation;
@@ -86,8 +90,19 @@ class ChallengesController extends Controller
 
 	public function destroy($id)
 	{
+		$challenge = Challenge::find($id);
+		$theme = $challenge->chapter->theme->slug;
+		$chapter = $challenge->chapter->slug;
+
 		Challenge::destroy($id);
-		return Redirect::back();
+
+		// Redirect to ...
+		// TODO: redirect to the main chapter page.
+		return redirect(route('themes.chapters', [$theme, $chapter]));
+		return [
+			'theme'=>$theme,
+			'chapter'=>$chapter
+		];
 	}
 
 

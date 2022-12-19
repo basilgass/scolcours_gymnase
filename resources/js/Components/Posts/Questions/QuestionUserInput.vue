@@ -1,0 +1,159 @@
+<template>
+	<div class="question-keyboard">
+		<div
+			v-if="message!==''"
+			v-katex.auto="message"
+			class="bg-red-100 border border-red-300 katex-container px-3 py-1 rounded text-red-600 text-xs"
+		/>
+		<component
+			:is="keyboardComponent"
+			ref="keyboardUI"
+			:options="keyboardOptions"
+			:answer="keyboardAnswer"
+			@change="updateQuestion"
+			@validate="validateQuestion"
+		/>
+		<div
+			v-if="givenAnswer.length>0"
+			class="flex gap-3 flex-wrap font-code text-xs"
+		>
+			<div
+				v-for="(item, index) of givenAnswer"
+				:key="index"
+			>
+				{{ item }}
+			</div>
+		</div>
+	</div>
+</template>
+
+<script setup>
+import {computed, defineAsyncComponent, onMounted, ref} from "vue"
+
+const emits = defineEmits(["change", "validate"])
+
+let props = defineProps({
+		question: {type: Object, required: true}
+	}),
+	keyboardComponent = computed(()=>{
+		if(props.question.keyboard){
+			return defineAsyncComponent(() => import(`@/Components/Keyboards/Keyboard${props.question.keyboard}`))
+		}else{
+			return defineAsyncComponent(() => import("@/Components/Keyboards/KeyboardBasic"))
+		}
+	}),
+	keyboardAnswer = computed(()=>{
+		return props.question.answer
+	}),
+	keyboardOptions = computed(()=>{
+		return props.question.parameters
+	})
+
+let tex = ref(""),
+	raw = ref(""),
+	message = ref(""),
+	givenAnswer = ref([])
+
+let updateQuestion = function(value){
+		// value = {tex, raw}
+		tex.value = value.tex
+		raw.value = value.raw
+		message.value=""
+
+		updateBody()
+	},
+	validateQuestion = function(value){
+		// value = {tex, raw, message, correct}
+		updateQuestion(value)
+
+		// Save the information to database.
+
+		// Update the given answers array.
+
+		if(value.result){
+			message.value = ""
+		}else{
+			message.value = value.message
+			givenAnswer.value.push(value.code)
+		}
+
+		emits("validate", {
+			answer: value.code,
+			result: value.correct
+		})
+	},
+	answerKeys = computed(()=>{
+		let questionsVars = [...new Set([...props.question.block.body.matchAll(/\$([A-Za-z])/g)].map(x => x[0].toLowerCase()))]
+		questionsVars.sort()
+		return questionsVars
+	}),
+	updateBody = function(){
+		let body = props.question.block.body
+
+		if(raw.value!==""){
+			if(body.includes("$A")) {
+				body = body.replaceAll("$A", raw.value)
+			}else{
+				body+= `\n\n${raw.value}`
+			}
+		}else {
+			if(body.includes("$")){
+				// Build the answer system
+				body = makeBodyFromAnswers()
+			}else{
+				// Add the answer at the end, as text code
+				body += `\n\n${tex.value}{.font-code .text-center}`
+			}
+		}
+
+		emits("change", body)
+	},
+	makeBodyFromAnswers = function() {
+		let body = props.question.block.body
+
+		// get list of answers
+		let userAnswer = tex.value.split(",")
+
+		// current answer index and values (filtering empty values)
+		const crtAnswerIndex = userAnswer.length - 1
+		userAnswer = userAnswer.filter(x => x !== "")
+
+		// replace wildcards with values.
+		let placeholder
+		for (let i = 0; i < answerKeys.value.length; i++) {
+			let key = answerKeys.value[i],
+				value = userAnswer[i]
+
+			// Raw update.
+			placeholder = answerKeys.value.length === 1 ? "?" : ` ${key[1]} `
+			if (i === crtAnswerIndex) {
+				value = `<div class="border border-blue-600 bg-blue-100 py-3 text-center">${(value && value !== "") ? value : "< " + placeholder + " >"}</div>`
+			}
+			if (value === undefined) {
+				value = `<div class="border border-red-600 bg-red-100 text-center"> ${placeholder} </div>`
+			}
+
+			if(body.includes(key.toUpperCase())) {
+				body = body.replaceAll(key.toUpperCase(), value)
+			}
+
+			value = userAnswer[i]
+			placeholder = answerKeys.value.length === 1 ? "\\ ?" : key[1]
+			if (i === crtAnswerIndex) {
+				value = `\\textcolor{cornflowerblue}{ ${(value && value !== "") ? value : "< " + placeholder + " >"} }`
+			}
+			if (value === undefined) {
+				value = `\\textcolor{red}{ <  ${placeholder} > }`
+			}
+			if(body.includes(key)) {
+				body = body.replaceAll(key, value)
+			}
+		}
+
+		return body
+	}
+
+onMounted(()=>{
+	updateBody()
+})
+</script>

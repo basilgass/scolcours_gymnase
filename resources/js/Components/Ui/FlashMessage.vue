@@ -1,0 +1,34 @@
+<template>
+	<transition name="flash-message">
+		<div
+			v-if="show"
+			class="rounded bg-white px-10 py-5"
+			v-bind="$attrs"
+			@click="closeFlashMessage"
+		>
+			<slot />
+		</div>
+	</transition>
+</template>
+
+<script setup>
+
+import {onMounted, ref} from "vue"
+
+const emits = defineEmits(["open", "close"])
+
+const props = defineProps({
+	timeout: {type: Number, default: 2000}
+})
+
+let show = ref(true),
+	closeFlashMessage = function(){
+		show.value = false
+		emits("close", timeoutId)
+	},
+	timeoutId
+onMounted(()=>{
+	timeoutId = setTimeout(() => closeFlashMessage(), props.timeout)
+	emits("open", timeoutId)
+})
+</script>

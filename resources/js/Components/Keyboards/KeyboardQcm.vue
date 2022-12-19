@@ -1,12 +1,17 @@
 <template>
 	<div>
+		<KeyboardValidateButton
+			ref="validateButton"
+			@validate="validateEvent"
+		/>
+
 		<div class="flex flex-wrap gap-1 md:gap-3 my-5">
 			<button
 				v-for="element of qcmItems"
 				:key="element.key"
-				class="btn"
 				:class="element.selected?'btn-success':'bg-white'"
-				@click="btnClick(element)"
+				class="btn"
+				@click="changeEvent(element)"
 			>
 				<span
 					v-if="element.ascii"
@@ -18,86 +23,81 @@
 				/>
 			</button>
 		</div>
-
-		<div class="max-w-xl mx-auto flex flex-col gap-3 keyboard">
-			<button
-				ref="validateButton"
-				class="key-cmd bg-white w-full
-				border-green-700 text-green-600 hover:bg-green-100 hover:border-green-800
-				mb-3"
-				@click="btnValidate"
-			>
-				<i class="bi bi-check" /> <span class="hidden md:inline md:ml-2">Valider</span>
-			</button>
-		</div>
 	</div>
 </template>
 
 <script setup>
 
-import {wrongAnswerAnimation} from "@/Composables/useHelpers"
+import {useWrongAnswerAnimation} from "@/Composables/useHelpers"
 import {onMounted, ref} from "vue"
+import KeyboardValidateButton from "@/Components/Keyboards/KeyboardValidateButton.vue"
 
 let props = defineProps({
 	options: {type: String},
-	errorMessage: {type: String, default: ""}
+	answer: {type: String}
 })
-let emits = defineEmits(["change", "tex", "raw", "validate"])
+let emits = defineEmits(["change", "validate"])
 let validateButton = ref(null),
 	resetKeyStrokes = function () {
 	},
 	wrongAnswer = function () {
-		wrongAnswerAnimation(validateButton.value)
+		useWrongAnswerAnimation(validateButton.value)
+	},
+	changeEvent = function (value) {
+		qcmItems.value.forEach(e => e.selected = false)
+		value.selected = !value.selected
+
+		emits("change", {
+			tex: qcmSelections("display"),
+			raw: ""
+		})
+	},
+	validateEvent = function (value) {
+		const correct = qcmSelections("key") === props.answer
+
+		emits("validate", {
+			code: qcmSelections("key"),
+			tex: qcmSelections("display"),
+			raw: "",
+			correct,
+			message: correct ? "" : "ce n'est pas la bonne réponse :("
+		})
 	},
 	getTex = function (value) {
-		emits("tex", "")
 		return ""
 	},
 	getRaw = function (value) {
-		let result = props.options.split("\n").map(x=>`- ${x}`).join("\n")
-		emits("raw", result)
-		return result
-	},
-	btnValidate = function () {
-		emits("change", qcmSelections("key"))
-		emits("tex", qcmSelections("display"))
-		emits("raw", "")
-		emits("validate", qcmSelections("key"))
+		// TODO: Keyboard QCM : generate raw text.
+		return props.options.split("\n").map(x => `- ${x}`).join("\n")
 	}
 defineExpose({resetKeyStrokes, wrongAnswer, getTex, getRaw})
 
 /* ------------------*/
-let qcmSelections = function(output){
+let qcmSelections = function (output) {
 		let values = [...qcmItems.value
-			.filter(x=>x.selected)
-			.map(x=>x[output?output:"display"])]
+			.filter(x => x.selected)
+			.map(x => x[output ? output : "display"])]
 		values.sort()
 
 		return values.join(",")
 	},
-	qcmItems = ref( []),
-	btnClick = function(element){
-		qcmItems.value.forEach(e=>e.selected = false)
-		element.selected =!element.selected
+	qcmItems = ref([])
 
-		emits("tex", qcmSelections("display"))
-	}
-
-onMounted(()=>{
+onMounted(() => {
 	qcmItems.value = props.options
 		.split("\n")
-		.filter(x=>x!=="")
-		.map(x=>{
+		.filter(x => x !== "")
+		.map(x => {
 			let keyDisplay = x.split("|"),
 				key, display, ascii
-			if(keyDisplay.length===1){
+			if (keyDisplay.length === 1) {
 				ascii = keyDisplay[0].startsWith("#")
-				key = ascii?keyDisplay[0].substring(1):keyDisplay[0]
+				key = ascii ? keyDisplay[0].substring(1) : keyDisplay[0]
 				display = key
-			}else{
+			} else {
 				ascii = keyDisplay[1].startsWith("#")
 				key = keyDisplay[0]
-				display = ascii?keyDisplay[1].substring(1):keyDisplay[1]
+				display = ascii ? keyDisplay[1].substring(1) : keyDisplay[1]
 			}
 
 			return {key, display, ascii, selected: false}

@@ -16,7 +16,7 @@ class ChaptersController extends Controller
 {
 	public function __construct()
 	{
-		$this->middleware('auth')->except(['index', 'show']);
+		$this->middleware('auth')->except(['index', 'show', 'page']);
 	}
 
 	public function index(Theme $theme)
@@ -94,6 +94,23 @@ class ChaptersController extends Controller
 			]);
 		}
 	}
+	public function page(Theme $theme, Chapter $chapter)
+	{
+		if ($chapter->active or Auth::User()?->admin) {
+
+			// Get the user data
+			return Inertia::render('Chapters/ChapterPage', [
+				// Used for the page layout
+				"theme" => $theme->only('color', 'icon', 'slug', 'title', 'id'),
+				// Get the chapter
+				"chapter" => fn() => ChapterResource::make($chapter),
+			]);
+		} else {
+			return Inertia::render('ErrorPage.vue', [
+				"body" => "La page n'est pas active - contacter l'administrateur."
+			]);
+		}
+	}
 
 	public function edit(Chapter $chapter)
 	{
@@ -113,7 +130,24 @@ class ChaptersController extends Controller
 		$chapter->slug = $validation['slug'];
 		$chapter->save();
 
-		return $chapter;
+		// Save the corresponding block!
+		// TODO: save the corresponding block automatically !
+		$block = $chapter->blocks[0];
+		$validation = $request->validate([
+			'block' => ['array'],
+			'block.body'=>['string'],
+		]);
+		$block->update([
+			'body'=>$validation['block']['body']
+		]);
+		// Update the illustration
+		// TODO: Chapter - block - illustration : update from ChapterForm
+
+		// Refresh the chapter model
+		$chapter->refresh();
+
+		// Return the chapter
+		return ChapterResource::make($chapter);
 	}
 
 	public function destroy(Chapter $chapter)
@@ -124,7 +158,7 @@ class ChaptersController extends Controller
 	public function updatePostsOrder(Chapter $chapter, Request $request)
 	{
 		foreach($request['data'] as $row){
-			$chapter->posts->find($row['id'])->update(['position'=>$row['order']]);
+			$chapter->posts->find($row['id'])->update(['order'=>$row['order']]);
 		}
 	}
 

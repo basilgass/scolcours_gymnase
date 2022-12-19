@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Auth;
-use Illuminate\Database\Eloquent\Casts\Attribute;
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 
 /**
  * App\Models\Question
@@ -16,24 +19,27 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $answer
  * @property string|null $checker
  * @property string|null $keyboard
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Block[] $blocks
+ * @property string|null $parameters
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property-read Collection|\App\Models\Block[] $blocks
  * @property-read int|null $blocks_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\User[] $users
+ * @property-read \App\Models\Post $post
+ * @property-read Collection|\App\Models\User[] $users
  * @property-read int|null $users_count
- * @method static \Illuminate\Database\Eloquent\Builder|Question newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Question newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Question query()
- * @method static \Illuminate\Database\Eloquent\Builder|Question whereAnswer($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Question whereChecker($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Question whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Question whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Question whereKeyboard($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Question whereOrder($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Question wherePostId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Question whereUpdatedAt($value)
- * @mixin \Eloquent
+ * @method static Builder|Question newModelQuery()
+ * @method static Builder|Question newQuery()
+ * @method static Builder|Question query()
+ * @method static Builder|Question whereAnswer($value)
+ * @method static Builder|Question whereChecker($value)
+ * @method static Builder|Question whereCreatedAt($value)
+ * @method static Builder|Question whereId($value)
+ * @method static Builder|Question whereKeyboard($value)
+ * @method static Builder|Question whereOrder($value)
+ * @method static Builder|Question whereParameters($value)
+ * @method static Builder|Question wherePostId($value)
+ * @method static Builder|Question whereUpdatedAt($value)
+ * @mixin Eloquent
  */
 class Question extends Model
 {
@@ -44,7 +50,7 @@ class Question extends Model
 
 	public function post()
 	{
-		$this->belongsTo(Post::class);
+		return $this->belongsTo(Post::class);
 	}
 
 	public function blocks()
@@ -56,50 +62,91 @@ class Question extends Model
 	{
 		return $this->belongsToMany(User::class)
 			->withTimestamps()
-			->withPivot('result', 'answer');
+			->withPivot('result', 'answer', 'attempts');
 	}
 
-	public function answersByUser($user)
+	public function userAnswers()
 	{
-		$values = collect([]);
-
-		if ($user) {
-			$values = collect($this->users()
-				->where('user_id', $user->id)->get()
-				->map(function ($answer) {
+		if (Auth::user()) {
+			return $this->users()
+				->where('question_user.user_id', '=', Auth::user()->id)
+				->get()
+				->map(function ($item) {
 					return [
-						'id' => $answer->pivot->question_id,
-						'answer' => $answer->pivot->answer,
-						'result' => $answer->pivot->result,
+						'answer' => $item->pivot->answer,
+						'result' => $item->pivot->result,
+						'attempts' => $item->pivot->attempts,
+						'created_at' => Carbon::parse($item->pivot->created_at)->diffForHumans(),
 					];
-				}));
-
+				});
+		} else {
+			return collect([]);
 		}
-		return Attribute::make(
-			get: fn () => $values
-		);
 	}
 
-	public function answeredByUser($user)
+	public function clean()
 	{
-		$values = collect([]);
+		$answers = [];
 
-		if ($user) {
-			$values = $this->users()
-				->where('user_id', $user->id)->get();
+		if (Auth::user()) {
+			$answers = $this->userAnswers();
+
+			// No answer yet ! No need to clean it !
+			if (count($answers) === 0) {
+				return 0;
+			}
+
+			// Remove all previous values.
+			foreach ($answers as $id => $answer) {
+				$this->users()->detach(Auth::user()->id);
+			}
 		}
 
-		return Attribute::make(
-			get: fn () => $values
-		);
+		return count($answers);
 	}
-	public function answers(): Attribute
-	{
-		return $this->answersByUser(Auth::user());
-	}
-	public function answered(): Attribute
-	{
-		return $this->answeredByUser(Auth::user());
+//	public function answersByUser($user)
+//	{
+//		$values = collect([]);
+//
+//		if ($user) {
+//			$values = collect($this->users()
+//				->where('user_id', $user->id)->get()
+//				->map(function ($answer) {
+//					return [
+//						'id' => $answer->pivot->question_id,
+//						'answer' => $answer->pivot->answer,
+//						'result' => $answer->pivot->result,
+//					];
+//				}));
+//
+//		}
+//		return Attribute::make(
+//			get: fn () => $values
+//		);
+//	}
 
-	}
+//	public function answeredByUser($user)
+//	{
+//		$values = collect([]);
+//
+//		if ($user) {
+//			$values = $this->users()
+//				->where('user_id', $user->id)->get();
+//		}
+//
+//		return Attribute::make(
+//			get: fn () => $values
+//		);
+//	}
+//
+//
+//	public function answers(): Attribute
+//	{
+//		return $this->answersByUser(Auth::user());
+//	}
+//	public function answered(): Attribute
+//	{
+//		return $this->answeredByUser(Auth::user());
+//
+//	}
 }

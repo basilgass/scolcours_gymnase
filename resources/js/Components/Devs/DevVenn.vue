@@ -21,7 +21,7 @@
 			Valider
 		</button>
 
-		<keyboard-base
+		<keyboard-element
 			v-model="input"
 			keyboard="venn@A,B,C"
 		/>
@@ -33,7 +33,7 @@ import {PiDraw} from "pidraw/esm"
 import FormInput from "@/Components/Form/FormInput.vue"
 import {computed, onMounted, ref} from "vue"
 import {PiMath} from "pimath/esm"
-import KeyboardBase from "@/Components/Keyboards/KeyboardBase.vue"
+import KeyboardElement from "@/Components/Keyboards/KeyboardElement.vue"
 
 let draw = ref(null),
 	geom,

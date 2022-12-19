@@ -16,7 +16,7 @@ use Illuminate\Support\Carbon;
  * @property int $chapter_id
  * @property string $title
  * @property string|null $type
- * @property int $position
+ * @property int $order
  * @property int $numberOfVisibleBlocks
  * @property string|null $questionsGrid
  * @property int $active
@@ -37,7 +37,7 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Post whereCreatedAt($value)
  * @method static Builder|Post whereId($value)
  * @method static Builder|Post whereNumberOfVisibleBlocks($value)
- * @method static Builder|Post wherePosition($value)
+ * @method static Builder|Post whereOrder($value)
  * @method static Builder|Post whereQuestionsGrid($value)
  * @method static Builder|Post whereScript($value)
  * @method static Builder|Post whereSwitch($value)

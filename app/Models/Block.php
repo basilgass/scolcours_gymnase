@@ -2,8 +2,12 @@
 
 namespace App\Models;
 
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 
 /**
  * App\Models\Block
@@ -19,28 +23,28 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $blockable_type
  * @property int $blockable_id
  * @property int $blur
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  * @property-read Model|\Eloquent $blockable
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Illustration[] $illustrations
+ * @property-read Collection|\App\Models\Illustration[] $illustrations
  * @property-read int|null $illustrations_count
- * @method static \Illuminate\Database\Eloquent\Builder|Block newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Block newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Block query()
- * @method static \Illuminate\Database\Eloquent\Builder|Block whereBlockableId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Block whereBlockableType($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Block whereBlur($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Block whereBody($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Block whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Block whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Block whereJson($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Block whereOrder($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Block whereScript($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Block whereSwitch($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Block whereTitle($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Block whereType($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Block whereUpdatedAt($value)
- * @mixin \Eloquent
+ * @method static Builder|Block newModelQuery()
+ * @method static Builder|Block newQuery()
+ * @method static Builder|Block query()
+ * @method static Builder|Block whereBlockableId($value)
+ * @method static Builder|Block whereBlockableType($value)
+ * @method static Builder|Block whereBlur($value)
+ * @method static Builder|Block whereBody($value)
+ * @method static Builder|Block whereCreatedAt($value)
+ * @method static Builder|Block whereId($value)
+ * @method static Builder|Block whereJson($value)
+ * @method static Builder|Block whereOrder($value)
+ * @method static Builder|Block whereScript($value)
+ * @method static Builder|Block whereSwitch($value)
+ * @method static Builder|Block whereTitle($value)
+ * @method static Builder|Block whereType($value)
+ * @method static Builder|Block whereUpdatedAt($value)
+ * @mixin Eloquent
  */
 class Block extends Model
 {

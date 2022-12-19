@@ -12,19 +12,10 @@
 			<div ref="outputHTML" />
 		</div>
 		<!-- BValidation button -->
-		<div class="keyboard mb-3">
-			<button
-				ref="validateButton"
-				class="key key-cmd bg-white w-full
-						border-green-700 text-green-600 hover:bg-green-100 hover:border-green-800"
-				@click="btnValidate"
-			>
-				<i class="bi bi-check" /> <span class="hidden md:inline md:ml-2">Valider</span>
-			</button>
-			<div class="text-red-500 text-xs text-center mt-2">
-				{{ props.errorMessage }}
-			</div>
-		</div>
+		<keyboard-validate-button
+			ref="validateButton"
+			@validate="validateEvent"
+		/>
 
 		<div
 			v-if="enablePlot"
@@ -83,7 +74,7 @@
 				</button>
 			</div>
 
-			<KeyboardBase
+			<KeyboardElement
 				ref="keyboardUI"
 				keyboard="algebra"
 				key-class="bg-white"
@@ -100,23 +91,37 @@
 <script setup>
 
 import {nextTick, onMounted, ref} from "vue"
-import {wrongAnswerAnimation} from "@/Composables/useHelpers"
+import {useWrongAnswerAnimation} from "@/Composables/useHelpers"
 import {PiDraw} from "pidraw/esm"
 import katex from "katex"
 import Button from "@/Components/Auth/Button.vue"
 import {PiMath} from "pimath/esm"
-import KeyboardBase from "@/Components/Keyboards/KeyboardBase.vue"
+import KeyboardElement from "@/Components/Keyboards/KeyboardElement.vue"
+import KeyboardValidateButton from "@/Components/Keyboards/KeyboardValidateButton.vue"
+import {useCheckers} from "@/Composables/useCheckers"
 
 let props = defineProps({
 	options: {type: String},
-	errorMessage: {type: String, default: ""},
+	answer: {type: String}
 })
 
-let emits = defineEmits(["change", "tex", "raw", "validate"])
+let emits = defineEmits(["change", "validate"])
 
 let outputHTML = ref(null),
 	validateButton = ref(null),
-	btnValidate = function () {
+	resetKeyStrokes = function () {
+		// Reset keystrokes
+		for(let item in items.value){
+			removeItem(item)
+		}
+	},
+	wrongAnswer = function () {
+		useWrongAnswerAnimation(validateButton.value)
+	},
+	changeEvent = function() {
+		emits("change")
+	},
+	validateEvent = function () {
 		let output = ""
 
 		if(enablePlot.value){
@@ -133,35 +138,34 @@ let outputHTML = ref(null),
 			output = [...items.value].sort().join(",")
 		}
 
-		// Get all outputs
-		emits("change", output)
-		emits("tex", "")
-		emits("raw", showRawOutput.value?PiGraph.svg.svg():"")
-		emits("validate", output)
-	},
-	resetKeyStrokes = function () {
-		// Reset keystrokes
-		for(let item in items.value){
-			removeItem(item)
-		}
-	},
-	wrongAnswer = function () {
-		wrongAnswerAnimation(validateButton.value)
+		const check = useCheckers("study").check(props.answer, output)
+
+		// TODO: checking / message for keyboard STUDY.
+		emits("validate", {
+			code: output,
+			tex: "",
+			raw: showRawOutput.value?PiGraph.svg.svg():"",
+			correct: check.result,
+			message: check.message
+		})
 	},
 	getTex = function (value) {
 		const v = value.split("@")
 
+		//TODO: Keyboard Study - get tex/raw does not work ?
 		nextTick(() => outputHTML.value.innerHTML).then(resolve => {
-			emits("tex", resolve)
-			emits("raw", showRawOutput.value?PiGraph.svg.svg():"")
+			// emits("tex", resolve)
+			// emits("raw", showRawOutput.value?PiGraph.svg.svg():"")
 		})
 
 		return ""
 	},
 	getRaw = function (value) {
 		nextTick(() => outputHTML.value.innerHTML).then(resolve => {
-			emits("raw", PiGraph.svg.svg())
+			// emits("raw", PiGraph.svg.svg())
 		})
+
+		return ""
 	}
 defineExpose({resetKeyStrokes, wrongAnswer, getTex, getRaw})
 
@@ -282,7 +286,10 @@ onMounted(()=>{
 	}
 
 	// Update the value
-	emits("raw", showRawOutput.value?PiGraph.svg.svg():"")
+	emits("change",{
+		tex: "",
+		raw: showRawOutput.value?PiGraph.svg.svg():""
+	})
 
 	// Add resize observer
 	const resizeObserver = new ResizeObserver((entries) => {
@@ -399,7 +406,10 @@ function addItemToGraph(btn){
 	keyboardUI.value.resetKeyStrokes()
 
 	// Update the graph
-	emits("raw", showRawOutput.value?PiGraph.svg.svg():"")
+	emits("change",{
+		tex: "",
+		raw: showRawOutput.value?PiGraph.svg.svg():""
+	})
 }
 
 function removeAllItems(){
@@ -433,7 +443,10 @@ function removeItem(item) {
 	delete itemsGraph.value[item]
 
 	// Update the graph
-	emits("raw", showRawOutput.value?PiGraph.svg.svg():"")
+	emits("change",{
+		tex: "",
+		raw: showRawOutput.value?PiGraph.svg.svg():""
+	})
 }
 
 function removeControlsAndBezier(item){

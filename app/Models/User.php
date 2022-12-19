@@ -3,6 +3,7 @@
 	namespace App\Models;
 
 	use App\Models\Challenges\ChallengeSession;
+	use Database\Factories\UserFactory;
 	use Eloquent;
 	use Illuminate\Database\Eloquent\Builder;
 	use Illuminate\Database\Eloquent\Collection;

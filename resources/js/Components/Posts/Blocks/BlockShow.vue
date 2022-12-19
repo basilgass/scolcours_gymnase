@@ -1,137 +1,77 @@
 <template>
 	<article
-		class="relative"
-		:class="($page.props.auth.can.admin && editMode)?'border border-dashed border-amber-600 rounded -mx-4 pt-2 pb-2 px-4':''"
+		v-show="showBlock"
+		:class="block.type!==''?`block-border-${block.type}`:''"
+		class="px-5"
 	>
-		<!-- Edit mode the block -->
-		<dialog-modal
-			v-model="edit"
-		>
-			<block-form
-				ref="bForm"
-				v-model="crtBlock"
-				:switch="props.switch"
-				@close="edit=false"
+		<!-- Block title (if exist) -->
+		<div class="flex justify-between w-full">
+			<h3
+				v-katex.auto="block.title"
+				class="font-semibold"
 			/>
-		</dialog-modal>
-
-		<!-- Admin buttons -->
-		<div
-			v-if="$page.props.auth.can.admin && editMode"
-			class="admin-wrapper mb-5 flex-col"
-		>
-			<div class="w-full flex flex-row justify-between">
-				<div class="space-x-3">
-					<button
-						class="btn-edit btn-xs"
-						@click="edit=true"
-					>
-						éditer <i class="bi bi-pencil" />
-					</button>
-
-					<confirm-button
-						v-if="!hideDelete"
-						xs
-						btn-class="btn-delete"
-						@confirm="destroyBlock"
-					>
-						supprimer <i class="bi bi-trash" />
-					</confirm-button>
-				</div>
-
-				<div class="space-x-3">
-					<button
-						v-if="!hideBlur"
-						class="btn btn-xs px-5"
-						@click="blurBlock"
-					>
-						<i
-							class="bi bi-eye"
-							:class="dbBlur?'blur-sm':''"
-						/>
-					</button>
-					<button
-						v-if="props.switch"
-						class="btn-xs px-5"
-						:class="{
-							'text-white bg-orange-700': crtBlock.switch===0,
-							'text-white bg-blue-700': crtBlock.switch===1
-						}"
-						@click="switchBlock"
-					>
-						<i class="bi bi-toggle-off" />
-					</button>
-				</div>
-			</div>
 
 			<div
-				v-if="$slots.admin"
-				class="w-full"
+				v-if="block.script || $page.props.auth.can.admin"
+				class="flex gap-3"
 			>
-				<slot name="admin" />
+				<button
+					v-if="block.script"
+					class="btn btn-xs"
+					@click="random++"
+				>
+					aléatoire
+				</button>
+
+				<div
+					v-if="$page.props.auth.can.admin"
+				>
+					<button
+
+						class="text-xs mr-2"
+						@click="showEditForm=true"
+					>
+						{{ theBlock.id }} <i class="bi bi-pencil ml-2" />
+					</button>
+
+					<button
+						class="draggable-handle text-xs px-1"
+					>
+						<i class="bi bi-arrows-move" />
+					</button>
+				</div>
 			</div>
 		</div>
 
-		<!-- display mode of the block -->
-		<!-- display the block faded or not -->
+		<!-- Block body -->
+		<markdown-it :text="blockBody" />
+
+		<!-- Block illustrations -->
 		<div
-			class="relative"
-			:class="blockTypeClass"
+			v-if="block.illustrations.length"
+			:class="{
+				'md:grid-cols-2 xl:grid-cols-3': block.illustrations.length>=2,
+				'xl:grid-cols-2': block.illustrations.length===2,
+				'max-w-lg mx-auto': block.illustrations.length===1
+			}"
+			class="grid grid-cols-1 mt-8 mb-4 gap-4"
 		>
-			<div
-				class="transition-all "
-				:class="{ 'blur-sm':crtBlock.blur }"
-			>
-				<!-- Header of the block -->
-				<div class="flex gap-5">
-					<div
-						v-katex.auto="crtBlock.title"
-						class="text-lg flex-1"
-					/>
+			<illustration-show
+				v-for="illustration of block.illustrations"
+				:key="`block-${block.id}-illustration-${illustration.id}`"
+				:illustration="illustrationEdited(illustration)"
+			/>
+		</div>
 
-					<button
-						v-if="crtBlock.script"
-						class="btn btn-xs bg-white hover:bg-blue-400 hover:border-blue-500 hover:text-white"
-						@click="runBlockScript()"
-					>
-						<i class="bi bi-shuffle mr-2" />Rendre aléatoire
-					</button>
-				</div>
-
-				<!-- Body of the block -->
-				<markdown-it
-					:text="editedBody"
-					@dblclick.prevent="toggleBlockEdition"
-				/>
-
-				<!-- Illustration of the block -->
-				<div
-					v-if="crtBlock.illustrations.length>0"
-					class="grid grid-cols-1 mt-8 mb-4 gap-4"
-					:class="{
-						'md:grid-cols-2 xl:grid-cols-3': crtBlock.illustrations.length>=2,
-						'xl:grid-cols-2': crtBlock.illustrations.length===2,
-						'max-w-lg mx-auto': crtBlock.illustrations.length===1
-					}"
-				>
-					<illustration-show
-						v-for="illustration in crtBlock.illustrations"
-						:key="illustration.id"
-						:illustration="illustration"
-					/>
-				</div>
-			</div>
-			<div
-				v-show="crtBlock.blur"
-				class="absolute top-0 h-full left-0 w-full bg-white/30"
-			>
-				<button
-					class="w-full h-full text-3xl hover:scale-125 transition-all duration-300"
-					@click="crtBlock.blur=false"
-				>
-					<i class="bi bi-eye" />
-				</button>
-			</div>
+		<div v-if="$page.props.auth.can.admin && showEditForm">
+			<component
+				:is="editForm"
+				v-model="showEditForm"
+				:block="props.block"
+				:max-illustration="maxIllustration"
+				@change="updateBlock"
+				@destroy="emits('destroy', $event)"
+			/>
 		</div>
 	</article>
 </template>
@@ -139,131 +79,55 @@
 <script setup>
 
 import MarkdownIt from "@/Components/Ui/MarkdownIt"
-import {computed, inject, nextTick, onMounted, provide, ref, watch} from "vue"
 import IllustrationShow from "@/Components/Posts/Illustrations/IllustrationShow.vue"
+import {computed, defineAsyncComponent, inject, ref} from "vue"
 import {PiMath} from "pimath/esm"
-import DialogModal from "@/Components/Ui/DialogModal"
-import BlockForm from "@/Components/Posts/Blocks/BlockForm"
-import ConfirmButton from "@/Components/Ui/ConfirmButton"
+import {useFormattedBody} from "@/Composables/useHelpers"
 
-const $emits = defineEmits(["delete", "updated"])
-const props = defineProps({
-	block: {
-		type: Object, default: () => {
-		}
-	},
-	switch: {type: Boolean},
-	hideBlur: {type:Boolean, default:false},
-	hideDelete: {type:Boolean, default:false},
-	hasPadding: {type: Boolean, default: false}
-})
+const emits = defineEmits(["destroy"])
+let props = defineProps({
+		block: {type: Object, required: true},
+		switch: {type: Boolean},
+		maxIllustration: {type: Number, default: null}
+	}),
+	theBlock = ref(props.block),
+	showBlock = computed(()=>{
+		// if(usePage().props.value.auth.can.admin){return true}
 
-let editMode = inject("editpost")
-
-/** Script result coming from the post (random or not) */
-let postScriptResult = inject("postScriptResult"),
-	runBlockScript =async function () {
-		if (crtBlock.value.script !== null) {
-			let F = new Function("PiMath", "postScript", crtBlock.value.script)
-			await nextTick()
-			blockScriptResult.value = F(PiMath, postScriptResult.value)
-		}
-	},
-	blockScriptResult = ref({}),
-	scriptsResult = computed(()=>{
-		return {...postScriptResult.value, ...blockScriptResult.value}
-	})
-
-provide("blockScriptResult", scriptsResult)
-watch(postScriptResult, ()=>{
-	runBlockScript()
-})
-onMounted(() => runBlockScript())
-
-let edit = ref(props.block.isNew === true),
-	crtBlock = ref(props.block),
-	dbBlur = ref(props.block.blur),
-	bForm = ref(null),
-	blockTypeClass = computed(()=>{
-		if(crtBlock.value.type===""){return props.hasPadding?"-mx-4 px-4":""}
-		return `${props.hasPadding?"-mx-4 px-4":""} block-border-${crtBlock.value.type}`
+		if(theBlock.value.switch===null){return true}
+		return Boolean(theBlock.value.switch) === Boolean(props.switch)
 	})
 
 
-async function toggleBlockEdition(){
-	if(editMode.value && edit.value===false){
-		edit.value = true
-		await nextTick()
-		bForm.value.focus(true)
-	}
-}
-
-
-let editedBody = computed(() => {
-	// There is no value for the script
-	if(scriptsResult.value === {})return crtBlock.value.body
-
-	// Edit the output
-	let output = crtBlock.value.body
-	for (let key in scriptsResult.value) {
-		output = output.replaceAll("$" + key, scriptsResult.value[key])
-	}
-
-	// Rename all "unwanted" double signs.
-	// - - => +
-	// + -  or  - + => -
-	// + + => +
-	output = output.replaceAll("--", "+")
-	output = output.replaceAll("++", "+")
-	output = output.replaceAll("-+", "-")
-	output = output.replaceAll("+-", "-")
-
-	return output
-})
-
-function blurBlock() {
-	// Update the blur
-	dbBlur.value = !dbBlur.value
-	if (dbBlur.value !== crtBlock.value.blur) {
-		crtBlock.value.blur = dbBlur.value
-	}
-
-	// Update the database
-	axios.post(
-		route("blocks.blur", [crtBlock.value.id]),
-		{
-			blur: dbBlur.value,
-			_method: "patch"
-		}
-	)
-}
-
-function switchBlock(){
-	if(props.switch) {
-		if(crtBlock.value.switch===null){
-			crtBlock.value.switch = 0
-		}else if (crtBlock.value.switch===0){
-			crtBlock.value.switch = 1
-		}else{
-			crtBlock.value.switch = null
+let random = ref(1),
+	postData = inject("postData", {}),
+	blockData = computed(() => {
+		if (props.block.script !== null && random.value>0) {
+			let F = new Function("PiMath", "postData", props.block.script)
+			return {...postData.value, ...F(PiMath, postData.value)}
 		}
 
-		axios.post(
-			route("blocks.switch", [crtBlock.value.id]),
-			{
-				switch: crtBlock.value.switch,
-				_method: "patch"
-			}
+		return {...postData.value}
+	}),
+	blockBody = computed(() => {
+		return useFormattedBody(props.block.body, blockData)
+	}),
+	illustrationEdited = function(illustration){
+		return {
+			type: illustration.type,
+			code: useFormattedBody(illustration.code, blockData),
+			parameters: illustration.parameters?useFormattedBody(illustration.parameters, blockData):""
+		}
+	}
+
+let showEditForm = ref(props.block?.isNew===true),
+	editForm = computed(()=>{
+		return defineAsyncComponent(
+			()=>import("@/Components/Posts/Blocks/BlockForm.vue")
 		)
+	}),
+	updateBlock = function(b){
+		theBlock.value = b
 	}
-}
-
-function destroyBlock() {
-	$emits("delete", crtBlock.value.id)
-	axios.post(
-		route("blocks.destroy", [crtBlock.value.id]),
-		{_method: "delete"}
-	).catch(err => console.log(err))
-}
 
 </script>

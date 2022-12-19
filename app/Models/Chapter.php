@@ -2,11 +2,15 @@
 
 namespace App\Models;
 
+use Database\Factories\ChapterFactory;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
 use URL;
@@ -21,15 +25,15 @@ use URL;
  * @property int $active
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Block[] $blocks
+ * @property-read Collection|\App\Models\Block[] $blocks
  * @property-read int|null $blocks_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Challenge[] $challenges
+ * @property-read Collection|\App\Models\Challenge[] $challenges
  * @property-read int|null $challenges_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Formula[] $formulas
+ * @property-read Collection|\App\Models\Formula[] $formulas
  * @property-read int|null $formulas_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Post[] $posts
+ * @property-read Collection|\App\Models\Post[] $posts
  * @property-read int|null $posts_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Question[] $questions
+ * @property-read Collection|\App\Models\Question[] $questions
  * @property-read int|null $questions_count
  * @property-read \App\Models\Theme $theme
  * @method static \Database\Factories\ChapterFactory factory(...$parameters)
@@ -54,7 +58,7 @@ class Chapter extends Model
 	// removed the theme:id,slug
 	protected $with = ['posts','formulas', 'challenges'];
 
-	public function theme(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+	public function theme(): BelongsTo
 	{
 		return $this->belongsTo(Theme::class);
 	}
@@ -64,17 +68,17 @@ class Chapter extends Model
 		return $this->morphMany(Block::class, 'blockable');
 	}
 
-	public function posts(): \Illuminate\Database\Eloquent\Relations\HasMany
+	public function posts(): HasMany
 	{
-		return $this->hasMany(Post::class)->orderBy('position')->orderBy('id');
+		return $this->hasMany(Post::class)->orderBy('order')->orderBy('id');
 	}
 
-	public function formulas(): \Illuminate\Database\Eloquent\Relations\HasMany
+	public function formulas(): HasMany
 	{
 		return $this->hasMany(Formula::class)->orderBy('order')->orderBy('id');
 	}
 
-	public function challenges(): \Illuminate\Database\Eloquent\Relations\HasMany
+	public function challenges(): HasMany
 	{
 		return $this->hasMany(Challenge::class);
 	}

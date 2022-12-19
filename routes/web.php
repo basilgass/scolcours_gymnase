@@ -10,6 +10,10 @@ use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\ScolcoursController;
 use App\Http\Controllers\ToolsController;
 use App\Http\Controllers\TranslationController;
+use App\Http\Resources\QuestionResource;
+use App\Models\Block;
+use App\Models\Post;
+use App\Models\Question;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -41,12 +45,9 @@ Route::get('/admin/users', [AdminController::class, 'users'])
 	->middleware(['auth', 'verified'])->name('admin.users');
 Route::post('/admin/users/create', [AdminController::class, 'createUsers'])->name('admin.users.create');
 Route::delete('/admin/users/${user}/destroy', [AdminController::class, 'destroyUser'])->name('admin.users.destroy');
-
 Route::patch('/admin/chapters/{chapter:slug}', [AdminController::class, 'activate'])
 	->middleware(['auth', 'verified'])->name('toggleChapterActive');
-
 Route::get('/admin/stats/{chapter:slug}', [AdminController::class, 'usersStats']);
-
 require __DIR__ . '/auth.php';
 
 // Chapter routes
@@ -67,14 +68,28 @@ Route::post('formulas/{formula}/duplicate', [FormulaController::class, 'duplicat
 Route::post('formulas/updateOrder', [FormulaController::class, 'updateOrder'])->name('formulas.updateOrder');
 
 // Posts routes
+Route::get('dev/questions/{question}', function(Question $question){
+	dd(QuestionResource::make($question));
+});
+Route::get('dev/posts/{post}', function(Post $post){
+	dd( \App\Http\Resources\PostResource::make($pose));
+});
+Route::get('dev/blocks/{block}', function(Block $block){
+	dd( \App\Http\Resources\BlockResource::make($block));
+});
 
-Route::get('posts/{post}', [PostController::class, "show"]);
+Route::get('questions/{question}/edit', [QuestionController::class, 'edit'])->name('questions.edit');
+Route::get('blocks/{block}/edit', [BlockController::class, 'edit'])->name('blocks.edit');
+Route::get('posts/{post}/edit', [PostController::class, 'edit'])->name('posts.edit');
+Route::get('challenges/{challenge}/edit', [ChallengesController::class, 'edit'])->name('challenges.edit');
 
+Route::resource('posts', PostController::class)
+	->only('show');
 Route::resource('chapters.posts', PostController::class)
 	->parameters([
 		"chapters" => "chapter:slug"
 	])
-	->shallow();
+	->shallow()->except('show');
 Route::patch('posts/{post}/numberOfVisibleBlocks', [PostController::class, 'updateNumberOfVisibleBlocks'])->name('posts.updateNumberOfVisibleBlocks');
 Route::patch('posts/{post}/ordering', [PostController::class, 'updateBlocksOrder'])->name('posts.updateBlocksOrder');
 Route::patch('posts/{post}/updateQuestionsGrid', [PostController::class, 'updateQuestionsGrid'])->name('posts.updateQuestionsGrid');
@@ -86,7 +101,7 @@ Route::apiResource('posts.questions', QuestionController::class)
 Route::post('questions/{question}/validate', [QuestionController::class, 'storeAnswer'])->name('questions.validate');
 Route::post('questions/{question}/duplicate', [QuestionController::class, 'duplicate'])->name('questions.duplicate');
 Route::patch('posts/{post}/questions/reset', [QuestionController::class, 'resetAnswers'])->name('posts.questions.reset');
-Route::post('questions/updateOrder', [QuestionController::class, 'updateOrder'])->name('questions.updateOrder');
+Route::patch('posts/{post}/questions/updateOrder', [PostController::class, 'updateQuestionsOrder'])->name('questions.updateOrder');
 
 // Blocks routews
 Route::post('posts/{post}/blocks/create', [BlockController::class, 'storeInPost'])->name('posts.blocks.store');
@@ -157,5 +172,5 @@ Route::get('tools/{tool:slug}', [ToolsController::class, 'show'])->name('tools.t
 
 // Themes and chapters main routes
 Route::get('{theme:slug}/', [ChaptersController::class, 'index'])->name('theme');
-Route::get('{theme:slug}/{chapter:slug}', [ChaptersController::class, 'show'])->name('theme.chapter');
+Route::get('{theme:slug}/{chapter:slug}', [ChaptersController::class, 'page'])->name('theme.chapter');
 

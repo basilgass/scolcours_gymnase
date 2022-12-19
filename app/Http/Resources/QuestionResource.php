@@ -2,9 +2,10 @@
 
 namespace App\Http\Resources;
 
-use Auth;
+use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Support\Carbon;
+use JsonSerializable;
 
 class QuestionResource extends JsonResource
 {
@@ -18,36 +19,56 @@ class QuestionResource extends JsonResource
 	/**
 	 * Transform the resource into an array.
 	 *
-	 * @param \Illuminate\Http\Request $request
-	 * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
+	 * @param Request $request
+	 * @return array|Arrayable|JsonSerializable
 	 */
 	public function toArray($request)
 	{
-		$userAnswers = $this->users->filter(function ($value, $key) {
-			return $value->id === Auth::user()?->id;
-		})->values()->map(function ($user) {
-			return [
-				'answer' => $user->pivot->answer,
-				'result' => $user->pivot->result,
-				'when' => Carbon::parse($user->pivot->created_at)->diffForHumans()
-			];
-		});
+//		$userAnswers = $this->users->filter(function ($value, $key) {
+//			return $value->id === Auth::user()?->id;
+//		})->values()->map(function ($user) {
+//			return [
+//				'answer' => $user->pivot->answer,
+//				'result' => $user->pivot->result,
+//				'when' => Carbon::parse($user->pivot->created_at)->diffForHumans()
+//			];
+//		});
 
 		if(count($this->blocks)===0){
 			$this->blocks()->create(['body'=>'Sans contenu']);
+			$this->blocks;
 		}
+
+		$userAnswers = $this->userAnswers();
+		$isCorrect = false;
+		foreach ($userAnswers as $answer){
+			if($answer['result']){
+				$isCorrect = true;
+				break;
+			}
+		}
+
 
 		return [
 			"id" => $this->id,
+			"order"=>$this->order,
 			"body" => $this->body,
-			"block" => $this->blocks[0],
+			"block" => [
+				'id'=>$this->blocks[0]->id,
+				'body'=>$this->blocks[0]->body,
+				'illustration'=>$this->blocks[0]->illustrations[0]??null
+			],
 			"answer" => $this->answer,
 			"checker" => $this->checker,
-			"keyboard" => $this->keyboard??'algebra',
+			"keyboard" => $this->keyboard,
 			"parameters" => $this->parameters??'',
-			"updated_at" => $this->updated_at,
-			"userAnswers" => $userAnswers,
-			"userHasCorrectAnswer" => count($userAnswers)>0 && $userAnswers[count($userAnswers)-1]['result']
+			"user" => [
+				"answers" => $userAnswers,
+				"correct" => $isCorrect
+			]
+//			"updated_at" => $this->updated_at,
+//			"userAnswers" => $userAnswers,
+//			"userHasCorrectAnswer" => count($userAnswers)>0 && $userAnswers[count($userAnswers)-1]['result']
 		];
 //        return parent::toArray($request);
 	}

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Resources\FormulaResource;
 use App\Models\Chapter;
 use App\Models\Formula;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 
@@ -18,7 +20,7 @@ class FormulaController extends Controller
 	/**
      * Display a listing of the resource.
      *
-     * @return Formula[]|\Illuminate\Database\Eloquent\Collection
+     * @return Formula[]|Collection
 	 */
     public function index(Chapter $chapter)
     {
@@ -29,8 +31,8 @@ class FormulaController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @param Request $request
+     * @return RedirectResponse
 	 */
     public function store(Chapter $chapter, Request $request)
     {
@@ -66,7 +68,7 @@ class FormulaController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param Request $request
      * @param  int  $id
      * @return Formula
 	 */
@@ -96,7 +98,7 @@ class FormulaController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
 	 */
     public function destroy($id)
     {

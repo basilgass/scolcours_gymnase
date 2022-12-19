@@ -1,20 +1,10 @@
 <template>
 	<form-field>
-		<form-label
-			v-if="!labelRight"
-			:label="labelSwitch"
-			:name="name"
-			class="inline-block mr-5"
-		/>
 		<ui-switch
 			v-model="value"
+			:true-text="labelSwitch.pre"
+			:false-text="labelSwitch.post"
 			:sm="props.sm"
-		/>
-		<form-label
-			v-if="labelRight"
-			:label="labelSwitch"
-			:name="name"
-			class="inline-block ml-5"
 		/>
 		<form-error
 			:message="error"
@@ -25,7 +15,6 @@
 
 <script setup>
 import FormField from "@/Components/Form/FormField"
-import FormLabel from "@/Components/Form/FormLabel"
 import FormError from "@/Components/Form/FormError"
 import UiSwitch from "@/Components/Ui/UiSwitch"
 import {computed, ref, watch} from "vue"
@@ -45,10 +34,10 @@ const props = defineProps({
 let value = ref(Boolean(props.modelValue)===true)
 
 let labelSwitch = computed(()=>{
-	if(props.label.includes(",")){
-		return props.label.split(",")[value.value?0:1]
-	}else{
-		return props.label
+	let [pre,post] = props.label.split(",")
+	return {
+		pre: pre??"",
+		post: post??""
 	}
 })
 

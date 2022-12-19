@@ -233,7 +233,7 @@ class AdminController extends Controller
 		$chapter->active = $request->active;
 		$chapter->save();
 
-		return redirect()->route('admin');
+		return redirect()->route('admin.pages');
 	}
 
 	public function usersStats(Chapter $chapter)

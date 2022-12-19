@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\BlockResource;
 use App\Http\Resources\PostResource;
 use App\Models\Chapter;
 use App\Models\Post;
@@ -39,7 +40,7 @@ class PostController extends Controller
 		$post = $chapter->posts()->create([
 			'title' => $validation['title'],
 			'numberOfVisibleBlocks' => 0,
-			'position' => count($chapter->posts)
+			'order' => count($chapter->posts)
 		]);
 
 		// Load the blocks, even if it's empty :)
@@ -49,20 +50,19 @@ class PostController extends Controller
 
 	public function show(Post $post)
 	{
-		return Inertia::render("Posts/PostShowNew", [
-			'theme' => $post->chapter->theme,
-			'post' => PostResource::make($post)
-		]);
+		return PostResource::make($post);
+//		return Inertia::render("Posts/PostSlide.vue", [
+//			'theme' => $post->chapter->theme,
+//			'post' => PostResource::make($post)
+//		]);
 	}
 
 	public function edit(Post $post)
 	{
 		// Create a post form
-//		return Inertia::render("Posts/PostForm", [
-//			"theme" => $post->chapter->theme,
-//			"chapter" => $post->chapter,
-//			'edit' => $post
-//		]);
+		return Inertia::render("Devs/Edit/PostEditPage", [
+			'post' => BlockResource::make($post)
+		]);
 	}
 
 	public function update(Post $post, Request $request)
@@ -81,7 +81,7 @@ class PostController extends Controller
 		$post->type = $validation['type'] ?? null;
 		$post->save();
 
-		return $post;
+		return PostResource::make($post);
 	}
 
 	public function updateNumberOfVisibleBlocks(Post $post, Request $request)
@@ -99,9 +99,20 @@ class PostController extends Controller
 
 	public function updateBlocksOrder(Post $post, Request $request)
 	{
-		foreach ($request['data'] as $row) {
+		foreach ($request['order'] as $row) {
 			$post->blocks->find($row['id'])->update(['order' => $row['order']]);
 		}
+
+		return 1;
+	}
+
+	public function updateQuestionsOrder(Post $post, Request $request)
+	{
+		foreach ($request['order'] as $value) {
+			$post->questions->find($value['id'])->update(['order' => $value['order']]);
+		}
+
+		return true;
 	}
 
 	public function updateQuestionsGrid(Post $post, Request $request)

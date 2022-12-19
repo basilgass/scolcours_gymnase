@@ -11,7 +11,7 @@
 				</div>
 				<div v-katex="tex" />
 
-				<keyboard-base
+				<keyboard-element
 					v-model="input"
 					class="mt-10 mt-auto mb-2"
 					:keyboard="{
@@ -55,7 +55,7 @@ import FormInput from "@/Components/Form/FormInput"
 import {computed, onMounted, ref} from "vue"
 import {PiMath} from "pimath/esm"
 import {PiDraw} from "pidraw/esm"
-import KeyboardBase from "@/Components/Keyboards/KeyboardBase.vue"
+import KeyboardElement from "@/Components/Keyboards/KeyboardElement.vue"
 
 let draw = ref(null),
 	geom,

@@ -31,11 +31,32 @@
 					hover:rotate-90
 					transition-all duration-500
 					cursor-pointer"
-				@click="menuScrollTo()"
+				@click="useMenuScrollTo()"
 			>
 				<i class="bi bi-chevron-left" />
 			</aside>
 		</transition>
+
+		<!-- Flash message handler -->
+		<div
+			v-if="flashMessages.length"
+			class="fixed bottom-2 right-2 grid grid-cols-1 gap-3 max-w-[20em]"
+		>
+			<flash-message
+				v-for="(message, idx) in flashMessages"
+				:key="`flash-${idx}`"
+				:class="{
+					'bg-red-600/80 text-white':message.type==='error',
+					'bg-green-600/80 text-white':message.type==='success',
+					'bg-amber-400/80 text-black':message.type==='info',
+				}"
+				:timeout="message.timeout"
+				@open="message.id=$event"
+				@close="flashMessages = flashMessages.filter(x=>x.id!==$event)"
+			>
+				{{ message.message }}
+			</flash-message>
+		</div>
 	</div>
 </template>
 
@@ -43,7 +64,8 @@
 import MainHeader from "@/Components/MainHeader"
 import MainFooter from "@/Components/MainFooter"
 import {computed, onMounted, onUnmounted, provide, ref} from "vue"
-import {menuScrollTo} from "@/Composables/useHelpers"
+import {useMenuScrollTo} from "@/Composables/useHelpers"
+import FlashMessage from "@/Components/Ui/FlashMessage.vue"
 
 defineProps({
 	theme: {
@@ -59,10 +81,24 @@ let showScrollToTop = ref(400),
 		return scrollY.value > showScrollToTop.value
 	})
 
+
+let	flashMessages = ref([]),
+	addFlashMessage = function(message, type="success", timeout=2000){
+		flashMessages.value.push({message, type, timeout})
+	}
+provide("flash", {add: addFlashMessage})
+
 provide("showfloatingfooter", showFloatingFooter)
+
 
 onMounted(()=>{
 	window.addEventListener("scroll", handleScroll)
+
+	// flashMessages.value = [
+	// 	{type: "success", message: "a success message", timeout: 5000},
+	// 	{type: "error", message: "an error message", timeout: 5000},
+	// 	{type: "info", message: "an information message", timeout: 5000}
+	// ]
 })
 
 onUnmounted(()=>{

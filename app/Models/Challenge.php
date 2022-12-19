@@ -23,8 +23,8 @@ use Illuminate\Support\Carbon;
  * @property string $output
  * @property int $maxLevel
  * @property int $nextLevelAfter
- * @property string $checker
- * @property string $keyboard
+ * @property string|null $keyboard
+ * @property string|null $parameters
  * @property int $duration
  * @property int $lives
  * @property int|null $bonusScoreTrigger
@@ -50,7 +50,6 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Challenge whereBonusScoreTime($value)
  * @method static Builder|Challenge whereBonusScoreTrigger($value)
  * @method static Builder|Challenge whereChapterId($value)
- * @method static Builder|Challenge whereChecker($value)
  * @method static Builder|Challenge whereCreatedAt($value)
  * @method static Builder|Challenge whereDuration($value)
  * @method static Builder|Challenge whereGenerator($value)
@@ -61,6 +60,7 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Challenge whereMaxLevel($value)
  * @method static Builder|Challenge whereNextLevelAfter($value)
  * @method static Builder|Challenge whereOutput($value)
+ * @method static Builder|Challenge whereParameters($value)
  * @method static Builder|Challenge whereSlug($value)
  * @method static Builder|Challenge whereTitle($value)
  * @method static Builder|Challenge whereUpdatedAt($value)

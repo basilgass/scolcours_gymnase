@@ -1,12 +1,24 @@
 <template>
-	<Switch
-		v-model="switchValue"
-		:class="switchClass"
-	>
+	<div class="flex gap-2 items-baseline">
 		<span
-			:class="circleClass"
+			v-katex.auto="falseText"
+			class="transition-all duration-300"
+			:class="!switchValue?'opacity-100':'opacity-40'"
 		/>
-	</Switch>
+		<Switch
+			v-model="switchValue"
+			:class="switchClass"
+		>
+			<span
+				:class="circleClass"
+			/>
+		</Switch>
+		<span
+			v-katex.auto="trueText"
+			class="transition-all duration-300"
+			:class="switchValue?'opacity-100':'opacity-50'"
+		/>
+	</div>
 </template>
 <script setup>
 import {Switch} from "@headlessui/vue"
@@ -16,6 +28,8 @@ let emit = defineEmits(["update:modelValue"])
 
 let props = defineProps({
 	modelValue: Boolean,
+	trueText: {type: String, default: ""},
+	falseText: {type: String, default: ""},
 	sm: {type: Boolean, default: false},
 	disabledColor: {type: String, default: "bg-orange-700"},
 	enabledColor: {type: String, default: "bg-blue-700"},

@@ -32,7 +32,7 @@
 		</div>
 
 		<div class="mt-2">
-			<keyboard-base
+			<keyboard-element
 				v-show="activeInput==='fx'"
 				v-model="f"
 				back
@@ -41,7 +41,7 @@
 				keyboard="polynom"
 				@next="activeInput='x'"
 			/>
-			<keyboard-base
+			<keyboard-element
 				v-show="activeInput==='x'"
 				v-model="x"
 				back
@@ -65,7 +65,7 @@ import Panel from "@/Components/Ui/Panel"
 import FormInput from "@/Components/Form/FormInput"
 import {computed, ref} from "vue"
 import {PiMath} from "pimath/esm"
-import KeyboardBase from "@/Components/Keyboards/KeyboardBase.vue"
+import KeyboardElement from "@/Components/Keyboards/KeyboardElement.vue"
 
 let f = ref("3*x+1"),
 	x = ref("1"),

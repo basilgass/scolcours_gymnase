@@ -22,7 +22,7 @@
 					<a
 						:href="`#${props.menuId}${index}`"
 						class="hover:underline"
-						@click.prevent="menuScrollTo(`#menu-${index}`)"
+						@click.prevent="useMenuScrollTo(`#menu-${index}`)"
 						v-html="item"
 					/>
 				</li>
@@ -60,7 +60,7 @@ function buildMenu() {
 	})
 }
 
-function menuScrollTo(id) {
+function useMenuScrollTo(id) {
 	let el = id === undefined ? document.body : tableofcontents.value.querySelector(id)
 
 	el.scrollIntoView({

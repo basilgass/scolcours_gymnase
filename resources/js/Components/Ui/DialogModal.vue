@@ -10,8 +10,7 @@
 			<div
 				ref="root"
 				v-bind="$attrs"
-				class="grid items-center bg-white rounded-lg px-5 py-3 max-w-[1600px] w-[90%] max-h-[90vh] overflow-scroll"
-				@close="emits('update:modelValue', false)"
+				class="grid items-center bg-white rounded-lg max-w-[1600px] w-[90%] max-h-[95vh] overflow-auto"
 			>
 				<div>
 					<div v-if="$slots.header">
