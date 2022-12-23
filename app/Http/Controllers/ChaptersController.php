@@ -16,7 +16,7 @@ class ChaptersController extends Controller
 {
 	public function __construct()
 	{
-		$this->middleware('auth')->except(['index', 'show', 'page']);
+		$this->middleware('auth')->except(['index', 'show', 'page', 'slide']);
 	}
 
 	public function index(Theme $theme)
