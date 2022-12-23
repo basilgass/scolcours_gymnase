@@ -67,8 +67,14 @@ let validateButton = ref(null),
 	},
 	getRaw = function (value) {
 		return ""
+	},
+	getAnswer = function(value){
+		return {
+			tex: getTex(value),
+			raw: getRaw(value)
+		}
 	}
-defineExpose({resetKeyStrokes, wrongAnswer, getTex, getRaw})
+defineExpose({resetKeyStrokes, wrongAnswer, getAnswer})
 
 // ---------------------------------------
 let availableKeyboards = computed(()=>{
@@ -83,7 +89,8 @@ let theKeyboard = computed(() => {
 		return false
 	}
 	let kbrd = availableKeyboards.value[Math.min(availableKeyboards.value.length - 1, answerNumber.value)]?.split("\n"),
-		[name, checker] = kbrd[0].split("@"),
+		checker = kbrd[0].split("@"),
+		name = checker.shift(),
 		letters = "", parameters = ""
 
 	if (kbrd.length > 1) {
@@ -104,7 +111,7 @@ let theKeyboard = computed(() => {
 	return {
 		name,
 		keyboard: keyboards[name],
-		checker: useCheckers(checker ?? name),
+		checker: useCheckers(checker.length>0?checker.join("@"): name),
 		letters,
 		parameters
 	}

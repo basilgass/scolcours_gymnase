@@ -75,25 +75,25 @@ class ChaptersController extends Controller
 		return redirect()->route('theme.chapter', [$theme->slug, $chapter->slug]);
 	}
 
-	public function show(Theme $theme, Chapter $chapter)
-	{
-		if ($chapter->active or Auth::User()?->admin) {
-
-			// Get the user data
-			return Inertia::render('Chapters/ChapterShow', [
-				// Used for the page layout
-				"theme" => $theme->only('color', 'icon', 'slug', 'title', 'id'),
-				// Get the chapter
-				"chapter" => fn() => ChapterResource::make($chapter),
-				// Find a component if it exists.
-				"component" => $chapter->component,
-			]);
-		} else {
-			return Inertia::render('ErrorPage.vue', [
-				"body" => "La page n'est pas active - contacter l'administrateur."
-			]);
-		}
-	}
+//	public function show(Theme $theme, Chapter $chapter)
+//	{
+//		if ($chapter->active or Auth::User()?->admin) {
+//
+//			// Get the user data
+//			return Inertia::render('Chapters/ChapterShow', [
+//				// Used for the page layout
+//				"theme" => $theme->only('color', 'icon', 'slug', 'title', 'id'),
+//				// Get the chapter
+//				"chapter" => fn() => ChapterResource::make($chapter),
+//				// Find a component if it exists.
+//				"component" => $chapter->component,
+//			]);
+//		} else {
+//			return Inertia::render('ErrorPage.vue', [
+//				"body" => "La page n'est pas active - contacter l'administrateur."
+//			]);
+//		}
+//	}
 	public function page(Theme $theme, Chapter $chapter)
 	{
 		if ($chapter->active or Auth::User()?->admin) {
@@ -105,11 +105,30 @@ class ChaptersController extends Controller
 				// Get the chapter
 				"chapter" => fn() => ChapterResource::make($chapter),
 			]);
-		} else {
-			return Inertia::render('ErrorPage.vue', [
-				"body" => "La page n'est pas active - contacter l'administrateur."
-			]);
 		}
+
+		return Inertia::render('ErrorPage.vue', [
+			"body" => "La page n'est pas active - contacter l'administrateur."
+		]);
+	}
+
+	public function slide(Theme $theme, Chapter $chapter, Int $order)
+	{
+		$post = $chapter->posts->where('order', "=", $order)->first();
+
+		return Inertia::render('Chapters/ChapterSlide', [
+			// Used for the page layout
+			"theme" => $theme->only('color', 'icon', 'slug', 'title', 'id'),
+			// Get the chapter (for next / precvious / ...)
+			"chapter" => fn() => ChapterResource::make($chapter, true),
+			// The post information
+			"postId" => $post->id,
+			"postNb" => $order,
+			"nav" => [
+				'previous'=>$order-1<0?null:route('theme.chapter.slide', [$theme, $chapter, $order-1]),
+				'next'=>$order===count($chapter->posts)?null:route('theme.chapter.slide', [$theme, $chapter, $order+1])
+			]
+		]);
 	}
 
 	public function edit(Chapter $chapter)

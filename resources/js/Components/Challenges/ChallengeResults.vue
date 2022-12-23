@@ -1,11 +1,11 @@
 <template>
-	<foote>
+	<footer>
 		<div class="grid grid-cols-3 gap-6">
 			<div
 				class="col-span-2 bg-white rounded text-xl md:text-2xl text-center p-2 md:p-10 flex flex-col justify-between gap-4"
 			>
 				<div>Score</div>
-				<div>{{ score }}</div>
+				<div>{{ results.score }}</div>
 			</div>
 
 			<div
@@ -19,28 +19,28 @@
 				class="bg-white rounded text-xl md:text-2xl text-center p-2 md:p-10 flex flex-col justify-between gap-4"
 			>
 				<div>Vie(s)</div>
-				<div>{{ lives - death }}</div>
+				<div>{{ results.lives - results.death }}</div>
 			</div>
 
 			<div
 				class="bg-white rounded text-xl md:text-2xl text-center p-2 md:p-10 flex flex-col justify-between gap-4"
 			>
 				<div>Erreur(s)</div>
-				<div>{{ death }}</div>
+				<div>{{ results.death }}</div>
 			</div>
 
 			<div
 				class="bg-white rounded text-xl md:text-2xl text-center p-2 md:p-10 flex flex-col justify-between gap-4"
 			>
 				<div>Temps restant</div>
-				<div>{{ remainingTime }}</div>
+				<div>{{ results.time }}</div>
 			</div>
 		</div>
 
 		<div class="min-h-[120px] grid place-items-center my-5">
 			<button
 				class="btn-success btn-xl hover:scale-110 transition-all"
-				@click="startChallenge"
+				@click="emits('start')"
 			>
 				Recommencer
 			</button>
@@ -52,7 +52,7 @@
 			</div>
 			<div class="space-y-2">
 				<div
-					v-for="(item, index) of listOfAnswers"
+					v-for="(item, index) of results.answers"
 					:key="`answer-${index}`"
 					v-katex.auto="item.value"
 					:class="
@@ -64,8 +64,14 @@
 				/>
 			</div>
 		</div>
-	</foote>
+	</footer>
 </template>
 
 <script setup>
+
+const emits = defineEmits(["start"])
+const props = defineProps({
+	results: {type: Object, required: true}
+})
+
 </script>

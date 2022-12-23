@@ -16,7 +16,7 @@
 		</div>
 
 		<button
-			v-if="$page.props.auth.can.admin"
+			v-admin
 			class="absolute right-2 top-0 text-xs"
 			@click="showEditForm=true"
 		>
@@ -63,16 +63,47 @@
 				<!-- user input -->
 				<question-user-input
 					v-show="showInput"
+					ref="keyboardUI"
 					:question="theQuestion"
 					@change="theQuestionBody = $event"
 					@validate="onValidate"
 				/>
+			</div>
 
-				<!-- footer - display previous answers -->
+			<!-- footer - display previous answers -->
+			<div
+				v-if="theQuestion.user.correct"
+				class="mt-5 border-t border-gray-200 px-5 py-2"
+			>
+				<button
+					v-if="!showAnswer"
+					@click="showAnswer=true"
+				>
+					<i
+						class="bi bi-eye mr-2"
+					/>réponse
+				</button>
+				<div v-else>
+					<div
+						v-if="displayAnswer.tex"
+						v-katex.display="displayAnswer.tex"
+					/>
+					<div
+						v-if="displayAnswer.raw"
+						v-html="displayAnswer"
+					/>
+					<div
+						class="text-xs text-center ml-3 font-code font-xs"
+						v-text="theQuestion.answer"
+					/>
+				</div>
 			</div>
 		</div>
 
-		<div v-if="$page.props.auth.can.admin && showEditForm">
+		<div
+			v-if="showEditForm"
+			v-admin
+		>
 			<component
 				:is="editForm"
 				v-model="showEditForm"
@@ -95,9 +126,17 @@ let props = defineProps({
 		question: {type: Object, required: true},
 		displayInput: {type: Boolean, default :false}
 	}),
+	keyboardUI = ref(null),
 	theQuestion = ref(props.question),
 	theQuestionBody = ref(props.question.block.body),
 	showInput = ref(props.displayInput),
+	showAnswer = ref(false),
+	displayAnswer = computed(()=>{
+		return {
+			...keyboardUI.value.getAnswer(theQuestion.value.answer),
+			code: theQuestion.value.answer
+		}
+	}),
 	onValidate = function (event) {
 		if (props.question.id === undefined) {
 			emits("validate", {

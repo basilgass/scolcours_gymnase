@@ -4,7 +4,7 @@
 			<ArticleTitle :title="theme.title" />
 
 			<button
-				v-if="$page.props.auth.can.admin"
+				v-admin
 				class="btn-primary btn-xs"
 				@click="showDialog=true"
 			>
@@ -30,25 +30,23 @@
 				v-if="chaptersFiltered.length>0"
 				name="list"
 			>
-				<Panel
+				<Link
 					v-for="chapter in chaptersFiltered"
 					:key="`chapter-${chapter.slug}`"
-					class="panel flex flex-col justify-between cursor-pointer hover:scale-105 hover:shadow transition-all duration-300"
+					class="panel bg-white border border-gray-200 px-4 py-2 rounded-xl border transition-all cursor-pointer hover:scale-105 hover:shadow transition-all duration-300"
 					:class="{'border-red-500':chapter.active===0}"
-					@click="$inertia.visit(route('theme.chapter', [$page.props.theme.slug, chapter.slug]))"
+					:href="route('theme.chapter', [$page.props.theme.slug, chapter.slug])"
 				>
-					<div>
-						<div class="text-2xl block  mb-5 cursor-pointer">
-							{{ chapter.title }}
-						</div>
-						<illustration-show
-							v-if="chapter.block.illustrations.length>0"
-							class="mb-3"
-							:illustration="chapter.block.illustrations[0]"
-						/>
-						<div v-katex.auto="chapter.block.body" />
+					<div class="text-2xl block  mb-5 cursor-pointer">
+						{{ chapter.title }}
 					</div>
-				</panel>
+					<illustration-show
+						v-if="chapter.block.illustrations.length>0"
+						class="mb-3"
+						:illustration="chapter.block.illustrations[0]"
+					/>
+					<div v-katex.auto="chapter.block.body" />
+				</Link>
 			</transition-group>
 		</div>
 

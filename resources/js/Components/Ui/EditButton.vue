@@ -1,6 +1,6 @@
 <template>
 	<button
-		v-if="$page.props.auth.can.admin"
+		v-admin
 		class="absolute -right-1 -top-1 z-10 border bg-white rounded-full w-8 h-8"
 		:class="edit?'bg-green-100 text-green-600':'bg-red-100 text-red-600'"
 		@click="btnClick"

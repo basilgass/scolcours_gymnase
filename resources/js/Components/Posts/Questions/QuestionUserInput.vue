@@ -35,6 +35,7 @@ const emits = defineEmits(["change", "validate"])
 let props = defineProps({
 		question: {type: Object, required: true}
 	}),
+	keyboardUI = ref(null),
 	keyboardComponent = computed(()=>{
 		if(props.question.keyboard){
 			return defineAsyncComponent(() => import(`@/Components/Keyboards/Keyboard${props.question.keyboard}`))
@@ -152,6 +153,11 @@ let updateQuestion = function(value){
 
 		return body
 	}
+
+
+defineExpose({
+	getAnswer: (value)=>keyboardUI.value.getAnswer(value)
+})
 
 onMounted(()=>{
 	updateBody()

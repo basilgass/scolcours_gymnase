@@ -4,7 +4,7 @@ import draggableComponent from "vuedraggable/src/vuedraggable.js"
 import {InertiaProgress} from "@inertiajs/progress"
 
 // Custom directives
-import {katexDirective, visibleDirective} from "@/vueDirectives"
+import {adminDirective, katexDirective, visibleDirective} from "@/vueDirectives"
 
 require("./bootstrap")
 
@@ -23,6 +23,7 @@ createInertiaApp({
 			.use(plugin)
 			.directive("katex", katexDirective)
 			.directive("visible", visibleDirective)
+			.directive("admin", adminDirective)
 			.mixin({methods: {route}})
 
 		// Custom function available as 	$fnName

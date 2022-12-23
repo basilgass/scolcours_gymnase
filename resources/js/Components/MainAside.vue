@@ -42,7 +42,7 @@
 					<hr>
 					<div v-if="$page.props.auth.user">
 						<Link
-							v-if="$page.props.auth.can.admin"
+							v-admin
 							as="button"
 							class="block transition duration-300 hover:translate-x-2 px-0 md:px-4 py-1"
 							:href="route('admin')"
@@ -51,7 +51,7 @@
 							administration
 						</Link>
 						<Link
-							v-if="$page.props.auth.can.admin"
+							v-admin
 							as="button"
 							class="block transition duration-300 hover:translate-x-2 px-0 md:px-4 py-1"
 							:href="route('dev.index')"

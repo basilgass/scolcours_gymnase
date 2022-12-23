@@ -11,10 +11,7 @@
 				class="font-semibold"
 			/>
 
-			<div
-				v-if="block.script || $page.props.auth.can.admin"
-				class="flex gap-3"
-			>
+			<div class="flex gap-3">
 				<button
 					v-if="block.script"
 					class="btn btn-xs"
@@ -24,7 +21,7 @@
 				</button>
 
 				<div
-					v-if="$page.props.auth.can.admin"
+					v-admin
 				>
 					<button
 
@@ -63,7 +60,10 @@
 			/>
 		</div>
 
-		<div v-if="$page.props.auth.can.admin && showEditForm">
+		<div
+			v-if="showEditForm"
+			v-admin
+		>
 			<component
 				:is="editForm"
 				v-model="showEditForm"

@@ -10,7 +10,7 @@
 				</div>
 			</div>
 
-			<div v-if="$page.props.auth.can.admin">
+			<div v-admin>
 				<i
 					class="bi bi-trash text-gray-200 hover:text-red-500 transition-colors cursor-pointer"
 					@click="deleteExercise(exercise.id)"

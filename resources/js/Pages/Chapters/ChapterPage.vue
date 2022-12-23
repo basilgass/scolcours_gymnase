@@ -5,7 +5,7 @@
 				{{ theChapter.title }}
 			</h1>
 
-			<div v-if="$page.props.auth.can.admin">
+			<div v-admin>
 				<button
 					class="text-xs"
 					@click="showEditForm=true"
@@ -35,10 +35,10 @@
 
 			<div class="columns-1 md:columns-2 lg:columns-3 column-toc gap-8 space-y-4">
 				<button
-					v-for="(post, postId) of theChapter.posts"
-					:key="`toc-${postId}`"
+					v-for="post in theChapter.posts"
+					:key="`toc-${post.id}`"
 					class="block hover:pl-5 transition-all duration text-left"
-					@click="useMenuScrollTo(`post-${postId}`)"
+					@click="useMenuScrollTo(`post-${post.id}`)"
 				>
 					<i
 						:class="{
@@ -67,16 +67,16 @@
 				class="space-y-10"
 			>
 				<post-show
-					v-for="(post, postId) of theChapter.posts"
-					:id="`post-${postId}`"
-					:key="`post-${postId}`"
-					:post-id="postId"
+					v-for="post in theChapter.posts"
+					:id="`post-${post.id}`"
+					:key="`post-${post.id}`"
+					:post-id="post.id"
 					@destroy="destroyPost"
 				/>
 			</div>
 
 			<div
-				v-if="$page.props.auth.can.admin"
+				v-admin
 				class="mt-10"
 			>
 				<button
@@ -110,6 +110,7 @@ let props = defineProps({
 	}),
 	theChapter = reactive(props.chapter.data)
 
+console.log(theChapter.posts)
 let showEditForm = ref(false),
 	editForm = computed(()=>{
 		return defineAsyncComponent(
@@ -117,11 +118,10 @@ let showEditForm = ref(false),
 		)
 	}),
 	updateChapter = function(c){
-		theChapter.value = c
+		// TODO: update theChapter ?
 	}
 
 let addPost = function(){
-		console.log(theChapter.slug)
 		axios.post(
 			route("chapters.posts.store", [theChapter.slug]),
 			{

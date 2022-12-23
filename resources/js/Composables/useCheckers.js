@@ -6,9 +6,11 @@ import {TableofsignChecker} from "@/Composables/Checkers/TableofsignChecker"
 import {SolutionChecker} from "@/Composables/Checkers/SolutionChecker"
 import {ExactChecker} from "@/Composables/Checkers/ExactChecker"
 import {StudyChecker} from "@/Composables/Checkers/StudyChecker"
+import {RationalChecker} from "@/Composables/Checkers/RationalChecker"
 
 export const checkersList = {
 	"polynom": ["factors", "develop"],
+	"qolynom": ["factors", "develop", "reduced"],
 	"nb":  ["1", "2", "3", "4"],
 	"scn": ["1", "2", "3", "4"],
 	"tos": [],
@@ -16,24 +18,17 @@ export const checkersList = {
 	"exact": [],
 	"study": [],
 }
-// export const checkersList = [
-// 	"polynom",
-// 	"nb",
-// 	"scn",
-// 	"tos",
-// 	"sol",
-// 	"exact",
-// ]
 
 export function useCheckers(checkerData) {
-	const options = checkerData.split("@"),
-		checker = options.shift()
+	const [checker, options] = checkerData.split("@")
 
 	switch (checker) {
 	case "exact":
 		return ExactChecker(options)
 	case "polynom":
 		return PolynomChecker(options)
+	case "rational":
+		return RationalChecker(options)
 	case "nb" || "number":
 		return NumberChecker(options)
 	case "scn":

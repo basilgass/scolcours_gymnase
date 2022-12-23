@@ -23,7 +23,7 @@
 				</Link>
 
 				<div
-					v-if="$page.props.auth.can.admin"
+					v-admin
 					class="flex items-center"
 				>
 					<div v-if="challenge.sessions.length>0">
@@ -35,13 +35,13 @@
 								{{ qsession.token }}
 							</Link>
 							<i
-								v-if="$page.props.auth.can.admin"
+								v-admin
 								class="bi bi-stop-fill cursor-pointer px-2"
 							/>
 						</div>
 					</div>
 
-					<div v-if="$page.props.auth.can.admin">
+					<div v-admin>
 						<Link
 							:href="`/challenge/${challenge.slug}/start`"
 							as="div"

@@ -45,7 +45,10 @@
 		</div>
 
 		<!-- résultat du challenge qui vient de se terminer -->
-		<challenge-results v-if="isFinished" />
+		<challenge-results
+			v-if="isFinished"
+			:results="results"
+		/>
 	</article>
 </template>
 
@@ -127,13 +130,25 @@ let listOfQuestions = ref([]),
 	maxTimeInMinutes = ref(theChallenge.value.duration),
 	ellapsedTime = ref(0),
 	level = ref(1),
-	score = ref(0),
 	levelScore = ref(0),
+	score = ref(0),
 	lives = ref(theChallenge.value.lives),
 	death = ref(0),
 	localScore = ref(
 		localStorage.getItem("scolcoursChallenge-" + theChallenge.value.id)
 	)
+
+let results = computed(()=>{
+	return {
+		level: level.value,
+		lives: lives.value,
+		death: death.value,
+		score: score.value,
+		answers: listOfAnswers.value,
+		time: remainingTime.value
+	}
+})
+
 
 if (localScore.value === null) {
 	localScore.value = "0"
@@ -202,7 +217,7 @@ let startChallenge = function () {
 		return (ellapsedTime.value / maxTimeInMinutes.value) * 100
 	}),
 	remainingTime = computed(() => {
-		let remaining = maxTimeInMinutes.value - ellapsedTime.value // time remaining in minutes.
+		let remaining = Math.max(maxTimeInMinutes.value - ellapsedTime.value, 0) // time remaining in minutes.
 
 		const minutes = Math.trunc(remaining),
 			seconds = Math.round((remaining - minutes) * 60)

@@ -34,7 +34,7 @@
 		</div>
 	</article>
 	<div
-		v-if="$page.props.auth.can.admin"
+		v-admin
 		class="mb-10"
 	>
 		<button

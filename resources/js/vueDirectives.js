@@ -1,6 +1,7 @@
 import katex from "katex/dist/katex.mjs"
 import AsciiMathParser from "./asciimath2tex"
 import {number} from "tailwindcss/lib/util/dataTypes"
+import {usePage} from "@inertiajs/inertia-vue3"
 
 function katexUpdate(el, binding, vnode) {
 	el.innerHTML = ""
@@ -70,4 +71,23 @@ export const visibleDirective = {
 	mounted (el, binding, vnode) {
 		el.style.visibility = binding.value ? "visible" : "hidden"
 	}
+}
+
+function adminUpdate(el, binding, vnode){
+	if(!usePage().props.value.auth.can.admin){
+		el.remove()
+	}
+	// TODO: extend v-admin directive
+	// if(binding.modifiers.edit){
+	// 	console.log(binding.value)
+	// 	el.style.display = binding.value?"block":"none"
+	// }
+}
+export const adminDirective = {
+	mounted (el, binding, vnode) {
+		adminUpdate(el, binding, vnode)
+	},
+	updated (el, binding, vnode) {
+		adminUpdate(el, binding, vnode)
+	},
 }

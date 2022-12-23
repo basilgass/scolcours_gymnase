@@ -4,7 +4,7 @@
 	<ArticleTitle :title="`profil de ${$page.props.auth.user.name}`" />
 
 	<div
-		v-if="$page.props.auth.can.admin"
+		v-admin
 		class="flex flex-col gap-3 my-3 admin-wrapper"
 	>
 		<Link

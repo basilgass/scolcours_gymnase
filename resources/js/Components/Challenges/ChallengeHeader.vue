@@ -45,7 +45,10 @@
 	</header>
 
 	<!-- edition du challenge -->
-	<div v-if="$page.props.auth.can.admin && showEditForm">
+	<div
+		v-if="showEditForm"
+		v-admin
+	>
 		<component
 			:is="editForm"
 			v-model="showEditForm"

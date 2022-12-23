@@ -6,7 +6,7 @@
 		<!-- Title of the post -->
 		<div class=" px-5 border-b border-gray-200 pb-5 flex justify-between">
 			<h2 class="text-lg md:text-xl xl:text-2xl">
-				{{ thePost.title }}
+				<span v-katex.auto="thePost.title" />
 
 				<button
 					class="text-xs ml-3"
@@ -35,7 +35,10 @@
 		</div>
 
 		<!-- Header of the post (configuration, admin, ...) -->
-		<div v-if="$page.props.auth.can.admin && showEditForm">
+		<div
+			v-if="showEditForm"
+			v-admin
+		>
 			<component
 				:is="editForm"
 				v-model="showEditForm"
@@ -71,7 +74,7 @@
 			</draggable>
 
 			<div
-				v-if="$page.props.auth.can.admin"
+				v-admin
 				class="px-5"
 			>
 				<button
@@ -84,8 +87,9 @@
 		</div>
 
 		<!-- post questions -->
-		<article v-if="thePost.questions.length">
+		<article>
 			<div
+				v-if="thePost.questions.length"
 				:class="thePost.blocks.length?'border-t border-gray-200 mt-5':''"
 				class="flex justify-between px-5 py-5"
 			>
@@ -94,7 +98,7 @@
 				>
 					questions
 				</h3>
-				<div v-if="$page.props.auth.can.admin">
+				<div v-admin>
 					<button
 						class="btn btn-xs"
 						@click="resetAnswers"
@@ -104,34 +108,36 @@
 				</div>
 			</div>
 
-			<div>
-				<draggable
-					v-if="thePost.questions.length"
-					v-model="thePost.questions"
-					class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 px-5"
-					item-key="id"
-					handle=".draggable-handle"
-					v-bind="{
-						animation: 200,
-						disabled: !($page.props.auth.can.admin),
-					}"
-					@end="updateQuestionsOrder"
+			<draggable
+				v-if="thePost.questions.length"
+				v-model="thePost.questions"
+				class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 px-5"
+				item-key="id"
+				handle=".draggable-handle"
+				v-bind="{
+					animation: 200,
+					disabled: !($page.props.auth.can.admin),
+				}"
+				@end="updateQuestionsOrder"
+			>
+				<template #item="{element}">
+					<question-show
+						:question="element"
+						@destroy="destroyQuestion"
+					/>
+				</template>
+			</draggable>
+
+			<div
+				v-admin
+				class="px-5"
+			>
+				<button
+					class="btn-new mt-10"
+					@click="addQuestion"
 				>
-					<template #item="{element}">
-						<question-show
-							:question="element"
-							@destroy="destroyQuestion"
-						/>
-					</template>
-				</draggable>
-				<div v-if="$page.props.auth.can.admin">
-					<button
-						class="btn-new mt-10"
-						@click="addQuestion"
-					>
-						ajouter une question
-					</button>
-				</div>
+					ajouter une question
+				</button>
 			</div>
 		</article>
 	</section>
