@@ -40,7 +40,7 @@ class PostController extends Controller
 		$post = $chapter->posts()->create([
 			'title' => $validation['title'],
 			'numberOfVisibleBlocks' => 0,
-			'order' => count($chapter->posts)
+			'order' => count($chapter->posts)+1
 		]);
 
 		// Load the blocks, even if it's empty :)

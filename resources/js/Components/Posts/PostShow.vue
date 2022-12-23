@@ -124,6 +124,7 @@
 					<question-show
 						:question="element"
 						@destroy="destroyQuestion"
+						@duplicate="thePost.questions.push($event)"
 					/>
 				</template>
 			</draggable>

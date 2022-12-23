@@ -15,15 +15,25 @@
 			{{ theQuestion.order }}
 		</div>
 
-		<button
+		<div
 			v-admin
-			class="absolute right-2 top-0 text-xs"
-			@click="showEditForm=true"
+			class="flex justify-end w-full px-3 gap-3 mt-2"
 		>
-			<i class="bi bi-pencil mr-2" />{{ theQuestion.id }}
-		</button>
+			<button
+				class="text-xs"
+				@click="showEditForm=true"
+			>
+				{{ theQuestion.id }} <i class="bi bi-pencil ml-2" />
+			</button>
+			<button
+				class="text-xs px-2"
+				@click="duplicateQuestion"
+			>
+				<i class="bi bi-clipboard-plus" />
+			</button>
+		</div>
 
-		<div class="flex flex-col h-full justify-between">
+		<div class="flex flex-col justify-between">
 			<!-- Admin edition mode -->
 
 			<!-- the body of question -->
@@ -72,18 +82,23 @@
 
 			<!-- footer - display previous answers -->
 			<div
-				v-if="theQuestion.user.correct"
+				v-if="theQuestion.user.correct || $page.props.auth.can.admin"
 				class="mt-5 border-t border-gray-200 px-5 py-2"
 			>
 				<button
 					v-if="!showAnswer"
+					class="text-xs text-gray-400 w-full"
 					@click="showAnswer=true"
 				>
 					<i
 						class="bi bi-eye mr-2"
-					/>réponse
+					/>voir la réponse
 				</button>
-				<div v-else>
+				<div
+					v-else
+					class="cursor-pointer"
+					@click="showAnswer=false"
+				>
 					<div
 						v-if="displayAnswer.tex"
 						v-katex.display="displayAnswer.tex"
@@ -121,7 +136,7 @@ import IllustrationShow from "@/Components/Posts/Illustrations/IllustrationShow.
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 import QuestionUserInput from "@/Components/Posts/Questions/QuestionUserInput.vue"
 
-let emits = defineEmits(["destroy", "validate"])
+let emits = defineEmits(["destroy", "validate", "duplicate"])
 let props = defineProps({
 		question: {type: Object, required: true},
 		displayInput: {type: Boolean, default :false}
@@ -168,5 +183,10 @@ let showEditForm = ref(props.question.isNew === true),
 	updateQuestion = function (q) {
 		theQuestion.value = q
 		theQuestionBody.value = q.block.body
+	},
+	duplicateQuestion = function(){
+		axios.post(route("questions.duplicate", [theQuestion.value.id])).then((res)=>{
+			emits("duplicate", res.data.data)
+		})
 	}
 </script>
