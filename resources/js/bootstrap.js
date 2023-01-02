@@ -1,9 +1,10 @@
+import {useKatexMacros} from "@/Composables/useHelpers"
+import renderMathInElement from "katex/dist/contrib/auto-render.mjs"
+
 window._ = require("lodash")
 
 window.axios = require("axios")
 window.axios.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest"
-
-import renderMathInElement from "katex/dist/contrib/auto-render.mjs"
 
 // codeInput.registerTemplate("syntax-highlighted",
 // 	codeInput.templates.prism(window.Prism, [
@@ -15,17 +16,14 @@ window.katexAutoRender = function (el, display) {
 		// customised options
 		// • auto-render specific keys, e.g.:
 		delimiters: [
-			{left: "$$", right: "$$", display: true},
-			{left: "$", right: "$", display: false},
-			{left: "\\[", right: "\\]", display: true},
-			{left: "\\(", right: "\\)", display: false},
+			"brackets", "dollars"
+			// {left: "$$", right: "$$", display: true},
+			// {left: "$", right: "$", display: false},
+			// {left: "\\[", right: "\\]", display: true},
+			// {left: "\\(", right: "\\)", display: false},
 		],
 		// • rendering keys, e.g.:
 		throwOnError: false,
-		macros: {
-			"\\IR": "\\mathbb{R}",
-			"\\IN": "\\mathbb{N}",
-			"\\ds": "\\displaystyle"
-		}
-	})
+		macros: useKatexMacros	}
+	)
 }

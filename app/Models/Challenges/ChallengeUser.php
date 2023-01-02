@@ -16,7 +16,7 @@
  * @property int $score
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property-read \App\Models\Challenges\ChallengeSession|null $session
+ * @property-read ChallengeSession|null $session
  * @method static Builder|ChallengeUser newModelQuery()
  * @method static Builder|ChallengeUser newQuery()
  * @method static Builder|ChallengeUser query()

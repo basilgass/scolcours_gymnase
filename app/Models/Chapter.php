@@ -25,18 +25,18 @@ use URL;
  * @property int $active
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property-read Collection|\App\Models\Block[] $blocks
+ * @property-read Collection|Block[] $blocks
  * @property-read int|null $blocks_count
- * @property-read Collection|\App\Models\Challenge[] $challenges
+ * @property-read Collection|Challenge[] $challenges
  * @property-read int|null $challenges_count
- * @property-read Collection|\App\Models\Formula[] $formulas
+ * @property-read Collection|Formula[] $formulas
  * @property-read int|null $formulas_count
- * @property-read Collection|\App\Models\Post[] $posts
+ * @property-read Collection|Post[] $posts
  * @property-read int|null $posts_count
- * @property-read Collection|\App\Models\Question[] $questions
+ * @property-read Collection|Question[] $questions
  * @property-read int|null $questions_count
- * @property-read \App\Models\Theme $theme
- * @method static \Database\Factories\ChapterFactory factory(...$parameters)
+ * @property-read Theme $theme
+ * @method static ChapterFactory factory(...$parameters)
  * @method static Builder|Chapter newModelQuery()
  * @method static Builder|Chapter newQuery()
  * @method static Builder|Chapter query()

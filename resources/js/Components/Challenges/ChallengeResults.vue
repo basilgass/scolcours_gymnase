@@ -11,8 +11,8 @@
 			<div
 				class="bg-white rounded text-xl md:text-2xl text-center p-2 md:p-10 flex flex-col justify-between gap-4"
 			>
-				<div>Meilleure score</div>
-				<div>{{ localScore }}</div>
+				<div>Meilleures scores</div>
+				<div>{{ props.challenge.score.user }} / {{ props.challenge.score.best }}</div>
 			</div>
 
 			<div
@@ -71,7 +71,8 @@
 
 const emits = defineEmits(["start"])
 const props = defineProps({
-	results: {type: Object, required: true}
+	results: {type: Object, required: true},
+	challenge: {type: Object, require: true}
 })
 
 </script>

@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
+use function redirect;
 
 class ChallengesController extends Controller
 {
@@ -18,6 +19,7 @@ class ChallengesController extends Controller
 		if (count($challenge->blocks) === 0) {
 			$challenge->blocks()->create();
 		}
+
 		return Inertia::render('Challenges/ChallengesPage', [
 			"theme" => $theme->only('color', 'icon', 'slug', 'title', 'id'),
 			"challenge" => ChallengeResource::make($challenge),
@@ -51,7 +53,7 @@ class ChallengesController extends Controller
 
 		$challenge->blocks()->create();
 
-		return \redirect()->route('challenges.quick', [$challenge->slug]);
+		return redirect()->route('challenges.quick', [$challenge->slug]);
 	}
 
 	public function edit(Challenge $challenge)

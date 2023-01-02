@@ -48,6 +48,7 @@
 		<challenge-results
 			v-if="isFinished"
 			:results="results"
+			:challenge="theChallenge"
 		/>
 	</article>
 </template>
@@ -67,6 +68,8 @@ import ChallengeIntro from "@/Components/Challenges/ChallengeIntro.vue"
 import ChallengeHeader from "@/Components/Challenges/ChallengeHeader.vue"
 import ChallengeResults from "@/Components/Challenges/ChallengeResults.vue"
 import QuestionShow from "@/Components/Posts/Questions/QuestionShow.vue"
+import FormInput from "@/Components/Form/FormInput.vue"
+import {usePage} from "@inertiajs/inertia-vue3"
 
 const emits = defineEmits(["destroy", "change"])
 const props = defineProps({
@@ -212,6 +215,9 @@ let startChallenge = function () {
 			)
 			localScore.value = +score.value
 		}
+
+		// Sauvegarde le score dans la base de donnée
+		storeScore()
 	},
 	timerWidth = computed(() => {
 		return (ellapsedTime.value / maxTimeInMinutes.value) * 100
@@ -338,5 +344,16 @@ watch(questionId, () => {
 	}
 })
 
+const storeScore = function(){
+	if(usePage().props.value.auth){
+		axios.post(route("scores.store"), {
+			"user_id": usePage().props.value.auth.user.id,
+			"challenge_id": theChallenge.value.id,
+			"score": results.value.score
+		}).then(res=>{
+			console.log(res)
+		})
+	}
+}
 
 </script>

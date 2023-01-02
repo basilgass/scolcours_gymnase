@@ -27,6 +27,13 @@
 			>
 				Commencer le challenge
 			</button>
+
+			<div class="w-full">
+				<div class="flex flex-col gap-3 mx-auto">
+					<div>Votre score: {{ props.challenge.score.user }}</div>
+					<div>Meilleur score: {{ props.challenge.score.best }}</div>
+				</div>
+			</div>
 		</div>
 	</div>
 </template>

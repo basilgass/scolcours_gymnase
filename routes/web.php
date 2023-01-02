@@ -8,12 +8,17 @@ use App\Http\Controllers\FormulaController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\ScolcoursController;
+use App\Http\Controllers\ScoreController;
 use App\Http\Controllers\ToolsController;
 use App\Http\Controllers\TranslationController;
+use App\Http\Resources\BlockResource;
+use App\Http\Resources\PostResource;
 use App\Http\Resources\QuestionResource;
 use App\Models\Block;
+use App\Models\Challenge;
 use App\Models\Post;
 use App\Models\Question;
+use App\Models\Score;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -27,6 +32,31 @@ use Inertia\Inertia;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+// Posts routes
+Route::get('dev/questions/{question}', function(Question $question){
+	dd(QuestionResource::make($question));
+});
+Route::get('dev/posts/{post}', function(Post $post){
+	dd( PostResource::make($pose));
+});
+Route::get('dev/blocks/{block}', function(Block $block){
+	dd( BlockResource::make($block));
+});
+Route::get('dev/scores', function(){
+	$ch = Challenge::find(1);
+	dd($ch->scores->where('user_id', Auth::user()->id)->first()->score);
+//	dd($ch->scores->pluck('score')->max());
+	dd(Score::where([
+		'user_id'=>1,
+		'challenge_id'=>2,
+	])->first()?->score);
+
+	dd(Challenge::find(1)->scores->max()->score);
+});
+
+Route::apiResource('scores', ScoreController::class);
+
 
 // Home page - no controller
 Route::get('/', [ScolcoursController::class, 'index'])->name('home');
@@ -67,17 +97,6 @@ Route::apiResource('chapters.formulas', FormulaController::class)
 	->shallow();
 Route::post('formulas/{formula}/duplicate', [FormulaController::class, 'duplicate'])->name('formulas.duplicate');
 Route::post('formulas/updateOrder', [FormulaController::class, 'updateOrder'])->name('formulas.updateOrder');
-
-// Posts routes
-Route::get('dev/questions/{question}', function(Question $question){
-	dd(QuestionResource::make($question));
-});
-Route::get('dev/posts/{post}', function(Post $post){
-	dd( \App\Http\Resources\PostResource::make($pose));
-});
-Route::get('dev/blocks/{block}', function(Block $block){
-	dd( \App\Http\Resources\BlockResource::make($block));
-});
 
 Route::get('questions/{question}/edit', [QuestionController::class, 'edit'])->name('questions.edit');
 Route::get('blocks/{block}/edit', [BlockController::class, 'edit'])->name('blocks.edit');

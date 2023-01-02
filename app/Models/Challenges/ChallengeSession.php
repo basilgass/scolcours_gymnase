@@ -23,7 +23,7 @@
  * @property Carbon|null $updated_at
  * @property-read User|null $admin
  * @property-read Challenge $challenge
- * @property-read Collection|\App\Models\Challenges\ChallengeUser[] $users
+ * @property-read Collection|ChallengeUser[] $users
  * @property-read int|null $users_count
  * @method static Builder|ChallengeSession newModelQuery()
  * @method static Builder|ChallengeSession newQuery()

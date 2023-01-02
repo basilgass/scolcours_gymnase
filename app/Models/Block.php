@@ -25,8 +25,8 @@ use Illuminate\Support\Carbon;
  * @property int $blur
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property-read Model|\Eloquent $blockable
- * @property-read Collection|\App\Models\Illustration[] $illustrations
+ * @property-read Model|Eloquent $blockable
+ * @property-read Collection|Illustration[] $illustrations
  * @property-read int|null $illustrations_count
  * @method static Builder|Block newModelQuery()
  * @method static Builder|Block newQuery()

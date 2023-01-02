@@ -32,11 +32,13 @@
  * @property-read mixed $admin
  * @property-read DatabaseNotificationCollection|DatabaseNotification[] $notifications
  * @property-read int|null $notifications_count
- * @property-read Collection|\App\Models\Question[] $questions
+ * @property-read Collection|Question[] $questions
  * @property-read int|null $questions_count
+ * @property-read Collection|Score[] $scores
+ * @property-read int|null $scores_count
  * @property-read Collection|PersonalAccessToken[] $tokens
  * @property-read int|null $tokens_count
- * @method static \Database\Factories\UserFactory factory(...$parameters)
+ * @method static UserFactory factory(...$parameters)
  * @method static Builder|User newModelQuery()
  * @method static Builder|User newQuery()
  * @method static Builder|User query()
@@ -96,9 +98,13 @@
 				->withPivot('result', 'answer');
 		}
 
+		public function scores()
+		{
+			return $this->hasMany(Score::class);
+		}
+
 		public function getAdminAttribute()
 		{
 			return $this->email==='basil@scolcours.ch' or $this->email==='alyssia@famillegass.ch';
 		}
-
 	}

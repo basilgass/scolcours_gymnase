@@ -34,10 +34,12 @@ use Illuminate\Support\Carbon;
  * @property int $bonusLevelTime
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property-read Collection|\App\Models\Block[] $blocks
+ * @property-read Collection|Block[] $blocks
  * @property-read int|null $blocks_count
- * @property-read \App\Models\Chapter|null $chapter
+ * @property-read Chapter|null $chapter
  * @property-read mixed $running
+ * @property-read Collection|Score[] $scores
+ * @property-read int|null $scores_count
  * @property-read Collection|ChallengeSession[] $sessions
  * @property-read int|null $sessions_count
  * @method static Builder|Challenge newModelQuery()
@@ -86,6 +88,10 @@ class Challenge extends Model
 		return $this->morphMany(Block::class, 'blockable');
 	}
 
+	public function scores()
+	{
+		return $this->hasMany(Score::class);
+	}
 	public function getRunningAttribute()
 	{
 		return $this->sessions->where('open', 'is', true);

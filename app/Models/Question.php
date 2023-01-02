@@ -22,10 +22,10 @@ use Illuminate\Support\Carbon;
  * @property string|null $parameters
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property-read Collection|\App\Models\Block[] $blocks
+ * @property-read Collection|Block[] $blocks
  * @property-read int|null $blocks_count
- * @property-read \App\Models\Post $post
- * @property-read Collection|\App\Models\User[] $users
+ * @property-read Post $post
+ * @property-read Collection|User[] $users
  * @property-read int|null $users_count
  * @method static Builder|Question newModelQuery()
  * @method static Builder|Question newQuery()

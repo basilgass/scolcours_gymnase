@@ -18,7 +18,7 @@ use Illuminate\Support\Carbon;
  * @property string|null $parameters
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property-read \App\Models\Block $block
+ * @property-read Block $block
  * @method static Builder|Illustration newModelQuery()
  * @method static Builder|Illustration newQuery()
  * @method static Builder|Illustration query()
