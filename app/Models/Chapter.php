@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
@@ -58,7 +57,7 @@ class Chapter extends Model
 	// removed the theme:id,slug
 	protected $with = ['posts','formulas', 'challenges'];
 
-	public function theme(): BelongsTo
+	public function theme(): \Illuminate\Database\Eloquent\Relations\BelongsTo
 	{
 		return $this->belongsTo(Theme::class);
 	}
@@ -86,6 +85,11 @@ class Chapter extends Model
 	public function questions()
 	{
 		return $this->hasManyThrough(Question::class, Post::class);
+	}
+
+	public function users()
+	{
+		return $this->hasMany(User::class);
 	}
 
 //

@@ -71,7 +71,7 @@ use Illuminate\Support\Carbon;
 class Challenge extends Model
 {
 	protected $guarded = [];
-	protected $with = ['blocks'];
+	protected $with = ['blocks', 'scores'];
 
 	public function chapter()
 	{
@@ -90,7 +90,8 @@ class Challenge extends Model
 
 	public function scores()
 	{
-		return $this->hasMany(Score::class);
+		return $this->morphMany(Score::class, 'scoreable');
+//		return $this->hasMany(Score::class);
 	}
 	public function getRunningAttribute()
 	{

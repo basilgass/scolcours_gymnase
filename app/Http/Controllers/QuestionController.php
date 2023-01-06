@@ -195,9 +195,7 @@ class QuestionController extends Controller
 				"attempts"=>$attempts+1
 			]
 		);
-
-
-
+		
 		return $validate;
 	}
 

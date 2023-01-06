@@ -1,5 +1,5 @@
-import {useKatexMacros} from "@/Composables/useHelpers"
 import renderMathInElement from "katex/dist/contrib/auto-render.mjs"
+import {useKatexMacros} from "@/Composables/useHelpers"
 
 window._ = require("lodash")
 
@@ -12,18 +12,20 @@ window.axios.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest"
 // 	] /* Array of plugins (see below) */))
 
 window.katexAutoRender = function (el, display) {
-	renderMathInElement(el, {
-		// customised options
-		// • auto-render specific keys, e.g.:
-		delimiters: [
-			"brackets", "dollars"
-			// {left: "$$", right: "$$", display: true},
-			// {left: "$", right: "$", display: false},
-			// {left: "\\[", right: "\\]", display: true},
-			// {left: "\\(", right: "\\)", display: false},
-		],
-		// • rendering keys, e.g.:
-		throwOnError: false,
-		macros: useKatexMacros	}
-	)
+	if(el) {
+		renderMathInElement(el, {
+			// customised options
+			// • auto-render specific keys, e.g.:
+			delimiters: [
+				{left: "$$", right: "$$", display: true},
+				{left: "$", right: "$", display: false},
+				{left: "\\[", right: "\\]", display: true},
+				{left: "\\(", right: "\\)", display: false},
+			],
+			// • rendering keys, e.g.:
+			throwOnError: false,
+			macros: useKatexMacros
+		}
+		)
+	}
 }

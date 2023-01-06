@@ -1,6 +1,6 @@
 <template>
 	<section
-		v-if="thePost"
+		v-if="postLoaded"
 		class="bg-white border border-gray-200 rounded shadow py-5"
 	>
 		<!-- Title of the post -->
@@ -9,6 +9,7 @@
 				<span v-katex.auto="thePost.title" />
 
 				<button
+					v-if="$page.props.auth.can.admin"
 					class="text-xs ml-3"
 					@click="showEditForm=true"
 				>
@@ -16,6 +17,13 @@
 				</button>
 			</h2>
 			<div>
+				<Link
+					v-if="props.isolate"
+					:href="route('theme.chapter.slide', [$page.props.theme.slug, props.chapter.slug, thePost.order])"
+				>
+					isoler
+				</Link>
+
 				<ui-switch
 					v-if="thePost.switch"
 					v-model="postSwitch"
@@ -65,7 +73,7 @@
 			>
 				<template #item="{element}">
 					<block-show
-						:key="`post-${postId}-block-${element.id}`"
+						:key="`post-${thePost.id}-block-${element.id}`"
 						:block="element"
 						:switch="postSwitch"
 						@destroy="destroyBlock"
@@ -151,7 +159,7 @@
 </template>
 
 <script setup>
-import {computed, defineAsyncComponent, inject, onMounted, provide, ref} from "vue"
+import {computed, defineAsyncComponent, inject, provide, ref} from "vue"
 import QuestionShow from "@/Components/Posts/Questions/QuestionShow.vue"
 import BlockShow from "@/Components/Posts/Blocks/BlockShow.vue"
 import {PiMath} from "pimath/esm"
@@ -159,9 +167,12 @@ import UiSwitch from "@/Components/Ui/UiSwitch.vue"
 
 let emits = defineEmits(["change", "destroy"])
 let props = defineProps({
-		postId: {type: [Number, String], required: true}
+		post: {type: Object, required: true},
+		chapter: {type: Object, required: true},
+		isolate: {type: Boolean, default: false}
 	}),
-	thePost = ref(null)
+	thePost = ref(props.post),
+	postLoaded = ref(true)
 
 const flash = inject("flash")
 
@@ -175,7 +186,7 @@ let showEditForm = ref(false),
 		thePost.value = p
 	},
 	updateBlocksOrder = function(){
-		axios.post(route("posts.updateBlocksOrder", [props.postId]), {
+		axios.post(route("posts.updateBlocksOrder", [thePost.value.id]), {
 			order: thePost.value.blocks.map((x, index)=>{return {id: x.id, order: index}}),
 			_method: "PATCH"
 		}).then(res=>{
@@ -187,7 +198,7 @@ let showEditForm = ref(false),
 
 let addBlock = function(){
 		axios.post(
-			route("posts.blocks.store", [props.postId])
+			route("posts.blocks.store", [thePost.value.id])
 		).then(res => {
 			// Set the first block in edit mode.
 			thePost.value.blocks.push({
@@ -204,7 +215,7 @@ let addBlock = function(){
 
 let addQuestion = function () {
 		axios.post(
-			route("posts.questions.store", [props.postId]), {
+			route("posts.questions.store", [thePost.value.id]), {
 				math: false,
 				mathAppend: "",
 				body: "nouvelle question",
@@ -222,7 +233,7 @@ let addQuestion = function () {
 		thePost.value.questions = thePost.value.questions.filter(x => x.id !== destroyId)
 	},
 	updateQuestionsOrder = function(){
-		axios.post(route("questions.updateOrder", [props.postId]), {
+		axios.post(route("questions.updateOrder", [thePost.value.id]), {
 			order: thePost.value.questions.map((x, index)=>{return {id: x.id, order: index+1}}),
 			_method: "PATCH"
 		}).then(res=>{
@@ -233,7 +244,7 @@ let addQuestion = function () {
 	},
 	resetAnswers = function () {
 		axios
-			.patch(route("posts.questions.reset", [props.postId]))
+			.patch(route("posts.questions.reset", [thePost.value.id]))
 			.then(res => {
 				for(let i in thePost.value.questions){
 					thePost.value.questions[i].user.answer = []
@@ -245,9 +256,13 @@ let addQuestion = function () {
 provide("postData",
 	computed(()=>{
 		// trigger the computed value on button click
-		if (thePost.value.script && thePost.value.random) {
-			let F = new Function("PiMath", thePost.value.script)
-			return F(PiMath)
+		try {
+			if (thePost.value.script && thePost.value.random) {
+				let F = new Function("PiMath", thePost.value.script)
+				return F(PiMath)
+			}
+		}catch(e){
+			console.log("Post script generator error", e)
 		}
 		return {}
 	})
@@ -268,12 +283,12 @@ let postSwitchLabel = computed(()=>{
 	postSwitch = ref(false)
 
 
-onMounted(() => {
-	// Load asynchronously the post
-	axios.get(route("posts.show", props.postId))
-		.then((res) => {
-			thePost.value = res.data.data
-			thePost.value.random = 1
-		})
-})
+// onMounted(() => {
+// 	// Load asynchronously the post
+// 	axios.get(route("posts.show", thePost.value.id))
+// 		.then((res) => {
+// 			thePost.value = res.data.data
+// 			thePost.value.random = 1
+// 		})
+// })
 </script>

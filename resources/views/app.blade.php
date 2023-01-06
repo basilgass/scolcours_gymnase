@@ -38,9 +38,9 @@
 <div id="modal-dialog"></div>
 </body>
 <script>
-	document.addEventListener('DOMContentLoaded', function () {
-		katexAutoRender(document.body)
-	})
+	// document.addEventListener('DOMContentLoaded', function () {
+	// 	katexAutoRender(document.body)
+	// })
 </script>
 
 </html>

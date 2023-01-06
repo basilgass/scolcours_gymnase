@@ -136,6 +136,4 @@ class ChallengesController extends Controller
 		}
 		$this->index();
 	}
-
-
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\ChapterResource;
+use App\Http\Resources\PostResource;
 use App\Http\Resources\QuestionCollection;
 use App\Models\Chapter;
 use App\Models\Theme;
@@ -16,7 +17,7 @@ class ChaptersController extends Controller
 {
 	public function __construct()
 	{
-		$this->middleware('auth')->except(['index', 'show', 'page', 'slide']);
+		$this->middleware('auth')->except(['index', 'show', 'page', 'slide', 'intro']);
 	}
 
 	public function index(Theme $theme)
@@ -69,7 +70,7 @@ class ChaptersController extends Controller
 
 		// Create a specific block
 		$chapter->blocks()->create([
-			'body'=>'Aucune extrait...'
+			'body' => 'Aucune extrait...'
 		]);
 
 		return redirect()->route('theme.chapter', [$theme->slug, $chapter->slug]);
@@ -112,7 +113,21 @@ class ChaptersController extends Controller
 		]);
 	}
 
-	public function slide(Theme $theme, Chapter $chapter, Int $order)
+	public function intro(Theme $theme, Chapter $chapter)
+	{
+		return Inertia::render('Chapters/ChapterIntro', [
+			// Used for the page layout
+			"theme" => $theme->only('color', 'icon', 'slug', 'title', 'id'),
+			// Get the chapter (for next / precvious / ...)
+			"chapter" => fn() => ChapterResource::make($chapter, true),
+			// The post information
+			"nav" => [
+				'previous' => null,
+				'next' => route('theme.chapter.slide', [$theme, $chapter, 1])
+			]
+		]);
+	}
+	public function slide(Theme $theme, Chapter $chapter, int $order)
 	{
 		$post = $chapter->posts->where('order', "=", $order)->first();
 
@@ -122,11 +137,10 @@ class ChaptersController extends Controller
 			// Get the chapter (for next / precvious / ...)
 			"chapter" => fn() => ChapterResource::make($chapter, true),
 			// The post information
-			"postId" => $post->id,
-			"postNb" => $order,
+			"post" => PostResource::make($post),
 			"nav" => [
-				'previous'=>$order-1<0?null:route('theme.chapter.slide', [$theme, $chapter, $order-1]),
-				'next'=>$order===count($chapter->posts)?null:route('theme.chapter.slide', [$theme, $chapter, $order+1])
+				'previous' => $order - 1 <= 0 ? route('theme.chapter.intro', [$theme, $chapter]) : route('theme.chapter.slide', [$theme, $chapter, $order - 1]),
+				'next' => $order === count($chapter->posts) ? null : route('theme.chapter.slide', [$theme, $chapter, $order + 1])
 			]
 		]);
 	}
@@ -154,10 +168,10 @@ class ChaptersController extends Controller
 		$block = $chapter->blocks[0];
 		$validation = $request->validate([
 			'block' => ['array'],
-			'block.body'=>['string'],
+			'block.body' => ['string'],
 		]);
 		$block->update([
-			'body'=>$validation['block']['body']
+			'body' => $validation['block']['body']
 		]);
 		// Update the illustration
 		// TODO: Chapter - block - illustration : update from ChapterForm
@@ -176,9 +190,36 @@ class ChaptersController extends Controller
 
 	public function updatePostsOrder(Chapter $chapter, Request $request)
 	{
-		foreach($request['data'] as $row){
-			$chapter->posts->find($row['id'])->update(['order'=>$row['order']]);
+		foreach ($request['data'] as $row) {
+			$chapter->posts->find($row['id'])->update(['order' => $row['order']]);
 		}
+	}
+
+	public function updateCurrentPost(Chapter $chapter, Request $request)
+	{
+		$user = Auth::user();
+
+		if ($user?->exists) {
+
+			$validate = $request->validate([
+				'currentPost' => ['int', 'min:0'],
+				'open'=>['boolean', "nullable"]
+			]);
+
+//			$question->users()->attach($user,
+//				[
+//					...$validate,
+//					"attempts"=>$attempts+1
+//				]
+//			);
+			$user->chapters()->detach($chapter->id);
+			$user->chapters()->attach(
+				$chapter,
+				[...$validate]
+			);
+		}
+
+
 	}
 
 	// TO BE REMOVED

@@ -2,10 +2,10 @@
 
 namespace App\Http\Resources;
 
+use Auth;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Support\Facades\Auth;
 use JsonSerializable;
 
 class ChallengeResource extends JsonResource
@@ -24,7 +24,11 @@ class ChallengeResource extends JsonResource
 			$this->blocks;
 		}
 
-
+		$bestScore = $this->scores?->pluck('score')->max()??0;
+		$userScore = 0;
+		if(Auth::user()){
+			$userScore = $this->scores?->where('user_id', Auth::user()->id)->first()->score??0;
+		}
 		//	dd($ch->scores()->where('user_id', Auth::user()->id)->first()->score);
 		//	dd($ch->scores->pluck('score')->max());
 		return [
@@ -32,8 +36,8 @@ class ChallengeResource extends JsonResource
 			'block' => $this->blocks[0],
 			'chapter' => ChapterMinResource::make($this->chapter),
 			'score' => [
-				'best' => $this->scores->pluck('score')->max(),
-				'user' => Auth::user()?$this->scores->where('user_id', Auth::user()->id)->first()->score:0
+				'best' => $bestScore,
+				'user' => $userScore
 			]
 		];
 	}

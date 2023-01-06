@@ -62,7 +62,7 @@ export default {
 </script>
 <script setup>
 
-import {ref, watch, computed} from "vue"
+import {ref, watch, computed, onMounted, inject} from "vue"
 import {PiMath} from "pimath/esm"
 import ChallengeIntro from "@/Components/Challenges/ChallengeIntro.vue"
 import ChallengeHeader from "@/Components/Challenges/ChallengeHeader.vue"
@@ -76,6 +76,8 @@ const props = defineProps({
 	challenge: {type: Object, required: true},
 	component: {type: String, require: true},
 })
+
+const flash = inject("flash")
 
 let theChallenge = ref(props.challenge.data),
 	challengeGenerator = ref(props.challenge.data.generator),
@@ -217,7 +219,7 @@ let startChallenge = function () {
 		}
 
 		// Sauvegarde le score dans la base de donnée
-		storeScore()
+		storeScore(score.value)
 	},
 	timerWidth = computed(() => {
 		return (ellapsedTime.value / maxTimeInMinutes.value) * 100
@@ -344,14 +346,20 @@ watch(questionId, () => {
 	}
 })
 
-const storeScore = function(){
+const storeScore = function(value){
 	if(usePage().props.value.auth){
-		axios.post(route("scores.store"), {
-			"user_id": usePage().props.value.auth.user.id,
-			"challenge_id": theChallenge.value.id,
-			"score": results.value.score
+		// TODO: Add stars system to challenge
+		axios.post(route("scores.challenge", [theChallenge.value.id]), {
+			"score": value
 		}).then(res=>{
-			console.log(res)
+			if(res.data) {
+				const delta = res.data.updated.score-res.data.previous.score
+				if(delta>0){
+					flash.add(`Bravo, vous avez amélioré votre score de ${delta} point${delta>1?"s":""}`)
+				}else {
+					flash.add("Vous n'avez pas amélioré votre score... dommage !" ,"info")
+				}
+			}
 		})
 	}
 }

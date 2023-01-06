@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Chapter;
 use App\Models\Theme;
+use App\Models\User;
+use Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
@@ -44,6 +46,14 @@ class ScolcoursController extends Controller
 		]);
     }
 
+	public function dashboard()
+	{
+		dd(User::find(Auth::user()->chapters));
+
+		return Inertia::render('DashboardPage.vue', [
+			'courses'=> Auth::user()
+		]);
+	}
 	public function devIndex()
 	{
 		// Get all devs.

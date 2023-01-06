@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\Challenge;
 use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -19,12 +18,13 @@ return new class extends Migration
             $table->id();
 
 			$table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
-			$table->foreignIdFor(Challenge::class)->constrained()->cascadeOnDelete();
+			$table->morphs('scoreable');
+//			$table->foreignIdFor(Challenge::class)->constrained()->cascadeOnDelete();
 			$table->integer('score');
 			$table->integer('stars')->nullable();
             $table->timestamps();
 
-			$table->unique(['user_id', 'challenge_id']);
+			$table->unique(['user_id', 'scoreable_id', 'scoreable_type']);
         });
 
 

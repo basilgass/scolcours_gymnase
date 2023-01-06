@@ -88,6 +88,7 @@
 
 		public function challenges()
 		{
+			// TODO: challenge session is disabled !
 			return $this->hasMany(ChallengeSession::class);
 		}
 
@@ -95,12 +96,17 @@
 		{
 			return $this->belongsToMany(Question::class)
 				->withTimestamps()
-				->withPivot('result', 'answer');
+				->withPivot('result', 'answer', 'attempts');
 		}
 
 		public function scores()
 		{
 			return $this->hasMany(Score::class);
+		}
+
+		public function chapters()
+		{
+			return $this->belongsToMany(Chapter::class);
 		}
 
 		public function getAdminAttribute()

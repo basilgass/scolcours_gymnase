@@ -60,7 +60,6 @@
 		<!-- The formulas -->
 		<chapter-formulas :chapter-slug="theChapter.slug" />
 
-		<!-- The posts -->
 		<section>
 			<div
 				v-if="theChapter.posts"
@@ -70,7 +69,9 @@
 					v-for="post in theChapter.posts"
 					:id="`post-${post.id}`"
 					:key="`post-${post.id}`"
-					:post-id="post.id"
+					:post="post"
+					:chapter="theChapter"
+					isolate
 					@destroy="destroyPost"
 				/>
 			</div>
@@ -104,13 +105,13 @@ import {useMenuScrollTo} from "@/Composables/useHelpers"
 import ChapterChallenges from "@/Components/Chapters/ChapterChallenges.vue"
 import ChapterFormulas from "@/Components/Chapters/ChapterFormulas.vue"
 import FlashMessage from "@/Components/Ui/FlashMessage.vue"
+import {usePage} from "@inertiajs/inertia-vue3"
 
 let props = defineProps({
 		chapter: {type: Object, required: true}
 	}),
 	theChapter = reactive(props.chapter.data)
 
-console.log(theChapter.posts)
 let showEditForm = ref(false),
 	editForm = computed(()=>{
 		return defineAsyncComponent(
@@ -130,10 +131,7 @@ let addPost = function(){
 		)
 			.then(res => {
 				const post = res.data.data
-				theChapter.posts[post.id] = {
-					title: post.title,
-					type: null
-				}
+				theChapter.posts[post.order] = post
 			})
 			.catch(err => console.log(err))
 	},

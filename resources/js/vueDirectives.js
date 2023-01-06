@@ -2,6 +2,7 @@ import katex from "katex/dist/katex.mjs"
 import AsciiMathParser from "./asciimath2tex"
 import {number} from "tailwindcss/lib/util/dataTypes"
 import {usePage} from "@inertiajs/inertia-vue3"
+import {useKatexMacros} from "@/Composables/useHelpers"
 
 function katexUpdate(el, binding, vnode) {
 	el.innerHTML = ""
@@ -35,6 +36,16 @@ function katexUpdate(el, binding, vnode) {
 	if(binding.modifiers.auto){
 		el.innerHTML = rawTex
 		katexAutoRender(el)
+		// try {
+		// 	katexAutoRender(el)
+		// }catch(e){
+		// 	// do nothing particular
+		// 	console.log({
+		// 		"error": e,
+		// 		"TeX": rawTex,
+		// 		"element": el
+		// 	})
+		// }
 	}else {
 		let tex = binding.modifiers.ascii ? new AsciiMathParser().parse(rawTex) : rawTex
 
@@ -49,7 +60,8 @@ function katexUpdate(el, binding, vnode) {
 				(binding.modifiers.display ? "\\displaystyle " : "") + tex,
 				{
 					throwOnError: false,
-					displayMode: displayMode
+					displayMode: displayMode,
+					macros: useKatexMacros
 				})
 		}
 	}

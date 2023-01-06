@@ -50,4 +50,9 @@ class Score extends Model
 	{
 		return $this->belongsToMany(Challenge::class);
 	}
+
+	public function scoreable(): \Illuminate\Database\Eloquent\Relations\MorphTo
+	{
+		return $this->morphTo();
+	}
 }

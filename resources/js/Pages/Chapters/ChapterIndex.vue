@@ -35,7 +35,7 @@
 					:key="`chapter-${chapter.slug}`"
 					class="panel bg-white border border-gray-200 px-4 py-2 rounded-xl border transition-all cursor-pointer hover:scale-105 hover:shadow transition-all duration-300"
 					:class="{'border-red-500':chapter.active===0}"
-					:href="route('theme.chapter', [$page.props.theme.slug, chapter.slug])"
+					:href="route('theme.chapter.intro', [$page.props.theme.slug, chapter.slug])"
 				>
 					<div class="text-2xl block  mb-5 cursor-pointer">
 						{{ chapter.title }}

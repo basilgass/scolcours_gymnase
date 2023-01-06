@@ -235,9 +235,13 @@ let show = ref(props.modelValue),
 let random = ref(1),
 	postData = inject("postData", {}),
 	blockData = computed(() => {
-		if (props.block.script !== null && random.value>0) {
-			let F = new Function("PiMath", "postData", props.block.script)
-			return {...postData.value, ...F(PiMath, postData.value)}
+		try {
+			if (props.block.script !== null && random.value>0) {
+				let F = new Function("PiMath", "postData", props.block.script)
+				return {...postData.value, ...F(PiMath, postData.value)}
+			}
+		}catch(e){
+			console.log("Block form (script)", e)
 		}
 
 		return {...postData.value}

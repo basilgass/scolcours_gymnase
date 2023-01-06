@@ -1,6 +1,4 @@
 <template>
-	<Head title="Dashboard" />
-
 	<ArticleTitle :title="`profil de ${$page.props.auth.user.name}`" />
 
 	<div
@@ -35,4 +33,6 @@ export default {
 </script>
 <script setup>
 import ArticleTitle from "@/Components/Ui/ArticleTitle"
+
+
 </script>

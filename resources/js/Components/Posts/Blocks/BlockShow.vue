@@ -102,9 +102,13 @@ let props = defineProps({
 let random = ref(1),
 	postData = inject("postData", {}),
 	blockData = computed(() => {
-		if (props.block.script !== null && random.value>0) {
-			let F = new Function("PiMath", "postData", props.block.script)
-			return {...postData.value, ...F(PiMath, postData.value)}
+		try {
+			if (props.block.script !== null && random.value>0) {
+				let F = new Function("PiMath", "postData", props.block.script)
+				return {...postData.value, ...F(PiMath, postData.value)}
+			}
+		}catch(e){
+			console.log("BlockShow (script genration)", e)
 		}
 
 		return {...postData.value}

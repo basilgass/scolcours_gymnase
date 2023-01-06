@@ -166,5 +166,9 @@ let addIllustration = function(){
 				emits("destroy", props.question.id)
 			})
 			.catch(err => console.log(err))
-	}
+	},
+	theBody = computed(()=>{
+		//TODO : update the question form to display the answer "live"
+		return ""
+	})
 </script>
