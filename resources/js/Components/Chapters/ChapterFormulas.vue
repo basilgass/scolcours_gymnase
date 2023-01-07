@@ -1,12 +1,9 @@
 <template>
-	<article
-		v-if="theFormular.length>0"
-		class="bg-white border border-gray-200 rounded shadow py-5 mb-10"
-	>
-		<div class=" px-5 border-b border-gray-200 pb-5 flex justify-between">
-			<h2 class="text-lg md:text-xl xl:text-2xl">
+	<article v-if="theFormular.length>0">
+		<div class="px-5 flex justify-between">
+			<h3 class="uppercase font-extralight mb-2">
 				Formulaires
-			</h2>
+			</h3>
 		</div>
 
 		<div class="columns-1 md:columns-2 lg:columns-3">

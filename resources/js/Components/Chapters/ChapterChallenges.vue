@@ -2,7 +2,7 @@
 <template>
 	<div
 		v-if="chapter.challenges"
-		class="mb-5"
+		class="px-5"
 	>
 		<h3 class="uppercase font-extralight mb-2">
 			challenges

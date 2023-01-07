@@ -82,13 +82,14 @@
 			</form>
 			<div class="bg-white border border-gray-200 rounded py-4">
 				<markdown-it
-					:text="theQuestion.block.body"
+					:text="theBody"
 					class="border-b border-gray-200 px-3 mb-3 pb-3"
 				/>
 
 				<QuestionUserInput
 					:question="theQuestion"
 					class="px-3"
+					@change="theBody = $event"
 				/>
 			</div>
 		</div>
@@ -167,8 +168,5 @@ let addIllustration = function(){
 			})
 			.catch(err => console.log(err))
 	},
-	theBody = computed(()=>{
-		//TODO : update the question form to display the answer "live"
-		return ""
-	})
+	theBody = ref(theQuestion.block.body)
 </script>

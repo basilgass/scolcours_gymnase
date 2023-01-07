@@ -4,7 +4,7 @@
 		class="bg-white border border-gray-200 rounded shadow py-5"
 	>
 		<!-- Title of the post -->
-		<div class=" px-5 border-b border-gray-200 pb-5 flex justify-between">
+		<div class=" px-5 border-b border-gray-200 pb-5 flex flex-col gap-3 lg:flex-row  justify-between">
 			<h2 class="text-lg md:text-xl xl:text-2xl">
 				<span v-katex.auto="thePost.title" />
 
@@ -16,7 +16,7 @@
 					<i class="bi bi-pencil mr-2" /> {{ thePost.id }}
 				</button>
 			</h2>
-			<div>
+			<div class="self-end flex w-full gap-3 lg:w-auto justify-between">
 				<Link
 					v-if="props.isolate"
 					:href="route('theme.chapter.slide', [$page.props.theme.slug, props.chapter.slug, thePost.order])"
@@ -32,6 +32,7 @@
 					sm
 					class="mx-1"
 				/>
+
 				<button
 					v-if="thePost.script"
 					class="btn btn-xs"
@@ -171,7 +172,10 @@ let props = defineProps({
 		chapter: {type: Object, required: true},
 		isolate: {type: Boolean, default: false}
 	}),
-	thePost = ref(props.post),
+	thePost = ref({
+		...props.post,
+		random: 1		// special trick to make random function... functional !
+	}),
 	postLoaded = ref(true)
 
 const flash = inject("flash")
