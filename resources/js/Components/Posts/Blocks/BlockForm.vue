@@ -92,10 +92,13 @@
 							label="type du block"
 							name="type2"
 						>
+							<option value="">
+								-
+							</option>
 							<option
-								v-for="item in postType"
-								:key="item.value"
-								:value="item.value"
+								v-for="(item, key) in postType"
+								:key="key"
+								:value="key"
 							>
 								{{ item.text }}
 							</option>
@@ -210,6 +213,7 @@ import DialogModal from "@/Components/Ui/DialogModal.vue"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
 import {PiMath} from "pimath/esm"
 import {useFormattedBody} from "@/Composables/useHelpers"
+import {useBlockTypes} from "@/scolcours"
 
 const emits = defineEmits(["update:modelValue", "change", "destroy"])
 const props = defineProps({
@@ -285,27 +289,5 @@ let saveBlock = function () {
 			.catch(error => console.error(error))
 	}
 
-// TODO: make if dynamic !
-const postType = [
-	{
-		value: "",
-		text: "-"
-	},
-	{
-		value: "definition",
-		text: "définition"
-	},
-	{
-		value: "theorem",
-		text: "théorème"
-	},
-	{
-		value: "property",
-		text: "propriété"
-	},
-	{
-		value: "remark",
-		text: "remarque"
-	}
-]
+const postType = useBlockTypes
 </script>

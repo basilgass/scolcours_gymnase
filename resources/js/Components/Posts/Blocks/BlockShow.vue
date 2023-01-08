@@ -1,19 +1,19 @@
 <template>
 	<article
 		v-show="showBlock"
-		:class="block.type!==''?`block-border-${block.type}`:''"
+		:class="theBlock.type!==''?`block-border-${theBlock.type}`:''"
 		class="px-5"
 	>
 		<!-- Block title (if exist) -->
 		<div class="flex justify-between w-full">
 			<h3
-				v-katex.auto="block.title"
+				v-katex.auto="blockTitle"
 				class="font-semibold"
 			/>
 
 			<div class="flex gap-3">
 				<button
-					v-if="block.script"
+					v-if="theBlock.script"
 					class="btn btn-xs"
 					@click="random++"
 				>
@@ -45,17 +45,17 @@
 
 		<!-- Block illustrations -->
 		<div
-			v-if="block.illustrations.length"
+			v-if="theBlock.illustrations.length"
 			:class="{
-				'md:grid-cols-2 xl:grid-cols-3': block.illustrations.length>=2,
-				'xl:grid-cols-2': block.illustrations.length===2,
-				'max-w-lg mx-auto': block.illustrations.length===1
+				'md:grid-cols-2 xl:grid-cols-3': theBlock.illustrations.length>=2,
+				'xl:grid-cols-2': theBlock.illustrations.length===2,
+				'max-w-lg mx-auto': theBlock.illustrations.length===1
 			}"
 			class="grid grid-cols-1 mt-8 mb-4 gap-4"
 		>
 			<illustration-show
-				v-for="illustration of block.illustrations"
-				:key="`block-${block.id}-illustration-${illustration.id}`"
+				v-for="illustration of theBlock.illustrations"
+				:key="`block-${theBlock.id}-illustration-${illustration.id}`"
 				:illustration="illustrationEdited(illustration)"
 			/>
 		</div>
@@ -67,7 +67,7 @@
 			<component
 				:is="editForm"
 				v-model="showEditForm"
-				:block="props.block"
+				:block="theBlock"
 				:max-illustration="maxIllustration"
 				@change="updateBlock"
 				@destroy="emits('destroy', $event)"
@@ -83,6 +83,7 @@ import IllustrationShow from "@/Components/Posts/Illustrations/IllustrationShow.
 import {computed, defineAsyncComponent, inject, ref} from "vue"
 import {PiMath} from "pimath/esm"
 import {useFormattedBody} from "@/Composables/useHelpers"
+import {useBlockTypes} from "@/scolcours"
 
 const emits = defineEmits(["destroy"])
 let props = defineProps({
@@ -96,6 +97,19 @@ let props = defineProps({
 
 		if(theBlock.value.switch===null){return true}
 		return Boolean(theBlock.value.switch) === Boolean(props.switch)
+	})
+
+const blockTypes = useBlockTypes,
+	blockTitle = computed(()=>{
+		if(theBlock.value.title){
+			return theBlock.value.title
+		}
+
+		if(blockTypes[theBlock.value.type]!==undefined){
+			return blockTypes[theBlock.value.type].text
+		}
+
+		return ""
 	})
 
 
@@ -135,5 +149,6 @@ let showEditForm = ref(props.block?.isNew===true),
 	updateBlock = function(b){
 		theBlock.value = b
 	}
+
 
 </script>
