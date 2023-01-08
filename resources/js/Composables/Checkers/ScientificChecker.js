@@ -1,7 +1,6 @@
 import {NumberChecker} from "@/Composables/Checkers/NumberChecker"
 
 export function ScientificChecker(options) {
-
 	return {
 		format: () => {
 			if (isNaN(options[0])) {

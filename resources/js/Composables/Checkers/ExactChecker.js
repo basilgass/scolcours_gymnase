@@ -1,4 +1,6 @@
 export function ExactChecker(options){
+	if(options===undefined){options = []}
+
 	return {
 		format: () => {
 			return "réponse sous forme exacte, réduite"

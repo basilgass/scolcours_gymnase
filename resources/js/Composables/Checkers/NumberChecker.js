@@ -1,4 +1,5 @@
 export function NumberChecker(options){
+	if(options===undefined){options = []}
 	return {
 		format: () => {
 			if (isNaN(options[0])) {

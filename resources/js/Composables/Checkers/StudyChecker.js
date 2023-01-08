@@ -1,4 +1,4 @@
-export function StudyChecker(options){
+export function StudyChecker(options) {
 	return {
 		format: () => {
 			return ""
@@ -6,44 +6,44 @@ export function StudyChecker(options){
 		check: (expectedAnswer, answer = []) => {
 			const arrayAnswer = answer.split(",").sort(),
 				arrayExpected = expectedAnswer.split(",").sort(),
-				d = arrayExpected.length-arrayAnswer.length
+				d = arrayExpected.length - arrayAnswer.length
 
-			if(d>0){
+			if (d > 0) {
 				return {
 					result: false,
-					message: `il manque ${d} élément${d>1?"s":""}`
+					message: `il manque ${d} élément${d > 1 ? "s" : ""}`
 				}
-			}else if(d<0){
+			} else if (d < 0) {
 				return {
 					result: false,
-					message: `il y a ${-d} élément${-d>1?"s":""} en trop`
+					message: `il y a ${-d} élément${-d > 1 ? "s" : ""} en trop`
 				}
 			}
 
 			let erreurs = [],
 				traceErrors = []
-			for(let i=0; i<=arrayAnswer.length; i++){
-				if(arrayAnswer[i]!==arrayExpected[i]){
+			for (let i = 0; i <= arrayAnswer.length; i++) {
+				if (arrayAnswer[i] !== arrayExpected[i]) {
 
-					if(arrayExpected[i].split("&")[0] === arrayAnswer[i].split("&")[0]){
-						traceErrors.push(i+1)
-					}else {
+					if (arrayExpected[i].split("&")[0] === arrayAnswer[i].split("&")[0]) {
+						traceErrors.push(i + 1)
+					} else {
 						erreurs.push(i + 1)
 					}
 				}
 			}
 
-			if(erreurs.length>0){
+			if (erreurs.length > 0) {
 				return {
 					result: false,
-					message: `il y a ${erreurs.length} erreur${erreurs.length>1?"s":""}`
+					message: `il y a ${erreurs.length} erreur${erreurs.length > 1 ? "s" : ""}`
 				}
 			}
 
-			if(traceErrors.length>0){
+			if (traceErrors.length > 0) {
 				return {
 					result: false,
-					message: `il y a ${traceErrors.length} erreur${traceErrors.length>1?"s":""} dans le tracé`
+					message: `il y a ${traceErrors.length} erreur${traceErrors.length > 1 ? "s" : ""} dans le tracé`
 				}
 			}
 

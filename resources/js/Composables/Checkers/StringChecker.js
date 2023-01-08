@@ -1,9 +1,8 @@
 export function StringChecker(options) {
-
 	return {
 		format: () => {
 			if (isNaN(options[0])) {
-				return `réponse numérique`
+				return "réponse numérique"
 			} else {
 				return `réponse avec ${options[0]} chiffre(s) après la virgule`
 			}

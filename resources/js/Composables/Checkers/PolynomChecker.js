@@ -1,6 +1,7 @@
 import {PiMath} from "pimath/esm"
 
 export function PolynomChecker(options) {
+	if(options===undefined){options = []}
 	return {
 		format: () => {
 			let opts = []
