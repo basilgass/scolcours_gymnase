@@ -106,7 +106,9 @@
 
 		public function chapters()
 		{
-			return $this->belongsToMany(Chapter::class);
+			return $this->belongsToMany(Chapter::class)
+				->withPivot('open', 'currentPost', 'updated_at')
+				->orderBy('pivot_updated_at', 'desc');
 		}
 
 		public function getAdminAttribute()

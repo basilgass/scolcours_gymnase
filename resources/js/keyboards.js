@@ -157,11 +157,24 @@ export const keyboards = {
 			return asciiToTex(value)
 		}
 	},
+	"rational": {
+		grid: "grid-cols-6",
+		layout: [
+			"1", "2", "3", "+", "x", "x^2",
+			"4", "5", "6", "-", "x^3", "x^4",
+			"7", "8", "9", "/", "^2", "^",
+			"(", ")", "0", "", "", ""
+		],
+		tex: function (value) {
+			let [Pnum, Pden] = value.split("/")
+			return Pden===undefined?asciiToTex(Pnum):`\\frac{ ${asciiToTex(Pnum)} }{ ${Pden} }`
+		}
+	},
 	"exact": {
 		grid: "grid-cols-5",
 		layout: [
 			"1", "2", "3", "+", "-",
-			"4", "5", "6", "*", "/",
+			"4", "5", "6", "", "/",
 			"7", "8", "9", "^2", "^",
 			"0", "(", ")", "sqrt", "root(",
 			"log", "_", "ln", "pi", "e",

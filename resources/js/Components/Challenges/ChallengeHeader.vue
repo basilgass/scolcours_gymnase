@@ -4,7 +4,7 @@
 		<div class="pt-4 mb-4">
 			<Link
 				:href="
-					route('theme.chapter', [
+					route('theme.chapter.intro', [
 						$page.props.theme.slug,
 						props.challenge.chapter.slug,
 					])

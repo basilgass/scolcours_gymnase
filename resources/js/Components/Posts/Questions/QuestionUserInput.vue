@@ -154,7 +154,6 @@ let updateQuestion = function(value){
 		return body
 	}
 
-
 defineExpose({
 	getAnswer: (value)=>keyboardUI.value.getAnswer(value)
 })

@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Chapter;
 use App\Models\Theme;
-use App\Models\User;
 use Auth;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
@@ -26,8 +26,8 @@ class ScolcoursController extends Controller
 			$modified = $item->updated_at->diffInDays();
 			if ($modified === 0) {
 				$modified = $item->updated_at->diffForHumans();
-			}else{
-				$modified = "Il y a $modified jour".($modified>1?"s":"");
+			} else {
+				$modified = "Il y a $modified jour" . ($modified > 1 ? "s" : "");
 			}
 			$item->modified = $modified;
 
@@ -44,31 +44,44 @@ class ScolcoursController extends Controller
 			'themes' => $themes,
 			'newChapters' => $newChapters
 		]);
-    }
+	}
 
 	public function dashboard()
 	{
-		dd(User::find(Auth::user()->chapters));
+		$courses = Auth::user()->chapters
+			->map(function ($chapter) {
+				return [
+					'slug' => $chapter->slug,
+					'title' => $chapter->title,
+					'theme' => $chapter->theme->slug,
+					'currentPost' => $chapter->pivot->currentPost,
+					'maxPost' =>count($chapter->posts),
+					'open' => $chapter->pivot->open,
+					'updated_at' => Carbon::parse($chapter->pivot->updated_at)->diffForHumans()
+				];
+			});
 
 		return Inertia::render('DashboardPage.vue', [
-			'courses'=> Auth::user()
+			'courses' => $courses
 		]);
 	}
+
 	public function devIndex()
 	{
 		// Get all devs.
-		$devPages = collect(Storage::disk('devs')->files())->map(function($p) {
+		$devPages = collect(Storage::disk('devs')->files())->map(function ($p) {
 			return pathinfo($p)['filename'];
-		}) ;
+		});
 
 		return Inertia::render("Devs/DevsIndex.vue", [
-			'pages'=>$devPages
+			'pages' => $devPages
 		]);
 	}
+
 	public function dev($page)
 	{
 		return Inertia::render('Devs/DevsShow.vue', [
-			"dev"=>$page
+			"dev" => $page
 		]);
 	}
 }

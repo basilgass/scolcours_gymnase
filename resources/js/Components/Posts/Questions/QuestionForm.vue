@@ -87,14 +87,13 @@
 				/>
 
 				<QuestionUserInput
+					ref="userInput"
 					:question="theQuestion"
 					class="px-3"
 					@change="theBody = $event"
 				/>
 			</div>
 		</div>
-
-		<div>{{}}</div>
 	</dialog-modal>
 </template>
 <script setup>
@@ -114,7 +113,8 @@ let props = defineProps({
 	}),
 	show = ref(props.modelValue),
 	theQuestion = reactive(props.question),
-	errorMessage = ref("")
+	errorMessage = ref(""),
+	userInput = ref(null)
 
 let addIllustration = function(){
 		theQuestion.block.illustration = {
@@ -168,5 +168,4 @@ let addIllustration = function(){
 			})
 			.catch(err => console.log(err))
 	},
-	theBody = ref(theQuestion.block.body)
-</script>
+	theBody = ref(theQuestion.block.body)</script>

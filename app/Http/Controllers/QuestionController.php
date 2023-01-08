@@ -195,7 +195,7 @@ class QuestionController extends Controller
 				"attempts"=>$attempts+1
 			]
 		);
-		
+
 		return $validate;
 	}
 
@@ -215,6 +215,9 @@ class QuestionController extends Controller
 		$newQuestion = $question->replicate();
 		$newQuestion->push();
 		$newQuestion->blocks()->save($question->blocks[0]->duplicate());
+		// update the new order (place it at last).
+		$newQuestion->order = count($newQuestion->post->questions);
+		$newQuestion->save();
 
 		return QuestionResource::make($newQuestion);
 	}
