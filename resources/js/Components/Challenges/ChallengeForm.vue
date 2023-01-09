@@ -168,7 +168,10 @@
 							min="1"
 							name="level"
 						/>
-						<div class="font-code divide-y">
+						<div
+							v-if="generateQuestions.length>0"
+							class="font-code divide-y"
+						>
 							<div
 								v-for="(question, idx) of generateQuestions"
 								:key="`question-${idx}`"
@@ -223,12 +226,15 @@ let generateQuestionsError = ref(""),
 					theChallenge.value.generator
 				)
 				for (let i = 0; i < 20; i++) {
-					arr.push(F(PiMath, level.value))
+					const result = F(PiMath, level.value)
+					if(result && result.hasOwnProperty("question") && result.hasOwnProperty("answer")) {
+						arr.push(result)
+					}
 				}
 
 				return arr
 			} catch (err) {
-				console.log(err)
+				//console.warn(err)
 			}
 		}
 

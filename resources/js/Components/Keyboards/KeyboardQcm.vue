@@ -84,12 +84,14 @@ let qcmSelections = function (output) {
 	qcmItems = ref([])
 
 onMounted(() => {
+	//TODO : options pour mettre aléatoire.
 	qcmItems.value = props.options
 		.split("\n")
 		.filter(x => x !== "")
 		.map(x => {
 			let keyDisplay = x.split("|"),
 				key, display, ascii
+
 			if (keyDisplay.length === 1) {
 				ascii = keyDisplay[0].startsWith("#")
 				key = ascii ? keyDisplay[0].substring(1) : keyDisplay[0]
