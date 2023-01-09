@@ -34,8 +34,6 @@
 		</div>
 
 		<div class="flex flex-col justify-between">
-			<!-- Admin edition mode -->
-
 			<!-- the body of question -->
 			<div class="px-5 py-3 overflow-x-auto">
 				<illustration-show
@@ -46,10 +44,17 @@
 				<markdown-it
 					:text="theQuestionBody"
 				/>
+
+				<!-- answer format -->
+				<div
+					v-if="answerFormat"
+					v-katex.auto="answerFormat"
+					class="text-center text-xs text-gray-400 mt-5"
+				/>
 			</div>
 
 			<!-- the user input container -->
-			<div class="mt-5 border-t border-gray-200 px-5 py-2">
+			<div class="border-t border-gray-200 px-5 py-2">
 				<!-- Open / Close user input -->
 				<div
 					v-if="!displayInput"
@@ -131,7 +136,7 @@
 </template>
 
 <script setup>
-import {computed, defineAsyncComponent, ref} from "vue"
+import {computed, defineAsyncComponent, provide, ref} from "vue"
 import IllustrationShow from "@/Components/Posts/Illustrations/IllustrationShow.vue"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 import QuestionUserInput from "@/Components/Posts/Questions/QuestionUserInput.vue"
@@ -173,6 +178,12 @@ let props = defineProps({
 			})
 		})
 	}
+
+// Format edition / checker
+let answerFormat = ref("")
+provide("checkerFormat", {
+	update: (value)=>{answerFormat.value = value}
+})
 
 let showEditForm = ref(props.question.isNew === true),
 	editForm = computed(() => {

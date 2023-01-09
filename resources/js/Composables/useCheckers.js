@@ -23,7 +23,6 @@ export function useCheckers(checkerData) {
 	let [checker, options] = checkerData.split("@")
 
 	if(options===undefined){options = []}
-
 	switch (checker) {
 	case "exact":
 		return ExactChecker(options)

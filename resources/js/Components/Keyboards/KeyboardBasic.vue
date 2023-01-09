@@ -20,7 +20,7 @@
 <script setup>
 
 import {useWrongAnswerAnimation} from "@/Composables/useHelpers"
-import {computed, ref} from "vue"
+import {computed, inject, ref} from "vue"
 import KeyboardElement from "@/Components/Keyboards/KeyboardElement.vue"
 import KeyboardValidateButton from "@/Components/Keyboards/KeyboardValidateButton.vue"
 import {useCheckers} from "@/Composables/useCheckers"
@@ -32,6 +32,8 @@ let props = defineProps({
 })
 
 let emits = defineEmits(["change", "validate"])
+let checkerFormat = inject("checkerFormat")
+
 let validateButton = ref(null),
 	keyboardUI = ref(null),
 	resetKeyStrokes = function () {
@@ -108,10 +110,15 @@ let theKeyboard = computed(() => {
 		name = "exact"
 	}
 
+	checker = useCheckers(checker.length>0?checker.join("@"): name)
+
+	checkerFormat.update(checker.format())
+
+
 	return {
 		name,
 		keyboard: keyboards[name],
-		checker: useCheckers(checker.length>0?checker.join("@"): name),
+		checker,
 		letters,
 		parameters
 	}
