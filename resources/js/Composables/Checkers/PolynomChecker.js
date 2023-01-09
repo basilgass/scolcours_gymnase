@@ -30,7 +30,7 @@ export function PolynomChecker(options) {
 			// Factorized
 			if (options.includes("f") || options.includes("factor")) {
 				try {
-					if (!Q.isFactorized(answer)) {
+					if (!A.isFactorized(answer)) {
 						return {
 							result: false,
 							message: "Le polynôme n'est pas (entièrement) factorisé."
@@ -46,7 +46,7 @@ export function PolynomChecker(options) {
 
 			// Developed
 			if (options.includes("d") || options.includes("develop")) {
-				if (!Q.isDeveloped(answer)) {
+				if (!A.isDeveloped(answer)) {
 					return {
 						result: false,
 						message: "Le polynôme n'est pas (entièrement) développé."
