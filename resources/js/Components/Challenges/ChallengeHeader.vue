@@ -23,6 +23,7 @@
 			</h1>
 
 			<button
+				v-if="$page.props.auth.can.admin"
 				class="text-xs"
 				@click="showEditForm = true"
 			>
@@ -46,7 +47,7 @@
 
 	<!-- edition du challenge -->
 	<div
-		v-if="showEditForm"
+		v-if="showEditForm && $page.props.auth.can.admin"
 		v-admin
 	>
 		<component
