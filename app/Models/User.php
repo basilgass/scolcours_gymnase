@@ -107,7 +107,7 @@
 		public function chapters()
 		{
 			return $this->belongsToMany(Chapter::class)
-				->withPivot('open', 'currentPost', 'updated_at')
+				->withPivot('open', 'post_id', 'updated_at')
 				->orderBy('pivot_updated_at', 'desc');
 		}
 

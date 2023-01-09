@@ -202,7 +202,7 @@ class ChaptersController extends Controller
 		if ($user?->exists) {
 
 			$validate = $request->validate([
-				'currentPost' => ['int', 'min:0'],
+				'post_id' => ['required', 'exists:App\Models\Post,id'],
 				'open'=>['boolean', "nullable"]
 			]);
 

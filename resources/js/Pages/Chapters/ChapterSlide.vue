@@ -61,7 +61,7 @@ let props = defineProps({
 
 const storeCurrentPost = function () {
 	axios.post(route("chapters.currentPost", [theChapter.value.id]), {
-		currentPost: thePost.value.order,
+		post_id: thePost.value.id,
 		open: true
 	}).then(res => {
 		console.log(res.data)

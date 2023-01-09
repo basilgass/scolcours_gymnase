@@ -20,7 +20,7 @@ return new class extends Migration
 			$table->foreignIdFor(\App\Models\User::class)->constrained()->cascadeOnDelete();
 
 			$table->boolean('open')->nullable();	// determine if the chapter is open for this user
-			$table->integer('currentPost')->nullable();	// current post number (order)
+			$table->foreignIdFor(\App\Models\Post::class)->constrained()->cascadeOnDelete();	// current post id
 
 			$table->timestamps();
 

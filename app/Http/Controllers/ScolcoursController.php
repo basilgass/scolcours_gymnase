@@ -54,7 +54,7 @@ class ScolcoursController extends Controller
 					'slug' => $chapter->slug,
 					'title' => $chapter->title,
 					'theme' => $chapter->theme->slug,
-					'currentPost' => $chapter->pivot->currentPost,
+					'currentPost' => $chapter->posts->where('id', $chapter->pivot->post_id)->first()->order,
 					'maxPost' =>count($chapter->posts),
 					'open' => $chapter->pivot->open,
 					'updated_at' => Carbon::parse($chapter->pivot->updated_at)->diffForHumans()

@@ -19,7 +19,6 @@ return new class extends Migration
 
 			$table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
 			$table->morphs('scoreable');
-//			$table->foreignIdFor(Challenge::class)->constrained()->cascadeOnDelete();
 			$table->integer('score');
 			$table->integer('stars')->nullable();
             $table->timestamps();

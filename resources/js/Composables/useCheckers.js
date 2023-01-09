@@ -20,9 +20,10 @@ export const checkersList = {
 }
 
 export function useCheckers(checkerData) {
-	let [checker, options] = checkerData.split("@")
+	// checkerData = checker,opt1,opt2,opt3
+	let options = checkerData.split(",")
+	let checker = options.shift()
 
-	if(options===undefined){options = []}
 	switch (checker) {
 	case "exact":
 		return ExactChecker(options)
