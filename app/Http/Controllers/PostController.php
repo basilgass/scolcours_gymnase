@@ -45,7 +45,15 @@ class PostController extends Controller
 
 		// Load the blocks, even if it's empty :)
 		$post->blocks;
-		return PostResource::make($post);
+
+		return [
+			'post'=>PostResource::make($post),
+			'redirect' => route('theme.chapter.slide', [
+				'theme'=>$chapter->theme->slug,
+				'chapter'=>$chapter->slug,
+				'order' => $post->order
+			])
+		];
 	}
 
 	public function show(Post $post)
@@ -139,5 +147,5 @@ class PostController extends Controller
 
 		return true;
 	}
-	
+
 }

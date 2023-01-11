@@ -7,13 +7,23 @@
 			<h3 class="uppercase font-extralight mb-2">
 				table des matières
 			</h3>
-			<form-switch
+			<div
 				v-if="$page.props.auth.can.admin"
-				v-model="moveMode"
-				label="mode déplacement"
-				name="move"
-				sm
-			/>
+				class="flex gap-3 items-baseline"
+			>
+				<form-switch
+					v-model="moveMode"
+					label="mode déplacement"
+					name="move"
+					sm
+				/>
+				<button
+					class="btn-new-inline btn-xs"
+					@click="addPost"
+				>
+					Ajouter un article {{ posts.length + 1 }}
+				</button>
+			</div>
 		</div>
 
 		<draggable
@@ -61,6 +71,7 @@
 
 import {inject, ref} from "vue"
 import FormSwitch from "@/Components/Form/FormSwitch.vue"
+import {Inertia} from "@inertiajs/inertia"
 
 let props = defineProps({
 	chapter: {type: Object, required: true},
@@ -83,7 +94,20 @@ let posts = ref(props.chapter.posts),
 			_method: "PATCH"
 		}).then(res => {
 			// TODO : flash message !
-			flash.add("les posts ont bien été réordrer !")
+			flash.add("les posts ont bien été réordré !")
 		}).catch(res => console.log("update ordering order: ", res.response.data.message))
+	},
+	addPost = function () {
+		axios.post(
+			route("chapters.posts.store", [props.chapter.slug]),
+			{
+				title: "nouvel article",
+			}
+		)
+			.then(res => {
+				Inertia.visit(res.data.redirect)
+			})
+			.catch(err => console.log(err))
 	}
+
 </script>
