@@ -25,7 +25,13 @@ class FormulaController extends Controller
     public function index(Chapter $chapter)
     {
 		// Get the list of all formulas as JSON ?
-		return FormulaResource::collection($chapter->formulas);
+		return [
+			'formular'=>FormulaResource::collection($chapter->formulas),
+			'chapters'=>$chapter->theme->chapters()
+				->has('formulas')
+				->get()
+				->map(function($chapter){return $chapter->only(['slug', 'title']);})
+		];
     }
 
     /**
@@ -36,12 +42,6 @@ class FormulaController extends Controller
 	 */
     public function store(Chapter $chapter, Request $request)
     {
-//		$validation = $request->validate([
-//			'chapter_id' => ['required', 'exists:App\Models\Chapter,id'],
-//			'formula' => ['required', 'max:255'],
-//			'comment' => []
-//		]);
-
 		// Create the post model
 		$formula = $chapter->formulas()->create();
 		$formula->blocks()->create([

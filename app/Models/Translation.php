@@ -19,7 +19,7 @@ use Illuminate\Support\Carbon;
  * @property string|null $examples
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property-read TranslationUnit|null $unit
+ * @property-read \App\Models\TranslationUnit|null $unit
  * @method static Builder|Translation newModelQuery()
  * @method static Builder|Translation newQuery()
  * @method static Builder|Translation query()

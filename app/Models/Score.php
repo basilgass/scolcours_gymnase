@@ -14,22 +14,25 @@ use Illuminate\Support\Carbon;
  *
  * @property int $id
  * @property int $user_id
- * @property int $challenge_id
+ * @property string $scoreable_type
+ * @property int $scoreable_id
  * @property int $score
- * @property int $stars
+ * @property int|null $stars
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property-read Collection|Challenge[] $challenges
+ * @property-read Collection|\App\Models\Challenge[] $challenges
  * @property-read int|null $challenges_count
- * @property-read Collection|User[] $users
+ * @property-read Model|\Eloquent $scoreable
+ * @property-read Collection|\App\Models\User[] $users
  * @property-read int|null $users_count
  * @method static Builder|Score newModelQuery()
  * @method static Builder|Score newQuery()
  * @method static Builder|Score query()
- * @method static Builder|Score whereChallengeId($value)
  * @method static Builder|Score whereCreatedAt($value)
  * @method static Builder|Score whereId($value)
  * @method static Builder|Score whereScore($value)
+ * @method static Builder|Score whereScoreableId($value)
+ * @method static Builder|Score whereScoreableType($value)
  * @method static Builder|Score whereStars($value)
  * @method static Builder|Score whereUpdatedAt($value)
  * @method static Builder|Score whereUserId($value)

@@ -87,6 +87,7 @@
 				/>
 
 				<QuestionUserInput
+					:key="theQuestion.block.body"
 					ref="userInput"
 					:question="theQuestion"
 					class="px-3"

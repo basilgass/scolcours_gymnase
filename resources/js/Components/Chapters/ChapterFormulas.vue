@@ -6,7 +6,24 @@
 			</h3>
 		</div>
 
-		<div class="columns-1 md:columns-2 lg:columns-3">
+		<div class="flex flex-wrap text-xs gap-1 px-5">
+			<button
+				v-for="item of themeChapters"
+				:key="item.slug"
+				v-katex.auto="item.title"
+				class="btn btn-xs transition-colors"
+				:class="{
+					'is-active': item.slug===theSlug,
+					'font-semibold': item.slug===props.chapterSlug
+				}"
+				@click="updateFormular(item.slug)"
+			/>
+		</div>
+
+		<div
+			class="columns-1 "
+			:class="props.responsive?'md:columns-2 lg:columns-3': ''"
+		>
 			<draggable
 				v-model="theFormular"
 				class="grid grid-cols-1 gap-3 my-5"
@@ -27,20 +44,22 @@
 						:max-illustration="1"
 					/>
 				</template>
+				<template #footer>
+					<div
+						v-admin
+						class="px-5"
+					>
+						<button
+							class="btn-new"
+							@click="addFormula"
+						>
+							Ajouter une formule
+						</button>
+					</div>
+				</template>
 			</draggable>
 		</div>
 	</article>
-	<div
-		v-admin
-		class="mb-10"
-	>
-		<button
-			class="btn-new"
-			@click="addFormula"
-		>
-			Ajouter une formule
-		</button>
-	</div>
 </template>
 
 <script setup>
@@ -49,9 +68,12 @@ import {inject, onMounted, ref} from "vue"
 import BlockShow from "@/Components/Posts/Blocks/BlockShow.vue"
 
 const props = defineProps({
-	chapterSlug: {type: String, required: true}
+	chapterSlug: {type: String, required: true},
+	responsive: {type: Boolean, default: false}
 })
-const theFormular = ref([])
+const theFormular = ref([]),
+	theSlug = ref(props.chapterSlug),
+	themeChapters = ref([])
 
 const flash = inject("flash")
 const addFormula = function(){
@@ -69,13 +91,22 @@ const addFormula = function(){
 			// TODO : flash message !
 			flash.add("L'ordre des formules à bien été enregistré !")
 		}).catch(res=>console.log("update ordering order: ", res.data))
+	},
+	loadFormular = function(){
+		return axios
+			.get(route("chapters.formulas.index", [theSlug.value]))
+			.then(res => {
+				theFormular.value = res.data.formular
+				themeChapters.value = res.data.chapters
+			})
+	},
+	updateFormular = function(slug){
+		theSlug.value = slug
+		loadFormular()
 	}
 
+// Load the formular
 onMounted(()=>{
-	axios
-		.get(route("chapters.formulas.index", [props.chapterSlug]))
-		.then(res=>theFormular.value = res.data.data)
+	loadFormular()
 })
-
-// TODO: ajouter une formule au formulaire !
 </script>

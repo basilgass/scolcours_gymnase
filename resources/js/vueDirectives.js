@@ -36,16 +36,6 @@ function katexUpdate(el, binding, vnode) {
 	if(binding.modifiers.auto){
 		el.innerHTML = rawTex
 		katexAutoRender(el)
-		// try {
-		// 	katexAutoRender(el)
-		// }catch(e){
-		// 	// do nothing particular
-		// 	console.log({
-		// 		"error": e,
-		// 		"TeX": rawTex,
-		// 		"element": el
-		// 	})
-		// }
 	}else {
 		let tex = binding.modifiers.ascii ? new AsciiMathParser().parse(rawTex) : rawTex
 

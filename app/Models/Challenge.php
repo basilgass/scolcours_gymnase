@@ -34,11 +34,11 @@ use Illuminate\Support\Carbon;
  * @property int $bonusLevelTime
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property-read Collection|Block[] $blocks
+ * @property-read Collection|\App\Models\Block[] $blocks
  * @property-read int|null $blocks_count
- * @property-read Chapter|null $chapter
+ * @property-read \App\Models\Chapter|null $chapter
  * @property-read mixed $running
- * @property-read Collection|Score[] $scores
+ * @property-read Collection|\App\Models\Score[] $scores
  * @property-read int|null $scores_count
  * @property-read Collection|ChallengeSession[] $sessions
  * @property-read int|null $sessions_count

@@ -24,11 +24,13 @@ use Illuminate\Support\Carbon;
  * @property string|null $switch
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property-read Collection|Block[] $blocks
+ * @property-read Collection|\App\Models\Block[] $blocks
  * @property-read int|null $blocks_count
- * @property-read Chapter $chapter
- * @property-read Collection|Question[] $questions
+ * @property-read \App\Models\Chapter $chapter
+ * @property-read Collection|\App\Models\Question[] $questions
  * @property-read int|null $questions_count
+ * @property-read Collection|\App\Models\Score[] $scores
+ * @property-read int|null $scores_count
  * @method static Builder|Post newModelQuery()
  * @method static Builder|Post newQuery()
  * @method static Builder|Post query()

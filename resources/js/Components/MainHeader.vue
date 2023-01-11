@@ -4,6 +4,7 @@
 		:class="`bg-scolcours-${theme.slug}`"
 	>
 		<MainAside />
+		
 		<div
 			class="scolcours-container py-6
 				flex justify-between items-center"

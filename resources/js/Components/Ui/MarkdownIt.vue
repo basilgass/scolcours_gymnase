@@ -25,6 +25,7 @@ const props = defineProps({
 const tm = require("markdown-it-texmath")
 const attr = require("markdown-it-attrs")
 const md = require("markdown-it")({html: true})
+	.use(attr)
 	.use(tm, {
 		engine: require("katex"),
 		delimiters: props.delimiters??["brackets", "dollars"],
@@ -32,7 +33,6 @@ const md = require("markdown-it")({html: true})
 			macros: useKatexMacros
 		}
 	})
-	.use(attr)
 
 watchEffect(()=>{
 	if(props.text) {

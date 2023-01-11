@@ -38,7 +38,10 @@
 			<chapter-challenges :chapter="theChapter" />
 
 			<!-- The formulas -->
-			<chapter-formulas :chapter-slug="theChapter.slug" />
+			<chapter-formulas
+				responsive
+				:chapter-slug="theChapter.slug"
+			/>
 		</div>
 	</section>
 </template>

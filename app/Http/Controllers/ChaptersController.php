@@ -190,7 +190,12 @@ class ChaptersController extends Controller
 
 	public function updatePostsOrder(Chapter $chapter, Request $request)
 	{
-		foreach ($request['data'] as $row) {
+		$validation = $request->validate([
+			"posts"=> ["array"],
+			"posts.*.id" => ['required', 'exists:App\Models\Post,id'],
+			"posts.*.order" => ['required', "int", 'min:1']
+		]);
+		foreach ($validation['posts'] as $row) {
 			$chapter->posts->find($row['id'])->update(['order' => $row['order']]);
 		}
 	}

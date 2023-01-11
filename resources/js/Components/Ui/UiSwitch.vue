@@ -2,8 +2,9 @@
 	<div class="flex gap-2 items-baseline">
 		<span
 			v-katex.auto="falseText"
-			class="transition-all duration-300"
+			class="transition-all duration-300 cursor-pointer"
 			:class="!switchValue?'opacity-100':'opacity-40'"
+			@click="switchValue=!switchValue"
 		/>
 		<Switch
 			v-model="switchValue"
@@ -15,8 +16,9 @@
 		</Switch>
 		<span
 			v-katex.auto="trueText"
-			class="transition-all duration-300"
+			class="transition-all duration-300 cursor-pointer"
 			:class="switchValue?'opacity-100':'opacity-50'"
+			@click="switchValue=!switchValue"
 		/>
 	</div>
 </template>

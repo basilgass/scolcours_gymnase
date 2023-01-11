@@ -32,10 +32,12 @@
 		</div>
 
 		<chapter-toc
-			class="mt-10"
 			:active="thePost.order"
 			:chapter="theChapter"
+			class="mt-10"
 		/>
+
+		<chapter-formulas-slider :chapter="theChapter" />
 	</section>
 </template>
 
@@ -50,6 +52,7 @@ export default {
 import {onMounted, ref} from "vue"
 import PostShow from "@/Components/Posts/PostShow.vue"
 import ChapterToc from "@/Components/Chapters/ChapterToc.vue"
+import ChapterFormulasSlider from "@/Components/Chapters/ChapterFormulasSlider.vue"
 
 let props = defineProps({
 		chapter: {type: Object, required: true},

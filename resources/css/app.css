@@ -160,6 +160,8 @@
 	.btn-scolcours-jeux {@apply btn bg-orange-500 text-white hover:bg-orange-100 hover:text-black}
 	.btn-scolcours-tools {@apply btn bg-pink-400 text-white hover:bg-pink-100 hover:text-black}
 
+	.is-active{@apply bg-blue-100 border border-blue-600}
+
 	.list-space {
 		@apply list-outside ml-3
 	}

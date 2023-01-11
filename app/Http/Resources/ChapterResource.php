@@ -38,22 +38,6 @@ class ChapterResource extends JsonResource
 			'active' => $this->active,
 			'updated_at' => $this->updated_at,
 			'posts' => PostResource::collection($this->posts),
-//			'posts' => $this->posts->mapWithKeys(function ($item, $key) use ($withLinks) {
-//				if ($withLinks) {
-//					return [$item['order'] => [
-//						"id" => $item['id'],
-//						"title" => $item["title"],
-//						"type" => $item["type"],
-//						"url" => route('theme.chapter.slide', [$this->theme, $this, $item['order']])
-//					]];
-//				}
-//				return [$item['order'] => [
-//					"id" => $item['id'],
-//					"title" => $item["title"],
-//					"type" => $item["type"],
-//				]];
-//			}),
-			'formulas' => $this->formulas->pluck('id'),
 			'challenges' => $this->challenges->map(
 				function ($challenge) {
 					return [
@@ -62,9 +46,6 @@ class ChapterResource extends JsonResource
 						"title" => $challenge["title"]
 					];
 				}),
-//			'posts' => PostResource::collection($this->posts),
-//			'formulas' => FormulaResource::collection($this->formulas),
-//			'challenges' => ChallengeResource::collection($this->challenges)
 		];
 	}
 }
