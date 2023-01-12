@@ -56,9 +56,9 @@
 				v-else
 				class="col-span-2 border-dashed border-gray-200 border-2 rounded h-full w-full grid grid-cols-1 text-center items-center"
 			>
-				<ol v-if="chapterComponents.length>0">
+				<ol v-if="chapterComponents">
 					<li
-						v-for="comp of chapterComponents"
+						v-for="(description, comp) of chapterComponents"
 						:key="comp"
 						:class="theModel.title===comp?'btn-success':'btn'"
 						@click="theModel.title=comp"
@@ -77,6 +77,11 @@
 					name="drawData"
 					:rows="10"
 				/>
+				<markdown-it
+					v-if="chapterComponents[theModel.title]"
+					class="font-code text-left"
+					:text="chapterComponents[theModel.title]"
+				/>
 			</div>
 		</div>
 	</form-field>
@@ -88,6 +93,7 @@ import FormLabel from "@/Components/Form/FormLabel"
 import {computed, onMounted, ref} from "vue"
 import FormTextarea from "@/Components/Form/FormTextarea"
 import FormInput from "@/Components/Form/FormInput"
+import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 
 defineEmits(["update:modelValue", "inputFocus"])
 let props = defineProps({
@@ -108,7 +114,7 @@ let props = defineProps({
 	focus: {type: Boolean, default: false}
 })
 
-let chapterComponents = ref([])
+let chapterComponents = ref({})
 
 function loadComponents(){
 	theModel.value.type="component"

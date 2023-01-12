@@ -1,13 +1,14 @@
+parameters: dx
+
+code: rational fraction
 <template>
 	<pi-table-of-signs
-		:tos="study.signs"
+		:tos="tableOfSigns"
 		:fn="study.name"
 		:minimal="minimal"
 	/>
 </template>
-
 <script setup>
-
 import {computed, ref} from "vue"
 import {PiMath} from "pimath/esm"
 import PiTableOfSigns from "@/Components/Pi/PiTableOfSigns.vue"
@@ -26,5 +27,13 @@ let study = computed(()=>{
 	}),
 	minimal = computed(()=>{
 		return params.value?params.value.includes("minimal"):false
+	}),
+	tableOfSigns = computed(()=>{
+		if(params.value.split(",").includes("dx")){
+			return study.value.derivative
+		}else{
+			return study.value.signs
+		}
 	})
+
 </script>

@@ -219,7 +219,11 @@ class BlockController extends Controller
 	{
 		$components = [];
 		foreach (Storage::disk('illustrations')->files() as $file) {
-			$components[] = basename($file, '.vue');
+			// TODO: get documentation from the file
+			// read it and grab the md text.
+			$content = explode("<template>", Storage::disk('illustrations')->get($file));
+
+			$components[basename($file, '.vue')] = $content[0];
 		}
 		return $components;
 	}
