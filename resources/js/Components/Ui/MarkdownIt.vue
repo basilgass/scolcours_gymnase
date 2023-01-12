@@ -24,7 +24,9 @@ const props = defineProps({
 
 const tm = require("markdown-it-texmath")
 const attr = require("markdown-it-attrs")
+const bracketed = require("markdown-it-bracketed-spans")
 const md = require("markdown-it")({html: true})
+	.use(bracketed)
 	.use(attr)
 	.use(tm, {
 		engine: require("katex"),

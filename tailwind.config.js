@@ -11,6 +11,14 @@ module.exports = {
 		"./resources/css/**/*.css",
 		"./resources/js/*.js",
 	],
+	safelist: [
+		{
+			pattern: /bg-(red|green|blue|amber)-(500|600)/
+		},
+		{
+			pattern: /text-(red|green|blue|amber)-(500|600)/
+		}
+	],
 	theme: {
 		extend: {
 			fontFamily: {
