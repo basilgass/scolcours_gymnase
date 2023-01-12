@@ -43,12 +43,23 @@
 
 				<!-- illustration -->
 				<!-- type, parameter, code -->
-				<form-illustration
+				<div
 					v-if="theQuestion.block.illustration"
-					v-model="theQuestion.block.illustration"
-					name="illustration"
-					label="illustration"
-				/>
+					class="relative"
+				>
+					<button
+						class="btn-delete btn-xs absolute top-0 right-0"
+						@click="delete theQuestion.block.illustration"
+					>
+						<i class="bi bi-trash" />Supprimer
+					</button>
+					<form-illustration
+						v-model="theQuestion.block.illustration"
+						class="pt-5"
+						name="illustration"
+						label="illustration"
+					/>
+				</div>
 				<button
 					v-else
 					class="btn btn-block"

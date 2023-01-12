@@ -171,7 +171,8 @@ let props = defineProps({
 			required: true, type: Object
 		},
 		fn: {type: String, default: "f"},
-		minimal: {type: Boolean, default: false}
+		minimal: {type: Boolean, default: false},
+		extremes: {type: String, default: null},
 	}),
 	showTex = ref(false)
 
@@ -184,10 +185,16 @@ function displaySigns(index) {
 }
 
 function displayExtremes(index) {
-	let zero = props.tos.zeroes[(index - 1) / 2],
+	let zeroIndex = (index - 1) / 2,
+		zero = props.tos.zeroes[zeroIndex],
 		extreme = props.tos.extremes[zero.tex]
 
-	return `\\substack{ ${extreme.type} \\\\ \\left(${extreme.tex.x}; ${extreme.tex.y}  \\right) }`
+	if(props.extremes) {
+		let labels = props.extremes.split(",")
+		return zeroIndex<labels.length?labels[zeroIndex]:labels[labels.length-1]
+	}else {
+		return `\\substack{ ${extreme.type} \\\\ \\left(${extreme.tex.x}; ${extreme.tex.y}  \\right) }`
+	}
 }
 
 </script>

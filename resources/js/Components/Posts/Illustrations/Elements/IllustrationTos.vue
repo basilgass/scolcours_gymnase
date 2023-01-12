@@ -6,6 +6,7 @@ code: rational fraction
 		:tos="tableOfSigns"
 		:fn="study.name"
 		:minimal="minimal"
+		:extremes="extremes"
 	/>
 </template>
 <script setup>
@@ -27,6 +28,14 @@ let study = computed(()=>{
 	}),
 	minimal = computed(()=>{
 		return params.value?params.value.includes("minimal"):false
+	}),
+	extremes = computed(()=>{
+		if(params.value){
+			if(params.value.includes("extrema=")){
+				return params.value.split("extrema=")[1].split(",")[0].split("|").join(",")
+			}
+		}
+		return null
 	}),
 	tableOfSigns = computed(()=>{
 		if(params.value.split(",").includes("dx")){
