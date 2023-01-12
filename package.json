@@ -40,8 +40,8 @@
 		"markdown-it": "^13.0.1",
 		"markdown-it-attrs": "^4.1.6",
 		"markdown-it-texmath": "^1.0.0",
-		"pidraw": "^0.0.48",
-		"pimath": "^0.0.103",
+		"pidraw": "^0.0.49",
+		"pimath": "^0.0.104",
 		"vue-slider-component": "4.0.0-beta.7",
 		"vuedraggable": "^4.1.0"
 	}
