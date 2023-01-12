@@ -47,8 +47,8 @@
 		<!-- résultat du challenge qui vient de se terminer -->
 		<challenge-results
 			v-if="isFinished"
-			:results="results"
 			:challenge="theChallenge"
+			:results="results"
 		/>
 	</article>
 </template>
@@ -143,7 +143,7 @@ let listOfQuestions = ref([]),
 		localStorage.getItem("scolcoursChallenge-" + theChallenge.value.id)
 	)
 
-let results = computed(()=>{
+let results = computed(() => {
 	return {
 		level: level.value,
 		lives: lives.value,
@@ -326,38 +326,40 @@ async function addTabCharacter(ev) {
 let theQuestion = ref({})
 
 watch(questionId, () => {
+	const currentQuestion = listOfQuestions.value[questionId.value]
+
 	theQuestion.value = {
 		block: {
 			body: theChallenge.value.output
 				.replace(
 					"question",
-					listOfQuestions.value[questionId.value].question
+					currentQuestion.question
 				)
 				.replace("answer", "$a"),
 			illustrations: [],
 		},
 		checker: theChallenge.value.checker,
-		keyboard: theChallenge.value.keyboard,
-		parameters: theChallenge.value.parameters || "",
-		answer: "" + listOfQuestions.value[questionId.value].answer,
+		keyboard: currentQuestion.keyboard ? currentQuestion.keyboard.name : theChallenge.value.keyboard,
+		parameters: currentQuestion.keyboard ? currentQuestion.keyboard.parameters : theChallenge.value.parameters || "",
+		answer: "" + currentQuestion.answer,
 		user: {
 			correct: false,
 		},
 	}
 })
 
-const storeScore = function(value){
-	if(usePage().props.value.auth){
+const storeScore = function (value) {
+	if (usePage().props.value.auth) {
 		// TODO: Add stars system to challenge
 		axios.post(route("scores.challenge", [theChallenge.value.id]), {
 			"score": value
-		}).then(res=>{
-			if(res.data) {
-				const delta = res.data.updated.score-res.data.previous.score
-				if(delta>0){
-					flash.add(`Bravo, vous avez amélioré votre score de ${delta} point${delta>1?"s":""}`)
-				}else {
-					flash.add("Vous n'avez pas amélioré votre score... dommage !" ,"info")
+		}).then(res => {
+			if (res.data) {
+				const delta = res.data.updated.score - res.data.previous.score
+				if (delta > 0) {
+					flash.add(`Bravo, vous avez amélioré votre score de ${delta} point${delta > 1 ? "s" : ""}`)
+				} else {
+					flash.add("Vous n'avez pas amélioré votre score... dommage !", "info")
 				}
 			}
 		})
