@@ -25,6 +25,7 @@
 				v-bind="$attrs"
 				:autocomplete="autocomplete===true?'on':autocomplete"
 				:placeholder="inline?label:''"
+				:disabled="props.disabled"
 				:list="`${name}List`"
 				@focus="$emit('inputFocus')"
 				@input="$emit('update:modelValue', $event.target.value)"
@@ -81,7 +82,8 @@ let props = defineProps({
 	focus: {type: Boolean, default: false},
 	autocomplete: {type: [String,Boolean], default: "off"},
 	btnClass:{type: String, default: "btn"},
-	datalist: {type: Array, default: ()=>[]}
+	datalist: {type: Array, default: ()=>[]},
+	disabled: {type: Boolean, default: false}
 })
 
 let inp = ref(null),

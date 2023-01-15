@@ -39,6 +39,7 @@ let study = computed(()=>{
 	}),
 	tableOfSigns = computed(()=>{
 		if(params.value.split(",").includes("dx")){
+			console.log(study.value.derivative)
 			return study.value.derivative
 		}else{
 			return study.value.signs

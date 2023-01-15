@@ -8,6 +8,8 @@ export function PolynomChecker(options) {
 
 			if (options.includes("f") || options.includes("factors")) {
 				opts.push("factorisé")
+			} else if (options.includes("F") || options.includes("FACTORS")) {
+				opts.push("entièrement factorisé")
 			} else if (options.includes("d") || options.includes("develop")) {
 				opts.push("développé")
 			}
@@ -28,9 +30,9 @@ export function PolynomChecker(options) {
 
 			/** Polynom checker options */
 			// Factorized
-			if (options.includes("f") || options.includes("factor")) {
+			if (options.includes("f") || options.includes("factor") || options.includes("F") || options.includes("FACTORS")) {
 				try {
-					if (!A.isFactorized(answer)) {
+					if (!A.isFactorized(answer, options.includes("f") || options.includes("factor"))) {
 						return {
 							result: false,
 							message: "Le polynôme n'est pas (entièrement) factorisé."

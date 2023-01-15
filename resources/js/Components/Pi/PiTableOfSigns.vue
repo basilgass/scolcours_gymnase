@@ -92,7 +92,7 @@
 						<td>
 							<div class="flex flex-row h-16">
 								<div
-									v-for="(sign, n) in displaySigns(tos.signs.length-2)"
+									v-for="(sign, n) in displaySigns(tos.signs.length-2, true)"
 									:key="`tos-foot-cell-${n}`"
 									:class="{
 										'cell-v-line-d':sign==='d',
@@ -103,12 +103,11 @@
 								>
 									<div
 										v-if="n%2===1"
-										v-katex.inline="n%2===0?'':(sign==='z'?displayExtremes(n):'')"
+										v-katex.inline="displayExtremes(n)"
 										class="text-center translate-y-6 absolute left-1/2 -translate-x-1/2 bg-white z-50"
 									/>
 									<i
 										v-else
-
 										:class="{'bi-arrow-down-right':sign==='-','bi-arrow-up-right':sign==='+'}"
 										class="bi"
 									/>
@@ -176,8 +175,13 @@ let props = defineProps({
 	}),
 	showTex = ref(false)
 
-function displaySigns(index) {
-	let signs = [...props.tos.signs[index]]
+function displaySigns(index, isGrows) {
+	let signs
+	if(isGrows && props.tos.grows){
+		return props.tos.grows
+	}
+
+	signs = [...props.tos.signs[index]]
 	signs.shift()
 	signs.pop()
 
@@ -192,7 +196,7 @@ function displayExtremes(index) {
 	if(props.extremes) {
 		let labels = props.extremes.split(",")
 		return zeroIndex<labels.length?labels[zeroIndex]:labels[labels.length-1]
-	}else {
+	}else if(extreme){
 		return `\\substack{ ${extreme.type} \\\\ \\left(${extreme.tex.x}; ${extreme.tex.y}  \\right) }`
 	}
 }

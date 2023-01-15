@@ -60,6 +60,14 @@
 					v-else-if="key.type==='icon'"
 					:class="key.display"
 				/>
+				<span
+					v-else-if="key.type==='text'"
+					v-katex.auto="key.display"
+				/>
+				<span
+					v-else
+					v-html="key.display"
+				/>
 			</button>
 		</div>
 

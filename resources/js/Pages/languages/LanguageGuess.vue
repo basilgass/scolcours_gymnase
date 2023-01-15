@@ -29,7 +29,9 @@
 				v-model="userGuess"
 				name="guess"
 				:label="numberOfLetters>1?`entrer les ${numberOfLetters} premières lettres`:'entrer la première lettre'"
+				:disabled="unknownWordAnswer!==''"
 				@keyup.enter="suggestionEnter"
+				@keyup="resetUnknowns"
 			/>
 
 			<div class="text-xs flex justify-between">
@@ -77,6 +79,37 @@
 				>
 					continuer
 				</button>
+			</div>
+
+			<div v-if="unknownWordForeign.length>0">
+				<h2 class="text-xl font-semibold mt-10">
+					{{ unknownWordForeign }}
+				</h2>
+				<div
+					v-if="unknownWordExamples.length>0"
+					class="mt-5"
+				>
+					<h3 class="border-t text-lg pt-3 mb-3 font-semibold">
+						exemples
+					</h3>
+					<div class="flex flex-col gap-2">
+						<div
+							v-for="(example, index) in unknownWordExamples"
+							:key="`example-${index}`"
+							v-text="example"
+						/>
+					</div>
+				</div>
+
+				<div
+					v-if="unknownWordDefinition.length>0"
+					class="mt-5"
+				>
+					<h3 class="border-t text-lg pt-3 mb-3 font-semibold">
+						définition
+					</h3>
+					<div v-text="unknownWordDefinition" />
+				</div>
 			</div>
 		</div>
 
@@ -146,6 +179,9 @@ let unitsSelection = ref([]),
 		return availableWords.value[startIndex.value].fr
 	}),
 	unknownWordAnswer = ref(""),
+	unknownWordForeign = ref(""),
+	unknownWordExamples = ref([]),
+	unknownWordDefinition = ref(""),
 	unknownCount = ref(0),
 	gameStopped = ref(true),
 	suggestInput = ref(null)
@@ -172,6 +208,7 @@ let continueGame = function (enter){
 	userGuess.value = ""
 	startIndex.value ++
 	unknownWordAnswer.value = ""
+	resetUnknowns()
 
 	if(startIndex.value===availableWords.value.length){
 		alert("Félicitations - tu as fait tout ton voc !")
@@ -179,7 +216,7 @@ let continueGame = function (enter){
 		availableWords.value = []
 	}
 
-	suggestInput.value.focus()
+	nextTick(()=>suggestInput.value.focus())
 }
 
 let generateWords = function() {
@@ -207,11 +244,25 @@ let suggestionClick = function(index) {
 
 		// Add the translation for one second.
 		suggestionsItems.value[index].hint = true
+
+		defineUnknowns(suggestionsItems.value[index])
 		setTimeout(()=>suggestionsItems.value[index].hint = false, 2000)
 	}
 }
 
+let defineUnknowns = function(item) {
+	unknownWordForeign.value = item.foreign
+	unknownWordExamples.value = item.examples.split("|")
+	unknownWordDefinition.value = item.definition
+}
+let resetUnknowns = function(){
+	unknownWordForeign.value = ""
+	unknownWordExamples.value = []
+	unknownWordDefinition.value = ""
+}
+
 let unknownWord = function () {
+	// add item at the end
 	const item = {...availableWords.value[startIndex.value]}
 	if(!item.errors){
 		item.errors = 1
@@ -219,9 +270,20 @@ let unknownWord = function () {
 		item.errors++
 	}
 	availableWords.value.push({...item})
-
-	unknownWordAnswer.value = item.foreign
 	unknownCount.value++
+
+	// reset the suggestion input
+	userGuess.value = ""
+	// lock the suggestion input.
+
+	// set the unknown word
+	unknownWordAnswer.value = item.foreign
+	// show the definition
+	defineUnknowns(item)
+
+
+
+
 }
 
 function shake(index) {
@@ -263,11 +325,10 @@ watch(userGuess, (newValue, oldValue)=>{
 			return {
 				foreign: x.foreign,
 				fr: x.fr,
-				hint: false
+				hint: false,
+				examples: x.examples,
+				definition: x.definition
 			}
 		})
-
-	console.log(txt)
-	console.log(suggestionsItems.value)
 })
 </script>
