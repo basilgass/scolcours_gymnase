@@ -18,7 +18,7 @@
 		<div class="max-w-xl mx-auto flex flex-col gap-3 keyboard">
 			<div
 				class="grid gap-3"
-				:class="withGrows?'grid-cols-3':'grid-cols-2'"
+				:class="(withGrows && !withCoords)?'grid-cols-3':'grid-cols-2'"
 			>
 				<button
 					:class="showKeyboard==='zeroes'?'btn-primary':''"
@@ -41,6 +41,14 @@
 					@click="showKeyboard='grows'"
 				>
 					croissance
+				</button>
+				<button
+					v-if="withCoords"
+					:class="showKeyboard==='coords'?'btn-primary':''"
+					class="py-0 px-5"
+					@click="showKeyboard='coords';updateTos()"
+				>
+					coordonnées
 				</button>
 			</div>
 
@@ -88,6 +96,17 @@
 				@change="grows = $event; updateTos()"
 				@tex="growsTex = $event"
 			/>
+
+			<KeyboardElement
+				v-show="showKeyboard==='coords'"
+				:multiple="true"
+				back
+				key-class="bg-white"
+				keyboard="exact"
+				reset
+				@change="coords = $event; updateTos()"
+				@tex="coordsTex = $event"
+			/>
 		</div>
 	</div>
 </template>
@@ -119,6 +138,8 @@ let zeroes = ref(""),
 	signsTex = ref(""),
 	grows = ref(""),
 	growsTex = ref(""),
+	coords = ref(""),
+	coordsTex = ref(""),
 	validateButton = ref(null),
 	tosUI = ref(null),
 	tosName = computed(()=>{
@@ -127,13 +148,23 @@ let zeroes = ref(""),
 		return names.length===0 ? "f" : names[0]
 	}),
 	withGrows = computed(()=>{
-		return props.options.split("\n").filter(x=>x.startsWith("dx")).length===1
+		return props.answer.split("@").length>2
+	}),
+	withCoords = computed(()=>{
+		return props.answer.split("@").length>3
 	}),
 	tos = computed(() => {
 		if(withGrows.value){
-			let extremes = {}
-			for(let i in zeroes.value.split(",")){
-				let z = zeroes.value.split(",")[i],
+			let extremes = {},
+				extremesValues = coords.value.split(","),
+				zeroesValues = zeroes.value.split(",")
+
+			if(showKeyboard.value!=="coords"){
+				extremesValues=[]
+			}
+
+			for(let i in zeroesValues){
+				let z = zeroesValues[i],
 					g = grows.value[2*i+1]
 
 				if(g!==undefined) {
@@ -144,11 +175,16 @@ let zeroes = ref(""),
 						t = "min"
 					}
 
+					let label = " "
+					if(extremesValues[i]!==undefined){
+						label = `\\left(${z};${extremesValues[i]===""?"?":extremesValues[i]}\\right)`
+					}
+
 					extremes[keyboards.exact.tex(z)] = {
 						tex: {x: 1, y: 2},
 						type: t,
 						value: {x: 1, y: 2},
-						label: ""
+						label
 					}
 				}
 			}
@@ -180,6 +216,7 @@ let zeroes = ref(""),
 		zeroes.value = ""
 		signs.value = ""
 		grows.value = ""
+		coords.value = ""
 	},
 	wrongAnswer = function () {
 		useWrongAnswerAnimation(validateButton.value)
@@ -194,6 +231,9 @@ let zeroes = ref(""),
 		signs.value = v[1]
 		if(withGrows.value) {
 			grows.value = v[2]
+		}
+		if(withCoords.value){
+			coords.value = v[3]
 		}
 
 		nextTick(() => tosUI.value.$el.innerHTML).then(resolve => {
@@ -211,11 +251,15 @@ let zeroes = ref(""),
 		}
 	},
 	answerValue = computed(()=>{
+		let r = `${zeroes.value}@${signs.value}`
 		if(withGrows.value){
-			return `${zeroes.value}@${signs.value}@${grows.value}`
-		}else{
-			return `${zeroes.value}@${signs.value}`
+			r +=`@${grows.value}`
 		}
+		if(withCoords.value){
+			r +=`@${coords.value}`
+		}
+
+		return r
 	}),
 	validateEvent = function () {
 		const check = useCheckers("tos").check(props.answer, answerValue.value)
