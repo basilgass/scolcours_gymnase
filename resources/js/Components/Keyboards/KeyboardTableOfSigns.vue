@@ -147,11 +147,12 @@ let zeroes = ref(""),
 					extremes[keyboards.exact.tex(z)] = {
 						tex: {x: 1, y: 2},
 						type: t,
-						value: {x: 1, y: 2}
+						value: {x: 1, y: 2},
+						label: ""
 					}
 				}
 			}
-			console.log(extremes)
+
 			return {
 				zeroes: zeroes.value.split(",").map(x => {
 					return {tex: keyboards.exact.tex(x)}
@@ -191,20 +192,36 @@ let zeroes = ref(""),
 
 		zeroes.value = v[0]
 		signs.value = v[1]
-		grows.value = v[2]
+		if(withGrows.value) {
+			grows.value = v[2]
+		}
 
 		nextTick(() => tosUI.value.$el.innerHTML).then(resolve => {
-			emits("tex", "")
-			emits("raw", resolve)
+			changeEvent()
+			// emits("tex", "")
+			// emits("raw", resolve)
 		})
 
 		return ""
 	},
+	getAnswer = function(value){
+		return {
+			tex: getTex(value),
+			raw: getRaw(value)
+		}
+	},
+	answerValue = computed(()=>{
+		if(withGrows.value){
+			return `${zeroes.value}@${signs.value}@${grows.value}`
+		}else{
+			return `${zeroes.value}@${signs.value}`
+		}
+	}),
 	validateEvent = function () {
-		const check = useCheckers("tos").check(props.answer, `${zeroes.value}@${signs.value}`)
+		const check = useCheckers("tos").check(props.answer, answerValue.value)
 
 		emits("validate", {
-			code: `${zeroes.value}@${signs.value}`,
+			code: answerValue.value,
 			tex: "",
 			raw: tosUI.value.$el.innerHTML,
 			correct: check.result,
@@ -222,5 +239,5 @@ const changeEvent= function(){
 		raw: tosUI.value.$el.innerHTML
 	})
 }
-defineExpose({resetKeyStrokes, wrongAnswer, getTex, getRaw})
+defineExpose({resetKeyStrokes, wrongAnswer, getAnswer})
 </script>

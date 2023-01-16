@@ -169,8 +169,14 @@ let outputHTML = ref(null),
 		})
 
 		return ""
+	},
+	getAnswer = function(value){
+		return {
+			tex: getTex(value),
+			raw: getRaw(value)
+		}
 	}
-defineExpose({resetKeyStrokes, wrongAnswer, getTex, getRaw})
+defineExpose({resetKeyStrokes, wrongAnswer, getAnswer})
 
 // Code specific to Study.
 let PiGraph,

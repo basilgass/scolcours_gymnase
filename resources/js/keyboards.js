@@ -185,6 +185,35 @@ export const keyboards = {
 			return value.split(",").map(v => makeExactFromAscii(v)).join(",")
 		}
 	},
+	"coord": {
+		grid: "grid-cols-5",
+		layout: [
+			"1", "2", "3", "+", "-",
+			"4", "5", "6", "", "/",
+			"7", "8", "9", "^2", "sqrt",
+			"", "0", ".", "^", "root(",
+			"(", ";", ")", "pi", "e"
+		],
+		tex: function (value) {
+			//TODO: coord tex display only works for 2 dimensional coordinates.
+			// should be: (a;b)
+			// Apply this for all split values
+			let [a,b] = value.split(";"),
+				lp = "", rp = "", col=b===undefined?" ":";"
+			if(a.startsWith("(")){
+				lp = "\\left("
+				a = a.substring(1)
+				rp = "\\right."
+			}
+			if(b!==undefined && b.endsWith(")")){
+				if(lp===""){lp="\\left."}
+				rp = "\\right)"
+				b = b.substring(0, b.length-1)
+			}
+
+			return `${lp}${makeExactFromAscii(a)}${col}${makeExactFromAscii(b)}${rp}`
+		}
+	},
 	"limit": {
 		grid: "grid-cols-5",
 		layout: [
@@ -245,7 +274,32 @@ export const keyboardsList = [
 	"#Qcm"
 ]
 
+export function getKeyboard(value){
+	// Basic keyboard
+	if(keyboards[value]){
+		return value
+	}
+
+	// Component keyboard
+	switch (value.toLowerCase()) {
+	case "tos" || "tableofsigns":
+		return "TableOfSigns"
+	case "study":
+		return "Study"
+	case "order":
+		return "Order"
+	case "qcm":
+		return "Qcm"
+	default:
+		return false
+	}
+
+
+}
+
 function makeExactFromAscii(value) {
+	if(value===undefined || value===""){return ""}
+
 	// Aucune division - pas de problème, c'est du ascii.
 	if (!value.includes("/")) {
 		return asciiToTex(value)

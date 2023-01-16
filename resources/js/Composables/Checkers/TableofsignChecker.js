@@ -11,7 +11,11 @@ export function TableofsignChecker(options) {
 					},
 					signs = {
 						expected: expectedAnswer.split("@")[1],
-						provided: answer.split("@")[1] | ""
+						provided: answer.split("@")[1] ?? ""
+					},
+					grows = {
+						expected: expectedAnswer.split("@")[2] ?? "",
+						provided: answer.split("@")[2] ?? ""
 					}
 
 				if (zeroes.expected !== zeroes.provided) {
@@ -26,6 +30,13 @@ export function TableofsignChecker(options) {
 					return {
 						result: false,
 						message: "les signes ne sont pas justes"
+					}
+				}
+
+				if(grows.expected!== grows.provided){
+					return {
+						result: false,
+						message: "la croissance n'est pas juste"
 					}
 				}
 

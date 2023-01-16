@@ -29,6 +29,7 @@
 
 <script setup>
 import {computed, defineAsyncComponent, onMounted, ref} from "vue"
+import {getKeyboard} from "@/keyboards"
 
 const emits = defineEmits(["change", "validate"])
 
@@ -37,8 +38,11 @@ let props = defineProps({
 	}),
 	keyboardUI = ref(null),
 	keyboardComponent = computed(()=>{
-		if(props.question.keyboard){
-			return defineAsyncComponent(() => import(`@/Components/Keyboards/Keyboard${props.question.keyboard}`))
+		let kbrd = getKeyboard(props.question.keyboard)
+
+		if(kbrd){
+			// get the component
+			return defineAsyncComponent(() => import(`@/Components/Keyboards/Keyboard${kbrd}`))
 		}else{
 			return defineAsyncComponent(() => import("@/Components/Keyboards/KeyboardBasic"))
 		}

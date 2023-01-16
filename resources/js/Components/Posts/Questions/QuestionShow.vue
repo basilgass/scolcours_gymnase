@@ -110,7 +110,7 @@
 					/>
 					<div
 						v-if="displayAnswer.raw"
-						v-html="displayAnswer"
+						v-html="displayAnswer.raw"
 					/>
 					<div
 						class="text-xs text-center ml-3 font-code font-xs"

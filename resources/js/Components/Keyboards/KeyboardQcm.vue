@@ -68,9 +68,16 @@ let validateButton = ref(null),
 	},
 	getRaw = function (value) {
 		// TODO: Keyboard QCM : generate raw text.
-		return props.options.split("\n").map(x => `- ${x}`).join("\n")
+		// return props.options.split("\n").map(x => `- ${x}`).join("\n")
+		return value
+	},
+	getAnswer = function(value){
+		return {
+			tex: getTex(value),
+			raw: getRaw(value)
+		}
 	}
-defineExpose({resetKeyStrokes, wrongAnswer, getTex, getRaw})
+defineExpose({resetKeyStrokes, wrongAnswer, getAnswer})
 
 /* ------------------*/
 let qcmSelections = function (output) {

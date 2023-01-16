@@ -34,20 +34,20 @@
 		<div class="mt-2">
 			<keyboard-element
 				v-show="activeInput==='fx'"
-				v-model="f"
 				back
 				reset
 				next
 				keyboard="polynom"
+				@change="f=$event"
 				@next="activeInput='x'"
 			/>
 			<keyboard-element
 				v-show="activeInput==='x'"
-				v-model="x"
 				back
 				reset
 				next
 				keyboard="fraction"
+				@change="x=$event"
 				@next="activeInput='fx'"
 			/>
 		</div>

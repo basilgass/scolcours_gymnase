@@ -7,6 +7,7 @@ import {SolutionChecker} from "@/Composables/Checkers/SolutionChecker"
 import {ExactChecker} from "@/Composables/Checkers/ExactChecker"
 import {StudyChecker} from "@/Composables/Checkers/StudyChecker"
 import {RationalChecker} from "@/Composables/Checkers/RationalChecker"
+import {CoordChecker} from "@/Composables/Checkers/CoordChecker"
 
 export const checkersList = {
 	"polynom": ["factors", "develop"],
@@ -41,6 +42,8 @@ export function useCheckers(checkerData) {
 		return StudyChecker(options)
 	case "sol":
 		return SolutionChecker(options)
+	case "coord":
+		return CoordChecker(options)
 
 	default:
 		return StringChecker(options)

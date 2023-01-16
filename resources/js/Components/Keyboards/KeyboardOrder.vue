@@ -62,8 +62,14 @@ let validateButton = ref(null),
 	getRaw = function (value) {
 		// TODO: Keyboard ORDER : make the solution correctly
 		return ""
+	},
+	getAnswer = function(value){
+		return {
+			tex: getTex(value),
+			raw: getRaw(value)
+		}
 	}
-defineExpose({resetKeyStrokes, wrongAnswer, getTex, getRaw})
+defineExpose({resetKeyStrokes, wrongAnswer, getAnswer})
 
 /* ------------------*/
 
