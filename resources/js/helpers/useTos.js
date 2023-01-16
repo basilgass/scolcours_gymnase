@@ -1,7 +1,7 @@
 import {keyboards} from "@/keyboards"
 
 
-export function makeStudyFromCode(code, showCoords){
+export function makeStudyFromCode(code, showCoords, displayMode){
 	let [zeroes, signs, grows, coords] = code.split("@")
 	if(grows!==undefined){
 		let extremes = {},
@@ -27,8 +27,17 @@ export function makeStudyFromCode(code, showCoords){
 				}
 
 				let label = " "
+
 				if(extremesValues[i]!==undefined){
-					label = `\\left(${z};${extremesValues[i]===""?"?":extremesValues[i]}\\right)`
+					// if in writing mode, show a question mark
+					if(displayMode){
+						if(extremesValues[i] !== ""){
+							label = `\\left(${z};${extremesValues[i]}\\right)`
+						}
+
+					}else {
+						label = `\\left(${z};${extremesValues[i] === "" ? "?" : extremesValues[i]}\\right)`
+					}
 				}
 
 				extremes[keyboards.exact.tex(z)] = {
