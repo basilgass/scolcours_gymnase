@@ -13,6 +13,7 @@ code: rational fraction
 import {computed, ref} from "vue"
 import {PiMath} from "pimath/esm"
 import PiTableOfSigns from "@/Components/Pi/PiTableOfSigns.vue"
+import {makeStudyFromCode} from "@/helpers/useTos"
 
 let props = defineProps({
 		illustration: {type: Object, required: true}
@@ -21,13 +22,22 @@ let props = defineProps({
 	code = ref(props.illustration.code)
 
 let study = computed(()=>{
+		if(code.value.includes("@")){
+			return {
+				name: "f"
+			}
+		}
+
 		let [num, den] = code.value.split("/"),
-			p = new PiMath.Rational(num, den),
-			cfg = params.value?params.value.split(","):[]
+			p = new PiMath.Rational(num, den || "1")
+
 		return p.study("signs" + (params.value?(","+params.value):""))
+
 	}),
 	minimal = computed(()=>{
-		return params.value?params.value.includes("minimal"):false
+		if(code.value.includes("@")){return true}
+		if(params.value.includes("minimal")||params.value.includes("min")){return true}
+		return false
 	}),
 	extremes = computed(()=>{
 		if(params.value){
@@ -38,8 +48,12 @@ let study = computed(()=>{
 		return null
 	}),
 	tableOfSigns = computed(()=>{
+		if(code.value.includes("@")){
+			// Building manually
+			return makeStudyFromCode(code.value)
+		}
+
 		if(params.value.split(",").includes("dx")){
-			console.log(study.value.derivative)
 			return study.value.derivative
 		}else{
 			return study.value.signs

@@ -196,11 +196,13 @@ function displayExtremes(index) {
 	if(props.extremes) {
 		let labels = props.extremes.split(",")
 		return zeroIndex < labels.length ? labels[zeroIndex] : labels[labels.length - 1]
-	}else if(extreme.label!==undefined){
+	}else if(extreme!==undefined && extreme.label!==undefined){
 		return `\\substack{ ${extreme.type} \\\\ ${extreme.label} }`
 	}else if(extreme){
 		return `\\substack{ ${extreme.type} \\\\ \\left(${extreme.tex.x}; ${extreme.tex.y}  \\right) }`
 	}
+
+	return ""
 }
 
 </script>

@@ -116,11 +116,11 @@
 
 import {computed, nextTick, ref} from "vue"
 import PiTableOfSigns from "@/Components/Pi/PiTableOfSigns.vue"
-import {keyboards} from "@/keyboards"
 import {useWrongAnswerAnimation} from "@/Composables/useHelpers"
 import KeyboardElement from "@/Components/Keyboards/KeyboardElement.vue"
 import KeyboardValidateButton from "@/Components/Keyboards/KeyboardValidateButton.vue"
 import {useCheckers} from "@/Composables/useCheckers"
+import {makeStudyFromCode} from "@/helpers/useTos"
 
 let props = defineProps({
 	options: {type: String},
@@ -155,67 +155,7 @@ let zeroes = ref(""),
 		return props.answer.split("@").length>3
 	}),
 	tos = computed(() => {
-		if(withGrows.value){
-			let extremes = {},
-				extremesValues = coords.value.split(","),
-				zeroesValues = zeroes.value.split(",")
-
-			if(showKeyboard.value!=="coords"){
-				extremesValues=[]
-			}
-
-			for(let i in zeroesValues){
-				let z = zeroesValues[i],
-					g = grows.value[2*i+1]
-
-				if(g!==undefined) {
-					let t = ""
-					if (g === "M") {
-						t = "max"
-					} else if(g==="m") {
-						t = "min"
-					} else if(g==="_"){
-						t = "replat"
-					}
-
-					let label = " "
-					if(extremesValues[i]!==undefined){
-						label = `\\left(${z};${extremesValues[i]===""?"?":extremesValues[i]}\\right)`
-					}
-
-					extremes[keyboards.exact.tex(z)] = {
-						tex: {x: 1, y: 2},
-						type: t,
-						value: {x: 1, y: 2},
-						label
-					}
-
-					console.log(extremes[keyboards.exact.tex(z)])
-				}
-			}
-
-			return {
-				zeroes: zeroes.value.split(",").map(x => {
-					return {tex: keyboards.exact.tex(x)}
-				}),
-				factors: [],
-				extremes,
-				type: "grows",
-				grows: [...grows.value.split("")],
-				signs: [
-					["", ...signs.value.split(""), ""],
-					["", ...signs.value.split(""), ""]
-				]
-			}
-		}
-
-		return {
-			zeroes: zeroes.value.split(",").map(x => {
-				return {tex: keyboards.exact.tex(x)}
-			}),
-			factors: [],
-			signs: [["", ...signs.value.split(""), ""]]
-		}
+		return makeStudyFromCode(answerValue.value, showKeyboard.value==="coords")
 	}),
 	resetKeyStrokes = function () {
 		zeroes.value = ""
