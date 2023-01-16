@@ -50,7 +50,7 @@ let study = computed(()=>{
 	tableOfSigns = computed(()=>{
 		if(code.value.includes("@")){
 			// Building manually
-			return makeStudyFromCode(code.value, code.value.length===4)
+			return makeStudyFromCode(code.value, code.value.split("@").length===4)
 		}
 
 		if(params.value.split(",").includes("dx")){
