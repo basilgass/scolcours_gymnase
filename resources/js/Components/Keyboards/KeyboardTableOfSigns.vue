@@ -84,13 +84,14 @@
 				:custom-keys="{
 					'-': {type: 'icon', display: 'bi bi-arrow-down-right'},
 					'+': {type: 'icon', display: 'bi bi-arrow-up-right'},
+					'd': {type: 'math', display: '\\textcolor{red}{\\Vert}'},
 					'M': {type: 'text', display: 'max'},
 					'm': {type: 'text', display: 'min'},
 					'_': {type: 'text', display: 'replat'},
 				}"
 				:keyboard="{
-					grid: 'grid-cols-5',
-					layout: ['+', '-', 'm', 'M', '_', '', '', '', '@back', '@reset']
+					grid: 'grid-cols-3',
+					layout: ['+', '-', 'd', 'm', 'M', '_', '', '@back', '@reset']
 				}"
 				key-class="bg-white"
 				@change="grows = $event; updateTos()"
@@ -168,11 +169,13 @@ let zeroes = ref(""),
 					g = grows.value[2*i+1]
 
 				if(g!==undefined) {
-					let t = "replat"
+					let t = ""
 					if (g === "M") {
 						t = "max"
 					} else if(g==="m") {
 						t = "min"
+					} else if(g==="_"){
+						t = "replat"
 					}
 
 					let label = " "
@@ -186,6 +189,8 @@ let zeroes = ref(""),
 						value: {x: 1, y: 2},
 						label
 					}
+
+					console.log(extremes[keyboards.exact.tex(z)])
 				}
 			}
 
