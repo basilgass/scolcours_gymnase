@@ -294,6 +294,8 @@ let unknownWord = function () {
 	// show the definition
 	defineUnknowns(item)
 
+	// Save the localStorage.
+	saveToLocalStorage(1)
 
 }
 
@@ -345,11 +347,11 @@ watch(userGuess, (newValue, oldValue) => {
 		})
 })
 
-function saveToLocalStorage() {
+function saveToLocalStorage(addToIndex) {
 	localStorage.setItem(localStorageKey.value,
 		JSON.stringify(
 			{
-				"index": startIndex.value,
+				"index": startIndex.value + (addToIndex?addToIndex:0),
 				"words": availableWords.value,
 				"unknowns": unknownCount.value
 			}
