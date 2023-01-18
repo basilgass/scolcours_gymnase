@@ -4,6 +4,7 @@ export function StudyChecker(options) {
 			return ""
 		},
 		check: (expectedAnswer, answer = []) => {
+			console.log(expectedAnswer, answer)
 			const arrayAnswer = answer.split(",").sort(),
 				arrayExpected = expectedAnswer.split(",").sort(),
 				d = arrayExpected.length - arrayAnswer.length

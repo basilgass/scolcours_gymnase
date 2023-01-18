@@ -6,7 +6,7 @@
 			:href="`/${language}`"
 			class="hover:pl-2 transition-all duration-300"
 		>
-			<i class="bi bi-arrow-bar-left" />  retour
+			<i class="bi bi-arrow-bar-left" /> retour
 		</Link>
 
 		<div v-if="!gameStopped">
@@ -27,17 +27,17 @@
 			<form-input
 				ref="suggestInput"
 				v-model="userGuess"
-				name="guess"
-				:label="numberOfLetters>1?`entrer les ${numberOfLetters} premières lettres`:'entrer la première lettre'"
 				:disabled="unknownWordAnswer!==''"
-				@keyup.enter="suggestionEnter"
+				:label="numberOfLetters>1?`entrer les ${numberOfLetters} premières lettres`:'entrer la première lettre'"
+				name="guess"
 				@keyup="resetUnknowns"
+				@keyup.enter="suggestionEnter"
 			/>
 
 			<div class="text-xs flex justify-between">
 				<div>Mot {{ startIndex + 1 }} sur {{ availableWords.length }}</div>
 				<div v-if="unknownCount>0">
-					{{ unknownCount }} erreur{{ unknownCount>1?'s':'' }}
+					{{ unknownCount }} erreur{{ unknownCount > 1 ? 's' : '' }}
 				</div>
 			</div>
 
@@ -147,7 +147,7 @@ export default {
 </script>
 <script setup>
 import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
-import {computed, nextTick, ref, watch} from "vue"
+import {computed, nextTick, onMounted, ref, watch} from "vue"
 import {PiMath} from "pimath/esm"
 import FormInput from "@/Components/Form/FormInput.vue"
 import FormNumber from "@/Components/Form/FormNumber.vue"
@@ -156,16 +156,19 @@ import LanguageUnitsSelector from "@/Pages/languages/LanguageUnitsSelector.vue"
 let props = defineProps({
 	code: {type: String, required: true},
 	language: {type: String, required: true},
-	units: {type: Array, default: ()=>[]}
+	units: {type: Array, default: () => []}
 })
 let unitsSelection = ref([]),
+	localStorageKey = computed(()=>{
+		return `scolcours_guess_${props.language}`
+	}),
 	availableWords = ref([]),
 	numberOfLetters = ref(2),
 	userGuess = ref(""),
-	determinants = computed(()=>{
-		if(props.language==="italiano"){
+	determinants = computed(() => {
+		if (props.language === "italiano") {
 			return ["il ", "la ", "le ", "lo ", "i ", "l'", "gli "]
-		}else if(props.language==="english"){
+		} else if (props.language === "english") {
 			return ["a ", "to ", "the ", "an "]
 		}
 
@@ -174,8 +177,10 @@ let unitsSelection = ref([]),
 	suggestionsItems = ref([]),
 	suggestionsWrapper = ref(null),
 	startIndex = ref(0),
-	currentWordForeign = computed(()=>{
-		if (availableWords.value.length===0){return ""}
+	currentWordForeign = computed(() => {
+		if (availableWords.value.length === 0) {
+			return ""
+		}
 		return availableWords.value[startIndex.value].fr
 	}),
 	unknownWordAnswer = ref(""),
@@ -188,74 +193,82 @@ let unitsSelection = ref([]),
 
 
 let startGame = function () {
-	if(unitsSelection.value.length===0){
+	if (unitsSelection.value.length === 0) {
 		alert("sélectionner au moins une unité !")
 		return
 	}
-	if(availableWords.value.length===0) {
+	if (availableWords.value.length === 0) {
 		generateWords()
 	}
 
+	// The game has been started - store the value in the localStorage.
+	saveToLocalStorage()
+
 	gameStopped.value = false
 
-	nextTick(()=>{
+	nextTick(() => {
 		suggestInput.value.focus()
 	})
 
 }
 
-let continueGame = function (enter){
+let continueGame = function (enter) {
 	userGuess.value = ""
-	startIndex.value ++
+	startIndex.value++
 	unknownWordAnswer.value = ""
 	resetUnknowns()
 
-	if(startIndex.value===availableWords.value.length){
+	if (startIndex.value === availableWords.value.length) {
 		alert("Félicitations - tu as fait tout ton voc !")
 		gameStopped.value = true
 		availableWords.value = []
 	}
 
-	nextTick(()=>suggestInput.value.focus())
+	nextTick(() => suggestInput.value.focus())
 }
 
-let generateWords = function() {
+let generateWords = function () {
 	// All words available
 	startIndex.value = 0
 	let words = []
-	for(let values of unitsSelection.value.map(x=>x.words)){
+	for (let values of unitsSelection.value.map(x => x.words)) {
 		words = words.concat(values)
 	}
 
 	availableWords.value = PiMath.Random.shuffle(words)
 }
 
-let suggestionEnter = function (){
-	if(suggestionsItems.value.length===1){
+let suggestionEnter = function () {
+	if (suggestionsItems.value.length === 1) {
 		suggestionClick(0)
 	}
 }
-let suggestionClick = function(index) {
-	if(suggestionsItems.value[index].foreign === availableWords.value[startIndex.value].foreign){
+let suggestionClick = function (index) {
+	if (suggestionsItems.value[index].foreign === availableWords.value[startIndex.value].foreign) {
 		// Continue the game
+		availableWords.value[startIndex.value].found = true
 		continueGame()
-	}else{
+	} else {
+		availableWords.value[startIndex.value].found = false
 		shake(index)
 
 		// Add the translation for one second.
 		suggestionsItems.value[index].hint = true
 
 		defineUnknowns(suggestionsItems.value[index])
-		setTimeout(()=>suggestionsItems.value[index].hint = false, 2000)
+		setTimeout(() => suggestionsItems.value[index].hint = false, 2000)
 	}
+
+	// On sauvegarde la valeur en mémoire...
+	saveToLocalStorage()
 }
 
-let defineUnknowns = function(item) {
+let defineUnknowns = function (item) {
 	unknownWordForeign.value = item.foreign
 	unknownWordExamples.value = item.examples.split("|")
 	unknownWordDefinition.value = item.definition
 }
-let resetUnknowns = function(){
+let resetUnknowns = function () {
 	unknownWordForeign.value = ""
 	unknownWordExamples.value = []
 	unknownWordDefinition.value = ""
@@ -264,9 +277,9 @@ let resetUnknowns = function(){
 let unknownWord = function () {
 	// add item at the end
 	const item = {...availableWords.value[startIndex.value]}
-	if(!item.errors){
+	if (!item.errors) {
 		item.errors = 1
-	}else{
+	} else {
 		item.errors++
 	}
 	availableWords.value.push({...item})
@@ -282,8 +295,6 @@ let unknownWord = function () {
 	defineUnknowns(item)
 
 
-
-
 }
 
 function shake(index) {
@@ -297,31 +308,33 @@ function shake(index) {
 	}, 500)
 }
 
-watch(userGuess, (newValue, oldValue)=>{
+watch(userGuess, (newValue, oldValue) => {
 	const txt = userGuess.value.toLowerCase()
 
 	suggestionsItems.value = availableWords.value
-		.filter(x=> {
+		.filter(x => {
 			// C'est un rajout qui vient de "Je ne sais pas".
-			if(x.errors>0){return false}
+			if (x.errors > 0) {
+				return false
+			}
 
 			let translation = x.foreign.toLowerCase()
 			// On filtre les déterminants
-			for(let det of determinants.value){
-				if(translation.startsWith(det)){
+			for (let det of determinants.value) {
+				if (translation.startsWith(det)) {
 					translation = translation.substring(det.length)
 					break
 				}
 			}
 
 			// Le mot cherché a moins de lettre que le nombre de lettres actuelles.
-			if(txt === translation){
+			if (txt === translation) {
 				return true
 			}
 
 			// On retourne uniquement s'il commence
-			return txt.length>=numberOfLetters.value && translation.startsWith(txt)
-		}).map(x=>{
+			return txt.length >= numberOfLetters.value && translation.startsWith(txt)
+		}).map(x => {
 			return {
 				foreign: x.foreign,
 				fr: x.fr,
@@ -330,5 +343,38 @@ watch(userGuess, (newValue, oldValue)=>{
 				definition: x.definition
 			}
 		})
+})
+
+function saveToLocalStorage() {
+	localStorage.setItem(localStorageKey.value,
+		JSON.stringify(
+			{
+				"index": startIndex.value,
+				"words": availableWords.value,
+				"unknowns": unknownCount.value
+			}
+		)
+	)
+}
+function removeFromLcalStorage() {
+	localStorage.removeItem(localStorageKey.value)
+}
+
+onMounted(() => {
+	let previousData = localStorage.getItem(localStorageKey.value)
+	if (previousData) {
+		if (confirm("Il y a des valeurs en mémoire... continuer ?")) {
+			const localData = JSON.parse(previousData)
+			startIndex.value = localData.index
+			availableWords.value = localData.words
+			unknownCount.value = localData.unknowns
+
+			gameStopped.value = false
+
+		}else{
+			removeFromLcalStorage()
+		}
+	}
+
 })
 </script>

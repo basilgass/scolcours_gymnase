@@ -34,7 +34,7 @@
 				<button
 					v-for="item in items"
 					:key="item"
-					v-katex.ascii.nomargin="item"
+					v-katex.ascii.nomargin="displayItem(item)"
 					class="key bg-white hover:bg-amber-300 transition-colors"
 					@dblclick="removeItem(item)"
 				/>
@@ -124,7 +124,7 @@ let outputHTML = ref(null),
 			raw: showRawOutput.value?PiGraph.svg.svg():""
 		})
 	},
-	validateEvent = function () {
+	validateOutput = function(){
 		let output = ""
 
 		if(enablePlot.value){
@@ -141,6 +141,10 @@ let outputHTML = ref(null),
 			output = [...items.value].sort().join(",")
 		}
 
+		return output
+	},
+	validateEvent = function () {
+		const output = validateOutput()
 		const check = useCheckers("study").check(props.answer, output)
 
 		// TODO: checking / message for keyboard STUDY.
@@ -181,9 +185,10 @@ defineExpose({resetKeyStrokes, wrongAnswer, getAnswer})
 // Code specific to Study.
 let PiGraph,
 	plot,
+	plotResult = ref(null),
 	draw = ref(null),
 	keyboardUI = ref(null),
-	theOptions = ref(props.options?props.options.toLowerCase().split(","):[]),
+	theOptions = ref(props.options?props.options.toLowerCase().split("\n"):[]),
 	addButtons = ref([]),
 	tex = ref(""),
 	display = ref(""),
@@ -219,8 +224,14 @@ const btnKeys = {
 	"t": {
 		label: "trou", description: "trou"
 	},
-	"e": {
-		label: "extremum", description: "extremum"
+	"m": {
+		label: "min", description: "minimum"
+	},
+	"mm": {
+		label: "max", description: "maximum"
+	},
+	"_": {
+		label: "replat", description: "replat"
 	}
 }
 
@@ -240,8 +251,14 @@ onMounted(()=>{
 
 	if(theOptions.value.length>0){
 		for(let opt of theOptions.value){
-			if(btnKeys[opt]!==undefined){
-				withButtons.push(opt)
+			if(opt.includes(",")){
+				const btns = opt.split(",")
+				for(let btn of btns){
+					if(btnKeys[btn]!==undefined){
+						withButtons.push(btn)
+					}
+				}
+
 			}else if(opt==="g"){
 				showGraph.value=true
 			}else if(opt==="trace"){
@@ -251,6 +268,8 @@ onMounted(()=>{
 				showRawOutput.value=true
 			}else if(opt.startsWith("f=")){
 				fx = opt.split("f=")[1]
+			}else if(opt.startsWith("p=")){
+				plotResult.value = opt.split("p=")[1]
 			}else if(opt.startsWith("cfg=")){
 				cfgRaw = opt.split("=")[1]
 			}
@@ -258,7 +277,7 @@ onMounted(()=>{
 	}
 
 	if(withButtons.length===0){
-		addButtons.value = ["av", "ah", "ao", "!", "p", "z", "o", "t", "e"]
+		addButtons.value = ["av", "ah", "ao", "!", "p", "z", "o", "t", "m", "mm", "_"]
 	}else{
 		addButtons.value = [...withButtons]
 	}
@@ -339,6 +358,7 @@ function initPlot(fx){
 	}
 }
 function addItemToGraph(btn){
+
 	// Checker.
 	message.value = ""
 	if(btn.startsWith("a")){
@@ -415,6 +435,23 @@ function addItemToGraph(btn){
 	changeEvent()
 }
 
+function displayItem(value){
+	let item = itemsGraph.value[value]
+
+	if(item===undefined){return "?"}
+	if(item.type!=="point"){return value}
+
+	if(item.kind==="m"){
+		return `\\text{min}${value}`
+	}else if(item.kind==="mm"){
+		return `\\text{max}${value}`
+	}else if(item.kind==="_"){
+		return `\\text{replat}${value}`
+	}else if(item.kind==="t"){
+		return `\\text{trou}${value}`
+	}
+}
+
 function removeAllItems(){
 	let keys = [...items.value]
 	for(let item of keys){
@@ -471,6 +508,18 @@ function btnClickEvent(btn) {
 
 function asymptoteToAnswer(item){
 	let ctrls = []
+
+	if(itemsGraph.value[item].type==="point"){
+		switch (itemsGraph.value[item].kind){
+		case "m": return `m${item}`
+		case "mm": return `M${item}`
+		case "_": return `_${item}`
+		case "t": return `t${item}`
+		default: return item
+		}
+	}
+
+
 	for(let key in itemsGraph.value[item].controls){
 		if( itemsGraph.value[item].controls[key].svg.fill()==="green" ){
 			ctrls.push(key)
@@ -653,12 +702,22 @@ function addPoint(type, xValue, yValue){
 
 	let P = PiGraph.point(x, y),
 		pixels = PiGraph.unitsToPixels({x, y}),
-		bar = PiGraph.path(`M${pixels.x-50},${pixels.y} L${pixels.x+50},${pixels.y}`).hide()
-	if(type==="trou"){
+		bar, text, beziercontrol="smooth"
+
+	if(type==="trou" || type==="t"){
 		P.asCircle().fill("white")
-	}else if(type==="extremum"){
-		P.asCircle().fill("black")
-		bar.stroke("red").show()
+	}else if(type==="extremum" || type==="e" || type==="m" || type==="mm" || type==="_"){
+		P.asCircle().fill("red")
+		bar = PiGraph.path(`M${pixels.x-50},${pixels.y} L${pixels.x+50},${pixels.y}`)
+		bar.stroke("red")
+
+		if(type==="m") {
+			text = PiGraph.svg.text("MIN").move(pixels.x-5, pixels.y+10)
+		}else if(type==="mm"){
+			text = PiGraph.svg.text("MAX").move(pixels.x-5, pixels.y-20)
+		}
+
+		beziercontrol = "flat"
 	}else{
 		P.asCircle().fill("black")
 	}
@@ -666,15 +725,27 @@ function addPoint(type, xValue, yValue){
 
 	return {
 		type: "point",
-		beziercontrol: type==="extremum"?"flat":"smooth",
+		kind: type,
+		beziercontrol,
 		element: P,
 		controls: {
-			bar
+			bar,
+			text
 		}
 	}
 }
 
 function plotGraph(){
+	// Check the validation -
+	// if the result is TRUE, trace the existing value (if it exists).
+	const check = useCheckers("study").check(props.answer, validateOutput())
+	console.log(plotResult.value)
+	if(check.result && plotResult.value){
+		console.log("PLOT CORRECT FUNCTION")
+		initPlot(plotResult.value)
+		return
+	}
+
 	// Get all points
 	let ctrlPoints = []
 
