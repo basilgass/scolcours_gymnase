@@ -58,7 +58,9 @@ class TranslationController extends Controller
 		]);
 
 		foreach ($validation['translations'] as $translation) {
-			$unit->translations()->create($translation);
+			$unit->translations()->updateOrCreate(
+				$translation
+			);
 		}
 
 		return true;
