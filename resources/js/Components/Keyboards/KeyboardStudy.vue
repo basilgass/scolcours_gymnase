@@ -439,6 +439,7 @@ function displayItem(value){
 	let item = itemsGraph.value[value]
 
 	if(item===undefined){return "?"}
+
 	if(item.type!=="point"){return value}
 
 	if(item.kind==="m"){
@@ -450,6 +451,8 @@ function displayItem(value){
 	}else if(item.kind==="t"){
 		return `\\text{trou}${value}`
 	}
+
+	return value
 }
 
 function removeAllItems(){
@@ -488,7 +491,11 @@ function removeItem(item) {
 
 function removeControlsAndBezier(item){
 	// Remove the control points.
-	Object.values(itemsGraph.value[item].controls||[]).forEach(el=>el.remove())
+	Object.values(itemsGraph.value[item].controls||[]).forEach(el=> {
+		if(el) {
+			el.remove()
+		}
+	})
 	// Remove the bezier points.
 	Object.values(itemsGraph.value[item].bezier||[]).forEach(group=>group.forEach(el=>el.remove()))
 
@@ -739,9 +746,7 @@ function plotGraph(){
 	// Check the validation -
 	// if the result is TRUE, trace the existing value (if it exists).
 	const check = useCheckers("study").check(props.answer, validateOutput())
-	console.log(plotResult.value)
 	if(check.result && plotResult.value){
-		console.log("PLOT CORRECT FUNCTION")
 		initPlot(plotResult.value)
 		return
 	}
