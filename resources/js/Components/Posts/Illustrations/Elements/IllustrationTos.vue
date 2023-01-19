@@ -23,8 +23,15 @@ let props = defineProps({
 
 let study = computed(()=>{
 		if(code.value.includes("@")){
+			let name = "f"
+			for(let param of params.value.split(",")){
+				if(param.includes("(x)")){
+					name = param.split("(x)")[0]
+				}
+			}
+
 			return {
-				name: "f"
+				name
 			}
 		}
 
