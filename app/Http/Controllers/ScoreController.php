@@ -17,6 +17,7 @@ class ScoreController extends Controller
 			'user_id' => ["exists:App\Models\User,id"],
 			'challenge_id' => ["exists:App\Models\Challenge,id"],
 			'score' => ['int'],
+			'level' => ['int', 'nullable'],
 			'stars' => ['int', 'nullable']
 		]);
 
@@ -33,6 +34,7 @@ class ScoreController extends Controller
 			],
 			[
 				'score' => max($validate['score'], $currentScore),
+				'level' => $validate['level'] ?? null,
 				'stars' => $validate['stars'] ?? null,
 			]
 		);
@@ -52,6 +54,7 @@ class ScoreController extends Controller
 	{
 		$validate = $request->validate([
 			'score' => ['int', 'min:0'],
+			'level' => ['nullable', 'int', 'min:1'],
 			'stars' => ['nullable', 'int', 'min:0', 'max:5'],
 		]);
 
@@ -64,6 +67,7 @@ class ScoreController extends Controller
 				'user_id' => Auth::user()->id,
 			], [
 				'score' => $validate["score"],
+				'level' => $validate["level"] ?? null,
 				'stars' => $validate["stars"] ?? null
 			]);
 		}
@@ -71,10 +75,12 @@ class ScoreController extends Controller
 		return [
 			'previous' => [
 				'score' => $currentScore['score'] ?? 0,
+				'level' => $currentScore['level'] ?? 1,
 				'stars' => $currentScore['stars'] ?? 0
 			],
 			'updated' => [
 				'score' => $validate['score'],
+				'level' => $validate['level'] ?? 1,
 				'stars' => $validate['stars'] ?? 0
 			]
 		];

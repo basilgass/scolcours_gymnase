@@ -219,7 +219,7 @@ let startChallenge = function () {
 		}
 
 		// Sauvegarde le score dans la base de donnée
-		storeScore(score.value)
+		storeScore(score.value, level.value)
 	},
 	timerWidth = computed(() => {
 		return (ellapsedTime.value / maxTimeInMinutes.value) * 100
@@ -328,8 +328,6 @@ let theQuestion = ref({})
 watch(questionId, () => {
 	const currentQuestion = listOfQuestions.value[questionId.value]
 
-	console.log(theChallenge.value)
-
 	theQuestion.value = {
 		block: {
 			body: theChallenge.value.output
@@ -349,11 +347,12 @@ watch(questionId, () => {
 	}
 })
 
-const storeScore = function (value) {
+const storeScore = function (value, level) {
 	if (usePage().props.value.auth) {
 		// TODO: Add stars system to challenge
 		axios.post(route("scores.challenge", [theChallenge.value.id]), {
-			"score": value
+			"score": value,
+			"level": level
 		}).then(res => {
 			if (res.data) {
 				const delta = res.data.updated.score - res.data.previous.score
