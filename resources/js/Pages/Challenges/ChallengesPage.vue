@@ -328,6 +328,8 @@ let theQuestion = ref({})
 watch(questionId, () => {
 	const currentQuestion = listOfQuestions.value[questionId.value]
 
+	console.log(theChallenge.value)
+
 	theQuestion.value = {
 		block: {
 			body: theChallenge.value.output
@@ -338,7 +340,6 @@ watch(questionId, () => {
 				.replace("answer", "$a"),
 			illustrations: [],
 		},
-		checker: theChallenge.value.checker,
 		keyboard: currentQuestion.keyboard ? currentQuestion.keyboard.name : theChallenge.value.keyboard,
 		parameters: currentQuestion.keyboard ? currentQuestion.keyboard.parameters : theChallenge.value.parameters || "",
 		answer: "" + currentQuestion.answer,

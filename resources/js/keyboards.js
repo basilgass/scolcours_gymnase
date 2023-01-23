@@ -276,8 +276,8 @@ export const keyboardsList = [
 
 export function getKeyboard(value){
 	// Basic keyboard
-	if(keyboards[value]){
-		return value
+	if(value===null || keyboards[value]){
+		return value || ""
 	}
 
 	// Component keyboard
