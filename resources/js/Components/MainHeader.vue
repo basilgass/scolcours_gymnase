@@ -4,7 +4,7 @@
 		:class="`bg-scolcours-${theme.slug}`"
 	>
 		<MainAside />
-		
+
 		<div
 			class="scolcours-container py-6
 				flex justify-between items-center"
@@ -20,7 +20,21 @@
 			</div>
 
 			<div>
-				<div v-if="$page.props.auth.user">
+				<div
+					v-if="$page.props.auth.user"
+					class="flex gap-3"
+				>
+					<div v-admin>
+						<button
+							class="btn btn-xs hover:text-black"
+							:class="editMode.enabled.value?'bg-white/40':''"
+							@click="editMode.toggle()"
+						>
+							<span v-show="editMode.enabled.value"> <i class="bi bi-pencil mr-2" /> édition activée</span>
+							<span v-show="!editMode.enabled.value"> <i class="bi bi-pencil mr-2" /> activer l'édition</span>
+						</button>
+					</div>
+
 					<div
 						class="relative cursor-pointer"
 						@click="showMenu = !showMenu"
@@ -53,7 +67,7 @@
 	</header>
 </template>
 <script setup>
-import {ref} from "vue"
+import {inject, ref} from "vue"
 import MainAside from "@/Components/MainAside"
 import LogoutButton from "@/Components/Ui/LogoutButton"
 
@@ -62,7 +76,8 @@ defineProps({
 })
 
 let showMenu = ref(false),
-	showAside = ref(false)
+	showAside = ref(false),
+	editMode = inject("editMode")
 
 defineExpose({
 	showAside, showMenu

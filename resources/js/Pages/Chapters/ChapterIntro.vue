@@ -15,7 +15,10 @@
 			/>
 
 			<!-- commencer l'aventure -->
-			<div class="w-full text-center px-5">
+			<div
+				v-if="theChapter.posts.length>0"
+				class="w-full text-center px-5"
+			>
 				<Link
 					class="min-h-[80px] mx-auto w-full md:w-auto md:px-20"
 					:class="`btn-scolcours-${$page.props.theme.slug}`"

@@ -39,6 +39,7 @@
 					:question="theQuestion"
 					class="max-w-[40em] mx-auto"
 					display-input
+					dynamic
 					@validate="validateAnswer"
 				/>
 			</div>
@@ -49,6 +50,7 @@
 			v-if="isFinished"
 			:challenge="theChallenge"
 			:results="results"
+			@start="startChallenge"
 		/>
 	</article>
 </template>

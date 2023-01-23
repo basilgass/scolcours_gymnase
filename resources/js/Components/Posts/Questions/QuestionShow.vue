@@ -16,6 +16,8 @@
 		</div>
 
 		<div
+			v-if="!dynamic"
+			v-show="editMode.enabled.value"
 			v-admin
 			class="flex justify-end w-full px-3 gap-3 mt-2"
 		>
@@ -136,15 +138,19 @@
 </template>
 
 <script setup>
-import {computed, defineAsyncComponent, provide, ref} from "vue"
+import {computed, defineAsyncComponent, inject, provide, ref} from "vue"
 import IllustrationShow from "@/Components/Posts/Illustrations/IllustrationShow.vue"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 import QuestionUserInput from "@/Components/Posts/Questions/QuestionUserInput.vue"
 
 let emits = defineEmits(["destroy", "validate", "duplicate"])
+
+let editMode = inject("editMode")
+
 let props = defineProps({
 		question: {type: Object, required: true},
-		displayInput: {type: Boolean, default :false}
+		displayInput: {type: Boolean, default :false},
+		dynamic: {type: Boolean, default: false},
 	}),
 	keyboardUI = ref(null),
 	theQuestion = ref(props.question),

@@ -195,23 +195,51 @@ export const keyboards = {
 			"(", ";", ")", "pi", "e"
 		],
 		tex: function (value) {
-			//TODO: coord tex display only works for 2 dimensional coordinates.
-			// should be: (a;b)
-			// Apply this for all split values
-			let [a,b] = value.split(";"),
-				lp = "", rp = "", col=b===undefined?" ":";"
-			if(a.startsWith("(")){
+			let [...coords] = value.split(";"),
+				lp = "", rp = ""
+
+			if(coords[0].startsWith("(")){
 				lp = "\\left("
-				a = a.substring(1)
+				coords[0] = coords[0].substring(1)
 				rp = "\\right."
 			}
-			if(b!==undefined && b.endsWith(")")){
+			if(coords[coords.length-1].endsWith(")")){
 				if(lp===""){lp="\\left."}
 				rp = "\\right)"
-				b = b.substring(0, b.length-1)
+				coords[coords.length-1] = coords[coords.length-1].substring(0, coords[coords.length-1].length-1)
 			}
 
-			return `${lp}${makeExactFromAscii(a)}${col}${makeExactFromAscii(b)}${rp}`
+			return `${lp}${coords.map(x=>makeExactFromAscii(x)).join(";")}${rp}`
+		}
+	},
+	"vector": {
+		grid: "grid-cols-5",
+		layout: [
+			"1", "2", "3", "+", "-",
+			"4", "5", "6", "", "/",
+			"7", "8", "9", "^2", "sqrt",
+			"", "0", ".", "^", "root(",
+			"(", ";", ")", "pi", "e"
+		],
+		tex: function (value) {
+			let [...coords] = value.split(";"),
+				lp = "", rp = ""
+
+			if(coords[0].startsWith("(")){
+				lp = "\\left("
+				coords[0] = coords[0].substring(1)
+				rp = "\\right."
+			}
+			if(coords[coords.length-1].endsWith(")")){
+				if(lp===""){lp="\\left."}
+				rp = "\\right)"
+				coords[coords.length-1] = coords[coords.length-1].substring(0, coords[coords.length-1].length-1)
+			}
+
+			return `${lp}\\begin{matrix}${coords.map(x=>{
+				let tex = makeExactFromAscii(x)
+				return tex==="" ? "\\phantom{ }" : tex
+			}).join("\\\\")}\\end{matrix}${rp}`
 		}
 	},
 	"limit": {

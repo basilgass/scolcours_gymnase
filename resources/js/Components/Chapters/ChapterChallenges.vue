@@ -22,6 +22,7 @@
 			</Link>
 
 			<div
+				v-show="editMode.enabled.value"
 				v-admin
 				class="min-h-[100px] grid place-items-center"
 			>
@@ -68,7 +69,7 @@
 
 <script setup>
 import DialogModal from "@/Components/Ui/DialogModal.vue"
-import {ref} from "vue"
+import {inject, ref} from "vue"
 import FormInput from "@/Components/Form/FormInput.vue"
 import {useForm} from "@inertiajs/inertia-vue3"
 import FormButton from "@/Components/Form/FormButton.vue"
@@ -76,6 +77,8 @@ import FormButton from "@/Components/Form/FormButton.vue"
 let props = defineProps({
 	chapter: {type: Object,required:true}
 })
+
+const editMode = inject("editMode")
 
 let show = ref(false),
 	form = useForm({

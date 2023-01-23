@@ -1,4 +1,5 @@
 import {ExactChecker} from "@/Composables/Checkers/ExactChecker"
+import {stripFirstCharacter, stripLastCharacter} from "@/Composables/useCheckers"
 
 export function CoordChecker(options) {
 	// TODO: coordchecker is by default using exactChecker. Might also be good to use nb checker
@@ -16,7 +17,8 @@ export function CoordChecker(options) {
 
 			// On récupère les valeurs
 			let values = answer.split(";"),
-				expectedValues = expectedAnswer.split(",")
+				expectedValues = expectedAnswer.split(";")
+
 			if(values.length===1){
 				return {
 					result: false,
@@ -32,8 +34,15 @@ export function CoordChecker(options) {
 			}
 
 			// remove the parentese from the first and last value.
-			values[0] = values[0].substring(1)
-			values[values.length-1] = values[values.length-1].substring(0, values[values.length-1].length-1)
+			values[0] = stripFirstCharacter(values[0])
+			values[values.length-1] = stripLastCharacter(values[values.length-1])
+
+			if(expectedValues[0].startsWith("(")){expectedValues[0] = stripFirstCharacter(expectedValues[0])}
+
+			if(expectedValues[expectedValues.length-1].endsWith(")")){
+				expectedValues[expectedValues.length-1] = stripLastCharacter(expectedValues[expectedValues.length-1])
+			}
+
 
 			let eChecker = ExactChecker(options)
 			for(let i=0; i<values.length; i++){

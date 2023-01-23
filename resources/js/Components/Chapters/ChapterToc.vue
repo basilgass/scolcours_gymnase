@@ -9,6 +9,7 @@
 			</h3>
 			<div
 				v-if="$page.props.auth.can.admin"
+				v-show="editMode.enabled.value"
 				class="flex gap-3 items-baseline"
 			>
 				<form-switch
@@ -79,7 +80,8 @@ let props = defineProps({
 	active: {type: Number, default: null}
 })
 
-const flash = inject("flash")
+const flash = inject("flash"),
+	editMode = inject("editMode")
 let posts = ref(props.chapter.posts),
 	moveMode = ref(false),
 	updatePostsOrder = function () {

@@ -41,7 +41,7 @@
 <script setup>
 import MainHeader from "@/Components/MainHeader"
 import MainFooter from "@/Components/MainFooter"
-import {provide, ref} from "vue"
+import {computed, provide, ref} from "vue"
 import FlashMessage from "@/Components/Ui/FlashMessage.vue"
 
 defineProps({
@@ -57,6 +57,17 @@ let	flashMessages = ref([]),
 		flashMessages.value.push({message, type, timeout})
 	}
 provide("flash", {add: addFlashMessage})
+
+let globalEditMode = ref(false),
+	globalCorrectionMode = ref(false)
+provide("editMode", {
+	enabled: computed(()=>{return globalEditMode.value}),
+	toggle: function(){globalEditMode.value = !globalEditMode.value}
+})
+provide("correctionMode", {
+	enabled: computed(()=>{return globalCorrectionMode.value}),
+	toggle: function(){globalCorrectionMode.value = !globalCorrectionMode.value}
+})
 
 </script>
 <style scoped>

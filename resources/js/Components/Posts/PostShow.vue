@@ -6,7 +6,8 @@
 				<span v-katex.auto="thePost.title" />
 
 				<button
-					v-if="$page.props.auth.can.admin"
+					v-show="editMode.enabled.value"
+					v-admin
 					class="text-xs ml-3"
 					@click="showEditForm=true"
 				>
@@ -24,10 +25,10 @@
 				<ui-switch
 					v-if="thePost.switch"
 					v-model="postSwitch"
-					:true-text="postSwitchLabel.post"
 					:false-text="postSwitchLabel.pre"
-					sm
+					:true-text="postSwitchLabel.post"
 					class="mx-1"
+					sm
 				/>
 
 				<button
@@ -61,8 +62,8 @@
 				v-if="thePost.blocks.length"
 				v-model="thePost.blocks"
 				class="grid grid-cols-1 gap-3 my-5"
-				item-key="id"
 				handle=".draggable-handle"
+				item-key="id"
 				v-bind="{
 					animation: 200,
 					disabled: !($page.props.auth.can.admin),
@@ -80,6 +81,7 @@
 			</draggable>
 
 			<div
+				v-show="editMode.enabled.value"
 				v-admin
 				class="px-5"
 			>
@@ -104,7 +106,10 @@
 				>
 					questions
 				</h3>
-				<div v-admin>
+				<div
+					v-show="editMode.enabled.value"
+					v-admin
+				>
 					<button
 						class="btn btn-xs"
 						@click="resetAnswers"
@@ -118,8 +123,8 @@
 				v-if="thePost.questions.length"
 				v-model="thePost.questions"
 				class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 px-5"
-				item-key="id"
 				handle=".draggable-handle"
+				item-key="id"
 				v-bind="{
 					animation: 200,
 					disabled: !($page.props.auth.can.admin),
@@ -128,8 +133,8 @@
 			>
 				<template #item="{element}">
 					<question-show
-						:question="element"
 						:class="element.css??''"
+						:question="element"
 						@destroy="destroyQuestion"
 						@duplicate="thePost.questions.push($event)"
 					/>
@@ -137,6 +142,7 @@
 			</draggable>
 
 			<div
+				v-show="editMode.enabled.value"
 				v-admin
 				class="px-5"
 			>
@@ -169,29 +175,32 @@ let props = defineProps({
 		random: 1		// special trick to make random function... functional !
 	})
 
-const flash = inject("flash")
+const flash = inject("flash"),
+	editMode = inject("editMode")
 
 let showEditForm = ref(false),
-	editForm = computed(()=>{
+	editForm = computed(() => {
 		return defineAsyncComponent(
-			()=>import("@/Components/Posts/PostForm.vue")
+			() => import("@/Components/Posts/PostForm.vue")
 		)
 	}),
-	updatePost = function(p){
+	updatePost = function (p) {
 		thePost.value = p
 	},
-	updateBlocksOrder = function(){
+	updateBlocksOrder = function () {
 		axios.post(route("posts.updateBlocksOrder", [thePost.value.id]), {
-			order: thePost.value.blocks.map((x, index)=>{return {id: x.id, order: index}}),
+			order: thePost.value.blocks.map((x, index) => {
+				return {id: x.id, order: index}
+			}),
 			_method: "PATCH"
-		}).then(res=>{
+		}).then(res => {
 			// TODO : flash message !
 			flash.add("les blocs ont bien été mis à jour !")
-		}).catch(res=>console.log("update ordering order: ", res.response.data.message))
+		}).catch(res => console.log("update ordering order: ", res.response.data.message))
 	}
 
 
-let addBlock = function(){
+let addBlock = function () {
 		axios.post(
 			route("posts.blocks.store", [thePost.value.id])
 		).then(res => {
@@ -204,7 +213,7 @@ let addBlock = function(){
 			console.error(err)
 		})
 	},
-	destroyBlock = function(destroyId){
+	destroyBlock = function (destroyId) {
 		thePost.value.blocks = thePost.value.blocks.filter(x => x.id !== destroyId)
 	}
 
@@ -227,21 +236,23 @@ let addQuestion = function () {
 	destroyQuestion = function (destroyId) {
 		thePost.value.questions = thePost.value.questions.filter(x => x.id !== destroyId)
 	},
-	updateQuestionsOrder = function(){
+	updateQuestionsOrder = function () {
 		axios.post(route("questions.updateOrder", [thePost.value.id]), {
-			order: thePost.value.questions.map((x, index)=>{return {id: x.id, order: index+1}}),
+			order: thePost.value.questions.map((x, index) => {
+				return {id: x.id, order: index + 1}
+			}),
 			_method: "PATCH"
-		}).then(res=>{
+		}).then(res => {
 			// TODO : flash message !
 			flash.add("les questions ont bien été mis à jour !")
-		}).catch(res=>console.log("update questions order failed", res))
+		}).catch(res => console.log("update questions order failed", res))
 
 	},
 	resetAnswers = function () {
 		axios
 			.patch(route("posts.questions.reset", [thePost.value.id]))
 			.then(res => {
-				for(let i in thePost.value.questions){
+				for (let i in thePost.value.questions) {
 					thePost.value.questions[i].user.answer = []
 					thePost.value.questions[i].user.correct = false
 				}
@@ -249,28 +260,28 @@ let addQuestion = function () {
 	}
 
 provide("postData",
-	computed(()=>{
+	computed(() => {
 		// trigger the computed value on button click
 		try {
 			if (thePost.value.script && thePost.value.random) {
 				let F = new Function("PiMath", thePost.value.script)
 				return F(PiMath)
 			}
-		}catch(e){
+		} catch (e) {
 			console.log("Post script generator error", e)
 		}
 		return {}
 	})
 )
-let updatePostData = function(){
+let updatePostData = function () {
 	thePost.value.random++
 }
-let postSwitchLabel = computed(()=>{
-		if(thePost.value.switch){
+let postSwitchLabel = computed(() => {
+		if (thePost.value.switch) {
 			const [pre, post] = thePost.value.switch.split("@")
 			return {
 				pre,
-				post: post??""
+				post: post ?? ""
 			}
 		}
 		return {pre: "", post: ""}

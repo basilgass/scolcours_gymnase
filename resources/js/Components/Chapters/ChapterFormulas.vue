@@ -46,6 +46,7 @@
 				</template>
 				<template #footer>
 					<div
+						v-show="editMode.enabled.value"
 						v-admin
 						class="px-5"
 					>
@@ -75,7 +76,8 @@ const theFormular = ref([]),
 	theSlug = ref(props.chapterSlug),
 	themeChapters = ref([])
 
-const flash = inject("flash")
+const flash = inject("flash"),
+	editMode = inject("editMode")
 const addFormula = function(){
 		axios
 			.post(route("chapters.formulas.store", [props.chapterSlug]), {})

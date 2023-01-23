@@ -8,6 +8,7 @@ import {ExactChecker} from "@/Composables/Checkers/ExactChecker"
 import {StudyChecker} from "@/Composables/Checkers/StudyChecker"
 import {RationalChecker} from "@/Composables/Checkers/RationalChecker"
 import {CoordChecker} from "@/Composables/Checkers/CoordChecker"
+import {VectorChecker} from "@/Composables/Checkers/VectorChecker"
 
 export const checkersList = {
 	"polynom": ["factors", "develop"],
@@ -44,8 +45,18 @@ export function useCheckers(checkerData) {
 		return SolutionChecker(options)
 	case "coord":
 		return CoordChecker(options)
+	case "vector":
+		return VectorChecker(options)
 
 	default:
 		return StringChecker(options)
 	}
+}
+
+
+export function stripFirstCharacter(value){
+	return value.substring(1)
+}
+export function stripLastCharacter(value){
+	return value.substring(0, value.length-1)
 }

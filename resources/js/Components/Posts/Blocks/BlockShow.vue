@@ -21,6 +21,7 @@
 				</button>
 
 				<div
+					v-show="editMode.enabled.value"
 					v-admin
 				>
 					<button
@@ -68,6 +69,8 @@
 			</template>
 			<template #footer>
 				<button
+					v-show="editMode.enabled.value"
+					v-admin
 					class="btn-new-inline"
 					@click="addIllustration"
 				>
@@ -116,7 +119,8 @@ let props = defineProps({
 		}
 		return Boolean(theBlock.value.switch) === Boolean(props.switch)
 	}),
-	flash = inject("flash")
+	flash = inject("flash"),
+	editMode = inject("editMode")
 
 const blockTypes = useBlockTypes,
 	blockTitle = computed(() => {
