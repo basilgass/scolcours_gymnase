@@ -55,7 +55,7 @@ class Block extends Model
 
 	public function illustrations()
 	{
-		return $this->hasMany(Illustration::class);
+		return $this->hasMany(Illustration::class)->orderBy('order')->orderBy('id');
 	}
 
 	public function blockable()

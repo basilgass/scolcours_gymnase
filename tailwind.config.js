@@ -17,6 +17,10 @@ module.exports = {
 		},
 		{
 			pattern: /text-(red|green|blue|amber)-(500|600)/
+		},
+		{
+			pattern: /col-span-([1-3])/,
+			variants: ["lg", "md"]
 		}
 	],
 	theme: {
@@ -58,5 +62,6 @@ module.exports = {
 		// require('@tailwindcss/forms'),
 		require("@tailwindcss/typography"),
 		require("@tailwindcss/line-clamp"),
+		require("@tailwindcss/container-queries"),
 	],
 }

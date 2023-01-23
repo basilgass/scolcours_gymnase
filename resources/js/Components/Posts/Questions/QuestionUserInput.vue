@@ -1,5 +1,5 @@
 <template>
-	<div class="question-keyboard">
+	<div class="question-keyboard @container">
 		<div
 			v-if="message!==''"
 			v-katex.auto="message"

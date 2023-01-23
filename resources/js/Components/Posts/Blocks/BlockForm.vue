@@ -131,7 +131,10 @@
 					</div>
 				</div>
 
-				<div class="w-full">
+				<div
+					v-if="1===0"
+					class="w-full"
+				>
 					<form-button
 						v-if="props.maxIllustration===null || theBlock.illustrations.length < props.maxIllustration"
 						@click="theBlock.illustrations.push({
@@ -145,7 +148,7 @@
 					</form-button>
 				</div>
 				<div
-					v-if="theBlock.illustrations?.length>0"
+					v-if="theBlock.illustrations?.length>0 && 1===0"
 					class="w-full"
 				>
 					<div

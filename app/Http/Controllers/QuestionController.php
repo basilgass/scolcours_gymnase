@@ -132,6 +132,7 @@ class QuestionController extends Controller
 				'checker' => ['string', 'nullable'],
 				'keyboard' => ['string', 'nullable'],
 				'parameters' => ['string', 'nullable'],
+				'css' => ['string', 'nullable'],
 			]
 		);
 

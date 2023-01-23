@@ -44,21 +44,37 @@
 		<markdown-it :text="blockBody" />
 
 		<!-- Block illustrations -->
-		<div
-			v-if="theBlock.illustrations.length"
+		<draggable
+			v-model="theBlock.illustrations"
 			:class="{
 				'md:grid-cols-2 xl:grid-cols-3': theBlock.illustrations.length>=2,
 				'xl:grid-cols-2': theBlock.illustrations.length===2,
 				'max-w-lg mx-auto': theBlock.illustrations.length===1
 			}"
-			class="grid grid-cols-1 mt-8 mb-4 gap-4"
+			class="grid grid-cols-1 gap-3 my-5"
+			handle=".draggable-handle"
+			item-key="id"
+			v-bind="{
+				animation: 200,
+				disabled: !($page.props.auth.can.admin),
+			}"
+			@end="updateIllustrationsOrder"
 		>
-			<illustration-show
-				v-for="illustration of theBlock.illustrations"
-				:key="`block-${theBlock.id}-illustration-${illustration.id}`"
-				:illustration="illustrationEdited(illustration)"
-			/>
-		</div>
+			<template #item="{ element }">
+				<illustration-show
+					:illustration="illustrationEdited(element)"
+					@destroy="destroyIllustration"
+				/>
+			</template>
+			<template #footer>
+				<button
+					class="btn-new-inline"
+					@click="addIllustration"
+				>
+					ajouter une illustration
+				</button>
+			</template>
+		</draggable>
 
 		<div
 			v-if="showEditForm"
@@ -92,20 +108,23 @@ let props = defineProps({
 		maxIllustration: {type: Number, default: null}
 	}),
 	theBlock = ref(props.block),
-	showBlock = computed(()=>{
+	showBlock = computed(() => {
 		// if(usePage().props.value.auth.can.admin){return true}
 
-		if(theBlock.value.switch===null){return true}
+		if (theBlock.value.switch === null) {
+			return true
+		}
 		return Boolean(theBlock.value.switch) === Boolean(props.switch)
-	})
+	}),
+	flash = inject("flash")
 
 const blockTypes = useBlockTypes,
-	blockTitle = computed(()=>{
-		if(theBlock.value.title){
+	blockTitle = computed(() => {
+		if (theBlock.value.title) {
 			return theBlock.value.title
 		}
 
-		if(blockTypes[theBlock.value.type]!==undefined){
+		if (blockTypes[theBlock.value.type] !== undefined) {
 			return blockTypes[theBlock.value.type].text
 		}
 
@@ -117,11 +136,11 @@ let random = ref(1),
 	postData = inject("postData", {}),
 	blockData = computed(() => {
 		try {
-			if (props.block.script !== null && random.value>0) {
+			if (props.block.script !== null && random.value > 0) {
 				let F = new Function("PiMath", "postData", props.block.script)
 				return {...postData.value, ...F(PiMath, postData.value)}
 			}
-		}catch(e){
+		} catch (e) {
 			console.log("BlockShow (script genration)", e)
 		}
 
@@ -130,25 +149,50 @@ let random = ref(1),
 	blockBody = computed(() => {
 		return useFormattedBody(props.block.body, blockData)
 	}),
-	illustrationEdited = function(illustration){
+	illustrationEdited = function (illustration) {
 		return {
 			id: illustration.id,
 			title: illustration.title,
 			type: illustration.type,
 			code: useFormattedBody(illustration.code, blockData),
-			parameters: illustration.parameters?useFormattedBody(illustration.parameters, blockData):""
+			parameters: illustration.parameters ? useFormattedBody(illustration.parameters, blockData) : ""
 		}
 	}
 
-let showEditForm = ref(props.block?.isNew===true),
-	editForm = computed(()=>{
+let showEditForm = ref(props.block?.isNew === true),
+	editForm = computed(() => {
 		return defineAsyncComponent(
-			()=>import("@/Components/Posts/Blocks/BlockForm.vue")
+			() => import("@/Components/Posts/Blocks/BlockForm.vue")
 		)
 	}),
-	updateBlock = function(b){
+	updateBlock = function (b) {
 		theBlock.value = b
+	},
+	addIllustration = function () {
+		axios.post(route("blocks.illustrations.store", [props.block.id]), {})
+			.then(res => {
+				res.data.isNew = true
+				theBlock.value.illustrations.push(res.data)
+				// edit the new illustration.
+
+				flash.add("une nouvelle illustration a été créée")
+			})
+	},
+	updateIllustrationsOrder = function () {
+		axios.post(route("blocks.illustrations.order", [props.block.id]), {
+			order: theBlock.value.illustrations.map((illustration, index) => {
+				return {
+					id: illustration.id,
+					order: index + 1,
+				}
+			}),
+			_method: "PATCH"
+		}).then(res => {
+			// TODO : flash message !
+			flash.add("les illustrations ont bien été réordrées !")
+		}).catch(res => console.log("update ordering illustrations: ", res))
+	},
+	destroyIllustration = function(destroyId){
+		theBlock.value.illustrations = theBlock.value.illustrations.filter(x => x.id !== destroyId)
 	}
-
-
 </script>

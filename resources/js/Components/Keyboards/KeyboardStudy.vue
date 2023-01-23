@@ -1,65 +1,72 @@
 <template>
-	<div class="keyboard-study">
-		<div
-			v-show="showGraph"
-			class="overflow-x-scroll my-5"
-		>
-			<!-- Visual output -->
-			<div
-				ref="draw"
-				class="min-w-[1em]"
+	<div class="keyboard-study grid grid-cols-1 @xl:grid-cols-2 gap-3">
+		<div>
+			<!-- Validation button -->
+			<keyboard-validate-button
+				ref="validateButton"
+				@validate="validateEvent"
 			/>
-			<div ref="outputHTML" />
-		</div>
-		<!-- BValidation button -->
-		<keyboard-validate-button
-			ref="validateButton"
-			@validate="validateEvent"
-		/>
 
-		<div
-			v-if="enablePlot"
-			class="text-center"
-		>
-			<button
-				class="btn btn-primary btn-xs px-10"
-				@click="plotGraph"
+			<!-- graph -->
+			<div
+				v-show="showGraph"
+				class="overflow-x-scroll my-5"
 			>
-				tracer le graphe
-			</button>
-		</div>
-
-		<div class="keyboard-study-items my-3">
-			<div class="flex gap-1 lg:gap-2 items-baseline justify-center keyboard min-h-[3em]">
-				<button
-					v-for="item in items"
-					:key="item"
-					v-katex.ascii.nomargin="displayItem(item)"
-					class="key bg-white hover:bg-amber-300 transition-colors"
-					@dblclick="removeItem(item)"
+				<!-- Visual output -->
+				<div
+					ref="draw"
+					class="min-w-[1em]"
 				/>
-
-				<!-- Keyboard inputs -->
-				<div v-katex="tex" />
+				<div ref="outputHTML" />
 			</div>
+
+			<!-- Trace button -->
 			<div
-				class="text-center text-red-500 text-sm"
-				v-html="message"
-			/>
-			<div
-				v-show="items.length>0"
-				class="text-xs text-gray-700 text-center"
+				v-if="enablePlot"
+				class="text-center"
 			>
-				double-cliquer pour supprimer ou
 				<button
-					class="btn btn-xs bg-white"
-					@click="removeAllItems()"
+					class="btn btn-primary btn-xs px-10"
+					@click="plotGraph"
 				>
-					<i class="bi bi-trash mr-3 text-red-800" />tout supprimer
+					tracer le graphe
 				</button>
 			</div>
+
+			<!-- currently loaded elements (point, max, min, av, ...) -->
+			<div class="keyboard-study-items my-3">
+				<div class="flex gap-1 lg:gap-2 items-baseline justify-center keyboard min-h-[3em]">
+					<button
+						v-for="item in items"
+						:key="item"
+						v-katex.ascii.nomargin="displayItem(item)"
+						class="key bg-white hover:bg-amber-300 transition-colors"
+						@dblclick="removeItem(item)"
+					/>
+
+					<!-- Keyboard inputs -->
+					<div v-katex="tex" />
+				</div>
+				<div
+					class="text-center text-red-500 text-sm"
+					v-html="message"
+				/>
+				<div
+					v-show="items.length>0"
+					class="text-xs text-gray-700 text-center"
+				>
+					double-cliquer pour supprimer ou
+					<button
+						class="btn btn-xs bg-white"
+						@click="removeAllItems()"
+					>
+						<i class="bi bi-trash mr-3 text-red-800" />tout supprimer
+					</button>
+				</div>
+			</div>
 		</div>
 
+		<!-- keyboard -->
 		<div class="keyboard keyboard-study-keyboard flex flex-col gap-3">
 			<!-- Keyboard selection -->
 			<div class="keyboard flex flex-wrap gap-3 justify-center">
@@ -144,6 +151,10 @@ let outputHTML = ref(null),
 		return output
 	},
 	validateEvent = function () {
+		if(enablePlot.value){
+			plotGraph()
+		}
+		
 		const output = validateOutput()
 		const check = useCheckers("study").check(props.answer, output)
 

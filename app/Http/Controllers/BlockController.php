@@ -148,10 +148,12 @@ class BlockController extends Controller
 			'blur' => ['boolean'],
 			'switch' => ['boolean', 'nullable'],
 			'illustrations' => ['array', 'nullable'],
+			'illustrations.*.id' => ['integer', 'nullable'],
 			'illustrations.*.title' => ['string', 'nullable'],
 			'illustrations.*.type' => ['string'],
 			'illustrations.*.code' => ['string'],
-			'illustrations.*.parameters' => ['string', 'nullable']
+			'illustrations.*.parameters' => ['string', 'nullable'],
+			'illustrations.*.css' => ['string', 'nullable']
 		]);
 
 		$block->title = $validation['title'] ?? '';
@@ -162,17 +164,28 @@ class BlockController extends Controller
 		$block->blur = $validation['blur'] ?? false;
 		$block->switch = $validation['switch'] ?? null;
 
-
-		// Remove all illustrations
-		$block->illustrations()->delete();
-
-		// Get all items.
-		if (count($validation['illustrations']) > 0) {
+		// Get all illustrations IDs.
+		// TODO: remove illustration handle from block
+		if(count($validation['illustrations'])===0){
+			// remove all illustrations (we don't want anymore !)
+			$block->illustrations()->delete();
+		}else{
 			// Add all illustrations
-			foreach ($validation['illustrations'] as $illustration) {
-				$block->illustrations()->create($illustration);
+			$block->illustrations()
+				->whereNotIn(
+					'id',
+					collect($validation['illustrations'])->pluck('id')
+				)->delete();
+
+			foreach ($validation['illustrations'] as $i=>$illustration) {
+				$illustration['order'] = $i+1;
+				$block->illustrations()->updateOrCreate(
+					["id"=>$illustration['id']],
+					$illustration
+				);
 			}
 		}
+		// update the block
 		$block->save();
 		$block->update();
 
@@ -228,4 +241,13 @@ class BlockController extends Controller
 		return $components;
 	}
 
+	public function updateIllustrationsOrder(Block $block, Request $request)
+	{
+		foreach ($request['order'] as $value) {
+			$block->illustrations->find($value['id'])->update(['order' => $value['order']]);
+		}
+
+		return true;
+
+	}
 }

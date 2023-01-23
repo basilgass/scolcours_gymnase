@@ -1,8 +1,5 @@
 <template>
-	<section
-		v-if="postLoaded"
-		class="bg-white border border-gray-200 rounded shadow py-5"
-	>
+	<section class="bg-white border border-gray-200 rounded shadow py-5">
 		<!-- Title of the post -->
 		<div class=" px-5 border-b border-gray-200 pb-5 flex flex-col gap-3 lg:flex-row  justify-between">
 			<h2 class="text-lg md:text-xl xl:text-2xl">
@@ -132,6 +129,7 @@
 				<template #item="{element}">
 					<question-show
 						:question="element"
+						:class="element.css??''"
 						@destroy="destroyQuestion"
 						@duplicate="thePost.questions.push($event)"
 					/>
@@ -151,12 +149,6 @@
 			</div>
 		</article>
 	</section>
-	<div
-		v-else
-		class="bg-white border rounded min-h-[400px] grid grid-cols-1 place-items-center"
-	>
-		<div>Chargement ...</div>
-	</div>
 </template>
 
 <script setup>
@@ -175,8 +167,7 @@ let props = defineProps({
 	thePost = ref({
 		...props.post,
 		random: 1		// special trick to make random function... functional !
-	}),
-	postLoaded = ref(true)
+	})
 
 const flash = inject("flash")
 

@@ -131,6 +131,7 @@ class ChaptersController extends Controller
 	{
 		$post = $chapter->posts->where('order', "=", $order)->first();
 
+//		dd($post->blocks[0]);
 		return Inertia::render('Chapters/ChapterSlide', [
 			// Used for the page layout
 			"theme" => $theme->only('color', 'icon', 'slug', 'title', 'id'),

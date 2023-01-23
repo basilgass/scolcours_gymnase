@@ -34,6 +34,11 @@
 		</template>
 		<div class="grid grid-cols-1 md:grid-cols-2 gap-3 px-5 pb-5">
 			<form @submit.prevent>
+				<form-input
+					v-model="theQuestion.css"
+					name="css"
+					label="CSS"
+				/>
 				<form-textarea
 					v-model="theQuestion.block.body"
 					:label="`body (id: ${theQuestion.block.id})`"
@@ -155,6 +160,7 @@ let addIllustration = function(){
 						checker: theQuestion.checker,
 						keyboard: theQuestion.keyboard,
 						parameters: theQuestion.parameters,
+						css: theQuestion.css
 					})
 					.then(res => {
 						emits("update:modelValue", false)

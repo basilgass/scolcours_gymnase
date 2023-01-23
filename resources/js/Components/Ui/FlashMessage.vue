@@ -2,7 +2,7 @@
 	<transition name="flash-message">
 		<div
 			v-if="show"
-			class="rounded bg-white px-10 py-5"
+			class="rounded px-10 py-5"
 			v-bind="$attrs"
 			@click="closeFlashMessage"
 		>
@@ -18,7 +18,7 @@ import {onMounted, ref} from "vue"
 const emits = defineEmits(["open", "close"])
 
 const props = defineProps({
-	timeout: {type: Number, default: 2000}
+	timeout: {type: Number, default: 1000*60}
 })
 
 let show = ref(true),

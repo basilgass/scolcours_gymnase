@@ -26,6 +26,7 @@
 					'bg-red-600/80 text-white':message.type==='error',
 					'bg-green-600/80 text-white':message.type==='success',
 					'bg-amber-400/80 text-black':message.type==='info',
+					'bg-white text-black': message.type===undefined
 				}"
 				:timeout="message.timeout"
 				@open="message.id=$event"

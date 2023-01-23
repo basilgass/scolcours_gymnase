@@ -5,6 +5,12 @@
 			:name="name"
 		/>
 
+		<form-input
+			v-model="theModel.css"
+			name="css"
+			label="css"
+		/>
+
 		<div class="grid grid-cols-1 gap-3">
 			<div class="w-full grid grid-cols-3 gap-3">
 				<button
@@ -30,12 +36,14 @@
 				</button>
 			</div>
 
+			<!-- image illustration -->
 			<div
 				v-if="modelValue.type==='image'"
 				class="col-span-2 border-dashed border-gray-200 border-2 rounded h-full w-full grid grid-cols-1 text-center items-center"
 			>
 				Glisser / déposer une image
 			</div>
+			<!-- draw illustration -->
 			<div
 				v-else-if="modelValue.type==='draw'"
 				class="col-span-2 h-full w-full"
@@ -52,6 +60,7 @@
 					:rows="10"
 				/>
 			</div>
+			<!-- component illustration -->
 			<div
 				v-else
 				class="col-span-2 border-dashed border-gray-200 border-2 rounded h-full w-full grid grid-cols-1 text-center items-center"
@@ -103,7 +112,9 @@ let props = defineProps({
 				title: "",
 				type: "draw",
 				code: "",
-				parameters: ""
+				parameters: "",
+				css: "",
+				order: 0
 			}
 		}
 	},
