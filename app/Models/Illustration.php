@@ -12,6 +12,8 @@ use Illuminate\Support\Carbon;
  *
  * @property int $id
  * @property int $block_id
+ * @property int $order
+ * @property string|null $css
  * @property string|null $title
  * @property string $type
  * @property string $code
@@ -25,7 +27,9 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Illustration whereBlockId($value)
  * @method static Builder|Illustration whereCode($value)
  * @method static Builder|Illustration whereCreatedAt($value)
+ * @method static Builder|Illustration whereCss($value)
  * @method static Builder|Illustration whereId($value)
+ * @method static Builder|Illustration whereOrder($value)
  * @method static Builder|Illustration whereParameters($value)
  * @method static Builder|Illustration whereTitle($value)
  * @method static Builder|Illustration whereType($value)

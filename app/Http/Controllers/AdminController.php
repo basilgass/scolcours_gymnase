@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\UserResource;
 use App\Models\Challenge;
 use App\Models\Chapter;
+use App\Models\Team;
 use App\Models\Theme;
 use App\Models\Tools;
 use App\Models\User;
@@ -60,7 +62,8 @@ class AdminController extends Controller
 	{
 		return Inertia::render(
 			'Admin/AdminUsersShow.vue', [
-			"users" => User::all()
+			"users" => UserResource::collection(User::all()),
+			"teams" => Team::all()
 		]);
 	}
 
@@ -264,7 +267,9 @@ class AdminController extends Controller
 					// Liste des utilisateurs du groupe qui ont répondu à cette question
 					$filteredUsers = $question->users->whereIn('id', $users_id);
 
-					$answers = $filteredUsers->countBy(function($user){return $user->id;});
+					$answers = $filteredUsers->countBy(function ($user) {
+						return $user->id;
+					});
 
 					return [
 						'id' => $question->id,

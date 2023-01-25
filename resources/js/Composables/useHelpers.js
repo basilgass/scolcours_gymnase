@@ -62,5 +62,6 @@ export function useFormattedBody(body, mabyeRefValues){
 export let useKatexMacros = {
 	"\\IR": "\\mathbb{R}",
 	"\\IN": "\\mathbb{N}",
-	"\\ds": "\\displaystyle"
+	"\\ds": "\\displaystyle",
+	"\\vect": "\\overrightarrow"
 }

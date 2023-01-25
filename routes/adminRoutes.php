@@ -3,6 +3,7 @@
 
 // Admin controller and routes
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\TeamController;
 
 Route::get('/admin/', [AdminController::class, 'show'])
 	->middleware(['auth', 'verified'])->name('admin');
@@ -15,3 +16,9 @@ Route::delete('/admin/users/${user}/destroy', [AdminController::class, 'destroyU
 Route::patch('/admin/chapters/{chapter:slug}', [AdminController::class, 'activate'])
 	->middleware(['auth', 'verified'])->name('toggleChapterActive');
 Route::get('/admin/stats/{chapter:slug}', [AdminController::class, 'usersStats']);
+
+
+// Route for teams
+Route::patch('/admin/users/{user}/teams/{team}/toggle', [TeamController::class, "toggle"])->name('users.team.toggle');
+Route::post('/admin/teams/store', [TeamController::class, "store"])->name('teams.store');
+Route::delete('/admin/teams/{team}/destroy', [TeamController::class, "destroy"])->name('teams.destroy');

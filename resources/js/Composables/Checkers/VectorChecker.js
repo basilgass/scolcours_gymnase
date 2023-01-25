@@ -1,11 +1,12 @@
 import {ExactChecker} from "@/Composables/Checkers/ExactChecker"
 import {stripFirstCharacter, stripLastCharacter} from "@/Composables/useCheckers"
+import {PiMath} from "pimath/esm"
 
 export function VectorChecker(options) {
 	// TODO: vectorchecker is by default using exactChecker. Might also be good to use nb checker
 
 	return {
-		format: () => "Vecteur d'un point sous la forme \\(\\begin{pmatrix}a\\\\b\\end{pmatrix}\\)",
+		format: () => "Vecteur sous la forme \\(\\begin{pmatrix}a\\\\b\\end{pmatrix}\\)",
 		check: (expectedAnswer, answer = []) => {
 			// Manque les parenthèses
 			if(answer[0]!=="(" || answer[answer.length-1]!==")"){
@@ -18,6 +19,7 @@ export function VectorChecker(options) {
 			// On récupère les valeurs
 			let values = answer.split(";"),
 				expectedValues = expectedAnswer.split(";")
+
 
 			if(values.length===1){
 				return {
@@ -43,23 +45,56 @@ export function VectorChecker(options) {
 				expectedValues[expectedValues.length-1] = stripLastCharacter(expectedValues[expectedValues.length-1])
 			}
 
+			if(options.includes("co")){
+				// suppose that each values are fraction
+				let a, b, k
 
-			let eChecker = ExactChecker(options)
-			for(let i=0; i<values.length; i++){
-				let result = eChecker.check(expectedValues[i], values[i])
-				if(!result.result){
-					return {
-						result: false,
-						message: `la ${i===0?"1ère":(i+1)+"ème"} composante n'est pas juste.<br>${result.message}`
+				for(let i=0; i<values.length; i++){
+					a = new PiMath.Fraction(values[i])
+					b = new PiMath.Fraction(expectedValues[i])
+
+					if((a.isZero() && b.isNotZero()) || a.isNotZero() && b.isZero()){
+						return{
+							result: false,
+							message: `la ${i+1}e composante est fausse.`
+						}
+					}
+
+					if(a.isNotZero() && b.isNotZero()){
+						if(k===undefined){
+							k = new PiMath.Fraction(a.clone().divide(b))
+						}else{
+							if(a.isNotEqual(b.clone().multiply(k))){
+								return {
+									result: false,
+									message: `la ${i+1}e composante n'est pas proportionnelle`
+								}
+							}
+						}
+					}
+				}
+			}else{
+				let eChecker = ExactChecker(options)
+				for(let i=0; i<values.length; i++){
+					let result = eChecker.check(expectedValues[i], values[i])
+					if(!result.result){
+						return {
+							result: false,
+							message: `la ${i===0?"1ère":(i+1)+"ème"} composante n'est pas juste.<br>${result.message}`
+						}
 					}
 				}
 			}
+
+
+
 
 			// tous les tests sont passés ! La réponse est donc juste
 			return {
 				result: true,
 				message: ""
 			}
+
 		}
 	}
 }

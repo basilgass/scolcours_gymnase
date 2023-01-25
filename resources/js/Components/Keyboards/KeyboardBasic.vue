@@ -51,17 +51,32 @@ let validateButton = ref(null),
 		})
 	},
 	validateEvent = function () {
-		const check = theKeyboard.value.checker.check(props.answer, givenAnswer.value)
+		// With the Basic keyboard, allow to have more than one answer...
+		let stackMessages = [], check
+
+		for(let expected of props.answer.split("|")){
+			// Get the check
+			check = theKeyboard.value.checker.check(expected, givenAnswer.value)
+			if(check.result){
+				// If check if true, it's the only one
+				stackMessages = []
+				break
+			}else{
+				// if check is false, stack it
+				stackMessages.push(check.message)
+			}
+		}
 
 		if(!check.result) {
 			wrongAnswer()
 		}
+
 		emits("validate", {
 			code: givenAnswer.value,
 			tex: theKeyboard.value.keyboard.tex(givenAnswer.value),
 			raw: "",
 			correct: check.result,
-			message: check.message
+			message: stackMessages.join("<span class=\"font-semibold\"> ou </span>")
 		})
 	},
 	getTex = function (value) {

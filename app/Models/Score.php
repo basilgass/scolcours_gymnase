@@ -17,6 +17,7 @@ use Illuminate\Support\Carbon;
  * @property string $scoreable_type
  * @property int $scoreable_id
  * @property int $score
+ * @property int|null $level
  * @property int|null $stars
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
@@ -30,6 +31,7 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Score query()
  * @method static Builder|Score whereCreatedAt($value)
  * @method static Builder|Score whereId($value)
+ * @method static Builder|Score whereLevel($value)
  * @method static Builder|Score whereScore($value)
  * @method static Builder|Score whereScoreableId($value)
  * @method static Builder|Score whereScoreableType($value)

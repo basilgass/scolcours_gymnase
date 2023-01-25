@@ -25,9 +25,13 @@ class ChallengeResource extends JsonResource
 		}
 
 		$bestScore = $this->scores?->pluck('score')->max()??0;
+		$bestLevel = $this->scores?->pluck('level')->max()??0;
 		$userScore = 0;
+		$userLevel = 0;
+
 		if(Auth::user()){
 			$userScore = $this->scores?->where('user_id', Auth::user()->id)->first()->score??0;
+			$userLevel = $this->scores?->where('user_id', Auth::user()->id)->first()->level??0;
 		}
 		//	dd($ch->scores()->where('user_id', Auth::user()->id)->first()->score);
 		//	dd($ch->scores->pluck('score')->max());
@@ -35,9 +39,13 @@ class ChallengeResource extends JsonResource
 			...parent::toArray($request),
 			'block' => $this->blocks[0],
 			'chapter' => ChapterMinResource::make($this->chapter),
-			'score' => [
-				'best' => $bestScore,
-				'user' => $userScore
+			'best' => [
+				'score' => $bestScore,
+				'level' => $bestLevel
+			],
+			'user' => [
+				'score' => $userScore,
+				'level' => $userLevel
 			]
 		];
 	}

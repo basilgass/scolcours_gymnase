@@ -16,6 +16,7 @@ use Illuminate\Support\Carbon;
  * @property int $id
  * @property int $post_id
  * @property int $order
+ * @property string|null $css
  * @property string|null $answer
  * @property string|null $checker
  * @property string|null $keyboard
@@ -33,6 +34,7 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Question whereAnswer($value)
  * @method static Builder|Question whereChecker($value)
  * @method static Builder|Question whereCreatedAt($value)
+ * @method static Builder|Question whereCss($value)
  * @method static Builder|Question whereId($value)
  * @method static Builder|Question whereKeyboard($value)
  * @method static Builder|Question whereOrder($value)
