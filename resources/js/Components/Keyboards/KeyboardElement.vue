@@ -328,9 +328,11 @@ let keyboardComputed = computed(() => {
 
 function resetKeyStrokes() {
 	keyStrokes.value = []
-	emits("tex", "")
-	emits("raw", "")
-	emits("change", "")
+	emits("change", {
+		input: "",
+		tex: "",
+		raw: ""
+	})
 	emits("clear", "")
 }
 
@@ -357,9 +359,15 @@ let changeEvent = function(){
 			.map(k => k.fn(output))
 			.join("")
 
-	emits("change", result)
-	emits("tex", getTex(result))
-	emits("raw", "")
+	emits("change",{
+		input: result,
+		tex: getTex(result),
+		raw: ""
+	})
+
+	// emits("change", result)
+	// emits("tex", getTex(result))
+	// emits("raw", "")
 }
 let validateButton = ref(null)
 
@@ -377,6 +385,15 @@ function wrongAnswer() {
 }
 
 function getTex(value) {
+	let output = []
+
+	for(let v of value.split(",")){
+		output.push(getTexFromOneValue(v))
+	}
+	return output.join(",")
+}
+
+function getTexFromOneValue(value){
 	if (typeof theKeyboard.value === "string") {
 		return keyboards[theKeyboard.value].tex ? keyboards[theKeyboard.value].tex(value) : value
 	} else {

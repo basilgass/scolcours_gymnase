@@ -46,40 +46,67 @@ let validateButton = ref(null),
 		givenAnswer.value = value
 		// value = result from the keyboard as ascii or...
 		emits("change", {
-			tex: theKeyboard.value.keyboard.tex(value),
+			tex: value.tex,
 			raw: "",
 		})
 	},
-	validateEvent = function () {
-		// With the Basic keyboard, allow to have more than one answer...
-		let stackMessages = [], check
-
-		for(let expected of props.answer.split("|")){
+	validateOneAnswer = function(expected, given, kbrd){
+		let check, stackMessages = []
+		for(let expected of expected.split("|")){
 			// Get the check
-			check = theKeyboard.value.checker.check(expected, givenAnswer.value)
+			check = kbrd.checker.check(expected, given)
 			if(check.result){
 				// If check if true, it's the only one
-				stackMessages = []
-				break
+				return true
 			}else{
 				// if check is false, stack it
 				stackMessages.push(check.message)
 			}
 		}
+		return stackMessages.join("<span class=\"font-semibold\"> ou </span>")
+	},
+	validateEvent = function () {
+		// With the Basic keyboard, allow to have more than one answer...
+		let stackMessages = [], check
 
-		if(!check.result) {
+		// Go through each answers
+		let expectedArray = props.answer.split(","),
+			givenArray = givenAnswer.value.input.split(",")
+
+		if(expectedArray.length===givenArray.length){
+			for(let i=0; i<expectedArray.length; i++){
+				const validatedValue = validateOneAnswer(expectedArray[i], givenArray[i], makeKeyboard(i))
+
+				if(validatedValue!==true) {
+					stackMessages = [
+						...stackMessages,
+						`<b class="font-semibold">${i + 1}e réponse: </b>` + validatedValue
+					]
+				}
+			}
+		}else{
+			if(expectedArray.length>givenArray.length) {
+				stackMessages.push(`il manque encore ${expectedArray.length-givenArray.length} réponse(s)`)
+			}else{
+				stackMessages.push(`il y a ${givenArray.length-expectedArray.length} réponse(s) en trop`)
+			}
+		}
+
+		if(stackMessages.length>0) {
 			wrongAnswer()
 		}
 
+		//TODO: Make it handle multiple answer with numbering.
 		emits("validate", {
-			code: givenAnswer.value,
-			tex: theKeyboard.value.keyboard.tex(givenAnswer.value),
+			code: givenAnswer.value.input,
+			tex: givenAnswer.value.tex,
 			raw: "",
-			correct: check.result,
-			message: stackMessages.join("<span class=\"font-semibold\"> ou </span>")
+			correct: stackMessages.length===0,
+			message: stackMessages.filter(x=>x!=="").join("<br/>")
 		})
 	},
 	getTex = function (value) {
+		//TODO: remove it ?
 		return theKeyboard.value.keyboard.tex(value)
 	},
 	getRaw = function (value) {
@@ -95,8 +122,54 @@ defineExpose({resetKeyStrokes, wrongAnswer, getAnswer})
 
 // ---------------------------------------
 let availableKeyboards = computed(()=>{
-		return props.options ? props.options.split("\n\n") : []
+		let nb = props.answer.split(",").length,
+			kbrds = []
+		if(props.options){
+			kbrds = props.options.split("\n\n")
+		}
+		if(kbrds.length<nb){
+			const lastKbrd = kbrds[kbrds.length-1]
+			// duplicate the last entries
+			while(kbrds.length<nb){
+				kbrds.push(lastKbrd)
+			}
+		}
+		return kbrds
 	}),
+	makeKeyboard = function(id){
+		let kbrd = availableKeyboards.value[Math.min(availableKeyboards.value.length - 1, id)]?.split("\n"),
+			checker = kbrd[0].split("@"),
+			name = checker.shift(),
+			letters = "", parameters = ""
+
+		if (kbrd.length > 1) {
+			if (kbrd[1].startsWith("@")) {
+				letters = kbrd[1].substring(1)
+			} else {
+				parameters = kbrd[1]
+			}
+		}
+		if (kbrd.length > 2 && parameters !== "") {
+			parameters = kbrd[2]
+		}
+
+		if(!keyboards.hasOwnProperty(name)){
+			name = "exact"
+		}
+
+		checker = useCheckers(checker.length>0?checker.join("@"): name)
+
+		checkerFormat.update(checker.format())
+
+
+		return {
+			name,
+			keyboard: keyboards[name],
+			checker,
+			letters,
+			parameters
+		}
+	},
 	answerNumber = ref(1),
 	multiple = ref(props.answer.split(",").length > 1),
 	givenAnswer = ref("")
@@ -105,37 +178,7 @@ let theKeyboard = computed(() => {
 	if(availableKeyboards.value.length===0){
 		return false
 	}
-	let kbrd = availableKeyboards.value[Math.min(availableKeyboards.value.length - 1, answerNumber.value)]?.split("\n"),
-		checker = kbrd[0].split("@"),
-		name = checker.shift(),
-		letters = "", parameters = ""
 
-	if (kbrd.length > 1) {
-		if (kbrd[1].startsWith("@")) {
-			letters = kbrd[1].substring(1)
-		} else {
-			parameters = kbrd[1]
-		}
-	}
-	if (kbrd.length > 2 && parameters !== "") {
-		parameters = kbrd[2]
-	}
-
-	if(!keyboards.hasOwnProperty(name)){
-		name = "exact"
-	}
-
-	checker = useCheckers(checker.length>0?checker.join("@"): name)
-
-	checkerFormat.update(checker.format())
-
-
-	return {
-		name,
-		keyboard: keyboards[name],
-		checker,
-		letters,
-		parameters
-	}
+	return makeKeyboard( answerNumber.value )
 })
 </script>

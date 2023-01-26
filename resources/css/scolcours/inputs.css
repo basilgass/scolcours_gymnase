@@ -80,6 +80,11 @@
         focus:outline-none focus-within:border-blue-500;
     }
 
+	.keyboard>.key-touch{
+		touch-action:auto;
+		@apply px-1 py-1 lg:px-3 lg:py-2 rounded border hover:bg-blue-100 hover:border-blue-200 transition-colors
+	}
+
     .keyboard>.key {
 		touch-action: none;
 		@apply px-1 py-1 lg:px-3 lg:py-2 rounded border hover:bg-blue-100 hover:border-blue-200 transition-colors

@@ -50,7 +50,6 @@ class QuestionController extends Controller
 			'body' => $validate['body']??''
 		]);
 
-
 		return QuestionResource::make($question);
 	}
 
@@ -219,6 +218,7 @@ class QuestionController extends Controller
 		// update the new order (place it at last).
 		$newQuestion->order = count($newQuestion->post->questions);
 		$newQuestion->save();
+		$newQuestion->refresh();
 
 		return QuestionResource::make($newQuestion);
 	}

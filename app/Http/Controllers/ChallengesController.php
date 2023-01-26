@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\ChallengeResource;
 use App\Models\Challenge;
 use App\Models\Chapter;
+use App\Models\Team;
 use App\Models\Theme;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -38,17 +39,17 @@ class ChallengesController extends Controller
 	public function store(Chapter $chapter, Request $request)
 	{
 		$validation = $request->validate([
-			'title'=>['string','min:5']
+			'title' => ['string', 'min:5']
 		]);
 
 		$slug = Str::slug($request['title']);
-		if(Challenge::where('slug', $slug)->first()){
+		if (Challenge::where('slug', $slug)->first()) {
 			return redirect()->back();
 		}
 
 		$challenge = $chapter->challenges()->create([
-			'title'=>$validation['title'],
-			'slug'=>$slug
+			'title' => $validation['title'],
+			'slug' => $slug
 		]);
 
 		$challenge->blocks()->create();
@@ -84,7 +85,9 @@ class ChallengesController extends Controller
 			'bonusLevelTime' => ['numeric', 'min:0'],
 		]);
 
-		if($validation['parameters']===null){$validation['parameters']='exact';}
+		if ($validation['parameters'] === null) {
+			$validation['parameters'] = 'exact';
+		}
 		$challenge->update($validation);
 
 		return $validation;
@@ -99,12 +102,7 @@ class ChallengesController extends Controller
 		Challenge::destroy($id);
 
 		// Redirect to ...
-		// TODO: redirect to the main chapter page.
 		return redirect(route('themes.chapters', [$theme, $chapter]));
-		return [
-			'theme'=>$theme,
-			'chapter'=>$chapter
-		];
 	}
 
 
@@ -135,5 +133,10 @@ class ChallengesController extends Controller
 
 		}
 		$this->index();
+	}
+
+	public function teams(Theme $theme, Chapter $chapter, Challenge $challenge, Team $team)
+	{
+		return redirect()->route('teams.challenge', [$team, $challenge]);
 	}
 }

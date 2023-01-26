@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\ChallengeResource;
+use App\Models\Challenge;
 use App\Models\Team;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class TeamController extends Controller
 {
@@ -40,4 +43,16 @@ class TeamController extends Controller
 			"team"=>$updatedTeam
 		];
     }
+
+	public function challenge(Team $team, Challenge $challenge)
+	{
+		$user_ids = $team->users->pluck('id');
+		$scores = $challenge->scores->whereIn('user_id', $user_ids);
+
+		return Inertia::render("Teams/TeamsChallengePage", [
+			'team' => $team,
+			'challenge'=>ChallengeResource::make($challenge),
+			'scores'=>$scores
+		]);
+	}
 }

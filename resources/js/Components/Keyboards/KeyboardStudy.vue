@@ -32,7 +32,10 @@
 					tracer le graphe
 				</button>
 			</div>
+		</div>
 
+		<!-- keyboard -->
+		<div class="keyboard keyboard-study-keyboard flex flex-col gap-3">
 			<!-- currently loaded elements (point, max, min, av, ...) -->
 			<div class="keyboard-study-items my-3">
 				<div class="flex gap-1 lg:gap-2 items-baseline justify-center keyboard min-h-[3em]">
@@ -40,12 +43,12 @@
 						v-for="item in items"
 						:key="item"
 						v-katex.ascii.nomargin="displayItem(item)"
-						class="key bg-white hover:bg-amber-300 transition-colors"
+						class="key-touch bg-white hover:bg-amber-300 transition-colors"
 						@dblclick="removeItem(item)"
 					/>
 
 					<!-- Keyboard inputs -->
-					<div v-katex="tex" />
+					<div v-katex="display.tex" />
 				</div>
 				<div
 					class="text-center text-red-500 text-sm"
@@ -64,10 +67,7 @@
 					</button>
 				</div>
 			</div>
-		</div>
 
-		<!-- keyboard -->
-		<div class="keyboard keyboard-study-keyboard flex flex-col gap-3">
 			<!-- Keyboard selection -->
 			<div class="keyboard flex flex-wrap gap-3 justify-center">
 				<button
@@ -88,7 +88,6 @@
 				reset
 				back
 				@change="display = $event"
-				@tex="tex = $event"
 				@clear="message=''"
 			/>
 		</div>
@@ -154,7 +153,7 @@ let outputHTML = ref(null),
 		if(enablePlot.value){
 			plotGraph()
 		}
-		
+
 		const output = validateOutput()
 		const check = useCheckers("study").check(props.answer, output)
 
@@ -202,7 +201,7 @@ let PiGraph,
 	theOptions = ref(props.options?props.options.toLowerCase().split("\n"):[]),
 	addButtons = ref([]),
 	tex = ref(""),
-	display = ref(""),
+	display = ref({input: "", tex: "", raw: ""}),
 	message = ref(""),
 	showGraph = ref(false),
 	enablePlot = ref(false),
@@ -373,7 +372,7 @@ function addItemToGraph(btn){
 	// Checker.
 	message.value = ""
 	if(btn.startsWith("a")){
-		let equ = display.value.split("=")
+		let equ = display.value.input.split("=")
 
 		if(equ.length!==2){
 			message.value = "L'équation de la droite n'est pas correcte"
@@ -390,34 +389,34 @@ function addItemToGraph(btn){
 				message.value="Ce n'est pas une asymptote oblique"
 				return
 			}
-			itemsGraph.value[display.value] = addAO(display.value)
+			itemsGraph.value[display.value.input] = addAO(display.value.input)
 
 		}else if(btn==="av"){
 			if(equ[0]!=="x"){
 				message.value="Ce n'est pas une asymptote verticale"
 				return
 			}
-			itemsGraph.value[display.value] = addAV(equ[1])
+			itemsGraph.value[display.value.input] = addAV(equ[1])
 
 		}else if(btn==="ah") {
 			if (equ[0]!=="y") {
 				message.value = "Ce n'est pas une asymptote horizontale"
 				return
 			}
-			itemsGraph.value[display.value] = addAH(equ[1])
+			itemsGraph.value[display.value.input] = addAH(equ[1])
 		}
 	}
 	else if (btn==="!"){
-		display.value="!!"
+		display.value.input="!!"
 		itemsGraph.value["!!"] = null
 	}
 	else{
-		if(!(display.value.startsWith("(") && display.value.endsWith(")") && display.value.split(";").length===2)){
+		if(!(display.value.input.startsWith("(") && display.value.input.endsWith(")") && display.value.input.split(";").length===2)){
 			message.value="Ce n'est pas un point"
 			return
 		}
 
-		let [x, y] = display.value.replace("(", "").replace(")", "").split(";")
+		let [x, y] = display.value.input.replace("(", "").replace(")", "").split(";")
 
 		if(btn==="z" && y!=="0"){
 			message.value ="Ce n'est pas un zéro"
@@ -428,16 +427,16 @@ function addItemToGraph(btn){
 			return
 		}
 
-		itemsGraph.value[display.value] = addPoint(btn, x, y)
+		itemsGraph.value[display.value.input] = addPoint(btn, x, y)
 	}
 
 	// Hide controls if necessary
 	if(!enablePlot.value){
-		removeControlsAndBezier(display.value)
+		removeControlsAndBezier(display.value.input)
 	}
 
 	// Add the element to the list of object created...
-	items.value.push(display.value)
+	items.value.push(display.value.input)
 
 	// Reset the keyboard
 	keyboardUI.value.resetKeyStrokes()
@@ -754,6 +753,9 @@ function addPoint(type, xValue, yValue){
 }
 
 function plotGraph(){
+	// Remove existing plot.
+
+	if(plot){plot.remove()}
 	// Check the validation -
 	// if the result is TRUE, trace the existing value (if it exists).
 	const check = useCheckers("study").check(props.answer, validateOutput())
@@ -788,8 +790,6 @@ function plotGraph(){
 
 	// Sort the points.
 	ctrlPoints.sort((a,b)=>a.point.x-b.point.x)
-
-	if(plot){plot.remove()}
 	plot = PiGraph.bezier(ctrlPoints)
 }
 

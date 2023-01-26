@@ -310,7 +310,8 @@ export function getKeyboard(value){
 
 	// Component keyboard
 	switch (value.toLowerCase()) {
-	case "tos" || "tableofsigns":
+	case "tos":
+	case "tableofsigns":
 		return "TableOfSigns"
 	case "study":
 		return "Study"
@@ -319,7 +320,7 @@ export function getKeyboard(value){
 	case "qcm":
 		return "Qcm"
 	default:
-		return false
+		return ""
 	}
 
 

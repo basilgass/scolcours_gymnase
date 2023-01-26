@@ -199,7 +199,7 @@ let showEditForm = ref(props.question.isNew === true),
 	}),
 	updateQuestion = function (q) {
 		theQuestion.value = q
-		theQuestionBody.value = q.block.body
+		theQuestionBody.value = theQuestion.value.block.body
 	},
 	duplicateQuestion = function(){
 		axios.post(route("questions.duplicate", [theQuestion.value.id])).then((res)=>{

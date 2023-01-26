@@ -58,10 +58,9 @@
 				:multiple="true"
 				back
 				key-class="bg-white"
-				keyboard="exact"
+				:keyboard="zeroesKeyboard"
 				reset
 				@change="zeroes = $event; updateTos()"
-				@tex="zeroesTex = $event"
 			/>
 
 			<KeyboardElement
@@ -76,7 +75,6 @@
 				}"
 				key-class="bg-white"
 				@change="signs = $event; updateTos()"
-				@tex="signsTex = $event"
 			/>
 
 			<KeyboardElement
@@ -95,7 +93,6 @@
 				}"
 				key-class="bg-white"
 				@change="grows = $event; updateTos()"
-				@tex="growsTex = $event"
 			/>
 
 			<KeyboardElement
@@ -106,7 +103,6 @@
 				keyboard="exact"
 				reset
 				@change="coords = $event; updateTos()"
-				@tex="coordsTex = $event"
 			/>
 		</div>
 	</div>
@@ -129,18 +125,11 @@ let props = defineProps({
 let emits = defineEmits(["change", "validate"])
 
 let showKeyboard = ref("zeroes")
-let showZeroesKeyboard = ref(true),
-	showSignsKeyboard = ref(false),
-	showGrowsKeyboard = ref(false)
-
-let zeroes = ref(""),
-	zeroesTex = ref(""),
-	signs = ref(""),
-	signsTex = ref(""),
-	grows = ref(""),
-	growsTex = ref(""),
-	coords = ref(""),
-	coordsTex = ref(""),
+let zeroes = ref({input: "", tex: "", raw: ""}),
+	zeroesKeyboard = ref(props.options.includes("float")?"algebra":"exact"),
+	signs = ref({input: "", tex: "", raw: ""}),
+	grows = ref({input: "", tex: "", raw: ""}),
+	coords = ref({input: "", tex: "", raw: ""}),
 	validateButton = ref(null),
 	tosUI = ref(null),
 	tosName = computed(()=>{
@@ -158,10 +147,10 @@ let zeroes = ref(""),
 		return makeStudyFromCode(answerValue.value, showKeyboard.value==="coords")
 	}),
 	resetKeyStrokes = function () {
-		zeroes.value = ""
-		signs.value = ""
-		grows.value = ""
-		coords.value = ""
+		zeroes.value = {input: "", tex: "", raw: ""}
+		signs.value = {input: "", tex: "", raw: ""}
+		grows.value = {input: "", tex: "", raw: ""}
+		coords.value = {input: "", tex: "", raw: ""}
 	},
 	wrongAnswer = function () {
 		useWrongAnswerAnimation(validateButton.value)
@@ -172,13 +161,13 @@ let zeroes = ref(""),
 	getRaw = function (value) {
 		const v = value.split("@")
 
-		zeroes.value = v[0]
-		signs.value = v[1]
+		zeroes.value.input = v[0]
+		signs.value.input = v[1]
 		if(withGrows.value) {
-			grows.value = v[2]
+			grows.value.input = v[2]
 		}
 		if(withCoords.value){
-			coords.value = v[3]
+			coords.value.input = v[3]
 		}
 
 		nextTick(() => tosUI.value.$el.innerHTML).then(resolve => {
@@ -196,12 +185,12 @@ let zeroes = ref(""),
 		}
 	},
 	answerValue = computed(()=>{
-		let r = `${zeroes.value}@${signs.value}`
+		let r = `${zeroes.value.input}@${signs.value.input}`
 		if(withGrows.value){
-			r +=`@${grows.value}`
+			r +=`@${grows.value.input}`
 		}
 		if(withCoords.value){
-			r +=`@${coords.value}`
+			r +=`@${coords.value.input}`
 		}
 
 		return r

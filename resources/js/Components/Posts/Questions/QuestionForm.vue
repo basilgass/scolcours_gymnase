@@ -145,7 +145,8 @@ let addIllustration = function(){
 		if(theQuestion.block.illustration){
 			illustrations = [{...theQuestion.block.illustration}]
 		}
-		axios.post(route("blocks.update", [props.question.block.id]),
+
+		axios.post(route("blocks.update", [theQuestion.block.id]),
 			{
 				_method: "PATCH",
 				body: theQuestion.block.body,
@@ -153,7 +154,7 @@ let addIllustration = function(){
 			}
 		)
 			.then(res => {
-				axios.post(route("questions.update", [props.question.id]),
+				axios.post(route("questions.update", [theQuestion.id]),
 					{
 						_method: "PATCH",
 						answer: theQuestion.answer,
