@@ -52,7 +52,7 @@ class TeamController extends Controller
 		return Inertia::render("Teams/TeamsChallengePage", [
 			'team' => $team,
 			'challenge'=>ChallengeResource::make($challenge),
-			'scores'=>$scores
+			'scores'=> $scores
 		]);
 	}
 }

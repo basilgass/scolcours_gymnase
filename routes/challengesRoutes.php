@@ -15,4 +15,3 @@ Route::get('challenges/{challenge}/edit', [ChallengesController::class, 'edit'])
 Route::get('{theme:slug}/{chapter:slug}/challenges/{challenge:slug}/team/{team:name}', [ChallengesController::class, 'teams'])
 	->withoutScopedBindings()
 	->name('challenges.team');
-//Route::get('challenges/{challenge:slug}/team/{team:name}', [ChallengesController::class, 'teams'])->name('challenges.team');

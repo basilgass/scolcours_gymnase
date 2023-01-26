@@ -49,7 +49,7 @@ import {usePage} from "@inertiajs/inertia-vue3"
 const props = defineProps({
 		team: {type: Object, required: true},
 		challenge: {type: Object, required: true},
-		scores: {type: Array, required: true}
+		scores: {type: Object, required: true}
 	}),
 	showStars = computed(()=>{
 		return usersScores.value.filter(item => item.score.stars!=="?").length>0
@@ -57,7 +57,7 @@ const props = defineProps({
 	usersScores = computed(() => {
 		let scoresPerUser = []
 		for (let user of props.team.users) {
-			const result = props.scores.filter(score => score.user_id === user.id)[0] || false
+			const result = Object.values(props.scores).filter(score => score.user_id === user.id)[0] || false
 
 			scoresPerUser.push({
 				user,
@@ -68,7 +68,6 @@ const props = defineProps({
 				}
 			})
 		}
-		console.log(scoresPerUser)
 		return scoresPerUser
 	})
 
