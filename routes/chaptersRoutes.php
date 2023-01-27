@@ -15,6 +15,6 @@ Route::patch('chapters/{chapter}/ordering', [ChaptersController::class, 'updateP
 
 // Themes and chapters main routes
 Route::get('{theme:slug}/', [ChaptersController::class, 'index'])->name('theme');
-Route::get('{theme:slug}/{chapter:slug}', [ChaptersController::class, 'page'])->name('theme.chapter');
-Route::get('{theme:slug}/{chapter:slug}/accueil', [ChaptersController::class, 'intro'])->name('theme.chapter.intro');
+Route::get('{theme:slug}/{chapter:slug}', [ChaptersController::class, 'intro'])->name('theme.chapter.intro');
+Route::get('{theme:slug}/{chapter:slug}/complete', [ChaptersController::class, 'page'])->name('theme.chapter');
 Route::get('{theme:slug}/{chapter:slug}/{order}', [ChaptersController::class, 'slide'])->name('theme.chapter.slide');

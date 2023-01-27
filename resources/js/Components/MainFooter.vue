@@ -10,8 +10,24 @@
 
 			<div class="md:mx-auto">
 				<h3 class="text-lg font-semibold">
-					Liens
+					Langues
 				</h3>
+				<Link
+					:href="route('translation.index', ['italiano'])"
+					class="block transition duration-300 hover:translate-x-2 px-0 md:px-4 py-1"
+				>
+					<i
+						class="mr-2"
+					/> italiano
+				</Link>
+				<Link
+					:href="route('translation.index', ['english'])"
+					class="block transition duration-300 hover:translate-x-2 px-0 md:px-4 py-1"
+				>
+					<i
+						class="mr-2"
+					/> english
+				</Link>
 			</div>
 
 			<div class="md:mx-auto">

@@ -7,6 +7,7 @@
 		<challenge-intro
 			v-if="!isRunning && !isFinished"
 			:challenge="theChallenge"
+			:teams="teams"
 			@start="startChallenge"
 		/>
 
@@ -77,6 +78,7 @@ const emits = defineEmits(["destroy", "change"])
 const props = defineProps({
 	challenge: {type: Object, required: true},
 	component: {type: String, require: true},
+	teams: {type: Object, required: true}
 })
 
 const flash = inject("flash")
@@ -359,10 +361,14 @@ const storeScore = function (value, level) {
 			if (res.data) {
 				const delta = res.data.updated.score - res.data.previous.score
 				if (delta > 0) {
+					theChallenge.value.user.score = Math.max(theChallenge.value.user.score, res.data.updated.score)
+					theChallenge.value.user.stars = Math.max(theChallenge.value.user.stars, res.data.updated.stars)
+					theChallenge.value.user.level = Math.max(theChallenge.value.user.level, res.data.updated.level)
 					flash.add(`Bravo, vous avez amélioré votre score de ${delta} point${delta > 1 ? "s" : ""}`)
 				} else {
 					flash.add("Vous n'avez pas amélioré votre score... dommage !", "info")
 				}
+
 			}
 		})
 	}

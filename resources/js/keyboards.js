@@ -38,6 +38,7 @@ export const keyboardKeys = {
 	"_": {type: "math", display: "\\textcolor{lightgray}{\\log}_a"},
 	"|": {type: "math", display: "\\big\\vert \\textcolor{lightgray}{x} \\big\\vert"},
 	"y": {type: "math", display: "y"},
+	"y^2": {type: "math", display: "y^2"},
 	"e": {type: "math", display: "\\text{e}"},
 	"ln": {type: "math", display: "\\ln"},
 	"pi": {type: "math", display: "\\pi"},
@@ -154,6 +155,18 @@ export const keyboards = {
 			"(", ")", "0", "/", "^2", "^"
 		],
 		tex: function (value) {
+			return asciiToTex(value)
+		}
+	},
+	"equation": {
+		grid: "grid-cols-6",
+		layout: [
+			"1", "2", "3", "+", "x", "x^2",
+			"4", "5", "6", "-", "y", "y^2",
+			"7", "8", "9", "*", "^2", "^",
+			"(", ")", "0", "/", ["=", 2]
+		],
+		tex(value) {
 			return asciiToTex(value)
 		}
 	},

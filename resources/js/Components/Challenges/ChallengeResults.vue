@@ -12,7 +12,7 @@
 				class="bg-white rounded text-xl md:text-2xl text-center p-2 md:p-10 flex flex-col justify-between gap-4"
 			>
 				<div>Meilleures scores</div>
-				<div>{{ props.challenge.score.user }} / {{ props.challenge.score.best }}</div>
+				<div>{{ Math.max(props.challenge.user.score, results.score) }} / {{ props.challenge.best.score }}</div>
 			</div>
 
 			<div

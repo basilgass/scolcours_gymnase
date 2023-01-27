@@ -78,9 +78,10 @@ let validateButton = ref(null),
 				const validatedValue = validateOneAnswer(expectedArray[i], givenArray[i], makeKeyboard(i))
 
 				if(validatedValue!==true) {
+					let preMessage = multiple.value?`<b class="font-semibold">${i + 1}e réponse: </b>`:""
 					stackMessages = [
 						...stackMessages,
-						`<b class="font-semibold">${i + 1}e réponse: </b>` + validatedValue
+						preMessage + validatedValue
 					]
 				}
 			}
@@ -123,10 +124,8 @@ defineExpose({resetKeyStrokes, wrongAnswer, getAnswer})
 // ---------------------------------------
 let availableKeyboards = computed(()=>{
 		let nb = props.answer.split(",").length,
-			kbrds = []
-		if(props.options){
-			kbrds = props.options.split("\n\n")
-		}
+			kbrds = props.options.split("\n\n")??[]
+
 		if(kbrds.length<nb){
 			const lastKbrd = kbrds[kbrds.length-1]
 			// duplicate the last entries
@@ -137,30 +136,40 @@ let availableKeyboards = computed(()=>{
 		return kbrds
 	}),
 	makeKeyboard = function(id){
+		// keyboard@checker,params
+		// other keyboard parameters ?
 		let kbrd = availableKeyboards.value[Math.min(availableKeyboards.value.length - 1, id)]?.split("\n"),
-			checker = kbrd[0].split("@"),
-			name = checker.shift(),
-			letters = "", parameters = ""
+			// checker = kbrd[0].split("@"),
+			// name = checker.shift(),
+			letters = "", parameters = []
+
+		// Get the keyboard name and the checker
+		let [name, checker] = kbrd[0].split("@")
+		if(checker===undefined){
+			// means the checker is implicit with the keyboard.
+			let nameWithParams = name.split(",")
+			name = checker = nameWithParams.shift()
+			parameters = parameters.concat(...nameWithParams)
+		}
 
 		if (kbrd.length > 1) {
-			if (kbrd[1].startsWith("@")) {
-				letters = kbrd[1].substring(1)
-			} else {
-				parameters = kbrd[1]
+			// More parameters.
+			for (let i = 1; i < kbrd.length; i++) {
+				if(kbrd[i].startsWith("@")){
+					letters = kbrd[i].substring(1)
+				}else{
+					parameters.push(kbrd[i])
+				}
 			}
-		}
-		if (kbrd.length > 2 && parameters !== "") {
-			parameters = kbrd[2]
 		}
 
 		if(!keyboards.hasOwnProperty(name)){
 			name = "exact"
 		}
 
-		checker = useCheckers(checker.length>0?checker.join("@"): name)
+		checker = useCheckers([checker, ...parameters].join(","))
 
 		checkerFormat.update(checker.format())
-
 
 		return {
 			name,

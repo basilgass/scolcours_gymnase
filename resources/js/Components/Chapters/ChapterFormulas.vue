@@ -1,64 +1,66 @@
 <template>
-	<article v-if="theFormular.length>0">
+	<article>
 		<div class="px-5 flex justify-between">
 			<h3 class="uppercase font-extralight mb-2">
 				Formulaires
 			</h3>
 		</div>
 
-		<div class="flex flex-wrap text-xs gap-1 px-5">
-			<button
-				v-for="item of themeChapters"
-				:key="item.slug"
-				v-katex.auto="item.title"
-				class="btn btn-xs transition-colors"
-				:class="{
-					'is-active': item.slug===theSlug,
-					'font-semibold': item.slug===props.chapterSlug
-				}"
-				@click="updateFormular(item.slug)"
-			/>
-		</div>
+		<div v-if="theFormular.length>0 || editMode.enabled.value">
+			<div class="flex flex-wrap text-xs gap-1 px-5">
+				<button
+					v-for="item of themeChapters"
+					:key="item.slug"
+					v-katex.auto="item.title"
+					class="btn btn-xs transition-colors"
+					:class="{
+						'is-active': item.slug===theSlug,
+						'font-semibold': item.slug===props.chapterSlug
+					}"
+					@click="updateFormular(item.slug)"
+				/>
+			</div>
 
-		<div
-			class="columns-1 "
-			:class="props.responsive?'md:columns-2 lg:columns-3': ''"
-		>
-			<draggable
-				v-model="theFormular"
-				class="grid grid-cols-1 gap-3 my-5"
-				item-key="id"
-				handle=".draggable-handle"
-				v-bind="{
-					animation: 200,
-					disabled: !($page.props.auth.can.admin),
-				}"
-				@end="updateFormulasOrder"
+			<div
+				class="columns-1 "
+				:class="props.responsive?'md:columns-2 lg:columns-3': ''"
 			>
-				<template #item="{ element }">
-					<block-show
-						v-if="element.block"
-						:key="element.id"
-						class="break-inside-avoid-column"
-						:block="element.block"
-						:max-illustration="1"
-					/>
-				</template>
-				<template #footer>
-					<div
-						v-show="editMode.enabled.value"
-						v-admin
-						class="px-5"
-					>
-						<button
-							class="btn-new"
-							@click="addFormula"
+				<draggable
+					v-model="theFormular"
+					class="grid grid-cols-1 gap-3 my-5"
+					item-key="id"
+					handle=".draggable-handle"
+					v-bind="{
+						animation: 200,
+						disabled: !($page.props.auth.can.admin),
+					}"
+					@end="updateFormulasOrder"
+				>
+					<template #item="{ element }">
+						<block-show
+							v-if="element.block"
+							:key="element.id"
+							class="break-inside-avoid-column"
+							:block="element.block"
+							:max-illustration="1"
+						/>
+					</template>
+					<template #footer>
+						<div
+							v-show="editMode.enabled.value"
+							v-admin
+							class="px-5"
 						>
-							Ajouter une formule
-						</button>
-					</div>
-				</template>
-			</draggable>
+							<button
+								class="btn-new"
+								@click="addFormula"
+							>
+								Ajouter une formule
+							</button>
+						</div>
+					</template>
+				</draggable>
+			</div>
 		</div>
 	</article>
 </template>

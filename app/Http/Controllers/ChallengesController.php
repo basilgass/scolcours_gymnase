@@ -24,6 +24,7 @@ class ChallengesController extends Controller
 		return Inertia::render('Challenges/ChallengesPage', [
 			"theme" => $theme->only('color', 'icon', 'slug', 'title', 'id'),
 			"challenge" => ChallengeResource::make($challenge),
+			"teams" => Team::all()
 		]);
 	}
 

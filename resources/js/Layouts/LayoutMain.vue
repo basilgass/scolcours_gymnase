@@ -41,7 +41,7 @@
 <script setup>
 import MainHeader from "@/Components/MainHeader"
 import MainFooter from "@/Components/MainFooter"
-import {computed, provide, ref} from "vue"
+import {computed, onMounted, provide, ref} from "vue"
 import FlashMessage from "@/Components/Ui/FlashMessage.vue"
 
 defineProps({
@@ -62,11 +62,22 @@ let globalEditMode = ref(false),
 	globalCorrectionMode = ref(false)
 provide("editMode", {
 	enabled: computed(()=>{return globalEditMode.value}),
-	toggle: function(){globalEditMode.value = !globalEditMode.value}
+	toggle: function(){
+		globalEditMode.value = !globalEditMode.value
+		localStorage.setItem("scolcours_editMode", globalEditMode.value)
+	}
 })
 provide("correctionMode", {
 	enabled: computed(()=>{return globalCorrectionMode.value}),
-	toggle: function(){globalCorrectionMode.value = !globalCorrectionMode.value}
+	toggle: function(){
+		globalCorrectionMode.value = !globalCorrectionMode.value
+		localStorage.setItem("scolcours_correctionMode", globalCorrectionMode.value)
+	}
+})
+
+onMounted(()=>{
+	globalEditMode.value = localStorage.getItem("scolcours_editMode") || false
+	globalCorrectionMode.value = localStorage.getItem("scolcours_correctionMode") || false
 })
 
 </script>
