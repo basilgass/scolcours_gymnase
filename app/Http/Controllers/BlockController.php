@@ -57,11 +57,11 @@ class BlockController extends Controller
 			'script' => ['string', 'nullable'],
 			'switch' => ['boolean', 'nullable'],
 			'json' => ['string', 'nullable'],
-			'illustrations' => ['array'],
-			'illustrations.*.title' => ['string', 'nullable'],
-			'illustrations.*.type' => ['string'],
-			'illustrations.*.code' => ['string'],
-			'illustrations.*.parameters' => ['text', 'nullable'],
+//			'illustrations' => ['array'],
+//			'illustrations.*.title' => ['string', 'nullable'],
+//			'illustrations.*.type' => ['string'],
+//			'illustrations.*.code' => ['string'],
+//			'illustrations.*.parameters' => ['text', 'nullable'],
 		]);
 
 		$block = Block::create([
@@ -73,16 +73,16 @@ class BlockController extends Controller
 			'data' => $request->data
 		]);
 
-		if (count($request->illustrations) > 0) {
-			foreach ($request->illustrations as $item) {
-				$block->illustrations()->create([
-					'title' => $item['title'] ?? '',
-					'type' => $item['type'],
-					'code' => $item['code'],
-					'parameters' => $item['parameters']
-				]);
-			}
-		}
+//		if (count($request->illustrations) > 0) {
+//			foreach ($request->illustrations as $item) {
+//				$block->illustrations()->create([
+//					'title' => $item['title'] ?? '',
+//					'type' => $item['type'],
+//					'code' => $item['code'],
+//					'parameters' => $item['parameters']
+//				]);
+//			}
+//		}
 
 		if ($request->target === 'Chapter') {
 			Chapter::get($request->target_id)?->append($block);
@@ -147,13 +147,13 @@ class BlockController extends Controller
 			'json' => ['string', 'nullable'],
 			'blur' => ['boolean'],
 			'switch' => ['boolean', 'nullable'],
-			'illustrations' => ['array', 'nullable'],
-			'illustrations.*.id' => ['integer', 'nullable'],
-			'illustrations.*.title' => ['string', 'nullable'],
-			'illustrations.*.type' => ['string'],
-			'illustrations.*.code' => ['string'],
-			'illustrations.*.parameters' => ['string', 'nullable'],
-			'illustrations.*.css' => ['string', 'nullable']
+//			'illustrations' => ['array', 'nullable'],
+//			'illustrations.*.id' => ['integer', 'nullable'],
+//			'illustrations.*.title' => ['string', 'nullable'],
+//			'illustrations.*.type' => ['string'],
+//			'illustrations.*.code' => ['string'],
+//			'illustrations.*.parameters' => ['string', 'nullable'],
+//			'illustrations.*.css' => ['string', 'nullable']
 		]);
 
 		$block->title = $validation['title'] ?? '';
@@ -166,25 +166,26 @@ class BlockController extends Controller
 
 		// Get all illustrations IDs.
 		// TODO: remove illustration handle from block
-		if(count($validation['illustrations'])===0){
-			// remove all illustrations (we don't want anymore !)
-			$block->illustrations()->delete();
-		}else{
-			// Add all illustrations
-			$block->illustrations()
-				->whereNotIn(
-					'id',
-					collect($validation['illustrations'])->pluck('id')
-				)->delete();
+//		if(count($validation['illustrations'])===0){
+//			// remove all illustrations (we don't want anymore !)
+//			$block->illustrations()->delete();
+//		}else{
+//			// Add all illustrations
+//			$block->illustrations()
+//				->whereNotIn(
+//					'id',
+//					collect($validation['illustrations'])->pluck('id')
+//				)->delete();
+//
+//			foreach ($validation['illustrations'] as $i=>$illustration) {
+//				$illustration['order'] = $i+1;
+//				$block->illustrations()->updateOrCreate(
+//					["id"=>$illustration['id']],
+//					$illustration
+//				);
+//			}
+//		}
 
-			foreach ($validation['illustrations'] as $i=>$illustration) {
-				$illustration['order'] = $i+1;
-				$block->illustrations()->updateOrCreate(
-					["id"=>$illustration['id']],
-					$illustration
-				);
-			}
-		}
 		// update the block
 		$block->save();
 		$block->update();

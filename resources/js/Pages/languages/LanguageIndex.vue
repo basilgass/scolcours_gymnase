@@ -21,6 +21,12 @@
 			>
 				liste des mots
 			</Link>
+			<Link
+				:href="`/${language}/type`"
+				class="bg-white border rounded hover:scale-105 h-32 grid place-items-center transition-all duration-300"
+			>
+				Typographie
+			</Link>
 		</div>
 	</article>
 </template>

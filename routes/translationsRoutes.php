@@ -7,7 +7,7 @@ Route::get("{language}", [TranslationController::class, "index"])
 	->name('translation.index');
 Route::get("{language}/{game}", [TranslationController::class, "show"])
 	->where('language', 'italiano|english')
-	->where('game', 'memory|guess|list')
+	->where('game', 'memory|guess|list|type')
 	->name('translation.show');
 Route::get('translation', [TranslationController::class, 'import'])->name('translation.import');
 Route::get('translation/{unit}/words', [TranslationController::class, 'fetchWords'])->name('translation.words');

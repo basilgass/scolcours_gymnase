@@ -3,7 +3,7 @@
 		ref="root"
 	>
 		<div
-			v-if="$page.props.auth.can.admin && !preview"
+			v-if="$page.props.auth.can.admin && !preview && editMode.enabled.value"
 			class="flex justify-between mb-3"
 		>
 			<div>
@@ -62,7 +62,7 @@
 </template>
 
 <script setup>
-import {computed, defineAsyncComponent, ref} from "vue"
+import {computed, defineAsyncComponent, inject, ref} from "vue"
 import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"
 
 const props = defineProps({
@@ -78,6 +78,7 @@ let root = ref(null),
 			() => import("@/Components/Posts/Illustrations/IllustrationForm.vue")
 		)
 	}),
+	editMode = inject("editMode"),
 	theIllustration = ref(props.illustration),
 	updateComponentKey = ref(0)
 

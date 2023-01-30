@@ -132,50 +132,6 @@
 				</div>
 
 				<div
-					v-if="1===0"
-					class="w-full"
-				>
-					<form-button
-						v-if="props.maxIllustration===null || theBlock.illustrations.length < props.maxIllustration"
-						@click="theBlock.illustrations.push({
-							title: '',
-							type: 'draw',
-							code: '',
-							parameters: ''
-						})"
-					>
-						Ajouter une illustration
-					</form-button>
-				</div>
-				<div
-					v-if="theBlock.illustrations?.length>0 && 1===0"
-					class="w-full"
-				>
-					<div
-						v-for="(illustration, index) of theBlock.illustrations"
-						:key="`illustration-${index}`"
-						class="grid grid-cols-1 md:grid-cols-2 gap-3 space-y-3"
-					>
-						<div>
-							<form-illustration
-								v-model="theBlock.illustrations[index]"
-								:label="`illustration ${index}`"
-								:name="`illustration-${index}`"
-							/>
-						</div>
-						<div class="hidden md:block">
-							<illustration-show :illustration="theBlock.illustrations[index]" />
-							<button
-								class="btn-delete btn-xs float-right"
-								@click="theBlock.illustrations.splice(index,1)"
-							>
-								<i class="bi bi-trash" />Supprimer
-							</button>
-						</div>
-					</div>
-				</div>
-
-				<div
 					v-show="!props.noScript || !props.noData"
 					class="grid grid-cols-1 md:grid-cols-2 gap-3"
 				>
@@ -204,14 +160,11 @@
 
 import FormInput from "@/Components/Form/FormInput"
 import FormTextarea from "@/Components/Form/FormTextarea"
-import FormButton from "@/Components/Form/FormButton"
-import FormIllustration from "@/Components/Form/FormIllustration"
 import FormSwitch from "@/Components/Form/FormSwitch"
 import FormNumber from "@/Components/Form/FormNumber"
 import {computed, inject, ref} from "vue"
 import MarkdownIt from "@/Components/Ui/MarkdownIt"
 import FormSelect from "@/Components/Form/FormSelect"
-import IllustrationShow from "@/Components/Posts/Illustrations/IllustrationShow.vue"
 import DialogModal from "@/Components/Ui/DialogModal.vue"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
 import {PiMath} from "pimath/esm"
@@ -230,8 +183,7 @@ const props = defineProps({
 	noData: {type: Boolean, default: false},
 	noBlur: {type: Boolean, default: false},
 	previewCol: {type: Boolean, default: false},
-	overflowScroll: {type: Boolean, default: false},
-	maxIllustration: {type: [Number,null], default: null}
+	overflowScroll: {type: Boolean, default: false}
 })
 
 let show = ref(props.modelValue),
