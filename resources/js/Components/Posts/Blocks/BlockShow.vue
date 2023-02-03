@@ -63,7 +63,7 @@
 		>
 			<template #item="{ element }">
 				<illustration-show
-					:illustration="illustrationEdited(element)"
+					:illustration="element"
 					@destroy="destroyIllustration"
 				/>
 			</template>
@@ -99,7 +99,7 @@
 
 import MarkdownIt from "@/Components/Ui/MarkdownIt"
 import IllustrationShow from "@/Components/Posts/Illustrations/IllustrationShow.vue"
-import {computed, defineAsyncComponent, inject, ref} from "vue"
+import {computed, defineAsyncComponent, inject, provide, ref} from "vue"
 import {PiMath} from "pimath/esm"
 import {useFormattedBody} from "@/Composables/useHelpers"
 import {useBlockTypes} from "@/scolcours"
@@ -152,16 +152,9 @@ let random = ref(1),
 	}),
 	blockBody = computed(() => {
 		return useFormattedBody(props.block.body, blockData)
-	}),
-	illustrationEdited = function (illustration) {
-		return {
-			id: illustration.id,
-			title: illustration.title,
-			type: illustration.type,
-			code: useFormattedBody(illustration.code, blockData),
-			parameters: illustration.parameters ? useFormattedBody(illustration.parameters, blockData) : ""
-		}
-	}
+	})
+
+provide("blockData", blockData)
 
 let showEditForm = ref(props.block?.isNew === true),
 	editForm = computed(() => {

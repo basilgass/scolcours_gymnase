@@ -42,7 +42,7 @@
 			>
 				<form-illustration
 					v-model="theIllustration"
-					:label="`illustratio`"
+					:label="`illustration`"
 					:name="`illustration`"
 				/>
 

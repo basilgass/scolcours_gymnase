@@ -212,7 +212,8 @@ onMounted(() => {
 	PiGraph.texConverter = {
 		toTex: katex.renderToString,
 		options: {
-			throwOnError: false
+			throwOnError: false,
+			displayMode: true
 		}
 	}
 
@@ -240,6 +241,8 @@ onMounted(() => {
 let drawMouseUp = function(){
 	emits("update", PiGraph.figures)
 }
+
+// TODO: make PiDrawParser much better vue compatible (reactive) and using computed properties.
 watch(drawCode, (code, before)=>{
 	// Watch changes from "inside"
 	try {
@@ -250,22 +253,22 @@ watch(drawCode, (code, before)=>{
 	}
 })
 
-watch(()=>props.draw.code, (code, before) => {
-	// Watch changes from "outside"
-	getSliders()
-	try {
-		PiParser.update(drawCode.value)
-		emits("update", PiGraph.figures)
-	}catch{
-		console.log("Cannot parse (watch props.draw.code) ", drawCode.value)
-	}
-})
-
-watch(() => props.draw.parameters, (params, before) => {
-	try {
-		PiParser.updateLayout(params)
-	}catch{
-		console.log("Cannot parse (watch props.draw.parameters)", props.draw.params)
+watch(()=>props.draw, (newValue, oldValue)=>{
+	if(newValue.code!==oldValue.code){
+		// Watch changes from "outside"
+		getSliders()
+		try {
+			PiParser.update(drawCode.value)
+			emits("update", PiGraph.figures)
+		}catch{
+			console.log("Cannot parse (watch props.draw.code) ", drawCode.value)
+		}
+	}else if(newValue.parameters !== oldValue.paramaeters){
+		try {
+			PiParser.updateLayout(newValue.parameters)
+		}catch{
+			console.log("Cannot parse (watch props.draw.parameters)", props.draw.params)
+		}
 	}
 })
 

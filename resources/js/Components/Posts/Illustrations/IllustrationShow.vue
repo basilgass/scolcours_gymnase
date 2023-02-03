@@ -1,5 +1,5 @@
 <template>
-	<div
+	<figure
 		ref="root"
 	>
 		<div
@@ -22,14 +22,15 @@
 		</div>
 		<pi-draw-parser
 			v-if="theIllustration.type==='draw'"
-			:draw="theIllustration"
+			:draw="blockIllustration"
 		/>
-		<div>
+		<div
+			v-if="theIllustration.type==='component'"
+		>
 			<component
 				:is="IllustrationComponent"
-				v-if="theIllustration.type==='component'"
 				:key="updateComponentKey"
-				:illustration="theIllustration"
+				:illustration="blockIllustration"
 			/>
 			<div class="float-right">
 				<button
@@ -45,6 +46,12 @@
 			</div>
 		</div>
 
+		<figcaption
+			v-if="blockIllustration.title"
+			v-katex.auto="blockIllustration.title"
+			class="text-center text-xs border border-gray-200 bg-gray-100 py-1"
+		/>
+
 		<!-- edit form -->
 		<div
 			v-if="showEditForm"
@@ -58,18 +65,21 @@
 				@destroy="emits('destroy', $event)"
 			/>
 		</div>
-	</div>
+	</figure>
 </template>
 
 <script setup>
 import {computed, defineAsyncComponent, inject, ref} from "vue"
 import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"
+import {useFormattedBody} from "@/Composables/useHelpers"
 
 const props = defineProps({
 		illustration: {type: Object, required: true},
 		preview: {type: Boolean, default: false}
 	}),
 	emits = defineEmits(["destroy"])
+
+let blockData = inject("blockData", {})
 
 let root = ref(null),
 	showEditForm = ref(false),
@@ -78,19 +88,27 @@ let root = ref(null),
 			() => import("@/Components/Posts/Illustrations/IllustrationForm.vue")
 		)
 	}),
-	editMode = inject("editMode"),
 	theIllustration = ref(props.illustration),
+	editMode = inject("editMode"),
+	blockIllustration = computed(()=>{
+		return {
+			title: theIllustration.value.title ? useFormattedBody(theIllustration.value.title, blockData):"",
+			code: useFormattedBody(theIllustration.value.code, blockData),
+			parameters: theIllustration.value.parameters ? useFormattedBody(theIllustration.value.parameters, blockData) : ""
+		}
+	}),
 	updateComponentKey = ref(0)
 
 const IllustrationComponent = computed(
 	() => {
-		if(props.illustration.type==="component" && props.illustration.title!==null){
+		if(props.illustration.type==="component" && props.illustration.value!==null){
 			return defineAsyncComponent(
-				() => import(`@/Components/Posts/Illustrations/Elements/${props.illustration.title}.vue`)
+				() => import(`@/Components/Posts/Illustrations/Elements/${props.illustration.value}.vue`)
 			)
 		}else{
 			return false
 		}
 	}
 )
+
 </script>

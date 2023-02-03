@@ -79,6 +79,7 @@ class IllustrationController extends Controller
 		$validation = $request->validate([
 			'title' => ['string', 'nullable'],
 			'type' => ['string'],
+			'value' => ['string', 'nullable'],
 			'code' => ['string'],
 			'parameters' => ['string', 'nullable'],
 			'css' => ['string', 'nullable'],

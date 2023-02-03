@@ -1,15 +1,24 @@
 <template>
 	<form-field>
-		<form-label
-			:label="label"
-			:name="name"
-		/>
+		<div class="mb-3">
+			<form-label
+				:label="label"
+				:name="name"
+			/>
 
-		<form-input
-			v-model="theModel.css"
-			name="css"
-			label="css"
-		/>
+			<form-input
+				v-model="theModel.title"
+				name="title"
+				label="nom de la figure"
+			/>
+
+			<form-input
+				v-model="theModel.css"
+				name="css"
+				label="css"
+				class="font-code"
+			/>
+		</div>
 
 		<div class="grid grid-cols-1 gap-3">
 			<div class="w-full grid grid-cols-3 gap-3">
@@ -60,6 +69,7 @@
 					:rows="10"
 				/>
 			</div>
+
 			<!-- component illustration -->
 			<div
 				v-else
@@ -69,8 +79,8 @@
 					<li
 						v-for="(description, comp) of chapterComponents"
 						:key="comp"
-						:class="theModel.title===comp?'btn-success':'btn'"
-						@click="theModel.title=comp"
+						:class="theModel.value===comp?'btn-success':'btn'"
+						@click="theModel.value=comp"
 					>
 						{{ comp }}
 					</li>
@@ -87,9 +97,9 @@
 					:rows="10"
 				/>
 				<markdown-it
-					v-if="chapterComponents[theModel.title]"
+					v-if="chapterComponents[theModel.value]"
 					class="font-code text-left"
-					:text="chapterComponents[theModel.title]"
+					:text="chapterComponents[theModel.value]"
 				/>
 			</div>
 		</div>
@@ -111,6 +121,7 @@ let props = defineProps({
 			return {
 				title: "",
 				type: "draw",
+				value: "",
 				code: "",
 				parameters: "",
 				css: "",
