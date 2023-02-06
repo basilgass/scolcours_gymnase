@@ -16,7 +16,7 @@
 		<transition name="slide-fade">
 			<div
 				v-if="afficherFormulaires"
-				class="bg-white fixed bottom-0 left-0 w-full md:w-[400px] h-full border-gray-200 py-3"
+				class="bg-white fixed bottom-0 left-0 w-full md:w-[400px] h-full border-gray-200 py-3 overflow-y-scroll"
 			>
 				<div>
 					<button
