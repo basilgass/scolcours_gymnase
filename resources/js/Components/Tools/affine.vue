@@ -2,9 +2,9 @@
 	<Panel>
 		<form-input
 			v-model="A"
+			focus
 			label="Point A"
 			name="A"
-			focus
 		>
 			Utiliser <code class="px-2 bg-gray-200">a,b</code> pour les coordonnées d'un point
 		</form-input>
@@ -14,12 +14,24 @@
 			:label="B[0]==='v'?'Vecteur directeur':'Point B'"
 			name="B"
 		>
-			Utiliser <code class="px-2 bg-gray-200">a,b</code> pour les coordonnées d'un point ou <code class="px-2 bg-gray-200">va,b</code> pour un vecteur directeur
+			Utiliser <code class="px-2 bg-gray-200">a,b</code> pour les coordonnées d'un point ou <code
+				class="px-2 bg-gray-200"
+			>va,b</code> pour un vecteur directeur
 		</form-input>
 
 		<div v-if="affine">
-			<div v-katex="`${affine.tex.mxh}`" />
-			<div v-katex="`${affine.tex.canonical}`" />
+			<div>
+				<div v-katex="`${affine.tex.mxh}`" />
+				<div v-katex="`${affine.tex.canonical}`" />
+				<div v-katex="`${affine.tex.equation}`" />
+				<div v-katex="`${affine.tex.parametric}`" />
+			</div>
+			<div class="bg-gray-100 border-gray-300 rounded font-code px-3 py-1">
+				<div v-text="`${affine.tex.mxh}`" />
+				<div v-text="`${affine.tex.canonical}`" />
+				<div v-text="`${affine.tex.equation}`" />
+				<div v-text="`${affine.tex.parametric}`" />
+			</div>
 		</div>
 		<div
 			v-else

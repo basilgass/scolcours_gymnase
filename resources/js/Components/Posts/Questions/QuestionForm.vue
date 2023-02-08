@@ -38,6 +38,7 @@
 					v-model="theQuestion.css"
 					name="css"
 					label="CSS"
+					class="font-code"
 				/>
 				<form-textarea
 					v-model="theQuestion.block.body"
@@ -77,16 +78,19 @@
 					v-model="theQuestion.answer"
 					label="answer"
 					name="answer"
+					class="font-code"
 				/>
 				<form-input
 					v-model="theQuestion.keyboard"
 					label="keyboard"
 					name="keyboard"
+					class="font-code"
 				/>
 				<form-textarea
 					v-model="theQuestion.parameters"
 					label="parameters"
 					name="parameters"
+					class="font-code"
 				/>
 
 				<div
