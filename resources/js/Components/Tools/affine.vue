@@ -21,16 +21,16 @@
 
 		<div v-if="affine">
 			<div>
-				<div v-katex="`${affine.tex.mxh}`" />
-				<div v-katex="`${affine.tex.canonical}`" />
-				<div v-katex="`${affine.tex.equation}`" />
-				<div v-katex="`${affine.tex.parametric}`" />
+				<div v-katex="`${affine.mxh}`" />
+				<div v-katex="`${affine.canonical}`" />
+				<div v-katex="`${affine.equation}`" />
+				<div v-katex="`${affine.parametric}`" />
 			</div>
 			<div class="bg-gray-100 border-gray-300 rounded font-code px-3 py-1">
-				<div v-text="`${affine.tex.mxh}`" />
-				<div v-text="`${affine.tex.canonical}`" />
-				<div v-text="`${affine.tex.equation}`" />
-				<div v-text="`${affine.tex.parametric}`" />
+				<div v-text="`${affine.mxh}`" />
+				<div v-text="`${affine.canonical}`" />
+				<div v-text="`${affine.equation}`" />
+				<div v-text="`${affine.parametric}`" />
 			</div>
 		</div>
 		<div
@@ -63,7 +63,7 @@ let affine = computed(() => {
 		return new PiMath.Geometry.Line(
 			new PiMath.Geometry.Point(A.value),
 			B.value[0] === "v" ? new PiMath.Geometry.Vector(B.value.substring(1)) : new PiMath.Geometry.Point(B.value)
-		)
+		).tex
 	} catch (e) {
 		return false
 	}
