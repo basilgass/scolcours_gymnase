@@ -76,8 +76,8 @@ provide("correctionMode", {
 })
 
 onMounted(()=>{
-	globalEditMode.value = localStorage.getItem("scolcours_editMode") || false
-	globalCorrectionMode.value = localStorage.getItem("scolcours_correctionMode") || false
+	globalEditMode.value = (localStorage.getItem("scolcours_editMode")==="true") || false
+	globalCorrectionMode.value = (localStorage.getItem("scolcours_correctionMode") === "true") || false
 })
 
 </script>

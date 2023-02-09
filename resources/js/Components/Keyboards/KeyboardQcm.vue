@@ -9,7 +9,11 @@
 			<button
 				v-for="element of qcmItems"
 				:key="element.key"
-				:class="element.selected?'btn-success':'bg-white'"
+				:class="{
+					'btn-success': element.selected,
+					'bg-white': !element.selected,
+					'w-full': isFullWidth
+				}"
 				class="btn"
 				@click="changeEvent(element)"
 			>
@@ -29,7 +33,7 @@
 <script setup>
 
 import {useWrongAnswerAnimation} from "@/Composables/useHelpers"
-import {onMounted, ref} from "vue"
+import {computed, onMounted, ref} from "vue"
 import KeyboardValidateButton from "@/Components/Keyboards/KeyboardValidateButton.vue"
 
 let props = defineProps({
@@ -88,13 +92,22 @@ let qcmSelections = function (output) {
 
 		return values.join(",")
 	},
-	qcmItems = ref([])
+	qcmItems = ref([]),
+	qcmOptions = computed(()=>{
+		return props.options.split("\n")
+			.filter(x=>x.startsWith("@"))
+			.map(x=>x.substring(1))
+	}),
+	isFullWidth = computed(()=>{
+		return qcmOptions.value.includes("full")
+	})
 
 onMounted(() => {
 	//TODO : options pour mettre aléatoire.
 	qcmItems.value = props.options
 		.split("\n")
 		.filter(x => x !== "")
+		.filter(x => !x.startsWith("@"))
 		.map(x => {
 			let keyDisplay = x.split("|"),
 				key, display, ascii
