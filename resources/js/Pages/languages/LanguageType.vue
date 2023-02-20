@@ -25,7 +25,10 @@
 			</button>
 		</div>
 		<div v-else>
-			<div class="bg-grey-300 border border-600 rounded">
+			<div
+				v-admin
+				class="bg-grey-300 border border-600 rounded"
+			>
 				{{ currentWord.fr }} --> {{ currentWord.foreign }}
 			</div>
 
@@ -167,14 +170,14 @@ function saveToLocalStorage(addToIndex) {
 	)
 }
 
-function removeFromLcalStorage() {
+function removeFromLocalStorage() {
 	localStorage.removeItem(localStorageKey.value)
 }
 
 
 let typoButtons = ref(null),
 	excludeLetters = ref([" ", ",", "'", ".", "!", "?", "(", ")", "-"]),
-	foreignLetters = rcomef([]),
+	foreignLetters = ref([]),
 	resultLetters = ref([]),
 	buildResult = function () {
 		let theWord = currentWord.value.foreign
