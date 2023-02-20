@@ -21,10 +21,10 @@ use Illuminate\Support\Carbon;
  * @property int|null $stars
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property-read Collection|\App\Models\Challenge[] $challenges
+ * @property-read Collection<int, \App\Models\Challenge> $challenges
  * @property-read int|null $challenges_count
  * @property-read Model|\Eloquent $scoreable
- * @property-read Collection|\App\Models\User[] $users
+ * @property-read Collection<int, \App\Models\User> $users
  * @property-read int|null $users_count
  * @method static Builder|Score newModelQuery()
  * @method static Builder|Score newQuery()

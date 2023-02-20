@@ -34,13 +34,13 @@ use Illuminate\Support\Carbon;
  * @property int $bonusLevelTime
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property-read Collection|\App\Models\Block[] $blocks
+ * @property-read Collection<int, \App\Models\Block> $blocks
  * @property-read int|null $blocks_count
  * @property-read \App\Models\Chapter|null $chapter
  * @property-read mixed $running
- * @property-read Collection|\App\Models\Score[] $scores
+ * @property-read Collection<int, \App\Models\Score> $scores
  * @property-read int|null $scores_count
- * @property-read Collection|ChallengeSession[] $sessions
+ * @property-read Collection<int, ChallengeSession> $sessions
  * @property-read int|null $sessions_count
  * @method static Builder|Challenge newModelQuery()
  * @method static Builder|Challenge newQuery()

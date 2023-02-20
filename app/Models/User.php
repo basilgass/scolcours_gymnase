@@ -27,21 +27,21 @@ use Laravel\Sanctum\PersonalAccessToken;
  * @property string|null $remember_token
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property-read Collection|ChallengeSession[] $challenges
+ * @property-read Collection<int, ChallengeSession> $challenges
  * @property-read int|null $challenges_count
- * @property-read Collection|\App\Models\Chapter[] $chapters
+ * @property-read Collection<int, \App\Models\Chapter> $chapters
  * @property-read int|null $chapters_count
  * @property-read mixed $admin
- * @property-read DatabaseNotificationCollection|DatabaseNotification[] $notifications
+ * @property-read DatabaseNotificationCollection<int, DatabaseNotification> $notifications
  * @property-read int|null $notifications_count
- * @property-read Collection|\App\Models\Question[] $questions
+ * @property-read Collection<int, \App\Models\Question> $questions
  * @property-read int|null $questions_count
- * @property-read Collection|\App\Models\Score[] $scores
+ * @property-read Collection<int, \App\Models\Score> $scores
  * @property-read int|null $scores_count
  * @property-read \App\Models\Team|null $team
- * @property-read Collection|PersonalAccessToken[] $tokens
+ * @property-read Collection<int, PersonalAccessToken> $tokens
  * @property-read int|null $tokens_count
- * @method static \Database\Factories\UserFactory factory(...$parameters)
+ * @method static \Database\Factories\UserFactory factory($count = null, $state = [])
  * @method static Builder|User newModelQuery()
  * @method static Builder|User newQuery()
  * @method static Builder|User query()

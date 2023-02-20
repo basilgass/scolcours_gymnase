@@ -1,7 +1,10 @@
 <template>
-	<h1 class="text-3xl pt-5 mb-10">
-		Statistiques de {{ chapter.title }}
+	<h1 class="text-3xl pt-5">
+		Statistiques de {{ team.name }}
 	</h1>
+	<h3 class="text-2xl mb-10">
+		{{ chapter.title }}
+	</h3>
 
 	<section>
 		<div
@@ -36,15 +39,14 @@ export default {
 </script>
 <script setup>
 
-import ProgressBar from "@/Pages/Admin/ProgressBar"
+import ProgressBar from "@/Components/Ui/ProgressBar.vue"
+import {computed} from "vue"
 
 let props = defineProps({
+	team: {type: Object},
 	chapter: {type: Object},
 	users: {type: Number},
-	stats: {type: Object},
-	questions: {type: Array}
+	stats: {type: Object}
 })
-
-console.log(props.stats)
 </script>
 

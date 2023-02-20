@@ -48,9 +48,11 @@
 			<!-- image illustration -->
 			<div
 				v-if="modelValue.type==='image'"
-				class="col-span-2 border-dashed border-gray-200 border-2 rounded h-full w-full grid grid-cols-1 text-center items-center"
+				class="col-span-2 mb-5"
 			>
-				Glisser / déposer une image
+				<form-image-drop
+					@file-dropped="imageFileDropped"
+				/>
 			</div>
 			<!-- draw illustration -->
 			<div
@@ -59,7 +61,7 @@
 			>
 				<form-input
 					v-model="theModel.parameters"
-					label="parametres"
+					label="paramètres"
 					name="drawParameters"
 				/>
 				<form-textarea
@@ -113,6 +115,7 @@ import {computed, onMounted, ref} from "vue"
 import FormTextarea from "@/Components/Form/FormTextarea"
 import FormInput from "@/Components/Form/FormInput"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
+import FormImageDrop from "@/Components/Form/FormImageDrop.vue"
 
 defineEmits(["update:modelValue", "inputFocus"])
 let props = defineProps({
@@ -136,8 +139,12 @@ let props = defineProps({
 	focus: {type: Boolean, default: false}
 })
 
-let chapterComponents = ref({})
+function imageFileDropped(e){
+	theModel.value.code = e
+	emit("update:modelValue", theModel.value)
+}
 
+let chapterComponents = ref({})
 function loadComponents(){
 	theModel.value.type="component"
 	axios.get(route("illustrations.components"))

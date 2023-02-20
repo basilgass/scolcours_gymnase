@@ -29,17 +29,45 @@
 				{{ currentWord.fr }} --> {{ currentWord.foreign }}
 			</div>
 
-			<div>
+			<div class="space-y-10">
 				<div class="text-xl text-center">
 					{{ currentWord.fr }}
 				</div>
-				<div class="keyboard">
+
+				<div class="flex flex-wrap gap-4 justify-center">
+					<div
+						v-for="(key, index) in resultLetters"
+						:key="`found-${index}`"
+						:class="{
+							'p-2 w-14 border border-gray-200 rounded': key.key!==' ',
+							'p-0 w-2': key.key===' ',
+							'bg-white': key.key !== ' ' && index!==currentIndex,
+							'is-active': index===currentIndex
+						}"
+						class="text-center text-lg font-code h-14"
+					>
+						<span
+							v-show="key.visible"
+							v-text="key.key"
+						/>
+					</div>
+				</div>
+
+				<div
+					ref="typoButtons"
+					class="keyboard flex flex-wrap gap-4 justify-center"
+				>
 					<button
 						v-for="(key, index) in foreignLetters"
-						:key="`${key}-${index}`"
-						class="key bg-white"
+						:key="`${key.key}-${index}`"
+						:class="{
+							'bg-white hover:scale-105 hover:shadow': !key.used,
+							'bg-gray-200 disabled text-gray-400 cursor-wait': key.used
+						}"
+						class="p-2 w-14 h-14 border border-gray-200 rounded transition-all"
+						@click="key.used?'':validateKey(index)"
 					>
-						{{ key }}
+						{{ key.key }}
 					</button>
 				</div>
 			</div>
@@ -68,7 +96,7 @@ let props = defineProps({
 	units: {type: Array, default: () => []}
 })
 let unitsSelection = ref([]),
-	localStorageKey = computed(()=>{
+	localStorageKey = computed(() => {
 		return `scolcours_type_${props.language}`
 	}),
 	availableWords = ref([]),
@@ -90,6 +118,8 @@ let startGame = function () {
 	// The game has been started - store the value in the localStorage.
 	saveToLocalStorage()
 
+	buildResult()
+
 	gameStopped.value = false
 
 }
@@ -101,6 +131,8 @@ let continueGame = function (enter) {
 		alert("Félicitations - tu as fait tout ton voc !")
 		gameStopped.value = true
 		availableWords.value = []
+	} else {
+		buildResult()
 	}
 }
 
@@ -115,17 +147,7 @@ let generateWords = function () {
 	availableWords.value = PiMath.Random.shuffle(words)
 }
 
-let foreignLetters = computed(()=>{
-		// not used letters:
-		return PiMath.Random.shuffle(currentWord.value.foreign.split("")
-			.filter(x=>excludeLetters.value.indexOf(x)===-1)
-		)
-	}),
-	excludeLetters =[" ", ",", "'", ".", "!", "?"]
-
-function shake(index) {
-	let item = suggestionsWrapper.value.children[index]
-
+function shake(item) {
 	item.style.setProperty("animation-name", "v-shake-horizontal")
 	item.style.setProperty("animation-duration", "500ms")
 
@@ -134,21 +156,85 @@ function shake(index) {
 	}, 500)
 }
 
-
-
 function saveToLocalStorage(addToIndex) {
 	localStorage.setItem(localStorageKey.value,
 		JSON.stringify(
 			{
-				"index": startIndex.value + (addToIndex?addToIndex:0),
+				"index": startIndex.value + (addToIndex ? addToIndex : 0),
 				"words": availableWords.value
 			}
 		)
 	)
 }
+
 function removeFromLcalStorage() {
 	localStorage.removeItem(localStorageKey.value)
 }
+
+
+let typoButtons = ref(null),
+	excludeLetters = ref([" ", ",", "'", ".", "!", "?", "(", ")", "-"]),
+	foreignLetters = rcomef([]),
+	resultLetters = ref([]),
+	buildResult = function () {
+		let theWord = currentWord.value.foreign
+
+		// Modify the word
+		if(theWord.endsWith(", a, i, e")){
+			theWord = theWord.split(", a, i, e")[0]
+		}
+		if(theWord.endsWith(", i")){
+			theWord = theWord.split(", i")[0]
+		}
+		if(theWord.split(", -").length===2){
+			theWord = theWord.spit(", -")[0]
+		}
+
+		foreignLetters.value = PiMath.Random.shuffle(theWord.split("")
+			.filter(key => excludeLetters.value.indexOf(key) === -1)
+			.map(key => {
+				return {
+					key: key.toUpperCase(),
+					used: false
+				}
+			})
+		)
+
+		resultLetters.value = theWord.split("").map((key, index)=>{
+			return {
+				index,
+				key: key.toUpperCase(),
+				visible: excludeLetters.value.indexOf(key) !== -1
+			}
+		})
+
+		// Tell we are watching the first letter
+		currentIndex.value = 0
+	},
+	currentIndex = ref(-1),
+	validateKey = function (index) {
+		if (resultLetters.value[currentIndex.value].key === foreignLetters.value[index].key) {
+			resultLetters.value[currentIndex.value].visible = true
+			foreignLetters.value[index].used = true
+
+			// finished ?
+			currentIndex.value++
+			if (currentIndex.value >= resultLetters.value.length) {
+				continueGame()
+				return
+			}
+			while (resultLetters.value[currentIndex.value].visible) {
+				currentIndex.value++
+				if (currentIndex.value >= resultLetters.value.length) {
+					continueGame()
+					return
+				}
+			}
+		} else {
+			shake(typoButtons.value.children[index])
+		}
+	}
+
 
 onMounted(() => {
 	// let previousData = localStorage.getItem(localStorageKey.value)
@@ -163,6 +249,5 @@ onMounted(() => {
 	// 		removeFromLcalStorage()
 	// 	}
 	// }
-
 })
 </script>

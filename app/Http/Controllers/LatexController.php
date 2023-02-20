@@ -60,7 +60,6 @@
 					              $pdf->name
 				              );
 			}
-
 			return false;
 
 		}

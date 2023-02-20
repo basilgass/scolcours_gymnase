@@ -18,7 +18,7 @@ use Illuminate\Support\Carbon;
  * @property string $title
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property-read Collection|\App\Models\Translation[] $translations
+ * @property-read Collection<int, \App\Models\Translation> $translations
  * @property-read int|null $translations_count
  * @method static Builder|TranslationUnit newModelQuery()
  * @method static Builder|TranslationUnit newQuery()

@@ -12,7 +12,8 @@
 				:class="{
 					'btn-success': element.selected,
 					'bg-white': !element.selected,
-					'w-full': isFullWidth
+					'w-full': isFullWidth,
+					'flex-1': isFlex
 				}"
 				class="btn"
 				@click="changeEvent(element)"
@@ -100,6 +101,9 @@ let qcmSelections = function (output) {
 	}),
 	isFullWidth = computed(()=>{
 		return qcmOptions.value.includes("full")
+	}),
+	isFlex = computed(()=>{
+		return qcmOptions.value.includes("flex")
 	})
 
 onMounted(() => {

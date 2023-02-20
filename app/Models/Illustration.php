@@ -13,8 +13,9 @@ use Illuminate\Support\Carbon;
  * @property int $id
  * @property int $block_id
  * @property int $order
- * @property string|null $css
  * @property string|null $title
+ * @property string|null $css
+ * @property string|null $value
  * @property string $type
  * @property string $code
  * @property string|null $parameters
@@ -34,6 +35,7 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Illustration whereTitle($value)
  * @method static Builder|Illustration whereType($value)
  * @method static Builder|Illustration whereUpdatedAt($value)
+ * @method static Builder|Illustration whereValue($value)
  * @mixin Eloquent
  */
 class Illustration extends Model

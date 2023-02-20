@@ -17,7 +17,7 @@ use Illuminate\Support\Carbon;
  * @property int|null $order
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property-read Collection|\App\Models\Block[] $blocks
+ * @property-read Collection<int, \App\Models\Block> $blocks
  * @property-read int|null $blocks_count
  * @property-read \App\Models\Chapter $chapter
  * @method static Builder|Formula newModelQuery()

@@ -102,4 +102,21 @@ class IllustrationController extends Controller
 
 		return $id;
 	}
+
+	public function upload(Request $request)
+	{
+		$validate = $request->validate([
+			'image'=>['required', 'image', 'max:2048'],
+		]);
+
+		$uploadedFile = $request->file('image');
+
+		// Upload the image.
+		$filename = time().'-'.$uploadedFile->getClientOriginalName();
+
+		return \Storage::disk('public')->putFileAs(
+			'illustrations', $uploadedFile, $filename
+		);
+
+	}
 }

@@ -24,20 +24,20 @@ use URL;
  * @property int $active
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property-read Collection|\App\Models\Block[] $blocks
+ * @property-read Collection<int, \App\Models\Block> $blocks
  * @property-read int|null $blocks_count
- * @property-read Collection|\App\Models\Challenge[] $challenges
+ * @property-read Collection<int, \App\Models\Challenge> $challenges
  * @property-read int|null $challenges_count
- * @property-read Collection|\App\Models\Formula[] $formulas
+ * @property-read Collection<int, \App\Models\Formula> $formulas
  * @property-read int|null $formulas_count
- * @property-read Collection|\App\Models\Post[] $posts
+ * @property-read Collection<int, \App\Models\Post> $posts
  * @property-read int|null $posts_count
- * @property-read Collection|\App\Models\Question[] $questions
+ * @property-read Collection<int, \App\Models\Question> $questions
  * @property-read int|null $questions_count
  * @property-read \App\Models\Theme $theme
- * @property-read Collection|\App\Models\User[] $users
+ * @property-read Collection<int, \App\Models\User> $users
  * @property-read int|null $users_count
- * @method static \Database\Factories\ChapterFactory factory(...$parameters)
+ * @method static \Database\Factories\ChapterFactory factory($count = null, $state = [])
  * @method static Builder|Chapter newModelQuery()
  * @method static Builder|Chapter newQuery()
  * @method static Builder|Chapter query()

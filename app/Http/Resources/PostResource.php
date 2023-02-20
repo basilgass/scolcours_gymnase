@@ -28,7 +28,7 @@ class PostResource extends JsonResource
 			'script' => $this->script,
 			'switch' => $this->switch,
 			'updated_at' => $this->updated_at,
-			'blocks' => $this->blocks,
+			'blocks' => BlockResource::collection($this->blocks),
 			'questions' => QuestionResource::collection($this->questions),
 			'questionsGrid' => $this->questionsGrid
 		];

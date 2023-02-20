@@ -20,6 +20,9 @@
 				</button>
 			</div>
 		</div>
+		<div v-if="theIllustration.type==='image'">
+			<img :src="'\\storage\\'+theIllustration.code">
+		</div>
 		<pi-draw-parser
 			v-if="theIllustration.type==='draw'"
 			:draw="blockIllustration"
@@ -80,7 +83,6 @@ const props = defineProps({
 	emits = defineEmits(["destroy"])
 
 let blockData = inject("blockData", {})
-
 let root = ref(null),
 	showEditForm = ref(false),
 	editForm = computed(() => {

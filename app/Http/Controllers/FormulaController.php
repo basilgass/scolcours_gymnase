@@ -42,10 +42,13 @@ class FormulaController extends Controller
 	 */
     public function store(Chapter $chapter, Request $request)
     {
+		// Get the number of formulas for this chapter
+		$n = $chapter->formulas->count();
 		// Create the post model
 		$formula = $chapter->formulas()->create();
 		$formula->blocks()->create([
-			'body'=>'A modifier...'
+			'body'=>'A modifier...',
+			'order' => $n+1,
 		]);
 
 		$formula->blocks;
