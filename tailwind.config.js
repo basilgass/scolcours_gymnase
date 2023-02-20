@@ -21,6 +21,12 @@ module.exports = {
 		{
 			pattern: /col-span-([1-3])/,
 			variants: ["lg", "md"]
+		},
+		{
+			pattern: /justify-(between|around)/
+		},
+		{
+			pattern: /max-w-.+/
 		}
 	],
 	theme: {
