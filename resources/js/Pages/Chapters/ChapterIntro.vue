@@ -2,10 +2,30 @@
 	<section
 		class="bg-white border border-gray-200 rounded shadow py-5 mt-5"
 	>
-		<h1
-			v-katex.auto="theChapter.title"
-			class="px-5 border-b border-gray-200 pb-5 text-xl md:text-2xl xl:text-3xl"
-		/>
+		<div class="flex justify-between items-baseline px-5 border-b border-gray-200 pb-5 ">
+			<h1
+				v-katex.auto="theChapter.title"
+				class="text-xl md:text-2xl xl:text-3xl"
+			/>
+
+			<div v-admin>
+				<button
+					class="text-xs"
+					@click="showEditForm=true"
+				>
+					<i class="bi bi-pencil mr-2" /> {{ theChapter.id }}
+				</button>
+
+				<div v-if="showEditForm">
+					<component
+						:is="editForm"
+						v-model="showEditForm"
+						:chapter="theChapter"
+						@change="updateChapter"
+					/>
+				</div>
+			</div>
+		</div>
 
 		<div class="space-y-10">
 			<!-- table des matieres -->
@@ -57,7 +77,7 @@ export default {
 }
 </script>
 <script setup>
-import {computed, onMounted, ref} from "vue"
+import {computed, defineAsyncComponent, onMounted, ref} from "vue"
 import PostShow from "@/Components/Posts/PostShow.vue"
 import {Menu, MenuButton, MenuItem, MenuItems} from "@headlessui/vue"
 import ChapterToc from "@/Components/Chapters/ChapterToc.vue"
@@ -70,4 +90,13 @@ let props = defineProps({
 	}),
 	theChapter = ref(props.chapter.data)
 
+let showEditForm = ref(false),
+	editForm = computed(()=>{
+		return defineAsyncComponent(
+			()=>import("@/Components/Chapters/ChapterForm.vue")
+		)
+	}),
+	updateChapter = function(c){
+		// TODO: update theChapter ?
+	}
 </script>
