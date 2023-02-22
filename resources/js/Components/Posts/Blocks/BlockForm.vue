@@ -111,6 +111,17 @@
 							label="corps"
 							name="body"
 						/>
+
+						<div>
+							<form-input
+								v-model="theBlock.template"
+								label="disposition"
+								name="disposition"
+							/>
+							<p class="text-xs">
+								bi,md:b+i,lg:2b+i,xl:3b+i
+							</p>
+						</div>
 					</div>
 
 					<div

@@ -54,35 +54,21 @@ class BlockController extends Controller
 			'target_id' => ['number'],
 			'title' => ['string', 'nullable'],
 			'body' => ['required', 'min:5'],
+			'template' => ['string', 'nullable'],
 			'script' => ['string', 'nullable'],
 			'switch' => ['boolean', 'nullable'],
-			'json' => ['string', 'nullable'],
-//			'illustrations' => ['array'],
-//			'illustrations.*.title' => ['string', 'nullable'],
-//			'illustrations.*.type' => ['string'],
-//			'illustrations.*.code' => ['string'],
-//			'illustrations.*.parameters' => ['text', 'nullable'],
+			'json' => ['string', 'nullable']
 		]);
 
 		$block = Block::create([
 			'title' => $request->title,
 			'body' => $request->body,
+			'template' => $request->template,
 			'script' => $request->script,
 			'json' => $request->json,
 			'switch' => $request->switch,
 			'data' => $request->data
 		]);
-
-//		if (count($request->illustrations) > 0) {
-//			foreach ($request->illustrations as $item) {
-//				$block->illustrations()->create([
-//					'title' => $item['title'] ?? '',
-//					'type' => $item['type'],
-//					'code' => $item['code'],
-//					'parameters' => $item['parameters']
-//				]);
-//			}
-//		}
 
 		if ($request->target === 'Chapter') {
 			Chapter::get($request->target_id)?->append($block);
@@ -142,6 +128,7 @@ class BlockController extends Controller
 		$validation = $request->validate([
 			'title' => ['nullable', 'max:255'],
 			'body' => ['required'],
+			'template' => ['string', 'nullable'],
 			'type' => ['string', 'nullable'],
 			'script' => ['string', 'nullable'],
 			'json' => ['string', 'nullable'],
@@ -158,6 +145,7 @@ class BlockController extends Controller
 
 		$block->title = $validation['title'] ?? '';
 		$block->body = $validation['body'];
+		$block->template = $validation['template']??null;
 		$block->type = $validation['type'] ?? '';
 		$block->script = $validation['script'] ?? null;
 		$block->json = $validation['json'] ?? null;

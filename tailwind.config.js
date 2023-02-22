@@ -19,14 +19,22 @@ module.exports = {
 			pattern: /text-(red|green|blue|amber)-(500|600)/
 		},
 		{
-			pattern: /col-span-([1-3])/,
-			variants: ["lg", "md"]
+			pattern: /col-span-([1-4])/,
+			variants: ["lg", "md", "xl"]
 		},
 		{
 			pattern: /justify-(between|around)/
 		},
 		{
 			pattern: /max-w-.+/
+		},
+		{
+			pattern: /grid-cols-([1-5])/,
+			variants: ["lg", "md", "xl"]
+		},
+		{
+			pattern: /order-([1-2])/,
+			variants: ["lg", "md", "xl"]
 		}
 	],
 	theme: {
