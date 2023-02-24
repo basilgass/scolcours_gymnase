@@ -42,7 +42,7 @@
 		"markdown-it-attrs": "^4.1.6",
 		"markdown-it-bracketed-spans": "^1.0.1",
 		"markdown-it-texmath": "^1.0.0",
-		"pidraw": "^0.0.55",
+		"pidraw": "^0.0.56",
 		"pimath": "^0.0.113",
 		"vue-slider-component": "4.0.0-beta.7",
 		"vuedraggable": "^4.1.0"

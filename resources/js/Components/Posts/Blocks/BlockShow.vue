@@ -2,100 +2,96 @@
 	<article
 		v-show="showBlock"
 		:class="theBlock.type!==''?`block-border-${theBlock.type}`:''"
-		class="px-5"
 	>
-		<div class="relative">
-			<button
-				v-if="isBlur"
-				v-katex.auto.inline="blockTitle===''?'afficher':blockTitle"
-				class="absolute inset-0 grid place-items-center cursor-pointer z-10"
-				@click="isBlur=false"
-			/>
-			<div
-				:class="{
-					'blur max-h-[5em] overflow-y-hidden':isBlur
-				}"
-			>
-				<!-- Block title (if exist) -->
-				<div class="flex justify-between w-full">
-					<h3
-						v-katex.auto="blockTitle"
-						class="font-semibold"
-					/>
+		<button
+			v-if="isBlur"
+			v-katex.auto.inline="blockTitle===''?'afficher':blockTitle"
+			class="w-full "
+			:class="`active-scolcours-${$page.props.theme.slug}`"
+			@click="isBlur=false"
+		/>
+		<div v-else>
+			<!-- Block title (if exist) -->
+			<div class="flex justify-between w-full px-5 block-header">
+				<h3
+					v-katex.auto="blockTitle"
+				/>
 
-					<div class="flex gap-3">
+				<div class="flex gap-3">
+					<button
+						v-if="theBlock.script"
+						:class="`btn-scolcours-${$page.props.theme.slug} btn-xs tracking-wider`"
+						@click="random++"
+					>
+						<i class="bi bi-shuffle mr-2" />aléatoire
+					</button>
+
+					<div
+						v-show="editMode.enabled.value"
+						v-admin
+					>
 						<button
-							v-if="theBlock.script"
-							class="btn btn-xs"
-							@click="random++"
+
+							class="text-xs mr-2"
+							@click="showEditForm=true"
 						>
-							aléatoire
+							{{ theBlock.id }} <i class="bi bi-pencil ml-2" />
 						</button>
 
-						<div
-							v-show="editMode.enabled.value"
-							v-admin
+						<button
+							class="draggable-handle text-xs px-1"
 						>
-							<button
-
-								class="text-xs mr-2"
-								@click="showEditForm=true"
-							>
-								{{ theBlock.id }} <i class="bi bi-pencil ml-2" />
-							</button>
-
-							<button
-								class="draggable-handle text-xs px-1"
-							>
-								<i class="bi bi-arrows-move" />
-							</button>
-						</div>
+							<i class="bi bi-arrows-move" />
+						</button>
 					</div>
 				</div>
+			</div>
 
-				<div :class="blockTemplate.grid">
-					<!-- Block body -->
-					<markdown-it
-						:class="blockTemplate.block"
-						:text="blockBody"
-					/>
+			<div
+				:class="blockTemplate.grid"
+				class="px-5"
+			>
+				<!-- Block body -->
+				<markdown-it
+					:class="blockTemplate.block"
+					:text="blockBody"
+				/>
 
-					<!-- Block illustrations -->
-					<div :class="blockTemplate.illustration">
-						<draggable
-							v-model="theBlock.illustrations"
-							:class="{
-								'md:grid-cols-2 xl:grid-cols-3': theBlock.illustrations.length>=2,
-								'xl:grid-cols-2': theBlock.illustrations.length===2,
-								'max-w-lg mx-auto': theBlock.illustrations.length===1
-							}"
-							class="grid grid-cols-1 gap-3 my-5"
-							handle=".draggable-handle"
-							item-key="id"
-							v-bind="{
-								animation: 200,
-								disabled: !($page.props.auth.can.admin),
-							}"
-							@end="updateIllustrationsOrder"
-						>
-							<template #item="{ element }">
-								<illustration-show
-									:illustration="element"
-									@destroy="destroyIllustration"
-								/>
-							</template>
-							<template #footer>
-								<button
-									v-show="editMode.enabled.value"
-									v-admin
-									class="btn-new-inline"
-									@click="addIllustration"
-								>
-									ajouter une illustration
-								</button>
-							</template>
-						</draggable>
-					</div>
+				<!-- Block illustrations -->
+				<div :class="blockTemplate.illustration">
+					<draggable
+						v-model="theBlock.illustrations"
+						:class="{
+							'md:grid-cols-2 xl:grid-cols-3': theBlock.illustrations.length>=2,
+							'xl:grid-cols-2': theBlock.illustrations.length===2,
+							'max-w-lg mx-auto': theBlock.illustrations.length===1
+						}"
+						class="grid grid-cols-1 gap-3 my-5"
+						handle=".draggable-handle"
+						item-key="id"
+						v-bind="{
+							animation: 200,
+							disabled: !($page.props.auth.can.admin),
+						}"
+						@end="updateIllustrationsOrder"
+					>
+						<template #item="{ element }">
+							<illustration-show
+								:illustration="element"
+								@destroy="destroyIllustration"
+							/>
+						</template>
+						<template #footer>
+							<button
+								v-show="editMode.enabled.value"
+								v-admin
+								class="btn-new-inline"
+								@click="addIllustration"
+							>
+								ajouter une illustration
+							</button>
+						</template>
+					</draggable>
 				</div>
 			</div>
 		</div>
