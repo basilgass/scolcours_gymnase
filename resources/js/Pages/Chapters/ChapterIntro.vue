@@ -8,7 +8,10 @@
 				class="text-xl md:text-2xl xl:text-3xl"
 			/>
 
-			<div v-admin>
+			<div
+				v-show="editMode.enabled.value"
+				v-admin
+			>
 				<button
 					class="text-xs"
 					@click="showEditForm=true"
@@ -77,7 +80,7 @@ export default {
 }
 </script>
 <script setup>
-import {computed, defineAsyncComponent, onMounted, ref} from "vue"
+import {computed, defineAsyncComponent, inject, onMounted, ref} from "vue"
 import PostShow from "@/Components/Posts/PostShow.vue"
 import {Menu, MenuButton, MenuItem, MenuItems} from "@headlessui/vue"
 import ChapterToc from "@/Components/Chapters/ChapterToc.vue"
@@ -89,6 +92,8 @@ let props = defineProps({
 		nav: {type: Object, required: true}
 	}),
 	theChapter = ref(props.chapter.data)
+
+const editMode = inject("editMode")
 
 let showEditForm = ref(false),
 	editForm = computed(()=>{
