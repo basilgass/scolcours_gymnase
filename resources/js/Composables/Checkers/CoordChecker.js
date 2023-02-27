@@ -7,6 +7,13 @@ export function CoordChecker(options) {
 	return {
 		format: () => "Coordonnées d'un point sous la forme \\((a;b)\\)",
 		check: (expectedAnswer, answer = []) => {
+			if(expectedAnswer===answer){
+				return {
+					result: true,
+					message: ""
+				}
+			}
+
 			// Manque les parenthèses
 			if(answer[0]!=="(" || answer[answer.length-1]!==")"){
 				return {
