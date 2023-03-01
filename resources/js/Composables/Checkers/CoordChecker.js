@@ -7,7 +7,7 @@ export function CoordChecker(options) {
 	return {
 		format: () => "Coordonnées d'un point sous la forme \\((a;b)\\)",
 		check: (expectedAnswer, answer = []) => {
-			if(expectedAnswer===answer){
+			if (expectedAnswer === answer) {
 				return {
 					result: true,
 					message: ""
@@ -15,7 +15,7 @@ export function CoordChecker(options) {
 			}
 
 			// Manque les parenthèses
-			if(answer[0]!=="(" || answer[answer.length-1]!==")"){
+			if (answer[0] !== "(" || answer[answer.length - 1] !== ")") {
 				return {
 					result: false,
 					message: "des coordonnées commencent et se terminent par des parenthèses"
@@ -26,14 +26,14 @@ export function CoordChecker(options) {
 			let values = answer.split(";"),
 				expectedValues = expectedAnswer.split(";")
 
-			if(values.length===1){
+			if (values.length === 1) {
 				return {
 					result: false,
 					message: "des coordonnées ont au moins deux valeurs, séparées par un \\(;\\)"
 				}
 			}
 
-			if(values.length!== expectedValues.length){
+			if (values.length !== expectedValues.length) {
 				return {
 					result: false,
 					message: "la dimension de la coordonnées ne correspond pas"
@@ -42,22 +42,24 @@ export function CoordChecker(options) {
 
 			// remove the parentese from the first and last value.
 			values[0] = stripFirstCharacter(values[0])
-			values[values.length-1] = stripLastCharacter(values[values.length-1])
+			values[values.length - 1] = stripLastCharacter(values[values.length - 1])
 
-			if(expectedValues[0].startsWith("(")){expectedValues[0] = stripFirstCharacter(expectedValues[0])}
+			if (expectedValues[0].startsWith("(")) {
+				expectedValues[0] = stripFirstCharacter(expectedValues[0])
+			}
 
-			if(expectedValues[expectedValues.length-1].endsWith(")")){
-				expectedValues[expectedValues.length-1] = stripLastCharacter(expectedValues[expectedValues.length-1])
+			if (expectedValues[expectedValues.length - 1].endsWith(")")) {
+				expectedValues[expectedValues.length - 1] = stripLastCharacter(expectedValues[expectedValues.length - 1])
 			}
 
 
 			let eChecker = ExactChecker(options)
-			for(let i=0; i<values.length; i++){
+			for (let i = 0; i < values.length; i++) {
 				let result = eChecker.check(expectedValues[i], values[i])
-				if(!result.result){
+				if (!result.result) {
 					return {
 						result: false,
-						message: `la ${i===0?"1ère":(i+1)+"ème"} coordonnée n'est pas juste.<br>${result.message}`
+						message: `la ${i === 0 ? "1ère" : (i + 1) + "ème"} coordonnée n'est pas juste.<br>${result.message}`
 					}
 				}
 			}

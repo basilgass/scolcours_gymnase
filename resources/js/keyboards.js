@@ -312,7 +312,9 @@ export const keyboardsList = [
 	"#TableOfSigns",
 	"#Study",
 	"#Order",
-	"#Qcm"
+	"#Qcm",
+	"#Input",
+	"#Type"
 ]
 
 export function getKeyboard(value){
@@ -332,6 +334,10 @@ export function getKeyboard(value){
 		return "Order"
 	case "qcm":
 		return "Qcm"
+	case "input":
+		return "Input"
+	case "type":
+		return "Type"
 	default:
 		return ""
 	}

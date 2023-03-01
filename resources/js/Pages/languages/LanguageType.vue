@@ -65,7 +65,7 @@
 						:key="`${key.key}-${index}`"
 						:class="{
 							'bg-white hover:scale-105 hover:shadow': !key.used,
-							'bg-gray-200 disabled text-gray-400 cursor-wait': key.used
+							'bg-gray-200 disabled text-gray-400 cursor-not-allowed': key.used
 						}"
 						class="p-2 w-14 h-14 border border-gray-200 rounded transition-all"
 						@click="key.used?'':validateKey(index)"

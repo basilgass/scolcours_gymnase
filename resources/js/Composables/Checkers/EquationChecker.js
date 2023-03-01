@@ -3,8 +3,8 @@ import {PiMath} from "pimath/esm"
 export function EquationChecker(options) {
 	if(options===undefined){options = []}
 
-	const isReduced = (options.includes("r") || options.includes("reduced")),
-		isCanonical = options.includes("c") || options.includes("canonical")
+	const isReduced = (options.includes("r") || options.includes("reduced") || options.includes("re")) ,
+		isCanonical = (options.includes("c") || options.includes("canonical") || options.includes("ca"))
 
 	return {
 		format: () => {
@@ -27,7 +27,7 @@ export function EquationChecker(options) {
 				if(!A.right.isZero() && !A.left.isZero()){
 					return {
 						result: false,
-						message: "le polynôme n'est pas sous sa forme canonique."
+						message: "l'équation n'est pas sous sa forme canonique."
 					}
 				}
 			}
@@ -39,7 +39,7 @@ export function EquationChecker(options) {
 			if(!A2.left.isEqual(Q2.left)){
 				return {
 					result: false,
-					message: "le polynôme n'est pas juste."
+					message: "l'équation n'est pas juste."
 				}
 			}
 
@@ -51,7 +51,7 @@ export function EquationChecker(options) {
 				if(lcm!==1){
 					return {
 						result: false,
-						message: "le polynôme n'est pas réduit."
+						message: "l'équation n'est pas réduite."
 					}
 
 				}
