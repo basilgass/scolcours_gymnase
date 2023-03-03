@@ -10,16 +10,25 @@
 				flex justify-between items-center"
 		>
 			<div class="text-3xl">
-				<i
-					class="bi bi-list cursor-pointer mr-2"
-					@click="showAside=!showAside"
-				/>
+				<Link href="/">
+					<i
+						class="bi bi-house cursor-pointer mr-2"
+					/>
+				</Link>
+
 				<Link :href="theme.slug==='main'?`/`:`/${theme.slug}`">
 					{{ theme.title }}
 				</Link>
 			</div>
 
-			<div>
+			<div class="flex gap-3">
+				<div class="text-3xl">
+					<i
+						class="bi bi-list cursor-pointer mr-2"
+						@click="showAside=!showAside"
+					/>
+				</div>
+
 				<div
 					v-if="$page.props.auth.user"
 					class="flex gap-3"
@@ -39,7 +48,7 @@
 						class="relative cursor-pointer"
 						@click="showMenu = !showMenu"
 					>
-						{{ $page.props.auth.user.name }}
+						<span class="text-lg">{{ $page.props.auth.user.name }}</span>
 						<div
 							v-if="showMenu"
 							class="w-40

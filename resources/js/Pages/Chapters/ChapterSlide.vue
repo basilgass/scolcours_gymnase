@@ -10,13 +10,16 @@
 				<Link
 					v-if="nav.previous"
 					:href="nav.previous"
-					class="hover:pl-3 transition-all"
+					:class="`btn-scolcours-${$page.props.theme.slug}`"
 				>
 					<i class="bi bi-box-arrow-in-left mr-2" />précédant
 				</Link>
 			</div>
 			<div class="justify-self-center col-span-2 order-last pt-5 md:pt-0 md:col-span-1 md:order-none flex gap-10">
-				<Link :href="route('theme.chapter.intro', [$page.props.theme.slug, theChapter.slug])">
+				<Link
+					:class="`btn-scolcours-${$page.props.theme.slug}`"
+					:href="route('theme.chapter.intro', [$page.props.theme.slug, theChapter.slug])"
+				>
 					<i class="bi bi-house mr-2" /><span v-katex.auto="theChapter.title" />
 				</Link>
 			</div>
@@ -24,7 +27,7 @@
 				<Link
 					v-if="nav.next"
 					:href="nav.next"
-					class="hover:pr-3 transition-all"
+					:class="`btn-scolcours-${$page.props.theme.slug}`"
 				>
 					suivant<i class="bi bi-box-arrow-in-right ml-2" />
 				</Link>

@@ -58,7 +58,10 @@
 				/>
 
 				<!-- Block illustrations -->
-				<div :class="blockTemplate.illustration">
+				<div
+					v-if="theBlock.illustrations.length>0"
+					:class="blockTemplate.illustration"
+				>
 					<draggable
 						v-model="theBlock.illustrations"
 						:class="{
@@ -231,8 +234,8 @@ let random = ref(1),
 	blockData = computed(() => {
 		try {
 			if (props.block.script !== null && random.value > 0) {
-				let F = new Function("PiMath", "postData", props.block.script)
-				return {...postData.value, ...F(PiMath, postData.value)}
+				let F = new Function("PiMath", "postData", "iteration", props.block.script)
+				return {...postData.value, ...F(PiMath, postData.value, random.value)}
 			}
 		} catch (e) {
 			console.log("BlockShow (script genration)", e)

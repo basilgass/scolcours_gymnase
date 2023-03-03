@@ -129,6 +129,7 @@ let updateQuestion = function(value){
 				value = userAnswer[i]
 
 			// Raw update.
+			// TODO: option to make raw output inline ?
 			placeholder = answerKeys.value.length === 1 ? "?" : ` ${key[1]} `
 			if (i === crtAnswerIndex) {
 				value = `<div class="border border-blue-600 bg-blue-100 py-3 text-center">${(value && value !== "") ? value : "< " + placeholder + " >"}</div>`

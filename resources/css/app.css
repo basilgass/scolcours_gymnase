@@ -35,18 +35,21 @@
 	.bg-scolcours-statistiques {@apply bg-cyan-500}
 	.bg-scolcours-jeux {@apply bg-orange-500}
 	.bg-scolcours-tools {@apply bg-pink-400}
+
 	.text-scolcours-algebre {@apply text-blue-500}
 	.text-scolcours-analyse {@apply text-amber-500}
 	.text-scolcours-geometrie {@apply text-purple-500}
 	.text-scolcours-statistiques {@apply text-cyan-500}
 	.text-scolcours-jeux {@apply text-orange-500}
 	.text-scolcours-tools {@apply text-pink-400}
+
 	.border-scolcours-algebre {@apply border-blue-300}
 	.border-scolcours-analyse {@apply border-amber-300}
 	.border-scolcours-geometrie {@apply border-purple-300}
 	.border-scolcours-statistiques {@apply border-cyan-300}
 	.border-scolcours-jeux {@apply border-orange-300}
 	.border-scolcours-tools {@apply border-pink-300}
+
 	.active-scolcours-algebre {@apply px-5 py-4 hover:bg-blue-50 border-t border-b hover:border-blue-500 hover:text-blue-500 transition-colors duration-300}
 	.active-scolcours-analyse {@apply px-5 py-4 hover:bg-amber-50 border-t border-b hover:border-amber-500 hover:text-amber-500 transition-colors duration-300}
 	.active-scolcours-geometrie {@apply px-5 py-4 hover:bg-purple-50 border-t border-b hover:border-purple-500 hover:text-purple-500 transition-colors duration-300}
@@ -106,7 +109,7 @@
 	.block-border-property {
 		@apply border-l-4 border-purple-600;
 	}
-	.block-border-theorem .block-header{
+	.block-border-property .block-header{
 		@apply bg-purple-50 text-purple-700
 	}
 
@@ -115,6 +118,13 @@
 	}
 	.block-border-remark .block-header{
 		@apply bg-pink-50 text-pink-700
+	}
+
+	.block-border-example {
+		@apply border-0;
+	}
+	.block-border-example .block-header{
+		@apply bg-gray-100 text-gray-800
 	}
 
 	.admin-wrapper{
