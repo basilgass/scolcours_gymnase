@@ -19,7 +19,7 @@ module.exports = {
 			pattern: /text-(red|green|blue|amber)-(500|600)/
 		},
 		{
-			pattern: /col-span-([1-4])/,
+			pattern: /col-span-([1-9])/,
 			variants: ["lg", "md", "xl"]
 		},
 		{
@@ -29,7 +29,7 @@ module.exports = {
 			pattern: /max-w-.+/
 		},
 		{
-			pattern: /grid-cols-([1-5])/,
+			pattern: /grid-cols-([1-9]|10)/,
 			variants: ["lg", "md", "xl"]
 		},
 		{
