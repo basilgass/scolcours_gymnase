@@ -47,33 +47,6 @@
 					:rows="10"
 				/>
 
-				<!-- illustration -->
-				<!-- type, parameter, code -->
-				<div
-					v-if="theQuestion.block.illustration"
-					class="relative"
-				>
-					<button
-						class="btn-delete btn-xs absolute top-0 right-0"
-						@click="delete theQuestion.block.illustration"
-					>
-						<i class="bi bi-trash" />Supprimer
-					</button>
-					<form-illustration
-						v-model="theQuestion.block.illustration"
-						class="pt-5"
-						name="illustration"
-						label="illustration"
-					/>
-				</div>
-				<button
-					v-else
-					class="btn btn-block"
-					@click="addIllustration"
-				>
-					Ajouter une illustration
-				</button>
-
 				<form-input
 					v-model="theQuestion.answer"
 					label="answer"
@@ -125,7 +98,6 @@ import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 import QuestionUserInput from "@/Components/Posts/Questions/QuestionUserInput.vue"
 import DialogModal from "@/Components/Ui/DialogModal.vue"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
-import FormIllustration from "@/Components/Form/FormIllustration.vue"
 
 const emits = defineEmits(["update:modelValue", "change", "destroy"])
 let props = defineProps({
@@ -137,18 +109,8 @@ let props = defineProps({
 	errorMessage = ref(""),
 	userInput = ref(null)
 
-let addIllustration = function(){
-		theQuestion.block.illustration = {
-			type: "draw",
-			parameters: "",
-			code: ""
-		}
-	},
-	saveQuestion = function () {
+let saveQuestion = function () {
 		let illustrations = []
-		if(theQuestion.block.illustration){
-			illustrations = [{...theQuestion.block.illustration}]
-		}
 
 		axios.post(route("blocks.update", [theQuestion.block.id]),
 			{

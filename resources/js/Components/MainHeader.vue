@@ -9,7 +9,7 @@
 			class="scolcours-container py-6
 				flex justify-between items-center"
 		>
-			<div class="text-3xl">
+			<div class="text-lg md:text-xl lg:text-3xl">
 				<Link href="/">
 					<i
 						class="bi bi-house cursor-pointer mr-2"
@@ -22,6 +22,19 @@
 			</div>
 
 			<div class="flex gap-3">
+				<div v-admin>
+					<button
+						class="btn btn-xs hover:text-black"
+						:class="editMode.enabled.value?'bg-white/40':''"
+						@click="editMode.toggle()"
+					>
+						<span v-show="editMode.enabled.value"> <i class="bi bi-pencil mr-2" /> <span
+							class="hidden md:inline"
+						>édition activée</span></span>
+						<span v-show="!editMode.enabled.value"> <i class="bi bi-pencil mr-2" /> <span>activer l'édition</span></span>
+					</button>
+				</div>
+
 				<div class="text-3xl">
 					<i
 						class="bi bi-list cursor-pointer mr-2"
@@ -33,17 +46,6 @@
 					v-if="$page.props.auth.user"
 					class="flex gap-3"
 				>
-					<div v-admin>
-						<button
-							class="btn btn-xs hover:text-black"
-							:class="editMode.enabled.value?'bg-white/40':''"
-							@click="editMode.toggle()"
-						>
-							<span v-show="editMode.enabled.value"> <i class="bi bi-pencil mr-2" /> édition activée</span>
-							<span v-show="!editMode.enabled.value"> <i class="bi bi-pencil mr-2" /> activer l'édition</span>
-						</button>
-					</div>
-
 					<div
 						class="relative cursor-pointer"
 						@click="showMenu = !showMenu"

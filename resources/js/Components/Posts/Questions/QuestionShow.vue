@@ -33,6 +33,14 @@
 			>
 				<i class="bi bi-clipboard-plus" />
 			</button>
+
+			<button
+				v-if="!theQuestion.block.illustration"
+				class="text-xs px-2"
+				@click="addIllustration"
+			>
+				<i class="bi bi-image" />
+			</button>
 		</div>
 
 		<div class="flex flex-col justify-between">
@@ -205,5 +213,19 @@ let showEditForm = ref(props.question.isNew === true),
 		axios.post(route("questions.duplicate", [theQuestion.value.id])).then((res)=>{
 			emits("duplicate", res.data.data)
 		})
+	},
+	addIllustration = function() {
+		if(theQuestion.value.block.illustration){
+			alert("EDIT")
+		}else{
+			// Create a new illustration
+			axios.post(route("blocks.illustrations.store", [props.question.block.id]), {})
+				.then(res => {
+					res.data.isNew = true
+					theQuestion.value.block.illustration = res.data
+
+					flash.add("une nouvelle illustration a été créée")
+				})
+		}
 	}
 </script>
