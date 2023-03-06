@@ -128,13 +128,24 @@
 						v-if="!props.noPreview"
 						class="pt-8 pb-3 px-3"
 					>
-						<button
-							v-if="theBlock.script"
-							class="btn btn-xs"
-							@click="random++"
-						>
-							Aléatoire
-						</button>
+						<div class="flex gap-3">
+							<button
+								v-if="theBlock.script"
+								class="btn btn-xs"
+								@click="random++"
+							>
+								aléatoire
+							</button>
+
+							<button
+								v-if="blockData.reset"
+								class="btn btn-xs"
+								@click="random=1"
+							>
+								Reset
+							</button>
+						</div>
+
 						<markdown-it
 							:text="blockBody"
 							class="p-3 bg-gray-100 border border-dashed border-gray-200 h-full"
@@ -181,6 +192,7 @@ import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
 import {PiMath} from "pimath/esm"
 import {useFormattedBody} from "@/Composables/useHelpers"
 import {useBlockTypes} from "@/scolcours"
+import Button from "@/Components/Auth/Button.vue"
 
 const emits = defineEmits(["update:modelValue", "change", "destroy"])
 const props = defineProps({
@@ -207,8 +219,8 @@ let random = ref(1),
 	blockData = computed(() => {
 		try {
 			if (props.block.script !== null && random.value>0) {
-				let F = new Function("PiMath", "postData", props.block.script)
-				return {...postData.value, ...F(PiMath, postData.value)}
+				let F = new Function("PiMath", "postData", "iteration", props.block.script)
+				return {...postData.value, ...F(PiMath, postData.value, random.value)}
 			}
 		}catch(e){
 			console.log("Block form (script)", e)

@@ -18,6 +18,17 @@
 				/>
 
 				<div class="flex gap-3">
+					<transition name="slide-fade">
+						<div v-if="blockData.reset && random>1">
+							<button
+								:class="`btn-scolcours-${$page.props.theme.slug} btn-xs tracking-wider d-block`"
+								@click="random=1"
+							>
+								<i class="bi bi-x-square mr-2" />par défaut
+							</button>
+						</div>
+					</transition>
+
 					<button
 						v-if="theBlock.script"
 						:class="`btn-scolcours-${$page.props.theme.slug} btn-xs tracking-wider`"
@@ -59,7 +70,7 @@
 
 				<!-- Block illustrations -->
 				<div
-					v-if="theBlock.illustrations.length>0"
+					v-if="theBlock.illustrations.length>0 || $page.props.auth.can.admin"
 					:class="blockTemplate.illustration"
 				>
 					<draggable
