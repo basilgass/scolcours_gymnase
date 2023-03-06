@@ -122,7 +122,10 @@
 			<draggable
 				v-if="thePost.questions.length"
 				v-model="thePost.questions"
-				class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 px-5"
+				class="grid grid-cols-1 md:grid-cols-2 gap-3 px-5"
+				:class="{
+					'lg:grid-cols-3': thePost.questions.length>2,
+				}"
 				handle=".draggable-handle"
 				item-key="id"
 				v-bind="{
