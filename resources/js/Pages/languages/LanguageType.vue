@@ -37,17 +37,17 @@
 					{{ currentWord.fr }}
 				</div>
 
-				<div class="flex flex-wrap gap-4 justify-center">
+				<div class="flex flex-wrap gap-2 justify-center bg-white px-5 py-3 text-lg">
 					<div
 						v-for="(key, index) in resultLetters"
 						:key="`found-${index}`"
 						:class="{
-							'p-2 w-14 border border-gray-200 rounded': key.key!==' ',
-							'p-0 w-2': key.key===' ',
+							'p-2 w-8 border-b-2 border-gray-200': key.key!==' ',
+							'p-0 w-3': key.key===' ',
 							'bg-white': key.key !== ' ' && index!==currentIndex,
 							'is-active': index===currentIndex
 						}"
-						class="text-center text-lg font-code h-14"
+						class="text-center text-lg font-code h-[2.5em]"
 					>
 						<span
 							v-show="key.visible"
@@ -58,7 +58,7 @@
 
 				<div
 					ref="typoButtons"
-					class="keyboard flex flex-wrap gap-4 justify-center"
+					class="keyboard flex flex-wrap gap-4 justify-center max-w-xl mx-auto"
 				>
 					<button
 						v-for="(key, index) in foreignLetters"
