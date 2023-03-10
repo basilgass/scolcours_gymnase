@@ -3,6 +3,7 @@
 		<!-- draw graph-->
 		<div
 			ref="draw"
+			class="katex-m-0"
 			@mouseup="drawMouseUp"
 		/>
 

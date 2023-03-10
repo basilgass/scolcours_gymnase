@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\UserResource;
 use App\Models\Challenge;
 use App\Models\Chapter;
+use App\Models\Illustration;
 use App\Models\Team;
 use App\Models\Theme;
 use App\Models\Tools;
@@ -295,4 +296,14 @@ class AdminController extends Controller
 			]
 		);
 	}
+
+    public function illustrations()
+    {
+        return Inertia::render(
+            'Admin/AdminIllustrations.vue',
+            [
+                'illustrations'=>Illustration::where('type', "=", "draw")->get()
+            ]
+        );
+    }
 }

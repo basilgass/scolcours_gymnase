@@ -17,8 +17,10 @@ Route::patch('/admin/chapters/{chapter:slug}', [AdminController::class, 'activat
 	->middleware(['auth', 'verified'])->name('toggleChapterActive');
 Route::get('/admin/stats/{chapter:slug}', [AdminController::class, 'usersStats']);
 
-
 // Route for teams
 Route::patch('/admin/users/{user}/teams/{team}/toggle', [TeamController::class, "toggle"])->name('users.team.toggle');
 Route::post('/admin/teams/store', [TeamController::class, "store"])->name('teams.store');
 Route::delete('/admin/teams/{team}/destroy', [TeamController::class, "destroy"])->name('teams.destroy');
+
+// Route for checking illustrations
+Route::get('/admin/illustrations', [AdminController::class, "illustrations"])->name('admin.illustrations.index');
