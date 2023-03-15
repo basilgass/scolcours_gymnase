@@ -12,24 +12,24 @@
 					v-for="item of themeChapters"
 					:key="item.slug"
 					v-katex.auto="item.title"
-					class="btn btn-xs transition-colors"
 					:class="{
 						'is-active': item.slug===theSlug,
 						'font-semibold': item.slug===props.chapterSlug
 					}"
+					class="btn btn-xs transition-colors"
 					@click="updateFormular(item.slug)"
 				/>
 			</div>
 
 			<div
-				class="columns-1 "
 				:class="props.responsive?'md:columns-2 lg:columns-3': ''"
+				class="columns-1 "
 			>
 				<draggable
 					v-model="theFormular"
 					class="grid grid-cols-1 gap-3 my-5"
-					item-key="id"
 					handle=".draggable-handle"
+					item-key="id"
 					v-bind="{
 						animation: 200,
 						disabled: !($page.props.auth.can.admin),
@@ -40,24 +40,26 @@
 						<block-show
 							v-if="element.block"
 							:key="element.id"
-							class="break-inside-avoid-column"
 							:block="element.block"
 							:max-illustration="1"
+							class="break-inside-avoid-column"
 						/>
 					</template>
 					<template #footer>
-						<div
-							v-show="editMode.enabled.value"
-							v-admin
-							class="px-5"
-						>
-							<button
-								class="btn-new"
-								@click="addFormula"
+						<footer>
+							<div
+								v-show="editMode.enabled.value"
+								v-admin
+								class="px-5"
 							>
-								Ajouter une formule
-							</button>
-						</div>
+								<button
+									class="btn-new"
+									@click="addFormula"
+								>
+									Ajouter une formule
+								</button>
+							</div>
+						</footer>
 					</template>
 				</draggable>
 			</div>
@@ -80,23 +82,25 @@ const theFormular = ref([]),
 
 const flash = inject("flash"),
 	editMode = inject("editMode")
-const addFormula = function(){
+const addFormula = function () {
 		axios
 			.post(route("chapters.formulas.store", [props.chapterSlug]), {})
-			.then(res=>{
+			.then(res => {
 				flash.add("formule créée")
 				theFormular.value.push(res.data.data)
 			})
 	},
-	updateFormulasOrder = function(){
+	updateFormulasOrder = function () {
 		axios.post(route("formulas.updateOrder"), {
-			order: theFormular.value.map((x, index)=>{return {id: x.id, order: index}})
-		}).then(res=>{
+			order: theFormular.value.map((x, index) => {
+				return {id: x.id, order: index}
+			})
+		}).then(res => {
 			// TODO : flash message !
 			flash.add("L'ordre des formules à bien été enregistré !")
-		}).catch(res=>console.log("update ordering order: ", res.data))
+		}).catch(res => console.log("update ordering order: ", res.data))
 	},
-	loadFormular = function(){
+	loadFormular = function () {
 		return axios
 			.get(route("chapters.formulas.index", [theSlug.value]))
 			.then(res => {
@@ -104,13 +108,13 @@ const addFormula = function(){
 				themeChapters.value = res.data.chapters
 			})
 	},
-	updateFormular = function(slug){
+	updateFormular = function (slug) {
 		theSlug.value = slug
 		loadFormular()
 	}
 
 // Load the formular
-onMounted(()=>{
+onMounted(() => {
 	loadFormular()
 })
 </script>

@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div :class="PiParserHasErrors?'bg-red-100':''">
 		<!-- draw graph-->
 		<div
 			ref="draw"
@@ -159,40 +159,55 @@ let getSliders = function(){
 	}
 }
 
-let PiGraph, PiParser, PiAxis
-
+let PiGraph, PiParser, PiAxis,
+	PiParserHasErrors = ref(false)
 let	drawCode = computed(()=>{
-	let outputCode = props.draw.code
+		let outputCode = props.draw.code
 
-	// Modify the code using the local information (sliders)
-	if(sliders.value.length>0){
-		// Remove the lines starting with $ (dollar sign)
-		let code = outputCode.split("\n").filter(row=>row[0]!=="$")
+		// Modify the code using the local information (sliders)
+		if(sliders.value.length>0){
+			// Remove the lines starting with $ (dollar sign)
+			let code = outputCode.split("\n").filter(row=>row[0]!=="$")
 
-		// Modify the value of all variables ($a, $b, ...)
-		outputCode = code
-			.map(row=>{
-				sliders.value.forEach(slider => {
-					if(row.split("=")[0].includes("(x)")) {
-						row = row.replaceAll(slider.key, `(${slider.value})`)
-					}else{
-						row = row.replaceAll(slider.key, slider.value)
-					}
+			// Modify the value of all variables ($a, $b, ...)
+			outputCode = code
+				.map(row=>{
+					sliders.value.forEach(slider => {
+						if(row.split("=")[0].includes("(x)")) {
+							row = row.replaceAll(slider.key, `(${slider.value})`)
+						}else{
+							row = row.replaceAll(slider.key, slider.value)
+						}
+					})
+					return row
 				})
-				return row
-			})
-			.join("\n")
-	}
+				.join("\n")
+		}
 
-	// Modify the code according to the script level
-	if(Object.values(blockScriptResult.value).length>0){
-		for(let key in blockScriptResult.value){
-			outputCode = outputCode.replaceAll(`$${key}`, blockScriptResult.value[key])
+		// Modify the code according to the script level
+		if(Object.values(blockScriptResult.value).length>0){
+			for(let key in blockScriptResult.value){
+				outputCode = outputCode.replaceAll(`$${key}`, blockScriptResult.value[key])
+			}
+		}
+
+		return outputCode
+	}),
+	PiParserUpdate = function(from, withSliders = false) {
+		if(withSliders) {
+			getSliders()
+		}
+
+		try {
+			PiParser.update(drawCode.value)
+			emits("update", PiGraph.figures)
+			PiParserHasErrors.value = false
+		}catch{
+			console.warn("Cannot parse from: " + from)
+			console.warn(drawCode.value)
+			PiParserHasErrors.value = true
 		}
 	}
-
-	return outputCode
-})
 
 let figures = ref({})
 
@@ -229,13 +244,7 @@ onMounted(() => {
 	}
 
 	if (drawCode.value) {
-		getSliders()
-		try {
-			PiParser.update(drawCode.value)
-			emits("update", PiGraph.figures)
-		}catch{
-			console.log("Cannot parse", drawCode.value)
-		}
+		PiParserUpdate("onMounted", true)
 	}
 })
 
@@ -246,24 +255,12 @@ let drawMouseUp = function(){
 // TODO: make PiDrawParser much better vue compatible (reactive) and using computed properties.
 watch(drawCode, (code, before)=>{
 	// Watch changes from "inside"
-	try {
-		PiParser.update(drawCode.value)
-		emits("update", PiGraph.figures)
-	}catch{
-		console.log("Cannot parse (watch drawCode)", drawCode.value)
-	}
+	PiParserUpdate("drawCode watcher")
 })
 
 watch(()=>props.draw, (newValue, oldValue)=>{
 	if(newValue.code!==oldValue.code){
-		// Watch changes from "outside"
-		getSliders()
-		try {
-			PiParser.update(drawCode.value)
-			emits("update", PiGraph.figures)
-		}catch{
-			console.log("Cannot parse (watch props.draw.code) ", drawCode.value)
-		}
+		PiParserUpdate("props.draw watcher", true)
 	}else if(newValue.parameters !== oldValue.paramaeters){
 		try {
 			PiParser.updateLayout(newValue.parameters)
