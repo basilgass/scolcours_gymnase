@@ -17,7 +17,7 @@
 	}
 
 	.font-code{
-		font-family: 'Source Code Pro', monospace;
+		font-family: 'ui-monospace', 'Source Code Pro', monospace;
 	}
 
 	.scolcours-container {

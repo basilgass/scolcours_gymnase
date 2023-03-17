@@ -51,7 +51,7 @@
 				éditer la génération
 			</button>
 		</div>
-		<div class="px-5 pb-5 overflow-scroll">
+		<div class="px-5 pb-5 overflow-scroll min-h-[80vh]">
 			<div
 				v-show="tab === 'block'"
 				class="grid grid-cols-1 lg:grid-cols-2 gap-3"
@@ -155,7 +155,7 @@
 				</h3>
 
 				<div class="grid grid-cols-1 grid-cols-2 gap-3">
-					<form-textarea
+					<form-codearea
 						v-model="theChallenge.generator"
 						:rows="30"
 						label="générateur de questions"
@@ -202,6 +202,7 @@ import FormIllustration from "@/Components/Form/FormIllustration.vue"
 import FormNumber from "@/Components/Form/FormNumber.vue"
 import {PiMath} from "pimath/esm"
 import {Inertia} from "@inertiajs/inertia"
+import FormCodearea from "@/Components/Form/FormCodearea.vue"
 
 const emits = defineEmits(["update:modelValue", "change", "destroy"])
 

@@ -5,22 +5,25 @@
 			:post="thePost"
 		/>
 
-		<div class="grid grid-cols-2 md:grid-cols-3 mt-3 px-5 md:px-0">
+		<div class="grid grid-cols-3 mt-3 px-5 md:px-0">
 			<div class="justify-self-start">
 				<Link
 					v-if="nav.previous"
 					:href="nav.previous"
 					:class="`btn-scolcours-${$page.props.theme.slug}`"
 				>
-					<i class="bi bi-box-arrow-in-left mr-2" />précédant
+					<i class="bi bi-box-arrow-in-left mr-0 md:mr-2" />
+					<div class="hidden md:inline">
+						précédant
+					</div>
 				</Link>
 			</div>
-			<div class="justify-self-center col-span-2 order-last pt-5 md:pt-0 md:col-span-1 md:order-none flex gap-10">
+			<div class="justify-self-center flex">
 				<Link
 					:class="`btn-scolcours-${$page.props.theme.slug}`"
 					:href="route('theme.chapter.intro', [$page.props.theme.slug, theChapter.slug])"
 				>
-					<i class="bi bi-house mr-2" /><span v-katex.auto="theChapter.title" />
+					<i class="bi bi-house mr-2 hidden md:inline" /><span v-katex.auto="theChapter.title" />
 				</Link>
 			</div>
 			<div class="justify-self-end">
@@ -29,7 +32,9 @@
 					:href="nav.next"
 					:class="`btn-scolcours-${$page.props.theme.slug}`"
 				>
-					suivant<i class="bi bi-box-arrow-in-right ml-2" />
+					<div class="hidden md:inline">
+						suivant
+					</div><i class="bi bi-box-arrow-in-right ml-0 md:ml-2" />
 				</Link>
 			</div>
 		</div>

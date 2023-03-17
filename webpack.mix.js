@@ -1,5 +1,6 @@
 const mix = require("laravel-mix")
 const path = require("path")
+const NodePolyfillPlugin = require("node-polyfill-webpack-plugin")
 /*
  |--------------------------------------------------------------------------
  | Mix Asset Management
@@ -23,9 +24,16 @@ mix.js("resources/js/app.js", "public/js")
 		require("postcss-import"),
 		require("tailwindcss"),
 		require("autoprefixer")
-	]).webpackConfig({
+	])
+	.webpackConfig({
 		output: {
 			chunkFilename: mix.inProduction() ? "js/dynamic/[name].[contenthash].js" : "js/dev/[name].js",
+		},
+		plugins: [new NodePolyfillPlugin()],
+		optimization: {
+			splitChunks: {
+				chunks: "all",
+			},
 		},
 		resolve: {
 			// fallback: {

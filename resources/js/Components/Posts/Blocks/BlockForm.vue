@@ -157,10 +157,9 @@
 					v-show="!props.noScript || !props.noData"
 					class="grid grid-cols-1 md:grid-cols-2 gap-3"
 				>
-					<form-textarea
+					<form-codearea
 						v-show="!props.noScript"
 						v-model="theBlock.script"
-						:rows="8"
 						label="script"
 						name="script"
 					/>
@@ -193,6 +192,7 @@ import {PiMath} from "pimath/esm"
 import {useFormattedBody} from "@/Composables/useHelpers"
 import {useBlockTypes} from "@/scolcours"
 import Button from "@/Components/Auth/Button.vue"
+import FormCodearea from "@/Components/Form/FormCodearea.vue"
 
 const emits = defineEmits(["update:modelValue", "change", "destroy"])
 const props = defineProps({
