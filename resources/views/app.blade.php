@@ -24,8 +24,8 @@
 	<script src="{{ mix('js/app.js') }}" defer></script>
 
 
-	<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-coy.min.css"></link>
+{{--	<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>--}}
+{{--	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-coy.min.css"></link>--}}
 
 	<!--code-input-->
 	<!--In the <head>-->

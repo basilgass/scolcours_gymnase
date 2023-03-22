@@ -5,6 +5,8 @@
 			name="test"
 			label="éditeur de script"
 			focus
+			language="latex"
+			wrap
 		/>
 	</div>
 </template>

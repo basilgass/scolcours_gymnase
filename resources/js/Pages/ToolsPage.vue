@@ -75,7 +75,8 @@ import ArticleTitle from "@/Components/Ui/ArticleTitle"
 import {Inertia} from "@inertiajs/inertia"
 
 let toolSlug = ref(null),
-	toolSearch = ref("")
+	toolSearch = ref(""),
+	arraySearch = ref({})
 
 const props = defineProps({
 	tools: {
@@ -110,14 +111,34 @@ onMounted(()=> {
 	if (props.tool !== null && props.tool.slug !== "") {
 		toolSlug.value = props.tool.slug
 	}
+
+	arraySearch.value = props.tools.map(tool=>{
+		return {
+			...tool,
+			search: {
+				slug: tool.slug.normalize("NFD").replace(/\p{Diacritic}/gu, ""),
+				title: tool.title.normalize("NFD").replace(/\p{Diacritic}/gu, ""),
+				body: tool.body.normalize("NFD").replace(/\p{Diacritic}/gu, "")
+			}
+		}
+	})
 })
 
 let listOfTools = computed(()=>{
+	let foundTools = []
 	if(toolSearch.value.trim() === ""){
-		return props.tools
+		foundTools = [...props.tools]
 	}else {
-		return props.tools.filter(tool => tool.slug.includes(toolSearch.value) || tool.title.includes(toolSearch.value))
+		const search = toolSearch.value.normalize("NFD").replace(/\p{Diacritic}/gu, "")
+		foundTools =  arraySearch.value.filter(tool =>
+			tool.search.slug.includes(search) ||
+			tool.search.title.includes(search) ||
+			tool.search.body.includes(search)
+		)
 	}
+
+	foundTools.sort((a,b)=>b.title<a.title)
+	return foundTools
 })
 
 function toolSelect(){

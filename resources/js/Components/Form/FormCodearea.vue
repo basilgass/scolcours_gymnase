@@ -7,8 +7,9 @@
 		/>
 
 		<div
-			class="tracking-normal font-normal w-full code-input border bg-white language-javascript h-full text-[1.1em]"
+			class="tracking-normal font-normal max-w-md code-input border bg-white language-javascript h-full text-[1.1em]"
 			v-bind="$attrs"
+			:class="props.wrap?'whitespace-pre-wrap':'whitespace-pre'"
 		>
 			<textarea
 				ref="inp"
@@ -17,6 +18,7 @@
 				@input="sync_scroll();$emit('update:modelValue', theValue)"
 				@scroll="sync_scroll"
 				@keydown.tab.prevent="tabber($event)"
+				@keydown.enter.prevent="indenter($event)"
 			/>
 			<pre ref="pre"><code
 				class="w-full"
@@ -36,6 +38,13 @@ import FormLabel from "@/Components/Form/FormLabel"
 import FormError from "@/Components/Form/FormError"
 import {computed, onMounted, ref} from "vue"
 
+import Prism from "prismjs"
+import "prismjs/themes/prism.css"
+import "prismjs/components/prism-latex"
+import "prismjs/components/prism-javascript"
+
+Prism.manual = true
+
 let inp = ref(null)
 
 function focus(select) {
@@ -54,16 +63,65 @@ const props = defineProps({
 		error: {type: String, default: ""},
 		rows: {type: Number, default: 4},
 		hideLabel: {type: Boolean, default: false},
-		codeWriting: {type: Boolean, default: false},
-		focus: {type: Boolean, default: false}
+		focus: {type: Boolean, default: false},
+		language: {type: String, default: "javascript"},
+		wrap: {type: Boolean, default: false}
 	}),
 	theValue = ref(props.modelValue)
 
 let pre = ref(null),
 	highlighted = computed(() => {
-		// Calculate the output... must use debounce ?
-		return Prism.highlight(theValue.value, Prism.languages.javascript, "javascript")
+		if(theValue.value) {
+			try {
+				if (props.language.toLowerCase() === "latex") {
+					return Prism.highlight(theValue.value, Prism.languages.latex, "latex")
+				}
+				return Prism.highlight(theValue.value, Prism.languages.javascript, "javascript")
+			} catch (e) {
+				return theValue.value
+			}
+		}
+		return ""
 	}),
+	indenter = function (event) {
+		let text = theValue.value,
+			originalSelectionStart = event.target.selectionStart,
+			textStart = text.slice(0, originalSelectionStart),
+			textEnd = text.slice(originalSelectionStart),
+			startLines = textStart.split("\n"),
+			currentLine = startLines.pop().trimEnd(),
+			lastCharacter = currentLine[currentLine.length - 1],
+			previousLine, lastPreviousCharacter = "",
+			currentIndentLength = 0,
+			index = 0
+
+		if (startLines.length > 0) {
+			previousLine = startLines.pop().trimEnd()
+			lastPreviousCharacter = previousLine[previousLine.length - 1]
+		}
+
+		// Get the number of tab character at the beginning of the line.
+		while (currentLine.charAt(index++) === "\t") {
+			currentIndentLength++
+		}
+
+		if (["{", "(", "["].indexOf(lastCharacter) !== -1) {
+			currentIndentLength++
+		} else if (["}", ")", "]"].indexOf(lastCharacter) !== -1) {
+			currentIndentLength--
+		} else if (["+", "-", ".", ","].indexOf(lastCharacter) !== -1) {
+			if (["+", "-", ".", ","].indexOf(lastPreviousCharacter) !== ["+", "-", ".", ","].indexOf(lastCharacter)) {
+				currentIndentLength++
+			}
+		}
+		if (currentIndentLength < 0) {
+			currentIndentLength = 0
+		}
+
+		theValue.value = `${textStart}\n${"\t".repeat(currentIndentLength)}${textEnd}`
+		event.target.value = theValue.value // required to make the cursor stay in place.
+		event.target.selectionEnd = event.target.selectionStart = originalSelectionStart + 1 + currentIndentLength
+	},
 	tabber = function (event) {
 		/* enable tab caracter */
 		let text = theValue.value,
@@ -75,14 +133,13 @@ let pre = ref(null),
 		event.target.value = theValue.value // required to make the cursor stay in place.
 		event.target.selectionEnd = event.target.selectionStart = originalSelectionStart + 1
 	},
-	sync_scroll = function(){
+	sync_scroll = function () {
 		/* Scroll result to scroll coords of event - sync with textarea */
 		pre.value.scrollTop = inp.value.scrollTop
 		pre.value.scrollLeft = inp.value.scrollLeft
 	}
-
-onMounted(()=>{
-	if(props.focus){
+onMounted(() => {
+	if (props.focus) {
 		focus(false)
 	}
 })
@@ -112,7 +169,6 @@ onMounted(()=>{
 	line-height: inherit;
 	tab-size: 2;
 	caret-color: darkgrey;
-	white-space: pre;
 }
 
 .code-input textarea, .code-input pre {
@@ -122,6 +178,7 @@ onMounted(()=>{
 	border: 0;
 	width: 100%;
 	height: 100%;
+	white-space: inherit;
 }
 
 .code-input textarea, .code-input pre, .code-input pre * {

@@ -104,12 +104,13 @@
 							</option>
 						</form-select>
 
-						<form-textarea
+						<form-codearea
 							ref="formBody"
 							v-model="theBlock.body"
 							:rows="11"
 							label="corps"
 							name="body"
+							language="latex"
 						/>
 
 						<div>
@@ -118,8 +119,19 @@
 								label="disposition"
 								name="disposition"
 							/>
-							<p class="text-xs">
-								bi,md:b+i,lg:2b+i,xl:3b+i
+							<p class="text-xs flex gap-3">
+								<button
+									class="text-xs"
+									@click="theBlock.template='bi,md:3b+2i'"
+								>
+									bi,md:3b+2i
+								</button>
+								<button
+									class="text-xs"
+									@click="theBlock.template='bi,md:b+i,lg:3b+2i'"
+								>
+									bi,md:b+i,lg:3b+2i
+								</button>
 							</p>
 						</div>
 					</div>

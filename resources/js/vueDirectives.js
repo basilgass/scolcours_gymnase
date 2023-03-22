@@ -1,8 +1,8 @@
 import katex from "katex/dist/katex.mjs"
 import AsciiMathParser from "./asciimath2tex"
-import {number} from "tailwindcss/lib/util/dataTypes"
 import {usePage} from "@inertiajs/inertia-vue3"
 import {useKatexMacros} from "@/Composables/useHelpers"
+import {numberCorrection} from "pidraw/esm/Calculus"
 
 function katexUpdate(el, binding, vnode) {
 	el.innerHTML = ""
@@ -32,17 +32,26 @@ function katexUpdate(el, binding, vnode) {
 		el.classList.add("katex-m-1")
 	}
 
-	let rawTex = binding.value.replaceAll(/\$[a-z]/g, "\\textcolor{red}{A}")
+	// Create the text to display.
+	let rawTex = binding.value
+
+	if(!isNaN(rawTex)) {
+		for (let key in binding.modifiers) {
+			if (key.startsWith("number")) {
+				let [b, digits] = key.split(":")
+				if(digits===undefined){digits = 2}
+				rawTex = numberCorrection(rawTex, null, null, digits).toString()
+			}
+		}
+	}
+
+
+	rawTex = rawTex.replaceAll(/\$[a-z]/g, "\\textcolor{red}{A}")
 	if(binding.modifiers.auto){
 		el.innerHTML = rawTex
 		katexAutoRender(el)
 	}else {
 		let tex = binding.modifiers.ascii ? new AsciiMathParser().parse(rawTex) : rawTex
-
-		if (typeof tex === number) {
-			tex = tex.toString()
-		}
-
 		let displayMode = !binding.modifiers.inline && el.tagName !== "SPAN"
 
 		if (tex !== undefined && tex.length > 0) {
