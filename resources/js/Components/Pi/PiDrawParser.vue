@@ -12,27 +12,40 @@
 			v-if="stepperMax>1"
 			class="my-3"
 		>
-			<div class="flex items-center justify-center gap-10">
-				<button
-					class="px-3 py-2 btn btn-xs"
-					:disabled="stepperIndex<=0"
-					@click="stepperIndex--"
-				>
-					<i class="bi bi-chevron-left" />
-				</button>
-				<div>{{ stepperIndex + 1 }} / {{ stepperMax }}</div>
-				<button
-					class="px-3 py-2 btn btn-xs"
-					:disabled="stepperIndex >= stepperMax-1"
-					@click="stepperIndex++"
-				>
-					<i class="bi bi-chevron-right" />
-				</button>
+			<div v-if="stepperStart">
+				<div class="flex items-center justify-center gap-10">
+					<button
+						class="px-3 py-2 btn btn-xs"
+						:disabled="stepperIndex<=0"
+						@click="stepperIndex--"
+					>
+						<i class="bi bi-chevron-left" />
+					</button>
+					<div>{{ stepperIndex + 1 }} / {{ stepperMax }}</div>
+					<button
+						class="px-3 py-2 btn btn-xs"
+						:disabled="stepperIndex >= stepperMax-1"
+						@click="stepperIndex++"
+					>
+						<i class="bi bi-chevron-right" />
+					</button>
+				</div>
+				<div
+					v-katex.auto="stepperText"
+					class="my-3"
+				/>
 			</div>
 			<div
-				v-katex.auto="stepperText"
-				class="my-3"
-			/>
+				v-else
+				class="w-full"
+			>
+				<button
+					:class="`w-full btn-xs btn-scolcours-${$page.props.theme.slug} tracking-wider d-block`"
+					@click="stepperStart=true"
+				>
+					Marche à suivre
+				</button>
+			</div>
 		</div>
 		<!-- slider(s) -->
 		<div
@@ -190,7 +203,8 @@ let PiGraph, PiParser, PiAxis,
 	PiParserHasErrors = ref(false)
 
 
-let	stepperMax = computed(()=>props.draw.code.split("\n\n").length),
+let	stepperStart = ref(false),
+	stepperMax = computed(()=>props.draw.code.split("\n\n").length),
 	stepperIndex = ref(0),
 	stepperText = computed(()=>{
 		const step = drawCode.value.split("\n\n")[stepperIndex.value]
@@ -232,7 +246,7 @@ let	stepperMax = computed(()=>props.draw.code.split("\n\n").length),
 			}
 		}
 
-		if(stepperMax.value>1){
+		if(stepperStart.value && stepperMax.value>1){
 			return outputCode.split("\n\n").slice(0, stepperIndex.value+1).join("\n\n")
 		}else{
 			return outputCode

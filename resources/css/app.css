@@ -184,7 +184,7 @@
 	}
 
 	.btn-xs {
-		@apply px-2 py-1 text-sm
+		@apply !px-2 !py-1 text-sm
 	}
 
 	.btn-form {
