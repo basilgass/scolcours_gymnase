@@ -1,3 +1,7 @@
+<!--
+Affichage des résultats à la fin d'un challenge.
+Permet de recommencer le challenge.
+-->
 <template>
 	<footer>
 		<div class="grid grid-cols-3 gap-6">

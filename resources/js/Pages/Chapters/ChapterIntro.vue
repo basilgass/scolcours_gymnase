@@ -33,8 +33,8 @@
 		<div class="space-y-10">
 			<!-- table des matieres -->
 			<ChapterToc
-				class="px-5"
 				:chapter="theChapter"
+				class="px-5"
 			/>
 
 			<!-- commencer l'aventure -->
@@ -43,10 +43,10 @@
 				class="w-full text-center px-5"
 			>
 				<Link
-					class="min-h-[80px] mx-auto w-full md:w-auto md:px-20"
 					:class="`btn-scolcours-${$page.props.theme.slug}`"
-					as="button"
 					:href="route('theme.chapter.slide', [$page.props.theme.slug, theChapter.slug, 1])"
+					as="button"
+					class="min-h-[80px] mx-auto w-full md:w-auto md:px-20"
 				>
 					<div class="flex flex-col gap-3 py-3 text-xs font-ultrathin">
 						<p>
@@ -65,8 +65,8 @@
 
 			<!-- The formulas -->
 			<chapter-formulas
-				responsive
 				:chapter-slug="theChapter.slug"
+				responsive
 			/>
 		</div>
 	</section>
@@ -80,9 +80,7 @@ export default {
 }
 </script>
 <script setup>
-import {computed, defineAsyncComponent, inject, onMounted, ref} from "vue"
-import PostShow from "@/Components/Posts/PostShow.vue"
-import {Menu, MenuButton, MenuItem, MenuItems} from "@headlessui/vue"
+import {computed, defineAsyncComponent, inject, ref} from "vue"
 import ChapterToc from "@/Components/Chapters/ChapterToc.vue"
 import ChapterChallenges from "@/Components/Chapters/ChapterChallenges.vue"
 import ChapterFormulas from "@/Components/Chapters/ChapterFormulas.vue"
@@ -96,12 +94,12 @@ let props = defineProps({
 const editMode = inject("editMode")
 
 let showEditForm = ref(false),
-	editForm = computed(()=>{
+	editForm = computed(() => {
 		return defineAsyncComponent(
-			()=>import("@/Components/Chapters/ChapterForm.vue")
+			() => import("@/Components/Chapters/ChapterForm.vue")
 		)
 	}),
-	updateChapter = function(c){
+	updateChapter = function (c) {
 		// TODO: update theChapter ?
 	}
 </script>

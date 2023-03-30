@@ -1,3 +1,6 @@
+<!--
+Affichage d'un texte en markdown.
+-->
 <template>
 	<div
 		ref="root"

@@ -1,3 +1,6 @@
+<!--
+Affichage du formulaire en menu "slide-in" depuis la gauche.
+-->
 <template>
 	<div>
 		<button

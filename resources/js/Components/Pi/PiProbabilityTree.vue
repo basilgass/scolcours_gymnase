@@ -1,3 +1,7 @@
+<!--
+Affichage d'un arbre de probabilité
+Utilisé avec ProbabilityTree.js
+-->
 <template>
 	<div ref="root">
 		<div ref="tree" />
@@ -21,9 +25,12 @@ function updateTree() {
 	// It should accept
 	// A,3,P,5,3
 	// A,3,[B,4,[C,2,3],C,8],U,9
-	if (treeData.value.includes("\n")) {
+	let securityCount = 1000
+	if (props.treeData.includes("\n")) {
+		if(securityCount<0){return }
+		securityCount--
 		// It's an object
-		let lines = treeData.value.split("\n"),
+		let lines = props.treeData.split("\n"),
 			crtLeaves = [],	// Leaves from the current node.
 			rootLeaf = {node: "ROOT", value: 0, leaves: []},		// current root node
 			branchLeaves = [rootLeaf],	// list of nodes
@@ -66,11 +73,11 @@ function updateTree() {
 			}
 		}
 		// console.log("FINAL")
-		// console.log(rootLeaf)
+		// console.log(branchLeaves)
 		Tree.update(branchLeaves[0].leaves)
-	} else if (treeData.value.split(",").length % 2 === 1) {
+	} else if (props.treeData.split(",").length % 2 === 1) {
 		// A,3,P,5,3
-		let data = treeData.value.split(","),
+		let data = props.treeData.split(","),
 			throws = data.pop()
 		Tree.update({data, throws})
 	} else {
@@ -78,11 +85,11 @@ function updateTree() {
 	}
 
 	// Update the katex data.
-	katexAutoRender(tree.value)
+	// katexAutoRender(tree.value)
 }
 
 onMounted(() => {
-	// Tree = new ProbabilityTree(document.getElementById("tree"), treeData.value)
+	// Tree = new ProbabilityTree(document.getElementById("tree"), props.treeData)
 	Tree = new ProbabilityTree(tree.value)
 	updateTree()
 })

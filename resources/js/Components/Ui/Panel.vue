@@ -1,3 +1,8 @@
+<!--
+Mise en forme d'un "panel" tout simple.
+Utilisé pour encadrer de manière uniforme des zones.
+TODO: à améliorer, avec plus d'option (couleurs, côtés, ...)
+-->
 <template>
 	<article
 		class="px-4 py-2 rounded-xl border transition-all"

@@ -1,3 +1,9 @@
+<!--
+Composant d'introduction du challenge, avec la configuration actuelle
+nombre de vies, niveaux de difficultés, temps et les résultats courants
+
+Pour l'admin, contient également les liens vers les résultats par teams.
+-->
 <template>
 	<div
 		class="grid place-items-center"

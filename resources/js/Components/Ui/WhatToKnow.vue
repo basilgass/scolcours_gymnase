@@ -1,3 +1,7 @@
+<!--
+Génération de questions à imprimer
+TODO: a retravailler de A à Z
+-->
 <template>
 	<div class="mx-auto">
 		<div>

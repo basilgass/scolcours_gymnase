@@ -5,5 +5,5 @@
 Powered by Scolcours
 </div>
 
-##Introduction
+## Introduction
 This is my *private* repo for my mathematical website, designed for the Switzerland gymnasium.

@@ -1,3 +1,7 @@
+<!--
+Switch permettant d'activer ou désactiver une fonctionnalité
+TODO: utilisé dans FormSwitch et PostShow: modifier PostShow pour utiliser formSwitch à la place ?
+-->
 <template>
 	<div class="flex gap-2 items-baseline">
 		<span

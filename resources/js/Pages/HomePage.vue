@@ -39,7 +39,7 @@
 					<div class="flex justify-between items-center mb-2">
 						<h3 class="font-normal">
 							<Link
-								:href="item.href"
+								:href="item.url"
 								class="hover:underline"
 							>
 								{{ item.title }}

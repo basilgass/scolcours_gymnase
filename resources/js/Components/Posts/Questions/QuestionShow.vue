@@ -1,3 +1,8 @@
+<!--
+Affichage d'une question
+Envoi de la validation d'une réponse
+keyboard -> QuestionUserInput -> QuestionShow
+-->
 <template>
 	<div
 		:id="`question-${theQuestion.id}`"

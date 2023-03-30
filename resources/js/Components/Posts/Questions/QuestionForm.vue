@@ -1,3 +1,6 @@
+<!--
+Formulaire d'édition d'une question
+-->
 <template>
 	<dialog-modal
 		v-model="show"

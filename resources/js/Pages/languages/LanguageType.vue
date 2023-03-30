@@ -213,6 +213,15 @@ let typoButtons = ref(null),
 
 		// Tell we are watching the first letter
 		currentIndex.value = 0
+		while (resultLetters.value[currentIndex.value].visible) {
+			currentIndex.value++
+			if (currentIndex.value >= resultLetters.value.length) {
+				continueGame()
+				return
+			}
+		}
+
+
 	},
 	currentIndex = ref(-1),
 	validateKey = function (index) {
@@ -237,7 +246,6 @@ let typoButtons = ref(null),
 			shake(typoButtons.value.children[index])
 		}
 	}
-
 
 onMounted(() => {
 	// let previousData = localStorage.getItem(localStorageKey.value)

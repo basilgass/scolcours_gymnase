@@ -1,3 +1,6 @@
+<!--
+Génération des liens pour les themes.
+-->
 <template>
 	<Link
 		v-for="theme of $page.props.themes"

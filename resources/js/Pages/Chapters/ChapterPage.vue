@@ -69,8 +69,8 @@
 					v-for="post in theChapter.posts"
 					:id="`post-${post.id}`"
 					:key="`post-${post.id}`"
-					:post="post"
 					:chapter="theChapter"
+					:post="post"
 					isolate
 					@destroy="destroyPost"
 				/>
@@ -104,8 +104,7 @@ import PostShow from "@/Components/Posts/PostShow.vue"
 import {useMenuScrollTo} from "@/Composables/useHelpers"
 import ChapterChallenges from "@/Components/Chapters/ChapterChallenges.vue"
 import ChapterFormulas from "@/Components/Chapters/ChapterFormulas.vue"
-import FlashMessage from "@/Components/Ui/FlashMessage.vue"
-import {usePage} from "@inertiajs/inertia-vue3"
+
 
 let props = defineProps({
 		chapter: {type: Object, required: true}
@@ -113,16 +112,16 @@ let props = defineProps({
 	theChapter = reactive(props.chapter.data)
 
 let showEditForm = ref(false),
-	editForm = computed(()=>{
+	editForm = computed(() => {
 		return defineAsyncComponent(
-			()=>import("@/Components/Chapters/ChapterForm.vue")
+			() => import("@/Components/Chapters/ChapterForm.vue")
 		)
 	}),
-	updateChapter = function(c){
+	updateChapter = function (c) {
 		// TODO: update theChapter ?
 	}
 
-let addPost = function(){
+let addPost = function () {
 		axios.post(
 			route("chapters.posts.store", [theChapter.slug]),
 			{
@@ -135,7 +134,7 @@ let addPost = function(){
 			})
 			.catch(err => console.log(err))
 	},
-	destroyPost = function(id){
+	destroyPost = function (id) {
 		delete theChapter.posts[id]
 	}
 </script>

@@ -1,8 +1,8 @@
 <template>
-	<button class="btn"
-			:class="buttonClass"
+	<button :class="buttonClass"
+			class="btn"
 			@click="btnClick">
-		<span v-show="!confirmClick"><slot /></span>
+		<span v-show="!confirmClick"><slot/></span>
 		<span v-show="confirmClick" v-text="props.confirmText"/>
 	</button>
 </template>
@@ -20,13 +20,15 @@ let emits = defineEmits(['confirm'])
 
 let confirmClick = ref(false),
 	buttonClass = computed(() => {
-		let cl = props.xs?'btn-xs ':''
+		let cl = props.xs ? 'btn-xs ' : ''
 		return cl + (confirmClick.value ? props.confirmClass : props.btnClass)
 	}),
 	btnClick = function () {
 		if (!confirmClick.value) {
 			confirmClick.value = true
-			setTimeout(()=>{confirmClick.value = false}, 2000)
+			setTimeout(() => {
+				confirmClick.value = false
+			}, 2000)
 		} else {
 			emits('confirm')
 		}

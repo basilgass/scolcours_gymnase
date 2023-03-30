@@ -1,3 +1,7 @@
+<!--
+En-tête d'un challenge.
+Contient le bouton de retour au chapitre, le titre, la description et l'édition
+-->
 <template>
 	<header>
 		<!-- Header - return back -->

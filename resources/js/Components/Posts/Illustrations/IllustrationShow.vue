@@ -1,3 +1,6 @@
+<!--
+Affichage des illustrations
+-->
 <template>
 	<figure
 		ref="root"

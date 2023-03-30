@@ -1,3 +1,7 @@
+<!--
+Affichage du titre de la page
+TODO: est-ce vraiment utile (utilisé dans DEV et language)
+-->
 <template>
 	<Head>
 		<title>

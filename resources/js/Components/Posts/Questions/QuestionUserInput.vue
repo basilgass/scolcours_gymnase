@@ -1,3 +1,7 @@
+<!--
+Entrée utilisateur, permettant d'afficher les claviers
+Met à jour la donnée en fonction des réponses.
+-->
 <template>
 	<div class="question-keyboard @container">
 		<div
@@ -73,7 +77,6 @@ let updateQuestion = function(value){
 		// Save the information to database.
 
 		// Update the given answers array.
-
 		if(value.result){
 			message.value = ""
 		}else{

@@ -1,3 +1,7 @@
+<!--
+Création d'une table des matières dynamique
+TODO: déplacer dans les composants, le simplifier ou supprimer ?
+-->
 <template>
 	<div
 		ref="root"

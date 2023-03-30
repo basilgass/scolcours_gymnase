@@ -1,3 +1,8 @@
+<!--
+Une barre de progression
+TODO: a améliorer, ajouter également cette barre dynamique dans le challenge ?
+-->
+
 <template>
 	<div class=" min-w-[400px]">
 		<div class="border border-green-700 rounded bg-green-50">

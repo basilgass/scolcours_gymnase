@@ -1,3 +1,6 @@
+<!--
+En-tête principal, sensible au thème
+-->
 <template>
 	<header
 		class="shadow text-white"

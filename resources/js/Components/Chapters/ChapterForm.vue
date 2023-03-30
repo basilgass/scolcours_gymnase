@@ -1,3 +1,7 @@
+<!--
+Formulaire d'édition d'un chapitre.
+TODO: donner la possibilité d'ajouter un chapitre.
+-->
 <template>
 	<dialog-modal
 		v-model="show"

@@ -1,3 +1,8 @@
+<info>
+parameters: {name}(x),f (for fundamuntal), a (for asymptote), b (for bottom)
+
+code: rational fraction
+</info>
 <template>
 	<pi-euclidian
 		:fx="euclidian.fx"
@@ -7,7 +12,9 @@
 		:at-bottom="euclidian.atBottom"
 	/>
 </template>
+<info>
 
+</info>
 <script setup>
 
 import {computed, ref} from "vue"

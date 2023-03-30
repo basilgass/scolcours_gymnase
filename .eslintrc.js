@@ -30,7 +30,8 @@ module.exports = {
 		"vue/html-indent": ["warn", "tab", {"attribute": 1, "closeBracket": 0}],
 		"vue/script-indent": ["error", "tab", {"baseIndent": 0}],
 		"vue/order-in-components": ["error"],
-		"vue/html-quotes": [ "error", "double", { "avoidEscape": false } ]
+		"vue/html-quotes": [ "error", "double", { "avoidEscape": false } ],
+		"vue/multi-word-component-names": "off"
 	},
 	"overrides": [
 		{

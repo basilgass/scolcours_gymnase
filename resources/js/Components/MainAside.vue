@@ -1,3 +1,6 @@
+<!--
+Menu latéral, avec les thèmes
+-->
 <template>
 	<aside>
 		<transition name="fade">

@@ -1,3 +1,6 @@
+<!--
+Edition d'un challenge
+-->
 <template>
 	<dialog-modal v-model="show">
 		<template #header>

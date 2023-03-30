@@ -21,9 +21,6 @@ export default {
 </script>
 <script setup>
 
-import ProgressBar from "@/Components/Ui/ProgressBar.vue"
-import {computed} from "vue"
-import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"
 import IllustrationShow from "@/Components/Posts/Illustrations/IllustrationShow.vue"
 
 let props = defineProps({

@@ -221,11 +221,10 @@ class BlockController extends Controller
 	{
 		$components = [];
 		foreach (Storage::disk('illustrations')->files() as $file) {
-			// TODO: get documentation from the file
 			// read it and grab the md text.
-			$content = explode("<template>", Storage::disk('illustrations')->get($file));
-
-			$components[basename($file, '.vue')] = $content[0];
+			$content = explode("<info>", Storage::disk('illustrations')->get($file));
+			$components[basename($file, '.vue')] = count($content) >= 2 ? explode("</info>", $content[1])[0] : "";
+			
 		}
 		return $components;
 	}

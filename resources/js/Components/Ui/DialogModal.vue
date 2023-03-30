@@ -1,3 +1,7 @@
+<!--
+Génère un modal
+Utilisé principalement pour l'édition des blocks
+-->
 <template>
 	<Teleport
 		v-if="props.modelValue"

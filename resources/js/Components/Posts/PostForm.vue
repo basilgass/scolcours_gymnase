@@ -1,3 +1,7 @@
+<!--
+Formulaire d'édition d'un post
+Utilisé dans PoseShow et PostEditPage (pour l'édition mode développement ?)
+-->
 <template>
 	<dialog-modal
 		v-model="show"

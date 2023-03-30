@@ -1,3 +1,6 @@
+<!--
+Formulaire d'édition d'un bloc
+-->
 <template>
 	<dialog-modal
 		v-model="show"

@@ -1,0 +1,2 @@
+(self.webpackChunk=self.webpackChunk||[]).push([[2180],{2180:(e,t,r)=>{"use strict";r.r(t),r.d(t,{default:()=>a});var n=r(821);const u={__name:"IllustrationStepper",props:{illustration:{type:Object,required:!0}},setup:function(e){var t=e;(0,n.ref)(t.illustration.parameters),(0,n.ref)(t.illustration.code);return function(e,t){return(0,n.openBlock)(),(0,n.createElementBlock)("div",null," STEPPER COMPONENT ")}}};var l=r(4121),o=r.n(l);"function"==typeof o()&&o()(u);const a=u},4121:()=>{}}]);
+//# sourceMappingURL=2180.21bb4ac3f3944eba.js.map

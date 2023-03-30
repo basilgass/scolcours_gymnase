@@ -1,3 +1,8 @@
+<!--
+Interface pour les "flash message"
+A utiliser en conjonction avec
+const flash = inject('flash')
+-->
 <template>
 	<transition name="flash-message">
 		<div

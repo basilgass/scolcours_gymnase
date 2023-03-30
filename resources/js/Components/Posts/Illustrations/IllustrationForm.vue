@@ -1,3 +1,8 @@
+<!--
+Formulaire d'édition d'une illustratrion
+TODO: Améliorer les illustrations de type components.
+TODO: Ajouter des "helpers", pour avoir des indications des paramètres par exemple.
+-->
 <template>
 	<dialog-modal
 		v-model="show"

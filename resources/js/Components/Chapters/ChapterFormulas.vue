@@ -1,3 +1,6 @@
+<!--
+Affichage d'un formulaire, avec la possibilité de passer d'un formulaire du thème à un autre.
+-->
 <template>
 	<article>
 		<div class="px-5 flex justify-between">
@@ -6,7 +9,7 @@
 			</h3>
 		</div>
 
-		<div v-if="theFormular.length>0 || editMode.enabled.value">
+		<div v-if="theFormular.length>0 || editMode.enabled.value ">
 			<div class="flex flex-wrap text-xs gap-1 px-5">
 				<button
 					v-for="item of themeChapters"
@@ -22,6 +25,13 @@
 			</div>
 
 			<div
+				v-if="loadingState"
+				class="px-5 grid place-items-center min-h-[10em]"
+			>
+				à la recherche des formules dans un très gros livre
+			</div>
+			<div
+				v-else
 				:class="props.responsive?'md:columns-2 lg:columns-3': ''"
 				class="columns-1 "
 			>
@@ -64,6 +74,12 @@
 				</draggable>
 			</div>
 		</div>
+
+		<div
+			v-if="theFormularErrors!==''"
+			class="text-red font-code text-xs"
+			v-text="theFormularErrors"
+		/>
 	</article>
 </template>
 
@@ -78,7 +94,9 @@ const props = defineProps({
 })
 const theFormular = ref([]),
 	theSlug = ref(props.chapterSlug),
-	themeChapters = ref([])
+	themeChapters = ref([]),
+	loadingState = ref(true),
+	theFormularErrors = ref("")
 
 const flash = inject("flash"),
 	editMode = inject("editMode")
@@ -106,10 +124,18 @@ const addFormula = function () {
 			.then(res => {
 				theFormular.value = res.data.formular
 				themeChapters.value = res.data.chapters
+
+			})
+			.catch(err => {
+				theFormularErrors.value = err.toJSON()
+			})
+			.finally(res => {
+				loadingState.value = false
 			})
 	},
 	updateFormular = function (slug) {
 		theSlug.value = slug
+		loadingState.value = true
 		loadFormular()
 	}
 

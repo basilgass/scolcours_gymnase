@@ -17,7 +17,8 @@ class ScolcoursController extends Controller
 	public function index()
 	{
 		$themes = Theme::all();
-		$newChapters = Chapter::orderBy('updated_at', 'desc')
+		$newChapters = Chapter::without(['posts', 'formulas', 'challenges'])
+			->orderBy('updated_at', 'desc')
 			->limit(5)
 			->where('active', true)
 			->get();
@@ -32,7 +33,7 @@ class ScolcoursController extends Controller
 			$item->modified = $modified;
 
 			// Save the href
-			$item->href = $item->url;
+//			$item->href = $item->url;
 
 			return $item;
 		});

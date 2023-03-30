@@ -1,11 +1,13 @@
-parameters: ???
-
-code: ???
 <template>
 	<div>
 		STEPPER COMPONENT
 	</div>
 </template>
+<info>
+parameters: ???
+
+code: ???
+</info>
 <script setup>
 import {ref} from "vue"
 

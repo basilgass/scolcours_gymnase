@@ -1,3 +1,6 @@
+<!--
+Un bouton pour se déloguer, tout simple, sans mise en forme.
+-->
 <template>
 	<Link
 		as="button"

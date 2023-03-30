@@ -1,3 +1,6 @@
+<!--
+Affichage d'un block , avec toutes les possibilités
+-->
 <template>
 	<article
 		v-show="showBlock"

@@ -1,3 +1,7 @@
+<!--
+Affichage d'un PiDraw
+// TODO: doit être remodeler pour plus de robustesse et optimiser
+-->
 <template>
 	<div :class="PiParserHasErrors?'bg-red-100':''">
 		<!-- draw graph-->

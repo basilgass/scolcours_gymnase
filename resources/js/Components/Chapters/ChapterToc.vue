@@ -1,12 +1,30 @@
+<!--
+Affichage de la tablea des matières.
+// TODO: ajouter des filtres (que les exercices, n'afficher que le courant -2 et +2 ?
+-->
 <template>
 	<div
 		v-if="props.chapter.posts"
 		class="my-5"
 	>
 		<div class="flex justify-between items-baseline">
-			<h3 class="uppercase font-extralight mb-2">
-				table des matières
-			</h3>
+			<div class="flex gap-3 items-baseline">
+				<h3 class="uppercase font-extralight mb-2">
+					table des matières
+				</h3>
+				<button
+					:class="filterPosts==='theory'?`text-scolcours-${$page.props.theme.slug}`:''"
+					@click="filterPosts=filterPosts==='theory'?'':'theory'"
+				>
+					<i class="bi bi-text-paragraph" />
+				</button>
+				<button
+					:class="filterPosts==='exercise'?`text-scolcours-${$page.props.theme.slug}`:''"
+					@click="filterPosts=filterPosts==='exercise'?'':'exercise'"
+				>
+					<i class="bi bi-calculator" />
+				</button>
+			</div>
 			<div
 				v-if="$page.props.auth.can.admin"
 				v-show="editMode.enabled.value"
@@ -70,7 +88,7 @@
 </template>
 <script setup>
 
-import {inject, ref} from "vue"
+import {computed, inject, ref} from "vue"
 import FormSwitch from "@/Components/Form/FormSwitch.vue"
 import {Inertia} from "@inertiajs/inertia"
 
@@ -82,7 +100,14 @@ let props = defineProps({
 
 const flash = inject("flash"),
 	editMode = inject("editMode")
-let posts = ref(props.chapter.posts),
+let filterPosts = ref(""),
+	posts = computed(() => {
+		if (filterPosts.value !== "") {
+			return props.chapter.posts.filter(x => x.type === (filterPosts.value==="theory"?null:filterPosts.value))
+		}
+
+		return props.chapter.posts
+	}),
 	moveMode = ref(false),
 	updatePostsOrder = function () {
 		axios.post(route("chapters.updatePostsOrder", [props.chapter.id]), {

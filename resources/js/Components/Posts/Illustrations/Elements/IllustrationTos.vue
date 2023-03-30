@@ -1,6 +1,8 @@
+<info>
 parameters: dx
 
 code: rational fraction
+</info>
 <template>
 	<pi-table-of-signs
 		:tos="tableOfSigns"
@@ -9,6 +11,7 @@ code: rational fraction
 		:extremes="extremes"
 	/>
 </template>
+
 <script setup>
 import {computed, ref} from "vue"
 import {PiMath} from "pimath/esm"

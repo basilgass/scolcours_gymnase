@@ -1,3 +1,7 @@
+<!--
+Affichage d'une division euclidienne
+Uniquement utilisée dans Posts/Illustrations/Elements/IllustrationEuclidian
+-->
 <template>
 	<div class="pi-euclidian-wrapper">
 		<div

@@ -40,11 +40,11 @@ function katexUpdate(el, binding, vnode) {
 			if (key.startsWith("number")) {
 				let [b, digits] = key.split(":")
 				if(digits===undefined){digits = 2}
-				rawTex = numberCorrection(rawTex, null, null, digits).toString()
+				rawTex = numberCorrection(rawTex, digits).toString()
 			}
 		}
+		rawTex = rawTex.toString()
 	}
-
 
 	rawTex = rawTex.replaceAll(/\$[a-z]/g, "\\textcolor{red}{A}")
 	if(binding.modifiers.auto){

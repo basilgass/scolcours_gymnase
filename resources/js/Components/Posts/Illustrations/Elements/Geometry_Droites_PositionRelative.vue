@@ -1,6 +1,8 @@
+<info>
 parameters: empty
 
 code: empty
+</info>
 <template>
 	<div class="stepper-wrapper">
 		<div v-katex="sequence.results.tex.equ1" />

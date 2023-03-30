@@ -1,5 +1,9 @@
 import {Fraction} from "pimath/esm/maths/coefficients/fraction"
 import {SVG} from "@svgdotjs/svg.js"
+import katex from "katex"
+
+// TODO: améliorer la génération d'arbre de probabilité avec des options de couleurs (label, chemin, etc...)
+
 
 export class ProbabilityTree {
 	constructor(root, data) {
@@ -34,16 +38,38 @@ export class ProbabilityTree {
 			}
 		}
 
-		if(data!==undefined){
+		if (data !== undefined) {
 			this.update(data)
 		}
 	}
 
-	_drawLeavesFromRoot(branch, x, y, depth, deltaX, deltaY, maxLeaves) {
-		this.svg.add(this.svg.circle(60).center(x, y).fill("white"))
-		this.svg.add(this.svg.text(branch.node).font({"anchor": "middle"})
-			.center(x, y))
+	_addNodeLabel(value, x, y, labelClass) {
+		const fo = this.svg
+			.foreignObject(1, 1)
+			.attr("style", "overflow:visible")
+			.add(`<div class="w-fit rounded-full katex-m-0 ${labelClass === undefined ? "" : labelClass}">${katex.renderToString(value, {displayMode: true})}</div>`)
 
+		// Getting the width and height of the HTML element
+		const w = fo.node.children[0].clientWidth,
+			h = fo.node.children[0].clientHeight
+
+		fo.width(w)
+		fo.height(h)
+
+		// Place item after the size is correct !
+		fo.center(x, y)
+
+		// add the element
+		this.svg.add(fo)
+		return fo
+	}
+
+	_drawLeavesFromRoot(branch, x, y, depth, deltaX, deltaY, maxLeaves) {
+		// Root node
+		// this.svg.add(this.svg.circle(60).center(x, y).fill("white"))
+		this._addNodeLabel(branch.node, x, y, "bg-white px-3 py-3 min-w-[3em] min-h-[3em]")
+
+		// Adding branches
 		if (branch.leaves !== undefined && branch.leaves.length > 0) {
 			// Build the next node positions.
 			let pathes = this._getNumberOfPathes(depth), n = branch.leaves.length, posX = x + deltaX, posY,
@@ -63,26 +89,30 @@ export class ProbabilityTree {
 				this.svg.add(this.svg.line(x, y, posX, posY).stroke({color: "black"}))
 
 				// add the probability, on half way.
-				let foText,digits = this.config.output.branch.digits
-				if(this.config.output.branch.type==="value") {
-					foText = this.svg.foreignObject(40, 40).add(SVG(`<div class="bg-white text-center">\\(${leaf.probability.value.toFixed(digits)}\\)</div>`))
-				}else if(this.config.output.branch.type==="percent"){
-					foText = this.svg.foreignObject(40, 40).add(SVG(`<div class="bg-white text-xs text-center">\\(${leaf.probability.value.toFixed(digits)}\\% \\)</div>`))
-				}else{
-					foText = this.svg.foreignObject(40, 40).add(SVG(`<div class="bg-white text-center">\\(${leaf.probability.tex}\\)</div>`))
+				let digits = this.config.output.branch.digits
+				if (this.config.output.branch.type === "value") {
+					this._addNodeLabel(`${leaf.probability.value.toFixed(digits)}`, (x + posX) / 2, (y + posY) / 2, "bg-white text-xs px-2 py-1")
+					// foText = this.svg.foreignObject(40, 40).add(SVG(`<div class="bg-white text-center">\\(${leaf.probability.value.toFixed(digits)}\\)</div>`))
+				} else if (this.config.output.branch.type === "percent") {
+					this._addNodeLabel(`${leaf.probability.value.toFixed(digits)}\\%`, (x + posX) / 2, (y + posY) / 2, "bg-white text-xs px-2 py-1")
+					// foText = this.svg.foreignObject(40, 40).add(SVG(`<div class="bg-white text-xs text-center">\\(${leaf.probability.value.toFixed(digits)}\\% \\)</div>`))
+				} else {
+					this._addNodeLabel(`${leaf.probability.tex}`, (x + posX) / 2, (y + posY) / 2, "bg-white text-xs px-2 py-1")
+					// foText = this.svg.foreignObject(40, 40).add(SVG(`<div class="bg-white text-center">\\(${leaf.probability.tex}\\)</div>`))
 				}
-				this.svg.add(foText.center((x + posX) / 2, (y + posY) / 2))
 
 				// Add the ending node
-				this.svg.add(this.svg.circle(60).center(posX, posY).fill("white"))
-				this.svg.add(this.svg.text(leaf.node).font({"anchor": "middle"})
-					.center(posX, posY))
+				// this.svg.add(this.svg.circle(60).center(posX, posY).fill("white"))
+				// this.svg.add(this.svg.text(leaf.node).font({"anchor": "middle"})
+				// 	.center(posX, posY))
+				this._addNodeLabel(leaf.node, posX, posY)
 
 				this._drawLeavesFromRoot(leaf, posX, posY, depth + 1, deltaX, deltaY, maxLeaves)
 				posY += currentDeltaY
 			}
 		} else {
-			this.svg.add(this.svg.foreignObject(200, 30).add(SVG(`<div>${branch.result}</div>`)).center(x + 140, y).x(x + 40))
+			this._addNodeLabel(branch.result, x + 100, y)
+			// this.svg.add(this.svg.foreignObject(200, 30).add(SVG()).center(x + 140, y).x(x + 40))
 		}
 	}
 
@@ -120,16 +150,16 @@ export class ProbabilityTree {
 
 		let leaves = []
 
-		for(let item of items){
+		for (let item of items) {
 			let L = {
 				node: item.node,
 				probability: new Fraction(+item.value, maxItems),
 				branchProbability: [...branchProbability, new Fraction(+item.value, maxItems)]
 			}
 
-			if(item.leaves!==undefined && item.leaves.length>0){
+			if (item.leaves !== undefined && item.leaves.length > 0) {
 				L.leaves = this._generateFromArray_LeavesFromRoot(item.leaves, L.branchProbability)
-			}else{
+			} else {
 				L.result = this._consolidateTreeBranchResult(L.branchProbability)
 			}
 
@@ -174,15 +204,15 @@ export class ProbabilityTree {
 	// 	}
 	// }
 
-	_consolidateTreeBranchResult(branchProbability){
-		if(this.config.output.result.type==="fraction") {
-			return `\\( ${branchProbability.map(x => x.tex).join("\\cdot ")} = ${new Fraction().xMultiply(...branchProbability).tex}\\)`
-		}else if(this.config.output.result.type==="value"){
+	_consolidateTreeBranchResult(branchProbability) {
+		if (this.config.output.result.type === "fraction") {
+			return `\\scriptsize ${branchProbability.map(x => x.tex).join("\\cdot ")} = ${new Fraction().xMultiply(...branchProbability).tex}`
+		} else if (this.config.output.result.type === "value") {
 			const digit = this.config.output.result.digits
-			return `\\( ${branchProbability.map(x => x.value.toFixed(digit)).join("\\cdot ")} = ${new Fraction().xMultiply(...branchProbability).value.toFixed(digit)}\\)`
-		}else if(this.config.output.result.type==="percent"){
+			return `\\scriptsize ${branchProbability.map(x => x.value.toFixed(digit)).join("\\cdot ")} = ${new Fraction().xMultiply(...branchProbability).value.toFixed(digit)}`
+		} else if (this.config.output.result.type === "percent") {
 			const digit = this.config.output.result.digit
-			return `\\( ${branchProbability.map(x => (+x.value*100).toFixed(digit) + "\\%").join("\\cdot ")} = ${(new Fraction().xMultiply(...branchProbability).value * 100).toFixed(digit)}\\% \\)`
+			return `\\scriptsize ${branchProbability.map(x => (+x.value * 100).toFixed(digit) + "\\%").join("\\cdot ")} = ${(new Fraction().xMultiply(...branchProbability).value * 100).toFixed(digit)}\\% `
 		}
 	}
 
@@ -219,7 +249,9 @@ export class ProbabilityTree {
 	_getAllBranches() {
 		let result = []
 		for (let leaf of this._tree.leaves) {
-			if(leaf.leaves===undefined || leaf.leaves.length===0){continue}
+			if (leaf.leaves === undefined || leaf.leaves.length === 0) {
+				continue
+			}
 			for (let branch of this._getAllBranchesFromRoot(leaf)) {
 				result.push([{node: leaf.node, probability: leaf.probability}, ...branch])
 			}
@@ -324,14 +356,14 @@ export class ProbabilityTree {
 	}
 
 	_validateUserInput(input) {
-		console.log(input)
+		// console.log(input)
 		if (input === undefined) {
 			// Default display.
 			this._generateFromString("U,3,P,2", 3)
-		} else if(input.data !== undefined && input.throws!==undefined) {
+		} else if (input.data !== undefined && input.throws !== undefined) {
 			// From string and number of throws
 			this._generateFromString(input.data, input.throws)
-		}else{
+		} else {
 			// It's an array of objects
 			// [ {node, probability, leaves[]} ]
 			this._generateFromArray(input)
@@ -348,19 +380,20 @@ export class ProbabilityTree {
 		this._preprocess()
 	}
 
-	branchOutput(key, value){
-		if(["fraction", "percent", "value"].includes(key)){
+	branchOutput(key, value) {
+		if (["fraction", "percent", "value"].includes(key)) {
 			this.config.output.branch.type = key
 		}
-		if(Number.isSafeInteger(+value)){
+		if (Number.isSafeInteger(+value)) {
 			this.config.output.branch.digits = value
 		}
 	}
-	resultOutput(key, value){
-		if(["fraction", "percent", "value"].includes(key)){
+
+	resultOutput(key, value) {
+		if (["fraction", "percent", "value"].includes(key)) {
 			this.config.output.result.type = key
 		}
-		if(Number.isSafeInteger(+value)){
+		if (Number.isSafeInteger(+value)) {
 			this.config.output.result.digits = value
 		}
 	}

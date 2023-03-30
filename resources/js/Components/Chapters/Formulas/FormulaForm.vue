@@ -1,3 +1,6 @@
+<!--
+Edition d'un formule d'un formulaire.
+-->
 <template>
 	<dialog-modal
 		v-model="show"

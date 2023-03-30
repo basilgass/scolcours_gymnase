@@ -1,4 +1,6 @@
-<!-- component to show the challenges list in the chapterPage -->
+<!--
+Affichage de la liste des challenges pour un chapitre donné.
+-->
 <template>
 	<div
 		v-if="chapter.challenges"

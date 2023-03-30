@@ -1,3 +1,6 @@
+<!--
+Pied de page pour les pages principales.
+-->
 <template>
 	<div class="bg-black text-white px-10 mt-24">
 		<div class="max-w-5xl mx-auto py-10 grid grid-cols-1 md:grid-cols-3 gap-5">

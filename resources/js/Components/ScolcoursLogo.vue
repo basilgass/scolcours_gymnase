@@ -1,3 +1,6 @@
+<!--
+Logo du site
+-->
 <template>
 	<div class="text-center">
 		<div class="text-4xl">

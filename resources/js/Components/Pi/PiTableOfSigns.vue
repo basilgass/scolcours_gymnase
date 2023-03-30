@@ -1,3 +1,7 @@
+<!--
+Affichage d'un tableau de signes ou de croissance.
+// TODO: Refactor the footer.
+-->
 <template>
 	<div class="table-of-sign-wrapper">
 		<div class="not-prose">
@@ -164,7 +168,7 @@
 <script setup>
 import {ref} from "vue"
 
-// TODO: Refactor the footer.
+
 let props = defineProps({
 		tos: {
 			required: true, type: Object

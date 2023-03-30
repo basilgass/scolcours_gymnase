@@ -1,3 +1,7 @@
+<!--
+Affichage d'un post avec toutes les options activées
+Principalement la couche utilisée dans ChapterSlide.
+-->
 <template>
 	<section class="bg-white border border-gray-200 rounded shadow py-5">
 		<!-- Title of the post -->
