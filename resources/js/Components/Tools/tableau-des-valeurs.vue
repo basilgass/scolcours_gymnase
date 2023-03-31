@@ -47,7 +47,7 @@
 				reset
 				next
 				keyboard="polynom"
-				@change="f=$event.input;ftex=$event.tex"
+				@change="f=$event.input"
 				@next="activeInput='xMin'"
 			/>
 			<keyboard-element
@@ -94,7 +94,7 @@
 				class="w-full"
 			>
 				<div
-					v-katex="`f(x) = ${ftex}`"
+					v-katex.ascii="`f(x) = ${f}`"
 					class="katex-boxed"
 				/>
 
@@ -162,14 +162,14 @@ import FormInput from "@/Components/Form/FormInput"
 import {computed, ref} from "vue"
 import {PiMath} from "pimath/esm"
 import KeyboardElement from "@/Components/Keyboards/KeyboardElement.vue"
+import {numberCorrection} from "pidraw/esm/Calculus"
 
-let f = ref("3x+1"),
-	ftex = ref("3x+1"),
-	xMin = ref("-10"),
-	xMax = ref("10"),
-	step = ref("1"),
+let f = ref("sin(x)"),
+	xMin = ref("0"),
+	xMax = ref("6.5"),
+	step = ref("0.52359877"),
 	activeInput = ref("fx"),
-	fixed = ref(2)
+	fixed = ref("2")
 
 let fx = computed(() => {
 		try {
@@ -180,6 +180,8 @@ let fx = computed(() => {
 		}
 	}),
 	getTableOfValues = function(){
+		let exp = new PiMath.NumExp(f.value)
+
 		let FX = new PiMath.Polynom(f.value),
 			x = new PiMath.Fraction(Math.min(xMin.value, xMax.value)),
 			vMax = new PiMath.Fraction(Math.max(xMin.value, xMax.value)),
@@ -188,13 +190,17 @@ let fx = computed(() => {
 			data = [],
 			securityIncrement = 0
 
-
 		while(x.value<=vMax.value){
-			const v = FX.evaluate(x)
+			let v = FX.numberOfVars===1?
+				FX.evaluate(x):
+				{
+					value: exp.evaluate({x: x.value}),
+					tex: ""
+				}
 
 			data.push({
 				x: x.value,
-				fx: PiMath.Numeric.round(v.value, vFixed),
+				fx: numberCorrection(v.value, null, null, 2),
 				fxTex: v.tex
 			})
 			x.add(vStep)

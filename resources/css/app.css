@@ -23,11 +23,11 @@
 	.scolcours-container {
 		@apply max-w-7xl mx-auto px-1 md:px-5
 	}
+}
 
+@layer components {
 	/* Just adding the color for JIT */
-	.bg-scolcours-main {
-		background-color: chocolate
-	}
+	.bg-scolcours-main {background-color: chocolate}
 
 	.bg-scolcours-algebre {@apply bg-blue-500}
 	.bg-scolcours-analyse {@apply bg-amber-500}
@@ -133,9 +133,7 @@
 	.admin-wrapper-row{
 		@apply w-full flex justify-between gap-3 items-baseline;
 	}
-}
 
-@layer components {
 	.btn {
         @apply border px-5 py-2 rounded-lg
         hover:bg-gray-100 hover:shadow

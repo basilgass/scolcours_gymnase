@@ -19,9 +19,7 @@
 				label="c = "
 				name="fonction"
 			/>
-		</div>
 
-		<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
 			<form-input
 				v-model="alpha"
 				focus
@@ -39,6 +37,12 @@
 				v-model="gamma"
 				label="\(\gamma = \)"
 				name="fonction"
+			/>
+
+			<form-number
+				v-model="fixed"
+				label="arrondi"
+				name="arrondi"
 			/>
 		</div>
 
@@ -105,6 +109,7 @@ import Panel from "@/Components/Ui/Panel"
 import FormInput from "@/Components/Form/FormInput"
 import {computed, ref} from "vue"
 import {numberCorrection} from "pidraw/esm/Calculus"
+import FormNumber from "@/Components/Form/FormNumber.vue"
 
 let A = ref(""),
 	B = ref(""),
@@ -112,6 +117,7 @@ let A = ref(""),
 	alpha = ref(""),
 	beta = ref(""),
 	gamma = ref(""),
+	fixed = ref(3),
 	labels = {
 		a: "a",
 		b: "b",
@@ -172,15 +178,15 @@ function formatTriangle(value) {
 	if(value.resolvable){
 		const area =  thmArea(value.a, value.b, value.gamma)
 		return {
-			a: (+value.a.toFixed(2)).toString(),
-			b: (+value.b.toFixed(2)).toString(),
-			c: (+value.c.toFixed(2)).toString(),
-			alpha: (+value.alpha.toFixed(2)) + "°",
-			beta: (+value.beta.toFixed(2)) + "°",
-			gamma: (+value.gamma.toFixed(2)) + "°",
-			area: numberCorrection(area, null, null,2),
-			radius: numberCorrection(value.a/Math.sin(value.alpha*Math.PI / 180)/2, null, null, 2),
-			radiusI: numberCorrection(2*area / (value.a+value.b+value.c), null, null, 2)
+			a: (+value.a.toFixed(fixed.value)).toString(),
+			b: (+value.b.toFixed(fixed.value)).toString(),
+			c: (+value.c.toFixed(fixed.value)).toString(),
+			alpha: (+value.alpha.toFixed(fixed.value)) + "°",
+			beta: (+value.beta.toFixed(fixed.value)) + "°",
+			gamma: (+value.gamma.toFixed(fixed.value)) + "°",
+			area: numberCorrection(area, null, null,fixed.value),
+			radius: numberCorrection(value.a/Math.sin(value.alpha*Math.PI / 180)/2, null, null, fixed.value),
+			radiusI: numberCorrection(2*area / (value.a+value.b+value.c), null, null, fixed.value)
 		}}else{
 		return null
 	}
