@@ -4,7 +4,7 @@
 
 	use App\Models\Chapter;
 	use App\Models\Theme;
-	use App\Models\Tools;
+	use App\Models\Tool;
 	use Illuminate\Http\Request;
 	use Inertia\Inertia;
 
@@ -13,7 +13,7 @@
 		public function index()
 		{
 			$data = ["theme"    => Theme::where('slug', 'tools')->first()];
-			$data['tools'] = Tools::all();
+			$data['tools'] = Tool::all();
 			$data['tool'] = null;
 			return Inertia::render("ToolsPage.vue", $data);
 		}
@@ -28,10 +28,10 @@
 			//
 		}
 
-		public function show(Tools $tool)
+		public function show(Tool $tool)
 		{
 			$data = ["theme"    => Theme::where('slug', 'tools')->first()];
-			$data['tools'] = Tools::all();
+			$data['tools'] = Tool::all();
 			$data['tool'] = $tool;
 
 			return Inertia::render("ToolsPage.vue", $data);

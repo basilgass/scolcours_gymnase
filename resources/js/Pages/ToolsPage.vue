@@ -129,7 +129,7 @@ let listOfTools = computed(()=>{
 	if(toolSearch.value.trim() === ""){
 		foundTools = [...props.tools]
 	}else {
-		const search = toolSearch.value.normalize("NFD").replace(/\p{Diacritic}/gu, "")
+		const search = toolSearch.value.toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu, "")
 		foundTools =  arraySearch.value.filter(tool =>
 			tool.search.slug.includes(search) ||
 			tool.search.title.includes(search) ||

@@ -8,7 +8,7 @@ use App\Models\Chapter;
 use App\Models\Illustration;
 use App\Models\Team;
 use App\Models\Theme;
-use App\Models\Tools;
+use App\Models\Tool;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -32,7 +32,7 @@ class AdminController extends Controller
 		return Inertia::render(
 			'Admin/AdminPagesShow.vue',
 			[
-				'tools' => Tools::all()->map(function ($tool, $key) {
+				'tools' => Tool::all()->map(function ($tool, $key) {
 					return [
 						'slug' => $tool->slug,
 						'title' => $tool->title,
@@ -122,7 +122,7 @@ class AdminController extends Controller
 		foreach (Storage::disk('tools')->files() as $file) {
 			$slug = substr($file, 0, -4);
 			$lastModified = Storage::disk('tools')->lastModified($file);
-			$existingTools = Tools::where('slug', $slug)->first();
+			$existingTools = Tool::where('slug', $slug)->first();
 
 			// Les informations dans la base de données sont plus récente - pas de modification à faire.
 			if ($existingTools?->updated_at->greaterThanOrEqualTo(Carbon::createFromTimestamp($lastModified))) {
@@ -161,7 +161,7 @@ class AdminController extends Controller
 			}
 
 			// Création dans la base de donnée.
-			Tools::updateOrCreate(
+			Tool::updateOrCreate(
 				[
 					"slug" => $slug
 				],
@@ -187,7 +187,7 @@ class AdminController extends Controller
 						$slug = pathinfo($file)['filename'];
 
 						$lastModified = Storage::disk('chapters')->lastModified($file);
-						$existingTools = Tools::where('slug', $slug)->first();
+						$existingTools = Tool::where('slug', $slug)->first();
 
 						// Les informations dans la base de données sont plus récente - pas de modification à faire.
 						if ($existingTools?->updated_at->greaterThanOrEqualTo(Carbon::createFromTimestamp($lastModified))) {

@@ -3,9 +3,9 @@
 		<form-input
 			v-model="f"
 			:active="activeInput==='fx'"
+			focus
 			label="fonction"
 			name="f"
-			focus
 			@input-focus="activeInput='fx'"
 		/>
 
@@ -44,45 +44,45 @@
 			<keyboard-element
 				v-show="activeInput==='fx'"
 				back
-				reset
-				next
 				keyboard="polynom"
+				next
+				reset
 				@change="f=$event.input"
 				@next="activeInput='xMin'"
 			/>
 			<keyboard-element
 				v-show="activeInput==='xMin'"
 				back
-				reset
-				next
 				keyboard="number"
+				next
+				reset
 				@change="xMin=$event.input"
 				@next="activeInput='xMax'"
 			/>
 			<keyboard-element
 				v-show="activeInput==='xMax'"
 				back
-				reset
-				next
 				keyboard="number"
+				next
+				reset
 				@change="xMax=$event.input"
 				@next="activeInput='step'"
 			/>
 			<keyboard-element
 				v-show="activeInput==='step'"
 				back
-				reset
-				next
 				keyboard="number"
+				next
+				reset
 				@change="step=$event.input"
 				@next="activeInput='fx'"
 			/>
 			<keyboard-element
 				v-show="activeInput==='fixed'"
 				back
-				reset
-				next
 				keyboard="number"
+				next
+				reset
 				@change="fixed=$event.input"
 				@next="activeInput='fixed'"
 			/>
@@ -163,6 +163,9 @@ import {computed, ref} from "vue"
 import {PiMath} from "pimath/esm"
 import KeyboardElement from "@/Components/Keyboards/KeyboardElement.vue"
 import {numberCorrection} from "pidraw/esm/Calculus"
+import {Polynom} from "pimath/esm/maths/algebra/polynom"
+
+// TODO: tableau des valeurs doit être restructurer pour fonctionner avec des valeurs trigonométriques.
 
 let f = ref("sin(x)"),
 	xMin = ref("0"),
@@ -174,29 +177,39 @@ let f = ref("sin(x)"),
 let fx = computed(() => {
 		try {
 			return getTableOfValues()
-		}catch(e){
+		} catch (e) {
 			console.warn(e)
 			return false
 		}
 	}),
-	getTableOfValues = function(){
-		let exp = new PiMath.NumExp(f.value)
+	isTrigonometric = computed(() => {
+		return f.value.includes("sin") || f.value.includes("cos") || f.value.includes("tan")
+	}),
+	getTableOfValues = function () {
+		let exp
+		if (isTrigonometric.value) {
+			exp = new PiMath.NumExp(f.value)
+		} else {
+			exp = new PiMath.Polynom(f.value)
+		}
 
-		let FX = new PiMath.Polynom(f.value),
-			x = new PiMath.Fraction(Math.min(xMin.value, xMax.value)),
+		let x = new PiMath.Fraction(Math.min(xMin.value, xMax.value)),
 			vMax = new PiMath.Fraction(Math.max(xMin.value, xMax.value)),
-			vStep = +step.value===0?1:+step.value,
+			vStep = +step.value === 0 ? 1 : +step.value,
 			vFixed = Math.max(1, Math.min(5, fixed.value)),
 			data = [],
 			securityIncrement = 0
 
-		while(x.value<=vMax.value){
-			let v = FX.numberOfVars===1?
-				FX.evaluate(x):
-				{
+		while (x.value <= vMax.value) {
+			let v
+			if(exp instanceof Polynom){
+				v = exp.evaluate(x)
+			}else{
+				v = {
 					value: exp.evaluate({x: x.value}),
 					tex: ""
 				}
+			}
 
 			data.push({
 				x: x.value,
@@ -207,7 +220,9 @@ let fx = computed(() => {
 
 			securityIncrement++
 
-			if(securityIncrement>100){break}
+			if (securityIncrement > 100) {
+				break
+			}
 		}
 
 		return data

@@ -51,37 +51,49 @@
 			class="my-10"
 		>
 			<div class="grid grid-cols-2 gap-4">
-				<table v-if="result.triangle">
-					<tr
-						v-for="(value, key) in result.triangle"
-						:key="`triangle-${key}`"
-					>
-						<td
-							v-katex="`${labels[key]}=`"
-							class="w-[50px] text-right bg-gray-100 font-semibold px-4"
-						/>
-						<td
-							v-katex.left="value"
-							class="px-4"
-						/>
-					</tr>
-				</table>
+				<div v-if="result.triangle">
+					<table>
+						<tr
+							v-for="(value, key) in result.triangle"
+							:key="`triangle-${key}`"
+						>
+							<td
+								v-katex="`${labels[key]}=`"
+								class="w-[50px] text-right bg-gray-100 font-semibold px-4"
+							/>
+							<td
+								v-katex.left="value"
+								class="px-4"
+							/>
+						</tr>
+					</table>
 
-				<table v-if="result.triangle2">
-					<tr
-						v-for="(value, key) in result.triangle2"
-						:key="`triangle-${key}`"
-					>
-						<td
-							v-katex="`${labels[key]}=`"
-							class="w-[50px] text-right bg-gray-100 font-semibold px-4"
-						/>
-						<td
-							v-katex.left="value"
-							class="px-4"
-						/>
-					</tr>
-				</table>
+					<pi-draw-parser
+						:draw="triangleDrawCode"
+					/>
+				</div>
+
+				<div v-if="result.triangle2">
+					<table>
+						<tr
+							v-for="(value, key) in result.triangle2"
+							:key="`triangle-${key}`"
+						>
+							<td
+								v-katex="`${labels[key]}=`"
+								class="w-[50px] text-right bg-gray-100 font-semibold px-4"
+							/>
+							<td
+								v-katex.left="value"
+								class="px-4"
+							/>
+						</tr>
+					</table>
+
+					<pi-draw-parser
+						:draw="triangle2DrawCode"
+					/>
+				</div>
 			</div>
 			<div
 				v-if="result.text"
@@ -110,11 +122,12 @@ import FormInput from "@/Components/Form/FormInput"
 import {computed, ref} from "vue"
 import {numberCorrection} from "pidraw/esm/Calculus"
 import FormNumber from "@/Components/Form/FormNumber.vue"
+import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"
 
-let A = ref(""),
-	B = ref(""),
+let A = ref("3"),
+	B = ref("5"),
 	C = ref(""),
-	alpha = ref(""),
+	alpha = ref("25"),
 	beta = ref(""),
 	gamma = ref(""),
 	fixed = ref(3),
@@ -131,52 +144,92 @@ let A = ref(""),
 	}
 
 let result = computed(() => {
-	try {
-		let triangle = makeTriangle({
-				a: A.value !== "" ? +A.value : null,
-				b: B.value !== "" ? +B.value : null,
-				c: C.value !== "" ? +C.value : null,
-				alpha: alpha.value !== "" ? +alpha.value : null,
-				beta: beta.value !== "" ? +beta.value : null,
-				gamma: gamma.value !== "" ? +gamma.value : null,
-				resolvable: null
-			}),
-			triangle2
+		try {
+			let triangle = makeTriangle({
+					a: A.value !== "" ? +A.value : null,
+					b: B.value !== "" ? +B.value : null,
+					c: C.value !== "" ? +C.value : null,
+					alpha: alpha.value !== "" ? +alpha.value : null,
+					beta: beta.value !== "" ? +beta.value : null,
+					gamma: gamma.value !== "" ? +gamma.value : null,
+					resolvable: null
+				}),
+				triangle2
 
-		if (triangle.hasAlternate) {
-			triangle2 = makeTriangle({
-				a: A.value !== "" ? +A.value : null,
-				b: B.value !== "" ? +B.value : null,
-				c: C.value !== "" ? +C.value : null,
-				alpha: alpha.value !== "" ? +alpha.value : null,
-				beta: beta.value !== "" ? +beta.value : null,
-				gamma: gamma.value !== "" ? +gamma.value : null,
-				resolvable: null
-			}, true)
-		}
-
-
-		if (triangle.resolvable !== true && triangle2.resolvable !== true) {
-			return {
-				triangle: null,
-				triangle2: null,
-				text: `le triangle n'est pas résolvable. ${triangle.resolvable}`
+			if (triangle.hasAlternate) {
+				triangle2 = makeTriangle({
+					a: A.value !== "" ? +A.value : null,
+					b: B.value !== "" ? +B.value : null,
+					c: C.value !== "" ? +C.value : null,
+					alpha: alpha.value !== "" ? +alpha.value : null,
+					beta: beta.value !== "" ? +beta.value : null,
+					gamma: gamma.value !== "" ? +gamma.value : null,
+					resolvable: null
+				}, true)
 			}
+
+
+			if (triangle.resolvable !== true && triangle2.resolvable !== true) {
+				return {
+					triangle: null,
+					triangle2: null,
+					text: `le triangle n'est pas résolvable. ${triangle.resolvable}`
+				}
+			}
+			return {
+				triangle: formatTriangle(triangle),
+				triangle2: (triangle.hasAlternate && triangle2.resolvable === true) ? formatTriangle(triangle2) : {},
+				text: null,
+				raw: {
+					triangle,
+					triangle2: (triangle.hasAlternate && triangle2.resolvable === true) ? triangle2: null,
+				}
+			}
+		} catch (e) {
+			console.error(e)
+			return false
 		}
-		return {
-			triangle: formatTriangle(triangle),
-			triangle2: (triangle.hasAlternate && triangle2.resolvable===true)?formatTriangle(triangle2):{},
-			text: null
-		}
-	} catch (e) {
-		console.error(e)
-		return false
+	}),
+	triangleDrawCode = computed(()=>{
+		return drawTriangle(result.value.raw.triangle)
+	}),
+	triangle2DrawCode = computed(()=>{
+		return drawTriangle(result.value.raw.triangle2)
+
+	})
+
+function drawTriangle(value) {
+	if(value===null){return {
+		code: "",
+		parameters: ""
+	}}
+
+	const Cx = value.b * Math.cos(value.alpha * Math.PI / 180),
+		Cy = value.b * Math.sin(value.alpha * Math.PI / 180),
+		xMin = Math.round(Math.min(Cx, 0))-1,
+		xMax = Math.round(Math.max(value.c, Cx))+1,
+		yMin = -1,
+		yMax = Math.round(Cy)+1,
+		scale = 10/Math.max(xMax-xMin, yMax-yMin)
+
+	return {
+		parameters: `x=-1:${xMax*scale},y=-1:${Math.round(yMax*scale)}`,
+		code: `A(0,0)->$/bl
+			B(${value.c*scale},0)->$/br
+			C(${Cx*scale},${Cy*scale})->$/tc
+			d1=[AB]
+			d2=[AC]
+			d3=[BC]
+			a1=arc B,A,C,0.5->$\\alpha
+			a2=arc C,B,A,0.5->$\\beta
+			a3=arc A,C,B,0.5->$\\gamma
+			`
 	}
-})
+}
 
 function formatTriangle(value) {
-	if(value.resolvable){
-		const area =  thmArea(value.a, value.b, value.gamma)
+	if (value.resolvable) {
+		const area = thmArea(value.a, value.b, value.gamma)
 		return {
 			a: (+value.a.toFixed(fixed.value)).toString(),
 			b: (+value.b.toFixed(fixed.value)).toString(),
@@ -184,10 +237,11 @@ function formatTriangle(value) {
 			alpha: (+value.alpha.toFixed(fixed.value)) + "°",
 			beta: (+value.beta.toFixed(fixed.value)) + "°",
 			gamma: (+value.gamma.toFixed(fixed.value)) + "°",
-			area: numberCorrection(area, null, null,fixed.value),
-			radius: numberCorrection(value.a/Math.sin(value.alpha*Math.PI / 180)/2, null, null, fixed.value),
-			radiusI: numberCorrection(2*area / (value.a+value.b+value.c), null, null, fixed.value)
-		}}else{
+			area: numberCorrection(area, null, null, fixed.value),
+			radius: numberCorrection(value.a / Math.sin(value.alpha * Math.PI / 180) / 2, null, null, fixed.value),
+			radiusI: numberCorrection(2 * area / (value.a + value.b + value.c), null, null, fixed.value),
+		}
+	} else {
 		return null
 	}
 

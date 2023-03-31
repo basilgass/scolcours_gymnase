@@ -7,7 +7,7 @@
 		/>
 
 		<div
-			class="tracking-normal font-normal max-w-md code-input border bg-white language-javascript h-full text-[1.1em]"
+			class="tracking-normal font-normal code-input border bg-white language-javascript h-full text-[1.1em]"
 			v-bind="$attrs"
 			:class="props.wrap?'whitespace-pre-wrap':'whitespace-pre'"
 		>
@@ -17,6 +17,7 @@
 				class="w-full"
 				@input="sync_scroll();$emit('update:modelValue', theValue)"
 				@scroll="sync_scroll"
+				@keyup="autofill($event)"
 				@keydown.tab.prevent="tabber($event)"
 				@keydown.enter.prevent="indenter($event)"
 			/>
@@ -42,6 +43,7 @@ import Prism from "prismjs"
 import "prismjs/themes/prism.css"
 import "prismjs/components/prism-latex"
 import "prismjs/components/prism-javascript"
+import {javascriptTriggers, latexTriggers} from "@/helpers/mdAutofill"
 
 Prism.manual = true
 
@@ -65,7 +67,7 @@ const props = defineProps({
 		hideLabel: {type: Boolean, default: false},
 		focus: {type: Boolean, default: false},
 		language: {type: String, default: "javascript"},
-		wrap: {type: Boolean, default: false}
+		wrap: {type: Boolean, default: true}
 	}),
 	theValue = ref(props.modelValue)
 
@@ -137,6 +139,36 @@ let pre = ref(null),
 		/* Scroll result to scroll coords of event - sync with textarea */
 		pre.value.scrollTop = inp.value.scrollTop
 		pre.value.scrollLeft = inp.value.scrollLeft
+	},
+	autofillTriggers = computed(()=>{
+		if(props.language==="latex"){
+			return latexTriggers
+		}else if(props.language==="javascript"){
+			return javascriptTriggers
+		}
+		return {}
+	}),
+
+	autofill = function(event) {
+		let text = theValue.value,
+			originalSelectionStart = event.target.selectionStart,
+			textStart = text.slice(0, originalSelectionStart),
+			textEnd = text.slice(originalSelectionStart)
+
+		let trigger = textStart.slice(textStart.length-3)
+
+		if(autofillTriggers.value[trigger]){
+			theValue.value = `${textStart.slice(0,textStart.length-trigger.length)}${autofillTriggers.value[trigger][0]}${autofillTriggers.value[trigger][1]}${textEnd}`
+			event.target.value = theValue.value
+			event.target.selectionEnd = event.target.selectionStart = originalSelectionStart + autofillTriggers.value[trigger][0].length - trigger.length
+		}
+
+	},
+	autofill_latex = function(event){
+
+	},
+	autofill_javascript = function(event) {
+
 	}
 onMounted(() => {
 	if (props.focus) {
