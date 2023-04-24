@@ -10,6 +10,7 @@ code: rational fraction
 		:fundamental="euclidian.fundamental"
 		:asymptote="euclidian.asymptote"
 		:at-bottom="euclidian.atBottom"
+		class="max-w-lg mx-auto"
 	/>
 </template>
 <info>

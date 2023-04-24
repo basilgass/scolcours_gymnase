@@ -116,7 +116,7 @@ import {useWrongAnswerAnimation} from "@/Composables/useHelpers"
 import KeyboardElement from "@/Components/Keyboards/KeyboardElement.vue"
 import KeyboardValidateButton from "@/Components/Keyboards/KeyboardValidateButton.vue"
 import {useCheckers} from "@/Composables/useCheckers"
-import {makeStudyFromCode} from "@/helpers/useTos"
+import {makeStudyFromCode} from "@/Composables/useTos"
 
 let props = defineProps({
 	options: {type: String},

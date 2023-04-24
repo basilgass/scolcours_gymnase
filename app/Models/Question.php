@@ -50,40 +50,55 @@ class Question extends Model
 	protected $guarded = [];
 	protected $with = ['users', 'blocks'];
 
-	public function post()
+	public function questionable(): \Illuminate\Database\Eloquent\Relations\MorphTo
 	{
-		return $this->belongsTo(Post::class);
+		return $this->morphTo();
 	}
 
-	public function blocks()
+//	public function post(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+//	{
+//		return $this->belongsTo(Post::class);
+//	}
+
+	public function blocks(): \Illuminate\Database\Eloquent\Relations\MorphMany
 	{
 		return $this->morphMany(Block::class, 'blockable')->orderBy('order')->orderBy('id');
 	}
 
-	public function users()
+	public function users(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
 	{
 		return $this->belongsToMany(User::class)
 			->withTimestamps()
 			->withPivot('result', 'answer', 'attempts');
 	}
 
+	public function answersFrom(mixed $ids)
+	{
+		return $this->users()
+			->whereIn('question_user.user_id', $ids)
+			->get();
+	}
+	public function answersFromUser(User $user)
+	{
+		return $this->users()
+			->where('question_user.user_id', '=', $user->id)
+			->get()
+			->map(function ($item) {
+				return [
+					'answer' => $item->pivot->answer,
+					'result' => $item->pivot->result,
+					'attempts' => $item->pivot->attempts,
+					'created_at' => Carbon::parse($item->pivot->created_at)->diffForHumans(),
+				];
+			});
+	}
 	public function userAnswers()
 	{
 		if (Auth::user()) {
-			return $this->users()
-				->where('question_user.user_id', '=', Auth::user()->id)
-				->get()
-				->map(function ($item) {
-					return [
-						'answer' => $item->pivot->answer,
-						'result' => $item->pivot->result,
-						'attempts' => $item->pivot->attempts,
-						'created_at' => Carbon::parse($item->pivot->created_at)->diffForHumans(),
-					];
-				});
-		} else {
-			return collect([]);
+			return $this->answersFromUser(Auth::user());
 		}
+
+		return collect([]);
 	}
 
 	public function clean()
@@ -106,49 +121,4 @@ class Question extends Model
 
 		return count($answers);
 	}
-//	public function answersByUser($user)
-//	{
-//		$values = collect([]);
-//
-//		if ($user) {
-//			$values = collect($this->users()
-//				->where('user_id', $user->id)->get()
-//				->map(function ($answer) {
-//					return [
-//						'id' => $answer->pivot->question_id,
-//						'answer' => $answer->pivot->answer,
-//						'result' => $answer->pivot->result,
-//					];
-//				}));
-//
-//		}
-//		return Attribute::make(
-//			get: fn () => $values
-//		);
-//	}
-
-//	public function answeredByUser($user)
-//	{
-//		$values = collect([]);
-//
-//		if ($user) {
-//			$values = $this->users()
-//				->where('user_id', $user->id)->get();
-//		}
-//
-//		return Attribute::make(
-//			get: fn () => $values
-//		);
-//	}
-//
-//
-//	public function answers(): Attribute
-//	{
-//		return $this->answersByUser(Auth::user());
-//	}
-//	public function answered(): Attribute
-//	{
-//		return $this->answeredByUser(Auth::user());
-//
-//	}
 }

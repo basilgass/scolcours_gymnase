@@ -34,9 +34,17 @@
 				<div v-katex="`C=${result.triangle.C.tex}`" />
 			</div>
 			<h2 class="font-lg">
-				médianes
+				droites
 			</h2>
 			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
+				<div v-katex="`(d_{AB}): ${result.triangle.lines.AB.tex.canonical}`" />
+				<div v-katex="`(d_{AC}): ${result.triangle.lines.AC.tex.canonical}`" />
+				<div v-katex="`(d_{BC}): ${result.triangle.lines.BC.tex.canonical}`" />
+			</div>
+			<h2 class="font-lg">
+				médianes
+			</h2>
+			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 items-baseline">
 				<div v-katex="`(m_A): ${result.triangle.remarquables.medians.A.tex.canonical}`" />
 				<div v-katex="`(m_B): ${result.triangle.remarquables.medians.B.tex.canonical}`" />
 				<div v-katex="`(m_C): ${result.triangle.remarquables.medians.C.tex.canonical}`" />
@@ -45,25 +53,25 @@
 			<h2 class="font-lg">
 				médiatrices
 			</h2>
-			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
-				<div v-katex="`(m_AB): ${result.triangle.remarquables.mediators.AB.tex.canonical}`" />
-				<div v-katex="`(m_AC): ${result.triangle.remarquables.mediators.AC.tex.canonical}`" />
-				<div v-katex="`(m_BC): ${result.triangle.remarquables.mediators.BC.tex.canonical}`" />
+			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 items-baseline">
+				<div v-katex="`(m_{AB}): ${result.triangle.remarquables.mediators.AB.tex.canonical}`" />
+				<div v-katex="`(m_{AC}): ${result.triangle.remarquables.mediators.AC.tex.canonical}`" />
+				<div v-katex="`(m_{BC}): ${result.triangle.remarquables.mediators.BC.tex.canonical}`" />
 				<div v-katex="`P=${result.triangle.remarquables.mediators.intersection.tex}`" />
 			</div>
 			<h2 class="font-lg">
 				hauteurs
 			</h2>
-			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
-				<div v-katex="`(b_A): ${result.triangle.remarquables.heights.A.tex.canonical}`" />
-				<div v-katex="`(b_B): ${result.triangle.remarquables.heights.B.tex.canonical}`" />
-				<div v-katex="`(b_C): ${result.triangle.remarquables.heights.C.tex.canonical}`" />
+			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 items-baseline">
+				<div v-katex="`(h_A): ${result.triangle.remarquables.heights.A.tex.canonical}`" />
+				<div v-katex="`(h_B): ${result.triangle.remarquables.heights.B.tex.canonical}`" />
+				<div v-katex="`(h_C): ${result.triangle.remarquables.heights.C.tex.canonical}`" />
 				<div v-katex="`D=${result.triangle.remarquables.heights.intersection.tex}`" />
 			</div>
 			<h2 class="font-lg">
 				bissectrices
 			</h2>
-			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
+			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 items-baseline">
 				<div v-katex="`(b_A): ${result.triangle.remarquables.bisectors.A.tex.canonical}`" />
 				<div v-katex="`(b_B): ${result.triangle.remarquables.bisectors.B.tex.canonical}`" />
 				<div v-katex="`(b_C): ${result.triangle.remarquables.bisectors.C.tex.canonical}`" />
@@ -96,17 +104,18 @@ let A = ref("15x-8y+16=0"),
 	C = ref("5x+12y-24=0")
 
 let result = computed(() => {
-
-
-
 	try {
-		let triangle = new PiMath.Geometry.Triangle(A.value,B.value,C.value)
+		let triangle = new PiMath.Geometry.Triangle(
+			...A.value.split(","),
+			...B.value.split(","),
+			...C.value.split(",")
+		)
 		console.log(triangle)
 		return {
 			triangle: triangle
 		}
 	} catch (e) {
-		console.error(e)
+		// console.error(e)
 		return false
 	}
 })

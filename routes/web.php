@@ -33,6 +33,10 @@ require __DIR__ . '/challengesRoutes.php';
 require __DIR__ . '/teamsRoutes.php';
 require __DIR__ . '/devRoutes.php';
 require __DIR__ . '/toolsRoutes.php';
-require __DIR__ . '/chaptersRoutes.php';
+require __DIR__ . '/quizzsRoutes.php';
+
 require __DIR__ . '/gamesRoutes.php';
 require __DIR__ . '/latexRoutes.php';
+
+// Must be the last one !
+require __DIR__ . '/chaptersRoutes.php';

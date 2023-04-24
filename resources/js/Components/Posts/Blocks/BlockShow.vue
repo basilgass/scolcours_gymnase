@@ -81,7 +81,7 @@ Affichage d'un block , avec toutes les possibilités
 						:class="{
 							'md:grid-cols-2 xl:grid-cols-3': theBlock.illustrations.length>=2,
 							'xl:grid-cols-2': theBlock.illustrations.length===2,
-							'max-w-lg mx-auto': theBlock.illustrations.length===1
+							'w-full': theBlock.illustrations.length===1
 						}"
 						class="grid grid-cols-1 gap-3 my-5"
 						handle=".draggable-handle"

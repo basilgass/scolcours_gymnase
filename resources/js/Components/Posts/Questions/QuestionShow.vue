@@ -7,13 +7,13 @@ keyboard -> QuestionUserInput -> QuestionShow
 	<div
 		:id="`question-${theQuestion.id}`"
 		:class="{
-			'bg-gray-50 border-gray-200': !theQuestion.user.correct,
-			'bg-green-50 border-green-600/60': theQuestion.user.correct,
+			'relative rounded border h-full': !props.minimal,
+			'bg-gray-50 border-gray-200': !theQuestion.user.correct && !props.minimal,
+			'bg-green-50 border-green-600/60': theQuestion.user.correct && !props.minimal,
 		}"
-		class="relative rounded border h-full"
 	>
 		<div
-			v-if="theQuestion.order"
+			v-if="theQuestion.order && !props.minimal"
 			class="absolute -left-2 -top-2 rounded-full bg-white border w-8 h-8 text-xs flex justify-center items-center draggable-handle"
 			:class="{'draggable-handle cursor-move':$page.props.auth.can.admin}"
 		>
@@ -49,6 +49,12 @@ keyboard -> QuestionUserInput -> QuestionShow
 		</div>
 
 		<div class="flex flex-col justify-between">
+			<!-- the title of question -->
+			<div
+				v-if="props.showTitle"
+				v-katex.auto="theQuestion.block.title"
+				class="px-5 py-3 font-semibold text-lg"
+			/>
 			<!-- the body of question -->
 			<div class="px-5 py-3 overflow-x-auto">
 				<illustration-show
@@ -158,12 +164,14 @@ import QuestionUserInput from "@/Components/Posts/Questions/QuestionUserInput.vu
 
 let emits = defineEmits(["destroy", "validate", "duplicate"])
 
-let editMode = inject("editMode")
+let editMode = inject("editMode", false)
 
 let props = defineProps({
 		question: {type: Object, required: true},
+		showTitle: {type: Boolean, default: false},
 		displayInput: {type: Boolean, default :false},
 		dynamic: {type: Boolean, default: false},
+		minimal: {type: Boolean, default: false},
 	}),
 	keyboardUI = ref(null),
 	theQuestion = ref(props.question),

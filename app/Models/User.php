@@ -109,6 +109,12 @@ class User extends Authenticatable
 			->withTimestamps()
 			->withPivot('result', 'answer', 'attempts');
 	}
+	
+	public function quizz_sessions()
+	{
+		return $this->belongsToMany(QuizzSession::class)
+			->withTimestamps();
+	}
 
 	public function scores()
 	{

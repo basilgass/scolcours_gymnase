@@ -1,2 +1,0 @@
-"use strict";(self.webpackChunk=self.webpackChunk||[]).push([[2180],{2180:(e,t,r)=>{r.r(t),r.d(t,{default:()=>l});var n=r(821);const l={__name:"IllustrationStepper",props:{illustration:{type:Object,required:!0}},setup:function(e){var t=e;(0,n.ref)(t.illustration.parameters),(0,n.ref)(t.illustration.code);return function(e,t){return(0,n.openBlock)(),(0,n.createElementBlock)("div",null," STEPPER COMPONENT ")}}}}}]);
-//# sourceMappingURL=2180.0ced82c3ceb7e656.js.map

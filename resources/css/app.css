@@ -15,6 +15,7 @@
 	body{
 		@apply font-light tracking-wide bg-gray-100;
 	}
+/*overflow-x-hidden*/
 
 	.font-code{
 		font-family: 'ui-monospace', 'Source Code Pro', monospace;
@@ -28,7 +29,6 @@
 @layer components {
 	/* Just adding the color for JIT */
 	.bg-scolcours-main {background-color: chocolate}
-
 	.bg-scolcours-algebre {@apply bg-blue-500}
 	.bg-scolcours-analyse {@apply bg-amber-500}
 	.bg-scolcours-geometrie {@apply bg-purple-500}
@@ -57,11 +57,20 @@
 	.active-scolcours-jeux {@apply px-5 py-4 hover:bg-orange-50 border-t border-b hover:border-orange-500 hover:text-orange-500 transition-colors duration-300}
 	.active-scolcours-tools {@apply px-5 py-4 hover:bg-pink-50 border-t border-b hover:border-pink-500 hover:text-pink-500 transition-colors duration-300}
 
+	.scrollbar-scolcours {@apply scrollbar scrollbar-w-1 scrollbar-h-1 scrollbar-thumb-rounded-full}
+	.scrollbar-scolcours-katex {@apply scrollbar-scolcours scrollbar-thumb-amber-700/50}
+	.scrollbar-scolcours-algebre {@apply scrollbar-scolcours scrollbar-thumb-blue-500  scrollbar-track-blue-50 }
+	.scrollbar-scolcours-analyse {@apply scrollbar-scolcours scrollbar-thumb-pink-500 scrollbar-track-pink-50 }
+	.scrollbar-scolcours-geometrie {@apply scrollbar-scolcours scrollbar-thumb-pink-500 scrollbar-track-pink-50 }
+	.scrollbar-scolcours-statistiques {@apply scrollbar-scolcours scrollbar-thumb-pink-500 scrollbar-track-pink-50 }
+	.scrollbar-scolcours-jeux {@apply scrollbar-scolcours scrollbar-thumb-pink-500 scrollbar-track-pink-50 }
+	.scrollbar-scolcours-tools {@apply scrollbar-scolcours scrollbar-thumb-pink-400 scrollbar-track-pink-50 }
+
 	.md-danger {@apply bg-red-300}
 	.md-success {@apply bg-green-300}
 
 	.katex-boxed .katex-display {
-		@apply bg-amber-700/5 px-5 py-4 my-2 rounded overflow-x-auto;
+		@apply bg-amber-700/5 px-5 py-4 my-2 rounded overflow-x-auto scrollbar-scolcours-katex;
 	}
 
 	.katex-boxed.katex-boxed-lg .katex-display {

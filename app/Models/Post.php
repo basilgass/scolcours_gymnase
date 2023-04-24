@@ -67,7 +67,7 @@ class Post extends Model
 
 	public function questions()
 	{
-		return $this->hasMany(Question::class)->orderBy('order')->orderBy('id');
+		return $this->morphMany(Question::class, 'questionable')->orderBy('order')->orderBy('id');
 	}
 
 	public function scores()

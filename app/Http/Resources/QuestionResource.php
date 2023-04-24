@@ -56,6 +56,7 @@ class QuestionResource extends JsonResource
 			"body" => $this->body,
 			"block" => [
 				'id'=>$this->blocks[0]->id,
+				'title'=>$this->blocks[0]->title,
 				'body'=>$this->blocks[0]->body,
 				'illustration'=>$this->blocks[0]->illustrations[0]??null
 			],

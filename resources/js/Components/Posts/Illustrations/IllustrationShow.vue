@@ -29,6 +29,7 @@ Affichage des illustrations
 		<pi-draw-parser
 			v-if="theIllustration.type==='draw'"
 			:draw="blockIllustration"
+			class="max-w-lg mx-auto"
 		/>
 		<div
 			v-if="theIllustration.type==='component'"

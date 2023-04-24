@@ -1,13 +1,17 @@
 import katex from "katex/dist/katex.mjs"
 import AsciiMathParser from "./asciimath2tex"
-import {usePage} from "@inertiajs/inertia-vue3"
-import {useKatexMacros} from "@/Composables/useHelpers"
-import {numberCorrection} from "pidraw/esm/Calculus"
+import { usePage } from "@inertiajs/inertia-vue3"
+import { useKatexMacros } from "@/Composables/useHelpers"
+import { numberCorrection } from "pidraw/esm/Calculus"
 
 function katexUpdate(el, binding, vnode) {
 	el.innerHTML = ""
 
-	if (binding.value=== null || binding.value === undefined || binding.value.length === 0) {
+	if (
+		binding.value === null ||
+		binding.value === undefined ||
+		binding.value.length === 0
+	) {
 		return
 	}
 
@@ -28,18 +32,20 @@ function katexUpdate(el, binding, vnode) {
 	if (binding.modifiers.nomargin) {
 		el.classList.add("katex-m-0")
 	}
-	if(binding.modifiers.dense){
+	if (binding.modifiers.dense) {
 		el.classList.add("katex-m-1")
 	}
 
 	// Create the text to display.
 	let rawTex = binding.value
 
-	if(!isNaN(rawTex)) {
+	if (!isNaN(rawTex)) {
 		for (let key in binding.modifiers) {
 			if (key.startsWith("number")) {
 				let [b, digits] = key.split(":")
-				if(digits===undefined){digits = 2}
+				if (digits === undefined) {
+					digits = 2
+				}
 				rawTex = numberCorrection(rawTex, digits).toString()
 			}
 		}
@@ -47,11 +53,13 @@ function katexUpdate(el, binding, vnode) {
 	}
 
 	rawTex = rawTex.replaceAll(/\$[a-z]/g, "\\textcolor{red}{A}")
-	if(binding.modifiers.auto){
+	if (binding.modifiers.auto) {
 		el.innerHTML = rawTex
 		katexAutoRender(el)
-	}else {
-		let tex = binding.modifiers.ascii ? new AsciiMathParser().parse(rawTex) : rawTex
+	} else {
+		let tex = binding.modifiers.ascii
+			? new AsciiMathParser().parse(rawTex)
+			: rawTex
 		let displayMode = !binding.modifiers.inline && el.tagName !== "SPAN"
 
 		if (tex !== undefined && tex.length > 0) {
@@ -60,8 +68,9 @@ function katexUpdate(el, binding, vnode) {
 				{
 					throwOnError: false,
 					displayMode: displayMode,
-					macros: useKatexMacros
-				})
+					macros: useKatexMacros,
+				}
+			)
 		}
 	}
 }

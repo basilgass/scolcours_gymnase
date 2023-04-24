@@ -9,6 +9,7 @@ code: rational fraction
 		:fn="study.name"
 		:minimal="minimal"
 		:extremes="extremes"
+		class="max-w-lg mx-auto"
 	/>
 </template>
 
@@ -16,7 +17,7 @@ code: rational fraction
 import {computed, ref} from "vue"
 import {PiMath} from "pimath/esm"
 import PiTableOfSigns from "@/Components/Pi/PiTableOfSigns.vue"
-import {makeStudyFromCode} from "@/helpers/useTos"
+import {makeStudyFromCode} from "@/Composables/useTos"
 
 let props = defineProps({
 		illustration: {type: Object, required: true}

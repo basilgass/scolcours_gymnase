@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Database\Factories\ChapterFactory;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -86,7 +85,7 @@ class Chapter extends Model
 
 	public function questions()
 	{
-		return $this->hasManyThrough(Question::class, Post::class);
+		return $this->morphedByMany(Question::class, Post::class);
 	}
 
 	public function users()

@@ -13,14 +13,22 @@ Affichage de la tablea des matières.
 					table des matières
 				</h3>
 				<button
-					:class="filterPosts==='theory'?`text-scolcours-${$page.props.theme.slug}`:''"
-					@click="filterPosts=filterPosts==='theory'?'':'theory'"
+					:class="
+						postsFilterCurrent === 'theory'
+							? `text-scolcours-${$page.props.theme.slug}`
+							: ''
+					"
+					@click="postsFilter('theory')"
 				>
 					<i class="bi bi-text-paragraph" />
 				</button>
 				<button
-					:class="filterPosts==='exercise'?`text-scolcours-${$page.props.theme.slug}`:''"
-					@click="filterPosts=filterPosts==='exercise'?'':'exercise'"
+					:class="
+						postsFilterCurrent === 'exercise'
+							? `text-scolcours-${$page.props.theme.slug}`
+							: ''
+					"
+					@click="postsFilter('exercise')"
 				>
 					<i class="bi bi-calculator" />
 				</button>
@@ -31,6 +39,7 @@ Affichage de la tablea des matières.
 				class="flex gap-3 items-baseline"
 			>
 				<form-switch
+					v-if="postsFilterCurrent === ''"
 					v-model="moveMode"
 					label="mode déplacement"
 					name="move"
@@ -53,11 +62,11 @@ Affichage de la tablea des matières.
 			item-key="id"
 			v-bind="{
 				animation: 200,
-				disabled: !($page.props.auth.can.admin) && moveMode,
+				disabled: !$page.props.auth.can.admin && moveMode,
 			}"
 			@end="updatePostsOrder"
 		>
-			<template #item="{element}">
+			<template #item="{ element }">
 				<div class="flex gap-3">
 					<button
 						v-if="$page.props.auth.can.admin && moveMode"
@@ -66,14 +75,24 @@ Affichage de la tablea des matières.
 						<i class="bi bi-arrows-move" />
 					</button>
 					<Link
-						:class="props.active===element.order?`font-semibold text-scolcours-${$page.props.theme.slug}`:''"
-						:href="route('theme.chapter.slide', [$page.props.theme.slug, props.chapter.slug, element.order])"
+						:class="
+							props.active === element.order
+								? `font-semibold text-scolcours-${$page.props.theme.slug}`
+								: ''
+						"
+						:href="
+							route('theme.chapter.slide', [
+								$page.props.theme.slug,
+								props.chapter.slug,
+								element.order,
+							])
+						"
 						class="block text-left hover:pl-5 transition-all duration"
 					>
 						<i
 							:class="{
-								'bi bi-calculator': element.type==='exercise',
-								'bi bi-text-paragraph': !element.type
+								'bi bi-calculator': element.type === 'exercise',
+								'bi bi-text-paragraph': !element.type,
 							}"
 						/>
 						<span
@@ -87,54 +106,70 @@ Affichage de la tablea des matières.
 	</div>
 </template>
 <script setup>
-
-import {computed, inject, ref} from "vue"
+import { inject, ref } from "vue"
 import FormSwitch from "@/Components/Form/FormSwitch.vue"
-import {Inertia} from "@inertiajs/inertia"
+import { Inertia } from "@inertiajs/inertia"
 
 let props = defineProps({
-	chapter: {type: Object, required: true},
-	scroll: {type: Boolean, default: false},
-	active: {type: Number, default: null}
+	chapter: { type: Object, required: true },
+	scroll: { type: Boolean, default: false },
+	active: { type: Number, default: null },
 })
 
 const flash = inject("flash"),
 	editMode = inject("editMode")
 let filterPosts = ref(""),
-	posts = computed(() => {
-		if (filterPosts.value !== "") {
-			return props.chapter.posts.filter(x => x.type === (filterPosts.value==="theory"?null:filterPosts.value))
-		}
+	posts = ref(props.chapter.posts),
+	postsFilterCurrent = ref(""),
+	postsFilter = function (filter) {
+		postsFilterCurrent.value =
+			postsFilterCurrent.value === filter ? "" : filter
 
-		return props.chapter.posts
-	}),
+		if (postsFilterCurrent.value === "") {
+			posts.value = props.chapter.posts
+		} else {
+			moveMode.value = false
+			posts.value = props.chapter.posts.filter(
+				(x) =>
+					x.type ===
+					(postsFilterCurrent.value === "theory"
+						? null
+						: postsFilterCurrent.value)
+			)
+		}
+	},
 	moveMode = ref(false),
 	updatePostsOrder = function () {
-		axios.post(route("chapters.updatePostsOrder", [props.chapter.id]), {
-			posts: posts.value.map((post, index) => {
-				return {
-					id: post.id,
-					title: post.title,
-					order: index + 1,
-				}
-			}),
-			_method: "PATCH"
-		}).then(res => {
-			// TODO : flash message !
-			flash.add("les posts ont bien été réordré !")
-		}).catch(res => console.log("update ordering order: ", res.response.data.message))
+		axios
+			.post(route("chapters.updatePostsOrder", [props.chapter.id]), {
+				posts: posts.value.map((post, index) => {
+					return {
+						id: post.id,
+						title: post.title,
+						order: index + 1,
+					}
+				}),
+				_method: "PATCH",
+			})
+			.then((res) => {
+				// TODO : flash message !
+				flash.add("les posts ont bien été réordré !")
+			})
+			.catch((res) =>
+				console.log(
+					"update ordering order: ",
+					res.response.data.message
+				)
+			)
 	},
 	addPost = function () {
-		axios.post(
-			route("chapters.posts.store", [props.chapter.slug]),
-			{
+		axios
+			.post(route("chapters.posts.store", [props.chapter.slug]), {
 				title: "nouvel article",
-			}
-		)
-			.then(res => {
+			})
+			.then((res) => {
 				Inertia.visit(res.data.redirect)
 			})
-			.catch(err => console.log(err))
+			.catch((err) => console.log(err))
 	}
-
 </script>
