@@ -9,6 +9,8 @@ class QuizzSession extends Model
 {
 	use HasFactory;
 
+	protected $guarded = [];
+
 	protected $appends = ['status', 'total'];
 
 	public function quizz()

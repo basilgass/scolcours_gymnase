@@ -26,7 +26,8 @@ class QuizzSessionRessource extends JsonResource
 			'current' => $this->index,
 			'status' =>$this->status,
 			'total' =>$this->total,
-			'questions' => QuestionResource::collection($this->quizz->questions)
+			'questions' => QuestionResource::collection($this->quizz->questions),
+			"users" => UserResource::collection($this->users)
 		];
 //        return parent::toArray($request);
 	}

@@ -5,16 +5,29 @@ namespace App\Http\Controllers;
 use App\Http\Resources\QuestionResource;
 use App\Models\Post;
 use App\Models\Question;
+use App\Models\Quizz;
 use Auth;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Str;
 use Inertia\Inertia;
 
 class QuestionController extends Controller
 {
+	public function getQuestionable(String $type, int $id): Post|Quizz
+	{
+		$target = null;
+		if (ucfirst($type)==='Post') {
+			return Post::findOrFail($id);
+		}
+
+		if(ucfirst($type)==='Quizz') {
+			return Quizz::findOrFail($id);
+		}
+
+		abort(404);
+	}
 	public function __construct()
 	{
 		$this->middleware('auth')->except(['index', 'show']);
@@ -25,8 +38,10 @@ class QuestionController extends Controller
 		return QuestionResource::collection($post->questions);
 	}
 
-	public function store(Post $post, Request $request)
+	public function store(String $type, int $id, Request $request)
 	{
+		$target = $this->getQuestionable($type, $id);
+
 		$validate = $request->validate(
 			[
 				'body' => ['string', 'min:2'],
@@ -38,12 +53,12 @@ class QuestionController extends Controller
 		);
 
 		// Create the question new way.
-		$question = $post->questions()->create([
+		$question = $target->questions()->create([
 			'answer' => $validate['answer'] ?? null,
 			'checker' => $validate['checker'] ?? null,
 			'keyboard' => $validate['keyboard'] ?? '',
 			'parameters' => $validate['parameters'] ?? '',
-			'order' => count($post->questions)+1
+			'order' => count($target->questions)+1
 		]);
 
 		$question->blocks()->create([
@@ -60,61 +75,61 @@ class QuestionController extends Controller
 	 * @param Request $request
 	 * @return AnonymousResourceCollection
 	 */
-	public function storeMultiple(Post $post, Request $request)
-	{
-		$validate = $request->validate(
-			[
-				'math' => ['boolean'],
-				'mathAppend' => ['string', 'nullable'],
-				'body' => ['string', 'min:2'],
-				'answer' => ['nullable'],
-				'checker' => ['string', 'nullable'],
-				'keyboard' => ['string', 'nullable'],
-				'parameters' => ['string', 'nullable'],
-			]
-		);
-
-
-		// If there is a return line, means it's multiple.
-		$answers = preg_split('/\r\n|\r|\n/', $validate['answer']);
-		$checkers = preg_split('/\r\n|\r|\n/', $validate['checker']);
-		$bodies = count($answers) > 1 ? preg_split('/\r\n|\r|\n/', $validate['body']) : [];
-
-		$questions = [];
-		foreach ($answers as $key => $answer) {
-			$body = $bodies[$key] ?? $validate['body'];
-			$checker = $checkers[$key] ?? $validate['checker'];
-
-			if ($validate['math']) {
-				$body = '\\[' . $body . (Str::endsWith($body, '=') ? '$a' : '') . '\\]';
-			}
-
-			if ($validate['mathAppend']) {
-				if (Str::endsWith($body, '\\]')) {
-					$body = $body . PHP_EOL . $validate['mathAppend'];
-				} else {
-					$body = $body . PHP_EOL . PHP_EOL . $validate['mathAppend'];
-				}
-			}
-
-			// Create the question new way.
-			$theQuestion = $post->questions()->create([
-				'answer' => $answer ?? null,
-				'checker' => $checker,
-				'keyboard' => $validate['keyboard'] ?? '',
-				'parameters' => $validate['parameters'] ?? '',
-			]);
-
-			$theQuestion->blocks()->create([
-				"title" => '',
-				'body' => $body
-			]);
-
-			$questions[] = $theQuestion;
-		}
-
-		return QuestionResource::collection(collect($questions));
-	}
+//	public function storeMultiple(Post $post, Request $request)
+//	{
+//		$validate = $request->validate(
+//			[
+//				'math' => ['boolean'],
+//				'mathAppend' => ['string', 'nullable'],
+//				'body' => ['string', 'min:2'],
+//				'answer' => ['nullable'],
+//				'checker' => ['string', 'nullable'],
+//				'keyboard' => ['string', 'nullable'],
+//				'parameters' => ['string', 'nullable'],
+//			]
+//		);
+//
+//
+//		// If there is a return line, means it's multiple.
+//		$answers = preg_split('/\r\n|\r|\n/', $validate['answer']);
+//		$checkers = preg_split('/\r\n|\r|\n/', $validate['checker']);
+//		$bodies = count($answers) > 1 ? preg_split('/\r\n|\r|\n/', $validate['body']) : [];
+//
+//		$questions = [];
+//		foreach ($answers as $key => $answer) {
+//			$body = $bodies[$key] ?? $validate['body'];
+//			$checker = $checkers[$key] ?? $validate['checker'];
+//
+//			if ($validate['math']) {
+//				$body = '\\[' . $body . (Str::endsWith($body, '=') ? '$a' : '') . '\\]';
+//			}
+//
+//			if ($validate['mathAppend']) {
+//				if (Str::endsWith($body, '\\]')) {
+//					$body = $body . PHP_EOL . $validate['mathAppend'];
+//				} else {
+//					$body = $body . PHP_EOL . PHP_EOL . $validate['mathAppend'];
+//				}
+//			}
+//
+//			// Create the question new way.
+//			$theQuestion = $post->questions()->create([
+//				'answer' => $answer ?? null,
+//				'checker' => $checker,
+//				'keyboard' => $validate['keyboard'] ?? '',
+//				'parameters' => $validate['parameters'] ?? '',
+//			]);
+//
+//			$theQuestion->blocks()->create([
+//				"title" => '',
+//				'body' => $body
+//			]);
+//
+//			$questions[] = $theQuestion;
+//		}
+//
+//		return QuestionResource::collection(collect($questions));
+//	}
 
 	/**
 	 * Update the specified resource in storage.
@@ -142,6 +157,14 @@ class QuestionController extends Controller
 		return QuestionResource::make($question);
 	}
 
+	public function updateQuestionsOrder(Request $request)
+	{
+		foreach ($request['order'] as $value) {
+			Question::find($value['id'])?->update(['order' => $value['order']]);
+		}
+		return true;
+	}
+
 	/**
 	 * Remove the specified resource from storage.
 	 *
@@ -150,11 +173,17 @@ class QuestionController extends Controller
 	 */
 	public function destroy($id)
 	{
-		$postId = Question::find($id)->post->id;
-		Question::destroy($id);
+		$question = Question::findOrFail($id);
+		$target = $question->questionable;
+
+		// Destroy the question.
+		$question->delete();
+
+		// Refresh the target
+		$target->refresh();
 
 		// Reorder the questions
-		foreach(Post::find($postId)->questions as $idx=>$question){
+		foreach($target->questions as $idx=>$question){
 			$question->update(['order'=>$idx+1]);
 		}
 		return Redirect::back();
@@ -199,14 +228,15 @@ class QuestionController extends Controller
 		return $validate;
 	}
 
-	public function resetAnswers(Post $post)
+	public function resetAnswers(String $type, int $id)
 	{
 		$user = Auth::user();
 		if (!$user) {
 			return false;
 		}
 
-		$user->questions()->detach($post->questions->pluck('id'));
+		$target = $this->getQuestionable($type, $id);
+		$user->questions()->detach($target->questions->pluck('id'));
 		return true;
 	}
 
@@ -215,8 +245,13 @@ class QuestionController extends Controller
 		$newQuestion = $question->replicate();
 		$newQuestion->push();
 		$newQuestion->blocks()->save($question->blocks[0]->duplicate());
+
 		// update the new order (place it at last).
-		$newQuestion->order = count($newQuestion->post->questions);
+		if($newQuestion->post) {
+			$newQuestion->order = count($newQuestion->post->questions);
+		}else if($newQuestion->quizz) {
+			$newQuestion->order = count($newQuestion->quizz->questions);
+		}
 		$newQuestion->save();
 		$newQuestion->refresh();
 

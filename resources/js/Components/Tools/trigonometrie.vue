@@ -68,9 +68,7 @@
 						</tr>
 					</table>
 
-					<pi-draw-parser
-						:draw="triangleDrawCode"
-					/>
+					<pi-draw-parser :draw="triangleDrawCode" />
 				</div>
 
 				<div v-if="result.triangle2">
@@ -90,9 +88,7 @@
 						</tr>
 					</table>
 
-					<pi-draw-parser
-						:draw="triangle2DrawCode"
-					/>
+					<pi-draw-parser :draw="triangle2DrawCode" />
 				</div>
 			</div>
 			<div
@@ -119,16 +115,16 @@
  */
 import Panel from "@/Components/Ui/Panel"
 import FormInput from "@/Components/Form/FormInput"
-import {computed, ref} from "vue"
-import {numberCorrection} from "pidraw/esm/Calculus"
+import { computed, ref } from "vue"
+import { numberCorrection } from "pidraw/esm/Calculus"
 import FormNumber from "@/Components/Form/FormNumber.vue"
 import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"
 
-let A = ref("3"),
-	B = ref("5"),
-	C = ref(""),
-	alpha = ref("25"),
-	beta = ref(""),
+let A = ref("7"),
+	B = ref(""),
+	C = ref("9"),
+	alpha = ref(""),
+	beta = ref("20"),
 	gamma = ref(""),
 	fixed = ref(3),
 	labels = {
@@ -140,7 +136,7 @@ let A = ref("3"),
 		gamma: "\\gamma",
 		area: "\\sigma_{ABC}",
 		radius: "r_{\\text{circ.}}",
-		radiusI: "r_{\\text{insc.}}"
+		radiusI: "r_{\\text{insc.}}",
 	}
 
 let result = computed(() => {
@@ -152,78 +148,87 @@ let result = computed(() => {
 					alpha: alpha.value !== "" ? +alpha.value : null,
 					beta: beta.value !== "" ? +beta.value : null,
 					gamma: gamma.value !== "" ? +gamma.value : null,
-					resolvable: null
+					resolvable: null,
 				}),
 				triangle2
 
 			if (triangle.hasAlternate) {
-				triangle2 = makeTriangle({
-					a: A.value !== "" ? +A.value : null,
-					b: B.value !== "" ? +B.value : null,
-					c: C.value !== "" ? +C.value : null,
-					alpha: alpha.value !== "" ? +alpha.value : null,
-					beta: beta.value !== "" ? +beta.value : null,
-					gamma: gamma.value !== "" ? +gamma.value : null,
-					resolvable: null
-				}, true)
+				triangle2 = makeTriangle(
+					{
+						a: A.value !== "" ? +A.value : null,
+						b: B.value !== "" ? +B.value : null,
+						c: C.value !== "" ? +C.value : null,
+						alpha: alpha.value !== "" ? +alpha.value : null,
+						beta: beta.value !== "" ? +beta.value : null,
+						gamma: gamma.value !== "" ? +gamma.value : null,
+						resolvable: null,
+					},
+					true
+				)
 			}
-
 
 			if (triangle.resolvable !== true && triangle2.resolvable !== true) {
 				return {
 					triangle: null,
 					triangle2: null,
-					text: `le triangle n'est pas résolvable. ${triangle.resolvable}`
+					text: `le triangle n'est pas résolvable. ${triangle.resolvable}`,
 				}
 			}
 			return {
 				triangle: formatTriangle(triangle),
-				triangle2: (triangle.hasAlternate && triangle2.resolvable === true) ? formatTriangle(triangle2) : {},
+				triangle2:
+					triangle.hasAlternate && triangle2.resolvable === true
+						? formatTriangle(triangle2)
+						: {},
 				text: null,
 				raw: {
 					triangle,
-					triangle2: (triangle.hasAlternate && triangle2.resolvable === true) ? triangle2: null,
-				}
+					triangle2:
+						triangle.hasAlternate && triangle2.resolvable === true
+							? triangle2
+							: null,
+				},
 			}
 		} catch (e) {
 			console.error(e)
 			return false
 		}
 	}),
-	triangleDrawCode = computed(()=>{
+	triangleDrawCode = computed(() => {
 		return drawTriangle(result.value.raw.triangle)
 	}),
-	triangle2DrawCode = computed(()=>{
+	triangle2DrawCode = computed(() => {
 		return drawTriangle(result.value.raw.triangle2)
-
 	})
 
 function drawTriangle(value) {
-	if(value===null){return {
-		code: "",
-		parameters: ""
-	}}
+	if (value === null) {
+		return {
+			code: "",
+			parameters: "",
+		}
+	}
 
-	const Cx = value.b * Math.cos(value.alpha * Math.PI / 180),
-		Cy = value.b * Math.sin(value.alpha * Math.PI / 180),
-		xMin = Math.round(Math.min(Cx, 0))-1,
-		xMax = Math.round(Math.max(value.c, Cx))+1,
+	const Cx = value.b * Math.cos((value.alpha * Math.PI) / 180),
+		Cy = value.b * Math.sin((value.alpha * Math.PI) / 180),
+		xMin = Math.round(Math.min(Cx, 0)) - 1,
+		xMax = Math.round(Math.max(value.c, Cx)) + 1,
 		yMin = -1,
-		yMax = Math.round(Cy)+1,
-		scale = 10/Math.max(xMax-xMin, yMax-yMin)
+		yMax = Math.round(Cy) + 1,
+		scale = 10 / Math.max(xMax - xMin, yMax - yMin)
 
 	return {
-		parameters: `x=-1:${xMax*scale},y=-1:${Math.round(yMax*scale)}`,
+		parameters: `x=-1:${xMax * scale},y=-1:${Math.round(yMax * scale)}`,
 		code: `A(0,0)->$/bl
-			B(${value.c*scale},0)->$/br
-			C(${Cx*scale},${Cy*scale})->$/tc
+			B(${value.c * scale},0)->$/br
+			C(${Cx * scale},${Cy * scale})->$/tc
 			d1=[AB]
 			d2=[AC]
 			d3=[BC]
 			a1=arc B,A,C,0.5->$\\alpha
 			a2=arc C,B,A,0.5->$\\beta
 			a3=arc A,C,B,0.5->$\\gamma
-			`
+			`,
 	}
 }
 
@@ -234,17 +239,26 @@ function formatTriangle(value) {
 			a: (+value.a.toFixed(fixed.value)).toString(),
 			b: (+value.b.toFixed(fixed.value)).toString(),
 			c: (+value.c.toFixed(fixed.value)).toString(),
-			alpha: (+value.alpha.toFixed(fixed.value)) + "°",
-			beta: (+value.beta.toFixed(fixed.value)) + "°",
-			gamma: (+value.gamma.toFixed(fixed.value)) + "°",
+			alpha: +value.alpha.toFixed(fixed.value) + "°",
+			beta: +value.beta.toFixed(fixed.value) + "°",
+			gamma: +value.gamma.toFixed(fixed.value) + "°",
 			area: numberCorrection(area, null, null, fixed.value),
-			radius: numberCorrection(value.a / Math.sin(value.alpha * Math.PI / 180) / 2, null, null, fixed.value),
-			radiusI: numberCorrection(2 * area / (value.a + value.b + value.c), null, null, fixed.value),
+			radius: numberCorrection(
+				value.a / Math.sin((value.alpha * Math.PI) / 180) / 2,
+				null,
+				null,
+				fixed.value
+			),
+			radiusI: numberCorrection(
+				(2 * area) / (value.a + value.b + value.c),
+				null,
+				null,
+				fixed.value
+			),
 		}
 	} else {
 		return null
 	}
-
 }
 
 function thmTriangleSum(alpha, beta) {
@@ -257,34 +271,47 @@ function thmTriangleSum(alpha, beta) {
 }
 
 function thmCosinus(b, c, alpha) {
-	return Math.sqrt(b ** 2 + c ** 2 - 2 * b * c * Math.cos(alpha * Math.PI / 180))
+	return Math.sqrt(
+		b ** 2 + c ** 2 - 2 * b * c * Math.cos((alpha * Math.PI) / 180)
+	)
 }
 
 function thmCosinusAngle(a, b, c) {
-	return Math.acos((b ** 2 + c ** 2 - a ** 2) / (2 * b * c)) * 180 / Math.PI
+	return (
+		(Math.acos((b ** 2 + c ** 2 - a ** 2) / (2 * b * c)) * 180) / Math.PI
+	)
 }
 
 function thmSinus(alpha, b, beta) {
-	return b * Math.sin(alpha * Math.PI / 180) / Math.sin(beta * Math.PI / 180)
+	return (
+		(b * Math.sin((alpha * Math.PI) / 180)) /
+		Math.sin((beta * Math.PI) / 180)
+	)
 }
 
 function thmSinusAngle(a, b, beta, alternate) {
-	const alpha = Math.asin(a * Math.sin(beta * Math.PI / 180) / b) * 180 / Math.PI
+	const alpha =
+		(Math.asin((a * Math.sin((beta * Math.PI) / 180)) / b) * 180) / Math.PI
 
 	return alternate === true ? 180 - alpha : alpha
 }
 
 function thmArea(a, b, gamma) {
-	return 1 / 2 * a * b * Math.sin(Math.PI / 180 * gamma)
+	return (1 / 2) * a * b * Math.sin((Math.PI / 180) * gamma)
 }
 
 function isNotResvoled(value) {
-	return value.a * value.b * value.c * value.alpha * value.beta * value.gamma === 0
+	return (
+		value.a * value.b * value.c * value.alpha * value.beta * value.gamma ===
+		0
+	)
 }
 
 function isResolvable(value) {
 	// il faut au moins 3 données en tout.
-	const numberOfGivenData = Object.values(value).filter(x => x !== null).length
+	const numberOfGivenData = Object.values(value).filter(
+		(x) => x !== null
+	).length
 	if (numberOfGivenData < 3) {
 		return "Il faut connaître au moins 3 élèments pour résoudre un triangle."
 	}
@@ -384,30 +411,60 @@ function makeTriangle(value, alternate) {
 		// Théorème du sinus pour un angle => 2 solutions !
 		if (!value.alpha && value.a > 0) {
 			if (value.b > 0 && value.beta > 0) {
-				value.alpha = thmSinusAngle(value.a, value.b, value.beta, alternate)
+				value.alpha = thmSinusAngle(
+					value.a,
+					value.b,
+					value.beta,
+					alternate
+				)
 				value.hasAlternate = true
 			} else if (value.c > 0 && value.gamma > 0) {
-				value.alpha = thmSinusAngle(value.a, value.c, value.gamma, alternate)
+				value.alpha = thmSinusAngle(
+					value.a,
+					value.c,
+					value.gamma,
+					alternate
+				)
 				value.hasAlternate = true
 			}
 		}
 
 		if (!value.beta && value.b > 0) {
 			if (value.a > 0 && value.alpha > 0) {
-				value.beta = thmSinusAngle(value.b, value.a, value.alpha, alternate)
+				value.beta = thmSinusAngle(
+					value.b,
+					value.a,
+					value.alpha,
+					alternate
+				)
 				value.hasAlternate = true
 			} else if (value.c > 0 && value.gamma > 0) {
-				value.beta = thmSinusAngle(value.a, value.c, value.gamma, alternate)
+				value.beta = thmSinusAngle(
+					value.a,
+					value.c,
+					value.gamma,
+					alternate
+				)
 				value.hasAlternate = true
 			}
 		}
 
 		if (!value.gamma && value.c > 0) {
 			if (value.a > 0 && value.alpha > 0) {
-				value.gamma = thmSinusAngle(value.c, value.a, value.alpha, alternate)
+				value.gamma = thmSinusAngle(
+					value.c,
+					value.a,
+					value.alpha,
+					alternate
+				)
 				value.hasAlternate = true
 			} else if (value.b > 0 && value.beta > 0) {
-				value.gamma = thmSinusAngle(value.c, value.b, value.beta, alternate)
+				value.gamma = thmSinusAngle(
+					value.c,
+					value.b,
+					value.beta,
+					alternate
+				)
 				value.hasAlternate = true
 			}
 		}

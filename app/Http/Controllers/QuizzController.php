@@ -6,6 +6,7 @@ use App\Http\Resources\QuestionResource;
 use App\Http\Resources\QuizzSessionRessource;
 use App\Models\Quizz;
 use App\Models\QuizzSession;
+use App\Models\Team;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -14,14 +15,40 @@ class QuizzController extends Controller
 
 	public function index()
 	{
-		return Quizz::all();
+		//TODO: est-il utile d'avoir cette page, vu qu'il est prévu que ce soit par invitation. Prémice pour l'utilisation sans utilisateur ?
+		return Inertia::render("Quizzs/QuizzHome",
+			["shortcode" => null]
+		);
 	}
+
+	public function admin()
+	{
+		return Inertia::render('Quizzs/QuizzAdmin',
+			[
+				"quizzs" => Quizz::all()
+			]
+		);
+	}
+
+	public function adminQuizz(Quizz $quizz)
+	{
+		return Inertia::render('Quizzs/QuizzAdminSession',
+			[
+				"quizz" => $quizz,
+				"questions" => QuestionResource::collection($quizz->questions),
+				"sessions" => QuizzSessionRessource::collection($quizz->sessions),
+				"teams" => Team::all()
+			]
+		);
+
+	}
+
 
 	public function show(QuizzSession $quizzSession)
 	{
 		// User must be logged in
-		if(!\Auth::user()){
-			return redirect()->route('home');
+		if (!\Auth::user()) {
+			return redirect()->route('login');
 		}
 
 		// Questions list from the current quizz.
@@ -38,7 +65,7 @@ class QuizzController extends Controller
 		return Inertia::render('Quizzs/QuizzShow',
 			[
 				"quizzSession" => $quizzSession,
-				"question" => $question===null?null:QuestionResource::make($question),
+				"question" => $question === null ? null : QuestionResource::make($question),
 				"total" => count($questions)
 			]
 		);
@@ -48,7 +75,7 @@ class QuizzController extends Controller
 	{
 		return Inertia::render('Quizzs/QuizzDashboard',
 			[
-				"quizzSession"=>QuizzSessionRessource::make($quizzSession),
+				"quizzSession" => QuizzSessionRessource::make($quizzSession),
 			]
 		);
 	}
@@ -60,7 +87,7 @@ class QuizzController extends Controller
 		$question = $quizzSession->question;
 		$answers = [];
 
-		if($question!==null){
+		if ($question !== null) {
 			// On a une question
 			// Recherche de toutes les réponses et filtrer avec les utilisateurs
 			$answers = $question->answersFrom($quizzSession->users->pluck('id'));
@@ -70,28 +97,56 @@ class QuizzController extends Controller
 			[
 				"quizzSession" => QuizzSessionRessource::make($quizzSession),
 				"results" => $answers,
-				"usersCount"=>$quizzSession->users->count(),
+				"usersCount" => $quizzSession->users->count(),
 			]
 		);
 	}
 
 	public function updateCurrent(QuizzSession $quizzSession, Request $request)
 	{
-		$validate = $request->validate(["index"=>["int", "min:0"]]);
+		$validate = $request->validate(["index" => ["int", "min:0"]]);
 
 		$quizzSession->index = $validate["index"];
 		$quizzSession->save();
 
-		return redirect()->route('quizzs.dashboard', [$quizzSession->shortcode]);
+		return redirect()->route('quizzs.sessions.dashboard', [$quizzSession->shortcode]);
 	}
 
 	public function updateEnable(QuizzSession $quizzSession, Request $request)
 	{
-		$validate = $request->validate(["enable"=>["bool"]]);
+		$validate = $request->validate(["enable" => ["bool"]]);
 
 		$quizzSession->enable = $validate["enable"];
 		$quizzSession->save();
 
-		return redirect()->route('quizzs.dashboard', [$quizzSession->shortcode]);
+		return redirect()->route('quizzs.sessions.dashboard', [$quizzSession->shortcode]);
+	}
+
+	public function updateQuestionsOrder(Quizz $quizz, Request $request)
+	{
+		foreach ($request['order'] as $value) {
+			$quizz->questions->find($value['id'])->update(['order' => $value['order']]);
+		}
+
+		return true;
+	}
+
+	public function sessionCreate(Quizz $quizz, Request $request)
+	{
+		$validation = $request->validate([
+			"name"=>['string', 'min:2', 'unique:quizz_sessions,shortcode'],
+			"team"=>['int', 'exists:App\Models\Team,id']
+		]);
+
+		$session = $quizz->sessions()->create([
+			"shortcode"=>$validation['name']
+		]);
+
+		// Get the users from the team
+		$team = Team::find($validation['team']);
+		foreach ($team->users as $user){
+			$session->users()->attach($user);
+		}
+
 	}
 }

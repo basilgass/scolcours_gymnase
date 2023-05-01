@@ -10,5 +10,3 @@ Route::apiResource('chapters.formulas', FormulaController::class)
 	->shallow();
 Route::post('formulas/{formula}/duplicate', [FormulaController::class, 'duplicate'])->name('formulas.duplicate');
 Route::post('formulas/updateOrder', [FormulaController::class, 'updateOrder'])->name('formulas.updateOrder');
-
-

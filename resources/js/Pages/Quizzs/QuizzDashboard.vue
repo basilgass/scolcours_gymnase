@@ -24,7 +24,7 @@
 		</div>
 
 		<table class="w-full mt-10">
-			<tr :class="liveQuizz.current===0?'is-active':''">
+			<tr :class="liveQuizz.current === 0 ? 'is-active' : ''">
 				<td>Introduction</td>
 				<td>
 					<button
@@ -38,24 +38,30 @@
 			<tr
 				v-for="(question, index) in liveQuizz.questions"
 				:key="`q-${question.id}`"
-				:class="liveQuizz.current===index+1?'is-active':''"
+				:class="liveQuizz.current === index + 1 ? 'is-active' : ''"
 			>
-				<td>{{ question.block.title || 'sans titre' }}</td>
+				<td>{{ question.block.title || "sans titre" }}</td>
 				<td>
 					<button
 						class="btn btn-xs"
-						@click="updateCurrent(index+1)"
+						@click="updateCurrent(index + 1)"
 					>
 						set
 					</button>
 				</td>
 			</tr>
-			<tr :class="liveQuizz.current>liveQuizz.questions.length?'is-active':''">
+			<tr
+				:class="
+					liveQuizz.current > liveQuizz.questions.length
+						? 'is-active'
+						: ''
+				"
+			>
 				<td>Récapitulatif</td>
 				<td>
 					<button
 						class="btn btn-xs"
-						@click="updateCurrent(liveQuizz.questions.length+1)"
+						@click="updateCurrent(liveQuizz.questions.length + 1)"
 					>
 						set
 					</button>
@@ -69,38 +75,39 @@
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 
 export default {
-	layout: LayoutMain
+	layout: LayoutMain,
 }
 </script>
 <script setup>
-
-import {computed} from "vue"
+import { computed } from "vue"
 import QuizzQuestion from "@/Components/Quizzs/QuizzQuestion.vue"
 import QuizzIntro from "@/Components/Quizzs/QuizzIntro.vue"
 import QuizzOutro from "@/Components/Quizzs/QuizzOutro.vue"
-import {Inertia} from "@inertiajs/inertia"
+import { Inertia } from "@inertiajs/inertia"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 
 let props = defineProps({
-		quizzSession: {type: Object, required: true},
+		quizzSession: { type: Object, required: true },
 	}),
-	liveQuizz = computed(()=>props.quizzSession.data)
+	liveQuizz = computed(() => props.quizzSession.data)
 
-const updateCurrent = function(index){
+const updateCurrent = function (index) {
 	Inertia.post(
-		route("quizzs.updateCurrent", [liveQuizz.value.shortcode]),{index},
+		route("quizzs.sessions.updateCurrent", [liveQuizz.value.shortcode]),
+		{ index },
 		{
 			preserveState: true,
-			preserveScroll: true
+			preserveScroll: true,
 		}
 	)
 }
-const updateEnable = function(enable){
+const updateEnable = function (enable) {
 	Inertia.post(
-		route("quizzs.updateEnable", [liveQuizz.value.shortcode]),{enable},
+		route("quizzs.sessions.updateEnable", [liveQuizz.value.shortcode]),
+		{ enable },
 		{
 			preserveState: true,
-			preserveScroll: true
+			preserveScroll: true,
 		}
 	)
 }

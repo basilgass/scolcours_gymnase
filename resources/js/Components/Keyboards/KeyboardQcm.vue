@@ -13,7 +13,7 @@
 					'btn-success': element.selected,
 					'bg-white': !element.selected,
 					'w-full': isFullWidth,
-					'flex-1': isFlex
+					'flex-1': isFlex,
 				}"
 				class="btn"
 				@click="changeEvent(element)"
@@ -32,29 +32,27 @@
 </template>
 
 <script setup>
-
-import {useWrongAnswerAnimation} from "@/Composables/useHelpers"
-import {computed, onMounted, ref} from "vue"
+import { useWrongAnswerAnimation } from "@/Composables/useHelpers"
+import { computed, onMounted, ref } from "vue"
 import KeyboardValidateButton from "@/Components/Keyboards/KeyboardValidateButton.vue"
 
 let props = defineProps({
-	options: {type: String},
-	answer: {type: String}
+	options: { type: String },
+	answer: { type: String },
 })
 let emits = defineEmits(["change", "validate"])
 let validateButton = ref(null),
-	resetKeyStrokes = function () {
-	},
+	resetKeyStrokes = function () {},
 	wrongAnswer = function () {
 		useWrongAnswerAnimation(validateButton.value)
 	},
 	changeEvent = function (value) {
-		qcmItems.value.forEach(e => e.selected = false)
+		qcmItems.value.forEach((e) => (e.selected = false))
 		value.selected = !value.selected
 
 		emits("change", {
 			tex: qcmSelections("display"),
-			raw: ""
+			raw: "",
 		})
 	},
 	validateEvent = function (value) {
@@ -65,7 +63,7 @@ let validateButton = ref(null),
 			tex: qcmSelections("display"),
 			raw: "",
 			correct,
-			message: correct ? "" : "ce n'est pas la bonne réponse :("
+			message: correct ? "" : "ce n'est pas la bonne réponse :(",
 		})
 	},
 	getTex = function (value) {
@@ -76,33 +74,37 @@ let validateButton = ref(null),
 		// return props.options.split("\n").map(x => `- ${x}`).join("\n")
 		return value
 	},
-	getAnswer = function(value){
+	getAnswer = function (value) {
+		// TODO: get the display value of the answer (not the "code" value)
 		return {
 			tex: getTex(value),
-			raw: getRaw(value)
+			raw: getRaw(value),
 		}
 	}
-defineExpose({resetKeyStrokes, wrongAnswer, getAnswer})
+defineExpose({ resetKeyStrokes, wrongAnswer, getAnswer })
 
 /* ------------------*/
 let qcmSelections = function (output) {
-		let values = [...qcmItems.value
-			.filter(x => x.selected)
-			.map(x => x[output ? output : "display"])]
+		let values = [
+			...qcmItems.value
+				.filter((x) => x.selected)
+				.map((x) => x[output ? output : "display"]),
+		]
 		values.sort()
 
 		return values.join(",")
 	},
 	qcmItems = ref([]),
-	qcmOptions = computed(()=>{
-		return props.options.split("\n")
-			.filter(x=>x.startsWith("@"))
-			.map(x=>x.substring(1))
+	qcmOptions = computed(() => {
+		return props.options
+			.split("\n")
+			.filter((x) => x.startsWith("@"))
+			.map((x) => x.substring(1))
 	}),
-	isFullWidth = computed(()=>{
+	isFullWidth = computed(() => {
 		return qcmOptions.value.includes("full")
 	}),
-	isFlex = computed(()=>{
+	isFlex = computed(() => {
 		return qcmOptions.value.includes("flex")
 	})
 
@@ -110,11 +112,13 @@ onMounted(() => {
 	//TODO : options pour mettre aléatoire.
 	qcmItems.value = props.options
 		.split("\n")
-		.filter(x => x !== "")
-		.filter(x => !x.startsWith("@"))
-		.map(x => {
+		.filter((x) => x !== "")
+		.filter((x) => !x.startsWith("@"))
+		.map((x) => {
 			let keyDisplay = x.split("|"),
-				key, display, ascii
+				key,
+				display,
+				ascii
 
 			if (keyDisplay.length === 1) {
 				ascii = keyDisplay[0].startsWith("#")
@@ -126,7 +130,7 @@ onMounted(() => {
 				display = ascii ? keyDisplay[1].substring(1) : keyDisplay[1]
 			}
 
-			return {key, display, ascii, selected: false}
+			return { key, display, ascii, selected: false }
 		})
 })
 </script>

@@ -8,7 +8,9 @@ Formulaire d'édition d'une question
 		@cancel="emits('update:modelValue', false)"
 	>
 		<template #header>
-			<div class="bg-white flex justify-between items-baseline border-b border-gray-200 px-5 py-3 mb-5">
+			<div
+				class="bg-white flex justify-between items-baseline border-b border-gray-200 px-5 py-3 mb-5"
+			>
 				<h1>
 					<span class="text-xl md:text-2xl">édition d'une question</span>
 					<span class="text-xs font-code ml-5">(id: {{ theQuestion.id }})</span>
@@ -37,6 +39,12 @@ Formulaire d'édition d'une question
 		</template>
 		<div class="grid grid-cols-1 md:grid-cols-2 gap-3 px-5 pb-5">
 			<form @submit.prevent>
+				<form-input
+					v-model="theQuestion.block.title"
+					name="title"
+					label="title"
+					class="font-code"
+				/>
 				<form-input
 					v-model="theQuestion.css"
 					name="css"
@@ -96,7 +104,7 @@ Formulaire d'édition d'une question
 <script setup>
 import FormTextarea from "@/Components/Form/FormTextarea.vue"
 import FormInput from "@/Components/Form/FormInput.vue"
-import {reactive, ref} from "vue"
+import { reactive, ref } from "vue"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 import QuestionUserInput from "@/Components/Posts/Questions/QuestionUserInput.vue"
 import DialogModal from "@/Components/Ui/DialogModal.vue"
@@ -104,8 +112,8 @@ import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
 
 const emits = defineEmits(["update:modelValue", "change", "destroy"])
 let props = defineProps({
-		question: {type: Object, required: true},
-		modelValue: {type: Boolean, default: false},
+		question: { type: Object, required: true },
+		modelValue: { type: Boolean, default: false },
 	}),
 	show = ref(props.modelValue),
 	theQuestion = reactive(props.question),
@@ -115,45 +123,45 @@ let props = defineProps({
 let saveQuestion = function () {
 		let illustrations = []
 
-		axios.post(route("blocks.update", [theQuestion.block.id]),
-			{
+		axios
+			.post(route("blocks.update", [theQuestion.block.id]), {
 				_method: "PATCH",
+				title: theQuestion.block.title,
 				body: theQuestion.block.body,
-				illustrations
-			}
-		)
-			.then(res => {
-				axios.post(route("questions.update", [theQuestion.id]),
-					{
+				illustrations,
+			})
+			.then((res) => {
+				axios
+					.post(route("questions.update", [theQuestion.id]), {
 						_method: "PATCH",
 						answer: theQuestion.answer,
 						checker: theQuestion.checker,
 						keyboard: theQuestion.keyboard,
 						parameters: theQuestion.parameters,
-						css: theQuestion.css
+						css: theQuestion.css,
 					})
-					.then(res => {
+					.then((res) => {
 						emits("update:modelValue", false)
 						emits("change", res.data.data)
 					})
-					.catch(error=> {
+					.catch((error) => {
 						errorMessage.value = error.response.data.message
 					})
 			})
-			.catch(error=> {
+			.catch((error) => {
 				errorMessage.value = error.response.data.message
 			})
 	},
-	deleteQuestion = function(){
+	deleteQuestion = function () {
 		axios
-			.post(
-				route("questions.destroy", [props.question.id]),
-				{_method: "delete"}
-			)
-			.then((res)=>{
+			.post(route("questions.destroy", [props.question.id]), {
+				_method: "delete",
+			})
+			.then((res) => {
 				emits("update:modelValue", false)
 				emits("destroy", props.question.id)
 			})
-			.catch(err => console.log(err))
+			.catch((err) => console.log(err))
 	},
-	theBody = ref(theQuestion.block.body)</script>
+	theBody = ref(theQuestion.block.body)
+</script>

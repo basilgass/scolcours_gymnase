@@ -5,20 +5,26 @@
 
 	<div class="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 gap-3">
 		<Panel class="min-h-[10em]">
-			<Link href="/admin/pages">
+			<Link :href="route('admin.pages')">
 				Gestion des pages
 			</Link>
 		</Panel>
 
 		<Panel class="min-h-[10em]">
-			<Link href="/admin/users">
+			<Link :href="route('admin.users')">
 				Gestion des utilisateurs
 			</Link>
 		</Panel>
 
 		<Panel class="min-h-[10em]">
-			<Link href="/admin/stats/puissances">
+			<Link :href="route('admin.stats.chapter', ['puissances'])">
 				Statistiques
+			</Link>
+		</Panel>
+
+		<Panel class="min-h-[10em]">
+			<Link :href="route('quizzs.admin')">
+				Quizz
 			</Link>
 		</Panel>
 	</div>
@@ -28,7 +34,7 @@
 import LayoutMain from "@/Layouts/LayoutMain"
 
 export default {
-	layout: LayoutMain
+	layout: LayoutMain,
 }
 </script>
 <script setup>

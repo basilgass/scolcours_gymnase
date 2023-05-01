@@ -19,4 +19,4 @@ Route::patch('posts/{post}/updateQuestionsGrid', [PostController::class, 'update
 
 Route::get('posts/{post}/edit', [PostController::class, 'edit'])->name('posts.edit');
 
-Route::patch('posts/{post}/questions/updateOrder', [PostController::class, 'updateQuestionsOrder'])->name('questions.updateOrder');
+//Route::patch('posts/{post}/questions/updateOrder', [PostController::class, 'updateQuestionsOrder'])->name('questions.updateOrder');

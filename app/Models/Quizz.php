@@ -14,7 +14,7 @@ class Quizz extends Model
 		return $this->morphMany(Question::class, 'questionable')->orderBy('order')->orderBy('id');
 	}
 
-	public function session()
+	public function sessions()
 	{
 		return $this->hasMany(QuizzSession::class);
 	}

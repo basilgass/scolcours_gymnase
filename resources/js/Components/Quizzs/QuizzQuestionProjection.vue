@@ -16,11 +16,11 @@
 			</info-tile>
 
 			<info-tile
-				v-if="nbAnswers===props.usersCount"
+				v-if="nbAnswers === props.usersCount"
 				class="col-span-1 md:col-span-2"
 			>
 				<template #title>
-					Réponse
+					Réponses
 				</template>
 				<div class="flex flex-wrap gap-10">
 					<div
@@ -35,18 +35,24 @@
 </template>
 
 <script setup>
-import {computed} from "vue"
+import { computed } from "vue"
 import InfoTile from "@/Components/Ui/InfoTile.vue"
 
 let props = defineProps({
-		quizzSession: {type: Object, required: true},
-		usersCount: {type: Number, required: true},
-		results: {type: Array, required: true}
+		quizzSession: { type: Object, required: true },
+		usersCount: { type: Number, required: true },
+		results: { type: Array, required: true },
 	}),
-	quizz = computed(()=> props.quizzSession.quizz),
-	nbAnswers = computed(()=>props.results.length),
-	nbCorrect = computed(()=>props.results.filter(x=>x.pivot.result).length),
-	ratioCorrect = computed(()=>(nbCorrect.value/nbAnswers.value*100).toFixed())
+	quizz = computed(() => props.quizzSession.quizz),
+	nbAnswers = computed(() => props.results.length),
+	nbCorrect = computed(
+		() => props.results.filter((x) => x.pivot.result).length
+	),
+	ratioCorrect = computed(() => {
+		return nbAnswers.value > 0
+			? ((nbCorrect.value / nbAnswers.value) * 100).toFixed()
+			: " - - "
+	})
 
 // TODO: add a chart of the results
 </script>
