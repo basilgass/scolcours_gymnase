@@ -1,25 +1,25 @@
-import {NumberChecker} from "@/Composables/Checkers/NumberChecker"
-import {PolynomChecker} from "@/Composables/Checkers/PolynomChecker"
-import {ScientificChecker} from "@/Composables/Checkers/ScientificChecker"
-import {StringChecker} from "@/Composables/Checkers/StringChecker"
-import {TableofsignChecker} from "@/Composables/Checkers/TableofsignChecker"
-import {SolutionChecker} from "@/Composables/Checkers/SolutionChecker"
-import {ExactChecker} from "@/Composables/Checkers/ExactChecker"
-import {StudyChecker} from "@/Composables/Checkers/StudyChecker"
-import {RationalChecker} from "@/Composables/Checkers/RationalChecker"
-import {CoordChecker} from "@/Composables/Checkers/CoordChecker"
-import {VectorChecker} from "@/Composables/Checkers/VectorChecker"
-import {EquationChecker} from "@/Composables/Checkers/EquationChecker"
+import { NumberChecker } from "@/Composables/Checkers/NumberChecker"
+import { PolynomChecker } from "@/Composables/Checkers/PolynomChecker"
+import { ScientificChecker } from "@/Composables/Checkers/ScientificChecker"
+import { StringChecker } from "@/Composables/Checkers/StringChecker"
+import { TableofsignChecker } from "@/Composables/Checkers/TableofsignChecker"
+import { SolutionChecker } from "@/Composables/Checkers/SolutionChecker"
+import { ExactChecker } from "@/Composables/Checkers/ExactChecker"
+import { StudyChecker } from "@/Composables/Checkers/StudyChecker"
+import { RationalChecker } from "@/Composables/Checkers/RationalChecker"
+import { CoordChecker } from "@/Composables/Checkers/CoordChecker"
+import { VectorChecker } from "@/Composables/Checkers/VectorChecker"
+import { EquationChecker } from "@/Composables/Checkers/EquationChecker"
 
 export const checkersList = {
-	"polynom": ["factors", "develop"],
-	"qolynom": ["factors", "develop", "reduced"],
-	"nb":  ["1", "2", "3", "4"],
-	"scn": ["1", "2", "3", "4"],
-	"tos": [],
-	"sol": [],
-	"exact": [],
-	"study": [],
+	polynom: ["factors", "develop"],
+	qolynom: ["factors", "develop", "reduced"],
+	nb: ["1", "2", "3", "4"],
+	scn: ["1", "2", "3", "4"],
+	tos: [],
+	sol: [],
+	exact: [],
+	study: [],
 }
 
 export function useCheckers(checkerData) {
@@ -37,7 +37,8 @@ export function useCheckers(checkerData) {
 	case "equ":
 	case "equation":
 		return EquationChecker(options)
-	case "nb" || "number":
+	case "nb":
+	case "number":
 		return NumberChecker(options)
 	case "scn":
 		return ScientificChecker(options)

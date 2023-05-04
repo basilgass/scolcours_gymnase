@@ -10,6 +10,7 @@ export function NumberChecker(options){
 		},
 		check: (expectedAnswer, answer = []) => {
 			// Le résultat est exactement ce qui est demandé
+			console.log("checking", expectedAnswer)
 			if (answer.toString() === expectedAnswer.toString()) {
 				return {
 					result: true,
