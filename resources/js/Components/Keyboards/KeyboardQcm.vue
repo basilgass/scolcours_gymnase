@@ -23,6 +23,10 @@
 					v-katex.ascii="element.display"
 				/>
 				<span
+					v-else-if="isTex"
+					v-katex="element.display"
+				/>
+				<span
 					v-else
 					v-katex.auto="element.display"
 				/>
@@ -32,8 +36,8 @@
 </template>
 
 <script setup>
-import { useWrongAnswerAnimation } from "@/Composables/useHelpers"
-import { computed, onMounted, ref } from "vue"
+import {useWrongAnswerAnimation} from "@/Composables/useHelpers"
+import {computed, onMounted, ref} from "vue"
 import KeyboardValidateButton from "@/Components/Keyboards/KeyboardValidateButton.vue"
 
 let props = defineProps({
@@ -56,7 +60,7 @@ let validateButton = ref(null),
 		})
 	},
 	validateEvent = function (value) {
-		const correct = qcmSelections("key") === props.answer
+		const correct = props.answer.split("|").includes(qcmSelections("key"))
 
 		emits("validate", {
 			code: qcmSelections("key"),
@@ -106,6 +110,9 @@ let qcmSelections = function (output) {
 	}),
 	isFlex = computed(() => {
 		return qcmOptions.value.includes("flex")
+	}),
+	isTex = computed(()=>{
+		return qcmOptions.value.includes("tex")
 	})
 
 onMounted(() => {
