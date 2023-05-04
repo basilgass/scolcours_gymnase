@@ -9,7 +9,6 @@ use App\Models\Quizz;
 use Auth;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 
@@ -70,73 +69,11 @@ class QuestionController extends Controller
 
 
 	/**
-	 * Store a newly created resource in storage.
-	 *
-	 * @param Request $request
-	 * @return AnonymousResourceCollection
-	 */
-//	public function storeMultiple(Post $post, Request $request)
-//	{
-//		$validate = $request->validate(
-//			[
-//				'math' => ['boolean'],
-//				'mathAppend' => ['string', 'nullable'],
-//				'body' => ['string', 'min:2'],
-//				'answer' => ['nullable'],
-//				'checker' => ['string', 'nullable'],
-//				'keyboard' => ['string', 'nullable'],
-//				'parameters' => ['string', 'nullable'],
-//			]
-//		);
-//
-//
-//		// If there is a return line, means it's multiple.
-//		$answers = preg_split('/\r\n|\r|\n/', $validate['answer']);
-//		$checkers = preg_split('/\r\n|\r|\n/', $validate['checker']);
-//		$bodies = count($answers) > 1 ? preg_split('/\r\n|\r|\n/', $validate['body']) : [];
-//
-//		$questions = [];
-//		foreach ($answers as $key => $answer) {
-//			$body = $bodies[$key] ?? $validate['body'];
-//			$checker = $checkers[$key] ?? $validate['checker'];
-//
-//			if ($validate['math']) {
-//				$body = '\\[' . $body . (Str::endsWith($body, '=') ? '$a' : '') . '\\]';
-//			}
-//
-//			if ($validate['mathAppend']) {
-//				if (Str::endsWith($body, '\\]')) {
-//					$body = $body . PHP_EOL . $validate['mathAppend'];
-//				} else {
-//					$body = $body . PHP_EOL . PHP_EOL . $validate['mathAppend'];
-//				}
-//			}
-//
-//			// Create the question new way.
-//			$theQuestion = $post->questions()->create([
-//				'answer' => $answer ?? null,
-//				'checker' => $checker,
-//				'keyboard' => $validate['keyboard'] ?? '',
-//				'parameters' => $validate['parameters'] ?? '',
-//			]);
-//
-//			$theQuestion->blocks()->create([
-//				"title" => '',
-//				'body' => $body
-//			]);
-//
-//			$questions[] = $theQuestion;
-//		}
-//
-//		return QuestionResource::collection(collect($questions));
-//	}
-
-	/**
 	 * Update the specified resource in storage.
 	 *
 	 * @param Question $question
 	 * @param Request $request
-	 * @return Question
+	 * @return QuestionResource
 	 */
 	public function update(Question $question, Request $request)
 	{
@@ -157,12 +94,15 @@ class QuestionController extends Controller
 		return QuestionResource::make($question);
 	}
 
-	public function updateQuestionsOrder(Request $request)
+	public function updateQuestionsOrder(String $type, int $id, Request $request)
 	{
+		$target = $this->getQuestionable($type, $id);
+
 		foreach ($request['order'] as $value) {
-			Question::find($value['id'])?->update(['order' => $value['order']]);
+			$target->questions()->where('id', $value['id'])->first()?->update(['order' => $value['order']]);
 		}
-		return true;
+
+		return QuestionResource::collection($target->questions()->orderBy('order')->get());
 	}
 
 	/**
@@ -247,10 +187,9 @@ class QuestionController extends Controller
 		$newQuestion->blocks()->save($question->blocks[0]->duplicate());
 
 		// update the new order (place it at last).
-		if($newQuestion->post) {
-			$newQuestion->order = count($newQuestion->post->questions);
-		}else if($newQuestion->quizz) {
-			$newQuestion->order = count($newQuestion->quizz->questions);
+		$target = $newQuestion->questionable;
+		if($target->exists){
+			$newQuestion->order = count($target->questions);
 		}
 		$newQuestion->save();
 		$newQuestion->refresh();

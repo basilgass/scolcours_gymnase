@@ -262,15 +262,15 @@ let addQuestion = function () {
 	},
 	updateQuestionsOrder = function () {
 		axios
-			.post(route("questions.updateOrder"), {
+			.post(route("questions.updateOrder", ["Post", thePost.value.id]), {
 				order: thePost.value.questions.map((x, index) => {
 					return { id: x.id, order: index + 1 }
 				}),
-				_method: "PATCH",
 			})
 			.then((res) => {
 				// TODO : flash message !
 				flash.add("les questions ont bien été mis à jour !")
+				thePost.value.questions = res.data.data
 			})
 			.catch((res) => console.log("update questions order failed", res))
 	},
@@ -314,13 +314,4 @@ let postSwitchLabel = computed(() => {
 		return { pre: "", post: "" }
 	}),
 	postSwitch = ref(false)
-
-// onMounted(() => {
-// 	// Load asynchronously the post
-// 	axios.get(route("posts.show", thePost.value.id))
-// 		.then((res) => {
-// 			thePost.value = res.data.data
-// 			thePost.value.random = 1
-// 		})
-// })
 </script>

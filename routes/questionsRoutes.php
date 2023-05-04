@@ -18,5 +18,5 @@ Route::patch('questions/{type}/{id}/reset', [QuestionController::class, 'resetAn
 Route::get('questions/{question}/edit', [QuestionController::class, 'edit'])
 	->name('questions.edit');
 
-Route::post('questions/updateOrder', [QuestionController::class, 'updateQuestionsOrder'])
+Route::post('questions/{type}/{id}/updateOrder', [QuestionController::class, 'updateQuestionsOrder'])
 	->name('questions.updateOrder');
