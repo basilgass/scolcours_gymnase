@@ -81,7 +81,7 @@
 				</button>
 			</div>
 
-			<KeyboardElement
+			<KeyboardDisplay
 				ref="keyboardUI"
 				keyboard="algebra"
 				key-class="bg-white"
@@ -95,14 +95,14 @@
 </template>
 
 <script setup>
-
+// TODO: permettre l'affichage de la réponse.
 import {nextTick, onMounted, ref} from "vue"
 import {useWrongAnswerAnimation} from "@/Composables/useHelpers"
 import {PiDraw} from "pidraw/esm"
 import katex from "katex"
 import Button from "@/Components/Auth/Button.vue"
 import {PiMath} from "pimath/esm"
-import KeyboardElement from "@/Components/Keyboards/KeyboardElement.vue"
+import KeyboardDisplay from "@/Components/Keyboards/KeyboardDisplay.vue"
 import KeyboardValidateButton from "@/Components/Keyboards/KeyboardValidateButton.vue"
 import {useCheckers} from "@/Composables/useCheckers"
 

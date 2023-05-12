@@ -9,6 +9,13 @@ Route::get("{language}/{game}", [TranslationController::class, "show"])
 	->where('language', 'italiano|english')
 	->where('game', 'memory|guess|list|type')
 	->name('translation.show');
-Route::get('translation', [TranslationController::class, 'import'])->name('translation.import');
-Route::get('translation/{unit}/words', [TranslationController::class, 'fetchWords'])->name('translation.words');
-Route::post('translation/word', [TranslationController::class, 'create'])->name('translation.create');
+Route::get('translation/{unit}/words', [TranslationController::class, 'fetchWords'])
+	->name('translation.words');
+
+
+Route::middleware("can:admin")->group(function () {
+	Route::get('translation', [TranslationController::class, 'import'])
+		->name('translation.import');
+	Route::post('translation/word', [TranslationController::class, 'create'])
+		->name('translation.create');
+});

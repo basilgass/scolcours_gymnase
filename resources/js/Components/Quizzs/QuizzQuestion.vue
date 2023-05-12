@@ -1,5 +1,5 @@
 <template>
-	<article class="mt-10">
+	<article>
 		<question-show
 			class="max-w-xl mx-auto"
 			:question="props.question"

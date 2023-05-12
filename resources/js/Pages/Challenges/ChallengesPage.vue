@@ -352,7 +352,7 @@ watch(questionId, () => {
 })
 
 const storeScore = function (value, level) {
-	if (usePage().props.value.auth) {
+	if (usePage().props.value.auth.user) {
 		// TODO: Add stars system to challenge
 		axios.post(route("scores.challenge", [theChallenge.value.id]), {
 			"score": value,

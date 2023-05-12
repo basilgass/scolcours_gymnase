@@ -41,7 +41,7 @@
 		</div>
 
 		<div class="mt-2">
-			<keyboard-element
+			<keyboard-display
 				v-show="activeInput==='fx'"
 				back
 				keyboard="polynom"
@@ -50,7 +50,7 @@
 				@change="f=$event.input"
 				@next="activeInput='xMin'"
 			/>
-			<keyboard-element
+			<keyboard-display
 				v-show="activeInput==='xMin'"
 				back
 				keyboard="number"
@@ -59,7 +59,7 @@
 				@change="xMin=$event.input"
 				@next="activeInput='xMax'"
 			/>
-			<keyboard-element
+			<keyboard-display
 				v-show="activeInput==='xMax'"
 				back
 				keyboard="number"
@@ -68,7 +68,7 @@
 				@change="xMax=$event.input"
 				@next="activeInput='step'"
 			/>
-			<keyboard-element
+			<keyboard-display
 				v-show="activeInput==='step'"
 				back
 				keyboard="number"
@@ -77,7 +77,7 @@
 				@change="step=$event.input"
 				@next="activeInput='fx'"
 			/>
-			<keyboard-element
+			<keyboard-display
 				v-show="activeInput==='fixed'"
 				back
 				keyboard="number"
@@ -161,9 +161,9 @@ import Panel from "@/Components/Ui/Panel"
 import FormInput from "@/Components/Form/FormInput"
 import {computed, ref} from "vue"
 import {PiMath} from "pimath/esm"
-import KeyboardElement from "@/Components/Keyboards/KeyboardElement.vue"
 import {numberCorrection} from "pidraw/esm/Calculus"
 import {Polynom} from "pimath/esm/maths/algebra/polynom"
+import KeyboardDisplay from "@/Components/Keyboards/KeyboardDisplay.vue"
 
 // TODO: tableau des valeurs doit être restructurer pour fonctionner avec des valeurs trigonométriques.
 

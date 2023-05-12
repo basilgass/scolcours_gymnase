@@ -51,11 +51,14 @@ Formulaire d'édition d'une question
 					label="CSS"
 					class="font-code"
 				/>
-				<form-textarea
+
+				<form-codearea
+					ref="formBody"
 					v-model="theQuestion.block.body"
+					:rows="10"
 					:label="`body (id: ${theQuestion.block.id})`"
 					name="body"
-					:rows="10"
+					language="latex"
 				/>
 
 				<form-input
@@ -104,11 +107,12 @@ Formulaire d'édition d'une question
 <script setup>
 import FormTextarea from "@/Components/Form/FormTextarea.vue"
 import FormInput from "@/Components/Form/FormInput.vue"
-import { reactive, ref } from "vue"
+import {reactive, ref} from "vue"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 import QuestionUserInput from "@/Components/Posts/Questions/QuestionUserInput.vue"
 import DialogModal from "@/Components/Ui/DialogModal.vue"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
+import FormCodearea from "@/Components/Form/FormCodearea.vue"
 
 const emits = defineEmits(["update:modelValue", "change", "destroy"])
 let props = defineProps({

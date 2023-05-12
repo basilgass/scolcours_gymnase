@@ -21,6 +21,28 @@ class QuizzController extends Controller
 		);
 	}
 
+	public function store(Request $request)
+	{
+		return Quizz::create()->id;
+	}
+	public function update(Quizz $quizz, Request $request)
+	{
+		$validation = $request->validate([
+			'title'=>['string', 'min:2'],
+			'body'=>['string', 'min:2']
+		]);
+
+		$quizz->update($validation);
+
+		return true;
+	}
+
+	public function destroy(Quizz $quizz)
+	{
+		$quizz->delete();
+
+		return true;
+	}
 	public function admin()
 	{
 		return Inertia::render('Quizzs/QuizzAdmin',
@@ -32,7 +54,7 @@ class QuizzController extends Controller
 
 	public function adminQuizz(Quizz $quizz)
 	{
-		return Inertia::render('Quizzs/QuizzAdminSession',
+		return Inertia::render('Quizzs/QuizzAdminEdit',
 			[
 				"quizz" => $quizz,
 				"questions" => QuestionResource::collection($quizz->questions),
@@ -147,6 +169,10 @@ class QuizzController extends Controller
 		foreach ($team->users as $user){
 			$session->users()->attach($user);
 		}
+	}
 
+	public function sessionDestroy(QuizzSession $quizzSession)
+	{
+		$quizzSession->delete();
 	}
 }

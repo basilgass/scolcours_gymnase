@@ -124,4 +124,11 @@ class Chapter extends Model
 		);
 	}
 
+	public function reorder()
+	{
+		$this->refresh();
+		foreach($this->posts as $index=>$post){
+			$post->update(["order"=>$index+1]);
+		}
+	}
 }

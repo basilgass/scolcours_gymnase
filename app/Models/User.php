@@ -36,6 +36,8 @@ use Laravel\Sanctum\PersonalAccessToken;
  * @property-read int|null $notifications_count
  * @property-read Collection<int, \App\Models\Question> $questions
  * @property-read int|null $questions_count
+ * @property-read Collection<int, \App\Models\QuizzSession> $quizz_sessions
+ * @property-read int|null $quizz_sessions_count
  * @property-read Collection<int, \App\Models\Score> $scores
  * @property-read int|null $scores_count
  * @property-read \App\Models\Team|null $team

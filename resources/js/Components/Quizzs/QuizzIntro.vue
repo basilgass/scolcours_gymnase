@@ -1,13 +1,13 @@
 <template>
 	<article class="grid place-items-center mt-10">
 		<div class="grid grid-cols-1 gap-4">
-			<h1 class="text-xl">
+			<h1 class="text-xl lg:text-2xl font-semibold">
 				{{ props.quizz.title }}
 			</h1>
 
 			<markdown-it :text="props.quizz.body" />
 
-			<icon-wait class="text-center mt-10" />
+			<icon-wait class="text-center mt-20" />
 		</div>
 	</article>
 </template>

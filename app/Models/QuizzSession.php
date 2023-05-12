@@ -5,6 +5,34 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * App\Models\QuizzSession
+ *
+ * @property int $id
+ * @property int $quizz_id
+ * @property string $shortcode
+ * @property int $enable
+ * @property int $index
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read mixed $question
+ * @property-read string $status
+ * @property-read mixed $total
+ * @property-read \App\Models\Quizz $quizz
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\User> $users
+ * @property-read int|null $users_count
+ * @method static \Illuminate\Database\Eloquent\Builder|QuizzSession newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|QuizzSession newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|QuizzSession query()
+ * @method static \Illuminate\Database\Eloquent\Builder|QuizzSession whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|QuizzSession whereEnable($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|QuizzSession whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|QuizzSession whereIndex($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|QuizzSession whereQuizzId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|QuizzSession whereShortcode($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|QuizzSession whereUpdatedAt($value)
+ * @mixin \Eloquent
+ */
 class QuizzSession extends Model
 {
 	use HasFactory;

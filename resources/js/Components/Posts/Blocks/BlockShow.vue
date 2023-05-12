@@ -122,6 +122,7 @@ Affichage d'un block , avec toutes les possibilités
 				v-model="showEditForm"
 				:block="theBlock"
 				:max-illustration="maxIllustration"
+				:no-delete="props.noDelete"
 				@change="updateBlock"
 				@destroy="emits('destroy', $event)"
 			/>
@@ -132,16 +133,17 @@ Affichage d'un block , avec toutes les possibilités
 <script setup>
 import MarkdownIt from "@/Components/Ui/MarkdownIt"
 import IllustrationShow from "@/Components/Posts/Illustrations/IllustrationShow.vue"
-import { computed, defineAsyncComponent, inject, provide, ref } from "vue"
-import { PiMath } from "pimath/esm"
-import { useFormattedBody } from "@/Composables/useHelpers"
-import { useBlockTypes } from "@/scolcours"
+import {computed, defineAsyncComponent, inject, provide, ref} from "vue"
+import {PiMath} from "pimath/esm"
+import {useFormattedBody} from "@/Composables/useHelpers"
+import {useBlockTypes} from "@/scolcours"
 
 const emits = defineEmits(["destroy"])
 let props = defineProps({
 		block: { type: Object, required: true },
 		switch: { type: Boolean },
 		maxIllustration: { type: Number, default: null },
+		noDelete: {type: Boolean, default: false}
 	}),
 	theBlock = ref(props.block),
 	isBlur = ref(props.block.blur),

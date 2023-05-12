@@ -1,20 +1,48 @@
 <?php
 
 use App\Http\Controllers\ChaptersController;
+use App\Models\Theme;
 
-Route::resource('themes.chapters', ChaptersController::class)
-	->parameters([
-		'themes' => 'theme:slug',
-		'chapters' => 'chapter:slug'
-	])
-	->shallow()
-	->except('show');
+// Store the themes cache.
+//Cache::forget('themes');
+$themesList = Cache::rememberForever('themes', function () {
+	return Theme::all()->pluck('slug')->toArray();
+});
 
-Route::post('chapters/{chapter}/currentPost', [ChaptersController::class, 'updateCurrentPost'])->name('chapters.currentPost');
-Route::patch('chapters/{chapter}/ordering', [ChaptersController::class, 'updatePostsOrder'])->name('chapters.updatePostsOrder');
+// themes.chapters.store, chapters.update, chapters.destroy
+//Route::resource('themes.chapters', ChaptersController::class)
+//	->parameters([
+//		'themes' => 'theme:slug',
+//		'chapters' => 'chapter:slug'
+//	])
+//	->shallow()
+//	->except('show');
+// TODO: remove the slug from all routes, except "public" routes ?
 
 // Themes and chapters main routes
-Route::get('{theme:slug}/', [ChaptersController::class, 'index'])->name('theme');
-Route::get('{theme:slug}/{chapter:slug}', [ChaptersController::class, 'intro'])->name('theme.chapter.intro');
-Route::get('{theme:slug}/{chapter:slug}/complete', [ChaptersController::class, 'page'])->name('theme.chapter');
-Route::get('{theme:slug}/{chapter:slug}/{order}', [ChaptersController::class, 'slide'])->name('theme.chapter.slide');
+// Public routes !
+Route::whereIn('theme', $themesList)->group(function (){
+	// Public routes
+	Route::get('{theme:slug}/', [ChaptersController::class, 'index'])
+		->name('theme');
+	Route::get('{theme:slug}/{chapter:slug}', [ChaptersController::class, 'intro'])
+		->name('theme.chapter.intro');
+	Route::get('{theme:slug}/{chapter:slug}/complete', [ChaptersController::class, 'page'])
+		->name('theme.chapter');
+	Route::get('{theme:slug}/{chapter:slug}/{order}', [ChaptersController::class, 'slide'])
+		->name('theme.chapter.slide');
+
+	//Admin routes
+	Route::middleware("can:admin")->group(function () {
+		Route::post('themes/{theme:slug}/chapters', [ChaptersController::class, 'store'])
+			->name('themes.chapters.store');
+		Route::patch('chapters/{chapter:slug}', [ChaptersController::class, 'update'])
+			->name('chapters.update');
+		Route::delete('chapters/{chapter}', [ChaptersController::class, 'destroy'])
+			->name('chapters.destroy');
+
+		Route::post('chapters/{chapter}/currentPost', [ChaptersController::class, 'updateCurrentPost'])->name('chapters.currentPost');
+		Route::patch('chapters/{chapter}/ordering', [ChaptersController::class, 'updatePostsOrder'])->name('chapters.updatePostsOrder');
+	});
+
+});

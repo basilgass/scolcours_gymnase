@@ -14,7 +14,6 @@ use Illuminate\Support\Carbon;
  * App\Models\Question
  *
  * @property int $id
- * @property int $post_id
  * @property int $order
  * @property string|null $css
  * @property string|null $answer
@@ -23,9 +22,11 @@ use Illuminate\Support\Carbon;
  * @property string|null $parameters
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
+ * @property string $questionable_type
+ * @property int $questionable_id
  * @property-read Collection<int, \App\Models\Block> $blocks
  * @property-read int|null $blocks_count
- * @property-read \App\Models\Post $post
+ * @property-read Model|\Eloquent $questionable
  * @property-read Collection<int, \App\Models\User> $users
  * @property-read int|null $users_count
  * @method static Builder|Question newModelQuery()
@@ -39,7 +40,8 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Question whereKeyboard($value)
  * @method static Builder|Question whereOrder($value)
  * @method static Builder|Question whereParameters($value)
- * @method static Builder|Question wherePostId($value)
+ * @method static Builder|Question whereQuestionableId($value)
+ * @method static Builder|Question whereQuestionableType($value)
  * @method static Builder|Question whereUpdatedAt($value)
  * @mixin Eloquent
  */

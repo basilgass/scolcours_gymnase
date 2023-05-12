@@ -42,7 +42,6 @@ import {PiMath} from "pimath/esm"
 import ChallengeIntro from "@/Components/Challenges/ChallengeIntro.vue"
 import ChallengeHeader from "@/Components/Challenges/ChallengeHeader.vue"
 import ChallengeResults from "@/Components/Challenges/ChallengeResults.vue"
-import QuestionShow from "@/Components/Posts/Questions/QuestionShow.vue"
 import FormInput from "@/Components/Form/FormInput.vue"
 import {usePage} from "@inertiajs/inertia-vue3"
 

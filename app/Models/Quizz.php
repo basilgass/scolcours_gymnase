@@ -5,10 +5,35 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * App\Models\Quizz
+ *
+ * @property int $id
+ * @property string $title
+ * @property string $body
+ * @property string|null $outro
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Question> $questions
+ * @property-read int|null $questions_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\QuizzSession> $sessions
+ * @property-read int|null $sessions_count
+ * @method static \Illuminate\Database\Eloquent\Builder|Quizz newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Quizz newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Quizz query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Quizz whereBody($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Quizz whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Quizz whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Quizz whereOutro($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Quizz whereTitle($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Quizz whereUpdatedAt($value)
+ * @mixin \Eloquent
+ */
 class Quizz extends Model
 {
     use HasFactory;
 
+	protected $guarded=[];
 	public function questions()
 	{
 		return $this->morphMany(Question::class, 'questionable')->orderBy('order')->orderBy('id');

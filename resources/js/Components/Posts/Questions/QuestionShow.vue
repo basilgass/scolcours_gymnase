@@ -12,6 +12,7 @@ keyboard -> QuestionUserInput -> QuestionShow
 			'bg-green-50 border-green-600/60': theQuestion.user.correct && !props.minimal,
 		}"
 	>
+		<!-- Order number of the question -->
 		<div
 			v-if="theQuestion.order && !props.minimal"
 			class="absolute -left-2 -top-2 rounded-full bg-white border w-8 h-8 text-xs flex justify-center items-center draggable-handle"
@@ -20,6 +21,7 @@ keyboard -> QuestionUserInput -> QuestionShow
 			{{ theQuestion.order }}
 		</div>
 
+		<!-- Admin header of the question -->
 		<div
 			v-if="!dynamic"
 			v-show="editMode.enabled.value"
@@ -48,6 +50,7 @@ keyboard -> QuestionUserInput -> QuestionShow
 			</button>
 		</div>
 
+
 		<div class="flex flex-col justify-between">
 			<!-- the title of question -->
 			<div
@@ -55,13 +58,17 @@ keyboard -> QuestionUserInput -> QuestionShow
 				v-katex.auto="theQuestion.block.title"
 				class="px-5 py-3 font-semibold text-lg"
 			/>
+
 			<!-- the body of question -->
 			<div class="px-5 py-3 overflow-x-auto">
+				<!-- Illustration -->
 				<illustration-show
 					v-if="theQuestion.block.illustration"
 					:illustration="theQuestion.block.illustration"
 					class="bg-white"
 				/>
+
+				<!-- dispalyed text -->
 				<markdown-it
 					:text="theQuestionBody"
 				/>
@@ -114,7 +121,7 @@ keyboard -> QuestionUserInput -> QuestionShow
 				<button
 					v-if="!showAnswer"
 					class="text-xs text-gray-400 w-full"
-					@click="showAnswer=true"
+					@click="loadAnswer"
 				>
 					<i
 						class="bi bi-eye mr-2"
@@ -123,7 +130,7 @@ keyboard -> QuestionUserInput -> QuestionShow
 				<div
 					v-else
 					class="cursor-pointer"
-					@click="showAnswer=false"
+					@click="hideAnswer"
 				>
 					<div
 						v-if="displayAnswer.tex"
@@ -141,6 +148,7 @@ keyboard -> QuestionUserInput -> QuestionShow
 			</div>
 		</div>
 
+		<!-- Edit form -->
 		<div
 			v-if="showEditForm"
 			v-admin
@@ -161,6 +169,7 @@ import {computed, defineAsyncComponent, inject, provide, ref} from "vue"
 import IllustrationShow from "@/Components/Posts/Illustrations/IllustrationShow.vue"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 import QuestionUserInput from "@/Components/Posts/Questions/QuestionUserInput.vue"
+import {usePage} from "@inertiajs/inertia-vue3"
 
 let emits = defineEmits(["destroy", "validate", "duplicate"])
 
@@ -178,6 +187,14 @@ let props = defineProps({
 	theQuestionBody = ref(props.question.block.body),
 	showInput = ref(props.displayInput),
 	showAnswer = ref(false),
+	loadAnswer = function(){
+		theQuestionBody.value = keyboardUI.value.makeBodyFromAnswers(theQuestion.value.answer)
+		showAnswer.value = true
+	},
+	hideAnswer = function(){
+		theQuestionBody.value = keyboardUI.value.makeBodyFromAnswers("")
+		showAnswer.value = false
+	},
 	displayAnswer = computed(()=>{
 		return {
 			...keyboardUI.value.getAnswer(theQuestion.value.answer),
@@ -185,6 +202,9 @@ let props = defineProps({
 		}
 	}),
 	onValidate = function (event) {
+		// event: {result: Boolean, answer: string}
+
+		// It's a dynamic question (without id)
 		if (props.question.id === undefined) {
 			emits("validate", {
 				...event,
@@ -192,18 +212,21 @@ let props = defineProps({
 			})
 			return
 		}
+
 		theQuestion.value.user.correct = event.result
 
 		// need answer (string: min1), , result (boolean)
-		// Save the information to the database
-		axios.post(route("questions.validate", [props.question.id]), {
-			...event
-		}).then(res => {
-			emits("validate", {
-				...event,
-				question: theQuestionBody.value
+		// Save the information to the database if the user is logged in
+		if(usePage().props.value.auth.user) {
+			axios.post(route("questions.validate", [props.question.id]), {
+				...event
+			}).then(res => {
+				emits("validate", {
+					...event,
+					question: theQuestionBody.value
+				})
 			})
-		})
+		}
 	}
 
 // Format edition / checker
@@ -212,6 +235,8 @@ provide("checkerFormat", {
 	update: (value)=>{answerFormat.value = value}
 })
 
+
+// Question form, update, duplicate, addIllustration, ...
 let showEditForm = ref(props.question.isNew === true),
 	editForm = computed(() => {
 		return defineAsyncComponent(
@@ -229,7 +254,7 @@ let showEditForm = ref(props.question.isNew === true),
 	},
 	addIllustration = function() {
 		if(theQuestion.value.block.illustration){
-			alert("EDIT")
+			console.log("Il y a déjà une illustration", theQuestion.value.id)
 		}else{
 			// Create a new illustration
 			axios.post(route("blocks.illustrations.store", [props.question.block.id]), {})

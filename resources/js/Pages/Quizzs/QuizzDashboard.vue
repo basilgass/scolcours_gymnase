@@ -1,34 +1,42 @@
 <template>
-	<section>
-		<h2
-			v-katex.auto="liveQuizz.quizz.title"
-			class="font-semibold text-lg"
-		/>
-		<markdown-it :text="liveQuizz.quizz.body" />
+	<section class="py-10">
+		<div class="bg-white rounded border border-slate-200 p-4">
+			<h2
+				v-katex.auto="liveQuizz.quizz.title"
+				class="font-semibold text-lg mb-3"
+			/>
+			<markdown-it :text="liveQuizz.quizz.body" />
+		</div>
 
-		<div class="text-center">
+		<div class="max-w-xl mx-auto h-32 my-20">
 			<button
 				v-if="liveQuizz.enable"
-				class="btn is-active"
+				class="btn is-active w-full h-full"
 				@click="updateEnable(false)"
 			>
 				En cours...
 			</button>
 			<button
 				v-else
-				class="btn"
+				class="btn btn-success w-full h-full"
 				@click="updateEnable(true)"
 			>
 				Démarrer
 			</button>
 		</div>
 
-		<table class="w-full mt-10">
-			<tr :class="liveQuizz.current === 0 ? 'is-active' : ''">
-				<td>Introduction</td>
-				<td>
+		<table class="max-w-xl mx-auto mt-10">
+			<tr
+				class="border-y border-slate-200"
+				:class="liveQuizz.current === 0 ? 'is-active' : ''"
+			>
+				<td class="h-16 px-4 w-full">
+					Introduction
+				</td>
+				<td class="w-64">
 					<button
-						class="btn btn-xs"
+						v-show="liveQuizz.current !== 0"
+						class="btn h-full w-64 bg-white"
 						@click="updateCurrent(0)"
 					>
 						set
@@ -38,12 +46,16 @@
 			<tr
 				v-for="(question, index) in liveQuizz.questions"
 				:key="`q-${question.id}`"
+				class="border-y border-slate-200"
 				:class="liveQuizz.current === index + 1 ? 'is-active' : ''"
 			>
-				<td>{{ question.block.title || "sans titre" }}</td>
-				<td>
+				<td class="h-16 px-4">
+					{{ question.block.title || "sans titre" }}
+				</td>
+				<td class="w-64">
 					<button
-						class="btn btn-xs"
+						v-show="liveQuizz.current !== (index+1)"
+						class="btn h-full w-64 bg-white"
 						@click="updateCurrent(index + 1)"
 					>
 						set
@@ -51,16 +63,20 @@
 				</td>
 			</tr>
 			<tr
+				class="border-y border-slate-200"
 				:class="
 					liveQuizz.current > liveQuizz.questions.length
 						? 'is-active'
 						: ''
 				"
 			>
-				<td>Récapitulatif</td>
-				<td>
+				<td class="h-16 px-4">
+					Récapitulatif
+				</td>
+				<td class="w-64">
 					<button
-						class="btn btn-xs"
+						v-show="liveQuizz.current !== (liveQuizz.questions.length + 1)"
+						class="btn h-full w-64 bg-white"
 						@click="updateCurrent(liveQuizz.questions.length + 1)"
 					>
 						set

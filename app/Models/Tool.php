@@ -8,7 +8,7 @@
 	use Illuminate\Support\Carbon;
 
 	/**
- * App\Models\Tools
+ * App\Models\Tool
  *
  * @property int $id
  * @property string $slug

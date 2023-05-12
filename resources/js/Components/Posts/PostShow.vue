@@ -105,77 +105,23 @@ Principalement la couche utilisée dans ChapterSlide.
 		</div>
 
 		<!-- post questions -->
-		<article>
-			<div
-				v-if="thePost.questions.length"
-				:class="
-					thePost.blocks.length ? 'border-t border-gray-200 mt-5' : ''
-				"
-				class="flex justify-between px-5 py-5"
-			>
-				<h3 class="font-extralight uppercase">
-					questions
-				</h3>
-				<div
-					v-show="editMode.enabled.value"
-					v-admin
-				>
-					<button
-						class="btn btn-xs"
-						@click="resetAnswers"
-					>
-						réinitialiser les réponses
-					</button>
-				</div>
-			</div>
-
-			<draggable
-				v-if="thePost.questions.length"
-				v-model="thePost.questions"
-				class="grid grid-cols-1 md:grid-cols-2 gap-3 px-5"
-				:class="{
-					'lg:grid-cols-3': thePost.questions.length > 2,
-				}"
-				handle=".draggable-handle"
-				item-key="id"
-				v-bind="{
-					animation: 200,
-					disabled: !$page.props.auth.can.admin,
-				}"
-				@end="updateQuestionsOrder"
-			>
-				<template #item="{ element }">
-					<question-show
-						:class="element.css ?? ''"
-						:question="element"
-						@destroy="destroyQuestion"
-						@duplicate="thePost.questions.push($event)"
-					/>
-				</template>
-			</draggable>
-
-			<div
-				v-show="editMode.enabled.value"
-				v-admin
-				class="px-5"
-			>
-				<button
-					class="btn-new mt-10"
-					@click="addQuestion"
-				>
-					ajouter une question
-				</button>
-			</div>
-		</article>
+		<questions-index
+			:class="
+				thePost.blocks.length ? 'border-t border-gray-200 mt-5' : ''
+			"
+			:questions="thePost.questions"
+			container-type="Post"
+			:container-id="thePost.id"
+		/>
 	</section>
 </template>
 
 <script setup>
-import { computed, defineAsyncComponent, inject, provide, ref } from "vue"
-import QuestionShow from "@/Components/Posts/Questions/QuestionShow.vue"
+import {computed, defineAsyncComponent, inject, provide, ref} from "vue"
 import BlockShow from "@/Components/Posts/Blocks/BlockShow.vue"
-import { PiMath } from "pimath/esm"
+import {PiMath} from "pimath/esm"
 import UiSwitch from "@/Components/Ui/UiSwitch.vue"
+import QuestionsIndex from "@/Components/Posts/QuestionsIndex.vue"
 
 let emits = defineEmits(["change", "destroy"])
 let props = defineProps({
@@ -202,13 +148,13 @@ let showEditForm = ref(false),
 	},
 	updateBlocksOrder = function () {
 		axios
-			.post(route("posts.updateBlocksOrder"), {
+			.post(route("posts.updateBlocksOrder", [thePost.value.id]), {
 				order: thePost.value.blocks.map((x, index) => {
 					return { id: x.id, order: index }
 				}),
+				_method: "PATCH"
 			})
 			.then((res) => {
-				// TODO : flash message !
 				flash.add("les blocs ont bien été mis à jour !")
 			})
 			.catch((res) =>
@@ -237,52 +183,6 @@ let addBlock = function () {
 		thePost.value.blocks = thePost.value.blocks.filter(
 			(x) => x.id !== destroyId
 		)
-	}
-
-let addQuestion = function () {
-		axios
-			.post(route("questions.storeTo", ["Post", thePost.value.id]), {
-				math: false,
-				mathAppend: "",
-				body: "nouvelle question",
-				answer: "-",
-			})
-			.then((res) => {
-				// Add the question.
-				thePost.value.questions.push({
-					...res.data.data,
-					isNew: true,
-				})
-			})
-	},
-	destroyQuestion = function (destroyId) {
-		thePost.value.questions = thePost.value.questions.filter(
-			(x) => x.id !== destroyId
-		)
-	},
-	updateQuestionsOrder = function () {
-		axios
-			.post(route("questions.updateOrder", ["Post", thePost.value.id]), {
-				order: thePost.value.questions.map((x, index) => {
-					return { id: x.id, order: index + 1 }
-				}),
-			})
-			.then((res) => {
-				// TODO : flash message !
-				flash.add("les questions ont bien été mis à jour !")
-				thePost.value.questions = res.data.data
-			})
-			.catch((res) => console.log("update questions order failed", res))
-	},
-	resetAnswers = function () {
-		axios
-			.patch(route("questions.answers.reset", ["Post", thePost.value.id]))
-			.then((res) => {
-				for (let i in thePost.value.questions) {
-					thePost.value.questions[i].user.answer = []
-					thePost.value.questions[i].user.correct = false
-				}
-			})
 	}
 
 provide(

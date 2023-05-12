@@ -28,6 +28,7 @@ Formulaire d'édition d'un bloc
 							fermer
 						</button>
 						<confirm-button
+							v-if="!props.noDelete"
 							class="btn-delete btn-xs"
 							@confirm="deleteBlock"
 						>
@@ -220,6 +221,7 @@ const props = defineProps({
 	noScript: {type: Boolean, default: false},
 	noData: {type: Boolean, default: false},
 	noBlur: {type: Boolean, default: false},
+	noDelete: {type: Boolean, default: false},
 	previewCol: {type: Boolean, default: false},
 	overflowScroll: {type: Boolean, default: false}
 })

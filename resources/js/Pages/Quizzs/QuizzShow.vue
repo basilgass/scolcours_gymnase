@@ -3,41 +3,36 @@
 		v-if="props.quizzSession.enable"
 		class="px-5"
 	>
-		<div
+		<!-- En tête lorsque les questions sont en cours -->
+		<quizz-header
 			v-if="props.quizzSession.status==='wait' || props.quizzSession.status==='question'"
-			class="font-lg bg-black text-white mb-10 flex justify-between items-baseline fixed top-0 left-0 w-full px-5 py-2"
-		>
-			<h2
-				v-katex.auto="props.quizzSession.quizz.title"
-				class="text-white"
-			/>
-			<div class="text-xs text-gray-100">
-				Question {{ props.quizzSession.index }} sur {{ props.total }}
-			</div>
-		</div>
+			:quizz-session="props.quizzSession"
+		/>
 
-		<quizz-intro
-			v-if="props.quizzSession.status==='intro'"
-			:quizz="props.quizzSession.quizz"
-		/>
-		<quizz-outro
-			v-else-if="props.quizzSession.status==='outro'"
-			:quizz="props.quizzSession.quizz"
-		/>
-		<quizz-wait
-			v-else-if="props.quizzSession.status==='wait'"
-			:quizz="props.quizzSession.quizz"
-		/>
-		<quizz-question
-			v-else-if="props.quizzSession.status==='question'"
-			:key="props.question.data.id"
-			:question="props.question.data"
-			:quizz="props.quizzSession.quizz"
-			@validate="updateQuizz"
-		/>
-		<div v-else>
-			Apparemment, il y a un problème avec {{ props.quizzSession.status }}
-		</div>
+		<section class="mt-16 sm:mt-12">
+			<quizz-intro
+				v-if="props.quizzSession.status==='intro'"
+				:quizz="props.quizzSession.quizz"
+			/>
+			<quizz-outro
+				v-else-if="props.quizzSession.status==='outro'"
+				:quizz="props.quizzSession.quizz"
+			/>
+			<quizz-wait
+				v-else-if="props.quizzSession.status==='wait'"
+				:quizz="props.quizzSession.quizz"
+			/>
+			<quizz-question
+				v-else-if="props.quizzSession.status==='question'"
+				:key="props.question.data.id"
+				:question="props.question.data"
+				:quizz="props.quizzSession.quizz"
+				@validate="updateQuizz"
+			/>
+			<div v-else>
+				Apparemment, il y a un problème avec {{ props.quizzSession.status }}
+			</div>
+		</section>
 	</section>
 	<section
 		v-else
@@ -73,6 +68,7 @@ import QuizzIntro from "@/Components/Quizzs/QuizzIntro.vue"
 import QuizzOutro from "@/Components/Quizzs/QuizzOutro.vue"
 import {Inertia} from "@inertiajs/inertia"
 import QuizzWait from "@/Components/Quizzs/QuizzWait.vue"
+import QuizzHeader from "@/Components/Quizzs/QuizzHeader.vue"
 
 let props = defineProps({
 		quizzSession: {type: Object, required: true},

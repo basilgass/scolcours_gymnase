@@ -53,7 +53,7 @@
 			</div>
 
 			<!-- Add keyboard to input the zeros -->
-			<KeyboardElement
+			<KeyboardDisplay
 				v-show="showKeyboard==='zeroes'"
 				:multiple="true"
 				back
@@ -63,7 +63,7 @@
 				@change="zeroes = $event; updateTos()"
 			/>
 
-			<KeyboardElement
+			<KeyboardDisplay
 				v-show="showKeyboard==='signs'"
 				:custom-keys="{
 					'd': {type: 'math', display: '\\textcolor{red}{\\Vert}'},
@@ -77,7 +77,7 @@
 				@change="signs = $event; updateTos()"
 			/>
 
-			<KeyboardElement
+			<KeyboardDisplay
 				v-show="showKeyboard==='grows'"
 				:custom-keys="{
 					'-': {type: 'icon', display: 'bi bi-arrow-down-right'},
@@ -95,7 +95,7 @@
 				@change="grows = $event; updateTos()"
 			/>
 
-			<KeyboardElement
+			<KeyboardDisplay
 				v-show="showKeyboard==='coords'"
 				:multiple="true"
 				back
@@ -109,11 +109,11 @@
 </template>
 
 <script setup>
-
+// TODO: permettre l'affichage de la réponse.
 import {computed, nextTick, ref} from "vue"
 import PiTableOfSigns from "@/Components/Pi/PiTableOfSigns.vue"
 import {useWrongAnswerAnimation} from "@/Composables/useHelpers"
-import KeyboardElement from "@/Components/Keyboards/KeyboardElement.vue"
+import KeyboardDisplay from "@/Components/Keyboards/KeyboardDisplay.vue"
 import KeyboardValidateButton from "@/Components/Keyboards/KeyboardValidateButton.vue"
 import {useCheckers} from "@/Composables/useCheckers"
 import {makeStudyFromCode} from "@/Composables/useTos"

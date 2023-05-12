@@ -77,6 +77,14 @@
 				<div v-katex="`(b_C): ${result.triangle.remarquables.bisectors.C.tex.canonical}`" />
 				<div v-katex="`D=${result.triangle.remarquables.bisectors.intersection.tex}`" />
 			</div>
+			<h2 class="font-lg">
+				bissectrices extérieures
+			</h2>
+			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 items-baseline">
+				<div v-katex="`(b_A'): ${result.extBissectors.A.tex.canonical}`" />
+				<div v-katex="`(b_B'): ${result.extBissectors.B.tex.canonical}`" />
+				<div v-katex="`(b_C'): ${result.extBissectors.C.tex.canonical}`" />
+			</div>
 		</div>
 		<div
 			v-else
@@ -110,9 +118,14 @@ let result = computed(() => {
 			...B.value.split(","),
 			...C.value.split(",")
 		)
-		console.log(triangle)
+		// console.log(triangle)
 		return {
-			triangle: triangle
+			triangle: triangle,
+			extBissectors: {
+				A: new PiMath.Geometry.Line(triangle.A, triangle.remarquables.bisectors.A.d, "perpendicular"),
+				B: new PiMath.Geometry.Line(triangle.B, triangle.remarquables.bisectors.B.d, "perpendicular"),
+				C: new PiMath.Geometry.Line(triangle.C, triangle.remarquables.bisectors.C.d, "perpendicular")
+			}
 		}
 	} catch (e) {
 		// console.error(e)

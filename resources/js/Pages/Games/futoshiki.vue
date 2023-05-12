@@ -18,7 +18,9 @@
 						class="w-16 h-16 border rounded-sm grid place-items-center"
 					>
 						<button
-							class="min-w-0 w-full h-full text-center border rounded-sm bg-white"
+							class="min-w-0 w-full h-full text-center border rounded-sm"
+							:class="item.selected?'is-active':'bg-white'"
+							@click="updateSelection(item)"
 						>
 							{{ item.value }}
 						</button>
@@ -46,9 +48,9 @@
 			</div>
 		</div>
 
-		<div class="keyboard flex gap-4">
+		<div class="keyboard flex gap-4 mt-10">
 			<button
-				class="key btn w-16 h-16"
+				class="key btn w-10 h-10"
 				:class="suggest?'btn-edit':'bg-white'"
 				@click="suggest=!suggest"
 			>
@@ -57,7 +59,7 @@
 			<button
 				v-for="n in rang"
 				:key="`key-${n}`"
-				class="key bg-white w-16 h-16"
+				class="key bg-white w-10 h-10"
 			>
 				{{ n }}
 			</button>
@@ -83,6 +85,8 @@ let futoshiki = ref([]),
 class futoshikiItem {
 	constructor(value) {
 		this.value = value
+		this.original = value!==undefined
+		this.selected = false
 		this.user = {
 			possibilites: [],
 			answer: null
@@ -131,9 +135,26 @@ function generateFutoshiki(size, values, signs){
 }
 
 function solveFutoshiki(data) {
-	console.log(data)
+	console.table(data)
 }
 
+function updateSelection(item) {
+	// Cancel all selections
+	if(item.selected===true){
+		item.selected = false
+		return
+	}
+
+	for(let i=0; i<futoshiki.value.length; i++){
+		for(let j=0; j<futoshiki.value[i].length; j++){
+			futoshiki.value[i][j].selected=false
+		}
+	}
+
+	if(item.original===false) {
+		item.selected = true
+	}
+}
 onMounted(()=>{
 	// Define the size of the futoshiki
 	futoshiki.value = generateFutoshiki(

@@ -61,6 +61,7 @@ import {onMounted, ref} from "vue"
 import PostShow from "@/Components/Posts/PostShow.vue"
 import ChapterToc from "@/Components/Chapters/ChapterToc.vue"
 import ChapterFormulasSlider from "@/Components/Chapters/ChapterFormulasSlider.vue"
+import {usePage} from "@inertiajs/inertia-vue3"
 
 let props = defineProps({
 		chapter: {type: Object, required: true},
@@ -71,12 +72,13 @@ let props = defineProps({
 	thePost = ref(props.post.data)
 
 const storeCurrentPost = function () {
-	axios.post(route("chapters.currentPost", [theChapter.value.id]), {
-		post_id: thePost.value.id,
-		open: true
-	}).then(res => {
-		console.log(res.data)
-	})
+	// Update last post checked only if user is signed in
+	if(usePage().props.value.auth.user) {
+		axios.post(route("chapters.currentPost", [theChapter.value.id]), {
+			post_id: thePost.value.id,
+			open: true
+		})
+	}
 }
 
 onMounted(() => {

@@ -1,5 +1,7 @@
 <template>
-	<div>Merci de patienter...</div>
+	<div class="text-xl">
+		Merci de patienter...
+	</div>
 </template>
 
 <script setup>

@@ -41,6 +41,7 @@ let validateButton = ref(null),
 		})
 	},
 	validateEvent = function (value) {
+		//TODO: must enable options, like uppercase, trim, etc...
 		const correct = inputValue.value === props.answer
 
 		emits("validate", {

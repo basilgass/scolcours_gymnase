@@ -76,7 +76,7 @@ TODO: Ajouter des "helpers", pour avoir des indications des paramètres par exem
 
 <script setup>
 import FormIllustration from "@/Components/Form/FormIllustration.vue"
-import { computed, ref } from "vue"
+import {computed, ref} from "vue"
 import DialogModal from "@/Components/Ui/DialogModal.vue"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
 import IllustrationShow from "@/Components/Posts/Illustrations/IllustrationShow.vue"
@@ -118,7 +118,7 @@ let saveIllustration = function () {
 	copyIllustration = function () {
 		sessionStorage.setItem(
 			"scolcours-clipboard-illustration",
-			`${theIllustration.value.parameters}\n${theIllustration.value.code}`
+			`${theIllustration.value.parameters??""}\n${theIllustration.value.code}`
 		)
 	},
 	pasteIllustration = function () {

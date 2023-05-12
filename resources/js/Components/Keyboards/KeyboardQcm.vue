@@ -5,6 +5,32 @@
 			@validate="validateEvent"
 		/>
 
+		<div
+			v-if="multiAnswers"
+			class="max-w-xl mx-auto flex gap-3 keyboard"
+		>
+			<button
+				class="key-cmd bg-white w-full
+				border-slate-200 text-slate-600 hover:bg-slate-100 hover:border-slate-800
+				mb-3"
+				:class="multiAnswersId===0?'invisible':''"
+				:disabled="multiAnswersId===0"
+				@click="multiAnswersDelete"
+			>
+				<i class="bi bi-chevron-left" /> <span class="hidden md:inline md:ml-2">effacer</span>
+			</button>
+			<button
+				class="key-cmd bg-white w-full
+				border-slate-200 text-slate-600 hover:bg-slate-100 hover:border-slate-800
+				mb-3"
+				:class="multiAnswersId===(multiAnswers-1)?'invisible':''"
+				:disabled="multiAnswersId===(multiAnswers-1)"
+				@click="multiAnswersAdd"
+			>
+				<span class="hidden md:inline md:mr-2">ajouter</span> <i class="bi bi-chevron-right" />
+			</button>
+		</div>
+
 		<div class="flex flex-wrap gap-1 md:gap-3 my-5">
 			<button
 				v-for="element of qcmItems"
@@ -113,7 +139,18 @@ let qcmSelections = function (output) {
 	}),
 	isTex = computed(()=>{
 		return qcmOptions.value.includes("tex")
-	})
+	}),
+	multiAnswers = computed(()=>{
+		return props.answer.split(",").length
+	}),
+	multiAnswersId = ref(0),
+	multiAnswersDelete = function(){
+		multiAnswersId.value--
+		
+	},
+	multiAnswersAdd = function(){
+		multiAnswersId.value++
+	}
 
 onMounted(() => {
 	//TODO : options pour mettre aléatoire.

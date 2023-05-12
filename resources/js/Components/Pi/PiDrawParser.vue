@@ -69,12 +69,12 @@ Affichage d'un PiDraw
 </template>
 
 <script setup>
-import { computed, inject, onMounted, ref, watch } from "vue"
-import { PiDraw } from "pidraw/esm"
+import {computed, inject, onMounted, ref, watch} from "vue"
+import {PiDraw} from "pidraw/esm"
 
 import VueSlider from "vue-slider-component"
 import "vue-slider-component/theme/material.css"
-import { PiMath } from "pimath/esm"
+import {PiMath} from "pimath/esm"
 import katex from "katex"
 
 const emits = defineEmits(["update"])
@@ -345,7 +345,9 @@ watch(
 	(newValue, oldValue) => {
 		if (newValue.code !== oldValue.code) {
 			PiParserUpdate("props.draw watcher", true)
-		} else if (newValue.parameters !== oldValue.parameters) {
+		}
+
+		if (newValue.parameters !== oldValue.parameters) {
 			try {
 				PiParser.updateLayout(newValue.parameters)
 			} catch {

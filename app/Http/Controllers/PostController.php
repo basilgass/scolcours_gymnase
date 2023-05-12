@@ -140,10 +140,20 @@ class PostController extends Controller
 	{
 		$post = Post::find($id);
 		if ($post) {
-			$post->blocks()->delete();
+            $chapter = $post->chapter;
+            // Remove all children blocks.
+            $post->blocks()->delete();
+
+            // Destroy the post
+//            $post->delete();
+            Post::destroy($id);
+
+            // Update the posts order.
+
+            $chapter->reorder();
 		}
 
-		Post::destroy($id);
+
 
 		return true;
 	}

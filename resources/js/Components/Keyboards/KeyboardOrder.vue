@@ -29,6 +29,7 @@ import {ref} from "vue"
 import {PiMath} from "pimath/esm"
 import KeyboardValidateButton from "@/Components/Keyboards/KeyboardValidateButton.vue"
 
+//TODO : how to show the answer correctly ?
 let props = defineProps({
 	options: {type: String},
 	answer: {type: String}

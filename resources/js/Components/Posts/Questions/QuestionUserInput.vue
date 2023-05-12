@@ -4,11 +4,14 @@ Met à jour la donnée en fonction des réponses.
 -->
 <template>
 	<div class="question-keyboard @container">
+		<!-- Message affichant les détails des erreurs  -->
 		<div
 			v-if="message!==''"
 			v-katex.auto="message"
 			class="bg-red-100 border border-red-300 katex-container px-3 py-1 rounded text-red-600 text-xs"
 		/>
+
+		<!-- Le clavier à proprement dit -->
 		<component
 			:is="keyboardComponent"
 			ref="keyboardUI"
@@ -17,6 +20,8 @@ Met à jour la donnée en fonction des réponses.
 			@change="updateQuestion"
 			@validate="validateQuestion"
 		/>
+
+		<!-- Affichage des réponses déjà données pendant cette session -->
 		<div
 			v-if="givenAnswer.length>0"
 			class="flex gap-3 flex-wrap font-code text-xs"
@@ -75,6 +80,7 @@ let updateQuestion = function(value){
 		updateQuestion(value)
 
 		// Save the information to database.
+		// It's now disabled
 
 		// Update the given answers array.
 		if(value.result){
@@ -89,11 +95,18 @@ let updateQuestion = function(value){
 			result: value.correct
 		})
 	},
+	/**
+	 * Détermine la liste des variables contenus dans le bloc
+	 * @type {ComputedRef<string[]>}
+	 */
 	answerKeys = computed(()=>{
 		let questionsVars = [...new Set([...props.question.block.body.matchAll(/\$([A-Za-z])/g)].map(x => x[0].toLowerCase()))]
 		questionsVars.sort()
 		return questionsVars
 	}),
+	/**
+	 * émet la nouvelle valeur de "body" à afficher.
+	 */
 	updateBody = function(){
 		let body = props.question.block.body
 
@@ -106,7 +119,7 @@ let updateQuestion = function(value){
 		}else {
 			if(body.includes("$")){
 				// Build the answer system
-				body = makeBodyFromAnswers()
+				body = makeBodyFromAnswers(tex.value)
 			}else{
 				// Add the answer at the end, as text code
 				body += `\n\n${tex.value}{.font-code .text-center}`
@@ -115,11 +128,16 @@ let updateQuestion = function(value){
 
 		emits("change", body)
 	},
-	makeBodyFromAnswers = function() {
+	/**
+	 * Création de nouveau "body" en fonction des réponses données.
+	 * @param value
+	 * @returns {string}
+	 */
+	makeBodyFromAnswers = function(value) {
 		let body = props.question.block.body
 
+		let userAnswer = value.split(",")
 		// get list of answers
-		let userAnswer = tex.value.split(",")
 
 		// current answer index and values (filtering empty values)
 		const crtAnswerIndex = userAnswer.length - 1
@@ -162,7 +180,8 @@ let updateQuestion = function(value){
 	}
 
 defineExpose({
-	getAnswer: (value)=>keyboardUI.value.getAnswer(value)
+	getAnswer: (value)=>keyboardUI.value.getAnswer(value),
+	makeBodyFromAnswers: (value)=>makeBodyFromAnswers(value)
 })
 
 onMounted(()=>{

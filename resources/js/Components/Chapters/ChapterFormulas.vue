@@ -53,6 +53,7 @@ Affichage d'un formulaire, avec la possibilité de passer d'un formulaire du th�
 							:block="element.block"
 							:max-illustration="1"
 							class="break-inside-avoid-column"
+							@destroy="deleteFormular(element.id)"
 						/>
 					</template>
 					<template #footer>
@@ -106,6 +107,14 @@ const addFormula = function () {
 			.then(res => {
 				flash.add("formule créée")
 				theFormular.value.push(res.data.data)
+			})
+	},
+	deleteFormular = function (id) {
+		axios.post(route("formulas.destroy", [id]),
+			{_method: "DELETE"})
+			.then(res=> {
+				flash.add("formule supprimée")
+				theFormular.value = theFormular.value.filter(x=>x.id!==id)
 			})
 	},
 	updateFormulasOrder = function () {

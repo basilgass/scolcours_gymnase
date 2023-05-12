@@ -3,7 +3,7 @@
 		ref="validateButton"
 		@validate="validateEvent"
 	/>
-	<keyboard-element
+	<keyboard-display
 		v-if="theKeyboard"
 		ref="keyboardUI"
 		:keyboard="theKeyboard.name"
@@ -18,12 +18,12 @@
 </template>
 
 <script setup>
-import { useWrongAnswerAnimation } from "@/Composables/useHelpers"
-import { computed, inject, ref } from "vue"
-import KeyboardElement from "@/Components/Keyboards/KeyboardElement.vue"
+import {useWrongAnswerAnimation} from "@/Composables/useHelpers"
+import {computed, inject, ref} from "vue"
 import KeyboardValidateButton from "@/Components/Keyboards/KeyboardValidateButton.vue"
-import { useCheckers } from "@/Composables/useCheckers"
-import { keyboards } from "@/keyboards"
+import {useCheckers} from "@/Composables/useCheckers"
+import {keyboards} from "@/keyboards"
+import KeyboardDisplay from "@/Components/Keyboards/KeyboardDisplay.vue"
 
 let props = defineProps({
 	options: { type: String },
@@ -49,17 +49,31 @@ let validateButton = ref(null),
 			raw: "",
 		})
 	},
+	validateNthAnswer = null,
 	validateOneAnswer = function (expected, given, kbrd) {
 		let check,
-			stackMessages = []
-		for (let expected of expected.split("|")) {
-			// Get the check
+			stackMessages = [],
+			expectedAnswers = expected.split("|")
+
+		if(validateNthAnswer===null){
+			// On doit chercher la bonne réponse dans la liste.
+			for(let i=0; i<expectedAnswers.length; i++){
+				check = kbrd.checker.check(expectedAnswers[i], given)
+
+				if(check.result){
+					validateNthAnswer = i
+					return true
+				}else{
+					stackMessages.push(check.message)
+				}
+			}
+		}else{
+			const expected = validateNthAnswer<expectedAnswers.length ? expectedAnswers[validateNthAnswer]:expectedAnswers[0]
 			check = kbrd.checker.check(expected, given)
-			if (check.result) {
-				// If check if true, it's the only one
+
+			if(check.result){
 				return true
-			} else {
-				// if check is false, stack it
+			}else{
 				stackMessages.push(check.message)
 			}
 		}
@@ -74,13 +88,21 @@ let validateButton = ref(null),
 		let expectedArray = props.answer.split(","),
 			givenArray = givenAnswer.value.input.split(",")
 
+		//TODO: autoriser les validatations d'une question même si non remplie. N'émet pas de validation complète, mais permet de vérifier les réponses intermédiaires.
 		if (expectedArray.length === givenArray.length) {
+			// Il y a autant de réponses données que prévues.
+			// On compare toutes les réponses
+			// Dans le cas de plusieurs réponses, elles doivent être "alignées"
+			// ou pas...
+			validateNthAnswer = null
 			for (let i = 0; i < expectedArray.length; i++) {
 				const validatedValue = validateOneAnswer(
 					expectedArray[i],
 					givenArray[i],
 					makeKeyboard(i)
 				)
+
+				// La première réponse est-elle juste ? Si oui, on ne devrait alors consulter que la réponse "n"
 
 				if (validatedValue !== true) {
 					let preMessage = multiple.value

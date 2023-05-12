@@ -69,6 +69,14 @@
 					</table>
 
 					<pi-draw-parser :draw="triangleDrawCode" />
+					<pre
+						class="font-code"
+						v-text="triangleDrawCode.code"
+					/>
+					<pre
+						class="font-code"
+						v-text="triangleAnswerCode"
+					/>
 				</div>
 
 				<div v-if="result.triangle2">
@@ -89,6 +97,14 @@
 					</table>
 
 					<pi-draw-parser :draw="triangle2DrawCode" />
+					<pre
+						class="font-code"
+						v-text="triangle2DrawCode.code"
+					/>
+					<pre
+						class="font-code"
+						v-text="triangle2AnswerCode"
+					/>
 				</div>
 			</div>
 			<div
@@ -115,8 +131,8 @@
  */
 import Panel from "@/Components/Ui/Panel"
 import FormInput from "@/Components/Form/FormInput"
-import { computed, ref } from "vue"
-import { numberCorrection } from "pidraw/esm/Calculus"
+import {computed, ref} from "vue"
+import {numberCorrection} from "pidraw/esm/Calculus"
 import FormNumber from "@/Components/Form/FormNumber.vue"
 import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"
 
@@ -197,8 +213,17 @@ let result = computed(() => {
 	triangleDrawCode = computed(() => {
 		return drawTriangle(result.value.raw.triangle)
 	}),
+	triangleAnswerCode = computed(()=>{
+		return `${result.value.triangle.a},${result.value.triangle.b},${result.value.triangle.c},${result.value.triangle.alpha.slice(0,-1)},${result.value.triangle.beta.slice(0,-1)},${result.value.triangle.gamma.slice(0,-1)},${result.value.triangle.area}`
+	}),
 	triangle2DrawCode = computed(() => {
 		return drawTriangle(result.value.raw.triangle2)
+	}),
+	triangle2AnswerCode = computed(()=>{
+		if(result.value.triangle2 === undefined) {return ""}
+		if(result.value.triangle2.a === undefined){return ""}
+
+		return `${result.value.triangle2.a},${result.value.triangle2.b},${result.value.triangle2.c},${result.value.triangle2.alpha.slice(0, -1)},${result.value.triangle2.beta.slice(0, -1)},${result.value.triangle2.gamma.slice(0, -1)},${result.value.triangle2.area}`
 	})
 
 function drawTriangle(value) {
@@ -220,15 +245,15 @@ function drawTriangle(value) {
 	return {
 		parameters: `x=-1:${xMax * scale},y=-1:${Math.round(yMax * scale)}`,
 		code: `A(0,0)->$/bl
-			B(${value.c * scale},0)->$/br
-			C(${Cx * scale},${Cy * scale})->$/tc
-			d1=[AB]
-			d2=[AC]
-			d3=[BC]
-			a1=arc B,A,C,0.5->$\\alpha
-			a2=arc C,B,A,0.5->$\\beta
-			a3=arc A,C,B,0.5->$\\gamma
-			`,
+B(${value.c * scale},0)->$/br
+C(${Cx * scale},${Cy * scale})->$/tc
+d1=[AB]->$c${C.value===""?"":"=" + C.value}/c
+d2=[AC]->$b${B.value===""?"":"=" + B.value}/lt
+d3=[BC]->$a${A.value===""?"":"=" + A.value}/t
+a1=arc B,A,C,0.5->$\\alpha${alpha.value===""?"":"=" + alpha.value + "°"}/r
+a2=arc C,B,A,0.5->$\\beta${beta.value===""?"":"=" + beta.value + "°"}/l
+a3=arc A,C,B,0.5->$\\gamma${gamma.value===""?"":"=" + gamma.value + "°"}
+`,
 	}
 }
 

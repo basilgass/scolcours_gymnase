@@ -32,7 +32,7 @@
 		</div>
 
 		<div class="mt-2">
-			<keyboard-element
+			<keyboard-display
 				v-show="activeInput==='fx'"
 				back
 				reset
@@ -41,7 +41,7 @@
 				@change="f=$event"
 				@next="activeInput='x'"
 			/>
-			<keyboard-element
+			<keyboard-display
 				v-show="activeInput==='x'"
 				back
 				reset
@@ -65,7 +65,7 @@ import Panel from "@/Components/Ui/Panel"
 import FormInput from "@/Components/Form/FormInput"
 import {computed, ref} from "vue"
 import {PiMath} from "pimath/esm"
-import KeyboardElement from "@/Components/Keyboards/KeyboardElement.vue"
+import KeyboardDisplay from "@/Components/Keyboards/KeyboardDisplay.vue"
 
 let f = ref("3*x+1"),
 	x = ref("1"),

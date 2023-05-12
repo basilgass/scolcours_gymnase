@@ -6,7 +6,7 @@
 
 		<div class="h-[80vh] w-full grid place-items-center">
 			<div v-if="props.shortcode">
-				IL Y A UN SHORTCE {{ props.shortcode }}
+				IL Y A UN SHORTCUT {{ props.shortcode }}
 			</div>
 			<div v-else>
 				Dommage, vous n'êtes pour l'instant pas invité à un quizz.
