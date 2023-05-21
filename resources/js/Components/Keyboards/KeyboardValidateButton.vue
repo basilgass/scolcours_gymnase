@@ -1,9 +1,8 @@
 <template>
-	<div class="max-w-xl mx-auto flex flex-col gap-3 keyboard">
+	<div class="max-w-xl mx-auto keyboard">
 		<button
 			class="key-cmd bg-white w-full
-				border-green-700 text-green-600 hover:bg-green-100 hover:border-green-800
-				mb-3"
+				border-green-700 text-green-600 hover:bg-green-100 hover:border-green-800"
 			@click="emits('validate')"
 		>
 			<i class="bi bi-check" /> <span class="hidden md:inline md:ml-2">Valider</span>

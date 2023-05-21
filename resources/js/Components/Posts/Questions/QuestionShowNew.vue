@@ -74,46 +74,22 @@ keyboard -> QuestionUserInput -> QuestionShow
 			/>
 		</main>
 
-		<!-- Answer selector -->
-		<div
-			class="question-answer-selector flex justify-between items-baseline my-3"
-		>
-			<button
-				:class="answerId===0?'invisible':''"
-				class="px-3 text-xl font-semibold"
-				@click="answerId--"
-			>
-				<i class="bi-chevron-left" />
-			</button>
-			<div
-				v-if="answerFormat"
-				v-katex.auto="answerFormat"
-				class="text-center text-xs text-gray-400 mt-5"
-			/>
-			<button
-				:class="answerId===answersNumber-1?'invisible':''"
-				class="px-3 text-xl font-semibold"
-				@click="answerId++"
-			>
-				<i class="bi-chevron-right" />
-			</button>
-		</div>
-
 		<!-- user input -->
 		<div
 			v-if="!showInput"
-			class="text-xs px-5 text-right"
+			class="text-xs px-5 text-right my-3"
 		>
 			<button
 				v-if="!showUserInput"
-				class="w-full"
+				class="w-full py-3 hover:border-t hover:border-b"
+				:class="`active-scolcours-${$page.props.theme.slug}`"
 				@click="showUserInput=!showUserInput"
 			>
 				<i class="bi bi-calculator mr-2" />donner la réponse
 			</button>
 			<button
 				v-else
-				class="mb-3 text-red-600"
+				class="text-red-600"
 				@click="showUserInput=!showUserInput"
 			>
 				fermer <i class="bi bi-x-lg ml-2" />
@@ -127,10 +103,7 @@ keyboard -> QuestionUserInput -> QuestionShow
 				ref="validateButton"
 				@validate="validateQuestion"
 			/>
-			<div
-				v-if="userAnswersErrors.length>0"
-				class="mb-3"
-			>
+			<div v-if="userAnswersErrors.length>0">
 				<div
 					v-for="(msg, index) in userAnswersErrors"
 					:key="`error-${index}`"
@@ -138,6 +111,32 @@ keyboard -> QuestionUserInput -> QuestionShow
 					class="text-red-600 text-xs"
 				/>
 			</div>
+
+			<!-- Answer selector -->
+			<div
+				class="question-answer-selector flex justify-between items-center my-5"
+			>
+				<button
+					:class="answerId===0?'invisible':`active-scolcours-${$page.props.theme.slug}`"
+					class="px-3 text-xl font-semibold border rounded-full"
+					@click="answerId--"
+				>
+					<i class="bi-chevron-left" />
+				</button>
+				<div
+					v-if="answerFormat"
+					v-katex.auto="answerFormat"
+					class="text-center text-xs text-gray-400"
+				/>
+				<button
+					:class="answerId===answersNumber-1?'invisible':`active-scolcours-${$page.props.theme.slug}`"
+					class="px-3 text-xl font-semibold border rounded-full"
+					@click="answerId++"
+				>
+					<i class="bi-chevron-right" />
+				</button>
+			</div>
+
 			<component
 				:is="theAnswers[answerId].keyboard.component"
 				ref="keyboardUI"
@@ -200,7 +199,7 @@ import {computed, defineAsyncComponent, inject, provide, reactive, ref} from "vu
 import KeyboardValidateButton from "@/Components/Keyboards/KeyboardValidateButton.vue"
 import {usePage} from "@inertiajs/inertia-vue3"
 import {useWrongAnswerAnimation} from "@/Composables/useHelpers"
-import {getKeyboard} from "@/keyboards"
+import {getKeyboard} from "@/keyboards" // Props
 
 // Props
 let props = defineProps({

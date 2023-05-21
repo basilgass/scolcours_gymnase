@@ -50,12 +50,12 @@
 	.border-scolcours-jeux {@apply border-orange-300}
 	.border-scolcours-tools {@apply border-pink-300}
 
-	.active-scolcours-algebre {@apply px-5 py-4 hover:bg-blue-50 border-t border-b hover:border-blue-500 hover:text-blue-500 transition-colors duration-300}
-	.active-scolcours-analyse {@apply px-5 py-4 hover:bg-amber-50 border-t border-b hover:border-amber-500 hover:text-amber-500 transition-colors duration-300}
-	.active-scolcours-geometrie {@apply px-5 py-4 hover:bg-purple-50 border-t border-b hover:border-purple-500 hover:text-purple-500 transition-colors duration-300}
-	.active-scolcours-statistiques {@apply px-5 py-4 hover:bg-cyan-50 border-t border-b hover:border-cyan-500 hover:text-cyan-500 transition-colors duration-300}
-	.active-scolcours-jeux {@apply px-5 py-4 hover:bg-orange-50 border-t border-b hover:border-orange-500 hover:text-orange-500 transition-colors duration-300}
-	.active-scolcours-tools {@apply px-5 py-4 hover:bg-pink-50 border-t border-b hover:border-pink-500 hover:text-pink-500 transition-colors duration-300}
+	.active-scolcours-algebre {@apply hover:bg-blue-50 hover:border-blue-500 hover:text-blue-500 transition-colors duration-300}
+	.active-scolcours-analyse {@apply hover:bg-amber-50 hover:border-amber-500 hover:text-amber-500 transition-colors duration-300}
+	.active-scolcours-geometrie {@apply hover:bg-purple-50 hover:border-purple-500 hover:text-purple-500 transition-colors duration-300}
+	.active-scolcours-statistiques {@apply hover:bg-cyan-50 hover:border-cyan-500 hover:text-cyan-500 transition-colors duration-300}
+	.active-scolcours-jeux {@apply hover:bg-orange-50 hover:border-orange-500 hover:text-orange-500 transition-colors duration-300}
+	.active-scolcours-tools {@apply hover:bg-pink-50 hover:border-pink-500 hover:text-pink-500 transition-colors duration-300}
 
 	.scrollbar-scolcours-default {@apply scrollbar scrollbar-w-1 scrollbar-h-1 scrollbar-thumb-rounded-full}
 	.scrollbar-scolcours {@apply scrollbar-scolcours-default scrollbar-thumb-gray-700/50}

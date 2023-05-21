@@ -9,7 +9,7 @@ Affichage d'un block , avec toutes les possibilités
 		<button
 			v-if="isBlur"
 			v-katex.auto.inline="blockTitle === '' ? 'afficher' : blockTitle"
-			class="w-full"
+			class="w-full px-5 py-4 border-t border-b"
 			:class="`active-scolcours-${$page.props.theme.slug}`"
 			@click="isBlur = false"
 		/>
