@@ -35,11 +35,11 @@
 			</div>
 
 			<div v-if="listOfQuestions[questionId]">
-				<question-show
+				<question-show-new
 					:key="questionId"
 					:question="theQuestion"
 					class="max-w-[40em] mx-auto"
-					display-input
+					show-input
 					dynamic
 					@validate="validateAnswer"
 				/>
@@ -73,6 +73,7 @@ import ChallengeResults from "@/Components/Challenges/ChallengeResults.vue"
 import QuestionShow from "@/Components/Posts/Questions/QuestionShow.vue"
 import FormInput from "@/Components/Form/FormInput.vue"
 import {usePage} from "@inertiajs/inertia-vue3"
+import QuestionShowNew from "@/Components/Posts/Questions/QuestionShowNew.vue"
 
 const emits = defineEmits(["destroy", "change"])
 const props = defineProps({

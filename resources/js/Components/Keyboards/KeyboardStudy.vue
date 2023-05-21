@@ -1,24 +1,11 @@
 <template>
-	<div class="keyboard-study grid grid-cols-1 @xl:grid-cols-2 gap-3">
+	<article class="keyboard-study grid grid-cols-1 @xl:grid-cols-2 gap-3">
 		<div>
-			<!-- Validation button -->
-			<keyboard-validate-button
-				ref="validateButton"
-				@validate="validateEvent"
-			/>
-
-			<!-- graph -->
+			<!-- Visual output - qui est remonte en tant que "raw"-->
 			<div
-				v-show="showGraph"
-				class="overflow-x-scroll my-5"
-			>
-				<!-- Visual output -->
-				<div
-					ref="draw"
-					class="min-w-[1em]"
-				/>
-				<div ref="outputHTML" />
-			</div>
+				ref="draw"
+				class="min-w-[1em]"
+			/>
 
 			<!-- Trace button -->
 			<div
@@ -91,19 +78,18 @@
 				@clear="message=''"
 			/>
 		</div>
-	</div>
+	</article>
 </template>
 
 <script setup>
 // TODO: permettre l'affichage de la réponse.
-import {nextTick, onMounted, ref} from "vue"
-import {useWrongAnswerAnimation} from "@/Composables/useHelpers"
+// TODO: retravailler pour être plus facile à modifier / debogguer
+import {onMounted, ref} from "vue"
 import {PiDraw} from "pidraw/esm"
 import katex from "katex"
 import Button from "@/Components/Auth/Button.vue"
 import {PiMath} from "pimath/esm"
 import KeyboardDisplay from "@/Components/Keyboards/KeyboardDisplay.vue"
-import KeyboardValidateButton from "@/Components/Keyboards/KeyboardValidateButton.vue"
 import {useCheckers} from "@/Composables/useCheckers"
 
 let props = defineProps({
@@ -111,86 +97,107 @@ let props = defineProps({
 	answer: {type: String}
 })
 
-let emits = defineEmits(["change", "validate"])
-
-let outputHTML = ref(null),
-	validateButton = ref(null),
-	resetKeyStrokes = function () {
-		// Reset keystrokes
-		for(let item in items.value){
-			removeItem(item)
-		}
-	},
-	wrongAnswer = function () {
-		useWrongAnswerAnimation(validateButton.value)
-	},
-	changeEvent = function() {
-		emits("change",{
-			tex: "",
-			raw: showRawOutput.value?PiGraph.svg.svg():""
-		})
-	},
-	validateOutput = function(){
-		let output = ""
-
-		if(enablePlot.value){
-			let arr = []
-			for(let item of items.value){
-				arr.push(asymptoteToAnswer(item))
-			}
-			let envCtrls = asymptoteToAnswer("env")
-			if(envCtrls!=="env") {
-				arr.push(envCtrls)
-			}
-			output = arr.sort().join(",")
-		}else{
-			output = [...items.value].sort().join(",")
-		}
-
-		return output
-	},
-	validateEvent = function () {
-		if(enablePlot.value){
-			plotGraph()
-		}
-
+let emits = defineEmits(["change", "validate"]),
+	changeEvent = function (event) {
+		// On récupère la mise en forme de la réponse
 		const output = validateOutput()
-		const check = useCheckers("study").check(props.answer, output)
+		// On valide la réponse
+		const validation = useCheckers("study").check(props.answer, output)
 
-		// TODO: checking / message for keyboard STUDY.
-		emits("validate", {
-			code: output,
-			tex: "",
-			raw: showRawOutput.value?PiGraph.svg.svg():"",
-			correct: check.result,
-			message: check.message
+		emits("change", {
+			value: {
+				input: output,
+				tex: "",
+				raw: showRawOutput.value?PiGraph.svg.svg():""
+			},
+			validation
 		})
-	},
-	getTex = function (value) {
-		const v = value.split("@")
-
-		//TODO: Keyboard Study - get tex/raw does not work ?
-		nextTick(() => outputHTML.value.innerHTML).then(resolve => {
-			// emits("tex", resolve)
-			// emits("raw", showRawOutput.value?PiGraph.svg.svg():"")
-		})
-
-		return ""
-	},
-	getRaw = function (value) {
-		nextTick(() => outputHTML.value.innerHTML).then(resolve => {
-			// emits("raw", PiGraph.svg.svg())
-		})
-
-		return ""
-	},
-	getAnswer = function(value){
-		return {
-			tex: getTex(value),
-			raw: getRaw(value)
-		}
 	}
-defineExpose({resetKeyStrokes, wrongAnswer, getAnswer})
+
+
+// Mise en forme de la réponse pour comparaison
+let validateOutput = function(){
+	let output = ""
+
+	if(enablePlot.value){
+		let arr = []
+		for(let item of items.value){
+			arr.push(asymptoteToAnswer(item))
+		}
+		let envCtrls = asymptoteToAnswer("env")
+		if(envCtrls!=="env") {
+			arr.push(envCtrls)
+		}
+		output = arr.sort().join(",")
+	}else{
+		output = [...items.value].sort().join(",")
+	}
+
+	return output
+}
+
+
+
+// let outputHTML = ref(null),
+// 	validateButton = ref(null),
+// 	resetKeyStrokes = function () {
+// 		// Reset keystrokes
+// 		for(let item in items.value){
+// 			removeItem(item)
+// 		}
+// 	},
+// wrongAnswer = function () {
+// 	useWrongAnswerAnimation(validateButton.value)
+// },
+// changeEvent = function() {
+// 	emits("change",{
+// 		tex: "",
+// 		raw: showRawOutput.value?PiGraph.svg.svg():""
+// 	})
+// },
+// ,
+// validateEvent = function () {
+// 	if(enablePlot.value){
+// 		plotGraph()
+// 	}
+//
+// 	const output = validateOutput()
+// 	const check = useCheckers("study").check(props.answer, output)
+//
+// 	// TODO: checking / message for keyboard STUDY.
+// 	emits("validate", {
+// 		code: output,
+// 		tex: "",
+// 		raw: showRawOutput.value?PiGraph.svg.svg():"",
+// 		correct: check.result,
+// 		message: check.message
+// 	})
+// },
+// getTex = function (value) {
+// 	const v = value.split("@")
+//
+// 	//TODO: Keyboard Study - get tex/raw does not work ?
+// 	nextTick(() => outputHTML.value.innerHTML).then(resolve => {
+// 		// emits("tex", resolve)
+// 		// emits("raw", showRawOutput.value?PiGraph.svg.svg():"")
+// 	})
+//
+// 	return ""
+// },
+// getRaw = function (value) {
+// 	nextTick(() => outputHTML.value.innerHTML).then(resolve => {
+// 		// emits("raw", PiGraph.svg.svg())
+// 	})
+//
+// 	return ""
+// },
+// getAnswer = function(value){
+// 	return {
+// 		tex: getTex(value),
+// 		raw: getRaw(value)
+// 	}
+// }
+// defineExpose({resetKeyStrokes, wrongAnswer, getAnswer})
 
 // Code specific to Study.
 let PiGraph,
@@ -319,18 +326,20 @@ onMounted(()=>{
 			initPlot(f)
 		}
 	}
+
 	if(enablePlot.value){
 		itemsGraph.value["env"] =  addTracePoints()
 	}
 
-	// Update the value
-	changeEvent()
 
 	// Add resize observer
 	const resizeObserver = new ResizeObserver((entries) => {
 		PiGraph.update()
 	})
 	resizeObserver.observe(draw.value)
+
+	// Update the value
+	// nextTick().then(()=>changeEvent())
 })
 
 function initPlot(fx){
@@ -518,14 +527,17 @@ function btnClickEvent(btn) {
 		} else {
 			btn.svg.fill("white")
 		}
-	})
 
+		changeEvent()
+	})
 	return btn
 }
 
 function asymptoteToAnswer(item){
-	let ctrls = []
+	// il n'y a rien à montrer...
+	if(itemsGraph.value[item]===undefined){return ""}
 
+	let ctrls = []
 	if(itemsGraph.value[item].type==="point"){
 		switch (itemsGraph.value[item].kind){
 		case "m": return `m${item}`
@@ -754,7 +766,6 @@ function addPoint(type, xValue, yValue){
 
 function plotGraph(){
 	// Remove existing plot.
-
 	if(plot){plot.remove()}
 	// Check the validation -
 	// if the result is TRUE, trace the existing value (if it exists).
@@ -791,6 +802,8 @@ function plotGraph(){
 	// Sort the points.
 	ctrlPoints.sort((a,b)=>a.point.x-b.point.x)
 	plot = PiGraph.bezier(ctrlPoints)
+
+	changeEvent()
 }
 
 </script>

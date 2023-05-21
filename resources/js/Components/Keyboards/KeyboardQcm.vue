@@ -1,36 +1,5 @@
 <template>
 	<div>
-		<KeyboardValidateButton
-			ref="validateButton"
-			@validate="validateEvent"
-		/>
-
-		<div
-			v-if="multiAnswers"
-			class="max-w-xl mx-auto flex gap-3 keyboard"
-		>
-			<button
-				class="key-cmd bg-white w-full
-				border-slate-200 text-slate-600 hover:bg-slate-100 hover:border-slate-800
-				mb-3"
-				:class="multiAnswersId===0?'invisible':''"
-				:disabled="multiAnswersId===0"
-				@click="multiAnswersDelete"
-			>
-				<i class="bi bi-chevron-left" /> <span class="hidden md:inline md:ml-2">effacer</span>
-			</button>
-			<button
-				class="key-cmd bg-white w-full
-				border-slate-200 text-slate-600 hover:bg-slate-100 hover:border-slate-800
-				mb-3"
-				:class="multiAnswersId===(multiAnswers-1)?'invisible':''"
-				:disabled="multiAnswersId===(multiAnswers-1)"
-				@click="multiAnswersAdd"
-			>
-				<span class="hidden md:inline md:mr-2">ajouter</span> <i class="bi bi-chevron-right" />
-			</button>
-		</div>
-
 		<div class="flex flex-wrap gap-1 md:gap-3 my-5">
 			<button
 				v-for="element of qcmItems"
@@ -46,15 +15,15 @@
 			>
 				<span
 					v-if="element.ascii"
-					v-katex.ascii="element.display"
+					v-katex.ascii="element.label"
 				/>
 				<span
 					v-else-if="isTex"
-					v-katex="element.display"
+					v-katex="element.label"
 				/>
 				<span
 					v-else
-					v-katex.auto="element.display"
+					v-katex.auto="element.label"
 				/>
 			</button>
 		</div>
@@ -62,70 +31,80 @@
 </template>
 
 <script setup>
-import {useWrongAnswerAnimation} from "@/Composables/useHelpers"
 import {computed, onMounted, ref} from "vue"
-import KeyboardValidateButton from "@/Components/Keyboards/KeyboardValidateButton.vue"
 
 let props = defineProps({
 	options: { type: String },
 	answer: { type: String },
 })
+
 let emits = defineEmits(["change", "validate"])
-let validateButton = ref(null),
-	resetKeyStrokes = function () {},
-	wrongAnswer = function () {
-		useWrongAnswerAnimation(validateButton.value)
-	},
-	changeEvent = function (value) {
+
+let changeEvent = function (value) {
+	if(!multiAnswers.value) {
+		// Si on n'est pas dans une "Multi-réponses", on désactive tout.
 		qcmItems.value.forEach((e) => (e.selected = false))
-		value.selected = !value.selected
+	}
 
-		emits("change", {
-			tex: qcmSelections("display"),
-			raw: "",
-		})
-	},
-	validateEvent = function (value) {
-		const correct = props.answer.split("|").includes(qcmSelections("key"))
+	value.selected = !value.selected
 
-		emits("validate", {
-			code: qcmSelections("key"),
-			tex: qcmSelections("display"),
-			raw: "",
-			correct,
-			message: correct ? "" : "ce n'est pas la bonne réponse :(",
-		})
-	},
-	getTex = function (value) {
-		return ""
-	},
-	getRaw = function (value) {
-		// TODO: Keyboard QCM : generate raw text.
-		// return props.options.split("\n").map(x => `- ${x}`).join("\n")
-		return value
-	},
-	getAnswer = function (value) {
-		// TODO: get the display value of the answer (not the "code" value)
-		return {
-			tex: getTex(value),
-			raw: getRaw(value),
+	let answers = qcmSelections(),
+		answersKeys = answers.map(x=>x.key)
+
+	// On parcoure toutes les réponses
+	let goodAnswers = props.answer.split(",")
+	// props.answer = "1,2|3,5|6|7"
+	// answersKeys = [1,3,5]
+
+	// le nombre de réponses données doit être le bon.
+	let result = goodAnswers.length===answersKeys.length,
+		message = ""
+
+	// Chaque réponse doit se trouver dans une liste et uniquement dans une.
+	if(result) {
+		console.log(answersKeys)
+		for (let key of answersKeys) {
+			console.log("Checking", key)
+
+			for(let index in goodAnswers){
+				if(goodAnswers[index].split("|").includes(key)){
+					// remove this item
+					goodAnswers.splice(index,1)
+					break
+				}
+			}
+		}
+		// There should be no more goodanswers...
+		result = goodAnswers.length===0
+
+		if(!result){
+			message = `il y a ${goodAnswers.length>1?"des":"une"}  ${goodAnswers.length} réponse${goodAnswers.length>1?"s":""} fausse${goodAnswers.length>1?"s":""}.`
+		}
+	}else{
+		let delta = goodAnswers.length-answersKeys.length
+		if(delta > 0 ) {
+			message = `il manque ${delta} réponse${delta>1?"s":""}`
+		}else{
+			message = `il y a ${-delta} réponse${delta>1?"s":""} en trop.`
 		}
 	}
-defineExpose({ resetKeyStrokes, wrongAnswer, getAnswer })
+
+	emits("change", {
+		value: {
+			intput: "",
+			tex: answers.map(x=>x.tex).join(", "),
+			raw: answers.map(x=>x.label).join(", ")
+		},
+		validation: {
+			result,
+			message
+		}
+	})
+}
 
 /* ------------------*/
-let qcmSelections = function (output) {
-		let values = [
-			...qcmItems.value
-				.filter((x) => x.selected)
-				.map((x) => x[output ? output : "display"]),
-		]
-		values.sort()
-
-		return values.join(",")
-	},
-	qcmItems = ref([]),
-	qcmOptions = computed(() => {
+// Options du QCM
+let qcmOptions = computed(() => {
 		return props.options
 			.split("\n")
 			.filter((x) => x.startsWith("@"))
@@ -142,39 +121,57 @@ let qcmSelections = function (output) {
 	}),
 	multiAnswers = computed(()=>{
 		return props.answer.split(",").length
-	}),
-	multiAnswersId = ref(0),
+	})
+
+/* ---------------- */
+// Gestion du QCM
+let qcmItems = ref([]),
+	qcmSelections = function () {
+		// Retourne la ou les valeur(s) sélectionnée(s).
+		let values = [
+			...qcmItems.value
+				.filter((x) => x.selected)
+		]
+
+		//.map((x) => x[output ? output : "display"]),
+		values.sort((a,b)=>a.key<b.key)
+		return values
+	}
+
+/* ---------------*/
+// Gestion du QCM avec plusieurs réponses.
+let	multiAnswersId = ref(0),
 	multiAnswersDelete = function(){
 		multiAnswersId.value--
-		
 	},
 	multiAnswersAdd = function(){
 		multiAnswersId.value++
 	}
 
 onMounted(() => {
-	//TODO : options pour mettre aléatoire.
+	// Build the Items.
+	// key|TeX|Button
+	// key|Tex
+	// TeX
+
 	qcmItems.value = props.options
 		.split("\n")
-		.filter((x) => x !== "")
-		.filter((x) => !x.startsWith("@"))
+		.filter((x) => x !== "") // on enlève les lignes vides
+		.filter((x) => !x.startsWith("@")) // on enlève les lignes commençant par '@' (options)
 		.map((x) => {
-			let keyDisplay = x.split("|"),
+			let [key, label, tex] = x.split("|")
+
+			// S'il n'y a pas de label
+			if(label===undefined){label=""+key}
+
+			// Est-ce que le TeX est donné en ascii ?
+			let ascii = label.startsWith("#")
+			return {
 				key,
-				display,
-				ascii
-
-			if (keyDisplay.length === 1) {
-				ascii = keyDisplay[0].startsWith("#")
-				key = ascii ? keyDisplay[0].substring(1) : keyDisplay[0]
-				display = key
-			} else {
-				ascii = keyDisplay[1].startsWith("#")
-				key = keyDisplay[0]
-				display = ascii ? keyDisplay[1].substring(1) : keyDisplay[1]
-			}
-
-			return { key, display, ascii, selected: false }
+				label: label.startsWith("#")?label.substring(1):label,
+				tex: tex===undefined?"":tex,
+				ascii,
+				selected: false }
 		})
 })
 </script>

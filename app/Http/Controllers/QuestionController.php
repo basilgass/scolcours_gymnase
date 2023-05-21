@@ -132,8 +132,8 @@ class QuestionController extends Controller
 
 	public function storeAnswer(Question $question, Request $request)
 	{
+		// TODO: remove answer from Question table  ?
 		$validate = $request->validate([
-			'answer' => ['required', 'min:1'],
 			'result' => ['boolean']
 		]);
 

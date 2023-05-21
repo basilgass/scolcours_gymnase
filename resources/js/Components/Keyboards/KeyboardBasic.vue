@@ -1,148 +1,56 @@
 <template>
-	<keyboard-validate-button
-		ref="validateButton"
-		@validate="validateEvent"
-	/>
 	<keyboard-display
-		v-if="theKeyboard"
 		ref="keyboardUI"
-		:keyboard="theKeyboard.name"
-		:multiple="multiple"
-		:extra-letters="theKeyboard.letters"
+		:keyboard="keyboard.name"
+		:extra-letters="keyboard.letters"
 		back
 		class="max-w-xl mx-auto"
 		key-class="bg-white"
 		reset
 		@change="changeEvent"
+		@validate="$emit('validate')"
 	/>
 </template>
 
 <script setup>
-import {useWrongAnswerAnimation} from "@/Composables/useHelpers"
-import {computed, inject, ref} from "vue"
-import KeyboardValidateButton from "@/Components/Keyboards/KeyboardValidateButton.vue"
-import {useCheckers} from "@/Composables/useCheckers"
-import {keyboards} from "@/keyboards"
 import KeyboardDisplay from "@/Components/Keyboards/KeyboardDisplay.vue"
+import {useKeyboard} from "@/Composables/useKeyboard"
+import {ref} from "vue"
 
+// Each keyboards has props
+// props.options: keyboard options, like special letters or other...
+// props.answer: expected answer
 let props = defineProps({
 	options: { type: String },
 	answer: { type: String },
 })
 
-let emits = defineEmits(["change", "validate"])
-let checkerFormat = inject("checkerFormat")
+// Used to "move" up the currently keyboard chercker format.
+// let checkerFormat = inject("checkerFormat")
 
-let validateButton = ref(null),
-	keyboardUI = ref(null),
+// Emits change and validate (to trigger a validation manually on the parent)
+let emits = defineEmits(["change", "validate"]),
+	changeEvent = function (value) {
+		//value = {tex, raw, input}
+
+		// Make the validation.
+		// validation = {result: Boolean, message: string}
+		const validation = keyboard.value.checker.check(props.answer, value.input)
+
+		// emit change event
+		emits("change", {value, validation})
+	}
+
+// Get the keyboard and make it reactive.
+let {makeKeyboard} = useKeyboard()
+let keyboard = ref(makeKeyboard(props.options))
+
+
+	/*
 	resetKeyStrokes = function () {
 		keyboardUI.value.resetKeyStrokes()
 	},
-	wrongAnswer = function () {
-		useWrongAnswerAnimation(validateButton.value.$el)
-	},
-	changeEvent = function (value) {
-		givenAnswer.value = value
-		// value = result from the keyboard as ascii or...
-		emits("change", {
-			tex: value.tex,
-			raw: "",
-		})
-	},
-	validateNthAnswer = null,
-	validateOneAnswer = function (expected, given, kbrd) {
-		let check,
-			stackMessages = [],
-			expectedAnswers = expected.split("|")
 
-		if(validateNthAnswer===null){
-			// On doit chercher la bonne réponse dans la liste.
-			for(let i=0; i<expectedAnswers.length; i++){
-				check = kbrd.checker.check(expectedAnswers[i], given)
-
-				if(check.result){
-					validateNthAnswer = i
-					return true
-				}else{
-					stackMessages.push(check.message)
-				}
-			}
-		}else{
-			const expected = validateNthAnswer<expectedAnswers.length ? expectedAnswers[validateNthAnswer]:expectedAnswers[0]
-			check = kbrd.checker.check(expected, given)
-
-			if(check.result){
-				return true
-			}else{
-				stackMessages.push(check.message)
-			}
-		}
-		return stackMessages.join("<span class=\"font-semibold\"> ou </span>")
-	},
-	validateEvent = function () {
-		// With the Basic keyboard, allow to have more than one answer...
-		let stackMessages = [],
-			check
-
-		// Go through each answers
-		let expectedArray = props.answer.split(","),
-			givenArray = givenAnswer.value.input.split(",")
-
-		//TODO: autoriser les validatations d'une question même si non remplie. N'émet pas de validation complète, mais permet de vérifier les réponses intermédiaires.
-		if (expectedArray.length === givenArray.length) {
-			// Il y a autant de réponses données que prévues.
-			// On compare toutes les réponses
-			// Dans le cas de plusieurs réponses, elles doivent être "alignées"
-			// ou pas...
-			validateNthAnswer = null
-			for (let i = 0; i < expectedArray.length; i++) {
-				const validatedValue = validateOneAnswer(
-					expectedArray[i],
-					givenArray[i],
-					makeKeyboard(i)
-				)
-
-				// La première réponse est-elle juste ? Si oui, on ne devrait alors consulter que la réponse "n"
-
-				if (validatedValue !== true) {
-					let preMessage = multiple.value
-						? `<b class="font-semibold">${i + 1}e réponse: </b>`
-						: ""
-					stackMessages = [
-						...stackMessages,
-						preMessage + validatedValue,
-					]
-				}
-			}
-		} else {
-			if (expectedArray.length > givenArray.length) {
-				stackMessages.push(
-					`il manque encore ${
-						expectedArray.length - givenArray.length
-					} réponse(s)`
-				)
-			} else {
-				stackMessages.push(
-					`il y a ${
-						givenArray.length - expectedArray.length
-					} réponse(s) en trop`
-				)
-			}
-		}
-
-		if (stackMessages.length > 0) {
-			wrongAnswer()
-		}
-
-		//TODO: Make it handle multiple answer with numbering.
-		emits("validate", {
-			code: givenAnswer.value.input,
-			tex: givenAnswer.value.tex,
-			raw: "",
-			correct: stackMessages.length === 0,
-			message: stackMessages.filter((x) => x !== "").join("<br/>"),
-		})
-	},
 	getTex = function (value) {
 		//TODO: remove it ?
 		return theKeyboard.value.keyboard.tex(value)
@@ -157,78 +65,5 @@ let validateButton = ref(null),
 		}
 	}
 defineExpose({ resetKeyStrokes, wrongAnswer, getAnswer })
-
-// ---------------------------------------
-let availableKeyboards = computed(() => {
-		let nb = props.answer.split(",").length,
-			kbrds = props.options.split("\n\n") ?? []
-
-		if (kbrds.length < nb) {
-			const lastKbrd = kbrds[kbrds.length - 1]
-			// duplicate the last entries
-			while (kbrds.length < nb) {
-				kbrds.push(lastKbrd)
-			}
-		}
-		return kbrds
-	}),
-	makeKeyboard = function (id) {
-		// keyboard@checker,params
-		// other keyboard parameters ?
-		let kbrd =
-				availableKeyboards.value[
-					Math.min(availableKeyboards.value.length - 1, id)
-				]?.split("\n"),
-			// checker = kbrd[0].split("@"),
-			// name = checker.shift(),
-			letters = "",
-			parameters = []
-
-		// Get the keyboard name and the checker
-		let [name, checker] = kbrd[0].split("@")
-		if (checker === undefined) {
-			// means the checker is implicit with the keyboard.
-			let nameWithParams = name.split(",")
-			name = checker = nameWithParams.shift()
-			parameters = parameters.concat(...nameWithParams)
-		}
-
-		if (kbrd.length > 1) {
-			// More parameters.
-			for (let i = 1; i < kbrd.length; i++) {
-				if (kbrd[i].startsWith("@")) {
-					letters = kbrd[i].substring(1)
-				} else {
-					parameters.push(kbrd[i])
-				}
-			}
-		}
-
-		if (!keyboards.hasOwnProperty(name)) {
-			name = "exact"
-		}
-
-		checker = useCheckers([checker, ...parameters].join(","))
-
-		checkerFormat.update(checker.format())
-
-		return {
-			name,
-			keyboard: keyboards[name],
-			checker,
-			letters,
-			parameters,
-		}
-	},
-	answerNumber = ref(1),
-	multiple = ref(props.answer.split(",").length > 1),
-	givenAnswer = ref("")
-
-let theKeyboard = computed(() => {
-	if (availableKeyboards.value.length === 0) {
-		return false
-	}
-
-	return makeKeyboard(answerNumber.value)
-})
+*/
 </script>

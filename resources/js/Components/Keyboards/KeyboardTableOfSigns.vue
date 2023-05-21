@@ -1,24 +1,20 @@
 <template>
-	<div>
+	<article>
 		<div
 			class="overflow-x-scroll my-5 hidden"
 		>
 			<pi-table-of-signs
 				ref="tosUI"
-				:tos="tos"
 				:fn="tosName"
+				:tos="tos"
 			/>
 		</div>
 
-		<keyboard-validate-button
-			ref="validateButton"
-			@validate="validateEvent"
-		/>
 
 		<div class="max-w-xl mx-auto flex flex-col gap-3 keyboard">
 			<div
-				class="grid gap-3"
 				:class="(withGrows && !withCoords)?'grid-cols-3':'grid-cols-2'"
+				class="grid gap-3"
 			>
 				<button
 					:class="showKeyboard==='zeroes'?'btn-primary':''"
@@ -46,7 +42,7 @@
 					v-if="withCoords"
 					:class="showKeyboard==='coords'?'btn-primary':''"
 					class="py-0 px-5"
-					@click="showKeyboard='coords';updateTos()"
+					@click="showKeyboard='coords'"
 				>
 					coordonnées
 				</button>
@@ -55,12 +51,12 @@
 			<!-- Add keyboard to input the zeros -->
 			<KeyboardDisplay
 				v-show="showKeyboard==='zeroes'"
+				:keyboard="zeroesKeyboard"
 				:multiple="true"
 				back
 				key-class="bg-white"
-				:keyboard="zeroesKeyboard"
 				reset
-				@change="zeroes = $event; updateTos()"
+				@change="changeKeyboard"
 			/>
 
 			<KeyboardDisplay
@@ -74,7 +70,7 @@
 					layout: ['+', '-', 'z', 'd', ['@back', 2], ['@reset', 2]]
 				}"
 				key-class="bg-white"
-				@change="signs = $event; updateTos()"
+				@change="changeKeyboard"
 			/>
 
 			<KeyboardDisplay
@@ -92,7 +88,7 @@
 					layout: ['+', '-', 'd', 'm', 'M', '_', '', '@back', '@reset']
 				}"
 				key-class="bg-white"
-				@change="grows = $event; updateTos()"
+				@change="changeKeyboard"
 			/>
 
 			<KeyboardDisplay
@@ -100,122 +96,141 @@
 				:multiple="true"
 				back
 				key-class="bg-white"
-				keyboard="exact"
+				:keyboard="zeroesKeyboard"
 				reset
-				@change="coords = $event; updateTos()"
+				@change="changeKeyboard"
 			/>
 		</div>
-	</div>
+	</article>
 </template>
 
 <script setup>
 // TODO: permettre l'affichage de la réponse.
-import {computed, nextTick, ref} from "vue"
+import {computed, nextTick, onMounted, ref} from "vue"
 import PiTableOfSigns from "@/Components/Pi/PiTableOfSigns.vue"
-import {useWrongAnswerAnimation} from "@/Composables/useHelpers"
 import KeyboardDisplay from "@/Components/Keyboards/KeyboardDisplay.vue"
-import KeyboardValidateButton from "@/Components/Keyboards/KeyboardValidateButton.vue"
-import {useCheckers} from "@/Composables/useCheckers"
 import {makeStudyFromCode} from "@/Composables/useTos"
+import {useCheckers} from "@/Composables/useCheckers"
 
 let props = defineProps({
 	options: {type: String},
 	answer: {type: String}
 })
-let emits = defineEmits(["change", "validate"])
 
-let showKeyboard = ref("zeroes")
-let zeroes = ref({input: "", tex: "", raw: ""}),
-	zeroesKeyboard = ref(props.options.includes("float")?"algebra":"exact"),
-	signs = ref({input: "", tex: "", raw: ""}),
-	grows = ref({input: "", tex: "", raw: ""}),
-	coords = ref({input: "", tex: "", raw: ""}),
-	validateButton = ref(null),
-	tosUI = ref(null),
-	tosName = computed(()=>{
-		let names = props.options.split("\n").filter(x=>x.includes("(x)")).map(x=>x.split("(")[0])
-
-		return names.length===0 ? "f" : names[0]
-	}),
-	withGrows = computed(()=>{
-		return props.answer.split("@").length>2
-	}),
-	withCoords = computed(()=>{
-		return props.answer.split("@").length>3
-	}),
-	tos = computed(() => {
-		return makeStudyFromCode(answerValue.value, showKeyboard.value==="coords")
-	}),
-	resetKeyStrokes = function () {
-		zeroes.value = {input: "", tex: "", raw: ""}
-		signs.value = {input: "", tex: "", raw: ""}
-		grows.value = {input: "", tex: "", raw: ""}
-		coords.value = {input: "", tex: "", raw: ""}
-	},
-	wrongAnswer = function () {
-		useWrongAnswerAnimation(validateButton.value)
-	},
-	getTex = function (value) {
-		return ""
-	},
-	getRaw = function (value) {
-		const v = value.split("@")
-
-		zeroes.value.input = v[0]
-		signs.value.input = v[1]
-		if(withGrows.value) {
-			grows.value.input = v[2]
-		}
-		if(withCoords.value){
-			coords.value.input = v[3]
-		}
-
-		nextTick(() => tosUI.value.$el.innerHTML).then(resolve => {
-			changeEvent()
-			// emits("tex", "")
-			// emits("raw", resolve)
-		})
-
-		return ""
-	},
-	getAnswer = function(value){
-		return {
-			tex: getTex(value),
-			raw: getRaw(value)
-		}
-	},
-	answerValue = computed(()=>{
-		let r = `${zeroes.value.input}@${signs.value.input}`
-		if(withGrows.value){
-			r +=`@${grows.value.input}`
-		}
-		if(withCoords.value){
-			r +=`@${coords.value.input}`
-		}
-
-		return r
-	}),
-	validateEvent = function () {
+let emits = defineEmits(["change", "validate"]),
+	changeEvent = async function (value) {
+		await nextTick()
 		const check = useCheckers("tos").check(props.answer, answerValue.value)
 
-		emits("validate", {
-			code: answerValue.value,
-			tex: "",
-			raw: tosUI.value.$el.innerHTML,
-			correct: check.result,
-			message: check.message
+		emits("change", {
+			value: {
+				input: answerValue.value,
+				tex: "",
+				raw: tosUI.value.$el.innerHTML
+			},
+			validation: {
+				result: check.result,
+				message: check.message
+			}
 		})
-	},
-	updateTos = async function(){
-		await nextTick()
+	}
+
+/* FONCTIONS SPECIFIQUES */
+// Les options du clavier TOS
+let tosName = computed(() => { // le nom de la fonction
+		let names = props.options.split("\n").filter(x => x.includes("(x)")).map(x => x.split("(")[0])
+		return names.length === 0 ? "f" : names[0]
+	}),
+	withGrows = computed(() => { // s'il y a la croissance
+		return props.answer.split("@").length > 2
+	}),
+	withCoords = computed(() => { // s'il faut donner les coordonnées
+		return props.answer.split("@").length > 3
+	})
+
+// Le clavier a afficher
+let showKeyboard = ref("zeroes"),
+	changeKeyboard = function (event) {
+		// event = {input, raw, tex}
+
+		// mise à jour du tableau de siges
+		switch (showKeyboard.value) {
+		case "zeroes":
+			zeroes.value = event
+			break
+		case "signs":
+			signs.value = event
+			break
+		case "grows":
+			grows.value = event
+			break
+		case "coords":
+			coords.value = event
+			break
+		}
+
 		changeEvent()
 	}
 
-const changeEvent= function(){
-	emits("change",{
-		tex: "",
-		raw: tosUI.value.$el.innerHTML
+// Génération de la réponse pour comparaison et de l'affichage.
+let zeroes = ref({input: "", tex: "", raw: ""}),
+	zeroesKeyboard = ref(props.options.includes("float") ? "algebra" : "exact"),
+	signs = ref({input: "", tex: "", raw: ""}),
+	grows = ref({input: "", tex: "", raw: ""}),
+	coords = ref({input: "", tex: "", raw: ""}),
+	tosUI = ref(null),
+	tos = computed(() => {
+		return makeStudyFromCode(answerValue.value, showKeyboard.value === "coords")
+	}),
+	answerValue = computed(() => {
+		let r = `${zeroes.value.input}@${signs.value.input}`
+		if (withGrows.value) {
+			r += `@${grows.value.input}`
+		}
+		if (withCoords.value) {
+			r += `@${coords.value.input}`
+		}
+
+		return r
 	})
-}
-defineExpose({resetKeyStrokes, wrongAnswer, getAnswer})
+
+// Initialisation au démarrage.
+onMounted(()=>{
+	changeEvent()
+})
+
+
+// let resetKeyStrokes = function () {
+// 		zeroes.value = {input: "", tex: "", raw: ""}
+// 		signs.value = {input: "", tex: "", raw: ""}
+// 		grows.value = {input: "", tex: "", raw: ""}
+// 		coords.value = {input: "", tex: "", raw: ""}
+// 	},
+// 	getRaw = function (value) {
+// 		const v = value.split("@")
+//
+// 		zeroes.value.input = v[0]
+// 		signs.value.input = v[1]
+// 		if (withGrows.value) {
+// 			grows.value.input = v[2]
+// 		}
+// 		if (withCoords.value) {
+// 			coords.value.input = v[3]
+// 		}
+//
+// 		nextTick(() => tosUI.value.$el.innerHTML).then(resolve => {
+// 			changeEvent()
+// 			// emits("tex", "")
+// 			// emits("raw", resolve)
+// 		})
+//
+// 		return ""
+// 	},
+// 	getAnswer = function (value) {
+// 		return {
+// 			tex: getTex(value),
+// 			raw: getRaw(value)
+// 		}
+// 	}
+
 </script>

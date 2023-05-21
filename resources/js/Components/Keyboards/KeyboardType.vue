@@ -52,49 +52,39 @@ let props = defineProps({
 	options: {type: String},
 	answer: {type: String}
 })
+
 let emits = defineEmits(["change", "validate"])
-let validateButton = ref(null),
-	resetKeyStrokes = function () {
-	},
-	wrongAnswer = function () {
-		useWrongAnswerAnimation(validateButton.value)
-	},
-	changeEvent = async function (value) {
-		await nextTick()
-		emits("change", {
+
+let	changeEvent = async function () {
+	await nextTick()
+
+	// Get the answer
+	let input = currentAnswer(),
+		result = input.length===props.answer.length
+
+	emits("change", {
+		value: {
+			input,
 			tex: "",
-			raw: props.answer
-		})
-	},
-	validateEvent = function (value) {
-		emits("validate", {
-			code: props.answer,
-			tex: "",
-			raw: props.answer,
-			correct: true,
+			raw: input
+		},
+		validation: {
+			result,
 			message: ""
-		})
-	},
-	getTex = function (value) {
-		return ""
-	},
-	getRaw = function (value) {
-		return value
-	},
-	getAnswer = function(value){
-		return {
-			tex: getTex(value),
-			raw: getRaw(value)
 		}
+	})
+
+	if(result){
+		emits("validate")
 	}
-defineExpose({resetKeyStrokes, wrongAnswer, getAnswer})
+}
 
 /* ------------------*/
 let typoButtons = ref(null),
 	excludeLetters = ref([" ", ",", "'", ".", "!", "?", "(", ")", "-"]),
 	answerLetters = ref([]),
 	resultLetters = ref([]),
-	buildResult = function () {
+	generateQuestion = function () {
 		let theWord = props.answer
 
 		answerLetters.value = PiMath.Random.shuffle(theWord.split("")
@@ -127,22 +117,27 @@ let typoButtons = ref(null),
 			// finished ?
 			currentIndex.value++
 			if (currentIndex.value >= resultLetters.value.length) {
-				validateEvent()
+				changeEvent()
 				return
 			}
 			while (resultLetters.value[currentIndex.value].visible) {
 				currentIndex.value++
 				if (currentIndex.value >= resultLetters.value.length) {
-					validateEvent()
+					changeEvent()
 					return
 				}
 			}
-		} else {
+		}else {
 			useWrongAnswerAnimation(typoButtons.value.children[index])
 		}
+
+		changeEvent()
+	},
+	currentAnswer = function(){
+		return resultLetters.value.map(x=>x.visible?x.key:"").join("")
 	}
 
 onMounted(()=>{
-	buildResult()
+	generateQuestion()
 })
 </script>

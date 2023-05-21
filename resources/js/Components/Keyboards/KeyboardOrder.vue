@@ -1,9 +1,5 @@
 <template>
 	<div>
-		<keyboard-validate-button
-			ref="validateButton"
-			@validate="validateEvent"
-		/>
 		<draggable
 			v-model="sortableItems"
 			class="grid grid-cols-1 gap-3 my-5"
@@ -11,6 +7,7 @@
 				animation: 200,
 			}"
 			item-key="id"
+			@update="changeEvent"
 		>
 			<template #item="{ element }">
 				<button
@@ -24,61 +21,63 @@
 
 <script setup>
 
-import {useWrongAnswerAnimation} from "@/Composables/useHelpers"
 import {ref} from "vue"
 import {PiMath} from "pimath/esm"
-import KeyboardValidateButton from "@/Components/Keyboards/KeyboardValidateButton.vue"
 
-//TODO : how to show the answer correctly ?
 let props = defineProps({
 	options: {type: String},
 	answer: {type: String}
 })
-let emits = defineEmits(["change", "validate"])
-let validateButton = ref(null),
-	resetKeyStrokes = function () {
-	},
-	wrongAnswer = function () {
-		useWrongAnswerAnimation(validateButton.value)
-	},
-	validateEvent = function () {
-		let result = 0
+
+let emits = defineEmits(["change", "validate"]),
+	changeEvent = function (value) {
+		// On compte le nombre de réponses au bon endroit...
+		let errors = 0
 		for(let i=1; i<=sortableItems.value.length; i++){
 			if(sortableItems.value[i-1].id!==i){
-				result++
+				errors++
 			}
 		}
 
-		emits("validate", {
-			code: `${result>0?result+" faute(s)":""}`,
-			tex: "",
-			raw: "",
-			correct: `${result>0?result+" faute(s)":0}`,
-			message: `${result>0?result+" faute(s)":""}`
+		emits("change", {
+			value: {
+				input: "",
+				tex: "",
+				raw: sortableItems.value.map(el=>`- ${el.label}`).join("\n")
+			},
+			validation: {
+				result: errors===0,
+				message: errors>0?`Il y a ${errors} erreur${errors>1?"s":""}`:""
+			}
 		})
-	},
-	getTex = function (value) {
-		return ""
-	},
-	getRaw = function (value) {
-		// TODO: Keyboard ORDER : make the solution correctly
-		return ""
-	},
-	getAnswer = function(value){
-		return {
-			tex: getTex(value),
-			raw: getRaw(value)
-		}
 	}
-defineExpose({resetKeyStrokes, wrongAnswer, getAnswer})
 
-/* ------------------*/
-
+// Liste des élèments qui sont à réordrer.
 let sortableItems = ref(PiMath.Random.shuffle(
 	props.options.split("\n").map((element, index)=>{return {
 		id: index+1,
 		label: element
 	}})
 ))
+
+
+let	validateEvent = function () {
+	let result = 0
+	for(let i=1; i<=sortableItems.value.length; i++){
+		if(sortableItems.value[i-1].id!==i){
+			result++
+		}
+	}
+
+	emits("validate", {
+		code: `${result>0?result+" faute(s)":""}`,
+		tex: "",
+		raw: "",
+		correct: `${result>0?result+" faute(s)":0}`,
+		message: `${result>0?result+" faute(s)":""}`
+	})
+}
+
+
 
 </script>

@@ -1,16 +1,13 @@
 export function StringChecker(options) {
 	return {
 		format: () => {
-			if (isNaN(options[0])) {
-				return "réponse numérique"
-			} else {
-				return `réponse avec ${options[0]} chiffre(s) après la virgule`
-			}
+			return "réponse textuelle"
 		},
 		check: (expectedAnswer, answer, options = []) => {
 			if (typeof answer !== "string") {
 				answer = answer.toString()
 			}
+
 			if (typeof expectedAnswer !== "string") {
 				expectedAnswer = expectedAnswer.toString()
 			}

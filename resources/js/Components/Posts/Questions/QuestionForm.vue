@@ -61,11 +61,12 @@ Formulaire d'édition d'une question
 					language="latex"
 				/>
 
-				<form-input
+				<form-textarea
 					v-model="theQuestion.answer"
 					label="answer"
 					name="answer"
 					class="font-code"
+					:rows="3"
 				/>
 				<form-input
 					v-model="theQuestion.keyboard"
