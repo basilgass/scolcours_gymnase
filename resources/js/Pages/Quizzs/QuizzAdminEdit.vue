@@ -26,6 +26,9 @@
 				v-text="theQuizz.title"
 			/>
 			<markdown-it :text="theQuizz.body" />
+
+			<hr class="divide-slate-100 my-5">
+			<markdown-it :text="theQuizz.outro" />
 		</div>
 
 		<div class="max-w-lg mx-auto grid grid-cols-2 gap-5 my-10">
@@ -102,6 +105,21 @@
 				</div>
 			</template>
 			<div class="px-5">
+				<form-select
+					v-model="theQuizz.chapter"
+					name="quizz-themes"
+					label="thème"
+				>
+					<option value="">
+						-
+					</option>
+					<option
+						v-for="chapter in props.chapters"
+						:key="'chapter-'+chapter.id"
+						:value="chapter.id"
+						v-text="chapter.title"
+					/>
+				</form-select>
 				<form-input
 					v-model="theQuizz.title"
 					name="quizz-title"
@@ -112,6 +130,12 @@
 					name="quizz-body"
 					label="body"
 					:rows="10"
+				/>
+				<form-textarea
+					v-model="theQuizz.outro"
+					name="quizz-outro"
+					label="outro"
+					:rows="4"
 				/>
 			</div>
 		</dialog-modal>
@@ -222,6 +246,7 @@ import QuestionsIndex from "@/Components/Posts/QuestionsIndex.vue"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
 import {Inertia} from "@inertiajs/inertia"
+import FormSelect from "@/Components/Form/FormSelect.vue"
 
 const flash = inject("flash")
 let props = defineProps({
@@ -229,6 +254,7 @@ let props = defineProps({
 		questions: { type: Object, required: true },
 		sessions: { type: Object, required: true },
 		teams: { type: Array, required: true },
+		chapters: {type: Array, required: true},
 	}),
 	ongoing = function (session) {
 		return session.current <= session.total && session.enable
@@ -241,6 +267,8 @@ let showQuizzForm = ref (false),
 			.post(route("quizzs.update", [theQuizz.value.id]), {
 				title: theQuizz.value.title,
 				body: theQuizz.value.body,
+				outro: theQuizz.value.outro,
+				chapter_id: theQuizz.value.chapter,
 				_method: "PATCH"
 			})
 			.then(res=>{

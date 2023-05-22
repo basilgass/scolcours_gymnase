@@ -82,7 +82,7 @@ keyboard -> QuestionUserInput -> QuestionShow
 			<button
 				v-if="!showUserInput"
 				class="w-full py-3 hover:border-t hover:border-b"
-				:class="`active-scolcours-${$page.props.theme.slug}`"
+				:class="`active-scolcours-${$page.props.theme?.slug}`"
 				@click="showUserInput=!showUserInput"
 			>
 				<i class="bi bi-calculator mr-2" />donner la réponse
@@ -117,7 +117,7 @@ keyboard -> QuestionUserInput -> QuestionShow
 				class="question-answer-selector flex justify-between items-center my-5"
 			>
 				<button
-					:class="answerId===0?'invisible':`active-scolcours-${$page.props.theme.slug}`"
+					:class="answerId===0?'invisible':`active-scolcours-${$page.props.theme?.slug}`"
 					class="px-3 text-xl font-semibold border rounded-full"
 					@click="answerId--"
 				>
@@ -129,7 +129,7 @@ keyboard -> QuestionUserInput -> QuestionShow
 					class="text-center text-xs text-gray-400"
 				/>
 				<button
-					:class="answerId===answersNumber-1?'invisible':`active-scolcours-${$page.props.theme.slug}`"
+					:class="answerId===answersNumber-1?'invisible':`active-scolcours-${$page.props.theme?.slug}`"
 					class="px-3 text-xl font-semibold border rounded-full"
 					@click="answerId++"
 				>

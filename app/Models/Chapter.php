@@ -93,6 +93,10 @@ class Chapter extends Model
 		return $this->belongsToMany(User::class);
 	}
 
+	public function quizzs()
+	{
+		return $this->hasMany(Quizz::class);
+	}
 //
 //	public function questions()
 //	{

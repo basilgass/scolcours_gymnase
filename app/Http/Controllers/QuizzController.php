@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\QuestionResource;
 use App\Http\Resources\QuizzSessionRessource;
+use App\Models\Chapter;
 use App\Models\Quizz;
 use App\Models\QuizzSession;
 use App\Models\Team;
@@ -29,7 +30,9 @@ class QuizzController extends Controller
 	{
 		$validation = $request->validate([
 			'title'=>['string', 'min:2'],
-			'body'=>['string', 'min:2']
+			'body'=>['string', 'min:2'],
+			'outro'=>['string', 'min:0', 'nullable'],
+			'chapter_id'=>['exists:App\Models\Chapter,id', 'nullable'],
 		]);
 
 		$quizz->update($validation);
@@ -54,14 +57,26 @@ class QuizzController extends Controller
 
 	public function adminQuizz(Quizz $quizz)
 	{
-		return Inertia::render('Quizzs/QuizzAdminEdit',
-			[
-				"quizz" => $quizz,
-				"questions" => QuestionResource::collection($quizz->questions),
-				"sessions" => QuizzSessionRessource::collection($quizz->sessions),
-				"teams" => Team::all()
-			]
-		);
+
+		$data = [
+			"quizz" => $quizz,
+			"questions" => QuestionResource::collection($quizz->questions),
+			"sessions" => QuizzSessionRessource::collection($quizz->sessions),
+			"teams" => Team::all(),
+			"chapters" => Chapter::all()->map(function ($chapter){
+				return [
+					'id'=>$chapter->id,
+					'title'=>$chapter->title,
+					'theme'=>$chapter->theme->slug
+				];
+			}),
+		];
+
+		// Add the theme to the main layout page
+		if($quizz->chapter){
+			$data["theme"] = $quizz->chapter?->theme->only('color', 'icon', 'slug', 'title', 'id');
+		}
+		return Inertia::render('Quizzs/QuizzAdminEdit',$data);
 
 	}
 

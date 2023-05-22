@@ -16,7 +16,7 @@
 			</info-tile>
 
 			<info-tile
-				v-if="nbAnswers === props.usersCount"
+				v-if="nbAnswers > props.usersCount * 0.1"
 				class="col-span-1 md:col-span-2"
 			>
 				<template #title>
@@ -35,7 +35,7 @@
 </template>
 
 <script setup>
-import { computed } from "vue"
+import {computed} from "vue"
 import InfoTile from "@/Components/Ui/InfoTile.vue"
 
 let props = defineProps({

@@ -44,4 +44,8 @@ class Quizz extends Model
 		return $this->hasMany(QuizzSession::class);
 	}
 
+	public function chapter()
+	{
+		return $this->belongsTo(Chapter::class);
+	}
 }
