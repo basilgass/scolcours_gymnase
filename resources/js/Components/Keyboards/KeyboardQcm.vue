@@ -62,10 +62,7 @@ let changeEvent = function (value) {
 
 	// Chaque réponse doit se trouver dans une liste et uniquement dans une.
 	if(result) {
-		console.log(answersKeys)
 		for (let key of answersKeys) {
-			console.log("Checking", key)
-
 			for(let index in goodAnswers){
 				if(goodAnswers[index].split("|").includes(key)){
 					// remove this item
@@ -120,7 +117,7 @@ let qcmOptions = computed(() => {
 		return qcmOptions.value.includes("tex")
 	}),
 	multiAnswers = computed(()=>{
-		return props.answer.split(",").length
+		return props.answer.split(",").length>1
 	})
 
 /* ---------------- */
