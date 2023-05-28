@@ -1,7 +1,6 @@
 <template>
 	<section
 		v-if="props.quizzSession.enable"
-		class="px-5"
 	>
 		<!-- En tête lorsque les questions sont en cours -->
 		<quizz-header
@@ -9,7 +8,7 @@
 			:quizz-session="props.quizzSession"
 		/>
 
-		<section class="mt-16 sm:mt-12">
+		<section class="mt-12 px-5">
 			<quizz-intro
 				v-if="props.quizzSession.status==='intro'"
 				:quizz="props.quizzSession.quizz"

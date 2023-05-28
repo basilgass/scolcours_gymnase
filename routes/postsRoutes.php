@@ -36,6 +36,8 @@ Route::middleware('can:admin')->group(function () {
 		->name('posts.updateQuestionsGrid');
 	Route::get('posts/{post}/edit', [PostController::class, 'edit'])
 		->name('posts.edit');
+	Route::get('posts/{post}', [PostController::class, 'show'])
+		->name('posts.show');
 
 	// TODO: remove the display of one post as a separate item ?
 	Route::get('posts/{post}', [PostController::class, 'show'])

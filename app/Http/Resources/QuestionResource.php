@@ -34,20 +34,14 @@ class QuestionResource extends JsonResource
 //			];
 //		});
 
+		// Il n'y a pas de block pour cette question
 		if(count($this->blocks)===0){
 			$this->blocks()->create(['body'=>'Sans contenu']);
 			$this->blocks;
 		}
 
+		// On récupère les réponses de l'utilisateur.
 		$userAnswers = $this->userAnswers();
-		$isCorrect = false;
-		foreach ($userAnswers as $answer){
-			if($answer['result']){
-				$isCorrect = true;
-				break;
-			}
-		}
-
 
 		return [
 			"id" => $this->id,
@@ -64,13 +58,7 @@ class QuestionResource extends JsonResource
 			"checker" => $this->checker,
 			"keyboard" => $this->keyboard,
 			"parameters" => $this->parameters??'',
-			"user" => [
-				"answers" => $userAnswers,
-				"correct" => $isCorrect
-			]
-//			"updated_at" => $this->updated_at,
-//			"userAnswers" => $userAnswers,
-//			"userHasCorrectAnswer" => count($userAnswers)>0 && $userAnswers[count($userAnswers)-1]['result']
+			"user" => $userAnswers
 		];
 //        return parent::toArray($request);
 	}

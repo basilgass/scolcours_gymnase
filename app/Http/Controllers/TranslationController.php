@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Translation;
 use App\Models\TranslationUnit;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -12,24 +13,29 @@ class TranslationController extends Controller
 	public function index($language)
 	{
 		return Inertia::render("languages/LanguageIndex.vue", [
-			"language"=>$language
+			"language" => $language
 		]);
 	}
 
 	public function show($language, $game)
 	{
 		$code = "";
-		if($language==='italiano'){$code="it";}
-		if($language==='english'){$code="en";}
+		if ($language === 'italiano') {
+			$code = "it";
+		}
+		if ($language === 'english') {
+			$code = "en";
+		}
 
 		$units = TranslationUnit::where('language', $code)->get();
 
-		return Inertia::render("languages/Language".Str::title($game).".vue", [
-			"code"=>$code,
-			"language"=>$language,
-			"units"=>$units
+		return Inertia::render("languages/Language" . Str::title($game) . ".vue", [
+			"code" => $code,
+			"language" => $language,
+			"units" => $units
 		]);
 	}
+
 	public function import()
 	{
 		return Inertia::render("languages/LanguageImport.vue");
@@ -51,10 +57,10 @@ class TranslationController extends Controller
 
 		// Make sur the unit / language exists.
 		$unit = TranslationUnit::updateOrCreate([
-			"language"=>$validation["language"],
-			"unit"=>$validation["unit"]
+			"language" => $validation["language"],
+			"unit" => $validation["unit"]
 		], [
-			"title"=> $validation['title']?:''
+			"title" => $validation['title'] ?: ''
 		]);
 
 		foreach ($validation['translations'] as $translation) {
@@ -69,5 +75,19 @@ class TranslationController extends Controller
 	public function fetchWords(TranslationUnit $unit)
 	{
 		return $unit->translations;
+	}
+
+	public function updateTranslation(Request $request, Translation $translation)
+	{
+		$validation = $request->validate([
+			"fr" => ["string", "min:1", "required"],
+			"foreign" => ["string", "min:1", "required"],
+		]);
+
+
+		$translation->update($validation);
+		$translation->save();
+		// update the word
+		return $translation;
 	}
 }

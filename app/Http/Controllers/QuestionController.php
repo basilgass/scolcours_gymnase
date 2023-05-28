@@ -132,9 +132,10 @@ class QuestionController extends Controller
 
 	public function storeAnswer(Question $question, Request $request)
 	{
-		// TODO: remove answer from Question table  ?
+		// On valide les données
 		$validate = $request->validate([
-			'result' => ['boolean']
+			'result' => ['boolean'],
+			'answer'=> ['string', 'min:1']
 		]);
 
 		// User must be logged in.
@@ -150,19 +151,24 @@ class QuestionController extends Controller
 			return true;
 		}
 
-		// remove all "wrong" answers.
-		$attempts = 0;
-		if($validate['result']) {
-			$attempts = $question->clean();
-		}
+		// On récupère la liste des réponses.
+		$userQuestion = $question->users()
+			->where('user_id', $user->id)->first();
 
-//		$attempts = 0;
-		// Save the new question
-		$question->users()->attach($user,
+		// Default value.
+		$answers = $userQuestion?
+			$userQuestion->pivot->answer.PHP_EOL.$validate['answer']:
+			$validate['answer'];
+		$attempts = count(explode(PHP_EOL, $answers));
+
+		// On ajoute ou modifie la valeur.
+		$question->users()->syncWithPivotValues(
+			$user,
 			[
-				...$validate,
-				"attempts"=>$attempts+1
-			]
+				"answer" => $answers,
+				"result" => $validate["result"],
+				"attempts"=>$attempts,
+				]
 		);
 
 		return $validate;

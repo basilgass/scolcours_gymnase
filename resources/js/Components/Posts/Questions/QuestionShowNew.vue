@@ -8,8 +8,8 @@ keyboard -> QuestionUserInput -> QuestionShow
 		:id="`question-${theQuestion.id}`"
 		:class="{
 			'rounded border h-full': !props.isMinimal,
-			'bg-gray-50 border-gray-200': !theQuestion.user.correct && !props.isMinimal,
-			'bg-green-50 border-green-600/60': theQuestion.user.correct && !props.isMinimal,
+			'bg-gray-50 border-gray-200': !theQuestion.user.result && !props.isMinimal,
+			'bg-green-50 border-green-600/60': theQuestion.user.result && !props.isMinimal,
 		}"
 	>
 		<header class="flex relative">
@@ -101,9 +101,10 @@ keyboard -> QuestionUserInput -> QuestionShow
 		>
 			<keyboard-validate-button
 				ref="validateButton"
+				:disabled="lockValidationButton"
 				@validate="validateQuestion"
 			/>
-			<div v-if="userAnswersErrors.length>0">
+			<div v-if="userAnswersErrors.length>0 && !props.singleAnswer">
 				<div
 					v-for="(msg, index) in userAnswersErrors"
 					:key="`error-${index}`"
@@ -149,7 +150,7 @@ keyboard -> QuestionUserInput -> QuestionShow
 
 		<!-- already answered or admin answer -->
 		<div
-			v-if="theQuestion.user.correct || $page.props.auth.can.admin"
+			v-if="theQuestion.user.result || $page.props.auth.can.admin"
 			class="question-footer mt-5 border-t border-gray-200 px-5 py-2"
 		>
 			<div>
@@ -199,7 +200,7 @@ import {computed, defineAsyncComponent, inject, provide, reactive, ref} from "vu
 import KeyboardValidateButton from "@/Components/Keyboards/KeyboardValidateButton.vue"
 import {usePage} from "@inertiajs/inertia-vue3"
 import {useWrongAnswerAnimation} from "@/Composables/useHelpers"
-import {getKeyboard} from "@/keyboards" // Props
+import {getKeyboard} from "@/keyboards"
 
 // Props
 let props = defineProps({
@@ -208,6 +209,7 @@ let props = defineProps({
 	showInput: {type: Boolean, default: false},
 	isDynamic: {type: Boolean, default: false},
 	isMinimal: {type: Boolean, default: false},
+	singleAnswer: {type: Boolean, default: false},
 })
 
 // flash message
@@ -345,8 +347,13 @@ let showAnswer = ref(false),
 		}
 	},
 	validateButton = ref(null),
+	lockValidationButton = ref(false),
 	validateQuestion = function(){
 		// validation des réponses.
+
+		// On bloque la possibitié de cliquer une nouvelle fois sur le bouton.
+		lockValidationButton.value = true
+
 		// On vérifie que toutes les réponses ont été données.
 		let result = true,
 			stack = []
@@ -371,23 +378,27 @@ let showAnswer = ref(false),
 			answer: userAnswers.value.map(a=>a.value.input).join(",")
 		})
 
+		setTimeout(()=>lockValidationButton.value = false, 500)
+
 	},
 	storeValidation = function(event){
 		// event: {question: string, answer: string, result: boolean}
-		if(!event.result){useWrongAnswerAnimation(validateButton.value.$el)}
+		if(!props.singleAnswer && !event.result){useWrongAnswerAnimation(validateButton.value.$el)}
 
 		// It's a dynamic question (without id)
+		// On ne peut donc pas sauvegarder les informations.
 		if (props.question.id === undefined) {
 			emits("validate", event)
 			return
 		}
 
-		theQuestion.user.correct = event.result
+		// On définit les informations utilisateurs.
+		theQuestion.user.result = event.result
 
-		// need answer (string: min1), , result (boolean)
+		// need answer (string: min1) , result (boolean)
 		// Save the information to the database if the user is logged in
 		// and if the result is correct
-		if(usePage().props.value.auth.user && event.result) {
+		if(usePage().props.value.auth.user) {
 			axios.post(route("questions.validate", [props.question.id]), {
 				...event
 			}).then(res => {
@@ -427,4 +438,5 @@ let editMode = inject("editMode", false),
 				})
 		}
 	}
+
 </script>

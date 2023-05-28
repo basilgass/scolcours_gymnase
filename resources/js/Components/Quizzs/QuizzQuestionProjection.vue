@@ -54,5 +54,7 @@ let props = defineProps({
 			: " - - "
 	})
 
+console.log(props.results)
+
 // TODO: add a chart of the results
 </script>

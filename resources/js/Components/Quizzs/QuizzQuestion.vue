@@ -1,11 +1,12 @@
 <template>
 	<article>
 		<question-show-new
-			class="max-w-xl mx-auto"
+			class="max-w-xl mx-auto bg-white border rounded"
 			:question="props.question"
 			show-title
-			minimal
-			display-input
+			show-input
+			is-minimal
+			single-answer
 			@validate="$emit('validate')"
 		/>
 	</article>

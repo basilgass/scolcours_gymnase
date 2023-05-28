@@ -51,7 +51,7 @@ let changeEvent = function (value) {
 	let answers = qcmSelections(),
 		answersKeys = answers.map(x=>x.key)
 
-	// On parcoure toutes les réponses
+	// On parcourt toutes les réponses
 	let goodAnswers = props.answer.split(",")
 	// props.answer = "1,2|3,5|6|7"
 	// answersKeys = [1,3,5]
@@ -88,7 +88,7 @@ let changeEvent = function (value) {
 
 	emits("change", {
 		value: {
-			intput: "",
+			input: answersKeys.join(","),
 			tex: answers.map(x=>x.tex).join(", "),
 			raw: answers.map(x=>x.label).join(", ")
 		},
@@ -137,13 +137,13 @@ let qcmItems = ref([]),
 
 /* ---------------*/
 // Gestion du QCM avec plusieurs réponses.
-let	multiAnswersId = ref(0),
-	multiAnswersDelete = function(){
-		multiAnswersId.value--
-	},
-	multiAnswersAdd = function(){
-		multiAnswersId.value++
-	}
+// let	multiAnswersId = ref(0),
+// 	multiAnswersDelete = function(){
+// 		multiAnswersId.value--
+// 	},
+// 	multiAnswersAdd = function(){
+// 		multiAnswersId.value++
+// 	}
 
 onMounted(() => {
 	// Build the Items.

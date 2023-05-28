@@ -50,7 +50,8 @@ class Question extends Model
 	use HasFactory;
 
 	protected $guarded = [];
-	protected $with = ['users', 'blocks'];
+	// TODO: removed "users" from the $with attribute.
+	protected $with = ['blocks'];
 
 	public function questionable(): \Illuminate\Database\Eloquent\Relations\MorphTo
 	{
@@ -82,17 +83,26 @@ class Question extends Model
 	}
 	public function answersFromUser(User $user)
 	{
-		return $this->users()
+		$answer = $this->users()
 			->where('question_user.user_id', '=', $user->id)
-			->get()
-			->map(function ($item) {
-				return [
-					'answer' => $item->pivot->answer,
-					'result' => $item->pivot->result,
-					'attempts' => $item->pivot->attempts,
-					'created_at' => Carbon::parse($item->pivot->created_at)->diffForHumans(),
-				];
-			});
+			->first();
+
+		if($answer){
+			return [
+				'answer' => $answer->pivot->answer,
+				'result' => $answer->pivot->result,
+				'attempts' => $answer->pivot->attempts,
+				'updated_at' => Carbon::parse($answer->pivot->updated_at)->diffForHumans(),
+			];
+		}
+
+		return  [
+			'answer' => "",
+			'result' => false,
+			'attempts' => 0,
+			'updated_at' => null,
+		];
+
 	}
 	public function userAnswers()
 	{

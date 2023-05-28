@@ -2,6 +2,9 @@
 
 use App\Http\Controllers\QuestionController;
 
+Route::get('questions/admin/{question}', function(\App\Models\Question $question){
+	return \App\Http\Resources\QuestionResource::make($question);
+});
 // TODO: remove posts references to questionsRoutes
 
 Route::apiResource('posts.questions', QuestionController::class)

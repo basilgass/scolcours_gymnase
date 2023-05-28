@@ -16,8 +16,7 @@ let gaugeValue = computed(()=>{
 		class="text-lg lg:text-xl
 		bg-black text-white
 		w-full px-3 mb-10 min-h-[3em] py-3 space-y-3 sm:space-y-0
-		flex flex-col sm:flex-row justify-between items-center
-		fixed top-0 left-0"
+		flex flex-col sm:flex-row justify-between items-center"
 	>
 		<h2
 			v-katex.auto="props.quizzSession.quizz.title"
