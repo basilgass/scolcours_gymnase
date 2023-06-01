@@ -37,7 +37,7 @@
 <script>
 import BreezeButton from "@/Components/Auth/Button.vue"
 import BreezeGuestLayout from "@/Layouts/LayoutGuest.vue"
-import {Head, Link} from "@inertiajs/inertia-vue3"
+import {Head, Link} from "@inertiajs/vue3"
 
 export default {
 

@@ -99,7 +99,7 @@ import { computed } from "vue"
 import QuizzQuestion from "@/Components/Quizzs/QuizzQuestion.vue"
 import QuizzIntro from "@/Components/Quizzs/QuizzIntro.vue"
 import QuizzOutro from "@/Components/Quizzs/QuizzOutro.vue"
-import { Inertia } from "@inertiajs/inertia"
+import { router } from "@inertiajs/vue3"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 
 let props = defineProps({
@@ -108,7 +108,7 @@ let props = defineProps({
 	liveQuizz = computed(() => props.quizzSession.data)
 
 const updateCurrent = function (index) {
-	Inertia.post(
+	router.post(
 		route("quizzs.sessions.updateCurrent", [liveQuizz.value.shortcode]),
 		{ index },
 		{
@@ -118,7 +118,7 @@ const updateCurrent = function (index) {
 	)
 }
 const updateEnable = function (enable) {
-	Inertia.post(
+	router.post(
 		route("quizzs.sessions.updateEnable", [liveQuizz.value.shortcode]),
 		{ enable },
 		{

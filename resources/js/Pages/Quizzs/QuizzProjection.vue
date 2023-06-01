@@ -63,7 +63,7 @@ import {computed, onBeforeUnmount, onMounted, ref} from "vue"
 import QuizzQuestion from "@/Components/Quizzs/QuizzQuestion.vue"
 import QuizzIntro from "@/Components/Quizzs/QuizzIntro.vue"
 import QuizzOutro from "@/Components/Quizzs/QuizzOutro.vue"
-import {Inertia} from "@inertiajs/inertia"
+import {router} from "@inertiajs/vue3"
 import QuizzWait from "@/Components/Quizzs/QuizzWait.vue"
 import QuizzQuestionProjection from "@/Components/Quizzs/QuizzQuestionProjection.vue"
 
@@ -75,7 +75,7 @@ let props = defineProps({
 	interval = null,
 	updateCounter = ref(0),
 	updateQuizz = function () {
-		Inertia.reload({
+		router.reload({
 			preserveScroll: true,
 			preserveState: true
 		})

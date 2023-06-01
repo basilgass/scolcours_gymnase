@@ -49,7 +49,7 @@ import BreezeGuestLayout from "@/Layouts/LayoutGuest.vue"
 import BreezeInput from "@/Components/Auth/Input.vue"
 import BreezeLabel from "@/Components/Auth/Label.vue"
 import BreezeValidationErrors from "@/Components/Auth/ValidationErrors.vue"
-import {Head} from "@inertiajs/inertia-vue3"
+import {Head} from "@inertiajs/vue3"
 
 export default {
 

@@ -198,7 +198,7 @@ import IllustrationShow from "@/Components/Posts/Illustrations/IllustrationShow.
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 import {computed, defineAsyncComponent, inject, nextTick, provide, reactive, ref} from "vue"
 import KeyboardValidateButton from "@/Components/Keyboards/KeyboardValidateButton.vue"
-import {usePage} from "@inertiajs/inertia-vue3"
+import {usePage} from "@inertiajs/vue3"
 import {useWrongAnswerAnimation} from "@/Composables/useHelpers"
 import {getKeyboard} from "@/keyboards"
 
@@ -417,7 +417,7 @@ let updateQuestion = function (event) {
 		// need answer (string: min1) , result (boolean)
 		// Save the information to the database if the user is logged in
 		// and if the result is correct
-		if (usePage().props.value.auth.user) {
+		if (usePage().props.auth.user) {
 			axios.post(route("questions.validate", [props.question.id]), {
 				...event
 			}).catch((res) => {

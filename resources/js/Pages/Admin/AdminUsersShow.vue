@@ -180,8 +180,8 @@ export default {
 
 import {computed, ref} from "vue"
 import FormInput from "@/Components/Form/FormInput"
-import {useForm} from "@inertiajs/inertia-vue3"
-import {Inertia} from "@inertiajs/inertia"
+import {useForm} from "@inertiajs/vue3"
+import {router} from "@inertiajs/vue3"
 import FormSwitch from "@/Components/Form/FormSwitch"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
 
@@ -223,7 +223,7 @@ function destroyUser(id) {
 	axios.post(route("admin.users.destroy", [id]), {_method: "delete"}).then((res) => {
 		if (res.data) {
 			// Reload the page.
-			Inertia.reload({only: ["users"]})
+			router.reload({only: ["users"]})
 		}
 	})
 }

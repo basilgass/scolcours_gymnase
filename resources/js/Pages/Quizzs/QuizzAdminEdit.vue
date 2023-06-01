@@ -245,7 +245,7 @@ import DialogModal from "@/Components/Ui/DialogModal.vue"
 import QuestionsIndex from "@/Components/Posts/QuestionsIndex.vue"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
-import {Inertia} from "@inertiajs/inertia"
+import {router} from "@inertiajs/vue3"
 import FormSelect from "@/Components/Form/FormSelect.vue"
 
 const flash = inject("flash")
@@ -284,7 +284,7 @@ let showQuizzForm = ref (false),
 			_method: "DELETE"
 		})
 			.then(res=>{
-				Inertia.visit(route("quizzs.admin"))
+				router.visit(route("quizzs.admin"))
 			})
 	}
 

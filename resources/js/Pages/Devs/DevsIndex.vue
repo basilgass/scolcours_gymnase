@@ -25,7 +25,7 @@ export default {
 import FormInput from "@/Components/Form/FormInput.vue"
 import {computed, defineAsyncComponent, onMounted, ref} from "vue"
 import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
-import {Inertia} from "@inertiajs/inertia"
+import {router} from "@inertiajs/vue3"
 
 let toolSlug = ref(null),
 	toolSearch = ref("")

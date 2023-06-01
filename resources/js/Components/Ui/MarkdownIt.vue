@@ -13,7 +13,6 @@ Affichage d'un texte en markdown.
 
 <script setup>
 import {ref, watchEffect} from "vue"
-import {Inertia} from "@inertiajs/inertia"
 import {useKatexMacros, useMenuScrollTo} from "@/Composables/useHelpers"
 
 let root = ref(null),
@@ -55,10 +54,10 @@ let mdClick = function(event){
 			if(url===document.URL){
 				useMenuScrollTo(anchor)
 			}else{
-				Inertia.visit(event.target.href)
+				router.visit(event.target.href)
 			}
 		}else {
-			Inertia.visit(event.target.href)
+			router.visit(event.target.href)
 		}
 	}
 }

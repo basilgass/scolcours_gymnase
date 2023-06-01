@@ -169,7 +169,7 @@ import {computed, defineAsyncComponent, inject, provide, ref} from "vue"
 import IllustrationShow from "@/Components/Posts/Illustrations/IllustrationShow.vue"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 import QuestionUserInput from "@/Components/Posts/Questions/QuestionUserInput.vue"
-import {usePage} from "@inertiajs/inertia-vue3"
+import {usePage} from "@inertiajs/vue3"
 
 let emits = defineEmits(["destroy", "validate", "duplicate"])
 
@@ -217,7 +217,7 @@ let props = defineProps({
 
 		// need answer (string: min1), , result (boolean)
 		// Save the information to the database if the user is logged in
-		if(usePage().props.value.auth.user) {
+		if(usePage().props.auth.user) {
 			axios.post(route("questions.validate", [props.question.id]), {
 				...event
 			}).then(res => {

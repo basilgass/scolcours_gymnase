@@ -48,7 +48,7 @@ export default {
 <script setup>
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 import { onMounted } from "vue"
-import {Inertia} from "@inertiajs/inertia"
+import {router} from "@inertiajs/vue3"
 
 let props = defineProps({
 	quizzs: { type: Array, required: true },
@@ -57,7 +57,7 @@ let props = defineProps({
 function createQuizz(){
 	axios.post(route("quizzs.store"))
 		.then(res=>{
-			Inertia.visit(route("quizzs.admin.quizz", [res.data]))
+			router.visit(route("quizzs.admin.quizz", [res.data]))
 		})
 }
 </script>

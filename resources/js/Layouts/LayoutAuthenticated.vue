@@ -162,7 +162,7 @@ import BreezeDropdown from "@/Components/Auth/Dropdown.vue"
 import BreezeDropdownLink from "@/Components/Auth/DropdownLink.vue"
 import BreezeNavLink from "@/Components/Auth/NavLink.vue"
 import BreezeResponsiveNavLink from "@/Components/Auth/ResponsiveNavLink.vue"
-import {Link} from "@inertiajs/inertia-vue3"
+import {Link} from "@inertiajs/vue3"
 
 export default {
 	components: {

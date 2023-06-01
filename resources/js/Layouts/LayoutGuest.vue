@@ -10,7 +10,7 @@
 
 <script>
 import BreezeApplicationLogo from "@/Components/Auth/ApplicationLogo.vue"
-import {Link} from "@inertiajs/inertia-vue3"
+import {Link} from "@inertiajs/vue3"
 import ScolCoursLogo from "@/Components/ScolcoursLogo"
 
 export default {

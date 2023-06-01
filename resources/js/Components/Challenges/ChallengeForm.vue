@@ -204,7 +204,6 @@ import FormTextarea from "@/Components/Form/FormTextarea.vue"
 import FormIllustration from "@/Components/Form/FormIllustration.vue"
 import FormNumber from "@/Components/Form/FormNumber.vue"
 import {PiMath} from "pimath/esm"
-import {Inertia} from "@inertiajs/inertia"
 import FormCodearea from "@/Components/Form/FormCodearea.vue"
 
 const emits = defineEmits(["update:modelValue", "change", "destroy"])
@@ -280,7 +279,7 @@ let saveChallenge = function () {
 			})
 			.then((res) => {
 				// go back
-				Inertia.visit(
+				router.visit(
 					route("theme.chapter", [res.data.theme, res.data.chapter])
 				)
 			})

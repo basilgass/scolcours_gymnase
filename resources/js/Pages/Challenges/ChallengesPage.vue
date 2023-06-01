@@ -72,7 +72,7 @@ import ChallengeHeader from "@/Components/Challenges/ChallengeHeader.vue"
 import ChallengeResults from "@/Components/Challenges/ChallengeResults.vue"
 import QuestionShow from "@/Components/Posts/Questions/QuestionShow.vue"
 import FormInput from "@/Components/Form/FormInput.vue"
-import {usePage} from "@inertiajs/inertia-vue3"
+import {usePage} from "@inertiajs/vue3"
 import QuestionShowNew from "@/Components/Posts/Questions/QuestionShowNew.vue"
 
 const emits = defineEmits(["destroy", "change"])
@@ -353,7 +353,7 @@ watch(questionId, () => {
 })
 
 const storeScore = function (value, level) {
-	if (usePage().props.value.auth.user) {
+	if (usePage().props.auth.user) {
 		// TODO: Add stars system to challenge
 		axios.post(route("scores.challenge", [theChallenge.value.id]), {
 			"score": value,

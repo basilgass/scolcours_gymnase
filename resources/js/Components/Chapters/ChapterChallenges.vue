@@ -73,7 +73,7 @@ Affichage de la liste des challenges pour un chapitre donné.
 import DialogModal from "@/Components/Ui/DialogModal.vue"
 import {inject, ref} from "vue"
 import FormInput from "@/Components/Form/FormInput.vue"
-import {useForm} from "@inertiajs/inertia-vue3"
+import {useForm} from "@inertiajs/vue3"
 import FormButton from "@/Components/Form/FormButton.vue"
 
 let props = defineProps({

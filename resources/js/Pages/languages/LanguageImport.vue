@@ -91,7 +91,7 @@ export default {
 </script>
 
 <script setup>
-import {useForm} from "@inertiajs/inertia-vue3"
+import {useForm} from "@inertiajs/vue3"
 import FormInput from "@/Components/Form/FormInput.vue"
 import FormTextarea from "@/Components/Form/FormTextarea.vue"
 import {computed, ref} from "vue"

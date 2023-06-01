@@ -106,9 +106,9 @@ Affichage de la tablea des matières.
 	</div>
 </template>
 <script setup>
-import { inject, ref } from "vue"
+import {inject, ref} from "vue"
 import FormSwitch from "@/Components/Form/FormSwitch.vue"
-import { Inertia } from "@inertiajs/inertia"
+import {router} from "@inertiajs/vue3"
 
 let props = defineProps({
 	chapter: { type: Object, required: true },
@@ -168,7 +168,7 @@ let filterPosts = ref(""),
 				title: "nouvel article",
 			})
 			.then((res) => {
-				Inertia.visit(res.data.redirect)
+				router.visit(res.data.redirect)
 			})
 			.catch((err) => console.log(err))
 	}

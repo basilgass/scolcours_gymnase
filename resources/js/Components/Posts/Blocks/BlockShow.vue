@@ -148,7 +148,7 @@ let props = defineProps({
 	theBlock = ref(props.block),
 	isBlur = ref(props.block.blur),
 	showBlock = computed(() => {
-		// if(usePage().props.value.auth.can.admin){return true}
+		// if(usePage().props.auth.can.admin){return true}
 
 		if (theBlock.value.switch === null) {
 			return true

@@ -113,7 +113,7 @@ import {PiMath} from "pimath/esm"
 import FormSwitch from "@/Components/Form/FormSwitch.vue"
 import LanguageUnitsSelector from "@/Pages/languages/LanguageUnitsSelector.vue"
 import FormInput from "@/Components/Form/FormInput.vue"
-import {usePage} from "@inertiajs/inertia-vue3"
+import {usePage} from "@inertiajs/vue3"
 import DialogModal from "@/Components/Ui/DialogModal.vue"
 
 let props = defineProps({
@@ -157,7 +157,7 @@ let generateWords = function() {
 let showEditForm = ref(false),
 	editWord = ref({}),
 	editTranslation = function(word) {
-		if(editMode.enabled.value && usePage().props.value.auth.can.admin){
+		if(editMode.enabled.value && usePage().props.auth.can.admin){
 			editWord.value = word
 			showEditForm.value = true
 		}

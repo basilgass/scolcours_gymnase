@@ -39,7 +39,7 @@ import ChallengeIntro from "@/Components/Challenges/ChallengeIntro.vue"
 import ChallengeHeader from "@/Components/Challenges/ChallengeHeader.vue"
 import ChallengeResults from "@/Components/Challenges/ChallengeResults.vue"
 import FormInput from "@/Components/Form/FormInput.vue"
-import {usePage} from "@inertiajs/inertia-vue3"
+import {usePage} from "@inertiajs/vue3"
 
 const props = defineProps({
 	teams: {type: Object, required: true}

@@ -1,8 +1,8 @@
 import katex from "katex/dist/katex.mjs"
 import AsciiMathParser from "./asciimath2tex"
-import { usePage } from "@inertiajs/inertia-vue3"
-import { useKatexMacros } from "@/Composables/useHelpers"
-import { numberCorrection } from "pidraw/esm/Calculus"
+import {usePage} from "@inertiajs/vue3"
+import {useKatexMacros} from "@/Composables/useHelpers"
+import {numberCorrection} from "pidraw/esm/Calculus"
 
 function katexUpdate(el, binding, vnode) {
 	el.innerHTML = ""
@@ -94,7 +94,7 @@ export const visibleDirective = {
 }
 
 function adminUpdate(el, binding, vnode){
-	if(!usePage().props.value.auth.can.admin){
+	if(!usePage().props.auth.can.admin){
 		el.remove()
 	}
 	// TODO: extend v-admin directive

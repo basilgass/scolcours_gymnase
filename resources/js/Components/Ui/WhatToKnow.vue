@@ -68,14 +68,14 @@ TODO: a retravailler de A à Z
 <script setup>
 import {onMounted, ref} from "vue"
 import Panel from "@/Components/Ui/Panel"
-import {usePage} from "@inertiajs/inertia-vue3"
+import {usePage} from "@inertiajs/vue3"
 
 const props = defineProps({
 	questions: Function,
 	sep: {type: String, default: "\ =\ "},
 	preAnswerSep: {type: String, default: ""},
-	title: {type: String, default: usePage().props.value.chapter.title},
-	slug: {type: String, default: usePage().props.value.chapter.slug}
+	title: {type: String, default: usePage().props.chapter.title},
+	slug: {type: String, default: usePage().props.chapter.slug}
 })
 
 let downloadGenerating = ref(false),
@@ -116,7 +116,7 @@ function generatePDF() {
 		"/latex",
 		{
 			questions,
-			theme: usePage().props.value.theme.slug,
+			theme: usePage().props.theme.slug,
 			slug: props.slug,
 			title: props.title
 		}

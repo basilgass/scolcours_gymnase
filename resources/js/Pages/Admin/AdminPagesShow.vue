@@ -129,7 +129,7 @@ export default {
 </script>
 <script setup>
 import Panel from "@/Components/Ui/Panel"
-import {useForm} from "@inertiajs/inertia-vue3"
+import {useForm} from "@inertiajs/vue3"
 import FormInput from "@/Components/Form/FormInput"
 import {computed, ref} from "vue"
 
