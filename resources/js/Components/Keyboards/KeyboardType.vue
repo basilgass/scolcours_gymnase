@@ -45,8 +45,10 @@
 <script setup>
 
 import {useWrongAnswerAnimation} from "@/Composables/useHelpers"
+
 import {nextTick, onMounted, ref} from "vue"
 import {PiMath} from "pimath/esm"
+import {useKeyboard} from "@/Composables/useKeyboard"
 
 let props = defineProps({
 	options: {type: String},
@@ -139,5 +141,25 @@ let typoButtons = ref(null),
 
 onMounted(()=>{
 	generateQuestion()
+})
+
+let {loadAnswerToKeyboard} = useKeyboard(props)
+let reset = function(){
+	generateQuestion()
+}
+defineExpose({
+	loadAnswer: (value)=> {
+		loadAnswerToKeyboard(value, reset, changeEvent, (value)=>{
+			resultLetters.value.forEach(letter=>{
+				letter.visible = true
+			})
+
+			answerLetters.value.forEach(letter=>{
+				letter.used = true
+			})
+
+		}
+		)
+	}
 })
 </script>

@@ -7,8 +7,7 @@
 		class="max-w-xl mx-auto"
 		key-class="bg-white"
 		reset
-		@change="changeEvent"
-		@validate="$emit('validate')"
+		@change="keyboardChange"
 	/>
 </template>
 
@@ -30,40 +29,34 @@ let props = defineProps({
 
 // Emits change and validate (to trigger a validation manually on the parent)
 let emits = defineEmits(["change", "validate"]),
-	changeEvent = function (value) {
+	changeEvent = function () {
 		//value = {tex, raw, input}
 
 		// Make the validation.
 		// validation = {result: Boolean, message: string}
-		const validation = keyboard.value.checker.check(props.answer, value.input)
+		const validation = keyboard.value.checker.check(props.answer, keyboardInput.value.input)
 
 		// emit change event
-		emits("change", {value, validation})
+		emits("change", {value: keyboardInput.value, validation})
 	}
 
 // Get the keyboard and make it reactive.
-let {makeKeyboard} = useKeyboard()
-let keyboard = ref(makeKeyboard(props.options))
-
-
-	/*
-	resetKeyStrokes = function () {
-		keyboardUI.value.resetKeyStrokes()
-	},
-
-	getTex = function (value) {
-		//TODO: remove it ?
-		return theKeyboard.value.keyboard.tex(value)
-	},
-	getRaw = function (value) {
-		return ""
-	},
-	getAnswer = function (value) {
-		return {
-			tex: getTex(value),
-			raw: getRaw(value),
-		}
+let {makeKeyboard, loadAnswerToKeyboard} = useKeyboard(props)
+let keyboard = ref(makeKeyboard(props.options)),
+	keyboardInput = ref({input: "", tex: "", raw: ""}),
+	keyboardChange = (event) =>{
+		keyboardInput.value = event
+		changeEvent()
 	}
-defineExpose({ resetKeyStrokes, wrongAnswer, getAnswer })
-*/
+
+let reset = ()=>{}
+defineExpose({
+	reset,
+	loadAnswer: (value)=>{
+		loadAnswerToKeyboard(value, reset, changeEvent, (value)=>{
+			keyboardInput.value.input = value
+			keyboardInput.value.tex = keyboard.value.keyboard.tex(value)
+		})
+	}
+})
 </script>

@@ -166,13 +166,11 @@ Affichage d'un tableau de signes ou de croissance.
 	</div>
 </template>
 <script setup>
-import {ref} from "vue"
+import {ref, watch} from "vue"
 
 
 let props = defineProps({
-		tos: {
-			required: true, type: Object
-		},
+		tos: {required: true, type: Object},
 		fn: {type: String, default: "f"},
 		minimal: {type: Boolean, default: false},
 		extremes: {type: String, default: null},
@@ -209,4 +207,7 @@ function displayExtremes(index) {
 	return ""
 }
 
+watch(()=>props.tos,(newValue,oldValue)=>{
+
+})
 </script>

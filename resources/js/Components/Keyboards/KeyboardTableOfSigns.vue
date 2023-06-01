@@ -111,6 +111,7 @@ import PiTableOfSigns from "@/Components/Pi/PiTableOfSigns.vue"
 import KeyboardDisplay from "@/Components/Keyboards/KeyboardDisplay.vue"
 import {makeStudyFromCode} from "@/Composables/useTos"
 import {useCheckers} from "@/Composables/useCheckers"
+import {useKeyboard} from "@/Composables/useKeyboard"
 
 let props = defineProps({
 	options: {type: String},
@@ -153,7 +154,7 @@ let showKeyboard = ref("zeroes"),
 	changeKeyboard = function (event) {
 		// event = {input, raw, tex}
 
-		// mise à jour du tableau de siges
+		// mise à jour du tableau de signes
 		switch (showKeyboard.value) {
 		case "zeroes":
 			zeroes.value = event
@@ -197,6 +198,34 @@ let zeroes = ref({input: "", tex: "", raw: ""}),
 // Initialisation au démarrage.
 onMounted(()=>{
 	changeEvent()
+})
+
+let {loadAnswerToKeyboard} =useKeyboard(props)
+let reset = function(){
+	zeroes.value = {input: "", tex: "", raw: ""}
+	signs.value = {input: "", tex: "", raw: ""}
+	grows.value = {input: "", tex: "", raw: ""}
+	coords.value = {input: "", tex: "", raw: ""}
+}
+defineExpose({
+	reset,
+	loadAnswer: (value)=>{
+		loadAnswerToKeyboard(value, reset, changeEvent, (value)=>{
+
+			// Display the correct answer
+			let [z,s,g,c] = value.split("@")
+
+			zeroes.value = {input: z, tex: "", raw: ""}
+			signs.value = {input: s, tex: "", raw: ""}
+			grows.value = {input: g??"", tex: "", raw: ""}
+
+			if(c!==undefined) {
+				showKeyboard.value = "coords"
+				coords.value = {input: c, tex: "", raw: ""}
+			}
+		}
+		)
+	}
 })
 
 

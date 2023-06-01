@@ -11,7 +11,7 @@
 					'flex-1': isFlex,
 				}"
 				class="btn"
-				@click="changeEvent(element)"
+				@click="qcmButtonClick(element)"
 			>
 				<span
 					v-if="element.ascii"
@@ -32,6 +32,7 @@
 
 <script setup>
 import {computed, onMounted, ref} from "vue"
+import {useKeyboard} from "@/Composables/useKeyboard"
 
 let props = defineProps({
 	options: { type: String },
@@ -40,14 +41,7 @@ let props = defineProps({
 
 let emits = defineEmits(["change", "validate"])
 
-let changeEvent = function (value) {
-	if(!multiAnswers.value) {
-		// Si on n'est pas dans une "Multi-réponses", on désactive tout.
-		qcmItems.value.forEach((e) => (e.selected = false))
-	}
-
-	value.selected = !value.selected
-
+let changeEvent = function () {
 	let answers = qcmSelections(),
 		answersKeys = answers.map(x=>x.key)
 
@@ -133,6 +127,15 @@ let qcmItems = ref([]),
 		//.map((x) => x[output ? output : "display"]),
 		values.sort((a,b)=>a.key<b.key)
 		return values
+	},
+	qcmButtonClick = (element)=>{
+		if(!multiAnswers.value) {
+			// Si on n'est pas dans une "Multi-réponses", on désactive tout.
+			qcmItems.value.forEach((e) => (e.selected = false))
+		}
+
+		element.selected = !element.selected
+		changeEvent()
 	}
 
 /* ---------------*/
@@ -170,5 +173,27 @@ onMounted(() => {
 				ascii,
 				selected: false }
 		})
+})
+
+let {loadAnswerToKeyboard} = useKeyboard(props)
+let reset = function(){
+	qcmItems.value.forEach(item=>item.selected=false)
+}
+defineExpose({
+	reset,
+	loadAnswer: (value)=>{
+		loadAnswerToKeyboard(value, reset,  changeEvent, (value)=>{
+			let keys = value.split(",")
+			console.log(keys)
+
+			qcmItems.value.forEach(item=>{
+				console.log(item.key)
+				console.log(item)
+				if(keys.includes(item.key)){
+					item.selected = true
+				}
+			})
+		})
+	}
 })
 </script>

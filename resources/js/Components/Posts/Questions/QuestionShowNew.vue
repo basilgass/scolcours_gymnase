@@ -16,8 +16,8 @@ keyboard -> QuestionUserInput -> QuestionShow
 			<!-- QUESTION NUMBER -->
 			<div
 				v-if="theQuestion.order && !props.isMinimal"
-				class="absolute -left-2 -top-2 rounded-full bg-white border w-8 h-8 text-xs flex justify-center items-center draggable-handle"
 				:class="{'draggable-handle cursor-move':$page.props.auth.can.admin}"
+				class="absolute -left-2 -top-2 rounded-full bg-white border w-8 h-8 text-xs flex justify-center items-center draggable-handle"
 			>
 				{{ theQuestion.order }}
 			</div>
@@ -81,8 +81,8 @@ keyboard -> QuestionUserInput -> QuestionShow
 		>
 			<button
 				v-if="!showUserInput"
-				class="w-full py-3 hover:border-t hover:border-b"
 				:class="`active-scolcours-${$page.props.theme?.slug}`"
+				class="w-full py-3 hover:border-t hover:border-b"
 				@click="showUserInput=!showUserInput"
 			>
 				<i class="bi bi-calculator mr-2" />donner la réponse
@@ -141,8 +141,8 @@ keyboard -> QuestionUserInput -> QuestionShow
 			<component
 				:is="theAnswers[answerId].keyboard.component"
 				ref="keyboardUI"
-				:options="theAnswers[answerId].keyboard.parameters"
 				:answer="theAnswers[answerId].answer"
+				:options="theAnswers[answerId].keyboard.parameters"
 				@change="updateQuestion"
 				@validate="validateQuestion"
 			/>
@@ -157,7 +157,7 @@ keyboard -> QuestionUserInput -> QuestionShow
 				<button
 					v-if="!showAnswer"
 					class="text-xs text-gray-400 w-full"
-					@click="loadAnswer"
+					@click="loadAnswer()"
 				>
 					<i
 						class="bi bi-eye mr-2"
@@ -166,7 +166,7 @@ keyboard -> QuestionUserInput -> QuestionShow
 				<div
 					v-else
 					class="cursor-pointer overflow-x-auto scrollbar-scolcours"
-					@click="showAnswer=false"
+					@click="loadAnswer(null)"
 				>
 					<div
 						class="text-xs text-center ml-3 font-code font-xs"
@@ -186,8 +186,8 @@ keyboard -> QuestionUserInput -> QuestionShow
 				v-model="showEditForm"
 				:question="props.question"
 				@change="updateQuestion"
-				@validate="validateQuestion"
 				@destroy="emits('destroy', $event)"
+				@validate="validateQuestion"
 			/>
 		</div>
 	</article>
@@ -196,7 +196,7 @@ keyboard -> QuestionUserInput -> QuestionShow
 <script setup>
 import IllustrationShow from "@/Components/Posts/Illustrations/IllustrationShow.vue"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
-import {computed, defineAsyncComponent, inject, provide, reactive, ref} from "vue"
+import {computed, defineAsyncComponent, inject, nextTick, provide, reactive, ref} from "vue"
 import KeyboardValidateButton from "@/Components/Keyboards/KeyboardValidateButton.vue"
 import {usePage} from "@inertiajs/inertia-vue3"
 import {useWrongAnswerAnimation} from "@/Composables/useHelpers"
@@ -220,23 +220,23 @@ const emits = defineEmits(["validate", "destroy", "duplicate"])
 
 // Reactivity
 let theQuestion = reactive(props.question), // la question principale, vraiment en "reactive" ?
-	theQuestionBody = computed(()=>{
+	theQuestionBody = computed(() => {
 		// On s'assure que le tableau des réponses est complet.
 		checkUserAnswers()
 
 		// On récupère le body original, avec les placeholder.
-		let body =  theQuestion.block.body,
+		let body = theQuestion.block.body,
 			alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 		// $a, $b, ... sont des valeurs dans des environnements TeX
 		// $A, $B, ... sont des valeurs hors des environnements Tex
-		for(let i=0; i<answersNumber.value; i++){
+		for (let i = 0; i < answersNumber.value; i++) {
 			let key = theAnswers.value[i].key,
-				rawColor = i===answerId.value ? "border-blue-600 bg-blue-100": "border-red-600 bg-red-100",
-				texColor = i===answerId.value ? "cornflowerblue": "red"
+				rawColor = i === answerId.value ? "border-blue-600 bg-blue-100" : "border-red-600 bg-red-100",
+				texColor = i === answerId.value ? "cornflowerblue" : "red"
 
 			// S'il manque une valeur, on l'ajoute automatiquement à la fin.
-			if(key===undefined) {
+			if (key === undefined) {
 				key = `$${alphabet[i]}`
 				body += "\n\n" + key
 			}
@@ -260,10 +260,10 @@ let theQuestion = reactive(props.question), // la question principale, vraiment 
 			body = body.replaceAll("@$", "$")
 
 			// On peut avoir tex, raw, input
-			if(userAnswers.value[i].value===undefined){
+			if (userAnswers.value[i].value === undefined) {
 				body = body.replaceAll(key.toUpperCase(), "< ?? >")
 				body = body.replaceAll(key.toLowerCase(), "<\\ ? >")
-			}else {
+			} else {
 
 				// Raw output
 				if (userAnswers.value[i].value.raw === undefined || userAnswers.value[i].value.raw === "") {
@@ -287,26 +287,26 @@ let theQuestion = reactive(props.question), // la question principale, vraiment 
 // Gestion des réponses
 let answerId = ref(0), // numéro de la question en cours d'édition
 	answerFormat = ref(""), // format de la réponse
-	answersNumber = computed(()=>theQuestion.answer.split("\n").filter(x=>x!=="").length), // nombre de réponses maximales
-	answersKeys = computed(()=>{
+	answersNumber = computed(() => theQuestion.answer.split("\n").filter(x => x !== "").length), // nombre de réponses maximales
+	answersKeys = computed(() => {
 		let questionsVars = [...new Set([...props.question.block.body.matchAll(/\$([A-Za-z])/g)].map(x => x[0].toLowerCase()))]
 		questionsVars.sort()
 		return questionsVars
 	}), // liste des littres, dans l'ordre.
-	theAnswers = computed(()=>{
+	theAnswers = computed(() => {
 		let arr = [],
 			answers = theQuestion.answer.split("\n"),
-			names = theQuestion.keyboard?theQuestion.keyboard.split("\n"):[""],
+			names = theQuestion.keyboard ? theQuestion.keyboard.split("\n") : [""],
 			params = theQuestion.parameters.split("\n\n")
 
-		for(let i=0; i<answersNumber.value; i++){
-			const kbrd = getKeyboard(names[Math.min(names.length-1, i)])
+		for (let i = 0; i < answersNumber.value; i++) {
+			const kbrd = getKeyboard(names[Math.min(names.length - 1, i)])
 			arr.push({
 				key: answersKeys.value[i],	// may be undefined !
 				keyboard: {
 					name: kbrd,
-					parameters: params[Math.min(params.length-1, i)],
-					component: defineAsyncComponent(() => import(`@/Components/Keyboards/Keyboard${kbrd===""?"Basic":kbrd}`)),
+					parameters: params[Math.min(params.length - 1, i)],
+					component: defineAsyncComponent(() => import(`@/Components/Keyboards/Keyboard${kbrd === "" ? "Basic" : kbrd}`)),
 				},
 				answer: answers[i]
 			})
@@ -316,29 +316,47 @@ let answerId = ref(0), // numéro de la question en cours d'édition
 	}), // la liste des réponses / claviers / etc...
 	userAnswers = ref([]),
 	userAnswersErrors = ref([]),
-	loadAnswer = function (){
-		showAnswer.value = true
+	keyboardUI = ref(null),
+	showAnswer = ref(false),
+	loadAnswer = async function (value) {
+		answerId.value = 0
+		await nextTick()
+		let timer = setInterval(()=>{
+			if (keyboardUI.value) {
+				keyboardUI.value.loadAnswer(value)
+			}
+
+			if(answerId.value===answersNumber.value-1){
+				clearInterval(timer)
+				if(value===null){answerId.value = 0}
+			}else{
+				answerId.value++
+			}
+		}, 100)
+
+		showAnswer.value = value===undefined
 	},
 	showUserInput = ref(props.showInput)
 
 // donne des fonctions aux claviers
 provide("questionHandler", {
-	format: (value)=>{answerFormat.value = value},
+	format: (value) => {
+		answerFormat.value = value
+	},
 })
 
 
-let showAnswer = ref(false),
-	updateQuestion = function(event){
+let updateQuestion = function (event) {
 		// {
 		// 		value: {input, tex, raw},
 		// 		validation: {result, message}
 		// }
 		userAnswers.value[answerId.value] = event
 	},
-	checkUserAnswers = function(){
+	checkUserAnswers = function () {
 		// On contrôle que la table des réponses est correctement initialisée
-		if(userAnswers.value.length<answersNumber.value){
-			for(let i=userAnswers.value.length; i<answersNumber.value;i++){
+		if (userAnswers.value.length < answersNumber.value) {
+			for (let i = userAnswers.value.length; i < answersNumber.value; i++) {
 				userAnswers.value.push({
 					value: {input: "", tex: "", raw: ""},
 					validation: {result: false, message: "réponse non donnée."}
@@ -348,7 +366,7 @@ let showAnswer = ref(false),
 	},
 	validateButton = ref(null),
 	lockValidationButton = ref(false),
-	validateQuestion = function(){
+	validateQuestion = function () {
 		// validation des réponses.
 
 		// On bloque la possibitié de cliquer une nouvelle fois sur le bouton.
@@ -358,10 +376,10 @@ let showAnswer = ref(false),
 		let result = true,
 			stack = []
 
-		for(let i =0; i<userAnswers.value.length; i++){
+		for (let i = 0; i < userAnswers.value.length; i++) {
 			result = result && userAnswers.value[i].validation.result
 
-			if(!result) {
+			if (!result) {
 				if (userAnswers.value.length > 1) {
 					stack.push(`${i + 1}: ${userAnswers.value[i].validation.message}`)
 				} else {
@@ -375,15 +393,16 @@ let showAnswer = ref(false),
 		storeValidation({
 			result,
 			question: theQuestionBody.value,
-			answer: userAnswers.value.map(a=>a.value.input).join(",")
+			answer: userAnswers.value.map(a => a.value.input).join(",")
 		})
-
-		setTimeout(()=>lockValidationButton.value = false, 500)
+		setTimeout(() => lockValidationButton.value = false, 500)
 
 	},
-	storeValidation = function(event){
+	storeValidation = function (event) {
 		// event: {question: string, answer: string, result: boolean}
-		if(!props.singleAnswer && !event.result){useWrongAnswerAnimation(validateButton.value.$el)}
+		if (!props.singleAnswer && !event.result) {
+			useWrongAnswerAnimation(validateButton.value.$el)
+		}
 
 		// It's a dynamic question (without id)
 		// On ne peut donc pas sauvegarder les informations.
@@ -398,13 +417,17 @@ let showAnswer = ref(false),
 		// need answer (string: min1) , result (boolean)
 		// Save the information to the database if the user is logged in
 		// and if the result is correct
-		if(usePage().props.value.auth.user) {
+		if (usePage().props.value.auth.user) {
 			axios.post(route("questions.validate", [props.question.id]), {
 				...event
-			}).then(res => {
-				emits("validate", event)
+			}).catch((res) => {
+				console.log("Il y a une erreur lors du chargement de la réponse.")
+				console.log(res.response.data.message)
 			})
-		}else{
+				.then(res => {
+					emits("validate", event)
+				})
+		} else {
 			emits("validate", event)
 		}
 	}
@@ -417,17 +440,17 @@ let editMode = inject("editMode", false),
 			() => import("@/Components/Posts/Questions/QuestionForm")
 		)
 	}),
-	duplicateQuestion = function(){
+	duplicateQuestion = function () {
 		axios.post(route("questions.duplicate", [theQuestion.id]))
-			.then((res)=>{
+			.then((res) => {
 				emits("duplicate", res.data.data)
 				flash.add("la question a bien été dupliquée !")
 			})
 	},
-	addIllustration = function() {
-		if(theQuestion.block.illustration){
+	addIllustration = function () {
+		if (theQuestion.block.illustration) {
 			console.log("Il y a déjà une illustration", theQuestion.id)
-		}else{
+		} else {
 			// Create a new illustration
 			axios.post(route("blocks.illustrations.store", [theQuestion.block.id]), {})
 				.then(res => {

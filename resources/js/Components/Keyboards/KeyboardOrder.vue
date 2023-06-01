@@ -23,6 +23,7 @@
 
 import {ref} from "vue"
 import {PiMath} from "pimath/esm"
+import {useKeyboard} from "@/Composables/useKeyboard"
 
 let props = defineProps({
 	options: {type: String},
@@ -30,7 +31,7 @@ let props = defineProps({
 })
 
 let emits = defineEmits(["change", "validate"]),
-	changeEvent = function (value) {
+	changeEvent = function () {
 		// On compte le nombre de réponses au bon endroit...
 		let errors = 0
 		for(let i=1; i<=sortableItems.value.length; i++){
@@ -53,31 +54,30 @@ let emits = defineEmits(["change", "validate"]),
 	}
 
 // Liste des élèments qui sont à réordrer.
-let sortableItems = ref(PiMath.Random.shuffle(
-	props.options.split("\n").map((element, index)=>{return {
-		id: index+1,
-		label: element
-	}})
-))
-
-
-let	validateEvent = function () {
-	let result = 0
-	for(let i=1; i<=sortableItems.value.length; i++){
-		if(sortableItems.value[i-1].id!==i){
-			result++
-		}
-	}
-
-	emits("validate", {
-		code: `${result>0?result+" faute(s)":""}`,
-		tex: "",
-		raw: "",
-		correct: `${result>0?result+" faute(s)":0}`,
-		message: `${result>0?result+" faute(s)":""}`
-	})
+let randomizeItems = ()=> {
+	return PiMath.Random.shuffle(
+		props.options.split("\n").map((element, index) => {
+			return {
+				id: index + 1,
+				label: element
+			}
+		})
+	)
 }
+let sortableItems = ref(randomizeItems())
 
+let {loadAnswerToKeyboard} = useKeyboard(props)
+let reset = () => sortableItems.value = randomizeItems()
+defineExpose({
+	reset,
+	loadAnswer: (value)=>{
+		loadAnswerToKeyboard(value, reset, changeEvent, (value)=>{
+			sortableItems.value = props.options.split("\n").map((element, index)=>{
+				return {id: index+1, label: element}
+			})
+		})
+	}
+})
 
 
 </script>

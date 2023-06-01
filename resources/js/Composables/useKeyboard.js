@@ -2,7 +2,7 @@ import {keyboards} from "@/keyboards"
 import {useCheckers} from "@/Composables/useCheckers"
 import {inject} from "vue"
 
-export function useKeyboard(){
+export function useKeyboard(props){
 	// Do something !
 	let questionHandler = inject("questionHandler")
 
@@ -40,5 +40,21 @@ export function useKeyboard(){
 		}
 	}
 
-	return {makeKeyboard}
+	function loadAnswerToKeyboard(
+		value, reset, changeCallback, callback, answer
+	){
+		reset()
+
+		if(value===null) {
+			changeCallback()
+			return
+		}
+
+		if(value===undefined)value = props.answer
+
+		callback(value)
+
+		changeCallback(value)
+	}
+	return {makeKeyboard, loadAnswerToKeyboard}
 }
