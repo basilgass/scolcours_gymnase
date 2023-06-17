@@ -2,108 +2,123 @@
 	<article>
 		<ArticleTitle title="Futoshiki" />
 
-		<div>
-			<div
-				v-for="row in size*2-1"
-				:key="`row-${row}`"
-				class="flex"
+		<div v-show="!gameStarted">
+			<form-number
+				v-model="size"
+				name="nombre de colonnes"
+			/>
+			<button
+				class="btn btn-primary"
+				@click="start"
 			>
+				commencer
+			</button>
+		</div>
+
+		<div v-if="gameStarted">
+			<div>
 				<div
-					v-for="col in size*2-1"
-					:key="`cell-${col}:${row}`"
+					v-for="row in size*2-1"
+					:key="`row-${row}`"
+					class="flex"
 				>
 					<div
-						:class="{
-							'w-[3em] h-[3em] bg-white border rounded-sm': row%2===1 && col%2===1,
-							'w-[1em] h-[3em]': row%2===1 && col%2===0,
-							'w-[3em] h-[1em]': row%2===0 && col%2===1,
-							'w-[1em] h-[1em]': row%2===0 && col%2===0,
-						}"
-						class="grid place-items-center"
+						v-for="col in size*2-1"
+						:key="`cell-${col}:${row}`"
 					>
 						<div
-							v-if="row%2===1 && col%2===1"
-							class="relative w-full h-full"
-							@click="setValue(col, row)"
+							:class="{
+								'w-[3em] h-[3em] bg-white border rounded-sm': row%2===1 && col%2===1,
+								'w-[1em] h-[3em]': row%2===1 && col%2===0,
+								'w-[3em] h-[1em]': row%2===0 && col%2===1,
+								'w-[1em] h-[1em]': row%2===0 && col%2===0,
+							}"
+							class="grid place-items-center"
 						>
 							<div
-								class="absolute inset-0 h-full grid grid-cols-3 place-items-center text-xs text-gray-500"
+								v-if="row%2===1 && col%2===1"
+								class="relative w-full h-full"
+								@click="setValue(col, row)"
 							>
 								<div
-									v-for="i of 9"
-									v-show="futoshiki.futoshiki[`${(col - 1) / 2}:${(row - 1) / 2}`].suggestion.indexOf(i)!==-1"
-									:key="`suggestion-${i}`"
+									class="absolute inset-0 h-full grid grid-cols-3 place-items-center text-xs text-gray-500"
 								>
-									{{ i }}
+									<div
+										v-for="i of 9"
+										v-show="futoshiki.futoshiki[`${(col - 1) / 2}:${(row - 1) / 2}`].suggestion.indexOf(i)!==-1"
+										:key="`suggestion-${i}`"
+									>
+										{{ i }}
+									</div>
+								</div>
+								<div
+									:class="futoshiki.futoshiki[`${(col - 1) / 2}:${(row - 1) / 2}`].default===null?'text-blue-500':''"
+									class="grid place-items-center w-full h-full text-2xl"
+								>
+									{{ futoshiki.futoshiki[`${(col - 1) / 2}:${(row - 1) / 2}`]?.value }}
 								</div>
 							</div>
 							<div
-								:class="futoshiki.futoshiki[`${(col - 1) / 2}:${(row - 1) / 2}`].default===null?'text-blue-500':''"
-								class="grid place-items-center w-full h-full text-2xl"
+								v-else-if="row%2!==col%2"
+								class="w-full h-full grid place-items-center"
 							>
-								{{ futoshiki.futoshiki[`${(col - 1) / 2}:${(row - 1) / 2}`]?.value }}
+								<i
+									:class="getConstrain(col, row)"
+									@click="getConstrain(col, row)"
+								/>
 							</div>
+							<div v-else />
 						</div>
-						<div
-							v-else-if="row%2!==col%2"
-							class="w-full h-full grid place-items-center"
-						>
-							<i
-								:class="getConstrain(col, row)"
-								@click="getConstrain(col, row)"
-							/>
-						</div>
-						<div v-else />
 					</div>
 				</div>
 			</div>
-		</div>
 
-		<div class="mt-5">
-			<h3 class="font-light">
-				sélecteur
-			</h3>
+			<div class="mt-5">
+				<h3 class="font-light">
+					sélecteur
+				</h3>
 
-			<div class="flex gap-3">
-				<div
-					:class="valueSelector===0?'bg-red-200':'bg-white'"
-					class="w-[3em] h-[3em] rounded-sm grid
-					place-items-center font-2xl cursor-pointer
-					hover:bg-amber-200 transition-colors"
-					@click="valueSelector = 0"
-				>
-					<i class="bi bi-eraser" />
-				</div>
-				<div
-					v-for="value in size"
-					:key="`value-${value}`"
-					:class="valueSelector===value?'bg-blue-200':'bg-white'"
-					class="w-[3em] h-[3em] rounded-sm grid
-					place-items-center font-2xl cursor-pointer
-					hover:bg-amber-200 transition-colors"
-					@click="valueSelector = value"
-				>
-					{{ value }}
-				</div>
+				<div class="flex gap-3">
+					<div
+						:class="valueSelector===0?'bg-red-200':'bg-white'"
+						class="w-[3em] h-[3em] rounded-sm grid
+							place-items-center font-2xl cursor-pointer
+							hover:bg-amber-200 transition-colors"
+						@click="valueSelector = 0"
+					>
+						<i class="bi bi-eraser" />
+					</div>
+					<div
+						v-for="value in size"
+						:key="`value-${value}`"
+						:class="valueSelector===value?'bg-blue-200':'bg-white'"
+						class="w-[3em] h-[3em] rounded-sm grid
+							place-items-center font-2xl cursor-pointer
+							hover:bg-amber-200 transition-colors"
+						@click="valueSelector = value"
+					>
+						{{ value }}
+					</div>
 
-				<div
-					:class="suggestionMode?'bg-blue-200':'bg-white'"
-					class="w-[3em] h-[3em] rounded-sm grid
-					place-items-center font-2xl cursor-pointer
-					hover:bg-amber-200 transition-colors"
-					@click="suggestionMode = !suggestionMode"
-				>
-					<i class="bi bi-pencil" />
+					<div
+						:class="suggestionMode?'bg-blue-200':'bg-white'"
+						class="w-[3em] h-[3em] rounded-sm grid
+							place-items-center font-2xl cursor-pointer
+							hover:bg-amber-200 transition-colors"
+						@click="suggestionMode = !suggestionMode"
+					>
+						<i class="bi bi-pencil" />
+					</div>
 				</div>
 			</div>
-		</div>
 
-		<div class="text-red-600">
-			<div
-				v-for="(contradiction, index) in contradictions"
-				:key="`contradiction-${index}`"
-			>
-				{{ contradiction }}
+			<div class="text-red-600">
+				<div
+					v-for="(contradiction, index) in contradictions"
+					:key="`contradiction-${index}`"
+				>
+					{{ contradiction }}
+				</div>
 			</div>
 		</div>
 	</article>
@@ -120,11 +135,20 @@ export default {
 import ArticleTitle from "@/Components/Ui/ArticleTitle"
 import {Futoshiki} from "pigames/build/module/lib/futoshiki"
 import {computed, nextTick, reactive, ref} from "vue"
+import FormNumber from "@/Components/Form/FormNumber.vue"
+
+let gameStarted = ref(false),
+	start = function(){
+		gameStarted.value  = true
+
+		console.log("GENERATE")
+		futo.generate(size.value)
+	}
 
 let size = ref(4),
 	futo = new Futoshiki(4)
 
-futo.generate()
+// futo.generate()
 
 let wrapper = ref(null),
 	futoshiki = reactive(futo),
