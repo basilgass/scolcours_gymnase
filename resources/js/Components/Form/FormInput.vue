@@ -102,6 +102,7 @@ function handleCtrlKey(ev){
 		emits("save", ev)
 	}
 }
+
 function focus(select){
 	inp.value.focus()
 	if(select===true){
@@ -113,10 +114,7 @@ onMounted(() => {
 		inp.value.focus()
 		inp.value.select()
 	}
-
 })
-
-
 defineExpose({focus})
 
 </script>

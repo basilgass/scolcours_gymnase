@@ -76,7 +76,8 @@ defineExpose({
 				return {id: index+1, label: element}
 			})
 		})
-	}
+	},
+	parameters: ""
 })
 
 

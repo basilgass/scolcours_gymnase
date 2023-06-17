@@ -2,67 +2,109 @@
 	<article>
 		<ArticleTitle title="Futoshiki" />
 
-		<div class="flex flex-col">
+		<div>
 			<div
-				v-for="(row, rowIndex) in futoshiki"
-				:key="`row-${rowIndex}`"
+				v-for="row in size*2-1"
+				:key="`row-${row}`"
 				class="flex"
 			>
 				<div
-					v-for="(item, colIndex) in row"
-					:key="`cell-${rowIndex}-${colIndex}`"
-					class="m-1 grid place-items-center"
+					v-for="col in size*2-1"
+					:key="`cell-${col}:${row}`"
 				>
 					<div
-						v-if="rowIndex%2===0 && colIndex%2===0"
-						class="w-16 h-16 border rounded-sm grid place-items-center"
-					>
-						<button
-							class="min-w-0 w-full h-full text-center border rounded-sm"
-							:class="item.selected?'is-active':'bg-white'"
-							@click="updateSelection(item)"
-						>
-							{{ item.value }}
-						</button>
-					</div>
-					<div
-						v-else
 						:class="{
-							'w-5': colIndex%2===1,
-							'w-16': colIndex%2===0,
-							'h-16': rowIndex%2===0,
-							'h-5': rowIndex%2===1,
+							'w-[3em] h-[3em] bg-white border rounded-sm': row%2===1 && col%2===1,
+							'w-[1em] h-[3em]': row%2===1 && col%2===0,
+							'w-[3em] h-[1em]': row%2===0 && col%2===1,
+							'w-[1em] h-[1em]': row%2===0 && col%2===0,
 						}"
 						class="grid place-items-center"
 					>
-						<i
-							class="bi"
-							:class="{
-								'bi-chevron-right': item.value==='>',
-								'bi-chevron-left': item.value==='<',
-								'rotate-90': rowIndex%2===1
-							}"
-						/>
+						<div
+							v-if="row%2===1 && col%2===1"
+							class="relative w-full h-full"
+							@click="setValue(col, row)"
+						>
+							<div
+								class="absolute inset-0 h-full grid grid-cols-3 place-items-center text-xs text-gray-500"
+							>
+								<div
+									v-for="i of 9"
+									v-show="futoshiki.futoshiki[`${(col - 1) / 2}:${(row - 1) / 2}`].suggestion.indexOf(i)!==-1"
+									:key="`suggestion-${i}`"
+								>
+									{{ i }}
+								</div>
+							</div>
+							<div
+								:class="futoshiki.futoshiki[`${(col - 1) / 2}:${(row - 1) / 2}`].default===null?'text-blue-500':''"
+								class="grid place-items-center w-full h-full text-2xl"
+							>
+								{{ futoshiki.futoshiki[`${(col - 1) / 2}:${(row - 1) / 2}`]?.value }}
+							</div>
+						</div>
+						<div
+							v-else-if="row%2!==col%2"
+							class="w-full h-full grid place-items-center"
+						>
+							<i
+								:class="getConstrain(col, row)"
+								@click="getConstrain(col, row)"
+							/>
+						</div>
+						<div v-else />
 					</div>
 				</div>
 			</div>
 		</div>
 
-		<div class="keyboard flex gap-4 mt-10">
-			<button
-				class="key btn w-10 h-10"
-				:class="suggest?'btn-edit':'bg-white'"
-				@click="suggest=!suggest"
+		<div class="mt-5">
+			<h3 class="font-light">
+				sélecteur
+			</h3>
+
+			<div class="flex gap-3">
+				<div
+					:class="valueSelector===0?'bg-red-200':'bg-white'"
+					class="w-[3em] h-[3em] rounded-sm grid
+					place-items-center font-2xl cursor-pointer
+					hover:bg-amber-200 transition-colors"
+					@click="valueSelector = 0"
+				>
+					<i class="bi bi-eraser" />
+				</div>
+				<div
+					v-for="value in size"
+					:key="`value-${value}`"
+					:class="valueSelector===value?'bg-blue-200':'bg-white'"
+					class="w-[3em] h-[3em] rounded-sm grid
+					place-items-center font-2xl cursor-pointer
+					hover:bg-amber-200 transition-colors"
+					@click="valueSelector = value"
+				>
+					{{ value }}
+				</div>
+
+				<div
+					:class="suggestionMode?'bg-blue-200':'bg-white'"
+					class="w-[3em] h-[3em] rounded-sm grid
+					place-items-center font-2xl cursor-pointer
+					hover:bg-amber-200 transition-colors"
+					@click="suggestionMode = !suggestionMode"
+				>
+					<i class="bi bi-pencil" />
+				</div>
+			</div>
+		</div>
+
+		<div class="text-red-600">
+			<div
+				v-for="(contradiction, index) in contradictions"
+				:key="`contradiction-${index}`"
 			>
-				<i class="bi bi-pencil" />
-			</button>
-			<button
-				v-for="n in rang"
-				:key="`key-${n}`"
-				class="key bg-white w-10 h-10"
-			>
-				{{ n }}
-			</button>
+				{{ contradiction }}
+			</div>
 		</div>
 	</article>
 </template>
@@ -76,102 +118,162 @@ export default {
 </script>
 <script setup>
 import ArticleTitle from "@/Components/Ui/ArticleTitle"
-import {onMounted, ref} from "vue"
+import {Futoshiki} from "pigames/build/module/lib/futoshiki"
+import {computed, nextTick, reactive, ref} from "vue"
 
-let futoshiki = ref([]),
-	rang = ref(0),
-	suggest = ref(false)
+let size = ref(4),
+	futo = new Futoshiki(4)
 
-class futoshikiItem {
-	constructor(value) {
-		this.value = value
-		this.original = value!==undefined
-		this.selected = false
-		this.user = {
-			possibilites: [],
-			answer: null
+futo.generate()
+
+let wrapper = ref(null),
+	futoshiki = reactive(futo),
+	valueSelector = ref(1),
+	suggestionMode = ref(false),
+	contradictions = ref([])
+
+let rows = computed(() => {
+	let arr = []
+	for (let i = 0; i < size.value; i++) {
+		for (let j = 0; j < size.value; j++) {
+
 		}
-
-		this.solver = {
-			possibilites: [],
-			top: [],
-			bottom: [],
-			left: [],
-			right: [],
-			column: [],
-			row: []
-		}
-
-	}
-}
-
-function generateFutoshiki(size, values, signs){
-	// Build the futoshiki data.
-	let rowData,
-		futoshikiData = []
-	for(let row=0; row<size*2-1; row++){
-		rowData = []
-		for(let col=0; col<size*2-1; col++){
-			if(col%2===0 && row%2===0){
-				// It's a value
-				rowData.push(new futoshikiItem(values[`${row/2}-${col/2}`]))
-			}else if(col%2===1 && row%2===1){
-				// It's an intersection
-				rowData.push(new futoshikiItem(null))
-			}else{
-				// It's a sign.
-				const s = signs[`${row}-${col}`]
-				rowData.push(new futoshikiItem(
-					s===undefined?"":s
-				))
-			}
-		}
-
-		futoshikiData.push(rowData)
+		arr.push(
+			Object.values(futoshiki).filter(cell => cell.row === i)
+		)
 	}
 
-
-	return futoshikiData
-}
-
-function solveFutoshiki(data) {
-	console.table(data)
-}
-
-function updateSelection(item) {
-	// Cancel all selections
-	if(item.selected===true){
-		item.selected = false
-		return
-	}
-
-	for(let i=0; i<futoshiki.value.length; i++){
-		for(let j=0; j<futoshiki.value[i].length; j++){
-			futoshiki.value[i][j].selected=false
-		}
-	}
-
-	if(item.original===false) {
-		item.selected = true
-	}
-}
-onMounted(()=>{
-	// Define the size of the futoshiki
-	futoshiki.value = generateFutoshiki(
-		3,
-		{
-			"0-2": 3,
-			"1-1": 2,
-			"2-2": 1
-		},
-		{
-			"0-1": ">",
-			"0-3": "<",
-			"1-2": "<",
-			"3-2": "<"
-		})
-	rang.value = 3
-
-	solveFutoshiki(futoshiki.value)
+	return arr
 })
+
+let getConstrain = function (col, row) {
+	// console.log(col, row)
+	if (row % 2 === 1) {
+		// left / right constrain
+		const AKey = `${col / 2 - 1}:${(row - 1) / 2}`,
+			BKey = `${col / 2}:${(row - 1) / 2}`
+
+		if (futoshiki.futoshiki[AKey].isLesserThan(futoshiki.futoshiki[BKey])) {
+			return "bi bi-chevron-compact-left"
+		}
+		if (futoshiki.futoshiki[AKey].isGreaterThan(futoshiki.futoshiki[BKey])) {
+			return "bi bi-chevron-compact-right"
+		}
+	}
+	if (row % 2 === 0) {
+		// greater / lesser constrain
+		const AKey = `${(col - 1) / 2}:${row / 2 - 1}`,
+			BKey = `${(col - 1) / 2}:${row / 2}`
+
+		if (futoshiki.futoshiki[AKey].isLesserThan(futoshiki.futoshiki[BKey])) {
+			return "bi bi-chevron-compact-up"
+		}
+		if (futoshiki.futoshiki[AKey].isGreaterThan(futoshiki.futoshiki[BKey])) {
+			return "bi bi-chevron-compact-down"
+		}
+	}
+	return ""
+}
+let setValue = function (col, row) {
+	const cellKey = `${(col - 1) / 2}:${(row - 1) / 2}`
+	if (suggestionMode.value && valueSelector.value > 0) {
+		if (futoshiki.futoshiki[cellKey].value === null) {
+			futoshiki.futoshiki[cellKey].toggleSuggestion(valueSelector.value)
+		}
+	} else {
+		if (futoshiki.futoshiki[cellKey].default === null) {
+			if (valueSelector.value === 0) {
+				// Erase mode
+				futoshiki.futoshiki[cellKey].value = null
+			} else {
+				futoshiki.futoshiki[cellKey].value = valueSelector.value
+			}
+
+			futoshiki.futoshiki[cellKey].suggestion = []
+
+			// Show a success message.
+			nextTick(() => {
+				let solution = futoshiki.isSolved()
+				if (solution.result) {
+					alert("bravo")
+				} else {
+					if(futoshiki.cells.every(cell => cell.value)) {
+						contradictions.value = solution.contradictions
+					}else{
+						contradictions.value = []
+					}
+				}
+			})
+		}
+	}
+}
+
 </script>
+
+<style>
+.futoshiki {
+	text-align: center;
+}
+
+.futoshiki-cell {
+	width: 3rem;
+	height: 3rem;
+	background-color: white;
+	border: thin solid black;
+	font-size: 2em;
+
+}
+
+.futoshiki-cell > div {
+	width: 100%;
+	height: 100%;
+	position: relative;
+	display: grid;
+	place-items: center;
+}
+
+.futoshiki-cell-suggestion {
+	padding: 0.2rem;
+	font-size: 0.7rem;
+	position: absolute;
+	inset: 0;
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr;
+	grid-template-rows: 1fr 1fr 1fr;
+	color: darkcyan;
+	background-color: transparent;
+}
+
+.futoshiki-corner {
+	width: 1rem;
+	height: 1rem;
+}
+
+.futoshiki-constraint-v {
+	width: 1rem;
+	height: 3rem;
+}
+
+.futoshiki-constraint-v.lesser-than:before {
+	content: '<';
+}
+
+.futoshiki-constraint-v.greater-than:before {
+	content: '>';
+}
+
+.futoshiki-constraint-h {
+	width: 3rem;
+	height: 1rem;
+}
+
+.futoshiki-constraint-h.lesser-than:before {
+	content: '^';
+}
+
+.futoshiki-constraint-h.greater-than:after {
+	content: '^';
+	display: inline-block;
+	transform: rotate(180deg);
+}
+</style>

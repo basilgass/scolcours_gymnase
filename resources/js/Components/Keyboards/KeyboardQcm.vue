@@ -194,6 +194,7 @@ defineExpose({
 				}
 			})
 		})
-	}
+	},
+	parameters: "full (pleine largeur)\nflex (utilisation de flex)\ntex (converti en TeX)"
 })
 </script>

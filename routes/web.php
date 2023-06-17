@@ -37,6 +37,7 @@ require __DIR__ . '/quizzsRoutes.php';
 
 require __DIR__ . '/gamesRoutes.php';
 require __DIR__ . '/latexRoutes.php';
+require __DIR__ . '/variousRoutes.php';
 
 // Must be the last one !
 require __DIR__ . '/chaptersRoutes.php';

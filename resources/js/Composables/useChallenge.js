@@ -2,7 +2,7 @@
  *	Init: generateQuestion
  *	onValidate:
  *	- checkAnswer : add a line to the results
- * 	- if(false): 	handle points/lives/
+ * 	- if(false): 	handle maxPoints/lives/
  * 	- if(true):
  */
 
@@ -14,7 +14,7 @@ export function useChallenge(generateQuestion, check=null, format=null, reset=nu
 	// Active variables
 	let question = ref({question: "", answer: "", data: null}),
 		answer = ref(""),			// the answer given by the user
-		points = ref(0),				// current number of points and how to handle them
+		points = ref(0),				// current number of maxPoints and how to handle them
 		lives = ref(3),
 		results = ref([]),			// list of given results - simple list display.
 		keyboard = ref(null)

@@ -30,7 +30,7 @@
 				v-for="(key, index) in answerLetters"
 				:key="`${key.key}-${index}`"
 				:class="{
-					'bg-white hover:scale-105 hover:shadow': !key.used,
+					'bg-white hover:scale-105 hover:shadow font-semibold': !key.used,
 					'bg-gray-200 disabled text-gray-400 cursor-not-allowed': key.used
 				}"
 				class="p-2 w-14 h-14 border border-gray-200 rounded transition-all"
@@ -148,6 +148,7 @@ let reset = function(){
 	generateQuestion()
 }
 defineExpose({
+	reset,
 	loadAnswer: (value)=> {
 		loadAnswerToKeyboard(value, reset, changeEvent, (value)=>{
 			resultLetters.value.forEach(letter=>{
@@ -160,6 +161,7 @@ defineExpose({
 
 		}
 		)
-	}
+	},
+	parameters: ""
 })
 </script>

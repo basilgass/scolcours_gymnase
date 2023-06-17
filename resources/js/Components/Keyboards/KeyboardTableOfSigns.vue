@@ -225,7 +225,8 @@ defineExpose({
 			}
 		}
 		)
-	}
+	},
+	parameters: "<name>(x)"
 })
 
 

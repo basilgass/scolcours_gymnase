@@ -107,7 +107,7 @@ Edition d'un challenge
 				<div class="grid grid-cols-1 md:grid-cols-3 gap-3 items-end">
 					<form-number
 						v-model="theChallenge.nextLevelAfter"
-						label="points / niveau"
+						label="maxPoints / niveau"
 						name="questionsLevelTrigger"
 					/>
 

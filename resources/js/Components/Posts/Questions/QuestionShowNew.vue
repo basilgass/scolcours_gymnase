@@ -59,7 +59,7 @@ keyboard -> QuestionUserInput -> QuestionShow
 			</div>
 		</header>
 
-		<main class="px-5 overflow-x-auto">
+		<main class="px-5 overflow-x-auto mb-3">
 			<!-- the body of question -->
 			<!-- Illustration -->
 			<illustration-show
@@ -77,7 +77,7 @@ keyboard -> QuestionUserInput -> QuestionShow
 		<!-- user input -->
 		<div
 			v-if="!showInput"
-			class="text-xs px-5 text-right my-3"
+			class="text-xs px-5 text-right mb-3"
 		>
 			<button
 				v-if="!showUserInput"
@@ -173,6 +173,16 @@ keyboard -> QuestionUserInput -> QuestionShow
 						v-text="theQuestion.answer"
 					/>
 				</div>
+
+				<div
+					v-if="showParameters && keyboardParameters!==''"
+					class="flex flex-col gap-3 text-xs"
+				>
+					<h3 class="font-semibold">
+						paramètres
+					</h3>
+					<pre class="font-code">{{ keyboardParameters }}</pre>
+				</div>
 			</div>
 		</div>
 
@@ -200,13 +210,14 @@ import {computed, defineAsyncComponent, inject, nextTick, provide, reactive, ref
 import KeyboardValidateButton from "@/Components/Keyboards/KeyboardValidateButton.vue"
 import {usePage} from "@inertiajs/vue3"
 import {useWrongAnswerAnimation} from "@/Composables/useHelpers"
-import {getKeyboard} from "@/keyboards"
+import {getKeyboard} from "@/keyboards" // Props
 
 // Props
 let props = defineProps({
 	question: {type: Object, required: true},
 	showTitle: {type: Boolean, default: false},
 	showInput: {type: Boolean, default: false},
+	showParameters: {type: Boolean, default: false},
 	isDynamic: {type: Boolean, default: false},
 	isMinimal: {type: Boolean, default: false},
 	singleAnswer: {type: Boolean, default: false},
@@ -435,6 +446,13 @@ let updateQuestion = function (event) {
 // Gestion administrateur
 let editMode = inject("editMode", false),
 	showEditForm = ref(props.question.isNew === true),
+	keyboardParameters = computed(()=>{
+		if(keyboardUI.value) {
+			return keyboardUI.value.parameters
+		}
+
+		return ""
+	}),
 	editForm = computed(() => {
 		return defineAsyncComponent(
 			() => import("@/Components/Posts/Questions/QuestionForm")

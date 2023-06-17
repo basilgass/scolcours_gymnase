@@ -15,7 +15,11 @@
 			@input="$emit('update:modelValue', $event.target.value)"
 		/>
 
-		<slot></slot>
+		<slot />
+		<div
+			v-katex.auto="helperText"
+			class="text-xs text-gray-400"
+		/>
 		<form-error
 			:name="name"
 			:message="error"
@@ -44,6 +48,7 @@ const props = defineProps({
 	error: {type: String, default: ""},
 	rows: {type: Number, default: 4},
 	hideLabel: {type: Boolean, default: false},
-	codeWriting: {type: Boolean, default: false}
+	codeWriting: {type: Boolean, default: false},
+	helperText: {type: String, default: ""}
 })
 </script>

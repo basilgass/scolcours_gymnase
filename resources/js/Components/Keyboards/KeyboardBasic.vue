@@ -57,6 +57,7 @@ defineExpose({
 			keyboardInput.value.input = value
 			keyboardInput.value.tex = keyboard.value.keyboard.tex(value)
 		})
-	}
+	},
+	parameters: "paramètres en fonction du clavier"
 })
 </script>

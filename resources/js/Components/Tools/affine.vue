@@ -45,7 +45,7 @@
 <script setup>
 /** Tools
  * title: affine
- * body: calcul d'une fonction affine par deux points
+ * body: calcul d'une fonction affine par deux maxPoints
  * parameters: a=Point, b=Point
  * tags: algebre,1M
  */

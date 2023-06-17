@@ -88,20 +88,14 @@ Formulaire d'édition d'une question
 					{{ errorMessage }}
 				</div>
 			</form>
-			<div class="bg-white border border-gray-200 rounded py-4">
-				<markdown-it
-					:text="theBody"
-					class="border-b border-gray-200 px-3 mb-3 pb-3"
-				/>
 
-				<QuestionUserInput
-					:key="theQuestion.block.body"
-					ref="userInput"
-					:question="theQuestion"
-					class="px-3"
-					@change="theBody = $event"
-				/>
-			</div>
+			<question-show-new
+				:question="theQuestion"
+				:class="theQuestion.css"
+				is-dynamic
+				show-input
+				show-parameters
+			/>
 		</div>
 	</dialog-modal>
 </template>
@@ -109,11 +103,10 @@ Formulaire d'édition d'une question
 import FormTextarea from "@/Components/Form/FormTextarea.vue"
 import FormInput from "@/Components/Form/FormInput.vue"
 import {reactive, ref} from "vue"
-import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
-import QuestionUserInput from "@/Components/Posts/Questions/QuestionUserInput.vue"
 import DialogModal from "@/Components/Ui/DialogModal.vue"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
 import FormCodearea from "@/Components/Form/FormCodearea.vue"
+import QuestionShowNew from "@/Components/Posts/Questions/QuestionShowNew.vue"
 
 const emits = defineEmits(["update:modelValue", "change", "destroy"])
 let props = defineProps({
@@ -122,8 +115,7 @@ let props = defineProps({
 	}),
 	show = ref(props.modelValue),
 	theQuestion = reactive(props.question),
-	errorMessage = ref(""),
-	userInput = ref(null)
+	errorMessage = ref("")
 
 let saveQuestion = function () {
 		let illustrations = []
@@ -167,6 +159,5 @@ let saveQuestion = function () {
 				emits("destroy", props.question.id)
 			})
 			.catch((err) => console.log(err))
-	},
-	theBody = ref(theQuestion.block.body)
+	}
 </script>

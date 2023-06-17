@@ -228,9 +228,9 @@ const props = defineProps({
 
 let show = ref(props.modelValue),
 	theBlock = ref(props.block),
-	switchEnable = ref(props.block.switch!==null)
+	switchEnable = ref(props.block.switch!==null),
+	tab = ref(1)
 
-//TODO:  Duplicate code with "blocks" -> move to composable ?
 let random = ref(1),
 	postData = inject("postData", {}),
 	blockData = computed(() => {
@@ -256,6 +256,7 @@ let updateSwitchEnable = function(){
 		theBlock.value.switch = null
 	}
 }
+
 let saveBlock = function () {
 		axios.post(
 			route("blocks.update", [theBlock.value.id]),

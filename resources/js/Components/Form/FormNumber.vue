@@ -7,6 +7,7 @@
 		/>
 		<input
 			:id="name"
+			ref="inp"
 			:name="name"
 			:value="modelValue"
 			class="border border-gray-200 p-2 w-full rounded"
@@ -29,6 +30,7 @@
 import FormField from "@/Components/Form/FormField"
 import FormLabel from "@/Components/Form/FormLabel"
 import FormError from "@/Components/Form/FormError"
+import {onMounted, ref} from "vue"
 
 const emits = defineEmits(["update:modelValue", "enter", "cancel", "inputFocus"])
 const props = defineProps({
@@ -36,8 +38,11 @@ const props = defineProps({
 	modelValue: {type: Number, default: null},
 	name: {type: String, required: true},
 	label: {type: String, default: ""},
-	error: {type: String, default: ""}
+	error: {type: String, default: ""},
+	focus: {type: Boolean, default: false},
 })
+
+let inp = ref(null)
 
 function doCancel(){
 	emits("update:modelValue", originalValue.value)
@@ -46,5 +51,19 @@ function doCancel(){
 function doValidate(){
 	emits("enter")
 }
+
+function focus(select){
+	inp.value.focus()
+	if(select===true){
+		inp.value.select()
+	}
+}
+onMounted(() => {
+	if (props.focus) {
+		inp.value.focus()
+		inp.value.select()
+	}
+})
+defineExpose({focus})
 
 </script>

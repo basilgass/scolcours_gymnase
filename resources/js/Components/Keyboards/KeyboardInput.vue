@@ -49,6 +49,7 @@ defineExpose({
 		loadAnswerToKeyboard(value, reset, changeEvent, (value)=>{
 			inputValue.value = value
 		})
-	}
+	},
+	parameters: ""
 })
 </script>

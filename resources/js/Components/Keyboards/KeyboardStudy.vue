@@ -509,13 +509,13 @@ function removeItem(item) {
 }
 
 function removeControlsAndBezier(item){
-	// Remove the control points.
+	// Remove the control maxPoints.
 	Object.values(itemsGraph.value[item].controls||[]).forEach(el=> {
 		if(el) {
 			el.remove()
 		}
 	})
-	// Remove the bezier points.
+	// Remove the bezier maxPoints.
 	Object.values(itemsGraph.value[item].bezier||[]).forEach(group=>group.forEach(el=>el.remove()))
 
 }
@@ -775,7 +775,7 @@ function plotGraph(){
 		return
 	}
 
-	// Get all points
+	// Get all maxPoints
 	let ctrlPoints = []
 
 	for(let item of Object.values(itemsGraph.value)){
@@ -799,7 +799,7 @@ function plotGraph(){
 		}
 	}
 
-	// Sort the points.
+	// Sort the maxPoints.
 	ctrlPoints.sort((a,b)=>a.point.x-b.point.x)
 	plot = PiGraph.bezier(ctrlPoints)
 
