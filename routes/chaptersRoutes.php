@@ -6,7 +6,12 @@ use App\Models\Theme;
 // Store the themes cache.
 //Cache::forget('themes');
 $themesList = Cache::rememberForever('themes', function () {
-	return Theme::all()->pluck('slug')->toArray();
+	try {
+		return Theme::all()->pluck('slug')->toArray();
+	} catch (Exception $exception) {
+		return [];
+	}
+
 });
 
 // themes.chapters.store, chapters.update, chapters.destroy
@@ -21,7 +26,7 @@ $themesList = Cache::rememberForever('themes', function () {
 
 // Themes and chapters main routes
 // Public routes !
-Route::whereIn('theme', $themesList)->group(function (){
+Route::whereIn('theme', $themesList)->group(function () {
 	// Public routes
 	Route::get('{theme:slug}/', [ChaptersController::class, 'index'])
 		->name('theme');
