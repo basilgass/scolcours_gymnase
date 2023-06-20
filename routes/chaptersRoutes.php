@@ -9,20 +9,9 @@ $themesList = Cache::rememberForever('themes', function () {
 	try {
 		return Theme::all()->pluck('slug')->toArray();
 	} catch (Exception $exception) {
-		return [];
+		return ["algebre", "geometrie", "analyse", "statistiques", "jeux"];
 	}
-
 });
-
-// themes.chapters.store, chapters.update, chapters.destroy
-//Route::resource('themes.chapters', ChaptersController::class)
-//	->parameters([
-//		'themes' => 'theme:slug',
-//		'chapters' => 'chapter:slug'
-//	])
-//	->shallow()
-//	->except('show');
-// TODO: remove the slug from all routes, except "public" routes ?
 
 // Themes and chapters main routes
 // Public routes !

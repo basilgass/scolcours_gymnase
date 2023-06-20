@@ -111,7 +111,7 @@ class User extends Authenticatable
 			->withTimestamps()
 			->withPivot('result', 'answer', 'attempts');
 	}
-	
+
 	public function quizz_sessions()
 	{
 		return $this->belongsToMany(QuizzSession::class)
@@ -132,6 +132,7 @@ class User extends Authenticatable
 
 	public function getAdminAttribute()
 	{
-		return $this->email === 'basil@scolcours.ch' or $this->email === 'alyssia@famillegass.ch';
+		return $this->email === 'basil@scolcours.ch' or
+			$this->email === 'alyssia@famillegass.ch';
 	}
 }
