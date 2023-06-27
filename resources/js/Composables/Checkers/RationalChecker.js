@@ -2,6 +2,7 @@ import {PiMath} from "pimath/esm"
 
 export function RationalChecker(options) {
 	return {
+		name: "rational",
 		format: () => {
 			let opts = []
 

@@ -83,7 +83,8 @@ let props = defineProps({
 	autocomplete: {type: [String,Boolean], default: "off"},
 	btnClass:{type: String, default: "btn"},
 	datalist: {type: Array, default: ()=>[]},
-	disabled: {type: Boolean, default: false}
+	disabled: {type: Boolean, default: false},
+	ascii: {type: Boolean, default: false},
 })
 
 let inp = ref(null),
@@ -103,7 +104,7 @@ function handleCtrlKey(ev){
 	}
 }
 
-function focus(select){
+function getFocus(select){
 	inp.value.focus()
 	if(select===true){
 		inp.value.select()
@@ -115,6 +116,6 @@ onMounted(() => {
 		inp.value.select()
 	}
 })
-defineExpose({focus})
+defineExpose({focus: getFocus})
 
 </script>

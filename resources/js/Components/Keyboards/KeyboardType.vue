@@ -51,7 +51,7 @@ import {PiMath} from "pimath/esm"
 import {useKeyboard} from "@/Composables/useKeyboard"
 
 let props = defineProps({
-	options: {type: String},
+	keyboard: {type: Object, required: true},
 	answer: {type: String}
 })
 

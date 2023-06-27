@@ -12,13 +12,14 @@
 
 <script setup>
 
-import {nextTick, ref} from "vue"
+import {computed, nextTick, ref} from "vue"
 import FormInput from "@/Components/Form/FormInput.vue"
 import {useKeyboard} from "@/Composables/useKeyboard"
+import AsciiMathParser from "@/asciimath2tex"
 
 //TODO: KeyboardInput doit accepter des "checkers" différents, issus de KeyboardBasic
 let props = defineProps({
-	options: {type: String},
+	keyboard: {type: Object, required: true},
 	answer: {type: String}
 })
 let emits = defineEmits(["change", "validate"])
@@ -28,18 +29,40 @@ let changeEvent = async function () {
 	emits("change", {
 		value:		{
 			input: inputValue.value,
-			tex: inputValue.value,
+			tex: isTex.value?inputValue.value:new AsciiMathParser().parse(inputValue.value),
 			raw: inputValue.value
 		},
-		validation: keyboard.value.checker.check(props.answer, inputValue.value)
+		validation: checker.value.check(props.answer, inputValue.value)
 	})
 }
 
 /* ------------------*/
-let	inputValue = ref(""),
-	{makeKeyboard} = useKeyboard() ,
-	keyboard = ref(makeKeyboard(props.options, "string"))
+const {getKeyboards} = useKeyboard()
 
+let	inputValue = ref(""),
+	isTex = computed(()=>{
+		return props.keyboard.parameters.includes("tex")
+	}),
+	checker = computed(()=>{
+		if(props.keyboard.parameters.length===0){
+			return {
+				check: () => {
+					return {message: "il n'y a pas de contrôle...", result: false}
+				}
+			}
+		}
+
+		const kbrds = getKeyboards(props.keyboard.parameters[0])
+		if(kbrds===null || kbrds.length===0) {
+			return {
+				check: () => {
+					return {message: "il n'y a pas de contrôle...", result: false}
+				}
+			}
+		}
+
+		return kbrds[0].checker
+	})
 
 let {loadAnswerToKeyboard} = useKeyboard(props)
 let reset = ()=>{inputValue.value = ""}

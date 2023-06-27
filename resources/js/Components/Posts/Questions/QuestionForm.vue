@@ -68,16 +68,11 @@ Formulaire d'édition d'une question
 					class="font-code"
 					:rows="3"
 				/>
-				<form-input
+				<form-textarea
 					v-model="theQuestion.keyboard"
+					:rows="5"
 					label="keyboard"
 					name="keyboard"
-					class="font-code"
-				/>
-				<form-textarea
-					v-model="theQuestion.parameters"
-					label="parameters"
-					name="parameters"
 					class="font-code"
 				/>
 
@@ -89,12 +84,11 @@ Formulaire d'édition d'une question
 				</div>
 			</form>
 
-			<question-show-new
+			<question-show
 				:question="theQuestion"
 				:class="theQuestion.css"
 				is-dynamic
 				show-input
-				show-parameters
 			/>
 		</div>
 	</dialog-modal>
@@ -106,7 +100,7 @@ import {reactive, ref} from "vue"
 import DialogModal from "@/Components/Ui/DialogModal.vue"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
 import FormCodearea from "@/Components/Form/FormCodearea.vue"
-import QuestionShowNew from "@/Components/Posts/Questions/QuestionShowNew.vue"
+import QuestionShow from "@/Components/Posts/Questions/QuestionShow.vue"
 
 const emits = defineEmits(["update:modelValue", "change", "destroy"])
 let props = defineProps({
@@ -134,7 +128,6 @@ let saveQuestion = function () {
 						answer: theQuestion.answer,
 						checker: theQuestion.checker,
 						keyboard: theQuestion.keyboard,
-						parameters: theQuestion.parameters,
 						css: theQuestion.css,
 					})
 					.then((res) => {

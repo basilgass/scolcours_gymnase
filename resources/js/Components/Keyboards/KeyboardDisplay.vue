@@ -128,7 +128,9 @@
 
 <script setup>
 import {computed, ref} from "vue"
-import {asciiToTex, keyboardKeys, keyboards} from "@/keyboards"
+import {useKeyboard} from "@/Composables/useKeyboard"
+
+let {asciiToTex, keyboardKeys, keyboards} = useKeyboard()
 
 const emits = defineEmits(["tex", "raw", "validate", "next", "change", "clear"])
 const props = defineProps({
@@ -145,7 +147,7 @@ const props = defineProps({
 	textOutput: {type: Boolean, default: false},
 	small: {type: Boolean, default: false},
 	keyClass: {type: String, default: "bg-gray-50"},
-	extraLetters: {type: String, default: ""},
+	extraLetters: {type: Array, default: ()=>[]},
 	customKeys: {
 		type: Object, default: () => {
 		}
@@ -177,10 +179,9 @@ let theKeyboard = computed(() => {
 		return props.keyboard
 	}),
 	keyboardOptions = computed(() => {
-		if (props.extraLetters!=="") {
+		if (props.extraLetters.length>0) {
 
-			let opts = props.extraLetters.split(",")
-			opts = opts.map(x => {
+			let opts = props.extraLetters.map(x => {
 				const keyDisplay = x.split("|"),
 					d = keyDisplay.length >= 2 ? keyDisplay[1] : keyDisplay[0],
 					isMath = d.startsWith("#") || d.startsWith("\\")
@@ -196,7 +197,7 @@ let theKeyboard = computed(() => {
 					}
 				}
 			})
-			
+
 			return opts
 		}
 

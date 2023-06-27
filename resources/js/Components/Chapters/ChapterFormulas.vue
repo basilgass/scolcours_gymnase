@@ -125,7 +125,10 @@ const addFormula = function () {
 		}).then(res => {
 			// TODO : flash message !
 			flash.add("L'ordre des formules à bien été enregistré !")
-		}).catch(res => console.log("update ordering order: ", res.data))
+		}).catch(res => {
+			// toDO: Show error message
+			console.warning("update ordering order: ", res.data)
+		})
 	},
 	loadFormular = function () {
 		return axios

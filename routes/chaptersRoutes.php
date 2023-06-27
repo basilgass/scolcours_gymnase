@@ -7,11 +7,12 @@ use App\Models\Theme;
 //Cache::forget('themes');
 $themesList = Cache::rememberForever('themes', function () {
 	try {
-		return Theme::all()->pluck('slug')->toArray();
+		return Theme::where("enabled", "=", 1)->get()->pluck('slug')->toArray();
 	} catch (Exception $exception) {
 		return ["algebre", "geometrie", "analyse", "statistiques", "jeux"];
 	}
 });
+
 
 // Themes and chapters main routes
 // Public routes !

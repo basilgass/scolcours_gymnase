@@ -33,6 +33,8 @@ use URL;
  * @property-read int|null $posts_count
  * @property-read Collection<int, \App\Models\Question> $questions
  * @property-read int|null $questions_count
+ * @property-read Collection<int, \App\Models\Quizz> $quizzs
+ * @property-read int|null $quizzs_count
  * @property-read \App\Models\Theme $theme
  * @property-read Collection<int, \App\Models\User> $users
  * @property-read int|null $users_count

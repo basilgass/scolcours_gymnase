@@ -152,12 +152,12 @@ Edition d'un challenge
 					/>
 				</div>
 			</div>
-			<div v-show="tab === 'generator'">
+			<div v-show="tab === 'generator_disabled'">
 				<h3 class="text-lg uppercase">
 					Générateur (script)
 				</h3>
 
-				<div class="grid grid-cols-1 grid-cols-2 gap-3">
+				<div class="grid grid-cols-2 gap-3">
 					<form-codearea
 						v-model="theChallenge.generator"
 						:rows="30"
@@ -191,6 +191,85 @@ Edition d'un challenge
 					</div>
 				</div>
 			</div>
+			<div v-show="tab === 'generator'">
+				<h3 class="text-lg uppercase">
+					Générateur (script)
+				</h3>
+
+				<div>
+					<div class="flex gap-4">
+						<button
+							v-for="(generator, index) of theChallenge.generators"
+							:key="`generator-btn-${index}`"
+							class="btn"
+							:class="generatorTab === generator.pivot.order ? 'is-active':'' "
+							@click="generatorTab = index+1"
+						>
+							level {{ index + 1 }}
+						</button>
+					</div>
+
+					<div
+						v-for="(generator, index) of theChallenge.generators"
+						v-show="generator.pivot.order===generatorTab"
+						:key="`generator-${generator.id}`"
+						class="grid grid-cols-2 gap-3"
+					>
+						<form-codearea
+							v-model="theChallenge.generators[index].code"
+							:rows="30"
+							label="générateur de questions"
+							name="questionsGenerator"
+						/>
+						<div>
+							<h3>Exemples</h3>
+
+							<div
+								v-if="generateQuestions.length>0"
+								class="font-code divide-y"
+							>
+								<div
+									v-for="(question, idx) of generateQuestions"
+									:key="`question-${idx}`"
+									class="flex justify-between py-2"
+								>
+									<div v-katex="question.question" />
+									<div v-text="question.answer" />
+								</div>
+							</div>
+							<div
+								class="text-red-600"
+								v-text="generateQuestionsError"
+							/>
+						</div>
+						<!--						<div class="mt-8">-->
+						<!--							<form-number-->
+						<!--								v-model="level"-->
+						<!--								label="niveau"-->
+						<!--								min="1"-->
+						<!--								name="level"-->
+						<!--							/>-->
+						<!--							<div-->
+						<!--								v-if="generateQuestions.length>0"-->
+						<!--								class="font-code divide-y"-->
+						<!--							>-->
+						<!--								<div-->
+						<!--									v-for="(question, idx) of generateQuestions"-->
+						<!--									:key="`question-${idx}`"-->
+						<!--									class="flex justify-between py-2"-->
+						<!--								>-->
+						<!--									<div v-katex="question.question" />-->
+						<!--									<div v-text="question.answer" />-->
+						<!--								</div>-->
+						<!--							</div>-->
+						<!--							<div-->
+						<!--								class="text-red-600"-->
+						<!--								v-text="generateQuestionsError"-->
+						<!--							/>-->
+						<!--						</div>-->
+					</div>
+				</div>
+			</div>
 		</div>
 	</dialog-modal>
 </template>
@@ -214,6 +293,7 @@ let props = defineProps({
 })
 let show = ref(props.modelValue),
 	tab = ref("generator"),
+	generatorTab = ref(1),
 	theChallenge = ref(props.challenge),
 	level = ref(1)
 

@@ -1,7 +1,8 @@
-import {asciiToTex} from "@/keyboards"
+import AsciiMathParser from "@/asciimath2tex"
 
 export function SolutionChecker(options) {
 	return {
+		name: "solution",
 		format: () => "Solution de la forme \\(\\mathcal{S}=\\{3;5\\}\\)",
 		check: (expectedAnswer, answer = []) => {
 
@@ -21,7 +22,7 @@ export function SolutionChecker(options) {
 				if (answer === `{${answer}}`) {
 					return {
 						result: false,
-						message: `${asciiToTex(expectedAnswer)} est déjà un ensemble.`
+						message: `${ new AsciiMathParser().parse(expectedAnswer)} est déjà un ensemble.`
 					}
 				}
 			}

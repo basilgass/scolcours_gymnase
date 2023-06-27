@@ -35,7 +35,7 @@ import {computed, onMounted, ref} from "vue"
 import {useKeyboard} from "@/Composables/useKeyboard"
 
 let props = defineProps({
-	options: { type: String },
+	keyboard: { type: Object, required: true },
 	answer: { type: String },
 })
 
@@ -95,20 +95,14 @@ let changeEvent = function () {
 
 /* ------------------*/
 // Options du QCM
-let qcmOptions = computed(() => {
-		return props.options
-			.split("\n")
-			.filter((x) => x.startsWith("@"))
-			.map((x) => x.substring(1))
-	}),
-	isFullWidth = computed(() => {
-		return qcmOptions.value.includes("full")
+let isFullWidth = computed(() => {
+		return props.keyboard.parameters.includes("full")
 	}),
 	isFlex = computed(() => {
-		return qcmOptions.value.includes("flex")
+		return props.keyboard.parameters.includes("flex")
 	}),
 	isTex = computed(()=>{
-		return qcmOptions.value.includes("tex")
+		return props.keyboard.parameters.includes("tex")
 	}),
 	multiAnswers = computed(()=>{
 		return props.answer.split(",").length>1
@@ -154,10 +148,8 @@ onMounted(() => {
 	// key|Tex
 	// TeX
 
-	qcmItems.value = props.options
-		.split("\n")
-		.filter((x) => x !== "") // on enlève les lignes vides
-		.filter((x) => !x.startsWith("@")) // on enlève les lignes commençant par '@' (options)
+
+	qcmItems.value = props.keyboard.values
 		.map((x) => {
 			let [key, label, tex] = x.split("|")
 
@@ -184,11 +176,8 @@ defineExpose({
 	loadAnswer: (value)=>{
 		loadAnswerToKeyboard(value, reset,  changeEvent, (value)=>{
 			let keys = value.split(",")
-			console.log(keys)
 
 			qcmItems.value.forEach(item=>{
-				console.log(item.key)
-				console.log(item)
 				if(keys.includes(item.key)){
 					item.selected = true
 				}

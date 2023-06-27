@@ -1,4 +1,6 @@
-import {keyboards} from "@/keyboards"
+import {useKeyboard} from "@/Composables/useKeyboard"
+
+let {keyboards} = useKeyboard()
 
 
 export function makeStudyFromCode(code, showCoords, displayMode){

@@ -2,6 +2,7 @@ export function ExactChecker(options){
 	if(options===undefined){options = []}
 
 	return {
+		name: "exact",
 		format: () => {
 			return "réponse sous forme exacte, réduite"
 		},
@@ -18,7 +19,7 @@ export function ExactChecker(options){
 			} else {
 				return {
 					result: false,
-					message: ""
+					message: "La réponse donnée n'est pas juste."
 				}
 			}
 		}

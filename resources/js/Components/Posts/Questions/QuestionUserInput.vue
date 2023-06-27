@@ -37,8 +37,11 @@ Met à jour la donnée en fonction des réponses.
 </template>
 
 <script setup>
-import {computed, defineAsyncComponent, onMounted, ref} from "vue"
-import {getKeyboard} from "@/keyboards"
+import {computed, onMounted, ref} from "vue"
+// import {getKeyboardName} from "@/keyboards"
+import {useKeyboard} from "@/Composables/useKeyboard"
+
+let {getComponent} = useKeyboard()
 
 const emits = defineEmits(["change", "validate"])
 
@@ -47,13 +50,14 @@ let props = defineProps({
 	}),
 	keyboardUI = ref(null),
 	keyboardComponent = computed(()=>{
-		let kbrd = getKeyboard(props.question.keyboard)
-		if(kbrd){
-			// get the component
-			return defineAsyncComponent(() => import(`@/Components/Keyboards/Keyboard${kbrd}`))
-		}else{
-			return defineAsyncComponent(() => import("@/Components/Keyboards/KeyboardBasic"))
-		}
+		return getComponent(props.question.keyboard)
+		// let kbrd = getKeyboardName(props.question.keyboard)
+		// if(kbrd){
+		// 	// get the component
+		// 	return defineAsyncComponent(() => import(`@/Components/Keyboards/Keyboard${kbrd}`))
+		// }else{
+		// 	return defineAsyncComponent(() => import("@/Components/Keyboards/KeyboardBasic"))
+		// }
 	}),
 	keyboardAnswer = computed(()=>{
 		return props.question.answer

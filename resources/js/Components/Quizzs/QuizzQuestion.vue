@@ -1,6 +1,6 @@
 <template>
 	<article>
-		<question-show-new
+		<question-show
 			class="max-w-xl mx-auto bg-white border rounded"
 			:question="props.question"
 			show-title
@@ -13,7 +13,7 @@
 </template>
 
 <script setup>
-import QuestionShowNew from "@/Components/Posts/Questions/QuestionShowNew.vue"
+import QuestionShow from "@/Components/Posts/Questions/QuestionShow.vue"
 
 const emits = defineEmits(["validate"])
 let props = defineProps({

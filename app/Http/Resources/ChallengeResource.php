@@ -46,7 +46,8 @@ class ChallengeResource extends JsonResource
 			'user' => [
 				'score' => $userScore,
 				'level' => $userLevel
-			]
+			],
+			"generators" => $this->generators
 		];
 	}
 }

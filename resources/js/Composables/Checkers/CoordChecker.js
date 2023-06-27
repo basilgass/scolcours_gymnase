@@ -5,6 +5,7 @@ export function CoordChecker(options) {
 	// TODO: coordchecker is by default using exactChecker. Might also be good to use nb checker
 
 	return {
+		name: "coordinates",
 		format: () => "Coordonnées d'un point sous la forme \\((a;b)\\)",
 		check: (expectedAnswer, answer = []) => {
 			if (expectedAnswer === answer) {

@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use App\Models\Theme;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Inertia\Middleware;
 
 class HandleInertiaRequests extends Middleware
@@ -41,12 +42,14 @@ class HandleInertiaRequests extends Middleware
 					'admin' => $request->user()?->admin
 				]
 			],
-			'themes' => Theme::all()->mapWithKeys(function ($item, $key) {
+			'scolcours' => Cache::get('scolcours')->toArray(),
+			'themes' => Theme::where("enabled", "=", 1)->get()->mapWithKeys(function ($item, $key) {
 				return [
 					$key => [
 						'id' => $item->id,
 						'slug' => $item->slug,
-						'title' => $item->title
+						'title' => $item->title,
+						'enabled'=>$item->enabled
 					]
 				];
 			})

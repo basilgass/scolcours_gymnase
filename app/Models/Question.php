@@ -19,7 +19,6 @@ use Illuminate\Support\Carbon;
  * @property string|null $answer
  * @property string|null $checker
  * @property string|null $keyboard
- * @property string|null $parameters
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property string $questionable_type
@@ -39,7 +38,6 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Question whereId($value)
  * @method static Builder|Question whereKeyboard($value)
  * @method static Builder|Question whereOrder($value)
- * @method static Builder|Question whereParameters($value)
  * @method static Builder|Question whereQuestionableId($value)
  * @method static Builder|Question whereQuestionableType($value)
  * @method static Builder|Question whereUpdatedAt($value)

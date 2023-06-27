@@ -1,5 +1,6 @@
 export function StudyChecker(options) {
 	return {
+		name: "study",
 		format: () => {
 			return ""
 		},

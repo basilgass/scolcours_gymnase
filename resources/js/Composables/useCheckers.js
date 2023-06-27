@@ -1,15 +1,16 @@
-import { NumberChecker } from "@/Composables/Checkers/NumberChecker"
-import { PolynomChecker } from "@/Composables/Checkers/PolynomChecker"
-import { ScientificChecker } from "@/Composables/Checkers/ScientificChecker"
-import { StringChecker } from "@/Composables/Checkers/StringChecker"
-import { TableofsignChecker } from "@/Composables/Checkers/TableofsignChecker"
-import { SolutionChecker } from "@/Composables/Checkers/SolutionChecker"
-import { ExactChecker } from "@/Composables/Checkers/ExactChecker"
-import { StudyChecker } from "@/Composables/Checkers/StudyChecker"
-import { RationalChecker } from "@/Composables/Checkers/RationalChecker"
-import { CoordChecker } from "@/Composables/Checkers/CoordChecker"
-import { VectorChecker } from "@/Composables/Checkers/VectorChecker"
-import { EquationChecker } from "@/Composables/Checkers/EquationChecker"
+import {NumberChecker} from "@/Composables/Checkers/NumberChecker"
+import {PolynomChecker} from "@/Composables/Checkers/PolynomChecker"
+import {ScientificChecker} from "@/Composables/Checkers/ScientificChecker"
+import {StringChecker} from "@/Composables/Checkers/StringChecker"
+import {TableofsignChecker} from "@/Composables/Checkers/TableofsignChecker"
+import {SolutionChecker} from "@/Composables/Checkers/SolutionChecker"
+import {ExactChecker} from "@/Composables/Checkers/ExactChecker"
+import {StudyChecker} from "@/Composables/Checkers/StudyChecker"
+import {RationalChecker} from "@/Composables/Checkers/RationalChecker"
+import {CoordChecker} from "@/Composables/Checkers/CoordChecker"
+import {VectorChecker} from "@/Composables/Checkers/VectorChecker"
+import {EquationChecker} from "@/Composables/Checkers/EquationChecker"
+import {FractionChecker} from "@/Composables/Checkers/FractionChecker"
 
 export const checkersList = {
 	polynom: ["factors", "develop"],
@@ -25,7 +26,7 @@ export const checkersList = {
 export function useCheckers(checkerData) {
 	// checkerData = checker,opt1,opt2,opt3
 	let options = checkerData.split(",")
-	let checker = options.shift()
+	let checker = options.shift().toLowerCase()
 
 	switch (checker) {
 	case "exact":
@@ -40,6 +41,10 @@ export function useCheckers(checkerData) {
 	case "nb":
 	case "number":
 		return NumberChecker(options)
+	case "fr":
+	case "frac":
+	case "fraction":
+		return FractionChecker(options)
 	case "scn":
 		return ScientificChecker(options)
 	case "tos":
@@ -53,7 +58,6 @@ export function useCheckers(checkerData) {
 		return CoordChecker(options)
 	case "vector":
 		return VectorChecker(options)
-
 	default:
 		return StringChecker(options)
 	}

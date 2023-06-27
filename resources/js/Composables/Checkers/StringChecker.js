@@ -1,5 +1,6 @@
 export function StringChecker(options) {
 	return {
+		name: "string",
 		format: () => {
 			return "réponse textuelle"
 		},

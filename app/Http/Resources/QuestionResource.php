@@ -57,7 +57,7 @@ class QuestionResource extends JsonResource
 			"answer" => $this->answer,
 			"checker" => $this->checker,
 			"keyboard" => $this->keyboard,
-			"parameters" => $this->parameters??'',
+//			"parameters" => $this->parameters??'',
 			"user" => $userAnswers
 		];
 //        return parent::toArray($request);

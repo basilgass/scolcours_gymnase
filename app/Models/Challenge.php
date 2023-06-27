@@ -37,6 +37,8 @@ use Illuminate\Support\Carbon;
  * @property-read Collection<int, \App\Models\Block> $blocks
  * @property-read int|null $blocks_count
  * @property-read \App\Models\Chapter|null $chapter
+ * @property-read Collection<int, \App\Models\Generator> $generators
+ * @property-read int|null $generators_count
  * @property-read mixed $running
  * @property-read Collection<int, \App\Models\Score> $scores
  * @property-read int|null $scores_count
@@ -92,6 +94,12 @@ class Challenge extends Model
 	{
 		return $this->morphMany(Score::class, 'scoreable');
 //		return $this->hasMany(Score::class);
+	}
+
+	public function generators()
+	{
+		return $this->morphToMany(Generator::class, 'generatorable')
+			->withPivot('order');
 	}
 	public function getRunningAttribute()
 	{

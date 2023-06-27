@@ -8,7 +8,7 @@
 		gap-6 p-6"
 		>
 			<Link
-				v-for="(theme, index) in themes"
+				v-for="(theme, index) in $page.props.themes"
 				:key="theme.slug"
 				:class="'bg-scolcours-'+theme.slug + ' ' + (index%2===0?'rotate-1':'-rotate-1')"
 				:href="'/'+theme.slug"
@@ -73,9 +73,7 @@ import ScolCoursLogo from "@/Components/ScolcoursLogo"
 let props = defineProps({
 	canLogin: Boolean,
 	canRegister: Boolean,
-	themes: Array,
 	newChapters: Array
 })
-
 
 </script>

@@ -4,7 +4,7 @@ Logo du site
 <template>
 	<div class="text-center">
 		<div class="text-4xl">
-			Gymnase
+			{{ $page.props.scolcours.title }}
 		</div>
 		<div class="text-sm">
 			powered by Scolcours
@@ -12,6 +12,7 @@ Logo du site
 	</div>
 </template>
 <script>
+
 export default {
 	name: "ScolCoursLogo"
 }

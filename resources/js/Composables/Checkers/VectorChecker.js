@@ -6,6 +6,7 @@ export function VectorChecker(options) {
 	// TODO: vectorchecker is by default using exactChecker. Might also be good to use nb checker
 
 	return {
+		name: "vector",
 		format: () => "Vecteur sous la forme \\(\\begin{pmatrix}a\\\\b\\end{pmatrix}\\)",
 		check: (expectedAnswer, answer = []) => {
 			// Manque les parenthèses

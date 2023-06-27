@@ -36,7 +36,7 @@
 			@end="updateQuestionsOrder"
 		>
 			<template #item="{ element }">
-				<question-show-new
+				<question-show
 					:class="element.css ?? ''"
 					:question="element"
 					@destroy="destroyQuestion"
@@ -62,7 +62,7 @@
 <script setup>
 
 import {inject, ref} from "vue"
-import QuestionShowNew from "@/Components/Posts/Questions/QuestionShowNew.vue"
+import QuestionShow from "@/Components/Posts/Questions/QuestionShow.vue"
 
 const props = defineProps({
 	questions: {type: Array, required: true},

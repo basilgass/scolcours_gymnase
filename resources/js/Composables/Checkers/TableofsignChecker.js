@@ -3,6 +3,7 @@ import {ExactChecker} from "@/Composables/Checkers/ExactChecker"
 export function TableofsignChecker(options) {
 
 	return {
+		name: "table of signs",
 		format: () => "tableau de signes",
 		check: (expectedAnswer, answer = []) => {
 			//TODO: TOS checker

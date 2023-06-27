@@ -4,124 +4,161 @@ Envoi de la validation d'une réponse
 keyboard -> QuestionUserInput -> QuestionShow
 -->
 <template>
-	<div
+	<article
 		:id="`question-${theQuestion.id}`"
 		:class="{
-			'relative rounded border h-full': !props.minimal,
-			'bg-gray-50 border-gray-200': !theQuestion.user.correct && !props.minimal,
-			'bg-green-50 border-green-600/60': theQuestion.user.correct && !props.minimal,
+			'rounded border h-full': !props.isMinimal,
+			'bg-gray-50 border-gray-200': !theQuestion.user.result && !props.isMinimal,
+			'bg-green-50 border-green-600/60': theQuestion.user.result && !props.isMinimal,
 		}"
 	>
-		<!-- Order number of the question -->
-		<div
-			v-if="theQuestion.order && !props.minimal"
-			class="absolute -left-2 -top-2 rounded-full bg-white border w-8 h-8 text-xs flex justify-center items-center draggable-handle"
-			:class="{'draggable-handle cursor-move':$page.props.auth.can.admin}"
-		>
-			{{ theQuestion.order }}
-		</div>
-
-		<!-- Admin header of the question -->
-		<div
-			v-if="!dynamic"
-			v-show="editMode.enabled.value"
-			v-admin
-			class="flex justify-end w-full px-3 gap-3 mt-2"
-		>
-			<button
-				class="text-xs"
-				@click="showEditForm=true"
+		<header class="flex relative">
+			<!-- QUESTION NUMBER -->
+			<div
+				v-if="theQuestion.order && !props.isMinimal"
+				:class="{'draggable-handle cursor-move':$page.props.auth.can.admin}"
+				class="absolute -left-2 -top-2 rounded-full bg-white border w-8 h-8 text-xs flex justify-center items-center draggable-handle"
 			>
-				{{ theQuestion.id }} <i class="bi bi-pencil ml-2" />
-			</button>
-			<button
-				class="text-xs px-2"
-				@click="duplicateQuestion"
-			>
-				<i class="bi bi-clipboard-plus" />
-			</button>
+				{{ theQuestion.order }}
+			</div>
 
-			<button
-				v-if="!theQuestion.block.illustration"
-				class="text-xs px-2"
-				@click="addIllustration"
-			>
-				<i class="bi bi-image" />
-			</button>
-		</div>
-
-
-		<div class="flex flex-col justify-between">
-			<!-- the title of question -->
+			<!-- QUESTION TITLE -->
 			<div
 				v-if="props.showTitle"
 				v-katex.auto="theQuestion.block.title"
 				class="px-5 py-3 font-semibold text-lg"
 			/>
 
+			<!-- ADMIN HEADER -->
+			<div
+				v-if="!isDynamic"
+				v-show="editMode.enabled.value"
+				v-admin
+				class="flex justify-end w-full px-3 gap-3 mt-2"
+			>
+				<button
+					class="text-xs"
+					@click="showEditForm=true"
+				>
+					{{ theQuestion.id }} <i class="bi bi-pencil ml-2" />
+				</button>
+				<button
+					class="text-xs px-2"
+					@click="duplicateQuestion"
+				>
+					<i class="bi bi-clipboard-plus" />
+				</button>
+
+				<button
+					v-if="!theQuestion.block.illustration"
+					class="text-xs px-2"
+					@click="addIllustration"
+				>
+					<i class="bi bi-image" />
+				</button>
+			</div>
+		</header>
+
+		<main class="px-5 overflow-x-auto mb-3">
 			<!-- the body of question -->
-			<div class="px-5 py-3 overflow-x-auto">
-				<!-- Illustration -->
-				<illustration-show
-					v-if="theQuestion.block.illustration"
-					:illustration="theQuestion.block.illustration"
-					class="bg-white"
-				/>
+			<!-- Illustration -->
+			<illustration-show
+				v-if="theQuestion.block.illustration"
+				:illustration="theQuestion.block.illustration"
+				class="bg-white"
+			/>
 
-				<!-- dispalyed text -->
-				<markdown-it
-					:text="theQuestionBody"
-				/>
+			<!-- dispalyed text -->
+			<markdown-it
+				:text="theQuestionBody"
+			/>
+		</main>
 
-				<!-- answer format -->
+		<!-- user input -->
+		<div
+			v-if="!showInput"
+			class="text-xs px-5 text-right mb-3"
+		>
+			<button
+				v-if="!showUserInput"
+				:class="`active-scolcours-${$page.props.theme?.slug}`"
+				class="w-full py-3 hover:border-t hover:border-b"
+				@click="showUserInput=!showUserInput"
+			>
+				<i class="bi bi-calculator mr-2" />donner la réponse
+			</button>
+			<button
+				v-else
+				class="text-red-600"
+				@click="showUserInput=!showUserInput"
+			>
+				fermer <i class="bi bi-x-lg ml-2" />
+			</button>
+		</div>
+		<div
+			v-show="showUserInput"
+			class="question-user-input px-5"
+		>
+			<keyboard-validate-button
+				ref="validateButton"
+				:disabled="lockValidationButton"
+				@validate="validateQuestion"
+			/>
+			<div v-if="userAnswersErrors.length>0 && !props.singleAnswer">
+				<div
+					v-for="(msg, index) in userAnswersErrors"
+					:key="`error-${index}`"
+					v-katex.auto="msg"
+					class="text-red-600 text-xs"
+				/>
+			</div>
+
+			<!-- Answer selector -->
+			<div
+				class="question-answer-selector flex justify-between items-center my-5"
+			>
+				<button
+					:class="answerId===0?'invisible':`active-scolcours-${$page.props.theme?.slug}`"
+					class="px-3 text-xl font-semibold border rounded-full"
+					@click="answerId--"
+				>
+					<i class="bi-chevron-left" />
+				</button>
 				<div
 					v-if="answerFormat"
 					v-katex.auto="answerFormat"
-					class="text-center text-xs text-gray-400 mt-5"
+					class="text-center text-xs text-gray-400"
 				/>
-			</div>
-
-			<!-- the user input container -->
-			<div class="border-t border-gray-200 px-5 py-2">
-				<!-- Open / Close user input -->
-				<div
-					v-if="!displayInput"
-					:class="showInput?'text-right':'text-center'"
+				<button
+					:class="answerId===answersNumber-1?'invisible':`active-scolcours-${$page.props.theme?.slug}`"
+					class="px-3 text-xl font-semibold border rounded-full"
+					@click="answerId++"
 				>
-					<button
-						v-if="showInput"
-						@click="showInput=!showInput"
-					>
-						<span class="text-xs font-ultralight">Fermer </span><i class="bi bi-x-lg" />
-					</button>
-					<button
-						v-else
-						class="w-full"
-						@click="showInput=!showInput"
-					>
-						Donner la réponse
-					</button>
-				</div>
-
-				<!-- user input -->
-				<question-user-input
-					v-show="showInput"
-					ref="keyboardUI"
-					:question="theQuestion"
-					@change="theQuestionBody = $event"
-					@validate="onValidate"
-				/>
+					<i class="bi-chevron-right" />
+				</button>
 			</div>
 
-			<!-- footer - display previous answers -->
-			<div
-				v-if="theQuestion.user.correct || $page.props.auth.can.admin"
-				class="mt-5 border-t border-gray-200 px-5 py-2"
-			>
+			<component
+				:is="theAnswers[answerId].keyboard.component"
+				v-if="theAnswers[answerId]"
+				ref="keyboardUI"
+				:answer="theAnswers[answerId].answer"
+				:keyboard="theAnswers[answerId].keyboard"
+				@change="updateQuestion"
+				@validate="validateQuestion"
+			/>
+		</div>
+
+		<!-- already answered or admin answer -->
+		<div
+			v-if="theQuestion.user.result || $page.props.auth.can.admin"
+			class="question-footer mt-5 border-t border-gray-200 px-5 py-2"
+		>
+			<div>
 				<button
 					v-if="!showAnswer"
 					class="text-xs text-gray-400 w-full"
-					@click="loadAnswer"
+					@click="loadAnswer()"
 				>
 					<i
 						class="bi bi-eye mr-2"
@@ -129,17 +166,9 @@ keyboard -> QuestionUserInput -> QuestionShow
 				</button>
 				<div
 					v-else
-					class="cursor-pointer"
-					@click="hideAnswer"
+					class="cursor-pointer overflow-x-auto scrollbar-scolcours"
+					@click="loadAnswer(null)"
 				>
-					<div
-						v-if="displayAnswer.tex"
-						v-katex.display="displayAnswer.tex"
-					/>
-					<div
-						v-if="displayAnswer.raw"
-						v-html="displayAnswer.raw"
-					/>
 					<div
 						class="text-xs text-center ml-3 font-code font-xs"
 						v-text="theQuestion.answer"
@@ -159,111 +188,295 @@ keyboard -> QuestionUserInput -> QuestionShow
 				:question="props.question"
 				@change="updateQuestion"
 				@destroy="emits('destroy', $event)"
+				@validate="validateQuestion"
 			/>
 		</div>
-	</div>
+	</article>
 </template>
 
 <script setup>
-import {computed, defineAsyncComponent, inject, provide, ref} from "vue"
 import IllustrationShow from "@/Components/Posts/Illustrations/IllustrationShow.vue"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
-import QuestionUserInput from "@/Components/Posts/Questions/QuestionUserInput.vue"
+import {computed, defineAsyncComponent, inject, nextTick, provide, reactive, ref} from "vue"
+import KeyboardValidateButton from "@/Components/Keyboards/KeyboardValidateButton.vue"
 import {usePage} from "@inertiajs/vue3"
+import {useWrongAnswerAnimation} from "@/Composables/useHelpers"
+import {useKeyboard} from "@/Composables/useKeyboard"
 
-let emits = defineEmits(["destroy", "validate", "duplicate"])
+let {getKeyboards} = useKeyboard()
 
-let editMode = inject("editMode", false)
 
+// Props
 let props = defineProps({
-		question: {type: Object, required: true},
-		showTitle: {type: Boolean, default: false},
-		displayInput: {type: Boolean, default :false},
-		dynamic: {type: Boolean, default: false},
-		minimal: {type: Boolean, default: false},
+	question: {type: Object, required: true},
+	showTitle: {type: Boolean, default: false},
+	showInput: {type: Boolean, default: false},
+	isDynamic: {type: Boolean, default: false},
+	isMinimal: {type: Boolean, default: false},
+	singleAnswer: {type: Boolean, default: false},
+})
+
+// flash message
+const flash = inject("flash")
+
+// Emits
+const emits = defineEmits(["validate", "destroy", "duplicate"])
+
+// Reactivity
+let theQuestion = reactive(props.question), // la question principale, vraiment en "reactive" ?
+	theQuestionBody = computed(() => {
+		// On s'assure que le tableau des réponses est complet.
+		checkUserAnswers()
+
+		// On récupère le body original, avec les placeholder.
+		let body = theQuestion.block.body,
+			alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+
+		// $a, $b, ... sont des valeurs dans des environnements TeX
+		// $A, $B, ... sont des valeurs hors des environnements Tex
+		for (let i = 0; i < answersNumber.value; i++) {
+			if(theAnswers.value[i]===undefined){
+				return "Aucun clavier n'a pu être généré..."
+			}
+
+			let key = theAnswers.value[i].key,
+				rawColor = i === answerId.value ? "border-blue-600 bg-blue-100" : "border-red-600 bg-red-100",
+				texColor = i === answerId.value ? "cornflowerblue" : "red"
+
+			// S'il manque une valeur, on l'ajoute automatiquement à la fin.
+			if (key === undefined) {
+				key = `$${alphabet[i]}`
+				body += "\n\n" + key
+			}
+			// On met une couleur pour chaque variable.
+			// TODO: rajouter des couleurs en fonctions de la bonne réponse ou non ?
+			// On supprime les clés sans mise en forme.
+			body = body.replaceAll(
+				"\n@" + key.toUpperCase(),
+				"\n@" + key.toUpperCase() + "\n")
+			body = body.replaceAll(
+				"\n" + key.toUpperCase(),
+				"\n" + key.toUpperCase() + "\n" + `{.border .px-3 .py-1 .${rawColor}}`)
+			body = body.replaceAll(
+				` ${key.toUpperCase()}`,
+				` [${key.toUpperCase()}]{.inline-block .mx-1 .px-3 .py-1 .border .${rawColor} }`)
+			body = body.replaceAll(
+				key.toLowerCase(),
+				`\\textcolor{${texColor}}{ ${key.toLowerCase()} }`)
+
+			// on supprime les valeurs de type @$ qui sont sans mise en forme.
+			body = body.replaceAll("@$", "$")
+
+			// On peut avoir tex, raw, input
+			if (userAnswers.value[i].value === undefined) {
+				body = body.replaceAll(key.toUpperCase(), "< ?? >")
+				body = body.replaceAll(key.toLowerCase(), "<\\ ? >")
+			} else {
+
+				// Raw output
+				if (userAnswers.value[i].value.raw === undefined || userAnswers.value[i].value.raw === "") {
+					body = body.replaceAll(key.toUpperCase(), "< ?? >")
+				} else {
+					body = body.replaceAll(key.toUpperCase(), userAnswers.value[i].value.raw)
+				}
+
+				// TeX output
+				if (userAnswers.value[i].value.tex === undefined || userAnswers.value[i].value.tex === "") {
+					body = body.replaceAll(key.toLowerCase(), "<\\ ? >")
+				} else {
+					body = body.replaceAll(key.toLowerCase(), userAnswers.value[i].value.tex)
+				}
+			}
+		}
+		return body
+	})
+
+
+// Gestion des réponses
+
+// numéro de la question en cours d'édition
+let answerId = ref(0),
+	// Format de la réponse
+	answerFormat = ref(""),
+	// Nombre de réponses totales
+	answersNumber = computed(() => theQuestion.answer.split("\n").filter(x => x !== "").length),
+	// liste des lettres, dans l'ordre.
+	answersKeys = computed(() => {
+		return "abcdefghijklmnopqrstuvwxyz"
+			.split("")
+			.map(x=>`$${x}`)
 	}),
+	// liste des réponses / claviers / etc...
+	theAnswers = computed(() => {
+		// The keyboard is wrong...
+		if (!theQuestion.keyboard) {
+			return []
+		}
+
+		// Get the keyboards
+		let arr = [],
+			answers = theQuestion.answer.split("\n"),
+			kbrds = getKeyboards(theQuestion.keyboard)
+
+		for (let i = 0; i < answersNumber.value; i++) {
+			arr.push({
+				key: answersKeys.value[i],	// may be undefined !
+				keyboard: kbrds[Math.min(kbrds.length - 1, i)],
+				answer: answers[i]
+			})
+		}
+
+		return arr
+	}),
+	userAnswers = ref([]),
+	userAnswersErrors = ref([]),
 	keyboardUI = ref(null),
-	theQuestion = ref(props.question),
-	theQuestionBody = ref(props.question.block.body),
-	showInput = ref(props.displayInput),
 	showAnswer = ref(false),
-	loadAnswer = function(){
-		theQuestionBody.value = keyboardUI.value.makeBodyFromAnswers(theQuestion.value.answer)
-		showAnswer.value = true
+	loadAnswer = async function (value) {
+		answerId.value = 0
+		await nextTick()
+
+		let timer = setInterval(() => {
+			if (keyboardUI.value) {
+				keyboardUI.value.loadAnswer(value)
+			}
+
+			if (answerId.value === answersNumber.value - 1) {
+				clearInterval(timer)
+				if (value === null) {
+					answerId.value = 0
+				}
+			} else {
+				answerId.value++
+			}
+		}, 100)
+
+		showAnswer.value = value === undefined
 	},
-	hideAnswer = function(){
-		theQuestionBody.value = keyboardUI.value.makeBodyFromAnswers("")
-		showAnswer.value = false
+	showUserInput = ref(props.showInput)
+
+// donne des fonctions aux claviers
+provide("questionHandler", {
+	format: (value) => {
+		answerFormat.value = value
 	},
-	displayAnswer = computed(()=>{
-		return {
-			...keyboardUI.value.getAnswer(theQuestion.value.answer),
-			code: theQuestion.value.answer
-		}
-	}),
-	onValidate = function (event) {
-		// event: {result: Boolean, answer: string}
-
-		// It's a dynamic question (without id)
-		if (props.question.id === undefined) {
-			emits("validate", {
-				...event,
-				question: theQuestionBody.value
-			})
-			return
-		}
-
-		theQuestion.value.user.correct = event.result
-
-		// need answer (string: min1), , result (boolean)
-		// Save the information to the database if the user is logged in
-		if(usePage().props.auth.user) {
-			axios.post(route("questions.validate", [props.question.id]), {
-				...event
-			}).then(res => {
-				emits("validate", {
-					...event,
-					question: theQuestionBody.value
-				})
-			})
-		}
-	}
-
-// Format edition / checker
-let answerFormat = ref("")
-provide("checkerFormat", {
-	update: (value)=>{answerFormat.value = value}
 })
 
 
-// Question form, update, duplicate, addIllustration, ...
-let showEditForm = ref(props.question.isNew === true),
+let updateQuestion = function (event) {
+		// {
+		// 		value: {input, tex, raw},
+		// 		validation: {result, message}
+		// }
+		userAnswers.value[answerId.value] = event
+	},
+	checkUserAnswers = function () {
+		// On contrôle que la table des réponses est correctement initialisée
+		if (userAnswers.value.length < answersNumber.value) {
+			for (let i = userAnswers.value.length; i < answersNumber.value; i++) {
+				userAnswers.value.push({
+					value: {input: "", tex: "", raw: ""},
+					validation: {result: false, message: "réponse non donnée."}
+				})
+			}
+		}
+	},
+	validateButton = ref(null),
+	lockValidationButton = ref(false),
+	validateQuestion = function () {
+		// validation des réponses.
+
+		// On bloque la possibitié de cliquer une nouvelle fois sur le bouton.
+		lockValidationButton.value = true
+
+		// On vérifie que toutes les réponses ont été données.
+		let result = true,
+			stack = []
+
+		for (let i = 0; i < userAnswers.value.length; i++) {
+			result = result && userAnswers.value[i].validation.result
+
+			if (!result) {
+				if (userAnswers.value.length > 1) {
+					stack.push(`${i + 1}: ${userAnswers.value[i].validation.message}`)
+				} else {
+					stack.push(userAnswers.value[i].validation.message)
+				}
+			}
+		}
+
+		userAnswersErrors.value = stack
+
+		storeValidation({
+			result,
+			question: theQuestionBody.value,
+			answer: userAnswers.value.map(a => a.value.input).join(",")
+		})
+		setTimeout(() => lockValidationButton.value = false, 500)
+
+	},
+	storeValidation = function (event) {
+		// event: {question: string, answer: string, result: boolean}
+		if (!props.singleAnswer && !event.result) {
+			useWrongAnswerAnimation(validateButton.value.$el)
+		}
+
+		// It's a dynamic question (without id)
+		// On ne peut donc pas sauvegarder les informations.
+		if (props.question.id === undefined) {
+			emits("validate", event)
+			return
+		}
+
+		// On définit les informations utilisateurs.
+		theQuestion.user.result = event.result
+
+		// need answer (string: min1) , result (boolean)
+		// Save the information to the database if the user is logged in
+		// and if the result is correct
+		if (usePage().props.auth.user) {
+			axios.post(route("questions.validate", [props.question.id]), {
+				...event
+			}).catch((res) => {
+				console.log("Il y a une erreur lors du chargement de la réponse.")
+				console.log(res.response.data.message)
+			})
+				.then(res => {
+					emits("validate", event)
+				})
+		} else {
+			emits("validate", event)
+		}
+	}
+
+// Gestion administrateur
+let editMode = inject("editMode", false),
+	showEditForm = ref(props.question.isNew === true),
 	editForm = computed(() => {
 		return defineAsyncComponent(
 			() => import("@/Components/Posts/Questions/QuestionForm")
 		)
 	}),
-	updateQuestion = function (q) {
-		theQuestion.value = q
-		theQuestionBody.value = theQuestion.value.block.body
+	duplicateQuestion = function () {
+		axios.post(route("questions.duplicate", [theQuestion.id]))
+			.then((res) => {
+				emits("duplicate", res.data.data)
+				flash.add("la question a bien été dupliquée !")
+			})
 	},
-	duplicateQuestion = function(){
-		axios.post(route("questions.duplicate", [theQuestion.value.id])).then((res)=>{
-			emits("duplicate", res.data.data)
-		})
-	},
-	addIllustration = function() {
-		if(theQuestion.value.block.illustration){
-			console.log("Il y a déjà une illustration", theQuestion.value.id)
-		}else{
+	addIllustration = function () {
+		if (theQuestion.block.illustration) {
+			console.log("Il y a déjà une illustration", theQuestion.id)
+		} else {
 			// Create a new illustration
-			axios.post(route("blocks.illustrations.store", [props.question.block.id]), {})
+			axios.post(route("blocks.illustrations.store", [theQuestion.block.id]), {})
 				.then(res => {
 					res.data.isNew = true
-					theQuestion.value.block.illustration = res.data
+					theQuestion.block.illustration = res.data
 
 					flash.add("une nouvelle illustration a été créée")
 				})
 		}
 	}
+
 </script>

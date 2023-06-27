@@ -1,6 +1,8 @@
 export function NumberChecker(options){
 	if(options===undefined){options = []}
 	return {
+		name: "number",
+		helper: "number@3 => 3 chiffres après la virgule",
 		format: () => {
 			if (isNaN(options[0])) {
 				return "réponse numérique"

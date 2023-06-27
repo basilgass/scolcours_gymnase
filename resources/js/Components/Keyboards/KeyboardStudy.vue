@@ -93,7 +93,7 @@ import KeyboardDisplay from "@/Components/Keyboards/KeyboardDisplay.vue"
 import {useCheckers} from "@/Composables/useCheckers"
 
 let props = defineProps({
-	options: {type: String},
+	keyboard: {type: Object, required: true},
 	answer: {type: String}
 })
 
@@ -205,7 +205,7 @@ let PiGraph,
 	plotResult = ref(null),
 	draw = ref(null),
 	keyboardUI = ref(null),
-	theOptions = ref(props.options?props.options.toLowerCase().split("\n"):[]),
+	theOptions = ref(props.keyboard.parameters? props.keyboard.parameters.map(x=>x.toLowerCase()):[]),
 	addButtons = ref([]),
 	tex = ref(""),
 	display = ref({input: "", tex: "", raw: ""}),

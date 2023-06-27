@@ -6,12 +6,14 @@ use App\Http\Resources\UserResource;
 use App\Models\Challenge;
 use App\Models\Chapter;
 use App\Models\Illustration;
+use App\Models\Scolcours;
 use App\Models\Team;
 use App\Models\Theme;
 use App\Models\Tool;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
@@ -22,6 +24,44 @@ class AdminController extends Controller
 	{
 		return Inertia::render('Admin/AdminDashboard.vue');
 	}
+
+	public function config()
+	{
+		$scolcours = Cache::get('scolcours');
+
+		return Inertia::render('Admin/AdminConfig.vue',
+		[
+			"title" => $scolcours->title,
+			"allThemes" => Theme::all()
+		]
+		);
+	}
+
+	public function configUpdate(Request $request)
+	{
+		// Validation
+		$validation = $request->validate([
+			'title'=>['string', 'min:2'],
+			'themes'=>['array'],
+			'themes.*.slug'=>['string', 'exists:App\Models\Theme,slug'],
+			'themes.*.enabled'=>['boolean'],
+		]);
+
+		$scolcours = Scolcours::find(1);
+		$scolcours->title = $validation['title'];
+		$scolcours->save();
+
+		Cache::delete('scolcours');
+		
+		foreach($validation['themes'] as $theme){
+			$model = Theme::where('slug', $theme["slug"])->first();
+			$model->enabled = $theme['enabled'];
+			$model->save();
+		}
+
+		return true;
+	}
+
 
 	public function pages()
 	{

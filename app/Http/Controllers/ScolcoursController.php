@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Chapter;
-use App\Models\Theme;
 use Auth;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Route;
@@ -16,33 +15,34 @@ class ScolcoursController extends Controller
 {
 	public function index()
 	{
-		$themes = Theme::all();
 		$newChapters = Chapter::without(['posts', 'formulas', 'challenges'])
 			->orderBy('updated_at', 'desc')
 			->limit(5)
 			->where('active', true)
 			->get();
 
-		$newChapters->Map(function ($item) {
-			$modified = $item->updated_at->diffInDays();
-			if ($modified === 0) {
-				$modified = $item->updated_at->diffForHumans();
-			} else {
-				$modified = "Il y a $modified jour" . ($modified > 1 ? "s" : "");
-			}
-			$item->modified = $modified;
-
-			// Save the href
-//			$item->href = $item->url;
-
-			return $item;
+		$newChapters = $newChapters->Map(function (Chapter $item) {
+//			$modified = $item->updated_at->diffInDays();
+//			if ($modified === 0) {
+//				$modified = $item->updated_at->diffForHumans();
+//			} else {
+//				$modified = "Il y a $modified jour" . ($modified > 1 ? "s" : "");
+//			}
+//
+//			$modified = $item->updated_at->diffForHumans();
+			return [
+				"id"=>$item->id,
+				"slug"=>$item->slug,
+				"title"=>$item->title,
+				"url"=>$item->url,
+				"modified"=>$item->updated_at->diffForHumans()
+			];
 		});
 
 		// TODO : canLogin and canRegister could be removed ?
 		return Inertia::render('HomePage.vue', [
 			'canLogin' => Route::has('login'),
 			'canRegister' => Route::has('register'),
-			'themes' => $themes,
 			'newChapters' => $newChapters
 		]);
 	}

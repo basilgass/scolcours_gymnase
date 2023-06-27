@@ -10,6 +10,7 @@ require("./bootstrap")
 const appName = window.document.getElementsByTagName("title")[0]?.innerText || "ScolCours"
 
 
+
 createInertiaApp({
 	title: (title) => `${title} - ${appName}`,
 	resolve: name => import(`./Pages/${name}`),

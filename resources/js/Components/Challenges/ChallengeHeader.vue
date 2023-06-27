@@ -91,7 +91,7 @@ let showEditForm = ref(false),
 			.then((res) => {
 			})
 			.catch((res) => {
-				console.log(res.response.data.message)
+				// TODO: show error message
 			})
 	}
 </script>

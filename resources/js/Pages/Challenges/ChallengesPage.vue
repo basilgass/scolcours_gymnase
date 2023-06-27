@@ -35,12 +35,12 @@
 			</div>
 
 			<div v-if="listOfQuestions[questionId]">
-				<question-show-new
+				<question-show
 					:key="questionId"
 					:question="theQuestion"
 					class="max-w-[40em] mx-auto"
-					show-input
 					dynamic
+					show-input
 					@validate="validateAnswer"
 				/>
 			</div>
@@ -70,10 +70,10 @@ import {PiMath} from "pimath/esm"
 import ChallengeIntro from "@/Components/Challenges/ChallengeIntro.vue"
 import ChallengeHeader from "@/Components/Challenges/ChallengeHeader.vue"
 import ChallengeResults from "@/Components/Challenges/ChallengeResults.vue"
-import QuestionShow from "@/Components/Posts/Questions/QuestionShow.vue"
 import FormInput from "@/Components/Form/FormInput.vue"
 import {usePage} from "@inertiajs/vue3"
-import QuestionShowNew from "@/Components/Posts/Questions/QuestionShowNew.vue"
+import {useGenerators} from "@/Composables/useGenerators"
+import QuestionShow from "@/Components/Posts/Questions/QuestionShow.vue"
 
 const emits = defineEmits(["destroy", "change"])
 const props = defineProps({
@@ -86,50 +86,59 @@ const flash = inject("flash")
 
 let theChallenge = ref(props.challenge.data),
 	challengeGenerator = ref(props.challenge.data.generator),
+	challengeGenerators = ref(props.challenge.data.generators),
 	challengeGeneratorError = ref(""),
 	editMode = ref(false),
 	questions = ref([]),
+	currentGenerator = computed(() => {
+		return useGenerators(challengeGenerators).generator(level)
+	}),
 	runChallengeGenerator = function () {
-		let crtLevel = 1
-		try {
-			crtLevel = level.value
-		} catch {
-			crtLevel = 1
-		}
-
-		if (challengeGenerator.value !== "") {
+		if (currentGenerator.value !== "") {
 			questions.value = []
-			let F = new Function("PiMath", "level", challengeGenerator.value)
+			let F = new Function("PiMath", currentGenerator.value.code)
 
 			// TODO: Must make the generation and check for uniqueness.
 			try {
 				for (let i = 0; i < 20; i++) {
-					questions.value.push(F(PiMath, crtLevel))
-				}
+					let result = F(PiMath)
+					if(!result.keyboard){
+						result.keyboard = currentGenerator.value.keyboard
+					}
 
+					questions.value.push(result)
+				}
 				challengeGeneratorError.value = ""
 			} catch (e) {
 				challengeGeneratorError.value = e.message
 			}
 		}
+
+		// let crtLevel = 1
+		// try {
+		// 	crtLevel = level.value
+		// } catch {
+		// 	crtLevel = 1
+		// }
+		//
+		//
+		// if (challengeGenerator.value !== "") {
+		// 	questions.value = []
+		// 	let F = new Function("PiMath", "level", challengeGenerator.value)
+		//
+		// 	// TODO: Must make the generation and check for uniqueness.
+		// 	try {
+		// 		for (let i = 0; i < 20; i++) {
+		// 			questions.value.push(F(PiMath, crtLevel))
+		// 		}
+		//
+		// 		challengeGeneratorError.value = ""
+		// 	} catch (e) {
+		// 		challengeGeneratorError.value = e.message
+		// 	}
+		// }
 	}
-watch(challengeGenerator, (newValue, prevValue) => {
-	runChallengeGenerator()
-})
 
-if (challengeGenerator.value === "") {
-	// Edit mode as there is no generator actually.
-	editMode.value = true
-} else {
-	runChallengeGenerator()
-	if (questions.value.length === 0) {
-		editMode.value = true
-	}
-}
-
-// Admin - update challenge
-
-// Ui part
 // Now, it's the game part.
 let listOfQuestions = ref([]),
 	listOfAnswers = ref([]),
@@ -147,6 +156,23 @@ let listOfQuestions = ref([]),
 	localScore = ref(
 		localStorage.getItem("scolcoursChallenge-" + theChallenge.value.id)
 	)
+watch(challengeGenerator, (newValue, prevValue) => {
+	runChallengeGenerator()
+})
+
+if (challengeGenerators.value.length === 0) {
+	// Edit mode as there is no generator actually.
+	editMode.value = true
+} else {
+	runChallengeGenerator()
+	if (questions.value.length === 0) {
+		editMode.value = true
+	}
+}
+
+// Admin - update challenge
+
+// Ui part
 
 let results = computed(() => {
 	return {
@@ -316,20 +342,8 @@ let startChallenge = function () {
 		}
 	}
 
-// Testing function
-async function addTabCharacter(ev) {
-	let start = ev.target.selectionStart,
-		end = ev.target.selectionEnd,
-		text = challengeGenerator.value
-
-	challengeGenerator.value = text.slice(0, start) + "\t" + text.slice(end)
-
-	nextTick()
-	ev.target.setSelectionRange(start, start)
-}
 
 let theQuestion = ref({})
-
 watch(questionId, () => {
 	const currentQuestion = listOfQuestions.value[questionId.value]
 
@@ -343,8 +357,7 @@ watch(questionId, () => {
 				.replace("answer", "$a"),
 			illustrations: [],
 		},
-		keyboard: currentQuestion.keyboard ? currentQuestion.keyboard.name : theChallenge.value.keyboard,
-		parameters: currentQuestion.keyboard ? currentQuestion.keyboard.parameters : theChallenge.value.parameters || "",
+		keyboard: currentQuestion.keyboard ? currentQuestion.keyboard : theChallenge.value.keyboard,
 		answer: "" + currentQuestion.answer,
 		user: {
 			correct: false,

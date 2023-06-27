@@ -1,10 +1,18 @@
-import AsciiMathParser from "./asciimath2tex"
+import AsciiMathParser from "@/asciimath2tex"
 
-export function asciiToTex(value) {
-	const parser = new AsciiMathParser()
-
-	// Force display style
-	return  parser.parse(value)
+export function keyboardMaps(kbrd) {
+	switch (kbrd){
+	case "nb":
+		return "number"
+	case "fr":
+	case "frac":
+		return "fraction"
+	case "sol":
+		return "solution"
+	case "scn":
+		return "scientific"
+	}
+	return kbrd
 }
 
 export const keyboardKeys = {
@@ -66,12 +74,12 @@ export const keyboardKeys = {
 	"@back": {type: "icon", display: "bi bi-backspace"}
 }
 
-export const keyboards = {
+export 	const keyboards = {
 	"qcm": {
 		grid: "grid-cols-4",
 		layout: [],
 		tex(value) {
-			return value.startsWith("#")?asciiToTex(value.substring(1)):value
+			return value.startsWith("#") ? asciiToTex(value.substring(1)) : value
 		}
 	},
 	"number": {
@@ -122,7 +130,7 @@ export const keyboards = {
 			return asciiToTex(value)
 		}
 	},
-	"scn": {
+	"scientific": {
 		grid: "grid-cols-4",
 		layout: [
 			"1", "2", "3", "-",
@@ -180,7 +188,7 @@ export const keyboards = {
 		],
 		tex: function (value) {
 			let [Pnum, Pden] = value.split("/")
-			return Pden===undefined?asciiToTex(Pnum):`\\frac{ ${asciiToTex(Pnum)} }{ ${Pden} }`
+			return Pden === undefined ? asciiToTex(Pnum) : `\\frac{ ${asciiToTex(Pnum)} }{ ${Pden} }`
 		}
 	},
 	"exact": {
@@ -211,18 +219,20 @@ export const keyboards = {
 			let [...coords] = value.split(";"),
 				lp = "", rp = ""
 
-			if(coords[0].startsWith("(")){
+			if (coords[0].startsWith("(")) {
 				lp = "\\left("
 				coords[0] = coords[0].substring(1)
 				rp = "\\right."
 			}
-			if(coords[coords.length-1].endsWith(")")){
-				if(lp===""){lp="\\left."}
+			if (coords[coords.length - 1].endsWith(")")) {
+				if (lp === "") {
+					lp = "\\left."
+				}
 				rp = "\\right)"
-				coords[coords.length-1] = coords[coords.length-1].substring(0, coords[coords.length-1].length-1)
+				coords[coords.length - 1] = coords[coords.length - 1].substring(0, coords[coords.length - 1].length - 1)
 			}
 
-			return `${lp}${coords.map(x=>makeExactFromAscii(x)).join(";")}${rp}`
+			return `${lp}${coords.map(x => makeExactFromAscii(x)).join(";")}${rp}`
 		}
 	},
 	"vector": {
@@ -238,20 +248,22 @@ export const keyboards = {
 			let [...coords] = value.split(";"),
 				lp = "", rp = ""
 
-			if(coords[0].startsWith("(")){
+			if (coords[0].startsWith("(")) {
 				lp = "\\left("
 				coords[0] = coords[0].substring(1)
 				rp = "\\right."
 			}
-			if(coords[coords.length-1].endsWith(")")){
-				if(lp===""){lp="\\left."}
+			if (coords[coords.length - 1].endsWith(")")) {
+				if (lp === "") {
+					lp = "\\left."
+				}
 				rp = "\\right)"
-				coords[coords.length-1] = coords[coords.length-1].substring(0, coords[coords.length-1].length-1)
+				coords[coords.length - 1] = coords[coords.length - 1].substring(0, coords[coords.length - 1].length - 1)
 			}
 
-			return `${lp}\\begin{matrix}${coords.map(x=>{
+			return `${lp}\\begin{matrix}${coords.map(x => {
 				let tex = makeExactFromAscii(x)
-				return tex==="" ? "\\phantom{ }" : tex
+				return tex === "" ? "\\phantom{ }" : tex
 			}).join("\\\\")}\\end{matrix}${rp}`
 		}
 	},
@@ -264,7 +276,7 @@ export const keyboards = {
 			"0", "", "+-", "-+", "oo"
 		],
 		tex: function (value) {
-			// Apply this for all splited.
+			// Apply this for all values.
 			return value.split(",").map(v => makeExactFromAscii(v)).join(",")
 		}
 	},
@@ -294,11 +306,15 @@ export const keyboards = {
 			}
 
 			// remove the braces...
-			let beforeBrace = value.startsWith("{")?"\\left\\{":"",
-				afterBrace = value.endsWith("}")?"\\right\\}":""
+			let beforeBrace = value.startsWith("{") ? "\\left\\{" : "",
+				afterBrace = value.endsWith("}") ? "\\right\\}" : ""
 
-			if(afterBrace!=="" && beforeBrace===""){beforeBrace=" \\left. "}
-			if(beforeBrace!=="" && afterBrace===""){afterBrace=" \\right. "}
+			if (afterBrace !== "" && beforeBrace === "") {
+				beforeBrace = " \\left. "
+			}
+			if (beforeBrace !== "" && afterBrace === "") {
+				afterBrace = " \\right. "
+			}
 
 			value = value.replace("{", "").replace("}", "")
 
@@ -307,46 +323,17 @@ export const keyboards = {
 	}
 }
 
-export const keyboardsList = [
-	...Object.keys(keyboards),
-	"#TableOfSigns",
-	"#Study",
-	"#Order",
-	"#Qcm",
-	"#Input",
-	"#Type"
-]
+function asciiToTex(value) {
+	const parser = new AsciiMathParser()
 
-export function getKeyboard(value){
-	// Basic keyboard
-	if(value===null || keyboards[value]){
-		return value || ""
-	}
-
-	// Component keyboard
-	switch (value.toLowerCase()) {
-	case "tos":
-	case "tableofsigns":
-		return "TableOfSigns"
-	case "study":
-		return "Study"
-	case "order":
-		return "Order"
-	case "qcm":
-		return "Qcm"
-	case "input":
-		return "Input"
-	case "type":
-		return "Type"
-	default:
-		return ""
-	}
-
-
+	// Force display style
+	return parser.parse(value)
 }
 
 function makeExactFromAscii(value) {
-	if(value===undefined || value===""){return ""}
+	if (value === undefined || value === "") {
+		return ""
+	}
 
 	// Aucune division - pas de problème, c'est du ascii.
 	if (!value.includes("/")) {
@@ -356,19 +343,19 @@ function makeExactFromAscii(value) {
 	const numden = value.split("/")
 	let stack = [], result = [], parentheses = 0
 
-	for(let item of numden){
+	for (let item of numden) {
 		parentheses += item.split("(").length - item.split(")").length
-		if(parentheses!==0){
+		if (parentheses !== 0) {
 			stack.push(item)
-		}else{
+		} else {
 			stack.push(item)
 			result.push(stack.join("/"))
 			stack = []
 		}
 	}
-	if(stack.length>0){
+	if (stack.length > 0) {
 		result.push(stack.join("/"))
 	}
 
-	return asciiToTex(result.length===1?result[0]:result.map(x=>`(${x})`).join("/"))
+	return asciiToTex(result.length === 1 ? result[0] : result.map(x => `(${x})`).join("/"))
 }

@@ -114,7 +114,7 @@ import {useCheckers} from "@/Composables/useCheckers"
 import {useKeyboard} from "@/Composables/useKeyboard"
 
 let props = defineProps({
-	options: {type: String},
+	keyboard: {type: Object, required: true},
 	answer: {type: String}
 })
 
@@ -136,10 +136,11 @@ let emits = defineEmits(["change", "validate"]),
 		})
 	}
 
+
 /* FONCTIONS SPECIFIQUES */
 // Les options du clavier TOS
 let tosName = computed(() => { // le nom de la fonction
-		let names = props.options.split("\n").filter(x => x.includes("(x)")).map(x => x.split("(")[0])
+		let names = props.keyboard.parameters.filter(x => x.includes("(x)")).map(x => x.split("(")[0])
 		return names.length === 0 ? "f" : names[0]
 	}),
 	withGrows = computed(() => { // s'il y a la croissance
@@ -175,7 +176,7 @@ let showKeyboard = ref("zeroes"),
 
 // Génération de la réponse pour comparaison et de l'affichage.
 let zeroes = ref({input: "", tex: "", raw: ""}),
-	zeroesKeyboard = ref(props.options.includes("float") ? "algebra" : "exact"),
+	zeroesKeyboard = ref(props.keyboard.parameters.includes("float") ? "algebra" : "exact"),
 	signs = ref({input: "", tex: "", raw: ""}),
 	grows = ref({input: "", tex: "", raw: ""}),
 	coords = ref({input: "", tex: "", raw: ""}),

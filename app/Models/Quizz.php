@@ -9,11 +9,13 @@ use Illuminate\Database\Eloquent\Model;
  * App\Models\Quizz
  *
  * @property int $id
+ * @property int $chapter_id
  * @property string $title
  * @property string $body
  * @property string|null $outro
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Chapter $chapter
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Question> $questions
  * @property-read int|null $questions_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\QuizzSession> $sessions
@@ -22,6 +24,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Quizz newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Quizz query()
  * @method static \Illuminate\Database\Eloquent\Builder|Quizz whereBody($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Quizz whereChapterId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Quizz whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Quizz whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Quizz whereOutro($value)
