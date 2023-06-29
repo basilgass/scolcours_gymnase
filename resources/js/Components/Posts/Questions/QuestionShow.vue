@@ -15,7 +15,7 @@ keyboard -> QuestionUserInput -> QuestionShow
 		<header class="flex relative">
 			<!-- QUESTION NUMBER -->
 			<div
-				v-if="theQuestion.order && !props.isMinimal"
+				v-if="theQuestion.order && !props.isMinimal && !props.isDynamic"
 				:class="{'draggable-handle cursor-move':$page.props.auth.can.admin}"
 				class="absolute -left-2 -top-2 rounded-full bg-white border w-8 h-8 text-xs flex justify-center items-center draggable-handle"
 			>
@@ -31,7 +31,7 @@ keyboard -> QuestionUserInput -> QuestionShow
 
 			<!-- ADMIN HEADER -->
 			<div
-				v-if="!isDynamic"
+				v-if="!props.isDynamic"
 				v-show="editMode.enabled.value"
 				v-admin
 				class="flex justify-end w-full px-3 gap-3 mt-2"
@@ -197,7 +197,7 @@ keyboard -> QuestionUserInput -> QuestionShow
 <script setup>
 import IllustrationShow from "@/Components/Posts/Illustrations/IllustrationShow.vue"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
-import {computed, defineAsyncComponent, inject, nextTick, provide, reactive, ref} from "vue"
+import {computed, defineAsyncComponent, inject, nextTick, reactive, ref} from "vue"
 import KeyboardValidateButton from "@/Components/Keyboards/KeyboardValidateButton.vue"
 import {usePage} from "@inertiajs/vue3"
 import {useWrongAnswerAnimation} from "@/Composables/useHelpers"
@@ -235,7 +235,7 @@ let theQuestion = reactive(props.question), // la question principale, vraiment 
 		// $a, $b, ... sont des valeurs dans des environnements TeX
 		// $A, $B, ... sont des valeurs hors des environnements Tex
 		for (let i = 0; i < answersNumber.value; i++) {
-			if(theAnswers.value[i]===undefined){
+			if (theAnswers.value[i] === undefined) {
 				return "Aucun clavier n'a pu être généré..."
 			}
 
@@ -291,20 +291,29 @@ let theQuestion = reactive(props.question), // la question principale, vraiment 
 		return body
 	})
 
-
 // Gestion des réponses
 
 // numéro de la question en cours d'édition
 let answerId = ref(0),
 	// Format de la réponse
-	answerFormat = ref(""),
+	answerFormat = computed(() => {
+		if(!theAnswers.value[answerId.value]){return ""}
+		
+		let kbrd = theAnswers.value[answerId.value].keyboard
+
+		if (kbrd.name === "Basic") {
+			return theAnswers.value[answerId.value].keyboard.checker.format()
+		}
+
+		return ""
+	}),
 	// Nombre de réponses totales
 	answersNumber = computed(() => theQuestion.answer.split("\n").filter(x => x !== "").length),
 	// liste des lettres, dans l'ordre.
 	answersKeys = computed(() => {
 		return "abcdefghijklmnopqrstuvwxyz"
 			.split("")
-			.map(x=>`$${x}`)
+			.map(x => `$${x}`)
 	}),
 	// liste des réponses / claviers / etc...
 	theAnswers = computed(() => {
@@ -354,13 +363,6 @@ let answerId = ref(0),
 		showAnswer.value = value === undefined
 	},
 	showUserInput = ref(props.showInput)
-
-// donne des fonctions aux claviers
-provide("questionHandler", {
-	format: (value) => {
-		answerFormat.value = value
-	},
-})
 
 
 let updateQuestion = function (event) {
@@ -412,7 +414,7 @@ let updateQuestion = function (event) {
 			question: theQuestionBody.value,
 			answer: userAnswers.value.map(a => a.value.input).join(",")
 		})
-		setTimeout(() => lockValidationButton.value = false, 500)
+		// setTimeout(() => lockValidationButton.value = false, 500)
 
 	},
 	storeValidation = function (event) {
@@ -425,6 +427,7 @@ let updateQuestion = function (event) {
 		// On ne peut donc pas sauvegarder les informations.
 		if (props.question.id === undefined) {
 			emits("validate", event)
+			lockValidationButton.value = false
 			return
 		}
 
@@ -437,15 +440,20 @@ let updateQuestion = function (event) {
 		if (usePage().props.auth.user) {
 			axios.post(route("questions.validate", [props.question.id]), {
 				...event
-			}).catch((res) => {
-				console.log("Il y a une erreur lors du chargement de la réponse.")
-				console.log(res.response.data.message)
 			})
+				.catch((res) => {
+					console.log("Il y a une erreur lors du chargement de la réponse.")
+					console.log(res.response.data.message)
+				})
 				.then(res => {
 					emits("validate", event)
 				})
+				.finally(()=>{
+					lockValidationButton.value = false
+				})
 		} else {
 			emits("validate", event)
+			lockValidationButton.value = false
 		}
 	}
 

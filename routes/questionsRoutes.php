@@ -6,10 +6,8 @@ Route::get('questions/admin/{question}', function(\App\Models\Question $question
 	return \App\Http\Resources\QuestionResource::make($question);
 });
 // TODO: remove posts references to questionsRoutes
-
 Route::apiResource('posts.questions', QuestionController::class)
 	->shallow();
-
 
 
 // Must be a verified user
@@ -36,8 +34,8 @@ Route::middleware("can:admin")->group(function () {
 	Route::patch('questions/{type}/{id}/reset', [QuestionController::class, 'resetAnswers'])
 		->name('questions.answers.reset');
 
-//	Route::get('questions/{question}/edit', [QuestionController::class, 'edit'])
-//		->name('questions.edit');
+	Route::get('questions/{question}/edit', [QuestionController::class, 'edit'])
+		->name('questions.edit');
 
 
 });

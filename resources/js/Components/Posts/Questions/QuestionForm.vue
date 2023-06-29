@@ -37,19 +37,24 @@ Formulaire d'édition d'une question
 				</div>
 			</div>
 		</template>
-		<div class="grid grid-cols-1 md:grid-cols-2 gap-3 px-5 pb-5">
-			<form @submit.prevent>
+		<div class="flex flex-col md:flex-row gap-3 px-5 pb-5">
+			<form
+				class="flex-1"
+				@submit.prevent
+			>
 				<form-input
 					v-model="theQuestion.block.title"
 					name="title"
 					label="title"
 					class="font-code"
+					inline
 				/>
 				<form-input
 					v-model="theQuestion.css"
 					name="css"
 					label="CSS"
 					class="font-code"
+					inline
 				/>
 
 				<form-codearea
@@ -85,10 +90,12 @@ Formulaire d'édition d'une question
 			</form>
 
 			<question-show
+				class="min-w-[350px]"
 				:question="theQuestion"
 				:class="theQuestion.css"
 				is-dynamic
 				show-input
+				show-title
 			/>
 		</div>
 	</dialog-modal>

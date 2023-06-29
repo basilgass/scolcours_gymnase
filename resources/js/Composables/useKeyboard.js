@@ -1,6 +1,6 @@
 // import {getComponentKeyboardName, getKeyboardName} from "@/keyboards"
 import {useCheckers} from "@/Composables/useCheckers"
-import {defineAsyncComponent, inject, unref} from "vue"
+import {defineAsyncComponent, unref} from "vue"
 import {keyboardKeys, keyboardMaps, keyboards} from "@/Composables/keyboardConfig"
 
 export function useKeyboard(props) {
@@ -107,45 +107,6 @@ export function useKeyboard(props) {
 		return arr
 	}
 
-
-	// TODO: Remove these functions
-	function makeKeyboard(kbrd, dft_kbrd = "exact") {
-		// keyboard@checker,params
-		// other keyboard parameters ?
-		let letters = "",
-			parameters = []
-
-		// Get the keyboard name and the checker
-		let [name, checker] = kbrd.split("@")
-
-
-		if (checker === undefined) {
-			// means the checker is implicit with the keyboard.
-			let nameWithParams = name.includes(",") ? name.split(",") : name.split("\n")
-			name = checker = nameWithParams.shift()
-			parameters = parameters.concat(...nameWithParams)
-		}
-
-		if (!keyboards.hasOwnProperty(name)) {
-			name = dft_kbrd
-		}
-
-		checker = useCheckers([checker, ...parameters].join(","))
-
-
-		//TODO: questionHandler problem here.
-		let questionHandler = inject("questionHandler", (value) => "")
-		questionHandler.format(checker.format())
-
-		return {
-			name,
-			keyboard: keyboards[name],
-			checker,
-			letters,
-			parameters,
-		}
-	}
-
 	function loadAnswerToKeyboard(value, reset, changeCallback, callback, answer) {
 		// Load the answer to the keyboard... but... possible it can be removed for a better handling ?
 		reset()
@@ -174,8 +135,5 @@ export function useKeyboard(props) {
 		keyboards,				// List of all available "basic" keyboards with their configuration
 		getComponent,			// Get the component of the keyboard given by name
 		loadAnswerToKeyboard, 	// load the answer to the keyboard
-		// ------------- TO BE REMOVED ----------------
-		makeKeyboard,			// Should be removed
-
 	}
 }

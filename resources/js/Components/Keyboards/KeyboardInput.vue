@@ -7,6 +7,10 @@
 			@input="changeEvent"
 			@enter="$emit('validate')"
 		/>
+		<div
+			v-katex.auto="checker.format()"
+			class="text-center text-xs text-gray-400"
+		/>
 	</div>
 </template>
 
@@ -57,6 +61,9 @@ let	inputValue = ref(""),
 			return {
 				check: () => {
 					return {message: "il n'y a pas de contrôle...", result: false}
+				},
+				format: () => {
+					return ""
 				}
 			}
 		}

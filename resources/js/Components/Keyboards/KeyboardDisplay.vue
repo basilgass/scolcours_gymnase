@@ -166,6 +166,8 @@ let theKeyboard = computed(() => {
 		if (typeof props.keyboard === "string") {
 
 			// Parse the keyboard value
+			//TODO: is it still relevant ?
+			console.log("LOADING STRING KEYBOARD", props.keyboard)
 			let keyboardName = props.keyboard.split("@")[0]
 
 			if (keyboards.hasOwnProperty(keyboardName)) {

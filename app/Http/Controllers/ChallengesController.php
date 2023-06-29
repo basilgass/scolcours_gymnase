@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\ChallengeResource;
 use App\Models\Challenge;
 use App\Models\Chapter;
+use App\Models\Generator;
 use App\Models\Team;
 use App\Models\Theme;
 use Illuminate\Http\Request;
@@ -25,15 +26,6 @@ class ChallengesController extends Controller
 			"theme" => $theme->only('color', 'icon', 'slug', 'title', 'id'),
 			"challenge" => ChallengeResource::make($challenge),
 			"teams" => Team::all()
-		]);
-	}
-
-	public function index()
-	{
-		// TODO: get all challenges with the "opened" sessions only...
-		$challenges = Challenge::with('sessions')->orderBy('title')->get();
-		return Inertia::render('ChallengesIndex.vue', [
-			'challenges' => $challenges
 		]);
 	}
 
@@ -65,33 +57,114 @@ class ChallengesController extends Controller
 		]);
 	}
 
-	public function update(Request $request, Challenge $challenge)
+	public function update(Challenge $challenge, Request $request)
 	{
 		unset($request['block']);
 
+		// Save the challenge configuration
 		$validation = $request->validate([
 			'slug' => ['required', 'min:2'],
 			'title' => ['required', 'min:2'],
 			'active' => ['boolean'],
-			'generator' => ['string', 'min:2'],
+//			'generator' => ['string', 'min:2'],
 			'output' => ['string', 'min:2'],
 			'nextLevelAfter' => ['numeric', 'min:0'],
 			'parameters' => ['nullable', 'string'],
 			'keyboard' => ['nullable', 'string'],
 			'duration' => ['numeric', 'min:0'],
 			'lives' => ['numeric', 'min:0'],
+			'bonusScoreTrigger' => ['numeric', 'min:0', 'nullable'],
 			'bonusScoreLife' => ['numeric', 'min:0'],
 			'bonusScoreTime' => ['numeric', 'min:0'],
 			'bonusLevelLife' => ['numeric', 'min:0'],
 			'bonusLevelTime' => ['numeric', 'min:0'],
 		]);
+//
+//		if ($validation['parameters'] === null) {
+//			$validation['parameters'] = 'exact';
+//		}
 
-		if ($validation['parameters'] === null) {
-			$validation['parameters'] = 'exact';
-		}
 		$challenge->update($validation);
 
-		return $validation;
+		// Update the generators
+		$validation = $request->validate([
+			'generators' => ['array'],
+			'generators.*.id' => ['exists:App\Models\Generator,id'],
+			'generators.*.code' => ['string']
+		]);
+
+		foreach ($validation['generators'] as $generator) {
+			Generator::find($generator['id'])?->update(["code" => $generator['code']]);
+		}
+
+		return true;
+	}
+
+
+	public function indexGenerator(Challenge $challenge)
+	{
+		return Generator::where('theme_id', $challenge->chapter->theme->id)
+			->whereNotIn('id', $challenge->generators->pluck('id'))
+			->get();
+	}
+
+	public function storeGenerator(Request $request, Challenge $challenge)
+	{
+		// Get the order
+		$order = count($challenge->generators) + 1;
+
+		// Create the generator
+		$generator = Generator::create([
+			'theme_id' => $challenge->chapter->theme->id,
+			'title' => $challenge->chapter->slug . '-' . $order,
+			'code' => 'return {question: "", answer: ""}',
+		]);
+
+		return $this->attachGenerator($challenge, $generator);
+	}
+
+	public function attachGenerator(Challenge $challenge, Generator $generator)
+	{
+		$order = count($challenge->generators) + 1;
+
+		// Attach the generator with the order
+		$challenge->generators()->attach(
+			$generator,
+			['order' => $order]
+		);
+
+		// Refresh the challenge
+		$challenge->refresh();
+
+		// Return all the generators
+		return $challenge->generators;
+	}
+
+	public function detachGenerator(Challenge $challenge, Generator $generator, Request $request)
+	{
+		$challenge->generators()->detach($generator);
+
+		if ($request['destroy']) {
+			$generator->delete();
+		}
+	}
+
+	public function updateGeneratorsOrder(Request $request, Challenge $challenge)
+	{
+		$validation = $request->validate([
+			'order' => ['array'],
+			'order.*.id' => ['exists:App\Models\Generator'],
+			'order.*.order' => ['int', 'min:1']
+		]);
+
+		// Update the order
+		foreach ($request['order'] as $value) {
+			$challenge->generators()->updateExistingPivot($value['id'], [
+				"order" => $value['order']
+			]);
+		}
+
+		return true;
 	}
 
 	public function destroy($id)
@@ -103,9 +176,9 @@ class ChallengesController extends Controller
 		Challenge::destroy($id);
 
 		// Redirect to ...
-		return redirect(route('themes.chapters', [$theme, $chapter]));
+//		return redirect(route('theme.chapter', [$theme, $chapter]));
+		return true;
 	}
-
 
 	public function quick(Challenge $challenge)
 	{
@@ -134,6 +207,15 @@ class ChallengesController extends Controller
 
 		}
 		$this->index();
+	}
+
+	public function index()
+	{
+		// TODO: get all challenges with the "opened" sessions only...
+		$challenges = Challenge::with('sessions')->orderBy('title')->get();
+		return Inertia::render('ChallengesIndex.vue', [
+			'challenges' => $challenges
+		]);
 	}
 
 	public function teams(Theme $theme, Chapter $chapter, Challenge $challenge, Team $team)

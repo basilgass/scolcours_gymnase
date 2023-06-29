@@ -8,6 +8,7 @@ export function FractionChecker(options){
 	return {
 		name: "fraction",
 		format: () => {
+			let opts = []
 			if (expectReduced) {
 				opts.push("réduite")
 			}

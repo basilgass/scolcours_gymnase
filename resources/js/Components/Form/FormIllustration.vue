@@ -10,6 +10,7 @@
 				v-model="theModel.title"
 				name="title"
 				label="nom de la figure"
+				inline
 			/>
 
 			<form-input
@@ -17,6 +18,7 @@
 				name="css"
 				label="css"
 				class="font-code"
+				inline
 			/>
 		</div>
 

@@ -12,6 +12,7 @@ export function keyboardMaps(kbrd) {
 	case "scn":
 		return "scientific"
 	}
+
 	return kbrd
 }
 
@@ -76,6 +77,7 @@ export const keyboardKeys = {
 
 export 	const keyboards = {
 	"qcm": {
+		name: "qcm",
 		grid: "grid-cols-4",
 		layout: [],
 		tex(value) {
@@ -83,6 +85,7 @@ export 	const keyboards = {
 		}
 	},
 	"number": {
+		name: "number",
 		grid: "grid-cols-3",
 		layout: [
 			"1", "2", "3",
@@ -95,6 +98,7 @@ export 	const keyboards = {
 		}
 	},
 	"fraction": {
+		name: "fraction",
 		grid: "grid-cols-3",
 		layout: [
 			"1", "2", "3",
@@ -107,6 +111,7 @@ export 	const keyboards = {
 		}
 	},
 	"simple": {
+		name: "simple",
 		grid: "grid-cols-4",
 		layout: [
 			"1", "2", "3", "+",
@@ -119,6 +124,7 @@ export 	const keyboards = {
 		}
 	},
 	"pow": {
+		name: "pow",
 		grid: "grid-cols-4",
 		layout: [
 			"1", "2", "3", "-",
@@ -131,6 +137,7 @@ export 	const keyboards = {
 		}
 	},
 	"scientific": {
+		name: "scientific",
 		grid: "grid-cols-4",
 		layout: [
 			"1", "2", "3", "-",
@@ -143,6 +150,7 @@ export 	const keyboards = {
 		}
 	},
 	"algebra": {
+		name: "algebra",
 		grid: "grid-cols-7",
 		layout: [
 			"1", "2", "3", "+", "x", "y", "e",
@@ -155,6 +163,7 @@ export 	const keyboards = {
 		}
 	},
 	"polynom": {
+		name: "polynom",
 		grid: "grid-cols-6",
 		layout: [
 			"1", "2", "3", "+", "x", "x^2",
@@ -167,6 +176,7 @@ export 	const keyboards = {
 		}
 	},
 	"equation": {
+		name: "equation",
 		grid: "grid-cols-6",
 		layout: [
 			"1", "2", "3", "+", "x", "x^2",
@@ -179,6 +189,7 @@ export 	const keyboards = {
 		}
 	},
 	"rational": {
+		name: "rational",
 		grid: "grid-cols-6",
 		layout: [
 			"1", "2", "3", "+", "x", "x^2",
@@ -192,6 +203,7 @@ export 	const keyboards = {
 		}
 	},
 	"exact": {
+		name: "exact",
 		grid: "grid-cols-5",
 		layout: [
 			"1", "2", "3", "+", "-",
@@ -207,6 +219,7 @@ export 	const keyboards = {
 		}
 	},
 	"coord": {
+		name: "coord",
 		grid: "grid-cols-5",
 		layout: [
 			"1", "2", "3", "+", "-",
@@ -236,6 +249,7 @@ export 	const keyboards = {
 		}
 	},
 	"vector": {
+		name: "vector",
 		grid: "grid-cols-5",
 		layout: [
 			"1", "2", "3", "+", "-",
@@ -268,6 +282,7 @@ export 	const keyboards = {
 		}
 	},
 	"limit": {
+		name: "limit",
 		grid: "grid-cols-5",
 		layout: [
 			"1", "2", "3", "+", "-",
@@ -281,6 +296,7 @@ export 	const keyboards = {
 		}
 	},
 	"solution": {
+		name: "solution",
 		grid: "grid-cols-5",
 		layout: [
 			"1", "2", "3", "+", "-",

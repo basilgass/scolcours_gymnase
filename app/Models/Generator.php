@@ -36,6 +36,8 @@ class Generator extends Model
 {
     use HasFactory;
 
+	protected $guarded = [];
+
 	public function challenges()
 	{
 		return $this->morphedByMany(Challenge::class, 'generatorable')

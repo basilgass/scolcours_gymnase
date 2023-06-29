@@ -1,7 +1,7 @@
 <template>
 	<keyboard-display
 		ref="keyboardUI"
-		:keyboard="props.keyboard.checker.name"
+		:keyboard="props.keyboard.config"
 		:extra-letters="extraLetters"
 		back
 		class="max-w-xl mx-auto"

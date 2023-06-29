@@ -3,6 +3,7 @@ Edition d'un challenge
 -->
 <template>
 	<dialog-modal v-model="show">
+		<!-- Header -->
 		<template #header>
 			<div
 				class="bg-white flex justify-between items-baseline border-b border-gray-200 px-5 py-3 mb-5"
@@ -34,30 +35,37 @@ Edition d'un challenge
 			</div>
 		</template>
 
+		<!-- Tab buttons -->
 		<div class="grid grid-cols-3 gap-4 px-5">
 			<button
+				:class="tab==='block'?`is-active`:''"
 				class="btn"
 				@click="tab = 'block'"
 			>
 				éditer la donnée
 			</button>
 			<button
+				:class="tab==='config'?`is-active`:''"
 				class="btn"
 				@click="tab = 'config'"
 			>
 				éditer la configuration
 			</button>
 			<button
+				:class="tab==='generator'?`is-active`:''"
 				class="btn"
 				@click="tab = 'generator'"
 			>
 				éditer la génération
 			</button>
 		</div>
+
+
 		<div class="px-5 pb-5 overflow-scroll min-h-[80vh]">
+			<!-- challenge title, slug and description -->
 			<div
 				v-show="tab === 'block'"
-				class="grid grid-cols-1 lg:grid-cols-2 gap-3"
+				class="grid grid-cols-1 md:grid-cols-2 gap-3"
 			>
 				<div>
 					<form-input
@@ -72,72 +80,75 @@ Edition d'un challenge
 					/>
 					<form-textarea
 						v-model="theChallenge.block.body"
+						:rows="10"
 						label="body"
 						name="body"
-						:rows="10"
 					/>
 				</div>
+
 				<form-illustration
 					v-model="theIllustration"
 					label="illustration"
 					name="illustration"
 				/>
 			</div>
+			<!-- challenge configuration: output, dft keyboard, time, levels, lives, bonus per level-->
 			<div v-show="tab === 'config'">
 				<div class="grid grid-cols-1 md:grid-cols-2 gap-3 items-end">
-					<form-input
-						v-model="theChallenge.output"
-						label="affichage de la question/réponse"
-						name="questionsoutput"
-					/>
+					<div>
+						<form-input
+							v-model="theChallenge.output"
+							label="affichage de la question/réponse"
+							name="questionsoutput"
+						/>
 
-					<form-input
-						v-model="theChallenge.keyboard"
-						label="clavier affiché"
-						name="questionsKeyboard"
-					/>
-					<form-textarea
-						v-model="theChallenge.parameters"
-						label="paramètres du claviers"
-						name="questionsKeyboardParams"
-						:rows="5"
-					/>
+						<form-textarea
+							v-model="theChallenge.keyboard"
+							label="clavier affiché"
+							name="questionsKeyboard"
+						/>
+					</div>
+					<div>
+						<form-number
+							v-model="theChallenge.duration"
+							label="durée"
+							name="questionsDuration"
+						/>
+
+						<form-number
+							v-model="theChallenge.lives"
+							label="nombre de vie"
+							name="questionsLives"
+						/>
+
+						<form-number
+							v-model="theChallenge.nextLevelAfter"
+							label="maxPoints / niveau"
+							name="questionsLevelTrigger"
+						/>
+					</div>
 				</div>
 
-				<div class="grid grid-cols-1 md:grid-cols-3 gap-3 items-end">
-					<form-number
-						v-model="theChallenge.nextLevelAfter"
-						label="maxPoints / niveau"
-						name="questionsLevelTrigger"
-					/>
+				<h3 class="uppercase mt-10">
+					Bonus
+				</h3>
 
-					<form-number
-						v-model="theChallenge.duration"
-						label="durée"
-						name="questionsDuration"
-					/>
-
-					<form-number
-						v-model="theChallenge.lives"
-						label="nombre de vie"
-						name="questionsLives"
-					/>
-				</div>
 				<div
-					class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 items-end"
+					class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-3 items-end"
 				>
-					<h3 class="col-span-4 uppercase mt-5 -mb-5">
-						Bonus
-					</h3>
-
+					<form-number
+						v-model="theChallenge.bonusScoreTrigger"
+						label="score trigger"
+						name="questionsBonuses0"
+					/>
 					<form-number
 						v-model="theChallenge.bonusScoreLife"
-						label="vie / score"
+						:label="`vie / ${theChallenge.bonusScoreTrigger>0?theChallenge.bonusScoreTrigger:'x'} points`"
 						name="questionsBonuses1"
 					/>
 					<form-number
 						v-model="theChallenge.bonusScoreTime"
-						label="temps / score"
+						:label="`temps / ${theChallenge.bonusScoreTrigger>0?theChallenge.bonusScoreTrigger:'x'} points`"
 						name="questionsBonuses2"
 					/>
 					<form-number
@@ -152,77 +163,90 @@ Edition d'un challenge
 					/>
 				</div>
 			</div>
-			<div v-show="tab === 'generator_disabled'">
-				<h3 class="text-lg uppercase">
-					Générateur (script)
-				</h3>
-
-				<div class="grid grid-cols-2 gap-3">
-					<form-codearea
-						v-model="theChallenge.generator"
-						:rows="30"
-						label="générateur de questions"
-						name="questionsGenerator"
-					/>
-					<div class="mt-8">
-						<form-number
-							v-model="level"
-							label="niveau"
-							min="1"
-							name="level"
-						/>
-						<div
-							v-if="generateQuestions.length>0"
-							class="font-code divide-y"
-						>
-							<div
-								v-for="(question, idx) of generateQuestions"
-								:key="`question-${idx}`"
-								class="flex justify-between py-2"
-							>
-								<div v-katex="question.question" />
-								<div v-text="question.answer" />
-							</div>
-						</div>
-						<div
-							class="text-red-600"
-							v-text="generateQuestionsError"
-						/>
-					</div>
-				</div>
-			</div>
+			<!-- challenge generators -->
 			<div v-show="tab === 'generator'">
 				<h3 class="text-lg uppercase">
 					Générateur (script)
 				</h3>
 
 				<div>
-					<div class="flex gap-4">
-						<button
-							v-for="(generator, index) of theChallenge.generators"
-							:key="`generator-btn-${index}`"
-							class="btn"
-							:class="generatorTab === generator.pivot.order ? 'is-active':'' "
-							@click="generatorTab = index+1"
-						>
-							level {{ index + 1 }}
-						</button>
-					</div>
+					<draggable
+						v-model="theChallenge.generators"
+						class="flex gap-4 items-baseline"
+						item-key="id"
+						@end="updateGeneratorsOrder"
+					>
+						<template #item="{ element }">
+							<div class="flex flex-col">
+								<button
+									:class="generatorTab === element.pivot.order ? 'is-active':'' "
+									class="btn"
+									@click="generatorTab = element.pivot.order"
+								>
+									{{ element.title }}
+								</button>
+								<button
+									class="text-red-200"
+									@click="detachGenerator(element.id, $event)"
+								>
+									détacher
+								</button>
+							</div>
+						</template>
+						<template #footer>
+							<button
+								class="btn"
+								@click="addGenerator"
+							>
+								<i class="bi bi-plus-lg" />
+							</button>
+							<button
+								:disabled="attachGeneratorId===''"
+								class="btn disabled:is-disabled"
+								@click="attachGenerator"
+							>
+								<i class="bi bi-file-arrow-up" />
+							</button>
+							<form-select
+								v-model="attachGeneratorId"
+								label="generateurs"
+								name="generatorsList"
+								@click.once="getListOfGenerators"
+							>
+								<option
+									v-for="generator of availableGenerators"
+									:key="`generator-${generator.id}`"
+									:value="generator.id"
+								>
+									{{ generator.title }}
+								</option>
+							</form-select>
+						</template>
+					</draggable>
 
 					<div
 						v-for="(generator, index) of theChallenge.generators"
 						v-show="generator.pivot.order===generatorTab"
 						:key="`generator-${generator.id}`"
-						class="grid grid-cols-2 gap-3"
+						class="flex flex-col md:flex-row gap-3 min-h-[65vh]"
 					>
 						<form-codearea
 							v-model="theChallenge.generators[index].code"
 							:rows="30"
+							class="flex-1"
 							label="générateur de questions"
 							name="questionsGenerator"
 						/>
-						<div>
-							<h3>Exemples</h3>
+						<div class="w-[250px]">
+							<div class="flex justify-between">
+								<h3>Exemples</h3>
+								<button
+									class="btn-xs"
+									@click="generateId++"
+								>
+									générer
+								</button>
+							</div>
 
 							<div
 								v-if="generateQuestions.length>0"
@@ -242,31 +266,6 @@ Edition d'un challenge
 								v-text="generateQuestionsError"
 							/>
 						</div>
-						<!--						<div class="mt-8">-->
-						<!--							<form-number-->
-						<!--								v-model="level"-->
-						<!--								label="niveau"-->
-						<!--								min="1"-->
-						<!--								name="level"-->
-						<!--							/>-->
-						<!--							<div-->
-						<!--								v-if="generateQuestions.length>0"-->
-						<!--								class="font-code divide-y"-->
-						<!--							>-->
-						<!--								<div-->
-						<!--									v-for="(question, idx) of generateQuestions"-->
-						<!--									:key="`question-${idx}`"-->
-						<!--									class="flex justify-between py-2"-->
-						<!--								>-->
-						<!--									<div v-katex="question.question" />-->
-						<!--									<div v-text="question.answer" />-->
-						<!--								</div>-->
-						<!--							</div>-->
-						<!--							<div-->
-						<!--								class="text-red-600"-->
-						<!--								v-text="generateQuestionsError"-->
-						<!--							/>-->
-						<!--						</div>-->
 					</div>
 				</div>
 			</div>
@@ -275,7 +274,7 @@ Edition d'un challenge
 </template>
 
 <script setup>
-import {computed, ref} from "vue"
+import {computed, inject, ref} from "vue"
 import DialogModal from "@/Components/Ui/DialogModal.vue"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
 import FormInput from "@/Components/Form/FormInput.vue"
@@ -284,33 +283,44 @@ import FormIllustration from "@/Components/Form/FormIllustration.vue"
 import FormNumber from "@/Components/Form/FormNumber.vue"
 import {PiMath} from "pimath/esm"
 import FormCodearea from "@/Components/Form/FormCodearea.vue"
+import {useGenerators} from "@/Composables/useGenerators"
+import FormSelect from "@/Components/Form/FormSelect.vue"
+import {router} from "@inertiajs/vue3"
 
 const emits = defineEmits(["update:modelValue", "change", "destroy"])
 
 let props = defineProps({
-	modelValue: { type: Boolean, default: false },
-	challenge: { type: Object, required: true },
+	modelValue: {type: Boolean, default: false},
+	challenge: {type: Object, required: true},
 })
+
+const flash = inject("flash")
+
 let show = ref(props.modelValue),
 	tab = ref("generator"),
 	generatorTab = ref(1),
 	theChallenge = ref(props.challenge),
 	level = ref(1)
 
-let generateQuestionsError = ref(""),
+let currentGenerator = computed(() => {
+		return useGenerators(theChallenge.value.generators).generator(generatorTab.value)
+	}),
+	generateQuestionsError = ref(""),
+	generateId = ref(1),
 	generateQuestions = computed(() => {
-		if (theChallenge.value.generator !== "") {
+		const nbQuestions = 5
+		if (currentGenerator.value.code !== "" && generateId.value >= 1) {
 			let arr = []
 
 			try {
+				// let F = makeFunction(currentGenerator.value.code)
 				let F = new Function(
 					"PiMath",
-					"level",
-					theChallenge.value.generator
+					currentGenerator.value.code
 				)
-				for (let i = 0; i < 20; i++) {
+				for (let i = 0; i < nbQuestions; i++) {
 					const result = F(PiMath, level.value)
-					if(result && result.hasOwnProperty("question") && result.hasOwnProperty("answer")) {
+					if (result && result.hasOwnProperty("question") && result.hasOwnProperty("answer")) {
 						arr.push(result)
 					}
 				}
@@ -320,12 +330,65 @@ let generateQuestionsError = ref(""),
 				//console.warn(err)
 			}
 		}
-
 		return []
-	})
+	}),
+	updateGeneratorsOrder = function () {
+		// Update the pivot value according to the order
+		theChallenge.value.generators.forEach((gen, index) => gen.pivot.order = index + 1)
+
+		axios.post(route("challenges.generators.updateOrder", [theChallenge.value.id]), {
+			_method: "PATCH",
+			order: theChallenge.value.generators.map(x => {
+				return {id: x.id, order: x.pivot.order}
+			})
+		}).then(res => {
+			flash.add("L'ordre des générateurs à bien été enregistré !")
+		}).catch(res => {
+			console.warn("update ordering order: ", res)
+		})
+	},
+	addGenerator = function () {
+		axios.post(route("challenges.generators.store", [theChallenge.value.id]))
+			.then(res => {
+				console.log(res.data)
+				theChallenge.value.generators = res.data
+			}).catch(res => {
+				console.warn("add generator error")
+				console.log(res.response.data.message)
+			})
+	},
+	availableGenerators = ref([]),
+	attachGeneratorId = ref(""),
+	getListOfGenerators = function () {
+		if (availableGenerators.value.length === 0) {
+			axios.get(route("challenges.generators.index", [theChallenge.value.id]))
+				.then(res => availableGenerators.value = res.data)
+				.catch(res => {
+					console.log(res.response.data.message)
+				})
+		}
+	},
+	attachGenerator = function (s) {
+		if (attachGeneratorId.value !== "") {
+
+			axios.post(route("challenges.generators.attach", [theChallenge.value.id, attachGeneratorId.value]))
+				.then(res => {
+					theChallenge.value.generators = res.data
+					attachGeneratorId.value = ""
+				})
+		}
+	},
+	detachGenerator = function (id, destroy) {
+		axios.post(route("challenges.generators.detach", [theChallenge.value.id, id]), {
+			"destroy": destroy.ctrlKey
+		})
+			.then(res => {
+				theChallenge.value.generators = theChallenge.value.generators.filter(x => x.id !== id)
+			})
+	}
 
 let theIllustration = ref(
-	props.challenge.block.illustrations.length>0?props.challenge.block.illustrations[0]:{
+	props.challenge.block.illustrations.length > 0 ? props.challenge.block.illustrations[0] : {
 		title: "",
 		type: "draw",
 		code: "",
@@ -334,17 +397,20 @@ let theIllustration = ref(
 )
 
 let saveChallenge = function () {
+		// 1- Save the description block
+		// 2- Save the challenge configuration
+		// 3- Save the generators
 		axios
-			.post(route("blocks.update", [theChallenge.value.block.id]), {
+			.patch(route("blocks.update", [theChallenge.value.block.id]), {
 				_method: "PATCH",
 				body: theChallenge.value.block.body,
-				illustrations: theIllustration.value.parameters!==""?[theIllustration.value]:[],
+				illustrations: theIllustration.value.parameters !== "" ? [theIllustration.value] : [],
 			})
 			.then((res) => {
 				axios
-					.post(route("challenges.update", [props.challenge.id]), {
+					.patch(route("challenges.update", [props.challenge.id]), {
 						...theChallenge.value,
-						_method: "patch",
+						_method: "PATCH",
 					})
 					.then((res) => {
 						emits("update:modelValue", false)
@@ -358,10 +424,13 @@ let saveChallenge = function () {
 				_method: "delete",
 			})
 			.then((res) => {
-				// go back
-				router.visit(
-					route("theme.chapter", [res.data.theme, res.data.chapter])
-				)
+				if(res.data) {
+					// go back
+					router.visit(
+						route("chapter.show", [props.challenge.chapter.slug])
+					)
+					flash.add("Le challenge a été supprimé avec succès...")
+				}
 			})
 	}
 </script>

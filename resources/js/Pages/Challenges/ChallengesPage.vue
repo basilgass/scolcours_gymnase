@@ -85,7 +85,7 @@ const props = defineProps({
 const flash = inject("flash")
 
 let theChallenge = ref(props.challenge.data),
-	challengeGenerator = ref(props.challenge.data.generator),
+	// challengeGenerator = ref(props.challenge.data.generator),
 	challengeGenerators = ref(props.challenge.data.generators),
 	challengeGeneratorError = ref(""),
 	editMode = ref(false),
@@ -156,9 +156,9 @@ let listOfQuestions = ref([]),
 	localScore = ref(
 		localStorage.getItem("scolcoursChallenge-" + theChallenge.value.id)
 	)
-watch(challengeGenerator, (newValue, prevValue) => {
-	runChallengeGenerator()
-})
+// watch(challengeGenerator, (newValue, prevValue) => {
+// 	runChallengeGenerator()
+// })
 
 if (challengeGenerators.value.length === 0) {
 	// Edit mode as there is no generator actually.

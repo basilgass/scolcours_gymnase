@@ -87,6 +87,6 @@ let show = ref(false),
 		title: "nouveau challenge"
 	}),
 	storeChallenge = function(){
-		form.post(route("chapters.challenges.store", [props.chapter.slug]))
+		form.post(route("chapters.challenges.store", [props.chapter.id]))
 	}
 </script>

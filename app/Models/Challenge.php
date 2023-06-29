@@ -73,7 +73,7 @@ use Illuminate\Support\Carbon;
 class Challenge extends Model
 {
 	protected $guarded = [];
-	protected $with = ['blocks', 'scores'];
+	protected $with = ['blocks', 'scores', 'generators'];
 
 	public function chapter()
 	{
@@ -99,7 +99,8 @@ class Challenge extends Model
 	public function generators()
 	{
 		return $this->morphToMany(Generator::class, 'generatorable')
-			->withPivot('order');
+			->withPivot('order')
+			->orderByPivot('order');
 	}
 	public function getRunningAttribute()
 	{

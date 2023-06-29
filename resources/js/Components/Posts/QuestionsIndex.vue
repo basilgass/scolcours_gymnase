@@ -40,7 +40,7 @@
 					:class="element.css ?? ''"
 					:question="element"
 					@destroy="destroyQuestion"
-					@duplicate="theQuestions.push($event)"
+					@duplicate="duplicateQuestion"
 				/>
 			</template>
 		</draggable>
@@ -70,6 +70,7 @@ const props = defineProps({
 	containerId: {type: Number, required: true}
 })
 
+console.log(props.questions)
 const flash = inject("flash"),
 	editMode = inject("editMode")
 
@@ -90,6 +91,9 @@ let addQuestion = function () {
 					isNew: true,
 				})
 			})
+	},
+	duplicateQuestion = function(event) {
+		theQuestions.value.push(event)
 	},
 	destroyQuestion = function (destroyId) {
 		theQuestions.value = theQuestions.value.filter(

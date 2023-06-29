@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ChaptersController;
+use App\Models\Chapter;
 use App\Models\Theme;
 
 // Store the themes cache.
@@ -24,6 +25,9 @@ Route::whereIn('theme', $themesList)->group(function () {
 		->name('theme.chapter.intro');
 	Route::get('{theme:slug}/{chapter:slug}/complete', [ChaptersController::class, 'page'])
 		->name('theme.chapter');
+	Route::get('chapter/{chapter:slug}', function(Chapter $chapter){
+		return redirect()->route('theme.chapter.intro', [$chapter->theme->slug, $chapter->slug]);
+	})->name('chapter.show');
 	Route::get('{theme:slug}/{chapter:slug}/{order}', [ChaptersController::class, 'slide'])
 		->name('theme.chapter.slide');
 

@@ -47,7 +47,6 @@ class QuestionController extends Controller
 				'answer' => ['nullable'],
 				'checker' => ['string', 'nullable'],
 				'keyboard' => ['string', 'nullable'],
-				'parameters' => ['string', 'nullable'],
 			]
 		);
 
@@ -56,7 +55,6 @@ class QuestionController extends Controller
 			'answer' => $validate['answer'] ?? null,
 			'checker' => $validate['checker'] ?? null,
 			'keyboard' => $validate['keyboard'] ?? '',
-			'parameters' => $validate['parameters'] ?? '',
 			'order' => count($target->questions)+1
 		]);
 
