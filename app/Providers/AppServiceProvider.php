@@ -2,7 +2,6 @@
 
 namespace App\Providers;
 
-use App\Models\Scolcours;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\URL;
@@ -19,7 +18,8 @@ class AppServiceProvider extends ServiceProvider
     {
         //
 		$this->app->singleton('Scolcours', function($app){
-			return Scolcours::all()->first();
+//			return Scolcours::all()->first();
+			return "";
 		});
     }
 
@@ -35,7 +35,8 @@ class AppServiceProvider extends ServiceProvider
 	    }
 
 		Cache::rememberForever('scolcours', function (){
-			return Scolcours::all()->first();
+//			return Scolcours::all()->first();
+			return "";
 		});
 
     }
