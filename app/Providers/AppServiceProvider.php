@@ -18,9 +18,13 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         //
-		$this->app->singleton('Scolcours', function($app){
-			return Scolcours::all()->first();
-		});
+//		$this->app->singleton('Scolcours', function($app){
+//			try {
+//				return Scolcours::all()->first();
+//			}catch(\Exception $exception){
+//				return [];
+//			}
+//		});
     }
 
     /**
@@ -35,7 +39,11 @@ class AppServiceProvider extends ServiceProvider
 	    }
 
 		Cache::rememberForever('scolcours', function (){
-			return Scolcours::all()->first();
+			try {
+				return Scolcours::all()->first();
+			}catch (\Exception $exception) {
+				return [];
+			}
 		});
 
     }
