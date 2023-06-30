@@ -20,7 +20,7 @@
 				class="text-white px-4 py-2 rounded flex-1 grid grid-cols-1 gap-3 place-items-center"
 			>
 				<div>{{ theme.title }}</div>
-				<i :class="`bi bi-${theme.icon}`" />
+				<i :class="`${theme.icon}`" />
 			</div>
 
 			<form-switch

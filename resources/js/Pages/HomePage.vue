@@ -20,7 +20,7 @@
 				cursor-pointer
 				transform hover:scale-105 hover:rotate-0 duration-300"
 			>
-				<i :class="`bi bi-${theme.icon} mr-2 text-3xl`" />
+				<i :class="`${theme.icon} mr-2 text-3xl`" />
 				{{ theme.title }}
 			</Link>
 		</div>

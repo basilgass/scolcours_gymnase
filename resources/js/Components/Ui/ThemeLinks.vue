@@ -10,7 +10,7 @@ Génération des liens pour les themes.
 		@click="emit('ClickNavigationLinks')"
 	>
 		<i
-			:class="`bi-${theme.icon}`"
+			:class="`${theme.icon}`"
 			class="mr-2"
 		/>{{ theme.title }}
 	</Link>

@@ -32,7 +32,7 @@ class AdminController extends Controller
 		return Inertia::render('Admin/AdminConfig.vue',
 		[
 			"title" => $scolcours->title,
-			"allThemes" => Theme::all()
+			"allThemes" => Theme::orderBy('order')->get()
 		]
 		);
 	}
@@ -52,7 +52,7 @@ class AdminController extends Controller
 		$scolcours->save();
 
 		Cache::delete('scolcours');
-		
+
 		foreach($validation['themes'] as $theme){
 			$model = Theme::where('slug', $theme["slug"])->first();
 			$model->enabled = $theme['enabled'];

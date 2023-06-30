@@ -43,12 +43,16 @@ class HandleInertiaRequests extends Middleware
 				]
 			],
 			'scolcours' => Cache::get('scolcours')->toArray(),
-			'themes' => Theme::where("enabled", "=", 1)->get()->mapWithKeys(function ($item, $key) {
+			'themes' => Theme::where("enabled", "=", 1)
+				->orderBy('order')
+				->get()
+				->mapWithKeys(function ($item, $key) {
 				return [
 					$key => [
 						'id' => $item->id,
 						'slug' => $item->slug,
 						'title' => $item->title,
+						'icon' => $item->icon,
 						'enabled'=>$item->enabled
 					]
 				];

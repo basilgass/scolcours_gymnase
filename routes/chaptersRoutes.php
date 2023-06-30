@@ -8,9 +8,11 @@ use App\Models\Theme;
 //Cache::forget('themes');
 $themesList = Cache::rememberForever('themes', function () {
 	try {
-		return Theme::where("enabled", "=", 1)->get()->pluck('slug')->toArray();
+		return Theme::where("enabled", "=", 1)
+			->orderBy('order')
+			->get()->pluck('slug')->toArray();
 	} catch (Exception $exception) {
-		return ["algebre", "geometrie", "analyse", "statistiques", "jeux"];
+		return ["algebre", "geometrie", "analyse", "statistiques", "jeux", "numeric"];
 	}
 });
 
