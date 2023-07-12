@@ -90,7 +90,7 @@ Formulaire d'édition d'une question
 			</form>
 
 			<question-show
-				class="min-w-[350px]"
+				class="min-w-[350px] md:max-w-[40vw]"
 				:question="theQuestion"
 				:class="theQuestion.css"
 				is-dynamic

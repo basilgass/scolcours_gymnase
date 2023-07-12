@@ -73,28 +73,9 @@ class ChaptersController extends Controller
 			'body' => 'Aucune extrait...'
 		]);
 
-		return redirect()->route('theme.chapter', [$theme->slug, $chapter->slug]);
+		return redirect()->route('theme.chapter.intro', [$theme->slug, $chapter->slug]);
 	}
-
-//	public function show(Theme $theme, Chapter $chapter)
-//	{
-//		if ($chapter->active or Auth::User()?->admin) {
-//
-//			// Get the user data
-//			return Inertia::render('Chapters/ChapterShow', [
-//				// Used for the page layout
-//				"theme" => $theme->only('color', 'icon', 'slug', 'title', 'id'),
-//				// Get the chapter
-//				"chapter" => fn() => ChapterResource::make($chapter),
-//				// Find a component if it exists.
-//				"component" => $chapter->component,
-//			]);
-//		} else {
-//			return Inertia::render('ErrorPage.vue', [
-//				"body" => "La page n'est pas active - contacter l'administrateur."
-//			]);
-//		}
-//	}
+	
 	public function page(Theme $theme, Chapter $chapter)
 	{
 		if ($chapter->active or Auth::User()?->admin) {

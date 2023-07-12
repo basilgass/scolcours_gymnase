@@ -298,7 +298,7 @@ let answerId = ref(0),
 	// Format de la réponse
 	answerFormat = computed(() => {
 		if(!theAnswers.value[answerId.value]){return ""}
-		
+
 		let kbrd = theAnswers.value[answerId.value].keyboard
 
 		if (kbrd.name === "Basic") {
@@ -459,7 +459,7 @@ let updateQuestion = function (event) {
 
 // Gestion administrateur
 let editMode = inject("editMode", false),
-	showEditForm = ref(props.question.isNew === true),
+	showEditForm = ref(false),
 	editForm = computed(() => {
 		return defineAsyncComponent(
 			() => import("@/Components/Posts/Questions/QuestionForm")

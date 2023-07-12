@@ -87,8 +87,7 @@ let addQuestion = function () {
 			.then((res) => {
 				// Add the question.
 				theQuestions.value.push({
-					...res.data.data,
-					isNew: true,
+					...res.data.data
 				})
 			})
 	},
