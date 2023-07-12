@@ -62,6 +62,26 @@ class AdminController extends Controller
 		return true;
 	}
 
+	public function configUpdateOrder(Request $request)
+	{
+		$validation = $request->validate([
+			'order' => ['array'],
+			'order.*.id' => ['exists:App\Models\Theme'],
+			 'order.*.order' => ['int', 'min:1'],
+		]);
+
+		foreach ($validation['order'] as $value ){
+			Theme::find($value['id'])->update([
+				'order'=>$value['order']
+			]);
+		}
+
+		// Reset the cache.
+		Cache::delete('scolcours');
+		Cache::delete('themes');
+
+		return true;
+	}
 
 	public function pages()
 	{

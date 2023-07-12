@@ -13,6 +13,7 @@ Route::middleware("can:admin")->group(function () {
 	// WEBSITE CONFIGURATION
 	Route::get('/admin/config', [AdminController::class, 'config'])->name('admin.config');
 	Route::patch('/admin/config/update', [AdminController::class, 'configUpdate'])->name('admin.config.update');
+	Route::patch('/admin/config/updateOrder', [AdminController::class, 'configUpdateOrder'])->name('admin.config.updateOrder');
 
 
 	Route::get('/admin/pages', [AdminController::class, 'pages'])

@@ -35,17 +35,6 @@ object-assign
  * @license  MIT
  */
 
-/*!
-* @svgdotjs/svg.draggable.js - An extension for svg.js which allows to drag elements with your mouse
-* @version 3.0.3
-* https://github.com/svgdotjs/svg.draggable.js
-*
-* @copyright Wout Fierens
-* @license MIT
-*
-* BUILT: Mon Mar 20 2023 18:56:35 GMT+0100 (Central European Standard Time)
-*/
-
 /*! https://mths.be/punycode v1.4.1 by @mathias */
 
 /*! ieee754. BSD-3-Clause License. Feross Aboukhadijeh <https://feross.org/opensource> */

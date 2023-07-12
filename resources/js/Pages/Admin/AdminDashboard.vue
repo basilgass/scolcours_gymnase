@@ -5,6 +5,12 @@
 
 	<div class="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 gap-3">
 		<Panel class="min-h-[10em]">
+			<Link :href="route('admin.config')">
+				Configuration générale
+			</Link>
+		</Panel>
+
+		<Panel class="min-h-[10em]">
 			<Link :href="route('admin.pages')">
 				Gestion des pages
 			</Link>
