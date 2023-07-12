@@ -24,36 +24,20 @@ En-tête principal, sensible au thème
 				</Link>
 			</div>
 
-			<div class="flex gap-3">
-				<div v-admin>
-					<button
-						class="btn btn-xs hover:text-black"
-						:class="editMode.enabled.value?'bg-white/40':''"
-						@click="editMode.toggle()"
-					>
-						<span v-show="editMode.enabled.value"> <i class="bi bi-pencil mr-2" /> <span
-							class="hidden md:inline"
-						>édition activée</span></span>
-						<span v-show="!editMode.enabled.value"> <i class="bi bi-pencil mr-2" /> <span>activer l'édition</span></span>
-					</button>
-				</div>
-
-				<div class="text-3xl">
-					<i
-						class="bi bi-list cursor-pointer mr-2"
-						@click="showAside=!showAside"
-					/>
-				</div>
-
+			<div class="flex gap-8 items-center">
+				<!-- utilisateur connecté -->
 				<div
 					v-if="$page.props.auth.user"
-					class="flex gap-3"
+					class="flex"
 				>
 					<div
 						class="relative cursor-pointer"
 						@click="showMenu = !showMenu"
 					>
-						<span class="text-lg">{{ $page.props.auth.user.name }}</span>
+						<span class="text-lg">
+							<i class="bi bi-person-fill mr-1" />
+							{{ $page.props.auth.user.name }}
+						</span>
 						<div
 							v-if="showMenu"
 							class="w-40
@@ -76,6 +60,37 @@ En-tête principal, sensible au thème
 						Se connecter
 					</a>
 				</div>
+
+				<!-- affichage du menu de côté -->
+				<div class="text-3xl">
+					<i
+						class="bi bi-list cursor-pointer mr-2"
+						@click="showAside=!showAside"
+					/>
+				</div>
+			</div>
+		</div>
+		<!-- ligne administration -->
+		<div
+			v-admin
+			class="bg-slate-600 py-3"
+		>
+			<div class="scolcours-container flex justify-between items-baseline">
+				<div>
+					<h4 class="text-xs text-white uppercase">
+						administrateur
+					</h4>
+				</div>
+				<button
+					class="btn btn-xs hover:text-black"
+					:class="editMode.enabled.value?'bg-white/40':''"
+					@click="editMode.toggle()"
+				>
+					<span v-show="editMode.enabled.value"> <i class="bi bi-pencil mr-2" /> <span
+						class="hidden md:inline"
+					>édition activée</span></span>
+					<span v-show="!editMode.enabled.value"> <i class="bi bi-pencil mr-2" /> <span>activer l'édition</span></span>
+				</button>
 			</div>
 		</div>
 	</header>

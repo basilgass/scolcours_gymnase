@@ -43,20 +43,21 @@ import Prism from "prismjs"
 import "prismjs/themes/prism.css"
 import "prismjs/components/prism-latex"
 import "prismjs/components/prism-javascript"
+import "prismjs/components/prism-json"
 import {javascriptTriggers, latexTriggers} from "@/helpers/mdAutofill"
 
 Prism.manual = true
 
 let inp = ref(null)
 
-function focus(select) {
+function focusFn(select) {
 	inp.value.focus()
 	if (select === true) {
 		inp.value.select()
 	}
 }
 
-defineExpose({focus})
+defineExpose({focus: focusFn})
 defineEmits(["update:modelValue"])
 const props = defineProps({
 		modelValue: {type: String, default: ""},
@@ -77,6 +78,9 @@ let pre = ref(null),
 			try {
 				if (props.language.toLowerCase() === "latex") {
 					return Prism.highlight(theValue.value, Prism.languages.latex, "latex")
+				}
+				if (props.language.toLowerCase() === "json") {
+					return Prism.highlight(theValue.value, Prism.languages.json, "json")
 				}
 				return Prism.highlight(theValue.value, Prism.languages.javascript, "javascript")
 			} catch (e) {

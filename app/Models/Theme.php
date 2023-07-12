@@ -14,6 +14,7 @@ use Illuminate\Support\Carbon;
  * @property int $id
  * @property string $slug
  * @property string $title
+ * @property int $order
  * @property string $color
  * @property string|null $icon
  * @property int $enabled
@@ -29,6 +30,7 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Theme whereEnabled($value)
  * @method static Builder|Theme whereIcon($value)
  * @method static Builder|Theme whereId($value)
+ * @method static Builder|Theme whereOrder($value)
  * @method static Builder|Theme whereSlug($value)
  * @method static Builder|Theme whereTitle($value)
  * @method static Builder|Theme whereUpdatedAt($value)

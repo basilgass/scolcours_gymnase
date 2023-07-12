@@ -4,30 +4,49 @@
 	<ArticleTitle title="Echelle" />
 
 	<div>
-		<form-number
-			v-model="maxPoints"
-			focus
-			label="nombre de maxPoints"
-			name="points"
-		/>
+		<div class="grid grid-cols-2 gap-5">
+			<form-number
+				v-model="maxPoints"
+				focus
+				label="nombre max de points"
+				name="points"
+			/>
+			<form-number
+				v-model="pourcentage"
+				focus
+				helper-text="vide pour échelle fédérale"
+				label="pourcentage"
+				name="points"
+			/>
+		</div>
 		<form-textarea
 			v-model="pointsData"
-			helper-text="notes séparées par des espaces"
+			helper-text="notes séparées par des espaces, des virgules ou à la ligne."
 			label="valeurs"
 			name="points"
 		/>
 	</div>
 
-	<div>
-		<p>Nombre de notes: {{ evaluations.length }}</p>
-		<p>Moyenne: {{ average.points.toFixed(2) }} ( {{ average.evaluation.toFixed(2) }} )</p>
-		<p>Médiane: {{ median.points.toFixed(2) }} ( {{ median.evaluation }} )</p>
+	<div class="grid grid-cols-2 gap-5">
+		<div
+			class="relative w-[40vw] h-[30vw] max-w-full mx-auto"
+		>
+			<canvas ref="chartD" />
+		</div>
+
+		<div
+			class="relative w-[40vw] h-[30vw] max-w-full mx-auto"
+		>
+			<canvas ref="chart" />
+		</div>
 	</div>
 
-	<div
-		class="relative max-w-xl mx-auto w-[80vw] h-[40vw]"
-	>
-		<canvas ref="chart" />
+	<div>
+		<div class="flex justify-between">
+			<p>Nombre de notes: {{ evaluations.length }}</p>
+			<p>Moyenne: {{ average.points.toFixed(2) }} ( {{ average.evaluation.toFixed(2) }} )</p>
+			<p>Médiane: {{ median.points.toFixed(2) }} ( {{ median.evaluation }} )</p>
+		</div>
 	</div>
 </template>
 <script>
@@ -47,29 +66,35 @@ import {Chart} from "chart.js/auto"
 
 let pointsData = ref("2 1.5 1 1.5 4 4.5 4 5.5 5 3 3.5 5 4.5 4 2.5 5.5 6 5.5 3 3.5"),
 	maxPoints = ref(20),
-	chart = ref(null)
+	pourcentage = ref(""),
+	halfPoints = ref(true),
+	chart = ref(null),
+	chartD = ref(null)
 
-let points = computed(()=>{
-		return pointsData.value.split(" ")
-			.filter(x=>x!=="")
-			.map(x=>+x)
-			.filter(x=>!isNaN(x))
+let points = computed(() => {
+		return pointsData.value.split(/[\s,\n]/)
+			.filter(x => x !== "")
+			.map(x => +x)
+			.filter(x => !isNaN(x))
 	}),
 	evaluations = computed(() => {
 		return points.value
 			.map(x => {
-				let e = (x / maxPoints.value * 5) + 1
-				return Math.round(e * 2) / 2
+				return evalNote(x)
+				// let e = (x / maxPoints.value * 5) + 1
+				// return Math.round(e * 2) / 2
 			})
 	}),
 	average = computed(() => {
-		if(evaluations.value.length===0){return {
-			points: "-",
-			evaluation: "-"
-		}}
+		if (evaluations.value.length === 0) {
+			return {
+				points: "-",
+				evaluation: "-"
+			}
+		}
 		return {
-			points: points.value.reduce((a,b)=>a+b)/points.value.length,
-			evaluation: evaluations.value.reduce((a, b)=>a+b)/evaluations.value.length
+			points: points.value.reduce((a, b) => a + b) / points.value.length,
+			evaluation: evaluations.value.reduce((a, b) => a + b) / evaluations.value.length
 		}
 	}),
 	median = computed(() => {
@@ -89,16 +114,17 @@ let points = computed(()=>{
 			evaluation: s.length % 2 === 0 ? ((s[mid - 1] + s[mid]) / 2) : s[mid]
 		}
 	}),
-	numberByEvaluation = computed(()=>{
+	numberByEvaluation = computed(() => {
 		let arr = {}
-		for(let i=1; i<=6; i+=0.5){
-			arr[`${i.toPrecision(2)}`] = evaluations.value.filter(x=>x===i).length
+		for (let i = 1; i <= 6; i += 0.5) {
+			arr[`${i.toPrecision(2)}`] = evaluations.value.filter(x => x === i).length
 		}
 		return arr
 	})
 
-let chartObject
-onMounted(()=>{
+let chartObject,
+	chartDObject
+onMounted(() => {
 	chartObject = new Chart(chart.value, {
 		type: "bar",
 		data: {
@@ -144,6 +170,7 @@ onMounted(()=>{
 				}
 			},
 			responsive: true,
+			maintainAspectRatio: false,
 			plugins: {
 				legend: {
 					display: false
@@ -152,12 +179,143 @@ onMounted(()=>{
 		}
 	})
 
-	console.log(chartObject.options.scales["y"])
+	chartDObject = new Chart(chartD.value, {
+		type: "line",
+		data: {
+			labels: [],
+			datasets: [{data: []}]
+		},
+		options: {
+			responsive: true,
+			maintainAspectRatio: false,
+			plugins: {
+				legend: {
+					display: false
+				}
+			},
+			scales: {
+				x: {
+					type: "linear",
+					min: 0,
+					max: maxPoints.value,
+					ticks: {
+						stepSize: halfPoints.value ? 0.5 : 1
+					}
+				}
+			}
+		}
+	})
+
+	updateChardD()
 })
 
-watch(numberByEvaluation, (newValue, oldValue)=>{
+watch(numberByEvaluation, (newValue, oldValue) => {
 	chartObject.config.data.datasets[0].data = Object.values(numberByEvaluation.value)
 	chartObject.update()
+
+	updateChardD()
 })
+
+watch(pourcentage, (newValue, oldValue) => {
+	updateChardD()
+})
+
+watch(maxPoints, (newValue, oldValue) => {
+	updateChardD()
+})
+
+function roundTo(x) {
+	if (halfPoints.value) {
+		return Math.floor(x * 2) / 2
+	} else {
+		return Math.floor(x) + 1
+	}
+}
+
+function evalB1(note) {
+	if (note < 1) {
+		return 0
+	}
+	return (note - 1) * maxPoints.value * pourcentage.value / 100 / 2.75
+}
+
+function evalB2(note) {
+	return (note - (6 - 2.25 / (1 - pourcentage.value / 100))) * maxPoints.value * (1 - pourcentage.value / 100) / 2.25
+}
+
+function evalF(note) {
+	if (note < 1) {
+		return 0
+	}
+	if (note > 6) {
+		return maxPoints.value
+	}
+
+	return (note - 1) * maxPoints.value / 5
+}
+function roundNote(note){
+	return Math.round(note*2)/2
+}
+function evalNote(x) {
+	if(pourcentage.value==="" || pourcentage.value===0){
+		return roundNote(x*5/maxPoints.value+1)
+	}
+
+	if(x < maxPoints.value*pourcentage.value/100){
+		return roundNote(2.75/(maxPoints.value*pourcentage.value/100)*x+1)
+	}else{
+		return roundNote(2.25/(maxPoints.value*(1-pourcentage.value/100))*x+(6-(2.25/(1-pourcentage.value/100))))
+	}
+}
+
+function evalRange(note) {
+	if (note < 1 || note > 6) {
+		return [0, maxPoints.value]
+	}
+
+	if (pourcentage.value === "" || pourcentage.value === 0) {
+		// échelle fédérale.
+		return [
+			roundTo(evalF(note - 0.25)),
+			roundTo(evalF(note + 0.25))
+		]
+	}
+
+	if (note < 4) {
+		return [
+			roundTo(evalB1(note - 0.25)),
+			roundTo(evalB1(note + 0.25))
+		]
+	} else {
+		return [
+			roundTo(evalB2(note - 0.25)),
+			roundTo(evalB2(note + 0.25))
+		]
+
+	}
+
+	return [0, 0]
+}
+
+function updateChardD() {
+	// Mise à jours des labels
+	let labels = [],
+		pts = []
+
+	for (let note = 1; note <= 6; note += 0.5) {
+		labels.push(evalRange(note)[0])
+		labels.push(evalRange(note)[1])
+		pts.push(note)
+		pts.push(note)
+	}
+	labels.push(maxPoints.value)
+
+	// Mise à jours des points
+	chartDObject.config.data.labels = labels
+	chartDObject.config.data.datasets[0].data = pts
+	chartDObject.config.options.scales.x.max = maxPoints.value
+
+	chartDObject.update()
+}
 </script>
 

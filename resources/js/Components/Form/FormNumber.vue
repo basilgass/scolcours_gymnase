@@ -19,6 +19,11 @@
 			@keyup.esc="doCancel"
 			@keyup.enter="doValidate"
 		>
+		<div
+			v-if="helperText!==''"
+			v-katex.auto="helperText"
+			class="text-xs text-gray-400"
+		/>
 		<form-error
 			:message="error"
 			:name="name"
@@ -40,6 +45,7 @@ const props = defineProps({
 	label: {type: String, default: ""},
 	error: {type: String, default: ""},
 	focus: {type: Boolean, default: false},
+	helperText: {type: String, default: ""},
 })
 
 let inp = ref(null)

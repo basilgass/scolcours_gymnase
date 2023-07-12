@@ -24,8 +24,15 @@ export const checkersList = {
 }
 
 export function useCheckers(checkerData) {
-	// checkerData = checker,opt1,opt2,opt3
-	let options = checkerData.split(",")
+	// checkerData =[ checker,opt1,opt2,opt3]
+	let options = []
+
+	if(typeof checkerData === "string"){
+		options = checkerData.split(",")
+	}else{
+		options = [...checkerData]
+	}
+
 	let checker = options.shift().toLowerCase()
 
 	switch (checker) {

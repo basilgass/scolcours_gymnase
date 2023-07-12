@@ -10,11 +10,11 @@ Menu latéral, avec les thèmes
 				@click="$parent.showAside=false"
 			/>
 		</transition>
-		<transition name="slide-fade">
+		<transition name="slide-fade-right">
 			<div
 				v-cloak
 				v-show="$parent.showAside"
-				class="fixed top-0 left-0 w-full z-50 sm:w-60 bg-black min-h-screen text-white"
+				class="fixed top-0 right-0 w-full z-50 sm:w-60 bg-black min-h-screen text-white"
 			>
 				<div class="space-y-1 py-2 text-sm">
 					<div class="relative">

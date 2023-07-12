@@ -21,6 +21,7 @@ use Laravel\Sanctum\PersonalAccessToken;
  * @property int $id
  * @property string $name
  * @property string $email
+ * @property string|null $role
  * @property int|null $team_id
  * @property Carbon|null $email_verified_at
  * @property string $password
@@ -54,6 +55,7 @@ use Laravel\Sanctum\PersonalAccessToken;
  * @method static Builder|User whereName($value)
  * @method static Builder|User wherePassword($value)
  * @method static Builder|User whereRememberToken($value)
+ * @method static Builder|User whereRole($value)
  * @method static Builder|User whereTeamId($value)
  * @method static Builder|User whereUpdatedAt($value)
  * @mixin Eloquent
@@ -132,7 +134,8 @@ class User extends Authenticatable
 
 	public function getAdminAttribute()
 	{
-		return $this->email === 'basil@scolcours.ch' or
-			$this->email === 'alyssia@famillegass.ch';
+		return $this->role === 'admin';
+//		return $this->email === 'basil@scolcours.ch' or
+//			$this->email === 'alyssia@famillegass.ch';
 	}
 }

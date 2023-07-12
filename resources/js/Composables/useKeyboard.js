@@ -78,7 +78,13 @@ export function useKeyboard(props) {
 				checker = useCheckers([value, ...options].join(","))
 
 				// Get the config for this keyboard.
-				config = keyboards.hasOwnProperty(value) ? keyboards[value] : keyboards["exact"]
+				if(keyboards.hasOwnProperty(value)){
+					config = keyboards[value]
+				}else if(keyboards.hasOwnProperty(checker.name)){
+					config = keyboards[checker.name]
+				}else {
+					config = keyboards["exact"]
+				}
 			}
 
 			// Add the parameters (all starting with @)

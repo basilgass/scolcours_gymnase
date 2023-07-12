@@ -17,6 +17,7 @@
 
 		<slot />
 		<div
+			v-if="helperText!==''"
 			v-katex.auto="helperText"
 			class="text-xs text-gray-400"
 		/>
