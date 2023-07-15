@@ -12,22 +12,15 @@ keyboard -> QuestionUserInput -> QuestionShow
 			'bg-green-50 border-green-600/60': theQuestion.user.result && !props.isMinimal,
 		}"
 	>
-		<header class="flex relative">
+		<header class="flex flex-col relative">
 			<!-- QUESTION NUMBER -->
 			<div
 				v-if="theQuestion.order && !props.isMinimal && !props.isDynamic"
 				:class="{'draggable-handle cursor-move':$page.props.auth.can.admin}"
-				class="absolute -left-2 -top-2 rounded-full bg-white border w-8 h-8 text-xs flex justify-center items-center draggable-handle"
+				class="absolute left-1 -top-4 rounded-full bg-white border w-8 h-8 text-xs flex justify-center items-center draggable-handle"
 			>
 				{{ theQuestion.order }}
 			</div>
-
-			<!-- QUESTION TITLE -->
-			<div
-				v-if="props.showTitle"
-				v-katex.auto="theQuestion.block.title"
-				class="px-5 py-3 font-semibold text-lg"
-			/>
 
 			<!-- ADMIN HEADER -->
 			<div
@@ -38,12 +31,14 @@ keyboard -> QuestionUserInput -> QuestionShow
 			>
 				<button
 					class="text-xs"
+					title="editer"
 					@click="showEditForm=true"
 				>
 					{{ theQuestion.id }} <i class="bi bi-pencil ml-2" />
 				</button>
 				<button
 					class="text-xs px-2"
+					title="dupliquer"
 					@click="duplicateQuestion"
 				>
 					<i class="bi bi-clipboard-plus" />
@@ -52,11 +47,19 @@ keyboard -> QuestionUserInput -> QuestionShow
 				<button
 					v-if="!theQuestion.block.illustration"
 					class="text-xs px-2"
+					title="ajouter une illustration"
 					@click="addIllustration"
 				>
 					<i class="bi bi-image" />
 				</button>
 			</div>
+
+			<!-- QUESTION TITLE -->
+			<div
+				v-if="!props.hideTitle"
+				v-katex.auto="theQuestion.block.title"
+				class="px-5 py-3 font-semibold text-lg"
+			/>
 		</header>
 
 		<main class="px-5 overflow-x-auto mb-3">
@@ -209,7 +212,7 @@ let {getKeyboards} = useKeyboard()
 // Props
 let props = defineProps({
 	question: {type: Object, required: true},
-	showTitle: {type: Boolean, default: false},
+	hideTitle: {type: Boolean, default: false},
 	showInput: {type: Boolean, default: false},
 	isDynamic: {type: Boolean, default: false},
 	isMinimal: {type: Boolean, default: false},

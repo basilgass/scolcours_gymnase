@@ -3,7 +3,6 @@
 		<question-show
 			class="max-w-xl mx-auto bg-white border rounded"
 			:question="props.question"
-			show-title
 			show-input
 			is-minimal
 			single-answer

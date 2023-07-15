@@ -118,7 +118,8 @@ let addQuestion = function () {
 			.then((res) => {
 				for (let i in theQuestions.value) {
 					theQuestions.value[i].user.answer = []
-					theQuestions.value[i].user.correct = false
+					theQuestions.value[i].user.result = 0
+					theQuestions.value[i].user.attempts = 0
 				}
 			})
 	}

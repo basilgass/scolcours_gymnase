@@ -1,13 +1,15 @@
 import {PiMath} from "pimath/esm"
 
 export function EquationChecker(options) {
-	if(options===undefined){options = []}
+	if (options === undefined) {
+		options = []
+	}
 
-	const isReduced = (options.includes("r") || options.includes("reduced") || options.includes("re")) ,
+	const isReduced = (options.includes("r") || options.includes("reduced") || options.includes("re")),
 		isCanonical = (options.includes("c") || options.includes("canonical") || options.includes("ca"))
 
 	return {
-		name:"equation",
+		name: "equation",
 		format: () => {
 			let opts = []
 
@@ -21,11 +23,18 @@ export function EquationChecker(options) {
 			return `équation ${opts.join(", ")}`
 		},
 		check: (expectedAnswer, answer) => {
+			if(!answer.includes("=")){
+				return {
+					result: false,
+					message: "il manque un signe d'égalité."
+				}
+			}
+
 			let A = new PiMath.Equation(answer),
 				Q = new PiMath.Equation(expectedAnswer)
 
-			if(isCanonical){
-				if(!A.right.isZero() && !A.left.isZero()){
+			if (isCanonical) {
+				if (!A.right.isZero() && !A.left.isZero()) {
 					return {
 						result: false,
 						message: "l'équation n'est pas sous sa forme canonique."
@@ -37,19 +46,22 @@ export function EquationChecker(options) {
 			const A2 = A.clone().moveLeft(), Q2 = Q.clone().moveLeft()
 			A2.simplify()
 			Q2.simplify()
-			if(!A2.left.isEqual(Q2.left)){
+
+			// L'expression de gauche est soit égale, soit opposée.
+			// TODO: modify to isLinear as soon as PiMath is updated.
+			if (!(A2.left.isEqual(Q2.left) || A2.left.isOpposedAt(Q2.left))) {
 				return {
 					result: false,
 					message: "l'équation n'est pas juste."
 				}
 			}
 
-			if(isReduced){
+			if (isReduced) {
 				const lcmL = A.left.commonMonom().coefficient.value,
 					lcmR = A.right.commonMonom().coefficient.value,
 					lcm = PiMath.Numeric.lcm(lcmL, lcmR)
 
-				if(lcm!==1){
+				if (lcm !== 1) {
 					return {
 						result: false,
 						message: "l'équation n'est pas réduite."
