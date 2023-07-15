@@ -97,11 +97,6 @@ function adminUpdate(el, binding, vnode){
 	if(!usePage().props.auth.can.admin){
 		el.remove()
 	}
-	// TODO: extend v-admin directive
-	// if(binding.modifiers.edit){
-	// 	console.log(binding.value)
-	// 	el.style.display = binding.value?"block":"none"
-	// }
 }
 export const adminDirective = {
 	mounted (el, binding, vnode) {

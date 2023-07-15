@@ -74,7 +74,7 @@ let title = ref(props.title),
 			themes: themes.value,
 			_method: "PATCH"
 		}).then(res => {
-			flash.add("les modifications de configuration ont bien été changées !")
+			flash.success("les modifications de configuration ont bien été changées !")
 		}).catch(err => {
 			console.log(err)
 		})
@@ -86,7 +86,7 @@ let title = ref(props.title),
 				return {id: x.id, order: index + 1}
 			})
 		}).then(res => {
-			flash.add("L'ordre des thèmes à bien été enregistré !")
+			flash.success("L'ordre des thèmes à bien été enregistré !")
 		}).catch(res => {
 			console.warn("update ordering order: ", res)
 		})

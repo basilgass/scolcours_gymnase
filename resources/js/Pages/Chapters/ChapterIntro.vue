@@ -24,7 +24,6 @@
 						:is="editForm"
 						v-model="showEditForm"
 						:chapter="theChapter"
-						@change="updateChapter"
 					/>
 				</div>
 			</div>
@@ -98,8 +97,5 @@ let showEditForm = ref(false),
 		return defineAsyncComponent(
 			() => import("@/Components/Chapters/ChapterForm.vue")
 		)
-	}),
-	updateChapter = function (c) {
-		// TODO: update theChapter ?
-	}
+	})
 </script>

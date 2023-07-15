@@ -8,6 +8,9 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Support\Carbon;
 
 /**
@@ -23,10 +26,10 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $updated_at
  * @property string $questionable_type
  * @property int $questionable_id
- * @property-read Collection<int, \App\Models\Block> $blocks
+ * @property-read Collection<int, Block> $blocks
  * @property-read int|null $blocks_count
- * @property-read Model|\Eloquent $questionable
- * @property-read Collection<int, \App\Models\User> $users
+ * @property-read Model|Eloquent $questionable
+ * @property-read Collection<int, User> $users
  * @property-read int|null $users_count
  * @method static Builder|Question newModelQuery()
  * @method static Builder|Question newQuery()
@@ -48,25 +51,19 @@ class Question extends Model
 	use HasFactory;
 
 	protected $guarded = [];
-	// TODO: removed "users" from the $with attribute.
 	protected $with = ['blocks'];
 
-	public function questionable(): \Illuminate\Database\Eloquent\Relations\MorphTo
+	public function questionable(): MorphTo
 	{
 		return $this->morphTo();
 	}
 
-//	public function post(): \Illuminate\Database\Eloquent\Relations\BelongsTo
-//	{
-//		return $this->belongsTo(Post::class);
-//	}
-
-	public function blocks(): \Illuminate\Database\Eloquent\Relations\MorphMany
+	public function blocks(): MorphMany
 	{
 		return $this->morphMany(Block::class, 'blockable')->orderBy('order')->orderBy('id');
 	}
 
-	public function users(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+	public function users(): BelongsToMany
 	{
 		return $this->belongsToMany(User::class)
 			->withTimestamps()

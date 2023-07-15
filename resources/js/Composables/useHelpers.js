@@ -49,7 +49,7 @@ export function useFormattedBody(body, mabyeRefValues){
 	// - - => +
 	// + -  or  - + => -
 	// + + => +
-	// TODO: robust solution to replace the duoble signs only when "replace" all items.
+	// TODO: robust solution to replace the double signs only when "replace" all items.
 	output = output.replaceAll("-REPLACE_VALUE-", "+")
 	output = output.replaceAll("-REPLACE_VALUE+", "-")
 	output = output.replaceAll("+REPLACE_VALUE-", "-")

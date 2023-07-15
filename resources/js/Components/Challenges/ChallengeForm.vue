@@ -342,7 +342,7 @@ let currentGenerator = computed(() => {
 				return {id: x.id, order: x.pivot.order}
 			})
 		}).then(res => {
-			flash.add("L'ordre des générateurs à bien été enregistré !")
+			flash.success("L'ordre des générateurs à bien été enregistré !")
 		}).catch(res => {
 			console.warn("update ordering order: ", res)
 		})
@@ -416,6 +416,12 @@ let saveChallenge = function () {
 						emits("update:modelValue", false)
 						emits("change", res.data.data)
 					})
+					.then((res) => {
+						flash.success("Le challenge a bien été mis à jour")
+					})
+					.catch((res) => {
+						flash.error("Il y a eu une erreur lors de la mise à jour.")
+					})
 			})
 	},
 	deleteChallenge = function () {
@@ -429,7 +435,7 @@ let saveChallenge = function () {
 					router.visit(
 						route("chapter.show", [props.challenge.chapter.slug])
 					)
-					flash.add("Le challenge a été supprimé avec succès...")
+					flash.success("Le challenge a été supprimé avec succès...")
 				}
 			})
 	}

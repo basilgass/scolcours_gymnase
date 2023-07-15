@@ -105,7 +105,7 @@ const addFormula = function () {
 		axios
 			.post(route("chapters.formulas.store", [props.chapterSlug]), {})
 			.then(res => {
-				flash.add("formule créée")
+				flash.success("formule créée")
 				theFormular.value.push(res.data.data)
 			})
 	},
@@ -113,7 +113,7 @@ const addFormula = function () {
 		axios.post(route("formulas.destroy", [id]),
 			{_method: "DELETE"})
 			.then(res=> {
-				flash.add("formule supprimée")
+				flash.success("formule supprimée")
 				theFormular.value = theFormular.value.filter(x=>x.id!==id)
 			})
 	},
@@ -124,7 +124,7 @@ const addFormula = function () {
 			})
 		}).then(res => {
 			// TODO : flash message !
-			flash.add("L'ordre des formules à bien été enregistré !")
+			flash.success("L'ordre des formules à bien été enregistré !")
 		}).catch(res => {
 			// toDO: Show error message
 			console.warning("update ordering order: ", res.data)

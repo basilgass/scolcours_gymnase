@@ -153,7 +153,7 @@ let filterPosts = ref(""),
 			})
 			.then((res) => {
 				// TODO : flash message !
-				flash.add("les posts ont bien été réordré !")
+				flash.success("les posts ont bien été réordré !")
 			})
 			.catch((res) =>
 				console.log(

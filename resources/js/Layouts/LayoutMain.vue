@@ -52,31 +52,39 @@ defineProps({
 	}
 })
 
-let	flashMessages = ref([]),
-	addFlashMessage = function(message, type="success", timeout=2000){
+let flashMessages = ref([]),
+	addFlashMessage = function (message, type = "success", timeout = 2000) {
 		flashMessages.value.push({message, type, timeout})
 	}
-provide("flash", {add: addFlashMessage})
+provide("flash", {
+	add: addFlashMessage,
+	success: (message, timeout) => addFlashMessage(message, "success", timeout),
+	error: (message, timeout) => addFlashMessage(message, "error", timeout),
+})
 
 let globalEditMode = ref(false),
 	globalCorrectionMode = ref(false)
 provide("editMode", {
-	enabled: computed(()=>{return globalEditMode.value}),
-	toggle: function(){
+	enabled: computed(() => {
+		return globalEditMode.value
+	}),
+	toggle: function () {
 		globalEditMode.value = !globalEditMode.value
 		localStorage.setItem("scolcours_editMode", globalEditMode.value)
 	}
 })
 provide("correctionMode", {
-	enabled: computed(()=>{return globalCorrectionMode.value}),
-	toggle: function(){
+	enabled: computed(() => {
+		return globalCorrectionMode.value
+	}),
+	toggle: function () {
 		globalCorrectionMode.value = !globalCorrectionMode.value
 		localStorage.setItem("scolcours_correctionMode", globalCorrectionMode.value)
 	}
 })
 
-onMounted(()=>{
-	globalEditMode.value = (localStorage.getItem("scolcours_editMode")==="true") || false
+onMounted(() => {
+	globalEditMode.value = (localStorage.getItem("scolcours_editMode") === "true") || false
 	globalCorrectionMode.value = (localStorage.getItem("scolcours_correctionMode") === "true") || false
 })
 

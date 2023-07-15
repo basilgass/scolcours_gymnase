@@ -273,7 +273,7 @@ let showQuizzForm = ref (false),
 			})
 			.then(res=>{
 				showQuizzForm.value = false
-				flash.add("le quizz a bien été mis à jour")
+				flash.success("le quizz a bien été mis à jour")
 			})
 			.catch((err)=>{
 				console.log(err)
@@ -300,7 +300,7 @@ let showUsersIndex = ref(-1),
 			})
 			.then((res) => {
 				showNewSessionForm.value = false
-				flash.add(`la session ${sessionName.value} a bien été créée pour l'équipe ${props.teams.filter(x=>+x.id===+sessionTeam.value)[0].name}`)
+				flash.success(`la session ${sessionName.value} a bien été créée pour l'équipe ${props.teams.filter(x=>+x.id===+sessionTeam.value)[0].name}`)
 				// Add the new session
 			})
 			.catch((err) => {
@@ -313,7 +313,7 @@ let showUsersIndex = ref(-1),
 			{_method: "DELETE"}
 		)
 			.then((res)=>{
-				flash.add("session supprimée")
+				flash.success("session supprimée")
 				// remove the deleted session
 			})
 			.catch((err)=>{

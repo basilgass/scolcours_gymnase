@@ -389,7 +389,7 @@ let showEditForm = ref(props.block?.isNew === true),
 				theBlock.value.illustrations.push(res.data)
 				// edit the new illustration.
 
-				flash.add("une nouvelle illustration a été créée")
+				flash.success("une nouvelle illustration a été créée")
 			})
 	},
 	updateIllustrationsOrder = function () {
@@ -407,7 +407,7 @@ let showEditForm = ref(props.block?.isNew === true),
 			})
 			.then((res) => {
 				// TODO : flash message !
-				flash.add("les illustrations ont bien été réordrées !")
+				flash.success("les illustrations ont bien été réordrées !")
 			})
 			.catch((res) =>
 				console.log("update ordering illustrations: ", res)

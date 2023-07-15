@@ -472,7 +472,7 @@ let editMode = inject("editMode", false),
 		axios.post(route("questions.duplicate", [theQuestion.id]))
 			.then((res) => {
 				emits("duplicate", res.data.data)
-				flash.add("la question a bien été dupliquée !")
+				flash.success("la question a bien été dupliquée !")
 			})
 	},
 	addIllustration = function () {
@@ -485,7 +485,7 @@ let editMode = inject("editMode", false),
 					res.data.isNew = true
 					theQuestion.block.illustration = res.data
 
-					flash.add("une nouvelle illustration a été créée")
+					flash.success("une nouvelle illustration a été créée")
 				})
 		}
 	}

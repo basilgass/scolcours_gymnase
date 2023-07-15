@@ -95,7 +95,7 @@ let show = ref(props.modelValue),
 			_method: "PATCH",
 			...theChapter.value
 		}).then(res=>{
-			flash.add("Le chapitre a été enregistré")
+			flash.success("Le chapitre a été enregistré")
 			emits("update:modelValue", false)
 			emits("change", res.data.data)
 		})

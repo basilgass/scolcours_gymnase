@@ -3,7 +3,7 @@ import {stripFirstCharacter, stripLastCharacter} from "@/Composables/useCheckers
 import {PiMath} from "pimath/esm"
 
 export function VectorChecker(options) {
-	// TODO: vectorchecker is by default using exactChecker. Might also be good to use nb checker
+	// TODO: vectorchecker is by default using exactChecker. Might also be good to use nb or simple fraction checker
 
 	return {
 		name: "vector",

@@ -6,7 +6,6 @@ export function TableofsignChecker(options) {
 		name: "table of signs",
 		format: () => "tableau de signes",
 		check: (expectedAnswer, answer = []) => {
-			//TODO: TOS checker
 			if (expectedAnswer !== answer) {
 				const zeroes = {
 						expected: expectedAnswer.split("@")[0],

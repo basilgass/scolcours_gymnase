@@ -107,7 +107,7 @@ let addQuestion = function () {
 			})
 			.then((res) => {
 				// TODO : flash message !
-				flash.add("les questions ont bien été mis à jour !")
+				flash.success("les questions ont bien été mis à jour !")
 				theQuestions.value = res.data.data
 			})
 			.catch((res) => console.log("update questions order failed", res))

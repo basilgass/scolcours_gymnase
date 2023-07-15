@@ -18,7 +18,6 @@ Route::middleware("can:admin")->group(function () {
 		->name('translation.import');
 	Route::post('translation/word', [TranslationController::class, 'create'])
 		->name('translation.create');
-	// TODO: donner la possibilité d'éditer / modifier des translations fausses.
 	Route::patch('translation/words/{translation}/edit', [TranslationController::class, 'updateTranslation'])
 		->name('translation.words.update');
 

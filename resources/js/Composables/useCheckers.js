@@ -13,7 +13,7 @@ import {EquationChecker} from "@/Composables/Checkers/EquationChecker"
 import {FractionChecker} from "@/Composables/Checkers/FractionChecker"
 import {FunctionChecker} from "@/Composables/Checkers/FunctionChecker"
 
-//TODO: checkerslist, but uncomplete
+//TODO: checkerslist, but incomplete
 export const checkersList = {
 	polynom: ["factors", "develop"],
 	qolynom: ["factors", "develop", "reduced"],

@@ -113,30 +113,6 @@ let theChallenge = ref(props.challenge.data),
 				challengeGeneratorError.value = e.message
 			}
 		}
-
-		// let crtLevel = 1
-		// try {
-		// 	crtLevel = level.value
-		// } catch {
-		// 	crtLevel = 1
-		// }
-		//
-		//
-		// if (challengeGenerator.value !== "") {
-		// 	questions.value = []
-		// 	let F = new Function("PiMath", "level", challengeGenerator.value)
-		//
-		// 	// TODO: Must make the generation and check for uniqueness.
-		// 	try {
-		// 		for (let i = 0; i < 20; i++) {
-		// 			questions.value.push(F(PiMath, crtLevel))
-		// 		}
-		//
-		// 		challengeGeneratorError.value = ""
-		// 	} catch (e) {
-		// 		challengeGeneratorError.value = e.message
-		// 	}
-		// }
 	}
 
 // Now, it's the game part.
@@ -378,9 +354,9 @@ const storeScore = function (value, level) {
 					theChallenge.value.user.score = Math.max(theChallenge.value.user.score, res.data.updated.score)
 					theChallenge.value.user.stars = Math.max(theChallenge.value.user.stars, res.data.updated.stars)
 					theChallenge.value.user.level = Math.max(theChallenge.value.user.level, res.data.updated.level)
-					flash.add(`Bravo, vous avez amélioré votre score de ${delta} point${delta > 1 ? "s" : ""}`)
+					flash.success(`Bravo, vous avez amélioré votre score de ${delta} point${delta > 1 ? "s" : ""}`)
 				} else {
-					flash.add("Vous n'avez pas amélioré votre score... dommage !", "info")
+					flash.success("Vous n'avez pas amélioré votre score... dommage !", "info")
 				}
 
 			}

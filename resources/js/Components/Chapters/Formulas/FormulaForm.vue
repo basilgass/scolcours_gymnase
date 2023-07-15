@@ -93,7 +93,7 @@ let show = ref(props.modelValue),
 			_method: "PATCH",
 			...theFormula.value
 		}).then(res=>{
-			flash.add("La formule a été enregistrée")
+			flash.success("La formule a été enregistrée")
 			emits("update:modelValue", false)
 			emits("change", res.data.data)
 		})

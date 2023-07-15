@@ -155,7 +155,7 @@ let showEditForm = ref(false),
 				_method: "PATCH"
 			})
 			.then((res) => {
-				flash.add("les blocs ont bien été mis à jour !")
+				flash.success("les blocs ont bien été mis à jour !")
 			})
 			.catch((res) =>
 				console.log(

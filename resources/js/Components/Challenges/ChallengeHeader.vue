@@ -58,7 +58,6 @@ Contient le bouton de retour au chapitre, le titre, la description et l'édition
 			:is="editForm"
 			v-model="showEditForm"
 			:challenge="challenge"
-			@change="updateChallenge"
 		/>
 	</div>
 </template>
@@ -81,17 +80,5 @@ let showEditForm = ref(false),
 	}),
 	updatePost = function (p) {
 		thePost.value = p
-	},
-	updateChallenge = function(updatedChallenge) {
-		axios
-			.post(route("challenges.update", [props.challenge.value.id]), {
-				_method: "PATCH",
-				...updatedChallenge.value
-			})
-			.then((res) => {
-			})
-			.catch((res) => {
-				// TODO: show error message
-			})
 	}
 </script>
