@@ -110,6 +110,7 @@ export function useKeyboard(props) {
 			})
 		})
 
+		console.log(arr)
 		return arr
 	}
 

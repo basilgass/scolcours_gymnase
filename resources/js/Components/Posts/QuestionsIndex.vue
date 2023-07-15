@@ -70,7 +70,6 @@ const props = defineProps({
 	containerId: {type: Number, required: true}
 })
 
-console.log(props.questions)
 const flash = inject("flash"),
 	editMode = inject("editMode")
 

@@ -11,6 +11,10 @@ export function keyboardMaps(kbrd) {
 		return "solution"
 	case "scn":
 		return "scientific"
+	case "equ":
+		return "equation"
+	case "fn":
+		return "function"
 	}
 
 	return kbrd
@@ -200,6 +204,19 @@ export 	const keyboards = {
 		tex: function (value) {
 			let [Pnum, Pden] = value.split("/")
 			return Pden === undefined ? asciiToTex(Pnum) : `\\frac{ ${asciiToTex(Pnum)} }{ ${Pden} }`
+		}
+	},
+	"function": {
+		name: "function",
+		grid: "grid-cols-6",
+		layout: [
+			"1", "2", "3", "+", "x", "x^2",
+			"4", "5", "6", "-", "y", "y^2",
+			"7", "8", "9", "*", "^2", "^",
+			"(", ")", "0", "/"
+		],
+		tex(value) {
+			return asciiToTex(value)
 		}
 	},
 	"exact": {

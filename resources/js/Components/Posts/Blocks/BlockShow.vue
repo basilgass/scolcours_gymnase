@@ -19,24 +19,41 @@ Affichage d'un block , avec toutes les possibilités
 				<h3 v-katex.auto="blockTitle" />
 
 				<div class="flex gap-3">
-					<transition name="slide-fade">
-						<div v-if="blockData.reset && random > 1">
+					<div
+						v-if="blockButtons"
+						class="flex gap-3"
+					>
+						<div v-if="blockButtons && blockButtons.reset.show">
 							<button
 								:class="`btn-scolcours-${$page.props.theme.slug} btn-xs tracking-wider d-block`"
 								@click="random = 1"
 							>
-								<i class="bi bi-x-square mr-2" />par défaut
+								<i
+									v-show="blockButtons.reset.icon"
+									:class="blockButtons.reset.icon"
+									class="mr-2"
+								/>
+								<span
+									v-katex.auto="blockButtons.reset.text"
+								/>
 							</button>
 						</div>
-					</transition>
 
-					<button
-						v-if="theBlock.script"
-						:class="`btn-scolcours-${$page.props.theme.slug} btn-xs tracking-wider`"
-						@click="random++"
-					>
-						<i class="bi bi-shuffle mr-2" />aléatoire
-					</button>
+						<button
+							v-if="blockButtons && blockButtons.random.show"
+							:class="`btn-scolcours-${$page.props.theme.slug} btn-xs tracking-wider d-block`"
+							@click="random++"
+						>
+							<i
+								v-show="blockButtons.random.icon"
+								:class="blockButtons.random.icon"
+								class="mr-2"
+							/>
+							<span
+								v-katex.auto="blockButtons.random.text"
+							/>
+						</button>
+					</div>
 
 					<div
 						v-show="editMode.enabled.value"
@@ -140,9 +157,9 @@ import {useBlockTypes} from "@/scolcours"
 
 const emits = defineEmits(["destroy"])
 let props = defineProps({
-		block: { type: Object, required: true },
-		switch: { type: Boolean },
-		maxIllustration: { type: Number, default: null },
+		block: {type: Object, required: true},
+		switch: {type: Boolean},
+		maxIllustration: {type: Number, default: null},
 		noDelete: {type: Boolean, default: false}
 	}),
 	theBlock = ref(props.block),
@@ -286,6 +303,7 @@ let random = ref(1),
 					"iteration",
 					props.block.script
 				)
+
 				return {
 					...postData.value,
 					...F(PiMath, postData.value, random.value),
@@ -295,10 +313,61 @@ let random = ref(1),
 			console.log("BlockShow (script generation)", e)
 		}
 
-		return { ...postData.value }
+		return {...postData.value}
 	}),
 	blockBody = computed(() => {
 		return useFormattedBody(props.block.body, blockData)
+	}),
+	blockButtons = computed(() => {
+		let showRandom = theBlock.value.script,
+			hasCustomButtons = blockData.value.btn !== undefined
+
+		// No random buttons
+		if (!showRandom) {
+			return false
+		}
+
+		// Default values
+		let randomBtn = {
+				icon: "bi bi-x-square",
+				text: "par défaut",
+				show: true
+			},
+			resetBtn = false
+
+		if (showRandom && blockData.value.reset) {
+			resetBtn = {
+				icon: "bi bi-shuffle",
+				text: "aléatoire",
+				show: random.value > 1
+			}
+		}
+
+		// Custom buttons
+		if (hasCustomButtons) {
+			// Random button
+			if (blockData.value.btn.random) {
+				randomBtn = {
+					icon: blockData.value.btn.random.icon ?? "",
+					text: blockData.value.btn.random.text ?? blockData.value.btn.random,
+					show: blockData.value.btn.random.show === undefined || blockData.value.btn.random.show ? true : random.value ===1
+				}
+			}
+
+			// Reset button
+			if (blockData.value.btn.reset) {
+				resetBtn = {
+					icon: blockData.value.btn.reset.icon ?? "",
+					text: blockData.value.btn.reset.text ?? blockData.value.btn.reset,
+					show: blockData.value.btn.reset.show ?? random.value > 1
+				}
+			}
+		}
+
+		return {
+			random: randomBtn,
+			reset: resetBtn
+		}
 	})
 
 provide("blockData", blockData)

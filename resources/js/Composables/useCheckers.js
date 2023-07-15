@@ -11,7 +11,9 @@ import {CoordChecker} from "@/Composables/Checkers/CoordChecker"
 import {VectorChecker} from "@/Composables/Checkers/VectorChecker"
 import {EquationChecker} from "@/Composables/Checkers/EquationChecker"
 import {FractionChecker} from "@/Composables/Checkers/FractionChecker"
+import {FunctionChecker} from "@/Composables/Checkers/FunctionChecker"
 
+//TODO: checkerslist, but uncomplete
 export const checkersList = {
 	polynom: ["factors", "develop"],
 	qolynom: ["factors", "develop", "reduced"],
@@ -45,6 +47,9 @@ export function useCheckers(checkerData) {
 	case "equ":
 	case "equation":
 		return EquationChecker(options)
+	case "fn":
+	case "function":
+		return FunctionChecker(options)
 	case "nb":
 	case "number":
 		return NumberChecker(options)

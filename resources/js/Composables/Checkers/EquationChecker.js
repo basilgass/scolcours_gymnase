@@ -7,6 +7,7 @@ export function EquationChecker(options) {
 		isCanonical = (options.includes("c") || options.includes("canonical") || options.includes("ca"))
 
 	return {
+		name:"equation",
 		format: () => {
 			let opts = []
 
