@@ -26,10 +26,10 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $updated_at
  * @property string $questionable_type
  * @property int $questionable_id
- * @property-read Collection<int, Block> $blocks
+ * @property-read Collection<int, \App\Models\Block> $blocks
  * @property-read int|null $blocks_count
- * @property-read Model|Eloquent $questionable
- * @property-read Collection<int, User> $users
+ * @property-read Model|\Eloquent $questionable
+ * @property-read Collection<int, \App\Models\User> $users
  * @property-read int|null $users_count
  * @method static Builder|Question newModelQuery()
  * @method static Builder|Question newQuery()

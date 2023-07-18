@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $chapter_id
  * @property string $title
  * @property string $body
- * @property string|null $outro
+ * @property string $outro
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\Chapter $chapter
