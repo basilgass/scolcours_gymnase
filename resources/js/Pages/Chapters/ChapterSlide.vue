@@ -1,5 +1,7 @@
 <template>
 	<section class="py-5">
+		<Head :title="`${theChapter.title} - ${$page.props.theme.title}`" />
+
 		<post-show
 			:chapter="theChapter"
 			:post="thePost"
@@ -61,7 +63,7 @@ import {onMounted, ref} from "vue"
 import PostShow from "@/Components/Posts/PostShow.vue"
 import ChapterToc from "@/Components/Chapters/ChapterToc.vue"
 import ChapterFormulasSlider from "@/Components/Chapters/ChapterFormulasSlider.vue"
-import {usePage} from "@inertiajs/vue3"
+import {Head, usePage} from "@inertiajs/vue3"
 
 let props = defineProps({
 		chapter: {type: Object, required: true},

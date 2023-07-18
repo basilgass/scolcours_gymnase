@@ -77,8 +77,5 @@ let showEditForm = ref(false),
 		return defineAsyncComponent(() =>
 			import("@/Components/Challenges/ChallengeForm.vue")
 		)
-	}),
-	updatePost = function (p) {
-		thePost.value = p
-	}
+	})
 </script>

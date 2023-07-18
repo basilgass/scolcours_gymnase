@@ -1,5 +1,7 @@
 <template>
 	<div class="space-y-10 bg-gray-100">
+		<Head title="" />
+
 		<ScolCoursLogo class="py-10" />
 
 		<div
@@ -69,6 +71,7 @@ export default {
 <script setup>
 import {onMounted} from "vue"
 import ScolCoursLogo from "@/Components/ScolcoursLogo"
+import {Head} from "@inertiajs/vue3"
 
 let props = defineProps({
 	canLogin: Boolean,

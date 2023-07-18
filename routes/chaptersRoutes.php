@@ -37,7 +37,7 @@ Route::whereIn('theme', $themesList)->group(function () {
 	Route::middleware("can:admin")->group(function () {
 		Route::post('themes/{theme:slug}/chapters', [ChaptersController::class, 'store'])
 			->name('themes.chapters.store');
-		Route::patch('chapters/{chapter:slug}', [ChaptersController::class, 'update'])
+		Route::patch('chapters/{chapter}', [ChaptersController::class, 'update'])
 			->name('chapters.update');
 		Route::delete('chapters/{chapter}', [ChaptersController::class, 'destroy'])
 			->name('chapters.destroy');

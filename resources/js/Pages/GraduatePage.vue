@@ -3,8 +3,8 @@
 	<!-- Title -->
 	<ArticleTitle title="Echelle" />
 
-	<div>
-		<div class="grid grid-cols-2 gap-5">
+	<div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+		<div class="flex flex-col gap-5">
 			<form-number
 				v-model="maxPoints"
 				focus
@@ -18,34 +18,63 @@
 				label="pourcentage"
 				name="points"
 			/>
-		</div>
-		<form-textarea
-			v-model="pointsData"
-			helper-text="notes séparées par des espaces, des virgules ou à la ligne."
-			label="valeurs"
-			name="points"
-		/>
-	</div>
 
-	<div class="grid grid-cols-2 gap-5">
-		<div
-			class="relative w-[40vw] h-[30vw] max-w-full mx-auto"
-		>
-			<canvas ref="chartD" />
+			<div class="min-w-[9em] max-w-[16em] w-full mx-auto bg-white rounded border border-slate-100 p-3">
+				<table class="table tab w-full text-center font-code">
+					<thead>
+						<tr class="font-semibold">
+							<td>de</td>
+							<td>à</td>
+							<td class="">
+								éval.
+							</td>
+						</tr>
+					</thead>
+					<tbody>
+						<tr
+							v-for="(item, index) in rangeByEvaluation"
+							:key="`range-${index}`"
+							class="odd:bg-amber-100"
+						>
+							<td>{{ item.min }}</td>
+							<td>{{ item.max }}</td>
+							<td>{{ item.note }}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
 		</div>
+		<div>
+			<div class="grid grid-cols-2 gap-3">
+				<form-textarea
+					v-model="pointsData"
+					helper-text="notes séparées par des espaces, des virgules ou à la ligne."
+					label="valeurs"
+					name="points"
+					:rows="6"
+				/>
 
-		<div
-			class="relative w-[40vw] h-[30vw] max-w-full mx-auto"
-		>
-			<canvas ref="chart" />
-		</div>
-	</div>
+				<div
+					class="relative w-[20vw] h-[15vw] max-w-full mx-auto"
+				>
+					<canvas ref="chartD" />
+				</div>
+			</div>
 
-	<div>
-		<div class="flex justify-between">
-			<p>Nombre de notes: {{ evaluations.length }}</p>
-			<p>Moyenne: {{ average.points.toFixed(2) }} ( {{ average.evaluation.toFixed(2) }} )</p>
-			<p>Médiane: {{ median.points.toFixed(2) }} ( {{ median.evaluation }} )</p>
+			<div
+				v-show="points.length>0"
+				class="relative w-[32vw] h-[24vw] max-w-full mx-auto"
+			>
+				<canvas ref="chart" />
+			</div>
+
+			<div v-if="points.length>0">
+				<div class="flex justify-between">
+					<p>Nombre de notes: {{ evaluations.length }}</p>
+					<p>Moyenne: {{ average.points.toFixed(2) }} ( {{ average.evaluation.toFixed(2) }} )</p>
+					<p>Médiane: {{ median.points.toFixed(2) }} ( {{ median.evaluation }} )</p>
+				</div>
+			</div>
 		</div>
 	</div>
 </template>
@@ -119,11 +148,35 @@ let points = computed(() => {
 		for (let i = 1; i <= 6; i += 0.5) {
 			arr[`${i.toPrecision(2)}`] = evaluations.value.filter(x => x === i).length
 		}
+
 		return arr
+	}),
+	rangeByEvaluation = computed(()=> {
+		let arr = {}
+		for (let i = 0; i <= +maxPoints.value; i += halfPoints.value?0.5:1) {
+			const note = evalNote(i)
+			if(arr[note]===undefined){arr[note] = []}
+			arr[note].push(i)
+		}
+
+		let sorted = []
+		for (let note of Object.keys(arr)) {
+			// arr[note] = [Math.min(...arr[note]), Math.max(...arr[note])]
+			sorted.push({
+				note,
+				min: Math.min(...arr[note]),
+				max: Math.max(...arr[note])
+			})
+		}
+
+		sorted.sort((a,b)=>b.note-a.note)
+		// Make a sorted array.
+		return sorted
 	})
 
 let chartObject,
 	chartDObject
+
 onMounted(() => {
 	chartObject = new Chart(chart.value, {
 		type: "bar",
@@ -253,6 +306,7 @@ function evalF(note) {
 
 	return (note - 1) * maxPoints.value / 5
 }
+
 function roundNote(note){
 	return Math.round(note*2)/2
 }
@@ -302,13 +356,24 @@ function updateChardD() {
 	let labels = [],
 		pts = []
 
-	for (let note = 1; note <= 6; note += 0.5) {
-		labels.push(evalRange(note)[0])
-		labels.push(evalRange(note)[1])
-		pts.push(note)
-		pts.push(note)
-	}
-	labels.push(maxPoints.value)
+	// for (let note = 1; note <= 6; note += 0.5) {
+	// 	labels.push(evalRange(note)[0])
+	// 	labels.push(evalRange(note)[1])
+	// 	pts.push(note)
+	// 	pts.push(note)
+	// }
+
+	// Départ
+	labels.push(0)
+	pts.push(0)
+
+	// 4
+	labels.push(evalRange(4)[0])
+	pts.push(4)
+
+	// max
+	labels.push(evalRange(6)[0])
+	pts.push(6)
 
 	// Mise à jours des points
 	chartDObject.config.data.labels = labels

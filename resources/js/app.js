@@ -12,7 +12,11 @@ const appName = window.document.getElementsByTagName("title")[0]?.innerText || "
 
 
 createInertiaApp({
-	title: (title) => `${title} - ${appName}`,
+	title: (title) => {
+		return title?
+			`${title} - ${appName}`:
+			`${appName}`
+	},
 	resolve: name => import(`./Pages/${name}`),
 	setup({el, App, props, plugin}) {
 		const vueApp = createApp(

@@ -3,7 +3,7 @@ Affichage du titre de la page
 TODO: est-ce vraiment utile (utilisé dans DEV et language)
 -->
 <template>
-	<Head>
+	<Head title="">
 		<title>
 			{{ headTitle }}
 		</title>
@@ -42,11 +42,11 @@ let headTitle = computed(() => {
 	let calculatedTitle = "ScolCours"
 
 	if (props.chapter) {
-		calculatedTitle = props.chapter + "-" + calculatedTitle
+		calculatedTitle = props.chapter + " - " + calculatedTitle
 	}
 
 	if (props.title) {
-		calculatedTitle = props.title + "-" + calculatedTitle
+		calculatedTitle = props.title + " - " + calculatedTitle
 	}
 
 	return calculatedTitle

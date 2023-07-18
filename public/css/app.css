@@ -1087,10 +1087,11 @@ dialog::backdrop {
 .h-6{height: 1.5rem}
 .h-8{height: 2rem}
 .h-9{height: 2.25rem}
+.h-\[15vw\]{height: 15vw}
 .h-\[1em\]{height: 1em}
 .h-\[2\.5em\]{height: 2.5em}
+.h-\[24vw\]{height: 24vw}
 .h-\[300px\]{height: 300px}
-.h-\[30vw\]{height: 30vw}
 .h-\[3em\]{height: 3em}
 .h-\[400px\]{height: 400px}
 .h-\[80vh\]{height: 80vh}
@@ -1125,9 +1126,10 @@ dialog::backdrop {
 .w-7{width: 1.75rem}
 .w-8{width: 2rem}
 .w-\[1em\]{width: 1em}
+.w-\[20vw\]{width: 20vw}
 .w-\[250px\]{width: 250px}
+.w-\[32vw\]{width: 32vw}
 .w-\[3em\]{width: 3em}
-.w-\[40vw\]{width: 40vw}
 .w-\[50px\]{width: 50px}
 .w-\[90\%\]{width: 90%}
 .w-auto{width: auto}
@@ -1141,6 +1143,7 @@ dialog::backdrop {
 .min-w-\[400px\]{min-width: 400px}
 .min-w-\[4em\]{min-width: 4em}
 .min-w-\[5em\]{min-width: 5em}
+.min-w-\[9em\]{min-width: 9em}
 .max-w-0{max-width: 0rem}
 .max-w-2xl{max-width: 42rem}
 .max-w-3xl{max-width: 48rem}
@@ -1149,6 +1152,7 @@ dialog::backdrop {
 .max-w-6xl{max-width: 72rem}
 .max-w-7xl{max-width: 80rem}
 .max-w-\[1600px\]{max-width: 1600px}
+.max-w-\[16em\]{max-width: 16em}
 .max-w-\[20em\]{max-width: 20em}
 .max-w-\[30em\]{max-width: 30em}
 .max-w-\[40em\]{max-width: 40em}

@@ -2,6 +2,8 @@
 	<section
 		class="bg-white border border-gray-200 rounded shadow py-5 mt-5"
 	>
+		<Head :title="`${theChapter.title} - ${$page.props.theme.title}`" />
+
 		<div class="flex justify-between items-baseline px-5 border-b border-gray-200 pb-5 ">
 			<h1
 				v-katex.auto="theChapter.title"
@@ -83,6 +85,7 @@ import {computed, defineAsyncComponent, inject, ref} from "vue"
 import ChapterToc from "@/Components/Chapters/ChapterToc.vue"
 import ChapterChallenges from "@/Components/Chapters/ChapterChallenges.vue"
 import ChapterFormulas from "@/Components/Chapters/ChapterFormulas.vue"
+import {Head} from "@inertiajs/vue3"
 
 let props = defineProps({
 		chapter: {type: Object, required: true},

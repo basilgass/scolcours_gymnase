@@ -75,7 +75,7 @@ class ChaptersController extends Controller
 
 		return redirect()->route('theme.chapter.intro', [$theme->slug, $chapter->slug]);
 	}
-	
+
 	public function page(Theme $theme, Chapter $chapter)
 	{
 		if ($chapter->active or Auth::User()?->admin) {
@@ -152,6 +152,7 @@ class ChaptersController extends Controller
 			'block' => ['array'],
 			'block.body' => ['string'],
 		]);
+
 		$block->update([
 			'body' => $validation['block']['body']
 		]);

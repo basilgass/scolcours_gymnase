@@ -78,6 +78,7 @@ import FormInput from "@/Components/Form/FormInput.vue"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
 import FormTextarea from "@/Components/Form/FormTextarea.vue"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
+import {router} from "@inertiajs/vue3"
 
 const emits = defineEmits(["update:modelValue", "change", "destroy"])
 
@@ -91,13 +92,20 @@ let theChapter = ref(props.chapter)
 const flash = inject("flash")
 let show = ref(props.modelValue),
 	saveChapter = function(){
-		axios.patch(route("chapters.update", [props.chapter.slug]), {
+		axios.patch(route("chapters.update", [props.chapter.id]), {
 			_method: "PATCH",
 			...theChapter.value
 		}).then(res=>{
 			flash.success("Le chapitre a été enregistré")
 			emits("update:modelValue", false)
 			emits("change", res.data.data)
+
+			// if the url is not the same than current, redirect.
+			router.visit(route("chapter.show", [res.data.data.slug]))
+		}).catch(res=>{
+			flash.error("Erreur lors de l'enregistrement du chapitre...")
+			emits("update:modelValue", false)
+			console.log(res)
 		})
 	},
 	deleteChapter = function (){
