@@ -5,54 +5,47 @@
 
 	<div class="grid grid-cols-1 md:grid-cols-2 gap-5">
 		<div class="flex flex-col gap-5">
-			<form-number
-				v-model="maxPoints"
-				focus
-				label="nombre max de points"
-				name="points"
-			/>
-			<form-number
-				v-model="pourcentage"
-				focus
-				helper-text="vide pour échelle fédérale"
-				label="pourcentage"
-				name="points"
-			/>
+			<div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+				<div>
+					<form-number
+						v-model="maxPoints"
+						focus
+						label="points maximum du test"
+						name="points"
+					/>
+					<form-number
+						v-model="pourcentage"
+						focus
+						helper-text="vide pour échelle fédérale"
+						label="pourcentage"
+						name="points"
+					/>
 
-			<div class="min-w-[9em] max-w-[16em] w-full mx-auto bg-white rounded border border-slate-100 p-3">
-				<table class="table tab w-full text-center font-code">
-					<thead>
-						<tr class="font-semibold">
-							<td>de</td>
-							<td>à</td>
-							<td class="">
-								éval.
-							</td>
-						</tr>
-					</thead>
-					<tbody>
-						<tr
-							v-for="(item, index) in rangeByEvaluation"
-							:key="`range-${index}`"
-							class="odd:bg-amber-100"
-						>
-							<td>{{ item.min }}</td>
-							<td>{{ item.max }}</td>
-							<td>{{ item.note }}</td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
-		</div>
-		<div>
-			<div class="grid grid-cols-2 gap-3">
-				<form-textarea
-					v-model="pointsData"
-					helper-text="notes séparées par des espaces, des virgules ou à la ligne."
-					label="valeurs"
-					name="points"
-					:rows="6"
-				/>
+					<div class=" mt-10 min-w-[9em] w-full bg-white rounded border border-slate-100 p-3">
+						<table class="table tab w-full text-center font-code">
+							<thead>
+								<tr class="font-semibold">
+									<td>de</td>
+									<td>à</td>
+									<td class="">
+										éval.
+									</td>
+								</tr>
+							</thead>
+							<tbody>
+								<tr
+									v-for="(item, index) in rangeByEvaluation"
+									:key="`range-${index}`"
+									class="odd:bg-amber-100"
+								>
+									<td>{{ item.min }}</td>
+									<td>{{ item.max }}</td>
+									<td>{{ item.note }}</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
 
 				<div
 					class="relative w-[20vw] h-[15vw] max-w-full mx-auto"
@@ -60,19 +53,66 @@
 					<canvas ref="chartD" />
 				</div>
 			</div>
+		</div>
+		<div class="space-y-5">
+			<form-textarea
+				v-model="pointsData"
+				helper-text="notes séparées par des espaces, des virgules ou à la ligne."
+				label="liste des points"
+				name="points"
+				:rows="6"
+			/>
+
+			<div v-if="points.length>0">
+				<div class="flex gap-10 justify-between text-center">
+					<div
+						class="bg-white p-3 grid place-items-center text-lg border border-slate-100 rounded-xl shadow aspect-square w-full py-8"
+					>
+						<div class="flex flex-col h-full justify-between">
+							<div class="font-extralight">
+								Nombre de notes
+							</div>
+							<div class="font-semibold text-xl">
+								{{ evaluations.length }}
+							</div>
+						</div>
+					</div>
+					<div
+						class="bg-white p-3 grid place-items-center text-lg border border-slate-100 rounded-xl shadow aspect-square w-full py-8"
+					>
+						<div class="flex flex-col h-full justify-between">
+							<div class="font-extralight">
+								Moyenne
+							</div>
+							<div class="font-semibold text-xl">
+								{{ average.points.toFixed(2) }} ( {{ average.evaluation.toFixed(2) }} )
+							</div>
+						</div>
+					</div>
+					<div
+						class="bg-white p-3 grid place-items-center text-lg border border-slate-100 rounded-xl shadow aspect-square w-full py-8"
+					>
+						<div class="flex flex-col h-full justify-between">
+							<div class="font-extralight">
+								Médiane
+							</div>
+							<div class="font-semibold text-xl">
+								{{ median.points.toFixed(2) }} ( {{ median.evaluation }} )
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
 
 			<div
 				v-show="points.length>0"
-				class="relative w-[32vw] h-[24vw] max-w-full mx-auto"
+				class="bg-white p-5 w-full border border-slate-100 rounded-xl shadow "
 			>
-				<canvas ref="chart" />
-			</div>
+				<div
 
-			<div v-if="points.length>0">
-				<div class="flex justify-between">
-					<p>Nombre de notes: {{ evaluations.length }}</p>
-					<p>Moyenne: {{ average.points.toFixed(2) }} ( {{ average.evaluation.toFixed(2) }} )</p>
-					<p>Médiane: {{ median.points.toFixed(2) }} ( {{ median.evaluation }} )</p>
+					class="relative w-[32vw] h-[24vw] max-w-full mx-auto"
+				>
+					<canvas ref="chart" />
 				</div>
 			</div>
 		</div>
@@ -93,7 +133,7 @@ import FormNumber from "@/Components/Form/FormNumber.vue"
 import {Chart} from "chart.js/auto"
 
 
-let pointsData = ref("2 1.5 1 1.5 4 4.5 4 5.5 5 3 3.5 5 4.5 4 2.5 5.5 6 5.5 3 3.5"),
+let pointsData = ref(""),
 	maxPoints = ref(20),
 	pourcentage = ref(""),
 	halfPoints = ref(true),
@@ -151,11 +191,13 @@ let points = computed(() => {
 
 		return arr
 	}),
-	rangeByEvaluation = computed(()=> {
+	rangeByEvaluation = computed(() => {
 		let arr = {}
-		for (let i = 0; i <= +maxPoints.value; i += halfPoints.value?0.5:1) {
+		for (let i = 0; i <= +maxPoints.value; i += halfPoints.value ? 0.5 : 1) {
 			const note = evalNote(i)
-			if(arr[note]===undefined){arr[note] = []}
+			if (arr[note] === undefined) {
+				arr[note] = []
+			}
 			arr[note].push(i)
 		}
 
@@ -169,7 +211,7 @@ let points = computed(() => {
 			})
 		}
 
-		sorted.sort((a,b)=>b.note-a.note)
+		sorted.sort((a, b) => b.note - a.note)
 		// Make a sorted array.
 		return sorted
 	})
@@ -307,18 +349,19 @@ function evalF(note) {
 	return (note - 1) * maxPoints.value / 5
 }
 
-function roundNote(note){
-	return Math.round(note*2)/2
+function roundNote(note) {
+	return Math.round(note * 2) / 2
 }
+
 function evalNote(x) {
-	if(pourcentage.value==="" || pourcentage.value===0){
-		return roundNote(x*5/maxPoints.value+1)
+	if (pourcentage.value === "" || pourcentage.value === 0) {
+		return roundNote(x * 5 / maxPoints.value + 1)
 	}
 
-	if(x < maxPoints.value*pourcentage.value/100){
-		return roundNote(2.75/(maxPoints.value*pourcentage.value/100)*x+1)
-	}else{
-		return roundNote(2.25/(maxPoints.value*(1-pourcentage.value/100))*x+(6-(2.25/(1-pourcentage.value/100))))
+	if (x < maxPoints.value * pourcentage.value / 100) {
+		return roundNote(2.75 / (maxPoints.value * pourcentage.value / 100) * x + 1)
+	} else {
+		return roundNote(2.25 / (maxPoints.value * (1 - pourcentage.value / 100)) * x + (6 - (2.25 / (1 - pourcentage.value / 100))))
 	}
 }
 
