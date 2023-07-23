@@ -97,6 +97,7 @@ class QuizzController extends Controller
 //			$question = QuestionResource::make($quizzSession->quizz->questions[$quizzSession->index - 1]);
 //		}
 
+		// Remove the question
 		$quizzSession->quizz->unsetRelation('questions');
 
 		return Inertia::render('Quizzs/QuizzShow',

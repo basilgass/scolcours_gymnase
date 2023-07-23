@@ -220,7 +220,7 @@ let props = defineProps({
 })
 
 // flash message
-const flash = inject("flash")
+const flash = inject("flash", null)
 
 // Emits
 const emits = defineEmits(["validate", "destroy", "duplicate"])
