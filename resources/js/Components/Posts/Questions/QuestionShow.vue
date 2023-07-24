@@ -12,6 +12,7 @@ keyboard -> QuestionUserInput -> QuestionShow
 			'bg-green-50 border-green-600/60': theQuestion.user.result && !props.isMinimal,
 		}"
 	>
+		<!-- Header -->
 		<header class="flex flex-col relative">
 			<!-- QUESTION NUMBER -->
 			<div
@@ -62,8 +63,8 @@ keyboard -> QuestionUserInput -> QuestionShow
 			/>
 		</header>
 
+		<!-- the body of question -->
 		<main class="px-5 overflow-x-auto mb-3">
-			<!-- the body of question -->
 			<!-- Illustration -->
 			<illustration-show
 				v-if="theQuestion.block.illustration"
@@ -141,15 +142,18 @@ keyboard -> QuestionUserInput -> QuestionShow
 				</button>
 			</div>
 
-			<component
-				:is="theAnswers[answerId].keyboard.component"
-				v-if="theAnswers[answerId]"
-				ref="keyboardUI"
-				:answer="theAnswers[answerId].answer"
-				:keyboard="theAnswers[answerId].keyboard"
-				@change="updateQuestion"
-				@validate="validateQuestion"
-			/>
+			<keep-alive>
+				<component
+					:is="theAnswers[answerId].keyboard.component"
+					v-if="theAnswers[answerId]"
+					:key="answerId"
+					ref="keyboardUI"
+					:answer="theAnswers[answerId].answer"
+					:keyboard="theAnswers[answerId].keyboard"
+					@change="updateQuestion"
+					@validate="validateQuestion"
+				/>
+			</keep-alive>
 		</div>
 
 		<!-- already answered or admin answer -->
