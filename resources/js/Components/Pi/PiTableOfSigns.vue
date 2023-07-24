@@ -67,7 +67,7 @@ Affichage d'un tableau de signes ou de croissance.
 						class="border-t border-t-2 border-gray-400"
 					>
 						<td
-							v-katex.inline="`${props.fn}'(x)`"
+							v-katex.inline="`${props.fn}`"
 							class="min-w-[100px] border-r text-center border-gray-400"
 						/>
 						<td>
@@ -90,7 +90,7 @@ Affichage d'un tableau de signes ou de croissance.
 						class="border-t border-t-2 border-gray-400"
 					>
 						<td
-							v-katex.inline="`${props.fn}(x)`"
+							v-katex.inline="`${props.fn}`"
 							class="min-w-[100px] border-r text-center border-gray-400"
 						/>
 						<td>
@@ -125,7 +125,7 @@ Affichage d'un tableau de signes ou de croissance.
 						class="border-t border-t-2 border-gray-400"
 					>
 						<td
-							v-katex.inline="`${props.fn}(x)`"
+							v-katex.inline="`${props.fn}`"
 							class="min-w-[100px] border-r text-center border-gray-400"
 						/>
 						<td>
@@ -166,12 +166,12 @@ Affichage d'un tableau de signes ou de croissance.
 	</div>
 </template>
 <script setup>
-import {ref, watch} from "vue"
+import {ref} from "vue"
 
 
 let props = defineProps({
 		tos: {required: true, type: Object},
-		fn: {type: String, default: "f"},
+		fn: {type: String, default: "f(x)"},
 		minimal: {type: Boolean, default: false},
 		extremes: {type: String, default: null},
 	}),
@@ -203,11 +203,6 @@ function displayExtremes(index) {
 	}else if(extreme){
 		return `\\substack{ ${extreme.type} \\\\ \\left(${extreme.tex.x}; ${extreme.tex.y}  \\right) }`
 	}
-
 	return ""
 }
-
-watch(()=>props.tos,(newValue,oldValue)=>{
-
-})
 </script>

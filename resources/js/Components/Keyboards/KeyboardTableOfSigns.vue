@@ -140,8 +140,8 @@ let emits = defineEmits(["change", "validate"]),
 /* FONCTIONS SPECIFIQUES */
 // Les options du clavier TOS
 let tosName = computed(() => { // le nom de la fonction
-		let names = props.keyboard.parameters.filter(x => x.includes("(x)")).map(x => x.split("(")[0])
-		return names.length === 0 ? "f" : names[0]
+		let names = props.keyboard.parameters.filter(x => x.includes("(")&&x.includes(")"))
+		return names.length === 0 ? "f(x)" : names[0]
 	}),
 	withGrows = computed(() => { // s'il y a la croissance
 		return props.answer.split("@").length > 2

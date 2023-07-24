@@ -9,13 +9,13 @@ use Illuminate\Database\Eloquent\Model;
  * App\Models\Quizz
  *
  * @property int $id
- * @property int $chapter_id
+ * @property int|null $chapter_id
  * @property string $title
  * @property string $body
- * @property string $outro
+ * @property string|null $outro
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \App\Models\Chapter $chapter
+ * @property-read \App\Models\Chapter|null $chapter
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Question> $questions
  * @property-read int|null $questions_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\QuizzSession> $sessions
