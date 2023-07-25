@@ -20,7 +20,7 @@ Pied de page pour les pages principales.
 					class="block transition duration-300 hover:translate-x-2 px-0 md:px-4 py-1"
 				>
 					<i
-						class="mr-2"
+						class="mr-2 bi bi-translate"
 					/> italiano
 				</Link>
 				<Link
@@ -28,7 +28,7 @@ Pied de page pour les pages principales.
 					class="block transition duration-300 hover:translate-x-2 px-0 md:px-4 py-1"
 				>
 					<i
-						class="mr-2"
+						class="mr-2 bi bi-translate"
 					/> english
 				</Link>
 			</div>
@@ -40,13 +40,29 @@ Pied de page pour les pages principales.
 
 				<div v-if="$page.props.auth.user">
 					<Link
-						href="/dashboard"
-						class="block"
+						:href="route('dashboard')"
+						class="block transition duration-300 hover:translate-x-2 px-0 md:px-4 py-1"
 					>
-						{{ $page.props.auth.user.name }}
+						<i class="mr-2 bi bi-person-fill" />{{ $page.props.auth.user.name }}
+					</Link>
+					<Link
+						:href="route('quizzs.index')"
+						class="block transition duration-300 hover:translate-x-2 px-0 md:px-4 py-1"
+					>
+						<i class="mr-2 bi bi-question" />quizz
 					</Link>
 
-					<LogoutButton class="mt-10 px-0 py-0" />
+					<Link
+						v-if="$page.props.auth.can.admin"
+						:href="route('admin')"
+						class="block transition duration-300 hover:translate-x-2 px-0 md:px-4 py-1"
+					>
+						<i class="mr-2 bi bi-person-workspace" />administration
+					</Link>
+
+					<LogoutButton
+						class="block transition duration-300 hover:translate-x-2 px-0 md:px-4 py-1 mt-10"
+					/>
 				</div>
 				<div v-else>
 					<Link href="/login">

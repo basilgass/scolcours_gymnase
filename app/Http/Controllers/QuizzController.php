@@ -16,9 +16,31 @@ class QuizzController extends Controller
 
 	public function index()
 	{
-		//TODO: est-il utile d'avoir cette page, vu qu'il est prévu que ce soit par invitation. Prémice pour l'utilisation sans utilisateur ?
+		// The user is connected.
+		// Check if a quizz session is enabled for this user.
+		$user = \Auth::user();
+		$theme = null;
+
+		if ($user) {
+			$quizzSessions = $user->quizz_sessions
+				->filter(function ($quizz_session){
+					return $quizz_session->enable;
+				})
+				->map(function ($quizz_session) {
+					// Load the quizz
+					$quizz_session->quizz;
+					// Load the chapter
+					$quizz_session->quizz->theme;
+
+					return $quizz_session;
+				});
+		}
+
 		return Inertia::render("Quizzs/QuizzHome",
-			["shortcode" => null]
+			[
+				"quizzSessions" => $quizzSessions
+			],
+
 		);
 	}
 
@@ -26,13 +48,14 @@ class QuizzController extends Controller
 	{
 		return Quizz::create()->id;
 	}
+
 	public function update(Quizz $quizz, Request $request)
 	{
 		$validation = $request->validate([
-			'title'=>['string', 'min:2'],
-			'body'=>['string', 'min:2'],
-			'outro'=>['string', 'min:0', 'nullable'],
-			'chapter_id'=>['exists:App\Models\Chapter,id', 'nullable'],
+			'title' => ['string', 'min:2'],
+			'body' => ['string', 'min:2'],
+			'outro' => ['string', 'min:0', 'nullable'],
+			'chapter_id' => ['exists:App\Models\Chapter,id', 'nullable'],
 		]);
 
 		$quizz->update($validation);
@@ -46,6 +69,7 @@ class QuizzController extends Controller
 
 		return true;
 	}
+
 	public function admin()
 	{
 		return Inertia::render('Quizzs/QuizzAdmin',
@@ -63,20 +87,20 @@ class QuizzController extends Controller
 			"questions" => QuestionResource::collection($quizz->questions),
 			"sessions" => QuizzSessionRessource::collection($quizz->sessions),
 			"teams" => Team::all(),
-			"chapters" => Chapter::all()->map(function ($chapter){
+			"chapters" => Chapter::all()->map(function ($chapter) {
 				return [
-					'id'=>$chapter->id,
-					'title'=>$chapter->title,
-					'theme'=>$chapter->theme->slug
+					'id' => $chapter->id,
+					'title' => $chapter->title,
+					'theme' => $chapter->theme->slug
 				];
 			}),
 		];
 
 		// Add the theme to the main layout page
-		if($quizz->chapter){
+		if ($quizz->chapter) {
 			$data["theme"] = $quizz->chapter?->theme->only('color', 'icon', 'slug', 'title', 'id');
 		}
-		return Inertia::render('Quizzs/QuizzAdminEdit',$data);
+		return Inertia::render('Quizzs/QuizzAdminEdit', $data);
 
 	}
 
@@ -172,17 +196,17 @@ class QuizzController extends Controller
 	public function sessionCreate(Quizz $quizz, Request $request)
 	{
 		$validation = $request->validate([
-			"name"=>['string', 'min:2', 'unique:quizz_sessions,shortcode'],
-			"team"=>['int', 'exists:App\Models\Team,id']
+			"name" => ['string', 'min:2', 'unique:quizz_sessions,shortcode'],
+			"team" => ['int', 'exists:App\Models\Team,id']
 		]);
 
 		$session = $quizz->sessions()->create([
-			"shortcode"=>$validation['name']
+			"shortcode" => $validation['name']
 		]);
 
 		// Get the users from the team
 		$team = Team::find($validation['team']);
-		foreach ($team->users as $user){
+		foreach ($team->users as $user) {
 			$session->users()->attach($user);
 		}
 	}

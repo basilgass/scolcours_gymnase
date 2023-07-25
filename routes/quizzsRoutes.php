@@ -4,6 +4,7 @@ use App\Http\Controllers\QuizzController;
 
 Route::middleware(["auth", "verified"])->group(function () {
 // Quizz homepage - this is where the user will see their available quizz.
+	Route::get('q', function (){return redirect()->route('quizzs.index');});
 	Route::get('quizz', [QuizzController::class, "index"])
 		->name('quizzs.index');
 

@@ -77,9 +77,12 @@ En-tête principal, sensible au thème
 		>
 			<div class="scolcours-container flex justify-between items-baseline">
 				<div>
-					<h4 class="text-xs text-white uppercase">
+					<Link
+						class="text-xs text-white uppercase"
+						:href="route('admin')"
+					>
 						administrateur
-					</h4>
+					</Link>
 				</div>
 				<button
 					class="btn btn-xs hover:text-black"

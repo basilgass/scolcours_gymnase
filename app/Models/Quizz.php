@@ -51,4 +51,9 @@ class Quizz extends Model
 	{
 		return $this->belongsTo(Chapter::class);
 	}
+
+	public function theme()
+	{
+		return $this->hasOneThrough(Theme::class, Chapter::class, 'id', 'id', 'chapter_id', 'id');
+	}
 }
