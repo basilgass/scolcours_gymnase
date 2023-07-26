@@ -72,14 +72,13 @@ class QuizzSession extends Model
 	{
 		// Le quizz n'a pas commencé
 		if($this->index===0){return 'intro';}
+
 		// Le quizz est terminé
-		if($this->index===count($this->quizz->questions)+1){return 'outro';}
+		if($this->index>=count($this->quizz->questions)+1){return 'outro';}
 
 		// Le quizz est en cours.
 		if(\Auth::user()) {
 			// Determine if the current question has already been answered.
-//			dd($this->question->users->where('id', \Auth::id())->first()->pivot->attempts);
-
 			if ($this->question->users->where('id', \Auth::id())->first()?->pivot->attempts>0) {
 				return "wait";
 			}

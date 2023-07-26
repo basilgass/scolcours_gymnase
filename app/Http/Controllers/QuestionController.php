@@ -166,7 +166,8 @@ class QuestionController extends Controller
 				"answer" => $answers,
 				"result" => $validate["result"],
 				"attempts"=>$attempts,
-				]
+				],
+			false
 		);
 
 		return $validate;

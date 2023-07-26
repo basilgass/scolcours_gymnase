@@ -19,7 +19,6 @@ class QuizzController extends Controller
 		// The user is connected.
 		// Check if a quizz session is enabled for this user.
 		$user = \Auth::user();
-		$theme = null;
 
 		if ($user) {
 			$quizzSessions = $user->quizz_sessions
@@ -79,7 +78,7 @@ class QuizzController extends Controller
 		);
 	}
 
-	public function adminQuizz(Quizz $quizz)
+	public function adminQuizz(Quizz $quizz): \Inertia\Response
 	{
 
 		$data = [
@@ -105,7 +104,7 @@ class QuizzController extends Controller
 	}
 
 
-	public function show(QuizzSession $quizzSession)
+	public function show(QuizzSession $quizzSession): \Inertia\Response|\Illuminate\Http\RedirectResponse
 	{
 		// User must be logged in
 		if (!\Auth::user()) {
@@ -117,11 +116,8 @@ class QuizzController extends Controller
 
 		// Current question (or null)
 		$question = $quizzSession->question;
-//		if ($quizzSession->index > 0 and $quizzSession->index <= count($questions)) {
-//			$question = QuestionResource::make($quizzSession->quizz->questions[$quizzSession->index - 1]);
-//		}
 
-		// Remove the question
+		// Remove the list of questions.
 		$quizzSession->quizz->unsetRelation('questions');
 
 		return Inertia::render('Quizzs/QuizzShow',
@@ -133,7 +129,7 @@ class QuizzController extends Controller
 		);
 	}
 
-	public function dashboard(QuizzSession $quizzSession)
+	public function dashboard(QuizzSession $quizzSession): \Inertia\Response
 	{
 		return Inertia::render('Quizzs/QuizzDashboard',
 			[
@@ -142,7 +138,7 @@ class QuizzController extends Controller
 		);
 	}
 
-	public function projection(QuizzSession $quizzSession)
+	public function projection(QuizzSession $quizzSession): \Inertia\Response
 	{
 		// Get all user answers.
 		$usersId = $quizzSession->users->pluck('id');
@@ -164,7 +160,7 @@ class QuizzController extends Controller
 		);
 	}
 
-	public function updateCurrent(QuizzSession $quizzSession, Request $request)
+	public function updateCurrent(QuizzSession $quizzSession, Request $request): \Illuminate\Http\RedirectResponse
 	{
 		$validate = $request->validate(["index" => ["int", "min:0"]]);
 
@@ -174,7 +170,7 @@ class QuizzController extends Controller
 		return redirect()->route('quizzs.sessions.dashboard', [$quizzSession->shortcode]);
 	}
 
-	public function updateEnable(QuizzSession $quizzSession, Request $request)
+	public function updateEnable(QuizzSession $quizzSession, Request $request): \Illuminate\Http\RedirectResponse
 	{
 		$validate = $request->validate(["enable" => ["bool"]]);
 
@@ -184,7 +180,7 @@ class QuizzController extends Controller
 		return redirect()->route('quizzs.sessions.dashboard', [$quizzSession->shortcode]);
 	}
 
-	public function updateQuestionsOrder(Quizz $quizz, Request $request)
+	public function updateQuestionsOrder(Quizz $quizz, Request $request): bool
 	{
 		foreach ($request['order'] as $value) {
 			$quizz->questions->find($value['id'])->update(['order' => $value['order']]);
@@ -193,7 +189,7 @@ class QuizzController extends Controller
 		return true;
 	}
 
-	public function sessionCreate(Quizz $quizz, Request $request)
+	public function sessionCreate(Quizz $quizz, Request $request): void
 	{
 		$validation = $request->validate([
 			"name" => ['string', 'min:2', 'unique:quizz_sessions,shortcode'],
@@ -211,7 +207,7 @@ class QuizzController extends Controller
 		}
 	}
 
-	public function sessionDestroy(QuizzSession $quizzSession)
+	public function sessionDestroy(QuizzSession $quizzSession): void
 	{
 		$quizzSession->delete();
 	}
