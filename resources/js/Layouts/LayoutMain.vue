@@ -43,6 +43,8 @@ import MainHeader from "@/Components/MainHeader"
 import MainFooter from "@/Components/MainFooter"
 import {computed, onMounted, provide, ref} from "vue"
 import FlashMessage from "@/Components/Ui/FlashMessage.vue"
+import {useMagicKeys, whenever} from "@vueuse/core"
+import {usePage} from "@inertiajs/vue3"
 
 defineProps({
 	theme: {
@@ -84,8 +86,19 @@ provide("correctionMode", {
 })
 
 onMounted(() => {
-	globalEditMode.value = (localStorage.getItem("scolcours_editMode") === "true") || false
-	globalCorrectionMode.value = (localStorage.getItem("scolcours_correctionMode") === "true") || false
+	if(usePage().props.auth.user && usePage().props.auth.can.admin) {
+		globalEditMode.value = (localStorage.getItem("scolcours_editMode") === "true") || false
+		globalCorrectionMode.value = (localStorage.getItem("scolcours_correctionMode") === "true") || false
+	}
+})
+
+
+// Add shortcut to open toggle admin mode.
+const keys = useMagicKeys()
+whenever(keys.ctrl_alt_a, ()=>{
+	if(usePage().props.auth.user && usePage().props.auth.can.admin) {
+		globalEditMode.value = !globalEditMode.value
+	}
 })
 
 </script>

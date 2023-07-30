@@ -46,6 +46,7 @@ class QuestionResource extends JsonResource
 		return [
 			"id" => $this->id,
 			"order"=>$this->order,
+			"displayIf"=>$this->displayif,
 			"css"=>$this->css,
 			"body" => $this->body,
 			"block" => [

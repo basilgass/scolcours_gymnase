@@ -193,7 +193,7 @@
 	}
 
 	.btn-xl {
-		@apply border px-10 py-5 rounded-xl text-lg
+		@apply px-10 py-5 rounded-xl text-lg
 	}
 
 	.btn-xs {

@@ -1,5 +1,5 @@
 <template>
-	<form-field>
+	<form-field :class="inline?'!mt-0':''">
 		<form-label
 			v-if="!props.inline"
 			:label="label"
@@ -14,9 +14,11 @@
 			<input
 				ref="inp"
 				:name="name"
-				class="p-2 w-full focus:outline-none focus:bg-blue-50 focus:border focus:border-blue-500 transition;"
+				class="w-full focus:outline-none focus:bg-blue-50 focus:border focus:border-blue-500 transition"
 				:value="modelValue"
 				:class="{
+					'p-2': !sm,
+					'px-2 py-0': sm,
 					'form-active': active,
 					'border border-gray-200': !active,
 					'rounded': !$slots.button,
@@ -85,6 +87,7 @@ let props = defineProps({
 	datalist: {type: Array, default: ()=>[]},
 	disabled: {type: Boolean, default: false},
 	ascii: {type: Boolean, default: false},
+	sm: {type: Boolean, default: false}
 })
 
 let inp = ref(null),

@@ -3,36 +3,46 @@
 		Admin dashboard
 	</h1>
 
-	<div class="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 gap-3">
-		<Panel class="min-h-[10em]">
-			<Link :href="route('admin.config')">
-				Configuration générale
-			</Link>
-		</Panel>
+	<div class="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+		<Link
+			:href="route('admin.config')"
+			as="button"
+			class="min-h-[8em] bg-white border border-gray-200 rounded-xl"
+		>
+			configuration générale
+		</Link>
 
-		<Panel class="min-h-[10em]">
-			<Link :href="route('admin.pages')">
-				Gestion des pages
-			</Link>
-		</Panel>
+		<Link
+			as="button"
+			class="min-h-[8em] bg-white border border-gray-200 rounded-xl"
+			:href="route('admin.pages')"
+		>
+			gestion des pages
+		</Link>
 
-		<Panel class="min-h-[10em]">
-			<Link :href="route('admin.users')">
-				Gestion des utilisateurs
-			</Link>
-		</Panel>
+		<Link
+			as="button"
+			class="min-h-[8em] bg-white border border-gray-200 rounded-xl"
+			:href="route('admin.users')"
+		>
+			gestion des utilisateurs
+		</Link>
 
-		<Panel class="min-h-[10em]">
-			<Link :href="route('admin.stats.chapter', ['puissances'])">
-				Statistiques
-			</Link>
-		</Panel>
+		<Link
+			as="button"
+			class="min-h-[8em] bg-white border border-gray-200 rounded-xl"
+			:href="route('admin.stats.chapter', ['puissances'])"
+		>
+			statistiques
+		</Link>
 
-		<Panel class="min-h-[10em]">
-			<Link :href="route('quizzs.admin')">
-				Quizz
-			</Link>
-		</Panel>
+		<Link
+			as="button"
+			class="min-h-[8em] bg-white border border-gray-200 rounded-xl"
+			:href="route('quizzs.admin')"
+		>
+			gestion des quizz
+		</Link>
 	</div>
 </template>
 

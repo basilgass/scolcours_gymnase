@@ -28,15 +28,58 @@ keyboard -> QuestionUserInput -> QuestionShow
 				v-if="!props.isDynamic"
 				v-show="editMode.enabled.value"
 				v-admin
-				class="flex justify-end w-full px-3 gap-3 mt-2"
+				class="flex justify-end w-full px-3 gap-3 py-2 bg-slate-600 text-white rounded-t"
 			>
 				<button
-					class="text-xs"
+					class="text-xs font-code"
 					title="editer"
 					@click="showEditForm=true"
 				>
-					{{ theQuestion.id }} <i class="bi bi-pencil ml-2" />
+					id: {{ theQuestion.id }} <i class="bi bi-pencil ml-2" />
 				</button>
+
+				<div
+					class="cursor-pointer"
+				>
+					<dropdown-menu prevent-close>
+						<template #button>
+							<i class="bi bi-eye" /> {{ theQuestion.displayIf }}
+						</template>
+
+						<div
+							v-for="q in props.groupeIds"
+							:key="`display-if-${q}`"
+							class="hover:bg-gray-100 px-3 py-2 font-code"
+						>
+							<div v-if="q===theQuestion.id">
+								- question courante -
+							</div>
+							<div
+								v-else
+							>
+								<label
+									class="block"
+								>
+									<input
+										type="checkbox"
+										:checked="displayIfIds.includes(q)"
+										@input="toggleDisplayId(q)"
+									>
+									{{ q }}</label>
+							</div>
+						</div>
+
+						<template #footer>
+							<button
+								class="px-3 py-2"
+								@click="toggleDisplayId(-1)"
+							>
+								toujours
+							</button>
+						</template>
+					</dropdown-menu>
+				</div>
+
 				<button
 					class="text-xs px-2"
 					title="dupliquer"
@@ -142,18 +185,16 @@ keyboard -> QuestionUserInput -> QuestionShow
 				</button>
 			</div>
 
-			<keep-alive>
-				<component
-					:is="theAnswers[answerId].keyboard.component"
-					v-if="theAnswers[answerId]"
-					:key="answerId"
-					ref="keyboardUI"
-					:answer="theAnswers[answerId].answer"
-					:keyboard="theAnswers[answerId].keyboard"
-					@change="updateQuestion"
-					@validate="validateQuestion"
-				/>
-			</keep-alive>
+			<component
+				:is="theAnswers[answerId].keyboard.component"
+				v-if="theAnswers[answerId] && theAnswers[answerId].keyboard.name!==''"
+				:key="answerId"
+				ref="keyboardUI"
+				:answer="theAnswers[answerId].answer"
+				:keyboard="theAnswers[answerId].keyboard"
+				@change="updateQuestion"
+				@validate="validateQuestion"
+			/>
 		</div>
 
 		<!-- already answered or admin answer -->
@@ -209,6 +250,7 @@ import KeyboardValidateButton from "@/Components/Keyboards/KeyboardValidateButto
 import {usePage} from "@inertiajs/vue3"
 import {useWrongAnswerAnimation} from "@/Composables/useHelpers"
 import {useKeyboard} from "@/Composables/useKeyboard"
+import DropdownMenu from "@/Components/Ui/DropdownMenu.vue"
 
 let {getKeyboards} = useKeyboard()
 
@@ -221,6 +263,7 @@ let props = defineProps({
 	isDynamic: {type: Boolean, default: false},
 	isMinimal: {type: Boolean, default: false},
 	singleAnswer: {type: Boolean, default: false},
+	groupeIds: {type: Array, default: ()=>[]}
 })
 
 // flash message
@@ -492,6 +535,40 @@ let editMode = inject("editMode", false),
 					flash.success("une nouvelle illustration a été créée")
 				})
 		}
+	}
+
+
+// Manage "DisplayIf"
+let displayIfIds = computed(()=>{
+		if(theQuestion.displayIf===null){return []}
+		return theQuestion.displayIf.split(",").map(id=>+id)
+	}),
+	toggleDisplayId = async function(id){
+		if(id===-1){
+			theQuestion.displayIf = null
+		}else {
+			nextTick()
+			let ids = [...displayIfIds.value],
+				idx = ids.indexOf(id)
+
+			if (idx === -1) {
+				ids.push(id)
+				ids.sort()
+			} else {
+				ids.splice(idx, 1)
+			}
+
+			theQuestion.displayIf = ids.length === 0 ? null : ids.join(",")
+		}
+
+		axios.post(route("questions.updateDisplayIf", {question: theQuestion.id}), {
+			_method: "PATCH",
+			displayIf: theQuestion.displayIf,
+		}).then(res => {
+			flash.success("Modification de la condition d'apparition réussi")
+		}).catch(res => {
+			flash.error("Modification de la condition échouée.")
+		})
 	}
 
 </script>

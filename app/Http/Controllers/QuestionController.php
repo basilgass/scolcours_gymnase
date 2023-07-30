@@ -203,10 +203,39 @@ class QuestionController extends Controller
 	}
 
 
-	public function edit(Question $question)
+	public function edit(Question $question): \Inertia\Response
 	{
 		return Inertia::render("Devs/Edit/QuestionEditPage", [
 			'question' => QuestionResource::make($question)
 		]);
+	}
+
+
+	public function updateQuestionDisplayIf(Question $question, Request $request): bool
+	{
+		$validation = $request->validate([
+			'displayIf' => ['string', 'nullable']
+		]);
+
+		$question->displayIf = $validation['displayIf'];
+		$question->save();
+
+		return true;
+	}
+	public function updateQuestionsDisplayIf(Request $request): bool
+	{
+		$validation = $request->validate([
+			'values' => ['array'],
+			'values.*.id' => ['exists:App\Models\Question,id'],
+			'values.*.displayIf' => ['string', 'nullable']
+		]);
+
+		foreach ($validation["values"] as $value) {
+			$question = Question::find($value['id']);
+			$question->displayIf = $value['displayIf'];
+			$question->save();
+		}
+
+		return true;
 	}
 }

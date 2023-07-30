@@ -53,13 +53,25 @@
 					{{ question.block.title || "sans titre" }}
 				</td>
 				<td class="w-64">
-					<button
-						v-show="liveQuizz.current !== (index+1)"
-						class="btn h-full w-64 bg-white"
-						@click="updateCurrent(index + 1)"
-					>
-						set
-					</button>
+					<div class="flex gap-3">
+						<button
+							v-show="liveQuizz.current !== (index+1)"
+							class="btn h-full w-64 bg-white"
+							@click="updateCurrent(index + 1)"
+						>
+							set
+						</button>
+						<button
+							class="btn h-full w-64 bg-white"
+						>
+							réponses
+						</button>
+						<button
+							class="btn h-full w-64 bg-white"
+						>
+							solution
+						</button>
+					</div>
 				</td>
 			</tr>
 			<tr

@@ -2,13 +2,13 @@
 
 use App\Http\Controllers\QuestionController;
 
-Route::get('questions/admin/{question}', function(\App\Models\Question $question){
+Route::get('questions/admin/{question}', function (\App\Models\Question $question) {
 	return \App\Http\Resources\QuestionResource::make($question);
 });
+
 // TODO: remove posts references to questionsRoutes
 Route::apiResource('posts.questions', QuestionController::class)
 	->shallow();
-
 
 // Must be a verified user
 Route::post('questions/{question}/validate', [QuestionController::class, 'storeAnswer'])
@@ -21,6 +21,7 @@ Route::middleware("can:admin")->group(function () {
 
 	Route::patch('questions/{question}', [QuestionController::class, 'update'])
 		->name('questions.update');
+
 	Route::delete('questions/{question}', [QuestionController::class, 'destroy'])
 		->name('questions.destroy');
 
@@ -28,7 +29,7 @@ Route::middleware("can:admin")->group(function () {
 		->name('questions.duplicate');
 
 	// Apply to all questions related to a specific "questionable"
-	Route::post('questions/{type}/{id}/updateOrder', [QuestionController::class, 'updateQuestionsOrder'])
+	Route::patch('questions/{type}/{id}/updateOrder', [QuestionController::class, 'updateQuestionsOrder'])
 		->name('questions.updateOrder');
 
 	Route::patch('questions/{type}/{id}/reset', [QuestionController::class, 'resetAnswers'])
@@ -37,5 +38,9 @@ Route::middleware("can:admin")->group(function () {
 	Route::get('questions/{question}/edit', [QuestionController::class, 'edit'])
 		->name('questions.edit');
 
+	Route::patch('questions/patch/updateDisplayIf', [QuestionController::class, 'updateQuestionsDisplayIf'])
+		->name('questions.batch.updateDisplayIf');
 
+	Route::patch('questions/{question}/updateDisplayIf', [QuestionController::class, 'updateQuestionDisplayIf'])
+		->name('questions.updateDisplayIf');
 });
