@@ -35,7 +35,7 @@
 	.bg-scolcours-statistiques {@apply bg-cyan-500}
 	.bg-scolcours-jeux {@apply bg-orange-500}
 	.bg-scolcours-tools {@apply bg-pink-400}
-	.bg-scolcours-numeric {@apply bg-lime-500}
+	.bg-scolcours-arithmetique {@apply bg-lime-500}
 
 	.text-scolcours-algebre {@apply text-blue-500}
 	.text-scolcours-analyse {@apply text-amber-500}
@@ -43,7 +43,7 @@
 	.text-scolcours-statistiques {@apply text-cyan-500}
 	.text-scolcours-jeux {@apply text-orange-500}
 	.text-scolcours-tools {@apply text-pink-400}
-	.text-scolcours-numeric {@apply text-lime-500}
+	.text-scolcours-arithmetique {@apply text-lime-500}
 
 	.border-scolcours-algebre {@apply border-blue-300}
 	.border-scolcours-analyse {@apply border-amber-300}
@@ -51,7 +51,7 @@
 	.border-scolcours-statistiques {@apply border-cyan-300}
 	.border-scolcours-jeux {@apply border-orange-300}
 	.border-scolcours-tools {@apply border-pink-300}
-	.border-scolcours-numeric {@apply border-lime-300}
+	.border-scolcours-arithmetique {@apply border-lime-300}
 
 	.active-scolcours-algebre {@apply hover:bg-blue-50 hover:border-blue-500 hover:text-blue-500 transition-colors duration-300}
 	.active-scolcours-analyse {@apply hover:bg-amber-50 hover:border-amber-500 hover:text-amber-500 transition-colors duration-300}
@@ -59,7 +59,7 @@
 	.active-scolcours-statistiques {@apply hover:bg-cyan-50 hover:border-cyan-500 hover:text-cyan-500 transition-colors duration-300}
 	.active-scolcours-jeux {@apply hover:bg-orange-50 hover:border-orange-500 hover:text-orange-500 transition-colors duration-300}
 	.active-scolcours-tools {@apply hover:bg-pink-50 hover:border-pink-500 hover:text-pink-500 transition-colors duration-300}
-	.active-scolcours-numeric {@apply hover:bg-lime-50 hover:border-lime-500 hover:text-lime-500 transition-colors duration-300}
+	.active-scolcours-arithmetique {@apply hover:bg-lime-50 hover:border-lime-500 hover:text-lime-500 transition-colors duration-300}
 
 	.scrollbar-scolcours-default {@apply scrollbar scrollbar-w-1 scrollbar-h-1 scrollbar-thumb-rounded-full}
 	.scrollbar-scolcours {@apply scrollbar-scolcours-default scrollbar-thumb-gray-700/50}
@@ -70,7 +70,7 @@
 	.scrollbar-scolcours-statistiques {@apply scrollbar-scolcours-default scrollbar-thumb-pink-500 scrollbar-track-pink-50 }
 	.scrollbar-scolcours-jeux {@apply scrollbar-scolcours-default scrollbar-thumb-pink-500 scrollbar-track-pink-50 }
 	.scrollbar-scolcours-tools {@apply scrollbar-scolcours-default scrollbar-thumb-pink-400 scrollbar-track-pink-50 }
-	.scrollbar-scolcours-numeric {@apply scrollbar-scolcours-default scrollbar-thumb-lime-400 scrollbar-track-lime-50 }
+	.scrollbar-scolcours-arithmetique {@apply scrollbar-scolcours-default scrollbar-thumb-lime-400 scrollbar-track-lime-50 }
 
 	.md-danger {@apply bg-red-300}
 	.md-success {@apply bg-green-300}
@@ -210,7 +210,7 @@
 	.btn-scolcours-statistiques {@apply btn bg-cyan-500 text-white hover:bg-cyan-100 hover:border-cyan-500 hover:text-cyan-500 transition-colors duration-300}
 	.btn-scolcours-jeux {@apply btn bg-orange-500 text-white hover:bg-orange-100 hover:border-orange-500 hover:text-orange-500 transition-colors duration-300}
 	.btn-scolcours-tools {@apply btn bg-pink-400 text-white hover:bg-pink-100 hover:border-pink-500 hover:text-pink-500 transition-colors duration-300}
-	.btn-scolcours-numeric {@apply btn bg-lime-500 text-white hover:bg-lime-100 hover:border-lime-500 hover:text-lime-500 transition-colors duration-300}
+	.btn-scolcours-arithmetique {@apply btn bg-lime-500 text-white hover:bg-lime-100 hover:border-lime-500 hover:text-lime-500 transition-colors duration-300}
 
 	.is-active{@apply bg-blue-100 border-blue-600}
 	.is-disabled{@apply bg-gray-100 border-gray-200 text-gray-300}

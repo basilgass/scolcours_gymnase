@@ -3,19 +3,19 @@ import {PiMath} from "pimath/esm"
 export function FunctionChecker(options) {
 	if(options===undefined){options = []}
 
-	const isReduced = (options.includes("r") || options.includes("reduced") || options.includes("re"))
+	const isDevelopped = (options.includes("d") || options.includes("developped") || options.includes("dev"))
 
 	return {
 		name: "function",
 		format: () => {
 			let opts = []
 
-			if (isReduced) {
-				// TODO: reduced function does not work for now...
-				opts.push("réduite")
+			if (isDevelopped) {
+				// TODO: develop function does not work for now...
+				opts.push("développée")
 			}
 
-			return `équation ${opts.join(", ")}`
+			return `fonction ${opts.join(", ")}`
 		},
 		check: (expectedAnswer, answer) => {
 			let A = new PiMath.Polynom(answer),

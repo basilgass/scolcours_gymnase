@@ -44,7 +44,7 @@ Affichage d'un PiDraw
 				class="w-full"
 			>
 				<button
-					:class="`w-full btn-xs btn-scolcours-${$page.props.theme.slug} tracking-wider d-block`"
+					:class="`w-full btn-xs btn-scolcours-${$page.props.theme?.slug||'main'} tracking-wider d-block`"
 					@click="stepperStart = true"
 				>
 					Marche à suivre

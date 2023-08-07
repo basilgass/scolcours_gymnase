@@ -259,10 +259,23 @@ let keyboardComputed = computed(() => {
 
 		// Loop through all keyboard keys in the layout.
 		for (let key of keyboardData.value.layout) {
-			let kkey = typeof key === "string" ? key : key[0],
-				spankey = typeof key === "string" ? 0 : key[1],
-				kdata = {}
+			let kkey, spankey, kdata = {},
+				theKey
+			if(typeof key==="string"){
+				kkey = key
+				spankey = 0
+				theKey = keyboardKeys[kkey]
+			}else if(key.key !== undefined) {
+				kkey = key.key
+				spankey = key.span?key.span:0
+				theKey = key
+			}else {
+				kkey = key[0]
+				spankey = key[1]
+				theKey = keyboardKeys[kkey]
+			}
 
+			// Span the buttons
 			if (spankey === 2) {
 				spankey = "col-span-2"
 			} else if (spankey === 3) {
@@ -271,11 +284,6 @@ let keyboardComputed = computed(() => {
 				spankey = "col-span-4"
 			} else if (spankey === 5) {
 				spankey = "col-span-5"
-			}
-
-			let theKey = keyboardKeys[kkey]
-			if (props.customKeys !== undefined && props.customKeys[kkey] !== undefined) {
-				theKey = props.customKeys[kkey]
 			}
 
 			kdata = {

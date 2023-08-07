@@ -3,9 +3,17 @@
 		Contrôle des illustrations
 	</h1>
 
-	<section class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+	<div>
+		<form-input
+			v-model="search"
+			name="filtrer"
+			:label="`filtrer (${listOfIllustrations.length} / ${props.illustrations.length})`"
+		/>
+	</div>
+
+	<section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
 		<illustration-show
-			v-for="(illustration, id) of illustrations"
+			v-for="(illustration, id) of listOfIllustrations"
 			:key="`illustration-${id}`"
 			:illustration="illustration"
 		/>
@@ -22,9 +30,25 @@ export default {
 <script setup>
 
 import IllustrationShow from "@/Components/Posts/Illustrations/IllustrationShow.vue"
+import FormInput from "@/Components/Form/FormInput.vue"
+import {computed, ref} from "vue"
 
 let props = defineProps({
 	illustrations: {type: Array, required: true}
 })
+
+let search = ref(""),
+	listOfIllustrations = computed(()=>{
+		if(search.value===""){
+			return props.illustrations
+		}
+
+		const searchLC = search.value.toLowerCase()
+
+		return props.illustrations.filter(item =>
+			item.parameters?.toLowerCase().includes(searchLC) ||
+			item.code.toLowerCase().includes(searchLC)
+		)
+	})
 </script>
 
