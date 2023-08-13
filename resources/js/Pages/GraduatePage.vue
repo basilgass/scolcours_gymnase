@@ -3,67 +3,100 @@
 	<!-- Title -->
 	<ArticleTitle title="Echelle" />
 
-	<div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-		<div class="flex flex-col gap-5">
-			<div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-				<div>
-					<form-number
-						v-model="maxPoints"
-						focus
-						label="points maximum du test"
-						name="points"
-					/>
-					<form-number
-						v-model="pourcentage"
-						focus
-						helper-text="vide pour échelle fédérale"
-						label="pourcentage"
-						name="points"
-					/>
-
-					<div class=" mt-10 min-w-[9em] w-full bg-white rounded border border-slate-100 p-3">
-						<table class="table tab w-full text-center font-code">
-							<thead>
-								<tr class="font-semibold">
-									<td>de</td>
-									<td>à</td>
-									<td class="">
-										éval.
-									</td>
-								</tr>
-							</thead>
-							<tbody>
-								<tr
-									v-for="(item, index) in rangeByEvaluation"
-									:key="`range-${index}`"
-									class="odd:bg-amber-100"
-								>
-									<td>{{ item.min }}</td>
-									<td>{{ item.max }}</td>
-									<td>{{ item.note }}</td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-				</div>
-
-				<div
-					class="relative w-[20vw] h-[15vw] max-w-full mx-auto"
-				>
-					<canvas ref="chartD" />
-				</div>
-			</div>
-		</div>
+	<div class="grid grid-cols-1 md:grid-cols-2 gap-5 items-start">
 		<div class="space-y-5">
-			<form-textarea
-				v-model="pointsData"
-				helper-text="notes séparées par des espaces, des virgules ou à la ligne."
-				label="liste des points"
+			<form-number
+				v-model="maxPoints"
+				focus
+				label="points maximum du test"
 				name="points"
-				:rows="6"
 			/>
 
-			<div v-if="points.length>0">
+			<div class="flex items-end align-bottom gap-3 flex-grow">
+				<form-input
+					v-model="precision"
+					label="précision"
+					name="precision"
+					class="grow"
+					@blur="precision=(isNaN(+precision)||+precision<=0)?0.5:+precision"
+				/>
+				<button
+					class="btn px-10"
+					:class="+precision===1?'is-active':'bg-white'"
+					@click="precision=1"
+				>
+					1
+				</button>
+				<button
+					class="btn px-10"
+					:class="+precision===0.5?'is-active':'bg-white'"
+					@click="precision=0.5"
+				>
+					0.5
+				</button>
+				<button
+					class="btn px-10"
+					:class="+precision===0.1?'is-active':'bg-white'"
+					@click="precision=0.1"
+				>
+					0.1
+				</button>
+			</div>
+
+			<form-number
+				v-model="pourcentage"
+				helper-text="vide pour échelle fédérale"
+				label="pourcentage"
+				name="points"
+			/>
+			<div
+				v-show="showChartD"
+				class="relative w-[800px] aspect-[4/3] max-w-full mx-auto mt-5 bg-white p-3"
+			>
+				<canvas ref="chartD" />
+			</div>
+		</div>
+
+		<div class="min-w-[9em] w-full bg-white rounded border border-slate-100 p-3">
+			<div class="mb-3 py-2 text-center font-code bg-slate-700 text-slate-100">
+				mode compact
+			</div>
+			<table class="table tab w-full text-center font-code">
+				<thead>
+					<tr class="font-semibold">
+						<td>de</td>
+						<td>à</td>
+						<td class="">
+							éval.
+						</td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr
+						v-for="(item, index) in rangeByEvaluation"
+						:key="`range-${index}`"
+						class="odd:bg-amber-100"
+					>
+						<td>{{ item.min }}</td>
+						<td>{{ item.max }}</td>
+						<td>{{ item.note }}</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+	<div class="grid grid-cols-1 md:grid-cols-2 gap-5 mt-10">
+		<form-textarea
+			v-model="pointsData"
+			:rows="6"
+			helper-text="notes séparées par des espaces, des virgules ou à la ligne."
+			label="liste des points"
+			name="points"
+		/>
+
+		<div class="mt-8">
+			<div>
 				<div class="flex gap-10 justify-between text-center">
 					<div
 						class="bg-white p-3 grid place-items-center text-lg border border-slate-100 rounded-xl shadow aspect-square w-full py-8"
@@ -85,7 +118,7 @@
 								Moyenne
 							</div>
 							<div class="font-semibold text-xl">
-								{{ average.points.toFixed(2) }} ( {{ average.evaluation.toFixed(2) }} )
+								{{ average.points==='-'?'-':average.points.toFixed(2) }} ( {{ average.evaluation==="-"?'-':average.evaluation?.toFixed(2) }} )
 							</div>
 						</div>
 					</div>
@@ -97,7 +130,7 @@
 								Médiane
 							</div>
 							<div class="font-semibold text-xl">
-								{{ median.points.toFixed(2) }} ( {{ median.evaluation }} )
+								{{ median.points==='-'?'-':median.points.toFixed(2) }} ( {{ median.evaluation }} )
 							</div>
 						</div>
 					</div>
@@ -108,10 +141,7 @@
 				v-show="points.length>0"
 				class="bg-white p-5 w-full border border-slate-100 rounded-xl shadow "
 			>
-				<div
-
-					class="relative w-[32vw] h-[24vw] max-w-full mx-auto"
-				>
+				<div class="relative w-[32vw] h-[24vw] max-w-full mx-auto">
 					<canvas ref="chart" />
 				</div>
 			</div>
@@ -131,14 +161,17 @@ import FormTextarea from "@/Components/Form/FormTextarea.vue"
 import {computed, nextTick, onMounted, ref, watch} from "vue"
 import FormNumber from "@/Components/Form/FormNumber.vue"
 import {Chart} from "chart.js/auto"
+import FormInput from "@/Components/Form/FormInput.vue"
 
 
 let pointsData = ref(""),
 	maxPoints = ref(20),
 	pourcentage = ref(""),
+	precision = ref(0.5),
 	halfPoints = ref(true),
 	chart = ref(null),
-	chartD = ref(null)
+	chartD = ref(null),
+	showChartD = ref(false)
 
 let points = computed(() => {
 		return pointsData.value.split(/[\s,\n]/)
