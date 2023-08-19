@@ -4,4 +4,8 @@ export const useBlockTypes = {
 	property: {text:  "propriété"},
 	remark: {text:  "remarque"},
 	example: {text:  "exemple"},
+	danger: {
+		text:  "attention",
+		icon: "bi bi-exclamation-triangle"
+	},
 }

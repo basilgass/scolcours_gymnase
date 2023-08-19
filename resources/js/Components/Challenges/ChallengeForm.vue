@@ -88,7 +88,6 @@ Edition d'un challenge
 
 				<form-illustration
 					v-model="theIllustration"
-					label="illustration"
 					name="illustration"
 				/>
 			</div>

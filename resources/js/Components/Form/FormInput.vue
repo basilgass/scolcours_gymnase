@@ -76,7 +76,7 @@ import {onMounted, ref} from "vue"
 const emits = defineEmits(["update:modelValue", "inputFocus", "enter", "cancel", "save", "buttonClick"])
 let props = defineProps({
 	inline: {type: Boolean, default: false},
-	modelValue: {type: String, default: null},
+	modelValue: {type: [String,Number], default: null},
 	active: {type: Boolean, default: false},
 	name: {type: String, required: true},
 	label: {type: String, default: ""},

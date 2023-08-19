@@ -13,6 +13,8 @@
 			:class="hideLabel?'':'p-2'"
 			:value="modelValue"
 			@input="$emit('update:modelValue', $event.target.value)"
+			@keyup="atKeyup"
+			@mouseup="atKeyup"
 		/>
 
 		<slot />
@@ -40,8 +42,17 @@ function focus(select){
 		inp.value.select()
 	}
 }
+
+function atKeyup(){
+	let pos = inp.value.selectionStart,
+		lines = props.modelValue.split("\n"),
+		lineIndex = props.modelValue.substring(0, pos).split("\n").length-1
+
+	emits("currentLine", lines[lineIndex])
+}
+
 defineExpose({focus})
-defineEmits(["update:modelValue"])
+const emits = defineEmits(["update:modelValue", "currentLine"])
 const props = defineProps({
 	modelValue: {type: String, default: ""},
 	name: {type: String, required: true},

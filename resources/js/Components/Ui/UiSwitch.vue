@@ -71,4 +71,8 @@ let circleClass = computed(()=>{
 watch(()=> switchValue.value, (value) =>{
 	emit("update:modelValue", value)
 })
+
+watch(()=> props.modelValue, (newValue) => {
+	switchValue.value = newValue
+})
 </script>

@@ -16,7 +16,13 @@ Affichage d'un block , avec toutes les possibilités
 		<div v-else>
 			<!-- Block title (if exist) -->
 			<div class="flex justify-between w-full px-5 block-header">
-				<h3 v-katex.auto="blockTitle" />
+				<div class="flex gap-3">
+					<i
+						v-if="blockIcon"
+						:class="blockIcon"
+					/>
+					<h3 v-katex.auto="blockTitle" />
+				</div>
 
 				<div class="flex gap-3">
 					<div
@@ -140,6 +146,7 @@ Affichage d'un block , avec toutes les possibilités
 				:block="theBlock"
 				:max-illustration="maxIllustration"
 				:no-delete="props.noDelete"
+				:overflow-scroll="true"
 				@change="updateBlock"
 				@destroy="emits('destroy', $event)"
 			/>
@@ -186,6 +193,9 @@ const blockTypes = useBlockTypes,
 		}
 
 		return ""
+	}),
+	blockIcon = computed(()=>{
+		return blockTypes[theBlock.value.type]?.icon
 	}),
 	blockTemplate = computed(() => {
 		if (!theBlock.value.template) {
@@ -329,16 +339,16 @@ let random = ref(1),
 
 		// Default values
 		let randomBtn = {
-				icon: "bi bi-x-square",
-				text: "par défaut",
+				icon: "bi bi-shuffle",
+				text: "aléatoire",
 				show: true
 			},
 			resetBtn = false
 
-		if (showRandom && blockData.value.reset) {
+		if (blockData.value.reset) {
 			resetBtn = {
-				icon: "bi bi-shuffle",
-				text: "aléatoire",
+				icon: "bi bi-x-square",
+				text: "par défaut",
 				show: random.value > 1
 			}
 		}

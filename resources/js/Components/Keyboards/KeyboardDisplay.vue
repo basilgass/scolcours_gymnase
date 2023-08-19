@@ -167,7 +167,6 @@ let theKeyboard = computed(() => {
 
 			// Parse the keyboard value
 			//TODO: is it still relevant ?
-			console.log("LOADING STRING KEYBOARD", props.keyboard)
 			let keyboardName = props.keyboard.split("@")[0]
 
 			if (keyboards.hasOwnProperty(keyboardName)) {
@@ -182,7 +181,6 @@ let theKeyboard = computed(() => {
 	}),
 	keyboardOptions = computed(() => {
 		if (props.extraLetters.length>0) {
-
 			let opts = props.extraLetters.map(x => {
 				const keyDisplay = x.split("|"),
 					d = keyDisplay.length >= 2 ? keyDisplay[1] : keyDisplay[0],
@@ -256,7 +254,6 @@ const btnReset = {
 
 let keyboardComputed = computed(() => {
 		let data = []
-
 		// Loop through all keyboard keys in the layout.
 		for (let key of keyboardData.value.layout) {
 			let kkey, spankey, kdata = {},
@@ -286,12 +283,21 @@ let keyboardComputed = computed(() => {
 				spankey = "col-span-5"
 			}
 
+			// Default key code data.
 			kdata = {
 				key: kkey,
 				visible: kkey === "",
 				type: theKey === undefined ? false : theKey.type,
 				display: theKey === undefined ? false : theKey.display,
 				span: spankey
+			}
+
+			// Maybe there is a custom keys
+			if(props.customKeys?.hasOwnProperty(kkey)) {
+				kdata = {
+					...kdata,
+					...props.customKeys[kkey]
+				}
 			}
 
 			if (theKey === undefined) {

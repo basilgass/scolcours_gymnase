@@ -98,6 +98,7 @@ const keys = useMagicKeys()
 whenever(keys.ctrl_alt_a, ()=>{
 	if(usePage().props.auth.user && usePage().props.auth.can.admin) {
 		globalEditMode.value = !globalEditMode.value
+		localStorage.setItem("scolcours_editMode", globalEditMode.value)
 	}
 })
 

@@ -15,10 +15,13 @@ use Illuminate\Support\Facades\Route;
 */
 
 // Home page - no controller
-Route::get('/', [ScolcoursController::class, 'index'])->name('home');
+Route::get('/', [ScolcoursController::class, 'index'])
+	->name('home');
 
 // Admin sections, Auth route
-Route::get('/dashboard', [ScolcoursController::class, 'dashboard'])->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [ScolcoursController::class, 'dashboard'])
+	->middleware(['auth', 'verified'])
+	->name('dashboard');
 
 require __DIR__ . '/adminRoutes.php';
 require __DIR__ . '/auth.php';

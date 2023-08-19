@@ -20,6 +20,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read int|null $questions_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\QuizzSession> $sessions
  * @property-read int|null $sessions_count
+ * @property-read \App\Models\Theme|null $theme
  * @method static \Illuminate\Database\Eloquent\Builder|Quizz newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Quizz newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Quizz query()

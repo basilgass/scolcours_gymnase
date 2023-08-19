@@ -4,7 +4,7 @@ Formulaire d'édition d'un bloc
 <template>
 	<dialog-modal
 		v-model="show"
-		class="bg-gray-50"
+		class="bg-gray-50 max-h-screen"
 		@cancel="emits('update:modelValue', false)"
 	>
 		<template #header>
@@ -20,6 +20,12 @@ Formulaire d'édition d'un bloc
 							@click="saveBlock"
 						>
 							enregistrer
+						</button>
+						<button
+							class="btn-primary btn-xs"
+							@click="saveAndCloseBlock"
+						>
+							enregistrer + fermr
 						</button>
 						<button
 							class="btn-cancel btn-xs"
@@ -266,11 +272,14 @@ let saveBlock = function () {
 				_method: "PATCH"
 			}
 		).then(res=>{
-			emits("update:modelValue", false)
 			emits("change", res.data.data)
 		}).catch(error=>{
 			console.error(error)
 		})
+	},
+	saveAndCloseBlock = async function () {
+		await saveBlock()
+		emits("update:modelValue", false)
 	},
 	deleteBlock = function(){
 		axios

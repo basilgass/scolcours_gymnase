@@ -60,7 +60,6 @@ TODO: Ajouter des "helpers", pour avoir des indications des paramètres par exem
 			>
 				<form-illustration
 					v-model="theIllustration"
-					:label="`illustration`"
 					:name="`illustration`"
 				/>
 

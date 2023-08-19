@@ -40,7 +40,7 @@ En-tête principal, sensible au thème
 
 						<Link
 							class="hover:bg-gray-100 px-3 py-2"
-							href="/dashboard"
+							:href="route('dashboard')"
 						>
 							profil
 						</Link>

@@ -41,8 +41,12 @@ let labelSwitch = computed(()=>{
 	}
 })
 
-watch(()=> value.value, (value) =>{
-	emit("update:modelValue", value?true:false)
+watch(()=> value.value, (newValue) =>{
+	emit("update:modelValue", newValue?true:false)
 	emit("input")
+})
+
+watch(()=> props.modelValue, (newValue) =>{
+	value.value = newValue
 })
 </script>

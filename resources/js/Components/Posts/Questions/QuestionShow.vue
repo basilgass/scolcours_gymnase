@@ -438,15 +438,21 @@ let updateQuestion = function (event) {
 	validateQuestion = function () {
 		// validation des réponses.
 
-		// On bloque la possibitié de cliquer une nouvelle fois sur le bouton.
+		// On bloque la possibilité de cliquer une nouvelle fois sur le bouton.
 		lockValidationButton.value = true
 
 		// On vérifie que toutes les réponses ont été données.
 		let result = true,
+			index,
 			stack = []
 
 		for (let i = 0; i < userAnswers.value.length; i++) {
-			result = result && userAnswers.value[i].validation.result
+			// The result index must be the same for each answers.
+			if(index===undefined){index = userAnswers.value[i].validation.index || 0}
+			// The result must be "true" for each answers
+			result = result &&
+				userAnswers.value[i].validation.result &&
+				(index === (userAnswers.value[i].validation.index||0))
 
 			if (!result) {
 				if (userAnswers.value.length > 1) {

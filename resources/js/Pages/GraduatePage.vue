@@ -14,51 +14,54 @@
 
 			<div class="flex items-end align-bottom gap-3 flex-grow">
 				<form-input
-					v-model="precision"
+					v-model.number="precision"
+					class="grow"
 					label="précision"
 					name="precision"
-					class="grow"
-					@blur="precision=(isNaN(+precision)||+precision<=0)?0.5:+precision"
+					@blur="
+						precision =
+							isNaN(+precision) || +precision <= 0
+								? 0.5
+								: +precision
+					"
 				/>
 				<button
+					:class="+precision === 1 ? 'is-active' : 'bg-white'"
 					class="btn px-10"
-					:class="+precision===1?'is-active':'bg-white'"
-					@click="precision=1"
+					@click="precision = 1"
 				>
 					1
 				</button>
 				<button
+					:class="+precision === 0.5 ? 'is-active' : 'bg-white'"
 					class="btn px-10"
-					:class="+precision===0.5?'is-active':'bg-white'"
-					@click="precision=0.5"
+					@click="precision = 0.5"
 				>
 					0.5
 				</button>
 				<button
+					:class="+precision === 0.1 ? 'is-active' : 'bg-white'"
 					class="btn px-10"
-					:class="+precision===0.1?'is-active':'bg-white'"
-					@click="precision=0.1"
+					@click="precision = 0.1"
 				>
 					0.1
 				</button>
 			</div>
 
-			<form-number
-				v-model="pourcentage"
+			<form-input
+				v-model.number="pourcentage"
 				helper-text="vide pour échelle fédérale"
 				label="pourcentage"
 				name="points"
 			/>
-			<div
-				v-show="showChartD"
-				class="relative w-[800px] aspect-[4/3] max-w-full mx-auto mt-5 bg-white p-3"
-			>
-				<canvas ref="chartD" />
-			</div>
 		</div>
 
-		<div class="min-w-[9em] w-full bg-white rounded border border-slate-100 p-3">
-			<div class="mb-3 py-2 text-center font-code bg-slate-700 text-slate-100">
+		<div
+			class="min-w-[9em] w-full bg-white rounded border border-slate-100 p-3"
+		>
+			<div
+				class="mb-3 py-2 text-center font-code bg-slate-700 text-slate-100"
+			>
 				mode compact
 			</div>
 			<table class="table tab w-full text-center font-code">
@@ -73,12 +76,12 @@
 				</thead>
 				<tbody>
 					<tr
-						v-for="(item, index) in rangeByEvaluation"
-						:key="`range-${index}`"
+						v-for="item in pointsParNote"
+						:key="`range-${item.note}`"
 						class="odd:bg-amber-100"
 					>
-						<td>{{ item.min }}</td>
-						<td>{{ item.max }}</td>
+						<td>{{ item.pointsMin }}</td>
+						<td>{{ item.pointsMax }}</td>
 						<td>{{ item.note }}</td>
 					</tr>
 				</tbody>
@@ -87,17 +90,28 @@
 	</div>
 
 	<div class="grid grid-cols-1 md:grid-cols-2 gap-5 mt-10">
-		<form-textarea
-			v-model="pointsData"
-			:rows="6"
-			helper-text="notes séparées par des espaces, des virgules ou à la ligne."
-			label="liste des points"
-			name="points"
-		/>
+		<div>
+			<form-textarea
+				v-model="pointsData"
+				:rows="6"
+				helper-text="notes séparées par des espaces, des virgules ou à la ligne."
+				label="liste des points"
+				name="points"
+			/>
+			<div
+				v-show="listeDesPointsAvecErreurs.length>0"
+				class="text-red-600 text-sm"
+			>
+				Il y a un ou des points supérieurs au maximum ({{ listeDesPointsAvecErreurs.join(', ') }})
+			</div>
+		</div>
 
-		<div class="mt-8">
+		<div
+			v-if="listeDesNotes.length>0"
+			class="mt-8 flex flex-col gap-4"
+		>
 			<div>
-				<div class="flex gap-10 justify-between text-center">
+				<div class="flex gap-2 md:gap-4 xl:gap-10 justify-between text-center">
 					<div
 						class="bg-white p-3 grid place-items-center text-lg border border-slate-100 rounded-xl shadow aspect-square w-full py-8"
 					>
@@ -106,7 +120,7 @@
 								Nombre de notes
 							</div>
 							<div class="font-semibold text-xl">
-								{{ evaluations.length }}
+								{{ listeDesNotes.length }}
 							</div>
 						</div>
 					</div>
@@ -118,7 +132,7 @@
 								Moyenne
 							</div>
 							<div class="font-semibold text-xl">
-								{{ average.points==='-'?'-':average.points.toFixed(2) }} ( {{ average.evaluation==="-"?'-':average.evaluation?.toFixed(2) }} )
+								{{ moyenneDesNotes }}
 							</div>
 						</div>
 					</div>
@@ -130,7 +144,7 @@
 								Médiane
 							</div>
 							<div class="font-semibold text-xl">
-								{{ median.points==='-'?'-':median.points.toFixed(2) }} ( {{ median.evaluation }} )
+								{{ medianeDesNotes }}
 							</div>
 						</div>
 					</div>
@@ -138,12 +152,13 @@
 			</div>
 
 			<div
-				v-show="points.length>0"
-				class="bg-white p-5 w-full border border-slate-100 rounded-xl shadow "
+				class="bg-white p-5 w-full border border-slate-100 rounded-xl shadow"
 			>
-				<div class="relative w-[32vw] h-[24vw] max-w-full mx-auto">
-					<canvas ref="chart" />
-				</div>
+				<bar-chart
+					:chart-dataset="decompteDesNotes"
+					:chart-labels="[1, 1.5,2, 2.5,3, 3.5,4, 4.5,5, 5.5,6]"
+					:chart-options="{scales: { y: { ticks: { stepSize: 1, }, }, }, }"
+				/>
 			</div>
 		</div>
 	</div>
@@ -152,7 +167,7 @@
 import LayoutMain from "@/Layouts/LayoutMain"
 
 export default {
-	layout: LayoutMain
+	layout: LayoutMain,
 }
 </script>
 <script setup>
@@ -162,301 +177,174 @@ import {computed, nextTick, onMounted, ref, watch} from "vue"
 import FormNumber from "@/Components/Form/FormNumber.vue"
 import {Chart} from "chart.js/auto"
 import FormInput from "@/Components/Form/FormInput.vue"
-
+import {PiMath} from "pimath/esm"
+import BarChart from "@/Components/Charts/barChart.vue"
 
 let pointsData = ref(""),
 	maxPoints = ref(20),
 	pourcentage = ref(""),
+	pourcentage4 = ref(false),
 	precision = ref(0.5),
 	halfPoints = ref(true),
 	chart = ref(null),
 	chartD = ref(null),
 	showChartD = ref(false)
 
-let points = computed(() => {
-		return pointsData.value.split(/[\s,\n]/)
-			.filter(x => x !== "")
-			.map(x => +x)
-			.filter(x => !isNaN(x))
-	}),
-	evaluations = computed(() => {
-		return points.value
-			.map(x => {
-				return evalNote(x)
-				// let e = (x / maxPoints.value * 5) + 1
-				// return Math.round(e * 2) / 2
-			})
-	}),
-	average = computed(() => {
-		if (evaluations.value.length === 0) {
-			return {
-				points: "-",
-				evaluation: "-"
+// Nouvelle version, plus logique et stable
+let bareme = computed(() => {
+		if (maxPoints.value <= 0) {
+			return null
+		}
+
+		if (+pourcentage.value < 0) {
+			return null
+		}
+
+		if (precision.value <= 0) {
+			return null
+		}
+
+		let pt = 0,
+			result = {}
+		while (pt <= maxPoints.value) {
+			const note = calculerLaNote(pt),
+				ptKey = PiMath.Numeric.numberCorrection(pt)
+			result[pt] = {
+				pt: ptKey,
+				note: Math.round(note * 2) / 2,
+				centieme: note.toFixed(2)
 			}
-		}
-		return {
-			points: points.value.reduce((a, b) => a + b) / points.value.length,
-			evaluation: evaluations.value.reduce((a, b) => a + b) / evaluations.value.length
-		}
-	}),
-	median = computed(() => {
-		// https://stackoverflow.com/questions/45309447/calculating-median-javascript
-		if (!evaluations.value.length) return {
-			points: "-",
-			evaluation: "-"
+
+			pt += precision.value
 		}
 
-		const s = [...evaluations.value].sort((a, b) => a - b)
-		const mid = Math.floor(s.length / 2)
-
-		const sPt = [...evaluations.value].sort((a, b) => a - b)
-		const midPt = Math.floor(s.length / 2)
-		return {
-			points: sPt.length % 2 === 0 ? ((sPt[midPt - 1] + sPt[midPt]) / 2) : sPt[midPt],
-			evaluation: s.length % 2 === 0 ? ((s[mid - 1] + s[mid]) / 2) : s[mid]
-		}
+		return result
 	}),
-	numberByEvaluation = computed(() => {
-		let arr = {}
-		for (let i = 1; i <= 6; i += 0.5) {
-			arr[`${i.toPrecision(2)}`] = evaluations.value.filter(x => x === i).length
+	pointsSorted = computed(() => {
+		let keys = Object.keys(bareme.value)
+		keys = keys.sort((a, b) => +a - b)
+		return keys
+	}),
+	pointsParNote = computed(() => {
+		// returns [
+		//      {note, pointsDe, pointsA}
+		// ]
+		let arr = []
+		for (let i = 6; i >= 1; i -= 0.5) {
+			let values = Object.values(bareme.value)
+				.filter(x => x.note === i)
+				.map(x => x.pt)
+
+			arr.push({
+				note: i,
+				pointsMin: Math.min(...values),
+				pointsMax: Math.max(...values),
+			})
+		}
+
+		return arr
+	})
+
+let calculerLaNote = function (pt) {
+	// échelle fédérale.
+	if (pourcentage.value === "") {
+		return pt / maxPoints.value * 5 + 1
+	}
+
+	// échelle avec pourcentage.
+	if (isNaN(+pourcentage.value)) {
+		return 0
+	}
+
+	const seuil = maxPoints.value * (+pourcentage.value) / 100
+	let note1 = 1, note4 = pourcentage4.value ? 4 : 3.75, note6 = 6
+
+	if (pt < seuil) {
+		// note de 1 à 3.75 (ou 4)
+		// 0pt          => 1
+		// seuil pt     => 3.75 (ou 4)
+		// pente        => 2.75 (ou 3)/seuil
+		return note1 + (note4 - note1) / seuil * pt
+	} else {
+		// seuil pt     => 3.75 (ou 4)
+		// maxPooints   => 6
+		return note4 + (note6 - note4) / (maxPoints.value - seuil) * (pt - seuil)
+	}
+}
+
+
+
+let listeDesPoints = computed(() => {
+		return pointsData.value.split( " ")
+			.map(pt => Math.min(pt, maxPoints.value))
+			.filter(pt=>bareme.value.hasOwnProperty(pt))
+	}),
+	listeDesPointsAvecErreurs = computed(() => {
+		return pointsData.value.split( " ")
+			.filter(pt=>pt!=="" && !bareme.value.hasOwnProperty(pt))
+	}),
+	listeDesNotes = computed(()=>{
+		return listeDesPoints.value
+			.map(pt=>bareme.value[pt].note)
+	}),
+	decompteDesNotes = computed(()=>{
+		let arr = []
+
+		for(let i=1; i<=6; i+=0.5){
+			arr.push(listeDesNotes.value.filter(note=>note===i).length)
 		}
 
 		return arr
 	}),
-	rangeByEvaluation = computed(() => {
-		let arr = {}
-		for (let i = 0; i <= +maxPoints.value; i += halfPoints.value ? 0.5 : 1) {
-			const note = evalNote(i)
-			if (arr[note] === undefined) {
-				arr[note] = []
-			}
-			arr[note].push(i)
-		}
+	moyenneDesNotes = computed(() => {
+		if(listeDesNotes.value.length===0){return "-"}
 
-		let sorted = []
-		for (let note of Object.keys(arr)) {
-			// arr[note] = [Math.min(...arr[note]), Math.max(...arr[note])]
-			sorted.push({
-				note,
-				min: Math.min(...arr[note]),
-				max: Math.max(...arr[note])
-			})
-		}
+		return (listeDesNotes.value.reduce((a,b) => a+b) / listeDesNotes.value.length).toFixed(2)
+	}),
+	medianeDesNotes = computed(() => {
+		if(listeDesNotes.value.length===0){return "-"}
 
-		sorted.sort((a, b) => b.note - a.note)
-		// Make a sorted array.
-		return sorted
+		// https://stackoverflow.com/questions/45309447/calculating-median-javascript
+		const s = [...listeDesNotes.value].sort((a, b) => a - b)
+		const mid = Math.floor(s.length / 2)
+
+		return (s.length % 2 === 0 ? (s[mid - 1] + s[mid]) / 2 : s[mid]).toFixed(2)
 	})
 
-let chartObject,
-	chartDObject
+
+
+
+
+
+
 
 onMounted(() => {
-	chartObject = new Chart(chart.value, {
-		type: "bar",
-		data: {
-			labels: ["1", "1.5", "2", "2.5", "3", "3.5", "4", "4.5", "5", "5.5", "6"],
-			datasets: [{
-				label: null,
-				data: Object.values(numberByEvaluation.value),
-				backgroundColor: [
-					"rgba(255, 99, 132, 0.2)",
-					"rgba(255, 99, 132, 0.2)",
-					"rgba(255, 99, 132, 0.2)",
-					"rgba(255, 159, 64, 0.2)",
-					"rgba(255, 159, 64, 0.2)",
-					"rgba(255, 205, 86, 0.2)",
-					"rgba(54, 162, 235, 0.2)",
-					"rgba(54, 162, 235, 0.2)",
-					"rgba(75, 192, 192, 0.2)",
-					"rgba(75, 192, 192, 0.2)",
-					"rgba(40,210,72,0.2)"
-				],
-				borderColor: [
-					"rgb(255, 99, 132)",
-					"rgb(255, 99, 132)",
-					"rgb(255, 99, 132)",
-					"rgb(255, 159, 64)",
-					"rgb(255, 159, 64)",
-					"rgb(255, 205, 86)",
-					"rgb(54, 162, 235)",
-					"rgb(54, 162, 235)",
-					"rgb(75, 192, 192)",
-					"rgb(75, 192, 192)",
-					"rgb(201, 203, 207)",
-				],
-				borderWidth: 1,
-			}],
-		},
-		options: {
-			scales: {
-				y: {
-					ticks: {
-						stepSize: 1
-					}
-				}
-			},
-			responsive: true,
-			maintainAspectRatio: false,
-			plugins: {
-				legend: {
-					display: false
-				}
-			}
-		}
-	})
-
-	chartDObject = new Chart(chartD.value, {
-		type: "line",
-		data: {
-			labels: [],
-			datasets: [{data: []}]
-		},
-		options: {
-			responsive: true,
-			maintainAspectRatio: false,
-			plugins: {
-				legend: {
-					display: false
-				}
-			},
-			scales: {
-				x: {
-					type: "linear",
-					min: 0,
-					max: maxPoints.value,
-					ticks: {
-						stepSize: halfPoints.value ? 0.5 : 1
-					}
-				}
-			}
-		}
-	})
-
-	updateChardD()
+	// chartDObject = new Chart(chartD.value, {
+	// 	type: "line",
+	// 	data: {
+	// 		labels: [],
+	// 		datasets: [{data: []}],
+	// 	},
+	// 	options: {
+	// 		responsive: true,
+	// 		maintainAspectRatio: false,
+	// 		plugins: {
+	// 			legend: {
+	// 				display: false,
+	// 			},
+	// 		},
+	// 		scales: {
+	// 			x: {
+	// 				type: "linear",
+	// 				min: 0,
+	// 				max: maxPoints.value,
+	// 				ticks: {
+	// 					stepSize: halfPoints.value ? 0.5 : 1,
+	// 				},
+	// 			},
+	// 		},
+	// 	},
+	// })
 })
 
-watch(numberByEvaluation, (newValue, oldValue) => {
-	chartObject.config.data.datasets[0].data = Object.values(numberByEvaluation.value)
-	chartObject.update()
-
-	updateChardD()
-})
-
-watch(pourcentage, (newValue, oldValue) => {
-	updateChardD()
-})
-
-watch(maxPoints, (newValue, oldValue) => {
-	updateChardD()
-})
-
-function roundTo(x) {
-	if (halfPoints.value) {
-		return Math.floor(x * 2) / 2
-	} else {
-		return Math.floor(x) + 1
-	}
-}
-
-function evalB1(note) {
-	if (note < 1) {
-		return 0
-	}
-	return (note - 1) * maxPoints.value * pourcentage.value / 100 / 2.75
-}
-
-function evalB2(note) {
-	return (note - (6 - 2.25 / (1 - pourcentage.value / 100))) * maxPoints.value * (1 - pourcentage.value / 100) / 2.25
-}
-
-function evalF(note) {
-	if (note < 1) {
-		return 0
-	}
-	if (note > 6) {
-		return maxPoints.value
-	}
-
-	return (note - 1) * maxPoints.value / 5
-}
-
-function roundNote(note) {
-	return Math.round(note * 2) / 2
-}
-
-function evalNote(x) {
-	if (pourcentage.value === "" || pourcentage.value === 0) {
-		return roundNote(x * 5 / maxPoints.value + 1)
-	}
-
-	if (x < maxPoints.value * pourcentage.value / 100) {
-		return roundNote(2.75 / (maxPoints.value * pourcentage.value / 100) * x + 1)
-	} else {
-		return roundNote(2.25 / (maxPoints.value * (1 - pourcentage.value / 100)) * x + (6 - (2.25 / (1 - pourcentage.value / 100))))
-	}
-}
-
-function evalRange(note) {
-	if (note < 1 || note > 6) {
-		return [0, maxPoints.value]
-	}
-
-	if (pourcentage.value === "" || pourcentage.value === 0) {
-		// échelle fédérale.
-		return [
-			roundTo(evalF(note - 0.25)),
-			roundTo(evalF(note + 0.25))
-		]
-	}
-
-	if (note < 4) {
-		return [
-			roundTo(evalB1(note - 0.25)),
-			roundTo(evalB1(note + 0.25))
-		]
-	} else {
-		return [
-			roundTo(evalB2(note - 0.25)),
-			roundTo(evalB2(note + 0.25))
-		]
-
-	}
-
-	return [0, 0]
-}
-
-function updateChardD() {
-	// Mise à jours des labels
-	let labels = [],
-		pts = []
-
-	// for (let note = 1; note <= 6; note += 0.5) {
-	// 	labels.push(evalRange(note)[0])
-	// 	labels.push(evalRange(note)[1])
-	// 	pts.push(note)
-	// 	pts.push(note)
-	// }
-
-	// Départ
-	labels.push(0)
-	pts.push(0)
-
-	// 4
-	labels.push(evalRange(4)[0])
-	pts.push(4)
-
-	// max
-	labels.push(evalRange(6)[0])
-	pts.push(6)
-
-	// Mise à jours des points
-	chartDObject.config.data.labels = labels
-	chartDObject.config.data.datasets[0].data = pts
-	chartDObject.config.options.scales.x.max = maxPoints.value
-
-	chartDObject.update()
-}
 </script>
-

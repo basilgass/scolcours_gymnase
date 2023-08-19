@@ -1,46 +1,41 @@
 <template>
 	<form-field>
-		<div class="mb-3">
-			<form-label
-				:label="label"
-				:name="name"
-			/>
-
+		<div class="flex flex-col gap-3 -mt-2">
 			<form-input
 				v-model="theModel.title"
-				name="title"
-				label="nom de la figure"
 				inline
+				label="nom de la figure"
+				name="title"
 			/>
 
 			<form-input
 				v-model="theModel.css"
-				name="css"
-				label="css"
 				class="font-code"
 				inline
+				label="css"
+				name="css"
 			/>
 		</div>
 
-		<div class="grid grid-cols-1 gap-3">
+		<div class="grid grid-cols-1 gap-3 mt-5">
 			<div class="w-full grid grid-cols-3 gap-3">
 				<button
-					class="btn"
 					:class="modelValue.type==='image'?'bg-amber-200':'bg-white'"
+					class="btn"
 					@click.prevent="theModel.type='image'"
 				>
 					Image
 				</button>
 				<button
-					class="btn"
 					:class="modelValue.type==='draw'?'bg-amber-200':'bg-white'"
+					class="btn"
 					@click.prevent="theModel.type='draw'"
 				>
 					Draw
 				</button>
 				<button
-					class="btn"
 					:class="modelValue.type==='component'?'bg-amber-200':'bg-white'"
+					class="btn"
 					@click.prevent="loadComponents"
 				>
 					Component
@@ -61,19 +56,84 @@
 				v-else-if="modelValue.type==='draw'"
 				class="col-span-2 h-full w-full"
 			>
-				<form-input
-					v-model="theModel.parameters"
-					label="paramètres"
-					name="drawParameters"
-				/>
+				<div class="mb-3">
+					<div class="font-code text-xs grid grid-cols-3 gap-3 gap-y-0 items-end">
+						<form-switch
+							v-model="drawParameters.axis"
+							label="axes"
+							name="axis"
+							sm
+							@input="updateDrawParameters"
+						/>
+
+						<form-input
+							v-model="drawParameters.x"
+							inline
+							label="x="
+							name="gridX"
+							sm
+							@input="updateDrawParameters"
+						/>
+
+						<form-input
+							v-model="drawParameters.y"
+							inline
+							label="y="
+							name="gridY"
+							sm
+							@input="updateDrawParameters"
+						/>
+						<form-switch
+							v-model="drawParameters.grid"
+							label="grilles"
+							name="grid"
+							sm
+							@input="updateDrawParameters"
+						/>
+
+						<form-switch
+							v-model="drawParameters.nolabel"
+							label="pt anonyme"
+							name="nolabel"
+							sm
+							@input="updateDrawParameters"
+						/>
+
+						<form-switch
+							v-model="drawParameters.nopoint"
+							label="pt caché"
+							name="nopoint"
+							sm
+							@input="updateDrawParameters"
+						/>
+					</div>
+					<form-input
+						v-model="theModel.parameters"
+						class="font-code mt-3 text-xs"
+						name="parameters"
+						label="paramètres"
+						inline
+						sm
+						@input="updateSwitchParameters"
+					/>
+				</div>
+
 				<form-textarea
 					v-model="theModel.code"
 					:hide-label="true"
-					name="drawData"
 					:rows="10"
+					name="drawData"
+					@current-line="currentLine = $event"
 				/>
-			</div>
 
+				<div class="font-code text-xs min-h-[3em]">
+					<div class="flex justify-between">
+						<div>{{ currentLineHelperText.parameters }}</div>
+						<div>{{ currentLineHelperText.options }}</div>
+					</div>
+					<div>{{ currentLineHelperText.description }}</div>
+				</div>
+			</div>
 			<!-- component illustration -->
 			<div
 				v-else
@@ -97,13 +157,13 @@
 				<form-textarea
 					v-model="theModel.code"
 					:hide-label="true"
-					name="drawData"
 					:rows="10"
+					name="drawData"
 				/>
 				<markdown-it
 					v-if="chapterComponents[theModel.value]"
-					class="font-code text-left"
 					:text="chapterComponents[theModel.value]"
+					class="font-code text-left"
 				/>
 			</div>
 		</div>
@@ -112,12 +172,13 @@
 
 <script setup>
 import FormField from "@/Components/Form/FormField"
-import FormLabel from "@/Components/Form/FormLabel"
-import {computed, onMounted, ref} from "vue"
+import {computed, nextTick, onMounted, reactive, ref} from "vue"
 import FormTextarea from "@/Components/Form/FormTextarea"
 import FormInput from "@/Components/Form/FormInput"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 import FormImageDrop from "@/Components/Form/FormImageDrop.vue"
+import {parserHelperText} from "pidraw/esm/Parser"
+import FormSwitch from "@/Components/Form/FormSwitch.vue"
 
 defineEmits(["update:modelValue", "inputFocus"])
 let props = defineProps({
@@ -141,28 +202,78 @@ let props = defineProps({
 	focus: {type: Boolean, default: false}
 })
 
-function imageFileDropped(e){
+function imageFileDropped(e) {
 	theModel.value.code = e
 	emit("update:modelValue", theModel.value)
 }
 
 let chapterComponents = ref({})
-function loadComponents(){
-	theModel.value.type="component"
+
+function loadComponents() {
+	theModel.value.type = "component"
 	axios.get(route("illustrations.components"))
-		.then(res=> {
+		.then(res => {
 			chapterComponents.value = res.data
 		})
-		.catch(err=>console.log(err))
+		.catch(err => console.log(err))
 }
+
 let theModel = computed({
-	get: ()=>props.modelValue,
+	get: () => props.modelValue,
 	set: (value) => emit("update:modelValue", value)
 })
 
-onMounted(()=>{
-	if(props.modelValue.type==="component"){
+let drawParameters = reactive({
+	axis: false,
+	grid: false,
+	x: "",
+	y: "",
+	nolabel: false,
+	nopoint: false
+})
+let updateDrawParameters = async function () {
+		await nextTick()
+		let opts = []
+		for(const [key, value] of Object.entries(drawParameters)){
+			if(value===true){
+				opts.push(key)
+			}else if(typeof value==="string" && value!==""){
+				opts.push(`${key}=${value}`)
+			}
+		}
+
+		theModel.value.parameters = opts.length===0?null:opts.join(",")
+	},
+	updateSwitchParameters = async function(){
+		await nextTick()
+
+		if (props.modelValue.type ==="draw" && props.modelValue.parameters){
+			let opts = props.modelValue.parameters.split(",")
+			drawParameters.axis = opts.includes("axis")
+			drawParameters.grid = opts.includes("grid")
+			drawParameters.nolabel = opts.includes("nolabel")
+			drawParameters.nopoint = opts.includes("nopoint")
+			const x = opts.filter(value=>value.startsWith("x="))
+			if(x.length===1) {
+				drawParameters.x = x[0].split("=")[1] || ""
+			}
+			const y = opts.filter(value=>value.startsWith("y="))
+			if(y.length===1) {
+				drawParameters.y = y[0].split("=")[1] || ""
+			}
+		}
+	}
+
+let currentLine = ref(""),
+	currentLineHelperText = computed(() => {
+		return parserHelperText(currentLine.value)
+	})
+
+onMounted(() => {
+	if (props.modelValue.type === "component") {
 		loadComponents()
 	}
+
+	updateSwitchParameters()
 })
 </script>

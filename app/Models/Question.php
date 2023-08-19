@@ -18,6 +18,7 @@ use Illuminate\Support\Carbon;
  *
  * @property int $id
  * @property int $order
+ * @property string|null $displayif
  * @property string|null $css
  * @property string|null $answer
  * @property string|null $checker
@@ -38,6 +39,7 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Question whereChecker($value)
  * @method static Builder|Question whereCreatedAt($value)
  * @method static Builder|Question whereCss($value)
+ * @method static Builder|Question whereDisplayif($value)
  * @method static Builder|Question whereId($value)
  * @method static Builder|Question whereKeyboard($value)
  * @method static Builder|Question whereOrder($value)

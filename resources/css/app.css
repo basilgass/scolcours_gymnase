@@ -142,6 +142,15 @@
 		@apply bg-gray-100 text-gray-800
 	}
 
+	.block-border-danger {
+		@apply border border-l-4 border-red-600;
+	}
+	.block-border-danger .block-header{
+		@apply bg-red-50 text-red-700
+	}
+
+
+
 	.admin-wrapper{
 		@apply flex justify-between gap-3 items-baseline bg-amber-100 rounded border border-dashed border-amber-600 px-3 py-2;
 	}

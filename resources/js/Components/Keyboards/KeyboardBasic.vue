@@ -57,9 +57,6 @@ let extraLetters = computed(()=>{
 		return props.keyboard.config
 	})
 
-
-console.log(props.keyboard.config)
-
 // Emits change and validate (to trigger a validation manually on the parent)
 let emits = defineEmits(["change", "validate"]),
 	changeEvent = function () {
@@ -67,7 +64,16 @@ let emits = defineEmits(["change", "validate"]),
 
 		// Make the validation.
 		// validation = {result: Boolean, message: string}
-		const validation = props.keyboard.checker.check(props.answer, keyboardInput.value.input)
+		let validation = {result: false}
+		props.answer.split("|")
+			.forEach((anAnswer, index)=> {
+				if(!validation.result) {
+					validation = {
+						...props.keyboard.checker.check(anAnswer, keyboardInput.value.input),
+						index
+					}
+				}
+			})
 
 		// emit change event
 		emits("change", {value: keyboardInput.value, validation})
