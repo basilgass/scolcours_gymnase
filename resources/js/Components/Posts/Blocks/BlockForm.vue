@@ -10,22 +10,26 @@ Formulaire d'édition d'un bloc
 		<template #header>
 			<div class="bg-white border-b border-gray-200 px-5 py-3 mb-5">
 				<div class=" flex justify-between items-baseline w-full">
-					<h1>
+					<h1 class="flex items-baseline gap-5">
 						<span class="text-xl md:text-2xl">édition un block</span>
-						<span class="text-xs font-code ml-5">(id: {{ theBlock.id }})</span>
+						<span class="text-xs font-code">(id: {{ theBlock.id }})</span>
+						<button class="btn btn-xs self-end">
+							déplacer (WIP)
+						</button>
 					</h1>
 					<div class="flex gap-3 justify-end">
 						<button
-							class="btn-primary btn-xs"
+							class="btn-primary btn-xs w-[60px]"
 							@click="saveBlock"
 						>
-							enregistrer
+							<i class="bi bi-save" />
 						</button>
 						<button
-							class="btn-primary btn-xs"
+							class="btn-primary btn-xs w-[60px]"
 							@click="saveAndCloseBlock"
 						>
-							enregistrer + fermr
+							<i class="bi bi-save" />
+							+ <i class="bi bi-x-lg" />
 						</button>
 						<button
 							class="btn-cancel btn-xs"
@@ -52,12 +56,12 @@ Formulaire d'édition d'un bloc
 						sm
 					/>
 
-					<div>
-						<input
+					<div class="flex items-baseline gap-5">
+						<label>visibilité alternative <input
 							v-model="switchEnable"
 							type="checkbox"
 							@click="updateSwitchEnable"
-						>
+						></label>
 
 						<form-switch
 							v-show="!props.noSwitch && switchEnable"
@@ -110,7 +114,7 @@ Formulaire d'édition d'un bloc
 								:key="key"
 								:value="key"
 							>
-								{{ item.text }}
+								{{ item.title }}
 							</option>
 						</form-select>
 
@@ -212,7 +216,7 @@ import DialogModal from "@/Components/Ui/DialogModal.vue"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
 import {PiMath} from "pimath/esm"
 import {useFormattedBody} from "@/Composables/useHelpers"
-import {useBlockTypes} from "@/scolcours"
+import {blockTypes} from "@/scolcours"
 import Button from "@/Components/Auth/Button.vue"
 import FormCodearea from "@/Components/Form/FormCodearea.vue"
 
@@ -294,5 +298,5 @@ let saveBlock = function () {
 			.catch(error => console.error(error))
 	}
 
-const postType = useBlockTypes
+const postType = blockTypes
 </script>

@@ -42,5 +42,10 @@ function updateCrtLine(evt){
 		label="test avec ligne courant"
 		@current-line="updateCrtLine"
 	/>
-	<div>{{ crtLine }}</div>
+	<div
+		v-theme.border="'arithmetique'"
+		class="border"
+	>
+		{{ crtLine }}
+	</div>
 </template>

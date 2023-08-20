@@ -76,33 +76,63 @@ function katexUpdate(el, binding, vnode) {
 }
 
 export const katexDirective = {
-	mounted (el, binding, vnode) {
+	mounted(el, binding, vnode) {
 		katexUpdate(el, binding, vnode)
 	},
-	updated (el, binding, vnode) {
+	updated(el, binding, vnode) {
 		katexUpdate(el, binding, vnode)
 	},
-	unmounted(el){
+	unmounted(el) {
 		el.innerHTML = ""
 	}
 }
 
 export const visibleDirective = {
-	mounted (el, binding, vnode) {
+	mounted(el, binding, vnode) {
 		el.style.visibility = binding.value ? "visible" : "hidden"
 	}
 }
 
-function adminUpdate(el, binding, vnode){
-	if(!usePage().props.auth.can.admin){
+function adminUpdate(el, binding, vnode) {
+	if (!usePage().props.auth.can.admin) {
 		el.remove()
 	}
 }
+
 export const adminDirective = {
-	mounted (el, binding, vnode) {
+	mounted(el, binding, vnode) {
 		adminUpdate(el, binding, vnode)
 	},
-	updated (el, binding, vnode) {
+	updated(el, binding, vnode) {
 		adminUpdate(el, binding, vnode)
 	},
+}
+
+function themeUpdate(el, binding, vnode){
+	const themes = usePage().props.themes.map(theme => theme.slug)
+
+	let chapter
+	if(themes.indexOf(binding.value) === -1){
+		chapter = usePage().props?.theme?.slug
+	}else{
+		chapter = binding.value
+	}
+
+	if(chapter!==undefined){
+		const keys = ["btn", "bg", "text", "border", "active", "scrollbar"]
+		Object.keys(binding.modifiers).forEach(key =>{
+			if(keys.indexOf(key)!==-1){
+				el.classList.add(`${key}-scolcours-${chapter}`)
+			}
+		})
+
+	}
+}
+export const themeDirective = {
+	mounted(el, binding, vnode) {
+		themeUpdate(el, binding, vnode)
+	},
+	updated(el, binding, vnode) {
+		themeUpdate(el, binding, vnode)
+	}
 }

@@ -9,7 +9,7 @@ Utilisé principalement pour l'édition des blocks
 	>
 		<div
 			class="fixed inset-0 bg-gray-800/60 grid place-items-center z-50"
-			@click.self="doCancel"
+			@mousedown.self="doCancel"
 		>
 			<div
 				ref="root"

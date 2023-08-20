@@ -4,7 +4,7 @@ Affichage d'un block , avec toutes les possibilités
 <template>
 	<article
 		v-show="showBlock"
-		:class="theBlock.type !== '' ? `block-border-${theBlock.type}` : ''"
+		:class="blockConfig.style.body"
 	>
 		<button
 			v-if="isBlur"
@@ -15,7 +15,10 @@ Affichage d'un block , avec toutes les possibilités
 		/>
 		<div v-else>
 			<!-- Block title (if exist) -->
-			<div class="flex justify-between w-full px-5 block-header">
+			<div
+				class="flex justify-between w-full px-5 py-3 mb-3 text-xl"
+				:class="blockConfig.style.header"
+			>
 				<div class="flex gap-3">
 					<i
 						v-if="blockIcon"
@@ -135,6 +138,7 @@ Affichage d'un block , avec toutes les possibilités
 				</div>
 			</div>
 		</div>
+
 		<!-- Edit form -->
 		<div
 			v-if="showEditForm"
@@ -160,7 +164,7 @@ import IllustrationShow from "@/Components/Posts/Illustrations/IllustrationShow.
 import {computed, defineAsyncComponent, inject, provide, ref} from "vue"
 import {PiMath} from "pimath/esm"
 import {useFormattedBody} from "@/Composables/useHelpers"
-import {useBlockTypes} from "@/scolcours"
+import {blockTypes} from "@/scolcours"
 
 const emits = defineEmits(["destroy"])
 let props = defineProps({
@@ -182,20 +186,16 @@ let props = defineProps({
 	flash = inject("flash"),
 	editMode = inject("editMode")
 
-const blockTypes = useBlockTypes,
+const	blockConfig = computed(()=>{
+		return blockTypes[theBlock.value.type] === undefined ?
+			blockTypes["default"]:
+			blockTypes[theBlock.value.type]
+	}),
 	blockTitle = computed(() => {
-		if (theBlock.value.title) {
-			return theBlock.value.title
-		}
-
-		if (blockTypes[theBlock.value.type] !== undefined) {
-			return blockTypes[theBlock.value.type].text
-		}
-
-		return ""
+		return theBlock.value.title===""?blockConfig.value.title:theBlock.value.title
 	}),
 	blockIcon = computed(()=>{
-		return blockTypes[theBlock.value.type]?.icon
+		return blockConfig.value.icon
 	}),
 	blockTemplate = computed(() => {
 		if (!theBlock.value.template) {

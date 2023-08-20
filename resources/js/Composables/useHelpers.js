@@ -63,5 +63,6 @@ export let useKatexMacros = {
 	"\\IR": "\\mathbb{R}",
 	"\\IN": "\\mathbb{N}",
 	"\\ds": "\\displaystyle",
-	"\\vect": "\\overrightarrow"
+	"\\vect": "\\overrightarrow",
+	"\\dx": "\\hspace{0.5em}\\text{d}x",
 }

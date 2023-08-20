@@ -104,53 +104,6 @@
 		margin-bottom: 0.3em;
 	}
 
-	.block-header {
-		@apply py-3 mb-3 text-xl
-	}
-	.block-border-definition {
-		@apply border-l-4 border-lime-400;
-	}
-	.block-border-definition .block-header {
-		@apply bg-lime-50 text-lime-700
-	}
-
-	.block-border-theorem {
-		@apply border-l-4 border-amber-600;
-	}
-	.block-border-theorem .block-header{
-		@apply bg-amber-50 text-amber-700
-	}
-
-	.block-border-property {
-		@apply border-l-4 border-purple-600;
-	}
-	.block-border-property .block-header{
-		@apply bg-purple-50 text-purple-700
-	}
-
-	.block-border-remark {
-		@apply border-l-4 border-pink-600;
-	}
-	.block-border-remark .block-header{
-		@apply bg-pink-50 text-pink-700
-	}
-
-	.block-border-example {
-		@apply border-0;
-	}
-	.block-border-example .block-header{
-		@apply bg-gray-100 text-gray-800
-	}
-
-	.block-border-danger {
-		@apply border border-l-4 border-red-600;
-	}
-	.block-border-danger .block-header{
-		@apply bg-red-50 text-red-700
-	}
-
-
-
 	.admin-wrapper{
 		@apply flex justify-between gap-3 items-baseline bg-amber-100 rounded border border-dashed border-amber-600 px-3 py-2;
 	}
