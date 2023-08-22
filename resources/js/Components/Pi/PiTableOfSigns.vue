@@ -17,8 +17,8 @@ Affichage d'un tableau de signes ou de croissance.
 							>
 								<div
 									v-katex.inline="`-\\infty`"
-									class="w-6 text-xs pl-1"
-									:class="tos.zeroes.length===0?'w-10':'w-6'"
+									class="text-xs pl-1 text-left"
+									:class="tos.zeroes.length===0?'w-12':'w-6'"
 								/>
 								<div
 									v-for="(zero, n) in tos.zeroes"
@@ -30,8 +30,8 @@ Affichage d'un tableau de signes ou de croissance.
 								</div>
 								<div
 									v-katex.inline="`+\\infty`"
-									class="text-xs mr-1"
-									:class="tos.zeroes.length===0?'w-10':'w-6'"
+									class="text-xs mr-1 text-right"
+									:class="tos.zeroes.length===0?'w-12':'w-6'"
 								/>
 							</div>
 						</th>
@@ -56,7 +56,7 @@ Affichage d'un tableau de signes ou de croissance.
 									:class="{
 										'cell-v-line-d':sign==='d',
 										'cell-v-line': n%2===1,
-										'w-20': tos.zeroes.length===0,
+										'w-24': tos.zeroes.length===0,
 										'w-12': tos.zeroes.length>0
 									}"
 									class="text-center hover:bg-white py-2"
@@ -83,7 +83,7 @@ Affichage d'un tableau de signes ou de croissance.
 									:class="{
 										'cell-v-line-d':sign==='d',
 										'cell-v-line': n%2===1,
-										'w-20': tos.zeroes.length===0,
+										'w-24': tos.zeroes.length===0,
 										'w-12': tos.zeroes.length>0
 									}"
 									class="w-12 text-center hover:bg-white py-2"
@@ -107,7 +107,7 @@ Affichage d'un tableau de signes ou de croissance.
 									:class="{
 										'cell-v-line-d':sign==='d',
 										'cell-v-line': n%2===1,
-										'w-20': tos.zeroes.length===0,
+										'w-24': tos.zeroes.length===0,
 										'w-12': tos.zeroes.length>0
 									}"
 
@@ -145,7 +145,7 @@ Affichage d'un tableau de signes ou de croissance.
 									:class="{
 										'cell-v-line-d':sign==='d',
 										'cell-v-line': n%2===1,
-										'w-20': tos.zeroes.length===0,
+										'w-24': tos.zeroes.length===0,
 										'w-12': tos.zeroes.length>0
 									}"
 									class="w-12 text-center hover:bg-white py-2"
@@ -177,7 +177,6 @@ Affichage d'un tableau de signes ou de croissance.
 </template>
 <script setup>
 import {computed, ref} from "vue"
-
 
 let props = defineProps({
 		tos: {required: true, type: Object},
