@@ -70,13 +70,23 @@ class BlockController extends Controller
 			'data' => $request->data
 		]);
 
-		if ($request->target === 'Chapter') {
-			Chapter::get($request->target_id)?->append($block);
-		} elseif ($request->target === 'Post') {
-			Post::get($request->target_id)?->append($block);
-		}
+		$this->storeInBlockable($request->target, $request->target_id, $block);
+//		if ($request->target === 'Chapter') {
+//			Chapter::get($request->target_id)?->append($block);
+//		} elseif ($request->target === 'Post') {
+//			Post::get($request->target_id)?->append($block);
+//		}
 
 		return $block;
+	}
+
+	public function storeInBlockable(string $target, int $target_id, Block $block)
+	{
+		if ($target === 'Chapter') {
+			Chapter::get($target_id)?->append($block);
+		} elseif ($target === 'Post') {
+			Post::get($target_id)?->append($block);
+		}
 	}
 
 	public function storeInPost(Post $post, Request $request)
@@ -89,7 +99,6 @@ class BlockController extends Controller
 
 		return BlockResource::make($block);
 	}
-
 
 	/**
 	 * Display the specified resource.
@@ -224,7 +233,7 @@ class BlockController extends Controller
 			// read it and grab the md text.
 			$content = explode("<info>", Storage::disk('illustrations')->get($file));
 			$components[basename($file, '.vue')] = count($content) >= 2 ? explode("</info>", $content[1])[0] : "";
-			
+
 		}
 		return $components;
 	}
@@ -237,5 +246,19 @@ class BlockController extends Controller
 
 		return true;
 
+	}
+
+	public function moveBlockToPost(Block $block, Post $post)
+	{
+		// remove the block from the current blockable.
+		$block->update([
+			'blockable_id' => $post->id,
+			'order' => count($post->blocks) + 2
+		]);
+
+		return [
+			'url'=>$post->url,
+			'label'=>$post->title,
+		];
 	}
 }

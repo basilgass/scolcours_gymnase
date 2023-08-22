@@ -61,6 +61,9 @@
 				</Link>
 			</div>
 
+			<!-- liste des relations -->
+			<chapter-relations :chapter="theChapter" />
+
 			<!-- liste des challenges -->
 			<chapter-challenges :chapter="theChapter" />
 
@@ -86,6 +89,7 @@ import ChapterToc from "@/Components/Chapters/ChapterToc.vue"
 import ChapterChallenges from "@/Components/Chapters/ChapterChallenges.vue"
 import ChapterFormulas from "@/Components/Chapters/ChapterFormulas.vue"
 import {Head} from "@inertiajs/vue3"
+import ChapterRelations from "@/Components/Chapters/ChapterRelations.vue"
 
 let props = defineProps({
 		chapter: {type: Object, required: true},

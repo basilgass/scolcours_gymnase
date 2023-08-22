@@ -3,18 +3,11 @@
 
 use App\Http\Controllers\PostController;
 
-//Route::resource('posts', PostController::class)
-//	->only('show');
-//Route::resource('chapters.posts', PostController::class)
-//	->parameters([
-//		"chapters" => "chapter:slug"
-//	])
-//	->shallow()
-//	->except('show');
-
 // Public
 Route::get('chapters/{chapter:slug}/posts', [PostController::class, 'show'])
 	->name("chapters.posts.index");
+
+
 
 Route::middleware('can:admin')->group(function () {
 	Route::get('chapters/{chapter:slug}/posts/create', [PostController::class, 'create'])

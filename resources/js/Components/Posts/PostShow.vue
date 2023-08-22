@@ -82,6 +82,7 @@ Principalement la couche utilisée dans ChapterSlide.
 			>
 				<template #item="{ element }">
 					<block-show
+						:id="`post-${thePost.id}-block-${element.id}`"
 						:key="`post-${thePost.id}-block-${element.id}`"
 						:block="element"
 						:switch="postSwitch"

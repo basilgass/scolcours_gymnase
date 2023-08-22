@@ -124,7 +124,9 @@ Affichage d'un block , avec toutes les possibilités
 								@destroy="destroyIllustration"
 							/>
 						</template>
-						<template #footer>
+						<template
+							#footer
+						>
 							<button
 								v-show="editMode.enabled.value"
 								v-admin

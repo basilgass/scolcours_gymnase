@@ -40,9 +40,10 @@
 						])
 					"
 				>
-					<div class="text-2xl block mb-5 cursor-pointer">
-						{{ chapter.title }}
-					</div>
+					<div
+						v-katex.auto="chapter.title"
+						class="text-2xl block mb-5 cursor-pointer"
+					/>
 					<illustration-show
 						v-if="chapter.block.illustrations.length > 0"
 						class="mb-3"

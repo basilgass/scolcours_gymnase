@@ -19,6 +19,7 @@ class ChapterMinResource extends JsonResource
 	{
 		return [
 			'id' => $this->id,
+			'theme_id'=>$this->theme->id,
 			'slug' => $this->slug,
 			'title' => $this->title,
 		];

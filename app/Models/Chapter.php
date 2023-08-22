@@ -35,6 +35,8 @@ use URL;
  * @property-read int|null $questions_count
  * @property-read Collection<int, \App\Models\Quizz> $quizzs
  * @property-read int|null $quizzs_count
+ * @property-read Collection<int, Chapter> $relations
+ * @property-read int|null $relations_count
  * @property-read \App\Models\Theme $theme
  * @property-read Collection<int, \App\Models\User> $users
  * @property-read int|null $users_count
@@ -58,7 +60,7 @@ class Chapter extends Model
 	protected $guarded = [];
 
 	// removed the theme:id,slug
-	protected $with = ['posts','formulas', 'challenges'];
+	protected $with = ['posts','formulas', 'challenges', "relations"];
 
 	public function theme(): \Illuminate\Database\Eloquent\Relations\BelongsTo
 	{
@@ -98,6 +100,11 @@ class Chapter extends Model
 	public function quizzs()
 	{
 		return $this->hasMany(Quizz::class);
+	}
+
+	public function relations()
+	{
+		return $this->belongsToMany(Chapter::class, "chapter_relation", "chapter_id", "related_id");
 	}
 //
 //	public function questions()

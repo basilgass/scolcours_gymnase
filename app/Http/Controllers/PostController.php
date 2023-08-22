@@ -158,4 +158,19 @@ class PostController extends Controller
 		return true;
 	}
 
+	public function movePostToChapter(Post $post, Chapter $chapter)
+	{
+		// remove the block from the current blockable.
+		$post->update([
+			'chapter_id' => $chapter->id,
+			'order' => count($chapter->posts) + 2
+		]);
+
+		return [
+			'url'=>$chapter->url,
+			'label'=>$chapter->title,
+		];
+
+	}
+
 }

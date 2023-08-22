@@ -13,9 +13,12 @@ Formulaire d'édition d'un bloc
 					<h1 class="flex items-baseline gap-5">
 						<span class="text-xl md:text-2xl">édition un block</span>
 						<span class="text-xs font-code">(id: {{ theBlock.id }})</span>
-						<button class="btn btn-xs self-end">
-							déplacer (WIP)
-						</button>
+						<move-to
+							:source-id="theBlock.id"
+							source="block"
+							target="post"
+							@moved="emits('update:modelValue', false)"
+						/>
 					</h1>
 					<div class="flex gap-3 justify-end">
 						<button
@@ -219,6 +222,7 @@ import {useFormattedBody} from "@/Composables/useHelpers"
 import {blockTypes} from "@/scolcours"
 import Button from "@/Components/Auth/Button.vue"
 import FormCodearea from "@/Components/Form/FormCodearea.vue"
+import MoveTo from "@/Components/Posts/Blocks/moveTo.vue"
 
 const emits = defineEmits(["update:modelValue", "change", "destroy"])
 const props = defineProps({
@@ -299,4 +303,5 @@ let saveBlock = function () {
 	}
 
 const postType = blockTypes
+
 </script>

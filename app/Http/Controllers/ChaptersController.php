@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\ChapterMinResource;
 use App\Http\Resources\ChapterResource;
+use App\Http\Resources\ChapterShowResource;
 use App\Http\Resources\PostResource;
 use App\Http\Resources\QuestionCollection;
 use App\Models\Chapter;
@@ -24,23 +26,28 @@ class ChaptersController extends Controller
 	{
 		if (Auth::User()?->admin) {
 			$chapters = ChapterResource::collection($theme->chapters()
-				->with('challenges')
+//				->with('challenges')
 				->get());
 		} else {
 			$chapters = ChapterResource::collection($theme->chapters()
-				->with('challenges')
+//				->with('challenges')
 				->where('active', true)
 				->get());
 		}
 
 		// Filter output.
-		// TODO: filter values passed for chapters using resources
 		$data = [
 			"theme" => $theme->only('color', 'icon', 'slug', 'title', 'id'),
-			"chapters" => $chapters
+			"chapters" => ChapterShowResource::collection($chapters)
 		];
 
 		return Inertia::render("Chapters/ChapterIndex", $data);
+	}
+
+	public function indexMin()
+	{
+		// Should be admin only
+		return ChapterMinResource::collection(Chapter::all()->sortBy(['theme_id', 'title']));
 	}
 
 	public function create(Theme $theme)
@@ -214,6 +221,23 @@ class ChaptersController extends Controller
 	public function download(string $filename)
 	{
 		return Storage::disk('public')->download('/pdf/' . $filename);
+	}
+
+	public function toggleRelated(Chapter $chapter, Chapter $related)
+	{
+		if($chapter->id===$related->id){
+			return false;
+		}
+		// update it !
+		if($chapter->relations->contains($related)){
+			$chapter->relations()->detach($related);
+		}else {
+			$chapter->relations()->attach($related);
+		}
+		$chapter->refresh();
+
+		return ChapterMinResource::collection($chapter->relations->order
+		->sortBy());
 	}
 
 	// TODO: Delete this section as it has been moved to LatexController ?

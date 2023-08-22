@@ -12,10 +12,9 @@ $themesList = Cache::rememberForever('themes', function () {
 			->orderBy('order')
 			->get()->pluck('slug')->toArray();
 	} catch (Exception $exception) {
-		return ["algebre", "geometrie", "analyse", "statistiques", "jeux", "numeric"];
+		return ["arithmetique", "algebre", "geometrie", "analyse", "statistiques", "jeux", "numeric"];
 	}
 });
-
 
 // Themes and chapters main routes
 // Public routes !
@@ -44,6 +43,11 @@ Route::whereIn('theme', $themesList)->group(function () {
 
 		Route::post('chapters/{chapter}/currentPost', [ChaptersController::class, 'updateCurrentPost'])->name('chapters.currentPost');
 		Route::patch('chapters/{chapter}/ordering', [ChaptersController::class, 'updatePostsOrder'])->name('chapters.updatePostsOrder');
+
+		Route::get('chapters/min', [ChaptersController::class, 'indexMin'])
+			->name('chapters.index.min');
+		Route::post('chapters/{chapter}/relations/{related}', [ChaptersController::class, 'toggleRelated'])
+			->name('chapters.relations.toggle');
 	});
 
 });

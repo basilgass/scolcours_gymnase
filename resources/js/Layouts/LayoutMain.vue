@@ -29,10 +29,12 @@
 					'bg-white text-black': message.type===undefined
 				}"
 				:timeout="message.timeout"
+				:link="message.link"
 				@open="message.id=$event"
 				@close="flashMessages = flashMessages.filter(x=>x.id!==$event)"
 			>
 				{{ message.message }}
+				<template />
 			</flash-message>
 		</div>
 	</div>
@@ -55,13 +57,15 @@ defineProps({
 })
 
 let flashMessages = ref([]),
-	addFlashMessage = function (message, type = "success", timeout = 2000) {
-		flashMessages.value.push({message, type, timeout})
+	addFlashMessage = function (message, link, type = "success", timeout = 2000) {
+		flashMessages.value.push({message, link, type, timeout})
 	}
+// TODO: add link in flash message
+// flash.add(message, link, timeout)
 provide("flash", {
 	add: addFlashMessage,
-	success: (message, timeout) => addFlashMessage(message, "success", timeout),
-	error: (message, timeout) => addFlashMessage(message, "error", timeout),
+	success: (message, link, timeout) => addFlashMessage(message, link, "success", timeout),
+	error: (message, link, timeout) => addFlashMessage(message, link, "error", timeout),
 })
 
 let globalEditMode = ref(false),

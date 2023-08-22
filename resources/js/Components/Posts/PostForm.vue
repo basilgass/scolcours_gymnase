@@ -13,6 +13,12 @@ Utilisé dans PoseShow et PostEditPage (pour l'édition mode développement ?)
 				<h1>
 					<span class="text-xl md:text-2xl">édition d'un post</span>
 					<span class="text-xs font-code ml-5">(id: {{ props.post.id }})</span>
+					<move-to
+						target="chapter"
+						:source-id="props.post.id"
+						source="post"
+						@moved="emits('update:modelValue', false)"
+					/>
 				</h1>
 				<div class="flex gap-3 justify-end">
 					<button
@@ -80,6 +86,7 @@ import {ref} from "vue"
 import FormTextarea from "@/Components/Form/FormTextarea"
 import DialogModal from "@/Components/Ui/DialogModal.vue"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
+import MoveTo from "@/Components/Posts/Blocks/moveTo.vue"
 
 const emits = defineEmits(["update:modelValue", "change", "destroy"])
 

@@ -97,6 +97,12 @@ function adminUpdate(el, binding, vnode) {
 	if (!usePage().props.auth.can.admin) {
 		el.remove()
 	}
+
+	if(binding.value){
+		el.classList.add("hide")
+	}else{
+		el.classList.remove("hide")
+	}
 }
 
 export const adminDirective = {
@@ -110,9 +116,16 @@ export const adminDirective = {
 
 function themeUpdate(el, binding, vnode){
 	const themes = usePage().props.themes.map(theme => theme.slug)
-
 	let chapter
-	if(themes.indexOf(binding.value) === -1){
+
+	if(!isNaN(+binding.value)){
+		// it's a number -> get the theme id.
+		let theme = usePage().props.themes.filter(th=>th.id===+binding.value)
+
+		if(theme.length===1) {
+			chapter = theme[0].slug
+		}
+	}else if(themes.indexOf(slug) === -1){
 		chapter = usePage().props?.theme?.slug
 	}else{
 		chapter = binding.value

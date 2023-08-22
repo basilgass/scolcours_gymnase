@@ -46,6 +46,17 @@ class ChapterResource extends JsonResource
 						"title" => $challenge["title"]
 					];
 				}),
+			'relations' => $this->relations
+				->map(
+					function ($related) {
+						return [
+							"id" => $related["id"],
+							"slug" => $related["slug"],
+							"title" => $related["title"],
+							"theme_id" => $related["theme_id"],
+						];
+					}
+				)->sortBy(['theme_id', 'title'])->all(),
 		];
 	}
 }
