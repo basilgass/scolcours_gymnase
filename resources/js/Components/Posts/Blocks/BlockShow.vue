@@ -88,6 +88,7 @@ Affichage d'un block , avec toutes les possibilités
 			>
 				<!-- Block body -->
 				<markdown-it
+					v-if="blockBody!==null"
 					:class="blockTemplate.block"
 					:text="blockBody"
 				/>

@@ -54,7 +54,7 @@ export function makeStudyFromCode(code, showCoords, displayMode){
 		return {
 			zeroes: zeroes.split(",").map(x => {
 				return {tex: keyboards.exact.tex(x)}
-			}),
+			}).filter(x=>x.tex!==""),
 			factors: [],
 			extremes,
 			type: "grows",

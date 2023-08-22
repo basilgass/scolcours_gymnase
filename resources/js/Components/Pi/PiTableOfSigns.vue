@@ -18,6 +18,7 @@ Affichage d'un tableau de signes ou de croissance.
 								<div
 									v-katex.inline="`-\\infty`"
 									class="w-6 text-xs pl-1"
+									:class="tos.zeroes.length===0?'w-10':'w-6'"
 								/>
 								<div
 									v-for="(zero, n) in tos.zeroes"
@@ -29,7 +30,8 @@ Affichage d'un tableau de signes ou de croissance.
 								</div>
 								<div
 									v-katex.inline="`+\\infty`"
-									class="w-6 text-xs mr-1"
+									class="text-xs mr-1"
+									:class="tos.zeroes.length===0?'w-10':'w-6'"
 								/>
 							</div>
 						</th>
@@ -53,9 +55,11 @@ Affichage d'un tableau de signes ou de croissance.
 									v-katex.inline="n%2===0?sign:(sign==='z'?'0':'')"
 									:class="{
 										'cell-v-line-d':sign==='d',
-										'cell-v-line': n%2===1
+										'cell-v-line': n%2===1,
+										'w-20': tos.zeroes.length===0,
+										'w-12': tos.zeroes.length>0
 									}"
-									class="w-12 text-center hover:bg-white py-2"
+									class="text-center hover:bg-white py-2"
 								/>
 							</div>
 						</td>
@@ -67,7 +71,7 @@ Affichage d'un tableau de signes ou de croissance.
 						class="border-t border-t-2 border-gray-400"
 					>
 						<td
-							v-katex.inline="`${props.fn}`"
+							v-katex.inline="`${dxName}`"
 							class="min-w-[100px] border-r text-center border-gray-400"
 						/>
 						<td>
@@ -78,7 +82,9 @@ Affichage d'un tableau de signes ou de croissance.
 									v-katex.inline="n%2===0?sign:(sign==='z'?'0':'')"
 									:class="{
 										'cell-v-line-d':sign==='d',
-										'cell-v-line': n%2===1
+										'cell-v-line': n%2===1,
+										'w-20': tos.zeroes.length===0,
+										'w-12': tos.zeroes.length>0
 									}"
 									class="w-12 text-center hover:bg-white py-2"
 								/>
@@ -90,7 +96,7 @@ Affichage d'un tableau de signes ou de croissance.
 						class="border-t border-t-2 border-gray-400"
 					>
 						<td
-							v-katex.inline="`${props.fn}`"
+							v-katex.inline="`${fnName}`"
 							class="min-w-[100px] border-r text-center border-gray-400"
 						/>
 						<td>
@@ -101,6 +107,8 @@ Affichage d'un tableau de signes ou de croissance.
 									:class="{
 										'cell-v-line-d':sign==='d',
 										'cell-v-line': n%2===1,
+										'w-20': tos.zeroes.length===0,
+										'w-12': tos.zeroes.length>0
 									}"
 
 									class="w-12 text-center hover:bg-white py-2 relative"
@@ -125,7 +133,7 @@ Affichage d'un tableau de signes ou de croissance.
 						class="border-t border-t-2 border-gray-400"
 					>
 						<td
-							v-katex.inline="`${props.fn}`"
+							v-katex.inline="`${fnName}`"
 							class="min-w-[100px] border-r text-center border-gray-400"
 						/>
 						<td>
@@ -136,7 +144,9 @@ Affichage d'un tableau de signes ou de croissance.
 									v-katex.inline="n%2===0?sign:(sign==='z'?'0':'')"
 									:class="{
 										'cell-v-line-d':sign==='d',
-										'cell-v-line': n%2===1
+										'cell-v-line': n%2===1,
+										'w-20': tos.zeroes.length===0,
+										'w-12': tos.zeroes.length>0
 									}"
 									class="w-12 text-center hover:bg-white py-2"
 								/>
@@ -166,7 +176,7 @@ Affichage d'un tableau de signes ou de croissance.
 	</div>
 </template>
 <script setup>
-import {ref} from "vue"
+import {computed, ref} from "vue"
 
 
 let props = defineProps({
@@ -176,6 +186,20 @@ let props = defineProps({
 		extremes: {type: String, default: null},
 	}),
 	showTex = ref(false)
+
+const fnName = computed(()=>{
+		if(props.fn===null){return "f(x)"}
+
+		return props.fn
+	}),
+	dxName = computed(()=>{
+		if(fnName.value.includes("(")){
+			const [name, x] = fnName.value.split("(")
+			return `${name}'(${x}`
+		}
+
+		return `\\left(${fnName.value}\\right)'`
+	})
 
 function displaySigns(index, isGrows) {
 	let signs

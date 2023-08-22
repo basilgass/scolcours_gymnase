@@ -34,6 +34,8 @@ export function useWrongAnswerAnimation(btn) {
 
 
 export function useFormattedBody(body, mabyeRefValues){
+	if(body===null){return null}
+
 	const values = unref(mabyeRefValues)
 
 	// There is no value for the script

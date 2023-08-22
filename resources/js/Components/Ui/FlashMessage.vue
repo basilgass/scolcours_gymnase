@@ -19,7 +19,10 @@ const flash = inject('flash')
 
 			<slot />
 
-			<div class="flex gap-4 hover:underline">
+			<div
+				v-if="props.link"
+				class="flex gap-4 hover:underline"
+			>
 				<i class="bi bi-link" />
 				<Link
 					:href="props.link.url"

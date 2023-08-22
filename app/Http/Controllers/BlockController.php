@@ -136,52 +136,23 @@ class BlockController extends Controller
 	{
 		$validation = $request->validate([
 			'title' => ['nullable', 'max:255'],
-			'body' => ['required'],
+			'body' => ['nullable'],
 			'template' => ['string', 'nullable'],
 			'type' => ['string', 'nullable'],
 			'script' => ['string', 'nullable'],
 			'json' => ['string', 'nullable'],
 			'blur' => ['boolean'],
 			'switch' => ['boolean', 'nullable'],
-//			'illustrations' => ['array', 'nullable'],
-//			'illustrations.*.id' => ['integer', 'nullable'],
-//			'illustrations.*.title' => ['string', 'nullable'],
-//			'illustrations.*.type' => ['string'],
-//			'illustrations.*.code' => ['string'],
-//			'illustrations.*.parameters' => ['string', 'nullable'],
-//			'illustrations.*.css' => ['string', 'nullable']
 		]);
 
 		$block->title = $validation['title'] ?? '';
-		$block->body = $validation['body'];
+		$block->body = $validation['body'] ?? null;
 		$block->template = $validation['template']??null;
 		$block->type = $validation['type'] ?? '';
 		$block->script = $validation['script'] ?? null;
 		$block->json = $validation['json'] ?? null;
 		$block->blur = $validation['blur'] ?? false;
 		$block->switch = $validation['switch'] ?? null;
-
-		// Get all illustrations IDs.
-		// TODO: remove illustration handle from block
-//		if(count($validation['illustrations'])===0){
-//			// remove all illustrations (we don't want anymore !)
-//			$block->illustrations()->delete();
-//		}else{
-//			// Add all illustrations
-//			$block->illustrations()
-//				->whereNotIn(
-//					'id',
-//					collect($validation['illustrations'])->pluck('id')
-//				)->delete();
-//
-//			foreach ($validation['illustrations'] as $i=>$illustration) {
-//				$illustration['order'] = $i+1;
-//				$block->illustrations()->updateOrCreate(
-//					["id"=>$illustration['id']],
-//					$illustration
-//				);
-//			}
-//		}
 
 		// update the block
 		$block->save();

@@ -6,7 +6,7 @@ code: rational fraction
 <template>
 	<pi-table-of-signs
 		:tos="tableOfSigns"
-		:fn="study.name"
+		:fn="fnName"
 		:minimal="minimal"
 		:extremes="extremes"
 		class="max-w-lg mx-auto"
@@ -18,6 +18,13 @@ import {computed, ref} from "vue"
 import {PiMath} from "pimath/esm"
 import PiTableOfSigns from "@/Components/Pi/PiTableOfSigns.vue"
 import {makeStudyFromCode} from "@/Composables/useTos"
+// Paramètres
+//      - <nom>(x)          permet de déterminer le nom de la fonction
+//      - min[imal]         n'afficher que la dernière ligne
+//      - extream=3|4|5     liste des coord y des extremes pour l'affichage des coordonnées
+// Deux modes pour code
+// 1.   PiMath.Rational
+// 2.   <zero>@<signs>@<croissance>@<extremes>
 
 let props = defineProps({
 		illustration: {type: Object, required: true}
@@ -25,36 +32,25 @@ let props = defineProps({
 	params = ref(props.illustration.parameters),
 	code = ref(props.illustration.code)
 
-let study = computed(()=>{
-		if(code.value.includes("@")){
-			let name = "f"
-			for(let param of params.value.split(",")){
-				if(param.includes("(x)")){
-					name = param.split("(x)")[0]
-				}
-			}
 
-			return {
-				name
-			}
-		}
-
-		let [num, den] = code.value.split("/"),
-			p = new PiMath.Rational(num, den || "1")
-
-		return p.study("signs" + (params.value?(","+params.value):""))
-
+let config = computed(()=>{
+		return props.illustration.parameters.split(",")
+	}),
+	fnName = computed(()=>{
+		const name = config.value.filter(x=>x.startsWith("name=")).map(x=>x.split("name=")[1])
+		return name.length === 1 ? name[0] : "f(x)"
 	}),
 	minimal = computed(()=>{
 		if(code.value.includes("@")){return true}
-		if(params.value.includes("minimal")||params.value.includes("min")){return true}
-		return false
+
+		return !!(config.value.includes("minimal") || config.value.includes("min"))
+
 	}),
 	extremes = computed(()=>{
-		if(params.value){
-			if(params.value.includes("extrema=")){
-				return params.value.split("extrema=")[1].split(",")[0].split("|").join(",")
-			}
+		const extremes = config.value.filter(x=>x.startsWith("extrema=")).map(x=>x.split("extrema=")[1])
+
+		if(extremes.length===1){
+			return extremes[0].split("|")
 		}
 		return null
 	}),
@@ -64,10 +60,14 @@ let study = computed(()=>{
 			return makeStudyFromCode(code.value, code.value.split("@").length===4, true)
 		}
 
-		if(params.value.split(",").includes("dx")){
-			return study.value.derivative
+		let [num, den] = code.value.split("/"),
+			p = new PiMath.Rational(num, den || "1")
+
+		const study = p.study("signs" + (params.value?(","+params.value):""))
+		if(config.value.includes("dx")){
+			return study.derivative
 		}else{
-			return study.value.signs
+			return study.signs
 		}
 	})
 
