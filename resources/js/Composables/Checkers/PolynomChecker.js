@@ -49,6 +49,7 @@ export function PolynomChecker(options) {
 
 			// Developed
 			if (options.includes("d") || options.includes("develop")) {
+				console.log(A.tex, A.isDeveloped(answer))
 				if (!A.isDeveloped(answer)) {
 					return {
 						result: false,

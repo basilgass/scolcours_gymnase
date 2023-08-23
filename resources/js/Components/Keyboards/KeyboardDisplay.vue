@@ -181,7 +181,7 @@ let theKeyboard = computed(() => {
 	}),
 	keyboardOptions = computed(() => {
 		if (props.extraLetters.length>0) {
-			let opts = props.extraLetters.map(x => {
+			return props.extraLetters.map(x => {
 				const keyDisplay = x.split("|"),
 					d = keyDisplay.length >= 2 ? keyDisplay[1] : keyDisplay[0],
 					isMath = d.startsWith("#") || d.startsWith("\\")
@@ -189,16 +189,14 @@ let theKeyboard = computed(() => {
 				return {
 					key: keyDisplay[0],
 					visible: true,
-					type: isMath?"math":"text",
-					display: d.startsWith("#")?asciiToTex(d.substring(1)):d,
+					type: isMath ? "math" : "text",
+					display: d.startsWith("#") ? asciiToTex(d.substring(1)) : d,
 					span: 0,
 					fn: (value) => {
 						return value + keyDisplay[0]
 					}
 				}
 			})
-
-			return opts
 		}
 
 		return []
@@ -252,6 +250,8 @@ const btnReset = {
 		atEnd: false
 	}
 
+
+console.log(props.customKeys)
 let keyboardComputed = computed(() => {
 		let data = []
 		// Loop through all keyboard keys in the layout.
@@ -294,6 +294,7 @@ let keyboardComputed = computed(() => {
 
 			// Maybe there is a custom keys
 			if(props.customKeys?.hasOwnProperty(kkey)) {
+				theKey = props.customKeys[kkey]
 				kdata = {
 					...kdata,
 					...props.customKeys[kkey]
