@@ -65,6 +65,7 @@ let flashMessages = ref([]),
 provide("flash", {
 	add: addFlashMessage,
 	success: (message, link, timeout) => addFlashMessage(message, link, "success", timeout),
+	info: (message, link, timeout) => addFlashMessage(message, link, "info", timeout),
 	error: (message, link, timeout) => addFlashMessage(message, link, "error", timeout),
 })
 

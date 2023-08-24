@@ -276,7 +276,7 @@ let showQuizzForm = ref (false),
 				flash.success("le quizz a bien été mis à jour")
 			})
 			.catch((err)=>{
-				console.log(err)
+				console.warn(err)
 			})
 	},
 	quizzDestroy = function (){
@@ -304,7 +304,7 @@ let showUsersIndex = ref(-1),
 				// Add the new session
 			})
 			.catch((err) => {
-				console.log(err)
+				console.warn(err)
 			})
 	},
 	sessionDestroy = function(id){
@@ -317,7 +317,7 @@ let showUsersIndex = ref(-1),
 				// remove the deleted session
 			})
 			.catch((err)=>{
-				console.log(err)
+				console.warn(err)
 			})
 	},
 	showNewSessionForm =ref(false),

@@ -36,7 +36,7 @@
 
 			<div v-if="listOfQuestions[questionId]">
 				<question-show
-					:key="questionId"
+					:key="`level-${level}-question-${questionId}`"
 					:question="theQuestion"
 					class="max-w-[40em] mx-auto"
 					dynamic
@@ -319,11 +319,10 @@ let startChallenge = function () {
 	}
 
 
-let theQuestion = ref({})
-watch(questionId, () => {
+let theQuestion = computed(()=>{
 	const currentQuestion = listOfQuestions.value[questionId.value]
 
-	theQuestion.value = {
+	return {
 		block: {
 			body: theChallenge.value.output
 				.replace(
@@ -342,6 +341,7 @@ watch(questionId, () => {
 })
 
 const storeScore = function (value, level) {
+
 	if (usePage().props.auth.user) {
 		// TODO: Add stars system to challenge
 		axios.post(route("scores.challenge", [theChallenge.value.id]), {
@@ -356,7 +356,7 @@ const storeScore = function (value, level) {
 					theChallenge.value.user.level = Math.max(theChallenge.value.user.level, res.data.updated.level)
 					flash.success(`Bravo, vous avez amélioré votre score de ${delta} point${delta > 1 ? "s" : ""}`)
 				} else {
-					flash.success("Vous n'avez pas amélioré votre score... dommage !", "info")
+					flash.info("Vous n'avez pas amélioré votre score... dommage !", "info")
 				}
 
 			}

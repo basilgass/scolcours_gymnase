@@ -167,7 +167,7 @@ import IllustrationShow from "@/Components/Posts/Illustrations/IllustrationShow.
 import {computed, defineAsyncComponent, inject, provide, ref} from "vue"
 import {PiMath} from "pimath/esm"
 import {useFormattedBody} from "@/Composables/useHelpers"
-import {blockTypes} from "@/scolcours"
+import {blockTypeDefault, blockTypes} from "@/scolcours"
 
 const emits = defineEmits(["destroy"])
 let props = defineProps({
@@ -191,7 +191,7 @@ let props = defineProps({
 
 const	blockConfig = computed(()=>{
 		return blockTypes[theBlock.value.type] === undefined ?
-			blockTypes["default"]:
+			blockTypeDefault:
 			blockTypes[theBlock.value.type]
 	}),
 	blockTitle = computed(() => {
@@ -323,7 +323,7 @@ let random = ref(1),
 				}
 			}
 		} catch (e) {
-			console.log("BlockShow (script generation)", e)
+			console.warn("BlockShow (script generation)", e)
 		}
 
 		return {...postData.value}
@@ -423,7 +423,7 @@ let showEditForm = ref(props.block?.isNew === true),
 				flash.success("les illustrations ont bien été réordrées !")
 			})
 			.catch((res) =>
-				console.log("update ordering illustrations: ", res)
+				console.warn("update ordering illustrations: ", res)
 			)
 	},
 	destroyIllustration = function (destroyId) {

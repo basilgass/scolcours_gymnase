@@ -288,8 +288,6 @@ export class ProbabilityTree {
 	}
 
 	_getCurrentBranchNumberOfEndings(branch, maxDepth, currentDepth) {
-		// console.log(`Depth ${currentDepth} of ${maxDepth}`)
-
 		// We are above the maxdepth - do not count any more !
 		if (currentDepth > maxDepth) {
 			return 0
@@ -356,7 +354,6 @@ export class ProbabilityTree {
 	}
 
 	_validateUserInput(input) {
-		// console.log(input)
 		if (input === undefined) {
 			// Default display.
 			this._generateFromString("U,3,P,2", 3)

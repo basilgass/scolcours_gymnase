@@ -128,7 +128,7 @@ let addPost = function () {
 				const post = res.data.data
 				theChapter.posts[post.order] = post
 			})
-			.catch(err => console.log(err))
+			.catch(err => console.warn(err))
 	},
 	destroyPost = function (id) {
 		delete theChapter.posts[id]

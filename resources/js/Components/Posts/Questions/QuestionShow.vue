@@ -352,7 +352,9 @@ let answerId = ref(0),
 		let kbrd = theAnswers.value[answerId.value].keyboard
 
 		if (kbrd.name === "Basic") {
-			return theAnswers.value[answerId.value].keyboard.checker.format()
+			let customOutput = theAnswers.value[answerId.value].keyboard.parameters.filter(x=>x.startsWith("format:"))[0]
+
+			return customOutput??theAnswers.value[answerId.value].keyboard.checker.format()
 		}
 
 		return ""
@@ -498,8 +500,8 @@ let updateQuestion = function (event) {
 				...event
 			})
 				.catch((res) => {
-					console.log("Il y a une erreur lors du chargement de la réponse.")
-					console.log(res.response.data.message)
+					console.warn("Il y a une erreur lors du chargement de la réponse.")
+					console.warn(res.response.data.message)
 				})
 				.then(res => {
 					emits("validate", event)
@@ -529,9 +531,7 @@ let editMode = inject("editMode", false),
 			})
 	},
 	addIllustration = function () {
-		if (theQuestion.block.illustration) {
-			console.log("Il y a déjà une illustration", theQuestion.id)
-		} else {
+		if (!theQuestion.block.illustration) {
 			// Create a new illustration
 			axios.post(route("blocks.illustrations.store", [theQuestion.block.id]), {})
 				.then(res => {

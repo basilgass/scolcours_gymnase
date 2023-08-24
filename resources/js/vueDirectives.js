@@ -125,7 +125,7 @@ function themeUpdate(el, binding, vnode){
 		if(theme.length===1) {
 			chapter = theme[0].slug
 		}
-	}else if(themes.indexOf(slug) === -1){
+	}else if(themes.indexOf(binding.value) === -1){
 		chapter = usePage().props?.theme?.slug
 	}else{
 		chapter = binding.value

@@ -158,6 +158,6 @@ let saveQuestion = function () {
 				emits("update:modelValue", false)
 				emits("destroy", props.question.id)
 			})
-			.catch((err) => console.log(err))
+			.catch((err) => console.warn(err))
 	}
 </script>

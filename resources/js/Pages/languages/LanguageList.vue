@@ -161,9 +161,7 @@ let showEditForm = ref(false),
 			editWord.value = word
 			showEditForm.value = true
 		}
-	// if(usePage().props.auth.can.admin) {
-	// 	console.log(word)
-	// }
+
 	},
 	updateTranslation = function(){
 		axios.post(route("translation.words.update", [editWord.value.id]), {

@@ -18,8 +18,20 @@ export function PolynomChecker(options) {
 			return `polynôme ${opts.join(", ")}`
 		},
 		check: (expectedAnswer, answer) => {
-			let A = new PiMath.Polynom(answer),
+			// Make sur the polynom is constructable
+			let A, Q
+
+			try{
+				A = new PiMath.Polynom(answer)
 				Q = new PiMath.Polynom(expectedAnswer)
+			}catch{
+				return {
+					result: false,
+					message: "Le polynôme n'est pas formé correctement."
+				}
+			}
+
+
 
 			// Polynom must be equals.
 			if (!Q.isEqual(A)) {
@@ -49,7 +61,6 @@ export function PolynomChecker(options) {
 
 			// Developed
 			if (options.includes("d") || options.includes("develop")) {
-				console.log(A.tex, A.isDeveloped(answer))
 				if (!A.isDeveloped(answer)) {
 					return {
 						result: false,

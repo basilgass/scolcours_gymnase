@@ -50,6 +50,4 @@ let props = defineProps({
 	courses: {type: Object, required: true}
 })
 
-console.log(props.courses)
-
 </script>

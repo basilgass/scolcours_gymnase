@@ -209,7 +209,7 @@ let addQuestion = function () {
 				flash.success("les questions ont bien été mis à jour !")
 				theQuestions.value = res.data.data
 			})
-			.catch((res) => console.log("update questions order failed", res))
+			.catch((res) => console.warn("update questions order failed", res))
 	},
 	resetAnswers = function () {
 		axios

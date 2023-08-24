@@ -155,12 +155,6 @@ let filterPosts = ref(""),
 				// TODO : flash message !
 				flash.success("les posts ont bien été réordré !")
 			})
-			.catch((res) =>
-				console.log(
-					"update ordering order: ",
-					res.response.data.message
-				)
-			)
 	},
 	addPost = function () {
 		axios
@@ -170,6 +164,6 @@ let filterPosts = ref(""),
 			.then((res) => {
 				router.visit(res.data.redirect)
 			})
-			.catch((err) => console.log(err))
+			.catch((err) => console.warn(err))
 	}
 </script>

@@ -35,10 +35,9 @@ function onDrop(e) {
 				"Content-Type": "multipart/form-data"
 			}
 		}).then(res=>{
-		console.log(res.data)
 		emit("file-dropped", res.data)
 	}).catch(err=>{
-		console.log(err)
+		console.warn(err)
 	})
 
 }

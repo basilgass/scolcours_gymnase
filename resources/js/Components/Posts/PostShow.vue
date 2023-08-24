@@ -159,7 +159,7 @@ let showEditForm = ref(false),
 				flash.success("les blocs ont bien été mis à jour !")
 			})
 			.catch((res) =>
-				console.log(
+				console.warn(
 					"update ordering order: ",
 					res.response.data.message
 				)
@@ -196,7 +196,7 @@ provide(
 				return F(PiMath)
 			}
 		} catch (e) {
-			console.log("Post script generator error", e)
+			console.warn("Post script generator error", e)
 		}
 		return {}
 	})

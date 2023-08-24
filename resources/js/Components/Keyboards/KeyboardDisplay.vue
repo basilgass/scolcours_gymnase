@@ -250,8 +250,6 @@ const btnReset = {
 		atEnd: false
 	}
 
-
-console.log(props.customKeys)
 let keyboardComputed = computed(() => {
 		let data = []
 		// Loop through all keyboard keys in the layout.

@@ -40,6 +40,7 @@ let numerator = ref("3x^2-4"),
 	denominator = ref("x-5")
 
 let updateEuclidian = function(event){
+	//TODO: update euclidian
 	console.log(event)
 }
 </script>

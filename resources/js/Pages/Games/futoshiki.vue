@@ -141,7 +141,6 @@ let gameStarted = ref(false),
 	start = function(){
 		gameStarted.value  = true
 
-		console.log("GENERATE")
 		futo.generate(size.value)
 	}
 
@@ -171,7 +170,6 @@ let rows = computed(() => {
 })
 
 let getConstrain = function (col, row) {
-	// console.log(col, row)
 	if (row % 2 === 1) {
 		// left / right constrain
 		const AKey = `${col / 2 - 1}:${(row - 1) / 2}`,

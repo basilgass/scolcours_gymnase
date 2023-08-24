@@ -215,7 +215,7 @@ function loadComponents() {
 		.then(res => {
 			chapterComponents.value = res.data
 		})
-		.catch(err => console.log(err))
+		.catch(err => console.warn(err))
 }
 
 let theModel = computed({

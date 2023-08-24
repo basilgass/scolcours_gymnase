@@ -266,7 +266,6 @@ const usersTeams = computed(() => {
 						user.team = res.data.team
 					}
 				})
-				console.log(res)
 			})
 			.catch(res => {
 				console.error(res)

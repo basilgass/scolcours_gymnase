@@ -67,7 +67,7 @@ let showMoveTo = ref(false),
 
 			})
 			.catch(res=>{
-				console.log(res)
+				console.warn(res)
 			})
 	}
 </script>

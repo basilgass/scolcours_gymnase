@@ -60,11 +60,11 @@ const props = defineProps({
 
 			scoresPerUser.push({
 				user,
-				score: {
-					score: result.score || "?",
-					level: result.level || "?",
-					stars: result.stars || "?",
-				}
+				score: result?{
+					score: result.score,
+					level: result.level,
+					stars: result.stars ?? 0,
+				}:{score: "?", level: "?", stars: "?"}
 			})
 		}
 		return scoresPerUser

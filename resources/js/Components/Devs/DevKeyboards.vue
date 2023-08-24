@@ -37,8 +37,6 @@ import CodeArea from "@/Components/Ui/CodeArea.vue"
 let kbrdCode = ref("")
 
 let kbrds = computed(() => {
-		console.log(useKeyboard().getKeyboards(kbrdCode))
-
 		return useKeyboard().getKeyboards(kbrdCode)
 	// return useKeyboard().getKeyboards(kbrdCode)
 	}),

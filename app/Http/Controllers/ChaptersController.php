@@ -25,14 +25,16 @@ class ChaptersController extends Controller
 	public function index(Theme $theme)
 	{
 		if (Auth::User()?->admin) {
-			$chapters = ChapterResource::collection($theme->chapters()
+			$chapters = $theme->chapters()
 //				->with('challenges')
-				->get());
+				->orderBy('active', 'DESC')
+				->orderBy('title', 'ASC')
+				->get();
 		} else {
-			$chapters = ChapterResource::collection($theme->chapters()
+			$chapters = $theme->chapters()
 //				->with('challenges')
 				->where('active', true)
-				->get());
+				->get();
 		}
 
 		// Filter output.

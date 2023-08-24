@@ -103,23 +103,20 @@ Formulaire d'édition d'un bloc
 							name="title"
 						/>
 
-						<form-select
+						<div
 							v-show="!props.noType"
-							v-model="theBlock.type"
-							label="type du block"
-							name="type2"
+							class="flex flex-wrap gap-2 justify-between mt-1"
 						>
-							<option value="">
-								-
-							</option>
-							<option
+							<button
 								v-for="(item, key) in postType"
 								:key="key"
-								:value="key"
+								class="btn btn-xs"
+								:class="key===theBlock.type?'is-active':''"
+								@click="theBlock.type = theBlock.type===key?'':key"
 							>
 								{{ item.title }}
-							</option>
-						</form-select>
+							</button>
+						</div>
 
 						<form-codearea
 							ref="formBody"
@@ -135,6 +132,7 @@ Formulaire d'édition d'un bloc
 								v-model="theBlock.template"
 								label="disposition"
 								name="disposition"
+								sm
 							/>
 							<p class="text-xs flex gap-3">
 								<button
@@ -214,7 +212,6 @@ import FormSwitch from "@/Components/Form/FormSwitch"
 import FormNumber from "@/Components/Form/FormNumber"
 import {computed, inject, ref} from "vue"
 import MarkdownIt from "@/Components/Ui/MarkdownIt"
-import FormSelect from "@/Components/Form/FormSelect"
 import DialogModal from "@/Components/Ui/DialogModal.vue"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
 import {PiMath} from "pimath/esm"
@@ -254,7 +251,7 @@ let random = ref(1),
 				return {...postData.value, ...F(PiMath, postData.value, random.value)}
 			}
 		}catch(e){
-			console.log("Block form (script)", e)
+			console.warn("Block form (script)", e)
 		}
 
 		return {...postData.value}

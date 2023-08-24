@@ -89,8 +89,6 @@ function updateValue(){
 }
 onMounted(() => {
 	updateValue()
-	// console.log(root.value)
-	// katexAutoRender(root.value)
 })
 
 </script>

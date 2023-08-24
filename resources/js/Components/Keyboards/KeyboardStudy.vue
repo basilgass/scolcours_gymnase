@@ -373,7 +373,7 @@ function initPlot(fx){
 			"stroke-dashoffset": ""
 		})
 	}catch {
-		console.log("Error parsing", fx)
+		console.warn("Error parsing", fx)
 	}
 }
 function addItemToGraph(btn){

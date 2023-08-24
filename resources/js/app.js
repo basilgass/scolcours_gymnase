@@ -31,9 +31,6 @@ createInertiaApp({
 			.directive("theme", themeDirective)
 			.mixin({methods: {route}})
 
-		// Custom function available as 	$fnName
-		vueApp.config.globalProperties.$log = console.log
-
 		return vueApp.mount(el)
 	},
 	progress: {color: "#4B5563"}

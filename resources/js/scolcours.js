@@ -1,11 +1,11 @@
+export const blockTypeDefault = {
+	title: "",
+	style: {
+		header: "",
+		body: ""
+	}
+}
 export const blockTypes = {
-	default: {
-		title: "",
-		style: {
-			header: "",
-			body: ""
-		}
-	},
 	definition: {
 		title: "définition",
 		icon: "bi bi-book",

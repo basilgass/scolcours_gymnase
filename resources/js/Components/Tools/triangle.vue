@@ -118,7 +118,6 @@ let result = computed(() => {
 			...B.value.split(","),
 			...C.value.split(",")
 		)
-		// console.log(triangle)
 		return {
 			triangle: triangle,
 			extBissectors: {

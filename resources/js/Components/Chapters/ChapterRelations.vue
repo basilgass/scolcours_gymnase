@@ -66,7 +66,7 @@ let chapterRelations = ref(props.chapter.relations),
 				allChapters.value = res.data.data.filter(ch=>ch.slug!==props.chapter.slug)
 			})
 			.catch(res => {
-				console.log(res)
+				console.warn(res)
 			})
 	},
 	toggleRelation = function(id) {

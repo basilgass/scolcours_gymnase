@@ -105,7 +105,7 @@ let show = ref(props.modelValue),
 		}).catch(res=>{
 			flash.error("Erreur lors de l'enregistrement du chapitre...")
 			emits("update:modelValue", false)
-			console.log(res)
+			console.warn(res)
 		})
 	},
 	deleteChapter = function (){

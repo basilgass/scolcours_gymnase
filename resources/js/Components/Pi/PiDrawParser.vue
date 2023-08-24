@@ -351,7 +351,7 @@ watch(
 			try {
 				PiParser.updateLayout(newValue.parameters)
 			} catch {
-				console.log(
+				console.warn(
 					"Cannot parse (watch props.draw.parameters)",
 					props.draw.params
 				)

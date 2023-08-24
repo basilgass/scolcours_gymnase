@@ -44,7 +44,7 @@ class QuestionController extends Controller
 		$validate = $request->validate(
 			[
 				'body' => ['string', 'min:2'],
-				'answer' => ['nullable'],
+				'answer' => ['min:1'],
 				'checker' => ['string', 'nullable'],
 				'keyboard' => ['string', 'nullable'],
 			]

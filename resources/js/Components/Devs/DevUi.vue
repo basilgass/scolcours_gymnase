@@ -12,7 +12,6 @@ let value = ref(15),
 	crtLine = ref("")
 
 function updateCrtLine(evt){
-	console.log(evt)
 	crtLine.value = evt
 }
 </script>

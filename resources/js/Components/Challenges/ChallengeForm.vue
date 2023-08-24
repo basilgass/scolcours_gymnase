@@ -349,11 +349,8 @@ let currentGenerator = computed(() => {
 	addGenerator = function () {
 		axios.post(route("challenges.generators.store", [theChallenge.value.id]))
 			.then(res => {
-				console.log(res.data)
 				theChallenge.value.generators = res.data
 			}).catch(res => {
-				console.warn("add generator error")
-				console.log(res.response.data.message)
 			})
 	},
 	availableGenerators = ref([]),
@@ -363,7 +360,7 @@ let currentGenerator = computed(() => {
 			axios.get(route("challenges.generators.index", [theChallenge.value.id]))
 				.then(res => availableGenerators.value = res.data)
 				.catch(res => {
-					console.log(res.response.data.message)
+					console.warn(res.response.data.message)
 				})
 		}
 	},

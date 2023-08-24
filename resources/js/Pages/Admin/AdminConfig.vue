@@ -76,7 +76,7 @@ let title = ref(props.title),
 		}).then(res => {
 			flash.success("les modifications de configuration ont bien été changées !")
 		}).catch(err => {
-			console.log(err)
+			console.warn(err)
 		})
 	},
 	sortEvent = function () {

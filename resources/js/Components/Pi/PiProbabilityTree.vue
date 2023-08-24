@@ -43,17 +43,10 @@ function updateTree() {
 				node = sline[0].trim(),
 				value = sline[1] || 0
 
-			// console.log(level, node, value)
-			// console.log(rootLeaf?.node)
-			// console.log("")
-
 			if (level === crtLevel) {
-				// console.log("Same level")
-				// console.log(rootLeaf)
 				// Same level -> adding to the current root leaf.
 				rootLeaf.leaves.push({node, value, leaves: []})
 			}else if (level > crtLevel) {
-				// console.log("New child")
 				// it's a child node..
 				crtLevel = +level
 				// Add the current root to the list.
@@ -72,8 +65,6 @@ function updateTree() {
 				rootLeaf.leaves.push({node, value, leaves: []})
 			}
 		}
-		// console.log("FINAL")
-		// console.log(branchLeaves)
 		Tree.update(branchLeaves[0].leaves)
 	} else if (props.treeData.split(",").length % 2 === 1) {
 		// A,3,P,5,3
