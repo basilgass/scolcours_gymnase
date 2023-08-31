@@ -41,8 +41,8 @@
 				<tr>
 					<th
 						v-katex="`\\left[b_i; b_ii\\right[`"
-						title="classe modale"
 						class="w-[150px]"
+						title="classe modale"
 					/>
 					<th
 						v-katex="'c_i'"
@@ -94,16 +94,16 @@
 						{{ item.ni }}
 					</td>
 					<td class="border-x border-gray-300 py-2">
-						{{ item.bii-item.bi }}
+						{{ item.bii - item.bi }}
 					</td>
 					<td class="border-x border-gray-300 py-2">
-						{{ statConfig.percent ? statRoundValue(item.fi*100)+`%`: statRoundValue(item.fi) }}
+						{{ statConfig.percent ? statRoundValue(item.fi * 100) + `%` : statRoundValue(item.fi) }}
 					</td>
 					<td class="border-x border-gray-300 py-2">
-						{{ statConfig.percent ? statRoundValue(item.Fi*100)+`%`: statRoundValue(item.Fi) }}
+						{{ statConfig.percent ? statRoundValue(item.Fi * 100) + `%` : statRoundValue(item.Fi) }}
 					</td>
 					<td class="border-x border-gray-300 py-2">
-						{{ statConfig.percent ? statRoundValue(item.Fid*100)+`%`: statRoundValue(item.Fid) }}
+						{{ statConfig.percent ? statRoundValue(item.Fid * 100) + `%` : statRoundValue(item.Fid) }}
 					</td>
 					<td class="border-x border-gray-300 py-2">
 						{{ statRoundValue(item.fixi) }}
@@ -136,18 +136,74 @@
 			</tfoot>
 		</table>
 
-		<h2 class="font-xl uppercase font-semibold">
+		<h2 class="font-xl uppercase font-semibold mt-10">
+			Valeurs centrales
+		</h2>
+		<div class="grid grid-cols-2 md:grid-cols-3 gap-3 mt-5">
+			<div class="bg-white text-center border rounded-lg min-h-[80px] flex flex-col justify-around">
+				<div class="font-semibold">
+					Moyenne
+				</div>
+				<div class="font-code text-xl">
+					{{ statRoundValue(statCentralValues.mean) }}
+				</div>
+			</div>
+			<div class="bg-white text-center border rounded-lg min-h-[80px] flex flex-col justify-around">
+				<div class="font-semibold">
+					Classe modale
+				</div>
+				<div class="font-code text-xl">
+					{{ statRoundValue(statCentralValues.modal) }}
+				</div>
+			</div>
+			<div class="bg-white text-center border rounded-lg min-h-[80px] flex flex-col justify-around">
+				<div class="font-semibold">
+					Médiane
+				</div>
+				<div class="font-code text-xl">
+					{{ statRoundValue(statCentralValues.q2) }}
+				</div>
+			</div>
+			<div class="bg-white text-center border rounded-lg min-h-[80px] flex flex-col justify-around">
+				<div class="font-semibold">
+					Quartiles
+				</div>
+				<div class="font-code text-xl">
+					<span v-katex="'q_1='" /> {{ statRoundValue(statCentralValues.q1) }} <br>
+					<span v-katex="'q_3='" /> {{ statRoundValue(statCentralValues.q3) }}
+				</div>
+			</div>
+			<div class="bg-white text-center border rounded-lg min-h-[80px] flex flex-col justify-around">
+				<div class="font-semibold">
+					Variance
+				</div>
+				<div class="font-code text-xl">
+					{{ statRoundValue(statCentralValues.variance) }}
+				</div>
+			</div>
+			<div class="bg-white text-center border rounded-lg min-h-[80px] flex flex-col justify-around">
+				<div class="font-semibold">
+					Déviation
+				</div>
+				<div class="font-code text-xl">
+					<span v-katex="'\\sigma^2 ='" /> {{ statRoundValue(statCentralValues.sigma2) }} <br>
+					<span v-katex="'\\sigma ='" /> {{ statRoundValue(statCentralValues.sigma) }}
+				</div>
+			</div>
+		</div>
+
+		<h2 class="font-xl uppercase font-semibold mt-10">
 			Graphiques
 		</h2>
 
-		<div class="grid grid-cols-1 md:grid-cols-2 gap-5 mt-10">
+		<div class="grid grid-cols-1 md:grid-cols-2 gap-5 mt-5">
 			<div>
 				<h2 class="text-lg font-extralight">
 					histogramme et polygon des fréquences
 				</h2>
 				<bar-chart
-					:chart-labels="graphLabels"
 					:chart-dataset="graphDataset"
+					:chart-labels="graphLabels"
 				/>
 			</div>
 
@@ -156,8 +212,8 @@
 					Graphe des fréquences cumulées
 				</h2>
 				<line-chart
-					:chart-labels="graphAccumulatesLabel"
 					:chart-dataset="graphAccumulates"
+					:chart-labels="graphAccumulatesLabel"
 					:chart-options="graphAccumulatesOptions"
 				/>
 			</div>
@@ -167,8 +223,8 @@
 					Boîte à moustaches
 				</h2>
 				<box-plot-chart
-					:chart-labels="['']"
 					:chart-dataset="graphBoxPlot"
+					:chart-labels="['']"
 					:chart-options="graphBoxPlotOptions"
 				/>
 			</div>
@@ -188,7 +244,7 @@ import {computed, onMounted, reactive, ref} from "vue"
 import FormInput from "@/Components/Form/FormInput.vue"
 
 import BarChart from "@/Components/Charts/barChart.vue"
-import { Chart } from "chart.js"
+import {Chart} from "chart.js"
 import annotationPlugin from "chartjs-plugin-annotation"
 import LineChart from "@/Components/Charts/lineChart.vue"
 import BoxPlotChart from "@/Components/Charts/boxPlotChart.vue"
@@ -214,20 +270,28 @@ let statConfig = reactive({
 let statCustomNi = ref("4 12 20 27 39 85 92 75 40")
 
 let statRaw = computed(() => {
-	if(
+	if (
 		isNaN(statConfig.samples) ||
 		isNaN(statConfig.min) ||
 		isNaN(statConfig.max) ||
 		isNaN(statConfig.length) ||
 		isNaN(statConfig.skew)
-	){
+	) {
 		return []
 	}
 	// Check the values.
-	if(statConfig.samples<1){return []}
-	if(statConfig.min >= statConfig.max){return []}
-	if(statConfig.length < 1){return []}
-	if(statConfig.skew <=0.05){return []}
+	if (statConfig.samples < 1) {
+		return []
+	}
+	if (statConfig.min >= statConfig.max) {
+		return []
+	}
+	if (statConfig.length < 1) {
+		return []
+	}
+	if (statConfig.skew <= 0.05) {
+		return []
+	}
 
 
 	if (statConfig.customData.length === 0) {
@@ -237,14 +301,14 @@ let statRaw = computed(() => {
 })
 
 let statTable = computed(() => {
-	if(statConfig.length===1){
+	if (statConfig.length === 1) {
 		return statsBuildTable_discrete()
 	}
 	return statsBuildTable_continuous()
 })
 
-let statSum = computed(()=>{
-	return statTable.value.reduce((acc, value)=>{
+let statSum = computed(() => {
+	return statTable.value.reduce((acc, value) => {
 			acc.ni += value.ni
 			acc.fi += value.fi
 			acc.fixi += value.fixi
@@ -254,13 +318,13 @@ let statSum = computed(()=>{
 		{ni: 0, fi: 0, fixi: 0, fixii: 0})
 })
 
-let graphLabels = computed(()=>{
-		return ["", ...statTable.value.map(x=>`[${x.bi};${x.bii}[`), ""]
+let graphLabels = computed(() => {
+		return ["", ...statTable.value.map(x => `[${x.bi};${x.bii}[`), ""]
 	}),
-	graphBarValues = computed(()=>{
-		return [0, ...statTable.value.map(x=>x.ni), 0]
+	graphBarValues = computed(() => {
+		return [0, ...statTable.value.map(x => x.ni), 0]
 	}),
-	graphDataset = computed(()=>{
+	graphDataset = computed(() => {
 		return [
 			{
 				type: "line",
@@ -277,27 +341,27 @@ let graphLabels = computed(()=>{
 			},
 		]
 	}),
-	graphAccumulatesLabel = computed(()=>{
-		return [...statTable.value.map(x=>x.bi), statConfig.max]
+	graphAccumulatesLabel = computed(() => {
+		return [...statTable.value.map(x => x.bi), statConfig.max]
 	}),
-	graphAccumulates = computed(()=>{
+	graphAccumulates = computed(() => {
 		return [
 			{
 				type: "line",
-				data: [0, ...statTable.value.map(x=>x.Fi), 1],
+				data: [0, ...statTable.value.map(x => x.Fi), 1],
 				borderColor: "rgb(75, 192, 192)"
 			},
 			{
 				type: "line",
-				data: [1, ...statTable.value.map(x=>x.Fid), 0],
+				data: [1, ...statTable.value.map(x => x.Fid), 0],
 				borderColor: "rgb(54, 162, 235)"
 			},
 		]
 	}),
-	graphAccumulatesOptions = computed(()=>{
+	graphAccumulatesOptions = computed(() => {
 		return {
 			scales: {
-				x: {type: "linear", min: statConfig.min, max:statConfig.max}
+				x: {type: "linear", min: statConfig.min, max: statConfig.max}
 			},
 			plugins: {
 				annotation: {
@@ -319,18 +383,35 @@ let graphLabels = computed(()=>{
 			}
 		}
 	}),
-	graphBoxPlot = computed(()=>{
-		return {
-			min: statConfig.min,
-			q1: statCentralValues.value.q1,
-			median: statCentralValues.value.q2,
-			mean: statCentralValues.value.mean,
-			q3: statCentralValues.value.q3,
-			max: statConfig.max,
-			// items: [104, 106, 185, 192]
-		}
+	graphBoxPlot = computed(() => {
+		return [
+			{
+				label: "min / max",
+				data: {
+					whiskerMin: statConfig.min,
+					q1: statCentralValues.value.q1,
+					median: statCentralValues.value.q2,
+					q3: statCentralValues.value.q3,
+					whiskerMax: statConfig.max,
+					// items: [104, 106, 185, 192]
+				}
+			},
+			{
+				label: "1.5*IQ",
+				data: {
+					whiskerMin: Math.max(statCentralValues.value.q1 - 1.5*statCentralValues.value.iq, statConfig.min),
+					q1: statCentralValues.value.q1,
+					median: statCentralValues.value.q2,
+					q3: statCentralValues.value.q3,
+					whiskerMax: Math.min(statCentralValues.value.q3 + 1.5*statCentralValues.value.iq, statConfig.max),
+					// items: [104, 106, 185, 192]
+				}
+
+			}
+
+		]
 	}),
-	graphBoxPlotOptions = computed(()=>{
+	graphBoxPlotOptions = computed(() => {
 		return {
 			scales: {
 				x: {
@@ -359,15 +440,18 @@ let statCentralValues = computed(() => {
 	// statistics.mustaches.bm = statistics.middle.quartiles.first - 1.5 * statistics.mustaches.Q
 	// statistics.mustaches.bp = statistics.middle.quartiles.last + 1.5 * statistics.mustaches.Q
 
-	const mean = statTable.value.reduce((previous, row) => previous + row.fi + row.xi,  0),
-		sigma2 = statTable.value.reduce((previous, row) => previous + row.fi * Math.pow(+row.xi - mean, 2),  0)
+	const mean = statTable.value.reduce((previous, row) => previous + row.fi * row.xi, 0),
+		sigma2 = statTable.value.reduce((previous, row) => previous + row.fi * Math.pow(+row.xi - mean, 2), 0),
+		q1 = stats_median(statTable.value, 0.25),
+		q3 = stats_median(statTable.value, 0.75)
 	return {
 		modal: stats_mode(statTable.value),
-		q1: stats_median(statTable.value, 0.25),
+		q1,
 		q2: stats_median(statTable.value, 0.5),
-		q3: stats_median(statTable.value, 0.75),
+		q3,
+		iq: q3-q1,
 		mean,
-		variance: statTable.value.reduce((previous, row) => previous + row.fi * Math.abs(+row.xi - mean),  0),
+		variance: statTable.value.reduce((previous, row) => previous + row.fi * Math.abs(+row.xi - mean), 0),
 		sigma2,
 		sigma: Math.sqrt(sigma2)
 	}
@@ -470,7 +554,7 @@ function statsBuildTable_continuous() {
 
 	let bi = statConfig.min,
 		securityCount = 0,
-		customNi = statCustomNi.value.split(" ").filter(x=>x!=="").map(x=>+x)
+		customNi = statCustomNi.value.split(" ").filter(x => x !== "").map(x => +x)
 
 
 	while (bi < statConfig.max) {
@@ -479,9 +563,9 @@ function statsBuildTable_continuous() {
 			xi = (bi + bii) / 2, ni, fi
 
 
-		if(customNi.length===0) {
+		if (customNi.length === 0) {
 			ni = statRaw.value.filter(x => x >= bi && x < bii).length
-		}else{
+		} else {
 			ni = customNi.shift()
 		}
 
@@ -501,14 +585,14 @@ function statsBuildTable_continuous() {
 	}
 
 	// Get the ni sum.
-	let sum = table.reduce((acc, value)=>acc+=value.ni, 0)
+	let sum = table.reduce((acc, value) => acc += value.ni, 0)
 
 	// Build the accumulate frequencies
 	let Fi = 0.0, Fid = 1.0
 	table.forEach(item => {
 		item.fi = item.ni / sum
-		item.fixi = item.fi*item.xi
-		item.fixii = item.fi*item.xi**2
+		item.fixi = item.fi * item.xi
+		item.fixii = item.fi * item.xi ** 2
 
 		Fi = Fi + item.fi
 		item.Fi = Fi
@@ -573,12 +657,6 @@ onMounted(() => {
 	console.table(statCentralValues.value)
 
 })
-
-
-
-
-
-
 
 
 // OUTPUT

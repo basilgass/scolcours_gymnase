@@ -17,6 +17,8 @@ export function keyboardMaps(kbrd) {
 		return "function"
 	case "log":
 		return "exact"
+	case "exp":
+		return "algebra"
 	}
 
 	return kbrd

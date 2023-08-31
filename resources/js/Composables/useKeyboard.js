@@ -1,7 +1,7 @@
 // import {getComponentKeyboardName, getKeyboardName} from "@/keyboards"
 import {checkersConfig} from "@/Composables/checkersConfig"
 import {defineAsyncComponent, unref} from "vue"
-import {keyboardKeys, keyboards} from "@/Composables/keyboardConfig"
+import {keyboardKeys, keyboardMaps, keyboards} from "@/Composables/keyboardConfig"
 
 function getComponentKeyboardName(value) {
 	switch (value.toLowerCase()) {
@@ -72,7 +72,15 @@ function getOneKeyboard(kbrd) {
 	checker = checkersConfig([value, ...options].join(","))
 
 	// Get the display config for this keyboard.
-	config = keyboards.hasOwnProperty(value) ? keyboards[value] : keyboards["exact"]
+	if(keyboards.hasOwnProperty(value)){
+		config = keyboards[value]
+	}else if(keyboards.hasOwnProperty(keyboardMaps(value))){
+		config = keyboards[keyboardMaps(value)]
+	}else{
+		config = keyboards["exact"]
+	}
+
+	console.log(config)
 	// }
 
 	// Add the parameters (all starting with @)

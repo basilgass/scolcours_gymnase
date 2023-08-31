@@ -32,3 +32,10 @@ export function splitAtSigns(value) {
 		.map(x=>x.trim())
 		.filter(x=>x!=="")
 }
+
+
+export function braceSorter(value) {
+	return value.split("{")[0] + "{" +
+		value.split("{")[1].split("}")[0].split(";").sort().join(";") +
+		"}" + (value.split("}")[1] ?? "")
+}

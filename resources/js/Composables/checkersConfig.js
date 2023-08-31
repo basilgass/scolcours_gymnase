@@ -17,6 +17,7 @@ import {InputChecker} from "@/Composables/Checkers/InputChecker"
 import {OrderChecker} from "@/Composables/Checkers/OrderChecker"
 import {QcmChecker} from "@/Composables/Checkers/QcmChecker"
 import {TypeChecker} from "@/Composables/Checkers/TypeChecker"
+import {ExpChecker} from "@/Composables/Checkers/ExpChecker"
 
 export function checkersConfig(checkerData) {
 	// checkerData =[checker,opt1,opt2,opt3]
@@ -66,6 +67,8 @@ export function checkersConfig(checkerData) {
 		return VectorChecker(options)
 	case "log":
 		return LogChecker(options)
+	case "exp":
+		return ExpChecker(options)
 	default:
 		return StringChecker(options)
 	}
@@ -76,6 +79,7 @@ export function getCheckers() {
 	list[CoordChecker().name] = CoordChecker()
 	list[EquationChecker().name] = EquationChecker()
 	list[ExactChecker().name] = ExactChecker()
+	list[ExpChecker().name] = ExpChecker()
 	list[FractionChecker().name] = FractionChecker()
 	list[FunctionChecker().name] = FunctionChecker()
 	list[InputChecker().name] = InputChecker()

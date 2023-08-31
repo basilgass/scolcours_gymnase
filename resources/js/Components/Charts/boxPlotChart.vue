@@ -5,7 +5,10 @@ import {BoxPlotChart} from "@sgratzl/chartjs-chart-boxplot"
 let props = defineProps({
 	chartLabels: {type: Array, default: () => []},
 	chartDataset: {type: [Object, Array], required: true},
-	chartOptions: {type: Object, default: () => {}},
+	chartOptions: {
+		type: Object, default: () => {
+		}
+	},
 	chartLegend: {type: Boolean, default: false},
 	chartColorset: {type: String, default: null}
 })
@@ -18,29 +21,34 @@ let chartData = computed(() => {
 
 		return {
 			...labels,
-			datasets: [{
-				medianColor: "red",
-				borderWidth: 2,
-				data: [props.chartDataset]
-			}]
+			datasets: [
+				...props.chartDataset.map(d=>{
+					return {
+						label: d.label,
+						medianColor: "red",
+						borderWidth: 2,
+						data: [d.data]
+					}
+				}),
+			]
 		}
 	}),
-	chartOptionsMerged = computed(()=>{
-		let opts= {
+	chartOptionsMerged = computed(() => {
+		let opts = {
 			responsive: true,
 			maintainAspectRatio: true,
-			plugins: {
-				legend: {
-					display: props.chartLegend,
-				},
-			},
+			// plugins: {
+			// 	legend: {
+			// 		display: props.chartLegend,
+			// 	},
+			// },
 			indexAxis: "y",
 		}
 
 		return _.merge(opts, props.chartOptions)
 	}),
-	chartColors = computed(()=>{
-		if(props.chartColorset==="graduate") {
+	chartColors = computed(() => {
+		if (props.chartColorset === "graduate") {
 			return {
 				backgroundColor: [
 					"rgba(255, 99, 132, 0.2)",
@@ -78,18 +86,23 @@ let chartData = computed(() => {
 
 let graph = ref(null)
 let chart
-onMounted(()=>{
-	chart  = new BoxPlotChart(graph.value, {
+onMounted(() => {
+	chart = new BoxPlotChart(graph.value, {
 		data: chartData.value,
 		options: chartOptionsMerged.value
 	})
+
+	console.log("DATA")
+	console.log(chart.data)
+	console.log("OPTIONS")
+	console.log(chart.options)
 })
 
-watch(()=>props.chartDataset, () => {
+watch(() => props.chartDataset, () => {
 	chart.data = chartData.value
 	chart.update()
 })
-watch(()=>props.chartOptions, () => {
+watch(() => props.chartOptions, () => {
 	chart.options = chartOptionsMerged.value
 	chart.update()
 })
