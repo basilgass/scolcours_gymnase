@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\ChallengeResource;
 use App\Http\Resources\ChapterMinResource;
+use App\Http\Resources\UserResource;
 use App\Models\Challenge;
 use App\Models\Chapter;
 use App\Models\Team;
@@ -24,7 +25,9 @@ class TeamController extends Controller
 		return Inertia::render("Teams/TeamsShow",
 			[
 				'team' => $team,
-				'chapters'=>ChapterMinResource::collection(Chapter::where('active', true)->get())
+				'students'=>UserResource::collection($team->users),
+				'chapters'=>ChapterMinResource::collection(Chapter::where('active', true)->get()),
+				'challenges' =>ChallengeResource::collection(Challenge::all()),
 			]
 		);
 	}

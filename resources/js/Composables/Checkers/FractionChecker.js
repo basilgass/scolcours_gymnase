@@ -1,12 +1,18 @@
 import {PiMath} from "pimath/esm"
 
+const name="fraction"
+
+const description = `fraction,[paramètres]
+
+**paramètres**
+- r=réduit
+`
 export function FractionChecker(options){
-	if(options===undefined){options = []}
+	options = options??[]
 
 	const expectReduced = options.includes("r") || options.includes("reduced")
 
-	return {
-		name: "fraction",
+	return {name, description,
 		format: () => {
 			let opts = []
 			if (expectReduced) {

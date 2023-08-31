@@ -1,9 +1,18 @@
-export function NumberChecker(options){
-	if(options===undefined){options = []}
 
+const name = "number",
+	description = `number|nb,[paramètres]
+
+**paramètres**
+- [1,2,3,4,...]: nombre de chiffres après la virgule
+- s: significatif (donc 2.3 ne passe pas pour 2.30)
+`
+
+export function NumberChecker(options){
+	options = options ?? []
+
+	// TODO: ajouter le significatif
 	return {
-		name: "number",
-		helper: "number@3 => 3 chiffres après la virgule",
+		name, description,
 		format: () => {
 			if (isNaN(options[0])) {
 				return "réponse numérique"

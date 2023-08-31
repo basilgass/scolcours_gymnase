@@ -1,119 +1,113 @@
 // import {getComponentKeyboardName, getKeyboardName} from "@/keyboards"
-import {useCheckers} from "@/Composables/useCheckers"
+import {checkersConfig} from "@/Composables/checkersConfig"
 import {defineAsyncComponent, unref} from "vue"
-import {keyboardKeys, keyboardMaps, keyboards} from "@/Composables/keyboardConfig"
+import {keyboardKeys, keyboards} from "@/Composables/keyboardConfig"
 
-export function useKeyboard(props) {
-	function getComponentKeyboardName(value) {
-		switch (value.toLowerCase()) {
-		case "tos":
-		case "tableofsigns":
-			return "TableOfSigns"
-		case "study":
-			return "Study"
-		case "order":
-			return "Order"
-		case "qcm":
-			return "Qcm"
-		case "input":
-			return "Input"
-		case "type":
-			return "Type"
-		default:
-			return ""
-		}
+function getComponentKeyboardName(value) {
+	switch (value.toLowerCase()) {
+	case "tos":
+	case "tableofsigns":
+		return "TableOfSigns"
+	case "study":
+		return "Study"
+	case "order":
+		return "Order"
+	case "qcm":
+		return "Qcm"
+	case "input":
+		return "Input"
+	case "type":
+		return "Type"
+	default:
+		return "Basic"
 	}
+}
 
-	function getKeyboardName(value) {
-		// Basic keyboard
-		if (value === null || keyboards[keyboardMaps(value)]) {
-			return "Basic"
-		}
+function getComponent(kbrd) {
+	// TODO: Make a check on the name to make sur the component exists.
+	return defineAsyncComponent(() => import(`@/Components/Keyboards/Keyboard${kbrd}`))
+}
 
-		// Component keyboard
-		return getComponentKeyboardName(value)
-	}
+function getOneKeyboard(kbrd) {
+	/* A kbrd code is defined like this:
+	*
+	 * keyboard name					-> name
+	 *    or [checker[,checkerParams]]	-> checker: {name, options)
+	 * @letters (for 'basic keyboard') or special keys / commands -> parameters
+	 * Other parameters...				-> values: []
+	 *
+	 * new keyboard
+	 */
+	// The first line is the keyboard name or checker
+	// Qcm or nb,2 for example
 
-	function getKeyboards(kbrdCode) {
-		let unrefKbrd = unref(kbrdCode)
+	// output values, with defaults
+	let name = "",
+		checker,
+		parameters = [],
+		values = [],
+		config,
+		component= null
 
-		if (!unrefKbrd) {
-			return null
-		}
-		/* A kbrdCode is defined like this:
-		*
-		 * keyboard name					-> name
-		 *    or [checker[@checkerParams]]	-> checker: {name, options)
-		 * @letters (for 'basic keyboard') or special keys / commands -> parameters
-		 * Other parameters...				-> values: []
-		 *
-		 * new keyboard
-		 */
+	// Split as each lines.
+	const kbrdValues = kbrd.split("\n")
 
-		let arr = []
+	// The first line is the keyboard name or checker
+	// Qcm or nb,2 for example
+	let [value, ...options] = kbrdValues.shift().split(",")
 
-		unrefKbrd.split("\n\n").forEach(kbrd => {
-			let checker,
-				parameters = [],
-				values = [],
-				kbrdValues = kbrd.split("\n"),
-				config
+	// Make sure the value does not contain extra spaces or hidden \r \n
+	value = value.trim()
+	options = options ?? []
 
-			// The first line is the keyboard name or checker
-			// Qcm or nb@2 for example
-			let [value, options] = kbrdValues.shift().split("@")
+	// Get the component name (keyboard name or Basic)
+	name = getComponentKeyboardName(value)
 
-			// Make sure the value does not contain extra spaces or hidden \r \n
-			value = value.trim()
+	// If it's a basic keyboard
+	// if (name === "Basic") {
+	// Get the checker options (empty array if undefined)
+	options = options ?? []
 
-			// Get the component name (if exist)
-			let name = getComponentKeyboardName(value)
+	// Get the checker for this keyboard.
+	checker = checkersConfig([value, ...options].join(","))
 
-			// If it's a basic keyboard
-			if (name === "") {
-				name = getKeyboardName(value)
-				options = options ? options.split(",") : []
+	// Get the display config for this keyboard.
+	config = keyboards.hasOwnProperty(value) ? keyboards[value] : keyboards["exact"]
+	// }
 
-				// Get the checker for this keyboard.
-				checker = useCheckers([value, ...options].join(","))
-
-				// Get the config for this keyboard.
-				if(keyboards.hasOwnProperty(value)){
-					config = keyboards[value]
-				}else if(keyboards.hasOwnProperty(checker.name)){
-					config = keyboards[checker.name]
-				}else {
-					config = keyboards["exact"]
-				}
-			}
-
-			// Add the parameters (all starting with @)
-			kbrdValues
-				.filter(x => x.startsWith("@"))
-				.forEach(k => {
-					parameters.push(k.substring(1))
-				})
-
-
-			// All other values
-			kbrdValues.filter(x => !x.startsWith("@"))
-				.forEach(k => {
-					values.push(k)
-				})
-
-			arr.push({
-				name,
-				checker,
-				parameters,
-				values,
-				config,
-				component: getComponent(name)
-			})
+	// Add the parameters (all starting with @)
+	kbrdValues
+		.filter(x => x.startsWith("@"))
+		.forEach(k => {
+			parameters.push(k.substring(1))
 		})
 
-		return arr
+
+	// All other values
+	kbrdValues.filter(x => !x.startsWith("@"))
+		.forEach(k => {
+			values.push(k)
+		})
+
+	return {
+		name,
+		checker,
+		parameters,
+		values,
+		config,
+		component: getComponent(name)
 	}
 
+}
+
+function getKeyboards(kbrdCode) {
+	let unrefKbrd = unref(kbrdCode)
+
+	if (!unrefKbrd) return null
+	return unrefKbrd.split("\n\n").map(kbrd => getOneKeyboard(kbrd))
+}
+
+export function useKeyboard(props) {
 	function loadAnswerToKeyboard(value, reset, changeCallback, callback, answer) {
 		// Load the answer to the keyboard... but... possible it can be removed for a better handling ?
 		reset()
@@ -128,11 +122,6 @@ export function useKeyboard(props) {
 		callback(value)
 
 		changeCallback(value)
-	}
-
-	function getComponent(kbrd) {
-		// TODO: Make a check on the name to make sur the component exists.
-		return defineAsyncComponent(() => import(`@/Components/Keyboards/Keyboard${kbrd}`))
 	}
 
 	// Return the available functions

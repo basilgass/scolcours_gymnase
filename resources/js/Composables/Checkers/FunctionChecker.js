@@ -1,12 +1,17 @@
 import {PiMath} from "pimath/esm"
 
+const name = "function"
+const description = `function|fn,[paramètres]
+
+**paramètres**
+- d=développé
+`
 export function FunctionChecker(options) {
-	if(options===undefined){options = []}
+	options = options??[]
 
 	const isDevelopped = (options.includes("d") || options.includes("developped") || options.includes("dev"))
 
-	return {
-		name: "function",
+	return {name, description,
 		format: () => {
 			let opts = []
 

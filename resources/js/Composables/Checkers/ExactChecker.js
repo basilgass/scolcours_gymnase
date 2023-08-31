@@ -1,8 +1,10 @@
-export function ExactChecker(options){
-	if(options===undefined){options = []}
 
+const name="exact"
+const description = "exact"
+export function ExactChecker(options){
+	options = options??[]
 	return {
-		name: "exact",
+		name, description,
 		format: () => {
 			return "réponse sous forme exacte, réduite"
 		},

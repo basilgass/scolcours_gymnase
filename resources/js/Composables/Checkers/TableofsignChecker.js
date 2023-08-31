@@ -1,9 +1,16 @@
 import {ExactChecker} from "@/Composables/Checkers/ExactChecker"
 
+const name = "tos"
+const description = `tos,[paramètres]
+
+**paramètres**
+aucun
+`
 export function TableofsignChecker(options) {
+	options = options ?? []
 
 	return {
-		name: "table of signs",
+		name, description,
 		format: () => "tableau de signes",
 		check: (expectedAnswer, answer = []) => {
 			if (expectedAnswer !== answer) {

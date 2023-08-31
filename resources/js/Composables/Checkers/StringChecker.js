@@ -1,6 +1,11 @@
+const name = "string"
+const description = "string"
+
 export function StringChecker(options) {
+	options = options ?? []
+
 	return {
-		name: "string",
+		name, description,
 		format: () => {
 			return "réponse textuelle"
 		},

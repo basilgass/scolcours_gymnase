@@ -35,7 +35,7 @@ import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"
 import {PiMath} from "pimath/esm"
 import DialogModal from "@/Components/Ui/DialogModal.vue"
 import FormTextarea from "@/Components/Form/FormTextarea.vue"
-import {useCheckers} from "@/Composables/useCheckers"
+import {checkersConfig} from "@/Composables/checkersConfig"
 
 let root = ref(null),
 	code = ref("rational@r\nx-1/x^2\nx^2-x/x^3")
@@ -43,13 +43,13 @@ let root = ref(null),
 
 const format = computed(()=>{
 	let data = code.value.split("\n")
-	return useCheckers(data[0]).format()
+	return checkersConfig(data[0]).format()
 })
 const check = computed(()=>{
 	let data = code.value.split("\n")
 	if(data.length!==3){return "code à revoir..."}
 
-	let checker = useCheckers(data.shift())
+	let checker = checkersConfig(data.shift())
 	return checker.check(...data)
 
 	// try {

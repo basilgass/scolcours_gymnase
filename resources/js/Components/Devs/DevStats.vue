@@ -37,17 +37,22 @@ export default {
 </script>
 <script setup>
 
-import {computed, ref} from "vue"
+import {computed, onMounted, ref} from "vue"
 import FormTextarea from "@/Components/Form/FormTextarea.vue"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 import {PiMath} from "pimath/esm"
 
-let rawValues = ref("11,11,11,7,6,13,13,7,4,9,5,10,11,8,14,15,8,10,4,9,7,7,9,12,10,14,18,6,9,10,13,9,12,8,10,5,7,13,12,12,13,11,9,11,9,8,10,14,10,11,9,7,7,6,10,6,11,10,8,8,11,7,6,8,11,12,14,9,12,7,8,8,16,14,9,10,7,10,10,12"),
+let rawValues = ref(""),
+	numberOfSamples = ref(0),
 	values = computed(() => {
-		let arr = rawValues.value
-			.split(",")
-			.filter(x => x.trim() !== "")
-			.map(x => +x)
+		let arr = []
+		for(let i=0; i<numberOfSamples.value; i++){
+			arr.push(
+				PiMath.Random.number(1,20)+
+					PiMath.Random.number(1,20)+
+					PiMath.Random.number(1,20)
+			)
+		}
 		arr.sort((a, b) => a - b)
 
 		return arr
@@ -82,7 +87,7 @@ let rawValues = ref("11,11,11,7,6,13,13,7,4,9,5,10,11,8,14,15,8,10,4,9,7,7,9,12,
 		let md = "| \\(x_i\\)| \\(l_i\\) | \\(f_i\\)|\\(F_i\\)|\\(\\overline{F_i}\\)| \n|---|----|----|----|----|\n"
 
 		for (let v of frequencyArray.value) {
-			md += `| \\(${v.value}\\) | \\( ${v.count} \\) | \\(${+(v.frequency * 100).toFixed(2)}\\%\\) | \\(${+(v.accumulate * 100).toFixed(2)}\\%\\) | \\(${+(v.deaccumulate * 100).toFixed(2)}\\%\\) |\n`
+			md += `| ${v.value} | ${v.count} | \\(${+(v.frequency * 100).toFixed(2)}\\%\\) | \\(${+(v.accumulate * 100).toFixed(2)}\\%\\) | \\(${+(v.deaccumulate * 100).toFixed(2)}\\%\\) |\n`
 		}
 
 		return md
@@ -144,5 +149,9 @@ function quantileSorted(sorted, p, fnValueFrom) {
 		value1 = +fnValueFrom(sorted[i0 + 1], i0 + 1, sorted)
 	return value0 + (value1 - value0) * (i - i0)
 }
+
+onMounted(()=>{
+	numberOfSamples.value = 1000
+})
 </script>
 

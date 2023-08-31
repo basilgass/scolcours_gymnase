@@ -7,17 +7,17 @@
 		/>
 
 		<div
+			:class="props.wrap?'whitespace-pre-wrap':'whitespace-pre'"
 			class="tracking-normal font-normal code-input border bg-white language-javascript h-full text-[1.1em]"
 			v-bind="$attrs"
-			:class="props.wrap?'whitespace-pre-wrap':'whitespace-pre'"
 		>
 			<textarea
 				ref="inp"
 				v-model="theValue"
 				class="w-full"
 				@input="sync_scroll();$emit('update:modelValue', theValue)"
-				@scroll="sync_scroll"
 				@keyup="autofill($event)"
+				@scroll="sync_scroll"
 				@keydown.tab.prevent="tabber($event)"
 				@keydown.enter.prevent="indenter($event)"
 			/>
@@ -74,7 +74,7 @@ const props = defineProps({
 
 let pre = ref(null),
 	highlighted = computed(() => {
-		if(theValue.value) {
+		if (theValue.value) {
 			try {
 				if (props.language.toLowerCase() === "latex") {
 					return Prism.highlight(theValue.value, Prism.languages.latex, "latex")
@@ -144,34 +144,42 @@ let pre = ref(null),
 		pre.value.scrollTop = inp.value.scrollTop
 		pre.value.scrollLeft = inp.value.scrollLeft
 	},
-	autofillTriggers = computed(()=>{
-		if(props.language==="latex"){
+	autofillTriggers = computed(() => {
+		if (props.language === "latex") {
 			return latexTriggers
-		}else if(props.language==="javascript"){
+		} else if (props.language === "javascript") {
 			return javascriptTriggers
 		}
 		return {}
 	}),
 
-	autofill = function(event) {
-		let text = theValue.value,
-			originalSelectionStart = event.target.selectionStart,
-			textStart = text.slice(0, originalSelectionStart),
-			textEnd = text.slice(originalSelectionStart)
+	autofill = function (event) {
+		// Test the three letters triggers.
+		let applied = autofill_do(event, 3)
 
-		let trigger = textStart.slice(textStart.length-3)
-
-		if(autofillTriggers.value[trigger]){
-			theValue.value = `${textStart.slice(0,textStart.length-trigger.length)}${autofillTriggers.value[trigger][0]}${autofillTriggers.value[trigger][1]}${textEnd}`
-			event.target.value = theValue.value
-			event.target.selectionEnd = event.target.selectionStart = originalSelectionStart + autofillTriggers.value[trigger][0].length - trigger.length
+		if (!applied) {
+			autofill_do(event, 2)
 		}
 
 	},
-	autofill_latex = function(event){
+	autofill_do = function (event, length) {
+		let originalSelectionStart = event.target.selectionStart,
+			textStart = theValue.value.slice(0, originalSelectionStart),
+			textEnd = theValue.value.slice(originalSelectionStart),
+			trigger = textStart.slice(-length)
+
+		if (autofillTriggers.value.hasOwnProperty(trigger)) {
+			theValue.value = `${textStart.slice(0, textStart.length - trigger.length)}${autofillTriggers.value[trigger][0]}${autofillTriggers.value[trigger][1]}${textEnd}`
+			event.target.value = theValue.value
+			event.target.selectionEnd = event.target.selectionStart = originalSelectionStart + autofillTriggers.value[trigger][0].length - trigger.length
+			return true
+		}
+		return false
+	},
+	autofill_latex = function (event) {
 
 	},
-	autofill_javascript = function(event) {
+	autofill_javascript = function (event) {
 
 	}
 onMounted(() => {

@@ -1,8 +1,18 @@
 import {NumberChecker} from "@/Composables/Checkers/NumberChecker"
 
+const name = "scientific"
+const description = `scientific|scn,[paramètres]
+
+//TODO: scn: mode stricte
+**paramètres**
+- [1,2,3,4,...]: nombre de chiffre après la virgule
+- s: strict (1.2 ne passe pas pour 1.20)
+`
 export function ScientificChecker(options) {
+	options = options ?? []
+
 	return {
-		name: "scientific",
+		name, description,
 		format: () => {
 			if (isNaN(options[0])) {
 				return "réponse en notation scientifique"

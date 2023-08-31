@@ -12,21 +12,15 @@ import {VectorChecker} from "@/Composables/Checkers/VectorChecker"
 import {EquationChecker} from "@/Composables/Checkers/EquationChecker"
 import {FractionChecker} from "@/Composables/Checkers/FractionChecker"
 import {FunctionChecker} from "@/Composables/Checkers/FunctionChecker"
+import {LogChecker} from "@/Composables/Checkers/LogChecker"
+import {InputChecker} from "@/Composables/Checkers/InputChecker"
+import {OrderChecker} from "@/Composables/Checkers/OrderChecker"
+import {QcmChecker} from "@/Composables/Checkers/QcmChecker"
+import {TypeChecker} from "@/Composables/Checkers/TypeChecker"
 
-//TODO: checkerslist, but incomplete
-export const checkersList = {
-	polynom: ["factors", "develop"],
-	qolynom: ["factors", "develop", "reduced"],
-	nb: ["1", "2", "3", "4"],
-	scn: ["1", "2", "3", "4"],
-	tos: [],
-	sol: [],
-	exact: [],
-	study: [],
-}
+export function checkersConfig(checkerData) {
+	// checkerData =[checker,opt1,opt2,opt3]
 
-export function useCheckers(checkerData) {
-	// checkerData =[ checker,opt1,opt2,opt3]
 	let options = []
 
 	if(typeof checkerData === "string"){
@@ -70,12 +64,37 @@ export function useCheckers(checkerData) {
 		return CoordChecker(options)
 	case "vector":
 		return VectorChecker(options)
+	case "log":
+		return LogChecker(options)
 	default:
 		return StringChecker(options)
 	}
 }
 
+export function getCheckers() {
+	let list = {}
+	list[CoordChecker().name] = CoordChecker()
+	list[EquationChecker().name] = EquationChecker()
+	list[ExactChecker().name] = ExactChecker()
+	list[FractionChecker().name] = FractionChecker()
+	list[FunctionChecker().name] = FunctionChecker()
+	list[InputChecker().name] = InputChecker()
+	list[LogChecker().name] = LogChecker()
+	list[NumberChecker().name] = NumberChecker()
+	list[OrderChecker().name] = OrderChecker()
+	list[PolynomChecker().name] = PolynomChecker()
+	list[QcmChecker().name] = QcmChecker()
+	list[RationalChecker().name] = RationalChecker()
+	list[ScientificChecker().name] = ScientificChecker()
+	list[SolutionChecker().name] = SolutionChecker()
+	list[StringChecker().name] = StringChecker()
+	list[StudyChecker().name] = StudyChecker()
+	list[TableofsignChecker().name] = TableofsignChecker()
+	list[TypeChecker().name] = TypeChecker()
+	list[VectorChecker().name] = VectorChecker()
 
+	return list
+}
 export function stripFirstCharacter(value){
 	return value.substring(1)
 }

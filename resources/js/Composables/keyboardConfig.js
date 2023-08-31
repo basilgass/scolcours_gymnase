@@ -15,6 +15,8 @@ export function keyboardMaps(kbrd) {
 		return "equation"
 	case "fn":
 		return "function"
+	case "log":
+		return "exact"
 	}
 
 	return kbrd
@@ -84,79 +86,14 @@ export const keyboardKeys = {
 }
 
 export 	const keyboards = {
-	"qcm": {
-		name: "qcm",
-		grid: "grid-cols-4",
-		layout: [],
-		tex(value) {
-			return value.startsWith("#") ? asciiToTex(value.substring(1)) : value
-		}
-	},
-	"number": {
-		name: "number",
-		grid: "grid-cols-3",
-		layout: [
-			"1", "2", "3",
-			"4", "5", "6",
-			"7", "8", "9",
-			"-", "0", "."
-		],
-		tex(value) {
-			return asciiToTex(value)
-		}
-	},
-	"fraction": {
-		name: "fraction",
-		grid: "grid-cols-3",
-		layout: [
-			"1", "2", "3",
-			"4", "5", "6",
-			"7", "8", "9",
-			"-", "0", "/"
-		],
-		tex(value) {
-			return asciiToTex(value)
-		}
-	},
-	"simple": {
-		name: "simple",
-		grid: "grid-cols-4",
-		layout: [
-			"1", "2", "3", "+",
-			"4", "5", "6", "-",
-			"7", "8", "9", "*",
-			"", "0", ".", "/"
-		],
-		tex(value) {
-			return asciiToTex(value)
-		}
-	},
-	"pow": {
-		name: "pow",
-		grid: "grid-cols-4",
-		layout: [
-			"1", "2", "3", "-",
-			"4", "5", "6", "^",
-			"7", "8", "9", "/",
-			"", "0", "(", ")"
-		],
-		tex(value) {
-			return asciiToTex(value)
-		}
-	},
-	"scientific": {
-		name: "scientific",
-		grid: "grid-cols-4",
-		layout: [
-			"1", "2", "3", "-",
-			"4", "5", "6", "*",
-			"7", "8", "9", "10^",
-			"", "0", ".", ""
-		],
-		tex(value) {
-			return asciiToTex(value)
-		}
-	},
+	// "qcm": {
+	// 	name: "qcm",
+	// 	grid: "grid-cols-4",
+	// 	layout: [],
+	// 	tex(value) {
+	// 		return value.startsWith("#") ? asciiToTex(value.substring(1)) : value
+	// 	}
+	// },
 	"algebra": {
 		name: "algebra",
 		grid: "grid-cols-7",
@@ -168,75 +105,6 @@ export 	const keyboards = {
 		],
 		tex(value) {
 			return asciiToTex(value)
-		}
-	},
-	"polynom": {
-		name: "polynom",
-		grid: "grid-cols-6",
-		layout: [
-			"1", "2", "3", "+", "x", "x^2",
-			"4", "5", "6", "-", "x^3", "x^4",
-			"7", "8", "9", "*", "", "",
-			"(", ")", "0", "/", "^2", "^"
-		],
-		tex: function (value) {
-			return asciiToTex(value)
-		}
-	},
-	"equation": {
-		name: "equation",
-		grid: "grid-cols-6",
-		layout: [
-			"1", "2", "3", "+", "x", "x^2",
-			"4", "5", "6", "-", "y", "y^2",
-			"7", "8", "9", "*", "^2", "^",
-			"(", ")", "0", "/", ["=", 2]
-		],
-		tex(value) {
-			return asciiToTex(value)
-		}
-	},
-	"rational": {
-		name: "rational",
-		grid: "grid-cols-6",
-		layout: [
-			"1", "2", "3", "+", "x", "x^2",
-			"4", "5", "6", "-", "x^3", "x^4",
-			"7", "8", "9", "/", "^2", "^",
-			"(", ")", "0", "", "", ""
-		],
-		tex: function (value) {
-			let [Pnum, Pden] = value.split("/")
-			return Pden === undefined ? asciiToTex(Pnum) : `\\frac{ ${asciiToTex(Pnum)} }{ ${Pden} }`
-		}
-	},
-	"function": {
-		name: "function",
-		grid: "grid-cols-6",
-		layout: [
-			"1", "2", "3", "+", "x", "x^2",
-			"4", "5", "6", "-", "y", "y^2",
-			"7", "8", "9", "*", "^2", "^",
-			"(", ")", "0", "/"
-		],
-		tex(value) {
-			return asciiToTex(value)
-		}
-	},
-	"exact": {
-		name: "exact",
-		grid: "grid-cols-5",
-		layout: [
-			"1", "2", "3", "+", "-",
-			"4", "5", "6", "", "/",
-			"7", "8", "9", "^2", "^",
-			"0", "(", ")", "sqrt", "root(",
-			"log", "_", "ln", "pi", "e",
-			"oo", "", "", "RR", "!!"
-		],
-		tex: function (value) {
-			// Apply this for all splited.
-			return value.split(",").map(v => makeExactFromAscii(v)).join(",")
 		}
 	},
 	"coord": {
@@ -269,37 +137,59 @@ export 	const keyboards = {
 			return `${lp}${coords.map(x => makeExactFromAscii(x)).join(";")}${rp}`
 		}
 	},
-	"vector": {
-		name: "vector",
+	"equation": {
+		name: "equation",
+		grid: "grid-cols-6",
+		layout: [
+			"1", "2", "3", "+", "x", "x^2",
+			"4", "5", "6", "-", "y", "y^2",
+			"7", "8", "9", "*", "^2", "^",
+			"(", ")", "0", "/", ["=", 2]
+		],
+		tex(value) {
+			return asciiToTex(value)
+		}
+	},
+	"exact": {
+		name: "exact",
 		grid: "grid-cols-5",
 		layout: [
 			"1", "2", "3", "+", "-",
 			"4", "5", "6", "", "/",
-			"7", "8", "9", "^2", "sqrt",
-			"", "0", ".", "^", "root(",
-			"(", ";", ")", "pi", "e"
+			"7", "8", "9", "^2", "^",
+			"0", "(", ")", "sqrt", "root(",
+			"log", "_", "ln", "pi", "e",
+			"oo", "", "", "RR", "!!"
 		],
 		tex: function (value) {
-			let [...coords] = value.split(";"),
-				lp = "", rp = ""
-
-			if (coords[0].startsWith("(")) {
-				lp = "\\left("
-				coords[0] = coords[0].substring(1)
-				rp = "\\right."
-			}
-			if (coords[coords.length - 1].endsWith(")")) {
-				if (lp === "") {
-					lp = "\\left."
-				}
-				rp = "\\right)"
-				coords[coords.length - 1] = coords[coords.length - 1].substring(0, coords[coords.length - 1].length - 1)
-			}
-
-			return `${lp}\\begin{matrix}${coords.map(x => {
-				let tex = makeExactFromAscii(x)
-				return tex === "" ? "\\phantom{ }" : tex
-			}).join("\\\\")}\\end{matrix}${rp}`
+			// Apply this for all splited.
+			return value.split(",").map(v => makeExactFromAscii(v)).join(",")
+		}
+	},
+	"fraction": {
+		name: "fraction",
+		grid: "grid-cols-3",
+		layout: [
+			"1", "2", "3",
+			"4", "5", "6",
+			"7", "8", "9",
+			"-", "0", "/"
+		],
+		tex(value) {
+			return asciiToTex(value)
+		}
+	},
+	"function": {
+		name: "function",
+		grid: "grid-cols-6",
+		layout: [
+			"1", "2", "3", "+", "x", "x^2",
+			"4", "5", "6", "-", "y", "y^2",
+			"7", "8", "9", "*", "^2", "^",
+			"(", ")", "0", "/"
+		],
+		tex(value) {
+			return asciiToTex(value)
 		}
 	},
 	"limit": {
@@ -314,6 +204,85 @@ export 	const keyboards = {
 		tex: function (value) {
 			// Apply this for all values.
 			return value.split(",").map(v => makeExactFromAscii(v)).join(",")
+		}
+	},
+	"number": {
+		name: "number",
+		grid: "grid-cols-3",
+		layout: [
+			"1", "2", "3",
+			"4", "5", "6",
+			"7", "8", "9",
+			"-", "0", "."
+		],
+		tex(value) {
+			return asciiToTex(value)
+		}
+	},
+	"polynom": {
+		name: "polynom",
+		grid: "grid-cols-6",
+		layout: [
+			"1", "2", "3", "+", "x", "x^2",
+			"4", "5", "6", "-", "x^3", "x^4",
+			"7", "8", "9", "*", "", "",
+			"(", ")", "0", "/", "^2", "^"
+		],
+		tex: function (value) {
+			return asciiToTex(value)
+		}
+	},
+	"pow": {
+		name: "pow",
+		grid: "grid-cols-4",
+		layout: [
+			"1", "2", "3", "-",
+			"4", "5", "6", "^",
+			"7", "8", "9", "/",
+			"", "0", "(", ")"
+		],
+		tex(value) {
+			return asciiToTex(value)
+		}
+	},
+	"rational": {
+		name: "rational",
+		grid: "grid-cols-6",
+		layout: [
+			"1", "2", "3", "+", "x", "x^2",
+			"4", "5", "6", "-", "x^3", "x^4",
+			"7", "8", "9", "/", "^2", "^",
+			"(", ")", "0", "", "", ""
+		],
+		tex: function (value) {
+			let [Pnum, Pden] = value.split("/")
+			return Pden === undefined ? asciiToTex(Pnum) : `\\frac{ ${asciiToTex(Pnum)} }{ ${Pden} }`
+		}
+	},
+	"scientific": {
+		name: "scientific",
+		grid: "grid-cols-4",
+		layout: [
+			"1", "2", "3", "-",
+			"4", "5", "6", "*",
+			"7", "8", "9", "10^",
+			"", "0", ".", ""
+		],
+		tex(value) {
+			return asciiToTex(value)
+		}
+	},
+	"simple": {
+		name: "simple",
+		grid: "grid-cols-4",
+		layout: [
+			"1", "2", "3", "+",
+			"4", "5", "6", "-",
+			"7", "8", "9", "*",
+			"", "0", ".", "/"
+		],
+		tex(value) {
+			return asciiToTex(value)
 		}
 	},
 	"solution": {
@@ -356,6 +325,39 @@ export 	const keyboards = {
 			value = value.replace("{", "").replace("}", "")
 
 			return `${beforeBrace} ${value.split(";").map(x => makeExactFromAscii(x)).join(";")} ${afterBrace}`
+		}
+	},
+	"vector": {
+		name: "vector",
+		grid: "grid-cols-5",
+		layout: [
+			"1", "2", "3", "+", "-",
+			"4", "5", "6", "", "/",
+			"7", "8", "9", "^2", "sqrt",
+			"", "0", ".", "^", "root(",
+			"(", ";", ")", "pi", "e"
+		],
+		tex: function (value) {
+			let [...coords] = value.split(";"),
+				lp = "", rp = ""
+
+			if (coords[0].startsWith("(")) {
+				lp = "\\left("
+				coords[0] = coords[0].substring(1)
+				rp = "\\right."
+			}
+			if (coords[coords.length - 1].endsWith(")")) {
+				if (lp === "") {
+					lp = "\\left."
+				}
+				rp = "\\right)"
+				coords[coords.length - 1] = coords[coords.length - 1].substring(0, coords[coords.length - 1].length - 1)
+			}
+
+			return `${lp}\\begin{matrix}${coords.map(x => {
+				let tex = makeExactFromAscii(x)
+				return tex === "" ? "\\phantom{ }" : tex
+			}).join("\\\\")}\\end{matrix}${rp}`
 		}
 	}
 }

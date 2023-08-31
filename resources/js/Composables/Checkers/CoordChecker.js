@@ -1,11 +1,30 @@
 import {ExactChecker} from "@/Composables/Checkers/ExactChecker"
-import {stripFirstCharacter, stripLastCharacter} from "@/Composables/useCheckers"
+import {stripFirstCharacter, stripLastCharacter} from "@/Composables/checkersConfig"
+import {NumberChecker} from "@/Composables/Checkers/NumberChecker"
+import {FractionChecker} from "@/Composables/Checkers/FractionChecker"
+
+const name = "coord"
+const description = `coord,[paramètres]
+
+**paramètres**
+- nb= les coordonnées sont des nombres
+- frac= les coordonnées sont des fractions
+`
 
 export function CoordChecker(options) {
 	// TODO: coordchecker is by default using exactChecker. Might also be good to use nb checker
+	options = options??[]
+	let checker
+	if(options.includes("nb")){
+		checker = NumberChecker()
+	}else if(options.includes("frac")){
+		checker = FractionChecker()
+	}else{
+		checker = ExactChecker()
+	}
 
 	return {
-		name: "coord",
+		name, description,
 		format: () => "Coordonnées d'un point sous la forme \\((a;b)\\)",
 		check: (expectedAnswer, answer = []) => {
 			if (expectedAnswer === answer) {
@@ -54,9 +73,9 @@ export function CoordChecker(options) {
 			}
 
 
-			let eChecker = ExactChecker(options)
+			// let eChecker = ExactChecker(options)
 			for (let i = 0; i < values.length; i++) {
-				let result = eChecker.check(expectedValues[i], values[i])
+				let result = checker.check(expectedValues[i], values[i])
 				if (!result.result) {
 					return {
 						result: false,

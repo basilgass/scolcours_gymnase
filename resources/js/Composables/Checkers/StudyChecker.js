@@ -1,6 +1,15 @@
+const name = "study"
+const description = `study
+
+**paramètres**
+aucun
+`
+
 export function StudyChecker(options) {
+	options = options ?? []
+
 	return {
-		name: "study",
+		name, description,
 		format: () => {
 			return ""
 		},

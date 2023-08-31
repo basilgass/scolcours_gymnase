@@ -1,11 +1,20 @@
 import AsciiMathParser from "@/asciimath2tex"
 
+const name = "solution"
+const description = `solution|sol,[paramètres]
+
+**paramètres**
+checker = par défaut, c'est le "exact"
+`
 export function SolutionChecker(options) {
+	options = options ?? []
+
 	return {
-		name: "solution",
+		name, description,
 		format: () => "Solution de la forme \\(\\mathcal{S}=\\{3;5\\}\\)",
 		check: (expectedAnswer, answer = []) => {
 
+			// C'est exactement la bonne valeur.
 			if (expectedAnswer === answer) {
 				return {
 					result: expectedAnswer === answer,
@@ -13,19 +22,20 @@ export function SolutionChecker(options) {
 				}
 			}
 
-			function isEmptyOrReal(value) {
-				return value === "!!" || value === "RR"
-			}
-
 			// Ensemble vide / réelles entre accolades.
-			if (isEmptyOrReal(expectedAnswer)) {
-				if (answer === `{${answer}}`) {
+			if (isEmptyOrReal(answer)) {
+				if (answer === `{${expectedAnswer}}`) {
 					return {
 						result: false,
 						message: `${ new AsciiMathParser().parse(expectedAnswer)} est déjà un ensemble.`
 					}
 				}
+
+				return {result: false, message: "Ce n'est pas le bon ensemble de solution."}
 			}
+
+			// La réponse donnée n'est pas un cas particulier.
+
 
 			// Manque les parenthèses
 			if (expectedAnswer.startsWith("{") && !isEmptyOrReal(answer)) {
@@ -66,4 +76,14 @@ export function SolutionChecker(options) {
 			}
 		}
 	}
+}
+
+function isEmptyOrReal(value) {
+	return value === "!!" ||
+		value === "RR" ||
+		value === "RR^**" ||
+		value === "RR_+" ||
+		value === "RR_+^**" ||
+		value === "RR_-" ||
+		value === "RR_-^**"
 }

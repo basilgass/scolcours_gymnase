@@ -1,12 +1,31 @@
 import {ExactChecker} from "@/Composables/Checkers/ExactChecker"
-import {stripFirstCharacter, stripLastCharacter} from "@/Composables/useCheckers"
+import {stripFirstCharacter, stripLastCharacter} from "@/Composables/checkersConfig"
 import {PiMath} from "pimath/esm"
+import {NumberChecker} from "@/Composables/Checkers/NumberChecker"
+import {FractionChecker} from "@/Composables/Checkers/FractionChecker"
 
+const name = "vector"
+const description = `vector,[paramètres]
+
+**paramètres**
+- co=accepte un vecteur colinéaire
+- nb= les composantes sont des nombres
+- frac= les composantes sont des fractions
+`
 export function VectorChecker(options) {
 	// TODO: vectorchecker is by default using exactChecker. Might also be good to use nb or simple fraction checker
+	options = options??[]
+	let checker
+	if(options.includes("nb")){
+		checker = NumberChecker()
+	}else if(options.includes("frac")){
+		checker = FractionChecker()
+	}else{
+		checker = ExactChecker()
+	}
 
 	return {
-		name: "vector",
+		name, description,
 		format: () => "Vecteur sous la forme \\(\\begin{pmatrix}a\\\\b\\end{pmatrix}\\)",
 		check: (expectedAnswer, answer = []) => {
 			// Manque les parenthèses
@@ -75,9 +94,8 @@ export function VectorChecker(options) {
 					}
 				}
 			}else{
-				let eChecker = ExactChecker(options)
 				for(let i=0; i<values.length; i++){
-					let result = eChecker.check(expectedValues[i], values[i])
+					let result = checker.check(expectedValues[i], values[i])
 					if(!result.result){
 						return {
 							result: false,

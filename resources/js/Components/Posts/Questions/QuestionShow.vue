@@ -300,16 +300,23 @@ let theQuestion = reactive(props.question), // la question principale, vraiment 
 			}
 			// On met une couleur pour chaque variable.
 			// TODO: rajouter des couleurs en fonctions de la bonne réponse ou non ?
+
 			// On supprime les clés sans mise en forme.
 			body = body.replaceAll(
 				"\n@" + key.toUpperCase(),
 				"\n@" + key.toUpperCase() + "\n")
+
+			// Mise en forme dans le cas d'un texte de type bloc
 			body = body.replaceAll(
 				"\n" + key.toUpperCase(),
 				"\n" + key.toUpperCase() + "\n" + `{.border .px-3 .py-1 .${rawColor}}`)
+
+			// Mise en forme dans le cas d'un texte "en ligne"
 			body = body.replaceAll(
 				` ${key.toUpperCase()}`,
 				` [${key.toUpperCase()}]{.inline-block .mx-1 .px-3 .py-1 .border .${rawColor} }`)
+
+			// Mise en forme pour des textes mathématiques
 			body = body.replaceAll(
 				key.toLowerCase(),
 				`\\textcolor{${texColor}}{ ${key.toLowerCase()} }`)
@@ -338,6 +345,7 @@ let theQuestion = reactive(props.question), // la question principale, vraiment 
 				}
 			}
 		}
+
 		return body
 	})
 

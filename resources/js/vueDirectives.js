@@ -135,7 +135,11 @@ function themeUpdate(el, binding, vnode){
 		const keys = ["btn", "bg", "text", "border", "active", "scrollbar"]
 		Object.keys(binding.modifiers).forEach(key =>{
 			if(keys.indexOf(key)!==-1){
-				el.classList.add(`${key}-scolcours-${chapter}`)
+				if(key==="text" && binding.modifiers.hasOwnProperty("bg")){
+					el.classList.add("text-white")
+				}else {
+					el.classList.add(`${key}-scolcours-${chapter}`)
+				}
 			}
 		})
 

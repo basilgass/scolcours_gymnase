@@ -1,9 +1,18 @@
 import {PiMath} from "pimath/esm"
 
+const name = "polynom"
+const description = `polynom,[paramètres]
+
+**paramètres**
+- f=factorisé
+- F=entièrement factorisé \\((2x+4)(x-3)\\) ne passe pas.
+- d=développé
+`
+
 export function PolynomChecker(options) {
-	if(options===undefined){options = []}
-	return {
-		name: "polynom",
+	options = options ?? []
+
+	return {name, description,
 		format: () => {
 			let opts = []
 

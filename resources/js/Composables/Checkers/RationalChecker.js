@@ -1,8 +1,18 @@
 import {PiMath} from "pimath/esm"
 
+const name = "rational"
+const description = `rational,[paramètres]
+
+**paramètres**
+- f=factorisée
+- d=développée
+- r=réduite
+`
 export function RationalChecker(options) {
+	options = options ?? []
+
 	return {
-		name: "rational",
+		name,description,
 		format: () => {
 			let opts = []
 

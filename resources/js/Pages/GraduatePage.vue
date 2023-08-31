@@ -158,6 +158,7 @@
 					:chart-dataset="decompteDesNotes"
 					:chart-labels="[1, 1.5,2, 2.5,3, 3.5,4, 4.5,5, 5.5,6]"
 					:chart-options="{scales: { y: { ticks: { stepSize: 1, }, }, }, }"
+					chart-colorset="graduate"
 				/>
 			</div>
 		</div>

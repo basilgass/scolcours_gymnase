@@ -71,14 +71,14 @@ export default {
 import FormField from "@/Components/Form/FormField"
 import FormLabel from "@/Components/Form/FormLabel"
 import FormError from "@/Components/Form/FormError"
-import {onMounted, ref} from "vue"
+import {computed, onMounted, ref} from "vue"
 
 const emits = defineEmits(["update:modelValue", "inputFocus", "enter", "cancel", "save", "buttonClick"])
 let props = defineProps({
 	inline: {type: Boolean, default: false},
 	modelValue: {type: [String,Number], default: null},
 	active: {type: Boolean, default: false},
-	name: {type: String, required: true},
+	name: {type: String, default: ""},
 	label: {type: String, default: ""},
 	error: {type: String, default: ""},
 	focus: {type: Boolean, default: false},
@@ -93,6 +93,9 @@ let props = defineProps({
 let inp = ref(null),
 	originalValue = ref(props.modelValue)
 
+let formName = computed(()=>{
+	return props.name==="" ? props.label:props.name
+})
 function doCancel(){
 	emits("update:modelValue", originalValue.value)
 	emits("cancel")

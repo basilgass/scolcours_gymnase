@@ -110,7 +110,7 @@ import {computed, nextTick, onMounted, ref} from "vue"
 import PiTableOfSigns from "@/Components/Pi/PiTableOfSigns.vue"
 import KeyboardDisplay from "@/Components/Keyboards/KeyboardDisplay.vue"
 import {makeStudyFromCode} from "@/Composables/useTos"
-import {useCheckers} from "@/Composables/useCheckers"
+import {checkersConfig} from "@/Composables/checkersConfig"
 import {useKeyboard} from "@/Composables/useKeyboard"
 
 let props = defineProps({
@@ -121,7 +121,7 @@ let props = defineProps({
 let emits = defineEmits(["change", "validate"]),
 	changeEvent = async function (value) {
 		await nextTick()
-		const check = useCheckers("tos").check(props.answer, answerValue.value)
+		const check = checkersConfig("tos").check(props.answer, answerValue.value)
 
 		emits("change", {
 			value: {

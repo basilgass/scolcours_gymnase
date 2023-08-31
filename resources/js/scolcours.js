@@ -5,6 +5,7 @@ export const blockTypeDefault = {
 		body: ""
 	}
 }
+
 export const blockTypes = {
 	definition: {
 		title: "définition",

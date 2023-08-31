@@ -39,7 +39,7 @@ Formulaire d'édition d'une question
 		</template>
 		<div class="flex flex-col md:flex-row gap-3 px-5 pb-5">
 			<form
-				class="flex-1"
+				class="flex-1 flex flex-col gap-2"
 				@submit.prevent
 			>
 				<form-input
@@ -47,6 +47,7 @@ Formulaire d'édition d'une question
 					name="title"
 					label="title"
 					class="font-code"
+					sm
 					inline
 				/>
 				<form-input
@@ -54,17 +55,23 @@ Formulaire d'édition d'une question
 					name="css"
 					label="CSS"
 					class="font-code"
+					sm
 					inline
 				/>
 
-				<form-codearea
-					ref="formBody"
-					v-model="theQuestion.block.body"
-					:rows="10"
-					:label="`body (id: ${theQuestion.block.id})`"
-					name="body"
-					language="latex"
-				/>
+				<div>
+					<form-codearea
+						ref="formBody"
+						v-model="theQuestion.block.body"
+						:rows="10"
+						:label="`body (id: ${theQuestion.block.id})`"
+						name="body"
+						language="latex"
+					/>
+					<div class="text-[12px] font-code">
+						$a = TeX, $A = texte, @$A = format spéciaux
+					</div>
+				</div>
 
 				<form-textarea
 					v-model="theQuestion.answer"
@@ -73,19 +80,21 @@ Formulaire d'édition d'une question
 					class="font-code"
 					:rows="3"
 				/>
-				<form-textarea
-					v-model="theQuestion.keyboard"
-					:rows="5"
-					label="keyboard"
-					name="keyboard"
-					class="font-code"
-				/>
 
-				<div
-					v-show="errorMessage"
-					class="bg-red-200 border rounded border-red-300 py-3 px-2"
-				>
-					{{ errorMessage }}
+				<div class="grid grid-cols-2 gap-3">
+					<form-textarea
+						v-model="theQuestion.keyboard"
+						:rows="8"
+						label="keyboard"
+						name="keyboard"
+						class="font-code"
+						@current-line="currentKeyboardLine = $event"
+					/>
+
+					<markdown-it
+						class="font-code !text-[12px] mt-6"
+						:text="currentKeyboardLineHelperText"
+					/>
 				</div>
 			</form>
 
@@ -103,11 +112,13 @@ Formulaire d'édition d'une question
 <script setup>
 import FormTextarea from "@/Components/Form/FormTextarea.vue"
 import FormInput from "@/Components/Form/FormInput.vue"
-import {reactive, ref} from "vue"
+import {computed, inject, reactive, ref} from "vue"
 import DialogModal from "@/Components/Ui/DialogModal.vue"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
 import FormCodearea from "@/Components/Form/FormCodearea.vue"
 import QuestionShow from "@/Components/Posts/Questions/QuestionShow.vue"
+import {getCheckers} from "@/Composables/checkersConfig"
+import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 
 const emits = defineEmits(["update:modelValue", "change", "destroy"])
 let props = defineProps({
@@ -115,9 +126,23 @@ let props = defineProps({
 		modelValue: { type: Boolean, default: false },
 	}),
 	show = ref(props.modelValue),
-	theQuestion = reactive(props.question),
-	errorMessage = ref("")
+	theQuestion = reactive(props.question)
 
+let checkersList = getCheckers(),
+	currentKeyboardLine = ref(""),
+	currentKeyboardLineHelperText = computed(() => {
+		const [name, ...options] = currentKeyboardLine.value.split(",")
+
+		if(checkersList.hasOwnProperty(name)){
+			return checkersList[name].description
+		}
+
+		// Search for checkers name
+		return Object.keys(checkersList).filter(x=>x.startsWith(currentKeyboardLine.value)).join(", ")
+	})
+
+
+const flash = inject("flash")
 let saveQuestion = function () {
 		let illustrations = []
 
@@ -142,11 +167,13 @@ let saveQuestion = function () {
 						emits("change", res.data.data)
 					})
 					.catch((error) => {
-						errorMessage.value = error.response.data.message
+						flash.error("Une erreur est survenue - voir la console")
+						console.log(error)
 					})
 			})
 			.catch((error) => {
-				errorMessage.value = error.response.data.message
+				flash.error("Une erreur est survenue - voir la console")
+				console.log(error)
 			})
 	},
 	deleteQuestion = function () {

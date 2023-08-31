@@ -90,7 +90,7 @@ import katex from "katex"
 import Button from "@/Components/Auth/Button.vue"
 import {PiMath} from "pimath/esm"
 import KeyboardDisplay from "@/Components/Keyboards/KeyboardDisplay.vue"
-import {useCheckers} from "@/Composables/useCheckers"
+import {checkersConfig} from "@/Composables/checkersConfig"
 
 let props = defineProps({
 	keyboard: {type: Object, required: true},
@@ -102,7 +102,7 @@ let emits = defineEmits(["change", "validate"]),
 		// On récupère la mise en forme de la réponse
 		const output = validateOutput()
 		// On valide la réponse
-		const validation = useCheckers("study").check(props.answer, output)
+		const validation = checkersConfig("study").check(props.answer, output)
 
 		emits("change", {
 			value: {
@@ -769,7 +769,7 @@ function plotGraph(){
 	if(plot){plot.remove()}
 	// Check the validation -
 	// if the result is TRUE, trace the existing value (if it exists).
-	const check = useCheckers("study").check(props.answer, validateOutput())
+	const check = checkersConfig("study").check(props.answer, validateOutput())
 	if(check.result && plotResult.value){
 		initPlot(plotResult.value)
 		return
