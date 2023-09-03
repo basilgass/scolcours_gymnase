@@ -168,10 +168,30 @@ let pre = ref(null),
 			textEnd = theValue.value.slice(originalSelectionStart),
 			trigger = textStart.slice(-length)
 
+		if(props.language==="latex"){
+			// must be in math mode
+			if(
+				(textStart.split("\\(").length-textStart.split("\\)").length!==1) &&
+				(textStart.split("\\[").length-textStart.split("\\]").length!==1)
+			){
+				return false
+			}
+		}
 		if (autofillTriggers.value.hasOwnProperty(trigger)) {
-			theValue.value = `${textStart.slice(0, textStart.length - trigger.length)}${autofillTriggers.value[trigger][0]}${autofillTriggers.value[trigger][1]}${textEnd}`
+			let pos = 0
+			if(typeof autofillTriggers.value[trigger]==="function"){
+				const [txt1, txt2] = autofillTriggers.value[trigger](textStart, textEnd)
+				theValue.value = `${txt1}${txt2}`
+				pos = txt1.length
+			}else {
+				// It's a code action.
+				theValue.value = `${textStart.slice(0, textStart.length - trigger.length)}${autofillTriggers.value[trigger][0]}${autofillTriggers.value[trigger][1]}${textEnd}`
+				pos =  event.target.selectionStart = originalSelectionStart + autofillTriggers.value[trigger][0].length - trigger.length
+			}
+
+			// Update the caret position
 			event.target.value = theValue.value
-			event.target.selectionEnd = event.target.selectionStart = originalSelectionStart + autofillTriggers.value[trigger][0].length - trigger.length
+			event.target.selectionEnd = pos
 			return true
 		}
 		return false

@@ -90,11 +90,17 @@ class ChallengesController extends Controller
 		$validation = $request->validate([
 			'generators' => ['array'],
 			'generators.*.id' => ['exists:App\Models\Generator,id'],
+			'generators.*.title' => ['string', 'nullable'],
+			'generators.*.body' => ['string', 'nullable'],
 			'generators.*.code' => ['string']
 		]);
 
 		foreach ($validation['generators'] as $generator) {
-			Generator::find($generator['id'])?->update(["code" => $generator['code']]);
+			Generator::find($generator['id'])?->update([
+				"title" => $generator['title']??'',
+				"body" => $generator['body']??'',
+				"code" => $generator['code']
+			]);
 		}
 
 		return true;
@@ -116,7 +122,8 @@ class ChallengesController extends Controller
 		// Create the generator
 		$generator = Generator::create([
 			'theme_id' => $challenge->chapter->theme->id,
-			'title' => $challenge->chapter->slug . '-' . $order,
+			'slug' => $challenge->chapter->slug . '-' . $challenge->slug .'-' . $order,
+			'title' => '',
 			'code' => 'return {question: "", answer: ""}',
 		]);
 

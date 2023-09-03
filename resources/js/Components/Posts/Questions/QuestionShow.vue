@@ -165,8 +165,9 @@ keyboard -> QuestionUserInput -> QuestionShow
 				class="question-answer-selector flex justify-between items-center my-5"
 			>
 				<button
-					:class="answerId===0?'invisible':`active-scolcours-${$page.props.theme?.slug}`"
-					class="px-3 text-xl font-semibold border rounded-full"
+					v-theme.bg.hover
+					:class="answerId===0?'invisible':``"
+					class="px-3 text-xl text-white font-semibold border rounded-full"
 					@click="answerId--"
 				>
 					<i class="bi-chevron-left" />
@@ -177,8 +178,9 @@ keyboard -> QuestionUserInput -> QuestionShow
 					class="text-center text-xs text-gray-400"
 				/>
 				<button
-					:class="answerId===answersNumber-1?'invisible':`active-scolcours-${$page.props.theme?.slug}`"
-					class="px-3 text-xl font-semibold border rounded-full"
+					v-theme.bg.hover
+					:class="answerId===answersNumber-1?'invisible':``"
+					class="px-3 text-xl text-white font-semibold border rounded-full"
 					@click="answerId++"
 				>
 					<i class="bi-chevron-right" />
@@ -322,7 +324,7 @@ let theQuestion = reactive(props.question), // la question principale, vraiment 
 				`\\textcolor{${texColor}}{ ${key.toLowerCase()} }`)
 
 			// on supprime les valeurs de type @$ qui sont sans mise en forme.
-			body = body.replaceAll("@$", "$")
+			body = body.replaceAll("@" + key.toUpperCase(), key.toUpperCase())
 
 			// On peut avoir tex, raw, input
 			if (userAnswers.value[i].value === undefined) {

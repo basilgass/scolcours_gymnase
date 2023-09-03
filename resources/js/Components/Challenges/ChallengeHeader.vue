@@ -16,7 +16,7 @@ Contient le bouton de retour au chapitre, le titre, la description et l'édition
 				class="text-sm text-gray-400 hover:text-gray-800 transition-colors"
 			>
 				<i class="bi bi-chevron-left text-xs mr-2" />retour à
-				{{ props.challenge.chapter.title }}
+				<span v-katex.auto="props.challenge.chapter.title" />
 			</Link>
 		</div>
 

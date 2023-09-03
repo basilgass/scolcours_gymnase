@@ -8,7 +8,8 @@ Pour l'admin, contient également les liens vers les résultats par teams.
 	<div
 		class="grid place-items-center"
 	>
-		<div class="flex flex-col items-center gap-3">
+		<div class="flex flex-col items-center gap-3 bg-white p-10 rounded-lg">
+			<!-- Description du challenge -->
 			<div class="w-full space-y-2">
 				<div class="flex justify-between w-full">
 					<div>Nombre de vies</div>
@@ -27,20 +28,24 @@ Pour l'admin, contient également les liens vers les résultats par teams.
 					<div>{{ challenge.duration }}</div>
 				</div>
 			</div>
+
+			<!-- Bouton pour commencer -->
 			<button
-				class="btn-success btn-xl hover:scale-110 transition-all"
+				v-theme.bg
+				class="btn btn-xl hover:scale-110 transition-all"
 				@click="emits('start')"
 			>
 				Commencer le challenge
 			</button>
 
+			<!-- Résultat du challenge pour l'utilisateur -->
 			<div class="w-full">
 				<h3 class="uppercase text-center mt-5 my-2">
 					résultats
 				</h3>
 
-				<div class="grid mx-auto gap-3 grid-cols-1 md:grid-cols-2">
-					<div class="bg-white aspect-square p-4 rounded-xl border border-gray-200 grid place-items-center">
+				<div class="grid mx-auto gap-8 grid-cols-2">
+					<div class="bg-white aspect-square p-4 rounded-xl border border-gray-200 grid place-items-center shadow">
 						<div class="text-center flex flex-col justify-between h-full">
 							<h4 class="text-xl uppercase ">
 								score
@@ -53,7 +58,7 @@ Pour l'admin, contient également les liens vers les résultats par teams.
 							</div>
 						</div>
 					</div>
-					<div class="bg-white aspect-square p-4 rounded-xl border border-gray-200 grid place-items-center">
+					<div class="bg-white aspect-square p-4 rounded-xl border border-gray-200 grid place-items-center shadow">
 						<div class="text-center flex flex-col justify-between h-full">
 							<h4 class="text-xl uppercase">
 								niveau
@@ -69,6 +74,7 @@ Pour l'admin, contient également les liens vers les résultats par teams.
 				</div>
 			</div>
 
+			<!-- Gestion administrateur -->
 			<div
 				v-admin
 				class="w-full mt-10 border-t"
@@ -100,4 +106,5 @@ const props = defineProps({
 })
 
 const emits = defineEmits(["start"])
+
 </script>

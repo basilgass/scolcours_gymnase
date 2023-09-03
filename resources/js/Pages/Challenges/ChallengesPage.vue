@@ -1,11 +1,20 @@
 <!--suppress ALL -->
 <template>
 	<article>
-		<challenge-header :challenge="theChallenge" />
+		<challenge-header
+			:challenge="theChallenge"
+		/>
+
+		<!-- Entraînement au challenges -->
+		<challenge-training
+			class="my-10"
+			:challenge="theChallenge"
+		/>
 
 		<!-- Avant de lancer le challenge -->
 		<challenge-intro
 			v-if="!isRunning && !isFinished"
+			class="mt-10"
 			:challenge="theChallenge"
 			:teams="teams"
 			@start="startChallenge"
@@ -74,6 +83,7 @@ import FormInput from "@/Components/Form/FormInput.vue"
 import {usePage} from "@inertiajs/vue3"
 import {useGenerators} from "@/Composables/useGenerators"
 import QuestionShow from "@/Components/Posts/Questions/QuestionShow.vue"
+import ChallengeTraining from "@/Components/Challenges/ChallengeTraining.vue"
 
 const emits = defineEmits(["destroy", "change"])
 const props = defineProps({
