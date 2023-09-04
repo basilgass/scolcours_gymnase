@@ -5,20 +5,61 @@
 			:challenge="theChallenge"
 		/>
 
+		<!-- création du menu -->
+		<div
+			v-if="!isRunning && !isFinished"
+			class="flex w-full mt-10"
+		>
+			<div class="w-[300px] flex flex-col gap-2">
+				<div
+					class="text-3xl font-semibold px-3 py-5 min-h-[50px] border border-r-0  rounded-l cursor-pointer transition-all"
+					:class="selector===0?'bg-gray-50 border-gray-200':'bg-gray-200 border-gray-400 hover:bg-gray-100'"
+					@click="selector=0"
+				>
+					Challenge
+				</div>
+
+				<div
+					v-for=" (gen, index) of theChallenge.generators"
+					:key="`generator-selector-${gen.slug}`"
+					:class="selector===index+1?'bg-gray-50 border-gray-200':'bg-gray-200 border-gray-400 hover:bg-gray-100'"
+					class="px-3 py-5 min-h-[50px] border border-r-0  rounded-l cursor-pointer transition-all"
+					@click="selector=index+1"
+				>
+					<h2
+						v-katex.auto="gen.title"
+						class="text-lg font-semibold"
+					/>
+					<markdown-it :text="gen.body" />
+				</div>
+			</div>
+			<div class="bg-gray-50 border border-l-0 border-gray-200 flex-1">
+				<div v-if="selector===0">
+					<challenge-intro
+						class="mt-10"
+						:challenge="theChallenge"
+						:teams="teams"
+						@start="startChallenge"
+					/>
+				</div>
+
+				<div v-else>
+					<challenge-training
+						:key="`question-training-${selector}`"
+						:slug="theChallenge.generators[selector-1].slug"
+						:challenge="theChallenge"
+					/>
+				</div>
+			</div>
+		</div>
 		<!-- Entraînement au challenges -->
-		<challenge-training
-			class="my-10"
-			:challenge="theChallenge"
-		/>
+		<!--		<challenge-training-->
+		<!--			class="my-10"-->
+		<!--			:challenge="theChallenge"-->
+		<!--		/>-->
 
 		<!-- Avant de lancer le challenge -->
-		<challenge-intro
-			v-if="!isRunning && !isFinished"
-			class="mt-10"
-			:challenge="theChallenge"
-			:teams="teams"
-			@start="startChallenge"
-		/>
+
 
 		<!-- le challenge est en cours -->
 		<div v-if="isRunning && !isFinished">
@@ -61,6 +102,7 @@
 			:challenge="theChallenge"
 			:results="results"
 			@start="startChallenge"
+			@cancel="cancelChallenge"
 		/>
 	</article>
 </template>
@@ -84,6 +126,7 @@ import {usePage} from "@inertiajs/vue3"
 import {useGenerators} from "@/Composables/useGenerators"
 import QuestionShow from "@/Components/Posts/Questions/QuestionShow.vue"
 import ChallengeTraining from "@/Components/Challenges/ChallengeTraining.vue"
+import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 
 const emits = defineEmits(["destroy", "change"])
 const props = defineProps({
@@ -93,6 +136,8 @@ const props = defineProps({
 })
 
 const flash = inject("flash")
+
+let selector = ref(0)
 
 let theChallenge = ref(props.challenge.data),
 	// challengeGenerator = ref(props.challenge.data.generator),
@@ -133,7 +178,7 @@ let listOfQuestions = ref([]),
 	questionId = ref(-1),
 	answer = ref(""),
 	maxTimeInMinutes = ref(theChallenge.value.duration),
-	ellapsedTime = ref(0),
+	elapsedTime = ref(0),
 	level = ref(1),
 	levelScore = ref(0),
 	score = ref(0),
@@ -191,7 +236,7 @@ let startChallenge = function () {
 		questionId.value = 0
 		answer.value = ""
 		maxTimeInMinutes.value = theChallenge.value.duration
-		ellapsedTime.value = 0
+		elapsedTime.value = 0
 		level.value = 1
 		score.value = 0
 		levelScore.value = 0
@@ -210,9 +255,9 @@ let startChallenge = function () {
 		// Start the counter / timer
 		if (theChallenge.value.duration) {
 			timerInterval.value = setInterval(() => {
-				ellapsedTime.value += timerIntervalSpeed.value / 1000 / 60
+				elapsedTime.value += timerIntervalSpeed.value / 1000 / 60
 
-				if (ellapsedTime.value > maxTimeInMinutes.value) {
+				if (elapsedTime.value > maxTimeInMinutes.value) {
 					stopChallenge()
 				}
 			}, timerIntervalSpeed.value)
@@ -238,11 +283,15 @@ let startChallenge = function () {
 		// Sauvegarde le score dans la base de donnée
 		storeScore(score.value, level.value)
 	},
+	cancelChallenge = function (){
+		isRunning.value = false
+		isFinished.value = false
+	},
 	timerWidth = computed(() => {
-		return (ellapsedTime.value / maxTimeInMinutes.value) * 100
+		return (elapsedTime.value / maxTimeInMinutes.value) * 100
 	}),
 	remainingTime = computed(() => {
-		let remaining = Math.max(maxTimeInMinutes.value - ellapsedTime.value, 0) // time remaining in minutes.
+		let remaining = Math.max(maxTimeInMinutes.value - elapsedTime.value, 0) // time remaining in minutes.
 
 		const minutes = Math.trunc(remaining),
 			seconds = Math.round((remaining - minutes) * 60)

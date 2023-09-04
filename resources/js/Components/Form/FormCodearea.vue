@@ -8,13 +8,14 @@
 
 		<div
 			:class="props.wrap?'whitespace-pre-wrap':'whitespace-pre'"
-			class="tracking-normal font-normal code-input border bg-white language-javascript h-full text-[1.1em]"
+			class="tracking-normal font-normal code-input border bg-white language-javascript text-[1.1em]"
 			v-bind="$attrs"
 		>
 			<textarea
 				ref="inp"
 				v-model="theValue"
 				class="w-full"
+				:rows="props.rows"
 				@input="sync_scroll();$emit('update:modelValue', theValue)"
 				@keyup="autofill($event)"
 				@scroll="sync_scroll"

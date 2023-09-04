@@ -12,6 +12,7 @@
 			class="border border-gray-200 w-full rounded px-3 py-2 font-code tracking-tighter"
 			:class="hideLabel?'':'p-2'"
 			:value="modelValue"
+			v-bind="$attrs"
 			@input="$emit('update:modelValue', $event.target.value)"
 			@keyup="atKeyup"
 			@mouseup="atKeyup"

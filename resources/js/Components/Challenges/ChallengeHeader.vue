@@ -26,13 +26,13 @@ Contient le bouton de retour au chapitre, le titre, la description et l'édition
 				{{ props.challenge.title }}
 			</h1>
 
-			<button
+			<Link
 				v-if="$page.props.auth.can.admin"
-				class="text-xs"
-				@click="showEditForm = true"
+				class="text-xs hover:font-semibold"
+				:href="route('challenges.edit', [props.challenge.id])"
 			>
-				<i class="bi bi-pencil mr-2" /> {{ props.challenge.id }}
-			</button>
+				éditer le challenge (id: {{ props.challenge.id }}) <i class="bi bi-pencil ml-2" />
+			</Link>
 		</div>
 
 		<!-- the body / question of the challenge -->

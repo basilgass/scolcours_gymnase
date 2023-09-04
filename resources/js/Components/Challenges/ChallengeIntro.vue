@@ -5,10 +5,8 @@ nombre de vies, niveaux de difficultés, temps et les résultats courants
 Pour l'admin, contient également les liens vers les résultats par teams.
 -->
 <template>
-	<div
-		class="grid place-items-center"
-	>
-		<div class="flex flex-col items-center gap-3 bg-white p-10 rounded-lg">
+	<div>
+		<div class="flex flex-col items-center gap-3 bg-gray-50 px-10">
 			<!-- Description du challenge -->
 			<div class="w-full space-y-2">
 				<div class="flex justify-between w-full">

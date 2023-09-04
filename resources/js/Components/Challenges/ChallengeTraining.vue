@@ -1,19 +1,18 @@
 <script setup>
 
 import {PiMath} from "pimath/esm"
-import {computed, ref} from "vue"
+import {computed, onMounted, ref} from "vue"
 import QuestionShow from "@/Components/Posts/Questions/QuestionShow.vue"
-import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 
 let props = defineProps({
-	challenge: {type: Object, required: true}
+	challenge: {type: Object, required: true},
+	slug: {type: String, required: true}
 })
 
 let showTraining = ref(false)
 
-let currentGeneratorSlug = ref(""),
-	currentGenerator = computed(() => {
-		return props.challenge.generators.filter(g => g.slug === currentGeneratorSlug.value)[0]
+let currentGenerator = computed(() => {
+		return props.challenge.generators.filter(g => g.slug === props.slug)[0]
 	}),
 	question = ref({}),
 	counter = ref(0)
@@ -26,10 +25,6 @@ let generateQuestion = function () {
 			question.value = F(PiMath)
 			console.log(question.value)
 		}
-	},
-	startTraining = function(slug){
-		currentGeneratorSlug.value = slug
-		generateQuestion()
 	},
 	nextQuestion = function (checkerResult) {
 		if (checkerResult.result) {
@@ -56,52 +51,20 @@ let generateQuestion = function () {
 			},
 		}
 	})
+
+onMounted(()=>{generateQuestion()})
 </script>
 
 <template>
-	<div>
-		<button
-			class="my-5"
-			@click="showTraining=!showTraining"
-		>
-			Entraînement
-		</button>
-		<div
-			v-if="showTraining"
-			class="grid grid-cols-1 md:grid-cols-2 gap-5"
-		>
-			<!-- Entraînement au challenges -->
-			<div class="flex flex-col gap-3">
-				<div
-					v-for="gen of props.challenge.generators"
-					:key="gen.slug"
-				>
-					<div
-						v-theme.active
-						class="w-full bg-white border rounded flex flex-col gap-3 py-3 px-3 cursor-pointer"
-						:class="gen.slug===currentGeneratorSlug?'is-active':'bg-white'"
-						@click="startTraining(gen.slug)"
-					>
-						<h2
-							v-katex.auto="gen.title"
-							class="text-lg font-semibold"
-						/>
-						<markdown-it :text="gen.body" />
-					</div>
-				</div>
-			</div>
-
-			<div v-if="theQuestion">
-				<question-show
-					:key="`question-${counter}`"
-					:question="theQuestion"
-					class="max-w-[40em] mx-auto"
-					dynamic
-					show-input
-					@validate="nextQuestion"
-				/>
-			</div>
-		</div>
+	<div v-if="theQuestion">
+		<question-show
+			:key="`question-${counter}`"
+			:question="theQuestion"
+			class="max-w-[40em] mx-auto border-0"
+			dynamic
+			show-input
+			@validate="nextQuestion"
+		/>
 	</div>
 </template>
 

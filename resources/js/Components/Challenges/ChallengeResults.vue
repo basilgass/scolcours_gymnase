@@ -48,6 +48,13 @@ Permet de recommencer le challenge.
 			>
 				Recommencer
 			</button>
+
+			<button
+				class="btn-success btn-xl hover:scale-110 transition-all"
+				@click="emits('cancel')"
+			>
+				Fermer
+			</button>
 		</div>
 
 		<div class="mt-5 border-t">
@@ -73,7 +80,7 @@ Permet de recommencer le challenge.
 
 <script setup>
 
-const emits = defineEmits(["start"])
+const emits = defineEmits(["start", "cancel"])
 const props = defineProps({
 	results: {type: Object, required: true},
 	challenge: {type: Object, require: true}
