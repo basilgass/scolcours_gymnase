@@ -156,13 +156,16 @@ onMounted(() => {
 			// S'il n'y a pas de label
 			if(label===undefined){label=""+key}
 
-			// Est-ce que le TeX est donné en ascii ?
-			let ascii = label.startsWith("#")
+			// Si on est en mode TeX, la label peut être la valeur a afficher.
+			if(tex===undefined && isTex.value){
+				tex = label
+			}
+
 			return {
 				key,
 				label: label.startsWith("#")?label.substring(1):label,
 				tex: tex===undefined?"":tex,
-				ascii,
+				ascii: label.startsWith("#"),
 				selected: false }
 		})
 })
