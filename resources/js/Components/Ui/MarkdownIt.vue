@@ -14,6 +14,7 @@ Affichage d'un texte en markdown.
 <script setup>
 import {ref, watchEffect} from "vue"
 import {useKatexMacros, useMenuScrollTo} from "@/Composables/useHelpers"
+import { router } from "@inertiajs/vue3"
 
 let root = ref(null),
 	mdit = ref("")
@@ -50,15 +51,28 @@ let mdClick = function(event){
 	if(event.target.tagName==="A"){
 		event.preventDefault()
 		const [url, anchor] = event.target.href.split("#")
-		if(anchor){
-			if(url===document.URL){
-				useMenuScrollTo(anchor)
-			}else{
+
+		// l'url peut être de deux forme.
+		// https://url
+		// nom,...paramètres
+		
+		if(url.includes("@")){
+			const [routeName, ...routeParameters] = url.split("@")[1].split(",")
+			console.log(routeName, routeParameters)
+			router.visit(route(routeName, routeParameters))
+		}else{
+			if (anchor) {
+				if (url === document.URL) {
+					useMenuScrollTo(anchor)
+				} else {
+					router.visit(event.target.href)
+				}
+			} else {
 				router.visit(event.target.href)
 			}
-		}else {
-			router.visit(event.target.href)
+			
 		}
+
 	}
 }
 
