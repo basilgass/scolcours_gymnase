@@ -12,7 +12,7 @@ export const blockTypes = {
 		icon: "bi bi-book",
 		style: {
 			header: "bg-lime-50 text-lime-700",
-			body: "border-l-4 border-lime-400"
+			body: "border-l-8 border-lime-400 border-b border-b-lime-100"
 		}
 	},
 	theorem: {
@@ -20,7 +20,7 @@ export const blockTypes = {
 		icon: "bi bi-book",
 		style: {
 			header: "bg-amber-50 text-amber-700",
-			body: "border-l-4 border-amber-600"
+			body: "border-l-8 border-amber-600 border-b border-b-amber-100"
 		}
 	},
 	property: {
@@ -28,7 +28,7 @@ export const blockTypes = {
 		icon: "bi bi-wrench",
 		style: {
 			header: "bg-purple-50 text-purple-700",
-			body: "border-l-4 border-purple-600"
+			body: "border-l-8 border-purple-600 border-b border-b-purple-100"
 		}
 	},
 	remark: {
@@ -36,7 +36,7 @@ export const blockTypes = {
 		icon: "bi bi-chat",
 		style: {
 			header: "bg-pink-50 text-pink-700",
-			body: "border-l-4 border-pink-600"
+			body: "border-l-8 border-pink-600 border-b border-b-pink-100"
 		}
 	},
 	example: {
@@ -44,7 +44,7 @@ export const blockTypes = {
 		icon: "bi bi-calculator",
 		style: {
 			header: "bg-gray-100 text-gray-800",
-			body: "border-0"
+			body: "border-0 border-b border-b-gray-100"
 		}
 	},
 	danger: {
@@ -52,7 +52,7 @@ export const blockTypes = {
 		icon: "bi bi-exclamation-triangle",
 		style: {
 			header: "bg-red-50 text-red-700",
-			body: "border border-l-4 border-red-600"
+			body: "border border-l-8 border-red-600"
 		}
 	},
 }

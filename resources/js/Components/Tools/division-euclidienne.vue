@@ -28,8 +28,8 @@
  * parameters: numerator=Polynom, denominator=Polynom
  * tags: algebre,1M
  */
-import Panel from "@/Components/Ui/Panel"
-import FormInput from "@/Components/Form/FormInput"
+import Panel from "@/Components/Ui/Panel.vue"
+import FormInput from "@/Components/Form/FormInput.vue"
 import {ref} from "vue"
 import PiEuclidian from "@/Components/Pi/PiEuclidian.vue"
 

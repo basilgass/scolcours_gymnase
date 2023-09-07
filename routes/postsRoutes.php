@@ -1,13 +1,9 @@
 <?php
-
-
 use App\Http\Controllers\PostController;
 
 // Public
-Route::get('chapters/{chapter:slug}/posts', [PostController::class, 'show'])
-	->name("chapters.posts.index");
-
-
+Route::get('posts/{post}', [PostController::class, 'show'])
+	->name('posts.show');
 
 Route::middleware('can:admin')->group(function () {
 	Route::get('chapters/{chapter:slug}/posts/create', [PostController::class, 'create'])
@@ -29,12 +25,8 @@ Route::middleware('can:admin')->group(function () {
 		->name('posts.updateQuestionsGrid');
 	Route::get('posts/{post}/edit', [PostController::class, 'edit'])
 		->name('posts.edit');
-	Route::get('posts/{post}', [PostController::class, 'show'])
-		->name('posts.show');
+	
 
-	// TODO: remove the display of one post as a separate item ?
-	Route::get('posts/{post}', [PostController::class, 'show'])
-		->name("posts.show");
 });
 
 //Route::patch('posts/{post}/questions/updateOrder', [PostController::class, 'updateQuestionsOrder'])->name('questions.updateOrder');

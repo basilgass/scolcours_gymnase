@@ -157,8 +157,8 @@
  * parameters: fx=Fonction (texte), min=Nombre ou Fraction, max=Nombre ou Fraction, pas=Nombre ou Fraction
  * tags: algebre,1M
  */
-import Panel from "@/Components/Ui/Panel"
-import FormInput from "@/Components/Form/FormInput"
+import Panel from "@/Components/Ui/Panel.vue"
+import FormInput from "@/Components/Form/FormInput.vue"
 import {computed, ref} from "vue"
 import {PiMath} from "pimath/esm"
 import {numberCorrection} from "pidraw/esm/Calculus"

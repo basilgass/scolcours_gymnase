@@ -98,7 +98,7 @@ class ChaptersController extends Controller
 			]);
 		}
 
-		return Inertia::render('ErrorPage.vue', [
+		return Inertia::render('ErrorPage', [
 			"body" => "La page n'est pas active - contacter l'administrateur."
 		]);
 	}
@@ -125,10 +125,11 @@ class ChaptersController extends Controller
 		return Inertia::render('Chapters/ChapterSlide', [
 			// Used for the page layout
 			"theme" => $theme->only('color', 'icon', 'slug', 'title', 'id'),
-			// Get the chapter (for next / precvious / ...)
+			// Get the chapter (for next / previous / ...)
 			"chapter" => fn() => ChapterResource::make($chapter, true),
 			// The post information
 			"post" => PostResource::make($post),
+			// navigation bar.
 			"nav" => [
 				'previous' => $order - 1 <= 0 ? route('theme.chapter.intro', [$theme, $chapter]) : route('theme.chapter.slide', [$theme, $chapter, $order - 1]),
 				'next' => $order === count($chapter->posts) ? null : route('theme.chapter.slide', [$theme, $chapter, $order + 1])
@@ -238,8 +239,7 @@ class ChaptersController extends Controller
 		}
 		$chapter->refresh();
 
-		return ChapterMinResource::collection($chapter->relations->order
-		->sortBy());
+		return ChapterMinResource::collection($chapter->relations);
 	}
 
 	// TODO: Delete this section as it has been moved to LatexController ?

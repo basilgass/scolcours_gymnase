@@ -12,7 +12,7 @@ class TranslationController extends Controller
 {
 	public function index($language)
 	{
-		return Inertia::render("languages/LanguageIndex.vue", [
+		return Inertia::render("languages/LanguageIndex", [
 			"language" => $language
 		]);
 	}
@@ -29,7 +29,7 @@ class TranslationController extends Controller
 
 		$units = TranslationUnit::where('language', $code)->get();
 
-		return Inertia::render("languages/Language" . Str::title($game) . ".vue", [
+		return Inertia::render("languages/Language" . Str::title($game), [
 			"code" => $code,
 			"language" => $language,
 			"units" => $units
@@ -38,7 +38,7 @@ class TranslationController extends Controller
 
 	public function import()
 	{
-		return Inertia::render("languages/LanguageImport.vue");
+		return Inertia::render("languages/LanguageImport");
 	}
 
 	public function create(Request $request)

@@ -1,8 +1,8 @@
-<info>
+<!--<info>
 parameters: min:max:step,[rounded:2]
 
 code: [f(x)=]function (multiple line possible)
-</info>
+</info>-->
 <template>
 	<div
 		class="overflow-x-auto relative"
@@ -41,10 +41,10 @@ code: [f(x)=]function (multiple line possible)
 </template>
 
 <script setup>
-import { computed, ref } from "vue"
-import { PiMath } from "pimath/esm"
-import { Polynom } from "pimath/esm/maths/algebra/polynom"
-import { numberCorrection } from "pidraw/esm/Calculus"
+import {computed, ref} from "vue"
+import {PiMath} from "pimath/esm"
+import {Polynom} from "pimath/esm/maths/algebra/polynom"
+import {numberCorrection} from "pidraw/esm/Calculus"
 
 let props = defineProps({
 		illustration: { type: Object, required: true },

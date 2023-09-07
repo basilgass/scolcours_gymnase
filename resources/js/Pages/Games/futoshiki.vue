@@ -125,14 +125,14 @@
 </template>
 
 <script>
-import LayoutMain from "@/Layouts/LayoutMain"
+import LayoutMain from "@/Layouts/LayoutMain.vue"
 
 export default {
 	layout: LayoutMain
 }
 </script>
 <script setup>
-import ArticleTitle from "@/Components/Ui/ArticleTitle"
+import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
 import {Futoshiki} from "pigames/build/module/lib/futoshiki"
 import {computed, nextTick, reactive, ref} from "vue"
 import FormNumber from "@/Components/Form/FormNumber.vue"

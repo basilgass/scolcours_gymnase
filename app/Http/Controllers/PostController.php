@@ -19,16 +19,16 @@ class PostController extends Controller
 	public function index()
 	{
 		// TODO : make a single post page view...
-//		return Inertia::render("Tools", $data);
+		//		return Inertia::render("Tools", $data);
 	}
 
 	public function create(Chapter $chapter)
 	{
 		// Create a post form
-//		return Inertia::render("Posts/PostForm", [
-//			"theme" => $chapter->theme,
-//			"chapter" => $chapter
-//		]);
+		//		return Inertia::render("Posts/PostForm", [
+		//			"theme" => $chapter->theme,
+		//			"chapter" => $chapter
+		//		]);
 	}
 
 	public function store(Chapter $chapter, Request $request)
@@ -40,17 +40,17 @@ class PostController extends Controller
 		$post = $chapter->posts()->create([
 			'title' => $validation['title'],
 			'numberOfVisibleBlocks' => 0,
-			'order' => count($chapter->posts)+1
+			'order' => count($chapter->posts) + 1
 		]);
 
 		// Load the blocks, even if it's empty :)
 		$post->blocks;
 
 		return [
-			'post'=>PostResource::make($post),
+			'post' => PostResource::make($post),
 			'redirect' => route('theme.chapter.slide', [
-				'theme'=>$chapter->theme->slug,
-				'chapter'=>$chapter->slug,
+				'theme' => $chapter->theme->slug,
+				'chapter' => $chapter->slug,
 				'order' => $post->order
 			])
 		];
@@ -58,11 +58,14 @@ class PostController extends Controller
 
 	public function show(Post $post)
 	{
-		return PostResource::make($post);
-//		return Inertia::render("Posts/PostSlide.vue", [
-//			'theme' => $post->chapter->theme,
-//			'post' => PostResource::make($post)
-//		]);
+		$chapter = $post->chapter;
+		$theme = $chapter->theme;
+		return redirect()->route(
+			'theme.chapter.slide',
+			[
+				$theme->slug, $chapter->slug, $post->order
+			]
+		);
 	}
 
 	public function edit(Post $post)
@@ -126,11 +129,11 @@ class PostController extends Controller
 	public function updateQuestionsGrid(Post $post, Request $request)
 	{
 		$validate = $request->validate([
-			'questionsGrid'=>['string', 'nullable']
+			'questionsGrid' => ['string', 'nullable']
 		]);
 
 		$post->update([
-			'questionsGrid' => $validate['questionsGrid']??$validate['questionsGrid']
+			'questionsGrid' => $validate['questionsGrid'] ?? $validate['questionsGrid']
 		]);
 		$post->save();
 		return true;
@@ -140,17 +143,17 @@ class PostController extends Controller
 	{
 		$post = Post::find($id);
 		if ($post) {
-            $chapter = $post->chapter;
-            // Remove all children blocks.
-            $post->blocks()->delete();
+			$chapter = $post->chapter;
+			// Remove all children blocks.
+			$post->blocks()->delete();
 
-            // Destroy the post
-//            $post->delete();
-            Post::destroy($id);
+			// Destroy the post
+			//            $post->delete();
+			Post::destroy($id);
 
-            // Update the posts order.
+			// Update the posts order.
 
-            $chapter->reorder();
+			$chapter->reorder();
 		}
 
 
@@ -167,10 +170,8 @@ class PostController extends Controller
 		]);
 
 		return [
-			'url'=>$chapter->url,
-			'label'=>$chapter->title,
+			'url' => $chapter->url,
+			'label' => $chapter->title,
 		];
-
 	}
-
 }

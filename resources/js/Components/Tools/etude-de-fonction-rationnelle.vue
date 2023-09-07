@@ -186,12 +186,12 @@
  */
 import {nextTick, onMounted, reactive, ref} from "vue"
 import {PiMath} from "pimath/esm"
-import TableOfSigns from "@/Components/Pi/PiTableOfSigns"
-import PiDrawParser from "@/Components/Pi/PiDrawParser"
-import Panel from "@/Components/Ui/Panel"
-import FormInput from "@/Components/Form/FormInput"
-import FormButton from "@/Components/Form/FormButton"
-import TableOfContents from "@/Components/Ui/TableOfContents"
+import TableOfSigns from "@/Components/Pi/PiTableOfSigns.vue"
+import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"
+import Panel from "@/Components/Ui/Panel.vue"
+import FormInput from "@/Components/Form/FormInput.vue"
+import FormButton from "@/Components/Form/FormButton.vue"
+import TableOfContents from "@/Components/Ui/TableOfContents.vue"
 
 let root = ref(null),
 	fx = ref("(3x-5)(x+7)/(x-3)"),

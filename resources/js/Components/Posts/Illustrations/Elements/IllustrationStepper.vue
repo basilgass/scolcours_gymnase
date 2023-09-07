@@ -25,11 +25,11 @@
 		</div>
 	</div>
 </template>
-<info>
+<!--<info>
 parameters: ???
 
 code: texte séparé par %STEP
-</info>
+</info>-->
 
 
 <script setup>

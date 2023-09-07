@@ -1,0 +1,24 @@
+import {PageProps as InertiaPageProps} from '@inertiajs/core'
+import {AxiosInstance} from "axios";
+import ziggyRoute, {COnfig as ZiggyConfig} from "ziggy-js"
+import {PageProps as AppPageProps} from './'
+
+declare global {
+	interface Windows {
+		axios: AxiosInstance
+	}
+
+	var route: typeof ziggyRoute;
+	var Ziggy: ZiggyConfig;
+}
+
+declare module "vue" {
+	interface ComponentCustomProperties {
+		route: typeof ZiggyRoute;
+	}
+}
+
+declare module "@inertiajs/core" {
+	interface PageProps extends InertiaPageProps, AppPageProps {
+	}
+}

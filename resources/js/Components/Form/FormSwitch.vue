@@ -14,9 +14,9 @@
 </template>
 
 <script setup>
-import FormField from "@/Components/Form/FormField"
-import FormError from "@/Components/Form/FormError"
-import UiSwitch from "@/Components/Ui/UiSwitch"
+import FormField from "@/Components/Form/FormField.vue"
+import FormError from "@/Components/Form/FormError.vue"
+import UiSwitch from "@/Components/Ui/UiSwitch.vue"
 import {computed, ref, watch} from "vue"
 
 

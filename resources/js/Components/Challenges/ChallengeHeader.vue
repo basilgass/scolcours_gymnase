@@ -22,9 +22,10 @@ Contient le bouton de retour au chapitre, le titre, la description et l'édition
 
 		<!-- The title of the challenge -->
 		<div class="flex justify-between">
-			<h1 class="text-2xl mb-4">
-				{{ props.challenge.title }}
-			</h1>
+			<h1
+				v-katex.auto="props.challenge.title"
+				class="text-2xl mb-4"
+			/>
 
 			<Link
 				v-if="$page.props.auth.can.admin"

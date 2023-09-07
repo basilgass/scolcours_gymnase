@@ -117,26 +117,41 @@ Principalement la couche utilisée dans ChapterSlide.
 	</section>
 </template>
 
-<script setup>
-import {computed, defineAsyncComponent, inject, provide, ref} from "vue"
+<script setup lang="ts">
+
+import {computed, defineAsyncComponent, inject, PropType, provide, ref} from "vue"
 import BlockShow from "@/Components/Posts/Blocks/BlockShow.vue"
 import {PiMath} from "pimath/esm"
 import UiSwitch from "@/Components/Ui/UiSwitch.vue"
 import QuestionsIndex from "@/Components/Posts/QuestionsIndex.vue"
+import axios from "axios";
+import {ChapterInterface, PostInterface} from "@/types/modelInterfaces";
+import {editModeInterface, flashInterface} from "@/types";
+
 
 let emits = defineEmits(["change", "destroy"])
-let props = defineProps({
-		post: { type: Object, required: true },
-		chapter: { type: Object, required: true },
-		isolate: { type: Boolean, default: false },
+const props = defineProps({
+		post: {
+			type: Object as PropType<PostInterface>,
+			required: true
+		},
+		chapter: {
+			type: Object as PropType<ChapterInterface>,
+			required: true
+		},
+		isolate: {
+			type: Boolean,
+			default: false
+		},
 	}),
 	thePost = ref({
 		...props.post,
 		random: 1, // special trick to make random function... functional !
 	})
 
-const flash = inject("flash"),
-	editMode = inject("editMode")
+
+const flash = inject<flashInterface>("flash"),
+	editMode = inject<editModeInterface>("editMode")
 
 let showEditForm = ref(false),
 	editForm = computed(() => {

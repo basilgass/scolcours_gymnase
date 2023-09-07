@@ -170,7 +170,7 @@
 </template>
 
 <script>
-import LayoutMain from "@/Layouts/LayoutMain"
+import LayoutMain from "@/Layouts/LayoutMain.vue"
 
 export default {
 	layout: LayoutMain
@@ -179,10 +179,10 @@ export default {
 <script setup>
 
 import {computed, ref} from "vue"
-import FormInput from "@/Components/Form/FormInput"
+import FormInput from "@/Components/Form/FormInput.vue"
 import {useForm} from "@inertiajs/vue3"
 import {router} from "@inertiajs/vue3"
-import FormSwitch from "@/Components/Form/FormSwitch"
+import FormSwitch from "@/Components/Form/FormSwitch.vue"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
 
 let props = defineProps({

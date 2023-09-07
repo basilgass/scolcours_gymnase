@@ -56,7 +56,7 @@
 	</div>
 </template>
 <script>
-import LayoutMain from "@/Layouts/LayoutMain"
+import LayoutMain from "@/Layouts/LayoutMain.vue"
 
 export default {
 	layout: LayoutMain
@@ -65,7 +65,7 @@ export default {
 </script>
 <script setup>
 import {ref} from "vue"
-import FormInput from "@/Components/Form/FormInput"
+import FormInput from "@/Components/Form/FormInput.vue"
 
 defineProps({
 	challenges: Object

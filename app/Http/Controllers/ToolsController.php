@@ -3,19 +3,19 @@
 	namespace App\Http\Controllers;
 
 	use App\Models\Chapter;
-	use App\Models\Theme;
-	use App\Models\Tool;
-	use Illuminate\Http\Request;
-	use Inertia\Inertia;
+    use App\Models\Theme;
+    use App\Models\Tool;
+    use Illuminate\Http\Request;
+    use Inertia\Inertia;
 
-	class ToolsController extends Controller
+    class ToolsController extends Controller
 	{
 		public function index()
 		{
 			$data = ["theme"    => Theme::where('slug', 'tools')->first()];
 			$data['tools'] = Tool::all();
 			$data['tool'] = null;
-			return Inertia::render("ToolsPage.vue", $data);
+			return Inertia::render("ToolsPage", $data);
 		}
 
 		public function create()
@@ -34,7 +34,7 @@
 			$data['tools'] = Tool::all();
 			$data['tool'] = $tool;
 
-			return Inertia::render("ToolsPage.vue", $data);
+			return Inertia::render("ToolsPage", $data);
 		}
 
 		public function edit(Chapter $chapter)

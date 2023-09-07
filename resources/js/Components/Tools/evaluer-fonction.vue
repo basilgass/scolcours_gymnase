@@ -61,8 +61,8 @@
  * parameters: fx=Fonction (texte), b=Nombre ou Fraction
  * tags: algebre,1M
  */
-import Panel from "@/Components/Ui/Panel"
-import FormInput from "@/Components/Form/FormInput"
+import Panel from "@/Components/Ui/Panel.vue"
+import FormInput from "@/Components/Form/FormInput.vue"
 import {computed, ref} from "vue"
 import {PiMath} from "pimath/esm"
 import KeyboardDisplay from "@/Components/Keyboards/KeyboardDisplay.vue"

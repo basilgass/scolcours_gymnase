@@ -30,7 +30,7 @@
  * parameters: fonction à tracer.
  * tags: algebre,1M
  */
-import Panel from "@/Components/Ui/Panel"
+import Panel from "@/Components/Ui/Panel.vue"
 import {ref} from "vue"
 import FormTextarea from "@/Components/Form/FormTextarea.vue"
 import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"

@@ -25,7 +25,7 @@ function getComponentKeyboardName(value) {
 
 function getComponent(kbrd) {
 	// TODO: Make a check on the name to make sur the component exists.
-	return defineAsyncComponent(() => import(`@/Components/Keyboards/Keyboard${kbrd}`))
+	return defineAsyncComponent(() => import(/* @vite-ignore */`/resources/js/Components/Keyboards/Keyboard${kbrd}.vue`))
 }
 
 function getOneKeyboard(kbrd) {
@@ -80,7 +80,6 @@ function getOneKeyboard(kbrd) {
 		config = keyboards["exact"]
 	}
 
-	console.log(config)
 	// }
 
 	// Add the parameters (all starting with @)

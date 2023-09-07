@@ -121,16 +121,16 @@
 </template>
 
 <script>
-import LayoutMain from "@/Layouts/LayoutMain"
+import LayoutMain from "@/Layouts/LayoutMain.vue"
 
 export default {
 	layout: LayoutMain
 }
 </script>
 <script setup>
-import Panel from "@/Components/Ui/Panel"
+import Panel from "@/Components/Ui/Panel.vue"
 import {useForm} from "@inertiajs/vue3"
-import FormInput from "@/Components/Form/FormInput"
+import FormInput from "@/Components/Form/FormInput.vue"
 import {computed, ref} from "vue"
 
 const props = defineProps({

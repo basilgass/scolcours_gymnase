@@ -7,9 +7,12 @@ Affichage des illustrations
 	>
 		<div
 			v-if="$page.props.auth.can.admin && !preview && editMode.enabled.value"
-			class="flex justify-between mb-3"
+			class="flex justify-end mb-3"
 		>
-			<div>
+			<div
+				v-theme.bg.text.admin
+				class="px-3 py-2 rounded flex place-content-center font-code"
+			>
 				<button
 					class="draggable-handle text-xs px-1 text-gray-400 hover:text-black"
 				>
@@ -19,7 +22,7 @@ Affichage des illustrations
 					class="text-xs ml-3"
 					@click="showEditForm=true"
 				>
-					<i class="bi bi-pencil mr-2" /> {{ theIllustration.id }}
+					éditer l'illustration (id: {{ theIllustration.id }}) <i class="bi bi-pencil ml-2" />
 				</button>
 			</div>
 		</div>
@@ -89,11 +92,9 @@ const props = defineProps({
 let blockData = inject("blockData", {})
 let root = ref(null),
 	showEditForm = ref(false),
-	editForm = computed(() => {
-		return defineAsyncComponent(
-			() => import("@/Components/Posts/Illustrations/IllustrationForm.vue")
-		)
-	}),
+	editForm = defineAsyncComponent(() =>
+		import("@/Components/Posts/Illustrations/IllustrationForm.vue")
+	),
 	theIllustration = ref(props.illustration),
 	editMode = inject("editMode"),
 	blockIllustration = computed(()=>{
@@ -109,7 +110,7 @@ const IllustrationComponent = computed(
 	() => {
 		if(props.illustration.type==="component" && props.illustration.value!==null){
 			return defineAsyncComponent(
-				() => import(`@/Components/Posts/Illustrations/Elements/${props.illustration.value}.vue`)
+				() => import(/* @vite-ignore */`/resources/js/Components/Posts/Illustrations/Elements/${props.illustration.value}.vue`)
 			)
 		}else{
 			return false

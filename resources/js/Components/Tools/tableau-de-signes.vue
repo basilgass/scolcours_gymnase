@@ -82,10 +82,10 @@
  */
 import {nextTick, onMounted, reactive, ref} from "vue"
 import {PiMath} from "pimath/esm"
-import TableOfSigns from "@/Components/Pi/PiTableOfSigns"
-import Panel from "@/Components/Ui/Panel"
-import FormInput from "@/Components/Form/FormInput"
-import FormButton from "@/Components/Form/FormButton"
+import TableOfSigns from "@/Components/Pi/PiTableOfSigns.vue"
+import Panel from "@/Components/Ui/Panel.vue"
+import FormInput from "@/Components/Form/FormInput.vue"
+import FormButton from "@/Components/Form/FormButton.vue"
 import FormSwitch from "@/Components/Form/FormSwitch.vue"
 
 let root = ref(null),

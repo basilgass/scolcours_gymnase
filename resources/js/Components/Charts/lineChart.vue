@@ -12,7 +12,7 @@ let props = defineProps({
 
 let chartData = computed(() => {
 		let labels = []
-		if (props.chartLabels !== []) {
+		if (props.chartLabels.length>0) {
 			labels["labels"] = props.chartLabels
 		}
 

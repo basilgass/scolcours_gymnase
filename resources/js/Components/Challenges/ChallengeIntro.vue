@@ -29,7 +29,7 @@ Pour l'admin, contient également les liens vers les résultats par teams.
 
 			<!-- Bouton pour commencer -->
 			<button
-				v-theme.bg
+				v-theme.bg.text
 				class="btn btn-xl hover:scale-110 transition-all"
 				@click="emits('start')"
 			>

@@ -47,12 +47,12 @@
 </template>
 
 <script>
-import LayoutMain from "@/Layouts/LayoutMain"
+import LayoutMain from "@/Layouts/LayoutMain.vue"
 
 export default {
 	layout: LayoutMain,
 }
 </script>
 <script setup>
-import Panel from "@/Components/Ui/Panel"
+import Panel from "@/Components/Ui/Panel.vue"
 </script>

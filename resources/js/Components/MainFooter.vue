@@ -78,8 +78,8 @@ Pied de page pour les pages principales.
 	</div>
 </template>
 <script>
-import LogoutButton from "@/Components/Ui/LogoutButton"
-import ThemeLinks from "@/Components/Ui/ThemeLinks"
+import LogoutButton from "@/Components/Ui/LogoutButton.vue"
+import ThemeLinks from "@/Components/Ui/ThemeLinks.vue"
 
 export default {
 	name: "MainFooter",

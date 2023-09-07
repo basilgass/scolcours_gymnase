@@ -1,4 +1,4 @@
-import AsciiMathParser from "@/asciimath2tex"
+import AsciiMathParser from "@/asciimath2tex.js"
 import {braceSorter} from "@/helpers/helperFunctions"
 
 const name = "solution"

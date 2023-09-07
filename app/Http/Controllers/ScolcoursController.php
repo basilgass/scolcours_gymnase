@@ -40,7 +40,7 @@ class ScolcoursController extends Controller
 		});
 
 		// TODO : canLogin and canRegister could be removed ?
-		return Inertia::render('HomePage.vue', [
+		return Inertia::render('HomePage', [
 			'canLogin' => Route::has('login'),
 			'canRegister' => Route::has('register'),
 			'newChapters' => $newChapters
@@ -62,7 +62,7 @@ class ScolcoursController extends Controller
 				];
 			});
 
-		return Inertia::render('DashboardPage.vue', [
+		return Inertia::render('DashboardPage', [
 			'courses' => $courses
 		]);
 	}
@@ -74,14 +74,14 @@ class ScolcoursController extends Controller
 			return pathinfo($p)['filename'];
 		});
 
-		return Inertia::render("Devs/DevsIndex.vue", [
+		return Inertia::render("Devs/DevsIndex", [
 			'pages' => $devPages
 		]);
 	}
 
 	public function dev($page)
 	{
-		return Inertia::render('Devs/DevsShow.vue', [
+		return Inertia::render('Devs/DevsShow', [
 			"dev" => $page
 		]);
 	}

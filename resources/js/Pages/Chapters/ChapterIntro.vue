@@ -44,7 +44,7 @@
 				class="w-full text-center px-5"
 			>
 				<Link
-					:class="`btn-scolcours-${$page.props.theme.slug}`"
+					v-theme.bg.text
 					:href="route('theme.chapter.slide', [$page.props.theme.slug, theChapter.slug, 1])"
 					as="button"
 					class="min-h-[80px] mx-auto w-full md:w-auto md:px-20"
@@ -77,7 +77,7 @@
 </template>
 
 <script>
-import LayoutMain from "@/Layouts/LayoutMain"
+import LayoutMain from "@/Layouts/LayoutMain.vue"
 
 export default {
 	layout: LayoutMain

@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @property int $id
  * @property int $theme_id
+ * @property string|null $slug
  * @property string $title
  * @property string $body
  * @property string $keyboard
@@ -27,6 +28,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Generator whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Generator whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Generator whereKeyboard($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Generator whereSlug($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Generator whereThemeId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Generator whereTitle($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Generator whereUpdatedAt($value)

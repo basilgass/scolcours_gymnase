@@ -29,9 +29,9 @@ export default {
 }
 </script>
 <script setup>
-import FormField from "@/Components/Form/FormField"
-import FormLabel from "@/Components/Form/FormLabel"
-import FormError from "@/Components/Form/FormError"
+import FormField from "@/Components/Form/FormField.vue"
+import FormLabel from "@/Components/Form/FormLabel.vue"
+import FormError from "@/Components/Form/FormError.vue"
 import {computed, onMounted, ref} from "vue"
 import {Fraction} from "pimath/esm/maths/coefficients/fraction"
 

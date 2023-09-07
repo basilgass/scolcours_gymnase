@@ -25,7 +25,7 @@
 			:route-data="(item)=>[props.team.name, item.slug]"
 			:item-background="(item)=>item.theme_id"
 		/>
-		
+
 		<filtered-list
 			title="challenges"
 			:list="props.challenges.data"
@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import LayoutMain from "@/Layouts/LayoutMain"
+import LayoutMain from "@/Layouts/LayoutMain.vue"
 
 export default {
 	layout: LayoutMain,

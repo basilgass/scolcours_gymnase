@@ -67,7 +67,7 @@ TODO: a retravailler de A à Z
 
 <script setup>
 import {onMounted, ref} from "vue"
-import Panel from "@/Components/Ui/Panel"
+import Panel from "@/Components/Ui/Panel.vue"
 import {usePage} from "@inertiajs/vue3"
 
 const props = defineProps({

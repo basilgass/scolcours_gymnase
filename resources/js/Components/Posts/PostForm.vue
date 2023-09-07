@@ -81,9 +81,9 @@ Utilisé dans PoseShow et PostEditPage (pour l'édition mode développement ?)
 </template>
 <script setup>
 // TODO: make the dialog html modal more user friendly and reactive !
-import FormInput from "@/Components/Form/FormInput"
+import FormInput from "@/Components/Form/FormInput.vue"
 import {ref} from "vue"
-import FormTextarea from "@/Components/Form/FormTextarea"
+import FormTextarea from "@/Components/Form/FormTextarea.vue"
 import DialogModal from "@/Components/Ui/DialogModal.vue"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
 import MoveTo from "@/Components/Posts/Blocks/moveTo.vue"

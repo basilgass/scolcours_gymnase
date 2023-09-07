@@ -12,12 +12,17 @@ Affichage d'un texte en markdown.
 </template>
 
 <script setup>
-import {ref, watchEffect} from "vue"
+import {computed, ref} from "vue"
 import {useKatexMacros, useMenuScrollTo} from "@/Composables/useHelpers"
-import { router } from "@inertiajs/vue3"
+import {router} from "@inertiajs/vue3"
+import markdownIt from "markdown-it"
+import bracketed from "markdown-it-bracketed-spans";
+import attr from "markdown-it-attrs";
+import tm from "markdown-it-texmath";
+import katex from "katex";
 
-let root = ref(null),
-	mdit = ref("")
+let root = ref(null)/*,
+	mdit = ref("")*/
 
 const props = defineProps({
 	text: {type: String, default: ""},
@@ -25,26 +30,30 @@ const props = defineProps({
 	katexClass: {type: String, default: "katex-boxed"}
 })
 
-const tm = require("markdown-it-texmath")
-const attr = require("markdown-it-attrs")
-const bracketed = require("markdown-it-bracketed-spans")
-const md = require("markdown-it")({html: true})
+
+// const tm = require("markdown-it-texmath")
+// const attr = require("markdown-it-attrs")
+// const bracketed = require("markdown-it-bracketed-spans")
+
+
+const md = markdownIt({html: true})
 	.use(bracketed)
 	.use(attr)
 	.use(tm, {
-		engine: require("katex"),
+		engine: katex,
 		delimiters: props.delimiters??["brackets", "dollars"],
 		katexOptions: {
 			macros: useKatexMacros
 		}
 	})
 
-watchEffect(()=>{
-	if(props.text) {
-		mdit.value = md.render(props.text)
-	}else{
-		mdit.value = ""
-	}
+let mdit = computed(()=>{
+	if(!props.text){return ""}
+	let output = md.render(props.text)
+
+	//TODO: markdown pre process and post process
+
+	return output
 })
 
 let mdClick = function(event){
@@ -55,7 +64,7 @@ let mdClick = function(event){
 		// l'url peut être de deux forme.
 		// https://url
 		// nom,...paramètres
-		
+
 		if(url.includes("@")){
 			const [routeName, ...routeParameters] = url.split("@")[1].split(",")
 			console.log(routeName, routeParameters)
@@ -70,7 +79,7 @@ let mdClick = function(event){
 			} else {
 				router.visit(event.target.href)
 			}
-			
+
 		}
 
 	}

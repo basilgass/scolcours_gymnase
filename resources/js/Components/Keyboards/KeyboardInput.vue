@@ -18,8 +18,8 @@
 
 import {computed, nextTick, ref} from "vue"
 import FormInput from "@/Components/Form/FormInput.vue"
-import {useKeyboard} from "@/Composables/useKeyboard"
-import AsciiMathParser from "@/asciimath2tex"
+import {useKeyboard} from "@/Composables/useKeyboard.js"
+import AsciiMathParser from "@/asciimath2tex.js"
 
 //TODO: KeyboardInput doit accepter des "checkers" différents, issus de KeyboardBasic
 let props = defineProps({

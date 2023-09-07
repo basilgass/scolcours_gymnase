@@ -171,10 +171,10 @@
 </template>
 
 <script setup>
-import FormField from "@/Components/Form/FormField"
+import FormField from "@/Components/Form/FormField.vue"
 import {computed, nextTick, onMounted, reactive, ref} from "vue"
-import FormTextarea from "@/Components/Form/FormTextarea"
-import FormInput from "@/Components/Form/FormInput"
+import FormTextarea from "@/Components/Form/FormTextarea.vue"
+import FormInput from "@/Components/Form/FormInput.vue"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 import FormImageDrop from "@/Components/Form/FormImageDrop.vue"
 import {parserHelperText} from "pidraw/esm/Parser"

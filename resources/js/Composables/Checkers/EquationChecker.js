@@ -85,7 +85,6 @@ export function EquationChecker(options) {
 				}
 			}
 
-			console.log(isCentreRayon)
 			if (isCentreRayon) {
 				// TODO: Check que c'est l'équation sous la forme centre - rayon.
 				// x^2  + (y-b)^2 = r^2

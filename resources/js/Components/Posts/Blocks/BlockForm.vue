@@ -206,12 +206,12 @@ Formulaire d'édition d'un bloc
 
 <script setup>
 
-import FormInput from "@/Components/Form/FormInput"
-import FormTextarea from "@/Components/Form/FormTextarea"
-import FormSwitch from "@/Components/Form/FormSwitch"
-import FormNumber from "@/Components/Form/FormNumber"
+import FormInput from "@/Components/Form/FormInput.vue"
+import FormTextarea from "@/Components/Form/FormTextarea.vue"
+import FormSwitch from "@/Components/Form/FormSwitch.vue"
+import FormNumber from "@/Components/Form/FormNumber.vue"
 import {computed, inject, ref} from "vue"
-import MarkdownIt from "@/Components/Ui/MarkdownIt"
+import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 import DialogModal from "@/Components/Ui/DialogModal.vue"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
 import {PiMath} from "pimath/esm"

@@ -8,8 +8,8 @@
 	</div>
 </template>
 
-<script>
-import MainFooter from "@/Components/MainFooter"
+<script lang="ts">
+import MainFooter from "@/Components/MainFooter.vue"
 
 export default {
 	name: "LayoutFullpage",

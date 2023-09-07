@@ -11,7 +11,7 @@
 <script>
 import BreezeApplicationLogo from "@/Components/Auth/ApplicationLogo.vue"
 import {Link} from "@inertiajs/vue3"
-import ScolCoursLogo from "@/Components/ScolcoursLogo"
+import ScolCoursLogo from "@/Components/ScolcoursLogo.vue"
 
 export default {
 	components: {

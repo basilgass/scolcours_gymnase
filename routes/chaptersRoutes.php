@@ -22,13 +22,17 @@ Route::whereIn('theme', $themesList)->group(function () {
 	// Public routes
 	Route::get('{theme:slug}/', [ChaptersController::class, 'index'])
 		->name('theme');
+
 	Route::get('{theme:slug}/{chapter:slug}', [ChaptersController::class, 'intro'])
 		->name('theme.chapter.intro');
+
 	Route::get('{theme:slug}/{chapter:slug}/complete', [ChaptersController::class, 'page'])
 		->name('theme.chapter');
+
 	Route::get('chapter/{chapter:slug}', function(Chapter $chapter){
 		return redirect()->route('theme.chapter.intro', [$chapter->theme->slug, $chapter->slug]);
 	})->name('chapter.show');
+	
 	Route::get('{theme:slug}/{chapter:slug}/{order}', [ChaptersController::class, 'slide'])
 		->name('theme.chapter.slide');
 

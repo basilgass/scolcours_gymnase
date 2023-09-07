@@ -2,21 +2,21 @@
 <template>
 	<!-- Title -->
 	<div
-		class="flex justify-between items-baseline mb-4"
+			class="flex justify-between items-baseline mb-4"
 	>
 		<div>
-			<ArticleTitle title="Outils" />
+			<ArticleTitle title="Outils"/>
 			<Link
-				v-if="toolSlug!==''"
-				:href="`/tools/${toolSlug}`"
+					v-if="toolSlug!==''"
+					:href="`/tools/${toolSlug}`"
 			>
 				{{ toolName }}
 			</Link>
 		</div>
 
 		<button
-			v-if="toolSlug"
-			@click="toolSlug=''"
+				v-if="toolSlug"
+				@click="toolSlug=''"
 		>
 			Tous les outils
 		</button>
@@ -24,20 +24,20 @@
 
 	<div v-if="!toolSlug">
 		<form-input
-			v-model="toolSearch"
-			label="Sélectionner l'outils"
-			name="tools"
-			focus
-			@keyup.enter="toolSelect"
+				v-model="toolSearch"
+				focus
+				label="Sélectionner l'outils"
+				name="tools"
+				@keyup.enter="toolSelect"
 		/>
 
 		<!-- List of all tools -->
 		<table class="w-full my-5">
 			<tr
-				v-for="tool of listOfTools"
-				:key="tool.slug"
-				class="odd:bg-white hover:bg-amber-100  cursor-pointer"
-				@click="toolSlug=tool.slug"
+					v-for="tool of listOfTools"
+					:key="tool.slug"
+					class="odd:bg-white hover:bg-amber-100  cursor-pointer"
+					@click="toolSlug=tool.slug"
 			>
 				<td class="pl-3 py-2">
 					<h2 class="text-lg">
@@ -56,99 +56,105 @@
 
 	<keep-alive>
 		<component
-			:is="toolComponents[toolSlug]"
-			@keyup.esc="toolUnselect"
+				:is="toolComponents[toolSlug]"
+				@keyup.esc="toolUnselect"
 		/>
 	</keep-alive>
 </template>
-<script>
-import LayoutMain from "@/Layouts/LayoutMain"
+<script lang="ts">
+import LayoutMain from "@/Layouts/LayoutMain.vue"
 
 export default {
-	layout: LayoutMain
+    layout: LayoutMain
 }
 </script>
-<script setup>
-import FormInput from "@/Components/Form/FormInput"
-import {computed, defineAsyncComponent, onMounted, ref} from "vue"
-import ArticleTitle from "@/Components/Ui/ArticleTitle"
-import {router} from "@inertiajs/vue3"
+<script lang="ts" setup>
+import FormInput from "@/Components/Form/FormInput.vue"
+import {computed, defineAsyncComponent, DefineComponent, onMounted, PropType, ref, resolveComponent} from "vue"
+import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
+import {ToolInterface} from "@/types";
 
 let toolSlug = ref(null),
-	toolSearch = ref(""),
-	arraySearch = ref({})
+    toolSearch = ref(""),
+    arraySearch = ref([])
 
 const props = defineProps({
-	tools: {
-		type: Object, default: () => {
-		}
-	},
-	tool: {
-		type: Object, default: () => {
-		}
-	}
+    tools: {
+        type: Object as PropType<ToolInterface[]>, default: () => {
+        }
+    },
+    tool: {
+        type: Object, default: () => {
+        }
+    }
 })
 
-let toolComponents = []
-for (let tool of props.tools) {
-	toolComponents[tool.slug] = defineAsyncComponent(
-		()=>import(`@/Components/Tools/${tool.slug}`)
-	)
+let toolComponents = computed(() => {
+    let arr = {}
+    for (let tool of props.tools) {
+        arr[tool.slug] = defineAsyncComponent(() => import(/* @vite-ignore */`/resources/js/Components/Tools/${tool.slug}.vue`))
+        // arr[tool.slug] = defineAsyncComponent(
+        // 	()=>import(/* vite-ignore */ `./resources/js/Components/Tools/${tool.slug}.vue`)
+        // )
+    }
+
+    return arr
+})
+
+let toolName = computed(() => {
+    if (toolSlug.value === "") {
+        return ""
+    }
+    for (let tool of props.tools) {
+        if (tool.slug === toolSlug.value) {
+            return tool.title
+        }
+    }
+    return ""
+})
+onMounted(() => {
+    if (props.tool !== null && props.tool.slug !== "") {
+        toolSlug.value = props.tool.slug
+    }
+
+    arraySearch.value = props.tools.map(tool => {
+        return {
+            ...tool,
+            search: {
+                slug: tool.slug.normalize("NFD").replace(/\p{Diacritic}/gu, ""),
+                title: tool.title.normalize("NFD").replace(/\p{Diacritic}/gu, ""),
+                body: tool.body.normalize("NFD").replace(/\p{Diacritic}/gu, "")
+            }
+        }
+    })
+})
+
+let listOfTools = computed(() => {
+    let foundTools = []
+    if (toolSearch.value.trim() === "") {
+        foundTools = [...props.tools]
+    } else {
+        const search = toolSearch.value.toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu, "")
+        foundTools = arraySearch.value.filter(tool =>
+            tool.search.slug.includes(search) ||
+            tool.search.title.includes(search) ||
+            tool.search.body.includes(search)
+        )
+    }
+
+    foundTools.sort((a, b) => b.title < a.title ? 1 : 0)
+    return foundTools
+})
+
+function toolSelect() {
+    if (listOfTools.value.length === 1) {
+        toolSlug.value = listOfTools.value[0].slug
+    }
 }
 
-let toolName = computed(()=>{
-	if (toolSlug.value === "") {
-		return ""
-	}
-	for(let tool of props.tools){
-		if(tool.slug===toolSlug.value){
-			return tool.title
-		}
-	}
-	return ""
-})
-onMounted(()=> {
-	if (props.tool !== null && props.tool.slug !== "") {
-		toolSlug.value = props.tool.slug
-	}
-
-	arraySearch.value = props.tools.map(tool=>{
-		return {
-			...tool,
-			search: {
-				slug: tool.slug.normalize("NFD").replace(/\p{Diacritic}/gu, ""),
-				title: tool.title.normalize("NFD").replace(/\p{Diacritic}/gu, ""),
-				body: tool.body.normalize("NFD").replace(/\p{Diacritic}/gu, "")
-			}
-		}
-	})
-})
-
-let listOfTools = computed(()=>{
-	let foundTools = []
-	if(toolSearch.value.trim() === ""){
-		foundTools = [...props.tools]
-	}else {
-		const search = toolSearch.value.toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu, "")
-		foundTools =  arraySearch.value.filter(tool =>
-			tool.search.slug.includes(search) ||
-			tool.search.title.includes(search) ||
-			tool.search.body.includes(search)
-		)
-	}
-
-	foundTools.sort((a,b)=>b.title<a.title)
-	return foundTools
-})
-
-function toolSelect(){
-	if(listOfTools.value.length===1){
-		toolSlug.value = listOfTools.value[0].slug
-	}
-}
-function toolUnselect(){
-	toolSearch.value = ""
-	toolSlug.value = ""
+function toolUnselect() {
+    toolSearch.value = ""
+    toolSlug.value = ""
 }
 </script>
 

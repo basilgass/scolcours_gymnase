@@ -46,8 +46,8 @@
  * parameters: fn=Function
  * tags: algebre,2M
  */
-import Panel from "@/Components/Ui/Panel"
-import FormInput from "@/Components/Form/FormInput"
+import Panel from "@/Components/Ui/Panel.vue"
+import FormInput from "@/Components/Form/FormInput.vue"
 import {computed, ref} from "vue"
 import {PiMath} from "pimath/esm"
 

@@ -72,7 +72,7 @@ Affichage d'un PiDraw
 import {computed, inject, onMounted, ref, watch} from "vue"
 import {PiDraw} from "pidraw/esm"
 
-import VueSlider from "vue-slider-component"
+import VueSlider from "vue-slider-component/dist/vue-slider-component.umd.min"
 import "vue-slider-component/theme/material.css"
 import {PiMath} from "pimath/esm"
 import katex from "katex"

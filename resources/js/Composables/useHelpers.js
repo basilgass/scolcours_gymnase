@@ -39,7 +39,7 @@ export function useFormattedBody(body, mabyeRefValues){
 	const values = unref(mabyeRefValues)
 
 	// There is no value for the script
-	if (unref(values) === {}) return unref(body)
+	if (!unref(values)) return unref(body)
 
 	// Edit the output
 	let output = `${unref(body)}`

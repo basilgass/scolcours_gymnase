@@ -14,14 +14,13 @@ Affichage de la liste des challenges pour un chapitre donné.
 			<Link
 				v-for="challenge in chapter.challenges"
 				:key="`challenge-${challenge.id}`"
+				v-katex.auto="challenge.title"
 				class="min-h-[80px] w-full h-full"
 				:class="`btn-scolcours-${$page.props.theme.slug}`"
 				as="button"
 				type="button"
 				:href="route('chapters.challenge', [$page.props.theme.slug, chapter.slug, challenge.slug])"
-			>
-				{{ challenge.title }}
-			</Link>
+			/>
 
 			<div
 				v-show="editMode.enabled.value"

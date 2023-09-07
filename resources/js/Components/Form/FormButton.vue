@@ -19,7 +19,7 @@ export default {
 </script>
 
 <script setup>
-import FormField from "@/Components/Form/FormField"
+import FormField from "@/Components/Form/FormField.vue"
 
 let props = defineProps({
 	type: {type: String, default: "submit"}

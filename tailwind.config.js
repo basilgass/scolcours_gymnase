@@ -1,8 +1,10 @@
-const defaultTheme = require("tailwindcss/defaultTheme")
-const colors = require("tailwindcss/colors")
+// const defaultTheme = require("tailwindcss/defaultTheme")
+// const colors = require("tailwindcss/colors")
+import defaultTheme from "tailwindcss/defaultTheme"
+import colors from "tailwindcss/colors";
 
-module.exports = {
-	mode: "jit",
+/** @type {import('tailwindcss').Config} */
+export default {
 	content: [
 		"./vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php",
 		"./storage/framework/views/*.php",
@@ -10,6 +12,7 @@ module.exports = {
 		"./resources/js/**/*.vue",
 		"./resources/css/**/*.css",
 		"./resources/js/*.js",
+		"./resources/js/*.ts",
 	],
 	safelist: [
 		{
@@ -40,7 +43,6 @@ module.exports = {
 	theme: {
 		extend: {
 			fontFamily: {
-				// sans: ["Quicksand", ...defaultTheme.fontFamily.sans],
 				sans: ["Raleway", ...defaultTheme.fontFamily.sans],
 			},
 			zIndex: {
@@ -73,9 +75,8 @@ module.exports = {
 		borderRadius: ["responsive", "hover"]
 	},
 	plugins: [
-		// require('@tailwindcss/forms'),
-		require("@tailwindcss/typography"),
-		require("@tailwindcss/container-queries"),
-		require("tailwind-scrollbar")({nocompatible: true})
+		require('@tailwindcss/typography'),
+		require('@tailwindcss/container-queries'),
+		require('tailwind-scrollbar')({nocompatible: true})
 	],
 }

@@ -52,7 +52,7 @@ class ChallengesController extends Controller
 
 	public function edit(Challenge $challenge)
 	{
-		return Inertia::render("Devs/Edit/ChallengeEditPage", [
+		return Inertia::render("Challenges/ChallengeEditPage", [
 			'challenge' => ChallengeResource::make($challenge)
 		]);
 	}
@@ -220,7 +220,7 @@ class ChallengesController extends Controller
 	{
 		// TODO: get all challenges with the "opened" sessions only...
 		$challenges = Challenge::with('sessions')->orderBy('title')->get();
-		return Inertia::render('ChallengesIndex.vue', [
+		return Inertia::render('ChallengesIndex', [
 			'challenges' => $challenges
 		]);
 	}

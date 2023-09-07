@@ -43,12 +43,11 @@
  * parameters: fx=Polynom, a=Fraction, b=Fraction
  * tags: algebre,3M
  */
-import Panel from "@/Components/Ui/Panel"
-import FormInput from "@/Components/Form/FormInput"
+import Panel from "@/Components/Ui/Panel.vue"
+import FormInput from "@/Components/Form/FormInput.vue"
 import {computed, ref} from "vue"
 import {PiMath} from "pimath/esm"
-import FormFraction from "@/Components/Form/FormFraction"
-import FormTextarea from "../Form/FormTextarea.vue"
+import FormFraction from "@/Components/Form/FormFraction.vue"
 
 let fx = ref(""),
 	a = ref(0),

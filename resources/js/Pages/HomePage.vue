@@ -60,23 +60,24 @@
 		</div>
 	</div>
 </template>
-<script>
-import LayoutFullpage from "@/Layouts/LayoutFullpage"
+<script lang="ts">
+import LayoutFullpage from "@/Layouts/LayoutFullpage.vue"
 
 export default {
 	layout: LayoutFullpage,
 }
 
 </script>
-<script setup>
-import {onMounted} from "vue"
-import ScolCoursLogo from "@/Components/ScolcoursLogo"
+<script setup lang="ts">
+import ScolCoursLogo from "@/Components/ScolcoursLogo.vue"
 import {Head} from "@inertiajs/vue3"
+import {PropType} from "vue";
+import {ChapterInterface} from "@/types/modelInterfaces";
 
 let props = defineProps({
 	canLogin: Boolean,
 	canRegister: Boolean,
-	newChapters: Array
+	newChapters: Array as PropType<any[]>
 })
 
 </script>

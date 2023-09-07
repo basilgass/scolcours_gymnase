@@ -33,7 +33,7 @@ const props = defineProps({
 })
 
 let component = defineAsyncComponent(
-	()=>import(`@/Components/Devs/${props.dev}`)
+	()=>import(/* @vite-ignore */`/resources/js/Components/Devs/${props.dev}.vue`)
 )
 
 </script>

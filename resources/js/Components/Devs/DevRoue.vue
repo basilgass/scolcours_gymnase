@@ -65,7 +65,7 @@ export default {
 import FormInput from "@/Components/Form/FormInput.vue"
 import FormNumber from "@/Components/Form/FormNumber.vue"
 import {computed, onMounted, ref, watch} from "vue"
-import VueSlider from "vue-slider-component"
+import VueSlider from "vue-slider-component/dist/vue-slider-component.umd.min"
 import "vue-slider-component/theme/material.css"
 
 let vitesse = ref("0"),

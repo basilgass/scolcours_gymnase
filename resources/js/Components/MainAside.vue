@@ -79,6 +79,7 @@ Menu latéral, avec les thèmes
 	</aside>
 </template>
 <script setup>
-import LogoutButton from "@/Components/Ui/LogoutButton"
-import ThemeLinks from "@/Components/Ui/ThemeLinks"</script>
+import LogoutButton from "@/Components/Ui/LogoutButton.vue"
+import ThemeLinks from "@/Components/Ui/ThemeLinks.vue"
+</script>
 

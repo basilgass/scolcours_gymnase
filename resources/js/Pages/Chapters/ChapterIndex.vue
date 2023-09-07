@@ -74,7 +74,7 @@
 </template>
 
 <script>
-import LayoutMain from "@/Layouts/LayoutMain"
+import LayoutMain from "@/Layouts/LayoutMain.vue"
 
 export default {
 	layout: LayoutMain,
@@ -82,13 +82,13 @@ export default {
 </script>
 
 <script setup>
-import ArticleTitle from "@/Components/Ui/ArticleTitle"
-import Panel from "@/Components/Ui/Panel"
-import FormInput from "@/Components/Form/FormInput"
+import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
+import Panel from "@/Components/Ui/Panel.vue"
+import FormInput from "@/Components/Form/FormInput.vue"
 import { computed, onMounted, ref } from "vue"
 import { useForm } from "@inertiajs/vue3"
-import DialogModal from "@/Components/Ui/DialogModal"
-import FormButton from "@/Components/Form/FormButton"
+import DialogModal from "@/Components/Ui/DialogModal.vue"
+import FormButton from "@/Components/Form/FormButton.vue"
 import IllustrationShow from "@/Components/Posts/Illustrations/IllustrationShow.vue"
 
 let props = defineProps({

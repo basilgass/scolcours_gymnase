@@ -530,7 +530,7 @@ let editMode = inject("editMode", false),
 	showEditForm = ref(false),
 	editForm = computed(() => {
 		return defineAsyncComponent(
-			() => import("@/Components/Posts/Questions/QuestionForm")
+			() => import("@/Components/Posts/Questions/QuestionForm.vue")
 		)
 	}),
 	duplicateQuestion = function () {

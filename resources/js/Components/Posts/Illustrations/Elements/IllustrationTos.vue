@@ -1,8 +1,8 @@
-<info>
+<!--<info>
 parameters: dx
 
 code: rational fraction
-</info>
+</info>-->
 <template>
 	<pi-table-of-signs
 		:tos="tableOfSigns"

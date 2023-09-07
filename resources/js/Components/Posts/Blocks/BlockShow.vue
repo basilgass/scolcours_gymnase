@@ -19,12 +19,32 @@ Affichage d'un block , avec toutes les possibilités
 				class="flex justify-between w-full px-5 py-3 mb-3 text-xl"
 				:class="blockConfig.style.header"
 			>
-				<div class="flex gap-3">
-					<i
-						v-if="blockIcon"
-						:class="blockIcon"
-					/>
-					<h3 v-katex.auto="blockTitle" />
+				<div>
+					<div class="flex gap-3">
+						<i
+							v-if="blockIcon"
+							:class="blockIcon"
+						/>
+						<h3 v-katex.auto="blockTitle" />
+					</div>
+
+					<div
+						v-show="editMode.enabled.value"
+						v-admin
+						v-theme.bg.text.admin
+						class="py-2 px-3 rounded font-code flex place-content-center"
+					>
+						<button
+							class="text-xs mr-2"
+							@click="showEditForm = true"
+						>
+							<i class="bi bi-pencil mr-2" /> éditer le paragraphe (id: {{ theBlock.id }})
+						</button>
+
+						<button class="draggable-handle text-xs px-1">
+							<i class="bi bi-arrows-move" />
+						</button>
+					</div>
 				</div>
 
 				<div class="flex gap-3">
@@ -61,22 +81,6 @@ Affichage d'un block , avec toutes les possibilités
 							<span
 								v-katex.auto="blockButtons.random.text"
 							/>
-						</button>
-					</div>
-
-					<div
-						v-show="editMode.enabled.value"
-						v-admin
-					>
-						<button
-							class="text-xs mr-2"
-							@click="showEditForm = true"
-						>
-							{{ theBlock.id }} <i class="bi bi-pencil ml-2" />
-						</button>
-
-						<button class="draggable-handle text-xs px-1">
-							<i class="bi bi-arrows-move" />
 						</button>
 					</div>
 				</div>
@@ -162,7 +166,7 @@ Affichage d'un block , avec toutes les possibilités
 </template>
 
 <script setup>
-import MarkdownIt from "@/Components/Ui/MarkdownIt"
+import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 import IllustrationShow from "@/Components/Posts/Illustrations/IllustrationShow.vue"
 import {computed, defineAsyncComponent, inject, provide, ref} from "vue"
 import {PiMath} from "pimath/esm"

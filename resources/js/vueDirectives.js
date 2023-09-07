@@ -1,8 +1,28 @@
 import katex from "katex/dist/katex.mjs"
-import AsciiMathParser from "./asciimath2tex"
+import * as AsciiMathParser from "./asciimath2tex"
 import {usePage} from "@inertiajs/vue3"
 import {useKatexMacros} from "@/Composables/useHelpers"
 import {numberCorrection} from "pidraw/esm/Calculus"
+import renderMathInElement from "katex/contrib/auto-render";
+
+function katexAutoRender(el) {
+	if(el) {
+		renderMathInElement(el, {
+				// customised options
+				// • auto-render specific keys, e.g.:
+				delimiters: [
+					{left: "$$", right: "$$", display: true},
+					{left: "$", right: "$", display: false},
+					{left: "\\[", right: "\\]", display: true},
+					{left: "\\(", right: "\\)", display: false},
+				],
+				// • rendering keys, e.g.:
+				throwOnError: false,
+				macros: useKatexMacros
+			}
+		)
+	}
+}
 
 function katexUpdate(el, binding, vnode) {
 	el.innerHTML = ""
@@ -118,7 +138,9 @@ function themeUpdate(el, binding, vnode){
 	const themes = usePage().props.themes.map(theme => theme.slug)
 	let chapter
 
-	if(!isNaN(+binding.value)){
+	if(binding.modifiers.hasOwnProperty("admin") || binding.value==="admin"){
+		chapter = "admin"
+	}else if(!isNaN(+binding.value)){
 		// it's a number -> get the theme id.
 		let theme = usePage().props.themes.filter(th=>th.id===+binding.value)
 

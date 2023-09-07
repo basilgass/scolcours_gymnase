@@ -23,7 +23,6 @@ let generateQuestion = function () {
 			let F = new Function("PiMath", currentGenerator.value.code)
 
 			question.value = F(PiMath)
-			console.log(question.value)
 		}
 	},
 	nextQuestion = function (checkerResult) {

@@ -94,7 +94,7 @@ En-tête principal, sensible au thème
 </template>
 <script setup>
 import {inject, ref} from "vue"
-import MainAside from "@/Components/MainAside"
+import MainAside from "@/Components/MainAside.vue"
 import DropdownMenu from "@/Components/Ui/DropdownMenu.vue"
 import LogoutButton from "@/Components/Ui/LogoutButton.vue"
 

@@ -18,14 +18,14 @@
 </template>
 
 <script>
-import LayoutMain from "@/Layouts/LayoutMain"
+import LayoutMain from "@/Layouts/LayoutMain.vue"
 
 export default {
 	layout: LayoutMain
 }
 </script>
 <script setup>
-import ArticleTitle from "@/Components/Ui/ArticleTitle"
+import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
 
 defineProps({
 	error: {type: String, default: "erreur inconnue"}

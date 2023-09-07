@@ -22,14 +22,14 @@ class AdminController extends Controller
 {
 	public function show()
 	{
-		return Inertia::render('Admin/AdminDashboard.vue');
+		return Inertia::render('Admin/AdminDashboard');
 	}
 
 	public function config()
 	{
 		$scolcours = Cache::get('scolcours');
 
-		return Inertia::render('Admin/AdminConfig.vue',
+		return Inertia::render('Admin/AdminConfig',
 		[
 			"title" => $scolcours->title,
 			"allThemes" => Theme::orderBy('order')->get()
@@ -90,7 +90,7 @@ class AdminController extends Controller
 		$this->loadTools();
 
 		return Inertia::render(
-			'Admin/AdminPagesShow.vue',
+			'Admin/AdminPagesShow',
 			[
 				'tools' => Tool::all()->map(function ($tool, $key) {
 					return [
@@ -122,7 +122,7 @@ class AdminController extends Controller
 	public function users()
 	{
 		return Inertia::render(
-			'Admin/AdminUsersShow.vue', [
+			'Admin/AdminUsersShow', [
 			"users" => UserResource::collection(User::all()),
 			"teams" => Team::all()
 		]);
@@ -347,7 +347,7 @@ class AdminController extends Controller
 		}
 
 		return Inertia::render(
-			'Admin/AdminStatsShow.vue',
+			'Admin/AdminStatsShow',
 			[
 				"chapter" => $chapter,
 				"users" => $users->count(),
@@ -360,7 +360,7 @@ class AdminController extends Controller
     public function illustrations()
     {
         return Inertia::render(
-            'Admin/AdminIllustrations.vue',
+            'Admin/AdminIllustrations',
             [
                 'illustrations'=>Illustration::where('type', "=", "draw")->get()
             ]

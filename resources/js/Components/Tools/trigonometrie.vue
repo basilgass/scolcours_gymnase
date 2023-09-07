@@ -129,8 +129,8 @@
  * parameters: a=nombre, b=numbre, c=nombre, alpha=nombre, beta=nombre, gamma=nombre
  * tags: geoetrie,1M,2C
  */
-import Panel from "@/Components/Ui/Panel"
-import FormInput from "@/Components/Form/FormInput"
+import Panel from "@/Components/Ui/Panel.vue"
+import FormInput from "@/Components/Form/FormInput.vue"
 import {computed, ref} from "vue"
 import {numberCorrection} from "pidraw/esm/Calculus"
 import FormNumber from "@/Components/Form/FormNumber.vue"

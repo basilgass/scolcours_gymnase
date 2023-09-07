@@ -35,14 +35,20 @@
 				</button>
 			</div>
 
-			<button
-				v-for="chapter of allChapters"
-				:key="chapter.slug"
-				v-katex.auto="chapter.title"
-				v-theme.btn="chapter.theme_id"
-				class="btn-xs"
-				@click="toggleRelation(chapter.id)"
-			/>
+			<div
+				v-show="modifyRelations"
+				class="flex flex-wrap gap-3"
+			>
+				<button
+					v-for="chapter of allChapters"
+					:key="chapter.slug"
+					v-katex.auto="chapter.title"
+					v-theme.btn="chapter.theme_id"
+					class="btn-xs"
+					:class="Object.values(chapterRelations).map(x=>x.slug).includes(chapter.slug)?'bg-white text-black':''"
+					@click="toggleRelation(chapter.id)"
+				/>
+			</div>
 		</div>
 	</div>
 </template>
@@ -59,11 +65,21 @@ const flash = inject("flash"),
 	editMode = inject("editMode")
 
 let chapterRelations = ref(props.chapter.relations),
+	modifyRelations = ref(false),
 	allChapters = ref([]),
 	getAllChapters = function(){
+		if(modifyRelations.value){
+			modifyRelations.value = false
+			return
+		}else if(allChapters.value.length>0){
+			modifyRelations.value = true
+			return
+		}
+
 		axios.get(route("chapters.index.min"))
 			.then(res=>{
 				allChapters.value = res.data.data.filter(ch=>ch.slug!==props.chapter.slug)
+				modifyRelations.value = true
 			})
 			.catch(res => {
 				console.warn(res)
@@ -76,6 +92,8 @@ let chapterRelations = ref(props.chapter.relations),
 				if(res.data!==false){
 					chapterRelations.value = res.data.data
 				}
+			}).catch(res=>{
+				console.log(res)
 			})
 	}
 </script>

@@ -76,8 +76,8 @@ import BreezeInput from "@/Components/Auth/Input.vue"
 import BreezeLabel from "@/Components/Auth/Label.vue"
 import BreezeValidationErrors from "@/Components/Auth/ValidationErrors.vue"
 import {Head, Link} from "@inertiajs/vue3"
-import FormInput from "@/Components/Form/FormInput"
-import FormButton from "@/Components/Form/FormButton"
+import FormInput from "@/Components/Form/FormInput.vue"
+import FormButton from "@/Components/Form/FormButton.vue"
 
 export default {
 

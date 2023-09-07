@@ -40,9 +40,9 @@
 	</div>
 </template>
 
-<script setup>
-import MainHeader from "@/Components/MainHeader"
-import MainFooter from "@/Components/MainFooter"
+<script setup lang="ts">
+import MainHeader from "@/Components/MainHeader.vue"
+import MainFooter from "@/Components/MainFooter.vue"
 import {computed, onMounted, provide, ref} from "vue"
 import FlashMessage from "@/Components/Ui/FlashMessage.vue"
 import {useMagicKeys, whenever} from "@vueuse/core"
@@ -71,13 +71,18 @@ provide("flash", {
 
 let globalEditMode = ref(false),
 	globalCorrectionMode = ref(false)
+
 provide("editMode", {
 	enabled: computed(() => {
 		return globalEditMode.value
 	}),
-	toggle: function () {
-		globalEditMode.value = !globalEditMode.value
-		localStorage.setItem("scolcours_editMode", globalEditMode.value)
+	toggle: function (value?: boolean) {
+		if(value!==undefined) {
+			globalEditMode.value = value
+		}else {
+			globalEditMode.value = !globalEditMode.value
+		}
+		localStorage.setItem("scolcours_editMode", `${globalEditMode.value}`)
 	}
 })
 provide("correctionMode", {
@@ -86,7 +91,7 @@ provide("correctionMode", {
 	}),
 	toggle: function () {
 		globalCorrectionMode.value = !globalCorrectionMode.value
-		localStorage.setItem("scolcours_correctionMode", globalCorrectionMode.value)
+		localStorage.setItem("scolcours_correctionMode", `${globalCorrectionMode.value}`)
 	}
 })
 
@@ -103,7 +108,7 @@ const keys = useMagicKeys()
 whenever(keys.ctrl_alt_a, ()=>{
 	if(usePage().props.auth.user && usePage().props.auth.can.admin) {
 		globalEditMode.value = !globalEditMode.value
-		localStorage.setItem("scolcours_editMode", globalEditMode.value)
+		localStorage.setItem("scolcours_editMode", `${globalEditMode.value}`)
 	}
 })
 

@@ -123,7 +123,7 @@ class TeamController extends Controller
 			}
 		}
 		return Inertia::render(
-			'Admin/AdminStatsShow.vue',
+			'Admin/AdminStatsShow',
 			[
 				"team" => $team,
 				"chapter" => $chapter,
