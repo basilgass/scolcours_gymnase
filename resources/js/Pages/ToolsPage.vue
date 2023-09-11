@@ -56,7 +56,7 @@
 
 	<keep-alive>
 		<component
-				:is="toolComponents[toolSlug]"
+				:is="toolComponent"
 				@keyup.esc="toolUnselect"
 		/>
 	</keep-alive>
@@ -73,6 +73,7 @@ import FormInput from "@/Components/Form/FormInput.vue"
 import {computed, defineAsyncComponent, DefineComponent, onMounted, PropType, ref, resolveComponent} from "vue"
 import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
 import {ToolInterface} from "@/types";
+import {ToolsModules} from "@/scolcours";
 
 let toolSlug = ref(null),
     toolSearch = ref(""),
@@ -88,17 +89,12 @@ const props = defineProps({
         }
     }
 })
-
-let toolComponents = computed(() => {
-    let arr = {}
-    for (let tool of props.tools) {
-        arr[tool.slug] = defineAsyncComponent(() => import(/* @vite-ignore */`/resources/js/Components/Tools/${tool.slug}.vue`))
-        // arr[tool.slug] = defineAsyncComponent(
-        // 	()=>import(/* vite-ignore */ `./resources/js/Components/Tools/${tool.slug}.vue`)
-        // )
-    }
-
-    return arr
+let toolComponent = computed(() => {
+	const key = `./Components/Tools/${toolSlug.value}.vue`;
+	if(ToolsModules.hasOwnProperty(key)){
+		return defineAsyncComponent(ToolsModules[key])
+	}
+	return false
 })
 
 let toolName = computed(() => {

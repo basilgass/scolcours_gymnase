@@ -12,7 +12,6 @@ import formKitConfig from "../../formkit.config";
 import {adminDirective, katexDirective, themeDirective, visibleDirective} from "@/vueDirectives"
 
 // import route from "ziggy-js"
-
 const appName = window.document.getElementsByTagName("title")[0]?.innerText || "ScolCours"
 
 createInertiaApp({
@@ -27,6 +26,7 @@ createInertiaApp({
             import.meta.glob<DefineComponent>("./Pages/**/*.vue")
     ),
 	setup({el, App, props, plugin}) {
+
 		createApp(
 			{render: () => h(App, props)})
 			.component("Link", Link)
