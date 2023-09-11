@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<h3
-			v-katex.auto="step.title"
+			v-katex.auto="step?.title"
 			class="font-semibold"
 		/>
 		<markdown-it :text="step.body" />

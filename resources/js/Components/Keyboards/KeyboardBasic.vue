@@ -11,7 +11,7 @@
 	/>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import KeyboardDisplay from "@/Components/Keyboards/KeyboardDisplay.vue"
 import {useKeyboard} from "@/Composables/useKeyboard"
 import {computed, ref} from "vue"

@@ -73,7 +73,7 @@ import FormInput from "@/Components/Form/FormInput.vue"
 import {computed, defineAsyncComponent, DefineComponent, onMounted, PropType, ref, resolveComponent} from "vue"
 import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
 import {ToolInterface} from "@/types";
-import {ToolsModules} from "@/scolcours";
+import {getModule, MODULE_TYPES, ToolsModules} from "@/scolcours";
 
 let toolSlug = ref(null),
     toolSearch = ref(""),
@@ -90,11 +90,12 @@ const props = defineProps({
     }
 })
 let toolComponent = computed(() => {
-	const key = `./Components/Tools/${toolSlug.value}.vue`;
-	if(ToolsModules.hasOwnProperty(key)){
-		return defineAsyncComponent(ToolsModules[key])
-	}
-	return false
+    return getModule(toolSlug.value, MODULE_TYPES.TOOLS)
+	// const key = `./Components/Tools/${toolSlug.value}.vue`;
+	// if(ToolsModules.hasOwnProperty(key)){
+	// 	return defineAsyncComponent(ToolsModules[key])
+	// }
+	// return false
 })
 
 let toolName = computed(() => {

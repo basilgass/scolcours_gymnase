@@ -14,7 +14,7 @@
 	</div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 
 import {computed, nextTick, ref} from "vue"
 import FormInput from "@/Components/Form/FormInput.vue"

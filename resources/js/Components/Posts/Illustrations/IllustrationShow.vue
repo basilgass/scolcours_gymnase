@@ -78,10 +78,12 @@ Affichage des illustrations
 	</figure>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import {computed, defineAsyncComponent, inject, ref} from "vue"
 import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"
 import {useFormattedBody} from "@/Composables/useHelpers"
+import {getModule, MODULE_TYPES} from "@/scolcours";
+import {editModeInterface} from "@/types";
 
 const props = defineProps({
 		illustration: {type: Object, required: true},
@@ -96,7 +98,7 @@ let root = ref(null),
 		import("@/Components/Posts/Illustrations/IllustrationForm.vue")
 	),
 	theIllustration = ref(props.illustration),
-	editMode = inject("editMode"),
+	editMode = inject<editModeInterface>("editMode"),
 	blockIllustration = computed(() => {
 		return {
 			title: theIllustration.value.title ? useFormattedBody(theIllustration.value.title, blockData) : "",
@@ -109,24 +111,7 @@ let root = ref(null),
 const IllustrationComponent = computed(
 	() => {
 		if (props.illustration.type === "component" && props.illustration.value !== null) {
-			// TODO: Make dynamic import work !
-			switch (props.illustration.value) {
-				case "IllustrationEuclidian":
-					return defineAsyncComponent(() => import(`@/Components/Posts/Illustrations/Elements/IllustrationEuclidian.vue`))
-				case "IllustrationStepper":
-					return defineAsyncComponent(() => import(`@/Components/Posts/Illustrations/Elements/IllustrationStepper.vue`))
-				case "IllustrationTos":
-					return defineAsyncComponent(() => import(`@/Components/Posts/Illustrations/Elements/IllustrationTos.vue`))
-				case "IllustrationValues":
-					return defineAsyncComponent(() => import(`@/Components/Posts/Illustrations/Elements/IllustrationValues.vue`))
-				case "Geometry_Droites_PositionRelative":
-					return defineAsyncComponent(() => import(`@/Components/Posts/Illustrations/Elements/Geometry_Droites_PositionRelative.vue`))
-			}
-
-
-			// return defineAsyncComponent(
-			// 	() => import(/* @vite-ignore */`/resources/js/Components/Posts/Illustrations/Elements/${props.illustration.value}.vue`)
-			// )
+            return getModule(props.illustration.value, MODULE_TYPES.ILLUSTRATION)
 		} else {
 			return false
 		}

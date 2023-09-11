@@ -1,293 +1,284 @@
 {
   "FormCodearea.css": {
-    "file": "assets/FormCodearea-7003c054.css",
+    "file": "assets/FormCodearea-5fd23f65.css",
     "src": "FormCodearea.css"
   },
-  "_ArticleTitle-9245a16f.js": {
-    "file": "assets/ArticleTitle-9245a16f.js",
+  "_ArticleTitle-e813f343.js": {
+    "file": "assets/ArticleTitle-e813f343.js",
     "imports": [
       "resources/js/app.ts"
     ]
   },
-  "_ChapterChallenges-32d73c72.js": {
-    "file": "assets/ChapterChallenges-32d73c72.js",
+  "_ChapterChallenges-cb6a7d50.js": {
+    "file": "assets/ChapterChallenges-cb6a7d50.js",
     "imports": [
       "resources/js/app.ts",
-      "_DialogModal-96fb7f8f.js",
-      "_FormInput-672b0e41.js",
-      "_FormButton-b2c15031.js"
+      "_DialogModal-f8fda5e0.js",
+      "_FormInput-7224ee33.js",
+      "_FormButton-f924c193.js"
     ]
   },
-  "_ChapterFormulas-e891f1ef.js": {
+  "_ChapterFormulas-a337feba.js": {
     "dynamicImports": [
       "resources/js/Components/Posts/Blocks/BlockForm.vue"
     ],
-    "file": "assets/ChapterFormulas-e891f1ef.js",
+    "file": "assets/ChapterFormulas-a337feba.js",
     "imports": [
       "resources/js/app.ts",
-      "_MarkdownIt-462c8cb5.js",
-      "_IllustrationShow-e0ddf4cc.js",
-      "_index-20b6e59e.js",
-      "_scolcours-7b394fc8.js"
+      "_MarkdownIt-fb2bd3e9.js",
+      "_IllustrationShow.vue_vue_type_script_setup_true_lang-7955ecb4.js",
+      "_index-e6f55065.js",
+      "_scolcours-4f54a458.js"
     ]
   },
-  "_ChapterToc-2c2f26a8.js": {
-    "file": "assets/ChapterToc-2c2f26a8.js",
+  "_ChapterToc-a6548c30.js": {
+    "file": "assets/ChapterToc-a6548c30.js",
     "imports": [
       "resources/js/app.ts",
-      "_FormSwitch-bd89b2a1.js"
+      "_FormSwitch-1fb610d6.js"
     ]
   },
-  "_ConfirmButton-da3cf975.js": {
-    "file": "assets/ConfirmButton-da3cf975.js",
+  "_ConfirmButton-803a1e6e.js": {
+    "file": "assets/ConfirmButton-803a1e6e.js",
     "imports": [
       "resources/js/app.ts"
     ]
   },
-  "_DialogModal-96fb7f8f.js": {
-    "file": "assets/DialogModal-96fb7f8f.js",
+  "_DialogModal-f8fda5e0.js": {
+    "file": "assets/DialogModal-f8fda5e0.js",
     "imports": [
       "resources/js/app.ts"
     ]
   },
-  "_DropdownMenu-083e1e91.js": {
-    "file": "assets/DropdownMenu-083e1e91.js",
+  "_DropdownMenu-ce2cb4b8.js": {
+    "file": "assets/DropdownMenu-ce2cb4b8.js",
     "imports": [
       "resources/js/app.ts"
     ]
   },
-  "_FormButton-b2c15031.js": {
-    "file": "assets/FormButton-b2c15031.js",
+  "_FormButton-f924c193.js": {
+    "file": "assets/FormButton-f924c193.js",
     "imports": [
-      "_FormError-164a318e.js",
+      "_FormError-60c808f0.js",
       "resources/js/app.ts"
     ]
   },
-  "_FormCodearea-8548d74f.js": {
-    "file": "assets/FormCodearea-8548d74f.js",
+  "_FormCodearea-5ca9ffc2.js": {
+    "css": [
+      "assets/FormCodearea-5fd23f65.css"
+    ],
+    "file": "assets/FormCodearea-5ca9ffc2.js",
     "imports": [
       "resources/js/app.ts",
-      "_FormError-164a318e.js",
-      "_FormLabel-eef82139.js",
-      "_FormCodearea.vue_vue_type_style_index_0_scoped_c558357e_lang-10a23a7b.js",
+      "_FormError-60c808f0.js",
+      "_FormLabel-9f172f77.js",
+      "_prism-json-dee24e93.js",
       "__plugin-vue_export-helper-c27b6911.js"
     ]
   },
-  "_FormCodearea.vue_vue_type_style_index_0_scoped_c558357e_lang-10a23a7b.js": {
-    "css": [
-      "assets/FormCodearea-7003c054.css"
-    ],
-    "file": "assets/FormCodearea.vue_vue_type_style_index_0_scoped_c558357e_lang-10a23a7b.js",
+  "_FormError-60c808f0.js": {
+    "file": "assets/FormError-60c808f0.js",
     "imports": [
       "resources/js/app.ts"
     ]
   },
-  "_FormError-164a318e.js": {
-    "file": "assets/FormError-164a318e.js",
-    "imports": [
-      "resources/js/app.ts"
-    ]
-  },
-  "_FormIllustration-4a0c0fbf.js": {
-    "file": "assets/FormIllustration-4a0c0fbf.js",
+  "_FormIllustration-0d12a4cd.js": {
+    "file": "assets/FormIllustration-0d12a4cd.js",
     "imports": [
       "resources/js/app.ts",
-      "_FormError-164a318e.js",
-      "_FormTextarea-33a0c7e3.js",
-      "_FormInput-672b0e41.js",
-      "_MarkdownIt-462c8cb5.js",
-      "_Parser-fb89dac2.js",
-      "_FormSwitch-bd89b2a1.js"
+      "_FormError-60c808f0.js",
+      "_FormTextarea-d21522be.js",
+      "_FormInput-7224ee33.js",
+      "_MarkdownIt-fb2bd3e9.js",
+      "_Parser-d4808822.js",
+      "_FormSwitch-1fb610d6.js"
     ]
   },
-  "_FormInput-672b0e41.js": {
-    "file": "assets/FormInput-672b0e41.js",
+  "_FormInput-7224ee33.js": {
+    "file": "assets/FormInput-7224ee33.js",
     "imports": [
       "resources/js/app.ts",
-      "_FormError-164a318e.js",
-      "_FormLabel-eef82139.js"
+      "_FormError-60c808f0.js",
+      "_FormLabel-9f172f77.js"
     ]
   },
-  "_FormLabel-eef82139.js": {
-    "file": "assets/FormLabel-eef82139.js",
+  "_FormLabel-9f172f77.js": {
+    "file": "assets/FormLabel-9f172f77.js",
     "imports": [
       "resources/js/app.ts"
     ]
   },
-  "_FormNumber-e756a072.js": {
-    "file": "assets/FormNumber-e756a072.js",
+  "_FormNumber-391834eb.js": {
+    "file": "assets/FormNumber-391834eb.js",
     "imports": [
       "resources/js/app.ts",
-      "_FormError-164a318e.js",
-      "_FormLabel-eef82139.js"
+      "_FormError-60c808f0.js",
+      "_FormLabel-9f172f77.js"
     ]
   },
-  "_FormSelect-aaa69ad9.js": {
-    "file": "assets/FormSelect-aaa69ad9.js",
+  "_FormSelect-c234966d.js": {
+    "file": "assets/FormSelect-c234966d.js",
     "imports": [
-      "_FormError-164a318e.js",
-      "_FormLabel-eef82139.js",
+      "_FormError-60c808f0.js",
+      "_FormLabel-9f172f77.js",
       "resources/js/app.ts"
     ]
   },
-  "_FormSwitch-bd89b2a1.js": {
-    "file": "assets/FormSwitch-bd89b2a1.js",
+  "_FormSwitch-1fb610d6.js": {
+    "file": "assets/FormSwitch-1fb610d6.js",
     "imports": [
-      "_FormError-164a318e.js",
-      "_UiSwitch-7d735904.js",
+      "_FormError-60c808f0.js",
+      "_UiSwitch-0f25dba7.js",
       "resources/js/app.ts"
     ]
   },
-  "_FormTextarea-33a0c7e3.js": {
-    "file": "assets/FormTextarea-33a0c7e3.js",
+  "_FormTextarea-d21522be.js": {
+    "file": "assets/FormTextarea-d21522be.js",
     "imports": [
-      "_FormError-164a318e.js",
-      "_FormLabel-eef82139.js",
+      "_FormError-60c808f0.js",
+      "_FormLabel-9f172f77.js",
       "resources/js/app.ts"
     ]
   },
-  "_IllustrationShow-e0ddf4cc.js": {
+  "_IllustrationShow.vue_vue_type_script_setup_true_lang-7955ecb4.js": {
     "dynamicImports": [
-      "resources/js/Components/Posts/Illustrations/IllustrationForm.vue",
-      "resources/js/Components/Posts/Illustrations/Elements/IllustrationEuclidian.vue",
-      "resources/js/Components/Posts/Illustrations/Elements/IllustrationStepper.vue",
-      "resources/js/Components/Posts/Illustrations/Elements/IllustrationTos.vue",
-      "resources/js/Components/Posts/Illustrations/Elements/IllustrationValues.vue",
-      "resources/js/Components/Posts/Illustrations/Elements/Geometry_Droites_PositionRelative.vue"
+      "resources/js/Components/Posts/Illustrations/IllustrationForm.vue"
     ],
-    "file": "assets/IllustrationShow-e0ddf4cc.js",
+    "file": "assets/IllustrationShow.vue_vue_type_script_setup_true_lang-7955ecb4.js",
     "imports": [
       "resources/js/app.ts",
-      "_PiDrawParser-e58d10cb.js"
+      "_PiDrawParser-f5335967.js",
+      "_scolcours-4f54a458.js"
     ]
   },
-  "_KeyboardDisplay-3b2f5394.js": {
-    "file": "assets/KeyboardDisplay-3b2f5394.js",
+  "_KeyboardDisplay-d37be63c.js": {
+    "file": "assets/KeyboardDisplay-d37be63c.js",
     "imports": [
-      "_useKeyboard-b9c18eeb.js",
+      "_useKeyboard-c07cd214.js",
       "resources/js/app.ts"
     ]
   },
-  "_LayoutGuest-16a4c416.js": {
-    "file": "assets/LayoutGuest-16a4c416.js",
+  "_LayoutGuest-c5fcaf6b.js": {
+    "file": "assets/LayoutGuest-c5fcaf6b.js",
     "imports": [
       "__plugin-vue_export-helper-c27b6911.js",
       "resources/js/app.ts",
-      "_ScolcoursLogo-1e6f1188.js"
+      "_ScolcoursLogo-a9cb34bb.js"
     ]
   },
-  "_LayoutMain.vue_vue_type_script_setup_true_lang-8fcb0411.js": {
-    "file": "assets/LayoutMain.vue_vue_type_script_setup_true_lang-8fcb0411.js",
+  "_LayoutMain.vue_vue_type_script_setup_true_lang-3e5e8565.js": {
+    "file": "assets/LayoutMain.vue_vue_type_script_setup_true_lang-3e5e8565.js",
     "imports": [
       "resources/js/app.ts",
-      "_MainFooter-61badba9.js",
-      "_DropdownMenu-083e1e91.js"
+      "_MainFooter-ea9aa75a.js",
+      "_DropdownMenu-ce2cb4b8.js"
     ]
   },
-  "_LayoutProjection-4fcf4157.js": {
-    "file": "assets/LayoutProjection-4fcf4157.js",
+  "_LayoutProjection-cf224d52.js": {
+    "file": "assets/LayoutProjection-cf224d52.js",
     "imports": [
-      "_MarkdownIt-462c8cb5.js",
-      "__plugin-vue_export-helper-c27b6911.js",
-      "resources/js/app.ts"
-    ]
-  },
-  "_MainFooter-61badba9.js": {
-    "file": "assets/MainFooter-61badba9.js",
-    "imports": [
+      "_MarkdownIt-fb2bd3e9.js",
       "__plugin-vue_export-helper-c27b6911.js",
       "resources/js/app.ts"
     ]
   },
-  "_MarkdownIt-462c8cb5.js": {
-    "file": "assets/MarkdownIt-462c8cb5.js",
+  "_MainFooter-ea9aa75a.js": {
+    "file": "assets/MainFooter-ea9aa75a.js",
+    "imports": [
+      "__plugin-vue_export-helper-c27b6911.js",
+      "resources/js/app.ts"
+    ]
+  },
+  "_MarkdownIt-fb2bd3e9.js": {
+    "file": "assets/MarkdownIt-fb2bd3e9.js",
     "imports": [
       "resources/js/app.ts",
-      "_texmath-4cb66d6f.js"
+      "_texmath-59529073.js"
     ]
   },
-  "_Panel-4b55454d.js": {
-    "file": "assets/Panel-4b55454d.js",
+  "_Panel-78cefc5c.js": {
+    "file": "assets/Panel-78cefc5c.js",
     "imports": [
       "resources/js/app.ts"
     ]
   },
-  "_Parser-fb89dac2.js": {
-    "file": "assets/Parser-fb89dac2.js",
+  "_Parser-d4808822.js": {
+    "file": "assets/Parser-d4808822.js",
+    "imports": [
+      "resources/js/app.ts",
+      "_svg.esm-8b70f06e.js"
+    ]
+  },
+  "_PiDrawParser-f5335967.js": {
+    "file": "assets/PiDrawParser-f5335967.js",
+    "imports": [
+      "_index-e4a37cb5.js",
+      "_material-77c33a61.js",
+      "_index-e6f55065.js",
+      "resources/js/app.ts"
+    ]
+  },
+  "_PiEuclidian-85ee4890.js": {
+    "file": "assets/PiEuclidian-85ee4890.js",
+    "imports": [
+      "_index-e6f55065.js",
+      "resources/js/app.ts"
+    ]
+  },
+  "_PiTableOfSigns-5dd4c7fd.js": {
+    "file": "assets/PiTableOfSigns-5dd4c7fd.js",
     "imports": [
       "resources/js/app.ts"
     ]
   },
-  "_PiDrawParser-e58d10cb.js": {
-    "file": "assets/PiDrawParser-e58d10cb.js",
-    "imports": [
-      "_index-2d2628cf.js",
-      "_material-ad9b3c1c.js",
-      "_index-20b6e59e.js",
-      "resources/js/app.ts"
-    ]
-  },
-  "_PiEuclidian-2fcd3b73.js": {
-    "file": "assets/PiEuclidian-2fcd3b73.js",
-    "imports": [
-      "_index-20b6e59e.js",
-      "resources/js/app.ts"
-    ]
-  },
-  "_PiTableOfSigns-3415a1f6.js": {
-    "file": "assets/PiTableOfSigns-3415a1f6.js",
-    "imports": [
-      "resources/js/app.ts"
-    ]
-  },
-  "_PostShow.vue_vue_type_script_setup_true_lang-3ea35967.js": {
+  "_PostShow.vue_vue_type_script_setup_true_lang-a4cf09b6.js": {
     "dynamicImports": [
       "resources/js/Components/Posts/PostForm.vue"
     ],
-    "file": "assets/PostShow.vue_vue_type_script_setup_true_lang-3ea35967.js",
+    "file": "assets/PostShow.vue_vue_type_script_setup_true_lang-a4cf09b6.js",
     "imports": [
       "resources/js/app.ts",
-      "_ChapterFormulas-e891f1ef.js",
-      "_index-20b6e59e.js",
-      "_UiSwitch-7d735904.js",
-      "_QuestionsIndex-a58fb5e4.js"
+      "_ChapterFormulas-a337feba.js",
+      "_index-e6f55065.js",
+      "_UiSwitch-0f25dba7.js",
+      "_QuestionsIndex-0b703e35.js"
     ]
   },
-  "_QuestionShow-29d08a56.js": {
+  "_QuestionShow-a5c88a4e.js": {
     "dynamicImports": [
       "resources/js/Components/Posts/Questions/QuestionForm.vue"
     ],
-    "file": "assets/QuestionShow-29d08a56.js",
+    "file": "assets/QuestionShow-a5c88a4e.js",
     "imports": [
       "resources/js/app.ts",
-      "_IllustrationShow-e0ddf4cc.js",
-      "_MarkdownIt-462c8cb5.js",
-      "_useKeyboard-b9c18eeb.js",
-      "_DropdownMenu-083e1e91.js"
+      "_IllustrationShow.vue_vue_type_script_setup_true_lang-7955ecb4.js",
+      "_MarkdownIt-fb2bd3e9.js",
+      "_useKeyboard-c07cd214.js",
+      "_DropdownMenu-ce2cb4b8.js"
     ]
   },
-  "_QuestionsIndex-a58fb5e4.js": {
-    "file": "assets/QuestionsIndex-a58fb5e4.js",
+  "_QuestionsIndex-0b703e35.js": {
+    "file": "assets/QuestionsIndex-0b703e35.js",
     "imports": [
       "resources/js/app.ts",
-      "_QuestionShow-29d08a56.js"
+      "_QuestionShow-a5c88a4e.js"
     ]
   },
-  "_ScolcoursLogo-1e6f1188.js": {
-    "file": "assets/ScolcoursLogo-1e6f1188.js",
+  "_ScolcoursLogo-a9cb34bb.js": {
+    "file": "assets/ScolcoursLogo-a9cb34bb.js",
     "imports": [
       "__plugin-vue_export-helper-c27b6911.js",
       "resources/js/app.ts"
     ]
   },
-  "_UiSwitch-7d735904.js": {
-    "file": "assets/UiSwitch-7d735904.js",
+  "_UiSwitch-0f25dba7.js": {
+    "file": "assets/UiSwitch-0f25dba7.js",
     "imports": [
       "resources/js/app.ts"
     ]
   },
-  "_ValidationErrors-161002ff.js": {
-    "file": "assets/ValidationErrors-161002ff.js",
+  "_ValidationErrors-7df241c1.js": {
+    "file": "assets/ValidationErrors-7df241c1.js",
     "imports": [
       "__plugin-vue_export-helper-c27b6911.js",
       "resources/js/app.ts"
@@ -296,42 +287,69 @@
   "__plugin-vue_export-helper-c27b6911.js": {
     "file": "assets/_plugin-vue_export-helper-c27b6911.js"
   },
-  "_index-20b6e59e.js": {
-    "file": "assets/index-20b6e59e.js",
+  "_barChart-1c398eee.js": {
+    "file": "assets/barChart-1c398eee.js",
     "imports": [
       "resources/js/app.ts"
     ]
   },
-  "_index-2d2628cf.js": {
-    "file": "assets/index-2d2628cf.js",
+  "_checkersConfig-04d77b02.js": {
+    "file": "assets/checkersConfig-04d77b02.js",
     "imports": [
-      "_Parser-fb89dac2.js",
+      "_index-e6f55065.js",
       "resources/js/app.ts"
     ]
   },
-  "_material-ad9b3c1c.js": {
+  "_fraction-051d087d.js": {
+    "file": "assets/fraction-051d087d.js"
+  },
+  "_index-e4a37cb5.js": {
+    "file": "assets/index-e4a37cb5.js",
+    "imports": [
+      "_Parser-d4808822.js",
+      "_svg.esm-8b70f06e.js",
+      "resources/js/app.ts"
+    ]
+  },
+  "_index-e6f55065.js": {
+    "file": "assets/index-e6f55065.js",
+    "imports": [
+      "_fraction-051d087d.js",
+      "resources/js/app.ts"
+    ]
+  },
+  "_material-77c33a61.js": {
     "css": [
       "assets/material-cf522168.css"
     ],
-    "file": "assets/material-ad9b3c1c.js",
+    "file": "assets/material-77c33a61.js",
     "imports": [
       "resources/js/app.ts"
     ]
   },
-  "_moveTo-e81e81ac.js": {
-    "file": "assets/moveTo-e81e81ac.js",
+  "_moveTo-59192c97.js": {
+    "file": "assets/moveTo-59192c97.js",
     "imports": [
-      "_FormInput-672b0e41.js",
+      "_FormInput-7224ee33.js",
       "resources/js/app.ts"
     ]
   },
-  "_polynom-5d268248.js": {
-    "file": "assets/polynom-5d268248.js",
+  "_polynom-d910776e.js": {
+    "file": "assets/polynom-d910776e.js",
     "imports": [
-      "_index-20b6e59e.js"
+      "_index-e6f55065.js"
     ]
   },
-  "_scolcours-7b394fc8.js": {
+  "_prism-json-dee24e93.js": {
+    "css": [
+      "assets/prism-json-a8067485.css"
+    ],
+    "file": "assets/prism-json-dee24e93.js",
+    "imports": [
+      "resources/js/app.ts"
+    ]
+  },
+  "_scolcours-4f54a458.js": {
     "dynamicImports": [
       "resources/js/Components/Tools/affine.vue",
       "resources/js/Components/Tools/derivees.vue",
@@ -349,768 +367,1100 @@
       "resources/js/Components/Tools/tangentes-a-un-cercle.vue",
       "resources/js/Components/Tools/triangle.vue",
       "resources/js/Components/Tools/trigonometrie.vue",
-      "resources/js/Components/Tools/venn.vue"
-    ],
-    "file": "assets/scolcours-7b394fc8.js",
-    "imports": [
-      "resources/js/app.ts"
-    ]
-  },
-  "_texmath-4cb66d6f.js": {
-    "file": "assets/texmath-4cb66d6f.js",
-    "imports": [
-      "resources/js/app.ts"
-    ]
-  },
-  "_useGenerators-81be8fa1.js": {
-    "file": "assets/useGenerators-81be8fa1.js",
-    "imports": [
-      "resources/js/app.ts"
-    ]
-  },
-  "_useKeyboard-b9c18eeb.js": {
-    "dynamicImports": [
+      "resources/js/Components/Tools/venn.vue",
       "resources/js/Components/Keyboards/KeyboardBasic.vue",
       "resources/js/Components/Keyboards/KeyboardInput.vue",
       "resources/js/Components/Keyboards/KeyboardOrder.vue",
       "resources/js/Components/Keyboards/KeyboardQcm.vue",
-      "resources/js/Components/Keyboards/KeyboardInput.vue",
+      "resources/js/Components/Keyboards/KeyboardStudy.vue",
       "resources/js/Components/Keyboards/KeyboardTableOfSigns.vue",
       "resources/js/Components/Keyboards/KeyboardType.vue",
-      "resources/js/Components/Keyboards/KeyboardBasic.vue"
+      "resources/js/Components/Posts/Illustrations/Elements/Geometry_Droites_PositionRelative.vue",
+      "resources/js/Components/Posts/Illustrations/Elements/IllustrationEuclidian.vue",
+      "resources/js/Components/Posts/Illustrations/Elements/IllustrationStepper.vue",
+      "resources/js/Components/Posts/Illustrations/Elements/IllustrationTos.vue",
+      "resources/js/Components/Posts/Illustrations/Elements/IllustrationValues.vue",
+      "resources/js/Components/Devs/DevAbs.vue",
+      "resources/js/Components/Devs/DevChecker.vue",
+      "resources/js/Components/Devs/DevCircles.vue",
+      "resources/js/Components/Devs/DevCodeHighlight.vue",
+      "resources/js/Components/Devs/DevKeyboards.vue",
+      "resources/js/Components/Devs/DevProbTree.vue",
+      "resources/js/Components/Devs/DevRoue.vue",
+      "resources/js/Components/Devs/DevStats.vue",
+      "resources/js/Components/Devs/DevStats2.vue",
+      "resources/js/Components/Devs/DevUi.vue",
+      "resources/js/Components/Devs/DevVenn.vue"
     ],
-    "file": "assets/useKeyboard-b9c18eeb.js",
+    "file": "assets/scolcours-4f54a458.js",
     "imports": [
-      "resources/js/app.ts",
-      "_index-20b6e59e.js"
+      "resources/js/app.ts"
     ]
   },
-  "_useTos-764154c0.js": {
-    "file": "assets/useTos-764154c0.js",
+  "_svg.esm-8b70f06e.js": {
+    "file": "assets/svg.esm-8b70f06e.js"
+  },
+  "_texmath-59529073.js": {
+    "file": "assets/texmath-59529073.js",
     "imports": [
-      "_useKeyboard-b9c18eeb.js"
+      "resources/js/app.ts"
+    ]
+  },
+  "_useGenerators-94bf9eba.js": {
+    "file": "assets/useGenerators-94bf9eba.js",
+    "imports": [
+      "resources/js/app.ts"
+    ]
+  },
+  "_useKeyboard-c07cd214.js": {
+    "file": "assets/useKeyboard-c07cd214.js",
+    "imports": [
+      "_checkersConfig-04d77b02.js",
+      "resources/js/app.ts",
+      "_scolcours-4f54a458.js"
+    ]
+  },
+  "_useTos-5015ba37.js": {
+    "file": "assets/useTos-5015ba37.js",
+    "imports": [
+      "_useKeyboard-c07cd214.js"
     ]
   },
   "material.css": {
     "file": "assets/material-cf522168.css",
     "src": "material.css"
   },
+  "prism-json.css": {
+    "file": "assets/prism-json-a8067485.css",
+    "src": "prism-json.css"
+  },
   "resources/js/Components/Challenges/ChallengeForm.vue": {
-    "file": "assets/ChallengeForm-f7df5d1a.js",
+    "css": [
+      "assets/FormCodearea-5fd23f65.css"
+    ],
+    "file": "assets/ChallengeForm-7b7404a1.js",
     "imports": [
       "resources/js/app.ts",
-      "_ConfirmButton-da3cf975.js",
-      "_FormInput-672b0e41.js",
-      "_FormTextarea-33a0c7e3.js",
-      "_FormIllustration-4a0c0fbf.js",
-      "_FormNumber-e756a072.js",
-      "_index-20b6e59e.js",
-      "_FormCodearea-8548d74f.js",
-      "_useGenerators-81be8fa1.js",
-      "_FormSelect-aaa69ad9.js",
-      "_FormError-164a318e.js",
-      "_FormLabel-eef82139.js",
-      "_MarkdownIt-462c8cb5.js",
-      "_texmath-4cb66d6f.js",
-      "_Parser-fb89dac2.js",
-      "_FormSwitch-bd89b2a1.js",
-      "_UiSwitch-7d735904.js",
-      "_FormCodearea.vue_vue_type_style_index_0_scoped_c558357e_lang-10a23a7b.js",
+      "_ConfirmButton-803a1e6e.js",
+      "_FormInput-7224ee33.js",
+      "_FormTextarea-d21522be.js",
+      "_FormIllustration-0d12a4cd.js",
+      "_FormNumber-391834eb.js",
+      "_index-e6f55065.js",
+      "_FormCodearea-5ca9ffc2.js",
+      "_useGenerators-94bf9eba.js",
+      "_FormSelect-c234966d.js",
+      "_FormError-60c808f0.js",
+      "_FormLabel-9f172f77.js",
+      "_MarkdownIt-fb2bd3e9.js",
+      "_texmath-59529073.js",
+      "_Parser-d4808822.js",
+      "_svg.esm-8b70f06e.js",
+      "_FormSwitch-1fb610d6.js",
+      "_UiSwitch-0f25dba7.js",
+      "_fraction-051d087d.js",
+      "_prism-json-dee24e93.js",
       "__plugin-vue_export-helper-c27b6911.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Components/Challenges/ChallengeForm.vue"
   },
   "resources/js/Components/Chapters/ChapterForm.vue": {
-    "file": "assets/ChapterForm-846621c8.js",
+    "file": "assets/ChapterForm-7472c093.js",
     "imports": [
-      "_DialogModal-96fb7f8f.js",
-      "_FormInput-672b0e41.js",
-      "_ConfirmButton-da3cf975.js",
-      "_FormTextarea-33a0c7e3.js",
-      "_MarkdownIt-462c8cb5.js",
+      "_DialogModal-f8fda5e0.js",
+      "_FormInput-7224ee33.js",
+      "_ConfirmButton-803a1e6e.js",
+      "_FormTextarea-d21522be.js",
+      "_MarkdownIt-fb2bd3e9.js",
       "resources/js/app.ts",
-      "_FormError-164a318e.js",
-      "_FormLabel-eef82139.js",
-      "_texmath-4cb66d6f.js"
+      "_FormError-60c808f0.js",
+      "_FormLabel-9f172f77.js",
+      "_texmath-59529073.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Components/Chapters/ChapterForm.vue"
   },
-  "resources/js/Components/Keyboards/KeyboardBasic.vue": {
-    "file": "assets/KeyboardBasic-540b978d.js",
+  "resources/js/Components/Devs/DevAbs.vue": {
+    "file": "assets/DevAbs-eaa4c59c.js",
     "imports": [
-      "_KeyboardDisplay-3b2f5394.js",
-      "_useKeyboard-b9c18eeb.js",
+      "_PiDrawParser-f5335967.js",
+      "_index-e6f55065.js",
+      "_FormInput-7224ee33.js",
+      "_LayoutMain.vue_vue_type_script_setup_true_lang-3e5e8565.js",
       "resources/js/app.ts",
-      "_index-20b6e59e.js"
+      "_index-e4a37cb5.js",
+      "_Parser-d4808822.js",
+      "_svg.esm-8b70f06e.js",
+      "_material-77c33a61.js",
+      "_fraction-051d087d.js",
+      "_FormError-60c808f0.js",
+      "_FormLabel-9f172f77.js",
+      "_MainFooter-ea9aa75a.js",
+      "__plugin-vue_export-helper-c27b6911.js",
+      "_DropdownMenu-ce2cb4b8.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Components/Devs/DevAbs.vue"
+  },
+  "resources/js/Components/Devs/DevChecker.vue": {
+    "file": "assets/DevChecker-2cc694f0.js",
+    "imports": [
+      "_index-e4a37cb5.js",
+      "_material-77c33a61.js",
+      "_index-e6f55065.js",
+      "resources/js/app.ts",
+      "_FormTextarea-d21522be.js",
+      "_checkersConfig-04d77b02.js",
+      "_LayoutMain.vue_vue_type_script_setup_true_lang-3e5e8565.js",
+      "_Parser-d4808822.js",
+      "_svg.esm-8b70f06e.js",
+      "_fraction-051d087d.js",
+      "_FormError-60c808f0.js",
+      "_FormLabel-9f172f77.js",
+      "_MainFooter-ea9aa75a.js",
+      "__plugin-vue_export-helper-c27b6911.js",
+      "_DropdownMenu-ce2cb4b8.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Components/Devs/DevChecker.vue"
+  },
+  "resources/js/Components/Devs/DevCircles.vue": {
+    "file": "assets/DevCircles-2f791e5b.js",
+    "imports": [
+      "resources/js/app.ts",
+      "_PiDrawParser-f5335967.js",
+      "_index-e6f55065.js",
+      "_FormInput-7224ee33.js",
+      "_LayoutMain.vue_vue_type_script_setup_true_lang-3e5e8565.js",
+      "_index-e4a37cb5.js",
+      "_Parser-d4808822.js",
+      "_svg.esm-8b70f06e.js",
+      "_material-77c33a61.js",
+      "_fraction-051d087d.js",
+      "_FormError-60c808f0.js",
+      "_FormLabel-9f172f77.js",
+      "_MainFooter-ea9aa75a.js",
+      "__plugin-vue_export-helper-c27b6911.js",
+      "_DropdownMenu-ce2cb4b8.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Components/Devs/DevCircles.vue"
+  },
+  "resources/js/Components/Devs/DevCodeHighlight.vue": {
+    "css": [
+      "assets/FormCodearea-5fd23f65.css"
+    ],
+    "file": "assets/DevCodeHighlight-04e6abc9.js",
+    "imports": [
+      "_FormCodearea-5ca9ffc2.js",
+      "resources/js/app.ts",
+      "_FormError-60c808f0.js",
+      "_FormLabel-9f172f77.js",
+      "_prism-json-dee24e93.js",
+      "__plugin-vue_export-helper-c27b6911.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Components/Devs/DevCodeHighlight.vue"
+  },
+  "resources/js/Components/Devs/DevKeyboards.css": {
+    "file": "assets/DevKeyboards-14cf2a2d.css",
+    "src": "resources/js/Components/Devs/DevKeyboards.css"
+  },
+  "resources/js/Components/Devs/DevKeyboards.vue": {
+    "css": [
+      "assets/DevKeyboards-14cf2a2d.css"
+    ],
+    "file": "assets/DevKeyboards-771f60ab.js",
+    "imports": [
+      "_useKeyboard-c07cd214.js",
+      "_FormTextarea-d21522be.js",
+      "_prism-json-dee24e93.js",
+      "__plugin-vue_export-helper-c27b6911.js",
+      "resources/js/app.ts",
+      "_LayoutMain.vue_vue_type_script_setup_true_lang-3e5e8565.js",
+      "_checkersConfig-04d77b02.js",
+      "_index-e6f55065.js",
+      "_fraction-051d087d.js",
+      "_scolcours-4f54a458.js",
+      "_FormError-60c808f0.js",
+      "_FormLabel-9f172f77.js",
+      "_MainFooter-ea9aa75a.js",
+      "_DropdownMenu-ce2cb4b8.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Components/Devs/DevKeyboards.vue"
+  },
+  "resources/js/Components/Devs/DevProbTree.vue": {
+    "file": "assets/DevProbTree-14b0630e.js",
+    "imports": [
+      "_fraction-051d087d.js",
+      "_svg.esm-8b70f06e.js",
+      "resources/js/app.ts",
+      "_FormTextarea-d21522be.js",
+      "_FormError-60c808f0.js",
+      "_FormLabel-9f172f77.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Components/Devs/DevProbTree.vue"
+  },
+  "resources/js/Components/Devs/DevRoue.vue": {
+    "file": "assets/DevRoue-cd576bf6.js",
+    "imports": [
+      "_FormInput-7224ee33.js",
+      "_material-77c33a61.js",
+      "_LayoutMain.vue_vue_type_script_setup_true_lang-3e5e8565.js",
+      "resources/js/app.ts",
+      "_FormError-60c808f0.js",
+      "_FormLabel-9f172f77.js",
+      "_MainFooter-ea9aa75a.js",
+      "__plugin-vue_export-helper-c27b6911.js",
+      "_DropdownMenu-ce2cb4b8.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Components/Devs/DevRoue.vue"
+  },
+  "resources/js/Components/Devs/DevStats.vue": {
+    "file": "assets/DevStats-846f9742.js",
+    "imports": [
+      "_FormTextarea-d21522be.js",
+      "_MarkdownIt-fb2bd3e9.js",
+      "_index-e6f55065.js",
+      "_LayoutMain.vue_vue_type_script_setup_true_lang-3e5e8565.js",
+      "resources/js/app.ts",
+      "_FormError-60c808f0.js",
+      "_FormLabel-9f172f77.js",
+      "_texmath-59529073.js",
+      "_fraction-051d087d.js",
+      "_MainFooter-ea9aa75a.js",
+      "__plugin-vue_export-helper-c27b6911.js",
+      "_DropdownMenu-ce2cb4b8.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Components/Devs/DevStats.vue"
+  },
+  "resources/js/Components/Devs/DevStats2.vue": {
+    "file": "assets/DevStats2-274f0f38.js",
+    "imports": [
+      "_FormInput-7224ee33.js",
+      "_barChart-1c398eee.js",
+      "resources/js/app.ts",
+      "_LayoutMain.vue_vue_type_script_setup_true_lang-3e5e8565.js",
+      "_FormError-60c808f0.js",
+      "_FormLabel-9f172f77.js",
+      "_MainFooter-ea9aa75a.js",
+      "__plugin-vue_export-helper-c27b6911.js",
+      "_DropdownMenu-ce2cb4b8.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Components/Devs/DevStats2.vue"
+  },
+  "resources/js/Components/Devs/DevUi.css": {
+    "file": "assets/DevUi-973683bf.css",
+    "src": "resources/js/Components/Devs/DevUi.css"
+  },
+  "resources/js/Components/Devs/DevUi.vue": {
+    "css": [
+      "assets/DevUi-973683bf.css"
+    ],
+    "file": "assets/DevUi-180ddd30.js",
+    "imports": [
+      "resources/js/app.ts",
+      "__plugin-vue_export-helper-c27b6911.js",
+      "_FormNumber-391834eb.js",
+      "_FormTextarea-d21522be.js",
+      "_MarkdownIt-fb2bd3e9.js",
+      "_FormError-60c808f0.js",
+      "_FormLabel-9f172f77.js",
+      "_texmath-59529073.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Components/Devs/DevUi.vue"
+  },
+  "resources/js/Components/Devs/DevVenn.vue": {
+    "file": "assets/DevVenn-4dd7ea1a.js",
+    "imports": [
+      "_index-e4a37cb5.js",
+      "_FormInput-7224ee33.js",
+      "_index-e6f55065.js",
+      "_KeyboardDisplay-d37be63c.js",
+      "resources/js/app.ts",
+      "_Parser-d4808822.js",
+      "_svg.esm-8b70f06e.js",
+      "_FormError-60c808f0.js",
+      "_FormLabel-9f172f77.js",
+      "_fraction-051d087d.js",
+      "_useKeyboard-c07cd214.js",
+      "_checkersConfig-04d77b02.js",
+      "_scolcours-4f54a458.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Components/Devs/DevVenn.vue"
+  },
+  "resources/js/Components/Keyboards/KeyboardBasic.vue": {
+    "file": "assets/KeyboardBasic-20e20d7b.js",
+    "imports": [
+      "_KeyboardDisplay-d37be63c.js",
+      "_useKeyboard-c07cd214.js",
+      "resources/js/app.ts",
+      "_checkersConfig-04d77b02.js",
+      "_index-e6f55065.js",
+      "_fraction-051d087d.js",
+      "_scolcours-4f54a458.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Components/Keyboards/KeyboardBasic.vue"
   },
   "resources/js/Components/Keyboards/KeyboardInput.vue": {
-    "file": "assets/KeyboardInput-10725113.js",
+    "file": "assets/KeyboardInput-a929f555.js",
     "imports": [
-      "_FormInput-672b0e41.js",
-      "_useKeyboard-b9c18eeb.js",
+      "_FormInput-7224ee33.js",
+      "_useKeyboard-c07cd214.js",
       "resources/js/app.ts",
-      "_FormError-164a318e.js",
-      "_FormLabel-eef82139.js",
-      "_index-20b6e59e.js"
+      "_FormError-60c808f0.js",
+      "_FormLabel-9f172f77.js",
+      "_checkersConfig-04d77b02.js",
+      "_index-e6f55065.js",
+      "_fraction-051d087d.js",
+      "_scolcours-4f54a458.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Components/Keyboards/KeyboardInput.vue"
   },
   "resources/js/Components/Keyboards/KeyboardOrder.vue": {
-    "file": "assets/KeyboardOrder-7ba79415.js",
+    "file": "assets/KeyboardOrder-3f9a4421.js",
     "imports": [
-      "_index-20b6e59e.js",
-      "_useKeyboard-b9c18eeb.js",
-      "resources/js/app.ts"
+      "_index-e6f55065.js",
+      "_useKeyboard-c07cd214.js",
+      "resources/js/app.ts",
+      "_fraction-051d087d.js",
+      "_checkersConfig-04d77b02.js",
+      "_scolcours-4f54a458.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Components/Keyboards/KeyboardOrder.vue"
   },
   "resources/js/Components/Keyboards/KeyboardQcm.vue": {
-    "file": "assets/KeyboardQcm-5cfa3e29.js",
+    "file": "assets/KeyboardQcm-83960934.js",
     "imports": [
-      "_useKeyboard-b9c18eeb.js",
+      "_useKeyboard-c07cd214.js",
       "resources/js/app.ts",
-      "_index-20b6e59e.js"
+      "_checkersConfig-04d77b02.js",
+      "_index-e6f55065.js",
+      "_fraction-051d087d.js",
+      "_scolcours-4f54a458.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Components/Keyboards/KeyboardQcm.vue"
   },
-  "resources/js/Components/Keyboards/KeyboardTableOfSigns.vue": {
-    "file": "assets/KeyboardTableOfSigns-d8501133.js",
+  "resources/js/Components/Keyboards/KeyboardStudy.vue": {
+    "file": "assets/KeyboardStudy-83da4ab1.js",
     "imports": [
       "resources/js/app.ts",
-      "_PiTableOfSigns-3415a1f6.js",
-      "_KeyboardDisplay-3b2f5394.js",
-      "_useTos-764154c0.js",
-      "_useKeyboard-b9c18eeb.js",
-      "_index-20b6e59e.js"
+      "_index-e4a37cb5.js",
+      "_index-e6f55065.js",
+      "_KeyboardDisplay-d37be63c.js",
+      "_checkersConfig-04d77b02.js",
+      "_Parser-d4808822.js",
+      "_svg.esm-8b70f06e.js",
+      "_fraction-051d087d.js",
+      "_useKeyboard-c07cd214.js",
+      "_scolcours-4f54a458.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Components/Keyboards/KeyboardStudy.vue"
+  },
+  "resources/js/Components/Keyboards/KeyboardTableOfSigns.vue": {
+    "file": "assets/KeyboardTableOfSigns-39e59225.js",
+    "imports": [
+      "resources/js/app.ts",
+      "_PiTableOfSigns-5dd4c7fd.js",
+      "_KeyboardDisplay-d37be63c.js",
+      "_useTos-5015ba37.js",
+      "_checkersConfig-04d77b02.js",
+      "_useKeyboard-c07cd214.js",
+      "_index-e6f55065.js",
+      "_fraction-051d087d.js",
+      "_scolcours-4f54a458.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Components/Keyboards/KeyboardTableOfSigns.vue"
   },
   "resources/js/Components/Keyboards/KeyboardType.vue": {
-    "file": "assets/KeyboardType-46896a5b.js",
+    "file": "assets/KeyboardType-fb51f2f6.js",
     "imports": [
       "resources/js/app.ts",
-      "_index-20b6e59e.js",
-      "_useKeyboard-b9c18eeb.js"
+      "_index-e6f55065.js",
+      "_useKeyboard-c07cd214.js",
+      "_fraction-051d087d.js",
+      "_checkersConfig-04d77b02.js",
+      "_scolcours-4f54a458.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Components/Keyboards/KeyboardType.vue"
   },
   "resources/js/Components/Posts/Blocks/BlockForm.vue": {
-    "file": "assets/BlockForm-273f24df.js",
+    "css": [
+      "assets/FormCodearea-5fd23f65.css"
+    ],
+    "file": "assets/BlockForm-727db61d.js",
     "imports": [
       "resources/js/app.ts",
-      "_FormTextarea-33a0c7e3.js",
-      "_FormSwitch-bd89b2a1.js",
-      "_FormNumber-e756a072.js",
-      "_MarkdownIt-462c8cb5.js",
-      "_DialogModal-96fb7f8f.js",
-      "_ConfirmButton-da3cf975.js",
-      "_index-20b6e59e.js",
-      "_scolcours-7b394fc8.js",
-      "_FormCodearea-8548d74f.js",
-      "_moveTo-e81e81ac.js",
-      "_FormError-164a318e.js",
-      "_FormLabel-eef82139.js",
-      "_UiSwitch-7d735904.js",
-      "_texmath-4cb66d6f.js",
-      "_FormCodearea.vue_vue_type_style_index_0_scoped_c558357e_lang-10a23a7b.js",
+      "_FormTextarea-d21522be.js",
+      "_FormSwitch-1fb610d6.js",
+      "_FormNumber-391834eb.js",
+      "_MarkdownIt-fb2bd3e9.js",
+      "_DialogModal-f8fda5e0.js",
+      "_ConfirmButton-803a1e6e.js",
+      "_index-e6f55065.js",
+      "_scolcours-4f54a458.js",
+      "_FormCodearea-5ca9ffc2.js",
+      "_moveTo-59192c97.js",
+      "_FormError-60c808f0.js",
+      "_FormLabel-9f172f77.js",
+      "_UiSwitch-0f25dba7.js",
+      "_texmath-59529073.js",
+      "_fraction-051d087d.js",
+      "_prism-json-dee24e93.js",
       "__plugin-vue_export-helper-c27b6911.js",
-      "_FormInput-672b0e41.js"
+      "_FormInput-7224ee33.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Components/Posts/Blocks/BlockForm.vue"
   },
   "resources/js/Components/Posts/Illustrations/Elements/Geometry_Droites_PositionRelative.vue": {
-    "file": "assets/Geometry_Droites_PositionRelative-f6e10f39.js",
+    "file": "assets/Geometry_Droites_PositionRelative-2e1cd6ae.js",
     "imports": [
-      "_index-20b6e59e.js",
-      "resources/js/app.ts"
+      "_index-e6f55065.js",
+      "resources/js/app.ts",
+      "_fraction-051d087d.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Components/Posts/Illustrations/Elements/Geometry_Droites_PositionRelative.vue"
   },
   "resources/js/Components/Posts/Illustrations/Elements/IllustrationEuclidian.vue": {
-    "file": "assets/IllustrationEuclidian-ad512ea4.js",
+    "file": "assets/IllustrationEuclidian-b1b792bd.js",
     "imports": [
-      "_PiEuclidian-2fcd3b73.js",
+      "_PiEuclidian-85ee4890.js",
       "resources/js/app.ts",
-      "_index-20b6e59e.js"
+      "_index-e6f55065.js",
+      "_fraction-051d087d.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Components/Posts/Illustrations/Elements/IllustrationEuclidian.vue"
   },
   "resources/js/Components/Posts/Illustrations/Elements/IllustrationStepper.vue": {
-    "file": "assets/IllustrationStepper-a69ee4e0.js",
+    "file": "assets/IllustrationStepper-6e1e6a75.js",
     "imports": [
-      "_MarkdownIt-462c8cb5.js",
+      "_MarkdownIt-fb2bd3e9.js",
       "resources/js/app.ts",
-      "_texmath-4cb66d6f.js"
+      "_texmath-59529073.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Components/Posts/Illustrations/Elements/IllustrationStepper.vue"
   },
   "resources/js/Components/Posts/Illustrations/Elements/IllustrationTos.vue": {
-    "file": "assets/IllustrationTos-4cc6c2d4.js",
+    "file": "assets/IllustrationTos-4e7c808d.js",
     "imports": [
-      "_index-20b6e59e.js",
-      "_PiTableOfSigns-3415a1f6.js",
-      "_useTos-764154c0.js",
+      "_index-e6f55065.js",
+      "_PiTableOfSigns-5dd4c7fd.js",
+      "_useTos-5015ba37.js",
       "resources/js/app.ts",
-      "_useKeyboard-b9c18eeb.js"
+      "_fraction-051d087d.js",
+      "_useKeyboard-c07cd214.js",
+      "_checkersConfig-04d77b02.js",
+      "_scolcours-4f54a458.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Components/Posts/Illustrations/Elements/IllustrationTos.vue"
   },
   "resources/js/Components/Posts/Illustrations/Elements/IllustrationValues.vue": {
-    "file": "assets/IllustrationValues-a8ff0570.js",
+    "file": "assets/IllustrationValues-3930837c.js",
     "imports": [
-      "_index-20b6e59e.js",
-      "_polynom-5d268248.js",
-      "resources/js/app.ts"
+      "_index-e6f55065.js",
+      "_polynom-d910776e.js",
+      "resources/js/app.ts",
+      "_fraction-051d087d.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Components/Posts/Illustrations/Elements/IllustrationValues.vue"
   },
   "resources/js/Components/Posts/Illustrations/IllustrationForm.vue": {
-    "file": "assets/IllustrationForm-9188ec4e.js",
+    "file": "assets/IllustrationForm-47dd7389.js",
     "imports": [
-      "_FormIllustration-4a0c0fbf.js",
-      "_DialogModal-96fb7f8f.js",
-      "_ConfirmButton-da3cf975.js",
-      "_IllustrationShow-e0ddf4cc.js",
+      "_FormIllustration-0d12a4cd.js",
+      "_DialogModal-f8fda5e0.js",
+      "_ConfirmButton-803a1e6e.js",
+      "_IllustrationShow.vue_vue_type_script_setup_true_lang-7955ecb4.js",
       "resources/js/app.ts",
-      "_FormError-164a318e.js",
-      "_FormTextarea-33a0c7e3.js",
-      "_FormLabel-eef82139.js",
-      "_FormInput-672b0e41.js",
-      "_MarkdownIt-462c8cb5.js",
-      "_texmath-4cb66d6f.js",
-      "_Parser-fb89dac2.js",
-      "_FormSwitch-bd89b2a1.js",
-      "_UiSwitch-7d735904.js",
-      "_PiDrawParser-e58d10cb.js",
-      "_index-2d2628cf.js",
-      "_material-ad9b3c1c.js",
-      "_index-20b6e59e.js"
+      "_FormError-60c808f0.js",
+      "_FormTextarea-d21522be.js",
+      "_FormLabel-9f172f77.js",
+      "_FormInput-7224ee33.js",
+      "_MarkdownIt-fb2bd3e9.js",
+      "_texmath-59529073.js",
+      "_Parser-d4808822.js",
+      "_svg.esm-8b70f06e.js",
+      "_FormSwitch-1fb610d6.js",
+      "_UiSwitch-0f25dba7.js",
+      "_PiDrawParser-f5335967.js",
+      "_index-e4a37cb5.js",
+      "_material-77c33a61.js",
+      "_index-e6f55065.js",
+      "_fraction-051d087d.js",
+      "_scolcours-4f54a458.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Components/Posts/Illustrations/IllustrationForm.vue"
   },
   "resources/js/Components/Posts/PostForm.vue": {
-    "file": "assets/PostForm-b5d7f8fa.js",
+    "file": "assets/PostForm-8505f8f1.js",
     "imports": [
-      "_FormInput-672b0e41.js",
-      "_FormTextarea-33a0c7e3.js",
-      "_DialogModal-96fb7f8f.js",
-      "_ConfirmButton-da3cf975.js",
-      "_moveTo-e81e81ac.js",
+      "_FormInput-7224ee33.js",
+      "_FormTextarea-d21522be.js",
+      "_DialogModal-f8fda5e0.js",
+      "_ConfirmButton-803a1e6e.js",
+      "_moveTo-59192c97.js",
       "resources/js/app.ts",
-      "_FormError-164a318e.js",
-      "_FormLabel-eef82139.js"
+      "_FormError-60c808f0.js",
+      "_FormLabel-9f172f77.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Components/Posts/PostForm.vue"
   },
   "resources/js/Components/Posts/Questions/QuestionForm.vue": {
-    "file": "assets/QuestionForm-a2684332.js",
+    "css": [
+      "assets/FormCodearea-5fd23f65.css"
+    ],
+    "file": "assets/QuestionForm-a64c96a2.js",
     "imports": [
       "resources/js/app.ts",
-      "_FormTextarea-33a0c7e3.js",
-      "_FormInput-672b0e41.js",
-      "_DialogModal-96fb7f8f.js",
-      "_ConfirmButton-da3cf975.js",
-      "_FormCodearea-8548d74f.js",
-      "_QuestionShow-29d08a56.js",
-      "_useKeyboard-b9c18eeb.js",
-      "_MarkdownIt-462c8cb5.js",
-      "_FormError-164a318e.js",
-      "_FormLabel-eef82139.js",
-      "_FormCodearea.vue_vue_type_style_index_0_scoped_c558357e_lang-10a23a7b.js",
+      "_FormTextarea-d21522be.js",
+      "_FormInput-7224ee33.js",
+      "_DialogModal-f8fda5e0.js",
+      "_ConfirmButton-803a1e6e.js",
+      "_FormCodearea-5ca9ffc2.js",
+      "_QuestionShow-a5c88a4e.js",
+      "_checkersConfig-04d77b02.js",
+      "_MarkdownIt-fb2bd3e9.js",
+      "_FormError-60c808f0.js",
+      "_FormLabel-9f172f77.js",
+      "_prism-json-dee24e93.js",
       "__plugin-vue_export-helper-c27b6911.js",
-      "_IllustrationShow-e0ddf4cc.js",
-      "_PiDrawParser-e58d10cb.js",
-      "_index-2d2628cf.js",
-      "_Parser-fb89dac2.js",
-      "_material-ad9b3c1c.js",
-      "_index-20b6e59e.js",
-      "_DropdownMenu-083e1e91.js",
-      "_texmath-4cb66d6f.js"
+      "_IllustrationShow.vue_vue_type_script_setup_true_lang-7955ecb4.js",
+      "_PiDrawParser-f5335967.js",
+      "_index-e4a37cb5.js",
+      "_Parser-d4808822.js",
+      "_svg.esm-8b70f06e.js",
+      "_material-77c33a61.js",
+      "_index-e6f55065.js",
+      "_fraction-051d087d.js",
+      "_scolcours-4f54a458.js",
+      "_useKeyboard-c07cd214.js",
+      "_DropdownMenu-ce2cb4b8.js",
+      "_texmath-59529073.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Components/Posts/Questions/QuestionForm.vue"
   },
   "resources/js/Components/Tools/affine.vue": {
-    "file": "assets/affine-0d4e3ef1.js",
+    "file": "assets/affine-9df0dbff.js",
     "imports": [
-      "_Panel-4b55454d.js",
-      "_FormInput-672b0e41.js",
-      "_index-20b6e59e.js",
+      "_Panel-78cefc5c.js",
+      "_FormInput-7224ee33.js",
+      "_index-e6f55065.js",
       "resources/js/app.ts",
-      "_FormError-164a318e.js",
-      "_FormLabel-eef82139.js"
+      "_FormError-60c808f0.js",
+      "_FormLabel-9f172f77.js",
+      "_fraction-051d087d.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Components/Tools/affine.vue"
   },
   "resources/js/Components/Tools/derivees.vue": {
-    "file": "assets/derivees-fa45ec3f.js",
+    "file": "assets/derivees-cb11a99c.js",
     "imports": [
-      "_Panel-4b55454d.js",
-      "_FormInput-672b0e41.js",
-      "_index-20b6e59e.js",
+      "_Panel-78cefc5c.js",
+      "_FormInput-7224ee33.js",
+      "_index-e6f55065.js",
       "resources/js/app.ts",
-      "_FormError-164a318e.js",
-      "_FormLabel-eef82139.js"
+      "_FormError-60c808f0.js",
+      "_FormLabel-9f172f77.js",
+      "_fraction-051d087d.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Components/Tools/derivees.vue"
   },
   "resources/js/Components/Tools/division-euclidienne.vue": {
-    "file": "assets/division-euclidienne-2ed9879c.js",
+    "file": "assets/division-euclidienne-adbdeb2d.js",
     "imports": [
-      "_Panel-4b55454d.js",
-      "_FormInput-672b0e41.js",
-      "_PiEuclidian-2fcd3b73.js",
+      "_Panel-78cefc5c.js",
+      "_FormInput-7224ee33.js",
+      "_PiEuclidian-85ee4890.js",
       "resources/js/app.ts",
-      "_FormError-164a318e.js",
-      "_FormLabel-eef82139.js",
-      "_index-20b6e59e.js"
+      "_FormError-60c808f0.js",
+      "_FormLabel-9f172f77.js",
+      "_index-e6f55065.js",
+      "_fraction-051d087d.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Components/Tools/division-euclidienne.vue"
   },
   "resources/js/Components/Tools/etude-de-fonction-rationnelle.vue": {
-    "file": "assets/etude-de-fonction-rationnelle-7cb2c39c.js",
+    "file": "assets/etude-de-fonction-rationnelle-e314850d.js",
     "imports": [
       "resources/js/app.ts",
-      "_index-20b6e59e.js",
-      "_PiTableOfSigns-3415a1f6.js",
-      "_PiDrawParser-e58d10cb.js",
-      "_Panel-4b55454d.js",
-      "_FormInput-672b0e41.js",
-      "_FormButton-b2c15031.js",
-      "_index-2d2628cf.js",
-      "_Parser-fb89dac2.js",
-      "_material-ad9b3c1c.js",
-      "_FormError-164a318e.js",
-      "_FormLabel-eef82139.js"
+      "_index-e6f55065.js",
+      "_PiTableOfSigns-5dd4c7fd.js",
+      "_PiDrawParser-f5335967.js",
+      "_Panel-78cefc5c.js",
+      "_FormInput-7224ee33.js",
+      "_FormButton-f924c193.js",
+      "_fraction-051d087d.js",
+      "_index-e4a37cb5.js",
+      "_Parser-d4808822.js",
+      "_svg.esm-8b70f06e.js",
+      "_material-77c33a61.js",
+      "_FormError-60c808f0.js",
+      "_FormLabel-9f172f77.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Components/Tools/etude-de-fonction-rationnelle.vue"
   },
   "resources/js/Components/Tools/evaluer-fonction.vue": {
-    "file": "assets/evaluer-fonction-997717df.js",
+    "file": "assets/evaluer-fonction-8d88e3fb.js",
     "imports": [
       "resources/js/app.ts",
-      "_Panel-4b55454d.js",
-      "_FormInput-672b0e41.js",
-      "_index-20b6e59e.js",
-      "_KeyboardDisplay-3b2f5394.js",
-      "_FormError-164a318e.js",
-      "_FormLabel-eef82139.js",
-      "_useKeyboard-b9c18eeb.js"
+      "_Panel-78cefc5c.js",
+      "_FormInput-7224ee33.js",
+      "_index-e6f55065.js",
+      "_KeyboardDisplay-d37be63c.js",
+      "_FormError-60c808f0.js",
+      "_FormLabel-9f172f77.js",
+      "_fraction-051d087d.js",
+      "_useKeyboard-c07cd214.js",
+      "_checkersConfig-04d77b02.js",
+      "_scolcours-4f54a458.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Components/Tools/evaluer-fonction.vue"
   },
   "resources/js/Components/Tools/graphe.vue": {
-    "file": "assets/graphe-72a92da6.js",
+    "file": "assets/graphe-736b771f.js",
     "imports": [
-      "_Panel-4b55454d.js",
-      "_FormTextarea-33a0c7e3.js",
-      "_PiDrawParser-e58d10cb.js",
-      "_FormInput-672b0e41.js",
+      "_Panel-78cefc5c.js",
+      "_FormTextarea-d21522be.js",
+      "_PiDrawParser-f5335967.js",
+      "_FormInput-7224ee33.js",
       "resources/js/app.ts",
-      "_FormError-164a318e.js",
-      "_FormLabel-eef82139.js",
-      "_index-2d2628cf.js",
-      "_Parser-fb89dac2.js",
-      "_material-ad9b3c1c.js",
-      "_index-20b6e59e.js"
+      "_FormError-60c808f0.js",
+      "_FormLabel-9f172f77.js",
+      "_index-e4a37cb5.js",
+      "_Parser-d4808822.js",
+      "_svg.esm-8b70f06e.js",
+      "_material-77c33a61.js",
+      "_index-e6f55065.js",
+      "_fraction-051d087d.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Components/Tools/graphe.vue"
   },
   "resources/js/Components/Tools/integrale.vue": {
-    "file": "assets/integrale-e852a013.js",
+    "file": "assets/integrale-9b9db7ab.js",
     "imports": [
-      "_Panel-4b55454d.js",
-      "_FormInput-672b0e41.js",
-      "_index-20b6e59e.js",
-      "_FormError-164a318e.js",
-      "_FormLabel-eef82139.js",
+      "_Panel-78cefc5c.js",
+      "_FormInput-7224ee33.js",
+      "_index-e6f55065.js",
+      "_FormError-60c808f0.js",
+      "_FormLabel-9f172f77.js",
+      "_fraction-051d087d.js",
       "resources/js/app.ts"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Components/Tools/integrale.vue"
   },
   "resources/js/Components/Tools/polynom-develop.vue": {
-    "file": "assets/polynom-develop-72bf26c2.js",
+    "file": "assets/polynom-develop-906ee53d.js",
     "imports": [
-      "_Panel-4b55454d.js",
-      "_FormInput-672b0e41.js",
-      "_index-20b6e59e.js",
+      "_Panel-78cefc5c.js",
+      "_FormInput-7224ee33.js",
+      "_index-e6f55065.js",
       "resources/js/app.ts",
-      "_FormError-164a318e.js",
-      "_FormLabel-eef82139.js"
+      "_FormError-60c808f0.js",
+      "_FormLabel-9f172f77.js",
+      "_fraction-051d087d.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Components/Tools/polynom-develop.vue"
   },
   "resources/js/Components/Tools/polynom-factorisation.vue": {
-    "file": "assets/polynom-factorisation-0cd248ea.js",
+    "file": "assets/polynom-factorisation-eb000c8b.js",
     "imports": [
-      "_Panel-4b55454d.js",
-      "_FormInput-672b0e41.js",
-      "_index-20b6e59e.js",
+      "_Panel-78cefc5c.js",
+      "_FormInput-7224ee33.js",
+      "_index-e6f55065.js",
       "resources/js/app.ts",
-      "_FormError-164a318e.js",
-      "_FormLabel-eef82139.js"
+      "_FormError-60c808f0.js",
+      "_FormLabel-9f172f77.js",
+      "_fraction-051d087d.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Components/Tools/polynom-factorisation.vue"
   },
   "resources/js/Components/Tools/quadratique.vue": {
-    "file": "assets/quadratique-162accdf.js",
+    "file": "assets/quadratique-7b6a4847.js",
     "imports": [
-      "_Panel-4b55454d.js",
-      "_FormInput-672b0e41.js",
-      "_index-20b6e59e.js",
+      "_Panel-78cefc5c.js",
+      "_FormInput-7224ee33.js",
+      "_index-e6f55065.js",
       "resources/js/app.ts",
-      "_FormError-164a318e.js",
-      "_FormLabel-eef82139.js"
+      "_FormError-60c808f0.js",
+      "_FormLabel-9f172f77.js",
+      "_fraction-051d087d.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Components/Tools/quadratique.vue"
   },
   "resources/js/Components/Tools/tableau-de-signes.vue": {
-    "file": "assets/tableau-de-signes-bfe53ffc.js",
+    "file": "assets/tableau-de-signes-1be194ab.js",
     "imports": [
       "resources/js/app.ts",
-      "_index-20b6e59e.js",
-      "_PiTableOfSigns-3415a1f6.js",
-      "_Panel-4b55454d.js",
-      "_FormInput-672b0e41.js",
-      "_FormButton-b2c15031.js",
-      "_FormSwitch-bd89b2a1.js",
-      "_FormError-164a318e.js",
-      "_FormLabel-eef82139.js",
-      "_UiSwitch-7d735904.js"
+      "_index-e6f55065.js",
+      "_PiTableOfSigns-5dd4c7fd.js",
+      "_Panel-78cefc5c.js",
+      "_FormInput-7224ee33.js",
+      "_FormButton-f924c193.js",
+      "_FormSwitch-1fb610d6.js",
+      "_fraction-051d087d.js",
+      "_FormError-60c808f0.js",
+      "_FormLabel-9f172f77.js",
+      "_UiSwitch-0f25dba7.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Components/Tools/tableau-de-signes.vue"
   },
   "resources/js/Components/Tools/tableau-des-valeurs.vue": {
-    "file": "assets/tableau-des-valeurs-2740c843.js",
+    "file": "assets/tableau-des-valeurs-e382cae1.js",
     "imports": [
       "resources/js/app.ts",
-      "_Panel-4b55454d.js",
-      "_FormInput-672b0e41.js",
-      "_index-20b6e59e.js",
-      "_polynom-5d268248.js",
-      "_KeyboardDisplay-3b2f5394.js",
-      "_FormError-164a318e.js",
-      "_FormLabel-eef82139.js",
-      "_useKeyboard-b9c18eeb.js"
+      "_Panel-78cefc5c.js",
+      "_FormInput-7224ee33.js",
+      "_index-e6f55065.js",
+      "_polynom-d910776e.js",
+      "_KeyboardDisplay-d37be63c.js",
+      "_FormError-60c808f0.js",
+      "_FormLabel-9f172f77.js",
+      "_fraction-051d087d.js",
+      "_useKeyboard-c07cd214.js",
+      "_checkersConfig-04d77b02.js",
+      "_scolcours-4f54a458.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Components/Tools/tableau-des-valeurs.vue"
   },
   "resources/js/Components/Tools/tangente-a-un-graphe.vue": {
-    "file": "assets/tangente-a-un-graphe-0b244068.js",
+    "file": "assets/tangente-a-un-graphe-46c236c1.js",
     "imports": [
-      "_Panel-4b55454d.js",
-      "_FormInput-672b0e41.js",
-      "_index-20b6e59e.js",
+      "_Panel-78cefc5c.js",
+      "_FormInput-7224ee33.js",
+      "_index-e6f55065.js",
       "resources/js/app.ts",
-      "_FormError-164a318e.js",
-      "_FormLabel-eef82139.js"
+      "_FormError-60c808f0.js",
+      "_FormLabel-9f172f77.js",
+      "_fraction-051d087d.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Components/Tools/tangente-a-un-graphe.vue"
   },
   "resources/js/Components/Tools/tangentes-a-un-cercle.vue": {
-    "file": "assets/tangentes-a-un-cercle-aa81cf34.js",
+    "file": "assets/tangentes-a-un-cercle-8583432f.js",
     "imports": [
-      "_Panel-4b55454d.js",
-      "_FormInput-672b0e41.js",
-      "_index-20b6e59e.js",
+      "_Panel-78cefc5c.js",
+      "_FormInput-7224ee33.js",
+      "_index-e6f55065.js",
       "resources/js/app.ts",
-      "_FormError-164a318e.js",
-      "_FormLabel-eef82139.js"
+      "_FormError-60c808f0.js",
+      "_FormLabel-9f172f77.js",
+      "_fraction-051d087d.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Components/Tools/tangentes-a-un-cercle.vue"
   },
   "resources/js/Components/Tools/triangle.vue": {
-    "file": "assets/triangle-2c44c02e.js",
+    "file": "assets/triangle-d113d9b6.js",
     "imports": [
-      "_Panel-4b55454d.js",
-      "_FormInput-672b0e41.js",
-      "_index-20b6e59e.js",
+      "_Panel-78cefc5c.js",
+      "_FormInput-7224ee33.js",
+      "_index-e6f55065.js",
       "resources/js/app.ts",
-      "_FormError-164a318e.js",
-      "_FormLabel-eef82139.js"
+      "_FormError-60c808f0.js",
+      "_FormLabel-9f172f77.js",
+      "_fraction-051d087d.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Components/Tools/triangle.vue"
   },
   "resources/js/Components/Tools/trigonometrie.vue": {
-    "file": "assets/trigonometrie-b761b523.js",
+    "file": "assets/trigonometrie-603de509.js",
     "imports": [
-      "_Panel-4b55454d.js",
-      "_FormInput-672b0e41.js",
+      "_Panel-78cefc5c.js",
+      "_FormInput-7224ee33.js",
       "resources/js/app.ts",
-      "_FormNumber-e756a072.js",
-      "_PiDrawParser-e58d10cb.js",
-      "_FormError-164a318e.js",
-      "_FormLabel-eef82139.js",
-      "_index-2d2628cf.js",
-      "_Parser-fb89dac2.js",
-      "_material-ad9b3c1c.js",
-      "_index-20b6e59e.js"
+      "_FormNumber-391834eb.js",
+      "_PiDrawParser-f5335967.js",
+      "_FormError-60c808f0.js",
+      "_FormLabel-9f172f77.js",
+      "_index-e4a37cb5.js",
+      "_Parser-d4808822.js",
+      "_svg.esm-8b70f06e.js",
+      "_material-77c33a61.js",
+      "_index-e6f55065.js",
+      "_fraction-051d087d.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Components/Tools/trigonometrie.vue"
   },
   "resources/js/Components/Tools/venn.vue": {
-    "file": "assets/venn-d3dfc554.js",
+    "file": "assets/venn-38272c74.js",
     "imports": [
-      "_Panel-4b55454d.js",
-      "_FormInput-672b0e41.js",
-      "_index-20b6e59e.js",
-      "_index-2d2628cf.js",
-      "_KeyboardDisplay-3b2f5394.js",
+      "_Panel-78cefc5c.js",
+      "_FormInput-7224ee33.js",
+      "_index-e6f55065.js",
+      "_index-e4a37cb5.js",
+      "_KeyboardDisplay-d37be63c.js",
       "resources/js/app.ts",
-      "_FormError-164a318e.js",
-      "_FormLabel-eef82139.js",
-      "_Parser-fb89dac2.js",
-      "_useKeyboard-b9c18eeb.js"
+      "_FormError-60c808f0.js",
+      "_FormLabel-9f172f77.js",
+      "_fraction-051d087d.js",
+      "_Parser-d4808822.js",
+      "_svg.esm-8b70f06e.js",
+      "_useKeyboard-c07cd214.js",
+      "_checkersConfig-04d77b02.js",
+      "_scolcours-4f54a458.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Components/Tools/venn.vue"
   },
   "resources/js/Pages/Admin/AdminConfig.vue": {
-    "file": "assets/AdminConfig-efbe2709.js",
+    "file": "assets/AdminConfig-cc3947fb.js",
     "imports": [
-      "_FormSwitch-bd89b2a1.js",
+      "_FormSwitch-1fb610d6.js",
       "resources/js/app.ts",
-      "_FormInput-672b0e41.js",
-      "_LayoutMain.vue_vue_type_script_setup_true_lang-8fcb0411.js",
-      "_FormError-164a318e.js",
-      "_UiSwitch-7d735904.js",
-      "_FormLabel-eef82139.js",
-      "_MainFooter-61badba9.js",
+      "_FormInput-7224ee33.js",
+      "_LayoutMain.vue_vue_type_script_setup_true_lang-3e5e8565.js",
+      "_FormError-60c808f0.js",
+      "_UiSwitch-0f25dba7.js",
+      "_FormLabel-9f172f77.js",
+      "_MainFooter-ea9aa75a.js",
       "__plugin-vue_export-helper-c27b6911.js",
-      "_DropdownMenu-083e1e91.js"
+      "_DropdownMenu-ce2cb4b8.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/Admin/AdminConfig.vue"
   },
   "resources/js/Pages/Admin/AdminDashboard.vue": {
-    "file": "assets/AdminDashboard-92ada71a.js",
+    "file": "assets/AdminDashboard-a03f6465.js",
     "imports": [
-      "_LayoutMain.vue_vue_type_script_setup_true_lang-8fcb0411.js",
+      "_LayoutMain.vue_vue_type_script_setup_true_lang-3e5e8565.js",
       "resources/js/app.ts",
-      "_MainFooter-61badba9.js",
+      "_MainFooter-ea9aa75a.js",
       "__plugin-vue_export-helper-c27b6911.js",
-      "_DropdownMenu-083e1e91.js"
+      "_DropdownMenu-ce2cb4b8.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/Admin/AdminDashboard.vue"
   },
   "resources/js/Pages/Admin/AdminIllustrations.vue": {
-    "file": "assets/AdminIllustrations-e11deac5.js",
+    "file": "assets/AdminIllustrations-3d795fb3.js",
     "imports": [
-      "_IllustrationShow-e0ddf4cc.js",
-      "_FormInput-672b0e41.js",
-      "_LayoutMain.vue_vue_type_script_setup_true_lang-8fcb0411.js",
+      "_IllustrationShow.vue_vue_type_script_setup_true_lang-7955ecb4.js",
+      "_FormInput-7224ee33.js",
+      "_LayoutMain.vue_vue_type_script_setup_true_lang-3e5e8565.js",
       "resources/js/app.ts",
-      "_PiDrawParser-e58d10cb.js",
-      "_index-2d2628cf.js",
-      "_Parser-fb89dac2.js",
-      "_material-ad9b3c1c.js",
-      "_index-20b6e59e.js",
-      "_FormError-164a318e.js",
-      "_FormLabel-eef82139.js",
-      "_MainFooter-61badba9.js",
+      "_PiDrawParser-f5335967.js",
+      "_index-e4a37cb5.js",
+      "_Parser-d4808822.js",
+      "_svg.esm-8b70f06e.js",
+      "_material-77c33a61.js",
+      "_index-e6f55065.js",
+      "_fraction-051d087d.js",
+      "_scolcours-4f54a458.js",
+      "_FormError-60c808f0.js",
+      "_FormLabel-9f172f77.js",
+      "_MainFooter-ea9aa75a.js",
       "__plugin-vue_export-helper-c27b6911.js",
-      "_DropdownMenu-083e1e91.js"
+      "_DropdownMenu-ce2cb4b8.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/Admin/AdminIllustrations.vue"
   },
   "resources/js/Pages/Admin/AdminPagesShow.vue": {
-    "file": "assets/AdminPagesShow-751502ac.js",
+    "file": "assets/AdminPagesShow-80ec6254.js",
     "imports": [
-      "_Panel-4b55454d.js",
+      "_Panel-78cefc5c.js",
       "resources/js/app.ts",
-      "_FormInput-672b0e41.js",
-      "_LayoutMain.vue_vue_type_script_setup_true_lang-8fcb0411.js",
-      "_FormError-164a318e.js",
-      "_FormLabel-eef82139.js",
-      "_MainFooter-61badba9.js",
+      "_FormInput-7224ee33.js",
+      "_LayoutMain.vue_vue_type_script_setup_true_lang-3e5e8565.js",
+      "_FormError-60c808f0.js",
+      "_FormLabel-9f172f77.js",
+      "_MainFooter-ea9aa75a.js",
       "__plugin-vue_export-helper-c27b6911.js",
-      "_DropdownMenu-083e1e91.js"
+      "_DropdownMenu-ce2cb4b8.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/Admin/AdminPagesShow.vue"
   },
   "resources/js/Pages/Admin/AdminStatsShow.vue": {
-    "file": "assets/AdminStatsShow-f453bbc1.js",
+    "file": "assets/AdminStatsShow-a49d6bc8.js",
     "imports": [
       "resources/js/app.ts",
-      "_LayoutMain.vue_vue_type_script_setup_true_lang-8fcb0411.js",
-      "_MainFooter-61badba9.js",
+      "_LayoutMain.vue_vue_type_script_setup_true_lang-3e5e8565.js",
+      "_MainFooter-ea9aa75a.js",
       "__plugin-vue_export-helper-c27b6911.js",
-      "_DropdownMenu-083e1e91.js"
+      "_DropdownMenu-ce2cb4b8.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/Admin/AdminStatsShow.vue"
   },
   "resources/js/Pages/Admin/AdminUsersShow.vue": {
-    "file": "assets/AdminUsersShow-b5618977.js",
+    "file": "assets/AdminUsersShow-0569d4f5.js",
     "imports": [
       "resources/js/app.ts",
-      "_FormInput-672b0e41.js",
-      "_FormSwitch-bd89b2a1.js",
-      "_ConfirmButton-da3cf975.js",
-      "_LayoutMain.vue_vue_type_script_setup_true_lang-8fcb0411.js",
-      "_FormError-164a318e.js",
-      "_FormLabel-eef82139.js",
-      "_UiSwitch-7d735904.js",
-      "_MainFooter-61badba9.js",
+      "_FormInput-7224ee33.js",
+      "_FormSwitch-1fb610d6.js",
+      "_ConfirmButton-803a1e6e.js",
+      "_LayoutMain.vue_vue_type_script_setup_true_lang-3e5e8565.js",
+      "_FormError-60c808f0.js",
+      "_FormLabel-9f172f77.js",
+      "_UiSwitch-0f25dba7.js",
+      "_MainFooter-ea9aa75a.js",
       "__plugin-vue_export-helper-c27b6911.js",
-      "_DropdownMenu-083e1e91.js"
+      "_DropdownMenu-ce2cb4b8.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/Admin/AdminUsersShow.vue"
   },
   "resources/js/Pages/Auth/ConfirmPassword.vue": {
-    "file": "assets/ConfirmPassword-ef0ec57a.js",
+    "file": "assets/ConfirmPassword-059a0ae6.js",
     "imports": [
-      "_LayoutGuest-16a4c416.js",
-      "_ValidationErrors-161002ff.js",
+      "_LayoutGuest-c5fcaf6b.js",
+      "_ValidationErrors-7df241c1.js",
       "resources/js/app.ts",
       "__plugin-vue_export-helper-c27b6911.js",
-      "_ScolcoursLogo-1e6f1188.js"
+      "_ScolcoursLogo-a9cb34bb.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/Auth/ConfirmPassword.vue"
   },
   "resources/js/Pages/Auth/ForgotPassword.vue": {
-    "file": "assets/ForgotPassword-4279682f.js",
+    "file": "assets/ForgotPassword-19cd170d.js",
     "imports": [
-      "_LayoutGuest-16a4c416.js",
-      "_ValidationErrors-161002ff.js",
+      "_LayoutGuest-c5fcaf6b.js",
+      "_ValidationErrors-7df241c1.js",
       "resources/js/app.ts",
       "__plugin-vue_export-helper-c27b6911.js",
-      "_ScolcoursLogo-1e6f1188.js"
+      "_ScolcoursLogo-a9cb34bb.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/Auth/ForgotPassword.vue"
   },
   "resources/js/Pages/Auth/Login.vue": {
-    "file": "assets/Login-fa6e8b61.js",
+    "file": "assets/Login-4ddd46da.js",
     "imports": [
-      "_LayoutGuest-16a4c416.js",
+      "_LayoutGuest-c5fcaf6b.js",
       "resources/js/app.ts",
       "__plugin-vue_export-helper-c27b6911.js",
-      "_ValidationErrors-161002ff.js",
-      "_FormInput-672b0e41.js",
-      "_FormButton-b2c15031.js",
-      "_ScolcoursLogo-1e6f1188.js",
-      "_FormError-164a318e.js",
-      "_FormLabel-eef82139.js"
+      "_ValidationErrors-7df241c1.js",
+      "_FormInput-7224ee33.js",
+      "_FormButton-f924c193.js",
+      "_ScolcoursLogo-a9cb34bb.js",
+      "_FormError-60c808f0.js",
+      "_FormLabel-9f172f77.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/Auth/Login.vue"
   },
   "resources/js/Pages/Auth/Register.vue": {
-    "file": "assets/Register-b19fa9bc.js",
+    "file": "assets/Register-045f8164.js",
     "imports": [
-      "_LayoutGuest-16a4c416.js",
-      "_ValidationErrors-161002ff.js",
+      "_LayoutGuest-c5fcaf6b.js",
+      "_ValidationErrors-7df241c1.js",
       "resources/js/app.ts",
       "__plugin-vue_export-helper-c27b6911.js",
-      "_ScolcoursLogo-1e6f1188.js"
+      "_ScolcoursLogo-a9cb34bb.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/Auth/Register.vue"
   },
   "resources/js/Pages/Auth/ResetPassword.vue": {
-    "file": "assets/ResetPassword-7b1d75e6.js",
+    "file": "assets/ResetPassword-2b46171f.js",
     "imports": [
-      "_LayoutGuest-16a4c416.js",
-      "_ValidationErrors-161002ff.js",
+      "_LayoutGuest-c5fcaf6b.js",
+      "_ValidationErrors-7df241c1.js",
       "resources/js/app.ts",
       "__plugin-vue_export-helper-c27b6911.js",
-      "_ScolcoursLogo-1e6f1188.js"
+      "_ScolcoursLogo-a9cb34bb.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/Auth/ResetPassword.vue"
   },
   "resources/js/Pages/Auth/VerifyEmail.vue": {
-    "file": "assets/VerifyEmail-8b14e276.js",
+    "file": "assets/VerifyEmail-109cc64b.js",
     "imports": [
-      "_LayoutGuest-16a4c416.js",
+      "_LayoutGuest-c5fcaf6b.js",
       "resources/js/app.ts",
       "__plugin-vue_export-helper-c27b6911.js",
-      "_ScolcoursLogo-1e6f1188.js"
+      "_ScolcoursLogo-a9cb34bb.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/Auth/VerifyEmail.vue"
   },
   "resources/js/Pages/Challenges/ChallengeEditPage.vue": {
-    "file": "assets/ChallengeEditPage-958b3810.js",
+    "css": [
+      "assets/FormCodearea-5fd23f65.css"
+    ],
+    "file": "assets/ChallengeEditPage-4b8ede7b.js",
     "imports": [
       "resources/js/Components/Challenges/ChallengeForm.vue",
-      "_LayoutMain.vue_vue_type_script_setup_true_lang-8fcb0411.js",
+      "_LayoutMain.vue_vue_type_script_setup_true_lang-3e5e8565.js",
       "resources/js/app.ts",
-      "_ConfirmButton-da3cf975.js",
-      "_FormInput-672b0e41.js",
-      "_FormError-164a318e.js",
-      "_FormLabel-eef82139.js",
-      "_FormTextarea-33a0c7e3.js",
-      "_FormIllustration-4a0c0fbf.js",
-      "_MarkdownIt-462c8cb5.js",
-      "_texmath-4cb66d6f.js",
-      "_Parser-fb89dac2.js",
-      "_FormSwitch-bd89b2a1.js",
-      "_UiSwitch-7d735904.js",
-      "_FormNumber-e756a072.js",
-      "_index-20b6e59e.js",
-      "_FormCodearea-8548d74f.js",
-      "_FormCodearea.vue_vue_type_style_index_0_scoped_c558357e_lang-10a23a7b.js",
+      "_ConfirmButton-803a1e6e.js",
+      "_FormInput-7224ee33.js",
+      "_FormError-60c808f0.js",
+      "_FormLabel-9f172f77.js",
+      "_FormTextarea-d21522be.js",
+      "_FormIllustration-0d12a4cd.js",
+      "_MarkdownIt-fb2bd3e9.js",
+      "_texmath-59529073.js",
+      "_Parser-d4808822.js",
+      "_svg.esm-8b70f06e.js",
+      "_FormSwitch-1fb610d6.js",
+      "_UiSwitch-0f25dba7.js",
+      "_FormNumber-391834eb.js",
+      "_index-e6f55065.js",
+      "_fraction-051d087d.js",
+      "_FormCodearea-5ca9ffc2.js",
+      "_prism-json-dee24e93.js",
       "__plugin-vue_export-helper-c27b6911.js",
-      "_useGenerators-81be8fa1.js",
-      "_FormSelect-aaa69ad9.js",
-      "_MainFooter-61badba9.js",
-      "_DropdownMenu-083e1e91.js"
+      "_useGenerators-94bf9eba.js",
+      "_FormSelect-c234966d.js",
+      "_MainFooter-ea9aa75a.js",
+      "_DropdownMenu-ce2cb4b8.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/Challenges/ChallengeEditPage.vue"
   },
   "resources/js/Pages/Challenges/ChallengesIndex.vue": {
-    "file": "assets/ChallengesIndex-397c2cf6.js",
+    "file": "assets/ChallengesIndex-726d2419.js",
     "imports": [
-      "_FormInput-672b0e41.js",
-      "_LayoutMain.vue_vue_type_script_setup_true_lang-8fcb0411.js",
+      "_FormInput-7224ee33.js",
+      "_LayoutMain.vue_vue_type_script_setup_true_lang-3e5e8565.js",
       "resources/js/app.ts",
-      "_FormError-164a318e.js",
-      "_FormLabel-eef82139.js",
-      "_MainFooter-61badba9.js",
+      "_FormError-60c808f0.js",
+      "_FormLabel-9f172f77.js",
+      "_MainFooter-ea9aa75a.js",
       "__plugin-vue_export-helper-c27b6911.js",
-      "_DropdownMenu-083e1e91.js"
+      "_DropdownMenu-ce2cb4b8.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/Challenges/ChallengesIndex.vue"
@@ -1119,51 +1469,58 @@
     "dynamicImports": [
       "resources/js/Components/Challenges/ChallengeForm.vue"
     ],
-    "file": "assets/ChallengesPage-86a4affc.js",
+    "file": "assets/ChallengesPage-6b6245c1.js",
     "imports": [
-      "_index-20b6e59e.js",
+      "_index-e6f55065.js",
       "resources/js/app.ts",
-      "_IllustrationShow-e0ddf4cc.js",
-      "_MarkdownIt-462c8cb5.js",
-      "_FormInput-672b0e41.js",
-      "_useGenerators-81be8fa1.js",
-      "_QuestionShow-29d08a56.js",
-      "_LayoutMain.vue_vue_type_script_setup_true_lang-8fcb0411.js",
-      "_PiDrawParser-e58d10cb.js",
-      "_index-2d2628cf.js",
-      "_Parser-fb89dac2.js",
-      "_material-ad9b3c1c.js",
-      "_texmath-4cb66d6f.js",
-      "_FormError-164a318e.js",
-      "_FormLabel-eef82139.js",
-      "_useKeyboard-b9c18eeb.js",
-      "_DropdownMenu-083e1e91.js",
-      "_MainFooter-61badba9.js",
+      "_IllustrationShow.vue_vue_type_script_setup_true_lang-7955ecb4.js",
+      "_MarkdownIt-fb2bd3e9.js",
+      "_FormInput-7224ee33.js",
+      "_useGenerators-94bf9eba.js",
+      "_QuestionShow-a5c88a4e.js",
+      "_LayoutMain.vue_vue_type_script_setup_true_lang-3e5e8565.js",
+      "_fraction-051d087d.js",
+      "_PiDrawParser-f5335967.js",
+      "_index-e4a37cb5.js",
+      "_Parser-d4808822.js",
+      "_svg.esm-8b70f06e.js",
+      "_material-77c33a61.js",
+      "_scolcours-4f54a458.js",
+      "_texmath-59529073.js",
+      "_FormError-60c808f0.js",
+      "_FormLabel-9f172f77.js",
+      "_useKeyboard-c07cd214.js",
+      "_checkersConfig-04d77b02.js",
+      "_DropdownMenu-ce2cb4b8.js",
+      "_MainFooter-ea9aa75a.js",
       "__plugin-vue_export-helper-c27b6911.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/Challenges/ChallengesPage.vue"
   },
   "resources/js/Pages/Chapters/ChapterIndex.vue": {
-    "file": "assets/ChapterIndex-0eec65ec.js",
+    "file": "assets/ChapterIndex-9bc1a262.js",
     "imports": [
       "resources/js/app.ts",
-      "_ArticleTitle-9245a16f.js",
-      "_FormInput-672b0e41.js",
-      "_DialogModal-96fb7f8f.js",
-      "_FormButton-b2c15031.js",
-      "_IllustrationShow-e0ddf4cc.js",
-      "_LayoutMain.vue_vue_type_script_setup_true_lang-8fcb0411.js",
-      "_FormError-164a318e.js",
-      "_FormLabel-eef82139.js",
-      "_PiDrawParser-e58d10cb.js",
-      "_index-2d2628cf.js",
-      "_Parser-fb89dac2.js",
-      "_material-ad9b3c1c.js",
-      "_index-20b6e59e.js",
-      "_MainFooter-61badba9.js",
+      "_ArticleTitle-e813f343.js",
+      "_FormInput-7224ee33.js",
+      "_DialogModal-f8fda5e0.js",
+      "_FormButton-f924c193.js",
+      "_IllustrationShow.vue_vue_type_script_setup_true_lang-7955ecb4.js",
+      "_LayoutMain.vue_vue_type_script_setup_true_lang-3e5e8565.js",
+      "_FormError-60c808f0.js",
+      "_FormLabel-9f172f77.js",
+      "_PiDrawParser-f5335967.js",
+      "_index-e4a37cb5.js",
+      "_Parser-d4808822.js",
+      "_svg.esm-8b70f06e.js",
+      "_material-77c33a61.js",
+      "_index-e6f55065.js",
+      "_fraction-051d087d.js",
+      "_scolcours-4f54a458.js",
+      "_MainFooter-ea9aa75a.js",
       "__plugin-vue_export-helper-c27b6911.js",
-      "_DropdownMenu-083e1e91.js"
+      "_DropdownMenu-ce2cb4b8.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/Chapters/ChapterIndex.vue"
@@ -1172,32 +1529,34 @@
     "dynamicImports": [
       "resources/js/Components/Chapters/ChapterForm.vue"
     ],
-    "file": "assets/ChapterIntro-e6b25b3e.js",
+    "file": "assets/ChapterIntro-4184914e.js",
     "imports": [
       "resources/js/app.ts",
-      "_ChapterToc-2c2f26a8.js",
-      "_ChapterChallenges-32d73c72.js",
-      "_ChapterFormulas-e891f1ef.js",
-      "_LayoutMain.vue_vue_type_script_setup_true_lang-8fcb0411.js",
-      "_FormSwitch-bd89b2a1.js",
-      "_FormError-164a318e.js",
-      "_UiSwitch-7d735904.js",
-      "_DialogModal-96fb7f8f.js",
-      "_FormInput-672b0e41.js",
-      "_FormLabel-eef82139.js",
-      "_FormButton-b2c15031.js",
-      "_MarkdownIt-462c8cb5.js",
-      "_texmath-4cb66d6f.js",
-      "_IllustrationShow-e0ddf4cc.js",
-      "_PiDrawParser-e58d10cb.js",
-      "_index-2d2628cf.js",
-      "_Parser-fb89dac2.js",
-      "_material-ad9b3c1c.js",
-      "_index-20b6e59e.js",
-      "_scolcours-7b394fc8.js",
-      "_MainFooter-61badba9.js",
+      "_ChapterToc-a6548c30.js",
+      "_ChapterChallenges-cb6a7d50.js",
+      "_ChapterFormulas-a337feba.js",
+      "_LayoutMain.vue_vue_type_script_setup_true_lang-3e5e8565.js",
+      "_FormSwitch-1fb610d6.js",
+      "_FormError-60c808f0.js",
+      "_UiSwitch-0f25dba7.js",
+      "_DialogModal-f8fda5e0.js",
+      "_FormInput-7224ee33.js",
+      "_FormLabel-9f172f77.js",
+      "_FormButton-f924c193.js",
+      "_MarkdownIt-fb2bd3e9.js",
+      "_texmath-59529073.js",
+      "_IllustrationShow.vue_vue_type_script_setup_true_lang-7955ecb4.js",
+      "_PiDrawParser-f5335967.js",
+      "_index-e4a37cb5.js",
+      "_Parser-d4808822.js",
+      "_svg.esm-8b70f06e.js",
+      "_material-77c33a61.js",
+      "_index-e6f55065.js",
+      "_fraction-051d087d.js",
+      "_scolcours-4f54a458.js",
+      "_MainFooter-ea9aa75a.js",
       "__plugin-vue_export-helper-c27b6911.js",
-      "_DropdownMenu-083e1e91.js"
+      "_DropdownMenu-ce2cb4b8.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/Chapters/ChapterIntro.vue"
@@ -1206,216 +1565,239 @@
     "dynamicImports": [
       "resources/js/Components/Chapters/ChapterForm.vue"
     ],
-    "file": "assets/ChapterPage-197346d9.js",
+    "file": "assets/ChapterPage-d06da264.js",
     "imports": [
       "resources/js/app.ts",
-      "_PostShow.vue_vue_type_script_setup_true_lang-3ea35967.js",
-      "_ChapterChallenges-32d73c72.js",
-      "_ChapterFormulas-e891f1ef.js",
-      "_LayoutMain.vue_vue_type_script_setup_true_lang-8fcb0411.js",
-      "_index-20b6e59e.js",
-      "_UiSwitch-7d735904.js",
-      "_QuestionsIndex-a58fb5e4.js",
-      "_QuestionShow-29d08a56.js",
-      "_IllustrationShow-e0ddf4cc.js",
-      "_PiDrawParser-e58d10cb.js",
-      "_index-2d2628cf.js",
-      "_Parser-fb89dac2.js",
-      "_material-ad9b3c1c.js",
-      "_MarkdownIt-462c8cb5.js",
-      "_texmath-4cb66d6f.js",
-      "_useKeyboard-b9c18eeb.js",
-      "_DropdownMenu-083e1e91.js",
-      "_DialogModal-96fb7f8f.js",
-      "_FormInput-672b0e41.js",
-      "_FormError-164a318e.js",
-      "_FormLabel-eef82139.js",
-      "_FormButton-b2c15031.js",
-      "_scolcours-7b394fc8.js",
-      "_MainFooter-61badba9.js",
+      "_PostShow.vue_vue_type_script_setup_true_lang-a4cf09b6.js",
+      "_ChapterChallenges-cb6a7d50.js",
+      "_ChapterFormulas-a337feba.js",
+      "_LayoutMain.vue_vue_type_script_setup_true_lang-3e5e8565.js",
+      "_index-e6f55065.js",
+      "_fraction-051d087d.js",
+      "_UiSwitch-0f25dba7.js",
+      "_QuestionsIndex-0b703e35.js",
+      "_QuestionShow-a5c88a4e.js",
+      "_IllustrationShow.vue_vue_type_script_setup_true_lang-7955ecb4.js",
+      "_PiDrawParser-f5335967.js",
+      "_index-e4a37cb5.js",
+      "_Parser-d4808822.js",
+      "_svg.esm-8b70f06e.js",
+      "_material-77c33a61.js",
+      "_scolcours-4f54a458.js",
+      "_MarkdownIt-fb2bd3e9.js",
+      "_texmath-59529073.js",
+      "_useKeyboard-c07cd214.js",
+      "_checkersConfig-04d77b02.js",
+      "_DropdownMenu-ce2cb4b8.js",
+      "_DialogModal-f8fda5e0.js",
+      "_FormInput-7224ee33.js",
+      "_FormError-60c808f0.js",
+      "_FormLabel-9f172f77.js",
+      "_FormButton-f924c193.js",
+      "_MainFooter-ea9aa75a.js",
       "__plugin-vue_export-helper-c27b6911.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/Chapters/ChapterPage.vue"
   },
   "resources/js/Pages/Chapters/ChapterSlide.vue": {
-    "file": "assets/ChapterSlide-f6242b5c.js",
+    "file": "assets/ChapterSlide-ac974f2c.js",
     "imports": [
-      "_PostShow.vue_vue_type_script_setup_true_lang-3ea35967.js",
-      "_ChapterToc-2c2f26a8.js",
+      "_PostShow.vue_vue_type_script_setup_true_lang-a4cf09b6.js",
+      "_ChapterToc-a6548c30.js",
       "resources/js/app.ts",
-      "_ChapterFormulas-e891f1ef.js",
-      "_LayoutMain.vue_vue_type_script_setup_true_lang-8fcb0411.js",
-      "_index-20b6e59e.js",
-      "_UiSwitch-7d735904.js",
-      "_QuestionsIndex-a58fb5e4.js",
-      "_QuestionShow-29d08a56.js",
-      "_IllustrationShow-e0ddf4cc.js",
-      "_PiDrawParser-e58d10cb.js",
-      "_index-2d2628cf.js",
-      "_Parser-fb89dac2.js",
-      "_material-ad9b3c1c.js",
-      "_MarkdownIt-462c8cb5.js",
-      "_texmath-4cb66d6f.js",
-      "_useKeyboard-b9c18eeb.js",
-      "_DropdownMenu-083e1e91.js",
-      "_FormSwitch-bd89b2a1.js",
-      "_FormError-164a318e.js",
-      "_scolcours-7b394fc8.js",
-      "_MainFooter-61badba9.js",
+      "_ChapterFormulas-a337feba.js",
+      "_LayoutMain.vue_vue_type_script_setup_true_lang-3e5e8565.js",
+      "_index-e6f55065.js",
+      "_fraction-051d087d.js",
+      "_UiSwitch-0f25dba7.js",
+      "_QuestionsIndex-0b703e35.js",
+      "_QuestionShow-a5c88a4e.js",
+      "_IllustrationShow.vue_vue_type_script_setup_true_lang-7955ecb4.js",
+      "_PiDrawParser-f5335967.js",
+      "_index-e4a37cb5.js",
+      "_Parser-d4808822.js",
+      "_svg.esm-8b70f06e.js",
+      "_material-77c33a61.js",
+      "_scolcours-4f54a458.js",
+      "_MarkdownIt-fb2bd3e9.js",
+      "_texmath-59529073.js",
+      "_useKeyboard-c07cd214.js",
+      "_checkersConfig-04d77b02.js",
+      "_DropdownMenu-ce2cb4b8.js",
+      "_FormSwitch-1fb610d6.js",
+      "_FormError-60c808f0.js",
+      "_MainFooter-ea9aa75a.js",
       "__plugin-vue_export-helper-c27b6911.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/Chapters/ChapterSlide.vue"
   },
   "resources/js/Pages/DashboardPage.vue": {
-    "file": "assets/DashboardPage-d2181635.js",
+    "file": "assets/DashboardPage-a92c8de2.js",
     "imports": [
-      "_ArticleTitle-9245a16f.js",
-      "_LayoutMain.vue_vue_type_script_setup_true_lang-8fcb0411.js",
+      "_ArticleTitle-e813f343.js",
+      "_LayoutMain.vue_vue_type_script_setup_true_lang-3e5e8565.js",
       "resources/js/app.ts",
-      "_MainFooter-61badba9.js",
+      "_MainFooter-ea9aa75a.js",
       "__plugin-vue_export-helper-c27b6911.js",
-      "_DropdownMenu-083e1e91.js"
+      "_DropdownMenu-ce2cb4b8.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/DashboardPage.vue"
   },
   "resources/js/Pages/Devs/DevsIndex.vue": {
-    "file": "assets/DevsIndex-c0f9143f.js",
+    "file": "assets/DevsIndex-15993ede.js",
     "imports": [
-      "_FormInput-672b0e41.js",
-      "_ArticleTitle-9245a16f.js",
+      "_FormInput-7224ee33.js",
+      "_ArticleTitle-e813f343.js",
       "resources/js/app.ts",
-      "_LayoutMain.vue_vue_type_script_setup_true_lang-8fcb0411.js",
-      "_FormError-164a318e.js",
-      "_FormLabel-eef82139.js",
-      "_MainFooter-61badba9.js",
+      "_LayoutMain.vue_vue_type_script_setup_true_lang-3e5e8565.js",
+      "_FormError-60c808f0.js",
+      "_FormLabel-9f172f77.js",
+      "_MainFooter-ea9aa75a.js",
       "__plugin-vue_export-helper-c27b6911.js",
-      "_DropdownMenu-083e1e91.js"
+      "_DropdownMenu-ce2cb4b8.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/Devs/DevsIndex.vue"
   },
   "resources/js/Pages/Devs/DevsShow.vue": {
-    "file": "assets/DevsShow-c9b2b142.js",
+    "file": "assets/DevsShow-065c0601.js",
     "imports": [
+      "_scolcours-4f54a458.js",
+      "_LayoutMain.vue_vue_type_script_setup_true_lang-3e5e8565.js",
       "resources/js/app.ts",
-      "_LayoutMain.vue_vue_type_script_setup_true_lang-8fcb0411.js",
-      "_MainFooter-61badba9.js",
+      "_MainFooter-ea9aa75a.js",
       "__plugin-vue_export-helper-c27b6911.js",
-      "_DropdownMenu-083e1e91.js"
+      "_DropdownMenu-ce2cb4b8.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/Devs/DevsShow.vue"
   },
   "resources/js/Pages/Devs/Edit/BlockEditPage.vue": {
-    "file": "assets/BlockEditPage-fa26df85.js",
+    "css": [
+      "assets/FormCodearea-5fd23f65.css"
+    ],
+    "file": "assets/BlockEditPage-5b87953a.js",
     "imports": [
       "resources/js/Components/Posts/Blocks/BlockForm.vue",
-      "_LayoutMain.vue_vue_type_script_setup_true_lang-8fcb0411.js",
+      "_LayoutMain.vue_vue_type_script_setup_true_lang-3e5e8565.js",
       "resources/js/app.ts",
-      "_FormTextarea-33a0c7e3.js",
-      "_FormError-164a318e.js",
-      "_FormLabel-eef82139.js",
-      "_FormSwitch-bd89b2a1.js",
-      "_UiSwitch-7d735904.js",
-      "_FormNumber-e756a072.js",
-      "_MarkdownIt-462c8cb5.js",
-      "_texmath-4cb66d6f.js",
-      "_DialogModal-96fb7f8f.js",
-      "_ConfirmButton-da3cf975.js",
-      "_index-20b6e59e.js",
-      "_scolcours-7b394fc8.js",
-      "_FormCodearea-8548d74f.js",
-      "_FormCodearea.vue_vue_type_style_index_0_scoped_c558357e_lang-10a23a7b.js",
+      "_FormTextarea-d21522be.js",
+      "_FormError-60c808f0.js",
+      "_FormLabel-9f172f77.js",
+      "_FormSwitch-1fb610d6.js",
+      "_UiSwitch-0f25dba7.js",
+      "_FormNumber-391834eb.js",
+      "_MarkdownIt-fb2bd3e9.js",
+      "_texmath-59529073.js",
+      "_DialogModal-f8fda5e0.js",
+      "_ConfirmButton-803a1e6e.js",
+      "_index-e6f55065.js",
+      "_fraction-051d087d.js",
+      "_scolcours-4f54a458.js",
+      "_FormCodearea-5ca9ffc2.js",
+      "_prism-json-dee24e93.js",
       "__plugin-vue_export-helper-c27b6911.js",
-      "_moveTo-e81e81ac.js",
-      "_FormInput-672b0e41.js",
-      "_MainFooter-61badba9.js",
-      "_DropdownMenu-083e1e91.js"
+      "_moveTo-59192c97.js",
+      "_FormInput-7224ee33.js",
+      "_MainFooter-ea9aa75a.js",
+      "_DropdownMenu-ce2cb4b8.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/Devs/Edit/BlockEditPage.vue"
   },
   "resources/js/Pages/Devs/Edit/PostEditPage.vue": {
-    "file": "assets/PostEditPage-ebb268c5.js",
+    "css": [
+      "assets/FormCodearea-5fd23f65.css"
+    ],
+    "file": "assets/PostEditPage-bb1afe97.js",
     "imports": [
-      "_FormInput-672b0e41.js",
-      "_FormCodearea.vue_vue_type_style_index_0_scoped_c558357e_lang-10a23a7b.js",
-      "_index-2d2628cf.js",
-      "_material-ad9b3c1c.js",
-      "_index-20b6e59e.js",
+      "_FormInput-7224ee33.js",
+      "_prism-json-dee24e93.js",
+      "_index-e4a37cb5.js",
+      "_material-77c33a61.js",
+      "_index-e6f55065.js",
       "resources/js/app.ts",
-      "_texmath-4cb66d6f.js",
+      "_texmath-59529073.js",
       "resources/js/Components/Posts/PostForm.vue",
-      "_LayoutMain.vue_vue_type_script_setup_true_lang-8fcb0411.js",
-      "_FormError-164a318e.js",
-      "_FormLabel-eef82139.js",
-      "_Parser-fb89dac2.js",
-      "_FormTextarea-33a0c7e3.js",
-      "_DialogModal-96fb7f8f.js",
-      "_ConfirmButton-da3cf975.js",
-      "_moveTo-e81e81ac.js",
-      "_MainFooter-61badba9.js",
+      "_LayoutMain.vue_vue_type_script_setup_true_lang-3e5e8565.js",
+      "_FormError-60c808f0.js",
+      "_FormLabel-9f172f77.js",
+      "_Parser-d4808822.js",
+      "_svg.esm-8b70f06e.js",
+      "_fraction-051d087d.js",
+      "_FormTextarea-d21522be.js",
+      "_DialogModal-f8fda5e0.js",
+      "_ConfirmButton-803a1e6e.js",
+      "_moveTo-59192c97.js",
+      "_MainFooter-ea9aa75a.js",
       "__plugin-vue_export-helper-c27b6911.js",
-      "_DropdownMenu-083e1e91.js"
+      "_DropdownMenu-ce2cb4b8.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/Devs/Edit/PostEditPage.vue"
   },
   "resources/js/Pages/Devs/Edit/QuestionEditPage.vue": {
-    "file": "assets/QuestionEditPage-caa6dd5a.js",
+    "css": [
+      "assets/FormCodearea-5fd23f65.css"
+    ],
+    "file": "assets/QuestionEditPage-c7705614.js",
     "imports": [
       "resources/js/Components/Posts/Questions/QuestionForm.vue",
-      "_LayoutMain.vue_vue_type_script_setup_true_lang-8fcb0411.js",
+      "_LayoutMain.vue_vue_type_script_setup_true_lang-3e5e8565.js",
       "resources/js/app.ts",
-      "_FormTextarea-33a0c7e3.js",
-      "_FormError-164a318e.js",
-      "_FormLabel-eef82139.js",
-      "_FormInput-672b0e41.js",
-      "_DialogModal-96fb7f8f.js",
-      "_ConfirmButton-da3cf975.js",
-      "_FormCodearea-8548d74f.js",
-      "_FormCodearea.vue_vue_type_style_index_0_scoped_c558357e_lang-10a23a7b.js",
+      "_FormTextarea-d21522be.js",
+      "_FormError-60c808f0.js",
+      "_FormLabel-9f172f77.js",
+      "_FormInput-7224ee33.js",
+      "_DialogModal-f8fda5e0.js",
+      "_ConfirmButton-803a1e6e.js",
+      "_FormCodearea-5ca9ffc2.js",
+      "_prism-json-dee24e93.js",
       "__plugin-vue_export-helper-c27b6911.js",
-      "_QuestionShow-29d08a56.js",
-      "_IllustrationShow-e0ddf4cc.js",
-      "_PiDrawParser-e58d10cb.js",
-      "_index-2d2628cf.js",
-      "_Parser-fb89dac2.js",
-      "_material-ad9b3c1c.js",
-      "_index-20b6e59e.js",
-      "_MarkdownIt-462c8cb5.js",
-      "_texmath-4cb66d6f.js",
-      "_useKeyboard-b9c18eeb.js",
-      "_DropdownMenu-083e1e91.js",
-      "_MainFooter-61badba9.js"
+      "_QuestionShow-a5c88a4e.js",
+      "_IllustrationShow.vue_vue_type_script_setup_true_lang-7955ecb4.js",
+      "_PiDrawParser-f5335967.js",
+      "_index-e4a37cb5.js",
+      "_Parser-d4808822.js",
+      "_svg.esm-8b70f06e.js",
+      "_material-77c33a61.js",
+      "_index-e6f55065.js",
+      "_fraction-051d087d.js",
+      "_scolcours-4f54a458.js",
+      "_MarkdownIt-fb2bd3e9.js",
+      "_texmath-59529073.js",
+      "_useKeyboard-c07cd214.js",
+      "_checkersConfig-04d77b02.js",
+      "_DropdownMenu-ce2cb4b8.js",
+      "_MainFooter-ea9aa75a.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/Devs/Edit/QuestionEditPage.vue"
   },
   "resources/js/Pages/Error404.vue": {
-    "file": "assets/Error404-8b7fd4c4.js",
+    "file": "assets/Error404-70f418d0.js",
     "imports": [
-      "_ArticleTitle-9245a16f.js",
-      "_LayoutMain.vue_vue_type_script_setup_true_lang-8fcb0411.js",
+      "_ArticleTitle-e813f343.js",
+      "_LayoutMain.vue_vue_type_script_setup_true_lang-3e5e8565.js",
       "resources/js/app.ts",
-      "_MainFooter-61badba9.js",
+      "_MainFooter-ea9aa75a.js",
       "__plugin-vue_export-helper-c27b6911.js",
-      "_DropdownMenu-083e1e91.js"
+      "_DropdownMenu-ce2cb4b8.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/Error404.vue"
   },
   "resources/js/Pages/ErrorPage.vue": {
-    "file": "assets/ErrorPage-ef3cd4c0.js",
+    "file": "assets/ErrorPage-8fccd904.js",
     "imports": [
-      "_LayoutMain.vue_vue_type_script_setup_true_lang-8fcb0411.js",
+      "_LayoutMain.vue_vue_type_script_setup_true_lang-3e5e8565.js",
       "resources/js/app.ts",
-      "_MainFooter-61badba9.js",
+      "_MainFooter-ea9aa75a.js",
       "__plugin-vue_export-helper-c27b6911.js",
-      "_DropdownMenu-083e1e91.js"
+      "_DropdownMenu-ce2cb4b8.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/ErrorPage.vue"
@@ -1428,350 +1810,375 @@
     "css": [
       "assets/futoshiki-03ec250c.css"
     ],
-    "file": "assets/futoshiki-0d08007a.js",
+    "file": "assets/futoshiki-5d7b6cb1.js",
     "imports": [
       "resources/js/app.ts",
-      "_ArticleTitle-9245a16f.js",
-      "_FormNumber-e756a072.js",
-      "_LayoutMain.vue_vue_type_script_setup_true_lang-8fcb0411.js",
-      "_FormError-164a318e.js",
-      "_FormLabel-eef82139.js",
-      "_MainFooter-61badba9.js",
+      "_ArticleTitle-e813f343.js",
+      "_FormNumber-391834eb.js",
+      "_LayoutMain.vue_vue_type_script_setup_true_lang-3e5e8565.js",
+      "_FormError-60c808f0.js",
+      "_FormLabel-9f172f77.js",
+      "_MainFooter-ea9aa75a.js",
       "__plugin-vue_export-helper-c27b6911.js",
-      "_DropdownMenu-083e1e91.js"
+      "_DropdownMenu-ce2cb4b8.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/Games/futoshiki.vue"
   },
   "resources/js/Pages/GraduatePage.vue": {
-    "file": "assets/GraduatePage-866c3c4f.js",
+    "file": "assets/GraduatePage-df4be1b8.js",
     "imports": [
       "resources/js/app.ts",
-      "_ArticleTitle-9245a16f.js",
-      "_FormTextarea-33a0c7e3.js",
-      "_FormNumber-e756a072.js",
-      "_FormInput-672b0e41.js",
-      "_index-20b6e59e.js",
-      "_LayoutMain.vue_vue_type_script_setup_true_lang-8fcb0411.js",
-      "_FormError-164a318e.js",
-      "_FormLabel-eef82139.js",
-      "_MainFooter-61badba9.js",
+      "_ArticleTitle-e813f343.js",
+      "_FormTextarea-d21522be.js",
+      "_FormNumber-391834eb.js",
+      "_barChart-1c398eee.js",
+      "_FormInput-7224ee33.js",
+      "_index-e6f55065.js",
+      "_LayoutMain.vue_vue_type_script_setup_true_lang-3e5e8565.js",
+      "_FormError-60c808f0.js",
+      "_FormLabel-9f172f77.js",
+      "_fraction-051d087d.js",
+      "_MainFooter-ea9aa75a.js",
       "__plugin-vue_export-helper-c27b6911.js",
-      "_DropdownMenu-083e1e91.js"
+      "_DropdownMenu-ce2cb4b8.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/GraduatePage.vue"
   },
   "resources/js/Pages/HomePage.vue": {
-    "file": "assets/HomePage-bf3a0db0.js",
+    "file": "assets/HomePage-08720cbf.js",
     "imports": [
-      "_ScolcoursLogo-1e6f1188.js",
+      "_ScolcoursLogo-a9cb34bb.js",
       "resources/js/app.ts",
-      "_MainFooter-61badba9.js",
+      "_MainFooter-ea9aa75a.js",
       "__plugin-vue_export-helper-c27b6911.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/HomePage.vue"
   },
   "resources/js/Pages/Quizzs/QuizzAdmin.vue": {
-    "file": "assets/QuizzAdmin-30532bd2.js",
+    "file": "assets/QuizzAdmin-4c90afcd.js",
     "imports": [
-      "_MarkdownIt-462c8cb5.js",
+      "_MarkdownIt-fb2bd3e9.js",
       "resources/js/app.ts",
-      "_LayoutMain.vue_vue_type_script_setup_true_lang-8fcb0411.js",
-      "_texmath-4cb66d6f.js",
-      "_MainFooter-61badba9.js",
+      "_LayoutMain.vue_vue_type_script_setup_true_lang-3e5e8565.js",
+      "_texmath-59529073.js",
+      "_MainFooter-ea9aa75a.js",
       "__plugin-vue_export-helper-c27b6911.js",
-      "_DropdownMenu-083e1e91.js"
+      "_DropdownMenu-ce2cb4b8.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/Quizzs/QuizzAdmin.vue"
   },
   "resources/js/Pages/Quizzs/QuizzAdminEdit.vue": {
-    "file": "assets/QuizzAdminEdit-27762dc6.js",
+    "file": "assets/QuizzAdminEdit-ec7234c5.js",
     "imports": [
       "resources/js/app.ts",
-      "_FormInput-672b0e41.js",
-      "_FormTextarea-33a0c7e3.js",
-      "_DialogModal-96fb7f8f.js",
-      "_QuestionsIndex-a58fb5e4.js",
-      "_MarkdownIt-462c8cb5.js",
-      "_ConfirmButton-da3cf975.js",
-      "_FormSelect-aaa69ad9.js",
-      "_LayoutMain.vue_vue_type_script_setup_true_lang-8fcb0411.js",
-      "_FormError-164a318e.js",
-      "_FormLabel-eef82139.js",
-      "_QuestionShow-29d08a56.js",
-      "_IllustrationShow-e0ddf4cc.js",
-      "_PiDrawParser-e58d10cb.js",
-      "_index-2d2628cf.js",
-      "_Parser-fb89dac2.js",
-      "_material-ad9b3c1c.js",
-      "_index-20b6e59e.js",
-      "_useKeyboard-b9c18eeb.js",
-      "_DropdownMenu-083e1e91.js",
-      "_texmath-4cb66d6f.js",
-      "_MainFooter-61badba9.js",
+      "_FormInput-7224ee33.js",
+      "_FormTextarea-d21522be.js",
+      "_DialogModal-f8fda5e0.js",
+      "_QuestionsIndex-0b703e35.js",
+      "_MarkdownIt-fb2bd3e9.js",
+      "_ConfirmButton-803a1e6e.js",
+      "_FormSelect-c234966d.js",
+      "_LayoutMain.vue_vue_type_script_setup_true_lang-3e5e8565.js",
+      "_FormError-60c808f0.js",
+      "_FormLabel-9f172f77.js",
+      "_QuestionShow-a5c88a4e.js",
+      "_IllustrationShow.vue_vue_type_script_setup_true_lang-7955ecb4.js",
+      "_PiDrawParser-f5335967.js",
+      "_index-e4a37cb5.js",
+      "_Parser-d4808822.js",
+      "_svg.esm-8b70f06e.js",
+      "_material-77c33a61.js",
+      "_index-e6f55065.js",
+      "_fraction-051d087d.js",
+      "_scolcours-4f54a458.js",
+      "_useKeyboard-c07cd214.js",
+      "_checkersConfig-04d77b02.js",
+      "_DropdownMenu-ce2cb4b8.js",
+      "_texmath-59529073.js",
+      "_MainFooter-ea9aa75a.js",
       "__plugin-vue_export-helper-c27b6911.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/Quizzs/QuizzAdminEdit.vue"
   },
   "resources/js/Pages/Quizzs/QuizzDashboard.vue": {
-    "file": "assets/QuizzDashboard-60fb6a27.js",
+    "file": "assets/QuizzDashboard-badd5407.js",
     "imports": [
       "resources/js/app.ts",
-      "_index-2d2628cf.js",
-      "_material-ad9b3c1c.js",
-      "_index-20b6e59e.js",
-      "_MarkdownIt-462c8cb5.js",
-      "_LayoutMain.vue_vue_type_script_setup_true_lang-8fcb0411.js",
-      "_Parser-fb89dac2.js",
-      "_texmath-4cb66d6f.js",
-      "_MainFooter-61badba9.js",
+      "_index-e4a37cb5.js",
+      "_material-77c33a61.js",
+      "_index-e6f55065.js",
+      "_MarkdownIt-fb2bd3e9.js",
+      "_LayoutMain.vue_vue_type_script_setup_true_lang-3e5e8565.js",
+      "_Parser-d4808822.js",
+      "_svg.esm-8b70f06e.js",
+      "_fraction-051d087d.js",
+      "_texmath-59529073.js",
+      "_MainFooter-ea9aa75a.js",
       "__plugin-vue_export-helper-c27b6911.js",
-      "_DropdownMenu-083e1e91.js"
+      "_DropdownMenu-ce2cb4b8.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/Quizzs/QuizzDashboard.vue"
   },
   "resources/js/Pages/Quizzs/QuizzHome.vue": {
-    "file": "assets/QuizzHome-e1583e30.js",
+    "file": "assets/QuizzHome-6959e965.js",
     "imports": [
       "resources/js/app.ts",
-      "_LayoutMain.vue_vue_type_script_setup_true_lang-8fcb0411.js",
-      "_MainFooter-61badba9.js",
+      "_LayoutMain.vue_vue_type_script_setup_true_lang-3e5e8565.js",
+      "_MainFooter-ea9aa75a.js",
       "__plugin-vue_export-helper-c27b6911.js",
-      "_DropdownMenu-083e1e91.js"
+      "_DropdownMenu-ce2cb4b8.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/Quizzs/QuizzHome.vue"
   },
   "resources/js/Pages/Quizzs/QuizzProjection.vue": {
-    "file": "assets/QuizzProjection-77cd57f5.js",
+    "file": "assets/QuizzProjection-f47cb7a3.js",
     "imports": [
-      "_index-2d2628cf.js",
-      "_material-ad9b3c1c.js",
-      "_index-20b6e59e.js",
+      "_index-e4a37cb5.js",
+      "_material-77c33a61.js",
+      "_index-e6f55065.js",
       "resources/js/app.ts",
-      "_texmath-4cb66d6f.js",
-      "_LayoutProjection-4fcf4157.js",
+      "_texmath-59529073.js",
+      "_LayoutProjection-cf224d52.js",
       "__plugin-vue_export-helper-c27b6911.js",
-      "_Parser-fb89dac2.js",
-      "_MarkdownIt-462c8cb5.js"
+      "_Parser-d4808822.js",
+      "_svg.esm-8b70f06e.js",
+      "_fraction-051d087d.js",
+      "_MarkdownIt-fb2bd3e9.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/Quizzs/QuizzProjection.vue"
   },
   "resources/js/Pages/Quizzs/QuizzShow.vue": {
-    "file": "assets/QuizzShow-8b848d5e.js",
+    "file": "assets/QuizzShow-a475ab52.js",
     "imports": [
-      "_QuestionShow-29d08a56.js",
+      "_QuestionShow-a5c88a4e.js",
       "resources/js/app.ts",
-      "_LayoutProjection-4fcf4157.js",
-      "_IllustrationShow-e0ddf4cc.js",
-      "_PiDrawParser-e58d10cb.js",
-      "_index-2d2628cf.js",
-      "_Parser-fb89dac2.js",
-      "_material-ad9b3c1c.js",
-      "_index-20b6e59e.js",
-      "_MarkdownIt-462c8cb5.js",
-      "_texmath-4cb66d6f.js",
-      "_useKeyboard-b9c18eeb.js",
-      "_DropdownMenu-083e1e91.js",
+      "_LayoutProjection-cf224d52.js",
+      "_IllustrationShow.vue_vue_type_script_setup_true_lang-7955ecb4.js",
+      "_PiDrawParser-f5335967.js",
+      "_index-e4a37cb5.js",
+      "_Parser-d4808822.js",
+      "_svg.esm-8b70f06e.js",
+      "_material-77c33a61.js",
+      "_index-e6f55065.js",
+      "_fraction-051d087d.js",
+      "_scolcours-4f54a458.js",
+      "_MarkdownIt-fb2bd3e9.js",
+      "_texmath-59529073.js",
+      "_useKeyboard-c07cd214.js",
+      "_checkersConfig-04d77b02.js",
+      "_DropdownMenu-ce2cb4b8.js",
       "__plugin-vue_export-helper-c27b6911.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/Quizzs/QuizzShow.vue"
   },
   "resources/js/Pages/Teams/TeamsChallengePage.vue": {
-    "file": "assets/TeamsChallengePage-fb1ae242.js",
+    "file": "assets/TeamsChallengePage-3bfaa7b3.js",
     "imports": [
       "resources/js/app.ts",
-      "_index-20b6e59e.js",
-      "_index-2d2628cf.js",
-      "_material-ad9b3c1c.js",
-      "_texmath-4cb66d6f.js",
-      "_FormInput-672b0e41.js",
-      "_LayoutMain.vue_vue_type_script_setup_true_lang-8fcb0411.js",
-      "_Parser-fb89dac2.js",
-      "_FormError-164a318e.js",
-      "_FormLabel-eef82139.js",
-      "_MainFooter-61badba9.js",
+      "_index-e6f55065.js",
+      "_index-e4a37cb5.js",
+      "_material-77c33a61.js",
+      "_texmath-59529073.js",
+      "_FormInput-7224ee33.js",
+      "_LayoutMain.vue_vue_type_script_setup_true_lang-3e5e8565.js",
+      "_fraction-051d087d.js",
+      "_Parser-d4808822.js",
+      "_svg.esm-8b70f06e.js",
+      "_FormError-60c808f0.js",
+      "_FormLabel-9f172f77.js",
+      "_MainFooter-ea9aa75a.js",
       "__plugin-vue_export-helper-c27b6911.js",
-      "_DropdownMenu-083e1e91.js"
+      "_DropdownMenu-ce2cb4b8.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/Teams/TeamsChallengePage.vue"
   },
   "resources/js/Pages/Teams/TeamsIndex.vue": {
-    "file": "assets/TeamsIndex-ee2401b5.js",
+    "file": "assets/TeamsIndex-6cc05aeb.js",
     "imports": [
-      "_index-20b6e59e.js",
-      "_index-2d2628cf.js",
-      "_material-ad9b3c1c.js",
+      "_index-e6f55065.js",
+      "_index-e4a37cb5.js",
+      "_material-77c33a61.js",
       "resources/js/app.ts",
-      "_texmath-4cb66d6f.js",
-      "_FormInput-672b0e41.js",
-      "_LayoutMain.vue_vue_type_script_setup_true_lang-8fcb0411.js",
-      "_Parser-fb89dac2.js",
-      "_FormError-164a318e.js",
-      "_FormLabel-eef82139.js",
-      "_MainFooter-61badba9.js",
+      "_texmath-59529073.js",
+      "_FormInput-7224ee33.js",
+      "_LayoutMain.vue_vue_type_script_setup_true_lang-3e5e8565.js",
+      "_fraction-051d087d.js",
+      "_Parser-d4808822.js",
+      "_svg.esm-8b70f06e.js",
+      "_FormError-60c808f0.js",
+      "_FormLabel-9f172f77.js",
+      "_MainFooter-ea9aa75a.js",
       "__plugin-vue_export-helper-c27b6911.js",
-      "_DropdownMenu-083e1e91.js"
+      "_DropdownMenu-ce2cb4b8.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/Teams/TeamsIndex.vue"
   },
   "resources/js/Pages/Teams/TeamsShow.vue": {
-    "file": "assets/TeamsShow-967ad821.js",
+    "file": "assets/TeamsShow-91cdbae8.js",
     "imports": [
-      "_index-20b6e59e.js",
-      "_index-2d2628cf.js",
-      "_material-ad9b3c1c.js",
+      "_index-e6f55065.js",
+      "_index-e4a37cb5.js",
+      "_material-77c33a61.js",
       "resources/js/app.ts",
-      "_texmath-4cb66d6f.js",
-      "_FormInput-672b0e41.js",
-      "_LayoutMain.vue_vue_type_script_setup_true_lang-8fcb0411.js",
-      "_Parser-fb89dac2.js",
-      "_FormError-164a318e.js",
-      "_FormLabel-eef82139.js",
-      "_MainFooter-61badba9.js",
+      "_texmath-59529073.js",
+      "_FormInput-7224ee33.js",
+      "_LayoutMain.vue_vue_type_script_setup_true_lang-3e5e8565.js",
+      "_fraction-051d087d.js",
+      "_Parser-d4808822.js",
+      "_svg.esm-8b70f06e.js",
+      "_FormError-60c808f0.js",
+      "_FormLabel-9f172f77.js",
+      "_MainFooter-ea9aa75a.js",
       "__plugin-vue_export-helper-c27b6911.js",
-      "_DropdownMenu-083e1e91.js"
+      "_DropdownMenu-ce2cb4b8.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/Teams/TeamsShow.vue"
   },
   "resources/js/Pages/ToolsPage.vue": {
-    "file": "assets/ToolsPage-d576c6be.js",
+    "file": "assets/ToolsPage-7d7b7867.js",
     "imports": [
       "resources/js/app.ts",
-      "_FormInput-672b0e41.js",
-      "_ArticleTitle-9245a16f.js",
-      "_scolcours-7b394fc8.js",
-      "_LayoutMain.vue_vue_type_script_setup_true_lang-8fcb0411.js",
-      "_FormError-164a318e.js",
-      "_FormLabel-eef82139.js",
-      "_MainFooter-61badba9.js",
+      "_FormInput-7224ee33.js",
+      "_ArticleTitle-e813f343.js",
+      "_scolcours-4f54a458.js",
+      "_LayoutMain.vue_vue_type_script_setup_true_lang-3e5e8565.js",
+      "_FormError-60c808f0.js",
+      "_FormLabel-9f172f77.js",
+      "_MainFooter-ea9aa75a.js",
       "__plugin-vue_export-helper-c27b6911.js",
-      "_DropdownMenu-083e1e91.js"
+      "_DropdownMenu-ce2cb4b8.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/ToolsPage.vue"
   },
   "resources/js/Pages/languages/LanguageGuess.vue": {
-    "file": "assets/LanguageGuess-c785f5be.js",
+    "file": "assets/LanguageGuess-f028bef3.js",
     "imports": [
       "resources/js/app.ts",
-      "_ArticleTitle-9245a16f.js",
-      "_index-20b6e59e.js",
-      "_FormInput-672b0e41.js",
-      "_FormNumber-e756a072.js",
+      "_ArticleTitle-e813f343.js",
+      "_index-e6f55065.js",
+      "_FormInput-7224ee33.js",
+      "_FormNumber-391834eb.js",
       "resources/js/Pages/languages/LanguageUnitsSelector.vue",
-      "_LayoutMain.vue_vue_type_script_setup_true_lang-8fcb0411.js",
-      "_FormError-164a318e.js",
-      "_FormLabel-eef82139.js",
-      "_MainFooter-61badba9.js",
+      "_LayoutMain.vue_vue_type_script_setup_true_lang-3e5e8565.js",
+      "_fraction-051d087d.js",
+      "_FormError-60c808f0.js",
+      "_FormLabel-9f172f77.js",
+      "_MainFooter-ea9aa75a.js",
       "__plugin-vue_export-helper-c27b6911.js",
-      "_DropdownMenu-083e1e91.js"
+      "_DropdownMenu-ce2cb4b8.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/languages/LanguageGuess.vue"
   },
   "resources/js/Pages/languages/LanguageImport.vue": {
-    "file": "assets/LanguageImport-3f1ccb9d.js",
+    "file": "assets/LanguageImport-31a00dde.js",
     "imports": [
       "resources/js/app.ts",
-      "_FormInput-672b0e41.js",
-      "_FormTextarea-33a0c7e3.js",
-      "_LayoutMain.vue_vue_type_script_setup_true_lang-8fcb0411.js",
-      "_FormError-164a318e.js",
-      "_FormLabel-eef82139.js",
-      "_MainFooter-61badba9.js",
+      "_FormInput-7224ee33.js",
+      "_FormTextarea-d21522be.js",
+      "_LayoutMain.vue_vue_type_script_setup_true_lang-3e5e8565.js",
+      "_FormError-60c808f0.js",
+      "_FormLabel-9f172f77.js",
+      "_MainFooter-ea9aa75a.js",
       "__plugin-vue_export-helper-c27b6911.js",
-      "_DropdownMenu-083e1e91.js"
+      "_DropdownMenu-ce2cb4b8.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/languages/LanguageImport.vue"
   },
   "resources/js/Pages/languages/LanguageIndex.vue": {
-    "file": "assets/LanguageIndex-d63ee791.js",
+    "file": "assets/LanguageIndex-18a25ac9.js",
     "imports": [
-      "_ArticleTitle-9245a16f.js",
-      "_index-20b6e59e.js",
-      "_FormInput-672b0e41.js",
-      "_LayoutMain.vue_vue_type_script_setup_true_lang-8fcb0411.js",
+      "_ArticleTitle-e813f343.js",
+      "_index-e6f55065.js",
+      "_FormInput-7224ee33.js",
+      "_LayoutMain.vue_vue_type_script_setup_true_lang-3e5e8565.js",
       "resources/js/app.ts",
-      "_FormError-164a318e.js",
-      "_FormLabel-eef82139.js",
-      "_MainFooter-61badba9.js",
+      "_fraction-051d087d.js",
+      "_FormError-60c808f0.js",
+      "_FormLabel-9f172f77.js",
+      "_MainFooter-ea9aa75a.js",
       "__plugin-vue_export-helper-c27b6911.js",
-      "_DropdownMenu-083e1e91.js"
+      "_DropdownMenu-ce2cb4b8.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/languages/LanguageIndex.vue"
   },
   "resources/js/Pages/languages/LanguageList.vue": {
-    "file": "assets/LanguageList-a8c8ec00.js",
+    "file": "assets/LanguageList-d70127f7.js",
     "imports": [
-      "_ArticleTitle-9245a16f.js",
-      "_index-20b6e59e.js",
-      "_FormSwitch-bd89b2a1.js",
+      "_ArticleTitle-e813f343.js",
+      "_index-e6f55065.js",
+      "_FormSwitch-1fb610d6.js",
       "resources/js/Pages/languages/LanguageUnitsSelector.vue",
-      "_FormInput-672b0e41.js",
+      "_FormInput-7224ee33.js",
       "resources/js/app.ts",
-      "_DialogModal-96fb7f8f.js",
-      "_LayoutMain.vue_vue_type_script_setup_true_lang-8fcb0411.js",
-      "_FormError-164a318e.js",
-      "_UiSwitch-7d735904.js",
-      "_FormLabel-eef82139.js",
-      "_MainFooter-61badba9.js",
+      "_DialogModal-f8fda5e0.js",
+      "_LayoutMain.vue_vue_type_script_setup_true_lang-3e5e8565.js",
+      "_fraction-051d087d.js",
+      "_FormError-60c808f0.js",
+      "_UiSwitch-0f25dba7.js",
+      "_FormLabel-9f172f77.js",
+      "_MainFooter-ea9aa75a.js",
       "__plugin-vue_export-helper-c27b6911.js",
-      "_DropdownMenu-083e1e91.js"
+      "_DropdownMenu-ce2cb4b8.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/languages/LanguageList.vue"
   },
   "resources/js/Pages/languages/LanguageMemory.vue": {
-    "file": "assets/LanguageMemory-a2a2d5a2.js",
+    "file": "assets/LanguageMemory-8f6fc4d6.js",
     "imports": [
       "resources/js/app.ts",
-      "_ArticleTitle-9245a16f.js",
-      "_index-20b6e59e.js",
-      "_FormNumber-e756a072.js",
+      "_ArticleTitle-e813f343.js",
+      "_index-e6f55065.js",
+      "_FormNumber-391834eb.js",
       "resources/js/Pages/languages/LanguageUnitsSelector.vue",
-      "_LayoutMain.vue_vue_type_script_setup_true_lang-8fcb0411.js",
-      "_FormError-164a318e.js",
-      "_FormLabel-eef82139.js",
-      "_MainFooter-61badba9.js",
+      "_LayoutMain.vue_vue_type_script_setup_true_lang-3e5e8565.js",
+      "_fraction-051d087d.js",
+      "_FormError-60c808f0.js",
+      "_FormLabel-9f172f77.js",
+      "_MainFooter-ea9aa75a.js",
       "__plugin-vue_export-helper-c27b6911.js",
-      "_DropdownMenu-083e1e91.js"
+      "_DropdownMenu-ce2cb4b8.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/languages/LanguageMemory.vue"
   },
   "resources/js/Pages/languages/LanguageType.vue": {
-    "file": "assets/LanguageType-95b8041b.js",
+    "file": "assets/LanguageType-e01e7974.js",
     "imports": [
       "resources/js/app.ts",
-      "_ArticleTitle-9245a16f.js",
-      "_index-20b6e59e.js",
-      "_FormInput-672b0e41.js",
+      "_ArticleTitle-e813f343.js",
+      "_index-e6f55065.js",
+      "_FormInput-7224ee33.js",
       "resources/js/Pages/languages/LanguageUnitsSelector.vue",
-      "_LayoutMain.vue_vue_type_script_setup_true_lang-8fcb0411.js",
-      "_FormError-164a318e.js",
-      "_FormLabel-eef82139.js",
-      "_MainFooter-61badba9.js",
+      "_LayoutMain.vue_vue_type_script_setup_true_lang-3e5e8565.js",
+      "_fraction-051d087d.js",
+      "_FormError-60c808f0.js",
+      "_FormLabel-9f172f77.js",
+      "_MainFooter-ea9aa75a.js",
       "__plugin-vue_export-helper-c27b6911.js",
-      "_DropdownMenu-083e1e91.js"
+      "_DropdownMenu-ce2cb4b8.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/languages/LanguageType.vue"
   },
   "resources/js/Pages/languages/LanguageUnitsSelector.vue": {
-    "file": "assets/LanguageUnitsSelector-9667a1e9.js",
+    "file": "assets/LanguageUnitsSelector-18a20ec6.js",
     "imports": [
       "resources/js/app.ts"
     ],
@@ -1835,7 +2242,7 @@
       "resources/js/Pages/languages/LanguageType.vue",
       "resources/js/Pages/languages/LanguageUnitsSelector.vue"
     ],
-    "file": "assets/app-49b8e557.js",
+    "file": "assets/app-6cf5e26b.js",
     "isEntry": true,
     "src": "resources/js/app.ts"
   }

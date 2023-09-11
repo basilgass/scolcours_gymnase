@@ -18,19 +18,20 @@
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 
 export default {
-	layout: LayoutMain
+    layout: LayoutMain
 }
 </script>
-<script setup lang="ts">
+<script lang="ts" setup>
 
-import {computed, defineAsyncComponent} from "vue"
+import {computed} from "vue"
+import {getModule, MODULE_TYPES} from "@/scolcours";
 
 const props = defineProps({
-	dev: {type: String, required: true}
+    dev: {type: String, required: true}
 })
 
 let component = computed(() => {
-	return defineAsyncComponent(() => import(/* @vite-ignore */`/resources/js/Components/Devs/${props.dev}.vue`))
+    return getModule(props.dev, MODULE_TYPES.DEV)
 })
 
 </script>
