@@ -51,13 +51,6 @@ let props = defineProps({
 	keyboardUI = ref(null),
 	keyboardComponent = computed(()=>{
 		return getComponent(props.question.keyboard)
-		// let kbrd = getKeyboardName(props.question.keyboard)
-		// if(kbrd){
-		// 	// get the component
-		// 	return defineAsyncComponent(() => import(`@/Components/Keyboards/Keyboard${kbrd}`))
-		// }else{
-		// 	return defineAsyncComponent(() => import("@/Components/Keyboards/KeyboardBasic"))
-		// }
 	}),
 	keyboardAnswer = computed(()=>{
 		return props.question.answer

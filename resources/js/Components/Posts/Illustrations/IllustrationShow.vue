@@ -16,13 +16,13 @@ Affichage des illustrations
 				<button
 					class="draggable-handle text-xs px-1 text-gray-400 hover:text-black"
 				>
-					<i class="bi bi-arrows-move" />
+					<i class="bi bi-arrows-move"/>
 				</button>
 				<button
 					class="text-xs ml-3"
 					@click="showEditForm=true"
 				>
-					éditer l'illustration (id: {{ theIllustration.id }}) <i class="bi bi-pencil ml-2" />
+					éditer l'illustration (id: {{ theIllustration.id }}) <i class="bi bi-pencil ml-2"/>
 				</button>
 			</div>
 		</div>
@@ -49,7 +49,7 @@ Affichage des illustrations
 					@click="updateComponentKey++"
 				>
 					<div class="group-hover:rotate-180 transition-all">
-						<i class="bi bi-arrow-clockwise" />
+						<i class="bi bi-arrow-clockwise"/>
 					</div>
 					<div>mise à jour</div>
 				</button>
@@ -97,9 +97,9 @@ let root = ref(null),
 	),
 	theIllustration = ref(props.illustration),
 	editMode = inject("editMode"),
-	blockIllustration = computed(()=>{
+	blockIllustration = computed(() => {
 		return {
-			title: theIllustration.value.title ? useFormattedBody(theIllustration.value.title, blockData):"",
+			title: theIllustration.value.title ? useFormattedBody(theIllustration.value.title, blockData) : "",
 			code: useFormattedBody(theIllustration.value.code, blockData),
 			parameters: theIllustration.value.parameters ? useFormattedBody(theIllustration.value.parameters, blockData) : ""
 		}
@@ -108,11 +108,26 @@ let root = ref(null),
 
 const IllustrationComponent = computed(
 	() => {
-		if(props.illustration.type==="component" && props.illustration.value!==null){
-			return defineAsyncComponent(
-				() => import(/* @vite-ignore */`/resources/js/Components/Posts/Illustrations/Elements/${props.illustration.value}.vue`)
-			)
-		}else{
+		if (props.illustration.type === "component" && props.illustration.value !== null) {
+			// TODO: Make dynamic import work !
+			switch (props.illustration.value) {
+				case "IllustrationEuclidian":
+					return defineAsyncComponent(() => import(`@/Components/Posts/Illustrations/Elements/IllustrationEuclidian.vue`))
+				case "IllustrationStepper":
+					return defineAsyncComponent(() => import(`@/Components/Posts/Illustrations/Elements/IllustrationStepper.vue`))
+				case "IllustrationTos":
+					return defineAsyncComponent(() => import(`@/Components/Posts/Illustrations/Elements/IllustrationTos.vue`))
+				case "IllustrationValues":
+					return defineAsyncComponent(() => import(`@/Components/Posts/Illustrations/Elements/IllustrationValues.vue`))
+				case "Geometry_Droites_PositionRelative":
+					return defineAsyncComponent(() => import(`@/Components/Posts/Illustrations/Elements/Geometry_Droites_PositionRelative.vue`))
+			}
+
+
+			// return defineAsyncComponent(
+			// 	() => import(/* @vite-ignore */`/resources/js/Components/Posts/Illustrations/Elements/${props.illustration.value}.vue`)
+			// )
+		} else {
 			return false
 		}
 	}

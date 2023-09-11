@@ -25,7 +25,26 @@ function getComponentKeyboardName(value) {
 
 function getComponent(kbrd) {
 	// TODO: Make a check on the name to make sur the component exists.
-	return defineAsyncComponent(() => import(/* @vite-ignore */`/resources/js/Components/Keyboards/Keyboard${kbrd}.vue`))
+
+	switch (kbrd){
+		case "Basic":
+			return defineAsyncComponent(() => import(`@/Components/Keyboards/KeyboardBasic.vue`))
+		case "Input":
+			return defineAsyncComponent(() => import(`@/Components/Keyboards/KeyboardInput.vue`))
+		case "Order":
+			return defineAsyncComponent(() => import(`@/Components/Keyboards/KeyboardOrder.vue`))
+		case "Qcm":
+			return defineAsyncComponent(() => import(`@/Components/Keyboards/KeyboardQcm.vue`))
+		case "Study":
+			return defineAsyncComponent(() => import(`@/Components/Keyboards/KeyboardInput.vue`))
+		case "TableOfSigns":
+			return defineAsyncComponent(() => import(`@/Components/Keyboards/KeyboardInput.vue`))
+		case "Type":
+			return defineAsyncComponent(() => import(`@/Components/Keyboards/KeyboardInput.vue`))
+	}
+
+	return defineAsyncComponent(() => import(/* @vite-ignore */`/resources/js/Components/Keyboards/KeyboardBasic.vue`))
+	// return defineAsyncComponent(() => import(/* @vite-ignore */`/resources/js/Components/Keyboards/Keyboard${kbrd}.vue`))
 }
 
 function getOneKeyboard(kbrd) {
