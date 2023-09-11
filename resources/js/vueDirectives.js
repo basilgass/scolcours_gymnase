@@ -1,5 +1,5 @@
 import katex from "katex/dist/katex.mjs"
-import * as AsciiMathParser from "./asciimath2tex"
+import AsciiMathParser from "./asciimath2tex"
 import {usePage} from "@inertiajs/vue3"
 import {useKatexMacros} from "@/Composables/useHelpers"
 import {numberCorrection} from "pidraw/esm/Calculus"

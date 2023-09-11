@@ -9,6 +9,9 @@
 			@input-focus="activeInput='fx'"
 		/>
 
+		<form-switch name="numericParse" label="calcul numérique" v-model="numericParse"/>
+		<form-switch name="veritcalTable" label="Mode veritcal" v-model="verticalTable"/>
+
 		<div class="flex gap-3">
 			<form-input
 				v-model="xMin"
@@ -98,7 +101,32 @@
 					class="katex-boxed"
 				/>
 
-				<div class="overflow-x-auto w-full mt-10 mb-3">
+				<div v-if="verticalTable" class="w-full mt-10 mb-3">
+					<table class="mb-3">
+						<thead class="border border-gray-500 bg-gray-200">
+							<tr class="font-semibold">
+								<th
+										v-katex="`x`"
+										class="border-r border-gray-500 min-w-[5em]"
+								/>
+								<th
+										v-katex.ascii="f"
+										class="min-w-[4em] px-3"
+								/>
+							</tr>
+						</thead>
+						<tbody>
+							<tr v-for="v of fx" :key="`td-${v.x}`"
+							    class=" border border-gray-500 min-w-[5em]">
+								<td class="border-r border-gray-500 px-3" v-katex="`${v.x}`"></td>
+								<td  class="px-3" v-katex="`${v.fx}`"></td>
+								<td></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="overflow-x-auto w-full mt-10 mb-3"
+				v-else>
 					<table class="mb-3">
 						<thead class="border-b border-gray-500 bg-gray-200">
 							<tr class="font-semibold">
@@ -150,7 +178,7 @@
 	</Panel>
 </template>
 
-<script setup>
+<script setup lang="ts">
 /** Tools
  * title: tableau des valeurs d'une fonction
  * body: permet de créer un tableau des valeurs d'une fonction
@@ -164,13 +192,14 @@ import {PiMath} from "pimath/esm"
 import {numberCorrection} from "pidraw/esm/Calculus"
 import {Polynom} from "pimath/esm/maths/algebra/polynom"
 import KeyboardDisplay from "@/Components/Keyboards/KeyboardDisplay.vue"
+import FormSwitch from "@/Components/Form/FormSwitch.vue";
 
 // TODO: tableau des valeurs doit être restructurer pour fonctionner avec des valeurs trigonométriques.
 
-let f = ref("sin(x)"),
-	xMin = ref("0"),
-	xMax = ref("6.5"),
-	step = ref("0.52359877"),
+let f = ref("2^x"),
+	xMin = ref("-5"),
+	xMax = ref("5"),
+	step = ref("0.5"),
 	activeInput = ref("fx"),
 	fixed = ref("2")
 
@@ -178,25 +207,30 @@ let fx = computed(() => {
 		try {
 			return getTableOfValues()
 		} catch (e) {
-			console.warn(e)
 			return false
 		}
 	}),
-	isTrigonometric = computed(() => {
+	numericParse = ref(true),
+    verticalTable = ref(true),
+	isNumeric = computed(() => {
 		return f.value.includes("sin") || f.value.includes("cos") || f.value.includes("tan")
 	}),
 	getTableOfValues = function () {
 		let exp
-		if (isTrigonometric.value) {
+		if (isNumeric.value || numericParse.value) {
 			exp = new PiMath.NumExp(f.value)
 		} else {
-			exp = new PiMath.Polynom(f.value)
+			try {
+				exp = new PiMath.Polynom(f.value)
+			}catch{
+				exp = new PiMath.NumExp(f.value)
+			}
 		}
 
-		let x = new PiMath.Fraction(Math.min(xMin.value, xMax.value)),
-			vMax = new PiMath.Fraction(Math.max(xMin.value, xMax.value)),
+		let x = new PiMath.Fraction(Math.min(+xMin.value, +xMax.value)),
+			vMax = new PiMath.Fraction(Math.max(+xMin.value, +xMax.value)),
 			vStep = +step.value === 0 ? 1 : +step.value,
-			vFixed = Math.max(1, Math.min(5, fixed.value)),
+			vFixed = Math.max(1, Math.min(5, +fixed.value)),
 			data = [],
 			securityIncrement = 0
 
@@ -213,7 +247,7 @@ let fx = computed(() => {
 
 			data.push({
 				x: x.value,
-				fx: numberCorrection(v.value, null, null, 2),
+				fx: numberCorrection(v.value, null, null, +fixed.value),
 				fxTex: v.tex
 			})
 			x.add(vStep)
