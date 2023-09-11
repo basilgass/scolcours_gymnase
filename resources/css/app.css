@@ -233,3 +233,11 @@
 	column-rule-color: #e8e8e8;
 }
 
+
+
+[data-floating-label='true'] input:focus ~ .formkit-label,
+[data-floating-label='true'] textarea:focus ~ .formkit-label,
+[data-floating-label='true']:not([data-empty='true']) .formkit-label,
+[data-floating-label='true'][data-expanded='true'] .formkit-label {
+    @apply px-2 mb-1;
+}

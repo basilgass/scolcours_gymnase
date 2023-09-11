@@ -1,4 +1,3 @@
-<!--suppress ALL -->
 <template>
 	<!-- Title -->
 	<div class="py-5">
@@ -6,35 +5,33 @@
 			{{ props.dev }}
 		</h1>
 		<Link
-			href="/dev"
-			class="hover:pl-3 transition-all"
+				class="hover:pl-3 transition-all"
+				href="/dev"
 		>
 			Retour
 		</Link>
 	</div>
 
-	<component
-		:is="component"
-	/>
+	<component :is="component"/>
 </template>
-<script>
+<script lang="ts">
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 
 export default {
 	layout: LayoutMain
 }
 </script>
-<script setup>
+<script setup lang="ts">
 
-import {defineAsyncComponent} from "vue"
+import {computed, defineAsyncComponent} from "vue"
 
 const props = defineProps({
 	dev: {type: String, required: true}
 })
 
-let component = defineAsyncComponent(
-	()=>import(/* @vite-ignore */`/resources/js/Components/Devs/${props.dev}.vue`)
-)
+let component = computed(() => {
+	return defineAsyncComponent(() => import(/* @vite-ignore */`/resources/js/Components/Devs/${props.dev}.vue`))
+})
 
 </script>
 

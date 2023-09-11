@@ -13,6 +13,7 @@ export default {
 		"./resources/css/**/*.css",
 		"./resources/js/*.js",
 		"./resources/js/*.ts",
+		"./tailwind-theme.js",
 	],
 	safelist: [
 		{
@@ -77,6 +78,7 @@ export default {
 	plugins: [
 		require('@tailwindcss/typography'),
 		require('@tailwindcss/container-queries'),
-		require('tailwind-scrollbar')({nocompatible: true})
+		require('tailwind-scrollbar')({nocompatible: true}),
+		require('@formkit/themes/tailwindcss'),
 	],
 }

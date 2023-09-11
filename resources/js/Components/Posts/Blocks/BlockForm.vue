@@ -87,7 +87,7 @@ Formulaire d'édition d'un bloc
 					:class="(props.previewCol || props.noPreview )?'':'md:grid-cols-2'"
 					class="grid grid-cols-1 gap-5"
 				>
-					<div>
+					<div class="mt-2">
 						<form-number
 							v-if="props.switch"
 							v-show="!props.noSwitch"
@@ -95,13 +95,12 @@ Formulaire d'édition d'un bloc
 							label="switch"
 							name="switch"
 						/>
-						<form-input
+						<form-kit
 							v-show="!props.noTitle"
 							v-model="theBlock.title"
-							focus
 							label="titre"
-							name="title"
-						/>
+							label-class="uppercase"
+						></form-kit>
 
 						<div
 							v-show="!props.noType"
@@ -128,12 +127,11 @@ Formulaire d'édition d'un bloc
 						/>
 
 						<div>
-							<form-input
-								v-model="theBlock.template"
-								label="disposition"
-								name="disposition"
-								sm
-							/>
+							<form-kit
+									label="disposition"
+									label-class="uppercase"
+								/>
+
 							<p class="text-xs flex gap-3">
 								<button
 									class="text-xs"
@@ -206,7 +204,6 @@ Formulaire d'édition d'un bloc
 
 <script setup>
 
-import FormInput from "@/Components/Form/FormInput.vue"
 import FormTextarea from "@/Components/Form/FormTextarea.vue"
 import FormSwitch from "@/Components/Form/FormSwitch.vue"
 import FormNumber from "@/Components/Form/FormNumber.vue"

@@ -6,11 +6,12 @@ import {createInertiaApp, Head, Link} from "@inertiajs/vue3"
 import draggableComponent from "vuedraggable/src/vuedraggable.js"
 import {resolvePageComponent} from "laravel-vite-plugin/inertia-helpers"
 import {ZiggyVue} from "../../vendor/tightenco/ziggy/dist/vue.m"
-
+import {defaultConfig, plugin as formKitPlugin} from "@formkit/vue";
+import formKitConfig from "../../formkit.config";
 // Custom directives
 import {adminDirective, katexDirective, themeDirective, visibleDirective} from "@/vueDirectives"
-// import route from "ziggy-js"
 
+// import route from "ziggy-js"
 
 const appName = window.document.getElementsByTagName("title")[0]?.innerText || "ScolCours"
 
@@ -33,6 +34,7 @@ createInertiaApp({
 			.component("draggable", draggableComponent)
 			.use(plugin)
 			.use(ZiggyVue, Ziggy)
+			.use(formKitPlugin, defaultConfig(formKitConfig))
 			.directive("katex", katexDirective)
 			.directive("visible", visibleDirective)
 			.directive("admin", adminDirective)

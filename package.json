@@ -7,6 +7,7 @@
 		"ide-helper": "php artisan ide-helper:generate && php artisan ide-helper:meta && php artisan ide-helper:models -R -W"
 	},
 	"devDependencies": {
+		"@headlessui/vue": "^1.7.16",
 		"@inertiajs/vue3": "^1.0.11",
 		"@tailwindcss/line-clamp": "^0.4.4",
 		"@tailwindcss/typography": "^0.5.10",
@@ -14,7 +15,6 @@
 		"@types/lodash": "^4.14.198",
 		"@types/ziggy-js": "^1.3.3",
 		"@vitejs/plugin-vue": "^4.3.4",
-		"@headlessui/vue": "^1.7.16",
 		"autoprefixer": "^10.4.15",
 		"axios": "^1.5.0",
 		"eslint": "^8.48.0",
@@ -23,12 +23,16 @@
 		"postcss": "^8.4.29",
 		"tailwind-scrollbar": "^3.0.5",
 		"tailwindcss": "^3.3.3",
+		"typescript": "^5.2.2",
 		"vite": "^4.4.9",
 		"vue": "^3.3.4",
-		"typescript": "^5.2.2",
 		"vue-tsc": "^1.8.10"
 	},
 	"dependencies": {
+		"@formkit/addons": "^1.0.0",
+		"@formkit/icons": "^1.0.0",
+		"@formkit/themes": "^1.0.0",
+		"@formkit/vue": "^1.0.0",
 		"@sgratzl/chartjs-chart-boxplot": "^4.2.4",
 		"@svgdotjs/svg.js": "^3.2.0",
 		"@tailwindcss/container-queries": "^0.1.1",

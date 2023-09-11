@@ -1,9 +1,10 @@
-<script setup>
+<script setup lang="ts">
 import UiSlider from "@/Components/Ui/UiSlider.vue"
 import {ref} from "vue"
 import FormNumber from "@/Components/Form/FormNumber.vue"
 import FormTextarea from "@/Components/Form/FormTextarea.vue"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
+import {ExampleChecker} from "@/Composables/Checkers/CheckerBase";
 
 let value = ref(15),
 	vmin = ref(10),
@@ -11,7 +12,14 @@ let value = ref(15),
 	ta = ref(""),
 	crtLine = ref("")
 
-function updateCrtLine(evt){
+
+let chk = new ExampleChecker(['trois', 'quatre', 'cinq'])
+console.log(chk.name)
+console.log(chk.description)
+console.log(chk.format())
+
+
+function updateCrtLine(evt) {
 	crtLine.value = evt
 }
 
@@ -63,7 +71,7 @@ let md = ref(`<div class="not-prose">
 </script>
 
 <template>
-	<markdown-it :text="md" />
+	<markdown-it :text="md"/>
 
 	<form-number
 		v-model="vmin"
@@ -85,8 +93,8 @@ let md = ref(`<div class="not-prose">
 
 	<form-textarea
 		v-model="ta"
-		name="test"
 		label="test avec ligne courant"
+		name="test"
 		@current-line="updateCrtLine"
 	/>
 	<div
@@ -94,5 +102,25 @@ let md = ref(`<div class="not-prose">
 		class="border"
 	>
 		{{ crtLine }}
+	</div>
+
+	<div class="bg-white p-10">
+
+		<FormKit
+			label="Hello world"
+			placeholder="why not ?"
+			type="text"
+			suffix-icon="avatarMan"
+			suffix-icon-class="!p-0"
+		/>
+
+		<FormKit
+			label="small text"
+			placeholder="why not ?"
+			type="text"
+			input-class="!py-1 text-xs w-full"
+			prefix-icon="avatarMan"
+		/>
+
 	</div>
 </template>
