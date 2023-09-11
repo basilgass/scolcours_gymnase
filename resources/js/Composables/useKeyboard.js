@@ -38,9 +38,9 @@ function getComponent(kbrd) {
 		case "Study":
 			return defineAsyncComponent(() => import(`@/Components/Keyboards/KeyboardInput.vue`))
 		case "TableOfSigns":
-			return defineAsyncComponent(() => import(`@/Components/Keyboards/KeyboardInput.vue`))
+			return defineAsyncComponent(() => import(`@/Components/Keyboards/KeyboardTableOfSigns.vue`))
 		case "Type":
-			return defineAsyncComponent(() => import(`@/Components/Keyboards/KeyboardInput.vue`))
+			return defineAsyncComponent(() => import(`@/Components/Keyboards/KeyboardType.vue`))
 	}
 
 	return defineAsyncComponent(() => import(/* @vite-ignore */`/resources/js/Components/Keyboards/KeyboardBasic.vue`))
