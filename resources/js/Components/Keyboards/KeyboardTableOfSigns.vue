@@ -111,6 +111,7 @@ import PiTableOfSigns from "@/Components/Pi/PiTableOfSigns.vue"
 import KeyboardDisplay from "@/Components/Keyboards/KeyboardDisplay.vue"
 import {makeStudyFromCode} from "@/Composables/useTos"
 import {useKeyboard} from "@/Composables/useKeyboard"
+import {customCheck} from "@/Composables/checkersConfig";
 
 let props = defineProps({
 	keyboard: {type: Object, required: true},
