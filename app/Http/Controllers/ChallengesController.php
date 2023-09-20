@@ -22,7 +22,7 @@ class ChallengesController extends Controller
 			$challenge->blocks()->create();
 		}
 
-		return Inertia::render('Challenges/ChallengesPage', [
+		return Inertia::render('Challenges/ChallengeShow', [
 			"theme" => $theme->only('color', 'icon', 'slug', 'title', 'id'),
 			"challenge" => ChallengeResource::make($challenge),
 			"teams" => Team::all()

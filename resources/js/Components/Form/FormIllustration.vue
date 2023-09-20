@@ -129,7 +129,7 @@
 				<div class="font-code text-xs min-h-[3em]">
 					<div class="flex justify-between">
 						<div>{{ currentLineHelperText.parameters }}</div>
-						<div>{{ currentLineHelperText.options }}</div>
+						<div>{{ currentLineHelperText.config }}</div>
 					</div>
 					<div>{{ currentLineHelperText.description }}</div>
 				</div>

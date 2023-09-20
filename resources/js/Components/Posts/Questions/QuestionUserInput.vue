@@ -38,7 +38,6 @@ Met à jour la donnée en fonction des réponses.
 
 <script setup>
 import {computed, onMounted, ref} from "vue"
-// import {getKeyboardName} from "@/keyboards"
 import {useKeyboard} from "@/Composables/useKeyboard"
 
 let {getComponent} = useKeyboard()

@@ -1,3 +1,5 @@
+import {User} from "@/types/index";
+
 export interface ChapterInterface {
     id: number,
     slug: string,
@@ -81,4 +83,15 @@ export interface PostInterface {
     blocks: BlockInterface[],
     questions: QuestionInterface[],
     questionGrid: string,
+}
+
+
+export interface EvaluationInterface {
+    id: number,
+    slug: string,
+    title: string,
+    body: string,
+    randomOrder: boolean,
+    owner: User,
+    questions: QuestionInterface[]
 }

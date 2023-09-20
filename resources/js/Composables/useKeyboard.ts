@@ -1,8 +1,8 @@
 // import {getComponentKeyboardName, getKeyboardName} from "@/keyboards"
-import {checkersConfig} from "@/Composables/checkersConfig"
 import {unref} from "vue"
 import {keyboardKeys, keyboardMaps, keyboards} from "@/Composables/keyboardConfig"
 import {getModule, MODULE_TYPES} from "@/scolcours.js";
+import {getChecker} from "@/Composables/checkersConfig";
 
 function getComponentKeyboardName(value) {
 	switch (value.toLowerCase()) {
@@ -32,7 +32,7 @@ function getOneKeyboard(kbrd) {
 	/* A kbrd code is defined like this:
 	*
 	 * keyboard name					-> name
-	 *    or [checker[,checkerParams]]	-> checker: {name, options)
+	 *    or [checker[,checkerParams]]	-> checker: {name, config)
 	 * @letters (for 'basic keyboard') or special keys / commands -> parameters
 	 * Other parameters...				-> values: []
 	 *
@@ -65,11 +65,9 @@ function getOneKeyboard(kbrd) {
 
 	// If it's a basic keyboard
 	// if (name === "Basic") {
-	// Get the checker options (empty array if undefined)
-	options = options ?? []
 
 	// Get the checker for this keyboard.
-	checker = checkersConfig([value, ...options].join(","))
+	checker = getChecker(value, options)
 
 	// Get the display config for this keyboard.
 	if(keyboards.hasOwnProperty(value)){

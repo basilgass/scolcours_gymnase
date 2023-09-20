@@ -39,25 +39,23 @@ Formulaire d'édition d'une question
 		</template>
 		<div class="flex flex-col md:flex-row gap-3 px-5 pb-5">
 			<form
-				class="flex-1 flex flex-col gap-2"
+				class="flex-1 flex flex-col"
 				@submit.prevent
 			>
-				<form-input
-					v-model="theQuestion.block.title"
-					name="title"
-					label="title"
-					class="font-code"
-					sm
-					inline
+				<form-kit
+						type="text"
+						v-model="theQuestion.block.title"
+						label="titre"
+						input-class="font-code"
+						sm
 				/>
-				<form-input
+				<form-kit
+					type="text"
 					v-model="theQuestion.css"
-					name="css"
 					label="CSS"
-					class="font-code"
+					input-class="font-code"
 					sm
-					inline
-				/>
+					/>
 
 				<div>
 					<form-codearea
@@ -111,13 +109,12 @@ Formulaire d'édition d'une question
 </template>
 <script setup>
 import FormTextarea from "@/Components/Form/FormTextarea.vue"
-import FormInput from "@/Components/Form/FormInput.vue"
 import {computed, inject, reactive, ref} from "vue"
 import DialogModal from "@/Components/Ui/DialogModal.vue"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
 import FormCodearea from "@/Components/Form/FormCodearea.vue"
 import QuestionShow from "@/Components/Posts/Questions/QuestionShow.vue"
-import {getCheckers} from "@/Composables/checkersConfig"
+import {checkersList, getChecker} from "@/Composables/checkersConfig"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 
 const emits = defineEmits(["update:modelValue", "change", "destroy"])
@@ -128,17 +125,16 @@ let props = defineProps({
 	show = ref(props.modelValue),
 	theQuestion = reactive(props.question)
 
-let checkersList = getCheckers(),
-	currentKeyboardLine = ref(""),
+let currentKeyboardLine = ref(""),
 	currentKeyboardLineHelperText = computed(() => {
 		const [name, ...options] = currentKeyboardLine.value.split(",")
 
-		if(checkersList.hasOwnProperty(name)){
-			return checkersList[name].description
+		if(checkersList.includes(name)){
+			return getChecker(name).description
 		}
 
 		// Search for checkers name
-		return Object.keys(checkersList).filter(x=>x.startsWith(currentKeyboardLine.value)).join(", ")
+		return checkersList.filter(x=>x.startsWith(currentKeyboardLine.value)).join(", ")
 	})
 
 
@@ -168,12 +164,12 @@ let saveQuestion = function () {
 					})
 					.catch((error) => {
 						flash.error("Une erreur est survenue - voir la console")
-						console.log(error)
+						console.warning(error)
 					})
 			})
 			.catch((error) => {
 				flash.error("Une erreur est survenue - voir la console")
-				console.log(error)
+				console.warning(error)
 			})
 	},
 	deleteQuestion = function () {

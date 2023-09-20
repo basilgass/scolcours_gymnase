@@ -8,7 +8,7 @@
 			@enter="$emit('validate')"
 		/>
 		<div
-			v-katex.auto="checker.format()"
+			v-katex.auto="checker.format"
 			class="text-center text-xs text-gray-400"
 		/>
 	</div>

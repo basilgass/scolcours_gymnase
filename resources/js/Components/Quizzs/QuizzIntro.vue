@@ -7,14 +7,14 @@
 
 			<markdown-it :text="props.quizz.body" />
 
-			<icon-wait class="text-center mt-20" />
+			<quizz-icon-wait class="text-center mt-20" />
 		</div>
 	</article>
 </template>
 
 <script setup>
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
-import IconWait from "@/Components/Ui/IconWait.vue"
+import QuizzIconWait from "@/Components/Quizzs/QuizzIconWait.vue"
 
 let props = defineProps({
 	quizz: {type: Object, required: true}

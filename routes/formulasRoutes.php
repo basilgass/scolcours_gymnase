@@ -1,6 +1,7 @@
 <?php
 
 // Formulas routes
+use App\Http\Controllers\ChaptersController;
 use App\Http\Controllers\FormulaController;
 
 
@@ -15,6 +16,8 @@ use App\Http\Controllers\FormulaController;
 // Public route
 Route::get("chapters/{chapter:slug}/formulas", [FormulaController::class, 'index'])
 	->name('chapters.formulas.index');
+Route::get("chapters/{chapter:slug}/theorems", [ChaptersController::class, 'theorems'])
+    ->name('chapters.theorems.index');
 
 
 Route::middleware("can:admin")->group(function () {

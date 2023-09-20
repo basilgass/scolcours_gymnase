@@ -1,0 +1,1 @@
+import{o as t,c as a,t as l}from"./app-7ab6dcff.js";const r=["for"],s={__name:"FormLabel",props:{label:{type:String,default:""},name:{type:String,required:!0}},setup(e){return(n,o)=>(t(),a("label",{for:e.name,class:"block my-1 uppercase font-bold text-xs text-gray-700"},l(e.label===""?e.name:e.label??""),9,r))}};export{s as _};

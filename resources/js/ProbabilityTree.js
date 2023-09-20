@@ -2,7 +2,7 @@ import {Fraction} from "pimath/esm/maths/coefficients/fraction"
 import {SVG} from "@svgdotjs/svg.js"
 import katex from "katex"
 
-// TODO: améliorer la génération d'arbre de probabilité avec des options de couleurs (label, chemin, etc...)
+// TODO: améliorer la génération d'arbre de probabilité avec des config de couleurs (label, chemin, etc...)
 
 
 export class ProbabilityTree {

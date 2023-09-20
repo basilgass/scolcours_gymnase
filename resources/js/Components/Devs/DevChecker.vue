@@ -2,63 +2,52 @@
 	<!-- Title -->
 	<div ref="root">
 		<div class="grid grid-cols-1 gap-3">
-			<form-textarea
-				v-model="code"
-				label="code"
-				name="code"
-			/>
-			<div class="font-code">
-				checker@options<br>
-				expected answer<br>
-				given answer
-			</div>
-
-			<div
-				class="border-b py-3"
-				v-text="format"
-			/>
-			<div v-text="`réponse: ${check.result}`" />
-			<div v-text="check.message" />
+			SEE CONSOLE
 		</div>
 	</div>
 </template>
-<script>
+<script lang="ts">
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 
 export default {
 	layout: LayoutMain
 }
 </script>
-<script setup>
-import {computed, onMounted, ref} from "vue"
-import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"
-import {PiMath} from "pimath/esm"
-import DialogModal from "@/Components/Ui/DialogModal.vue"
-import FormTextarea from "@/Components/Form/FormTextarea.vue"
-import {checkersConfig} from "@/Composables/checkersConfig"
+<script lang="ts" setup>
 
-let root = ref(null),
-	code = ref("rational@r\nx-1/x^2\nx^2-x/x^3")
+import {SolutionChecker} from "@/Checkers/SolutionChecker";
+import {VectorChecker} from "@/Checkers/VectorChecker";
+import {NumberChecker} from "@/Checkers/NumberChecker";
+import {CoordChecker} from "@/Checkers/CoordChecker";
+import {FractionChecker} from "@/Checkers/FractionChecker";
+import {EquationChecker} from "@/Checkers/EquationChecker";
+import {ExpChecker} from "@/Checkers/ExpChecker";
 
+// let chk = new SolutionChecker('checker:log'.split('/n'))
+// console.log(chk.check("{log(3)-2/5;4-log(7)}", "s{-log(3)+2/-5;4-log(7)}"))
 
-const format = computed(()=>{
-	let data = code.value.split("\n")
-	return checkersConfig(data[0]).format()
-})
-const check = computed(()=>{
-	let data = code.value.split("\n")
-	if(data.length!==3){return "code à revoir..."}
+// let chk = new VectorChecker("nb,co")
+// console.log(chk.check('(3;5)', '(6;10)'))
 
-	let checker = checkersConfig(data.shift())
-	return checker.check(...data)
+// let chk = new NumberChecker("2,s")
+// console.log(chk.check('3.10', '3.1'))
 
-	// try {
-	// 	let checker = useCheckers(data.shift())
-	// 	return checker.check(...data)
-	// }catch(e){
-	// 	return e
-	// }
+// let chk = new CoordChecker('frac')
+// console.log(chk.check('(3/2;2)', '(3/2;2)'))
 
-})
+// let chk = new FractionChecker('r')
+// console.log(chk.check('3/2', '3/2'))
+
+// let chk = new EquationChecker('s')
+// console.log(chk.check('y=(x-2)^2+4', 'y=(x-2)^2+4'))
+
+let chk = new ExpChecker()
+console.log(chk.check("x(x-3)e^x(x+2)+e^3x+(7x-5)", "e^3x+(x^2-3x)e^(2x+x^2)-(5-7x)"))
+
+console.log(chk.name)
+console.log(chk.description)
+console.log(chk.secondaryCheckerName)
+console.log(chk.format)
+
 </script>
 

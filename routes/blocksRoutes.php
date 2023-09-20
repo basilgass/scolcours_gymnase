@@ -23,8 +23,8 @@ Route::middleware('can:admin')->group(function(){
 		->name('blocks.blur');
 	Route::patch('blocks/{block}/switch', [BlockController::class, 'toggleswitch'])
 		->name('blocks.switch');
-//	Route::get('blocks/{block}/edit', [BlockController::class, 'edit'])
-//		->name('blocks.edit');
+	Route::get('blocks/{block}/edit', [BlockController::class, 'edit'])
+		->name('blocks.edit');
 
 	// Edit / update illustrations.
 	Route::post('blocks/{block}/illustrations/store', [IllustrationController::class, 'store'])

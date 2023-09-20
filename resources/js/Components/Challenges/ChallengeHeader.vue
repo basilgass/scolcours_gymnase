@@ -7,58 +7,60 @@ Contient le bouton de retour au chapitre, le titre, la description et l'édition
 		<!-- Header - return back -->
 		<div class="pt-4 mb-4">
 			<Link
-				:href="
+					:href="
 					route('theme.chapter.intro', [
 						$page.props.theme.slug,
 						props.challenge.chapter.slug,
 					])
 				"
-				class="text-sm text-gray-400 hover:text-gray-800 transition-colors"
+					class="text-sm text-gray-400 hover:text-gray-800 transition-colors"
 			>
-				<i class="bi bi-chevron-left text-xs mr-2" />retour à
-				<span v-katex.auto="props.challenge.chapter.title" />
+				<i class="bi bi-chevron-left text-xs mr-2"/>retour à
+				<span v-katex.auto="props.challenge.chapter.title"/>
 			</Link>
 		</div>
 
 		<!-- The title of the challenge -->
-		<div class="flex justify-between">
+		<div class="flex justify-between items-baseline">
 			<h1
-				v-katex.auto="props.challenge.title"
-				class="text-2xl mb-4"
+					v-katex.auto="props.challenge.title"
+					class="text-2xl mb-4"
 			/>
 
 			<Link
-				v-if="$page.props.auth.can.admin"
-				class="text-xs hover:font-semibold"
-				:href="route('challenges.edit', [props.challenge.id])"
+					v-if="$page.props.auth.can.admin"
+					v-theme.bg.text.admin
+					as="button"
+					:href="route('challenges.edit', [props.challenge.id])"
+					class="text-xs py-2 px-3 rounded font-code flex place-content-center"
 			>
-				éditer le challenge (id: {{ props.challenge.id }}) <i class="bi bi-pencil ml-2" />
+				éditer le challenge (id: {{ props.challenge.id }}) <i class="bi bi-pencil ml-2"/>
 			</Link>
 		</div>
 
 		<!-- the body / question of the challenge -->
 		<markdown-it
-			:text="props.challenge.block.body"
-			class="mt-3"
+				:text="props.challenge.block.body"
+				class="mt-3"
 		/>
 
 		<!-- illustration -->
 		<illustration-show
-			v-if="props.challenge.block.illustrations.length"
-			:illustration="props.challenge.block.illustrations[0]"
-			class="max-w-[30em] mx-auto"
+				v-if="props.challenge.block.illustrations.length"
+				:illustration="props.challenge.block.illustrations[0]"
+				class="max-w-[30em] mx-auto"
 		/>
 	</header>
 
 	<!-- edition du challenge -->
 	<div
-		v-if="showEditForm && $page.props.auth.can.admin"
-		v-admin
+			v-if="showEditForm && $page.props.auth.can.admin"
+			v-admin
 	>
 		<component
-			:is="editForm"
-			v-model="showEditForm"
-			:challenge="challenge"
+				:is="editForm"
+				v-model="showEditForm"
+				:challenge="challenge"
 		/>
 	</div>
 </template>

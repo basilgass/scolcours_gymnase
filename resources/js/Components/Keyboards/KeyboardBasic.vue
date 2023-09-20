@@ -17,7 +17,7 @@ import {useKeyboard} from "@/Composables/useKeyboard"
 import {computed, ref} from "vue"
 
 // Each keyboards has props
-// props.options: keyboard options, like special letters or other...
+// props.config: keyboard config, like special letters or other...
 // props.answer: expected answer
 let props = defineProps({
 	answer: { type: String },
@@ -82,7 +82,7 @@ let emits = defineEmits(["change", "validate"]),
 // Get the keyboard and make it reactive.
 let {loadAnswerToKeyboard} = useKeyboard(props)
 
-// loadAnswerToKeyboard(props.options)
+// loadAnswerToKeyboard(props.config)
 let keyboardInput = ref({input: "", tex: "", raw: ""}),
 	keyboardChange = (event) =>{
 		keyboardInput.value = event

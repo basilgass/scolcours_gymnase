@@ -1,0 +1,157 @@
+import {splitAtSigns, splitIfOutsideParentheses} from "@/helpers/helperFunctions.js"
+import {CheckerBase} from "@/Checkers/CheckerBase";
+import {PiMath} from "pimath/esm";
+
+const name = "exp"
+const description = `exp,[paramètres]
+
+**paramètres**
+aucun
+`
+
+export class ExpChecker extends CheckerBase {
+    constructor(config?: string[] | string) {
+        super(config);
+        this.name = name
+        this.description = description
+    }
+
+    get format(): string {
+        return "polynôme avec des exponentielles <br/>\\((x-3)e^{x^2-3}\\)"
+    }
+
+    check(expected: string, given: string): {
+        result: boolean;
+        message: string
+    } {
+        // Le résultat est exactement ce qui est demandé
+        const asciiAnswer = given.startsWith("#") ? given.substring(1) : given
+
+        if (asciiAnswer === expected) {
+            return {
+                result: true,
+                message: ""
+            }
+        }
+
+        // plusieurs possible:
+        // ae^(polynom)
+        // ae^(polynom) + be^(polynom)
+        // ae^(polynom) + be^(polynom) / ae^(polynom) + be^(polynom)
+
+        // on coupe en numérateur / dénominateur
+        // on recherche un endroit qui n'est pas entre parenthèse.
+        let [N, D] = splitIfOutsideParentheses(given, "/"),
+            [eN, eD] = splitIfOutsideParentheses(expected, "/")
+
+        if (D === undefined && eD !== undefined) {
+            return {
+                result: false,
+                message: "Un dénominateur est attendu..."
+            }
+        }
+
+        if (D !== undefined && eD === undefined) {
+            return {
+                result: false,
+                message: "Aucun dénominateur n'est prévu dans cette réponse."
+            }
+        }
+
+        const resultatNumerateur = expCompare(eN, N)
+
+        if (!resultatNumerateur.result) return resultatNumerateur
+
+        // On contrôle les dénominateurs
+        if (D !== undefined && eD !== undefined) {
+            return expCompare(eD, D)
+        }
+
+        return {
+            result: true,
+            message: ""
+        }
+
+    }
+
+}
+
+
+function expCompare(eValue, value) {
+    // On contrôle maintenant les numérateurs
+    let elements = splitAtSigns(value),
+        expectedElements = splitAtSigns(eValue)
+
+    if (expectedElements.length !== elements.length) {
+        return {
+            result: false,
+            message: "il n'y a pas le bon nombre d'éléments au numérateur"
+        }
+    }
+
+    // Chaque élément est maintenant de la forme
+    // (polynom)e^(polynom)
+
+    // Préparation de tous les éléments sous la forme d'un tableau:
+    // [ {polynom, exponent} ]
+    let elementsArr: {
+        polynom: string,
+        exponent: string,
+        sort: string
+    }[] = elements.map(element => {
+        const match = element.match(/^(\S+)?(e\^(\S+))$/)
+        return match ? {
+                polynom: match[1],
+                exponent: match[3],
+                sort: (match[1] ? new PiMath.Polynom(match[1]).reorder().display : "") + (new PiMath.Polynom(match[3]).reorder().display),
+            } :
+            {
+                polynom: element,
+                exponent: null,
+                sort: (new PiMath.Polynom(element).reorder().display)
+            }
+    }).sort((a, b) => {
+        return a.sort < b.sort ? 1 : -1
+    })
+
+    let expectedElementsArr: {
+        polynom: string,
+        exponent: string,
+        sort: string
+    }[] = expectedElements.map(element => {
+        const match = element.match(/^(\S+)?(e\^(\S+))$/)
+        return match ?
+            {
+                polynom: match[1],
+                exponent: match[3],
+                sort: (match[1] ? new PiMath.Polynom(match[1]).reorder().display : '') + (new PiMath.Polynom(match[3]).reorder().display),
+            } :
+            {
+                polynom: element,
+                exponent: null,
+                sort: (new PiMath.Polynom(element).reorder().display)
+            }
+
+    }).sort((a, b) => {
+        return a.sort < b.sort ? 1 : -1
+    })
+
+    // Tous les éléments sont "alignés"
+    let errors = 0
+    for (let i = 0; i < expectedElementsArr.length; i++) {
+        if (expectedElementsArr[i].sort !== elementsArr[i].sort) {
+            errors++
+        }
+    }
+    if (errors > 0) {
+        return {
+            result: false,
+            message: `Il y a ${errors} élément${errors === 1 ? "" : "s"} qui ${errors === 1 ? "est" : "sont"} faux.`
+        }
+    }
+
+    return {
+        result: true,
+        message: ""
+    }
+}

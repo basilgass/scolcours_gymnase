@@ -90,7 +90,7 @@ import katex from "katex"
 import Button from "@/Components/Auth/Button.vue"
 import {PiMath} from "pimath/esm"
 import KeyboardDisplay from "@/Components/Keyboards/KeyboardDisplay.vue"
-import {checkersConfig} from "@/Composables/checkersConfig"
+import {customCheck} from "@/Composables/checkersConfig"
 
 let props = defineProps({
 	keyboard: {type: Object, required: true},
@@ -102,7 +102,7 @@ let emits = defineEmits(["change", "validate"]),
 		// On récupère la mise en forme de la réponse
 		const output = validateOutput()
 		// On valide la réponse
-		const validation = checkersConfig("study").check(props.answer, output)
+		const validation = customCheck('study', props.answer, output)
 
 		emits("change", {
 			value: {
@@ -136,68 +136,6 @@ let validateOutput = function(){
 	return output
 }
 
-
-
-// let outputHTML = ref(null),
-// 	validateButton = ref(null),
-// 	resetKeyStrokes = function () {
-// 		// Reset keystrokes
-// 		for(let item in items.value){
-// 			removeItem(item)
-// 		}
-// 	},
-// wrongAnswer = function () {
-// 	useWrongAnswerAnimation(validateButton.value)
-// },
-// changeEvent = function() {
-// 	emits("change",{
-// 		tex: "",
-// 		raw: showRawOutput.value?PiGraph.svg.svg():""
-// 	})
-// },
-// ,
-// validateEvent = function () {
-// 	if(enablePlot.value){
-// 		plotGraph()
-// 	}
-//
-// 	const output = validateOutput()
-// 	const check = useCheckers("study").check(props.answer, output)
-//
-// 	// TODO: checking / message for keyboard STUDY.
-// 	emits("validate", {
-// 		code: output,
-// 		tex: "",
-// 		raw: showRawOutput.value?PiGraph.svg.svg():"",
-// 		correct: check.result,
-// 		message: check.message
-// 	})
-// },
-// getTex = function (value) {
-// 	const v = value.split("@")
-//
-// 	//TODO: Keyboard Study - get tex/raw does not work ?
-// 	nextTick(() => outputHTML.value.innerHTML).then(resolve => {
-// 		// emits("tex", resolve)
-// 		// emits("raw", showRawOutput.value?PiGraph.svg.svg():"")
-// 	})
-//
-// 	return ""
-// },
-// getRaw = function (value) {
-// 	nextTick(() => outputHTML.value.innerHTML).then(resolve => {
-// 		// emits("raw", PiGraph.svg.svg())
-// 	})
-//
-// 	return ""
-// },
-// getAnswer = function(value){
-// 	return {
-// 		tex: getTex(value),
-// 		raw: getRaw(value)
-// 	}
-// }
-// defineExpose({resetKeyStrokes, wrongAnswer, getAnswer})
 
 // Code specific to Study.
 let PiGraph,
@@ -769,7 +707,7 @@ function plotGraph(){
 	if(plot){plot.remove()}
 	// Check the validation -
 	// if the result is TRUE, trace the existing value (if it exists).
-	const check = checkersConfig("study").check(props.answer, validateOutput())
+	const check = customCheck("study", props.answer, validateOutput())
 	if(check.result && plotResult.value){
 		initPlot(plotResult.value)
 		return

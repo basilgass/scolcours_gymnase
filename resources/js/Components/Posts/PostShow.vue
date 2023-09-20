@@ -1,5 +1,5 @@
 <!--
-Affichage d'un post avec toutes les options activées
+Affichage d'un post avec toutes les config activées
 Principalement la couche utilisée dans ChapterSlide.
 -->
 <template>

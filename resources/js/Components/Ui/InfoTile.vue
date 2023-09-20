@@ -10,4 +10,5 @@
 </template>
 
 <script setup>
+// TODO: remove InfoTile as only used in QuizzQuestionProjection.vue
 </script>

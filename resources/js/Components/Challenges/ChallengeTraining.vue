@@ -59,7 +59,7 @@ onMounted(()=>{generateQuestion()})
 		<question-show
 			:key="`question-${counter}`"
 			:question="theQuestion"
-			class="max-w-[40em] mx-auto border-0"
+			class="max-w-[40em] mx-auto border border-gray-400"
 			dynamic
 			show-input
 			@validate="nextQuestion"

@@ -42,7 +42,7 @@ TODO: déplacer dans les composants, le simplifier ou supprimer ?
 	</div>
 </template>
 <script setup>
-
+// Génère une tabée des matières en récupérant les titres ".chapter-menu"
 import {onMounted, ref} from "vue"
 
 let props = defineProps({

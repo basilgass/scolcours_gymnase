@@ -274,6 +274,8 @@ const flash = inject("flash", null)
 // Emits
 const emits = defineEmits(["validate", "destroy", "duplicate"])
 
+
+
 // Reactivity
 let theQuestion = reactive(props.question), // la question principale, vraiment en "reactive" ?
 	theQuestionBody = computed(() => {
@@ -364,7 +366,7 @@ let answerId = ref(0),
 		if (kbrd.name === "Basic") {
 			let customOutput = theAnswers.value[answerId.value].keyboard.parameters.filter(x=>x.startsWith("format:"))[0]
 
-			return customOutput??theAnswers.value[answerId.value].keyboard.checker.format()
+			return customOutput??theAnswers.value[answerId.value].keyboard.checker.format
 		}
 
 		return ""
@@ -526,7 +528,7 @@ let updateQuestion = function (event) {
 	}
 
 // Gestion administrateur
-let editMode = inject("editMode", false),
+let editMode = inject("editMode", {enabled: false}),
 	showEditForm = ref(false),
 	editForm = computed(() => {
 		return defineAsyncComponent(

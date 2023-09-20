@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\BlockResource;
 use App\Http\Resources\ChapterMinResource;
 use App\Http\Resources\ChapterResource;
 use App\Http\Resources\ChapterShowResource;
@@ -105,7 +106,7 @@ class ChaptersController extends Controller
 
 	public function intro(Theme $theme, Chapter $chapter)
 	{
-		return Inertia::render('Chapters/ChapterIntro', [
+		return Inertia::render('Chapters/ChapterShow', [
 			// Used for the page layout
 			"theme" => $theme->only('color', 'icon', 'slug', 'title', 'id'),
 			// Get the chapter (for next / precvious / ...)
@@ -242,6 +243,19 @@ class ChaptersController extends Controller
 		return ChapterMinResource::collection($chapter->relations);
 	}
 
+    public function theorems(Chapter $chapter)
+    {
+        // Get all [theorem / propreties and definition] blocks from all post in the chapter.
+        $blocks = $chapter->posts->map(function($post){
+            return $post->blocks;
+        })
+            ->flatten()
+            ->filter(function($block){
+                return $block->type==="theorem" or $block->type==="definition" or $block->type==="property";
+            });
+
+        return BlockResource::collection($blocks);
+    }
 	// TODO: Delete this section as it has been moved to LatexController ?
 //	public function latex(Request $data)
 //	{

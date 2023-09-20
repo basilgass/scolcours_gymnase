@@ -18,6 +18,7 @@ Affichage d'un block , avec toutes les possibilités
 			<div
 				class="flex justify-between w-full px-5 py-3 mb-3 text-xl"
 				:class="blockConfig.style.header"
+				v-show="editMode.enabled.value || blockTitle"
 			>
 				<div>
 					<div class="flex gap-3">
@@ -99,10 +100,7 @@ Affichage d'un block , avec toutes les possibilités
 
 				<!-- Block illustrations -->
 				<div
-					v-if="
-						theBlock.illustrations.length > 0 ||
-							$page.props.auth.can.admin
-					"
+					v-if=" theBlock.illustrations.length > 0 || editMode.enabled.value"
 					:class="blockTemplate.illustration"
 				>
 					<draggable

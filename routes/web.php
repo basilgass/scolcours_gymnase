@@ -37,6 +37,7 @@ require __DIR__ . '/teamsRoutes.php';
 require __DIR__ . '/devRoutes.php';
 require __DIR__ . '/toolsRoutes.php';
 require __DIR__ . '/quizzsRoutes.php';
+require __DIR__ . '/evaluationRoutes.php';
 
 require __DIR__ . '/gamesRoutes.php';
 require __DIR__ . '/latexRoutes.php';

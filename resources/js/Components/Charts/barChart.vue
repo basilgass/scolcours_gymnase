@@ -4,6 +4,7 @@ import {computed} from "vue"
 
 import {Chart as ChartJS} from "chart.js/auto"
 import {CategoryScale} from "chart.js"
+import _ from "lodash";
 
 ChartJS.register(CategoryScale)
 

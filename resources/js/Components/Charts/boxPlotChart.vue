@@ -1,6 +1,7 @@
 <script setup>
 import {computed, onMounted, ref, watch} from "vue"
 import {BoxPlotChart} from "@sgratzl/chartjs-chart-boxplot"
+import _ from "lodash";
 
 let props = defineProps({
 	chartLabels: {type: Array, default: () => []},

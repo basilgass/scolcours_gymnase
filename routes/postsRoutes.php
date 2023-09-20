@@ -1,4 +1,5 @@
 <?php
+
 use App\Http\Controllers\PostController;
 
 // Public
@@ -23,9 +24,8 @@ Route::middleware('can:admin')->group(function () {
 		->name('posts.updateBlocksOrder');
 	Route::patch('posts/{post}/updateQuestionsGrid', [PostController::class, 'updateQuestionsGrid'])
 		->name('posts.updateQuestionsGrid');
-	Route::get('posts/{post}/edit', [PostController::class, 'edit'])
-		->name('posts.edit');
-	
+
+
 
 });
 

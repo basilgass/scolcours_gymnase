@@ -4,7 +4,7 @@
 
 /**
  * A helper file for Laravel, to provide autocomplete information to your IDE
- * Generated for Laravel 10.15.0.
+ * Generated for Laravel 10.22.0.
  *
  * This file should not be included in your code, only analyzed by your IDE!
  *
@@ -2775,6 +2775,18 @@
                         return $instance->getCustomDirectives();
         }
                     /**
+         * Indicate that the following callable should be used to prepare strings for compilation.
+         *
+         * @param callable $callback
+         * @return \Illuminate\View\Compilers\BladeCompiler 
+         * @static 
+         */ 
+        public static function prepareStringsForCompilationUsing($callback)
+        {
+                        /** @var \Illuminate\View\Compilers\BladeCompiler $instance */
+                        return $instance->prepareStringsForCompilationUsing($callback);
+        }
+                    /**
          * Register a new precompiler.
          *
          * @param callable $precompiler
@@ -3639,6 +3651,18 @@
         {
                         /** @var \Illuminate\Support\Testing\Fakes\BusFake $instance */
                         return $instance->recordPendingBatch($pendingBatch);
+        }
+                    /**
+         * Specify if commands should be serialized and restored when being batched.
+         *
+         * @param bool $serializeAndRestore
+         * @return \Illuminate\Support\Testing\Fakes\BusFake 
+         * @static 
+         */ 
+        public static function serializeAndRestore($serializeAndRestore = true)
+        {
+                        /** @var \Illuminate\Support\Testing\Fakes\BusFake $instance */
+                        return $instance->serializeAndRestore($serializeAndRestore);
         }
          
     }
@@ -7851,7 +7875,7 @@
      * @method static \Illuminate\Http\Client\PendingRequest sink(string|resource $to)
      * @method static \Illuminate\Http\Client\PendingRequest timeout(int $seconds)
      * @method static \Illuminate\Http\Client\PendingRequest connectTimeout(int $seconds)
-     * @method static \Illuminate\Http\Client\PendingRequest retry(int $times, Closure|int $sleepMilliseconds = 0, callable|null $when = null, bool $throw = true)
+     * @method static \Illuminate\Http\Client\PendingRequest retry(int $times, \Closure|int $sleepMilliseconds = 0, callable|null $when = null, bool $throw = true)
      * @method static \Illuminate\Http\Client\PendingRequest withOptions(array $options)
      * @method static \Illuminate\Http\Client\PendingRequest withMiddleware(callable $middleware)
      * @method static \Illuminate\Http\Client\PendingRequest withRequestMiddleware(callable $middleware)
@@ -10097,6 +10121,18 @@
                         return $instance->pushedJobs();
         }
                     /**
+         * Specify if jobs should be serialized and restored when being "pushed" to the queue.
+         *
+         * @param bool $serializeAndRestore
+         * @return \Illuminate\Support\Testing\Fakes\QueueFake 
+         * @static 
+         */ 
+        public static function serializeAndRestore($serializeAndRestore = true)
+        {
+                        /** @var \Illuminate\Support\Testing\Fakes\QueueFake $instance */
+                        return $instance->serializeAndRestore($serializeAndRestore);
+        }
+                    /**
          * Get the connection name for the queue.
          *
          * @return string 
@@ -10944,7 +10980,7 @@
          *
          * @param string|null $key
          * @param mixed $default
-         * @return \Symfony\Component\HttpFoundation\ParameterBag|mixed 
+         * @return \Symfony\Component\HttpFoundation\InputBag|mixed 
          * @static 
          */ 
         public static function json($key = null, $default = null)
@@ -11106,7 +11142,7 @@
                     /**
          * Set the JSON payload for the request.
          *
-         * @param \Symfony\Component\HttpFoundation\ParameterBag $json
+         * @param \Symfony\Component\HttpFoundation\InputBag $json
          * @return \Illuminate\Http\Request 
          * @static 
          */ 
@@ -16536,6 +16572,18 @@
                         return $instance->withKeyResolver($keyResolver);
         }
                     /**
+         * Set the callback that should be used to attempt to resolve missing named routes.
+         *
+         * @param callable $missingNamedRouteResolver
+         * @return \Illuminate\Routing\UrlGenerator 
+         * @static 
+         */ 
+        public static function resolveMissingNamedRoutesUsing($missingNamedRouteResolver)
+        {
+                        /** @var \Illuminate\Routing\UrlGenerator $instance */
+                        return $instance->resolveMissingNamedRoutesUsing($missingNamedRouteResolver);
+        }
+                    /**
          * Get the root controller namespace.
          *
          * @return string 
@@ -18779,7 +18827,7 @@ namespace  {
             }
              
                 /**
-             * Get the first record matching the attributes or create it.
+             * Get the first record matching the attributes. If the record is not found, create it.
              *
              * @param array $attributes
              * @param array $values
@@ -18790,6 +18838,20 @@ namespace  {
             {
                                 /** @var \Illuminate\Database\Eloquent\Builder $instance */
                                 return $instance->firstOrCreate($attributes, $values);
+            }
+             
+                /**
+             * Attempt to create the record. If a unique constraint violation occurs, attempt to find the matching record.
+             *
+             * @param array $attributes
+             * @param array $values
+             * @return \Illuminate\Database\Eloquent\Model|static 
+             * @static 
+             */ 
+            public static function createOrFirst($attributes = [], $values = [])
+            {
+                                /** @var \Illuminate\Database\Eloquent\Builder $instance */
+                                return $instance->createOrFirst($attributes, $values);
             }
              
                 /**
@@ -19148,6 +19210,20 @@ namespace  {
             {
                                 /** @var \Illuminate\Database\Eloquent\Builder $instance */
                                 return $instance->withCasts($casts);
+            }
+             
+                /**
+             * Execute the given Closure within a transaction savepoint if needed.
+             *
+             * @template TModelValue
+             * @param \Closure():  TModelValue  $scope
+             * @return \Illuminate\Database\Eloquent\TModelValue 
+             * @static 
+             */ 
+            public static function withSavepointIfNeeded($scope)
+            {
+                                /** @var \Illuminate\Database\Eloquent\Builder $instance */
+                                return $instance->withSavepointIfNeeded($scope);
             }
              
                 /**

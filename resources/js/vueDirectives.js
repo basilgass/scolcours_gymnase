@@ -8,7 +8,7 @@ import renderMathInElement from "katex/contrib/auto-render";
 function katexAutoRender(el) {
 	if(el) {
 		renderMathInElement(el, {
-				// customised options
+				// customised config
 				// • auto-render specific keys, e.g.:
 				delimiters: [
 					{left: "$$", right: "$$", display: true},

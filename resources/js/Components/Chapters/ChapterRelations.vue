@@ -93,7 +93,7 @@ let chapterRelations = ref(props.chapter.relations),
 					chapterRelations.value = res.data.data
 				}
 			}).catch(res=>{
-				console.log(res)
+				flash.error(res.data)
 			})
 	}
 </script>

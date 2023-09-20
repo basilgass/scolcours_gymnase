@@ -1,6 +1,7 @@
 <script setup>
 import {Line} from "vue-chartjs"
 import {computed} from "vue"
+import _ from "lodash";
 
 let props = defineProps({
 	chartLabels: {type: Array, default: () => []},

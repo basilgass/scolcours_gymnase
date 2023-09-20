@@ -61,7 +61,7 @@ return [
                 env('MEMCACHED_USERNAME'),
                 env('MEMCACHED_PASSWORD'),
             ],
-            'options' => [
+            'config' => [
                 // Memcached::OPT_CONNECT_TIMEOUT => 2000,
             ],
             'servers' => [

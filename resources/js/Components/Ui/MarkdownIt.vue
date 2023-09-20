@@ -61,13 +61,12 @@ let mdClick = function(event){
 		event.preventDefault()
 		const [url, anchor] = event.target.href.split("#")
 
-		// l'url peut être de deux forme.
+		// l'url peut être de deux formes.
 		// https://url
 		// nom,...paramètres
 
 		if(url.includes("@")){
 			const [routeName, ...routeParameters] = url.split("@")[1].split(",")
-			console.log(routeName, routeParameters)
 			router.visit(route(routeName, routeParameters))
 		}else{
 			if (anchor) {

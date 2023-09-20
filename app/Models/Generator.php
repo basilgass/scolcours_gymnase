@@ -20,6 +20,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Challenge> $challenges
  * @property-read int|null $challenges_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Evaluation> $evaluations
+ * @property-read int|null $evaluations_count
  * @method static \Illuminate\Database\Eloquent\Builder|Generator newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Generator newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Generator query()
@@ -45,4 +47,10 @@ class Generator extends Model
 		return $this->morphedByMany(Challenge::class, 'generatorable')
 			->withPivot('order');
 	}
+
+    public function evaluations()
+    {
+        return $this->morphedByMany(Evaluation::class, 'generatorable')
+            ->withPivot('order');
+    }
 }

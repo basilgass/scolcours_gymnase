@@ -12,7 +12,7 @@
 </template>
 
 <script>
-// use normal <script> to declare options
+// use normal <script> to declare config
 export default {
 	inheritAttrs: false
 }

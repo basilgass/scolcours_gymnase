@@ -110,7 +110,6 @@ import {computed, nextTick, onMounted, ref} from "vue"
 import PiTableOfSigns from "@/Components/Pi/PiTableOfSigns.vue"
 import KeyboardDisplay from "@/Components/Keyboards/KeyboardDisplay.vue"
 import {makeStudyFromCode} from "@/Composables/useTos"
-import {checkersConfig} from "@/Composables/checkersConfig"
 import {useKeyboard} from "@/Composables/useKeyboard"
 
 let props = defineProps({
@@ -121,7 +120,7 @@ let props = defineProps({
 let emits = defineEmits(["change", "validate"]),
 	changeEvent = async function (value) {
 		await nextTick()
-		const check = checkersConfig("tos").check(props.answer, answerValue.value)
+		const check = customCheck("tos", props.answer, answerValue.value)
 
 		emits("change", {
 			value: {
@@ -138,7 +137,7 @@ let emits = defineEmits(["change", "validate"]),
 
 
 /* FONCTIONS SPECIFIQUES */
-// Les options du clavier TOS
+// Les config du clavier TOS
 let tosName = computed(() => { // le nom de la fonction
 		let names = props.keyboard.parameters.filter(x => x.includes("(")&&x.includes(")"))
 		return names.length === 0 ? "f(x)" : names[0]

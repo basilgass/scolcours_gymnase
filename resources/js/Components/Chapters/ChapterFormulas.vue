@@ -4,7 +4,7 @@ Affichage d'un formulaire, avec la possibilit√© de passer d'un formulaire du th√
 <template>
 	<article>
 		<div class="px-5 flex justify-between">
-			<h3 class="uppercase font-extralight mb-2">
+			<h3 class="text-xl uppercase font-extralight mb-2">
 				Formulaires
 			</h3>
 		</div>
@@ -33,11 +33,11 @@ Affichage d'un formulaire, avec la possibilit√© de passer d'un formulaire du th√
 			<div
 				v-else
 				:class="props.responsive?'md:columns-2 lg:columns-3': ''"
-				class="columns-1 "
+				class="columns-1 gap-4"
 			>
 				<draggable
 					v-model="theFormular"
-					class="grid grid-cols-1 gap-3 my-5"
+					class="my-5"
 					handle=".draggable-handle"
 					item-key="id"
 					v-bind="{

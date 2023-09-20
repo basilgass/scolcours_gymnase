@@ -64,7 +64,7 @@
 			>
 				mode compact
 			</div>
-			<table class="table tab w-full text-center font-code">
+			<table class="table tab w-full text-center font-code text-xl">
 				<thead>
 					<tr class="font-semibold">
 						<td>de</td>
@@ -82,7 +82,7 @@
 					>
 						<td>{{ item.pointsMin }}</td>
 						<td>{{ item.pointsMax }}</td>
-						<td>{{ item.note }}</td>
+						<td class="font-semibold">{{ item.note }}</td>
 					</tr>
 				</tbody>
 			</table>
@@ -216,7 +216,7 @@ let bareme = computed(() => {
 				centieme: note.toFixed(2)
 			}
 
-			pt += precision.value
+			pt = +(pt + precision.value).toFixed(3)
 		}
 
 		return result
@@ -326,7 +326,7 @@ onMounted(() => {
 	// 		labels: [],
 	// 		datasets: [{data: []}],
 	// 	},
-	// 	options: {
+	// 	config: {
 	// 		responsive: true,
 	// 		maintainAspectRatio: false,
 	// 		plugins: {

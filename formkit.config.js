@@ -3,7 +3,10 @@ import {genesisIcons} from "@formkit/icons";
 import {generateClasses} from "@formkit/themes";
 import myTailwindTheme from "./tailwind-theme";
 import {createFloatingLabelsPlugin} from "@formkit/addons";
-import '@formkit/addons/css/floatingLabels.css'
+import './resources/css/FormKitFloatingLabel.css'
+
+import text from "./resources/js/FormKitText";
+
 
 export default {
 	icons: {
@@ -19,5 +22,8 @@ export default {
 		createFloatingLabelsPlugin({
 			useAsDefault: true
 		})
-	]
+	],
+	inputs : {
+		text
+	}
 }

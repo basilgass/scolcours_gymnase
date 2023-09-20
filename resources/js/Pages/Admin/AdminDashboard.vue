@@ -7,14 +7,14 @@
 		<Link
 			:href="route('admin.config')"
 			as="button"
-			class="min-h-[8em] bg-white border border-gray-200 rounded-xl"
+			class="min-h-[8em] text-xl bg-white border border-gray-200 rounded-xl"
 		>
 			configuration générale
 		</Link>
 
 		<Link
 			as="button"
-			class="min-h-[8em] bg-white border border-gray-200 rounded-xl"
+			class="min-h-[8em] text-xl bg-white border border-gray-200 rounded-xl"
 			:href="route('admin.pages')"
 		>
 			gestion des pages
@@ -22,7 +22,7 @@
 
 		<Link
 			as="button"
-			class="min-h-[8em] bg-white border border-gray-200 rounded-xl"
+			class="min-h-[8em] text-xl bg-white border border-gray-200 rounded-xl"
 			:href="route('admin.users')"
 		>
 			gestion des utilisateurs
@@ -30,15 +30,15 @@
 
 		<Link
 			as="button"
-			class="min-h-[8em] bg-white border border-gray-200 rounded-xl"
-			:href="route('admin.stats.chapter', ['puissances'])"
+			class="min-h-[8em] text-xl bg-white border border-gray-200 rounded-xl"
+			:href="route('teams.index')"
 		>
-			statistiques
+			équipes
 		</Link>
 
 		<Link
 			as="button"
-			class="min-h-[8em] bg-white border border-gray-200 rounded-xl"
+			class="min-h-[8em] text-xl bg-white border border-gray-200 rounded-xl"
 			:href="route('quizzs.admin')"
 		>
 			gestion des quizz

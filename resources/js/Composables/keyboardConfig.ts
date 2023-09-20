@@ -1,6 +1,27 @@
 import AsciiMathParser from "@/asciimath2tex"
 
-export function keyboardMaps(kbrd) {
+/**
+ * Represents a keyboard object type.
+ * @typedef {Object} KeyboardObjectType
+ * @property {string} name - The name of the keyboard object type.
+ * @property {string} grid - The grid information of the keyboard object type.
+ * @property {string[]} layout - The layout of the keyboard object type.
+ * @property {function} tex - The function that returns a value based on the given string value.
+ */
+type KeyboardObjectType = {
+    name: string;
+    grid: string;
+    layout: (string|[string,number])[];
+    tex: (value: string) => string; // Type of the returned value can be changed according to actual function implementation
+};
+
+/**
+ * Returns the corresponding type of keyboard given a checker parameter.
+ *
+ * @param {string} kbrd - The input parameter representing the type of keyboard.
+ * @return {string} The type of keyboard based on the input parameter. Returns the input parameter if no match is found.
+ */
+export function keyboardMaps(kbrd:string):string {
 	switch (kbrd){
 	case "nb":
 		return "number"
@@ -24,6 +45,11 @@ export function keyboardMaps(kbrd) {
 	return kbrd
 }
 
+/**
+ * @typedef {Object} KeyObject
+ * @property {string} type - The type of the key, either "math" or "icon".
+ * @property {string} display - The display value of the key.
+ */
 export const keyboardKeys = {
 	"0": {type: "math", display: "0"},
 	"1": {type: "math", display: "1"},
@@ -87,7 +113,17 @@ export const keyboardKeys = {
 	"@back": {type: "icon", display: "bi bi-backspace"}
 }
 
-export 	const keyboards = {
+/**
+ * The `keyboards` object is used to store the layout and transformation functions for different types of keyboards.
+ * Each keyboard is represented as a key-value pair, where the key is the name of the keyboard and the value is an object containing the following properties:
+ *
+ * @typedef {Object} Keyboard
+ * @property {string} name - The name of the keyboard.
+ * @property {string} grid - The CSS class for the grid layout of the keyboard.
+ * @property {string[]} layout - An array representing the layout of the keyboard keys.
+ * @property {function} tex - A function that converts the ASCII representation of a key into its corresponding LaTeX representation.
+ */
+export 	const keyboards:{[Key:string]:KeyboardObjectType} = {
 	// "qcm": {
 	// 	name: "qcm",
 	// 	grid: "grid-cols-4",
@@ -364,14 +400,26 @@ export 	const keyboards = {
 	}
 }
 
-function asciiToTex(value) {
+/**
+ * Converts ASCII math expression to TeX format.
+ *
+ * @param {string} value - The ASCII math expression to be converted.
+ * @return {string} - The TeX formatted string.
+ */
+function asciiToTex(value:string):string {
 	const parser = new AsciiMathParser()
 
 	// Force display style
 	return parser.parse(value)
 }
 
-function makeExactFromAscii(value) {
+/**
+ * Converts an ASCII string to an exact string.
+ *
+ * @param {string} value - The ASCII string to convert.
+ * @return {string} - The converted exact string.
+ */
+function makeExactFromAscii(value:string):string {
 	if (value === undefined || value === "") {
 		return ""
 	}
