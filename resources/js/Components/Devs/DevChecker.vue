@@ -43,6 +43,7 @@ import {ExpChecker} from "@/Checkers/ExpChecker";
 
 let chk = new ExpChecker()
 console.log(chk.check("x(x-3)e^x(x+2)+e^3x+(7x-5)", "e^3x+(x^2-3x)e^(2x+x^2)-(5-7x)"))
+console.log(chk.check("-e^(1/x)/x^2", "-e^(1/x)/x^2"))
 
 console.log(chk.name)
 console.log(chk.description)

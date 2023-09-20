@@ -78,6 +78,13 @@ export class ExpChecker extends CheckerBase {
 
 
 function expCompare(eValue, value) {
+    if (eValue === value) {
+        return {
+            result: true,
+            message: ""
+        }
+    }
+
     // On contrôle maintenant les numérateurs
     let elements = splitAtSigns(value),
         expectedElements = splitAtSigns(eValue)
@@ -99,17 +106,7 @@ function expCompare(eValue, value) {
         exponent: string,
         sort: string
     }[] = elements.map(element => {
-        const match = element.match(/^(\S+)?(e\^(\S+))$/)
-        return match ? {
-                polynom: match[1],
-                exponent: match[3],
-                sort: (match[1] ? new PiMath.Polynom(match[1]).reorder().display : "") + (new PiMath.Polynom(match[3]).reorder().display),
-            } :
-            {
-                polynom: element,
-                exponent: null,
-                sort: (new PiMath.Polynom(element).reorder().display)
-            }
+        return displayPolynomForSorting(element)
     }).sort((a, b) => {
         return a.sort < b.sort ? 1 : -1
     })
@@ -119,19 +116,7 @@ function expCompare(eValue, value) {
         exponent: string,
         sort: string
     }[] = expectedElements.map(element => {
-        const match = element.match(/^(\S+)?(e\^(\S+))$/)
-        return match ?
-            {
-                polynom: match[1],
-                exponent: match[3],
-                sort: (match[1] ? new PiMath.Polynom(match[1]).reorder().display : '') + (new PiMath.Polynom(match[3]).reorder().display),
-            } :
-            {
-                polynom: element,
-                exponent: null,
-                sort: (new PiMath.Polynom(element).reorder().display)
-            }
-
+        return displayPolynomForSorting(element)
     }).sort((a, b) => {
         return a.sort < b.sort ? 1 : -1
     })
@@ -154,4 +139,41 @@ function expCompare(eValue, value) {
         result: true,
         message: ""
     }
+}
+
+function displayPolynomForSorting(element: string) {
+    const match = element.match(/^(\S+)?(e\^(\S+))$/)
+
+    let poly1, poly2
+    if (match) {
+        try {
+            poly1 = new PiMath.Polynom(match[1]).reorder().display
+        } catch {
+            poly1 = match[1] ? match[1] : ""
+        }
+        try {
+            poly2 = new PiMath.Polynom(match[3]).reorder().display
+        } catch {
+            poly2 = match[3] ? match[3] : ""
+        }
+
+        return {
+            polynom: match[1],
+            exponent: match[3],
+            sort: poly1 + poly2,
+        }
+    }
+
+    let poly3
+    try{
+        poly3 = new PiMath.Polynom(element).reorder().display
+    }catch{
+        poly3 = element
+    }
+    return {
+        polynom: element,
+        exponent: null,
+        sort: poly3
+    }
+
 }
