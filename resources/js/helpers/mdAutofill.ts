@@ -50,6 +50,8 @@ function wrapLastWord(text:string, wrapperBefore:string, wrapperAfter:string): s
 	}
 
 	let item = txt.pop()
-	return `${text.slice(0, -item.length)}${wrapperBefore}${item}${wrapperAfter}`
+    return item.length>0?
+        `${text.slice(0, -item.length)}${wrapperBefore}${item}${wrapperAfter}`:
+        `${text}${wrapperBefore}${item}${wrapperAfter}`
 
 }

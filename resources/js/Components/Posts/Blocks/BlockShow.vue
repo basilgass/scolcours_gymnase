@@ -5,6 +5,7 @@ Affichage d'un block , avec toutes les possibilités
 	<article
 		v-show="showBlock"
 		:class="blockConfig.style.body"
+		:id="`block-${props.block.id}`"
 	>
 		<button
 			v-if="isBlur"

@@ -8,6 +8,7 @@ use App\Http\Resources\ChapterResource;
 use App\Http\Resources\ChapterShowResource;
 use App\Http\Resources\PostResource;
 use App\Http\Resources\QuestionCollection;
+use App\Models\Block;
 use App\Models\Chapter;
 use App\Models\Theme;
 use Illuminate\Http\Request;
@@ -118,7 +119,7 @@ class ChaptersController extends Controller
 			]
 		]);
 	}
-	public function slide(Theme $theme, Chapter $chapter, int $order)
+	public function slide(Theme $theme, Chapter $chapter, int $order, Block $block=null)
 	{
 		$post = $chapter->posts->where('order', "=", $order)->first();
 
@@ -130,6 +131,8 @@ class ChaptersController extends Controller
 			"chapter" => fn() => ChapterResource::make($chapter, true),
 			// The post information
 			"post" => PostResource::make($post),
+            // Block for a scroll to
+            "blockAnchor" => $block?->id,
 			// navigation bar.
 			"nav" => [
 				'previous' => $order - 1 <= 0 ? route('theme.chapter.intro', [$theme, $chapter]) : route('theme.chapter.slide', [$theme, $chapter, $order - 1]),

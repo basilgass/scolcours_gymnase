@@ -5,8 +5,11 @@ use App\Http\Controllers\BlockController;
 use App\Http\Controllers\IllustrationController;
 use App\Http\Controllers\PostController;
 
-Route::get('blocks/components', [BlockController::class, 'fetchComponents'])->name('illustrations.components');
+Route::get('blocks/components', [BlockController::class, 'fetchComponents'])
+    ->name('illustrations.components');
 
+Route::get('blocks/{block}', [BlockController::class, 'show'])
+    ->name('blocks.show');
 //Route::apiResource('blocks', BlockController::class);
 
 Route::middleware('can:admin')->group(function(){

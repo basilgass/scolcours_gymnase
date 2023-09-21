@@ -76,6 +76,7 @@ export interface PostInterface {
     type: string,
     title: string,
     order: number,
+    blockAnchor: number,
     numberOfVisibleBlocks: number,
     active: number,
     script: string,

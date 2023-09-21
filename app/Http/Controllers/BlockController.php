@@ -104,11 +104,20 @@ class BlockController extends Controller
 	 * Display the specified resource.
 	 *
 	 * @param int $id
-	 * @return Response
-	 */
-	public function show($id)
+	 * @return RedirectResponse
+     */
+	public function show(Block $block)
 	{
-		//
+		// Redirect to the post / show item
+        $post = $block->blockable;
+        $chapter = $post->chapter;
+        $theme = $chapter->theme;
+        return redirect()->route(
+            'theme.chapter.slide.block',
+            [
+                $theme->slug, $chapter->slug, $post->order, $block->id
+            ]
+        );
 	}
 
 	/**

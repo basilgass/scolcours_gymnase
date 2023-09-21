@@ -258,8 +258,8 @@ let statConfig = reactive({
 	samples: 100,           // Taille de l'échantillon
 	samplesExact: true,     // La taille de l'échantillon doit être exact.
 	min: 100,                // Valeur minimale des modalités
-	max: 190,               // Valeur maximale des modalités
-	length: 10,             // Taille des classes de modalité
+	max: 900,               // Valeur maximale des modalités
+	length: 100,             // Taille des classes de modalité
 	skew: 1,                // Paramètre pour la génération des valeurs
 	flatten: 10,            // Paramètre pour la génération des valeurs
 	round: 2,               // Arrondir les valeurs
@@ -293,7 +293,6 @@ let statRaw = computed(() => {
 		return []
 	}
 
-
 	if (statConfig.customData.length === 0) {
 		return statsBuildData_auto()
 	}
@@ -304,7 +303,12 @@ let statTable = computed(() => {
 	if (statConfig.length === 1) {
 		return statsBuildTable_discrete()
 	}
-	return statsBuildTable_continuous()
+
+	if(statRaw.value.length>0) {
+		return statsBuildTable_continuous()
+	}
+
+	return []
 })
 
 let statSum = computed(() => {
@@ -444,6 +448,7 @@ let statCentralValues = computed(() => {
 		sigma2 = statTable.value.reduce((previous, row) => previous + row.fi * Math.pow(+row.xi - mean, 2), 0),
 		q1 = stats_median(statTable.value, 0.25),
 		q3 = stats_median(statTable.value, 0.75)
+
 	return {
 		modal: stats_mode(statTable.value),
 		q1,
@@ -616,6 +621,8 @@ function statRoundValue(value) {
  * @returns {number} - The mode of the table.
  */
 function stats_mode(table) {
+	if(statTable.value.length===0){return 0}
+
 	// xm = b(i-1) + (D1)/(D1+D2)*Li
 	let niMax = Math.max(...table.map(o => o.ni)),
 		niMaxID
@@ -627,10 +634,17 @@ function stats_mode(table) {
 		}
 	}
 
+	let v1 = table[niMaxID].bi + (table[niMaxID].ni - table[niMaxID-1].ni)/(table[niMaxID].ni - table[niMaxID+1].ni)*(table[niMaxID].bii - table[niMaxID].bi)
+
 	let D1 = table[niMaxID].fi - ((niMaxID - 1 === -1) ? 0 : table[niMaxID - 1].fi),
 		D2 = table[niMaxID].fi - ((niMaxID + 1 === table.length) ? 0 : table[niMaxID + 1].fi)
 
-	return table[niMaxID].bi + (D1) / (D1 + D2) * (table[niMaxID].bii - table[niMaxID].bi)
+	let v2 = table[niMaxID].bi + (D1) / (D1 + D2) * (table[niMaxID].bii - table[niMaxID].bi)
+
+	console.log(v1, v2)
+	return v1
+
+
 }
 
 /**

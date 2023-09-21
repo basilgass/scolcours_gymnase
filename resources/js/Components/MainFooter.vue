@@ -31,6 +31,14 @@ Pied de page pour les pages principales.
 						class="mr-2 bi bi-translate"
 					/> english
 				</Link>
+				<Link
+						:href="route('translation.index', ['deutsch'])"
+						class="block transition duration-300 hover:translate-x-2 px-0 md:px-4 py-1"
+				>
+					<i
+							class="mr-2 bi bi-translate"
+					/> deutsch
+				</Link>
 			</div>
 
 			<div class="md:mx-auto">

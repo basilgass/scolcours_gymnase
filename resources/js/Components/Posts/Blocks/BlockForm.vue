@@ -119,6 +119,7 @@ Formulaire d'édition d'un bloc
 								language="latex"
 								name="body"
 						/>
+						<p class="text-xs">@posts.show,[id] | @blocks.show,[id] | #[item-id]</p>
 
 						<div class="mt-3">
 							<form-kit

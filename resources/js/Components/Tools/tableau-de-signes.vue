@@ -75,7 +75,7 @@
 	</Panel>
 </template>
 
-<script setup>
+<script setup lang="ts">
 /** Chapter
  * title: tableau de signes ou de variations
  * body: tableau de signes ou de variations
@@ -87,12 +87,21 @@ import Panel from "@/Components/Ui/Panel.vue"
 import FormInput from "@/Components/Form/FormInput.vue"
 import FormButton from "@/Components/Form/FormButton.vue"
 import FormSwitch from "@/Components/Form/FormSwitch.vue"
+import {splitIfOutsideParentheses} from "@/helpers/helperFunctions.js";
+
+type fracRationnelle = {
+    valid: boolean,
+	tos: {}|null,
+	dxtos: {}|null,
+	extrema?: {},
+	dxTex?: string
+}
 
 let root = ref(null),
 	fx = ref("x^2-5x+6"),
 	mode = ref(true),
 	validation = ref(false),
-	fraction_rationnelle = reactive({
+	fraction_rationnelle: fracRationnelle = reactive({
 		valid: false,
 		tos: {
 			signs: [],
@@ -103,7 +112,7 @@ let root = ref(null),
 			signs: [],
 			factors: [],
 			zeroes: []
-		},
+		}
 	})
 
 async function validation_fx() {
@@ -113,22 +122,22 @@ async function validation_fx() {
 	if (fx.value === "") return false
 
 	// Get numerator and denominator
+	const [numeratorStr, denominatorStr] = splitIfOutsideParentheses(fx.value, "/")
 	let numerator, denominator
-
-	const fxSplit = fx.value.split("/")
+	//  fx.value.split("/")
 	try {
-		numerator = new PiMath.Polynom(fxSplit[0])
+		numerator = new PiMath.Polynom(numeratorStr)
 	} catch (e) {
-		validationDescription.value = "Le numérateur n'est pas reconnue"
+		// validationDescription.value = "Le numérateur n'est pas reconnue"
 		return false
 	}
 
-	if (fxSplit.length === 2) {
+	if (denominatorStr!==undefined) {
 		try {
 
-			denominator = new PiMath.Polynom(fxSplit[1] ? fxSplit[1] : 1)
+			denominator = new PiMath.Polynom(denominatorStr?denominatorStr:1)
 		} catch (e) {
-			validationDescription.value = "Le dénominateur n'est pas reconnu"
+			// validationDescription.value = "Le dénominateur n'est pas reconnu"
 			return false
 		}
 	} else {

@@ -3,7 +3,7 @@ Affichage d'un post avec toutes les config activées
 Principalement la couche utilisée dans ChapterSlide.
 -->
 <template>
-	<section class="bg-white border border-gray-200 rounded shadow py-5">
+	<section class="bg-white border border-gray-200 rounded shadow py-5" :id="`post-${props.post.id}`">
 		<!-- Title of the post -->
 		<div
 			class="px-5 border-b border-gray-200 pb-5 flex flex-col gap-3 lg:flex-row justify-between"
@@ -82,8 +82,7 @@ Principalement la couche utilisée dans ChapterSlide.
 			>
 				<template #item="{ element }">
 					<block-show
-						:id="`post-${thePost.id}-block-${element.id}`"
-						:key="`post-${thePost.id}-block-${element.id}`"
+						:key="`block-${element.id}`"
 						:block="element"
 						:switch="postSwitch"
 						@destroy="destroyBlock"
@@ -230,4 +229,5 @@ let postSwitchLabel = computed(() => {
 		return { pre: "", post: "" }
 	}),
 	postSwitch = ref(false)
+
 </script>

@@ -59,16 +59,18 @@ export default {
 }
 </script>
 <script setup>
-import {onMounted, ref} from "vue"
+import {nextTick, onMounted, ref} from "vue"
 import PostShow from "@/Components/Posts/PostShow.vue"
 import ChapterToc from "@/Components/Chapters/ChapterToc.vue"
 import ChapterFormulasSlider from "@/Components/Chapters/ChapterFormulasSlider.vue"
 import {Head, usePage} from "@inertiajs/vue3"
+import {useMenuScrollTo} from "@/Composables/useHelpers.js";
 
 let props = defineProps({
 		chapter: {type: Object, required: true},
 		post: {type: Object, required: true},
-		nav: {type: Object, required: true}
+		nav: {type: Object, required: true},
+		blockAnchor: {type: Number, required: true}
 	}),
 	theChapter = ref(props.chapter.data),
 	thePost = ref(props.post.data)
@@ -85,5 +87,8 @@ const storeCurrentPost = function () {
 
 onMounted(() => {
 	storeCurrentPost()
+	if(props.blockAnchor) {
+		nextTick(()=>useMenuScrollTo(`block-${props.blockAnchor}`))
+	}
 })
 </script>

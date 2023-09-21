@@ -26,6 +26,9 @@ class TranslationController extends Controller
 		if ($language === 'english') {
 			$code = "en";
 		}
+        if ($language === 'deutsch') {
+            $code = "de";
+        }
 
 		$units = TranslationUnit::where('language', $code)->get();
 
