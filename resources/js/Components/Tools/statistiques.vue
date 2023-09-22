@@ -35,199 +35,200 @@
 			/>
 		</div>
 
-		<h2>Tableau des valeurs</h2>
-		<table class="w-full text-center table-fixed">
-			<thead class="bg-gray-600 text-white">
-			<tr>
-				<th
-						v-katex="`\\left[b_i; b_ii\\right[`"
-						class="w-[150px]"
-						title="classe modale"
-				/>
-				<th
-						v-katex="'c_i'"
-						title="valeur centrale"
-				/>
-				<th
-						v-katex="'n_i'"
-						title="effectif"
-				/>
-				<th
-						v-katex="'L_i'"
-						title="amplitude"
-				/>
-				<th
-						v-katex="'f_i'"
-						title="fréquence"
-				/>
-				<th
-						v-katex="'F_i'"
-						title="fréquence cumulée croissante"
-				/>
-				<th
-						v-katex="'F_i\''"
-						title="fréquence cumulée décroissante"
-				/>
-				<th
-						v-katex="'f_i\\cdot x_i'"
-						title="fixi"
-				/>
-				<th
-						v-katex="'f_i\\cdot x_i^2'"
-						title="fixi2"
-				/>
-			</tr>
-			</thead>
-			<tbody class="font-code">
-			<tr
-					v-for="(item, index) in statTable"
-					:key="`stats-${index}`"
-					class="odd:bg-gray-200 border-t border-b border-gray-300"
-			>
-				<td class="border-x border-gray-300 py-2">
-					[{{ item.bi }} - {{ item.bii }}[
-				</td>
-				<td class="border-x border-gray-300 py-2">
-					{{ item.xi }}
-				</td>
-				<td class="border-x border-gray-300 py-2">
-					{{ item.ni }}
-				</td>
-				<td class="border-x border-gray-300 py-2">
-					{{ item.bii - item.bi }}
-				</td>
-				<td class="border-x border-gray-300 py-2">
-					{{ statConfig.percent ? statRoundValue(item.fi * 100) + `%` : statRoundValue(item.fi) }}
-				</td>
-				<td class="border-x border-gray-300 py-2">
-					{{ statConfig.percent ? statRoundValue(item.Fi * 100) + `%` : statRoundValue(item.Fi) }}
-				</td>
-				<td class="border-x border-gray-300 py-2">
-					{{ statConfig.percent ? statRoundValue(item.Fid * 100) + `%` : statRoundValue(item.Fid) }}
-				</td>
-				<td class="border-x border-gray-300 py-2">
-					{{ statRoundValue(item.fixi) }}
-				</td>
-				<td class="border-x border-gray-300 py-2">
-					{{ statRoundValue(item.fixii) }}
-				</td>
-			</tr>
-			</tbody>
-			<tfoot class="font-code">
-			<tr>
-				<td/>
-				<td/>
-				<td class="bg-gray-300 border border-gray-300">
-					{{ statSum.ni }}
-				</td>
-				<td/>
-				<td class="bg-gray-300 border border-gray-300">
-					{{ statRoundValue(statSum.fi) }}
-				</td>
-				<td/>
-				<td/>
-				<td class="bg-gray-300 border border-gray-300">
-					{{ statRoundValue(statSum.fixi) }}
-				</td>
-				<td class="bg-gray-300 border border-gray-300">
-					{{ statRoundValue(statSum.fixii) }}
-				</td>
-			</tr>
-			</tfoot>
-		</table>
+		<div v-if="statTable.length>0"><h2>Tableau des valeurs</h2>
+			<table class="w-full text-center table-fixed">
+				<thead class="bg-gray-600 text-white">
+				<tr>
+					<th
+							v-katex="`\\left[b_i; b_ii\\right[`"
+							class="w-[150px]"
+							title="classe modale"
+					/>
+					<th
+							v-katex="'c_i'"
+							title="valeur centrale"
+					/>
+					<th
+							v-katex="'n_i'"
+							title="effectif"
+					/>
+					<th
+							v-katex="'L_i'"
+							title="amplitude"
+					/>
+					<th
+							v-katex="'f_i'"
+							title="fréquence"
+					/>
+					<th
+							v-katex="'F_i'"
+							title="fréquence cumulée croissante"
+					/>
+					<th
+							v-katex="'F_i\''"
+							title="fréquence cumulée décroissante"
+					/>
+					<th
+							v-katex="'f_i\\cdot x_i'"
+							title="fixi"
+					/>
+					<th
+							v-katex="'f_i\\cdot x_i^2'"
+							title="fixi2"
+					/>
+				</tr>
+				</thead>
+				<tbody class="font-code">
+				<tr
+						v-for="(item, index) in statTable"
+						:key="`stats-${index}`"
+						class="odd:bg-gray-200 border-t border-b border-gray-300"
+				>
+					<td class="border-x border-gray-300 py-2">
+						[{{ item.bi }} - {{ item.bii }}[
+					</td>
+					<td class="border-x border-gray-300 py-2">
+						{{ item.xi }}
+					</td>
+					<td class="border-x border-gray-300 py-2">
+						{{ item.ni }}
+					</td>
+					<td class="border-x border-gray-300 py-2">
+						{{ item.bii - item.bi }}
+					</td>
+					<td class="border-x border-gray-300 py-2">
+						{{ statConfig.percent ? statRoundValue(item.fi * 100) + `%` : statRoundValue(item.fi) }}
+					</td>
+					<td class="border-x border-gray-300 py-2">
+						{{ statConfig.percent ? statRoundValue(item.Fi * 100) + `%` : statRoundValue(item.Fi) }}
+					</td>
+					<td class="border-x border-gray-300 py-2">
+						{{ statConfig.percent ? statRoundValue(item.Fid * 100) + `%` : statRoundValue(item.Fid) }}
+					</td>
+					<td class="border-x border-gray-300 py-2">
+						{{ statRoundValue(item.fixi) }}
+					</td>
+					<td class="border-x border-gray-300 py-2">
+						{{ statRoundValue(item.fixii) }}
+					</td>
+				</tr>
+				</tbody>
+				<tfoot class="font-code">
+				<tr>
+					<td/>
+					<td/>
+					<td class="bg-gray-300 border border-gray-300">
+						{{ statSum.ni }}
+					</td>
+					<td/>
+					<td class="bg-gray-300 border border-gray-300">
+						{{ statRoundValue(statSum.fi) }}
+					</td>
+					<td/>
+					<td/>
+					<td class="bg-gray-300 border border-gray-300">
+						{{ statRoundValue(statSum.fixi) }}
+					</td>
+					<td class="bg-gray-300 border border-gray-300">
+						{{ statRoundValue(statSum.fixii) }}
+					</td>
+				</tr>
+				</tfoot>
+			</table>
 
-		<h2 class="font-xl uppercase font-semibold mt-10">
-			Valeurs centrales
-		</h2>
-		<div class="grid grid-cols-2 md:grid-cols-3 gap-3 mt-5">
-			<div class="bg-white text-center border rounded-lg min-h-[80px] flex flex-col justify-around">
-				<div class="font-semibold">
-					Moyenne
+			<h2 class="font-xl uppercase font-semibold mt-10">
+				Valeurs centrales
+			</h2>
+			<div class="grid grid-cols-2 md:grid-cols-3 gap-3 mt-5">
+				<div class="bg-white text-center border rounded-lg min-h-[80px] flex flex-col justify-around">
+					<div class="font-semibold">
+						Moyenne
+					</div>
+					<div class="font-code text-xl">
+						{{ statRoundValue(statCentralValues.mean) }}
+					</div>
 				</div>
-				<div class="font-code text-xl">
-					{{ statRoundValue(statCentralValues.mean) }}
+				<div class="bg-white text-center border rounded-lg min-h-[80px] flex flex-col justify-around">
+					<div class="font-semibold">
+						Classe modale
+					</div>
+					<div class="font-code text-xl">
+						{{ statCentralValues.modal.classe }}<br/>
+						{{ statRoundValue(statCentralValues.modal.mode) }}
+					</div>
 				</div>
-			</div>
-			<div class="bg-white text-center border rounded-lg min-h-[80px] flex flex-col justify-around">
-				<div class="font-semibold">
-					Classe modale
+				<div class="bg-white text-center border rounded-lg min-h-[80px] flex flex-col justify-around">
+					<div class="font-semibold">
+						Médiane
+					</div>
+					<div class="font-code text-xl">
+						{{ statRoundValue(statCentralValues.q2) }}
+					</div>
 				</div>
-				<div class="font-code text-xl">
-					{{ statCentralValues.modal.classe }}<br/>
-					{{ statRoundValue(statCentralValues.modal.mode) }}
+				<div class="bg-white text-center border rounded-lg min-h-[80px] flex flex-col justify-around">
+					<div class="font-semibold">
+						Quartiles
+					</div>
+					<div class="font-code text-xl">
+						<span v-katex="'q_1='"/> {{ statRoundValue(statCentralValues.q1) }} <br>
+						<span v-katex="'q_3='"/> {{ statRoundValue(statCentralValues.q3) }}
+					</div>
 				</div>
-			</div>
-			<div class="bg-white text-center border rounded-lg min-h-[80px] flex flex-col justify-around">
-				<div class="font-semibold">
-					Médiane
+				<div class="bg-white text-center border rounded-lg min-h-[80px] flex flex-col justify-around">
+					<div class="font-semibold">
+						Variance
+					</div>
+					<div class="font-code text-xl">
+						{{ statRoundValue(statCentralValues.variance) }}
+					</div>
 				</div>
-				<div class="font-code text-xl">
-					{{ statRoundValue(statCentralValues.q2) }}
+				<div class="bg-white text-center border rounded-lg min-h-[80px] flex flex-col justify-around">
+					<div class="font-semibold">
+						Déviation
+					</div>
+					<div class="font-code text-xl">
+						<span v-katex="'\\sigma^2 ='"/> {{ statRoundValue(statCentralValues.sigma2) }} <br>
+						<span v-katex="'\\sigma ='"/> {{ statRoundValue(statCentralValues.sigma) }}
+					</div>
 				</div>
-			</div>
-			<div class="bg-white text-center border rounded-lg min-h-[80px] flex flex-col justify-around">
-				<div class="font-semibold">
-					Quartiles
-				</div>
-				<div class="font-code text-xl">
-					<span v-katex="'q_1='"/> {{ statRoundValue(statCentralValues.q1) }} <br>
-					<span v-katex="'q_3='"/> {{ statRoundValue(statCentralValues.q3) }}
-				</div>
-			</div>
-			<div class="bg-white text-center border rounded-lg min-h-[80px] flex flex-col justify-around">
-				<div class="font-semibold">
-					Variance
-				</div>
-				<div class="font-code text-xl">
-					{{ statRoundValue(statCentralValues.variance) }}
-				</div>
-			</div>
-			<div class="bg-white text-center border rounded-lg min-h-[80px] flex flex-col justify-around">
-				<div class="font-semibold">
-					Déviation
-				</div>
-				<div class="font-code text-xl">
-					<span v-katex="'\\sigma^2 ='"/> {{ statRoundValue(statCentralValues.sigma2) }} <br>
-					<span v-katex="'\\sigma ='"/> {{ statRoundValue(statCentralValues.sigma) }}
-				</div>
-			</div>
-		</div>
-
-		<h2 class="font-xl uppercase font-semibold mt-10">
-			Graphiques
-		</h2>
-
-		<div class="grid grid-cols-1 md:grid-cols-2 gap-5 mt-5">
-			<div>
-				<h2 class="text-lg font-extralight">
-					histogramme et polygon des fréquences
-				</h2>
-				<bar-chart
-						:chart-dataset="graphDataset"
-						:chart-labels="graphLabels"
-				/>
 			</div>
 
-			<div>
-				<h2 class="text-lg font-extralight">
-					Graphe des fréquences cumulées
-				</h2>
-				<line-chart
-						:chart-dataset="graphAccumulates"
-						:chart-labels="graphAccumulatesLabel"
-						:chart-options="graphAccumulatesOptions"
-				/>
-			</div>
+			<h2 class="font-xl uppercase font-semibold mt-10">
+				Graphiques
+			</h2>
 
-			<div>
-				<h2 class="text-lg font-extralight">
-					Boîte à moustaches
-				</h2>
-				<box-plot-chart
-						:chart-dataset="graphBoxPlot"
-						:chart-labels="['']"
-						:chart-options="graphBoxPlotOptions"
-				/>
+			<div class="grid grid-cols-1 md:grid-cols-2 gap-5 mt-5">
+				<div>
+					<h2 class="text-lg font-extralight">
+						histogramme et polygon des fréquences
+					</h2>
+					<bar-chart
+							:chart-dataset="graphDataset"
+							:chart-labels="graphLabels"
+					/>
+				</div>
+
+				<div>
+					<h2 class="text-lg font-extralight">
+						Graphe des fréquences cumulées
+					</h2>
+					<line-chart
+							:chart-dataset="graphAccumulates"
+							:chart-labels="graphAccumulatesLabel"
+							:chart-options="graphAccumulatesOptions"
+					/>
+				</div>
+
+				<div>
+					<h2 class="text-lg font-extralight">
+						Boîte à moustaches
+					</h2>
+					<box-plot-chart
+							:chart-dataset="graphBoxPlot"
+							:chart-labels="['']"
+							:chart-options="graphBoxPlotOptions"
+					/>
+				</div>
 			</div>
 		</div>
 	</div>
