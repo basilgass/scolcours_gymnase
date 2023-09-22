@@ -240,6 +240,12 @@ export default {
 }
 </script>
 <script setup>
+/** Tools
+ * title: statistiques
+ * body: tableau statistique à distribution normale
+ * parameters:
+ * tags: statistique,2C
+ */
 
 import {computed, onMounted, reactive, ref} from "vue"
 import FormInput from "@/Components/Form/FormInput.vue"
