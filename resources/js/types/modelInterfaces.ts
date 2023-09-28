@@ -1,4 +1,4 @@
-import {User} from "@/types/index";
+import {ThemeInterface, User} from "@/types/index";
 
 export interface ChapterInterface {
     id: number,
@@ -95,4 +95,13 @@ export interface EvaluationInterface {
     randomOrder: boolean,
     owner: User,
     questions: QuestionInterface[]
+}
+
+export interface GeneratorInterface {
+    id: number;
+    theme: ThemeInterface;
+    title: string;
+    body: string;
+    keyboard: string;
+    code: string;
 }

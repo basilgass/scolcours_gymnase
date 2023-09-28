@@ -11,17 +11,18 @@
 
 		<div
 			v-if="cards.length>0"
-			class="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-6 gap-2 lg:gap-4"
+			class="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-6 gap-3 lg:gap-4"
 		>
 			<div
 				v-for="(card, index) in cards"
 				:key="index"
 				:class="{
-					'bg-green-600': card.found,
-					'bg-amber-400': card.selected
+					'bg-lime-50 border-green-600/30 text-slate-300 cursor-not-allowed': card.found,
+					'bg-amber-200 border-amber-600 cursor-not-allowed': card.selected,
+					'bg-white cursor-pointer': !card.found && !card.selected,
 				}"
-				class="bg-white border rounded h-24 grid place-items-center p-3 cursor-pointer transform-all duration-300"
-				@click="showAllCards?null:selectCard(card)"
+				class="text-lg border rounded-lg h-24 grid place-items-center p-3 transform-all duration-300"
+				@click="(showAllCards || (card.found||card.selected))?null:selectCard(card)"
 			>
 				<span v-show="showAllCards || card.found || card.selected">
 					{{ card.text }}
@@ -37,19 +38,35 @@
 				@update="unitsSelection=$event"
 			/>
 
-			<div class="mt-10 flex items-end justify-between">
+			<div class="my-3">
+				<h2 class="text-lg font-extralight mb-2 uppercase">configuration du memory</h2>
+				<div class="flex gap-3">
+					<form-kit
+							type="number"
+							min="10"
+							max="100"
+							v-model="numberOfCards"
+							label="nombre de cartes"
+					/>
+
+					<form-kit
+							type="number"
+							v-model="cardTimeout"
+							min="1"
+							max="5"
+							label="durée d'affichage [seconde]"
+					/>
+				</div>
+			</div>
+
+			<div class="grid place-items-center mt-12">
 				<button
-					class="btn-primary"
-					@click="startGame"
+						class="btn-primary px-20 py-10 text-2xl"
+						@click="startGame"
+						v-show="unitsSelection.length>0"
 				>
 					Commencer
 				</button>
-
-				<form-number
-					v-model="numberOfCards"
-					label="nombre de cartes"
-					name="nombre de cartes"
-				/>
 			</div>
 		</div>
 		<div
@@ -94,7 +111,7 @@ import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
 import {computed, ref} from "vue"
 import {PiMath} from "pimath/esm"
 import FormNumber from "@/Components/Form/FormNumber.vue"
-import LanguageUnitsSelector from "@/Pages/languages/LanguageUnitsSelector.vue"
+import LanguageUnitsSelector from "@/Components/Languages/LanguageUnitsSelector.vue"
 
 let props = defineProps({
 	code: {type: String, required: true},
@@ -105,6 +122,7 @@ let unitsSelection = ref([]),
 	availableWords = ref([]),
 	startIndex = ref(0),
 	cards = ref([]),
+	cardTimeout = ref(1),
 	showAllCards = ref(false),
 	numberOfCards = ref(12),
 	gamePaused = ref(true),
@@ -202,7 +220,7 @@ let selectCard = function (card) {
 		selectedCards.map(c => {
 			c.selected = false
 		})
-	}, 1000)
+	}, cardTimeout.value*1000)
 }
 
 </script>

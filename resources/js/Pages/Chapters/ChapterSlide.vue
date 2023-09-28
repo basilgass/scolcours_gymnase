@@ -64,13 +64,13 @@ import PostShow from "@/Components/Posts/PostShow.vue"
 import ChapterToc from "@/Components/Chapters/ChapterToc.vue"
 import ChapterFormulasSlider from "@/Components/Chapters/ChapterFormulasSlider.vue"
 import {Head, usePage} from "@inertiajs/vue3"
-import {useMenuScrollTo} from "@/Composables/useHelpers.js";
+import {useMenuScrollTo} from "@/Composables/useHelpers";
 
 let props = defineProps({
 		chapter: {type: Object, required: true},
 		post: {type: Object, required: true},
 		nav: {type: Object, required: true},
-		blockAnchor: {type: Number, required: true}
+		blockAnchor: {type: [Number,null], required: true}
 	}),
 	theChapter = ref(props.chapter.data),
 	thePost = ref(props.post.data)

@@ -45,7 +45,7 @@
 		"markdown-it-attrs": "^4.1.6",
 		"markdown-it-bracketed-spans": "^1.0.1",
 		"markdown-it-texmath": "^1.0.0",
-		"pidraw": "^0.0.82",
+		"pidraw": "^0.0.83",
 		"pigames": "^0.1.18",
 		"pimath": "^0.0.123",
 		"prismjs": "^1.29.0",

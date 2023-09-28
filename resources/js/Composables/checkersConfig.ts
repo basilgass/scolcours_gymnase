@@ -14,8 +14,14 @@ import {FractionChecker} from "@/Checkers/FractionChecker"
 import {FunctionChecker} from "@/Checkers/FunctionChecker"
 import {LogChecker} from "@/Checkers/LogChecker"
 import {ExpChecker} from "@/Checkers/ExpChecker"
+import {CheckerBase} from "@/Checkers/CheckerBase";
 
-export const checkersList:string[] = [
+export interface CheckerResult {
+    result: boolean,
+    message: string
+}
+
+export const checkersList: string[] = [
     "coord",
     "equ", "equation",
     "exact",
@@ -83,34 +89,37 @@ export function getCheckerClass(checker: string) {
     return null
 
 }
-export function getChecker(checker: string, options?: string[]){
+
+export function getChecker(checker: string, options?: string[]): CheckerBase {
     let chkClass = getCheckerClass(checker)
 
     // No options are defined.
-    if(options===undefined){options = []}
+    if (options === undefined) {
+        options = []
+    }
 
-    if(chkClass !== null){
+    if (chkClass !== null) {
         return new chkClass(options)
     }
 
     return new StringChecker(options)
 }
-export function customCheck(checker: string, expected: string, given: string): { result: boolean, message: string } {
+
+export function customCheck(checker: string, expected: string, given: string): CheckerResult {
     let [name, ...config] = checker.split(',')
 
     const chkClass = getCheckerClass(name)
 
-    if(chkClass) {
-        if(config===undefined){config = []}
+    if (chkClass) {
+        if (config === undefined) {
+            config = []
+        }
 
         return new chkClass(config).check(expected, given)
-    }else{
+    } else {
         return {
             result: false,
             message: "Problème de configuration du checker"
         }
     }
 }
-
-
-// export function getCheckers() {

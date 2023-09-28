@@ -26,6 +26,15 @@
 					v-model.number="statConfig.flatten"
 					label="applatissement de la distribution"
 			/>
+
+			<form-switch name="percent" label="en pourcent" v-model="statConfig.percent"/>
+
+			<form-kit
+				type="number"
+				:min="0"
+				:max="5"
+				label="précision"
+				v-model="statConfig.round"/>
 		</div>
 
 		<div>
@@ -135,6 +144,7 @@
 				</tr>
 				</tfoot>
 			</table>
+			<pre class="font-code">{{ tableToTexOutput }}</pre>
 
 			<h2 class="font-xl uppercase font-semibold mt-10">
 				Valeurs centrales
@@ -233,14 +243,14 @@
 		</div>
 	</div>
 </template>
-<script>
+<script lang="ts">
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 
 export default {
-	layout: LayoutMain
+    layout: LayoutMain
 }
 </script>
-<script setup>
+<script lang="ts" setup>
 /** Tools
  * title: statistiques
  * body: tableau statistique à distribution normale
@@ -257,182 +267,189 @@ import annotationPlugin from "chartjs-plugin-annotation"
 import LineChart from "@/Components/Charts/lineChart.vue"
 import BoxPlotChart from "@/Components/Charts/boxPlotChart.vue"
 
+import {PiDraw} from "pidraw/esm";
+import FormSwitch from "@/Components/Form/FormSwitch.vue";
+
 Chart.register(annotationPlugin)
 // import {Chart} from "chart.js/auto"
 // Chart.defaults.font.family = "Source Code Pro"
 
 // Configuration générale
 let statConfig = reactive({
-	samples: 100,           // Taille de l'échantillon
-	samplesExact: true,     // La taille de l'échantillon doit être exact.
-	min: 100,                // Valeur minimale des modalités
-	max: 900,               // Valeur maximale des modalités
-	length: 100,             // Taille des classes de modalité
-	skew: 1,                // Paramètre pour la génération des valeurs
-	flatten: 10,            // Paramètre pour la génération des valeurs
-	round: 2,               // Arrondir les valeurs
-	percent: true,          // Mets les valeurs en pourcent lorsque nécessaire
-	customData: [],          // Valeurs données par l'utilisateur
+    samples: 100,           // Taille de l'échantillon
+    samplesExact: true,     // La taille de l'échantillon doit être exact.
+    min: 100,                // Valeur minimale des modalités
+    max: 900,               // Valeur maximale des modalités
+    length: 100,             // Taille des classes de modalité
+    skew: 1,                // Paramètre pour la génération des valeurs
+    flatten: 10,            // Paramètre pour la génération des valeurs
+    round: 3,               // Arrondir les valeurs
+    percent: true,          // Mets les valeurs en pourcent lorsque nécessaire
+    customData: [],          // Valeurs données par l'utilisateur
 })
 
 let statCustomNi = ref("4 12 20 27 39 85 92 75 40")
 
 let statRaw = computed(() => {
-	if (
-		isNaN(statConfig.samples) ||
-		isNaN(statConfig.min) ||
-		isNaN(statConfig.max) ||
-		isNaN(statConfig.length) ||
-		isNaN(statConfig.skew)
-	) {
-		return []
-	}
-	// Check the values.
-	if (statConfig.samples < 1) {
-		return []
-	}
-	if (statConfig.min >= statConfig.max) {
-		return []
-	}
-	if (statConfig.length < 1) {
-		return []
-	}
-	if (statConfig.skew <= 0.05) {
-		return []
-	}
+    if (
+        isNaN(statConfig.samples) ||
+        isNaN(statConfig.min) ||
+        isNaN(statConfig.max) ||
+        isNaN(statConfig.length) ||
+        isNaN(statConfig.skew)
+    ) {
+        return []
+    }
+    // Check the values.
+    if (statConfig.samples < 1) {
+        return []
+    }
+    if (statConfig.min >= statConfig.max) {
+        return []
+    }
+    if (statConfig.length < 1) {
+        return []
+    }
+    if (statConfig.skew <= 0.05) {
+        return []
+    }
 
-	if (statConfig.customData.length === 0) {
-		return statsBuildData_auto()
-	}
-	return statsBuildData_customData()
+    if (statConfig.customData.length === 0) {
+        return statsBuildData_auto()
+    }
+    return statsBuildData_customData()
 })
 
 let statTable = computed(() => {
-	if (statConfig.length === 1) {
-		return statsBuildTable_discrete()
-	}
+    if (statConfig.length === 1) {
+        return statsBuildTable_discrete()
+    }
 
-	if (statRaw.value.length > 0) {
-		return statsBuildTable_continuous()
-	}
+    if (statRaw.value.length > 0) {
+        return statsBuildTable_continuous()
+    }
 
-	return []
+    return []
 })
 
-let statSum = computed(() => {
-	return statTable.value.reduce((acc, value) => {
-			acc.ni += value.ni
-			acc.fi += value.fi
-			acc.fixi += value.fixi
-			acc.fixii += value.fixii
-			return acc
-		},
-		{ni: 0, fi: 0, fixi: 0, fixii: 0})
+let statTableToTex = computed(() => {
+
+})
+
+let statSum = computed<{ ni: number, fi: number, fixi: number, fixii: number }>(() => {
+    return statTable.value.reduce((acc, value) => {
+            acc.ni += value.ni
+            acc.fi += value.fi
+            acc.fixi += value.fixi
+            acc.fixii += value.fixii
+            return acc
+        },
+        {ni: 0, fi: 0, fixi: 0, fixii: 0})
 })
 
 let graphLabels = computed(() => {
-		return ["", ...statTable.value.map(x => `[${x.bi};${x.bii}[`), ""]
-	}),
-	graphBarValues = computed(() => {
-		return [0, ...statTable.value.map(x => x.ni), 0]
-	}),
-	graphDataset = computed(() => {
-		return [
-			{
-				type: "line",
-				data: graphBarValues.value,
-				borderColor: "rgb(75, 192, 192)"
-			},
-			{
-				barPercentage: 1,
-				categoryPercentage: 1,
-				data: graphBarValues.value,
-				backgroundColor: "rgba(54, 162, 235, 0.2)",
-				borderColor: "rgb(54, 162, 235)"
+        return ["", ...statTable.value.map(x => `[${x.bi};${x.bii}[`), ""]
+    }),
+    graphBarValues = computed(() => {
+        return [0, ...statTable.value.map(x => x.ni), 0]
+    }),
+    graphDataset = computed(() => {
+        return [
+            {
+                type: "line",
+                data: graphBarValues.value,
+                borderColor: "rgb(75, 192, 192)"
+            },
+            {
+                barPercentage: 1,
+                categoryPercentage: 1,
+                data: graphBarValues.value,
+                backgroundColor: "rgba(54, 162, 235, 0.2)",
+                borderColor: "rgb(54, 162, 235)"
 
-			},
-		]
-	}),
-	graphAccumulatesLabel = computed(() => {
-		return [...statTable.value.map(x => x.bi), statConfig.max]
-	}),
-	graphAccumulates = computed(() => {
-		return [
-			{
-				type: "line",
-				data: [0, ...statTable.value.map(x => x.Fi), 1],
-				borderColor: "rgb(75, 192, 192)"
-			},
-			{
-				type: "line",
-				data: [1, ...statTable.value.map(x => x.Fid), 0],
-				borderColor: "rgb(54, 162, 235)"
-			},
-		]
-	}),
-	graphAccumulatesOptions = computed(() => {
-		return {
-			scales: {
-				x: {type: "linear", min: statConfig.min, max: statConfig.max}
-			},
-			plugins: {
-				annotation: {
-					annotations: {
-						median: {
-							type: "line",
-							scaleID: "x",
-							value: statCentralValues.value.q2,
-							borderColor: "rgba(255, 99, 132, 0.75)",
-							borderWith: 2,
-							label: {
-								display: true,
-								content: "médiane",
-								position: "start",
-							}
-						}
-					}
-				}
-			}
-		}
-	}),
-	graphBoxPlot = computed(() => {
-		return [
-			{
-				label: "min / max",
-				data: {
-					whiskerMin: statConfig.min,
-					q1: statCentralValues.value.q1,
-					median: statCentralValues.value.q2,
-					q3: statCentralValues.value.q3,
-					whiskerMax: statConfig.max,
-					// items: [104, 106, 185, 192]
-				}
-			},
-			{
-				label: "1.5*IQ",
-				data: {
-					whiskerMin: Math.max(statCentralValues.value.q1 - 1.5 * statCentralValues.value.iq, statConfig.min),
-					q1: statCentralValues.value.q1,
-					median: statCentralValues.value.q2,
-					q3: statCentralValues.value.q3,
-					whiskerMax: Math.min(statCentralValues.value.q3 + 1.5 * statCentralValues.value.iq, statConfig.max),
-					// items: [104, 106, 185, 192]
-				}
+            },
+        ]
+    }),
+    graphAccumulatesLabel = computed(() => {
+        return [...statTable.value.map(x => x.bi), statConfig.max]
+    }),
+    graphAccumulates = computed(() => {
+        return [
+            {
+                type: "line",
+                data: [0, ...statTable.value.map(x => x.Fi), 1],
+                borderColor: "rgb(75, 192, 192)"
+            },
+            {
+                type: "line",
+                data: [1, ...statTable.value.map(x => x.Fid), 0],
+                borderColor: "rgb(54, 162, 235)"
+            },
+        ]
+    }),
+    graphAccumulatesOptions = computed(() => {
+        return {
+            scales: {
+                x: {type: "linear", min: statConfig.min, max: statConfig.max}
+            },
+            plugins: {
+                annotation: {
+                    annotations: {
+                        median: {
+                            type: "line",
+                            scaleID: "x",
+                            value: statCentralValues.value.q2,
+                            borderColor: "rgba(255, 99, 132, 0.75)",
+                            borderWith: 2,
+                            label: {
+                                display: true,
+                                content: "médiane",
+                                position: "start",
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }),
+    graphBoxPlot = computed(() => {
+        return [
+            {
+                label: "min / max",
+                data: {
+                    whiskerMin: statConfig.min,
+                    q1: statCentralValues.value.q1,
+                    median: statCentralValues.value.q2,
+                    q3: statCentralValues.value.q3,
+                    whiskerMax: statConfig.max,
+                    // items: [104, 106, 185, 192]
+                }
+            },
+            {
+                label: "1.5*IQ",
+                data: {
+                    whiskerMin: Math.max(statCentralValues.value.q1 - 1.5 * statCentralValues.value.iq, statConfig.min),
+                    q1: statCentralValues.value.q1,
+                    median: statCentralValues.value.q2,
+                    q3: statCentralValues.value.q3,
+                    whiskerMax: Math.min(statCentralValues.value.q3 + 1.5 * statCentralValues.value.iq, statConfig.max),
+                    // items: [104, 106, 185, 192]
+                }
 
-			}
+            }
 
-		]
-	}),
-	graphBoxPlotOptions = computed(() => {
-		return {
-			scales: {
-				x: {
-					min: statConfig.min - statConfig.length,
-					max: statConfig.max + statConfig.length
-				}
-			}
-		}
-	})
+        ]
+    }),
+    graphBoxPlotOptions = computed(() => {
+        return {
+            scales: {
+                x: {
+                    min: statConfig.min - statConfig.length,
+                    max: statConfig.max + statConfig.length
+                }
+            }
+        }
+    })
 
 /**
  * Calculates various central values for a given statistical table.
@@ -447,27 +464,37 @@ let graphLabels = computed(() => {
  * - sigma2: The squared standard deviation of the statistical table.
  * - sigma: The standard deviation of the statistical table.
  */
-let statCentralValues = computed(() => {
-	// statistics.mustaches.Q = statistics.middle.quartiles.last - statistics.middle.quartiles.first
-	// statistics.mustaches.bm = statistics.middle.quartiles.first - 1.5 * statistics.mustaches.Q
-	// statistics.mustaches.bp = statistics.middle.quartiles.last + 1.5 * statistics.mustaches.Q
+let statCentralValues = computed<{
+    modal: { classe: string, mode: number },
+    q1: number,
+    q2: number,
+    q3: number,
+    iq: number,
+    mean: number,
+    variance: number,
+    sigma2: number,
+    sigma: number
+}>(() => {
+    // statistics.mustaches.Q = statistics.middle.quartiles.last - statistics.middle.quartiles.first
+    // statistics.mustaches.bm = statistics.middle.quartiles.first - 1.5 * statistics.mustaches.Q
+    // statistics.mustaches.bp = statistics.middle.quartiles.last + 1.5 * statistics.mustaches.Q
 
-	const mean = statTable.value.reduce((previous, row) => previous + row.fi * row.xi, 0),
-		sigma2 = statTable.value.reduce((previous, row) => previous + row.fi * Math.pow(+row.xi - mean, 2), 0),
-		q1 = stats_median(statTable.value, 0.25),
-		q3 = stats_median(statTable.value, 0.75)
+    const mean = statTable.value.reduce((previous, row) => previous + row.fi * row.xi, 0),
+        sigma2 = statTable.value.reduce((previous, row) => previous + row.fi * Math.pow(+row.xi - mean, 2), 0),
+        q1 = stats_median(statTable.value, 0.25),
+        q3 = stats_median(statTable.value, 0.75)
 
-	return {
-		modal: stats_mode(statTable.value),
-		q1,
-		q2: stats_median(statTable.value, 0.5),
-		q3,
-		iq: q3 - q1,
-		mean,
-		variance: statTable.value.reduce((previous, row) => previous + row.fi * Math.abs(+row.xi - mean), 0),
-		sigma2,
-		sigma: Math.sqrt(sigma2)
-	}
+    return {
+        modal: stats_mode(statTable.value),
+        q1,
+        q2: stats_median(statTable.value, 0.5),
+        q3,
+        iq: q3 - q1,
+        mean,
+        variance: statTable.value.reduce((previous, row) => previous + row.fi * Math.abs(+row.xi - mean), 0),
+        sigma2,
+        sigma: Math.sqrt(sigma2)
+    }
 })
 
 /**
@@ -479,18 +506,18 @@ let statCentralValues = computed(() => {
  * @param {number} flatten - The flatten factor of the distribution.
  * @returns {number} - A random number from the skewed normal distribution within the specified range.
  */
-function randn_bm(min, max, skew, flatten) {
-	let u = 0, v = 0
-	while (u === 0) u = Math.random() //Converting [0,1) to (0,1)
-	while (v === 0) v = Math.random()
-	let num = Math.sqrt(-flatten * Math.log(u)) * Math.cos(flatten * Math.PI * v)
+function randn_bm(min: number, max: number, skew: number, flatten?: number) {
+    let u = 0, v = 0
+    while (u === 0) u = Math.random() //Converting [0,1) to (0,1)
+    while (v === 0) v = Math.random()
+    let num = Math.sqrt(-flatten * Math.log(u)) * Math.cos(flatten * Math.PI * v)
 
-	num = num / 10.0 + 0.5 // Translate to 0 -> 1
-	if (num > 1 || num < 0) num = randn_bm(min, max, skew) // resample between 0 and 1 if out of range
-	num = Math.pow(num, skew) // Skew
-	num *= max - min // Stretch to fill range
-	num += min // offset to min
-	return num
+    num = num / 10.0 + 0.5 // Translate to 0 -> 1
+    if (num > 1 || num < 0) num = randn_bm(min, max, skew) // resample between 0 and 1 if out of range
+    num = Math.pow(num, skew) // Skew
+    num *= max - min // Stretch to fill range
+    num += min // offset to min
+    return num
 }
 
 /**
@@ -499,20 +526,20 @@ function randn_bm(min, max, skew, flatten) {
  * @returns {Array} The custom statistical data.
  */
 function statsBuildData_customData() {
-	let raw = []
+    let raw = []
 
-	// TODO : Generate data with random ni values
-	let bi = +statConfig.min, dataIndex = 0
-	while (bi < statConfig.max) {
-		let ni = statConfig.customData[dataIndex] === undefined ? 0 : +statConfig.customData[dataIndex]
-		for (let i = 0; i < ni; i++) {
-			raw.push(bi)
-		}
+    // TODO : Generate data with random ni values
+    let bi = +statConfig.min, dataIndex = 0
+    while (bi < statConfig.max) {
+        let ni = statConfig.customData[dataIndex] === undefined ? 0 : +statConfig.customData[dataIndex]
+        for (let i = 0; i < ni; i++) {
+            raw.push(bi)
+        }
 
-		bi += (statConfig.length > 0 ? statConfig.length : 1)
-		dataIndex++
-	}
-	return raw
+        bi += (statConfig.length > 0 ? statConfig.length : 1)
+        dataIndex++
+    }
+    return raw
 }
 
 /**
@@ -521,104 +548,105 @@ function statsBuildData_customData() {
  * @returns {Array} The raw statistical data generated.
  */
 function statsBuildData_auto() {
-	let raw = []
-	// Build the data randomly
-	for (let i = 0; i < statConfig.samples; i++) {
-		let rnd
-		while (isNaN(rnd)) {
-			rnd = Math.round(randn_bm(statConfig.min, statConfig.max, statConfig.skew, statConfig.flatten))
-			if (statConfig.samplesExact === false) {
-				break
-			}
-		}
+    let raw = []
+    // Build the data randomly
+    for (let i = 0; i < statConfig.samples; i++) {
+        let rnd
+        while (isNaN(rnd)) {
+            rnd = Math.round(randn_bm(statConfig.min, statConfig.max, statConfig.skew, statConfig.flatten))
+            if (statConfig.samplesExact === false) {
+                break
+            }
+        }
 
-		if (!isNaN(rnd)) {
-			// Add to the raw list
-			raw.push(rnd)
-		}
-	}
+        if (!isNaN(rnd)) {
+            // Add to the raw list
+            raw.push(rnd)
+        }
+    }
 
-	return raw
+    return raw
 }
 
 function statsBuildTable_discrete() {
-	return []
+    return []
 }
 
-function statsBuildTable_continuous() {
-	// The length must be greater than 1.
-	if (statConfig.length <= 1) {
-		return []
-	}
+function statsBuildTable_continuous(): { bi: number, bii: number, xi: number, Li: number, ni: number, fi: number, Fi: number, Fid: number, fixi: number, fixii: number }[] {
+    // The length must be greater than 1.
+    if (statConfig.length <= 1) {
+        return []
+    }
 
-	// Generate the table
-	// item: {
-	// 	    bi,     lower bound
-	// 	    bii,    upper bound
-	// 	    xi,     central value
-	// 	    ni,     number
-	// 	    fi,     frequency
-	// 	    Fi,    cumulative frequency ascending
-	//      F1d,    cumulative freqeucey descending
-	//      fixi,    cumulative freqeucey descending
-	//      fixii,    cumulative freqeucey descending
-	//  }
-	let table = []
+    // Generate the table
+    // item: {
+    // 	    bi,     lower bound
+    // 	    bii,    upper bound
+    // 	    xi,     central value
+    // 	    xi,     length
+    // 	    ni,     number
+    // 	    fi,     frequency
+    // 	    Fi,    cumulative frequency ascending
+    //      F1d,    cumulative freqeucey descending
+    //      fixi,    cumulative freqeucey descending
+    //      fixii,    cumulative freqeucey descending
+    //  }
+    let table = []
 
-	let bi = statConfig.min,
-		securityCount = 0,
-		customNi = statCustomNi.value.split(" ").filter(x => x !== "").map(x => +x)
-
-
-	while (bi < statConfig.max) {
-
-		let bii = bi + statConfig.length,
-			xi = (bi + bii) / 2, ni, fi
+    let bi = statConfig.min,
+        securityCount = 0,
+        customNi = statCustomNi.value.split(" ").filter(x => x !== "").map(x => +x)
 
 
-		if (customNi.length === 0) {
-			ni = statRaw.value.filter(x => x >= bi && x < bii).length
-		} else {
-			ni = customNi.shift()
-		}
+    while (bi < statConfig.max) {
 
-		fi = statRoundValue(ni / statRaw.value.length)
+        let bii = bi + statConfig.length,
+            xi = (bi + bii) / 2, ni, fi
 
-		// Add item to the table
-		table.push({bi, bii, xi, ni, fi: 0, Fi: 0, Fid: 0, fixi: 0, fixii: 0})
 
-		// Prepare next line of data.
-		bi += statConfig.length
+        if (customNi.length === 0) {
+            ni = statRaw.value.filter(x => x >= bi && x < bii).length
+        } else {
+            ni = customNi.shift()
+        }
 
-		// Security exit.
-		securityCount++
-		if (securityCount > 100) {
-			break
-		}
-	}
+        fi = statRoundValue(ni / statRaw.value.length)
 
-	// Get the ni sum.
-	let sum = table.reduce((acc, value) => acc += value.ni, 0)
+        // Add item to the table
+        table.push({bi, bii, xi, ni, Li: bii - bi, fi: 0, Fi: 0, Fid: 0, fixi: 0, fixii: 0})
 
-	// Build the accumulate frequencies
-	let Fi = 0.0, Fid = 1.0
-	table.forEach(item => {
-		item.fi = item.ni / sum
-		item.fixi = item.fi * item.xi
-		item.fixii = item.fi * item.xi ** 2
+        // Prepare next line of data.
+        bi += statConfig.length
 
-		Fi = Fi + item.fi
-		item.Fi = Fi
+        // Security exit.
+        securityCount++
+        if (securityCount > 100) {
+            break
+        }
+    }
 
-		Fid = Fid - item.fi
-		item.Fid = Fid
-	})
+    // Get the ni sum.
+    let sum = table.reduce((acc, value) => acc += value.ni, 0)
 
-	return table
+    // Build the accumulate frequencies
+    let Fi = 0.0, Fid = 1.0
+    table.forEach(item => {
+        item.fi = item.ni / sum
+        item.fixi = item.fi * item.xi
+        item.fixii = item.fi * item.xi ** 2
+
+        Fi = Fi + item.fi
+        item.Fi = Fi
+
+        Fid = Fid - item.fi
+        item.Fid = Fid
+    })
+
+    return table
 }
 
 function statRoundValue(value) {
-	return statConfig.round > 0 ? +value.toFixed(statConfig.round) : value
+    return statConfig.round > 0 ? +value.toFixed(statConfig.round) : value
 }
 
 /**
@@ -628,29 +656,29 @@ function statRoundValue(value) {
  * @param {Array} table - The table containing the data.
  * @returns {number} - The mode of the table.
  */
-function stats_mode(table) {
-	if (statTable.value.length === 0) {
-		return 0
-	}
+function stats_mode(table): { classe: string, mode: number } {
+    if (statTable.value.length === 0) {
+        return {classe: "", mode: 0}
+    }
 
-	// xm = b(i-1) + (D1)/(D1+D2)*Li
-	let niMax = Math.max(...table.map(o => o.ni)),
-		niMaxID
+    // xm = b(i-1) + (D1)/(D1+D2)*Li
+    let niMax = Math.max(...table.map(o => o.ni)),
+        niMaxID
 
-	for (let i = 0; i < table.length; i++) {
-		if (table[i].ni === niMax) {
-			niMaxID = +i
-			break
-		}
-	}
+    for (let i = 0; i < table.length; i++) {
+        if (table[i].ni === niMax) {
+            niMaxID = +i
+            break
+        }
+    }
 
-	let D1 = table[niMaxID].fi - ((niMaxID - 1 === -1) ? 0 : table[niMaxID - 1].fi),
-		D2 = table[niMaxID].fi - ((niMaxID + 1 === table.length) ? 0 : table[niMaxID + 1].fi)
+    let D1 = table[niMaxID].fi - ((niMaxID - 1 === -1) ? 0 : table[niMaxID - 1].fi),
+        D2 = table[niMaxID].fi - ((niMaxID + 1 === table.length) ? 0 : table[niMaxID + 1].fi)
 
-	return {
-		classe: `[${table[niMaxID].bi} - ${table[niMaxID].bii}[`,
-		mode: table[niMaxID].bi + (D1) / (D1 + D2) * (table[niMaxID].bii - table[niMaxID].bi)
-	}
+    return {
+        classe: `[${table[niMaxID].bi} - ${table[niMaxID].bii}[`,
+        mode: table[niMaxID].bi + (D1) / (D1 + D2) * (table[niMaxID].bii - table[niMaxID].bi)
+    }
 
 }
 
@@ -662,141 +690,145 @@ function stats_mode(table) {
  * @returns {number} - The calculated median value.
  */
 function stats_median(table, breakPoint = 0.5) {
-	for (let i = 0; i < table.length; i++) {
-		if (table[i].Fi >= breakPoint) {
-			return table[i].bi + (breakPoint - (table[i - 1] === undefined ? 0 : table[i - 1].Fi)) / (table[i].fi) * (table[i].bii - table[i].bi)
-		}
-	}
+    for (let i = 0; i < table.length; i++) {
+        if (table[i].Fi >= breakPoint) {
+            return table[i].bi + (breakPoint - (table[i - 1] === undefined ? 0 : table[i - 1].Fi)) / (table[i].fi) * (table[i].bii - table[i].bi)
+        }
+    }
 
-	return 0
+    return 0
 }
 
 
 onMounted(() => {
-	console.log(statRaw.value)
-	console.table(statTable.value)
-	console.table(statCentralValues.value)
+    console.log(statRaw.value)
+    console.table(statTable.value)
+    console.table(statCentralValues.value)
 
 })
 
 
 // OUTPUT
-function tableToTexOutput(stats) {
-	let tex = "\\begin{tabularx}{\\textwidth}",
-		outputTable = []
+let tableToTexOutput = computed(() => {
+    let tex = "\\begin{tblr}",
+        outputTable = []
 
-	for (let row of stats.table) {
-		outputTable.push("\\(" + [
-			`\\bigl[${row.bi};${row.bii}\\bigr[`,
-			row.xi,
-			row.ni,
-			(row.fi).toFixed(2),
-			(row.Fi).toFixed(2),
-			(row.fi * row.xi).toFixed(2),
-			(row.xi - stats.middle.mean).toFixed(2),
-			(row.fi * Math.abs(row.xi - stats.middle.mean)).toFixed(2),
-			(row.fi * Math.pow(row.xi - stats.middle.mean, 2)).toFixed(2)
-		].join("\\)&\\(") + "\\)"
-		)
-	}
+    for (let row of statTable.value) {
+        outputTable.push([
+                `\\(\\bigl[${row.bi};${row.bii}\\bigr[\\)`,
+                row.xi,
+                row.ni,
+                row.Li,
+                statConfig.percent ? `${(row.fi * 100).toFixed(1)}\\%` : (row.fi).toFixed(3),
+                statConfig.percent ? `${(row.Fi * 100).toFixed(1)}\\%` : (row.Fi).toFixed(3),
+                statConfig.percent ? `${(row.Fid * 100).toFixed(1)}\\%` : (row.Fid).toFixed(3),
+                (row.fi * row.xi).toFixed(2),
+                (row.fi * row.xi ** 2).toFixed(2),
+            ].join(" & ")
+        )
+    }
 
-	let cols = "{Xwc{1.5cm}wc{1.5cm}wc{1.5cm}wc{1.5cm}wc{1.5cm}wc{1.5cm}wc{1.5cm}wc{1.5cm}}",
-		header = "\\(" + [
-			"\\bigl[b_{i-1};b_i\\bigr[",
-			"x_i",
-			"n_i",
-			"f_i",
-			"F_i",
-			"f_i\\cdot x_i",
-			"x_i - \\overline{x}",
-			"f_i \\lvert x_i-\\overline{x}\\rvert",
-			"f_i \\left(x_i-\\overline{x}\\right)^2"
-		].join("\\)&\\(") + "\\)\\\\ \\hline \\hline \n",
-		footer = "\\(" + [
-			"\\text{TOTAUX}",
-			"",
-			stats.samples,
-			"",
-			"1",
-			(stats.middle.mean).toFixed(2),
-			"",
-			(stats.middle.ecartmoyen).toFixed(2),
-			(stats.middle.sigma2).toFixed(2)
-		].join("\\)&\\(") + "\\)\\\\  \n"
+    let header = "\\(" + [
+            "\\bigl[b_{i-1};b_i\\bigr[",
+            "c_i",
+            "n_i",
+            "L_i",
+            "f_i",
+            "F_i",
+            "F'_i",
+            "f_i\\cdot x_i",
+            "f_i\\cdot x_i^2",
+        ].join("\\)&\\(") + "\\)\\\\ \n",
+        footer = [
+            "TOTAUX",
+            "",
+            statConfig.samples,
+            "",
+            "1",
+            "",
+            "",
+            (statCentralValues.value.mean).toFixed(2),
+            "",
+        ].join(" & ") + " \n"
 
-	document.getElementById("texoutput").value = tex + cols + "\n\\hline" + header + outputTable.join("\\\\ \\hline \n") + "\\\\ \\hline\\hline \n" + footer + "\n\\end{tabularx}"
-}
+    return "\\begin{tblr}{ colspec={| X[c,2cm] | *{7}{X[c]|} X[c,2cm] |}, hlines, row{1}={lightgray}, row{Z}={lightgray} }\n" +
+        header + "\\hline" +
+        outputTable.join("\\\\ \n") + "\\\\ \\hline \n" +
+        footer +
+        "\\end{tblr}"
+})
 
-function makeGraph(stats) {
-	// Removev previous graph
-	// TODO : make it possible to only UPDATE the data.
-	makeGraphHist(stats)
-	makeGraphMustache(stats)
-}
 
-function makeGraphHist(stats) {
-	// TODO: Graph alignement.
-	let $el = document.getElementById("svgGraphiqueHist").firstChild
-	if ($el) {
-		$el.remove()
-	}
-
-	let maxH = Math.max(...stats.table.map(x => x.fi)),
-		factor = 10,
-		w = stats.table.length + 3
-
-	let graph = new PiGraph("svgGraphiqueHist", w, Math.round(maxH * 10 + 0.5) + 2)
-	graph.origin = {
-		x: 1,
-		y: 1
-	}
-
-	graph.xAxis.ticks = 1
-	let labels = stats.table.map(x => x.bi)
-	labels.push(stats.table[stats.table.length - 1].bii)
-	graph.xAxis.ticksLabels = i => (labels[i - 1] !== undefined ? labels[i - 1] : "")
-	graph.xAxis.tickOrigine = false
-	graph.yAxis.ticks = 1
-	graph._yAxis.ticksLabels = i => (i * 10)
-	graph.yAxis.tickOrigine = false
-	graph.showGrid()
-
-	let f = graph.plot("stat").hist(stats.table.map(x => x.fi * factor), stats.table.map(x => x.xi)).histFrequency()
-}
-
-function makeGraphMustache(stats) {
-	let $el = document.getElementById("svgGraphiqueMustache").firstChild
-	if ($el) {
-		$el.remove()
-	}
-
-	let maxValue = Math.max(...stats.table.map(x => x.bii)),
-		minValue = Math.min(...stats.table.map(x => x.bi)),
-		factorValue = 10.0 / maxValue
-
-	let graph = new PiGraph("svgGraphiqueMustache", 12, 6)
-	graph.origin = {
-		x: 1,
-		y: 1
-	}
-
-	graph.xAxis.ticks = 1
-	graph.xAxis.ticksLabels = i => (i / factorValue)
-	graph.xAxis.tickOrigine = false
-	graph.yAxis.ticks = 1
-	graph.yAxis.showTicks(false)
-	graph.showGrid()
-
-	let m = graph.plot("stat").mustache({
-		x1: Math.max(stats.middle.quartiles.first * factorValue, 0),
-		x2: stats.middle.mediane * factorValue,
-		x3: Math.min(stats.middle.quartiles.last * factorValue, 10),
-		minX: minValue * factorValue,
-		maxX: maxValue * factorValue,
-		height: 2,
-		width: 2
-	})
-}
+// function makeGraph(stats) {
+//     // Removev previous graph
+//     // TODO : make it possible to only UPDATE the data.
+//     makeGraphHist(stats)
+//     makeGraphMustache(stats)
+// }
+//
+// function makeGraphHist(stats) {
+//     // TODO: Graph alignement.
+//     let $el = document.getElementById("svgGraphiqueHist").firstChild
+//     if ($el) {
+//         $el.remove()
+//     }
+//
+//     let maxH = Math.max(...stats.table.map(x => x.fi)),
+//         factor = 10,
+//         w = stats.table.length + 3
+//
+//     let graph = new PiGraph("svgGraphiqueHist", w, Math.round(maxH * 10 + 0.5) + 2)
+//     graph.origin = {
+//         x: 1,
+//         y: 1
+//     }
+//
+//     graph.xAxis.ticks = 1
+//     let labels = stats.table.map(x => x.bi)
+//     labels.push(stats.table[stats.table.length - 1].bii)
+//     graph.xAxis.ticksLabels = i => (labels[i - 1] !== undefined ? labels[i - 1] : "")
+//     graph.xAxis.tickOrigine = false
+//     graph.yAxis.ticks = 1
+//     graph._yAxis.ticksLabels = i => (i * 10)
+//     graph.yAxis.tickOrigine = false
+//     graph.showGrid()
+//
+//     let f = graph.plot("stat").hist(stats.table.map(x => x.fi * factor), stats.table.map(x => x.xi)).histFrequency()
+// }
+//
+// function makeGraphMustache(stats) {
+//     let $el = document.getElementById("svgGraphiqueMustache").firstChild
+//     if ($el) {
+//         $el.remove()
+//     }
+//
+//     let maxValue = Math.max(...stats.table.map(x => x.bii)),
+//         minValue = Math.min(...stats.table.map(x => x.bi)),
+//         factorValue = 10.0 / maxValue
+//
+//     let graph = new PiGraph("svgGraphiqueMustache", 12, 6)
+//     graph.origin = {
+//         x: 1,
+//         y: 1
+//     }
+//
+//     graph.xAxis.ticks = 1
+//     graph.xAxis.ticksLabels = i => (i / factorValue)
+//     graph.xAxis.tickOrigine = false
+//     graph.yAxis.ticks = 1
+//     graph.yAxis.showTicks(false)
+//     graph.showGrid()
+//
+//     let m = graph.plot("stat").mustache({
+//         x1: Math.max(stats.middle.quartiles.first * factorValue, 0),
+//         x2: stats.middle.mediane * factorValue,
+//         x3: Math.min(stats.middle.quartiles.last * factorValue, 10),
+//         minX: minValue * factorValue,
+//         maxX: maxValue * factorValue,
+//         height: 2,
+//         width: 2
+//     })
+// }
 
 </script>
 

@@ -1,11 +1,6 @@
-export abstract class CheckerBase {
-    get secondaryCheckerOptions(): string[] {
-        return this._secondaryCheckerOptions;
-    }
+import {CheckerResult} from "@/Composables/checkersConfig";
 
-    set secondaryCheckerOptions(value: string[]) {
-        this._secondaryCheckerOptions = value;
-    }
+export abstract class CheckerBase {
     protected constructor(config?: string[] | string) {
         if (config === undefined) {
             this._config = []
@@ -17,15 +12,14 @@ export abstract class CheckerBase {
 
         // Subchecker : we suppose that everything after is for the subchecker
         const [tmp, chk] = this._config.join(',').split('checker:')
-        if(chk!==undefined) {
+        if (chk !== undefined) {
             const [chkName, ...opts] = chk.split(',')
             this._secondaryCheckerName = chkName
-            this._secondaryCheckerOptions = opts||[]
+            this._secondaryCheckerOptions = opts || []
         }
     }
 
-    private _secondaryCheckerName: string
-    private _secondaryCheckerOptions: string[]
+    protected _secondaryCheckerName?: string
 
     get secondaryCheckerName(): string {
         return this._secondaryCheckerName;
@@ -35,7 +29,17 @@ export abstract class CheckerBase {
         this._secondaryCheckerName = value;
     }
 
-    private _config: string[]
+    protected _secondaryCheckerOptions?: string[]
+
+    get secondaryCheckerOptions(): string[] {
+        return this._secondaryCheckerOptions;
+    }
+
+    set secondaryCheckerOptions(value: string[]) {
+        this._secondaryCheckerOptions = value;
+    }
+
+    protected _config: string[]
 
     get config(): string[] {
         return this._config;
@@ -45,7 +49,7 @@ export abstract class CheckerBase {
         this._config = value;
     }
 
-    private _name: string
+    protected _name: string
 
     get name(): string {
         return this._name;
@@ -55,7 +59,7 @@ export abstract class CheckerBase {
         this._name = value;
     }
 
-    private _description: string
+    protected _description: string
 
     get description(): string {
         return this._description;
@@ -67,6 +71,6 @@ export abstract class CheckerBase {
 
     abstract get format(): string
 
-    abstract check(expected: string, given: string): { result: boolean, message: string }
+    abstract check(expected: string, given: string): CheckerResult
 }
 

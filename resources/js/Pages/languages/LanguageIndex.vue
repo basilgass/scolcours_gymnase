@@ -5,27 +5,27 @@
 		<div class="grid grid-cols-2 md:grid-cols-4 gap-4">
 			<Link
 				:href="`/${language}/memory`"
-				class="bg-white border rounded hover:scale-105 h-32 grid place-items-center transition-all duration-300"
+				class="text-xl bg-white border rounded hover:scale-105 h-32 grid place-items-center transition-all duration-300"
 			>
 				memory
 			</Link>
 			<Link
 				:href="`/${language}/guess`"
-				class="bg-white border rounded hover:scale-105 h-32 grid place-items-center transition-all duration-300"
+				class="text-xl bg-white border rounded hover:scale-105 h-32 grid place-items-center transition-all duration-300"
 			>
 				suggestions
 			</Link>
 			<Link
-				:href="`/${language}/list`"
-				class="bg-white border rounded hover:scale-105 h-32 grid place-items-center transition-all duration-300"
+				:href="`/${language}/type`"
+				class="text-xl bg-white border rounded hover:scale-105 h-32 grid place-items-center transition-all duration-300"
 			>
-				liste des mots
+				typographie
 			</Link>
 			<Link
-				:href="`/${language}/type`"
-				class="bg-white border rounded hover:scale-105 h-32 grid place-items-center transition-all duration-300"
+					:href="`/${language}/list`"
+					class="text-xl bg-white border rounded hover:scale-105 h-32 grid place-items-center transition-all duration-300"
 			>
-				Typographie
+				liste des mots
 			</Link>
 		</div>
 	</article>

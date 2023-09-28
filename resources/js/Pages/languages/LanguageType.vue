@@ -1,33 +1,43 @@
 <template>
 	<article>
-		<ArticleTitle :title="language" />
+		<ArticleTitle :title="language"/>
 
 		<Link
-			:href="`/${language}`"
-			class="hover:pl-2 transition-all duration-300"
+				:href="`/${language}`"
+				class="hover:pl-2 transition-all duration-300"
 		>
-			<i class="bi bi-arrow-bar-left" /> retour
+			<i class="bi bi-arrow-bar-left"/> retour
 		</Link>
 
 		<div
-			v-if="gameStopped"
+				v-if="gameStopped"
 		>
 			<LanguageUnitsSelector
-				:units="props.units"
-				@update="unitsSelection=$event"
+					:units="props.units"
+					@update="unitsSelection=$event"
 			/>
 
-			<button
-				class="btn-primary"
-				@click="startGame"
-			>
-				Commencer
-			</button>
+			<div v-show="false" class="my-3">
+				<h2 class="text-lg font-extralight mb-2 uppercase">configuration de typographe</h2>
+				<div class="flex gap-3">
+
+				</div>
+			</div>
+
+			<div class="grid place-items-center mt-12">
+				<button
+						v-show="unitsSelection.length>0"
+						class="btn-primary px-20 py-10 text-2xl"
+						@click="startGame"
+				>
+					Commencer
+				</button>
+			</div>
 		</div>
 		<div v-else>
 			<div
-				v-admin
-				class="bg-grey-300 border border-600 rounded"
+					v-admin
+					class="bg-grey-300 border border-600 rounded"
 			>
 				{{ currentWord.fr }} --> {{ currentWord.foreign }}
 			</div>
@@ -39,36 +49,36 @@
 
 				<div class="flex flex-wrap gap-2 justify-center bg-white px-5 py-3 text-lg">
 					<div
-						v-for="(key, index) in resultLetters"
-						:key="`found-${index}`"
-						:class="{
+							v-for="(key, index) in resultLetters"
+							:key="`found-${index}`"
+							:class="{
 							'p-2 w-8 border-b-2 border-gray-200': key.key!==' ',
 							'p-0 w-3': key.key===' ',
 							'bg-white': key.key !== ' ' && index!==currentIndex,
 							'is-active': index===currentIndex
 						}"
-						class="text-center text-lg font-code h-[2.5em]"
+							class="text-center text-lg font-code h-[2.5em]"
 					>
 						<span
-							v-show="key.visible"
-							v-text="key.key"
+								v-show="key.visible"
+								v-text="key.key"
 						/>
 					</div>
 				</div>
 
 				<div
-					ref="typoButtons"
-					class="keyboard flex flex-wrap gap-4 justify-center max-w-xl mx-auto"
+						ref="typoButtons"
+						class="keyboard flex flex-wrap gap-4 justify-center max-w-xl mx-auto"
 				>
 					<button
-						v-for="(key, index) in foreignLetters"
-						:key="`${key.key}-${index}`"
-						:class="{
+							v-for="(key, index) in foreignLetters"
+							:key="`${key.key}-${index}`"
+							:class="{
 							'bg-white hover:scale-105 hover:shadow': !key.used,
 							'bg-gray-200 disabled text-gray-400 cursor-not-allowed': key.used
 						}"
-						class="p-2 w-14 h-14 border border-gray-200 rounded transition-all"
-						@click="key.used?'':validateKey(index)"
+							class="p-2 w-14 h-14 border border-gray-200 rounded transition-all"
+							@click="key.used?'':validateKey(index)"
 					>
 						{{ key.key }}
 					</button>
@@ -91,7 +101,7 @@ import {computed, nextTick, onMounted, ref, watch} from "vue"
 import {PiMath} from "pimath/esm"
 import FormInput from "@/Components/Form/FormInput.vue"
 import FormNumber from "@/Components/Form/FormNumber.vue"
-import LanguageUnitsSelector from "@/Pages/languages/LanguageUnitsSelector.vue"
+import LanguageUnitsSelector from "@/Components/Languages/LanguageUnitsSelector.vue"
 
 let props = defineProps({
 	code: {type: String, required: true},
@@ -183,13 +193,13 @@ let typoButtons = ref(null),
 		let theWord = currentWord.value.foreign
 
 		// Modify the word
-		if(theWord.endsWith(", a, i, e")){
+		if (theWord.endsWith(", a, i, e")) {
 			theWord = theWord.split(", a, i, e")[0]
 		}
-		if(theWord.endsWith(", i")){
+		if (theWord.endsWith(", i")) {
 			theWord = theWord.split(", i")[0]
 		}
-		if(theWord.split(", -").length===2){
+		if (theWord.split(", -").length === 2) {
 			theWord = theWord.spit(", -")[0]
 		}
 
@@ -203,7 +213,7 @@ let typoButtons = ref(null),
 			})
 		)
 
-		resultLetters.value = theWord.split("").map((key, index)=>{
+		resultLetters.value = theWord.split("").map((key, index) => {
 			return {
 				index,
 				key: key.toUpperCase(),

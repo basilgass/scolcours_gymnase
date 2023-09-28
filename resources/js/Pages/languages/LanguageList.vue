@@ -1,67 +1,78 @@
 <template>
 	<article>
-		<ArticleTitle :title="props.language" />
+		<ArticleTitle :title="props.language"/>
 		<Link
-			:href="`/${props.language}`"
-			class="hover:pl-2 transition-all duration-300"
+				:href="`/${props.language}`"
+				class="hover:pl-2 transition-all duration-300"
 		>
-			<i class="bi bi-arrow-bar-left" />  retour
+			<i class="bi bi-arrow-bar-left"/> retour
 		</Link>
 
-		<div
-			class="mt-10 flex items-end justify-between"
-		>
-			<LanguageUnitsSelector
+		<LanguageUnitsSelector
 				:units="props.units"
 				@update="unitsSelection=$event"
-			/>
+		/>
+
+		<div
+				class="mt-10 flex items-end justify-between"
+		>
 
 			<button
-				class="btn-primary"
-				@click="generateWords"
+					class="btn-primary"
+					@click="generateWords"
 			>
 				Afficher la liste des unité(s)
 			</button>
 
 			<form-switch
-				v-model="fr_foreign"
-				name="ordreLangues"
-				:label="`français - ${props.language}`"
+					v-model="fr_foreign"
+					:label="`français - ${props.language}`"
+					name="ordreLangues"
 			/>
 
 			<form-switch
-				v-model="random"
-				name="randomwords"
-				label="ordre aléatoire"
-				@click="generateWords"
+					v-model="random"
+					label="ordre aléatoire"
+					name="randomwords"
+					@click="generateWords"
 			/>
 		</div>
 
+
+		<div class="mt-5 flex items-end w-full gap-3">
+			<div class="flex-1 ">
+				<form-input
+						v-model="filterValue"
+						label="filtrer"
+						name="filtrer"
+				/>
+			</div>
+
+			<button :class="filteredWords.length===0?'bg-gray-300':'btn-primary'"
+			        :disabled="filteredWords.length===0"
+			        class="btn"
+			        @click="exportList"
+			>exporter
+			</button>
+		</div>
 		<div>Il y a {{ availableWords.length }} mots</div>
 
-		<div>
-			<form-input
-				v-model="filterValue"
-				name="filtrer"
-				label="filtrer"
-			/>
-		</div>
 		<div
-			v-if="filteredWords.length>0"
-			class="flex flex-col gap-2 mt-10"
+				v-if="filteredWords.length>0"
+				class="flex flex-col gap-2 mt-10"
 		>
 			<div
-				v-for="(item, index) in filteredWords"
-				:key="index"
-				class="bg-white border rounded grid grid-cols-2 p-3"
-				:class="editMode.enabled.value?'hover:bg-amber-100 cursor-pointer':''"
-				@click="editTranslation(item)"
+					v-for="(item, index) in filteredWords"
+					:key="index"
+					:class="editMode.enabled.value?'hover:bg-amber-100 cursor-pointer':''"
+					class="bg-white border rounded grid grid-cols-2 p-3"
+					@click="editTranslation(item)"
 			>
 				<div>
-					{{ fr_foreign?item.fr:item.foreign }}
+					{{ fr_foreign ? item.fr : item.foreign }}
 				</div>
 				<div>
-					{{ fr_foreign?item.foreign:item.fr }}
+					{{ fr_foreign ? item.foreign : item.fr }}
 				</div>
 			</div>
 		</div>
@@ -75,8 +86,8 @@
 			<template #footer>
 				<div class="text-right px-3 py-5">
 					<button
-						class="btn btn-primary"
-						@click="updateTranslation"
+							class="btn btn-primary"
+							@click="updateTranslation"
 					>
 						enregistrer
 					</button>
@@ -84,14 +95,14 @@
 			</template>
 			<div class="px-3">
 				<form-input
-					v-model="editWord.fr"
-					name="edit-fr"
-					label="français"
+						v-model="editWord.fr"
+						label="français"
+						name="edit-fr"
 				>
 					<form-input
-						v-model="editWord.foreign"
-						name="edit-foreign"
-						label="translation"
+							v-model="editWord.foreign"
+							label="translation"
+							name="edit-foreign"
 					/>
 				</form-input>
 			</div>
@@ -111,7 +122,7 @@ import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
 import {computed, inject, ref} from "vue"
 import {PiMath} from "pimath/esm"
 import FormSwitch from "@/Components/Form/FormSwitch.vue"
-import LanguageUnitsSelector from "@/Pages/languages/LanguageUnitsSelector.vue"
+import LanguageUnitsSelector from "@/Components/Languages/LanguageUnitsSelector.vue"
 import FormInput from "@/Components/Form/FormInput.vue"
 import {usePage} from "@inertiajs/vue3"
 import DialogModal from "@/Components/Ui/DialogModal.vue"
@@ -119,7 +130,7 @@ import DialogModal from "@/Components/Ui/DialogModal.vue"
 let props = defineProps({
 	code: {type: String, required: true},
 	language: {type: String, required: true},
-	units: {type: Array, default: ()=>[]}
+	units: {type: Array, default: () => []}
 })
 
 const flash = inject("flash"),
@@ -131,24 +142,26 @@ let availableWords = ref([]),
 	unitsSelection = ref([]),
 	filterValue = ref("")
 
-let generateWords = function() {
+let generateWords = function () {
 		// All words available
 		let words = []
-		for(let values of unitsSelection.value.map(x=>x.words)){
+		for (let values of unitsSelection.value.map(x => x.words)) {
 			words = words.concat(values)
 		}
 
 		// availableWords.value = PiMath.Random.array(words, numberOfCards.value)
-		if(random.value) {
+		if (random.value) {
 			availableWords.value = PiMath.Random.shuffle(words)
-		}else{
+		} else {
 			availableWords.value = words
 		}
 	},
-	filteredWords = computed(()=>{
-		if(filterValue.value===""){return availableWords.value}
+	filteredWords = computed(() => {
+		if (filterValue.value === "") {
+			return availableWords.value
+		}
 
-		return availableWords.value.filter(word=>{
+		return availableWords.value.filter(word => {
 			return word.fr.toLowerCase().includes(filterValue.value) ||
 				word.foreign.toLowerCase().includes(filterValue.value)
 		})
@@ -156,20 +169,23 @@ let generateWords = function() {
 
 let showEditForm = ref(false),
 	editWord = ref({}),
-	editTranslation = function(word) {
-		if(editMode.enabled.value && usePage().props.auth.can.admin){
+	editTranslation = function (word) {
+		if (editMode.enabled.value && usePage().props.auth.can.admin) {
 			editWord.value = word
 			showEditForm.value = true
 		}
 
 	},
-	updateTranslation = function(){
+	updateTranslation = function () {
 		axios.post(route("translation.words.update", [editWord.value.id]), {
 			...editWord.value,
 			_method: "PATCH"
-		}).then(res=>{
+		}).then(res => {
 			showEditForm.value = false
 		})
+	},
+	exportList = function(){
+		// TODO: export as excel list.
 	}
 
 </script>
