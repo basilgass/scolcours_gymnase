@@ -5,77 +5,84 @@
 		</h1>
 
 
-		<div class="grid grid-cols-3 gap-3">
+		<div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+			<div class="flex w-full gap-3 items-end">
+				<button :class="form.language==='it'?'is-active':'bg-white'" class="btn flex-1" @click="form.language='it'">it</button>
+				<button :class="form.language==='en'?'is-active':'bg-white'" class="btn flex-1" @click="form.language='en'">en</button>
+				<button :class="form.language==='de'?'is-active':'bg-white'" class="btn flex-1" @click="form.language='de'">de</button>
+			</div>
+
 			<form-input
-				v-model="form.language"
-				label="langue"
-				name="langue"
+					v-model="form.unit"
+					label="unité"
+					name="unite"
 			/>
 			<form-input
-				v-model="form.unit"
-				label="unité"
-				name="unite"
-			/>
-			<form-input
-				v-model="form.title"
-				label="titre"
-				name="titre"
+					v-model="form.title"
+					label="titre"
+					name="titre"
 			/>
 		</div>
 
 		<div>
 			<form-textarea
-				v-model="traduction"
-				label="traduction"
-				name="traduction"
+					v-model="traduction"
+					label="traduction"
+					name="traduction"
+					catch-tab
 			>
 				français \t langue étrangère \t description \t exemples
 			</form-textarea>
 
-			<button
-				class="btn btn-primary"
-				@click="importerLesTraductions"
-			>
-				Importer
-			</button>
+			<div class="flex gap-3">
+				<button
+						class="btn btn-primary"
+						@click="importerLesTraductions"
+				>
+					Importer
+				</button>
+
+				<form-switch v-model="swapFrForeign" :label="`inverser FR - ${form.language.toUpperCase()}`"
+				             name="swapLanguage"/>
+			</div>
 
 			<div class="bg-white">
 				<table class="w-full">
 					<thead>
-						<tr class="text-left">
-							<th class="p-2">
-								français
-							</th>
-							<th class="p-2">
-								langue étrangère
-							</th>
-							<th class="p-2">
-								definition
-							</th>
-							<th class="p-2">
-								exemples
-							</th>
-						</tr>
+					<tr class="text-left">
+						<th class="p-2">
+							français
+						</th>
+						<th class="p-2">
+							langue étrangère
+						</th>
+						<th class="p-2">
+							definition
+						</th>
+						<th class="p-2">
+							exemples
+						</th>
+					</tr>
 					</thead>
 					<tbody>
-						<tr
+					<tr
 							v-for="(item, index) of traductions"
 							:key="index"
 							class="odd:bg-amber-100"
-						>
-							<td class="p-2">
-								{{ item.fr }}
-							</td>
-							<td class="p-2">
-								{{ item.foreign }}
-							</td>
-							<td class="p-2">
-								{{ item.definition }}
-							</td>
-							<td class="p-2">
-								{{ item.examples }}
-							</td>
-						</tr>
+					>
+						<td class="p-2">
+							{{ item.fr }}
+						</td>
+						<td class="p-2">
+							{{ item.foreign }}
+						</td>
+						<td class="p-2">
+							{{ item.definition }}
+						</td>
+						<td class="p-2">
+							{{ item.examples }}
+						</td>
+					</tr>
 					</tbody>
 				</table>
 			</div>
@@ -95,17 +102,21 @@ import {useForm} from "@inertiajs/vue3"
 import FormInput from "@/Components/Form/FormInput.vue"
 import FormTextarea from "@/Components/Form/FormTextarea.vue"
 import {computed, ref} from "vue"
+import FormSwitch from "@/Components/Form/FormSwitch.vue";
 
 let traduction = ref(""),
+	swapFrForeign = ref(false),
 	traductions = computed(() => {
-
 		return traduction.value.split("\n")
-			.filter(x => x.trim() !== "")
+			.filter(x => x.trim() !== "" && x.split("\t").length >= 2)
 			.map(x => {
-				const values = x.split("\t")
+
+				const values = x
+					.replaceAll("’", "'")
+					.split("\t")
 				return {
-					fr: values[0],
-					foreign: values.length >= 2 ? values[1] : "",
+					fr: values[swapFrForeign.value ? 1 : 0],
+					foreign: values[swapFrForeign.value ? 0 : 1],
 					definition: values.length >= 3 ? values[2] : "",
 					examples: values.length >= 4 ? values[3] : "",
 				}
@@ -127,37 +138,6 @@ let form = useForm({
 			.post(route("translation.create"))
 
 
-	},
-	generate = function (L, U) {
-		form.language = L
-		let TR = []
-		if (L === "it") {
-			form.unit = `unità ${U}`
-			TR = vocabulare[U].map(x => {
-				return {
-					fr: x[1],
-					foreign: x[0]
-				}
-			})
-		} else {
-			form.unit = `Life ${U}`
-			TR = vocabulary[U].map(x => {
-				return {
-					fr: x.fr,
-					foreign: x.en,
-					definition: x.definition,
-					examples: x.examples
-				}
-			})
-		}
-
-		form
-			.transform((data) => {
-				return {
-					...data,
-					translations: TR
-				}
-			})
-			.post(route("translation.create"))
 	}
+
 </script>

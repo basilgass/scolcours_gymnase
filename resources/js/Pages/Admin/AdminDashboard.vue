@@ -43,6 +43,14 @@
 		>
 			gestion des quizz
 		</Link>
+
+		<Link
+				as="button"
+				class="min-h-[8em] text-xl bg-white border border-gray-200 rounded-xl"
+				:href="route('translation.import')"
+		>
+			import des langues
+		</Link>
 	</div>
 </template>
 

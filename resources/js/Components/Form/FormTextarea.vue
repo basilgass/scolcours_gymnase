@@ -16,6 +16,7 @@
 			@input="$emit('update:modelValue', $event.target.value)"
 			@keyup="atKeyup"
 			@mouseup="atKeyup"
+			@keydown.tab="tabber"
 		/>
 
 		<slot />
@@ -62,6 +63,21 @@ const props = defineProps({
 	rows: {type: Number, default: 4},
 	hideLabel: {type: Boolean, default: false},
 	codeWriting: {type: Boolean, default: false},
-	helperText: {type: String, default: ""}
+	helperText: {type: String, default: ""},
+	catchTab: {type: Boolean, default: false}
 })
+
+let tabber = function (event) {
+	if(!props.catchTab){return}
+	event.preventDefault()
+	/* enable tab caracter */
+	let text = traduction.value,
+		originalSelectionStart = event.target.selectionStart,
+		textStart = text.slice(0, originalSelectionStart),
+		textEnd = text.slice(originalSelectionStart)
+
+	traduction.value = `${textStart}\t${textEnd}`
+	event.target.value = traduction.value // required to make the cursor stay in place.
+	event.target.selectionEnd = event.target.selectionStart = originalSelectionStart + 1
+}
 </script>
