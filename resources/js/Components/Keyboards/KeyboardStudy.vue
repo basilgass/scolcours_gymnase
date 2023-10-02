@@ -199,14 +199,14 @@ onMounted(() => {
 			xMax: 10,
 			yMin: -10,
 			yMax: 10,
+			xUnit: 1,
+			yUnit: 1,
 			pixelsPerUnit: 40
 		},
 		cfgRaw = null
 
 	let withButtons = []
 
-
-	console.log(theOptions.value)
 	if (theOptions.value.length > 0) {
 		for (let opt of theOptions.value) {
 			if (opt.includes(",")) {
@@ -247,13 +247,23 @@ onMounted(() => {
 			cfg.xMax = +d[0].split(":")[1]
 			cfg.yMin = +d[1].split(":")[0]
 			cfg.yMax = +d[1].split(":")[1]
-			let res = d[2] ? +d[2] : 800
-			cfg.pixelsPerUnit = res / (cfg.xMax - cfg.xMin)
+			cfg.xUnit = d[2] ? +d[2].split(":")[0] : 1
+			cfg.yUnit = d[2] ? +d[2].split(':')[1] : 1
+			// let res = d[3] ? +d[3] : 800
+			// cfg.pixelsPerUnit = res / (cfg.xMax - cfg.xMin)
 		}
 	}
 
+	console.log(cfg)
+
 	PiGraph = new PiDraw(draw.value)
+
+
 	PiGraph.updateLayout(cfg, false)
+	PiGraph.pixelsPerUnit = {
+		x: PiGraph.pixelsPerUnit.x / cfg.xUnit,
+		y: PiGraph.pixelsPerUnit.y / cfg.yUnit
+	}
 	PiGraph.axis()
 	PiGraph.texConverter = {
 		toTex: katex.renderToString,
@@ -366,7 +376,9 @@ function addItemToGraph(btn) {
 			return
 		}
 
-		let [x, y] = display.value.input.replace("(", "").replace(")", "").split(";")
+		let [x, y] = display.value.input
+			.substring(1, display.value.input.length - 2)
+			.split(";")
 
 		if (btn === "z" && y !== "0") {
 			message.value = "Ce n'est pas un zéro"
@@ -720,13 +732,23 @@ function getCoordinates(value) {
 		return [undefined, undefined];
 	}
 
-	return value.match(/\(([^)]+)\)/)[1].split(';');
+	// Remove the first parenthesis and the last one.
+	let parts = value.split('('),
+		key = parts.shift(),
+		coords = parts.join('(')
+	coords = coords.substring(0, coords.length - 1)
+
+	return coords.split(";")
+	// return value.match(/\(([^)]+)\)/)[1].split(';');
 }
 
 function addPoint(type, xValue, yValue) {
-	let x = new PiMath.Fraction(xValue).value,
-		y = new PiMath.Fraction(yValue).value
 
+	let x = xValue === "" ? 0 : +(new PiMath.NumExp(xValue)).evaluate(),
+		y = yValue === "" ? 0 : +(new PiMath.NumExp(yValue)).evaluate()
+
+	// let x = new PiMath.Fraction(xValue).value,
+	// 	y = new PiMath.Fraction(yValue).value
 	let P = PiGraph.point(x, y),
 		pixels = PiGraph.unitsToPixels({x, y}),
 		bar, text, beziercontrol = "smooth"
@@ -818,15 +840,19 @@ defineExpose({
 	loadAnswer: (value) => {
 		loadAnswerToKeyboard(value, reset, changeEvent, (value) => {
 			value.split(',').forEach((item) => {
+
 				// Adding points.
 				const [x, y] = getCoordinates(item)
+
 				if (x !== undefined && y !== undefined) {
 					let type = item.split('(')[0]
 
-					if(type==='M'){type="mm"}
+					if (type === 'M') {
+						type = "mm"
+					}
 
 					display.value.input = `(${x};${y})`
-					addItemToGraph(type===""?'p':type)
+					addItemToGraph(type === "" ? 'p' : type)
 				} else {
 					// Plotting asymptotes
 					// Adding asymptotes.

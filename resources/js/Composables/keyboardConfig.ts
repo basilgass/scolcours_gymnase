@@ -406,7 +406,7 @@ export const keyboards: { [Key: string]: KeyboardObjectType } = {
  * @param {string} value - The ASCII math expression to be converted.
  * @return {string} - The TeX formatted string.
  */
-function asciiToTex(value: string): string {
+export function asciiToTex(value: string): string {
     const parser = new AsciiMathParser()
 
     // Force display style

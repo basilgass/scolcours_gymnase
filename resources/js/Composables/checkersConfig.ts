@@ -86,7 +86,6 @@ export function getCheckerClass(checker: string) {
             return StringChecker
     }
 
-    return null
 
 }
 

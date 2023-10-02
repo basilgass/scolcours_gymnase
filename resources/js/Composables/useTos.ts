@@ -1,10 +1,12 @@
 import {useKeyboard} from "@/Composables/useKeyboard"
+import {asciiToTex} from "@/Composables/keyboardConfig";
 
 let {keyboards} = useKeyboard()
 
 
 export function makeStudyFromCode(code, showCoords, displayMode){
 	let [zeroes, signs, grows, coords] = code.split("@")
+
 	if(grows!==undefined){
 		let extremes = {},
 			extremesValues = coords?coords.split(","):[],
@@ -14,9 +16,9 @@ export function makeStudyFromCode(code, showCoords, displayMode){
 			extremesValues=[]
 		}
 
-		for(let i of zeroesValues){
+		for(let i in zeroesValues){
 			let z = zeroesValues[i],
-				g = grows[2*i+1]
+				g = grows[2*(+i)+1]
 
 			if(g!==undefined) {
 				let t = ""
@@ -34,11 +36,11 @@ export function makeStudyFromCode(code, showCoords, displayMode){
 					// if in writing mode, show a question mark
 					if(displayMode){
 						if(extremesValues[i] !== ""){
-							label = `\\left(${z};${extremesValues[i]}\\right)`
+							label = `\\left(${z};${asciiToTex(extremesValues[i])}\\right)`
 						}
 
 					}else {
-						label = `\\left(${z};${extremesValues[i] === "" ? "?" : extremesValues[i]}\\right)`
+						label = `\\left(${z};${extremesValues[i] === "" ? "?" : asciiToTex(extremesValues[i])}\\right)`
 					}
 				}
 

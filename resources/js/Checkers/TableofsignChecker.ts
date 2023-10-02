@@ -1,5 +1,5 @@
-import {ExactChecker} from "@/Checkers/ExactChecker.js"
 import {CheckerBase} from "@/Checkers/CheckerBase";
+import {getCheckerClass} from "@/Composables/checkersConfig";
 
 const name = "tos"
 const description = `tos,[paramètres]
@@ -9,16 +9,29 @@ aucun
 `
 
 export class TableofsignChecker extends CheckerBase {
-	private grows: boolean;
-	private coords: boolean;
+    private grows: boolean;
+    private coords: boolean;
+    private secondaryChecker: CheckerBase;
 
-    constructor(config:string[]|string) {
+    constructor(config: string[] | string) {
         super(config);
         this.name = name
         this.description = description
 
         this.grows = this.config.includes('g') || this.config.includes('grows')
         this.coords = this.config.includes('c') || this.config.includes('coords')
+
+        const chkClass = getCheckerClass(this.secondaryCheckerName || "exact")
+        this.secondaryChecker = new chkClass(this.secondaryCheckerOptions)
+    }
+
+    get format(): string {
+        if (this.coords) {
+            return `Tableau de croissance avec min / max<br/>Coordonnées au format ${this.secondaryChecker.format}`
+        } else if (this.grows) {
+            return "Tableau de croissance"
+        }
+        return "Tableau de signes";
     }
 
     check(expected: string, given: string): { result: boolean; message: string } {
@@ -55,7 +68,7 @@ export class TableofsignChecker extends CheckerBase {
                 }
             }
 
-            if(grows.expected!== grows.provided){
+            if (grows.expected !== grows.provided) {
                 return {
                     result: false,
                     message: "la croissance n'est pas juste"
@@ -63,25 +76,24 @@ export class TableofsignChecker extends CheckerBase {
             }
 
             // Check the coordinates
-            if(coords.expected.length>0){
+            if (coords.expected.length > 0) {
                 let expectedCoordinates = coords.expected.split(","),
                     providedCoordinates = coords.provided.split(",")
 
-                if(expectedCoordinates.length!==providedCoordinates.length){
+                if (expectedCoordinates.length !== providedCoordinates.length) {
                     return {
                         result: false,
                         message: "toutes les valeurs des extrêmes n'ont pas été données..."
                     }
                 }
 
-                let eChecker = new ExactChecker(this.config)
-                for(let i=0; i<expectedCoordinates.length; i++){
-                    let check = eChecker.check(expectedCoordinates[i], providedCoordinates[i])
+                for (let i = 0; i < expectedCoordinates.length; i++) {
+                    let check = this.secondaryChecker.check(expectedCoordinates[i], providedCoordinates[i])
 
-                    if(!check.result){
+                    if (!check.result) {
                         return {
                             result: false,
-                            message: `il y a une erreur avec ${i===0?"la 1ère":"la "+(i+1)+"ème"} coordonnée`
+                            message: `il y a une erreur avec ${i === 0 ? "la 1ère" : "la " + (i + 1) + "ème"} coordonnée`
                         }
                     }
                 }
@@ -98,15 +110,6 @@ export class TableofsignChecker extends CheckerBase {
             result: true,
             message: ""
         }
-    }
-
-    get format(): string {
-        if(this.coords){
-            return "Tableau de croissance avec min / max"
-        }else if(this.grows){
-            return "Tableau de croissance"
-        }
-        return "Tableau de signes";
     }
 
 }
