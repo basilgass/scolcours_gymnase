@@ -254,8 +254,6 @@ onMounted(() => {
 		}
 	}
 
-	console.log(cfg)
-
 	PiGraph = new PiDraw(draw.value)
 
 
@@ -377,7 +375,7 @@ function addItemToGraph(btn) {
 		}
 
 		let [x, y] = display.value.input
-			.substring(1, display.value.input.length - 2)
+			.substring(1, display.value.input.length - 1)
 			.split(";")
 
 		if (btn === "z" && y !== "0") {
@@ -747,6 +745,8 @@ function addPoint(type, xValue, yValue) {
 	let x = xValue === "" ? 0 : +(new PiMath.NumExp(xValue)).evaluate(),
 		y = yValue === "" ? 0 : +(new PiMath.NumExp(yValue)).evaluate()
 
+	console.log(xValue, x)
+	console.log(yValue, y)
 	// let x = new PiMath.Fraction(xValue).value,
 	// 	y = new PiMath.Fraction(yValue).value
 	let P = PiGraph.point(x, y),
