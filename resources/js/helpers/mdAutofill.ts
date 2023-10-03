@@ -10,14 +10,21 @@ export const latexTriggers: TriggersObject = {
 	"BEQ": ["\\begin{array}{rl|l}\n", "\n\\end{array}"],
 	"BFR": ["\\frac{", "}{}"],
 	"=>": ["\\implies ", ""],
-	"<=>": ["\\Longleftrightarrow ", ""],
+	"<>": ["\\Longleftrightarrow ", ""],
 	"**": ["\\cdot ", ""],
 	"==": ["&= ", ""],
+	"\"\"": ["\\text{ ", " }"],
 	"<=": ["\\leq ", ""],
 	">=": ["\\geq ", ""],
 	",.": (textBefore, textAfter)=>{
 		return [
 			wrapLastWord(textBefore.slice(0, -2), " \\overrightarrow{", "} "),
+			textAfter
+		]
+	},
+	",,": (textBefore, textAfter)=>{
+		return [
+			wrapLastWord(textBefore.slice(0, -2), " \\overline{", "} "),
 			textAfter
 		]
 	},

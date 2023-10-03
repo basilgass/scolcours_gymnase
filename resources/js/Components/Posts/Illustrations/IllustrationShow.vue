@@ -42,6 +42,7 @@ Affichage des illustrations
 				:key="updateComponentKey"
 				:illustration="blockIllustration"
 			/>
+
 			<div class="float-right">
 				<button
 					v-if="preview"
@@ -79,7 +80,7 @@ Affichage des illustrations
 </template>
 
 <script setup lang="ts">
-import {computed, defineAsyncComponent, inject, ref} from "vue"
+import {computed, defineAsyncComponent, inject, ref, watch} from "vue"
 import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"
 import {useFormattedBody} from "@/Composables/useHelpers"
 import {getModule, MODULE_TYPES} from "@/scolcours";
@@ -108,6 +109,9 @@ let root = ref(null),
 	}),
 	updateComponentKey = ref(0)
 
+watch(blockData, ()=>{
+	updateComponentKey.value++
+})
 const IllustrationComponent = computed(
 	() => {
 		if (props.illustration.type === "component" && props.illustration.value !== null) {

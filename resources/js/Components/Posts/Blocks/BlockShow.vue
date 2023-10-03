@@ -19,7 +19,7 @@ Affichage d'un block , avec toutes les possibilités
 			<div
 				class="flex justify-between w-full px-5 py-3 mb-3 text-xl"
 				:class="blockConfig.style.header"
-				v-show="editMode.enabled.value || blockTitle"
+				v-show="editMode.enabled.value || blockTitle || blockButtons"
 			>
 				<div>
 					<div class="flex gap-3">
@@ -49,10 +49,10 @@ Affichage d'un block , avec toutes les possibilités
 					</div>
 				</div>
 
-				<div class="flex gap-3">
+				<div class="flex items-end gap-3">
 					<div
 						v-if="blockButtons"
-						class="flex gap-3"
+						class="flex items-end gap-3"
 					>
 						<div v-if="blockButtons && blockButtons.reset.show">
 							<button
