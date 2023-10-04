@@ -100,8 +100,8 @@ export const keyboardKeys = {
     ".": {type: "math", display: "."},
     ";": {type: "math", display: ";"},
     "RR": {type: "math", display: "\\mathbb{R}"},
-    "RR_(+)": {type: "math", display: "\\mathbb{R}_+"},
-    "RR_(-)": {type: "math", display: "\\mathbb{R}_-"},
+    "RR_+": {type: "math", display: "\\mathbb{R}_+"},
+    "RR_-": {type: "math", display: "\\mathbb{R}_-"},
     "^**": {type: "math", display: "\\textcolor{lightgray}{\\mathbb{R}}^*"},
     "\\\\": {type: "math", display: "\\setminus \\textcolor{lightgray}{ E } "},
     "uu": {type: "math", display: "\\cup"},
@@ -335,12 +335,15 @@ export const keyboards: { [Key: string]: KeyboardObjectType } = {
             "0", "(", ")", "sqrt", "root(",
             "log", "_", "ln", "pi", "e",
 			"{", ";", "}", "[", "]",
-			"RR", "RR_(+)", "RR_(-)", "^**", "!!",
+			"RR", "RR_+", "RR_-", "^**", "!!",
 			"\\\\", "uu", "oo",
         ],
         tex: function (value) {
-            //TODO: parse correctly solutions when using setminus.
-			let tex = asciiToTex(value)
+			let tex = asciiToTex(
+                value
+                .replace('RR_+', 'RR_(+)')
+                .replace('RR_-', 'RR_(-)')
+            )
 
 			let isOpened = false
 			return tex
