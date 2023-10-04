@@ -18,6 +18,19 @@ export class RationalChecker extends CheckerBase {
     }
 
     check(expected: string, given: string): { result: boolean; message: string } {
+		if(expected===given){
+			return {
+				result: true,
+				message: ""
+			}
+		}
+		if(expected==='!!' || given==='!!'){
+			return {
+				result: false,
+				message: "Il semble qu'il y ait une erreur quelque part..."
+			}
+		}
+
         let [num, den] = given.split("/")
         if (den === undefined) den = "1"
         let [expectedNum, expectedDen] = expected.split("/")
