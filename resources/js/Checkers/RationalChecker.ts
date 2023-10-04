@@ -9,7 +9,6 @@ const description = `rational,[paramètres]
 - d=développée
 - r=réduite
 `
-
 export class RationalChecker extends CheckerBase {
     constructor(config:string[]|string) {
         super(config);
@@ -18,6 +17,7 @@ export class RationalChecker extends CheckerBase {
     }
 
     check(expected: string, given: string): { result: boolean; message: string } {
+		// TODO: ajouter le check impossible de manière générique à tous les claviers !
 		if(expected===given){
 			return {
 				result: true,

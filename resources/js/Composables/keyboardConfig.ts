@@ -100,6 +100,8 @@ export const keyboardKeys = {
     ".": {type: "math", display: "."},
     ";": {type: "math", display: ";"},
     "RR": {type: "math", display: "\\mathbb{R}"},
+    "RR_(+)": {type: "math", display: "\\mathbb{R}_+"},
+    "RR_(-)": {type: "math", display: "\\mathbb{R}_-"},
     "^**": {type: "math", display: "\\textcolor{lightgray}{\\mathbb{R}}^*"},
     "\\\\": {type: "math", display: "\\setminus \\textcolor{lightgray}{ E } "},
     "uu": {type: "math", display: "\\cup"},
@@ -332,37 +334,58 @@ export const keyboards: { [Key: string]: KeyboardObjectType } = {
             "7", "8", "9", "^2", "^",
             "0", "(", ")", "sqrt", "root(",
             "log", "_", "ln", "pi", "e",
-            "{", ";", "}", "RR", "!!",
-            "^**", "\\\\", "uu", "", "",
-            "[", "]", "oo", "", ""
+			"{", ";", "}", "[", "]",
+			"RR", "RR_(+)", "RR_(-)", "^**", "!!",
+			"\\\\", "uu", "oo",
         ],
         tex: function (value) {
             //TODO: parse correctly solutions when using setminus.
-            if (value.startsWith("RR")) {
-                return `${asciiToTex(value)}`
-            } else if (value === "!!") {
-                return "\\varnothing"
-            }
+			let tex = asciiToTex(value)
 
-            if (value.includes("]") || value.includes("[")) {
-                // TODO: handle intervals : extract value.
-                return `${value.split(";").map(x => makeExactFromAscii(x)).join(";")} `
-            }
-
-            // remove the braces...
-            let beforeBrace = value.startsWith("{") ? "\\left\\{" : "",
-                afterBrace = value.endsWith("}") ? "\\right\\}" : ""
-
-            if (afterBrace !== "" && beforeBrace === "") {
-                beforeBrace = " \\left. "
-            }
-            if (beforeBrace !== "" && afterBrace === "") {
-                afterBrace = " \\right. "
-            }
-
-            value = value.replace("{", "").replace("}", "")
-
-            return `${beforeBrace} ${value.split(";").map(x => makeExactFromAscii(x)).join(";")} ${afterBrace}`
+			let isOpened = false
+			return tex
+				.replaceAll("\\left [", "[")
+				.replaceAll("\\left ]", "]")
+				.replaceAll("\\right [", "[")
+				.replaceAll("\\right ]", "]")
+				.replaceAll("\\right.", "")
+				.replaceAll("\\left.", "")
+				.split("")
+				.map(c => {
+					if(c===']' || c==='['){
+                        const bigBracket = `\\${isOpened?'right':'left'} ${c}`
+                        isOpened = !isOpened
+						return bigBracket
+                    }else{
+						return c
+					}
+				})
+				.join('')
+			// if (value.startsWith("RR")) {
+            //     return `${asciiToTex(value)}`
+            // } else if (value === "!!") {
+            //     return "\\varnothing"
+            // }
+			//
+            // if (value.includes("]") || value.includes("[")) {
+            //     // TODO: handle intervals : extract value.
+            //     return `${value.split(";").map(x => makeExactFromAscii(x)).join(";")} `
+            // }
+			//
+            // // remove the braces...
+            // let beforeBrace = value.startsWith("{") ? "\\left\\{" : "",
+            //     afterBrace = value.endsWith("}") ? "\\right\\}" : ""
+			//
+            // if (afterBrace !== "" && beforeBrace === "") {
+            //     beforeBrace = " \\left. "
+            // }
+            // if (beforeBrace !== "" && afterBrace === "") {
+            //     afterBrace = " \\right. "
+            // }
+			//
+            // value = value.replace("{", "").replace("}", "")
+			//
+            // return `${beforeBrace} ${value.split(";").map(x => makeExactFromAscii(x)).join(";")} ${afterBrace}`
         }
     },
     "vector": {
