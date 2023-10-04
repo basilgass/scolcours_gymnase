@@ -64,10 +64,11 @@
 				:custom-keys="{
 					'd': {type: 'math', display: '\\textcolor{red}{\\Vert}'},
 					'z': {type: 'math', display: '0'},
+					'!': {type: 'bg', display: 'bg-stripes bg-stripes-red-100'}
 				}"
 				:keyboard="{
-					grid: 'grid-cols-4',
-					layout: ['+', '-', 'z', 'd', ['@back', 2], ['@reset', 2]]
+					grid: 'grid-cols-6',
+					layout: [['+', 2], ['-', 2], ['!', 2], ['z', 3], ['d', 3], ['@back', 3], ['@reset', 3]]
 				}"
 				key-class="bg-white"
 				@change="changeKeyboard"

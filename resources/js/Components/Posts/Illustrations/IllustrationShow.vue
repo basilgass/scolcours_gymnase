@@ -60,7 +60,7 @@ Affichage des illustrations
 		<figcaption
 			v-if="blockIllustration.title"
 			v-katex.auto="blockIllustration.title"
-			class="text-center text-xs border border-gray-200 bg-gray-100 py-1"
+			class="text-center text-xs border border-gray-200 bg-gray-100 py-1 mt-3"
 		/>
 
 		<!-- edit form -->

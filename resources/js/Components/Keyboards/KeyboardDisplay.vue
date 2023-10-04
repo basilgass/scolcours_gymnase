@@ -49,7 +49,7 @@
 				v-for="(key, index) of keyboardComputed"
 				:key="`key-${key.key}-${index}`"
 				class="key"
-				:class="`${keyClass} ${key.span===0?'':key.span} ${key.visible?'invisible':''}`"
+				:class="`${keyClass} ${key.span===0?'':key.span} ${key.visible?'invisible':''} ${key.type==='bg'?key.display:''}`"
 				@click="ButtonKeyClick(key)"
 			>
 				<span
@@ -65,7 +65,7 @@
 					v-katex.auto="key.display"
 				/>
 				<span
-					v-else
+					v-else-if="key.type!=='bg'"
 					v-html="key.display"
 				/>
 			</button>

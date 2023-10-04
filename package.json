@@ -47,7 +47,7 @@
 		"markdown-it-texmath": "^1.0.0",
 		"pidraw": "^0.0.84",
 		"pigames": "^0.1.18",
-		"pimath": "^0.0.123",
+		"pimath": "^0.0.124",
 		"prismjs": "^1.29.0",
 		"vue-chartjs": "^5.2.0",
 		"vue-slider-component": "4.1.0-beta.7",
