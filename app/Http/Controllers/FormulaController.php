@@ -27,10 +27,16 @@ class FormulaController extends Controller
 		// Get the list of all formulas as JSON ?
 		return [
 			'formular'=>FormulaResource::collection($chapter->formulas),
-			'chapters'=>$chapter->theme->chapters()
+			'chapters'=> $chapter->theme->chapters()
 				->has('formulas')
 				->get()
 				->map(function($chapter){return $chapter->only(['slug', 'title']);})
+			->concat(
+				$chapter->relations()
+					->has('formulas')
+					->get()
+					->map(function($relation){return $relation->only(['slug', 'title']);})
+			)->unique('slug')
 		];
     }
 

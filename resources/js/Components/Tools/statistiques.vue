@@ -1,6 +1,6 @@
 <template>
 	<!-- Title -->
-	<div>
+	<Panel>
 		<div class="grid grid-cols-1 md:grid-cols-6">
 			<form-input
 					v-model.number="statConfig.samples"
@@ -241,7 +241,7 @@
 				</div>
 			</div>
 		</div>
-	</div>
+	</Panel>
 </template>
 <script lang="ts">
 import LayoutMain from "@/Layouts/LayoutMain.vue"
@@ -269,6 +269,7 @@ import BoxPlotChart from "@/Components/Charts/boxPlotChart.vue"
 
 import {PiDraw} from "pidraw/esm";
 import FormSwitch from "@/Components/Form/FormSwitch.vue";
+import Panel from "@/Components/Ui/Panel.vue";
 
 Chart.register(annotationPlugin)
 // import {Chart} from "chart.js/auto"

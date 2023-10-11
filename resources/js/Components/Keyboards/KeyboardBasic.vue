@@ -1,58 +1,48 @@
-<template>
-	<keyboard-display
-		ref="keyboardUI"
-		:keyboard="kbrdConfig"
-		:extra-letters="extraLetters"
-		back
-		class="max-w-xl mx-auto"
-		key-class="bg-white"
-		reset
-		@change="keyboardChange"
-	/>
-</template>
-
-<script setup lang="ts">
+<script lang="ts" setup>
 import KeyboardDisplay from "@/Components/Keyboards/KeyboardDisplay.vue"
-import {useKeyboard} from "@/Composables/useKeyboard"
-import {computed, ref} from "vue"
+import { useKeyboard } from "@/Composables/useKeyboard"
+import { computed, ref } from "vue"
 
 // Each keyboards has props
 // props.config: keyboard config, like special letters or other...
 // props.answer: expected answer
 let props = defineProps({
 	answer: { type: String },
-	keyboard: {type: Object, required: true}
+	keyboard: { type: Object, required: true },
 })
 
 // Used to "move" up the currently keyboard chercker format.
 // let checkerFormat = inject("checkerFormat")
-let extraLetters = computed(()=>{
-		return props.keyboard.values.length > 0 ? props.keyboard.values[0].split(",") : []
+let extraLetters = computed(() => {
+		return props.keyboard.values.length > 0
+			? props.keyboard.values[0].split(",")
+			: []
 	}),
-	kbrdConfig = computed(()=> {
-		if (props.keyboard.parameters.length>0){
-			let items = props.keyboard.parameters.filter(x=>x.startsWith("var:")),
+	kbrdConfig = computed(() => {
+		if (props.keyboard.parameters.length > 0) {
+			let items = props.keyboard.parameters.filter((x) =>
+					x.startsWith("var:"),
+				),
 				varName
 
-			if(items.length===1){
+			if (items.length === 1) {
 				varName = items[0].split(":")[1]
 
 				return {
 					...props.keyboard.config,
-					layout: props.keyboard.config.layout.map(x=>{
-						if(x.includes("x")) {
+					layout: props.keyboard.config.layout.map((x) => {
+						if (x.includes("x")) {
 							let newKey = x.replace("x", varName)
 							return {
 								key: newKey,
 								display: newKey,
-								type: "math"
+								type: "math",
 							}
 						}
 						return x
-					})
+					}),
 				}
 			}
-
 		}
 		return props.keyboard.config
 	})
@@ -64,41 +54,57 @@ let emits = defineEmits(["change", "validate"]),
 
 		// Make the validation.
 		// validation = {result: Boolean, message: string}
-		let validation = {result: false}
-		props.answer.split("|")
-			.forEach((anAnswer, index)=> {
-				if(!validation.result) {
-					validation = {
-						...props.keyboard.checker.check(anAnswer, keyboardInput.value.input),
-						index
-					}
+		let validation = { result: false }
+		props.answer.split("|").forEach((anAnswer, index) => {
+			if (!validation.result) {
+				validation = {
+					...props.keyboard.checker.check(
+						anAnswer,
+						keyboardInput.value.input,
+					),
+					index,
 				}
-			})
+			}
+		})
 
 		// emit change event
-		emits("change", {value: keyboardInput.value, validation})
+		emits("change", { value: keyboardInput.value, validation })
 	}
 
 // Get the keyboard and make it reactive.
-let {loadAnswerToKeyboard} = useKeyboard(props)
+let { loadAnswerToKeyboard } = useKeyboard(props)
 
 // loadAnswerToKeyboard(props.config)
-let keyboardInput = ref({input: "", tex: "", raw: ""}),
-	keyboardChange = (event) =>{
+let keyboardInput = ref({ input: "", tex: "", raw: "" }),
+	keyboardChange = (event) => {
+		console.log("EVENET", event)
 		keyboardInput.value = event
 		changeEvent()
 	}
 
-let reset = ()=>{
-	keyboardInput.value = {input: "", tex: "", raw: ""}
+let reset = () => {
+	keyboardInput.value = { input: "", tex: "", raw: "" }
 }
 defineExpose({
 	reset,
-	loadAnswer: (value)=>{
-		loadAnswerToKeyboard(value, reset, changeEvent, (value)=>{
+	loadAnswer: (value) => {
+		loadAnswerToKeyboard(value, reset, changeEvent, (value) => {
 			keyboardInput.value.input = value
 			keyboardInput.value.tex = props.keyboard.config.tex(value)
 		})
-	}
+	},
 })
 </script>
+
+<template>
+	<keyboard-display
+		ref="keyboardUI"
+		:extra-letters="extraLetters"
+		:keyboard="kbrdConfig"
+		back
+		class="max-w-xl mx-auto"
+		key-class="bg-white"
+		reset
+		@change="keyboardChange"
+	/>
+</template>

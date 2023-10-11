@@ -195,6 +195,10 @@ class ChaptersController extends Controller
 		foreach ($validation['posts'] as $row) {
 			$chapter->posts->find($row['id'])->update(['order' => $row['order']]);
 		}
+
+		return [
+			"posts" => PostResource::collection($chapter->posts->sortBy("order"))
+		];
 	}
 
 	public function updateCurrentPost(Chapter $chapter, Request $request)
