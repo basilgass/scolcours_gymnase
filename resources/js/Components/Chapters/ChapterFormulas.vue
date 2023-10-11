@@ -58,7 +58,17 @@ Affichage d'un formulaire, avec la possibilit√© de passer d'un formulaire du th√
 				.get(route("chapters.formulas.index", [theSlug.value]))
 				.then((res) => {
 					theFormular.value = res.data.formular
-					themeChapters.value = res.data.chapters
+					// Add the new chapters to the list
+					res.data.chapters.forEach((chapter) => {
+						if (
+							!themeChapters.value.find(
+								(x) => x.slug === chapter.slug,
+							)
+						) {
+							themeChapters.value.push(chapter)
+						}
+					})
+					// themeChapters.value = res.data.chapters
 				})
 				.catch((err) => {
 					theFormularErrors.value = err.toJSON()
@@ -85,21 +95,24 @@ Affichage d'un formulaire, avec la possibilit√© de passer d'un formulaire du th√
 			<h3 class="text-xl uppercase font-extralight mb-2">Formulaires</h3>
 		</div>
 
-		<div v-if="theFormular.length > 0 || editMode.enabled.value">
-			<div class="flex flex-wrap text-xs gap-1 px-5">
-				<button
-					v-for="item of themeChapters"
-					:key="item.slug"
-					v-katex.auto="item.title"
-					:class="{
-						'is-active': item.slug === theSlug,
-						'font-semibold': item.slug === props.chapterSlug,
-					}"
-					class="btn btn-xs transition-colors"
-					@click="updateFormular(item.slug)"
-				/>
-			</div>
+		<div
+			v-if="themeChapters.length > 0 || editMode.enabled.value"
+			class="flex flex-wrap text-xs gap-1 px-5"
+		>
+			<button
+				v-for="item of themeChapters"
+				:key="item.slug"
+				v-katex.auto="item.title"
+				:class="{
+					'is-active': item.slug === theSlug,
+					'font-semibold': item.slug === props.chapterSlug,
+				}"
+				class="btn btn-xs transition-colors"
+				@click="updateFormular(item.slug)"
+			/>
+		</div>
 
+		<div v-if="theFormular.length > 0 || editMode.enabled.value">
 			<div
 				v-if="loadingState"
 				class="px-5 grid place-items-center min-h-[10em]"
