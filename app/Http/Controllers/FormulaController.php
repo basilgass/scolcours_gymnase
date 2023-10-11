@@ -28,6 +28,7 @@ class FormulaController extends Controller
 		return [
 			'formular'=>FormulaResource::collection($chapter->formulas),
 			'chapters'=> $chapter->theme->chapters()
+				->where('active', true)
 				->has('formulas')
 				->get()
 				->map(function($chapter){return $chapter->only(['slug', 'title']);})
