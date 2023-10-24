@@ -1,4 +1,4 @@
-import {unref} from "vue"
+import { unref } from "vue"
 
 /**
  * Scrolls the page to the element with the specified class.
@@ -6,12 +6,12 @@ import {unref} from "vue"
  * @param {string} className - The class name of the element to scroll to.
  */
 export function useMenuScrollToClass(className: string) {
-    const el = document.getElementsByClassName(className)[0]
-    el.scrollIntoView({
-        block: "start",
-        behavior: "smooth",
-        inline: "start"
-    })
+	const el = document.getElementsByClassName(className)[0]
+	el.scrollIntoView({
+		block: "start",
+		behavior: "smooth",
+		inline: "start",
+	})
 }
 
 /**
@@ -23,15 +23,14 @@ export function useMenuScrollToClass(className: string) {
  * @return {void}
  */
 export function useMenuScrollTo(id: string) {
-    const el = id === undefined ? document.body : document.getElementById(id)
+	const el = id === undefined ? document.body : document.getElementById(id)
 
-    el.scrollIntoView({
-        block: "start",
-        behavior: "smooth",
-        inline: "start"
-    })
+	el.scrollIntoView({
+		block: "start",
+		behavior: "smooth",
+		inline: "start",
+	})
 }
-
 
 /**
  * Applies a wrong answer animation to the given button element.
@@ -41,18 +40,18 @@ export function useMenuScrollTo(id: string) {
  * @return {void}
  */
 export function useWrongAnswerAnimation(btn: HTMLElement) {
-    if (btn) {
-        btn.style.setProperty("animation-name", "v-shake-horizontal")
-        btn.style.setProperty("animation-duration", "500ms")
+	if (btn) {
+		btn.style.setProperty("animation-name", "v-shake-horizontal")
+		btn.style.setProperty("animation-duration", "500ms")
 
-        setTimeout(() => {
-            if (btn) { // the button may have already disappeared !
-                btn.style.setProperty("animation-name", "")
-            }
-        }, 500)
-    }
+		setTimeout(() => {
+			if (btn) {
+				// the button may have already disappeared !
+				btn.style.setProperty("animation-name", "")
+			}
+		}, 500)
+	}
 }
-
 
 /**
  * Processes and formats the body text with given values.
@@ -62,39 +61,39 @@ export function useWrongAnswerAnimation(btn: HTMLElement) {
  * @returns {string|null} - The formatted body text or null if body is null.
  */
 export function useFormattedBody(body: string, mabyeRefValues): string {
-    if (body === null) {
-        return null
-    }
+	if (body === null) {
+		return null
+	}
 
-    const values = unref(mabyeRefValues)
+	const values = unref(mabyeRefValues)
 
-    // There is no value for the script
-    if (!unref(values)) return unref(body)
+	// There is no value for the script
+	if (!unref(values)) return unref(body)
 
-    // Edit the output
-    let output = `${unref(body)}`
-    for (let key in values) {
-        output = output.replaceAll("$" + key, "REPLACE_VALUE" + values[key])
-    }
+	// Edit the output
+	let output = `${unref(body)}`
+	for (const key in values) {
+		output = output.replaceAll("$" + key, "REPLACE_VALUE" + values[key])
+	}
 
-    // Rename all "unwanted" double signs.
-    // - - => +
-    // + -  or  - + => -
-    // + + => +
-    // TODO: robust solution to replace the double signs only when "replace" all items.
-    output = output.replaceAll("-REPLACE_VALUE-", "+")
-    output = output.replaceAll("-REPLACE_VALUE+", "-")
-    output = output.replaceAll("+REPLACE_VALUE-", "-")
-    output = output.replaceAll("+REPLACE_VALUE+", "+")
-    output = output.replaceAll("REPLACE_VALUE", "")
+	// Rename all "unwanted" double signs.
+	// - - => +
+	// + -  or  - + => -
+	// + + => +
+	// TODO: robust solution to replace the double signs only when "replace" all items.
+	output = output.replaceAll("-REPLACE_VALUE-", "+")
+	output = output.replaceAll("-REPLACE_VALUE+", "-")
+	output = output.replaceAll("+REPLACE_VALUE-", "-")
+	output = output.replaceAll("+REPLACE_VALUE+", "+")
+	output = output.replaceAll("REPLACE_VALUE", "")
 
-    return output
+	return output
 }
 
-export let useKatexMacros: { [key: string]: string } = {
-    "\\IR": "\\mathbb{R}",
-    "\\IN": "\\mathbb{N}",
-    "\\ds": "\\displaystyle",
-    "\\vect": "\\overrightarrow",
-    "\\dx": "\\hspace{0.5em}\\text{d}x",
+export const useKatexMacros: { [key: string]: string } = {
+	"\\IR": "\\mathbb{R}",
+	"\\IN": "\\mathbb{N}",
+	"\\ds": "\\displaystyle",
+	"\\vect": "\\overrightarrow",
+	"\\dx": "\\hspace{0.5em}\\text{d}x",
 }

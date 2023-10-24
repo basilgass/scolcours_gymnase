@@ -206,6 +206,7 @@ Formulaire d'édition d'un bloc
 							label="titre"
 							label-class="uppercase"
 							type="text"
+							with-icon
 						/>
 
 						<div

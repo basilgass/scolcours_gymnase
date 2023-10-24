@@ -2,6 +2,23 @@
 	import { computed } from "vue"
 
 	const props = defineProps({
+		// Set the type of the input
+		fontCode: { type: Boolean, default: false },
+		helper: { type: Boolean, default: false },
+		inlineLabel: { type: Boolean, default: false },
+		inputClass: { type: String, default: "" },
+		label: { type: String, default: "" },
+		labelAsPlaceholder: { type: Boolean, default: false },
+		labelClass: { type: String, default: "" },
+		max: { type: [Number, String], default: null },
+		min: { type: [Number, String], default: null },
+		modelValue: {
+			type: [String, Number, Boolean],
+			default: "",
+		},
+		placeholder: { type: String, default: "" },
+		sm: { type: Boolean, default: false },
+		step: { type: [Number, String], default: null },
 		type: {
 			type: String,
 			default: "text",
@@ -11,27 +28,19 @@
 				)
 			},
 		},
-		modelValue: {
-			type: [String, Number, Boolean],
-			default: "",
-		},
-		label: { type: String, default: "" },
-		placeholder: { type: String, default: "" },
-		inputClass: { type: String, default: "" },
-		labelClass: { type: String, default: "" },
-		helper: { type: Boolean, default: false },
-		color: { type: String, default: "red" },
-		min: { type: [Number, String], default: null },
-		max: { type: [Number, String], default: null },
-		step: { type: [Number, String], default: null },
 		withIcon: { type: Boolean, default: false },
-		inlineLabel: { type: Boolean, default: false },
-		labelAsPlaceholder: { type: Boolean, default: false },
-		fontCode: { type: Boolean, default: false },
+	})
+
+	const combinedInputClass = computed(() => {
+		return `${props.inputClass} ${props.sm ? "text-xs p-1" : "p-2"} ${
+			props.withIcon ? "!pl-10" : ""
+		} ${
+			props.fontCode ? "font-code" : ""
+		} w-full border-[1px] border-slate-200 rounded appearance-none focus:border-slate-400 focus:outline-none focus:ring-0 focus:shadow transition`
 	})
 
 	const iconPadding = computed(() => {
-		return props.withIcon ? "2.5rem" : ""
+		return props.withIcon ? "2.5rem" : "0.5rem"
 	})
 
 	const placeholderValue = computed(() => {
@@ -77,10 +86,7 @@
 			:class="labelClass"
 		>
 		</label>
-		<div
-			class="inputWrapper relative"
-			:class="props.fontCode ? 'font-code' : ''"
-		>
+		<div class="inputWrapper relative">
 			<div
 				v-show="props.withIcon"
 				class="absolute w-8 grid place-items-center h-full border-r top-1/2 transform -translate-y-1/2 text-gray-400"
@@ -95,6 +101,7 @@
 			<input
 				v-if="type === 'text'"
 				:value="modelValue"
+				:class="combinedInputClass"
 				@input="updateInput($event)"
 				:placeholder="placeholderValue"
 			/>
@@ -102,6 +109,7 @@
 				v-if="type === 'number'"
 				:value="modelValue"
 				type="number"
+				:class="combinedInputClass"
 				@input="updateInput($event)"
 				:placeholder="placeholderValue"
 				:min="props.min"
@@ -110,6 +118,7 @@
 			/>
 			<input
 				v-if="type === 'checkbox'"
+				:class="combinedInputClass"
 				:value="modelValue"
 				type="checkbox"
 				@input="updateInput($event)"
@@ -129,7 +138,6 @@
 		@apply text-base;
 	}
 	input {
-		@apply py-2 border-[1px] border-slate-200 rounded appearance-none focus:border-slate-400 focus:outline-none focus:ring-0 focus:shadow transition;
 		padding-left: v-bind(iconPadding);
 	}
 

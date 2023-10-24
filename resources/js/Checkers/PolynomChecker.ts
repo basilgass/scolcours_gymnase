@@ -25,6 +25,15 @@ export class PolynomChecker extends CheckerBase {
 		// Make sur the polynom is constructable
 		let A, Q
 
+		// Exact answer given
+		if (given === expected) {
+			return {
+				result: true,
+				message: "",
+			}
+		}
+
+		// Build the polynoms
 		try {
 			A = new PiMath.Polynom(given)
 			Q = new PiMath.Polynom(expected)
@@ -87,8 +96,9 @@ export class PolynomChecker extends CheckerBase {
 		if (this.config.includes("s") || this.config.includes("sommet")) {
 			if (
 				given.match(
-					/(-?[\d](\/\d+)?)?\(x([+-][\d]+(\d+)?)?\)\^2([+-]\d+(\/\d+)?)?/,
-				)
+					/(-?[\d]+(\/\d+)?)?\(x([+-](\d+(\/\d+)?)?)?\)\^2([+-]\d+(\/\d+)?)?/,
+				) ||
+				given.match(/(-?[\d]+(\/\d+)?)?x\^2([+-]\d+(\/\d+)?)?/)
 			) {
 				return { result: true, message: "" }
 			} else {
