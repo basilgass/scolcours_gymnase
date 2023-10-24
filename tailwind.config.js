@@ -2,35 +2,35 @@
 // const colors = require("tailwindcss/colors")
 import defaultTheme from "tailwindcss/defaultTheme"
 
-const colors = require('tailwindcss/colors')
+const colors = require("tailwindcss/colors")
 
 const toRgba = (hexCode, opacity = 50) => {
-	let hex = hexCode.replace('#', '');
+	let hex = hexCode.replace("#", "")
 
 	if (hex.length === 3) {
-		hex = `${hex[0]}${hex[0]}${hex[1]}${hex[1]}${hex[2]}${hex[2]}`;
+		hex = `${hex[0]}${hex[0]}${hex[1]}${hex[1]}${hex[2]}${hex[2]}`
 	}
 
-	const r = parseInt(hex.substring(0, 2), 16);
-	const g = parseInt(hex.substring(2, 4), 16);
-	const b = parseInt(hex.substring(4, 6), 16);
+	const r = parseInt(hex.substring(0, 2), 16)
+	const g = parseInt(hex.substring(2, 4), 16)
+	const b = parseInt(hex.substring(4, 6), 16)
 
-	return `rgba(${r},${g},${b},${opacity / 100})`;
-};
+	return `rgba(${r},${g},${b},${opacity / 100})`
+}
 
-const flattenColorPalette = (obj, sep='-') => Object.assign(
-	{},
-	...function _flatten(o, p='') {
-		return [].concat(...Object.keys(o)
-			.map(k =>
-				typeof o[k] === 'object' ?
-					_flatten(o[k],k+sep) :
-					({[p+k]: o[k]})
+const flattenColorPalette = (obj, sep = "-") =>
+	Object.assign(
+		{},
+		...(function _flatten(o, p = "") {
+			return [].concat(
+				...Object.keys(o).map((k) =>
+					typeof o[k] === "object"
+						? _flatten(o[k], k + sep)
+						: { [p + k]: o[k] },
+				),
 			)
-		);
-	}(obj)
-);
-
+		})(obj),
+	)
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -46,29 +46,29 @@ export default {
 	],
 	safelist: [
 		{
-			pattern: /bg-(red|green|blue|amber)-(500|600)/
+			pattern: /bg-(red|green|blue|amber)-(500|600)/,
 		},
 		{
-			pattern: /text-(red|green|blue|amber)-(500|600)/
+			pattern: /text-(red|green|blue|amber)-(500|600)/,
 		},
 		{
 			pattern: /col-span-([1-9])/,
-			variants: ["lg", "md", "xl"]
+			variants: ["lg", "md", "xl"],
 		},
 		{
-			pattern: /justify-(between|around)/
+			pattern: /justify-(between|around)/,
 		},
 		{
-			pattern: /max-w-.+/
+			pattern: /max-w-.+/,
 		},
 		{
 			pattern: /grid-cols-([1-9]|10)/,
-			variants: ["lg", "md", "xl"]
+			variants: ["lg", "md", "xl"],
 		},
 		{
 			pattern: /order-([1-2])/,
-			variants: ["lg", "md", "xl"]
-		}
+			variants: ["lg", "md", "xl"],
+		},
 	],
 	theme: {
 		extend: {
@@ -76,24 +76,24 @@ export default {
 				sans: ["Raleway", ...defaultTheme.fontFamily.sans],
 			},
 			zIndex: {
-				"-1": "-1"
+				"-1": "-1",
 			},
 			transformOrigin: {
-				"0": "0%",
+				0: "0%",
 			},
 			colors: {
-				"gray": colors.neutral,
-				"lime": colors.lime,
-				"cyan": colors.cyan,
-				"amber": colors.amber,
-				"orange": colors.orange
+				gray: colors.neutral,
+				lime: colors.lime,
+				cyan: colors.cyan,
+				amber: colors.amber,
+				orange: colors.orange,
 			},
 			maxHeight: {
 				"1/2": "50vh",
 			},
 			spacing: {
-				'18': '4.5rem',
-			}
+				18: "4.5rem",
+			},
 		},
 	},
 
@@ -101,26 +101,35 @@ export default {
 		opacity: ["responsive", "hover", "focus", "disabled"],
 		borderWidth: ["responsive", "hover", "focus", "disabled"],
 		borderColor: ["responsive", "hover", "focus", "focus-within"],
-		backgroundColor: ["even", "odd", "hover", "focus", "responsive", "active"],
+		backgroundColor: [
+			"even",
+			"odd",
+			"hover",
+			"focus",
+			"responsive",
+			"active",
+		],
 		padding: ["hover", "responsive"],
 		textShadow: ["hover"],
 		fontWeight: ["hover", "focus"],
-		borderRadius: ["responsive", "hover"]
+		borderRadius: ["responsive", "hover"],
 	},
 	plugins: [
 		function ({ addUtilities, theme }) {
 			const utilities = {
-				'.bg-stripes': {
+				".bg-stripes": {
 					backgroundImage:
-						'linear-gradient(45deg, var(--stripes-color) 12.50%, transparent 12.50%, transparent 50%, var(--stripes-color) 50%, var(--stripes-color) 62.50%, transparent 62.50%, transparent 100%)',
-					backgroundSize: '5.66px 5.66px',
+						"linear-gradient(45deg, var(--stripes-color) 12.50%, transparent 12.50%, transparent 50%, var(--stripes-color) 50%, var(--stripes-color) 62.50%, transparent 62.50%, transparent 100%)",
+					backgroundSize: "5.66px 5.66px",
 				},
 			}
 
 			const addColor = (name, color) =>
-				(utilities[`.bg-stripes-${name}`] = { '--stripes-color': color })
+				(utilities[`.bg-stripes-${name}`] = {
+					"--stripes-color": color,
+				})
 
-			const colors = flattenColorPalette(theme('backgroundColor'))
+			const colors = flattenColorPalette(theme("backgroundColor"))
 			for (let name in colors) {
 				try {
 					const [r, g, b, a] = toRgba(colors[name])
@@ -137,9 +146,9 @@ export default {
 			addUtilities(utilities)
 		},
 
-		require('@tailwindcss/typography'),
-		require('@tailwindcss/container-queries'),
-		require('tailwind-scrollbar')({nocompatible: true}),
-		require('@formkit/themes/tailwindcss'),
+		require("@tailwindcss/typography"),
+		require("@tailwindcss/container-queries"),
+		require("tailwind-scrollbar")({ nocompatible: true }),
+		// require('@formkit/themes/tailwindcss'),
 	],
 }

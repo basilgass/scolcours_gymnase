@@ -1,99 +1,99 @@
 <script lang="ts" setup>
-import KeyboardDisplay from "@/Components/Keyboards/KeyboardDisplay.vue"
-import { useKeyboard } from "@/Composables/useKeyboard"
-import { computed, ref } from "vue"
+	import KeyboardDisplay from "@/Components/Keyboards/KeyboardDisplay.vue"
+	import { useKeyboard } from "@/Composables/useKeyboard"
+	import { computed, ref } from "vue"
 
-// Each keyboards has props
-// props.config: keyboard config, like special letters or other...
-// props.answer: expected answer
-let props = defineProps({
-	answer: { type: String },
-	keyboard: { type: Object, required: true },
-})
-
-// Used to "move" up the currently keyboard chercker format.
-// let checkerFormat = inject("checkerFormat")
-let extraLetters = computed(() => {
-		return props.keyboard.values.length > 0
-			? props.keyboard.values[0].split(",")
-			: []
-	}),
-	kbrdConfig = computed(() => {
-		if (props.keyboard.parameters.length > 0) {
-			let items = props.keyboard.parameters.filter((x) =>
-					x.startsWith("var:"),
-				),
-				varName
-
-			if (items.length === 1) {
-				varName = items[0].split(":")[1]
-
-				return {
-					...props.keyboard.config,
-					layout: props.keyboard.config.layout.map((x) => {
-						if (x.includes("x")) {
-							let newKey = x.replace("x", varName)
-							return {
-								key: newKey,
-								display: newKey,
-								type: "math",
-							}
-						}
-						return x
-					}),
-				}
-			}
-		}
-		return props.keyboard.config
+	// Each keyboards has props
+	// props.config: keyboard config, like special letters or other...
+	// props.answer: expected answer
+	let props = defineProps({
+		answer: { type: String },
+		keyboard: { type: Object, required: true },
 	})
 
-// Emits change and validate (to trigger a validation manually on the parent)
-let emits = defineEmits(["change", "validate"]),
-	changeEvent = function () {
-		//value = {tex, raw, input}
-
-		// Make the validation.
-		// validation = {result: Boolean, message: string}
-		let validation = { result: false }
-		props.answer.split("|").forEach((anAnswer, index) => {
-			if (!validation.result) {
-				validation = {
-					...props.keyboard.checker.check(
-						anAnswer,
-						keyboardInput.value.input,
+	// Used to "move" up the currently keyboard chercker format.
+	// let checkerFormat = inject("checkerFormat")
+	let extraLetters = computed(() => {
+			return props.keyboard.values.length > 0
+				? props.keyboard.values[0].split(",")
+				: []
+		}),
+		kbrdConfig = computed(() => {
+			if (props.keyboard.parameters.length > 0) {
+				let items = props.keyboard.parameters.filter((x) =>
+						x.startsWith("var:"),
 					),
-					index,
+					varName
+
+				if (items.length === 1) {
+					varName = items[0].split(":")[1]
+
+					return {
+						...props.keyboard.config,
+						layout: props.keyboard.config.layout.map((x) => {
+							if (x.includes("x")) {
+								let newKey = x.replace("x", varName)
+								return {
+									key: newKey,
+									display: newKey,
+									type: "math",
+								}
+							}
+							return x
+						}),
+					}
 				}
 			}
+			return props.keyboard.config
 		})
 
-		// emit change event
-		emits("change", { value: keyboardInput.value, validation })
+	// Emits change and validate (to trigger a validation manually on the parent)
+	let emits = defineEmits(["change", "validate"]),
+		changeEvent = function () {
+			//value = {tex, raw, input}
+
+			// Make the validation.
+			// validation = {result: Boolean, message: string}
+			let validation = { result: false }
+			props.answer.split("|").forEach((anAnswer, index) => {
+				if (!validation.result) {
+					validation = {
+						...props.keyboard.checker.check(
+							anAnswer,
+							keyboardInput.value.input,
+						),
+						index,
+					}
+				}
+			})
+
+			// emit change event
+			emits("change", { value: keyboardInput.value, validation })
+		}
+
+	// Get the keyboard and make it reactive.
+	let { loadAnswerToKeyboard } = useKeyboard(props)
+
+	// loadAnswerToKeyboard(props.config)
+	let keyboardInput = ref({ input: "", tex: "", raw: "" }),
+		keyboardChange = (event) => {
+			console.log("EVENET", event)
+			keyboardInput.value = event
+			changeEvent()
+		}
+
+	let reset = () => {
+		keyboardInput.value = { input: "", tex: "", raw: "" }
 	}
-
-// Get the keyboard and make it reactive.
-let { loadAnswerToKeyboard } = useKeyboard(props)
-
-// loadAnswerToKeyboard(props.config)
-let keyboardInput = ref({ input: "", tex: "", raw: "" }),
-	keyboardChange = (event) => {
-		console.log("EVENET", event)
-		keyboardInput.value = event
-		changeEvent()
-	}
-
-let reset = () => {
-	keyboardInput.value = { input: "", tex: "", raw: "" }
-}
-defineExpose({
-	reset,
-	loadAnswer: (value) => {
-		loadAnswerToKeyboard(value, reset, changeEvent, (value) => {
-			keyboardInput.value.input = value
-			keyboardInput.value.tex = props.keyboard.config.tex(value)
-		})
-	},
-})
+	defineExpose({
+		reset,
+		loadAnswer: (value) => {
+			loadAnswerToKeyboard(value, reset, changeEvent, (value) => {
+				keyboardInput.value.input = value
+				keyboardInput.value.tex = props.keyboard.config.tex(value)
+			})
+		},
+	})
 </script>
 
 <template>

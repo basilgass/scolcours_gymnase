@@ -2,8 +2,130 @@
 Affichage d'un post avec toutes les config activées
 Principalement la couche utilisée dans ChapterSlide.
 -->
+<script lang="ts" setup>
+	import {
+		computed,
+		defineAsyncComponent,
+		inject,
+		PropType,
+		provide,
+		ref,
+	} from "vue"
+	import BlockShow from "@/Components/Posts/Blocks/BlockShow.vue"
+	import { PiMath } from "pimath/esm"
+	import UiSwitch from "@/Components/Ui/UiSwitch.vue"
+	import QuestionsIndex from "@/Components/Posts/QuestionsIndex.vue"
+	import axios from "axios"
+	import { ChapterInterface, PostInterface } from "@/types/modelInterfaces"
+	import { editModeInterface, flashInterface } from "@/types"
+
+	let emits = defineEmits(["change", "destroy"])
+	const props = defineProps({
+			post: {
+				type: Object as PropType<PostInterface>,
+				required: true,
+			},
+			chapter: {
+				type: Object as PropType<ChapterInterface>,
+				required: true,
+			},
+			isolate: {
+				type: Boolean,
+				default: false,
+			},
+		}),
+		thePost = ref({
+			...props.post,
+			random: 1, // special trick to make random function... functional !
+		})
+
+	const flash = inject<flashInterface>("flash"),
+		editMode = inject<editModeInterface>("editMode")
+
+	let showEditForm = ref(false),
+		editForm = computed(() => {
+			return defineAsyncComponent(
+				() => import("@/Components/Posts/PostForm.vue"),
+			)
+		}),
+		updatePost = function (p) {
+			thePost.value = p
+		},
+		updateBlocksOrder = function () {
+			axios
+				.post(route("posts.updateBlocksOrder", [thePost.value.id]), {
+					order: thePost.value.blocks.map((x, index) => {
+						return { id: x.id, order: index }
+					}),
+					_method: "PATCH",
+				})
+				.then((res) => {
+					flash.success("les blocs ont bien été mis à jour !")
+				})
+				.catch((res) =>
+					console.warn(
+						"update ordering order: ",
+						res.response.data.message,
+					),
+				)
+		}
+
+	let addBlock = function () {
+			axios
+				.post(route("posts.blocks.store", [thePost.value.id]))
+				.then((res) => {
+					// Set the first block in edit mode.
+					thePost.value.blocks.push({
+						...res.data.data,
+						isNew: true,
+					})
+				})
+				.catch((err) => {
+					console.error(err)
+				})
+		},
+		destroyBlock = function (destroyId) {
+			thePost.value.blocks = thePost.value.blocks.filter(
+				(x) => x.id !== destroyId,
+			)
+		}
+
+	provide(
+		"postData",
+		computed(() => {
+			// trigger the computed value on button click
+			try {
+				if (thePost.value.script && thePost.value.random) {
+					let F = new Function("PiMath", thePost.value.script)
+					return F(PiMath)
+				}
+			} catch (e) {
+				console.warn("Post script generator error", e)
+			}
+			return {}
+		}),
+	)
+	let updatePostData = function () {
+		thePost.value.random++
+	}
+	let postSwitchLabel = computed(() => {
+			if (thePost.value.switch) {
+				const [pre, post] = thePost.value.switch.split("@")
+				return {
+					pre,
+					post: post ?? "",
+				}
+			}
+			return { pre: "", post: "" }
+		}),
+		postSwitch = ref(false)
+</script>
+
 <template>
-	<section class="bg-white border border-gray-200 rounded shadow py-5" :id="`post-${props.post.id}`">
+	<section
+		:id="`post-${props.post.id}`"
+		class="bg-white border border-gray-200 rounded shadow py-5"
+	>
 		<!-- Title of the post -->
 		<div
 			class="px-5 border-b border-gray-200 pb-5 flex flex-col gap-3 lg:flex-row justify-between"
@@ -54,10 +176,7 @@ Principalement la couche utilisée dans ChapterSlide.
 		</div>
 
 		<!-- Header of the post (configuration, admin, ...) -->
-		<div
-			v-if="showEditForm"
-			v-admin
-		>
+		<div v-if="showEditForm" v-admin>
 			<component
 				:is="editForm"
 				v-model="showEditForm"
@@ -90,15 +209,8 @@ Principalement la couche utilisée dans ChapterSlide.
 				</template>
 			</draggable>
 
-			<div
-				v-show="editMode.enabled.value"
-				v-admin
-				class="px-5"
-			>
-				<button
-					class="btn-new"
-					@click="addBlock"
-				>
+			<div v-show="editMode.enabled.value" v-admin class="px-5">
+				<button class="btn-new" @click="addBlock">
 					ajouter un bloc
 				</button>
 			</div>
@@ -109,125 +221,9 @@ Principalement la couche utilisée dans ChapterSlide.
 			:class="
 				thePost.blocks.length ? 'border-t border-gray-200 mt-5' : ''
 			"
+			:container-id="thePost.id"
 			:questions="thePost.questions"
 			container-type="Post"
-			:container-id="thePost.id"
 		/>
 	</section>
 </template>
-
-<script setup lang="ts">
-
-import {computed, defineAsyncComponent, inject, PropType, provide, ref} from "vue"
-import BlockShow from "@/Components/Posts/Blocks/BlockShow.vue"
-import {PiMath} from "pimath/esm"
-import UiSwitch from "@/Components/Ui/UiSwitch.vue"
-import QuestionsIndex from "@/Components/Posts/QuestionsIndex.vue"
-import axios from "axios";
-import {ChapterInterface, PostInterface} from "@/types/modelInterfaces";
-import {editModeInterface, flashInterface} from "@/types";
-
-
-let emits = defineEmits(["change", "destroy"])
-const props = defineProps({
-		post: {
-			type: Object as PropType<PostInterface>,
-			required: true
-		},
-		chapter: {
-			type: Object as PropType<ChapterInterface>,
-			required: true
-		},
-		isolate: {
-			type: Boolean,
-			default: false
-		},
-	}),
-	thePost = ref({
-		...props.post,
-		random: 1, // special trick to make random function... functional !
-	})
-
-
-const flash = inject<flashInterface>("flash"),
-	editMode = inject<editModeInterface>("editMode")
-
-let showEditForm = ref(false),
-	editForm = computed(() => {
-		return defineAsyncComponent(() =>
-			import("@/Components/Posts/PostForm.vue")
-		)
-	}),
-	updatePost = function (p) {
-		thePost.value = p
-	},
-	updateBlocksOrder = function () {
-		axios
-			.post(route("posts.updateBlocksOrder", [thePost.value.id]), {
-				order: thePost.value.blocks.map((x, index) => {
-					return { id: x.id, order: index }
-				}),
-				_method: "PATCH"
-			})
-			.then((res) => {
-				flash.success("les blocs ont bien été mis à jour !")
-			})
-			.catch((res) =>
-				console.warn(
-					"update ordering order: ",
-					res.response.data.message
-				)
-			)
-	}
-
-let addBlock = function () {
-		axios
-			.post(route("posts.blocks.store", [thePost.value.id]))
-			.then((res) => {
-				// Set the first block in edit mode.
-				thePost.value.blocks.push({
-					...res.data.data,
-					isNew: true,
-				})
-			})
-			.catch((err) => {
-				console.error(err)
-			})
-	},
-	destroyBlock = function (destroyId) {
-		thePost.value.blocks = thePost.value.blocks.filter(
-			(x) => x.id !== destroyId
-		)
-	}
-
-provide(
-	"postData",
-	computed(() => {
-		// trigger the computed value on button click
-		try {
-			if (thePost.value.script && thePost.value.random) {
-				let F = new Function("PiMath", thePost.value.script)
-				return F(PiMath)
-			}
-		} catch (e) {
-			console.warn("Post script generator error", e)
-		}
-		return {}
-	})
-)
-let updatePostData = function () {
-	thePost.value.random++
-}
-let postSwitchLabel = computed(() => {
-		if (thePost.value.switch) {
-			const [pre, post] = thePost.value.switch.split("@")
-			return {
-				pre,
-				post: post ?? "",
-			}
-		}
-		return { pre: "", post: "" }
-	}),
-	postSwitch = ref(false)
-
-</script>
