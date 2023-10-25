@@ -2,7 +2,7 @@
 Affichage d'un PiDraw
 // TODO: doit être remodeler pour plus de robustesse et optimiser
 -->
-<script setup>
+<script setup lang="ts">
 	import { computed, inject, onMounted, ref, watch } from "vue"
 	import { PiDraw } from "pidraw/esm"
 

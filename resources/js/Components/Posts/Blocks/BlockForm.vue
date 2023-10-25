@@ -120,12 +120,6 @@ Formulaire d'édition d'un bloc
 						<span class="text-xs font-code">
 							(id: {{ theBlock.id }})</span
 						>
-						<move-item-to
-							:source-id="theBlock.id"
-							source="block"
-							target="post"
-							@moved="emits('update:modelValue', false)"
-						/>
 					</h1>
 					<div class="flex gap-3 justify-end">
 						<button
@@ -156,6 +150,13 @@ Formulaire d'édition d'un bloc
 						</confirm-button>
 					</div>
 				</div>
+
+				<move-item-to
+					:source-id="theBlock.id"
+					source="block"
+					target="post"
+					@moved="emits('update:modelValue', false)"
+				/>
 
 				<div class="flex justify-between items-baseline w-full">
 					<form-switch

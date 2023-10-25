@@ -196,8 +196,15 @@
 				</button>
 			</div>
 		</div>
-		<div v-if="theQuestions.length" class="flex justify-between px-5 py-5">
-			<h3 class="font-extralight uppercase">questions</h3>
+
+		<div
+			v-theme.bg.text
+			v-if="theQuestions.length"
+			class="flex justify-between px-10 py-4 mb-5"
+		>
+			<h3 class="uppercase text-2xl relative">
+				<i class="bi bi-question-square mr-5"></i>questions
+			</h3>
 		</div>
 
 		<draggable
@@ -206,7 +213,7 @@
 			:class="{
 				'lg:grid-cols-3': theQuestions.length > 2,
 			}"
-			class="grid grid-cols-1 md:grid-cols-2 gap-3 px-5"
+			class="grid grid-cols-1 md:grid-cols-2 gap-3 px-5 pb-5"
 			handle=".draggable-handle"
 			item-key="id"
 			v-bind="{
@@ -241,7 +248,7 @@
 			</template>
 		</draggable>
 
-		<div v-show="editMode.enabled.value" v-admin class="px-5">
+		<div v-show="editMode.enabled.value" v-admin class="px-5 mb-5">
 			<button class="btn-new mt-10" @click="addQuestion">
 				ajouter une question
 			</button>

@@ -1,26 +1,25 @@
 import katex from "katex/dist/katex.mjs"
 import AsciiMathParser from "./asciimath2tex"
-import {usePage} from "@inertiajs/vue3"
-import {useKatexMacros} from "@/Composables/useHelpers"
-import {numberCorrection} from "pidraw/esm/Calculus"
-import renderMathInElement from "katex/contrib/auto-render";
+import { usePage } from "@inertiajs/vue3"
+import { useKatexMacros } from "@/Composables/useHelpers"
+import { numberCorrection } from "pidraw/esm/Calculus"
+import renderMathInElement from "katex/contrib/auto-render"
 
 function katexAutoRender(el) {
-	if(el) {
+	if (el) {
 		renderMathInElement(el, {
-				// customised config
-				// • auto-render specific keys, e.g.:
-				delimiters: [
-					{left: "$$", right: "$$", display: true},
-					{left: "$", right: "$", display: false},
-					{left: "\\[", right: "\\]", display: true},
-					{left: "\\(", right: "\\)", display: false},
-				],
-				// • rendering keys, e.g.:
-				throwOnError: false,
-				macros: useKatexMacros
-			}
-		)
+			// customised config
+			// • auto-render specific keys, e.g.:
+			delimiters: [
+				{ left: "$$", right: "$$", display: true },
+				{ left: "$", right: "$", display: false },
+				{ left: "\\[", right: "\\]", display: true },
+				{ left: "\\(", right: "\\)", display: false },
+			],
+			// • rendering keys, e.g.:
+			throwOnError: false,
+			macros: useKatexMacros,
+		})
 	}
 }
 
@@ -89,9 +88,25 @@ function katexUpdate(el, binding, vnode) {
 					throwOnError: false,
 					displayMode: displayMode,
 					macros: useKatexMacros,
-				}
+				},
 			)
 		}
+	}
+
+	// Add TeX output to the element
+	if (binding.modifiers.output) {
+		let output = document.createElement("div")
+		output.classList.add("katex-output")
+		output.innerHTML = rawTex
+		output.addEventListener("click", () => {
+			// Select the whole text
+			let range = document.createRange()
+			range.selectNodeContents(output)
+			let sel = window.getSelection()
+			sel.removeAllRanges()
+			sel.addRange(range)
+		})
+		el.appendChild(output)
 	}
 }
 
@@ -104,13 +119,13 @@ export const katexDirective = {
 	},
 	unmounted(el) {
 		el.innerHTML = ""
-	}
+	},
 }
 
 export const visibleDirective = {
 	mounted(el, binding, vnode) {
 		el.style.visibility = binding.value ? "visible" : "hidden"
-	}
+	},
 }
 
 function adminUpdate(el, binding, vnode) {
@@ -118,9 +133,9 @@ function adminUpdate(el, binding, vnode) {
 		el.remove()
 	}
 
-	if(binding.value){
+	if (binding.value) {
 		el.classList.add("hide")
-	}else{
+	} else {
 		el.classList.remove("hide")
 	}
 }
@@ -134,44 +149,49 @@ export const adminDirective = {
 	},
 }
 
-function themeUpdate(el, binding, vnode){
-	const themes = usePage().props.themes.map(theme => theme.slug)
+function themeUpdate(el, binding, vnode) {
+	const themes = usePage().props.themes.map((theme) => theme.slug)
 	let chapter
 
-	if(binding.modifiers.hasOwnProperty("admin") || binding.value==="admin"){
+	if (
+		binding.modifiers.hasOwnProperty("admin") ||
+		binding.value === "admin"
+	) {
 		chapter = "admin"
-	}else if(!isNaN(+binding.value)){
+	} else if (!isNaN(+binding.value)) {
 		// it's a number -> get the theme id.
-		let theme = usePage().props.themes.filter(th=>th.id===+binding.value)
+		let theme = usePage().props.themes.filter(
+			(th) => th.id === +binding.value,
+		)
 
-		if(theme.length===1) {
+		if (theme.length === 1) {
 			chapter = theme[0].slug
 		}
-	}else if(themes.indexOf(binding.value) === -1){
+	} else if (themes.indexOf(binding.value) === -1) {
 		chapter = usePage().props?.theme?.slug
-	}else{
+	} else {
 		chapter = binding.value
 	}
 
-	if(chapter!==undefined){
+	if (chapter !== undefined) {
 		const keys = ["btn", "bg", "text", "border", "active", "scrollbar"]
-		Object.keys(binding.modifiers).forEach(key =>{
-			if(keys.indexOf(key)!==-1){
-				if(key==="text" && binding.modifiers.hasOwnProperty("bg")){
+		Object.keys(binding.modifiers).forEach((key) => {
+			if (keys.indexOf(key) !== -1) {
+				if (key === "text" && binding.modifiers.hasOwnProperty("bg")) {
 					el.classList.add("text-white")
-				}else {
+				} else {
 					el.classList.add(`${key}-scolcours-${chapter}`)
 				}
 			}
 		})
-
 	}
 }
+
 export const themeDirective = {
 	mounted(el, binding, vnode) {
 		themeUpdate(el, binding, vnode)
 	},
 	updated(el, binding, vnode) {
 		themeUpdate(el, binding, vnode)
-	}
+	},
 }

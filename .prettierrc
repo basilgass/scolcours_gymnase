@@ -1,7 +1,8 @@
 {
-  "trailingComma": "all",
-  "useTabs": true,
-  "tabWidth": 4,
-  "semi": false,
-  "vueIndentScriptAndStyle": true
+	"trailingComma": "all",
+	"useTabs": true,
+	"tabWidth": 4,
+	"semi": false,
+	"vueIndentScriptAndStyle": true,
+	"printWidth": 600
 }

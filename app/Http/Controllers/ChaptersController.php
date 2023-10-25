@@ -54,14 +54,6 @@ class ChaptersController extends Controller
 		return ChapterMinResource::collection(Chapter::all()->sortBy(['theme_id', 'title']));
 	}
 
-	public function create(Theme $theme)
-	{
-		// TODO: route is disabled - does not exist anymore !
-//		return Inertia::render("Chapters/ChapterCreate",[
-//			"theme" => $theme->only('color', 'icon', 'slug', 'title', 'id')
-//		]);
-	}
-
 	public function store(Theme $theme, Request $request)
 	{
 		$request->merge([
@@ -85,6 +77,14 @@ class ChaptersController extends Controller
 		]);
 
 		return redirect()->route('theme.chapter.intro', [$theme->slug, $chapter->slug]);
+	}
+
+	public function create(Theme $theme)
+	{
+		// TODO: route is disabled - does not exist anymore !
+//		return Inertia::render("Chapters/ChapterCreate",[
+//			"theme" => $theme->only('color', 'icon', 'slug', 'title', 'id')
+//		]);
 	}
 
 	public function page(Theme $theme, Chapter $chapter)
@@ -119,7 +119,8 @@ class ChaptersController extends Controller
 			]
 		]);
 	}
-	public function slide(Theme $theme, Chapter $chapter, int $order, Block $block=null)
+
+	public function slide(Theme $theme, Chapter $chapter, int $order, Block $block = null)
 	{
 		$post = $chapter->posts->where('order', "=", $order)->first();
 
@@ -131,8 +132,8 @@ class ChaptersController extends Controller
 			"chapter" => fn() => ChapterResource::make($chapter, true),
 			// The post information
 			"post" => PostResource::make($post),
-            // Block for a scroll to
-            "blockAnchor" => $block?->id,
+			// Block for a scroll to
+			"blockAnchor" => $block?->id,
 			// navigation bar.
 			"nav" => [
 				'previous' => $order - 1 <= 0 ? route('theme.chapter.intro', [$theme, $chapter]) : route('theme.chapter.slide', [$theme, $chapter, $order - 1]),
@@ -146,6 +147,27 @@ class ChaptersController extends Controller
 //		return Inertia::render('Chapters/ChapterEdit', [
 //			'chapter' => $chapter
 //		]);
+	}
+
+	public function destroy(Chapter $chapter)
+	{
+		//
+	}
+
+	public function updatePostsOrder(Chapter $chapter, Request $request)
+	{
+		$validation = $request->validate([
+			"posts" => ["array"],
+			"posts.*.id" => ['required', 'exists:App\Models\Post,id'],
+			"posts.*.order" => ['required', "int", 'min:1']
+		]);
+		foreach ($validation['posts'] as $row) {
+			$chapter->posts->find($row['id'])->update(['order' => $row['order']]);
+		}
+
+		return [
+			"posts" => PostResource::collection($chapter->posts->sortBy("order"))
+		];
 	}
 
 	public function update(Request $request, Chapter $chapter)
@@ -180,27 +202,6 @@ class ChaptersController extends Controller
 		return ChapterResource::make($chapter);
 	}
 
-	public function destroy(Chapter $chapter)
-	{
-		//
-	}
-
-	public function updatePostsOrder(Chapter $chapter, Request $request)
-	{
-		$validation = $request->validate([
-			"posts"=> ["array"],
-			"posts.*.id" => ['required', 'exists:App\Models\Post,id'],
-			"posts.*.order" => ['required', "int", 'min:1']
-		]);
-		foreach ($validation['posts'] as $row) {
-			$chapter->posts->find($row['id'])->update(['order' => $row['order']]);
-		}
-
-		return [
-			"posts" => PostResource::collection($chapter->posts->sortBy("order"))
-		];
-	}
-
 	public function updateCurrentPost(Chapter $chapter, Request $request)
 	{
 		$user = Auth::user();
@@ -209,7 +210,7 @@ class ChaptersController extends Controller
 
 			$validate = $request->validate([
 				'post_id' => ['required', 'exists:App\Models\Post,id'],
-				'open'=>['boolean', "nullable"]
+				'open' => ['boolean', "nullable"]
 			]);
 
 //			$question->users()->attach($user,
@@ -236,13 +237,13 @@ class ChaptersController extends Controller
 
 	public function toggleRelated(Chapter $chapter, Chapter $related)
 	{
-		if($chapter->id===$related->id){
+		if ($chapter->id === $related->id) {
 			return false;
 		}
 		// update it !
-		if($chapter->relations->contains($related)){
+		if ($chapter->relations->contains($related)) {
 			$chapter->relations()->detach($related);
-		}else {
+		} else {
 			$chapter->relations()->attach($related);
 		}
 		$chapter->refresh();
@@ -250,19 +251,19 @@ class ChaptersController extends Controller
 		return ChapterMinResource::collection($chapter->relations);
 	}
 
-    public function theorems(Chapter $chapter)
-    {
-        // Get all [theorem / propreties and definition] blocks from all post in the chapter.
-        $blocks = $chapter->posts->map(function($post){
-            return $post->blocks;
-        })
-            ->flatten()
-            ->filter(function($block){
-                return $block->type==="theorem" or $block->type==="definition" or $block->type==="property";
-            });
+	public function theorems(Chapter $chapter)
+	{
+		// Get all [theorem / propreties and definition] blocks from all post in the chapter.
+		$blocks = $chapter->posts->map(function ($post) {
+			return $post->blocks;
+		})
+			->flatten()
+			->filter(function ($block) {
+				return $block->type === "theorem" or $block->type === "definition" or $block->type === "property";
+			});
 
-        return BlockResource::collection($blocks);
-    }
+		return BlockResource::collection($blocks);
+	}
 	// TODO: Delete this section as it has been moved to LatexController ?
 //	public function latex(Request $data)
 //	{
@@ -278,4 +279,13 @@ class ChaptersController extends Controller
 //
 //		return $filename;
 //	}
+
+// Get basic info about chapter
+	public function info(Chapter $chapter)
+	{
+		return [
+			"title" => $chapter->title,
+		];
+	}
+
 }

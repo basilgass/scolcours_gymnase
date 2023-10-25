@@ -122,108 +122,111 @@ Principalement la couche utilisée dans ChapterSlide.
 </script>
 
 <template>
-	<section
-		:id="`post-${props.post.id}`"
-		class="bg-white border border-gray-200 rounded shadow py-5"
-	>
-		<!-- Title of the post -->
-		<div
-			class="px-5 border-b border-gray-200 pb-5 flex flex-col gap-3 lg:flex-row justify-between"
-		>
-			<h2 class="text-lg md:text-xl xl:text-2xl">
-				<span v-katex.auto="thePost.title" />
-
-				<button
-					v-show="editMode.enabled.value"
-					v-admin
-					class="text-xs ml-3"
-					@click="showEditForm = true"
-				>
-					<i class="bi bi-pencil mr-2" /> {{ thePost.id }}
-				</button>
-			</h2>
-			<div class="self-end flex w-full gap-3 lg:w-auto justify-between">
-				<Link
-					v-if="props.isolate"
-					:href="
-						route('theme.chapter.slide', [
-							$page.props.theme.slug,
-							props.chapter.slug,
-							thePost.order,
-						])
-					"
-				>
-					isoler
-				</Link>
-
-				<ui-switch
-					v-if="thePost.switch"
-					v-model="postSwitch"
-					:false-text="postSwitchLabel.pre"
-					:true-text="postSwitchLabel.post"
-					class="mx-1"
-					sm
-				/>
-
-				<button
-					v-if="thePost.script"
-					class="btn btn-xs"
-					@click="updatePostData"
-				>
-					aléatoire
-				</button>
-			</div>
-		</div>
-
-		<!-- Header of the post (configuration, admin, ...) -->
-		<div v-if="showEditForm" v-admin>
-			<component
-				:is="editForm"
-				v-model="showEditForm"
-				:post="thePost"
-				@change="updatePost"
-				@destroy="emits('destroy', $event)"
-			/>
-		</div>
-		<!-- Displaying blocks of the post -->
-		<div class="mt-5">
-			<draggable
-				v-if="thePost.blocks.length"
-				v-model="thePost.blocks"
-				class="grid grid-cols-1 gap-3 my-5"
-				handle=".draggable-handle"
-				item-key="id"
-				v-bind="{
-					animation: 200,
-					disabled: !$page.props.auth.can.admin,
-				}"
-				@end="updateBlocksOrder"
+	<section :id="`post-${props.post.id}`">
+		<div class="bg-white border border-gray-200 rounded shadow py-5">
+			<!-- Title of the post -->
+			<div
+				class="px-5 border-b border-gray-200 pb-5 flex flex-col gap-3 lg:flex-row justify-between"
 			>
-				<template #item="{ element }">
-					<block-show
-						:key="`block-${element.id}`"
-						:block="element"
-						:switch="postSwitch"
-						@destroy="destroyBlock"
-					/>
-				</template>
-			</draggable>
+				<h2 class="text-lg md:text-xl xl:text-2xl">
+					<span v-katex.auto="thePost.title" />
 
-			<div v-show="editMode.enabled.value" v-admin class="px-5">
-				<button class="btn-new" @click="addBlock">
-					ajouter un bloc
-				</button>
+					<button
+						v-show="editMode.enabled.value"
+						v-admin
+						class="text-xs ml-3"
+						@click="showEditForm = true"
+					>
+						<i class="bi bi-pencil mr-2" /> {{ thePost.id }}
+					</button>
+				</h2>
+				<div
+					class="self-end flex w-full gap-3 lg:w-auto justify-between"
+				>
+					<Link
+						v-if="props.isolate"
+						:href="
+							route('theme.chapter.slide', [
+								$page.props.theme.slug,
+								props.chapter.slug,
+								thePost.order,
+							])
+						"
+					>
+						isoler
+					</Link>
+
+					<ui-switch
+						v-if="thePost.switch"
+						v-model="postSwitch"
+						:false-text="postSwitchLabel.pre"
+						:true-text="postSwitchLabel.post"
+						class="mx-1"
+						sm
+					/>
+
+					<button
+						v-if="thePost.script"
+						class="btn btn-xs"
+						@click="updatePostData"
+					>
+						aléatoire
+					</button>
+				</div>
+			</div>
+
+			<!-- Header of the post (configuration, admin, ...) -->
+			<div v-if="showEditForm" v-admin>
+				<component
+					:is="editForm"
+					v-model="showEditForm"
+					:post="thePost"
+					@change="updatePost"
+					@destroy="emits('destroy', $event)"
+				/>
+			</div>
+			<!-- Displaying blocks of the post -->
+			<div class="mt-5">
+				<draggable
+					v-if="thePost.blocks.length"
+					v-model="thePost.blocks"
+					class="grid grid-cols-1 gap-3 my-5"
+					handle=".draggable-handle"
+					item-key="id"
+					v-bind="{
+						animation: 200,
+						disabled: !$page.props.auth.can.admin,
+					}"
+					@end="updateBlocksOrder"
+				>
+					<template #item="{ element }">
+						<block-show
+							:key="`block-${element.id}`"
+							:block="element"
+							:switch="postSwitch"
+							@destroy="destroyBlock"
+						/>
+					</template>
+				</draggable>
+
+				<div v-show="editMode.enabled.value" v-admin class="px-5">
+					<button class="btn-new" @click="addBlock">
+						ajouter un bloc
+					</button>
+				</div>
 			</div>
 		</div>
 
 		<!-- post questions -->
-		<questions-index
-			:class="
-				thePost.blocks.length ? 'border-t border-gray-200 mt-5' : ''
-			"
-			:container-id="thePost.id"
-			:questions="thePost.questions"
-			container-type="Post"
-		/>
+		<div
+			class="bg-white border border-gray-200 rounded shadow"
+			:class="thePost.blocks.length ? 'mt-6' : ''"
+		>
+			<questions-index
+				:container-id="thePost.id"
+				:questions="thePost.questions"
+				container-type="Post"
+			/>
+		</div>
 	</section>
 </template>

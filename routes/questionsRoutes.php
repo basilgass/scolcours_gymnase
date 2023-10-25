@@ -43,4 +43,8 @@ Route::middleware("can:admin")->group(function () {
 
 	Route::patch('questions/{question}/updateDisplayIf', [QuestionController::class, 'updateQuestionDisplayIf'])
 		->name('questions.updateDisplayIf');
+
+	// Move question to post route
+	Route::patch('questions/{question}/moveTo/{post}', [QuestionController::class, 'moveToPost'])
+		->name('questions.moveTo.post');
 });

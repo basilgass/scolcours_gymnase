@@ -22,15 +22,6 @@ class PostController extends Controller
 		//		return Inertia::render("Tools", $data);
 	}
 
-	public function create(Chapter $chapter)
-	{
-		// Create a post form
-		//		return Inertia::render("Posts/PostForm", [
-		//			"theme" => $chapter->theme,
-		//			"chapter" => $chapter
-		//		]);
-	}
-
 	public function store(Chapter $chapter, Request $request)
 	{
 		$validation = $request->validate([
@@ -56,6 +47,15 @@ class PostController extends Controller
 		];
 	}
 
+	public function create(Chapter $chapter)
+	{
+		// Create a post form
+		//		return Inertia::render("Posts/PostForm", [
+		//			"theme" => $chapter->theme,
+		//			"chapter" => $chapter
+		//		]);
+	}
+
 	public function show(Post $post)
 	{
 		$chapter = $post->chapter;
@@ -74,25 +74,6 @@ class PostController extends Controller
 		return Inertia::render("Devs/Edit/PostEditPage", [
 			'post' => BlockResource::make($post)
 		]);
-	}
-
-	public function update(Post $post, Request $request)
-	{
-		// Validate the post.
-		$validation = $request->validate([
-			'title' => ['max:255'],
-			'script' => ['string', 'nullable'],
-			'switch' => ['string', 'nullable'],
-			'type' => ['string', 'nullable']
-		]);
-
-		$post->title = $validation['title'];
-		$post->script = $validation['script'] ?? '';
-		$post->switch = $validation['switch'];
-		$post->type = $validation['type'] ?? null;
-		$post->save();
-
-		return PostResource::make($post);
 	}
 
 	public function updateNumberOfVisibleBlocks(Post $post, Request $request)
@@ -115,6 +96,25 @@ class PostController extends Controller
 		}
 
 		return 1;
+	}
+
+	public function update(Post $post, Request $request)
+	{
+		// Validate the post.
+		$validation = $request->validate([
+			'title' => ['max:255'],
+			'script' => ['string', 'nullable'],
+			'switch' => ['string', 'nullable'],
+			'type' => ['string', 'nullable']
+		]);
+
+		$post->title = $validation['title'];
+		$post->script = $validation['script'] ?? '';
+		$post->switch = $validation['switch'];
+		$post->type = $validation['type'] ?? null;
+		$post->save();
+
+		return PostResource::make($post);
 	}
 
 	public function updateQuestionsOrder(Post $post, Request $request)
@@ -157,7 +157,6 @@ class PostController extends Controller
 		}
 
 
-
 		return true;
 	}
 
@@ -172,6 +171,14 @@ class PostController extends Controller
 		return [
 			'url' => $chapter->url,
 			'label' => $chapter->title,
+		];
+	}
+
+	// Get basic info about a post
+	public function info(Post $post)
+	{
+		return [
+			"title" => $post->title,
 		];
 	}
 }

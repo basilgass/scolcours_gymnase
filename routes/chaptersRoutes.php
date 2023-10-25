@@ -56,4 +56,7 @@ Route::whereIn('theme', $themesList)->group(function () {
 			->name('chapters.relations.toggle');
 	});
 
+	// Get basic chapter info
+	Route::get('chapters/{chapter}/info', [ChaptersController::class, 'info'])
+		->name('chapters.info');
 });

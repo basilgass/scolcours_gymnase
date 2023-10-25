@@ -242,6 +242,10 @@
         margin-bottom: 0.3em;
     }
 
+	.katex-output {
+		@apply font-code w-full bg-gray-100 p-2 appearance-none focus:border-slate-400 focus:outline-none focus:ring-0;
+	}
+
     .admin-wrapper {
         @apply flex justify-between gap-3 items-baseline bg-amber-100 rounded border border-dashed border-amber-600 px-3 py-2;
     }

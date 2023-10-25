@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-	import { computed } from "vue"
+	import { computed, ref } from "vue"
 
 	const props = defineProps({
 		// Set the type of the input
@@ -23,13 +23,20 @@
 			type: String,
 			default: "text",
 			validator(value: string) {
-				return ["text", "number", "checkbox", "radio", "code"].includes(
-					value,
-				)
+				return [
+					"id",
+					"text",
+					"number",
+					"checkbox",
+					"radio",
+					"code",
+				].includes(value)
 			},
 		},
 		withIcon: { type: Boolean, default: false },
 	})
+
+	const inputWrapper = ref(null)
 
 	const combinedInputClass = computed(() => {
 		return `${props.inputClass} ${props.sm ? "text-xs p-1" : "p-2"} ${
@@ -51,10 +58,10 @@
 		return props.labelAsPlaceholder ? props.label : ""
 	})
 
-	const $emit = defineEmits(["update:modelValue"])
+	const $emit = defineEmits(["update:modelValue", "enter"])
 
 	let updateInput = function (e) {
-		if (props.type === "text") {
+		if (props.type === "text" || props.type === "id") {
 			$emit("update:modelValue", e.target.value)
 			return
 		} else if (props.type === "number") {
@@ -71,6 +78,12 @@
 			return
 		}
 	}
+
+	// Provide a function to focus the input
+	let focus = function () {
+		inputWrapper.value.getElementsByTagName("input")[0].focus()
+	}
+	defineExpose({ focus })
 </script>
 
 <template>
@@ -86,7 +99,7 @@
 			:class="labelClass"
 		>
 		</label>
-		<div class="inputWrapper relative">
+		<div ref="inputWrapper" class="inputWrapper relative">
 			<div
 				v-show="props.withIcon"
 				class="absolute w-8 grid place-items-center h-full border-r top-1/2 transform -translate-y-1/2 text-gray-400"
@@ -95,26 +108,29 @@
 					:class="{
 						'bi bi-123': props.type === 'number',
 						'bi bi-fonts': props.type === 'text',
+						'bi bi-key': props.type === 'id',
 					}"
 				/>
 			</div>
 			<input
-				v-if="type === 'text'"
-				:value="modelValue"
+				v-if="type === 'text' || type === 'id'"
 				:class="combinedInputClass"
-				@input="updateInput($event)"
 				:placeholder="placeholderValue"
+				:value="modelValue"
+				@input="updateInput($event)"
+				@keyup.enter="$emit('enter')"
 			/>
 			<input
 				v-if="type === 'number'"
+				:class="combinedInputClass"
+				:max="props.max"
+				:min="props.min"
+				:placeholder="placeholderValue"
+				:step="props.step"
 				:value="modelValue"
 				type="number"
-				:class="combinedInputClass"
 				@input="updateInput($event)"
-				:placeholder="placeholderValue"
-				:min="props.min"
-				:max="props.max"
-				:step="props.step"
+				@keyup.enter="$emit('enter')"
 			/>
 			<input
 				v-if="type === 'checkbox'"
@@ -122,6 +138,7 @@
 				:value="modelValue"
 				type="checkbox"
 				@input="updateInput($event)"
+				@keyup.enter="$emit('enter')"
 			/>
 		</div>
 	</div>
@@ -131,12 +148,15 @@
 	label {
 		@apply font-semibold text-xs;
 	}
+
 	div.inlineLabel {
 		@apply flex items-center gap-3;
 	}
+
 	div.inlineLabel > label {
 		@apply text-base;
 	}
+
 	input {
 		padding-left: v-bind(iconPadding);
 	}

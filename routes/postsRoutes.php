@@ -25,7 +25,9 @@ Route::middleware('can:admin')->group(function () {
 	Route::patch('posts/{post}/updateQuestionsGrid', [PostController::class, 'updateQuestionsGrid'])
 		->name('posts.updateQuestionsGrid');
 
-
+	// Get basic post info
+	Route::get('posts/{post}/info', [PostController::class, 'info'])
+		->name('posts.info');
 
 });
 

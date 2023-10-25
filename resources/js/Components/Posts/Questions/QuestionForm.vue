@@ -11,6 +11,7 @@ Formulaire d'édition d'une question
 	import { checkersList, getChecker } from "@/Composables/checkersConfig"
 	import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 	import FormWrapper from "@/Components/Form/FormWrapper.vue"
+	import MoveItemTo from "@/Components/Posts/MoveItemTo.vue"
 
 	const emits = defineEmits(["update:modelValue", "change", "destroy"])
 	let props = defineProps({
@@ -45,7 +46,7 @@ Formulaire d'édition d'une question
 					body: theQuestion.block.body,
 					illustrations,
 				})
-				.then((res) => {
+				.then(() => {
 					axios
 						.post(route("questions.update", [theQuestion.id]), {
 							_method: "PATCH",
@@ -75,11 +76,15 @@ Formulaire d'édition d'une question
 				.post(route("questions.destroy", [props.question.id]), {
 					_method: "delete",
 				})
-				.then((res) => {
+				.then(() => {
 					emits("update:modelValue", false)
 					emits("destroy", props.question.id)
 				})
 				.catch((err) => console.warn(err))
+		},
+		moveItemToPost = function () {
+			emits("update:modelValue", false)
+			emits("destroy", props.question.id)
 		}
 </script>
 <template>
@@ -90,60 +95,72 @@ Formulaire d'édition d'une question
 	>
 		<template #header>
 			<div
-				class="bg-white flex justify-between items-baseline border-b border-gray-200 px-5 py-3 mb-5"
+				class="bg-white flex flex-col gap-3 border-b border-gray-200 px-5 py-3 mb-5"
 			>
-				<h1>
-					<span class="text-xl md:text-2xl"
-						>édition d'une question</span
-					>
-					<span class="text-xs font-code ml-5"
-						>(id: {{ theQuestion.id }})</span
-					>
-				</h1>
-				<div class="flex gap-3 justify-end">
-					<button class="btn-primary btn-xs" @click="saveQuestion">
-						enregistrer
-					</button>
-					<button
-						class="btn-cancel btn-xs"
-						@click="emits('update:modelValue', false)"
-					>
-						fermer
-					</button>
-					<confirm-button
-						class="btn-delete btn-xs"
-						@confirm="deleteQuestion"
-					>
-						supprimer
-					</confirm-button>
+				<div class="flex w-full justify-between items-baseline">
+					<h1>
+						<span class="text-xl md:text-2xl">
+							édition d'une question
+						</span>
+						<span class="text-xs font-code ml-5">
+							(id: {{ theQuestion.id }})
+						</span>
+					</h1>
+					<div class="flex gap-3 justify-end">
+						<button
+							class="btn-primary btn-xs"
+							@click="saveQuestion"
+						>
+							enregistrer
+						</button>
+						<button
+							class="btn-cancel btn-xs"
+							@click="emits('update:modelValue', false)"
+						>
+							fermer
+						</button>
+						<confirm-button
+							class="btn-delete btn-xs"
+							@confirm="deleteQuestion"
+						>
+							supprimer
+						</confirm-button>
+					</div>
 				</div>
+
+				<move-item-to
+					:source-id="theQuestion.id"
+					source="question"
+					target="post"
+					@moved="moveItemToPost"
+				/>
 			</div>
 		</template>
 		<div class="flex flex-col md:flex-row gap-3 px-5 pb-5">
 			<form class="flex-1 flex flex-col" @submit.prevent>
 				<form-wrapper
-					type="text"
 					v-model="theQuestion.block.title"
-					label="titre"
 					font-code
+					label="titre"
 					sm
+					type="text"
 				/>
 				<form-wrapper
-					type="text"
 					v-model="theQuestion.css"
-					label="CSS"
 					font-code
+					label="CSS"
 					sm
+					type="text"
 				/>
 
 				<div>
 					<form-codearea
 						ref="formBody"
 						v-model="theQuestion.block.body"
-						:rows="10"
 						:label="`body (id: ${theQuestion.block.id})`"
-						name="body"
+						:rows="10"
 						language="latex"
+						name="body"
 					/>
 					<div class="text-[12px] font-code">
 						$a = TeX, $A = texte, @$A = format spéciaux
@@ -152,33 +169,33 @@ Formulaire d'édition d'une question
 
 				<form-textarea
 					v-model="theQuestion.answer"
+					:rows="3"
+					class="font-code"
 					label="answer"
 					name="answer"
-					class="font-code"
-					:rows="3"
 				/>
 
 				<div class="grid grid-cols-2 gap-3">
 					<form-textarea
 						v-model="theQuestion.keyboard"
 						:rows="8"
+						class="font-code"
 						label="keyboard"
 						name="keyboard"
-						class="font-code"
 						@current-line="currentKeyboardLine = $event"
 					/>
 
 					<markdown-it
-						class="font-code !text-[12px] mt-6"
 						:text="currentKeyboardLineHelperText"
+						class="font-code !text-[12px] mt-6"
 					/>
 				</div>
 			</form>
 
 			<question-show
-				class="min-w-[350px] md:max-w-[40vw]"
-				:question="theQuestion"
 				:class="theQuestion.css"
+				:question="theQuestion"
+				class="min-w-[350px] md:max-w-[40vw]"
 				is-dynamic
 				show-input
 				show-title

@@ -238,4 +238,18 @@ class QuestionController extends Controller
 
 		return true;
 	}
+
+	// Move the question to another Post.
+	public function moveToPost(Question $question, Post $post): array
+	{
+
+		$question->questionable()->associate($post);
+		$question->order = count($post->questions)+2;
+		$question->save();
+
+		return [
+			'url'=>$post->url,
+			'label'=>$post->title,
+		];
+	}
 }
