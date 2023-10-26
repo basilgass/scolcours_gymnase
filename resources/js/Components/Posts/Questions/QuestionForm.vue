@@ -30,9 +30,7 @@ Formulaire d'édition d'une question
 			}
 
 			// Search for checkers name
-			return checkersList
-				.filter((x) => x.startsWith(currentKeyboardLine.value))
-				.join(", ")
+			return checkersList.filter((x) => x.startsWith(currentKeyboardLine.value)).join(", ")
 		})
 
 	const flash = inject("flash")
@@ -60,9 +58,7 @@ Formulaire d'édition d'une question
 							emits("change", res.data.data)
 						})
 						.catch((error) => {
-							flash.error(
-								"Une erreur est survenue - voir la console",
-							)
+							flash.error("Une erreur est survenue - voir la console")
 							console.warning(error)
 						})
 				})
@@ -89,13 +85,12 @@ Formulaire d'édition d'une question
 
 	// Handle copy and paste.
 	// TODO: Move the copy/paste to a composable.
+	// TODO: add a timeout for the localStorage.
 	let hasClipboard = computed(() => {
-			return (
-				sessionStorage.getItem("scolcours-clipboard-question") !== null
-			)
+			return localStorage.getItem("scolcours-clipboard-question") !== null
 		}),
 		copyQuestion = function () {
-			sessionStorage.setItem(
+			localStorage.setItem(
 				"scolcours-clipboard-question",
 				JSON.stringify({
 					title: theQuestion.block.title,
@@ -107,9 +102,10 @@ Formulaire d'édition d'une question
 			)
 		},
 		pasteQuestion = function () {
-			let paste = sessionStorage.getItem("scolcours-clipboard-question")
+			let paste = localStorage.getItem("scolcours-clipboard-question")
 			if (paste !== null) {
 				paste = JSON.parse(paste)
+				console.log(paste)
 				theQuestion.block.title = paste.title
 				theQuestion.block.body = paste.body
 				theQuestion.css = paste.css
@@ -119,129 +115,51 @@ Formulaire d'édition d'une question
 		}
 </script>
 <template>
-	<dialog-modal
-		v-model="show"
-		class="bg-gray-50"
-		@cancel="emits('update:modelValue', false)"
-	>
+	<dialog-modal v-model="show" class="bg-gray-50" @cancel="emits('update:modelValue', false)">
 		<template #header>
-			<div
-				class="bg-white flex flex-col gap-3 border-b border-gray-200 px-5 py-3 mb-5"
-			>
+			<div class="bg-white flex flex-col gap-3 border-b border-gray-200 px-5 py-3 mb-5">
 				<div class="flex w-full justify-between items-baseline">
 					<h1>
-						<span class="text-xl md:text-2xl">
-							édition d'une question
-						</span>
-						<span class="text-xs font-code ml-5">
-							(id: {{ theQuestion.id }})
-						</span>
+						<span class="text-xl md:text-2xl"> édition d'une question </span>
+						<span class="text-xs font-code ml-5"> (id: {{ theQuestion.id }}) </span>
 					</h1>
 					<div class="flex gap-3 justify-end">
 						<button class="btn btn-xs" @click="copyQuestion">
 							<i class="bi bi-clipboard-plus" />
 						</button>
-						<button
-							v-if="hasClipboard"
-							class="btn btn-xs"
-							@click="pasteQuestion"
-						>
+						<button v-if="hasClipboard" class="btn btn-xs" @click="pasteQuestion">
 							<i class="bi bi-clipboard-pulse" />
 						</button>
 
-						<button
-							class="btn-primary btn-xs"
-							@click="saveQuestion"
-						>
-							enregistrer
-						</button>
-						<button
-							class="btn-cancel btn-xs"
-							@click="emits('update:modelValue', false)"
-						>
-							fermer
-						</button>
-						<confirm-button
-							class="btn-delete btn-xs"
-							@confirm="deleteQuestion"
-						>
-							supprimer
-						</confirm-button>
+						<button class="btn-primary btn-xs" @click="saveQuestion">enregistrer</button>
+						<button class="btn-cancel btn-xs" @click="emits('update:modelValue', false)">fermer</button>
+						<confirm-button class="btn-delete btn-xs" @confirm="deleteQuestion"> supprimer </confirm-button>
 					</div>
 				</div>
 
-				<move-item-to
-					:source-id="theQuestion.id"
-					source="question"
-					target="post"
-					@moved="moveItemToPost"
-				/>
+				<move-item-to :source-id="theQuestion.id" source="question" target="post" @moved="moveItemToPost" />
 			</div>
 		</template>
 		<div class="flex flex-col md:flex-row gap-3 px-5 pb-5">
 			<form class="flex-1 flex flex-col" @submit.prevent>
-				<form-wrapper
-					v-model="theQuestion.block.title"
-					font-code
-					label="titre"
-					sm
-					type="text"
-				/>
-				<form-wrapper
-					v-model="theQuestion.css"
-					font-code
-					label="CSS"
-					sm
-					type="text"
-				/>
+				<form-wrapper v-model="theQuestion.block.title" font-code label="titre" sm type="text" />
+				<form-wrapper v-model="theQuestion.css" font-code label="CSS" sm type="text" />
 
 				<div>
-					<form-codearea
-						ref="formBody"
-						v-model="theQuestion.block.body"
-						:label="`body (id: ${theQuestion.block.id})`"
-						:rows="10"
-						language="latex"
-						name="body"
-					/>
-					<div class="text-[12px] font-code">
-						$a = TeX, $A = texte, @$A = format spéciaux
-					</div>
+					<form-codearea ref="formBody" v-model="theQuestion.block.body" :label="`body (id: ${theQuestion.block.id})`" :rows="10" language="latex" name="body" />
+					<div class="text-[12px] font-code">$a = TeX, $A = texte, @$A = format spéciaux</div>
 				</div>
 
-				<form-textarea
-					v-model="theQuestion.answer"
-					:rows="3"
-					class="font-code"
-					label="answer"
-					name="answer"
-				/>
+				<form-textarea v-model="theQuestion.answer" :rows="3" class="font-code" label="answer" name="answer" />
 
 				<div class="grid grid-cols-2 gap-3">
-					<form-textarea
-						v-model="theQuestion.keyboard"
-						:rows="8"
-						class="font-code"
-						label="keyboard"
-						name="keyboard"
-						@current-line="currentKeyboardLine = $event"
-					/>
+					<form-textarea v-model="theQuestion.keyboard" :rows="8" class="font-code" label="keyboard" name="keyboard" @current-line="currentKeyboardLine = $event" />
 
-					<markdown-it
-						:text="currentKeyboardLineHelperText"
-						class="font-code !text-[12px] mt-6"
-					/>
+					<markdown-it :text="currentKeyboardLineHelperText" class="font-code !text-[12px] mt-6" />
 				</div>
 			</form>
 
-			<question-show
-				:class="theQuestion.css"
-				:question="theQuestion"
-				class="min-w-[350px] md:max-w-[40vw]"
-				is-dynamic
-				show-input
-				show-title
-			/>
+			<question-show :class="theQuestion.css" :question="theQuestion" class="min-w-[350px] md:max-w-[40vw]" is-dynamic show-input show-title />
 		</div>
 	</dialog-modal>
 </template>

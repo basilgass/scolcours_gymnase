@@ -21,13 +21,10 @@ TODO: Ajouter des "helpers", pour avoir des indications des paramètres par exem
 
 	let saveIllustration = function () {
 			axios
-				.post(
-					route("illustrations.update", [theIllustration.value.id]),
-					{
-						...theIllustration.value,
-						_method: "PATCH",
-					},
-				)
+				.post(route("illustrations.update", [theIllustration.value.id]), {
+					...theIllustration.value,
+					_method: "PATCH",
+				})
 				.then((res) => {
 					emits("update:modelValue", false)
 					emits("change", res.data)
@@ -48,17 +45,10 @@ TODO: Ajouter des "helpers", pour avoir des indications des paramètres par exem
 				.catch((error) => console.error(error))
 		},
 		copyIllustration = function () {
-			sessionStorage.setItem(
-				"scolcours-clipboard-illustration",
-				`${theIllustration.value.parameters ?? ""}\n${
-					theIllustration.value.code
-				}`,
-			)
+			localStorage.setItem("scolcours-clipboard-illustration", `${theIllustration.value.parameters ?? ""}\n${theIllustration.value.code}`)
 		},
 		pasteIllustration = function () {
-			let paste = sessionStorage.getItem(
-				"scolcours-clipboard-illustration",
-			)
+			let paste = localStorage.getItem("scolcours-clipboard-illustration")
 			if (paste !== null) {
 				paste = paste.split("\n")
 				theIllustration.value.parameters = paste.shift()
@@ -66,79 +56,39 @@ TODO: Ajouter des "helpers", pour avoir des indications des paramètres par exem
 			}
 		},
 		hasClipboard = computed(() => {
-			return (
-				sessionStorage.getItem("scolcours-clipboard-illustration") !==
-				null
-			)
+			return localStorage.getItem("scolcours-clipboard-illustration") !== null
 		})
 </script>
 
 <template>
-	<dialog-modal
-		v-model="show"
-		class="bg-gray-50"
-		@cancel="emits('update:modelValue', false)"
-	>
+	<dialog-modal v-model="show" class="bg-gray-50" @cancel="emits('update:modelValue', false)">
 		<template #header>
 			<div class="bg-white border-b border-gray-200 px-5 py-3 mb-5">
 				<div class="flex justify-between items-baseline w-full">
 					<h1>
-						<span class="text-xl md:text-2xl">
-							édition d'une illustration
-						</span>
-						<span class="text-xs font-code ml-5">
-							(id: {{ theIllustration.id }})
-						</span>
+						<span class="text-xl md:text-2xl"> édition d'une illustration </span>
+						<span class="text-xs font-code ml-5"> (id: {{ theIllustration.id }}) </span>
 					</h1>
 					<div class="flex gap-3 justify-end">
 						<button class="btn btn-xs" @click="copyIllustration">
 							<i class="bi bi-clipboard-plus" />
 						</button>
-						<button
-							v-if="hasClipboard"
-							class="btn btn-xs"
-							@click="pasteIllustration"
-						>
+						<button v-if="hasClipboard" class="btn btn-xs" @click="pasteIllustration">
 							<i class="bi bi-clipboard-pulse" />
 						</button>
-						<button
-							class="btn-primary btn-xs"
-							@click="saveIllustration"
-						>
-							enregistrer
-						</button>
-						<button
-							class="btn-cancel btn-xs"
-							@click="emits('update:modelValue', false)"
-						>
-							fermer
-						</button>
-						<confirm-button
-							class="btn-delete btn-xs"
-							@confirm="deleteIllustration"
-						>
-							supprimer
-						</confirm-button>
+						<button class="btn-primary btn-xs" @click="saveIllustration">enregistrer</button>
+						<button class="btn-cancel btn-xs" @click="emits('update:modelValue', false)">fermer</button>
+						<confirm-button class="btn-delete btn-xs" @confirm="deleteIllustration"> supprimer </confirm-button>
 					</div>
 				</div>
 			</div>
 		</template>
 
 		<div class="w-full px-5">
-			<div
-				:class="props.overflowScroll ? 'overflow-y-scroll' : ''"
-				class="grid grid-cols-1 md:grid-cols-2 gap-3"
-			>
-				<form-illustration
-					v-model="theIllustration"
-					:name="`illustration`"
-				/>
+			<div :class="props.overflowScroll ? 'overflow-y-scroll' : ''" class="grid grid-cols-1 md:grid-cols-2 gap-3">
+				<form-illustration v-model="theIllustration" :name="`illustration`" />
 
-				<illustration-show
-					:illustration="theIllustration"
-					class="bg-white"
-					preview
-				/>
+				<illustration-show :illustration="theIllustration" class="bg-white" preview />
 			</div>
 		</div>
 	</dialog-modal>
