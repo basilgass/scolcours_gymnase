@@ -86,6 +86,37 @@ Formulaire d'édition d'une question
 			emits("update:modelValue", false)
 			emits("destroy", props.question.id)
 		}
+
+	// Handle copy and paste.
+	// TODO: Move the copy/paste to a composable.
+	let hasClipboard = computed(() => {
+			return (
+				sessionStorage.getItem("scolcours-clipboard-question") !== null
+			)
+		}),
+		copyQuestion = function () {
+			sessionStorage.setItem(
+				"scolcours-clipboard-question",
+				JSON.stringify({
+					title: theQuestion.block.title,
+					body: theQuestion.block.body,
+					css: theQuestion.css,
+					answer: theQuestion.answer,
+					keyboard: theQuestion.keyboard,
+				}),
+			)
+		},
+		pasteQuestion = function () {
+			let paste = sessionStorage.getItem("scolcours-clipboard-question")
+			if (paste !== null) {
+				paste = JSON.parse(paste)
+				theQuestion.block.title = paste.title
+				theQuestion.block.body = paste.body
+				theQuestion.css = paste.css
+				theQuestion.answer = paste.answer
+				theQuestion.keyboard = paste.keyboard
+			}
+		}
 </script>
 <template>
 	<dialog-modal
@@ -107,6 +138,17 @@ Formulaire d'édition d'une question
 						</span>
 					</h1>
 					<div class="flex gap-3 justify-end">
+						<button class="btn btn-xs" @click="copyQuestion">
+							<i class="bi bi-clipboard-plus" />
+						</button>
+						<button
+							v-if="hasClipboard"
+							class="btn btn-xs"
+							@click="pasteQuestion"
+						>
+							<i class="bi bi-clipboard-pulse" />
+						</button>
+
 						<button
 							class="btn-primary btn-xs"
 							@click="saveQuestion"

@@ -83,12 +83,12 @@ TODO: Ajouter des "helpers", pour avoir des indications des paramètres par exem
 			<div class="bg-white border-b border-gray-200 px-5 py-3 mb-5">
 				<div class="flex justify-between items-baseline w-full">
 					<h1>
-						<span class="text-xl md:text-2xl"
-							>édition d'une illustration</span
-						>
-						<span class="text-xs font-code ml-5"
-							>(id: {{ theIllustration.id }})</span
-						>
+						<span class="text-xl md:text-2xl">
+							édition d'une illustration
+						</span>
+						<span class="text-xs font-code ml-5">
+							(id: {{ theIllustration.id }})
+						</span>
 					</h1>
 					<div class="flex gap-3 justify-end">
 						<button class="btn btn-xs" @click="copyIllustration">
