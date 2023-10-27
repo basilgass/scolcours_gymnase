@@ -10,6 +10,7 @@ Affichage d'un PiDraw
 	import "vue-slider-component/theme/material.css"
 	import { PiMath } from "pimath/esm"
 	import katex from "katex"
+	import { useResizeObserver } from "@vueuse/core"
 
 	const emits = defineEmits(["update"])
 
@@ -266,6 +267,13 @@ Affichage d'un PiDraw
 		if (drawCode.value) {
 			PiParserUpdate("onMounted", true)
 		}
+
+		// Add a resizeObserver on the draw container
+		useResizeObserver(draw.value, () => {
+			PiParserUpdate("onResize", true)
+			PiParser.updateLayout(props.draw.parameters)
+			PiParser.update(drawCode.value, true)
+		})
 	})
 
 	let drawMouseUp = function () {

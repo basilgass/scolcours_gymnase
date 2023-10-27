@@ -3,14 +3,7 @@ Affichage d'un post avec toutes les config activées
 Principalement la couche utilisée dans ChapterSlide.
 -->
 <script lang="ts" setup>
-	import {
-		computed,
-		defineAsyncComponent,
-		inject,
-		PropType,
-		provide,
-		ref,
-	} from "vue"
+	import { computed, defineAsyncComponent, inject, PropType, provide, ref } from "vue"
 	import BlockShow from "@/Components/Posts/Blocks/BlockShow.vue"
 	import { PiMath } from "pimath/esm"
 	import UiSwitch from "@/Components/Ui/UiSwitch.vue"
@@ -44,9 +37,7 @@ Principalement la couche utilisée dans ChapterSlide.
 
 	let showEditForm = ref(false),
 		editForm = computed(() => {
-			return defineAsyncComponent(
-				() => import("@/Components/Posts/PostForm.vue"),
-			)
+			return defineAsyncComponent(() => import("@/Components/Posts/PostForm.vue"))
 		}),
 		updatePost = function (p) {
 			thePost.value = p
@@ -62,12 +53,7 @@ Principalement la couche utilisée dans ChapterSlide.
 				.then((res) => {
 					flash.success("les blocs ont bien été mis à jour !")
 				})
-				.catch((res) =>
-					console.warn(
-						"update ordering order: ",
-						res.response.data.message,
-					),
-				)
+				.catch((res) => console.warn("update ordering order: ", res.response.data.message))
 		}
 
 	let addBlock = function () {
@@ -85,9 +71,7 @@ Principalement la couche utilisée dans ChapterSlide.
 				})
 		},
 		destroyBlock = function (destroyId) {
-			thePost.value.blocks = thePost.value.blocks.filter(
-				(x) => x.id !== destroyId,
-			)
+			thePost.value.blocks = thePost.value.blocks.filter((x) => x.id !== destroyId)
 		}
 
 	provide(
@@ -125,32 +109,19 @@ Principalement la couche utilisée dans ChapterSlide.
 	<section :id="`post-${props.post.id}`">
 		<div class="bg-white border border-gray-200 rounded shadow py-5">
 			<!-- Title of the post -->
-			<div
-				class="px-5 border-b border-gray-200 pb-5 flex flex-col gap-3 lg:flex-row justify-between"
-			>
+			<div class="px-5 border-b border-gray-200 pb-5 flex flex-col gap-3 lg:flex-row justify-between">
 				<h2 class="text-lg md:text-xl xl:text-2xl">
 					<span v-katex.auto="thePost.title" />
 
-					<button
-						v-show="editMode.enabled.value"
-						v-admin
-						class="text-xs ml-3"
-						@click="showEditForm = true"
-					>
+					<button v-show="editMode.enabled.value" v-admin class="text-xs ml-3" @click="showEditForm = true">
 						<i class="bi bi-pencil mr-2" /> {{ thePost.id }}
 					</button>
 				</h2>
-				<div
-					class="self-end flex w-full gap-3 lg:w-auto justify-between"
-				>
+				<div class="self-end flex w-full gap-3 lg:w-auto justify-between">
 					<Link
 						v-if="props.isolate"
 						:href="
-							route('theme.chapter.slide', [
-								$page.props.theme.slug,
-								props.chapter.slug,
-								thePost.order,
-							])
+							route('theme.chapter.slide', [$page.props.theme.slug, props.chapter.slug, thePost.order])
 						"
 					>
 						isoler
@@ -165,13 +136,7 @@ Principalement la couche utilisée dans ChapterSlide.
 						sm
 					/>
 
-					<button
-						v-if="thePost.script"
-						class="btn btn-xs"
-						@click="updatePostData"
-					>
-						aléatoire
-					</button>
+					<button v-if="thePost.script" class="btn btn-xs" @click="updatePostData">aléatoire</button>
 				</div>
 			</div>
 
@@ -210,22 +175,18 @@ Principalement la couche utilisée dans ChapterSlide.
 				</draggable>
 
 				<div v-show="editMode.enabled.value" v-admin class="px-5">
-					<button class="btn-new" @click="addBlock">
-						ajouter un bloc
-					</button>
+					<button class="btn-new" @click="addBlock">ajouter un bloc</button>
 				</div>
 			</div>
 		</div>
 
 		<!-- post questions -->
-		<div
-			class="bg-white border border-gray-200 rounded shadow"
-			:class="thePost.blocks.length ? 'mt-6' : ''"
-		>
+		<div class="bg-white border border-gray-200 rounded shadow" :class="thePost.blocks.length ? 'mt-6' : ''">
 			<questions-index
 				:container-id="thePost.id"
 				:questions="thePost.questions"
 				container-type="Post"
+				:grid="thePost.questionsGrid"
 			/>
 		</div>
 	</section>

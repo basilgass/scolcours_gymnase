@@ -1,6 +1,291 @@
 <!--
 Affichage d'un block , avec toutes les possibilités
 -->
+<script setup>
+	import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
+	import IllustrationShow from "@/Components/Posts/Illustrations/IllustrationShow.vue"
+	import { computed, defineAsyncComponent, inject, provide, ref } from "vue"
+	import { PiMath } from "pimath/esm"
+	import { useFormattedBody } from "@/Composables/useHelpers"
+	import { blockTypeDefault, blockTypes } from "@/scolcours"
+
+	const emits = defineEmits(["destroy"])
+	let props = defineProps({
+			block: { type: Object, required: true },
+			switch: { type: Boolean },
+			maxIllustration: { type: Number, default: null },
+			noDelete: { type: Boolean, default: false },
+		}),
+		theBlock = ref(props.block),
+		isBlur = ref(props.block.blur),
+		showBlock = computed(() => {
+			// if(usePage().props.auth.can.admin){return true}
+
+			if (theBlock.value.switch === null) {
+				return true
+			}
+			return Boolean(theBlock.value.switch) === Boolean(props.switch)
+		}),
+		flash = inject("flash"),
+		editMode = inject("editMode")
+
+	const blockConfig = computed(() => {
+			return blockTypes[theBlock.value.type] === undefined
+				? blockTypeDefault
+				: blockTypes[theBlock.value.type]
+		}),
+		blockTitle = computed(() => {
+			return theBlock.value.title === ""
+				? blockConfig.value.title
+				: theBlock.value.title
+		}),
+		blockIcon = computed(() => {
+			return blockConfig.value.icon
+		}),
+		blockTemplate = computed(() => {
+			if (!theBlock.value.template) {
+				return {
+					grid: "grid grid-cols-1 gap-3",
+					block: "",
+					illustration: "",
+				}
+			}
+
+			const values = theBlock.value.template
+				.split(",")
+				.filter((x) => x !== "")
+			// pattern is:
+			// bi,md:b+i,lg:2b+i,xl:i+3b
+			if (values.length === 0) {
+				return {
+					grid: "grid grid-cols-1 gap-3",
+					block: "",
+					illustration: "",
+				}
+			}
+
+			let grid = ["grid grid-cols-1 gap-3"],
+				block = [
+					values[0][0] === "b"
+						? "order-1 col-span-1"
+						: "order-2 col-span-1",
+				],
+				illustration = [
+					values[0][0] === "i"
+						? "order-1 col-span-1"
+						: "order-2 col-span-1",
+				]
+
+			for (let i = 1; i < values.length; i++) {
+				const media = values[i].split(":") // ["md", "2b+i"]
+				if (media.length !== 2) {
+					continue
+				}
+
+				if (["md", "lg", "xl"].indexOf(media[0]) !== -1) {
+					if (media[1].includes("+")) {
+						// md:b+i or md:3b+i or ...
+						const value = media[1].split("+"), // ["2b", "i"]
+							sizes = [
+								value[0].slice(0, -1) === ""
+									? 1
+									: +value[0].slice(0, -1),
+								value[1].slice(0, -1) === ""
+									? 1
+									: +value[1].slice(0, -1),
+							] // [2, 1]
+
+						// define grid size for the media query
+						grid.push(
+							`${media[0]}:grid-cols-${sizes[0] + sizes[1]}`,
+						)
+
+						// define elements.
+						for (let j = 0; j < sizes.length; j++) {
+							if (sizes[j] === 0) {
+								// Must be hidden.
+								if (value[0].includes("b")) {
+									block.push(`${media[0]}:hidden`)
+								} else {
+									illustration.push(`${media[0]}:hidden`)
+								}
+							} else {
+								if (value[j].includes("b")) {
+									block.push(
+										`${media[0]}:order-${j + 1} ${
+											media[0]
+										}:col-span-${sizes[j]}`,
+									)
+								} else {
+									illustration.push(
+										`${media[0]}:order-${j + 1} ${
+											media[0]
+										}:col-span-${sizes[j]}`,
+									)
+								}
+							}
+						}
+					} else {
+						// md:bi or md:ib
+						grid.push(`${media[0]}:grid-cols-1`)
+						block.push(
+							media[1][0] === "b"
+								? `${media[0]}:order-1 ${media[0]}:col-span-1`
+								: `${media[0]}:order-2 ${media[0]}:col-span-1`,
+						)
+						illustration.push(
+							media[1][0] === "i"
+								? `${media[0]}:order-1 ${media[0]}:col-span-1`
+								: `${media[0]}:order-2 ${media[0]}:col-span-1`,
+						)
+					}
+				}
+			}
+
+			return {
+				grid: grid.join(" "),
+				block: block.join(" "),
+				illustration: illustration.join(" "),
+			}
+		})
+
+	let random = ref(1),
+		postData = inject("postData", {}),
+		blockData = computed(() => {
+			try {
+				if (props.block.script !== null && random.value > 0) {
+					let F = new Function(
+						"PiMath",
+						"postData",
+						"iteration",
+						props.block.script,
+					)
+
+					return {
+						...postData.value,
+						...F(PiMath, postData.value, random.value),
+					}
+				}
+			} catch (e) {
+				console.warn("BlockShow (script generation)", e)
+			}
+
+			return { ...postData.value }
+		}),
+		blockBody = computed(() => {
+			return useFormattedBody(props.block.body, blockData)
+		}),
+		blockButtons = computed(() => {
+			let showRandom = theBlock.value.script,
+				hasCustomButtons = blockData.value.btn !== undefined
+
+			// No random buttons
+			if (!showRandom) {
+				return false
+			}
+
+			// Default values
+			let randomBtn = {
+					icon: "bi bi-shuffle",
+					text: "aléatoire",
+					show: true,
+				},
+				resetBtn = false
+
+			if (blockData.value.reset) {
+				resetBtn = {
+					icon: "bi bi-x-square",
+					text: "par défaut",
+					show: random.value > 1,
+				}
+			}
+
+			// Custom buttons
+			if (hasCustomButtons) {
+				// Random button
+				if (blockData.value.btn.random) {
+					randomBtn = {
+						icon: blockData.value.btn.random.icon ?? "",
+						text:
+							blockData.value.btn.random.text ??
+							blockData.value.btn.random,
+						show:
+							blockData.value.btn.random.show === undefined ||
+							blockData.value.btn.random.show
+								? true
+								: random.value === 1,
+					}
+				}
+
+				// Reset button
+				if (blockData.value.btn.reset) {
+					resetBtn = {
+						icon: blockData.value.btn.reset.icon ?? "",
+						text:
+							blockData.value.btn.reset.text ??
+							blockData.value.btn.reset,
+						show:
+							blockData.value.btn.reset.show ?? random.value > 1,
+					}
+				}
+			}
+
+			return {
+				random: randomBtn,
+				reset: resetBtn,
+			}
+		})
+
+	provide("blockData", blockData)
+
+	let showEditForm = ref(props.block?.isNew === true),
+		editForm = computed(() => {
+			return defineAsyncComponent(() =>
+				import("@/Components/Posts/Blocks/BlockForm.vue"),
+			)
+		}),
+		updateBlock = function (b) {
+			theBlock.value = b
+		},
+		addIllustration = function () {
+			axios
+				.post(route("blocks.illustrations.store", [props.block.id]), {})
+				.then((res) => {
+					res.data.isNew = true
+					theBlock.value.illustrations.push(res.data)
+					// edit the new illustration.
+
+					flash.success("une nouvelle illustration a été créée")
+				})
+		},
+		updateIllustrationsOrder = function () {
+			axios
+				.post(route("blocks.illustrations.order", [props.block.id]), {
+					order: theBlock.value.illustrations.map(
+						(illustration, index) => {
+							return {
+								id: illustration.id,
+								order: index + 1,
+							}
+						},
+					),
+					_method: "PATCH",
+				})
+				.then((res) => {
+					// TODO : flash message !
+					flash.success("les illustrations ont bien été réordrées !")
+				})
+				.catch((res) =>
+					console.warn("update ordering illustrations: ", res),
+				)
+		},
+		destroyIllustration = function (destroyId) {
+			theBlock.value.illustrations = theBlock.value.illustrations.filter(
+				(x) => x.id !== destroyId,
+			)
+		}
+</script>
+
 <template>
 	<article
 		v-show="showBlock"
@@ -23,10 +308,7 @@ Affichage d'un block , avec toutes les possibilités
 			>
 				<div>
 					<div class="flex gap-3">
-						<i
-							v-if="blockIcon"
-							:class="blockIcon"
-						/>
+						<i v-if="blockIcon" :class="blockIcon" />
 						<h3 v-katex.auto="blockTitle" />
 					</div>
 
@@ -40,7 +322,8 @@ Affichage d'un block , avec toutes les possibilités
 							class="text-xs mr-2"
 							@click="showEditForm = true"
 						>
-							<i class="bi bi-pencil mr-2" /> éditer le paragraphe (id: {{ theBlock.id }})
+							<i class="bi bi-pencil mr-2" /> éditer le paragraphe
+							(id: {{ theBlock.id }})
 						</button>
 
 						<button class="draggable-handle text-xs px-1">
@@ -50,10 +333,7 @@ Affichage d'un block , avec toutes les possibilités
 				</div>
 
 				<div class="flex items-end gap-3">
-					<div
-						v-if="blockButtons"
-						class="flex items-end gap-3"
-					>
+					<div v-if="blockButtons" class="flex items-end gap-3">
 						<div v-if="blockButtons && blockButtons.reset.show">
 							<button
 								:class="`btn-scolcours-${$page.props.theme.slug} btn-xs tracking-wider d-block`"
@@ -64,9 +344,7 @@ Affichage d'un block , avec toutes les possibilités
 									:class="blockButtons.reset.icon"
 									class="mr-2"
 								/>
-								<span
-									v-katex.auto="blockButtons.reset.text"
-								/>
+								<span v-katex.auto="blockButtons.reset.text" />
 							</button>
 						</div>
 
@@ -80,28 +358,26 @@ Affichage d'un block , avec toutes les possibilités
 								:class="blockButtons.random.icon"
 								class="mr-2"
 							/>
-							<span
-								v-katex.auto="blockButtons.random.text"
-							/>
+							<span v-katex.auto="blockButtons.random.text" />
 						</button>
 					</div>
 				</div>
 			</div>
 
-			<div
-				:class="blockTemplate.grid"
-				class="px-5"
-			>
+			<div :class="blockTemplate.grid" class="px-5">
 				<!-- Block body -->
 				<markdown-it
-					v-if="blockBody!==null"
+					v-if="blockBody !== null"
 					:class="blockTemplate.block"
 					:text="blockBody"
 				/>
 
 				<!-- Block illustrations -->
 				<div
-					v-if=" theBlock.illustrations.length > 0 || editMode.enabled.value"
+					v-if="
+						theBlock.illustrations.length > 0 ||
+						editMode.enabled.value
+					"
 					:class="blockTemplate.illustration"
 				>
 					<draggable
@@ -128,9 +404,7 @@ Affichage d'un block , avec toutes les possibilités
 								@destroy="destroyIllustration"
 							/>
 						</template>
-						<template
-							#footer
-						>
+						<template #footer>
 							<button
 								v-show="editMode.enabled.value"
 								v-admin
@@ -146,10 +420,7 @@ Affichage d'un block , avec toutes les possibilités
 		</div>
 
 		<!-- Edit form -->
-		<div
-			v-if="showEditForm"
-			v-admin
-		>
+		<div v-if="showEditForm" v-admin>
 			<component
 				:is="editForm"
 				v-model="showEditForm"
@@ -163,275 +434,3 @@ Affichage d'un block , avec toutes les possibilités
 		</div>
 	</article>
 </template>
-
-<script setup>
-import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
-import IllustrationShow from "@/Components/Posts/Illustrations/IllustrationShow.vue"
-import {computed, defineAsyncComponent, inject, provide, ref} from "vue"
-import {PiMath} from "pimath/esm"
-import {useFormattedBody} from "@/Composables/useHelpers"
-import {blockTypeDefault, blockTypes} from "@/scolcours"
-
-const emits = defineEmits(["destroy"])
-let props = defineProps({
-		block: {type: Object, required: true},
-		switch: {type: Boolean},
-		maxIllustration: {type: Number, default: null},
-		noDelete: {type: Boolean, default: false}
-	}),
-	theBlock = ref(props.block),
-	isBlur = ref(props.block.blur),
-	showBlock = computed(() => {
-		// if(usePage().props.auth.can.admin){return true}
-
-		if (theBlock.value.switch === null) {
-			return true
-		}
-		return Boolean(theBlock.value.switch) === Boolean(props.switch)
-	}),
-	flash = inject("flash"),
-	editMode = inject("editMode")
-
-const	blockConfig = computed(()=>{
-		return blockTypes[theBlock.value.type] === undefined ?
-			blockTypeDefault:
-			blockTypes[theBlock.value.type]
-	}),
-	blockTitle = computed(() => {
-		return theBlock.value.title===""?blockConfig.value.title:theBlock.value.title
-	}),
-	blockIcon = computed(()=>{
-		return blockConfig.value.icon
-	}),
-	blockTemplate = computed(() => {
-		if (!theBlock.value.template) {
-			return {
-				grid: "grid grid-cols-1 gap-3",
-				block: "",
-				illustration: "",
-			}
-		}
-
-		const values = theBlock.value.template
-			.split(",")
-			.filter((x) => x !== "")
-		// pattern is:
-		// bi,md:b+i,lg:2b+i,xl:i+3b
-		if (values.length === 0) {
-			return {
-				grid: "grid grid-cols-1 gap-3",
-				block: "",
-				illustration: "",
-			}
-		}
-
-		let grid = ["grid grid-cols-1 gap-3"],
-			block = [
-				values[0][0] === "b"
-					? "order-1 col-span-1"
-					: "order-2 col-span-1",
-			],
-			illustration = [
-				values[0][0] === "i"
-					? "order-1 col-span-1"
-					: "order-2 col-span-1",
-			]
-
-		for (let i = 1; i < values.length; i++) {
-			const media = values[i].split(":") // ["md", "2b+i"]
-			if (media.length !== 2) {
-				continue
-			}
-
-			if (["md", "lg", "xl"].indexOf(media[0]) !== -1) {
-				if (media[1].includes("+")) {
-					// md:b+i or md:3b+i or ...
-					const value = media[1].split("+"), // ["2b", "i"]
-						sizes = [
-							value[0].slice(0, -1) === ""
-								? 1
-								: +value[0].slice(0, -1),
-							value[1].slice(0, -1) === ""
-								? 1
-								: +value[1].slice(0, -1),
-						] // [2, 1]
-
-					// define grid size for the media query
-					grid.push(`${media[0]}:grid-cols-${sizes[0] + sizes[1]}`)
-
-					// define elements.
-					for (let j = 0; j < sizes.length; j++) {
-						if (sizes[j] === 0) {
-							// Must be hidden.
-							if (value[0].includes("b")) {
-								block.push(`${media[0]}:hidden`)
-							} else {
-								illustration.push(`${media[0]}:hidden`)
-							}
-						} else {
-							if (value[j].includes("b")) {
-								block.push(
-									`${media[0]}:order-${j + 1} ${
-										media[0]
-									}:col-span-${sizes[j]}`
-								)
-							} else {
-								illustration.push(
-									`${media[0]}:order-${j + 1} ${
-										media[0]
-									}:col-span-${sizes[j]}`
-								)
-							}
-						}
-					}
-				} else {
-					// md:bi or md:ib
-					grid.push(`${media[0]}:grid-cols-1`)
-					block.push(
-						media[1][0] === "b"
-							? `${media[0]}:order-1 ${media[0]}:col-span-1`
-							: `${media[0]}:order-2 ${media[0]}:col-span-1`
-					)
-					illustration.push(
-						media[1][0] === "i"
-							? `${media[0]}:order-1 ${media[0]}:col-span-1`
-							: `${media[0]}:order-2 ${media[0]}:col-span-1`
-					)
-				}
-			}
-		}
-
-		return {
-			grid: grid.join(" "),
-			block: block.join(" "),
-			illustration: illustration.join(" "),
-		}
-	})
-
-let random = ref(1),
-	postData = inject("postData", {}),
-	blockData = computed(() => {
-		try {
-			if (props.block.script !== null && random.value > 0) {
-				let F = new Function(
-					"PiMath",
-					"postData",
-					"iteration",
-					props.block.script
-				)
-
-				return {
-					...postData.value,
-					...F(PiMath, postData.value, random.value),
-				}
-			}
-		} catch (e) {
-			console.warn("BlockShow (script generation)", e)
-		}
-
-		return {...postData.value}
-	}),
-	blockBody = computed(() => {
-		return useFormattedBody(props.block.body, blockData)
-	}),
-	blockButtons = computed(() => {
-		let showRandom = theBlock.value.script,
-			hasCustomButtons = blockData.value.btn !== undefined
-
-		// No random buttons
-		if (!showRandom) {
-			return false
-		}
-
-		// Default values
-		let randomBtn = {
-				icon: "bi bi-shuffle",
-				text: "aléatoire",
-				show: true
-			},
-			resetBtn = false
-
-		if (blockData.value.reset) {
-			resetBtn = {
-				icon: "bi bi-x-square",
-				text: "par défaut",
-				show: random.value > 1
-			}
-		}
-
-		// Custom buttons
-		if (hasCustomButtons) {
-			// Random button
-			if (blockData.value.btn.random) {
-				randomBtn = {
-					icon: blockData.value.btn.random.icon ?? "",
-					text: blockData.value.btn.random.text ?? blockData.value.btn.random,
-					show: blockData.value.btn.random.show === undefined || blockData.value.btn.random.show ? true : random.value ===1
-				}
-			}
-
-			// Reset button
-			if (blockData.value.btn.reset) {
-				resetBtn = {
-					icon: blockData.value.btn.reset.icon ?? "",
-					text: blockData.value.btn.reset.text ?? blockData.value.btn.reset,
-					show: blockData.value.btn.reset.show ?? random.value > 1
-				}
-			}
-		}
-
-		return {
-			random: randomBtn,
-			reset: resetBtn
-		}
-	})
-
-provide("blockData", blockData)
-
-let showEditForm = ref(props.block?.isNew === true),
-	editForm = computed(() => {
-		return defineAsyncComponent(() =>
-			import("@/Components/Posts/Blocks/BlockForm.vue")
-		)
-	}),
-	updateBlock = function (b) {
-		theBlock.value = b
-	},
-	addIllustration = function () {
-		axios
-			.post(route("blocks.illustrations.store", [props.block.id]), {})
-			.then((res) => {
-				res.data.isNew = true
-				theBlock.value.illustrations.push(res.data)
-				// edit the new illustration.
-
-				flash.success("une nouvelle illustration a été créée")
-			})
-	},
-	updateIllustrationsOrder = function () {
-		axios
-			.post(route("blocks.illustrations.order", [props.block.id]), {
-				order: theBlock.value.illustrations.map(
-					(illustration, index) => {
-						return {
-							id: illustration.id,
-							order: index + 1,
-						}
-					}
-				),
-				_method: "PATCH",
-			})
-			.then((res) => {
-				// TODO : flash message !
-				flash.success("les illustrations ont bien été réordrées !")
-			})
-			.catch((res) =>
-				console.warn("update ordering illustrations: ", res)
-			)
-	},
-	destroyIllustration = function (destroyId) {
-		theBlock.value.illustrations = theBlock.value.illustrations.filter(
-			(x) => x.id !== destroyId
-		)
-	}
-</script>

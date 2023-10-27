@@ -99,7 +99,7 @@
 			:class="labelClass"
 		>
 		</label>
-		<div ref="inputWrapper" class="inputWrapper relative">
+		<div ref="inputWrapper" class="inputWrapper relative flex-1">
 			<div
 				v-show="props.withIcon"
 				class="absolute w-8 grid place-items-center h-full border-r top-1/2 transform -translate-y-1/2 text-gray-400"
@@ -158,6 +158,7 @@
 	}
 
 	input {
+		@apply text-black;
 		padding-left: v-bind(iconPadding);
 	}
 

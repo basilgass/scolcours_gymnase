@@ -2,11 +2,13 @@
 	import { computed, inject, ref } from "vue"
 	import QuestionShow from "@/Components/Posts/Questions/QuestionShow.vue"
 	import axios from "axios"
+	import FormWrapper from "@/Components/Form/FormWrapper.vue"
 
 	const props = defineProps({
 		questions: { type: Array, required: true },
 		containerType: { type: String, required: true },
 		containerId: { type: Number, required: true },
+		grid: { type: String, default: null },
 	})
 
 	const flash = inject("flash"),
@@ -173,33 +175,95 @@
 					}
 				})
 		}
+
+	const questionsCustomGrid = ref(props.grid)
+	const questionsGrid = computed(() => {
+		if (questionsCustomGrid.value) {
+			return questionsCustomGrid.value
+		}
+
+		let grid = "grid grid-cols-1"
+
+		if (theQuestions.value.length > 1) {
+			grid += " md:grid-cols-2"
+		}
+
+		if (theQuestions.value.length > 2) {
+			grid += " lg:grid-cols-3"
+		}
+
+		return grid
+	})
+	const updateQuestionsGrid = function () {
+		// Save to database.
+		axios
+			.patch(route("posts.updateQuestionsGrid", [props.containerId]), {
+				_method: "PATCH",
+				grid: questionsCustomGrid.value,
+			})
+			.then((res) => {
+				console.log(res.data)
+				flash.success("La grille a bien été enregistrée.")
+			})
+			.catch(() => {
+				flash.error("Il y a eu un problème avec la grille.")
+			})
+	}
 </script>
 <template>
 	<article>
 		<div
 			v-show="editMode.enabled.value"
 			v-admin
-			class="bg-slate-600 p-3 text-white flex flex-wrap justify-between items-center"
+			v-theme.bg.text="'admin'"
+			class="p-3"
 		>
-			<div class="uppercase">administration des questions</div>
+			<div class="flex flex-wrap justify-between items-center">
+				<div class="uppercase">administration des questions</div>
+				<div class="flex gap-4">
+					<button class="btn btn-xs" @click="addDisplayIf">
+						apparition conditionnel
+					</button>
+					<button class="btn btn-xs" @click="removeDisplayIf">
+						supprimer conditions
+					</button>
 
-			<div class="flex gap-4">
-				<button class="btn btn-xs" @click="addDisplayIf">
-					apparition conditionnel
+					<button class="btn btn-xs" @click="resetAnswers">
+						réinitialiser les réponses
+					</button>
+				</div>
+			</div>
+			<div v-if="props.containerType === 'Post'" class="mt-5 flex gap-3">
+				<form-wrapper
+					label="Gestion de la grille"
+					inline-label
+					v-model="questionsCustomGrid"
+					sm
+					font-code
+					class="flex-1"
+					@enter="updateQuestionsGrid"
+				></form-wrapper>
+				<button class="btn btn-xs" @click="questionsCustomGrid = ''">
+					<i class="bi bi-ban" />
 				</button>
-				<button class="btn btn-xs" @click="removeDisplayIf">
-					supprimer conditions
+				<button
+					class="btn btn-xs"
+					@click="questionsCustomGrid = 'grid grid-cols-1'"
+				>
+					grid-1
 				</button>
-
-				<button class="btn btn-xs" @click="resetAnswers">
-					réinitialiser les réponses
+				<button
+					class="btn btn-xs bg-gray-100 text-slate-600"
+					@click="updateQuestionsGrid"
+				>
+					<i class="bi bi-check2" />
 				</button>
 			</div>
 		</div>
 
 		<div
-			v-theme.bg.text
 			v-if="theQuestions.length"
+			v-theme.bg.text
 			class="flex justify-between px-10 py-4 mb-5"
 		>
 			<h3 class="uppercase text-2xl relative">
@@ -210,10 +274,8 @@
 		<draggable
 			v-if="theQuestions.length"
 			v-model="theQuestions"
-			:class="{
-				'lg:grid-cols-3': theQuestions.length > 2,
-			}"
-			class="grid grid-cols-1 md:grid-cols-2 gap-3 px-5 pb-5"
+			:class="questionsGrid"
+			class="px-5 pb-5 gap-6"
 			handle=".draggable-handle"
 			item-key="id"
 			v-bind="{
@@ -224,11 +286,9 @@
 		>
 			<template #item="{ element }">
 				<question-show
-					v-show="
-						displayedQuestions[element.id] || editMode.enabled.value
-					"
 					:class="element.css ?? ''"
 					:groupe-ids="questionsIds"
+					:locked="!displayedQuestions[element.id]"
 					:question="element"
 					@destroy="destroyQuestion"
 					@duplicate="duplicateQuestion"

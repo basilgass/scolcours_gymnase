@@ -92,6 +92,7 @@ Formulaire d'édition d'une question
 		copyQuestion = function () {
 			localStorage.setItem(
 				"scolcours-clipboard-question",
+
 				JSON.stringify({
 					title: theQuestion.block.title,
 					body: theQuestion.block.body,
@@ -105,7 +106,6 @@ Formulaire d'édition d'une question
 			let paste = localStorage.getItem("scolcours-clipboard-question")
 			if (paste !== null) {
 				paste = JSON.parse(paste)
-				console.log(paste)
 				theQuestion.block.title = paste.title
 				theQuestion.block.body = paste.body
 				theQuestion.css = paste.css

@@ -129,11 +129,11 @@ class PostController extends Controller
 	public function updateQuestionsGrid(Post $post, Request $request)
 	{
 		$validate = $request->validate([
-			'questionsGrid' => ['string', 'nullable']
+			'grid' => ['string', 'nullable']
 		]);
 
 		$post->update([
-			'questionsGrid' => $validate['questionsGrid'] ?? $validate['questionsGrid']
+			'questionsGrid' => $validate['grid'] ?? $validate['grid']
 		]);
 		$post->save();
 		return true;

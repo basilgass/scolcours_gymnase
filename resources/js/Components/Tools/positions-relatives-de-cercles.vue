@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 	/** Tools
 	 * title: positions relatives de cercles
 	 * body: permet de déterminer la position relative de cercle ou de générer un exemple
@@ -13,9 +13,7 @@
 
 	let circle1 = ref(""),
 		circle2 = ref(""),
-		position = ref(""),
-		maxRadius = ref(20),
-		draw = ref({ parameters: "", code: "" })
+		maxRadius = ref(20)
 
 	// Compute the result
 	let result = computed(() => {
@@ -25,25 +23,58 @@
 			}
 			const C1 = new PiMath.Geometry.Circle(circle1.value)
 			const C2 = new PiMath.Geometry.Circle(circle2.value)
+			const r1 = C1.radius.value
+			const r2 = C2.radius.value
+			const d = C1.center.distanceTo(C2.center).value
+
+			// Get the relative position of the circles
+			let position = ""
+			if (d === 0) {
+				if (r1 === r2) {
+					position = "superposés"
+				} else {
+					position = "concentriques"
+				}
+			} else {
+				if (r1 + r2 === d) {
+					position = "tangents externes"
+				} else if (Math.abs(r1 - r2) === d) {
+					position = "tangents internes"
+				} else if (r1 + r2 > d && Math.abs(r1 - r2) < d) {
+					position = "sécants"
+				} else {
+					position = "disjoints"
+				}
+			}
 
 			return {
 				C1: C1.tex,
 				C2: C2.tex,
 				O1: C1.center.tex,
 				O2: C2.center.tex,
-				r1: C1.radius.value,
-				r2: C2.radius.value,
-				distance: `\\delta(O_1;O_2) = ${
-					C1.center.distanceTo(C2.center).tex
-				}`,
-				position: "",
+				r1,
+				r2,
+				distance: `\\delta(O_1;O_2) = ${C1.center.distanceTo(C2.center).tex}`,
+				position,
+				draw: {
+					parameters: `axis,grid,x=${Math.min(C1.center.x.value - r1, C2.center.x.value - r2) - 1}:${
+						Math.max(C1.center.x.value + r1, C2.center.x.value + r2) + 1
+					},y=${Math.min(C1.center.y.value - r1, C2.center.y.value - C2.radius.value) - 1}:${
+						Math.max(C1.center.y.value + r1, C2.center.y.value + r2) + 1
+					}`,
+					code: [
+						`P1(${C1.center.x.value},${C1.center.y.value})`,
+						`P2(${C2.center.x.value},${C2.center.y.value})`,
+						`c1=circ P1,${r1}`,
+						`c2=circ P2,${r2}`,
+					].join("\n"),
+				},
 			}
 		} catch (e) {
 			console.error(e)
 			return false
 		}
 	})
-
 	// Generate two points at random distance
 	function getTriple(allowZero = false): number[] {
 		let triple: number[][] = [],
@@ -68,10 +99,7 @@
 		const P1 = PiMath.Random.Geometry.point(),
 			triple = getTriple(allowZero)
 
-		const P2 = new PiMath.Geometry.Point(
-			P1.x.value + triple[0],
-			P1.y.value + triple[1],
-		)
+		const P2 = new PiMath.Geometry.Point(P1.x.value + triple[0], P1.y.value + triple[1])
 
 		return { P1, P2, triple }
 	}
@@ -84,6 +112,7 @@
 		"disjoints",
 		"superposés",
 	]
+
 	// Generate random circles
 	function generateCircles() {
 		let { P1, P2, triple } = generatePoints()
@@ -123,15 +152,9 @@
 					}
 				}
 				if (r1 > d) {
-					r2 =
-						r1 -
-						d -
-						PiMath.Random.number(1, Math.min(10, r1 - d - 1))
+					r2 = r1 - d - PiMath.Random.number(1, Math.min(10, r1 - d - 1))
 				} else {
-					r2 =
-						d -
-						r1 -
-						PiMath.Random.number(1, Math.min(10, d - r1 - 1))
+					r2 = d - r1 - PiMath.Random.number(1, Math.min(10, d - r1 - 1))
 				}
 
 				break
@@ -149,21 +172,6 @@
 
 		circle1.value = new PiMath.Geometry.Circle(P1, r1).display
 		circle2.value = new PiMath.Geometry.Circle(P2, r2).display
-		position.value = pos
-
-		draw.value = {
-			parameters: `axis,grid,x=${
-				Math.min(P1.x.value - r1, P2.x.value - r2) - 1
-			}:${Math.max(P1.x.value + r1, P2.x.value + r2) + 1},y=${
-				Math.min(P1.y.value - r1, P2.y.value - r2) - 1
-			}:${Math.max(P1.y.value + r1, P2.y.value + r2) + 1}`,
-			code: [
-				`P1(${P1.x.value},${P1.y.value})`,
-				`P2(${P2.x.value},${P2.y.value})`,
-				`c1=circ P1,${r1}`,
-				`c2=circ P2,${r2}`,
-			].join("\n"),
-		}
 	}
 
 	onMounted(() => {
@@ -175,49 +183,32 @@
 	<div>
 		<div class="grid grid-cols-2 gap-3">
 			<div>
-				<form-wrapper font-code type="text" v-model="circle1" focus />
+				<form-wrapper v-model="circle1" focus font-code type="text" />
 
-				<form-wrapper font-code type="text" v-model="circle2" focus />
+				<form-wrapper v-model="circle2" focus font-code type="text" />
 
 				<div class="text-center mt-3 mb-5">
-					<button class="btn btn-primary" @click="generateCircles">
-						Générer
-					</button>
+					<button class="btn btn-primary" @click="generateCircles">Générer</button>
 				</div>
 
 				<div v-if="result">
-					<div
-						v-katex.display.boxed.lg="`(\\Gamma_1): ${result.C1}`"
-					/>
-					<div
-						v-katex.display.boxed="
-							`O_1=${result.O1}\\quad r_1 = ${result.r1}`
-						"
-					></div>
-					<div
-						class="mt-10"
-						v-katex.display.boxed.lg="`(\\Gamma_2): ${result.C2}`"
-					/>
-					<div
-						v-katex.display.boxed="
-							`O_2=${result.O2}\\quad r_2 = ${result.r2}`
-						"
-					></div>
+					<div v-katex.display.boxed.lg="`(\\Gamma_1): ${result.C1}`" />
+					<div v-katex.display.boxed="`O_1=${result.O1}\\quad r_1 = ${result.r1}`"></div>
+					<div v-katex.display.boxed.lg="`(\\Gamma_2): ${result.C2}`" class="mt-10" />
+					<div v-katex.display.boxed="`O_2=${result.O2}\\quad r_2 = ${result.r2}`"></div>
 				</div>
 			</div>
 
-			<div class="flex flex-col gap-3" v-if="result">
+			<div v-if="result" class="flex flex-col gap-3">
 				<div v-katex.display.boxed="result.distance"></div>
 				<div>
 					Les deux cercles sont
-					<span class="font-semibold text-lg">{{ position }}</span
+					<span class="font-semibold text-lg">{{ result.position }}</span
 					>.
 				</div>
-				<pi-draw-parser :draw="draw" />
+				<pi-draw-parser :draw="result.draw" />
 			</div>
-			<div v-else class="text-red-700 text-sm">
-				Une erreur s'est produite avec vos données.
-			</div>
+			<div v-else class="text-red-700 text-sm">Une erreur s'est produite avec vos données.</div>
 		</div>
 	</div>
 </template>

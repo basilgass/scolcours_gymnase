@@ -22,31 +22,19 @@ const flattenColorPalette = (obj, sep = "-") =>
 	Object.assign(
 		{},
 		...(function _flatten(o, p = "") {
-			return [].concat(
-				...Object.keys(o).map((k) =>
-					typeof o[k] === "object"
-						? _flatten(o[k], k + sep)
-						: { [p + k]: o[k] },
-				),
-			)
+			return [].concat(...Object.keys(o).map((k) => (typeof o[k] === "object" ? _flatten(o[k], k + sep) : { [p + k]: o[k] })))
 		})(obj),
 	)
 
 /** @type {import('tailwindcss').Config} */
 export default {
-	content: [
-		"./vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php",
-		"./storage/framework/views/*.php",
-		"./resources/views/**/*.blade.php",
-		"./resources/js/**/*.vue",
-		"./resources/css/**/*.css",
-		"./resources/js/*.js",
-		"./resources/js/*.ts",
-		"./tailwind-theme.js",
-	],
+	content: ["./vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php", "./storage/framework/views/*.php", "./resources/views/**/*.blade.php", "./resources/js/**/*.vue", "./resources/css/**/*.css", "./resources/js/*.js", "./resources/js/*.ts", "./tailwind-theme.js"],
 	safelist: [
 		{
 			pattern: /bg-(red|green|blue|amber)-(500|600)/,
+		},
+		{
+			pattern: /border-(red|green|blue|amber)-(500|600)/,
 		},
 		{
 			pattern: /text-(red|green|blue|amber)-(500|600)/,
@@ -101,14 +89,7 @@ export default {
 		opacity: ["responsive", "hover", "focus", "disabled"],
 		borderWidth: ["responsive", "hover", "focus", "disabled"],
 		borderColor: ["responsive", "hover", "focus", "focus-within"],
-		backgroundColor: [
-			"even",
-			"odd",
-			"hover",
-			"focus",
-			"responsive",
-			"active",
-		],
+		backgroundColor: ["even", "odd", "hover", "focus", "responsive", "active"],
 		padding: ["hover", "responsive"],
 		textShadow: ["hover"],
 		fontWeight: ["hover", "focus"],
@@ -118,8 +99,7 @@ export default {
 		function ({ addUtilities, theme }) {
 			const utilities = {
 				".bg-stripes": {
-					backgroundImage:
-						"linear-gradient(45deg, var(--stripes-color) 12.50%, transparent 12.50%, transparent 50%, var(--stripes-color) 50%, var(--stripes-color) 62.50%, transparent 62.50%, transparent 100%)",
+					backgroundImage: "linear-gradient(45deg, var(--stripes-color) 12.50%, transparent 12.50%, transparent 50%, var(--stripes-color) 50%, var(--stripes-color) 62.50%, transparent 62.50%, transparent 100%)",
 					backgroundSize: "5.66px 5.66px",
 				},
 			}

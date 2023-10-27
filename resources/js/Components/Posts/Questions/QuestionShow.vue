@@ -6,14 +6,7 @@ keyboard -> QuestionUserInput -> QuestionShow
 <script setup>
 	import IllustrationShow from "@/Components/Posts/Illustrations/IllustrationShow.vue"
 	import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
-	import {
-		computed,
-		defineAsyncComponent,
-		inject,
-		nextTick,
-		reactive,
-		ref,
-	} from "vue"
+	import { computed, defineAsyncComponent, inject, nextTick, reactive, ref } from "vue"
 	import KeyboardValidateButton from "@/Components/Keyboards/KeyboardValidateButton.vue"
 	import { usePage } from "@inertiajs/vue3"
 	import { useWrongAnswerAnimation } from "@/Composables/useHelpers"
@@ -31,6 +24,7 @@ keyboard -> QuestionUserInput -> QuestionShow
 		isMinimal: { type: Boolean, default: false },
 		singleAnswer: { type: Boolean, default: false },
 		groupeIds: { type: Array, default: () => [] },
+		locked: { type: Boolean, default: false },
 	})
 
 	// flash message
@@ -57,10 +51,7 @@ keyboard -> QuestionUserInput -> QuestionShow
 				}
 
 				let key = theAnswers.value[i].key,
-					rawColor =
-						i === answerId.value
-							? "border-blue-600 bg-blue-100"
-							: "border-red-600 bg-red-100",
+					rawColor = i === answerId.value ? "border-blue-600 bg-blue-100" : "border-red-600 bg-red-100",
 					texColor = i === answerId.value ? "cornflowerblue" : "red"
 
 				// S'il manque une valeur, on l'ajoute automatiquement à la fin.
@@ -72,18 +63,12 @@ keyboard -> QuestionUserInput -> QuestionShow
 				// TODO: rajouter des couleurs en fonctions de la bonne réponse ou non ?
 
 				// On supprime les clés sans mise en forme.
-				body = body.replaceAll(
-					"\n@" + key.toUpperCase(),
-					"\n@" + key.toUpperCase() + "\n",
-				)
+				body = body.replaceAll("\n@" + key.toUpperCase(), "\n@" + key.toUpperCase() + "\n")
 
 				// Mise en forme dans le cas d'un texte de type bloc
 				body = body.replaceAll(
 					"\n" + key.toUpperCase(),
-					"\n" +
-						key.toUpperCase() +
-						"\n" +
-						`{.border .px-3 .py-1 .${rawColor}}`,
+					"\n" + key.toUpperCase() + "\n" + `{.border .px-3 .py-1 .${rawColor}}`,
 				)
 
 				// Mise en forme dans le cas d'un texte "en ligne"
@@ -93,16 +78,10 @@ keyboard -> QuestionUserInput -> QuestionShow
 				)
 
 				// Mise en forme pour des textes mathématiques
-				body = body.replaceAll(
-					key.toLowerCase(),
-					`\\textcolor{${texColor}}{ ${key.toLowerCase()} }`,
-				)
+				body = body.replaceAll(key.toLowerCase(), `\\textcolor{${texColor}}{ ${key.toLowerCase()} }`)
 
 				// on supprime les valeurs de type @$ qui sont sans mise en forme.
-				body = body.replaceAll(
-					"@" + key.toUpperCase(),
-					key.toUpperCase(),
-				)
+				body = body.replaceAll("@" + key.toUpperCase(), key.toUpperCase())
 
 				// On peut avoir tex, raw, input
 				if (userAnswers.value[i].value === undefined) {
@@ -110,34 +89,26 @@ keyboard -> QuestionUserInput -> QuestionShow
 					body = body.replaceAll(key.toLowerCase(), "<\\ ? >")
 				} else {
 					// Raw output
-					if (
-						userAnswers.value[i].value.raw === undefined ||
-						userAnswers.value[i].value.raw === ""
-					) {
+					if (userAnswers.value[i].value.raw === undefined || userAnswers.value[i].value.raw === "") {
 						body = body.replaceAll(key.toUpperCase(), "< ?? >")
 					} else {
-						body = body.replaceAll(
-							key.toUpperCase(),
-							userAnswers.value[i].value.raw,
-						)
+						body = body.replaceAll(key.toUpperCase(), userAnswers.value[i].value.raw)
 					}
 
 					// TeX output
-					if (
-						userAnswers.value[i].value.tex === undefined ||
-						userAnswers.value[i].value.tex === ""
-					) {
+					if (userAnswers.value[i].value.tex === undefined || userAnswers.value[i].value.tex === "") {
 						body = body.replaceAll(key.toLowerCase(), "<\\ ? >")
 					} else {
-						body = body.replaceAll(
-							key.toLowerCase(),
-							userAnswers.value[i].value.tex,
-						)
+						body = body.replaceAll(key.toLowerCase(), userAnswers.value[i].value.tex)
 					}
 				}
 			}
 
 			return body
+		}),
+		theQuestionLocked = computed(() => {
+			//v-if="locked && !editMode.enabled.value"
+			return props.locked && !editMode.enabled.value
 		})
 
 	// Gestion des réponses
@@ -153,22 +124,17 @@ keyboard -> QuestionUserInput -> QuestionShow
 			let kbrd = theAnswers.value[answerId.value].keyboard
 
 			if (kbrd.name === "Basic") {
-				let customOutput = theAnswers.value[
-					answerId.value
-				].keyboard.parameters.filter((x) => x.startsWith("format:"))[0]
+				let customOutput = theAnswers.value[answerId.value].keyboard.parameters.filter((x) =>
+					x.startsWith("format:"),
+				)[0]
 
-				return (
-					customOutput ??
-					theAnswers.value[answerId.value].keyboard.checker.format
-				)
+				return customOutput ?? theAnswers.value[answerId.value].keyboard.checker.format
 			}
 
 			return ""
 		}),
 		// Nombre de réponses totales
-		answersNumber = computed(
-			() => theQuestion.answer.split("\n").filter((x) => x !== "").length,
-		),
+		answersNumber = computed(() => theQuestion.answer.split("\n").filter((x) => x !== "").length),
 		// liste des lettres, dans l'ordre.
 		answersKeys = computed(() => {
 			return "abcdefghijklmnopqrstuvwxyz".split("").map((x) => `$${x}`)
@@ -232,11 +198,7 @@ keyboard -> QuestionUserInput -> QuestionShow
 		checkUserAnswers = function () {
 			// On contrôle que la table des réponses est correctement initialisée
 			if (userAnswers.value.length < answersNumber.value) {
-				for (
-					let i = userAnswers.value.length;
-					i < answersNumber.value;
-					i++
-				) {
+				for (let i = userAnswers.value.length; i < answersNumber.value; i++) {
 					userAnswers.value.push({
 						value: { input: "", tex: "", raw: "" },
 						validation: {
@@ -273,11 +235,7 @@ keyboard -> QuestionUserInput -> QuestionShow
 
 				if (!result) {
 					if (userAnswers.value.length > 1) {
-						stack.push(
-							`${i + 1}: ${
-								userAnswers.value[i].validation.message
-							}`,
-						)
+						stack.push(`${i + 1}: ${userAnswers.value[i].validation.message}`)
 					} else {
 						stack.push(userAnswers.value[i].validation.message)
 					}
@@ -319,9 +277,7 @@ keyboard -> QuestionUserInput -> QuestionShow
 						...event,
 					})
 					.catch((res) => {
-						console.warn(
-							"Il y a une erreur lors du chargement de la réponse.",
-						)
+						console.warn("Il y a une erreur lors du chargement de la réponse.")
 						console.warn(res.response.data.message)
 					})
 					.then(() => {
@@ -340,34 +296,23 @@ keyboard -> QuestionUserInput -> QuestionShow
 	let editMode = inject("editMode", { enabled: false }),
 		showEditForm = ref(false),
 		editForm = computed(() => {
-			return defineAsyncComponent(() =>
-				import("@/Components/Posts/Questions/QuestionForm.vue"),
-			)
+			return defineAsyncComponent(() => import("@/Components/Posts/Questions/QuestionForm.vue"))
 		}),
 		duplicateQuestion = function () {
-			axios
-				.post(route("questions.duplicate", [theQuestion.id]))
-				.then((res) => {
-					emits("duplicate", res.data.data)
-					flash.success("la question a bien été dupliquée !")
-				})
+			axios.post(route("questions.duplicate", [theQuestion.id])).then((res) => {
+				emits("duplicate", res.data.data)
+				flash.success("la question a bien été dupliquée !")
+			})
 		},
 		addIllustration = function () {
 			if (!theQuestion.block.illustration) {
 				// Create a new illustration
-				axios
-					.post(
-						route("blocks.illustrations.store", [
-							theQuestion.block.id,
-						]),
-						{},
-					)
-					.then((res) => {
-						res.data.isNew = true
-						theQuestion.block.illustration = res.data
+				axios.post(route("blocks.illustrations.store", [theQuestion.block.id]), {}).then((res) => {
+					res.data.isNew = true
+					theQuestion.block.illustration = res.data
 
-						flash.success("une nouvelle illustration a été créée")
-					})
+					flash.success("une nouvelle illustration a été créée")
+				})
 			}
 		}
 
@@ -407,9 +352,7 @@ keyboard -> QuestionUserInput -> QuestionShow
 					},
 				)
 				.then(() => {
-					flash.success(
-						"Modification de la condition d'apparition réussi",
-					)
+					flash.success("Modification de la condition d'apparition réussi")
 				})
 				.catch(() => {
 					flash.error("Modification de la condition échouée.")
@@ -422,12 +365,19 @@ keyboard -> QuestionUserInput -> QuestionShow
 		:id="`question-${theQuestion.id}`"
 		:class="{
 			'rounded border h-full': !props.isMinimal,
-			'bg-gray-50 border-gray-200':
-				!theQuestion.user.result && !props.isMinimal,
-			'bg-green-50 border-green-600/60':
-				theQuestion.user.result && !props.isMinimal,
+			'bg-gray-50 border-gray-200': !theQuestion.user.result && !props.isMinimal,
+			'bg-green-50 border-green-600/60': theQuestion.user.result && !props.isMinimal,
 		}"
+		class="relative"
 	>
+		<transition name="fade">
+			<div
+				v-if="theQuestionLocked"
+				class="w-full h-full font-extralight text-lg min-h-[5em] px-5 absolute inset-0 bg-gradient-to-b from-gray-100 to-gray-50 z-10 grid text-center place-items-center"
+			>
+				<i class="bi bi-question-lg text-8xl text-gray-300" />
+			</div>
+		</transition>
 		<!-- Header -->
 		<header class="flex flex-col relative">
 			<!-- QUESTION NUMBER -->
@@ -436,7 +386,8 @@ keyboard -> QuestionUserInput -> QuestionShow
 				:class="{
 					'draggable-handle cursor-move': $page.props.auth.can.admin,
 				}"
-				class="absolute left-1 -top-4 rounded-full bg-white border w-8 h-8 text-xs flex justify-center items-center draggable-handle"
+				class="z-10 font-semibold font-code absolute left-1 -top-4 rounded-full border w-8 h-8 grid place-items-center draggable-handle"
+				v-theme.bg.text="!theQuestionLocked"
 			>
 				{{ theQuestion.order }}
 			</div>
@@ -448,28 +399,20 @@ keyboard -> QuestionUserInput -> QuestionShow
 				v-admin
 				class="flex justify-end w-full px-3 gap-3 py-2 bg-slate-600 text-white rounded-t"
 			>
-				<button
-					class="text-xs font-code"
-					title="editer"
-					@click="showEditForm = true"
-				>
+				<button class="text-xs font-code" title="editer" @click="showEditForm = true">
 					id: {{ theQuestion.id }} <i class="bi bi-pencil ml-2" />
 				</button>
 
 				<div class="cursor-pointer">
 					<dropdown-menu prevent-close>
-						<template #button>
-							<i class="bi bi-eye" /> {{ theQuestion.displayIf }}
-						</template>
+						<template #button><i class="bi bi-eye" /> {{ theQuestion.displayIf }}</template>
 
 						<div
 							v-for="q in props.groupeIds"
 							:key="`display-if-${q}`"
 							class="hover:bg-gray-100 px-3 py-2 font-code"
 						>
-							<div v-if="q === theQuestion.id">
-								- question courante -
-							</div>
+							<div v-if="q === theQuestion.id">- question courante -</div>
 							<div v-else>
 								<label class="block">
 									<input
@@ -483,21 +426,12 @@ keyboard -> QuestionUserInput -> QuestionShow
 						</div>
 
 						<template #footer>
-							<button
-								class="px-3 py-2"
-								@click="toggleDisplayId(-1)"
-							>
-								toujours
-							</button>
+							<button class="px-3 py-2" @click="toggleDisplayId(-1)">toujours</button>
 						</template>
 					</dropdown-menu>
 				</div>
 
-				<button
-					class="text-xs px-2"
-					title="dupliquer"
-					@click="duplicateQuestion"
-				>
+				<button class="text-xs px-2" title="dupliquer" @click="duplicateQuestion">
 					<i class="bi bi-clipboard-plus" />
 				</button>
 
@@ -542,11 +476,7 @@ keyboard -> QuestionUserInput -> QuestionShow
 			>
 				<i class="bi bi-calculator mr-2" />donner la réponse
 			</button>
-			<button
-				v-else
-				class="text-red-600"
-				@click="showUserInput = !showUserInput"
-			>
+			<button v-else class="text-red-600" @click="showUserInput = !showUserInput">
 				fermer <i class="bi bi-x-lg ml-2" />
 			</button>
 		</div>
@@ -566,9 +496,7 @@ keyboard -> QuestionUserInput -> QuestionShow
 			</div>
 
 			<!-- Answer selector -->
-			<div
-				class="question-answer-selector flex justify-between items-center my-5"
-			>
+			<div class="question-answer-selector flex justify-between items-center my-5">
 				<button
 					v-theme.bg.hover
 					:class="answerId === 0 ? 'invisible' : ``"
@@ -577,11 +505,7 @@ keyboard -> QuestionUserInput -> QuestionShow
 				>
 					<i class="bi-chevron-left" />
 				</button>
-				<div
-					v-if="answerFormat"
-					v-katex.auto="answerFormat"
-					class="text-center text-xs text-gray-400"
-				/>
+				<div v-if="answerFormat" v-katex.auto="answerFormat" class="text-center text-xs text-gray-400" />
 				<button
 					v-theme.bg.hover
 					:class="answerId === answersNumber - 1 ? 'invisible' : ``"
@@ -594,10 +518,7 @@ keyboard -> QuestionUserInput -> QuestionShow
 
 			<component
 				:is="theAnswers[answerId].keyboard.component"
-				v-if="
-					theAnswers[answerId] &&
-					theAnswers[answerId].keyboard.name !== ''
-				"
+				v-if="theAnswers[answerId] && theAnswers[answerId].keyboard.name !== ''"
 				:key="answerId"
 				ref="keyboardUI"
 				:answer="theAnswers[answerId].answer"
@@ -613,22 +534,11 @@ keyboard -> QuestionUserInput -> QuestionShow
 			class="question-footer mt-5 border-t border-gray-200 px-5 py-2"
 		>
 			<div>
-				<button
-					v-if="!showAnswer"
-					class="text-xs text-gray-400 w-full"
-					@click="loadAnswer()"
-				>
+				<button v-if="!showAnswer" class="text-xs text-gray-400 w-full" @click="loadAnswer()">
 					<i class="bi bi-eye mr-2" />voir la réponse
 				</button>
-				<div
-					v-else
-					class="cursor-pointer overflow-x-auto scrollbar-scolcours"
-					@click="loadAnswer(null)"
-				>
-					<div
-						class="text-xs text-center ml-3 font-code font-xs"
-						v-text="theQuestion.answer"
-					/>
+				<div v-else class="cursor-pointer overflow-x-auto scrollbar-scolcours" @click="loadAnswer(null)">
+					<div class="text-xs text-center ml-3 font-code font-xs" v-text="theQuestion.answer" />
 				</div>
 			</div>
 		</div>
