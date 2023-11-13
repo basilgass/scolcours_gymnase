@@ -1,0 +1,41 @@
+import{_ as r}from"./PiDrawParser.vue_vue_type_script_setup_true_lang-2d752f38.js";import{aF as t,J as e,W as c}from"./@vue-d8807e25.js";import"./pidraw-92edb091.js";import"./@svgdotjs-404fd87d.js";import"./vue-slider-component-dd3b06f9.js";import"./vue-603f1dfa.js";import"./pimath-7d48ec27.js";import"./katex-cd867a54.js";import"./@vueuse-defff74c.js";const i={class:"bg-white max-w-3xl mx-auto"},s=`O(0,0)
+c=circ O,10
+P0(10,0)
+P1(8.67,5)->tex:\\frac{\\pi}{6}/mr/0.5:0
+P2(7.07,7.07)->tex:\\frac{\\pi}{4}/mr/0.5:0.4
+P3(5,8.67)->tex:\\frac{\\pi}{3}/tr/0.5:0
+P4(0,10)->tex:\\frac{\\pi}{2}/tl/-0.5:0.2
+P7(-8.67,5)->tex:\\frac{5\\pi}{6}/ml/-0.5:0
+P6(-7.07,7.07)->tex:\\frac{3\\pi}{4}/ml/-0.5:0.4
+P5(-5,8.67)->tex:\\frac{2\\pi}{3}/tl/-0.5:0
+P8(-10,0)->tex:\\frac{3\\pi}{2}/tl/-0.5:0.3
+P9(8.67,-5)->tex:\\frac{11\\pi}{6}/mr/0.5:0
+P10(7.07,-7.07)->tex:\\frac{7\\pi}{4}/br/0.5:0
+P311(5,-8.67)->tex:\\frac{5\\pi}{3}/br/0.5:0
+P12(0,-10)->tex:\\frac{3\\pi}{2}/bl/-0.5:-0.3
+P13(-8.67,-5)->tex:\\frac{7\\pi}{6}/ml/-0.5:0
+P14(-7.07,-7.07)->tex:\\frac{5\\pi}{4}/bl/-0.5:0
+P15(-5,-8.67)->tex:\\frac{4\\pi}{3}/bl/-0.5:0
+T1(5,0)->tex:\\scriptsize\\frac{1}{2}/cb/0:-0.5
+T2(7.07,0)->tex:\\scriptsize\\frac{\\sqrt{2}}{2}/cb/0:-0.5
+T3(8.6,0)->tex:\\scriptsize\\frac{\\sqrt{3}}{2}/cb/0:-0.5
+T4(10,0)->tex:\\scriptsize 1/rb/0.4:0
+T5(0,5)->tex:\\scriptsize\\frac{1}{2}/rm/0.5:0
+T6(0,7.07)->tex:\\scriptsize\\frac{\\sqrt{2}}{2}/rm/0.5:0
+T7(0,8.6)->tex:\\scriptsize\\frac{\\sqrt{3}}{2}/rm/0.5:0
+T9(0,10)->tex:\\scriptsize 1/rt/0.5:0
+T11(-5,0)->tex:\\scriptsize-\\frac{1}{2}/cb/0:-0.5
+T12(-7.07,0)->tex:\\scriptsize-\\frac{\\sqrt{2}}{2}/cb/0:-0.5
+T13(-8.6,0)->tex:\\scriptsize-\\frac{\\sqrt{3}}{2}/cb/0:-0.5
+T14(-10,0)->tex:\\scriptsize -1/lb/-0.4:0
+T15(0,-5)->tex:\\scriptsize-\\frac{1}{2}/rm/0.5:0
+T16(0,-7.07)->tex:\\scriptsize-\\frac{\\sqrt{2}}{2}/rm/0.5:0
+T17(0,-8.6)->tex:\\scriptsize-\\frac{\\sqrt{3}}{2}/rm/0.5:0
+T19(0,-10)->tex:\\scriptsize -1/rb/0.5:0
+P(7.07,7.07)->drag:c
+C(P.x,0)->hide
+S(0,P.y)->hide
+c=PC.->dash
+s=PS.->dash
+p=PO.
+a=arc P0,O,P->tex:\\theta`,a="axis,x=-12:12,y=-13:13,nolabel",_={__name:"cercle-trigonometrique",setup(p){return(x,f)=>(t(),e("div",i,[c(r,{draw:{code:s,parameters:a}},null,8,["draw"])]))}};export{_ as default};

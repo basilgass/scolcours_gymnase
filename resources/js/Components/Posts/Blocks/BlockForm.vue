@@ -4,17 +4,16 @@ Formulaire d'édition d'un bloc
 <script setup>
 	import FormTextarea from "@/Components/Form/FormTextarea.vue"
 	import FormSwitch from "@/Components/Form/FormSwitch.vue"
-	import { computed, inject, ref } from "vue"
+	import { ref } from "vue"
 	import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 	import DialogModal from "@/Components/Ui/DialogModal.vue"
 	import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
-	import { PiMath } from "pimath/esm"
-	import { useFormattedBody } from "@/Composables/useHelpers"
 	import { blockTypes } from "@/scolcours"
-	import Button from "@/Components/Auth/Button.vue"
 	import FormCodearea from "@/Components/Form/FormCodearea.vue"
 	import MoveItemTo from "@/Components/Posts/MoveItemTo.vue"
 	import FormWrapper from "@/Components/Form/FormWrapper.vue"
+	import { useBlock } from "@/Components/Posts/Blocks/useBlock"
+	import BlockBodyButtons from "@/Components/Posts/Blocks/BlockBodyButtons.vue"
 
 	const emits = defineEmits(["update:modelValue", "change", "destroy"])
 	const props = defineProps({
@@ -34,34 +33,9 @@ Formulaire d'édition d'un bloc
 
 	let show = ref(props.modelValue),
 		theBlock = ref(props.block),
-		switchEnable = ref(props.block.switch !== null),
-		tab = ref(1)
+		switchEnable = ref(props.block.switch !== null)
 
-	let random = ref(1),
-		postData = inject("postData", {}),
-		blockData = computed(() => {
-			try {
-				if (props.block.script !== null && random.value > 0) {
-					let F = new Function(
-						"PiMath",
-						"postData",
-						"iteration",
-						props.block.script,
-					)
-					return {
-						...postData.value,
-						...F(PiMath, postData.value, random.value),
-					}
-				}
-			} catch (e) {
-				console.warn("Block form (script)", e)
-			}
-
-			return { ...postData.value }
-		}),
-		blockBody = computed(() => {
-			return useFormattedBody(props.block.body, blockData)
-		})
+	const { blockBody, blockButtons, random } = useBlock(theBlock)
 
 	let updateSwitchEnable = function () {
 		if (switchEnable.value) {
@@ -270,22 +244,11 @@ Formulaire d'édition d'un bloc
 					</div>
 
 					<div v-if="!props.noPreview" class="pt-8 pb-3 px-3">
-						<div class="flex gap-3">
-							<button
-								v-if="theBlock.script"
-								class="btn btn-xs"
-								@click="random++"
-							>
-								aléatoire
-							</button>
-
-							<button
-								v-if="blockData.reset"
-								class="btn btn-xs"
-								@click="random = 1"
-							>
-								Reset
-							</button>
+						<div class="w-full flex justify-end gap-3 mb-2">
+							<BlockBodyButtons
+								:buttons="blockButtons"
+								v-model="random"
+							/>
 						</div>
 
 						<markdown-it

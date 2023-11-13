@@ -4,6 +4,7 @@ export interface ChapterInterface {
 	id: number
 	slug: string
 	title: string
+	meta_title: string
 	block: BlockInterface
 	active: boolean
 	updated_at: string
@@ -30,6 +31,7 @@ export interface BlockInterface {
 	title: string
 	body: string
 	template: string
+	illustrationsGrid: string
 	illustrations: IllustrationInterface[]
 	script: string
 	json: string

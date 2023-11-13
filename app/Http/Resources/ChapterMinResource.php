@@ -22,6 +22,7 @@ class ChapterMinResource extends JsonResource
 			'theme_id'=>$this->theme->id,
 			'slug' => $this->slug,
 			'title' => $this->title,
+			'meta_title' => $this->meta_title,
 		];
 	}
 }

@@ -18,6 +18,7 @@ use Illuminate\Support\Carbon;
  * @property string|null $body
  * @property string $type
  * @property string|null $template
+ * @property string|null $illustrationsGrid
  * @property string|null $script
  * @property int|null $switch
  * @property string|null $json
@@ -38,6 +39,7 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Block whereBody($value)
  * @method static Builder|Block whereCreatedAt($value)
  * @method static Builder|Block whereId($value)
+ * @method static Builder|Block whereIllustrationsGrid($value)
  * @method static Builder|Block whereJson($value)
  * @method static Builder|Block whereOrder($value)
  * @method static Builder|Block whereScript($value)

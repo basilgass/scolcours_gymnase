@@ -1,10 +1,9 @@
 <!--
-Affichage de la tablea des matières.
-// TODO: ajouter des filtres (que les exercices, n'afficher que le courant -2 et +2 ?
+Affichage de la table des matières.
 -->
 
 <script setup>
-	import { inject, ref } from "vue"
+	import { computed, inject, ref } from "vue"
 	import FormSwitch from "@/Components/Form/FormSwitch.vue"
 	import { router } from "@inertiajs/vue3"
 
@@ -66,6 +65,18 @@ Affichage de la tablea des matières.
 				})
 				.catch((err) => console.warn(err))
 		}
+
+	const questionStatus = computed(() => {
+		let result = {}
+		props.chapter.posts.forEach((p) => {
+			result[p.id] =
+				p.questions.length > 0
+					? p.questions.filter((q) => q.user.result).length ===
+					  p.questions.length
+					: null
+		})
+		return result
+	})
 </script>
 <template>
 	<div v-if="props.chapter.posts" class="my-5">
@@ -146,7 +157,7 @@ Affichage de la tablea des matières.
 								element.order,
 							])
 						"
-						class="block text-left hover:pl-5 transition-all duration"
+						class="block text-left hover:pl-5 transition-all duration flex gap-1"
 					>
 						<i
 							:class="{
@@ -154,7 +165,20 @@ Affichage de la tablea des matières.
 								'bi bi-text-paragraph': !element.type,
 							}"
 						/>
-						<span v-katex.auto="element.title" class="ml-2" />
+
+						<i
+							class="mx-2"
+							:class="{
+								'bi bi-check-circle-fill text-green-500':
+									questionStatus[element.id],
+								'bi bi-check-circle text-gray-300':
+									questionStatus[element.id] === false,
+								'bi bi-check-circle text-gray-300 invisible':
+									questionStatus[element.id] === null,
+							}"
+						></i>
+
+						<span v-katex.auto="element.title" />
 					</Link>
 				</div>
 			</template>

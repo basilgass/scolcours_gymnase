@@ -241,4 +241,17 @@ class BlockController extends Controller
 			'label'=>$post->title,
 		];
 	}
+
+	public function updateIllustrationsGrid(Block $block, Request $request)
+	{
+		$validate = $request->validate([
+			'grid' => ['string', 'nullable']
+		]);
+
+		$block->update([
+			'illustrationsGrid' => $validate['grid'] ?? $validate['grid']
+		]);
+		$block->save();
+		return true;
+	}
 }

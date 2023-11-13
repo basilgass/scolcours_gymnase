@@ -40,6 +40,8 @@ Route::middleware('can:admin')->group(function(){
 		->name('blocks.illustrations.order');
 	Route::post('image', [IllustrationController::class, "upload"])
 		->name('images.upload');
+	Route::patch('blocks/{block}/updateIllustrationsGrid', [BlockController::class, 'updateIllustrationsGrid'])
+		->name('blocks.updateIllustrationsGrid');
 
 	Route::patch('blocks/{block}/moveTo/post/{post}', [BlockController::class, 'moveBlockToPost'])->name('blocks.moveTo.post');
 	Route::patch('post/{post}/moveTo/chapter/{chapter}', [PostController::class, 'movePostToChapter'])->name('posts.moveTo.chapter');

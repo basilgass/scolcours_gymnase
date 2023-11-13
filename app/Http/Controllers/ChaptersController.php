@@ -7,7 +7,6 @@ use App\Http\Resources\ChapterMinResource;
 use App\Http\Resources\ChapterResource;
 use App\Http\Resources\ChapterShowResource;
 use App\Http\Resources\PostResource;
-use App\Http\Resources\QuestionCollection;
 use App\Models\Block;
 use App\Models\Chapter;
 use App\Models\Theme;
@@ -174,10 +173,12 @@ class ChaptersController extends Controller
 	{
 		$validation = $request->validate([
 			'title' => ['required', 'min:2', 'max:255'],
+			'meta_title' => ['nullable', 'min:2', 'max:255'],
 			'slug' => ['required', 'min:1', 'max:255'],
 		]);
 
 		$chapter->title = $validation['title'];
+		$chapter->meta_title = $validation['meta_title'] ?? null;
 		$chapter->slug = $validation['slug'];
 		$chapter->save();
 
@@ -213,12 +214,6 @@ class ChaptersController extends Controller
 				'open' => ['boolean', "nullable"]
 			]);
 
-//			$question->users()->attach($user,
-//				[
-//					...$validate,
-//					"attempts"=>$attempts+1
-//				]
-//			);
 			$user->chapters()->detach($chapter->id);
 			$user->chapters()->attach(
 				$chapter,
@@ -264,21 +259,6 @@ class ChaptersController extends Controller
 
 		return BlockResource::collection($blocks);
 	}
-	// TODO: Delete this section as it has been moved to LatexController ?
-//	public function latex(Request $data)
-//	{
-//		$requestData = json_decode($data->getContent());
-//
-//		// TODO: modifier le nom du fichier - déplacer dans LatexController.php
-//		$filename = $requestData->slug . '.pdf';
-//		(new LaraTeX('latex.WhatToKnow'))->with([
-//			'title' => $requestData->title,
-//			'questions' => $requestData->questions
-//		])
-//			->savePdf(storage_path('app/public/pdf/' . $filename));
-//
-//		return $filename;
-//	}
 
 // Get basic info about chapter
 	public function info(Chapter $chapter)

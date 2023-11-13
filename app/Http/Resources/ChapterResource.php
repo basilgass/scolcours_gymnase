@@ -34,6 +34,7 @@ class ChapterResource extends JsonResource
 			'id' => $this->id,
 			'slug' => $this->slug,
 			'title' => $this->title,
+			'meta_title' => $this->meta_title,
 			'block' => BlockResource::make($this->blocks[0]),
 			'active' => $this->active,
 			'updated_at' => $this->updated_at,

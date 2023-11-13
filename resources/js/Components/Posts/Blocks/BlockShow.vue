@@ -3,36 +3,55 @@ Affichage d'un block , avec toutes les possibilités
 -->
 <script setup>
 	import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
-	import IllustrationShow from "@/Components/Posts/Illustrations/IllustrationShow.vue"
-	import { computed, defineAsyncComponent, inject, provide, ref } from "vue"
-	import { PiMath } from "pimath/esm"
-	import { useFormattedBody } from "@/Composables/useHelpers"
+	import { computed, inject, ref } from "vue"
 	import { blockTypeDefault, blockTypes } from "@/scolcours"
+	import IllustrationsIndex from "@/Components/Posts/Illustrations/IllustrationsIndex.vue"
+	import BlockEdit from "@/Components/Posts/Blocks/BlockEdit.vue"
+	import { useBlock } from "@/Components/Posts/Blocks/useBlock"
+	import BlockBodyButtons from "@/Components/Posts/Blocks/BlockBodyButtons.vue"
 
-	const emits = defineEmits(["destroy"])
-	let props = defineProps({
-			block: { type: Object, required: true },
-			switch: { type: Boolean },
-			maxIllustration: { type: Number, default: null },
-			noDelete: { type: Boolean, default: false },
-		}),
-		theBlock = ref(props.block),
-		isBlur = ref(props.block.blur),
+	// Props
+	const props = defineProps({
+		block: { type: Object, required: true },
+		switch: { type: Boolean, default: null },
+		forceShow: { type: Boolean, default: false },
+		maxIllustration: { type: Number, default: null },
+		noDelete: { type: Boolean, default: false },
+	})
+
+	// Reactive edition mode (admin only)
+	let editMode = inject("editMode")
+
+	// Reactive Refs
+	let theBlock = ref(props.block)
+
+	// Reactive GUI
+	let isBlur = ref(props.block.blur),
 		showBlock = computed(() => {
-			// if(usePage().props.auth.can.admin){return true}
+			if (props.forceShow) return true
 
-			if (theBlock.value.switch === null) {
-				return true
-			}
+			if (theBlock.value.switch === null) return true
+
 			return Boolean(theBlock.value.switch) === Boolean(props.switch)
-		}),
-		flash = inject("flash"),
-		editMode = inject("editMode")
+		})
 
+	// Block display style computed properties
 	const blockConfig = computed(() => {
 			return blockTypes[theBlock.value.type] === undefined
 				? blockTypeDefault
 				: blockTypes[theBlock.value.type]
+		}),
+		blockExtraStyle = computed(() => {
+			let extraClass = ""
+			if (editMode.enabled.value) {
+				extraClass += " border border-dashed border-gray-400"
+			}
+
+			if (blockTitle.value !== "" && theBlock.value.order > 0) {
+				extraClass += " mt-10"
+			}
+
+			return extraClass
 		}),
 		blockTitle = computed(() => {
 			return theBlock.value.title === ""
@@ -149,218 +168,43 @@ Affichage d'un block , avec toutes les possibilités
 			}
 		})
 
-	let random = ref(1),
-		postData = inject("postData", {}),
-		blockData = computed(() => {
-			try {
-				if (props.block.script !== null && random.value > 0) {
-					let F = new Function(
-						"PiMath",
-						"postData",
-						"iteration",
-						props.block.script,
-					)
-
-					return {
-						...postData.value,
-						...F(PiMath, postData.value, random.value),
-					}
-				}
-			} catch (e) {
-				console.warn("BlockShow (script generation)", e)
-			}
-
-			return { ...postData.value }
-		}),
-		blockBody = computed(() => {
-			return useFormattedBody(props.block.body, blockData)
-		}),
-		blockButtons = computed(() => {
-			let showRandom = theBlock.value.script,
-				hasCustomButtons = blockData.value.btn !== undefined
-
-			// No random buttons
-			if (!showRandom) {
-				return false
-			}
-
-			// Default values
-			let randomBtn = {
-					icon: "bi bi-shuffle",
-					text: "aléatoire",
-					show: true,
-				},
-				resetBtn = false
-
-			if (blockData.value.reset) {
-				resetBtn = {
-					icon: "bi bi-x-square",
-					text: "par défaut",
-					show: random.value > 1,
-				}
-			}
-
-			// Custom buttons
-			if (hasCustomButtons) {
-				// Random button
-				if (blockData.value.btn.random) {
-					randomBtn = {
-						icon: blockData.value.btn.random.icon ?? "",
-						text:
-							blockData.value.btn.random.text ??
-							blockData.value.btn.random,
-						show:
-							blockData.value.btn.random.show === undefined ||
-							blockData.value.btn.random.show
-								? true
-								: random.value === 1,
-					}
-				}
-
-				// Reset button
-				if (blockData.value.btn.reset) {
-					resetBtn = {
-						icon: blockData.value.btn.reset.icon ?? "",
-						text:
-							blockData.value.btn.reset.text ??
-							blockData.value.btn.reset,
-						show:
-							blockData.value.btn.reset.show ?? random.value > 1,
-					}
-				}
-			}
-
-			return {
-				random: randomBtn,
-				reset: resetBtn,
-			}
-		})
-
-	provide("blockData", blockData)
-
-	let showEditForm = ref(props.block?.isNew === true),
-		editForm = computed(() => {
-			return defineAsyncComponent(() =>
-				import("@/Components/Posts/Blocks/BlockForm.vue"),
-			)
-		}),
-		updateBlock = function (b) {
-			theBlock.value = b
-		},
-		addIllustration = function () {
-			axios
-				.post(route("blocks.illustrations.store", [props.block.id]), {})
-				.then((res) => {
-					res.data.isNew = true
-					theBlock.value.illustrations.push(res.data)
-					// edit the new illustration.
-
-					flash.success("une nouvelle illustration a été créée")
-				})
-		},
-		updateIllustrationsOrder = function () {
-			axios
-				.post(route("blocks.illustrations.order", [props.block.id]), {
-					order: theBlock.value.illustrations.map(
-						(illustration, index) => {
-							return {
-								id: illustration.id,
-								order: index + 1,
-							}
-						},
-					),
-					_method: "PATCH",
-				})
-				.then((res) => {
-					// TODO : flash message !
-					flash.success("les illustrations ont bien été réordrées !")
-				})
-				.catch((res) =>
-					console.warn("update ordering illustrations: ", res),
-				)
-		},
-		destroyIllustration = function (destroyId) {
-			theBlock.value.illustrations = theBlock.value.illustrations.filter(
-				(x) => x.id !== destroyId,
-			)
-		}
+	const { blockBody, blockButtons, random } = useBlock(theBlock)
 </script>
 
 <template>
 	<article
-		v-show="showBlock"
-		:class="blockConfig.style.body"
+		v-if="showBlock"
 		:id="`block-${props.block.id}`"
+		:class="blockConfig.style.body + blockExtraStyle"
 	>
 		<button
 			v-if="isBlur"
 			v-katex.auto.inline="blockTitle === '' ? 'afficher' : blockTitle"
-			class="w-full px-5 py-4 border-t border-b"
 			:class="`active-scolcours-${$page.props.theme.slug}`"
+			class="w-full px-5 py-4 border-t border-b"
 			@click="isBlur = false"
 		/>
 		<div v-else>
-			<!-- Block title (if exist) -->
+			<block-edit
+				v-show="editMode.enabled.value"
+				v-admin
+				:block="theBlock"
+			/>
 			<div
-				class="flex justify-between w-full px-5 py-3 mb-3 text-xl"
-				:class="blockConfig.style.header"
 				v-show="editMode.enabled.value || blockTitle || blockButtons"
+				:class="blockConfig.style.header"
+				class="flex justify-between w-full px-5 py-3 mb-3 text-xl"
 			>
-				<div>
-					<div class="flex gap-3">
-						<i v-if="blockIcon" :class="blockIcon" />
-						<h3 v-katex.auto="blockTitle" />
-					</div>
-
-					<div
-						v-show="editMode.enabled.value"
-						v-admin
-						v-theme.bg.text.admin
-						class="py-2 px-3 rounded font-code flex place-content-center"
-					>
-						<button
-							class="text-xs mr-2"
-							@click="showEditForm = true"
-						>
-							<i class="bi bi-pencil mr-2" /> éditer le paragraphe
-							(id: {{ theBlock.id }})
-						</button>
-
-						<button class="draggable-handle text-xs px-1">
-							<i class="bi bi-arrows-move" />
-						</button>
-					</div>
+				<div class="flex gap-3">
+					<i v-if="blockIcon" :class="blockIcon" />
+					<h3 v-katex.auto="blockTitle" />
 				</div>
 
 				<div class="flex items-end gap-3">
-					<div v-if="blockButtons" class="flex items-end gap-3">
-						<div v-if="blockButtons && blockButtons.reset.show">
-							<button
-								:class="`btn-scolcours-${$page.props.theme.slug} btn-xs tracking-wider d-block`"
-								@click="random = 1"
-							>
-								<i
-									v-show="blockButtons.reset.icon"
-									:class="blockButtons.reset.icon"
-									class="mr-2"
-								/>
-								<span v-katex.auto="blockButtons.reset.text" />
-							</button>
-						</div>
-
-						<button
-							v-if="blockButtons && blockButtons.random.show"
-							:class="`btn-scolcours-${$page.props.theme.slug} btn-xs tracking-wider d-block`"
-							@click="random++"
-						>
-							<i
-								v-show="blockButtons.random.icon"
-								:class="blockButtons.random.icon"
-								class="mr-2"
-							/>
-							<span v-katex.auto="blockButtons.random.text" />
-						</button>
-					</div>
+					<BlockBodyButtons
+						v-model="random"
+						:buttons="blockButtons"
+					/>
 				</div>
 			</div>
 
@@ -376,61 +220,18 @@ Affichage d'un block , avec toutes les possibilités
 				<div
 					v-if="
 						theBlock.illustrations.length > 0 ||
-						editMode.enabled.value
+							editMode.enabled.value
 					"
 					:class="blockTemplate.illustration"
 				>
-					<draggable
-						v-model="theBlock.illustrations"
-						:class="{
-							'md:grid-cols-2 xl:grid-cols-3':
-								theBlock.illustrations.length >= 2,
-							'xl:grid-cols-2':
-								theBlock.illustrations.length === 2,
-							'w-full': theBlock.illustrations.length === 1,
-						}"
-						class="grid grid-cols-1 gap-3 my-5"
-						handle=".draggable-handle"
-						item-key="id"
-						v-bind="{
-							animation: 200,
-							disabled: !$page.props.auth.can.admin,
-						}"
-						@end="updateIllustrationsOrder"
-					>
-						<template #item="{ element }">
-							<illustration-show
-								:illustration="element"
-								@destroy="destroyIllustration"
-							/>
-						</template>
-						<template #footer>
-							<button
-								v-show="editMode.enabled.value"
-								v-admin
-								class="btn-new-inline"
-								@click="addIllustration"
-							>
-								ajouter une illustration
-							</button>
-						</template>
-					</draggable>
+					<illustrations-index
+						:container-id="theBlock.id"
+						:grid="theBlock.illustrationsGrid"
+						:illustrations="theBlock.illustrations"
+						container-type="Block"
+					/>
 				</div>
 			</div>
-		</div>
-
-		<!-- Edit form -->
-		<div v-if="showEditForm" v-admin>
-			<component
-				:is="editForm"
-				v-model="showEditForm"
-				:block="theBlock"
-				:max-illustration="maxIllustration"
-				:no-delete="props.noDelete"
-				:overflow-scroll="true"
-				@change="updateBlock"
-				@destroy="emits('destroy', $event)"
-			/>
 		</div>
 	</article>
 </template>

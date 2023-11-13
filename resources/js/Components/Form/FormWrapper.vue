@@ -46,6 +46,12 @@
 		} w-full border-[1px] border-slate-200 rounded appearance-none focus:border-slate-400 focus:outline-none focus:ring-0 focus:shadow transition`
 	})
 
+	const combinedLabelClass = computed(() => {
+		return `${props.labelClass} ${
+			props.sm || !props.inlineLabel ? "text-xs" : "text-base"
+		}`
+	})
+
 	const iconPadding = computed(() => {
 		return props.withIcon ? "2.5rem" : "0.5rem"
 	})
@@ -96,7 +102,7 @@
 		<label
 			v-show="!props.labelAsPlaceholder"
 			v-katex.auto="props.label"
-			:class="labelClass"
+			:class="combinedLabelClass"
 		>
 		</label>
 		<div ref="inputWrapper" class="inputWrapper relative flex-1">
@@ -145,16 +151,8 @@
 </template>
 
 <style scoped>
-	label {
-		@apply font-semibold text-xs;
-	}
-
 	div.inlineLabel {
 		@apply flex items-center gap-3;
-	}
-
-	div.inlineLabel > label {
-		@apply text-base;
 	}
 
 	input {

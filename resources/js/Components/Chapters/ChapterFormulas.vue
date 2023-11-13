@@ -2,13 +2,22 @@
 Affichage d'un formulaire, avec la possibilité de passer d'un formulaire du thème à un autre.
 -->
 <script setup>
-	import { inject, onMounted, ref } from "vue"
+	import { inject, ref } from "vue"
 	import BlockShow from "@/Components/Posts/Blocks/BlockShow.vue"
+	import { useIntersectionObserver } from "@vueuse/core"
 
 	const props = defineProps({
 		chapterSlug: { type: String, required: true },
 		responsive: { type: Boolean, default: false },
 	})
+
+	const formular = ref(null)
+	useIntersectionObserver(formular, ([{ isIntersecting }]) => {
+		if (isIntersecting && theFormular.value.length === 0) {
+			loadFormular()
+		}
+	})
+
 	const theFormular = ref([]),
 		theSlug = ref(props.chapterSlug),
 		themeChapters = ref([]),
@@ -82,15 +91,10 @@ Affichage d'un formulaire, avec la possibilité de passer d'un formulaire du th�
 			loadingState.value = true
 			loadFormular()
 		}
-
-	// Load the formular
-	onMounted(() => {
-		loadFormular()
-	})
 </script>
 
 <template>
-	<article>
+	<article ref="formular">
 		<div class="px-5 flex justify-between">
 			<h3 class="text-xl uppercase font-extralight mb-2">Formulaires</h3>
 		</div>
