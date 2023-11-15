@@ -7,7 +7,8 @@
 	 */
 	import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"
 
-	const code = `O(0,0)
+	const code = `@begin:static
+O(0,0)
 c=circ O,10
 P0(10,0)
 P1(8.67,5)->tex:\\frac{\\pi}{6}/mr/0.5:0
@@ -41,6 +42,7 @@ T15(0,-5)->tex:\\scriptsize-\\frac{1}{2}/rm/0.5:0
 T16(0,-7.07)->tex:\\scriptsize-\\frac{\\sqrt{2}}{2}/rm/0.5:0
 T17(0,-8.6)->tex:\\scriptsize-\\frac{\\sqrt{3}}{2}/rm/0.5:0
 T19(0,-10)->tex:\\scriptsize -1/rb/0.5:0
+@end:static
 P(7.07,7.07)->drag:c
 C(P.x,0)->hide
 S(0,P.y)->hide

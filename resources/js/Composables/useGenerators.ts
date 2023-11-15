@@ -1,18 +1,47 @@
-import {unref} from "vue"
-import {GeneratorInterface} from "@/types/modelInterfaces";
+import { unref } from "vue"
+import {
+	GeneratorInterface,
+	QuestionMinInterface,
+} from "@/types/modelInterfaces"
 
+export function useGenerators(generators?: GeneratorInterface[]): {
+	generator: (level: number) => GeneratorInterface
+	code: (level: number) => string
+	question: (value, challengeDefaults) => QuestionMinInterface
+} {
+	function getGenerator(level: number): GeneratorInterface {
+		return unref(generators)[unref(level) - 1]
+	}
 
-export function useGenerators(generators: GeneratorInterface[]):
-    {
-        generator: (level: number) => GeneratorInterface,
-        code: (level: number) => string
-    } {
+	function question(value, challengeDefaults): QuestionMinInterface {
+		const questionUnref = unref(value)
+		const challengeDefaultsUnref = unref(challengeDefaults)
 
-    function getGenerator(level: number): GeneratorInterface {
-        return unref(generators)[unref(level) - 1]
-    }
+		return {
+			body: "",
+			block: {
+				title: questionUnref.title
+					? questionUnref.title
+					: challengeDefaultsUnref.title,
+				body: (questionUnref.output
+					? questionUnref.output
+					: challengeDefaultsUnref.output
+				)
+					.replace("question", questionUnref.question)
+					.replace("answer", "$a"),
+				illustration: null,
+			},
+			keyboard: questionUnref.keyboard
+				? questionUnref.keyboard
+				: challengeDefaultsUnref.keyboard,
+			answer: "" + questionUnref.answer,
+			user: {
+				result: false,
+			},
+		}
+	}
 
-    const dftCode: string = `return {
+	const dftCode: string = `return {
 	question: "erreur dans la génération de question",
 	answer: "-",
 	keyboard: {
@@ -21,8 +50,10 @@ export function useGenerators(generators: GeneratorInterface[]):
 	}
 }`
 
-    return {
-        generator: (level: number) => getGenerator(level),
-        code: (level: number) => getGenerator(level).code ?? dftCode,
-    }
+	return {
+		generator: (level: number) => getGenerator(level),
+		code: (level: number) => getGenerator(level).code ?? dftCode,
+		question: (value, challengeDefaults) =>
+			question(value, challengeDefaults),
+	}
 }

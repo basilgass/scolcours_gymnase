@@ -69,7 +69,21 @@ export interface QuestionInterface {
 		result: boolean
 		attempts: number
 		update_at: string
-	}[]
+	}
+}
+
+export interface QuestionMinInterface {
+	body: string
+	block: {
+		title: string
+		body: string
+		illustration: IllustrationInterface
+	}
+	answer: string
+	keyboard: string
+	user: {
+		result: boolean
+	}
 }
 
 export interface PostInterface {

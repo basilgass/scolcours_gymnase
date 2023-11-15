@@ -77,7 +77,6 @@
 	// loadAnswerToKeyboard(props.config)
 	let keyboardInput = ref({ input: "", tex: "", raw: "" }),
 		keyboardChange = (event) => {
-			console.log("EVENET", event)
 			keyboardInput.value = event
 			changeEvent()
 		}
