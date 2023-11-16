@@ -47,7 +47,7 @@ class ChallengesController extends Controller
 
 		$challenge->blocks()->create();
 
-		return redirect()->route('challenges.quick', [$challenge->slug]);
+		return redirect()->route('challenges.show', [$challenge->slug]);
 	}
 
 	public function edit(Challenge $challenge)

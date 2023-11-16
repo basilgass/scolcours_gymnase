@@ -1,16 +1,35 @@
 <!--
 Affichage de la liste des challenges pour un chapitre donné.
 -->
-<template>
-	<div
-		v-if="chapter.challenges"
-		class="px-5"
-	>
-		<h3 class="uppercase font-extralight mb-2">
-			challenges
-		</h3>
+<script setup>
+	import DialogModal from "@/Components/Ui/DialogModal.vue"
+	import { inject, ref } from "vue"
+	import FormInput from "@/Components/Form/FormInput.vue"
+	import { useForm } from "@inertiajs/vue3"
+	import FormButton from "@/Components/Form/FormButton.vue"
 
-		<div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-1 lg:gap-3">
+	let props = defineProps({
+		chapter: { type: Object, required: true },
+	})
+
+	const editMode = inject("editMode")
+
+	let show = ref(false),
+		form = useForm({
+			title: "nouveau challenge",
+		}),
+		storeChallenge = function () {
+			form.post(route("chapters.challenges.store", [props.chapter.id]))
+		}
+</script>
+
+<template>
+	<div v-if="chapter.challenges" class="px-5">
+		<h3 class="uppercase font-extralight mb-2">challenges</h3>
+
+		<div
+			class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-1 lg:gap-3"
+		>
 			<Link
 				v-for="challenge in chapter.challenges"
 				:key="`challenge-${challenge.id}`"
@@ -19,7 +38,13 @@ Affichage de la liste des challenges pour un chapitre donné.
 				:class="`btn-scolcours-${$page.props.theme.slug}`"
 				as="button"
 				type="button"
-				:href="route('chapters.challenge', [$page.props.theme.slug, chapter.slug, challenge.slug])"
+				:href="
+					route('chapters.challenge', [
+						$page.props.theme.slug,
+						chapter.slug,
+						challenge.slug,
+					])
+				"
 			/>
 
 			<div
@@ -27,26 +52,26 @@ Affichage de la liste des challenges pour un chapitre donné.
 				v-admin
 				class="min-h-[100px] grid place-items-center"
 			>
-				<button
-					class="btn-new"
-					@click="show=true"
-				>
+				<button class="btn-new" @click="show = true">
 					Nouveau challenge
 				</button>
-				<dialog-modal
-					v-model="show"
-					class="max-w-[30em]"
-				>
+				<dialog-modal v-model="show" class="max-w-[30em]">
 					<template #header>
-						<div class="bg-white flex justify-between items-baseline border-b border-gray-200 px-5 py-3 mb-5">
+						<div
+							class="bg-white flex justify-between items-baseline border-b border-gray-200 px-5 py-3 mb-5"
+						>
 							<h1>
-								<span class="text-xl md:text-2xl">créer un challenge</span>
+								<span class="text-xl md:text-2xl"
+									>créer un challenge</span
+								>
 							</h1>
 						</div>
 					</template>
 
 					<template #footer>
-						<div class="bg-white flex justify-end items-baseline border-t border-gray-200 px-5 py-3 mt-5">
+						<div
+							class="bg-white flex justify-end items-baseline border-t border-gray-200 px-5 py-3 mt-5"
+						>
 							<form-button @click="storeChallenge">
 								Créer un nouveau challenge
 							</form-button>
@@ -59,7 +84,7 @@ Affichage de la liste des challenges pour un chapitre donné.
 							name="newChallenge"
 							:focus="true"
 							@enter="storeChallenge"
-							@cancel="show=false"
+							@cancel="show = false"
 						/>
 					</div>
 				</dialog-modal>
@@ -67,25 +92,3 @@ Affichage de la liste des challenges pour un chapitre donné.
 		</div>
 	</div>
 </template>
-
-<script setup>
-import DialogModal from "@/Components/Ui/DialogModal.vue"
-import {inject, ref} from "vue"
-import FormInput from "@/Components/Form/FormInput.vue"
-import {useForm} from "@inertiajs/vue3"
-import FormButton from "@/Components/Form/FormButton.vue"
-
-let props = defineProps({
-	chapter: {type: Object,required:true}
-})
-
-const editMode = inject("editMode")
-
-let show = ref(false),
-	form = useForm({
-		title: "nouveau challenge"
-	}),
-	storeChallenge = function(){
-		form.post(route("chapters.challenges.store", [props.chapter.id]))
-	}
-</script>

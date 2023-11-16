@@ -236,7 +236,7 @@ Edition d'un challenge
 					enregistrer
 				</button>
 				<Link
-					:href="route('challenges.quick', [theChallenge.slug])"
+					:href="route('challenges.show', [theChallenge.slug])"
 					class="btn-success btn-xs"
 				>
 					visiter

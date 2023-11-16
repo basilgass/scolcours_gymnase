@@ -31,7 +31,7 @@
 
 <template>
 	<article
-		class="mt-5 py-5 mx-auto max-w-xl bg-white rounded-lg border border-slate-300"
+		class="my-8 py-5 mx-auto max-w-xl bg-white rounded-lg border border-slate-300 min-h-screen"
 	>
 		<header class="px-5">
 			<h2 class="text-3xl" v-katex.auto="props.evaluation.title"></h2>
@@ -60,7 +60,7 @@
 			</div>
 
 			<keep-alive>
-				<div class="min-h-[600px] relative overflow-hidden">
+				<div class="overflow-hidden">
 					<transition :name="`slide-${direction}`" mode="out-in">
 						<question-show
 							class="mt-5"

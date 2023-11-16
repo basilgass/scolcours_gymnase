@@ -184,17 +184,20 @@ function themeUpdate(el, binding, vnode) {
 		chapter = usePage().props?.theme?.slug
 	}
 
-	if (chapter !== undefined) {
-		Object.keys(binding.modifiers).forEach((key) => {
-			if (keys.indexOf(key) !== -1) {
-				if (key === "text" && binding.modifiers.hasOwnProperty("bg")) {
-					el.classList.add("text-white")
-				} else {
-					el.classList.add(`${key}-scolcours-${chapter}`)
-				}
-			}
-		})
+	if (chapter === undefined) {
+		el.classList.add(`bg-white`)
+		return
 	}
+
+	Object.keys(binding.modifiers).forEach((key) => {
+		if (keys.indexOf(key) !== -1) {
+			if (key === "text" && binding.modifiers.hasOwnProperty("bg")) {
+				el.classList.add("text-white")
+			} else {
+				el.classList.add(`${key}-scolcours-${chapter}`)
+			}
+		}
+	})
 }
 
 export const themeDirective = {

@@ -1,3 +1,64 @@
+<script>
+	import LayoutMain from "@/Layouts/LayoutMain.vue"
+
+	export default {
+		layout: LayoutMain,
+	}
+</script>
+
+<script setup>
+	import Panel from "@/Components/Ui/Panel.vue"
+	import { useForm } from "@inertiajs/vue3"
+	import FormInput from "@/Components/Form/FormInput.vue"
+	import { computed, ref } from "vue"
+
+	const props = defineProps({
+		tools: Object,
+		chapters: Object,
+		challenges: Object,
+	})
+
+	let filterChapter = ref("")
+
+	const Form = useForm({
+		slug: "",
+		active: false,
+	})
+
+	let chapterCurrentTheme = ref("")
+	let chapterThemes = computed(() => {
+		let themes = props.chapters.map((chapter) => chapter.theme)
+		themes.sort()
+		return [...new Set(themes)]
+	})
+
+	let filtreredChapters = computed(() => {
+		let chapters = props.chapters.filter(
+			(chapter) =>
+				chapter.theme === chapterCurrentTheme.value ||
+				chapterCurrentTheme.value === "",
+		)
+		if (filterChapter.value !== "") {
+			chapters = chapters.filter(
+				(chapter) =>
+					chapter.slug.includes(filterChapter.value) ||
+					chapter.title.includes(filterChapter.value),
+			)
+		}
+
+		return chapters
+	})
+
+	//TODO : add a please wait...
+	function toggleChapterVisibility(slug, active) {
+		Form.slug = slug
+		Form.active = active
+		Form.patch(`/admin/chapters/${slug}`, {
+			preserveScroll: true,
+			onSuccess: {},
+		})
+	}
+</script>
 <template>
 	<h1 class="text-3xl pt-5 mb-10">
 		Gestion des chapitres, challenges et chapitres
@@ -5,9 +66,7 @@
 
 	<div class="space-y-4">
 		<Panel>
-			<h2 class="text-lg my-2">
-				Chapitres
-			</h2>
+			<h2 class="text-lg my-2">Chapitres</h2>
 			<form-input
 				v-model="filterChapter"
 				name="filtrer"
@@ -17,8 +76,8 @@
 				<div>Filtrer par thèmes:</div>
 				<button
 					class="btn btn-xs"
-					:class="chapterCurrentTheme===''?'btn-success':''"
-					@click="chapterCurrentTheme=''"
+					:class="chapterCurrentTheme === '' ? 'btn-success' : ''"
+					@click="chapterCurrentTheme = ''"
 				>
 					Tous
 				</button>
@@ -26,8 +85,8 @@
 					v-for="(theme, id) of chapterThemes"
 					:key="id"
 					class="btn btn-xs"
-					:class="chapterCurrentTheme===theme?'btn-success':''"
-					@click="chapterCurrentTheme=theme"
+					:class="chapterCurrentTheme === theme ? 'btn-success' : ''"
+					@click="chapterCurrentTheme = theme"
 				>
 					{{ theme }}
 				</button>
@@ -53,10 +112,18 @@
 						<div>{{ chapter.updated_at }}</div>
 						<button
 							class="btn btn-xs w-full text-white hover:text-gray-800"
-							:class="{'bg-green-600' :chapter.active, 'bg-red-600':!chapter.active}"
-							@click="toggleChapterVisibility(chapter.slug, !chapter.active)"
+							:class="{
+								'bg-green-600': chapter.active,
+								'bg-red-600': !chapter.active,
+							}"
+							@click="
+								toggleChapterVisibility(
+									chapter.slug,
+									!chapter.active,
+								)
+							"
 						>
-							{{ chapter.active ? 'en ligne': 'caché' }}
+							{{ chapter.active ? "en ligne" : "caché" }}
 						</button>
 					</div>
 				</div>
@@ -64,9 +131,7 @@
 		</Panel>
 
 		<Panel>
-			<h2 class="text-lg my-2">
-				Challenges
-			</h2>
+			<h2 class="text-lg my-2">Challenges</h2>
 			<div class="w-full">
 				<div
 					v-for="challenge in challenges"
@@ -75,7 +140,7 @@
 				>
 					<div>
 						<Link
-							:href="route('challenges.quick', [challenge.slug])"
+							:href="route('challenges.show', [challenge.slug])"
 							class="text-lg leading-6 font-medium text-gray-900"
 						>
 							{{ challenge.title }}
@@ -93,9 +158,7 @@
 		</Panel>
 
 		<Panel>
-			<h2 class="text-lg my-2">
-				Outils
-			</h2>
+			<h2 class="text-lg my-2">Outils</h2>
 			<div class="w-full">
 				<div
 					v-for="tool in tools"
@@ -120,66 +183,4 @@
 	</div>
 </template>
 
-<script>
-import LayoutMain from "@/Layouts/LayoutMain.vue"
-
-export default {
-	layout: LayoutMain
-}
-</script>
-<script setup>
-import Panel from "@/Components/Ui/Panel.vue"
-import {useForm} from "@inertiajs/vue3"
-import FormInput from "@/Components/Form/FormInput.vue"
-import {computed, ref} from "vue"
-
-const props = defineProps({
-	tools: Object,
-	chapters: Object,
-	challenges: Object
-})
-
-let filterChapter = ref("")
-
-const Form = useForm({
-	slug: "",
-	active: false
-})
-
-let chapterCurrentTheme = ref("")
-let chapterThemes = computed(()=>{
-	let themes = props.chapters.map(chapter=>chapter.theme)
-	themes.sort()
-	return [... new Set(themes)]
-})
-
-let filtreredChapters = computed(()=>{
-	let chapters = props.chapters.filter(chapter=>chapter.theme===chapterCurrentTheme.value || chapterCurrentTheme.value==="")
-	if(filterChapter.value!==""){
-		chapters = chapters.filter(chapter =>
-			chapter.slug.includes(filterChapter.value) ||
-			chapter.title.includes(filterChapter.value)
-		)
-	}
-
-	return chapters
-})
-
-//TODO : add a please wait...
-function toggleChapterVisibility(slug, active){
-	Form.slug = slug
-	Form.active = active
-	Form.patch(`/admin/chapters/${slug}`,
-		{
-			preserveScroll: true,
-			onSuccess: {
-
-			}
-		}
-	)
-}
-</script>
-
-<style scoped>
-
-</style>
+<style scoped></style>

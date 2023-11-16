@@ -44,7 +44,7 @@ T17(0,-8.6)->tex:\\scriptsize-\\frac{\\sqrt{3}}{2}/rm/0.5:0
 T19(0,-10)->tex:\\scriptsize -1/rb/0.5:0
 @end:static
 P(7.07,7.07)->drag:c
-C(P.x,0)->hide
+C(P.x,0)
 S(0,P.y)->hide
 c=PC.->dash
 s=PS.->dash

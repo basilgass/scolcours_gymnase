@@ -40,8 +40,9 @@ Affichage d'un texte en markdown.
 		let output = props.text
 
 		output = output.replaceAll(/\(@\S+\)/g, (match) => {
-			const [routeName, ...routeOptions] = match.substring(2, match.length - 1).split(",")
-			// const anchor = routeOptions.filter(value=>value.startsWith('#'))[0]||""
+			const [routeName, ...routeOptions] = match
+				.substring(2, match.length - 1)
+				.split(",")
 
 			return `(${route(routeName, routeOptions)})`
 		})
@@ -74,5 +75,11 @@ Affichage d'un texte en markdown.
 </script>
 
 <template>
-	<div ref="root" :class="katexClass" class="prose lg:prose-lg max-w-full" @click="mdClick" v-html="mdit" />
+	<div
+		ref="root"
+		:class="katexClass"
+		class="prose lg:prose-lg max-w-full"
+		@click="mdClick"
+		v-html="mdit"
+	/>
 </template>

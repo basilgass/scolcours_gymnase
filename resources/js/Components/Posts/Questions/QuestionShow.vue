@@ -346,8 +346,8 @@ keyboard -> QuestionUserInput -> QuestionShow
 	let editMode = inject("editMode", { enabled: false }),
 		showEditForm = ref(false),
 		editForm = computed(() => {
-			return defineAsyncComponent(() =>
-				import("@/Components/Posts/Questions/QuestionForm.vue"),
+			return defineAsyncComponent(
+				() => import("@/Components/Posts/Questions/QuestionForm.vue"),
 			)
 		}),
 		duplicateQuestion = function () {

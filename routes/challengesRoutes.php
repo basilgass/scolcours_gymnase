@@ -4,7 +4,7 @@ use App\Http\Controllers\ChallengesController;
 
 // Public routes.
 Route::get('q/{challenge:slug}', [ChallengesController::class, 'quick'])
-	->name("challenges.quick");
+	->name("challenges.show");
 Route::get('{theme:slug}/{chapter:slug}/challenges/{challenge:slug}', [ChallengesController::class, 'show'])
 	->name('chapters.challenge');
 

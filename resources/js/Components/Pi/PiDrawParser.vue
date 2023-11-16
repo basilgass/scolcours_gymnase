@@ -18,7 +18,7 @@ Affichage d'un PiDraw
 	let blockScriptResult = inject("blockScriptResult", ref({}))
 
 	// SVG drawing container
-	let draw = ref(null)
+	let drawWrapper = ref(null)
 
 	// Incoming props
 	let props = defineProps({
@@ -223,7 +223,7 @@ Affichage d'un PiDraw
 				PiParser.update(drawCode.value)
 				emits("update", PiGraph.figures)
 				PiParserHasErrors.value = false
-			} catch {
+			} catch (e) {
 				console.warn("Cannot parse from: " + from)
 				console.warn(drawCode.value)
 				PiParserHasErrors.value = true
@@ -233,7 +233,7 @@ Affichage d'un PiDraw
 	let figures = ref({})
 
 	onMounted(() => {
-		PiGraph = new PiDraw(draw.value, {
+		PiGraph = new PiDraw(drawWrapper.value, {
 			width: props.width,
 			height: props.height,
 			origin: {
@@ -269,7 +269,7 @@ Affichage d'un PiDraw
 		}
 
 		// Add a resizeObserver on the draw container
-		useResizeObserver(draw.value, () => {
+		useResizeObserver(drawWrapper.value, () => {
 			PiParserUpdate("onResize", true)
 			PiParser.updateLayout(props.draw.parameters)
 			PiParser.update(drawCode.value, true)
@@ -312,7 +312,7 @@ Affichage d'un PiDraw
 <template>
 	<div :class="PiParserHasErrors ? 'bg-red-100' : ''">
 		<!-- draw graph-->
-		<div ref="draw" class="katex-m-0" @mouseup="drawMouseUp" />
+		<div ref="drawWrapper" class="katex-m-0" @mouseup="drawMouseUp" />
 
 		<!-- stepper -->
 		<div v-if="stepperMax > 1" class="my-3">
