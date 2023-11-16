@@ -293,18 +293,6 @@
 					@duplicate="duplicateQuestion"
 				/>
 			</template>
-
-			<template #footer>
-				<div
-					v-if="remainingQuestions > 0"
-					class="text-slate-400 font-extralight grid place-items-center text-xl text-center"
-				>
-					<div class="flex flex-col gap-5">
-						<i class="bi bi-plus-square text-3xl" />
-						{{ footerText }}
-					</div>
-				</div>
-			</template>
 		</draggable>
 
 		<div v-show="editMode.enabled.value" v-admin class="px-5 mb-5">
