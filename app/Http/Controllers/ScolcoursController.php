@@ -22,18 +22,11 @@ class ScolcoursController extends Controller
 			->get();
 
 		$newChapters = $newChapters->Map(function (Chapter $item) {
-//			$modified = $item->updated_at->diffInDays();
-//			if ($modified === 0) {
-//				$modified = $item->updated_at->diffForHumans();
-//			} else {
-//				$modified = "Il y a $modified jour" . ($modified > 1 ? "s" : "");
-//			}
-//
-//			$modified = $item->updated_at->diffForHumans();
 			return [
 				"id"=>$item->id,
 				"slug"=>$item->slug,
 				"title"=>$item->title,
+				"body" => $item->blocks[0]->body,
 				"url"=>$item->url,
 				"modified"=>$item->updated_at->diffForHumans()
 			];
