@@ -1,3 +1,61 @@
+<script>
+	import LayoutMain from "@/Layouts/LayoutMain.vue"
+
+	export default {
+		layout: LayoutMain,
+	}
+</script>
+
+<script setup>
+	import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
+	import FormInput from "@/Components/Form/FormInput.vue"
+	import { computed, ref } from "vue"
+	import { useForm } from "@inertiajs/vue3"
+	import DialogModal from "@/Components/Ui/DialogModal.vue"
+	import FormButton from "@/Components/Form/FormButton.vue"
+	import IllustrationShow from "@/Components/Posts/Illustrations/IllustrationShow.vue"
+
+	let props = defineProps({
+		theme: {
+			type: Object,
+			default: () => {},
+		},
+		chapters: {
+			type: Object,
+			default: () => {},
+		},
+	})
+
+	let chaptersFilter = ref(""),
+		root = ref(null)
+
+	let chaptersFiltered = computed(() => {
+		if (chaptersFilter.value === "") {
+			return props.chapters.data
+		}
+
+		let filter = chaptersFilter.value.toLowerCase()
+
+		return props.chapters.data.filter(
+			(chapter) =>
+				chapter.slug.toLowerCase().includes(chaptersFilter.value) ||
+				chapter.title.toLowerCase().includes(chaptersFilter.value) ||
+				chapter.block.body
+					?.toLowerCase()
+					.includes(chaptersFilter.value),
+		)
+	})
+
+	let showDialog = ref(false)
+	const newChapterForm = useForm({
+		title: "exemple",
+	})
+
+	function createNewChapter() {
+		newChapterForm.post(route("themes.chapters.store", [props.theme.slug]))
+	}
+</script>
+
 <template>
 	<div ref="root">
 		<div class="flex justify-between items-center">
@@ -24,10 +82,7 @@
 		</div>
 
 		<div class="mt-10 grid grid-cols-1 md:grid-cols-3 gap-5">
-			<transition-group
-				v-if="chaptersFiltered.length > 0"
-				name="list"
-			>
+			<transition-group v-if="chaptersFiltered.length > 0" name="list">
 				<Link
 					v-for="chapter in chaptersFiltered"
 					:key="`chapter-${chapter.slug}`"
@@ -54,10 +109,7 @@
 			</transition-group>
 		</div>
 
-		<dialog-modal
-			v-model="showDialog"
-			class="max-w-xl mx-auto p-5"
-		>
+		<dialog-modal v-model="showDialog" class="max-w-xl mx-auto p-5">
 			<form-input
 				v-model="newChapterForm.title"
 				label="Nouveau chapitre"
@@ -72,62 +124,5 @@
 		</dialog-modal>
 	</div>
 </template>
-
-<script>
-import LayoutMain from "@/Layouts/LayoutMain.vue"
-
-export default {
-	layout: LayoutMain,
-}
-</script>
-
-<script setup>
-import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
-import Panel from "@/Components/Ui/Panel.vue"
-import FormInput from "@/Components/Form/FormInput.vue"
-import { computed, onMounted, ref } from "vue"
-import { useForm } from "@inertiajs/vue3"
-import DialogModal from "@/Components/Ui/DialogModal.vue"
-import FormButton from "@/Components/Form/FormButton.vue"
-import IllustrationShow from "@/Components/Posts/Illustrations/IllustrationShow.vue"
-
-let props = defineProps({
-	theme: {
-		type: Object,
-		default: () => {},
-	},
-	chapters: {
-		type: Object,
-		default: () => {},
-	},
-})
-
-let chaptersFilter = ref(""),
-	root = ref(null)
-
-let chaptersFiltered = computed(() => {
-	if (chaptersFilter.value === "") {
-		return props.chapters.data
-	}
-
-	let filter = chaptersFilter.value.toLowerCase()
-
-	return props.chapters.data.filter(
-		(chapter) =>
-			chapter.slug.toLowerCase().includes(chaptersFilter.value) ||
-			chapter.title.toLowerCase().includes(chaptersFilter.value) ||
-			chapter.block.body?.toLowerCase().includes(chaptersFilter.value)
-	)
-})
-
-let showDialog = ref(false)
-const newChapterForm = useForm({
-	title: "exemple",
-})
-
-function createNewChapter() {
-	newChapterForm.post(route("themes.chapters.store", [props.theme.slug]))
-}
-</script>
 
 <style scoped></style>

@@ -14,7 +14,6 @@ Affichage d'un formulaire, avec la possibilité de passer d'un formulaire du th�
 	const theoremsList = ref(null)
 	useIntersectionObserver(theoremsList, ([{ isIntersecting }]) => {
 		if (isIntersecting && theTheorems.value.length === 0) {
-			console.log("load theorems")
 			loadTheorems()
 		}
 	})
@@ -55,7 +54,14 @@ Affichage d'un formulaire, avec la possibilité de passer d'un formulaire du th�
 
 <template>
 	<article ref="theoremsList">
-		<div v-if="theTheorems.length > 0">
+		<div
+			v-if="loadingState"
+			class="px-5 grid place-items-center min-h-[10em]"
+		>
+			à la recherche des théories dans un très gros livre
+		</div>
+
+		<div v-else-if="theTheorems.length > 0">
 			<div class="px-5 my-5">
 				<h3 class="text-xl uppercase font-extralight mb-2">Théorie</h3>
 				<div class="flex flex-wrap text-xs gap-1">
@@ -83,29 +89,19 @@ Affichage d'un formulaire, avec la possibilité de passer d'un formulaire du th�
 				</div>
 			</div>
 
-			<div>
-				<div
-					v-if="loadingState"
-					class="px-5 grid place-items-center min-h-[10em]"
-				>
-					à la recherche des théories dans un très gros livre
-				</div>
-
-				<div v-else class="grid grid-cols-1 gap-5">
-					<block-show
-						v-for="block in theTheoremsFiltered"
-						:key="`block-${block.id}`"
-						:block="block"
-						force-show
-					></block-show>
-				</div>
+			<div class="grid grid-cols-1 gap-5">
+				<block-show
+					v-for="block in theTheoremsFiltered"
+					:key="`block-${block.id}`"
+					:block="block"
+					force-show
+				></block-show>
 			</div>
-
-			<div
-				v-if="theTheoremsErrors !== ''"
-				class="text-red font-code text-xs"
-				v-text="theTheoremsErrors"
-			/>
 		</div>
+		<div
+			v-if="theTheoremsErrors !== ''"
+			class="text-red font-code text-xs"
+			v-text="theTheoremsErrors"
+		/>
 	</article>
 </template>

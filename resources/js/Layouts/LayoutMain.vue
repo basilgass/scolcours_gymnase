@@ -1,3 +1,96 @@
+<script lang="ts" setup>
+	import MainHeader from "@/Components/MainHeader.vue"
+	import MainFooter from "@/Components/MainFooter.vue"
+	import { computed, onMounted, provide, ref } from "vue"
+	import FlashMessage from "@/Components/Ui/FlashMessage.vue"
+	import { useMagicKeys, whenever } from "@vueuse/core"
+	import { usePage } from "@inertiajs/vue3"
+
+	defineProps({
+		theme: {
+			type: Object,
+			default: () => {
+				return { title: "Scolcours", slug: "main" }
+			},
+		},
+	})
+
+	let flashMessages = ref([]),
+		addFlashMessage = function (
+			message,
+			link,
+			type = "success",
+			timeout = 2000,
+		) {
+			flashMessages.value.push({ message, link, type, timeout })
+		}
+	// TODO: add link in flash message
+	// flash.add(message, link, timeout)
+	provide("flash", {
+		add: addFlashMessage,
+		success: (message, link, timeout) =>
+			addFlashMessage(message, link, "success", timeout),
+		info: (message, link, timeout) =>
+			addFlashMessage(message, link, "info", timeout),
+		error: (message, link, timeout) =>
+			addFlashMessage(message, link, "error", timeout),
+	})
+
+	let globalEditMode = ref(false),
+		globalCorrectionMode = ref(false)
+
+	provide("editMode", {
+		enabled: computed(() => {
+			return globalEditMode.value
+		}),
+		toggle: function (value?: boolean) {
+			if (value !== undefined) {
+				globalEditMode.value = value
+			} else {
+				globalEditMode.value = !globalEditMode.value
+			}
+			localStorage.setItem(
+				"scolcours_editMode",
+				`${globalEditMode.value}`,
+			)
+		},
+	})
+	provide("correctionMode", {
+		enabled: computed(() => {
+			return globalCorrectionMode.value
+		}),
+		toggle: function () {
+			globalCorrectionMode.value = !globalCorrectionMode.value
+			localStorage.setItem(
+				"scolcours_correctionMode",
+				`${globalCorrectionMode.value}`,
+			)
+		},
+	})
+
+	onMounted(() => {
+		if (usePage().props.auth.user && usePage().props.auth.can.admin) {
+			globalEditMode.value =
+				localStorage.getItem("scolcours_editMode") === "true" || false
+			globalCorrectionMode.value =
+				localStorage.getItem("scolcours_correctionMode") === "true" ||
+				false
+		}
+	})
+
+	// Add shortcut to open toggle admin mode.
+	const keys = useMagicKeys()
+	whenever(keys.ctrl_alt_a, () => {
+		if (usePage().props.auth.user && usePage().props.auth.can.admin) {
+			globalEditMode.value = !globalEditMode.value
+			localStorage.setItem(
+				"scolcours_editMode",
+				`${globalEditMode.value}`,
+			)
+		}
+	})
+</script>
+
 <template>
 	<div>
 		<!-- Header of the page -->
@@ -23,15 +116,17 @@
 				v-for="(message, idx) in flashMessages"
 				:key="`flash-${idx}`"
 				:class="{
-					'bg-red-600/80 text-white':message.type==='error',
-					'bg-green-600/80 text-white':message.type==='success',
-					'bg-amber-400/80 text-black':message.type==='info',
-					'bg-white text-black': message.type===undefined
+					'bg-red-600/80 text-white': message.type === 'error',
+					'bg-green-600/80 text-white': message.type === 'success',
+					'bg-amber-400/80 text-black': message.type === 'info',
+					'bg-white text-black': message.type === undefined,
 				}"
-				:timeout="message.timeout"
 				:link="message.link"
-				@open="message.id=$event"
-				@close="flashMessages = flashMessages.filter(x=>x.id!==$event)"
+				:timeout="message.timeout"
+				@close="
+					flashMessages = flashMessages.filter((x) => x.id !== $event)
+				"
+				@open="message.id = $event"
 			>
 				{{ message.message }}
 				<template />
@@ -39,80 +134,4 @@
 		</div>
 	</div>
 </template>
-
-<script setup lang="ts">
-import MainHeader from "@/Components/MainHeader.vue"
-import MainFooter from "@/Components/MainFooter.vue"
-import {computed, onMounted, provide, ref} from "vue"
-import FlashMessage from "@/Components/Ui/FlashMessage.vue"
-import {useMagicKeys, whenever} from "@vueuse/core"
-import {usePage} from "@inertiajs/vue3"
-
-defineProps({
-	theme: {
-		type: Object, default: () => {
-			return {title: "Scolcours", slug: "main"}
-		}
-	}
-})
-
-let flashMessages = ref([]),
-	addFlashMessage = function (message, link, type = "success", timeout = 2000) {
-		flashMessages.value.push({message, link, type, timeout})
-	}
-// TODO: add link in flash message
-// flash.add(message, link, timeout)
-provide("flash", {
-	add: addFlashMessage,
-	success: (message, link, timeout) => addFlashMessage(message, link, "success", timeout),
-	info: (message, link, timeout) => addFlashMessage(message, link, "info", timeout),
-	error: (message, link, timeout) => addFlashMessage(message, link, "error", timeout),
-})
-
-let globalEditMode = ref(false),
-	globalCorrectionMode = ref(false)
-
-provide("editMode", {
-	enabled: computed(() => {
-		return globalEditMode.value
-	}),
-	toggle: function (value?: boolean) {
-		if(value!==undefined) {
-			globalEditMode.value = value
-		}else {
-			globalEditMode.value = !globalEditMode.value
-		}
-		localStorage.setItem("scolcours_editMode", `${globalEditMode.value}`)
-	}
-})
-provide("correctionMode", {
-	enabled: computed(() => {
-		return globalCorrectionMode.value
-	}),
-	toggle: function () {
-		globalCorrectionMode.value = !globalCorrectionMode.value
-		localStorage.setItem("scolcours_correctionMode", `${globalCorrectionMode.value}`)
-	}
-})
-
-onMounted(() => {
-	if(usePage().props.auth.user && usePage().props.auth.can.admin) {
-		globalEditMode.value = (localStorage.getItem("scolcours_editMode") === "true") || false
-		globalCorrectionMode.value = (localStorage.getItem("scolcours_correctionMode") === "true") || false
-	}
-})
-
-
-// Add shortcut to open toggle admin mode.
-const keys = useMagicKeys()
-whenever(keys.ctrl_alt_a, ()=>{
-	if(usePage().props.auth.user && usePage().props.auth.can.admin) {
-		globalEditMode.value = !globalEditMode.value
-		localStorage.setItem("scolcours_editMode", `${globalEditMode.value}`)
-	}
-})
-
-</script>
-<style scoped>
-
-</style>
+<style scoped></style>

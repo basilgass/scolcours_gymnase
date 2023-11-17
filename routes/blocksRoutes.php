@@ -18,6 +18,8 @@ Route::middleware('can:admin')->group(function(){
 		->name('posts.blocks.store');
 	Route::patch('blocks/{block}', [BlockController::class, 'update'])
 		->name("blocks.update");
+	Route::patch('blocks/{block}/template', [BlockController::class, 'updateTemplate'])
+		->name("blocks.updateTemplate");
 	Route::delete('blocks/{block}', [BlockController::class, 'destroy'])
 		->name("blocks.destroy");
 

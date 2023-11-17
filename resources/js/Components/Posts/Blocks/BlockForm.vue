@@ -164,7 +164,7 @@ Formulaire d'édition d'un bloc
 		</template>
 
 		<div class="w-full px-5">
-			<div :class="props.overflowScroll ? 'overflow-y-scroll' : ''">
+			<div :class="props.overflowScroll ? 'overflow-y-auto' : ''">
 				<!-- data to be displayed -->
 				<div
 					:class="
@@ -212,9 +212,10 @@ Formulaire d'édition d'un bloc
 							language="latex"
 							name="body"
 						/>
-						<p class="text-xs">
-							@posts.show,[id] | @blocks.show,[id] | #[item-id]
-						</p>
+						<div class="text-xs font-code">
+							@posts.show,[id] | @blocks.show,[id] | #[item-id]<br />
+							.@text .@bg pour des classes à thème
+						</div>
 
 						<div class="mt-3">
 							<form-wrapper
@@ -251,10 +252,12 @@ Formulaire d'édition d'un bloc
 							/>
 						</div>
 
-						<markdown-it
-							:text="blockBody"
-							class="p-3 bg-gray-100 border border-dashed border-gray-200 h-full"
-						/>
+						<div class="max-h-[50vh] overflow-y-auto">
+							<markdown-it
+								:text="blockBody"
+								class="p-3 bg-gray-100 border border-dashed border-gray-200 h-full"
+							/>
+						</div>
 					</div>
 				</div>
 

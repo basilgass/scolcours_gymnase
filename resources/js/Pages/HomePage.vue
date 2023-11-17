@@ -7,7 +7,7 @@
 </script>
 <script lang="ts" setup>
 	import ScolCoursLogo from "@/Components/ScolcoursLogo.vue"
-	import { Head, router } from "@inertiajs/vue3"
+	import { Head } from "@inertiajs/vue3"
 	import { PropType } from "vue"
 	import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 
@@ -31,7 +31,7 @@
 	<div class="space-y-10 bg-gray-100">
 		<Head title="" />
 
-		<ScolCoursLogo class="py-10" />
+		<ScolCoursLogo class="py-10 scale-150" />
 
 		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
 			<Link

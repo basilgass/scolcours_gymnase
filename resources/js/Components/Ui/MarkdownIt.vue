@@ -4,7 +4,7 @@ Affichage d'un texte en markdown.
 <script setup>
 	import { computed, ref } from "vue"
 	import { useKatexMacros, useMenuScrollTo } from "@/Composables/useHelpers"
-	import { router } from "@inertiajs/vue3"
+	import { router, usePage } from "@inertiajs/vue3"
 	import markdownIt from "markdown-it"
 	import bracketed from "markdown-it-bracketed-spans"
 	import attr from "markdown-it-attrs"
@@ -39,15 +39,28 @@ Affichage d'un texte en markdown.
 
 		let output = props.text
 
+		// Remplace les class courtes en classes complètes.
+		// .@text = .text-scolcours-theme
+		// .@bg = .bg-scolcours-theme
+		output = output.replaceAll(/\.(@[a-z]+)/g, (match) => {
+			const prefix = match.substring(2),
+				theme = usePage().props.theme.slug
+
+			return `.${prefix}-scolcours-${theme}`
+		})
+
+		// Remplace les liens vers les routes par des liens vers les pages
 		output = output.replaceAll(/\(@\S+\)/g, (match) => {
 			const [routeName, ...routeOptions] = match
 				.substring(2, match.length - 1)
 				.split(",")
 
-			return `(${route(routeName, routeOptions)})`
+			try {
+				return `(${route(routeName, routeOptions)})`
+			} catch {
+				return `(${match})`
+			}
 		})
-
-		//TODO: markdown pre process and post process
 
 		return md.render(output)
 	})

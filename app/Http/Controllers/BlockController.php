@@ -228,6 +228,19 @@ class BlockController extends Controller
 
 	}
 
+	public function updateTemplate(Block $block, Request $request)
+	{
+		$validate = $request->validate([
+			'template' => ['string', 'nullable']
+		]);
+
+		$block->update([
+			'template' => $validate['template'] ?? $validate['template']
+		]);
+
+		return true;
+	}
+
 	public function moveBlockToPost(Block $block, Post $post)
 	{
 		// remove the block from the current blockable.
