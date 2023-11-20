@@ -55,10 +55,18 @@ Affichage des illustrations
 			return false
 		}
 	})
+
+	const figureClass = computed(() => {
+		if (theIllustration.value.css) {
+			return theIllustration.value.css
+		}
+
+		return "w-full max-w-xl mx-auto"
+	})
 </script>
 
 <template>
-	<figure ref="root" :class="theIllustration.css">
+	<figure ref="root" :class="figureClass">
 		<div
 			v-if="
 				$page.props.auth.can.admin && !preview && editMode.enabled.value
@@ -86,7 +94,6 @@ Affichage des illustrations
 		<pi-draw-parser
 			v-if="theIllustration.type === 'draw'"
 			:draw="blockIllustration"
-			class="max-w-lg mx-auto"
 		/>
 		<div v-if="theIllustration.type === 'component'">
 			<component
