@@ -66,6 +66,14 @@ export class EquationChecker extends CheckerBase {
 			}
 		}
 
+		// If expected and given are the same, it is correct.
+		if (expected === given) {
+			return {
+				result: true,
+				message: "",
+			}
+		}
+
 		let A, Q
 
 		try {
@@ -124,8 +132,8 @@ export class EquationChecker extends CheckerBase {
 			}
 
 			// One part of the equation must be of degree zero.
-			let center = "",
-				radius = ""
+			let center = ""
+
 			if (
 				A.left.degree("x").value === 2 &&
 				A.right.degree("x").isZero() &&
@@ -157,7 +165,7 @@ export class EquationChecker extends CheckerBase {
 				center.match(/\(x[+-][0-9/]+\)\^2\+\(y[+-][0-9/]+\)\^2/) ||
 				center.match(/x\^2\+\(y[+-][0-9/]+\)\^2/) ||
 				center.match(/\(x[+-][0-9/]+\)\^2\+y\^2/) ||
-				center.match(/\(x\^2\+y\^2/)
+				center.match(/x\^2\+y\^2/)
 			) {
 				return { result: true, message: "" }
 			} else {
