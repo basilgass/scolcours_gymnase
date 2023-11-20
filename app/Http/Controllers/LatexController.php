@@ -1,74 +1,90 @@
 <?php
 
-	namespace App\Http\Controllers;
+namespace App\Http\Controllers;
 
-	use App\Models\LatexPdf;
-	use Illuminate\Http\Request;
-	use Illuminate\Support\Facades\Storage;
-	use Illuminate\Support\Str;
-	use Ismaelw\LaraTeX\LaraTeX;
+use App\Models\LatexPdf;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use Ismaelw\LaraTeX\LaraTeX;
 
-	class LatexController extends Controller
+class LatexController extends Controller
+{
+	public function latex(Request $data) // POST request
 	{
-		public function latex(Request $data) // POST request
-		{
-			$requestData = json_decode($data->getContent());
+		$validation = $data->validate([
+			'template' => ['required', 'string', 'in:latex.exercises,latex.standalone,latex.simple'],
+			'title' => 'required|string',
+			'content' => 'string',
+			'questions' => 'array',
+			'slug' => 'required|string',
+			'theme' => 'string',
+		]);
 
-			// Check if folder exists.
-			$folder = "pdf/{$requestData->theme}/{$requestData->slug}";
-			if (!Storage::disk('public')->exists($folder)) {
-				Storage::disk('public')->makeDirectory($folder);
-			}
 
-			// Generate a filename
-			// TODO: Generate slug of 4 letters
+		// Check if folder exists.
+		$theme = $validation["theme"]??'divers';
+		$folder = "pdf/{$theme}/{$validation["slug"]}";
+		if (!Storage::disk('public')->exists($folder)) {
+			Storage::disk('public')->makeDirectory($folder);
+		}
+
+		// Generate a filename
+		// TODO: Generate slug of 4 letters
+		$fileID = Str::random(4);
+		// Check if it is already in the database.
+		while (LatexPdf::whereSlug($fileID)->first()) {
 			$fileID = Str::random(4);
-			// Check if it is already in the database.
-			while (LatexPdf::whereSlug($fileID)->first()) {
-				$fileID = Str::random(4);
-			}
-
-			$filename = $fileID . '.pdf';
-			$fullpath = $folder . '/' . $filename;
-
-			$result = (new LaraTeX('latex.WhatToKnow'))->with([
-				                                                  'title'     => $requestData->title,
-				                                                  'questions' => $requestData->questions,
-				                                                  'slug'      => '/download/' . $fileID
-			                                                  ])
-			                                           ->savePdf(Storage::disk('public')->path($fullpath));
-
-			if ($result) {
-				// Save it to the database.
-				LatexPdf::create([
-					                 'slug' => $fileID,
-					                 'name' => $requestData->slug . '.pdf',
-					                 'url'  => $fullpath,
-				                 ]);
-			}
-			return $fileID;
 		}
 
-		public function download(string $fileID) // Download file name from public/pdf
-		{
-			$pdf = LatexPdf::whereSlug($fileID)->first();
+		$filename = $fileID . '.pdf';
+		$fullpath = $folder . '/' . $filename;
 
-			if ($pdf) {
-				return Storage::disk('public')
-				              ->download(
-					              $pdf->url,
-					              $pdf->name
-				              );
-			}
-			return false;
+		$result = (new LaraTeX($validation["template"]))
+			->with([
+				'title' => $validation["title"],
+				'questions' => $validation["questions"]??[],
+				'content' => $validation["content"]??'',
+				'slug' => '/download/' . $fileID
+			])
+			->savePdf(Storage::disk('public')->path($fullpath));
 
+		if ($result) {
+			// Save it to the database.
+			return LatexPdf::create([
+				'slug' => $fileID,
+				'name' => $validation["slug"] . '.pdf',
+				'url' => $fullpath
+			]);
 		}
+		return false;
+	}
 
-		public function dry()
-		{
-			return (new LaraTeX)->dryRun();
+	public function download(string $fileID) // Download file name from public/pdf
+	{
+		$pdf = LatexPdf::whereSlug($fileID)->first();
 
+		if ($pdf) {
+			return Storage::disk('public')
+				->download(
+					$pdf->url,
+					$pdf->name
+				);
 		}
+		return false;
+
+	}
+
+	public function links()
+	{
+		return LatexPdf::all();
+	}
+
+	public function dry()
+	{
+		return (new LaraTeX)->dryRun();
+
+	}
 //		public function toPng()
 //		{
 //			$outputFile = false;
@@ -132,4 +148,4 @@
 //		}
 
 
-	}
+}

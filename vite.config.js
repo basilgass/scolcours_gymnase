@@ -37,4 +37,7 @@ export default defineConfig({
 			"@/*": ["./resources/js/*"],
 		},
 	},
+	test: {
+		environment: "jsdom",
+	},
 })

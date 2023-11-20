@@ -1,13 +1,13 @@
 <?php
 
-	namespace App\Models;
+namespace App\Models;
 
-	use Eloquent;
-	use Illuminate\Database\Eloquent\Builder;
-	use Illuminate\Database\Eloquent\Model;
-	use Illuminate\Support\Carbon;
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 
-	/**
+/**
  * App\Models\LatexPdf
  *
  * @property int $id
@@ -28,6 +28,9 @@
  * @mixin Eloquent
  */
 class LatexPdf extends Model
-	{
-		protected $guarded=[];
-	}
+{
+	protected $guarded = [];
+	protected $hidden = ['created_at', 'updated_at'];
+
+}
+

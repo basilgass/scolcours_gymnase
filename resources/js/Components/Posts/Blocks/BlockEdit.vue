@@ -23,6 +23,7 @@
 		}
 
 	const flash = inject<flashInterface>("flash")
+
 	const updateBlockTemplate = function () {
 		// Save to database.
 		axios

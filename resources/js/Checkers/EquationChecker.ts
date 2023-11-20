@@ -165,7 +165,8 @@ export class EquationChecker extends CheckerBase {
 				center.match(/\(x[+-][0-9/]+\)\^2\+\(y[+-][0-9/]+\)\^2/) ||
 				center.match(/x\^2\+\(y[+-][0-9/]+\)\^2/) ||
 				center.match(/\(x[+-][0-9/]+\)\^2\+y\^2/) ||
-				center.match(/x\^2\+y\^2/)
+				center === "x^2+y^2" ||
+				center === "y^2+x^2"
 			) {
 				return { result: true, message: "" }
 			} else {

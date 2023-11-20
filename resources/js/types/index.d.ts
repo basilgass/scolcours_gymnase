@@ -37,16 +37,21 @@ export type PageProps<
 	themes: ThemeInterface[]
 }
 
+export interface flashLink {
+	url: string
+	label: string
+	external?: boolean
+}
 export interface flashInterface {
 	add: (
 		message: string,
-		link?: string,
+		link?: flashLink,
 		type?: string,
 		timeout?: number,
 	) => void
-	success: (message: string, link?: string, timeout?: number) => void
-	info: (message: string, link?: string, timeout?: number) => void
-	error: (message: string, link?: string, timeout?: number) => void
+	success: (message: string, link?: flashLink, timeout?: number) => void
+	info: (message: string, link?: flashLink, timeout?: number) => void
+	error: (message: string, link?: flashLink, timeout?: number) => void
 }
 
 export interface editModeInterface {
