@@ -1,13 +1,4 @@
-<script setup>
-	/** Tools
-	 * title: cercle trigonométrique
-	 * body: aide aux calculs des valeurs trigonométriques
-	 * parameters: aucun
-	 * tags: géométrie,1M,2C,2M
-	 */
-	import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"
-
-	const code = `@begin:static
+import{_ as r}from"./PiDrawParser.vue_vue_type_script_setup_true_lang-b8791707.js";import{aF as t,J as e,W as c}from"./@vue-b854543f.js";import"./pidraw-8d6bf96f.js";import"./@svgdotjs-404fd87d.js";import"./vue-slider-component-33c48041.js";import"./vue-9f182421.js";import"./pimath-a03240fc.js";import"./katex-cd867a54.js";import"./@vueuse-77d1b040.js";const i={class:"bg-white max-w-3xl mx-auto"},s=`@begin:static
 O(0,0)
 c=circ O,10
 P0(10,0)
@@ -62,13 +53,4 @@ c1=OC.->green,w:5
 s1=OS.->red,w:5
 a=arc P0,O,P->tex:\\theta
 T=inter p,t
-t1=P0T.->gold,w:5`
-
-	const parameters = `axis,x=-12:12,y=-20:20,nolabel`
-</script>
-
-<template>
-	<div class="bg-white max-w-3xl mx-auto">
-		<pi-draw-parser :draw="{ code: code, parameters: parameters }" />
-	</div>
-</template>
+t1=P0T.->gold,w:5`,a="axis,x=-12:12,y=-20:20,nolabel",q={__name:"cercle-trigonometrique",setup(p){return(x,m)=>(t(),e("div",i,[c(r,{draw:{code:s,parameters:a}},null,8,["draw"])]))}};export{q as default};
