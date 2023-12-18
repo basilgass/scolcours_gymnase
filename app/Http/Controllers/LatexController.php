@@ -13,14 +13,13 @@ class LatexController extends Controller
 	public function latex(Request $data) // POST request
 	{
 		$validation = $data->validate([
-			'template' => ['required', 'string', 'in:latex.exercises,latex.standalone,latex.simple'],
+			'template' => ['required', 'string', 'in:latex.questions,latex.standalone,latex.simple'],
 			'title' => 'required|string',
 			'content' => 'string',
 			'questions' => 'array',
 			'slug' => 'required|string',
 			'theme' => 'string',
 		]);
-
 
 		// Check if folder exists.
 		$theme = $validation["theme"]??'divers';
@@ -40,22 +39,26 @@ class LatexController extends Controller
 		$filename = $fileID . '.pdf';
 		$fullpath = $folder . '/' . $filename;
 
-		$result = (new LaraTeX($validation["template"]))
+		$laraTeX = (new LaraTeX($validation["template"]))
 			->with([
 				'title' => $validation["title"],
 				'questions' => $validation["questions"]??[],
 				'content' => $validation["content"]??'',
 				'slug' => '/download/' . $fileID
-			])
+			]);
+		$result = $laraTeX
 			->savePdf(Storage::disk('public')->path($fullpath));
 
 		if ($result) {
 			// Save it to the database.
-			return LatexPdf::create([
+			$pdf = LatexPdf::create([
 				'slug' => $fileID,
 				'name' => $validation["slug"] . '.pdf',
 				'url' => $fullpath
 			]);
+
+			$pdf->tex = $laraTeX->render();
+			return $pdf;
 		}
 		return false;
 	}

@@ -68,7 +68,7 @@
     @else
 \pagestyle{fancy}
 \fancyhf{}
-\renewcommand{\footrule}{\color{lightgray}\hrulefill\color{black}}
+\renewcommand{\footrule}{ {\color{lightgray}\hrulefill\color{black}} }
 \renewcommand{\headrulewidth}{0pt}
 \renewcommand{\footrulewidth}{0.1pt}
 \fancyfoot[L]{\scriptsize \thedate}

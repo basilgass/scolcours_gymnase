@@ -67,10 +67,10 @@ class ChallengesController extends Controller
 			'title' => ['required', 'min:2'],
 			'active' => ['boolean'],
 //			'generator' => ['string', 'min:2'],
-			'output' => ['string', 'min:2'],
+//			'output' => ['string', 'min:2'],
 			'nextLevelAfter' => ['numeric', 'min:0'],
-			'parameters' => ['nullable', 'string'],
-			'keyboard' => ['nullable', 'string'],
+//			'parameters' => ['nullable', 'string'],
+//			'keyboard' => ['nullable', 'string'],
 			'duration' => ['numeric', 'min:0'],
 			'lives' => ['numeric', 'min:0'],
 			'bonusScoreTrigger' => ['numeric', 'min:0', 'nullable'],
@@ -83,7 +83,6 @@ class ChallengesController extends Controller
 //		if ($validation['parameters'] === null) {
 //			$validation['parameters'] = 'exact';
 //		}
-
 		$challenge->update($validation);
 
 		// Update the generators
@@ -91,14 +90,20 @@ class ChallengesController extends Controller
 			'generators' => ['array'],
 			'generators.*.id' => ['exists:App\Models\Generator,id'],
 			'generators.*.title' => ['string', 'nullable'],
+			'generators.*.slug' => ['string',],
 			'generators.*.body' => ['string', 'nullable'],
-			'generators.*.code' => ['string']
+			'generators.*.template' => ['string', 'nullable'],
+			'generators.*.keyboard' => ['string'],
+			'generators.*.code' => ['string'],
 		]);
 
 		foreach ($validation['generators'] as $generator) {
 			Generator::find($generator['id'])?->update([
 				"title" => $generator['title']??'',
+				"slug" => $generator['slug']??'',
 				"body" => $generator['body']??'',
+				"template" => $generator['template']??'',
+				"keyboard" => $generator['keyboard']??'',
 				"code" => $generator['code']
 			]);
 		}

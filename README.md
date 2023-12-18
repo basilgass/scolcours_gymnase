@@ -7,3 +7,4 @@ Powered by Scolcours
 
 ## Introduction
 This is my *private* repo for my mathematical website, designed for the Switzerland gymnasium.
+

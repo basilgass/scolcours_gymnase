@@ -1,10 +1,10 @@
 <script setup>
-	import { computed, inject, ref } from "vue"
-	import QuestionShow from "@/Components/Posts/Questions/QuestionShow.vue"
-	import axios from "axios"
-	import FormWrapper from "@/Components/Form/FormWrapper.vue"
+import { computed, inject, ref } from "vue"
+import QuestionShow from "@/Components/Posts/Questions/QuestionShow.vue"
+import axios from "axios"
+import FormMaker from "@/Components/Form/FormMaker.vue"
 
-	const props = defineProps({
+const props = defineProps({
 		questions: { type: Array, required: true },
 		containerType: { type: String, required: true },
 		containerId: { type: Number, required: true },
@@ -218,22 +218,36 @@
 			class="p-3"
 		>
 			<div class="flex flex-wrap justify-between items-center">
-				<div class="uppercase">administration des questions</div>
+				<div class="uppercase">
+					administration des questions
+				</div>
 				<div class="flex gap-4">
-					<button class="btn btn-xs" @click="addDisplayIf">
+					<button
+						class="btn btn-xs"
+						@click="addDisplayIf"
+					>
 						apparition conditionnel
 					</button>
-					<button class="btn btn-xs" @click="removeDisplayIf">
+					<button
+						class="btn btn-xs"
+						@click="removeDisplayIf"
+					>
 						supprimer conditions
 					</button>
 
-					<button class="btn btn-xs" @click="resetAnswers">
+					<button
+						class="btn btn-xs"
+						@click="resetAnswers"
+					>
 						réinitialiser les réponses
 					</button>
 				</div>
 			</div>
-			<div v-if="props.containerType === 'Post'" class="mt-5 flex gap-3">
-				<form-wrapper
+			<div
+				v-if="props.containerType === 'Post'"
+				class="mt-5 flex gap-3"
+			>
+				<form-maker
 					label="Gestion de la grille"
 					inline-label
 					v-model="questionsCustomGrid"
@@ -241,8 +255,11 @@
 					font-code
 					class="flex-1"
 					@enter="updateQuestionsGrid"
-				></form-wrapper>
-				<button class="btn btn-xs" @click="questionsCustomGrid = ''">
+				/>
+				<button
+					class="btn btn-xs"
+					@click="questionsCustomGrid = ''"
+				>
 					<i class="bi bi-ban" />
 				</button>
 				<button
@@ -266,7 +283,7 @@
 			class="flex justify-between px-10 py-4 mb-5"
 		>
 			<h3 class="uppercase text-2xl relative">
-				<i class="bi bi-question-square mr-5"></i>questions
+				<i class="bi bi-question-square mr-5" />questions
 			</h3>
 		</div>
 
@@ -295,8 +312,15 @@
 			</template>
 		</draggable>
 
-		<div v-show="editMode.enabled.value" v-admin class="px-5 mb-5">
-			<button class="btn-new mt-10" @click="addQuestion">
+		<div
+			v-show="editMode.enabled.value"
+			v-admin
+			class="px-5 mb-5"
+		>
+			<button
+				class="btn-new mt-10"
+				@click="addQuestion"
+			>
 				ajouter une question
 			</button>
 		</div>

@@ -1,44 +1,3 @@
-<template>
-	<Panel>
-		<form-input
-			v-model="numerator"
-			label="fonction à dériver (numérateur)"
-			name="fonction"
-			focus
-		/>
-
-		<form-input
-			v-model="denominator"
-			label="fonction à dériver (dénominateur - optionnel)"
-			name="fonction"
-		/>
-
-
-		<div v-if="result">
-			<div
-				v-if="numerator.trim()!==''"
-				v-katex="result"
-			/>
-			<div class="flex text-xs text-gray-600">
-				<button
-					class="bi bi-clipboard mr-3"
-					@click="copyToClipboard"
-				/>
-				<div
-					class="font-code"
-					v-text="result"
-				/>
-			</div>
-		</div>
-		<div
-			v-else
-			class="text-red-700 text-sm"
-		>
-			Une erreur s'est produite avec vos données.
-		</div>
-	</Panel>
-</template>
-
 <script setup>
 /** Tools
  * title: dérivées
@@ -47,9 +6,9 @@
  * tags: algebre,2M
  */
 import Panel from "@/Components/Ui/Panel.vue"
-import FormInput from "@/Components/Form/FormInput.vue"
-import {computed, ref} from "vue"
-import {PiMath} from "pimath/esm"
+import { computed, ref } from "vue"
+import { PiMath } from "pimath/esm"
+import FormMaker from "@/Components/Form/FormMaker.vue"
 
 let numerator = ref(""),
 	denominator = ref("")
@@ -82,3 +41,44 @@ function copyToClipboard(){
 	navigator.clipboard.writeText(result.value)
 }
 </script>
+
+<template>
+	<Panel>
+		<form-maker
+			v-model="numerator"
+			label="fonction à dériver (numérateur)"
+			name="fonction"
+			focus
+		/>
+
+		<form-maker
+			v-model="denominator"
+			label="fonction à dériver (dénominateur - optionnel)"
+			name="fonction"
+		/>
+
+
+		<div v-if="result">
+			<div
+				v-if="numerator.trim()!==''"
+				v-katex="result"
+			/>
+			<div class="flex text-xs text-gray-600">
+				<button
+					class="bi bi-clipboard mr-3"
+					@click="copyToClipboard"
+				/>
+				<div
+					class="font-code"
+					v-text="result"
+				/>
+			</div>
+		</div>
+		<div
+			v-else
+			class="text-red-700 text-sm"
+		>
+			Une erreur s'est produite avec vos données.
+		</div>
+	</Panel>
+</template>

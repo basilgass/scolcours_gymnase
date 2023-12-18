@@ -1,39 +1,10 @@
-<template>
-	<div>
-		<div>
-			<form-input
-				v-model="input"
-				name="Réponse"
-				label="réponse"
-			/>
-		</div>
-		<div>
-			Affichage : <span v-katex="tex" />
-		</div>
-		<div
-			ref="draw"
-			class="max-w-lg"
-		/>
-		<button
-			class="btn btn-primary"
-			@click="validate"
-		>
-			Valider
-		</button>
-
-		<keyboard-display
-			v-model="input"
-			keyboard="venn@A,B,C"
-		/>
-	</div>
-</template>
 <script setup>
 
-import {PiDraw} from "pidraw/esm"
-import FormInput from "@/Components/Form/FormInput.vue"
-import {computed, onMounted, ref} from "vue"
-import {PiMath} from "pimath/esm"
+import { PiDraw } from "pidraw/esm"
+import { computed, onMounted, ref } from "vue"
+import { PiMath } from "pimath/esm"
 import KeyboardDisplay from "@/Components/Keyboards/KeyboardDisplay.vue"
+import FormMaker from "@/Components/Form/FormMaker.vue"
 
 let draw = ref(null),
 	geom,
@@ -148,3 +119,32 @@ onMounted(()=>{
 	// generate()
 })
 </script>
+<template>
+	<div>
+		<div>
+			<form-maker
+				v-model="input"
+				name="Réponse"
+				label="réponse"
+			/>
+		</div>
+		<div>
+			Affichage : <span v-katex="tex" />
+		</div>
+		<div
+			ref="draw"
+			class="max-w-lg"
+		/>
+		<button
+			class="btn btn-primary"
+			@click="validate"
+		>
+			Valider
+		</button>
+
+		<keyboard-display
+			v-model="input"
+			keyboard="venn@A,B,C"
+		/>
+	</div>
+</template>

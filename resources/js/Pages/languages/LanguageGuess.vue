@@ -1,150 +1,3 @@
-<template>
-	<article>
-		<ArticleTitle :title="language"/>
-
-		<Link
-				:href="`/${language}`"
-				class="hover:pl-2 transition-all duration-300"
-		>
-			<i class="bi bi-arrow-bar-left"/> retour
-		</Link>
-
-		<div v-if="!gameStopped">
-			<div
-					class="flex justify-between items-baseline"
-			>
-				<div class="text-2xl my-10">
-					{{ currentWordForeign }}
-				</div>
-				<div
-						v-show="availableWords[startIndex].errors"
-						class="text-red-600"
-				>
-					{{ availableWords[startIndex].errors }}ème tentative
-				</div>
-			</div>
-
-			<form-input
-					ref="suggestInput"
-					v-model="userGuess"
-					:disabled="unknownWordAnswer!==''"
-					:label="numberOfLetters>1?`entrer les ${numberOfLetters} premières lettres`:'entrer la première lettre'"
-					name="guess"
-					@keyup="resetUnknowns"
-					@keyup.enter="suggestionEnter"
-			/>
-
-			<div class="text-xs flex justify-between">
-				<div>Mot {{ startIndex + 1 }} sur {{ availableWords.length }}</div>
-				<div v-if="unknownCount>0">
-					{{ unknownCount }} erreur{{ unknownCount > 1 ? 's' : '' }}
-				</div>
-			</div>
-
-			<div
-					v-if="suggestionsItems.length>0"
-					ref="suggestionsWrapper"
-					class="suggestions flex flex-col bg-white border rounded my-4 divide-y"
-			>
-				<div
-						v-for="(word, index) in suggestionsItems"
-						:key="index"
-						class="px-4 py-3 hover:bg-amber-100 transition-all duration-300 cursor-pointer flex justify-between"
-						@click="suggestionClick(index)"
-				>
-					<div>
-						{{ word.foreign }}
-					</div>
-					<transition name="fade-right">
-						<div v-show="word.hint">
-							{{ word.fr }}
-						</div>
-					</transition>
-				</div>
-			</div>
-
-			<div class="mt-5 flex gap-3">
-				<button
-						v-show="unknownWordAnswer===''"
-						class="btn-cancel btn-xs"
-						@click="unknownWord"
-				>
-					Je ne sais pas
-				</button>
-				<div v-text="unknownWordAnswer"/>
-				<button
-						v-show="unknownWordAnswer!==''"
-						class="btn-primary btn-xs"
-						@click="continueGame"
-				>
-					continuer
-				</button>
-			</div>
-
-			<div v-if="unknownWordForeign.length>0">
-				<h2 class="text-xl font-semibold mt-10">
-					{{ unknownWordForeign }}
-				</h2>
-				<div
-						v-if="unknownWordExamples.length>0"
-						class="mt-5"
-				>
-					<h3 class="border-t text-lg pt-3 mb-3 font-semibold">
-						exemples
-					</h3>
-					<div class="flex flex-col gap-2">
-						<div
-								v-for="(example, index) in unknownWordExamples"
-								:key="`example-${index}`"
-								v-text="example"
-						/>
-					</div>
-				</div>
-
-				<div
-						v-if="unknownWordDefinition.length>0"
-						class="mt-5"
-				>
-					<h3 class="border-t text-lg pt-3 mb-3 font-semibold">
-						définition
-					</h3>
-					<div v-text="unknownWordDefinition"/>
-				</div>
-			</div>
-		</div>
-
-		<div
-				v-if="gameStopped"
-		>
-			<LanguageUnitsSelector
-					:units="props.units"
-					@update="unitsSelection=$event"
-			/>
-
-			<div class="my-3">
-				<h2 class="text-lg font-extralight mb-2 uppercase">configuration des suggestions</h2>
-				<div class="flex gap-3">
-					<form-number
-							v-model="numberOfLetters"
-							label="nombre de lettres min."
-							name="nombre de lettres"
-					/>
-				</div>
-			</div>
-
-			<div class="grid place-items-center mt-12">
-				<button
-						class="btn-primary px-20 py-10 text-2xl"
-						@click="startGame"
-						v-show="unitsSelection.length>0"
-				>
-					Commencer
-				</button>
-			</div>
-		</div>
-	</article>
-</template>
-
 <script>
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 
@@ -152,13 +5,13 @@ export default {
 	layout: LayoutMain
 }
 </script>
+
 <script setup>
 import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
 import {computed, nextTick, onMounted, ref, watch} from "vue"
 import {PiMath} from "pimath/esm"
-import FormInput from "@/Components/Form/FormInput.vue"
-import FormNumber from "@/Components/Form/FormNumber.vue"
 import LanguageUnitsSelector from "@/Components/Languages/LanguageUnitsSelector.vue"
+import FormMaker from "@/Components/Form/FormMaker.vue"
 
 let props = defineProps({
 	code: {type: String, required: true},
@@ -388,3 +241,152 @@ onMounted(() => {
 
 })
 </script>
+<template>
+	<article>
+		<ArticleTitle :title="language" />
+
+		<Link
+			:href="`/${language}`"
+			class="hover:pl-2 transition-all duration-300"
+		>
+			<i class="bi bi-arrow-bar-left" /> retour
+		</Link>
+
+		<div v-if="!gameStopped">
+			<div
+				class="flex justify-between items-baseline"
+			>
+				<div class="text-2xl my-10">
+					{{ currentWordForeign }}
+				</div>
+				<div
+					v-show="availableWords[startIndex].errors"
+					class="text-red-600"
+				>
+					{{ availableWords[startIndex].errors }}ème tentative
+				</div>
+			</div>
+
+			<form-maker
+				ref="suggestInput"
+				v-model="userGuess"
+				:disabled="unknownWordAnswer!==''"
+				:label="numberOfLetters>1?`entrer les ${numberOfLetters} premières lettres`:'entrer la première lettre'"
+				name="guess"
+				@keyup="resetUnknowns"
+				@keyup.enter="suggestionEnter"
+			/>
+
+			<div class="text-xs flex justify-between">
+				<div>Mot {{ startIndex + 1 }} sur {{ availableWords.length }}</div>
+				<div v-if="unknownCount>0">
+					{{ unknownCount }} erreur{{ unknownCount > 1 ? 's' : '' }}
+				</div>
+			</div>
+
+			<div
+				v-if="suggestionsItems.length>0"
+				ref="suggestionsWrapper"
+				class="suggestions flex flex-col bg-white border rounded my-4 divide-y"
+			>
+				<div
+					v-for="(word, index) in suggestionsItems"
+					:key="index"
+					class="px-4 py-3 hover:bg-amber-100 transition-all duration-300 cursor-pointer flex justify-between"
+					@click="suggestionClick(index)"
+				>
+					<div>
+						{{ word.foreign }}
+					</div>
+					<transition name="fade-right">
+						<div v-show="word.hint">
+							{{ word.fr }}
+						</div>
+					</transition>
+				</div>
+			</div>
+
+			<div class="mt-5 flex gap-3">
+				<button
+					v-show="unknownWordAnswer===''"
+					class="btn-cancel btn-xs"
+					@click="unknownWord"
+				>
+					Je ne sais pas
+				</button>
+				<div v-text="unknownWordAnswer" />
+				<button
+					v-show="unknownWordAnswer!==''"
+					class="btn-primary btn-xs"
+					@click="continueGame"
+				>
+					continuer
+				</button>
+			</div>
+
+			<div v-if="unknownWordForeign.length>0">
+				<h2 class="text-xl font-semibold mt-10">
+					{{ unknownWordForeign }}
+				</h2>
+				<div
+					v-if="unknownWordExamples.length>0"
+					class="mt-5"
+				>
+					<h3 class="border-t text-lg pt-3 mb-3 font-semibold">
+						exemples
+					</h3>
+					<div class="flex flex-col gap-2">
+						<div
+							v-for="(example, index) in unknownWordExamples"
+							:key="`example-${index}`"
+							v-text="example"
+						/>
+					</div>
+				</div>
+
+				<div
+					v-if="unknownWordDefinition.length>0"
+					class="mt-5"
+				>
+					<h3 class="border-t text-lg pt-3 mb-3 font-semibold">
+						définition
+					</h3>
+					<div v-text="unknownWordDefinition" />
+				</div>
+			</div>
+		</div>
+
+		<div
+			v-if="gameStopped"
+		>
+			<LanguageUnitsSelector
+				:units="props.units"
+				@update="unitsSelection=$event"
+			/>
+
+			<div class="my-3">
+				<h2 class="text-lg font-extralight mb-2 uppercase">
+					configuration des suggestions
+				</h2>
+				<div class="flex gap-3">
+					<form-maker
+						type="number"
+						v-model="numberOfLetters"
+						label="nombre de lettres min."
+						name="nombre de lettres"
+					/>
+				</div>
+			</div>
+
+			<div class="grid place-items-center mt-12">
+				<button
+					class="btn-primary px-20 py-10 text-2xl"
+					@click="startGame"
+					v-show="unitsSelection.length>0"
+				>
+					Commencer
+				</button>
+			</div>
+		</div>
+	</article>
+</template>

@@ -1,7 +1,7 @@
 <script>
-	import LayoutMain from "@/Layouts/LayoutMain.vue"
+import LayoutMain from "@/Layouts/LayoutMain.vue"
 
-	export default {
+export default {
 		layout: LayoutMain,
 	}
 </script>
@@ -11,7 +11,7 @@
 	import { ref } from "vue"
 	import { PiMath } from "pimath/esm"
 	import LanguageUnitsSelector from "@/Components/Languages/LanguageUnitsSelector.vue"
-	import FormWrapper from "@/Components/Form/FormWrapper.vue"
+	import FormMaker from "@/Components/Form/FormMaker.vue"
 
 	let props = defineProps({
 		code: { type: String, required: true },
@@ -182,14 +182,14 @@
 					configuration du memory
 				</h2>
 				<div class="flex gap-3">
-					<form-wrapper
+					<form-maker
 						type="number"
 						min="10"
 						max="100"
 						v-model="numberOfCards"
 						label="nombre de cartes"
 					/>
-					<form-wrapper
+					<form-maker
 						type="number"
 						min="1"
 						max="5"
@@ -209,7 +209,10 @@
 				</button>
 			</div>
 		</div>
-		<div v-else class="mt-10 grid grid-cols-3 w-full">
+		<div
+			v-else
+			class="mt-10 grid grid-cols-3 w-full"
+		>
 			<div>
 				<button
 					class="btn btn-xs bg-white"

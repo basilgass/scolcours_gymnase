@@ -114,9 +114,33 @@ export interface EvaluationInterface {
 
 export interface GeneratorInterface {
 	id: number
+	slug: string
 	theme: ThemeInterface
 	title: string
 	body: string
+	template: string
 	keyboard: string
 	code: string
+	pivot: {
+		order: number
+	}
+}
+
+export interface ChallengeInterface {
+	id: number
+	chapter: ChapterInterface
+	slug: string
+	active: boolean
+	title: string
+	block: BlockInterface
+	maxLevel: number
+	nextLevelAfter: number
+	duration: number
+	lives: number
+	bonusScoreTrigger: number
+	bonusScoreLife: number
+	bonusScoreTime: number
+	bonusLevelLife: number
+	bonusLevelTime: number
+	generators: GeneratorInterface[]
 }

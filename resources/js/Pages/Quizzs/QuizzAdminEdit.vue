@@ -1,22 +1,19 @@
 <script>
-	import LayoutMain from "@/Layouts/LayoutMain.vue"
+import LayoutMain from "@/Layouts/LayoutMain.vue"
 
-	export default {
+export default {
 		layout: LayoutMain,
 	}
 </script>
 
 <script setup>
-	import { computed, inject, onMounted, ref } from "vue"
-	import FormInput from "@/Components/Form/FormInput.vue"
-	import FormTextarea from "@/Components/Form/FormTextarea.vue"
-	import Button from "@/Components/Auth/Button.vue"
+	import { computed, inject, ref } from "vue"
 	import DialogModal from "@/Components/Ui/DialogModal.vue"
 	import QuestionsIndex from "@/Components/Posts/Questions/QuestionsIndex.vue"
 	import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 	import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
 	import { router } from "@inertiajs/vue3"
-	import FormSelect from "@/Components/Form/FormSelect.vue"
+	import FormMaker from "@/Components/Form/FormMaker.vue"
 
 	const flash = inject("flash")
 	let props = defineProps({
@@ -113,8 +110,13 @@
 	<section>
 		<div class="py-10">
 			<div class="flex justify-between">
-				<h1 class="text-2xl font-semibold">Gestion du quizz</h1>
-				<confirm-button xs @click="quizzDestroy">
+				<h1 class="text-2xl font-semibold">
+					Gestion du quizz
+				</h1>
+				<confirm-button
+					xs
+					@click="quizzDestroy"
+				>
 					supprimer
 				</confirm-button>
 			</div>
@@ -127,10 +129,13 @@
 		</div>
 
 		<div class="bg-white border border-slate-200 rounded py-3 px-5">
-			<h2 class="text-2xl" v-text="theQuizz.title" />
+			<h2
+				class="text-2xl"
+				v-text="theQuizz.title"
+			/>
 			<markdown-it :text="theQuizz.body" />
 
-			<hr class="divide-slate-100 my-5" />
+			<hr class="divide-slate-100 my-5">
 			<markdown-it :text="theQuizz.outro" />
 		</div>
 
@@ -149,7 +154,10 @@
 			</button>
 		</div>
 
-		<dialog-modal v-model="showNewSessionForm" class="py-2 max-w-lg">
+		<dialog-modal
+			v-model="showNewSessionForm"
+			class="py-2 max-w-lg"
+		>
 			<template #header>
 				<h2 class="px-5 text-lg border-b border-slate-200">
 					Nouvelle session
@@ -178,14 +186,17 @@
 						v-text="team.name"
 					/>
 				</div>
-				<form-input
+				<form-maker
 					v-model="sessionName"
 					name="id session"
 					label="id session"
 				/>
 			</div>
 		</dialog-modal>
-		<dialog-modal v-model="showQuizzForm" class="max-w-xl py-2">
+		<dialog-modal
+			v-model="showQuizzForm"
+			class="max-w-xl py-2"
+		>
 			<template #header>
 				<h2 class="text-xl px-5 border-b border-slate-200">
 					éditer le quizz
@@ -193,37 +204,45 @@
 			</template>
 			<template #footer>
 				<div class="px-5 text-right">
-					<button class="btn btn-primary" @click="quizzUpdate">
+					<button
+						class="btn btn-primary"
+						@click="quizzUpdate"
+					>
 						Enregistrer les modifications
 					</button>
 				</div>
 			</template>
 			<div class="px-5">
-				<form-select
+				<form-maker
+					type="select"
 					v-model="theQuizz.chapter"
 					name="quizz-themes"
 					label="thème"
 				>
-					<option value="">-</option>
+					<option value="">
+						-
+					</option>
 					<option
 						v-for="chapter in props.chapters"
 						:key="'chapter-' + chapter.id"
 						:value="chapter.id"
 						v-text="chapter.title"
 					/>
-				</form-select>
-				<form-input
+				</form-maker>
+				<form-maker
 					v-model="theQuizz.title"
 					name="quizz-title"
 					label="title"
 				/>
-				<form-textarea
+				<form-maker
+					type="textarea"
 					v-model="theQuizz.body"
 					name="quizz-body"
 					label="body"
 					:rows="10"
 				/>
-				<form-textarea
+				<form-maker
+					type="textarea"
 					v-model="theQuizz.outro"
 					name="quizz-outro"
 					label="outro"
@@ -240,7 +259,9 @@
 				:questions="props.questions.data"
 			/>
 		</div>
-		<h2 class="text-lg my-10">sessions précédantes</h2>
+		<h2 class="text-lg my-10">
+			sessions précédantes
+		</h2>
 		<table
 			v-if="props.sessions.data.length > 0"
 			class="table table-auto w-full"

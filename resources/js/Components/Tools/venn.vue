@@ -1,47 +1,3 @@
-<template>
-	<Panel>
-		<div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-			<div class="flex flex-col gap-5">
-				<div>
-					<form-input
-						v-model="input"
-						name="expression"
-						label="expression"
-					/>
-				</div>
-				<div v-katex="tex" />
-
-				<keyboard-display
-					v-model="input"
-					class="mt-10 mt-auto mb-2"
-					:keyboard="{
-						grid: 'grid-cols-3',
-						layout: [
-							'A', 'B', 'C',
-							'|', '&', '!',
-							'-', '(', ')'
-						]
-					}"
-					:custom-keys="{
-						'A': {type: 'math', display: 'A'},
-						'B': {type: 'math', display: 'B'},
-						'C': {type: 'math', display: 'C'},
-						'|': {type: 'math', display: '\\cup'},
-						'&': {type: 'math', display: '\\cap'},
-						'!': {type: 'math', display: '\\overline{\\textcolor{lightgray}{A}}'},
-						'-': {type: 'math', display: '\\textcolor{lightgray}{A}\\setminus{\\textcolor{lightgray}{B}}'},
-
-					}"
-				/>
-			</div>
-			<div
-				ref="draw"
-				class="max-w-lg"
-			/>
-		</div>
-	</Panel>
-</template>
-
 <script setup>
 /** Tools
  * title: diagramme de Venn
@@ -50,12 +6,12 @@
  * tags: algebre,1M
  */
 import Panel from "@/Components/Ui/Panel.vue"
-import FormInput from "@/Components/Form/FormInput.vue"
 
-import {computed, onMounted, ref} from "vue"
-import {PiMath} from "pimath/esm"
-import {PiDraw} from "pidraw/esm"
+import { computed, onMounted, ref } from "vue"
+import { PiMath } from "pimath/esm"
+import { PiDraw } from "pidraw/esm"
 import KeyboardDisplay from "@/Components/Keyboards/KeyboardDisplay.vue"
+import FormMaker from "@/Components/Form/FormMaker.vue"
 
 let draw = ref(null),
 	geom,
@@ -149,3 +105,47 @@ onMounted(()=>{
 })
 
 </script>
+
+<template>
+	<Panel>
+		<div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+			<div class="flex flex-col gap-5">
+				<div>
+					<form-maker
+						v-model="input"
+						name="expression"
+						label="expression"
+					/>
+				</div>
+				<div v-katex="tex" />
+
+				<keyboard-display
+					v-model="input"
+					class="mt-10 mt-auto mb-2"
+					:keyboard="{
+						grid: 'grid-cols-3',
+						layout: [
+							'A', 'B', 'C',
+							'|', '&', '!',
+							'-', '(', ')'
+						]
+					}"
+					:custom-keys="{
+						'A': {type: 'math', display: 'A'},
+						'B': {type: 'math', display: 'B'},
+						'C': {type: 'math', display: 'C'},
+						'|': {type: 'math', display: '\\cup'},
+						'&': {type: 'math', display: '\\cap'},
+						'!': {type: 'math', display: '\\overline{\\textcolor{lightgray}{A}}'},
+						'-': {type: 'math', display: '\\textcolor{lightgray}{A}\\setminus{\\textcolor{lightgray}{B}}'},
+
+					}"
+				/>
+			</div>
+			<div
+				ref="draw"
+				class="max-w-lg"
+			/>
+		</div>
+	</Panel>
+</template>

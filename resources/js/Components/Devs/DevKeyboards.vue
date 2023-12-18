@@ -1,25 +1,3 @@
-<template>
-	<!-- Title -->
-	<div ref="root">
-		<form-textarea
-			v-model="kbrdCode"
-			:row="20"
-			label="claviers"
-			name="keyboard"
-		/>
-
-		<div
-			v-katex.auto="kbrdFormat"
-			class="code h-16"
-		/>
-
-		<code-area
-			:code="kbrdsJson"
-			:rows="30"
-			language="json"
-		/>
-	</div>
-</template>
 <script>
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 
@@ -31,8 +9,8 @@ export default {
 
 import {computed, ref} from "vue"
 import {useKeyboard} from "@/Composables/useKeyboard"
-import FormTextarea from "@/Components/Form/FormTextarea.vue"
 import CodeArea from "@/Components/Ui/CodeArea.vue"
+import FormMaker from "@/Components/Form/FormMaker.vue"
 
 let kbrdCode = ref("")
 
@@ -55,4 +33,27 @@ let kbrds = computed(() => {
 		return JSON.stringify(kbrds.value, null, "\t")
 	})
 </script>
+<template>
+	<!-- Title -->
+	<div ref="root">
+		<form-maker
+			type="textarea"
+			v-model="kbrdCode"
+			:row="20"
+			label="claviers"
+			name="keyboard"
+		/>
+
+		<div
+			v-katex.auto="kbrdFormat"
+			class="code h-16"
+		/>
+
+		<code-area
+			:code="kbrdsJson"
+			:rows="30"
+			language="json"
+		/>
+	</div>
+</template>
 

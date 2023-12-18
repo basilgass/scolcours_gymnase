@@ -1,61 +1,41 @@
-<script setup>
-	import { PiMath } from "pimath/esm"
-	import { computed, onMounted, ref } from "vue"
+<script lang="ts" setup>
+	import { computed, onMounted, PropType, ref } from "vue"
 	import QuestionShow from "@/Components/Posts/Questions/QuestionShow.vue"
-	import { useGenerators } from "@/Composables/useGenerators"
+	import { useGenerator } from "@/Composables/useGenerator"
+	import {
+		ChallengeInterface,
+		GeneratorInterface,
+	} from "@/types/modelInterfaces"
 
 	let props = defineProps({
-		challenge: { type: Object, required: true },
+		challenge: {
+			type: Object as PropType<ChallengeInterface>,
+			required: true,
+		},
 		slug: { type: String, required: true },
 	})
 
-	let currentGenerator = computed(() => {
+	let currentGenerator = computed<GeneratorInterface>(() => {
 			return props.challenge.generators.filter(
 				(g) => g.slug === props.slug,
 			)[0]
 		}),
-		question = ref({}),
 		counter = ref(0)
 
-	let generateQuestion = function () {
-			if (currentGenerator.value !== undefined) {
-				counter.value++
-				let F = new Function("PiMath", currentGenerator.value.code)
-
-				question.value = F(PiMath)
-			}
-		},
-		nextQuestion = function (checkerResult) {
+	let nextQuestion = function (checkerResult) {
 			if (checkerResult.result) {
-				generateQuestion()
+				counter.value++
 			}
 		},
 		theQuestion = computed(() => {
-			if (question.value.question === undefined) {
-				return false
+			if (counter.value >= 0) {
+				return useGenerator(currentGenerator).question()
 			}
-
-			return useGenerators().question(question, props.challenge)
-
-			// return {
-			// 	block: {
-			// 		body: props.challenge.output
-			// 			.replace("question", question.value.question)
-			// 			.replace("answer", "$a"),
-			// 		illustrations: [],
-			// 	},
-			// 	keyboard: question.value.keyboard
-			// 		? question.value.keyboard
-			// 		: props.challenge.keyboard,
-			// 	answer: "" + question.value.answer,
-			// 	user: {
-			// 		result: false,
-			// 	},
-			// }
+			return false
 		})
 
 	onMounted(() => {
-		generateQuestion()
+		counter.value++
 	})
 </script>
 
@@ -64,7 +44,7 @@
 		<question-show
 			:key="`question-${counter}`"
 			:question="theQuestion"
-			class="max-w-[40em] mx-auto border border-gray-400"
+			class="max-w-[40em] mx-auto min-h-[500px] border border-gray-400"
 			dynamic
 			show-input
 			@validate="nextQuestion"

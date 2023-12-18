@@ -1,25 +1,9 @@
-<template>
-	<div>
-		<form-input
-			v-model="inputValue"
-			name="kbrd-input"
-			label="réponse"
-			@input="changeEvent"
-			@enter="$emit('validate')"
-		/>
-		<div
-			v-katex.auto="checker.format"
-			class="text-center text-xs text-gray-400"
-		/>
-	</div>
-</template>
-
 <script setup lang="ts">
 
-import {computed, nextTick, ref} from "vue"
-import FormInput from "@/Components/Form/FormInput.vue"
-import {useKeyboard} from "@/Composables/useKeyboard.js"
+import { computed, nextTick, ref } from "vue"
+import { useKeyboard } from "@/Composables/useKeyboard.js"
 import AsciiMathParser from "@/asciimath2tex"
+import FormMaker from "@/Components/Form/FormMaker.vue"
 
 //TODO: KeyboardInput doit accepter des "checkers" différents, issus de KeyboardBasic
 let props = defineProps({
@@ -83,3 +67,19 @@ defineExpose({
 	parameters: ""
 })
 </script>
+
+<template>
+	<div>
+		<form-maker
+			v-model="inputValue"
+			name="kbrd-input"
+			label="réponse"
+			@input="changeEvent"
+			@enter="$emit('validate')"
+		/>
+		<div
+			v-katex.auto="checker.format"
+			class="text-center text-xs text-gray-400"
+		/>
+	</div>
+</template>

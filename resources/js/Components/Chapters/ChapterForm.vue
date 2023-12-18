@@ -3,16 +3,14 @@ Formulaire d'édition d'un chapitre.
 TODO: donner la possibilité d'ajouter un chapitre.
 -->
 <script setup>
-	import { inject, ref } from "vue"
-	import DialogModal from "@/Components/Ui/DialogModal.vue"
-	import FormInput from "@/Components/Form/FormInput.vue"
-	import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
-	import FormTextarea from "@/Components/Form/FormTextarea.vue"
-	import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
-	import { router } from "@inertiajs/vue3"
-	import FormWrapper from "@/Components/Form/FormWrapper.vue"
+import { inject, ref } from "vue"
+import DialogModal from "@/Components/Ui/DialogModal.vue"
+import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
+import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
+import { router } from "@inertiajs/vue3"
+import FormMaker from "@/Components/Form/FormMaker.vue"
 
-	const emits = defineEmits(["update:modelValue", "change", "destroy"])
+const emits = defineEmits(["update:modelValue", "change", "destroy"])
 
 	const props = defineProps({
 		modelValue: { type: Boolean, default: false },
@@ -59,15 +57,14 @@ TODO: donner la possibilité d'ajouter un chapitre.
 				class="bg-white flex justify-between items-baseline border-b border-gray-200 px-5 py-3 mb-5"
 			>
 				<h1>
-					<span class="text-xl md:text-2xl"
-						>édition d'un chapitre</span
-					>
-					<span class="text-xs font-code ml-5"
-						>(id: {{ props.chapter.id }})</span
-					>
+					<span class="text-xl md:text-2xl">édition d'un chapitre</span>
+					<span class="text-xs font-code ml-5">(id: {{ props.chapter.id }})</span>
 				</h1>
 				<div class="flex gap-3 justify-end">
-					<button class="btn-primary btn-xs" @click="saveChapter">
+					<button
+						class="btn-primary btn-xs"
+						@click="saveChapter"
+					>
 						enregistrer
 					</button>
 					<button
@@ -87,21 +84,38 @@ TODO: donner la possibilité d'ajouter un chapitre.
 		</template>
 
 		<div class="px-5 pb-5">
-			<form-wrapper v-model="theChapter.title" label="titre" focus />
-			<form-wrapper v-model="theChapter.meta_title" label="meta-titre" />
+			<form-maker
+				v-model="theChapter.title"
+				label="titre"
+				focus
+			/>
+			<form-maker
+				v-model="theChapter.meta_title"
+				label="meta-titre"
+			/>
 
-			<form-input v-model="theChapter.slug" label="Titre" name="title" />
+			<form-maker
+				v-model="theChapter.slug"
+				label="Titre"
+				name="title"
+			/>
 
 			<div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-				<form-textarea
+				<form-maker
 					v-model="theChapter.block.body"
+					type="textarea"
 					name="body"
 					label="body"
 				/>
-				<markdown-it :text="theChapter.block.body" class="md:mt-6" />
+				<markdown-it
+					:text="theChapter.block.body"
+					class="md:mt-6"
+				/>
 			</div>
 
-			<div class="my-10">Illustration ?</div>
+			<div class="my-10">
+				Illustration ?
+			</div>
 		</div>
 	</dialog-modal>
 </template>

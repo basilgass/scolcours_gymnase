@@ -1,34 +1,9 @@
 <!--
 Switch permettant d'activer ou désactiver une fonctionnalité
-TODO: utilisé dans FormSwitch et PostShow: modifier PostShow pour utiliser formSwitch à la place ?
 -->
-<template>
-	<div class="flex gap-2 items-baseline">
-		<span
-			v-katex.auto="falseText"
-			class="transition-all duration-300 cursor-pointer"
-			:class="!switchValue?'opacity-100':'opacity-40'"
-			@click="switchValue=!switchValue"
-		/>
-		<Switch
-			v-model="switchValue"
-			:class="switchClass"
-		>
-			<span
-				:class="circleClass"
-			/>
-		</Switch>
-		<span
-			v-katex.auto="trueText"
-			class="transition-all duration-300 cursor-pointer"
-			:class="switchValue?'opacity-100':'opacity-50'"
-			@click="switchValue=!switchValue"
-		/>
-	</div>
-</template>
 <script setup>
-import {Switch} from "@headlessui/vue"
-import {computed, ref, watch} from "vue"
+import { Switch } from "@headlessui/vue"
+import { computed, ref, watch } from "vue"
 
 let emit = defineEmits(["update:modelValue"])
 
@@ -76,3 +51,27 @@ watch(()=> props.modelValue, (newValue) => {
 	switchValue.value = newValue
 })
 </script>
+<template>
+	<div class="flex gap-2 items-baseline">
+		<span
+			v-katex.auto="falseText"
+			class="transition-all duration-300 cursor-pointer"
+			:class="!switchValue?'opacity-100':'opacity-40'"
+			@click="switchValue=!switchValue"
+		/>
+		<Switch
+			v-model="switchValue"
+			:class="switchClass"
+		>
+			<span
+				:class="circleClass"
+			/>
+		</Switch>
+		<span
+			v-katex.auto="trueText"
+			class="transition-all duration-300 cursor-pointer"
+			:class="switchValue?'opacity-100':'opacity-50'"
+			@click="switchValue=!switchValue"
+		/>
+	</div>
+</template>

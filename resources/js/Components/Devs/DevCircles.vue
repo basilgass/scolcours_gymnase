@@ -1,33 +1,3 @@
-<template>
-	<!-- Title -->
-	<div ref="root">
-		<form-input
-			v-model="circle"
-			label="Cercle"
-			name="circle"
-			@keyup.enter="updateValue"
-		/>
-		<pi-draw-parser
-			:draw="{
-				parameters: '-18,18,-18,18',
-				code: code
-			}"
-			class="max-w-[800px] mx-auto border rounded bg-white"
-		/>
-		<div
-			v-for="(item, index) in tangentPerPoints"
-			:key="'tangent-'+index"
-		>
-			<div v-katex.left="item" />
-		</div>
-		<div
-			v-for="(item,index) in intersectionPoints"
-			:key="'item-'+index"
-		>
-			<div v-katex.left="`${item.tangent1} \\cap ${item.tangent2} \\implies P${item.point}`" />
-		</div>
-	</div>
-</template>
 <script>
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 
@@ -39,9 +9,7 @@ export default {
 import {onMounted, ref} from "vue"
 import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"
 import {PiMath} from "pimath/esm"
-import FormInput from "@/Components/Form/FormInput.vue"
-import DialogModal from "@/Components/Ui/DialogModal.vue"
-import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
+import FormMaker from "@/Components/Form/FormMaker.vue"
 
 let root = ref(null),
 	code = ref(""),
@@ -92,4 +60,34 @@ onMounted(() => {
 })
 
 </script>
+<template>
+	<!-- Title -->
+	<div ref="root">
+		<form-maker
+			v-model="circle"
+			label="Cercle"
+			name="circle"
+			@keyup.enter="updateValue"
+		/>
+		<pi-draw-parser
+			:draw="{
+				parameters: '-18,18,-18,18',
+				code: code
+			}"
+			class="max-w-[800px] mx-auto border rounded bg-white"
+		/>
+		<div
+			v-for="(item, index) in tangentPerPoints"
+			:key="'tangent-'+index"
+		>
+			<div v-katex.left="item" />
+		</div>
+		<div
+			v-for="(item,index) in intersectionPoints"
+			:key="'item-'+index"
+		>
+			<div v-katex.left="`${item.tangent1} \\cap ${item.tangent2} \\implies P${item.point}`" />
+		</div>
+	</div>
+</template>
 

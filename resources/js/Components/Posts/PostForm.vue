@@ -3,15 +3,14 @@ Formulaire d'édition d'un post
 Utilisé dans PoseShow et PostEditPage (pour l'édition mode développement ?)
 -->
 <script setup>
-	// TODO: make the dialog html modal more user friendly and reactive !
-	import FormInput from "@/Components/Form/FormInput.vue"
-	import { ref } from "vue"
-	import FormTextarea from "@/Components/Form/FormTextarea.vue"
-	import DialogModal from "@/Components/Ui/DialogModal.vue"
-	import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
-	import MoveItemTo from "@/Components/Posts/MoveItemTo.vue"
+// TODO: make the dialog html modal more user friendly and reactive !
+import { ref } from "vue"
+import DialogModal from "@/Components/Ui/DialogModal.vue"
+import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
+import MoveItemTo from "@/Components/Posts/MoveItemTo.vue"
+import FormMaker from "@/Components/Form/FormMaker.vue"
 
-	const emits = defineEmits(["update:modelValue", "change", "destroy"])
+const emits = defineEmits(["update:modelValue", "change", "destroy"])
 
 	const props = defineProps({
 		modelValue: { type: Boolean, default: false },
@@ -73,7 +72,10 @@ Utilisé dans PoseShow et PostEditPage (pour l'édition mode développement ?)
 						</span>
 					</h1>
 					<div class="flex gap-3 justify-end">
-						<button class="btn-primary btn-xs" @click="savePost">
+						<button
+							class="btn-primary btn-xs"
+							@click="savePost"
+						>
 							enregistrer
 						</button>
 						<button
@@ -100,7 +102,7 @@ Utilisé dans PoseShow et PostEditPage (pour l'édition mode développement ?)
 		</template>
 
 		<div class="px-5 pb-5">
-			<form-input
+			<form-maker
 				v-model="theTitle"
 				focus
 				label="Titre"
@@ -121,12 +123,17 @@ Utilisé dans PoseShow et PostEditPage (pour l'édition mode développement ?)
 			</div>
 
 			<div class="flex flex-col">
-				<form-textarea
+				<form-maker
+					type="textarea"
 					v-model="theScript"
 					label="script"
 					name="script"
 				/>
-				<form-input v-model="theSwitch" label="switch" name="switch" />
+				<form-maker
+					v-model="theSwitch"
+					label="switch"
+					name="switch"
+				/>
 			</div>
 		</div>
 	</dialog-modal>

@@ -1,10 +1,10 @@
 <script setup lang="ts">
-	import FormWrapper from "@/Components/Form/FormWrapper.vue"
-	import { computed, defineAsyncComponent, inject, ref } from "vue"
-	import axios from "axios"
-	import { flashInterface } from "@/types"
+import { computed, defineAsyncComponent, inject, ref } from "vue"
+import axios from "axios"
+import { flashInterface } from "@/types"
+import FormMaker from "@/Components/Form/FormMaker.vue"
 
-	const props = defineProps({
+const props = defineProps({
 		block: { required: true, type: Object },
 		noDelete: { type: Boolean, default: false },
 	})
@@ -47,13 +47,16 @@
 			v-theme.bg.text.admin
 			class="py-2 px-3 rounded font-code flex justify-between place-content-center"
 		>
-			<button class="text-xs mr-2" @click="showEditForm = true">
+			<button
+				class="text-xs mr-2"
+				@click="showEditForm = true"
+			>
 				<i class="bi bi-pencil mr-2" /> éditer le paragraphe (id:
 				{{ theBlock.id }})
 			</button>
 
 			<div class="grid grid-cols-1 gap-1">
-				<form-wrapper
+				<form-maker
 					label="grille"
 					inline-label
 					sm
@@ -61,7 +64,10 @@
 					@enter="updateBlockTemplate"
 				/>
 				<div class="flex gap-1">
-					<button class="btn btn-xs" @click="theBlock.template = ''">
+					<button
+						class="btn btn-xs"
+						@click="theBlock.template = ''"
+					>
 						<i class="bi bi-ban" />
 					</button>
 					<button
@@ -91,7 +97,10 @@
 		</div>
 
 		<!-- Edit form -->
-		<div v-if="showEditForm" v-admin>
+		<div
+			v-if="showEditForm"
+			v-admin
+		>
 			<component
 				:is="editForm"
 				v-model="showEditForm"

@@ -1,6 +1,42 @@
 <!--
 Edition d'un formule d'un formulaire.
 -->
+<script setup>
+
+import { inject, ref } from "vue"
+import DialogModal from "@/Components/Ui/DialogModal.vue"
+import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
+import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
+import FormIllustration from "@/Components/Form/FormIllustration.vue"
+import FormMaker from "@/Components/Form/FormMaker.vue"
+
+const emits = defineEmits(["update:modelValue", "change", "destroy"])
+
+const props = defineProps({
+	modelValue: {type: Boolean, default: false},
+	formula: {type: Object, required: true},
+})
+
+let theFormula = ref(props.formula)
+
+const flash = inject("flash")
+let show = ref(props.modelValue),
+	saveFormula = function(){
+		axios.patch(route("formulas.update", [props.formula.id]), {
+			_method: "PATCH",
+			...theFormula.value
+		}).then(res=>{
+			flash.success("La formule a été enregistrée")
+			emits("update:modelValue", false)
+			emits("change", res.data.data)
+		})
+	},
+	deleteFormula = function (){
+
+	}
+
+</script>
+
 <template>
 	<dialog-modal
 		v-model="show"
@@ -37,7 +73,7 @@ Edition d'un formule d'un formulaire.
 		</template>
 
 		<div class="px-5 pb-5">
-			<form-input
+			<form-maker
 				v-model="theFormula.block.body"
 				label="body"
 				name="body"
@@ -45,7 +81,8 @@ Edition d'un formule d'un formulaire.
 			/>
 
 			<div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-				<form-textarea
+				<form-maker
+					type="textarea"
 					v-model="theFormula.block.body"
 					name="body"
 					label="body"
@@ -66,40 +103,3 @@ Edition d'un formule d'un formulaire.
 		</div>
 	</dialog-modal>
 </template>
-
-<script setup>
-
-import {inject, ref} from "vue"
-import DialogModal from "@/Components/Ui/DialogModal.vue"
-import FormInput from "@/Components/Form/FormInput.vue"
-import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
-import FormTextarea from "@/Components/Form/FormTextarea.vue"
-import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
-import FormIllustration from "@/Components/Form/FormIllustration.vue"
-
-const emits = defineEmits(["update:modelValue", "change", "destroy"])
-
-const props = defineProps({
-	modelValue: {type: Boolean, default: false},
-	formula: {type: Object, required: true},
-})
-
-let theFormula = ref(props.formula)
-
-const flash = inject("flash")
-let show = ref(props.modelValue),
-	saveFormula = function(){
-		axios.patch(route("formulas.update", [props.formula.id]), {
-			_method: "PATCH",
-			...theFormula.value
-		}).then(res=>{
-			flash.success("La formule a été enregistrée")
-			emits("update:modelValue", false)
-			emits("change", res.data.data)
-		})
-	},
-	deleteFormula = function (){
-
-	}
-
-</script>

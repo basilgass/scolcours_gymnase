@@ -1,220 +1,223 @@
 <!--
 Edition d'un challenge
 -->
-<script setup>
-	import { computed, inject, ref } from "vue"
-	import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
-	import FormInput from "@/Components/Form/FormInput.vue"
-	import FormTextarea from "@/Components/Form/FormTextarea.vue"
-	import FormIllustration from "@/Components/Form/FormIllustration.vue"
-	import FormNumber from "@/Components/Form/FormNumber.vue"
-	import { PiMath } from "pimath/esm"
-	import FormCodearea from "@/Components/Form/FormCodearea.vue"
-	import { useGenerators } from "@/Composables/useGenerators"
-	import FormSelect from "@/Components/Form/FormSelect.vue"
-	import { router } from "@inertiajs/vue3"
+<script lang="ts" setup>
+import { computed, inject, PropType, ref } from "vue"
+import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
+import FormIllustration from "@/Components/Form/FormIllustration.vue"
+import { PiMath } from "pimath/esm"
+import { router } from "@inertiajs/vue3"
+import axios from "axios"
+import type { flashInterface } from "@/types"
+import type { ChallengeInterface } from "@/types/modelInterfaces"
+import FormMaker from "@/Components/Form/FormMaker.vue"
 
-	const emits = defineEmits(["update:modelValue", "change", "destroy"])
+const emits = defineEmits(["update:modelValue", "change", "destroy"])
 
-	let props = defineProps({
-		modelValue: { type: Boolean, default: false },
-		challenge: { type: Object, required: true },
-	})
+let props = defineProps({
+	modelValue: { type: Boolean, default: false },
+	challenge: {
+		type: Object as PropType<ChallengeInterface>,
+		required: true
+	}
+})
 
-	const flash = inject("flash")
+const flash = inject<flashInterface>("flash")
 
-	let show = ref(props.modelValue),
-		tab = ref("generator"),
-		generatorTab = ref(1),
-		theChallenge = ref(props.challenge),
-		level = ref(1)
+let generatorTab = ref(1),
+	theChallenge = ref(props.challenge),
+	level = ref(1)
 
-	let currentGenerator = computed(() => {
-			return useGenerators(theChallenge.value.generators).generator(
-				generatorTab.value,
-			)
-		}),
-		generateQuestionsError = ref(""),
-		generateId = ref(1),
-		generateQuestions = computed(() => {
-			const nbQuestions = 5
-			if (currentGenerator.value.code !== "" && generateId.value >= 1) {
-				let arr = []
+let currentGenerator = computed(() => {
+		return theChallenge.value.generators[generatorTab.value-1]
+	}),
+	generateQuestionsError = ref(""),
+	generateId = ref(1),
+	generateQuestions = computed(() => {
+		const nbQuestions = 5
 
-				try {
-					// let F = makeFunction(currentGenerator.value.code)
-					let F = new Function("PiMath", currentGenerator.value.code)
-					for (let i = 0; i < nbQuestions; i++) {
-						const result = F(PiMath, level.value)
-						if (
-							result &&
-							result.hasOwnProperty("question") &&
-							result.hasOwnProperty("answer")
-						) {
-							arr.push(result)
-						}
-					}
-
-					return arr
-				} catch (err) {
-					//console.warn(err)
-				}
-			}
+		if(currentGenerator.value===undefined){
+			console.log(`currentGenerator.value is undefined, tab number ${generatorTab.value}`)
 			return []
-		}),
-		updateGeneratorsOrder = function () {
-			// Update the pivot value according to the order
-			theChallenge.value.generators.forEach(
-				(gen, index) => (gen.pivot.order = index + 1),
-			)
+		}
+		if (currentGenerator.value.code !== "" && generateId.value >= 1) {
+			let arr = []
 
-			axios
-				.post(
-					route("challenges.generators.updateOrder", [
-						theChallenge.value.id,
-					]),
-					{
-						_method: "PATCH",
-						order: theChallenge.value.generators.map((x) => {
-							return { id: x.id, order: x.pivot.order }
-						}),
-					},
+			try {
+				// let F = makeFunction(currentGenerator.value.code)
+				let F = new Function("PiMath", currentGenerator.value.code)
+				for (let i = 0; i < nbQuestions; i++) {
+					const result = F(PiMath, level.value)
+					if (
+						result &&
+						Object.hasOwn(result, "question") &&
+						Object.hasOwn(result, "answer")
+					) {
+						arr.push(result)
+					}
+				}
+
+				return arr
+			} catch (err) {
+				//console.warn(err)
+			}
+		}
+		return []
+	}),
+	updateGeneratorsOrder = function() {
+		// Update the pivot value according to the order
+		theChallenge.value.generators.forEach(
+			(gen, index) => (gen.pivot.order = index + 1)
+		)
+
+		axios
+			.post(
+				route("challenges.generators.updateOrder", [
+					theChallenge.value.id
+				]),
+				{
+					_method: "PATCH",
+					order: theChallenge.value.generators.map((x) => {
+						return { id: x.id, order: x.pivot.order }
+					})
+				}
+			)
+			.then(() => {
+				flash.success(
+					"L'ordre des générateurs à bien été enregistré !"
 				)
-				.then((res) => {
-					flash.success(
-						"L'ordre des générateurs à bien été enregistré !",
-					)
-				})
+			})
+			.catch((res) => {
+				console.warn("update ordering order: ", res)
+			})
+	},
+	addGenerator = function() {
+		axios
+			.post(
+				route("challenges.generators.store", [
+					theChallenge.value.id
+				])
+			)
+			.then((res) => {
+				theChallenge.value.generators = res.data
+			})
+			.catch(() => {
+			})
+	},
+	availableGenerators = ref([]),
+	attachGeneratorId = ref(""),
+	getListOfGenerators = function() {
+		if (availableGenerators.value.length === 0) {
+			axios
+				.get(
+					route("challenges.generators.index", [
+						theChallenge.value.id
+					])
+				)
+				.then((res) => (availableGenerators.value = res.data))
 				.catch((res) => {
-					console.warn("update ordering order: ", res)
+					console.warn(res.response.data.message)
 				})
-		},
-		addGenerator = function () {
+		}
+	},
+	attachGenerator = function() {
+		if (attachGeneratorId.value !== "") {
 			axios
 				.post(
-					route("challenges.generators.store", [
+					route("challenges.generators.attach", [
 						theChallenge.value.id,
-					]),
+						attachGeneratorId.value
+					])
 				)
 				.then((res) => {
 					theChallenge.value.generators = res.data
+					attachGeneratorId.value = ""
 				})
-				.catch((res) => {})
-		},
-		availableGenerators = ref([]),
-		attachGeneratorId = ref(""),
-		getListOfGenerators = function () {
-			if (availableGenerators.value.length === 0) {
+		}
+	},
+	detachGenerator = function(id, destroy) {
+		axios
+			.post(
+				route("challenges.generators.detach", [
+					theChallenge.value.id,
+					id
+				]),
+				{
+					destroy: destroy.ctrlKey
+				}
+			)
+			.then(() => {
+				theChallenge.value.generators =
+					theChallenge.value.generators.filter((x) => x.id !== id)
+			})
+	}
+
+let theIllustration = ref(
+	props.challenge.block.illustrations.length > 0
+		? props.challenge.block.illustrations[0]
+		: {
+			title: "",
+			type: "draw",
+			code: "",
+			parameters: ""
+		}
+)
+
+let saveChallenge = function() {
+		// 1- Save the description block
+		// 2- Save the challenge configuration
+		// 3- Save the generators
+		axios
+			.patch(route("blocks.update", [theChallenge.value.block.id]), {
+				_method: "PATCH",
+				body: theChallenge.value.block.body,
+				illustrations:
+					theIllustration.value.parameters !== ""
+						? [theIllustration.value]
+						: []
+			})
+			.then(() => {
 				axios
-					.get(
-						route("challenges.generators.index", [
-							theChallenge.value.id,
-						]),
-					)
-					.then((res) => (availableGenerators.value = res.data))
-					.catch((res) => {
-						console.warn(res.response.data.message)
-					})
-			}
-		},
-		attachGenerator = function (s) {
-			if (attachGeneratorId.value !== "") {
-				axios
-					.post(
-						route("challenges.generators.attach", [
-							theChallenge.value.id,
-							attachGeneratorId.value,
-						]),
+					.patch(
+						route("challenges.update", [props.challenge.id]),
+						{
+							...theChallenge.value,
+							_method: "PATCH"
+						}
 					)
 					.then((res) => {
-						theChallenge.value.generators = res.data
-						attachGeneratorId.value = ""
+						emits("update:modelValue", false)
+						emits("change", res.data.data)
 					})
-			}
-		},
-		detachGenerator = function (id, destroy) {
-			axios
-				.post(
-					route("challenges.generators.detach", [
-						theChallenge.value.id,
-						id,
-					]),
-					{
-						destroy: destroy.ctrlKey,
-					},
-				)
-				.then((res) => {
-					theChallenge.value.generators =
-						theChallenge.value.generators.filter((x) => x.id !== id)
-				})
-		}
-
-	let theIllustration = ref(
-		props.challenge.block.illustrations.length > 0
-			? props.challenge.block.illustrations[0]
-			: {
-					title: "",
-					type: "draw",
-					code: "",
-					parameters: "",
-			  },
-	)
-
-	let saveChallenge = function () {
-			// 1- Save the description block
-			// 2- Save the challenge configuration
-			// 3- Save the generators
-			axios
-				.patch(route("blocks.update", [theChallenge.value.block.id]), {
-					_method: "PATCH",
-					body: theChallenge.value.block.body,
-					illustrations:
-						theIllustration.value.parameters !== ""
-							? [theIllustration.value]
-							: [],
-				})
-				.then((res) => {
-					axios
-						.patch(
-							route("challenges.update", [props.challenge.id]),
-							{
-								...theChallenge.value,
-								_method: "PATCH",
-							},
+					.then(() => {
+						flash.success("Le challenge a bien été mis à jour")
+					})
+					.catch(() => {
+						flash.error(
+							"Il y a eu une erreur lors de la mise à jour."
 						)
-						.then((res) => {
-							emits("update:modelValue", false)
-							emits("change", res.data.data)
-						})
-						.then((res) => {
-							flash.success("Le challenge a bien été mis à jour")
-						})
-						.catch((res) => {
-							flash.error(
-								"Il y a eu une erreur lors de la mise à jour.",
-							)
-						})
-				})
-		},
-		deleteChallenge = function () {
-			axios
-				.post(route("challenges.destroy", [props.challenge.id]), {
-					_method: "delete",
-				})
-				.then((res) => {
-					if (res.data) {
-						// go back
-						router.visit(
-							route("chapter.show", [
-								props.challenge.chapter.slug,
-							]),
-						)
-						flash.success(
-							"Le challenge a été supprimé avec succès...",
-						)
-					}
-				})
-		}
+					})
+			})
+	},
+	deleteChallenge = function() {
+		axios
+			.post(route("challenges.destroy", [props.challenge.id]), {
+				_method: "delete"
+			})
+			.then((res) => {
+				if (res.data) {
+					// go back
+					router.visit(
+						route("chapter.show", [
+							props.challenge.chapter.slug
+						])
+					)
+					flash.success(
+						"Le challenge a été supprimé avec succès..."
+					)
+				}
+			})
+	}
 </script>
 
 <template>
@@ -227,12 +230,15 @@ Edition d'un challenge
 		>
 			<h1>
 				<span class="text-xl md:text-2xl">édition d'un challenge</span>
-				<span class="text-xs font-code ml-5"
-					>(id: {{ props.challenge.id }})</span
-				>
+				<span class="text-xs font-code ml-5">
+					(id: {{ props.challenge.id }})
+				</span>
 			</h1>
 			<div class="flex gap-3 justify-end">
-				<button class="btn-primary btn-xs" @click="saveChallenge">
+				<button
+					class="btn-primary btn-xs"
+					@click="saveChallenge"
+				>
 					enregistrer
 				</button>
 				<Link
@@ -256,21 +262,23 @@ Edition d'un challenge
 			<!-- challenge title, slug and description -->
 			<div class="grid grid-cols-1 md:grid-cols-2 gap-3">
 				<div class="flex flex-col gap-3 h-full">
-					<form-input
+					<form-maker
 						v-model="theChallenge.title"
 						label="titre du challenge"
 						name="titre"
 					/>
-					<form-input
+					<form-maker
 						v-model="theChallenge.slug"
 						label="slug"
 						name="slug"
 					/>
-					<form-textarea
+					<form-maker
 						v-model="theChallenge.block.body"
 						class="h-full"
 						label="description du challenge"
 						name="body"
+						type="textarea"
+						:rows="15"
 					/>
 				</div>
 				<form-illustration
@@ -284,73 +292,68 @@ Edition d'un challenge
 				<h2 class="text-xl uppercase bg-slate-200 -mx-5 px-5 py-3 mb-5">
 					paramètres
 				</h2>
-				<div class="grid grid-cols-1 md:grid-cols-2 gap-3 items-start">
-					<div class="flex flex-col">
-						<form-codearea
-							v-model="theChallenge.output"
-							label="affichage de la question/réponse"
-							language="latex"
-							name="questionsoutput"
-						/>
-						<form-textarea
-							v-model="theChallenge.keyboard"
-							:rows="2"
-							label="clavier affiché"
-							name="questionsKeyboard"
-						/>
-					</div>
-					<div class="grid grid-cols-3 gap-3">
-						<form-number
-							v-model="theChallenge.duration"
-							label="durée"
-							name="questionsDuration"
-						/>
-						<form-number
-							v-model="theChallenge.lives"
-							label="nombre de vie"
-							name="questionsLives"
-						/>
-						<form-number
-							v-model="theChallenge.nextLevelAfter"
-							label="maxPoints / niveau"
-							name="questionsLevelTrigger"
-						/>
+				<div class="grid grid-cols-3 gap-3">
+					<form-maker
+						v-model="theChallenge.duration"
+						label="durée"
+						name="questionsDuration"
+						type="number"
+					/>
+					<form-maker
+						v-model="theChallenge.lives"
+						label="nombre de vie"
+						name="questionsLives"
+						type="number"
+					/>
+					<form-maker
+						v-model="theChallenge.nextLevelAfter"
+						label="maxPoints / niveau"
+						name="questionsLevelTrigger"
+						type="number"
+					/>
 
-						<h3 class="uppercase mt-10 col-span-3">Bonus</h3>
-						<form-number
-							v-model="theChallenge.bonusScoreTrigger"
-							label="score trigger"
-							name="questionsBonuses0"
-						/>
-						<form-number
-							v-model="theChallenge.bonusScoreLife"
-							:label="`vie / ${
-								theChallenge.bonusScoreTrigger > 0
-									? theChallenge.bonusScoreTrigger
-									: 'x'
-							} points`"
-							name="questionsBonuses1"
-						/>
-						<form-number
-							v-model="theChallenge.bonusScoreTime"
-							:label="`temps / ${
-								theChallenge.bonusScoreTrigger > 0
-									? theChallenge.bonusScoreTrigger
-									: 'x'
-							} points`"
-							name="questionsBonuses2"
-						/>
-						<form-number
-							v-model="theChallenge.bonusLevelLife"
-							label="vie / niveau"
-							name="questionsBonuses3"
-						/>
-						<form-number
-							v-model="theChallenge.bonusLevelTime"
-							label="temps / niveau"
-							name="questionsBonuses4"
-						/>
-					</div>
+					<h3 class="uppercase mt-10 col-span-3">
+						Bonus
+					</h3>
+					<form-maker
+						v-model="theChallenge.bonusScoreTrigger"
+						label="score trigger"
+						name="questionsBonuses0"
+						type="number"
+					/>
+					<form-maker
+						v-model="theChallenge.bonusScoreLife"
+						:label="`vie / ${
+							theChallenge.bonusScoreTrigger > 0
+								? theChallenge.bonusScoreTrigger
+								: 'x'
+						} points`"
+						name="questionsBonuses1"
+						type="number"
+					/>
+					<form-maker
+						v-model="theChallenge.bonusScoreTime"
+
+						:label="`temps / ${
+							theChallenge.bonusScoreTrigger > 0
+								? theChallenge.bonusScoreTrigger
+								: 'x'
+						} points`"
+						name="questionsBonuses2"
+						type="number"
+					/>
+					<form-maker
+						type="number"
+						v-model="theChallenge.bonusLevelLife"
+						label="vie / niveau"
+						name="questionsBonuses3"
+					/>
+					<form-maker
+						type="number"
+						v-model="theChallenge.bonusLevelTime"
+						label="temps / niveau"
+						name="questionsBonuses4"
+					/>
 				</div>
 			</div>
 
@@ -392,7 +395,10 @@ Edition d'un challenge
 							</div>
 						</template>
 						<template #footer>
-							<button class="btn" @click="addGenerator">
+							<button
+								class="btn"
+								@click="addGenerator"
+							>
 								<i class="bi bi-plus-lg" />
 							</button>
 							<button
@@ -402,9 +408,10 @@ Edition d'un challenge
 							>
 								<i class="bi bi-file-arrow-up" />
 							</button>
-							<form-select
+							<form-maker
+								type="select"
 								v-model="attachGeneratorId"
-								label="generateurs"
+								label="générateurs"
 								name="generatorsList"
 								@click.once="getListOfGenerators"
 							>
@@ -415,7 +422,7 @@ Edition d'un challenge
 								>
 									{{ generator.title }}
 								</option>
-							</form-select>
+							</form-maker>
 						</template>
 					</draggable>
 
@@ -426,27 +433,57 @@ Edition d'un challenge
 						class="flex flex-col md:flex-row gap-3 pb-10"
 					>
 						<div class="flex flex-col grow">
-							<form-input
+							<form-maker
 								v-model="theChallenge.generators[index].title"
 								label="titre du générateur"
 								name="generatorTitle"
 							/>
-							<form-textarea
+							<form-maker
+								type="textarea"
 								v-model="theChallenge.generators[index].body"
+								:rows="2"
 								label="description du générateur"
 								name="generatorBody"
 							/>
-							<form-codearea
+
+							<div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+								<form-maker
+									v-model="
+										theChallenge.generators[index].template
+									"
+									:rows="2"
+									label="template"
+									type="code"
+								/>
+
+								<form-maker
+									v-model="
+										theChallenge.generators[index].keyboard
+									"
+									:rows="2"
+									label="clavier"
+									type="keyboard"
+								/>
+							</div>
+
+							<form-maker
 								v-model="theChallenge.generators[index].code"
+								:rows="10"
+								auto-size
 								label="générateur de questions"
-								name="questionsGenerator"
+								resizable
+								type="code"
+								language="javascript"
 							/>
 						</div>
 
 						<div class="w-[250px]">
 							<div class="flex justify-between">
 								<h3>Exemples</h3>
-								<button class="btn-xs" @click="generateId++">
+								<button
+									class="btn-xs"
+									@click="generateId++"
+								>
 									générer
 								</button>
 							</div>

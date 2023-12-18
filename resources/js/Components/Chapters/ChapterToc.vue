@@ -3,11 +3,11 @@ Affichage de la table des matières.
 -->
 
 <script setup>
-	import { computed, inject, ref } from "vue"
-	import FormSwitch from "@/Components/Form/FormSwitch.vue"
-	import { router } from "@inertiajs/vue3"
+import { computed, inject, ref } from "vue"
+import { router } from "@inertiajs/vue3"
+import FormMaker from "@/Components/Form/FormMaker.vue"
 
-	let props = defineProps({
+let props = defineProps({
 		chapter: { type: Object, required: true },
 		scroll: { type: Boolean, default: false },
 		active: { type: Number, default: null },
@@ -79,7 +79,10 @@ Affichage de la table des matières.
 	})
 </script>
 <template>
-	<div v-if="props.chapter.posts" class="my-5">
+	<div
+		v-if="props.chapter.posts"
+		class="my-5"
+	>
 		<div class="flex justify-between items-baseline">
 			<div class="flex gap-3 items-baseline">
 				<h3 class="uppercase font-extralight mb-2">
@@ -111,14 +114,18 @@ Affichage de la table des matières.
 				v-show="editMode.enabled.value"
 				class="flex gap-3 items-baseline"
 			>
-				<form-switch
+				<form-maker
+					type="switch"
 					v-if="postsFilterCurrent === ''"
 					v-model="moveMode"
 					label="mode déplacement"
 					name="move"
 					sm
 				/>
-				<button class="btn-new-inline btn-xs" @click="addPost">
+				<button
+					class="btn-new-inline btn-xs"
+					@click="addPost"
+				>
 					Ajouter un article {{ posts.length + 1 }}
 				</button>
 			</div>
@@ -176,7 +183,7 @@ Affichage de la table des matières.
 								'bi bi-check-circle text-gray-300 invisible':
 									questionStatus[element.id] === null,
 							}"
-						></i>
+						/>
 
 						<span v-katex.auto="element.title" />
 					</Link>

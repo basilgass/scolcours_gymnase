@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-	import { computed, ref } from "vue"
-	import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
+import { computed, ref } from "vue"
+import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 
-	let props = defineProps({
+let props = defineProps({
 		illustration: { type: Object, required: true },
 	})
 
@@ -132,15 +132,7 @@ the question as markdown with math katex enabled
 		let maxNumber = str.split("@<").length - 1
 		let match
 		let result =
-			initialString !== ""
-				? [
-						{
-							title: "",
-							body: initialString,
-							slides: generateSlidesNumber(0, maxNumber),
-						},
-				  ]
-				: []
+			initialString !== "" ? [{ title: "", body: initialString, slides: generateSlidesNumber(0, maxNumber), },] : []
 		let slideNumber = result.length
 
 		while ((match = regex.exec(restOfString)) !== null) {
@@ -183,6 +175,12 @@ the question as markdown with math katex enabled
 
 	function transformBody(str) {
 		let result = str.split(/(&|\\\\)/g).map((part) => {
+			// replace the color from ...\colorbox{color}... to ...\colorbox{transparent}... with regexep
+			if (part.includes("\\colorbox")) {
+				part = part.replaceAll(/colorbox{[^}]*}/g, "colorbox{transparent}")
+			}
+
+
 			return ["&", "\\\\"].includes(part) ? part : `\\phantom{ ${part} }`
 		})
 		return result.join("")
@@ -223,7 +221,10 @@ code: texte séparé par %STEP
 
 <template>
 	<div>
-		<h3 v-katex.auto="step?.title" class="font-semibold" />
+		<h3
+			v-katex.auto="step?.title"
+			class="font-semibold"
+		/>
 		<markdown-it :text="step.body" />
 		<div class="flex justify-between">
 			<button

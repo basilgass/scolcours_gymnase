@@ -1,9 +1,26 @@
+<script>
+import LayoutMain from "@/Layouts/LayoutMain.vue"
+
+export default {
+	layout: LayoutMain
+}
+
+</script>
+<script setup>
+
+import FormMaker from "@/Components/Form/FormMaker.vue"
+
+defineProps({
+	challenges: Object
+})
+
+</script>
 <template>
 	<div>
 		<h1 class="text-xl font-semibold">
 			Challenges
 		</h1>
-		<form-input
+		<form-maker
 			class="mb-5"
 			label="rechercher"
 			name="search"
@@ -55,22 +72,4 @@
 		</div>
 	</div>
 </template>
-<script>
-import LayoutMain from "@/Layouts/LayoutMain.vue"
-
-export default {
-	layout: LayoutMain
-}
-
-</script>
-<script setup>
-import {ref} from "vue"
-import FormInput from "@/Components/Form/FormInput.vue"
-
-defineProps({
-	challenges: Object
-})
-
-let test = ref("")
-</script>
 

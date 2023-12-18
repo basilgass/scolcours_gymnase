@@ -1,17 +1,16 @@
 <script setup>
-	/** Tools
-	 * title: développement de polynôme
-	 * body: permet de développer un polynôme plus ou moins complexe.
-	 * parameters: polynôme
-	 * tags: algebre,1M
-	 */
-	import Panel from "@/Components/Ui/Panel.vue"
-	import FormInput from "@/Components/Form/FormInput.vue"
-	import { computed, ref } from "vue"
-	import { PiMath } from "pimath/esm"
+/** Tools
+ * title: développement de polynôme
+ * body: permet de développer un polynôme plus ou moins complexe.
+ * parameters: polynôme
+ * tags: algebre,1M
+ */
+import Panel from "@/Components/Ui/Panel.vue"
+import { computed, ref } from "vue"
+import { PiMath } from "pimath/esm"
+import FormMaker from "@/Components/Form/FormMaker.vue"
 
-	let polynom = ref(""),
-		firstInput = ref(null)
+let polynom = ref("")
 
 	let result = computed(() => {
 		try {
@@ -32,12 +31,20 @@
 
 <template>
 	<Panel>
-		<form-input v-model="polynom" label="Polynôme" name="polynom" focus />
+		<form-maker
+			v-model="polynom"
+			label="Polynôme"
+			name="polynom"
+			focus
+		/>
 
 		<div v-if="result">
 			<div v-katex.display.boxed.lg.output="`${result.tex}`" />
 		</div>
-		<div v-else class="text-red-700 text-sm">
+		<div
+			v-else
+			class="text-red-700 text-sm"
+		>
 			Une erreur s'est produite avec vos données.
 		</div>
 	</Panel>

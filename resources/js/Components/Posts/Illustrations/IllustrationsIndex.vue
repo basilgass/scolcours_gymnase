@@ -1,12 +1,12 @@
 <script setup lang="ts">
-	import { computed, inject, ref } from "vue"
-	import IllustrationShow from "@/Components/Posts/Illustrations/IllustrationShow.vue"
-	import axios from "axios"
-	import { editModeInterface, flashInterface } from "@/types"
-	import { IllustrationInterface } from "@/types/modelInterfaces"
-	import FormWrapper from "@/Components/Form/FormWrapper.vue"
+import { computed, inject, ref } from "vue"
+import IllustrationShow from "@/Components/Posts/Illustrations/IllustrationShow.vue"
+import axios from "axios"
+import { editModeInterface, flashInterface } from "@/types"
+import { IllustrationInterface } from "@/types/modelInterfaces"
+import FormMaker from "@/Components/Form/FormMaker.vue"
 
-	const props = defineProps({
+const props = defineProps({
 		illustrations: { type: Array, required: true },
 		containerType: { type: String, required: true },
 		containerId: { type: Number, required: true },
@@ -106,10 +106,12 @@
 			class="p-3 mb-3"
 		>
 			<div class="flex justify-between">
-				<div class="uppercase">Administration des illustrations</div>
+				<div class="uppercase">
+					Administration des illustrations
+				</div>
 			</div>
 			<div class="mt-5 flex gap-3">
-				<form-wrapper
+				<form-maker
 					label="Gestion de la grille"
 					inline-label
 					v-model="illustrationsCustomGrid"
@@ -117,7 +119,7 @@
 					font-code
 					class="flex-1"
 					@enter="updateIllustrationsGrid"
-				></form-wrapper>
+				/>
 				<button
 					class="btn btn-xs"
 					@click="illustrationsCustomGrid = ''"

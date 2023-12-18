@@ -2,20 +2,17 @@
 Formulaire d'édition d'un bloc
 -->
 <script setup>
-	import FormTextarea from "@/Components/Form/FormTextarea.vue"
-	import FormSwitch from "@/Components/Form/FormSwitch.vue"
-	import { ref } from "vue"
-	import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
-	import DialogModal from "@/Components/Ui/DialogModal.vue"
-	import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
-	import { blockTypes } from "@/scolcours"
-	import FormCodearea from "@/Components/Form/FormCodearea.vue"
-	import MoveItemTo from "@/Components/Posts/MoveItemTo.vue"
-	import FormWrapper from "@/Components/Form/FormWrapper.vue"
-	import { useBlock } from "@/Components/Posts/Blocks/useBlock"
-	import BlockBodyButtons from "@/Components/Posts/Blocks/BlockBodyButtons.vue"
+import { ref } from "vue"
+import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
+import DialogModal from "@/Components/Ui/DialogModal.vue"
+import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
+import { blockTypes } from "@/scolcours"
+import MoveItemTo from "@/Components/Posts/MoveItemTo.vue"
+import { useBlock } from "@/Components/Posts/Blocks/useBlock"
+import BlockBodyButtons from "@/Components/Posts/Blocks/BlockBodyButtons.vue"
+import FormMaker from "@/Components/Form/FormMaker.vue"
 
-	const emits = defineEmits(["update:modelValue", "change", "destroy"])
+const emits = defineEmits(["update:modelValue", "change", "destroy"])
 	const props = defineProps({
 		block: { type: Object, required: true },
 		modelValue: { type: Boolean, default: false }, // show or hide the block dialog
@@ -89,11 +86,9 @@ Formulaire d'édition d'un bloc
 				<div class="flex justify-between items-baseline w-full">
 					<h1 class="flex items-baseline gap-5">
 						<span class="text-xl md:text-2xl">
-							édition un block</span
-						>
+							édition un block</span>
 						<span class="text-xs font-code">
-							(id: {{ theBlock.id }})</span
-						>
+							(id: {{ theBlock.id }})</span>
 					</h1>
 					<div class="flex gap-3 justify-end">
 						<button
@@ -133,7 +128,8 @@ Formulaire d'édition d'un bloc
 				/>
 
 				<div class="flex justify-between items-baseline w-full">
-					<form-switch
+					<form-maker
+						type="switch"
 						v-show="!props.noBlur"
 						v-model="theBlock.blur"
 						label="Bloc flouté,Bloc visible"
@@ -148,10 +144,11 @@ Formulaire d'édition d'un bloc
 								v-model="switchEnable"
 								type="checkbox"
 								@click="updateSwitchEnable"
-							/>
+							>
 						</label>
 
-						<form-switch
+						<form-maker
+							type="switch"
 							v-show="!props.noSwitch && switchEnable"
 							v-model="theBlock.switch"
 							label="Bloc visible, block caché"
@@ -175,7 +172,7 @@ Formulaire d'édition d'un bloc
 					class="grid grid-cols-1 gap-5"
 				>
 					<div class="mt-2">
-						<form-wrapper
+						<form-maker
 							v-show="!props.noTitle"
 							v-model="theBlock.title"
 							label="titre"
@@ -204,21 +201,21 @@ Formulaire d'édition d'un bloc
 							</button>
 						</div>
 
-						<form-codearea
+						<form-maker
 							ref="formBody"
+							type="code"
 							v-model="theBlock.body"
 							:rows="11"
 							label="corps"
 							language="latex"
-							name="body"
 						/>
 						<div class="text-xs font-code">
-							@posts.show,[id] | @blocks.show,[id] | #[item-id]<br />
+							@posts.show,[id] | @blocks.show,[id] | #[item-id]<br>
 							.@text .@bg pour des classes à thème
 						</div>
 
 						<div class="mt-3">
-							<form-wrapper
+							<form-maker
 								v-model="theBlock.template"
 								label="disposition"
 								label-class="uppercase"
@@ -244,7 +241,10 @@ Formulaire d'édition d'un bloc
 						</div>
 					</div>
 
-					<div v-if="!props.noPreview" class="pt-8 pb-3 px-3">
+					<div
+						v-if="!props.noPreview"
+						class="pt-8 pb-3 px-3"
+					>
 						<div class="w-full flex justify-end gap-3 mb-2">
 							<BlockBodyButtons
 								:buttons="blockButtons"
@@ -265,16 +265,19 @@ Formulaire d'édition d'un bloc
 					v-show="!props.noScript || !props.noData"
 					class="grid grid-cols-1 md:grid-cols-2 gap-3"
 				>
-					<form-codearea
+					<form-maker
 						v-show="!props.noScript"
 						v-model="theBlock.script"
 						label="script"
-						name="script"
+						type="code"
+						:rows="8"
+						language="javascript"
 					/>
 
-					<form-textarea
+					<form-maker
 						v-show="!props.noData"
 						v-model="theBlock.json"
+						type="textarea"
 						:rows="8"
 						label="data"
 						name="json"

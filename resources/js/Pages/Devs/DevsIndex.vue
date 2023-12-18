@@ -1,4 +1,25 @@
 <!--suppress ALL -->
+<script>
+import LayoutMain from "@/Layouts/LayoutMain.vue"
+
+export default {
+	layout: LayoutMain
+}
+</script>
+<script setup>
+import {ref} from "vue"
+import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
+
+let toolSlug = ref(null),
+	toolSearch = ref("")
+
+const props = defineProps({
+	pages: {
+		type: Array, default: () => []
+	},
+})
+
+</script>
 <template>
 	<!-- Title -->
 	<ArticleTitle title="Développement" />
@@ -14,27 +35,4 @@
 		</Link>
 	</div>
 </template>
-<script>
-import LayoutMain from "@/Layouts/LayoutMain.vue"
-
-export default {
-	layout: LayoutMain
-}
-</script>
-<script setup>
-import FormInput from "@/Components/Form/FormInput.vue"
-import {computed, defineAsyncComponent, onMounted, ref} from "vue"
-import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
-import {router} from "@inertiajs/vue3"
-
-let toolSlug = ref(null),
-	toolSearch = ref("")
-
-const props = defineProps({
-	pages: {
-		type: Array, default: () => []
-	},
-})
-
-</script>
 

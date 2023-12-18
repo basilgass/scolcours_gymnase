@@ -1,66 +1,4 @@
 <!--suppress ALL -->
-<template>
-	<!-- Title -->
-	<div
-			class="flex justify-between items-baseline mb-4"
-	>
-		<div>
-			<ArticleTitle title="Outils"/>
-			<Link
-					v-if="toolSlug!==''"
-					:href="`/tools/${toolSlug}`"
-			>
-				{{ toolName }}
-			</Link>
-		</div>
-
-		<button
-				v-if="toolSlug"
-				@click="toolSlug=''"
-		>
-			Tous les outils
-		</button>
-	</div>
-
-	<div v-if="!toolSlug">
-		<form-input
-				v-model="toolSearch"
-				focus
-				label="Sélectionner l'outils"
-				name="tools"
-				@keyup.enter="toolSelect"
-		/>
-
-		<!-- List of all tools -->
-		<table class="w-full my-5">
-			<tr
-					v-for="tool of listOfTools"
-					:key="tool.slug"
-					class="odd:bg-white hover:bg-amber-100  cursor-pointer"
-					@click="toolSlug=tool.slug"
-			>
-				<td class="pl-3 py-2">
-					<h2 class="text-lg">
-						{{ tool.title }}
-					</h2>
-					<div class="text-sm text-gray-400">
-						{{ tool.slug }}
-					</div>
-				</td>
-				<td class="py-2 align-text-top">
-					{{ tool.body }}
-				</td>
-			</tr>
-		</table>
-	</div>
-
-	<keep-alive>
-		<component
-				:is="toolComponent"
-				@keyup.esc="toolUnselect"
-		/>
-	</keep-alive>
-</template>
 <script lang="ts">
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 
@@ -69,11 +7,11 @@ export default {
 }
 </script>
 <script lang="ts" setup>
-import FormInput from "@/Components/Form/FormInput.vue"
 import {computed, defineAsyncComponent, DefineComponent, onMounted, PropType, ref, resolveComponent} from "vue"
 import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
-import {ToolInterface} from "@/types";
-import {getModule, MODULE_TYPES, ToolsModules} from "@/scolcours";
+import {ToolInterface} from "@/types"
+import {getModule, MODULE_TYPES, ToolsModules} from "@/scolcours"
+import FormMaker from "@/Components/Form/FormMaker.vue"
 
 let toolSlug = ref(null),
     toolSearch = ref(""),
@@ -154,4 +92,66 @@ function toolUnselect() {
     toolSlug.value = ""
 }
 </script>
+<template>
+	<!-- Title -->
+	<div
+		class="flex justify-between items-baseline mb-4"
+	>
+		<div>
+			<ArticleTitle title="Outils" />
+			<Link
+				v-if="toolSlug!==''"
+				:href="`/tools/${toolSlug}`"
+			>
+				{{ toolName }}
+			</Link>
+		</div>
+
+		<button
+			v-if="toolSlug"
+			@click="toolSlug=''"
+		>
+			Tous les outils
+		</button>
+	</div>
+
+	<div v-if="!toolSlug">
+		<form-maker
+			v-model="toolSearch"
+			focus
+			label="Sélectionner l'outils"
+			name="tools"
+			@keyup.enter="toolSelect"
+		/>
+
+		<!-- List of all tools -->
+		<table class="w-full my-5">
+			<tr
+				v-for="tool of listOfTools"
+				:key="tool.slug"
+				class="odd:bg-white hover:bg-amber-100  cursor-pointer"
+				@click="toolSlug=tool.slug"
+			>
+				<td class="pl-3 py-2">
+					<h2 class="text-lg">
+						{{ tool.title }}
+					</h2>
+					<div class="text-sm text-gray-400">
+						{{ tool.slug }}
+					</div>
+				</td>
+				<td class="py-2 align-text-top">
+					{{ tool.body }}
+				</td>
+			</tr>
+		</table>
+	</div>
+
+	<keep-alive>
+		<component
+			:is="toolComponent"
+			@keyup.esc="toolUnselect"
+		/>
+	</keep-alive>
+</template>
 

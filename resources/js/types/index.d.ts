@@ -58,3 +58,12 @@ export interface editModeInterface {
 	enabled: ComputedRef<boolean>
 	toggle: () => void
 }
+
+export interface generatedQuestionInterface {
+	question: string
+	answer: string
+	title?: string
+	keyboard?: string
+	button?: object
+	reset: boolean
+}

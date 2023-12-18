@@ -1,197 +1,15 @@
-<template>
-	<Panel
-		v-if="validation"
-		ref="root"
-	>
-		<!-- Value to modify enter -->
-		<form
-			class="max-w-md mx-auto mb-6"
-			@submit.prevent
-		>
-			<form-input
-				v-model="fx"
-				label="Fraction rationnelle"
-				name="fractionrationelle"
-				:focus="true"
-			/>
-
-			<div class="flex gap-3">
-				<form-button
-					@click.prevent="validation_fx"
-				>
-					Valider
-				</form-button>
-
-				<form-button @click.prevent="generate_fx">
-					générer {{ generate_attempts > 0 ? `(${generate_attempts})`:'' }}
-				</form-button>
-			</div>
-		</form>
-
-		<hr>
-
-		<!-- Output -->
-		<table-of-contents>
-			<div class="grid grid-cols-1 lg:grid-cols-2 gap-x-5 gap-y-20 katex-boxed">
-				<!-- Ensemble de définition -->
-				<div class="bg-white rounded border-gray-400 p-4">
-					<h2 class="chapter-menu text-lg mb-10">
-						Fonction
-					</h2>
-					<div
-						v-katex="fraction_rationnelle.tex"
-					/>
-					<div class="font-code text-gray-300 text-sm text-center">
-						{{ fraction_rationnelle.texDev }}
-					</div>
-				</div>
-
-				<!-- Ensemble de définition -->
-				<div class="bg-white rounded border-gray-400 p-4">
-					<h2 class="chapter-menu text-lg mb-10">
-						Ensemble de définition
-					</h2>
-					<div
-						v-katex="`ED_f=${fraction_rationnelle.domain}`"
-					/>
-				</div>
-
-				<!-- Tableau de signes -->
-				<div class="bg-white rounded border-gray-400 p-4">
-					<h2 class="chapter-menu text-lg mb-10">
-						Tableau de signes
-					</h2>
-
-					<table-of-signs
-						v-if="fraction_rationnelle.tos!==false"
-						class="px-10"
-						:tos="fraction_rationnelle.tos"
-					/>
-				</div>
-
-				<!-- Asymptotes verticales et horizontales -->
-				<div
-					v-if="fraction_rationnelle.av.length>0"
-					class="bg-white rounded border-gray-400 p-4"
-				>
-					<h2 class="chapter-menu text-lg mb-10">
-						Asymptotes verticales
-					</h2>
-
-					<div
-						v-for="(item, index) in fraction_rationnelle.av"
-						:key="`limites-${index}`"
-						v-katex="`${item.limits} \\implies \\text{ AV: } ${item.tex}`"
-					/>
-				</div>
-
-				<div
-					v-if="fraction_rationnelle.ah.length>0"
-					class="bg-white rounded border-gray-400 p-4"
-				>
-					<h2 class="chapter-menu text-lg mb-10">
-						Asymptotes horizontales
-					</h2>
-
-					<div
-						v-for="(item, index) in fraction_rationnelle.ah"
-						:key="`limites-${index}`"
-					>
-						<div v-katex="`${item.limits} \\implies \\text{ AH: } ${item.tex}`" />
-						<div
-							v-if="item.delta!==null"
-							v-katex="`\\delta(x)=${item.deltaX.tex}=${item.deltaX.texFactors}`"
-						/>
-						<table-of-signs
-							v-if="item.tableOfSign!==false"
-							:tos="item.tableOfSign"
-						/>
-					</div>
-				</div>
-
-
-				<!-- Asymptotes obliques -->
-				<div
-					v-if="fraction_rationnelle.ao.length>0"
-					class="bg-white rounded border-gray-400 p-4"
-				>
-					<h2 class="chapter-menu text-lg mb-10">
-						Asymptotes obliques
-					</h2>
-
-					<div>
-						<div v-katex.display="fraction_rationnelle.aoTex" />
-
-						<table-of-signs
-							v-if="fraction_rationnelle.ao[0].tableOfSign!==false"
-							:tos="fraction_rationnelle.ao[0].tableOfSign"
-							fn="\delta"
-						/>
-					</div>
-				</div>
-
-				<div class="bg-white rounded border-gray-400 p-4">
-					<h2 class="chapter-menu text-lg mb-10">
-						Variation
-					</h2>
-					<div
-						v-katex="fraction_rationnelle.dxTex"
-					/>
-
-					<table-of-signs
-						v-if="fraction_rationnelle.dxtos!==false"
-						class="px-10 mt-10"
-						:tos="fraction_rationnelle.dxtos"
-					/>
-
-					<div
-						v-for="(zero, index) in fraction_rationnelle.extrema"
-						:key="`zero-${index}`"
-						v-katex="zero"
-					/>
-				</div>
-
-				<!-- Graphe -->
-				<div class="bg-white rounded border-gray-400 p-4 lg:col-span-2">
-					<h2 class="chapter-menu text-lg mb-10">
-						Représentation graphique
-					</h2>
-
-					<pi-draw-parser
-						v-if="fraction_rationnelle.drawCode!==false"
-						class="max-w-3xl mx-auto"
-						axis
-						:width="800"
-						:height="600"
-						:draw="{
-							parameters: fraction_rationnelle.drawParameters,
-							code: fraction_rationnelle.drawCode
-						}"
-					/>
-				</div>
-			</div>
-		</table-of-contents>
-	</Panel>
-</template>
-
 <script setup>
 /** Chapter
  * title: étude de fonction rationnelle
  * body: étude de signe d'une fonction rationnelle.
  */
-
-/** Chapter
- * title: étude de signe
- * body: étude de signe d'une fonction rationnelle.
- */
-import {nextTick, onMounted, reactive, ref} from "vue"
-import {PiMath} from "pimath/esm"
+import { nextTick, onMounted, reactive, ref } from "vue"
+import { PiMath } from "pimath/esm"
 import TableOfSigns from "@/Components/Pi/PiTableOfSigns.vue"
 import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"
 import Panel from "@/Components/Ui/Panel.vue"
-import FormInput from "@/Components/Form/FormInput.vue"
-import FormButton from "@/Components/Form/FormButton.vue"
 import TableOfContents from "@/Components/Ui/TableOfContents.vue"
+import FormMaker from "@/Components/Form/FormMaker.vue"
 
 let root = ref(null),
 	fx = ref("(3x-5)(x+7)/(x-3)"),
@@ -383,3 +201,184 @@ onMounted(() => {
 	validation_fx()
 })
 </script>
+
+<template>
+	<Panel
+		v-if="validation"
+		ref="root"
+	>
+		<!-- Value to modify enter -->
+		<form
+			class="max-w-md mx-auto mb-6"
+			@submit.prevent
+		>
+			<form-maker
+				v-model="fx"
+				label="Fraction rationnelle"
+				autocomplete="off"
+				:input-class="'font-code'"
+				:focus="true"
+			/>
+
+			<div class="flex gap-3 mt-3">
+				<button
+					class="btn btn-primary btn-xs"
+					@click.prevent="validation_fx"
+				>
+					Valider
+				</button>
+
+				<button
+					@click.prevent="generate_fx"
+					class="btn btn-primary btn-xs"
+				>
+					générer {{ generate_attempts > 0 ? `(${generate_attempts})`:'' }}
+				</button>
+			</div>
+		</form>
+
+		<hr>
+
+		<!-- Output -->
+		<table-of-contents>
+			<div class="grid grid-cols-1 lg:grid-cols-2 gap-x-5 gap-y-20 katex-boxed">
+				<!-- Ensemble de définition -->
+				<div class="bg-white rounded border-gray-400 p-4">
+					<h2 class="chapter-menu text-lg mb-10">
+						Fonction
+					</h2>
+					<div
+						v-katex="fraction_rationnelle.tex"
+					/>
+					<div class="font-code text-gray-300 text-sm text-center">
+						{{ fraction_rationnelle.texDev }}
+					</div>
+				</div>
+
+				<!-- Ensemble de définition -->
+				<div class="bg-white rounded border-gray-400 p-4">
+					<h2 class="chapter-menu text-lg mb-10">
+						Ensemble de définition
+					</h2>
+					<div
+						v-katex="`ED_f=${fraction_rationnelle.domain}`"
+					/>
+				</div>
+
+				<!-- Tableau de signes -->
+				<div class="bg-white rounded border-gray-400 p-4">
+					<h2 class="chapter-menu text-lg mb-10">
+						Tableau de signes
+					</h2>
+
+					<table-of-signs
+						v-if="fraction_rationnelle.tos!==false"
+						class="px-10"
+						:tos="fraction_rationnelle.tos"
+					/>
+				</div>
+
+				<!-- Asymptotes verticales et horizontales -->
+				<div
+					v-if="fraction_rationnelle.av.length>0"
+					class="bg-white rounded border-gray-400 p-4"
+				>
+					<h2 class="chapter-menu text-lg mb-10">
+						Asymptotes verticales
+					</h2>
+
+					<div
+						v-for="(item, index) in fraction_rationnelle.av"
+						:key="`limites-${index}`"
+						v-katex="`${item.limits} \\implies \\text{ AV: } ${item.tex}`"
+					/>
+				</div>
+
+				<div
+					v-if="fraction_rationnelle.ah.length>0"
+					class="bg-white rounded border-gray-400 p-4"
+				>
+					<h2 class="chapter-menu text-lg mb-10">
+						Asymptotes horizontales
+					</h2>
+
+					<div
+						v-for="(item, index) in fraction_rationnelle.ah"
+						:key="`limites-${index}`"
+					>
+						<div v-katex="`${item.limits} \\implies \\text{ AH: } ${item.tex}`" />
+						<div
+							v-if="item.delta!==null"
+							v-katex="`\\delta(x)=${item.deltaX.tex}=${item.deltaX.texFactors}`"
+						/>
+						<table-of-signs
+							v-if="item.tableOfSign!==false"
+							:tos="item.tableOfSign"
+						/>
+					</div>
+				</div>
+
+
+				<!-- Asymptotes obliques -->
+				<div
+					v-if="fraction_rationnelle.ao.length>0"
+					class="bg-white rounded border-gray-400 p-4"
+				>
+					<h2 class="chapter-menu text-lg mb-10">
+						Asymptotes obliques
+					</h2>
+
+					<div>
+						<div v-katex.display="fraction_rationnelle.aoTex" />
+
+						<table-of-signs
+							v-if="fraction_rationnelle.ao[0].tableOfSign!==false"
+							:tos="fraction_rationnelle.ao[0].tableOfSign"
+							fn="\delta"
+						/>
+					</div>
+				</div>
+
+				<div class="bg-white rounded border-gray-400 p-4">
+					<h2 class="chapter-menu text-lg mb-10">
+						Variation
+					</h2>
+					<div
+						v-katex="fraction_rationnelle.dxTex"
+					/>
+
+					<table-of-signs
+						v-if="fraction_rationnelle.dxtos!==false"
+						class="px-10 mt-10"
+						:tos="fraction_rationnelle.dxtos"
+					/>
+
+					<div
+						v-for="(zero, index) in fraction_rationnelle.extrema"
+						:key="`zero-${index}`"
+						v-katex="zero"
+					/>
+				</div>
+
+				<!-- Graphe -->
+				<div class="bg-white rounded border-gray-400 p-4 lg:col-span-2">
+					<h2 class="chapter-menu text-lg mb-10">
+						Représentation graphique
+					</h2>
+
+					<pi-draw-parser
+						v-if="fraction_rationnelle.drawCode!==false"
+						class="max-w-3xl mx-auto"
+						axis
+						:width="800"
+						:height="600"
+						:draw="{
+							parameters: fraction_rationnelle.drawParameters,
+							code: fraction_rationnelle.drawCode
+						}"
+					/>
+				</div>
+			</div>
+		</table-of-contents>
+	</Panel>
+</template>

@@ -1,23 +1,47 @@
+<script setup>
+/** Tools
+ * title: affine
+ * body: calcul d'une fonction affine par deux maxPoints
+ * parameters: a=Point, b=Point
+ * tags: algebre,1M
+ */
+import Panel from "@/Components/Ui/Panel.vue"
+import { computed, ref } from "vue"
+import { PiMath } from "pimath/esm"
+import FormMaker from "@/Components/Form/FormMaker.vue"
+
+let A = ref("3,4"),
+	B = ref("1,2")
+
+
+let affine = computed(() => {
+	try {
+		return new PiMath.Geometry.Line(
+			new PiMath.Geometry.Point(A.value),
+			B.value[0] === "v" ? new PiMath.Geometry.Vector(B.value.substring(1)) : new PiMath.Geometry.Point(B.value)
+		).tex
+	} catch (e) {
+		return false
+	}
+})
+</script>
+
 <template>
 	<Panel>
-		<form-input
+		<form-maker
 			v-model="A"
 			focus
 			label="Point A"
 			name="A"
-		>
-			Utiliser <code class="px-2 bg-gray-200">a,b</code> pour les coordonnées d'un point
-		</form-input>
+			message="Utiliser `a,b` pour les coordonnées d'un point"
+		/>
 
-		<form-input
+		<form-maker
 			v-model="B"
 			:label="B[0]==='v'?'Vecteur directeur':'Point B'"
 			name="B"
-		>
-			Utiliser <code class="px-2 bg-gray-200">a,b</code> pour les coordonnées d'un point ou <code
-				class="px-2 bg-gray-200"
-			>va,b</code> pour un vecteur directeur
-		</form-input>
+			message="Utiliser `a,b` pour les coordonnées d'un point ou `va,b`"
+		/>
 
 		<div v-if="affine">
 			<div>
@@ -41,31 +65,3 @@
 		</div>
 	</Panel>
 </template>
-
-<script setup>
-/** Tools
- * title: affine
- * body: calcul d'une fonction affine par deux maxPoints
- * parameters: a=Point, b=Point
- * tags: algebre,1M
- */
-import Panel from "@/Components/Ui/Panel.vue"
-import FormInput from "@/Components/Form/FormInput.vue"
-import {computed, ref} from "vue"
-import {PiMath} from "pimath/esm"
-
-let A = ref("3,4"),
-	B = ref("1,2")
-
-
-let affine = computed(() => {
-	try {
-		return new PiMath.Geometry.Line(
-			new PiMath.Geometry.Point(A.value),
-			B.value[0] === "v" ? new PiMath.Geometry.Vector(B.value.substring(1)) : new PiMath.Geometry.Point(B.value)
-		).tex
-	} catch (e) {
-		return false
-	}
-})
-</script>

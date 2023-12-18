@@ -1,127 +1,3 @@
-<template>
-	<Panel>
-		<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-			<form-input
-				v-model="A"
-				focus
-				label="a = "
-				name="fonction"
-			/>
-
-			<form-input
-				v-model="B"
-				label="b = "
-				name="fonction"
-			/>
-
-			<form-input
-				v-model="C"
-				label="c = "
-				name="fonction"
-			/>
-
-			<form-input
-				v-model="alpha"
-				focus
-				label="\(\alpha = \)"
-				name="fonction"
-			/>
-
-			<form-input
-				v-model="beta"
-				label="\(\beta = \)"
-				name="fonction"
-			/>
-
-			<form-input
-				v-model="gamma"
-				label="\(\gamma = \)"
-				name="fonction"
-			/>
-
-			<form-number
-				v-model="fixed"
-				label="arrondi"
-				name="arrondi"
-			/>
-		</div>
-
-		<div
-			v-if="result"
-			class="my-10"
-		>
-			<div class="grid grid-cols-2 gap-4">
-				<div v-if="result.triangle">
-					<table>
-						<tr
-							v-for="(value, key) in result.triangle"
-							:key="`triangle-${key}`"
-						>
-							<td
-								v-katex="`${labels[key]}=`"
-								class="w-[50px] text-right bg-gray-100 font-semibold px-4"
-							/>
-							<td
-								v-katex.left="value"
-								class="px-4"
-							/>
-						</tr>
-					</table>
-
-					<pi-draw-parser :draw="triangleDrawCode" />
-					<pre
-						class="font-code"
-						v-text="triangleDrawCode.code"
-					/>
-					<pre
-						class="font-code"
-						v-text="triangleAnswerCode"
-					/>
-				</div>
-
-				<div v-if="result.triangle2">
-					<table>
-						<tr
-							v-for="(value, key) in result.triangle2"
-							:key="`triangle-${key}`"
-						>
-							<td
-								v-katex="`${labels[key]}=`"
-								class="w-[50px] text-right bg-gray-100 font-semibold px-4"
-							/>
-							<td
-								v-katex.left="value"
-								class="px-4"
-							/>
-						</tr>
-					</table>
-
-					<pi-draw-parser :draw="triangle2DrawCode" />
-					<pre
-						class="font-code"
-						v-text="triangle2DrawCode.code"
-					/>
-					<pre
-						class="font-code"
-						v-text="triangle2AnswerCode"
-					/>
-				</div>
-			</div>
-			<div
-				v-if="result.text"
-				class="text-center text-red-700"
-				v-text="result.text"
-			/>
-		</div>
-		<div
-			v-else
-			class="text-red-700 text-sm text-center mt-5"
-		>
-			Une erreur s'est produite avec vos données.
-		</div>
-	</Panel>
-</template>
-
 <script setup>
 /** Tools
  * title: trigonométrie dans le triangle quelconque
@@ -130,11 +6,10 @@
  * tags: geoetrie,1M,2C
  */
 import Panel from "@/Components/Ui/Panel.vue"
-import FormInput from "@/Components/Form/FormInput.vue"
-import {computed, ref} from "vue"
-import {numberCorrection} from "pidraw/esm/Calculus"
-import FormNumber from "@/Components/Form/FormNumber.vue"
+import { computed, ref } from "vue"
+import { numberCorrection } from "pidraw/esm/Calculus"
 import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"
+import FormMaker from "@/Components/Form/FormMaker.vue"
 
 let A = ref("7"),
 	B = ref(""),
@@ -502,3 +377,122 @@ function makeTriangle(value, alternate) {
 	return value
 }
 </script>
+
+<template>
+	<Panel>
+		<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+			<form-maker
+				v-model="A"
+				focus
+				label="a = "
+			/>
+
+			<form-maker
+				v-model="B"
+				label="b = "
+			/>
+
+			<form-maker
+				v-model="C"
+				label="c = "
+			/>
+
+			<form-maker
+				v-model="alpha"
+				focus
+				label="\(\alpha = \)"
+			/>
+
+			<form-maker
+				v-model="beta"
+				label="\(\beta = \)"
+				name="fonction"
+			/>
+
+			<form-maker
+				v-model="gamma"
+				label="\(\gamma = \)"
+			/>
+
+			<form-maker
+				type="number"
+				v-model="fixed"
+				label="arrondi"
+			/>
+		</div>
+
+		<div
+			v-if="result"
+			class="my-10"
+		>
+			<div class="grid grid-cols-2 gap-4">
+				<div v-if="result.triangle">
+					<table>
+						<tr
+							v-for="(value, key) in result.triangle"
+							:key="`triangle-${key}`"
+						>
+							<td
+								v-katex="`${labels[key]}=`"
+								class="w-[50px] text-right bg-gray-100 font-semibold px-4"
+							/>
+							<td
+								v-katex.left="value"
+								class="px-4"
+							/>
+						</tr>
+					</table>
+
+					<pi-draw-parser :draw="triangleDrawCode" />
+					<pre
+						class="font-code"
+						v-text="triangleDrawCode.code"
+					/>
+					<pre
+						class="font-code"
+						v-text="triangleAnswerCode"
+					/>
+				</div>
+
+				<div v-if="result.triangle2">
+					<table>
+						<tr
+							v-for="(value, key) in result.triangle2"
+							:key="`triangle-${key}`"
+						>
+							<td
+								v-katex="`${labels[key]}=`"
+								class="w-[50px] text-right bg-gray-100 font-semibold px-4"
+							/>
+							<td
+								v-katex.left="value"
+								class="px-4"
+							/>
+						</tr>
+					</table>
+
+					<pi-draw-parser :draw="triangle2DrawCode" />
+					<pre
+						class="font-code"
+						v-text="triangle2DrawCode.code"
+					/>
+					<pre
+						class="font-code"
+						v-text="triangle2AnswerCode"
+					/>
+				</div>
+			</div>
+			<div
+				v-if="result.text"
+				class="text-center text-red-700"
+				v-text="result.text"
+			/>
+		</div>
+		<div
+			v-else
+			class="text-red-700 text-sm text-center mt-5"
+		>
+			Une erreur s'est produite avec vos données.
+		</div>
+	</Panel>
+</template>

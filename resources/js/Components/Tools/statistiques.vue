@@ -1,7 +1,7 @@
 <script lang="ts">
-	import LayoutMain from "@/Layouts/LayoutMain.vue"
+import LayoutMain from "@/Layouts/LayoutMain.vue"
 
-	export default {
+export default {
 		layout: LayoutMain,
 	}
 </script>
@@ -14,7 +14,6 @@
 	 */
 
 	import { computed, onMounted, reactive, ref } from "vue"
-	import FormInput from "@/Components/Form/FormInput.vue"
 
 	import BarChart from "@/Components/Charts/barChart.vue"
 	import { Chart } from "chart.js"
@@ -22,10 +21,8 @@
 	import LineChart from "@/Components/Charts/lineChart.vue"
 	import BoxPlotChart from "@/Components/Charts/boxPlotChart.vue"
 
-	import { PiDraw } from "pidraw/esm"
-	import FormSwitch from "@/Components/Form/FormSwitch.vue"
 	import Panel from "@/Components/Ui/Panel.vue"
-	import FormWrapper from "@/Components/Form/FormWrapper.vue"
+	import FormMaker from "@/Components/Form/FormMaker.vue"
 
 	Chart.register(annotationPlugin)
 	// import {Chart} from "chart.js/auto"
@@ -680,35 +677,39 @@
 	<!-- Title -->
 	<Panel>
 		<div class="grid grid-cols-1 md:grid-cols-6">
-			<form-input v-model.number="statConfig.samples" label="samples" />
-			<form-input
+			<form-maker
+				v-model.number="statConfig.samples"
+				label="samples"
+			/>
+			<form-maker
 				v-model.number="statConfig.min"
 				label="valeur modale minmale"
 			/>
-			<form-input
+			<form-maker
 				v-model.number="statConfig.max"
 				label="valeur modale maximale"
 			/>
-			<form-input
+			<form-maker
 				v-model.number="statConfig.length"
 				label="amplitude de la classe"
 			/>
-			<form-input
+			<form-maker
 				v-model.number="statConfig.skew"
 				label="biais de la distribution"
 			/>
-			<form-input
+			<form-maker
 				v-model.number="statConfig.flatten"
 				label="applatissement de la distribution"
 			/>
 
-			<form-switch
+			<form-maker
+				type="switch"
 				name="percent"
 				label="en pourcent"
 				v-model="statConfig.percent"
 			/>
 
-			<form-wrapper
+			<form-maker
 				type="number"
 				min="0"
 				max="5"
@@ -718,7 +719,10 @@
 		</div>
 
 		<div>
-			<form-input v-model="statCustomNi" label="valeurs custom pour ni" />
+			<form-maker
+				v-model="statCustomNi"
+				label="valeurs custom pour ni"
+			/>
 		</div>
 
 		<div v-if="statTable.length > 0">
@@ -731,10 +735,22 @@
 							class="w-[150px]"
 							title="classe modale"
 						/>
-						<th v-katex="'c_i'" title="valeur centrale" />
-						<th v-katex="'n_i'" title="effectif" />
-						<th v-katex="'L_i'" title="amplitude" />
-						<th v-katex="'f_i'" title="fréquence" />
+						<th
+							v-katex="'c_i'"
+							title="valeur centrale"
+						/>
+						<th
+							v-katex="'n_i'"
+							title="effectif"
+						/>
+						<th
+							v-katex="'L_i'"
+							title="amplitude"
+						/>
+						<th
+							v-katex="'f_i'"
+							title="fréquence"
+						/>
 						<th
 							v-katex="'F_i'"
 							title="fréquence cumulée croissante"
@@ -743,8 +759,14 @@
 							v-katex="'F_i\''"
 							title="fréquence cumulée décroissante"
 						/>
-						<th v-katex="'f_i\\cdot x_i'" title="fixi" />
-						<th v-katex="'f_i\\cdot x_i^2'" title="fixi2" />
+						<th
+							v-katex="'f_i\\cdot x_i'"
+							title="fixi"
+						/>
+						<th
+							v-katex="'f_i\\cdot x_i^2'"
+							title="fixi2"
+						/>
 					</tr>
 				</thead>
 				<tbody class="font-code">
@@ -825,7 +847,9 @@
 				<div
 					class="bg-white text-center border rounded-lg min-h-[80px] flex flex-col justify-around"
 				>
-					<div class="font-semibold">Moyenne</div>
+					<div class="font-semibold">
+						Moyenne
+					</div>
 					<div class="font-code text-xl">
 						{{ statRoundValue(statCentralValues.mean) }}
 					</div>
@@ -833,16 +857,20 @@
 				<div
 					class="bg-white text-center border rounded-lg min-h-[80px] flex flex-col justify-around"
 				>
-					<div class="font-semibold">Classe modale</div>
+					<div class="font-semibold">
+						Classe modale
+					</div>
 					<div class="font-code text-xl">
-						{{ statCentralValues.modal.classe }}<br />
+						{{ statCentralValues.modal.classe }}<br>
 						{{ statRoundValue(statCentralValues.modal.mode) }}
 					</div>
 				</div>
 				<div
 					class="bg-white text-center border rounded-lg min-h-[80px] flex flex-col justify-around"
 				>
-					<div class="font-semibold">Médiane</div>
+					<div class="font-semibold">
+						Médiane
+					</div>
 					<div class="font-code text-xl">
 						{{ statRoundValue(statCentralValues.q2) }}
 					</div>
@@ -850,10 +878,12 @@
 				<div
 					class="bg-white text-center border rounded-lg min-h-[80px] flex flex-col justify-around"
 				>
-					<div class="font-semibold">Quartiles</div>
+					<div class="font-semibold">
+						Quartiles
+					</div>
 					<div class="font-code text-xl">
 						<span v-katex="'q_1='" />
-						{{ statRoundValue(statCentralValues.q1) }} <br />
+						{{ statRoundValue(statCentralValues.q1) }} <br>
 						<span v-katex="'q_3='" />
 						{{ statRoundValue(statCentralValues.q3) }}
 					</div>
@@ -861,7 +891,9 @@
 				<div
 					class="bg-white text-center border rounded-lg min-h-[80px] flex flex-col justify-around"
 				>
-					<div class="font-semibold">Variance</div>
+					<div class="font-semibold">
+						Variance
+					</div>
 					<div class="font-code text-xl">
 						{{ statRoundValue(statCentralValues.variance) }}
 					</div>
@@ -869,17 +901,21 @@
 				<div
 					class="bg-white text-center border rounded-lg min-h-[80px] flex flex-col justify-around"
 				>
-					<div class="font-semibold">Déviation</div>
+					<div class="font-semibold">
+						Déviation
+					</div>
 					<div class="font-code text-xl">
 						<span v-katex="'\\sigma^2 ='" />
-						{{ statRoundValue(statCentralValues.sigma2) }} <br />
+						{{ statRoundValue(statCentralValues.sigma2) }} <br>
 						<span v-katex="'\\sigma ='" />
 						{{ statRoundValue(statCentralValues.sigma) }}
 					</div>
 				</div>
 			</div>
 
-			<h2 class="font-xl uppercase font-semibold mt-10">Graphiques</h2>
+			<h2 class="font-xl uppercase font-semibold mt-10">
+				Graphiques
+			</h2>
 
 			<div class="grid grid-cols-1 md:grid-cols-2 gap-5 mt-5">
 				<div>
@@ -904,7 +940,9 @@
 				</div>
 
 				<div>
-					<h2 class="text-lg font-extralight">Boîte à moustaches</h2>
+					<h2 class="text-lg font-extralight">
+						Boîte à moustaches
+					</h2>
 					<box-plot-chart
 						:chart-dataset="graphBoxPlot"
 						:chart-labels="['']"

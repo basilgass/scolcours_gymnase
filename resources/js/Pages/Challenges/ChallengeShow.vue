@@ -1,5 +1,5 @@
 <!--suppress ALL -->
-<script>
+<script lang="ts">
 	import LayoutMain from "@/Layouts/LayoutMain.vue"
 
 	export default {
@@ -7,16 +7,19 @@
 	}
 </script>
 
-<script setup>
-	import { ref, computed, inject } from "vue"
+<script setup lang="ts">
+	import { ref, computed, inject, Ref } from "vue"
 	import { PiMath } from "pimath/esm"
 	import ChallengeIntro from "@/Components/Challenges/ChallengeIntro.vue"
 	import ChallengeHeader from "@/Components/Challenges/ChallengeHeader.vue"
 	import ChallengeResults from "@/Components/Challenges/ChallengeResults.vue"
 	import { usePage } from "@inertiajs/vue3"
-	import { useGenerators } from "@/Composables/useGenerators"
+	import { useGenerator } from "@/Composables/useGenerator"
 	import QuestionShow from "@/Components/Posts/Questions/QuestionShow.vue"
 	import ChallengeTraining from "@/Components/Challenges/ChallengeTraining.vue"
+	import axios from "axios"
+	import ChallengeExport from "@/Components/Challenges/ChallengeExport.vue"
+	import { flashInterface } from "@/types"
 
 	const emits = defineEmits(["destroy", "change"])
 	const props = defineProps({
@@ -25,7 +28,7 @@
 		teams: { type: Object, required: true },
 	})
 
-	const flash = inject("flash")
+	const flash = inject<flashInterface>("flash")
 
 	let selector = ref(0),
 		challengeDescription = computed(() => {
@@ -40,27 +43,11 @@
 		editMode = ref(false),
 		questions = ref([]),
 		currentGenerator = computed(() => {
-			return useGenerators(challengeGenerators).generator(level)
+			return challengeGenerators.value[level.value - 1]
 		}),
 		runChallengeGenerator = function () {
 			if (currentGenerator.value !== "") {
-				questions.value = []
-				let F = new Function("PiMath", currentGenerator.value.code)
-
-				// TODO: Must make the generation and check for uniqueness.
-				try {
-					for (let i = 0; i < 20; i++) {
-						let result = F(PiMath)
-						if (!result.keyboard) {
-							result.keyboard = currentGenerator.value.keyboard
-						}
-
-						questions.value.push(result)
-					}
-					challengeGeneratorError.value = ""
-				} catch (e) {
-					challengeGeneratorError.value = e.message
-				}
+				questions.value = useGenerator(currentGenerator).list(20)
 			}
 		}
 
@@ -115,7 +102,7 @@
 	let ValidateButton = ref(null),
 		questionUI = ref(null)
 
-	const timerInterval = ref(false),
+	let timerInterval: ReturnType<typeof setInterval> = null,
 		timerIntervalSpeed = ref(1000)
 	let startChallenge = function () {
 			// Reset the lists
@@ -145,7 +132,7 @@
 
 			// Start the counter / timer
 			if (theChallenge.value.duration) {
-				timerInterval.value = setInterval(() => {
+				timerInterval = setInterval(() => {
 					elapsedTime.value += timerIntervalSpeed.value / 1000 / 60
 
 					if (elapsedTime.value > maxTimeInMinutes.value) {
@@ -159,16 +146,16 @@
 			isFinished.value = true
 
 			// Stop the counter / timer
-			clearInterval(timerInterval.value)
-			timerInterval.value = false
+			clearInterval(timerInterval)
+			timerInterval = null
 
 			// Sauvegarde le score dans la session local
-			if (isNaN(localScore.value) || +localScore.value < score.value) {
+			if (isNaN(+localScore.value) || +localScore.value < score.value) {
 				localStorage.setItem(
 					"scolcoursChallenge-" + theChallenge.value.id,
-					score.value,
+					score.value.toString(),
 				)
-				localScore.value = +score.value
+				localScore.value = (+score.value).toString()
 			}
 
 			// Sauvegarde le score dans la base de donnée
@@ -279,9 +266,8 @@
 		}
 
 	let theQuestion = computed(() => {
-		return useGenerators().question(
+		return useGenerator(currentGenerator).question(
 			listOfQuestions.value[questionId.value],
-			theChallenge,
 		)
 	})
 
@@ -318,7 +304,6 @@
 						} else {
 							flash.info(
 								"Vous n'avez pas amélioré votre score... dommage !",
-								"info",
 							)
 						}
 					}
@@ -417,5 +402,7 @@
 			@cancel="cancelChallenge"
 			@start="startChallenge"
 		/>
+
+		<challenge-export :challenge="theChallenge" />
 	</article>
 </template>

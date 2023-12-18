@@ -1,20 +1,58 @@
+<script setup>
+/** Tools
+ * title: droites remarquables d'un triangle
+ * body: calcul des droites remarquables d'un triangle
+ * parameters: a, b, c=coord ou équation
+ * tags: geometrie,2M
+ */
+import Panel from "@/Components/Ui/Panel.vue"
+import { computed, ref } from "vue"
+import { PiMath } from "pimath/esm"
+import FormMaker from "@/Components/Form/FormMaker.vue"
+
+let A = ref("15x-8y+16=0"),
+	B = ref("3x-4y-6=0"),
+	C = ref("5x+12y-24=0")
+
+let result = computed(() => {
+	try {
+		let triangle = new PiMath.Geometry.Triangle(
+			...A.value.split(","),
+			...B.value.split(","),
+			...C.value.split(",")
+		)
+		return {
+			triangle: triangle,
+			extBissectors: {
+				A: new PiMath.Geometry.Line(triangle.A, triangle.remarquables.bisectors.A.d, "perpendicular"),
+				B: new PiMath.Geometry.Line(triangle.B, triangle.remarquables.bisectors.B.d, "perpendicular"),
+				C: new PiMath.Geometry.Line(triangle.C, triangle.remarquables.bisectors.C.d, "perpendicular")
+			}
+		}
+	} catch (e) {
+		// console.error(e)
+		return false
+	}
+})
+</script>
+
 <template>
 	<Panel>
 		<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-			<form-input
+			<form-maker
 				v-model="A"
 				focus
 				label="A ou équation BC"
 				name="fonction"
 			/>
 
-			<form-input
+			<form-maker
 				v-model="B"
 				label="B ou équation AC"
 				name="fonction"
 			/>
 
-			<form-input
+			<form-maker
 				v-model="C"
 				label="C ou équation AB"
 				name="fonction"
@@ -94,41 +132,3 @@
 		</div>
 	</Panel>
 </template>
-
-<script setup>
-/** Tools
- * title: droites remarquables d'un triangle
- * body: calcul des droites remarquables d'un triangle
- * parameters: a, b, c=coord ou équation
- * tags: geometrie,2M
- */
-import Panel from "@/Components/Ui/Panel.vue"
-import FormInput from "@/Components/Form/FormInput.vue"
-import {computed, ref} from "vue"
-import {PiMath} from "pimath/esm"
-
-let A = ref("15x-8y+16=0"),
-	B = ref("3x-4y-6=0"),
-	C = ref("5x+12y-24=0")
-
-let result = computed(() => {
-	try {
-		let triangle = new PiMath.Geometry.Triangle(
-			...A.value.split(","),
-			...B.value.split(","),
-			...C.value.split(",")
-		)
-		return {
-			triangle: triangle,
-			extBissectors: {
-				A: new PiMath.Geometry.Line(triangle.A, triangle.remarquables.bisectors.A.d, "perpendicular"),
-				B: new PiMath.Geometry.Line(triangle.B, triangle.remarquables.bisectors.B.d, "perpendicular"),
-				C: new PiMath.Geometry.Line(triangle.C, triangle.remarquables.bisectors.C.d, "perpendicular")
-			}
-		}
-	} catch (e) {
-		// console.error(e)
-		return false
-	}
-})
-</script>

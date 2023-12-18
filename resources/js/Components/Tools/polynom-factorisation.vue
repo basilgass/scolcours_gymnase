@@ -1,23 +1,3 @@
-<template>
-	<Panel>
-		<form-input
-			v-model="polynom"
-			label="polynôme"
-			name="polynom"
-		/>
-
-		<div v-if="result">
-			<div v-katex="`${result.tex}`" />
-		</div>
-		<div
-			v-else
-			class="text-red-700 text-sm"
-		>
-			Une erreur s'est produite avec vos données.
-		</div>
-	</Panel>
-</template>
-
 <script setup>
 /** Tools
  * title: factorisation d'un polynôme
@@ -26,9 +6,9 @@
  * tags: algebre,1M
  */
 import Panel from "@/Components/Ui/Panel.vue"
-import FormInput from "@/Components/Form/FormInput.vue"
-import {computed, ref} from "vue"
-import {PiMath} from "pimath/esm"
+import { computed, ref } from "vue"
+import { PiMath } from "pimath/esm"
+import FormMaker from "@/Components/Form/FormMaker.vue"
 
 let polynom = ref("")
 let result = computed(() => {
@@ -45,3 +25,23 @@ let result = computed(() => {
 	}
 })
 </script>
+
+<template>
+	<Panel>
+		<form-maker
+			v-model="polynom"
+			label="polynôme"
+			name="polynom"
+		/>
+
+		<div v-if="result">
+			<div v-katex="`${result.tex}`" />
+		</div>
+		<div
+			v-else
+			class="text-red-700 text-sm"
+		>
+			Une erreur s'est produite avec vos données.
+		</div>
+	</Panel>
+</template>

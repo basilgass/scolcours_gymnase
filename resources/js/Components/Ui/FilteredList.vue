@@ -1,8 +1,7 @@
 <script setup>
-	import FormInput from "@/Components/Form/FormInput.vue"
-	import { computed, ref } from "vue"
+import { computed, ref } from "vue"
 
-	const props = defineProps({
+const props = defineProps({
 		title: { type: String, required: true },
 		list: { type: Array, required: true },
 		routeName: { type: String, default: "" },
@@ -44,7 +43,7 @@
 		</div>
 
 		<div v-show="showList">
-			<form-input
+			<form-maker
 				v-model="selectedList"
 				:label="`filtrer les ${title}`"
 				class="mb-5"
@@ -54,9 +53,15 @@
 				class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-3"
 			>
 				<transition-group name="list">
-					<div v-for="item of filteredList" :key="`id-${item.id}`">
+					<div
+						v-for="item of filteredList"
+						:key="`id-${item.id}`"
+					>
 						<div v-if="$slots['card']">
-							<slot :item="item" name="card" />
+							<slot
+								:item="item"
+								name="card"
+							/>
 						</div>
 						<div
 							v-else
@@ -74,7 +79,10 @@
 									)
 								"
 							/>
-							<div v-else v-katex.auto="props.itemTitle(item)" />
+							<div
+								v-else
+								v-katex.auto="props.itemTitle(item)"
+							/>
 						</div>
 					</div>
 				</transition-group>

@@ -1,4 +1,22 @@
 <!--suppress ALL -->
+<script>
+import LayoutMain from "@/Layouts/LayoutMain.vue"
+
+export default {
+	layout: LayoutMain,
+}
+</script>
+
+<script setup>
+
+import {inject} from "vue"
+
+const props = defineProps({
+	teams: {type: Object, required: true}
+})
+
+const flash = inject("flash")
+</script>
 <template>
 	<article>
 		<h2 class="text-3xl font-semibold">
@@ -23,27 +41,3 @@
 		</div>
 	</article>
 </template>
-
-<script>
-import LayoutMain from "@/Layouts/LayoutMain.vue"
-
-export default {
-	layout: LayoutMain,
-}
-</script>
-<script setup>
-
-import {ref, watch, computed, onMounted, inject} from "vue"
-import {PiMath} from "pimath/esm"
-import ChallengeIntro from "@/Components/Challenges/ChallengeIntro.vue"
-import ChallengeHeader from "@/Components/Challenges/ChallengeHeader.vue"
-import ChallengeResults from "@/Components/Challenges/ChallengeResults.vue"
-import FormInput from "@/Components/Form/FormInput.vue"
-import {usePage} from "@inertiajs/vue3"
-
-const props = defineProps({
-	teams: {type: Object, required: true}
-})
-
-const flash = inject("flash")
-</script>

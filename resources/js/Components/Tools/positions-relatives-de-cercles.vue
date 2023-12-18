@@ -7,9 +7,9 @@
 	 */
 
 	import { computed, onMounted, ref } from "vue"
-	import FormWrapper from "@/Components/Form/FormWrapper.vue"
 	import { PiMath } from "pimath/esm"
 	import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"
+	import FormMaker from "@/Components/Form/FormMaker.vue"
 
 	let circle1 = ref(""),
 		circle2 = ref(""),
@@ -183,32 +183,57 @@
 	<div>
 		<div class="grid grid-cols-2 gap-3">
 			<div>
-				<form-wrapper v-model="circle1" focus font-code type="text" />
+				<form-maker
+					v-model="circle1"
+					focus
+					font-code
+					type="text"
+				/>
 
-				<form-wrapper v-model="circle2" focus font-code type="text" />
+				<form-maker
+					v-model="circle2"
+					focus
+					font-code
+					type="text"
+				/>
 
 				<div class="text-center mt-3 mb-5">
-					<button class="btn btn-primary" @click="generateCircles">Générer</button>
+					<button
+						class="btn btn-primary"
+						@click="generateCircles"
+					>
+						Générer
+					</button>
 				</div>
 
 				<div v-if="result">
 					<div v-katex.display.boxed.lg="`(\\Gamma_1): ${result.C1}`" />
-					<div v-katex.display.boxed="`O_1=${result.O1}\\quad r_1 = ${result.r1}`"></div>
-					<div v-katex.display.boxed.lg="`(\\Gamma_2): ${result.C2}`" class="mt-10" />
-					<div v-katex.display.boxed="`O_2=${result.O2}\\quad r_2 = ${result.r2}`"></div>
+					<div v-katex.display.boxed="`O_1=${result.O1}\\quad r_1 = ${result.r1}`" />
+					<div
+						v-katex.display.boxed.lg="`(\\Gamma_2): ${result.C2}`"
+						class="mt-10"
+					/>
+					<div v-katex.display.boxed="`O_2=${result.O2}\\quad r_2 = ${result.r2}`" />
 				</div>
 			</div>
 
-			<div v-if="result" class="flex flex-col gap-3">
-				<div v-katex.display.boxed="result.distance"></div>
+			<div
+				v-if="result"
+				class="flex flex-col gap-3"
+			>
+				<div v-katex.display.boxed="result.distance" />
 				<div>
 					Les deux cercles sont
-					<span class="font-semibold text-lg">{{ result.position }}</span
-					>.
+					<span class="font-semibold text-lg">{{ result.position }}</span>.
 				</div>
 				<pi-draw-parser :draw="result.draw" />
 			</div>
-			<div v-else class="text-red-700 text-sm">Une erreur s'est produite avec vos données.</div>
+			<div
+				v-else
+				class="text-red-700 text-sm"
+			>
+				Une erreur s'est produite avec vos données.
+			</div>
 		</div>
 	</div>
 </template>

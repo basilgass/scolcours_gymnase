@@ -1,7 +1,7 @@
 <script>
-	import LayoutMain from "@/Layouts/LayoutMain.vue"
+import LayoutMain from "@/Layouts/LayoutMain.vue"
 
-	export default {
+export default {
 		layout: LayoutMain,
 	}
 </script>
@@ -9,8 +9,8 @@
 <script setup>
 	import Panel from "@/Components/Ui/Panel.vue"
 	import { useForm } from "@inertiajs/vue3"
-	import FormInput from "@/Components/Form/FormInput.vue"
 	import { computed, ref } from "vue"
+	import FormMaker from "@/Components/Form/FormMaker.vue"
 
 	const props = defineProps({
 		tools: Object,
@@ -66,8 +66,10 @@
 
 	<div class="space-y-4">
 		<Panel>
-			<h2 class="text-lg my-2">Chapitres</h2>
-			<form-input
+			<h2 class="text-lg my-2">
+				Chapitres
+			</h2>
+			<form-maker
 				v-model="filterChapter"
 				name="filtrer"
 				title="Filtrer"
@@ -131,7 +133,9 @@
 		</Panel>
 
 		<Panel>
-			<h2 class="text-lg my-2">Challenges</h2>
+			<h2 class="text-lg my-2">
+				Challenges
+			</h2>
 			<div class="w-full">
 				<div
 					v-for="challenge in challenges"
@@ -158,7 +162,9 @@
 		</Panel>
 
 		<Panel>
-			<h2 class="text-lg my-2">Outils</h2>
+			<h2 class="text-lg my-2">
+				Outils
+			</h2>
 			<div class="w-full">
 				<div
 					v-for="tool in tools"

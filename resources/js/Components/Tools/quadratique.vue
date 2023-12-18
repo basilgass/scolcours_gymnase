@@ -1,36 +1,3 @@
-<template>
-	<Panel>
-		<form-input
-			v-model="A"
-			label="Coordonnées du point A"
-			name="fonction"
-			focus
-		/>
-
-		<form-input
-			v-model="B"
-			:label="C===''?'Coordonnées du sommet S':'Coordonnées du point B'"
-			name="fonction"
-		/>
-
-		<form-input
-			v-model="C"
-			label="Coordonnées du point C"
-			name="fonction"
-		/>
-
-		<div v-if="result">
-			<div v-katex="`${result.tex}`" />
-		</div>
-		<div
-			v-else
-			class="text-red-700 text-sm"
-		>
-			Une erreur s'est produite avec vos données.
-		</div>
-	</Panel>
-</template>
-
 <script setup>
 /** Tools
  * title: quadratique
@@ -39,22 +6,26 @@
  * tags: algebre,1M
  */
 import Panel from "@/Components/Ui/Panel.vue"
-import FormInput from "@/Components/Form/FormInput.vue"
-import {computed, ref} from "vue"
-import {PiMath} from "pimath/esm"
+import { computed, ref } from "vue"
+import { PiMath } from "pimath/esm"
+import FormMaker from "@/Components/Form/FormMaker.vue"
 
-let A = ref("1,4"),
-	B = ref("2,3"),
-	C = ref("5,8")
+let A = ref("-2,-11"),
+	B = ref("0,-7"),
+	C = ref("-4,-7")
 let result = computed(() => {
+
+	let poly = new PiMath.Polynom('ax^2+bx+c')
+
 	try {
-		let P = new PiMath.Equation("y = a*x^2+b*x+c"),
+		let P = new PiMath.Equation("y", "ax^2+bx+c"),
 			pA = new PiMath.Geometry.Point(A.value),
 			pB = new PiMath.Geometry.Point(B.value),
 			pC = new PiMath.Geometry.Point(C.value)
 
 		// TODO: améliorer le calcul et inclure dans PI
 		// y=ax^2+bx+c
+		// console.log(P.display)
 		let Pc = P.clone()
 				.replaceBy("x", new PiMath.Polynom(pA.x.display))
 				.replaceBy("y", new PiMath.Polynom(pA.y.display))
@@ -66,6 +37,8 @@ let result = computed(() => {
 				.isolate("b"),
 			Pa
 
+		// console.log(Pc.tex)
+		// console.log(Pb.tex)
 		if (C.value !== "") {
 			Pa = P.clone()
 				.replaceBy("x", new PiMath.Polynom(pC.x.display))
@@ -96,3 +69,36 @@ let result = computed(() => {
 	}
 })
 </script>
+
+<template>
+	<Panel>
+		<form-maker
+			v-model="A"
+			label="Coordonnées du point A"
+			name="fonction"
+			focus
+		/>
+
+		<form-maker
+			v-model="B"
+			:label="C===''?'Coordonnées du sommet S':'Coordonnées du point B'"
+			name="fonction"
+		/>
+
+		<form-maker
+			v-model="C"
+			label="Coordonnées du point C"
+			name="fonction"
+		/>
+
+		<div v-if="result">
+			<div v-katex="`${result.tex}`" />
+		</div>
+		<div
+			v-else
+			class="text-red-700 text-sm"
+		>
+			Une erreur s'est produite avec vos données.
+		</div>
+	</Panel>
+</template>

@@ -1,41 +1,3 @@
-<template>
-	<Panel>
-		<form-input
-			v-model="fx"
-			label="fonction"
-			name="fonction"
-			focus
-		/>
-		<form-fraction
-			v-model="a"
-			label="borne inférieure"
-			name="a"
-		/>
-		<form-fraction
-			v-model="b"
-			label="borne supérieure"
-			name="b"
-		/>
-
-		<div v-if="result">
-			<div
-				v-katex="result"
-				class="katex-boxed"
-			/>
-			<p
-				class="text-center text-sm font-extralight text-gray-400"
-				v-text="result"
-			/>
-		</div>
-		<div
-			v-else
-			class="text-red-700 text-sm"
-		>
-			Une erreur s'est produite avec vos données.
-		</div>
-	</Panel>
-</template>
-
 <script setup>
 /** Tools
  * title: intégrale entre deux bornes
@@ -44,10 +6,9 @@
  * tags: algebre,3M
  */
 import Panel from "@/Components/Ui/Panel.vue"
-import FormInput from "@/Components/Form/FormInput.vue"
-import {computed, ref} from "vue"
-import {PiMath} from "pimath/esm"
-import FormFraction from "@/Components/Form/FormFraction.vue"
+import { computed, ref } from "vue"
+import { PiMath } from "pimath/esm"
+import FormMaker from "@/Components/Form/FormMaker.vue"
 
 let fx = ref(""),
 	a = ref(0),
@@ -72,4 +33,44 @@ let result = computed(() => {
 	}
 })
 </script>
+
+<template>
+	<Panel>
+		<form-maker
+			v-model="fx"
+			label="fonction"
+			name="fonction"
+			focus
+		/>
+		<form-maker
+			v-model="a"
+			type="fraction"
+			label="borne inférieure"
+			name="a"
+		/>
+		<form-maker
+			type="fraction"
+			v-model="b"
+			label="borne supérieure"
+			name="b"
+		/>
+
+		<div v-if="result">
+			<div
+				v-katex="result"
+				class="katex-boxed"
+			/>
+			<p
+				class="text-center text-sm font-extralight text-gray-400"
+				v-text="result"
+			/>
+		</div>
+		<div
+			v-else
+			class="text-red-700 text-sm"
+		>
+			Une erreur s'est produite avec vos données.
+		</div>
+	</Panel>
+</template>
 

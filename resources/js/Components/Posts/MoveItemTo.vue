@@ -1,9 +1,9 @@
 <script setup>
-	import { inject, nextTick, ref } from "vue"
-	import { watchDebounced } from "@vueuse/core"
-	import FormWrapper from "@/Components/Form/FormWrapper.vue"
+import { inject, nextTick, ref } from "vue"
+import { watchDebounced } from "@vueuse/core"
+import FormMaker from "@/Components/Form/FormMaker.vue"
 
-	const flash = inject("flash"),
+const flash = inject("flash"),
 		props = defineProps({
 			source: { type: String, required: true },
 			sourceId: { type: Number, required: true },
@@ -67,11 +67,14 @@
 </script>
 <template>
 	<div class="flex gap-3 align-text-bottom">
-		<button class="btn btn-xs self-end" @click="enableMove">
+		<button
+			class="btn btn-xs self-end"
+			@click="enableMove"
+		>
 			déplacer le {{ props.source }}
 		</button>
 
-		<form-wrapper
+		<form-maker
 			with-icon
 			type="id"
 			v-if="showMoveTo"
@@ -83,6 +86,9 @@
 			font-code
 			@enter="moveTo"
 		/>
-		<div v-if="showMoveTo" v-katex.auto="targetName"></div>
+		<div
+			v-if="showMoveTo"
+			v-katex.auto="targetName"
+		/>
 	</div>
 </template>

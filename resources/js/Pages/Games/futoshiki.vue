@@ -1,9 +1,118 @@
+<script>
+import LayoutMain from "@/Layouts/LayoutMain.vue"
+
+export default {
+	layout: LayoutMain
+}
+</script>
+
+<script setup>
+import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
+import {Futoshiki} from "pigames/build/module/lib/futoshiki"
+import {computed, nextTick, reactive, ref} from "vue"
+import FormMaker from "@/Components/Form/FormMaker.vue"
+
+let gameStarted = ref(false),
+	start = function(){
+		gameStarted.value  = true
+
+		futo.generate(size.value)
+	}
+
+let size = ref(4),
+	futo = new Futoshiki(4)
+
+// futo.generate()
+
+let wrapper = ref(null),
+	futoshiki = reactive(futo),
+	valueSelector = ref(1),
+	suggestionMode = ref(false),
+	contradictions = ref([])
+
+let rows = computed(() => {
+	let arr = []
+	for (let i = 0; i < size.value; i++) {
+		for (let j = 0; j < size.value; j++) {
+
+		}
+		arr.push(
+			Object.values(futoshiki).filter(cell => cell.row === i)
+		)
+	}
+
+	return arr
+})
+
+let getConstrain = function (col, row) {
+	if (row % 2 === 1) {
+		// left / right constrain
+		const AKey = `${col / 2 - 1}:${(row - 1) / 2}`,
+			BKey = `${col / 2}:${(row - 1) / 2}`
+
+		if (futoshiki.futoshiki[AKey].isLesserThan(futoshiki.futoshiki[BKey])) {
+			return "bi bi-chevron-compact-left"
+		}
+		if (futoshiki.futoshiki[AKey].isGreaterThan(futoshiki.futoshiki[BKey])) {
+			return "bi bi-chevron-compact-right"
+		}
+	}
+	if (row % 2 === 0) {
+		// greater / lesser constrain
+		const AKey = `${(col - 1) / 2}:${row / 2 - 1}`,
+			BKey = `${(col - 1) / 2}:${row / 2}`
+
+		if (futoshiki.futoshiki[AKey].isLesserThan(futoshiki.futoshiki[BKey])) {
+			return "bi bi-chevron-compact-up"
+		}
+		if (futoshiki.futoshiki[AKey].isGreaterThan(futoshiki.futoshiki[BKey])) {
+			return "bi bi-chevron-compact-down"
+		}
+	}
+	return ""
+}
+let setValue = function (col, row) {
+	const cellKey = `${(col - 1) / 2}:${(row - 1) / 2}`
+	if (suggestionMode.value && valueSelector.value > 0) {
+		if (futoshiki.futoshiki[cellKey].value === null) {
+			futoshiki.futoshiki[cellKey].toggleSuggestion(valueSelector.value)
+		}
+	} else {
+		if (futoshiki.futoshiki[cellKey].default === null) {
+			if (valueSelector.value === 0) {
+				// Erase mode
+				futoshiki.futoshiki[cellKey].value = null
+			} else {
+				futoshiki.futoshiki[cellKey].value = valueSelector.value
+			}
+
+			futoshiki.futoshiki[cellKey].suggestion = []
+
+			// Show a success message.
+			nextTick(() => {
+				let solution = futoshiki.isSolved()
+				if (solution.result) {
+					alert("bravo")
+				} else {
+					if(futoshiki.cells.every(cell => cell.value)) {
+						contradictions.value = solution.contradictions
+					}else{
+						contradictions.value = []
+					}
+				}
+			})
+		}
+	}
+}
+
+</script>
 <template>
 	<article>
 		<ArticleTitle title="Futoshiki" />
 
 		<div v-show="!gameStarted">
-			<form-number
+			<form-maker
+				type="number"
 				v-model="size"
 				name="nombre de colonnes"
 			/>
@@ -123,114 +232,6 @@
 		</div>
 	</article>
 </template>
-
-<script>
-import LayoutMain from "@/Layouts/LayoutMain.vue"
-
-export default {
-	layout: LayoutMain
-}
-</script>
-<script setup>
-import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
-import {Futoshiki} from "pigames/build/module/lib/futoshiki"
-import {computed, nextTick, reactive, ref} from "vue"
-import FormNumber from "@/Components/Form/FormNumber.vue"
-
-let gameStarted = ref(false),
-	start = function(){
-		gameStarted.value  = true
-
-		futo.generate(size.value)
-	}
-
-let size = ref(4),
-	futo = new Futoshiki(4)
-
-// futo.generate()
-
-let wrapper = ref(null),
-	futoshiki = reactive(futo),
-	valueSelector = ref(1),
-	suggestionMode = ref(false),
-	contradictions = ref([])
-
-let rows = computed(() => {
-	let arr = []
-	for (let i = 0; i < size.value; i++) {
-		for (let j = 0; j < size.value; j++) {
-
-		}
-		arr.push(
-			Object.values(futoshiki).filter(cell => cell.row === i)
-		)
-	}
-
-	return arr
-})
-
-let getConstrain = function (col, row) {
-	if (row % 2 === 1) {
-		// left / right constrain
-		const AKey = `${col / 2 - 1}:${(row - 1) / 2}`,
-			BKey = `${col / 2}:${(row - 1) / 2}`
-
-		if (futoshiki.futoshiki[AKey].isLesserThan(futoshiki.futoshiki[BKey])) {
-			return "bi bi-chevron-compact-left"
-		}
-		if (futoshiki.futoshiki[AKey].isGreaterThan(futoshiki.futoshiki[BKey])) {
-			return "bi bi-chevron-compact-right"
-		}
-	}
-	if (row % 2 === 0) {
-		// greater / lesser constrain
-		const AKey = `${(col - 1) / 2}:${row / 2 - 1}`,
-			BKey = `${(col - 1) / 2}:${row / 2}`
-
-		if (futoshiki.futoshiki[AKey].isLesserThan(futoshiki.futoshiki[BKey])) {
-			return "bi bi-chevron-compact-up"
-		}
-		if (futoshiki.futoshiki[AKey].isGreaterThan(futoshiki.futoshiki[BKey])) {
-			return "bi bi-chevron-compact-down"
-		}
-	}
-	return ""
-}
-let setValue = function (col, row) {
-	const cellKey = `${(col - 1) / 2}:${(row - 1) / 2}`
-	if (suggestionMode.value && valueSelector.value > 0) {
-		if (futoshiki.futoshiki[cellKey].value === null) {
-			futoshiki.futoshiki[cellKey].toggleSuggestion(valueSelector.value)
-		}
-	} else {
-		if (futoshiki.futoshiki[cellKey].default === null) {
-			if (valueSelector.value === 0) {
-				// Erase mode
-				futoshiki.futoshiki[cellKey].value = null
-			} else {
-				futoshiki.futoshiki[cellKey].value = valueSelector.value
-			}
-
-			futoshiki.futoshiki[cellKey].suggestion = []
-
-			// Show a success message.
-			nextTick(() => {
-				let solution = futoshiki.isSolved()
-				if (solution.result) {
-					alert("bravo")
-				} else {
-					if(futoshiki.cells.every(cell => cell.value)) {
-						contradictions.value = solution.contradictions
-					}else{
-						contradictions.value = []
-					}
-				}
-			})
-		}
-	}
-}
-
-</script>
 
 <style>
 .futoshiki {

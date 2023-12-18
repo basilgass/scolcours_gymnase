@@ -1,93 +1,14 @@
-<template>
-	<Panel
-		v-if="validation"
-		ref="root"
-	>
-		<!-- Value to modify enter -->
-		<form
-			class="max-w-md mx-auto mb-6"
-			@submit.prevent
-		>
-			<form-input
-				v-model="fx"
-				:focus="true"
-				label="fonction"
-				name="fonction"
-			/>
-
-			<form-switch
-				v-model="mode"
-				label="signes,variations"
-				name="mode"
-			/>
-
-			<div class="flex gap-3">
-				<form-button
-					@click.prevent="validation_fx"
-				>
-					Valider
-				</form-button>
-			</div>
-		</form>
-
-		<hr>
-
-		<!-- Tableau de signes -->
-		<div
-			v-if="mode"
-			class="bg-white rounded border-gray-400 p-4"
-		>
-			<h2 class="chapter-menu text-lg mb-10">
-				Tableau de signes
-			</h2>
-
-			<table-of-signs
-				v-if="fraction_rationnelle.tos!==false"
-				:tos="fraction_rationnelle.tos"
-				class="px-10"
-			/>
-		</div>
-
-		<!-- Tableau de variation -->
-		<div
-			v-if="!mode"
-			class="bg-white rounded border-gray-400 p-4"
-		>
-			<h2 class="chapter-menu text-lg mb-10">
-				Variation
-			</h2>
-			<div
-				v-katex="fraction_rationnelle.dxTex"
-			/>
-
-			<table-of-signs
-				v-if="fraction_rationnelle.dxtos!==false"
-				:tos="fraction_rationnelle.dxtos"
-				class="px-10 mt-10"
-			/>
-
-			<div
-				v-for="(zero, index) in fraction_rationnelle.extrema"
-				:key="`zero-${index}`"
-				v-katex="zero"
-			/>
-		</div>
-	</Panel>
-</template>
-
 <script setup lang="ts">
 /** Chapter
  * title: tableau de signes ou de variations
  * body: tableau de signes ou de variations
  */
-import {nextTick, onMounted, reactive, ref} from "vue"
-import {PiMath} from "pimath/esm"
+import { nextTick, onMounted, reactive, ref } from "vue"
+import { PiMath } from "pimath/esm"
 import TableOfSigns from "@/Components/Pi/PiTableOfSigns.vue"
 import Panel from "@/Components/Ui/Panel.vue"
-import FormInput from "@/Components/Form/FormInput.vue"
-import FormButton from "@/Components/Form/FormButton.vue"
-import FormSwitch from "@/Components/Form/FormSwitch.vue"
-import {splitIfOutsideParentheses} from "@/helpers/helperFunctions.js";
+import { splitIfOutsideParentheses } from "@/helpers/helperFunctions.js"
+import FormMaker from "@/Components/Form/FormMaker.vue"
 
 type fracRationnelle = {
     valid: boolean,
@@ -158,3 +79,81 @@ onMounted(() => {
 	validation_fx()
 })
 </script>
+
+<template>
+	<Panel
+		v-if="validation"
+		ref="root"
+	>
+		<!-- Value to modify enter -->
+		<form
+			class="max-w-md mx-auto mb-6"
+			@submit.prevent
+		>
+			<form-maker
+				v-model="fx"
+				label="fonction"
+				focus
+				:prepend="'\\( f(x)=\\frac{a}{b}\\)'"
+			/>
+
+			<form-maker
+				type="switch"
+				v-model="mode"
+				label="signes,variations"
+			/>
+
+			<div class="flex gap-3">
+				<button
+					class="btn btn-primary"
+					@click.prevent="validation_fx"
+				>
+					valider
+				</button>
+			</div>
+		</form>
+
+		<hr>
+
+		<!-- Tableau de signes -->
+		<div
+			v-if="mode"
+			class="bg-white rounded border-gray-400 p-4"
+		>
+			<h2 class="chapter-menu text-lg mb-10">
+				Tableau de signes
+			</h2>
+
+			<table-of-signs
+				v-if="fraction_rationnelle.tos!==false"
+				:tos="fraction_rationnelle.tos"
+				class="px-10"
+			/>
+		</div>
+
+		<!-- Tableau de variation -->
+		<div
+			v-if="!mode"
+			class="bg-white rounded border-gray-400 p-4"
+		>
+			<h2 class="chapter-menu text-lg mb-10">
+				Variation
+			</h2>
+			<div
+				v-katex="fraction_rationnelle.dxTex"
+			/>
+
+			<table-of-signs
+				v-if="fraction_rationnelle.dxtos!==false"
+				:tos="fraction_rationnelle.dxtos"
+				class="px-10 mt-10"
+			/>
+
+			<div
+				v-for="(zero, index) in fraction_rationnelle.extrema"
+				:key="`zero-${index}`"
+				v-katex="zero"
+			/>
+		</div>
+	</Panel>
+</template>

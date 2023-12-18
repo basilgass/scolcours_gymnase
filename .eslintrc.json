@@ -6,17 +6,16 @@
 	"extends": [
 		"eslint:recommended",
 		"plugin:@typescript-eslint/recommended",
-		"plugin:vue/vue3-strongly-recommended",
-		"prettier"
+		"plugin:vue/vue3-strongly-recommended"
 	],
 	"parserOptions": {
 		"ecmaVersion": "latest",
 		"parser": "@typescript-eslint/parser",
 		"sourceType": "module"
 	},
-	"plugins": ["@typescript-eslint", "vue", "prettier"],
+	"plugins": ["@typescript-eslint", "vue"],
 	"rules": {
-		"prettier/prettier": "error",
+		"semi": ["error", "never"],
 		"no-undef": "off",
 		"vue/html-indent": ["error", "tab"],
 		"vue/block-order": [

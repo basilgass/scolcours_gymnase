@@ -1,31 +1,3 @@
-<template>
-	<Panel>
-		<form-input
-			v-model="fx"
-			label="fonction"
-			name="fonction"
-			focus
-		/>
-
-		<form-input
-			v-model="x"
-			label="abscisse du point de tangence"
-			name="x"
-		/>
-
-		<div v-if="affine">
-			<div v-katex="`${affine.tex.mxh}`" />
-			<div v-katex="`${affine.tex.canonical}`" />
-		</div>
-		<div
-			v-else
-			class="text-red-700 text-sm"
-		>
-			Une erreur s'est produite lors de l'introduction des coordonnées.
-		</div>
-	</Panel>
-</template>
-
 <script setup>
 /** Tools
  * title: tangente à un graphe (fonction polynomiale)
@@ -34,9 +6,9 @@
  * tags: algebre,2M
  */
 import Panel from "@/Components/Ui/Panel.vue"
-import FormInput from "@/Components/Form/FormInput.vue"
-import {computed, ref} from "vue"
-import {PiMath} from "pimath/esm"
+import { computed, ref } from "vue"
+import { PiMath } from "pimath/esm"
+import FormMaker from "@/Components/Form/FormMaker.vue"
 
 let fx = ref("1/3x^2"),
 	x = ref("3")
@@ -58,3 +30,31 @@ let affine = computed(() => {
 
 })
 </script>
+
+<template>
+	<Panel>
+		<form-maker
+			v-model="fx"
+			label="fonction"
+			name="fonction"
+			focus
+		/>
+
+		<form-maker
+			v-model="x"
+			label="abscisse du point de tangence"
+			name="x"
+		/>
+
+		<div v-if="affine">
+			<div v-katex="`${affine.tex.mxh}`" />
+			<div v-katex="`${affine.tex.canonical}`" />
+		</div>
+		<div
+			v-else
+			class="text-red-700 text-sm"
+		>
+			Une erreur s'est produite lors de l'introduction des coordonnées.
+		</div>
+	</Panel>
+</template>
