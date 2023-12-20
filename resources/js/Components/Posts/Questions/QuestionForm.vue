@@ -188,7 +188,7 @@ let hasClipboard = computed(() => {
 					<form-maker
 						ref="formBody"
 						type="code"
-						v-mode="theQuestion.block.body"
+						v-model="theQuestion.block.body"
 						:label="`body (id: ${theQuestion.block.id})`"
 						:rows="10"
 						language="latex"

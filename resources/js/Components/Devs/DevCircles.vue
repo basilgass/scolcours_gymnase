@@ -15,7 +15,7 @@ let root = ref(null),
 	code = ref(""),
 	intersectionPoints = ref([]),
 	tangentPerPoints = ref([]),
-	circle = ref("(x-3)^2+(y+2)^2=13")
+	circle = ref("(x-3)^2+(y+1)^2=13")
 
 function updateValue(){
 	intersectionPoints.value = []
@@ -31,10 +31,10 @@ function updateValue(){
 	pts.forEach((pt, index) => {
 		let tg = C.tangents(pt)[0]
 		tangents.push(tg)
-		code.value += `\nT${index + 1}@(${pt.x.value},${pt.y.value})*`
+		code.value += `\nT${index + 1}(${pt.x.value},${pt.y.value})->tex:T_${index + 1}=@`
 		code.value += `\nt${index + 1}=line ${tg.tex.canonical}`
 
-		tangentPerPoints.value.push(`T(${pt.x.tex};${pt.y.tex})\\implies ${tg.tex.canonical}`)
+		tangentPerPoints.value.push(`T_${index+1}(${pt.x.tex};${pt.y.tex})\\implies ${tg.tex.canonical}`)
 	})
 
 	for (let i = 0; i < tangents.length; i++) {
@@ -43,13 +43,13 @@ function updateValue(){
 
 			if (intersection.hasIntersection) {
 				if (!intersection.point.isInListOfPoints(pts)) {
-					pts.push(intersection.point)
+					intersection.point.name=`I_{${i + 1}-${j + 1}}`
 					intersectionPoints.value.push({
-						point: intersection.point.tex,
+						point: `I_{${i+1}-${j+1}}${intersection.point.tex}`,
 						tangent1: tangents[i].tex.canonical,
 						tangent2: tangents[j].tex.canonical
 					})
-					code.value += `\nI_${i + 1}_${j + 1}(${intersection.point.x.value},${intersection.point.y.value})*`
+					code.value += `\nI_${i + 1}_${j + 1}(${intersection.point.x.value},${intersection.point.y.value})->tex:I_{${i+1}-${i+2}}=@`
 				}
 			}
 		}
@@ -71,10 +71,10 @@ onMounted(() => {
 		/>
 		<pi-draw-parser
 			:draw="{
-				parameters: '-18,18,-18,18',
+				parameters: 'x=-10:10,y=-10:10,axis,grid',
 				code: code
 			}"
-			class="max-w-[800px] mx-auto border rounded bg-white"
+			class="max-w-full mx-auto border rounded bg-white"
 		/>
 		<div
 			v-for="(item, index) in tangentPerPoints"
@@ -86,7 +86,7 @@ onMounted(() => {
 			v-for="(item,index) in intersectionPoints"
 			:key="'item-'+index"
 		>
-			<div v-katex.left="`${item.tangent1} \\cap ${item.tangent2} \\implies P${item.point}`" />
+			<div v-katex.left="`${item.tangent1} \\cap ${item.tangent2} \\implies ${item.point}`" />
 		</div>
 	</div>
 </template>
