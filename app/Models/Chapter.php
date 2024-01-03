@@ -20,6 +20,7 @@ use URL;
  * @property int $theme_id
  * @property string $slug
  * @property string $title
+ * @property string|null $meta_title
  * @property int $active
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
@@ -47,6 +48,7 @@ use URL;
  * @method static Builder|Chapter whereActive($value)
  * @method static Builder|Chapter whereCreatedAt($value)
  * @method static Builder|Chapter whereId($value)
+ * @method static Builder|Chapter whereMetaTitle($value)
  * @method static Builder|Chapter whereSlug($value)
  * @method static Builder|Chapter whereThemeId($value)
  * @method static Builder|Chapter whereTitle($value)

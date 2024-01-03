@@ -144,3 +144,14 @@ export interface ChallengeInterface {
 	bonusLevelTime: number
 	generators: GeneratorInterface[]
 }
+
+export interface deckInterface {
+	id: number,
+	title: string,
+	slug: string,
+	flipcards: {
+		id: number,
+		recto: BlockInterface,
+		verso: BlockInterface
+	}[]
+}

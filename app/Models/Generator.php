@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $slug
  * @property string $title
  * @property string $body
+ * @property string|null $template
  * @property string $keyboard
  * @property string $code
  * @property \Illuminate\Support\Carbon|null $created_at
@@ -31,6 +32,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Generator whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Generator whereKeyboard($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Generator whereSlug($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Generator whereTemplate($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Generator whereThemeId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Generator whereTitle($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Generator whereUpdatedAt($value)

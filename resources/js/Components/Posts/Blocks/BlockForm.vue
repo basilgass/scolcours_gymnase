@@ -24,6 +24,7 @@ const emits = defineEmits(["update:modelValue", "change", "destroy"])
 		noData: { type: Boolean, default: false },
 		noBlur: { type: Boolean, default: false },
 		noDelete: { type: Boolean, default: false },
+		noGrid: { type: Boolean, default: false },
 		previewCol: { type: Boolean, default: false },
 		overflowScroll: { type: Boolean, default: false },
 	})
@@ -214,7 +215,10 @@ const emits = defineEmits(["update:modelValue", "change", "destroy"])
 							.@text .@bg pour des classes à thème
 						</div>
 
-						<div class="mt-3">
+						<div
+							class="mt-3"
+							v-if="!props.noGrid"
+						>
 							<form-maker
 								v-model="theBlock.template"
 								label="disposition"

@@ -21,7 +21,7 @@ use Illuminate\Support\Carbon;
  * @property string|null $illustrationsGrid
  * @property string|null $script
  * @property int|null $switch
- * @property string|null $json
+ * @property mixed|null $json
  * @property string $blockable_type
  * @property int $blockable_id
  * @property int $blur

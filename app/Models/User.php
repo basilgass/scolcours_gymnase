@@ -32,6 +32,8 @@ use Laravel\Sanctum\PersonalAccessToken;
  * @property-read int|null $challenges_count
  * @property-read Collection<int, \App\Models\Chapter> $chapters
  * @property-read int|null $chapters_count
+ * @property-read Collection<int, \App\Models\Flipcard> $flipcards
+ * @property-read int|null $flipcards_count
  * @property-read mixed $admin
  * @property-read DatabaseNotificationCollection<int, DatabaseNotification> $notifications
  * @property-read int|null $notifications_count
@@ -112,6 +114,13 @@ class User extends Authenticatable
 		return $this->belongsToMany(Question::class)
 			->withTimestamps()
 			->withPivot('result', 'answer', 'attempts');
+	}
+
+	public function flipcards()
+	{
+		return $this->belongsToMany(Flipcard::class)
+			->withTimestamps()
+			->withPivot('success');
 	}
 
 	public function quizz_sessions()

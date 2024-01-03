@@ -1,6 +1,10 @@
+/* eslint @typescript-eslint/no-var-requires: 0 */
+
+
 // const defaultTheme = require("tailwindcss/defaultTheme")
 // const colors = require("tailwindcss/colors")
 import defaultTheme from "tailwindcss/defaultTheme"
+
 
 const colors = require("tailwindcss/colors")
 
@@ -42,7 +46,6 @@ export default {
 		"./resources/css/**/*.css",
 		"./resources/js/*.js",
 		"./resources/js/*.ts",
-		"./tailwind-theme.js",
 	],
 	safelist: [
 		{

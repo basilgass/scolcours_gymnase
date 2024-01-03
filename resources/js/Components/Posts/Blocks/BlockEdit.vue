@@ -7,6 +7,13 @@ import FormMaker from "@/Components/Form/FormMaker.vue"
 const props = defineProps({
 		block: { required: true, type: Object },
 		noDelete: { type: Boolean, default: false },
+	noTitle: { type: Boolean, default: false },
+	noType: { type: Boolean, default: false },
+	noSwitch: { type: Boolean, default: false },
+	noScript: { type: Boolean, default: false },
+	noData: { type: Boolean, default: false },
+	noBlur: { type: Boolean, default: false },
+	noGrid: { type: Boolean, default: false },
 	})
 	const emits = defineEmits(["destroy"])
 
@@ -55,7 +62,10 @@ const props = defineProps({
 				{{ theBlock.id }})
 			</button>
 
-			<div class="grid grid-cols-1 gap-1">
+			<div
+				class="grid grid-cols-1 gap-1"
+				v-if="!props.noGrid"
+			>
 				<form-maker
 					label="grille"
 					inline-label
@@ -106,6 +116,12 @@ const props = defineProps({
 				v-model="showEditForm"
 				:block="theBlock"
 				:no-delete="props.noDelete"
+				:no-title="props.noTitle"
+				:no-type="props.noType"
+				:no-switch="props.noSwitch"
+				:no-script="props.noScript"
+				:no-data="props.noData"
+				:no-grid="props.noGrid"
 				:overflow-scroll="true"
 				@change="updateBlock"
 				@destroy="emits('destroy', $event)"
