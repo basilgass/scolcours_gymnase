@@ -75,12 +75,12 @@ useSwipe(el, {
 	>
 		<div
 			ref="el"
-			class="min-h-[200px] bg-white m-5 rounded-xl shadow grid place-items-center cursor-pointer"
+			class="min-h-[200px] bg-white m-5 rounded-xl shadow grid place-items-center cursor-pointer p-3 lg:p-6"
 			@click="flip"
 		>
 			<markdown-it
 				:text="cardsList[cardIndex][cardSide].body"
-				text-class="text-xl md:text-3xl"
+				text-class="text-xl md:text-2xl w-full text-center"
 			/>
 		</div>
 		<transition name="fade">

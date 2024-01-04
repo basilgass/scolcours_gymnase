@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 import { PropType, ref } from "vue"
@@ -8,25 +8,25 @@ import axios from "axios"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
 
 const props = defineProps({
-	deck: {type: Object as PropType<deckInterface>, required: true}
+	deck: { type: Object as PropType<deckInterface>, required: true }
 })
 let theDeck = ref(props.deck)
 
-function addCard(){
-	axios.post(route('decks.addFlipcard', [props.deck.id]))
+function addCard() {
+	axios.post(route("decks.addFlipcard", [props.deck.id]))
 		.then(res => {
 			theDeck.value.flipcards.push(res.data)
 		})
-		.catch(err=>{
+		.catch(err => {
 			console.log(err.response.data.message)
 		})
 }
 
-function deleteFlipcard(flipcardID){
-axios.delete(route('flipcards.destroy', [flipcardID]))
-	.then(res => {
-		theDeck.value.flipcards = theDeck.value.flipcards.filter(flipcard => flipcard.id!==flipcardID)
-	})
+function deleteFlipcard(flipcardID) {
+	axios.delete(route("flipcards.destroy", [flipcardID]))
+		.then(res => {
+			theDeck.value.flipcards = theDeck.value.flipcards.filter(flipcard => flipcard.id !== flipcardID)
+		})
 }
 </script>
 
@@ -37,37 +37,42 @@ axios.delete(route('flipcards.destroy', [flipcardID]))
 			:key="card.id"
 		>
 			<div class="grid grid-cols-2 gap-5">
-				<div class="bg-white border border-slate-200 rounded-xl min-h-[200px] grid place-items-center">
+				<div class="bg-white border border-slate-200 rounded-xl min-h-[200px] grid place-items-center relative">
 					<block-edit
 						:block="card.recto"
+						class="absolute top-0 left-0 w-full"
 						no-blur
 						no-data
 						no-delete
+						no-grid
 						no-script
 						no-switch
 						no-title
 						no-type
-						no-grid
 					/>
-					<div>
-						<markdown-it :text="card.recto.body" />
-					</div>
+					<markdown-it
+						:text="card.recto.body"
+						class="w-full px-3 mt-5"
+					/>
 				</div>
-				<div class="bg-white border border-slate-200 rounded-xl min-h-[200px] grid place-items-center">
+
+				<div class="bg-white border border-slate-200 rounded-xl min-h-[200px] grid place-items-center relative">
 					<block-edit
 						:block="card.verso"
+						class="absolute top-0 left-0 w-full"
 						no-blur
 						no-data
 						no-delete
+						no-grid
 						no-script
 						no-switch
 						no-title
 						no-type
-						no-grid
 					/>
-					<div>
-						<markdown-it :text="card.verso.body" />
-					</div>
+					<markdown-it
+						:text="card.verso.body"
+						class="w-full px-3 mt-5"
+					/>
 				</div>
 			</div>
 			<div class="text-right mt-1">
