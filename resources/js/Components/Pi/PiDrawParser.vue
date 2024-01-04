@@ -72,13 +72,22 @@ function getVisibilityButtons() {
 		if (optionCode.length === 1) {
 			// btnCode
 			const [, name] = optionCode[0].split(":")
-			visibilityButtons.value.push(
-				{
-					label: name,
-					figure: c.label,
-					visible: true
-				}
-			)
+
+			// check if the name is not already used.
+			// if it's the case, add the figure to the "related" array.
+			const btnWithRelations = visibilityButtons.value.filter(btn=>btn.label===name)
+			if(btnWithRelations.length===1){
+				btnWithRelations[0].related.push(c.label)
+			}else {
+				visibilityButtons.value.push(
+					{
+						label: name,
+						figure: c.label,
+						visible: true,
+						related: []
+					}
+				)
+			}
 		}
 	}
 }
@@ -88,7 +97,7 @@ function visibilityButtonsToggle(btn) {
 	btn.visible = !btn.visible
 
 	PiGraph.figures.forEach(fig => {
-		if (fig.name === btn.figure) {
+		if (fig.name === btn.figure || btn.related.includes(fig.name)) {
 			btn.visible ? fig.show() : fig.hide()
 		}
 	})
@@ -309,9 +318,9 @@ onMounted(() => {
 	}
 
 
-	// if (props.axis) {
-	// 	PiAxis = PiGraph.axis()
-	// }
+	if (props.axis) {
+		PiGraph.axis()
+	}
 
 	PiParser = PiGraph.parse("")
 
