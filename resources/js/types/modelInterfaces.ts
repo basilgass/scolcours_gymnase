@@ -145,13 +145,15 @@ export interface ChallengeInterface {
 	generators: GeneratorInterface[]
 }
 
+export interface flipcardsInterface {
+	id: number,
+	recto: BlockInterface,
+	verso: BlockInterface,
+	result?:boolean
+}
 export interface deckInterface {
 	id: number,
 	title: string,
 	slug: string,
-	flipcards: {
-		id: number,
-		recto: BlockInterface,
-		verso: BlockInterface
-	}[]
+	flipcards: flipcardsInterface[]
 }

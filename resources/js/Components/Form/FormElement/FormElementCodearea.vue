@@ -160,6 +160,7 @@ defineOptions({
 						textStart.split("\\]").length !==
 						1
 				) {
+					// TODO:  if not in math mode, may have some "text trigger" ?
 					return false
 				}
 			}
