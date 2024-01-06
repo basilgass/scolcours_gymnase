@@ -79,7 +79,10 @@ export default {
 	theme: {
 		extend: {
 			fontFamily: {
-				sans: ["Raleway", ...defaultTheme.fontFamily.sans],
+				// sans: ["Raleway", ...defaultTheme.fontFamily.sans],
+				// sans: ["Exo2", ...defaultTheme.fontFamily.sans],
+				// sans: ["Roboto", "Lato", "Raleway", "Exo2", ...defaultTheme.fontFamily.sans],
+				sans: ["Roboto Flex", ...defaultTheme.fontFamily.sans],
 			},
 			zIndex: {
 				"-1": "-1",

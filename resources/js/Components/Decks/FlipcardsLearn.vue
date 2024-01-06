@@ -4,6 +4,7 @@ import { computed, PropType, ref } from "vue"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 import { useSwipe } from "@vueuse/core"
 import type { deckInterface, flipcardsInterface } from "@/types/modelInterfaces"
+import { PiMath } from "pimath/esm"
 
 const props = defineProps({
 	deck: { type: Object as PropType<deckInterface>, required: true }
@@ -11,7 +12,7 @@ const props = defineProps({
 
 const cardIndex = ref(0),
 	cardSide = ref<"recto" | "verso">("recto"),
-	cardsList = ref<flipcardsInterface[]>(props.deck.flipcards)
+	cardsList = ref<flipcardsInterface[]>(PiMath.Random.shuffle(props.deck.flipcards))
 
 const flip = function() {
 	if (cardSide.value === "recto") {
