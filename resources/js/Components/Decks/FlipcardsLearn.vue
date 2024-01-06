@@ -61,13 +61,14 @@ const cardResult = function(result: boolean) {
 
 let el = ref(null)
 const { lengthX, isSwiping } = useSwipe(el, {
-	threshold: 60,
+	threshold: 50,
 	onSwipeEnd(e, d) {
 		// On évite le swipe par défault (historique)
-		// if (d === "left" || d === "right") e.preventDefault()
-
 		// La carte doit être sur son côté verso
 		if (cardSide.value === "recto") return
+
+		// On doit avoit une assez grande distance
+		if (Math.abs(lengthX.value) < 200) return
 
 		// On applique le résultat.
 		cardResult(d !== "right")
@@ -76,7 +77,7 @@ const { lengthX, isSwiping } = useSwipe(el, {
 const xClassTranslate = computed(() => {
 	const sign = lengthX.value < 0 ? -1 : 1
 	return isSwiping.value && cardSide.value === "verso" ?
-		`translate: ${-sign * Math.min(Math.abs(lengthX.value), 60)}px` :
+		`translate: ${-sign * Math.min(Math.abs(lengthX.value)/2, 75)}px` :
 		`translate: 0px`
 })
 
@@ -90,24 +91,24 @@ const xClassTranslate = computed(() => {
 			cursor-pointer
 			relative"
 	>
-		<div class="absolute left-3 top-[50%] text-red-500">
+		<div class="absolute left-3 lg:left-6 top-[50%] text-red-500">
 			<i class="bi bi-hand-thumbs-down-fill" />
 		</div>
-		<div class="absolute right-3 top-[50%] text-green-500">
+		<div class="absolute right-3 lg:right-6 top-[50%] text-green-500">
 			<i class="bi bi-hand-thumbs-up-fill" />
 		</div>
 
 		<div
 			:style="xClassTranslate"
 			class="bg-white rounded-xl shadow
-			min-h-[200px] w-full h-full
-			grid place-items-center
-			transition-all ease-in-out duration-500 "
+			min-h-[250px] py-20 px-10
+			flex items-center
+			transition-all ease-out duration-500"
 			@click="flip"
 		>
 			<markdown-it
 				:text="cardsList[cardIndex][cardSide].body"
-				text-class="text-xl md:text-2xl w-full text-center"
+				class="md:text-lg text-center w-full"
 			/>
 		</div>
 

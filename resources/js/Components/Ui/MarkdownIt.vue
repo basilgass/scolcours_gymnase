@@ -16,13 +16,9 @@ let root = ref(null)
 	const props = defineProps({
 		text: { type: String, default: "" },
 		delimiters: { type: Array, default: null },
-		katexClass: { type: String, default: "katex-boxed" },
-		textClass: { type: String, default: "" },
+		customKatex: {type: Boolean, default: false},
 	})
 
-const textareaClass = computed(()=>{
-	return [props.katexClass, props.textClass].filter(x=>x!=="").join(" ")
-})
 
 	const md = markdownIt({ html: true })
 		.use(bracketed)
@@ -95,9 +91,12 @@ const textareaClass = computed(()=>{
 <template>
 	<div
 		ref="root"
-		:class="textareaClass"
 		class="prose lg:prose-lg max-w-full"
+		:class="{
+			'katex-boxed': !customKatex,
+		}"
 		@click="mdClick"
 		v-html="mdit"
+		@touchmove.stop
 	/>
 </template>
