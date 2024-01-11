@@ -72,32 +72,31 @@ let result = computed(() => {
 
 	let poly: Polynom
 
-
-	if (A.value.includes("^2")) {
-		poly = new PiMath.Polynom(A.value)
-	} else if (!A.value.includes("x") &&
-		!B.value.includes("x") &&
-		!C.value.includes("x")) {
-
-		poly = getPolyFromThreePoints(A.value, B.value, C.value)
-	}
-
-	const a = poly.monomByDegree(2).coefficient,
-		b = poly.monomByDegree(1).coefficient,
-		c = poly.monomByDegree(0).coefficient,
-		delta = b.clone().pow(2).subtract(a.clone().multiply(c).multiply(4))
-
-	const equ = new PiMath.Equation(poly, 0)
-	equ.solve()
-
-	const sx = b.clone().opposed().divide(a.clone().multiply(2)),
-		sy = delta.clone().opposed().divide(a.clone().multiply(4))
-
-	// Forme du sommet
-	// a(x-sx)^2+sy
-	const sommet = `${a.isOne()?'':a.isNegativeOne()?'-':a.tex}${sx.isZero()?'x^2':`\\left( x ${sx.clone().opposed().texWithSign} \\right)^2`}${sy.texWithSign}`
-
 	try {
+		if (A.value.includes("^2")) {
+			poly = new PiMath.Polynom(A.value)
+		} else if (!A.value.includes("x") &&
+			!B.value.includes("x") &&
+			!C.value.includes("x")) {
+
+			poly = getPolyFromThreePoints(A.value, B.value, C.value)
+		}
+
+		const a = poly.monomByDegree(2).coefficient,
+			b = poly.monomByDegree(1).coefficient,
+			c = poly.monomByDegree(0).coefficient,
+			delta = b.clone().pow(2).subtract(a.clone().multiply(c).multiply(4))
+
+		const equ = new PiMath.Equation(poly, 0)
+		equ.solve()
+
+		const sx = b.clone().opposed().divide(a.clone().multiply(2)),
+			sy = delta.clone().opposed().divide(a.clone().multiply(4))
+
+		// Forme du sommet
+		// a(x-sx)^2+sy
+		const sommet = `${a.isOne()?'':a.isNegativeOne()?'-':a.tex}${sx.isZero()?'x^2':`\\left( x ${sx.clone().opposed().texWithSign} \\right)^2`}${sy.texWithSign}`
+
 		return {
 			tex: poly.tex,
 			factorise: poly.texFactors,
