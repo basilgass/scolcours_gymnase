@@ -207,6 +207,12 @@ onMounted(() => {
 				/>
 
 				<div class="font-code text-xs min-h-[3em]">
+					<div v-if="theModel.code.split('\n\n').length>1">
+						%<*> afficher qu'une fois<br>
+						%<...> afficher aux steps indiqués (que suivant) <br>
+						%-FG- couche au premier plan
+					</div>
+					<hr>
 					<div class="flex justify-between">
 						<div>{{ currentLineHelperText.parameters }}</div>
 						<div>{{ currentLineHelperText.config }}</div>

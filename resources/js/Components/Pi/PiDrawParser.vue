@@ -75,10 +75,10 @@ function getVisibilityButtons() {
 
 			// check if the name is not already used.
 			// if it's the case, add the figure to the "related" array.
-			const btnWithRelations = visibilityButtons.value.filter(btn=>btn.label===name)
-			if(btnWithRelations.length===1){
+			const btnWithRelations = visibilityButtons.value.filter(btn => btn.label === name)
+			if (btnWithRelations.length === 1) {
 				btnWithRelations[0].related.push(c.label)
-			}else {
+			} else {
 				visibilityButtons.value.push(
 					{
 						label: name,
@@ -213,7 +213,11 @@ let PiGraph,
 	PiParserHasErrors = ref(false)
 
 let stepperStart = ref(false),
-	stepperMax = computed(() => props.draw.code.split("\n\n").length),
+	stepperMax = computed(() => props.draw.code
+		.split("\n\n")
+		.filter(step=>!step.startsWith('%-FG-'))
+		.length
+	),
 	stepperIndex = ref(0),
 	stepperText = computed(() => {
 		const step = drawCode.value.split("\n\n")[stepperIndex.value]
@@ -224,7 +228,14 @@ let stepperStart = ref(false),
 			}
 		}
 		return ""
-	})
+	}),
+	stepperForeground = function(code: string) {
+		const [before, after] = code.split("%-FG-")
+		return [
+			before,
+			(after === undefined || after.trim() === "") ? "" : after
+		]
+	}
 
 let drawCode = computed(() => {
 	let outputCode = props.draw.code
@@ -264,11 +275,45 @@ let drawCode = computed(() => {
 		}
 	}
 
-	if (stepperStart.value && stepperMax.value > 1) {
-		return outputCode
-			.split("\n\n")
-			.slice(0, stepperIndex.value + 1)
-			.join("\n\n")
+	if (stepperMax.value > 1) {
+		const [stepsPart, FGPart] = stepperForeground(outputCode)
+
+		const crtIndex = stepperStart.value ? stepperIndex.value : stepperMax.value
+
+		return stepsPart
+				.split("\n\n")
+				.slice(0, crtIndex + 1)
+				.filter((step, index)=>{
+					if(step.slice(0,2)==='%<'){
+						let constrains = step.split('%<')[1].split('>')[0]
+
+						// It contains just a star : visible only for the corresponding step
+						if(constrains==='*'){return index===crtIndex}
+
+						// Might be a list of comma separated values.
+						let values = constrains
+							.split(',')
+							.map(value => {
+								if(value.includes('-')){
+									const [min, max] = value.split('-').map(x=>+x)
+									let v = []
+									for(let i=min; min<=max; i++){
+										v.push(i)
+									}
+									return v
+								}else if(Number.isSafeInteger(+value)){
+									return +value
+								}
+							})
+							.flat()
+
+						return values.indexOf(crtIndex)!==-1
+					}
+
+					return true
+				})
+				.join("\n\n")
+			+ FGPart
 	} else {
 		return outputCode
 	}

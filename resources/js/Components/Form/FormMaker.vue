@@ -45,7 +45,7 @@ const props = withDefaults(defineProps<FormMakerPropsType>(), {
 })
 
 // Define the emits
-const $emit = defineEmits(["update:modelValue", "enter"])
+const $emit = defineEmits(["update:modelValue", "enter", "currentLine"])
 
 // Get the root element
 const inputWrapper = ref(null)
@@ -56,6 +56,7 @@ const errors = computed(() => {
 })
 
 // Get the value of the input
+// used for custom inputs
 const theValue = ref(props.modelValue as string)
 
 // Determine if the label should be displayed
@@ -104,7 +105,7 @@ const placeholderValue = computed(() => {
 
 
 // On input update, emit the new value in correct format
-let updateInput = function(e) {
+function updateInput(e) {
 	if (
 		props.type === "text" ||
 		props.type === "email" ||
@@ -114,6 +115,7 @@ let updateInput = function(e) {
 		props.type === "fraction"
 	) {
 		$emit("update:modelValue", e.target.value)
+
 		return
 	} else if (props.type === "number") {
 		$emit(
@@ -130,17 +132,26 @@ let updateInput = function(e) {
 	}
 }
 
+const TEXTAREA = ref(null)
+function onKeyup(){
+	let pos = TEXTAREA.value.selectionStart,
+		lines = theValue.value.split("\n"),
+		lineIndex = theValue.value.substring(0, pos).split("\n").length - 1
+
+	$emit("currentLine", lines[lineIndex])
+}
+
 // validation function
 function validate() {
 	if (props.type === "number") return FormValidationNumber(props.modelValue as number, props)
-	
+
 	if (props.type === "fraction") return FormValidationFraction(props.modelValue as string)
 
 	return ""
 }
 
 // Provide a function to focus the input
-let setFocus = function() {
+function setFocus() {
 	let input = inputWrapper.value.getElementsByTagName("input")[0]
 
 	// Maybe the input is a textarea
@@ -199,11 +210,14 @@ defineExpose({ focus: setFocus })
 					@keyup.enter="$emit('enter')"
 				>
 				<textarea
+					ref="TEXTAREA"
 					v-if="type === 'textarea'"
 					:class="combinedInputClass"
 					:rows="props.rows"
 					:value="modelValue as string"
 					@input="updateInput($event)"
+					@keyup="onKeyup"
+					@mouseup="onKeyup"
 				/>
 				<input
 					v-else-if="type === 'number'"
