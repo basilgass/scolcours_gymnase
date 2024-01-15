@@ -1,104 +1,65 @@
 <!--<info>
-parameters: min:max:step,[rounded:2]
+parameters:
+min:max:step ou 3,5,8,9
+options: [rounded:2],[col:width],[table:class]
 
 code: [f(x)=]function (multiple line possible)
 </info>-->
-<template>
-	<div
-		class="overflow-x-auto relative"
-		:class="`scrollbar-scolcours-${$page.props.theme.slug}`"
-	>
-		<table class="border-collapse border border-slate-300">
-			<tr class="bg-gray-100 font-semibold border-b border-slate-300">
-				<td
-					v-katex="'x'"
-					class="border-r border-slate-300 px-4"
-				/>
-				<td
-					v-for="(x, index) in tableX"
-					:key="`x-${index}`"
-					v-katex="x"
-					class="border-r border-slate-300"
-				/>
-			</tr>
-			<tr
-				v-for="fx in tableFunctions"
-				:key="fx.name"
-			>
-				<td
-					v-katex="fx.name"
-					class="border-r border-slate-300 px-4"
-				/>
-				<td
-					v-for="(y, index) in fx.values"
-					:key="`${fx.name}-${index}`"
-					v-katex="y.fx"
-					class="border-r border-slate-300 px-2"
-				/>
-			</tr>
-		</table>
-	</div>
-</template>
-
-<script setup>
-import {computed, ref} from "vue"
-import {PiMath} from "pimath/esm"
-import {Polynom} from "pimath/esm/maths/algebra/polynom"
-import {numberCorrection} from "pidraw/esm/Calculus"
+<script lang="ts" setup>
+import { computed, ref } from "vue"
+import { PiMath } from "pimath/esm"
+import { Polynom } from "pimath/esm/maths/algebra/polynom"
+import { numberCorrection } from "pidraw/esm/Calculus"
 
 let props = defineProps({
-		illustration: { type: Object, required: true },
+		illustration: { type: Object, required: true }
 	}),
 	params = ref(props.illustration.parameters.split(",")),
 	code = ref(props.illustration.code),
 	roundedTo = computed(() => {
 		for (let param of params.value) {
 			if (param.startsWith("rounded:")) {
-				let [tmp, rounded] = param.split(":")
+				let [, rounded] = param.split(":")
 				return +rounded
 			}
 		}
 		return 0
 	}),
-	tableParameters = computed(() => {
-		let min = 0,
-			max = 10,
-			step = 1
-		// get the min:max:step
+	tableClass = computed(()=>{
 		for (let param of params.value) {
-			// must be numeric
-			if (isNaN(param[0]) && param[0] !== "-") {
-				continue
-			}
-			// it should be numbers
-			[min, max, step] = param.split(":")
-
-			if (min === undefined || min === "") {
-				min = 0
-			}
-			if (max === undefined || max === "" || +max <= min) {
-				max = min + 10
-			}
-			if (step === undefined || +step < 0) {
-				step = (max - min) / 10
-			}
-			if ((max - min) / step > 100) {
-				step = (max - min) / 20
+			if (param.startsWith("table:")) {
+				let [, w] = param.split(":")
+				return w
 			}
 		}
-
-		return { min: +min, max: +max, step: +step }
+		return 'auto'
+	}),
+	colWidth = computed(()=>{
+		for (let param of params.value) {
+			if (param.startsWith("col:")) {
+				let [, w] = param.split(":")
+				return w
+			}
+		}
+		return 'auto'
+	}),
+	rowHeight = computed(()=>{
+		for (let param of params.value) {
+			if (param.startsWith("row:")) {
+				let [, h] = param.split(":")
+				return h
+			}
+		}
+		return 'auto'
 	}),
 	tableX = computed(() => {
-		let arr = []
-		for (
-			let x = tableParameters.value.min;
-			x <= tableParameters.value.max;
-			x += tableParameters.value.step
-		) {
-			arr.push(x)
+		const availableValues = params.value.filter(param=>!param.match(/^[a-z]+:/))
+
+		if(availableValues[0].includes(':')){
+			return parseMinMaxStep(params.value[0])
 		}
-		return arr
+
+		return availableValues.map(x=>+x)
 	}),
 	tableFunctions = computed(() => {
 		// return [
@@ -124,26 +85,98 @@ let props = defineProps({
 			}
 
 			let values = []
-			for (
-				let x = tableParameters.value.min;
-				x <= tableParameters.value.max;
-				x += tableParameters.value.step
-			) {
+			for (let x in tableX.value) {
 				if (numExp instanceof Polynom) {
-					let v = numExp.evaluate(x)
+					let v = numExp.evaluate({ "x": x })
 					values.push({
 						x,
-						fx: v.tex,
+						fx: v.tex
 					})
 				} else {
 					let v = numExp.evaluate({ x: x })
 					values.push({
 						x,
-						fx: numberCorrection(v, 0, 0, roundedTo.value),
+						fx: numberCorrection(v, 0, 0, roundedTo.value)
 					})
 				}
 			}
 			return { name, values }
 		})
 	})
+
+function parseMinMaxStep(value: string): number[] {
+	// Output array.
+	let arr = []
+
+	// value = min:max:step
+	let [min, max, step] = value.split(":").map(x => +x)
+
+	if (min === undefined) {
+		min = 0
+	}
+	if (max === undefined || +max <= min) {
+		max = min + 10
+	}
+	if (step === undefined || +step < 0) {
+		step = (max - min) / 10
+	}
+	if ((max - min) / step > 100) {
+		step = (max - min) / 20
+	}
+
+	// Build the output array.
+	for (
+		let x = min;
+		x <= max;
+		x += step
+	) {
+		arr.push(x)
+	}
+
+	return arr
+}
 </script>
+
+<template>
+	<div
+		:class="`scrollbar-scolcours-${$page.props.theme.slug}`"
+		class="overflow-x-auto relative"
+	>
+		<table
+			class="border-collapse border border-slate-300"
+			:class="tableClass"
+		>
+			<tr class="bg-gray-100 font-semibold border-b border-slate-300">
+				<td
+					v-katex="'x'"
+					class="border-r border-slate-300 px-4"
+				/>
+				<td
+					v-for="(x, index) in tableX"
+					:key="`x-${index}`"
+					v-katex="x"
+					class="border-r border-slate-300"
+					:style="`width: ${colWidth}`"
+				/>
+			</tr>
+			<tr
+				v-for="(fx, line) in tableFunctions"
+				:key="fx.name"
+				:style="`height: ${rowHeight}`"
+			>
+				<td
+					v-katex="fx.name"
+					class="border-r border-slate-300 px-4"
+					:class="line>0?'border-t':''"
+				/>
+				<td
+					v-for="(y, index) in fx.values"
+					:key="`${fx.name}-${index}`"
+					v-katex="y.fx"
+					class="border-r border-slate-300 px-2"
+					:class="line>0?'border-t':''"
+				/>
+			</tr>
+		</table>
+	</div>
+</template>

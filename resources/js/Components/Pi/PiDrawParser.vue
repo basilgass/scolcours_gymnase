@@ -3,7 +3,7 @@ Affichage d'un PiDraw
 // TODO: doit être remodeler pour plus de robustesse et optimiser
 -->
 <script lang="ts" setup>
-import { computed, inject, onMounted, ref, watch } from "vue"
+import { computed, inject, onMounted, provide, ref, watch } from "vue"
 import { PiDraw } from "pidraw/esm"
 
 import VueSlider from "vue-slider-component/dist/vue-slider-component.umd.min"
@@ -11,12 +11,12 @@ import "vue-slider-component/theme/material.css"
 import { PiMath } from "pimath/esm"
 import katex from "katex"
 import { useResizeObserver } from "@vueuse/core"
-import { parserPreprocess } from "pidraw/esm/Parser"
+import PiDrawParserVisibility from "@/Components/Pi/Parts/PiDrawParserVisibility.vue"
 
 const emits = defineEmits(["update"])
 
 // Get the script value
-let blockScriptResult = inject("blockScriptResult", ref({}))
+let postData = inject("postData", ref({}))
 
 // SVG drawing container
 let drawWrapper = ref(null)
@@ -49,61 +49,6 @@ let texOutput = computed(() => {
 
 	return tex.replaceAll("+-", "-").replaceAll("--", "+")
 })
-
-/** Get the visibility buttons for figures
- * name=code->options,btn
- */
-type ParserPrepocessType = { label: string, key: string, code: string[], options: string[] }
-let visibilityButtons = ref([])
-
-function getVisibilityButtons() {
-	visibilityButtons.value = []
-
-	// Check if btn is somewhere in the code.
-	if (props.draw.code.split("btn").length === 1) {
-		return
-	}
-
-	// There is at least one button.
-	for (let row of props.draw.code.split("\n")) {
-		const c = parserPreprocess(row) as ParserPrepocessType
-
-		const optionCode = c.options.filter(x => x.split(":")[0] === "btn")
-		if (optionCode.length === 1) {
-			// btnCode
-			const [, name] = optionCode[0].split(":")
-
-			// check if the name is not already used.
-			// if it's the case, add the figure to the "related" array.
-			const btnWithRelations = visibilityButtons.value.filter(btn => btn.label === name)
-			if (btnWithRelations.length === 1) {
-				btnWithRelations[0].related.push(c.label)
-			} else {
-				visibilityButtons.value.push(
-					{
-						label: name,
-						figure: c.label,
-						visible: true,
-						related: []
-					}
-				)
-			}
-		}
-	}
-}
-
-function visibilityButtonsToggle(btn) {
-	// Change the visibility of the button
-	btn.visible = !btn.visible
-
-	PiGraph.figures.forEach(fig => {
-		if (fig.name === btn.figure || btn.related.includes(fig.name)) {
-			btn.visible ? fig.show() : fig.hide()
-		}
-	})
-
-
-}
 
 /** Get the sliders from the "header" of the code parts
  * $NAME=a,b,...,c/interval=default
@@ -266,11 +211,11 @@ let drawCode = computed(() => {
 	}
 
 	// Modify the code according to the script level
-	if (Object.values(blockScriptResult.value).length > 0) {
-		for (let key in blockScriptResult.value) {
+	if (Object.values(postData.value).length > 0) {
+		for (let key in postData.value) {
 			outputCode = outputCode.replaceAll(
 				`$${key}`,
-				blockScriptResult.value[key]
+				postData.value[key]
 			)
 		}
 	}
@@ -325,7 +270,7 @@ function PiParserUpdate(from, withSliders = false) {
 		getSliders()
 	}
 
-	getVisibilityButtons()
+	// getVisibilityButtons()
 
 	try {
 		PiParser.update(drawCode.value)
@@ -416,6 +361,8 @@ watch(
 )
 
 defineExpose({ figures })
+
+provide('PiDrawGraph', PiGraph)
 </script>
 
 <template>
@@ -427,19 +374,10 @@ defineExpose({ figures })
 			@mouseup="drawMouseUp"
 		/>
 
-		<!-- visibility buttons -->
-		<div
-			v-if="visibilityButtons.length > 0"
-			class="w-full flex flex-wrap gap-3 mt-2"
-		>
-			<button
-				v-for="btn of visibilityButtons"
-				:key="btn.figure"
-				v-katex.auto="`${btn.visible?'cacher':'afficher'} ${btn.label}`"
-				class="btn btn-xs"
-				@click="visibilityButtonsToggle(btn)"
-			/>
-		</div>
+		<pi-draw-parser-visibility
+			:graph="PiGraph"
+			:draw="props.draw"
+		/>
 
 		<!-- stepper -->
 		<div

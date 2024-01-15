@@ -235,6 +235,7 @@ onMounted(() => {
 						<button
 							v-for="(description, comp) of chapterComponents"
 							:key="comp"
+							class="btn btn-xs"
 							:class="theModel.value === comp ? 'font-semibold' : ''"
 							@click="theModel.value = comp"
 						>
@@ -255,7 +256,7 @@ onMounted(() => {
 				<markdown-it
 					v-if="chapterComponents[theModel.value]"
 					:text="chapterComponents[theModel.value]"
-					class="font-code text-left"
+					class="font-code text-left text-xs"
 				/>
 			</div>
 		</div>
