@@ -1,10 +1,26 @@
 <!--
 Affichage du formulaire en menu "slide-in" depuis la gauche.
 -->
+<script setup>
+import ChapterFormulas from "@/Components/Chapters/ChapterFormulas.vue"
+import { ref } from "vue"
+
+let props = defineProps({
+		chapter: { type: Object, required: true }
+	}),
+	afficherFormulaires = ref(false),
+	theChapter = ref(props.chapter)
+
+</script>
+
 <template>
 	<div>
 		<button
-			class="fixed bottom-5 left-0 bg-white rounded-r-full px-4 py-2 text-xs border border-gray-200 shadow"
+			class="fixed z-20
+			bottom-5 left-0
+			px-4 py-2
+			text-xs
+			bg-white rounded-r-full border border-gray-200 shadow"
 			@click="afficherFormulaires=!afficherFormulaires"
 		>
 			formulaire
@@ -12,14 +28,18 @@ Affichage du formulaire en menu "slide-in" depuis la gauche.
 		<transition name="fade">
 			<div
 				v-if="afficherFormulaires"
-				class="fixed inset-0 bg-gray-800/60"
+				class="fixed inset-0 z-20
+				bg-gray-800/60"
 				@click.self="afficherFormulaires=false"
 			/>
 		</transition>
 		<transition name="slide-fade">
 			<div
 				v-if="afficherFormulaires"
-				class="bg-white fixed bottom-0 left-0 w-full md:w-[400px] h-full border-gray-200 py-3 overflow-y-scroll"
+				class="fixed z-20 bottom-0 left-0 w-full md:w-[400px] h-full
+				 py-3
+				bg-white border-gray-200
+				 overflow-y-scroll"
 			>
 				<div>
 					<button
@@ -36,17 +56,5 @@ Affichage du formulaire en menu "slide-in" depuis la gauche.
 		</transition>
 	</div>
 </template>
-
-<script setup>
-import ChapterFormulas from "@/Components/Chapters/ChapterFormulas.vue"
-import {ref} from "vue"
-
-let props = defineProps({
-		chapter: {type: Object, required: true}
-	}),
-	afficherFormulaires = ref(false),
-	theChapter = ref(props.chapter)
-
-</script>
 
 

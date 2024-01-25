@@ -2,15 +2,15 @@
 Affichage d'un block , avec toutes les possibilités
 -->
 <script setup>
-	import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
-	import { computed, inject, ref } from "vue"
-	import { blockTypeDefault, blockTypes } from "@/scolcours"
-	import IllustrationsIndex from "@/Components/Posts/Illustrations/IllustrationsIndex.vue"
-	import BlockEdit from "@/Components/Posts/Blocks/BlockEdit.vue"
-	import { useBlock } from "@/Components/Posts/Blocks/useBlock"
-	import BlockBodyButtons from "@/Components/Posts/Blocks/BlockBodyButtons.vue"
+import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
+import { computed, inject, ref } from "vue"
+import { blockTypeDefault, blockTypes } from "@/scolcours"
+import IllustrationsIndex from "@/Components/Posts/Illustrations/IllustrationsIndex.vue"
+import BlockEdit from "@/Components/Posts/Blocks/BlockEdit.vue"
+import { useBlock } from "@/Components/Posts/Blocks/useBlock"
+import BlockBodyButtons from "@/Components/Posts/Blocks/BlockBodyButtons.vue"
 
-	// Props
+// Props
 	const props = defineProps({
 		block: { type: Object, required: true },
 		switch: { type: Boolean, default: null },
@@ -18,6 +18,9 @@ Affichage d'un block , avec toutes les possibilités
 		maxIllustration: { type: Number, default: null },
 		noDelete: { type: Boolean, default: false },
 	})
+
+	// emits
+const emits = defineEmits(["destroy"])
 
 	// Reactive edition mode (admin only)
 	let editMode = inject("editMode")
@@ -189,6 +192,7 @@ Affichage d'un block , avec toutes les possibilités
 				v-show="editMode.enabled.value"
 				v-admin
 				:block="theBlock"
+				@destroy="$emit('destroy', theBlock.id)"
 			/>
 			<div
 				v-show="editMode.enabled.value || blockTitle || blockButtons"
@@ -196,7 +200,10 @@ Affichage d'un block , avec toutes les possibilités
 				class="flex justify-between w-full px-5 py-3 mb-3 text-xl"
 			>
 				<div class="flex gap-3">
-					<i v-if="blockIcon" :class="blockIcon" />
+					<i
+						v-if="blockIcon"
+						:class="blockIcon"
+					/>
 					<h3 v-katex.auto="blockTitle" />
 				</div>
 
@@ -208,7 +215,10 @@ Affichage d'un block , avec toutes les possibilités
 				</div>
 			</div>
 
-			<div :class="blockTemplate.grid" class="px-5">
+			<div
+				:class="blockTemplate.grid"
+				class="px-5"
+			>
 				<!-- Block body -->
 				<markdown-it
 					v-if="blockBody !== null"

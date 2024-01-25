@@ -87,7 +87,7 @@ let props = defineProps({
 			let values = []
 			for (let x in tableX.value) {
 				if (numExp instanceof Polynom) {
-					let v = numExp.evaluate({ "x": x })
+					let v = numExp.evaluate(+x)
 					values.push({
 						x,
 						fx: v.tex

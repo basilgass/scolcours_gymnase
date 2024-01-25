@@ -1,20 +1,21 @@
-import {NumberChecker} from "@/Checkers/NumberChecker"
-import {PolynomChecker} from "@/Checkers/PolynomChecker"
-import {ScientificChecker} from "@/Checkers/ScientificChecker"
-import {StringChecker} from "@/Checkers/StringChecker"
-import {TableofsignChecker} from "@/Checkers/TableofsignChecker"
-import {SolutionChecker} from "@/Checkers/SolutionChecker"
-import {ExactChecker} from "@/Checkers/ExactChecker"
-import {StudyChecker} from "@/Checkers/StudyChecker"
-import {RationalChecker} from "@/Checkers/RationalChecker"
-import {CoordChecker} from "@/Checkers/CoordChecker"
-import {VectorChecker} from "@/Checkers/VectorChecker"
-import {EquationChecker} from "@/Checkers/EquationChecker"
-import {FractionChecker} from "@/Checkers/FractionChecker"
-import {FunctionChecker} from "@/Checkers/FunctionChecker"
-import {LogChecker} from "@/Checkers/LogChecker"
-import {ExpChecker} from "@/Checkers/ExpChecker"
-import {CheckerBase} from "@/Checkers/CheckerBase";
+import { NumberChecker } from "@/Checkers/NumberChecker"
+import { PolynomChecker } from "@/Checkers/PolynomChecker"
+import { ScientificChecker } from "@/Checkers/ScientificChecker"
+import { StringChecker } from "@/Checkers/StringChecker"
+import { TableofsignChecker } from "@/Checkers/TableofsignChecker"
+import { SolutionChecker } from "@/Checkers/SolutionChecker"
+import { ExactChecker } from "@/Checkers/ExactChecker"
+import { StudyChecker } from "@/Checkers/StudyChecker"
+import { RationalChecker } from "@/Checkers/RationalChecker"
+import { CoordChecker } from "@/Checkers/CoordChecker"
+import { VectorChecker } from "@/Checkers/VectorChecker"
+import { EquationChecker } from "@/Checkers/EquationChecker"
+import { FractionChecker } from "@/Checkers/FractionChecker"
+import { FunctionChecker } from "@/Checkers/FunctionChecker"
+import { LogChecker } from "@/Checkers/LogChecker"
+import { ExpChecker } from "@/Checkers/ExpChecker"
+import { CheckerBase } from "@/Checkers/CheckerBase"
+import { PrimitiveChecker } from "@/Checkers/PrimitiveChecker"
 
 export interface CheckerResult {
     result: boolean,
@@ -82,6 +83,8 @@ export function getCheckerClass(checker: string) {
             return LogChecker
         case "exp":
             return ExpChecker
+		case "primitive":
+			return PrimitiveChecker
         default:
             return StringChecker
     }
@@ -90,7 +93,7 @@ export function getCheckerClass(checker: string) {
 }
 
 export function getChecker(checker: string, options?: string[]): CheckerBase {
-    let chkClass = getCheckerClass(checker)
+    const chkClass = getCheckerClass(checker)
 
     // No options are defined.
     if (options === undefined) {

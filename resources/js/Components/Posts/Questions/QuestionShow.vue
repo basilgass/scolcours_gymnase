@@ -4,23 +4,16 @@ Envoi de la validation d'une réponse
 keyboard -> QuestionUserInput -> QuestionShow
 -->
 <script setup>
-	import IllustrationShow from "@/Components/Posts/Illustrations/IllustrationShow.vue"
-	import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
-	import {
-		computed,
-		defineAsyncComponent,
-		inject,
-		nextTick,
-		reactive,
-		ref,
-	} from "vue"
-	import KeyboardValidateButton from "@/Components/Keyboards/KeyboardValidateButton.vue"
-	import { usePage } from "@inertiajs/vue3"
-	import { useWrongAnswerAnimation } from "@/Composables/useHelpers"
-	import { useKeyboard } from "@/Composables/useKeyboard"
-	import DropdownMenu from "@/Components/Ui/DropdownMenu.vue"
+import IllustrationShow from "@/Components/Posts/Illustrations/IllustrationShow.vue"
+import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
+import { computed, defineAsyncComponent, inject, nextTick, reactive, ref } from "vue"
+import KeyboardValidateButton from "@/Components/Keyboards/KeyboardValidateButton.vue"
+import { usePage } from "@inertiajs/vue3"
+import { useWrongAnswerAnimation } from "@/Composables/useHelpers"
+import { useKeyboard } from "@/Composables/useKeyboard"
+import DropdownMenu from "@/Components/Ui/DropdownMenu.vue"
 
-	let { getKeyboards } = useKeyboard()
+let { getKeyboards } = useKeyboard()
 
 	// Props
 	let props = defineProps({
@@ -263,7 +256,7 @@ keyboard -> QuestionUserInput -> QuestionShow
 
 			// On vérifie que toutes les réponses ont été données.
 			let result = true,
-				index,
+				index, // TODO: à quoi sert "index" ici ?
 				stack = []
 
 			for (let i = 0; i < userAnswers.value.length; i++) {
@@ -451,6 +444,7 @@ keyboard -> QuestionUserInput -> QuestionShow
 				v-theme.bg.text="!theQuestionLocked"
 				:class="{
 					'draggable-handle cursor-move': $page.props.auth.can.admin,
+					'bg-white': theQuestionLocked
 				}"
 				class="z-10 font-semibold font-code absolute left-1 -top-4 rounded-full border w-8 h-8 grid place-items-center draggable-handle"
 			>
@@ -474,8 +468,8 @@ keyboard -> QuestionUserInput -> QuestionShow
 
 				<div class="cursor-pointer">
 					<dropdown-menu prevent-close>
-						<template #button
-						><i class="bi bi-eye" />
+						<template #button>
+							<i class="bi bi-eye" />
 							{{ theQuestion.displayIf }}
 						</template>
 
@@ -493,9 +487,8 @@ keyboard -> QuestionUserInput -> QuestionShow
 										:checked="displayIfIds.includes(q)"
 										type="checkbox"
 										@input="toggleDisplayId(q)"
-									/>
-									{{ q }}</label
-								>
+									>
+									{{ q }}</label>
 							</div>
 						</div>
 
@@ -547,10 +540,26 @@ keyboard -> QuestionUserInput -> QuestionShow
 
 			<!-- dispalyed text -->
 			<markdown-it :text="theQuestionBody" />
+
+			<div
+				v-admin
+				class="flex flex-col gap-1"
+			>
+				<div
+					class="font-code text-gray-700 text-xs bg-gray-200 border border-gray-300 py-1 px-2 min-h-[2.2em]"
+					v-for="(a,index) in userAnswers"
+					:key="'admin-user-answer' + index"
+				>
+					{{ a.value?.input }}
+				</div>
+			</div>
 		</main>
 
 		<!-- user input -->
-		<div v-if="!showInput" class="text-xs text-right mb-3">
+		<div
+			v-if="!showInput"
+			class="text-xs text-right mb-3"
+		>
 			<button
 				v-if="!showUserInput"
 				:class="`active-scolcours-${$page.props.theme?.slug}`"
@@ -570,13 +579,19 @@ keyboard -> QuestionUserInput -> QuestionShow
 				/>
 			</button>
 		</div>
-		<div v-show="showUserInput" class="question-user-input px-5">
+		<div
+			v-show="showUserInput"
+			class="question-user-input px-5"
+		>
 			<keyboard-validate-button
 				ref="validateButton"
 				:disabled="lockValidationButton"
 				@validate="validateQuestion"
 			/>
-			<div v-if="userAnswersErrors.length > 0 && !props.singleAnswer">
+			<div
+				v-if="userAnswersErrors.length > 0 && !props.singleAnswer"
+				class="max-w-xl mx-auto"
+			>
 				<div
 					v-for="(msg, index) in userAnswersErrors"
 					:key="`error-${index}`"
@@ -654,7 +669,10 @@ keyboard -> QuestionUserInput -> QuestionShow
 		</div>
 
 		<!-- Edit form -->
-		<div v-if="showEditForm" v-admin>
+		<div
+			v-if="showEditForm"
+			v-admin
+		>
 			<component
 				:is="editForm"
 				v-model="showEditForm"

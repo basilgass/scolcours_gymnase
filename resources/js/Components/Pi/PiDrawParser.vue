@@ -12,6 +12,8 @@ import { PiMath } from "pimath/esm"
 import katex from "katex"
 import { useResizeObserver } from "@vueuse/core"
 import PiDrawParserVisibility from "@/Components/Pi/Parts/PiDrawParserVisibility.vue"
+import type { Graph } from "pidraw/esm/Graph"
+import type { Parser } from "pidraw/esm/Parser"
 
 const emits = defineEmits(["update"])
 
@@ -33,21 +35,43 @@ let props = defineProps({
 				parameters: ""
 			}
 		}
-	},
-	axis: { type: Boolean, default: true }
+	}
 })
 
-// Sliders reactivity and methods
-let sliders = ref([]),
-	texCode = ref("")
+// Line by line code
+const codeArray = computed(()=>{
+	return props.draw.code.split('\n')
+})
 
+// Main draving system - not reactive !
+let PiGraph: Graph,
+	PiParser: Parser,
+	PiParserHasErrors = ref(false),
+	figures = ref({})
+
+// ------------------------
+// SLIDER PART
+// Sliders reactivity and methods
+let sliders = ref([])
+
+// Display text with sliders modifications.
 let texOutput = computed(() => {
-	let tex = texCode.value
+	// Get the output code: starting with $tex=
+	let tex = codeArray.value.filter(line=>line.startsWith('$tex='))[0]
+	if(tex === undefined) return ""
+
+	// Get the raw code
+	tex = tex.split('$tex=')[1]
+
+	// Update the raw code with the sliders values.
 	sliders.value.forEach((slider) => {
 		tex = tex.replaceAll(slider.key, slider.value)
 	})
 
-	return tex.replaceAll("+-", "-").replaceAll("--", "+")
+	// Return the tex code (reformatted)
+	return tex
+		.replaceAll("+-", "-")
+		.replaceAll("--", "+")
 })
 
 /** Get the sliders from the "header" of the code parts
@@ -56,17 +80,14 @@ let texOutput = computed(() => {
 function getSliders() {
 	// All slider are like: $a=...
 	sliders.value = []
-	for (let row of props.draw.code.split("\n")) {
+	for (let row of codeArray.value) {
 		if (row[0] === "$") {
 			const rowData = row.split("="),
 				rowKey = rowData.shift(),
 				rowItem = rowData.join("=")
 
-			// Output
-			if (rowKey === "$tex") {
-				texCode.value = rowItem
-				continue
-			}
+			// TeX output : no need to process
+			if (rowKey === "$tex") continue
 
 			// $a=a,b,...,c/interval=default
 			// interval not given => interval = b-a
@@ -76,10 +97,10 @@ function getSliders() {
 
 			if (rowItem !== "") {
 				let marks = rowItem.match(/^([-0-9.,]+)/),
-					a,
-					b,
-					c,
-					marksInterval,
+					a: number,
+					b: number,
+					c: number,
+					marksInterval: number,
 					interval = rowItem.match(/\/([0-9.]+)/),
 					dft = rowItem.match(/=([-0-9.]+)$/)
 
@@ -117,7 +138,7 @@ function getSliders() {
 							}
 						}
 					} else {
-						marks = marks.map((x) => +x)
+						marks = marks.map((x: number) => +x)
 					}
 				} else {
 					continue
@@ -153,14 +174,12 @@ function getSliders() {
 	}
 }
 
-let PiGraph,
-	PiParser,
-	PiParserHasErrors = ref(false)
-
+// ------------------------
+// STEPPER PARTS
 let stepperStart = ref(false),
 	stepperMax = computed(() => props.draw.code
 		.split("\n\n")
-		.filter(step=>!step.startsWith('%-FG-'))
+		.filter((step: string) => !step.startsWith("%-FG-"))
 		.length
 	),
 	stepperIndex = ref(0),
@@ -182,6 +201,12 @@ let stepperStart = ref(false),
 		]
 	}
 
+/**
+ * DrawCode system
+ * 1. apply sliders values
+ * 2. apply scripts values
+ * 3. apply steppers values.
+ */
 let drawCode = computed(() => {
 	let outputCode = props.draw.code
 
@@ -190,11 +215,11 @@ let drawCode = computed(() => {
 		// Remove the lines starting with $ (dollar sign)
 		let code = outputCode
 			.split("\n")
-			.filter((row) => row[0] !== "$")
+			.filter((row: string) => row[0] !== "$")
 
 		// Modify the value of all variables ($a, $b, ...)
 		outputCode = code
-			.map((row) => {
+			.map((row: string) => {
 				sliders.value.forEach((slider) => {
 					if (row.split("=")[0].includes("(x)")) {
 						row = row.replaceAll(
@@ -220,6 +245,7 @@ let drawCode = computed(() => {
 		}
 	}
 
+	// Split the code
 	if (stepperMax.value > 1) {
 		const [stepsPart, FGPart] = stepperForeground(outputCode)
 
@@ -228,31 +254,33 @@ let drawCode = computed(() => {
 		return stepsPart
 				.split("\n\n")
 				.slice(0, crtIndex + 1)
-				.filter((step, index)=>{
-					if(step.slice(0,2)==='%<'){
-						let constrains = step.split('%<')[1].split('>')[0]
+				.filter((step, index) => {
+					if (step.slice(0, 2) === "%<") {
+						let constrains = step.split("%<")[1].split(">")[0]
 
 						// It contains just a star : visible only for the corresponding step
-						if(constrains==='*'){return index===crtIndex}
+						if (constrains === "*") {
+							return index === crtIndex
+						}
 
 						// Might be a list of comma separated values.
 						let values = constrains
-							.split(',')
+							.split(",")
 							.map(value => {
-								if(value.includes('-')){
-									const [min, max] = value.split('-').map(x=>+x)
+								if (value.includes("-")) {
+									const [min, max] = value.split("-").map(x => +x)
 									let v = []
-									for(let i=min; min<=max; i++){
+									for (let i = min; min <= max; i++) {
 										v.push(i)
 									}
 									return v
-								}else if(Number.isSafeInteger(+value)){
+								} else if (Number.isSafeInteger(+value)) {
 									return +value
 								}
 							})
 							.flat()
 
-						return values.indexOf(crtIndex)!==-1
+						return values.indexOf(crtIndex) !== -1
 					}
 
 					return true
@@ -264,14 +292,11 @@ let drawCode = computed(() => {
 	}
 })
 
+function PiParserUpdate(from: string, withSliders = false) {
+	// Get the sliders
+	if (withSliders) getSliders()
 
-function PiParserUpdate(from, withSliders = false) {
-	if (withSliders) {
-		getSliders()
-	}
-
-	// getVisibilityButtons()
-
+	// Update the drawing
 	try {
 		PiParser.update(drawCode.value)
 		emits("update", PiGraph.figures)
@@ -283,9 +308,12 @@ function PiParserUpdate(from, withSliders = false) {
 	}
 }
 
-let figures = ref({})
-
+// Create the non reactive objects on mounted
+// PiGraph : display SVG
+// PiParser: convert string code to PiGraph data
+// Build the resizeobserver...
 onMounted(() => {
+	// Default settings
 	PiGraph = new PiDraw(drawWrapper.value, {
 		width: props.width,
 		height: props.height,
@@ -299,6 +327,7 @@ onMounted(() => {
 		}
 	})
 
+	// KaTeX converter
 	PiGraph.texConverter = {
 		toTex: katex.renderToString,
 		options: {
@@ -307,35 +336,27 @@ onMounted(() => {
 		}
 	}
 
+	// Add axis
+	PiGraph.axis()
 
-	if (props.axis) {
-		PiGraph.axis()
-	}
-
+	// Enable the parser system
 	PiParser = PiGraph.parse("")
-
-	if (props.draw.parameters) {
-		PiParser.updateLayout(props.draw.parameters)
-	}
-
-	if (drawCode.value) {
-		PiParserUpdate("onMounted", true)
-	}
 
 	// Add a resizeObserver on the draw container
 	useResizeObserver(drawWrapper.value, () => {
 		PiParserUpdate("onResize", true)
 		PiParser.updateLayout(props.draw.parameters)
-		PiParser.update(drawCode.value, true)
+		// PiParser.update(drawCode.value, true)
 	})
 })
 
+// Grab the data when on mouse up for external modifications
 let drawMouseUp = function() {
 	emits("update", PiGraph.figures)
 }
 
 // TODO: make PiDrawParser much better vue compatible (reactive) and using computed properties.
-watch(drawCode, (code, before) => {
+watch(drawCode, () => {
 	// Watch changes from "inside"
 	PiParserUpdate("drawCode watcher")
 })
@@ -362,7 +383,7 @@ watch(
 
 defineExpose({ figures })
 
-provide('PiDrawGraph', PiGraph)
+provide("PiDrawGraph", PiGraph)
 </script>
 
 <template>
@@ -375,8 +396,9 @@ provide('PiDrawGraph', PiGraph)
 		/>
 
 		<pi-draw-parser-visibility
-			:graph="PiGraph"
+			v-if="PiGraph"
 			:draw="props.draw"
+			:graph="PiGraph"
 		/>
 
 		<!-- stepper -->
@@ -424,7 +446,7 @@ provide('PiDrawGraph', PiGraph)
 
 		<!-- slider(s) -->
 		<div
-			v-if="sliders.length > 0 || texCode !== ''"
+			v-if="sliders.length > 0 "
 			class="space-y-12 mt-6"
 		>
 			<vue-slider

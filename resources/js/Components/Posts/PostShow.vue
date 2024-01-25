@@ -3,23 +3,16 @@ Affichage d'un post avec toutes les config activées
 Principalement la couche utilisée dans ChapterSlide.
 -->
 <script lang="ts" setup>
-	import {
-		computed,
-		defineAsyncComponent,
-		inject,
-		PropType,
-		provide,
-		ref,
-	} from "vue"
-	import BlockShow from "@/Components/Posts/Blocks/BlockShow.vue"
-	import { PiMath } from "pimath/esm"
-	import UiSwitch from "@/Components/Ui/UiSwitch.vue"
-	import QuestionsIndex from "@/Components/Posts/Questions/QuestionsIndex.vue"
-	import axios from "axios"
-	import { ChapterInterface, PostInterface } from "@/types/modelInterfaces"
-	import { editModeInterface, flashInterface } from "@/types"
+import { computed, defineAsyncComponent, inject, PropType, provide, ref } from "vue"
+import BlockShow from "@/Components/Posts/Blocks/BlockShow.vue"
+import { PiMath } from "pimath/esm"
+import UiSwitch from "@/Components/Ui/UiSwitch.vue"
+import QuestionsIndex from "@/Components/Posts/Questions/QuestionsIndex.vue"
+import axios from "axios"
+import { ChapterInterface, PostInterface } from "@/types/modelInterfaces"
+import { editModeInterface, flashInterface } from "@/types"
 
-	let emits = defineEmits(["change", "destroy"])
+let emits = defineEmits(["change", "destroy"])
 	const props = defineProps({
 			post: {
 				type: Object as PropType<PostInterface>,
@@ -178,7 +171,10 @@ Principalement la couche utilisée dans ChapterSlide.
 			</div>
 
 			<!-- Header of the post (configuration, admin, ...) -->
-			<div v-if="showEditForm" v-admin>
+			<div
+				v-if="showEditForm"
+				v-admin
+			>
 				<component
 					:is="editForm"
 					v-model="showEditForm"
@@ -211,8 +207,15 @@ Principalement la couche utilisée dans ChapterSlide.
 					</template>
 				</draggable>
 
-				<div v-show="editMode.enabled.value" v-admin class="px-5">
-					<button class="btn-new" @click="addBlock">
+				<div
+					v-show="editMode.enabled.value"
+					v-admin
+					class="px-5"
+				>
+					<button
+						class="btn-new"
+						@click="addBlock"
+					>
 						ajouter un bloc
 					</button>
 				</div>
