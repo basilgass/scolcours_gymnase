@@ -22,6 +22,8 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $updated_at
  * @property-read Collection<int, \App\Models\Chapter> $chapters
  * @property-read int|null $chapters_count
+ * @property-read Collection<int, \App\Models\Widget> $widgets
+ * @property-read int|null $widgets_count
  * @method static Builder|Theme newModelQuery()
  * @method static Builder|Theme newQuery()
  * @method static Builder|Theme query()
@@ -44,5 +46,10 @@ class Theme extends Model
     {
         return $this->hasMany(Chapter::class);
     }
+
+	public function widgets()
+	{
+		return $this->hasMany(Widget::class);
+	}
 
 }

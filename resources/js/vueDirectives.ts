@@ -14,11 +14,11 @@ function katexAutoRender(el) {
 				{ left: "$$", right: "$$", display: true },
 				{ left: "$", right: "$", display: false },
 				{ left: "\\[", right: "\\]", display: true },
-				{ left: "\\(", right: "\\)", display: false },
+				{ left: "\\(", right: "\\)", display: false }
 			],
 			// • rendering keys, e.g.:
 			throwOnError: false,
-			macros: useKatexMacros,
+			macros: useKatexMacros
 		})
 	}
 }
@@ -64,7 +64,7 @@ function katexUpdate(el, binding, vnode) {
 				const [b, digits] = key.split(":")
 				rawTex = numberCorrection(
 					rawTex,
-					digits === undefined ? 2 : +digits,
+					digits === undefined ? 2 : +digits
 				).toString()
 			}
 		}
@@ -87,8 +87,8 @@ function katexUpdate(el, binding, vnode) {
 				{
 					throwOnError: false,
 					displayMode: displayMode,
-					macros: useKatexMacros,
-				},
+					macros: useKatexMacros
+				}
 			)
 		}
 	}
@@ -119,13 +119,13 @@ export const katexDirective = {
 	},
 	unmounted(el) {
 		el.innerHTML = ""
-	},
+	}
 }
 
 export const visibleDirective = {
 	mounted(el, binding, vnode) {
 		el.style.visibility = binding.value ? "visible" : "hidden"
-	},
+	}
 }
 
 function adminUpdate(el, binding, vnode) {
@@ -146,7 +146,7 @@ export const adminDirective = {
 	},
 	updated(el, binding, vnode) {
 		adminUpdate(el, binding, vnode)
-	},
+	}
 }
 
 function themeUpdate(el, binding, vnode) {
@@ -162,10 +162,10 @@ function themeUpdate(el, binding, vnode) {
 		})
 	}
 
-	if (binding.value === false || binding.value === 0) return
+	if (binding.value === false || binding.value === 0 || binding.value === "") return
 
 	if (
-		binding.modifiers.hasOwnProperty("admin") ||
+		Object.hasOwn(binding.modifiers, "admin") ||
 		binding.value === "admin"
 	) {
 		chapter = "admin"
@@ -174,7 +174,7 @@ function themeUpdate(el, binding, vnode) {
 	} else if (typeof binding.value === "number") {
 		// it's a number -> get the theme id.
 		const theme = usePage().props.themes.filter(
-			(th) => +th.id === +binding.value,
+			(th) => +th.id === +binding.value
 		)
 
 		if (theme.length === 1) {
@@ -206,5 +206,5 @@ export const themeDirective = {
 	},
 	updated(el, binding, vnode) {
 		themeUpdate(el, binding, vnode)
-	},
+	}
 }

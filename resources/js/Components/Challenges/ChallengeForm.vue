@@ -4,13 +4,13 @@ Edition d'un challenge
 <script lang="ts" setup>
 import { computed, inject, PropType, ref } from "vue"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
-import FormIllustration from "@/Components/Form/FormIllustration.vue"
 import { PiMath } from "pimath/esm"
 import { router } from "@inertiajs/vue3"
 import axios from "axios"
 import type { flashInterface } from "@/types"
-import type { ChallengeInterface } from "@/types/modelInterfaces"
+import type { ChallengeInterface, IllustrationInterface } from "@/types/modelInterfaces"
 import FormMaker from "@/Components/Form/FormMaker.vue"
+import IllustrationEdit from "@/Components/Posts/Illustrations/IllustrationEdit.vue"
 
 const emits = defineEmits(["update:modelValue", "change", "destroy"])
 
@@ -29,14 +29,14 @@ let generatorTab = ref(1),
 	level = ref(1)
 
 let currentGenerator = computed(() => {
-		return theChallenge.value.generators[generatorTab.value-1]
+		return theChallenge.value.generators[generatorTab.value - 1]
 	}),
 	generateQuestionsError = ref(""),
 	generateId = ref(1),
 	generateQuestions = computed(() => {
 		const nbQuestions = 5
 
-		if(currentGenerator.value===undefined){
+		if (currentGenerator.value === undefined) {
 			console.log(`currentGenerator.value is undefined, tab number ${generatorTab.value}`)
 			return []
 		}
@@ -152,14 +152,21 @@ let currentGenerator = computed(() => {
 			})
 	}
 
-let theIllustration = ref(
+let theIllustration = ref<IllustrationInterface>(
 	props.challenge.block.illustrations.length > 0
 		? props.challenge.block.illustrations[0]
 		: {
+			id: 0,
+			order: 1,
+			css: "",
 			title: "",
 			type: "draw",
 			code: "",
-			parameters: ""
+			parameters: "",
+			value: "",
+			block_id: null,
+			widget_id: null,
+			widget: null
 		}
 )
 
@@ -274,15 +281,15 @@ let saveChallenge = function() {
 					/>
 					<form-maker
 						v-model="theChallenge.block.body"
+						:rows="15"
 						class="h-full"
 						label="description du challenge"
 						name="body"
 						type="textarea"
-						:rows="15"
 					/>
 				</div>
-				<form-illustration
-					v-model="theIllustration"
+				<illustration-edit
+					:illustration="theIllustration"
 					name="illustration"
 				/>
 			</div>
@@ -343,16 +350,16 @@ let saveChallenge = function() {
 						type="number"
 					/>
 					<form-maker
-						type="number"
 						v-model="theChallenge.bonusLevelLife"
 						label="vie / niveau"
 						name="questionsBonuses3"
+						type="number"
 					/>
 					<form-maker
-						type="number"
 						v-model="theChallenge.bonusLevelTime"
 						label="temps / niveau"
 						name="questionsBonuses4"
+						type="number"
 					/>
 				</div>
 			</div>
@@ -409,10 +416,10 @@ let saveChallenge = function() {
 								<i class="bi bi-file-arrow-up" />
 							</button>
 							<form-maker
-								type="select"
 								v-model="attachGeneratorId"
 								label="générateurs"
 								name="generatorsList"
+								type="select"
 								@click.once="getListOfGenerators"
 							>
 								<option
@@ -439,11 +446,11 @@ let saveChallenge = function() {
 								name="generatorTitle"
 							/>
 							<form-maker
-								type="textarea"
 								v-model="theChallenge.generators[index].body"
 								:rows="2"
 								label="description du générateur"
 								name="generatorBody"
+								type="textarea"
 							/>
 
 							<div class="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -471,9 +478,9 @@ let saveChallenge = function() {
 								:rows="10"
 								auto-size
 								label="générateur de questions"
+								language="javascript"
 								resizable
 								type="code"
-								language="javascript"
 							/>
 						</div>
 

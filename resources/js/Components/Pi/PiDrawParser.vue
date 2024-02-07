@@ -21,7 +21,7 @@ const emits = defineEmits(["update"])
 let postData = inject("postData", ref({}))
 
 // SVG drawing container
-let drawWrapper = ref(null)
+let drawWrapper = ref<HTMLElement>(null)
 
 // Incoming props
 let props = defineProps({
@@ -35,12 +35,12 @@ let props = defineProps({
 				parameters: ""
 			}
 		}
-	}
+	},
 })
 
 // Line by line code
-const codeArray = computed(()=>{
-	return props.draw.code.split('\n')
+const codeArray = computed(() => {
+	return props.draw.code.split("\n")
 })
 
 // Main draving system - not reactive !
@@ -57,11 +57,11 @@ let sliders = ref([])
 // Display text with sliders modifications.
 let texOutput = computed(() => {
 	// Get the output code: starting with $tex=
-	let tex = codeArray.value.filter(line=>line.startsWith('$tex='))[0]
-	if(tex === undefined) return ""
+	let tex = codeArray.value.filter(line => line.startsWith("$tex="))[0]
+	if (tex === undefined) return ""
 
 	// Get the raw code
-	tex = tex.split('$tex=')[1]
+	tex = tex.split("$tex=")[1]
 
 	// Update the raw code with the sliders values.
 	sliders.value.forEach((slider) => {
@@ -307,6 +307,7 @@ function PiParserUpdate(from: string, withSliders = false) {
 		PiParserHasErrors.value = true
 	}
 }
+
 
 // Create the non reactive objects on mounted
 // PiGraph : display SVG

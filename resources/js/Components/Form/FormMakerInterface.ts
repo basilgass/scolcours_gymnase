@@ -1,5 +1,3 @@
-
-
 export type FormMakerInputsType =
 	"id" |
 	"text" |
@@ -32,8 +30,8 @@ export interface FormMakerPropsType {
 	withIcon?: boolean | string;
 	prepend?: string;
 	focus?: boolean;
-	language?: "javascript" | "latex";
-	rows?: number;
+	language?: "javascript" | "latex" | "json";
+	rows?: number | string;
 	resizable?: boolean;
 	autoSize?: boolean;
 }

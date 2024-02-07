@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Block;
 use App\Models\Illustration;
+use App\Models\Widget;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class IllustrationController extends Controller
 {
@@ -19,16 +21,6 @@ class IllustrationController extends Controller
 	}
 
 	/**
-	 * Show the form for creating a new resource.
-	 *
-	 * @return \Illuminate\Http\Response
-	 */
-	public function create()
-	{
-		//
-	}
-
-	/**
 	 * Store a newly created resource in storage.
 	 *
 	 * @param \Illuminate\Http\Request $request
@@ -36,13 +28,36 @@ class IllustrationController extends Controller
 	 */
 	public function store(Block $block, Request $request)
 	{
+		$validation = $request->validate([
+			'code'=>['string', 'nullable'],
+			'parameters'=>['string', 'nullable'],
+			'widget_id'=>['exists:App\Models\Widget,id', 'nullable']
+		]);
+
+		if(isset($validation['widget_id'])){
+			$widget = Widget::find($validation['widget_id'])->first();
+		}else{
+			$widget = Widget::where('name','draw-parser-widget')->first();
+		}
+
 		// creates an empty illustration.
 		$illustration = $block->illustrations()->create([
 			'code' => '',
 			'parameters' => '',
-			'type' => 'draw'
+			'type'=>'',
+			'widget_id' => $widget->id
 		]);
 		return $illustration;
+	}
+
+	/**
+	 * Show the form for creating a new resource.
+	 *
+	 * @return \Illuminate\Http\Response
+	 */
+	public function create()
+	{
+		//
 	}
 
 	/**
@@ -60,11 +75,13 @@ class IllustrationController extends Controller
 	 * Show the form for editing the specified resource.
 	 *
 	 * @param int $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function edit($id)
+	 * @return \Inertia\Response
+     */
+	public function edit(Illustration $illustration)
 	{
-		//
+		return Inertia::render("Devs/Edit/IllustrationEditPage",
+			["illustration" => $illustration]
+		);
 	}
 
 	/**
@@ -72,17 +89,18 @@ class IllustrationController extends Controller
 	 *
 	 * @param \Illuminate\Http\Request $request
 	 * @param int $id
-	 * @return \Illuminate\Http\Response
+	 * @return Illustration|\Illuminate\Http\Response
 	 */
 	public function update(Request $request, Illustration $illustration)
 	{
 		$validation = $request->validate([
 			'title' => ['string', 'nullable'],
-			'type' => ['string'],
-			'value' => ['string', 'nullable'],
+			'css' => ['string', 'nullable'],
 			'code' => ['string'],
 			'parameters' => ['string', 'nullable'],
-			'css' => ['string', 'nullable'],
+			'widget_id'=>['exists:App\Models\Widget,id'],
+//			'value'=>['string'],
+//			'type'=>['string'],
 		]);
 
 		$illustration->update($validation);
@@ -106,13 +124,13 @@ class IllustrationController extends Controller
 	public function upload(Request $request)
 	{
 		$validate = $request->validate([
-			'image'=>['required', 'image', 'max:2048'],
+			'image' => ['required', 'image', 'max:2048'],
 		]);
 
 		$uploadedFile = $request->file('image');
 
 		// Upload the image.
-		$filename = time().'-'.$uploadedFile->getClientOriginalName();
+		$filename = time() . '-' . $uploadedFile->getClientOriginalName();
 
 		return \Storage::disk('public')->putFileAs(
 			'illustrations', $uploadedFile, $filename

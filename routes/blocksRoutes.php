@@ -4,6 +4,7 @@
 use App\Http\Controllers\BlockController;
 use App\Http\Controllers\IllustrationController;
 use App\Http\Controllers\PostController;
+use App\Models\Illustration;
 
 Route::get('blocks/components', [BlockController::class, 'fetchComponents'])
     ->name('illustrations.components');
@@ -44,6 +45,11 @@ Route::middleware('can:admin')->group(function(){
 		->name('images.upload');
 	Route::patch('blocks/{block}/updateIllustrationsGrid', [BlockController::class, 'updateIllustrationsGrid'])
 		->name('blocks.updateIllustrationsGrid');
+
+	Route::get('illustrations/{illustration}', function (Illustration $illustration){
+		return $illustration;
+	});
+	Route::get('illustrations/{illustration}/edit', [IllustrationController::class, 'edit']);
 
 	Route::patch('blocks/{block}/moveTo/post/{post}', [BlockController::class, 'moveBlockToPost'])->name('blocks.moveTo.post');
 	Route::patch('post/{post}/moveTo/chapter/{chapter}', [PostController::class, 'movePostToChapter'])->name('posts.moveTo.chapter');

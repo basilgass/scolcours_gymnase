@@ -72,6 +72,10 @@
 			'illustrations' => [
 				'driver' => 'local',
 				'root'   => resource_path('js/Components/Posts/Illustrations/Elements'),
+			],
+			'widgets' => [
+				'driver' => 'local',
+				'root'   => resource_path('js/Components/Widgets'),
 			]
 
 		],

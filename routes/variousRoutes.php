@@ -1,5 +1,19 @@
 <?php
-Route::get("/b", function (){return redirect()->to('/bareme');});
-Route::get("/bareme", function(){
+
+use App\Http\Controllers\ScolcoursController;
+
+Route::get("/b", function () {
+	return redirect()->to('/bareme');
+});
+Route::get("/bareme", function () {
 	return \Inertia\Inertia::render("GraduatePage");
 });
+
+Route::get("/g", function () {
+	return redirect()->to('/grapheur');
+});
+Route::get("/grapheur", function () {
+	return \Inertia\Inertia::render("GraphPage");
+});
+Route::post('/grapheur/svg/download', [ScolcoursController::class, "download"])
+	->name('grapheur.download');

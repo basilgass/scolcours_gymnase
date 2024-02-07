@@ -17,7 +17,7 @@ defineOptions({
 	const emits = defineEmits(["update:modelValue", "update"])
 	const props = defineProps({
 			modelValue: { type: String, default: "" },
-			rows: { type: Number, default: 4 },
+			rows: { type: [Number,String], default: 4 },
 			focus: { type: Boolean, default: false },
 			language: { type: String, default: "javascript" },
 			wrap: { type: Boolean, default: true },
@@ -224,6 +224,7 @@ defineOptions({
 				v-model="theValue"
 				class="w-full"
 				v-bind="$attrs"
+				:autofocus="props.focus"
 				@input="update"
 				@keyup="autofill($event)"
 				@scroll="sync_scroll"

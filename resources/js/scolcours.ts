@@ -11,6 +11,10 @@ export const KeyboardsModules = import.meta.glob([
 export const IllustrationsModules = import.meta.glob([
 	"./Components/Posts/Illustrations/Elements/*.vue",
 ])
+export const WidgetsModules = import.meta.glob([
+	"./Components/Widgets/*.vue",
+	"./Components/Widgets/*/*.vue",
+])
 export const DevsModules = import.meta.glob("./Components/Devs/*.vue")
 
 const dynamicModules = {
@@ -18,13 +22,17 @@ const dynamicModules = {
 		path: "./Components/Tools/",
 		modules: ToolsModules,
 	},
-	keyboard: {
+	keyboards: {
 		path: "./Components/Keyboards/",
 		modules: KeyboardsModules,
 	},
-	illustration: {
+	illustrations: {
 		path: "./Components/Posts/Illustrations/Elements/",
 		modules: IllustrationsModules,
+	},
+	widgets: {
+		path: "./Components/Widgets/",
+		modules: WidgetsModules,
 	},
 	dev: {
 		path: "./Components/Devs/",
@@ -33,25 +41,26 @@ const dynamicModules = {
 }
 
 export enum MODULE_TYPES {
-	ILLUSTRATION = "illustration",
+	ILLUSTRATION = "illustrations",
+	WIDGET = "widgets",
 	TOOLS = "tools",
-	KEYBOARD = "keyboard",
+	KEYBOARD = "keyboards",
 	DEV = "dev",
 }
 
 export function getModule(key: string, type: MODULE_TYPES) {
+	if(key===null || key===undefined) return null
+
+	const path = `${dynamicModules[type].path}${key}${key.endsWith('.vue')?'':'.vue'}`
 	if (
-		dynamicModules.hasOwnProperty(type) &&
-		dynamicModules[type].modules.hasOwnProperty(
-			`${dynamicModules[type].path}${key}.vue`,
-		)
+		Object.hasOwn(dynamicModules, type) &&
+		Object.hasOwn(dynamicModules[type].modules, path)
 	) {
 		return defineAsyncComponent(
-			dynamicModules[type].modules[
-				`${dynamicModules[type].path}${key}.vue`
-			],
+			dynamicModules[type].modules[path],
 		)
 	}
+	return null
 }
 
 export const blockTypeDefault = {
@@ -91,8 +100,8 @@ export const blockTypes = {
 		title: "remarque",
 		icon: "bi bi-chat",
 		style: {
-			header: "bg-pink-50 text-pink-700",
-			body: "border-l-8 border-pink-600 border-b border-b-pink-100",
+			header: "bg-cyan-50 text-cyan-400",
+			body: "border-l-8 border-cyan-300 border-b border-b-cyan-100",
 		},
 	},
 	example: {
@@ -107,8 +116,8 @@ export const blockTypes = {
 		title: "attention",
 		icon: "bi bi-exclamation-triangle",
 		style: {
-			header: "bg-red-50 text-red-700",
-			body: "border border-l-8 border-red-600",
+			header: "bg-red-50 text-red-700 rounded-t-xl !py-1",
+			body: "mx-4 md:mx-12 lg:mx-24 mx-auto border border-red-300 rounded-xl shadow",
 		},
 	},
 }

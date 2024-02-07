@@ -26,7 +26,7 @@ export interface BlockInterface {
 	id: number
 	order: number
 	blur: boolean
-	switch: string
+	switch: string|boolean
 	type: string
 	title: string
 	body: string
@@ -45,8 +45,11 @@ export interface IllustrationInterface {
 	css: string
 	value: string
 	type: string
-	code: string
+	widget_id: number
+	widget: widgetInterface
 	parameters: string
+	code: string
+	isNew?:boolean
 }
 
 export interface QuestionInterface {
@@ -156,4 +159,14 @@ export interface deckInterface {
 	title: string,
 	slug: string,
 	flipcards: flipcardsInterface[]
+}
+
+export interface widgetInterface {
+	id: number,
+	name: string,
+	slug: string,
+	component: string,
+	theme_id: number,
+	description: string,
+	control: boolean
 }

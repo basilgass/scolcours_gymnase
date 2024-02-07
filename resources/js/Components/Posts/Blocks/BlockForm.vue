@@ -1,8 +1,8 @@
 <!--
 Formulaire d'édition d'un bloc
 -->
-<script setup>
-import { ref } from "vue"
+<script setup lang="ts">
+import { computed, PropType, ref } from "vue"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 import DialogModal from "@/Components/Ui/DialogModal.vue"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
@@ -11,11 +11,14 @@ import MoveItemTo from "@/Components/Posts/MoveItemTo.vue"
 import { useBlock } from "@/Components/Posts/Blocks/useBlock"
 import BlockBodyButtons from "@/Components/Posts/Blocks/BlockBodyButtons.vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
+import axios from "axios"
+import { BlockInterface } from "@/types/modelInterfaces"
+import { useCycleList, useMagicKeys, whenever } from "@vueuse/core"
 
 const emits = defineEmits(["update:modelValue", "change", "destroy"])
 	const props = defineProps({
-		block: { type: Object, required: true },
-		modelValue: { type: Boolean, default: false }, // show or hide the block dialog
+		block: { type: Object as PropType<BlockInterface>, required: true },
+		modelValue: { type: Boolean, default: false },
 		switch: { type: Boolean },
 		noTitle: { type: Boolean, default: false },
 		noType: { type: Boolean, default: false },
@@ -25,15 +28,16 @@ const emits = defineEmits(["update:modelValue", "change", "destroy"])
 		noBlur: { type: Boolean, default: false },
 		noDelete: { type: Boolean, default: false },
 		noGrid: { type: Boolean, default: false },
+		noPreview: { type: Boolean, default: false },
 		previewCol: { type: Boolean, default: false },
 		overflowScroll: { type: Boolean, default: false },
 	})
 
 	let show = ref(props.modelValue),
-		theBlock = ref(props.block),
+		theBlock = ref<BlockInterface>(props.block),
 		switchEnable = ref(props.block.switch !== null)
 
-	const { blockBody, blockButtons, random } = useBlock(theBlock)
+	const { blockBody, blockButtons, random } = useBlock(theBlock.value)
 
 	let updateSwitchEnable = function () {
 		if (switchEnable.value) {
@@ -66,7 +70,7 @@ const emits = defineEmits(["update:modelValue", "change", "destroy"])
 				.post(route("blocks.destroy", [props.block.id]), {
 					_method: "delete",
 				})
-				.then((res) => {
+				.then(() => {
 					emits("update:modelValue", false)
 					emits("destroy", props.block.id)
 				})
@@ -74,24 +78,54 @@ const emits = defineEmits(["update:modelValue", "change", "destroy"])
 		}
 
 	const postType = blockTypes
+
+const tabs = useCycleList(['markdown', 'script', 'data'])
+const tab = computed(()=>tabs.state.value)
+const keys = useMagicKeys({
+	passive: false,
+	onEventFired(e) {
+		if(e.ctrlKey && (e.key==='<'||e.key==='>')) {
+			e.preventDefault()
+		}
+	},
+})
+const CtrlTab = keys['Ctrl+<']
+const CtrlTabReverse = keys['Ctrl+>']
+
+whenever(CtrlTab, () => {
+	tabs.next()
+})
+whenever(CtrlTabReverse, () => {
+	tabs.prev()
+})
 </script>
 
 <template>
 	<dialog-modal
 		v-model="show"
-		class="bg-gray-50 max-h-screen"
+		class="bg-gray-50 max-h-[90vh] min-h-[90vh]"
 		@cancel="emits('update:modelValue', false)"
 	>
 		<template #header>
-			<div class="bg-white border-b border-gray-200 px-5 py-3 mb-5">
-				<div class="flex justify-between items-baseline w-full">
+			<div class="bg-white border-b border-gray-200 px-5 py-3 flex flex-col gap-3">
+				<!-- titre et boutons de contrôle -->
+				<div
+					class="flex flex-col md:flex-row gap-3
+				justify-between items-baseline w-full"
+				>
 					<h1 class="flex items-baseline gap-5">
 						<span class="text-xl md:text-2xl">
-							édition un block</span>
+							édition d'un block</span>
 						<span class="text-xs font-code">
 							(id: {{ theBlock.id }})</span>
 					</h1>
 					<div class="flex gap-3 justify-end">
+						<move-item-to
+							:source-id="theBlock.id"
+							source="block"
+							target="post"
+							@moved="emits('update:modelValue', false)"
+						/>
 						<button
 							class="btn-primary btn-xs w-[60px]"
 							@click="saveBlock"
@@ -121,13 +155,7 @@ const emits = defineEmits(["update:modelValue", "change", "destroy"])
 					</div>
 				</div>
 
-				<move-item-to
-					:source-id="theBlock.id"
-					source="block"
-					target="post"
-					@moved="emits('update:modelValue', false)"
-				/>
-
+				<!-- Mise  en page du block -->
 				<div class="flex justify-between items-baseline w-full">
 					<form-maker
 						type="switch"
@@ -161,87 +189,110 @@ const emits = defineEmits(["update:modelValue", "change", "destroy"])
 			</div>
 		</template>
 
-		<div class="w-full px-5">
-			<div :class="props.overflowScroll ? 'overflow-y-auto' : ''">
-				<!-- data to be displayed -->
+		<template #footer>
+			<div class="h-[3.2em] font-code text-xs px-3">
+				<div v-show="tab==='markdown'">
+					@posts.show,[id] | @blocks.show,[id] | #[item-id]<br>
+					.@text .@bg pour des classes à thème
+				</div>
+			</div>
+		</template>
+		<div class="w-full h-full px-5 py-2">
+			<div
+				:class="props.overflowScroll ? 'overflow-y-auto' : 'h-full'"
+			>
+				<!-- Titre et type du block -->
+				<div>
+					<form-maker
+						v-show="!props.noTitle"
+						v-model="theBlock.title"
+						label="titre"
+						label-class="uppercase"
+						type="text"
+						inline-label
+						sm
+					/>
+
+					<!-- Boutons pour les types de blocks -->
+					<div
+						v-show="!props.noType"
+						class="grid grid-cols-6 gap-2 mt-2"
+					>
+						<button
+							v-for="(item, key) in postType"
+							:key="key"
+							:class="
+								key === theBlock.type ? 'is-active' : ''
+							"
+							class="btn btn-xs"
+							@click="
+								theBlock.type =
+									theBlock.type === key ? '' : key
+							"
+						>
+							{{ item.title }}
+						</button>
+					</div>
+				</div>
+
+				<!-- corps et preview -->
 				<div
-					:class="
-						props.previewCol || props.noPreview
-							? ''
-							: 'md:grid-cols-2'
-					"
+					:class=" props.previewCol || props.noPreview ? '' : 'md:grid-cols-2'"
 					class="grid grid-cols-1 gap-5"
 				>
-					<div class="mt-2">
-						<form-maker
-							v-show="!props.noTitle"
-							v-model="theBlock.title"
-							label="titre"
-							label-class="uppercase"
-							type="text"
-							with-icon
-						/>
-
-						<div
-							v-show="!props.noType"
-							class="flex flex-wrap gap-2 justify-between mt-1"
-						>
+					<div class="mt-4 relative">
+						<div class="absolute right-0 top-[0.6em] flex text-xs ">
 							<button
-								v-for="(item, key) in postType"
-								:key="key"
-								:class="
-									key === theBlock.type ? 'is-active' : ''
-								"
-								class="btn btn-xs"
-								@click="
-									theBlock.type =
-										theBlock.type === key ? '' : key
-								"
+								class="border-x border-t px-2 py-0 rounded-t transition-all duration-500"
+								:class="{'bg-blue-600 text-white':tab==='markdown'}"
+								@click="tabs.state.value='markdown'"
 							>
-								{{ item.title }}
+								markdown
+							</button>
+							<button
+								v-show="!props.noScript"
+								class="border-x border-t px-2 py-0 rounded-t transition-all duration-500"
+								:class="{'bg-blue-600 text-white':tab==='script'}"
+								@click="tabs.state.value='script'"
+							>
+								script
+							</button>
+							<button
+								v-show="!props.noData"
+								class="border-x border-t px-2 py-0 rounded-t transition-all duration-500"
+								:class="{'bg-blue-600 text-white':tab==='data'}"
+								@click="tabs.state.value='data'"
+							>
+								data
 							</button>
 						</div>
 
-						<form-maker
-							ref="formBody"
-							type="code"
-							v-model="theBlock.body"
-							:rows="11"
-							label="corps"
-							language="latex"
-						/>
-						<div class="text-xs font-code">
-							@posts.show,[id] | @blocks.show,[id] | #[item-id]<br>
-							.@text .@bg pour des classes à thème
-						</div>
-
-						<div
-							class="mt-3"
-							v-if="!props.noGrid"
-						>
+						<div>
 							<form-maker
-								v-model="theBlock.template"
-								label="disposition"
-								label-class="uppercase"
-								sm
-								type="text"
+								v-show="tab==='markdown'"
+								ref="formBody"
+								type="code"
+								v-model="theBlock.body"
+								label="corps"
+								:rows="20"
+								language="latex"
 							/>
-							<p class="text-xs flex gap-3">
-								<button
-									class="btn btn-xs"
-									@click="theBlock.template = 'bi,md:3b+2i'"
-								>
-									bi,md:3b+2i
-								</button>
-								<button
-									class="btn btn-xs"
-									@click="
-										theBlock.template = 'bi,md:b+i,lg:3b+2i'
-									"
-								>
-									bi,md:b+i,lg:3b+2i
-								</button>
-							</p>
+							<form-maker
+								v-show="tab==='script'"
+								v-model="theBlock.script"
+								label="script"
+								type="code"
+								:rows="20"
+								language="javascript"
+							/>
+							<form-maker
+								v-show="tab==='data'"
+								v-model="theBlock.json"
+								type="textarea"
+								:rows="20"
+								label="data"
+								language="json"
+							/>
 						</div>
 					</div>
 
@@ -263,29 +314,6 @@ const emits = defineEmits(["update:modelValue", "change", "destroy"])
 							/>
 						</div>
 					</div>
-				</div>
-
-				<div
-					v-show="!props.noScript || !props.noData"
-					class="grid grid-cols-1 md:grid-cols-2 gap-3"
-				>
-					<form-maker
-						v-show="!props.noScript"
-						v-model="theBlock.script"
-						label="script"
-						type="code"
-						:rows="8"
-						language="javascript"
-					/>
-
-					<form-maker
-						v-show="!props.noData"
-						v-model="theBlock.json"
-						type="textarea"
-						:rows="8"
-						label="data"
-						name="json"
-					/>
 				</div>
 			</div>
 		</div>

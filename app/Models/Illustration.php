@@ -16,12 +16,14 @@ use Illuminate\Support\Carbon;
  * @property string|null $title
  * @property string|null $css
  * @property string|null $value
+ * @property int|null $widget_id
  * @property string $type
  * @property string $code
  * @property string|null $parameters
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property-read \App\Models\Block $block
+ * @property-read \App\Models\Widget|null $widget
  * @method static Builder|Illustration newModelQuery()
  * @method static Builder|Illustration newQuery()
  * @method static Builder|Illustration query()
@@ -36,14 +38,22 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Illustration whereType($value)
  * @method static Builder|Illustration whereUpdatedAt($value)
  * @method static Builder|Illustration whereValue($value)
+ * @method static Builder|Illustration whereWidgetId($value)
  * @mixin Eloquent
  */
 class Illustration extends Model
 {
 	protected $guarded = [];
 
+	protected $with = ['widget'];
+
 	public function block()
 	{
 		return $this->belongsTo(Block::class);
+	}
+
+	public function widget()
+	{
+		return $this->belongsTo(Widget::class);
 	}
 }

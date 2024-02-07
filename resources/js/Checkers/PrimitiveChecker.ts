@@ -46,12 +46,21 @@ export class PrimitiveChecker extends CheckerBase {
 			subchk = new PolynomChecker(this._config)
 		}
 
-		const result = subchk.check(expected, given)
+		// On vérifie sans la constante !
+		const result = subchk.check(
+			expected.replaceAll('+c',''),
+			given.replaceAll('+c','')
+		)
 
-		if(!given.endsWith('+c')){
+		if(!result.result){
+			return result
+		}
+
+		const s = given.split('+c').length
+		if(s!==2){
 			return {
 				result: false,
-				message: "il manque la constante."
+				message: s===1?"il manque la constante.":`il y a ${s-1} constantes...`
 			}
 		}
 

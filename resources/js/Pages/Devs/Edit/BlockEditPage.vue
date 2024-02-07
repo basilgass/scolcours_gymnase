@@ -7,7 +7,7 @@ export default {
 </script>
 <script setup>
 import {ref} from "vue"
-import BlockFormNoDlg from "@/Components/Posts/Blocks/BlockFormNoDlg.vue"
+import BlockForm from "@/Components/Posts/Blocks/BlockForm.vue"
 
 let props = defineProps({
 	block: {type: Object, required: true},
@@ -16,7 +16,7 @@ let show = ref(true)
 </script>
 
 <template>
-	<block-form-no-dlg
+	<block-form
 		v-model="show"
 		:block="props.block.data"
 	/>

@@ -82,8 +82,9 @@ const combinedLabelClass = computed(() => {
 
 // calculate the icon padding
 const iconPadding = computed(() => {
-	return props.withIcon ? "2.5rem" : "0.5rem"
+	return props.withIcon ? "0.5rem" : "0.5rem"
 })
+
 // calculate the icon class
 const iconClass = computed(() => {
 	if (typeof props.withIcon === "string") return props.withIcon
@@ -182,9 +183,11 @@ defineExpose({ focus: setFocus })
 			v-katex.auto="props.label"
 			:class="combinedLabelClass"
 		/>
+
+		<!-- Display the input -->
 		<div
 			ref="inputWrapper"
-			class="inputWrapper"
+			class="w-full"
 		>
 			<div class="flex items-stretch">
 				<div
@@ -274,6 +277,7 @@ defineExpose({ focus: setFocus })
 					:class="combinedInputClass"
 					:focus="props.focus"
 					:label="props.label"
+					:sm="props.sm"
 					@update="updateInput($event)"
 				/>
 			</div>
@@ -283,6 +287,7 @@ defineExpose({ focus: setFocus })
 		<div
 			ref="inputError"
 			class="text-xs text-red-600"
+			v-if="errors"
 		>
 			{{ errors }}
 		</div>

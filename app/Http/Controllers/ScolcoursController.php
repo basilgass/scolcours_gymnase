@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Chapter;
 use Auth;
+use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
@@ -77,5 +78,22 @@ class ScolcoursController extends Controller
 		return Inertia::render('Devs/DevsShow', [
 			"dev" => $page
 		]);
+	}
+
+	public function download(Request $request)
+	{
+		return response()->streamDownload(function () {
+			echo "hello world";
+		}, 'users.txt');
+		
+		$validate = $request->validate([
+			'svg'=>['string', 'min:2']
+		]);
+
+		$content = $validate['svg'];
+		$filename = 'grapheur.svg';
+		return response()->streamDownload(function() use ($content) {
+			echo $content;
+		}, $filename);
 	}
 }

@@ -471,7 +471,7 @@ export const keyboards: { [Key: string]: KeyboardObjectType } = {
 			"*",
 			"sqrt",
 			"root(",
-			".",
+			"|",
 			"0",
 			"=",
 			"/",

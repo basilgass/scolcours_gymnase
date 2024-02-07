@@ -7,11 +7,12 @@ defineOptions({
 
 const emits = defineEmits(["update:modelValue", "update"])
 const props = defineProps({
-		modelValue: { type: [Boolean, String], default: false },
+		modelValue: { type: [Boolean, String, Number], default: false },
 		focus: { type: Boolean, default: false },
 		label: { type: String, default: "" },
 		enabledClass: { type: String, default: "bg-blue-700" },
-		disabledClass: { type: String, default: "bg-red-700" }
+		disabledClass: { type: String, default: "bg-red-700" },
+		sm: {type: Boolean, default: false},
 	}),
 	theValue = ref(props.modelValue),
 	enabledLabel = computed(() => {
@@ -28,21 +29,31 @@ const props = defineProps({
 
 </script>
 <template>
-	<div class="flex gap-3 cursor-pointer">
+	<div
+		class="flex gap-3 cursor-pointer"
+		:class="props.sm?' text-xs':''"
+	>
 		<div
 			v-katex.auto="enabledLabel"
-			:class="theValue?'text-black':'text-gray-400'"
+			:class="`${theValue?'text-black':'text-gray-400'}`"
 			class="transition-colors"
 			@click="update(true)"
 		/>
 		<div
-			:class="theValue?props.enabledClass:props.disabledClass"
-			class="border rounded-full w-[45px] relative h-[25px] transition-colors"
+			:class="`${theValue?props.enabledClass:props.disabledClass}
+			${props.sm?'w-[25px] h-[16px]':'w-[45px] h-[25px]'}`"
+			class="border rounded-full relative transition-colors"
 			@click="update(!theValue)"
 		>
 			<div
-				:class="theValue?'left-[3px]':'left-[22px]'"
-				class="w-[17px] h-[17px] absolute top-[3px] rounded-full transition-all"
+				:class="{
+					'left-[3px]':theValue,
+					'left-[22px]':!theValue && !props.sm,
+					'left-[11px]':!theValue && props.sm,
+					'top-[3px] w-[17px] h-[17px]':!props.sm,
+					'top-[2px] w-[10px] h-[10px]':props.sm,
+				}"
+				class="absolute rounded-full transition-all"
 			>
 				<div class="bg-white border h-full w-full rounded-full" />
 			</div>

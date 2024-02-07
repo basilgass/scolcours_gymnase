@@ -11,6 +11,7 @@ use App\Models\Team;
 use App\Models\Theme;
 use App\Models\Tool;
 use App\Models\User;
+use App\Models\Widget;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -117,6 +118,15 @@ class AdminController extends Controller
 				})
 			]
 		);
+	}
+
+	public function widgets()
+	{
+
+		return Inertia::render(
+			'Admin/AdminWidgetsShow', [
+			"widgets" => Widget::all()
+		]);
 	}
 
 	public function users()

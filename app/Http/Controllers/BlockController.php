@@ -32,16 +32,6 @@ class BlockController extends Controller
 	}
 
 	/**
-	 * Show the form for creating a new resource.
-	 *
-	 * @return Response
-	 */
-	public function create()
-	{
-		//
-	}
-
-	/**
 	 * Store a newly created resource in storage.
 	 *
 	 * @param Request $request
@@ -80,6 +70,16 @@ class BlockController extends Controller
 		return $block;
 	}
 
+	/**
+	 * Show the form for creating a new resource.
+	 *
+	 * @return Response
+	 */
+	public function create()
+	{
+		//
+	}
+
 	public function storeInBlockable(string $target, int $target_id, Block $block)
 	{
 		if ($target === 'Chapter') {
@@ -105,19 +105,19 @@ class BlockController extends Controller
 	 *
 	 * @param int $id
 	 * @return RedirectResponse
-     */
+	 */
 	public function show(Block $block)
 	{
 		// Redirect to the post / show item
-        $post = $block->blockable;
-        $chapter = $post->chapter;
-        $theme = $chapter->theme;
-        return redirect()->route(
-            'theme.chapter.slide.block',
-            [
-                $theme->slug, $chapter->slug, $post->order, $block->id
-            ]
-        );
+		$post = $block->blockable;
+		$chapter = $post->chapter;
+		$theme = $chapter->theme;
+		return redirect()->route(
+			'theme.chapter.slide.block',
+			[
+				$theme->slug, $chapter->slug, $post->order, $block->id
+			]
+		);
 	}
 
 	/**
@@ -132,43 +132,6 @@ class BlockController extends Controller
 		return Inertia::render("Devs/Edit/BlockEditPage", [
 			'block' => BlockResource::make($block)
 		]);
-	}
-
-	/**
-	 * Update the specified resource in storage.
-	 *
-	 * @param Request $request
-	 * @param int $id
-	 * @return BlockResource
-	 */
-	public function update(Request $request, Block $block)
-	{
-		$validation = $request->validate([
-			'title' => ['nullable', 'max:255'],
-			'body' => ['nullable'],
-			'template' => ['string', 'nullable'],
-			'type' => ['string', 'nullable'],
-			'script' => ['string', 'nullable'],
-			'json' => ['string', 'nullable'],
-			'blur' => ['boolean'],
-			'switch' => ['boolean', 'nullable'],
-		]);
-
-		$block->title = $validation['title'] ?? '';
-		$block->body = $validation['body'] ?? null;
-		$block->template = $validation['template']??null;
-		$block->type = $validation['type'] ?? '';
-		$block->script = $validation['script'] ?? null;
-		$block->json = $validation['json'] ?? null;
-		$block->blur = $validation['blur'] ?? false;
-		$block->switch = $validation['switch'] ?? null;
-
-		// update the block
-		$block->save();
-		$block->update();
-
-		// Return the updated block
-		return BlockResource::make($block);
 	}
 
 	public function toggleblur(Request $request, Block $block)
@@ -209,10 +172,22 @@ class BlockController extends Controller
 	public function fetchComponents()
 	{
 		$components = [];
-		foreach (Storage::disk('illustrations')->files() as $file) {
+
+		foreach (Storage::disk('illustrations')->allFiles() as $file) {
 			// read it and grab the md text.
 			$content = explode("<info>", Storage::disk('illustrations')->get($file));
-			$components[basename($file, '.vue')] = count($content) >= 2 ? explode("</info>", $content[1])[0] : "";
+			$theme_name = explode("/", $file);
+			$theme = "";
+			$name = basename($file, '.vue');
+			if(count($theme_name)===2){
+				$theme = $theme_name[0];
+			}
+
+			$components[$file] = [
+				"name" => $name,
+				"description" => count($content) >= 2 ? explode("</info>", $content[1])[0] : "",
+				"theme" => $theme
+			];
 
 		}
 		return $components;
@@ -226,6 +201,43 @@ class BlockController extends Controller
 
 		return true;
 
+	}
+
+	/**
+	 * Update the specified resource in storage.
+	 *
+	 * @param Request $request
+	 * @param int $id
+	 * @return BlockResource
+	 */
+	public function update(Request $request, Block $block)
+	{
+		$validation = $request->validate([
+			'title' => ['nullable', 'max:255'],
+			'body' => ['nullable'],
+			'template' => ['string', 'nullable'],
+			'type' => ['string', 'nullable'],
+			'script' => ['string', 'nullable'],
+			'json' => ['string', 'nullable'],
+			'blur' => ['boolean'],
+			'switch' => ['boolean', 'nullable'],
+		]);
+
+		$block->title = $validation['title'] ?? '';
+		$block->body = $validation['body'] ?? null;
+		$block->template = $validation['template'] ?? null;
+		$block->type = $validation['type'] ?? '';
+		$block->script = $validation['script'] ?? null;
+		$block->json = $validation['json'] ?? null;
+		$block->blur = $validation['blur'] ?? false;
+		$block->switch = $validation['switch'] ?? null;
+
+		// update the block
+		$block->save();
+		$block->update();
+
+		// Return the updated block
+		return BlockResource::make($block);
 	}
 
 	public function updateTemplate(Block $block, Request $request)
@@ -250,8 +262,8 @@ class BlockController extends Controller
 		]);
 
 		return [
-			'url'=>$post->url,
-			'label'=>$post->title,
+			'url' => $post->url,
+			'label' => $post->title,
 		];
 	}
 

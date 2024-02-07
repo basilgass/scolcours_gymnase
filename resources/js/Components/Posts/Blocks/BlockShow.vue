@@ -194,6 +194,7 @@ const emits = defineEmits(["destroy"])
 				:block="theBlock"
 				@destroy="$emit('destroy', theBlock.id)"
 			/>
+			<!-- header -->
 			<div
 				v-show="editMode.enabled.value || blockTitle || blockButtons"
 				:class="blockConfig.style.header"
@@ -214,10 +215,10 @@ const emits = defineEmits(["destroy"])
 					/>
 				</div>
 			</div>
-
+			<!-- body -->
 			<div
 				:class="blockTemplate.grid"
-				class="px-5"
+				class="px-5 pb-2"
 			>
 				<!-- Block body -->
 				<markdown-it
