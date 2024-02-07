@@ -1,134 +1,6 @@
-<template>
-	<div
-		v-if="theKeyboard!==''"
-		class="keyboard-wrapper"
-	>
-		<div class="keyboard-output">
-			<div
-				v-if="mathOutput"
-				class="grid grid-cols-1 min-h-[50px]"
-			>
-				<div
-					v-katex.ascii.left.nomargin="getTex(answerOutput)"
-					class="self-center"
-				/>
-			</div>
-			<div
-				v-if="textOutput"
-				class="grid grid-cols-1 min-h-[40px] italic"
-			>
-				<div
-
-					class="self-center"
-					v-text="answerOutput"
-				/>
-			</div>
-		</div>
-
-		<!-- keyboard validate (top version) -->
-		<div
-			v-if="validate && !validateAtBottom"
-			class="keyboard w-full my-3"
-		>
-			<button
-				ref="validateButton"
-				:class="`key-cmd ${keyClass} w-full border-green-700 text-green-600 hover:bg-green-100 hover:border-green-800`"
-				@click="btnValidate.fn()"
-			>
-				<i :class="btnValidate.icon" /> <span class="hidden md:inline md:ml-2">{{ btnValidate.label }}</span>
-			</button>
-		</div>
-
-		<!-- keyboard keys -->
-		<div
-			ref="root"
-			class="grid gap-1 lg:gap-2 keyboard"
-			:class="(keyboardData.grid??keyboardGridDefault) + (small?' keyboard-sm':'')"
-		>
-			<button
-				v-for="(key, index) of keyboardComputed"
-				:key="`key-${key.key}-${index}`"
-				class="key"
-				:class="`${keyClass} ${key.span===0?'':key.span} ${key.visible?'invisible':''} ${key.type==='bg'?key.display:''}`"
-				@click="ButtonKeyClick(key)"
-			>
-				<span
-					v-if="key.type==='math'"
-					v-katex.clear="key.display"
-				/>
-				<i
-					v-else-if="key.type==='icon'"
-					:class="key.display"
-				/>
-				<span
-					v-else-if="key.type==='text'"
-					v-katex.auto="key.display"
-				/>
-				<span
-					v-else-if="key.type!=='bg'"
-					v-html="key.display"
-				/>
-			</button>
-		</div>
-
-		<!-- keyboard extra buttons -->
-		<div
-			v-if="keyboardOptions.length>0"
-			class="keyboard flex flex-wrap w-full mt-10 gap-3"
-			:class="small?' keyboard-sm':''"
-		>
-			<button
-				v-for="(key, index) of keyboardOptions"
-				:key="`keyboard-options-${index}`"
-				:class="`key ${keyClass} grow`"
-				@click="ButtonKeyClick(key)"
-			>
-				<span
-					v-if="key.type==='math'"
-					v-katex.clear="key.display"
-				/>
-				<span
-					v-else-if="key.type==='text'"
-					v-katex.auto="key.display"
-				/>
-			</button>
-		</div>
-
-		<!-- keyboard commands -->
-		<div
-			v-if="keyboardCommands.length>0"
-			class="keyboard flex w-full mt-10 gap-3"
-			:class="small?' keyboard-sm':''"
-		>
-			<button
-				v-for="(item, index) of keyboardCommands"
-				:key="`keyboard-command-${index}`"
-				:class="`key ${keyClass} grow ${item.atEnd?'order-last':''}`"
-				@click="item.fn()"
-			>
-				<i :class="item.icon" /> <span class="hidden md:inline md:ml-2">{{ item.label }}</span>
-			</button>
-		</div>
-
-		<!-- keyboard validate (bottom version) -->
-		<div
-			v-if="validate && validateAtBottom"
-			class="keyboard w-full my-3"
-		>
-			<button
-				ref="validateButton"
-				:class="`key-cmd ${keyClass} w-full border-green-700 text-green-600 hover:bg-green-100 hover:border-green-800`"
-				@click="btnValidate.fn()"
-			>
-				<i :class="btnValidate.icon" /> <span class="hidden md:inline md:ml-2">{{ btnValidate.label }}</span>
-			</button>
-		</div>
-	</div>
-</template>
-
 <script setup>
-import {computed, ref} from "vue"
-import {useKeyboard} from "@/Composables/useKeyboard"
+import { computed, ref } from "vue"
+import { useKeyboard } from "@/Composables/useKeyboard"
 
 let {asciiToTex, keyboardKeys, keyboards} = useKeyboard()
 
@@ -182,7 +54,7 @@ let theKeyboard = computed(() => {
 	keyboardOptions = computed(() => {
 		if (props.extraLetters.length>0) {
 			return props.extraLetters.map(x => {
-				const keyDisplay = x.split("|"),
+				const keyDisplay = x.split("||"),
 					d = keyDisplay.length >= 2 ? keyDisplay[1] : keyDisplay[0],
 					isMath = d.startsWith("#") || d.startsWith("\\")
 
@@ -427,6 +299,134 @@ let answerOutput = computed(()=>{
 
 defineExpose({resetKeyStrokes, wrongAnswer, getTex})
 </script>
+
+<template>
+	<div
+		v-if="theKeyboard!==''"
+		class="keyboard-wrapper"
+	>
+		<div class="keyboard-output">
+			<div
+				v-if="mathOutput"
+				class="grid grid-cols-1 min-h-[50px]"
+			>
+				<div
+					v-katex.ascii.left.nomargin="getTex(answerOutput)"
+					class="self-center"
+				/>
+			</div>
+			<div
+				v-if="textOutput"
+				class="grid grid-cols-1 min-h-[40px] italic"
+			>
+				<div
+
+					class="self-center"
+					v-text="answerOutput"
+				/>
+			</div>
+		</div>
+
+		<!-- keyboard validate (top version) -->
+		<div
+			v-if="validate && !validateAtBottom"
+			class="keyboard w-full my-3"
+		>
+			<button
+				ref="validateButton"
+				:class="`key-cmd ${keyClass} w-full border-green-700 text-green-600 hover:bg-green-100 hover:border-green-800`"
+				@click="btnValidate.fn()"
+			>
+				<i :class="btnValidate.icon" /> <span class="hidden md:inline md:ml-2">{{ btnValidate.label }}</span>
+			</button>
+		</div>
+
+		<!-- keyboard keys -->
+		<div
+			ref="root"
+			class="grid gap-1 lg:gap-2 keyboard"
+			:class="(keyboardData.grid??keyboardGridDefault) + (small?' keyboard-sm':'')"
+		>
+			<button
+				v-for="(key, index) of keyboardComputed"
+				:key="`key-${key.key}-${index}`"
+				class="key"
+				:class="`${keyClass} ${key.span===0?'':key.span} ${key.visible?'invisible':''} ${key.type==='bg'?key.display:''}`"
+				@click="ButtonKeyClick(key)"
+			>
+				<span
+					v-if="key.type==='math'"
+					v-katex.clear="key.display"
+				/>
+				<i
+					v-else-if="key.type==='icon'"
+					:class="key.display"
+				/>
+				<span
+					v-else-if="key.type==='text'"
+					v-katex.auto="key.display"
+				/>
+				<span
+					v-else-if="key.type!=='bg'"
+					v-html="key.display"
+				/>
+			</button>
+		</div>
+
+		<!-- keyboard extra buttons -->
+		<div
+			v-if="keyboardOptions.length>0"
+			class="keyboard flex flex-wrap w-full mt-10 gap-3"
+			:class="small?' keyboard-sm':''"
+		>
+			<button
+				v-for="(key, index) of keyboardOptions"
+				:key="`keyboard-options-${index}`"
+				:class="`key ${keyClass} grow`"
+				@click="ButtonKeyClick(key)"
+			>
+				<span
+					v-if="key.type==='math'"
+					v-katex.clear="key.display"
+				/>
+				<span
+					v-else-if="key.type==='text'"
+					v-katex.auto="key.display"
+				/>
+			</button>
+		</div>
+
+		<!-- keyboard commands -->
+		<div
+			v-if="keyboardCommands.length>0"
+			class="keyboard flex w-full mt-10 gap-3"
+			:class="small?' keyboard-sm':''"
+		>
+			<button
+				v-for="(item, index) of keyboardCommands"
+				:key="`keyboard-command-${index}`"
+				:class="`key ${keyClass} grow ${item.atEnd?'order-last':''}`"
+				@click="item.fn()"
+			>
+				<i :class="item.icon" /> <span class="hidden md:inline md:ml-2">{{ item.label }}</span>
+			</button>
+		</div>
+
+		<!-- keyboard validate (bottom version) -->
+		<div
+			v-if="validate && validateAtBottom"
+			class="keyboard w-full my-3"
+		>
+			<button
+				ref="validateButton"
+				:class="`key-cmd ${keyClass} w-full border-green-700 text-green-600 hover:bg-green-100 hover:border-green-800`"
+				@click="btnValidate.fn()"
+			>
+				<i :class="btnValidate.icon" /> <span class="hidden md:inline md:ml-2">{{ btnValidate.label }}</span>
+			</button>
+		</div>
+	</div>
+</template>
 <style scoped>
 
 </style>

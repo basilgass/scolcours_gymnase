@@ -1,9 +1,9 @@
 <script lang="ts" setup>
-	import KeyboardDisplay from "@/Components/Keyboards/KeyboardDisplay.vue"
-	import { useKeyboard } from "@/Composables/useKeyboard"
-	import { computed, ref } from "vue"
+import KeyboardDisplay from "@/Components/Keyboards/KeyboardDisplay.vue"
+import { useKeyboard } from "@/Composables/useKeyboard"
+import { computed, ref } from "vue"
 
-	// Each keyboards has props
+// Each keyboards has props
 	// props.config: keyboard config, like special letters or other...
 	// props.answer: expected answer
 	let props = defineProps({
@@ -55,7 +55,7 @@
 			// Make the validation.
 			// validation = {result: Boolean, message: string}
 			let validation = { result: false }
-			props.answer.split("|").forEach((anAnswer, index) => {
+			props.answer.split("||").forEach((anAnswer, index) => {
 				if (!validation.result) {
 					validation = {
 						...props.keyboard.checker.check(

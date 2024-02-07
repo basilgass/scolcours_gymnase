@@ -41,6 +41,7 @@ export class PrimitiveChecker extends CheckerBase {
 		if(given.includes("e")){
 			subchk = new ExpChecker(this._config)
 		}else if(given.includes('ln')){
+			console.log('INCLUDE LN')
 			subchk = new LogChecker(this._config)
 		}else{
 			subchk = new PolynomChecker(this._config)
