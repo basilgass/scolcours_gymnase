@@ -15,6 +15,7 @@ export type FormMakerInputsType =
 export interface FormMakerPropsType {
 	fontCode?: boolean;
 	message?: string;
+	messageClass?: string;
 	inlineLabel?: boolean;
 	inputClass?: string;
 	label?: string;

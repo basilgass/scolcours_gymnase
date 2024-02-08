@@ -5,8 +5,8 @@ import { NumExp } from "pimath/esm/maths/numexp"
 import { IllustrationInterface } from "@/types/modelInterfaces"
 
 let props = defineProps({
-		illustration: {type: Object as PropType<IllustrationInterface>, required: true}
-	})
+	illustration: { type: Object as PropType<IllustrationInterface>, required: true }
+})
 
 type bissection = {
 	a: number
@@ -29,13 +29,13 @@ const fxExp = computed<NumExp>(() => {
 })
 
 function fx(value: number): number {
-	if(isNaN(value))return NaN
+	if (isNaN(value)) return NaN
 
 	return fxExp.value.evaluate({ x: value })
 }
 
 function rnd(value: number): number {
-	if(isNaN(value))return 0
+	if (isNaN(value)) return 0
 	return +((+value).toFixed(fixed.value))
 }
 
@@ -67,6 +67,10 @@ function garderLaBorne(borne: "a" | "b"): void {
 	}
 }
 
+const controleAB = computed(()=>{
+	return fx(a.value)*fx(b.value)<0
+})
+
 function commencer() {
 	table.value.push({
 		a: +a.value,
@@ -84,6 +88,23 @@ function recommencer() {
 	b.value = 1
 }
 
+function auto() {
+	commencer()
+	let row = table.value[0]
+	const borneInferieure = row.a < 0 ? "a" : "b",
+		borneSuperieure = row.a < 0 ? "b" : "a"
+
+	while (Math.abs(row.a - row.b) > 0.01) {
+		garderLaBorne(row.fm < 0 ? borneInferieure : borneSuperieure)
+		row = table.value[table.value.length-1]
+
+		// Security trigger
+		if (table.value.length > 20) {
+			break
+		}
+	}
+}
+
 </script>
 
 <template>
@@ -96,8 +117,8 @@ function recommencer() {
 				<form-maker
 					v-model="f"
 					focus
-					label="\(f(x)=\)"
 					inline-label
+					label="\(f(x)=\)"
 				/>
 				<div v-katex.ascii="` = ${f}`" />
 			</div>
@@ -105,11 +126,11 @@ function recommencer() {
 			<div class="flex">
 				<form-maker
 					v-model="a"
-					focus
-					label="\(a=\)"
-					inline-label
-					font-code
 					class="max-w-[150px]"
+					focus
+					font-code
+					inline-label
+					label="\(a=\)"
 				/>
 				<div v-katex="`\\implies f(${a}) = ${fx(a)}`" />
 			</div>
@@ -117,21 +138,30 @@ function recommencer() {
 			<div class="flex">
 				<form-maker
 					v-model="b"
-					focus
-					label="\(b=\)"
-					inline-label
-					font-code
 					class="max-w-[150px]"
+					focus
+					font-code
+					inline-label
+					label="\(b=\)"
 				/>
 				<div v-katex="`\\implies f(${b}) = ${fx(b)}`" />
 			</div>
 
-			<div class="flex justify-center mt-10">
+			<div class="flex gap-4 justify-center mt-10">
 				<button
-					class="btn btn-primary px-10 py-4 text-lg"
+					class="btn btn-primary px-10 py-4 text-lg disabled:bg-gray-300 disabled:text-gray-500"
 					@click="commencer"
+					:disabled="!controleAB"
 				>
 					commencer
+				</button>
+				<button
+					v-admin
+					class="btn btn-primary px-10 py-4 text-lg disabled:bg-gray-300 disabled:text-gray-500"
+					@click="auto"
+					:disabled="!controleAB"
+				>
+					automatique
 				</button>
 			</div>
 		</div>

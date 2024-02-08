@@ -29,6 +29,7 @@ const props = withDefaults(defineProps<FormMakerPropsType>(), {
 	labelClass: "",
 	max: null,
 	message: "",
+	messageClass:"",
 	min: null,
 	modelValue: "",
 	placeholder: "",
@@ -294,6 +295,7 @@ defineExpose({ focus: setFocus })
 
 		<!-- Display a helper message, via default slot -->
 		<markdown-it
+			:class="props.messageClass"
 			v-if="props.message"
 			:text="props.message"
 		/>

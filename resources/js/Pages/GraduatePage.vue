@@ -1,15 +1,15 @@
 <!--suppress ALL -->
-<script>
+<script lang="ts">
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 
 export default {
-	layout: LayoutMain,
+	layout: LayoutMain
 }
 </script>
-<script setup>
+<script lang="ts" setup>
 import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
-import {computed, nextTick, onMounted, ref, watch} from "vue"
-import {PiMath} from "pimath/esm"
+import { computed, nextTick, onMounted, ref, watch } from "vue"
+import { PiMath } from "pimath/esm"
 import BarChart from "@/Components/Charts/barChart.vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 
@@ -17,25 +17,23 @@ let pointsData = ref(""),
 	maxPoints = ref(20),
 	pourcentage = ref(""),
 	pourcentage4 = ref(false),
-	precision = ref(0.5),
-	halfPoints = ref(true),
-	chart = ref(null),
-	chartD = ref(null),
-	showChartD = ref(false)
+	precision = ref(0.5)
 
 // Nouvelle version, plus logique et stable
-let bareme = computed(() => {
-		if (maxPoints.value <= 0) {
-			return null
-		}
+interface baremeInterface {
+	[Key: string]: {
+		pt: number,
+		note: number,
+		centieme: string
+	};
+}
 
-		if (+pourcentage.value < 0) {
-			return null
-		}
+let bareme = computed<baremeInterface>(() => {
+		if (maxPoints.value <= 0) return {}
 
-		if (precision.value <= 0) {
-			return null
-		}
+		if (+pourcentage.value < 0) return {}
+
+		if (precision.value <= 0) return {}
 
 		let pt = 0,
 			result = {}
@@ -53,12 +51,7 @@ let bareme = computed(() => {
 
 		return result
 	}),
-	pointsSorted = computed(() => {
-		let keys = Object.keys(bareme.value)
-		keys = keys.sort((a, b) => +a - b)
-		return keys
-	}),
-	pointsParNote = computed(() => {
+	pointsParNote = computed<{ note: number, pointsMin: number, pointsMax: number }[]>(() => {
 		// returns [
 		//      {note, pointsDe, pointsA}
 		// ]
@@ -71,14 +64,14 @@ let bareme = computed(() => {
 			arr.push({
 				note: i,
 				pointsMin: Math.min(...values),
-				pointsMax: Math.max(...values),
+				pointsMax: Math.max(...values)
 			})
 		}
 
 		return arr
 	})
 
-let calculerLaNote = function (pt) {
+function calculerLaNote(pt: number): number {
 	// échelle fédérale.
 	if (pourcentage.value === "") {
 		return pt / maxPoints.value * 5 + 1
@@ -105,37 +98,36 @@ let calculerLaNote = function (pt) {
 	}
 }
 
-
-
-let listeDesPoints = computed(() => {
-		return pointsData.value.split( " ")
-			.map(pt => Math.min(pt, maxPoints.value))
-			.filter(pt=>bareme.value.hasOwnProperty(pt))
+const listeDesPoints = computed<number[]>(() => {
+		return pointsData.value.split(/\s+/)
+			.filter(pt => pt.trim()!=='' && !isNaN(+pt))
+			.map(pt => Math.min(+pt, maxPoints.value))
+			.filter(pt => bareme.value.hasOwnProperty(pt))
 	}),
-	listeDesPointsAvecErreurs = computed(() => {
-		return pointsData.value.split( " ")
-			.filter(pt=>pt!=="" && !bareme.value.hasOwnProperty(pt))
+	listeDesPointsAvecErreurs = computed<string[]>(() => {
+		return pointsData.value.split(/\s+/)
+			.filter(pt => pt !== "" && !Object.hasOwn(bareme.value, +pt.toString()))
 	}),
-	listeDesNotes = computed(()=>{
+	listeDesNotes = computed<number[]>(() => {
 		return listeDesPoints.value
-			.map(pt=>bareme.value[pt].note)
+			.map(pt => bareme.value[pt].note)
 	}),
-	decompteDesNotes = computed(()=>{
+	decompteDesNotes = computed<number[]>(() => {
 		let arr = []
 
-		for(let i=1; i<=6; i+=0.5){
-			arr.push(listeDesNotes.value.filter(note=>note===i).length)
+		for (let i = 1; i <= 6; i += 0.5) {
+			arr.push(listeDesNotes.value.filter(note => note === i).length)
 		}
 
 		return arr
 	}),
-	moyenneDesNotes = computed(() => {
-		if(listeDesNotes.value.length===0){return "-"}
+	moyenneDesNotes = computed<number | string>(() => {
+		if (listeDesNotes.value.length === 0) return "-"
 
-		return (listeDesNotes.value.reduce((a,b) => a+b) / listeDesNotes.value.length).toFixed(2)
+		return (listeDesNotes.value.reduce((a, b) => a + b) / listeDesNotes.value.length).toFixed(2)
 	}),
-	medianeDesNotes = computed(() => {
-		if(listeDesNotes.value.length===0){return "-"}
+	medianeDesNotes = computed<number | string>(() => {
+		if (listeDesNotes.value.length === 0) return "-"
 
 		// https://stackoverflow.com/questions/45309447/calculating-median-javascript
 		const s = [...listeDesNotes.value].sort((a, b) => a - b)
@@ -145,41 +137,6 @@ let listeDesPoints = computed(() => {
 	})
 
 
-
-
-
-
-
-
-onMounted(() => {
-	// chartDObject = new Chart(chartD.value, {
-	// 	type: "line",
-	// 	data: {
-	// 		labels: [],
-	// 		datasets: [{data: []}],
-	// 	},
-	// 	config: {
-	// 		responsive: true,
-	// 		maintainAspectRatio: false,
-	// 		plugins: {
-	// 			legend: {
-	// 				display: false,
-	// 			},
-	// 		},
-	// 		scales: {
-	// 			x: {
-	// 				type: "linear",
-	// 				min: 0,
-	// 				max: maxPoints.value,
-	// 				ticks: {
-	// 					stepSize: halfPoints.value ? 0.5 : 1,
-	// 				},
-	// 			},
-	// 		},
-	// 	},
-	// })
-})
-
 </script>
 <template>
 	<!-- Title -->
@@ -188,11 +145,12 @@ onMounted(() => {
 	<div class="grid grid-cols-1 md:grid-cols-2 gap-5 items-start">
 		<div class="space-y-5">
 			<form-maker
-				type="number"
 				v-model="maxPoints"
 				focus
 				label="points maximum du test"
 				name="points"
+				type="number"
+				font-code
 			/>
 
 			<div class="flex items-end align-bottom gap-3 flex-grow">
@@ -201,6 +159,7 @@ onMounted(() => {
 					class="grow"
 					label="précision"
 					name="precision"
+					font-code
 					@blur="
 						precision =
 							isNaN(+precision) || +precision <= 0
@@ -235,7 +194,10 @@ onMounted(() => {
 				v-model.number="pourcentage"
 				helper-text="vide pour échelle fédérale"
 				label="pourcentage"
+				font-code
 				name="points"
+				message="laisser vide pour l'échelle fédérale \(\quad \frac{pt}{max}\cdot 5+ 1\)"
+				message-class="text-xs"
 			/>
 		</div>
 
@@ -257,7 +219,7 @@ onMounted(() => {
 						</td>
 					</tr>
 				</thead>
-				<tbody>
+				<tbody v-if="Object.keys(bareme).length > 0">
 					<tr
 						v-for="item in pointsParNote"
 						:key="`range-${item.note}`"
@@ -270,6 +232,16 @@ onMounted(() => {
 						</td>
 					</tr>
 				</tbody>
+				<tbody v-else>
+					<tr class="text-center text-sm text-red-600">
+						<td
+							colspan="3"
+							class="py-5"
+						>
+							Le barème n'a pas pu être créé... merci de vérifier la configuration
+						</td>
+					</tr>
+				</tbody>
 			</table>
 		</div>
 	</div>
@@ -277,18 +249,19 @@ onMounted(() => {
 	<div class="grid grid-cols-1 md:grid-cols-2 gap-5 mt-10">
 		<div>
 			<form-maker
-				type="textarea"
 				v-model="pointsData"
-				:rows="6"
+				:rows="17"
 				helper-text="notes séparées par des espaces, des virgules ou à la ligne."
 				label="liste des points"
 				name="points"
+				type="textarea"
+				font-code
 			/>
 			<div
 				v-show="listeDesPointsAvecErreurs.length>0"
 				class="text-red-600 text-sm"
 			>
-				Il y a un ou des points supérieurs au maximum ({{ listeDesPointsAvecErreurs.join(', ') }})
+				Il y a un ou des points supérieurs au maximum ({{ listeDesPointsAvecErreurs.join(", ") }})
 			</div>
 		</div>
 
