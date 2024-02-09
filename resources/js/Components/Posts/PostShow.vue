@@ -122,18 +122,25 @@ let emits = defineEmits(["change", "destroy"])
 				v-theme.bg.text
 				class="pt-5 px-5 border-b border-gray-200 pb-5 flex flex-col gap-3 lg:flex-row justify-between"
 			>
-				<h2 class="text-xl md:text-3xl xl:text-4xl">
-					<span v-katex.auto="thePost.title" />
-
-					<button
-						v-show="editMode.enabled.value"
-						v-admin
-						class="text-xs ml-3"
-						@click="showEditForm = true"
+				<div>
+					<h2 class="text-xl md:text-3xl xl:text-4xl">
+						<span v-katex.auto="thePost.title" />
+						<button
+							v-show="editMode.enabled.value"
+							v-admin
+							class="text-xs ml-3"
+							@click="showEditForm = true"
+						>
+							<i class="bi bi-pencil mr-2" /> {{ thePost.id }}
+						</button>
+					</h2>
+					<Link
+						class="group"
+						:href="route('chapter.show', props.chapter.slug)"
 					>
-						<i class="bi bi-pencil mr-2" /> {{ thePost.id }}
-					</button>
-				</h2>
+						<i class="bi bi-house mr-1" />{{ props.chapter.title }}
+					</Link>
+				</div>
 				<div
 					class="self-end flex w-full gap-3 lg:w-auto justify-between"
 					v-show="props.isolate || thePost.switch || thePost.script"

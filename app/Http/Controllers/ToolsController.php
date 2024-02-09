@@ -3,17 +3,17 @@
 	namespace App\Http\Controllers;
 
 	use App\Models\Chapter;
-    use App\Models\Theme;
-    use App\Models\Tool;
-    use Illuminate\Http\Request;
-    use Inertia\Inertia;
+	use App\Models\Theme;
+	use App\Models\Tool;
+	use Illuminate\Http\Request;
+	use Inertia\Inertia;
 
-    class ToolsController extends Controller
+	class ToolsController extends Controller
 	{
 		public function index()
 		{
 			$data = ["theme"    => Theme::where('slug', 'tools')->first()];
-			$data['tools'] = Tool::all();
+			$data['tools'] = Tool::orderBy('title')->get();
 			$data['tool'] = null;
 			return Inertia::render("ToolsPage", $data);
 		}
