@@ -56,6 +56,9 @@ const figureClass = computed(() => {
 
 	return "w-full max-w-xl mx-auto"
 })
+function destroyIllustration(id: number) {
+	emits("destroy", id)
+}
 </script>
 
 <template>
@@ -67,6 +70,7 @@ const figureClass = computed(() => {
 			v-if="!preview && editMode.enabled.value"
 			v-admin
 			:illustration="theIllustration"
+			@destroy="destroyIllustration"
 		/>
 
 		<component

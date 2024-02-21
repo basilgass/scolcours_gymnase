@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 /** Tools
  * title: tableau des valeurs d'une fonction
  * body: permet de créer un tableau des valeurs d'une fonction
@@ -23,6 +23,8 @@ let f = ref("2^x"),
 	fixed = ref("2")
 
 let fx = computed(() => {
+		if (f.value === "") return false
+
 		try {
 			return getTableOfValues()
 		} catch (e) {
@@ -30,18 +32,18 @@ let fx = computed(() => {
 		}
 	}),
 	numericParse = ref(true),
-    verticalTable = ref(true),
+	verticalTable = ref(true),
 	isNumeric = computed(() => {
 		return f.value.includes("sin") || f.value.includes("cos") || f.value.includes("tan")
 	}),
-	getTableOfValues = function () {
+	getTableOfValues = function() {
 		let exp
 		if (isNumeric.value || numericParse.value) {
 			exp = new PiMath.NumExp(f.value)
 		} else {
 			try {
 				exp = new PiMath.Polynom(f.value)
-			}catch{
+			} catch {
 				exp = new PiMath.NumExp(f.value)
 			}
 		}
@@ -49,17 +51,16 @@ let fx = computed(() => {
 		let x = new PiMath.Fraction(Math.min(+xMin.value, +xMax.value)),
 			vMax = new PiMath.Fraction(Math.max(+xMin.value, +xMax.value)),
 			vStep = +step.value === 0 ? 1 : +step.value,
-			vFixed = Math.max(1, Math.min(5, +fixed.value)),
 			data = [],
 			securityIncrement = 0
 
 		while (x.value <= vMax.value) {
 			let v
-			if(exp instanceof Polynom){
+			if (exp instanceof Polynom) {
 				v = exp.evaluate(x)
-			}else{
+			} else {
 				v = {
-					value: exp.evaluate({x: x.value}),
+					value: exp.evaluate({ x: x.value }),
 					tex: ""
 				}
 			}
@@ -94,16 +95,17 @@ let fx = computed(() => {
 		/>
 
 		<form-maker
-			type="switch"
-			name="numericParse"
-			label="calcul numérique"
 			v-model="numericParse"
-		/>
-		<form-maker
+			label="calcul numérique"
+			name="numericParse"
 			type="switch"
-			name="veritcalTable"
-			label="Mode veritcal"
+		/>
+
+		<form-maker
 			v-model="verticalTable"
+			label="Mode veritcal"
+			name="veritcalTable"
+			type="switch"
 		/>
 
 		<div class="flex gap-3">
@@ -219,12 +221,12 @@ let fx = computed(() => {
 								class=" border border-gray-500 min-w-[5em]"
 							>
 								<td
-									class="border-r border-gray-500 px-3"
 									v-katex="`${v.x}`"
+									class="border-r border-gray-500 px-3"
 								/>
 								<td
-									class="px-3"
 									v-katex="`${v.fx}`"
+									class="px-3"
 								/>
 								<td />
 							</tr>
@@ -232,8 +234,8 @@ let fx = computed(() => {
 					</table>
 				</div>
 				<div
-					class="overflow-x-auto w-full mt-10 mb-3"
 					v-else
+					class="overflow-x-auto w-full mt-10 mb-3"
 				>
 					<table class="mb-3">
 						<thead class="border-b border-gray-500 bg-gray-200">

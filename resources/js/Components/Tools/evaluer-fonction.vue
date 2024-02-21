@@ -21,17 +21,21 @@ let fx = computed(() => {
 			data = {
 				x: "",
 				fx: "",
+				frac: null,
 				value: null
 			}
 		if (x.value === "") {
 			data.x = "x"
 			data.fx = FX.tex
+			data.frac = null
 			data.value = null
 		} else {
 			let fB = new PiMath.Fraction(x.value)
 			data.x = fB.tex
 			data.fx = FX.tex.replace(/x/g, `\\left(${x.value}\\right)`)
-			data.value = FX.evaluate(fB).tex
+			const value = FX.evaluate(fB)
+			data.frac = value.tex
+			data.value = value.value
 		}
 
 		return data
@@ -63,7 +67,7 @@ let fx = computed(() => {
 
 		<div class="h-24 flex items-center justify-center">
 			<div v-if="fx">
-				<div v-katex="`f\\left(${fx.x}\\right) = ${fx.fx} ${fx.value?'='+fx.value:''}`" />
+				<div v-katex="`f\\left(${fx.x}\\right) = ${fx.fx} ${fx.frac?'='+fx.frac:''} ${fx.value?'='+fx.value:''}`" />
 			</div>
 			<div
 				v-else

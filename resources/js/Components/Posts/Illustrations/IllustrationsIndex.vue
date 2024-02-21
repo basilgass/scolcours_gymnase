@@ -1,5 +1,5 @@
-<script setup lang="ts">
-import { computed, inject, ref } from "vue"
+<script lang="ts" setup>
+import { computed, inject, PropType, ref } from "vue"
 import IllustrationShow from "@/Components/Posts/Illustrations/IllustrationShow.vue"
 import axios from "axios"
 import { editModeInterface, flashInterface } from "@/types"
@@ -7,93 +7,92 @@ import { IllustrationInterface } from "@/types/modelInterfaces"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 
 const props = defineProps({
-		illustrations: { type: Array, required: true },
-		containerType: { type: String, required: true },
-		containerId: { type: Number, required: true },
-		grid: { type: String, default: null },
-	})
+	illustrations: { type: Array as PropType<IllustrationInterface[]>, required: true },
+	containerType: { type: String, required: true },
+	containerId: { type: Number, required: true },
+	grid: { type: String, default: null }
+})
 
-	const flash = inject<flashInterface>("flash"),
-		editMode = inject<editModeInterface>("editMode")
+const flash = inject<flashInterface>("flash"),
+	editMode = inject<editModeInterface>("editMode")
 
-	const theIllustrations = ref(props.illustrations)
+const theIllustrations = ref(props.illustrations)
 
-	const illustrationsCustomGrid = ref(props.grid)
-	const illustrationsGridClass = computed(() => {
-		if (illustrationsCustomGrid.value) {
-			return illustrationsCustomGrid.value
-		}
-
-		let grid = "grid grid-cols-1"
-
-		if (theIllustrations.value.length === 2) {
-			grid += " xl:grid-cols-2"
-		} else if (theIllustrations.value.length >= 3) {
-			grid += " md:grid-cols-2 xl:grid-cols-3"
-		}
-
-		return grid
-	})
-	const updateIllustrationsGrid = function () {
-		axios
-			.patch(
-				route("blocks.updateIllustrationsGrid", [props.containerId]),
-				{
-					_method: "PATCH",
-					grid: illustrationsCustomGrid.value,
-				},
-			)
-			.then((res) => {
-				flash.success("la grille a bien été mise à jour !")
-			})
-			.catch((res) => {
-				flash.error("la grille n'a pas pu être mise à jour !")
-			})
+const illustrationsCustomGrid = ref(props.grid)
+const illustrationsGridClass = computed(() => {
+	if (illustrationsCustomGrid.value) {
+		return illustrationsCustomGrid.value
 	}
 
-	const addIllustration = function () {
-			axios
-				.post(
-					route("blocks.illustrations.store", [props.containerId]),
-					{},
-				)
-				.then((res) => {
-					res.data.isNew = true
-					theIllustrations.value.push(res.data)
-					// edit the new illustration.
+	let grid = "grid grid-cols-1"
 
-					flash.success("une nouvelle illustration a été créée")
-				})
-		},
-		updateIllustrationsOrder = function () {
-			axios
-				.post(
-					route("blocks.illustrations.order", [props.containerId]),
-					{
-						order: theIllustrations.value.map(
-							(illustration: IllustrationInterface, index) => {
-								return {
-									id: illustration.id,
-									order: index + 1,
-								}
-							},
-						),
-						_method: "PATCH",
-					},
-				)
-				.then((res) => {
-					// TODO : flash message !
-					flash.success("les illustrations ont bien été réordrées !")
-				})
-				.catch((res) =>
-					console.warn("update ordering illustrations: ", res),
-				)
-		},
-		destroyIllustration = function (destroyId) {
-			theIllustrations.value = theIllustrations.value.filter(
-				(x: IllustrationInterface) => x.id !== destroyId,
+	if (theIllustrations.value.length === 2) {
+		grid += " xl:grid-cols-2"
+	} else if (theIllustrations.value.length >= 3) {
+		grid += " md:grid-cols-2 xl:grid-cols-3"
+	}
+
+	return grid
+})
+const updateIllustrationsGrid = function() {
+	axios
+		.patch(
+			route("blocks.updateIllustrationsGrid", [props.containerId]),
+			{
+				_method: "PATCH",
+				grid: illustrationsCustomGrid.value
+			}
+		)
+		.then(() => {
+			flash.success("la grille a bien été mise à jour !")
+		})
+		.catch(() => {
+			flash.error("la grille n'a pas pu être mise à jour !")
+		})
+}
+
+const addIllustration = function() {
+		axios
+			.post(
+				route("blocks.illustrations.store", [props.containerId]),
+				{}
 			)
-		}
+			.then((res) => {
+				res.data.isNew = true
+				theIllustrations.value.push(res.data)
+				// edit the new illustration.
+
+				flash.success("une nouvelle illustration a été créée")
+			})
+	},
+	updateIllustrationsOrder = function() {
+		axios
+			.post(
+				route("blocks.illustrations.order", [props.containerId]),
+				{
+					order: theIllustrations.value.map(
+						(illustration: IllustrationInterface, index) => {
+							return {
+								id: illustration.id,
+								order: index + 1
+							}
+						}
+					),
+					_method: "PATCH"
+				}
+			)
+			.then(() => {
+				flash.success("les illustrations ont bien été réordonées !")
+			})
+			.catch((res) =>
+				console.warn("update ordering illustrations: ", res)
+			)
+	},
+	destroyIllustration = function(destroyId) {
+		theIllustrations.value = theIllustrations.value.filter(
+			(x: IllustrationInterface) => x.id !== destroyId
+		)
+	}
 </script>
 
 <template>
@@ -112,12 +111,12 @@ const props = defineProps({
 			</div>
 			<div class="mt-5 flex gap-3">
 				<form-maker
-					label="Gestion de la grille"
-					inline-label
 					v-model="illustrationsCustomGrid"
-					sm
-					font-code
 					class="flex-1"
+					font-code
+					inline-label
+					label="Gestion de la grille"
+					sm
 					@enter="updateIllustrationsGrid"
 				/>
 				<button

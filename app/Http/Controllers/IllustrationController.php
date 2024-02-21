@@ -47,7 +47,8 @@ class IllustrationController extends Controller
 			'type'=>'',
 			'widget_id' => $widget->id
 		]);
-		return $illustration;
+
+		return Illustration::find($illustration->id);
 	}
 
 	/**

@@ -48,6 +48,7 @@ const editForm = computed(() => {
 				:is="editForm"
 				v-model="showEditForm"
 				:illustration="props.illustration"
+				@destroy="emits('destroy', theIllustration.id)"
 			/>
 		</div>
 	</div>

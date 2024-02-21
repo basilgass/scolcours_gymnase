@@ -225,7 +225,7 @@ code: texte séparé par %STEP
 			v-katex.auto="step?.title"
 			class="font-semibold"
 		/>
-		<markdown-it :text="step.body" />
+		<markdown-it :text="step?.body" />
 		<div class="flex justify-between">
 			<button
 				v-theme.btn

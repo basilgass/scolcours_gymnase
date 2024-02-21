@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import { computed, onMounted, PropType, reactive, ref } from "vue"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 import FormImageDrop from "@/Components/Form/FormImageDrop.vue"
@@ -18,14 +18,29 @@ let props = defineProps({
 })
 
 const show = defineModel<boolean>()
-const theIllustration = ref<IllustrationInterface>(props.illustration )
+const theIllustration = ref<IllustrationInterface>(props.illustration)
 
-const chapterComponents = ref<{[Key: string]: widgetInterface}>({})
-function toggleComponent (component:widgetInterface) {
+const chapterComponents = ref<{ [Key: string]: widgetInterface }>({})
+const currentComponent = computed(() => {
+	return chapterComponents.value[theIllustration.value.widget.id] !== undefined ?
+		chapterComponents.value[theIllustration.value.widget.id]
+		: {
+			id: -1,
+			name: " ? ",
+			slug: null,
+			component: null,
+			theme_id: null,
+			description: "module inconnu",
+			control: false
+		}
+})
+
+function toggleComponent(component: widgetInterface) {
 	theIllustration.value.widget_id = component.id
 	theIllustration.value.widget = component
 	emit("change", theIllustration)
 }
+
 function imageFileDropped(e) {
 	theIllustration.value.code = e
 	emit("change", theIllustration.value)
@@ -36,7 +51,10 @@ function loadComponents() {
 	axios
 		.get(route("widgets.components"))
 		.then((res) => {
-			chapterComponents.value = res.data
+			(res.data as Array<widgetInterface>).forEach(comp => {
+				chapterComponents.value[comp.id] = comp
+			})
+
 		})
 		.catch((err) => console.warn(err))
 }
@@ -95,10 +113,6 @@ let currentLine = ref(""),
 	})
 
 
-function updateIllustration(illustration: IllustrationInterface) {
-	theIllustration.value = illustration
-}
-
 let saveIllustration = function() {
 		axios
 			.post(route("illustrations.update", [theIllustration.value.id]), {
@@ -107,6 +121,7 @@ let saveIllustration = function() {
 			})
 			.then((res) => {
 				emit("change", res.data)
+				show.value = false
 			})
 			.catch((error) => {
 				console.error(error)
@@ -119,6 +134,7 @@ let saveIllustration = function() {
 			})
 			.then(() => {
 				emit("destroy", props.illustration.id)
+				show.value = false
 			})
 			.catch((error) => console.error(error))
 	},
@@ -195,15 +211,15 @@ onMounted(() => {
 			<div class="px-5 border-b">
 				<!-- sélection du widget -->
 				<h3 class="font-semibold">
-					Sélectionner le module: {{ chapterComponents[theIllustration.value]?.name }}
+					Sélectionner le module: {{ currentComponent.name }}
 				</h3>
 				<div class="text-xs flex gap-2 flex-wrap px-3 py-2">
 					<button
 						v-for="(data, comp) of chapterComponents"
 						:key="comp"
 						v-theme.btn="data.theme_id"
-						class="btn btn-xs transition-all"
 						:class="theIllustration.widget.id === data.id ? 'font-semibold border-2 shadow scale-110' : ''"
+						class="btn btn-xs transition-all"
 						@click="toggleComponent(data)"
 					>
 						{{ data.name }}
@@ -219,14 +235,15 @@ onMounted(() => {
 					<div class="grid grid-cols-1 gap-3">
 						<!-- image illustration -->
 						<div
-							v-if="chapterComponents[theIllustration.widget.id]?.component === 'image-widget.vue'"
+							v-if="currentComponent?.component === 'image-widget.vue'"
 							class="col-span-2 mb-5"
 						>
 							<form-image-drop @file-dropped="imageFileDropped" />
 						</div>
+
 						<!-- draw illustration -->
 						<div
-							v-else-if="chapterComponents[theIllustration.widget.id]?.component === 'draw-parser-widget.vue'"
+							v-else-if="currentComponent?.component === 'draw-parser-widget.vue'"
 							class="col-span-2 w-full"
 						>
 							<div class="mb-3">
@@ -291,8 +308,8 @@ onMounted(() => {
 								type="code"
 							/>
 							<markdown-it
-								v-if="chapterComponents[theIllustration.widget.id]"
-								:text="chapterComponents[theIllustration.widget.id].description"
+								v-if="currentComponent"
+								:text="currentComponent.description"
 								class="font-code text-xs min-h-[3em] bg-gray-200"
 							/>
 						</div>
@@ -309,16 +326,16 @@ onMounted(() => {
 				<form-maker
 					v-model="theIllustration.title"
 					inline
-					sm
 					label="nom de la figure"
+					sm
 				/>
 
 				<form-maker
 					v-model="theIllustration.css"
 					class="font-code"
 					inline
-					sm
 					label="css"
+					sm
 				/>
 			</div>
 		</div>
