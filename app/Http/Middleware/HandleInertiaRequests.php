@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Http\Resources\UserResource;
 use App\Models\Theme;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -35,9 +36,13 @@ class HandleInertiaRequests extends Middleware
 	 */
 	public function share(Request $request)
 	{
+		$user = null;
+		if($request->user()){
+			$user = UserResource::make($request->user())->resolve();
+		}
 		return array_merge(parent::share($request), [
 			'auth' => [
-				'user' => $request->user(),
+				'user' => $user,
 				'can' => [
 					'admin' => $request->user()?->admin
 				]

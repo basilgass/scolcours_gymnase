@@ -13,4 +13,7 @@ Route::middleware("can:admin")->group(function () {
 		->withoutScopedBindings()
 		->name('teams.chapters.stats');
 
+	Route::get('team/{team:name}/stats2/{chapter:slug}', [\App\Http\Controllers\TeamController::class, "statsByUser"])
+		->withoutScopedBindings();
+
 });

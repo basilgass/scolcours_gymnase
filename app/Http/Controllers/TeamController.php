@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\ChallengeResource;
 use App\Http\Resources\ChapterMinResource;
+use App\Http\Resources\TeamResource;
 use App\Http\Resources\UserResource;
 use App\Models\Challenge;
 use App\Models\Chapter;
@@ -17,17 +18,18 @@ class TeamController extends Controller
 	public function index()
 	{
 		return Inertia::render("Teams/TeamsIndex", [
-			'teams'=> Team::all()
+			'teams' => Team::all()
 		]);
 	}
+
 	public function show(Team $team)
 	{
 		return Inertia::render("Teams/TeamsShow",
 			[
 				'team' => $team,
-				'students'=>UserResource::collection($team->users),
-				'chapters'=>ChapterMinResource::collection(Chapter::where('active', true)->get()),
-				'challenges' =>ChallengeResource::collection(Challenge::all()),
+				'students' => UserResource::collection($team->users),
+				'chapters' => ChapterMinResource::collection(Chapter::where('active', true)->get()),
+				'challenges' => ChallengeResource::collection(Challenge::all()),
 			]
 		);
 	}
@@ -51,17 +53,19 @@ class TeamController extends Controller
 	public function toggle(User $user, Team $team): array
 	{
 		$updatedTeam = $team->name;
-		if ($user->team?->id === $team->id) {
-			$user->team()->dissociate();
+
+		if ($user->teams->contains($team->id)) {
+			$user->teams()->detach($team->id);
 			$updatedTeam = null;
 		} else {
-			$user->team()->associate($team);
+			$user->teams()->attach($team);
 		}
 		$user->save();
+		$user->refresh();
 
 		return [
 			"user" => $user->id,
-			"team" => $updatedTeam
+			"teams" => $user->teams,
 		];
 	}
 
@@ -79,55 +83,61 @@ class TeamController extends Controller
 
 	public function stats(Team $team, Chapter $chapter)
 	{
-		// Get all users that has answered a question from this chapter.
-		// 1. Filter the users to match a "classroom"
-		// 2. For all users, get the "most advanced" exercise, the percentage of resolving, ...
-		// 3. display the result
+		/**
+		 * for the chapter, get all the posts
+		 * for each post, get all the questions
+		 * for each question, get all the users from the team that have answered
+		 */
 
-		// Doit récupérer les utilisateurs du "groupe/classe"
-		$users = $team->users;
-		$users_id = $users->map(fn($user) => $user->id);
+		// Users
+		$users_id = $team->users->pluck('id');
 
 		$stats = [];
-		foreach ($chapter->posts as $post) {
-			if (count($post->questions) > 0) {
-				$stats[$post->id] = [
-					'title' => $post->title,
-					'type' => $post->type,
-					'questions' => $post->questions->map(function ($question) use ($users_id) {
-						/** Chaque question doit contenir
-						 * id et body (pour l'affichage et l'unicité)
-						 * resolved: le nombre d'utilisateurs du groupe ayant répondu correctement
-						 * answers: le nombre de réponses moyenne par utilisateur nécessaire pour répondre à la question
-						 */
 
-						// Liste des utilisateurs du groupe qui ont répondu à cette question
-						$filteredUsers = $question->users->whereIn('id', $users_id);
+		// Get in one request all the questions from the chapter
+		$data = $chapter
+			->posts()
+			->with('questions.users')
+			->whereHas('questions')
+			->get();
 
-						$answers = $filteredUsers->countBy(function ($user) {
-							return $user->id;
-						});
+		foreach($data as $post) {
+			$stat = [
+				"id" => $post->id,
+				"title" => $post->title,
+				"type" => $post->type,
+				"questions" => []
+			];
 
-						return [
-							'id' => $question->id,
-							'body' => $question->body,
-							'resolved' => $filteredUsers->where('pivot.result', 1)->count(),
-							'answers' => [
-								'min' => $answers->min(),
-								'max' => $answers->max(),
-								'average' => $answers->average()
-							]
-						];
+
+			foreach ($post->questions as $question){
+				$statQuestion = [
+					"id" => $question->id,
+					"users" => []
+				];
+
+				// Initialise the users
+				foreach ($users_id as $user_id){
+					$statQuestion["users"][$user_id] = null;
+				}
+
+				foreach ($question->users as $user){
+					if($users_id->contains($user->id)){
+						$statQuestion["users"][$user->id] = $user->pivot->result;
 					}
-					)];
+				}
+				$stat["questions"][] = $statQuestion;
 			}
+
+			$stats[] = $stat;
 		}
+
 		return Inertia::render(
 			'Admin/AdminStatsShow',
 			[
-				"team" => $team,
-				"chapter" => $chapter,
-				"users" => $users->count(),
+				"theme" => $chapter->theme,
+				"team" => TeamResource::make($team),
+				"chapter" => ChapterMinResource::make($chapter)->resolve(),
 				"stats" => $stats
 			]
 		);

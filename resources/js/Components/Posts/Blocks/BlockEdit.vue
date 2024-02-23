@@ -129,7 +129,8 @@ const deleteBlock = function() {
 					class="btn-delete btn-xs"
 					@confirm="deleteBlock"
 				>
-					supprimer
+					<i class="bi bi-trash" />
+					<span class="hidden ml-2 md:inline">supprimer</span>
 				</confirm-button>
 
 				<button class="draggable-handle text-xs px-1">

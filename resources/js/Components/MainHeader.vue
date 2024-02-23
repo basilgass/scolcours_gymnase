@@ -2,12 +2,12 @@
 En-tête principal, sensible au thème
 -->
 <script setup>
-	import { inject, ref } from "vue"
-	import MainAside from "@/Components/MainAside.vue"
-	import DropdownMenu from "@/Components/Ui/DropdownMenu.vue"
-	import LogoutButton from "@/Components/Ui/LogoutButton.vue"
+import { inject, ref } from "vue"
+import MainAside from "@/Components/MainAside.vue"
+import DropdownMenu from "@/Components/Ui/DropdownMenu.vue"
+import LogoutButton from "@/Components/Ui/LogoutButton.vue"
 
-	defineProps({
+defineProps({
 		theme: { type: Object, required: true },
 	})
 
@@ -21,12 +21,18 @@ En-tête principal, sensible au thème
 	})
 </script>
 <template>
-	<header :class="`bg-scolcours-${theme.slug}`" class="shadow text-white">
+	<header
+		:class="`bg-scolcours-${theme.slug}`"
+		class="shadow text-white"
+	>
 		<MainAside />
 
 		<div class="scolcours-container py-6 flex justify-between items-center">
 			<div class="text-lg md:text-xl lg:text-3xl flex gap-5">
-				<Link href="/" class="relative min-w-[1em]">
+				<Link
+					href="/"
+					class="relative min-w-[1em]"
+				>
 					<i class="absolute inset bi bi-house cursor-pointer" />
 					<i
 						class="absolute inset bi bi-house-fill cursor-pointer text-transparent hover:text-white transition-all duration-500"
@@ -43,12 +49,15 @@ En-tête principal, sensible au thème
 
 			<div class="flex gap-8 items-center">
 				<!-- utilisateur connecté -->
-				<div v-if="$page.props.auth.user" class="flex">
+				<div
+					v-if="$page.props.auth.user"
+					class="flex"
+				>
 					<dropdown-menu>
 						<template #button>
 							<span class="text-lg">
 								<i class="bi bi-person-fill mr-1" />
-								{{ $page.props.auth.user.name }}
+								{{ $page.props.auth.user.fullname }}
 							</span>
 						</template>
 
@@ -76,7 +85,10 @@ En-tête principal, sensible au thème
 			</div>
 		</div>
 		<!-- ligne administration -->
-		<div v-admin class="bg-slate-600 py-3">
+		<div
+			v-admin
+			class="bg-slate-600 py-3"
+		>
 			<div
 				class="scolcours-container flex justify-between items-baseline"
 			>
@@ -100,8 +112,7 @@ En-tête principal, sensible au thème
 					</span>
 					<span v-show="!editMode.enabled.value">
 						<i class="bi bi-pencil mr-2" />
-						<span>activer l'édition</span></span
-					>
+						<span>activer l'édition</span></span>
 				</button>
 			</div>
 		</div>

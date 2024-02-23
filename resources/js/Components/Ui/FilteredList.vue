@@ -1,5 +1,7 @@
 <script setup>
 import { computed, ref } from "vue"
+import FormMaker from "@/Components/Form/FormMaker.vue"
+import { router } from "@inertiajs/vue3"
 
 const props = defineProps({
 		title: { type: String, required: true },
@@ -12,7 +14,7 @@ const props = defineProps({
 		collapsed: { type: Boolean, default: null },
 	})
 
-	let filteredList = computed(() => {
+	const filteredList = computed(() => {
 			const checkString = selectedList.value.trim().toLowerCase()
 
 			if (checkString === "") {
@@ -24,10 +26,15 @@ const props = defineProps({
 					.filter((x) => typeof x === "string")
 					.some((x) => x.toLowerCase().includes(checkString)),
 			)
-		}),
-		selectedList = ref("")
+		})
+const selectedList = ref("")
+	const showList = ref(props.collapsed !== true)
 
-	let showList = ref(props.collapsed !== true)
+function itemClicked(item) {
+		if (props.routeName) {
+			router.visit(route(props.routeName, props.routeData(item)))
+		}
+	}
 </script>
 <template>
 	<div>
@@ -49,6 +56,7 @@ const props = defineProps({
 				class="mb-5"
 				name="chapter-list"
 			/>
+
 			<div
 				class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-3"
 			>
@@ -66,24 +74,11 @@ const props = defineProps({
 						<div
 							v-else
 							v-theme.bg.text="props.itemBackground(item)"
-							:class="props.itemClass"
+							:class="props.itemClass + (props.routeName ? ' cursor-pointer' : '')"
 							class="p-4 border border-gray-200 rounded hover:scale-105 hover:shadow transition-all h-full"
-						>
-							<Link
-								v-if="props.routeName !== ''"
-								v-katex.auto="props.itemTitle(item)"
-								:href="
-									route(
-										props.routeName,
-										props.routeData(item),
-									)
-								"
-							/>
-							<div
-								v-else
-								v-katex.auto="props.itemTitle(item)"
-							/>
-						</div>
+							@click="itemClicked(item)"
+							v-katex.auto="props.itemTitle(item)"
+						/>
 					</div>
 				</transition-group>
 			</div>

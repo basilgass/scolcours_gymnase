@@ -1,7 +1,7 @@
 <script>
-	import LayoutMain from "@/Layouts/LayoutMain.vue"
+import LayoutMain from "@/Layouts/LayoutMain.vue"
 
-	export default {
+export default {
 		layout: LayoutMain,
 	}
 </script>
@@ -26,7 +26,7 @@
 			:item-title="(item) => item.name"
 			:list="props.students.data"
 			item-class="bg-white"
-			title="étudiants"
+			:title="`${props.students.data.length} étudiants`"
 		>
 			<template #card="{ item }">
 				<div

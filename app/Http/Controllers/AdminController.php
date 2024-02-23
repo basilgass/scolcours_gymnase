@@ -31,10 +31,10 @@ class AdminController extends Controller
 		$scolcours = Cache::get('scolcours');
 
 		return Inertia::render('Admin/AdminConfig',
-		[
-			"title" => $scolcours->title,
-			"allThemes" => Theme::orderBy('order')->get()
-		]
+			[
+				"title" => $scolcours->title,
+				"allThemes" => Theme::orderBy('order')->get()
+			]
 		);
 	}
 
@@ -42,10 +42,10 @@ class AdminController extends Controller
 	{
 		// Validation
 		$validation = $request->validate([
-			'title'=>['string', 'min:2'],
-			'themes'=>['array'],
-			'themes.*.slug'=>['string', 'exists:App\Models\Theme,slug'],
-			'themes.*.enabled'=>['boolean'],
+			'title' => ['string', 'min:2'],
+			'themes' => ['array'],
+			'themes.*.slug' => ['string', 'exists:App\Models\Theme,slug'],
+			'themes.*.enabled' => ['boolean'],
 		]);
 
 		$scolcours = Scolcours::find(1);
@@ -54,7 +54,7 @@ class AdminController extends Controller
 
 		Cache::delete('scolcours');
 
-		foreach($validation['themes'] as $theme){
+		foreach ($validation['themes'] as $theme) {
 			$model = Theme::where('slug', $theme["slug"])->first();
 			$model->enabled = $theme['enabled'];
 			$model->save();
@@ -68,12 +68,12 @@ class AdminController extends Controller
 		$validation = $request->validate([
 			'order' => ['array'],
 			'order.*.id' => ['exists:App\Models\Theme'],
-			 'order.*.order' => ['int', 'min:1'],
+			'order.*.order' => ['int', 'min:1'],
 		]);
 
-		foreach ($validation['order'] as $value ){
+		foreach ($validation['order'] as $value) {
 			Theme::find($value['id'])->update([
-				'order'=>$value['order']
+				'order' => $value['order']
 			]);
 		}
 
@@ -118,73 +118,6 @@ class AdminController extends Controller
 				})
 			]
 		);
-	}
-
-	public function widgets()
-	{
-
-		return Inertia::render(
-			'Admin/AdminWidgetsShow', [
-			"widgets" => Widget::all()
-		]);
-	}
-
-	public function users()
-	{
-		return Inertia::render(
-			'Admin/AdminUsersShow', [
-			"users" => UserResource::collection(User::all()),
-			"teams" => Team::all()
-		]);
-	}
-
-	public function createUsers(Request $request)
-	{
-		$validation = $request->validate([
-			"users" => ['required'],
-			"users.*" => ['email'],
-			'password' => ['required', 'string', 'min:6']
-		]);
-
-		foreach ($validation['users'] as $email) {
-			User::create([
-				'name' => explode("@", $email)[0],
-				'email' => $email,
-				'password' => Hash::make($validation['password']),
-			]);
-		}
-
-		return redirect(route('admin.users'));
-	}
-
-	public function destroyUser(User $user)
-	{
-		$user->delete();
-		return true;
-	}
-
-	// TODO Remove loadChapters from AdminController
-	public function loadChapters()
-	{
-		// Detect all chapters and create "empty one", disabled by default.
-		foreach (Theme::all() as $theme) {
-			foreach (Storage::disk('chapters')->directories($theme->slug) as $chapter) {
-				$slug = explode('/', $chapter)[1];
-
-				// Check if the chapter exists.
-				$chapter = Chapter::where('slug', $slug)->first();
-
-				if (!$chapter) {
-					$chapter = Chapter::create([
-						'theme_id' => $theme->id,
-						'title' => $slug,
-						'slug' => $slug,
-//						'body' => 'Aucun extrait...'
-					]);
-					$chapter->blocks()->create();
-				}
-			}
-		}
 	}
 
 	public function loadTools()
@@ -244,7 +177,87 @@ class AdminController extends Controller
 		}
 	}
 
+	public function widgets()
+	{
+
+		return Inertia::render(
+			'Admin/AdminWidgetsShow', [
+			"widgets" => Widget::all()
+		]);
+	}
+
+	public function users()
+	{
+		return Inertia::render(
+			'Admin/AdminUsersShow', [
+			"users" => UserResource::collection(User::all())->resolve(),
+			"teams" => Team::all()
+		]);
+	}
+
+	public function createUsers(Request $request)
+	{
+		$validation = $request->validate([
+			"users" => ['required'],
+			"users.*" => ['email'],
+			'password' => ['required', 'string', 'min:6']
+		]);
+
+		foreach ($validation['users'] as $email) {
+			$username = explode("@", $email)[0];
+			$firstname_name = explode(".", $username);
+			if (count($firstname_name) == 1) {
+				$firstname = null;
+				$name = $firstname_name[0];
+			} else {
+				$firstname = $firstname_name[0];
+				$name = $firstname_name[1];
+			}
+
+			User::create([
+				'name' => ucwords($name),
+				'firstname' => ucwords($firstname ?? ""),
+				'email' => $email,
+				'password' => Hash::make($validation['password']),
+			]);
+		}
+
+		return redirect(route('admin.users'));
+	}
+
+	// TODO Remove loadChapters from AdminController
+
+	public function destroyUser(User $user)
+	{
+		$user->delete();
+		return true;
+	}
+
+	public function loadChapters()
+	{
+		// Detect all chapters and create "empty one", disabled by default.
+		foreach (Theme::all() as $theme) {
+			foreach (Storage::disk('chapters')->directories($theme->slug) as $chapter) {
+				$slug = explode('/', $chapter)[1];
+
+				// Check if the chapter exists.
+				$chapter = Chapter::where('slug', $slug)->first();
+
+				if (!$chapter) {
+					$chapter = Chapter::create([
+						'theme_id' => $theme->id,
+						'title' => $slug,
+						'slug' => $slug,
+//						'body' => 'Aucun extrait...'
+					]);
+					$chapter->blocks()->create();
+				}
+			}
+		}
+	}
+
 	// TODO Remove loadChallenges from AdminController
+
 	public function loadChallenges()
 	{
 		foreach (Theme::all() as $theme) {
@@ -310,70 +323,14 @@ class AdminController extends Controller
 		return redirect()->route('admin.pages');
 	}
 
-	public function usersStats(Chapter $chapter)
+
+	public function illustrations()
 	{
-		//TODO: usersstats : should be move somewhere else.. in a specific controller.
-
-		// Get all users that has answered a question from this chapter.
-		// 1. Filter the users to match a "classroom"
-		// 2. For all users, get the "most advanced" exercise, the percentage of resolving, ...
-		// 3. display the result
-
-		// Doit récupérer les utilisateurs du "groupe/classe"
-		$users = User::all();
-		$users_id = $users->map(fn($user) => $user->id);
-
-		$stats = [];
-		foreach ($chapter->posts as $post) {
-			$stats[$post->id] = [
-				'title' => $post->title,
-				'type' => $post->type,
-				'questions' => $post->questions->map(function ($question) use ($users_id) {
-					/** Chaque question doit contenir
-					 * id et body (pour l'affichage et l'unicité)
-					 * resolved: le nombre d'utilisateurs du groupe ayant répondu correctement
-					 * answers: le nombre de réponses moyenne par utilisateur nécessaire pour répondre à la question
-					 */
-
-					// Liste des utilisateurs du groupe qui ont répondu à cette question
-					$filteredUsers = $question->users->whereIn('id', $users_id);
-
-					$answers = $filteredUsers->countBy(function ($user) {
-						return $user->id;
-					});
-
-					return [
-						'id' => $question->id,
-						'body' => $question->body,
-						'resolved' => $filteredUsers->where('pivot.result', 1)->count(),
-						'answers' => [
-							'min' => $answers->min(),
-							'max' => $answers->max(),
-							'average' => $answers->average()
-						]
-					];
-				}
-				)];
-		}
-
 		return Inertia::render(
-			'Admin/AdminStatsShow',
+			'Admin/AdminIllustrations',
 			[
-				"chapter" => $chapter,
-				"users" => $users->count(),
-				"questions" => $chapter->questions,
-				"stats" => $stats
+				'illustrations' => Illustration::where('type', "=", "draw")->get()
 			]
 		);
 	}
-
-    public function illustrations()
-    {
-        return Inertia::render(
-            'Admin/AdminIllustrations',
-            [
-                'illustrations'=>Illustration::where('type', "=", "draw")->get()
-            ]
-        );
-    }
 }

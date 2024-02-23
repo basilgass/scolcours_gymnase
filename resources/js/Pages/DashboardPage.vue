@@ -1,5 +1,21 @@
+<script>
+import LayoutMain from "@/Layouts/LayoutMain.vue"
+
+export default {
+	layout: LayoutMain
+}
+</script>
+
+<script setup>
+import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
+
+let props = defineProps({
+	courses: {type: Object, required: true}
+})
+
+</script>
 <template>
-	<ArticleTitle :title="`profil de ${$page.props.auth.user.name}`" />
+	<ArticleTitle :title="`profil de ${$page.props.auth.user.fullname}`" />
 
 	<div
 		v-admin
@@ -35,19 +51,3 @@
 		</div>
 	</div>
 </template>
-
-<script>
-import LayoutMain from "@/Layouts/LayoutMain.vue"
-
-export default {
-	layout: LayoutMain
-}
-</script>
-<script setup>
-import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
-
-let props = defineProps({
-	courses: {type: Object, required: true}
-})
-
-</script>

@@ -7,7 +7,6 @@ import FormMaker from "@/Components/Form/FormMaker.vue"
 import { IllustrationInterface, widgetInterface } from "@/types/modelInterfaces.js"
 import axios from "axios"
 import DialogModal from "@/Components/Ui/DialogModal.vue"
-import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
 import IllustrationShow from "@/Components/Posts/Illustrations/IllustrationShow.vue"
 
 const emit = defineEmits(["change", "inputFocus", "destroy"])
@@ -127,17 +126,6 @@ let saveIllustration = function() {
 				console.error(error)
 			})
 	},
-	deleteIllustration = function() {
-		axios
-			.post(route("illustrations.destroy", [props.illustration.id]), {
-				_method: "delete"
-			})
-			.then(() => {
-				emit("destroy", props.illustration.id)
-				show.value = false
-			})
-			.catch((error) => console.error(error))
-	},
 	copyIllustration = function() {
 		localStorage.setItem("scolcours-clipboard-illustration", `${theIllustration.value.parameters ?? ""}\n${theIllustration.value.code}`)
 	},
@@ -196,12 +184,6 @@ onMounted(() => {
 						>
 							fermer
 						</button>
-						<confirm-button
-							class="btn-delete btn-xs"
-							@confirm="deleteIllustration"
-						>
-							supprimer
-						</confirm-button>
 					</div>
 				</div>
 			</div>

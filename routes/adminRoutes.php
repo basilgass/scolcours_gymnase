@@ -37,8 +37,6 @@ Route::middleware(["can:admin","auth", "verified"])->group(function () {
 		->name('admin.users.destroy');
 	Route::patch('/admin/chapters/{chapter:slug}', [AdminController::class, 'activate'])
 		->name('toggleChapterActive');
-	Route::get('/admin/stats/{chapter:slug}', [AdminController::class, 'usersStats'])
-		->name('admin.stats.chapter');
 
 // Route for teams
 	Route::patch('/admin/users/{user}/teams/{team}/toggle', [TeamController::class, "toggle"])

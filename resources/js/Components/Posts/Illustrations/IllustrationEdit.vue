@@ -6,6 +6,8 @@ TODO: Ajouter des "helpers", pour avoir des indications des paramètres par exem
 <script lang="ts" setup>
 import { computed, defineAsyncComponent, PropType, ref } from "vue"
 import { IllustrationInterface } from "@/types/modelInterfaces"
+import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
+import axios from "axios"
 
 const emits = defineEmits(["change", "destroy"])
 const props = defineProps({
@@ -21,6 +23,16 @@ const editForm = computed(() => {
 	}),
 	showEditForm = ref(props.illustration?.isNew === true)
 
+function deleteIllustration() {
+	axios
+		.post(route("illustrations.destroy", [props.illustration.id]), {
+			_method: "delete"
+		})
+		.then(() => {
+			emits("destroy", props.illustration.id)
+		})
+		.catch((error) => console.error(error))
+}
 </script>
 
 <template>
@@ -41,6 +53,12 @@ const editForm = computed(() => {
 				éditer l'illustration (id: {{ theIllustration.id }})
 				<i class="bi bi-pencil ml-2" />
 			</button>
+			<confirm-button
+				class="btn-delete btn-xs ml-10"
+				@confirm="deleteIllustration"
+			>
+				<i class="bi bi-trash" />
+			</confirm-button>
 		</div>
 
 		<div v-if="showEditForm">

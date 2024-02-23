@@ -73,6 +73,7 @@ class User extends Authenticatable
 	 */
 	protected $fillable = [
 		'name',
+		'firstname',
 		'email',
 		'password',
 	];
@@ -96,11 +97,12 @@ class User extends Authenticatable
 		'email_verified_at' => 'datetime',
 	];
 
-	protected $with = ['team'];
+	// TODO: restore with teams
+//		protected $with = ['teams'];
 
-	public function team()
+	public function teams()
 	{
-		return $this->belongsTo(Team::class);
+		return $this->belongsToMany(Team::class);
 	}
 
 	public function challenges()
@@ -144,7 +146,5 @@ class User extends Authenticatable
 	public function getAdminAttribute()
 	{
 		return $this->role === 'admin';
-//		return $this->email === 'basil@scolcours.ch' or
-//			$this->email === 'alyssia@famillegass.ch';
 	}
 }

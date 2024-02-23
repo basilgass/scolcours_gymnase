@@ -1,14 +1,5 @@
-<template>
-	<button :class="buttonClass"
-			class="btn"
-			@click="btnClick">
-		<span v-show="!confirmClick"><slot/></span>
-		<span v-show="confirmClick" v-text="props.confirmText"/>
-	</button>
-</template>
-
-<script setup>
-import {computed, ref} from "vue";
+<script setup lang="ts">
+import { computed, ref } from "vue"
 
 let props = defineProps({
 	btnClass: {type: String, default: 'btn-success'},
@@ -34,3 +25,17 @@ let confirmClick = ref(false),
 		}
 	}
 </script>
+
+<template>
+	<button
+		:class="buttonClass"
+		class="btn"
+		@click="btnClick"
+	>
+		<span v-show="!confirmClick"><slot /></span>
+		<span
+			v-show="confirmClick"
+			v-text="props.confirmText"
+		/>
+	</button>
+</template>

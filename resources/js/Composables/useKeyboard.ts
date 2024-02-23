@@ -101,8 +101,9 @@ function getOneKeyboard(kbrd: string): KeyboardInterface {
 			values.push(k)
 		})
 
+	const name = getComponentKeyboardName(value)
 	return {
-		name: getComponentKeyboardName(value),
+		name,
 		checker: getChecker(value, options),
 		parameters,
 		values,
