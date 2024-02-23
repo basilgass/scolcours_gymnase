@@ -190,8 +190,8 @@ onMounted(() => {
 		</template>
 
 		<div class="flex flex-col h-full">
+			<!-- sélection du widget -->
 			<div class="px-5 border-b">
-				<!-- sélection du widget -->
 				<h3 class="font-semibold">
 					Sélectionner le module: {{ currentComponent.name }}
 				</h3>
@@ -267,13 +267,22 @@ onMounted(() => {
 									%-FG- couche au premier plan
 								</div>
 								<hr>
-								<div class="flex justify-between">
+								<div v-if="currentLine.startsWith('$')">
+									$a=a,b,...,c/intervalle=valeur[~]<br>
+									~ est optionnel: il désactive les parenthèses autour de la variable
+								</div>
+								<div
+									v-else
+									class="flex justify-between"
+								>
 									<div>{{ currentLineHelperText.parameters }}</div>
 									<div>{{ currentLineHelperText.options }}</div>
+
+									<div>{{ currentLineHelperText.description }}</div>
 								</div>
-								<div>{{ currentLineHelperText.description }}</div>
 							</div>
 						</div>
+
 						<!-- component illustration -->
 						<div
 							v-else

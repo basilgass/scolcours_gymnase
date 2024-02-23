@@ -93,7 +93,7 @@ function getSliders() {
 			// interval not given => interval = b-a
 			// b-a: marks separation... or maybe all given manually !
 			// default value given at start.
-			//TODO: add labels to pi-draw-parser
+			// prevent parenthesis wrap
 
 			if (rowItem !== "") {
 				let marks = rowItem.match(/^([-0-9.,]+)/),
@@ -102,7 +102,8 @@ function getSliders() {
 					c: number,
 					marksInterval: number,
 					interval = rowItem.match(/\/([0-9.]+)/),
-					dft = rowItem.match(/=([-0-9.]+)$/)
+					dft = rowItem.match(/=([-0-9.]+)/),
+					wrap = !rowItem.match(/~$/)
 
 				if (marks) {
 					marks = marks[1].split(",")
@@ -161,6 +162,7 @@ function getSliders() {
 				sliders.value.push({
 					key: rowKey,
 					value: dft,
+					wrap,
 					options: {
 						min: marks[0],
 						max: marks[marks.length - 1],
@@ -224,7 +226,7 @@ let drawCode = computed(() => {
 					if (row.split("=")[0].includes("(x)")) {
 						row = row.replaceAll(
 							slider.key,
-							`(${slider.value})`
+							slider.wrap?`(${slider.value})`:`${slider.value}`
 						)
 					} else {
 						row = row.replaceAll(slider.key, slider.value)
