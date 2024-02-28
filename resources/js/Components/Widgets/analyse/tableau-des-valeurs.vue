@@ -25,41 +25,41 @@ let props = defineProps({
 		}
 		return 0
 	}),
-	tableClass = computed(()=>{
+	tableClass = computed(() => {
 		for (let param of params.value) {
 			if (param.startsWith("table:")) {
 				let [, w] = param.split(":")
 				return w
 			}
 		}
-		return 'auto'
+		return "auto"
 	}),
-	colWidth = computed(()=>{
+	colWidth = computed(() => {
 		for (let param of params.value) {
 			if (param.startsWith("col:")) {
 				let [, w] = param.split(":")
 				return w
 			}
 		}
-		return 'auto'
+		return "auto"
 	}),
-	rowHeight = computed(()=>{
+	rowHeight = computed(() => {
 		for (let param of params.value) {
 			if (param.startsWith("row:")) {
 				let [, h] = param.split(":")
 				return h
 			}
 		}
-		return 'auto'
+		return "auto"
 	}),
 	tableX = computed(() => {
-		const availableValues = params.value.filter(param=>!param.match(/^[a-z]+:/))
+		const availableValues = params.value.filter(param => !param.match(/^[a-z]+:/))
 
-		if(availableValues[0].includes(':')){
+		if (availableValues[0].includes(":")) {
 			return parseMinMaxStep(params.value[0])
 		}
 
-		return availableValues.map(x=>+x)
+		return availableValues.map(x => +x)
 	}),
 	tableFunctions = computed(() => {
 		// return [
@@ -130,7 +130,7 @@ function parseMinMaxStep(value: string): number[] {
 		x <= max;
 		x += step
 	) {
-		arr.push(x)
+		arr.push(numberCorrection(x, 0, 0, roundedTo.value))
 	}
 
 	return arr
@@ -143,8 +143,8 @@ function parseMinMaxStep(value: string): number[] {
 		class="overflow-x-auto relative"
 	>
 		<table
-			class="border-collapse border border-slate-300"
 			:class="tableClass"
+			class="border-collapse border border-slate-300"
 		>
 			<tr class="bg-gray-100 font-semibold border-b border-slate-300">
 				<td
@@ -155,8 +155,8 @@ function parseMinMaxStep(value: string): number[] {
 					v-for="(x, index) in tableX"
 					:key="`x-${index}`"
 					v-katex="x"
-					class="border-r border-slate-300"
 					:style="`width: ${colWidth}`"
+					class="border-r border-slate-300"
 				/>
 			</tr>
 			<tr
@@ -166,15 +166,15 @@ function parseMinMaxStep(value: string): number[] {
 			>
 				<td
 					v-katex="fx.name"
-					class="border-r border-slate-300 px-4"
 					:class="line>0?'border-t':''"
+					class="border-r border-slate-300 px-4"
 				/>
 				<td
 					v-for="(y, index) in fx.values"
 					:key="`${fx.name}-${index}`"
 					v-katex="y.fx"
-					class="border-r border-slate-300 px-2"
 					:class="line>0?'border-t':''"
+					class="border-r border-slate-300 px-2"
 				/>
 			</tr>
 		</table>
