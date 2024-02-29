@@ -89,12 +89,12 @@ defineOptions({
 	})
 </script>
 <template>
-	<div>
+	<div class="w-full">
 		<textarea
 			v-bind="$attrs"
 			ref="inp"
 			v-model="theValue"
-			class="w-full transition-all"
+			class="w-full transition-all font-code"
 			:rows="currentRows"
 			@input="update"
 			@keyup="onKeyup"

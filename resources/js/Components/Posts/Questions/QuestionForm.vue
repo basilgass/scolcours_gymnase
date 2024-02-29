@@ -166,46 +166,46 @@ let hasClipboard = computed(() => {
 		</template>
 		<div class="flex flex-col md:flex-row gap-3 px-5 pb-5">
 			<form
-				class="flex-1 flex flex-col"
+				class="flex-1 flex flex-col gap-2 font-code"
 				@submit.prevent
 			>
 				<form-maker
 					v-model="theQuestion.block.title"
-					font-code
+					inline-label
 					label="titre"
+					label-class="w-[60px]"
 					sm
 					type="text"
 				/>
+
 				<form-maker
 					v-model="theQuestion.css"
-					font-code
+					inline-label
 					label="CSS"
+					label-class="w-[60px]"
 					sm
 					type="text"
 				/>
 
-				<div>
-					<form-maker
-						ref="formBody"
-						type="code"
-						v-model="theQuestion.block.body"
-						:label="`body (id: ${theQuestion.block.id})`"
-						:rows="10"
-						language="latex"
-					/>
-
-					<div class="text-[12px] font-code">
-						$a = TeX, $A = texte, @$A = format spéciaux
-					</div>
-				</div>
+				<form-maker
+					ref="formBody"
+					v-model="theQuestion.block.body"
+					:label="`body (id: ${theQuestion.block.id})`"
+					:rows="10"
+					language="latex"
+					message="\$a = TeX, \$A = texte, @$A = format spéciaux"
+					message-class="text-[12px]"
+					type="code"
+				/>
 
 				<form-maker
-					type="textarea"
 					v-model="theQuestion.answer"
 					:rows="3"
-					class="font-code"
 					label="answer"
+					message="multi-réponse: ||"
+					message-class="text-[12px]"
 					name="answer"
+					type="textarea"
 				/>
 
 				<form-maker

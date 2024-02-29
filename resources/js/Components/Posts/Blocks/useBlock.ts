@@ -6,10 +6,16 @@ import { BlockInterface } from "@/types/modelInterfaces"
 export function useBlock(blockMaybeRef: BlockInterface) {
 	const block = unref(blockMaybeRef)
 
+	let events: {[Key: string]: EventListener}[] = []
 	const random = ref(1),
 		postData = inject("postData", { value: {} }),
 		blockData = computed(() => {
 			try {
+				if(events.length>0){
+					for (const [key, value] of Object.entries(events[0])) {
+						document.removeEventListener(key, value, false)
+					}
+				}
 				if (block.script !== null && random.value > 0) {
 					const F = new Function(
 						"PiMath",
@@ -18,9 +24,14 @@ export function useBlock(blockMaybeRef: BlockInterface) {
 						block.script,
 					)
 
+					const result = F(PiMath, postData.value, random.value)
+
+					if(result.events !== undefined){
+						events = result.events
+					}
 					return {
 						...postData.value,
-						...F(PiMath, postData.value, random.value),
+						...result,
 					}
 				}
 			} catch (e) {
@@ -92,6 +103,7 @@ export function useBlock(blockMaybeRef: BlockInterface) {
 				reset: resetBtn,
 			}
 		})
+
 
 	provide("blockData", blockData)
 	return { random, blockBody, blockButtons, blockData, postData }

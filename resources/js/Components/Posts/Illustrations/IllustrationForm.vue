@@ -142,6 +142,10 @@ let saveIllustration = function() {
 	})
 onMounted(() => {
 	loadComponents()
+
+	// Remove the new trigger
+	theIllustration.value.isNew = false
+	emit("change", theIllustration.value)
 })
 </script>
 

@@ -1,9 +1,26 @@
+<script setup lang="ts">
+
+import { ref } from "vue"
+
+let props = defineProps({
+	preventClose: {type: Boolean, default: false}
+})
+let showMenu = ref(false),
+	onMenuClick = function () {
+		if (props.preventClose) {
+			return
+		}
+
+		showMenu.value = !showMenu.value
+	}
+</script>
 <template>
 	<div
 		class="relative"
 	>
 		<div
 			@click="showMenu = !showMenu"
+			class="cursor-pointer"
 		>
 			<slot name="button" />
 		</div>
@@ -36,19 +53,3 @@
 		</transition>
 	</div>
 </template>
-<script setup>
-
-import {ref} from "vue"
-
-let props = defineProps({
-	preventClose: {type: Boolean, default: false}
-})
-let showMenu = ref(false),
-	onMenuClick = function () {
-		if (props.preventClose) {
-			return
-		}
-
-		showMenu.value = !showMenu.value
-	}
-</script>

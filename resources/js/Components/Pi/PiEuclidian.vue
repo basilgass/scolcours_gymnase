@@ -2,12 +2,169 @@
 Affichage d'une division euclidienne
 Uniquement utilisée dans Posts/Illustrations/Elements/IllustrationEuclidian
 -->
+<script lang="ts" setup>
+
+import { computed } from "vue"
+import { PiMath } from "pimath/esm"
+import { Polynom } from "pimath/esm/maths/algebra/polynom"
+
+let props = defineProps({
+	fx: { type: String, default: null },
+	name: { type: String, default: "f(x)" },
+	fundamental: { type: Boolean, default: false },
+	asymptote: { type: Boolean, default: false },
+	atBottom: { type: Boolean, default: false }
+})
+
+let emits = defineEmits(["update"])
+
+function addStep(P: Polynom, degree: number, withParenthesis?: boolean, isFirstStep?: boolean) {
+	withParenthesis = withParenthesis === undefined ? false : withParenthesis
+	isFirstStep = isFirstStep === undefined ? false : isFirstStep
+
+	let step = [], cntMonom = 0
+
+	for (let i = degree; i >= 0; i--) {
+		let M = P.monomByDegree(i)
+
+		if (M.isZero()) {
+			if (isFirstStep) {
+				let litteral = i === 0 ? "" : "x"
+				litteral = litteral + (i > 1 ? `^{${i}}` : "")
+				step.push(`\\textcolor{lightgrey}{+0${litteral}}`)
+			} else {
+				// add 0 if it's the only value
+				if(i===0 && step.every(e => e === "")){
+					step.push("0")
+				}else {
+					step.push("")
+				}
+			}
+		} else {
+			if (i < degree && M.coefficient.isStrictlyPositive() && cntMonom > 0) {
+				step.push("+" + M.tex)
+			} else {
+				step.push(M.tex)
+			}
+			cntMonom++
+		}
+	}
+
+	if (withParenthesis !== undefined) {
+		if (withParenthesis) {
+			let inside = false
+			for (let i = 0; i < step.length; i++) {
+				if (step[i] !== "" && inside === false) {
+					step.splice(i, 0, "-\\big(")
+					break
+				}
+			}
+
+			inside = false
+			for (let i = step.length - 1; i >= 0; i--) {
+				if (step[i] !== "" && inside === false) {
+					step.splice(i + 1, 0, "\\big)")
+					break
+				}
+			}
+		} else {
+			step.unshift("")
+			step.push("")
+		}
+	}
+	return step
+}
+
+let result = computed(() => {
+		try {
+			let N = new PiMath.Polynom(numerator.value),
+				D = new PiMath.Polynom(denominator.value),
+				euclidian = N.euclidian(D)
+
+			// For the euclidian division display.
+			let steps = [],
+				degree = N.degree().value,
+				crtPolynom = N.clone(),
+				underline = []
+
+			// Première ligne
+			steps.push([
+				[...addStep(crtPolynom, degree, false, true)],
+				[D.tex]
+			])
+
+			for (let m of euclidian.quotient.monoms) {
+				let DM = D.clone().multiply(m)
+
+				steps.push([
+					[...addStep(DM, degree, true)],
+					[steps.length === 1 ? euclidian.quotient.tex : ""]
+				])
+
+				// Create the underline.
+				let start, stop
+				for (let i = 0; i < steps[steps.length - 1][0].length; i++) {
+					if (steps[steps.length - 1][0][i] === "-\\big(") {
+						start = +i + 1
+					} else if (steps[steps.length - 1][0][i] === "\\big)") {
+						stop = +i - 1
+						break
+					}
+				}
+				underline.push({
+					start,
+					stop
+				})
+
+				crtPolynom.subtract(DM)
+				steps.push([
+					[...addStep(crtPolynom, degree, false)],
+					[""]
+				])
+			}
+
+			emits("update", {
+				P: N.reorder().tex,
+				Q: D.reorder().tex,
+				R: crtPolynom.reorder().tex
+			})
+
+			return {
+				numerator: N,
+				denominator: D,
+				euclidian,
+				table: {
+					steps,
+					underline
+				}
+			}
+
+		} catch (e) {
+			// console.error(e)
+			// emits("update", {
+			// 	P: numerator.value,
+			// 	Q: denominator.value,
+			// 	R: ""
+			// })
+			return false
+		}
+	}),
+	numerator = computed(() => {
+		return props.fx.split("/")[0]
+	}),
+	denominator = computed(() => {
+		return props.fx.split("/")[1] || "1"
+	}),
+	fxname = computed(() => {
+		return props.name ? `${props.name}=` : ""
+	})
+</script>
 <template>
 	<div class="pi-euclidian-wrapper">
 		<div
 			v-if="result"
-			v-bind="$attrs"
 			class="mt-10 space-y-10"
+			v-bind="$attrs"
 		>
 			<div v-if="!atBottom">
 				<div
@@ -66,157 +223,3 @@ Uniquement utilisée dans Posts/Illustrations/Elements/IllustrationEuclidian
 		</div>
 	</div>
 </template>
-<script setup>
-
-import {computed} from "vue"
-import {PiMath} from "pimath/esm"
-
-let props = defineProps({
-	fx: {type: String, default: null},
-	name: {type: String, default: "f(x)"},
-	fundamental: {type: Boolean, default: false},
-	asymptote: {type: Boolean, default: false},
-	atBottom: {type: Boolean, default: false}
-})
-
-let emits = defineEmits(["update"])
-
-function addStep(P, degree, withParenthesis, isFirstStep) {
-	withParenthesis = withParenthesis === undefined ? false : withParenthesis
-
-	let step = [], cntMonom = 0
-
-	for (let i = degree; i >= 0; i--) {
-		let M = P.monomByDegree(i)
-
-		if (M.isZero()) {
-			if(isFirstStep) {
-				let litteral = i === 0 ? "" : "x"
-				litteral = litteral + (i > 1 ? `^{${i}}`: "")
-				step.push(`\\textcolor{lightgrey}{+0${litteral}}`)
-			}else{
-				step.push("")
-			}
-		} else {
-			if (i < degree && M.coefficient.isStrictlyPositive() && cntMonom>0) {
-				step.push("+" + M.tex)
-			} else {
-				step.push(M.tex)
-			}
-			cntMonom++
-		}
-	}
-
-	if(withParenthesis!==undefined) {
-		if (withParenthesis) {
-			let inside = false
-			for (let i = 0; i < step.length; i++) {
-				if (step[i] !== "" && inside === false) {
-					step.splice(i, 0, "-\\big(")
-					break
-				}
-			}
-
-			inside = false
-			for (let i = step.length - 1; i >= 0; i--) {
-				if (step[i] !== "" && inside === false) {
-					step.splice(i + 1, 0, "\\big)")
-					break
-				}
-			}
-		}else {
-			step.unshift("")
-			step.push("")
-		}
-	}
-	return step
-}
-
-let result = computed(() => {
-		try {
-			let N = new PiMath.Polynom(numerator.value),
-				D = new PiMath.Polynom(denominator.value),
-				euclidian = N.euclidian(D)
-
-			// For the euclidian division display.
-			let steps = [],
-				degree = N.degree().value,
-				crtPolynom = N.clone(),
-				zeroPolynom = new PiMath.Polynom().zero(),
-				maxDegreeRight = Math.max(D.degree().value, euclidian.quotient.degree().value),
-				underline = []
-
-			// Première ligne
-			steps.push([
-				[...addStep(crtPolynom, degree,false, true)],
-				[D.tex]
-			// [...addStep(D, maxDegreeRight)]
-			])
-
-			for (let m of euclidian.quotient.monoms) {
-				let DM = D.clone().multiply(m)
-
-				steps.push([
-					[...addStep(DM, degree, true)],
-					[steps.length === 1 ? euclidian.quotient.tex : ""]
-				// [...addStep(steps.length === 1 ? euclidian.quotient : zeroPolynom, maxDegreeRight)]
-				])
-
-				// Create the underline.
-				let start, stop
-				for(let i = 0; i<steps[steps.length-1][0].length;i++){
-					if (steps[steps.length - 1][0][i] === "-\\big(") {
-						start = +i + 1
-					} else if (steps[steps.length - 1][0][i] === "\\big)") {
-						stop = +i - 1
-						break
-					}
-				}
-				underline.push({
-					start,
-					stop
-				})
-
-				crtPolynom.subtract(DM)
-				steps.push([
-					[...addStep(crtPolynom, degree,false)],
-					[""]
-				// [...addStep(zeroPolynom, maxDegreeRight)]
-				])
-			}
-
-			emits("update", {
-				P: N.reorder().tex,
-				Q: D.reorder().tex,
-				R: crtPolynom.reorder().tex
-			})
-			return {
-				numerator: N,
-				denominator: D,
-				euclidian,
-				table: {
-					steps,
-					underline
-				}
-			}
-
-		} catch (e) {
-			// console.error(e)
-			// emits("update", {
-			// 	P: numerator.value,
-			// 	Q: denominator.value,
-			// 	R: ""
-			// })
-			return false
-		}
-	}),
-	numerator = computed(()=>{
-		return props.fx.split("/")[0]
-	}),
-	denominator = computed(()=>{
-		return props.fx.split("/")[1]||"1"
-	}),
-	fxname = computed(()=>{
-		return props.name?`${props.name}=`:""
-	})
-</script>

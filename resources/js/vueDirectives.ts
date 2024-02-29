@@ -71,6 +71,9 @@ function katexUpdate(el, binding, vnode) {
 		rawTex = rawTex.toString()
 	}
 
+	// Make sure rawTex is a string
+	if(!rawTex)rawTex = ""
+
 	rawTex = rawTex.replaceAll(/\$[a-z]/g, "\\textcolor{red}{A}")
 	if (binding.modifiers.auto) {
 		el.innerHTML = rawTex

@@ -119,6 +119,7 @@ const props = defineProps({
 						mathAppend: "",
 						body: "nouvelle question",
 						answer: "-",
+						keyboard: "-"
 					},
 				)
 				.then((res) => {
