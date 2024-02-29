@@ -1,8 +1,9 @@
 <script lang="ts" setup>
 
-import { computed, PropType } from "vue"
+import { computed, onMounted, PropType, ref } from "vue"
 import { parserPreprocess } from "pidraw/esm/Parser"
 import { Graph } from "pidraw/esm/Graph"
+import { Plot } from "pidraw/esm/figures/Plot"
 
 const props = defineProps({
 	graph: { type: Object as PropType<Graph>, required: true },
@@ -14,13 +15,12 @@ const props = defineProps({
  */
 type ParserPrepocessType = { label: string, key: string, code: string[], options: string[] }
 type visibilityButtonType = { label: string, figure: string, visible: boolean, related: string[] }
-// let visibilityButtons = ref<visibilityButtonType[]>([])
 
 /**
  * Add / Remove buttons to hide or show svg elements from the graph.
  * It comes from    code->btn:name
  */
-const visibilityButtons = computed<visibilityButtonType[]>(() => {
+function visibilityButtonsInit(): visibilityButtonType[] {
 
 	// Check if btn is somewhere in the code.
 	if (props.draw.code.split("btn").length === 1) {
@@ -65,9 +65,11 @@ const visibilityButtons = computed<visibilityButtonType[]>(() => {
 		}
 	}
 
-	console.log("HERE")
 	return btns
-})
+}
+
+const visibilityButtons = ref<visibilityButtonType[]>([])
+
 
 /**
  * Toggle the visibility when clicked.
@@ -82,20 +84,92 @@ function visibilityButtonsToggle(btn) {
 		if (fig.name === btn.figure || btn.related.includes(fig.name)) {
 			btn.visible ? fig.show() : fig.hide()
 		}
+
+		// Maybe there are plugins
+		if (fig instanceof Plot && fig.plugins) {
+			fig.plugins.forEach(plugin => {
+				if (plugin.name === btn.figure || btn.related.includes(plugin.name)) {
+					btn.visible ? plugin.show() : plugin.hide()
+				}
+			})
+		}
 	})
 }
 
+const availableBtns = computed<visibilityButtonType[]>(()=>{
+	return visibilityButtons.value.filter(btn => !btn.label.startsWith('animate'))
+})
+
+const animatedBtns = computed<visibilityButtonType[]>(()=>{
+	const btns = visibilityButtons.value.filter(btn => btn.label.startsWith('animate'))
+
+	btns.sort((a,b)=>a.label<b.label?-1:1)
+	return btns
+})
+// Starting
+const animatedBtnsIndex = ref<number>(null)
+function animateNextFrame(){
+	// Frame duration
+	let duration:number
+
+	if(animatedBtnsIndex.value === null){
+		duration = 100
+		animatedBtnsIndex.value = 0
+	}else{
+		// Default duration per frame (last one is longer)
+		duration = animatedBtnsIndex.value === animatedBtns.value.length-1 ? 2000 : 1000
+		// Determine if the current frame has a custom duration
+		const [, itemDuration] = animatedBtns.value[animatedBtnsIndex.value].label.split('/')
+		duration = itemDuration ? parseInt(itemDuration) : duration
+
+		// Get next frame
+		animatedBtnsIndex.value = (animatedBtnsIndex.value + 1) % animatedBtns.value.length
+	}
+
+	setTimeout(()=>{
+		// All the previous buttons must be hidden, except if ending with +
+		if(animatedBtnsIndex.value > 0){
+			animatedBtns.value.slice(0,animatedBtnsIndex.value).forEach(btn=>{
+				if(!btn.label.endsWith('+')){
+					if(btn.visible === true){
+						visibilityButtonsToggle(btn)
+					}
+				}
+			})
+		}else{
+			// All buttons must be hidden
+			animatedBtns.value.forEach(btn=>{
+				if(btn.visible === true)visibilityButtonsToggle(btn)
+			})
+		}
+
+		// Toggle the current button on
+		visibilityButtonsToggle(animatedBtns.value[animatedBtnsIndex.value])
+
+		// Next frame
+		animateNextFrame()
+	}, duration)
+}
+
+onMounted(() => {
+	visibilityButtons.value = visibilityButtonsInit()
+
+	// Start animation
+	if(animatedBtns.value.length > 0){
+		animateNextFrame()
+	}
+})
 </script>
 
 <template>
 	<div>
 		<!-- visibility buttons -->
 		<div
-			v-if="visibilityButtons.length > 0"
+			v-if="availableBtns.length > 0"
 			class="w-full flex flex-wrap gap-3 mt-2"
 		>
 			<button
-				v-for="btn of visibilityButtons"
+				v-for="btn of availableBtns"
 				:key="btn.figure"
 				v-katex.auto="`${btn.visible?'cacher':'afficher'} ${btn.label}`"
 				class="btn btn-xs"

@@ -1,4 +1,4 @@
-import { computed, inject, provide, ref, unref } from "vue"
+import { computed, inject, onMounted, onUnmounted, provide, ref, unref } from "vue"
 import { PiMath } from "pimath/esm"
 import { useFormattedBody } from "@/Composables/useHelpers"
 import { BlockInterface } from "@/types/modelInterfaces"
@@ -6,32 +6,44 @@ import { BlockInterface } from "@/types/modelInterfaces"
 export function useBlock(blockMaybeRef: BlockInterface) {
 	const block = unref(blockMaybeRef)
 
-	let events: {[Key: string]: EventListener}[] = []
+	let events: { [Key: string]: EventListener }[] = []
 	const random = ref(1),
 		postData = inject("postData", { value: {} }),
+		eventData = ref({}),
 		blockData = computed(() => {
 			try {
-				if(events.length>0){
+				// Remove the existing events
+				if (events.length > 0) {
 					for (const [key, value] of Object.entries(events[0])) {
 						document.removeEventListener(key, value, false)
 					}
 				}
+
+				// Run the script if there is one.
 				if (block.script !== null && random.value > 0) {
 					const F = new Function(
 						"PiMath",
 						"postData",
 						"iteration",
-						block.script,
+						block.script
 					)
 
 					const result = F(PiMath, postData.value, random.value)
 
-					if(result.events !== undefined){
+					// Store events for later removal
+					if (result.events !== undefined) {
 						events = result.events
+
+						// Load the events.
+						Object.keys(events).forEach((key) => {
+							document.addEventListener(key, events[key], false)
+						})
+
 					}
+
 					return {
 						...postData.value,
-						...result,
+						...result
 					}
 				}
 			} catch (e) {
@@ -56,7 +68,7 @@ export function useBlock(blockMaybeRef: BlockInterface) {
 			let randomBtn = {
 					icon: "bi bi-shuffle",
 					text: "aléatoire",
-					show: true,
+					show: true
 				},
 				resetBtn: boolean | object = false
 
@@ -64,7 +76,7 @@ export function useBlock(blockMaybeRef: BlockInterface) {
 				resetBtn = {
 					icon: "bi bi-x-square",
 					text: "par défaut",
-					show: random.value > 1,
+					show: random.value > 1
 				}
 			}
 
@@ -81,7 +93,7 @@ export function useBlock(blockMaybeRef: BlockInterface) {
 							blockData.value.btn.random.show === undefined ||
 							blockData.value.btn.random.show
 								? true
-								: random.value === 1,
+								: random.value === 1
 					}
 				}
 
@@ -93,18 +105,34 @@ export function useBlock(blockMaybeRef: BlockInterface) {
 							blockData.value.btn.reset.text ??
 							blockData.value.btn.reset,
 						show:
-							blockData.value.btn.reset.show ?? random.value > 1,
+							blockData.value.btn.reset.show ?? random.value > 1
 					}
 				}
 			}
 
 			return {
 				random: randomBtn,
-				reset: resetBtn,
+				reset: resetBtn
 			}
 		})
 
 
+	// TODO : Work with event listener to make illustration more interactive !
+	const illustrationListener = (e: CustomEvent) => {
+		eventData.value = e.detail
+	}
+	onMounted(() => {
+		document.addEventListener("illustration.change", illustrationListener, false)
+	})
+	onUnmounted(() => {
+		document.removeEventListener("illustration.change", illustrationListener, false)
+		// Remove the existing events
+		if (events.length > 0) {
+			for (const [key, value] of Object.entries(events[0])) {
+				document.removeEventListener(key, value, false)
+			}
+		}
+	})
 	provide("blockData", blockData)
 	return { random, blockBody, blockButtons, blockData, postData }
 }
