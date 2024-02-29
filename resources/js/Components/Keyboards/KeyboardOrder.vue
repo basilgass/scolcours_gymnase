@@ -1,33 +1,8 @@
-<template>
-	<div>
-		<draggable
-			v-model="sortableItems"
-			:class="{
-				'w-full': isFullWidth,
-				'flex-1': isFlex,
-			}"
-			class="flex flex-wrap gap-3 my-5"
-			item-key="id"
-			v-bind="{
-				animation: 200,
-			}"
-			@update="changeEvent"
-		>
-			<template #item="{ element }">
-				<button
-					v-katex.auto="element.label"
-					class="btn bg-white"
-				/>
-			</template>
-		</draggable>
-	</div>
-</template>
-
 <script setup>
 
-import {computed, ref} from "vue"
-import {PiMath} from "pimath/esm"
-import {useKeyboard} from "@/Composables/useKeyboard"
+import { computed, ref } from "vue"
+import { PiMath } from "pimath/esm"
+import { useKeyboard } from "@/Composables/useKeyboard"
 
 let props = defineProps({
 	keyboard: {type: Object, required: true},
@@ -99,3 +74,29 @@ defineExpose({
 
 
 </script>
+
+<template>
+	<div>
+		<draggable
+			v-model="sortableItems"
+
+			class="flex flex-wrap gap-3 my-5"
+			item-key="id"
+			v-bind="{
+				animation: 200,
+			}"
+			@update="changeEvent"
+		>
+			<template #item="{ element }">
+				<button
+					v-katex.auto="element.label"
+					class="btn bg-white"
+					:class="{
+						'w-full': isFullWidth,
+						'flex-1': isFlex,
+					}"
+				/>
+			</template>
+		</draggable>
+	</div>
+</template>
