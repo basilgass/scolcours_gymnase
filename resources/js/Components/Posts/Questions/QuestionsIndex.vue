@@ -216,6 +216,7 @@ const props = defineProps({
 </script>
 <template>
 	<article>
+		<!-- Admin wrapper -->
 		<div
 			v-show="editMode.enabled.value"
 			v-admin
@@ -282,16 +283,20 @@ const props = defineProps({
 			</div>
 		</div>
 
+		<!-- title -->
 		<div
 			v-if="theQuestions.length"
 			v-theme.bg.text
-			class="flex justify-between px-10 py-4 mb-5"
+			class="flex justify-between items-center px-10 py-4 mb-10"
 		>
 			<h3 class="uppercase text-2xl relative">
 				<i class="bi bi-question-square mr-5" />questions
 			</h3>
+
+			<div>{{ answeredIds.length }} / {{ theQuestions.length }}</div>
 		</div>
 
+		<!-- questions list -->
 		<draggable
 			v-if="theQuestions.length"
 			v-model="theQuestions"
@@ -317,6 +322,7 @@ const props = defineProps({
 			</template>
 		</draggable>
 
+		<!-- Add question -->
 		<div
 			v-show="editMode.enabled.value"
 			v-admin
