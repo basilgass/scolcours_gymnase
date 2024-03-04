@@ -2,7 +2,7 @@
 En-tête principal, sensible au thème
 -->
 <script setup lang="ts">
-import { inject, ref } from "vue"
+import { inject, provide, ref } from "vue"
 import MainAside from "@/Components/MainAside.vue"
 import DropdownMenu from "@/Components/Ui/DropdownMenu.vue"
 import LogoutButton from "@/Components/Ui/LogoutButton.vue"
@@ -12,14 +12,10 @@ defineProps({
 		theme: { type: Object, required: true },
 	})
 
-	const showMenu = ref(false),
-		showAside = ref(false),
+	const showAside = ref(false),
 		editMode = inject<editModeInterface>("editMode")
 
-	defineExpose({
-		showAside,
-		showMenu,
-	})
+provide("showAside", showAside)
 </script>
 <template>
 	<header
