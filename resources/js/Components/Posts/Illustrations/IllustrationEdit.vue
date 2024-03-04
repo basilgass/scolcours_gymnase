@@ -15,7 +15,7 @@ const props = defineProps({
 	preview: {type: Boolean, default: true}
 })
 
-let theIllustration = ref<IllustrationInterface>(props.illustration)
+const theIllustration = ref<IllustrationInterface>(props.illustration)
 const editForm = computed(() => {
 		return defineAsyncComponent(
 			() => import("@/Components/Posts/Illustrations/IllustrationForm.vue")

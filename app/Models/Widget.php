@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $description
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read mixed $control
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Illustration> $illustration
  * @property-read int|null $illustration_count
  * @property-read \App\Models\Theme|null $theme

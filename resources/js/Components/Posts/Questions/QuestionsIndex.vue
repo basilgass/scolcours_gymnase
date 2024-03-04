@@ -1,27 +1,29 @@
-<script setup>
-import { computed, inject, ref } from "vue"
+<script setup lang="ts">
+import { computed, inject, PropType, ref } from "vue"
 import QuestionShow from "@/Components/Posts/Questions/QuestionShow.vue"
 import axios from "axios"
 import FormMaker from "@/Components/Form/FormMaker.vue"
+import { editModeInterface, flashInterface } from "@/types/index.js"
+import { QuestionInterface } from "@/types/modelInterfaces"
 
 const props = defineProps({
-		questions: { type: Array, required: true },
+		questions: { type: Object as PropType<QuestionInterface[]>, required: true },
 		containerType: { type: String, required: true },
 		containerId: { type: Number, required: true },
 		grid: { type: String, default: null },
 	})
 
-	const flash = inject("flash"),
-		editMode = inject("editMode")
+	const flash = inject<flashInterface>("flash"),
+		editMode = inject<editModeInterface>("editMode")
 
-	let theQuestions = ref(props.questions),
+	const theQuestions = ref(props.questions),
 		answeredIds = computed(() => {
 			return theQuestions.value
 				.filter((question) => question.user.result)
 				.map((question) => +question.id)
 		}),
 		questionsIds = computed(() => {
-			let ids = theQuestions.value.map((q) => {
+			const ids = theQuestions.value.map((q) => {
 				return { id: q.id, order: q.order }
 			})
 			ids.sort((a, b) => a.order - b.order)
@@ -29,30 +31,30 @@ const props = defineProps({
 			return ids.map((q) => q.id)
 		}),
 		displayedQuestions = computed(() => {
-			let obj = {}
+			const obj = {}
 
 			theQuestions.value.forEach((question) => {
 				obj[question.id] = displayQuestion(question)
 			})
 
 			return obj
-		}),
-		remainingQuestions = computed(() => {
-			return Object.values(displayedQuestions.value).filter(
-				(x) => x === false,
-			).length
-		}),
-		footerText = computed(() => {
-			if (remainingQuestions.value === 0) {
-				return ""
-			}
-			if (remainingQuestions.value === 1) {
-				return "encore 1 dernière question après."
-			}
-			return `${remainingQuestions.value} questions à venir...`
 		})
+		// remainingQuestions = computed(() => {
+		// 	return Object.values(displayedQuestions.value).filter(
+		// 		(x) => x === false,
+		// 	).length
+		// })
+		// footerText = computed(() => {
+		// 	if (remainingQuestions.value === 0) {
+		// 		return ""
+		// 	}
+		// 	if (remainingQuestions.value === 1) {
+		// 		return "encore 1 dernière question après."
+		// 	}
+		// 	return `${remainingQuestions.value} questions à venir...`
+		// })
 	// Prepare the question to display or not.
-	let displayQuestion = function (question) {
+	const displayQuestion = function (question) {
 		// ids of answered questions
 		return (
 			question.displayIf === null ||
@@ -64,7 +66,7 @@ const props = defineProps({
 	}
 
 	// Conditionnal display
-	let removeDisplayIf = function () {
+	const removeDisplayIf = function () {
 			theQuestions.value.forEach((question) => {
 				question.displayIf = null
 			})
@@ -95,19 +97,19 @@ const props = defineProps({
 						}
 					}),
 				})
-				.then((res) => {
+				.then(() => {
 					flash.success(
 						"L'affichage conditionnel a bien été enregistré.",
 					)
 				})
-				.catch((res) => {
+				.catch(() => {
 					flash.error(
 						"Il y a eu un problème avec l'affichage conditionnel.",
 					)
 				})
 		}
 
-	let addQuestion = function () {
+	const addQuestion = function () {
 			axios
 				.post(
 					route("questions.storeTo", [
@@ -168,10 +170,12 @@ const props = defineProps({
 						props.containerId,
 					]),
 				)
-				.then((res) => {
-					for (let i in theQuestions.value) {
-						theQuestions.value[i].user.answer = []
-						theQuestions.value[i].user.result = 0
+				.then(() => {
+					for (const i in theQuestions.value) {
+						theQuestions.value[i].user.answer = ""
+
+						theQuestions.value[i].user.result = false
+
 						theQuestions.value[i].user.attempts = 0
 					}
 				})
@@ -202,7 +206,7 @@ const props = defineProps({
 				_method: "PATCH",
 				grid: questionsCustomGrid.value,
 			})
-			.then((res) => {
+			.then(() => {
 				flash.success("La grille a bien été enregistrée.")
 			})
 			.catch(() => {

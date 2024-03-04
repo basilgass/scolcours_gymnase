@@ -33,13 +33,13 @@ const emits = defineEmits(["update:modelValue", "change", "destroy"])
 		overflowScroll: { type: Boolean, default: false },
 	})
 
-	let show = ref(props.modelValue),
+	const show = ref(props.modelValue),
 		theBlock = ref<BlockInterface>(props.block),
 		switchEnable = ref(props.block.switch !== null)
 
 	const { blockBody, blockButtons, random } = useBlock(theBlock.value)
 
-	let updateSwitchEnable = function () {
+	const updateSwitchEnable = function () {
 		if (switchEnable.value) {
 			theBlock.value.switch = false
 		} else {
@@ -47,7 +47,7 @@ const emits = defineEmits(["update:modelValue", "change", "destroy"])
 		}
 	}
 
-	let saveBlock = function () {
+	const saveBlock = function () {
 			axios
 				.post(route("blocks.update", [theBlock.value.id]), {
 					...theBlock.value,

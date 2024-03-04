@@ -1,19 +1,14 @@
-<script>
-	import LayoutMain from "@/Layouts/LayoutMain.vue"
+<script setup lang="ts">
+import { computed, nextTick, onMounted, ref } from "vue"
+import PostShow from "@/Components/Posts/PostShow.vue"
+import ChapterToc from "@/Components/Chapters/ChapterToc.vue"
+import ChapterFormulasSlider from "@/Components/Chapters/ChapterFormulasSlider.vue"
+import { Head, usePage } from "@inertiajs/vue3"
+import { useMenuScrollTo } from "@/Composables/useHelpers"
+import axios from "axios"
+import LayoutMain from "@/Layouts/LayoutMain.vue"
 
-	export default {
-		layout: LayoutMain,
-	}
-</script>
-
-<script setup>
-	import { computed, nextTick, onMounted, ref } from "vue"
-	import PostShow from "@/Components/Posts/PostShow.vue"
-	import ChapterToc from "@/Components/Chapters/ChapterToc.vue"
-	import ChapterFormulasSlider from "@/Components/Chapters/ChapterFormulasSlider.vue"
-	import { Head, usePage } from "@inertiajs/vue3"
-	import { useMenuScrollTo } from "@/Composables/useHelpers"
-
+defineOptions({ layout: LayoutMain })
 	let props = defineProps({
 			chapter: { type: Object, required: true },
 			post: { type: Object, required: true },
@@ -52,7 +47,10 @@
 	<section class="py-5">
 		<Head :title="pageTitle" />
 
-		<post-show :chapter="theChapter" :post="thePost" />
+		<post-show
+			:chapter="theChapter"
+			:post="thePost"
+		/>
 
 		<div class="grid grid-cols-3 mt-3 px-5 md:px-0">
 			<div class="justify-self-start">
@@ -62,7 +60,9 @@
 					:class="`btn-scolcours-${$page.props.theme.slug}`"
 				>
 					<i class="bi bi-box-arrow-in-left mr-0 md:mr-2" />
-					<div class="hidden md:inline">précédant</div>
+					<div class="hidden md:inline">
+						précédant
+					</div>
 				</Link>
 			</div>
 			<div class="justify-self-center flex">
@@ -86,7 +86,9 @@
 					:href="nav.next"
 					:class="`btn-scolcours-${$page.props.theme.slug}`"
 				>
-					<div class="hidden md:inline">suivant</div>
+					<div class="hidden md:inline">
+						suivant
+					</div>
 					<i class="bi bi-box-arrow-in-right ml-0 md:ml-2" />
 				</Link>
 			</div>

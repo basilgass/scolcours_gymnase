@@ -1,3 +1,39 @@
+<script lang="ts" setup>
+
+import { computed, onBeforeUnmount, onMounted, PropType, ref } from "vue"
+import QuizzIntro from "@/Components/Quizzs/QuizzIntro.vue"
+import QuizzOutro from "@/Components/Quizzs/QuizzOutro.vue"
+import { router } from "@inertiajs/vue3"
+import QuizzQuestionProjection from "@/Components/Quizzs/QuizzQuestionProjection.vue"
+import LayoutProjection from "@/Layouts/LayoutProjection.vue"
+import { resultInterface } from "@/types"
+
+defineOptions({ layout: LayoutProjection })
+let props = defineProps({
+		quizzSession: { type: Object, required: true },
+		results: { type: Object as PropType<resultInterface[]>, default: () => [] },
+		usersCount: { type: Number, required: true }
+	}),
+	interval = null,
+	updateCounter = ref(0),
+	updateQuizz = function() {
+		router.reload({
+			preserveScroll: true,
+			preserveState: true
+		})
+		updateCounter.value++
+	},
+	liveQuizz = computed(() => props.quizzSession.data)
+
+onMounted(() => {
+	interval = setInterval(() => updateQuizz(), 2000)
+})
+onBeforeUnmount(() => {
+	clearInterval(interval)
+})
+
+</script>
+
 <template>
 	<section
 		v-if="liveQuizz.enable"
@@ -27,8 +63,8 @@
 		<quizz-question-projection
 			v-else
 			:quizz-session="liveQuizz"
-			:users-count="props.usersCount"
 			:results="props.results"
+			:users-count="props.usersCount"
 		/>
 	</section>
 	<section
@@ -48,46 +84,3 @@
 		</div>
 	</section>
 </template>
-
-<script>
-
-import LayoutProjection from "@/Layouts/LayoutProjection.vue"
-
-export default {
-	layout: LayoutProjection
-}
-</script>
-<script setup>
-
-import {computed, onBeforeUnmount, onMounted, ref} from "vue"
-import QuizzQuestion from "@/Components/Quizzs/QuizzQuestion.vue"
-import QuizzIntro from "@/Components/Quizzs/QuizzIntro.vue"
-import QuizzOutro from "@/Components/Quizzs/QuizzOutro.vue"
-import {router} from "@inertiajs/vue3"
-import QuizzWait from "@/Components/Quizzs/QuizzWait.vue"
-import QuizzQuestionProjection from "@/Components/Quizzs/QuizzQuestionProjection.vue"
-
-let props = defineProps({
-		quizzSession: {type: Object, required: true},
-		results: {type: Array},
-		usersCount: {type: Number, required: true},
-	}),
-	interval = null,
-	updateCounter = ref(0),
-	updateQuizz = function () {
-		router.reload({
-			preserveScroll: true,
-			preserveState: true
-		})
-		updateCounter.value++
-	},
-	liveQuizz = computed(()=>props.quizzSession.data)
-
-onMounted(() => {
-	interval = setInterval(() => updateQuizz(), 2000)
-})
-onBeforeUnmount(() => {
-	clearInterval(interval)
-})
-
-</script>

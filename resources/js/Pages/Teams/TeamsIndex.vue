@@ -1,41 +1,40 @@
-<!--suppress ALL -->
-<script>
+<script lang="ts" setup>
+
 import LayoutMain from "@/Layouts/LayoutMain.vue"
+import { PropType } from "vue"
 
-export default {
-	layout: LayoutMain,
+defineOptions({ layout: LayoutMain })
+
+interface simpleTeam {
+	id: number;
+	name: string;
+	users_count: number;
 }
-</script>
-
-<script setup>
-
-import {inject} from "vue"
 
 const props = defineProps({
-	teams: {type: Object, required: true}
+	teams: { type: Object as PropType<simpleTeam[]>, required: true }
 })
 
-const flash = inject("flash")
 </script>
 <template>
-	<article>
-		<h2 class="text-3xl font-semibold">
+	<article class="py-10">
+		<h2 class="text-3xl font-semibold mb-5">
 			Teams
 		</h2>
-
+		
 		<div>
-			<h3 class="text-lg uppercase">
-				listes des teams
-			</h3>
-
-			<div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-3">
+			<div class="flex gap-5">
 				<Link
 					v-for="team of props.teams"
 					:key="`id-${team.id}`"
 					:href="route('teams.show', [team.name])"
-					class="bg-white px-4 py-2 border border-gray-200 rounded hover:scale-105 hover:shadow transition-all"
+					as="button"
+					class="bg-white px-4 py-2 border border-gray-200 rounded hover:scale-105 hover:shadow transition-all flex flex-col gap-2"
 				>
-					{{ team.name }}
+					<div class="font-semibold text-xl">
+						{{ team.name }}
+					</div>
+					<div>{{ team.users_count }} étudiants</div>
 				</Link>
 			</div>
 		</div>

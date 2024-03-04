@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 
 import {computed} from "vue"
 
@@ -6,7 +6,7 @@ const props = defineProps({
 	quizzSession: {type: Object, required: true},
 })
 
-let gaugeValue = computed(()=>{
+const gaugeValue = computed(()=>{
 	return (props.quizzSession.index-1)/props.quizzSession.total*100
 })
 </script>

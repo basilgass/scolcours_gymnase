@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-	import { computed } from "vue"
+import { computed } from "vue"
 
-	const props = defineProps({
+const props = defineProps({
 		buttons: { type: [Object, Boolean], required: true },
 		modelValue: { type: Number, required: true },
 	})
@@ -25,12 +25,15 @@
 		return props.buttons as buttonsInterface
 	})
 
-	let refresh = function (value) {
+	const refresh = function (value) {
 		emits("update:modelValue", value)
 	}
 </script>
 <template>
-	<div v-if="props.buttons" class="flex gap-3">
+	<div
+		v-if="props.buttons"
+		class="flex gap-3"
+	>
 		<div v-if="availableButtons.reset.show">
 			<button
 				:class="`btn-scolcours-${$page.props.theme.slug} btn-xs tracking-wider d-block`"

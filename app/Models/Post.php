@@ -33,6 +33,7 @@ use Illuminate\Support\Facades\URL;
  * @property-read int|null $questions_count
  * @property-read Collection<int, \App\Models\Score> $scores
  * @property-read int|null $scores_count
+ * @property-read mixed $url
  * @method static Builder|Post newModelQuery()
  * @method static Builder|Post newQuery()
  * @method static Builder|Post query()

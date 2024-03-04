@@ -1,20 +1,15 @@
-<script>
-import LayoutMain from "@/Layouts/LayoutMain.vue"
-
-export default {
-	layout: LayoutMain
-}
-</script>
-
-<script setup>
+<script setup lang="ts">
 import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
 import { computed, ref } from "vue"
 import { useForm } from "@inertiajs/vue3"
 import DialogModal from "@/Components/Ui/DialogModal.vue"
 import IllustrationShow from "@/Components/Posts/Illustrations/IllustrationShow.vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
+import LayoutMain from "@/Layouts/LayoutMain.vue"
 
-let props = defineProps({
+defineOptions({ layout: LayoutMain })
+
+const props = defineProps({
 	theme: {
 		type: Object,
 		default: () => {
@@ -27,15 +22,15 @@ let props = defineProps({
 	}
 })
 
-let chaptersFilter = ref(""),
+const chaptersFilter = ref(""),
 	root = ref(null)
 
-let chaptersFiltered = computed(() => {
+const chaptersFiltered = computed(() => {
 	if (chaptersFilter.value === "") {
 		return props.chapters.data
 	}
 
-	let filter = chaptersFilter.value.toLowerCase()
+	// let filter = chaptersFilter.value.toLowerCase()
 
 	return props.chapters.data.filter(
 		(chapter) =>
@@ -47,7 +42,7 @@ let chaptersFiltered = computed(() => {
 	)
 })
 
-let showDialog = ref(false)
+const showDialog = ref(false)
 const newChapterForm = useForm({
 	title: "exemple"
 })

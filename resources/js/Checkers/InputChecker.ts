@@ -6,7 +6,7 @@ const description = `input,[paramètres]
 `
 
 export function InputChecker(options){
-	options = options??[]
+	// options = options??[]
 
 	return {
 		name, description,

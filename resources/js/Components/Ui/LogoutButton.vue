@@ -1,6 +1,8 @@
 <!--
 Un bouton pour se déloguer, tout simple, sans mise en forme.
 -->
+<script setup lang="ts">
+</script>
 <template>
 	<Link
 		as="button"
@@ -11,8 +13,3 @@ Un bouton pour se déloguer, tout simple, sans mise en forme.
 		<i class="bi bi-box-arrow-right mr-2" />se déconnecter
 	</Link>
 </template>
-<script>
-export default {
-	name: "LogoutButton"
-}
-</script>

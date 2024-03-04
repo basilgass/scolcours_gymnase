@@ -1,18 +1,14 @@
-<script>
+<script setup lang="ts">
+import { ref } from "vue"
+import BlockForm from "@/Components/Posts/Blocks/BlockForm.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 
-export default {
-	layout: LayoutMain,
-}
-</script>
-<script setup>
-import {ref} from "vue"
-import BlockForm from "@/Components/Posts/Blocks/BlockForm.vue"
+defineOptions({ layout: LayoutMain })
 
-let props = defineProps({
+const props = defineProps({
 	block: {type: Object, required: true},
 })
-let show = ref(true)
+const show = ref(true)
 </script>
 
 <template>

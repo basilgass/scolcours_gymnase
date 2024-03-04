@@ -2,49 +2,15 @@
 Entrée utilisateur, permettant d'afficher les claviers
 Met à jour la donnée en fonction des réponses.
 -->
-<template>
-	<div class="question-keyboard @container">
-		<!-- Message affichant les détails des erreurs  -->
-		<div
-			v-if="message!==''"
-			v-katex.auto="message"
-			class="bg-red-100 border border-red-300 katex-container px-3 py-1 rounded text-red-600 text-xs"
-		/>
+<script setup lang="ts">
+import { computed, onMounted, ref } from "vue"
+import { useKeyboard } from "@/Composables/useKeyboard"
 
-		<!-- Le clavier à proprement dit -->
-		<component
-			:is="keyboardComponent"
-			ref="keyboardUI"
-			:options="keyboardOptions"
-			:answer="keyboardAnswer"
-			@change="updateQuestion"
-			@validate="validateQuestion"
-		/>
-
-		<!-- Affichage des réponses déjà données pendant cette session -->
-		<div
-			v-if="givenAnswer.length>0"
-			class="flex gap-3 flex-wrap font-code text-xs"
-		>
-			<div
-				v-for="(item, index) of givenAnswer"
-				:key="index"
-			>
-				{{ item }}
-			</div>
-		</div>
-	</div>
-</template>
-
-<script setup>
-import {computed, onMounted, ref} from "vue"
-import {useKeyboard} from "@/Composables/useKeyboard"
-
-let {getComponent} = useKeyboard()
+const {getComponent} = useKeyboard()
 
 const emits = defineEmits(["change", "validate"])
 
-let props = defineProps({
+const props = defineProps({
 		question: {type: Object, required: true}
 	}),
 	keyboardUI = ref(null),
@@ -58,12 +24,12 @@ let props = defineProps({
 		return props.question.parameters
 	})
 
-let tex = ref(""),
+const tex = ref(""),
 	raw = ref(""),
 	message = ref(""),
 	givenAnswer = ref([])
 
-let updateQuestion = function(value){
+const updateQuestion = function(value){
 		// value = {tex, raw}
 		tex.value = value.tex
 		raw.value = value.raw
@@ -96,7 +62,7 @@ let updateQuestion = function(value){
 	 * @type {ComputedRef<string[]>}
 	 */
 	answerKeys = computed(()=>{
-		let questionsVars = [...new Set([...props.question.block.body.matchAll(/\$([A-Za-z])/g)].map(x => x[0].toLowerCase()))]
+		const questionsVars = [...new Set([...props.question.block.body.matchAll(/\$([A-Za-z])/g)].map(x => x[0].toLowerCase()))]
 		questionsVars.sort()
 		return questionsVars
 	}),
@@ -184,3 +150,37 @@ onMounted(()=>{
 	updateBody()
 })
 </script>
+
+<template>
+	<div class="question-keyboard @container">
+		<!-- Message affichant les détails des erreurs  -->
+		<div
+			v-if="message!==''"
+			v-katex.auto="message"
+			class="bg-red-100 border border-red-300 katex-container px-3 py-1 rounded text-red-600 text-xs"
+		/>
+
+		<!-- Le clavier à proprement dit -->
+		<component
+			:is="keyboardComponent"
+			ref="keyboardUI"
+			:options="keyboardOptions"
+			:answer="keyboardAnswer"
+			@change="updateQuestion"
+			@validate="validateQuestion"
+		/>
+
+		<!-- Affichage des réponses déjà données pendant cette session -->
+		<div
+			v-if="givenAnswer.length>0"
+			class="flex gap-3 flex-wrap font-code text-xs"
+		>
+			<div
+				v-for="(item, index) of givenAnswer"
+				:key="index"
+			>
+				{{ item }}
+			</div>
+		</div>
+	</div>
+</template>

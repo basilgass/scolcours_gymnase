@@ -1,17 +1,11 @@
-<script lang="ts">
-import LayoutFullpage from "@/Layouts/LayoutFullpage.vue"
-
-export default {
-	layout: LayoutFullpage
-}
-</script>
-
 <script lang="ts" setup>
 
 import FlipcardsIndex from "@/Components/Decks/FlipcardsIndex.vue"
 import { deckInterface } from "@/types/modelInterfaces"
 import { PropType } from "vue"
+import LayoutMain from "@/Layouts/LayoutMain.vue"
 
+defineOptions({ layout: LayoutMain })
 
 const props = defineProps({
 	deck: { type: Object as PropType<deckInterface>, required: true }

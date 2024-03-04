@@ -3,8 +3,8 @@ export function splitIfOutsideParentheses(
 	splitCharacter: string,
 ): string[] {
 	let isInside = 0,
-		arr = [],
 		lastIndex = 0
+	const arr = []
 
 	for (let i = 0; i < value.length; i++) {
 		if (value[i] === "(") isInside++

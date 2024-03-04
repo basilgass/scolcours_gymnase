@@ -1,11 +1,11 @@
-import {CheckerBase} from "@/Checkers/CheckerBase";
+import {CheckerBase} from "@/Checkers/CheckerBase"
 
 const name = "type"
 const description = "type"
 
 export class TypeChecker extends CheckerBase {
     constructor(config:string[]|string) {
-        super(config);
+        super(config)
         this.name = name
         this.description = description
     }
@@ -25,7 +25,7 @@ export class TypeChecker extends CheckerBase {
     }
 
     get format(): string {
-        return "Cliquer sur les bonnes lettres.";
+        return "Cliquer sur les bonnes lettres."
     }
 
 }

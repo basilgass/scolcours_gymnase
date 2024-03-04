@@ -18,7 +18,14 @@ class TeamController extends Controller
 	public function index()
 	{
 		return Inertia::render("Teams/TeamsIndex", [
-			'teams' => Team::all()
+			'teams' => Team::with('users')->get()->map(function ($team) {
+				$team->users_count = $team->users->count();
+				return [
+					'id' => $team->id,
+					'name' => $team->name,
+					'users_count' => $team->users_count,
+				];
+			})
 		]);
 	}
 
@@ -27,9 +34,9 @@ class TeamController extends Controller
 		return Inertia::render("Teams/TeamsShow",
 			[
 				'team' => $team,
-				'students' => UserResource::collection($team->users),
-				'chapters' => ChapterMinResource::collection(Chapter::where('active', true)->get()),
-				'challenges' => ChallengeResource::collection(Challenge::all()),
+				'students' => UserResource::collection($team->users)->resolve(),
+				'chapters' => ChapterMinResource::collection(Chapter::where('active', true)->get())->resolve(),
+				'challenges' => ChallengeResource::collection(Challenge::all())->resolve(),
 			]
 		);
 	}
@@ -72,7 +79,10 @@ class TeamController extends Controller
 	public function challenge(Team $team, Challenge $challenge)
 	{
 		$user_ids = $team->users->pluck('id');
-		$scores = $challenge->scores->whereIn('user_id', $user_ids);
+		$scores = $challenge->scores
+			->sortBy('score', SORT_REGULAR, true)
+			->whereIn('user_id', $user_ids)
+			->values()->all();
 
 		return Inertia::render("Teams/TeamsChallengePage", [
 			'team' => $team,
@@ -101,7 +111,7 @@ class TeamController extends Controller
 			->whereHas('questions')
 			->get();
 
-		foreach($data as $post) {
+		foreach ($data as $post) {
 			$stat = [
 				"id" => $post->id,
 				"title" => $post->title,
@@ -110,19 +120,19 @@ class TeamController extends Controller
 			];
 
 
-			foreach ($post->questions as $question){
+			foreach ($post->questions as $question) {
 				$statQuestion = [
 					"id" => $question->id,
 					"users" => []
 				];
 
 				// Initialise the users
-				foreach ($users_id as $user_id){
+				foreach ($users_id as $user_id) {
 					$statQuestion["users"][$user_id] = null;
 				}
 
-				foreach ($question->users as $user){
-					if($users_id->contains($user->id)){
+				foreach ($question->users as $user) {
+					if ($users_id->contains($user->id)) {
 						$statQuestion["users"][$user->id] = $user->pivot->result;
 					}
 				}
@@ -133,7 +143,7 @@ class TeamController extends Controller
 		}
 
 		return Inertia::render(
-			'Admin/AdminStatsShow',
+			'Teams/TeamsPostPage',
 			[
 				"theme" => $chapter->theme,
 				"team" => TeamResource::make($team),

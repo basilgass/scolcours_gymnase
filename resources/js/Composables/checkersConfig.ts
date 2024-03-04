@@ -108,7 +108,9 @@ export function getChecker(checker: string, options?: string[]): CheckerBase {
 }
 
 export function customCheck(checker: string, expected: string, given: string): CheckerResult {
-    let [name, ...config] = checker.split(',')
+	const chkSplit = checker.split(',')
+	const [name] = chkSplit
+    let [, ...config] = chkSplit
 
     const chkClass = getCheckerClass(name)
 

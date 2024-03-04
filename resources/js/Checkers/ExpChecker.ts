@@ -1,6 +1,6 @@
-import {splitAtSigns, splitIfOutsideParentheses} from "@/helpers/helperFunctions.js"
-import {CheckerBase} from "@/Checkers/CheckerBase";
-import {PiMath} from "pimath/esm";
+import { splitAtSigns, splitIfOutsideParentheses } from "@/helpers/helperFunctions.js"
+import { CheckerBase } from "@/Checkers/CheckerBase"
+import { PiMath } from "pimath/esm"
 
 const name = "exp"
 const description = `exp,[paramètres]
@@ -11,7 +11,7 @@ aucun
 
 export class ExpChecker extends CheckerBase {
     constructor(config?: string[] | string) {
-        super(config);
+        super(config)
         this.name = name
         this.description = description
     }
@@ -41,7 +41,7 @@ export class ExpChecker extends CheckerBase {
 
         // on coupe en numérateur / dénominateur
         // on recherche un endroit qui n'est pas entre parenthèse.
-        let [N, D] = splitIfOutsideParentheses(given, "/"),
+        const [N, D] = splitIfOutsideParentheses(given, "/"),
             [eN, eD] = splitIfOutsideParentheses(expected, "/")
 
         if (D === undefined && eD !== undefined) {
@@ -86,7 +86,7 @@ function expCompare(eValue, value) {
     }
 
     // On contrôle maintenant les numérateurs
-    let elements = splitAtSigns(value),
+    const elements = splitAtSigns(value),
         expectedElements = splitAtSigns(eValue)
 
     if (expectedElements.length !== elements.length) {
@@ -101,7 +101,7 @@ function expCompare(eValue, value) {
 
     // Préparation de tous les éléments sous la forme d'un tableau:
     // [ {polynom, exponent} ]
-    let elementsArr: {
+    const elementsArr: {
         polynom: string,
         exponent: string,
         sort: string
@@ -111,7 +111,7 @@ function expCompare(eValue, value) {
         return a.sort < b.sort ? 1 : -1
     })
 
-    let expectedElementsArr: {
+    const expectedElementsArr: {
         polynom: string,
         exponent: string,
         sort: string

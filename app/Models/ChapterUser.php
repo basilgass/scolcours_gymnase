@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
  * App\Models\ChapterUser
  *
  * @property-read \App\Models\Chapter|null $chapter
- * @property-read \App\Models\User $user
+ * @property-read \App\Models\User|null $user
  * @method static \Illuminate\Database\Eloquent\Builder|ChapterUser newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|ChapterUser newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|ChapterUser query()

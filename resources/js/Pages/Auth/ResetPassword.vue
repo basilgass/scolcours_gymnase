@@ -1,3 +1,48 @@
+<script>
+import BreezeButton from "@/Components/Auth/Button.vue"
+import BreezeGuestLayout from "@/Layouts/LayoutGuest.vue"
+import BreezeInput from "@/Components/Auth/Input.vue"
+import BreezeLabel from "@/Components/Auth/Label.vue"
+import BreezeValidationErrors from "@/Components/Auth/ValidationErrors.vue"
+import { Head } from "@inertiajs/vue3"
+
+export default {
+
+	components: {
+		BreezeButton,
+		BreezeInput,
+		BreezeLabel,
+		BreezeValidationErrors,
+		Head,
+	},
+	layout: BreezeGuestLayout,
+
+	props: {
+		email: String,
+		token: String,
+	},
+
+	data() {
+		return {
+			form: this.$inertia.form({
+				token: this.token,
+				email: this.email,
+				password: "",
+				password_confirmation: "",
+			})
+		}
+	},
+
+	methods: {
+		submit() {
+			this.form.post(this.route("password.update"), {
+				onFinish: () => this.form.reset("password", "password_confirmation"),
+			})
+		}
+	}
+}
+</script>
+
 <template>
 	<Head title="Reset Password" />
 
@@ -60,48 +105,3 @@
 		</div>
 	</form>
 </template>
-
-<script>
-import BreezeButton from "@/Components/Auth/Button.vue"
-import BreezeGuestLayout from "@/Layouts/LayoutGuest.vue"
-import BreezeInput from "@/Components/Auth/Input.vue"
-import BreezeLabel from "@/Components/Auth/Label.vue"
-import BreezeValidationErrors from "@/Components/Auth/ValidationErrors.vue"
-import {Head} from "@inertiajs/vue3"
-
-export default {
-
-	components: {
-		BreezeButton,
-		BreezeInput,
-		BreezeLabel,
-		BreezeValidationErrors,
-		Head,
-	},
-	layout: BreezeGuestLayout,
-
-	props: {
-		email: String,
-		token: String,
-	},
-
-	data() {
-		return {
-			form: this.$inertia.form({
-				token: this.token,
-				email: this.email,
-				password: "",
-				password_confirmation: "",
-			})
-		}
-	},
-
-	methods: {
-		submit() {
-			this.form.post(this.route("password.update"), {
-				onFinish: () => this.form.reset("password", "password_confirmation"),
-			})
-		}
-	}
-}
-</script>

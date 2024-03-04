@@ -1,5 +1,14 @@
 import AsciiMathParser from "@/asciimath2tex"
 
+export type keyboardKey = {
+	key: string
+	visible: boolean
+	type: string
+	display: string
+	span: number
+	fn?: (value: string) => string
+}
+
 /**
  * Represents a keyboard object type.
  * @typedef {Object} KeyboardObjectType
@@ -13,7 +22,10 @@ export type KeyboardObjectType = {
 	grid: string
 	layout: (string | [string, number])[]
 	tex: (value: string) => string // Type of the returned value can be changed according to actual function implementation
+	keys?: {[Key: string]: keyboardKey}
 }
+
+
 
 /**
  * Returns the corresponding type of keyboard given a checker parameter.
@@ -81,7 +93,7 @@ export const keyboardKeys = {
 	_: { type: "math", display: "\\textcolor{lightgray}{\\log}_a" },
 	"|": {
 		type: "math",
-		display: "\\big\\vert \\textcolor{lightgray}{x} \\big\\vert",
+		display: "\\big\\vert \\textcolor{lightgray}{x} \\big\\vert"
 	},
 	y: { type: "math", display: "y" },
 	"y^2": { type: "math", display: "y^2" },
@@ -108,7 +120,7 @@ export const keyboardKeys = {
 	"^**": { type: "math", display: "\\textcolor{lightgray}{\\mathbb{R}}^*" },
 	"\\\\": {
 		type: "math",
-		display: "\\setminus \\textcolor{lightgray}{ E } ",
+		display: "\\setminus \\textcolor{lightgray}{ E } "
 	},
 	"+c": { type: "math", display: "+c" },
 	uu: { type: "math", display: "\\cup" },
@@ -119,7 +131,7 @@ export const keyboardKeys = {
 	"-+": { type: "math", display: "\\mp" },
 	"!!": { type: "math", display: "\\varnothing" },
 	"@reset": { type: "icon", display: "bi bi-trash" },
-	"@back": { type: "icon", display: "bi bi-backspace" },
+	"@back": { type: "icon", display: "bi bi-backspace" }
 }
 
 /**
@@ -172,11 +184,11 @@ export const keyboards: { [Key: string]: KeyboardObjectType } = {
 			"/",
 			"(",
 			")",
-			";",
+			";"
 		],
 		tex(value) {
 			return asciiToTex(value)
-		},
+		}
 	},
 	coord: {
 		name: "coord",
@@ -206,33 +218,11 @@ export const keyboards: { [Key: string]: KeyboardObjectType } = {
 			";",
 			")",
 			"pi",
-			"e",
+			"e"
 		],
-		tex: function (value) {
-			const [...coords] = value.split(";")
-			let lp = "",
-				rp = ""
-
-			if (coords[0].startsWith("(")) {
-				lp = "\\left("
-				coords[0] = coords[0].substring(1)
-				rp = "\\right."
-			}
-			if (coords[coords.length - 1].endsWith(")")) {
-				if (lp === "") {
-					lp = "\\left."
-				}
-				rp = "\\right)"
-				coords[coords.length - 1] = coords[coords.length - 1].substring(
-					0,
-					coords[coords.length - 1].length - 1,
-				)
-			}
-
-			return `${lp}${coords
-				.map((x) => makeExactFromAscii(x))
-				.join(";")}${rp}`
-		},
+		tex: function(value) {
+			return buildVectorialTex(value)
+		}
 	},
 	equation: {
 		name: "equation",
@@ -260,11 +250,11 @@ export const keyboards: { [Key: string]: KeyboardObjectType } = {
 			")",
 			"0",
 			"/",
-			["=", 2],
+			["=", 2]
 		],
 		tex(value) {
 			return asciiToTex(value)
-		},
+		}
 	},
 	exact: {
 		name: "exact",
@@ -299,15 +289,15 @@ export const keyboards: { [Key: string]: KeyboardObjectType } = {
 			"",
 			"",
 			"RR",
-			"!!",
+			"!!"
 		],
-		tex: function (value) {
+		tex: function(value) {
 			// Apply this for all splited.
 			return value
 				.split(",")
 				.map((v) => makeExactFromAscii(v))
 				.join(",")
-		},
+		}
 	},
 	fraction: {
 		name: "fraction",
@@ -315,7 +305,7 @@ export const keyboards: { [Key: string]: KeyboardObjectType } = {
 		layout: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "-", "0", "/"],
 		tex(value) {
 			return asciiToTex(value)
-		},
+		}
 	},
 	function: {
 		name: "function",
@@ -342,11 +332,11 @@ export const keyboards: { [Key: string]: KeyboardObjectType } = {
 			"(",
 			")",
 			"0",
-			"/",
+			"/"
 		],
 		tex(value) {
 			return asciiToTex(value)
-		},
+		}
 	},
 	limit: {
 		name: "limit",
@@ -371,15 +361,15 @@ export const keyboards: { [Key: string]: KeyboardObjectType } = {
 			"",
 			"+-",
 			"-+",
-			"oo",
+			"oo"
 		],
-		tex: function (value) {
+		tex: function(value) {
 			// Apply this for all values.
 			return value
 				.split(",")
 				.map((v) => makeExactFromAscii(v))
 				.join(",")
-		},
+		}
 	},
 	number: {
 		name: "number",
@@ -387,7 +377,7 @@ export const keyboards: { [Key: string]: KeyboardObjectType } = {
 		layout: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "-", "0", "."],
 		tex(value) {
 			return asciiToTex(value)
-		},
+		}
 	},
 	polynom: {
 		name: "polynom",
@@ -416,11 +406,11 @@ export const keyboards: { [Key: string]: KeyboardObjectType } = {
 			"0",
 			"/",
 			"^2",
-			"^",
+			"^"
 		],
-		tex: function (value) {
+		tex: function(value) {
 			return asciiToTex(value)
-		},
+		}
 	},
 	pow: {
 		name: "pow",
@@ -441,11 +431,11 @@ export const keyboards: { [Key: string]: KeyboardObjectType } = {
 			"",
 			"0",
 			"(",
-			")",
+			")"
 		],
 		tex(value) {
 			return asciiToTex(value)
-		},
+		}
 	},
 	primitive: {
 		name: "primitive",
@@ -477,11 +467,11 @@ export const keyboards: { [Key: string]: KeyboardObjectType } = {
 			"/",
 			"(",
 			")",
-			["+c",2],
+			["+c", 2]
 		],
 		tex(value) {
 			return asciiToTex(value)
-		},
+		}
 	},
 	rational: {
 		name: "rational",
@@ -510,14 +500,14 @@ export const keyboards: { [Key: string]: KeyboardObjectType } = {
 			"0",
 			"",
 			"",
-			"",
+			""
 		],
-		tex: function (value) {
+		tex: function(value) {
 			const [Pnum, Pden] = value.split("/")
 			return Pden === undefined
 				? asciiToTex(Pnum)
 				: `\\frac{ ${asciiToTex(Pnum)} }{ ${Pden} }`
-		},
+		}
 	},
 	scientific: {
 		name: "scientific",
@@ -538,11 +528,11 @@ export const keyboards: { [Key: string]: KeyboardObjectType } = {
 			"",
 			"0",
 			".",
-			"",
+			""
 		],
 		tex(value) {
 			return asciiToTex(value)
-		},
+		}
 	},
 	simple: {
 		name: "simple",
@@ -563,11 +553,11 @@ export const keyboards: { [Key: string]: KeyboardObjectType } = {
 			"",
 			"0",
 			".",
-			"/",
+			"/"
 		],
 		tex(value) {
 			return asciiToTex(value)
-		},
+		}
 	},
 	solution: {
 		name: "solution",
@@ -610,11 +600,11 @@ export const keyboards: { [Key: string]: KeyboardObjectType } = {
 			"!!",
 			"\\\\",
 			"uu",
-			"oo",
+			"oo"
 		],
-		tex: function (value) {
+		tex: function(value) {
 			let tex = asciiToTex(
-				value.replace("RR_+", "RR_(+)").replace("RR_-", "RR_(-)"),
+				value.replace("RR_+", "RR_(+)").replace("RR_-", "RR_(-)")
 			)
 
 			let isOpened = false
@@ -644,7 +634,7 @@ export const keyboards: { [Key: string]: KeyboardObjectType } = {
 			}
 
 			return tex
-		},
+		}
 	},
 	vector: {
 		name: "vector",
@@ -674,37 +664,40 @@ export const keyboards: { [Key: string]: KeyboardObjectType } = {
 			";",
 			")",
 			"pi",
-			"e",
+			"e"
 		],
-		tex: function (value) {
-			const [...coords] = value.split(";")
-			let lp = "",
-				rp = ""
+		tex: function(value) {
+			return buildVectorialTex(value)
+		}
+	}
+}
 
-			if (coords[0].startsWith("(")) {
-				lp = "\\left("
-				coords[0] = coords[0].substring(1)
-				rp = "\\right."
-			}
-			if (coords[coords.length - 1].endsWith(")")) {
-				if (lp === "") {
-					lp = "\\left."
-				}
-				rp = "\\right)"
-				coords[coords.length - 1] = coords[coords.length - 1].substring(
-					0,
-					coords[coords.length - 1].length - 1,
-				)
-			}
+function buildVectorialTex(value: string) {
+	const [...coords] = value.split(";")
+	let lp = "", rp = ""
 
-			return `${lp}\\begin{matrix}${coords
-				.map((x) => {
-					const tex = makeExactFromAscii(x)
-					return tex === "" ? "\\phantom{ }" : tex
-				})
-				.join("\\\\")}\\end{matrix}${rp}`
-		},
-	},
+	if (coords[0].startsWith("(")) {
+		lp = "\\left("
+		coords[0] = coords[0].substring(1)
+		rp = "\\right."
+	}
+	if (coords[coords.length - 1].endsWith(")")) {
+		if (lp === "") {
+			lp = "\\left."
+		}
+		rp = "\\right)"
+		coords[coords.length - 1] = coords[coords.length - 1].substring(
+			0,
+			coords[coords.length - 1].length - 1
+		)
+	}
+
+	return `${lp}\\begin{matrix}${coords
+		.map((x) => {
+			const tex = makeExactFromAscii(x)
+			return tex === "" ? "\\phantom{ }" : tex
+		})
+		.join("\\\\")}\\end{matrix}${rp}`
 }
 
 /**
@@ -756,6 +749,6 @@ function makeExactFromAscii(value: string): string {
 	}
 
 	return asciiToTex(
-		result.length === 1 ? result[0] : result.map((x) => `(${x})`).join("/"),
+		result.length === 1 ? result[0] : result.map((x) => `(${x})`).join("/")
 	)
 }

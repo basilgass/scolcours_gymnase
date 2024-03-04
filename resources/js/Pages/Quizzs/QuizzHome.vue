@@ -1,3 +1,26 @@
+<script setup lang="ts">
+import { onMounted, PropType } from "vue"
+import { router } from "@inertiajs/vue3"
+import LayoutMain from "@/Layouts/LayoutMain.vue"
+import { QuizzSessionInterface } from "@/types/modelInterfaces"
+
+defineOptions({ layout: LayoutMain })
+
+const props = defineProps({
+	quizzSessions: { type: Object as PropType<QuizzSessionInterface[]>, required: true },
+})
+
+const updateQuizz = ()=> {
+		router.reload({
+			preserveScroll: true,
+			preserveState: true
+		})
+	}
+onMounted(()=>{
+	setInterval(() => updateQuizz(), 2000)
+})
+</script>
+
 <template>
 	<section>
 		<h1 class="text-2xl">
@@ -36,30 +59,3 @@
 		</div>
 	</section>
 </template>
-
-<script>
-import LayoutMain from "@/Layouts/LayoutMain.vue"
-
-export default {
-	layout: LayoutMain,
-}
-</script>
-<script setup>
-import {onMounted} from "vue"
-import {router} from "@inertiajs/vue3"
-
-let props = defineProps({
-	quizzSessions: { type: Array, required: true },
-})
-
-let interval = null,
-	updateQuizz = ()=> {
-		router.reload({
-			preserveScroll: true,
-			preserveState: true
-		})
-	}
-onMounted(()=>{
-	interval = setInterval(() => updateQuizz(), 2000)
-})
-</script>

@@ -2,7 +2,7 @@
 Génère un modal
 Utilisé principalement pour l'édition des blocks
 -->
-<script setup>
+<script setup lang="ts">
 
 import { ref } from "vue"
 
@@ -19,7 +19,7 @@ const  props = defineProps({
 // 	if(val){root.value.showModal()}else{root.value.close()}
 // })
 
-let root = ref(null)
+const root = ref(null)
 
 function doCancel(){
 	emits("cancel")

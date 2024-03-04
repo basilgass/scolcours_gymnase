@@ -1,13 +1,13 @@
 <!--
 Switch permettant d'activer ou désactiver une fonctionnalité
 -->
-<script setup>
+<script setup lang="ts">
 import { Switch } from "@headlessui/vue"
 import { computed, ref, watch } from "vue"
 
-let emit = defineEmits(["update:modelValue"])
+const emit = defineEmits(["update:modelValue"])
 
-let props = defineProps({
+const props = defineProps({
 	modelValue: Boolean,
 	trueText: {type: String, default: ""},
 	falseText: {type: String, default: ""},
@@ -17,9 +17,9 @@ let props = defineProps({
 	circleColor: {type: String, default: "bg-white"}
 })
 
-let switchValue = ref(props.modelValue)
+const switchValue = ref(props.modelValue)
 
-let switchClass = computed(()=>{
+const switchClass = computed(()=>{
 	let value = "relative inline-flex items-center rounded-full "
 
 	if(props.sm){
@@ -31,7 +31,7 @@ let switchClass = computed(()=>{
 	return value + (switchValue.value ? props.enabledColor : props.disabledColor)
 })
 
-let circleClass = computed(()=>{
+const circleClass = computed(()=>{
 	let value = "inline-block transform rounded-full bg-white "
 
 	if(props.sm){

@@ -1,34 +1,32 @@
-<script>
+<script setup lang="ts">
+import { computed, inject, PropType, ref } from "vue"
+import DialogModal from "@/Components/Ui/DialogModal.vue"
+import QuestionsIndex from "@/Components/Posts/Questions/QuestionsIndex.vue"
+import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
+import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
+import { router } from "@inertiajs/vue3"
+import FormMaker from "@/Components/Form/FormMaker.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
+import axios from "axios"
+import { flashInterface } from "@/types"
+import { ChapterInterface, TeamInterface } from "@/types/modelInterfaces"
 
-export default {
-		layout: LayoutMain,
-	}
-</script>
+defineOptions({ layout: LayoutMain })
 
-<script setup>
-	import { computed, inject, ref } from "vue"
-	import DialogModal from "@/Components/Ui/DialogModal.vue"
-	import QuestionsIndex from "@/Components/Posts/Questions/QuestionsIndex.vue"
-	import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
-	import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
-	import { router } from "@inertiajs/vue3"
-	import FormMaker from "@/Components/Form/FormMaker.vue"
-
-	const flash = inject("flash")
-	let props = defineProps({
+	const flash = inject<flashInterface>("flash")
+	const props = defineProps({
 			quizz: { type: Object, required: true },
 			questions: { type: Object, required: true },
 			sessions: { type: Object, required: true },
-			teams: { type: Array, required: true },
-			chapters: { type: Array, required: true },
+			teams: { type: Object as PropType<TeamInterface[]>, required: true },
+			chapters: { type: Object as PropType<ChapterInterface[]>, required: true },
 		}),
 		ongoing = function (session) {
 			return session.current <= session.total && session.enable
 		},
 		theQuizz = ref(props.quizz)
 
-	let showQuizzForm = ref(false),
+	const showQuizzForm = ref(false),
 		quizzUpdate = function () {
 			axios
 				.post(route("quizzs.update", [theQuizz.value.id]), {
@@ -38,7 +36,7 @@ export default {
 					chapter_id: theQuizz.value.chapter,
 					_method: "PATCH",
 				})
-				.then((res) => {
+				.then(() => {
 					showQuizzForm.value = false
 					flash.success("le quizz a bien été mis à jour")
 				})
@@ -51,13 +49,13 @@ export default {
 				.post(route("quizzs.destroy", [theQuizz.value.id]), {
 					_method: "DELETE",
 				})
-				.then((res) => {
+				.then(() => {
 					router.visit(route("quizzs.admin"))
 				})
 		}
 
-	let showUsersIndex = ref(-1),
-		sessionTeam = ref(""),
+	const showUsersIndex = ref(-1),
+		sessionTeam = ref<string|number>(""),
 		sessionName = ref(""),
 		sessionCreate = function () {
 			axios
@@ -65,7 +63,7 @@ export default {
 					name: sessionName.value,
 					team: sessionTeam.value,
 				})
-				.then((res) => {
+				.then(() => {
 					showNewSessionForm.value = false
 					flash.success(
 						`la session ${
@@ -87,7 +85,7 @@ export default {
 				.post(route("quizzs.sessions.destroy", [id]), {
 					_method: "DELETE",
 				})
-				.then((res) => {
+				.then(() => {
 					flash.success("session supprimée")
 					// remove the deleted session
 				})

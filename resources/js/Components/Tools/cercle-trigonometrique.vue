@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 	/** Tools
 	 * title: cercle trigonométrique
 	 * body: aide aux calculs des valeurs trigonométriques

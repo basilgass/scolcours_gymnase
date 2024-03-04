@@ -1,3 +1,26 @@
+<script setup lang="ts">
+import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
+import { router } from "@inertiajs/vue3"
+import LayoutMain from "@/Layouts/LayoutMain.vue"
+import axios from "axios"
+import { PropType } from "vue"
+import { QuizzInterface } from "@/types/modelInterfaces"
+
+defineOptions({ layout: LayoutMain })
+
+defineProps({
+	quizzs: { type: Object as PropType<QuizzInterface[]>, required: true },
+})
+
+function createQuizz(){
+	axios.post(route("quizzs.store"))
+		.then(res=>{
+			router.visit(route("quizzs.admin.quizz", [res.data]))
+		})
+}
+</script>
+
+
 <template>
 	<section>
 		<h1 class="text-2xl pt-10">
@@ -37,27 +60,3 @@
 		</div>
 	</section>
 </template>
-
-<script>
-import LayoutMain from "@/Layouts/LayoutMain.vue"
-
-export default {
-	layout: LayoutMain,
-}
-</script>
-<script setup>
-import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
-import { onMounted } from "vue"
-import {router} from "@inertiajs/vue3"
-
-let props = defineProps({
-	quizzs: { type: Array, required: true },
-})
-
-function createQuizz(){
-	axios.post(route("quizzs.store"))
-		.then(res=>{
-			router.visit(route("quizzs.admin.quizz", [res.data]))
-		})
-}
-</script>

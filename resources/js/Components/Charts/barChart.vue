@@ -1,15 +1,15 @@
-<script setup>
-import {Bar} from "vue-chartjs"
-import {computed} from "vue"
+<script setup lang="ts">
+import { Bar } from "vue-chartjs"
+import { computed } from "vue"
 
-import {Chart as ChartJS} from "chart.js/auto"
-import {CategoryScale} from "chart.js"
-import _ from "lodash";
+import { Chart as ChartJS } from "chart.js/auto"
+import { CategoryScale } from "chart.js"
+import _ from "lodash"
 
 ChartJS.register(CategoryScale)
 
 
-let props = defineProps({
+const props = defineProps({
 	chartLabels: {type: Array, default: () => []},
 	chartDataset: {type: [Object, Array], required: true},
 	chartOptions: {type: Object, default: () => {}},
@@ -17,15 +17,15 @@ let props = defineProps({
 	chartColorset: {type: String, default: null}
 })
 
-let chartData = computed(() => {
-		let labels = []
+const chartData = computed(() => {
+		const labels = []
 		if (props.chartLabels.length>0) {
 			labels["labels"] = props.chartLabels
 		}
 
 		let datasets = []
 		if(Array.isArray(props.chartDataset)){
-			if(props.chartDataset[0].hasOwnProperty("data")){
+			if(Object.hasOwn(props.chartDataset[0], 'data')){
 				datasets = props.chartDataset
 			}else{
 				datasets = [{
@@ -43,7 +43,7 @@ let chartData = computed(() => {
 		}
 	}),
 	chartOptionsMerged = computed(()=>{
-		let opts= {
+		const opts= {
 			responsive: true,
 			maintainAspectRatio: true,
 			plugins: {

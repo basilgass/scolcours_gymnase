@@ -1,38 +1,6 @@
-<template>
-	<div>
-		<div class="flex flex-wrap gap-1 md:gap-3 my-5">
-			<button
-				v-for="element of qcmItems"
-				:key="element.key"
-				:class="{
-					'btn-success': element.selected,
-					'bg-white': !element.selected,
-					'w-full': isFullWidth,
-					'flex-1': isFlex,
-				}"
-				class="btn"
-				@click="qcmButtonClick(element)"
-			>
-				<span
-					v-if="element.ascii"
-					v-katex.ascii="element.label"
-				/>
-				<span
-					v-else-if="isTex"
-					v-katex="element.label"
-				/>
-				<span
-					v-else
-					v-katex.auto="element.label"
-				/>
-			</button>
-		</div>
-	</div>
-</template>
-
-<script setup>
-import {computed, onMounted, ref} from "vue"
-import {useKeyboard} from "@/Composables/useKeyboard"
+<script setup lang="ts">
+import { computed, onMounted, ref } from "vue"
+import { useKeyboard } from "@/Composables/useKeyboard"
 
 let props = defineProps({
 	keyboard: { type: Object, required: true },
@@ -60,7 +28,7 @@ let changeEvent = function () {
 			for(let index in goodAnswers){
 				if(goodAnswers[index].split("|").includes(key)){
 					// remove this item
-					goodAnswers.splice(index,1)
+					goodAnswers.splice(Number(index),1)
 					break
 				}
 			}
@@ -119,7 +87,8 @@ let qcmItems = ref([]),
 		]
 
 		//.map((x) => x[output ? output : "display"]),
-		values.sort((a,b)=>a.key<b.key)
+		// TODO: Check sorting order.
+		values.sort((a,b)=>a.key<b.key?-1:1)
 		return values
 	},
 	qcmButtonClick = (element)=>{
@@ -190,3 +159,35 @@ defineExpose({
 	parameters: "full (pleine largeur)\nflex (utilisation de flex)\ntex (converti en TeX)"
 })
 </script>
+
+<template>
+	<div>
+		<div class="flex flex-wrap gap-1 md:gap-3 my-5">
+			<button
+				v-for="element of qcmItems"
+				:key="element.key"
+				:class="{
+					'btn-success': element.selected,
+					'bg-white': !element.selected,
+					'w-full': isFullWidth,
+					'flex-1': isFlex,
+				}"
+				class="btn"
+				@click="qcmButtonClick(element)"
+			>
+				<span
+					v-if="element.ascii"
+					v-katex.ascii="element.label"
+				/>
+				<span
+					v-else-if="isTex"
+					v-katex="element.label"
+				/>
+				<span
+					v-else
+					v-katex.auto="element.label"
+				/>
+			</button>
+		</div>
+	</div>
+</template>

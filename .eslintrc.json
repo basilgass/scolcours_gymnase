@@ -17,12 +17,14 @@
 	"rules": {
 		"semi": ["error", "never"],
 		"no-undef": "off",
+		"prefer-const": "off",
 		"vue/html-indent": ["error", "tab"],
 		"vue/block-order": [
 			"error",
 			{
 				"order": ["script", "template", "style"]
 			}
-		]
+		],
+		"vue/multi-word-component-names": "off"
 	}
 }

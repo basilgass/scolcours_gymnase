@@ -1,17 +1,12 @@
-<script>
-import LayoutMain from "@/Layouts/LayoutMain.vue"
-
-export default {
-	layout: LayoutMain
-}
-
-</script>
-<script setup>
+<script setup lang="ts">
 
 import FormMaker from "@/Components/Form/FormMaker.vue"
+import LayoutMain from "@/Layouts/LayoutMain.vue"
+
+defineOptions({ layout: LayoutMain })
 
 defineProps({
-	challenges: Object
+	challenges: { type: Object, required: true }
 })
 
 </script>
@@ -45,8 +40,8 @@ defineProps({
 				>
 					<div v-if="challenge.sessions.length>0">
 						<div
-							v-for="(qsession, index) in challenge.sessions"
-							:key="`challenge-session-${ChallengesIndex}`"
+							v-for="(qsession) in challenge.sessions"
+							:key="`challenge-session-${qsession.id}`"
 						>
 							<Link :href="qsession.token">
 								{{ qsession.token }}

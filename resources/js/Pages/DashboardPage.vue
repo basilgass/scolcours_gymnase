@@ -1,13 +1,8 @@
-<script>
+<script setup lang="ts">
+import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 
-export default {
-	layout: LayoutMain
-}
-</script>
-
-<script setup>
-import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
+defineOptions({ layout: LayoutMain })
 
 let props = defineProps({
 	courses: {type: Object, required: true}

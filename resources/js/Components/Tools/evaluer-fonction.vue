@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 /** Tools
  * title: évaluation d'une fonction polynomiale
  * body: évaluation d'une fonction polynomiale
@@ -11,13 +11,13 @@ import { PiMath } from "pimath/esm"
 import KeyboardDisplay from "@/Components/Keyboards/KeyboardDisplay.vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 
-let f = ref("3*x+1"),
+const f = ref("3*x+1"),
 	x = ref("1"),
 	activeInput = ref("fx")
 
-let fx = computed(() => {
+const fx = computed(() => {
 	try {
-		let FX = new PiMath.Polynom(f.value),
+		const FX = new PiMath.Polynom(f.value),
 			data = {
 				x: "",
 				fx: "",
@@ -30,7 +30,7 @@ let fx = computed(() => {
 			data.frac = null
 			data.value = null
 		} else {
-			let fB = new PiMath.Fraction(x.value)
+			const fB = new PiMath.Fraction(x.value)
 			data.x = fB.tex
 			data.fx = FX.tex.replace(/x/g, `\\left(${x.value}\\right)`)
 			const value = FX.evaluate(fB)

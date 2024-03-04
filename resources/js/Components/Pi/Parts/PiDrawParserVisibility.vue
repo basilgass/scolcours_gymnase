@@ -27,10 +27,10 @@ function visibilityButtonsInit(): visibilityButtonType[] {
 		return []
 	}
 
-	let btns = []
+	const btns = []
 
 	// There is at least one button.
-	for (let row of props.draw.code.split("\n")) {
+	for (const row of props.draw.code.split("\n")) {
 		// Parse the current row, without creating any element.
 		const c = parserPreprocess(row) as ParserPrepocessType
 

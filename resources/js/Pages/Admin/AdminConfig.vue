@@ -1,30 +1,25 @@
-<script>
-import LayoutMain from "@/Layouts/LayoutMain.vue"
-
-export default {
-	layout: LayoutMain,
-}
-</script>
-
-<script setup>
-import {inject, ref} from "vue"
+<script setup lang="ts">
+import { inject, PropType, ref } from "vue"
 import axios from "axios"
 import FormMaker from "@/Components/Form/FormMaker.vue"
+import LayoutMain from "@/Layouts/LayoutMain.vue"
+import { flashInterface, ThemeInterface } from "@/types"
 
-const flash = inject("flash")
+defineOptions({ layout: LayoutMain })
+const flash = inject<flashInterface>("flash")
 
-let props = defineProps({
-	allThemes: {type: Array, required: true},
+const props = defineProps({
+	allThemes: {type: Object as PropType<ThemeInterface[]>, required: true},
 	title: {type: String, required: true}
 })
-let title = ref(props.title),
+const title = ref(props.title),
 	themes = ref(props.allThemes),
 	saveConfig = function () {
 		axios.post(route("admin.config.update"), {
 			title: title.value,
 			themes: themes.value,
 			_method: "PATCH"
-		}).then(res => {
+		}).then(() => {
 			flash.success("les modifications de configuration ont bien été changées !")
 		}).catch(err => {
 			console.warn(err)
@@ -36,7 +31,7 @@ let title = ref(props.title),
 			order: themes.value.map((x, index) => {
 				return {id: x.id, order: index + 1}
 			})
-		}).then(res => {
+		}).then(() => {
 			flash.success("L'ordre des thèmes à bien été enregistré !")
 		}).catch(res => {
 			console.warn("update ordering order: ", res)

@@ -1,14 +1,5 @@
-<template>
-	<Link
-		:class="classes"
-		:href="href"
-	>
-		<slot />
-	</Link>
-</template>
-
 <script>
-import {Link} from "@inertiajs/vue3"
+import { Link } from "@inertiajs/vue3"
 
 export default {
 	components: {
@@ -26,3 +17,12 @@ export default {
 	}
 }
 </script>
+
+<template>
+	<Link
+		:class="classes"
+		:href="href"
+	>
+		<slot />
+	</Link>
+</template>

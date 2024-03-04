@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 /** Tools
  * title: affine
  * body: calcul d'une fonction affine par deux maxPoints
@@ -10,11 +10,11 @@ import { computed, ref } from "vue"
 import { PiMath } from "pimath/esm"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 
-let A = ref("3,4"),
+const A = ref("3,4"),
 	B = ref("1,2")
 
 
-let affine = computed(() => {
+const affine = computed(() => {
 	try {
 		return new PiMath.Geometry.Line(
 			new PiMath.Geometry.Point(A.value),

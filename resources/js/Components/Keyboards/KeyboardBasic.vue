@@ -6,14 +6,14 @@ import { computed, ref } from "vue"
 // Each keyboards has props
 	// props.config: keyboard config, like special letters or other...
 	// props.answer: expected answer
-	let props = defineProps({
+	const props = defineProps({
 		answer: { type: String },
 		keyboard: { type: Object, required: true },
 	})
 
 	// Used to "move" up the currently keyboard chercker format.
 	// let checkerFormat = inject("checkerFormat")
-	let extraLetters = computed(() => {
+	const extraLetters = computed(() => {
 			return props.keyboard.values.length > 0
 				? props.keyboard.values[0].split(",")
 				: []
@@ -32,7 +32,7 @@ import { computed, ref } from "vue"
 						...props.keyboard.config,
 						layout: props.keyboard.config.layout.map((x) => {
 							if (x.includes("x")) {
-								let newKey = x.replace("x", varName)
+								const newKey = x.replace("x", varName)
 								return {
 									key: newKey,
 									display: newKey,
@@ -48,7 +48,7 @@ import { computed, ref } from "vue"
 		})
 
 	// Emits change and validate (to trigger a validation manually on the parent)
-	let emits = defineEmits(["change", "validate"]),
+	const emits = defineEmits(["change", "validate"]),
 		changeEvent = function () {
 			//value = {tex, raw, input}
 
@@ -72,16 +72,16 @@ import { computed, ref } from "vue"
 		}
 
 	// Get the keyboard and make it reactive.
-	let { loadAnswerToKeyboard } = useKeyboard(props)
+	const { loadAnswerToKeyboard } = useKeyboard(props)
 
 	// loadAnswerToKeyboard(props.config)
-	let keyboardInput = ref({ input: "", tex: "", raw: "" }),
+	const keyboardInput = ref({ input: "", tex: "", raw: "" }),
 		keyboardChange = (event) => {
 			keyboardInput.value = event
 			changeEvent()
 		}
 
-	let reset = () => {
+	const reset = () => {
 		keyboardInput.value = { input: "", tex: "", raw: "" }
 	}
 	defineExpose({

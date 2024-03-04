@@ -1,12 +1,13 @@
 <script lang="ts" setup>
-import { computed, PropType, ref } from "vue"
+import { computed, ref } from "vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import { NumExp } from "pimath/esm/maths/numexp"
-import { IllustrationInterface } from "@/types/modelInterfaces"
 
-let props = defineProps({
-	illustration: { type: Object as PropType<IllustrationInterface>, required: true }
-})
+// import { IllustrationInterface } from "@/types/modelInterfaces"
+//
+// defineProps({
+// 	illustration: { type: Object as PropType<IllustrationInterface>, required: true }
+// })
 
 type bissection = {
 	a: number
@@ -18,7 +19,7 @@ type bissection = {
 	choix?: "a" | "b"
 }
 
-let f = ref("3x+1"),
+const f = ref("3x+1"),
 	a = ref(-2),
 	b = ref(2),
 	fixed = ref(3),

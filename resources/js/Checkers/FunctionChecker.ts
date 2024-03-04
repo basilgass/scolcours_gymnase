@@ -1,5 +1,5 @@
-import {PiMath} from "pimath/esm"
-import {CheckerBase} from "@/Checkers/CheckerBase";
+import { PiMath } from "pimath/esm"
+import { CheckerBase } from "@/Checkers/CheckerBase"
 
 const name = "function"
 const description = `function|fn,[paramètres]
@@ -9,9 +9,9 @@ const description = `function|fn,[paramètres]
 `
 
 export class FunctionChecker extends CheckerBase {
-    private isDevelopped: boolean;
+    private isDevelopped: boolean
     constructor(config:string[]|string) {
-        super(config);
+        super(config)
         this.name = name
         this.description = description
 
@@ -19,7 +19,7 @@ export class FunctionChecker extends CheckerBase {
     }
 
     check(expected: string, given: string): { result: boolean; message: string } {
-        let A = new PiMath.Polynom(given),
+        const A = new PiMath.Polynom(given),
             Q = new PiMath.Polynom(expected)
 
         // Must be the same equation.
@@ -39,7 +39,7 @@ export class FunctionChecker extends CheckerBase {
     }
 
     get format(): string {
-        let opts = []
+        const opts = []
 
         if (this.isDevelopped) {
             // TODO: develop function does not work for now...

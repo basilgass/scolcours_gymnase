@@ -3,6 +3,12 @@ Une barre de progression
 TODO: a améliorer, ajouter également cette barre dynamique dans le challenge ?
 -->
 
+<script setup lang="ts">
+
+defineProps({
+	percent: {type: Number, required: true}
+})
+</script>
 <template>
 	<div class=" min-w-[400px]">
 		<div class="border border-green-700 rounded bg-green-50">
@@ -13,9 +19,3 @@ TODO: a améliorer, ajouter également cette barre dynamique dans le challenge ?
 		</div>
 	</div>
 </template>
-<script setup>
-
-defineProps({
-	percent: {type: Number, required: true}
-})
-</script>

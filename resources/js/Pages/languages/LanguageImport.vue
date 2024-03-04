@@ -1,16 +1,11 @@
-<script>
-import LayoutMain from "@/Layouts/LayoutMain.vue"
-
-export default {
-	layout: LayoutMain
-}
-</script>
-<script setup>
+<script setup lang="ts">
 import { useForm } from "@inertiajs/vue3"
 import { computed, ref } from "vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
+import LayoutMain from "@/Layouts/LayoutMain.vue"
 
-let traduction = ref(""),
+defineOptions({ layout: LayoutMain })
+const traduction = ref(""),
 	swapFrForeign = ref(false),
 	traductions = computed(() => {
 		return traduction.value.split("\n")
@@ -28,7 +23,7 @@ let traduction = ref(""),
 				}
 			})
 	})
-let form = useForm({
+const form = useForm({
 		language: "",
 		unit: "",
 		title: ""

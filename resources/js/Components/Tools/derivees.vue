@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 /** Tools
  * title: dérivées
  * body: calcul de la dérivée d'une fonction polynomiale ou rationnelle.

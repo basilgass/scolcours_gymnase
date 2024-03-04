@@ -6,11 +6,11 @@ Utilisé avec ProbabilityTree.js
 import { ProbabilityTree } from "@/ProbabilityTree"
 import { onMounted, ref, watch } from "vue"
 
-let props = defineProps({
+const props = defineProps({
 	treeData: {type: String, required: true},
 	treeParams: {type: String, required: true}
 })
-let root = ref(null),
+const root = ref(null),
 	tree = ref(null)
 
 let Tree

@@ -1,4 +1,4 @@
-import {CheckerBase} from "@/Checkers/CheckerBase";
+import {CheckerBase} from "@/Checkers/CheckerBase"
 
 const name = "study"
 const description = `study
@@ -9,7 +9,7 @@ aucun
 
 export class StudyChecker extends CheckerBase {
     constructor(config:string[]|string) {
-        super(config);
+        super(config)
         this.name = name
         this.description = description
     }
@@ -31,7 +31,7 @@ export class StudyChecker extends CheckerBase {
             }
         }
 
-        let erreurs = [],
+        const erreurs = [],
             traceErrors = []
         for (let i = 0; i <= arrayAnswer.length; i++) {
             if (arrayAnswer[i] !== arrayExpected[i]) {
@@ -66,7 +66,7 @@ export class StudyChecker extends CheckerBase {
     }
 
     get format(): string {
-        return "Tracer le graphe";
+        return "Tracer le graphe"
     }
 
 }

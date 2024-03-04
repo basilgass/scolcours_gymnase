@@ -11,12 +11,12 @@
 	import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"
 	import FormMaker from "@/Components/Form/FormMaker.vue"
 
-	let circle1 = ref(""),
+	const circle1 = ref(""),
 		circle2 = ref(""),
 		maxRadius = ref(20)
 
 	// Compute the result
-	let result = computed(() => {
+	const result = computed(() => {
 		try {
 			if (circle1.value === "" || circle2.value === "") {
 				return false

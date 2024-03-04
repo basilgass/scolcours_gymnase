@@ -15,7 +15,7 @@
 		},
 	})
 
-	let flashMessages = ref([]),
+	const flashMessages = ref([]),
 		addFlashMessage = function (
 			message,
 			link,
@@ -36,7 +36,7 @@
 			addFlashMessage(message, link, "error", timeout),
 	})
 
-	let globalEditMode = ref(false),
+	const globalEditMode = ref(false),
 		globalCorrectionMode = ref(false)
 
 	provide("editMode", {

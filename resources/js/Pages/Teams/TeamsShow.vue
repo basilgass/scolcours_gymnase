@@ -1,38 +1,43 @@
-<script>
+<script setup lang="ts">
+import FilteredList from "@/Components/Ui/FilteredList.vue"
+
 import LayoutMain from "@/Layouts/LayoutMain.vue"
+import { PropType } from "vue"
+import { ChallengeInterface, ChapterInterface, TeamInterface, UserInterface } from "@/types/modelInterfaces"
 
-export default {
-		layout: LayoutMain,
-	}
-</script>
+defineOptions({ layout: LayoutMain })
 
-<script setup>
-	import FilteredList from "@/Components/Ui/FilteredList.vue"
 
 	const props = defineProps({
-		team: { type: Object, required: true },
-		students: { type: Object, required: true },
-		chapters: { type: Object, required: true },
-		challenges: { type: Object, required: true },
+		team: { type: Object as PropType<TeamInterface>, required: true },
+		students: { type: Object as PropType<UserInterface[]>, required: true },
+		chapters: { type: Object as PropType<ChapterInterface[]>, required: true },
+		challenges: { type: Object as PropType<ChallengeInterface[]>, required: true },
 	})
 </script>
 <template>
 	<article class="flex flex-col gap-5">
-		<h2 class="text-3xl font-semibold my-10">
-			{{ props.team.name }}
-		</h2>
+		<div class=" my-10">
+			<h2 class="text-3xl font-semibold">
+				{{ props.team.name }}
+			</h2>
+			<Link :href="route('teams.index')">
+				<i class="bi bi-arrow-left" /> Retour aux équipes
+			</Link>
+		</div>
+
 
 		<filtered-list
-			:item-title="(item) => item.name"
-			:list="props.students.data"
+			:item-title="(x) => x.name"
+			:list="props.students"
 			item-class="bg-white"
-			:title="`${props.students.data.length} étudiants`"
+			:title="`${props.students.length} étudiants`"
 		>
-			<template #card="{ item }">
+			<template #card="{ item }: { item: string | object }">
 				<div
 					class="bg-white rounded-lg border border-slate-200 p-4 min-h-[3em]"
 				>
-					<i class="bi bi-person mr-3" />{{ item.name }}
+					<i class="bi bi-person mr-3" />{{ (typeof item === "string")?item:item['name'] }}
 				</div>
 			</template>
 		</filtered-list>
@@ -40,18 +45,20 @@ export default {
 		<div class="grid grid-cols-1 md:grid-cols-2 gap-5">
 			<filtered-list
 				:item-background="(item) => item.theme_id"
-				:list="props.chapters.data"
+				:list="props.chapters"
 				:route-data="(item) => [props.team.name, item.slug]"
 				:route-name="'teams.chapters.stats'"
 				title="chapitres"
+				list-class="grid grid-cols-1 gap-3 xl:grid-cols-2"
 			/>
 
 			<filtered-list
 				:item-background="(item) => item.chapter.theme_id"
-				:list="props.challenges.data"
+				:list="props.challenges"
 				:route-data="(item) => [props.team.name, item.slug]"
 				:route-name="'teams.challenge'"
 				title="challenges"
+				list-class="grid grid-cols-1 gap-3 xl:grid-cols-2"
 			/>
 		</div>
 	</article>

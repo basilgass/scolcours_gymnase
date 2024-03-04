@@ -11,7 +11,7 @@ defineOptions({
 		inheritAttrs: false,
 	})
 
-	let inp = ref(null)
+	const inp = ref(null)
 
 	function focusFn(select: boolean) {
 		inp.value.focus()
@@ -38,7 +38,7 @@ defineOptions({
 		if (props.focus) focusFn(false)
 	})
 
-	let showKeyboardHelper = ref(false),
+	const showKeyboardHelper = ref(false),
 		currentLine = ref(""),
 		currentLineKeyboardKey = computed(() => {
 			return currentLine.value.split(",")[0]
@@ -63,7 +63,7 @@ defineOptions({
 			return `${currentLineKeyboardDescription.value}\n- @format:custom format`
 		})
 	const onKeyup = () => {
-		let pos = inp.value.selectionStart,
+		const pos = inp.value.selectionStart,
 			lines = theValue.value.split("\n"),
 			lineIndex = theValue.value.substring(0, pos).split("\n").length - 1
 
@@ -71,7 +71,7 @@ defineOptions({
 	}
 	const tabber = () => {
 		if (currentLineKeyboards.value.length === 1) {
-			let pos = inp.value.selectionStart,
+			const pos = inp.value.selectionStart,
 				lines = theValue.value.split("\n"),
 				lineIndex =
 					theValue.value.substring(0, pos).split("\n").length - 1

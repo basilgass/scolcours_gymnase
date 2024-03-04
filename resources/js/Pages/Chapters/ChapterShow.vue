@@ -1,29 +1,26 @@
-<script>
-	import LayoutMain from "@/Layouts/LayoutMain.vue"
+<script setup lang="ts">
+import { computed, defineAsyncComponent, inject, ref } from "vue"
+import ChapterToc from "@/Components/Chapters/ChapterToc.vue"
+import ChapterChallenges from "@/Components/Chapters/ChapterChallenges.vue"
+import ChapterFormulas from "@/Components/Chapters/ChapterFormulas.vue"
+import { Head } from "@inertiajs/vue3"
+import ChapterRelations from "@/Components/Chapters/ChapterRelations.vue"
+import ChapterTheorems from "@/Components/Chapters/ChapterTheorems.vue"
 
-	export default {
-		layout: LayoutMain,
-	}
-</script>
+import LayoutMain from "@/Layouts/LayoutMain.vue"
+import { editModeInterface } from "@/types"
 
-<script setup>
-	import { computed, defineAsyncComponent, inject, ref } from "vue"
-	import ChapterToc from "@/Components/Chapters/ChapterToc.vue"
-	import ChapterChallenges from "@/Components/Chapters/ChapterChallenges.vue"
-	import ChapterFormulas from "@/Components/Chapters/ChapterFormulas.vue"
-	import { Head } from "@inertiajs/vue3"
-	import ChapterRelations from "@/Components/Chapters/ChapterRelations.vue"
-	import ChapterTheorems from "@/Components/Chapters/ChapterTheorems.vue"
+defineOptions({ layout: LayoutMain })
 
-	let props = defineProps({
+	const props = defineProps({
 			chapter: { type: Object, required: true },
 			nav: { type: Object, required: true },
 		}),
 		theChapter = ref(props.chapter.data)
 
-	const editMode = inject("editMode")
+	const editMode = inject<editModeInterface>("editMode")
 
-	let showEditForm = ref(false),
+	const showEditForm = ref(false),
 		editForm = computed(() => {
 			return defineAsyncComponent(() =>
 				import("@/Components/Chapters/ChapterForm.vue"),
@@ -51,8 +48,14 @@
 				class="text-xl md:text-2xl xl:text-3xl"
 			/>
 
-			<div v-show="editMode.enabled.value" v-admin>
-				<button class="text-xs" @click="showEditForm = true">
+			<div
+				v-show="editMode.enabled.value"
+				v-admin
+			>
+				<button
+					class="text-xs"
+					@click="showEditForm = true"
+				>
 					<i class="bi bi-pencil mr-2" /> {{ theChapter.id }}
 				</button>
 
@@ -68,7 +71,10 @@
 
 		<div class="space-y-10">
 			<!-- table des matieres -->
-			<ChapterToc :chapter="theChapter" class="px-5" />
+			<ChapterToc
+				:chapter="theChapter"
+				class="px-5"
+			/>
 
 			<!-- commencer l'aventure -->
 			<div

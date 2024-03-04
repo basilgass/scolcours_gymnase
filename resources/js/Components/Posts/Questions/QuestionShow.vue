@@ -3,7 +3,7 @@ Affichage d'une question
 Envoi de la validation d'une réponse
 keyboard -> QuestionUserInput -> QuestionShow
 -->
-<script setup>
+<script setup lang="ts">
 import IllustrationShow from "@/Components/Posts/Illustrations/IllustrationShow.vue"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 import { computed, defineAsyncComponent, inject, nextTick, reactive, ref } from "vue"
@@ -12,11 +12,13 @@ import { usePage } from "@inertiajs/vue3"
 import { useWrongAnswerAnimation } from "@/Composables/useHelpers"
 import { useKeyboard } from "@/Composables/useKeyboard"
 import DropdownMenu from "@/Components/Ui/DropdownMenu.vue"
+import { editModeInterface, flashInterface } from "@/types/index.js"
+import axios from "axios"
 
-let { getKeyboards } = useKeyboard()
+const { getKeyboards } = useKeyboard()
 
 	// Props
-	let props = defineProps({
+	const props = defineProps({
 		question: { type: Object, required: true },
 		hideTitle: { type: Boolean, default: false },
 		showInput: { type: Boolean, default: false },
@@ -28,13 +30,13 @@ let { getKeyboards } = useKeyboard()
 	})
 
 	// flash message
-	const flash = inject("flash", null)
+	const flash = inject<flashInterface>("flash", null)
 
 	// Emits
 	const emits = defineEmits(["validate", "destroy", "duplicate"])
 
 	// Reactivity
-	let theQuestion = reactive(props.question), // la question principale, vraiment en "reactive" ?
+	const theQuestion = reactive(props.question), // la question principale, vraiment en "reactive" ?
 		theQuestionBody = computed(() => {
 			// On s'assure que le tableau des réponses est complet.
 			checkUserAnswers()
@@ -141,17 +143,17 @@ let { getKeyboards } = useKeyboard()
 	// Gestion des réponses
 
 	// numéro de la question en cours d'édition
-	let answerId = ref(0),
+	const answerId = ref(0),
 		// Format de la réponse
 		answerFormat = computed(() => {
 			if (!theAnswers.value[answerId.value]) {
 				return ""
 			}
 
-			let kbrd = theAnswers.value[answerId.value].keyboard
+			const kbrd = theAnswers.value[answerId.value].keyboard
 
 			if (kbrd.name === "Basic") {
-				let customOutput = theAnswers.value[
+				const customOutput = theAnswers.value[
 					answerId.value
 				].keyboard.parameters
 					.filter((x) => x.startsWith("format:"))
@@ -180,7 +182,7 @@ let { getKeyboards } = useKeyboard()
 			}
 
 			// Get the keyboards
-			let arr = [],
+			const arr = [],
 				answers = theQuestion.answer.split("\n"),
 				kbrds = getKeyboards(theQuestion.keyboard)
 
@@ -198,11 +200,11 @@ let { getKeyboards } = useKeyboard()
 		userAnswersErrors = ref([]),
 		keyboardUI = ref(null),
 		showAnswer = ref(false),
-		loadAnswer = async function (value) {
+		loadAnswer = async function (value?: string) {
 			answerId.value = 0
 			await nextTick()
 
-			let timer = setInterval(() => {
+			const timer = setInterval(() => {
 				if (keyboardUI.value) {
 					keyboardUI.value.loadAnswer(value)
 				}
@@ -221,7 +223,7 @@ let { getKeyboards } = useKeyboard()
 		},
 		showUserInput = ref(props.showInput)
 
-	let updateQuestion = function (event) {
+	const updateQuestion = function (event) {
 			// {
 			// 		value: {input, tex, raw},
 			// 		validation: {result, message}
@@ -336,7 +338,7 @@ let { getKeyboards } = useKeyboard()
 		}
 
 	// Gestion administrateur
-	let editMode = inject("editMode", { enabled: false }),
+	const editMode = inject<editModeInterface>("editMode"),
 		showEditForm = ref(false),
 		editForm = computed(() => {
 			return defineAsyncComponent(
@@ -371,7 +373,7 @@ let { getKeyboards } = useKeyboard()
 		}
 
 	// Manage "DisplayIf"
-	let displayIfIds = computed(() => {
+	const displayIfIds = computed(() => {
 			if (theQuestion.displayIf === null) {
 				return []
 			}
@@ -381,8 +383,8 @@ let { getKeyboards } = useKeyboard()
 			if (id === -1) {
 				theQuestion.displayIf = null
 			} else {
-				nextTick()
-				let ids = [...displayIfIds.value],
+				await nextTick()
+				const ids = [...displayIfIds.value],
 					idx = ids.indexOf(id)
 
 				if (idx === -1) {

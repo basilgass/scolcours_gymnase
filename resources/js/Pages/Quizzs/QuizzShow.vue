@@ -1,3 +1,39 @@
+<script setup lang="ts">
+
+import { onBeforeUnmount, onMounted, ref } from "vue"
+import QuizzQuestion from "@/Components/Quizzs/QuizzQuestion.vue"
+import QuizzIntro from "@/Components/Quizzs/QuizzIntro.vue"
+import QuizzOutro from "@/Components/Quizzs/QuizzOutro.vue"
+import { router } from "@inertiajs/vue3"
+import QuizzWait from "@/Components/Quizzs/QuizzWait.vue"
+import QuizzHeader from "@/Components/Quizzs/QuizzHeader.vue"
+import LayoutProjection from "@/Layouts/LayoutProjection.vue"
+
+defineOptions({layout: LayoutProjection})
+let props = defineProps({
+		quizzSession: {type: Object, required: true},
+		question: {type: [Object, null], required: true},
+		total: {type: Number, required: true}
+	}),
+	interval = null,
+	updateCounter = ref(0),
+	updateQuizz = function () {
+		router.reload({
+			preserveScroll: true,
+			preserveState: true
+		})
+		updateCounter.value++
+	}
+
+onMounted(() => {
+	interval = setInterval(() => updateQuizz(), 2000)
+})
+onBeforeUnmount(() => {
+	clearInterval(interval)
+})
+
+</script>
+
 <template>
 	<section
 		v-if="props.quizzSession.enable"
@@ -50,45 +86,3 @@
 		</div>
 	</section>
 </template>
-
-<script>
-
-import LayoutProjection from "@/Layouts/LayoutProjection.vue"
-
-export default {
-	layout: LayoutProjection
-}
-</script>
-<script setup>
-
-import {computed, onBeforeUnmount, onMounted, ref} from "vue"
-import QuizzQuestion from "@/Components/Quizzs/QuizzQuestion.vue"
-import QuizzIntro from "@/Components/Quizzs/QuizzIntro.vue"
-import QuizzOutro from "@/Components/Quizzs/QuizzOutro.vue"
-import {router} from "@inertiajs/vue3"
-import QuizzWait from "@/Components/Quizzs/QuizzWait.vue"
-import QuizzHeader from "@/Components/Quizzs/QuizzHeader.vue"
-
-let props = defineProps({
-		quizzSession: {type: Object, required: true},
-		question: {type: [Object, null], required: true},
-		total: {type: Number, required: true}
-	}),
-	interval = null,
-	updateCounter = ref(0),
-	updateQuizz = function () {
-		router.reload({
-			preserveScroll: true,
-			preserveState: true
-		})
-		updateCounter.value++
-	}
-
-onMounted(() => {
-	interval = setInterval(() => updateQuizz(), 2000)
-})
-onBeforeUnmount(() => {
-	clearInterval(interval)
-})
-
-</script>

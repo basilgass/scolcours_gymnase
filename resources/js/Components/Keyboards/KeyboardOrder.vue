@@ -1,16 +1,16 @@
-<script setup>
+<script setup lang="ts">
 
 import { computed, ref } from "vue"
 import { PiMath } from "pimath/esm"
 import { useKeyboard } from "@/Composables/useKeyboard"
 
-let props = defineProps({
-	keyboard: {type: Object, required: true},
-	answer: {type: String}
+const props = defineProps({
+	keyboard: { type: Object, required: true },
+	answer: { type: String }
 })
 
-let emits = defineEmits(["change", "validate"]),
-	changeEvent = function () {
+const emits = defineEmits(["change", "validate"]),
+	changeEvent = function() {
 		// On compte le nombre de réponses au bon endroit...
 		let errors = 0
 		for (let i = 1; i <= sortableItems.value.length; i++) {
@@ -23,8 +23,8 @@ let emits = defineEmits(["change", "validate"]),
 			value: {
 				input: "",
 				tex: "",
-				raw: isList.value?
-					sortableItems.value.map(el => `- ${el.label}`).join("\n"):
+				raw: isList.value ?
+					sortableItems.value.map(el => `- ${el.label}`).join("\n") :
 					sortableItems.value.map(el => el.label).join(" ")
 			},
 			validation: {
@@ -35,38 +35,37 @@ let emits = defineEmits(["change", "validate"]),
 	}
 
 // Liste des élèments qui sont à réordrer.
-let
+const
 	isFullWidth = computed(() => {
 		return props.keyboard.parameters.includes("full")
 	}),
 	isFlex = computed(() => {
 		return props.keyboard.parameters.includes("flex")
 	}),
-	isList = computed(()=>{
+	isList = computed(() => {
 		return props.keyboard.parameters.includes("list")
 	})
 
-let randomizeItems = () => {
-	return PiMath.Random.shuffle(
-		props.keyboard.values.map((element, index) => {
-			return {
-				id: index + 1,
-				label: element
-			}
-		})
-	)
+const items = computed(() => {
+	return props.keyboard.values.map((element, index) => {
+		return {
+			id: index + 1,
+			label: element
+		}
+	})
+})
+const randomizeItems = () => {
+	return PiMath.Random.shuffle(items.value)
 }
-let sortableItems = ref(randomizeItems())
+const sortableItems = ref(randomizeItems())
 
-let {loadAnswerToKeyboard} = useKeyboard(props)
-let reset = () => sortableItems.value = randomizeItems()
+const { loadAnswerToKeyboard } = useKeyboard(props)
+const reset = () => sortableItems.value = randomizeItems()
 defineExpose({
 	reset,
 	loadAnswer: (value) => {
-		loadAnswerToKeyboard(value, reset, changeEvent, (value) => {
-			sortableItems.value = props.options.split("\n").map((element, index) => {
-				return {id: index + 1, label: element}
-			})
+		loadAnswerToKeyboard(value, reset, changeEvent, () => {
+			sortableItems.value = items.value
 		})
 	},
 	parameters: ""
@@ -90,11 +89,11 @@ defineExpose({
 			<template #item="{ element }">
 				<button
 					v-katex.auto="element.label"
-					class="btn bg-white"
 					:class="{
 						'w-full': isFullWidth,
 						'flex-1': isFlex,
 					}"
+					class="btn bg-white"
 				/>
 			</template>
 		</draggable>

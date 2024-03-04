@@ -1,3 +1,13 @@
+<script setup lang="ts">
+import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
+import LayoutMain from "@/Layouts/LayoutMain.vue"
+
+defineOptions({ layout: LayoutMain })
+defineProps({
+	error: {type: String, default: "erreur inconnue"}
+})
+</script>
+
 <template>
 	<ArticleTitle title="Page introuvable" />
 
@@ -16,18 +26,3 @@
 		</div>
 	</div>
 </template>
-
-<script>
-import LayoutMain from "@/Layouts/LayoutMain.vue"
-
-export default {
-	layout: LayoutMain
-}
-</script>
-<script setup>
-import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
-
-defineProps({
-	error: {type: String, default: "erreur inconnue"}
-})
-</script>

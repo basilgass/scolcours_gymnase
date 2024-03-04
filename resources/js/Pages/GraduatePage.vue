@@ -1,19 +1,13 @@
-<!--suppress ALL -->
-<script lang="ts">
-import LayoutMain from "@/Layouts/LayoutMain.vue"
-
-export default {
-	layout: LayoutMain
-}
-</script>
 <script lang="ts" setup>
 import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
-import { computed, nextTick, onMounted, ref, watch } from "vue"
+import { computed, ref } from "vue"
 import { PiMath } from "pimath/esm"
 import BarChart from "@/Components/Charts/barChart.vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
+import LayoutMain from "@/Layouts/LayoutMain.vue"
 
-let pointsData = ref(""),
+defineOptions({ layout: LayoutMain })
+const pointsData = ref(""),
 	maxPoints = ref(20),
 	pourcentage = ref(""),
 	pourcentage4 = ref(false),
@@ -28,7 +22,7 @@ interface baremeInterface {
 	};
 }
 
-let bareme = computed<baremeInterface>(() => {
+const bareme = computed<baremeInterface>(() => {
 		if (maxPoints.value <= 0) return {}
 
 		if (+pourcentage.value < 0) return {}
@@ -55,9 +49,9 @@ let bareme = computed<baremeInterface>(() => {
 		// returns [
 		//      {note, pointsDe, pointsA}
 		// ]
-		let arr = []
+		const arr = []
 		for (let i = 6; i >= 1; i -= 0.5) {
-			let values = Object.values(bareme.value)
+			const values = Object.values(bareme.value)
 				.filter(x => x.note === i)
 				.map(x => x.pt)
 
@@ -83,7 +77,7 @@ function calculerLaNote(pt: number): number {
 	}
 
 	const seuil = maxPoints.value * (+pourcentage.value) / 100
-	let note1 = 1, note4 = pourcentage4.value ? 4 : 3.75, note6 = 6
+	const note1 = 1, note4 = pourcentage4.value ? 4 : 3.75, note6 = 6
 
 	if (pt < seuil) {
 		// note de 1 à 3.75 (ou 4)
@@ -102,7 +96,7 @@ const listeDesPoints = computed<number[]>(() => {
 		return pointsData.value.split(/\s+/)
 			.filter(pt => pt.trim()!=='' && !isNaN(+pt))
 			.map(pt => Math.min(+pt, maxPoints.value))
-			.filter(pt => bareme.value.hasOwnProperty(pt))
+			.filter(pt => Object.hasOwn(bareme.value, pt))
 	}),
 	listeDesPointsAvecErreurs = computed<string[]>(() => {
 		return pointsData.value.split(/\s+/)
@@ -113,7 +107,7 @@ const listeDesPoints = computed<number[]>(() => {
 			.map(pt => bareme.value[pt].note)
 	}),
 	decompteDesNotes = computed<number[]>(() => {
-		let arr = []
+		const arr = []
 
 		for (let i = 1; i <= 6; i += 0.5) {
 			arr.push(listeDesNotes.value.filter(note => note === i).length)

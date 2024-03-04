@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 /** Tools
  * title: Fonction avec des valeurs absolues
  * body: génère et décompose des fonctions avec des valeurs absolues
@@ -11,19 +11,13 @@ import { PiMath } from "pimath/esm"
 import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"
 import Panel from "@/Components/Ui/Panel.vue"
 
-let result = computed(() => {
-	try {
-		return {
-			tex: ""
-		}
-	} catch (e) {
-		// console.error(e)
-		return false
-	}
+const result = computed(() => {
+	return { tex: "" }
+
 })
 
 
-let root = ref(null),
+const root = ref(null),
 	fx = ref("abs(3x-3)-4abs(x+1)+2"),
 	x = ref("-4"),
 	y = ref("-10"),
@@ -42,14 +36,14 @@ let root = ref(null),
 		}
 	}),
 	expression = computed(() => {
-		let abs = [],
+		const abs = [],
 			zeroes = [],
 			matches = [...fx.value.matchAll(/abs\(([^)]+)\)/g)],
 			expr = []
 
-		for (let m of matches) {
+		for (const m of matches) {
 			const P = new PiMath.Polynom(m[1])
-			for (let z of P.zeroes) {
+			for (const z of P.zeroes) {
 				zeroes.push(z)
 			}
 			abs.push({
@@ -94,18 +88,18 @@ let root = ref(null),
 			return false
 		}
 
-		let absTex = fx.value.replaceAll(/abs\(([^)]+)\)/g, "\\left\\vert $1 \\right\\vert")
+		const absTex = fx.value.replaceAll(/abs\(([^)]+)\)/g, "\\left\\vert $1 \\right\\vert")
 		return {
 			absTex,
 			tex: `f(x) = ${absTex} = \\begin{cases}${expr.map(x => `${x.polynom.display} &\\text{si}\\quad ${x.condition}`).join("\\\\")}\\end{cases}`,
 			drawCode: expr.map(x => `${x.polynom.display},${x.borders.min === null ? -20 : x.borders.min.value}:${x.borders.max === null ? 20 : x.borders.max.value}`),
 			solve: function(v) {
 				try {
-					let zeroes = []
-					for (let e of expr) {
+					const zeroes = []
+					for (const e of expr) {
 						const equ = new PiMath.Equation(e.polynom, v)
 						equ.solve()
-						for (let z of equ.solutions) {
+						for (const z of equ.solutions) {
 							if (checkValue(z.value, e.borders.min, e.borders.max)) {
 								zeroes.push(z)
 							}
@@ -123,7 +117,7 @@ let root = ref(null),
 			},
 			evaluate: function(v) {
 				try {
-					let Q = new PiMath.Fraction(v)
+					const Q = new PiMath.Fraction(v)
 
 					return expr.filter(x => {
 						return checkValue(Q.value, x.borders.min, x.borders.max)
@@ -138,7 +132,7 @@ let root = ref(null),
 		const v = min === null ? max.value - 1 : (max === null ? min.value + 1 : (max.value + min.value) / 2)
 		let fnx = "" + fn
 
-		for (let p of abs) {
+		for (const p of abs) {
 			if (p.polynom.evaluate(v).isNegative()) {
 				fnx = fnx.replace(p.match, `(${p.polynom.clone().opposed().display})`)
 			} else {
@@ -153,7 +147,7 @@ let root = ref(null),
 		}
 	},
 	randomAbs = function() {
-		let z1 = PiMath.Random.numberSym(10, false),
+		const z1 = PiMath.Random.numberSym(10, false),
 			z2 = PiMath.Random.numberSym(10, false),
 			p1 = new PiMath.Polynom(`x${(z1 > 0 ? "+" : "") + z1}`).multiply(PiMath.Random.numberSym(3, false)),
 			p2 = new PiMath.Polynom(`x${(z2 > 0 ? "+" : "") + z2}`).multiply(PiMath.Random.numberSym(3, false)),
@@ -166,7 +160,7 @@ let root = ref(null),
 		fx.value = `${k1}abs(${p1.display})${(k2 > 0 ? "+" : "") + k2}abs(${p2.display})${k3 === 0 ? "" : ((k3 > 0 ? "+" : "") + k3)}`
 	},
 	draw = computed(() => {
-		let alpha = "fghijklmn"
+		const alpha = "fghijklmn"
 		return {
 			code: expression.value.drawCode.map(
 				(f, index) => `${alpha[index]}(x)=${f.replace(/([0-9])x/, "$1*x")}`
@@ -221,8 +215,8 @@ let root = ref(null),
 						<form-maker
 							v-model="y"
 							inline
-							prepend="\(f(x) = \)"
 							name="y"
+							prepend="\(f(x) = \)"
 						/>
 						<div v-katex="`f(x)=${yAsTex}\\implies \\mathcal S = ${expression.solve(y).tex}`" />
 					</div>

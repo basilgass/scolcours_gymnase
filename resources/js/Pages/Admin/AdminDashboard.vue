@@ -1,3 +1,8 @@
+<script setup lang="ts">
+import LayoutMain from "@/Layouts/LayoutMain.vue"
+
+defineOptions({ layout: LayoutMain })
+</script>
 <template>
 	<h1 class="text-3xl pt-5 mb-10">
 		Admin dashboard
@@ -13,54 +18,43 @@
 		</Link>
 
 		<Link
+			:href="route('admin.pages')"
 			as="button"
 			class="min-h-[8em] text-xl bg-white border border-gray-200 rounded-xl"
-			:href="route('admin.pages')"
 		>
 			gestion des pages
 		</Link>
 
 		<Link
+			:href="route('admin.users')"
 			as="button"
 			class="min-h-[8em] text-xl bg-white border border-gray-200 rounded-xl"
-			:href="route('admin.users')"
 		>
 			gestion des utilisateurs
 		</Link>
 
 		<Link
+			:href="route('teams.index')"
 			as="button"
 			class="min-h-[8em] text-xl bg-white border border-gray-200 rounded-xl"
-			:href="route('teams.index')"
 		>
 			équipes
 		</Link>
 
 		<Link
+			:href="route('quizzs.admin')"
 			as="button"
 			class="min-h-[8em] text-xl bg-white border border-gray-200 rounded-xl"
-			:href="route('quizzs.admin')"
 		>
 			gestion des quizz
 		</Link>
 
 		<Link
-				as="button"
-				class="min-h-[8em] text-xl bg-white border border-gray-200 rounded-xl"
-				:href="route('translation.import')"
+			:href="route('translation.import')"
+			as="button"
+			class="min-h-[8em] text-xl bg-white border border-gray-200 rounded-xl"
 		>
 			import des langues
 		</Link>
 	</div>
 </template>
-
-<script>
-import LayoutMain from "@/Layouts/LayoutMain.vue"
-
-export default {
-	layout: LayoutMain,
-}
-</script>
-<script setup>
-import Panel from "@/Components/Ui/Panel.vue"
-</script>

@@ -2,6 +2,16 @@
 Affichage des résultats à la fin d'un challenge.
 Permet de recommencer le challenge.
 -->
+<script setup lang="ts">
+
+const emits = defineEmits(["start", "cancel"])
+const props = defineProps({
+	results: {type: Object, required: true},
+	challenge: {type: Object, require: true}
+})
+
+</script>
+
 <template>
 	<footer>
 		<div class="grid grid-cols-3 gap-6">
@@ -77,13 +87,3 @@ Permet de recommencer le challenge.
 		</div>
 	</footer>
 </template>
-
-<script setup>
-
-const emits = defineEmits(["start", "cancel"])
-const props = defineProps({
-	results: {type: Object, required: true},
-	challenge: {type: Object, require: true}
-})
-
-</script>

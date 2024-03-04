@@ -1,18 +1,20 @@
 <!--
 Affichage d'un block , avec toutes les possibilités
 -->
-<script setup>
+<script setup lang="ts">
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
-import { computed, inject, ref } from "vue"
+import { computed, inject, PropType, ref } from "vue"
 import { blockTypeDefault, blockTypes } from "@/scolcours"
 import IllustrationsIndex from "@/Components/Posts/Illustrations/IllustrationsIndex.vue"
 import BlockEdit from "@/Components/Posts/Blocks/BlockEdit.vue"
 import { useBlock } from "@/Components/Posts/Blocks/useBlock"
 import BlockBodyButtons from "@/Components/Posts/Blocks/BlockBodyButtons.vue"
+import { editModeInterface } from "@/types/index.js"
+import { BlockInterfaceExtended } from "@/types/modelInterfaces"
 
 // Props
 	const props = defineProps({
-		block: { type: Object, required: true },
+		block: { type: Object as PropType<BlockInterfaceExtended>, required: true },
 		switch: { type: Boolean, default: null },
 		forceShow: { type: Boolean, default: false },
 		maxIllustration: { type: Number, default: null },
@@ -20,16 +22,16 @@ import BlockBodyButtons from "@/Components/Posts/Blocks/BlockBodyButtons.vue"
 	})
 
 	// emits
-const emits = defineEmits(["destroy"])
+defineEmits(["destroy"])
 
 	// Reactive edition mode (admin only)
-	let editMode = inject("editMode")
+	const editMode = inject<editModeInterface>("editMode")
 
 	// Reactive Refs
-	let theBlock = ref(props.block)
+	const theBlock = ref(props.block)
 
 	// Reactive GUI
-	let isBlur = ref(props.block.blur),
+	const isBlur = ref(props.block.blur),
 		showBlock = computed(() => {
 			if (props.forceShow) return true
 
@@ -86,7 +88,7 @@ const emits = defineEmits(["destroy"])
 				}
 			}
 
-			let grid = ["grid grid-cols-1 gap-3"],
+			const grid = ["grid grid-cols-1 gap-3"],
 				block = [
 					values[0][0] === "b"
 						? "order-1 col-span-1"
@@ -171,7 +173,7 @@ const emits = defineEmits(["destroy"])
 			}
 		})
 
-	const { blockBody, blockButtons, random } = useBlock(theBlock)
+	const { blockBody, blockButtons, random } = useBlock(theBlock.value)
 </script>
 
 <template>

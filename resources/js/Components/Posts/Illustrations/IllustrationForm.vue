@@ -10,7 +10,7 @@ import DialogModal from "@/Components/Ui/DialogModal.vue"
 import IllustrationShow from "@/Components/Posts/Illustrations/IllustrationShow.vue"
 
 const emit = defineEmits(["change", "inputFocus", "destroy"])
-let props = defineProps({
+const props = defineProps({
 	illustration: { type: Object as PropType<IllustrationInterface>, required: true },
 	active: { type: Boolean, default: false },
 	focus: { type: Boolean, default: false }
@@ -58,7 +58,7 @@ function loadComponents() {
 		.catch((err) => console.warn(err))
 }
 
-let drawParameters = reactive({
+const drawParameters = reactive({
 	axis: false,
 	grid: false,
 	x: "",
@@ -78,7 +78,7 @@ const drawParametersList = [
 	"nopoint",
 	"tex"
 ]
-let updateDrawParameters = function(event, value) {
+const updateDrawParameters = function(event, value) {
 	// Determine if the value is already in the parameters
 	if (value.startsWith("x=")) {
 		drawParameters.x = drawParameters.x === "" ? (value.split("=")[1]) : ""
@@ -89,7 +89,7 @@ let updateDrawParameters = function(event, value) {
 	}
 
 
-	let opts = []
+	const opts = []
 	for (const [key, value] of Object.entries(drawParameters)) {
 		if (value === true) {
 			opts.push(key)
@@ -106,13 +106,13 @@ let updateDrawParameters = function(event, value) {
  * Permet d'afficher les informations de la lignes courantes.
  * @type {Ref<UnwrapRef<string>>}
  */
-let currentLine = ref(""),
+const currentLine = ref(""),
 	currentLineHelperText = computed(() => {
 		return parserHelperText(currentLine.value)
 	})
 
 
-let saveIllustration = function() {
+const saveIllustration = function() {
 		axios
 			.post(route("illustrations.update", [theIllustration.value.id]), {
 				...theIllustration.value,
@@ -130,7 +130,7 @@ let saveIllustration = function() {
 		localStorage.setItem("scolcours-clipboard-illustration", `${theIllustration.value.parameters ?? ""}\n${theIllustration.value.code}`)
 	},
 	pasteIllustration = function() {
-		let paste = localStorage.getItem("scolcours-clipboard-illustration")
+		const paste = localStorage.getItem("scolcours-clipboard-illustration")
 		if (paste !== null) {
 			const values = paste.split("\n")
 			theIllustration.value.parameters = values.shift()
@@ -266,8 +266,8 @@ onMounted(() => {
 
 							<div class="font-code text-xs min-h-[3em] bg-gray-200">
 								<div v-if="theIllustration.code.split('\n\n').length>1">
-									%<*> afficher qu'une fois<br>
-									%<...> afficher aux steps indiqués (que suivant) <br>
+									%&lt;*&gt; afficher qu'une fois<br>
+									%&lt;...&gt; afficher aux steps indiqués (que suivant) <br>
 									%-FG- couche au premier plan
 								</div>
 								<hr>

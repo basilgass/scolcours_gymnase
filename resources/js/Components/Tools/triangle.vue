@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 /** Tools
  * title: droites remarquables d'un triangle
  * body: calcul des droites remarquables d'un triangle

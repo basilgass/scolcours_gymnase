@@ -2,10 +2,10 @@
 
 import { ref } from "vue"
 
-let props = defineProps({
+const props = defineProps({
 	preventClose: {type: Boolean, default: false}
 })
-let showMenu = ref(false),
+const showMenu = ref(false),
 	onMenuClick = function () {
 		if (props.preventClose) {
 			return

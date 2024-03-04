@@ -1,17 +1,8 @@
-<!--suppress ALL -->
-<script>
+<script setup lang="ts">
+import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 
-export default {
-	layout: LayoutMain
-}
-</script>
-<script setup>
-import {ref} from "vue"
-import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
-
-let toolSlug = ref(null),
-	toolSearch = ref("")
+defineOptions({ layout: LayoutMain })
 
 const props = defineProps({
 	pages: {

@@ -1,21 +1,5 @@
-<template>
-	<div class="w-full">
-		<input
-			v-model="value"
-			type="range"
-			:min="min"
-			:max="max"
-			class="slider"
-			@input="emits('update:modelValue', +value)"
-		>
-		<div class="output">
-			{{ value }}
-		</div>
-	</div>
-</template>
-
-<script setup>
-import {ref} from "vue"
+<script setup lang="ts">
+import { ref } from "vue"
 
 // props
 const props = defineProps({
@@ -37,6 +21,22 @@ const value = ref(props.min)
 const emits = defineEmits(["update:modelValue"])
 
 </script>
+
+<template>
+	<div class="w-full">
+		<input
+			v-model="value"
+			type="range"
+			:min="min"
+			:max="max"
+			class="slider"
+			@input="emits('update:modelValue', +value)"
+		>
+		<div class="output">
+			{{ value }}
+		</div>
+	</div>
+</template>
 
 <style scoped>
 .slider {

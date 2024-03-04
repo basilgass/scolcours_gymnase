@@ -54,6 +54,9 @@ export interface BlockInterface {
 	script: string;
 	json: string;
 }
+export interface BlockInterfaceExtended extends BlockInterface {
+	isNew?: boolean
+}
 
 export interface IllustrationInterface {
 	id: number;
@@ -73,7 +76,7 @@ export interface IllustrationInterface {
 export interface QuestionInterface {
 	id: number;
 	order: number;
-	displayIf: boolean;
+	displayIf: boolean | string;
 	css: string;
 	body: string;
 	block: {
@@ -164,6 +167,7 @@ export interface ChallengeInterface {
 	bonusLevelLife: number;
 	bonusLevelTime: number;
 	generators: GeneratorInterface[];
+	updated_at: string;
 }
 
 export interface flipcardsInterface {
@@ -215,4 +219,25 @@ export interface PostQuestionsForOneUserStatsInterface {
 	}[];
 	sum: number;
 	total: number;
+}
+
+export interface QuizzInterface {
+	id: number
+	title: string
+	body: string
+}
+
+export interface QuizzSessionInterface {
+	shortcode: string
+	quizz: {
+		title: string
+		theme: ThemeInterface
+	}
+}
+
+export interface TranslationUnitInterface {
+	id: number
+	language: string
+	unit: string
+	title: string
 }

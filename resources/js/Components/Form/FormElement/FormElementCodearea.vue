@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { computed, onMounted, ref } from "vue"
 
 import Prism from "prismjs"
@@ -26,8 +26,8 @@ defineOptions({
 		}),
 		theValue = ref(props.modelValue)
 
-	let inp = ref(null),
-		currentRows = ref(props.rows)
+	const inp = ref(null),
+		currentRows = ref(+props.rows)
 
 	function focusFn(select) {
 		inp.value.focus()
@@ -36,7 +36,7 @@ defineOptions({
 		}
 	}
 
-	let pre = ref(null),
+	const pre = ref(null),
 		highlighted = computed(() => {
 			if (theValue.value) {
 				try {
@@ -113,7 +113,7 @@ defineOptions({
 		},
 		tabber = function (event) {
 			/* enable tab caracter */
-			let text = theValue.value,
+			const text = theValue.value,
 				originalSelectionStart = event.target.selectionStart,
 				textStart = text.slice(0, originalSelectionStart),
 				textEnd = text.slice(originalSelectionStart)
@@ -134,18 +134,18 @@ defineOptions({
 			} else if (props.language === "javascript") {
 				return javascriptTriggers
 			}
-			return {}
+			return ()=>{}
 		}),
 		autofill = function (event) {
 			// Test the three letters triggers.
-			let applied = autofill_do(event, 3)
+			const applied = autofill_do(event, 3)
 
 			if (!applied) {
 				autofill_do(event, 2)
 			}
 		},
 		autofill_do = function (event, length) {
-			let originalSelectionStart = event.target.selectionStart,
+			const originalSelectionStart = event.target.selectionStart,
 				textStart = theValue.value.slice(0, originalSelectionStart),
 				textEnd = theValue.value.slice(originalSelectionStart),
 				trigger = textStart.slice(-length)
@@ -201,15 +201,15 @@ defineOptions({
 	}
 	const areaHeight = computed(() => {
 		const r = (theValue.value??"").split("\n").length + 2
-		return `${0.5 + Math.max(currentRows.value, r) * 1.4 + 0.5}rem`
+		return `${0.5 + Math.max(+currentRows.value, r) * 1.4 + 0.5}rem`
 	})
 	onMounted(() => {
-		if (props.focus) focus(false)
+		if (props.focus) focus()
 
 		// Modify the height to fit everything.
 		currentRows.value = Math.max(
 			(theValue.value??"").split("\n").length + 2,
-			props.rows,
+			+props.rows,
 		)
 	})
 </script>

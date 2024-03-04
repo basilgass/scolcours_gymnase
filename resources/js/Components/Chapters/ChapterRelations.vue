@@ -1,3 +1,50 @@
+<script setup lang="ts">
+
+import { inject, PropType, ref } from "vue"
+import axios from "axios"
+import { editModeInterface, flashInterface } from "@/types"
+import { ChapterInterface } from "@/types/modelInterfaces"
+
+const props = defineProps({
+	chapter: {type: Object as PropType<ChapterInterface>, required: true}
+})
+
+const flash = inject<flashInterface>("flash"),
+	editMode = inject<editModeInterface>("editMode")
+
+const chapterRelations = ref(props.chapter.relations),
+	modifyRelations = ref(false),
+	allChapters = ref([]),
+	getAllChapters = function(){
+		if(modifyRelations.value){
+			modifyRelations.value = false
+			return
+		}else if(allChapters.value.length>0){
+			modifyRelations.value = true
+			return
+		}
+
+		axios.get(route("chapters.index.min"))
+			.then(res=>{
+				allChapters.value = res.data.data.filter(ch=>ch.slug!==props.chapter.slug)
+				modifyRelations.value = true
+			})
+			.catch(res => {
+				console.warn(res)
+			})
+	},
+	toggleRelation = function(id) {
+		axios.post(route("chapters.relations.toggle", [props.chapter.id, id]))
+			.then(res => {
+				flash.success("relation correctement mis à jour...")
+				if(res.data!==false){
+					chapterRelations.value = res.data.data
+				}
+			}).catch(res=>{
+				flash.error(res.data)
+			})
+	}
+</script>
 <template>
 	<div
 		v-if="chapterRelations.length>0 || editMode.enabled.value"
@@ -52,48 +99,3 @@
 		</div>
 	</div>
 </template>
-<script setup>
-
-import {inject, ref} from "vue"
-import axios from "axios"
-
-let props = defineProps({
-	chapter: {type: Object, required: true}
-})
-
-const flash = inject("flash"),
-	editMode = inject("editMode")
-
-let chapterRelations = ref(props.chapter.relations),
-	modifyRelations = ref(false),
-	allChapters = ref([]),
-	getAllChapters = function(){
-		if(modifyRelations.value){
-			modifyRelations.value = false
-			return
-		}else if(allChapters.value.length>0){
-			modifyRelations.value = true
-			return
-		}
-
-		axios.get(route("chapters.index.min"))
-			.then(res=>{
-				allChapters.value = res.data.data.filter(ch=>ch.slug!==props.chapter.slug)
-				modifyRelations.value = true
-			})
-			.catch(res => {
-				console.warn(res)
-			})
-	},
-	toggleRelation = function(id) {
-		axios.post(route("chapters.relations.toggle", [props.chapter.id, id]))
-			.then(res => {
-				flash.success("relation correctement mis à jour...")
-				if(res.data!==false){
-					chapterRelations.value = res.data.data
-				}
-			}).catch(res=>{
-				flash.error(res.data)
-			})
-	}
-</script>

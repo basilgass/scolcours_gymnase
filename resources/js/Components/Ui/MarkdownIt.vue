@@ -1,7 +1,7 @@
 <!--
 Affichage d'un texte en markdown.
 -->
-<script setup>
+<script setup lang="ts">
 import { computed, ref } from "vue"
 import { useKatexMacros, useMenuScrollTo } from "@/Composables/useHelpers"
 import { router, usePage } from "@inertiajs/vue3"
@@ -11,7 +11,7 @@ import attr from "markdown-it-attrs"
 import tm from "markdown-it-texmath"
 import katex from "katex"
 
-let root = ref(null)
+const root = ref(null)
 
 	const props = defineProps({
 		text: { type: String, default: "" },
@@ -33,7 +33,7 @@ let root = ref(null)
 			},
 		})
 
-	let mdit = computed(() => {
+	const mdit = computed(() => {
 		if (!props.text) {
 			return ""
 		}
@@ -66,7 +66,7 @@ let root = ref(null)
 		return md.render(output)
 	})
 
-	let mdClick = function (event) {
+	const mdClick = function (event) {
 		if (event.target.tagName === "A") {
 			event.preventDefault()
 			const [url, anchor] = event.target.href.split("#")

@@ -1,17 +1,17 @@
 <script setup lang="ts">
 import { computed, ref } from "vue"
 
-let props = defineProps({
+const props = defineProps({
 	btnClass: {type: String, default: 'btn-success'},
 	confirmClass: {type: String, default: 'btn-warning'},
 	confirmText: {type: String, default: 'vraiment ?'},
 	xs: {type: Boolean, default: false}
 })
-let emits = defineEmits(['confirm'])
+const emits = defineEmits(['confirm'])
 
-let confirmClick = ref(false),
+const confirmClick = ref(false),
 	buttonClass = computed(() => {
-		let cl = props.xs ? 'btn-xs ' : ''
+		const cl = props.xs ? 'btn-xs ' : ''
 		return cl + (confirmClick.value ? props.confirmClass : props.btnClass)
 	}),
 	btnClick = function () {

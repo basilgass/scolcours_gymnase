@@ -6,13 +6,13 @@ TODO: est-ce vraiment utile (utilisé dans DEV et language)
 import { computed, onMounted, ref } from "vue"
 
 const props = defineProps({
-	title: String,
+	title: { type: String, default: "" },
 	subtitle: {type: String, default: null},
-	head: String,
-	chapter: String
+	head: { type: String, default: "" },
+	chapter: { type: String, default: "" }
 })
 
-let headTitle = computed(() => {
+const headTitle = computed(() => {
 	if (props.head) {
 		return props.head
 	}
@@ -29,7 +29,7 @@ let headTitle = computed(() => {
 	return calculatedTitle
 })
 
-let showTitle = ref(false)
+const showTitle = ref(false)
 
 onMounted(() => {
 	showTitle.value = true

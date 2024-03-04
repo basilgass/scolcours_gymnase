@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 
 import { PiDraw } from "pidraw/esm"
 import { computed, onMounted, ref } from "vue"
@@ -10,31 +10,29 @@ let draw = ref(null),
 	geom,
 	venn,
 	tex = computed(()=>{
-		let P = ""
 		try {
-			P = new PiMath.Logicalset(input.value.replaceAll("uu", "|").replaceAll("nn", "&").replaceAll("not", "!"))
+			const P = new PiMath.Logicalset(input.value.replaceAll("uu", "|").replaceAll("nn", "&").replaceAll("not", "!"))
 			updateVenn(P)
-			P = P.tex
+			return P.tex
 		}catch(e){
-			P = "\\text{ réponse non reconnue }"
+			return "\\text{ réponse non reconnue }"
 		}
-		return P
 	}),
 	result = ref([]),
 	input = ref("")
 
 function updateVenn(P){
 	result.value = P.vennABC()
-	for(let key in venn){
+	for(const key in venn){
 		venn[key].selected = result.value.includes(key)
 		venn[key].shape.svg.fill(venn[key].selected ? "#cfc" : "#fff")
 	}
 }
-function generate() {
-	let P = new PiMath.Logicalset("(A&B)|C")
-	tex.value = P.tex
-	result.value = P.vennABC()
-}
+// function generate() {
+// 	let P = new PiMath.Logicalset("(A&B)|C")
+// 	tex.value = P.tex
+// 	result.value = P.vennABC()
+// }
 
 function generateSVG() {
 	geom = new PiDraw(draw.value, {width: 470, height:470,
@@ -80,7 +78,7 @@ function generateSVG() {
 		ABC: {shape: ABC, selected: false}
 	}
 
-	for (let key in venn) {
+	for (const key in venn) {
 		venn[key].shape.svg.fill("#fff")
 			.on("mouseover", function() {
 				this.animate(200).fill("#ddd")
@@ -100,7 +98,7 @@ function generateSVG() {
 
 function validate(){
 	let count = 0
-	for(let key in venn.value){
+	for(const key in venn.value){
 		if(venn.value[key].selected && result.value.includes(key)){
 			count ++
 		}

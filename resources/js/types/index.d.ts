@@ -3,6 +3,8 @@ import { ComputedRef } from "vue"
 export interface User {
 	id: number
 	name: string
+	firstname: string
+	fullname: string
 	email: string
 	email_verified_at: string
 	role: string
@@ -14,6 +16,7 @@ export interface ThemeInterface {
 	title: string
 	color: string
 	icon: string
+	enabled: boolean
 }
 
 export interface ToolInterface {
@@ -22,6 +25,7 @@ export interface ToolInterface {
 	title: string
 	body: string
 	parameters: string
+	updated_at: string
 }
 
 export type PageProps<
@@ -33,8 +37,14 @@ export type PageProps<
 			admin: boolean
 		}
 	}
+	scolcours: {title: string}
 	theme: ThemeInterface
 	themes: ThemeInterface[]
+	chapter: {
+		id: number
+		title: string
+		slug: string
+	}
 }
 
 export interface flashLink {
@@ -66,4 +76,20 @@ export interface generatedQuestionInterface {
 	keyboard?: string
 	button?: object
 	reset: boolean
+}
+
+
+export interface resultInterface {
+	pivot: {
+		answer: string
+		result: boolean
+	}
+}
+
+export interface ClipboardKeyboardInterface {
+	title: string
+	body: string
+	css: string
+	answer: string
+	keyboard: string
 }

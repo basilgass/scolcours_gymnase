@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 /** Tools
  * title: diagramme de Venn
  * body: permet d'afficher le résultat d'une expression sous forme de diagramme de Venn
@@ -17,22 +17,20 @@ let draw = ref(null),
 	geom,
 	venn,
 	tex = computed(()=>{
-		let P = ""
 		try {
-			P = new PiMath.Logicalset(input.value.replaceAll("uu", "|").replaceAll("nn", "&").replaceAll("not", "!"))
+			let P = new PiMath.Logicalset(input.value.replaceAll("uu", "|").replaceAll("nn", "&").replaceAll("not", "!"))
 			updateVenn(P)
-			P = P.tex
+			return P.tex
 		}catch(e){
-			P = "\\text{ expression non reconnue }"
+			return "\\text{ expression non reconnue }"
 		}
-		return P
 	}),
 	result = ref([]),
 	input = ref("")
 
 function updateVenn(P){
 	result.value = P.vennABC()
-	for(let key in venn){
+	for(const key in venn){
 		venn[key].selected = result.value.includes(key)
 		venn[key].shape.svg.fill(venn[key].selected ? "#cfc" : "#fff")
 	}
@@ -82,7 +80,7 @@ function generateSVG() {
 		ABC: {shape: ABC, selected: false}
 	}
 
-	for (let key in venn) {
+	for (const key in venn) {
 		venn[key].shape.svg.fill("#fff")
 		// .on("mouseover", function() {
 		// 	this.animate(200).fill("#ddd")

@@ -2,7 +2,7 @@
 import { computed, ref } from "vue"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 
-let props = defineProps({
+const props = defineProps({
 		illustration: { type: Object, required: true },
 	})
 
@@ -22,7 +22,7 @@ the question as markdown with math katex enabled
 	}
 
 	function makeStepsFromCode(value: string): stepInterface[] {
-		let stepsResult = []
+		const stepsResult = []
 
 		const codeSteps = value.split(/%STEP/).filter((s) => s !== "")
 
@@ -31,7 +31,7 @@ the question as markdown with math katex enabled
 			body = body.trim()
 			if (body.startsWith(":")) {
 				// Il y a un titre
-				let lines = body.split("\n")
+				const lines = body.split("\n")
 				title = lines.shift().substring(1).trim()
 				body = lines.join("\n")
 			} else {
@@ -89,7 +89,7 @@ the question as markdown with math katex enabled
 		}
 
 		// Build and merge
-		let steps: stepInterface[] = []
+		const steps: stepInterface[] = []
 
 		for (let slideNb = 0; slideNb < content.length; slideNb++) {
 			steps.push({
@@ -124,24 +124,24 @@ the question as markdown with math katex enabled
 
 	function processContent(str) {
 		// let regex = /@<((\d+|-|,)*):([^>]*?)>((?:[^@]|@(?![<]))*?)/gs;
-		let regex = /@<((\d+|-|,)*):([^>]*?)>((?:[^@]|@(?!<))*)/gs
+		const regex = /@<((\d+|-|,)*):([^>]*?)>((?:[^@]|@(?!<))*)/gs
 
-		let initialString = str.substring(0, str.indexOf("@<")).trim(),
+		const initialString = str.substring(0, str.indexOf("@<")).trim(),
 			restOfString = str.substring(str.indexOf("@<"))
 
-		let maxNumber = str.split("@<").length - 1
+		const maxNumber = str.split("@<").length - 1
 		let match
-		let result =
+		const result =
 			initialString !== "" ? [{ title: "", body: initialString, slides: generateSlidesNumber(0, maxNumber), },] : []
 		let slideNumber = result.length
 
 		while ((match = regex.exec(restOfString)) !== null) {
 			let slides = []
 			if (match[1]) {
-				let slideParts = match[1].split(",")
-				for (let part of slideParts) {
+				const slideParts = match[1].split(",")
+				for (const part of slideParts) {
 					if (part.includes("-")) {
-						let range = part.split("-")
+						const range = part.split("-")
 						for (
 							let i = parseInt(range[0]);
 							i <= parseInt(range[1]);
@@ -157,7 +157,7 @@ the question as markdown with math katex enabled
 				slides = generateSlidesNumber(slideNumber, maxNumber)
 			}
 
-			let part = {
+			const part = {
 				title: match[3],
 				slides,
 				body: match[4].trim(),
@@ -174,7 +174,7 @@ the question as markdown with math katex enabled
 	}
 
 	function transformBody(str) {
-		let result = str.split(/(&|\\\\)/g).map((part) => {
+		const result = str.split(/(&|\\\\)/g).map((part) => {
 			// replace the color from ...\colorbox{color}... to ...\colorbox{transparent}... with regexep
 			if (part.includes("\\colorbox")) {
 				part = part.replaceAll(/colorbox{[^}]*}/g, "colorbox{transparent}")
@@ -186,7 +186,7 @@ the question as markdown with math katex enabled
 		return result.join("")
 	}
 
-	let auto = computed(() => {
+	const auto = computed(() => {
 			const values = props.illustration.parameters.split(",")
 			return values.includes("equ")
 		}),
@@ -200,12 +200,12 @@ the question as markdown with math katex enabled
 		step = computed(() => {
 			return steps.value[stepIndex.value]
 		}),
-		prevStep = computed(() => {
-			if (stepIndex.value === 0) {
-				return null
-			}
-			return steps.value[stepIndex.value - 1]
-		}),
+		// prevStep = computed(() => {
+		// 	if (stepIndex.value === 0) {
+		// 		return null
+		// 	}
+		// 	return steps.value[stepIndex.value - 1]
+		// }),
 		nextStep = computed(() => {
 			if (stepIndex.value === steps.value.length - 1) {
 				return null

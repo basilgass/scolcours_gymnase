@@ -39,6 +39,7 @@ use Illuminate\Support\Carbon;
  * @property-read int|null $scores_count
  * @property-read Collection<int, ChallengeSession> $sessions
  * @property-read int|null $sessions_count
+ * @property-read mixed $url
  * @method static Builder|Challenge newModelQuery()
  * @method static Builder|Challenge newQuery()
  * @method static Builder|Challenge query()

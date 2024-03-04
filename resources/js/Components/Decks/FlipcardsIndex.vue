@@ -10,7 +10,7 @@ import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
 const props = defineProps({
 	deck: { type: Object as PropType<deckInterface>, required: true }
 })
-let theDeck = ref(props.deck)
+const theDeck = ref(props.deck)
 
 function addCard() {
 	axios.post(route("decks.addFlipcard", [props.deck.id]))
@@ -24,7 +24,7 @@ function addCard() {
 
 function deleteFlipcard(flipcardID) {
 	axios.delete(route("flipcards.destroy", [flipcardID]))
-		.then(res => {
+		.then(() => {
 			theDeck.value.flipcards = theDeck.value.flipcards.filter(flipcard => flipcard.id !== flipcardID)
 		})
 }

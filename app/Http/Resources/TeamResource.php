@@ -8,7 +8,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 class TeamResource extends JsonResource
 {
 	public static $wrap = null;
-	
+
     /**
      * Transform the resource into an array.
      *
@@ -19,7 +19,7 @@ class TeamResource extends JsonResource
         return [
 			'id' => $this->id,
 			'name' => $this->name,
-			'users' => UserResource::collection($this->users),
+			'users' => UserResource::collection($this->users)->resolve(),
 		];
     }
 }

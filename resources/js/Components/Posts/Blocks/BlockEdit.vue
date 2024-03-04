@@ -4,11 +4,8 @@ import axios from "axios"
 import { flashInterface } from "@/types"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
-import { BlockInterface } from "@/types/modelInterfaces"
+import { BlockInterfaceExtended } from "@/types/modelInterfaces"
 
-interface BlockInterfaceExtended extends BlockInterface {
-	isNew?: boolean
-}
 const props = defineProps({
 	block: { required: true, type: Object as PropType<BlockInterfaceExtended> },
 	noDelete: { type: Boolean, default: false },
@@ -22,9 +19,9 @@ const props = defineProps({
 })
 const emits = defineEmits(["destroy"])
 
-let theBlock = ref(props.block)
+const theBlock = ref(props.block)
 
-let showEditForm = ref(props.block?.isNew === true),
+const showEditForm = ref(props.block?.isNew === true),
 	editForm = computed(() => {
 		return defineAsyncComponent(
 			() => import("@/Components/Posts/Blocks/BlockForm.vue")

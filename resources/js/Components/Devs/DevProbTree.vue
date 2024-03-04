@@ -1,10 +1,10 @@
-<script setup>
+<script setup lang="ts">
 
 import { ref } from "vue"
 import PiProbabilityTree from "@/Components/Pi/PiProbabilityTree.vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 
-let treeData = ref("A,3,P,5,3"),
+const treeData = ref("A,3,P,5,3"),
 	treeParams = ref("")
 
 </script>

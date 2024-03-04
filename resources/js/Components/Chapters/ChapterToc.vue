@@ -2,81 +2,82 @@
 Affichage de la table des matières.
 -->
 
-<script setup>
+<script setup lang="ts">
 import { computed, inject, ref } from "vue"
 import { router } from "@inertiajs/vue3"
 import FormMaker from "@/Components/Form/FormMaker.vue"
+import { editModeInterface, flashInterface } from "@/types/index.js"
+import axios from "axios"
 
-let props = defineProps({
-		chapter: { type: Object, required: true },
-		scroll: { type: Boolean, default: false },
-		active: { type: Number, default: null },
-	})
+const props = defineProps({
+	chapter: { type: Object, required: true },
+	scroll: { type: Boolean, default: false },
+	active: { type: Number, default: null }
+})
 
-	const flash = inject("flash"),
-		editMode = inject("editMode")
-	let posts = ref(props.chapter.posts),
-		postsFilterCurrent = ref(""),
-		postsFilter = function (filter) {
-			postsFilterCurrent.value =
-				postsFilterCurrent.value === filter ? "" : filter
+const flash = inject<flashInterface>("flash"),
+	editMode = inject<editModeInterface>("editMode")
+const posts = ref(props.chapter.posts),
+	postsFilterCurrent = ref(""),
+	postsFilter = function(filter) {
+		postsFilterCurrent.value =
+			postsFilterCurrent.value === filter ? "" : filter
 
-			if (postsFilterCurrent.value === "") {
-				posts.value = props.chapter.posts
-			} else {
-				moveMode.value = false
-				posts.value = props.chapter.posts.filter(
-					(x) =>
-						x.type ===
-						(postsFilterCurrent.value === "theory"
-							? null
-							: postsFilterCurrent.value),
-				)
-			}
-		},
-		moveMode = ref(false),
-		updatePostsOrder = function () {
-			axios
-				.post(route("chapters.updatePostsOrder", [props.chapter.id]), {
-					posts: posts.value.map((post, index) => {
-						return {
-							id: post.id,
-							title: post.title,
-							order: index + 1,
-						}
-					}),
-					_method: "PATCH",
-				})
-				.then((res) => {
-					flash.success("les posts ont bien été réordré !")
-					// Post has been updated. Go to then new post
-					if (res.data.posts) {
-						posts.value = res.data.posts
-					}
-				})
-		},
-		addPost = function () {
-			axios
-				.post(route("chapters.posts.store", [props.chapter.slug]), {
-					title: "nouvel article",
-				})
-				.then((res) => {
-					router.visit(res.data.redirect)
-				})
-				.catch((err) => console.warn(err))
+		if (postsFilterCurrent.value === "") {
+			posts.value = props.chapter.posts
+		} else {
+			moveMode.value = false
+			posts.value = props.chapter.posts.filter(
+				(x) =>
+					x.type ===
+					(postsFilterCurrent.value === "theory"
+						? null
+						: postsFilterCurrent.value)
+			)
 		}
+	},
+	moveMode = ref(false),
+	updatePostsOrder = function() {
+		axios
+			.post(route("chapters.updatePostsOrder", [props.chapter.id]), {
+				posts: posts.value.map((post, index) => {
+					return {
+						id: post.id,
+						title: post.title,
+						order: index + 1
+					}
+				}),
+				_method: "PATCH"
+			})
+			.then((res) => {
+				flash.success("les posts ont bien été réordré !")
+				// Post has been updated. Go to then new post
+				if (res.data.posts) {
+					posts.value = res.data.posts
+				}
+			})
+	},
+	addPost = function() {
+		axios
+			.post(route("chapters.posts.store", [props.chapter.slug]), {
+				title: "nouvel article"
+			})
+			.then((res) => {
+				router.visit(res.data.redirect)
+			})
+			.catch((err) => console.warn(err))
+	}
 
-	const questionStatus = computed(() => {
-		let result = {}
-		props.chapter.posts.forEach((p) => {
-			result[p.id] =
-				p.questions.length > 0
-					? p.questions.filter((q) => q.user.result).length ===
-					  p.questions.length
-					: null
-		})
-		return result
+const questionStatus = computed(() => {
+	const result = {}
+	props.chapter.posts.forEach((p) => {
+		result[p.id] =
+			p.questions.length > 0
+				? p.questions.filter((q) => q.user.result).length ===p.questions.length
+				: null
 	})
+	return result
+})
 </script>
 <template>
 	<div
@@ -115,12 +116,12 @@ let props = defineProps({
 				class="flex gap-3 items-baseline"
 			>
 				<form-maker
-					type="switch"
 					v-if="postsFilterCurrent === ''"
 					v-model="moveMode"
 					label="mode déplacement"
 					name="move"
 					sm
+					type="switch"
 				/>
 				<button
 					class="btn-new-inline btn-xs"
@@ -174,7 +175,6 @@ let props = defineProps({
 						/>
 
 						<i
-							class="mx-2"
 							:class="{
 								'bi bi-check-circle-fill text-green-500':
 									questionStatus[element.id],
@@ -183,6 +183,7 @@ let props = defineProps({
 								'bi bi-check-circle text-gray-300 invisible':
 									questionStatus[element.id] === null,
 							}"
+							class="mx-2"
 						/>
 
 						<span v-katex.auto="element.title" />

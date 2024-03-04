@@ -1,3 +1,14 @@
+<script setup lang="ts">
+
+import LayoutMain from "@/Layouts/LayoutMain.vue"
+
+defineOptions({ layout: LayoutMain })
+defineProps({
+	body: String
+})
+
+</script>
+
 <template>
 	<div class="grid place-items-center w-full h-[400px]">
 		<div>
@@ -18,18 +29,3 @@
 		</div>
 	</div>
 </template>
-
-<script>
-import LayoutMain from "@/Layouts/LayoutMain.vue"
-
-export default {
-	layout: LayoutMain
-}
-</script>
-<script setup>
-
-const props = defineProps({
-	body: String
-})
-
-</script>

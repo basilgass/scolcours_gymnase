@@ -1,4 +1,4 @@
-<script setup>
+<script lang="ts" setup>
 /** Chapter
  * title: étude de fonction rationnelle
  * body: étude de signe d'une fonction rationnelle.
@@ -11,12 +11,16 @@ import Panel from "@/Components/Ui/Panel.vue"
 import TableOfContents from "@/Components/Ui/TableOfContents.vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 
-let root = ref(null),
+import { IExtrema, IZero } from "pimath/esm/maths/algebra/study"
+import { Polynom } from "pimath/esm/maths/algebra/polynom"
+
+const root = ref(null),
 	fx = ref("(3x-5)(x+7)/(x-3)"),
 	generate_attempts = ref(0),
 	validation = ref(false),
 	validationDescription = ref(""),
 	fraction_rationnelle = reactive({
+		tex: "",
 		valid: false,
 		fxTex: "",
 		domain: "",
@@ -29,6 +33,7 @@ let root = ref(null),
 		av: [],
 		ah: [],
 		ao: [],
+		aoTex: "",
 		dxTex: "",
 		dxtos: {
 			signs: [],
@@ -36,8 +41,9 @@ let root = ref(null),
 			zeroes: []
 		},
 		extrema: [],
-		drawCode: false,
-		drawParameters: "axis,grid"
+		drawCode: null,
+		drawParameters: "axis,grid",
+		texDev: ""
 	})
 
 async function validation_fx() {
@@ -47,7 +53,7 @@ async function validation_fx() {
 	if (fx.value === "") {
 		return false
 	}
-	let numerator, denominator
+	let numerator: Polynom, denominator: Polynom
 
 	const fxSplit = fx.value.split("/")
 	try {
@@ -64,7 +70,7 @@ async function validation_fx() {
 		return false
 	}
 
-	let FR = new PiMath.Rational(numerator, denominator),
+	const FR = new PiMath.Rational(numerator, denominator),
 		study = FR.study()
 
 	// Function name
@@ -79,7 +85,7 @@ async function validation_fx() {
 	fraction_rationnelle.ah = study.asymptotes.filter(x => x.type === "ah")
 	fraction_rationnelle.ao = study.asymptotes.filter(x => x.type === "ao")
 	if (fraction_rationnelle.ao.length === 1) {
-		let {quotient} = study.fx.euclidian()
+		const { quotient } = study.fx.euclidian()
 		fraction_rationnelle.aoTex = `f(x)=\\underbrace{ ${quotient.tex} }_{\\text{AO}} + \\underbrace{ ${fraction_rationnelle.ao[0].deltaX.texFactors} }_{\\delta(x)}`
 	} else {
 		fraction_rationnelle.aoTex = ""
@@ -92,7 +98,7 @@ async function validation_fx() {
 	// Plots
 	// Draw parameters
 	// Get the min / max x and the min / max y.
-	let extremesX = {
+	const extremesX = {
 			min: -1,
 			max: 1
 		},
@@ -101,29 +107,31 @@ async function validation_fx() {
 			max: 1
 		}
 	// Check the zeroes.
-	const particularPoints = [...study.zeroes, ...Object.values(study.derivative.extremes)]
-	particularPoints.forEach(zero=>{
-		let valueX = zero.value.x!==undefined?zero.value.x:zero.value,
-			valueY = zero.value.y!==undefined?zero.value.y:0
+	const particularPoints: (IZero | IExtrema)[] = [...study.zeroes, ...Object.values(study.derivative.extremes)]
 
-		extremesX.min = Math.floor(Math.min(valueX-5, extremesX.min)-1)
-		extremesX.max = Math.floor(Math.max(valueX+5, extremesX.max)+2)
-		extremesY.min = Math.floor(Math.min(valueY-5, extremesY.min)-1)
-		extremesY.max = Math.floor(Math.max(valueY+5, extremesY.max)+2)
+	// TODO: Check the particular points
+	particularPoints.forEach(zero => {
+		const valueX = (typeof zero.value === "number") ? zero.value : zero.value.x,
+			valueY = (typeof zero.value === "number") ? zero.value : zero.value.y
+
+		extremesX.min = Math.floor(Math.min(valueX - 5, extremesX.min) - 1)
+		extremesX.max = Math.floor(Math.max(valueX + 5, extremesX.max) + 2)
+		extremesY.min = Math.floor(Math.min(valueY - 5, extremesY.min) - 1)
+		extremesY.max = Math.floor(Math.max(valueY + 5, extremesY.max) + 2)
 	})
 
 	// Format it to have a 4:3 version.
 	const dx = extremesX.max - extremesX.min,
-		dy =  extremesY.max - extremesY.min
+		dy = extremesY.max - extremesY.min
 
-	if(dx/dy>1.3){
+	if (dx / dy > 1.3) {
 		// Too wide
-		extremesY.min -= Math.floor((dx*3/4-dy)/2)-1
-		extremesY.max += Math.floor((dx*3/4-dy)/2)+2
-	}else if(dx/dy<1.2){
+		extremesY.min -= Math.floor((dx * 3 / 4 - dy) / 2) - 1
+		extremesY.max += Math.floor((dx * 3 / 4 - dy) / 2) + 2
+	} else if (dx / dy < 1.2) {
 		// Too height
-		extremesX.min -= Math.floor((dy*4/3-dx)/2)-1
-		extremesX.max += Math.floor((dy*4/3-dx)/2)+2
+		extremesX.min -= Math.floor((dy * 4 / 3 - dx) / 2) - 1
+		extremesX.max += Math.floor((dy * 4 / 3 - dx) / 2) + 2
 	}
 	fraction_rationnelle.drawParameters = `axis,grid,x=${extremesX.min}:${extremesX.max},y=${extremesY.min}:${extremesY.max}`
 
@@ -135,17 +143,17 @@ async function validation_fx() {
 }
 
 
-function generate_fx(){
+function generate_fx() {
 	let n = 1,
 		genFx
-	while(n<=500){
-		genFx = getFxWithControls(n<250 ? 10: 5)
+	while (n <= 500) {
+		genFx = getFxWithControls(n < 250 ? 10 : 5)
 		if (Math.abs(genFx.control.oao) < 10 &&
 			Math.abs(genFx.control.slope) <= 3 &&
-			Math.abs(genFx.control.ordonnee) <=10 &&
+			Math.abs(genFx.control.ordonnee) <= 10 &&
 			!genFx.control.trou &&
 			!genFx.control.reduceable
-		){
+		) {
 			fx.value = genFx.fx
 			generate_attempts.value = n
 			return
@@ -158,38 +166,38 @@ function generate_fx(){
 	alert("Aucune fonction intéressante générée...")
 }
 
-function getFxWithControls(maxValue){
-	let a, b, c, d, e, k, kd, kd2
+function getFxWithControls(maxValue: number) {
+	let a: number, b: number, c: number, d: number, e: number, k: number, kd: number, kd2: number
 
 	d = PiMath.Random.number(1, maxValue)
 	k = PiMath.Random.numberSym(maxValue - d + 1, false)
-	kd = d*k
-	kd2 = d*d*k
+	kd = d * k
+	kd2 = d * d * k
 
 	e = PiMath.Random.item(
-		PiMath.Numeric.dividers(Math.abs(kd2)).filter(x=>x>=Math.sqrt(kd2))
-	)*(PiMath.Random.bool()?1:-1)
-	a = kd2/e
+		PiMath.Numeric.dividers(Math.abs(kd2)).filter(x => x >= Math.sqrt(kd2))
+	) * (PiMath.Random.bool() ? 1 : -1)
+	a = kd2 / e
 
-	const kd_divider = PiMath.Random.item(PiMath.Numeric.dividers(Math.abs(kd)))*(PiMath.Random.bool()?1:-1)
+	const kd_divider = PiMath.Random.item(PiMath.Numeric.dividers(Math.abs(kd))) * (PiMath.Random.bool() ? 1 : -1)
 	b = PiMath.Random.numberSym(maxValue, false)
 	c = kd_divider - b
 
-	let slope = a/d,
-		oao = a*d*(b+c)-a*e/d*d,
-		ordonnee = a*b*c/e,
-		trou = b===e/d || c===e/d,
-		reduceable = d%a===0 && e%a===0
+	const slope = a / d,
+		oao = a * d * (b + c) - a * e / d * d,
+		ordonnee = a * b * c / e,
+		trou = b === e / d || c === e / d,
+		reduceable = d % a === 0 && e % a === 0
 
-	a = a===1? "": (a===-1? "-": a)
-	b = (b>0 ? "+":"")+b
-	c = (c>0 ? "+":"")+(c!==0?c:"")
-	d = d===1? "": (d===-1? "-": d)
-	e = (e>0 ? "+":"")+e
+	const a2 = a === 1 ? "" : (a === -1 ? "-" : a),
+		b2 = (b > 0 ? "+" : "") + b,
+		c2 = (c > 0 ? "+" : "") + (c !== 0 ? c : ""),
+		d2 = d === 1 ? "" : (d === -1 ? "-" : d),
+		e2 = (e > 0 ? "+" : "") + e
 	return {
-		fx: `${a}(x${b})(x${c})/${d}x${e}`,
+		fx: `${a2}(x${b2})(x${c2})/${d2}x${e2}`,
 		control: {
-			slope ,
+			slope,
 			oao,
 			ordonnee,
 			trou,
@@ -197,6 +205,7 @@ function getFxWithControls(maxValue){
 		}
 	}
 }
+
 onMounted(() => {
 	validation_fx()
 })
@@ -214,10 +223,10 @@ onMounted(() => {
 		>
 			<form-maker
 				v-model="fx"
-				label="Fraction rationnelle"
-				autocomplete="off"
-				:input-class="'font-code'"
 				:focus="true"
+				:input-class="'font-code'"
+				autocomplete="off"
+				label="Fraction rationnelle"
 			/>
 
 			<div class="flex gap-3 mt-3">
@@ -229,10 +238,10 @@ onMounted(() => {
 				</button>
 
 				<button
-					@click.prevent="generate_fx"
 					class="btn btn-primary btn-xs"
+					@click.prevent="generate_fx"
 				>
-					générer {{ generate_attempts > 0 ? `(${generate_attempts})`:'' }}
+					générer {{ generate_attempts > 0 ? `(${generate_attempts})` : "" }}
 				</button>
 			</div>
 		</form>
@@ -272,9 +281,9 @@ onMounted(() => {
 					</h2>
 
 					<table-of-signs
-						v-if="fraction_rationnelle.tos!==false"
-						class="px-10"
+						v-if="fraction_rationnelle.tos"
 						:tos="fraction_rationnelle.tos"
+						class="px-10"
 					/>
 				</div>
 
@@ -348,9 +357,9 @@ onMounted(() => {
 					/>
 
 					<table-of-signs
-						v-if="fraction_rationnelle.dxtos!==false"
-						class="px-10 mt-10"
+						v-if="fraction_rationnelle.dxtos"
 						:tos="fraction_rationnelle.dxtos"
+						class="px-10 mt-10"
 					/>
 
 					<div
@@ -368,14 +377,14 @@ onMounted(() => {
 
 					<pi-draw-parser
 						v-if="fraction_rationnelle.drawCode!==false"
-						class="max-w-3xl mx-auto"
-						axis
-						:width="800"
-						:height="600"
 						:draw="{
 							parameters: fraction_rationnelle.drawParameters,
 							code: fraction_rationnelle.drawCode
 						}"
+						:height="600"
+						:width="800"
+						axis
+						class="max-w-3xl mx-auto"
 					/>
 				</div>
 			</div>

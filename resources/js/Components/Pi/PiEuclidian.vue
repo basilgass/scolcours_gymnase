@@ -8,7 +8,7 @@ import { computed } from "vue"
 import { PiMath } from "pimath/esm"
 import { Polynom } from "pimath/esm/maths/algebra/polynom"
 
-let props = defineProps({
+const props = defineProps({
 	fx: { type: String, default: null },
 	name: { type: String, default: "f(x)" },
 	fundamental: { type: Boolean, default: false },
@@ -16,7 +16,7 @@ let props = defineProps({
 	atBottom: { type: Boolean, default: false }
 })
 
-let emits = defineEmits(["update"])
+const emits = defineEmits(["update"])
 
 function addStep(P: Polynom, degree: number, withParenthesis?: boolean, isFirstStep?: boolean) {
 	withParenthesis = withParenthesis === undefined ? false : withParenthesis
@@ -25,7 +25,7 @@ function addStep(P: Polynom, degree: number, withParenthesis?: boolean, isFirstS
 	let step = [], cntMonom = 0
 
 	for (let i = degree; i >= 0; i--) {
-		let M = P.monomByDegree(i)
+		const M = P.monomByDegree(i)
 
 		if (M.isZero()) {
 			if (isFirstStep) {
@@ -75,14 +75,14 @@ function addStep(P: Polynom, degree: number, withParenthesis?: boolean, isFirstS
 	return step
 }
 
-let result = computed(() => {
+const result = computed(() => {
 		try {
-			let N = new PiMath.Polynom(numerator.value),
+			const N = new PiMath.Polynom(numerator.value),
 				D = new PiMath.Polynom(denominator.value),
 				euclidian = N.euclidian(D)
 
 			// For the euclidian division display.
-			let steps = [],
+			const steps = [],
 				degree = N.degree().value,
 				crtPolynom = N.clone(),
 				underline = []
@@ -93,8 +93,8 @@ let result = computed(() => {
 				[D.tex]
 			])
 
-			for (let m of euclidian.quotient.monoms) {
-				let DM = D.clone().multiply(m)
+			for (const m of euclidian.quotient.monoms) {
+				const DM = D.clone().multiply(m)
 
 				steps.push([
 					[...addStep(DM, degree, true)],

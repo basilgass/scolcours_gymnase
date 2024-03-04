@@ -1,18 +1,15 @@
-<script>
-import LayoutMain from "@/Layouts/LayoutMain.vue"
-
-export default {
-	layout: LayoutMain,
-}
-</script>
-<script setup>
-import {ref} from "vue"
+<script setup lang="ts">
+import { PropType, ref } from "vue"
 import IllustrationForm from "@/Components/Posts/Illustrations/IllustrationForm.vue"
+import LayoutMain from "@/Layouts/LayoutMain.vue"
+import { IllustrationInterface } from "@/types/modelInterfaces"
 
-let props = defineProps({
-	illustration: {type: Object, required: true},
+defineOptions({ layout: LayoutMain })
+
+const props = defineProps({
+	illustration: {type: Object as PropType<IllustrationInterface>, required: true},
 })
-let show = ref(true)
+const show = ref(true)
 </script>
 
 <template>

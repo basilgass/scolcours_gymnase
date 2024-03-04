@@ -1,19 +1,13 @@
-<!--suppress ALL -->
-<script lang="ts">
+<script lang="ts" setup>
+import { computed, onMounted, PropType, ref } from "vue"
+import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
+import { ToolInterface } from "@/types"
+import { getModule, MODULE_TYPES } from "@/scolcours"
+import FormMaker from "@/Components/Form/FormMaker.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 
-export default {
-    layout: LayoutMain
-}
-</script>
-<script lang="ts" setup>
-import {computed, defineAsyncComponent, DefineComponent, onMounted, PropType, ref, resolveComponent} from "vue"
-import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
-import {ToolInterface} from "@/types"
-import {getModule, MODULE_TYPES, ToolsModules} from "@/scolcours"
-import FormMaker from "@/Components/Form/FormMaker.vue"
-
-let toolSlug = ref(null),
+defineOptions({ layout: LayoutMain })
+const toolSlug = ref(null),
     toolSearch = ref(""),
     arraySearch = ref([])
 
@@ -27,7 +21,7 @@ const props = defineProps({
         }
     }
 })
-let toolComponent = computed(() => {
+const toolComponent = computed(() => {
     return getModule(toolSlug.value, MODULE_TYPES.TOOLS)
 	// const key = `./Components/Tools/${toolSlug.value}.vue`;
 	// if(ToolsModules.hasOwnProperty(key)){
@@ -36,11 +30,11 @@ let toolComponent = computed(() => {
 	// return false
 })
 
-let toolName = computed(() => {
+const toolName = computed(() => {
     if (toolSlug.value === "") {
         return ""
     }
-    for (let tool of props.tools) {
+    for (const tool of props.tools) {
         if (tool.slug === toolSlug.value) {
             return tool.title
         }
@@ -64,7 +58,7 @@ onMounted(() => {
     })
 })
 
-let listOfTools = computed(() => {
+const listOfTools = computed(() => {
     let foundTools = []
     if (toolSearch.value.trim() === "") {
         foundTools = [...props.tools]

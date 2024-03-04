@@ -20,9 +20,9 @@ use Laravel\Sanctum\PersonalAccessToken;
  *
  * @property int $id
  * @property string $name
+ * @property string $firstname
  * @property string $email
  * @property string|null $role
- * @property int|null $team_id
  * @property Carbon|null $email_verified_at
  * @property string $password
  * @property string|null $remember_token
@@ -43,7 +43,8 @@ use Laravel\Sanctum\PersonalAccessToken;
  * @property-read int|null $quizz_sessions_count
  * @property-read Collection<int, \App\Models\Score> $scores
  * @property-read int|null $scores_count
- * @property-read \App\Models\Team|null $team
+ * @property-read Collection<int, \App\Models\Team> $teams
+ * @property-read int|null $teams_count
  * @property-read Collection<int, PersonalAccessToken> $tokens
  * @property-read int|null $tokens_count
  * @method static \Database\Factories\UserFactory factory($count = null, $state = [])
@@ -53,12 +54,12 @@ use Laravel\Sanctum\PersonalAccessToken;
  * @method static Builder|User whereCreatedAt($value)
  * @method static Builder|User whereEmail($value)
  * @method static Builder|User whereEmailVerifiedAt($value)
+ * @method static Builder|User whereFirstname($value)
  * @method static Builder|User whereId($value)
  * @method static Builder|User whereName($value)
  * @method static Builder|User wherePassword($value)
  * @method static Builder|User whereRememberToken($value)
  * @method static Builder|User whereRole($value)
- * @method static Builder|User whereTeamId($value)
  * @method static Builder|User whereUpdatedAt($value)
  * @mixin Eloquent
  */

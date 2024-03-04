@@ -1,27 +1,21 @@
-<!--suppress ALL -->
-<script lang="ts">
-	import LayoutMain from "@/Layouts/LayoutMain.vue"
-
-	export default {
-		layout: LayoutMain,
-	}
-</script>
-
 <script setup lang="ts">
-	import { ref, computed, inject, Ref } from "vue"
-	import { PiMath } from "pimath/esm"
-	import ChallengeIntro from "@/Components/Challenges/ChallengeIntro.vue"
-	import ChallengeHeader from "@/Components/Challenges/ChallengeHeader.vue"
-	import ChallengeResults from "@/Components/Challenges/ChallengeResults.vue"
-	import { usePage } from "@inertiajs/vue3"
-	import { useGenerator } from "@/Composables/useGenerator"
-	import QuestionShow from "@/Components/Posts/Questions/QuestionShow.vue"
-	import ChallengeTraining from "@/Components/Challenges/ChallengeTraining.vue"
-	import axios from "axios"
-	import ChallengeExport from "@/Components/Challenges/ChallengeExport.vue"
-	import { flashInterface } from "@/types"
 
-	const emits = defineEmits(["destroy", "change"])
+import { computed, inject, ref } from "vue"
+import { PiMath } from "pimath/esm"
+import ChallengeIntro from "@/Components/Challenges/ChallengeIntro.vue"
+import ChallengeHeader from "@/Components/Challenges/ChallengeHeader.vue"
+import ChallengeResults from "@/Components/Challenges/ChallengeResults.vue"
+import { usePage } from "@inertiajs/vue3"
+import { useGenerator } from "@/Composables/useGenerator"
+import QuestionShow from "@/Components/Posts/Questions/QuestionShow.vue"
+import ChallengeTraining from "@/Components/Challenges/ChallengeTraining.vue"
+import axios from "axios"
+import ChallengeExport from "@/Components/Challenges/ChallengeExport.vue"
+import { flashInterface } from "@/types"
+import LayoutMain from "@/Layouts/LayoutMain.vue"
+
+defineOptions({ layout: LayoutMain })
+	defineEmits(["destroy", "change"])
 	const props = defineProps({
 		challenge: { type: Object, required: true },
 		component: { type: String, require: true },
@@ -30,16 +24,16 @@
 
 	const flash = inject<flashInterface>("flash")
 
-	let selector = ref(0),
-		challengeDescription = computed(() => {
-			return selector.value === 0
-				? ""
-				: challengeGenerators.value[selector.value - 1].body
-		})
+	let selector = ref(0)
+		// challengeDescription = computed(() => {
+		// 	return selector.value === 0
+		// 		? ""
+		// 		: challengeGenerators.value[selector.value - 1].body
+		// })
 
 	let theChallenge = ref(props.challenge.data),
 		challengeGenerators = ref(props.challenge.data.generators),
-		challengeGeneratorError = ref(""),
+		// challengeGeneratorError = ref(""),
 		editMode = ref(false),
 		questions = ref([]),
 		currentGenerator = computed(() => {
@@ -99,8 +93,8 @@
 		localScore.value = "0"
 	}
 	// UI reactive
-	let ValidateButton = ref(null),
-		questionUI = ref(null)
+	// let ValidateButton = ref(null)
+	let	questionUI = ref(null)
 
 	let timerInterval: ReturnType<typeof setInterval> = null,
 		timerIntervalSpeed = ref(1000)
@@ -316,7 +310,10 @@
 		<challenge-header :challenge="theChallenge" />
 
 		<!-- Création du menu -->
-		<div v-if="isStopped" class="my-10">
+		<div
+			v-if="isStopped"
+			class="my-10"
+		>
 			<div class="flex flex-col md:flex-row flex-wrap gap-1 md:gap-5">
 				<div
 					:class="selector === 0 ? 'is-active' : 'text-gray-400'"
@@ -324,8 +321,10 @@
 					@click="selector = 0"
 				>
 					<div class="flex gap-3 items-center md:justify-center">
-						<i class="bi bi-controller text-2xl"></i>
-						<h2 class="text-lg">Challenge</h2>
+						<i class="bi bi-controller text-2xl" />
+						<h2 class="text-lg">
+							Challenge
+						</h2>
 					</div>
 				</div>
 				<div
@@ -338,8 +337,11 @@
 					@click="selector = index + 1"
 				>
 					<div class="flex gap-3 items-center md:justify-center">
-						<i class="bi bi-calculator text-xl"></i>
-						<h2 v-katex.auto="gen.title" class="text-lg" />
+						<i class="bi bi-calculator text-xl" />
+						<h2
+							v-katex.auto="gen.title"
+							class="text-lg"
+						/>
 					</div>
 				</div>
 			</div>
@@ -373,9 +375,14 @@
 					<!--					Prochain niveau:-->
 					{{ theChallenge.nextLevelAfter - levelScore }} réponses
 				</div>
-				<div v-else>Niveau max</div>
+				<div v-else>
+					Niveau max
+				</div>
 			</div>
-			<div v-if="theChallenge.duration" class="header-timer w-full h-3">
+			<div
+				v-if="theChallenge.duration"
+				class="header-timer w-full h-3"
+			>
 				<div
 					:style="`width:${timerWidth}%;transition-timing-function:linear;transition-duration:${timerIntervalSpeed}ms`"
 					class="bg-green-600 h-3 transition-all"

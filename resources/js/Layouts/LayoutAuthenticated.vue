@@ -1,3 +1,29 @@
+<script>
+import BreezeApplicationLogo from "@/Components/Auth/ApplicationLogo.vue"
+import BreezeDropdown from "@/Components/Auth/Dropdown.vue"
+import BreezeDropdownLink from "@/Components/Auth/DropdownLink.vue"
+import BreezeNavLink from "@/Components/Auth/NavLink.vue"
+import BreezeResponsiveNavLink from "@/Components/Auth/ResponsiveNavLink.vue"
+import { Link } from "@inertiajs/vue3"
+
+export default {
+	components: {
+		BreezeApplicationLogo,
+		BreezeDropdown,
+		BreezeDropdownLink,
+		BreezeNavLink,
+		BreezeResponsiveNavLink,
+		Link,
+	},
+
+	data() {
+		return {
+			showingNavigationDropdown: false,
+		}
+	},
+}
+</script>
+
 <template>
 	<div>
 		<div class="min-h-screen bg-gray-100">
@@ -155,29 +181,3 @@
 		</div>
 	</div>
 </template>
-
-<script>
-import BreezeApplicationLogo from "@/Components/Auth/ApplicationLogo.vue"
-import BreezeDropdown from "@/Components/Auth/Dropdown.vue"
-import BreezeDropdownLink from "@/Components/Auth/DropdownLink.vue"
-import BreezeNavLink from "@/Components/Auth/NavLink.vue"
-import BreezeResponsiveNavLink from "@/Components/Auth/ResponsiveNavLink.vue"
-import {Link} from "@inertiajs/vue3"
-
-export default {
-	components: {
-		BreezeApplicationLogo,
-		BreezeDropdown,
-		BreezeDropdownLink,
-		BreezeNavLink,
-		BreezeResponsiveNavLink,
-		Link,
-	},
-
-	data() {
-		return {
-			showingNavigationDropdown: false,
-		}
-	},
-}
-</script>

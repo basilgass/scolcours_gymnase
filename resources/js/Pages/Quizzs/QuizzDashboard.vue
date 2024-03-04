@@ -1,3 +1,38 @@
+<script setup lang="ts">
+import { computed } from "vue"
+import { router } from "@inertiajs/vue3"
+import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
+import LayoutMain from "@/Layouts/LayoutMain.vue"
+
+defineOptions({ layout: LayoutMain })
+
+const props = defineProps({
+		quizzSession: { type: Object, required: true },
+	}),
+	liveQuizz = computed(() => props.quizzSession.data)
+
+const updateCurrent = function (index) {
+	router.post(
+		route("quizzs.sessions.updateCurrent", [liveQuizz.value.shortcode]),
+		{ index },
+		{
+			preserveState: true,
+			preserveScroll: true,
+		}
+	)
+}
+const updateEnable = function (enable) {
+	router.post(
+		route("quizzs.sessions.updateEnable", [liveQuizz.value.shortcode]),
+		{ enable },
+		{
+			preserveState: true,
+			preserveScroll: true,
+		}
+	)
+}
+</script>
+
 <template>
 	<section class="py-10">
 		<div class="bg-white rounded border border-slate-200 p-4">
@@ -98,45 +133,3 @@
 		</table>
 	</section>
 </template>
-
-<script>
-import LayoutMain from "@/Layouts/LayoutMain.vue"
-
-export default {
-	layout: LayoutMain,
-}
-</script>
-<script setup>
-import { computed } from "vue"
-import QuizzQuestion from "@/Components/Quizzs/QuizzQuestion.vue"
-import QuizzIntro from "@/Components/Quizzs/QuizzIntro.vue"
-import QuizzOutro from "@/Components/Quizzs/QuizzOutro.vue"
-import { router } from "@inertiajs/vue3"
-import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
-
-let props = defineProps({
-		quizzSession: { type: Object, required: true },
-	}),
-	liveQuizz = computed(() => props.quizzSession.data)
-
-const updateCurrent = function (index) {
-	router.post(
-		route("quizzs.sessions.updateCurrent", [liveQuizz.value.shortcode]),
-		{ index },
-		{
-			preserveState: true,
-			preserveScroll: true,
-		}
-	)
-}
-const updateEnable = function (enable) {
-	router.post(
-		route("quizzs.sessions.updateEnable", [liveQuizz.value.shortcode]),
-		{ enable },
-		{
-			preserveState: true,
-			preserveScroll: true,
-		}
-	)
-}
-</script>

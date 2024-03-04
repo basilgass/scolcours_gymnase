@@ -1,13 +1,15 @@
 <!--
 Formulaire d'édition d'une question
 -->
-<script setup>
+<script setup lang="ts">
 import { computed, inject, reactive, ref } from "vue"
 import DialogModal from "@/Components/Ui/DialogModal.vue"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
 import QuestionShow from "@/Components/Posts/Questions/QuestionShow.vue"
 import MoveItemTo from "@/Components/Posts/MoveItemTo.vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
+import { ClipboardKeyboardInterface, flashInterface } from "@/types"
+import axios from "axios"
 
 const emits = defineEmits(["update:modelValue", "change", "destroy"])
 let props = defineProps({
@@ -17,7 +19,7 @@ let props = defineProps({
 	show = ref(props.modelValue),
 	theQuestion = reactive(props.question)
 
-const flash = inject("flash")
+const flash = inject<flashInterface>("flash")
 
 let saveQuestion = function() {
 		let illustrations = []
@@ -46,12 +48,12 @@ let saveQuestion = function() {
 						flash.error(
 							"Une erreur est survenue - voir la console"
 						)
-						console.warning(error)
+						console.warn(error)
 					})
 			})
 			.catch((error) => {
 				flash.error("Une erreur est survenue - voir la console")
-				console.warning(error)
+				console.warn(error)
 			})
 	},
 	deleteQuestion = function() {
@@ -90,9 +92,9 @@ let hasClipboard = computed(() => {
 		)
 	},
 	pasteQuestion = function() {
-		let paste = localStorage.getItem("scolcours-clipboard-question")
-		if (paste !== null) {
-			paste = JSON.parse(paste)
+		let pasteCB = localStorage.getItem("scolcours-clipboard-question")
+		if (pasteCB !== null) {
+			const paste:ClipboardKeyboardInterface = JSON.parse(pasteCB)
 			theQuestion.block.title = paste.title
 			theQuestion.block.body = paste.body
 			theQuestion.css = paste.css

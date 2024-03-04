@@ -28,6 +28,7 @@ use URL;
  * @property-read int|null $blocks_count
  * @property-read Collection<int, \App\Models\Challenge> $challenges
  * @property-read int|null $challenges_count
+ * @property-read mixed $component
  * @property-read Collection<int, \App\Models\Formula> $formulas
  * @property-read int|null $formulas_count
  * @property-read Collection<int, \App\Models\Post> $posts
@@ -39,6 +40,7 @@ use URL;
  * @property-read Collection<int, Chapter> $relations
  * @property-read int|null $relations_count
  * @property-read \App\Models\Theme $theme
+ * @property-read mixed $url
  * @property-read Collection<int, \App\Models\User> $users
  * @property-read int|null $users_count
  * @method static \Database\Factories\ChapterFactory factory($count = null, $state = [])

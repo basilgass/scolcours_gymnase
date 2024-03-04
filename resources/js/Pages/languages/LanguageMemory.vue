@@ -1,24 +1,19 @@
-<script>
+<script setup lang="ts">
+import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
+import { PropType, ref } from "vue"
+import { PiMath } from "pimath/esm"
+import LanguageUnitsSelector from "@/Components/Languages/LanguageUnitsSelector.vue"
+import FormMaker from "@/Components/Form/FormMaker.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
+import { TranslationUnitInterface } from "@/types/modelInterfaces"
 
-export default {
-		layout: LayoutMain,
-	}
-</script>
-
-<script setup>
-	import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
-	import { ref } from "vue"
-	import { PiMath } from "pimath/esm"
-	import LanguageUnitsSelector from "@/Components/Languages/LanguageUnitsSelector.vue"
-	import FormMaker from "@/Components/Form/FormMaker.vue"
-
-	let props = defineProps({
+defineOptions({ layout: LayoutMain })
+	const props = defineProps({
 		code: { type: String, required: true },
 		language: { type: String, required: true },
-		units: { type: Array, default: () => [] },
+		units: { type: Object as PropType<TranslationUnitInterface[]>, default: () => {} },
 	})
-	let unitsSelection = ref([]),
+	const unitsSelection = ref([]),
 		availableWords = ref([]),
 		startIndex = ref(0),
 		cards = ref([]),
@@ -28,29 +23,29 @@ export default {
 		gamePaused = ref(true),
 		gameStopped = ref(true)
 
-	let startGame = function () {
+	const startGame = function () {
 		if (availableWords.value.length === 0) {
 			generateWords()
 		}
 
 		generateCards()
 	}
-	let continueGame = function () {
+	const continueGame = function () {
 		startIndex.value = startIndex.value + numberOfCards.value + 1
 		generateCards()
 	}
 
-	let generateWords = function () {
+	const generateWords = function () {
 		// All words available
 		startIndex.value = 0
 		let words = []
-		for (let values of unitsSelection.value.map((x) => x.words)) {
+		for (const values of unitsSelection.value.map((x) => x.words)) {
 			words = words.concat(values)
 		}
 
 		availableWords.value = PiMath.Random.shuffle(words)
 	}
-	let generateCards = function () {
+	const generateCards = function () {
 		if (startIndex.value > availableWords.value.length) {
 			alert("Bravo ! Tout le voc a été révisé !")
 			availableWords.value = []
@@ -59,8 +54,8 @@ export default {
 			return
 		}
 
-		let cardsList = []
-		for (let word of availableWords.value.slice(
+		const cardsList = []
+		for (const word of availableWords.value.slice(
 			startIndex.value,
 			startIndex.value + numberOfCards.value,
 		)) {
@@ -69,7 +64,7 @@ export default {
 		}
 
 		cards.value = []
-		for (let word of PiMath.Random.shuffle(cardsList)) {
+		for (const word of PiMath.Random.shuffle(cardsList)) {
 			cards.value.push({
 				text: word,
 				selected: false,
@@ -81,7 +76,7 @@ export default {
 		gamePaused.value = false
 	}
 
-	let selectCard = function (card) {
+	const selectCard = function (card) {
 		if (card.found) {
 			return
 		}
@@ -102,7 +97,7 @@ export default {
 
 		if (selectedCards.length === 2) {
 			// Il y a deux cartes sélectionnées.
-			for (let word of availableWords.value) {
+			for (const word of availableWords.value) {
 				if (
 					(selectedCards[0].text === word.fr &&
 						selectedCards[1].text === word.foreign) ||

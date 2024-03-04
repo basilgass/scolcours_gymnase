@@ -1,23 +1,19 @@
-<script>
-import LayoutMain from "@/Layouts/LayoutMain.vue"
-
-export default {
-	layout: LayoutMain
-}
-</script>
-
-<script setup>
+<script lang="ts" setup>
 import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
-import {computed, onMounted, ref} from "vue"
-import {PiMath} from "pimath/esm"
+import { computed, onMounted, PropType, ref } from "vue"
+import { PiMath } from "pimath/esm"
 import LanguageUnitsSelector from "@/Components/Languages/LanguageUnitsSelector.vue"
+import LayoutMain from "@/Layouts/LayoutMain.vue"
+import { TranslationUnitInterface } from "@/types/modelInterfaces"
 
-let props = defineProps({
-	code: {type: String, required: true},
-	language: {type: String, required: true},
-	units: {type: Array, default: () => []}
+defineOptions({ layout: LayoutMain })
+
+const props = defineProps({
+	code: { type: String, required: true },
+	language: { type: String, required: true },
+	units: { type: Object as PropType<TranslationUnitInterface[]>, default: () => {} }
 })
-let unitsSelection = ref([]),
+const unitsSelection = ref([]),
 	localStorageKey = computed(() => {
 		return `scolcours_type_${props.language}`
 	}),
@@ -28,7 +24,7 @@ let unitsSelection = ref([]),
 	}),
 	gameStopped = ref(true)
 
-let startGame = function () {
+const startGame = function() {
 	if (unitsSelection.value.length === 0) {
 		alert("sélectionner au moins une unité !")
 		return
@@ -46,7 +42,7 @@ let startGame = function () {
 
 }
 
-let continueGame = function (enter) {
+const continueGame = function() {
 	startIndex.value++
 
 	if (startIndex.value === availableWords.value.length) {
@@ -58,11 +54,11 @@ let continueGame = function (enter) {
 	}
 }
 
-let generateWords = function () {
+const generateWords = function() {
 	// All words available
 	startIndex.value = 0
 	let words = []
-	for (let values of unitsSelection.value.map(x => x.words)) {
+	for (const values of unitsSelection.value.map(x => x.words)) {
 		words = words.concat(values)
 	}
 
@@ -78,7 +74,7 @@ function shake(item) {
 	}, 500)
 }
 
-function saveToLocalStorage(addToIndex) {
+function saveToLocalStorage(addToIndex?: number) {
 	localStorage.setItem(localStorageKey.value,
 		JSON.stringify(
 			{
@@ -89,16 +85,12 @@ function saveToLocalStorage(addToIndex) {
 	)
 }
 
-function removeFromLocalStorage() {
-	localStorage.removeItem(localStorageKey.value)
-}
 
-
-let typoButtons = ref(null),
+const typoButtons = ref(null),
 	excludeLetters = ref([" ", ",", "'", ".", "!", "?", "(", ")", "-"]),
 	foreignLetters = ref([]),
 	resultLetters = ref([]),
-	buildResult = function () {
+	buildResult = function() {
 		let theWord = currentWord.value.foreign
 
 		// Modify the word
@@ -143,7 +135,7 @@ let typoButtons = ref(null),
 
 	},
 	currentIndex = ref(-1),
-	validateKey = function (index) {
+	validateKey = function(index) {
 		if (resultLetters.value[currentIndex.value].key === foreignLetters.value[index].key) {
 			resultLetters.value[currentIndex.value].visible = true
 			foreignLetters.value[index].used = true

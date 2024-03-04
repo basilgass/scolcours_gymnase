@@ -1,3 +1,27 @@
+<script setup lang="ts">
+import { computed, PropType } from "vue"
+import InfoTile from "@/Components/Ui/InfoTile.vue"
+import { resultInterface } from "@/types"
+
+
+const props = defineProps({
+		quizzSession: { type: Object, required: true },
+		usersCount: { type: Number, required: true },
+		results: { type: Object as PropType<resultInterface[]>, required: true },
+	}),
+	nbAnswers = computed(() => props.results.length),
+	nbCorrect = computed(
+		() => props.results.filter((x) => x.pivot.result).length
+	),
+	ratioCorrect = computed(() => {
+		return nbAnswers.value > 0
+			? ((nbCorrect.value / nbAnswers.value) * 100).toFixed()
+			: " - - "
+	})
+
+// TODO: add a chart of the results
+</script>
+
 <template>
 	<article class="grid place-items-center min-h-screen">
 		<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -33,26 +57,3 @@
 		</div>
 	</article>
 </template>
-
-<script setup>
-import {computed} from "vue"
-import InfoTile from "@/Components/Ui/InfoTile.vue"
-
-let props = defineProps({
-		quizzSession: { type: Object, required: true },
-		usersCount: { type: Number, required: true },
-		results: { type: Array, required: true },
-	}),
-	quizz = computed(() => props.quizzSession.quizz),
-	nbAnswers = computed(() => props.results.length),
-	nbCorrect = computed(
-		() => props.results.filter((x) => x.pivot.result).length
-	),
-	ratioCorrect = computed(() => {
-		return nbAnswers.value > 0
-			? ((nbCorrect.value / nbAnswers.value) * 100).toFixed()
-			: " - - "
-	})
-
-// TODO: add a chart of the results
-</script>

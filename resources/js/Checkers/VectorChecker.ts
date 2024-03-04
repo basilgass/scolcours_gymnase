@@ -1,7 +1,7 @@
 import {getCheckerClass} from "@/Composables/checkersConfig"
-import {CheckerBase} from "@/Checkers/CheckerBase";
-import {PiMath} from "pimath/esm";
-import {stripFirstCharacter, stripLastCharacter} from "@/helpers/helperFunctions";
+import {CheckerBase} from "@/Checkers/CheckerBase"
+import {PiMath} from "pimath/esm"
+import {stripFirstCharacter, stripLastCharacter} from "@/helpers/helperFunctions"
 
 const name = "vector"
 const description = `vector,[paramètres]
@@ -16,7 +16,7 @@ export class VectorChecker extends CheckerBase {
     private secondaryChecker: CheckerBase
 
     constructor(config?: string[]|string) {
-        super(config);
+        super(config)
         this.name = name
         this.description = description
 
@@ -34,7 +34,7 @@ export class VectorChecker extends CheckerBase {
     }
 
     get format(): string {
-        return `Vecteur sous la forme \\(\\begin{pmatrix}a\\\\b\\end{pmatrix}\\)<br>${this.secondaryChecker.format}`;
+        return `Vecteur sous la forme \\(\\begin{pmatrix}a\\\\b\\end{pmatrix}\\)<br>${this.secondaryChecker.format}`
     }
 
     check(expected: string, given: string): { result: boolean; message: string } {
@@ -48,7 +48,7 @@ export class VectorChecker extends CheckerBase {
         }
 
         // On récupère les valeurs
-        let values = given.split(";"),
+        const values = given.split(";"),
             expectedValues = expected.split(";")
 
 
@@ -108,7 +108,7 @@ export class VectorChecker extends CheckerBase {
             }
         } else {
             for (let i = 0; i < values.length; i++) {
-                let result = this.secondaryChecker.check(expectedValues[i], values[i])
+                const result = this.secondaryChecker.check(expectedValues[i], values[i])
                 if (!result.result) {
                     return {
                         result: false,

@@ -23,7 +23,7 @@ function katexAutoRender(el) {
 	}
 }
 
-function katexUpdate(el, binding, vnode) {
+function katexUpdate(el, binding) {
 	el.innerHTML = ""
 
 	if (
@@ -61,7 +61,7 @@ function katexUpdate(el, binding, vnode) {
 	if (!isNaN(rawTex)) {
 		for (const key in binding.modifiers) {
 			if (key.startsWith("number")) {
-				const [b, digits] = key.split(":")
+				const [, digits] = key.split(":")
 				rawTex = numberCorrection(
 					rawTex,
 					digits === undefined ? 2 : +digits
@@ -114,11 +114,11 @@ function katexUpdate(el, binding, vnode) {
 }
 
 export const katexDirective = {
-	mounted(el, binding, vnode) {
-		katexUpdate(el, binding, vnode)
+	mounted(el, binding) {
+		katexUpdate(el, binding)
 	},
-	updated(el, binding, vnode) {
-		katexUpdate(el, binding, vnode)
+	updated(el, binding) {
+		katexUpdate(el, binding)
 	},
 	unmounted(el) {
 		el.innerHTML = ""
@@ -126,12 +126,12 @@ export const katexDirective = {
 }
 
 export const visibleDirective = {
-	mounted(el, binding, vnode) {
+	mounted(el, binding) {
 		el.style.visibility = binding.value ? "visible" : "hidden"
 	}
 }
 
-function adminUpdate(el, binding, vnode) {
+function adminUpdate(el, binding) {
 	if (!usePage().props.auth.can.admin) {
 		el.remove()
 	}
@@ -144,15 +144,15 @@ function adminUpdate(el, binding, vnode) {
 }
 
 export const adminDirective = {
-	mounted(el, binding, vnode) {
-		adminUpdate(el, binding, vnode)
+	mounted(el, binding) {
+		adminUpdate(el, binding)
 	},
-	updated(el, binding, vnode) {
-		adminUpdate(el, binding, vnode)
+	updated(el, binding) {
+		adminUpdate(el, binding)
 	}
 }
 
-function themeUpdate(el, binding, vnode) {
+function themeUpdate(el, binding) {
 	const themes = usePage().props.themes.map((theme) => theme.slug)
 	const keys = ["btn", "bg", "text", "border", "active", "scrollbar"]
 
@@ -194,7 +194,7 @@ function themeUpdate(el, binding, vnode) {
 
 	Object.keys(binding.modifiers).forEach((key) => {
 		if (keys.indexOf(key) !== -1) {
-			if (key === "text" && binding.modifiers.hasOwnProperty("bg")) {
+			if (key === "text" && Object.hasOwn(binding.modifiers, "bg")) {
 				el.classList.add("text-white")
 			} else {
 				el.classList.add(`${key}-scolcours-${chapter}`)
@@ -204,10 +204,10 @@ function themeUpdate(el, binding, vnode) {
 }
 
 export const themeDirective = {
-	mounted(el, binding, vnode) {
-		themeUpdate(el, binding, vnode)
+	mounted(el, binding) {
+		themeUpdate(el, binding)
 	},
-	updated(el, binding, vnode) {
-		themeUpdate(el, binding, vnode)
+	updated(el, binding) {
+		themeUpdate(el, binding)
 	}
 }

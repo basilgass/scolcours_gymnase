@@ -1,5 +1,5 @@
-import {CheckerBase} from "@/Checkers/CheckerBase";
-import {customCheck} from "@/Composables/checkersConfig";
+import { CheckerBase } from "@/Checkers/CheckerBase"
+import { customCheck } from "@/Composables/checkersConfig"
 
 const name = "scientific"
 const description = `scientific|scn,[paramètres]
@@ -11,9 +11,9 @@ const description = `scientific|scn,[paramètres]
 `
 
 export class ScientificChecker extends CheckerBase {
-    private digits: number;
+    private digits: number
     constructor(config:string[]|string) {
-        super(config);
+        super(config)
         this.name = name
         this.description = description
         this.digits = isNaN(+this.config[0])?0:+this.config[0]
@@ -70,7 +70,7 @@ export class ScientificChecker extends CheckerBase {
     get format(): string {
         return this.digits ?
             "réponse en notation scientifique" :
-            `réponse en notation scientifique à ${this.digits} chiffre(s) significatif(s)`;
+            `réponse en notation scientifique à ${this.digits} chiffre(s) significatif(s)`
     }
 
 }

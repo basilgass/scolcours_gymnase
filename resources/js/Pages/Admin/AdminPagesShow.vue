@@ -1,63 +1,66 @@
-<script>
+<script lang="ts" setup>
+import Panel from "@/Components/Ui/Panel.vue"
+import { useForm } from "@inertiajs/vue3"
+import { computed, PropType, ref } from "vue"
+import FormMaker from "@/Components/Form/FormMaker.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
+import { ChallengeInterface } from "@/types/modelInterfaces"
+import { ToolInterface } from "@/types"
 
-export default {
-		layout: LayoutMain,
-	}
-</script>
+defineOptions({ layout: LayoutMain })
+const props = defineProps({
+	tools: { type: Object as PropType<ToolInterface[]>, required: true },
+	chapters: {
+		type: Object as PropType<{
+			slug: string
+			title: string
+			theme: string
+			active: boolean
+			updated_at: string
+		}[]>, required: true
+	},
+	challenges: { type: Object as PropType<ChallengeInterface[]>, required: true }
+})
 
-<script setup>
-	import Panel from "@/Components/Ui/Panel.vue"
-	import { useForm } from "@inertiajs/vue3"
-	import { computed, ref } from "vue"
-	import FormMaker from "@/Components/Form/FormMaker.vue"
+const filterChapter = ref("")
 
-	const props = defineProps({
-		tools: Object,
-		chapters: Object,
-		challenges: Object,
-	})
+const Form = useForm({
+	slug: "",
+	active: false
+})
 
-	let filterChapter = ref("")
+const chapterCurrentTheme = ref<string>("")
+const chapterThemes = computed(() => {
+	const themes = props.chapters.map((chapter) => chapter.theme)
+	themes.sort()
+	return [...new Set(themes)]
+})
 
-	const Form = useForm({
-		slug: "",
-		active: false,
-	})
-
-	let chapterCurrentTheme = ref("")
-	let chapterThemes = computed(() => {
-		let themes = props.chapters.map((chapter) => chapter.theme)
-		themes.sort()
-		return [...new Set(themes)]
-	})
-
-	let filtreredChapters = computed(() => {
-		let chapters = props.chapters.filter(
+const filtreredChapters = computed(() => {
+	let chapters = props.chapters.filter(
+		(chapter) =>
+			chapter.theme === chapterCurrentTheme.value ||
+			chapterCurrentTheme.value === ""
+	)
+	if (filterChapter.value !== "") {
+		chapters = chapters.filter(
 			(chapter) =>
-				chapter.theme === chapterCurrentTheme.value ||
-				chapterCurrentTheme.value === "",
+				chapter.slug.includes(filterChapter.value) ||
+				chapter.title.includes(filterChapter.value)
 		)
-		if (filterChapter.value !== "") {
-			chapters = chapters.filter(
-				(chapter) =>
-					chapter.slug.includes(filterChapter.value) ||
-					chapter.title.includes(filterChapter.value),
-			)
-		}
-
-		return chapters
-	})
-
-	//TODO : add a please wait...
-	function toggleChapterVisibility(slug, active) {
-		Form.slug = slug
-		Form.active = active
-		Form.patch(`/admin/chapters/${slug}`, {
-			preserveScroll: true,
-			onSuccess: {},
-		})
 	}
+
+	return chapters
+})
+
+//TODO : add a please wait...
+function toggleChapterVisibility(slug, active) {
+	Form.slug = slug
+	Form.active = active
+	Form.patch(`/admin/chapters/${slug}`, {
+		preserveScroll: true
+	})
+}
 </script>
 <template>
 	<h1 class="text-3xl pt-5 mb-10">
@@ -77,8 +80,8 @@ export default {
 			<div class="flex gap-5 items-center mt-3 mb-5">
 				<div>Filtrer par thèmes:</div>
 				<button
-					class="btn btn-xs"
 					:class="chapterCurrentTheme === '' ? 'btn-success' : ''"
+					class="btn btn-xs"
 					@click="chapterCurrentTheme = ''"
 				>
 					Tous
@@ -86,8 +89,8 @@ export default {
 				<button
 					v-for="(theme, id) of chapterThemes"
 					:key="id"
-					class="btn btn-xs"
 					:class="chapterCurrentTheme === theme ? 'btn-success' : ''"
+					class="btn btn-xs"
 					@click="chapterCurrentTheme = theme"
 				>
 					{{ theme }}
@@ -113,11 +116,11 @@ export default {
 					<div>
 						<div>{{ chapter.updated_at }}</div>
 						<button
-							class="btn btn-xs w-full text-white hover:text-gray-800"
 							:class="{
 								'bg-green-600': chapter.active,
 								'bg-red-600': !chapter.active,
 							}"
+							class="btn btn-xs w-full text-white hover:text-gray-800"
 							@click="
 								toggleChapterVisibility(
 									chapter.slug,

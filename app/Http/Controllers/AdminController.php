@@ -225,7 +225,20 @@ class AdminController extends Controller
 		return redirect(route('admin.users'));
 	}
 
-	// TODO Remove loadChapters from AdminController
+	public function updateUser(User $user, Request $request)
+	{
+		$request->validate([
+			'name' => 'required',
+			'firstname' => 'required'
+		]);
+
+		$user->name = $request->name;
+		$user->firstname = $request->firstname;
+		$user->save();
+		$user->refresh();
+
+		return UserResource::make($user)->resolve();
+	}
 
 	public function destroyUser(User $user)
 	{

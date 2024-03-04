@@ -1,6 +1,10 @@
 <!--
 Pied de page pour les pages principales.
 -->
+<script setup lang="ts">
+import LogoutButton from "@/Components/Ui/LogoutButton.vue"
+import ThemeLinks from "@/Components/Ui/ThemeLinks.vue"
+</script>
 <template>
 	<div class="bg-black text-white px-10 mt-24">
 		<div class="max-w-5xl mx-auto py-10 grid grid-cols-1 md:grid-cols-3 gap-5">
@@ -32,11 +36,11 @@ Pied de page pour les pages principales.
 					/> english
 				</Link>
 				<Link
-						:href="route('translation.index', ['deutsch'])"
-						class="block transition duration-300 hover:translate-x-2 px-0 md:px-4 py-1"
+					:href="route('translation.index', ['deutsch'])"
+					class="block transition duration-300 hover:translate-x-2 px-0 md:px-4 py-1"
 				>
 					<i
-							class="mr-2 bi bi-translate"
+						class="mr-2 bi bi-translate"
 					/> deutsch
 				</Link>
 			</div>
@@ -85,12 +89,3 @@ Pied de page pour les pages principales.
 		</div>
 	</div>
 </template>
-<script>
-import LogoutButton from "@/Components/Ui/LogoutButton.vue"
-import ThemeLinks from "@/Components/Ui/ThemeLinks.vue"
-
-export default {
-	name: "MainFooter",
-	components: {LogoutButton, ThemeLinks}
-}
-</script>

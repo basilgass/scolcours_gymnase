@@ -1,24 +1,20 @@
-<script>
-import LayoutMain from "@/Layouts/LayoutMain.vue"
-
-export default {
-	layout: LayoutMain
-}
-</script>
-
-<script setup>
+<script setup lang="ts">
 import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
-import {computed, nextTick, onMounted, ref, watch} from "vue"
-import {PiMath} from "pimath/esm"
+import { computed, nextTick, onMounted, PropType, ref, watch } from "vue"
+import { PiMath } from "pimath/esm"
 import LanguageUnitsSelector from "@/Components/Languages/LanguageUnitsSelector.vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
+import LayoutMain from "@/Layouts/LayoutMain.vue"
+import { TranslationUnitInterface } from "@/types/modelInterfaces"
 
-let props = defineProps({
+defineOptions({ layout: LayoutMain })
+
+const props = defineProps({
 	code: {type: String, required: true},
 	language: {type: String, required: true},
-	units: {type: Array, default: () => []}
+	units: {type: Object as PropType<TranslationUnitInterface[]>, default: () => {}}
 })
-let unitsSelection = ref([]),
+const unitsSelection = ref([]),
 	localStorageKey = computed(() => {
 		return `scolcours_guess_${props.language}`
 	}),
@@ -52,7 +48,7 @@ let unitsSelection = ref([]),
 	suggestInput = ref(null)
 
 
-let startGame = function () {
+const startGame = function () {
 	if (unitsSelection.value.length === 0) {
 		alert("sélectionner au moins une unité !")
 		return
@@ -72,7 +68,7 @@ let startGame = function () {
 
 }
 
-let continueGame = function (enter) {
+const continueGame = function () {
 	userGuess.value = ""
 	startIndex.value++
 	unknownWordAnswer.value = ""
@@ -87,23 +83,23 @@ let continueGame = function (enter) {
 	nextTick(() => suggestInput.value.focus())
 }
 
-let generateWords = function () {
+const generateWords = function () {
 	// All words available
 	startIndex.value = 0
 	let words = []
-	for (let values of unitsSelection.value.map(x => x.words)) {
+	for (const values of unitsSelection.value.map(x => x.words)) {
 		words = words.concat(values)
 	}
 
 	availableWords.value = PiMath.Random.shuffle(words)
 }
 
-let suggestionEnter = function () {
+const suggestionEnter = function () {
 	if (suggestionsItems.value.length === 1) {
 		suggestionClick(0)
 	}
 }
-let suggestionClick = function (index) {
+const suggestionClick = function (index) {
 	if (suggestionsItems.value[index].foreign === availableWords.value[startIndex.value].foreign) {
 		// Continue the game
 		availableWords.value[startIndex.value].found = true
@@ -123,18 +119,18 @@ let suggestionClick = function (index) {
 	saveToLocalStorage()
 }
 
-let defineUnknowns = function (item) {
+const defineUnknowns = function (item) {
 	unknownWordForeign.value = item.foreign
 	unknownWordExamples.value = item.examples.split("|")
 	unknownWordDefinition.value = item.definition
 }
-let resetUnknowns = function () {
+const resetUnknowns = function () {
 	unknownWordForeign.value = ""
 	unknownWordExamples.value = []
 	unknownWordDefinition.value = ""
 }
 
-let unknownWord = function () {
+const unknownWord = function () {
 	// add item at the end
 	const item = {...availableWords.value[startIndex.value]}
 	if (!item.errors) {
@@ -160,7 +156,7 @@ let unknownWord = function () {
 }
 
 function shake(index) {
-	let item = suggestionsWrapper.value.children[index]
+	const item = suggestionsWrapper.value.children[index]
 
 	item.style.setProperty("animation-name", "v-shake-horizontal")
 	item.style.setProperty("animation-duration", "500ms")
@@ -170,7 +166,7 @@ function shake(index) {
 	}, 500)
 }
 
-watch(userGuess, (newValue, oldValue) => {
+watch(userGuess, () => {
 	const txt = userGuess.value.toLowerCase()
 
 	suggestionsItems.value = availableWords.value
@@ -182,7 +178,7 @@ watch(userGuess, (newValue, oldValue) => {
 
 			let translation = x.foreign.toLowerCase()
 			// On filtre les déterminants
-			for (let det of determinants.value) {
+			for (const det of determinants.value) {
 				if (translation.startsWith(det)) {
 					translation = translation.substring(det.length)
 					break
@@ -207,7 +203,7 @@ watch(userGuess, (newValue, oldValue) => {
 		})
 })
 
-function saveToLocalStorage(addToIndex) {
+function saveToLocalStorage(addToIndex?: number) {
 	localStorage.setItem(localStorageKey.value,
 		JSON.stringify(
 			{
@@ -224,7 +220,7 @@ function removeFromLcalStorage() {
 }
 
 onMounted(() => {
-	let previousData = localStorage.getItem(localStorageKey.value)
+	const previousData = localStorage.getItem(localStorageKey.value)
 	if (previousData) {
 		if (confirm("Il y a des valeurs en mémoire... continuer ?")) {
 			const localData = JSON.parse(previousData)

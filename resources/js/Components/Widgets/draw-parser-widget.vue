@@ -3,7 +3,7 @@ import { PropType } from "vue"
 import { IllustrationInterface } from "@/types/modelInterfaces"
 import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"
 
-let props = defineProps({
+const props = defineProps({
 	illustration: { type: Object as PropType<IllustrationInterface>, required: true },
 })
 

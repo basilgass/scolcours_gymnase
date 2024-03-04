@@ -1,14 +1,14 @@
 // @ts-nocheck
 export default class AsciiMathParser {
 	constructor() {
-		this.decimalsign = '\\.';
+		this.decimalsign = '\\.'
 
-		this.setup_symbols();
-		this.sort_symbols();
+		this.setup_symbols()
+		this.sort_symbols()
 	}
 
 	setup_symbols() {
-		this.greek_letters = ['alpha', 'beta', 'gamma', 'Gamma', 'delta', 'Delta', 'epsilon', 'varepsilon', 'zeta', 'eta', 'theta', 'Theta', 'vartheta', 'iota', 'kappa', 'lambda', 'Lambda', 'mu', 'nu', 'xi', 'Xi', 'pi', 'Pi', 'rho', 'sigma', 'Sigma', 'tau', 'upsilon', 'phi', 'Phi', 'varphi', 'chi', 'psi', 'Psi', 'omega', 'Omega'];
+		this.greek_letters = ['alpha', 'beta', 'gamma', 'Gamma', 'delta', 'Delta', 'epsilon', 'varepsilon', 'zeta', 'eta', 'theta', 'Theta', 'vartheta', 'iota', 'kappa', 'lambda', 'Lambda', 'mu', 'nu', 'xi', 'Xi', 'pi', 'Pi', 'rho', 'sigma', 'Sigma', 'tau', 'upsilon', 'phi', 'Phi', 'varphi', 'chi', 'psi', 'Psi', 'omega', 'Omega']
 
 		this.relations = [
 			{"asciimath":":=","tex":":="},
@@ -221,8 +221,8 @@ export default class AsciiMathParser {
 			{"asciimath":"min","tex":"\\min"},
 			{"asciimath":"prod","tex":"\\prod"},
 			{"asciimath":"sum","tex":"\\sum"},
-		];
-		this.constants = this.constants.concat(this.relations);
+		]
+		this.constants = this.constants.concat(this.relations)
 
 		this.left_brackets = [
 			{asciimath: 'langle', tex: '\\langle'},
@@ -234,7 +234,7 @@ export default class AsciiMathParser {
 			{asciimath: '|:', tex: '\\lvert'},
 			{asciimath: '{', tex: '\\lbrace'},
 			{asciimath: 'lbrace', tex: '\\lbrace'},
-		];
+		]
 		this.right_brackets = [
 			{asciimath: 'rangle', tex: '\\rangle'},
 			{asciimath: ':)', tex: '\\rangle'},
@@ -245,10 +245,10 @@ export default class AsciiMathParser {
 			{asciimath: ':|', tex: '\\rvert'},
 			{asciimath: '}', tex: '\\rbrace'},
 			{asciimath: 'rbrace', tex: '\\rbrace'},
-		];
+		]
 		this.leftright_brackets = [
 			{asciimath: '|', left_tex: '\\lvert', right_tex: '\\rvert', free_tex: '|', mid_tex: '\\mid'},
-		];
+		]
 
 		this.unary_symbols = [
 			{asciimath: "sqrt", tex: "\\sqrt"},
@@ -321,7 +321,7 @@ export default class AsciiMathParser {
 			{asciimath: "mathtt", atname:"mathvariant", atval:"monospace", tex:"\\mathtt"},
 			{asciimath:"fr", atname:"mathvariant", atval:"fraktur", tex:"\\mathfrak"},
 			{asciimath: "mathfrak", atname:"mathvariant", atval:"fraktur", tex:"\\mathfrak"},
-		];
+		]
 
 		this.binary_symbols = [
 			{asciimath: "root", tex:"\\sqrt", option: true},
@@ -332,116 +332,116 @@ export default class AsciiMathParser {
 			{asciimath:"color", tex: "\\color", rawfirst: true},
 		]
 
-		this.non_constant_symbols = ['_','^','/'];
+		this.non_constant_symbols = ['_','^','/']
 
 	}
 
 	sort_symbols() {
-		const by_asciimath = (a,b)=>{a=a.asciimath.length,b=b.asciimath.length; return a>b ? -1 : a<b ? 1 : 0};
-		this.constants.sort(by_asciimath);
-		this.relations.sort(by_asciimath);
-		this.left_brackets.sort(by_asciimath);
-		this.right_brackets.sort(by_asciimath);
-		this.leftright_brackets.sort(by_asciimath);
-		this.unary_symbols.sort(by_asciimath);
-		this.binary_symbols.sort(by_asciimath);
+		const by_asciimath = (a,b)=>{a=a.asciimath.length,b=b.asciimath.length; return a>b ? -1 : a<b ? 1 : 0}
+		this.constants.sort(by_asciimath)
+		this.relations.sort(by_asciimath)
+		this.left_brackets.sort(by_asciimath)
+		this.right_brackets.sort(by_asciimath)
+		this.leftright_brackets.sort(by_asciimath)
+		this.unary_symbols.sort(by_asciimath)
+		this.binary_symbols.sort(by_asciimath)
 	}
 
 	error(message, pos) {
-		const neighbourhood = this.source(pos).slice(0,5);
-		throw(new Error(`Error at character ${pos} near "${neighbourhood}": ${message}`));
+		const neighbourhood = this.source(pos).slice(0,5)
+		throw(new Error(`Error at character ${pos} near "${neighbourhood}": ${message}`))
 	}
 
 	literal(token) {
 		if(token) {
-			return {tex: token.token, pos: token.pos, end: token.end, ttype: 'literal'};
+			return {tex: token.token, pos: token.pos, end: token.end, ttype: 'literal'}
 		}
 	}
 
 	longest(matches) {
-		matches = matches.filter(x=>!!x);
+		matches = matches.filter(x=>!!x)
 		matches.sort((x,y)=>{
-			x=x.end;
-			y=y.end;
-			return x>y ? -1 : x<y ? 1 : 0;
-		});
-		return matches[0];
+			x=x.end
+			y=y.end
+			return x>y ? -1 : x<y ? 1 : 0
+		})
+		return matches[0]
 	}
 
 	escape_text(str) {
 		return str
 			.replace(/\{/g,'\\{')
 			.replace(/\}/g,'\\}')
-			;
+
 	}
 
 	input(str) {
-		this._source = str;
-		this.brackets = [];
+		this._source = str
+		this.brackets = []
 	}
 
 	source(pos = 0,end?) {
 		if(arguments.length>1) {
-			return this._source.slice(pos,end);
+			return this._source.slice(pos,end)
 		} else {
-			return this._source.slice(pos);
+			return this._source.slice(pos)
 		}
 	}
 
 	eof(pos = 0) {
-		pos = this.strip_space(pos);
-		return pos == this._source.length;
+		pos = this.strip_space(pos)
+		return pos == this._source.length
 	}
 
 	unbracket(tok) {
 		if(!tok) {
-			return;
+			return
 		}
 		if(!tok.bracket) {
-			return tok;
+			return tok
 		}
 
-		const skip_brackets = ['(',')','[',']','{','}'];
-		const skipleft = skip_brackets.includes(tok.left.asciimath);
-		const skipright = skip_brackets.includes(tok.right.asciimath);
-		const pos = skipleft ? tok.left.end : tok.pos;
-		const end = skipright ? tok.right.pos : tok.end;
-		let left = skipleft ? '' : tok.left.tex;
-		let right = skipright ? '' : tok.right.tex;
-		const middle = tok.middle ? tok.middle.tex : '';
+		const skip_brackets = ['(',')','[',']','{','}']
+		const skipleft = skip_brackets.includes(tok.left.asciimath)
+		const skipright = skip_brackets.includes(tok.right.asciimath)
+		const pos = skipleft ? tok.left.end : tok.pos
+		const end = skipright ? tok.right.pos : tok.end
+		let left = skipleft ? '' : tok.left.tex
+		let right = skipright ? '' : tok.right.tex
+		const middle = tok.middle ? tok.middle.tex : ''
 		if(left || right) {
-			left = left || '.';
-			right = right || '.';
-			return {tex: `\\left ${left} ${middle} \\right ${right}`, pos: tok.pos, end: tok.end};
+			left = left || '.'
+			right = right || '.'
+			return {tex: `\\left ${left} ${middle} \\right ${right}`, pos: tok.pos, end: tok.end}
 		} else {
-			return {tex: middle, pos: tok.pos, end: tok.end, middle_asciimath: this.source(pos,end)};
+			return {tex: middle, pos: tok.pos, end: tok.end, middle_asciimath: this.source(pos,end)}
 		}
 	}
 
 	parse(str) {
-		this.input(str);
-		const result = this.consume();
-		return result.tex;
+		this.input(str)
+		const result = this.consume()
+		return result.tex
 	}
 
 	consume(pos = 0) {
-		let tex = '';
-		const exprs = [];
+		let tex = ''
+		const exprs = []
 		while(!this.eof(pos)) {
-			let expr = this.expression_list(pos);
+			let expr = this.expression_list(pos)
 			if(!expr) {
-				const rb = this.right_bracket(pos);
+				const rb = this.right_bracket(pos)
 				if(rb) {
 					if(rb.def.free_tex) {
-						rb.tex = rb.def.free_tex;
+						rb.tex = rb.def.free_tex
 					}
-					expr = rb;
+					expr = rb
 
 				}
-				const lr = this.leftright_bracket(pos);
+				const lr = this.leftright_bracket(pos)
 				if(lr) {
-					expr = lr;
-					const ss = this.subsup(lr.end);
+					expr = lr
+					const ss = this.subsup(lr.end)
 					if(ss) {
 						expr = {tex: `${expr.tex}${ss.tex}`, pos: pos, end: ss.end, ttype: 'expression'}
 					}
@@ -449,191 +449,191 @@ export default class AsciiMathParser {
 			}
 			if(expr) {
 				if(tex) {
-					tex += ' ';
+					tex += ' '
 				}
-				tex += expr.tex;
-				pos = expr.end;
-				exprs.push(expr);
+				tex += expr.tex
+				pos = expr.end
+				exprs.push(expr)
 			} else if(!this.eof(pos)) {
-				const chr = this.source(pos,pos+1);
-				exprs.push({tex: chr, pos: pos, ttype: 'character'});
-				tex += chr;
-				pos += 1;
+				const chr = this.source(pos,pos+1)
+				exprs.push({tex: chr, pos: pos, ttype: 'character'})
+				tex += chr
+				pos += 1
 			}
 		}
-		return {tex: tex, exprs: exprs};
+		return {tex: tex, exprs: exprs}
 	}
 
 	strip_space(pos = 0) {
-		const osource = this.source(pos);
-		const reduced = osource.replace(/^(\s|\\(?![\\ ]))*/,'');
-		return pos + osource.length - reduced.length;
+		const osource = this.source(pos)
+		const reduced = osource.replace(/^(\s|\\(?![\\ ]))*/,'')
+		return pos + osource.length - reduced.length
 	}
 
 	/* Does the given regex match next?
 	 */
 	match(re, pos) {
-		pos = this.strip_space(pos);
-		const m = re.exec(this.source(pos));
+		pos = this.strip_space(pos)
+		const m = re.exec(this.source(pos))
 		if(m) {
-			const token = m[0];
-			return {token: token, pos: pos, match: m, end: pos+token.length, ttype: 'regex'};
+			const token = m[0]
+			return {token: token, pos: pos, match: m, end: pos+token.length, ttype: 'regex'}
 		}
 	}
 
 	/* Does the exact given string occur next?
 	 */
 	exact(str, pos) {
-		pos = this.strip_space(pos);
+		pos = this.strip_space(pos)
 		if(this.source(pos).slice(0, str.length) == str) {
-			return {token: str, pos: pos, end: pos+str.length, ttype: 'exact'};
+			return {token: str, pos: pos, end: pos+str.length, ttype: 'exact'}
 		}
 	}
 
 	expression_list(pos = 0) {
-		let expr = this.expression(pos);
+		let expr = this.expression(pos)
 		if(!expr) {
-			return;
+			return
 		}
-		let end = expr.end;
-		let tex = expr.tex;
-		let exprs = [expr];
+		let end = expr.end
+		let tex = expr.tex
+		const exprs = [expr]
 		while(!this.eof(end)) {
-			const comma = this.exact(",",end);
+			const comma = this.exact(",",end)
 			if(!comma) {
-				break;
+				break
 			}
-			tex += ' ,';
-			end = comma.end;
-			expr = this.expression(end);
+			tex += ' ,'
+			end = comma.end
+			expr = this.expression(end)
 			if(!expr) {
-				break;
+				break
 			}
-			tex += ' '+expr.tex;
-			exprs.push(expr);
-			end = expr.end;
+			tex += ' '+expr.tex
+			exprs.push(expr)
+			end = expr.end
 		}
-		return {tex: tex, pos: pos, end: end, exprs: exprs, ttype: 'expression_list'};
+		return {tex: tex, pos: pos, end: end, exprs: exprs, ttype: 'expression_list'}
 	}
 
 	// E ::= IE | I/I                       Expression
 	expression(pos = 0) {
-		const negative = this.negative_expression(pos);
+		const negative = this.negative_expression(pos)
 		if(negative) {
-			return negative;
+			return negative
 		}
-		const first = this.intermediate_or_fraction(pos);
+		const first = this.intermediate_or_fraction(pos)
 		if(!first) {
-			for(let c of this.non_constant_symbols) {
-				const m = this.exact(c,pos);
+			for(const c of this.non_constant_symbols) {
+				const m = this.exact(c,pos)
 				if(m) {
-					return {tex: c, pos: pos, end: m.end, ttype: 'constant'};
+					return {tex: c, pos: pos, end: m.end, ttype: 'constant'}
 				}
 			}
-			return;
+			return
 		}
 		if(this.eof(first.end)) {
-			return first;
+			return first
 		}
-		const second = this.expression(first.end);
+		const second = this.expression(first.end)
 		if(second) {
-			return {tex: first.tex+' '+second.tex, pos: first.pos, end: second.end, ttype: 'expression', exprs: [first,second]};
+			return {tex: first.tex+' '+second.tex, pos: first.pos, end: second.end, ttype: 'expression', exprs: [first,second]}
 		} else {
-			return first;
+			return first
 		}
 	}
 
 	negative_expression(pos = 0) {
-		const dash = this.exact("-",pos);
+		const dash = this.exact("-",pos)
 		if(dash && !this.other_constant(pos)) {
-			const expr = this.expression(dash.end);
+			const expr = this.expression(dash.end)
 			if(expr) {
 				return {tex: `- ${expr.tex}`, pos: pos, end: expr.end, ttype: 'negative_expression', dash: dash, expression: expr}
 			} else {
-				return {tex: '-', pos: pos, end: dash.end, ttype: 'constant'};
+				return {tex: '-', pos: pos, end: dash.end, ttype: 'constant'}
 			}
 		}
 	}
 
 	intermediate_or_fraction(pos = 0) {
-		const first = this.intermediate(pos);
+		const first = this.intermediate(pos)
 		if(!first) {
-			return;
+			return
 		}
-		let frac = this.match(/^\/(?!\/)/,first.end);
+		const frac = this.match(/^\/(?!\/)/,first.end)
 		if(frac) {
-			const second = this.intermediate(frac.end);
+			const second = this.intermediate(frac.end)
 			if(second) {
-				const ufirst = this.unbracket(first);
-				const usecond = this.unbracket(second);
-				return {tex: `\\frac{${ufirst.tex}}{${usecond.tex}}`, pos: first.pos, end: second.end, ttype: 'fraction', numerator: ufirst, denominator: usecond, raw_numerator: first, raw_denominator: second};
+				const ufirst = this.unbracket(first)
+				const usecond = this.unbracket(second)
+				return {tex: `\\frac{${ufirst.tex}}{${usecond.tex}}`, pos: first.pos, end: second.end, ttype: 'fraction', numerator: ufirst, denominator: usecond, raw_numerator: first, raw_denominator: second}
 			} else {
-				const ufirst = this.unbracket(first);
-				return {tex: `\\frac{${ufirst.tex}}{}`, pos: first.pos, end: frac.end, ttype: 'fraction', numerator: ufirst, denominator: null, raw_numerator: first, raw_denominator: null};
+				const ufirst = this.unbracket(first)
+				return {tex: `\\frac{${ufirst.tex}}{}`, pos: first.pos, end: frac.end, ttype: 'fraction', numerator: ufirst, denominator: null, raw_numerator: first, raw_denominator: null}
 			}
 		} else {
-			return first;
+			return first
 		}
 	}
 
 	// I ::= S_S | S^S | S_S^S | S          Intermediate expression
 	intermediate(pos = 0) {
-		const first = this.simple(pos);
+		const first = this.simple(pos)
 		if(!first) {
-			return;
+			return
 		}
-		const ss = this.subsup(first.end);
+		const ss = this.subsup(first.end)
 		if(ss) {
-			return {tex: `${first.tex}${ss.tex}`, pos:pos, end:ss.end, ttype: 'intermediate', expression: first, subsup: ss};
+			return {tex: `${first.tex}${ss.tex}`, pos:pos, end:ss.end, ttype: 'intermediate', expression: first, subsup: ss}
 		} else {
-			return first;
+			return first
 		}
 	}
 
 	subsup(pos = 0) {
-		let tex = '';
-		let end = pos;
-		let sub = this.exact('_',pos);
-		let sub_expr, sup_expr;
+		let tex = ''
+		let end = pos
+		const sub = this.exact('_',pos)
+		let sub_expr, sup_expr
 		if(sub) {
-			sub_expr = this.unbracket(this.simple(sub.end));
+			sub_expr = this.unbracket(this.simple(sub.end))
 			if(sub_expr) {
-				tex = `${tex}_{${sub_expr.tex}}`;
-				end = sub_expr.end;
+				tex = `${tex}_{${sub_expr.tex}}`
+				end = sub_expr.end
 			} else {
-				tex = `${tex}_{}`;
-				end = sub.end;
+				tex = `${tex}_{}`
+				end = sub.end
 			}
 		}
-		let sup = this.match(/^\^(?!\^)/,end);
+		const sup = this.match(/^\^(?!\^)/,end)
 		if(sup) {
-			sup_expr = this.unbracket(this.simple(sup.end));
+			sup_expr = this.unbracket(this.simple(sup.end))
 			if(sup_expr) {
-				tex = `${tex}^{${sup_expr.tex}}`;
-				end = sup_expr.end;
+				tex = `${tex}^{${sup_expr.tex}}`
+				end = sup_expr.end
 			} else {
-				tex = `${tex}^{}`;
-				end = sup.end;
+				tex = `${tex}^{}`
+				end = sup.end
 			}
 		}
 		if(sub || sup) {
-			return {tex: tex, pos: pos, end: end, ttype: 'subsup', sub: sub_expr, sup: sup_expr};
+			return {tex: tex, pos: pos, end: end, ttype: 'subsup', sub: sub_expr, sup: sup_expr}
 		}
 	}
 
 	// S ::= v | lEr | uS | bSS             Simple expression
 	simple(pos = 0) {
-		return this.longest([this.matrix(pos), this.bracketed_expression(pos), this.binary(pos), this.constant(pos), this.text(pos), this.unary(pos), this.negative_simple(pos)]);
+		return this.longest([this.matrix(pos), this.bracketed_expression(pos), this.binary(pos), this.constant(pos), this.text(pos), this.unary(pos), this.negative_simple(pos)])
 	}
 
 	negative_simple(pos = 0) {
-		const dash = this.exact("-",pos);
+		const dash = this.exact("-",pos)
 		if(dash && !this.other_constant(pos)) {
-			const expr = this.simple(dash.end);
+			const expr = this.simple(dash.end)
 			if(expr) {
 				return {tex: `- ${expr.tex}`, pos: pos, end: expr.end, ttype: 'negative_simple', dash: dash, expr: expr}
 			} else {
-				return {tex: '-', pos: pos, end: dash.end, ttype: 'constant'};
+				return {tex: '-', pos: pos, end: dash.end, ttype: 'constant'}
 			}
 		}
 	}
@@ -641,163 +641,163 @@ export default class AsciiMathParser {
 	// matrix: leftbracket "(" expr ")" ("," "(" expr ")")* rightbracket
 	// each row must have the same number of elements
 	matrix(pos = 0) {
-		let left = this.left_bracket(pos);
-		let lr = false;
+		let left = this.left_bracket(pos)
+		let lr = false
 		if(!left) {
-			left = this.leftright_bracket(pos,'left');
+			left = this.leftright_bracket(pos,'left')
 			if(!left) {
-				return;
+				return
 			}
-			lr = true;
+			lr = true
 		}
-		const contents = this.matrix_contents(left.end, lr);
+		const contents = this.matrix_contents(left.end, lr)
 		if(!contents) {
-			return;
+			return
 		}
-		const right = lr ? this.leftright_bracket(contents.end, 'right') : this.right_bracket(contents.end);
+		const right = lr ? this.leftright_bracket(contents.end, 'right') : this.right_bracket(contents.end)
 		if(!right) {
-			return;
+			return
 		}
-		const contents_tex = contents.rows.map(r=>r.tex).join(' \\\\ ');
-		const matrix_tex = contents.is_array ? `\\begin{array}{${contents.column_desc}} ${contents_tex} \\end{array}` : `\\begin{matrix} ${contents_tex} \\end{matrix}`;
-		return {tex: `\\left ${left.tex} ${matrix_tex} \\right ${right.tex}`, pos: pos, end: right.end, ttype: 'matrix', rows: contents.rows, left: left, right: right};
+		const contents_tex = contents.rows.map(r=>r.tex).join(' \\\\ ')
+		const matrix_tex = contents.is_array ? `\\begin{array}{${contents.column_desc}} ${contents_tex} \\end{array}` : `\\begin{matrix} ${contents_tex} \\end{matrix}`
+		return {tex: `\\left ${left.tex} ${matrix_tex} \\right ${right.tex}`, pos: pos, end: right.end, ttype: 'matrix', rows: contents.rows, left: left, right: right}
 	}
 
 	matrix_contents(pos = 0, leftright = false) {
-		let rows = [];
-		let end = pos;
-		let row_length = undefined;
-		let column_desc = undefined;
-		let is_array = false;
+		const rows = []
+		let end = pos
+		let row_length = undefined
+		let column_desc = undefined
+		let is_array = false
 		while(!this.eof(end) && !(leftright ? this.leftright_bracket(end) : this.right_bracket(end))) {
 			if(rows.length) {
-				const comma = this.exact(",",end);
+				const comma = this.exact(",",end)
 				if(!comma) {
-					return;
+					return
 				}
-				end = comma.end;
+				end = comma.end
 			}
-			const lb = this.match(/^[(\[]/,end);
+			const lb = this.match(/^[(\[]/,end)
 			if(!lb) {
-				return;
+				return
 			}
 
-			const cells = [];
-			const columns = [];
-			end = lb.end;
+			const cells = []
+			const columns = []
+			end = lb.end
 			while(!this.eof(end)) {
 				if(cells.length) {
-					const comma = this.exact(",",end);
+					const comma = this.exact(",",end)
 					if(!comma) {
-						break;
+						break
 					}
-					end = comma.end;
+					end = comma.end
 				}
-				const cell = this.matrix_cell(end);
+				const cell = this.matrix_cell(end)
 				if(!cell) {
-					break;
+					break
 				}
 				if(cell.ttype=='column') {
-					columns.push('|');
-					is_array = true;
+					columns.push('|')
+					is_array = true
 					if(cell.expr!==null) {
-						columns.push('r');
-						cells.push(cell.expr);
+						columns.push('r')
+						cells.push(cell.expr)
 					}
 				} else {
-					columns.push('r');
-					cells.push(cell);
+					columns.push('r')
+					cells.push(cell)
 				}
-				end = cell.end;
+				end = cell.end
 			}
 			if(!cells.length) {
-				return;
+				return
 			}
 			if(row_length===undefined) {
-				row_length = cells.length;
+				row_length = cells.length
 			} else if(cells.length!=row_length) {
-				return;
+				return
 			}
-			const rb = this.match(/^[)\]]/,end);
+			const rb = this.match(/^[)\]]/,end)
 			if(!rb) {
-				return;
+				return
 			}
-			const row_column_desc = columns.join('');
+			const row_column_desc = columns.join('')
 			if(column_desc===undefined) {
-				column_desc = row_column_desc;
+				column_desc = row_column_desc
 			} else if(row_column_desc!=column_desc) {
-				return;
+				return
 			}
-			rows.push({ttype: 'row', tex: cells.map(c=>c.tex).join(' & '), pos: lb.end, end: end, cells: cells});
-			end = rb.end;
+			rows.push({ttype: 'row', tex: cells.map(c=>c.tex).join(' & '), pos: lb.end, end: end, cells: cells})
+			end = rb.end
 		}
 		if(row_length===undefined || (row_length<=1 && rows.length<=1)) {
-			return;
+			return
 		}
-		return {rows: rows, end: end, column_desc: column_desc, is_array: is_array};
+		return {rows: rows, end: end, column_desc: column_desc, is_array: is_array}
 	}
 
 	matrix_cell(pos = 0) {
-		const lvert = this.exact('|',pos);
+		const lvert = this.exact('|',pos)
 		if(lvert) {
-			const middle = this.expression(lvert.end);
+			const middle = this.expression(lvert.end)
 			if(middle) {
-				const rvert = this.exact('|',middle.end);
+				const rvert = this.exact('|',middle.end)
 				if(rvert) {
-					const second = this.expression(rvert.end);
+					const second = this.expression(rvert.end)
 					if(second) {
-						return {tex: `\\left \\lvert ${middle.tex} \\right \\rvert ${second.text}`, pos: lvert.pos, end: second.end, ttype: 'expression', exprs: [middle,second]};
+						return {tex: `\\left \\lvert ${middle.tex} \\right \\rvert ${second.text}`, pos: lvert.pos, end: second.end, ttype: 'expression', exprs: [middle,second]}
 					}
 				} else {
-					return {ttype: 'column', expr: middle, pos: lvert.pos, end: middle.end};
+					return {ttype: 'column', expr: middle, pos: lvert.pos, end: middle.end}
 				}
 			} else {
 				return {ttype: 'column', expr: null, pos: lvert.pos, end: lvert.end}
 			}
 		}
-		return this.expression(pos);
+		return this.expression(pos)
 	}
 
 	bracketed_expression(pos = 0) {
-		const l = this.left_bracket(pos);
+		const l = this.left_bracket(pos)
 		if(l) {
-			const middle = this.expression_list(l.end);
+			const middle = this.expression_list(l.end)
 			if(middle) {
-				const m = this.mid_expression(l,middle,pos);
+				const m = this.mid_expression(l,middle,pos)
 				if(m) {
-					return m;
+					return m
 				}
-				const r = this.right_bracket(middle.end) || this.leftright_bracket(middle.end,'right');
+				const r = this.right_bracket(middle.end) || this.leftright_bracket(middle.end,'right')
 				if(r) {
-					return {tex: `\\left ${l.tex} ${middle.tex} \\right ${r.tex}`, pos: pos, end: r.end, bracket: true, left: l, right: r, middle: middle, ttype: 'bracket'};
+					return {tex: `\\left ${l.tex} ${middle.tex} \\right ${r.tex}`, pos: pos, end: r.end, bracket: true, left: l, right: r, middle: middle, ttype: 'bracket'}
 				} else if(this.eof(middle.end)) {
-					return {tex: `\\left ${l.tex} ${middle.tex} \\right.`, pos: pos, end: middle.end, ttype: 'bracket', left: l, right: null, middle: middle};
+					return {tex: `\\left ${l.tex} ${middle.tex} \\right.`, pos: pos, end: middle.end, ttype: 'bracket', left: l, right: null, middle: middle}
 				} else {
-					return {tex: `${l.tex} ${middle.tex}`, pos: pos, end: middle.end, ttype: 'expression', exprs: [l,middle]};
+					return {tex: `${l.tex} ${middle.tex}`, pos: pos, end: middle.end, ttype: 'expression', exprs: [l,middle]}
 				}
 			} else {
-				const r = this.right_bracket(l.end) || this.leftright_bracket(l.end,'right');
+				const r = this.right_bracket(l.end) || this.leftright_bracket(l.end,'right')
 				if(r) {
-					return {tex: `\\left ${l.tex} \\right ${r.tex}`, pos: pos, end: r.end, bracket: true, left: l, right: r, middle: null, ttype: 'bracket'};
+					return {tex: `\\left ${l.tex} \\right ${r.tex}`, pos: pos, end: r.end, bracket: true, left: l, right: r, middle: null, ttype: 'bracket'}
 				} else {
-					return {tex: l.tex, pos: pos, end: l.end, ttype: 'constant'};
+					return {tex: l.tex, pos: pos, end: l.end, ttype: 'constant'}
 				}
 			}
 		}
 		if(this.other_constant(pos)) {
-			return;
+			return
 		}
-		const left = this.leftright_bracket(pos, 'left');
+		const left = this.leftright_bracket(pos, 'left')
 		if(left) {
-			const middle = this.expression_list(left.end);
+			const middle = this.expression_list(left.end)
 			if(middle) {
-				const m = this.mid_expression(left,middle,pos);
+				const m = this.mid_expression(left,middle,pos)
 				if(m) {
-					return m;
+					return m
 				}
-				const right = this.leftright_bracket(middle.end, 'right') || this.right_bracket(middle.end);
+				const right = this.leftright_bracket(middle.end, 'right') || this.right_bracket(middle.end)
 				if(right) {
-					return {tex: `\\left ${left.tex} ${middle.tex} \\right ${right.tex}`, pos: pos, end: right.end, bracket: true, left: left, right: right, middle: middle, ttype: 'bracket'};
+					return {tex: `\\left ${left.tex} ${middle.tex} \\right ${right.tex}`, pos: pos, end: right.end, bracket: true, left: left, right: right, middle: middle, ttype: 'bracket'}
 				}
 			}
 		}
@@ -807,100 +807,100 @@ export default class AsciiMathParser {
 	// In these cases, interpret this as a bracketed expression where the left/right symbol is a 'mid' delimiter.
 	mid_expression(l,middle,pos) {
 		function is_mid_bracket(t) {
-			return t.ttype == 'bracket' && t.left.ttype=='leftright_bracket';
+			return t.ttype == 'bracket' && t.left.ttype=='leftright_bracket'
 		}
 		if(middle.exprs.length==1 && middle.exprs[0].ttype=='expression') {
-			const firsts = [middle.exprs[0].exprs[0]];
-			let last =  middle.exprs[0].exprs[1];
-			let end = middle.end;
+			const firsts = [middle.exprs[0].exprs[0]]
+			let last =  middle.exprs[0].exprs[1]
+			let end = middle.end
 			while(last.ttype=='expression') {
-				const first = last.exprs[0];
+				const first = last.exprs[0]
 				if(is_mid_bracket(first)) {
-					last = first;
-					end = first.end;
-					break;
+					last = first
+					end = first.end
+					break
 				}
-				firsts.push(last.exprs[0]);
-				last = last.exprs[1];
+				firsts.push(last.exprs[0])
+				last = last.exprs[1]
 			}
 			if(last.ttype=='fraction') {
-				last = last.raw_numerator;
-				end = last.end;
+				last = last.raw_numerator
+				end = last.end
 			}
 			if(!(last.ttype=='bracket' && last.left.ttype=='leftright_bracket')) {
-				return;
+				return
 			}
-			const firsttex = firsts.map(e=>e.tex).join(' ');
-			const mid = last.left;
-			const lasttex = last.middle.exprs.map(e=>e.tex).join(' ');
-			const nr = last.right;
-			return {tex: `\\left ${l.tex} ${firsttex} ${mid.def.mid_tex} ${lasttex} \\right ${nr.tex}`, pos: pos, end: end, left: l, right: nr, middle: {tex: `${firsttex} ${mid.def.mid_tex} ${lasttex}`, exprs: firsts.concat([mid,last.middle]), pos: middle.pos, end: last.middle.end, ttype: 'expression_list'}};
+			const firsttex = firsts.map(e=>e.tex).join(' ')
+			const mid = last.left
+			const lasttex = last.middle.exprs.map(e=>e.tex).join(' ')
+			const nr = last.right
+			return {tex: `\\left ${l.tex} ${firsttex} ${mid.def.mid_tex} ${lasttex} \\right ${nr.tex}`, pos: pos, end: end, left: l, right: nr, middle: {tex: `${firsttex} ${mid.def.mid_tex} ${lasttex}`, exprs: firsts.concat([mid,last.middle]), pos: middle.pos, end: last.middle.end, ttype: 'expression_list'}}
 		}
 	}
 
 	// r ::= ) | ] | } | :) | :} | other right brackets
 	right_bracket(pos = 0) {
-		for(let bracket of this.right_brackets) {
-			const m = this.exact(bracket.asciimath,pos);
+		for(const bracket of this.right_brackets) {
+			const m = this.exact(bracket.asciimath,pos)
 			if(m) {
-				return {tex: bracket.tex, pos: pos, end: m.end, asciimath: bracket.asciimath, def: bracket, ttype: 'right_bracket'};
+				return {tex: bracket.tex, pos: pos, end: m.end, asciimath: bracket.asciimath, def: bracket, ttype: 'right_bracket'}
 			}
 		}
 	}
 
 	// l ::= ( | [ | { | (: | {: | other left brackets
 	left_bracket(pos = 0) {
-		for(let bracket of this.left_brackets) {
-			const m = this.exact(bracket.asciimath,pos);
+		for(const bracket of this.left_brackets) {
+			const m = this.exact(bracket.asciimath,pos)
 			if(m) {
-				return {tex: bracket.tex, pos: pos, end: m.end, asciimath: bracket.asciimath, ttype: 'left_bracket'};
+				return {tex: bracket.tex, pos: pos, end: m.end, asciimath: bracket.asciimath, ttype: 'left_bracket'}
 			}
 		}
 	}
 
 	leftright_bracket(pos = 0,position) {
-		for(let lr of this.leftright_brackets) {
-			const b = this.exact(lr.asciimath, pos);
+		for(const lr of this.leftright_brackets) {
+			const b = this.exact(lr.asciimath, pos)
 			if(b) {
 				if(this.exact(',',b.end)) {
-					return {tex: lr.free_tex, pos: pos, end: b.end, ttype: 'binary'};
+					return {tex: lr.free_tex, pos: pos, end: b.end, ttype: 'binary'}
 				} else {
-					return {tex: position=='left' ? lr.left_tex : position=='right' ? lr.right_tex : lr.free_tex, pos: pos, end: b.end, ttype: 'leftright_bracket', def: lr};
+					return {tex: position=='left' ? lr.left_tex : position=='right' ? lr.right_tex : lr.free_tex, pos: pos, end: b.end, ttype: 'leftright_bracket', def: lr}
 				}
 			}
 		}
 	}
 
 	text(pos = 0) {
-		const quoted = this.match(/^"([^"]*)"/,pos);
+		const quoted = this.match(/^"([^"]*)"/,pos)
 		if(quoted) {
-			const text = this.escape_text(quoted.match[1]);
-			return {tex: `\\text{${text}}`, pos: pos, end: quoted.end, ttype: 'text', text: text};
+			const text = this.escape_text(quoted.match[1])
+			return {tex: `\\text{${text}}`, pos: pos, end: quoted.end, ttype: 'text', text: text}
 		}
-		const textfn = this.match(/^(?:mbox|text)\s*(\([^)]*\)?|\{[^}]*\}?|\[[^\]]*\]?)/,pos);
+		const textfn = this.match(/^(?:mbox|text)\s*(\([^)]*\)?|\{[^}]*\}?|\[[^\]]*\]?)/,pos)
 		if(textfn) {
-			const text = this.escape_text(textfn.match[1].slice(1,textfn.match[1].length-1));
-			return {tex: `\\text{${text}}`, pos: pos, end: textfn.end, ttype: 'text', text: text};
+			const text = this.escape_text(textfn.match[1].slice(1,textfn.match[1].length-1))
+			return {tex: `\\text{${text}}`, pos: pos, end: textfn.end, ttype: 'text', text: text}
 		}
 	}
 
 	// b ::= frac | root | stackrel | other binary symbols
 	binary(pos = 0) {
-		for(let binary of this.binary_symbols) {
-			const m = this.exact(binary.asciimath, pos);
-			const [lb1,rb1] = binary.option ? ['[',']'] : ['{','}'];
+		for(const binary of this.binary_symbols) {
+			const m = this.exact(binary.asciimath, pos)
+			const [lb1,rb1] = binary.option ? ['[',']'] : ['{','}']
 			if(m) {
-				const a = this.unbracket(this.simple(m.end));
+				const a = this.unbracket(this.simple(m.end))
 				if(a) {
-					const atex = binary.rawfirst ? a.middle_asciimath : a.tex;
-					const b = this.unbracket(this.simple(a.end));
+					const atex = binary.rawfirst ? a.middle_asciimath : a.tex
+					const b = this.unbracket(this.simple(a.end))
 					if(b) {
-						return {tex: `${binary.tex}${lb1}${atex}${rb1}{${b.tex}}`, pos: pos, end: b.end, ttype: 'binary', op: binary, arg1: a, arg2: b};
+						return {tex: `${binary.tex}${lb1}${atex}${rb1}{${b.tex}}`, pos: pos, end: b.end, ttype: 'binary', op: binary, arg1: a, arg2: b}
 					} else {
-						return {tex: `${binary.tex}${lb1}${atex}${rb1}{}`, pos: pos, end: a.end, ttype: 'binary', op: binary, arg1: a, arg2: null};
+						return {tex: `${binary.tex}${lb1}${atex}${rb1}{}`, pos: pos, end: a.end, ttype: 'binary', op: binary, arg1: a, arg2: null}
 					}
 				} else {
-					return {tex: `${binary.tex}${lb1}${rb1}{}`, pos: pos, end: m.end, ttype: 'binary', op: binary, arg1: null, arg2: null};
+					return {tex: `${binary.tex}${lb1}${rb1}{}`, pos: pos, end: m.end, ttype: 'binary', op: binary, arg1: null, arg2: null}
 				}
 			}
 		}
@@ -908,27 +908,27 @@ export default class AsciiMathParser {
 
 	// u ::= sqrt | text | bb | other unary symbols for font commands
 	unary(pos = 0) {
-		for(let u of this.unary_symbols) {
-			const m = this.exact(u.asciimath, pos);
+		for(const u of this.unary_symbols) {
+			const m = this.exact(u.asciimath, pos)
 			if(m) {
-				const ss = this.subsup(m.end);
-				const sstex = ss ? ss.tex : '';
-				const end = ss ? ss.end : m.end;
-				const barg = this.simple(end);
-				const arg = u.func ? barg : this.unbracket(barg);
-				const argtex = arg && (u.raw ? arg.middle_asciimath : arg.tex);
+				const ss = this.subsup(m.end)
+				const sstex = ss ? ss.tex : ''
+				const end = ss ? ss.end : m.end
+				const barg = this.simple(end)
+				const arg = u.func ? barg : this.unbracket(barg)
+				const argtex = arg && (u.raw ? arg.middle_asciimath : arg.tex)
 				if(u.rewriteleftright) {
-					const [left,right] = u.rewriteleftright;
+					const [left,right] = u.rewriteleftright
 					if(arg) {
-						return {tex: `\\left ${left} ${argtex} \\right ${right} ${sstex}`, pos: pos, end: arg.end, ttype: 'unary', op: m, subsup: ss, arg: arg};
+						return {tex: `\\left ${left} ${argtex} \\right ${right} ${sstex}`, pos: pos, end: arg.end, ttype: 'unary', op: m, subsup: ss, arg: arg}
 					} else {
-						return {tex: `\\left ${left} \\right ${right} ${sstex}`, pos: pos, end: m.end, ttype: 'unary', op: m, subsup: ss, arg: null};
+						return {tex: `\\left ${left} \\right ${right} ${sstex}`, pos: pos, end: m.end, ttype: 'unary', op: m, subsup: ss, arg: null}
 					}
 				} else {
 					if(arg) {
-						return {tex: `${u.tex}${sstex}{${argtex}}`, pos: pos, end: arg.end, ttype: 'unary', op: m, subsup: ss, arg: arg};
+						return {tex: `${u.tex}${sstex}{${argtex}}`, pos: pos, end: arg.end, ttype: 'unary', op: m, subsup: ss, arg: arg}
 					} else {
-						return {tex: `${u.tex}${sstex}{}`, pos: pos, end: m.end, ttype: 'unary', op: m, subsup: ss, arg: null};
+						return {tex: `${u.tex}${sstex}{}`, pos: pos, end: m.end, ttype: 'unary', op: m, subsup: ss, arg: null}
 					}
 				}
 			}
@@ -938,40 +938,40 @@ export default class AsciiMathParser {
 	// v ::= [A-Za-z] | greek letters | numbers | other constant symbols
 	constant(pos = 0) {
 		if(this.right_bracket(pos)) {
-			return;
+			return
 		}
-		return this.longest([this.other_constant(pos), this.greek(pos), this.name(pos), this.number(pos), this.arbitrary_constant(pos)]);
+		return this.longest([this.other_constant(pos), this.greek(pos), this.name(pos), this.number(pos), this.arbitrary_constant(pos)])
 	}
 
 	name(pos = 0) {
-		return this.literal(this.match(/^[A-Za-z]/, pos));
+		return this.literal(this.match(/^[A-Za-z]/, pos))
 	}
 
 	greek(pos = 0) {
-		const re_greek = new RegExp('^('+this.greek_letters.join('|')+')');
-		const m = this.match(re_greek, pos);
+		const re_greek = new RegExp('^('+this.greek_letters.join('|')+')')
+		const m = this.match(re_greek, pos)
 		if(m) {
-			return {tex: '\\'+m.token, pos: pos, end: m.end, ttype: 'greek'};
+			return {tex: '\\'+m.token, pos: pos, end: m.end, ttype: 'greek'}
 		}
 	}
 
 	number(pos = 0) {
-		const re_number = new RegExp('^\\d+('+this.decimalsign+'\\d+)?');
-		return this.literal(this.match(re_number, pos));
+		const re_number = new RegExp('^\\d+('+this.decimalsign+'\\d+)?')
+		return this.literal(this.match(re_number, pos))
 	}
 
 	other_constant(pos = 0) {
-		for(let sym of this.constants) {
-			let m = this.exact(sym.asciimath, pos);
+		for(const sym of this.constants) {
+			const m = this.exact(sym.asciimath, pos)
 			if(m) {
-				return {tex: `${sym.tex}`, pos: m.pos, end: m.end, ttype: 'other_constant'};
+				return {tex: `${sym.tex}`, pos: m.pos, end: m.end, ttype: 'other_constant'}
 			}
 		}
-		for(let sym of this.relations) {
+		for(const sym of this.relations) {
 			if(!sym.asciimath.match(/^!/)) {
-				let notm = this.exact('!'+sym.asciimath, pos);
+				const notm = this.exact('!'+sym.asciimath, pos)
 				if(notm) {
-					return {tex: `\\not ${sym.tex}`, pos: notm.pos, end: notm.end, ttype: 'other_constant'};
+					return {tex: `\\not ${sym.tex}`, pos: notm.pos, end: notm.end, ttype: 'other_constant'}
 				}
 			}
 		}
@@ -980,16 +980,16 @@ export default class AsciiMathParser {
 	arbitrary_constant(pos = 0) {
 		if(!this.eof(pos)) {
 			if(this.exact(",",pos)) {
-				return;
+				return
 			}
-			for(let nc of this.non_constant_symbols.concat(this.left_brackets.map(x=>x.asciimath), this.right_brackets.map(x=>x.asciimath), this.leftright_brackets.map(x=>x.asciimath))) {
+			for(const nc of this.non_constant_symbols.concat(this.left_brackets.map(x=>x.asciimath), this.right_brackets.map(x=>x.asciimath), this.leftright_brackets.map(x=>x.asciimath))) {
 				if(this.exact(nc, pos)) {
-					return;
+					return
 				}
 			}
-			const spos = this.strip_space(pos);
-			const symbol = this.source(spos).slice(0,1);
-			return {tex: symbol, pos: pos, end: spos+1, ttype: 'arbitrary_constant'};
+			const spos = this.strip_space(pos)
+			const symbol = this.source(spos).slice(0,1)
+			return {tex: symbol, pos: pos, end: spos+1, ttype: 'arbitrary_constant'}
 		}
 	}
 }

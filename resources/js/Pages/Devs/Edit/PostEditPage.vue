@@ -1,24 +1,19 @@
-<template>
-	<post-form
-		v-model="show"
-		:post="props.post.data"
-	/>
-</template>
-<script>
+<script setup lang="ts">
+import { ref } from "vue"
+import PostForm from "@/Components/Posts/PostForm.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 
-export default {
-	layout: LayoutMain
-}
-</script>
-
-<script setup>
-import {ref} from "vue"
-import QuestionForm from "@/Components/Posts/Questions/QuestionForm.vue"
-import PostForm from "@/Components/Posts/PostForm.vue"
+defineOptions({ layout: LayoutMain })
 
 let props = defineProps({
 	post: {type: Object, required: true}
 })
 let show = ref(true)
 </script>
+
+<template>
+	<post-form
+		v-model="show"
+		:post="props.post.data"
+	/>
+</template>

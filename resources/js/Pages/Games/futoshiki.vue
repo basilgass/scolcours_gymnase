@@ -1,50 +1,44 @@
-<script>
+<script setup lang="ts">
+import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
+import { Futoshiki } from "pigames/build/module/lib/futoshiki"
+import { nextTick, reactive, ref } from "vue"
+import FormMaker from "@/Components/Form/FormMaker.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 
-export default {
-	layout: LayoutMain
-}
-</script>
+defineOptions({ layout: LayoutMain })
 
-<script setup>
-import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
-import {Futoshiki} from "pigames/build/module/lib/futoshiki"
-import {computed, nextTick, reactive, ref} from "vue"
-import FormMaker from "@/Components/Form/FormMaker.vue"
-
-let gameStarted = ref(false),
+const gameStarted = ref(false),
 	start = function(){
 		gameStarted.value  = true
 
 		futo.generate(size.value)
 	}
 
-let size = ref(4),
+const size = ref(4),
 	futo = new Futoshiki(4)
 
 // futo.generate()
 
-let wrapper = ref(null),
-	futoshiki = reactive(futo),
+const futoshiki = reactive(futo),
 	valueSelector = ref(1),
 	suggestionMode = ref(false),
 	contradictions = ref([])
 
-let rows = computed(() => {
-	let arr = []
-	for (let i = 0; i < size.value; i++) {
-		for (let j = 0; j < size.value; j++) {
+// let rows = computed(() => {
+// 	let arr = []
+// 	for (let i = 0; i < size.value; i++) {
+// 		for (let j = 0; j < size.value; j++) {
+//
+// 		}
+// 		arr.push(
+// 			Object.values(futoshiki).filter(cell => cell.row === i)
+// 		)
+// 	}
+//
+// 	return arr
+// })
 
-		}
-		arr.push(
-			Object.values(futoshiki).filter(cell => cell.row === i)
-		)
-	}
-
-	return arr
-})
-
-let getConstrain = function (col, row) {
+const getConstrain = function (col, row) {
 	if (row % 2 === 1) {
 		// left / right constrain
 		const AKey = `${col / 2 - 1}:${(row - 1) / 2}`,
@@ -71,7 +65,7 @@ let getConstrain = function (col, row) {
 	}
 	return ""
 }
-let setValue = function (col, row) {
+const setValue = function (col, row) {
 	const cellKey = `${(col - 1) / 2}:${(row - 1) / 2}`
 	if (suggestionMode.value && valueSelector.value > 0) {
 		if (futoshiki.futoshiki[cellKey].value === null) {
@@ -90,7 +84,7 @@ let setValue = function (col, row) {
 
 			// Show a success message.
 			nextTick(() => {
-				let solution = futoshiki.isSolved()
+				const solution = futoshiki.isSolved()
 				if (solution.result) {
 					alert("bravo")
 				} else {

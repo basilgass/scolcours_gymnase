@@ -1,16 +1,11 @@
-<!--suppress ALL -->
-<script lang="ts">
-import LayoutMain from "@/Layouts/LayoutMain.vue"
-
-export default {
-	layout: LayoutMain,
-}
-</script>
 <script setup lang="ts">
 import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import { computed, ref } from "vue"
-import { color } from "chart.js/helpers"
+
+import LayoutMain from "@/Layouts/LayoutMain.vue"
+
+defineOptions({ layout: LayoutMain })
 
 interface fnInterface {
 	fx: string

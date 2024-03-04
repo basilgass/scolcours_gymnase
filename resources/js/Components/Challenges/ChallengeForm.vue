@@ -14,7 +14,7 @@ import IllustrationEdit from "@/Components/Posts/Illustrations/IllustrationEdit.
 
 const emits = defineEmits(["update:modelValue", "change", "destroy"])
 
-let props = defineProps({
+const props = defineProps({
 	modelValue: { type: Boolean, default: false },
 	challenge: {
 		type: Object as PropType<ChallengeInterface>,
@@ -24,11 +24,11 @@ let props = defineProps({
 
 const flash = inject<flashInterface>("flash")
 
-let generatorTab = ref(1),
+const generatorTab = ref(1),
 	theChallenge = ref(props.challenge),
 	level = ref(1)
 
-let currentGenerator = computed(() => {
+const currentGenerator = computed(() => {
 		return theChallenge.value.generators[generatorTab.value - 1]
 	}),
 	generateQuestionsError = ref(""),
@@ -41,11 +41,11 @@ let currentGenerator = computed(() => {
 			return []
 		}
 		if (currentGenerator.value.code !== "" && generateId.value >= 1) {
-			let arr = []
+			const arr = []
 
 			try {
 				// let F = makeFunction(currentGenerator.value.code)
-				let F = new Function("PiMath", currentGenerator.value.code)
+				const F = new Function("PiMath", currentGenerator.value.code)
 				for (let i = 0; i < nbQuestions; i++) {
 					const result = F(PiMath, level.value)
 					if (
@@ -152,7 +152,7 @@ let currentGenerator = computed(() => {
 			})
 	}
 
-let theIllustration = ref<IllustrationInterface>(
+const theIllustration = ref<IllustrationInterface>(
 	props.challenge.block.illustrations.length > 0
 		? props.challenge.block.illustrations[0]
 		: {
@@ -170,7 +170,7 @@ let theIllustration = ref<IllustrationInterface>(
 		}
 )
 
-let saveChallenge = function() {
+const saveChallenge = function() {
 		// 1- Save the description block
 		// 2- Save the challenge configuration
 		// 3- Save the generators

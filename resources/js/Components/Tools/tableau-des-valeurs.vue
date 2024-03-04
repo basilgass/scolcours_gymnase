@@ -15,14 +15,14 @@ import FormMaker from "@/Components/Form/FormMaker.vue"
 
 // TODO: tableau des valeurs doit être restructurer pour fonctionner avec des valeurs trigonométriques.
 
-let f = ref("2^x"),
+const f = ref("2^x"),
 	xMin = ref("-5"),
 	xMax = ref("5"),
 	step = ref("0.5"),
 	activeInput = ref("fx"),
 	fixed = ref("2")
 
-let fx = computed(() => {
+const fx = computed(() => {
 		if (f.value === "") return false
 
 		try {

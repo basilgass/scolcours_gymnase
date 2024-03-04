@@ -1,3 +1,41 @@
+<script>
+import BreezeButton from "@/Components/Auth/Button.vue"
+import BreezeGuestLayout from "@/Layouts/LayoutGuest.vue"
+import { Head, Link } from "@inertiajs/vue3"
+
+export default {
+
+	components: {
+		BreezeButton,
+		Head,
+		Link,
+	},
+	layout: BreezeGuestLayout,
+
+	props: {
+		status: String,
+	},
+
+	data() {
+		return {
+			form: this.$inertia.form()
+		}
+	},
+
+	computed: {
+		verificationLinkSent() {
+			return this.status === "verification-link-sent"
+		}
+	},
+
+	methods: {
+		submit() {
+			this.form.post(this.route("verification.send"))
+		},
+	}
+}
+</script>
+
 <template>
 	<Head title="Email Verification" />
 
@@ -33,41 +71,3 @@
 		</div>
 	</form>
 </template>
-
-<script>
-import BreezeButton from "@/Components/Auth/Button.vue"
-import BreezeGuestLayout from "@/Layouts/LayoutGuest.vue"
-import {Head, Link} from "@inertiajs/vue3"
-
-export default {
-
-	components: {
-		BreezeButton,
-		Head,
-		Link,
-	},
-	layout: BreezeGuestLayout,
-
-	props: {
-		status: String,
-	},
-
-	data() {
-		return {
-			form: this.$inertia.form()
-		}
-	},
-
-	computed: {
-		verificationLinkSent() {
-			return this.status === "verification-link-sent"
-		}
-	},
-
-	methods: {
-		submit() {
-			this.form.post(this.route("verification.send"))
-		},
-	}
-}
-</script>

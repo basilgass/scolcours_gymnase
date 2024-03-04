@@ -1,3 +1,44 @@
+<script setup lang="ts">
+import { computed, defineAsyncComponent, reactive, ref } from "vue"
+import PostShow from "@/Components/Posts/PostShow.vue"
+import { useMenuScrollTo } from "@/Composables/useHelpers"
+import ChapterChallenges from "@/Components/Chapters/ChapterChallenges.vue"
+import ChapterFormulas from "@/Components/Chapters/ChapterFormulas.vue"
+import axios from "axios"
+import LayoutMain from "@/Layouts/LayoutMain.vue"
+
+defineOptions({ layout: LayoutMain })
+
+const props = defineProps({
+		chapter: {type: Object, required: true}
+	}),
+	theChapter = reactive(props.chapter.data)
+
+const showEditForm = ref(false),
+	editForm = computed(() => {
+		return defineAsyncComponent(
+			() => import("@/Components/Chapters/ChapterForm.vue")
+		)
+	})
+
+const addPost = function () {
+		axios.post(
+			route("chapters.posts.store", [theChapter.slug]),
+			{
+				title: "nouvel article",
+			}
+		)
+			.then(res => {
+				const post = res.data.data
+				theChapter.posts[post.order] = post
+			})
+			.catch(err => console.warn(err))
+	},
+	destroyPost = function (id) {
+		delete theChapter.posts[id]
+	}
+</script>
+
 <template>
 	<main>
 		<div class="flex justify-between items-baseline">
@@ -89,48 +130,3 @@
 		</section>
 	</main>
 </template>
-
-<script>
-import LayoutMain from "@/Layouts/LayoutMain.vue"
-
-export default {
-	layout: LayoutMain
-}
-</script>
-<script setup>
-import {computed, defineAsyncComponent, reactive, ref} from "vue"
-import PostShow from "@/Components/Posts/PostShow.vue"
-import {useMenuScrollTo} from "@/Composables/useHelpers"
-import ChapterChallenges from "@/Components/Chapters/ChapterChallenges.vue"
-import ChapterFormulas from "@/Components/Chapters/ChapterFormulas.vue"
-
-
-let props = defineProps({
-		chapter: {type: Object, required: true}
-	}),
-	theChapter = reactive(props.chapter.data)
-
-let showEditForm = ref(false),
-	editForm = computed(() => {
-		return defineAsyncComponent(
-			() => import("@/Components/Chapters/ChapterForm.vue")
-		)
-	})
-
-let addPost = function () {
-		axios.post(
-			route("chapters.posts.store", [theChapter.slug]),
-			{
-				title: "nouvel article",
-			}
-		)
-			.then(res => {
-				const post = res.data.data
-				theChapter.posts[post.order] = post
-			})
-			.catch(err => console.warn(err))
-	},
-	destroyPost = function (id) {
-		delete theChapter.posts[id]
-	}
-</script>

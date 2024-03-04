@@ -1,17 +1,13 @@
-<script>
+<script setup lang="ts">
+import { onMounted, ref } from "vue"
+import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"
+import { PiMath } from "pimath/esm"
+import FormMaker from "@/Components/Form/FormMaker.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 
-export default {
-	layout: LayoutMain
-}
-</script>
-<script setup>
-import {onMounted, ref} from "vue"
-import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"
-import {PiMath} from "pimath/esm"
-import FormMaker from "@/Components/Form/FormMaker.vue"
+defineOptions({ layout: LayoutMain })
 
-let root = ref(null),
+const root = ref(null),
 	code = ref(""),
 	intersectionPoints = ref([]),
 	tangentPerPoints = ref([]),
@@ -27,9 +23,9 @@ function updateValue(){
 	code.value = `C(${C.center.x.value},${C.center.y.value})
 	c=circ C,${C.radius.value}`
 
-	let tangents = []
+	const tangents = []
 	pts.forEach((pt, index) => {
-		let tg = C.tangents(pt)[0]
+		const tg = C.tangents(pt)[0]
 		tangents.push(tg)
 		code.value += `\nT${index + 1}(${pt.x.value},${pt.y.value})->tex:T_${index + 1}=@`
 		code.value += `\nt${index + 1}=line ${tg.tex.canonical}`
@@ -39,7 +35,7 @@ function updateValue(){
 
 	for (let i = 0; i < tangents.length; i++) {
 		for (let j = i + 1; j < tangents.length; j++) {
-			let intersection = tangents[i].intersection(tangents[j])
+			const intersection = tangents[i].intersection(tangents[j])
 
 			if (intersection.hasIntersection) {
 				if (!intersection.point.isInListOfPoints(pts)) {

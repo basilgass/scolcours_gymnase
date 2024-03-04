@@ -2,13 +2,14 @@
 Formulaire d'édition d'un post
 Utilisé dans PoseShow et PostEditPage (pour l'édition mode développement ?)
 -->
-<script setup>
+<script setup lang="ts">
 // TODO: make the dialog html modal more user friendly and reactive !
 import { ref } from "vue"
 import DialogModal from "@/Components/Ui/DialogModal.vue"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
 import MoveItemTo from "@/Components/Posts/MoveItemTo.vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
+import axios from "axios"
 
 const emits = defineEmits(["update:modelValue", "change", "destroy"])
 
@@ -17,9 +18,9 @@ const emits = defineEmits(["update:modelValue", "change", "destroy"])
 		post: { type: Object, required: true },
 	})
 
-	let show = ref(props.modelValue)
+	const show = ref(props.modelValue)
 
-	let theTitle = ref(props.post.title),
+	const theTitle = ref(props.post.title),
 		theScript = ref(props.post.script),
 		theSwitch = ref(props.post.switch),
 		theType = ref(props.post.type ?? ""),
@@ -28,7 +29,7 @@ const emits = defineEmits(["update:modelValue", "change", "destroy"])
 			exercice: "exercise",
 		})
 
-	let savePost = function () {
+	const savePost = function () {
 			axios
 				.post(route("posts.update", [props.post.id]), {
 					title: theTitle.value,
@@ -48,7 +49,7 @@ const emits = defineEmits(["update:modelValue", "change", "destroy"])
 				.post(route("posts.destroy", [props.post.id]), {
 					_method: "delete",
 				})
-				.then((res) => {
+				.then(() => {
 					emits("update:modelValue", false)
 					emits("destroy", props.post.id)
 				})

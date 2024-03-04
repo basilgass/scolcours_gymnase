@@ -1,15 +1,11 @@
-<script lang="ts">
-	import LayoutFullpage from "@/Layouts/LayoutFullpage.vue"
-
-	export default {
-		layout: LayoutFullpage,
-	}
-</script>
 <script lang="ts" setup>
-	import ScolCoursLogo from "@/Components/ScolcoursLogo.vue"
-	import { Head } from "@inertiajs/vue3"
-	import { PropType } from "vue"
-	import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
+import ScolCoursLogo from "@/Components/ScolcoursLogo.vue"
+import { Head } from "@inertiajs/vue3"
+import { PropType } from "vue"
+import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
+import LayoutFullpage from "@/Layouts/LayoutFullpage.vue"
+
+defineOptions({ layout: LayoutFullpage })
 
 	interface ChapterMiniInterface {
 		id: number
@@ -18,7 +14,7 @@
 		modified: string
 		body: string
 	}
-	let props = defineProps({
+	defineProps({
 		canLogin: { type: Boolean, required: true },
 		canRegister: { type: Boolean, required: true },
 		newChapters: {
@@ -49,7 +45,9 @@
 		</div>
 
 		<div class="space-y-10">
-			<h2 class="text-center text-xl">Dernières mises à jour</h2>
+			<h2 class="text-center text-xl">
+				Dernières mises à jour
+			</h2>
 			<div
 				class="grid gap-3 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
 			>
@@ -63,14 +61,16 @@
 						<h3
 							class="font-normal text-lg"
 							v-katex.auto="item.title"
-						></h3>
+						/>
 
 						<div class="text-xs">
 							{{ item.modified }}
 						</div>
 					</div>
-					<markdown-it class="font-extralight" :text="item.body">
-					</markdown-it>
+					<markdown-it
+						class="font-extralight"
+						:text="item.body"
+					/>
 				</div>
 			</div>
 		</div>

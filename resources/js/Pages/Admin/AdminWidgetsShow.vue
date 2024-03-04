@@ -1,15 +1,9 @@
-<script lang="ts">
+<script setup lang="ts">
+import WidgetForm from "@/Components/WidgetForm.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 
-export default {
-		layout: LayoutMain,
-	}
-</script>
-
-<script setup lang="ts">
-	import WidgetForm from "@/Components/WidgetForm.vue"
-
-	const props = defineProps({
+defineOptions({ layout: LayoutMain })
+	defineProps({
 		widgets: { type: Object, required: true }
 	})
 

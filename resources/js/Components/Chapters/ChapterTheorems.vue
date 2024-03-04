@@ -1,12 +1,13 @@
 <!--
 Affichage d'un formulaire, avec la possibilité de passer d'un formulaire du thème à un autre.
 -->
-<script setup>
-	import { computed, ref } from "vue"
-	import BlockShow from "@/Components/Posts/Blocks/BlockShow.vue"
-	import { useIntersectionObserver } from "@vueuse/core"
+<script setup lang="ts">
+import { computed, ref } from "vue"
+import BlockShow from "@/Components/Posts/Blocks/BlockShow.vue"
+import { useIntersectionObserver } from "@vueuse/core"
+import axios from "axios"
 
-	const props = defineProps({
+const props = defineProps({
 		chapterSlug: { type: String, required: true },
 		responsive: { type: Boolean, default: false },
 	})
@@ -35,7 +36,7 @@ Affichage d'un formulaire, avec la possibilité de passer d'un formulaire du th�
 			.catch((err) => {
 				theTheoremsErrors.value = err.toJSON()
 			})
-			.finally((res) => {
+			.finally(() => {
 				loadingState.value = false
 			})
 	}
@@ -63,7 +64,9 @@ Affichage d'un formulaire, avec la possibilité de passer d'un formulaire du th�
 
 		<div v-else-if="theTheorems.length > 0">
 			<div class="px-5 my-5">
-				<h3 class="text-xl uppercase font-extralight mb-2">Théorie</h3>
+				<h3 class="text-xl uppercase font-extralight mb-2">
+					Théorie
+				</h3>
 				<div class="flex flex-wrap text-xs gap-1">
 					<button
 						:class="showTheorems ? 'is-active' : ''"
@@ -95,7 +98,7 @@ Affichage d'un formulaire, avec la possibilité de passer d'un formulaire du th�
 					:key="`block-${block.id}`"
 					:block="block"
 					force-show
-				></block-show>
+				/>
 			</div>
 		</div>
 		<div

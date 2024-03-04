@@ -12,7 +12,7 @@ import axios from "axios"
 import { ChapterInterface, PostInterface } from "@/types/modelInterfaces"
 import { editModeInterface, flashInterface } from "@/types"
 
-let emits = defineEmits(["change", "destroy"])
+const emits = defineEmits(["change", "destroy"])
 	const props = defineProps({
 			post: {
 				type: Object as PropType<PostInterface>,
@@ -35,7 +35,7 @@ let emits = defineEmits(["change", "destroy"])
 	const flash = inject<flashInterface>("flash"),
 		editMode = inject<editModeInterface>("editMode")
 
-	let showEditForm = ref(false),
+	const showEditForm = ref(false),
 		editForm = computed(() => {
 			return defineAsyncComponent(
 				() => import("@/Components/Posts/PostForm.vue"),
@@ -52,7 +52,7 @@ let emits = defineEmits(["change", "destroy"])
 					}),
 					_method: "PATCH",
 				})
-				.then((res) => {
+				.then(() => {
 					flash.success("les blocs ont bien été mis à jour !")
 				})
 				.catch((res) =>
@@ -63,7 +63,7 @@ let emits = defineEmits(["change", "destroy"])
 				)
 		}
 
-	let addBlock = function () {
+	const addBlock = function () {
 			axios
 				.post(route("posts.blocks.store", [thePost.value.id]))
 				.then((res) => {
@@ -89,7 +89,7 @@ let emits = defineEmits(["change", "destroy"])
 			// trigger the computed value on button click
 			try {
 				if (thePost.value.script && thePost.value.random) {
-					let F = new Function("PiMath", thePost.value.script)
+					const F = new Function("PiMath", thePost.value.script)
 					return F(PiMath)
 				}
 			} catch (e) {
@@ -98,10 +98,10 @@ let emits = defineEmits(["change", "destroy"])
 			return {}
 		}),
 	)
-	let updatePostData = function () {
+	const updatePostData = function () {
 		thePost.value.random++
 	}
-	let postSwitchLabel = computed(() => {
+	const postSwitchLabel = computed(() => {
 			if (thePost.value.switch) {
 				const [pre, post] = thePost.value.switch.split("@")
 				return {

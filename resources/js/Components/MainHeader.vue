@@ -1,19 +1,20 @@
 <!--
 En-tête principal, sensible au thème
 -->
-<script setup>
+<script setup lang="ts">
 import { inject, ref } from "vue"
 import MainAside from "@/Components/MainAside.vue"
 import DropdownMenu from "@/Components/Ui/DropdownMenu.vue"
 import LogoutButton from "@/Components/Ui/LogoutButton.vue"
+import { editModeInterface } from "@/types/index.js"
 
 defineProps({
 		theme: { type: Object, required: true },
 	})
 
-	let showMenu = ref(false),
+	const showMenu = ref(false),
 		showAside = ref(false),
-		editMode = inject("editMode")
+		editMode = inject<editModeInterface>("editMode")
 
 	defineExpose({
 		showAside,

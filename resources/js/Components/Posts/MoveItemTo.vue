@@ -1,9 +1,11 @@
-<script setup>
+<script setup lang="ts">
 import { inject, nextTick, ref } from "vue"
 import { watchDebounced } from "@vueuse/core"
 import FormMaker from "@/Components/Form/FormMaker.vue"
+import { flashInterface } from "@/types"
+import axios from "axios"
 
-const flash = inject("flash"),
+const flash = inject<flashInterface>("flash"),
 		props = defineProps({
 			source: { type: String, required: true },
 			sourceId: { type: Number, required: true },
@@ -18,7 +20,7 @@ const flash = inject("flash"),
 		targetName = ref(""),
 		enableMove = async function () {
 			showMoveTo.value = !showMoveTo.value
-			nextTick(() => {
+			await nextTick(() => {
 				moveInput.value.focus()
 			})
 		},

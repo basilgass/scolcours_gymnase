@@ -7,7 +7,7 @@
 		GeneratorInterface,
 	} from "@/types/modelInterfaces"
 
-	let props = defineProps({
+	const props = defineProps({
 		challenge: {
 			type: Object as PropType<ChallengeInterface>,
 			required: true,
@@ -15,14 +15,14 @@
 		slug: { type: String, required: true },
 	})
 
-	let currentGenerator = computed<GeneratorInterface>(() => {
+	const currentGenerator = computed<GeneratorInterface>(() => {
 			return props.challenge.generators.filter(
 				(g) => g.slug === props.slug,
 			)[0]
 		}),
 		counter = ref(0)
 
-	let nextQuestion = function (checkerResult) {
+	const nextQuestion = function (checkerResult) {
 			if (checkerResult.result) {
 				counter.value++
 			}

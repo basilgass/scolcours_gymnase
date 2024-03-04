@@ -1,3 +1,40 @@
+<script>
+import BreezeButton from "@/Components/Auth/Button.vue"
+import BreezeGuestLayout from "@/Layouts/LayoutGuest.vue"
+import BreezeInput from "@/Components/Auth/Input.vue"
+import BreezeLabel from "@/Components/Auth/Label.vue"
+import BreezeValidationErrors from "@/Components/Auth/ValidationErrors.vue"
+import { Head } from "@inertiajs/vue3"
+
+export default {
+
+	components: {
+		BreezeButton,
+		BreezeInput,
+		BreezeLabel,
+		BreezeValidationErrors,
+		Head,
+	},
+	layout: BreezeGuestLayout,
+
+	data() {
+		return {
+			form: this.$inertia.form({
+				password: "",
+			})
+		}
+	},
+
+	methods: {
+		submit() {
+			this.form.post(this.route("password.confirm"), {
+				onFinish: () => this.form.reset(),
+			})
+		}
+	}
+}
+</script>
+
 <template>
 	<Head title="Confirm Password" />
 
@@ -35,40 +72,3 @@
 		</div>
 	</form>
 </template>
-
-<script>
-import BreezeButton from "@/Components/Auth/Button.vue"
-import BreezeGuestLayout from "@/Layouts/LayoutGuest.vue"
-import BreezeInput from "@/Components/Auth/Input.vue"
-import BreezeLabel from "@/Components/Auth/Label.vue"
-import BreezeValidationErrors from "@/Components/Auth/ValidationErrors.vue"
-import {Head} from "@inertiajs/vue3"
-
-export default {
-
-	components: {
-		BreezeButton,
-		BreezeInput,
-		BreezeLabel,
-		BreezeValidationErrors,
-		Head,
-	},
-	layout: BreezeGuestLayout,
-
-	data() {
-		return {
-			form: this.$inertia.form({
-				password: "",
-			})
-		}
-	},
-
-	methods: {
-		submit() {
-			this.form.post(this.route("password.confirm"), {
-				onFinish: () => this.form.reset(),
-			})
-		}
-	}
-}
-</script>

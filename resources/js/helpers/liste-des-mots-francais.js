@@ -1,4 +1,4 @@
-export let listeDeMots = [
+export const listeDeMots = [
 	"BLEU",
 	"SUPER",
 	"AUTRE",

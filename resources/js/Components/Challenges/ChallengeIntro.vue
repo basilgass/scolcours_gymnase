@@ -4,24 +4,35 @@ nombre de vies, niveaux de difficultés, temps et les résultats courants
 
 Pour l'admin, contient également les liens vers les résultats par teams.
 -->
+<script setup lang="ts">
+
+const props = defineProps({
+	challenge: {type: Object, required: true},
+	teams: {type: Object, required: true}
+})
+
+const emits = defineEmits(["start"])
+
+</script>
+
 <template>
 	<div class="flex flex-col gap-3 bg-gray-50 px-10 py-10 max-w-[40em] mx-auto border border-gray-400">
 		<!-- Description du challenge -->
 		<div class="max-w-[15em] w-full mx-auto flex flex-col gap-3 mb-5 text-lg">
 			<div class="flex justify-between w-full">
-				<div><i class="bi bi-heart mr-2"></i>Nombre de vies</div>
+				<div><i class="bi bi-heart mr-2" />Nombre de vies</div>
 				<div>{{ challenge.lives }}</div>
 			</div>
 
 			<div class="flex justify-between w-full">
-				<div><i class="bi bi-chevron-double-up mr-2"></i>Niveaux de diffcultés</div>
+				<div><i class="bi bi-chevron-double-up mr-2" />Niveaux de diffcultés</div>
 				<div>{{ challenge.maxLevel }}</div>
 			</div>
 			<div
 				v-if="challenge.duration > 0"
 				class="flex justify-between w-full"
 			>
-				<div><i class="bi bi-clock mr-2"></i>Temps (min)</div>
+				<div><i class="bi bi-clock mr-2" />Temps (min)</div>
 				<div>{{ challenge.duration }}</div>
 			</div>
 		</div>
@@ -43,7 +54,8 @@ Pour l'admin, contient également les liens vers les résultats par teams.
 
 			<div class="grid w-full gap-4 grid-cols-2">
 				<div
-					class="bg-white aspect-square p-4 rounded-xl border border-gray-200 grid place-items-center shadow">
+					class="bg-white aspect-square p-4 rounded-xl border border-gray-200 grid place-items-center shadow"
+				>
 					<div class="text-center flex flex-col justify-between h-full">
 						<h4 class="text-xl uppercase ">
 							score
@@ -57,7 +69,8 @@ Pour l'admin, contient également les liens vers les résultats par teams.
 					</div>
 				</div>
 				<div
-					class="bg-white aspect-square p-4 rounded-xl border border-gray-200 grid place-items-center shadow">
+					class="bg-white aspect-square p-4 rounded-xl border border-gray-200 grid place-items-center shadow"
+				>
 					<div class="text-center flex flex-col justify-between h-full">
 						<h4 class="text-xl uppercase">
 							niveau
@@ -95,14 +108,3 @@ Pour l'admin, contient également les liens vers les résultats par teams.
 		</div>
 	</div>
 </template>
-
-<script setup>
-
-const props = defineProps({
-	challenge: {type: Object, required: true},
-	teams: {type: Object, required: true}
-})
-
-const emits = defineEmits(["start"])
-
-</script>

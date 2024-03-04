@@ -1,26 +1,20 @@
-<script lang="ts">
-import LayoutFullpage from "@/Layouts/LayoutFullpage.vue"
-
-export default {
-	layout: LayoutFullpage
-}
-</script>
-
 <script lang="ts" setup>
 
 import { PropType, ref } from "vue"
 import { deckInterface } from "@/types/modelInterfaces"
-import { router } from "@inertiajs/vue3"
 import axios from "axios"
 import FormMaker from "@/Components/Form/FormMaker.vue"
+import LayoutMain from "@/Layouts/LayoutMain.vue"
+
+defineOptions({ layout: LayoutMain })
 
 const props = defineProps({
 	decks: { type: Array as PropType<deckInterface[]>, required: true }
 })
 
-let theDecks = ref(props.decks)
+const theDecks = ref(props.decks)
 
-let newDeckTitle = ref(""),
+const newDeckTitle = ref(""),
 	newDeckSlug = ref("")
 
 function addDeck() {

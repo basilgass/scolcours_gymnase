@@ -1,4 +1,4 @@
-<script setup>
+<script lang="ts" setup>
 /** Tools
  * title: trigonométrie dans le triangle quelconque
  * body: permet de calculer les longueurs et angles d'un triangle quelconque
@@ -11,7 +11,7 @@ import { numberCorrection } from "pidraw/esm/Calculus"
 import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 
-let A = ref("7"),
+const A = ref("7"),
 	B = ref(""),
 	C = ref("9"),
 	alpha = ref(""),
@@ -27,10 +27,34 @@ let A = ref("7"),
 		gamma: "\\gamma",
 		area: "\\sigma_{ABC}",
 		radius: "r_{\\text{circ.}}",
-		radiusI: "r_{\\text{insc.}}",
+		radiusI: "r_{\\text{insc.}}"
 	}
 
-let result = computed(() => {
+interface triangleInterface {
+	a: string
+	b: string
+	c: string
+	alpha: string
+	beta: string
+	gamma: string
+	area: string
+	radius: string
+	radiusI: string
+	hasAlternate?: boolean
+}
+
+interface triangleRawInterface {
+	a: number | null
+	b: number | null
+	c: number | null
+	alpha: number | null
+	beta: number | null
+	gamma: number | null
+	resolvable: boolean | string | null
+	hasAlternate?: boolean
+}
+
+const result = computed(() => {
 		try {
 			let triangle = makeTriangle({
 					a: A.value !== "" ? +A.value : null,
@@ -39,9 +63,9 @@ let result = computed(() => {
 					alpha: alpha.value !== "" ? +alpha.value : null,
 					beta: beta.value !== "" ? +beta.value : null,
 					gamma: gamma.value !== "" ? +gamma.value : null,
-					resolvable: null,
+					resolvable: null
 				}),
-				triangle2
+				triangle2: triangleRawInterface
 
 			if (triangle.hasAlternate) {
 				triangle2 = makeTriangle(
@@ -52,7 +76,7 @@ let result = computed(() => {
 						alpha: alpha.value !== "" ? +alpha.value : null,
 						beta: beta.value !== "" ? +beta.value : null,
 						gamma: gamma.value !== "" ? +gamma.value : null,
-						resolvable: null,
+						resolvable: null
 					},
 					true
 				)
@@ -62,7 +86,7 @@ let result = computed(() => {
 				return {
 					triangle: null,
 					triangle2: null,
-					text: `le triangle n'est pas résolvable. ${triangle.resolvable}`,
+					text: `le triangle n'est pas résolvable. ${triangle.resolvable}`
 				}
 			}
 			return {
@@ -70,15 +94,15 @@ let result = computed(() => {
 				triangle2:
 					triangle.hasAlternate && triangle2.resolvable === true
 						? formatTriangle(triangle2)
-						: {},
+						: null,
 				text: null,
 				raw: {
 					triangle,
 					triangle2:
 						triangle.hasAlternate && triangle2.resolvable === true
 							? triangle2
-							: null,
-				},
+							: null
+				}
 			}
 		} catch (e) {
 			console.error(e)
@@ -86,26 +110,55 @@ let result = computed(() => {
 		}
 	}),
 	triangleDrawCode = computed(() => {
+		if (result.value === false) {
+			return {
+				code: "",
+				parameters: ""
+			}
+		}
 		return drawTriangle(result.value.raw.triangle)
 	}),
-	triangleAnswerCode = computed(()=>{
-		return `${result.value.triangle.a},${result.value.triangle.b},${result.value.triangle.c},${result.value.triangle.alpha.slice(0,-1)},${result.value.triangle.beta.slice(0,-1)},${result.value.triangle.gamma.slice(0,-1)},${result.value.triangle.area}`
+	triangleAnswerCode = computed(() => {
+		if (result.value === false) {
+			return {
+				code: "",
+				parameters: ""
+			}
+		}
+		return `${result.value.triangle.a},${result.value.triangle.b},${result.value.triangle.c},${result.value.triangle.alpha.slice(0, -1)},${result.value.triangle.beta.slice(0, -1)},${result.value.triangle.gamma.slice(0, -1)},${result.value.triangle.area}`
 	}),
 	triangle2DrawCode = computed(() => {
+		if (result.value === false) {
+			return {
+				code: "",
+				parameters: ""
+			}
+		}
 		return drawTriangle(result.value.raw.triangle2)
 	}),
-	triangle2AnswerCode = computed(()=>{
-		if(result.value.triangle2 === undefined) {return ""}
-		if(result.value.triangle2.a === undefined){return ""}
+	triangle2AnswerCode = computed(() => {
+		if (result.value === false) {
+			return {
+				code: "",
+				parameters: ""
+			}
+		}
+		if (result.value.triangle2 === undefined || result.value.triangle2 === null) {
+			return ""
+		}
+
+		if (result.value.triangle2.a === undefined) {
+			return ""
+		}
 
 		return `${result.value.triangle2.a},${result.value.triangle2.b},${result.value.triangle2.c},${result.value.triangle2.alpha.slice(0, -1)},${result.value.triangle2.beta.slice(0, -1)},${result.value.triangle2.gamma.slice(0, -1)},${result.value.triangle2.area}`
 	})
 
-function drawTriangle(value) {
+function drawTriangle(value: triangleRawInterface) {
 	if (value === null) {
 		return {
 			code: "",
-			parameters: "",
+			parameters: ""
 		}
 	}
 
@@ -122,17 +175,17 @@ function drawTriangle(value) {
 		code: `A(0,0)->$/bl
 B(${value.c * scale},0)->$/br
 C(${Cx * scale},${Cy * scale})->$/tc
-d1=[AB]->$c${C.value===""?"":"=" + C.value}/c
-d2=[AC]->$b${B.value===""?"":"=" + B.value}/lt
-d3=[BC]->$a${A.value===""?"":"=" + A.value}/t
-a1=arc B,A,C,0.5->$\\alpha${alpha.value===""?"":"=" + alpha.value + "°"}/r
-a2=arc C,B,A,0.5->$\\beta${beta.value===""?"":"=" + beta.value + "°"}/l
-a3=arc A,C,B,0.5->$\\gamma${gamma.value===""?"":"=" + gamma.value + "°"}
-`,
+d1=[AB]->$c${C.value === "" ? "" : "=" + C.value}/c
+d2=[AC]->$b${B.value === "" ? "" : "=" + B.value}/lt
+d3=[BC]->$a${A.value === "" ? "" : "=" + A.value}/t
+a1=arc B,A,C,0.5->$\\alpha${alpha.value === "" ? "" : "=" + alpha.value + "°"}/r
+a2=arc C,B,A,0.5->$\\beta${beta.value === "" ? "" : "=" + beta.value + "°"}/l
+a3=arc A,C,B,0.5->$\\gamma${gamma.value === "" ? "" : "=" + gamma.value + "°"}
+`
 	}
 }
 
-function formatTriangle(value) {
+function formatTriangle(value: triangleRawInterface): triangleInterface {
 	if (value.resolvable) {
 		const area = thmArea(value.a, value.b, value.gamma)
 		return {
@@ -142,26 +195,26 @@ function formatTriangle(value) {
 			alpha: +value.alpha.toFixed(fixed.value) + "°",
 			beta: +value.beta.toFixed(fixed.value) + "°",
 			gamma: +value.gamma.toFixed(fixed.value) + "°",
-			area: numberCorrection(area, null, null, fixed.value),
+			area: numberCorrection(area, null, null, fixed.value).toString(),
 			radius: numberCorrection(
 				value.a / Math.sin((value.alpha * Math.PI) / 180) / 2,
 				null,
 				null,
 				fixed.value
-			),
+			).toString(),
 			radiusI: numberCorrection(
 				(2 * area) / (value.a + value.b + value.c),
 				null,
 				null,
 				fixed.value
-			),
+			).toString()
 		}
 	} else {
 		return null
 	}
 }
 
-function thmTriangleSum(alpha, beta) {
+function thmTriangleSum(alpha: number, beta: number) {
 	const gamma = 180 - alpha - beta
 
 	if (gamma > 0 && gamma < 180) {
@@ -170,44 +223,44 @@ function thmTriangleSum(alpha, beta) {
 	return null
 }
 
-function thmCosinus(b, c, alpha) {
+function thmCosinus(b: number, c: number, alpha: number) {
 	return Math.sqrt(
 		b ** 2 + c ** 2 - 2 * b * c * Math.cos((alpha * Math.PI) / 180)
 	)
 }
 
-function thmCosinusAngle(a, b, c) {
+function thmCosinusAngle(a: number, b: number, c: number) {
 	return (
 		(Math.acos((b ** 2 + c ** 2 - a ** 2) / (2 * b * c)) * 180) / Math.PI
 	)
 }
 
-function thmSinus(alpha, b, beta) {
+function thmSinus(alpha: number, b: number, beta: number) {
 	return (
 		(b * Math.sin((alpha * Math.PI) / 180)) /
 		Math.sin((beta * Math.PI) / 180)
 	)
 }
 
-function thmSinusAngle(a, b, beta, alternate) {
+function thmSinusAngle(a: number, b: number, beta: number, alternate?: boolean) {
 	const alpha =
 		(Math.asin((a * Math.sin((beta * Math.PI) / 180)) / b) * 180) / Math.PI
 
 	return alternate === true ? 180 - alpha : alpha
 }
 
-function thmArea(a, b, gamma) {
+function thmArea(a: number, b: number, gamma: number) {
 	return (1 / 2) * a * b * Math.sin((Math.PI / 180) * gamma)
 }
 
-function isNotResvoled(value) {
+function isNotResvoled(value: triangleRawInterface) {
 	return (
 		value.a * value.b * value.c * value.alpha * value.beta * value.gamma ===
 		0
 	)
 }
 
-function isResolvable(value) {
+function isResolvable(value: triangleRawInterface) {
 	// il faut au moins 3 données en tout.
 	const numberOfGivenData = Object.values(value).filter(
 		(x) => x !== null
@@ -230,7 +283,7 @@ function isResolvable(value) {
 	}
 	// la somme des deux plus petits côtés est plus grande que le grand.
 	if (value.a !== null && value.b !== null && value.c !== null) {
-		let sides = [value.a, value.b, value.c]
+		const sides = [value.a, value.b, value.c]
 		sides.sort()
 		if (sides[0] + sides[1] < sides[2]) {
 			return "La somme des deux plus petits côtés est inférieure au plus grand côté."
@@ -247,7 +300,7 @@ function isResolvable(value) {
 	return true
 }
 
-function makeTriangle(value, alternate) {
+function makeTriangle(value: triangleRawInterface, alternate?: boolean): triangleRawInterface {
 	value.resolvable = isResolvable(value)
 	if (value.resolvable !== true) {
 		return value
@@ -415,9 +468,9 @@ function makeTriangle(value, alternate) {
 			/>
 
 			<form-maker
-				type="number"
 				v-model="fixed"
 				label="arrondi"
+				type="number"
 			/>
 		</div>
 

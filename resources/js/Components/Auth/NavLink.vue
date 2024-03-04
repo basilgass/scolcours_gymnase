@@ -1,11 +1,3 @@
-<template>
-	<Link
-		:class="classes"
-		:href="href"
-	>
-		<slot />
-	</Link>
-</template>
 <script>
 
 export default {
@@ -20,3 +12,11 @@ export default {
 	}
 }
 </script>
+<template>
+	<Link
+		:class="classes"
+		:href="href"
+	>
+		<slot />
+	</Link>
+</template>

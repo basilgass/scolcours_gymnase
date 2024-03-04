@@ -1,36 +1,40 @@
-<script setup>
-import { computed, ref } from "vue"
+<script lang="ts" setup>
+import { computed, PropType, ref } from "vue"
 import { useKeyboard } from "@/Composables/useKeyboard"
+import { asciiToTex, keyboardKey, KeyboardObjectType } from "@/Composables/keyboardConfig"
 
-let {asciiToTex, keyboardKeys, keyboards} = useKeyboard()
+const { keyboardKeys, keyboards } = useKeyboard()
 
 const emits = defineEmits(["tex", "raw", "validate", "next", "change", "clear"])
 const props = defineProps({
-	tex: String,
-	keyboard: {type: [Object, String], default: () => "simple"},
-	validate: {type: Boolean, default: null},
-	validateAtBottom: {type: Boolean, default: false},
-	erase: {type: Boolean, default: null},
-	reset: {type: Boolean, default: null},
-	back: {type: Boolean, default: null},
-	next: {type: Boolean, default: null},
-	multiple: {type: Boolean, default: null},
-	mathOutput: {type: Boolean, default: false},
-	textOutput: {type: Boolean, default: false},
-	small: {type: Boolean, default: false},
-	keyClass: {type: String, default: "bg-gray-50"},
-	extraLetters: {type: Array, default: ()=>[]},
+	tex: { type: String, default: "" },
+	keyboard: { type: [Object, String], default: () => "simple" },
+	validate: { type: Boolean, default: null },
+	validateAtBottom: { type: Boolean, default: false },
+	erase: { type: Boolean, default: null },
+	reset: { type: Boolean, default: null },
+	back: { type: Boolean, default: null },
+	next: { type: Boolean, default: null },
+	multiple: { type: Boolean, default: null },
+	mathOutput: { type: Boolean, default: false },
+	textOutput: { type: Boolean, default: false },
+	small: { type: Boolean, default: false },
+	keyClass: { type: String, default: "bg-gray-50" },
+	extraLetters: {
+		type: Object as PropType<string[]>, default: () => {
+		}
+	},
 	customKeys: {
 		type: Object, default: () => {
 		}
 	}
 })
 
-let root = ref(null),
+const root = ref(null),
 	keyStrokes = ref([]),
 	keyboardGridDefault = ref("grid-cols-4")
 
-let theKeyboard = computed(() => {
+const theKeyboard = computed(() => {
 		if (props.keyboard === null) {
 			return ""
 		}
@@ -39,9 +43,9 @@ let theKeyboard = computed(() => {
 
 			// Parse the keyboard value
 			//TODO: is it still relevant ?
-			let keyboardName = props.keyboard.split("@")[0]
+			const keyboardName = props.keyboard.split("@")[0]
 
-			if (keyboards.hasOwnProperty(keyboardName)) {
+			if (Object.hasOwn(keyboards, keyboardName)) {
 				return keyboardName
 			} else {
 				return ""
@@ -52,7 +56,7 @@ let theKeyboard = computed(() => {
 		return props.keyboard
 	}),
 	keyboardOptions = computed(() => {
-		if (props.extraLetters.length>0) {
+		if (props.extraLetters.length > 0) {
 			return props.extraLetters.map(x => {
 				const keyDisplay = x.split("||"),
 					d = keyDisplay.length >= 2 ? keyDisplay[1] : keyDisplay[0],
@@ -73,12 +77,12 @@ let theKeyboard = computed(() => {
 
 		return []
 	}),
-	keyboardData = computed(() => {
+	keyboardData = computed<KeyboardObjectType>(() => {
 		if (typeof theKeyboard.value === "string") {
 			return keyboards[theKeyboard.value]
 		}
 
-		return props.keyboard
+		return props.keyboard as KeyboardObjectType
 	})
 
 const btnReset = {
@@ -122,21 +126,24 @@ const btnReset = {
 		atEnd: false
 	}
 
-let keyboardComputed = computed(() => {
-		let data = []
+const keyboardComputed = computed(() => {
+		const data = []
 		// Loop through all keyboard keys in the layout.
-		for (let key of keyboardData.value.layout) {
-			let kkey, spankey, kdata = {},
+		for (const key of keyboardData.value.layout) {
+			let kkey, spankey, kdata:keyboardKey,
 				theKey
-			if(typeof key==="string"){
+
+			if (typeof key === "string") {
 				kkey = key
 				spankey = 0
 				theKey = keyboardKeys[kkey]
-			}else if(key.key !== undefined) {
-				kkey = key.key
-				spankey = key.span?key.span:0
-				theKey = key
-			}else {
+				// }
+				// TODO: KeyboardDisplay: remove {key, span} ?
+				// else if(key.key !== undefined) {
+				// 	kkey = key.key
+				// 	spankey = key.span?key.span:0
+				// 	theKey = key
+			} else {
 				kkey = key[0]
 				spankey = key[1]
 				theKey = keyboardKeys[kkey]
@@ -159,11 +166,12 @@ let keyboardComputed = computed(() => {
 				visible: kkey === "",
 				type: theKey === undefined ? false : theKey.type,
 				display: theKey === undefined ? false : theKey.display,
-				span: spankey
+				span: spankey,
+				fn: null
 			}
 
 			// Maybe there is a custom keys
-			if(props.customKeys?.hasOwnProperty(kkey)) {
+			if (Object.hasOwn(props.customKeys, kkey)) {
 				theKey = props.customKeys[kkey]
 				kdata = {
 					...kdata,
@@ -172,7 +180,7 @@ let keyboardComputed = computed(() => {
 			}
 
 			if (theKey === undefined) {
-				kdata.fn = (key) => answerOutput.value + ""
+				kdata.fn = () => answerOutput.value + ""
 			} else {
 				if (theKey.fn === undefined) {
 					kdata.fn = (value) => value + kkey
@@ -195,7 +203,7 @@ let keyboardComputed = computed(() => {
 	}),
 	keyboardCommands = computed(() => {
 		// Return the buttons
-		let commandsBtn = []
+		const commandsBtn = []
 
 		if (props.back) {
 			commandsBtn.push(btnBack)
@@ -225,7 +233,7 @@ function resetKeyStrokes() {
 }
 
 function backKeyStrokes() {
-	ButtonKeyClick({key: "@back"})
+	ButtonKeyClick({ key: "@back" })
 	changeEvent()
 	emits("clear", "")
 }
@@ -241,13 +249,14 @@ function ButtonKeyClick(key) {
 
 	changeEvent()
 }
-let changeEvent = function(){
-	let output = "",
+
+const changeEvent = function() {
+	const output = "",
 		result = keyStrokes.value
 			.map(k => k.fn(output))
 			.join("")
 
-	emits("change",{
+	emits("change", {
 		input: result,
 		tex: getTex(result),
 		raw: ""
@@ -257,7 +266,7 @@ let changeEvent = function(){
 	// emits("tex", getTex(result))
 	// emits("raw", "")
 }
-let validateButton = ref(null)
+const validateButton = ref(null)
 
 function wrongAnswer() {
 	if (validateButton.value) {
@@ -265,7 +274,7 @@ function wrongAnswer() {
 		validateButton.value.style.setProperty("animation-duration", "500ms")
 
 		setTimeout(() => {
-			if(validateButton.value) { // the button may have already disappeared !
+			if (validateButton.value) { // the button may have already disappeared !
 				validateButton.value.style.setProperty("animation-name", "")
 			}
 		}, 500)
@@ -273,15 +282,15 @@ function wrongAnswer() {
 }
 
 function getTex(value) {
-	let output = []
+	const output = []
 
-	for(let v of value.split(",")){
+	for (const v of value.split(",")) {
 		output.push(getTexFromOneValue(v))
 	}
 	return output.join(",")
 }
 
-function getTexFromOneValue(value){
+function getTexFromOneValue(value) {
 	if (typeof theKeyboard.value === "string") {
 		return keyboards[theKeyboard.value].tex ? keyboards[theKeyboard.value].tex(value) : value
 	} else {
@@ -289,15 +298,15 @@ function getTexFromOneValue(value){
 	}
 }
 
-let answerOutput = computed(()=>{
-	let output = ""
+const answerOutput = computed(() => {
+	const output = ""
 
-	return  keyStrokes.value
+	return keyStrokes.value
 		.map(k => k.fn(output))
 		.join("")
 })
 
-defineExpose({resetKeyStrokes, wrongAnswer, getTex})
+defineExpose({ resetKeyStrokes, wrongAnswer, getTex })
 </script>
 
 <template>
@@ -344,14 +353,14 @@ defineExpose({resetKeyStrokes, wrongAnswer, getTex})
 		<!-- keyboard keys -->
 		<div
 			ref="root"
-			class="grid gap-1 lg:gap-2 keyboard"
 			:class="(keyboardData.grid??keyboardGridDefault) + (small?' keyboard-sm':'')"
+			class="grid gap-1 lg:gap-2 keyboard"
 		>
 			<button
 				v-for="(key, index) of keyboardComputed"
 				:key="`key-${key.key}-${index}`"
-				class="key"
 				:class="`${keyClass} ${key.span===0?'':key.span} ${key.visible?'invisible':''} ${key.type==='bg'?key.display:''}`"
+				class="key"
 				@click="ButtonKeyClick(key)"
 			>
 				<span
@@ -376,8 +385,8 @@ defineExpose({resetKeyStrokes, wrongAnswer, getTex})
 		<!-- keyboard extra buttons -->
 		<div
 			v-if="keyboardOptions.length>0"
-			class="keyboard flex flex-wrap w-full mt-10 gap-3"
 			:class="small?' keyboard-sm':''"
+			class="keyboard flex flex-wrap w-full mt-10 gap-3"
 		>
 			<button
 				v-for="(key, index) of keyboardOptions"
@@ -399,8 +408,8 @@ defineExpose({resetKeyStrokes, wrongAnswer, getTex})
 		<!-- keyboard commands -->
 		<div
 			v-if="keyboardCommands.length>0"
-			class="keyboard flex w-full mt-10 gap-3"
 			:class="small?' keyboard-sm':''"
+			class="keyboard flex w-full mt-10 gap-3"
 		>
 			<button
 				v-for="(item, index) of keyboardCommands"

@@ -1,4 +1,4 @@
-import {CheckerResult} from "@/Composables/checkersConfig";
+import { CheckerResult } from "@/Composables/checkersConfig"
 
 export abstract class CheckerBase {
     protected constructor(config?: string[] | string) {
@@ -11,7 +11,7 @@ export abstract class CheckerBase {
         }
 
         // Subchecker : we suppose that everything after is for the subchecker
-        const [tmp, chk] = this._config.join(',').split('checker:')
+        const [, chk] = this._config.join(',').split('checker:')
         if (chk !== undefined) {
             const [chkName, ...opts] = chk.split(',')
             this._secondaryCheckerName = chkName
@@ -22,51 +22,51 @@ export abstract class CheckerBase {
     protected _secondaryCheckerName?: string
 
     get secondaryCheckerName(): string {
-        return this._secondaryCheckerName;
+        return this._secondaryCheckerName
     }
 
     set secondaryCheckerName(value: string) {
-        this._secondaryCheckerName = value;
+        this._secondaryCheckerName = value
     }
 
     protected _secondaryCheckerOptions?: string[]
 
     get secondaryCheckerOptions(): string[] {
-        return this._secondaryCheckerOptions;
+        return this._secondaryCheckerOptions
     }
 
     set secondaryCheckerOptions(value: string[]) {
-        this._secondaryCheckerOptions = value;
+        this._secondaryCheckerOptions = value
     }
 
     protected _config: string[]
 
     get config(): string[] {
-        return this._config;
+        return this._config
     }
 
     set config(value: string[]) {
-        this._config = value;
+        this._config = value
     }
 
     protected _name: string
 
     get name(): string {
-        return this._name;
+        return this._name
     }
 
     set name(value: string) {
-        this._name = value;
+        this._name = value
     }
 
     protected _description: string
 
     get description(): string {
-        return this._description;
+        return this._description
     }
 
     set description(value: string) {
-        this._description = value;
+        this._description = value
     }
 
     abstract get format(): string

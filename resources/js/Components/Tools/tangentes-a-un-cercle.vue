@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 /** Tools
  * title: tangente à un cercle
  * body: calcul de la / les tangente(s) à un cercle passant par un point ou ayant une pente donnée

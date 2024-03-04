@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 /** Tools
  * title: factorisation d'un polynôme
  * body: factorisation d'un polynôme

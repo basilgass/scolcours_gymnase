@@ -1,5 +1,5 @@
-import {CheckerBase} from "@/Checkers/CheckerBase";
-import {getCheckerClass} from "@/Composables/checkersConfig";
+import { CheckerBase } from "@/Checkers/CheckerBase"
+import { getCheckerClass } from "@/Composables/checkersConfig"
 
 const name = "tos"
 const description = `tos,[paramètres]
@@ -9,12 +9,12 @@ aucun
 `
 
 export class TableofsignChecker extends CheckerBase {
-    private grows: boolean;
-    private coords: boolean;
-    private secondaryChecker: CheckerBase;
+    private grows: boolean
+    private coords: boolean
+    private secondaryChecker: CheckerBase
 
     constructor(config: string[] | string) {
-        super(config);
+        super(config)
         this.name = name
         this.description = description
 
@@ -31,7 +31,7 @@ export class TableofsignChecker extends CheckerBase {
         } else if (this.grows) {
             return "Tableau de croissance"
         }
-        return "Tableau de signes";
+        return "Tableau de signes"
     }
 
     check(expected: string, given: string): { result: boolean; message: string } {
@@ -77,7 +77,7 @@ export class TableofsignChecker extends CheckerBase {
 
             // Check the coordinates
             if (coords.expected.length > 0) {
-                let expectedCoordinates = coords.expected.split(","),
+                const expectedCoordinates = coords.expected.split(","),
                     providedCoordinates = coords.provided.split(",")
 
                 if (expectedCoordinates.length !== providedCoordinates.length) {
@@ -88,7 +88,7 @@ export class TableofsignChecker extends CheckerBase {
                 }
 
                 for (let i = 0; i < expectedCoordinates.length; i++) {
-                    let check = this.secondaryChecker.check(expectedCoordinates[i], providedCoordinates[i])
+                    const check = this.secondaryChecker.check(expectedCoordinates[i], providedCoordinates[i])
 
                     if (!check.result) {
                         return {

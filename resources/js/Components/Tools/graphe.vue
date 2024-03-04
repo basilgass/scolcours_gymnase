@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 /** Tools
  * title: graphe
  * body: affichage d'un graphique
@@ -10,7 +10,7 @@ import { ref } from "vue"
 import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 
-let code = ref(""),
+const code = ref(""),
 	params = ref("axis,grid,x=-10:10,y=-10:10")
 </script>
 

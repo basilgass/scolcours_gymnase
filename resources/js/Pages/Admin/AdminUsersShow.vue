@@ -1,32 +1,27 @@
-<script lang="ts">
-import LayoutMain from "@/Layouts/LayoutMain.vue"
-
-export default {
-	layout: LayoutMain
-}
-</script>
-
-<script setup lang="ts">
+<script lang="ts" setup>
 
 import { computed, inject, PropType, ref } from "vue"
-import {useForm} from "@inertiajs/vue3"
-import {router} from "@inertiajs/vue3"
+import { router, useForm } from "@inertiajs/vue3"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import axios from "axios"
 import { TeamInterface, UserInterface } from "@/types/modelInterfaces"
 import { flashInterface } from "@/types"
+import DialogModal from "@/Components/Ui/DialogModal.vue"
+import LayoutMain from "@/Layouts/LayoutMain.vue"
 
-let props = defineProps({
-		users: {type: Object as PropType<UserInterface[]>, required: true},
-		teams: {type: Object as PropType<TeamInterface[]>, required: true}
+defineOptions({ layout: LayoutMain })
+
+const props = defineProps({
+		users: { type: Object as PropType<UserInterface[]>, required: true },
+		teams: { type: Object as PropType<TeamInterface[]>, required: true }
 	}),
 	theUsers = ref(props.users),
 	theTeams = ref(props.teams)
 
 const flash = inject<flashInterface>("flash")
 
-let usersEmails = ref(""),
+const usersEmails = ref(""),
 	usersEmailsList = computed(() => {
 		const sep = usersEmails.value.includes(";") ? ";" : "\n"
 
@@ -34,7 +29,7 @@ let usersEmails = ref(""),
 	})
 
 
-let addMode = ref(false),
+const addMode = ref(false),
 	form = useForm({
 		users: [],
 		password: "GymnaseScolcours"
@@ -56,23 +51,18 @@ function addUsers() {
 
 }
 
-let deleteMode = ref(false)
+const deleteMode = ref(false)
 
 function destroyUser(id) {
-	axios.post(route("admin.users.destroy", [id]), {_method: "delete"}).then((res) => {
+	axios.post(route("admin.users.destroy", [id]), { _method: "delete" }).then((res) => {
 		if (res.data) {
 			// Reload the page.
-			router.reload({only: ["users"]})
+			router.reload({ only: ["users"] })
 		}
 	})
 }
 
 const usersTeams = computed(() => {
-		console.log(theUsers.value
-			.filter(user => user.teams)
-			.map(user => user.teams.flatMap(team => team.name))
-			.flat()
-		)
 
 		return [
 			...new Set([...theUsers.value
@@ -88,16 +78,16 @@ const usersTeams = computed(() => {
 		if (selectedTeam.value === "") {
 			return theUsers.value
 		} else if (selectedTeam.value === "_") {
-			return theUsers.value.filter(user => user.teams.length===0)
+			return theUsers.value.filter(user => user.teams.length === 0)
 		} else {
 			return theUsers.value.filter(user => user.teams.find(team => team.name === selectedTeam.value))
 		}
 	}),
 	newTeam = ref(""),
-	storeTeam = function () {
+	storeTeam = function() {
 		axios.post(route("teams.store"), {
-			"name": newTeam.value
-		}
+				"name": newTeam.value
+			}
 		).then(res => {
 			theTeams.value.push(res.data)
 		})
@@ -105,9 +95,9 @@ const usersTeams = computed(() => {
 				console.error(res.response.data.message)
 			)
 	},
-	updateTeam = function (userId:number, teamId:number) {
+	updateTeam = function(userId: number, teamId: number) {
 		axios.post(route("users.team.toggle", [userId, teamId]),
-			{_method: "PATCH"})
+			{ _method: "PATCH" })
 			.then(res => {
 				// update the button
 				theUsers.value.forEach(user => {
@@ -120,15 +110,52 @@ const usersTeams = computed(() => {
 				console.error(res)
 			})
 	},
-	destroyTeam = function (teamId) {
+	destroyTeam = function(teamId) {
 		axios.post(route("teams.destroy", [teamId]),
-			{_method: "DELETE"}
+			{ _method: "DELETE" }
 		).then(res => {
 			theTeams.value = theTeams.value.filter(x => x.name !== res.data)
 		}).catch(res => {
 			console.error(res.response.data.message)
 		})
 	}
+
+
+const editUserShow = ref(false)
+const editUserForm = ref({
+	id: 0,
+	firstname: "",
+	name: ""
+})
+
+function editUser(id) {
+	const user = theUsers.value.find(x => x.id === id)
+	editUserForm.value.id = user.id
+	editUserForm.value.name =user.name
+	editUserForm.value.firstname =user.firstname
+	editUserShow.value = true
+}
+
+function editUserStore(){
+	axios.post(route("admin.users.update", [editUserForm.value.id]), {
+		...editUserForm.value,
+		_method: "PATCH"
+	}).then(res => {
+		editUserShow.value = false
+		// update the user
+		theUsers.value.forEach(user => {
+			if(user.id === editUserForm.value.id){
+				user.name = editUserForm.value.name
+				user.firstname = editUserForm.value.firstname
+				user.fullname = res.data.fullname
+			}
+		})
+		flash.success("Utilisateur modifié")
+	}).catch(res => {
+		console.error(res.response.data.message)
+		flash.error("Erreur lors de la modification")
+	})
+}
 
 </script>
 <template>
@@ -182,26 +209,29 @@ const usersTeams = computed(() => {
 	</section>
 
 	<section>
+		<!-- titre -->
 		<div class="flex justify-between">
 			<h2 class="text-xl">
 				Utilisateurs
 			</h2>
 
 			<form-maker
-				type="switch"
 				v-model="deleteMode"
 				label="mode suppression"
 				name="deleteSwitch"
 				sm
+				type="switch"
 			/>
 			<form-maker
-				type="switch"
 				v-model="teamsMode"
 				label="assignation des équipes"
 				name="teamsSwitch"
 				sm
+				type="switch"
 			/>
 		</div>
+
+		<!-- choix des team -->
 		<div
 			v-if="usersTeams.length>0"
 			class="flex gap-3 flex-wrap mb-3"
@@ -230,6 +260,8 @@ const usersTeams = computed(() => {
 				{{ team }}
 			</button>
 		</div>
+
+		<!-- liste des utilisateurs -->
 		<div class="bg-white">
 			<div
 				v-for="user of selectedUsers"
@@ -251,6 +283,7 @@ const usersTeams = computed(() => {
 				</div>
 
 				<div class="user-wrapper-right">
+					<!-- suppression -->
 					<button
 						v-if="deleteMode"
 						class="btn-delete btn-xs ml-3"
@@ -259,6 +292,7 @@ const usersTeams = computed(() => {
 						Supprimer
 					</button>
 
+					<!-- assignation des équipes -->
 					<div
 						v-if="teamsMode"
 						class="flex gap-3"
@@ -273,11 +307,25 @@ const usersTeams = computed(() => {
 							{{ team.name }}
 						</button>
 					</div>
+
+					<!-- édition du nom / prénom -->
+					<div>
+						<button
+							class="btn btn-xs"
+							@click="editUser(user.id)"
+						>
+							éditer
+						</button>
+					</div>
 				</div>
 			</div>
 		</div>
 
-		<div>
+		<!-- gestion des équipes -->
+		<div class="mt-10 bg-white py-3 px-5 border">
+			<h2 class="text-xl mb-5">
+				gestion des équipes
+			</h2>
 			<form-maker
 				v-model="newTeam"
 				label="nouvelle équipe"
@@ -302,4 +350,42 @@ const usersTeams = computed(() => {
 			</div>
 		</div>
 	</section>
+
+	<dialog-modal v-model="editUserShow">
+		<template
+			#header
+		>
+			<div class="px-5 py-3 border-b flex justify-between">
+				<h2 class="text-lg ">
+					Édition de l'utilisateur
+				</h2>
+
+				<div class="flex gap-3">
+					<button
+						class="btn-primary btn-xs"
+						@click="editUserStore"
+					>
+						enregistrer
+					</button>
+					<button
+						class="btn-cancel btn-xs"
+						@click="editUserShow=false"
+					>
+						annuler
+					</button>
+				</div>
+			</div>
+		</template>
+
+		<div class="px-5 pb-5">
+			<form-maker
+				v-model="editUserForm.firstname"
+				label="prénom"
+			/>
+			<form-maker
+				v-model="editUserForm.name"
+				label="nom"
+			/>
+		</div>
+	</dialog-modal>
 </template>

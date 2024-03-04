@@ -1,7 +1,7 @@
 <!--
 Affichage du formulaire en menu "slide-in" depuis la gauche.
 -->
-<script setup>
+<script setup lang="ts">
 import ChapterFormulas from "@/Components/Chapters/ChapterFormulas.vue"
 import { ref } from "vue"
 
@@ -36,10 +36,7 @@ let props = defineProps({
 		<transition name="slide-fade">
 			<div
 				v-if="afficherFormulaires"
-				class="fixed z-20 bottom-0 left-0 w-full md:w-[400px] h-full
-				 py-3
-				bg-white border-gray-200
-				 overflow-y-scroll"
+				class="fixed z-20 bottom-0 left-0 w-full md:w-[400px] h-full py-3 bg-white border-gray-200 overflow-y-scroll"
 			>
 				<div>
 					<button

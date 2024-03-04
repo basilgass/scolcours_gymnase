@@ -1,3 +1,16 @@
+<script setup lang="ts">
+const emits = defineEmits(["validate"])
+
+const props = defineProps({
+	disabled: {type: Boolean, default: false}
+})
+
+let buttonClick = function (event){
+	if(!props.disabled) {
+		emits("validate", event)
+	}
+}
+</script>
 <template>
 	<div class="max-w-xl mx-auto keyboard">
 		<button
@@ -16,16 +29,3 @@
 		</button>
 	</div>
 </template>
-<script setup>
-const emits = defineEmits(["validate"])
-
-const props = defineProps({
-	disabled: {type: Boolean, default: false}
-})
-
-let buttonClick = function (event){
-	if(!props.disabled) {
-		emits("validate", event)
-	}
-}
-</script>

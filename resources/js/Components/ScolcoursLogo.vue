@@ -1,6 +1,8 @@
 <!--
 Logo du site
 -->
+<script setup lang="ts">
+</script>
 <template>
 	<div class="text-center">
 		<div class="text-4xl">
@@ -11,9 +13,3 @@ Logo du site
 		</div>
 	</div>
 </template>
-<script>
-
-export default {
-	name: "ScolCoursLogo"
-}
-</script>

@@ -1,6 +1,6 @@
-import {CheckerBase} from "@/Checkers/CheckerBase";
-import {stripFirstCharacter, stripLastCharacter} from "@/helpers/helperFunctions";
-import {getCheckerClass} from "@/Composables/checkersConfig";
+import { CheckerBase } from "@/Checkers/CheckerBase"
+import { stripFirstCharacter, stripLastCharacter } from "@/helpers/helperFunctions"
+import { getCheckerClass } from "@/Composables/checkersConfig"
 
 const name = "coord"
 const description = `coord,[paramètres]
@@ -11,9 +11,9 @@ const description = `coord,[paramètres]
 `
 
 export class CoordChecker extends CheckerBase {
-    private secondaryChecker: CheckerBase;
+    private secondaryChecker: CheckerBase
     constructor(config?:string[]|string) {
-        super(config);
+        super(config)
         this.name = name
         this.description = description
 
@@ -47,7 +47,7 @@ export class CoordChecker extends CheckerBase {
         }
 
         // On récupère les valeurs
-        let values = given.split(";"),
+        const values = given.split(";"),
             expectedValues = expected.split(";")
 
         if (values.length === 1) {
@@ -79,7 +79,7 @@ export class CoordChecker extends CheckerBase {
 
         // let eChecker = ExactChecker(config)
         for (let i = 0; i < values.length; i++) {
-            let result = this.secondaryChecker.check(expectedValues[i], values[i])
+            const result = this.secondaryChecker.check(expectedValues[i], values[i])
             if (!result.result) {
                 return {
                     result: false,
@@ -97,7 +97,7 @@ export class CoordChecker extends CheckerBase {
     }
 
     get format(): string {
-        return "Coordonnées d'un point sous la forme \\((a;b)\\)";
+        return "Coordonnées d'un point sous la forme \\((a;b)\\)"
     }
 
 }

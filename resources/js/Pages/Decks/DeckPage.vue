@@ -1,18 +1,11 @@
-<script lang="ts">
-import LayoutFullpage from "@/Layouts/LayoutFullpage.vue"
-
-export default {
-	layout: LayoutFullpage
-}
-</script>
-
 <script lang="ts" setup>
 
-import FlipcardsIndex from "@/Components/Decks/FlipcardsIndex.vue"
 import { deckInterface } from "@/types/modelInterfaces"
 import { PropType } from "vue"
 import FlipcardsLearn from "@/Components/Decks/FlipcardsLearn.vue"
+import LayoutFullpage from "@/Layouts/LayoutFullpage.vue"
 
+defineOptions({ layout: LayoutFullpage })
 
 const props = defineProps({
 	deck: { type: Object as PropType<deckInterface>, required: true }
@@ -27,7 +20,7 @@ const props = defineProps({
 		<div class="font-code text-xs">
 			{{ deck.slug }}
 		</div>
-		
+
 		<!-- card mode -->
 		<flipcards-learn :deck="props.deck" />
 	</section>

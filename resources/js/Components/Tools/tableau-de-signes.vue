@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 /** Chapter
  * title: tableau de signes ou de variations
  * body: tableau de signes ou de variations
@@ -11,10 +11,10 @@ import { splitIfOutsideParentheses } from "@/helpers/helperFunctions.js"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 
 type fracRationnelle = {
-    valid: boolean,
-	tos: {}|null,
-	dxtos: {}|null,
-	extrema?: {},
+	valid: boolean,
+	tos: object | null,
+	dxtos: object | null,
+	extrema?: object,
 	dxTex?: string
 }
 
@@ -53,10 +53,10 @@ async function validation_fx() {
 		return false
 	}
 
-	if (denominatorStr!==undefined) {
+	if (denominatorStr !== undefined) {
 		try {
 
-			denominator = new PiMath.Polynom(denominatorStr?denominatorStr:1)
+			denominator = new PiMath.Polynom(denominatorStr ? denominatorStr : 1)
 		} catch (e) {
 			// validationDescription.value = "Le dénominateur n'est pas reconnu"
 			return false
@@ -92,15 +92,15 @@ onMounted(() => {
 		>
 			<form-maker
 				v-model="fx"
-				label="fonction"
-				focus
 				:prepend="'\\( f(x)=\\frac{a}{b}\\)'"
+				focus
+				label="fonction"
 			/>
 
 			<form-maker
-				type="switch"
 				v-model="mode"
 				label="signes,variations"
+				type="switch"
 			/>
 
 			<div class="flex gap-3">
@@ -125,7 +125,7 @@ onMounted(() => {
 			</h2>
 
 			<table-of-signs
-				v-if="fraction_rationnelle.tos!==false"
+				v-if="fraction_rationnelle.tos"
 				:tos="fraction_rationnelle.tos"
 				class="px-10"
 			/>
@@ -144,7 +144,7 @@ onMounted(() => {
 			/>
 
 			<table-of-signs
-				v-if="fraction_rationnelle.dxtos!==false"
+				v-if="fraction_rationnelle.dxtos"
 				:tos="fraction_rationnelle.dxtos"
 				class="px-10 mt-10"
 			/>

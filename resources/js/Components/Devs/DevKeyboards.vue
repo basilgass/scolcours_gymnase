@@ -1,22 +1,16 @@
-<script>
-import LayoutMain from "@/Layouts/LayoutMain.vue"
+<script setup lang="ts">
 
-export default {
-	layout: LayoutMain
-}
-</script>
-<script setup>
-
-import {computed, ref} from "vue"
-import {useKeyboard} from "@/Composables/useKeyboard"
+import { computed, ref, unref } from "vue"
+import { useKeyboard } from "@/Composables/useKeyboard"
 import CodeArea from "@/Components/Ui/CodeArea.vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
+import LayoutMain from "@/Layouts/LayoutMain.vue"
 
-let kbrdCode = ref("")
+defineOptions({ layout: LayoutMain })
+const kbrdCode = ref("")
 
-let kbrds = computed(() => {
-		return useKeyboard().getKeyboards(kbrdCode)
-	// return useKeyboard().getKeyboards(kbrdCode)
+const kbrds = computed(() => {
+		return useKeyboard().getKeyboards(unref(kbrdCode))
 	}),
 	kbrdId = ref(0),
 	kbrdFormat = computed(()=>{

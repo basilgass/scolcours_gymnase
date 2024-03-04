@@ -1,22 +1,18 @@
-<script>
-import LayoutMain from "@/Layouts/LayoutMain.vue"
-
-export default {
-	layout: LayoutMain
-}
-</script>
-
-<script setup>
+<script setup lang="ts">
 
 import IllustrationShow from "@/Components/Posts/Illustrations/IllustrationShow.vue"
-import {computed, ref} from "vue"
+import { computed, PropType, ref } from "vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
+import LayoutMain from "@/Layouts/LayoutMain.vue"
+import { IllustrationInterface } from "@/types/modelInterfaces"
 
-let props = defineProps({
-	illustrations: {type: Array, required: true}
+defineOptions({ layout: LayoutMain })
+
+const props = defineProps({
+	illustrations: {type: Object as PropType<IllustrationInterface[]>, required: true}
 })
 
-let search = ref(""),
+const search = ref(""),
 	listOfIllustrations = computed(()=>{
 		if(search.value===""){
 			return props.illustrations

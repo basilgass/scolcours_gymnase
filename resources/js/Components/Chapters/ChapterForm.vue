@@ -2,13 +2,15 @@
 Formulaire d'édition d'un chapitre.
 TODO: donner la possibilité d'ajouter un chapitre.
 -->
-<script setup>
+<script setup lang="ts">
 import { inject, ref } from "vue"
 import DialogModal from "@/Components/Ui/DialogModal.vue"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 import { router } from "@inertiajs/vue3"
 import FormMaker from "@/Components/Form/FormMaker.vue"
+import axios from "axios"
+import { flashInterface } from "@/types"
 
 const emits = defineEmits(["update:modelValue", "change", "destroy"])
 
@@ -17,10 +19,10 @@ const emits = defineEmits(["update:modelValue", "change", "destroy"])
 		chapter: { type: Object, required: true },
 	})
 
-	let theChapter = ref(props.chapter)
+	const theChapter = ref(props.chapter)
 
-	const flash = inject("flash")
-	let show = ref(props.modelValue),
+	const flash = inject<flashInterface>("flash")
+	const show = ref(props.modelValue),
 		saveChapter = function () {
 			axios
 				.patch(route("chapters.update", [props.chapter.id]), {

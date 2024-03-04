@@ -1,39 +1,36 @@
-<script>
-import LayoutMain from "@/Layouts/LayoutMain.vue"
-
-export default {
-	layout: LayoutMain
-}
-</script>
-
-<script setup>
+<script setup lang="ts">
 import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
-import {computed, inject, ref} from "vue"
-import {PiMath} from "pimath/esm"
+import { computed, inject, PropType, ref } from "vue"
+import { PiMath } from "pimath/esm"
 import LanguageUnitsSelector from "@/Components/Languages/LanguageUnitsSelector.vue"
-import {usePage} from "@inertiajs/vue3"
+import { usePage } from "@inertiajs/vue3"
 import DialogModal from "@/Components/Ui/DialogModal.vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
+import axios from "axios"
+import LayoutMain from "@/Layouts/LayoutMain.vue"
+import { editModeInterface } from "@/types"
+import { TranslationUnitInterface } from "@/types/modelInterfaces"
 
-let props = defineProps({
+defineOptions({ layout: LayoutMain })
+
+const props = defineProps({
 	code: {type: String, required: true},
 	language: {type: String, required: true},
-	units: {type: Array, default: () => []}
+	units: {type: Object as PropType<TranslationUnitInterface[]>, default: () => {}}
 })
 
-const flash = inject("flash"),
-	editMode = inject("editMode")
+const editMode = inject<editModeInterface>("editMode")
 
-let availableWords = ref([]),
+const availableWords = ref([]),
 	random = ref(false),
 	fr_foreign = ref(true),
 	unitsSelection = ref([]),
 	filterValue = ref("")
 
-let generateWords = function () {
+const generateWords = function () {
 		// All words available
 		let words = []
-		for (let values of unitsSelection.value.map(x => x.words)) {
+		for (const values of unitsSelection.value.map(x => x.words)) {
 			words = words.concat(values)
 		}
 
@@ -55,8 +52,10 @@ let generateWords = function () {
 		})
 	})
 
-let showEditForm = ref(false),
-	editWord = ref({}),
+const showEditForm = ref(false),
+	editWord = ref<{id: number, foreign: string, fr: string}>({
+		id: null, foreign: null, fr: null
+	}),
 	editTranslation = function (word) {
 		if (editMode.enabled.value && usePage().props.auth.can.admin) {
 			editWord.value = word
@@ -68,7 +67,7 @@ let showEditForm = ref(false),
 		axios.post(route("translation.words.update", [editWord.value.id]), {
 			...editWord.value,
 			_method: "PATCH"
-		}).then(res => {
+		}).then(() => {
 			showEditForm.value = false
 		})
 	},

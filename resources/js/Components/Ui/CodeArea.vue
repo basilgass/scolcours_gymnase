@@ -1,16 +1,5 @@
-<template>
-	<div
-		:class="`${props.wrap?'whitespace-pre-wrap':'whitespace-pre'} language-${props.language.toLowerCase() }`"
-		class="tracking-normal font-normal code-input border bg-white text-[1.1em]"
-		v-bind="$attrs"
-	>
-		<pre ref="pre"><code
-				v-html="highlighted"
-		/></pre>
-	</div>
-</template>
-<script setup>
-import {computed, ref} from "vue"
+<script setup lang="ts">
+import { computed, ref } from "vue"
 
 import Prism from "prismjs"
 import "prismjs/themes/prism.css"
@@ -20,14 +9,14 @@ import "prismjs/components/prism-json"
 
 Prism.manual = true
 
-let inp = ref(null)
+// let inp = ref(null)
 
-function focusFn(select) {
-	inp.value.focus()
-	if (select === true) {
-		inp.value.select()
-	}
-}
+// function focusFn(select) {
+// 	inp.value.focus()
+// 	if (select === true) {
+// 		inp.value.select()
+// 	}
+// }
 
 const props = defineProps({
 	code: {type: String, default: ""},
@@ -55,6 +44,17 @@ let pre = ref(null),
 	})
 
 </script>
+<template>
+	<div
+		:class="`${props.wrap?'whitespace-pre-wrap':'whitespace-pre'} language-${props.language.toLowerCase() }`"
+		class="tracking-normal font-normal code-input border bg-white text-[1.1em]"
+		v-bind="$attrs"
+	>
+		<pre ref="pre"><code
+				v-html="highlighted"
+		/></pre>
+	</div>
+</template>
 
 <style scoped>
 .code-input {

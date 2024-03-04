@@ -12,12 +12,12 @@ import FormMaker from "@/Components/Form/FormMaker.vue"
 import type { Polynom } from "pimath/esm/maths/algebra/polynom"
 import type { Equation } from "pimath/esm/maths/algebra/equation"
 
-let A = ref("-2,-11"),
+const A = ref("-2,-11"),
 	B = ref("0,-7"),
 	C = ref("-4,-7")
 
 function getPolyFromThreePoints(A, B, C): Polynom {
-	let P = new PiMath.Equation("y", "ax^2+bx+c"),
+	const P = new PiMath.Equation("y", "ax^2+bx+c"),
 		pA = new PiMath.Geometry.Point(A),
 		pB = new PiMath.Geometry.Point(B),
 		pC = new PiMath.Geometry.Point(C)
@@ -64,7 +64,7 @@ function getPolyFromThreePoints(A, B, C): Polynom {
 		.right
 }
 
-let result = computed(() => {
+const result = computed(() => {
 
 	// two possibilities:
 	// A,B,C are given as numbers => ax^2+bx+c

@@ -19,8 +19,8 @@ const props = defineProps({
 	}),
 	emits = defineEmits(["destroy"])
 
-let blockData = inject("blockData", {})
-let root = ref(null),
+const blockData = inject("blockData", {})
+const root = ref(null),
 	theIllustration = ref(props.illustration),
 	editMode = inject<editModeInterface>("editMode"),
 	blockIllustration = computed(() => {

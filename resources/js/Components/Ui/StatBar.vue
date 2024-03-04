@@ -1,0 +1,58 @@
+<script lang="ts" setup>
+
+import { computed } from "vue"
+
+const props = defineProps({
+	label: { type: String, default: "" },
+	value: { type: Number, required: true },
+	max: { type: Number, required: true },
+	labelClass: { type: String, default: "" },
+	barLabel: { type: String, default: "" },
+	barClass: { type: String, default: "h-[2em]" },
+})
+
+const percent = computed(() => {
+	return props.value / props.max
+})
+
+const statLabelComputed = computed(() => {
+	return props.barLabel || `${props.value} / ${props.max}`
+})
+const barClassComputed = computed(() => {
+	const barClass = [props.barClass]
+
+	if (percent.value > 0.75) {
+		barClass.push("bg-green-400/30", "border", "border-green-400")
+	} else if (percent.value < 0.30) {
+		barClass.push("bg-red-300/30", "border", "border-red-200")
+	} else {
+		barClass.push("bg-amber-300/30", "border", "border-amber-400")
+	}
+
+	return barClass.join(' ')
+})
+</script>
+
+<template>
+	<div class="flex flex-row gap-5 w-full items-center">
+		<slot name="label">
+			<h2
+				:class="labelClass"
+				v-katex.auto="label"
+			/>
+		</slot>
+		<div class="relative w-full">
+			<div class="absolute inset-0 grid place-items-center">
+				<slot name="bar">
+					<span v-katex.auto="statLabelComputed" />
+				</slot>
+			</div>
+			<div
+				:class="barClassComputed"
+				:style="`width:${percent*100}%`"
+				class="flex  bar transition-all duration-500 ease-in-out"
+			/>
+		</div>
+	</div>
+</template>
+

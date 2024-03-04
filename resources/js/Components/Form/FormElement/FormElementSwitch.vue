@@ -22,7 +22,7 @@ const props = defineProps({
 		return props.label.split(",")[1] || ""
 	}),
 	update = (value) => {
-		theValue.value = value
+		theValue.value = disabledLabel.value === "" ? !theValue.value : value
 		emits("update:modelValue", theValue.value)
 		emits("update", theValue.value)
 	}

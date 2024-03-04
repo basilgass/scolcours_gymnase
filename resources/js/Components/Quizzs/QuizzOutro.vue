@@ -1,3 +1,11 @@
+<script setup lang="ts">
+import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
+
+const props = defineProps({
+	quizz: {type: Object, required: true}
+})
+</script>
+
 <template>
 	<article class="grid place-items-center min-h-screen">
 		<div>
@@ -19,11 +27,3 @@
 		</div>
 	</article>
 </template>
-
-<script setup>
-import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
-
-let props = defineProps({
-	quizz: {type: Object, required: true}
-})
-</script>

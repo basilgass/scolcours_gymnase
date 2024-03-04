@@ -1,3 +1,13 @@
+<script setup lang="ts">
+import QuestionShow from "@/Components/Posts/Questions/QuestionShow.vue"
+
+defineEmits(["validate"])
+let props = defineProps({
+	quizz: {type: Object, required: true},
+	question: {type: Object, required: true}
+})
+</script>
+
 <template>
 	<article>
 		<question-show
@@ -10,13 +20,3 @@
 		/>
 	</article>
 </template>
-
-<script setup>
-import QuestionShow from "@/Components/Posts/Questions/QuestionShow.vue"
-
-const emits = defineEmits(["validate"])
-let props = defineProps({
-	quizz: {type: Object, required: true},
-	question: {type: Object, required: true}
-})
-</script>

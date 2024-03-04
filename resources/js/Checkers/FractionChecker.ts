@@ -1,5 +1,5 @@
-import {PiMath} from "pimath/esm"
-import {CheckerBase} from "@/Checkers/CheckerBase";
+import { PiMath } from "pimath/esm"
+import { CheckerBase } from "@/Checkers/CheckerBase"
 
 const name="fraction"
 
@@ -10,9 +10,9 @@ const description = `fraction,[paramètres]
 `
 
 export class FractionChecker extends CheckerBase {
-    private expectReduced: boolean;
+    private expectReduced: boolean
     constructor(config?:string[]|string) {
-        super(config);
+        super(config)
         this.name = name
         this.description = description
 
@@ -70,7 +70,7 @@ export class FractionChecker extends CheckerBase {
     }
 
     get format(): string {
-        let opts = []
+        const opts = []
         if (this.expectReduced) {
             opts.push("réduite")
         }

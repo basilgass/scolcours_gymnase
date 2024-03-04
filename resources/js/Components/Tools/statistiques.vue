@@ -1,10 +1,3 @@
-<script lang="ts">
-import LayoutMain from "@/Layouts/LayoutMain.vue"
-
-export default {
-		layout: LayoutMain,
-	}
-</script>
 <script lang="ts" setup>
 	/** Tools
 	 * title: statistiques
@@ -13,6 +6,7 @@ export default {
 	 * tags: statistique,2C
 	 */
 
+	// TODO: apparemment, l'output TeX ne correspond pas à ce qui se trouve dans le tableau (pied du tableau)
 	import { computed, onMounted, reactive, ref } from "vue"
 
 	import BarChart from "@/Components/Charts/barChart.vue"
@@ -23,13 +17,16 @@ export default {
 
 	import Panel from "@/Components/Ui/Panel.vue"
 	import FormMaker from "@/Components/Form/FormMaker.vue"
+	import LayoutMain from "@/Layouts/LayoutMain.vue"
+
+	defineOptions({ layout: LayoutMain })
 
 	Chart.register(annotationPlugin)
 	// import {Chart} from "chart.js/auto"
 	// Chart.defaults.font.family = "Source Code Pro"
 
 	// Configuration générale
-	let statConfig = reactive({
+	const statConfig = reactive({
 		samples: 100, // Taille de l'échantillon
 		samplesExact: true, // La taille de l'échantillon doit être exact.
 		min: 100, // Valeur minimale des modalités
@@ -42,9 +39,9 @@ export default {
 		customData: [], // Valeurs données par l'utilisateur
 	})
 
-	let statCustomNi = ref("4 12 20 27 39 85 92 75 40")
+	const statCustomNi = ref("4 12 20 27 39 85 92 75 40")
 
-	let statRaw = computed(() => {
+	const statRaw = computed(() => {
 		if (
 			isNaN(statConfig.samples) ||
 			isNaN(statConfig.min) ||
@@ -74,7 +71,7 @@ export default {
 		return statsBuildData_customData()
 	})
 
-	let statTable = computed(() => {
+	const statTable = computed(() => {
 		if (statConfig.length === 1) {
 			return statsBuildTable_discrete()
 		}
@@ -86,9 +83,7 @@ export default {
 		return []
 	})
 
-	let statTableToTex = computed(() => {})
-
-	let statSum = computed<{
+	const statSum = computed<{
 		ni: number
 		fi: number
 		fixi: number
@@ -106,7 +101,7 @@ export default {
 		)
 	})
 
-	let graphLabels = computed(() => {
+	const graphLabels = computed(() => {
 			return ["", ...statTable.value.map((x) => `[${x.bi};${x.bii}[`), ""]
 		}),
 		graphBarValues = computed(() => {
@@ -232,7 +227,7 @@ export default {
 	 * - sigma2: The squared standard deviation of the statistical table.
 	 * - sigma: The standard deviation of the statistical table.
 	 */
-	let statCentralValues = computed<{
+	const statCentralValues = computed<{
 		modal: { classe: string; mode: number }
 		q1: number
 		q2: number
@@ -311,13 +306,13 @@ export default {
 	 * @returns {Array} The custom statistical data.
 	 */
 	function statsBuildData_customData() {
-		let raw = []
+		const raw = []
 
 		// TODO : Generate data with random ni values
 		let bi = +statConfig.min,
 			dataIndex = 0
 		while (bi < statConfig.max) {
-			let ni =
+			const ni =
 				statConfig.customData[dataIndex] === undefined
 					? 0
 					: +statConfig.customData[dataIndex]
@@ -337,7 +332,7 @@ export default {
 	 * @returns {Array} The raw statistical data generated.
 	 */
 	function statsBuildData_auto() {
-		let raw = []
+		const raw = []
 		// Build the data randomly
 		for (let i = 0; i < statConfig.samples; i++) {
 			let rnd
@@ -394,11 +389,11 @@ export default {
 		// 	    ni,     number
 		// 	    fi,     frequency
 		// 	    Fi,    cumulative frequency ascending
-		//      F1d,    cumulative freqeucey descending
-		//      fixi,    cumulative freqeucey descending
-		//      fixii,    cumulative freqeucey descending
+		//      F1d,    cumulative frequency descending
+		//      fixi,    cumulative frequency descending
+		//      fixii,    cumulative frequency descending
 		//  }
-		let table = []
+		const table = []
 
 		let bi = statConfig.min,
 			securityCount = 0,
@@ -410,16 +405,13 @@ export default {
 		while (bi < statConfig.max) {
 			let bii = bi + statConfig.length,
 				xi = (bi + bii) / 2,
-				ni,
-				fi
+				ni
 
 			if (customNi.length === 0) {
 				ni = statRaw.value.filter((x) => x >= bi && x < bii).length
 			} else {
 				ni = customNi.shift()
 			}
-
-			fi = statRoundValue(ni / statRaw.value.length)
 
 			// Add item to the table
 			table.push({
@@ -446,7 +438,7 @@ export default {
 		}
 
 		// Get the ni sum.
-		let sum = table.reduce((acc, value) => (acc += value.ni), 0)
+		const sum = table.reduce((acc, value) => (acc += value.ni), 0)
 
 		// Build the accumulate frequencies
 		let Fi = 0.0,
@@ -493,7 +485,7 @@ export default {
 			}
 		}
 
-		let D1 =
+		const D1 =
 				table[niMaxID].fi -
 				(niMaxID - 1 === -1 ? 0 : table[niMaxID - 1].fi),
 			D2 =
@@ -538,11 +530,10 @@ export default {
 	})
 
 	// OUTPUT
-	let tableToTexOutput = computed(() => {
-		let tex = "\\begin{tblr}",
-			outputTable = []
+	const tableToTexOutput = computed(() => {
+		const outputTable = []
 
-		for (let row of statTable.value) {
+		for (const row of statTable.value) {
 			outputTable.push(
 				[
 					`\\(\\bigl[${row.bi};${row.bii}\\bigr[\\)`,
@@ -564,7 +555,7 @@ export default {
 			)
 		}
 
-		let header =
+		const header =
 				"\\(" +
 				[
 					"\\bigl[b_{i-1};b_i\\bigr[",

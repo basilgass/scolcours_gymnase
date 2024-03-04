@@ -1,6 +1,17 @@
 <!--
 Génération des liens pour les themes.
 -->
+<script setup lang="ts">
+
+import { usePage } from "@inertiajs/vue3"
+import { computed } from "vue"
+
+const emit = defineEmits(["ClickNavigationLinks"])
+const enabledThemes = computed(()=>{
+	return usePage().props.themes.filter(theme=>theme.enabled)
+})
+
+</script>
 <template>
 	<Link
 		v-for="theme of enabledThemes"
@@ -15,14 +26,3 @@ Génération des liens pour les themes.
 		/>{{ theme.title }}
 	</Link>
 </template>
-<script setup>
-
-import {usePage} from "@inertiajs/vue3"
-import {computed} from "vue"
-
-let emit = defineEmits(["ClickNavigationLinks"])
-let enabledThemes = computed(()=>{
-	return usePage().props.themes.filter(theme=>theme.enabled)
-})
-
-</script>

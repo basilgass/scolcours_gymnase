@@ -1,18 +1,10 @@
-<script>
-import LayoutMain from "@/Layouts/LayoutMain.vue"
-
-export default {
-	layout: LayoutMain
-}
-</script>
-<script setup>
-
-
-
-import {computed, onMounted, ref, watch} from "vue"
+<script setup lang="ts">
+import { computed, onMounted, ref, watch } from "vue"
 import VueSlider from "vue-slider-component/dist/vue-slider-component.umd.min"
 import "vue-slider-component/theme/material.css"
+import LayoutMain from "@/Layouts/LayoutMain.vue"
 
+defineOptions({ layout: LayoutMain })
 let vitesse = ref("0"),
 	diametre = ref(1),
 	roue = ref(null),
@@ -20,11 +12,11 @@ let vitesse = ref("0"),
 	imageParSecondes = ref(24),
 	angleAjout = computed(()=>{
 		// v = a/360*pi*d /t => a = v * t * 360 / pi / d
-		return vitesse.value * (1/imageParSecondes.value) * 360 /(Math.PI*diametre.value) / 3.6
+		return (+vitesse.value) * (1/imageParSecondes.value) * 360 /(Math.PI*diametre.value) / 3.6
 	}),
 	timer
 
-watch(vitesse, (oldValue, newValue)=>{
+watch(vitesse, ()=>{
 	angle.value = 0
 	if(timer) {
 		clearInterval(timer)
@@ -78,7 +70,7 @@ onMounted(()=>{
 							vitesse
 						</td>
 						<td class="pr-4">
-							{{ (+vitesse).toFixed(3) }}km/h = {{ (vitesse / 3.6).toFixed(3) }} m/s
+							{{ (+vitesse).toFixed(3) }}km/h = {{ (+vitesse / 3.6).toFixed(3) }} m/s
 						</td>
 					</tr>
 					<tr>

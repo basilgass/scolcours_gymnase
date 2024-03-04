@@ -1,27 +1,10 @@
-<template>
-	<div>
-		<div
-			class="w-full min-h-[8em]
-			rounded border-2 border-dashed
-			grid place-items-center font-code
-			cursor-copy"
-			:class="active?'is-active':''"
-			@drop.prevent="onDrop"
-			@dragenter.prevent="active=true"
-			@dragleave.prevent="active=false"
-			@dragover.prevent="active=true"
-		>
-			glisser / déposer une image
-		</div>
-	</div>
-</template>
+<script setup lang="ts">
 
-<script setup>
+import { onMounted, onUnmounted, ref } from "vue"
+import axios from "axios"
 
-import {onMounted, onUnmounted, ref} from "vue"
-
-let emit = defineEmits(["file-dropped"])
-let active = ref(false)
+const emit = defineEmits(["file-dropped"])
+const active = ref(false)
 
 function onDrop(e) {
 	active.value = false
@@ -58,3 +41,21 @@ onUnmounted(() => {
 	})
 })
 </script>
+
+<template>
+	<div>
+		<div
+			class="w-full min-h-[8em]
+			rounded border-2 border-dashed
+			grid place-items-center font-code
+			cursor-copy"
+			:class="active?'is-active':''"
+			@drop.prevent="onDrop"
+			@dragenter.prevent="active=true"
+			@dragleave.prevent="active=false"
+			@dragover.prevent="active=true"
+		>
+			glisser / déposer une image
+		</div>
+	</div>
+</template>

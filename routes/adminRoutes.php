@@ -16,7 +16,6 @@ Route::middleware(["can:admin","auth", "verified"])->group(function () {
 	Route::patch('/admin/config/update', [AdminController::class, 'configUpdate'])->name('admin.config.update');
 	Route::patch('/admin/config/updateOrder', [AdminController::class, 'configUpdateOrder'])->name('admin.config.updateOrder');
 
-
 	Route::get('/admin/pages', [AdminController::class, 'pages'])
 		->name('admin.pages');
 
@@ -33,6 +32,8 @@ Route::middleware(["can:admin","auth", "verified"])->group(function () {
 		->name('admin.users');
 	Route::post('/admin/users/create', [AdminController::class, 'createUsers'])
 		->name('admin.users.create');
+	Route::patch('/admin/users/{user}/update', [AdminController::class, 'updateUser'])
+		->name('admin.users.update');
 	Route::delete('/admin/users/{user}/destroy', [AdminController::class, 'destroyUser'])
 		->name('admin.users.destroy');
 	Route::patch('/admin/chapters/{chapter:slug}', [AdminController::class, 'activate'])

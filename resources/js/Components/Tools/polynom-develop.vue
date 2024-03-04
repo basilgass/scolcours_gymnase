@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 /** Tools
  * title: développement de polynôme
  * body: permet de développer un polynôme plus ou moins complexe.
@@ -10,12 +10,12 @@ import { computed, ref } from "vue"
 import { PiMath } from "pimath/esm"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 
-let polynom = ref("")
+const polynom = ref("")
 
-	let result = computed(() => {
+	const result = computed(() => {
 		try {
 			if (polynom.value === "") {
-				return "\\text{Aucune fonction...}"
+				return { tex: "\\text{Aucune fonction...}" }
 			}
 			const P = new PiMath.Polynom(polynom.value)
 

@@ -1,40 +1,47 @@
-<script setup>
-import { computed, ref } from "vue"
+<script lang="ts" setup>
+import { computed, PropType, ref } from "vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import { router } from "@inertiajs/vue3"
 
 const props = defineProps({
-		title: { type: String, required: true },
-		list: { type: Array, required: true },
-		routeName: { type: String, default: "" },
-		routeData: { type: Function, default: () => [] },
-		itemTitle: { type: Function, default: (item) => item?.title },
-		itemBackground: { type: Function, default: () => "bg-white" },
-		itemClass: { type: String, default: "" },
-		collapsed: { type: Boolean, default: null },
-	})
+	title: { type: String, required: true },
+	list: { type: Object as PropType<(object | string)[]>, required: true },
+	routeName: { type: String, default: "" },
+	routeData: { type: Function, default: () => [] },
+	itemTitle: { type: Function, default: (item) => item?.title },
+	itemBackground: { type: Function, default: () => "bg-white" },
+	itemClass: { type: String, default: "" },
+	collapsed: { type: Boolean, default: null },
+	listClass: { type: String, default: "flex gap-3 flex-wrap" }
+})
 
-	const filteredList = computed(() => {
-			const checkString = selectedList.value.trim().toLowerCase()
 
-			if (checkString === "") {
-				return props.list
-			}
+const filteredList = computed<(object | string)[]>(() => {
+	const checkString = selectedList.value.trim().toLowerCase()
 
-			return props.list.filter((item) =>
-				Object.values(item)
-					.filter((x) => typeof x === "string")
-					.some((x) => x.toLowerCase().includes(checkString)),
-			)
-		})
+	if (checkString === "") {
+		return props.list
+	}
+
+	return props.list.filter((item) =>
+		Object.values(item)
+			.filter((x) => typeof x === "string")
+			.some((x) => x.toLowerCase().includes(checkString))
+	)
+})
 const selectedList = ref("")
-	const showList = ref(props.collapsed !== true)
+const showList = ref(props.collapsed !== true)
 
 function itemClicked(item) {
-		if (props.routeName) {
-			router.visit(route(props.routeName, props.routeData(item)))
-		}
+	if (props.routeName) {
+		router.visit(route(props.routeName, props.routeData(item)))
 	}
+}
+
+defineSlots<{
+	card(props: { item: object | string }): unknown
+}>()
+
 </script>
 <template>
 	<div>
@@ -58,12 +65,12 @@ function itemClicked(item) {
 			/>
 
 			<div
-				class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-3"
+				:class="props.listClass"
 			>
 				<transition-group name="list">
 					<div
-						v-for="item of filteredList"
-						:key="`id-${item.id}`"
+						v-for="(item, index) in filteredList"
+						:key="`id-${index}`"
 					>
 						<div v-if="$slots['card']">
 							<slot
@@ -73,11 +80,11 @@ function itemClicked(item) {
 						</div>
 						<div
 							v-else
+							v-katex.auto="props.itemTitle(item)"
 							v-theme.bg.text="props.itemBackground(item)"
 							:class="props.itemClass + (props.routeName ? ' cursor-pointer' : '')"
 							class="p-4 border border-gray-200 rounded hover:scale-105 hover:shadow transition-all h-full"
 							@click="itemClicked(item)"
-							v-katex.auto="props.itemTitle(item)"
 						/>
 					</div>
 				</transition-group>

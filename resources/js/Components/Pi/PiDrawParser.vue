@@ -18,13 +18,13 @@ import type { Parser } from "pidraw/esm/Parser"
 const emits = defineEmits(["update"])
 
 // Get the script value
-let postData = inject("postData", ref({}))
+const postData = inject("postData", ref({}))
 
 // SVG drawing container
-let drawWrapper = ref<HTMLElement>(null)
+const drawWrapper = ref<HTMLElement>(null)
 
 // Incoming props
-let props = defineProps({
+const props = defineProps({
 	width: { type: Number, default: 400 },
 	height: { type: Number, default: 320 },
 	draw: {
@@ -52,10 +52,10 @@ let PiGraph: Graph,
 // ------------------------
 // SLIDER PART
 // Sliders reactivity and methods
-let sliders = ref([])
+const sliders = ref([])
 
 // Display text with sliders modifications.
-let texOutput = computed(() => {
+const texOutput = computed(() => {
 	// Get the output code: starting with $tex=
 	let tex = codeArray.value.filter(line => line.startsWith("$tex="))[0]
 	if (tex === undefined) return ""
@@ -80,7 +80,7 @@ let texOutput = computed(() => {
 function getSliders() {
 	// All slider are like: $a=...
 	sliders.value = []
-	for (let row of codeArray.value) {
+	for (const row of codeArray.value) {
 		if (row[0] === "$") {
 			const rowData = row.split("="),
 				rowKey = rowData.shift(),
@@ -178,7 +178,7 @@ function getSliders() {
 
 // ------------------------
 // STEPPER PARTS
-let stepperStart = ref(false),
+const stepperStart = ref(false),
 	stepperMax = computed(() => props.draw.code
 		.split("\n\n")
 		.filter((step: string) => !step.startsWith("%-FG-"))
@@ -188,7 +188,7 @@ let stepperStart = ref(false),
 	stepperText = computed(() => {
 		const step = drawCode.value.split("\n\n")[stepperIndex.value]
 		if (step !== undefined) {
-			let steps = step.split("\n")
+			const steps = step.split("\n")
 			if (steps[0].startsWith("%")) {
 				return steps[0].substring(1)
 			}
@@ -209,13 +209,13 @@ let stepperStart = ref(false),
  * 2. apply scripts values
  * 3. apply steppers values.
  */
-let drawCode = computed(() => {
+const drawCode = computed(() => {
 	let outputCode = props.draw.code
 
 	// Modify the code using the local information (sliders)
 	if (sliders.value.length > 0) {
 		// Remove the lines starting with $ (dollar sign)
-		let code = outputCode
+		const code = outputCode
 			.split("\n")
 			.filter((row: string) => row[0] !== "$")
 
@@ -239,7 +239,7 @@ let drawCode = computed(() => {
 
 	// Modify the code according to the script level
 	if (Object.values(postData.value).length > 0) {
-		for (let key in postData.value) {
+		for (const key in postData.value) {
 			outputCode = outputCode.replaceAll(
 				`$${key}`,
 				postData.value[key]
@@ -258,7 +258,7 @@ let drawCode = computed(() => {
 				.slice(0, crtIndex + 1)
 				.filter((step, index) => {
 					if (step.slice(0, 2) === "%<") {
-						let constrains = step.split("%<")[1].split(">")[0]
+						const constrains = step.split("%<")[1].split(">")[0]
 
 						// It contains just a star : visible only for the corresponding step
 						if (constrains === "*") {
@@ -266,12 +266,12 @@ let drawCode = computed(() => {
 						}
 
 						// Might be a list of comma separated values.
-						let values = constrains
+						const values = constrains
 							.split(",")
 							.map(value => {
 								if (value.includes("-")) {
 									const [min, max] = value.split("-").map(x => +x)
-									let v = []
+									const v = []
 									for (let i = min; min <= max; i++) {
 										v.push(i)
 									}
@@ -354,7 +354,7 @@ onMounted(() => {
 })
 
 // Grab the data when on mouse up for external modifications
-let drawMouseUp = function() {
+const drawMouseUp = function() {
 	emits("update", PiGraph.figures)
 }
 

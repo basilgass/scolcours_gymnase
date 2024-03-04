@@ -1,5 +1,5 @@
-import {PiMath} from "pimath/esm"
-import {CheckerBase} from "@/Checkers/CheckerBase";
+import { PiMath } from "pimath/esm"
+import { CheckerBase } from "@/Checkers/CheckerBase"
 
 const name = "rational"
 const description = `rational,[paramètres]
@@ -11,7 +11,7 @@ const description = `rational,[paramètres]
 `
 export class RationalChecker extends CheckerBase {
     constructor(config:string[]|string) {
-        super(config);
+        super(config)
         this.name = name
         this.description = description
     }
@@ -30,13 +30,12 @@ export class RationalChecker extends CheckerBase {
 				message: "Il semble qu'il y ait une erreur quelque part..."
 			}
 		}
-
         let [num, den] = given.split("/")
         if (den === undefined) den = "1"
         let [expectedNum, expectedDen] = expected.split("/")
         if (expectedDen === undefined) expectedDen = "1"
 
-        let givenRationnal = new PiMath.Rational(num, den),
+        const givenRationnal = new PiMath.Rational(num, den),
             givenRationnalReduced = (new PiMath.Rational(num, den)).reduce(),
             expectedRationnal = (new PiMath.Rational(expectedNum, expectedDen)).reduce()
 
@@ -103,7 +102,7 @@ export class RationalChecker extends CheckerBase {
     }
 
     get format(): string {
-        let opts = []
+        const opts = []
 
         if (this.config.includes("f") || this.config.includes("factors")) {
             opts.push("factorisée")

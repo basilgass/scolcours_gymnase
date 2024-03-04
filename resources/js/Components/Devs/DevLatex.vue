@@ -1,15 +1,11 @@
-<script lang="ts">
-	import LayoutMain from "@/Layouts/LayoutMain.vue"
 
-	export default {
-		layout: LayoutMain,
-	}
-</script>
 <script setup lang="ts">
-	import { inject, onMounted, ref } from "vue"
-	import { flashInterface } from "@/types"
-	import axios from "axios"
+import { inject, onMounted, ref } from "vue"
+import { flashInterface } from "@/types"
+import axios from "axios"
+import LayoutMain from "@/Layouts/LayoutMain.vue"
 
+defineOptions({ layout: LayoutMain })
 	const flash = inject<flashInterface>("flash")
 
 	const content = ref(`\\begin{itemize}
@@ -61,12 +57,24 @@
 <template>
 	<!-- Title -->
 	<div>
-		<textarea v-model="content" rows="10" class="w-full p-3 rounded" />
+		<textarea
+			v-model="content"
+			rows="10"
+			class="w-full p-3 rounded"
+		/>
 
-		<button class="btn" @click="makePDF">to pdf</button>
+		<button
+			class="btn"
+			@click="makePDF"
+		>
+			to pdf
+		</button>
 
 		<div>
-			<div v-for="pdf in pdfs" :key="pdf.slug">
+			<div
+				v-for="pdf in pdfs"
+				:key="pdf.slug"
+			>
 				<a :href="route('latex.download', [pdf.slug])">{{
 					pdf.slug
 				}}</a>

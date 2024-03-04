@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 /** Tools
  * title: tangente à un graphe (fonction polynomiale)
  * body: permet de calculer l'équation cartésienne d'une tangente à un graphe à un point d'abscisse donné.
@@ -10,13 +10,13 @@ import { computed, ref } from "vue"
 import { PiMath } from "pimath/esm"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 
-let fx = ref("1/3x^2"),
+const fx = ref("1/3x^2"),
 	x = ref("3")
 
 
-let affine = computed(() => {
+const affine = computed(() => {
 	try{
-		let P = new PiMath.Polynom(fx.value),
+		const P = new PiMath.Polynom(fx.value),
 			a = new PiMath.Fraction(x.value),
 			fa = P.evaluate(a),
 			dP = P.derivative(),

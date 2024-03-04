@@ -1,23 +1,24 @@
-import {useKeyboard} from "@/Composables/useKeyboard"
-import {asciiToTex} from "@/Composables/keyboardConfig";
+import { useKeyboard } from "@/Composables/useKeyboard"
+import { asciiToTex } from "@/Composables/keyboardConfig"
 
-let {keyboards} = useKeyboard()
+const {keyboards} = useKeyboard()
 
 
-export function makeStudyFromCode(code, showCoords, displayMode){
-	let [zeroes, signs, grows, coords] = code.split("@")
+export function makeStudyFromCode(code: string, showCoords: boolean, displayMode?: boolean){
+	const [zeroes, signs, grows, coords] = code.split("@")
 
 	if(grows!==undefined){
-		let extremes = {},
-			extremesValues = coords?coords.split(","):[],
+		const extremes = {},
 			zeroesValues = zeroes.split(",")
+		let extremesValues = coords?coords.split(","):[]
+
 
 		if(!showCoords){
 			extremesValues=[]
 		}
 
-		for(let i in zeroesValues){
-			let z = zeroesValues[i],
+		for(const i in zeroesValues){
+			const z = zeroesValues[i],
 				g = grows[2*(+i)+1]
 
 			if(g!==undefined) {

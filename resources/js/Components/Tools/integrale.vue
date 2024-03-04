@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 /** Tools
  * title: intégrale entre deux bornes
  * body: calcul d'intégrale entre deux bornes
@@ -9,20 +9,21 @@ import Panel from "@/Components/Ui/Panel.vue"
 import { computed, ref } from "vue"
 import { PiMath } from "pimath/esm"
 import FormMaker from "@/Components/Form/FormMaker.vue"
+import { Fraction } from "pimath/esm/maths/coefficients/fraction"
 
-let fx = ref(""),
+const fx = ref(""),
 	a = ref(0),
 	b = ref(5)
 
-let result = computed(() => {
+const result = computed(() => {
 	try {
 		if (fx.value === "") {
 			return "\\text{Aucune fonction...}"
 		}
-		let p = new PiMath.Polynom(fx.value),
+		const p = new PiMath.Polynom(fx.value),
 			P = p.clone().primitive(),
-			Pa = P.evaluate({x: a.value}),
-			Pb = P.evaluate({x: b.value})
+			Pa = P.evaluate({x: a.value as unknown as Fraction}),
+			Pb = P.evaluate({x: b.value as unknown as Fraction})
 
 		return `\\int_{${a.value}}^{${b.value}} ${p.tex} \\ dx
 		= \\left. ${P.tex}\\right\\vert_{${a.value}}^{${b.value}}

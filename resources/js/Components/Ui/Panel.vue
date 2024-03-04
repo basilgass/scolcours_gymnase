@@ -3,31 +3,14 @@ Mise en forme d'un "panel" tout simple.
 Utilisé pour encadrer de manière uniforme des zones.
 TODO: à améliorer, avec plus d'option (couleurs, côtés, ...)
 -->
-<template>
-	<article
-		class="px-4 py-2 rounded-xl border transition-all"
-		:class="panelClass.panel"
-	>
-		<h2
-			v-if="$slots.title"
-			class="font-normal mb-4 border-b"
-			:class="`border-b border-scolcours-${$page.props.theme.slug}`"
-		>
-			<slot name="title" />
-		</h2>
-
-		<slot />
-	</article>
-</template>
-
-<script setup>
-import {computed} from "vue"
+<script setup lang="ts">
+import { computed } from "vue"
 
 const props = defineProps({
 	type: {type: String, default: null}
 })
 
-let panelClass = computed(()=>{
+const panelClass = computed(()=>{
 	if(props.type!==null && design[props.type]!==undefined){
 		return design[props.type]
 	}else{
@@ -35,15 +18,15 @@ let panelClass = computed(()=>{
 	}
 })
 
-let panelTitle = computed(()=>{
-	if(props.title!==null){return props.title}
-
-	if(props.type!==null && design[props.type]!==undefined){
-		return design[props.type].label
-	}else{
-		return ""
-	}
-})
+// let panelTitle = computed(()=>{
+// 	if(props.title!==null){return props.title}
+//
+// 	if(props.type!==null && design[props.type]!==undefined){
+// 		return design[props.type].label
+// 	}else{
+// 		return ""
+// 	}
+// })
 
 const design = {
 	"default": {
@@ -71,3 +54,20 @@ const design = {
 	}
 }
 </script>
+
+<template>
+	<article
+		class="px-4 py-2 rounded-xl border transition-all"
+		:class="panelClass.panel"
+	>
+		<h2
+			v-if="$slots.title"
+			class="font-normal mb-4 border-b"
+			:class="`border-b border-scolcours-${$page.props.theme.slug}`"
+		>
+			<slot name="title" />
+		</h2>
+
+		<slot />
+	</article>
+</template>

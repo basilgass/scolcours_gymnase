@@ -2,11 +2,11 @@
 parameters: name=<nom>(x),min[imal],extreme=3|4|5<br/>
 code: rational fraction ou <zero>@<signs>@<croissance>@<extremes>
 </info>-->
-<script setup>
+<script setup lang="ts">
 import { computed, ref } from "vue"
 import { PiMath } from "pimath/esm"
 import PiTableOfSigns from "@/Components/Pi/PiTableOfSigns.vue"
-import { makeStudyFromCode } from "@/Composables/useTos.ts"
+import { makeStudyFromCode } from "@/Composables/useTos"
 // Paramètres
 //      - name=<nom>(x)          permet de déterminer le nom de la fonction
 //      - min[imal]         n'afficher que la dernière ligne
@@ -15,14 +15,14 @@ import { makeStudyFromCode } from "@/Composables/useTos.ts"
 // 1.   PiMath.Rational
 // 2.   <zero>@<signs>@<croissance>@<extremes>
 
-let props = defineProps({
+const props = defineProps({
 		illustration: {type: Object, required: true}
 	}),
 	params = ref(props.illustration.parameters),
 	code = ref(props.illustration.code)
 
 
-let config = computed(()=>{
+const config = computed(()=>{
 		return props.illustration.parameters.split(",")
 	}),
 	fnName = computed(()=>{
@@ -49,7 +49,7 @@ let config = computed(()=>{
 			return makeStudyFromCode(code.value, code.value.split("@").length===4, true)
 		}
 
-		let [num, den] = code.value.split("/"),
+		const [num, den] = code.value.split("/"),
 			p = new PiMath.Rational(num, den || "1")
 
 		const study = p.study("signs" + (params.value?(","+params.value):""))

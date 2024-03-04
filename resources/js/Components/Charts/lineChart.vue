@@ -1,9 +1,9 @@
-<script setup>
-import {Line} from "vue-chartjs"
-import {computed} from "vue"
-import _ from "lodash";
+<script setup lang="ts">
+import { Line } from "vue-chartjs"
+import { computed } from "vue"
+import _ from "lodash"
 
-let props = defineProps({
+const props = defineProps({
 	chartLabels: {type: Array, default: () => []},
 	chartDataset: {type: [Object, Array], required: true},
 	chartOptions: {type: Object, default: () => {}},
@@ -11,15 +11,15 @@ let props = defineProps({
 	chartColorset: {type: String, default: null}
 })
 
-let chartData = computed(() => {
-		let labels = []
+const chartData = computed(() => {
+		const labels = []
 		if (props.chartLabels.length>0) {
 			labels["labels"] = props.chartLabels
 		}
 
 		let datasets = []
 		if(Array.isArray(props.chartDataset)){
-			if(props.chartDataset[0].hasOwnProperty("data")){
+			if(Object.hasOwn(props.chartDataset[0], "data")){
 				datasets = props.chartDataset
 			}else{
 				datasets = [{
@@ -37,7 +37,7 @@ let chartData = computed(() => {
 		}
 	}),
 	chartOptionsMerged = computed(()=>{
-		let opts= {
+		const opts= {
 			responsive: true,
 			maintainAspectRatio: true,
 			plugins: {

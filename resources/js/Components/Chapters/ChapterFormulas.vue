@@ -1,12 +1,14 @@
 <!--
 Affichage d'un formulaire, avec la possibilit√© de passer d'un formulaire du th√®me √† un autre.
 -->
-<script setup>
-	import { inject, ref } from "vue"
-	import BlockShow from "@/Components/Posts/Blocks/BlockShow.vue"
-	import { useIntersectionObserver } from "@vueuse/core"
+<script setup lang="ts">
+import { inject, ref } from "vue"
+import BlockShow from "@/Components/Posts/Blocks/BlockShow.vue"
+import { useIntersectionObserver } from "@vueuse/core"
+import { editModeInterface, flashInterface } from "@/types/index.js"
+import axios from "axios"
 
-	const props = defineProps({
+const props = defineProps({
 		chapterSlug: { type: String, required: true },
 		responsive: { type: Boolean, default: false },
 	})
@@ -24,8 +26,8 @@ Affichage d'un formulaire, avec la possibilit√© de passer d'un formulaire du th√
 		loadingState = ref(true),
 		theFormularErrors = ref("")
 
-	const flash = inject("flash"),
-		editMode = inject("editMode")
+	const flash = inject<flashInterface>("flash"),
+		editMode = inject<editModeInterface>("editMode")
 	const addFormula = function () {
 			axios
 				.post(route("chapters.formulas.store", [props.chapterSlug]), {})
@@ -59,7 +61,7 @@ Affichage d'un formulaire, avec la possibilit√© de passer d'un formulaire du th√
 				})
 				.catch((res) => {
 					// toDO: Show error message
-					console.warning("update ordering order: ", res.data)
+					console.warn("update ordering order: ", res.data)
 				})
 		},
 		loadFormular = function () {
@@ -96,7 +98,9 @@ Affichage d'un formulaire, avec la possibilit√© de passer d'un formulaire du th√
 <template>
 	<article ref="formular">
 		<div class="px-5 flex justify-between">
-			<h3 class="text-xl uppercase font-extralight mb-2">Formulaires</h3>
+			<h3 class="text-xl uppercase font-extralight mb-2">
+				Formulaires
+			</h3>
 		</div>
 
 		<div
@@ -156,7 +160,10 @@ Affichage d'un formulaire, avec la possibilit√© de passer d'un formulaire du th√
 								v-admin
 								class="px-5"
 							>
-								<button class="btn-new" @click="addFormula">
+								<button
+									class="btn-new"
+									@click="addFormula"
+								>
 									Ajouter une formule
 								</button>
 							</div>
