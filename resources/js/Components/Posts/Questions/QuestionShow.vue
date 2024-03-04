@@ -3,7 +3,7 @@ Affichage d'une question
 Envoi de la validation d'une réponse
 keyboard -> QuestionUserInput -> QuestionShow
 -->
-<script setup lang="ts">
+<script lang="ts" setup>
 import IllustrationShow from "@/Components/Posts/Illustrations/IllustrationShow.vue"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 import { computed, defineAsyncComponent, inject, nextTick, reactive, ref } from "vue"
@@ -17,405 +17,405 @@ import axios from "axios"
 
 const { getKeyboards } = useKeyboard()
 
-	// Props
-	const props = defineProps({
-		question: { type: Object, required: true },
-		hideTitle: { type: Boolean, default: false },
-		showInput: { type: Boolean, default: false },
-		isDynamic: { type: Boolean, default: false },
-		isMinimal: { type: Boolean, default: false },
-		singleAnswer: { type: Boolean, default: false },
-		groupeIds: { type: Array, default: () => [] },
-		locked: { type: Boolean, default: false },
-	})
+// Props
+const props = defineProps({
+	question: { type: Object, required: true },
+	hideTitle: { type: Boolean, default: false },
+	showInput: { type: Boolean, default: false },
+	isDynamic: { type: Boolean, default: false },
+	isMinimal: { type: Boolean, default: false },
+	singleAnswer: { type: Boolean, default: false },
+	groupeIds: { type: Array, default: () => [] },
+	locked: { type: Boolean, default: false }
+})
 
-	// flash message
-	const flash = inject<flashInterface>("flash", null)
+// flash message
+const flash = inject<flashInterface>("flash", null)
 
-	// Emits
-	const emits = defineEmits(["validate", "destroy", "duplicate"])
+// Emits
+const emits = defineEmits(["validate", "destroy", "duplicate"])
 
-	// Reactivity
-	const theQuestion = reactive(props.question), // la question principale, vraiment en "reactive" ?
-		theQuestionBody = computed(() => {
-			// On s'assure que le tableau des réponses est complet.
-			checkUserAnswers()
+// Reactivity
+const theQuestion = reactive(props.question), // la question principale, vraiment en "reactive" ?
+	theQuestionBody = computed(() => {
+		// On s'assure que le tableau des réponses est complet.
+		checkUserAnswers()
 
-			// On récupère le body original, avec les placeholder.
-			let body = theQuestion.block.body,
-				alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+		// On récupère le body original, avec les placeholder.
+		let body = theQuestion.block.body,
+			alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
-			// $a, $b, ... sont des valeurs dans des environnements TeX
-			// $A, $B, ... sont des valeurs hors des environnements Tex
-			for (let i = 0; i < answersNumber.value; i++) {
-				if (theAnswers.value[i] === undefined) {
-					return "Aucun clavier n'a pu être généré..."
-				}
+		// $a, $b, ... sont des valeurs dans des environnements TeX
+		// $A, $B, ... sont des valeurs hors des environnements Tex
+		for (let i = 0; i < answersNumber.value; i++) {
+			if (theAnswers.value[i] === undefined) {
+				return "Aucun clavier n'a pu être généré..."
+			}
 
-				let key = theAnswers.value[i].key,
-					rawColor =
-						i === answerId.value
-							? "border-blue-600 bg-blue-100"
-							: "border-red-600 bg-red-100",
-					texColor = i === answerId.value ? "cornflowerblue" : "red"
+			let key = theAnswers.value[i].key,
+				rawColor =
+					i === answerId.value
+						? "border-blue-600 bg-blue-100"
+						: "border-red-600 bg-red-100",
+				texColor = i === answerId.value ? "cornflowerblue" : "red"
 
-				// S'il manque une valeur, on l'ajoute automatiquement à la fin.
-				if (key === undefined) {
-					key = `$${alphabet[i]}`
-					body += "\n\n" + key
-				}
-				// On met une couleur pour chaque variable.
-				// TODO: rajouter des couleurs en fonctions de la bonne réponse ou non ?
+			// S'il manque une valeur, on l'ajoute automatiquement à la fin.
+			if (key === undefined) {
+				key = `$${alphabet[i]}`
+				body += "\n\n" + key
+			}
+			// On met une couleur pour chaque variable.
+			// TODO: rajouter des couleurs en fonctions de la bonne réponse ou non ?
 
-				// On supprime les clés sans mise en forme.
-				body = body.replaceAll(
-					"\n@" + key.toUpperCase(),
-					"\n@" + key.toUpperCase() + "\n",
-				)
+			// On supprime les clés sans mise en forme.
+			body = body.replaceAll(
+				"\n@" + key.toUpperCase(),
+				"\n@" + key.toUpperCase() + "\n"
+			)
 
-				// Mise en forme dans le cas d'un texte de type bloc
-				body = body.replaceAll(
-					"\n" + key.toUpperCase(),
-					"\n" +
-						key.toUpperCase() +
-						"\n" +
-						`{.border .px-3 .py-1 .${rawColor}}`,
-				)
+			// Mise en forme dans le cas d'un texte de type bloc
+			body = body.replaceAll(
+				"\n" + key.toUpperCase(),
+				"\n" +
+				key.toUpperCase() +
+				"\n" +
+				`{.border .px-3 .py-1 .${rawColor}}`
+			)
 
-				// Mise en forme dans le cas d'un texte "en ligne"
-				body = body.replaceAll(
-					` ${key.toUpperCase()}`,
-					` [${key.toUpperCase()}]{.inline-block .mx-1 .px-3 .py-1 .border .${rawColor} }`,
-				)
+			// Mise en forme dans le cas d'un texte "en ligne"
+			body = body.replaceAll(
+				` ${key.toUpperCase()}`,
+				` [${key.toUpperCase()}]{.inline-block .mx-1 .px-3 .py-1 .border .${rawColor} }`
+			)
 
-				// Mise en forme pour des textes mathématiques
-				body = body.replaceAll(
-					key.toLowerCase(),
-					`\\textcolor{${texColor}}{ ${key.toLowerCase()} }`,
-				)
+			// Mise en forme pour des textes mathématiques
+			body = body.replaceAll(
+				key.toLowerCase(),
+				`\\textcolor{${texColor}}{ ${key.toLowerCase()} }`
+			)
 
-				// on supprime les valeurs de type @$ qui sont sans mise en forme.
-				body = body.replaceAll(
-					"@" + key.toUpperCase(),
-					key.toUpperCase(),
-				)
+			// on supprime les valeurs de type @$ qui sont sans mise en forme.
+			body = body.replaceAll(
+				"@" + key.toUpperCase(),
+				key.toUpperCase()
+			)
 
-				// On peut avoir tex, raw, input
-				if (userAnswers.value[i].value === undefined) {
+			// On peut avoir tex, raw, input
+			if (userAnswers.value[i].value === undefined) {
+				body = body.replaceAll(key.toUpperCase(), "< ?? >")
+				body = body.replaceAll(key.toLowerCase(), "<\\ ? >")
+			} else {
+				// Raw output
+				if (
+					userAnswers.value[i].value.raw === undefined ||
+					userAnswers.value[i].value.raw === ""
+				) {
 					body = body.replaceAll(key.toUpperCase(), "< ?? >")
+				} else {
+					body = body.replaceAll(
+						key.toUpperCase(),
+						userAnswers.value[i].value.raw
+					)
+				}
+
+				// TeX output
+				if (
+					userAnswers.value[i].value.tex === undefined ||
+					userAnswers.value[i].value.tex === ""
+				) {
 					body = body.replaceAll(key.toLowerCase(), "<\\ ? >")
 				} else {
-					// Raw output
-					if (
-						userAnswers.value[i].value.raw === undefined ||
-						userAnswers.value[i].value.raw === ""
-					) {
-						body = body.replaceAll(key.toUpperCase(), "< ?? >")
-					} else {
-						body = body.replaceAll(
-							key.toUpperCase(),
-							userAnswers.value[i].value.raw,
-						)
-					}
-
-					// TeX output
-					if (
-						userAnswers.value[i].value.tex === undefined ||
-						userAnswers.value[i].value.tex === ""
-					) {
-						body = body.replaceAll(key.toLowerCase(), "<\\ ? >")
-					} else {
-						body = body.replaceAll(
-							key.toLowerCase(),
-							userAnswers.value[i].value.tex,
-						)
-					}
-				}
-			}
-
-			return body
-		}),
-		theQuestionLocked = computed(() => {
-			//v-if="locked && !editMode.enabled.value"
-			return props.locked && !editMode.enabled.value
-		})
-
-	// Gestion des réponses
-
-	// numéro de la question en cours d'édition
-	const answerId = ref(0),
-		// Format de la réponse
-		answerFormat = computed(() => {
-			if (!theAnswers.value[answerId.value]) {
-				return ""
-			}
-
-			const kbrd = theAnswers.value[answerId.value].keyboard
-
-			if (kbrd.name === "Basic") {
-				const customOutput = theAnswers.value[
-					answerId.value
-				].keyboard.parameters
-					.filter((x) => x.startsWith("format:"))
-					.map((x) => x.split("format:")[1])[0]
-				return (
-					customOutput ??
-					theAnswers.value[answerId.value].keyboard.checker.format
-				)
-			}
-
-			return ""
-		}),
-		// Nombre de réponses totales
-		answersNumber = computed(
-			() => theQuestion.answer.split("\n").filter((x) => x !== "").length,
-		),
-		// liste des lettres, dans l'ordre.
-		answersKeys = computed(() => {
-			return "abcdefghijklmnopqrstuvwxyz".split("").map((x) => `$${x}`)
-		}),
-		// liste des réponses / claviers / etc...
-		theAnswers = computed(() => {
-			// The keyboard is wrong...
-			if (!theQuestion.keyboard) {
-				return []
-			}
-
-			// Get the keyboards
-			const arr = [],
-				answers = theQuestion.answer.split("\n"),
-				kbrds = getKeyboards(theQuestion.keyboard)
-
-			for (let i = 0; i < answersNumber.value; i++) {
-				arr.push({
-					key: answersKeys.value[i], // may be undefined !
-					keyboard: kbrds[Math.min(kbrds.length - 1, i)],
-					answer: answers[i],
-				})
-			}
-
-			return arr
-		}),
-		userAnswers = ref([]),
-		userAnswersErrors = ref([]),
-		keyboardUI = ref(null),
-		showAnswer = ref(false),
-		loadAnswer = async function (value?: string) {
-			answerId.value = 0
-			await nextTick()
-
-			const timer = setInterval(() => {
-				if (keyboardUI.value) {
-					keyboardUI.value.loadAnswer(value)
-				}
-
-				if (answerId.value === answersNumber.value - 1) {
-					clearInterval(timer)
-					if (value === null) {
-						answerId.value = 0
-					}
-				} else {
-					answerId.value++
-				}
-			}, 100)
-
-			showAnswer.value = value === undefined
-		},
-		showUserInput = ref(props.showInput)
-
-	const updateQuestion = function (event) {
-			// {
-			// 		value: {input, tex, raw},
-			// 		validation: {result, message}
-			// }
-			userAnswers.value[answerId.value] = event
-		},
-		checkUserAnswers = function () {
-			// On contrôle que la table des réponses est correctement initialisée
-			if (userAnswers.value.length < answersNumber.value) {
-				for (
-					let i = userAnswers.value.length;
-					i < answersNumber.value;
-					i++
-				) {
-					userAnswers.value.push({
-						value: { input: "", tex: "", raw: "" },
-						validation: {
-							result: false,
-							message: "réponse non donnée.",
-						},
-					})
-				}
-			}
-		},
-		validateButton = ref(null),
-		lockValidationButton = ref(false),
-		validateQuestion = function () {
-			// validation des réponses.
-
-			// On bloque la possibilité de cliquer une nouvelle fois sur le bouton.
-			lockValidationButton.value = true
-
-			// On vérifie que toutes les réponses ont été données.
-			let result = true,
-				index, // TODO: à quoi sert "index" ici ?
-				stack = []
-
-			for (let i = 0; i < userAnswers.value.length; i++) {
-				// The result index must be the same for each answers.
-				if (index === undefined) {
-					index = userAnswers.value[i].validation.index || 0
-				}
-				// The result must be "true" for each answers
-				result =
-					result &&
-					userAnswers.value[i].validation.result &&
-					index === (userAnswers.value[i].validation.index || 0)
-
-				if (!result) {
-					if (userAnswers.value.length > 1) {
-						stack.push(
-							`${i + 1}: ${
-								userAnswers.value[i].validation.message
-							}`,
-						)
-					} else {
-						stack.push(userAnswers.value[i].validation.message)
-					}
-				}
-			}
-
-			userAnswersErrors.value = stack
-
-			storeValidation({
-				result,
-				question: theQuestionBody.value,
-				answer: userAnswers.value.map((a) => a.value.input).join(","),
-			})
-			// setTimeout(() => lockValidationButton.value = false, 500)
-		},
-		storeValidation = function (event) {
-			// event: {question: string, answer: string, result: boolean}
-			if (!props.singleAnswer && !event.result) {
-				useWrongAnswerAnimation(validateButton.value.$el)
-			}
-
-			// It's a dynamic question (without id)
-			// On ne peut donc pas sauvegarder les informations.
-			if (props.question.id === undefined) {
-				emits("validate", event)
-				lockValidationButton.value = false
-				return
-			}
-
-			// On définit les informations utilisateurs.
-			theQuestion.user.result = event.result
-
-			// need answer (string: min1) , result (boolean)
-			// Save the information to the database if the user is logged in
-			// and if the result is correct
-			if (usePage().props.auth.user) {
-				axios
-					.post(route("questions.validate", [props.question.id]), {
-						...event,
-					})
-					.catch((res) => {
-						console.warn(
-							"Il y a une erreur lors du chargement de la réponse.",
-						)
-						console.warn(res.response.data.message)
-					})
-					.then(() => {
-						emits("validate", event)
-					})
-					.finally(() => {
-						lockValidationButton.value = false
-					})
-			} else {
-				emits("validate", event)
-				lockValidationButton.value = false
-			}
-		}
-
-	// Gestion administrateur
-	const editMode = inject<editModeInterface>("editMode"),
-		showEditForm = ref(false),
-		editForm = computed(() => {
-			return defineAsyncComponent(
-				() => import("@/Components/Posts/Questions/QuestionForm.vue"),
-			)
-		}),
-		duplicateQuestion = function () {
-			axios
-				.post(route("questions.duplicate", [theQuestion.id]))
-				.then((res) => {
-					emits("duplicate", res.data.data)
-					flash.success("la question a bien été dupliquée !")
-				})
-		},
-		addIllustration = function () {
-			if (!theQuestion.block.illustration) {
-				// Create a new illustration
-				axios
-					.post(
-						route("blocks.illustrations.store", [
-							theQuestion.block.id,
-						]),
-						{},
+					body = body.replaceAll(
+						key.toLowerCase(),
+						userAnswers.value[i].value.tex
 					)
-					.then((res) => {
-						res.data.isNew = true
-						theQuestion.block.illustration = res.data
-
-						flash.success("une nouvelle illustration a été créée")
-					})
+				}
 			}
 		}
 
-	// Manage "DisplayIf"
-	const displayIfIds = computed(() => {
-			if (theQuestion.displayIf === null) {
-				return []
-			}
-			return theQuestion.displayIf.split(",").map((id) => +id)
-		}),
-		toggleDisplayId = async function (id) {
-			if (id === -1) {
-				theQuestion.displayIf = null
-			} else {
-				await nextTick()
-				const ids = [...displayIfIds.value],
-					idx = ids.indexOf(id)
+		return body
+	}),
+	theQuestionLocked = computed(() => {
+		//v-if="locked && !editMode.enabled.value"
+		return props.locked && !editMode.enabled.value
+	})
 
-				if (idx === -1) {
-					ids.push(id)
-					ids.sort()
-				} else {
-					ids.splice(idx, 1)
+// Gestion des réponses
+
+// numéro de la question en cours d'édition
+const answerId = ref(0),
+	// Format de la réponse
+	answerFormat = computed(() => {
+		if (!theAnswers.value[answerId.value]) {
+			return ""
+		}
+
+		const kbrd = theAnswers.value[answerId.value].keyboard
+
+		if (kbrd.name === "Basic") {
+			const customOutput = theAnswers.value[
+				answerId.value
+				].keyboard.parameters
+				.filter((x) => x.startsWith("format:"))
+				.map((x) => x.split("format:")[1])[0]
+			return (
+				customOutput ??
+				theAnswers.value[answerId.value].keyboard.checker.format
+			)
+		}
+
+		return ""
+	}),
+	// Nombre de réponses totales
+	answersNumber = computed(
+		() => theQuestion.answer.split("\n").filter((x) => x !== "").length
+	),
+	// liste des lettres, dans l'ordre.
+	answersKeys = computed(() => {
+		return "abcdefghijklmnopqrstuvwxyz".split("").map((x) => `$${x}`)
+	}),
+	// liste des réponses / claviers / etc...
+	theAnswers = computed(() => {
+		// The keyboard is wrong...
+		if (!theQuestion.keyboard) {
+			return []
+		}
+
+		// Get the keyboards
+		const arr = [],
+			answers = theQuestion.answer.split("\n"),
+			kbrds = getKeyboards(theQuestion.keyboard)
+
+		for (let i = 0; i < answersNumber.value; i++) {
+			arr.push({
+				key: answersKeys.value[i], // may be undefined !
+				keyboard: kbrds[Math.min(kbrds.length - 1, i)],
+				answer: answers[i]
+			})
+		}
+
+		return arr
+	}),
+	userAnswers = ref([]),
+	userAnswersErrors = ref([]),
+	keyboardUI = ref(null),
+	showAnswer = ref(false),
+	loadAnswer = async function(value?: string) {
+		answerId.value = 0
+		await nextTick()
+
+		const timer = setInterval(() => {
+			if (keyboardUI.value) {
+				keyboardUI.value.loadAnswer(value)
+			}
+
+			if (answerId.value === answersNumber.value - 1) {
+				clearInterval(timer)
+				if (value === null) {
+					answerId.value = 0
 				}
-
-				theQuestion.displayIf = ids.length === 0 ? null : ids.join(",")
+			} else {
+				answerId.value++
 			}
+		}, 100)
 
+		showAnswer.value = value === undefined
+	},
+	showUserInput = ref(props.showInput)
+
+const updateQuestion = function(event) {
+		// {
+		// 		value: {input, tex, raw},
+		// 		validation: {result, message}
+		// }
+		userAnswers.value[answerId.value] = event
+	},
+	checkUserAnswers = function() {
+		// On contrôle que la table des réponses est correctement initialisée
+		if (userAnswers.value.length < answersNumber.value) {
+			for (
+				let i = userAnswers.value.length;
+				i < answersNumber.value;
+				i++
+			) {
+				userAnswers.value.push({
+					value: { input: "", tex: "", raw: "" },
+					validation: {
+						result: false,
+						message: "réponse non donnée."
+					}
+				})
+			}
+		}
+	},
+	validateButton = ref(null),
+	lockValidationButton = ref(false),
+	validateQuestion = function() {
+		// validation des réponses.
+
+		// On bloque la possibilité de cliquer une nouvelle fois sur le bouton.
+		lockValidationButton.value = true
+
+		// On vérifie que toutes les réponses ont été données.
+		let result = true,
+			index, // TODO: à quoi sert "index" ici ?
+			stack = []
+
+		for (let i = 0; i < userAnswers.value.length; i++) {
+			// The result index must be the same for each answers.
+			if (index === undefined) {
+				index = userAnswers.value[i].validation.index || 0
+			}
+			// The result must be "true" for each answers
+			result =
+				result &&
+				userAnswers.value[i].validation.result &&
+				index === (userAnswers.value[i].validation.index || 0)
+
+			if (!result) {
+				if (userAnswers.value.length > 1) {
+					stack.push(
+						`${i + 1}: ${
+							userAnswers.value[i].validation.message
+						}`
+					)
+				} else {
+					stack.push(userAnswers.value[i].validation.message)
+				}
+			}
+		}
+
+		userAnswersErrors.value = stack
+
+		storeValidation({
+			result,
+			question: theQuestionBody.value,
+			answer: userAnswers.value.map((a) => a.value.input).join(",")
+		})
+		// setTimeout(() => lockValidationButton.value = false, 500)
+	},
+	storeValidation = function(event) {
+		// event: {question: string, answer: string, result: boolean}
+		if (!props.singleAnswer && !event.result) {
+			useWrongAnswerAnimation(validateButton.value.$el)
+		}
+
+		// It's a dynamic question (without id)
+		// On ne peut donc pas sauvegarder les informations.
+		if (props.question.id === undefined) {
+			emits("validate", event)
+			lockValidationButton.value = false
+			return
+		}
+
+		// On définit les informations utilisateurs.
+		theQuestion.user.result = event.result
+
+		// need answer (string: min1) , result (boolean)
+		// Save the information to the database if the user is logged in
+		// and if the result is correct
+		if (usePage().props.auth.user) {
+			axios
+				.post(route("questions.validate", [props.question.id]), {
+					...event
+				})
+				.catch((res) => {
+					console.warn(
+						"Il y a une erreur lors du chargement de la réponse."
+					)
+					console.warn(res.response.data.message)
+				})
+				.then(() => {
+					emits("validate", event)
+				})
+				.finally(() => {
+					lockValidationButton.value = false
+				})
+		} else {
+			emits("validate", event)
+			lockValidationButton.value = false
+		}
+	}
+
+// Gestion administrateur
+const editMode = inject<editModeInterface>("editMode"),
+	showEditForm = ref(false),
+	editForm = computed(() => {
+		return defineAsyncComponent(
+			() => import("@/Components/Posts/Questions/QuestionForm.vue")
+		)
+	}),
+	duplicateQuestion = function() {
+		axios
+			.post(route("questions.duplicate", [theQuestion.id]))
+			.then((res) => {
+				emits("duplicate", res.data.data)
+				flash.success("la question a bien été dupliquée !")
+			})
+	},
+	addIllustration = function() {
+		if (!theQuestion.block.illustration) {
+			// Create a new illustration
 			axios
 				.post(
-					route("questions.updateDisplayIf", {
-						question: theQuestion.id,
-					}),
-					{
-						_method: "PATCH",
-						displayIf: theQuestion.displayIf,
-					},
+					route("blocks.illustrations.store", [
+						theQuestion.block.id
+					]),
+					{}
 				)
-				.then(() => {
-					flash.success(
-						"Modification de la condition d'apparition réussi",
-					)
-				})
-				.catch(() => {
-					flash.error("Modification de la condition échouée.")
+				.then((res) => {
+					res.data.isNew = true
+					theQuestion.block.illustration = res.data
+
+					flash.success("une nouvelle illustration a été créée")
 				})
 		}
+	}
+
+// Manage "DisplayIf"
+const displayIfIds = computed(() => {
+		if (theQuestion.displayIf === null) {
+			return []
+		}
+		return theQuestion.displayIf.split(",").map((id) => +id)
+	}),
+	toggleDisplayId = async function(id) {
+		if (id === -1) {
+			theQuestion.displayIf = null
+		} else {
+			await nextTick()
+			const ids = [...displayIfIds.value],
+				idx = ids.indexOf(id)
+
+			if (idx === -1) {
+				ids.push(id)
+				ids.sort()
+			} else {
+				ids.splice(idx, 1)
+			}
+
+			theQuestion.displayIf = ids.length === 0 ? null : ids.join(",")
+		}
+
+		axios
+			.post(
+				route("questions.updateDisplayIf", {
+					question: theQuestion.id
+				}),
+				{
+					_method: "PATCH",
+					displayIf: theQuestion.displayIf
+				}
+			)
+			.then(() => {
+				flash.success(
+					"Modification de la condition d'apparition réussi"
+				)
+			})
+			.catch(() => {
+				flash.error("Modification de la condition échouée.")
+			})
+	}
 </script>
 
 <template>
@@ -445,7 +445,7 @@ const { getKeyboards } = useKeyboard()
 				v-if="theQuestion.order && !props.isMinimal && !props.isDynamic"
 				v-theme.bg.text="!theQuestionLocked"
 				:class="{
-					'draggable-handle cursor-move': $page.props.auth.can.admin,
+					'draggable-handle cursor-move': editMode.enabled.value,
 					'bg-white': theQuestionLocked
 				}"
 				class="z-10 font-semibold font-code absolute left-1 -top-4 rounded-full border w-8 h-8 grid place-items-center draggable-handle"
@@ -532,7 +532,7 @@ const { getKeyboards } = useKeyboard()
 		</header>
 
 		<!-- the body of question -->
-		<main class="px-5 overflow-x-auto mb-3">
+		<main class="px-5 overflow-x-auto border-b pb-3">
 			<!-- Illustration -->
 			<illustration-show
 				v-if="theQuestion.block.illustration"
@@ -542,37 +542,29 @@ const { getKeyboards } = useKeyboard()
 
 			<!-- dispalyed text -->
 			<markdown-it :text="theQuestionBody" />
-
-			<div
-				v-admin
-				class="flex flex-col gap-1"
-			>
-				<div
-					class="font-code text-gray-700 text-xs bg-gray-200 border border-gray-300 py-1 px-2 min-h-[2.2em]"
-					v-for="(a,index) in userAnswers"
-					:key="'admin-user-answer' + index"
-				>
-					{{ a.value?.input }}
-				</div>
-			</div>
 		</main>
 
 		<!-- user input -->
 		<div
+			v-katex.auto="answerFormat"
+			class="text-center text-xs text-gray-500 my-2"
+		/>
+		<div
 			v-if="!showInput"
-			class="text-xs text-right mb-3"
+			class="text-right py-3"
 		>
 			<button
 				v-if="!showUserInput"
+				v-theme.bg.text
 				:class="`active-scolcours-${$page.props.theme?.slug}`"
-				class="w-full py-3 hover:border-t hover:border-b"
+				class="flex gap-3 justify-center items-center mx-auto px-5 py-2 rounded-xl shadow hover:shadow-none"
 				@click="showUserInput = !showUserInput"
 			>
-				<i class="bi bi-calculator mr-2" />donner la réponse
+				<i class="text-xl bi bi-calculator mr-2" /> donner la réponse
 			</button>
 			<button
 				v-else
-				class="text-red-600 px-5 group"
+				class="px-5 group text-red-600"
 				@click="showUserInput = !showUserInput"
 			>
 				fermer
@@ -583,16 +575,19 @@ const { getKeyboards } = useKeyboard()
 		</div>
 		<div
 			v-show="showUserInput"
-			class="question-user-input px-5"
+			class="question-user-input px-5 mt-5"
 		>
+			<!-- Validation button -->
 			<keyboard-validate-button
 				ref="validateButton"
 				:disabled="lockValidationButton"
 				@validate="validateQuestion"
 			/>
+
+			<!-- Error messages -->
 			<div
 				v-if="userAnswersErrors.length > 0 && !props.singleAnswer"
-				class="max-w-xl mx-auto"
+				class="max-w-xl mx-auto border bg-red-50 border-red-600 p-3 rounded my-2"
 			>
 				<div
 					v-for="(msg, index) in userAnswersErrors"
@@ -604,6 +599,7 @@ const { getKeyboards } = useKeyboard()
 
 			<!-- Answer selector -->
 			<div
+				v-if="answersNumber>1 && !props.singleAnswer"
 				class="question-answer-selector flex justify-between items-center my-5"
 			>
 				<button
@@ -616,8 +612,8 @@ const { getKeyboards } = useKeyboard()
 				</button>
 				<div
 					v-if="answerFormat"
-					v-katex.auto="answerFormat"
 					class="text-center text-xs text-gray-400"
+					v-text="`Réponse ${answerId + 1} / ${answersNumber}`"
 				/>
 				<button
 					v-theme.bg.hover
@@ -629,6 +625,21 @@ const { getKeyboards } = useKeyboard()
 				</button>
 			</div>
 
+			<!-- admin output preview -->
+			<div
+				v-admin
+				class="flex flex-col gap-1"
+			>
+				<div
+					v-for="(a,index) in userAnswers"
+					:key="'admin-user-answer' + index"
+					class="font-code text-gray-700 text-xs bg-gray-200 border border-gray-300 py-1 px-2 min-h-[2.2em]"
+				>
+					{{ a.value?.input }}
+				</div>
+			</div>
+
+			<!-- keyboard component -->
 			<component
 				:is="theAnswers[answerId].keyboard.component"
 				v-if="
@@ -647,7 +658,7 @@ const { getKeyboards } = useKeyboard()
 		<!-- already answered or admin answer -->
 		<div
 			v-if="theQuestion.user.result || $page.props.auth.can.admin"
-			class="question-footer mt-5 border-t border-gray-200 px-5 py-2"
+			class="question-footer px-5 py-2"
 		>
 			<div>
 				<button

@@ -123,6 +123,7 @@ export default {
 			"responsive",
 			"active",
 		],
+		scale: ["responsive", "hover", "group-hover"],
 		padding: ["hover", "responsive"],
 		textShadow: ["hover"],
 		fontWeight: ["hover", "focus"],

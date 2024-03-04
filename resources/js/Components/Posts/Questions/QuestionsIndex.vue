@@ -301,7 +301,7 @@ const props = defineProps({
 			item-key="id"
 			v-bind="{
 				animation: 200,
-				disabled: !$page.props.auth.can.admin,
+				disabled: editMode.enabled.value === false,
 			}"
 			@end="updateQuestionsOrder"
 		>

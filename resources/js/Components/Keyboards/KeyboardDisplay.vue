@@ -171,7 +171,7 @@ const keyboardComputed = computed(() => {
 			}
 
 			// Maybe there is a custom keys
-			if (Object.hasOwn(props.customKeys, kkey)) {
+			if (props.customKeys !== undefined && Object.hasOwn(props.customKeys, kkey)) {
 				theKey = props.customKeys[kkey]
 				kdata = {
 					...kdata,
