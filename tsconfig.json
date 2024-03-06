@@ -6,6 +6,7 @@
 		"lib": ["ES6", "DOM", "ES7", "ES2015.Core", "ES2019", "ES2020", "ES2021", "ES2022", "ESNext"],
 		"strict": false,
 		"jsx": "preserve",
+		"resolveJsonModule": true,
 		"allowJs": true,
 		"noEmit": true,
 		"skipLibCheck": true,

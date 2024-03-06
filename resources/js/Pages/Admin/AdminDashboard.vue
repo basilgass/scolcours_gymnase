@@ -56,5 +56,13 @@ defineOptions({ layout: LayoutMain })
 		>
 			import des langues
 		</Link>
+
+		<Link
+			:href="route('admin.widgets')"
+			as="button"
+			class="min-h-[8em] text-xl bg-white border border-gray-200 rounded-xl"
+		>
+			widgets
+		</Link>
 	</div>
 </template>

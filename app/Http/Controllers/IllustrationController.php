@@ -37,7 +37,7 @@ class IllustrationController extends Controller
 		if(isset($validation['widget_id'])){
 			$widget = Widget::find($validation['widget_id'])->first();
 		}else{
-			$widget = Widget::where('name','draw-parser-widget')->first();
+			$widget = Widget::where('slug','draw-parser-widget')->first();
 		}
 
 		// creates an empty illustration.

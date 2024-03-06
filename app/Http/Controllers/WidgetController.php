@@ -47,6 +47,7 @@ class WidgetController extends Controller
 		}
 
 		// Go through each existing illustrations and take the correct one !
+		// TODO: remove these lines once done
 		Illustration::where('value', "image")
 			->update([
 				"widget_id"=> Widget::where("component", "image-widget.vue" )->first()->id
@@ -88,6 +89,8 @@ class WidgetController extends Controller
 			"component" => ["string", "min:1"], // check if file exists ?
 			"description" => ["string", "nullable"]
 		]);
+
+		$validate["description"] = $validate["description"] ?? "";
 
 		$widget->update($validate);
 

@@ -1,11 +1,14 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import WidgetForm from "@/Components/WidgetForm.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
+import { PropType } from "vue"
+import { widgetInterface } from "@/types/modelInterfaces"
 
 defineOptions({ layout: LayoutMain })
-	defineProps({
-		widgets: { type: Object, required: true }
-	})
+
+defineProps({
+	widgets: { type: Object as PropType<widgetInterface[]>, required: true }
+})
 
 </script>
 <template>
@@ -15,14 +18,14 @@ defineOptions({ layout: LayoutMain })
 
 	<div class="flex flex-col gap-4">
 		<div
-			class="bg-white border-l-8 px-5 py-2 rounded-r-lg"
 			v-for="widget in widgets"
 			:key="widget.id"
 			v-theme.border="widget.theme_id"
+			class="bg-white border-l-8 px-5 py-2 rounded-r-lg"
 		>
 			<div
-				class="font-semibold"
 				:class="!widget.control?'text-red-600':''"
+				class="font-semibold"
 			>
 				{{ widget.name }} <span class="text-xs ml-4">id: {{ widget.id }}</span>
 			</div>

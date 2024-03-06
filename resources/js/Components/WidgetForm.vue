@@ -2,27 +2,36 @@
 
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import { widgetInterface } from "@/types/modelInterfaces"
-import { computed, PropType, ref } from "vue"
+import { computed, inject, PropType, ref } from "vue"
 import axios from "axios"
 import { router } from "@inertiajs/vue3"
+import { flashInterface } from "@/types"
 
 const props = defineProps({
 	widget: { type: Object as PropType<widgetInterface>, required: true }
 })
 const theWidget = ref({ ...props.widget })
 
+const flash = inject<flashInterface>("flash")
+
 function update() {
 	axios.patch(route("widgets.update", [props.widget.id]), {
 		_method: "PATCH",
 		...theWidget.value
-	}).then(() => {
+	}).then((res) => {
 		// Reload the page
 		router.reload({
 			preserveScroll: true,
 			preserveState: true
 		})
+
+		theWidget.value = res.data
+
+
+		flash.success("Le widget a été mis à jour")
 	}).catch((res) => {
 			console.error(res.response.data.message)
+		flash.error("Une erreur est survenue:" + res.response.data.message)
 		})
 }
 

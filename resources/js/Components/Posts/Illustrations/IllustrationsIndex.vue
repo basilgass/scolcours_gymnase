@@ -63,6 +63,8 @@ const addIllustration = function() {
 				// edit the new illustration.
 
 				flash.success("une nouvelle illustration a été créée")
+			}).catch((res)=>{
+				console.warn("add illustration: ", res)
 			})
 	},
 	updateIllustrationsOrder = function() {

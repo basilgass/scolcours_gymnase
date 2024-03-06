@@ -179,9 +179,8 @@ class AdminController extends Controller
 
 	public function widgets()
 	{
-
 		return Inertia::render(
-			'Admin/AdminWidgetsShow', [
+			'Admin/AdminWidgetsPage', [
 			"widgets" => Widget::all()
 		]);
 	}
