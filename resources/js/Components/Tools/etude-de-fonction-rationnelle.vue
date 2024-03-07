@@ -3,6 +3,8 @@
  * title: étude de fonction rationnelle
  * body: étude de signe d'une fonction rationnelle.
  */
+
+// TODO: remove replaceAll('*x', 'x') in drawCode when PiDraw will be fixed
 import { nextTick, onMounted, reactive, ref } from "vue"
 import { PiMath } from "pimath/esm"
 import TableOfSigns from "@/Components/Pi/PiTableOfSigns.vue"
@@ -42,7 +44,7 @@ const root = ref(null),
 		},
 		extrema: [],
 		drawCode: null,
-		drawParameters: "axis,grid",
+		drawParameters: "axis,grid,tex",
 		texDev: ""
 	})
 
@@ -133,7 +135,7 @@ async function validation_fx() {
 		extremesX.min -= Math.floor((dy * 4 / 3 - dx) / 2) - 1
 		extremesX.max += Math.floor((dy * 4 / 3 - dx) / 2) + 2
 	}
-	fraction_rationnelle.drawParameters = `axis,grid,x=${extremesX.min}:${extremesX.max},y=${extremesY.min}:${extremesY.max}`
+	fraction_rationnelle.drawParameters = `axis,grid,tex,x=${extremesX.min}:${extremesX.max},y=${extremesY.min}:${extremesY.max}`
 
 	// Draw code
 	fraction_rationnelle.drawCode = study.drawCode()
@@ -250,14 +252,14 @@ onMounted(() => {
 
 		<!-- Output -->
 		<table-of-contents>
-			<div class="grid grid-cols-1 lg:grid-cols-2 gap-x-5 gap-y-20 katex-boxed">
+			<div class="grid grid-cols-1 lg:grid-cols-2 gap-x-5 gap-y-20">
 				<!-- Ensemble de définition -->
 				<div class="bg-white rounded border-gray-400 p-4">
 					<h2 class="chapter-menu text-lg mb-10">
 						Fonction
 					</h2>
 					<div
-						v-katex="fraction_rationnelle.tex"
+						v-katex.boxed="fraction_rationnelle.tex"
 					/>
 					<div class="font-code text-gray-300 text-sm text-center">
 						{{ fraction_rationnelle.texDev }}
@@ -270,7 +272,7 @@ onMounted(() => {
 						Ensemble de définition
 					</h2>
 					<div
-						v-katex="`ED_f=${fraction_rationnelle.domain}`"
+						v-katex.boxed="`ED_f=${fraction_rationnelle.domain}`"
 					/>
 				</div>
 
@@ -299,7 +301,7 @@ onMounted(() => {
 					<div
 						v-for="(item, index) in fraction_rationnelle.av"
 						:key="`limites-${index}`"
-						v-katex="`${item.limits} \\implies \\text{ AV: } ${item.tex}`"
+						v-katex.boxed="`${item.limits} \\implies \\text{ AV: } ${item.tex}`"
 					/>
 				</div>
 
@@ -315,10 +317,10 @@ onMounted(() => {
 						v-for="(item, index) in fraction_rationnelle.ah"
 						:key="`limites-${index}`"
 					>
-						<div v-katex="`${item.limits} \\implies \\text{ AH: } ${item.tex}`" />
+						<div v-katex.boxed="`${item.limits} \\implies \\text{ AH: } ${item.tex}`" />
 						<div
 							v-if="item.delta!==null"
-							v-katex="`\\delta(x)=${item.deltaX.tex}=${item.deltaX.texFactors}`"
+							v-katex.boxed="`\\delta(x)=${item.deltaX.tex}=${item.deltaX.texFactors}`"
 						/>
 						<table-of-signs
 							v-if="item.tableOfSign!==false"
@@ -338,7 +340,7 @@ onMounted(() => {
 					</h2>
 
 					<div>
-						<div v-katex.display="fraction_rationnelle.aoTex" />
+						<div v-katex.boxed.display="fraction_rationnelle.aoTex" />
 
 						<table-of-signs
 							v-if="fraction_rationnelle.ao[0].tableOfSign!==false"
@@ -353,7 +355,7 @@ onMounted(() => {
 						Variation
 					</h2>
 					<div
-						v-katex="fraction_rationnelle.dxTex"
+						v-katex.boxed="fraction_rationnelle.dxTex"
 					/>
 
 					<table-of-signs
@@ -365,7 +367,7 @@ onMounted(() => {
 					<div
 						v-for="(zero, index) in fraction_rationnelle.extrema"
 						:key="`zero-${index}`"
-						v-katex="zero"
+						v-katex.boxed="zero"
 					/>
 				</div>
 
@@ -380,12 +382,18 @@ onMounted(() => {
 						:draw="{
 							parameters: fraction_rationnelle.drawParameters,
 							code: fraction_rationnelle.drawCode
+								.replaceAll('*x', 'x')
+								.replaceAll(')*', '->*')
 						}"
 						:height="600"
 						:width="800"
 						axis
 						class="max-w-3xl mx-auto"
 					/>
+
+					<pre class="font-code text-xs">
+						{{ fraction_rationnelle.drawCode.replaceAll('*x', 'x') }}
+					</pre>
 				</div>
 			</div>
 		</table-of-contents>
