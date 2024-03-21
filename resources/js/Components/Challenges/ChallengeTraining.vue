@@ -1,13 +1,10 @@
 <script lang="ts" setup>
-	import { computed, onMounted, PropType, ref } from "vue"
-	import QuestionShow from "@/Components/Posts/Questions/QuestionShow.vue"
-	import { useGenerator } from "@/Composables/useGenerator"
-	import {
-		ChallengeInterface,
-		GeneratorInterface,
-	} from "@/types/modelInterfaces"
+import { computed, onMounted, PropType, ref } from "vue"
+import QuestionShow from "@/Pages/Questions/QuestionShow.vue"
+import { useGenerator } from "@/Composables/useGenerator"
+import { ChallengeInterface, GeneratorInterface } from "@/types/modelInterfaces"
 
-	const props = defineProps({
+const props = defineProps({
 		challenge: {
 			type: Object as PropType<ChallengeInterface>,
 			required: true,

@@ -69,7 +69,7 @@ defineOptions({ layout: LayoutMain })
 				<Link
 					:class="`btn-scolcours-${$page.props.theme.slug}`"
 					:href="
-						route('theme.chapter.intro', [
+						route('themes.chapters.intro', [
 							$page.props.theme.slug,
 							theChapter.slug,
 						])

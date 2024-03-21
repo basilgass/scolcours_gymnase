@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, defineAsyncComponent, inject, ref } from "vue"
+import { computed, defineAsyncComponent, inject, Ref, ref } from "vue"
 import ChapterToc from "@/Components/Chapters/ChapterToc.vue"
 import ChapterChallenges from "@/Components/Chapters/ChapterChallenges.vue"
 import ChapterFormulas from "@/Components/Chapters/ChapterFormulas.vue"
@@ -8,17 +8,15 @@ import ChapterRelations from "@/Components/Chapters/ChapterRelations.vue"
 import ChapterTheorems from "@/Components/Chapters/ChapterTheorems.vue"
 
 import LayoutMain from "@/Layouts/LayoutMain.vue"
-import { editModeInterface } from "@/types"
 
 defineOptions({ layout: LayoutMain })
 
 	const props = defineProps({
-			chapter: { type: Object, required: true },
-			nav: { type: Object, required: true },
+			chapter: { type: Object, required: true }
 		}),
-		theChapter = ref(props.chapter.data)
+		theChapter = ref(props.chapter)
 
-	const editMode = inject<editModeInterface>("editMode")
+	const editMode = inject<Ref<boolean>>("editMode")
 
 	const showEditForm = ref(false),
 		editForm = computed(() => {
@@ -49,7 +47,7 @@ defineOptions({ layout: LayoutMain })
 			/>
 
 			<div
-				v-show="editMode.enabled.value"
+				v-show="editMode"
 				v-admin
 			>
 				<button
@@ -84,7 +82,7 @@ defineOptions({ layout: LayoutMain })
 				<Link
 					v-theme.bg.text
 					:href="
-						route('theme.chapter.slide', [
+						route('themes.chapters.slide', [
 							$page.props.theme.slug,
 							theChapter.slug,
 							1,

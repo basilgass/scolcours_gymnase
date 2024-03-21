@@ -3,7 +3,7 @@ import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
 import { computed, ref } from "vue"
 import { useForm } from "@inertiajs/vue3"
 import DialogModal from "@/Components/Ui/DialogModal.vue"
-import IllustrationShow from "@/Components/Posts/Illustrations/IllustrationShow.vue"
+import IllustrationShow from "@/Components/Posts/Illustrations/IllustrationShow_OLD.vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 
@@ -86,7 +86,7 @@ function createNewChapter() {
 					:key="`chapter-${chapter.slug}`"
 					:class="{ 'border-red-500': chapter.active === 0 }"
 					:href="
-						route('theme.chapter.intro', [
+						route('themes.chapters.intro', [
 							$page.props.theme.slug,
 							chapter.slug,
 						])

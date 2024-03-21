@@ -1,6 +1,6 @@
 <!--
 Affichage du titre de la page
-TODO: est-ce vraiment utile (utilisé dans DEV et language)
+TODO: est-ce vraiment utile (utilisé dans DEV et language et d'autres - renommer et le rendre plus utile ?)
 -->
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue"

@@ -81,7 +81,7 @@ class Post extends Model
 	protected function url(): Attribute
 	{
 		return Attribute::make(
-			get: fn() => URL::route('theme.chapter.slide', [$this->chapter->theme->slug, $this->chapter->slug, $this->order], false)
+			get: fn() => URL::route('themes.chapters.slide', [$this->chapter->theme->slug, $this->chapter->slug, $this->order], false)
 //			get: fn() => [$this->chapter->theme->slug, $this->chapter->slug, $this->order]
 		);
 	}

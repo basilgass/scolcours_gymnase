@@ -2,10 +2,10 @@
 Affichage d'un formulaire, avec la possibilité de passer d'un formulaire du thème à un autre.
 -->
 <script setup lang="ts">
-import { inject, ref } from "vue"
-import BlockShow from "@/Components/Posts/Blocks/BlockShow.vue"
+import { inject, Ref, ref } from "vue"
+import BlockShow from "@/Pages/Blocks/BlockShow.vue"
 import { useIntersectionObserver } from "@vueuse/core"
-import { editModeInterface, flashInterface } from "@/types/index.js"
+import { flashInterface } from "@/types/index.js"
 import axios from "axios"
 
 const props = defineProps({
@@ -27,13 +27,13 @@ const props = defineProps({
 		theFormularErrors = ref("")
 
 	const flash = inject<flashInterface>("flash"),
-		editMode = inject<editModeInterface>("editMode")
+		editMode = inject<Ref<boolean>>("editMode")
 	const addFormula = function () {
 			axios
-				.post(route("chapters.formulas.store", [props.chapterSlug]), {})
+				.post(route("formulas.store", [props.chapterSlug]), {})
 				.then((res) => {
 					flash.success("formule créée")
-					theFormular.value.push(res.data.data)
+					theFormular.value.push(res.data)
 				})
 		},
 		deleteFormular = function (id) {
@@ -104,7 +104,7 @@ const props = defineProps({
 		</div>
 
 		<div
-			v-if="themeChapters.length > 0 || editMode.enabled.value"
+			v-if="themeChapters.length > 0 || editMode"
 			class="flex flex-wrap text-xs gap-1 px-5"
 		>
 			<button
@@ -120,7 +120,7 @@ const props = defineProps({
 			/>
 		</div>
 
-		<div v-if="theFormular.length > 0 || editMode.enabled.value">
+		<div v-if="theFormular.length > 0 || editMode">
 			<div
 				v-if="loadingState"
 				class="px-5 grid place-items-center min-h-[10em]"
@@ -156,7 +156,7 @@ const props = defineProps({
 					<template #footer>
 						<footer>
 							<div
-								v-show="editMode.enabled.value"
+								v-show="editMode"
 								v-admin
 								class="px-5"
 							>

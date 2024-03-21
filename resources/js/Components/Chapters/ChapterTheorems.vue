@@ -3,7 +3,7 @@ Affichage d'un formulaire, avec la possibilitÃ© de passer d'un formulaire du thÃ
 -->
 <script setup lang="ts">
 import { computed, ref } from "vue"
-import BlockShow from "@/Components/Posts/Blocks/BlockShow.vue"
+import BlockShow from "@/Pages/Blocks/BlockShow.vue"
 import { useIntersectionObserver } from "@vueuse/core"
 import axios from "axios"
 
@@ -31,7 +31,7 @@ const props = defineProps({
 		return axios
 			.get(route("chapters.theorems.index", [theSlug.value]))
 			.then((res) => {
-				theTheorems.value = res.data.data
+				theTheorems.value = res.data
 			})
 			.catch((err) => {
 				theTheoremsErrors.value = err.toJSON()

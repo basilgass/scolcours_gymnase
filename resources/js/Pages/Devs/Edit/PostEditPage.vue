@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue"
-import PostForm from "@/Components/Posts/PostForm.vue"
+import PostForm from "@/Components/Posts/PostForm_OLD.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 
 defineOptions({ layout: LayoutMain })

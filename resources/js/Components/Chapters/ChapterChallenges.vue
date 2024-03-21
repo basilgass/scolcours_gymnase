@@ -3,16 +3,15 @@ Affichage de la liste des challenges pour un chapitre donné.
 -->
 <script setup lang="ts">
 import DialogModal from "@/Components/Ui/DialogModal.vue"
-import { inject, ref } from "vue"
+import { inject, Ref, ref } from "vue"
 import { useForm } from "@inertiajs/vue3"
 import FormMaker from "@/Components/Form/FormMaker.vue"
-import { editModeInterface } from "@/types/index.js"
 
 let props = defineProps({
 	chapter: { type: Object, required: true }
 })
 
-const editMode = inject<editModeInterface>("editMode")
+const editMode = inject<Ref<boolean>>("editMode")
 
 let show = ref(false),
 	form = useForm({
@@ -53,7 +52,7 @@ let show = ref(false),
 			/>
 
 			<div
-				v-show="editMode.enabled.value"
+				v-show="editMode"
 				v-admin
 				class="min-h-[100px] grid place-items-center"
 			>

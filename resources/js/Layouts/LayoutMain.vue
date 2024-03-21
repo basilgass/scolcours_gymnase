@@ -1,12 +1,10 @@
 <script lang="ts" setup>
-	import MainHeader from "@/Components/MainHeader.vue"
-	import MainFooter from "@/Components/MainFooter.vue"
-	import { computed, onMounted, provide, ref } from "vue"
-	import FlashMessage from "@/Components/Ui/FlashMessage.vue"
-	import { useMagicKeys, whenever } from "@vueuse/core"
-	import { usePage } from "@inertiajs/vue3"
+import MainHeader from "@/Components/MainHeader.vue"
+import MainFooter from "@/Components/MainFooter.vue"
+import { provide, ref } from "vue"
+import FlashMessage from "@/Components/Ui/FlashMessage.vue"
 
-	defineProps({
+defineProps({
 		theme: {
 			type: Object,
 			default: () => {
@@ -35,60 +33,6 @@
 		error: (message, link, timeout) =>
 			addFlashMessage(message, link, "error", timeout),
 	})
-
-	const globalEditMode = ref(false),
-		globalCorrectionMode = ref(false)
-
-	provide("editMode", {
-		enabled: computed(() => {
-			return globalEditMode.value
-		}),
-		toggle: function (value?: boolean) {
-			if (value !== undefined) {
-				globalEditMode.value = value
-			} else {
-				globalEditMode.value = !globalEditMode.value
-			}
-			localStorage.setItem(
-				"scolcours_editMode",
-				`${globalEditMode.value}`,
-			)
-		},
-	})
-	provide("correctionMode", {
-		enabled: computed(() => {
-			return globalCorrectionMode.value
-		}),
-		toggle: function () {
-			globalCorrectionMode.value = !globalCorrectionMode.value
-			localStorage.setItem(
-				"scolcours_correctionMode",
-				`${globalCorrectionMode.value}`,
-			)
-		},
-	})
-
-	onMounted(() => {
-		if (usePage().props.auth.user && usePage().props.auth.can.admin) {
-			globalEditMode.value =
-				localStorage.getItem("scolcours_editMode") === "true" || false
-			globalCorrectionMode.value =
-				localStorage.getItem("scolcours_correctionMode") === "true" ||
-				false
-		}
-	})
-
-	// Add shortcut to open toggle admin mode.
-	const keys = useMagicKeys()
-	whenever(keys.ctrl_alt_a, () => {
-		if (usePage().props.auth.user && usePage().props.auth.can.admin) {
-			globalEditMode.value = !globalEditMode.value
-			localStorage.setItem(
-				"scolcours_editMode",
-				`${globalEditMode.value}`,
-			)
-		}
-	})
 </script>
 
 <template>
@@ -99,7 +43,7 @@
 		<!-- Container for the "column design" -->
 		<div class="min-h-screen bg-gray-100">
 			<!-- Main content -->
-			<main class="scolcours-container min-h-screen">
+			<main class="min-h-screen">
 				<slot />
 			</main>
 

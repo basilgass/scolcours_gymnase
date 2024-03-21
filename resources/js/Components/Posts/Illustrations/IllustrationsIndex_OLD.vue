@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-import { computed, inject, PropType, ref } from "vue"
-import IllustrationShow from "@/Components/Posts/Illustrations/IllustrationShow.vue"
+import { computed, inject, PropType, Ref, ref } from "vue"
+import IllustrationShow from "@/Components/Posts/Illustrations/IllustrationShow_OLD.vue"
 import axios from "axios"
-import { editModeInterface, flashInterface } from "@/types"
+import { flashInterface } from "@/types"
 import { IllustrationInterface } from "@/types/modelInterfaces"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 
@@ -14,7 +14,7 @@ const props = defineProps({
 })
 
 const flash = inject<flashInterface>("flash"),
-	editMode = inject<editModeInterface>("editMode")
+	editMode = inject<Ref<boolean>>("editMode")
 
 const theIllustrations = ref(props.illustrations)
 
@@ -54,7 +54,7 @@ const updateIllustrationsGrid = function() {
 const addIllustration = function() {
 		axios
 			.post(
-				route("blocks.illustrations.store", [props.containerId]),
+				route("illustrations.store", [props.containerId]),
 				{}
 			)
 			.then((res) => {
@@ -101,7 +101,7 @@ const addIllustration = function() {
 	<div>
 		<div
 			v-if="props.containerType === 'Block'"
-			v-show="editMode.enabled.value && theIllustrations.length > 0"
+			v-show="editMode && theIllustrations.length > 0"
 			v-admin
 			v-theme.bg.text.admin
 			class="p-3 mb-3"
@@ -161,8 +161,7 @@ const addIllustration = function() {
 			</template>
 			<template #footer>
 				<button
-					v-show="editMode.enabled.value"
-					v-admin
+					v-admin="editMode"
 					class="btn-new-inline"
 					@click="addIllustration"
 				>

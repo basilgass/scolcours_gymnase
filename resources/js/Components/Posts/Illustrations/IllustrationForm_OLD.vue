@@ -7,7 +7,7 @@ import FormMaker from "@/Components/Form/FormMaker.vue"
 import { IllustrationInterface, widgetInterface } from "@/types/modelInterfaces.js"
 import axios from "axios"
 import DialogModal from "@/Components/Ui/DialogModal.vue"
-import IllustrationShow from "@/Components/Posts/Illustrations/IllustrationShow.vue"
+import IllustrationShow from "@/Components/Posts/Illustrations/IllustrationShow_OLD.vue"
 
 const emit = defineEmits(["change", "inputFocus", "destroy"])
 const props = defineProps({

@@ -1,0 +1,188 @@
+<script lang="ts" setup>
+
+import FormMaker from "@/Components/Form/FormMaker.vue"
+import { inject, PropType, ref, Ref } from "vue"
+import { flashInterface } from "@/types"
+import axios from "axios"
+import QuestionShow from "@/Pages/Questions/QuestionShow.vue"
+import { PostInterface, QuestionInterface } from "@/types/modelInterfaces"
+
+const props = defineProps({
+	post: { type: Object as PropType<PostInterface>, required: true },
+	questions: { type: Object as PropType<QuestionInterface[]>, required: true },
+	components: { type: Object as PropType<Array<InstanceType<typeof QuestionShow>>>, required: true }
+})
+
+const editMode = inject<Ref<boolean>>("editMode")
+const flash = inject<flashInterface>("flash")
+
+const thePost = ref(props.post)
+const theQuestions = ref(props.questions)
+
+const removeDisplayIf = function() {
+		theQuestions.value.forEach((question) => {
+			question.displayIf = null
+		})
+		// Save to database.
+		storeDisplayIf()
+	},
+	addDisplayIf = function() {
+		// Add displayIf by increment.
+		//TODO:  Use the order key.
+		theQuestions.value.forEach((question, index) => {
+			if (index > 0) {
+				question.displayIf =
+					theQuestions.value[index - 1].id.toString()
+			}
+		})
+
+		// Save to database.
+		storeDisplayIf()
+	},
+	storeDisplayIf = function() {
+		axios
+			.post(route("questions.batch.updateDisplayIf"), {
+				_method: "PATCH",
+				values: theQuestions.value.map((question) => {
+					return {
+						id: question.id,
+						displayIf: question.displayIf
+					}
+				})
+			})
+			.then(() => {
+				flash.success(
+					"L'affichage conditionnel a bien été enregistré."
+				)
+			})
+			.catch(() => {
+				flash.error(
+					"Il y a eu un problème avec l'affichage conditionnel."
+				)
+			})
+	}
+
+function resetAnswers() {
+	axios
+		.patch(
+			route("questions.answers.reset", ["Post", props.post.id])
+		)
+		.then(() => {
+			for (const i in theQuestions.value) {
+				theQuestions.value[i].user.answer = ""
+
+				theQuestions.value[i].user.result = false
+
+				theQuestions.value[i].user.attempts = 0
+			}
+		})
+}
+
+
+const isAnswersShown = ref(false)
+
+function showAnswers() {
+	props.components.forEach((component) => {
+		if (component) {
+			if (isAnswersShown.value) {
+				component.loadAnswer(null) //reset the answer
+			} else {
+				component.loadAnswer() // show the answer
+			}
+
+		}
+	})
+
+	isAnswersShown.value = !isAnswersShown.value
+}
+
+const addQuestion = function () {
+	axios
+		.post(
+			route("questions.storeTo", [
+				"Post",
+				props.post.id,
+			]),
+			{
+				math: false,
+				mathAppend: "",
+				body: "nouvelle question",
+				answer: "-",
+				keyboard: "-"
+			},
+		)
+		.then((res) => {
+			// Add the question.
+			theQuestions.value.push({
+				...res.data,
+			})
+		})
+}
+</script>
+<template>
+	<div
+		v-admin="editMode"
+		class="bg-slate-600 text-white py-2 px-3 flex gap-6"
+	>
+		<button
+			class="text-xl"
+			@click="addQuestion"
+		>
+			<i class="bi bi-plus-circle" />
+		</button>
+		<div class="flex-1 flex gap-2">
+			<form-maker
+				v-model="thePost.questionsGrid"
+				:axios="{ model: 'Post', id: post.id, column: 'questionsGrid' }"
+				class="flex-1"
+				inline-label
+				label="grille"
+				sm
+			/>
+		</div>
+
+		<div class="flex gap-2 items-center">
+			<div class="text-sm">
+				apparitions
+			</div>
+			<button
+				class="btn btn-xs"
+				@click="addDisplayIf"
+			>
+				<i class="bi bi-bar-chart" />
+			</button>
+			<button
+				class="btn btn-xs"
+				@click="removeDisplayIf"
+			>
+				<i class="bi bi-trash" />
+			</button>
+		</div>
+
+
+		<div class="flex gap-2 items-center">
+			<div class="text-sm">
+				réponses
+			</div>
+			<button
+				class="btn btn-xs"
+				@click="showAnswers"
+			>
+				<i
+					v-if="isAnswersShown"
+					class="bi bi-eye"
+				/>
+				<i
+					v-else
+					class="bi bi-eye-slash"
+				/>
+			</button>
+			<button
+				class="btn btn-xs"
+				@click="resetAnswers"
+			>
+				<i class="bi bi-trash" />
+			</button>
+		</div>
+	</div>
+</template>

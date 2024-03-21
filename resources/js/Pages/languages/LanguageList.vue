@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
-import { computed, inject, PropType, ref } from "vue"
+import { computed, inject, PropType, Ref, ref } from "vue"
 import { PiMath } from "pimath/esm"
 import LanguageUnitsSelector from "@/Components/Languages/LanguageUnitsSelector.vue"
 import { usePage } from "@inertiajs/vue3"
@@ -8,7 +8,6 @@ import DialogModal from "@/Components/Ui/DialogModal.vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import axios from "axios"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
-import { editModeInterface } from "@/types"
 import { TranslationUnitInterface } from "@/types/modelInterfaces"
 
 defineOptions({ layout: LayoutMain })
@@ -19,7 +18,7 @@ const props = defineProps({
 	units: {type: Object as PropType<TranslationUnitInterface[]>, default: () => {}}
 })
 
-const editMode = inject<editModeInterface>("editMode")
+const editMode = inject<Ref<boolean>>("editMode")
 
 const availableWords = ref([]),
 	random = ref(false),
@@ -57,14 +56,14 @@ const showEditForm = ref(false),
 		id: null, foreign: null, fr: null
 	}),
 	editTranslation = function (word) {
-		if (editMode.enabled.value && usePage().props.auth.can.admin) {
+		if (editMode && usePage().props.auth.can.admin) {
 			editWord.value = word
 			showEditForm.value = true
 		}
 
 	},
 	updateTranslation = function () {
-		axios.post(route("translation.words.update", [editWord.value.id]), {
+		axios.post(route("translations.words.update", [editWord.value.id]), {
 			...editWord.value,
 			_method: "PATCH"
 		}).then(() => {
@@ -145,7 +144,7 @@ const showEditForm = ref(false),
 			<div
 				v-for="(item, index) in filteredWords"
 				:key="index"
-				:class="editMode.enabled.value?'hover:bg-amber-100 cursor-pointer':''"
+				:class="editMode?'hover:bg-amber-100 cursor-pointer':''"
 				class="bg-white border rounded grid grid-cols-2 p-3"
 				@click="editTranslation(item)"
 			>

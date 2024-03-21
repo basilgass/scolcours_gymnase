@@ -17,7 +17,7 @@ const props = defineProps({
         }
     },
     tool: {
-        type: Object, default: () => {
+        type: Object as PropType<ToolInterface>, default: () => {
         }
     }
 })

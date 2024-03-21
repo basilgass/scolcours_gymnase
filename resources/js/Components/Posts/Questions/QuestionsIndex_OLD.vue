@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { computed, inject, PropType, ref } from "vue"
-import QuestionShow from "@/Components/Posts/Questions/QuestionShow.vue"
+import { computed, inject, PropType, Ref, ref } from "vue"
+import QuestionShow from "@/Pages/Questions/QuestionShow.vue"
 import axios from "axios"
 import FormMaker from "@/Components/Form/FormMaker.vue"
-import { editModeInterface, flashInterface } from "@/types/index.js"
+import { flashInterface } from "@/types/index.js"
 import { QuestionInterface } from "@/types/modelInterfaces"
 
 const props = defineProps({
@@ -14,7 +14,7 @@ const props = defineProps({
 	})
 
 	const flash = inject<flashInterface>("flash"),
-		editMode = inject<editModeInterface>("editMode")
+		editMode = inject<Ref<boolean>>("editMode")
 
 	const theQuestions = ref(props.questions),
 		answeredIds = computed(() => {
@@ -127,7 +127,7 @@ const props = defineProps({
 				.then((res) => {
 					// Add the question.
 					theQuestions.value.push({
-						...res.data.data,
+						...res.data,
 					})
 				})
 		},
@@ -156,7 +156,7 @@ const props = defineProps({
 				.then((res) => {
 					// TODO : flash message !
 					flash.success("les questions ont bien été mis à jour !")
-					theQuestions.value = res.data.data
+					theQuestions.value = res.data
 				})
 				.catch((res) =>
 					console.warn("update questions order failed", res),
@@ -218,7 +218,7 @@ const props = defineProps({
 	<article>
 		<!-- Admin wrapper -->
 		<div
-			v-show="editMode.enabled.value"
+			v-show="editMode"
 			v-admin
 			v-theme.bg.text="'admin'"
 			class="p-3"
@@ -306,7 +306,7 @@ const props = defineProps({
 			item-key="id"
 			v-bind="{
 				animation: 200,
-				disabled: editMode.enabled.value === false,
+				disabled: editMode === false,
 			}"
 			@end="updateQuestionsOrder"
 		>
@@ -324,7 +324,7 @@ const props = defineProps({
 
 		<!-- Add question -->
 		<div
-			v-show="editMode.enabled.value"
+			v-show="editMode"
 			v-admin
 			class="px-5 mb-5"
 		>

@@ -2,12 +2,11 @@
 Affichage des illustrations
 -->
 <script lang="ts" setup>
-import { computed, inject, PropType, ref, watch } from "vue"
+import { computed, inject, PropType, Ref, ref, watch } from "vue"
 import { useFormattedBody } from "@/Composables/useHelpers"
-import { editModeInterface } from "@/types"
 import { getModule, MODULE_TYPES } from "@/scolcours"
 import { IllustrationInterface } from "@/types/modelInterfaces"
-import IllustrationEdit from "@/Components/Posts/Illustrations/IllustrationEdit.vue"
+import IllustrationEdit from "@/Components/Posts/Illustrations/IllustrationEdit_OLD.vue"
 
 interface IllustrationInterfaceExtended extends IllustrationInterface {
 	isNew?: boolean;
@@ -22,7 +21,7 @@ const props = defineProps({
 const blockData = inject("blockData", {})
 const root = ref(null),
 	theIllustration = ref(props.illustration),
-	editMode = inject<editModeInterface>("editMode"),
+	editMode = inject<Ref<boolean>>("editMode"),
 	blockIllustration = computed(() => {
 		return {
 			title: theIllustration.value.title
@@ -67,7 +66,7 @@ function destroyIllustration(id: number) {
 		:class="figureClass"
 	>
 		<illustration-edit
-			v-if="!preview && editMode.enabled.value"
+			v-if="!preview && editMode"
 			v-admin
 			:illustration="theIllustration"
 			@destroy="destroyIllustration"

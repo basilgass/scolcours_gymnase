@@ -53,7 +53,7 @@ class DeckController extends Controller
 	 */
 	public function show(Deck $deck)
 	{
-		return Inertia::render("Decks/DeckPage", [
+		return Inertia::render("Decks/DeckShow", [
 			'deck' => DeckResource::make($deck)
 		]);
 	}

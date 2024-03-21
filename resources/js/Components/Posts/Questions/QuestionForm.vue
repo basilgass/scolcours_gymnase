@@ -5,7 +5,7 @@ Formulaire d'édition d'une question
 import { computed, inject, reactive, ref } from "vue"
 import DialogModal from "@/Components/Ui/DialogModal.vue"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
-import QuestionShow from "@/Components/Posts/Questions/QuestionShow.vue"
+import QuestionShow from "@/Pages/Questions/QuestionShow.vue"
 import MoveItemTo from "@/Components/Posts/MoveItemTo.vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import { ClipboardKeyboardInterface, flashInterface } from "@/types"
@@ -42,7 +42,7 @@ let saveQuestion = function() {
 					})
 					.then((res) => {
 						emits("update:modelValue", false)
-						emits("change", res.data.data)
+						emits("change", res.data)
 					})
 					.catch((error) => {
 						flash.error(

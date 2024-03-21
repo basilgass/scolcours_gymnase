@@ -348,7 +348,7 @@ onMounted(() => {
 	// Add a resizeObserver on the draw container
 	useResizeObserver(drawWrapper.value, () => {
 		PiParserUpdate("onResize", true)
-		PiParser.updateLayout(props.draw.parameters)
+		PiParser.updateLayout(props.draw.parameters??"")
 		// PiParser.update(drawCode.value, true)
 	})
 })
@@ -373,7 +373,7 @@ watch(
 
 		if (newValue.parameters !== oldValue.parameters) {
 			try {
-				PiParser.updateLayout(newValue.parameters)
+				PiParser.updateLayout(newValue.parameters??"")
 			} catch {
 				console.warn(
 					"Cannot parse (watch props.draw.parameters)",

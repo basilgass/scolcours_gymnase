@@ -18,7 +18,7 @@ const props = defineProps({
 const theIllustration = ref<IllustrationInterface>(props.illustration)
 const editForm = computed(() => {
 		return defineAsyncComponent(
-			() => import("@/Components/Posts/Illustrations/IllustrationForm.vue")
+			() => import("@/Components/Posts/Illustrations/IllustrationForm_OLD.vue")
 		)
 	}),
 	showEditForm = ref(props.illustration?.isNew === true)

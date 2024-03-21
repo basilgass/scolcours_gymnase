@@ -38,6 +38,7 @@
 	"dependencies": {
 		"@sgratzl/chartjs-chart-boxplot": "^4.2.8",
 		"@svgdotjs/svg.js": "^3.2.0",
+		"@vueuse/components": "^10.9.0",
 		"@vueuse/core": "^10.9.0",
 		"bootstrap-icons": "^1.11.3",
 		"chart.js": "^4.4.2",

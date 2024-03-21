@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\BlockResource;
 use App\Http\Resources\PostResource;
+use App\Http\Resources\ThemeResource;
 use App\Models\Chapter;
 use App\Models\Post;
 use Illuminate\Http\Request;
@@ -39,7 +39,7 @@ class PostController extends Controller
 
 		return [
 			'post' => PostResource::make($post),
-			'redirect' => route('theme.chapter.slide', [
+			'redirect' => route('themes.chapters.slide', [
 				'theme' => $chapter->theme->slug,
 				'chapter' => $chapter->slug,
 				'order' => $post->order
@@ -47,47 +47,37 @@ class PostController extends Controller
 		];
 	}
 
-	public function create(Chapter $chapter)
-	{
-		// Create a post form
-		//		return Inertia::render("Posts/PostForm", [
-		//			"theme" => $chapter->theme,
-		//			"chapter" => $chapter
-		//		]);
-	}
-
 	public function show(Post $post)
 	{
 		$chapter = $post->chapter;
 		$theme = $chapter->theme;
-		return redirect()->route(
-			'theme.chapter.slide',
-			[
-				$theme->slug, $chapter->slug, $post->order
-			]
-		);
+		return redirect(route('themes.chapters.slide', [$theme, $chapter, $post->order]));
 	}
 
 	public function edit(Post $post)
 	{
+		$post->unsetRelation('blocks');
+		$post->unsetRelation('questions');
+
 		// Create a post form
-		return Inertia::render("Devs/Edit/PostEditPage", [
-			'post' => BlockResource::make($post)
+		return Inertia::render("Posts/PostEdit", [
+			'theme' => ThemeResource::make($post->chapter->theme),
+			'post' => $post
 		]);
 	}
 
-	public function updateNumberOfVisibleBlocks(Post $post, Request $request)
-	{
-		// Validate the post.
-		$validation = $request->validate([
-			'numberVisibleBlocks' => ['integer', 'between:0,100'],
-		]);
-
-		$post->numberOfVisibleBlocks = $validation['numberVisibleBlocks'];
-		$post->save();
-
-		return $post;
-	}
+//	public function updateNumberOfVisibleBlocks(Post $post, Request $request)
+//	{
+//		// Validate the post.
+//		$validation = $request->validate([
+//			'numberVisibleBlocks' => ['integer', 'between:0,100'],
+//		]);
+//
+//		$post->numberOfVisibleBlocks = $validation['numberVisibleBlocks'];
+//		$post->save();
+//
+//		return $post;
+//	}
 
 	public function updateBlocksOrder(Post $post, Request $request)
 	{
@@ -105,13 +95,15 @@ class PostController extends Controller
 			'title' => ['max:255'],
 			'script' => ['string', 'nullable'],
 			'switch' => ['string', 'nullable'],
-			'type' => ['string', 'nullable']
+			'type' => ['string', 'nullable'],
+			'questionsGrid' => ['string', 'nullable'],
 		]);
 
 		$post->title = $validation['title'];
 		$post->script = $validation['script'] ?? '';
 		$post->switch = $validation['switch'];
 		$post->type = $validation['type'] ?? null;
+		$post->questionsGrid = $validation['questionsGrid'] ?? null;
 		$post->save();
 
 		return PostResource::make($post);
@@ -142,6 +134,7 @@ class PostController extends Controller
 	public function destroy($id)
 	{
 		$post = Post::find($id);
+
 		if ($post) {
 			$chapter = $post->chapter;
 			// Remove all children blocks.
@@ -152,12 +145,12 @@ class PostController extends Controller
 			Post::destroy($id);
 
 			// Update the posts order.
-
 			$chapter->reorder();
+
+			return $chapter->url;
 		}
 
-
-		return true;
+		return null;
 	}
 
 	public function movePostToChapter(Post $post, Chapter $chapter)

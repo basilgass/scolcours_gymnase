@@ -2,49 +2,59 @@
 
 use App\Http\Controllers\QuestionController;
 
-Route::get('questions/admin/{question}', function (\App\Models\Question $question) {
-	return \App\Http\Resources\QuestionResource::make($question);
-});
+// TODO: check removing apiResources for posts.questions is still working.
+//Route::apiResource('posts.questions', QuestionController::class)
+//	->shallow();
 
-// TODO: remove posts references to questionsRoutes
-Route::apiResource('posts.questions', QuestionController::class)
-	->shallow();
-
-// Must be a verified user
+// Store and validate an answer for a user.
 Route::post('questions/{question}/validate', [QuestionController::class, 'storeAnswer'])
 	->middleware('auth', 'verified')
 	->name('questions.validate');
 
-Route::middleware("can:admin")->group(function () {
-	Route::post('questions/{type}/{id}/store', [QuestionController::class, 'store'])
-		->name('questions.storeTo');
+Route::get('questions/{question}', [QuestionController::class, "show"])
+	->name('questions.show');
 
-	Route::patch('questions/{question}', [QuestionController::class, 'update'])
-		->name('questions.update');
+/*
+* -----------------------------------------
+* Admin routes
+* -----------------------------------------
+*/
+Route::middleware("can:admin")
+	->group(function () {
+		// Get
+		Route::get('questions/{question}/edit', [QuestionController::class, 'edit'])
+			->name('questions.edit');
 
-	Route::delete('questions/{question}', [QuestionController::class, 'destroy'])
-		->name('questions.destroy');
 
-	Route::post('questions/{question}/duplicate', [QuestionController::class, 'duplicate'])
-		->name('questions.duplicate');
+		// Post
+		Route::post('questions/{question}/duplicate', [QuestionController::class, 'duplicate'])
+			->name('questions.duplicate');
 
-	// Apply to all questions related to a specific "questionable"
-	Route::patch('questions/{type}/{id}/updateOrder', [QuestionController::class, 'updateQuestionsOrder'])
-		->name('questions.updateOrder');
 
-	Route::patch('questions/{type}/{id}/reset', [QuestionController::class, 'resetAnswers'])
-		->name('questions.answers.reset');
+		// Patch
+		Route::patch('questions/{question}', [QuestionController::class, 'update'])
+			->name('questions.update');
 
-	Route::get('questions/{question}/edit', [QuestionController::class, 'edit'])
-		->name('questions.edit');
+		Route::post('questions/store/to/{type}/{id}', [QuestionController::class, 'store'])
+			->name('questions.storeTo');
 
-	Route::patch('questions/patch/updateDisplayIf', [QuestionController::class, 'updateQuestionsDisplayIf'])
-		->name('questions.batch.updateDisplayIf');
+		Route::patch('questions/update/order/for/{type}/{id}', [QuestionController::class, 'updateQuestionsOrder'])
+			->name('questions.updateOrder');
 
-	Route::patch('questions/{question}/updateDisplayIf', [QuestionController::class, 'updateQuestionDisplayIf'])
-		->name('questions.updateDisplayIf');
+		Route::patch('questions/reset/answers/for/{type}/{id}', [QuestionController::class, 'resetAnswers'])
+			->name('questions.answers.reset');
 
-	// Move question to post route
-	Route::patch('questions/{question}/moveTo/{post}', [QuestionController::class, 'moveToPost'])
-		->name('questions.moveTo.post');
-});
+		Route::patch('questions/patch/update/displayIf', [QuestionController::class, 'updateQuestionsDisplayIf'])
+			->name('questions.batch.updateDisplayIf');
+
+		Route::patch('questions/{question}/update/displayIf', [QuestionController::class, 'updateQuestionDisplayIf'])
+			->name('questions.updateDisplayIf');
+
+		Route::patch('questions/{question}/moveTo/{post}', [QuestionController::class, 'moveToPost'])
+			->name('questions.moveTo.post');
+
+
+		// Destroy
+		Route::delete('questions/{question}', [QuestionController::class, 'destroy'])
+			->name('questions.destroy');
+	});

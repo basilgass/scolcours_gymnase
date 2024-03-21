@@ -29,7 +29,7 @@ const addPost = function () {
 			}
 		)
 			.then(res => {
-				const post = res.data.data
+				const post = res.data
 				theChapter.posts[post.order] = post
 			})
 			.catch(err => console.warn(err))

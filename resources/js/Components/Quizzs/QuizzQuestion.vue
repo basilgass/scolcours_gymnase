@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import QuestionShow from "@/Components/Posts/Questions/QuestionShow.vue"
+import QuestionShow from "@/Pages/Questions/QuestionShow.vue"
 
 defineEmits(["validate"])
 let props = defineProps({

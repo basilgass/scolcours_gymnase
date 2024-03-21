@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, ref } from "vue"
+import { computed, inject, ref } from "vue"
 import FormElementCodearea from "@/Components/Form/FormElement/FormElementCodearea.vue"
 import FormElementKeyboard from "@/Components/Form/FormElement/FormElementKeyboard.vue"
 import FormElementSwitch from "@/Components/Form/FormElement/FormElementSwitch.vue"
@@ -7,6 +7,8 @@ import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 import { FormValidationFraction } from "@/Components/Form/FormValidation/FormValidationFraction"
 import { FormValidationNumber } from "@/Components/Form/FormValidation/FormValidationNumber"
 import type { FormMakerPropsType } from "@/Components/Form/FormMakerInterface"
+import { flashInterface } from "@/types"
+import axios from "axios"
 
 /**
  * This component is used to generate a form input
@@ -29,7 +31,7 @@ const props = withDefaults(defineProps<FormMakerPropsType>(), {
 	labelClass: "",
 	max: null,
 	message: "",
-	messageClass:"",
+	messageClass: "",
 	min: null,
 	modelValue: "",
 	placeholder: "",
@@ -42,12 +44,14 @@ const props = withDefaults(defineProps<FormMakerPropsType>(), {
 	language: "latex",
 	rows: 4,
 	resizable: false,
-	autoSize: false
+	autoSize: false,
+	axios: null
 })
 
 // Define the emits
-const $emit = defineEmits(["update:modelValue", "enter", "currentLine"])
+const emits = defineEmits(["update:modelValue", "enter", "currentLine"])
 
+const flash = inject<flashInterface>("flash")
 // Get the root element
 const inputWrapper = ref(null)
 
@@ -116,31 +120,32 @@ function updateInput(e) {
 		props.type === "textarea" ||
 		props.type === "fraction"
 	) {
-		$emit("update:modelValue", e.target.value)
+		emits("update:modelValue", e.target.value)
 
 		return
 	} else if (props.type === "number") {
-		$emit(
+		emits(
 			"update:modelValue",
 			e.target.value === "" ? "" : parseFloat(e.target.value)
 		)
 		return
 	} else if (props.type === "checkbox") {
-		$emit("update:modelValue", e.target.checked)
+		emits("update:modelValue", e.target.checked)
 		return
 	} else {
-		$emit("update:modelValue", e)
+		emits("update:modelValue", e)
 		return
 	}
 }
 
 const TEXTAREA = ref(null)
-function onKeyup(){
+
+function onKeyup() {
 	let pos = TEXTAREA.value.selectionStart,
 		lines = theValue.value.split("\n"),
 		lineIndex = theValue.value.substring(0, pos).split("\n").length - 1
 
-	$emit("currentLine", lines[lineIndex])
+	emits("currentLine", lines[lineIndex])
 }
 
 // validation function
@@ -157,7 +162,7 @@ function setFocus() {
 	let input = inputWrapper.value.getElementsByTagName("input")[0]
 
 	// Maybe the input is a textarea
-	if(!input){
+	if (!input) {
 		input = inputWrapper.value.getElementsByTagName("textarea")[0]
 	}
 
@@ -166,8 +171,34 @@ function setFocus() {
 		input = inputWrapper.value.getElementsByTagName("select")[0]
 	}
 
-	if(input)input.focus()
+	if (input) input.focus()
 }
+
+function onEnter(ev) {
+	if (props.axios === null) {
+		emits("enter", ev)
+		return
+	}
+
+	// There is a problem with axios values.
+	if (!props.axios.model || !props.axios.id || !props.axios.column) return
+
+	// Apply the axios
+	axios.patch(
+		route("api.update.a.value"),
+		{
+			_method: "PATCH",
+			...props.axios,
+			value: props.modelValue
+		})
+		.then(() => {
+			flash.success("Valeur enregistrée avec succès.")
+		})
+		.catch(() => {
+			flash.error("Une erreur est survenue lors de l'enregistrement.")
+		})
+}
+
 defineExpose({ focus: setFocus })
 </script>
 
@@ -193,7 +224,8 @@ defineExpose({ focus: setFocus })
 			<div class="flex items-stretch">
 				<div
 					v-if="props.withIcon"
-					class="py-2 w-8 grid place-items-center border rounded-l text-gray-400"
+					:class="props.sm? 'py-1' : 'py-2' "
+					class="w-8 grid place-items-center border rounded-l text-gray-400"
 				>
 					<i :class="iconClass" />
 				</div>
@@ -211,11 +243,11 @@ defineExpose({ focus: setFocus })
 					:value="modelValue"
 					@input="updateInput($event)"
 					@keyup="validate()"
-					@keyup.enter="$emit('enter')"
+					@keyup.enter="onEnter"
 				>
 				<textarea
-					ref="TEXTAREA"
 					v-if="type === 'textarea'"
+					ref="TEXTAREA"
 					:class="combinedInputClass"
 					:rows="props.rows"
 					:value="modelValue as string"
@@ -233,7 +265,7 @@ defineExpose({ focus: setFocus })
 					:value="modelValue"
 					type="number"
 					@input="updateInput($event)"
-					@keyup.enter="$emit('enter')"
+					@keyup.enter="onEnter"
 				>
 				<input
 					v-else-if="type === 'checkbox'"
@@ -241,7 +273,7 @@ defineExpose({ focus: setFocus })
 					:value="modelValue"
 					type="checkbox"
 					@input="updateInput($event)"
-					@keyup.enter="$emit('enter')"
+					@keyup.enter="onEnter"
 				>
 				<!-- select type input -->
 				<select
@@ -286,17 +318,18 @@ defineExpose({ focus: setFocus })
 
 		<!-- Display the error message -->
 		<div
+			v-if="errors"
 			ref="inputError"
 			class="text-xs text-red-600"
-			v-if="errors"
 		>
 			{{ errors }}
 		</div>
 
-		<!-- Display a helper message, via default slot -->
+		<!-- Display a helper message, via message slot or message prop -->
+		<slot name="message" />
 		<markdown-it
-			:class="props.messageClass"
 			v-if="props.message"
+			:class="props.messageClass"
 			:text="props.message"
 		/>
 	</div>

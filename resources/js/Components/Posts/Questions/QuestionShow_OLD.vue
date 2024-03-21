@@ -4,15 +4,15 @@ Envoi de la validation d'une réponse
 keyboard -> QuestionUserInput -> QuestionShow
 -->
 <script lang="ts" setup>
-import IllustrationShow from "@/Components/Posts/Illustrations/IllustrationShow.vue"
+import IllustrationShow from "@/Components/Posts/Illustrations/IllustrationShow_OLD.vue"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
-import { computed, defineAsyncComponent, inject, nextTick, reactive, ref } from "vue"
+import { computed, defineAsyncComponent, inject, nextTick, reactive, Ref, ref } from "vue"
 import KeyboardValidateButton from "@/Components/Keyboards/KeyboardValidateButton.vue"
 import { usePage } from "@inertiajs/vue3"
 import { useWrongAnswerAnimation } from "@/Composables/useHelpers"
 import { useKeyboard } from "@/Composables/useKeyboard"
 import DropdownMenu from "@/Components/Ui/DropdownMenu.vue"
-import { editModeInterface, flashInterface } from "@/types/index.js"
+import { flashInterface } from "@/types"
 import axios from "axios"
 
 const { getKeyboards } = useKeyboard()
@@ -137,7 +137,7 @@ const theQuestion = reactive(props.question), // la question principale, vraimen
 	}),
 	theQuestionLocked = computed(() => {
 		//v-if="locked && !editMode.enabled.value"
-		return props.locked && !editMode.enabled.value
+		return props.locked && !editMode
 	})
 
 // Gestion des réponses
@@ -338,7 +338,7 @@ const updateQuestion = function(event) {
 	}
 
 // Gestion administrateur
-const editMode = inject<editModeInterface>("editMode"),
+const editMode = inject<Ref<boolean>>("editMode"),
 	showEditForm = ref(false),
 	editForm = computed(() => {
 		return defineAsyncComponent(
@@ -349,7 +349,7 @@ const editMode = inject<editModeInterface>("editMode"),
 		axios
 			.post(route("questions.duplicate", [theQuestion.id]))
 			.then((res) => {
-				emits("duplicate", res.data.data)
+				emits("duplicate", res.data)
 				flash.success("la question a bien été dupliquée !")
 			})
 	},
@@ -358,7 +358,7 @@ const editMode = inject<editModeInterface>("editMode"),
 			// Create a new illustration
 			axios
 				.post(
-					route("blocks.illustrations.store", [
+					route("illustrations.store", [
 						theQuestion.block.id
 					]),
 					{}
@@ -445,7 +445,7 @@ const displayIfIds = computed(() => {
 				v-if="theQuestion.order && !props.isMinimal && !props.isDynamic"
 				v-theme.bg.text="!theQuestionLocked"
 				:class="{
-					'draggable-handle cursor-move': editMode.enabled.value,
+					'draggable-handle cursor-move': editMode,
 					'bg-white': theQuestionLocked
 				}"
 				class="z-10 font-semibold font-code absolute left-1 -top-4 rounded-full border w-8 h-8 grid place-items-center draggable-handle"
@@ -456,8 +456,7 @@ const displayIfIds = computed(() => {
 			<!-- ADMIN HEADER -->
 			<div
 				v-if="!props.isDynamic"
-				v-show="editMode.enabled.value"
-				v-admin
+				v-admin="editMode"
 				class="flex justify-end w-full px-3 gap-3 py-2 bg-slate-600 text-white rounded-t"
 			>
 				<button

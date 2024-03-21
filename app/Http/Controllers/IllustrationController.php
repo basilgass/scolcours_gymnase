@@ -65,11 +65,25 @@ class IllustrationController extends Controller
 	 * Display the specified resource.
 	 *
 	 * @param int $id
-	 * @return \Illuminate\Http\Response
+	 * @return \Illuminate\Http\RedirectResponse
 	 */
-	public function show($id)
+	public function show(Illustration $illustration)
 	{
-		//
+		// Redirect to the post / show item
+		$block = $illustration->block;
+		$post = $block->blockable;
+		$chapter = $post->chapter;
+		$theme = $chapter->theme;
+		return redirect()->route(
+			'themes.chapters.slide.anchor',
+			[
+				'theme' =>$theme->slug,
+				'chapter' =>$chapter->slug,
+				'order' =>$post->order,
+				'type' =>'illustration',
+				'id' =>$illustration->id
+			]
+		);
 	}
 
 	/**
@@ -80,8 +94,11 @@ class IllustrationController extends Controller
      */
 	public function edit(Illustration $illustration)
 	{
-		return Inertia::render("Devs/Edit/IllustrationEditPage",
-			["illustration" => $illustration]
+		return Inertia::render("Illustrations/IllustrationEdit",
+			[
+				"theme" => $illustration->block->blockable->chapter->theme,
+				"illustration" => $illustration
+			]
 		);
 	}
 
@@ -117,9 +134,11 @@ class IllustrationController extends Controller
 	 */
 	public function destroy($id)
 	{
+		// Get the url of the block containing the illustration
+		$block = Illustration::find($id)->block;
 		Illustration::destroy($id);
 
-		return $id;
+		return $block->url;
 	}
 
 	public function upload(Request $request)

@@ -9,12 +9,11 @@ use JsonSerializable;
 
 class ChapterResource extends JsonResource
 {
-	public function __construct($resource, bool $withLinks = false)
-	{
-		parent::__construct($resource);
-		$this->withLinks = $withLinks;
-	}
 
+
+	// No wrap around the data.
+	public static $wrap = null;
+	
 	/**
 	 * Transform the resource into an array.
 	 *
@@ -29,7 +28,6 @@ class ChapterResource extends JsonResource
 			$this->blocks;
 		}
 
-		$withLinks = $this->withLinks;
 		return [
 			'id' => $this->id,
 			'slug' => $this->slug,

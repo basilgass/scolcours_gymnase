@@ -1,18 +1,18 @@
 <script setup lang="ts">
-import { ref } from "vue"
-import QuestionForm from "@/Components/Posts/Questions/QuestionForm.vue"
+import { PropType, ref } from "vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
+import { QuestionInterface } from "@/types/modelInterfaces"
 
 defineOptions({ layout: LayoutMain })
 
 const props = defineProps({
-	question: {type: Object, required: true}
+	question: {type: Object as PropType<QuestionInterface>, required: true}
 })
-const show = ref(true)
+
+const theQuestion = ref(props.question)
 </script>
 <template>
-	<question-form
-		v-model="show"
-		:question="props.question.data"
-	/>
+	<article>
+		Something here
+	</article>
 </template>

@@ -15,7 +15,7 @@ const props = defineProps({
 		item.selected=!item.selected
 
 		if(!item.words) {
-			axios.get(route("translation.words", [item.id])).then(res => {
+			axios.get(route("translations.words", [item.id])).then(res => {
 				item.words = res.data
 			})
 		}

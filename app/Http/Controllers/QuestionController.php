@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\QuestionResource;
+use App\Http\Resources\ThemeResource;
 use App\Models\Post;
 use App\Models\Question;
 use App\Models\Quizz;
@@ -65,6 +66,18 @@ class QuestionController extends Controller
 		return QuestionResource::make($question);
 	}
 
+	public function show(Question $question)
+	{
+		// Go to the question.
+		return \redirect(route('themes.chapters.slide.anchor', [
+			'theme' => $question->questionable->chapter->theme->slug,
+			'chapter' => $question->questionable->chapter->slug,
+			'order' => $question->questionable->order,
+			'type' => 'question',
+			'id' => $question->id
+		]));
+
+	}
 
 	/**
 	 * Update the specified resource in storage.
@@ -205,7 +218,8 @@ class QuestionController extends Controller
 
 	public function edit(Question $question): \Inertia\Response
 	{
-		return Inertia::render("Devs/Edit/QuestionEditPage", [
+		return Inertia::render("Questions/QuestionEdit", [
+			'theme' => ThemeResource::make($question->questionable->chapter->theme),
 			'question' => QuestionResource::make($question)
 		]);
 	}

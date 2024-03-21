@@ -4,7 +4,7 @@ Contient le bouton de retour au chapitre, le titre, la description et l'édition
 -->
 <script setup lang="ts">
 
-import IllustrationShow from "@/Components/Posts/Illustrations/IllustrationShow.vue"
+import IllustrationShow from "@/Components/Posts/Illustrations/IllustrationShow_OLD.vue"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 import { computed, defineAsyncComponent, PropType, ref } from "vue"
 import { ChallengeInterface } from "@/types/modelInterfaces"
@@ -27,7 +27,7 @@ const showEditForm = ref(false),
 		<div class="pt-4 mb-4">
 			<Link
 				:href="
-					route('theme.chapter.intro', [
+					route('themes.chapters.intro', [
 						$page.props.theme.slug,
 						props.challenge.chapter.slug,
 					])

@@ -7,8 +7,11 @@ use App\Http\Resources\ChapterMinResource;
 use App\Http\Resources\ChapterResource;
 use App\Http\Resources\ChapterShowResource;
 use App\Http\Resources\PostResource;
+use App\Http\Resources\ThemeResource;
 use App\Models\Block;
 use App\Models\Chapter;
+use App\Models\Illustration;
+use App\Models\Question;
 use App\Models\Theme;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -16,7 +19,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 
-class ChaptersController extends Controller
+class ChapterController extends Controller
 {
 	public function __construct()
 	{
@@ -40,7 +43,7 @@ class ChaptersController extends Controller
 
 		// Filter output.
 		$data = [
-			"theme" => $theme->only('color', 'icon', 'slug', 'title', 'id'),
+			"theme" => ThemeResource::make($theme),
 			"chapters" => ChapterShowResource::collection($chapters)
 		];
 
@@ -75,7 +78,7 @@ class ChaptersController extends Controller
 			'body' => 'Aucune extrait...'
 		]);
 
-		return redirect()->route('theme.chapter.intro', [$theme->slug, $chapter->slug]);
+		return redirect()->route('themes.chapters.intro', [$theme->slug, $chapter->slug]);
 	}
 
 	public function create(Theme $theme)
@@ -93,7 +96,7 @@ class ChaptersController extends Controller
 			// Get the user data
 			return Inertia::render('Chapters/ChapterPage', [
 				// Used for the page layout
-				"theme" => $theme->only('color', 'icon', 'slug', 'title', 'id'),
+				"theme" => ThemeResource::make($theme),
 				// Get the chapter
 				"chapter" => fn() => ChapterResource::make($chapter),
 			]);
@@ -104,40 +107,44 @@ class ChaptersController extends Controller
 		]);
 	}
 
+
 	public function intro(Theme $theme, Chapter $chapter)
 	{
 		return Inertia::render('Chapters/ChapterShow', [
 			// Used for the page layout
-			"theme" => $theme->only('color', 'icon', 'slug', 'title', 'id'),
+			"theme" => ThemeResource::make($theme),
 			// Get the chapter (for next / precvious / ...)
 			"chapter" => fn() => ChapterResource::make($chapter, true),
-			// The post information
-			"nav" => [
-				'previous' => null,
-				'next' => route('theme.chapter.slide', [$theme, $chapter, 1])
-			]
 		]);
 	}
 
-	public function slide(Theme $theme, Chapter $chapter, int $order, Block $block = null)
+	public function slide(Theme $theme, Chapter $chapter, int $order, string $type = null, int $id = null)
 	{
 		$post = $chapter->posts->where('order', "=", $order)->first();
 
-//		dd($post->blocks[0]);
-		return Inertia::render('Chapters/ChapterSlide', [
+		$anchor = null;
+		if ($type !== null && $id !== null) {
+			// Get the model.
+			$model = null;
+			if ($type === 'block') {
+				$model = Block::find($id);
+			} else if ($type === 'illustration') {
+				$model = Illustration::find($id);
+			} else if ($type === 'question') {
+				$model = Question::find($id);
+			}
+			$anchor = sprintf("%s-%s", $type, $model->id);
+		}
+
+		return Inertia::render('Posts/PostShow', [
 			// Used for the page layout
-			"theme" => $theme->only('color', 'icon', 'slug', 'title', 'id'),
+			"theme" => ThemeResource::make($theme),
 			// Get the chapter (for next / previous / ...)
 			"chapter" => fn() => ChapterResource::make($chapter, true),
 			// The post information
 			"post" => PostResource::make($post),
 			// Block for a scroll to
-			"blockAnchor" => $block?->id,
-			// navigation bar.
-			"nav" => [
-				'previous' => $order - 1 <= 0 ? route('theme.chapter.intro', [$theme, $chapter]) : route('theme.chapter.slide', [$theme, $chapter, $order - 1]),
-				'next' => $order === count($chapter->posts) ? null : route('theme.chapter.slide', [$theme, $chapter, $order + 1])
-			]
+			"anchor" => $anchor,
 		]);
 	}
 

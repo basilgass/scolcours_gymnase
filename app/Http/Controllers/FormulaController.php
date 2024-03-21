@@ -75,25 +75,6 @@ class FormulaController extends Controller
         return $formula;
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param Request $request
-     * @param  int  $id
-     * @return Formula
-	 */
-    public function update(Formula $formula, Request $request)
-    {
-//		$validation = $request->validate([
-//			'formula' => ['required', 'max:255'],
-//			'comment' => []
-//		]);
-//
-//		$formula->update($validation);
-//		$formula->save();
-
-		return $formula;
-    }
 
 	public function updateOrder(Request $request)
 	{

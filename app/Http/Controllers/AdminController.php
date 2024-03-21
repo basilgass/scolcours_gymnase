@@ -30,9 +30,9 @@ class AdminController extends Controller
 	{
 		$scolcours = Cache::get('scolcours');
 
-		return Inertia::render('Admin/AdminConfig',
+		return Inertia::render('Admin/AdminConfigPage',
 			[
-				"title" => $scolcours->title,
+				"title"     => $scolcours->title,
 				"allThemes" => Theme::orderBy('order')->get()
 			]
 		);
@@ -42,21 +42,21 @@ class AdminController extends Controller
 	{
 		// Validation
 		$validation = $request->validate([
-			'title' => ['string', 'min:2'],
-			'themes' => ['array'],
-			'themes.*.slug' => ['string', 'exists:App\Models\Theme,slug'],
+			'title'            => ['string', 'min:2'],
+			'themes'           => ['array'],
+			'themes.*.slug'    => ['string', 'exists:App\Models\Theme,slug'],
 			'themes.*.enabled' => ['boolean'],
 		]);
 
 		$scolcours = Scolcours::find(1);
-		$scolcours->title = $validation['title'];
+		$scolcours->title = $validation[ 'title' ];
 		$scolcours->save();
 
 		Cache::delete('scolcours');
 
-		foreach ($validation['themes'] as $theme) {
-			$model = Theme::where('slug', $theme["slug"])->first();
-			$model->enabled = $theme['enabled'];
+		foreach ($validation[ 'themes' ] as $theme) {
+			$model = Theme::where('slug', $theme[ "slug" ])->first();
+			$model->enabled = $theme[ 'enabled' ];
 			$model->save();
 		}
 
@@ -66,14 +66,14 @@ class AdminController extends Controller
 	public function configUpdateOrder(Request $request)
 	{
 		$validation = $request->validate([
-			'order' => ['array'],
-			'order.*.id' => ['exists:App\Models\Theme'],
+			'order'         => ['array'],
+			'order.*.id'    => ['exists:App\Models\Theme'],
 			'order.*.order' => ['int', 'min:1'],
 		]);
 
-		foreach ($validation['order'] as $value) {
-			Theme::find($value['id'])->update([
-				'order' => $value['order']
+		foreach ($validation[ 'order' ] as $value) {
+			Theme::find($value[ 'id' ])->update([
+				'order' => $value[ 'order' ]
 			]);
 		}
 
@@ -91,28 +91,28 @@ class AdminController extends Controller
 		$this->loadTools();
 
 		return Inertia::render(
-			'Admin/AdminPagesShow',
+			'Admin/AdminChaptersPage',
 			[
-				'tools' => Tool::all()->map(function ($tool, $key) {
+				'tools'      => Tool::all()->map(function ($tool, $key) {
 					return [
-						'slug' => $tool->slug,
-						'title' => $tool->title,
+						'slug'       => $tool->slug,
+						'title'      => $tool->title,
 						'updated_at' => $tool->updated_at->format('d.m.Y H:m')
 					];
 				}),
-				'chapters' => Chapter::all()->map(function ($tool, $key) {
+				'chapters'   => Chapter::all()->map(function ($tool, $key) {
 					return [
-						'slug' => $tool->slug,
-						'title' => $tool->title,
-						'theme' => $tool->theme->slug,
-						'active' => $tool->active,
+						'slug'       => $tool->slug,
+						'title'      => $tool->title,
+						'theme'      => $tool->theme->slug,
+						'active'     => $tool->active,
 						'updated_at' => $tool->updated_at->format('d.m.Y H:m')
 					];
 				}),
 				'challenges' => Challenge::all()->map(function ($tool, $key) {
 					return [
-						'slug' => $tool->slug,
-						'title' => $tool->title,
+						'slug'       => $tool->slug,
+						'title'      => $tool->title,
 						'updated_at' => $tool->updated_at->format('d.m.Y H:m')
 					];
 				})
@@ -137,28 +137,28 @@ class AdminController extends Controller
 
 			// Le titre
 			if (preg_match("/\*\stitle:\s?(.+)/", $content, $title)) {
-				$title = $title[1];
+				$title = $title[ 1 ];
 			} else {
 				$title = '';
 			}
 
 			// La description
 			if (preg_match("/\*\sbody:\s?(.+)/", $content, $body)) {
-				$body = $body[1];
+				$body = $body[ 1 ];
 			} else {
 				$body = '';
 			}
 
 			// Les paramètrs
 			if (preg_match("/\*\sparameters:\s?(.+)/", $content, $parameters)) {
-				$parameters = collect(explode(",", $parameters[1]))->map(fn($x) => trim($x));
+				$parameters = collect(explode(",", $parameters[ 1 ]))->map(fn($x) => trim($x));
 			} else {
 				$parameters = collect([]);
 			}
 
 			// Les tags
 			if (preg_match("/\*\stags:\s?(.+)/", $content, $tags)) {
-				$tags = collect(explode(",", $tags[1]))->map(fn($x) => trim($x));
+				$tags = collect(explode(",", $tags[ 1 ]))->map(fn($x) => trim($x));
 			} else {
 				$tags = collect([]);
 			}
@@ -169,8 +169,8 @@ class AdminController extends Controller
 					"slug" => $slug
 				],
 				[
-					"title" => $title,
-					"body" => $body,
+					"title"      => $title,
+					"body"       => $body,
 					"parameters" => $parameters
 				]
 			);
@@ -188,8 +188,8 @@ class AdminController extends Controller
 	public function users()
 	{
 		return Inertia::render(
-			'Admin/AdminUsersShow', [
-			"users" => UserResource::collection(User::all())->resolve(),
+			'Admin/AdminUsersPage', [
+			"users" => UserResource::collection(User::all()),
 			"teams" => Team::all()
 		]);
 	}
@@ -197,27 +197,27 @@ class AdminController extends Controller
 	public function createUsers(Request $request)
 	{
 		$validation = $request->validate([
-			"users" => ['required'],
-			"users.*" => ['email'],
+			"users"    => ['required'],
+			"users.*"  => ['email'],
 			'password' => ['required', 'string', 'min:6']
 		]);
 
-		foreach ($validation['users'] as $email) {
-			$username = explode("@", $email)[0];
+		foreach ($validation[ 'users' ] as $email) {
+			$username = explode("@", $email)[ 0 ];
 			$firstname_name = explode(".", $username);
 			if (count($firstname_name) == 1) {
 				$firstname = null;
-				$name = $firstname_name[0];
+				$name = $firstname_name[ 0 ];
 			} else {
-				$firstname = $firstname_name[0];
-				$name = $firstname_name[1];
+				$firstname = $firstname_name[ 0 ];
+				$name = $firstname_name[ 1 ];
 			}
 
 			User::create([
-				'name' => ucwords($name),
+				'name'      => ucwords($name),
 				'firstname' => ucwords($firstname ?? ""),
-				'email' => $email,
-				'password' => Hash::make($validation['password']),
+				'email'     => $email,
+				'password'  => Hash::make($validation[ 'password' ]),
 			]);
 		}
 
@@ -227,7 +227,7 @@ class AdminController extends Controller
 	public function updateUser(User $user, Request $request)
 	{
 		$request->validate([
-			'name' => 'required',
+			'name'      => 'required',
 			'firstname' => 'required'
 		]);
 
@@ -236,7 +236,7 @@ class AdminController extends Controller
 		$user->save();
 		$user->refresh();
 
-		return UserResource::make($user)->resolve();
+		return UserResource::make($user);
 	}
 
 	public function destroyUser(User $user)
@@ -250,7 +250,7 @@ class AdminController extends Controller
 		// Detect all chapters and create "empty one", disabled by default.
 		foreach (Theme::all() as $theme) {
 			foreach (Storage::disk('chapters')->directories($theme->slug) as $chapter) {
-				$slug = explode('/', $chapter)[1];
+				$slug = explode('/', $chapter)[ 1 ];
 
 				// Check if the chapter exists.
 				$chapter = Chapter::where('slug', $slug)->first();
@@ -258,9 +258,9 @@ class AdminController extends Controller
 				if (!$chapter) {
 					$chapter = Chapter::create([
 						'theme_id' => $theme->id,
-						'title' => $slug,
-						'slug' => $slug,
-//						'body' => 'Aucun extrait...'
+						'title'    => $slug,
+						'slug'     => $slug,
+						//						'body' => 'Aucun extrait...'
 					]);
 					$chapter->blocks()->create();
 				}
@@ -274,12 +274,12 @@ class AdminController extends Controller
 	{
 		foreach (Theme::all() as $theme) {
 			foreach (Storage::disk('chapters')->directories($theme->slug) as $chapter) {
-				$chapter_slug = explode('/', $chapter)[1];
+				$chapter_slug = explode('/', $chapter)[ 1 ];
 				$chapter_id = Chapter::where('slug', $chapter_slug)->first()->id;
 
 				if ($chapter) {
 					foreach (Storage::disk('chapters')->files($chapter . '/challenges') as $file) {
-						$slug = pathinfo($file)['filename'];
+						$slug = pathinfo($file)[ 'filename' ];
 
 						$lastModified = Storage::disk('chapters')->lastModified($file);
 						$existingTools = Tool::where('slug', $slug)->first();
@@ -294,7 +294,7 @@ class AdminController extends Controller
 
 						// Get the title
 						if (preg_match("/const title = [\"]\s?(.+)[\"]/", $content, $title)) {
-							$title = preg_replace("[\"]", "", $title[1]);
+							$title = preg_replace("[\"]", "", $title[ 1 ]);
 						} else {
 							$title = $slug;
 						}
@@ -306,9 +306,9 @@ class AdminController extends Controller
 							$challenge = Challenge::create(
 								[
 									"chapter_id" => $chapter_id,
-									"title" => $title,
-									"slug" => $slug,
-									"active" => false
+									"title"      => $title,
+									"slug"       => $slug,
+									"active"     => false
 								]
 							);
 							$challenge->blocks()->create();
@@ -324,7 +324,7 @@ class AdminController extends Controller
 	public function activate(Chapter $chapter, Request $request)
 	{
 		$request->validate([
-			'slug' => ['required', 'exists:App\Models\Chapter,slug'],
+			'slug'   => ['required', 'exists:App\Models\Chapter,slug'],
 			'active' => ['required', 'boolean']
 		]);
 
@@ -339,10 +339,29 @@ class AdminController extends Controller
 	public function illustrations()
 	{
 		return Inertia::render(
-			'Admin/AdminIllustrations',
+			'Admin/AdminIllustrationsPage',
 			[
 				'illustrations' => Illustration::where('type', "=", "draw")->get()
 			]
 		);
+	}
+
+	public function updateAValue(Request $request)
+	{
+		$request->validate([
+			'model'  => ["string"],
+			'id'     => ["int"],
+			'column' => ["string"],
+			'value'  => ["string"]
+		]);
+		
+		// Get the model
+		$model = app('App\\Models\\' . $request->model);
+		$model = $model::find($request->id);
+
+		$model[ $request->column ] = $request->value;
+		$model->save();
+
+		return $model;
 	}
 }

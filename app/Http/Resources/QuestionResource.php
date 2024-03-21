@@ -9,6 +9,8 @@ use JsonSerializable;
 
 class QuestionResource extends JsonResource
 {
+	// No wrap around the data.
+	public static $wrap = null;
 	/**
 	 * Indicates if the resource's collection keys should be preserved.
 	 *

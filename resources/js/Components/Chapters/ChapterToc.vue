@@ -2,11 +2,11 @@
 Affichage de la table des matières.
 -->
 
-<script setup lang="ts">
-import { computed, inject, ref } from "vue"
+<script lang="ts" setup>
+import { computed, inject, Ref, ref } from "vue"
 import { router } from "@inertiajs/vue3"
 import FormMaker from "@/Components/Form/FormMaker.vue"
-import { editModeInterface, flashInterface } from "@/types/index.js"
+import { flashInterface } from "@/types/index.js"
 import axios from "axios"
 
 const props = defineProps({
@@ -15,8 +15,9 @@ const props = defineProps({
 	active: { type: Number, default: null }
 })
 
-const flash = inject<flashInterface>("flash"),
-	editMode = inject<editModeInterface>("editMode")
+const flash = inject<flashInterface>("flash")
+const editMode = inject<Ref<boolean>>("editMode")
+
 const posts = ref(props.chapter.posts),
 	postsFilterCurrent = ref(""),
 	postsFilter = function(filter) {
@@ -73,7 +74,7 @@ const questionStatus = computed(() => {
 	props.chapter.posts.forEach((p) => {
 		result[p.id] =
 			p.questions.length > 0
-				? p.questions.filter((q) => q.user.result).length ===p.questions.length
+				? p.questions.filter((q) => q.user.result).length === p.questions.length
 				: null
 	})
 	return result
@@ -112,7 +113,7 @@ const questionStatus = computed(() => {
 			</div>
 			<div
 				v-if="$page.props.auth.can.admin"
-				v-show="editMode.enabled.value"
+				v-show="editMode"
 				class="flex gap-3 items-baseline"
 			>
 				<form-maker
@@ -159,7 +160,7 @@ const questionStatus = computed(() => {
 								: ''
 						"
 						:href="
-							route('theme.chapter.slide', [
+							route('themes.chapters.slide', [
 								$page.props.theme.slug,
 								props.chapter.slug,
 								element.order,

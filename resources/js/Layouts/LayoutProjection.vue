@@ -1,26 +1,9 @@
 <script setup lang="ts">
-import { computed, provide, ref } from "vue"
 import "@/Layouts/LayoutProjection.vue"
 import LayoutProjection from "@/Layouts/LayoutProjection.vue"
 
 defineOptions({layout: LayoutProjection})
 
-let globalEditMode = ref(false),
-	globalCorrectionMode = ref(false)
-provide("editMode", {
-	enabled: computed(()=>{return globalEditMode.value}),
-	toggle: function(){
-		globalEditMode.value = !globalEditMode.value
-		localStorage.setItem("scolcours_editMode", globalEditMode.value.toString())
-	}
-})
-provide("correctionMode", {
-	enabled: computed(()=>{return globalCorrectionMode.value}),
-	toggle: function(){
-		globalCorrectionMode.value = !globalCorrectionMode.value
-		localStorage.setItem("scolcours_correctionMode", globalCorrectionMode.value.toString())
-	}
-})
 </script>
 
 <template>
@@ -37,17 +20,17 @@ provide("correctionMode", {
 				administration
 			</Link>
 
-			<button
-				class="btn btn-xs hover:text-black"
-				:class="globalEditMode?'bg-white/40':''"
-				title="Ctrl+Alt+A"
-				@click="globalEditMode=!globalEditMode"
-			>
-				<span v-show="globalEditMode"> <i class="bi bi-pencil mr-2" /> <span
-					class="hidden md:inline"
-				>édition activée</span></span>
-				<span v-show="!globalEditMode"> <i class="bi bi-pencil mr-2" /> <span>activer l'édition</span></span>
-			</button>
+			<!--			<button-->
+			<!--				class="btn btn-xs hover:text-black"-->
+			<!--				:class="globalEditMode?'bg-white/40':''"-->
+			<!--				title="Ctrl+Alt+A"-->
+			<!--				@click="globalEditMode=!globalEditMode"-->
+			<!--			>-->
+			<!--				<span v-show="globalEditMode"> <i class="bi bi-pencil mr-2" /> <span-->
+			<!--					class="hidden md:inline"-->
+			<!--				>édition activée</span></span>-->
+			<!--				<span v-show="!globalEditMode"> <i class="bi bi-pencil mr-2" /> <span>activer l'édition</span></span>-->
+			<!--			</button>-->
 		</header>
 		<main class="w-full flex-1">
 			<slot />

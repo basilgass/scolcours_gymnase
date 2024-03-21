@@ -32,10 +32,10 @@ const emits = defineEmits(["update:modelValue", "change", "destroy"])
 				.then((res) => {
 					flash.success("Le chapitre a été enregistré")
 					emits("update:modelValue", false)
-					emits("change", res.data.data)
+					emits("change", res.data)
 
 					// if the url is not the same than current, redirect.
-					router.visit(route("chapter.show", [res.data.data.slug]))
+					router.visit(route("chapters.show", [res.data.slug]))
 				})
 				.catch((res) => {
 					flash.error(

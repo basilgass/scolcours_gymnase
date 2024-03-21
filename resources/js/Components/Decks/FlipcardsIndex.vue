@@ -3,7 +3,7 @@
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 import { PropType, ref } from "vue"
 import { deckInterface } from "@/types/modelInterfaces"
-import BlockEdit from "@/Components/Posts/Blocks/BlockEdit.vue"
+import BlockEdit from "@/Components/Posts/Blocks/BlockEdit_oldversion.vue"
 import axios from "axios"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
 

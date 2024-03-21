@@ -9,8 +9,6 @@ use App\Models\Post;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
@@ -21,15 +19,6 @@ class BlockController extends Controller
 		$this->middleware('auth');
 	}
 
-	/**
-	 * Display a listing of the resource.
-	 *
-	 * @return Response
-	 */
-	public function index()
-	{
-		//
-	}
 
 	/**
 	 * Store a newly created resource in storage.
@@ -61,23 +50,8 @@ class BlockController extends Controller
 		]);
 
 		$this->storeInBlockable($request->target, $request->target_id, $block);
-//		if ($request->target === 'Chapter') {
-//			Chapter::get($request->target_id)?->append($block);
-//		} elseif ($request->target === 'Post') {
-//			Post::get($request->target_id)?->append($block);
-//		}
 
 		return $block;
-	}
-
-	/**
-	 * Show the form for creating a new resource.
-	 *
-	 * @return Response
-	 */
-	public function create()
-	{
-		//
 	}
 
 	public function storeInBlockable(string $target, int $target_id, Block $block)
@@ -113,9 +87,13 @@ class BlockController extends Controller
 		$chapter = $post->chapter;
 		$theme = $chapter->theme;
 		return redirect()->route(
-			'theme.chapter.slide.block',
+			'themes.chapters.slide.anchor',
 			[
-				$theme->slug, $chapter->slug, $post->order, $block->id
+				'theme' => $theme->slug,
+				'chapter' => $chapter->slug,
+				'order' => $post->order,
+				'type' => 'block',
+				'id' => $block->id
 			]
 		);
 	}
@@ -129,8 +107,9 @@ class BlockController extends Controller
 	public function edit(Block $block)
 	{
 		//
-		return Inertia::render("Devs/Edit/BlockEditPage", [
-			'block' => BlockResource::make($block)
+		return Inertia::render("Blocks/BlockEdit", [
+			'theme' => $block->blockable->chapter->theme,
+			'block' => BlockResource::make($block),
 		]);
 	}
 
@@ -164,33 +143,41 @@ class BlockController extends Controller
 	 */
 	public function destroy($id)
 	{
+		// Get the blockable item.
+		$parent = Block::find($id)->blockable;
+
+		// Delete the block
 		Block::destroy($id);
 
-		return Redirect::back();
+		return $parent->url;
 	}
 
-	public function fetchComponents()
+	public function fetchWidgets()
 	{
-		$components = [];
+		return \Cache::rememberForever('widgets', function () {
+			$components = [];
 
-		foreach (Storage::disk('illustrations')->allFiles() as $file) {
-			// read it and grab the md text.
-			$content = explode("<info>", Storage::disk('illustrations')->get($file));
-			$theme_name = explode("/", $file);
-			$theme = "";
-			$name = basename($file, '.vue');
-			if(count($theme_name)===2){
-				$theme = $theme_name[0];
+			foreach (Storage::disk('illustrations')->allFiles() as $file) {
+				// read it and grab the md text.
+				$content = explode("<info>", Storage::disk('illustrations')->get($file));
+				$theme_name = explode("/", $file);
+				$theme = "";
+				$name = basename($file, '.vue');
+				if (count($theme_name) === 2) {
+					$theme = $theme_name[0];
+				}
+
+				$components[$file] = [
+					"name" => $name,
+					"description" => count($content) >= 2 ? explode("</info>", $content[1])[0] : "",
+					"theme" => $theme
+				];
+
 			}
+			return $components;
+		});
 
-			$components[$file] = [
-				"name" => $name,
-				"description" => count($content) >= 2 ? explode("</info>", $content[1])[0] : "",
-				"theme" => $theme
-			];
 
-		}
-		return $components;
 	}
 
 	public function updateIllustrationsOrder(Block $block, Request $request)
@@ -221,6 +208,7 @@ class BlockController extends Controller
 			'json' => ['string', 'nullable'],
 			'blur' => ['boolean'],
 			'switch' => ['boolean', 'nullable'],
+			'illustrationsGrid' => ['string', 'nullable']
 		]);
 
 		$block->title = $validation['title'] ?? '';
@@ -231,6 +219,7 @@ class BlockController extends Controller
 		$block->json = $validation['json'] ?? null;
 		$block->blur = $validation['blur'] ?? false;
 		$block->switch = $validation['switch'] ?? null;
+		$block->illustrationsGrid = $validation['illustrationsGrid'] ?? null;
 
 		// update the block
 		$block->save();

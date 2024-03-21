@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, inject, PropType, ref } from "vue"
 import DialogModal from "@/Components/Ui/DialogModal.vue"
-import QuestionsIndex from "@/Components/Posts/Questions/QuestionsIndex.vue"
+import QuestionsIndex from "@/Components/Posts/Questions/QuestionsIndex_OLD.vue"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
 import { router } from "@inertiajs/vue3"

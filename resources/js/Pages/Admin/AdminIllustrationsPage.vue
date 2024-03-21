@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import IllustrationShow from "@/Components/Posts/Illustrations/IllustrationShow.vue"
+import IllustrationShow from "@/Components/Posts/Illustrations/IllustrationShow_OLD.vue"
 import { computed, PropType, ref } from "vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
@@ -39,7 +39,7 @@ const search = ref(""),
 		/>
 	</div>
 
-	<section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+	<section class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4">
 		<illustration-show
 			v-for="(illustration, id) of listOfIllustrations"
 			:key="`illustration-${id}`"

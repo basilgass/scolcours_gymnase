@@ -3,13 +3,12 @@ Affichage d'un block , avec toutes les possibilités
 -->
 <script setup lang="ts">
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
-import { computed, inject, PropType, ref } from "vue"
+import { computed, inject, PropType, Ref, ref } from "vue"
 import { blockTypeDefault, blockTypes } from "@/scolcours"
-import IllustrationsIndex from "@/Components/Posts/Illustrations/IllustrationsIndex.vue"
-import BlockEdit from "@/Components/Posts/Blocks/BlockEdit.vue"
+import IllustrationsIndex from "@/Components/Posts/Illustrations/IllustrationsIndex_OLD.vue"
+import BlockEdit from "@/Components/Posts/Blocks/BlockEdit_oldversion.vue"
 import { useBlock } from "@/Components/Posts/Blocks/useBlock"
 import BlockBodyButtons from "@/Components/Posts/Blocks/BlockBodyButtons.vue"
-import { editModeInterface } from "@/types/index.js"
 import { BlockInterfaceExtended } from "@/types/modelInterfaces"
 
 // Props
@@ -25,7 +24,7 @@ import { BlockInterfaceExtended } from "@/types/modelInterfaces"
 defineEmits(["destroy"])
 
 	// Reactive edition mode (admin only)
-	const editMode = inject<editModeInterface>("editMode")
+	const editMode = inject<Ref<boolean>>("editMode")
 
 	// Reactive Refs
 	const theBlock = ref(props.block)
@@ -48,7 +47,7 @@ defineEmits(["destroy"])
 		}),
 		blockExtraStyle = computed(() => {
 			let extraClass = ""
-			if (editMode.enabled.value) {
+			if (editMode) {
 				extraClass += " border border-dashed border-gray-400"
 			}
 
@@ -191,14 +190,14 @@ defineEmits(["destroy"])
 		/>
 		<div v-else>
 			<block-edit
-				v-show="editMode.enabled.value"
+				v-show="editMode"
 				v-admin
 				:block="theBlock"
 				@destroy="$emit('destroy', theBlock.id)"
 			/>
 			<!-- header -->
 			<div
-				v-show="editMode.enabled.value || blockTitle || blockButtons"
+				v-show="editMode || blockTitle || blockButtons"
 				:class="blockConfig.style.header"
 				class="flex justify-between w-full px-5 py-3 mb-3 text-xl"
 			>
@@ -233,7 +232,7 @@ defineEmits(["destroy"])
 				<div
 					v-if="
 						theBlock.illustrations.length > 0 ||
-							editMode.enabled.value
+							editMode
 					"
 					:class="blockTemplate.illustration"
 				>

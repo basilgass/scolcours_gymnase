@@ -24,7 +24,7 @@ export function useMenuScrollToClass(className: string) {
  */
 export function useMenuScrollTo(id: string) {
 	const el = id === undefined ? document.body : document.getElementById(id)
-
+	
 	el.scrollIntoView({
 		block: "start",
 		behavior: "smooth",

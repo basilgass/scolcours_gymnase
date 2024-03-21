@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\ChallengeResource;
+use App\Http\Resources\ThemeResource;
 use App\Models\Challenge;
 use App\Models\Chapter;
 use App\Models\Generator;
@@ -14,7 +15,7 @@ use Illuminate\Support\Str;
 use Inertia\Inertia;
 use function redirect;
 
-class ChallengesController extends Controller
+class ChallengeController extends Controller
 {
 	public function show(Theme $theme, Chapter $chapter, Challenge $challenge)
 	{
@@ -23,7 +24,7 @@ class ChallengesController extends Controller
 		}
 
 		return Inertia::render('Challenges/ChallengeShow', [
-			"theme" => $theme->only('color', 'icon', 'slug', 'title', 'id'),
+			"theme" => ThemeResource::make($theme),
 			"challenge" => ChallengeResource::make($challenge),
 			"teams" => Team::all()
 		]);

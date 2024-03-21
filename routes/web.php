@@ -14,11 +14,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Home page - no controller
+// Home page
 Route::get('/', [ScolcoursController::class, 'index'])
 	->name('home');
 
-// Admin sections, Auth route
+
+// Profile de l'utilisateur
 Route::get('/dashboard', [ScolcoursController::class, 'dashboard'])
 	->middleware(['auth', 'verified'])
 	->name('dashboard');
@@ -26,11 +27,13 @@ Route::get('/dashboard', [ScolcoursController::class, 'dashboard'])
 require __DIR__ . '/adminRoutes.php';
 require __DIR__ . '/auth.php';
 
-require __DIR__ . '/translationsRoutes.php';
-require __DIR__ . '/questionsRoutes.php';
-require __DIR__ . '/blocksRoutes.php';
-require __DIR__ . '/formulasRoutes.php';
-require __DIR__ . '/postsRoutes.php';
+
+require __DIR__ . '/translationsRoutes.php';	// 20.03.2024
+require __DIR__ . '/questionsRoutes.php';	// 19.03.2024
+require __DIR__ . '/blocksRoutes.php';	// 19.03.2024
+require __DIR__ . '/illustrationsRoutes.php'; // 19.03.2024
+require __DIR__ . '/formulasRoutes.php'; // 19.03.2024
+require __DIR__ . '/postsRoutes.php'; // 19.03.2024
 require __DIR__ . '/scoresRoutes.php';
 require __DIR__ . '/challengesRoutes.php';
 require __DIR__ . '/teamsRoutes.php';

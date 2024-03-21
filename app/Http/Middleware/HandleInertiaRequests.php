@@ -38,7 +38,7 @@ class HandleInertiaRequests extends Middleware
 	{
 		$user = null;
 		if($request->user()){
-			$user = UserResource::make($request->user())->resolve();
+			$user = UserResource::make($request->user());
 		}
 		return array_merge(parent::share($request), [
 			'auth' => [

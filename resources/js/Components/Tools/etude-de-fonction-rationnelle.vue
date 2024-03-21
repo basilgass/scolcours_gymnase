@@ -377,23 +377,24 @@ onMounted(() => {
 						Représentation graphique
 					</h2>
 
-					<pi-draw-parser
-						v-if="fraction_rationnelle.drawCode!==false"
-						:draw="{
-							parameters: fraction_rationnelle.drawParameters,
-							code: fraction_rationnelle.drawCode
-								.replaceAll('*x', 'x')
-								.replaceAll(')*', '->*')
-						}"
-						:height="600"
-						:width="800"
-						axis
-						class="max-w-3xl mx-auto"
-					/>
+					<div>
+						<pi-draw-parser
+							v-if="fraction_rationnelle.drawCode!==false"
+							:draw="{
+								parameters: fraction_rationnelle.drawParameters,
+								code: fraction_rationnelle.drawCode
+									.replaceAll('*x', 'x')
+									.replaceAll(')*', '->*')
+							}"
+							:height="600"
+							:width="800"
+							axis
+							class="max-w-3xl mx-auto"
+						/>
 
-					<pre class="font-code text-xs">
-						{{ fraction_rationnelle.drawCode.replaceAll('*x', 'x') }}
-					</pre>
+						<pre class="font-code text-xs max-w-lg mx-auto bg-gray-100 border p-2 mt-3 rounded">{{ fraction_rationnelle.drawCode.replaceAll("*x", "x")
+							.replaceAll(')*', '->*') }}</pre>
+					</div>
 				</div>
 			</div>
 		</table-of-contents>

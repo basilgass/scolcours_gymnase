@@ -7,7 +7,8 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class EvaluationRessource extends JsonResource
 {
-    public static $wrap = null;
+// No wrap around the data.
+	public static $wrap = null;
     /**
      * Transform the resource into an array.
      *

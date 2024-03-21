@@ -50,7 +50,7 @@ defineOptions({ layout: LayoutMain })
 		</Link>
 
 		<Link
-			:href="route('translation.import')"
+			:href="route('translations.import')"
 			as="button"
 			class="min-h-[8em] text-xl bg-white border border-gray-200 rounded-xl"
 		>

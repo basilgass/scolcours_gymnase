@@ -118,7 +118,7 @@ class Chapter extends Model
 	protected function url(): Attribute
 	{
 		return Attribute::make(
-			get: fn() => URL::route('theme.chapter.intro', [$this->theme->slug, $this->slug], false)
+			get: fn() => URL::route('themes.chapters.intro', [$this->theme->slug, $this->slug], false)
 		);
 	}
 

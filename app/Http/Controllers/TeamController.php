@@ -17,7 +17,7 @@ class TeamController extends Controller
 {
 	public function index()
 	{
-		return Inertia::render("Teams/TeamsIndex", [
+		return Inertia::render("Teams/TeamIndex", [
 			'teams' => Team::with('users')->get()->map(function ($team) {
 				$team->users_count = $team->users->count();
 				return [
@@ -31,12 +31,12 @@ class TeamController extends Controller
 
 	public function show(Team $team)
 	{
-		return Inertia::render("Teams/TeamsShow",
+		return Inertia::render("Teams/TeamShow",
 			[
 				'team' => $team,
-				'students' => UserResource::collection($team->users)->resolve(),
-				'chapters' => ChapterMinResource::collection(Chapter::where('active', true)->get())->resolve(),
-				'challenges' => ChallengeResource::collection(Challenge::all())->resolve(),
+				'students' => UserResource::collection($team->users),
+				'chapters' => ChapterMinResource::collection(Chapter::where('active', true)->get()),
+				'challenges' => ChallengeResource::collection(Challenge::all()),
 			]
 		);
 	}
@@ -84,7 +84,7 @@ class TeamController extends Controller
 			->whereIn('user_id', $user_ids)
 			->values()->all();
 
-		return Inertia::render("Teams/TeamsChallengePage", [
+		return Inertia::render("Teams/TeamChallengeShow", [
 			'team' => $team,
 			'challenge' => ChallengeResource::make($challenge),
 			'scores' => $scores
@@ -143,11 +143,11 @@ class TeamController extends Controller
 		}
 
 		return Inertia::render(
-			'Teams/TeamsPostPage',
+			'Teams/TeamPostShow',
 			[
 				"theme" => $chapter->theme,
 				"team" => TeamResource::make($team),
-				"chapter" => ChapterMinResource::make($chapter)->resolve(),
+				"chapter" => ChapterMinResource::make($chapter),
 				"stats" => $stats
 			]
 		);

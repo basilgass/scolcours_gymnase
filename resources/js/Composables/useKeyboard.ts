@@ -131,9 +131,11 @@ export function useKeyboard(props?) {
 
 		if (value === undefined) value = props.answer
 
-		callback(value)
+		// show always only the first value
+		const firstvalue = value.split("||")[0]
+		callback(firstvalue)
 
-		changeCallback(value)
+		changeCallback(firstvalue)
 	}
 
 	// Return the available functions

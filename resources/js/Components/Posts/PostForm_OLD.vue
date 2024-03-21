@@ -41,7 +41,7 @@ const emits = defineEmits(["update:modelValue", "change", "destroy"])
 				.then((res) => {
 					// TODO: Send flash message ?
 					emits("update:modelValue", false)
-					emits("change", res.data.data)
+					emits("change", res.data)
 				})
 		},
 		deletePost = function () {

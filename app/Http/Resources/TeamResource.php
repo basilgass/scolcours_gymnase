@@ -7,6 +7,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class TeamResource extends JsonResource
 {
+	// No wrap around the data.
 	public static $wrap = null;
 
     /**
@@ -19,7 +20,7 @@ class TeamResource extends JsonResource
         return [
 			'id' => $this->id,
 			'name' => $this->name,
-			'users' => UserResource::collection($this->users)->resolve(),
+			'users' => UserResource::collection($this->users),
 		];
     }
 }

@@ -3,14 +3,15 @@ Affichage d'un post avec toutes les config activées
 Principalement la couche utilisée dans ChapterSlide.
 -->
 <script lang="ts" setup>
-import { computed, defineAsyncComponent, inject, PropType, provide, ref } from "vue"
-import BlockShow from "@/Components/Posts/Blocks/BlockShow.vue"
+import { computed, defineAsyncComponent, inject, PropType, provide, Ref, ref } from "vue"
+import BlockShow from "@/Pages/Blocks/BlockShow.vue"
 import { PiMath } from "pimath/esm"
 import UiSwitch from "@/Components/Ui/UiSwitch.vue"
-import QuestionsIndex from "@/Components/Posts/Questions/QuestionsIndex.vue"
+import QuestionsIndex from "@/Components/Posts/Questions/QuestionsIndex_OLD.vue"
 import axios from "axios"
 import { ChapterInterface, PostInterface } from "@/types/modelInterfaces"
-import { editModeInterface, flashInterface } from "@/types"
+import { flashInterface } from "@/types"
+import EditLink from "@/Components/Ui/EditLink.vue"
 
 const emits = defineEmits(["change", "destroy"])
 	const props = defineProps({
@@ -33,12 +34,12 @@ const emits = defineEmits(["change", "destroy"])
 		})
 
 	const flash = inject<flashInterface>("flash"),
-		editMode = inject<editModeInterface>("editMode")
+		editMode = inject<Ref<boolean>>("editMode")
 
 	const showEditForm = ref(false),
 		editForm = computed(() => {
 			return defineAsyncComponent(
-				() => import("@/Components/Posts/PostForm.vue"),
+				() => import("@/Components/Posts/PostForm_OLD.vue"),
 			)
 		}),
 		updatePost = function (p) {
@@ -69,7 +70,7 @@ const emits = defineEmits(["change", "destroy"])
 				.then((res) => {
 					// Set the first block in edit mode.
 					thePost.value.blocks.push({
-						...res.data.data,
+						...res.data,
 						isNew: true,
 					})
 				})
@@ -123,20 +124,17 @@ const emits = defineEmits(["change", "destroy"])
 				class="pt-5 px-5 border-b border-gray-200 pb-5 flex flex-col gap-3 lg:flex-row justify-between"
 			>
 				<div>
-					<h2 class="text-xl md:text-3xl xl:text-4xl">
+					<h2 class="text-xl md:text-3xl xl:text-4xl relative">
 						<span v-katex.auto="thePost.title" />
-						<button
-							v-show="editMode.enabled.value"
-							v-admin
-							class="text-xs ml-3"
-							@click="showEditForm = true"
-						>
-							<i class="bi bi-pencil mr-2" /> {{ thePost.id }}
-						</button>
+
+						<edit-link
+							:id="thePost.id"
+							route-name="posts.edit"
+						/>
 					</h2>
 					<Link
 						class="group"
-						:href="route('chapter.show', props.chapter.slug)"
+						:href="route('chapters.show', props.chapter.slug)"
 					>
 						<i class="bi bi-house mr-1" />{{ props.chapter.title }}
 					</Link>
@@ -148,7 +146,7 @@ const emits = defineEmits(["change", "destroy"])
 					<Link
 						v-if="props.isolate"
 						:href="
-							route('theme.chapter.slide', [
+							route('themes.chapters.slide', [
 								$page.props.theme.slug,
 								props.chapter.slug,
 								thePost.order,
@@ -215,7 +213,7 @@ const emits = defineEmits(["change", "destroy"])
 				</draggable>
 
 				<div
-					v-show="editMode.enabled.value"
+					v-show="editMode"
 					v-admin
 					class="px-5"
 				>

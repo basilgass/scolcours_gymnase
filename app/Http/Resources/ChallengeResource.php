@@ -10,6 +10,9 @@ use JsonSerializable;
 
 class ChallengeResource extends JsonResource
 {
+
+	// No wrap around the data.
+	public static $wrap = null;
 	/**
 	 * Transform the resource into an array.
 	 *

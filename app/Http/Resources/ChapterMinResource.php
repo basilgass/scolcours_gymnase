@@ -9,6 +9,10 @@ use JsonSerializable;
 
 class ChapterMinResource extends JsonResource
 {
+
+	// No wrap around the data.
+	public static $wrap = null;
+
 	/**
 	 * Transform the resource into an array.
 	 *
@@ -18,10 +22,10 @@ class ChapterMinResource extends JsonResource
 	public function toArray($request)
 	{
 		return [
-			'id' => $this->id,
-			'theme_id'=>$this->theme->id,
-			'slug' => $this->slug,
-			'title' => $this->title,
+			'id'         => $this->id,
+			'theme_id'   => $this->theme->id,
+			'slug'       => $this->slug,
+			'title'      => $this->title,
 			'meta_title' => $this->meta_title,
 		];
 	}

@@ -50,7 +50,8 @@ const props = defineProps({
 
 		<button
 			v-if="props.buttons && availableButtons.random.show"
-			:class="`btn-scolcours-${$page.props.theme.slug} btn-xs tracking-wider d-block`"
+			v-theme.btn
+			:class="`btn-xs tracking-wider d-block`"
 			@click="refresh(props.modelValue + 1)"
 		>
 			<i

@@ -8,7 +8,7 @@
 	use Illuminate\Http\Request;
 	use Inertia\Inertia;
 
-	class ToolsController extends Controller
+	class ToolController extends Controller
 	{
 		public function index()
 		{

@@ -55,7 +55,7 @@ const emits = defineEmits(["update:modelValue", "change", "destroy"])
 					_method: "PATCH",
 				})
 				.then((res) => {
-					emits("change", res.data.data)
+					emits("change", res.data)
 				})
 				.catch((error) => {
 					console.error(error)

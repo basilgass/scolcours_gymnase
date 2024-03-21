@@ -36,7 +36,7 @@ const form = useForm({
 					translations: traductions.value
 				}
 			})
-			.post(route("translation.create"))
+			.post(route("translations.create"))
 
 
 	}

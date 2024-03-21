@@ -10,7 +10,7 @@ import axios from "axios"
 import type { flashInterface } from "@/types"
 import type { ChallengeInterface, IllustrationInterface } from "@/types/modelInterfaces"
 import FormMaker from "@/Components/Form/FormMaker.vue"
-import IllustrationEdit from "@/Components/Posts/Illustrations/IllustrationEdit.vue"
+import IllustrationEdit from "@/Components/Posts/Illustrations/IllustrationEdit_OLD.vue"
 
 const emits = defineEmits(["update:modelValue", "change", "destroy"])
 
@@ -194,7 +194,7 @@ const saveChallenge = function() {
 					)
 					.then((res) => {
 						emits("update:modelValue", false)
-						emits("change", res.data.data)
+						emits("change", res.data)
 					})
 					.then(() => {
 						flash.success("Le challenge a bien été mis à jour")
@@ -215,7 +215,7 @@ const saveChallenge = function() {
 				if (res.data) {
 					// go back
 					router.visit(
-						route("chapter.show", [
+						route("chapters.show", [
 							props.challenge.chapter.slug
 						])
 					)

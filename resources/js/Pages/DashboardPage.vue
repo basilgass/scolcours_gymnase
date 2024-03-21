@@ -33,7 +33,7 @@ let props = defineProps({
 			<Link
 				v-for="course in props.courses"
 				:key="course.slug"
-				:href="route('theme.chapter.slide', [course.theme, course.slug, course.currentPost])"
+				:href="route('themes.chapters.slide', [course.theme, course.slug, course.currentPost])"
 				class="px-5 py-3 hover:px-8 transition-all flex justify-between items-baseline"
 			>
 				<div

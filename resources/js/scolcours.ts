@@ -77,7 +77,7 @@ export const blockTypes = {
 		icon: "bi bi-book",
 		style: {
 			header: "bg-lime-50 text-lime-700",
-			body: "border-l-8 border-lime-400 border-b border-b-lime-100",
+			body: "border border-l-8 border-lime-400",
 		},
 	},
 	theorem: {
@@ -85,7 +85,7 @@ export const blockTypes = {
 		icon: "bi bi-book",
 		style: {
 			header: "bg-amber-50 text-amber-700",
-			body: "border-l-8 border-amber-600 border-b border-b-amber-100",
+			body: "border border-l-8 border-amber-600",
 		},
 	},
 	property: {
@@ -93,7 +93,7 @@ export const blockTypes = {
 		icon: "bi bi-wrench",
 		style: {
 			header: "bg-purple-50 text-purple-700",
-			body: "border-l-8 border-purple-600 border-b border-b-purple-100",
+			body: "border border-l-8 border-purple-600",
 		},
 	},
 	remark: {
@@ -101,23 +101,23 @@ export const blockTypes = {
 		icon: "bi bi-chat",
 		style: {
 			header: "bg-cyan-50 text-cyan-400",
-			body: "border-l-8 border-cyan-300 border-b border-b-cyan-100",
+			body: "border border-l-8 border-cyan-300",
 		},
 	},
 	example: {
 		title: "exemple",
 		icon: "bi bi-calculator",
 		style: {
-			header: "bg-gray-100 text-gray-800",
-			body: "border-0 border-b border-b-gray-100",
+			header: "bg-gray-200 text-gray-800",
+			body: "",
 		},
 	},
 	danger: {
 		title: "attention",
 		icon: "bi bi-exclamation-triangle",
 		style: {
-			header: "bg-red-50 text-red-700 rounded-t-xl !py-1",
-			body: "mx-4 md:mx-12 lg:mx-24 mx-auto border border-red-300 rounded-xl shadow",
+			header: "bg-red-50 text-red-700",
+			body: "border border-red-300",
 		},
 	},
 }

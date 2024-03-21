@@ -1,7 +1,7 @@
 <?php
 
 // Tools routes
-use App\Http\Controllers\ToolsController;
+use App\Http\Controllers\ToolController;
 
-Route::get('tools/', [ToolsController::class, 'index'])->name('tools');
-Route::get('tools/{tool:slug}', [ToolsController::class, 'show'])->name('tools.tool');
+Route::get('tools/', [ToolController::class, 'index'])->name('tools');
+Route::get('tools/{tool:slug}', [ToolController::class, 'show'])->name('tools.tool');

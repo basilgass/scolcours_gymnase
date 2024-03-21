@@ -20,7 +20,7 @@ import ThemeLinks from "@/Components/Ui/ThemeLinks.vue"
 					Langues
 				</h3>
 				<Link
-					:href="route('translation.index', ['italiano'])"
+					:href="route('translations.index', ['italiano'])"
 					class="block transition duration-300 hover:translate-x-2 px-0 md:px-4 py-1"
 				>
 					<i
@@ -28,7 +28,7 @@ import ThemeLinks from "@/Components/Ui/ThemeLinks.vue"
 					/> italiano
 				</Link>
 				<Link
-					:href="route('translation.index', ['english'])"
+					:href="route('translations.index', ['english'])"
 					class="block transition duration-300 hover:translate-x-2 px-0 md:px-4 py-1"
 				>
 					<i
@@ -36,7 +36,7 @@ import ThemeLinks from "@/Components/Ui/ThemeLinks.vue"
 					/> english
 				</Link>
 				<Link
-					:href="route('translation.index', ['deutsch'])"
+					:href="route('translations.index', ['deutsch'])"
 					class="block transition duration-300 hover:translate-x-2 px-0 md:px-4 py-1"
 				>
 					<i

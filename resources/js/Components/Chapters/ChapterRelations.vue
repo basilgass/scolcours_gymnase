@@ -1,8 +1,8 @@
 <script setup lang="ts">
 
-import { inject, PropType, ref } from "vue"
+import { inject, PropType, Ref, ref } from "vue"
 import axios from "axios"
-import { editModeInterface, flashInterface } from "@/types"
+import { flashInterface } from "@/types"
 import { ChapterInterface } from "@/types/modelInterfaces"
 
 const props = defineProps({
@@ -10,7 +10,7 @@ const props = defineProps({
 })
 
 const flash = inject<flashInterface>("flash"),
-	editMode = inject<editModeInterface>("editMode")
+	editMode = inject<Ref<boolean>>("editMode")
 
 const chapterRelations = ref(props.chapter.relations),
 	modifyRelations = ref(false),
@@ -26,7 +26,7 @@ const chapterRelations = ref(props.chapter.relations),
 
 		axios.get(route("chapters.index.min"))
 			.then(res=>{
-				allChapters.value = res.data.data.filter(ch=>ch.slug!==props.chapter.slug)
+				allChapters.value = res.data.filter(ch=>ch.slug!==props.chapter.slug)
 				modifyRelations.value = true
 			})
 			.catch(res => {
@@ -38,7 +38,7 @@ const chapterRelations = ref(props.chapter.relations),
 			.then(res => {
 				flash.success("relation correctement mis à jour...")
 				if(res.data!==false){
-					chapterRelations.value = res.data.data
+					chapterRelations.value = res.data
 				}
 			}).catch(res=>{
 				flash.error(res.data)
@@ -47,7 +47,7 @@ const chapterRelations = ref(props.chapter.relations),
 </script>
 <template>
 	<div
-		v-if="chapterRelations.length>0 || editMode.enabled.value"
+		v-if="chapterRelations.length>0 || editMode"
 		class="px-5"
 	>
 		<h3 class="uppercase font-extralight mb-2">
@@ -62,18 +62,18 @@ const chapterRelations = ref(props.chapter.relations),
 				v-katex.auto="ch.title"
 				as="button"
 				class="btn-xs"
-				:href="route('chapter.show', [ch.slug])"
+				:href="route('chapters.show', [ch.slug])"
 			/>
 		</div>
 
 		<div
-			v-show="editMode.enabled.value"
+			v-show="editMode"
 			v-admin
 			class="my-5"
 		>
 			<div class="mb-3">
 				<button
-					v-show="editMode.enabled.value"
+					v-show="editMode"
 					v-admin
 					class="btn-new-inline"
 					@click="getAllChapters"

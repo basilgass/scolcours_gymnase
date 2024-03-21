@@ -68,29 +68,34 @@ const flash = inject<flashInterface>("flash"),
 	watchDebounced(moveToId, getTargetName, { debounce: 1000, maxWait: 2000 })
 </script>
 <template>
-	<div class="flex gap-3 align-text-bottom">
-		<button
-			class="btn btn-xs self-end"
-			@click="enableMove"
-		>
-			déplacer le {{ props.source }}
-		</button>
+	<div>
+		<div class="flex gap-3 items-center">
+			<button
+				class="btn btn-xs bg-white hover:bg-orange-100"
+				@click="enableMove"
+			>
+				déplacer le {{ props.source }}
+			</button>
 
-		<form-maker
-			with-icon
-			type="id"
-			v-if="showMoveTo"
-			ref="moveInput"
-			v-model.number="moveToId"
-			class="rounded-r-none max-w-[6em]"
-			label-as-placeholder
-			sm
-			font-code
-			@enter="moveTo"
-		/>
+			<form-maker
+				with-icon
+				type="id"
+				v-if="showMoveTo"
+				ref="moveInput"
+				v-model.number="moveToId"
+				class="rounded-r-none max-w-[6em]"
+				label-as-placeholder
+				sm
+				font-code
+				@enter="moveTo"
+			/>
+		</div>
 		<div
+			class="text-gray-400 italic flex gap-3"
 			v-if="showMoveTo"
-			v-katex.auto="targetName"
-		/>
+		>
+			<i class="bi bi-chevron-double-right" />
+			<div v-katex.auto="targetName" />
+		</div>
 	</div>
 </template>

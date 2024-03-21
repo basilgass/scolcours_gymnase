@@ -2,25 +2,24 @@
 En-tête principal, sensible au thème
 -->
 <script setup lang="ts">
-import { inject, provide, ref } from "vue"
+import { inject, provide, Ref, ref } from "vue"
 import MainAside from "@/Components/MainAside.vue"
 import DropdownMenu from "@/Components/Ui/DropdownMenu.vue"
 import LogoutButton from "@/Components/Ui/LogoutButton.vue"
-import { editModeInterface } from "@/types/index.js"
 
 defineProps({
 		theme: { type: Object, required: true },
 	})
 
 	const showAside = ref(false),
-		editMode = inject<editModeInterface>("editMode")
+		editMode = inject<Ref<boolean>>("editMode")
 
 provide("showAside", showAside)
 </script>
 <template>
 	<header
-		:class="`bg-scolcours-${theme.slug}`"
-		class="shadow text-white"
+		v-theme.bg.text
+		class="border-b border-black/30"
 	>
 		<MainAside />
 
@@ -98,16 +97,16 @@ provide("showAside", showAside)
 					</Link>
 				</div>
 				<button
-					:class="editMode.enabled.value ? 'bg-white/40' : ''"
+					:class="editMode ? 'bg-white/40' : ''"
 					class="btn btn-xs hover:text-black"
 					title="Ctrl+Alt+A"
-					@click="editMode.toggle()"
+					@click="editMode=!editMode"
 				>
-					<span v-show="editMode.enabled.value">
+					<span v-show="editMode">
 						<i class="bi bi-pencil mr-2" />
 						<span class="hidden md:inline"> édition activée </span>
 					</span>
-					<span v-show="!editMode.enabled.value">
+					<span v-show="!editMode">
 						<i class="bi bi-pencil mr-2" />
 						<span>activer l'édition</span></span>
 				</button>

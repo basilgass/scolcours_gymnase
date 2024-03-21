@@ -1,6 +1,5 @@
 import katex from "katex/dist/katex.mjs"
-import AsciiMathParser from "./asciimath2tex"
-import { usePage } from "@inertiajs/vue3"
+import AsciiMathParser from "../asciimath2tex"
 import { useKatexMacros } from "@/Composables/useHelpers"
 import { numberCorrection } from "pidraw/esm/Calculus"
 import renderMathInElement from "katex/contrib/auto-render"
@@ -122,92 +121,5 @@ export const katexDirective = {
 	},
 	unmounted(el) {
 		el.innerHTML = ""
-	}
-}
-
-export const visibleDirective = {
-	mounted(el, binding) {
-		el.style.visibility = binding.value ? "visible" : "hidden"
-	}
-}
-
-function adminUpdate(el, binding) {
-	if (!usePage().props.auth.can.admin) {
-		el.remove()
-	}
-
-	if (binding.value) {
-		el.classList.add("hide")
-	} else {
-		el.classList.remove("hide")
-	}
-}
-
-export const adminDirective = {
-	mounted(el, binding) {
-		adminUpdate(el, binding)
-	},
-	updated(el, binding) {
-		adminUpdate(el, binding)
-	}
-}
-
-function themeUpdate(el, binding) {
-	const themes = usePage().props.themes.map((theme) => theme.slug)
-	const keys = ["btn", "bg", "text", "border", "active", "scrollbar"]
-
-	let chapter
-
-	// Remove all classes from el matching the pattern "<key>-scolcours-<theme>"
-	if (el) {
-		keys.forEach((key) => {
-			el.classList.remove(new RegExp(`${key}-scolcours-.*`))
-		})
-	}
-
-	if (binding.value === false || binding.value === 0 || binding.value === "") return
-
-	if (
-		Object.hasOwn(binding.modifiers, "admin") ||
-		binding.value === "admin"
-	) {
-		chapter = "admin"
-	} else if (themes.indexOf(binding.value) !== -1) {
-		chapter = binding.value
-	} else if (typeof binding.value === "number") {
-		// it's a number -> get the theme id.
-		const theme = usePage().props.themes.filter(
-			(th) => +th.id === +binding.value
-		)
-
-		if (theme.length === 1) {
-			chapter = theme[0].slug
-		}
-	} else {
-		chapter = usePage().props?.theme?.slug
-	}
-
-	if (chapter === undefined) {
-		el.classList.add(`bg-white`)
-		return
-	}
-
-	Object.keys(binding.modifiers).forEach((key) => {
-		if (keys.indexOf(key) !== -1) {
-			if (key === "text" && Object.hasOwn(binding.modifiers, "bg")) {
-				el.classList.add("text-white")
-			} else {
-				el.classList.add(`${key}-scolcours-${chapter}`)
-			}
-		}
-	})
-}
-
-export const themeDirective = {
-	mounted(el, binding) {
-		themeUpdate(el, binding)
-	},
-	updated(el, binding) {
-		themeUpdate(el, binding)
 	}
 }

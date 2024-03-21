@@ -38,6 +38,7 @@ export interface ChapterMinInterface {
 	title: string;
 	meta_title: string;
 	theme_id: number;
+	posts_length: number;
 }
 
 export interface BlockInterface {
@@ -54,6 +55,7 @@ export interface BlockInterface {
 	script: string;
 	json: string;
 }
+
 export interface BlockInterfaceExtended extends BlockInterface {
 	isNew?: boolean
 }
@@ -110,9 +112,11 @@ export interface QuestionMinInterface {
 	};
 }
 
+//TODD: modify PostInterfae
 export interface PostInterface {
 	id: number;
 	chapter_id: number;
+	chapter: ChapterMinInterface;
 	type: string;
 	title: string;
 	order: number;

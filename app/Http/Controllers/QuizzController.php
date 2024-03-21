@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\QuestionResource;
 use App\Http\Resources\QuizzSessionRessource;
+use App\Http\Resources\ThemeResource;
 use App\Models\Chapter;
 use App\Models\Quizz;
 use App\Models\QuizzSession;
@@ -97,7 +98,7 @@ class QuizzController extends Controller
 
 		// Add the theme to the main layout page
 		if ($quizz->chapter) {
-			$data["theme"] = $quizz->chapter?->theme->only('color', 'icon', 'slug', 'title', 'id');
+			$data["theme"] = ThemeResource::make($quizz->chapter->theme);
 		}
 		return Inertia::render('Quizzs/QuizzAdminEdit', $data);
 
