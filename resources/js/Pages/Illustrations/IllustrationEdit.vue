@@ -1,16 +1,16 @@
 <script lang="ts" setup>
 import { computed, inject, onMounted, PropType, ref } from "vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
-import { IllustrationInterface, widgetInterface } from "@/types/modelInterfaces"
+import type { IllustrationInterface, widgetInterface } from "@/types/modelInterfaces"
 import FormImageDrop from "@/Components/Form/FormImageDrop.vue"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
-import IllustrationShow from "@/Components/Posts/Illustrations/IllustrationShow_OLD.vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import { parserHelperText } from "pidraw/esm/Parser"
 import { router } from "@inertiajs/vue3"
 import axios from "axios"
 import { flashInterface } from "@/types"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
+import IllustrationShow from "@/Pages/Illustrations/IllustrationShow.vue"
 
 defineOptions({ layout: LayoutMain })
 

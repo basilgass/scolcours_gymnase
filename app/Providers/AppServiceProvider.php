@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\Scolcours;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\URL;
@@ -46,5 +47,6 @@ class AppServiceProvider extends ServiceProvider
 			}
 		});
 
+		JsonResource::withoutWrapping();
     }
 }

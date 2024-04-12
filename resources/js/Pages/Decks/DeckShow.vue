@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 
-import { deckInterface } from "@/types/modelInterfaces"
+import type { deckInterface } from "@/types/modelInterfaces"
 import { PropType } from "vue"
 import FlipcardsLearn from "@/Components/Decks/FlipcardsLearn.vue"
 import LayoutFullpage from "@/Layouts/LayoutFullpage.vue"

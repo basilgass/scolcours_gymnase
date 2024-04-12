@@ -7,6 +7,7 @@ import "prismjs/components/prism-json"
 import { checkersList, getChecker } from "@/Composables/checkersConfig"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 
+const theValue = defineModel<string>({required: true})
 defineOptions({
 		inheritAttrs: false,
 	})
@@ -21,16 +22,13 @@ defineOptions({
 	}
 
 	defineExpose({ focus: focusFn })
-	const emits = defineEmits(["update:modelValue", "update"])
+	const emits = defineEmits(["update"])
 	const props = defineProps({
-			modelValue: { type: String, default: "" },
 			rows: { type: Number, default: 2 },
 			focus: { type: Boolean, default: false },
-		}),
-		theValue = ref(props.modelValue)
+		})
 
 	const update = () => {
-		emits("update:modelValue", theValue)
 		emits("update", theValue.value)
 	}
 

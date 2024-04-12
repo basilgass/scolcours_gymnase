@@ -4,7 +4,7 @@ import { router } from "@inertiajs/vue3"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 import axios from "axios"
 import { PropType } from "vue"
-import { QuizzInterface } from "@/types/modelInterfaces"
+import type { QuizzInterface } from "@/types/modelInterfaces"
 
 defineOptions({ layout: LayoutMain })
 

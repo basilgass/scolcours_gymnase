@@ -4,8 +4,8 @@ import { useForm } from "@inertiajs/vue3"
 import { computed, PropType, ref } from "vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
-import { ChallengeInterface } from "@/types/modelInterfaces"
-import { ToolInterface } from "@/types"
+import type { ChallengeInterface } from "@/types/modelInterfaces"
+import type { ToolInterface } from "@/types"
 
 defineOptions({ layout: LayoutMain })
 const props = defineProps({

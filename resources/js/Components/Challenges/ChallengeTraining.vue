@@ -2,7 +2,7 @@
 import { computed, onMounted, PropType, ref } from "vue"
 import QuestionShow from "@/Pages/Questions/QuestionShow.vue"
 import { useGenerator } from "@/Composables/useGenerator"
-import { ChallengeInterface, GeneratorInterface } from "@/types/modelInterfaces"
+import type { ChallengeInterface, GeneratorInterface, QuestionInterface } from "@/types/modelInterfaces"
 
 const props = defineProps({
 		challenge: {
@@ -40,9 +40,9 @@ const props = defineProps({
 	<div v-if="theQuestion">
 		<question-show
 			:key="`question-${counter}`"
-			:question="theQuestion"
+			:question="theQuestion as QuestionInterface"
 			class="max-w-[40em] mx-auto min-h-[500px] border border-gray-400"
-			dynamic
+			is-dynamic
 			show-input
 			@validate="nextQuestion"
 		/>

@@ -8,9 +8,7 @@ use App\Models\Post;
 use App\Models\Question;
 use App\Models\Quizz;
 use Auth;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 
 class QuestionController extends Controller
@@ -120,7 +118,7 @@ class QuestionController extends Controller
 	 * Remove the specified resource from storage.
 	 *
 	 * @param int $id
-	 * @return RedirectResponse
+	 * @return string
 	 */
 	public function destroy($id)
 	{
@@ -137,7 +135,12 @@ class QuestionController extends Controller
 		foreach($target->questions as $idx=>$question){
 			$question->update(['order'=>$idx+1]);
 		}
-		return Redirect::back();
+
+		if($target instanceof Post){
+			return route('posts.show', $target->id);
+		}
+
+		return $target;
 	}
 
 
@@ -200,8 +203,11 @@ class QuestionController extends Controller
 
 	public function duplicate(Question $question)
 	{
+		// Duplicate a question
 		$newQuestion = $question->replicate();
 		$newQuestion->push();
+
+		// Duplicate the block
 		$newQuestion->blocks()->save($question->blocks[0]->duplicate());
 
 		// update the new order (place it at last).

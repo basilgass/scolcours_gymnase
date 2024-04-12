@@ -2,26 +2,52 @@
 Affichage d'un block , avec toutes les possibilités
 -->
 <script lang="ts" setup>
-import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
-import { computed, PropType } from "vue"
+import { computed, inject, PropType, provide, ref } from "vue"
 import { blockTypeDefault, blockTypes } from "@/scolcours"
-import { useBlock } from "@/Components/Posts/Blocks/useBlock"
-import BlockBodyButtons from "@/Components/Posts/Blocks/BlockBodyButtons.vue"
-import { BlockInterface } from "@/types/modelInterfaces"
+import type { BlockInterface } from "@/types/modelInterfaces"
 import IllustrationShow from "@/Pages/Illustrations/IllustrationShow.vue"
-import EditLink from "@/Components/Ui/EditLink.vue"
+import BlockShowAdmin from "@/Pages/Blocks/BlockShowAdmin.vue"
+import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
+import { useFormattedBody } from "@/Composables/useHelpers"
+import { PiMath } from "pimath/esm"
+import BlockBodyButtons from "@/Components/Blocks/BlockBodyButtons.vue"
 
 // Props
 const props = defineProps({
-	block: { type: Object as PropType<BlockInterface>, required: true },
-	switch: { type: Boolean, default: null },
-	forceShow: { type: Boolean, default: false },
-	maxIllustration: { type: Number, default: null },
-	noDelete: { type: Boolean, default: false }
+	block: {
+		type: Object as PropType<BlockInterface>,
+		required: true
+	},
+	groupIndex: {
+		type: Number,
+		default: 0
+	}
+	// TODO: delete extra props for BlockShow
+	// format: {
+	// 	type: String as PropType<"post" | "formula" | "question">,
+	// 	default: "post"
+	// },
+	// switch: {
+	// 	type: Boolean,
+	// 	default: null
+	// },
+	// forceShow: {
+	// 	type: Boolean,
+	// 	default: false
+	// },
+	// maxIllustration: {
+	// 	type: Number,
+	// 	default: null
+	// },
+	// noDelete: {
+	// 	type: Boolean,
+	// 	default: false
+	// }
 })
 
 // emits
 defineEmits(["destroy"])
+
 
 // Block display style computed properties
 const blockConfig = computed(() => {
@@ -144,28 +170,77 @@ const blockTemplate = computed(() => {
 	}
 })
 
-const { blockBody, blockButtons, random } = useBlock(props.block)
+const postData = inject('postData', ref({}))
+// const { blockData, random } = useBlock(props.block)
+const random = ref(1)
+const blockData = computed(()=>{try {
+	// Remove the existing events
+	// if (events.length > 0) {
+	// 	for (const [key, value] of Object.entries(events[0])) {
+	// 		document.removeEventListener(key, value, false)
+	// 	}
+	// }
 
+	// Run the script if there is one.
+	if (props.block.script !== null && random.value > 0) {
+		const F = new Function(
+			"PiMath",
+			"postData",
+			"iteration",
+			props.block.script
+		)
+
+		const result = F(PiMath, postData.value, random.value)
+
+		// // Store events for later removal
+		// if (result.events !== undefined) {
+		// 	events = result.events
+		//
+		// 	// Load the events.
+		// 	Object.keys(events).forEach((key) => {
+		// 		document.addEventListener(key, events[key], false)
+		// 	})
+		//
+		// }
+
+		return {
+			...postData.value,
+			...result
+		}
+	}
+} catch (e) {
+	console.warn("BlockShow (script generation)", e)
+	return {}
+}
+
+	return {}
+})
+const blockBody = computed(()=>useFormattedBody(props.block.body, blockData))
+provide("blockData", blockData)
+
+//
+// const { bodyData, iteration, blockScript } = useDataMaker()
+//
+// onMounted(()=>{
+// 	blockScript(props.block.script)
+// })
 </script>
 
 <template>
 	<article
-		:id="`block-${props.block.id}`"
+		:id="`block-${block.id}`"
 		:class="blockConfig.style.body"
-		class="relative rounded"
+		class="rounded bg-white"
 	>
-		<edit-link
-			:id="props.block.id"
-			route-name="blocks.edit"
-			label="block id: "
-		/>
+		<BlockShowAdmin :block="block" />
 
 		<!-- header -->
 		<div
-			v-show="blockTitle || blockButtons"
+			v-show="blockTitle || 1===1"
 			:class="blockConfig.style.header"
 			class="flex justify-between w-full px-5 py-3 mb-3 text-xl"
 		>
+			<!-- header left: (generic) icon and title -->
 			<div class="flex gap-3 items-baseline">
 				<i
 					v-if="blockIcon"
@@ -174,20 +249,18 @@ const { blockBody, blockButtons, random } = useBlock(props.block)
 				<h3 v-katex.auto="blockTitle" />
 			</div>
 
-			<div class="flex items-end gap-3">
-				<block-body-buttons
-					v-model="random"
-					:buttons="blockButtons"
-				/>
-			</div>
+			<!-- buttons for randomize and more... -->
+			<block-body-buttons
+				v-model="random"
+				:block-data="blockData"
+			/>
 		</div>
 
 		<!-- body -->
 		<div
-			:class="blockTemplate.grid"
+			:class="blockTemplate.grid + (groupIndex>0 || (!block.title && !block.type)?' pt-3':'')"
 			class="px-5 pb-2"
 		>
-			<!-- Block body -->
 			<markdown-it
 				v-if="blockBody !== null"
 				:class="blockTemplate.block"

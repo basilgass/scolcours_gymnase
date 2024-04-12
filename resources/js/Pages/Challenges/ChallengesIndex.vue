@@ -1,6 +1,5 @@
 <script setup lang="ts">
 
-import FormMaker from "@/Components/Form/FormMaker.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 
 defineOptions({ layout: LayoutMain })
@@ -15,11 +14,11 @@ defineProps({
 		<h1 class="text-xl font-semibold">
 			Challenges
 		</h1>
-		<form-maker
-			class="mb-5"
-			label="rechercher"
-			name="search"
-		/>
+		<!--		<form-maker-->
+		<!--			class="mb-5"-->
+		<!--			label="rechercher"-->
+		<!--			name="search"-->
+		<!--		/>-->
 
 		<div class="space-y-2 py-2">
 			<div

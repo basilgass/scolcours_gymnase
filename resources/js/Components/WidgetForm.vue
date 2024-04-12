@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 
 import FormMaker from "@/Components/Form/FormMaker.vue"
-import { widgetInterface } from "@/types/modelInterfaces"
+import type { widgetInterface } from "@/types/modelInterfaces"
 import { computed, inject, PropType, ref } from "vue"
 import axios from "axios"
 import { router } from "@inertiajs/vue3"

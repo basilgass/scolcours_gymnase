@@ -17,11 +17,11 @@ const props = defineProps({
 
 </script>
 <template>
-	<article class="py-10">
+	<article class="scolcours-container">
 		<h2 class="text-3xl font-semibold mb-5">
 			Teams
 		</h2>
-		
+
 		<div>
 			<div class="flex gap-5">
 				<Link

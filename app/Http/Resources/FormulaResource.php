@@ -12,6 +12,7 @@ class FormulaResource extends JsonResource
 
 	// No wrap around the data.
 	public static $wrap = null;
+
 	/**
 	 * Transform the resource into an array.
 	 *
@@ -22,12 +23,16 @@ class FormulaResource extends JsonResource
 	{
 //        return parent::toArray($request);
 
-		$this->blocks;
+//		$this->blocks;
 		return [
 			'id' => $this->id,
-			'chapter_id' => $this->chapter_id,
+			'chapter' => [
+				'id'=> $this->chapter->id,
+				'title'=> $this->chapter->title,
+				'theme_id'=> $this->chapter->theme_id,
+			],
 			'order' => $this->order,
-			'block' => $this->blocks[0] ?? null
+			'block' => BlockResource::make($this->blocks[0])
 		];
 	}
 }

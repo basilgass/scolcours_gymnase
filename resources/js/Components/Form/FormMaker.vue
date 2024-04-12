@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, inject, ref } from "vue"
+import { computed, inject, ref, useAttrs } from "vue"
 import FormElementCodearea from "@/Components/Form/FormElement/FormElementCodearea.vue"
 import FormElementKeyboard from "@/Components/Form/FormElement/FormElementKeyboard.vue"
 import FormElementSwitch from "@/Components/Form/FormElement/FormElementSwitch.vue"
@@ -29,11 +29,8 @@ const props = withDefaults(defineProps<FormMakerPropsType>(), {
 	label: "",
 	labelAsPlaceholder: false,
 	labelClass: "",
-	max: null,
 	message: "",
 	messageClass: "",
-	min: null,
-	modelValue: "",
 	placeholder: "",
 	sm: false,
 	step: null,
@@ -42,16 +39,28 @@ const props = withDefaults(defineProps<FormMakerPropsType>(), {
 	prepend: "",
 	focus: false,
 	language: "latex",
-	rows: 4,
 	resizable: false,
 	autoSize: false,
 	axios: null
 })
 
+// Define the model value.
+const theValue = defineModel<string | number | boolean | null>({
+	set(value) {
+		if(props.type==='switch' || props.type==='checkbox')return !!value
+
+		if(props.type==='id' || props.type==='number') return +value
+
+		return value.toString()
+	},
+	required: true
+})
+
 // Define the emits
-const emits = defineEmits(["update:modelValue", "enter", "currentLine"])
+const emits = defineEmits(["enter", "currentLine"])
 
 const flash = inject<flashInterface>("flash")
+
 // Get the root element
 const inputWrapper = ref(null)
 
@@ -59,10 +68,6 @@ const inputWrapper = ref(null)
 const errors = computed(() => {
 	return validate()
 })
-
-// Get the value of the input
-// used for custom inputs
-const theValue = ref(props.modelValue as string)
 
 // Determine if the label should be displayed
 const showLabel = computed(() => {
@@ -112,47 +117,53 @@ const placeholderValue = computed(() => {
 
 // On input update, emit the new value in correct format
 function updateInput(e) {
-	if (
-		props.type === "text" ||
-		props.type === "email" ||
-		props.type === "password" ||
-		props.type === "id" ||
-		props.type === "textarea" ||
-		props.type === "fraction"
-	) {
-		emits("update:modelValue", e.target.value)
-
-		return
-	} else if (props.type === "number") {
-		emits(
-			"update:modelValue",
-			e.target.value === "" ? "" : parseFloat(e.target.value)
-		)
-		return
-	} else if (props.type === "checkbox") {
-		emits("update:modelValue", e.target.checked)
-		return
-	} else {
-		emits("update:modelValue", e)
-		return
-	}
+	// TODO: FormMaker - updateInput disabled with new defineModel - does is still work ?
+	// if (
+	// 	props.type === "text" ||
+	// 	props.type === "email" ||
+	// 	props.type === "password" ||
+	// 	props.type === "id" ||
+	// 	props.type === "textarea" ||
+	// 	props.type === "fraction"
+	// ) {
+	// 	emits("update:modelValue", e.target.value)
+	//
+	// 	return
+	// } else if (props.type === "number") {
+	// 	emits(
+	// 		"update:modelValue",
+	// 		e.target.value === "" ? "" : parseFloat(e.target.value)
+	// 	)
+	// 	return
+	// } else if (props.type === "checkbox") {
+	// 	emits("update:modelValue", e.target.checked)
+	// 	return
+	// } else {
+	// 	emits("update:modelValue", e)
+	// 	return
+	// }
 }
 
 const TEXTAREA = ref(null)
 
 function onKeyup() {
 	let pos = TEXTAREA.value.selectionStart,
-		lines = theValue.value.split("\n"),
-		lineIndex = theValue.value.substring(0, pos).split("\n").length - 1
+		lines = (theValue.value as string).split("\n"),
+		lineIndex = (theValue.value as string).substring(0, pos).split("\n").length - 1
 
 	emits("currentLine", lines[lineIndex])
 }
 
 // validation function
 function validate() {
-	if (props.type === "number") return FormValidationNumber(props.modelValue as number, props)
+	if (props.type === "number") {
+		return FormValidationNumber(+theValue.value as number, {
+			min: +useAttrs().min ?? 0,
+			max: +useAttrs().max ?? 10
+		})
+	}
 
-	if (props.type === "fraction") return FormValidationFraction(props.modelValue as string)
+	if (props.type === "fraction") return FormValidationFraction(theValue.value as string)
 
 	return ""
 }
@@ -189,12 +200,13 @@ function onEnter(ev) {
 		{
 			_method: "PATCH",
 			...props.axios,
-			value: props.modelValue
+			value: theValue.value
 		})
 		.then(() => {
 			flash.success("Valeur enregistrée avec succès.")
 		})
-		.catch(() => {
+		.catch((err) => {
+			console.warn(err.response.data.message)
 			flash.error("Une erreur est survenue lors de l'enregistrement.")
 		})
 }
@@ -204,6 +216,7 @@ defineExpose({ focus: setFocus })
 
 <template>
 	<div
+		class="relative"
 		:class="{
 			helper: props.helper,
 			inlineLabel: props.inlineLabel,
@@ -240,7 +253,8 @@ defineExpose({ focus: setFocus })
 					:class="combinedInputClass"
 					:placeholder="placeholderValue"
 					:type="type"
-					:value="modelValue"
+					v-model="theValue"
+					v-bind="$attrs"
 					@input="updateInput($event)"
 					@keyup="validate()"
 					@keyup.enter="onEnter"
@@ -248,9 +262,9 @@ defineExpose({ focus: setFocus })
 				<textarea
 					v-if="type === 'textarea'"
 					ref="TEXTAREA"
+					v-model="theValue as string"
 					:class="combinedInputClass"
-					:rows="props.rows"
-					:value="modelValue as string"
+					v-bind="$attrs"
 					@input="updateInput($event)"
 					@keyup="onKeyup"
 					@mouseup="onKeyup"
@@ -258,20 +272,20 @@ defineExpose({ focus: setFocus })
 				<input
 					v-else-if="type === 'number'"
 					:class="combinedInputClass"
-					:max="props.max"
-					:min="props.min"
 					:placeholder="placeholderValue"
 					:step="props.step"
-					:value="modelValue"
+					v-model="theValue as number"
 					type="number"
+					v-bind="$attrs"
 					@input="updateInput($event)"
 					@keyup.enter="onEnter"
 				>
 				<input
 					v-else-if="type === 'checkbox'"
 					:class="combinedInputClass"
-					:value="modelValue"
+					v-model="theValue as boolean"
 					type="checkbox"
+					v-bind="$attrs"
 					@input="updateInput($event)"
 					@keyup.enter="onEnter"
 				>
@@ -279,7 +293,8 @@ defineExpose({ focus: setFocus })
 				<select
 					v-else-if="type === 'select'"
 					:class="combinedInputClass"
-					:value="modelValue"
+					v-model="theValue"
+					v-bind="$attrs"
 					@input="updateInput($event)"
 				>
 					<slot />
@@ -288,29 +303,30 @@ defineExpose({ focus: setFocus })
 				<!-- custom element form inputs -->
 				<form-element-codearea
 					v-else-if="type === 'code'"
-					v-model="theValue"
+					v-model="theValue as string"
 					:auto-size="props.autoSize"
 					:class="combinedInputClass"
 					:focus="props.focus"
 					:language="props.language"
 					:resizeable="props.resizable"
-					:rows="props.rows"
+					v-bind="$attrs"
 					@update="updateInput($event)"
 				/>
 				<form-element-keyboard
 					v-else-if="type === 'keyboard'"
-					v-model="theValue"
+					v-model="theValue as string"
 					:class="combinedInputClass"
 					:focus="props.focus"
+					v-bind="$attrs"
 					@update="updateInput($event)"
 				/>
 				<form-element-switch
 					v-else-if="type === 'switch'"
-					v-model="theValue"
+					v-model="theValue as boolean"
 					:class="combinedInputClass"
-					:focus="props.focus"
 					:label="props.label"
 					:sm="props.sm"
+					v-bind="$attrs"
 					@update="updateInput($event)"
 				/>
 			</div>
@@ -332,6 +348,21 @@ defineExpose({ focus: setFocus })
 			:class="props.messageClass"
 			:text="props.message"
 		/>
+
+		<button
+			v-if="props.axios?.button"
+			class="absolute -top-2 right-0 z-10 px-1 border bg-green-500"
+			@click="onEnter"
+		>
+			<i
+				class="bi bi-save"
+				v-if="props.axios.button === true"
+			/>
+			<span
+				v-else
+				v-katex.auto="props.axios.button"
+			/>
+		</button>
 	</div>
 </template>
 

@@ -41,9 +41,17 @@ export interface ChapterMinInterface {
 	posts_length: number;
 }
 
+export interface BlockMinInterface {
+	id: number
+	title: string
+	body: string
+	illustration: IllustrationInterface
+}
+
 export interface BlockInterface {
 	id: number;
 	order: number;
+	merge: boolean;
 	blur: boolean;
 	switch: string | boolean;
 	type: string;
@@ -81,12 +89,7 @@ export interface QuestionInterface {
 	displayIf: boolean | string;
 	css: string;
 	body: string;
-	block: {
-		id: number
-		title: string
-		body: string
-		illustration: IllustrationInterface
-	};
+	block: BlockMinInterface;
 	answer: string;
 	checker: string;
 	keyboard: string;
@@ -100,11 +103,7 @@ export interface QuestionInterface {
 
 export interface QuestionMinInterface {
 	body: string;
-	block: {
-		title: string
-		body: string
-		illustration: IllustrationInterface
-	};
+	block: BlockMinInterface;
 	answer: string;
 	keyboard: string;
 	user: {
@@ -154,13 +153,16 @@ export interface GeneratorInterface {
 	};
 }
 
+export interface ChallengeScoreInterface {
+	score: number,
+	level: number
+}
+
 export interface ChallengeInterface {
 	id: number;
-	chapter: ChapterInterface;
 	slug: string;
 	active: boolean;
 	title: string;
-	block: BlockInterface;
 	maxLevel: number;
 	nextLevelAfter: number;
 	duration: number;
@@ -170,8 +172,12 @@ export interface ChallengeInterface {
 	bonusScoreTime: number;
 	bonusLevelLife: number;
 	bonusLevelTime: number;
-	generators: GeneratorInterface[];
 	updated_at: string;
+	chapter: ChapterMinInterface;
+	block: BlockInterface;
+	best: ChallengeScoreInterface;
+	user: ChallengeScoreInterface;
+	generators: GeneratorInterface[];
 }
 
 export interface flipcardsInterface {
@@ -244,4 +250,27 @@ export interface TranslationUnitInterface {
 	language: string
 	unit: string
 	title: string
+}
+
+export interface TranslationWord {
+	id: number,
+	fr: string,
+	foreign: string,
+	definition: string,
+	examples: string
+}
+export interface TranslationUnitInterfaceExtended extends TranslationUnitInterface {
+	selected: boolean
+	words: TranslationWord[]
+}
+
+export interface FormulaInterface {
+	id: number
+	order: number
+	chapter: {
+		id: number
+		title: string
+		theme_id: number
+	}
+	block: BlockInterface
 }

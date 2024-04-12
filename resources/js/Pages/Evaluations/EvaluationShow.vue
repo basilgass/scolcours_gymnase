@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 import { PropType, ref } from "vue"
-import { EvaluationInterface } from "@/types/modelInterfaces"
+import type { EvaluationInterface } from "@/types/modelInterfaces"
 import QuestionShow from "@/Pages/Questions/QuestionShow.vue"
 import LayoutProjection from "@/Layouts/LayoutProjection.vue"
 

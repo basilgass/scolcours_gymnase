@@ -1,6 +1,6 @@
 <script setup lang="ts">
+import type { IllustrationInterface } from "@/types/modelInterfaces"
 import { PropType } from "vue"
-import { IllustrationInterface } from "@/types/modelInterfaces"
 
 let props = defineProps({
 	illustration: { type: Object as PropType<IllustrationInterface>, required: true },

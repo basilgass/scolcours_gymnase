@@ -12,8 +12,6 @@ const flash = inject<flashInterface>("flash"),
 			target: { type: String, required: true },
 		})
 
-	const emits = defineEmits(["moved"])
-
 	let showMoveTo = ref(false),
 		moveToId = ref(null),
 		moveInput = ref(null),
@@ -47,8 +45,6 @@ const flash = inject<flashInterface>("flash"),
 						},
 						10000,
 					)
-					// router.visit(res.data)
-					emits("moved", props.sourceId)
 				})
 				.catch((res) => {
 					console.warn(res)

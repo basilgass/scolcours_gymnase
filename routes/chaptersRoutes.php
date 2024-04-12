@@ -26,13 +26,8 @@ Route::whereIn('theme', $themesList)->group(function () {
 	Route::get('{theme:slug}/{chapter:slug}', [ChapterController::class, 'intro'])
 		->name('themes.chapters.intro');
 
-	
 	Route::get('chapters/{chapter}}/{order}', [ChapterController::class, 'slide'])
 		->name('chapters.slide');
-
-
-	Route::get('{theme:slug}/{chapter:slug}/complete', [ChapterController::class, 'page'])
-		->name('theme.chapter');
 
 	Route::get('chapter/{chapter:slug}', function (Chapter $chapter) {
 		return redirect()->route('themes.chapters.intro', [$chapter->theme->slug, $chapter->slug]);
@@ -47,8 +42,13 @@ Route::whereIn('theme', $themesList)->group(function () {
 
 	//Admin routes
 	Route::middleware("can:admin")->group(function () {
+
+		Route::get('chapters/{chapter}/edit', [ChapterController::class, 'edit'])
+			->name('chapters.edit');
+
 		Route::post('themes/{theme:slug}/chapters', [ChapterController::class, 'store'])
 			->name('themes.chapters.store');
+
 		Route::patch('chapters/{chapter}', [ChapterController::class, 'update'])
 			->name('chapters.update');
 		Route::delete('chapters/{chapter}', [ChapterController::class, 'destroy'])
@@ -62,7 +62,7 @@ Route::whereIn('theme', $themesList)->group(function () {
 		Route::post('chapters/{chapter}/relations/{related}', [ChapterController::class, 'toggleRelated'])
 			->name('chapters.relations.toggle');
 	});
-
+	
 	// Get basic chapter info
 	Route::get('chapters/{chapter}/info', [ChapterController::class, 'info'])
 		->name('chapters.info');

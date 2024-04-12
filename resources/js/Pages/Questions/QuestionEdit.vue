@@ -1,13 +1,14 @@
 <script lang="ts" setup>
 import { computed, inject, PropType, ref } from "vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
-import { QuestionInterface } from "@/types/modelInterfaces"
+import type { QuestionInterface } from "@/types/modelInterfaces"
 import axios from "axios"
 import { ClipboardKeyboardInterface, flashInterface } from "@/types"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import QuestionShow from "@/Pages/Questions/QuestionShow.vue"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
-import MoveItemTo from "@/Components/Posts/MoveItemTo.vue"
+import MoveItemTo from "@/Components/MoveItemTo.vue"
+import { router } from "@inertiajs/vue3"
 
 defineOptions({ layout: LayoutMain })
 
@@ -16,7 +17,6 @@ const props = defineProps({
 })
 
 const theQuestion = ref(props.question)
-const emits = defineEmits(["update:modelValue", "change", "destroy"])
 
 const flash = inject<flashInterface>("flash")
 
@@ -39,9 +39,8 @@ let saveQuestion = function() {
 						keyboard: theQuestion.value.keyboard,
 						css: theQuestion.value.css
 					})
-					.then((res) => {
-						emits("update:modelValue", false)
-						emits("change", res.data)
+					.then(() => {
+						flash.success("La question a été sauvegardée.")
 					})
 					.catch((error) => {
 						flash.error(
@@ -60,15 +59,11 @@ let saveQuestion = function() {
 			.post(route("questions.destroy", [props.question.id]), {
 				_method: "delete"
 			})
-			.then(() => {
-				emits("update:modelValue", false)
-				emits("destroy", props.question.id)
+			.then((res) => {
+				flash.success("la question a été supprimée")
+				router.visit(res.data)
 			})
 			.catch((err) => console.warn(err))
-	},
-	moveItemToPost = function() {
-		emits("update:modelValue", false)
-		emits("destroy", props.question.id)
 	}
 
 // Handle copy and paste.
@@ -156,7 +151,6 @@ let hasClipboard = computed(() => {
 				:source-id="theQuestion.id"
 				source="question"
 				target="post"
-				@moved="moveItemToPost"
 			/>
 		</div>
 		<div class="flex flex-col md:flex-row gap-3 px-5 pb-5">

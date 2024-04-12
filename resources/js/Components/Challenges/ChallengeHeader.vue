@@ -2,29 +2,33 @@
 En-tête d'un challenge.
 Contient le bouton de retour au chapitre, le titre, la description et l'édition
 -->
-<script setup lang="ts">
+<script lang="ts" setup>
 
-import IllustrationShow from "@/Components/Posts/Illustrations/IllustrationShow_OLD.vue"
-import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
-import { computed, defineAsyncComponent, PropType, ref } from "vue"
-import { ChallengeInterface } from "@/types/modelInterfaces"
+import { inject, PropType } from "vue"
+import type { ChallengeInterface } from "@/types/modelInterfaces"
 
 const props = defineProps({
-	challenge: {type: Object as PropType<ChallengeInterface>, required: true}
+	challenge: { type: Object as PropType<ChallengeInterface>, required: true }
 })
 
-const showEditForm = ref(false),
-	editForm = computed(() => {
-		return defineAsyncComponent(() =>
-			import("@/Components/Challenges/ChallengeForm.vue")
-		)
-	})
+const editMode = inject<boolean>("editMode")
 </script>
 
 <template>
-	<header>
-		<!-- Header - return back -->
-		<div class="pt-4 mb-4">
+	<header
+		v-theme.bg.text
+		class="py-2 lg:flex-row justify-between bg-opacity-80"
+	>
+		<div class="scolcours-container">
+			<!-- The title of the challenge -->
+			<div class="flex justify-between items-baseline">
+				<h1
+					v-katex.auto="props.challenge.title"
+					class="text-2xl mb-4"
+				/>
+			</div>
+
+			<!-- Header - return back -->
 			<Link
 				:href="
 					route('themes.chapters.intro', [
@@ -32,54 +36,24 @@ const showEditForm = ref(false),
 						props.challenge.chapter.slug,
 					])
 				"
-				class="text-sm text-gray-400 hover:text-gray-800 transition-colors"
+				as="button"
+				class="hover:pl-2 transition-all"
 			>
-				<i class="bi bi-chevron-left text-xs mr-2" />retour à
-				<span v-katex.auto="props.challenge.chapter.title" />
+				<i class=" bi bi-chevron-double-right mr-1" /><span v-katex.auto="props.challenge.chapter.title" />
 			</Link>
 		</div>
-
-		<!-- The title of the challenge -->
-		<div class="flex justify-between items-baseline">
-			<h1
-				v-katex.auto="props.challenge.title"
-				class="text-2xl mb-4"
-			/>
-
+		<div
+			v-admin="editMode"
+			v-theme.bg.text.admin
+			class="py-1 font-code text-sm -mb-2 mt-2"
+		>
 			<Link
-				v-if="$page.props.auth.can.admin"
-				v-theme.bg.text.admin
-				as="button"
 				:href="route('challenges.edit', [props.challenge.id])"
+				as="button"
 				class="text-xs py-2 px-3 rounded font-code flex place-content-center"
 			>
 				éditer le challenge (id: {{ props.challenge.id }}) <i class="bi bi-pencil ml-2" />
 			</Link>
 		</div>
-
-		<!-- the body / question of the challenge -->
-		<markdown-it
-			:text="props.challenge.block.body"
-			class="mt-3"
-		/>
-
-		<!-- illustration -->
-		<illustration-show
-			v-if="props.challenge.block.illustrations.length"
-			:illustration="props.challenge.block.illustrations[0]"
-			class="max-w-[30em] mx-auto"
-		/>
 	</header>
-
-	<!-- edition du challenge -->
-	<div
-		v-if="showEditForm && $page.props.auth.can.admin"
-		v-admin
-	>
-		<component
-			:is="editForm"
-			v-model="showEditForm"
-			:challenge="challenge"
-		/>
-	</div>
 </template>

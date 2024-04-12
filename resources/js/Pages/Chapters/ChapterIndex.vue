@@ -1,133 +1,64 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
-import { computed, ref } from "vue"
-import { useForm } from "@inertiajs/vue3"
-import DialogModal from "@/Components/Ui/DialogModal.vue"
-import IllustrationShow from "@/Components/Posts/Illustrations/IllustrationShow_OLD.vue"
-import FormMaker from "@/Components/Form/FormMaker.vue"
+import { PropType } from "vue"
+import { router, usePage } from "@inertiajs/vue3"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
+import theme from "tailwindcss/defaultTheme"
+import type { ChapterInterface } from "@/types/modelInterfaces"
+import FilteredList from "@/Components/Ui/FilteredList.vue"
+import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
+import ChapiterIndexCreateAdmin from "@/Pages/Chapters/ChapiterIndexCreateAdmin.vue"
 
 defineOptions({ layout: LayoutMain })
 
-const props = defineProps({
-	theme: {
-		type: Object,
-		default: () => {
-		}
-	},
+defineProps({
 	chapters: {
-		type: Object,
+		type: Object as PropType<ChapterInterface[]>,
 		default: () => {
 		}
 	}
 })
 
-const chaptersFilter = ref(""),
-	root = ref(null)
-
-const chaptersFiltered = computed(() => {
-	if (chaptersFilter.value === "") {
-		return props.chapters.data
+function triggerEnter(items: ChapterInterface[]){
+	// si il n'y a qu'un élément afficher, on le charge.
+	if(items.length===1){
+		router.visit(route('chapters.show', [items[0].slug]))
+		return
 	}
-
-	// let filter = chaptersFilter.value.toLowerCase()
-
-	return props.chapters.data.filter(
-		(chapter) =>
-			chapter.slug.toLowerCase().includes(chaptersFilter.value) ||
-			chapter.title.toLowerCase().includes(chaptersFilter.value) ||
-			chapter.block.body
-				?.toLowerCase()
-				.includes(chaptersFilter.value)
-	)
-})
-
-const showDialog = ref(false)
-const newChapterForm = useForm({
-	title: "exemple"
-})
-
-function createNewChapter() {
-	newChapterForm.post(route("themes.chapters.store", [props.theme.slug]))
 }
 </script>
 
 <template>
-	<div ref="root">
+	<section class="scolcours-container">
 		<div class="flex justify-between items-center">
 			<ArticleTitle :title="theme.title" />
-
-			<button
-				v-admin
-				class="btn-primary btn-xs"
-				@click="showDialog = true"
-			>
-				Créer un chapitre
-			</button>
 		</div>
 
-		<div>
-			<form-maker
-				v-if="chapters.data.length > 3"
-				v-model="chaptersFilter"
-				autocomplete="off"
-				label="filtrer les chapitres"
-				@cancel="chaptersFilter = ''"
-			/>
-		</div>
 
-		<div class="mt-10 grid grid-cols-1 md:grid-cols-3 gap-5">
-			<transition-group
-				v-if="chaptersFiltered.length > 0"
-				name="list"
-			>
-				<Link
-					v-for="chapter in chaptersFiltered"
-					:key="`chapter-${chapter.slug}`"
-					:class="{ 'border-red-500': chapter.active === 0 }"
-					:href="
-						route('themes.chapters.intro', [
-							$page.props.theme.slug,
-							chapter.slug,
-						])
-					"
-					class="panel bg-white border border-gray-200 px-4 py-2 rounded-xl border transition-all cursor-pointer hover:scale-105 hover:shadow transition-all duration-300"
-				>
-					<div
-						v-katex.auto="chapter.title"
-						class="text-2xl block mb-5 cursor-pointer"
-					/>
-					<illustration-show
-						v-if="chapter.block.illustrations.length > 0"
-						:illustration="chapter.block.illustrations[0]"
-						class="mb-3"
-					/>
-					<div v-katex.auto="chapter.block.body" />
-				</Link>
-			</transition-group>
-		</div>
-
-		<dialog-modal
-			v-model="showDialog"
-			class="max-w-xl mx-auto p-5"
+		<filtered-list
+			:list="chapters"
+			list-class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3"
+			title="chapitres"
+			@enter="triggerEnter"
 		>
-			<div class="grid grid-cols-1 gap-4">
-				<form-maker
-					v-model="newChapterForm.title"
-					:focus="true"
-					label="Nouveau chapitre"
-					@cancel="showDialog = false"
-					@enter="createNewChapter"
-				/>
-				<button
-					class="btn btn-primary"
-					@click="createNewChapter"
+			<template #button>
+				<ChapiterIndexCreateAdmin />
+			</template>
+			<template #card="{ item }:{ item: Object}">
+				<Link
+					:class="{
+						'opacity-30 hover:opacity-70': +item['active'] === 0,
+
+					}"
+					class="bg-white block h-full text-xl rounded px-5 py-3 shadow cursor-pointer transition-all"
+					:href="route('themes.chapters.intro',[usePage().props.theme.slug, item['slug']])"
 				>
-					Créer un nouveau chapitre
-				</button>
-			</div>
-		</dialog-modal>
-	</div>
+					<h3 v-katex.auto="item['title']" />
+
+					<markdown-it :text="item['block']['body']" />
+				</Link>
+			</template>
+		</filtered-list>
+	</section>
 </template>
 
-<style scoped></style>

@@ -2,7 +2,7 @@
 import { onMounted, PropType } from "vue"
 import { router } from "@inertiajs/vue3"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
-import { QuizzSessionInterface } from "@/types/modelInterfaces"
+import type { QuizzSessionInterface } from "@/types/modelInterfaces"
 
 defineOptions({ layout: LayoutMain })
 

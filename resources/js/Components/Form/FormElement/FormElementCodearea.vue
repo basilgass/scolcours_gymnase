@@ -8,13 +8,14 @@ import "prismjs/components/prism-javascript"
 import "prismjs/components/prism-json"
 import { javascriptTriggers, latexTriggers } from "@/helpers/mdAutofill"
 
-defineOptions({
-		inheritAttrs: false,
-	})
+const theValue = defineModel<string>({ required: true })
+
+defineOptions({ inheritAttrs: false })
+
 	Prism.manual = true
 
 	defineExpose({ focus: focusFn })
-	const emits = defineEmits(["update:modelValue", "update"])
+	const emits = defineEmits(["update"])
 	const props = defineProps({
 			modelValue: { type: String, default: "" },
 			rows: { type: [Number,String], default: 4 },
@@ -23,9 +24,7 @@ defineOptions({
 			wrap: { type: Boolean, default: true },
 			resizeable: { type: Boolean, default: false },
 			autoSize: { type: Boolean, default: false },
-		}),
-		theValue = ref(props.modelValue)
-
+		})
 	const inp = ref(null),
 		currentRows = ref(+props.rows)
 
@@ -196,7 +195,7 @@ defineOptions({
 		}
 	const update = () => {
 		sync_scroll()
-		emits("update:modelValue", theValue)
+		// emits("update:modelValue", theValue)
 		emits("update", theValue.value)
 	}
 	const areaHeight = computed(() => {

@@ -63,7 +63,7 @@ function addFunction(){
 	<article
 		class="py-5 space-y-6"
 	>
-		<Head title="Grapheur" />
+		<!--		<Head title="Grapheur" />-->
 		<h1 class="text-3xl">
 			Grapheur
 		</h1>

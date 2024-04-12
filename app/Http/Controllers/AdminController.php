@@ -352,9 +352,9 @@ class AdminController extends Controller
 			'model'  => ["string"],
 			'id'     => ["int"],
 			'column' => ["string"],
-			'value'  => ["string"]
+			'value'  => ["string", "nullable"]
 		]);
-		
+
 		// Get the model
 		$model = app('App\\Models\\' . $request->model);
 		$model = $model::find($request->id);

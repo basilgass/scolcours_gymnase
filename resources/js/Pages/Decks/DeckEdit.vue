@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 
 import FlipcardsIndex from "@/Components/Decks/FlipcardsIndex.vue"
-import { deckInterface } from "@/types/modelInterfaces"
+import type { deckInterface } from "@/types/modelInterfaces"
 import { PropType } from "vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 

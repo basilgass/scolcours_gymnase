@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { computed, PropType } from "vue"
 import { usePage } from "@inertiajs/vue3"
-import { ChapterInterface } from "@/types/modelInterfaces"
+import type { ChapterInterface } from "@/types/modelInterfaces"
 
 const props = defineProps({
 	chapter: {
@@ -24,7 +24,7 @@ const nav = computed(() => {
 			props.currentPost - 1
 		])
 
-	const next = props.currentPost === props.chapter.posts_length ?
+	const next = props.currentPost === props.chapter.posts.length ?
 		null :
 		route("themes.chapters.slide", [
 			usePage().props.theme.slug,

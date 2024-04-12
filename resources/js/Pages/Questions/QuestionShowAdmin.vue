@@ -1,10 +1,11 @@
 <script lang="ts" setup>
 import { computed, inject, nextTick, PropType, ref } from "vue"
-import { QuestionInterface } from "@/types/modelInterfaces"
+import type { QuestionInterface } from "@/types/modelInterfaces"
 import EditLink from "@/Components/Ui/EditLink.vue"
 import DropdownMenu from "@/Components/Ui/DropdownMenu.vue"
 import axios from "axios"
 import type { flashInterface } from "@/types"
+import { router } from "@inertiajs/vue3"
 
 const flash = inject<flashInterface>("flash")
 
@@ -62,14 +63,33 @@ const toggleDisplayId = async function(id) {
 			flash.error("Modification de la condition échouée.")
 		})
 }
+
+function duplicateQuestion(){
+	axios
+		.post(route('questions.duplicate', [props.question.id]))
+		.then((res)=>{
+			router.visit(route('questions.edit', [res.data.id]))
+		})
+}
 </script>
 <template>
 	<div
-
-
-		class="flex items-center justify-end w-full px-3 gap-3 py-2 bg-slate-600 text-white rounded-t"
+		class="flex items-center justify-between w-full px-3 gap-3 py-2 bg-slate-600 text-white rounded-t"
 	>
-		<div class="cursor-pointer">
+		<edit-link
+			:id="question.id"
+			route-name="questions.edit"
+			inline
+		/>
+
+		<div class="flex gap-2">
+			<button
+				class="text-xs px-2"
+				title="dupliquer"
+				@click="duplicateQuestion"
+			>
+				<i class="bi bi-clipboard-plus" />
+			</button>
 			<dropdown-menu prevent-close>
 				<template #button>
 					<i class="bi bi-eye" />
@@ -85,7 +105,7 @@ const toggleDisplayId = async function(id) {
 						- question courante -
 					</div>
 					<div v-else>
-						<label class="block">
+						<label class="block cursor-pointer">
 							<input
 								:checked="displayIfIds.includes(q)"
 								type="checkbox"
@@ -105,27 +125,5 @@ const toggleDisplayId = async function(id) {
 				</template>
 			</dropdown-menu>
 		</div>
-
-		<edit-link
-			:id="question.id"
-			route-name="questions.edit"
-			inline
-		/>
-		<!--				<button-->
-		<!--					class="text-xs px-2"-->
-		<!--					title="dupliquer"-->
-		<!--					@click="duplicateQuestion"-->
-		<!--				>-->
-		<!--					<i class="bi bi-clipboard-plus" />-->
-		<!--				</button>-->
-
-		<!--				<button-->
-		<!--					v-if="!theQuestion.block.illustration"-->
-		<!--					class="text-xs px-2"-->
-		<!--					title="ajouter une illustration"-->
-		<!--					@click="addIllustration"-->
-		<!--				>-->
-		<!--					<i class="bi bi-image" />-->
-		<!--				</button>-->
 	</div>
 </template>

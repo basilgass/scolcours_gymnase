@@ -1,90 +1,62 @@
-<script setup lang="ts">
-import { computed, defineAsyncComponent, inject, Ref, ref } from "vue"
+<script lang="ts" setup>
+import { PropType, ref } from "vue"
 import ChapterToc from "@/Components/Chapters/ChapterToc.vue"
 import ChapterChallenges from "@/Components/Chapters/ChapterChallenges.vue"
 import ChapterFormulas from "@/Components/Chapters/ChapterFormulas.vue"
-import { Head } from "@inertiajs/vue3"
 import ChapterRelations from "@/Components/Chapters/ChapterRelations.vue"
 import ChapterTheorems from "@/Components/Chapters/ChapterTheorems.vue"
 
 import LayoutMain from "@/Layouts/LayoutMain.vue"
+import type { ChapterInterface } from "@/types/modelInterfaces"
+import EditLink from "@/Components/Ui/EditLink.vue"
 
 defineOptions({ layout: LayoutMain })
 
-	const props = defineProps({
-			chapter: { type: Object, required: true }
-		}),
-		theChapter = ref(props.chapter)
+const props = defineProps({
+	chapter: { type: Object as PropType<ChapterInterface>, required: true }
+})
 
-	const editMode = inject<Ref<boolean>>("editMode")
+const showFormular = ref(false)
+const showTheorem = ref(false)
 
-	const showEditForm = ref(false),
-		editForm = computed(() => {
-			return defineAsyncComponent(() =>
-				import("@/Components/Chapters/ChapterForm.vue"),
-			)
-		})
-
-	const pageTitle = computed(() => {
-		return theChapter.value.meta_title
-			? theChapter.value.meta_title
-			: theChapter.value.title
-	})
-
-	const showFormular = ref(false)
-	const showTheorem = ref(false)
 </script>
 <template>
-	<section class="bg-white border border-gray-200 rounded shadow py-5 mt-5">
-		<Head :title="pageTitle" />
-
-		<div
-			class="flex justify-between items-baseline px-5 border-b border-gray-200 pb-5"
+	<section>
+		<header
+			v-theme.bg.text
+			class="py-6 lg:flex-row justify-between bg-opacity-80"
 		>
-			<h1
-				v-katex.auto="theChapter.title"
-				class="text-xl md:text-2xl xl:text-3xl"
-			/>
-
-			<div
-				v-show="editMode"
-				v-admin
-			>
-				<button
-					class="text-xs"
-					@click="showEditForm = true"
-				>
-					<i class="bi bi-pencil mr-2" /> {{ theChapter.id }}
-				</button>
-
-				<div v-if="showEditForm">
-					<component
-						:is="editForm"
-						v-model="showEditForm"
-						:chapter="theChapter"
-					/>
-				</div>
+			<!-- title -->
+			<div class="scolcours-container relative">
+				<edit-link
+					:id="chapter.id"
+					class="!text-black top-1 right-3"
+					route-name="chapters.edit"
+				/>
+				<h1
+					v-katex.auto="chapter.title"
+					class="text-xl md:text-3xl l:text-5xl"
+				/>
 			</div>
-		</div>
+		</header>
 
-		<div class="space-y-10">
+		<div class="scolcours-container space-y-10">
 			<!-- table des matieres -->
 			<ChapterToc
-				:chapter="theChapter"
-				class="px-5"
+				:chapter="chapter"
 			/>
 
 			<!-- commencer l'aventure -->
 			<div
-				v-if="theChapter.posts.length > 0"
-				class="w-full text-center px-5"
+				v-if="chapter.posts.length > 0"
+				class="w-full text-center"
 			>
 				<Link
 					v-theme.bg.text
 					:href="
 						route('themes.chapters.slide', [
 							$page.props.theme.slug,
-							theChapter.slug,
+							chapter.slug,
 							1,
 						])
 					"
@@ -96,7 +68,7 @@ defineOptions({ layout: LayoutMain })
 					>
 						<p>Commencer l'aventure avec</p>
 						<h2
-							v-katex.auto="theChapter.posts[0].title"
+							v-katex.auto="chapter.posts[0].title"
 							class="text-xl"
 						/>
 					</div>
@@ -104,40 +76,40 @@ defineOptions({ layout: LayoutMain })
 			</div>
 
 			<!-- liste des relations -->
-			<chapter-relations :chapter="theChapter" />
+			<chapter-relations :chapter="chapter" />
 
 			<!-- liste des challenges -->
-			<chapter-challenges :chapter="theChapter" />
+			<chapter-challenges :chapter="chapter" />
 
 			<!-- The formulas -->
 			<div>
 				<button
-					class="px-5 uppercase"
-					v-theme.text
 					v-if="!showFormular"
+					v-theme.text
+					class="uppercase"
 					@click="showFormular = true"
 				>
 					Afficher le formulaire
 				</button>
 				<chapter-formulas
 					v-else
-					:chapter-slug="theChapter.slug"
+					:chapter-slug="chapter.slug"
 					responsive
 				/>
 			</div>
 
 			<div>
 				<button
-					class="px-5 uppercase"
-					v-theme.text
 					v-if="!showTheorem"
+					v-theme.text
+					class="uppercase"
 					@click="showTheorem = true"
 				>
 					Afficher toute la théorie
 				</button>
 				<chapter-theorems
 					v-else
-					:chapter-slug="theChapter.slug"
+					:chapter-slug="chapter.slug"
 					class="mt-20"
 				/>
 			</div>

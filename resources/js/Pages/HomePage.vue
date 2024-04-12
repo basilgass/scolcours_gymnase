@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import ScolCoursLogo from "@/Components/ScolcoursLogo.vue"
-import { Head } from "@inertiajs/vue3"
 import { PropType } from "vue"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 import LayoutFullpage from "@/Layouts/LayoutFullpage.vue"
@@ -25,7 +24,7 @@ defineOptions({ layout: LayoutFullpage })
 </script>
 <template>
 	<div class="space-y-10 bg-gray-100">
-		<Head title="" />
+		<!--		<Head title="" />-->
 
 		<ScolCoursLogo class="py-10 scale-150" />
 

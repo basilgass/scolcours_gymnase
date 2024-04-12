@@ -12,7 +12,8 @@ const props = defineProps({
 	itemBackground: { type: Function, default: () => "bg-white" },
 	itemClass: { type: String, default: "" },
 	collapsed: { type: Boolean, default: null },
-	listClass: { type: String, default: "flex gap-3 flex-wrap" }
+	listClass: { type: String, default: "flex gap-3 flex-wrap" },
+	noFilterIfLessThan: { type: Number, default: 10 }
 })
 
 
@@ -39,9 +40,11 @@ function itemClicked(item) {
 }
 
 defineSlots<{
-	card(props: { item: object | string }): unknown
+	card(props: { item: object | string }): unknown,
+	button()
 }>()
 
+const emits = defineEmits(['enter'])
 </script>
 <template>
 	<div>
@@ -49,19 +52,24 @@ defineSlots<{
 			<h3 class="text-lg uppercase">
 				{{ title }}
 			</h3>
-			<button
-				v-if="props.collapsed !== null"
-				@click="showList = !showList"
-				v-text="showList ? 'cacher la liste' : 'afficher la liste'"
-			/>
+			<div class="flex gap-3">
+				<button
+					v-if="props.collapsed !== null"
+					@click="showList = !showList"
+					v-text="showList ? 'cacher la liste' : 'afficher la liste'"
+				/>
+				<slot name="button" />
+			</div>
 		</div>
 
 		<div v-show="showList">
 			<form-maker
+				v-show="props.list.length >= noFilterIfLessThan"
 				v-model="selectedList"
 				:label="`filtrer les ${title}`"
 				class="mb-5"
 				name="chapter-list"
+				@enter="emits('enter', filteredList)"
 			/>
 
 			<div
@@ -72,12 +80,11 @@ defineSlots<{
 						v-for="(item, index) in filteredList"
 						:key="`id-${index}`"
 					>
-						<div v-if="$slots['card']">
-							<slot
-								:item="item"
-								name="card"
-							/>
-						</div>
+						<slot
+							v-if="$slots['card']"
+							:item="item"
+							name="card"
+						/>
 						<div
 							v-else
 							v-katex.auto="props.itemTitle(item)"

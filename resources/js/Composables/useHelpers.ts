@@ -1,4 +1,4 @@
-import { unref } from "vue"
+import { Ref, unref } from "vue"
 
 /**
  * Scrolls the page to the element with the specified class.
@@ -24,7 +24,7 @@ export function useMenuScrollToClass(className: string) {
  */
 export function useMenuScrollTo(id: string) {
 	const el = id === undefined ? document.body : document.getElementById(id)
-	
+
 	el.scrollIntoView({
 		block: "start",
 		behavior: "smooth",
@@ -57,14 +57,14 @@ export function useWrongAnswerAnimation(btn: HTMLElement) {
  * Processes and formats the body text with given values.
  *
  * @param {string} body - The body text to be formatted.
- * @param {object} maybeRefValues - The values to replace in the body text.
+ * @param mabyeRefValues
  * @returns {string|null} - The formatted body text or null if body is null.
  */
-export function useFormattedBody(body: string, mabyeRefValues): string {
-	if (body === null) {
-		return null
-	}
+export function useFormattedBody(body: string|Ref<string>, mabyeRefValues: Ref<{[Key: string]: string}>): string {
+	// No body : no need to continue
+	if (body === null) return null
 
+	// Get the values to update
 	const values = unref(mabyeRefValues)
 
 	// There is no value for the script

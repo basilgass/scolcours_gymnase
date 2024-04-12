@@ -1,86 +1,93 @@
-<script setup lang="ts">
-import { inject, ref } from "vue"
+<script lang="ts" setup>
+import { inject, PropType, ref } from "vue"
 import { useClipboard } from "@vueuse/core"
 import { useGenerator } from "@/Composables/useGenerator"
 import axios from "axios"
-import { flashInterface } from "@/types"
+import { flashInterface, generatedQuestionInterface } from "@/types"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import { asciiToTex } from "@/Composables/keyboardConfig"
+import { ChallengeInterface } from "@/types/modelInterfaces"
+import { usePage } from "@inertiajs/vue3"
 
 /**
  * This component is used to generate a PDF from a challenge
  * Actually, it's only visible for administrators
  * TODO: make PDF generator available for everyone
+ * TODO: reformat ChallengeExport.vue
  */
 
 const props = defineProps({
-		challenge: { type: Object, required: true },
+	challenge: {
+		type: Object as PropType<ChallengeInterface>,
+		required: true
+	}
+})
+
+const flash = inject<flashInterface>("flash")
+
+const pdfGeneratorNb = ref<number[]>(Array(props.challenge.generators.length).fill(10))
+const pdfQuestionWrapper = ref("\\( @ \\)")
+const pdfError = ref("")
+const pdfLaTeX = ref("")
+
+const { copy, copied } = useClipboard({ source: pdfLaTeX })
+
+const pdfGenereate = () => {
+	let questions: generatedQuestionInterface[] = []
+	pdfGeneratorNb.value.forEach((nb, index) => {
+		for (let i = 0; i < nb; i++) {
+			questions.push(
+				useGenerator(props.challenge.generators[index]).random()
+			)
+		}
 	})
 
-	const flash = inject<flashInterface>("flash")
+	if (pdfQuestionWrapper.value !== "") {
+		questions = questions.map((q) => {
+			// Wrap the question in a custom wrapper
+			q.question = pdfQuestionWrapper.value.replace("@", q.question)
 
-	const pdfGeneratorNb = ref([])
-	const pdfQuestionWrapper = ref("\\( @ \\)")
-	const pdfError = ref("")
-	const pdfLaTeX = ref("")
-
-	const { copy, copied } = useClipboard({ source: pdfLaTeX })
-
-	const pdfGenereate = () => {
-		let questions = []
-		pdfGeneratorNb.value.forEach((nb, index) => {
-			for (let i = 0; i < nb; i++) {
-				questions.push(
-					useGenerator(props.challenge.generators[index]).random(),
-				)
-			}
+			// Convert asciimath to latex
+			q.answer = asciiToTex(q.answer)
+			return q
 		})
-
-		if (pdfQuestionWrapper.value !== "") {
-			questions = questions.map((q) => {
-				// Wrap the question in a custom wrapper
-				q.question = pdfQuestionWrapper.value.replace("@", q.question)
-
-				// Convert asciimath to latex
-				q.answer = asciiToTex(q.answer)
-				return q
-			})
-		}
-
-		pdfError.value = ""
-		pdfLaTeX.value = ""
-
-		axios
-			.post(route("latex.pdf"), {
-				template: "latex.questions",
-				title: props.challenge.title,
-				slug: props.challenge.slug,
-				theme: props.challenge.theme,
-				questions: questions,
-			})
-			.then((res) => {
-				pdfLaTeX.value = res.data.tex
-				flash.success(
-					"PDF généré avec succès",
-					{
-						label: "Voir le PDF",
-						url: route("latex.download", [res.data.slug]),
-						external: true,
-					},
-					5000,
-				)
-				document.location.href = route("latex.download", [res.data.slug])
-			})
-			.catch((err) => {
-				pdfError.value = err.response.data.message
-			})
 	}
+
+	pdfError.value = ""
+	pdfLaTeX.value = ""
+
+	// TODO:
+	axios
+		.post(route("latex.pdf"), {
+			template: "latex.questions",
+			title: props.challenge.title,
+			slug: props.challenge.slug,
+			theme: usePage().props.theme ? usePage().props.theme.slug : "divers",
+			questions: questions
+		})
+		.then((res) => {
+			pdfLaTeX.value = res.data.tex
+			flash.success(
+				"PDF généré avec succès",
+				{
+					label: "Voir le PDF",
+					url: route("latex.download", [res.data.slug]),
+					external: true
+				},
+				5000
+			)
+			document.location.href = route("latex.download", [res.data.slug])
+		})
+		.catch((err) => {
+			pdfError.value = err.response.data.message
+		})
+}
 </script>
 
 <template>
 	<div
-		class="mt-10 -mx-5 p-5 border-t"
 		v-admin
+		class="mt-10 -mx-5 p-5 border-t"
 	>
 		<div class="flex gap-5 mb-5">
 			<h3 class="text-xl font-semibold">
@@ -88,15 +95,15 @@ const props = defineProps({
 			</h3>
 
 			<form-maker
+				v-model="pdfQuestionWrapper"
 				inline-label
 				label="wrapper"
-				v-model="pdfQuestionWrapper"
 				sm
 			/>
 
 			<button
-				class="btn btn-xs ml-auto"
 				v-theme.btn
+				class="btn btn-xs ml-auto"
 				@click="pdfGenereate"
 			>
 				générer
@@ -117,11 +124,11 @@ const props = defineProps({
 				</div>
 
 				<form-maker
-					with-icon
-					type="number"
-					inline-label
-					class="w-[200px]"
 					v-model="pdfGeneratorNb[index]"
+					class="w-[200px]"
+					inline-label
+					type="number"
+					with-icon
 				/>
 			</div>
 		</div>
@@ -150,8 +157,8 @@ const props = defineProps({
 				</div>
 			</div>
 			<pre
-				v-text="pdfLaTeX"
 				class="bg-gray-100 overflow-y-auto overflow-x-auto max-h-screen"
+				v-text="pdfLaTeX"
 			/>
 		</div>
 		<div
@@ -162,8 +169,8 @@ const props = defineProps({
 				Erreur lors de la génération du code LaTeX.
 			</h3>
 			<pre
-				v-text="pdfError"
 				class="bg-red-100 overflow-y-auto overflow-x-auto max-h-screen"
+				v-text="pdfError"
 			/>
 		</div>
 	</div>

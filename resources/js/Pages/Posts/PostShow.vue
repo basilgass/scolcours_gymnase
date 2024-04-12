@@ -1,15 +1,16 @@
 <script lang="ts" setup>
 
-import { nextTick, onMounted, PropType } from "vue"
-import { ChapterInterface, PostInterface } from "@/types/modelInterfaces"
+import { computed, nextTick, onMounted, PropType, provide, ref } from "vue"
+import type { BlockInterface, ChapterInterface, PostInterface } from "@/types/modelInterfaces"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 import EditLink from "@/Components/Ui/EditLink.vue"
 import BlockShow from "@/Pages/Blocks/BlockShow.vue"
-import { useMenuScrollTo } from "@/Composables/useHelpers"
 import ChapterToc from "@/Components/Chapters/ChapterToc.vue"
 import ChapterFormulasSlider from "@/Components/Chapters/ChapterFormulasSlider.vue"
 import ChapterNav from "@/Components/Chapters/ChapterNav.vue"
 import QuestionsIndex from "@/Pages/Questions/QuestionsIndex.vue"
+import { useMenuScrollTo } from "@/Composables/useHelpers"
+import { PiMath } from "pimath/esm"
 
 defineOptions({ layout: LayoutMain })
 
@@ -28,10 +29,44 @@ const props = defineProps({
 	}
 })
 
+// Les blocks peuvent être groupé pour former un unique groupe.
+// Il s'agit surtout d'une mise en page
+const blocks = computed(() => {
+	// The blocks might be grouped
+	let arr: BlockInterface[][] = []
+
+	props.post.blocks.forEach(block => {
+		block.merge === true ? arr[arr.length - 1].push(block) : arr.push([block])
+	})
+
+	return arr
+})
+
+const iteration = ref(0)
+const postData = ref({})
+function loadDataScript() {
+	iteration.value ++
+	try {
+		if (props.post.script) {
+			const F = new Function("PiMath", "iteration", props.post.script)
+			postData.value = F(PiMath, iteration.value)
+		}
+	} catch (e) {
+		console.warn("Post script generator error", e)
+		postData.value = {}
+	}
+}
+const hasData = computed(() => {
+	return Object.keys(postData.value).length > 0
+})
+loadDataScript()
+provide("postData", postData)
+
+
 onMounted(() => {
+	// TODO: save the last visited post or perhaps last question ?
 	// storeCurrentPost()
 	if (props.anchor) {
-		console.log(props.anchor)
 		nextTick(() => useMenuScrollTo(props.anchor))
 	}
 })
@@ -44,23 +79,38 @@ onMounted(() => {
 			class="py-2 lg:flex-row justify-between bg-opacity-80"
 		>
 			<!-- title -->
-			<div class="scolcours-container relative">
-				<edit-link
-					:id="post.id"
-					class="!text-black top-1"
-					route-name="posts.edit"
-				/>
-				<h1
-					v-katex.auto="post.title"
-					class="text-LG md:text-2xl l:text-3xl"
-				/>
+			<div class="scolcours-container flex justify-between">
+				<div>
+					<h1
+						v-katex.auto="post.title"
+						class="text-LG md:text-2xl l:text-3xl"
+					/>
 
-				<Link
-					:href="route('chapters.show', [chapter.slug])"
-					class="hover:pl-2 transition-all"
-				>
-					<i class=" bi bi-chevron-double-right mr-1" />{{ chapter.title }}
-				</Link>
+					<Link
+						:href="route('chapters.show', [chapter.slug])"
+						class="hover:pl-2 transition-all"
+					>
+						<i class=" bi bi-chevron-double-right mr-1" />{{ chapter.title }}
+					</Link>
+				</div>
+
+				<div>
+					<edit-link
+						:id="post.id"
+						class="!text-black top-1"
+						inline
+						route-name="posts.edit"
+					/>
+
+					<button
+						v-if="hasData"
+						@click="loadDataScript"
+						v-theme.text
+						class="btn btn-xs bg-white font-semibold hover:shadow"
+					>
+						<i class="bi bi-shuffle mr-2" />aléatoire
+					</button>
+				</div>
 			</div>
 		</header>
 
@@ -68,24 +118,30 @@ onMounted(() => {
 		<main class="scolcours-container mt-5 space-y-5">
 			<!-- show the blocks -->
 			<article class="flex flex-col gap-4">
-				<block-show
-					v-for="block in post.blocks"
-					:key="`block-${block.id}`"
-					:block="block"
-					class="bg-white shadow"
-				/>
+				<div
+					v-for="group in blocks"
+					:key="group[0].id"
+					class="shadow"
+				>
+					<block-show
+						v-for="(block, index) in group"
+						:key="`block-${block.id}`"
+						:block="block"
+						:group-index="index"
+					/>
+				</div>
 			</article>
 
 			<!-- show the questions -->
 			<questions-index
-				:post="post"
 				:chapter="chapter"
+				:post="post"
 			/>
 
 			<!-- navigation -->
 			<chapter-nav
-				:current-post="post.order"
 				:chapter="chapter"
+				:current-post="post.order"
 			/>
 
 			<!-- table of contents -->

@@ -5,7 +5,7 @@ import { inject, PropType, ref, Ref } from "vue"
 import { flashInterface } from "@/types"
 import axios from "axios"
 import QuestionShow from "@/Pages/Questions/QuestionShow.vue"
-import { PostInterface, QuestionInterface } from "@/types/modelInterfaces"
+import type { PostInterface, QuestionInterface } from "@/types/modelInterfaces"
 
 const props = defineProps({
 	post: { type: Object as PropType<PostInterface>, required: true },
@@ -28,7 +28,6 @@ const removeDisplayIf = function() {
 	},
 	addDisplayIf = function() {
 		// Add displayIf by increment.
-		//TODO:  Use the order key.
 		theQuestions.value.forEach((question, index) => {
 			if (index > 0) {
 				question.displayIf =
@@ -70,11 +69,11 @@ function resetAnswers() {
 		.then(() => {
 			for (const i in theQuestions.value) {
 				theQuestions.value[i].user.answer = ""
-
 				theQuestions.value[i].user.result = false
-
 				theQuestions.value[i].user.attempts = 0
 			}
+
+			flash.success("Les réponses ont bien été réinitialisées.")
 		})
 }
 
@@ -85,9 +84,9 @@ function showAnswers() {
 	props.components.forEach((component) => {
 		if (component) {
 			if (isAnswersShown.value) {
-				component.loadAnswer(null) //reset the answer
+				component.loadAnswer(false) //reset the answer
 			} else {
-				component.loadAnswer() // show the answer
+				component.loadAnswer(true) // show the answer
 			}
 
 		}

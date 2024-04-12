@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { computed, PropType, ref } from "vue"
-import { ChapterMinInterface, PostQuestionsForOneUserStatsInterface, UserInterface } from "@/types/modelInterfaces"
+import type { ChapterMinInterface, PostQuestionsForOneUserStatsInterface, UserInterface } from "@/types/modelInterfaces"
 import { useIntersectionObserver } from "@vueuse/core"
 import { router } from "@inertiajs/vue3"
 import StatBar from "@/Components/Ui/StatBar.vue"

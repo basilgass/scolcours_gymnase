@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { PropType } from "vue"
-import { IllustrationInterface } from "@/types/modelInterfaces"
+import type { IllustrationInterface } from "@/types/modelInterfaces"
 import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"
 
 const props = defineProps({

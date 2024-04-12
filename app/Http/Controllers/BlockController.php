@@ -29,24 +29,24 @@ class BlockController extends Controller
 	public function store(Request $request)
 	{
 		$validation = $request->validate([
-			'target' => ['string'],
+			'target'    => ['string'],
 			'target_id' => ['number'],
-			'title' => ['string', 'nullable'],
-			'body' => ['required', 'min:5'],
-			'template' => ['string', 'nullable'],
-			'script' => ['string', 'nullable'],
-			'switch' => ['boolean', 'nullable'],
-			'json' => ['string', 'nullable']
+			'title'     => ['string', 'nullable'],
+			'body'      => ['required', 'min:5'],
+			'template'  => ['string', 'nullable'],
+			'script'    => ['string', 'nullable'],
+			'switch'    => ['boolean', 'nullable'],
+			'json'      => ['string', 'nullable']
 		]);
 
 		$block = Block::create([
-			'title' => $request->title,
-			'body' => $request->body,
+			'title'    => $request->title,
+			'body'     => $request->body,
 			'template' => $request->template,
-			'script' => $request->script,
-			'json' => $request->json,
-			'switch' => $request->switch,
-			'data' => $request->data
+			'script'   => $request->script,
+			'json'     => $request->json,
+			'switch'   => $request->switch,
+			'data'     => $request->data
 		]);
 
 		$this->storeInBlockable($request->target, $request->target_id, $block);
@@ -67,7 +67,7 @@ class BlockController extends Controller
 	{
 		$block = $post->blocks()->create([
 			'title' => '',
-			'body' => 'sans contenu',
+			'body'  => 'sans contenu',
 			'order' => count($post->blocks)
 		]);
 
@@ -86,16 +86,26 @@ class BlockController extends Controller
 		$post = $block->blockable;
 		$chapter = $post->chapter;
 		$theme = $chapter->theme;
-		return redirect()->route(
-			'themes.chapters.slide.anchor',
-			[
-				'theme' => $theme->slug,
-				'chapter' => $chapter->slug,
-				'order' => $post->order,
-				'type' => 'block',
-				'id' => $block->id
-			]
-		);
+
+
+		if ($post instanceof Post) {
+			return redirect()->route(
+				'themes.chapters.slide.anchor',
+				[
+					'theme'   => $theme->slug,
+					'chapter' => $chapter->slug,
+					'order'   => $post->order,
+					'type'    => 'block',
+					'id'      => $block->id
+				]
+			);
+		} else {
+			return redirect()->route('chapters.show',
+				[
+					'chapter' => $chapter->slug
+				]
+			);
+		}
 	}
 
 	/**
@@ -119,7 +129,7 @@ class BlockController extends Controller
 			'blur' => ['boolean', 'required']
 		]);
 
-		$block->blur = $validation['blur'];
+		$block->blur = $validation[ 'blur' ];
 		$block->save();
 		return $block;
 	}
@@ -130,7 +140,7 @@ class BlockController extends Controller
 			'switch' => ['boolean', 'nullable']
 		]);
 
-		$block->switch = $validation['switch'];
+		$block->switch = $validation[ 'switch' ];
 		$block->save();
 		return $block;
 	}
@@ -164,13 +174,13 @@ class BlockController extends Controller
 				$theme = "";
 				$name = basename($file, '.vue');
 				if (count($theme_name) === 2) {
-					$theme = $theme_name[0];
+					$theme = $theme_name[ 0 ];
 				}
 
-				$components[$file] = [
-					"name" => $name,
-					"description" => count($content) >= 2 ? explode("</info>", $content[1])[0] : "",
-					"theme" => $theme
+				$components[ $file ] = [
+					"name"        => $name,
+					"description" => count($content) >= 2 ? explode("</info>", $content[ 1 ])[ 0 ] : "",
+					"theme"       => $theme
 				];
 
 			}
@@ -182,8 +192,8 @@ class BlockController extends Controller
 
 	public function updateIllustrationsOrder(Block $block, Request $request)
 	{
-		foreach ($request['order'] as $value) {
-			$block->illustrations->find($value['id'])->update(['order' => $value['order']]);
+		foreach ($request[ 'order' ] as $value) {
+			$block->illustrations->find($value[ 'id' ])->update(['order' => $value[ 'order' ]]);
 		}
 
 		return true;
@@ -200,26 +210,26 @@ class BlockController extends Controller
 	public function update(Request $request, Block $block)
 	{
 		$validation = $request->validate([
-			'title' => ['nullable', 'max:255'],
-			'body' => ['nullable'],
-			'template' => ['string', 'nullable'],
-			'type' => ['string', 'nullable'],
-			'script' => ['string', 'nullable'],
-			'json' => ['string', 'nullable'],
-			'blur' => ['boolean'],
-			'switch' => ['boolean', 'nullable'],
+			'title'             => ['nullable', 'max:255'],
+			'body'              => ['nullable'],
+			'template'          => ['string', 'nullable'],
+			'type'              => ['string', 'nullable'],
+			'script'            => ['string', 'nullable'],
+			'json'              => ['string', 'nullable'],
+			'blur'              => ['boolean', 'nullable'],
+			'switch'            => ['boolean', 'nullable'],
 			'illustrationsGrid' => ['string', 'nullable']
 		]);
 
-		$block->title = $validation['title'] ?? '';
-		$block->body = $validation['body'] ?? null;
-		$block->template = $validation['template'] ?? null;
-		$block->type = $validation['type'] ?? '';
-		$block->script = $validation['script'] ?? null;
-		$block->json = $validation['json'] ?? null;
-		$block->blur = $validation['blur'] ?? false;
-		$block->switch = $validation['switch'] ?? null;
-		$block->illustrationsGrid = $validation['illustrationsGrid'] ?? null;
+		$block->title = $validation[ 'title' ] ?? '';
+		$block->body = $validation[ 'body' ] ?? null;
+		$block->template = $validation[ 'template' ] ?? null;
+		$block->type = $validation[ 'type' ] ?? '';
+		$block->script = $validation[ 'script' ] ?? null;
+		$block->json = $validation[ 'json' ] ?? null;
+		$block->blur = $validation[ 'blur' ] ?? false;
+		$block->switch = $validation[ 'switch' ] ?? null;
+		$block->illustrationsGrid = $validation[ 'illustrationsGrid' ] ?? null;
 
 		// update the block
 		$block->save();
@@ -236,7 +246,7 @@ class BlockController extends Controller
 		]);
 
 		$block->update([
-			'template' => $validate['template'] ?? $validate['template']
+			'template' => $validate[ 'template' ] ?? $validate[ 'template' ]
 		]);
 
 		return true;
@@ -247,11 +257,11 @@ class BlockController extends Controller
 		// remove the block from the current blockable.
 		$block->update([
 			'blockable_id' => $post->id,
-			'order' => count($post->blocks) + 2
+			'order'        => count($post->blocks) + 2
 		]);
 
 		return [
-			'url' => $post->url,
+			'url'   => $post->url,
 			'label' => $post->title,
 		];
 	}
@@ -263,7 +273,7 @@ class BlockController extends Controller
 		]);
 
 		$block->update([
-			'illustrationsGrid' => $validate['grid'] ?? $validate['grid']
+			'illustrationsGrid' => $validate[ 'grid' ] ?? $validate[ 'grid' ]
 		]);
 		$block->save();
 		return true;

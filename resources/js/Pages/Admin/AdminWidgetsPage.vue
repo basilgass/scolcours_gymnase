@@ -2,7 +2,7 @@
 import WidgetForm from "@/Components/WidgetForm.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 import { PropType } from "vue"
-import { widgetInterface } from "@/types/modelInterfaces"
+import type { widgetInterface } from "@/types/modelInterfaces"
 
 defineOptions({ layout: LayoutMain })
 

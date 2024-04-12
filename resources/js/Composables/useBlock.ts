@@ -1,14 +1,17 @@
-import { computed, inject, onMounted, onUnmounted, provide, ref, unref } from "vue"
+import { computed, inject, onMounted, onUnmounted, provide, Ref, ref, unref } from "vue"
 import { PiMath } from "pimath/esm"
 import { useFormattedBody } from "@/Composables/useHelpers"
-import { BlockInterface } from "@/types/modelInterfaces"
+import type { BlockInterface } from "@/types/modelInterfaces"
 
-export function useBlock(blockMaybeRef: BlockInterface) {
+//TODO: reformat useBlock
+
+export function useBlock(blockMaybeRef: BlockInterface | Ref<BlockInterface>) {
+	// The block to be edited.
 	const block = unref(blockMaybeRef)
 
 	let events: { [Key: string]: EventListener }[] = []
 	const random = ref(1),
-		postData = inject("postData", { value: {} }),
+		postData = inject<Ref<{Object}>>("postData"),
 		eventData = ref({}),
 		blockData = computed(() => {
 			try {
@@ -48,9 +51,11 @@ export function useBlock(blockMaybeRef: BlockInterface) {
 				}
 			} catch (e) {
 				console.warn("BlockShow (script generation)", e)
+				return {}
 			}
 
-			return { ...postData.value }
+			return {}
+			// return { ...postData.value }
 		}),
 		blockBody = computed(() => {
 			return useFormattedBody(block.body, blockData)
@@ -116,11 +121,11 @@ export function useBlock(blockMaybeRef: BlockInterface) {
 			}
 		})
 
-
 	// TODO : Work with event listener to make illustration more interactive !
 	const illustrationListener = (e: CustomEvent) => {
 		eventData.value = e.detail
 	}
+
 	onMounted(() => {
 		document.addEventListener("illustration.change", illustrationListener, false)
 	})
@@ -133,6 +138,8 @@ export function useBlock(blockMaybeRef: BlockInterface) {
 			}
 		}
 	})
+
+
 	provide("blockData", blockData)
 	return { random, blockBody, blockButtons, blockData, postData }
 }

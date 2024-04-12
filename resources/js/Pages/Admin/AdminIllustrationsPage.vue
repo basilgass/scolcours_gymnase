@@ -1,10 +1,9 @@
 <script setup lang="ts">
 
-import IllustrationShow from "@/Components/Posts/Illustrations/IllustrationShow_OLD.vue"
 import { computed, PropType, ref } from "vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
-import { IllustrationInterface } from "@/types/modelInterfaces"
+import type { IllustrationInterface } from "@/types/modelInterfaces"
 
 defineOptions({ layout: LayoutMain })
 
@@ -40,11 +39,7 @@ const search = ref(""),
 	</div>
 
 	<section class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4">
-		<illustration-show
-			v-for="(illustration, id) of listOfIllustrations"
-			:key="`illustration-${id}`"
-			:illustration="illustration"
-		/>
+		EDITION DES ILLUSTRATIONS
 	</section>
 </template>
 

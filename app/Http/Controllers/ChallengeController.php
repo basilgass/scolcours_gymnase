@@ -53,7 +53,7 @@ class ChallengeController extends Controller
 
 	public function edit(Challenge $challenge)
 	{
-		return Inertia::render("Challenges/ChallengeEditPage", [
+		return Inertia::render("Challenges/ChallengeEdit", [
 			'challenge' => ChallengeResource::make($challenge)
 		]);
 	}

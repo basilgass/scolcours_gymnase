@@ -17,6 +17,25 @@ import ThemeLinks from "@/Components/Ui/ThemeLinks.vue"
 
 			<div class="md:mx-auto">
 				<h3 class="text-lg font-semibold">
+					Enseignement
+				</h3>
+				<Link
+					:href="route('bareme.show')"
+					class="block transition duration-300 hover:translate-x-2 px-0 md:px-4 py-1"
+				>
+					<i
+						class="mr-2 bi bi-bar-chart"
+					/> barème
+				</Link>
+				<Link
+					:href="route('grapheur.show')"
+					class="block transition duration-300 hover:translate-x-2 px-0 md:px-4 py-1"
+				>
+					<i
+						class="mr-2 bi bi-graph-up"
+					/> grapheur
+				</Link>
+				<h3 class="text-lg mt-5 font-semibold">
 					Langues
 				</h3>
 				<Link

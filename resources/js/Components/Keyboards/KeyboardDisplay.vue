@@ -56,7 +56,7 @@ const theKeyboard = computed(() => {
 		return props.keyboard
 	}),
 	keyboardOptions = computed(() => {
-		if (props.extraLetters.length > 0) {
+		if (props.extraLetters?.length > 0) {
 			return props.extraLetters.map(x => {
 				const keyDisplay = x.split("||"),
 					d = keyDisplay.length >= 2 ? keyDisplay[1] : keyDisplay[0],

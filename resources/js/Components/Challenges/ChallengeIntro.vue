@@ -16,38 +16,57 @@ const emits = defineEmits(["start"])
 </script>
 
 <template>
-	<div class="flex flex-col gap-3 bg-gray-50 px-10 py-10 max-w-[40em] mx-auto border border-gray-400">
+	<article class="flex flex-col gap-3">
 		<!-- Description du challenge -->
-		<div class="max-w-[15em] w-full mx-auto flex flex-col gap-3 mb-5 text-lg">
-			<div class="flex justify-between w-full">
-				<div><i class="bi bi-heart mr-2" />Nombre de vies</div>
-				<div>{{ challenge.lives }}</div>
+		<div class="grid grid-cols-3 gap-3 w-[30em] mx-auto">
+			<div class="bg-white aspect-square p-4 rounded-xl border border-gray-200 grid place-items-center shadow">
+				<div class="text-center flex flex-col justify-between h-full">
+					<i class="text-5xl bi bi-heart" />
+					<div class="text-3xl">
+						{{ challenge.lives }}
+					</div>
+					<div class="text-sm text-gray-400">
+						vies
+					</div>
+				</div>
 			</div>
 
-			<div class="flex justify-between w-full">
-				<div><i class="bi bi-chevron-double-up mr-2" />Niveaux de diffcultés</div>
-				<div>{{ challenge.maxLevel }}</div>
+			<div class="bg-white aspect-square p-4 rounded-xl border border-gray-200 grid place-items-center shadow">
+				<div class="text-center flex flex-col justify-between h-full">
+					<i class="text-5xl bi bi-chevron-double-up" />
+					<div class="text-3xl">
+						{{ challenge.maxLevel }}
+					</div>
+					<div class="text-sm text-gray-400">
+						niveaux
+					</div>
+				</div>
 			</div>
-			<div
-				v-if="challenge.duration > 0"
-				class="flex justify-between w-full"
-			>
-				<div><i class="bi bi-clock mr-2" />Temps (min)</div>
-				<div>{{ challenge.duration }}</div>
+
+			<div class="bg-white aspect-square p-4 rounded-xl border border-gray-200 grid place-items-center shadow">
+				<div class="text-center flex flex-col justify-between h-full">
+					<i class="text-5xl bi bi-clock" />
+					<div class="text-3xl">
+						{{ challenge.duration }}
+					</div>
+					<div class="text-sm text-gray-400">
+						durée (min)
+					</div>
+				</div>
 			</div>
 		</div>
 
 		<!-- Bouton pour commencer -->
 		<button
 			v-theme.btn.text
-			class="px-6 py-4 text-2xl hover:scale-105 transition-all"
+			class="min-w-[20em] mx-auto py-4 text-2xl hover:scale-105 transition-all"
 			@click="emits('start')"
 		>
 			Commencer le challenge
 		</button>
 
 		<!-- Résultat du challenge pour l'utilisateur -->
-		<div class="max-w-[20em] mx-auto w-full">
+		<div class="min-w-[20em] mx-auto">
 			<h3 class="uppercase text-xl font-extralight text-center mt-5 my-2">
 				résultats
 			</h3>
@@ -89,7 +108,7 @@ const emits = defineEmits(["start"])
 		<!-- Gestion administrateur -->
 		<div
 			v-admin
-			class="mt-10 border-t -mx-10 px-10"
+			class="mt-10 border-t -mx-3 px-3"
 		>
 			<h3 class="uppercase py-3 font-extralight">
 				Résultats
@@ -106,5 +125,5 @@ const emits = defineEmits(["start"])
 				</Link>
 			</div>
 		</div>
-	</div>
+	</article>
 </template>

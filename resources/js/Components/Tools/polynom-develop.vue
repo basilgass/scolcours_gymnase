@@ -9,6 +9,7 @@ import Panel from "@/Components/Ui/Panel.vue"
 import { computed, ref } from "vue"
 import { PiMath } from "pimath/esm"
 import FormMaker from "@/Components/Form/FormMaker.vue"
+import KeyboardDisplay from "@/Components/Keyboards/KeyboardDisplay.vue"
 
 const polynom = ref("")
 
@@ -24,7 +25,9 @@ const polynom = ref("")
 			}
 		} catch (e) {
 			console.error(e)
-			return false
+			return {
+				tex: '\\text{ le polynôme n\'est pas reconnu.}'
+			}
 		}
 	})
 </script>
@@ -38,14 +41,14 @@ const polynom = ref("")
 			focus
 		/>
 
-		<div v-if="result">
-			<div v-katex.display.boxed.lg.output="`${result.tex}`" />
-		</div>
-		<div
-			v-else
-			class="text-red-700 text-sm"
-		>
-			Une erreur s'est produite avec vos données.
-		</div>
+		<div v-katex.display.boxed.lg.output="`${result.tex}`" />
+
+		<keyboard-display
+			back
+			reset
+			next
+			keyboard="polynom"
+			@change="polynom=$event.input"
+		/>
 	</Panel>
 </template>

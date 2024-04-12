@@ -2,19 +2,21 @@
 En-tête principal, sensible au thème
 -->
 <script setup lang="ts">
-import { inject, provide, Ref, ref } from "vue"
+import { inject, PropType, provide, Ref, ref } from "vue"
 import MainAside from "@/Components/MainAside.vue"
 import DropdownMenu from "@/Components/Ui/DropdownMenu.vue"
 import LogoutButton from "@/Components/Ui/LogoutButton.vue"
+import type { ThemeInterface } from "@/types"
 
 defineProps({
-		theme: { type: Object, required: true },
+		theme: { type: Object as PropType<ThemeInterface>, required: true },
 	})
 
 	const showAside = ref(false),
 		editMode = inject<Ref<boolean>>("editMode")
 
 provide("showAside", showAside)
+
 </script>
 <template>
 	<header
@@ -24,15 +26,13 @@ provide("showAside", showAside)
 		<MainAside />
 
 		<div class="scolcours-container py-6 flex justify-between items-center">
-			<div class="text-lg md:text-xl lg:text-3xl flex gap-5">
+			<div class="text-2xl md:text-3xl lg:text-5xl flex gap-5">
 				<Link
 					href="/"
 					class="relative min-w-[1em]"
 				>
 					<i class="absolute inset bi bi-house cursor-pointer" />
-					<i
-						class="absolute inset bi bi-house-fill cursor-pointer text-transparent hover:text-white transition-all duration-500"
-					/>
+					<i class="absolute inset bi bi-house-fill cursor-pointer text-transparent hover:text-white transition-all duration-500" />
 				</Link>
 
 				<Link

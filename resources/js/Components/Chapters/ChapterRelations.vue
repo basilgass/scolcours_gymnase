@@ -3,7 +3,7 @@
 import { inject, PropType, Ref, ref } from "vue"
 import axios from "axios"
 import { flashInterface } from "@/types"
-import { ChapterInterface } from "@/types/modelInterfaces"
+import type { ChapterInterface } from "@/types/modelInterfaces"
 
 const props = defineProps({
 	chapter: {type: Object as PropType<ChapterInterface>, required: true}
@@ -48,7 +48,6 @@ const chapterRelations = ref(props.chapter.relations),
 <template>
 	<div
 		v-if="chapterRelations.length>0 || editMode"
-		class="px-5"
 	>
 		<h3 class="uppercase font-extralight mb-2">
 			prérequis

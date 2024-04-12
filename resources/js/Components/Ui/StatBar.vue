@@ -9,6 +9,8 @@ const props = defineProps({
 	labelClass: { type: String, default: "" },
 	barLabel: { type: String, default: "" },
 	barClass: { type: String, default: "h-[2em]" },
+	barLabelClass: { type: String, default: "" },
+	inverted: {type: Boolean, default: false}
 })
 
 const percent = computed(() => {
@@ -21,12 +23,22 @@ const statLabelComputed = computed(() => {
 const barClassComputed = computed(() => {
 	const barClass = [props.barClass]
 
-	if (percent.value > 0.75) {
-		barClass.push("bg-green-400/30", "border", "border-green-400")
-	} else if (percent.value < 0.30) {
-		barClass.push("bg-red-300/30", "border", "border-red-200")
-	} else {
-		barClass.push("bg-amber-300/30", "border", "border-amber-400")
+	if(props.inverted){
+		if (percent.value > 0.75) {
+			barClass.push("bg-red-300/30", "border", "border-red-200")
+		} else if (percent.value < 0.30) {
+			barClass.push("bg-green-400/30", "border", "border-green-400")
+		} else {
+			barClass.push("bg-amber-300/30", "border", "border-amber-400")
+		}
+	}else {
+		if (percent.value > 0.75) {
+			barClass.push("bg-green-400/30", "border", "border-green-400")
+		} else if (percent.value < 0.30) {
+			barClass.push("bg-red-300/30", "border", "border-red-200")
+		} else {
+			barClass.push("bg-amber-300/30", "border", "border-amber-400")
+		}
 	}
 
 	return barClass.join(' ')
@@ -44,13 +56,16 @@ const barClassComputed = computed(() => {
 		<div class="relative w-full">
 			<div class="absolute inset-0 grid place-items-center">
 				<slot name="bar">
-					<span v-katex.auto="statLabelComputed" />
+					<span
+						:class="barLabelClass"
+						v-katex.auto="statLabelComputed"
+					/>
 				</slot>
 			</div>
 			<div
 				:class="barClassComputed"
 				:style="`width:${percent*100}%`"
-				class="flex  bar transition-all duration-500 ease-in-out"
+				class="flex bar transition-all duration-500 ease-in-out"
 			/>
 		</div>
 	</div>

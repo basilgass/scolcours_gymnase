@@ -105,17 +105,18 @@ const props = defineProps({
 
 		<div
 			v-if="themeChapters.length > 0 || editMode"
-			class="flex flex-wrap text-xs gap-1 px-5"
+			class="flex flex-wrap items-center gap-1 px-5 min-h-[3em]"
 		>
 			<button
 				v-for="item of themeChapters"
 				:key="item.slug"
+				v-theme.btn.text="item.theme_id"
 				v-katex.auto="item.title"
 				:class="{
-					'is-active': item.slug === theSlug,
+					'btn-xs text-xs': item.slug !== theSlug,
 					'font-semibold': item.slug === props.chapterSlug,
 				}"
-				class="btn btn-xs transition-colors"
+				class="transition-all btn"
 				@click="updateFormular(item.slug)"
 			/>
 		</div>
@@ -127,50 +128,46 @@ const props = defineProps({
 			>
 				à la recherche des formules dans un très gros livre
 			</div>
-			<div
+			<draggable
 				v-else
+				v-model="theFormular"
+				handle=".draggable-handle"
+				item-key="id"
 				:class="props.responsive ? 'md:columns-2 lg:columns-3' : ''"
-				class="columns-1 gap-4"
+				class="columns-1 space-y-5"
+				v-bind="{
+					animation: 200,
+					disabled: !$page.props.auth.can.admin,
+				}"
+				@end="updateFormulasOrder"
 			>
-				<draggable
-					v-model="theFormular"
-					class="my-5"
-					handle=".draggable-handle"
-					item-key="id"
-					v-bind="{
-						animation: 200,
-						disabled: !$page.props.auth.can.admin,
-					}"
-					@end="updateFormulasOrder"
-				>
-					<template #item="{ element }">
-						<block-show
-							v-if="element.block"
-							:key="element.id"
-							:block="element.block"
-							:max-illustration="1"
-							class="break-inside-avoid-column"
-							@destroy="deleteFormular(element.id)"
-						/>
-					</template>
-					<template #footer>
-						<footer>
-							<div
-								v-show="editMode"
-								v-admin
-								class="px-5"
+				<template #item="{ element }">
+					<block-show
+						v-if="element.block"
+						:key="element.id"
+						:block="element.block"
+						v-theme.border="element.chapter.theme_id"
+						:max-illustration="1"
+						class="break-inside-avoid-column bg-white rounded shadow border-l-4"
+						@destroy="deleteFormular(element.id)"
+					/>
+				</template>
+				<template #footer>
+					<footer>
+						<div
+							v-show="editMode"
+							v-admin
+						>
+							<button
+								class="btn-new"
+								@click="addFormula"
 							>
-								<button
-									class="btn-new"
-									@click="addFormula"
-								>
-									Ajouter une formule
-								</button>
-							</div>
-						</footer>
-					</template>
-				</draggable>
-			</div>
+								Ajouter une formule
+							</button>
+						</div>
+					</footer>
+				</template>
+			</draggable>
 		</div>
 
 		<div

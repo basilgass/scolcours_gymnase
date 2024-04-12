@@ -1,25 +1,18 @@
-<!--
-Edition d'un challenge
--->
 <script lang="ts" setup>
-import { computed, inject, PropType, ref } from "vue"
-import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
+import { computed, inject, ref } from "vue"
+import LayoutMain from "@/Layouts/LayoutMain.vue"
 import { PiMath } from "pimath/esm"
-import { router } from "@inertiajs/vue3"
 import axios from "axios"
-import type { flashInterface } from "@/types"
-import type { ChallengeInterface, IllustrationInterface } from "@/types/modelInterfaces"
+import { IllustrationInterface } from "@/types/modelInterfaces"
+import { router } from "@inertiajs/vue3"
 import FormMaker from "@/Components/Form/FormMaker.vue"
-import IllustrationEdit from "@/Components/Posts/Illustrations/IllustrationEdit_OLD.vue"
+import { flashInterface } from "@/types"
+import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
+import BlockShow from "@/Pages/Blocks/BlockShow.vue"
 
-const emits = defineEmits(["update:modelValue", "change", "destroy"])
-
+defineOptions({ layout: LayoutMain })
 const props = defineProps({
-	modelValue: { type: Boolean, default: false },
-	challenge: {
-		type: Object as PropType<ChallengeInterface>,
-		required: true
-	}
+	challenge: { type: Object, required: true }
 })
 
 const flash = inject<flashInterface>("flash")
@@ -192,10 +185,6 @@ const saveChallenge = function() {
 							_method: "PATCH"
 						}
 					)
-					.then((res) => {
-						emits("update:modelValue", false)
-						emits("change", res.data)
-					})
 					.then(() => {
 						flash.success("Le challenge a bien été mis à jour")
 					})
@@ -279,44 +268,36 @@ const saveChallenge = function() {
 						label="slug"
 						name="slug"
 					/>
-					<form-maker
-						v-model="theChallenge.block.body"
-						:rows="15"
-						class="h-full"
-						label="description du challenge"
-						name="body"
-						type="textarea"
-					/>
-				</div>
-				<illustration-edit
-					:illustration="theIllustration"
-					name="illustration"
-				/>
-			</div>
 
-			<!-- challenge configuration: output, dft keyboard, time, levels, lives, bonus per level-->
-			<div>
-				<h2 class="text-xl uppercase bg-slate-200 -mx-5 px-5 py-3 mb-5">
-					paramètres
-				</h2>
-				<div class="grid grid-cols-3 gap-3">
+					<h3 class="uppercase mt-10 col-span-3">
+						Paramètres
+					</h3>
 					<form-maker
 						v-model="theChallenge.duration"
 						label="durée"
 						name="questionsDuration"
 						type="number"
+						sm
+						inline-label
+						label-class="w-[150px]"
 					/>
 					<form-maker
 						v-model="theChallenge.lives"
 						label="nombre de vie"
 						name="questionsLives"
 						type="number"
+						sm
+						inline-label
+						label-class="w-[150px]"
 					/>
 					<form-maker
 						v-model="theChallenge.nextLevelAfter"
 						label="maxPoints / niveau"
 						name="questionsLevelTrigger"
 						type="number"
+						sm
+						inline-label
+						label-class="w-[150px]"
 					/>
 
 					<h3 class="uppercase mt-10 col-span-3">
@@ -327,6 +308,9 @@ const saveChallenge = function() {
 						label="score trigger"
 						name="questionsBonuses0"
 						type="number"
+						sm
+						inline-label
+						label-class="w-[150px]"
 					/>
 					<form-maker
 						v-model="theChallenge.bonusScoreLife"
@@ -337,6 +321,9 @@ const saveChallenge = function() {
 						} points`"
 						name="questionsBonuses1"
 						type="number"
+						sm
+						inline-label
+						label-class="w-[150px]"
 					/>
 					<form-maker
 						v-model="theChallenge.bonusScoreTime"
@@ -348,21 +335,34 @@ const saveChallenge = function() {
 						} points`"
 						name="questionsBonuses2"
 						type="number"
+						sm
+						inline-label
+						label-class="w-[150px]"
 					/>
 					<form-maker
 						v-model="theChallenge.bonusLevelLife"
 						label="vie / niveau"
 						name="questionsBonuses3"
 						type="number"
+						sm
+						inline-label
+						label-class="w-[150px]"
 					/>
 					<form-maker
 						v-model="theChallenge.bonusLevelTime"
 						label="temps / niveau"
 						name="questionsBonuses4"
 						type="number"
+						sm
+						inline-label
+						label-class="w-[150px]"
 					/>
 				</div>
+				<block-show
+					:block="theChallenge.block"
+				/>
 			</div>
+
 
 			<!-- challenge generators -->
 			<div>

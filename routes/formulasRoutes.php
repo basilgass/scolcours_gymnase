@@ -5,10 +5,13 @@ use App\Http\Controllers\ChapterController;
 use App\Http\Controllers\FormulaController;
 
 // Public routes
-Route::get("chapters/{chapter:slug}/formulas", [FormulaController::class, 'index'])
+Route::get("chapters/{chapter:slug}/formulas", [FormulaController::class, 'chapterFormular'])
 	->name('chapters.formulas.index');
 Route::get("chapters/{chapter:slug}/theorems", [ChapterController::class, 'theorems'])
 	->name('chapters.theorems.index');
+
+Route::get("formulas", [FormulaController::class, 'index'])
+	->name('formulas.index');
 
 // Admin routes
 Route::middleware("can:admin")

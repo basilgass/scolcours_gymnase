@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { computed, inject, PropType, provide, Ref, ref } from "vue"
 import QuestionShow from "@/Pages/Questions/QuestionShow.vue"
-import { ChapterInterface, PostInterface } from "@/types/modelInterfaces"
+import type { ChapterInterface, PostInterface } from "@/types/modelInterfaces"
 import axios from "axios"
 import { flashInterface } from "@/types"
 import QuestionsIndexAdmin from "@/Pages/Questions/QuestionsIndexAdmin.vue"
@@ -131,6 +131,7 @@ function addQuestionRef(element: InstanceType<typeof QuestionShow>) {
 					:class="element.css ?? ''"
 					:locked="isQuestionLocked(element)"
 					:question="element"
+					@validate="element.user=$event"
 				/>
 			</template>
 		</draggable>

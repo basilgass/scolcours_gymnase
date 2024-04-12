@@ -2,21 +2,13 @@
  * Récupération, création de question à partir d'un générateur donné.
  */
 import { ComputedRef, Ref, unref } from "vue"
-import {
-	GeneratorInterface,
-	QuestionMinInterface,
-} from "@/types/modelInterfaces"
+import type { GeneratorInterface, QuestionMinInterface } from "@/types/modelInterfaces"
 import { PiMath } from "pimath/esm"
-import { generatedQuestionInterface } from "@/types"
+import { generatedQuestionInterface, generatorResultInterface } from "@/types"
 
-export function useGenerator(generator: ComputedRef<GeneratorInterface>): {
-	code: string
-	question: (value?: generatedQuestionInterface) => QuestionMinInterface
-	list: (n: number) => generatedQuestionInterface[]
-	random: () => generatedQuestionInterface
-} {
+export function useGenerator(generator: GeneratorInterface | ComputedRef<GeneratorInterface>): generatorResultInterface {
 	function question(
-		value?: Ref<generatedQuestionInterface> | generatedQuestionInterface,
+		value?: Ref<generatedQuestionInterface> | generatedQuestionInterface
 	): QuestionMinInterface {
 		if (value === undefined) value = randomQuestion()
 
@@ -26,17 +18,18 @@ export function useGenerator(generator: ComputedRef<GeneratorInterface>): {
 		return {
 			body: "",
 			block: {
+				id: 0,
 				title: questionUnref.title ?? "",
 				body: generatorUnref.template
 					.replace("question", questionUnref.question)
 					.replace("answer", "$a"),
-				illustration: null,
+				illustration: null
 			},
 			keyboard: questionUnref.keyboard ?? generatorUnref.keyboard,
 			answer: "" + questionUnref.answer,
 			user: {
-				result: false,
-			},
+				result: false
+			}
 		}
 	}
 
@@ -50,9 +43,7 @@ export function useGenerator(generator: ComputedRef<GeneratorInterface>): {
 			const value = randomQuestion()
 
 			// Make sur the question is not already asked.
-			if (result.some((q) => q.question === value.question)) {
-				continue
-			}
+			if (result.some((q) => q.question === value.question)) continue
 
 			result.push(randomQuestion())
 		}
@@ -88,6 +79,6 @@ export function useGenerator(generator: ComputedRef<GeneratorInterface>): {
 		code: unref(generator).code ?? dftCode,
 		question: (value?: generatedQuestionInterface) => question(value),
 		list,
-		random: () => randomQuestion(),
+		random: () => randomQuestion()
 	}
 }

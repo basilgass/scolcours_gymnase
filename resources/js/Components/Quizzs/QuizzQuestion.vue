@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import QuestionShow from "@/Pages/Questions/QuestionShow.vue"
+import { QuestionInterface } from "@/types/modelInterfaces"
 
 defineEmits(["validate"])
 let props = defineProps({
@@ -12,7 +13,7 @@ let props = defineProps({
 	<article>
 		<question-show
 			class="max-w-xl mx-auto bg-white border rounded"
-			:question="props.question"
+			:question="props.question as QuestionInterface"
 			show-input
 			is-minimal
 			single-answer

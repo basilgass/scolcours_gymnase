@@ -54,15 +54,14 @@ use Illuminate\Support\Facades\URL;
  */
 class Block extends Model
 {
-    use HasFactory;
+	use HasFactory;
 
 	protected $guarded = [];
-	protected $with=['illustrations'];
+	protected $with = ['illustrations'];
 
-	public function illustrations()
-	{
-		return $this->hasMany(Illustration::class)->orderBy('order')->orderBy('id');
-	}
+	protected $casts = [
+		'merge' => 'boolean'
+	];
 
 	public function blockable()
 	{
@@ -71,18 +70,29 @@ class Block extends Model
 
 	public function duplicate()
 	{
+		// Duplicate the block
 		$clonedBlock = $this->replicate();
 		$clonedBlock->push();
-		foreach ($this->illustrations as $illustration){
-			$clonedBlock->illustrations()->create( [
-				'title'=>$illustration->title,
-				'type'=>$illustration->type,
-				'code'=>$illustration->code,
-				'parameters'=>$illustration->parameters
+
+		// Duplicate the illustrations.
+		foreach ($this->illustrations as $illustration) {
+			$clonedBlock->illustrations()->create([
+				'title'      => $illustration->title,
+				'type'       => $illustration->type,
+				'code'       => $illustration->code,
+				'parameters' => $illustration->parameters
 			]);
 		}
 
+		$clonedBlock->save();
+		$clonedBlock->refresh();
+
 		return $clonedBlock;
+	}
+
+	public function illustrations()
+	{
+		return $this->hasMany(Illustration::class)->orderBy('order')->orderBy('id');
 	}
 
 	protected function url(): Attribute

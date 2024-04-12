@@ -7,7 +7,6 @@ import draggableComponent from "vuedraggable/src/vuedraggable.js"
 import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers"
 import { ZiggyVue } from "../../vendor/tightenco/ziggy/dist/vue.m"
 import { katexDirective } from "@/directives/katexDirectives"
-import { visibleDirective } from "@/directives/visibilityDirectives"
 import { adminDirective } from "@/directives/adminDirectives"
 import { themeDirective } from "@/directives/themeDirectives"
 import { useEditMode } from "./Composables/useEditMode"
@@ -18,7 +17,7 @@ const appName =
 
 createInertiaApp({
 	title: (title) => {
-		return title ? `${title} - ${appName}` : `${appName}`
+		return title ? `${title} - ScolCours` : `ScolCours`
 	},
 	resolve: (title) =>
 		resolvePageComponent(
@@ -37,7 +36,6 @@ createInertiaApp({
 
 		// add directives
 		app.directive("katex", katexDirective)
-			.directive("visible", visibleDirective)
 			.directive("admin", adminDirective)
 			.directive("theme", themeDirective)
 			.mixin({ methods: { route } })
@@ -45,6 +43,8 @@ createInertiaApp({
 		// Provide global variables
 		const editMode = useEditMode()
 		app.provide("editMode", editMode)
+
+
 
 		// Mount the app.
 		app.mount(el)

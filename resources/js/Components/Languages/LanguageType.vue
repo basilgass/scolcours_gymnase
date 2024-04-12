@@ -1,36 +1,26 @@
 <script lang="ts" setup>
-import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
-import { computed, onMounted, PropType, ref } from "vue"
+import { computed, inject, ref } from "vue"
 import { PiMath } from "pimath/esm"
-import LanguageUnitsSelector from "@/Components/Languages/LanguageUnitsSelector.vue"
-import LayoutMain from "@/Layouts/LayoutMain.vue"
-import { TranslationUnitInterface } from "@/types/modelInterfaces"
+import type { LanguageDataInterface } from "@/Pages/languages/LanguageShow.vue"
 
-defineOptions({ layout: LayoutMain })
+const languageData = inject<LanguageDataInterface>('LanguageData')
 
-const props = defineProps({
-	code: { type: String, required: true },
-	language: { type: String, required: true },
-	units: { type: Object as PropType<TranslationUnitInterface[]>, default: () => {} }
-})
-const unitsSelection = ref([]),
-	localStorageKey = computed(() => {
-		return `scolcours_type_${props.language}`
-	}),
-	availableWords = ref([]),
-	startIndex = ref(0),
+const localStorageKey = computed(() => {
+		return `scolcours_type_${languageData.language}`
+	})
+
+/**
+ * Gestion du jeu.
+ */
+const	startIndex = ref(0),
 	currentWord = computed(() => {
-		return availableWords.value[startIndex.value]
-	}),
-	gameStopped = ref(true)
+		return languageData.words.value[startIndex.value]
+	})
 
 const startGame = function() {
-	if (unitsSelection.value.length === 0) {
+	if (languageData.units.value.length === 0) {
 		alert("sélectionner au moins une unité !")
 		return
-	}
-	if (availableWords.value.length === 0) {
-		generateWords()
 	}
 
 	// The game has been started - store the value in the localStorage.
@@ -38,31 +28,19 @@ const startGame = function() {
 
 	buildResult()
 
-	gameStopped.value = false
+	languageData.state.value = "running"
 
 }
 
 const continueGame = function() {
 	startIndex.value++
 
-	if (startIndex.value === availableWords.value.length) {
+	if (startIndex.value === languageData.words.value.length) {
 		alert("Félicitations - tu as fait tout ton voc !")
-		gameStopped.value = true
-		availableWords.value = []
+		languageData.state.value = "intro"
 	} else {
 		buildResult()
 	}
-}
-
-const generateWords = function() {
-	// All words available
-	startIndex.value = 0
-	let words = []
-	for (const values of unitsSelection.value.map(x => x.words)) {
-		words = words.concat(values)
-	}
-
-	availableWords.value = PiMath.Random.shuffle(words)
 }
 
 function shake(item) {
@@ -79,7 +57,7 @@ function saveToLocalStorage(addToIndex?: number) {
 		JSON.stringify(
 			{
 				"index": startIndex.value + (addToIndex ? addToIndex : 0),
-				"words": availableWords.value
+				"words": languageData.words.value
 			}
 		)
 	)
@@ -101,7 +79,7 @@ const typoButtons = ref(null),
 			theWord = theWord.split(", i")[0]
 		}
 		if (theWord.split(", -").length === 2) {
-			theWord = theWord.spit(", -")[0]
+			theWord = theWord.split(", -")[0]
 		}
 
 		foreignLetters.value = PiMath.Random.shuffle(theWord.split("")
@@ -158,40 +136,12 @@ const typoButtons = ref(null),
 		}
 	}
 
-onMounted(() => {
-	// let previousData = localStorage.getItem(localStorageKey.value)
-	// if (previousData) {
-	// 	if (confirm("Il y a des valeurs en mémoire... continuer ?")) {
-	// 		const localData = JSON.parse(previousData)
-	// 		startIndex.value = localData.index
-	// 		availableWords.value = localData.words
-	// 		gameStopped.value = false
-	//
-	// 	}else{
-	// 		removeFromLcalStorage()
-	// 	}
-	// }
-})
 </script>
 <template>
 	<article>
-		<ArticleTitle :title="language" />
-
-		<Link
-			:href="`/${language}`"
-			class="hover:pl-2 transition-all duration-300"
-		>
-			<i class="bi bi-arrow-bar-left" /> retour
-		</Link>
-
 		<div
-			v-if="gameStopped"
+			v-if="languageData.state.value==='intro'"
 		>
-			<LanguageUnitsSelector
-				:units="props.units"
-				@update="unitsSelection=$event"
-			/>
-
 			<div
 				v-show="false"
 				class="my-3"
@@ -204,7 +154,7 @@ onMounted(() => {
 
 			<div class="grid place-items-center mt-12">
 				<button
-					v-show="unitsSelection.length>0"
+					v-show="languageData.units.value.length>0"
 					class="btn-primary px-20 py-10 text-2xl"
 					@click="startGame"
 				>

@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 
 import { PropType, ref } from "vue"
-import { deckInterface } from "@/types/modelInterfaces"
+import type { deckInterface } from "@/types/modelInterfaces"
 import axios from "axios"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"

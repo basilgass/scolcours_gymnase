@@ -1,0 +1,167 @@
+<script lang="ts" setup>
+import { computed, inject, Ref, ref } from "vue"
+import { usePage } from "@inertiajs/vue3"
+import DialogModal from "@/Components/Ui/DialogModal.vue"
+import FormMaker from "@/Components/Form/FormMaker.vue"
+import axios from "axios"
+import type { TranslationWord } from "@/types/modelInterfaces"
+import { LanguageDataInterface } from "@/Pages/languages/LanguageShow.vue"
+import { PiMath } from "pimath/esm"
+
+const languageData = inject<LanguageDataInterface>('LanguageData')
+
+// Define the editMode.
+const editMode = inject<Ref<boolean>>("editMode")
+
+
+const words = computed(() => {
+	return random.value
+		? PiMath.Random.shuffle(languageData.words.value)
+		: languageData.words.value
+})
+
+// game specific functions.
+
+// toggle between random list and as inserted list.
+const random = ref(false)
+// swap fr <->foreign in the list
+const fr_foreign = ref(true)
+// filter search - default is  empty string = all words
+const filterValue = ref("")
+// display the list using a filter (searching in fr and foreign)
+const filteredWords = computed<TranslationWord[]>(() => {
+	if (filterValue.value === "") return words.value
+
+	return words.value.filter(word => {
+		return word.fr.toLowerCase().includes(filterValue.value) ||
+			word.foreign.toLowerCase().includes(filterValue.value)
+	})
+})
+
+/**
+ * Edition part - should be moved elsewhere ?
+ */
+// determine if the edit form is hidden or visible
+const showEditForm = ref(false)
+// editWord contains the word (id/fr/foreign) to be edited
+const editWord = ref<{ id: number, foreign: string, fr: string }>({
+	id: null, foreign: null, fr: null
+})
+// before editing, store the word to edit.
+const editTranslation = function(word) {
+	if (editMode && usePage().props.auth.can.admin) {
+		editWord.value = word
+		showEditForm.value = true
+	}
+
+}
+// update the translation to the DB.
+const updateTranslation = function() {
+	axios.post(route("translations.words.update", [editWord.value.id]), {
+		...editWord.value,
+		_method: "PATCH"
+	}).then(() => {
+		showEditForm.value = false
+	})
+}
+
+/**
+ * Export list as excel
+ * TODO: export as excel list.
+ */
+const exportList = function() {
+
+}
+
+</script>
+<template>
+	<article>
+		<div
+			class="mt-10 flex items-end justify-between"
+		>
+			<form-maker
+				v-model="fr_foreign"
+				:label="`français,${languageData.language}`"
+				type="switch"
+			/>
+
+			<form-maker
+				v-model="random"
+				label="ordre aléatoire"
+				name="randomwords"
+				type="switch"
+			/>
+		</div>
+
+
+		<div class="mt-5 flex items-end w-full gap-3">
+			<div class="flex-1 ">
+				<form-maker
+					v-model="filterValue"
+					label="filtrer"
+					name="filtrer"
+				/>
+			</div>
+
+			<button
+				:class="filteredWords.length===0?'bg-gray-300':'btn-primary'"
+				:disabled="filteredWords.length===0"
+				class="btn"
+				@click="exportList"
+			>
+				exporter
+			</button>
+		</div>
+		<div>Il y a {{ words.length }} mots</div>
+
+		<div
+			v-if="filteredWords.length>0"
+			class="flex flex-col gap-2 mt-10"
+		>
+			<div
+				v-for="(item, index) in filteredWords"
+				:key="index"
+				:class="editMode?'hover:bg-amber-100 cursor-pointer':''"
+				class="bg-white border rounded grid grid-cols-2 p-3"
+				@click="editTranslation(item)"
+			>
+				<div>
+					{{ fr_foreign ? item.fr : item.foreign }}
+				</div>
+				<div>
+					{{ fr_foreign ? item.foreign : item.fr }}
+				</div>
+			</div>
+		</div>
+
+		<dialog-modal v-model="showEditForm">
+			<template #header>
+				<div class="text-lg px-3 py-5">
+					éditer une translation (id: {{ editWord.id }})
+				</div>
+			</template>
+			<template #footer>
+				<div class="text-right px-3 py-5">
+					<button
+						class="btn btn-primary"
+						@click="updateTranslation"
+					>
+						enregistrer
+					</button>
+				</div>
+			</template>
+			<div class="px-3">
+				<form-maker
+					v-model="editWord.fr"
+					label="français"
+					name="edit-fr"
+				/>
+				<form-maker
+					v-model="editWord.foreign"
+					label="translation"
+					name="edit-foreign"
+				/>
+			</div>
+		</dialog-modal>
+	</article>
+</template>

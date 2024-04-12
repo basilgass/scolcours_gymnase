@@ -3,10 +3,9 @@ Formulaire d'édition d'un post
 Utilisé dans PoseShow et PostEditPage (pour l'édition mode développement ?)
 -->
 <script lang="ts" setup>
-// TODO: make the dialog html modal more user friendly and reactive !
 import { inject, PropType, ref } from "vue"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
-import MoveItemTo from "@/Components/Posts/MoveItemTo.vue"
+import MoveItemTo from "@/Components/MoveItemTo.vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import axios from "axios"
 import LayoutMain from "@/Layouts/LayoutMain.vue"

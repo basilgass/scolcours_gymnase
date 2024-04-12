@@ -1,4 +1,5 @@
 import { ComputedRef } from "vue"
+import { ChapterMinInterface, type QuestionMinInterface } from "@/types/modelInterfaces"
 
 export interface User {
 	id: number
@@ -37,14 +38,10 @@ export type PageProps<
 			admin: boolean
 		}
 	}
-	scolcours: {title: string}
+	scolcours: { title: string }
 	theme: ThemeInterface
 	themes: ThemeInterface[]
-	chapter: {
-		id: number
-		title: string
-		slug: string
-	}
+	chapter: ChapterMinInterface
 }
 
 export interface flashLink {
@@ -52,16 +49,30 @@ export interface flashLink {
 	label: string
 	external?: boolean
 }
+
 export interface flashInterface {
 	add: (
 		message: string,
 		link?: flashLink,
 		type?: string,
-		timeout?: number,
+		timeout?: number
 	) => void
 	success: (message: string, link?: flashLink, timeout?: number) => void
 	info: (message: string, link?: flashLink, timeout?: number) => void
 	error: (message: string, link?: flashLink, timeout?: number) => void
+}
+
+export interface userAnswerInterface {
+	value: {
+		input: string,
+		tex: string,
+		raw: string
+	},
+	validation: {
+		index: number,
+		result: boolean,
+		message: string
+	}
 }
 
 export interface editModeInterface {
@@ -76,6 +87,13 @@ export interface generatedQuestionInterface {
 	keyboard?: string
 	button?: object
 	reset: boolean
+}
+
+export interface generatorResultInterface {
+	code: string
+	question: (value?: generatedQuestionInterface) => QuestionMinInterface
+	list: (n: number) => generatedQuestionInterface[]
+	random: () => generatedQuestionInterface
 }
 
 

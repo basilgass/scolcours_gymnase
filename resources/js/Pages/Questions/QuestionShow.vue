@@ -4,354 +4,215 @@ Envoi de la validation d'une réponse
 keyboard -> QuestionUserInput -> QuestionShow
 -->
 <script lang="ts" setup>
-import IllustrationShow from "@/Components/Posts/Illustrations/IllustrationShow_OLD.vue"
-import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
-import { computed, inject, nextTick, PropType, reactive, Ref, ref } from "vue"
-import KeyboardValidateButton from "@/Components/Keyboards/KeyboardValidateButton.vue"
-import { usePage } from "@inertiajs/vue3"
-import { useWrongAnswerAnimation } from "@/Composables/useHelpers"
-import { useKeyboard } from "@/Composables/useKeyboard"
-import axios from "axios"
-import QuestionAdminHeader from "@/Pages/Questions/QuestionShowAdmin.vue"
-import { QuestionInterface } from "@/types/modelInterfaces"
+/**
+ * QuestionShow
+ * 1. block -> display the text / illustration
+ * 2. answer ->
+ *      2.a answer format
+ *      2.b btn to open / close the keyboard.
+ *      2.c keyboard
+ *      2.d show / hide answer
+ */
 
-const { getKeyboards } = useKeyboard()
+import { computed, ComputedRef, inject, nextTick, onMounted, PropType, provide, Ref, ref } from "vue"
+import QuestionAdminHeader from "@/Pages/Questions/QuestionShowAdmin.vue"
+import type { QuestionInterface } from "@/types/modelInterfaces"
+import QuestionBlock from "@/Components/Questions/QuestionBlock.vue"
+import { userAnswerInterface } from "@/types"
+import QuestionKeyboard from "@/Components/Questions/QuestionKeyboard.vue"
+import QuestionAnswerDisplay from "@/Components/Questions/QuestionAnswerDisplay.vue"
+import KeyboardBasic from "@/Components/Keyboards/KeyboardBasic.vue"
+import { ChallengeAnswerInterface } from "@/Components/Challenges/ChallengeGame.vue"
 
 // Props
 const props = defineProps({
 	question: { type: Object as PropType<QuestionInterface>, required: true },
-	hideTitle: { type: Boolean, default: false },
 	showInput: { type: Boolean, default: false },
-	isDynamic: { type: Boolean, default: false },
-	isMinimal: { type: Boolean, default: false },
 	singleAnswer: { type: Boolean, default: false },
-	locked: { type: Boolean, default: false }
+	locked: { type: Boolean, default: false },
+	isMinimal: { type: Boolean, default: false }, // TODO: remove isMinimal prop.
+	hideTitle: { type: Boolean, default: false } // TODO: remove hideTitle prop.
+
 })
 
-const editMode = inject<Ref<boolean>>("editMode")
+// EditMode is used to determine the locked status
+const editMode = inject<boolean>("editMode")
+
+// Determine if the question is dynamic (not coming from the DB)
+const isDynamic = props.question.id === undefined
+
+// Emits validate
+defineEmits<{
+	validate: [event: ChallengeAnswerInterface]
+}>()
+
+/**
+ * Determine if the question is locked or not
+ */
+const theQuestionLocked = computed(() => {
+	//v-if="locked && !editMode.enabled.value"
+	return props.locked && !editMode
+})
 
 
-// Emits
-const emits = defineEmits(["validate"])
+/**
+ * Answer id - default is zero.
+ */
+const answerId = ref(0)
 
-// Reactivity
-const theQuestion = reactive(props.question), // la question principale, vraiment en "reactive" ?
-	theQuestionBody = computed(() => {
-		// On s'assure que le tableau des réponses est complet.
-		checkUserAnswers()
+/**
+ * Number of answers for the question
+ */
+const answersNumber = computed(
+		() => props.question.answer.split("\n").filter((x) => x !== "").length
+	)
 
-		// On récupère le body original, avec les placeholder.
-		let body = theQuestion.block.body,
-			alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+/**
+ * User given answer.
+ */
+const userAnswers = ref<userAnswerInterface[]>([])
 
-		// $a, $b, ... sont des valeurs dans des environnements TeX
-		// $A, $B, ... sont des valeurs hors des environnements Tex
-		for (let i = 0; i < answersNumber.value; i++) {
-			if (theAnswers.value[i] === undefined) {
-				return "Aucun clavier n'a pu être généré..."
-			}
-
-			let key = theAnswers.value[i].key,
-				rawColor =
-					i === answerId.value
-						? "border-blue-600 bg-blue-100"
-						: "border-red-600 bg-red-100",
-				texColor = i === answerId.value ? "cornflowerblue" : "red"
-
-			// S'il manque une valeur, on l'ajoute automatiquement à la fin.
-			if (key === undefined) {
-				key = `$${alphabet[i]}`
-				body += "\n\n" + key
-			}
-			// On met une couleur pour chaque variable.
-			// TODO: rajouter des couleurs en fonctions de la bonne réponse ou non ?
-
-			// On supprime les clés sans mise en forme.
-			body = body.replaceAll(
-				"\n@" + key.toUpperCase(),
-				"\n@" + key.toUpperCase() + "\n"
-			)
-
-			// Mise en forme dans le cas d'un texte de type bloc
-			body = body.replaceAll(
-				"\n" + key.toUpperCase(),
-				"\n" +
-				key.toUpperCase() +
-				"\n" +
-				`{.border .px-3 .py-1 .${rawColor}}`
-			)
-
-			// Mise en forme dans le cas d'un texte "en ligne"
-			body = body.replaceAll(
-				` ${key.toUpperCase()}`,
-				` [${key.toUpperCase()}]{.inline-block .mx-1 .px-3 .py-1 .border .${rawColor} }`
-			)
-
-			// Mise en forme pour des textes mathématiques
-			body = body.replaceAll(
-				key.toLowerCase(),
-				`\\textcolor{${texColor}}{ ${key.toLowerCase()} }`
-			)
-
-			// on supprime les valeurs de type @$ qui sont sans mise en forme.
-			body = body.replaceAll(
-				"@" + key.toUpperCase(),
-				key.toUpperCase()
-			)
-
-			// On peut avoir tex, raw, input
-			if (userAnswers.value[i].value === undefined) {
-				body = body.replaceAll(key.toUpperCase(), "< ?? >")
-				body = body.replaceAll(key.toLowerCase(), "<\\ ? >")
-			} else {
-				// Raw output
-				if (
-					userAnswers.value[i].value.raw === undefined ||
-					userAnswers.value[i].value.raw === ""
-				) {
-					body = body.replaceAll(key.toUpperCase(), "< ?? >")
-				} else {
-					body = body.replaceAll(
-						key.toUpperCase(),
-						userAnswers.value[i].value.raw
-					)
-				}
-
-				// TeX output
-				if (
-					userAnswers.value[i].value.tex === undefined ||
-					userAnswers.value[i].value.tex === ""
-				) {
-					body = body.replaceAll(key.toLowerCase(), "<\\ ? >")
-				} else {
-					body = body.replaceAll(
-						key.toLowerCase(),
-						userAnswers.value[i].value.tex
-					)
-				}
-			}
-		}
-
-		return body
-	}),
-	theQuestionLocked = computed(() => {
-		//v-if="locked && !editMode.enabled.value"
-		return props.locked && !editMode.value
-	})
-
-// Gestion des réponses
-
-// numéro de la question en cours d'édition
-const answerId = ref(0),
-	// Format de la réponse
-	answerFormat = computed(() => {
-		if (!theAnswers.value[answerId.value]) {
-			return ""
-		}
-
-		const kbrd = theAnswers.value[answerId.value].keyboard
-
-		if (kbrd.name === "Basic") {
-			const customOutput = theAnswers.value[
-				answerId.value
-				].keyboard.parameters
-				.filter((x) => x.startsWith("format:"))
-				.map((x) => x.split("format:")[1])[0]
-			return (
-				customOutput ??
-				theAnswers.value[answerId.value].keyboard.checker.format
-			)
-		}
-
-		return ""
-	}),
-	// Nombre de réponses totales
-	answersNumber = computed(
-		() => theQuestion.answer.split("\n").filter((x) => x !== "").length
-	),
-	// liste des lettres, dans l'ordre.
-	answersKeys = computed(() => {
-		return "abcdefghijklmnopqrstuvwxyz".split("").map((x) => `$${x}`)
-	}),
-	// liste des réponses / claviers / etc...
-	theAnswers = computed(() => {
-		// The keyboard is wrong...
-		if (!theQuestion.keyboard) {
-			return []
-		}
-
-		// Get the keyboards
-		const arr = [],
-			answers = theQuestion.answer.split("\n"),
-			kbrds = getKeyboards(theQuestion.keyboard)
-
-		for (let i = 0; i < answersNumber.value; i++) {
-			arr.push({
-				key: answersKeys.value[i], // may be undefined !
-				keyboard: kbrds[Math.min(kbrds.length - 1, i)],
-				answer: answers[i]
-			})
-		}
-
-		return arr
-	}),
-	userAnswers = ref([]),
-	userAnswersErrors = ref([]),
-	keyboardUI = ref(null),
-	showAnswer = ref(false),
-	loadAnswer = async function(value?: string) {
+/**
+ * Load answers to keyboardBlock based on the keyboards component.
+ * @param show
+ */
+async function	loadAnswer(show: boolean){
 		answerId.value = 0
 		await nextTick()
 
+		// if value is
+		// true: loadAnswer
+		// false: resetAnswer
 		const timer = setInterval(() => {
-			if (keyboardUI.value) {
-				keyboardUI.value.loadAnswer(value)
+			// Load the answer on the keyboard
+			if (keyboardComponent.value) {
+				const kbrdComp = keyboardComponent.value.getKeyboard()
+				if (kbrdComp) kbrdComp.loadAnswer(
+					show ? props.question.answer : null
+				)
 			}
 
+			// Go to the next part.
 			if (answerId.value === answersNumber.value - 1) {
 				clearInterval(timer)
-				if (value === null) {
-					answerId.value = 0
-				}
+				answerId.value = 0
 			} else {
-				answerId.value++
+				answerId.value += 1
 			}
 		}, 100)
-
-		showAnswer.value = value === undefined
-	},
-	showUserInput = ref(props.showInput)
-
-const updateQuestion = function(event) {
-		// {
-		// 		value: {input, tex, raw},
-		// 		validation: {result, message}
-		// }
-		userAnswers.value[answerId.value] = event
-	},
-	checkUserAnswers = function() {
-		// On contrôle que la table des réponses est correctement initialisée
-		if (userAnswers.value.length < answersNumber.value) {
-			for (
-				let i = userAnswers.value.length;
-				i < answersNumber.value;
-				i++
-			) {
-				userAnswers.value.push({
-					value: { input: "", tex: "", raw: "" },
-					validation: {
-						result: false,
-						message: "réponse non donnée."
-					}
-				})
-			}
-		}
-	},
-	validateButton = ref(null),
-	lockValidationButton = ref(false),
-	validateQuestion = function() {
-		// validation des réponses.
-
-		// On bloque la possibilité de cliquer une nouvelle fois sur le bouton.
-		lockValidationButton.value = true
-
-		// On vérifie que toutes les réponses ont été données.
-		let result = true,
-			index, // TODO: à quoi sert "index" ici ?
-			stack = []
-
-		for (let i = 0; i < userAnswers.value.length; i++) {
-			// The result index must be the same for each answers.
-			if (index === undefined) {
-				index = userAnswers.value[i].validation.index || 0
-			}
-			// The result must be "true" for each answers
-			result =
-				result &&
-				userAnswers.value[i].validation.result &&
-				index === (userAnswers.value[i].validation.index || 0)
-
-			if (!result) {
-				if (userAnswers.value.length > 1) {
-					stack.push(
-						`${i + 1}: ${
-							userAnswers.value[i].validation.message
-						}`
-					)
-				} else {
-					stack.push(userAnswers.value[i].validation.message)
-				}
-			}
-		}
-
-		userAnswersErrors.value = stack
-
-		storeValidation({
-			result,
-			question: theQuestionBody.value,
-			answer: userAnswers.value.map((a) => a.value.input).join(",")
-		})
-		// setTimeout(() => lockValidationButton.value = false, 500)
-	},
-	storeValidation = function(event) {
-		// event: {question: string, answer: string, result: boolean}
-		if (!props.singleAnswer && !event.result) {
-			useWrongAnswerAnimation(validateButton.value.$el)
-		}
-
-		// It's a dynamic question (without id)
-		// On ne peut donc pas sauvegarder les informations.
-		if (props.question.id === undefined) {
-			emits("validate", event)
-			lockValidationButton.value = false
-			return
-		}
-
-		// On définit les informations utilisateurs.
-		theQuestion.user.result = event.result
-
-		// need answer (string: min1) , result (boolean)
-		// Save the information to the database if the user is logged in
-		// and if the result is correct
-		if (usePage().props.auth.user) {
-			axios
-				.post(route("questions.validate", [props.question.id]), {
-					...event
-				})
-				.catch((res) => {
-					console.warn(
-						"Il y a une erreur lors du chargement de la réponse."
-					)
-					console.warn(res.response.data.message)
-				})
-				.then(() => {
-					emits("validate", event)
-				})
-				.finally(() => {
-					lockValidationButton.value = false
-				})
-		} else {
-			emits("validate", event)
-			lockValidationButton.value = false
-		}
 	}
 
+/**
+ * Determiner the state of the keyboard visibility.
+ * hidden: the keyboard is hidden and can be toggled
+ * show: the keyboard is visible and can be toggled
+ * force: the keyboard is visible and CANNOT be toggled.
+ */
+const showUserInput = ref<"hidden" | "show" | "force">(
+		props.isMinimal ? "force" : props.showInput ? "show" : "hidden"
+	)
 
+/**
+ * Initialize the user's answers, based on the available number of answers
+ */
+const initUserAnswers = function() {
+	// Reset userAnswers
+	userAnswers.value = []
+
+	// Create the list of empty answers.
+	for (let i = 0; i < answers.value.length; i++) {
+		userAnswers.value.push({
+			value: { input: "", tex: "", raw: "" },
+			validation: {
+				index: 0,
+				result: false,
+				message: ""
+			}
+		})
+	}
+}
+
+/**
+ * Expose some function
+ * loadAnswer is used in QuestionIndexAdmin to show all answers at once.
+ */
 defineExpose({ loadAnswer })
+
+/**
+ * When the component is loaded, initialize the userAnswers reactive variable.
+ */
+onMounted(() => {
+	// Load the userAnswers
+	initUserAnswers()
+})
+
+
+// Provide data for all children components.
+export interface questionDataInterface {
+	// Question data from database
+	question: QuestionInterface,
+	// updated body string, with the answers inserted.
+	body: Ref<string>
+	// current answer id, if the question has more than one answer
+	answerId: Ref<number>,
+	// list of all answers
+	answers: ComputedRef<string[]>,
+	// user data
+	// - answers: given by the user
+	// - errors: list of errors once validated
+	user: {
+		answers: Ref<userAnswerInterface[]>,
+		errors: Ref<string[]>
+	},
+	// config of the current question
+	// - animation: enables or disable animation (use for "single answer" (quizz)
+	// - dynamic: determines if the question is dynnamically builded or is from DB.
+	config: {
+		animation: boolean,
+		dynamic: boolean
+	},
+	// Get the keyboard component, for access everywhere.
+	keyboard: {
+		component: Ref<InstanceType<typeof KeyboardBasic>>
+	}
+}
+
+const answers = computed(() => {
+	return props.question.answer.split("\n").filter((x) => x !== "")
+})
+provide<questionDataInterface>("questionData", {
+	question: props.question,
+	body: ref(""),
+	answerId,
+	answers,
+	user: {
+		answers: userAnswers,
+		errors: ref([])
+	},
+	config: {
+		animation: true,
+		dynamic: isDynamic
+	},
+	keyboard: null
+})
+
+
+const keyboardComponent = ref<InstanceType<typeof QuestionKeyboard>>(null)
 </script>
 
 <template>
 	<article
-		:id="`question-${theQuestion.id}`"
+		:id="`question-${question.id}`"
 		:class="{
 			'rounded border h-full': !props.isMinimal,
 			'bg-gray-50 border-gray-200':
-				!theQuestion.user.result && !props.isMinimal,
+				!props.question.user.result && !props.isMinimal,
 			'bg-green-50 border-green-600/60':
-				theQuestion.user.result && !props.isMinimal,
+				props.question.user.result && !props.isMinimal,
 		}"
 		class="relative flex flex-col"
 	>
+		<!-- Cover if question cannot yet be answered -->
 		<transition name="fade">
 			<div
 				v-if="theQuestionLocked"
@@ -361,11 +222,11 @@ defineExpose({ loadAnswer })
 			</div>
 		</transition>
 
-		<!-- Header -->
+		<!-- Header: number, title and admin -->
 		<header class="flex flex-col relative">
 			<!-- QUESTION NUMBER -->
 			<div
-				v-if="theQuestion.order && !props.isMinimal && !props.isDynamic"
+				v-if="question.order && !props.isMinimal && !isDynamic"
 				v-theme.bg.text="!theQuestionLocked"
 				:class="{
 					'draggable-handle cursor-move': editMode,
@@ -373,12 +234,12 @@ defineExpose({ loadAnswer })
 				}"
 				class="z-10 font-semibold font-code absolute left-1 -top-4 rounded-full border w-8 h-8 grid place-items-center draggable-handle"
 			>
-				{{ theQuestion.order }}
+				{{ question.order }}
 			</div>
 
 			<!-- ADMIN HEADER -->
 			<question-admin-header
-				v-if="!props.isDynamic"
+				v-if="!isDynamic"
 				v-admin="editMode"
 				:question="question"
 			/>
@@ -386,160 +247,24 @@ defineExpose({ loadAnswer })
 			<!-- QUESTION TITLE -->
 			<div
 				v-if="!props.hideTitle"
-				v-katex.auto="theQuestion.block.title"
+				v-katex.auto="question.block.title"
 				class="px-3 py-3 font-semibold text-lg"
 			/>
 		</header>
 
-		<!-- the body of question -->
-		<main class="flex-1 px-3 overflow-x-auto border-b pb-3">
-			<!-- Illustration -->
-			<illustration-show
-				v-if="theQuestion.block.illustration"
-				:illustration="theQuestion.block.illustration"
-				class="bg-white"
-			/>
+		<!-- the body and illustration of question (as block) -->
+		<question-block :user-answers="userAnswers" />
 
-			<!-- dispalyed text -->
-			<markdown-it :text="theQuestionBody" />
-		</main>
-
-		<!-- answer format -->
-		<div
-			v-katex.auto="answerFormat"
-			class="text-center text-xs text-gray-500 my-2"
+		<!-- user input (format, answer selector, keyboard) -->
+		<question-keyboard
+			ref="keyboardComponent"
+			v-model:show-input="showUserInput"
+			@validate="$emit('validate', $event)"
 		/>
 
-		<!-- user input -->
-		<div
-			v-if="!showInput"
-			class="text-right text-sm py-3 px-3"
-		>
-			<button
-				v-if="!showUserInput"
-				v-theme.bg.text
-				class="flex gap-2 justify-center items-center mx-auto px-2 py-2 rounded-xl shadow hover:shadow-none w-full"
-				@click="showUserInput = !showUserInput"
-			>
-				<i class="text-xl bi bi-calculator" /><span class="hidden md:inline-block"> donner la réponse</span>
-			</button>
-			<button
-				v-else
-				class="px-5 group text-red-600"
-				@click="showUserInput = !showUserInput"
-			>
-				fermer
-				<i
-					class="bi bi-x-lg inline-block ml-2 group-hover:rotate-180 transition-all transform duration-500 ease-in-out"
-				/>
-			</button>
-		</div>
-		<div
-			v-show="showUserInput"
-			class="question-user-input px-5 mt-5"
-		>
-			<!-- Validation button -->
-			<keyboard-validate-button
-				ref="validateButton"
-				:disabled="lockValidationButton"
-				@validate="validateQuestion"
-			/>
-
-			<!-- Error messages -->
-			<div
-				v-if="userAnswersErrors.length > 0 && !props.singleAnswer"
-				class="max-w-xl mx-auto border bg-red-50 border-red-600 p-3 rounded my-2"
-			>
-				<div
-					v-for="(msg, index) in userAnswersErrors"
-					:key="`error-${index}`"
-					v-katex.auto="msg"
-					class="text-red-600 text-xs"
-				/>
-			</div>
-
-			<!-- Answer selector -->
-			<div
-				v-if="answersNumber>1 && !props.singleAnswer"
-				class="question-answer-selector flex justify-between items-center my-5"
-			>
-				<button
-					v-theme.bg.hover
-					:class="answerId === 0 ? 'invisible' : ``"
-					class="px-3 text-xl text-white font-semibold border rounded-full"
-					@click="answerId--"
-				>
-					<i class="bi-chevron-left" />
-				</button>
-				<div
-					v-if="answerFormat"
-					class="text-center text-xs text-gray-400"
-					v-text="`Réponse ${answerId + 1} / ${answersNumber}`"
-				/>
-				<button
-					v-theme.bg.hover
-					:class="answerId === answersNumber - 1 ? 'invisible' : ``"
-					class="px-3 text-xl text-white font-semibold border rounded-full"
-					@click="answerId++"
-				>
-					<i class="bi-chevron-right" />
-				</button>
-			</div>
-
-			<!-- admin output preview -->
-			<div
-				v-admin
-				class="flex flex-col gap-1"
-			>
-				<div
-					v-for="(a,index) in userAnswers"
-					:key="'admin-user-answer' + index"
-					class="font-code text-gray-700 text-xs bg-gray-200 border border-gray-300 py-1 px-2 min-h-[2.2em]"
-				>
-					{{ a.value?.input }}
-				</div>
-			</div>
-
-			<!-- keyboard component -->
-			<component
-				:is="theAnswers[answerId].keyboard.component"
-				v-if="
-					theAnswers[answerId] &&
-						theAnswers[answerId].keyboard.name !== ''
-				"
-				:key="answerId"
-				ref="keyboardUI"
-				:answer="theAnswers[answerId].answer"
-				:keyboard="theAnswers[answerId].keyboard"
-				@change="updateQuestion"
-				@validate="validateQuestion"
-			/>
-		</div>
-
-		<!-- already answered or admin answer -->
-		<div
-			v-if="theQuestion.user.result || $page.props.auth.can.admin"
-			class="question-footer px-5 py-2"
-		>
-			<div>
-				<button
-					v-if="!showAnswer"
-					class="text-xs text-gray-400 w-full"
-					@click="loadAnswer()"
-				>
-					<i class="bi bi-eye mr-2" />voir la réponse
-				</button>
-				<div
-					v-else
-					class="cursor-pointer overflow-x-auto scrollbar-scolcours"
-					@click="loadAnswer(null)"
-				>
-					<div
-						class="text-xs text-center ml-3 font-code font-xs"
-						v-text="theQuestion.answer"
-					/>
-				</div>
-			</div>
-		</div>
+		<!-- user or admin answer -->
+		<question-answer-display
+			@toggle="loadAnswer($event)"
+		/>
 	</article>
 </template>

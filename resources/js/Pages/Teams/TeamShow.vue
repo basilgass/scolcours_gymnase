@@ -3,7 +3,7 @@ import FilteredList from "@/Components/Ui/FilteredList.vue"
 
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 import { PropType } from "vue"
-import { ChallengeInterface, ChapterInterface, TeamInterface, UserInterface } from "@/types/modelInterfaces"
+import type { ChallengeInterface, ChapterInterface, TeamInterface, UserInterface } from "@/types/modelInterfaces"
 
 defineOptions({ layout: LayoutMain })
 
@@ -16,7 +16,7 @@ defineOptions({ layout: LayoutMain })
 	})
 </script>
 <template>
-	<article class="flex flex-col gap-5">
+	<article class="scolcours-container">
 		<div class=" my-10">
 			<h2 class="text-3xl font-semibold">
 				{{ props.team.name }}

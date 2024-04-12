@@ -2,31 +2,14 @@
 Affichage du titre de la page
 TODO: est-ce vraiment utile (utilisé dans DEV et language et d'autres - renommer et le rendre plus utile ?)
 -->
-<script setup lang="ts">
-import { computed, onMounted, ref } from "vue"
+<script lang="ts" setup>
+import { onMounted, ref } from "vue"
 
-const props = defineProps({
+defineProps({
 	title: { type: String, default: "" },
-	subtitle: {type: String, default: null},
+	subtitle: { type: String, default: null },
 	head: { type: String, default: "" },
 	chapter: { type: String, default: "" }
-})
-
-const headTitle = computed(() => {
-	if (props.head) {
-		return props.head
-	}
-	let calculatedTitle = "ScolCours"
-
-	if (props.chapter) {
-		calculatedTitle = props.chapter + " - " + calculatedTitle
-	}
-
-	if (props.title) {
-		calculatedTitle = props.title + " - " + calculatedTitle
-	}
-
-	return calculatedTitle
 })
 
 const showTitle = ref(false)
@@ -36,11 +19,6 @@ onMounted(() => {
 })
 </script>
 <template>
-	<Head title="blalbal">
-		<title>
-			{{ headTitle }}
-		</title>
-	</Head>
 	<transition name="title-effect">
 		<div v-if="showTitle">
 			<h1

@@ -1,42 +1,49 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 
-import { computed, PropType, ref } from "vue"
 import axios from "axios"
-import { TranslationUnitInterface } from "@/types/modelInterfaces"
+import type { TranslationUnitInterfaceExtended } from "@/types/modelInterfaces"
+import { computed } from "vue"
 
-const props = defineProps({
-		units: {type: Object as PropType<TranslationUnitInterface[]>, default: ()=>{}}
-	}),
-	theUnits = ref(props.units.map(x=>({...x, selected: false}))),
-	unitsSelection = computed(()=>{
-		return theUnits.value.filter(x=>x.selected)
-	}),
-	updateUnits = function(item){
-		item.selected=!item.selected
+const units = defineModel<TranslationUnitInterfaceExtended[]>()
 
-		if(!item.words) {
-			axios.get(route("translations.words", [item.id])).then(res => {
-				item.words = res.data
-			})
-		}
+const updateUnits = function(item) {
+	// Change the state
+	item.selected = !item.selected
 
-		emits("update", unitsSelection.value)
+	// Load the missing words
+	if (item.words.length===0) {
+		axios.get(route("translations.words", [item.id])).then(res => {
+			item.words = res.data
+			console.log(units.value)
+		})
 	}
+}
 
-const emits = defineEmits(["update"])
+const numberOfWords = computed(()=>{
+	// sum for all units selected, get the number of words
+	return units.value.reduce((acc, item) => {
+		return item.selected ? acc + item.words.length : acc
+	}, 0)
+})
+
 </script>
 <template>
 	<div class="border-y border-gray-400 pt-3 pb-5">
-		<h2 class="text-lg font-extralight mb-2 uppercase">
-			sélection des unités
-		</h2>
+		<div class="flex justify-between font-extralight ">
+			<h2 class="text-lg mb-2 uppercase">
+				sélection des unités
+			</h2>
+			<div v-show="numberOfWords>0">
+				{{ numberOfWords }} mots
+			</div>
+		</div>
 
 		<div class="flex flex-wrap gap-3">
 			<button
-				v-for="(item, key) of theUnits"
+				v-for="(item, key) of units"
 				:key="key"
-				class="btn !px-10"
 				:class="item.selected?'btn-success':'bg-white'"
+				class="btn !px-10"
 				@click="updateUnits(item)"
 			>
 				{{ item.unit }}

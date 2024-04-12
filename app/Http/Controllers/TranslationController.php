@@ -6,7 +6,6 @@ use App\Models\Translation;
 use App\Models\TranslationUnit;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use Str;
 
 class TranslationController extends Controller
 {
@@ -32,10 +31,11 @@ class TranslationController extends Controller
 
 		$units = TranslationUnit::where('language', $code)->get();
 
-		return Inertia::render("languages/Language" . Str::title($game), [
+		return Inertia::render("languages/LanguageShow", [
 			"code" => $code,
 			"language" => $language,
-			"units" => $units
+			"units" => $units,
+			"game" => $game
 		]);
 	}
 

@@ -1,15 +1,18 @@
 <script lang="ts" setup>
 
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
-import { PropType, ref } from "vue"
-import { deckInterface } from "@/types/modelInterfaces"
-import BlockEdit from "@/Components/Posts/Blocks/BlockEdit_oldversion.vue"
+import { inject, PropType, ref } from "vue"
+import type { deckInterface } from "@/types/modelInterfaces"
 import axios from "axios"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
+import FormMaker from "@/Components/Form/FormMaker.vue"
 
 const props = defineProps({
 	deck: { type: Object as PropType<deckInterface>, required: true }
 })
+
+const editMode = inject<boolean>("editMode")
+
 const theDeck = ref(props.deck)
 
 function addCard() {
@@ -38,38 +41,42 @@ function deleteFlipcard(flipcardID) {
 		>
 			<div class="grid grid-cols-2 gap-5">
 				<div class="bg-white border border-slate-200 rounded-xl min-h-[200px] grid place-items-center relative">
-					<block-edit
-						:block="card.recto"
-						class="absolute top-0 left-0 w-full"
-						no-blur
-						no-data
-						no-delete
-						no-grid
-						no-script
-						no-switch
-						no-title
-						no-type
+					<form-maker
+						v-if="editMode"
+						v-model="card.recto.body"
+						type="code"
+						class="w-full"
+						rows="10"
+						:axios="{
+							model: 'Block',
+							id: card.recto.id,
+							column: 'body',
+							button: true
+						}"
 					/>
 					<markdown-it
+						v-else
 						:text="card.recto.body"
 						class="w-full px-3 mt-5"
 					/>
 				</div>
 
 				<div class="bg-white border border-slate-200 rounded-xl min-h-[200px] grid place-items-center relative">
-					<block-edit
-						:block="card.verso"
-						class="absolute top-0 left-0 w-full"
-						no-blur
-						no-data
-						no-delete
-						no-grid
-						no-script
-						no-switch
-						no-title
-						no-type
+					<form-maker
+						v-if="editMode"
+						v-model="card.verso.body"
+						type="code"
+						class="w-full"
+						rows="10"
+						:axios="{
+							model: 'Block',
+							id: card.verso.id,
+							column: 'body',
+							button: true
+						}"
 					/>
 					<markdown-it
+						v-else
 						:text="card.verso.body"
 						class="w-full px-3 mt-5"
 					/>

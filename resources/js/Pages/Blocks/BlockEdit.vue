@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 import LayoutMain from "@/Layouts/LayoutMain.vue"
-import { computed, inject, PropType, readonly, ref } from "vue"
+import { computed, inject, PropType, ref, unref } from "vue"
 import type { BlockInterface } from "@/types/modelInterfaces"
 import BlockShow from "@/Pages/Blocks/BlockShow.vue"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
-import MoveItemTo from "@/Components/Posts/MoveItemTo.vue"
+import MoveItemTo from "@/Components/MoveItemTo.vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import { router } from "@inertiajs/vue3"
 import axios from "axios"
@@ -28,7 +28,7 @@ const tab = ref<"markdown" | "script" | "data">("markdown")
 
 const theBlock = ref<BlockInterface>(props.block)
 
-const originalBlock = readonly(props.block)
+const originalBlock = unref({ ...props.block })
 const wasEdited = computed(() => {
 	return originalBlock.title !== theBlock.value.title
 		|| originalBlock.body !== theBlock.value.body
@@ -50,7 +50,6 @@ function saveBlock() {
 	axios
 		.post(route("blocks.update", [theBlock.value.id]), {
 			...theBlock.value,
-			// switch: switchEnable.value ? theBlock.value.switch : null,
 			_method: "PATCH"
 		})
 		.then(() => {
@@ -94,7 +93,24 @@ function addIllustration() {
 function blockSaveAndVisit() {
 	saveBlock()
 	visitBlock()
+}
 
+function addScriptsButtons() {
+	let script = theBlock.value.script.trim()
+
+	script = script.slice(0, script.length - 1) +
+		`,\n\tbtn: {
+		reset: {
+			icon: 'bi bi-trash',
+			text: 'reset'
+		},
+		random: {
+			icon: 'bi bi-shuffle',
+			text: 'aléatoire'
+		}
+	}` + '\n}'
+
+	theBlock.value.script = script
 }
 </script>
 
@@ -117,6 +133,7 @@ function blockSaveAndVisit() {
 			</div>
 			<div class="self-start grid grid-cols-2 gap-2 items-center flex-wrap">
 				<button
+					:class="wasEdited?'':'invisible'"
 					class="btn-primary btn-xs"
 					@click="saveBlock"
 				>
@@ -128,14 +145,14 @@ function blockSaveAndVisit() {
 					class="btn-primary btn-xs"
 					@click="blockSaveAndVisit"
 				>
-					<i class="bi bi-save mr-1" /> et retour
+					<i class="bi bi-save mr-1" /> et visiter
 				</button>
 
 				<button
 					class="btn-cancel btn-xs"
 					@click="visitBlock"
 				>
-					retour
+					visiter
 				</button>
 				<confirm-button
 					class="btn-delete btn-xs"
@@ -184,14 +201,6 @@ function blockSaveAndVisit() {
 
 				<!-- gestion des illustrations -->
 				<div v-if="displayStyle === 'side-by-side' || displayStyle === 'preview'">
-					<form-maker
-						v-model="theBlock.template"
-						inline-label
-						label="TEMPLATE"
-						label-class="w-[110px]"
-						sm
-						type="text"
-					/>
 					<div class="flex">
 						<form-maker
 							v-model="theBlock.illustrationsGrid"
@@ -261,14 +270,20 @@ function blockSaveAndVisit() {
 									language="latex"
 									type="code"
 								/>
-								<form-maker
-									v-show="tab==='script'"
-									v-model="theBlock.script"
-									:rows="20"
-									label="script"
-									language="javascript"
-									type="code"
-								/>
+								<div v-show="tab==='script'">
+									<form-maker
+										v-model="theBlock.script"
+										:rows="20"
+										label="script"
+										language="javascript"
+										type="code"
+									/>
+									<div class="flex">
+										<button @click="addScriptsButtons">
+											ajouter des boutons
+										</button>
+									</div>
+								</div>
 								<form-maker
 									v-show="tab==='data'"
 									v-model="theBlock.json"

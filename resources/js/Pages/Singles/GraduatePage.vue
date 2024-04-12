@@ -94,7 +94,7 @@ function calculerLaNote(pt: number): number {
 
 const listeDesPoints = computed<number[]>(() => {
 		return pointsData.value.split(/\s+/)
-			.filter(pt => pt.trim()!=='' && !isNaN(+pt))
+			.filter(pt => pt.trim() !== "" && !isNaN(+pt))
 			.map(pt => Math.min(+pt, maxPoints.value))
 			.filter(pt => Object.hasOwn(bareme.value, pt))
 	}),
@@ -133,187 +133,189 @@ const listeDesPoints = computed<number[]>(() => {
 
 </script>
 <template>
-	<!-- Title -->
-	<ArticleTitle title="Echelle" />
+	<section class="scolcours-container">
+		<!-- Title -->
+		<ArticleTitle title="Echelle" />
 
-	<div class="grid grid-cols-1 md:grid-cols-2 gap-5 items-start">
-		<div class="space-y-5">
-			<form-maker
-				v-model="maxPoints"
-				focus
-				label="points maximum du test"
-				name="points"
-				type="number"
-				font-code
-			/>
-
-			<div class="flex items-end align-bottom gap-3 flex-grow">
+		<div class="grid grid-cols-1 md:grid-cols-2 gap-5 items-start">
+			<div class="space-y-5">
 				<form-maker
-					v-model.number="precision"
-					class="grow"
-					label="précision"
-					name="precision"
+					v-model="maxPoints"
+					focus
 					font-code
-					@blur="
-						precision =
-							isNaN(+precision) || +precision <= 0
-								? 0.5
-								: +precision
-					"
+					label="points maximum du test"
+					name="points"
+					type="number"
 				/>
-				<button
-					:class="+precision === 1 ? 'is-active' : 'bg-white'"
-					class="btn px-10"
-					@click="precision = 1"
-				>
-					1
-				</button>
-				<button
-					:class="+precision === 0.5 ? 'is-active' : 'bg-white'"
-					class="btn px-10"
-					@click="precision = 0.5"
-				>
-					0.5
-				</button>
-				<button
-					:class="+precision === 0.1 ? 'is-active' : 'bg-white'"
-					class="btn px-10"
-					@click="precision = 0.1"
-				>
-					0.1
-				</button>
-			</div>
 
-			<form-maker
-				v-model.number="pourcentage"
-				helper-text="vide pour échelle fédérale"
-				label="pourcentage"
-				font-code
-				name="points"
-				message="laisser vide pour l'échelle fédérale \(\quad \frac{pt}{max}\cdot 5+ 1\)"
-				message-class="text-xs"
-			/>
-		</div>
-
-		<div
-			class="min-w-[9em] w-full bg-white rounded border border-slate-100 p-3"
-		>
-			<div
-				class="mb-3 py-2 text-center font-code bg-slate-700 text-slate-100"
-			>
-				mode compact
-			</div>
-			<table class="table tab w-full text-center font-code text-xl">
-				<thead>
-					<tr class="font-semibold">
-						<td>de</td>
-						<td>à</td>
-						<td class="">
-							éval.
-						</td>
-					</tr>
-				</thead>
-				<tbody v-if="Object.keys(bareme).length > 0">
-					<tr
-						v-for="item in pointsParNote"
-						:key="`range-${item.note}`"
-						class="odd:bg-amber-100"
+				<div class="flex items-end align-bottom gap-3 flex-grow">
+					<form-maker
+						v-model.number="precision"
+						class="grow"
+						font-code
+						label="précision"
+						name="precision"
+						@blur="
+							precision =
+								isNaN(+precision) || +precision <= 0
+									? 0.5
+									: +precision
+						"
+					/>
+					<button
+						:class="+precision === 1 ? 'is-active' : 'bg-white'"
+						class="btn px-10"
+						@click="precision = 1"
 					>
-						<td>{{ item.pointsMin }}</td>
-						<td>{{ item.pointsMax }}</td>
-						<td class="font-semibold">
-							{{ item.note }}
-						</td>
-					</tr>
-				</tbody>
-				<tbody v-else>
-					<tr class="text-center text-sm text-red-600">
-						<td
-							colspan="3"
-							class="py-5"
+						1
+					</button>
+					<button
+						:class="+precision === 0.5 ? 'is-active' : 'bg-white'"
+						class="btn px-10"
+						@click="precision = 0.5"
+					>
+						0.5
+					</button>
+					<button
+						:class="+precision === 0.1 ? 'is-active' : 'bg-white'"
+						class="btn px-10"
+						@click="precision = 0.1"
+					>
+						0.1
+					</button>
+				</div>
+
+				<form-maker
+					v-model.number="pourcentage"
+					font-code
+					helper-text="vide pour échelle fédérale"
+					label="pourcentage"
+					message="laisser vide pour l'échelle fédérale \(\quad \frac{pt}{max}\cdot 5+ 1\)"
+					message-class="text-xs"
+					name="points"
+				/>
+			</div>
+
+			<div
+				class="min-w-[9em] w-full bg-white rounded border border-slate-100 p-3"
+			>
+				<!--				<div-->
+				<!--					class="mb-3 py-2 text-center font-code bg-slate-700 text-slate-100"-->
+				<!--				>-->
+				<!--					mode compact-->
+				<!--				</div>-->
+				<table class="table tab w-full text-center font-code text-xl">
+					<thead>
+						<tr class="font-semibold">
+							<td>de</td>
+							<td>à</td>
+							<td class="">
+								éval.
+							</td>
+						</tr>
+					</thead>
+					<tbody v-if="Object.keys(bareme).length > 0">
+						<tr
+							v-for="item in pointsParNote"
+							:key="`range-${item.note}`"
+							class="odd:bg-amber-100"
 						>
-							Le barème n'a pas pu être créé... merci de vérifier la configuration
-						</td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
-	</div>
-
-	<div class="grid grid-cols-1 md:grid-cols-2 gap-5 mt-10">
-		<div>
-			<form-maker
-				v-model="pointsData"
-				:rows="17"
-				helper-text="notes séparées par des espaces, des virgules ou à la ligne."
-				label="liste des points"
-				name="points"
-				type="textarea"
-				font-code
-			/>
-			<div
-				v-show="listeDesPointsAvecErreurs.length>0"
-				class="text-red-600 text-sm"
-			>
-				Il y a un ou des points supérieurs au maximum ({{ listeDesPointsAvecErreurs.join(", ") }})
+							<td>{{ item.pointsMin }}</td>
+							<td>{{ item.pointsMax }}</td>
+							<td class="font-semibold">
+								{{ item.note }}
+							</td>
+						</tr>
+					</tbody>
+					<tbody v-else>
+						<tr class="text-center text-sm text-red-600">
+							<td
+								class="py-5"
+								colspan="3"
+							>
+								Le barème n'a pas pu être créé... merci de vérifier la configuration
+							</td>
+						</tr>
+					</tbody>
+				</table>
 			</div>
 		</div>
 
-		<div
-			v-if="listeDesNotes.length>0"
-			class="mt-8 flex flex-col gap-4"
-		>
+		<div class="grid grid-cols-1 md:grid-cols-2 gap-5 mt-10">
 			<div>
-				<div class="flex gap-2 md:gap-4 xl:gap-10 justify-between text-center">
-					<div
-						class="bg-white p-3 grid place-items-center text-lg border border-slate-100 rounded-xl shadow aspect-square w-full py-8"
-					>
-						<div class="flex flex-col h-full justify-between">
-							<div class="font-extralight">
-								Nombre de notes
-							</div>
-							<div class="font-semibold text-xl">
-								{{ listeDesNotes.length }}
-							</div>
-						</div>
-					</div>
-					<div
-						class="bg-white p-3 grid place-items-center text-lg border border-slate-100 rounded-xl shadow aspect-square w-full py-8"
-					>
-						<div class="flex flex-col h-full justify-between">
-							<div class="font-extralight">
-								Moyenne
-							</div>
-							<div class="font-semibold text-xl">
-								{{ moyenneDesNotes }}
-							</div>
-						</div>
-					</div>
-					<div
-						class="bg-white p-3 grid place-items-center text-lg border border-slate-100 rounded-xl shadow aspect-square w-full py-8"
-					>
-						<div class="flex flex-col h-full justify-between">
-							<div class="font-extralight">
-								Médiane
-							</div>
-							<div class="font-semibold text-xl">
-								{{ medianeDesNotes }}
-							</div>
-						</div>
-					</div>
+				<form-maker
+					v-model="pointsData"
+					:rows="17"
+					font-code
+					helper-text="notes séparées par des espaces, des virgules ou à la ligne."
+					label="liste des points"
+					name="points"
+					type="textarea"
+				/>
+				<div
+					v-show="listeDesPointsAvecErreurs.length>0"
+					class="text-red-600 text-sm"
+				>
+					Il y a un ou des points supérieurs au maximum ({{ listeDesPointsAvecErreurs.join(", ") }})
 				</div>
 			</div>
 
 			<div
-				class="bg-white p-5 w-full border border-slate-100 rounded-xl shadow"
+				v-if="listeDesNotes.length>0"
+				class="mt-8 flex flex-col gap-4"
 			>
-				<bar-chart
-					:chart-dataset="decompteDesNotes"
-					:chart-labels="[1, 1.5,2, 2.5,3, 3.5,4, 4.5,5, 5.5,6]"
-					:chart-options="{scales: { y: { ticks: { stepSize: 1, }, }, }, }"
-					chart-colorset="graduate"
-				/>
+				<div>
+					<div class="flex gap-2 md:gap-4 xl:gap-10 justify-between text-center">
+						<div
+							class="bg-white p-3 grid place-items-center text-lg border border-slate-100 rounded-xl shadow aspect-square w-full py-8"
+						>
+							<div class="flex flex-col h-full justify-between">
+								<div class="font-extralight">
+									Nombre de notes
+								</div>
+								<div class="font-semibold text-xl">
+									{{ listeDesNotes.length }}
+								</div>
+							</div>
+						</div>
+						<div
+							class="bg-white p-3 grid place-items-center text-lg border border-slate-100 rounded-xl shadow aspect-square w-full py-8"
+						>
+							<div class="flex flex-col h-full justify-between">
+								<div class="font-extralight">
+									Moyenne
+								</div>
+								<div class="font-semibold text-xl">
+									{{ moyenneDesNotes }}
+								</div>
+							</div>
+						</div>
+						<div
+							class="bg-white p-3 grid place-items-center text-lg border border-slate-100 rounded-xl shadow aspect-square w-full py-8"
+						>
+							<div class="flex flex-col h-full justify-between">
+								<div class="font-extralight">
+									Médiane
+								</div>
+								<div class="font-semibold text-xl">
+									{{ medianeDesNotes }}
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div
+					class="bg-white p-5 w-full border border-slate-100 rounded-xl shadow"
+				>
+					<bar-chart
+						:chart-dataset="decompteDesNotes"
+						:chart-labels="[1, 1.5,2, 2.5,3, 3.5,4, 4.5,5, 5.5,6]"
+						:chart-options="{scales: { y: { ticks: { stepSize: 1, }, }, }, }"
+						chart-colorset="graduate"
+					/>
+				</div>
 			</div>
 		</div>
-	</div>
+	</section>
 </template>

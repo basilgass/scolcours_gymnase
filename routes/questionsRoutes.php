@@ -24,8 +24,7 @@ Route::middleware("can:admin")
 		// Get
 		Route::get('questions/{question}/edit', [QuestionController::class, 'edit'])
 			->name('questions.edit');
-
-
+		
 		// Post
 		Route::post('questions/{question}/duplicate', [QuestionController::class, 'duplicate'])
 			->name('questions.duplicate');

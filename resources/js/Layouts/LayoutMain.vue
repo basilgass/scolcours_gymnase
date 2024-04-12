@@ -1,12 +1,14 @@
 <script lang="ts" setup>
 import MainHeader from "@/Components/MainHeader.vue"
 import MainFooter from "@/Components/MainFooter.vue"
-import { provide, ref } from "vue"
+import { computed, PropType, provide, ref } from "vue"
 import FlashMessage from "@/Components/Ui/FlashMessage.vue"
+import { Head, usePage } from "@inertiajs/vue3"
+import { ThemeInterface } from "@/types"
 
 defineProps({
 		theme: {
-			type: Object,
+			type: Object as PropType<ThemeInterface>,
 			default: () => {
 				return { title: "Scolcours", slug: "main" }
 			},
@@ -33,10 +35,24 @@ defineProps({
 		error: (message, link, timeout) =>
 			addFlashMessage(message, link, "error", timeout),
 	})
+
+
+const pageTitle = computed(() => {
+	if(usePage()?.props?.chapter) {
+		return usePage().props.chapter.meta_title
+			? usePage().props.chapter.meta_title
+			: usePage().props.chapter.title
+	}
+
+	return usePage().props.theme?usePage().props.theme.title:null
+})
+
 </script>
 
 <template>
 	<div>
+		<Head :title="pageTitle" />
+
 		<!-- Header of the page -->
 		<MainHeader :theme="theme" />
 

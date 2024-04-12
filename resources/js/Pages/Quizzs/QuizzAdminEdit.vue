@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { computed, inject, PropType, ref } from "vue"
 import DialogModal from "@/Components/Ui/DialogModal.vue"
-import QuestionsIndex from "@/Components/Posts/Questions/QuestionsIndex_OLD.vue"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
 import { router } from "@inertiajs/vue3"
@@ -9,7 +8,7 @@ import FormMaker from "@/Components/Form/FormMaker.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 import axios from "axios"
 import { flashInterface } from "@/types"
-import { ChapterInterface, TeamInterface } from "@/types/modelInterfaces"
+import type { ChapterInterface, TeamInterface } from "@/types/modelInterfaces"
 
 defineOptions({ layout: LayoutMain })
 
@@ -251,11 +250,12 @@ defineOptions({ layout: LayoutMain })
 
 		<div>
 			<!-- list of questions - make it draggable, like in a post -->
-			<questions-index
-				:container-id="theQuizz.id"
-				container-type="Quizz"
-				:questions="props.questions.data"
-			/>
+			GESTION DES QUESTIONS POUR LES ORDRER...
+			<!--			<questions-index-->
+			<!--				:container-id="theQuizz.id"-->
+			<!--				container-type="Quizz"-->
+			<!--				:questions="props.questions.data"-->
+			<!--			/>-->
 		</div>
 		<h2 class="text-lg my-10">
 			sessions précédantes

@@ -23,7 +23,7 @@ class ChapterController extends Controller
 {
 	public function __construct()
 	{
-		$this->middleware('auth')->except(['index', 'show', 'page', 'slide', 'intro']);
+		$this->middleware('auth')->except(['index', 'show', 'slide', 'intro']);
 	}
 
 	public function index(Theme $theme)
@@ -43,7 +43,7 @@ class ChapterController extends Controller
 
 		// Filter output.
 		$data = [
-			"theme" => ThemeResource::make($theme),
+			"theme"    => ThemeResource::make($theme),
 			"chapters" => ChapterShowResource::collection($chapters)
 		];
 
@@ -64,13 +64,13 @@ class ChapterController extends Controller
 
 		$validation = $request->validate([
 			'title' => ['string', 'required', 'min:2'],
-			'slug' => ['string', 'unique:chapters,slug']
+			'slug'  => ['string', 'unique:chapters,slug']
 		]);
 
 
 		$chapter = $theme->chapters()->create([
-			'title' => $validation['title'],
-			'slug' => $validation['slug'],
+			'title' => $validation[ 'title' ],
+			'slug'  => $validation[ 'slug' ],
 		]);
 
 		// Create a specific block
@@ -78,7 +78,8 @@ class ChapterController extends Controller
 			'body' => 'Aucune extrait...'
 		]);
 
-		return redirect()->route('themes.chapters.intro', [$theme->slug, $chapter->slug]);
+		return $chapter;
+//		return redirect()->route('themes.chapters.intro', [$theme->slug, $chapter->slug]);
 	}
 
 	public function create(Theme $theme)
@@ -89,30 +90,12 @@ class ChapterController extends Controller
 //		]);
 	}
 
-	public function page(Theme $theme, Chapter $chapter)
-	{
-		if ($chapter->active or Auth::User()?->admin) {
-
-			// Get the user data
-			return Inertia::render('Chapters/ChapterPage', [
-				// Used for the page layout
-				"theme" => ThemeResource::make($theme),
-				// Get the chapter
-				"chapter" => fn() => ChapterResource::make($chapter),
-			]);
-		}
-
-		return Inertia::render('ErrorPage', [
-			"body" => "La page n'est pas active - contacter l'administrateur."
-		]);
-	}
-
 
 	public function intro(Theme $theme, Chapter $chapter)
 	{
 		return Inertia::render('Chapters/ChapterShow', [
 			// Used for the page layout
-			"theme" => ThemeResource::make($theme),
+			"theme"   => ThemeResource::make($theme),
 			// Get the chapter (for next / precvious / ...)
 			"chapter" => fn() => ChapterResource::make($chapter, true),
 		]);
@@ -138,21 +121,22 @@ class ChapterController extends Controller
 
 		return Inertia::render('Posts/PostShow', [
 			// Used for the page layout
-			"theme" => ThemeResource::make($theme),
+			"theme"   => ThemeResource::make($theme),
 			// Get the chapter (for next / previous / ...)
 			"chapter" => fn() => ChapterResource::make($chapter, true),
 			// The post information
-			"post" => PostResource::make($post),
+			"post"    => PostResource::make($post),
 			// Block for a scroll to
-			"anchor" => $anchor,
+			"anchor"  => $anchor,
 		]);
 	}
 
 	public function edit(Chapter $chapter)
 	{
-//		return Inertia::render('Chapters/ChapterEdit', [
-//			'chapter' => $chapter
-//		]);
+		return Inertia::render('Chapters/ChapterEdit', [
+			'theme'   => ThemeResource::make($chapter->theme),
+			'chapter' => ChapterResource::make($chapter)
+		]);
 	}
 
 	public function destroy(Chapter $chapter)
@@ -163,12 +147,12 @@ class ChapterController extends Controller
 	public function updatePostsOrder(Chapter $chapter, Request $request)
 	{
 		$validation = $request->validate([
-			"posts" => ["array"],
-			"posts.*.id" => ['required', 'exists:App\Models\Post,id'],
+			"posts"         => ["array"],
+			"posts.*.id"    => ['required', 'exists:App\Models\Post,id'],
 			"posts.*.order" => ['required', "int", 'min:1']
 		]);
-		foreach ($validation['posts'] as $row) {
-			$chapter->posts->find($row['id'])->update(['order' => $row['order']]);
+		foreach ($validation[ 'posts' ] as $row) {
+			$chapter->posts->find($row[ 'id' ])->update(['order' => $row[ 'order' ]]);
 		}
 
 		return [
@@ -179,26 +163,26 @@ class ChapterController extends Controller
 	public function update(Request $request, Chapter $chapter)
 	{
 		$validation = $request->validate([
-			'title' => ['required', 'min:2', 'max:255'],
+			'title'      => ['required', 'min:2', 'max:255'],
 			'meta_title' => ['nullable', 'min:2', 'max:255'],
-			'slug' => ['required', 'min:1', 'max:255'],
+			'slug'       => ['required', 'min:1', 'max:255'],
 		]);
 
-		$chapter->title = $validation['title'];
-		$chapter->meta_title = $validation['meta_title'] ?? null;
-		$chapter->slug = $validation['slug'];
+		$chapter->title = $validation[ 'title' ];
+		$chapter->meta_title = $validation[ 'meta_title' ] ?? null;
+		$chapter->slug = $validation[ 'slug' ];
 		$chapter->save();
 
 		// Save the corresponding block!
 		// TODO: save the corresponding block automatically !
-		$block = $chapter->blocks[0];
+		$block = $chapter->blocks[ 0 ];
 		$validation = $request->validate([
-			'block' => ['array'],
+			'block'      => ['array'],
 			'block.body' => ['string'],
 		]);
 
 		$block->update([
-			'body' => $validation['block']['body']
+			'body' => $validation[ 'block' ][ 'body' ]
 		]);
 		// Update the illustration
 		// TODO: Chapter - block - illustration : update from ChapterForm
@@ -218,7 +202,7 @@ class ChapterController extends Controller
 
 			$validate = $request->validate([
 				'post_id' => ['required', 'exists:App\Models\Post,id'],
-				'open' => ['boolean', "nullable"]
+				'open'    => ['boolean', "nullable"]
 			]);
 
 			$user->chapters()->detach($chapter->id);
