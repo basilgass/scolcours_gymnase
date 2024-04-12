@@ -10,7 +10,7 @@ const props = defineProps({
 	barLabel: { type: String, default: "" },
 	barClass: { type: String, default: "h-[2em]" },
 	barLabelClass: { type: String, default: "" },
-	inverted: {type: Boolean, default: false}
+	inverted: { type: Boolean, default: false }
 })
 
 const percent = computed(() => {
@@ -23,7 +23,7 @@ const statLabelComputed = computed(() => {
 const barClassComputed = computed(() => {
 	const barClass = [props.barClass]
 
-	if(props.inverted){
+	if (props.inverted) {
 		if (percent.value > 0.75) {
 			barClass.push("bg-red-300/30", "border", "border-red-200")
 		} else if (percent.value < 0.30) {
@@ -31,7 +31,7 @@ const barClassComputed = computed(() => {
 		} else {
 			barClass.push("bg-amber-300/30", "border", "border-amber-400")
 		}
-	}else {
+	} else {
 		if (percent.value > 0.75) {
 			barClass.push("bg-green-400/30", "border", "border-green-400")
 		} else if (percent.value < 0.30) {
@@ -41,7 +41,7 @@ const barClassComputed = computed(() => {
 		}
 	}
 
-	return barClass.join(' ')
+	return barClass.join(" ")
 })
 </script>
 
@@ -49,16 +49,17 @@ const barClassComputed = computed(() => {
 	<div class="flex flex-row gap-5 w-full items-center">
 		<slot name="label">
 			<h2
-				:class="labelClass"
+				v-if="label!==''"
 				v-katex.auto="label"
+				:class="labelClass"
 			/>
 		</slot>
 		<div class="relative w-full">
 			<div class="absolute inset-0 grid place-items-center">
 				<slot name="bar">
 					<span
-						:class="barLabelClass"
 						v-katex.auto="statLabelComputed"
+						:class="barLabelClass"
 					/>
 				</slot>
 			</div>

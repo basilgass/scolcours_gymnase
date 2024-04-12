@@ -8,6 +8,7 @@ import { ChallengeInterface, TeamInterface } from "@/types/modelInterfaces"
 import ChallengeGame from "@/Components/Challenges/ChallengeGame.vue"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 import IllustrationShow from "@/Pages/Illustrations/IllustrationShow.vue"
+import ChallengeTraining from "@/Components/Challenges/ChallengeTraining.vue"
 
 defineOptions({ layout: LayoutMain })
 
@@ -17,7 +18,7 @@ const props = defineProps({
 })
 
 const userScore = ref(props.challenge.user)
-const state = ref<'intro'|'running'|'finished'>('intro')
+const state = ref<"intro" | "running" | "finished">("intro")
 let selector = ref(0)
 
 </script>
@@ -80,10 +81,16 @@ let selector = ref(0)
 			</div>
 
 			<challenge-game
-				v-model:user-score="userScore"
+				v-if="selector===0"
 				v-model:state="state"
+				v-model:user-score="userScore"
 				:challenge="challenge"
 				:teams="teams"
+			/>
+			<challenge-training
+				v-else
+				:challenge="challenge"
+				:slug="challenge.generators[selector-1].slug"
 			/>
 
 			<!-- export to pdf - admin only ! -->

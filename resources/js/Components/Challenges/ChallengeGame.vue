@@ -77,7 +77,7 @@ function reset() {
 	game.level = 1
 	game.levelScore = 0
 	game.death = 0
-	game.elapsedTime = 280
+	game.elapsedTime = 0
 	game.remainingTime = props.challenge.duration * 60
 	game.lives = props.challenge.lives
 	game.death = 0
