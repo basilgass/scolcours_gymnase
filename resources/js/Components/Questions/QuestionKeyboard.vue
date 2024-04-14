@@ -62,6 +62,7 @@ const keyboardAnswers = computed<questionAnswerInterface[]>(() => {
  * Get the current keyboard based an answerId
  */
 const currentKeyboard = computed<KeyboardInterface>(()=>{
+if (!keyboardAnswers.value[questionData.answerId.value]) return null
 	return keyboardAnswers.value[questionData.answerId.value].keyboard
 })
 
@@ -150,7 +151,7 @@ defineExpose({
 			<!-- keyboard component -->
 			<component
 				:is="currentKeyboard.component"
-				v-if="currentKeyboard.name !== ''"
+				v-if="currentKeyboard && currentKeyboard.name !== ''"
 				:key="questionData.answerId"
 				ref="keyboardUI"
 				:answer="keyboardAnswers[questionData.answerId.value].answer"

@@ -11,6 +11,7 @@ import ChapterNav from "@/Components/Chapters/ChapterNav.vue"
 import QuestionsIndex from "@/Pages/Questions/QuestionsIndex.vue"
 import { useMenuScrollTo } from "@/Composables/useHelpers"
 import { PiMath } from "pimath/esm"
+import axios from "axios"
 
 defineOptions({ layout: LayoutMain })
 
@@ -29,13 +30,15 @@ const props = defineProps({
 	}
 })
 
-// Les blocks peuvent être groupé pour former un unique groupe.
+// Les groupedBlocks peuvent être groupé pour former un unique groupe.
 // Il s'agit surtout d'une mise en page
-const blocks = computed(() => {
-	// The blocks might be grouped
+const blocks = ref<BlockInterface[]>(props.post.blocks)
+const groupedBlocks = computed(() => {
+	// TODO: work without groups and merge cleverly based on previous / next block
+	// The groupedBlocks might be grouped
 	let arr: BlockInterface[][] = []
 
-	props.post.blocks.forEach(block => {
+	blocks.value.forEach(block => {
 		block.merge === true ? arr[arr.length - 1].push(block) : arr.push([block])
 	})
 
@@ -44,6 +47,7 @@ const blocks = computed(() => {
 
 const iteration = ref(0)
 const postData = ref({})
+
 function loadDataScript() {
 	iteration.value ++
 	try {
@@ -60,8 +64,18 @@ const hasData = computed(() => {
 	return Object.keys(postData.value).length > 0
 })
 loadDataScript()
-provide("postData", postData)
 
+provide("postData", postData)
+provide('postBlocks', blocks)
+
+
+function addBlock() {
+	axios.post(
+		route("posts.blocks.store",[props.post.id])
+	).then((res) => {
+		blocks.value.push(res.data)
+	})
+}
 
 onMounted(() => {
 	// TODO: save the last visited post or perhaps last question ?
@@ -81,10 +95,18 @@ onMounted(() => {
 			<!-- title -->
 			<div class="scolcours-container flex justify-between">
 				<div>
-					<h1
-						v-katex.auto="post.title"
-						class="text-LG md:text-2xl l:text-3xl"
-					/>
+					<div class="flex gap-5 items-baseline">
+						<h1
+							v-katex.auto="post.title"
+							class="text-LG md:text-2xl l:text-3xl"
+						/>
+						<edit-link
+							:id="post.id"
+							class="!text-black top-1"
+							inline
+							route-name="posts.edit"
+						/>
+					</div>
 
 					<Link
 						:href="route('chapters.show', [chapter.slug])"
@@ -95,12 +117,13 @@ onMounted(() => {
 				</div>
 
 				<div>
-					<edit-link
-						:id="post.id"
-						class="!text-black top-1"
-						inline
-						route-name="posts.edit"
-					/>
+					<button
+						class="text-black text-xl"
+						v-admin
+						@click="addBlock"
+					>
+						<i class="bi bi-plus-circle" />
+					</button>
 
 					<button
 						v-if="hasData"
@@ -114,12 +137,13 @@ onMounted(() => {
 			</div>
 		</header>
 
-		<!-- show the blocks, questions and TOC -->
+		<!-- show the groupedBlocks, questions and TOC -->
 		<main class="scolcours-container mt-5 space-y-5">
-			<!-- show the blocks -->
+			<!-- show the groupedBlocks -->
+
 			<article class="flex flex-col gap-4">
 				<div
-					v-for="group in blocks"
+					v-for="group in groupedBlocks"
 					:key="group[0].id"
 					class="shadow"
 				>
@@ -131,6 +155,7 @@ onMounted(() => {
 					/>
 				</div>
 			</article>
+
 
 			<!-- show the questions -->
 			<questions-index

@@ -2,10 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 // A generator belongs to Challenge, Evaluation, and many more
+
 /**
  * App\Models\Generator
  *
@@ -23,6 +23,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read int|null $challenges_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Evaluation> $evaluations
  * @property-read int|null $evaluations_count
+ * @property-read \App\Models\Theme $theme
  * @method static \Illuminate\Database\Eloquent\Builder|Generator newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Generator newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Generator query()
@@ -40,19 +41,22 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Generator extends Model
 {
-    use HasFactory;
-
 	protected $guarded = [];
 
-	public function challenges()
+	public function theme(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+	{
+		return $this->belongsTo(Theme::class);
+	}
+
+	public function challenges(): \Illuminate\Database\Eloquent\Relations\MorphToMany
 	{
 		return $this->morphedByMany(Challenge::class, 'generatorable')
 			->withPivot('order');
 	}
 
-    public function evaluations()
-    {
-        return $this->morphedByMany(Evaluation::class, 'generatorable')
-            ->withPivot('order');
-    }
+	public function evaluations(): \Illuminate\Database\Eloquent\Relations\MorphToMany
+	{
+		return $this->morphedByMany(Evaluation::class, 'generatorable')
+			->withPivot('order');
+	}
 }

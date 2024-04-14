@@ -1,39 +1,40 @@
 <script lang="ts" setup>
-import { computed, onMounted, PropType, ref } from "vue"
+import { computed, PropType, ref } from "vue"
 import QuestionShow from "@/Pages/Questions/QuestionShow.vue"
 import { useGenerator } from "@/Composables/useGenerator"
-import type { ChallengeInterface, GeneratorInterface, QuestionInterface } from "@/types/modelInterfaces"
+import type { GeneratorInterface, QuestionInterface } from "@/types/modelInterfaces"
+import { ChallengeAnswerInterface } from "@/Components/Challenges/ChallengeGame.vue"
 
 const props = defineProps({
-		challenge: {
-			type: Object as PropType<ChallengeInterface>,
-			required: true,
-		},
-		slug: { type: String, required: true },
-	})
+	generator: {
+		type: Object as PropType<GeneratorInterface>,
+		required: true
+	}
+})
 
-	const currentGenerator = computed<GeneratorInterface>(() => {
-			return props.challenge.generators.filter(
-				(g) => g.slug === props.slug,
-			)[0]
-		}),
-		counter = ref(0)
+/**
+ * The current question counter, used to updated correctly the question
+ */
+const counter = ref(0)
 
-	const nextQuestion = function (checkerResult) {
-			if (checkerResult.result) {
-				counter.value++
-			}
-		},
-		theQuestion = computed(() => {
-			if (counter.value >= 0) {
-				return useGenerator(currentGenerator).question()
-			}
-			return false
-		})
+/**
+ * Display the next question
+ * @param checkerResult
+ */
+function nextQuestion(checkerResult: ChallengeAnswerInterface): void {
+	if (checkerResult.result) counter.value++
+}
 
-	onMounted(() => {
-		counter.value++
-	})
+/**
+ * The current question generated
+ */
+const theQuestion = computed(() => {
+	if (counter.value >= 0) {
+		return useGenerator(props.generator).question()
+	}
+	return false
+})
+
 </script>
 
 <template>

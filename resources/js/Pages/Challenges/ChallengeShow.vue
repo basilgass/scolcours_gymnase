@@ -89,8 +89,8 @@ let selector = ref(0)
 			/>
 			<challenge-training
 				v-else
-				:challenge="challenge"
-				:slug="challenge.generators[selector-1].slug"
+				:generator="challenge.generators[selector-1]"
+				:key="challenge.generators[selector-1].slug"
 			/>
 
 			<!-- export to pdf - admin only ! -->

@@ -22,6 +22,8 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $updated_at
  * @property-read Collection<int, \App\Models\Chapter> $chapters
  * @property-read int|null $chapters_count
+ * @property-read Collection<int, \App\Models\Generator> $generators
+ * @property-read int|null $generators_count
  * @property-read Collection<int, \App\Models\Widget> $widgets
  * @property-read int|null $widgets_count
  * @method static Builder|Theme newModelQuery()
@@ -50,6 +52,11 @@ class Theme extends Model
 	public function widgets()
 	{
 		return $this->hasMany(Widget::class);
+	}
+
+	public function generators()
+	{
+		return $this->hasMany(Generator::class);
 	}
 
 }

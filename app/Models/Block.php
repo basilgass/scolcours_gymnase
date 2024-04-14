@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\URL;
  *
  * @property int $id
  * @property int|null $order
+ * @property bool|null $merge
  * @property string|null $title
  * @property string|null $body
  * @property string $type
@@ -32,6 +33,7 @@ use Illuminate\Support\Facades\URL;
  * @property-read Model|\Eloquent $blockable
  * @property-read Collection<int, \App\Models\Illustration> $illustrations
  * @property-read int|null $illustrations_count
+ * @property-read mixed $url
  * @method static Builder|Block newModelQuery()
  * @method static Builder|Block newQuery()
  * @method static Builder|Block query()
@@ -43,6 +45,7 @@ use Illuminate\Support\Facades\URL;
  * @method static Builder|Block whereId($value)
  * @method static Builder|Block whereIllustrationsGrid($value)
  * @method static Builder|Block whereJson($value)
+ * @method static Builder|Block whereMerge($value)
  * @method static Builder|Block whereOrder($value)
  * @method static Builder|Block whereScript($value)
  * @method static Builder|Block whereSwitch($value)

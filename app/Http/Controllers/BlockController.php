@@ -278,4 +278,43 @@ class BlockController extends Controller
 		$block->save();
 		return true;
 	}
+
+	public function move(Block $block, Request $request)
+	{
+		$validate = $request->validate([
+			'direction' => ['string', 'required', 'in:top,bottom,up,down'],
+		]);
+
+		// Get the post
+		$post = $block->blockable;
+		$blocks = collect();
+		if($post instanceof Post) {
+			$blocks = $post->consolidateBlocksOrder();
+		}
+
+		// Get the index of the block
+		$index = $blocks->find($block)->order;
+
+		// Get the new index
+		if ($validate[ 'direction' ] === 'top') {
+			$newIndex = 0;
+		} else if ($validate[ 'direction' ] === 'bottom') {
+			$newIndex = count($blocks) - 1;
+		} else if ($validate[ 'direction' ] === 'up') {
+			$newIndex = $index - 1;
+		} else {
+			$newIndex = $index + 1;
+		}
+
+		// Move the block
+		$blocks->splice($index, 1);
+		$blocks->splice($newIndex, 0, [$block]);
+
+		// Update the order
+		$blocks->each(function ($block, $index) {
+			$block->update(['order' => $index]);
+		});
+
+		return BlockResource::collection($blocks);
+	}
 }

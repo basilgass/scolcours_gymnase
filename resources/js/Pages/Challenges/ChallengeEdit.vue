@@ -10,6 +10,8 @@ import { flashInterface } from "@/types"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
 import BlockShow from "@/Pages/Blocks/BlockShow.vue"
 
+
+// TODO: refactor ChallengeEdit.
 defineOptions({ layout: LayoutMain })
 const props = defineProps({
 	challenge: { type: Object, required: true }
@@ -444,6 +446,12 @@ const saveChallenge = function() {
 								v-model="theChallenge.generators[index].title"
 								label="titre du générateur"
 								name="generatorTitle"
+							/>
+							<form-maker
+								v-model="theChallenge.generators[index].slug"
+								label="slug du générateur"
+								name="generatorTitle"
+								sm
 							/>
 							<form-maker
 								v-model="theChallenge.generators[index].body"

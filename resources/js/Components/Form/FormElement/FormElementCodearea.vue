@@ -1,216 +1,329 @@
-<script setup lang="ts">
-import { computed, onMounted, ref } from "vue"
+<script lang="ts" setup>
+import { computed, nextTick, onMounted, ref } from "vue"
 
 import Prism from "prismjs"
 import "prismjs/themes/prism.css"
 import "prismjs/components/prism-latex"
 import "prismjs/components/prism-javascript"
 import "prismjs/components/prism-json"
-import { javascriptTriggers, latexTriggers } from "@/helpers/mdAutofill"
+import { javascriptTriggers, latexTriggers, TriggerFunction, TriggersObject } from "@/helpers/mdAutofill"
 
+/**
+ * The value of the codearea
+ */
 const theValue = defineModel<string>({ required: true })
 
 defineOptions({ inheritAttrs: false })
 
-	Prism.manual = true
+// Define the type of code (JS, LaTeX, JSON)
+Prism.manual = true
 
-	defineExpose({ focus: focusFn })
-	const emits = defineEmits(["update"])
-	const props = defineProps({
-			modelValue: { type: String, default: "" },
-			rows: { type: [Number,String], default: 4 },
-			focus: { type: Boolean, default: false },
-			language: { type: String, default: "javascript" },
-			wrap: { type: Boolean, default: true },
-			resizeable: { type: Boolean, default: false },
-			autoSize: { type: Boolean, default: false },
-		})
-	const inp = ref(null),
-		currentRows = ref(+props.rows)
+// Expose the focus function
+defineExpose({ focus: focusFn })
 
-	function focusFn(select) {
-		inp.value.focus()
-		if (select === true) {
-			inp.value.select()
+// Define the emits
+// const emits = defineEmits(["update"])
+
+// Define the props
+const props = defineProps({
+	modelValue: { type: String, default: "" },
+	rows: { type: [Number, String], default: 4 },
+	focus: { type: Boolean, default: false },
+	language: { type: String, default: "javascript" },
+	wrap: { type: Boolean, default: true },
+	resizeable: { type: Boolean, default: false },
+	autoSize: { type: Boolean, default: false }
+})
+
+// Input component
+const inp = ref(null)
+// Pre component (for the highlighted code)
+const pre = ref(null)
+
+// number of rows
+const currentRows = ref(+props.rows)
+
+/**
+ * Set the focus on the textarea
+ * @param select (bool) if true, select the text
+ */
+function focusFn(select: boolean) {
+	inp.value.focus()
+	if (select === true) inp.value.select()
+}
+
+/**
+ * Highlight the code using Prism.js
+ */
+const highlighted = computed(() => {
+	if (theValue.value) {
+		try {
+			if (props.language.toLowerCase() === "latex") {
+				return Prism.highlight(
+					theValue.value,
+					Prism.languages.latex,
+					"latex"
+				)
+			}
+			if (props.language.toLowerCase() === "json") {
+				return Prism.highlight(
+					theValue.value,
+					Prism.languages.json,
+					"json"
+				)
+			}
+			return Prism.highlight(
+				theValue.value,
+				Prism.languages.javascript,
+				"javascript"
+			)
+		} catch (e) {
+			return theValue.value
 		}
 	}
+	return ""
+})
 
-	const pre = ref(null),
-		highlighted = computed(() => {
-			if (theValue.value) {
-				try {
-					if (props.language.toLowerCase() === "latex") {
-						return Prism.highlight(
-							theValue.value,
-							Prism.languages.latex,
-							"latex",
-						)
-					}
-					if (props.language.toLowerCase() === "json") {
-						return Prism.highlight(
-							theValue.value,
-							Prism.languages.json,
-							"json",
-						)
-					}
-					return Prism.highlight(
-						theValue.value,
-						Prism.languages.javascript,
-						"javascript",
-					)
-				} catch (e) {
-					return theValue.value
-				}
-			}
-			return ""
-		}),
-		indenter = function (event) {
-			let text = theValue.value,
-				originalSelectionStart = event.target.selectionStart,
-				textStart = text.slice(0, originalSelectionStart),
-				textEnd = text.slice(originalSelectionStart),
-				startLines = textStart.split("\n"),
-				currentLine = startLines.pop().trimEnd(),
-				lastCharacter = currentLine[currentLine.length - 1],
-				previousLine,
-				lastPreviousCharacter = "",
-				currentIndentLength = 0,
-				index = 0
+/**
+ * Indent the code on enter
+ * @param event
+ */
+function indenter(event: KeyboardEvent) {
+	// The target is the textarea
+	const target = event.target as HTMLTextAreaElement
 
-			if (startLines.length > 0) {
-				previousLine = startLines.pop().trimEnd()
-				lastPreviousCharacter = previousLine[previousLine.length - 1]
-			}
+	let text = theValue.value,
+		originalSelectionStart = target.selectionStart,
+		textStart = text.slice(0, originalSelectionStart),
+		textEnd = text.slice(originalSelectionStart),
+		startLines = textStart.split("\n"),
+		currentLine = startLines.pop().trimEnd(),
+		lastCharacter = currentLine[currentLine.length - 1],
+		previousLine,
+		lastPreviousCharacter = "",
+		currentIndentLength = 0,
+		index = 0
 
-			// Get the number of tab character at the beginning of the line.
-			while (currentLine.charAt(index++) === "\t") {
-				currentIndentLength++
-			}
+	if (startLines.length > 0) {
+		previousLine = startLines.pop().trimEnd()
+		lastPreviousCharacter = previousLine[previousLine.length - 1]
+	}
 
-			if (["{", "(", "["].indexOf(lastCharacter) !== -1) {
-				currentIndentLength++
-			} else if (["}", ")", "]"].indexOf(lastCharacter) !== -1) {
-				currentIndentLength--
-			} else if (["+", "-", ".", ","].indexOf(lastCharacter) !== -1) {
-				if (
-					["+", "-", ".", ","].indexOf(lastPreviousCharacter) !==
-					["+", "-", ".", ","].indexOf(lastCharacter)
-				) {
-					currentIndentLength++
-				}
-			}
-			if (currentIndentLength < 0) {
-				currentIndentLength = 0
-			}
+	// Get the number of tab character at the beginning of the line.
+	while (currentLine.charAt(index++) === "\t") {
+		currentIndentLength++
+	}
 
-			theValue.value = `${textStart}\n${"\t".repeat(
-				currentIndentLength,
-			)}${textEnd}`
-			event.target.value = theValue.value // required to make the cursor stay in place.
-			event.target.selectionEnd = event.target.selectionStart =
-				originalSelectionStart + 1 + currentIndentLength
-		},
-		tabber = function (event) {
-			/* enable tab caracter */
-			const text = theValue.value,
-				originalSelectionStart = event.target.selectionStart,
-				textStart = text.slice(0, originalSelectionStart),
-				textEnd = text.slice(originalSelectionStart)
+	if (["{", "(", "["].indexOf(lastCharacter) !== -1) {
+		currentIndentLength++
+	} else if (["}", ")", "]"].indexOf(lastCharacter) !== -1) {
+		currentIndentLength--
+	} else if (["+", "-", ".", ","].indexOf(lastCharacter) !== -1) {
+		if (
+			["+", "-", ".", ","].indexOf(lastPreviousCharacter) !==
+			["+", "-", ".", ","].indexOf(lastCharacter)
+		) {
+			currentIndentLength++
+		}
+	}
+	if (currentIndentLength < 0) {
+		currentIndentLength = 0
+	}
 
-			theValue.value = `${textStart}\t${textEnd}`
-			event.target.value = theValue.value // required to make the cursor stay in place.
-			event.target.selectionEnd = event.target.selectionStart =
-				originalSelectionStart + 1
-		},
-		sync_scroll = function () {
-			/* Scroll result to scroll coords of event - sync with textarea */
-			pre.value.scrollTop = inp.value.scrollTop
-			pre.value.scrollLeft = inp.value.scrollLeft
-		},
-		autofillTriggers = computed(() => {
-			if (props.language === "latex") {
-				return latexTriggers
-			} else if (props.language === "javascript") {
-				return javascriptTriggers
-			}
-			return ()=>{}
-		}),
-		autofill = function (event) {
-			// Test the three letters triggers.
-			const applied = autofill_do(event, 3)
+	// Add the return and optionaly the tab character
+	theValue.value = `${textStart}\n${"\t".repeat(currentIndentLength)}${textEnd}`
 
-			if (!applied) {
-				autofill_do(event, 2)
-			}
-		},
-		autofill_do = function (event, length) {
-			const originalSelectionStart = event.target.selectionStart,
-				textStart = theValue.value.slice(0, originalSelectionStart),
-				textEnd = theValue.value.slice(originalSelectionStart),
-				trigger = textStart.slice(-length)
+	// Update the caret position on next update
+	nextTick(() => {
+		target.selectionEnd = target.selectionStart =
+			originalSelectionStart + 1 + currentIndentLength
+	})
 
-			if (props.language === "latex") {
-				// must be in math mode
-				if (
-					textStart.split("\\(").length -
-						textStart.split("\\)").length !==
-						1 &&
-					textStart.split("\\[").length -
-						textStart.split("\\]").length !==
-						1
-				) {
-					// TODO:  if not in math mode, may have some "text trigger" ?
-					return false
-				}
-			}
-			if (Object.hasOwn(autofillTriggers.value, trigger)) {
-				let pos = 0
-				if (typeof autofillTriggers.value[trigger] === "function") {
-					const [txt1, txt2] = autofillTriggers.value[trigger](
-						textStart,
-						textEnd,
-					)
-					theValue.value = `${txt1}${txt2}`
-					pos = txt1.length
-				} else {
-					// It's a code action.
-					theValue.value = `${textStart.slice(
-						0,
-						textStart.length - trigger.length,
-					)}${autofillTriggers.value[trigger][0]}${
-						autofillTriggers.value[trigger][1]
-					}${textEnd}`
-					pos = event.target.selectionStart =
-						originalSelectionStart +
-						autofillTriggers.value[trigger][0].length -
-						trigger.length
-				}
+}
 
-				// Update the caret position
-				event.target.value = theValue.value
-				event.target.selectionEnd = pos
-				return true
-			}
+/**
+ * Add a tab character on tab key
+ * @param event
+ */
+function tabber(event: KeyboardEvent) {
+	// Target is the textarea
+	const target = event.target as HTMLTextAreaElement
+
+	/* enable tab character */
+	const text = theValue.value,
+		originalSelectionStart = target.selectionStart,
+		textStart = text.slice(0, originalSelectionStart),
+		textEnd = text.slice(originalSelectionStart)
+
+	// Add the tab character
+	theValue.value = `${textStart}\t${textEnd}`
+
+	// Update the caret positoin on next update
+	nextTick(() => {
+		target.selectionEnd = target.selectionStart =
+			originalSelectionStart + 1
+	})
+}
+
+/**
+ * Synchronize the scroll of the textarea and the pre
+ */
+function sync_scroll() {
+	/* Scroll result to scroll coords of event - sync with textarea */
+	pre.value.scrollTop = inp.value.scrollTop
+	pre.value.scrollLeft = inp.value.scrollLeft
+}
+
+/**
+ * Get the autofill triggers (2 or three letters) based on the language
+ *
+ */
+const autofillTriggers = computed<TriggersObject>(() => {
+	if (props.language === "latex") {
+		return latexTriggers
+	} else if (props.language === "javascript") {
+		return javascriptTriggers
+	}
+	return {}
+})
+
+// On keydown, grab the selected text.
+// TODO: make a better "selectedText" to handle also wrapping with math attributes ?
+const selectedText = ref("")
+function grabSelectedText(event: KeyboardEvent) {
+	const target = event.target as HTMLTextAreaElement
+	const start = target.selectionStart,
+		end = target.selectionEnd
+	selectedText.value = theValue.value.slice(start, end)
+}
+
+/**
+ * Autofill the code based on the triggers
+ * @param event
+ */
+function autofill(event: KeyboardEvent) {
+	// If the key is a wrapper key: (, [ or {
+	if (["(", "[", "{"].indexOf(event.key) !== -1) {
+		autofill_wrap(event)
+		return
+	}
+
+	// Test the three letters triggers.
+	const applied = autofill_do(event, 3)
+
+	// Test the two letters triggers
+	if (!applied) autofill_do(event, 2)
+}
+function autofill_wrap(event: KeyboardEvent) {
+	// Get the target
+	const target = event.target as HTMLTextAreaElement
+
+	// Get the text before and after the caret
+	const originalSelectionStart = target.selectionStart,
+		textStart = theValue.value.slice(0, originalSelectionStart),
+		textEnd = theValue.value.slice(originalSelectionStart)
+
+	// Get the ending wrapper
+	const wrapperEnd = event.key === "(" ? ")" : event.key === "[" ? "]" : "}"
+
+	// Add the wrapper
+	theValue.value = `${textStart}${selectedText.value}${wrapperEnd}${textEnd}`
+
+	// Update the caret position on nextTick
+	nextTick(() => {
+		target.selectionEnd = target.selectionStart =
+			originalSelectionStart + 1 + selectedText.value.length
+	})
+}
+function autofill_do(event: KeyboardEvent, length: number) {
+	// Get the input / textarea target
+	const target = event.target as HTMLTextAreaElement
+
+	// Get the text before and after the caret
+	const originalSelectionStart = target.selectionStart,
+		textStart = theValue.value.slice(0, originalSelectionStart),
+		textEnd = theValue.value.slice(originalSelectionStart),
+		trigger = textStart.slice(-length)
+
+	// In LaTeX mode, we must be in math mode
+	if (props.language === "latex") {
+		// must be in math mode
+		if (
+			textStart.split("\\(").length -
+			textStart.split("\\)").length !== 1 &&
+			textStart.split("\\[").length -
+			textStart.split("\\]").length !== 1
+		) {
 			return false
 		}
-	const update = () => {
-		sync_scroll()
-		// emits("update:modelValue", theValue)
-		emits("update", theValue.value)
 	}
-	const areaHeight = computed(() => {
-		const r = (theValue.value??"").split("\n").length + 2
-		return `${0.5 + Math.max(+currentRows.value, r) * 1.4 + 0.5}rem`
-	})
-	onMounted(() => {
-		if (props.focus) focus()
 
-		// Modify the height to fit everything.
-		currentRows.value = Math.max(
-			(theValue.value??"").split("\n").length + 2,
-			+props.rows,
-		)
-	})
+	// Test the trigger
+	if (Object.hasOwn(autofillTriggers.value, trigger)) {
+		let pos = 0
+		if (typeof autofillTriggers.value[trigger] === "function") {
+			const [txt1, txt2] = (autofillTriggers.value[trigger] as TriggerFunction)(
+				textStart,
+				textEnd
+			)
+			theValue.value = `${txt1}${txt2}`
+			pos = txt1.length
+		} else {
+			// It's a code action.
+			theValue.value = `${textStart.slice(
+				0,
+				textStart.length - trigger.length
+			)}${autofillTriggers.value[trigger][0]}${
+				autofillTriggers.value[trigger][1]
+			}${textEnd}`
+			pos = target.selectionStart =
+				originalSelectionStart +
+				autofillTriggers.value[trigger][0].length -
+				trigger.length
+		}
+
+		// Update the caret position on nextTick
+		nextTick(() => {
+			target.selectionEnd = pos
+		})
+
+		// Trigger applied
+		return true
+	}
+
+	// No trigger found
+	return false
+}
+
+/**
+ * Synchronise the front and back textarea scroll position
+ */
+function update() {
+	sync_scroll()
+}
+
+
+/**
+ * Update the height of the textarea to fit the content
+ */
+const areaHeight = computed(() => {
+	const r = (theValue.value ?? "").split("\n").length + 2
+	return `${0.5 + Math.max(+currentRows.value, r) * 1.4 + 0.5}rem`
+})
+
+/**
+ * On mounted, set the focus if asked
+ * and update the height to fit everything.
+ */
+onMounted(() => {
+	if (props.focus) focus()
+
+	// Modify the height to fit everything.
+	currentRows.value = Math.max(
+		(theValue.value ?? "").split("\n").length + 2,
+		+props.rows
+	)
+})
 </script>
 <template>
 	<div class="w-full">
@@ -221,14 +334,15 @@ defineOptions({ inheritAttrs: false })
 			<textarea
 				ref="inp"
 				v-model="theValue"
+				:autofocus="props.focus"
 				class="w-full"
 				v-bind="$attrs"
-				:autofocus="props.focus"
 				@input="update"
-				@keyup="autofill($event)"
+				@keyup="autofill"
 				@scroll="sync_scroll"
-				@keydown.tab.prevent="tabber($event)"
-				@keydown.enter.prevent="indenter($event)"
+				@keydown="grabSelectedText"
+				@keydown.tab.prevent="tabber"
+				@keydown.enter.prevent="indenter"
 			/>
 			<pre ref="pre"><code
 				class="w-full"
@@ -237,8 +351,8 @@ defineOptions({ inheritAttrs: false })
 		</div>
 
 		<div
-			class="flex justify-center w-full mt-2"
 			v-if="resizeable"
+			class="flex justify-center w-full mt-2"
 		>
 			<button
 				class="text-xs"
@@ -251,88 +365,88 @@ defineOptions({ inheritAttrs: false })
 </template>
 
 <style scoped>
-	.code-input {
-		/* Allow other elems to be inside */
-		position: relative;
-		top: 0;
-		left: 0;
-		display: block;
-		/* Only scroll inside elems */
-		overflow: hidden;
+.code-input {
+	/* Allow other elems to be inside */
+	position: relative;
+	top: 0;
+	left: 0;
+	display: block;
+	/* Only scroll inside elems */
+	overflow: hidden;
 
-		/* Normal inline styles */
-		padding: 0;
-		margin: 0;
-		width: 100%;
-		min-height: v-bind(areaHeight);
-		/*height: 250px;*/
+	/* Normal inline styles */
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	min-height: v-bind(areaHeight);
+	/*height: 250px;*/
 
-		/*font-size: inherit;*/
-		font-family: monospace;
-		line-height: inherit;
-		tab-size: 2;
-		caret-color: darkgrey;
-	}
+	/*font-size: inherit;*/
+	font-family: monospace;
+	line-height: inherit;
+	tab-size: 2;
+	caret-color: darkgrey;
+}
 
-	.code-input textarea,
-	.code-input pre {
-		/* Both elements need the same text and space styling so they are directly on top of each other */
-		margin: 0 !important;
-		padding: 0.6rem !important;
-		border: 0;
-		width: 100%;
-		height: 100%;
-		white-space: inherit;
-	}
+.code-input textarea,
+.code-input pre {
+	/* Both elements need the same text and space styling so they are directly on top of each other */
+	margin: 0 !important;
+	padding: 0.6rem !important;
+	border: 0;
+	width: 100%;
+	height: 100%;
+	white-space: inherit;
+}
 
-	.code-input textarea,
-	.code-input pre,
-	.code-input pre * {
-		/* Also add text styles to highlighing tokens */
-		font-size: inherit !important;
-		font-family: inherit !important;
-		line-height: inherit !important;
-		tab-size: inherit !important;
-	}
+.code-input textarea,
+.code-input pre,
+.code-input pre * {
+	/* Also add text styles to highlighing tokens */
+	font-size: inherit !important;
+	font-family: inherit !important;
+	line-height: inherit !important;
+	tab-size: inherit !important;
+}
 
-	.code-input textarea,
-	.code-input pre {
-		/* In the same place */
-		position: absolute;
-		top: 0;
-		left: 0;
-	}
+.code-input textarea,
+.code-input pre {
+	/* In the same place */
+	position: absolute;
+	top: 0;
+	left: 0;
+}
 
-	/* Move the textarea in front of the result */
-	.code-input textarea {
-		z-index: 1;
-	}
+/* Move the textarea in front of the result */
+.code-input textarea {
+	z-index: 1;
+}
 
-	.code-input pre {
-		z-index: 0;
-	}
+.code-input pre {
+	z-index: 0;
+}
 
-	/* Make textarea almost completely transparent */
-	.code-input textarea {
-		color: transparent;
-		background: transparent;
-		caret-color: inherit !important; /* Or choose your favourite color */
-	}
+/* Make textarea almost completely transparent */
+.code-input textarea {
+	color: transparent;
+	background: transparent;
+	caret-color: inherit !important; /* Or choose your favourite color */
+}
 
-	/* Can be scrolled */
-	.code-input textarea,
-	.code-input pre {
-		overflow: auto !important;
+/* Can be scrolled */
+.code-input textarea,
+.code-input pre {
+	overflow: auto !important;
 
-		white-space: inherit;
-		word-spacing: normal;
-		word-break: normal;
-		word-wrap: normal;
-	}
+	white-space: inherit;
+	word-spacing: normal;
+	word-break: normal;
+	word-wrap: normal;
+}
 
-	/* No resize on textarea; stop outline */
-	.code-input textarea {
-		resize: none;
-		outline: none !important;
-	}
+/* No resize on textarea; stop outline */
+.code-input textarea {
+	resize: none;
+	outline: none !important;
+}
 </style>

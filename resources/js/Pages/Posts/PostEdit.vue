@@ -51,7 +51,7 @@ const deletePost = function() {
 }
 </script>
 <template>
-	<article class="my-5">
+	<article class="scolcours-container my-5">
 		<header class="flex justify-between items-baseline mb-6">
 			<div>
 				<h1>
@@ -90,8 +90,7 @@ const deletePost = function() {
 				</confirm-button>
 			</div>
 		</header>
-
-
+		
 		<div>
 			<form-maker
 				v-model="thePost.title"
@@ -112,11 +111,6 @@ const deletePost = function() {
 					{{ name }}
 				</button>
 			</div>
-
-			<form-maker
-				v-model="thePost.questionsGrid"
-				label="Grille des questions"
-			/>
 
 			<div class="flex flex-col">
 				<form-maker

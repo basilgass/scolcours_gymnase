@@ -115,7 +115,7 @@ function addScriptsButtons() {
 </script>
 
 <template>
-	<article class="my-5">
+	<article class="my-5 scolcours-container">
 		<!-- split view system -->
 		<split-view v-model="displayStyle" />
 

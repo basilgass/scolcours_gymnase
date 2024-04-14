@@ -8,7 +8,8 @@ import { generatedQuestionInterface, generatorResultInterface } from "@/types"
 
 export function useGenerator(generator: GeneratorInterface | ComputedRef<GeneratorInterface>): generatorResultInterface {
 	function question(
-		value?: Ref<generatedQuestionInterface> | generatedQuestionInterface
+		value?: Ref<generatedQuestionInterface> | generatedQuestionInterface,
+
 	): QuestionMinInterface {
 		if (value === undefined) value = randomQuestion()
 

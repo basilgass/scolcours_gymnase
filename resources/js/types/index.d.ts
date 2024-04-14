@@ -50,6 +50,20 @@ export interface flashLink {
 	external?: boolean
 }
 
+type flashType = "success" | "info" | "error"
+
+interface flashMessageInterface {
+	id: number
+	message: string
+	type: flashType
+	config: flashConfig
+}
+
+interface flashConfig {
+	link?: { label: string, external: boolean, url: string }
+	timeout?: number
+}
+
 export interface flashInterface {
 	add: (
 		message: string,
@@ -57,9 +71,9 @@ export interface flashInterface {
 		type?: string,
 		timeout?: number
 	) => void
-	success: (message: string, link?: flashLink, timeout?: number) => void
-	info: (message: string, link?: flashLink, timeout?: number) => void
-	error: (message: string, link?: flashLink, timeout?: number) => void
+	success: (message: string, config?: flashConfig) => void
+	info: (message: string, config?: flashConfig) => void
+	error: (message: string, config?: flashConfig) => void
 }
 
 export interface userAnswerInterface {

@@ -24,9 +24,9 @@ class ChallengeController extends Controller
 		}
 
 		return Inertia::render('Challenges/ChallengeShow', [
-			"theme" => ThemeResource::make($theme),
+			"theme"     => ThemeResource::make($theme),
 			"challenge" => ChallengeResource::make($challenge),
-			"teams" => Team::all()
+			"teams"     => Team::all()
 		]);
 	}
 
@@ -36,14 +36,14 @@ class ChallengeController extends Controller
 			'title' => ['string', 'min:5']
 		]);
 
-		$slug = Str::slug($request['title']);
+		$slug = Str::slug($request[ 'title' ]);
 		if (Challenge::where('slug', $slug)->first()) {
 			return redirect()->back();
 		}
 
 		$challenge = $chapter->challenges()->create([
-			'title' => $validation['title'],
-			'slug' => $slug
+			'title' => $validation[ 'title' ],
+			'slug'  => $slug
 		]);
 
 		$challenge->blocks()->create();
@@ -54,31 +54,32 @@ class ChallengeController extends Controller
 	public function edit(Challenge $challenge)
 	{
 		return Inertia::render("Challenges/ChallengeEdit", [
+			'theme'     => ThemeResource::make($challenge->chapter->theme),
 			'challenge' => ChallengeResource::make($challenge)
 		]);
 	}
 
 	public function update(Challenge $challenge, Request $request)
 	{
-		unset($request['block']);
+		unset($request[ 'block' ]);
 
 		// Save the challenge configuration
 		$validation = $request->validate([
-			'slug' => ['required', 'min:2'],
-			'title' => ['required', 'min:2'],
-			'active' => ['boolean'],
-//			'generator' => ['string', 'min:2'],
-//			'output' => ['string', 'min:2'],
-			'nextLevelAfter' => ['numeric', 'min:0'],
-//			'parameters' => ['nullable', 'string'],
-//			'keyboard' => ['nullable', 'string'],
-			'duration' => ['numeric', 'min:0'],
-			'lives' => ['numeric', 'min:0'],
+			'slug'              => ['required', 'min:2'],
+			'title'             => ['required', 'min:2'],
+			'active'            => ['boolean'],
+			//			'generator' => ['string', 'min:2'],
+			//			'output' => ['string', 'min:2'],
+			'nextLevelAfter'    => ['numeric', 'min:0'],
+			//			'parameters' => ['nullable', 'string'],
+			//			'keyboard' => ['nullable', 'string'],
+			'duration'          => ['numeric', 'min:0'],
+			'lives'             => ['numeric', 'min:0'],
 			'bonusScoreTrigger' => ['numeric', 'min:0', 'nullable'],
-			'bonusScoreLife' => ['numeric', 'min:0'],
-			'bonusScoreTime' => ['numeric', 'min:0'],
-			'bonusLevelLife' => ['numeric', 'min:0'],
-			'bonusLevelTime' => ['numeric', 'min:0'],
+			'bonusScoreLife'    => ['numeric', 'min:0'],
+			'bonusScoreTime'    => ['numeric', 'min:0'],
+			'bonusLevelLife'    => ['numeric', 'min:0'],
+			'bonusLevelTime'    => ['numeric', 'min:0'],
 		]);
 //
 //		if ($validation['parameters'] === null) {
@@ -88,24 +89,24 @@ class ChallengeController extends Controller
 
 		// Update the generators
 		$validation = $request->validate([
-			'generators' => ['array'],
-			'generators.*.id' => ['exists:App\Models\Generator,id'],
-			'generators.*.title' => ['string', 'nullable'],
-			'generators.*.slug' => ['string',],
-			'generators.*.body' => ['string', 'nullable'],
+			'generators'            => ['array'],
+			'generators.*.id'       => ['exists:App\Models\Generator,id'],
+			'generators.*.title'    => ['string', 'nullable'],
+			'generators.*.slug'     => ['string', 'min:3'],
+			'generators.*.body'     => ['string', 'nullable'],
 			'generators.*.template' => ['string', 'nullable'],
 			'generators.*.keyboard' => ['string'],
-			'generators.*.code' => ['string'],
+			'generators.*.code'     => ['string'],
 		]);
 
-		foreach ($validation['generators'] as $generator) {
-			Generator::find($generator['id'])?->update([
-				"title" => $generator['title']??'',
-				"slug" => $generator['slug']??'',
-				"body" => $generator['body']??'',
-				"template" => $generator['template']??'',
-				"keyboard" => $generator['keyboard']??'',
-				"code" => $generator['code']
+		foreach ($validation[ 'generators' ] as $generator) {
+			Generator::find($generator[ 'id' ])?->update([
+				"title"    => $generator[ 'title' ] ?? '',
+				"slug"     => $generator[ 'slug' ] ?? '',
+				"body"     => $generator[ 'body' ] ?? '',
+				"template" => $generator[ 'template' ] ?? '',
+				"keyboard" => $generator[ 'keyboard' ] ?? '',
+				"code"     => $generator[ 'code' ]
 			]);
 		}
 
@@ -128,9 +129,9 @@ class ChallengeController extends Controller
 		// Create the generator
 		$generator = Generator::create([
 			'theme_id' => $challenge->chapter->theme->id,
-			'slug' => $challenge->chapter->slug . '-' . $challenge->slug .'-' . $order,
-			'title' => '',
-			'code' => 'return {question: "", answer: ""}',
+			'slug'     => $challenge->chapter->slug . '-' . $challenge->slug . '-' . $order,
+			'title'    => '',
+			'code'     => 'return {question: "", answer: ""}',
 		]);
 
 		return $this->attachGenerator($challenge, $generator);
@@ -157,7 +158,7 @@ class ChallengeController extends Controller
 	{
 		$challenge->generators()->detach($generator);
 
-		if ($request['destroy']) {
+		if ($request[ 'destroy' ]) {
 			$generator->delete();
 		}
 	}
@@ -165,15 +166,15 @@ class ChallengeController extends Controller
 	public function updateGeneratorsOrder(Request $request, Challenge $challenge)
 	{
 		$validation = $request->validate([
-			'order' => ['array'],
-			'order.*.id' => ['exists:App\Models\Generator'],
+			'order'         => ['array'],
+			'order.*.id'    => ['exists:App\Models\Generator'],
 			'order.*.order' => ['int', 'min:1']
 		]);
 
 		// Update the order
-		foreach ($request['order'] as $value) {
-			$challenge->generators()->updateExistingPivot($value['id'], [
-				"order" => $value['order']
+		foreach ($request[ 'order' ] as $value) {
+			$challenge->generators()->updateExistingPivot($value[ 'id' ], [
+				"order" => $value[ 'order' ]
 			]);
 		}
 
@@ -211,9 +212,9 @@ class ChallengeController extends Controller
 		if (Auth::User()?->admin) {
 			$challenge->sessions()->create(
 				[
-					"token" => Str::random(4),
-					"open" => true,
-					"user_id" => Auth::User()->id,
+					"token"    => Str::random(4),
+					"open"     => true,
+					"user_id"  => Auth::User()->id,
 					"duration" => 5000
 				]
 			);

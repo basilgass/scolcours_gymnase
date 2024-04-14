@@ -4,47 +4,57 @@ import MainFooter from "@/Components/MainFooter.vue"
 import { computed, PropType, provide, ref } from "vue"
 import FlashMessage from "@/Components/Ui/FlashMessage.vue"
 import { Head, usePage } from "@inertiajs/vue3"
-import { ThemeInterface } from "@/types"
+import { flashConfig, flashMessageInterface, ThemeInterface } from "@/types"
 
 defineProps({
-		theme: {
-			type: Object as PropType<ThemeInterface>,
-			default: () => {
-				return { title: "Scolcours", slug: "main" }
-			},
-		},
-	})
-
-	const flashMessages = ref([]),
-		addFlashMessage = function (
-			message,
-			link,
-			type = "success",
-			timeout = 2000,
-		) {
-			flashMessages.value.push({ message, link, type, timeout })
+	theme: {
+		type: Object as PropType<ThemeInterface>,
+		default: () => {
+			return { title: "Scolcours", slug: "main" }
 		}
-	// TODO: add link in flash message
-	// flash.add(message, link, timeout)
-	provide("flash", {
-		add: addFlashMessage,
-		success: (message, link, timeout) =>
-			addFlashMessage(message, link, "success", timeout),
-		info: (message, link, timeout) =>
-			addFlashMessage(message, link, "info", timeout),
-		error: (message, link, timeout) =>
-			addFlashMessage(message, link, "error", timeout),
-	})
+	}
+})
+
+const flashMessages = ref<flashMessageInterface[]>([])
+
+function addFlashMessage(
+	message,
+	type: "success" | "info" | "error",
+	config: flashConfig
+) {
+	flashMessages.value.push({
+			id: null,
+			message,
+			type,
+			config: {
+				timeout: 1000*2,
+				...config
+			}
+		}
+	)
+}
+
+// TODO: add link in flash message
+// flash.add(message, link, timeout)
+provide("flash", {
+	add: addFlashMessage,
+	success: (message, config: flashConfig) =>
+		addFlashMessage(message, "success", config),
+	info: (message, config: flashConfig) =>
+		addFlashMessage(message, "info", config),
+	error: (message, config: flashConfig) =>
+		addFlashMessage(message, "error", config)
+})
 
 
 const pageTitle = computed(() => {
-	if(usePage()?.props?.chapter) {
+	if (usePage()?.props?.chapter) {
 		return usePage().props.chapter.meta_title
 			? usePage().props.chapter.meta_title
 			: usePage().props.chapter.title
 	}
 
-	return usePage().props.theme?usePage().props.theme.title:null
+	return usePage().props.theme ? usePage().props.theme.title : null
 })
 
 </script>
@@ -81,16 +91,12 @@ const pageTitle = computed(() => {
 					'bg-amber-400/80 text-black': message.type === 'info',
 					'bg-white text-black': message.type === undefined,
 				}"
-				:link="message.link"
-				:timeout="message.timeout"
-				@close="
-					flashMessages = flashMessages.filter((x) => x.id !== $event)
-				"
+				:link="message.config?.link"
+				:timeout="message.config.timeout"
+				@close=" flashMessages = flashMessages.filter((x) => x.id !== $event)"
 				@open="message.id = $event"
-			>
-				{{ message.message }}
-				<template />
-			</flash-message>
+				:message="message.message"
+			/>
 		</div>
 	</div>
 </template>

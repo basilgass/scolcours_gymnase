@@ -1,11 +1,13 @@
-<script lang="ts" setup>
+<script generic="T" lang="ts" setup>
 import { computed, PropType, ref } from "vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import { router } from "@inertiajs/vue3"
 
+// TODO: add a group by / (theme) tag to the filtered list
+
 const props = defineProps({
 	title: { type: String, required: true },
-	list: { type: Object as PropType<(object | string)[]>, required: true },
+	list: { type: Object as PropType<T[]>, required: true },
 	routeName: { type: String, default: "" },
 	routeData: { type: Function, default: () => [] },
 	itemTitle: { type: Function, default: (item) => item?.title },
@@ -17,12 +19,10 @@ const props = defineProps({
 })
 
 
-const filteredList = computed<(object | string)[]>(() => {
+const filteredList = computed<T[]>(() => {
 	const checkString = selectedList.value.trim().toLowerCase()
 
-	if (checkString === "") {
-		return props.list
-	}
+	if (checkString === "") return props.list
 
 	return props.list.filter((item) =>
 		Object.values(item)
@@ -40,11 +40,11 @@ function itemClicked(item) {
 }
 
 defineSlots<{
-	card(props: { item: object | string }): unknown,
+	card(props: { item: T }): unknown,
 	button()
 }>()
 
-const emits = defineEmits(['enter'])
+const emits = defineEmits(["enter"])
 </script>
 <template>
 	<div>
@@ -72,9 +72,7 @@ const emits = defineEmits(['enter'])
 				@enter="emits('enter', filteredList)"
 			/>
 
-			<div
-				:class="props.listClass"
-			>
+			<div :class="props.listClass">
 				<transition-group name="list">
 					<div
 						v-for="(item, index) in filteredList"

@@ -35,6 +35,7 @@ require __DIR__ . '/illustrationsRoutes.php'; // 19.03.2024
 require __DIR__ . '/formulasRoutes.php'; // 19.03.2024
 require __DIR__ . '/postsRoutes.php'; // 19.03.2024
 require __DIR__ . '/scoresRoutes.php';
+require __DIR__ . '/generatorsRoutes.php';
 require __DIR__ . '/challengesRoutes.php';
 require __DIR__ . '/teamsRoutes.php';
 require __DIR__ . '/decksRoutes.php';

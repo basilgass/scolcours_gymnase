@@ -3,25 +3,37 @@ Interface pour les "flash message"
 A utiliser en conjonction avec
 const flash = inject('flash')
 -->
-<script setup lang="ts">
-import { onMounted, ref } from "vue"
+<script lang="ts" setup>
+import { onMounted, PropType, ref, useSlots } from "vue"
+
+const slots = useSlots()
+const flashMessage = ref<string>(slots.default as unknown as string)
 
 const emits = defineEmits(["open", "close"])
-	const props = defineProps({
-		timeout: { type: Number, default: 1000 * 60 },
-		link: { type: Object, default: () => {} },
-	})
+const props = defineProps({
+	message: { type: String, default: "aucun message :(" },
+	timeout: { type: Number, default: 1000 * 5 },
+	link: {
+		type: Object as PropType<{ label: string, external: boolean, url: string }>, default: () => {
+		}
+	},
+	tex: { type: Boolean, default: false }
+})
 
-	let show = ref(true),
-		closeFlashMessage = function () {
-			show.value = false
-			emits("close", timeoutId)
-		},
-		timeoutId
-	onMounted(() => {
-		timeoutId = setTimeout(() => closeFlashMessage(), props.timeout)
-		emits("open", timeoutId)
-	})
+let show = ref(true),
+	closeFlashMessage = function() {
+		show.value = false
+		emits("close", timeoutId)
+	},
+	timeoutId
+
+
+
+onMounted(() => {
+
+	timeoutId = setTimeout(() => closeFlashMessage(), props.timeout)
+	emits("open", timeoutId)
+})
 </script>
 
 <template>
@@ -31,15 +43,10 @@ const emits = defineEmits(["open", "close"])
 			class="rounded px-10 py-5 flex flex-col gap-6 relative"
 			v-bind="$attrs"
 		>
-			<button
-				class="absolute r-0 t-0 p-1"
-				@click="closeFlashMessage"
-			>
-				<i class="bi bi-x-lg" />
-			</button>
+			<!-- Message to display -->
+			<div v-katex.auto="message" />
 
-			<slot />
-
+			<!-- add link if there is one -->
 			<div
 				v-if="props.link"
 				class="flex gap-4 hover:underline"
@@ -60,6 +67,14 @@ const emits = defineEmits(["open", "close"])
 					{{ props.link.label }}
 				</Link>
 			</div>
+
+			<!-- close button -->
+			<button
+				class="absolute right-1 top-0"
+				@click="closeFlashMessage"
+			>
+				<i class="bi bi-x-lg text-xl hover:rotate-180" />
+			</button>
 		</div>
 	</transition>
 </template>

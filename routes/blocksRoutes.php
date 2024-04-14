@@ -39,6 +39,8 @@ Route::middleware('can:admin')->group(function () {
 		->name('blocks.moveTo.post');
 	Route::patch('post/{post}/moveTo/chapter/{chapter}', [PostController::class, 'movePostToChapter'])
 		->name('posts.moveTo.chapter');
+	Route::patch('blocks/{block}/move', [BlockController::class, 'move'])
+		->name('blocks.move');
 
 
 	// Delete

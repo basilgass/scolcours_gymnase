@@ -1,10 +1,10 @@
-type TriggersFunction = (
+export type TriggerFunction = (
 	textBefore: string,
-	textAfter: string,
+	textAfter: string
 ) => [string, string]
 
-type TriggersObject = {
-	[key: string]: [string, string] | TriggersFunction
+export type TriggersObject = {
+	[key: string]: [string, string] | TriggerFunction
 }
 
 export const latexTriggers: TriggersObject = {
@@ -17,19 +17,19 @@ export const latexTriggers: TriggersObject = {
 	"=>": ["\\implies ", ""],
 	"**": ["\\cdot ", ""],
 	"==": ["&= ", ""],
-	'""': ["\\text{ ", " }"],
+	"\"\"": ["\\text{ ", " }"],
 	"<=": ["\\leq ", ""],
 	">=": ["\\geq ", ""],
 	",.": (textBefore, textAfter) => {
 		return [
 			wrapLastWord(textBefore.slice(0, -2), " \\overrightarrow{", "} "),
-			textAfter,
+			textAfter
 		]
 	},
 	",,": (textBefore, textAfter) => {
 		return [
 			wrapLastWord(textBefore.slice(0, -2), " \\overline{", "} "),
-			textAfter,
+			textAfter
 		]
 	},
 	"(.": ["\\left(", "\\right)"],
@@ -37,26 +37,26 @@ export const latexTriggers: TriggersObject = {
 	TT: (textBefore, textAfter) => {
 		return [
 			wrapLastWord(textBefore.slice(0, -2), " \\text{", "} "),
-			textAfter,
+			textAfter
 		]
 	},
 	"//": (textBefore, textAfter) => {
 		return [
 			wrapLastWord(textBefore.slice(0, -2), " \\frac{", "}{"),
-			"}" + textAfter,
+			"}" + textAfter
 		]
-	},
+	}
 }
 
 export const javascriptTriggers: TriggersObject = {
 	PRN: ["PiMath.Random.number(", ")"],
-	PRP: ["PiMath.Random.polynom({degree: ", "})"],
+	PRP: ["PiMath.Random.polynom({degree: ", "})"]
 }
 
 function wrapLastWord(
 	text: string,
 	wrapperBefore: string,
-	wrapperAfter: string,
+	wrapperAfter: string
 ): string {
 	const txt = text.split(/(\s|\n|\t|\r|\\\[|\\\()/g)
 
