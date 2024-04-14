@@ -1,10 +1,14 @@
 <script setup lang="ts">
 import LayoutMain from "@/Layouts/LayoutMain.vue"
+import Test from "@/Components/test.vue"
+import { ref } from "vue"
 
 defineOptions({ layout: LayoutMain })
+
+const v = ref("")
 </script>
 <template>
-	<div class="scolcours-container">
+	<section class="scolcours-container">
 		<h1 class="text-3xl pt-5 mb-10">
 			Admin dashboard
 		</h1>
@@ -66,5 +70,9 @@ defineOptions({ layout: LayoutMain })
 				widgets
 			</Link>
 		</div>
-	</div>
+
+		<div>
+			<test v-model="v" />
+		</div>
+	</section>
 </template>
