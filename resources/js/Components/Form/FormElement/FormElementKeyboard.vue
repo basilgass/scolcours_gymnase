@@ -7,12 +7,7 @@ import "prismjs/components/prism-json"
 import { checkersList, getChecker } from "@/Composables/checkersConfig"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 
-const theValue = defineModel<string>({
-	set(value) {
-		return value ?? ""
-	},
-	required: true
-})
+const theValue = defineModel<string>({ required: true })
 
 defineOptions({
 	inheritAttrs: false
@@ -89,7 +84,6 @@ const tabber = () => {
 }
 
 const currentRows = computed(() => {
-	console.log(props.rows, theValue.value)
 	return Math.max(props.rows, theValue.value.split("\n").length + 1)
 })
 

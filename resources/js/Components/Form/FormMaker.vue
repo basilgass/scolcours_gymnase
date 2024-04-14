@@ -47,6 +47,7 @@ const props = withDefaults(defineProps<FormMakerPropsType>(), {
 // Define the model value.
 const theValue = defineModel<string | number | boolean | null>({
 	set(value) {
+		console.log("FORMMAKER", props.type, value)
 		if(props.type==='switch' || props.type==='checkbox')return !!value
 
 		if(props.type==='id' || props.type==='number') return +value
@@ -117,31 +118,7 @@ const placeholderValue = computed(() => {
 
 // On input update, emit the new value in correct format
 function updateInput(e) {
-	// TODO: FormMaker - updateInput disabled with new defineModel - does is still work ?
-	// if (
-	// 	props.type === "text" ||
-	// 	props.type === "email" ||
-	// 	props.type === "password" ||
-	// 	props.type === "id" ||
-	// 	props.type === "textarea" ||
-	// 	props.type === "fraction"
-	// ) {
-	// 	emits("update:modelValue", e.target.value)
-	//
-	// 	return
-	// } else if (props.type === "number") {
-	// 	emits(
-	// 		"update:modelValue",
-	// 		e.target.value === "" ? "" : parseFloat(e.target.value)
-	// 	)
-	// 	return
-	// } else if (props.type === "checkbox") {
-	// 	emits("update:modelValue", e.target.checked)
-	// 	return
-	// } else {
-	// 	emits("update:modelValue", e)
-	// 	return
-	// }
+	// TODO: updateInput ?
 }
 
 const TEXTAREA = ref(null)
