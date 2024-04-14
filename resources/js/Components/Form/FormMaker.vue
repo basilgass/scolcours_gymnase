@@ -1,21 +1,11 @@
 <script lang="ts" setup>
-import { ref } from "vue"
 
 /**
  * This component is used to generate a form input
  */
 
 // Define the model value.
-const theValue = defineModel<string | number | boolean | null>({
-	set(value) {
-		if (value === null) return ""
-
-		if (value === true) return ""
-
-		// Make sure it's a string
-		return `${value}`
-	}
-})
+const theValue = defineModel<string | number | boolean | null>()
 
 
 // Define the list of inputs that are text based
@@ -25,7 +15,6 @@ const theValue = defineModel<string | number | boolean | null>({
 // Define the emits
 
 // Get the root element
-const inputWrapper = ref(null)
 
 // Display the error message if any
 </script>
