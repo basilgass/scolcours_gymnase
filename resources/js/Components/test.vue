@@ -11,7 +11,6 @@ const theValue = defineModel<string | number>({
 
 <template>
 	<input
-		class="mt-20"
 		v-model="theValue"
 	>
 </template>

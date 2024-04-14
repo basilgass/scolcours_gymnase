@@ -15,23 +15,21 @@ import axios from "axios"
  */
 
 // Define the model value.
-const theValue = defineModel<string | number | boolean | null>()
-/**
- * {
- * 	set(value) {
- * 		if (props.type === "switch" || props.type === "checkbox") return !!value
- *
- * 		if (props.type === "id" || props.type === "number") return +value
- *
- * 		if (value === null) return ""
- *
- * 		if (value === true) return ""
- *
- * 		// Make sure it's a string
- * 		return `${value}`
- * 	}
- * }
- */
+const theValue = defineModel<string | number | boolean | null>({
+	set(value) {
+		if (props.type === "switch" || props.type === "checkbox") return !!value
+
+		if (props.type === "id" || props.type === "number") return +value
+
+		if (value === null) return ""
+
+		if (value === true) return ""
+
+		// Make sure it's a string
+		return `${value}`
+	}
+})
+
 
 // Define the list of inputs that are text based
 const inputAsText = ["text", "email", "password", "id", "fraction"]

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import FormMaker from "@/Components/Form/FormMaker.vue"
+import Test from "@/Components/test.vue"
 
 const theValue = defineModel<string | number>({
 	set(value) {
@@ -12,8 +12,7 @@ const theValue = defineModel<string | number>({
 </script>
 
 <template>
-	<form-maker
-		class="mt-20"
+	<test
 		v-model="theValue"
 	/>
 </template>
