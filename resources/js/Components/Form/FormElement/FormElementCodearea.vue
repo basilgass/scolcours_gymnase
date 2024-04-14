@@ -11,7 +11,7 @@ import { javascriptTriggers, latexTriggers, TriggerFunction, TriggersObject } fr
 /**
  * The value of the code area
  */
-const theValue = defineModel<string>({ required: true, default: "" })
+const theValue = defineModel<string>()
 
 defineOptions({ inheritAttrs: false })
 

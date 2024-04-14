@@ -27,8 +27,7 @@ const theValue = defineModel<string | number | boolean | null>({
 
 		// Make sure it's a string
 		return `${value}`
-	},
-	required: true
+	}
 })
 
 

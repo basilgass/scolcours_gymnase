@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { computed } from "vue"
 
-const theValue = defineModel<boolean>({ required: true})
+const theValue = defineModel<boolean>()
 
 defineOptions({
 	inheritAttrs: false

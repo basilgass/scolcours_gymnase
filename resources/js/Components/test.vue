@@ -1,6 +1,11 @@
 <script setup lang="ts">
 
-const theValue = defineModel()
+const theValue = defineModel<string>({
+	set(value) {
+		// Make sure it's a string
+		return `${value}`
+	}
+})
 
 </script>
 
