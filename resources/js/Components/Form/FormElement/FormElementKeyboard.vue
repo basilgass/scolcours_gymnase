@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import { computed, onMounted, ref } from "vue"
 import "prismjs/themes/prism.css"
 import "prismjs/components/prism-latex"
@@ -7,100 +7,107 @@ import "prismjs/components/prism-json"
 import { checkersList, getChecker } from "@/Composables/checkersConfig"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 
-const theValue = defineModel<string>({required: true})
+const theValue = defineModel<string>({
+	set(value) {
+		return value ?? ""
+	},
+	required: true
+})
+
 defineOptions({
-		inheritAttrs: false,
-	})
+	inheritAttrs: false
+})
 
-	const inp = ref(null)
+const inp = ref(null)
 
-	function focusFn(select: boolean) {
-		inp.value.focus()
-		if (select === true) {
-			inp.value.select()
+function focusFn(select: boolean) {
+	inp.value.focus()
+	if (select === true) {
+		inp.value.select()
+	}
+}
+
+defineExpose({ focus: focusFn })
+const emits = defineEmits(["update"])
+const props = defineProps({
+	rows: { type: Number, default: 2 },
+	focus: { type: Boolean, default: false }
+})
+
+const update = () => {
+	emits("update", theValue.value)
+}
+
+onMounted(() => {
+	if (props.focus) focusFn(false)
+})
+
+const showKeyboardHelper = ref(false),
+	currentLine = ref(""),
+	currentLineKeyboardKey = computed(() => {
+		return currentLine.value.split(",")[0]
+	}),
+	currentLineKeyboardDescription = computed(() => {
+		if (checkersList.includes(currentLineKeyboardKey.value)) {
+			return getChecker(currentLineKeyboardKey.value).description
 		}
-	}
 
-	defineExpose({ focus: focusFn })
-	const emits = defineEmits(["update"])
-	const props = defineProps({
-			rows: { type: Number, default: 2 },
-			focus: { type: Boolean, default: false },
-		})
+		return ""
+	}),
+	currentLineKeyboards = computed(() => {
+		return checkersList.filter((x) =>
+			x.startsWith(currentLineKeyboardKey.value)
+		)
+	}),
+	keyboardHelper = computed(() => {
+		if (!checkersList.includes(currentLineKeyboardKey.value)) {
+			return currentLineKeyboards.value.join(", ")
+		}
 
-	const update = () => {
-		emits("update", theValue.value)
-	}
-
-	onMounted(() => {
-		if (props.focus) focusFn(false)
+		return `${currentLineKeyboardDescription.value}\n- @format:custom format`
 	})
+const onKeyup = () => {
+	const pos = inp.value.selectionStart,
+		lines = theValue.value.split("\n"),
+		lineIndex = theValue.value.substring(0, pos).split("\n").length - 1
 
-	const showKeyboardHelper = ref(false),
-		currentLine = ref(""),
-		currentLineKeyboardKey = computed(() => {
-			return currentLine.value.split(",")[0]
-		}),
-		currentLineKeyboardDescription = computed(() => {
-			if (checkersList.includes(currentLineKeyboardKey.value)) {
-				return getChecker(currentLineKeyboardKey.value).description
-			}
-
-			return ""
-		}),
-		currentLineKeyboards = computed(() => {
-			return checkersList.filter((x) =>
-				x.startsWith(currentLineKeyboardKey.value),
-			)
-		}),
-		keyboardHelper = computed(() => {
-			if (!checkersList.includes(currentLineKeyboardKey.value)) {
-				return currentLineKeyboards.value.join(", ")
-			}
-
-			return `${currentLineKeyboardDescription.value}\n- @format:custom format`
-		})
-	const onKeyup = () => {
+	currentLine.value = lines[lineIndex]
+}
+const tabber = () => {
+	if (currentLineKeyboards.value.length === 1) {
 		const pos = inp.value.selectionStart,
 			lines = theValue.value.split("\n"),
-			lineIndex = theValue.value.substring(0, pos).split("\n").length - 1
+			lineIndex =
+				theValue.value.substring(0, pos).split("\n").length - 1
 
-		currentLine.value = lines[lineIndex]
+		if (lines[lineIndex].startsWith(currentLineKeyboards.value[0]))
+			return
+		lines[lineIndex] = currentLineKeyboards.value[0]
+
+		theValue.value = lines.join("\n")
 	}
-	const tabber = () => {
-		if (currentLineKeyboards.value.length === 1) {
-			const pos = inp.value.selectionStart,
-				lines = theValue.value.split("\n"),
-				lineIndex =
-					theValue.value.substring(0, pos).split("\n").length - 1
+}
 
-			if (lines[lineIndex].startsWith(currentLineKeyboards.value[0]))
-				return
-			lines[lineIndex] = currentLineKeyboards.value[0]
+const currentRows = computed(() => {
+	return Math.max(props.rows, theValue.value.split("\n").length + 1)
+})
 
-			theValue.value = lines.join("\n")
-		}
-	}
-
-	const currentRows = computed(() => {
-		return Math.max(props.rows, theValue.value.split("\n").length + 1)
-	})
 </script>
 <template>
 	<div class="w-full">
 		<textarea
-			v-bind="$attrs"
 			ref="inp"
 			v-model="theValue"
-			class="w-full transition-all font-code"
 			:rows="currentRows"
+			class="w-full transition-all font-code"
+			v-bind="$attrs"
+			@blur="showKeyboardHelper = false"
+			@focus="showKeyboardHelper = true"
 			@input="update"
 			@keyup="onKeyup"
 			@mouseup="onKeyup"
 			@keydown.tab.prevent="tabber"
 			@current-line="currentLine = $event"
-			@focus="showKeyboardHelper = true"
-			@blur="showKeyboardHelper = false"
 		/>
 		<div class="font-code text-xs">
 			laisser une ligne vide entre deux claviers
@@ -108,8 +115,8 @@ defineOptions({
 
 		<transition name="fade">
 			<div
-				class="fixed right-2 bottom-2 w-[60vw] md:w-[40vw] lg:w-[30vw] z-10"
 				v-if="showKeyboardHelper"
+				class="fixed right-2 bottom-2 w-[60vw] md:w-[40vw] lg:w-[30vw] z-10"
 			>
 				<markdown-it
 					:text="keyboardHelper"
