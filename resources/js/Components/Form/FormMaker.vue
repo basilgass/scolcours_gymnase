@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 
-const theValue = defineModel()
+const theValue = defineModel<string | number | boolean >()
 </script>
 
 <template>

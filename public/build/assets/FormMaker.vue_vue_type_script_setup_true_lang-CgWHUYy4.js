@@ -1,0 +1,1 @@
+import{d as t,bh as s,aK as n,P as d,bz as u,bp as r,Q as m}from"./@vue-DqEkFMKT.js";const i={class:"w-full"},_=t({__name:"FormMaker",props:{modelValue:{type:Boolean},modelModifiers:{}},emits:["update:modelValue"],setup(a){const e=s(a,"modelValue");return(p,o)=>(n(),d("div",i,[u(m("input",{"onUpdate:modelValue":o[0]||(o[0]=l=>e.value=l)},null,512),[[r,e.value]])]))}});export{_};

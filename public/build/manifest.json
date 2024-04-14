@@ -45,49 +45,49 @@
       "_@vue-DqEkFMKT.js"
     ]
   },
-  "_BlockShow.vue_vue_type_script_setup_true_lang-BeGWy18r.js": {
-    "file": "assets/BlockShow.vue_vue_type_script_setup_true_lang-BeGWy18r.js",
+  "_BlockShow.vue_vue_type_script_setup_true_lang-a8qOR5aC.js": {
+    "file": "assets/BlockShow.vue_vue_type_script_setup_true_lang-a8qOR5aC.js",
     "name": "BlockShow.vue_vue_type_script_setup_true_lang",
     "imports": [
       "_@vue-DqEkFMKT.js",
-      "_scolcours-C_dv6wOK.js",
-      "_IllustrationShow.vue_vue_type_script_setup_true_lang-B9h3HIqa.js",
-      "_BlockShowAdmin.vue_vue_type_script_setup_true_lang-ClB7jp7o.js",
-      "_MarkdownIt.vue_vue_type_script_setup_true_lang-COsUhffw.js",
+      "_scolcours-C9mGPfV9.js",
+      "_IllustrationShow.vue_vue_type_script_setup_true_lang-DrV4lRHY.js",
+      "_BlockShowAdmin.vue_vue_type_script_setup_true_lang-YH_HVH2w.js",
+      "_MarkdownIt.vue_vue_type_script_setup_true_lang-vEHgWcJ1.js",
       "resources/js/app.ts",
       "_pimath-CCU4WHwg.js"
     ]
   },
-  "_BlockShowAdmin.vue_vue_type_script_setup_true_lang-ClB7jp7o.js": {
-    "file": "assets/BlockShowAdmin.vue_vue_type_script_setup_true_lang-ClB7jp7o.js",
+  "_BlockShowAdmin.vue_vue_type_script_setup_true_lang-YH_HVH2w.js": {
+    "file": "assets/BlockShowAdmin.vue_vue_type_script_setup_true_lang-YH_HVH2w.js",
     "name": "BlockShowAdmin.vue_vue_type_script_setup_true_lang",
     "imports": [
       "_EditLink.vue_vue_type_script_setup_true_lang-CEw-xBsZ.js",
-      "_FormMaker.vue_vue_type_script_setup_true_lang-jANCDKcC.js",
+      "_FormMaker.vue_vue_type_script_setup_true_lang-CgWHUYy4.js",
       "_axios-G5LVpFxl.js",
       "_@vue-DqEkFMKT.js"
     ]
   },
-  "_ChapiterIndexCreateAdmin.vue_vue_type_script_setup_true_lang-uKrtW-lF.js": {
-    "file": "assets/ChapiterIndexCreateAdmin.vue_vue_type_script_setup_true_lang-uKrtW-lF.js",
+  "_ChapiterIndexCreateAdmin.vue_vue_type_script_setup_true_lang-OclSU-mK.js": {
+    "file": "assets/ChapiterIndexCreateAdmin.vue_vue_type_script_setup_true_lang-OclSU-mK.js",
     "name": "ChapiterIndexCreateAdmin.vue_vue_type_script_setup_true_lang",
     "imports": [
       "_DialogModal.vue_vue_type_script_setup_true_lang-BZl89_C5.js",
-      "_FormMaker.vue_vue_type_script_setup_true_lang-jANCDKcC.js",
+      "_FormMaker.vue_vue_type_script_setup_true_lang-CgWHUYy4.js",
       "_axios-G5LVpFxl.js",
       "_@inertiajs-CMy4_go5.js",
       "_@vue-DqEkFMKT.js"
     ]
   },
-  "_ChapterFormulas.vue_vue_type_script_setup_true_lang-CstZLc0z.js": {
-    "file": "assets/ChapterFormulas.vue_vue_type_script_setup_true_lang-CstZLc0z.js",
+  "_ChapterFormulas.vue_vue_type_script_setup_true_lang-DZng6NX6.js": {
+    "file": "assets/ChapterFormulas.vue_vue_type_script_setup_true_lang-DZng6NX6.js",
     "name": "ChapterFormulas.vue_vue_type_script_setup_true_lang",
     "imports": [
       "_@vue-DqEkFMKT.js",
       "_@inertiajs-CMy4_go5.js",
-      "_FormMaker.vue_vue_type_script_setup_true_lang-jANCDKcC.js",
+      "_FormMaker.vue_vue_type_script_setup_true_lang-CgWHUYy4.js",
       "_axios-G5LVpFxl.js",
-      "_BlockShow.vue_vue_type_script_setup_true_lang-BeGWy18r.js",
+      "_BlockShow.vue_vue_type_script_setup_true_lang-a8qOR5aC.js",
       "_@vueuse-CObWd_w_.js"
     ]
   },
@@ -119,36 +119,36 @@
       "_@vue-DqEkFMKT.js"
     ]
   },
-  "_FilteredList.vue_vue_type_script_setup_true_lang-lSgwm2zs.js": {
-    "file": "assets/FilteredList.vue_vue_type_script_setup_true_lang-lSgwm2zs.js",
+  "_FilteredList.vue_vue_type_script_setup_true_lang-DkajMvrN.js": {
+    "file": "assets/FilteredList.vue_vue_type_script_setup_true_lang-DkajMvrN.js",
     "name": "FilteredList.vue_vue_type_script_setup_true_lang",
     "imports": [
       "_@vue-DqEkFMKT.js",
-      "_FormMaker.vue_vue_type_script_setup_true_lang-jANCDKcC.js",
+      "_FormMaker.vue_vue_type_script_setup_true_lang-CgWHUYy4.js",
       "_@inertiajs-CMy4_go5.js"
     ]
   },
-  "_FormMaker.vue_vue_type_script_setup_true_lang-jANCDKcC.js": {
-    "file": "assets/FormMaker.vue_vue_type_script_setup_true_lang-jANCDKcC.js",
+  "_FormMaker.vue_vue_type_script_setup_true_lang-CgWHUYy4.js": {
+    "file": "assets/FormMaker.vue_vue_type_script_setup_true_lang-CgWHUYy4.js",
     "name": "FormMaker.vue_vue_type_script_setup_true_lang",
     "imports": [
       "_@vue-DqEkFMKT.js"
     ]
   },
-  "_IllustrationShow.vue_vue_type_script_setup_true_lang-B9h3HIqa.js": {
-    "file": "assets/IllustrationShow.vue_vue_type_script_setup_true_lang-B9h3HIqa.js",
+  "_IllustrationShow.vue_vue_type_script_setup_true_lang-DrV4lRHY.js": {
+    "file": "assets/IllustrationShow.vue_vue_type_script_setup_true_lang-DrV4lRHY.js",
     "name": "IllustrationShow.vue_vue_type_script_setup_true_lang",
     "imports": [
-      "_scolcours-C_dv6wOK.js",
+      "_scolcours-C9mGPfV9.js",
       "_EditLink.vue_vue_type_script_setup_true_lang-CEw-xBsZ.js",
       "_@vue-DqEkFMKT.js"
     ]
   },
-  "_KeyboardDisplay.vue_vue_type_script_setup_true_lang-D-xAhtLr.js": {
-    "file": "assets/KeyboardDisplay.vue_vue_type_script_setup_true_lang-D-xAhtLr.js",
+  "_KeyboardDisplay.vue_vue_type_script_setup_true_lang-Cl5CLMO2.js": {
+    "file": "assets/KeyboardDisplay.vue_vue_type_script_setup_true_lang-Cl5CLMO2.js",
     "name": "KeyboardDisplay.vue_vue_type_script_setup_true_lang",
     "imports": [
-      "_useKeyboard-D7NGTEYb.js",
+      "_useKeyboard-DmIaSTFk.js",
       "_@vue-DqEkFMKT.js"
     ]
   },
@@ -197,8 +197,8 @@
       "_@inertiajs-CMy4_go5.js"
     ]
   },
-  "_MarkdownIt.vue_vue_type_script_setup_true_lang-COsUhffw.js": {
-    "file": "assets/MarkdownIt.vue_vue_type_script_setup_true_lang-COsUhffw.js",
+  "_MarkdownIt.vue_vue_type_script_setup_true_lang-vEHgWcJ1.js": {
+    "file": "assets/MarkdownIt.vue_vue_type_script_setup_true_lang-vEHgWcJ1.js",
     "name": "MarkdownIt.vue_vue_type_script_setup_true_lang",
     "imports": [
       "_@vue-DqEkFMKT.js",
@@ -211,11 +211,11 @@
       "_katex-J55txNYc.js"
     ]
   },
-  "_MoveItemTo.vue_vue_type_script_setup_true_lang-BF4989_n.js": {
-    "file": "assets/MoveItemTo.vue_vue_type_script_setup_true_lang-BF4989_n.js",
+  "_MoveItemTo.vue_vue_type_script_setup_true_lang-DJ8Wewd6.js": {
+    "file": "assets/MoveItemTo.vue_vue_type_script_setup_true_lang-DJ8Wewd6.js",
     "name": "MoveItemTo.vue_vue_type_script_setup_true_lang",
     "imports": [
-      "_FormMaker.vue_vue_type_script_setup_true_lang-jANCDKcC.js",
+      "_FormMaker.vue_vue_type_script_setup_true_lang-CgWHUYy4.js",
       "_axios-G5LVpFxl.js",
       "_@vueuse-CObWd_w_.js",
       "_@vue-DqEkFMKT.js"
@@ -265,15 +265,15 @@
       "_@vue-DqEkFMKT.js"
     ]
   },
-  "_QuestionShow.vue_vue_type_script_setup_true_lang-D9eLRDS7.js": {
-    "file": "assets/QuestionShow.vue_vue_type_script_setup_true_lang-D9eLRDS7.js",
+  "_QuestionShow.vue_vue_type_script_setup_true_lang-DZHgvWdp.js": {
+    "file": "assets/QuestionShow.vue_vue_type_script_setup_true_lang-DZHgvWdp.js",
     "name": "QuestionShow.vue_vue_type_script_setup_true_lang",
     "imports": [
       "_@vue-DqEkFMKT.js",
       "_QuestionShowAdmin.vue_vue_type_script_setup_true_lang-CpdVqzqw.js",
-      "_MarkdownIt.vue_vue_type_script_setup_true_lang-COsUhffw.js",
-      "_IllustrationShow.vue_vue_type_script_setup_true_lang-B9h3HIqa.js",
-      "_useKeyboard-D7NGTEYb.js",
+      "_MarkdownIt.vue_vue_type_script_setup_true_lang-vEHgWcJ1.js",
+      "_IllustrationShow.vue_vue_type_script_setup_true_lang-DrV4lRHY.js",
+      "_useKeyboard-DmIaSTFk.js",
       "resources/js/app.ts",
       "_@inertiajs-CMy4_go5.js",
       "_axios-G5LVpFxl.js"
@@ -290,30 +290,30 @@
       "_@vue-DqEkFMKT.js"
     ]
   },
-  "_QuestionsIndex.vue_vue_type_script_setup_true_lang-Db1z-wFs.js": {
-    "file": "assets/QuestionsIndex.vue_vue_type_script_setup_true_lang-Db1z-wFs.js",
+  "_QuestionsIndex.vue_vue_type_script_setup_true_lang-CjJwKm-c.js": {
+    "file": "assets/QuestionsIndex.vue_vue_type_script_setup_true_lang-CjJwKm-c.js",
     "name": "QuestionsIndex.vue_vue_type_script_setup_true_lang",
     "imports": [
-      "_QuestionShow.vue_vue_type_script_setup_true_lang-D9eLRDS7.js",
+      "_QuestionShow.vue_vue_type_script_setup_true_lang-DZHgvWdp.js",
       "_axios-G5LVpFxl.js",
-      "_QuestionsIndexAdmin.vue_vue_type_script_setup_true_lang-CCjKN-jb.js",
+      "_QuestionsIndexAdmin.vue_vue_type_script_setup_true_lang-DOaN0tSK.js",
       "_@vue-DqEkFMKT.js"
     ]
   },
-  "_QuestionsIndexAdmin.vue_vue_type_script_setup_true_lang-CCjKN-jb.js": {
-    "file": "assets/QuestionsIndexAdmin.vue_vue_type_script_setup_true_lang-CCjKN-jb.js",
+  "_QuestionsIndexAdmin.vue_vue_type_script_setup_true_lang-DOaN0tSK.js": {
+    "file": "assets/QuestionsIndexAdmin.vue_vue_type_script_setup_true_lang-DOaN0tSK.js",
     "name": "QuestionsIndexAdmin.vue_vue_type_script_setup_true_lang",
     "imports": [
-      "_FormMaker.vue_vue_type_script_setup_true_lang-jANCDKcC.js",
+      "_FormMaker.vue_vue_type_script_setup_true_lang-CgWHUYy4.js",
       "_axios-G5LVpFxl.js",
       "_@vue-DqEkFMKT.js"
     ]
   },
-  "_QuizzOutro.vue_vue_type_script_setup_true_lang-BuNv2AOs.js": {
-    "file": "assets/QuizzOutro.vue_vue_type_script_setup_true_lang-BuNv2AOs.js",
+  "_QuizzOutro.vue_vue_type_script_setup_true_lang-Jo75Msn2.js": {
+    "file": "assets/QuizzOutro.vue_vue_type_script_setup_true_lang-Jo75Msn2.js",
     "name": "QuizzOutro.vue_vue_type_script_setup_true_lang",
     "imports": [
-      "_MarkdownIt.vue_vue_type_script_setup_true_lang-COsUhffw.js",
+      "_MarkdownIt.vue_vue_type_script_setup_true_lang-vEHgWcJ1.js",
       "__plugin-vue_export-helper-DlAUqK2U.js",
       "_@vue-DqEkFMKT.js"
     ]
@@ -345,11 +345,11 @@
     "file": "assets/_plugin-vue_export-helper-DlAUqK2U.js",
     "name": "_plugin-vue_export-helper"
   },
-  "_algorithme-de-bissection.vue_vue_type_script_setup_true_lang-Bxo_m_iu.js": {
-    "file": "assets/algorithme-de-bissection.vue_vue_type_script_setup_true_lang-Bxo_m_iu.js",
+  "_algorithme-de-bissection.vue_vue_type_script_setup_true_lang-d4CknNHf.js": {
+    "file": "assets/algorithme-de-bissection.vue_vue_type_script_setup_true_lang-d4CknNHf.js",
     "name": "algorithme-de-bissection.vue_vue_type_script_setup_true_lang",
     "imports": [
-      "_FormMaker.vue_vue_type_script_setup_true_lang-jANCDKcC.js",
+      "_FormMaker.vue_vue_type_script_setup_true_lang-CgWHUYy4.js",
       "_pimath-CCU4WHwg.js",
       "_@vue-DqEkFMKT.js"
     ]
@@ -605,8 +605,8 @@
       "_side-channel-stswH0d1.js"
     ]
   },
-  "_scolcours-C_dv6wOK.js": {
-    "file": "assets/scolcours-C_dv6wOK.js",
+  "_scolcours-C9mGPfV9.js": {
+    "file": "assets/scolcours-C9mGPfV9.js",
     "name": "scolcours",
     "imports": [
       "resources/js/app.ts",
@@ -703,22 +703,22 @@
       "_@vue-DqEkFMKT.js"
     ]
   },
-  "_useKeyboard-D7NGTEYb.js": {
-    "file": "assets/useKeyboard-D7NGTEYb.js",
+  "_useKeyboard-DmIaSTFk.js": {
+    "file": "assets/useKeyboard-DmIaSTFk.js",
     "name": "useKeyboard",
     "imports": [
       "resources/js/app.ts",
-      "_scolcours-C_dv6wOK.js",
+      "_scolcours-C9mGPfV9.js",
       "_pimath-CCU4WHwg.js",
       "_helperFunctions-Bh4Sa31V.js",
       "_@vue-DqEkFMKT.js"
     ]
   },
-  "_useTos-C8cLc7Li.js": {
-    "file": "assets/useTos-C8cLc7Li.js",
+  "_useTos-BY5u6I9d.js": {
+    "file": "assets/useTos-BY5u6I9d.js",
     "name": "useTos",
     "imports": [
-      "_useKeyboard-D7NGTEYb.js"
+      "_useKeyboard-DmIaSTFk.js"
     ]
   },
   "_vue-DBjnF59O.js": {
@@ -761,7 +761,7 @@
     ]
   },
   "resources/js/Components/Devs/DevCircles.vue": {
-    "file": "assets/DevCircles-DdES65GT.js",
+    "file": "assets/DevCircles-Br91MCWF.js",
     "name": "DevCircles",
     "src": "resources/js/Components/Devs/DevCircles.vue",
     "isDynamicEntry": true,
@@ -769,7 +769,7 @@
       "_@vue-DqEkFMKT.js",
       "_PiDrawParser.vue_vue_type_script_setup_true_lang-C_5yURmO.js",
       "_pimath-CCU4WHwg.js",
-      "_FormMaker.vue_vue_type_script_setup_true_lang-jANCDKcC.js",
+      "_FormMaker.vue_vue_type_script_setup_true_lang-CgWHUYy4.js",
       "_LayoutMain.vue_vue_type_script_setup_true_lang-gRd_oA16.js",
       "_pidraw-J_eZaQIc.js",
       "_@svgdotjs-Bv5fOkx0.js",
@@ -804,16 +804,16 @@
     ]
   },
   "resources/js/Components/Devs/DevKeyboards.vue": {
-    "file": "assets/DevKeyboards-Apd7yxBL.js",
+    "file": "assets/DevKeyboards-B_YXklBg.js",
     "name": "DevKeyboards",
     "src": "resources/js/Components/Devs/DevKeyboards.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_useKeyboard-D7NGTEYb.js",
+      "_useKeyboard-DmIaSTFk.js",
       "_prismjs-CXFc62UE.js",
       "_@vue-DqEkFMKT.js",
       "__plugin-vue_export-helper-DlAUqK2U.js",
-      "_FormMaker.vue_vue_type_script_setup_true_lang-jANCDKcC.js",
+      "_FormMaker.vue_vue_type_script_setup_true_lang-CgWHUYy4.js",
       "_LayoutMain.vue_vue_type_script_setup_true_lang-gRd_oA16.js",
       "resources/js/app.ts",
       "_axios-G5LVpFxl.js",
@@ -844,7 +844,7 @@
       "_katex-J55txNYc.js",
       "_pidraw-J_eZaQIc.js",
       "_@vueuse-CObWd_w_.js",
-      "_scolcours-C_dv6wOK.js",
+      "_scolcours-C9mGPfV9.js",
       "_pimath-CCU4WHwg.js",
       "_helperFunctions-Bh4Sa31V.js",
       "_MainFooter.vue_vue_type_script_setup_true_lang-CcsgDa71.js",
@@ -890,13 +890,13 @@
     ]
   },
   "resources/js/Components/Devs/DevProbTree.vue": {
-    "file": "assets/DevProbTree-BNL22b9M.js",
+    "file": "assets/DevProbTree-DWOnSjbx.js",
     "name": "DevProbTree",
     "src": "resources/js/Components/Devs/DevProbTree.vue",
     "isDynamicEntry": true,
     "imports": [
       "_PiProbabilityTree.vue_vue_type_script_setup_true_lang-DmgcbTHb.js",
-      "_FormMaker.vue_vue_type_script_setup_true_lang-jANCDKcC.js",
+      "_FormMaker.vue_vue_type_script_setup_true_lang-CgWHUYy4.js",
       "_@vue-DqEkFMKT.js",
       "_pimath-CCU4WHwg.js",
       "_@svgdotjs-Bv5fOkx0.js",
@@ -941,18 +941,18 @@
     ]
   },
   "resources/js/Components/Devs/DevVenn.vue": {
-    "file": "assets/DevVenn-Bkr7XHS3.js",
+    "file": "assets/DevVenn-BrsrlF82.js",
     "name": "DevVenn",
     "src": "resources/js/Components/Devs/DevVenn.vue",
     "isDynamicEntry": true,
     "imports": [
       "_pidraw-J_eZaQIc.js",
       "_pimath-CCU4WHwg.js",
-      "_KeyboardDisplay.vue_vue_type_script_setup_true_lang-D-xAhtLr.js",
-      "_FormMaker.vue_vue_type_script_setup_true_lang-jANCDKcC.js",
+      "_KeyboardDisplay.vue_vue_type_script_setup_true_lang-Cl5CLMO2.js",
+      "_FormMaker.vue_vue_type_script_setup_true_lang-CgWHUYy4.js",
       "_@vue-DqEkFMKT.js",
       "_@svgdotjs-Bv5fOkx0.js",
-      "_useKeyboard-D7NGTEYb.js",
+      "_useKeyboard-DmIaSTFk.js",
       "resources/js/app.ts",
       "_axios-G5LVpFxl.js",
       "_@inertiajs-CMy4_go5.js",
@@ -980,31 +980,31 @@
       "_laravel-vite-plugin-DEL3ZhID.js",
       "_katex-J55txNYc.js",
       "_@vueuse-CObWd_w_.js",
-      "_scolcours-C_dv6wOK.js",
+      "_scolcours-C9mGPfV9.js",
       "_helperFunctions-Bh4Sa31V.js"
     ]
   },
   "resources/js/Components/Devs/DevWidgets.vue": {
-    "file": "assets/DevWidgets-dJ_BgIV8.js",
+    "file": "assets/DevWidgets-D6WJjig9.js",
     "name": "DevWidgets",
     "src": "resources/js/Components/Devs/DevWidgets.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_algorithme-de-bissection.vue_vue_type_script_setup_true_lang-Bxo_m_iu.js",
+      "_algorithme-de-bissection.vue_vue_type_script_setup_true_lang-d4CknNHf.js",
       "_@vue-DqEkFMKT.js",
-      "_FormMaker.vue_vue_type_script_setup_true_lang-jANCDKcC.js",
+      "_FormMaker.vue_vue_type_script_setup_true_lang-CgWHUYy4.js",
       "_pimath-CCU4WHwg.js",
       "_@svgdotjs-Bv5fOkx0.js"
     ]
   },
   "resources/js/Components/Keyboards/KeyboardBasic.vue": {
-    "file": "assets/KeyboardBasic-Cj-9UOBo.js",
+    "file": "assets/KeyboardBasic-BjH1meoC.js",
     "name": "KeyboardBasic",
     "src": "resources/js/Components/Keyboards/KeyboardBasic.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_KeyboardDisplay.vue_vue_type_script_setup_true_lang-D-xAhtLr.js",
-      "_useKeyboard-D7NGTEYb.js",
+      "_KeyboardDisplay.vue_vue_type_script_setup_true_lang-Cl5CLMO2.js",
+      "_useKeyboard-DmIaSTFk.js",
       "_@vue-DqEkFMKT.js",
       "resources/js/app.ts",
       "_axios-G5LVpFxl.js",
@@ -1035,22 +1035,22 @@
       "_katex-J55txNYc.js",
       "_pidraw-J_eZaQIc.js",
       "_@vueuse-CObWd_w_.js",
-      "_scolcours-C_dv6wOK.js",
+      "_scolcours-C9mGPfV9.js",
       "_pimath-CCU4WHwg.js",
       "_helperFunctions-Bh4Sa31V.js"
     ]
   },
   "resources/js/Components/Keyboards/KeyboardInput.vue": {
-    "file": "assets/KeyboardInput-Cdfotv_6.js",
+    "file": "assets/KeyboardInput-CPgRteyC.js",
     "name": "KeyboardInput",
     "src": "resources/js/Components/Keyboards/KeyboardInput.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_useKeyboard-D7NGTEYb.js",
+      "_useKeyboard-DmIaSTFk.js",
       "resources/js/app.ts",
-      "_FormMaker.vue_vue_type_script_setup_true_lang-jANCDKcC.js",
+      "_FormMaker.vue_vue_type_script_setup_true_lang-CgWHUYy4.js",
       "_@vue-DqEkFMKT.js",
-      "_scolcours-C_dv6wOK.js",
+      "_scolcours-C9mGPfV9.js",
       "_pimath-CCU4WHwg.js",
       "_@svgdotjs-Bv5fOkx0.js",
       "_helperFunctions-Bh4Sa31V.js",
@@ -1084,13 +1084,13 @@
     ]
   },
   "resources/js/Components/Keyboards/KeyboardOrder.vue": {
-    "file": "assets/KeyboardOrder-Mrhydbtm.js",
+    "file": "assets/KeyboardOrder-DvnkMNhr.js",
     "name": "KeyboardOrder",
     "src": "resources/js/Components/Keyboards/KeyboardOrder.vue",
     "isDynamicEntry": true,
     "imports": [
       "_pimath-CCU4WHwg.js",
-      "_useKeyboard-D7NGTEYb.js",
+      "_useKeyboard-DmIaSTFk.js",
       "_@vue-DqEkFMKT.js",
       "_@svgdotjs-Bv5fOkx0.js",
       "resources/js/app.ts",
@@ -1121,17 +1121,17 @@
       "_katex-J55txNYc.js",
       "_pidraw-J_eZaQIc.js",
       "_@vueuse-CObWd_w_.js",
-      "_scolcours-C_dv6wOK.js",
+      "_scolcours-C9mGPfV9.js",
       "_helperFunctions-Bh4Sa31V.js"
     ]
   },
   "resources/js/Components/Keyboards/KeyboardQcm.vue": {
-    "file": "assets/KeyboardQcm-C3ctEqO0.js",
+    "file": "assets/KeyboardQcm-DCBVq4I_.js",
     "name": "KeyboardQcm",
     "src": "resources/js/Components/Keyboards/KeyboardQcm.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_useKeyboard-D7NGTEYb.js",
+      "_useKeyboard-DmIaSTFk.js",
       "_@vue-DqEkFMKT.js",
       "resources/js/app.ts",
       "_axios-G5LVpFxl.js",
@@ -1162,13 +1162,13 @@
       "_katex-J55txNYc.js",
       "_pidraw-J_eZaQIc.js",
       "_@vueuse-CObWd_w_.js",
-      "_scolcours-C_dv6wOK.js",
+      "_scolcours-C9mGPfV9.js",
       "_pimath-CCU4WHwg.js",
       "_helperFunctions-Bh4Sa31V.js"
     ]
   },
   "resources/js/Components/Keyboards/KeyboardStudy.vue": {
-    "file": "assets/KeyboardStudy-D9ZL5Mei.js",
+    "file": "assets/KeyboardStudy-K08NAYue.js",
     "name": "KeyboardStudy",
     "src": "resources/js/Components/Keyboards/KeyboardStudy.vue",
     "isDynamicEntry": true,
@@ -1177,8 +1177,8 @@
       "_pidraw-J_eZaQIc.js",
       "_katex-J55txNYc.js",
       "_pimath-CCU4WHwg.js",
-      "_KeyboardDisplay.vue_vue_type_script_setup_true_lang-D-xAhtLr.js",
-      "_useKeyboard-D7NGTEYb.js",
+      "_KeyboardDisplay.vue_vue_type_script_setup_true_lang-Cl5CLMO2.js",
+      "_useKeyboard-DmIaSTFk.js",
       "_@svgdotjs-Bv5fOkx0.js",
       "resources/js/app.ts",
       "_axios-G5LVpFxl.js",
@@ -1206,21 +1206,21 @@
       "_sortablejs-DcahgXRU.js",
       "_laravel-vite-plugin-DEL3ZhID.js",
       "_@vueuse-CObWd_w_.js",
-      "_scolcours-C_dv6wOK.js",
+      "_scolcours-C9mGPfV9.js",
       "_helperFunctions-Bh4Sa31V.js"
     ]
   },
   "resources/js/Components/Keyboards/KeyboardTableOfSigns.vue": {
-    "file": "assets/KeyboardTableOfSigns-CQbmr_77.js",
+    "file": "assets/KeyboardTableOfSigns-DaMR7Yxy.js",
     "name": "KeyboardTableOfSigns",
     "src": "resources/js/Components/Keyboards/KeyboardTableOfSigns.vue",
     "isDynamicEntry": true,
     "imports": [
       "_@vue-DqEkFMKT.js",
       "_PiTableOfSigns.vue_vue_type_script_setup_true_lang-Bat7E0Pj.js",
-      "_KeyboardDisplay.vue_vue_type_script_setup_true_lang-D-xAhtLr.js",
-      "_useTos-C8cLc7Li.js",
-      "_useKeyboard-D7NGTEYb.js",
+      "_KeyboardDisplay.vue_vue_type_script_setup_true_lang-Cl5CLMO2.js",
+      "_useTos-BY5u6I9d.js",
+      "_useKeyboard-DmIaSTFk.js",
       "resources/js/app.ts",
       "_axios-G5LVpFxl.js",
       "_@inertiajs-CMy4_go5.js",
@@ -1250,13 +1250,13 @@
       "_katex-J55txNYc.js",
       "_pidraw-J_eZaQIc.js",
       "_@vueuse-CObWd_w_.js",
-      "_scolcours-C_dv6wOK.js",
+      "_scolcours-C9mGPfV9.js",
       "_pimath-CCU4WHwg.js",
       "_helperFunctions-Bh4Sa31V.js"
     ]
   },
   "resources/js/Components/Keyboards/KeyboardType.vue": {
-    "file": "assets/KeyboardType-C-zh60BQ.js",
+    "file": "assets/KeyboardType-CrSvn1if.js",
     "name": "KeyboardType",
     "src": "resources/js/Components/Keyboards/KeyboardType.vue",
     "isDynamicEntry": true,
@@ -1264,7 +1264,7 @@
       "_@vue-DqEkFMKT.js",
       "resources/js/app.ts",
       "_pimath-CCU4WHwg.js",
-      "_useKeyboard-D7NGTEYb.js",
+      "_useKeyboard-DmIaSTFk.js",
       "_axios-G5LVpFxl.js",
       "_@inertiajs-CMy4_go5.js",
       "_deepmerge-BLbTkTqH.js",
@@ -1293,19 +1293,19 @@
       "_katex-J55txNYc.js",
       "_pidraw-J_eZaQIc.js",
       "_@vueuse-CObWd_w_.js",
-      "_scolcours-C_dv6wOK.js",
+      "_scolcours-C9mGPfV9.js",
       "_helperFunctions-Bh4Sa31V.js"
     ]
   },
   "resources/js/Components/Tools/affine.vue": {
-    "file": "assets/affine-DVqPbhg7.js",
+    "file": "assets/affine-BrqsnkeI.js",
     "name": "affine",
     "src": "resources/js/Components/Tools/affine.vue",
     "isDynamicEntry": true,
     "imports": [
       "_Panel.vue_vue_type_script_setup_true_lang-DAxycl4X.js",
       "_pimath-CCU4WHwg.js",
-      "_FormMaker.vue_vue_type_script_setup_true_lang-jANCDKcC.js",
+      "_FormMaker.vue_vue_type_script_setup_true_lang-CgWHUYy4.js",
       "_@vue-DqEkFMKT.js",
       "_@svgdotjs-Bv5fOkx0.js"
     ]
@@ -1328,34 +1328,34 @@
     ]
   },
   "resources/js/Components/Tools/derivees.vue": {
-    "file": "assets/derivees-Cpx6bU8E.js",
+    "file": "assets/derivees-Cc6ShZxu.js",
     "name": "derivees",
     "src": "resources/js/Components/Tools/derivees.vue",
     "isDynamicEntry": true,
     "imports": [
       "_Panel.vue_vue_type_script_setup_true_lang-DAxycl4X.js",
       "_pimath-CCU4WHwg.js",
-      "_FormMaker.vue_vue_type_script_setup_true_lang-jANCDKcC.js",
+      "_FormMaker.vue_vue_type_script_setup_true_lang-CgWHUYy4.js",
       "_@vue-DqEkFMKT.js",
       "_@svgdotjs-Bv5fOkx0.js"
     ]
   },
   "resources/js/Components/Tools/division-euclidienne.vue": {
-    "file": "assets/division-euclidienne-DiPVAO79.js",
+    "file": "assets/division-euclidienne-DOBLCekT.js",
     "name": "division-euclidienne",
     "src": "resources/js/Components/Tools/division-euclidienne.vue",
     "isDynamicEntry": true,
     "imports": [
       "_Panel.vue_vue_type_script_setup_true_lang-DAxycl4X.js",
       "_PiEuclidian.vue_vue_type_script_setup_true_lang-BhCNB5nD.js",
-      "_FormMaker.vue_vue_type_script_setup_true_lang-jANCDKcC.js",
+      "_FormMaker.vue_vue_type_script_setup_true_lang-CgWHUYy4.js",
       "_@vue-DqEkFMKT.js",
       "_pimath-CCU4WHwg.js",
       "_@svgdotjs-Bv5fOkx0.js"
     ]
   },
   "resources/js/Components/Tools/etude-de-fonction-rationnelle.vue": {
-    "file": "assets/etude-de-fonction-rationnelle-BP3RmQ35.js",
+    "file": "assets/etude-de-fonction-rationnelle-mnQFrYn4.js",
     "name": "etude-de-fonction-rationnelle",
     "src": "resources/js/Components/Tools/etude-de-fonction-rationnelle.vue",
     "isDynamicEntry": true,
@@ -1365,7 +1365,7 @@
       "_PiTableOfSigns.vue_vue_type_script_setup_true_lang-Bat7E0Pj.js",
       "_PiDrawParser.vue_vue_type_script_setup_true_lang-C_5yURmO.js",
       "_Panel.vue_vue_type_script_setup_true_lang-DAxycl4X.js",
-      "_FormMaker.vue_vue_type_script_setup_true_lang-jANCDKcC.js",
+      "_FormMaker.vue_vue_type_script_setup_true_lang-CgWHUYy4.js",
       "_@svgdotjs-Bv5fOkx0.js",
       "_pidraw-J_eZaQIc.js",
       "_vue-slider-component-BjrKlHLS.js",
@@ -1375,7 +1375,7 @@
     ]
   },
   "resources/js/Components/Tools/evaluer-fonction.vue": {
-    "file": "assets/evaluer-fonction-C0h8s3Z0.js",
+    "file": "assets/evaluer-fonction-CLfVpmMp.js",
     "name": "evaluer-fonction",
     "src": "resources/js/Components/Tools/evaluer-fonction.vue",
     "isDynamicEntry": true,
@@ -1383,10 +1383,10 @@
       "_@vue-DqEkFMKT.js",
       "_Panel.vue_vue_type_script_setup_true_lang-DAxycl4X.js",
       "_pimath-CCU4WHwg.js",
-      "_KeyboardDisplay.vue_vue_type_script_setup_true_lang-D-xAhtLr.js",
-      "_FormMaker.vue_vue_type_script_setup_true_lang-jANCDKcC.js",
+      "_KeyboardDisplay.vue_vue_type_script_setup_true_lang-Cl5CLMO2.js",
+      "_FormMaker.vue_vue_type_script_setup_true_lang-CgWHUYy4.js",
       "_@svgdotjs-Bv5fOkx0.js",
-      "_useKeyboard-D7NGTEYb.js",
+      "_useKeyboard-DmIaSTFk.js",
       "resources/js/app.ts",
       "_axios-G5LVpFxl.js",
       "_@inertiajs-CMy4_go5.js",
@@ -1415,17 +1415,17 @@
       "_katex-J55txNYc.js",
       "_pidraw-J_eZaQIc.js",
       "_@vueuse-CObWd_w_.js",
-      "_scolcours-C_dv6wOK.js",
+      "_scolcours-C9mGPfV9.js",
       "_helperFunctions-Bh4Sa31V.js"
     ]
   },
   "resources/js/Components/Tools/fonction-valeur-absolue.vue": {
-    "file": "assets/fonction-valeur-absolue-C4YPjjeD.js",
+    "file": "assets/fonction-valeur-absolue-Bp8Waw34.js",
     "name": "fonction-valeur-absolue",
     "src": "resources/js/Components/Tools/fonction-valeur-absolue.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_FormMaker.vue_vue_type_script_setup_true_lang-jANCDKcC.js",
+      "_FormMaker.vue_vue_type_script_setup_true_lang-CgWHUYy4.js",
       "_pimath-CCU4WHwg.js",
       "_PiDrawParser.vue_vue_type_script_setup_true_lang-C_5yURmO.js",
       "_Panel.vue_vue_type_script_setup_true_lang-DAxycl4X.js",
@@ -1439,14 +1439,14 @@
     ]
   },
   "resources/js/Components/Tools/graphe.vue": {
-    "file": "assets/graphe-D1jqRT8u.js",
+    "file": "assets/graphe-BrF9-sth.js",
     "name": "graphe",
     "src": "resources/js/Components/Tools/graphe.vue",
     "isDynamicEntry": true,
     "imports": [
       "_Panel.vue_vue_type_script_setup_true_lang-DAxycl4X.js",
       "_PiDrawParser.vue_vue_type_script_setup_true_lang-C_5yURmO.js",
-      "_FormMaker.vue_vue_type_script_setup_true_lang-jANCDKcC.js",
+      "_FormMaker.vue_vue_type_script_setup_true_lang-CgWHUYy4.js",
       "_@vue-DqEkFMKT.js",
       "_pidraw-J_eZaQIc.js",
       "_@svgdotjs-Bv5fOkx0.js",
@@ -1458,31 +1458,31 @@
     ]
   },
   "resources/js/Components/Tools/integrale.vue": {
-    "file": "assets/integrale-Bggggj97.js",
+    "file": "assets/integrale-B9sgZwOG.js",
     "name": "integrale",
     "src": "resources/js/Components/Tools/integrale.vue",
     "isDynamicEntry": true,
     "imports": [
       "_Panel.vue_vue_type_script_setup_true_lang-DAxycl4X.js",
       "_pimath-CCU4WHwg.js",
-      "_FormMaker.vue_vue_type_script_setup_true_lang-jANCDKcC.js",
+      "_FormMaker.vue_vue_type_script_setup_true_lang-CgWHUYy4.js",
       "_@vue-DqEkFMKT.js",
       "_@svgdotjs-Bv5fOkx0.js"
     ]
   },
   "resources/js/Components/Tools/polynom-develop.vue": {
-    "file": "assets/polynom-develop-Dja6dfUs.js",
+    "file": "assets/polynom-develop-CZz2-FIM.js",
     "name": "polynom-develop",
     "src": "resources/js/Components/Tools/polynom-develop.vue",
     "isDynamicEntry": true,
     "imports": [
       "_Panel.vue_vue_type_script_setup_true_lang-DAxycl4X.js",
       "_pimath-CCU4WHwg.js",
-      "_FormMaker.vue_vue_type_script_setup_true_lang-jANCDKcC.js",
-      "_KeyboardDisplay.vue_vue_type_script_setup_true_lang-D-xAhtLr.js",
+      "_FormMaker.vue_vue_type_script_setup_true_lang-CgWHUYy4.js",
+      "_KeyboardDisplay.vue_vue_type_script_setup_true_lang-Cl5CLMO2.js",
       "_@vue-DqEkFMKT.js",
       "_@svgdotjs-Bv5fOkx0.js",
-      "_useKeyboard-D7NGTEYb.js",
+      "_useKeyboard-DmIaSTFk.js",
       "resources/js/app.ts",
       "_axios-G5LVpFxl.js",
       "_@inertiajs-CMy4_go5.js",
@@ -1511,32 +1511,32 @@
       "_katex-J55txNYc.js",
       "_pidraw-J_eZaQIc.js",
       "_@vueuse-CObWd_w_.js",
-      "_scolcours-C_dv6wOK.js",
+      "_scolcours-C9mGPfV9.js",
       "_helperFunctions-Bh4Sa31V.js"
     ]
   },
   "resources/js/Components/Tools/polynom-factorisation.vue": {
-    "file": "assets/polynom-factorisation-DaoKbwVh.js",
+    "file": "assets/polynom-factorisation-CXPbvWYX.js",
     "name": "polynom-factorisation",
     "src": "resources/js/Components/Tools/polynom-factorisation.vue",
     "isDynamicEntry": true,
     "imports": [
       "_Panel.vue_vue_type_script_setup_true_lang-DAxycl4X.js",
       "_pimath-CCU4WHwg.js",
-      "_FormMaker.vue_vue_type_script_setup_true_lang-jANCDKcC.js",
+      "_FormMaker.vue_vue_type_script_setup_true_lang-CgWHUYy4.js",
       "_@vue-DqEkFMKT.js",
       "_@svgdotjs-Bv5fOkx0.js"
     ]
   },
   "resources/js/Components/Tools/positions-relatives-de-cercles.vue": {
-    "file": "assets/positions-relatives-de-cercles-BJiQSZKs.js",
+    "file": "assets/positions-relatives-de-cercles-DSPK24uj.js",
     "name": "positions-relatives-de-cercles",
     "src": "resources/js/Components/Tools/positions-relatives-de-cercles.vue",
     "isDynamicEntry": true,
     "imports": [
       "_pimath-CCU4WHwg.js",
       "_PiDrawParser.vue_vue_type_script_setup_true_lang-C_5yURmO.js",
-      "_FormMaker.vue_vue_type_script_setup_true_lang-jANCDKcC.js",
+      "_FormMaker.vue_vue_type_script_setup_true_lang-CgWHUYy4.js",
       "_@vue-DqEkFMKT.js",
       "_@svgdotjs-Bv5fOkx0.js",
       "_pidraw-J_eZaQIc.js",
@@ -1547,7 +1547,7 @@
     ]
   },
   "resources/js/Components/Tools/quadratique.vue": {
-    "file": "assets/quadratique-QFsoDfhb.js",
+    "file": "assets/quadratique-CF_Etux2.js",
     "name": "quadratique",
     "src": "resources/js/Components/Tools/quadratique.vue",
     "isDynamicEntry": true,
@@ -1555,12 +1555,12 @@
       "_@vue-DqEkFMKT.js",
       "_Panel.vue_vue_type_script_setup_true_lang-DAxycl4X.js",
       "_pimath-CCU4WHwg.js",
-      "_FormMaker.vue_vue_type_script_setup_true_lang-jANCDKcC.js",
+      "_FormMaker.vue_vue_type_script_setup_true_lang-CgWHUYy4.js",
       "_@svgdotjs-Bv5fOkx0.js"
     ]
   },
   "resources/js/Components/Tools/statistiques.vue": {
-    "file": "assets/statistiques-BT3evL_x.js",
+    "file": "assets/statistiques-ylYlqlXv.js",
     "name": "statistiques",
     "src": "resources/js/Components/Tools/statistiques.vue",
     "isDynamicEntry": true,
@@ -1573,7 +1573,7 @@
       "_lodash-BOG-i_Kd.js",
       "_@sgratzl-Bs4-NeXB.js",
       "_Panel.vue_vue_type_script_setup_true_lang-DAxycl4X.js",
-      "_FormMaker.vue_vue_type_script_setup_true_lang-jANCDKcC.js",
+      "_FormMaker.vue_vue_type_script_setup_true_lang-CgWHUYy4.js",
       "_LayoutMain.vue_vue_type_script_setup_true_lang-gRd_oA16.js",
       "_@kurkle-BZxJdD1U.js",
       "_@svgdotjs-Bv5fOkx0.js",
@@ -1604,7 +1604,7 @@
     ]
   },
   "resources/js/Components/Tools/tableau-de-signes.vue": {
-    "file": "assets/tableau-de-signes-DPlrsM_j.js",
+    "file": "assets/tableau-de-signes-DHc65dVV.js",
     "name": "tableau-de-signes",
     "src": "resources/js/Components/Tools/tableau-de-signes.vue",
     "isDynamicEntry": true,
@@ -1614,12 +1614,12 @@
       "_PiTableOfSigns.vue_vue_type_script_setup_true_lang-Bat7E0Pj.js",
       "_Panel.vue_vue_type_script_setup_true_lang-DAxycl4X.js",
       "_helperFunctions-Bh4Sa31V.js",
-      "_FormMaker.vue_vue_type_script_setup_true_lang-jANCDKcC.js",
+      "_FormMaker.vue_vue_type_script_setup_true_lang-CgWHUYy4.js",
       "_@svgdotjs-Bv5fOkx0.js"
     ]
   },
   "resources/js/Components/Tools/tableau-des-valeurs.vue": {
-    "file": "assets/tableau-des-valeurs-BNE-Rlrt.js",
+    "file": "assets/tableau-des-valeurs-C6aO5bKS.js",
     "name": "tableau-des-valeurs",
     "src": "resources/js/Components/Tools/tableau-des-valeurs.vue",
     "isDynamicEntry": true,
@@ -1628,10 +1628,10 @@
       "_Panel.vue_vue_type_script_setup_true_lang-DAxycl4X.js",
       "_pimath-CCU4WHwg.js",
       "_pidraw-J_eZaQIc.js",
-      "_KeyboardDisplay.vue_vue_type_script_setup_true_lang-D-xAhtLr.js",
-      "_FormMaker.vue_vue_type_script_setup_true_lang-jANCDKcC.js",
+      "_KeyboardDisplay.vue_vue_type_script_setup_true_lang-Cl5CLMO2.js",
+      "_FormMaker.vue_vue_type_script_setup_true_lang-CgWHUYy4.js",
       "_@svgdotjs-Bv5fOkx0.js",
-      "_useKeyboard-D7NGTEYb.js",
+      "_useKeyboard-DmIaSTFk.js",
       "resources/js/app.ts",
       "_axios-G5LVpFxl.js",
       "_@inertiajs-CMy4_go5.js",
@@ -1659,51 +1659,51 @@
       "_laravel-vite-plugin-DEL3ZhID.js",
       "_katex-J55txNYc.js",
       "_@vueuse-CObWd_w_.js",
-      "_scolcours-C_dv6wOK.js",
+      "_scolcours-C9mGPfV9.js",
       "_helperFunctions-Bh4Sa31V.js"
     ]
   },
   "resources/js/Components/Tools/tangente-a-un-graphe.vue": {
-    "file": "assets/tangente-a-un-graphe-DFgxIVma.js",
+    "file": "assets/tangente-a-un-graphe-ZFrG9a3p.js",
     "name": "tangente-a-un-graphe",
     "src": "resources/js/Components/Tools/tangente-a-un-graphe.vue",
     "isDynamicEntry": true,
     "imports": [
       "_Panel.vue_vue_type_script_setup_true_lang-DAxycl4X.js",
       "_pimath-CCU4WHwg.js",
-      "_FormMaker.vue_vue_type_script_setup_true_lang-jANCDKcC.js",
+      "_FormMaker.vue_vue_type_script_setup_true_lang-CgWHUYy4.js",
       "_@vue-DqEkFMKT.js",
       "_@svgdotjs-Bv5fOkx0.js"
     ]
   },
   "resources/js/Components/Tools/tangentes-a-un-cercle.vue": {
-    "file": "assets/tangentes-a-un-cercle-DnOZn06U.js",
+    "file": "assets/tangentes-a-un-cercle-DrjMfiDb.js",
     "name": "tangentes-a-un-cercle",
     "src": "resources/js/Components/Tools/tangentes-a-un-cercle.vue",
     "isDynamicEntry": true,
     "imports": [
       "_Panel.vue_vue_type_script_setup_true_lang-DAxycl4X.js",
       "_pimath-CCU4WHwg.js",
-      "_FormMaker.vue_vue_type_script_setup_true_lang-jANCDKcC.js",
+      "_FormMaker.vue_vue_type_script_setup_true_lang-CgWHUYy4.js",
       "_@vue-DqEkFMKT.js",
       "_@svgdotjs-Bv5fOkx0.js"
     ]
   },
   "resources/js/Components/Tools/triangle.vue": {
-    "file": "assets/triangle-CKu0nBWS.js",
+    "file": "assets/triangle-C2G_r5zW.js",
     "name": "triangle",
     "src": "resources/js/Components/Tools/triangle.vue",
     "isDynamicEntry": true,
     "imports": [
       "_Panel.vue_vue_type_script_setup_true_lang-DAxycl4X.js",
       "_pimath-CCU4WHwg.js",
-      "_FormMaker.vue_vue_type_script_setup_true_lang-jANCDKcC.js",
+      "_FormMaker.vue_vue_type_script_setup_true_lang-CgWHUYy4.js",
       "_@vue-DqEkFMKT.js",
       "_@svgdotjs-Bv5fOkx0.js"
     ]
   },
   "resources/js/Components/Tools/trigonometrie.vue": {
-    "file": "assets/trigonometrie-BeTQ0nmX.js",
+    "file": "assets/trigonometrie-Dinw_Zlf.js",
     "name": "trigonometrie",
     "src": "resources/js/Components/Tools/trigonometrie.vue",
     "isDynamicEntry": true,
@@ -1711,7 +1711,7 @@
       "_Panel.vue_vue_type_script_setup_true_lang-DAxycl4X.js",
       "_pidraw-J_eZaQIc.js",
       "_PiDrawParser.vue_vue_type_script_setup_true_lang-C_5yURmO.js",
-      "_FormMaker.vue_vue_type_script_setup_true_lang-jANCDKcC.js",
+      "_FormMaker.vue_vue_type_script_setup_true_lang-CgWHUYy4.js",
       "_@vue-DqEkFMKT.js",
       "_@svgdotjs-Bv5fOkx0.js",
       "_vue-slider-component-BjrKlHLS.js",
@@ -1722,7 +1722,7 @@
     ]
   },
   "resources/js/Components/Tools/venn.vue": {
-    "file": "assets/venn-C-DsiZFj.js",
+    "file": "assets/venn-B5E3Nz8O.js",
     "name": "venn",
     "src": "resources/js/Components/Tools/venn.vue",
     "isDynamicEntry": true,
@@ -1730,11 +1730,11 @@
       "_Panel.vue_vue_type_script_setup_true_lang-DAxycl4X.js",
       "_pimath-CCU4WHwg.js",
       "_pidraw-J_eZaQIc.js",
-      "_KeyboardDisplay.vue_vue_type_script_setup_true_lang-D-xAhtLr.js",
-      "_FormMaker.vue_vue_type_script_setup_true_lang-jANCDKcC.js",
+      "_KeyboardDisplay.vue_vue_type_script_setup_true_lang-Cl5CLMO2.js",
+      "_FormMaker.vue_vue_type_script_setup_true_lang-CgWHUYy4.js",
       "_@vue-DqEkFMKT.js",
       "_@svgdotjs-Bv5fOkx0.js",
-      "_useKeyboard-D7NGTEYb.js",
+      "_useKeyboard-DmIaSTFk.js",
       "resources/js/app.ts",
       "_axios-G5LVpFxl.js",
       "_@inertiajs-CMy4_go5.js",
@@ -1762,7 +1762,7 @@
       "_laravel-vite-plugin-DEL3ZhID.js",
       "_katex-J55txNYc.js",
       "_@vueuse-CObWd_w_.js",
-      "_scolcours-C_dv6wOK.js",
+      "_scolcours-C9mGPfV9.js",
       "_helperFunctions-Bh4Sa31V.js"
     ]
   },
@@ -1779,30 +1779,30 @@
     ]
   },
   "resources/js/Components/Widgets/analyse/algorithme-de-bissection.vue": {
-    "file": "assets/algorithme-de-bissection-BTH1sd2W.js",
+    "file": "assets/algorithme-de-bissection-D7vWSEWS.js",
     "name": "algorithme-de-bissection",
     "src": "resources/js/Components/Widgets/analyse/algorithme-de-bissection.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_algorithme-de-bissection.vue_vue_type_script_setup_true_lang-Bxo_m_iu.js",
-      "_FormMaker.vue_vue_type_script_setup_true_lang-jANCDKcC.js",
+      "_algorithme-de-bissection.vue_vue_type_script_setup_true_lang-d4CknNHf.js",
+      "_FormMaker.vue_vue_type_script_setup_true_lang-CgWHUYy4.js",
       "_@vue-DqEkFMKT.js",
       "_pimath-CCU4WHwg.js",
       "_@svgdotjs-Bv5fOkx0.js"
     ]
   },
   "resources/js/Components/Widgets/analyse/tableau-de-signes.vue": {
-    "file": "assets/tableau-de-signes-4orv53S6.js",
+    "file": "assets/tableau-de-signes-9RnV01PL.js",
     "name": "tableau-de-signes",
     "src": "resources/js/Components/Widgets/analyse/tableau-de-signes.vue",
     "isDynamicEntry": true,
     "imports": [
       "_pimath-CCU4WHwg.js",
       "_PiTableOfSigns.vue_vue_type_script_setup_true_lang-Bat7E0Pj.js",
-      "_useTos-C8cLc7Li.js",
+      "_useTos-BY5u6I9d.js",
       "_@vue-DqEkFMKT.js",
       "_@svgdotjs-Bv5fOkx0.js",
-      "_useKeyboard-D7NGTEYb.js",
+      "_useKeyboard-DmIaSTFk.js",
       "resources/js/app.ts",
       "_axios-G5LVpFxl.js",
       "_@inertiajs-CMy4_go5.js",
@@ -1831,7 +1831,7 @@
       "_katex-J55txNYc.js",
       "_pidraw-J_eZaQIc.js",
       "_@vueuse-CObWd_w_.js",
-      "_scolcours-C_dv6wOK.js",
+      "_scolcours-C9mGPfV9.js",
       "_helperFunctions-Bh4Sa31V.js"
     ]
   },
@@ -1865,12 +1865,12 @@
     ]
   },
   "resources/js/Components/Widgets/etapes-par-etapes.vue": {
-    "file": "assets/etapes-par-etapes-C-7TrYrK.js",
+    "file": "assets/etapes-par-etapes-BTtlL4Jh.js",
     "name": "etapes-par-etapes",
     "src": "resources/js/Components/Widgets/etapes-par-etapes.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_MarkdownIt.vue_vue_type_script_setup_true_lang-COsUhffw.js",
+      "_MarkdownIt.vue_vue_type_script_setup_true_lang-vEHgWcJ1.js",
       "_@vue-DqEkFMKT.js",
       "resources/js/app.ts",
       "_axios-G5LVpFxl.js",
@@ -1946,14 +1946,14 @@
     ]
   },
   "resources/js/Pages/Admin/AdminChaptersPage.vue": {
-    "file": "assets/AdminChaptersPage-Cz15yfon.js",
+    "file": "assets/AdminChaptersPage-CBDMwHkU.js",
     "name": "AdminChaptersPage",
     "src": "resources/js/Pages/Admin/AdminChaptersPage.vue",
     "isDynamicEntry": true,
     "imports": [
       "_Panel.vue_vue_type_script_setup_true_lang-DAxycl4X.js",
       "_@inertiajs-CMy4_go5.js",
-      "_FormMaker.vue_vue_type_script_setup_true_lang-jANCDKcC.js",
+      "_FormMaker.vue_vue_type_script_setup_true_lang-CgWHUYy4.js",
       "_LayoutMain.vue_vue_type_script_setup_true_lang-gRd_oA16.js",
       "_@vue-DqEkFMKT.js",
       "_axios-G5LVpFxl.js",
@@ -1983,13 +1983,13 @@
     ]
   },
   "resources/js/Pages/Admin/AdminConfigPage.vue": {
-    "file": "assets/AdminConfigPage-niswNZNT.js",
+    "file": "assets/AdminConfigPage--Q9H9U2L.js",
     "name": "AdminConfigPage",
     "src": "resources/js/Pages/Admin/AdminConfigPage.vue",
     "isDynamicEntry": true,
     "imports": [
       "_axios-G5LVpFxl.js",
-      "_FormMaker.vue_vue_type_script_setup_true_lang-jANCDKcC.js",
+      "_FormMaker.vue_vue_type_script_setup_true_lang-CgWHUYy4.js",
       "_LayoutMain.vue_vue_type_script_setup_true_lang-gRd_oA16.js",
       "_@vue-DqEkFMKT.js",
       "_MainFooter.vue_vue_type_script_setup_true_lang-CcsgDa71.js",
@@ -2054,12 +2054,12 @@
     ]
   },
   "resources/js/Pages/Admin/AdminIllustrationsPage.vue": {
-    "file": "assets/AdminIllustrationsPage-DWg7oqHV.js",
+    "file": "assets/AdminIllustrationsPage-C-xEMnY5.js",
     "name": "AdminIllustrationsPage",
     "src": "resources/js/Pages/Admin/AdminIllustrationsPage.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_FormMaker.vue_vue_type_script_setup_true_lang-jANCDKcC.js",
+      "_FormMaker.vue_vue_type_script_setup_true_lang-CgWHUYy4.js",
       "_LayoutMain.vue_vue_type_script_setup_true_lang-gRd_oA16.js",
       "_@vue-DqEkFMKT.js",
       "_MainFooter.vue_vue_type_script_setup_true_lang-CcsgDa71.js",
@@ -2090,7 +2090,7 @@
     ]
   },
   "resources/js/Pages/Admin/AdminUsersPage.vue": {
-    "file": "assets/AdminUsersPage-Ckis9AmN.js",
+    "file": "assets/AdminUsersPage-BbmEMWO8.js",
     "name": "AdminUsersPage",
     "src": "resources/js/Pages/Admin/AdminUsersPage.vue",
     "isDynamicEntry": true,
@@ -2098,7 +2098,7 @@
       "_@vue-DqEkFMKT.js",
       "_@inertiajs-CMy4_go5.js",
       "_ConfirmButton.vue_vue_type_script_setup_true_lang-DxuLQxTL.js",
-      "_FormMaker.vue_vue_type_script_setup_true_lang-jANCDKcC.js",
+      "_FormMaker.vue_vue_type_script_setup_true_lang-CgWHUYy4.js",
       "_axios-G5LVpFxl.js",
       "_DialogModal.vue_vue_type_script_setup_true_lang-BZl89_C5.js",
       "_LayoutMain.vue_vue_type_script_setup_true_lang-gRd_oA16.js",
@@ -2128,17 +2128,17 @@
     ]
   },
   "resources/js/Pages/Admin/AdminWidgetsPage.vue": {
-    "file": "assets/AdminWidgetsPage-BWATxI70.js",
+    "file": "assets/AdminWidgetsPage-D6HkvD2W.js",
     "name": "AdminWidgetsPage",
     "src": "resources/js/Pages/Admin/AdminWidgetsPage.vue",
     "isDynamicEntry": true,
     "imports": [
       "_@vue-DqEkFMKT.js",
-      "_FormMaker.vue_vue_type_script_setup_true_lang-jANCDKcC.js",
+      "_FormMaker.vue_vue_type_script_setup_true_lang-CgWHUYy4.js",
       "_axios-G5LVpFxl.js",
       "_@inertiajs-CMy4_go5.js",
       "_LayoutMain.vue_vue_type_script_setup_true_lang-gRd_oA16.js",
-      "_FilteredList.vue_vue_type_script_setup_true_lang-lSgwm2zs.js",
+      "_FilteredList.vue_vue_type_script_setup_true_lang-DkajMvrN.js",
       "_deepmerge-BLbTkTqH.js",
       "_@svgdotjs-Bv5fOkx0.js",
       "_qs-DkMVgVgQ.js",
@@ -2235,7 +2235,7 @@
     ]
   },
   "resources/js/Pages/Auth/Login.vue": {
-    "file": "assets/Login-CJXBsRZT.js",
+    "file": "assets/Login-BYoSZtpM.js",
     "name": "Login",
     "src": "resources/js/Pages/Auth/Login.vue",
     "isDynamicEntry": true,
@@ -2245,7 +2245,7 @@
       "__plugin-vue_export-helper-DlAUqK2U.js",
       "_ValidationErrors-hGLwxOaR.js",
       "_@inertiajs-CMy4_go5.js",
-      "_FormMaker.vue_vue_type_script_setup_true_lang-jANCDKcC.js",
+      "_FormMaker.vue_vue_type_script_setup_true_lang-CgWHUYy4.js",
       "_ScolcoursLogo-CX7O4mlX.js",
       "_axios-G5LVpFxl.js",
       "_deepmerge-BLbTkTqH.js",
@@ -2375,27 +2375,27 @@
     ]
   },
   "resources/js/Pages/Blocks/BlockEdit.vue": {
-    "file": "assets/BlockEdit-y7LY7jjm.js",
+    "file": "assets/BlockEdit-DhdP250-.js",
     "name": "BlockEdit",
     "src": "resources/js/Pages/Blocks/BlockEdit.vue",
     "isDynamicEntry": true,
     "imports": [
       "_@vue-DqEkFMKT.js",
       "_LayoutMain.vue_vue_type_script_setup_true_lang-gRd_oA16.js",
-      "_BlockShow.vue_vue_type_script_setup_true_lang-BeGWy18r.js",
+      "_BlockShow.vue_vue_type_script_setup_true_lang-a8qOR5aC.js",
       "_ConfirmButton.vue_vue_type_script_setup_true_lang-DxuLQxTL.js",
-      "_MoveItemTo.vue_vue_type_script_setup_true_lang-BF4989_n.js",
-      "_FormMaker.vue_vue_type_script_setup_true_lang-jANCDKcC.js",
+      "_MoveItemTo.vue_vue_type_script_setup_true_lang-DJ8Wewd6.js",
+      "_FormMaker.vue_vue_type_script_setup_true_lang-CgWHUYy4.js",
       "_@inertiajs-CMy4_go5.js",
       "_axios-G5LVpFxl.js",
-      "_scolcours-C_dv6wOK.js",
+      "_scolcours-C9mGPfV9.js",
       "_MainFooter.vue_vue_type_script_setup_true_lang-CcsgDa71.js",
       "__plugin-vue_export-helper-DlAUqK2U.js",
       "_DropdownMenu.vue_vue_type_script_setup_true_lang-Bi50YI0a.js",
-      "_IllustrationShow.vue_vue_type_script_setup_true_lang-B9h3HIqa.js",
+      "_IllustrationShow.vue_vue_type_script_setup_true_lang-DrV4lRHY.js",
       "_EditLink.vue_vue_type_script_setup_true_lang-CEw-xBsZ.js",
-      "_BlockShowAdmin.vue_vue_type_script_setup_true_lang-ClB7jp7o.js",
-      "_MarkdownIt.vue_vue_type_script_setup_true_lang-COsUhffw.js",
+      "_BlockShowAdmin.vue_vue_type_script_setup_true_lang-YH_HVH2w.js",
+      "_MarkdownIt.vue_vue_type_script_setup_true_lang-vEHgWcJ1.js",
       "resources/js/app.ts",
       "_vuedraggable-BrBbrKw5.js",
       "_sortablejs-DcahgXRU.js",
@@ -2436,14 +2436,14 @@
     ]
   },
   "resources/js/Pages/Blocks/BlockShow.vue": {
-    "file": "assets/BlockShow-BVgl84LC.js",
+    "file": "assets/BlockShow-Ec7U7WnS.js",
     "name": "BlockShow",
     "src": "resources/js/Pages/Blocks/BlockShow.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_BlockShow.vue_vue_type_script_setup_true_lang-BeGWy18r.js",
+      "_BlockShow.vue_vue_type_script_setup_true_lang-a8qOR5aC.js",
       "_@vue-DqEkFMKT.js",
-      "_scolcours-C_dv6wOK.js",
+      "_scolcours-C9mGPfV9.js",
       "resources/js/app.ts",
       "_axios-G5LVpFxl.js",
       "_@inertiajs-CMy4_go5.js",
@@ -2473,11 +2473,11 @@
       "_katex-J55txNYc.js",
       "_pidraw-J_eZaQIc.js",
       "_@vueuse-CObWd_w_.js",
-      "_IllustrationShow.vue_vue_type_script_setup_true_lang-B9h3HIqa.js",
+      "_IllustrationShow.vue_vue_type_script_setup_true_lang-DrV4lRHY.js",
       "_EditLink.vue_vue_type_script_setup_true_lang-CEw-xBsZ.js",
-      "_BlockShowAdmin.vue_vue_type_script_setup_true_lang-ClB7jp7o.js",
-      "_FormMaker.vue_vue_type_script_setup_true_lang-jANCDKcC.js",
-      "_MarkdownIt.vue_vue_type_script_setup_true_lang-COsUhffw.js",
+      "_BlockShowAdmin.vue_vue_type_script_setup_true_lang-YH_HVH2w.js",
+      "_FormMaker.vue_vue_type_script_setup_true_lang-CgWHUYy4.js",
+      "_MarkdownIt.vue_vue_type_script_setup_true_lang-vEHgWcJ1.js",
       "_markdown-it-DI8MEbma.js",
       "_mdurl-k9Sl0PQj.js",
       "_uc.micro-kMc2yuuw.js",
@@ -2491,20 +2491,20 @@
     ]
   },
   "resources/js/Pages/Blocks/BlockShowAdmin.vue": {
-    "file": "assets/BlockShowAdmin-B5ZLRdut.js",
+    "file": "assets/BlockShowAdmin-OFDCVLmH.js",
     "name": "BlockShowAdmin",
     "src": "resources/js/Pages/Blocks/BlockShowAdmin.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_BlockShowAdmin.vue_vue_type_script_setup_true_lang-ClB7jp7o.js",
+      "_BlockShowAdmin.vue_vue_type_script_setup_true_lang-YH_HVH2w.js",
       "_EditLink.vue_vue_type_script_setup_true_lang-CEw-xBsZ.js",
       "_@vue-DqEkFMKT.js",
-      "_FormMaker.vue_vue_type_script_setup_true_lang-jANCDKcC.js",
+      "_FormMaker.vue_vue_type_script_setup_true_lang-CgWHUYy4.js",
       "_axios-G5LVpFxl.js"
     ]
   },
   "resources/js/Pages/Challenges/ChallengeEdit.vue": {
-    "file": "assets/ChallengeEdit-Bm8TkL6z.js",
+    "file": "assets/ChallengeEdit-GZeMz9yL.js",
     "name": "ChallengeEdit",
     "src": "resources/js/Pages/Challenges/ChallengeEdit.vue",
     "isDynamicEntry": true,
@@ -2514,9 +2514,9 @@
       "_pimath-CCU4WHwg.js",
       "_axios-G5LVpFxl.js",
       "_@inertiajs-CMy4_go5.js",
-      "_FormMaker.vue_vue_type_script_setup_true_lang-jANCDKcC.js",
+      "_FormMaker.vue_vue_type_script_setup_true_lang-CgWHUYy4.js",
       "_ConfirmButton.vue_vue_type_script_setup_true_lang-DxuLQxTL.js",
-      "_BlockShow.vue_vue_type_script_setup_true_lang-BeGWy18r.js",
+      "_BlockShow.vue_vue_type_script_setup_true_lang-a8qOR5aC.js",
       "_MainFooter.vue_vue_type_script_setup_true_lang-CcsgDa71.js",
       "__plugin-vue_export-helper-DlAUqK2U.js",
       "_DropdownMenu.vue_vue_type_script_setup_true_lang-Bi50YI0a.js",
@@ -2540,7 +2540,7 @@
       "_nprogress-am_f9gEK.js",
       "_lodash.clonedeep-BIV4HRze.js",
       "_lodash.isequal-CITiqanf.js",
-      "_scolcours-C_dv6wOK.js",
+      "_scolcours-C9mGPfV9.js",
       "resources/js/app.ts",
       "_vuedraggable-BrBbrKw5.js",
       "_sortablejs-DcahgXRU.js",
@@ -2548,10 +2548,10 @@
       "_katex-J55txNYc.js",
       "_pidraw-J_eZaQIc.js",
       "_@vueuse-CObWd_w_.js",
-      "_IllustrationShow.vue_vue_type_script_setup_true_lang-B9h3HIqa.js",
+      "_IllustrationShow.vue_vue_type_script_setup_true_lang-DrV4lRHY.js",
       "_EditLink.vue_vue_type_script_setup_true_lang-CEw-xBsZ.js",
-      "_BlockShowAdmin.vue_vue_type_script_setup_true_lang-ClB7jp7o.js",
-      "_MarkdownIt.vue_vue_type_script_setup_true_lang-COsUhffw.js",
+      "_BlockShowAdmin.vue_vue_type_script_setup_true_lang-YH_HVH2w.js",
+      "_MarkdownIt.vue_vue_type_script_setup_true_lang-vEHgWcJ1.js",
       "_markdown-it-DI8MEbma.js",
       "_mdurl-k9Sl0PQj.js",
       "_uc.micro-kMc2yuuw.js",
@@ -2564,7 +2564,7 @@
     ]
   },
   "resources/js/Pages/Challenges/ChallengeShow.vue": {
-    "file": "assets/ChallengeShow-QC2rWxEC.js",
+    "file": "assets/ChallengeShow-CCBcNQN6.js",
     "name": "ChallengeShow",
     "src": "resources/js/Pages/Challenges/ChallengeShow.vue",
     "isDynamicEntry": true,
@@ -2573,14 +2573,14 @@
       "_@vueuse-CObWd_w_.js",
       "_useGenerator-CqDgHi7a.js",
       "_axios-G5LVpFxl.js",
-      "_FormMaker.vue_vue_type_script_setup_true_lang-jANCDKcC.js",
-      "_useKeyboard-D7NGTEYb.js",
+      "_FormMaker.vue_vue_type_script_setup_true_lang-CgWHUYy4.js",
+      "_useKeyboard-DmIaSTFk.js",
       "_@inertiajs-CMy4_go5.js",
       "_LayoutMain.vue_vue_type_script_setup_true_lang-gRd_oA16.js",
-      "_QuestionShow.vue_vue_type_script_setup_true_lang-D9eLRDS7.js",
+      "_QuestionShow.vue_vue_type_script_setup_true_lang-DZHgvWdp.js",
       "_StatBar.vue_vue_type_script_setup_true_lang-bsAszabo.js",
-      "_MarkdownIt.vue_vue_type_script_setup_true_lang-COsUhffw.js",
-      "_IllustrationShow.vue_vue_type_script_setup_true_lang-B9h3HIqa.js",
+      "_MarkdownIt.vue_vue_type_script_setup_true_lang-vEHgWcJ1.js",
+      "_IllustrationShow.vue_vue_type_script_setup_true_lang-DrV4lRHY.js",
       "_pimath-CCU4WHwg.js",
       "_@svgdotjs-Bv5fOkx0.js",
       "resources/js/app.ts",
@@ -2608,7 +2608,7 @@
       "_nprogress-am_f9gEK.js",
       "_lodash.clonedeep-BIV4HRze.js",
       "_lodash.isequal-CITiqanf.js",
-      "_scolcours-C_dv6wOK.js",
+      "_scolcours-C9mGPfV9.js",
       "_helperFunctions-Bh4Sa31V.js",
       "_MainFooter.vue_vue_type_script_setup_true_lang-CcsgDa71.js",
       "__plugin-vue_export-helper-DlAUqK2U.js",
@@ -2662,15 +2662,15 @@
     ]
   },
   "resources/js/Pages/Chapters/ChapiterIndexCreateAdmin.vue": {
-    "file": "assets/ChapiterIndexCreateAdmin-ooUQi_Rw.js",
+    "file": "assets/ChapiterIndexCreateAdmin-CrtG1FVA.js",
     "name": "ChapiterIndexCreateAdmin",
     "src": "resources/js/Pages/Chapters/ChapiterIndexCreateAdmin.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_ChapiterIndexCreateAdmin.vue_vue_type_script_setup_true_lang-uKrtW-lF.js",
+      "_ChapiterIndexCreateAdmin.vue_vue_type_script_setup_true_lang-OclSU-mK.js",
       "_DialogModal.vue_vue_type_script_setup_true_lang-BZl89_C5.js",
       "_@vue-DqEkFMKT.js",
-      "_FormMaker.vue_vue_type_script_setup_true_lang-jANCDKcC.js",
+      "_FormMaker.vue_vue_type_script_setup_true_lang-CgWHUYy4.js",
       "_axios-G5LVpFxl.js",
       "_@inertiajs-CMy4_go5.js",
       "_deepmerge-BLbTkTqH.js",
@@ -2696,15 +2696,15 @@
     ]
   },
   "resources/js/Pages/Chapters/ChapterEdit.vue": {
-    "file": "assets/ChapterEdit-CSnH4VeP.js",
+    "file": "assets/ChapterEdit-DVsWpGKP.js",
     "name": "ChapterEdit",
     "src": "resources/js/Pages/Chapters/ChapterEdit.vue",
     "isDynamicEntry": true,
     "imports": [
       "_LayoutMain.vue_vue_type_script_setup_true_lang-gRd_oA16.js",
-      "_FormMaker.vue_vue_type_script_setup_true_lang-jANCDKcC.js",
+      "_FormMaker.vue_vue_type_script_setup_true_lang-CgWHUYy4.js",
       "_ConfirmButton.vue_vue_type_script_setup_true_lang-DxuLQxTL.js",
-      "_MarkdownIt.vue_vue_type_script_setup_true_lang-COsUhffw.js",
+      "_MarkdownIt.vue_vue_type_script_setup_true_lang-vEHgWcJ1.js",
       "_axios-G5LVpFxl.js",
       "_@vue-DqEkFMKT.js",
       "_MainFooter.vue_vue_type_script_setup_true_lang-CcsgDa71.js",
@@ -2750,7 +2750,7 @@
     ]
   },
   "resources/js/Pages/Chapters/ChapterIndex.vue": {
-    "file": "assets/ChapterIndex-C0bX08km.js",
+    "file": "assets/ChapterIndex-Bk7GPoAx.js",
     "name": "ChapterIndex",
     "src": "resources/js/Pages/Chapters/ChapterIndex.vue",
     "isDynamicEntry": true,
@@ -2759,9 +2759,9 @@
       "_@inertiajs-CMy4_go5.js",
       "_LayoutMain.vue_vue_type_script_setup_true_lang-gRd_oA16.js",
       "_tailwindcss-CkNzsrlQ.js",
-      "_FilteredList.vue_vue_type_script_setup_true_lang-lSgwm2zs.js",
-      "_MarkdownIt.vue_vue_type_script_setup_true_lang-COsUhffw.js",
-      "_ChapiterIndexCreateAdmin.vue_vue_type_script_setup_true_lang-uKrtW-lF.js",
+      "_FilteredList.vue_vue_type_script_setup_true_lang-DkajMvrN.js",
+      "_MarkdownIt.vue_vue_type_script_setup_true_lang-vEHgWcJ1.js",
+      "_ChapiterIndexCreateAdmin.vue_vue_type_script_setup_true_lang-OclSU-mK.js",
       "_@vue-DqEkFMKT.js",
       "_axios-G5LVpFxl.js",
       "_deepmerge-BLbTkTqH.js",
@@ -2787,7 +2787,7 @@
       "_MainFooter.vue_vue_type_script_setup_true_lang-CcsgDa71.js",
       "__plugin-vue_export-helper-DlAUqK2U.js",
       "_DropdownMenu.vue_vue_type_script_setup_true_lang-Bi50YI0a.js",
-      "_FormMaker.vue_vue_type_script_setup_true_lang-jANCDKcC.js",
+      "_FormMaker.vue_vue_type_script_setup_true_lang-CgWHUYy4.js",
       "resources/js/app.ts",
       "_vuedraggable-BrBbrKw5.js",
       "_sortablejs-DcahgXRU.js",
@@ -2808,18 +2808,18 @@
     ]
   },
   "resources/js/Pages/Chapters/ChapterShow.vue": {
-    "file": "assets/ChapterShow-CcmqOYuV.js",
+    "file": "assets/ChapterShow-Da2o-YNc.js",
     "name": "ChapterShow",
     "src": "resources/js/Pages/Chapters/ChapterShow.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_ChapterFormulas.vue_vue_type_script_setup_true_lang-CstZLc0z.js",
+      "_ChapterFormulas.vue_vue_type_script_setup_true_lang-DZng6NX6.js",
       "_@vue-DqEkFMKT.js",
       "_DialogModal.vue_vue_type_script_setup_true_lang-BZl89_C5.js",
       "_@inertiajs-CMy4_go5.js",
-      "_FormMaker.vue_vue_type_script_setup_true_lang-jANCDKcC.js",
+      "_FormMaker.vue_vue_type_script_setup_true_lang-CgWHUYy4.js",
       "_axios-G5LVpFxl.js",
-      "_BlockShow.vue_vue_type_script_setup_true_lang-BeGWy18r.js",
+      "_BlockShow.vue_vue_type_script_setup_true_lang-a8qOR5aC.js",
       "_@vueuse-CObWd_w_.js",
       "_LayoutMain.vue_vue_type_script_setup_true_lang-gRd_oA16.js",
       "_EditLink.vue_vue_type_script_setup_true_lang-CEw-xBsZ.js",
@@ -2843,16 +2843,16 @@
       "_nprogress-am_f9gEK.js",
       "_lodash.clonedeep-BIV4HRze.js",
       "_lodash.isequal-CITiqanf.js",
-      "_scolcours-C_dv6wOK.js",
+      "_scolcours-C9mGPfV9.js",
       "resources/js/app.ts",
       "_vuedraggable-BrBbrKw5.js",
       "_sortablejs-DcahgXRU.js",
       "_laravel-vite-plugin-DEL3ZhID.js",
       "_katex-J55txNYc.js",
       "_pidraw-J_eZaQIc.js",
-      "_IllustrationShow.vue_vue_type_script_setup_true_lang-B9h3HIqa.js",
-      "_BlockShowAdmin.vue_vue_type_script_setup_true_lang-ClB7jp7o.js",
-      "_MarkdownIt.vue_vue_type_script_setup_true_lang-COsUhffw.js",
+      "_IllustrationShow.vue_vue_type_script_setup_true_lang-DrV4lRHY.js",
+      "_BlockShowAdmin.vue_vue_type_script_setup_true_lang-YH_HVH2w.js",
+      "_MarkdownIt.vue_vue_type_script_setup_true_lang-vEHgWcJ1.js",
       "_markdown-it-DI8MEbma.js",
       "_mdurl-k9Sl0PQj.js",
       "_uc.micro-kMc2yuuw.js",
@@ -2905,15 +2905,15 @@
     ]
   },
   "resources/js/Pages/Decks/DeckEdit.vue": {
-    "file": "assets/DeckEdit-C5FUdUNR.js",
+    "file": "assets/DeckEdit-CCy0BXpS.js",
     "name": "DeckEdit",
     "src": "resources/js/Pages/Decks/DeckEdit.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_MarkdownIt.vue_vue_type_script_setup_true_lang-COsUhffw.js",
+      "_MarkdownIt.vue_vue_type_script_setup_true_lang-vEHgWcJ1.js",
       "_axios-G5LVpFxl.js",
       "_ConfirmButton.vue_vue_type_script_setup_true_lang-DxuLQxTL.js",
-      "_FormMaker.vue_vue_type_script_setup_true_lang-jANCDKcC.js",
+      "_FormMaker.vue_vue_type_script_setup_true_lang-CgWHUYy4.js",
       "_@vue-DqEkFMKT.js",
       "_LayoutMain.vue_vue_type_script_setup_true_lang-gRd_oA16.js",
       "resources/js/app.ts",
@@ -2959,13 +2959,13 @@
     ]
   },
   "resources/js/Pages/Decks/DeckIndex.vue": {
-    "file": "assets/DeckIndex-o2UOmiQ2.js",
+    "file": "assets/DeckIndex-BuP9hov_.js",
     "name": "DeckIndex",
     "src": "resources/js/Pages/Decks/DeckIndex.vue",
     "isDynamicEntry": true,
     "imports": [
       "_axios-G5LVpFxl.js",
-      "_FormMaker.vue_vue_type_script_setup_true_lang-jANCDKcC.js",
+      "_FormMaker.vue_vue_type_script_setup_true_lang-CgWHUYy4.js",
       "_LayoutMain.vue_vue_type_script_setup_true_lang-gRd_oA16.js",
       "_@vue-DqEkFMKT.js",
       "_MainFooter.vue_vue_type_script_setup_true_lang-CcsgDa71.js",
@@ -2995,13 +2995,13 @@
     ]
   },
   "resources/js/Pages/Decks/DeckShow.vue": {
-    "file": "assets/DeckShow-DYzlW5dm.js",
+    "file": "assets/DeckShow-GN-AwIbc.js",
     "name": "DeckShow",
     "src": "resources/js/Pages/Decks/DeckShow.vue",
     "isDynamicEntry": true,
     "imports": [
       "_@vue-DqEkFMKT.js",
-      "_MarkdownIt.vue_vue_type_script_setup_true_lang-COsUhffw.js",
+      "_MarkdownIt.vue_vue_type_script_setup_true_lang-vEHgWcJ1.js",
       "_@vueuse-CObWd_w_.js",
       "_pimath-CCU4WHwg.js",
       "_LayoutFullpage-CepAuMEX.js",
@@ -3083,12 +3083,12 @@
     ]
   },
   "resources/js/Pages/Devs/DevsShow.vue": {
-    "file": "assets/DevsShow-DGpY7VeZ.js",
+    "file": "assets/DevsShow-CzDFEV3q.js",
     "name": "DevsShow",
     "src": "resources/js/Pages/Devs/DevsShow.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_scolcours-C_dv6wOK.js",
+      "_scolcours-C9mGPfV9.js",
       "_LayoutMain.vue_vue_type_script_setup_true_lang-gRd_oA16.js",
       "_@vue-DqEkFMKT.js",
       "resources/js/app.ts",
@@ -3197,14 +3197,14 @@
     ]
   },
   "resources/js/Pages/Evaluations/EvaluationShow.vue": {
-    "file": "assets/EvaluationShow-DIJsFstP.js",
+    "file": "assets/EvaluationShow-Ci4pq-iH.js",
     "name": "EvaluationShow",
     "src": "resources/js/Pages/Evaluations/EvaluationShow.vue",
     "isDynamicEntry": true,
     "imports": [
       "_@vue-DqEkFMKT.js",
-      "_MarkdownIt.vue_vue_type_script_setup_true_lang-COsUhffw.js",
-      "_QuestionShow.vue_vue_type_script_setup_true_lang-D9eLRDS7.js",
+      "_MarkdownIt.vue_vue_type_script_setup_true_lang-vEHgWcJ1.js",
+      "_QuestionShow.vue_vue_type_script_setup_true_lang-DZHgvWdp.js",
       "_LayoutProjection.vue_vue_type_script_setup_true_lang-BD0efVPs.js",
       "resources/js/app.ts",
       "_axios-G5LVpFxl.js",
@@ -3247,25 +3247,25 @@
       "_QuestionShowAdmin.vue_vue_type_script_setup_true_lang-CpdVqzqw.js",
       "_EditLink.vue_vue_type_script_setup_true_lang-CEw-xBsZ.js",
       "_DropdownMenu.vue_vue_type_script_setup_true_lang-Bi50YI0a.js",
-      "_IllustrationShow.vue_vue_type_script_setup_true_lang-B9h3HIqa.js",
-      "_scolcours-C_dv6wOK.js",
-      "_useKeyboard-D7NGTEYb.js",
+      "_IllustrationShow.vue_vue_type_script_setup_true_lang-DrV4lRHY.js",
+      "_scolcours-C9mGPfV9.js",
+      "_useKeyboard-DmIaSTFk.js",
       "_pimath-CCU4WHwg.js",
       "_helperFunctions-Bh4Sa31V.js"
     ]
   },
   "resources/js/Pages/Formulas/FormulaIndex.vue": {
-    "file": "assets/FormulaIndex-Ca_bxprc.js",
+    "file": "assets/FormulaIndex-D1gEBsSe.js",
     "name": "FormulaIndex",
     "src": "resources/js/Pages/Formulas/FormulaIndex.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_BlockShow.vue_vue_type_script_setup_true_lang-BeGWy18r.js",
-      "_FormMaker.vue_vue_type_script_setup_true_lang-jANCDKcC.js",
+      "_BlockShow.vue_vue_type_script_setup_true_lang-a8qOR5aC.js",
+      "_FormMaker.vue_vue_type_script_setup_true_lang-CgWHUYy4.js",
       "_axios-G5LVpFxl.js",
       "_LayoutMain.vue_vue_type_script_setup_true_lang-gRd_oA16.js",
       "_@vue-DqEkFMKT.js",
-      "_scolcours-C_dv6wOK.js",
+      "_scolcours-C9mGPfV9.js",
       "resources/js/app.ts",
       "_@inertiajs-CMy4_go5.js",
       "_deepmerge-BLbTkTqH.js",
@@ -3294,10 +3294,10 @@
       "_katex-J55txNYc.js",
       "_pidraw-J_eZaQIc.js",
       "_@vueuse-CObWd_w_.js",
-      "_IllustrationShow.vue_vue_type_script_setup_true_lang-B9h3HIqa.js",
+      "_IllustrationShow.vue_vue_type_script_setup_true_lang-DrV4lRHY.js",
       "_EditLink.vue_vue_type_script_setup_true_lang-CEw-xBsZ.js",
-      "_BlockShowAdmin.vue_vue_type_script_setup_true_lang-ClB7jp7o.js",
-      "_MarkdownIt.vue_vue_type_script_setup_true_lang-COsUhffw.js",
+      "_BlockShowAdmin.vue_vue_type_script_setup_true_lang-YH_HVH2w.js",
+      "_MarkdownIt.vue_vue_type_script_setup_true_lang-vEHgWcJ1.js",
       "_markdown-it-DI8MEbma.js",
       "_mdurl-k9Sl0PQj.js",
       "_uc.micro-kMc2yuuw.js",
@@ -3314,7 +3314,7 @@
     ]
   },
   "resources/js/Pages/Games/futoshiki.vue": {
-    "file": "assets/futoshiki-DXtr11Q6.js",
+    "file": "assets/futoshiki-osH7ksVx.js",
     "name": "futoshiki",
     "src": "resources/js/Pages/Games/futoshiki.vue",
     "isDynamicEntry": true,
@@ -3322,7 +3322,7 @@
       "_@vue-DqEkFMKT.js",
       "_ArticleTitle.vue_vue_type_script_setup_true_lang-CQ1GEgmI.js",
       "_pigames-CjvDo7wu.js",
-      "_FormMaker.vue_vue_type_script_setup_true_lang-jANCDKcC.js",
+      "_FormMaker.vue_vue_type_script_setup_true_lang-CgWHUYy4.js",
       "_LayoutMain.vue_vue_type_script_setup_true_lang-gRd_oA16.js",
       "_MainFooter.vue_vue_type_script_setup_true_lang-CcsgDa71.js",
       "__plugin-vue_export-helper-DlAUqK2U.js",
@@ -3355,13 +3355,13 @@
     ]
   },
   "resources/js/Pages/Generators/GeneratorEdit.vue": {
-    "file": "assets/GeneratorEdit-D2oCY8Mv.js",
+    "file": "assets/GeneratorEdit-dLhtte-J.js",
     "name": "GeneratorEdit",
     "src": "resources/js/Pages/Generators/GeneratorEdit.vue",
     "isDynamicEntry": true,
     "imports": [
       "_LayoutMain.vue_vue_type_script_setup_true_lang-gRd_oA16.js",
-      "_FormMaker.vue_vue_type_script_setup_true_lang-jANCDKcC.js",
+      "_FormMaker.vue_vue_type_script_setup_true_lang-CgWHUYy4.js",
       "_pimath-CCU4WHwg.js",
       "_useGenerator-CqDgHi7a.js",
       "_ConfirmButton.vue_vue_type_script_setup_true_lang-DxuLQxTL.js",
@@ -3394,13 +3394,13 @@
     ]
   },
   "resources/js/Pages/Generators/GeneratorIndex.vue": {
-    "file": "assets/GeneratorIndex-BTfPDSP8.js",
+    "file": "assets/GeneratorIndex-DEvEWhIu.js",
     "name": "GeneratorIndex",
     "src": "resources/js/Pages/Generators/GeneratorIndex.vue",
     "isDynamicEntry": true,
     "imports": [
       "_LayoutMain.vue_vue_type_script_setup_true_lang-gRd_oA16.js",
-      "_FilteredList.vue_vue_type_script_setup_true_lang-lSgwm2zs.js",
+      "_FilteredList.vue_vue_type_script_setup_true_lang-DkajMvrN.js",
       "_@vue-DqEkFMKT.js",
       "_MainFooter.vue_vue_type_script_setup_true_lang-CcsgDa71.js",
       "__plugin-vue_export-helper-DlAUqK2U.js",
@@ -3427,17 +3427,17 @@
       "_lodash.clonedeep-BIV4HRze.js",
       "_lodash.isequal-CITiqanf.js",
       "_DropdownMenu.vue_vue_type_script_setup_true_lang-Bi50YI0a.js",
-      "_FormMaker.vue_vue_type_script_setup_true_lang-jANCDKcC.js"
+      "_FormMaker.vue_vue_type_script_setup_true_lang-CgWHUYy4.js"
     ]
   },
   "resources/js/Pages/HomePage.vue": {
-    "file": "assets/HomePage-B_NKZJ60.js",
+    "file": "assets/HomePage-H0V8w6CV.js",
     "name": "HomePage",
     "src": "resources/js/Pages/HomePage.vue",
     "isDynamicEntry": true,
     "imports": [
       "_ScolcoursLogo-CX7O4mlX.js",
-      "_MarkdownIt.vue_vue_type_script_setup_true_lang-COsUhffw.js",
+      "_MarkdownIt.vue_vue_type_script_setup_true_lang-vEHgWcJ1.js",
       "_LayoutFullpage-CepAuMEX.js",
       "_@vue-DqEkFMKT.js",
       "__plugin-vue_export-helper-DlAUqK2U.js",
@@ -3483,7 +3483,7 @@
     ]
   },
   "resources/js/Pages/Illustrations/IllustrationEdit.vue": {
-    "file": "assets/IllustrationEdit-BXg2F0TW.js",
+    "file": "assets/IllustrationEdit-Q8bgNfbj.js",
     "name": "IllustrationEdit",
     "src": "resources/js/Pages/Illustrations/IllustrationEdit.vue",
     "isDynamicEntry": true,
@@ -3491,12 +3491,12 @@
       "_LayoutMain.vue_vue_type_script_setup_true_lang-gRd_oA16.js",
       "_@vue-DqEkFMKT.js",
       "_axios-G5LVpFxl.js",
-      "_MarkdownIt.vue_vue_type_script_setup_true_lang-COsUhffw.js",
-      "_FormMaker.vue_vue_type_script_setup_true_lang-jANCDKcC.js",
+      "_MarkdownIt.vue_vue_type_script_setup_true_lang-vEHgWcJ1.js",
+      "_FormMaker.vue_vue_type_script_setup_true_lang-CgWHUYy4.js",
       "_pidraw-J_eZaQIc.js",
       "_@inertiajs-CMy4_go5.js",
       "_ConfirmButton.vue_vue_type_script_setup_true_lang-DxuLQxTL.js",
-      "_IllustrationShow.vue_vue_type_script_setup_true_lang-B9h3HIqa.js",
+      "_IllustrationShow.vue_vue_type_script_setup_true_lang-DrV4lRHY.js",
       "_MainFooter.vue_vue_type_script_setup_true_lang-CcsgDa71.js",
       "__plugin-vue_export-helper-DlAUqK2U.js",
       "_DropdownMenu.vue_vue_type_script_setup_true_lang-Bi50YI0a.js",
@@ -3535,18 +3535,18 @@
       "_markdown-it-bracketed-spans-M4ErAXhA.js",
       "_markdown-it-attrs-BPtfon-p.js",
       "_markdown-it-texmath-DoWyLTw4.js",
-      "_scolcours-C_dv6wOK.js",
+      "_scolcours-C9mGPfV9.js",
       "_EditLink.vue_vue_type_script_setup_true_lang-CEw-xBsZ.js"
     ]
   },
   "resources/js/Pages/Illustrations/IllustrationShow.vue": {
-    "file": "assets/IllustrationShow-f5LNJH6C.js",
+    "file": "assets/IllustrationShow-CD_u7Wkr.js",
     "name": "IllustrationShow",
     "src": "resources/js/Pages/Illustrations/IllustrationShow.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_IllustrationShow.vue_vue_type_script_setup_true_lang-B9h3HIqa.js",
-      "_scolcours-C_dv6wOK.js",
+      "_IllustrationShow.vue_vue_type_script_setup_true_lang-DrV4lRHY.js",
+      "_scolcours-C9mGPfV9.js",
       "resources/js/app.ts",
       "_axios-G5LVpFxl.js",
       "_@vue-DqEkFMKT.js",
@@ -3581,14 +3581,14 @@
     ]
   },
   "resources/js/Pages/Posts/PostEdit.vue": {
-    "file": "assets/PostEdit-CIMgnR3B.js",
+    "file": "assets/PostEdit-CEdJ04Ym.js",
     "name": "PostEdit",
     "src": "resources/js/Pages/Posts/PostEdit.vue",
     "isDynamicEntry": true,
     "imports": [
       "_ConfirmButton.vue_vue_type_script_setup_true_lang-DxuLQxTL.js",
-      "_MoveItemTo.vue_vue_type_script_setup_true_lang-BF4989_n.js",
-      "_FormMaker.vue_vue_type_script_setup_true_lang-jANCDKcC.js",
+      "_MoveItemTo.vue_vue_type_script_setup_true_lang-DJ8Wewd6.js",
+      "_FormMaker.vue_vue_type_script_setup_true_lang-CgWHUYy4.js",
       "_axios-G5LVpFxl.js",
       "_LayoutMain.vue_vue_type_script_setup_true_lang-gRd_oA16.js",
       "_@inertiajs-CMy4_go5.js",
@@ -3620,29 +3620,29 @@
     ]
   },
   "resources/js/Pages/Posts/PostShow.vue": {
-    "file": "assets/PostShow-PLWTjyEQ.js",
+    "file": "assets/PostShow-CrNUAZnF.js",
     "name": "PostShow",
     "src": "resources/js/Pages/Posts/PostShow.vue",
     "isDynamicEntry": true,
     "imports": [
       "_LayoutMain.vue_vue_type_script_setup_true_lang-gRd_oA16.js",
       "_EditLink.vue_vue_type_script_setup_true_lang-CEw-xBsZ.js",
-      "_BlockShow.vue_vue_type_script_setup_true_lang-BeGWy18r.js",
-      "_ChapterFormulas.vue_vue_type_script_setup_true_lang-CstZLc0z.js",
+      "_BlockShow.vue_vue_type_script_setup_true_lang-a8qOR5aC.js",
+      "_ChapterFormulas.vue_vue_type_script_setup_true_lang-DZng6NX6.js",
       "_@vue-DqEkFMKT.js",
       "_@inertiajs-CMy4_go5.js",
-      "_QuestionsIndex.vue_vue_type_script_setup_true_lang-Db1z-wFs.js",
+      "_QuestionsIndex.vue_vue_type_script_setup_true_lang-CjJwKm-c.js",
       "resources/js/app.ts",
       "_pimath-CCU4WHwg.js",
       "_axios-G5LVpFxl.js",
       "_MainFooter.vue_vue_type_script_setup_true_lang-CcsgDa71.js",
       "__plugin-vue_export-helper-DlAUqK2U.js",
       "_DropdownMenu.vue_vue_type_script_setup_true_lang-Bi50YI0a.js",
-      "_scolcours-C_dv6wOK.js",
-      "_IllustrationShow.vue_vue_type_script_setup_true_lang-B9h3HIqa.js",
-      "_BlockShowAdmin.vue_vue_type_script_setup_true_lang-ClB7jp7o.js",
-      "_FormMaker.vue_vue_type_script_setup_true_lang-jANCDKcC.js",
-      "_MarkdownIt.vue_vue_type_script_setup_true_lang-COsUhffw.js",
+      "_scolcours-C9mGPfV9.js",
+      "_IllustrationShow.vue_vue_type_script_setup_true_lang-DrV4lRHY.js",
+      "_BlockShowAdmin.vue_vue_type_script_setup_true_lang-YH_HVH2w.js",
+      "_FormMaker.vue_vue_type_script_setup_true_lang-CgWHUYy4.js",
+      "_MarkdownIt.vue_vue_type_script_setup_true_lang-vEHgWcJ1.js",
       "_markdown-it-DI8MEbma.js",
       "_mdurl-k9Sl0PQj.js",
       "_uc.micro-kMc2yuuw.js",
@@ -3674,11 +3674,11 @@
       "_nprogress-am_f9gEK.js",
       "_lodash.clonedeep-BIV4HRze.js",
       "_lodash.isequal-CITiqanf.js",
-      "_QuestionShow.vue_vue_type_script_setup_true_lang-D9eLRDS7.js",
+      "_QuestionShow.vue_vue_type_script_setup_true_lang-DZHgvWdp.js",
       "_QuestionShowAdmin.vue_vue_type_script_setup_true_lang-CpdVqzqw.js",
-      "_useKeyboard-D7NGTEYb.js",
+      "_useKeyboard-DmIaSTFk.js",
       "_helperFunctions-Bh4Sa31V.js",
-      "_QuestionsIndexAdmin.vue_vue_type_script_setup_true_lang-CCjKN-jb.js",
+      "_QuestionsIndexAdmin.vue_vue_type_script_setup_true_lang-DOaN0tSK.js",
       "_vuedraggable-BrBbrKw5.js",
       "_sortablejs-DcahgXRU.js",
       "_laravel-vite-plugin-DEL3ZhID.js",
@@ -3686,7 +3686,7 @@
     ]
   },
   "resources/js/Pages/Questions/QuestionEdit.vue": {
-    "file": "assets/QuestionEdit-BolZNHMz.js",
+    "file": "assets/QuestionEdit-Bg7yI9sB.js",
     "name": "QuestionEdit",
     "src": "resources/js/Pages/Questions/QuestionEdit.vue",
     "isDynamicEntry": true,
@@ -3694,17 +3694,17 @@
       "_@vue-DqEkFMKT.js",
       "_LayoutMain.vue_vue_type_script_setup_true_lang-gRd_oA16.js",
       "_axios-G5LVpFxl.js",
-      "_FormMaker.vue_vue_type_script_setup_true_lang-jANCDKcC.js",
-      "_QuestionShow.vue_vue_type_script_setup_true_lang-D9eLRDS7.js",
+      "_FormMaker.vue_vue_type_script_setup_true_lang-CgWHUYy4.js",
+      "_QuestionShow.vue_vue_type_script_setup_true_lang-DZHgvWdp.js",
       "_ConfirmButton.vue_vue_type_script_setup_true_lang-DxuLQxTL.js",
-      "_MoveItemTo.vue_vue_type_script_setup_true_lang-BF4989_n.js",
+      "_MoveItemTo.vue_vue_type_script_setup_true_lang-DJ8Wewd6.js",
       "_@inertiajs-CMy4_go5.js",
       "_MainFooter.vue_vue_type_script_setup_true_lang-CcsgDa71.js",
       "__plugin-vue_export-helper-DlAUqK2U.js",
       "_DropdownMenu.vue_vue_type_script_setup_true_lang-Bi50YI0a.js",
       "_QuestionShowAdmin.vue_vue_type_script_setup_true_lang-CpdVqzqw.js",
       "_EditLink.vue_vue_type_script_setup_true_lang-CEw-xBsZ.js",
-      "_MarkdownIt.vue_vue_type_script_setup_true_lang-COsUhffw.js",
+      "_MarkdownIt.vue_vue_type_script_setup_true_lang-vEHgWcJ1.js",
       "resources/js/app.ts",
       "_vuedraggable-BrBbrKw5.js",
       "_sortablejs-DcahgXRU.js",
@@ -3741,20 +3741,20 @@
       "_markdown-it-bracketed-spans-M4ErAXhA.js",
       "_markdown-it-attrs-BPtfon-p.js",
       "_markdown-it-texmath-DoWyLTw4.js",
-      "_IllustrationShow.vue_vue_type_script_setup_true_lang-B9h3HIqa.js",
-      "_scolcours-C_dv6wOK.js",
-      "_useKeyboard-D7NGTEYb.js",
+      "_IllustrationShow.vue_vue_type_script_setup_true_lang-DrV4lRHY.js",
+      "_scolcours-C9mGPfV9.js",
+      "_useKeyboard-DmIaSTFk.js",
       "_pimath-CCU4WHwg.js",
       "_helperFunctions-Bh4Sa31V.js"
     ]
   },
   "resources/js/Pages/Questions/QuestionShow.vue": {
-    "file": "assets/QuestionShow-BRaI3CGl.js",
+    "file": "assets/QuestionShow-Dqlrm4zZ.js",
     "name": "QuestionShow",
     "src": "resources/js/Pages/Questions/QuestionShow.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_QuestionShow.vue_vue_type_script_setup_true_lang-D9eLRDS7.js",
+      "_QuestionShow.vue_vue_type_script_setup_true_lang-DZHgvWdp.js",
       "_@vue-DqEkFMKT.js",
       "_QuestionShowAdmin.vue_vue_type_script_setup_true_lang-CpdVqzqw.js",
       "_EditLink.vue_vue_type_script_setup_true_lang-CEw-xBsZ.js",
@@ -3781,7 +3781,7 @@
       "_nprogress-am_f9gEK.js",
       "_lodash.clonedeep-BIV4HRze.js",
       "_lodash.isequal-CITiqanf.js",
-      "_MarkdownIt.vue_vue_type_script_setup_true_lang-COsUhffw.js",
+      "_MarkdownIt.vue_vue_type_script_setup_true_lang-vEHgWcJ1.js",
       "resources/js/app.ts",
       "_vuedraggable-BrBbrKw5.js",
       "_sortablejs-DcahgXRU.js",
@@ -3798,9 +3798,9 @@
       "_markdown-it-bracketed-spans-M4ErAXhA.js",
       "_markdown-it-attrs-BPtfon-p.js",
       "_markdown-it-texmath-DoWyLTw4.js",
-      "_IllustrationShow.vue_vue_type_script_setup_true_lang-B9h3HIqa.js",
-      "_scolcours-C_dv6wOK.js",
-      "_useKeyboard-D7NGTEYb.js",
+      "_IllustrationShow.vue_vue_type_script_setup_true_lang-DrV4lRHY.js",
+      "_scolcours-C9mGPfV9.js",
+      "_useKeyboard-DmIaSTFk.js",
       "_pimath-CCU4WHwg.js",
       "_helperFunctions-Bh4Sa31V.js"
     ]
@@ -3840,13 +3840,13 @@
     ]
   },
   "resources/js/Pages/Questions/QuestionsIndex.vue": {
-    "file": "assets/QuestionsIndex-DvJrgm9z.js",
+    "file": "assets/QuestionsIndex-BMBxoySj.js",
     "name": "QuestionsIndex",
     "src": "resources/js/Pages/Questions/QuestionsIndex.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_QuestionsIndex.vue_vue_type_script_setup_true_lang-Db1z-wFs.js",
-      "_QuestionShow.vue_vue_type_script_setup_true_lang-D9eLRDS7.js",
+      "_QuestionsIndex.vue_vue_type_script_setup_true_lang-CjJwKm-c.js",
+      "_QuestionShow.vue_vue_type_script_setup_true_lang-DZHgvWdp.js",
       "_@vue-DqEkFMKT.js",
       "_QuestionShowAdmin.vue_vue_type_script_setup_true_lang-CpdVqzqw.js",
       "_EditLink.vue_vue_type_script_setup_true_lang-CEw-xBsZ.js",
@@ -3873,7 +3873,7 @@
       "_nprogress-am_f9gEK.js",
       "_lodash.clonedeep-BIV4HRze.js",
       "_lodash.isequal-CITiqanf.js",
-      "_MarkdownIt.vue_vue_type_script_setup_true_lang-COsUhffw.js",
+      "_MarkdownIt.vue_vue_type_script_setup_true_lang-vEHgWcJ1.js",
       "resources/js/app.ts",
       "_vuedraggable-BrBbrKw5.js",
       "_sortablejs-DcahgXRU.js",
@@ -3890,34 +3890,34 @@
       "_markdown-it-bracketed-spans-M4ErAXhA.js",
       "_markdown-it-attrs-BPtfon-p.js",
       "_markdown-it-texmath-DoWyLTw4.js",
-      "_IllustrationShow.vue_vue_type_script_setup_true_lang-B9h3HIqa.js",
-      "_scolcours-C_dv6wOK.js",
-      "_useKeyboard-D7NGTEYb.js",
+      "_IllustrationShow.vue_vue_type_script_setup_true_lang-DrV4lRHY.js",
+      "_scolcours-C9mGPfV9.js",
+      "_useKeyboard-DmIaSTFk.js",
       "_pimath-CCU4WHwg.js",
       "_helperFunctions-Bh4Sa31V.js",
-      "_QuestionsIndexAdmin.vue_vue_type_script_setup_true_lang-CCjKN-jb.js",
-      "_FormMaker.vue_vue_type_script_setup_true_lang-jANCDKcC.js"
+      "_QuestionsIndexAdmin.vue_vue_type_script_setup_true_lang-DOaN0tSK.js",
+      "_FormMaker.vue_vue_type_script_setup_true_lang-CgWHUYy4.js"
     ]
   },
   "resources/js/Pages/Questions/QuestionsIndexAdmin.vue": {
-    "file": "assets/QuestionsIndexAdmin-6AQrUFFo.js",
+    "file": "assets/QuestionsIndexAdmin-BhJ2Ksmd.js",
     "name": "QuestionsIndexAdmin",
     "src": "resources/js/Pages/Questions/QuestionsIndexAdmin.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_QuestionsIndexAdmin.vue_vue_type_script_setup_true_lang-CCjKN-jb.js",
-      "_FormMaker.vue_vue_type_script_setup_true_lang-jANCDKcC.js",
+      "_QuestionsIndexAdmin.vue_vue_type_script_setup_true_lang-DOaN0tSK.js",
+      "_FormMaker.vue_vue_type_script_setup_true_lang-CgWHUYy4.js",
       "_@vue-DqEkFMKT.js",
       "_axios-G5LVpFxl.js"
     ]
   },
   "resources/js/Pages/Quizzs/QuizzAdmin.vue": {
-    "file": "assets/QuizzAdmin-Bc4ricMg.js",
+    "file": "assets/QuizzAdmin-Dyk6_Mwd.js",
     "name": "QuizzAdmin",
     "src": "resources/js/Pages/Quizzs/QuizzAdmin.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_MarkdownIt.vue_vue_type_script_setup_true_lang-COsUhffw.js",
+      "_MarkdownIt.vue_vue_type_script_setup_true_lang-vEHgWcJ1.js",
       "_@inertiajs-CMy4_go5.js",
       "_LayoutMain.vue_vue_type_script_setup_true_lang-gRd_oA16.js",
       "_axios-G5LVpFxl.js",
@@ -3964,17 +3964,17 @@
     ]
   },
   "resources/js/Pages/Quizzs/QuizzAdminEdit.vue": {
-    "file": "assets/QuizzAdminEdit-De3AUUTE.js",
+    "file": "assets/QuizzAdminEdit-2IUMpDfU.js",
     "name": "QuizzAdminEdit",
     "src": "resources/js/Pages/Quizzs/QuizzAdminEdit.vue",
     "isDynamicEntry": true,
     "imports": [
       "_@vue-DqEkFMKT.js",
       "_DialogModal.vue_vue_type_script_setup_true_lang-BZl89_C5.js",
-      "_MarkdownIt.vue_vue_type_script_setup_true_lang-COsUhffw.js",
+      "_MarkdownIt.vue_vue_type_script_setup_true_lang-vEHgWcJ1.js",
       "_ConfirmButton.vue_vue_type_script_setup_true_lang-DxuLQxTL.js",
       "_@inertiajs-CMy4_go5.js",
-      "_FormMaker.vue_vue_type_script_setup_true_lang-jANCDKcC.js",
+      "_FormMaker.vue_vue_type_script_setup_true_lang-CgWHUYy4.js",
       "_LayoutMain.vue_vue_type_script_setup_true_lang-gRd_oA16.js",
       "_axios-G5LVpFxl.js",
       "resources/js/app.ts",
@@ -4019,14 +4019,14 @@
     ]
   },
   "resources/js/Pages/Quizzs/QuizzDashboard.vue": {
-    "file": "assets/QuizzDashboard-HnPsMsdG.js",
+    "file": "assets/QuizzDashboard-C3p8xyk0.js",
     "name": "QuizzDashboard",
     "src": "resources/js/Pages/Quizzs/QuizzDashboard.vue",
     "isDynamicEntry": true,
     "imports": [
       "_@vue-DqEkFMKT.js",
       "_@inertiajs-CMy4_go5.js",
-      "_MarkdownIt.vue_vue_type_script_setup_true_lang-COsUhffw.js",
+      "_MarkdownIt.vue_vue_type_script_setup_true_lang-vEHgWcJ1.js",
       "_LayoutMain.vue_vue_type_script_setup_true_lang-gRd_oA16.js",
       "_axios-G5LVpFxl.js",
       "_deepmerge-BLbTkTqH.js",
@@ -4106,16 +4106,16 @@
     ]
   },
   "resources/js/Pages/Quizzs/QuizzProjection.vue": {
-    "file": "assets/QuizzProjection-BZIYL1-9.js",
+    "file": "assets/QuizzProjection-qSiWxC6w.js",
     "name": "QuizzProjection",
     "src": "resources/js/Pages/Quizzs/QuizzProjection.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_QuizzOutro.vue_vue_type_script_setup_true_lang-BuNv2AOs.js",
+      "_QuizzOutro.vue_vue_type_script_setup_true_lang-Jo75Msn2.js",
       "_@inertiajs-CMy4_go5.js",
       "_@vue-DqEkFMKT.js",
       "_LayoutProjection.vue_vue_type_script_setup_true_lang-BD0efVPs.js",
-      "_MarkdownIt.vue_vue_type_script_setup_true_lang-COsUhffw.js",
+      "_MarkdownIt.vue_vue_type_script_setup_true_lang-vEHgWcJ1.js",
       "resources/js/app.ts",
       "_axios-G5LVpFxl.js",
       "_vuedraggable-BrBbrKw5.js",
@@ -4157,21 +4157,21 @@
     ]
   },
   "resources/js/Pages/Quizzs/QuizzShow.vue": {
-    "file": "assets/QuizzShow-CrPPEyR5.js",
+    "file": "assets/QuizzShow-B54a4dUR.js",
     "name": "QuizzShow",
     "src": "resources/js/Pages/Quizzs/QuizzShow.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_QuestionShow.vue_vue_type_script_setup_true_lang-D9eLRDS7.js",
+      "_QuestionShow.vue_vue_type_script_setup_true_lang-DZHgvWdp.js",
       "_@vue-DqEkFMKT.js",
-      "_QuizzOutro.vue_vue_type_script_setup_true_lang-BuNv2AOs.js",
+      "_QuizzOutro.vue_vue_type_script_setup_true_lang-Jo75Msn2.js",
       "_@inertiajs-CMy4_go5.js",
       "_LayoutProjection.vue_vue_type_script_setup_true_lang-BD0efVPs.js",
       "_QuestionShowAdmin.vue_vue_type_script_setup_true_lang-CpdVqzqw.js",
       "_EditLink.vue_vue_type_script_setup_true_lang-CEw-xBsZ.js",
       "_DropdownMenu.vue_vue_type_script_setup_true_lang-Bi50YI0a.js",
       "_axios-G5LVpFxl.js",
-      "_MarkdownIt.vue_vue_type_script_setup_true_lang-COsUhffw.js",
+      "_MarkdownIt.vue_vue_type_script_setup_true_lang-vEHgWcJ1.js",
       "resources/js/app.ts",
       "_vuedraggable-BrBbrKw5.js",
       "_sortablejs-DcahgXRU.js",
@@ -4208,16 +4208,16 @@
       "_markdown-it-bracketed-spans-M4ErAXhA.js",
       "_markdown-it-attrs-BPtfon-p.js",
       "_markdown-it-texmath-DoWyLTw4.js",
-      "_IllustrationShow.vue_vue_type_script_setup_true_lang-B9h3HIqa.js",
-      "_scolcours-C_dv6wOK.js",
-      "_useKeyboard-D7NGTEYb.js",
+      "_IllustrationShow.vue_vue_type_script_setup_true_lang-DrV4lRHY.js",
+      "_scolcours-C9mGPfV9.js",
+      "_useKeyboard-DmIaSTFk.js",
       "_pimath-CCU4WHwg.js",
       "_helperFunctions-Bh4Sa31V.js",
       "__plugin-vue_export-helper-DlAUqK2U.js"
     ]
   },
   "resources/js/Pages/Singles/GraduatePage.vue": {
-    "file": "assets/GraduatePage-Dk3avjQJ.js",
+    "file": "assets/GraduatePage-C4HjvoNR.js",
     "name": "GraduatePage",
     "src": "resources/js/Pages/Singles/GraduatePage.vue",
     "isDynamicEntry": true,
@@ -4226,7 +4226,7 @@
       "_ArticleTitle.vue_vue_type_script_setup_true_lang-CQ1GEgmI.js",
       "_pimath-CCU4WHwg.js",
       "_barChart.vue_vue_type_script_setup_true_lang-BT_qBunS.js",
-      "_FormMaker.vue_vue_type_script_setup_true_lang-jANCDKcC.js",
+      "_FormMaker.vue_vue_type_script_setup_true_lang-CgWHUYy4.js",
       "_LayoutMain.vue_vue_type_script_setup_true_lang-gRd_oA16.js",
       "_@svgdotjs-Bv5fOkx0.js",
       "_vue-chartjs-CYPUYACP.js",
@@ -4260,13 +4260,13 @@
     ]
   },
   "resources/js/Pages/Singles/GraphPage.vue": {
-    "file": "assets/GraphPage-Cpp90MNn.js",
+    "file": "assets/GraphPage-C-niXBeX.js",
     "name": "GraphPage",
     "src": "resources/js/Pages/Singles/GraphPage.vue",
     "isDynamicEntry": true,
     "imports": [
       "_PiDrawParser.vue_vue_type_script_setup_true_lang-C_5yURmO.js",
-      "_FormMaker.vue_vue_type_script_setup_true_lang-jANCDKcC.js",
+      "_FormMaker.vue_vue_type_script_setup_true_lang-CgWHUYy4.js",
       "_LayoutMain.vue_vue_type_script_setup_true_lang-gRd_oA16.js",
       "_@vue-DqEkFMKT.js",
       "_pidraw-J_eZaQIc.js",
@@ -4411,15 +4411,15 @@
     ]
   },
   "resources/js/Pages/Teams/TeamShow.vue": {
-    "file": "assets/TeamShow-C0DffaJP.js",
+    "file": "assets/TeamShow-CzFcrBP8.js",
     "name": "TeamShow",
     "src": "resources/js/Pages/Teams/TeamShow.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_FilteredList.vue_vue_type_script_setup_true_lang-lSgwm2zs.js",
+      "_FilteredList.vue_vue_type_script_setup_true_lang-DkajMvrN.js",
       "_LayoutMain.vue_vue_type_script_setup_true_lang-gRd_oA16.js",
       "_@vue-DqEkFMKT.js",
-      "_FormMaker.vue_vue_type_script_setup_true_lang-jANCDKcC.js",
+      "_FormMaker.vue_vue_type_script_setup_true_lang-CgWHUYy4.js",
       "_@inertiajs-CMy4_go5.js",
       "_axios-G5LVpFxl.js",
       "_deepmerge-BLbTkTqH.js",
@@ -4448,15 +4448,15 @@
     ]
   },
   "resources/js/Pages/ToolsPage.vue": {
-    "file": "assets/ToolsPage-NSPMXGun.js",
+    "file": "assets/ToolsPage-EOVp-bcZ.js",
     "name": "ToolsPage",
     "src": "resources/js/Pages/ToolsPage.vue",
     "isDynamicEntry": true,
     "imports": [
       "_@vue-DqEkFMKT.js",
       "_ArticleTitle.vue_vue_type_script_setup_true_lang-CQ1GEgmI.js",
-      "_scolcours-C_dv6wOK.js",
-      "_FormMaker.vue_vue_type_script_setup_true_lang-jANCDKcC.js",
+      "_scolcours-C9mGPfV9.js",
+      "_FormMaker.vue_vue_type_script_setup_true_lang-CgWHUYy4.js",
       "_LayoutMain.vue_vue_type_script_setup_true_lang-gRd_oA16.js",
       "resources/js/app.ts",
       "_axios-G5LVpFxl.js",
@@ -4493,13 +4493,13 @@
     ]
   },
   "resources/js/Pages/languages/LanguageImport.vue": {
-    "file": "assets/LanguageImport-BpEMpJJ4.js",
+    "file": "assets/LanguageImport-DGbL9WDd.js",
     "name": "LanguageImport",
     "src": "resources/js/Pages/languages/LanguageImport.vue",
     "isDynamicEntry": true,
     "imports": [
       "_@inertiajs-CMy4_go5.js",
-      "_FormMaker.vue_vue_type_script_setup_true_lang-jANCDKcC.js",
+      "_FormMaker.vue_vue_type_script_setup_true_lang-CgWHUYy4.js",
       "_LayoutMain.vue_vue_type_script_setup_true_lang-gRd_oA16.js",
       "_@vue-DqEkFMKT.js",
       "_axios-G5LVpFxl.js",
@@ -4565,7 +4565,7 @@
     ]
   },
   "resources/js/Pages/languages/LanguageShow.vue": {
-    "file": "assets/LanguageShow-CQf2fcNl.js",
+    "file": "assets/LanguageShow-By_JXX7B.js",
     "name": "LanguageShow",
     "src": "resources/js/Pages/languages/LanguageShow.vue",
     "isDynamicEntry": true,
@@ -4576,7 +4576,7 @@
       "_axios-G5LVpFxl.js",
       "_@inertiajs-CMy4_go5.js",
       "_DialogModal.vue_vue_type_script_setup_true_lang-BZl89_C5.js",
-      "_FormMaker.vue_vue_type_script_setup_true_lang-jANCDKcC.js",
+      "_FormMaker.vue_vue_type_script_setup_true_lang-CgWHUYy4.js",
       "_pimath-CCU4WHwg.js",
       "_MainFooter.vue_vue_type_script_setup_true_lang-CcsgDa71.js",
       "__plugin-vue_export-helper-DlAUqK2U.js",
@@ -4604,7 +4604,7 @@
     ]
   },
   "resources/js/app.ts": {
-    "file": "assets/app-ZjRiZCk1.js",
+    "file": "assets/app-Bml5gvO3.js",
     "name": "app",
     "src": "resources/js/app.ts",
     "isEntry": true,
