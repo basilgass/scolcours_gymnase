@@ -46,16 +46,16 @@ const props = withDefaults(defineProps<FormMakerPropsType>(), {
 
 // Define the model value.
 const theValue = defineModel<string | number | boolean | null>({
-	set(value) {
-		if (props.type === "switch" || props.type === "checkbox") return !!value
-
-		if (props.type === "id" || props.type === "number") return +value
-
-		if (value === null) return ""
-
-		// Make sure it's a string
-		return `${value}`
-	},
+	// set(value) {
+	// 	if (props.type === "switch" || props.type === "checkbox") return !!value
+	//
+	// 	if (props.type === "id" || props.type === "number") return +value
+	//
+	// 	if (value === null) return ""
+	//
+	// 	// Make sure it's a string
+	// 	return `${value}`
+	// },
 	required: true
 })
 
