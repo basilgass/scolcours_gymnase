@@ -20,6 +20,8 @@
 		"@typescript-eslint/eslint-plugin": "^7.6.0",
 		"@typescript-eslint/parser": "^7.6.0",
 		"@vitejs/plugin-vue": "^5.0.4",
+		"@vueuse/components": "^10.9.0",
+		"@vueuse/core": "^10.9.0",
 		"autoprefixer": "^10.4.19",
 		"axios": "^1.6.8",
 		"eslint": "^8.57.0",
@@ -38,8 +40,6 @@
 	"dependencies": {
 		"@sgratzl/chartjs-chart-boxplot": "^4.3.1",
 		"@svgdotjs/svg.js": "^3.2.0",
-		"@vueuse/components": "^10.9.0",
-		"@vueuse/core": "^10.9.0",
 		"bootstrap-icons": "^1.11.3",
 		"chart.js": "^4.4.2",
 		"chartjs-plugin-annotation": "^3.0.1",
