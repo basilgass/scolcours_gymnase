@@ -13,7 +13,6 @@ defineOptions({
 	inheritAttrs: false
 })
 
-console.log('LOADING', theValue.value)
 const inp = ref(null)
 
 function focusFn(select: boolean) {
@@ -24,14 +23,14 @@ function focusFn(select: boolean) {
 }
 
 defineExpose({ focus: focusFn })
-const emits = defineEmits(["update"])
+// const emits = defineEmits(["update"])
 const props = defineProps({
 	rows: { type: Number, default: 2 },
 	focus: { type: Boolean, default: false }
 })
 
 const update = () => {
-	emits("update", theValue.value)
+	// emits("update", theValue.value)
 }
 
 onMounted(() => {
@@ -85,7 +84,11 @@ const tabber = () => {
 }
 
 const currentRows = computed(() => {
-	return Math.max(props.rows, theValue.value.split("\n").length + 1)
+	try{
+		return Math.max(props.rows, theValue.value.split("\n").length + 1)
+	}catch(e){
+		return props.rows
+	}
 })
 
 </script>

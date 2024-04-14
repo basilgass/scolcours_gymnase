@@ -51,7 +51,7 @@ const theValue = defineModel<string | number | boolean | null>({
 
 		if(props.type==='id' || props.type==='number') return +value
 
-		return value.toString()
+		return `${value}`
 	},
 	required: true
 })
@@ -139,7 +139,9 @@ function validate() {
 		})
 	}
 
-	if (props.type === "fraction") return FormValidationFraction(theValue.value as string)
+	if (props.type === "fraction") {
+		return FormValidationFraction(theValue.value as string)
+	}
 
 	return ""
 }
