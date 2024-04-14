@@ -40,7 +40,7 @@ function refreshWidgets() {
 				:list="widgets"
 				list-class="flex flex-col gap-5"
 				title="chapitres"
-				no-filter-if-less-than="0"
+				:no-filter-if-less-than="0"
 			>
 				<template #card="{ item }:{ item: widgetInterface}">
 					<div

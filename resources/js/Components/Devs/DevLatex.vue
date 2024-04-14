@@ -26,11 +26,13 @@ defineOptions({ layout: LayoutMain })
 				flash.success(
 					"PDF généré avec succès",
 					{
-						label: "Voir le PDF",
-						url: route("latex.download", [res.data.slug]),
-						external: true,
-					},
-					5000,
+						link: {
+							label: "Voir le PDF",
+							url: route("latex.download", [res.data.slug]),
+							external: true,
+						},
+						timeout: 5000
+					}
 				)
 			})
 			.catch((err) => {

@@ -4,17 +4,14 @@ A utiliser en conjonction avec
 const flash = inject('flash')
 -->
 <script lang="ts" setup>
-import { onMounted, PropType, ref, useSlots } from "vue"
-
-const slots = useSlots()
-const flashMessage = ref<string>(slots.default as unknown as string)
+import { onMounted, PropType, ref } from "vue"
 
 const emits = defineEmits(["open", "close"])
 const props = defineProps({
 	message: { type: String, default: "aucun message :(" },
 	timeout: { type: Number, default: 1000 * 5 },
 	link: {
-		type: Object as PropType<{ label: string, external: boolean, url: string }>, default: () => {
+		type: Object as PropType<{ label: string, external?: boolean, url: string }>, default: () => {
 		}
 	},
 	tex: { type: Boolean, default: false }
@@ -26,7 +23,6 @@ let show = ref(true),
 		emits("close", timeoutId)
 	},
 	timeoutId
-
 
 
 onMounted(() => {

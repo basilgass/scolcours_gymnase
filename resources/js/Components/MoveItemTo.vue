@@ -40,10 +40,12 @@ const flash = inject<flashInterface>("flash"),
 					flash.success(
 						`Le ${props.source} a bien été déplacé.`,
 						{
-							url: res.data.url,
-							label: res.data.label,
-						},
-						10000,
+							link: {
+								url: res.data.url,
+								label: res.data.label,
+							},
+							timeout: 10000
+						}
 					)
 				})
 				.catch((res) => {

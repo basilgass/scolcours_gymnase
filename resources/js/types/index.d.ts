@@ -60,7 +60,7 @@ interface flashMessageInterface {
 }
 
 interface flashConfig {
-	link?: { label: string, external: boolean, url: string }
+	link?: { label: string, external?: boolean, url: string }
 	timeout?: number
 }
 
