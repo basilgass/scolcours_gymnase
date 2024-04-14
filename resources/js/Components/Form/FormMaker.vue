@@ -123,6 +123,10 @@ const placeholderValue = computed(() => {
 
 // On input update, emit the new value in correct format
 function updateInput(e) {
+	console.log(props.type)
+	console.log(e)
+	console.log(theValue.value)
+	console.log('----------------------')
 	// TODO: updateInput ?
 }
 
