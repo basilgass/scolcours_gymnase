@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import LayoutMain from "@/Layouts/LayoutMain.vue"
-import Test from "@/Components/test.vue"
 import { ref } from "vue"
-import Test2 from "@/Components/test2.vue"
 
 defineOptions({ layout: LayoutMain })
 
@@ -71,11 +69,6 @@ const v2 = ref("")
 			>
 				widgets
 			</Link>
-		</div>
-
-		<div class="flex justify-between">
-			<test v-model="v" />
-			<test2 v-model="v2" />
 		</div>
 	</section>
 </template>
