@@ -89,6 +89,7 @@ const tabber = () => {
 }
 
 const currentRows = computed(() => {
+	console.log(props.rows, theValue.value)
 	return Math.max(props.rows, theValue.value.split("\n").length + 1)
 })
 
