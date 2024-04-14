@@ -13,6 +13,7 @@ defineOptions({
 	inheritAttrs: false
 })
 
+console.log('LOADING', theValue.value)
 const inp = ref(null)
 
 function focusFn(select: boolean) {

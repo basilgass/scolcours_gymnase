@@ -9,7 +9,7 @@ import "prismjs/components/prism-json"
 import { javascriptTriggers, latexTriggers, TriggerFunction, TriggersObject } from "@/helpers/mdAutofill"
 
 /**
- * The value of the codearea
+ * The value of the code area
  */
 const theValue = defineModel<string>({ required: true, default: "" })
 
@@ -26,7 +26,6 @@ defineExpose({ focus: focusFn })
 
 // Define the props
 const props = defineProps({
-	modelValue: { type: String, default: "" },
 	rows: { type: [Number, String], default: 4 },
 	focus: { type: Boolean, default: false },
 	language: { type: String, default: "javascript" },
