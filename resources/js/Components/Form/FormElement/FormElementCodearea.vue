@@ -11,7 +11,7 @@ import { javascriptTriggers, latexTriggers, TriggerFunction, TriggersObject } fr
 /**
  * The value of the codearea
  */
-const theValue = defineModel<string>({ required: true })
+const theValue = defineModel<string>({ required: true, default: "" })
 
 defineOptions({ inheritAttrs: false })
 
@@ -190,6 +190,7 @@ const autofillTriggers = computed<TriggersObject>(() => {
 // On keydown, grab the selected text.
 // TODO: make a better "selectedText" to handle also wrapping with math attributes ?
 const selectedText = ref("")
+
 function grabSelectedText(event: KeyboardEvent) {
 	const target = event.target as HTMLTextAreaElement
 	const start = target.selectionStart,
@@ -214,6 +215,7 @@ function autofill(event: KeyboardEvent) {
 	// Test the two letters triggers
 	if (!applied) autofill_do(event, 2)
 }
+
 function autofill_wrap(event: KeyboardEvent) {
 	// Get the target
 	const target = event.target as HTMLTextAreaElement
@@ -235,6 +237,7 @@ function autofill_wrap(event: KeyboardEvent) {
 			originalSelectionStart + 1 + selectedText.value.length
 	})
 }
+
 function autofill_do(event: KeyboardEvent, length: number) {
 	// Get the input / textarea target
 	const target = event.target as HTMLTextAreaElement
@@ -338,9 +341,9 @@ onMounted(() => {
 				class="w-full"
 				v-bind="$attrs"
 				@input="update"
+				@keydown="grabSelectedText"
 				@keyup="autofill"
 				@scroll="sync_scroll"
-				@keydown="grabSelectedText"
 				@keydown.tab.prevent="tabber"
 				@keydown.enter.prevent="indenter"
 			/>

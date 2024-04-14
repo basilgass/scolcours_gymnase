@@ -7,7 +7,7 @@ import "prismjs/components/prism-json"
 import { checkersList, getChecker } from "@/Composables/checkersConfig"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 
-const theValue = defineModel<string>({ required: true })
+const theValue = defineModel<string>({ required: true, default: "" })
 
 defineOptions({
 	inheritAttrs: false

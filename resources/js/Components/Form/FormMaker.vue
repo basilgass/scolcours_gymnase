@@ -47,8 +47,6 @@ const props = withDefaults(defineProps<FormMakerPropsType>(), {
 // Define the model value.
 const theValue = defineModel<string | number | boolean | null>({
 	set(value) {
-		console.log("FORMMAKER", props.type, value, typeof value, value.toString())
-
 		if(props.type==='switch' || props.type==='checkbox')return !!value
 
 		if(props.type==='id' || props.type==='number') return +value
