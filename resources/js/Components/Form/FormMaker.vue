@@ -123,23 +123,15 @@ const placeholderValue = computed(() => {
 
 // On input update, emit the new value in correct format
 function updateInput(e: Event) {
-	const target = e.target as HTMLInputElement
-	console.log(props.type)
-	console.log(e)
-	console.log(theValue.value)
-	console.log('TARGET: ', target.value)
-	console.log('----------------------')
 	// TODO: updateInput ?
 }
 
 const TEXTAREA = ref(null)
-
 function onKeyup() {
 	let pos = TEXTAREA.value.selectionStart,
 		lines = (theValue.value as string).split("\n"),
 		lineIndex = (theValue.value as string).substring(0, pos).split("\n").length - 1
 
-	console.log('KEYUP', theValue.value)
 	emits("currentLine", lines[lineIndex])
 }
 
