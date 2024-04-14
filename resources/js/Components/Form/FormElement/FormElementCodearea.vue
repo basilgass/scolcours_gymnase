@@ -215,7 +215,10 @@ function autofill(event: KeyboardEvent) {
 	if (!applied) autofill_do(event, 2)
 }
 
-function autofill_wrap(event: KeyboardEvent) {
+function autofill_wrap(event: KeyboardEvent)
+{
+	if(selectedText.value === "") return
+
 	// Get the target
 	const target = event.target as HTMLTextAreaElement
 

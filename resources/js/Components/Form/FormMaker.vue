@@ -47,10 +47,13 @@ const props = withDefaults(defineProps<FormMakerPropsType>(), {
 // Define the model value.
 const theValue = defineModel<string | number | boolean | null>({
 	set(value) {
-		if(props.type==='switch' || props.type==='checkbox')return !!value
+		if (props.type === "switch" || props.type === "checkbox") return !!value
 
-		if(props.type==='id' || props.type==='number') return +value
+		if (props.type === "id" || props.type === "number") return +value
 
+		if (value === null) return ""
+
+		// Make sure it's a string
 		return `${value}`
 	},
 	required: true
@@ -194,11 +197,11 @@ defineExpose({ focus: setFocus })
 
 <template>
 	<div
-		class="relative"
 		:class="{
 			helper: props.helper,
 			inlineLabel: props.inlineLabel,
 		}"
+		class="relative"
 	>
 		<label
 			v-if="showLabel"
@@ -227,11 +230,11 @@ defineExpose({ focus: setFocus })
 				/>
 				<input
 					v-if="inputAsText.includes(type)"
+					v-model="theValue"
 					:autofocus="props.focus"
 					:class="combinedInputClass"
 					:placeholder="placeholderValue"
 					:type="type"
-					v-model="theValue"
 					v-bind="$attrs"
 					@input="updateInput($event)"
 					@keyup="validate()"
@@ -249,10 +252,10 @@ defineExpose({ focus: setFocus })
 				/>
 				<input
 					v-else-if="type === 'number'"
+					v-model="theValue as number"
 					:class="combinedInputClass"
 					:placeholder="placeholderValue"
 					:step="props.step"
-					v-model="theValue as number"
 					type="number"
 					v-bind="$attrs"
 					@input="updateInput($event)"
@@ -260,8 +263,8 @@ defineExpose({ focus: setFocus })
 				>
 				<input
 					v-else-if="type === 'checkbox'"
-					:class="combinedInputClass"
 					v-model="theValue as boolean"
+					:class="combinedInputClass"
 					type="checkbox"
 					v-bind="$attrs"
 					@input="updateInput($event)"
@@ -270,8 +273,8 @@ defineExpose({ focus: setFocus })
 				<!-- select type input -->
 				<select
 					v-else-if="type === 'select'"
-					:class="combinedInputClass"
 					v-model="theValue"
+					:class="combinedInputClass"
 					v-bind="$attrs"
 					@input="updateInput($event)"
 				>
@@ -333,8 +336,8 @@ defineExpose({ focus: setFocus })
 			@click="onEnter"
 		>
 			<i
-				class="bi bi-save"
 				v-if="props.axios.button === true"
+				class="bi bi-save"
 			/>
 			<span
 				v-else
