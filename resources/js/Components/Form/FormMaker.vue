@@ -14,6 +14,24 @@ import axios from "axios"
  * This component is used to generate a form input
  */
 
+// Define the model value.
+const theValue = defineModel<string | number | boolean | null>({
+	set(value) {
+		if (props.type === "switch" || props.type === "checkbox") return !!value
+
+		if (props.type === "id" || props.type === "number") return +value
+
+		if (value === null) return ""
+
+		if (value === true) return ""
+
+		// Make sure it's a string
+		return `${value}`
+	},
+	required: true
+})
+
+
 // Define the list of inputs that are text based
 const inputAsText = ["text", "email", "password", "id", "fraction"]
 // Define the list of inputs that don't have a label
@@ -42,21 +60,6 @@ const props = withDefaults(defineProps<FormMakerPropsType>(), {
 	resizable: false,
 	autoSize: false,
 	axios: null
-})
-
-// Define the model value.
-const theValue = defineModel<string | number | boolean | null>({
-	// set(value) {
-	// 	if (props.type === "switch" || props.type === "checkbox") return !!value
-	//
-	// 	if (props.type === "id" || props.type === "number") return +value
-	//
-	// 	if (value === null) return ""
-	//
-	// 	// Make sure it's a string
-	// 	return `${value}`
-	// },
-	required: true
 })
 
 // Define the emits
@@ -137,8 +140,8 @@ function onKeyup() {
 function validate() {
 	if (props.type === "number") {
 		return FormValidationNumber(+theValue.value as number, {
-			min: +useAttrs().min ?? 0,
-			max: +useAttrs().max ?? 10
+			min: isNaN(+useAttrs().min)? 0 : +useAttrs().min,
+			max: isNaN(+useAttrs().max)? 10 : +useAttrs().max
 		})
 	}
 
