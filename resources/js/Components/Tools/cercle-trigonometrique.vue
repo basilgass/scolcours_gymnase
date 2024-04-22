@@ -1,13 +1,13 @@
-<script setup lang="ts">
-	/** Tools
-	 * title: cercle trigonométrique
-	 * body: aide aux calculs des valeurs trigonométriques
-	 * parameters: aucun
-	 * tags: géométrie,1M,2C,2M
-	 */
-	import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"
+<script lang="ts" setup>
+/** Tools
+ * title: cercle trigonométrique
+ * body: aide aux calculs des valeurs trigonométriques
+ * parameters: aucun
+ * tags: géométrie,1M,2C,2M
+ */
+import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"
 
-	const code = `@begin:static
+const code = `@begin:static
 O(0,0)
 c=circ O,10
 P0(10,0)
@@ -52,7 +52,7 @@ X6(10,-17.3)->tex:\\scriptsize -\\sqrt{3}/mr/0.5:
 t=TP0
 @end:static
 P(7.07,7.07)->drag:c
-C(P.x,0)->hide
+C=proj P,Ox->hide
 S(0,P.y)->hide
 c=PC.->dash
 s=PS.->dash
@@ -64,7 +64,7 @@ a=arc P0,O,P->tex:\\theta
 T=inter p,t
 t1=P0T.->gold,w:5`
 
-	const parameters = `axis,x=-12:12,y=-20:20,nolabel`
+const parameters = `axis,x=-12:12,y=-20:20,nolabel`
 </script>
 
 <template>

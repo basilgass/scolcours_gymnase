@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\BlockResource;
 use App\Models\Block;
 use App\Models\Chapter;
+use App\Models\Formula;
 use App\Models\Post;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\RedirectResponse;
@@ -286,11 +287,8 @@ class BlockController extends Controller
 		]);
 
 		// Get the post
-		$post = $block->blockable;
 		$blocks = collect();
-		if($post instanceof Post) {
-			$blocks = $post->consolidateBlocksOrder();
-		}
+		$blocks = $block->consolidateBlocksOrder();
 
 		// Get the index of the block
 		$index = $blocks->find($block)->order;

@@ -12,6 +12,10 @@ Route::prefix('admin')
 		Route::get('/', [AdminController::class, 'show'])
 			->name('admin');
 
+		// DEV
+		Route::get('/dev', [AdminController::class, 'dev'])
+			->name('admin.dev');
+
 		// WEBSITE CONFIGURATION
 		Route::get('/config', [AdminController::class, 'config'])
 			->name('admin.config');

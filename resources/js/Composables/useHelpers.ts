@@ -22,7 +22,7 @@ export function useMenuScrollToClass(className: string) {
  *
  * @return {void}
  */
-export function useMenuScrollTo(id: string) {
+export function useMenuScrollTo(id?: string) {
 	const el = id === undefined ? document.body : document.getElementById(id)
 
 	el.scrollIntoView({

@@ -24,12 +24,25 @@ const filteredList = computed<T[]>(() => {
 
 	if (checkString === "") return props.list
 
-	return props.list.filter((item) =>
+	const arr = props.list.filter((item) =>
 		Object.values(item)
 			.filter((x) => typeof x === "string")
 			.some((x) => x.toLowerCase().includes(checkString))
 	)
+
+	// The list is empty.
+	if (arr.length === 0) {
+		emits("empty", true)
+		return []
+	}
+
+
+	if (arr.length === 1) emits("unique", arr[0])
+
+	emits("empty", false)
+	return arr
 })
+
 const selectedList = ref("")
 const showList = ref(props.collapsed !== true)
 
@@ -41,10 +54,15 @@ function itemClicked(item) {
 
 defineSlots<{
 	card(props: { item: T }): unknown,
-	button()
+	button(),
+	noItemMessage(),
 }>()
 
-const emits = defineEmits(["enter"])
+const emits = defineEmits<{
+	enter: [event: T[]],
+	unique: [item: T],
+	empty: [value: boolean]
+}>()
 </script>
 <template>
 	<div>
@@ -72,7 +90,10 @@ const emits = defineEmits(["enter"])
 				@enter="emits('enter', filteredList)"
 			/>
 
-			<div :class="props.listClass">
+			<div
+				:class="props.listClass"
+				v-if="filteredList.length>0"
+			>
 				<transition-group name="list">
 					<div
 						v-for="(item, index) in filteredList"
@@ -93,6 +114,11 @@ const emits = defineEmits(["enter"])
 						/>
 					</div>
 				</transition-group>
+			</div>
+			<div v-else>
+				<slot name="noItemMessage">
+					Aucun {{ title.endsWith('s') ? title.slice(0, -1) :title }} trouvé
+				</slot>
 			</div>
 		</div>
 	</div>

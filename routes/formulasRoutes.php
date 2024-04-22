@@ -17,6 +17,12 @@ Route::get("formulas", [FormulaController::class, 'index'])
 Route::middleware("can:admin")
 	->group(function () {
 		// GET
+//		Route::get("formulas/chapter/{chapter}", function (Chapter $chapter) {
+//			return FormulaResource::collection($chapter->formulas)
+//				->sortBy(function ($formula) {
+//					return $formula->blocks[ 0 ]->order;
+//				})->values()->all();
+//		});
 
 		// POST
 		Route::post("chapters/{chapter:slug}/formulas", [FormulaController::class, 'store'])

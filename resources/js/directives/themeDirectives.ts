@@ -4,7 +4,7 @@ function themeUpdate(el, binding) {
 	const themes = usePage().props.themes.map((theme) => theme.slug)
 	const keys = ["btn", "bg", "text", "border", "active", "scrollbar"]
 
-	let chapter
+	let chapter: string
 
 	// Remove all classes from el matching the pattern "<key>-scolcours-<theme>"
 	if (el) {
@@ -35,10 +35,8 @@ function themeUpdate(el, binding) {
 		chapter = usePage().props?.theme?.slug
 	}
 
-	if (chapter === undefined) {
-		el.classList.add(`bg-white`)
-		return
-	}
+	// No chapter giver -> use main
+	if (chapter === undefined) chapter = 'main'
 
 	Object.keys(binding.modifiers).forEach((key) => {
 		if (keys.indexOf(key) !== -1) {

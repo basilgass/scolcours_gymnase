@@ -105,4 +105,23 @@ class Block extends Model
 //			get: fn() => [$this->chapter->theme->slug, $this->chapter->slug, $this->order]
 		);
 	}
+
+	/**
+	 * Consolidate the blocks order
+	 * Take the actual order and modify the "order" to match the index.
+	 * @return Collection
+	 */
+	public function consolidateBlocksOrder(): Collection
+	{
+		// Get the blocks
+		$blocks = $this->blockable->blocks;
+
+		// Update the order to match the index.
+		foreach ($blocks as $index => $block) {
+			$block->order = $index;
+			$block->save();
+		}
+
+		return $blocks;
+	}
 }

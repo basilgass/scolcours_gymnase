@@ -1,10 +1,11 @@
 <script lang="ts" setup>
-import { computed, onMounted, PropType, ref } from "vue"
+import { computed, nextTick, onMounted, PropType, ref } from "vue"
 import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
 import { ToolInterface } from "@/types"
 import { getModule, MODULE_TYPES } from "@/scolcours"
-import FormMaker from "@/Components/Form/FormMaker.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
+import FilteredList from "@/Components/Ui/FilteredList.vue"
+import { useMenuScrollTo } from "@/Composables/useHelpers"
 
 defineOptions({ layout: LayoutMain })
 const toolSlug = ref(null),
@@ -21,19 +22,27 @@ const props = defineProps({
         }
     }
 })
+
+function changeSlug(slug: string) {
+	console.log(slug)
+	
+	// Scroll to top
+	useMenuScrollTo()
+
+	// Update the slug
+	nextTick(()=>{
+		toolSlug.value=slug
+	})
+
+}
+
 const toolComponent = computed(() => {
     return getModule(toolSlug.value, MODULE_TYPES.TOOLS)
-	// const key = `./Components/Tools/${toolSlug.value}.vue`;
-	// if(ToolsModules.hasOwnProperty(key)){
-	// 	return defineAsyncComponent(ToolsModules[key])
-	// }
-	// return false
 })
 
 const toolName = computed(() => {
-    if (toolSlug.value === "") {
-        return ""
-    }
+    if (toolSlug.value === "") return ""
+
     for (const tool of props.tools) {
         if (tool.slug === toolSlug.value) {
             return tool.title
@@ -75,77 +84,62 @@ const listOfTools = computed(() => {
     return foundTools
 })
 
-function toolSelect() {
-    if (listOfTools.value.length === 1) {
-        toolSlug.value = listOfTools.value[0].slug
-    }
-}
-
-function toolUnselect() {
-    toolSearch.value = ""
-    toolSlug.value = ""
-}
 </script>
 <template>
-	<!-- Title -->
-	<div
-		class="flex justify-between items-baseline mb-4"
+	<section
+		class="scolcours-container"
 	>
-		<div>
-			<ArticleTitle title="Outils" />
-			<Link
-				v-if="toolSlug!==''"
-				:href="`/tools/${toolSlug}`"
+		<!-- Title -->
+		<div
+			class="flex justify-between items-baseline mb-4"
+		>
+			<div>
+				<ArticleTitle title="Outils" />
+				<Link
+					v-if="toolSlug!==''"
+					:href="`/tools/${toolSlug}`"
+				>
+					{{ toolName }}
+				</Link>
+			</div>
+
+			<button
+				v-if="toolSlug"
+				@click="toolSlug=''"
 			>
-				{{ toolName }}
-			</Link>
+				Tous les outils
+			</button>
 		</div>
 
-		<button
-			v-if="toolSlug"
-			@click="toolSlug=''"
-		>
-			Tous les outils
-		</button>
-	</div>
+		<component :is="toolComponent" />
 
-	<div v-if="!toolSlug">
-		<form-maker
-			v-model="toolSearch"
-			focus
-			label="Sélectionner l'outils"
-			name="tools"
-			@keyup.enter="toolSelect"
-		/>
-
-		<!-- List of all tools -->
-		<table class="w-full my-5">
-			<tr
-				v-for="tool of listOfTools"
-				:key="tool.slug"
-				class="odd:bg-white hover:bg-amber-100  cursor-pointer"
-				@click="toolSlug=tool.slug"
+		<div class="mt-10">
+			<filtered-list
+				title="outils"
+				:list="listOfTools"
+				list-class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-3 gap-y-6"
+				@enter="$event.length===1?changeSlug($event[0].slug):''"
 			>
-				<td class="pl-3 py-2">
-					<h2 class="text-lg">
-						{{ tool.title }}
-					</h2>
-					<div class="text-sm text-gray-400">
-						{{ tool.slug }}
+				<template #card="{item}:{item: ToolInterface}">
+					<div
+						class="bg-white border rounded-lg shadow cursor-pointer hover:scale-[102%] h-full transition"
+						@click="changeSlug(item.slug)"
+					>
+						<div class="border-b px-3 py-1 bg-slate-50 rounded-t-lg">
+							<h2 class="text-xl">
+								{{ item.title }}
+							</h2>
+							<div class="text-sm text-gray-400">
+								{{ item.slug }}
+							</div>
+						</div>
+						<div class="p-3">
+							{{ item.body }}
+						</div>
 					</div>
-				</td>
-				<td class="py-2 align-text-top">
-					{{ tool.body }}
-				</td>
-			</tr>
-		</table>
-	</div>
-
-	<keep-alive>
-		<component
-			:is="toolComponent"
-			@keyup.esc="toolUnselect"
-		/>
-	</keep-alive>
+				</template>
+			</filtered-list>
+		</div>
+	</section>
 </template>
 

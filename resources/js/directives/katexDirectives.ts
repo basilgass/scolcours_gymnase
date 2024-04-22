@@ -10,8 +10,8 @@ function katexAutoRender(el) {
 			// customised config
 			// • auto-render specific keys, e.g.:
 			delimiters: [
-				{ left: "$$", right: "$$", display: true },
-				{ left: "$", right: "$", display: false },
+				// { left: "$$", right: "$$", display: true },
+				// { left: "$", right: "$", display: false },
 				{ left: "\\[", right: "\\]", display: true },
 				{ left: "\\(", right: "\\)", display: false }
 			],
@@ -73,7 +73,9 @@ function katexUpdate(el, binding) {
 	// Make sure rawTex is a string
 	if(!rawTex)rawTex = ""
 
-	rawTex = rawTex.replaceAll(/\$[a-z]/g, "\\textcolor{red}{A}")
+	// TODO: removed the replaec All -> does it work?
+	// rawTex = rawTex.replaceAll(/\$[a-z]/g, "\\textcolor{red}{A}")
+
 	if (binding.modifiers.auto) {
 		el.innerHTML = rawTex
 		katexAutoRender(el)

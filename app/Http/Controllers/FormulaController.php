@@ -22,7 +22,7 @@ class FormulaController extends Controller
 	{
 		$formulas = Formula::with('chapter')->get();
 		return Inertia::render('Formulas/FormulaIndex', [
-			'formulas' => FormulaResource::collection($formulas		)
+			'formulas' => FormulaResource::collection($formulas)
 		]);
 	}
 

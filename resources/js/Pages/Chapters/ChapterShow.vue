@@ -12,11 +12,10 @@ import EditLink from "@/Components/Ui/EditLink.vue"
 
 defineOptions({ layout: LayoutMain })
 
-const props = defineProps({
+defineProps({
 	chapter: { type: Object as PropType<ChapterInterface>, required: true }
 })
 
-const showFormular = ref(false)
 const showTheorem = ref(false)
 
 </script>
@@ -41,7 +40,7 @@ const showTheorem = ref(false)
 		</header>
 
 		<div class="scolcours-container space-y-10">
-			<!-- table des matieres -->
+			<!-- table des matières -->
 			<ChapterToc
 				:chapter="chapter"
 			/>
@@ -82,21 +81,10 @@ const showTheorem = ref(false)
 			<chapter-challenges :chapter="chapter" />
 
 			<!-- The formulas -->
-			<div>
-				<button
-					v-if="!showFormular"
-					v-theme.text
-					class="uppercase"
-					@click="showFormular = true"
-				>
-					Afficher le formulaire
-				</button>
-				<chapter-formulas
-					v-else
-					:chapter-slug="chapter.slug"
-					responsive
-				/>
-			</div>
+			<chapter-formulas
+				:chapter-slug="chapter.slug"
+				responsive
+			/>
 
 			<div>
 				<button

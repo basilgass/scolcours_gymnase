@@ -364,4 +364,9 @@ class AdminController extends Controller
 
 		return $model;
 	}
+
+	public function dev()
+	{
+		return Inertia::render('Admin/AdminDev');
+	}
 }

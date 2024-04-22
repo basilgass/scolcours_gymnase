@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 /** Tools
  * title: tangente à un graphe (fonction polynomiale)
  * body: permet de calculer l'équation cartésienne d'une tangente à un graphe à un point d'abscisse donné.
@@ -7,24 +7,66 @@
  */
 import Panel from "@/Components/Ui/Panel.vue"
 import { computed, ref } from "vue"
-import { PiMath } from "pimath/esm"
 import FormMaker from "@/Components/Form/FormMaker.vue"
+import { ISolution } from "pimath/src/maths/algebra/equation"
+import { Line } from "pimath/esm/maths/geometry/line"
+import { PiMath } from "pimath/esm"
+import type { Fraction } from "pimath/esm/maths/coefficients/fraction"
 
-const fx = ref("1/3x^2"),
-	x = ref("3")
+const fx = ref("x^2"),
+	x = ref("1,0")
 
 
 const affine = computed(() => {
-	try{
-		const P = new PiMath.Polynom(fx.value),
-			a = new PiMath.Fraction(x.value),
-			fa = P.evaluate(a),
-			dP = P.derivative(),
+	try {
+		const P = new PiMath.Polynom(fx.value)
+
+		// The given x is a point
+		if (x.value.includes(",")) {
+			const [a, b] = x.value.split(",").map(y => new PiMath.Fraction(y))
+
+			const dP = P.clone().derivative()
+
+			const equ = new PiMath.Equation(
+				P.clone().subtract(b),
+				dP.clone().multiply(new PiMath.Monom("x")).subtract(dP.clone().multiply(a))
+			)
+
+			equ.solve()
+
+
+			let sols: Line[] = equ.solutions
+				.filter((sol: ISolution) => sol.exact !== false)
+				.map((sol: ISolution) => {
+					const x = sol.exact,
+						y = P.evaluate(x as Fraction)
+
+					return new PiMath.Geometry.Line(
+						new PiMath.Geometry.Point(x, y),
+						new PiMath.Geometry.Point(a, b)
+					)
+				})
+			// y = mx + h => h = b - ma
+			// solve equation P = P'(x)* x +
+
+			return {
+				tex: {
+					mxh: sols.map(sol => sol.tex.mxh).join("\\text{ ou }"),
+					canonical: sols.map(sol => sol.tex.canonical).join("\\text{ ou }")
+				}
+			}
+		}
+
+		// The given x is an abscissa
+		const a = new PiMath.Fraction(x.value),
+			fa = P.evaluate(a)
+
+		const dP = P.derivative(),
 			m = dP.evaluate(a),
 			h = fa.clone().subtract(m.clone().multiply(a))
 
 		return new PiMath.Geometry.Line(`y=${m.display}x+(${h.display})`)
-	}catch{
+	} catch {
 		return false
 	}
 
@@ -35,15 +77,15 @@ const affine = computed(() => {
 	<Panel>
 		<form-maker
 			v-model="fx"
+			focus
 			label="fonction"
 			name="fonction"
-			focus
 		/>
 
 		<form-maker
 			v-model="x"
-			label="abscisse du point de tangence"
-			name="x"
+			label="abscisse du point de tangence ou coordonnée d'un point"
+			name="x ou a,b"
 		/>
 
 		<div v-if="affine">

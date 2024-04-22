@@ -31,7 +31,7 @@ class FormulaResource extends JsonResource
 				'title'=> $this->chapter->title,
 				'theme_id'=> $this->chapter->theme_id,
 			],
-			'order' => $this->order,
+			'order' => $this->blocks[0]->order,
 			'block' => BlockResource::make($this->blocks[0])
 		];
 	}
