@@ -77,9 +77,19 @@ function addBlock() {
 	})
 }
 
+function storeCurrentPost(){
+	axios.post(
+		route("chapters.currentPost", [props.chapter.id]),
+		{
+			post_id: props.post.id,
+			open: true
+		}
+	)
+}
+
 onMounted(() => {
 	// TODO: save the last visited post or perhaps last question ?
-	// storeCurrentPost()
+	storeCurrentPost()
 	if (props.anchor) {
 		nextTick(() => useMenuScrollTo(props.anchor))
 	}
