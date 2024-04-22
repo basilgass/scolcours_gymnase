@@ -2,7 +2,7 @@
 
 import * as THREE from "three"
 import { onMounted, ref } from "vue"
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls"
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js"
 
 // Object to hold the scene container
 const sceneContainer = ref(null)
