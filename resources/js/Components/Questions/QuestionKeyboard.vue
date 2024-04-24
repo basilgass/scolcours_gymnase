@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import { computed, inject, ref } from "vue"
 import { KeyboardInterface, useKeyboard } from "@/Composables/useKeyboard"
 import QuestionAnswerSelector from "@/Components/Questions/QuestionAnswerSelector.vue"
@@ -9,7 +9,7 @@ import KeyboardBasic from "@/Components/Keyboards/KeyboardBasic.vue"
 import { ChallengeAnswerInterface } from "@/Components/Challenges/ChallengeGame.vue"
 
 // const props = defineProps({})
-const questionData = inject<questionDataInterface>('questionData')
+const questionData = inject<questionDataInterface>("questionData")
 
 // Get the keyboard building system
 const { getKeyboards } = useKeyboard()
@@ -24,7 +24,7 @@ defineEmits<{
  * hidden: keyboard is not visible, but can be shown
  * show: keyboard is visible, and can be hidden
  */
-const showInput = defineModel<'hidden'|'force'|'show'>('showInput', {default: 'hidden'})
+const showInput = defineModel<"hidden" | "force" | "show">("showInput", { default: "hidden" })
 
 /**
  * Keyboard data:
@@ -58,11 +58,12 @@ const keyboardAnswers = computed<questionAnswerInterface[]>(() => {
 
 	return arr
 })
+
 /**
  * Get the current keyboard based an answerId
  */
-const currentKeyboard = computed<KeyboardInterface>(()=>{
-if (!keyboardAnswers.value[questionData.answerId.value]) return null
+const currentKeyboard = computed<KeyboardInterface>(() => {
+	if (!keyboardAnswers.value[questionData.answerId.value]) return null
 	return keyboardAnswers.value[questionData.answerId.value].keyboard
 })
 
@@ -89,16 +90,19 @@ const answerFormat = computed(() => {
 
 	return ""
 })
+
 // Answers management.
 
-function updateQuestion(event: userAnswerInterface){
+function updateQuestion(event: userAnswerInterface) {
 	questionData.user.answers.value[questionData.answerId.value] = event
 }
 
 // Update the keyboard on question global data.
 const keyboardUI = ref<InstanceType<typeof KeyboardBasic>>(null)
 defineExpose({
-	getKeyboard(){return keyboardUI.value}
+	getKeyboard() {
+		return keyboardUI.value
+	}
 })
 </script>
 

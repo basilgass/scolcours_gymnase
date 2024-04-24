@@ -2,7 +2,7 @@ import { Component, unref } from "vue"
 import { keyboardKeys, keyboardMaps, KeyboardObjectType, keyboards } from "@/Composables/keyboardConfig"
 import { getModule, MODULE_TYPES } from "@/scolcours.js"
 import { getChecker } from "@/Composables/checkersConfig"
-import { CheckerBase } from "@/Checkers/CheckerBase"
+import { CheckerAbstract } from "@/Checkers/CheckerAbstract"
 
 /**
  * Get the keyboard name for a given component value.
@@ -41,7 +41,8 @@ function getComponent(kbrd: string) {
 
 export interface KeyboardInterface {
 	name: string;
-	checker: CheckerBase;
+	checker: CheckerAbstract;
+	checkerOverride?: {[Key: string]: string};
 	parameters: string[];
 	values: string[];
 	config: KeyboardObjectType;
@@ -65,7 +66,8 @@ function getOneKeyboard(kbrd: string): KeyboardInterface {
 	let config: KeyboardObjectType
 
 	const parameters: string[] = [],
-		values: string[] = []
+		values: string[] = [],
+		checkerOverride: {[Key: string]: string} = {}
 
 	// Split as each lines.
 	const kbrdValues = kbrd.split("\n")
@@ -91,9 +93,15 @@ function getOneKeyboard(kbrd: string): KeyboardInterface {
 	kbrdValues
 		.filter(x => x.startsWith("@"))
 		.forEach(k => {
+			if(k.substring(1).startsWith("if ")){
+				// Special case for the "si" command
+				// @si key?value
+				// remove the "@si " and split the key and value. The value may also contain a "?"
+				const [key, ...values] = k.substring(4).split("?")
+				checkerOverride[key] = values.join('?')
+			}
 			parameters.push(k.substring(1))
 		})
-
 
 	// All other values
 	kbrdValues.filter(x => !x.startsWith("@"))
@@ -105,6 +113,7 @@ function getOneKeyboard(kbrd: string): KeyboardInterface {
 	return {
 		name,
 		checker: getChecker(value, options),
+		checkerOverride,
 		parameters,
 		values,
 		config,

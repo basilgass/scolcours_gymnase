@@ -1,5 +1,5 @@
-import { CheckerBase } from "./CheckerBase"
-import AsciiMathParser from "../asciimath2tex"
+import { CheckerAbstract } from "../CheckerAbstract"
+import AsciiMathParser from "../../asciimath2tex"
 import { braceSorter } from "@/helpers/helperFunctions"
 import { getCheckerClass } from "@/Composables/checkersConfig"
 
@@ -10,8 +10,8 @@ const description: string = `solution|sol,[paramètres]
 checker = par défaut, c'est le "exact"
 `
 
-export class SolutionChecker extends CheckerBase {
-	private secondaryChecker: CheckerBase
+export class SolutionChecker extends CheckerAbstract {
+	private secondaryChecker: CheckerAbstract
 
 	constructor(config?: string[] | string) {
 		super(config)

@@ -1,6 +1,6 @@
 import { CheckerResult } from "@/Composables/checkersConfig"
 
-export abstract class CheckerBase {
+export abstract class CheckerAbstract {
     protected constructor(config?: string[] | string) {
         if (config === undefined) {
             this._config = []
@@ -10,7 +10,7 @@ export abstract class CheckerBase {
             this._config = [...config]
         }
 
-        // Subchecker : we suppose that everything after is for the subchecker
+        // Sub-checker : we suppose that everything after is for the sub-checker
         const [, chk] = this._config.join(',').split('checker:')
         if (chk !== undefined) {
             const [chkName, ...opts] = chk.split(',')

@@ -1,4 +1,4 @@
-import { CheckerBase } from "@/Checkers/CheckerBase"
+import { CheckerAbstract } from "@/Checkers/CheckerAbstract"
 
 const name = "number",
 	description = `number|nb,[paramètres]
@@ -8,11 +8,12 @@ const name = "number",
 - s (soft): significatif (donc 2.3 ne passe pas pour 2.30)
 `
 
-export class NumberChecker extends CheckerBase {
+export class NumberChecker extends CheckerAbstract {
 	constructor(config?: string[] | string) {
 		super(config)
 		this.name = name
 		this.description = description
+		
 		if (isNaN(+this.config[0])) {
 			this.config = ["0", ...this.config]
 		}

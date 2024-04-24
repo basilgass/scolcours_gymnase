@@ -40,7 +40,7 @@ function validateQuestion() {
 	// Save to database if the question
 	// - is NOT dynamic
 	// - and the user is connected.
-	if (!questionData.config.dynamic && usePage().props.auth.user) {
+	if (!questionData.config.dynamic && usePage().props.auth.user && emitValue.answer!=='') {
 
 		// It's a question in the database - store the value.
 		axios
@@ -83,8 +83,17 @@ function checkResult(): boolean {
 
 		// Stack the error if there is one.
 		if (!answer.validation.result) {
+			// The error message can be the given one.
+			// if the message is empty, either there is no helper message, either the answer was not given.
+			let msg = answer.validation.message
+			if (msg === "") {
+				msg = questionData.user.answers.value[id].value.input === ""
+					? "Vous n'avez pas répondu à cette question."
+					: "La réponse est incorrecte."
+			}
+
 			questionData.user.errors.value.push(
-				`${questionData.answers.value.length > 1 ? `${id + 1}: ` : ""}${answer.validation.message}`
+				`${questionData.answers.value.length > 1 ? `${id + 1}: ` : ""}${msg}`
 			)
 		}
 	})

@@ -1,5 +1,5 @@
 import { PiMath } from "pimath/esm"
-import { CheckerBase } from "@/Checkers/CheckerBase"
+import { CheckerAbstract } from "@/Checkers/CheckerAbstract"
 import { customCheck } from "@/Composables/checkersConfig"
 
 const name = "equation"
@@ -12,7 +12,7 @@ const description = `equation,[paramètres]
 - circle=forme centre rayon
 `
 
-export class EquationChecker extends CheckerBase {
+export class EquationChecker extends CheckerAbstract {
 	private isCentreRayon: boolean
 	private isReduced: boolean
 	private isCanonical: boolean

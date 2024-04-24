@@ -1,5 +1,5 @@
 import { NumExp } from "pimath/esm/maths/numexp"
-import { CheckerBase } from "@/Checkers/CheckerBase"
+import { CheckerAbstract } from "@/Checkers/CheckerAbstract"
 
 const name = "log"
 const description = `log,[paramètres]
@@ -7,7 +7,7 @@ const description = `log,[paramètres]
 **paramètres**
 `
 
-export class LogChecker extends CheckerBase {
+export class LogChecker extends CheckerAbstract {
 	constructor(config?: string[] | string) {
 		super(config)
 		this.name = name

@@ -1,4 +1,4 @@
-import { CheckerBase } from "@/Checkers/CheckerBase"
+import { CheckerAbstract } from "@/Checkers/CheckerAbstract"
 import { getCheckerClass } from "@/Composables/checkersConfig"
 
 const name = "tos"
@@ -8,10 +8,10 @@ const description = `tos,[paramètres]
 aucun
 `
 
-export class TableofsignChecker extends CheckerBase {
+export class TableofsignChecker extends CheckerAbstract {
     private grows: boolean
     private coords: boolean
-    private secondaryChecker: CheckerBase
+    private secondaryChecker: CheckerAbstract
 
     constructor(config: string[] | string) {
         super(config)

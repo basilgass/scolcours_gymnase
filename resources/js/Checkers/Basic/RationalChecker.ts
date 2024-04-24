@@ -1,5 +1,5 @@
 import { PiMath } from "pimath/esm"
-import { CheckerBase } from "@/Checkers/CheckerBase"
+import { CheckerAbstract } from "@/Checkers/CheckerAbstract"
 
 const name = "rational"
 const description = `rational,[paramètres]
@@ -9,7 +9,7 @@ const description = `rational,[paramètres]
 - d=développée
 - r=réduite
 `
-export class RationalChecker extends CheckerBase {
+export class RationalChecker extends CheckerAbstract {
     constructor(config:string[]|string) {
         super(config)
         this.name = name

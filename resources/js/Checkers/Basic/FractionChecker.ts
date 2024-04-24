@@ -1,5 +1,5 @@
 import { PiMath } from "pimath/esm"
-import { CheckerBase } from "@/Checkers/CheckerBase"
+import { CheckerAbstract } from "@/Checkers/CheckerAbstract"
 
 const name="fraction"
 
@@ -9,7 +9,7 @@ const description = `fraction,[paramètres]
 - r=réduit
 `
 
-export class FractionChecker extends CheckerBase {
+export class FractionChecker extends CheckerAbstract {
     private expectReduced: boolean
     constructor(config?:string[]|string) {
         super(config)

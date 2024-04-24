@@ -1,21 +1,21 @@
-import { NumberChecker } from "@/Checkers/NumberChecker"
-import { PolynomChecker } from "@/Checkers/PolynomChecker"
-import { ScientificChecker } from "@/Checkers/ScientificChecker"
-import { StringChecker } from "@/Checkers/StringChecker"
+import { NumberChecker } from "@/Checkers/Basic/NumberChecker"
+import { PolynomChecker } from "@/Checkers/Basic/PolynomChecker"
+import { ScientificChecker } from "@/Checkers/Basic/ScientificChecker"
+import { StringChecker } from "@/Checkers/Basic/StringChecker"
 import { TableofsignChecker } from "@/Checkers/TableofsignChecker"
-import { SolutionChecker } from "@/Checkers/SolutionChecker"
-import { ExactChecker } from "@/Checkers/ExactChecker"
+import { SolutionChecker } from "@/Checkers/Basic/SolutionChecker"
+import { ExactChecker } from "@/Checkers/Basic/ExactChecker"
 import { StudyChecker } from "@/Checkers/StudyChecker"
-import { RationalChecker } from "@/Checkers/RationalChecker"
-import { CoordChecker } from "@/Checkers/CoordChecker"
-import { VectorChecker } from "@/Checkers/VectorChecker"
-import { EquationChecker } from "@/Checkers/EquationChecker"
-import { FractionChecker } from "@/Checkers/FractionChecker"
-import { FunctionChecker } from "@/Checkers/FunctionChecker"
-import { LogChecker } from "@/Checkers/LogChecker"
-import { ExpChecker } from "@/Checkers/ExpChecker"
-import { CheckerBase } from "@/Checkers/CheckerBase"
-import { PrimitiveChecker } from "@/Checkers/PrimitiveChecker"
+import { RationalChecker } from "@/Checkers/Basic/RationalChecker"
+import { CoordChecker } from "@/Checkers/Basic/CoordChecker"
+import { VectorChecker } from "@/Checkers/Basic/VectorChecker"
+import { EquationChecker } from "@/Checkers/Basic/EquationChecker"
+import { FractionChecker } from "@/Checkers/Basic/FractionChecker"
+import { FunctionChecker } from "@/Checkers/Basic/FunctionChecker"
+import { LogChecker } from "@/Checkers/Basic/LogChecker"
+import { ExpChecker } from "@/Checkers/Basic/ExpChecker"
+import { CheckerAbstract } from "@/Checkers/CheckerAbstract"
+import { PrimitiveChecker } from "@/Checkers/Basic/PrimitiveChecker"
 
 export interface CheckerResult {
     result: boolean,
@@ -92,7 +92,7 @@ export function getCheckerClass(checker: string) {
 
 }
 
-export function getChecker(checker: string, options?: string[]): CheckerBase {
+export function getChecker(checker: string, options?: string[]): CheckerAbstract {
     const chkClass = getCheckerClass(checker)
 
     // No options are defined.

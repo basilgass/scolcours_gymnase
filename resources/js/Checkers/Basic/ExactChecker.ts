@@ -1,4 +1,4 @@
-import { CheckerBase } from "@/Checkers/CheckerBase"
+import { CheckerAbstract } from "@/Checkers/CheckerAbstract"
 import { PiMath } from "pimath/esm"
 
 const name = "exact"
@@ -8,7 +8,7 @@ const description = `exact
 soft = valeur numérique juste, mais pas sous la forme attendue
 `
 
-export class ExactChecker extends CheckerBase {
+export class ExactChecker extends CheckerAbstract {
 	private isSoft: boolean
 	constructor(config: string[] | string) {
 		super(config)

@@ -1,5 +1,5 @@
 import { PiMath } from "pimath/esm"
-import { CheckerBase } from "@/Checkers/CheckerBase"
+import { CheckerAbstract } from "@/Checkers/CheckerAbstract"
 
 const name = "function"
 const description = `function|fn,[paramètres]
@@ -8,7 +8,7 @@ const description = `function|fn,[paramètres]
 - d=développé
 `
 
-export class FunctionChecker extends CheckerBase {
+export class FunctionChecker extends CheckerAbstract {
     private isDevelopped: boolean
     constructor(config:string[]|string) {
         super(config)

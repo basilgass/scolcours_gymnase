@@ -1,7 +1,7 @@
-import { CheckerBase } from "@/Checkers/CheckerBase"
-import { ExpChecker } from "@/Checkers/ExpChecker"
-import { LogChecker } from "@/Checkers/LogChecker"
-import { PolynomChecker } from "@/Checkers/PolynomChecker"
+import { CheckerAbstract } from "@/Checkers/CheckerAbstract"
+import { ExpChecker } from "@/Checkers/Basic/ExpChecker"
+import { LogChecker } from "@/Checkers/Basic/LogChecker"
+import { PolynomChecker } from "@/Checkers/Basic/PolynomChecker"
 
 const name = "primitive"
 const description = `primitive,[paramètres]
@@ -10,7 +10,7 @@ const description = `primitive,[paramètres]
 aucun
 `
 
-export class PrimitiveChecker extends CheckerBase {
+export class PrimitiveChecker extends CheckerAbstract {
     constructor(config?: string[] | string) {
         super(config)
         this.name = name

@@ -1,4 +1,4 @@
-import { CheckerBase } from "@/Checkers/CheckerBase"
+import { CheckerAbstract } from "@/Checkers/CheckerAbstract"
 import { customCheck } from "@/Composables/checkersConfig"
 
 const name = "scientific"
@@ -10,7 +10,7 @@ const description = `scientific|scn,[paramètres]
 - s: strict (1.2 ne passe pas pour 1.20)
 `
 
-export class ScientificChecker extends CheckerBase {
+export class ScientificChecker extends CheckerAbstract {
     private digits: number
     constructor(config:string[]|string) {
         super(config)

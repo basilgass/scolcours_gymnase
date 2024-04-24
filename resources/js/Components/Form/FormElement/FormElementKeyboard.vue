@@ -109,7 +109,8 @@ const currentRows = computed(() => {
 			@current-line="currentLine = $event"
 		/>
 		<div class="font-code text-xs">
-			laisser une ligne vide entre deux claviers
+			laisser une ligne vide entre deux claviers<br>
+			@if &lt;réponse&gt;?&lt;message&gt;
 		</div>
 
 		<transition name="fade">

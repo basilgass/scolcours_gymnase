@@ -1,5 +1,5 @@
 import { splitAtSigns, splitIfOutsideParentheses } from "@/helpers/helperFunctions.js"
-import { CheckerBase } from "@/Checkers/CheckerBase"
+import { CheckerAbstract } from "@/Checkers/CheckerAbstract"
 import { PiMath } from "pimath/esm"
 
 const name = "exp"
@@ -9,7 +9,7 @@ const description = `exp,[paramètres]
 aucun
 `
 
-export class ExpChecker extends CheckerBase {
+export class ExpChecker extends CheckerAbstract {
     constructor(config?: string[] | string) {
         super(config)
         this.name = name

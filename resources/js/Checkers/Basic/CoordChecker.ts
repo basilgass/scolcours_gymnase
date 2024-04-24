@@ -1,4 +1,4 @@
-import { CheckerBase } from "@/Checkers/CheckerBase"
+import { CheckerAbstract } from "@/Checkers/CheckerAbstract"
 import { stripFirstCharacter, stripLastCharacter } from "@/helpers/helperFunctions"
 import { getCheckerClass } from "@/Composables/checkersConfig"
 
@@ -10,8 +10,8 @@ const description = `coord,[paramètres]
 - frac= les coordonnées sont des fractions
 `
 
-export class CoordChecker extends CheckerBase {
-    private secondaryChecker: CheckerBase
+export class CoordChecker extends CheckerAbstract {
+    private secondaryChecker: CheckerAbstract
     constructor(config?:string[]|string) {
         super(config)
         this.name = name

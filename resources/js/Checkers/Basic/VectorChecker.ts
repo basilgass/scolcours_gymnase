@@ -1,7 +1,7 @@
-import {getCheckerClass} from "@/Composables/checkersConfig"
-import {CheckerBase} from "@/Checkers/CheckerBase"
-import {PiMath} from "pimath/esm"
-import {stripFirstCharacter, stripLastCharacter} from "@/helpers/helperFunctions"
+import { getCheckerClass } from "@/Composables/checkersConfig"
+import { CheckerAbstract } from "@/Checkers/CheckerAbstract"
+import { PiMath } from "pimath/esm"
+import { stripFirstCharacter, stripLastCharacter } from "@/helpers/helperFunctions"
 
 const name = "vector"
 const description = `vector,[paramètres]
@@ -12,8 +12,8 @@ const description = `vector,[paramètres]
 - frac= les composantes sont des fractions
 `
 
-export class VectorChecker extends CheckerBase {
-    private secondaryChecker: CheckerBase
+export class VectorChecker extends CheckerAbstract {
+    private secondaryChecker: CheckerAbstract
 
     constructor(config?: string[]|string) {
         super(config)
@@ -38,7 +38,6 @@ export class VectorChecker extends CheckerBase {
     }
 
     check(expected: string, given: string): { result: boolean; message: string } {
-
         // Manque les parenthèses
         if (given[0] !== "(" || given[given.length - 1] !== ")") {
             return {

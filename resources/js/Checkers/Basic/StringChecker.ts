@@ -1,9 +1,9 @@
-import { CheckerBase } from "@/Checkers/CheckerBase"
+import { CheckerAbstract } from "@/Checkers/CheckerAbstract"
 
 const name = "string"
 const description = "string"
 
-export class StringChecker extends CheckerBase {
+export class StringChecker extends CheckerAbstract {
 	constructor(config?: string[] | string) {
 		super(config)
 		this.name = name
