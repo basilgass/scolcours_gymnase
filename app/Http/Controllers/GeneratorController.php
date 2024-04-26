@@ -52,6 +52,21 @@ class GeneratorController extends Controller
 		return $validation;
 	}
 
+	public function store(Request $request)
+	{
+		$validation = $request->validate([
+			'slug'     => ['string', 'min:3'],
+			'theme_id'	=> ['integer', 'exists:themes,id'],
+		]);
+
+		$validation['template'] = '\[question = answer\]';
+		$validation['keyboard'] = "algebra";
+		$validation['code'] = "let question = '';\nlet answer = '';\n\nreturn {question, answer}";
+		$generator = Generator::create($validation);
+
+		return $generator->id;
+	}
+
 	public function destroy(Generator $generator)
 	{
 		$generator->delete();

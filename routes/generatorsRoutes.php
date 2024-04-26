@@ -9,6 +9,10 @@ Route::middleware("can:admin")->group(function () {
 	Route::get('generators/{generator}/edit', [GeneratorController::class, "edit"])
 		->name('generators.edit');
 
+	// POST
+	Route::post('generators', [GeneratorController::class, 'store'])
+		->name('generators.store');
+
 	// PATCH
 	Route::patch('generators/{generator}', [GeneratorController::class, 'update'])
 		->name('generators.update');
