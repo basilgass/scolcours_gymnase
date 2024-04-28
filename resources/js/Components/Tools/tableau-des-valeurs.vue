@@ -7,11 +7,12 @@
  */
 import Panel from "@/Components/Ui/Panel.vue"
 import { computed, ref } from "vue"
-import { PiMath } from "pimath"
 import { numberCorrection } from "pidraw/esm/Calculus"
 import type { Polynom } from "pimath/dist/maths/algebra/polynom"
 import KeyboardDisplay from "@/Components/Keyboards/KeyboardDisplay.vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
+import { PiMath } from "pimath"
+import type { NumExp } from "pimath/dist/maths/numexp"
 
 // TODO: tableau des valeurs doit être restructurer pour fonctionner avec des valeurs trigonométriques.
 
@@ -37,7 +38,8 @@ const fx = computed(() => {
 		return f.value.includes("sin") || f.value.includes("cos") || f.value.includes("tan")
 	}),
 	getTableOfValues = function() {
-		let exp
+		let exp: NumExp | Polynom
+
 		if (isNumeric.value || numericParse.value) {
 			exp = new PiMath.NumExp(f.value)
 		} else {
@@ -56,11 +58,11 @@ const fx = computed(() => {
 
 		while (x.value <= vMax.value) {
 			let v
-			if (exp instanceof Polynom) {
-				v = exp.evaluate(x)
+			if (Object.hasOwn(exp, "monoms")) {
+				v = (exp as Polynom).evaluate(x)
 			} else {
 				v = {
-					value: exp.evaluate({ x: x.value }),
+					value: (exp as NumExp).evaluate({ x: x.value }),
 					tex: ""
 				}
 			}

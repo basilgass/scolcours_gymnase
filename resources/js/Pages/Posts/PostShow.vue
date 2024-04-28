@@ -140,7 +140,7 @@ onMounted(() => {
 					<button
 						class="text-black text-xl"
 						v-admin
-						@click="addBlock"
+						@click="addBlock()"
 					>
 						<i class="bi bi-plus-circle" />
 					</button>

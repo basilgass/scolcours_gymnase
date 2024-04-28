@@ -10,6 +10,7 @@ import { computed, ref } from "vue"
 import { numberCorrection } from "pidraw/esm/Calculus"
 import type { Polynom } from "pimath/dist/maths/algebra/polynom"
 import { PiMath } from "pimath"
+import type { NumExp } from "pimath/dist/maths/numexp"
 
 let props = defineProps({
 		illustration: { type: Object, required: true }
@@ -77,7 +78,7 @@ let props = defineProps({
 				name = exp = f
 			}
 
-			let numExp
+			let numExp: NumExp | Polynom
 			if (roundedTo.value > 0) {
 				numExp = new PiMath.NumExp(exp)
 			} else {
@@ -86,14 +87,14 @@ let props = defineProps({
 
 			let values = []
 			for (let x in tableX.value) {
-				if (numExp instanceof Polynom) {
-					let v = numExp.evaluate(+x)
+				if (Object.hasOwn(numExp, 'monoms')) {
+					let v = (numExp as Polynom).evaluate(+x)
 					values.push({
 						x,
 						fx: v.tex
 					})
 				} else {
-					let v = numExp.evaluate({ x: x })
+					let v = (numExp as NumExp).evaluate({ x: +x })
 					values.push({
 						x,
 						fx: numberCorrection(v, 0, 0, roundedTo.value)
