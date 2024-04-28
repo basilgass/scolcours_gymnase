@@ -64,7 +64,7 @@ const props = withDefaults(defineProps<FormMakerPropsType>(), {
 // Define the emits
 const emits = defineEmits(["enter", "currentLine"])
 
-const flash = inject<flashInterface>("flash")
+const flash = inject<flashInterface>("flash" , null)
 
 // Get the root element
 const inputWrapper = ref(null)
@@ -185,11 +185,11 @@ function onEnter(ev) {
 			value: theValue.value
 		})
 		.then(() => {
-			flash.success("Valeur enregistrée avec succès.")
+			flash?.success("Valeur enregistrée avec succès.")
 		})
 		.catch((err) => {
 			console.warn(err.response.data.message)
-			flash.error("Une erreur est survenue lors de l'enregistrement.")
+			flash?.error("Une erreur est survenue lors de l'enregistrement.")
 		})
 }
 

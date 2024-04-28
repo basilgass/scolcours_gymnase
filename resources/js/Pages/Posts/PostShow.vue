@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 
-import { computed, nextTick, onMounted, PropType, provide, ref } from "vue"
+import { computed, inject, nextTick, onMounted, PropType, provide, ref } from "vue"
 import type { BlockInterface, ChapterInterface, PostInterface } from "@/types/modelInterfaces"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 import EditLink from "@/Components/Ui/EditLink.vue"
@@ -12,8 +12,13 @@ import QuestionsIndex from "@/Pages/Questions/QuestionsIndex.vue"
 import { useMenuScrollTo } from "@/Composables/useHelpers"
 import { PiMath } from "pimath"
 import axios from "axios"
+import { flashInterface } from "@/types"
+import { usePage } from "@inertiajs/vue3"
 
 defineOptions({ layout: LayoutMain })
+
+const editMode = inject<boolean>("editMode")
+const flash = inject<flashInterface>("flash")
 
 const props = defineProps({
 	post: {
@@ -76,18 +81,20 @@ function addBlock(after?: number) {
 			after: after===undefined ? null: after
 		}
 	).then((res) => {
-		console.log('SUCCESS', res)
+		flash.success("Block ajouté avec succès.")
 		if(after===undefined) {
 			blocks.value.push(res.data)
 		}else{
 			blocks.value.splice(after+1, 0, res.data)
 		}
 	}).catch((res) => {
+		flash.error("Erreur lors de l'ajout du block.")
 		console.warn("add block: ", res.data)
 	})
 }
 
 function storeCurrentPost(){
+	if(usePage().props.auth.user === null) return
 	axios.post(
 		route("chapters.currentPost", [props.chapter.id]),
 		{
@@ -172,6 +179,7 @@ onMounted(() => {
 						:key="`block-${block.id}`"
 					>
 						<div
+							v-admin="editMode"
 							class="absolute -right-2 -bottom-2
 											w-[28px] h-[28px]
 											bg-white grid place-items-center pt-[0.15em]
