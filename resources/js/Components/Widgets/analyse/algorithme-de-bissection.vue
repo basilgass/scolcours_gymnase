@@ -1,7 +1,8 @@
 <script lang="ts" setup>
 import { computed, ref } from "vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
-import { NumExp } from "pimath/esm/maths/numexp"
+import type { NumExp } from "pimath/dist/maths/numexp"
+import { PiMath } from "pimath"
 
 // import { IllustrationInterface } from "@/types/modelInterfaces"
 //
@@ -26,7 +27,7 @@ const f = ref("3x+1"),
 	table = ref<bissection[]>([])
 
 const fxExp = computed<NumExp>(() => {
-	return new NumExp(f.value)
+	return new PiMath.NumExp(f.value)
 })
 
 function fx(value: number): number {

@@ -4,7 +4,7 @@
 import { onMounted, PropType, ref } from "vue"
 import { PiDraw } from "pidraw/esm"
 import katex from "katex"
-import { PiMath } from "pimath/esm"
+import { PiMath } from "pimath"
 import KeyboardDisplay from "@/Components/Keyboards/KeyboardDisplay.vue"
 import { customCheck } from "@/Composables/checkersConfig"
 import { KeyboardInterface, useKeyboard } from "@/Composables/useKeyboard"

@@ -40,9 +40,11 @@ function addGenerator() {
 
 <template>
 	<section class="scolcours-container">
-		<h1>Generateur </h1>
+		<h1 class="text-3xl my-3">
+			Gestion des générateurs
+		</h1>
 
-		<div>
+		<div class="bg-white max-w-lg mx-auto px-3 py-2 shadow rounded">
 			<form-maker
 				v-model="slug"
 				label="nouveau générateur (slug)"
@@ -60,12 +62,15 @@ function addGenerator() {
 					{{ theme.title }}
 				</option>
 			</form-maker>
-			<button
-				v-if="slug!==''"
-				@click="addGenerator"
-			>
-				Ajouter un générateur
-			</button>
+			<div class="min-h-[2em] w-full text-right mt-2">
+				<button
+					v-show="slug!==''"
+					class="btn btn-add btn-xs"
+					@click="addGenerator"
+				>
+					Ajouter un générateur
+				</button>
+			</div>
 		</div>
 
 		<filtered-list

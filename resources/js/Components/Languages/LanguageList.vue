@@ -6,7 +6,7 @@ import FormMaker from "@/Components/Form/FormMaker.vue"
 import axios from "axios"
 import type { TranslationWord } from "@/types/modelInterfaces"
 import { LanguageDataInterface } from "@/Pages/languages/LanguageShow.vue"
-import { PiMath } from "pimath/esm"
+import { PiMath } from "pimath"
 
 const languageData = inject<LanguageDataInterface>('LanguageData')
 

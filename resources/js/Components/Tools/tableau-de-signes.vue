@@ -4,7 +4,7 @@
  * body: tableau de signes ou de variations
  */
 import { nextTick, onMounted, reactive, ref } from "vue"
-import { PiMath } from "pimath/esm"
+import { PiMath } from "pimath"
 import TableOfSigns from "@/Components/Pi/PiTableOfSigns.vue"
 import Panel from "@/Components/Ui/Panel.vue"
 import { splitIfOutsideParentheses } from "@/helpers/helperFunctions.js"

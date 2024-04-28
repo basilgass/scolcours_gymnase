@@ -7,7 +7,7 @@
  */
 import Panel from "@/Components/Ui/Panel.vue"
 import { computed, ref } from "vue"
-import { PiMath } from "pimath/esm"
+import { PiMath } from "pimath"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 
 let equ = ref("(x-4)^2+(y-5)^2=25"),

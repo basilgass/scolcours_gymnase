@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { computed, inject, ref } from "vue"
-import { PiMath } from "pimath/esm"
+import { PiMath } from "pimath"
 import type { LanguageDataInterface } from "@/Pages/languages/LanguageShow.vue"
 
 const languageData = inject<LanguageDataInterface>('LanguageData')

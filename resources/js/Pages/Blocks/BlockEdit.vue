@@ -236,7 +236,7 @@ function addScriptsButtons() {
 					<div>
 						<!-- corps et preview -->
 						<div class="relative">
-							<div class="absolute right-0 top-[0.6em] flex text-xs ">
+							<div class="absolute right-0 top-[0.6em] flex text-xs z-10">
 								<button
 									:class="{'bg-blue-600 text-white':tab==='markdown'}"
 									class="border-x border-t px-2 py-0 rounded-t transition-all duration-500"

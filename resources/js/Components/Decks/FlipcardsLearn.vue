@@ -4,7 +4,7 @@ import { computed, PropType, ref } from "vue"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 import { useSwipe } from "@vueuse/core"
 import type { deckInterface, flipcardsInterface } from "@/types/modelInterfaces"
-import { PiMath } from "pimath/esm"
+import { PiMath } from "pimath"
 
 const props = defineProps({
 	deck: { type: Object as PropType<deckInterface>, required: true }

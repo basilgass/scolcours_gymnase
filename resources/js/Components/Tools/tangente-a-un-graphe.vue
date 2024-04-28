@@ -8,10 +8,10 @@
 import Panel from "@/Components/Ui/Panel.vue"
 import { computed, ref } from "vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
-import { ISolution } from "pimath/src/maths/algebra/equation"
-import { Line } from "pimath/esm/maths/geometry/line"
-import { PiMath } from "pimath/esm"
-import type { Fraction } from "pimath/esm/maths/coefficients/fraction"
+import { Line } from "pimath/dist/maths/geometry/line"
+import { PiMath } from "pimath"
+import type { Fraction } from "pimath/dist/maths/coefficients/fraction"
+import { ISolution } from "pimath/dist/maths/algebra/equation"
 
 const fx = ref("x^2"),
 	x = ref("1,0")

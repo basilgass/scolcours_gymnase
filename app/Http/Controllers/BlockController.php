@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Resources\BlockResource;
 use App\Models\Block;
 use App\Models\Chapter;
-use App\Models\Formula;
 use App\Models\Post;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\RedirectResponse;
@@ -66,11 +65,42 @@ class BlockController extends Controller
 
 	public function storeInPost(Post $post, Request $request)
 	{
-		$block = $post->blocks()->create([
-			'title' => '',
-			'body'  => 'sans contenu',
-			'order' => count($post->blocks)
+		$validation = $request->validate([
+			'after'     => ['int', 'nullable', 'min:0'],
 		]);
+
+
+		// If the "after" key was given:
+		// we need to reorder the blocks from the post
+		// and include the new one after the given value.
+		if ($request->after !== null) {
+			// Get the blocks from the post
+			$blocks = $post->blocks;
+
+			// Create the new block
+			$block = $post->blocks()->create([
+				'title' => '',
+				'body'  => 'sans contenu',
+				'order' => $request->after + 1
+			]);
+
+			// Insert the new block at the given index
+			$blocks->splice($request->after + 1, 0, [$block]);
+
+			// Reorder the blocks
+			$blocks->each(function ($b, $index) {
+				$b->update(['order' => $index]);
+			});
+
+			$block->refresh();
+		}else{
+			// Create the new block, add it at the end of the post.
+			$block = $post->blocks()->create([
+				'title' => '',
+				'body'  => 'sans contenu',
+				'order' => count($post->blocks)
+			]);
+		}
 
 		return BlockResource::make($block);
 	}

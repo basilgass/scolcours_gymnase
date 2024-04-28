@@ -44,8 +44,6 @@ createInertiaApp({
 		const editMode = useEditMode()
 		app.provide("editMode", editMode)
 
-
-
 		// Mount the app.
 		app.mount(el)
 	},

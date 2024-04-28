@@ -1,5 +1,5 @@
-import { NumExp } from "pimath/esm/maths/numexp"
 import { CheckerAbstract } from "@/Checkers/CheckerAbstract"
+import { PiMath } from "pimath"
 
 const name = "log"
 const description = `log,[paramètres]
@@ -52,7 +52,7 @@ export class LogChecker extends CheckerAbstract {
 
 			let userN, userD
 			try {
-				userN = new NumExp(ND[0]).evaluate()
+				userN = new PiMath.NumExp(ND[0]).evaluate()
 			} catch {
 				return {
 					result: false,
@@ -61,7 +61,7 @@ export class LogChecker extends CheckerAbstract {
 			}
 			if (ND.length === 2) {
 				try {
-					userD = new NumExp(ND[1]).evaluate()
+					userD = new PiMath.NumExp(ND[1]).evaluate()
 				} catch {
 					return {
 						result: false,
@@ -76,7 +76,7 @@ export class LogChecker extends CheckerAbstract {
 			const [expN, expD] = expected.split("/")
 			let expNValue: number, expDValue: number
 			try {
-				expNValue = new NumExp(expN).evaluate()
+				expNValue = new PiMath.NumExp(expN).evaluate()
 			} catch {
 				// Do nothing
 			}
@@ -84,7 +84,7 @@ export class LogChecker extends CheckerAbstract {
 				expDValue = 1
 			} else {
 				try {
-					expDValue = new NumExp(expD).evaluate()
+					expDValue = new PiMath.NumExp(expD).evaluate()
 				} catch {
 					// Do nothing
 				}

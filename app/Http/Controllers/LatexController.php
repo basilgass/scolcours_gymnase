@@ -46,8 +46,10 @@ class LatexController extends Controller
 				'content' => $validation["content"]??'',
 				'slug' => '/download/' . $fileID
 			]);
-		$result = $laraTeX
-			->savePdf(Storage::disk('public')->path($fullpath));
+
+		$result = $laraTeX->savePdf(
+				Storage::disk('public')->path($fullpath)
+			);
 
 		if ($result) {
 			// Save it to the database.

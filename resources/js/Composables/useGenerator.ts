@@ -3,7 +3,7 @@
  */
 import { ComputedRef, Ref, unref } from "vue"
 import type { GeneratorInterface, QuestionMinInterface } from "@/types/modelInterfaces"
-import { PiMath } from "pimath/esm"
+import { PiMath } from "pimath"
 import { generatedQuestionInterface, generatorResultInterface } from "@/types"
 
 export function useGenerator(generator: GeneratorInterface | ComputedRef<GeneratorInterface>): generatorResultInterface {

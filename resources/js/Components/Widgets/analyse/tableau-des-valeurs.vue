@@ -7,9 +7,9 @@ code: [f(x)=]function (multiple line possible)
 </info>-->
 <script lang="ts" setup>
 import { computed, ref } from "vue"
-import { PiMath } from "pimath/esm"
-import { Polynom } from "pimath/esm/maths/algebra/polynom"
 import { numberCorrection } from "pidraw/esm/Calculus"
+import type { Polynom } from "pimath/dist/maths/algebra/polynom"
+import { PiMath } from "pimath"
 
 let props = defineProps({
 		illustration: { type: Object, required: true }

@@ -4,7 +4,7 @@ code: rational fraction ou <zero>@<signs>@<croissance>@<extremes>
 </info>-->
 <script setup lang="ts">
 import { computed, ref } from "vue"
-import { PiMath } from "pimath/esm"
+import { PiMath } from "pimath"
 import PiTableOfSigns from "@/Components/Pi/PiTableOfSigns.vue"
 import { makeStudyFromCode } from "@/Composables/useTos"
 // Paramètres

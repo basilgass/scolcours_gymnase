@@ -1,5 +1,5 @@
-import { PiMath } from "pimath/esm"
 import { CheckerAbstract } from "@/Checkers/CheckerAbstract"
+import { PiMath } from "pimath"
 
 const name = "function"
 const description = `function|fn,[paramètres]

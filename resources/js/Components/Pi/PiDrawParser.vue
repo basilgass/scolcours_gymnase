@@ -8,7 +8,7 @@ import { PiDraw } from "pidraw/esm"
 
 import VueSlider from "vue-slider-component/dist/vue-slider-component.umd.min"
 import "vue-slider-component/theme/material.css"
-import { PiMath } from "pimath/esm"
+import { PiMath } from "pimath"
 import katex from "katex"
 import { useResizeObserver } from "@vueuse/core"
 import PiDrawParserVisibility from "@/Components/Pi/Parts/PiDrawParserVisibility.vue"

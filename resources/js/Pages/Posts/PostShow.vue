@@ -10,7 +10,7 @@ import ChapterFormulasSlider from "@/Components/Chapters/ChapterFormulasSlider.v
 import ChapterNav from "@/Components/Chapters/ChapterNav.vue"
 import QuestionsIndex from "@/Pages/Questions/QuestionsIndex.vue"
 import { useMenuScrollTo } from "@/Composables/useHelpers"
-import { PiMath } from "pimath/esm"
+import { PiMath } from "pimath"
 import axios from "axios"
 
 defineOptions({ layout: LayoutMain })
@@ -69,11 +69,21 @@ provide("postData", postData)
 provide('postBlocks', blocks)
 
 
-function addBlock() {
-	axios.post(
-		route("posts.blocks.store",[props.post.id])
+function addBlock(after?: number) {
+		axios.post(
+		route("posts.blocks.store",[props.post.id]),
+		{
+			after: after===undefined ? null: after
+		}
 	).then((res) => {
-		blocks.value.push(res.data)
+		console.log('SUCCESS', res)
+		if(after===undefined) {
+			blocks.value.push(res.data)
+		}else{
+			blocks.value.splice(after+1, 0, res.data)
+		}
+	}).catch((res) => {
+		console.warn("add block: ", res.data)
 	})
 }
 
@@ -155,14 +165,26 @@ onMounted(() => {
 				<div
 					v-for="group in groupedBlocks"
 					:key="group[0].id"
-					class="shadow"
 				>
-					<block-show
+					<div
+						class="shadow relative"
 						v-for="(block, index) in group"
 						:key="`block-${block.id}`"
-						:block="block"
-						:group-index="index"
-					/>
+					>
+						<div
+							class="absolute -right-2 -bottom-2
+											w-[28px] h-[28px]
+											bg-white grid place-items-center pt-[0.15em]
+											rounded-full border shadow hover:bg-black hover:text-white transition-colors duration-500 cursor-pointer"
+							@click="addBlock(block.order)"
+						>
+							<i class="bi bi-plus-circle" />
+						</div>
+						<block-show
+							:block="block"
+							:group-index="index"
+						/>
+					</div>
 				</div>
 			</article>
 

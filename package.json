@@ -51,7 +51,7 @@
 		"markdown-it-texmath": "^1.0.0",
 		"pidraw": "^0.0.99",
 		"pigames": "^0.1.18",
-		"pimath": "^0.0.127",
+		"pimath": "^0.0.133",
 		"prismjs": "^1.29.0",
 		"three": "^0.163.0",
 		"three-csg-ts": "^3.1.14",

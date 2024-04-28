@@ -16,7 +16,7 @@ import { computed, inject, nextTick, onMounted, ref, watch } from "vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import { LanguageDataInterface } from "@/Pages/languages/LanguageShow.vue"
 import type { TranslationWord } from "@/types/modelInterfaces"
-import { PiMath } from "pimath/esm"
+import { PiMath } from "pimath"
 
 interface GuessWord extends TranslationWord {
 	errors: number,

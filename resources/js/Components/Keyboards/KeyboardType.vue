@@ -3,7 +3,7 @@
 import { useWrongAnswerAnimation } from "@/Composables/useHelpers"
 
 import { nextTick, onMounted, ref } from "vue"
-import { PiMath } from "pimath/esm"
+import { PiMath } from "pimath"
 import { useKeyboard } from "@/Composables/useKeyboard"
 
 const props = defineProps({

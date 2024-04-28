@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { computed, inject, ref } from "vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
-import { PiMath } from "pimath/esm"
+import { PiMath } from "pimath"
 import axios from "axios"
 import { IllustrationInterface } from "@/types/modelInterfaces"
 import { router } from "@inertiajs/vue3"

@@ -6,15 +6,15 @@
 
 // TODO: remove replaceAll('*x', 'x') in drawCode when PiDraw will be fixed
 import { nextTick, onMounted, reactive, ref } from "vue"
-import { PiMath } from "pimath/esm"
+import { PiMath } from "pimath"
 import TableOfSigns from "@/Components/Pi/PiTableOfSigns.vue"
 import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"
 import Panel from "@/Components/Ui/Panel.vue"
 import TableOfContents from "@/Components/Ui/TableOfContents.vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 
-import { IExtrema, IZero } from "pimath/esm/maths/algebra/study"
-import { Polynom } from "pimath/esm/maths/algebra/polynom"
+import type { IExtrema, IZero } from "pimath/dist/maths/algebra/study"
+import type { Polynom } from "pimath/dist/maths/algebra/polynom"
 
 const root = ref(null),
 	fx = ref("(3x-5)(x+7)/(x-3)"),

@@ -1,6 +1,6 @@
 import { getCheckerClass } from "@/Composables/checkersConfig"
 import { CheckerAbstract } from "@/Checkers/CheckerAbstract"
-import { PiMath } from "pimath/esm"
+import { PiMath } from "pimath"
 import { stripFirstCharacter, stripLastCharacter } from "@/helpers/helperFunctions"
 
 const name = "vector"

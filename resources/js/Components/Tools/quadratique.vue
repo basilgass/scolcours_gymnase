@@ -7,10 +7,10 @@
  */
 import Panel from "@/Components/Ui/Panel.vue"
 import { computed, ref } from "vue"
-import { PiMath } from "pimath/esm"
+import { PiMath } from "pimath"
 import FormMaker from "@/Components/Form/FormMaker.vue"
-import type { Polynom } from "pimath/esm/maths/algebra/polynom"
-import type { Equation } from "pimath/esm/maths/algebra/equation"
+import type { Polynom } from "pimath/dist/maths/algebra/polynom"
+import type { Equation } from "pimath/dist/maths/algebra/equation"
 
 const A = ref("-2,-11"),
 	B = ref("0,-7"),

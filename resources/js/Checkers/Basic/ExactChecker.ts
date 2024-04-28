@@ -1,5 +1,5 @@
 import { CheckerAbstract } from "@/Checkers/CheckerAbstract"
-import { PiMath } from "pimath/esm"
+import { PiMath } from "pimath"
 
 const name = "exact"
 const description = `exact

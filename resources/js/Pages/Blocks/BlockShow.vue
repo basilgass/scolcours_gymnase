@@ -9,7 +9,7 @@ import IllustrationShow from "@/Pages/Illustrations/IllustrationShow.vue"
 import BlockShowAdmin from "@/Pages/Blocks/BlockShowAdmin.vue"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 import { useFormattedBody } from "@/Composables/useHelpers"
-import { PiMath } from "pimath/esm"
+import { PiMath } from "pimath"
 import BlockBodyButtons from "@/Components/Blocks/BlockBodyButtons.vue"
 
 // Props

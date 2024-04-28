@@ -15,9 +15,8 @@ const props = defineProps({
 	itemClass: { type: String, default: "" },
 	collapsed: { type: Boolean, default: null },
 	listClass: { type: String, default: "flex gap-3 flex-wrap" },
-	noFilterIfLessThan: { type: Number, default: 10 }
+	noFilterIfLessThan: { type: Number, default: 10 },
 })
-
 
 const filteredList = computed<T[]>(() => {
 	const checkString = selectedList.value.trim().toLowerCase()

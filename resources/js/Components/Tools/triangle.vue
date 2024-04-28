@@ -7,7 +7,7 @@
  */
 import Panel from "@/Components/Ui/Panel.vue"
 import { computed, ref } from "vue"
-import { PiMath } from "pimath/esm"
+import { PiMath } from "pimath"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 
 let A = ref("15x-8y+16=0"),

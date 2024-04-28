@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
 import { computed, ref } from "vue"
-import { PiMath } from "pimath/esm"
+import { PiMath } from "pimath"
 import BarChart from "@/Components/Charts/barChart.vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"

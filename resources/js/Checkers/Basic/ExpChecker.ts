@@ -1,6 +1,6 @@
 import { splitAtSigns, splitIfOutsideParentheses } from "@/helpers/helperFunctions.js"
 import { CheckerAbstract } from "@/Checkers/CheckerAbstract"
-import { PiMath } from "pimath/esm"
+import { PiMath } from "pimath/dist/pimath"
 
 const name = "exp"
 const description = `exp,[paramètres]

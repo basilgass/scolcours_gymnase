@@ -1,6 +1,7 @@
-import { Fraction } from "pimath/esm/maths/coefficients/fraction"
 import { Dom, ForeignObject, G, SVG, Svg } from "@svgdotjs/svg.js"
 import katex from "katex"
+import type { Fraction } from "pimath/dist/maths/coefficients/fraction"
+import { PiMath } from "pimath"
 
 /**
  * Class to generate a probability tree.
@@ -223,15 +224,15 @@ export class ProbabilityTree {
 
 		if (this._config.output.result.type === "fraction") {
 			const details = this._config.output.result.details === ProbabilityTreeBranchResult.details ? `${leaf.branchProbability.map(x => x.tex).join("\\cdot ")} = ` : ""
-			return `\\scriptsize ${details}${new Fraction().xMultiply(...leaf.branchProbability).tex}`
+			return `\\scriptsize ${details}${new PiMath.Fraction().xMultiply(...leaf.branchProbability).tex}`
 		} else if (this._config.output.result.type === "value") {
 			const digit = this._config.output.result.digits
 			const details = this._config.output.result.details === ProbabilityTreeBranchResult.details ? `${leaf.branchProbability.map(x => x.value.toFixed(digit)).join("\\cdot ")} = ` : ""
-			return `\\scriptsize ${details}${new Fraction().xMultiply(...leaf.branchProbability).value.toFixed(digit)}`
+			return `\\scriptsize ${details}${new PiMath.Fraction().xMultiply(...leaf.branchProbability).value.toFixed(digit)}`
 		} else if (this._config.output.result.type === "percent") {
 			const digit = this._config.output.result.digits
 			const details = this._config.output.result.details === ProbabilityTreeBranchResult.details ? `${leaf.branchProbability.map(x => (+x.value * 100).toFixed(digit) + "\\%").join("\\cdot ")} = ` : ""
-			return `\\scriptsize ${details}${(new Fraction().xMultiply(...leaf.branchProbability).value * 100).toFixed(digit)}\\% `
+			return `\\scriptsize ${details}${(new PiMath.Fraction().xMultiply(...leaf.branchProbability).value * 100).toFixed(digit)}\\% `
 		}
 	}
 
@@ -443,7 +444,7 @@ export class ProbabilityTree {
 			result.push({
 				node: key,
 				number: items[key],
-				probability: new Fraction(items[key], maxItems),
+				probability: new PiMath.Fraction(items[key], maxItems),
 				leaves: crtThrow < maxThrows ? this._parseSimpleInputAddLeaves(nextItems, crtThrow + 1, maxThrows, repeat) : undefined,
 				branchProbability: []
 			})
@@ -471,7 +472,7 @@ export class ProbabilityTree {
 				node: "ROOT",
 				leaves: [],
 				number: 0,
-				probability: new Fraction(1),
+				probability: new PiMath.Fraction(1),
 				branchProbability: []
 			},
 			crtLevel: number = 0
@@ -544,7 +545,7 @@ export class ProbabilityTree {
 			.reduce((a, b) => a + b)
 
 		root.leaves.forEach(leaf => {
-			leaf.probability = new Fraction(leaf.number, maxItems)
+			leaf.probability = new PiMath.Fraction(leaf.number, maxItems)
 			this._setProbabilityForLeaves(leaf)
 		})
 	}

@@ -7,9 +7,9 @@
  */
 import Panel from "@/Components/Ui/Panel.vue"
 import { computed, ref } from "vue"
-import { PiMath } from "pimath/esm"
+import { PiMath } from "pimath"
 import FormMaker from "@/Components/Form/FormMaker.vue"
-import { Fraction } from "pimath/esm/maths/coefficients/fraction"
+import type { Fraction } from "pimath/dist/maths/coefficients/fraction"
 
 const fx = ref(""),
 	a = ref(0),

@@ -1,4 +1,4 @@
-import { PiMath } from "pimath/esm"
+import { PiMath } from "pimath"
 import { CheckerAbstract } from "@/Checkers/CheckerAbstract"
 import { customCheck } from "@/Composables/checkersConfig"
 

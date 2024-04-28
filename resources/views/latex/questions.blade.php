@@ -10,7 +10,7 @@
     \begin{enumerate}
     \def\itemsep{3em}
     @foreach($questions as $question)
-        \item {{ $question['question'] }}
+        \item {!! $question['question'] !!}
     @endforeach
     \end{enumerate}
     \end{multicols}

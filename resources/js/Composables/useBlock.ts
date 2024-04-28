@@ -1,5 +1,5 @@
 import { computed, inject, onMounted, onUnmounted, provide, Ref, ref, unref } from "vue"
-import { PiMath } from "pimath/esm"
+import { PiMath } from "pimath"
 import { useFormattedBody } from "@/Composables/useHelpers"
 import type { BlockInterface } from "@/types/modelInterfaces"
 

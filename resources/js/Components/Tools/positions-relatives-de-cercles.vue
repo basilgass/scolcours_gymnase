@@ -7,7 +7,7 @@
 	 */
 
 	import { computed, onMounted, ref } from "vue"
-	import { PiMath } from "pimath/esm"
+	import { PiMath } from "pimath"
 	import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"
 	import FormMaker from "@/Components/Form/FormMaker.vue"
 

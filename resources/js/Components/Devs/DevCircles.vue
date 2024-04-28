@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue"
 import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"
-import { PiMath } from "pimath/esm"
+import { PiMath } from "pimath"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 

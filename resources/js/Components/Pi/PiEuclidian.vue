@@ -5,8 +5,8 @@ Uniquement utilisée dans Posts/Illustrations/Elements/IllustrationEuclidian
 <script lang="ts" setup>
 
 import { computed } from "vue"
-import { PiMath } from "pimath/esm"
-import { Polynom } from "pimath/esm/maths/algebra/polynom"
+import { PiMath } from "pimath"
+import type { Polynom } from "pimath/dist/maths/algebra/polynom"
 
 const props = defineProps({
 	fx: { type: String, default: null },

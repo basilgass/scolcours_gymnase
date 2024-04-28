@@ -8,7 +8,7 @@ code:
 import { IllustrationInterface } from "@/types/modelInterfaces"
 import { computed, inject, PropType, ref } from "vue"
 import { listeDeMots } from "@/helpers/liste-des-mots-francais"
-import { PiMath } from "pimath/esm"
+import { PiMath } from "pimath"
 import { flashInterface } from "@/types"
 
 const flash = inject<flashInterface>("flash")
