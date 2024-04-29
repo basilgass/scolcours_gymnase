@@ -346,7 +346,7 @@ export class ProbabilityTree {
 			}
 		}
 
-		if (parameters === undefined) return cfg
+		if (parameters === undefined || parameters === null) return cfg
 
 		// Build the output
 		const output = parameters.split(",") ?? []

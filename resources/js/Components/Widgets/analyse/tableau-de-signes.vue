@@ -3,7 +3,7 @@ parameters: name=<nom>(x),min[imal],extreme=3|4|5<br/>
 code: rational fraction ou <zero>@<signs>@<croissance>@<extremes>
 </info>-->
 <script setup lang="ts">
-import { computed, ref } from "vue"
+import { computed } from "vue"
 import { PiMath } from "pimath"
 import PiTableOfSigns from "@/Components/Pi/PiTableOfSigns.vue"
 import { makeStudyFromCode } from "@/Composables/useTos"
@@ -18,8 +18,8 @@ import { makeStudyFromCode } from "@/Composables/useTos"
 const props = defineProps({
 		illustration: {type: Object, required: true}
 	}),
-	params = ref(props.illustration.parameters),
-	code = ref(props.illustration.code)
+	params = computed(()=>props.illustration.parameters),
+	code = computed(()=>props.illustration.code)
 
 
 const config = computed(()=>{

@@ -16,7 +16,8 @@
 		"paths": {
 			"@/*": [
 				"./resources/js/*"
-			]
+			],
+			"pimath": ["./node_modules/pimath/dist/pimath.js"]
 		}
 	},
 	"include": [

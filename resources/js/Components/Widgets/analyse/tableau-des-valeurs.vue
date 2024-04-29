@@ -6,7 +6,7 @@ options: [rounded:2],[col:width],[table:class]
 code: [f(x)=]function (multiple line possible)
 </info>-->
 <script lang="ts" setup>
-import { computed, ref } from "vue"
+import { computed } from "vue"
 import { numberCorrection } from "pidraw/esm/Calculus"
 import type { Polynom } from "pimath/dist/maths/algebra/polynom"
 import { PiMath } from "pimath"
@@ -15,8 +15,8 @@ import type { NumExp } from "pimath/dist/maths/numexp"
 let props = defineProps({
 		illustration: { type: Object, required: true }
 	}),
-	params = ref(props.illustration.parameters.split(",")),
-	code = ref(props.illustration.code),
+	params = computed(()=>props.illustration.parameters.split(",")),
+	code = computed(()=>props.illustration.code),
 	roundedTo = computed(() => {
 		for (let param of params.value) {
 			if (param.startsWith("rounded:")) {
@@ -87,7 +87,7 @@ let props = defineProps({
 
 			let values = []
 			for (let x in tableX.value) {
-				if (Object.hasOwn(numExp, 'monoms')) {
+				if (Object.hasOwn(numExp, '_monoms')) {
 					let v = (numExp as Polynom).evaluate(+x)
 					values.push({
 						x,

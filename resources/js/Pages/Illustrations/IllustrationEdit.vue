@@ -12,8 +12,10 @@ import { flashInterface } from "@/types"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
 import IllustrationShow from "@/Pages/Illustrations/IllustrationShow.vue"
 
+// Define the layout
 defineOptions({ layout: LayoutMain })
 
+// Props definition
 const props = defineProps({
 	illustration: {
 		type: Object as PropType<IllustrationInterface>,
@@ -21,12 +23,13 @@ const props = defineProps({
 	}
 })
 
+// Flash message
 const flash = inject<flashInterface>("flash")
 
+// reactive illustration data.
 const theIllustration = ref<IllustrationInterface>(props.illustration)
 
-// Components
-const chapterComponents = ref<{ [Key: string]: widgetInterface }>({})
+// current component
 const currentComponent = computed<widgetInterface>(() => {
 	return chapterComponents.value[theIllustration.value.widget.id] !== undefined ?
 		chapterComponents.value[theIllustration.value.widget.id]
@@ -40,6 +43,10 @@ const currentComponent = computed<widgetInterface>(() => {
 			control: false
 		}
 })
+
+// available components.
+const chapterComponents = ref<{ [Key: string]: widgetInterface }>({})
+// Load the list of components
 function loadComponents() {
 	axios
 		.get(route("widgets.components"))
@@ -51,6 +58,7 @@ function loadComponents() {
 		})
 		.catch((err) => console.warn(err))
 }
+// Change the current component.
 function toggleComponent(component: widgetInterface) {
 	theIllustration.value.widget_id = component.id
 	theIllustration.value.widget = component
@@ -80,12 +88,10 @@ const currentLineHelperText = computed<{
 
 // Copy / Paste illustration
 const hasClipboard = ref(false)
-
 function copyIllustration() {
 	localStorage.setItem("illustrationClipboard", JSON.stringify(theIllustration.value))
 	hasClipboard.value = true
 }
-
 function pasteIllustration() {
 	const clipboard = localStorage.getItem("illustrationClipboard")
 	if (clipboard) {
@@ -93,6 +99,7 @@ function pasteIllustration() {
 	}
 }
 
+// Save the illustration to database
 function illustrationSave() {
 	axios
 		.post(route("illustrations.update", [theIllustration.value.id]), {
@@ -106,16 +113,16 @@ function illustrationSave() {
 			console.error(error)
 		})
 }
-
+// Save the illustration to database and go back to the belonging block.
 function illustrationSaveAndEdit() {
 	illustrationSave()
 	router.visit(route("blocks.edit", [theIllustration.value.block_id]))
 }
-
+// Visit the belonging block (no save, no edit)
 function illustrationVisit() {
 	router.visit(route("illustrations.show", [theIllustration.value.id]))
 }
-
+// Delete the illustration
 function illustrationDelete() {
 	axios
 		.post(route("illustrations.destroy", [theIllustration.value.id]), {

@@ -1,14 +1,19 @@
+<!--<info>
+parameters: a=number,b=number<br/>
+code: function
+</info>-->
+
 <script lang="ts" setup>
-import { computed, ref } from "vue"
+import { computed, onMounted, PropType, ref } from "vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import type { NumExp } from "pimath/dist/maths/numexp"
 import { PiMath } from "pimath"
 
-// import { IllustrationInterface } from "@/types/modelInterfaces"
-//
-// defineProps({
-// 	illustration: { type: Object as PropType<IllustrationInterface>, required: true }
-// })
+import { IllustrationInterface } from "@/types/modelInterfaces"
+
+const props = defineProps({
+	illustration: { type: Object as PropType<IllustrationInterface>, required: true }
+})
 
 type bissection = {
 	a: number
@@ -20,13 +25,14 @@ type bissection = {
 	choix?: "a" | "b"
 }
 
-const f = ref("3x+1"),
+const f = ref(""),
 	a = ref(-2),
 	b = ref(2),
 	fixed = ref(3),
 	table = ref<bissection[]>([])
 
 const fxExp = computed<NumExp>(() => {
+	if (f.value === "") return new PiMath.NumExp("0")
 	return new PiMath.NumExp(f.value)
 })
 
@@ -69,8 +75,8 @@ function garderLaBorne(borne: "a" | "b"): void {
 	}
 }
 
-const controleAB = computed(()=>{
-	return fx(a.value)*fx(b.value)<0
+const controleAB = computed(() => {
+	return fx(a.value) * fx(b.value) < 0
 })
 
 function commencer() {
@@ -98,7 +104,7 @@ function auto() {
 
 	while (Math.abs(row.a - row.b) > 0.01) {
 		garderLaBorne(row.fm < 0 ? borneInferieure : borneSuperieure)
-		row = table.value[table.value.length-1]
+		row = table.value[table.value.length - 1]
 
 		// Security trigger
 		if (table.value.length > 20) {
@@ -107,6 +113,24 @@ function auto() {
 	}
 }
 
+onMounted(() => {
+	if (props.illustration?.code !== "") {
+		f.value = props.illustration.code
+	}
+
+	if (props.illustration?.parameters !== "") {
+		const params = props.illustration.parameters.split(",")
+		// Get the value from "a=number" and "b=number"
+		params.forEach(param => {
+			const [key, value] = param.split("=")
+			if (key === "a") {
+				a.value = +value
+			} else if (key === "b") {
+				b.value = +value
+			}
+		})
+	}
+})
 </script>
 
 <template>
@@ -151,17 +175,17 @@ function auto() {
 
 			<div class="flex gap-4 justify-center mt-10">
 				<button
+					:disabled="!controleAB"
 					class="btn btn-primary px-10 py-4 text-lg disabled:bg-gray-300 disabled:text-gray-500"
 					@click="commencer"
-					:disabled="!controleAB"
 				>
 					commencer
 				</button>
 				<button
 					v-admin
+					:disabled="!controleAB"
 					class="btn btn-primary px-10 py-4 text-lg disabled:bg-gray-300 disabled:text-gray-500"
 					@click="auto"
-					:disabled="!controleAB"
 				>
 					automatique
 				</button>

@@ -5,19 +5,17 @@ code: rational fraction
 </info>-->
 <script setup lang="ts">
 
-import { computed, ref } from "vue"
+import { computed } from "vue"
 import PiEuclidian from "@/Components/Pi/PiEuclidian.vue"
 
 const props = defineProps({
 		illustration: {type: Object, required: true}
-	}),
-	params = ref(props.illustration.parameters),
-	code = ref(props.illustration.code)
+	})
 
 const euclidian = computed(()=>{
-	const config = params.value.split(",")
+	const config = props.illustration.parameters.split(",")
 	return {
-		fx: code.value,
+		fx: props.illustration.code,
 		name: config.filter(x=>x.includes("(x)"))[0]||"f(x)",
 		fundamental: config.indexOf("f")!==-1 || config.indexOf("fundamental")!==-1,
 		asymptote: config.indexOf("a")!==-1 || config.indexOf("asymptote")!==-1,

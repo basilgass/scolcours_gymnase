@@ -1,33 +1,28 @@
 <!--<info>
-parameters: {name}(x),f (for fundamuntal), a (for asymptote), b (for bottom)
+parameters: R=p|f/digits,B=p|f/digits (R: result, B: branches)
 
-code: rational fraction
+code: 1. (name: simple) [rootname\n]A,3,B,2,5[,*] -> A is three times, B is two times, number of throws 5, optional star if reusing
+2. (name: custom) [rootname\n]A,3\n B,2\n C,3\n D,4\n E,2\n F,2
 </info>-->
 <script setup lang="ts">
 
-import { computed, PropType, ref } from "vue"
+import { PropType } from "vue"
 import PiProbabilityTree from "@/Components/Pi/PiProbabilityTree.vue"
 import { IllustrationInterface } from "@/types/modelInterfaces"
 
-const props = defineProps({
+defineProps({
 		illustration: {
 			type: Object as PropType<IllustrationInterface>,
 			required: true
 		}
-	}),
-	params = ref(props.illustration.parameters),
-	code = ref(props.illustration.code)
+	})
 
-const probabilityTree = computed(()=>{
-	return {
-		parameters: params.value,
-		code: code.value
-	}
-})
 </script>
 <template>
-	<pi-probability-tree
-		:tree-params="probabilityTree.parameters"
-		:tree-data="probabilityTree.code"
-	/>
+	<div>
+		<pi-probability-tree
+			:tree-params="illustration.parameters"
+			:tree-data="illustration.code"
+		/>
+	</div>
 </template>
