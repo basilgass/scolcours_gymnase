@@ -9,6 +9,7 @@ import { FormValidationNumber } from "@/Components/Form/FormValidation/FormValid
 import type { FormMakerPropsType } from "@/Components/Form/FormMakerInterface"
 import { flashInterface } from "@/types"
 import axios from "axios"
+import { FormValidationVector } from "@/Components/Form/FormValidation/FormValidationVector"
 
 /**
  * This component is used to generate a form input
@@ -32,7 +33,7 @@ const theValue = defineModel({
 
 
 // Define the list of inputs that are text based
-const inputAsText = ["text", "email", "password", "id", "fraction"]
+const inputAsText = ["text", "email", "password", "id", "fraction", "vector"]
 // Define the list of inputs that don't have a label
 const noLabelForms = ["switch"]
 
@@ -145,6 +146,10 @@ function validate() {
 
 	if (props.type === "fraction") {
 		return FormValidationFraction(theValue.value as string)
+	}
+
+	if (props.type==="vector"){
+		return FormValidationVector(theValue.value as string)
 	}
 
 	return ""

@@ -16,17 +16,38 @@ import { PiMath } from "pimath"
  */
 
 // TODO: améliorer la génération d'arbre de probabilité avec des config de couleurs (label, chemin, etc...)
+	// TODO: améliorer les paramètres
+	// TDOD: mettre des commentaires et rendre le code plus clair.
+
 enum ProbabilityTreeBranchResult {
 	none,
 	simple,
 	details
 }
 
+enum ProbabilityTreeValue {
+	fraction,
+	percent,
+	value,
+	custom
+}
+
+interface ProbabilityTreeBranchConfig {
+	type: ProbabilityTreeValue
+	digits: number
+	details?: ProbabilityTreeBranchResult
+	values?: string[]
+}
+
 interface ProbabilityTreeConfigInterface {
 	output: {
-		result: { digits: number; type: string, details: ProbabilityTreeBranchResult };
-		branch: { digits: number; type: string }
-	};
+		result: ProbabilityTreeBranchConfig
+		branch: ProbabilityTreeBranchConfig
+	},
+	sequence?: {
+		values: string[]
+		asText: boolean
+	}
 }
 
 interface ProbabilityTreeLeafInterface {
@@ -47,6 +68,7 @@ export class ProbabilityTree {
 	private _config: ProbabilityTreeConfigInterface
 	private _tree: ProbabilityTreeLeafInterface
 	private _nodesByDepth: number[]
+	private _resultLeafIndex: number
 
 	constructor(root: HTMLElement, data: string, parameters?: string) {
 		// Create the wrapper
@@ -66,12 +88,12 @@ export class ProbabilityTree {
 		this._config = {
 			output: {
 				result: {
-					type: "fraction",
+					type: ProbabilityTreeValue.fraction,
 					digits: 2,
 					details: ProbabilityTreeBranchResult.simple
 				},
 				branch: {
-					type: "fraction",
+					type: ProbabilityTreeValue.fraction,
 					digits: 2
 				}
 			}
@@ -92,13 +114,14 @@ export class ProbabilityTree {
 		const { pathes } = this._consolidateTree()
 		const pathesNumber = pathes.length
 
-		// Consolidate the tree by getting :
-		// - number of leaves per depth
-		// - calculate the probability
-		// - other ?
+		// Initialise the result leaf index, used to set the custom result value.
+		this._resultLeafIndex = 0
 
 		// Draw the pathes
 		this._drawLeavesFromRoot(this._tree, 50, this._height / 2, 1, 200, this._height / (pathesNumber + 1), pathesNumber)
+
+		// Add the sequences.
+		this._drawSequences()
 	}
 
 	update(data: string, parameters?: string) {
@@ -106,9 +129,44 @@ export class ProbabilityTree {
 			this._config = this.parseParameters(parameters)
 			this._tree = this.parse(data)
 			this.draw()
-		} catch {
+		} catch (e) {
 			console.warn("ProbabilityTree: les valeurs données sont erronnées.", data, parameters)
+			console.error(e)
 		}
+	}
+
+	_parseTypeParameter(value: string, key: "R" | "B") {
+		const [type, digits, details] = value.split(`${key}=`)[1].split("/")
+
+		// Default value
+		const cfg: {
+			type: ProbabilityTreeValue,
+			digits: number,
+			details: ProbabilityTreeBranchResult,
+			values: []
+		} = {
+			type: ProbabilityTreeValue.fraction,
+			digits: 2,
+			details: ProbabilityTreeBranchResult.simple,
+			values: []
+		}
+
+		// Type can be p for percent, f for fraction, v for value or c for custom
+		cfg.type = type === "p" ?
+			ProbabilityTreeValue.percent :
+			type === "v" ?
+				ProbabilityTreeValue.value :
+				type === "c" ?
+					ProbabilityTreeValue.custom :
+					ProbabilityTreeValue.fraction
+
+		// Digits is the number of digits after the comma
+		cfg.digits = digits === undefined ? 2 : +digits
+
+		// Details can be d for details, s for simple or n for none
+		cfg.details = details === undefined ? ProbabilityTreeBranchResult.simple : details === "d" ? ProbabilityTreeBranchResult.details : ProbabilityTreeBranchResult.none
+
+		return cfg
 	}
 
 	private parse(value: string): ProbabilityTreeLeafInterface {
@@ -146,14 +204,14 @@ export class ProbabilityTree {
 		const maxDepth = pathes.reduce((accumulator, path) => Math.max(accumulator, path.length), 0)
 		// Width offset when there is a result
 		let widthOffset = 0
-		if(this._config.output.result.details !== ProbabilityTreeBranchResult.none){
-			const showDetails = this._config.output.result.details===ProbabilityTreeBranchResult.details ? 1:0
-			if(this._config.output.result.type==='fraction'){
-				widthOffset = showDetails *50*(maxDepth) + 50
-			}else if(this._config.output.result.type==='percent'){
-				widthOffset = showDetails * (20*this._config.output.result.digits+10)*(maxDepth) + 120
-			}else{
-				widthOffset = showDetails *(20*this._config.output.result.digits)*(maxDepth) + 100
+		if (this._config.output.result.details !== ProbabilityTreeBranchResult.none) {
+			const showDetails = this._config.output.result.details === ProbabilityTreeBranchResult.details ? 1 : 0
+			if (this._config.output.result.type === ProbabilityTreeValue.fraction) {
+				widthOffset = showDetails * 50 * (maxDepth) + 50
+			} else if (this._config.output.result.type === ProbabilityTreeValue.percent) {
+				widthOffset = showDetails * (20 * this._config.output.result.digits + 10) * (maxDepth) + 120
+			} else {
+				widthOffset = showDetails * (20 * this._config.output.result.digits) * (maxDepth) + 100
 			}
 		}
 		this._width = (maxDepth + 1) * 175 + widthOffset
@@ -163,7 +221,7 @@ export class ProbabilityTree {
 		this._svg.lines.children().forEach(item => item.remove())
 
 		// Make the viewbox, depending on the _width and _height
-		this._graph.viewbox(0, 0, this._width, this._height)
+		this._graph.viewbox(0, 0, this._width, this._height + ((this._config.sequence !== undefined && this._config.sequence.values.length > 0) ? 50 : 0))
 
 		// With the depth, get the number of leaves per depth.
 		this._nodesByDepth = []
@@ -222,17 +280,20 @@ export class ProbabilityTree {
 			return ""
 		}
 
-		if (this._config.output.result.type === "fraction") {
+		if (this._config.output.result.type === ProbabilityTreeValue.fraction) {
 			const details = this._config.output.result.details === ProbabilityTreeBranchResult.details ? `${leaf.branchProbability.map(x => x.tex).join("\\cdot ")} = ` : ""
 			return `\\scriptsize ${details}${new PiMath.Fraction().xMultiply(...leaf.branchProbability).tex}`
-		} else if (this._config.output.result.type === "value") {
+		} else if (this._config.output.result.type === ProbabilityTreeValue.value) {
 			const digit = this._config.output.result.digits
 			const details = this._config.output.result.details === ProbabilityTreeBranchResult.details ? `${leaf.branchProbability.map(x => x.value.toFixed(digit)).join("\\cdot ")} = ` : ""
 			return `\\scriptsize ${details}${new PiMath.Fraction().xMultiply(...leaf.branchProbability).value.toFixed(digit)}`
-		} else if (this._config.output.result.type === "percent") {
+		} else if (this._config.output.result.type === ProbabilityTreeValue.percent) {
 			const digit = this._config.output.result.digits
 			const details = this._config.output.result.details === ProbabilityTreeBranchResult.details ? `${leaf.branchProbability.map(x => (+x.value * 100).toFixed(digit) + "\\%").join("\\cdot ")} = ` : ""
 			return `\\scriptsize ${details}${(new PiMath.Fraction().xMultiply(...leaf.branchProbability).value * 100).toFixed(digit)}\\% `
+		} else if (this._config.output.result.type === ProbabilityTreeValue.custom) {
+			this._resultLeafIndex++
+			return this._config.output.result.values[this._resultLeafIndex - 1] || ""
 		}
 	}
 
@@ -268,18 +329,19 @@ export class ProbabilityTree {
 
 				// add the probability, on half way.
 				const digits = this._config.output.branch.digits
-				if (this._config.output.branch.type === "value") {
+
+				if (this._config.output.branch.type === ProbabilityTreeValue.value) {
 					this._addNodeLabel(
 						`${leaf.probability.value.toFixed(digits)}`,
 						(x + posX) / 2, (y + posY) / 2,
 						"bg-white text-xs px-2 py-1"
 					)
-				} else if (this._config.output.branch.type === "percent") {
+				} else if (this._config.output.branch.type === ProbabilityTreeValue.percent) {
 					this._addNodeLabel(`${(leaf.probability.value * 100).toFixed(digits)}\\%`,
 						(x + posX) / 2, (y + posY) / 2,
 						"bg-white text-xs px-2 py-1"
 					)
-				} else {
+				} else if (this._config.output.branch.type === ProbabilityTreeValue.fraction) {
 					this._addNodeLabel(`${leaf.probability.tex}`,
 						(x + posX) / 2, (y + posY) / 2,
 						"bg-white text-xs px-2 py-1"
@@ -295,6 +357,23 @@ export class ProbabilityTree {
 			this._addNodeLabel(this._addResultLabel(branch), 0, y)
 				.move(x + 40, undefined)
 		}
+	}
+
+	private _drawSequences() {
+		// Draw the sequence only if there are some in the config.
+		if (this._config.sequence === undefined || this._config.sequence.values.length === 0) return
+
+		// For each sequence, add the node label at the bottom.
+		const sequence = this._config.sequence
+		let x = 60
+		for (const seq of sequence.values) {
+			this._addNodeLabel(
+				this._config.sequence.asText ? `\\text{ ${seq} }` : seq,
+				x, this._height
+			)
+			x += 200
+		}
+
 	}
 
 	private _getCurrentBranchNumberOfEndings(branch: ProbabilityTreeLeafInterface, maxDepth: number, currentDepth: number) {
@@ -332,15 +411,15 @@ export class ProbabilityTree {
 	}
 
 	private parseParameters(parameters: string): ProbabilityTreeConfigInterface {
-		const cfg = {
+		const cfg: ProbabilityTreeConfigInterface = {
 			output: {
 				result: {
-					type: "fraction",
+					type: ProbabilityTreeValue.fraction,
 					digits: 2,
 					details: ProbabilityTreeBranchResult.simple
 				},
 				branch: {
-					type: "fraction",
+					type: ProbabilityTreeValue.fraction,
 					digits: 2
 				}
 			}
@@ -351,25 +430,36 @@ export class ProbabilityTree {
 		// Build the output
 		const output = parameters.split(",") ?? []
 
-		output.forEach(p => {
-			if (p.startsWith("R=")) {
-				const [type, digits, details] = p.split("R=")[1].split("/")
-				cfg.output.result.type =
-					type === "p" ? "percent" : type === "f" ? "fraction" : "value"
-				cfg.output.result.digits = digits === undefined ? 2 : +digits
-				cfg.output.result.details =
-					details === undefined ? ProbabilityTreeBranchResult.simple :
-						details === "d" ? ProbabilityTreeBranchResult.details :
-							ProbabilityTreeBranchResult.none
-			} else if (p.startsWith("B=")) {
-				const [type, digits] = p.split("B=")[1].split("/")
-				cfg.output.branch.type =
-					type === "p" ? "percent" : type === "f" ? "fraction" : "value"
-				cfg.output.branch.digits = digits === undefined ? 2 : +digits
+		// Get the resulting branch parameter
+		cfg.output.result = this._parseTypeParameter(
+			output.find(p => p.startsWith("R=")) ?? "R=f/2/s",
+			"R"
+		)
+
+		// Get the branch parameters
+		cfg.output.branch = this._parseTypeParameter(
+			output.find(p => p.startsWith("B=")) ?? "B=f/2",
+			"B"
+		)
+
+		// Get the values, if they exist, for the results. A value is a parameter without the "=" sign.
+		cfg.output.result.values =
+			output.filter(p => p.startsWith("V="))[0].split("V=")[1].split("/")
+
+		const sequence = output.filter(p => p.startsWith("S="))[0]
+		const sequenceAsText = output.filter(p => p.startsWith("ST="))[0]
+
+		if (sequence !== undefined) {
+			cfg.sequence = {
+				values: sequence.split("S=")[1].split("/"),
+				asText: false
 			}
-		})
-
-
+		} else if (sequenceAsText !== undefined) {
+			cfg.sequence = {
+				values: sequenceAsText.split("ST=")[1].split("/"),
+				asText: true
+			}
+		}
 		return cfg
 	}
 
@@ -456,18 +546,10 @@ export class ProbabilityTree {
 
 	private _parseCustomInput(value: string): ProbabilityTreeLeafInterface[] {
 
-		// Security counter to avoid infinite loop
-		let securityCount = 1000
-
 		// Not a correct string sequence..
 		if (!value.includes("\n")) return
 
-
-		// Split the value by newline.
-		if (securityCount < 0) return
-		securityCount--
-
-		// It's an object
+		// Start root leaf
 		let rootLeaf: ProbabilityTreeLeafInterface = {
 				node: "ROOT",
 				leaves: [],
@@ -477,9 +559,8 @@ export class ProbabilityTree {
 			},
 			crtLevel: number = 0
 
+		// Split the data into lines
 		const lines = value.split("\n"),
-			// Current root note
-			// list of nodes
 			branchLeaves = []
 
 
@@ -532,6 +613,7 @@ export class ProbabilityTree {
 			}
 		}
 
+		// Loop through all leaves and calculate the probability
 		this._setProbabilityForLeaves(branchLeaves[0])
 
 		return branchLeaves[0].leaves

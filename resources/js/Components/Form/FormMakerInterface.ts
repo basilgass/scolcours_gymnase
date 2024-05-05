@@ -10,7 +10,9 @@ export type FormMakerInputsType =
 	"code" |
 	"keyboard" |
 	"switch" |
-	"fraction";
+	"fraction" |
+	"vector"
+	;
 
 export interface FormMakerPropsType {
 	autoSize?: boolean;
