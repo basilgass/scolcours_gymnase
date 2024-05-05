@@ -44,10 +44,7 @@ interface ProbabilityTreeConfigInterface {
 		result: ProbabilityTreeBranchConfig
 		branch: ProbabilityTreeBranchConfig
 	},
-	sequence?: {
-		values: string[]
-		asText: boolean
-	}
+	sequence: string[]
 }
 
 interface ProbabilityTreeLeafInterface {
@@ -96,7 +93,8 @@ export class ProbabilityTree {
 					type: ProbabilityTreeValue.fraction,
 					digits: 2
 				}
-			}
+			},
+			sequence: []
 		}
 
 		// initialisation
@@ -135,8 +133,8 @@ export class ProbabilityTree {
 		}
 	}
 
-	_parseTypeParameter(value: string, key: "R" | "B") {
-		const [type, digits, details] = value.split(`${key}=`)[1].split("/")
+	_parseTypeParameter(value: string) {
+		const [type, digits, details] = value.split("/")
 
 		// Default value
 		const cfg: {
@@ -221,7 +219,7 @@ export class ProbabilityTree {
 		this._svg.lines.children().forEach(item => item.remove())
 
 		// Make the viewbox, depending on the _width and _height
-		this._graph.viewbox(0, 0, this._width, this._height + ((this._config.sequence !== undefined && this._config.sequence.values.length > 0) ? 50 : 0))
+		this._graph.viewbox(0, 0, this._width, this._height + ((this._config.sequence.length > 0) ? 50 : 0))
 
 		// With the depth, get the number of leaves per depth.
 		this._nodesByDepth = []
@@ -292,8 +290,9 @@ export class ProbabilityTree {
 			const details = this._config.output.result.details === ProbabilityTreeBranchResult.details ? `${leaf.branchProbability.map(x => (+x.value * 100).toFixed(digit) + "\\%").join("\\cdot ")} = ` : ""
 			return `\\scriptsize ${details}${(new PiMath.Fraction().xMultiply(...leaf.branchProbability).value * 100).toFixed(digit)}\\% `
 		} else if (this._config.output.result.type === ProbabilityTreeValue.custom) {
+			const [v, asText] = this._config.output.result.values[this._resultLeafIndex].split("/T")
 			this._resultLeafIndex++
-			return this._config.output.result.values[this._resultLeafIndex - 1] || ""
+			return v===undefined ? "" : asText!==undefined ? `\\text{ ${v} }`: v
 		}
 	}
 
@@ -361,14 +360,15 @@ export class ProbabilityTree {
 
 	private _drawSequences() {
 		// Draw the sequence only if there are some in the config.
-		if (this._config.sequence === undefined || this._config.sequence.values.length === 0) return
+		if (this._config.sequence.length === 0) return
 
 		// For each sequence, add the node label at the bottom.
 		const sequence = this._config.sequence
 		let x = 60
-		for (const seq of sequence.values) {
+		for (const seq of sequence) {
+			const [v, asText] = seq.split("/T")
 			this._addNodeLabel(
-				this._config.sequence.asText ? `\\text{ ${seq} }` : seq,
+				asText!==undefined ? `\\text{ ${v} }` : v,
 				x, this._height
 			)
 			x += 200
@@ -422,44 +422,42 @@ export class ProbabilityTree {
 					type: ProbabilityTreeValue.fraction,
 					digits: 2
 				}
-			}
+			},
+			sequence: []
 		}
 
 		if (parameters === undefined || parameters === null) return cfg
 
-		// Build the output
-		const output = parameters.split(",") ?? []
+		// Build the parameter array:
+		// key=value,key=value,key=[...values],key=[...values]/T
+		// R=f/2/s,B=f/2,V=1,2,3,S=1,2,3/T
+		const parms = {
+			R: "f//s",
+			B: "f",
+			V: "",
+			S: ""
+		}
+		let key = null
+		parameters.split(/,?([A-Z])=/g).filter(x => x !== "").forEach((value, index) => {
+			if (index % 2 === 0) {
+				key = value
+			} else {
+				parms[key] = value
+			}
+		})
 
 		// Get the resulting branch parameter
-		cfg.output.result = this._parseTypeParameter(
-			output.find(p => p.startsWith("R=")) ?? "R=f/2/s",
-			"R"
-		)
+		cfg.output.result = this._parseTypeParameter(parms["R"])
 
 		// Get the branch parameters
-		cfg.output.branch = this._parseTypeParameter(
-			output.find(p => p.startsWith("B=")) ?? "B=f/2",
-			"B"
-		)
+		cfg.output.branch = this._parseTypeParameter(parms["B"])
 
-		// Get the values, if they exist, for the results. A value is a parameter without the "=" sign.
-		cfg.output.result.values =
-			output.filter(p => p.startsWith("V="))[0].split("V=")[1].split("/")
+		// Get the values, if they exist, for the results.
+		// parms["V"] = "value1,value2,value3"
+		cfg.output.result.values = parms["V"].split(",")
 
-		const sequence = output.filter(p => p.startsWith("S="))[0]
-		const sequenceAsText = output.filter(p => p.startsWith("ST="))[0]
+		cfg.sequence = parms["S"] === "" ? [] : parms["S"].split(",")
 
-		if (sequence !== undefined) {
-			cfg.sequence = {
-				values: sequence.split("S=")[1].split("/"),
-				asText: false
-			}
-		} else if (sequenceAsText !== undefined) {
-			cfg.sequence = {
-				values: sequenceAsText.split("ST=")[1].split("/"),
-				asText: true
-			}
-		}
 		return cfg
 	}
 
