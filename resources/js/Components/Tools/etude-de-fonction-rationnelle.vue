@@ -9,7 +9,6 @@ import { nextTick, onMounted, reactive, ref } from "vue"
 import { PiMath } from "pimath"
 import TableOfSigns from "@/Components/Pi/PiTableOfSigns.vue"
 import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"
-import Panel from "@/Components/Ui/Panel.vue"
 import TableOfContents from "@/Components/Ui/TableOfContents.vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 
@@ -214,7 +213,7 @@ onMounted(() => {
 </script>
 
 <template>
-	<Panel
+	<article
 		v-if="validation"
 		ref="root"
 	>
@@ -229,6 +228,7 @@ onMounted(() => {
 				:input-class="'font-code'"
 				autocomplete="off"
 				label="Fraction rationnelle"
+				from-url="fx"
 			/>
 
 			<div class="flex gap-3 mt-3">
@@ -398,5 +398,5 @@ onMounted(() => {
 				</div>
 			</div>
 		</table-of-contents>
-	</Panel>
+	</article>
 </template>

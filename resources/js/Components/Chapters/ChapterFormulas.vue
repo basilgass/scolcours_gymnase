@@ -111,7 +111,7 @@ const addFormula = function() {
 				v-for="item of themeChapters"
 				:key="item.slug"
 				v-katex.auto="item.title"
-				v-theme.btn.text="item.theme_id"
+				v-theme.btn.text="item.theme.id"
 				:class="{
 					'btn-xs text-xs': item.slug !== theSlug,
 					'font-semibold': item.slug === props.chapterSlug,
@@ -152,7 +152,7 @@ const addFormula = function() {
 						<block-show
 							v-if="element.block"
 							:key="element.id"
-							v-theme.border="element.chapter.theme_id"
+							v-theme.border="element.chapter.theme.id"
 							:block="element.block"
 							:max-illustration="1"
 							class="break-inside-avoid-column bg-white rounded shadow border-l-4"

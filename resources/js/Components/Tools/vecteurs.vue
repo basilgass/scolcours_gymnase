@@ -53,19 +53,15 @@ let result = computed(() => {
 				v-model="v1"
 				label="\(\overrightarrow{v_1}=\)"
 				inline-label
+				from-url="v1"
 			/>
 			<form-maker
 				type="vector"
 				v-model="v2"
 				label="\(\overrightarrow{v_2}=\)"
 				inline-label
+				from-url="v2"
 			/>
-			<!--			<form-maker-->
-			<!--				type="vector"-->
-			<!--				v-model="v3"-->
-			<!--				label="\(\overrightarrow{v_3}=\)"-->
-			<!--				inline-label-->
-			<!--			/>-->
 		</div>
 
 		<div

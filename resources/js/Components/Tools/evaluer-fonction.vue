@@ -5,7 +5,6 @@
  * parameters: fx=Fonction (texte), b=Nombre ou Fraction
  * tags: algebre,1M
  */
-import Panel from "@/Components/Ui/Panel.vue"
 import { computed, ref } from "vue"
 import { PiMath } from "pimath"
 import KeyboardDisplay from "@/Components/Keyboards/KeyboardDisplay.vue"
@@ -46,12 +45,12 @@ const fx = computed(() => {
 </script>
 
 <template>
-	<Panel>
+	<article>
 		<form-maker
 			v-model="f"
 			:active="activeInput==='fx'"
 			label="fonction"
-			name="f"
+			from-url="fx"
 			focus
 			@input-focus="activeInput='fx'"
 		/>
@@ -60,7 +59,7 @@ const fx = computed(() => {
 			v-model="x"
 			:active="activeInput==='x'"
 			label="valeur"
-			name="x"
+			from-url="x"
 			@input-focus="activeInput='x'"
 			message="Utiliser un nombre ou une fraction"
 		/>
@@ -97,5 +96,5 @@ const fx = computed(() => {
 				@next="activeInput='fx'"
 			/>
 		</div>
-	</Panel>
+	</article>
 </template>

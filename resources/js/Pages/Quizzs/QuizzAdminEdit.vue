@@ -104,7 +104,7 @@ defineOptions({ layout: LayoutMain })
 	// })
 </script>
 <template>
-	<section>
+	<section class="my-5 scolcours-container">
 		<div class="py-10">
 			<div class="flex justify-between">
 				<h1 class="text-2xl font-semibold">

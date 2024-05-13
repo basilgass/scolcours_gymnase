@@ -80,7 +80,7 @@ function updateFormula(formula: FormulaInterface) {
 				<block-show
 					:block="formula.block"
 					class="bg-white rounded-r shadows border-l-4"
-					v-theme.border="formula.chapter.theme_id"
+					v-theme.border="formula.chapter.theme.id"
 				/>
 			</div>
 		</div>

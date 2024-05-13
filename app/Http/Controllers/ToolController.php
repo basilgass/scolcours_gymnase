@@ -15,7 +15,7 @@
 			$data = ["theme"    => Theme::where('slug', 'tools')->first()];
 			$data['tools'] = Tool::orderBy('title')->get();
 			$data['tool'] = null;
-			return Inertia::render("ToolsPage", $data);
+			return Inertia::render("Tools/ToolsPage", $data);
 		}
 
 		public function create()
@@ -34,7 +34,7 @@
 			$data['tools'] = Tool::all();
 			$data['tool'] = $tool;
 
-			return Inertia::render("ToolsPage", $data);
+			return Inertia::render("Tools/ToolsPage", $data);
 		}
 
 		public function edit(Chapter $chapter)

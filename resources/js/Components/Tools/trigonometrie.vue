@@ -5,7 +5,6 @@
  * parameters: a=nombre, b=numbre, c=nombre, alpha=nombre, beta=nombre, gamma=nombre
  * tags: geoetrie,1M,2C
  */
-import Panel from "@/Components/Ui/Panel.vue"
 import { computed, ref } from "vue"
 import { numberCorrection } from "pidraw/esm/Calculus"
 import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"
@@ -432,45 +431,51 @@ function makeTriangle(value: triangleRawInterface, alternate?: boolean): triangl
 </script>
 
 <template>
-	<Panel>
+	<article>
 		<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
 			<form-maker
 				v-model="A"
 				focus
 				label="a = "
+				from-url="a"
 			/>
 
 			<form-maker
 				v-model="B"
 				label="b = "
+				from-url="b"
 			/>
 
 			<form-maker
 				v-model="C"
 				label="c = "
+				from-url="c"
 			/>
 
 			<form-maker
 				v-model="alpha"
 				focus
 				label="\(\alpha = \)"
+				from-url="alpha"
 			/>
 
 			<form-maker
 				v-model="beta"
 				label="\(\beta = \)"
-				name="fonction"
+				from-url="beta"
 			/>
 
 			<form-maker
 				v-model="gamma"
 				label="\(\gamma = \)"
+				from-url="gamma"
 			/>
 
 			<form-maker
 				v-model="fixed"
 				label="arrondi"
 				type="number"
+				from-url="round"
 			/>
 		</div>
 
@@ -547,5 +552,5 @@ function makeTriangle(value: triangleRawInterface, alternate?: boolean): triangl
 		>
 			Une erreur s'est produite avec vos données.
 		</div>
-	</Panel>
+	</article>
 </template>

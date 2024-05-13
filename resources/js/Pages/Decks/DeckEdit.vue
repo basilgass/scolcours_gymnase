@@ -13,7 +13,7 @@ const props = defineProps({
 </script>
 
 <template>
-	<section>
+	<section class="my-5 scolcours-container">
 		<h3 class="text-3xl">
 			{{ deck.title }}
 		</h3>

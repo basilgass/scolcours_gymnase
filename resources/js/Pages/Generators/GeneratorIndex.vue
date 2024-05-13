@@ -18,14 +18,14 @@ defineProps({
 })
 
 const slug = ref("")
-const theme_id = ref(1)
+const themeId = ref(1)
 
 function addGenerator() {
 	if (slug.value === "") return
 
 	axios.post(route("generators.store"), {
 		slug: slug.value,
-		theme_id: theme_id.value
+		theme_id: themeId.value
 	})
 		.then((res) => {
 			slug.value = ""
@@ -52,7 +52,7 @@ function addGenerator() {
 			<form-maker
 				label="theme"
 				type="select"
-				v-model="theme_id"
+				v-model="themeId"
 			>
 				<option
 					v-for="theme in $page.props.themes"
@@ -74,7 +74,7 @@ function addGenerator() {
 		</div>
 
 		<filtered-list
-			:item-background="(item) => item.theme_id"
+			:item-background="(item) => item.theme.id"
 			:item-title="(item)=>item.title===''?item.slug:item.title"
 			:list="generators"
 			:route-data="(item) => [item.id]"

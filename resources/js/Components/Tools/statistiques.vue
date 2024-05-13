@@ -14,8 +14,6 @@ import { Chart } from "chart.js"
 import annotationPlugin from "chartjs-plugin-annotation"
 import LineChart from "@/Components/Charts/lineChart.vue"
 import BoxPlotChart from "@/Components/Charts/boxPlotChart.vue"
-
-import Panel from "@/Components/Ui/Panel.vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 
@@ -663,7 +661,7 @@ const tableToTexOutput = computed(() => {
 </script>
 <template>
 	<!-- Title -->
-	<Panel>
+	<article>
 		<div class="grid grid-cols-1 md:grid-cols-6">
 			<form-maker
 				v-model.number="statConfig.samples"
@@ -953,5 +951,5 @@ const tableToTexOutput = computed(() => {
 				</div>
 			</div>
 		</div>
-	</Panel>
+	</article>
 </template>

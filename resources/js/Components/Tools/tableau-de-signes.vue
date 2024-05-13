@@ -6,7 +6,6 @@
 import { nextTick, onMounted, reactive, ref } from "vue"
 import { PiMath } from "pimath"
 import TableOfSigns from "@/Components/Pi/PiTableOfSigns.vue"
-import Panel from "@/Components/Ui/Panel.vue"
 import { splitIfOutsideParentheses } from "@/helpers/helperFunctions.js"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 
@@ -81,7 +80,7 @@ onMounted(() => {
 </script>
 
 <template>
-	<Panel
+	<article
 		v-if="validation"
 		ref="root"
 	>
@@ -95,12 +94,14 @@ onMounted(() => {
 				:prepend="'\\( f(x)=\\frac{a}{b}\\)'"
 				focus
 				label="fonction"
+				from-url="fx"
 			/>
 
 			<form-maker
 				v-model="mode"
 				label="signes,variations"
 				type="switch"
+				from-url="mode"
 			/>
 
 			<div class="flex gap-3">
@@ -155,5 +156,5 @@ onMounted(() => {
 				v-katex="zero"
 			/>
 		</div>
-	</Panel>
+	</article>
 </template>

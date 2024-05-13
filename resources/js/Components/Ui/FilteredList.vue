@@ -6,7 +6,8 @@ import { router } from "@inertiajs/vue3"
 // TODO: add a group by / (theme) tag to the filtered list
 
 const props = defineProps({
-	title: { type: String, required: true },
+	title: { type: String, default: "" },
+	search: {type: String, default: null},
 	list: { type: Object as PropType<T[]>, required: true },
 	routeName: { type: String, default: "" },
 	routeData: { type: Function, default: () => [] },
@@ -16,6 +17,7 @@ const props = defineProps({
 	collapsed: { type: Boolean, default: null },
 	listClass: { type: String, default: "flex gap-3 flex-wrap" },
 	noFilterIfLessThan: { type: Number, default: 10 },
+	noTitle: { type: Boolean, default: false },
 })
 
 const filteredList = computed<T[]>(() => {
@@ -66,7 +68,10 @@ const emits = defineEmits<{
 <template>
 	<div>
 		<div class="flex justify-between">
-			<h3 class="text-lg uppercase">
+			<h3
+				class="text-lg uppercase"
+				v-if="!noTitle"
+			>
 				{{ title }}
 			</h3>
 			<div class="flex gap-3">
@@ -83,10 +88,12 @@ const emits = defineEmits<{
 			<form-maker
 				v-show="props.list.length >= noFilterIfLessThan"
 				v-model="selectedList"
-				:label="`filtrer les ${title}`"
-				class="mb-5"
+				:label="search===null?`filtrer les ${title}`:search"
+				class="mb-2"
+				autocomplete="off"
 				name="chapter-list"
 				@enter="emits('enter', filteredList)"
+				clearable
 			/>
 
 			<div

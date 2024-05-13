@@ -38,7 +38,7 @@ const currentComponent = computed<widgetInterface>(() => {
 			name: " ? ",
 			slug: null,
 			component: null,
-			theme_id: null,
+			theme: { id: null, slug: null },
 			description: "module inconnu",
 			control: false
 		}
@@ -46,6 +46,7 @@ const currentComponent = computed<widgetInterface>(() => {
 
 // available components.
 const chapterComponents = ref<{ [Key: string]: widgetInterface }>({})
+
 // Load the list of components
 function loadComponents() {
 	axios
@@ -58,6 +59,7 @@ function loadComponents() {
 		})
 		.catch((err) => console.warn(err))
 }
+
 // Change the current component.
 function toggleComponent(component: widgetInterface) {
 	theIllustration.value.widget_id = component.id
@@ -88,10 +90,12 @@ const currentLineHelperText = computed<{
 
 // Copy / Paste illustration
 const hasClipboard = ref(false)
+
 function copyIllustration() {
 	localStorage.setItem("illustrationClipboard", JSON.stringify(theIllustration.value))
 	hasClipboard.value = true
 }
+
 function pasteIllustration() {
 	const clipboard = localStorage.getItem("illustrationClipboard")
 	if (clipboard) {
@@ -113,15 +117,18 @@ function illustrationSave() {
 			console.error(error)
 		})
 }
+
 // Save the illustration to database and go back to the belonging block.
 function illustrationSaveAndEdit() {
 	illustrationSave()
 	router.visit(route("blocks.edit", [theIllustration.value.block_id]))
 }
+
 // Visit the belonging block (no save, no edit)
 function illustrationVisit() {
 	router.visit(route("illustrations.show", [theIllustration.value.id]))
 }
+
 // Delete the illustration
 function illustrationDelete() {
 	axios
@@ -144,7 +151,7 @@ onMounted(() => {
 </script>
 
 <template>
-	<article>
+	<article class="my-5 scolcours-container">
 		<header class="mb-5 flex justify-between">
 			<div>
 				<div class="text-3xl">
@@ -204,7 +211,7 @@ onMounted(() => {
 						<button
 							v-for="(data, comp) of chapterComponents"
 							:key="comp"
-							v-theme.btn="data.theme_id"
+							v-theme.btn="data.theme.id"
 							:class="theIllustration.widget.id === data.id ? 'font-semibold border-2 shadow scale-110' : ''"
 							class="btn btn-xs transition-all"
 							@click="toggleComponent(data)"

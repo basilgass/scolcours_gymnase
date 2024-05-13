@@ -5,7 +5,6 @@
  * parameters: numerator=Polynom, denominator=Polynom
  * tags: algebre,1M
  */
-import Panel from "@/Components/Ui/Panel.vue"
 import { ref } from "vue"
 import PiEuclidian from "@/Components/Pi/PiEuclidian.vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
@@ -19,23 +18,23 @@ const numerator = ref("3x^2-4"),
 </script>
 
 <template>
-	<Panel>
+	<article>
 		<form-maker
 			v-model="numerator"
 			label="numérateur"
-			name="numerator"
+			from-url="n"
 			focus
 		/>
 
 		<form-maker
 			v-model="denominator"
 			label="dénominateur"
-			name="denominator"
+			from-url="d"
 		/>
 		<pi-euclidian
 			:fx="`${numerator}/${denominator}`"
 			fundamental
 			asymptote
 		/>
-	</Panel>
+	</article>
 </template>

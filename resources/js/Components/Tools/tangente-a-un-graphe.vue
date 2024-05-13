@@ -5,7 +5,6 @@
  * parameters: fx=fonction polynomiale, x=abscisse du point de tangence
  * tags: algebre,2M
  */
-import Panel from "@/Components/Ui/Panel.vue"
 import { computed, ref } from "vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import { Line } from "pimath/dist/maths/geometry/line"
@@ -74,18 +73,20 @@ const affine = computed(() => {
 </script>
 
 <template>
-	<Panel>
+	<article>
 		<form-maker
 			v-model="fx"
 			focus
 			label="fonction"
 			name="fonction"
+			from-url="fx"
 		/>
 
 		<form-maker
 			v-model="x"
 			label="abscisse du point de tangence ou coordonnée d'un point"
 			name="x ou a,b"
+			from-url="x"
 		/>
 
 		<div v-if="affine">
@@ -98,5 +99,5 @@ const affine = computed(() => {
 		>
 			Une erreur s'est produite lors de l'introduction des coordonnées.
 		</div>
-	</Panel>
+	</article>
 </template>

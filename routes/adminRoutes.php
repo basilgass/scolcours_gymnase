@@ -23,8 +23,12 @@ Route::prefix('admin')
 			->name('admin.config.update');
 		Route::patch('/config/updateOrder', [AdminController::class, 'configUpdateOrder'])
 			->name('admin.config.updateOrder');
-		Route::get('/pages', [AdminController::class, 'pages'])
-			->name('admin.pages');
+		Route::get('/chapters', [AdminController::class, 'chapters'])
+			->name('admin.chapters');
+		Route::get('/tools', [AdminController::class, 'tools'])
+			->name('admin.tools');
+		Route::get('/challenges', [AdminController::class, 'challenges'])
+			->name('admin.challenges');
 		Route::get('/widgets', [AdminController::class, 'widgets'])
 			->name('admin.widgets');
 		Route::get('/widgets/refresh', [WidgetController::class, 'refresh'])

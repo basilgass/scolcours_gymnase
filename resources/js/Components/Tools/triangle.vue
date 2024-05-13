@@ -5,7 +5,6 @@
  * parameters: a, b, c=coord ou équation
  * tags: geometrie,2M
  */
-import Panel from "@/Components/Ui/Panel.vue"
 import { computed, ref } from "vue"
 import { PiMath } from "pimath"
 import FormMaker from "@/Components/Form/FormMaker.vue"
@@ -37,25 +36,25 @@ let result = computed(() => {
 </script>
 
 <template>
-	<Panel>
+	<article>
 		<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
 			<form-maker
 				v-model="A"
 				focus
 				label="A ou équation BC"
-				name="fonction"
+				from-url="A"
 			/>
 
 			<form-maker
 				v-model="B"
 				label="B ou équation AC"
-				name="fonction"
+				from-url="B"
 			/>
 
 			<form-maker
 				v-model="C"
 				label="C ou équation AB"
-				name="fonction"
+				from-url="C"
 			/>
 		</div>
 
@@ -130,5 +129,5 @@ let result = computed(() => {
 		>
 			Une erreur s'est produite avec vos données.
 		</div>
-	</Panel>
+	</article>
 </template>

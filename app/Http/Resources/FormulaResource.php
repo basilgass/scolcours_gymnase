@@ -29,7 +29,10 @@ class FormulaResource extends JsonResource
 			'chapter' => [
 				'id'=> $this->chapter->id,
 				'title'=> $this->chapter->title,
-				'theme_id'=> $this->chapter->theme_id,
+				'theme' => [
+					'id'=> $this->chapter->theme->id,
+					'slug'=> $this->chapter->theme->slug,
+				],
 			],
 			'order' => $this->blocks[0]->order,
 			'block' => BlockResource::make($this->blocks[0])

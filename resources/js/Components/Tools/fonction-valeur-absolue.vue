@@ -9,7 +9,6 @@ import { computed, ref } from "vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import { PiMath } from "pimath"
 import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"
-import Panel from "@/Components/Ui/Panel.vue"
 
 const result = computed(() => {
 	return { tex: "" }
@@ -171,7 +170,7 @@ const root = ref(null),
 </script>
 
 <template>
-	<Panel>
+	<article>
 		<div v-if="result">
 			<!-- Title -->
 			<div ref="root">
@@ -182,7 +181,7 @@ const root = ref(null),
 						<form-maker
 							v-model="fx"
 							label="fonction"
-							name="fx"
+							form-url="fx"
 						/>
 					</div>
 
@@ -205,7 +204,7 @@ const root = ref(null),
 						<form-maker
 							v-model="x"
 							inline
-							name="x"
+							from-url="x"
 							prepend="\(x=\)"
 						/>
 						<div v-katex="`f\\left(${xAsTex}\\right)=${expression.evaluate(x).tex}`" />
@@ -215,7 +214,7 @@ const root = ref(null),
 						<form-maker
 							v-model="y"
 							inline
-							name="y"
+							from-url="y"
 							prepend="\(f(x) = \)"
 						/>
 						<div v-katex="`f(x)=${yAsTex}\\implies \\mathcal S = ${expression.solve(y).tex}`" />
@@ -238,5 +237,5 @@ const root = ref(null),
 		>
 			Une erreur s'est produite avec vos données.
 		</div>
-	</Panel>
+	</article>
 </template>

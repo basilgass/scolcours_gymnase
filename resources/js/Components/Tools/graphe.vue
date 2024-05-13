@@ -5,7 +5,6 @@
  * parameters: fonction à tracer.
  * tags: algebre,1M
  */
-import Panel from "@/Components/Ui/Panel.vue"
 import { ref } from "vue"
 import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
@@ -15,17 +14,17 @@ const code = ref(""),
 </script>
 
 <template>
-	<Panel>
+	<article>
 		<form-maker
 			v-model="params"
 			label="paramètres"
-			name="params"
+			from-url="param"
 		/>
 		<form-maker
 			type="textarea"
 			v-model="code"
 			label="code"
-			name="code"
+			from-url="code"
 			focus
 		/>
 
@@ -37,5 +36,5 @@ const code = ref(""),
 				parameters: params
 			}"
 		/>
-	</Panel>
+	</article>
 </template>

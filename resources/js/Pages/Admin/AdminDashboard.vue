@@ -23,11 +23,27 @@ const v2 = ref("")
 			</Link>
 
 			<Link
-				:href="route('admin.pages')"
+				:href="route('admin.chapters')"
 				as="button"
 				class="min-h-[8em] text-xl bg-white border border-gray-200 rounded-xl"
 			>
-				gestion des pages
+				gestion des chapitres
+			</Link>
+
+			<Link
+				:href="route('admin.tools')"
+				as="button"
+				class="min-h-[8em] text-xl bg-white border border-gray-200 rounded-xl"
+			>
+				gestion des outils
+			</Link>
+
+			<Link
+				:href="route('admin.challenges')"
+				as="button"
+				class="min-h-[8em] text-xl bg-white border border-gray-200 rounded-xl"
+			>
+				gestion des challenges
 			</Link>
 
 			<Link

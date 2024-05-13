@@ -92,7 +92,7 @@ function deleteGenerator() {
 </script>
 
 <template>
-	<section class="scolcours-container">
+	<section class="scolcours-container my-5">
 		<header class="flex justify-between items-baseline mb-6">
 			<div>
 				<h1>

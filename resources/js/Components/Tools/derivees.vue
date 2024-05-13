@@ -5,7 +5,6 @@
  * parameters: fn=Function
  * tags: algebre,2M
  */
-import Panel from "@/Components/Ui/Panel.vue"
 import { computed, ref } from "vue"
 import { PiMath } from "pimath"
 import FormMaker from "@/Components/Form/FormMaker.vue"
@@ -43,18 +42,18 @@ function copyToClipboard(){
 </script>
 
 <template>
-	<Panel>
+	<article>
 		<form-maker
 			v-model="numerator"
 			label="fonction à dériver (numérateur)"
-			name="fonction"
+			from-url="n"
 			focus
 		/>
 
 		<form-maker
 			v-model="denominator"
 			label="fonction à dériver (dénominateur - optionnel)"
-			name="fonction"
+			from-url="d"
 		/>
 
 
@@ -80,5 +79,5 @@ function copyToClipboard(){
 		>
 			Une erreur s'est produite avec vos données.
 		</div>
-	</Panel>
+	</article>
 </template>

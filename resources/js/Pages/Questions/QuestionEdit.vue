@@ -98,9 +98,9 @@ let hasClipboard = computed(() => {
 	}
 </script>
 <template>
-	<section>
+	<section class="my-5 scolcours-container">
 		<div
-			class="bg-white flex flex-col gap-3 border-b border-gray-200 px-5 py-3 mb-5"
+			class="flex flex-col gap-3 border-b border-gray-200 px-5 py-3 mb-5"
 		>
 			<div class="flex w-full justify-between items-baseline">
 				<h1>

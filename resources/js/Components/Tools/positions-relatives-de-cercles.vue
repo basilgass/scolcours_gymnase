@@ -187,14 +187,14 @@
 					v-model="circle1"
 					focus
 					font-code
-					type="text"
+					from-url="c1"
 				/>
 
 				<form-maker
 					v-model="circle2"
 					focus
 					font-code
-					type="text"
+					from-url="c2"
 				/>
 
 				<div class="text-center mt-3 mb-5">

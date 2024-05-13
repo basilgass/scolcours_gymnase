@@ -18,6 +18,10 @@ export interface ChapterInterface {
 	active: boolean;
 	updated_at: string;
 	posts: PostInterface[];
+	theme: {
+		id: number
+		slug: string
+	};
 	challenges: {
 		id: number
 		slug: string
@@ -37,7 +41,10 @@ export interface ChapterMinInterface {
 	slug: string;
 	title: string;
 	meta_title: string;
-	theme_id: number;
+	theme: {
+		id: number
+		slug: string
+	};
 	posts_length: number;
 }
 
@@ -199,7 +206,10 @@ export interface widgetInterface {
 	name: string,
 	slug: string,
 	component: string,
-	theme_id: number,
+	theme: {
+		id: number;
+		slug: number;
+	},
 	description: string,
 	control: boolean
 }
@@ -270,7 +280,10 @@ export interface FormulaInterface {
 	chapter: {
 		id: number
 		title: string
-		theme_id: number
+		theme: {
+			id: number
+			slug: string
+		};
 	}
 	block: BlockInterface
 }

@@ -57,7 +57,7 @@ const chapterRelations = ref(props.chapter.relations),
 			<Link
 				v-for="ch of chapterRelations"
 				:key="`related-${ch.slug}`"
-				v-theme.btn="ch.theme_id"
+				v-theme.btn="ch.theme.id"
 				v-katex.auto="ch.title"
 				as="button"
 				class="btn-xs"
@@ -89,7 +89,7 @@ const chapterRelations = ref(props.chapter.relations),
 					v-for="chapter of allChapters"
 					:key="chapter.slug"
 					v-katex.auto="chapter.title"
-					v-theme.btn="chapter.theme_id"
+					v-theme.btn="chapter.theme.id"
 					class="btn-xs"
 					:class="Object.values(chapterRelations).map(x=>x.slug).includes(chapter.slug)?'bg-white text-black':''"
 					@click="toggleRelation(chapter.id)"

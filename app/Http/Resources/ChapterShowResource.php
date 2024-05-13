@@ -21,7 +21,10 @@ class ChapterShowResource extends JsonResource
 	{
 		return [
 			'id' => $this->id,
-			'theme_id'=>$this->theme->id,
+			'theme' => [
+				'id' => $this->theme->id,
+				'slug' => $this->theme->slug
+			],
 			'slug' => $this->slug,
 			'title' => $this->title,
 			'active' => $this->active,

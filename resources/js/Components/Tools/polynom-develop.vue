@@ -5,7 +5,6 @@
  * parameters: polynôme
  * tags: algebre,1M
  */
-import Panel from "@/Components/Ui/Panel.vue"
 import { computed, ref } from "vue"
 import { PiMath } from "pimath"
 import FormMaker from "@/Components/Form/FormMaker.vue"
@@ -33,11 +32,11 @@ const polynom = ref("")
 </script>
 
 <template>
-	<Panel>
+	<article>
 		<form-maker
 			v-model="polynom"
 			label="Polynôme"
-			name="polynom"
+			from-url="p"
 			focus
 		/>
 
@@ -50,5 +49,5 @@ const polynom = ref("")
 			keyboard="polynom"
 			@change="polynom=$event.input"
 		/>
-	</Panel>
+	</article>
 </template>

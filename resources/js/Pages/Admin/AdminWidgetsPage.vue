@@ -44,7 +44,7 @@ function refreshWidgets() {
 			>
 				<template #card="{ item }:{ item: widgetInterface}">
 					<div
-						v-theme.border="item.theme_id"
+						v-theme.border="item.theme.id"
 						class="bg-white border-l-8 px-5 py-2 rounded-r-lg"
 					>
 						<div
@@ -57,22 +57,6 @@ function refreshWidgets() {
 					</div>
 				</template>
 			</filtered-list>
-
-			<!--			<div-->
-			<!--				v-for="widget in widgets"-->
-			<!--				:key="widget.id"-->
-			<!--				v-theme.border="widget.theme_id"-->
-			<!--				class="bg-white border-l-8 px-5 py-2 rounded-r-lg"-->
-			<!--			>-->
-			<!--				<div-->
-			<!--					:class="!widget.control?'text-red-600':''"-->
-			<!--					class="font-semibold"-->
-			<!--				>-->
-			<!--					{{ widget.name }} <span class="text-xs ml-4">id: {{ widget.id }}</span>-->
-			<!--				</div>-->
-
-			<!--				<widget-form :widget="widget" />-->
-			<!--			</div>-->
 		</div>
 	</div>
 </template>

@@ -5,7 +5,6 @@
  * parameters: fx=Fonction (texte), min=Nombre ou Fraction, max=Nombre ou Fraction, pas=Nombre ou Fraction
  * tags: algebre,1M
  */
-import Panel from "@/Components/Ui/Panel.vue"
 import { computed, ref } from "vue"
 import { numberCorrection } from "pidraw/esm/Calculus"
 import type { Polynom } from "pimath/dist/maths/algebra/polynom"
@@ -86,13 +85,13 @@ const fx = computed(() => {
 </script>
 
 <template>
-	<Panel>
+	<article>
 		<form-maker
 			v-model="f"
 			:active="activeInput==='fx'"
 			focus
 			label="fonction"
-			name="f"
+			from-url="fx"
 			@input-focus="activeInput='fx'"
 		/>
 
@@ -115,28 +114,28 @@ const fx = computed(() => {
 				v-model="xMin"
 				:active="activeInput==='xMin'"
 				label="borne inférieure"
-				name="xMin"
+				from-url="xMin"
 				@input-focus="activeInput='xMin'"
 			/>
 			<form-maker
 				v-model="xMax"
 				:active="activeInput==='xMax'"
 				label="borne supérieure"
-				name="xMax"
+				from-url="xMax"
 				@input-focus="activeInput='xMax'"
 			/>
 			<form-maker
 				v-model="step"
 				:active="activeInput==='step'"
 				label="pas"
-				name="step"
+				from-url="step"
 				@input-focus="activeInput='step'"
 			/>
 			<form-maker
 				v-model="fixed"
 				:active="activeInput==='fixed'"
 				label="arrondi"
-				name="fixed"
+				from-url="fixed"
 				@input-focus="activeInput='fixed'"
 			/>
 		</div>
@@ -287,5 +286,5 @@ const fx = computed(() => {
 				Une erreur s'est produite lors de l'introduction des coordonnées.
 			</div>
 		</div>
-	</Panel>
+	</article>
 </template>

@@ -13,7 +13,7 @@ class ChapterResource extends JsonResource
 
 	// No wrap around the data.
 	public static $wrap = null;
-	
+
 	/**
 	 * Transform the resource into an array.
 	 *
@@ -29,30 +29,37 @@ class ChapterResource extends JsonResource
 		}
 
 		return [
-			'id' => $this->id,
-			'slug' => $this->slug,
-			'title' => $this->title,
+			'id'         => $this->id,
+			'slug'       => $this->slug,
+			'title'      => $this->title,
+			'theme'      => [
+				'id'   => $this->theme->id,
+				'slug' => $this->theme->slug
+			],
 			'meta_title' => $this->meta_title,
-			'block' => BlockResource::make($this->blocks[0]),
-			'active' => $this->active,
+			'block'      => BlockResource::make($this->blocks[ 0 ]),
+			'active'     => $this->active,
 			'updated_at' => $this->updated_at,
-			'posts' => PostResource::collection($this->posts),
+			'posts'      => PostResource::collection($this->posts),
 			'challenges' => $this->challenges->map(
 				function ($challenge) {
 					return [
-						"id" => $challenge["id"],
-						"slug" => $challenge["slug"],
-						"title" => $challenge["title"]
+						"id"    => $challenge[ "id" ],
+						"slug"  => $challenge[ "slug" ],
+						"title" => $challenge[ "title" ]
 					];
 				}),
-			'relations' => $this->relations
+			'relations'  => $this->relations
 				->map(
 					function ($related) {
 						return [
-							"id" => $related["id"],
-							"slug" => $related["slug"],
-							"title" => $related["title"],
-							"theme_id" => $related["theme_id"],
+							"id"    => $related[ "id" ],
+							"slug"  => $related[ "slug" ],
+							"title" => $related[ "title" ],
+							"theme" => [
+								'id' => $related[ "theme_id" ],
+								'slug' => null
+							],
 						];
 					}
 				)->sortBy(['theme_id', 'title'])->all(),

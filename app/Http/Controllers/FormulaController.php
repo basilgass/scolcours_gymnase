@@ -41,7 +41,14 @@ class FormulaController extends Controller
 				->has('formulas')
 				->get()
 				->map(function ($chapter) {
-					return $chapter->only(['slug', 'title', 'theme_id']);
+					return [
+						'slug'=> $chapter->slug,
+						'title' => $chapter->title,
+						'theme' => [
+							'id' => $chapter->theme_id
+						]
+					];
+//					return $chapter->only(['slug', 'title', 'theme_id']);
 				})
 				->concat(
 					$chapter->relations()

@@ -5,14 +5,12 @@
  * parameters: a=Point, b=Point
  * tags: algebre,1M
  */
-import Panel from "@/Components/Ui/Panel.vue"
 import { computed, ref } from "vue"
 import { PiMath } from "pimath"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 
-const A = ref("3,4"),
-	B = ref("1,2")
-
+const A = ref<string>("3,4"),
+	B = ref<string>("1,2")
 
 const affine = computed(() => {
 	try {
@@ -27,19 +25,19 @@ const affine = computed(() => {
 </script>
 
 <template>
-	<Panel>
+	<article>
 		<form-maker
 			v-model="A"
 			focus
 			label="Point A"
-			name="A"
+			from-url="A"
 			message="Utiliser `a,b` pour les coordonnées d'un point"
 		/>
 
 		<form-maker
 			v-model="B"
 			:label="B[0]==='v'?'Vecteur directeur':'Point B'"
-			name="B"
+			from-url="B"
 			message="Utiliser `a,b` pour les coordonnées d'un point ou `va,b`"
 		/>
 
@@ -63,5 +61,5 @@ const affine = computed(() => {
 		>
 			Une erreur s'est produite lors de l'introduction des coordonnées.
 		</div>
-	</Panel>
+	</article>
 </template>

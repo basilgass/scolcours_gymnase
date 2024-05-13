@@ -5,7 +5,6 @@
  * parameters: equ=equation, valeur=Point/Fraction
  * tags: geometrie,3M
  */
-import Panel from "@/Components/Ui/Panel.vue"
 import { computed, ref } from "vue"
 import { PiMath } from "pimath"
 import FormMaker from "@/Components/Form/FormMaker.vue"
@@ -25,19 +24,20 @@ let tangentes = computed(() => {
 </script>
 
 <template>
-	<Panel>
+	<article>
 		<form-maker
 			v-model="equ"
 			label="Equation du cercle"
 			name="equ"
 			focus
+			from-url="c"
 			message="Utiliser `a,b` pour les coordonnées d'un point"
 		/>
 
 		<form-maker
 			v-model="value"
 			:label="value.includes(',')?'Point':'Pente'"
-			name="value"
+			from-url="p"
 			message="Utiliser `a,b` pour les coordonnées d'un point ou `a/b` pour une pente"
 		/>
 
@@ -56,5 +56,5 @@ let tangentes = computed(() => {
 		</div>
 
 		<div />
-	</Panel>
+	</article>
 </template>

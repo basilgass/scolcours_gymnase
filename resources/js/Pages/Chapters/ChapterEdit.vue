@@ -45,7 +45,7 @@ function deleteChapter(){
 </script>
 
 <template>
-	<section class="scolcours-container">
+	<section class="scolcours-container my-5">
 		<div
 			class="flex justify-between items-baseline py-3 mb-5"
 		>

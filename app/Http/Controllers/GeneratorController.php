@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\GeneratorResource;
 use App\Models\Generator;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -11,7 +12,7 @@ class GeneratorController extends Controller
 	public function index()
 	{
 		return Inertia::render("Generators/GeneratorIndex", [
-			"generators" => Generator::all()
+			"generators" => GeneratorResource::collection(Generator::all())
 		]);
 	}
 	public function edit(Generator $generator)

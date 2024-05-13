@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, inject, ref, useAttrs } from "vue"
+import { computed, inject, onMounted, ref, useAttrs } from "vue"
 import FormElementCodearea from "@/Components/Form/FormElement/FormElementCodearea.vue"
 import FormElementKeyboard from "@/Components/Form/FormElement/FormElementKeyboard.vue"
 import FormElementSwitch from "@/Components/Form/FormElement/FormElementSwitch.vue"
@@ -10,6 +10,7 @@ import type { FormMakerPropsType } from "@/Components/Form/FormMakerInterface"
 import { flashInterface } from "@/types"
 import axios from "axios"
 import { FormValidationVector } from "@/Components/Form/FormValidation/FormValidationVector"
+import { useUrlSearchParams } from "@vueuse/core"
 
 /**
  * This component is used to generate a form input
@@ -18,7 +19,7 @@ import { FormValidationVector } from "@/Components/Form/FormValidation/FormValid
 // Define the model value.
 const theValue = defineModel({
 	set(value) {
-		if (props.type === "switch" || props.type === "checkbox") return !!value
+		if (props.type === "switch" || props.type === "checkbox") return !!(+value)
 
 		if (props.type === "id" || props.type === "number") return +value
 
@@ -59,13 +60,15 @@ const props = withDefaults(defineProps<FormMakerPropsType>(), {
 	language: "latex",
 	resizable: false,
 	autoSize: false,
-	axios: null
+	axios: null,
+	fromUrl: null,
+	clearable: true
 })
 
 // Define the emits
 const emits = defineEmits(["enter", "currentLine"])
 
-const flash = inject<flashInterface>("flash" , null)
+const flash = inject<flashInterface>("flash", null)
 
 // Get the root element
 const inputWrapper = ref(null)
@@ -127,6 +130,7 @@ function updateInput(e: Event) {
 }
 
 const TEXTAREA = ref(null)
+
 function onKeyup() {
 	let pos = TEXTAREA.value.selectionStart,
 		lines = (theValue.value as string).split("\n"),
@@ -139,8 +143,8 @@ function onKeyup() {
 function validate() {
 	if (props.type === "number") {
 		return FormValidationNumber(+theValue.value as number, {
-			min: isNaN(+useAttrs().min)? 0 : +useAttrs().min,
-			max: isNaN(+useAttrs().max)? 10 : +useAttrs().max
+			min: isNaN(+useAttrs().min) ? 0 : +useAttrs().min,
+			max: isNaN(+useAttrs().max) ? 10 : +useAttrs().max
 		})
 	}
 
@@ -148,7 +152,7 @@ function validate() {
 		return FormValidationFraction(theValue.value as string)
 	}
 
-	if (props.type==="vector"){
+	if (props.type === "vector") {
 		return FormValidationVector(theValue.value as string)
 	}
 
@@ -198,6 +202,14 @@ function onEnter(ev) {
 		})
 }
 
+onMounted(() => {
+	const params = useUrlSearchParams()
+
+	console.log(params)
+	if (props.fromUrl && params[props.fromUrl]) {
+		theValue.value = params[props.fromUrl]
+	}
+})
 defineExpose({ focus: setFocus })
 </script>
 
@@ -232,7 +244,11 @@ defineExpose({ focus: setFocus })
 				<div
 					v-else-if="props.prepend"
 					v-katex.auto="props.prepend"
-					class="px-2 grid place-items-center border rounded-l text-gray-400 whitespace-nowrap"
+					class="grid place-items-center
+					border rounded-l
+					px-2
+					text-gray-400
+					whitespace-nowrap relative"
 				/>
 				<input
 					v-if="inputAsText.includes(type)"
@@ -316,6 +332,18 @@ defineExpose({ focus: setFocus })
 					v-bind="$attrs"
 					@update="updateInput($event)"
 				/>
+
+				<!-- clearable button -->
+				<div
+					v-if="clearable && inputAsText.includes(type)"
+					class="absolute right-2 top-[50%] text-gray-400"
+				>
+					<i
+						class="cursor-pointer"
+						:class="sm?'bi bi-x':'bi bi-x-lg'"
+						@click="theValue = ''"
+					/>
+				</div>
 			</div>
 		</div>
 

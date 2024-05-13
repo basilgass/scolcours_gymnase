@@ -5,7 +5,6 @@
  * parameters: polynome
  * tags: algebre,1M
  */
-import Panel from "@/Components/Ui/Panel.vue"
 import { computed, ref } from "vue"
 import { PiMath } from "pimath"
 import FormMaker from "@/Components/Form/FormMaker.vue"
@@ -27,11 +26,11 @@ let result = computed(() => {
 </script>
 
 <template>
-	<Panel>
+	<article>
 		<form-maker
 			v-model="polynom"
 			label="polynôme"
-			name="polynom"
+			from-url="p"
 		/>
 
 		<div v-if="result">
@@ -43,5 +42,5 @@ let result = computed(() => {
 		>
 			Une erreur s'est produite avec vos données.
 		</div>
-	</Panel>
+	</article>
 </template>

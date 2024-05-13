@@ -156,7 +156,7 @@ defineExpose({
 			<component
 				:is="currentKeyboard.component"
 				v-if="currentKeyboard && currentKeyboard.name !== ''"
-				:key="questionData.answerId"
+				:key="questionData.answerId.value"
 				ref="keyboardUI"
 				:answer="keyboardAnswers[questionData.answerId.value].answer"
 				:keyboard="currentKeyboard"

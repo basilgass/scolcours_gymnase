@@ -5,7 +5,6 @@
  * parameters: a=Point, b=Point, c=Point (optionnel)
  * tags: algebre,1M
  */
-import Panel from "@/Components/Ui/Panel.vue"
 import { computed, ref } from "vue"
 import { PiMath } from "pimath"
 import FormMaker from "@/Components/Form/FormMaker.vue"
@@ -115,27 +114,27 @@ const result = computed(() => {
 </script>
 
 <template>
-	<Panel>
+	<article>
 		<div class="max-w-md mx-auto">
 			<form-maker
 				v-model="A"
 				focus
 				label="Coordonnées du point A ou polynôme de degré 2"
-				name="fonction"
+				from-url="A"
 			/>
 
 			<form-maker
 				v-show="!A.includes('x')"
 				v-model="B"
 				:label="C===''?'Coordonnées du sommet S':'Coordonnées du point B'"
-				name="fonction"
+				from-url="B"
 			/>
 
 			<form-maker
 				v-show="!A.includes('x')"
 				v-model="C"
 				label="Coordonnées du point C"
-				name="fonction"
+				from-url="C"
 			/>
 		</div>
 
@@ -182,5 +181,5 @@ const result = computed(() => {
 		>
 			Une erreur s'est produite avec vos données.
 		</div>
-	</Panel>
+	</article>
 </template>

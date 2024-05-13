@@ -5,7 +5,6 @@
  * parameters: fx=Polynom, a=Fraction, b=Fraction
  * tags: algebre,3M
  */
-import Panel from "@/Components/Ui/Panel.vue"
 import { computed, ref } from "vue"
 import { PiMath } from "pimath"
 import FormMaker from "@/Components/Form/FormMaker.vue"
@@ -36,24 +35,24 @@ const result = computed(() => {
 </script>
 
 <template>
-	<Panel>
+	<article>
 		<form-maker
 			v-model="fx"
 			label="fonction"
-			name="fonction"
+			from-url="fx"
 			focus
 		/>
 		<form-maker
 			v-model="a"
 			type="fraction"
 			label="borne inférieure"
-			name="a"
+			from-url="a"
 		/>
 		<form-maker
 			type="fraction"
 			v-model="b"
 			label="borne supérieure"
-			name="b"
+			from-url="b"
 		/>
 
 		<div v-if="result">
@@ -72,6 +71,6 @@ const result = computed(() => {
 		>
 			Une erreur s'est produite avec vos données.
 		</div>
-	</Panel>
+	</article>
 </template>
 

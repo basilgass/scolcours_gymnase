@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\ChapterResource;
 use App\Http\Resources\UserResource;
 use App\Models\Challenge;
 use App\Models\Chapter;
@@ -84,14 +85,22 @@ class AdminController extends Controller
 		return true;
 	}
 
-	public function pages()
+	public function chapters()
 	{
-//		$this->loadChapters();
-//		$this->loadChallenges();
+		return Inertia::render(
+			'Admin/AdminChaptersPage',
+			[
+				'chapters'   => ChapterResource::collection(Chapter::all())
+			]
+		);
+	}
+
+	public function tools()
+	{
 		$this->loadTools();
 
 		return Inertia::render(
-			'Admin/AdminChaptersPage',
+			'Admin/AdminToolsPage',
 			[
 				'tools'      => Tool::all()->map(function ($tool, $key) {
 					return [
@@ -99,16 +108,16 @@ class AdminController extends Controller
 						'title'      => $tool->title,
 						'updated_at' => $tool->updated_at->format('d.m.Y H:m')
 					];
-				}),
-				'chapters'   => Chapter::all()->map(function ($tool, $key) {
-					return [
-						'slug'       => $tool->slug,
-						'title'      => $tool->title,
-						'theme'      => $tool->theme->slug,
-						'active'     => $tool->active,
-						'updated_at' => $tool->updated_at->format('d.m.Y H:m')
-					];
-				}),
+				})
+			]
+		);
+	}
+
+	public function challenges()
+	{
+		return Inertia::render(
+			'Admin/AdminChallengesPage',
+			[
 				'challenges' => Challenge::all()->map(function ($tool, $key) {
 					return [
 						'slug'       => $tool->slug,

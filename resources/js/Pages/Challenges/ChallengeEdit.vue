@@ -219,7 +219,7 @@ const saveChallenge = function() {
 </script>
 
 <template>
-	<div class="bg-white relative">
+	<div class="my-5 scolcours-container">
 		<!-- <dialog-modal v-model="show"> -->
 		<!-- Header -->
 		<!-- <template #header> -->

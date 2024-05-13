@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\WidgetResource;
 use App\Models\Illustration;
 use App\Models\Theme;
 use App\Models\Widget;
@@ -99,6 +100,6 @@ class WidgetController extends Controller
 
 	public function components()
 	{
-		return Widget::all();
+		return WidgetResource::collection(Widget::all());
 	}
 }

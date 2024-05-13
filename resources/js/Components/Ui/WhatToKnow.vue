@@ -4,7 +4,6 @@ TODO: a retravailler de A à Z
 -->
 <script setup lang="ts">
 import { onMounted, ref } from "vue"
-import Panel from "@/Components/Ui/Panel.vue"
 import { usePage } from "@inertiajs/vue3"
 import axios from "axios"
 
@@ -84,7 +83,10 @@ onMounted(()=>{
 				<slot />
 			</div>
 		</div>
-		<Panel v-if="generatedQuestions.length>0">
+		<article
+			v-if="generatedQuestions.length>0"
+			class="bg-red-400"
+		>
 			<div
 				class="flex md:items-center min-h-[160px] md:min-h-[80px] select-none px-10  cursor-pointer"
 				@click="nextQuestion()"
@@ -130,7 +132,7 @@ onMounted(()=>{
 					{{ downloadGenerating ? 'Patienter...' : 'Générer PDF' }}
 				</button>
 			</div>
-		</Panel>
+		</article>
 		<div class="text-xs text-gray-400 italic">
 			Cliquer pour afficher la <span v-text="showAnswer?'prochaine question':'réponse'" />
 		</div>

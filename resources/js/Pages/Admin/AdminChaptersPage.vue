@@ -1,25 +1,16 @@
 <script lang="ts" setup>
-import Panel from "@/Components/Ui/Panel.vue"
 import { useForm } from "@inertiajs/vue3"
 import { computed, PropType, ref } from "vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
-import type { ChallengeInterface } from "@/types/modelInterfaces"
-import type { ToolInterface } from "@/types"
+import FilteredList from "@/Components/Ui/FilteredList.vue"
+import { ChapterInterface } from "@/types/modelInterfaces"
 
 defineOptions({ layout: LayoutMain })
 const props = defineProps({
-	tools: { type: Object as PropType<ToolInterface[]>, required: true },
 	chapters: {
-		type: Object as PropType<{
-			slug: string
-			title: string
-			theme: string
-			active: boolean
-			updated_at: string
-		}[]>, required: true
-	},
-	challenges: { type: Object as PropType<ChallengeInterface[]>, required: true }
+		type: Object as PropType<ChapterInterface[]>, required: true
+	}
 })
 
 const filterChapter = ref("")
@@ -63,12 +54,29 @@ function toggleChapterVisibility(slug, active) {
 }
 </script>
 <template>
-	<h1 class="text-3xl pt-5 mb-10">
-		Gestion des chapitres, challenges et chapitres
-	</h1>
+	<section class="scolcours-container">
+		<h1 class="text-3xl pt-5 mb-10">
+			administration des chapitres
+		</h1>
 
-	<div class="space-y-4">
-		<Panel>
+		<article>
+			<filtered-list
+				:list="chapters"
+				list-class="grid grid-cols-1 gap-2"
+			>
+				<template #card="{item}:{item: ChapterInterface}">
+					<div>
+						<h3 class="text-lg leading-6 font-medium text-gray-900">
+							<Link :href="`/${item.theme.id}/${item.slug}`">
+								{{ item.title }}
+							</Link>
+						</h3>
+						<p class="mt-1 max-w-2xl text-sm text-gray-500">
+							{{ item.slug }}
+						</p>
+					</div>
+				</template>
+			</filtered-list>
 			<h2 class="text-lg my-2">
 				Chapitres
 			</h2>
@@ -133,63 +141,8 @@ function toggleChapterVisibility(slug, active) {
 					</div>
 				</div>
 			</div>
-		</Panel>
-
-		<Panel>
-			<h2 class="text-lg my-2">
-				Challenges
-			</h2>
-			<div class="w-full">
-				<div
-					v-for="challenge in challenges"
-					:key="challenge.slug"
-					class="hover:bg-gray-200 flex justify-between px-4 py-2"
-				>
-					<div>
-						<Link
-							:href="route('challenges.show', [challenge.slug])"
-							class="text-lg leading-6 font-medium text-gray-900"
-						>
-							{{ challenge.title }}
-						</Link>
-						<p class="mt-1 max-w-2xl text-sm text-gray-500">
-							{{ challenge.slug }}
-						</p>
-					</div>
-					<div>
-						<div>{{ challenge.updated_at }}</div>
-						<div>Is activated</div>
-					</div>
-				</div>
-			</div>
-		</Panel>
-
-		<Panel>
-			<h2 class="text-lg my-2">
-				Outils
-			</h2>
-			<div class="w-full">
-				<div
-					v-for="tool in tools"
-					:key="tool.slug"
-					class="hover:bg-gray-200 flex justify-between px-4 py-2"
-				>
-					<div>
-						<h3 class="text-lg leading-6 font-medium text-gray-900">
-							{{ tool.title }}
-						</h3>
-						<p class="mt-1 max-w-2xl text-sm text-gray-500">
-							{{ tool.slug }}
-						</p>
-					</div>
-					<div>
-						<div>{{ tool.updated_at }}</div>
-						<div>Is activated</div>
-					</div>
-				</div>
-			</div>
-		</Panel>
-	</div>
+		</article>
+	</section>
 </template>
 
 <style scoped></style>

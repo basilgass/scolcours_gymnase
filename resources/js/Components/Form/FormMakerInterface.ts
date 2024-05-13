@@ -38,5 +38,7 @@ export interface FormMakerPropsType {
 		id: number,
 		column: string,
 		button?: boolean | string
-	};
+	},
+	fromUrl?: string;
+	clearable?: boolean;
 }

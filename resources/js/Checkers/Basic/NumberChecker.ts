@@ -5,18 +5,21 @@ const name = "number",
 
 **paramètres**
 - [1,2,3,4,...]: nombre de chiffres après la virgule
-- s (soft): significatif (donc 2.3 ne passe pas pour 2.30)
+- s (strict): significatif (donc 2.3 ne passe pas pour 2.30)
 `
 
 export class NumberChecker extends CheckerAbstract {
+	private _isStrict: boolean
 	constructor(config?: string[] | string) {
 		super(config)
 		this.name = name
 		this.description = description
-		
+
 		if (isNaN(+this.config[0])) {
 			this.config = ["0", ...this.config]
 		}
+
+		this._isStrict = this.config.includes("s")
 	}
 
 	get format(): string {
@@ -31,7 +34,8 @@ export class NumberChecker extends CheckerAbstract {
 	): { result: boolean; message: string } {
 		const nbDigits = +this.config[0],
 			nbExpectedDigits = (expected.split(".")[1] || []).length
-		if (nbExpectedDigits !== nbDigits) {
+
+		if (nbExpectedDigits !== nbDigits && this._isStrict) {
 			return {
 				result: false,
 				message:
@@ -47,7 +51,7 @@ export class NumberChecker extends CheckerAbstract {
 			}
 		}
 
-		if (this.config.includes("s") || this.config.includes("soft")) {
+		if (!this._isStrict) {
 			if (+given === +expected) {
 				return {
 					result: true,
