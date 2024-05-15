@@ -30,7 +30,7 @@ const chapterThemes = computed(() => {
 const filtreredChapters = computed(() => {
 	let chapters = props.chapters.filter(
 		(chapter) =>
-			chapter.theme === chapterCurrentTheme.value ||
+			chapter.theme.slug === chapterCurrentTheme.value ||
 			chapterCurrentTheme.value === ""
 	)
 	if (filterChapter.value !== "") {
@@ -97,9 +97,9 @@ function toggleChapterVisibility(slug, active) {
 				<button
 					v-for="(theme, id) of chapterThemes"
 					:key="id"
-					:class="chapterCurrentTheme === theme ? 'btn-success' : ''"
+					:class="chapterCurrentTheme === theme.slug ? 'btn-success' : ''"
 					class="btn btn-xs"
-					@click="chapterCurrentTheme = theme"
+					@click="chapterCurrentTheme = theme.slug"
 				>
 					{{ theme }}
 				</button>

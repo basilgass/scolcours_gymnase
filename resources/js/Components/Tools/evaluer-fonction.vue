@@ -8,11 +8,28 @@
 import { computed, ref } from "vue"
 import { PiMath } from "pimath"
 import KeyboardDisplay from "@/Components/Keyboards/KeyboardDisplay.vue"
-import FormMaker from "@/Components/Form/FormMaker.vue"
+import ToolForm, { IToolForm } from "@/Components/Tools/Parts/ToolForm.vue"
 
-const f = ref("3*x+1"),
-	x = ref("1"),
-	activeInput = ref("fx")
+const forms: IToolForm[] = [
+	{
+		label: "fonction",
+		type: "text",
+		value: ref("3x+1"),
+		fromUrl: "fx"
+	},
+	{
+		label: "valeur",
+		type: "text",
+		value: ref("1"),
+		fromUrl: "x",
+		message: "Utiliser un nombre ou une fraction"
+	}
+]
+
+const f = computed(() => forms[0].value.value),
+	x = computed(() => forms[1].value.value)
+
+const activeInput = ref<number>(0)
 
 const fx = computed(() => {
 	try {
@@ -46,22 +63,9 @@ const fx = computed(() => {
 
 <template>
 	<article>
-		<form-maker
-			v-model="f"
-			:active="activeInput==='fx'"
-			label="fonction"
-			from-url="fx"
-			focus
-			@input-focus="activeInput='fx'"
-		/>
-
-		<form-maker
-			v-model="x"
-			:active="activeInput==='x'"
-			label="valeur"
-			from-url="x"
-			@input-focus="activeInput='x'"
-			message="Utiliser un nombre ou une fraction"
+		<tool-form
+			:forms="forms"
+			:active="activeInput"
 		/>
 
 		<div class="h-24 flex items-center justify-center">
@@ -78,22 +82,22 @@ const fx = computed(() => {
 
 		<div class="mt-2">
 			<keyboard-display
-				v-show="activeInput==='fx'"
+				v-show="activeInput===0"
 				back
 				reset
 				next
 				keyboard="polynom"
 				@change="f=$event"
-				@next="activeInput='x'"
+				@next="activeInput=1"
 			/>
 			<keyboard-display
-				v-show="activeInput==='x'"
+				v-show="activeInput===1"
 				back
 				reset
 				next
 				keyboard="fraction"
 				@change="x=$event"
-				@next="activeInput='fx'"
+				@next="activeInput=0"
 			/>
 		</div>
 	</article>

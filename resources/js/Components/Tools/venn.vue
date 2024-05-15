@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 /** Tools
  * title: diagramme de Venn
  * body: permet d'afficher le résultat d'une expression sous forme de diagramme de Venn
@@ -10,33 +10,45 @@ import { computed, onMounted, ref } from "vue"
 import { PiMath } from "pimath"
 import { PiDraw } from "pidraw/esm"
 import KeyboardDisplay from "@/Components/Keyboards/KeyboardDisplay.vue"
-import FormMaker from "@/Components/Form/FormMaker.vue"
+import ToolForm, { IToolForm } from "@/Components/Tools/Parts/ToolForm.vue"
+
+const forms: IToolForm[] = [
+	{
+		label: "expression",
+		type: "text",
+		value: ref(""),
+		fromUrl: "exp"
+	}
+]
+
+const input = computed(() => forms[0].value.value as string)
+
 
 let draw = ref(null),
 	geom,
 	venn,
-	tex = computed(()=>{
+	tex = computed(() => {
 		try {
 			let P = new PiMath.Logicalset(input.value.replaceAll("uu", "|").replaceAll("nn", "&").replaceAll("not", "!"))
 			updateVenn(P)
 			return P.tex
-		}catch(e){
+		} catch (e) {
 			return "\\text{ expression non reconnue }"
 		}
 	}),
-	result = ref([]),
-	input = ref("")
+	result = ref([])
 
-function updateVenn(P){
+function updateVenn(P) {
 	result.value = P.vennABC()
-	for(const key in venn){
+	for (const key in venn) {
 		venn[key].selected = result.value.includes(key)
 		venn[key].shape.svg.fill(venn[key].selected ? "#cfc" : "#fff")
 	}
 }
 
 function generateSVG() {
-	geom = new PiDraw(draw.value, {width: 470, height:470,
+	geom = new PiDraw(draw.value, {
+		width: 470, height: 470,
 		grid: {
 			x: 42,
 			y: 42
@@ -64,19 +76,19 @@ function generateSVG() {
 		geom.point(5, 8, "C"),
 		geom.point(1, 9, "E")
 	]
-	labels.forEach(pt=>{
+	labels.forEach(pt => {
 		pt.hide().label.middle().center()
 	})
 
 	venn = {
-		E: {shape: E, selected: false},
-		A: {shape: A, selected: false},
-		B: {shape: B, selected: false},
-		C: {shape: C, selected: false},
-		AB: {shape: AB, selected: false},
-		AC: {shape: AC, selected: false},
-		BC: {shape: BC, selected: false},
-		ABC: {shape: ABC, selected: false}
+		E: { shape: E, selected: false },
+		A: { shape: A, selected: false },
+		B: { shape: B, selected: false },
+		C: { shape: C, selected: false },
+		AB: { shape: AB, selected: false },
+		AC: { shape: AC, selected: false },
+		BC: { shape: BC, selected: false },
+		ABC: { shape: ABC, selected: false }
 	}
 
 	for (const key in venn) {
@@ -97,7 +109,10 @@ function generateSVG() {
 	}
 }
 
-onMounted(()=>{
+function updateKbrd($event){
+	forms[0].value.value = $event.input
+}
+onMounted(() => {
 	generateSVG()
 })
 
@@ -106,27 +121,12 @@ onMounted(()=>{
 <template>
 	<article class="grid grid-cols-1 md:grid-cols-2 gap-3">
 		<div class="flex flex-col gap-5">
-			<div>
-				<form-maker
-					v-model="input"
-					name="expression"
-					label="expression"
-					from-url="expr"
-				/>
-			</div>
-			<div v-katex="tex" />
+			<tool-form :forms="forms" />
+
+			<div v-katex.boxed.lg="tex" />
 
 			<keyboard-display
-				v-model="input"
-				class="mt-10 mt-auto mb-2"
-				:keyboard="{
-					grid: 'grid-cols-3',
-					layout: [
-						'A', 'B', 'C',
-						'|', '&', '!',
-						'-', '(', ')'
-					]
-				}"
+				@change="updateKbrd"
 				:custom-keys="{
 					'A': {type: 'math', display: 'A'},
 					'B': {type: 'math', display: 'B'},
@@ -137,8 +137,19 @@ onMounted(()=>{
 					'-': {type: 'math', display: '\\textcolor{lightgray}{A}\\setminus{\\textcolor{lightgray}{B}}'},
 
 				}"
+				:keyboard="{
+					grid: 'grid-cols-3',
+					layout: [
+						'A', 'B', 'C',
+						'|', '&', '!',
+						'-', '(', ')',
+						'@back','', '@reset'
+					]
+				}"
+				class="my-2"
 			/>
 		</div>
+
 		<div
 			ref="draw"
 			class="max-w-lg"

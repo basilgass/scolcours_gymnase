@@ -205,7 +205,6 @@ function onEnter(ev) {
 onMounted(() => {
 	const params = useUrlSearchParams()
 
-	console.log(params)
 	if (props.fromUrl && params[props.fromUrl]) {
 		theValue.value = params[props.fromUrl]
 	}
@@ -233,7 +232,7 @@ defineExpose({ focus: setFocus })
 			ref="inputWrapper"
 			class="w-full"
 		>
-			<div class="flex items-stretch">
+			<div class="flex items-stretch relative">
 				<div
 					v-if="props.withIcon"
 					:class="props.sm? 'py-1' : 'py-2' "
@@ -336,11 +335,11 @@ defineExpose({ focus: setFocus })
 				<!-- clearable button -->
 				<div
 					v-if="clearable && inputAsText.includes(type)"
-					class="absolute right-2 top-[50%] text-gray-400"
+					class="absolute right-2 top-[50%] -translate-y-1/2 text-gray-400"
 				>
 					<i
-						class="cursor-pointer"
 						:class="sm?'bi bi-x':'bi bi-x-lg'"
+						class="cursor-pointer"
 						@click="theValue = ''"
 					/>
 				</div>

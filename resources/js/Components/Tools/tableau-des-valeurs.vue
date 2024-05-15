@@ -9,18 +9,69 @@ import { computed, ref } from "vue"
 import { numberCorrection } from "pidraw/esm/Calculus"
 import type { Polynom } from "pimath/dist/maths/algebra/polynom"
 import KeyboardDisplay from "@/Components/Keyboards/KeyboardDisplay.vue"
-import FormMaker from "@/Components/Form/FormMaker.vue"
 import { PiMath } from "pimath"
 import type { NumExp } from "pimath/dist/maths/numexp"
+import ToolForm, { IToolForm } from "@/Components/Tools/Parts/ToolForm.vue"
+import { Random } from "pimath/dist/maths/randomization/random"
+
+const forms: IToolForm[] = [
+	{
+		label: "Fonction",
+		type: "text",
+		value: ref("2^x"),
+		fromUrl: "fx",
+		itemClass: 'col-span-2 md:col-span-4'
+	},
+	{
+		label: "Borne inférieure",
+		type: "text",
+		value: ref("-5"),
+		fromUrl: "xMin"
+	},
+	{
+		label: "Borne supérieure",
+		type: "text",
+		value: ref("5"),
+		fromUrl: "xMax"
+	},
+	{
+		label: "Pas",
+		type: "text",
+		value: ref("0.5"),
+		fromUrl: "step"
+	},
+	{
+		label: "Arrondi",
+		type: "text",
+		value: ref("2"),
+		fromUrl: "fixed"
+	},
+	{
+		label: "tableau vertical",
+		type: "switch",
+		value: ref(true),
+		fromUrl: "orientation",
+		itemClass: 'col-span-1 md:col-span-2'
+	},
+	{
+		label: "numérique",
+		type: "switch",
+		value: ref(true),
+		fromUrl: "float",
+		itemClass: 'col-span-1 md:col-span-2'
+	}
+]
 
 // TODO: tableau des valeurs doit être restructurer pour fonctionner avec des valeurs trigonométriques.
+const f = computed(() => forms[0].value.value as string)
+const xMin = computed(() => forms[1].value.value as string)
+const xMax = computed(() => forms[2].value.value as string)
+const step = computed(() => forms[3].value.value as string)
+const fixed = computed(() => forms[4].value.value as string)
+const verticalTable = computed(()=>forms[5].value.value as boolean)
+const numericParse = computed(()=>forms[6].value.value as boolean)
 
-const f = ref("2^x"),
-	xMin = ref("-5"),
-	xMax = ref("5"),
-	step = ref("0.5"),
-	activeInput = ref("fx"),
-	fixed = ref("2")
+const activeInput = ref<number>(0)
 
 const fx = computed(() => {
 		if (f.value === "") return false
@@ -31,8 +82,6 @@ const fx = computed(() => {
 			return false
 		}
 	}),
-	numericParse = ref(true),
-	verticalTable = ref(true),
 	isNumeric = computed(() => {
 		return f.value.includes("sin") || f.value.includes("cos") || f.value.includes("tan")
 	}),
@@ -82,109 +131,67 @@ const fx = computed(() => {
 
 		return data
 	}
+
+function updateKbrd(event, index) {
+	forms[index].value.value = event.input
+}
+
 </script>
 
 <template>
 	<article>
-		<form-maker
-			v-model="f"
-			:active="activeInput==='fx'"
-			focus
-			label="fonction"
-			from-url="fx"
-			@input-focus="activeInput='fx'"
+		<tool-form
+			:active="activeInput"
+			:forms="forms"
+			form-class="grid grid-cols-2 md:grid-cols-4 gap-3"
 		/>
 
-		<form-maker
-			v-model="numericParse"
-			label="calcul numérique"
-			name="numericParse"
-			type="switch"
-		/>
-
-		<form-maker
-			v-model="verticalTable"
-			label="Mode veritcal"
-			name="veritcalTable"
-			type="switch"
-		/>
-
-		<div class="flex gap-3">
-			<form-maker
-				v-model="xMin"
-				:active="activeInput==='xMin'"
-				label="borne inférieure"
-				from-url="xMin"
-				@input-focus="activeInput='xMin'"
-			/>
-			<form-maker
-				v-model="xMax"
-				:active="activeInput==='xMax'"
-				label="borne supérieure"
-				from-url="xMax"
-				@input-focus="activeInput='xMax'"
-			/>
-			<form-maker
-				v-model="step"
-				:active="activeInput==='step'"
-				label="pas"
-				from-url="step"
-				@input-focus="activeInput='step'"
-			/>
-			<form-maker
-				v-model="fixed"
-				:active="activeInput==='fixed'"
-				label="arrondi"
-				from-url="fixed"
-				@input-focus="activeInput='fixed'"
-			/>
-		</div>
 
 		<div class="mt-2">
 			<keyboard-display
-				v-show="activeInput==='fx'"
+				v-show="activeInput===0"
 				back
 				keyboard="polynom"
 				next
 				reset
-				@change="f=$event.input"
-				@next="activeInput='xMin'"
+				@change="updateKbrd($event, 0)"
+				@next="activeInput=1"
 			/>
 			<keyboard-display
-				v-show="activeInput==='xMin'"
+				v-show="activeInput===1"
 				back
 				keyboard="number"
 				next
 				reset
-				@change="xMin=$event.input"
-				@next="activeInput='xMax'"
+				@change="updateKbrd($event, 1)"
+				@next="activeInput=2"
 			/>
 			<keyboard-display
-				v-show="activeInput==='xMax'"
+				v-show="activeInput===2"
 				back
 				keyboard="number"
 				next
 				reset
-				@change="xMax=$event.input"
-				@next="activeInput='step'"
+				@change="updateKbrd($event, 2)"
+				@next="activeInput=3"
 			/>
 			<keyboard-display
-				v-show="activeInput==='step'"
+				v-show="activeInput===3"
 				back
 				keyboard="number"
 				next
 				reset
-				@change="step=$event.input"
-				@next="activeInput='fx'"
+				@change="updateKbrd($event, 3)"
+				@next="activeInput=4"
 			/>
 			<keyboard-display
-				v-show="activeInput==='fixed'"
+				v-show="activeInput===4"
 				back
 				keyboard="number"
 				next
 				reset
-				@change="fixed=$event.input"
-				@next="activeInput='fixed'"
+				@change="updateKbrd($event, 4)"
+				@next="activeInput=0"
 			/>
 		</div>
 

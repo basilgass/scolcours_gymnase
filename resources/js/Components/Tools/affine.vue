@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 /** Tools
  * title: affine
  * body: calcul d'une fonction affine par deux maxPoints
@@ -7,10 +7,29 @@
  */
 import { computed, ref } from "vue"
 import { PiMath } from "pimath"
-import FormMaker from "@/Components/Form/FormMaker.vue"
+import ToolForm, { IToolForm } from "@/Components/Tools/Parts/ToolForm.vue"
+import TexCode from "@/Components/Ui/TexCode.vue"
 
-const A = ref<string>("3,4"),
-	B = ref<string>("1,2")
+// Define the forms
+const forms: IToolForm[] = [
+	{
+		label: "point A",
+		type: "text",
+		value: ref("3,4"),
+		fromUrl: "A",
+		message: "Utiliser `a,b` pour les coordonnées d'un point",
+	},
+	{
+		label: computed(() => B.value[0] === "v" ? "vecteur directeur" : "point B"),
+		type: "text",
+		value: ref("1,2"),
+		fromUrl: "B",
+		message: "Utiliser `a,b` pour les coordonnées d'un point ou `va,b`",
+	}
+]
+const A = computed<string>(() => forms[0].value.value as string)
+const B = computed<string>(() => forms[1].value.value as string)
+
 
 const affine = computed(() => {
 	try {
@@ -26,20 +45,7 @@ const affine = computed(() => {
 
 <template>
 	<article>
-		<form-maker
-			v-model="A"
-			focus
-			label="Point A"
-			from-url="A"
-			message="Utiliser `a,b` pour les coordonnées d'un point"
-		/>
-
-		<form-maker
-			v-model="B"
-			:label="B[0]==='v'?'Vecteur directeur':'Point B'"
-			from-url="B"
-			message="Utiliser `a,b` pour les coordonnées d'un point ou `va,b`"
-		/>
+		<tool-form :forms="forms" />
 
 		<div v-if="affine">
 			<div>
@@ -48,16 +54,12 @@ const affine = computed(() => {
 				<div v-katex="`${affine.equation}`" />
 				<div v-katex="`${affine.parametric}`" />
 			</div>
-			<div class="bg-gray-100 border-gray-300 rounded font-code px-3 py-1">
-				<div v-text="`${affine.mxh}`" />
-				<div v-text="`${affine.canonical}`" />
-				<div v-text="`${affine.equation}`" />
-				<div v-text="`${affine.parametric}`" />
-			</div>
+
+			<tex-code :tex="`${affine.mxh}\n${affine.canonical}\n${affine.equation}\n${affine.parametric}`" />
 		</div>
 		<div
 			v-else
-			class="text-red-700 text-sm"
+			class="text-red-700 text-xs"
 		>
 			Une erreur s'est produite lors de l'introduction des coordonnées.
 		</div>

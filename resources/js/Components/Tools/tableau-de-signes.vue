@@ -3,11 +3,11 @@
  * title: tableau de signes ou de variations
  * body: tableau de signes ou de variations
  */
-import { nextTick, onMounted, reactive, ref } from "vue"
+import { computed, nextTick, onMounted, reactive, ref } from "vue"
 import { PiMath } from "pimath"
 import TableOfSigns from "@/Components/Pi/PiTableOfSigns.vue"
 import { splitIfOutsideParentheses } from "@/helpers/helperFunctions.js"
-import FormMaker from "@/Components/Form/FormMaker.vue"
+import ToolForm, { IToolForm } from "@/Components/Tools/Parts/ToolForm.vue"
 
 type fracRationnelle = {
 	valid: boolean,
@@ -17,23 +17,38 @@ type fracRationnelle = {
 	dxTex?: string
 }
 
-let root = ref(null),
-	fx = ref("x^2-5x+6"),
-	mode = ref(true),
-	validation = ref(false),
-	fraction_rationnelle: fracRationnelle = reactive({
-		valid: false,
-		tos: {
-			signs: [],
-			factors: [],
-			zeroes: []
-		},
-		dxtos: {
-			signs: [],
-			factors: [],
-			zeroes: []
-		}
-	})
+const forms: IToolForm[] = [
+	{
+		label: "fonction",
+		type: "text",
+		value: ref("x^2-5x+6"),
+		fromUrl: "fx"
+	},
+	{
+		label: "signes,variations",
+		type: "switch",
+		value: ref(true),
+		fromUrl: "mode"
+	}
+]
+
+const fx = computed(() => forms[0].value.value as string)
+const mode = computed(() => forms[1].value.value as boolean)
+
+const validation = ref(false)
+const fraction_rationnelle: fracRationnelle = reactive({
+	valid: false,
+	tos: {
+		signs: [],
+		factors: [],
+		zeroes: []
+	},
+	dxtos: {
+		signs: [],
+		factors: [],
+		zeroes: []
+	}
+})
 
 async function validation_fx() {
 	validation.value = false
@@ -85,26 +100,12 @@ onMounted(() => {
 		ref="root"
 	>
 		<!-- Value to modify enter -->
-		<form
-			class="max-w-md mx-auto mb-6"
-			@submit.prevent
+
+		<tool-form
+			:forms="forms"
+			form-class="grid grid-cols-1 gap-3"
 		>
-			<form-maker
-				v-model="fx"
-				:prepend="'\\( f(x)=\\frac{a}{b}\\)'"
-				focus
-				label="fonction"
-				from-url="fx"
-			/>
-
-			<form-maker
-				v-model="mode"
-				label="signes,variations"
-				type="switch"
-				from-url="mode"
-			/>
-
-			<div class="flex gap-3">
+			<div class="flex gap-3 justify-center">
 				<button
 					class="btn btn-primary"
 					@click.prevent="validation_fx"
@@ -112,9 +113,7 @@ onMounted(() => {
 					valider
 				</button>
 			</div>
-		</form>
-
-		<hr>
+		</tool-form>
 
 		<!-- Tableau de signes -->
 		<div

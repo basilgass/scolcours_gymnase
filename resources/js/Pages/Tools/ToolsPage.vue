@@ -1,6 +1,5 @@
 <script lang="ts" setup>
-import { computed, nextTick, onMounted, PropType, ref } from "vue"
-import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
+import { computed, nextTick, onMounted, PropType, provide, ref } from "vue"
 import { ToolInterface } from "@/types"
 import { getModule, MODULE_TYPES } from "@/scolcours"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
@@ -12,6 +11,7 @@ const toolSlug = ref(null),
 	toolSearch = ref(""),
 	arraySearch = ref([])
 
+provide("toolData", toolSlug)
 const props = defineProps({
 	tools: {
 		type: Object as PropType<ToolInterface[]>, default: () => {
@@ -90,24 +90,11 @@ const listOfTools = computed(() => {
 	>
 		<!-- Title -->
 		<div
-			class="flex justify-between items-baseline mb-4"
+			class="flex justify-between items-baseline my-4"
 		>
-			<div>
-				<ArticleTitle title="Outils" />
-				<Link
-					v-if="toolSlug!==''"
-					:href="`/tools/${toolSlug}`"
-				>
-					{{ toolName }}
-				</Link>
-			</div>
-
-			<button
-				v-if="toolSlug"
-				@click="toolSlug=''"
-			>
-				Tous les outils
-			</button>
+			<h2 class="text-2xl font-extralight">
+				{{ toolName }}
+			</h2>
 		</div>
 
 		<div class="flex gap-3 flex-col md:flex-row">
@@ -133,13 +120,14 @@ const listOfTools = computed(() => {
 					@enter="$event.length===1?changeSlug($event[0].slug):''"
 				>
 					<template #card="{item}:{item: ToolInterface}">
-						<div
+						<Link
 							:class="item.slug===toolSlug?'font-semibold':''"
+							:href="route('tools.tool', [item.slug])"
+							as="div"
 							class="cursor-pointer hover:pl-2 transition-all text-sm"
-							@click="changeSlug(item.slug)"
 						>
 							{{ item.title }}
-						</div>
+						</Link>
 					</template>
 				</filtered-list>
 			</div>

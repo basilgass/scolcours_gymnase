@@ -394,7 +394,7 @@ provide("PiDrawGraph", PiGraph)
 		<!-- draw graph-->
 		<div
 			ref="drawWrapper"
-			class="katex-m-0"
+			class="katex-m-0 min-w-[50px] min-h-[50px]"
 			@mouseup="drawMouseUp"
 		/>
 

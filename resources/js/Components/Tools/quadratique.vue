@@ -7,13 +7,34 @@
  */
 import { computed, ref } from "vue"
 import { PiMath } from "pimath"
-import FormMaker from "@/Components/Form/FormMaker.vue"
 import type { Polynom } from "pimath/dist/maths/algebra/polynom"
 import type { Equation } from "pimath/dist/maths/algebra/equation"
+import ToolForm, { IToolForm } from "@/Components/Tools/Parts/ToolForm.vue"
 
-const A = ref("-2,-11"),
-	B = ref("0,-7"),
-	C = ref("-4,-7")
+const forms: IToolForm[] = [
+	{
+		label: "Point A",
+		type: "text",
+		value: ref("-2,-11"),
+		fromUrl: "A"
+	},
+	{
+		label: "Point B",
+		type: "text",
+		value: ref("0,-7"),
+		fromUrl: "B"
+	},
+	{
+		label: "Point C",
+		type: "text",
+		value: ref("-4,-7"),
+		fromUrl: "C"
+	}
+]
+
+const A = computed(()=>forms[0].value.value as string)
+const	B = computed(()=>forms[1].value.value as string)
+const	C = computed(()=>forms[2].value.value as string)
 
 function getPolyFromThreePoints(A, B, C): Polynom {
 	const P = new PiMath.Equation("y", "ax^2+bx+c"),
@@ -107,7 +128,6 @@ const result = computed(() => {
 			}
 		}
 	} catch (e) {
-		console.error(e)
 		return false
 	}
 })
@@ -115,28 +135,10 @@ const result = computed(() => {
 
 <template>
 	<article>
-		<div class="max-w-md mx-auto">
-			<form-maker
-				v-model="A"
-				focus
-				label="Coordonnées du point A ou polynôme de degré 2"
-				from-url="A"
-			/>
-
-			<form-maker
-				v-show="!A.includes('x')"
-				v-model="B"
-				:label="C===''?'Coordonnées du sommet S':'Coordonnées du point B'"
-				from-url="B"
-			/>
-
-			<form-maker
-				v-show="!A.includes('x')"
-				v-model="C"
-				label="Coordonnées du point C"
-				from-url="C"
-			/>
-		</div>
+		<tool-form
+			:forms="forms"
+			form-class="grid grid-cols-1 md:grid-cols-3 gap-3"
+		/>
 
 		<div
 			v-if="result"
@@ -144,19 +146,19 @@ const result = computed(() => {
 		>
 			<div
 				class="col-span-2 text-lg my-10"
-				v-katex="`f(x) = ${result.tex}`"
+				v-katex.display.boxed.lg="`f(x) = ${result.tex}`"
 			/>
 
 			<div>
 				<h2 class="font-semibold">
 					forme factorisée
 				</h2>
-				<div v-katex="`f(x) = ${result.factorise}`" />
+				<div v-katex.display.boxed.lg="`f(x) = ${result.factorise}`" />
 
 				<h2 class="font-semibold">
 					forme du sommet
 				</h2>
-				<div v-katex="`f(x) = ${result.sommet}`" />
+				<div v-katex.display.boxed.lg="`f(x) = ${result.sommet}`" />
 			</div>
 
 			<div>
@@ -165,12 +167,12 @@ const result = computed(() => {
 				</h2>
 
 				<div class="grid grid-cols-2">
-					<div v-katex="`H = ${result.points.H}`" />
-					<div v-katex="`S = ${result.points.S}`" />
+					<div v-katex.display.boxed.lg="`H = ${result.points.H}`" />
+					<div v-katex.display.boxed.lg="`S = ${result.points.S}`" />
 					<div
 						v-for="(sol, idx) of result.points.Z"
 						:key="sol"
-						v-katex="`z_${idx+1} = ${sol}`"
+						v-katex.display.boxed.lg="`z_${idx+1} = ${sol}`"
 					/>
 				</div>
 			</div>

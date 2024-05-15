@@ -7,10 +7,25 @@
  */
 import { computed, ref } from "vue"
 import { PiMath } from "pimath"
-import FormMaker from "@/Components/Form/FormMaker.vue"
+import ToolForm, { IToolForm } from "@/Components/Tools/Parts/ToolForm.vue"
+import TexCode from "@/Components/Ui/TexCode.vue"
 
-let numerator = ref(""),
-	denominator = ref("")
+const forms: IToolForm[] = [
+	{
+		label: "fonction à dériver (numérateur)",
+		type: "text",
+		value: ref(""),
+		fromUrl: "n",
+	},
+	{
+		label: "fonction à dériver (dénominateur - optionnel)",
+		type: "text",
+		value: ref(""),
+		fromUrl: "d",
+	}
+]
+let numerator = computed(()=>forms[0].value.value as string),
+	denominator = computed(()=>forms[1].value.value as string)
 
 let result = computed(() => {
 	let  P
@@ -36,42 +51,18 @@ let result = computed(() => {
 	}
 })
 
-function copyToClipboard(){
-	navigator.clipboard.writeText(result.value)
-}
 </script>
 
 <template>
 	<article>
-		<form-maker
-			v-model="numerator"
-			label="fonction à dériver (numérateur)"
-			from-url="n"
-			focus
-		/>
-
-		<form-maker
-			v-model="denominator"
-			label="fonction à dériver (dénominateur - optionnel)"
-			from-url="d"
-		/>
-
+		<tool-form :forms="forms" />
 
 		<div v-if="result">
 			<div
 				v-if="numerator.trim()!==''"
 				v-katex="result"
 			/>
-			<div class="flex text-xs text-gray-600">
-				<button
-					class="bi bi-clipboard mr-3"
-					@click="copyToClipboard"
-				/>
-				<div
-					class="font-code"
-					v-text="result"
-				/>
-			</div>
+			<tex-code :tex="result" />
 		</div>
 		<div
 			v-else

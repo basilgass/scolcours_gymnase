@@ -6,14 +6,29 @@
  * tags: algebre,2M
  */
 import { computed, ref } from "vue"
-import FormMaker from "@/Components/Form/FormMaker.vue"
 import { Line } from "pimath/dist/maths/geometry/line"
 import { PiMath } from "pimath"
 import type { Fraction } from "pimath/dist/maths/coefficients/fraction"
 import { ISolution } from "pimath/dist/maths/algebra/equation"
+import ToolForm, { IToolForm } from "@/Components/Tools/Parts/ToolForm.vue"
 
-const fx = ref("x^2"),
-	x = ref("1,0")
+const forms: IToolForm[] = [
+	{
+		label: "fonction",
+		type: "text",
+		value: ref("x^2"),
+		fromUrl: "fx"
+	},
+	{
+		label: "abscisse du point de tangence ou coordonnée d'un point",
+		type: "text",
+		value: ref("1,0"),
+		fromUrl: "x"
+	}
+]
+
+const fx = computed(()=> forms[0].value.value as string)
+const x = computed(()=> forms[1].value.value as string)
 
 
 const affine = computed(() => {
@@ -74,24 +89,11 @@ const affine = computed(() => {
 
 <template>
 	<article>
-		<form-maker
-			v-model="fx"
-			focus
-			label="fonction"
-			name="fonction"
-			from-url="fx"
-		/>
-
-		<form-maker
-			v-model="x"
-			label="abscisse du point de tangence ou coordonnée d'un point"
-			name="x ou a,b"
-			from-url="x"
-		/>
+		<tool-form :forms="forms" />
 
 		<div v-if="affine">
-			<div v-katex="`${affine.tex.mxh}`" />
-			<div v-katex="`${affine.tex.canonical}`" />
+			<div v-katex.boxed.lg="`${affine.tex.mxh}`" />
+			<div v-katex.boxed.lg="`${affine.tex.canonical}`" />
 		</div>
 		<div
 			v-else

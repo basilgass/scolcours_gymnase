@@ -8,26 +8,72 @@
 import { computed, ref } from "vue"
 import { numberCorrection } from "pidraw/esm/Calculus"
 import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"
-import FormMaker from "@/Components/Form/FormMaker.vue"
+import ToolForm, { IToolForm } from "@/Components/Tools/Parts/ToolForm.vue"
 
-const A = ref("7"),
-	B = ref(""),
-	C = ref("9"),
-	alpha = ref(""),
-	beta = ref("20"),
-	gamma = ref(""),
-	fixed = ref(3),
-	labels = {
-		a: "a",
-		b: "b",
-		c: "c",
-		alpha: "\\alpha",
-		beta: "\\beta",
-		gamma: "\\gamma",
-		area: "\\sigma_{ABC}",
-		radius: "r_{\\text{circ.}}",
-		radiusI: "r_{\\text{insc.}}"
+const forms: IToolForm[] = [
+	{
+		label: "a",
+		type: "text",
+		value: ref("7"),
+		fromUrl: "a",
+	},
+	{
+		label: "b",
+		type: "text",
+		value: ref(""),
+		fromUrl: "b"
+	},
+	{
+		label: "c",
+		type: "text",
+		value: ref("9"),
+		fromUrl: "c"
+	},
+	{
+		label: "\\(\\alpha\\)",
+		type: "text",
+		value: ref(""),
+		fromUrl: "alpha"
+	},
+	{
+		label: "\\(\\beta\\)",
+		type: "text",
+		value: ref("20"),
+		fromUrl: "beta"
+	},
+	{
+		label: "\\(\\gamma\\)",
+		type: "text",
+		value: ref(""),
+		fromUrl: "gamma"
+	},
+	{
+		label: "arrondi",
+		type: "number",
+		value: ref(3),
+		fromUrl: "round"
 	}
+]
+
+const A = computed(()=>forms[0].value.value as string)
+const B = computed(()=>forms[1].value.value as string)
+const C = computed(()=>forms[2].value.value as string)
+const alpha = computed(()=>forms[3].value.value as string)
+const beta = computed(()=>forms[4].value.value as string)
+const gamma = computed(()=>forms[5].value.value as string)
+const fixed = computed(()=>forms[6].value.value as number)
+
+const labels = {
+	a: "a",
+	b: "b",
+	c: "c",
+	alpha: "\\alpha",
+	beta: "\\beta",
+	gamma: "\\gamma",
+	area: "\\sigma_{ABC}",
+	radius: "r_{\\text{circ.}}",
+	radiusI: "r_{\\text{insc.}}"
+}
 
 interface triangleInterface {
 	a: string
@@ -432,52 +478,10 @@ function makeTriangle(value: triangleRawInterface, alternate?: boolean): triangl
 
 <template>
 	<article>
-		<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-			<form-maker
-				v-model="A"
-				focus
-				label="a = "
-				from-url="a"
-			/>
-
-			<form-maker
-				v-model="B"
-				label="b = "
-				from-url="b"
-			/>
-
-			<form-maker
-				v-model="C"
-				label="c = "
-				from-url="c"
-			/>
-
-			<form-maker
-				v-model="alpha"
-				focus
-				label="\(\alpha = \)"
-				from-url="alpha"
-			/>
-
-			<form-maker
-				v-model="beta"
-				label="\(\beta = \)"
-				from-url="beta"
-			/>
-
-			<form-maker
-				v-model="gamma"
-				label="\(\gamma = \)"
-				from-url="gamma"
-			/>
-
-			<form-maker
-				v-model="fixed"
-				label="arrondi"
-				type="number"
-				from-url="round"
-			/>
-		</div>
+		<tool-form
+			:forms="forms"
+			form-class="grid grid-cols-1 md:grid-cols-3 gap-4"
+		/>
 
 		<div
 			v-if="result"

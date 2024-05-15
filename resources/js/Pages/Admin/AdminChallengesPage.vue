@@ -1,63 +1,19 @@
 <script lang="ts" setup>
-import { useForm } from "@inertiajs/vue3"
-import { computed, PropType, ref } from "vue"
+import { PropType } from "vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 import type { ChallengeInterface } from "@/types/modelInterfaces"
 
 defineOptions({ layout: LayoutMain })
-const props = defineProps({
+defineProps({
 	challenges: { type: Object as PropType<ChallengeInterface[]>, required: true }
 })
 
-const filterChapter = ref("")
-
-const Form = useForm({
-	slug: "",
-	active: false
-})
-
-const chapterCurrentTheme = ref<string>("")
-const chapterThemes = computed(() => {
-	const themes = props.chapters.map((chapter) => chapter.theme)
-	themes.sort()
-	return [...new Set(themes)]
-})
-
-const filtreredChapters = computed(() => {
-	let chapters = props.chapters.filter(
-		(chapter) =>
-			chapter.theme === chapterCurrentTheme.value ||
-			chapterCurrentTheme.value === ""
-	)
-	if (filterChapter.value !== "") {
-		chapters = chapters.filter(
-			(chapter) =>
-				chapter.slug.includes(filterChapter.value) ||
-				chapter.title.includes(filterChapter.value)
-		)
-	}
-
-	return chapters
-})
-
-//TODO : add a please wait...
-function toggleChapterVisibility(slug, active) {
-	Form.slug = slug
-	Form.active = active
-	Form.patch(`/admin/chapters/${slug}`, {
-		preserveScroll: true
-	})
-}
 </script>
 <template>
-	<h1 class="text-3xl pt-5 mb-10">
-		Gestion des chapitres, challenges et chapitres
-	</h1>
-
-	<article>
-		<h2 class="text-lg my-2">
-			Challenges
-		</h2>
+	<section class="scolcours-container">
+		<h1 class="text-3xl pt-5 mb-10">
+			administration des challenges
+		</h1>
 		<div class="w-full">
 			<div
 				v-for="challenge in challenges"
@@ -81,7 +37,7 @@ function toggleChapterVisibility(slug, active) {
 				</div>
 			</div>
 		</div>
-	</article>
+	</section>
 </template>
 
 <style scoped></style>

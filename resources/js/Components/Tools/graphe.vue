@@ -5,28 +5,32 @@
  * parameters: fonction à tracer.
  * tags: algebre,1M
  */
-import { ref } from "vue"
+import { computed, ref } from "vue"
 import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"
-import FormMaker from "@/Components/Form/FormMaker.vue"
+import ToolForm, { IToolForm } from "@/Components/Tools/Parts/ToolForm.vue"
 
-const code = ref(""),
-	params = ref("axis,grid,x=-10:10,y=-10:10")
+const forms: IToolForm[] = [
+	{
+		label: "paramètres",
+		type: "text",
+		value: ref("axis,grid,x=-10:10,y=-10:10"),
+		fromUrl: "fonction",
+	},
+	{
+		label: "code",
+		type: "code",
+		value: ref(""),
+	}
+]
+
+const params = computed(()=>  forms[0].value.value as string)
+const code = computed(()=>  forms[1].value.value as string)
+
 </script>
 
 <template>
 	<article>
-		<form-maker
-			v-model="params"
-			label="paramètres"
-			from-url="param"
-		/>
-		<form-maker
-			type="textarea"
-			v-model="code"
-			label="code"
-			from-url="code"
-			focus
-		/>
+		<tool-form :forms="forms" />
 
 		<pi-draw-parser
 			:width="800"

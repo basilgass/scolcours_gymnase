@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 /** Tools
  * title: tangente à un cercle
  * body: calcul de la / les tangente(s) à un cercle passant par un point ou ayant une pente donnée
@@ -7,15 +7,33 @@
  */
 import { computed, ref } from "vue"
 import { PiMath } from "pimath"
-import FormMaker from "@/Components/Form/FormMaker.vue"
+import ToolForm, { IToolForm } from "@/Components/Tools/Parts/ToolForm.vue"
+import TexCode from "@/Components/Ui/TexCode.vue"
 
-let equ = ref("(x-4)^2+(y-5)^2=25"),
-	value = ref("7,9")
+const forms: IToolForm[] = [
+	{
+		label: "Equation du cercle",
+		type: "text",
+		value: ref("(x-4)^2+(y-5)^2=25"),
+		fromUrl: "c",
+		message: "Utiliser `a,b` pour les coordonnées d'un point"
+	},
+	{
+		label: computed(() => equ.value.includes(',')?'Point':'Pente'),
+		type: "text",
+		value: ref("7,9"),
+		fromUrl: "p",
+		message: "Utiliser `a,b` pour les coordonnées d'un point ou `a/b` pour une pente"
+	}
+]
+
+const equ = computed(()=>forms[0].value.value as string)
+const p = computed(()=>forms[1].value.value as string)
 
 let tangentes = computed(() => {
 	try {
 		const C = new PiMath.Geometry.Circle(equ.value)
-		const P = new PiMath.Geometry.Point(value.value)
+		const P = new PiMath.Geometry.Point(p.value)
 		return C.tangents(P)
 	} catch (e) {
 		return false
@@ -25,29 +43,18 @@ let tangentes = computed(() => {
 
 <template>
 	<article>
-		<form-maker
-			v-model="equ"
-			label="Equation du cercle"
-			name="equ"
-			focus
-			from-url="c"
-			message="Utiliser `a,b` pour les coordonnées d'un point"
-		/>
-
-		<form-maker
-			v-model="value"
-			:label="value.includes(',')?'Point':'Pente'"
-			from-url="p"
-			message="Utiliser `a,b` pour les coordonnées d'un point ou `a/b` pour une pente"
-		/>
+		<tool-form :forms="forms" />
 
 		<div v-if="tangentes">
 			<div
 				v-for="(tangente,index) of tangentes"
 				:key="'tangente-'+index"
-				v-katex="`${tangente.tex.canonical}`"
-			/>
+			>
+				<div v-katex.boxed.lg="`${tangente.tex.canonical}`" />
+				<tex-code :tex="tangente.tex.canonical" />
+			</div>
 		</div>
+
 		<div
 			v-else
 			class="text-red-700 text-sm"

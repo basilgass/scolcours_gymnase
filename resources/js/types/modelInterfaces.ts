@@ -31,7 +31,10 @@ export interface ChapterInterface {
 		id: number
 		slug: string
 		title: string
-		theme_id: number
+		theme: {
+			id: number
+			slug: string
+		};
 	}[];
 }
 
@@ -269,6 +272,7 @@ export interface TranslationWord {
 	definition: string,
 	examples: string
 }
+
 export interface TranslationUnitInterfaceExtended extends TranslationUnitInterface {
 	selected: boolean
 	words: TranslationWord[]

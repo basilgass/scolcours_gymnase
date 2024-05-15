@@ -9,6 +9,18 @@ import { computed, ref } from "vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import { PiMath } from "pimath"
 import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"
+import { IToolForm } from "@/Components/Tools/Parts/ToolForm.vue"
+import TexCode from "@/Components/Ui/TexCode.vue"
+
+const forms: IToolForm[] = [
+	{
+		label: "fonction",
+		type: "text",
+		value: ref("abs(3x-3)-4abs(x+1)+2"),
+		fromUrl: "fx"
+	}
+]
+const fx = computed(()=>forms[0].value.value as string)
 
 const result = computed(() => {
 	return { tex: "" }
@@ -17,7 +29,6 @@ const result = computed(() => {
 
 
 const root = ref(null),
-	fx = ref("abs(3x-3)-4abs(x+1)+2"),
 	x = ref("-4"),
 	y = ref("-10"),
 	xAsTex = computed(() => {
@@ -156,7 +167,7 @@ const root = ref(null),
 
 		// -7abs(x+1)-abs(2x+18)+3
 
-		fx.value = `${k1}abs(${p1.display})${(k2 > 0 ? "+" : "") + k2}abs(${p2.display})${k3 === 0 ? "" : ((k3 > 0 ? "+" : "") + k3)}`
+		forms[0].value.value = `${k1}abs(${p1.display})${(k2 > 0 ? "+" : "") + k2}abs(${p2.display})${k3 === 0 ? "" : ((k3 > 0 ? "+" : "") + k3)}`
 	},
 	draw = computed(() => {
 		const alpha = "fghijklmn"
@@ -221,13 +232,10 @@ const root = ref(null),
 					</div>
 				</div>
 
-				<div class="max-w-lg">
+				<div class="max-w-lg space-y-3">
 					<pi-draw-parser :draw="draw" />
 
-					<pre
-						class="bg-gray-100 p-3 text-xs"
-						v-html="draw.code"
-					/>
+					<tex-code :tex="draw.code" />
 				</div>
 			</div>
 		</div>

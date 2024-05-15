@@ -1,40 +1,42 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 /** Tools
  * title: division de polynômes
  * body: division euclidienne avec des polynômes
  * parameters: numerator=Polynom, denominator=Polynom
  * tags: algebre,1M
  */
-import { ref } from "vue"
+import { computed, ref } from "vue"
 import PiEuclidian from "@/Components/Pi/PiEuclidian.vue"
-import FormMaker from "@/Components/Form/FormMaker.vue"
+import ToolForm, { IToolForm } from "@/Components/Tools/Parts/ToolForm.vue"
 
-// TODO: Rework the euclidian division output as table - it's complicated :)
-// TODO:  Make the display array of euclidian fraction as tex -> should be put in PiMath
-
-const numerator = ref("3x^2-4"),
-	denominator = ref("x-5")
+// Define the forms
+const forms: IToolForm[] = [
+	{
+		label: "numérateur",
+		type: "text",
+		value: ref("3x^2-4"),
+		fromUrl: "n"
+	},
+	{
+		label: "dénominateur",
+		type: "text",
+		value: ref("x-5"),
+		fromUrl: "d"
+	}
+]
+const numerator = computed(() => forms[0].value.value)
+const denominator = computed(() => forms[1].value.value)
 
 </script>
 
 <template>
 	<article>
-		<form-maker
-			v-model="numerator"
-			label="numérateur"
-			from-url="n"
-			focus
-		/>
+		<tool-form :forms="forms" />
 
-		<form-maker
-			v-model="denominator"
-			label="dénominateur"
-			from-url="d"
-		/>
 		<pi-euclidian
 			:fx="`${numerator}/${denominator}`"
-			fundamental
 			asymptote
+			fundamental
 		/>
 	</article>
 </template>

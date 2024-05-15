@@ -251,7 +251,7 @@ export class ProbabilityTree {
 			.attr("style", "overflow:visible")
 
 		// Add the label
-		const html = `<div class="w-fit rounded-full katex-m-0 ${labelClass === undefined ? "" : labelClass}">${katex.renderToString(value, { displayMode: true })}</div>`
+		const html = `<div class="fixed rounded-full katex-m-0 ${labelClass === undefined ? "" : labelClass}">${katex.renderToString(value, { displayMode: true })}</div>`
 		fo.add(html as unknown as Dom)
 
 		// Getting the _width and _height of the HTML element

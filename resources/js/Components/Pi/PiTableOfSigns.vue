@@ -4,6 +4,7 @@ Affichage d'un tableau de signes ou de croissance.
 -->
 <script setup lang="ts">
 import { computed, ref } from "vue"
+import TexCode from "@/Components/Ui/TexCode.vue"
 
 const props = defineProps({
 		tos: {required: true, type: Object},
@@ -217,7 +218,7 @@ function displayExtremes(index) {
 
 			<div
 				v-if="tos.tex && tos.tex!==''"
-				class="text-center mt-5"
+				class="flex flex-col gap-3 mt-5 justify-center"
 			>
 				<button
 					class="text-xs"
@@ -225,10 +226,10 @@ function displayExtremes(index) {
 				>
 					Afficher le code TeX
 				</button>
-				<pre
+
+				<tex-code
 					v-show="showTex"
-					class="text-left my-2 mx-auto max-w-md bg-gray-200 border border-gray-400 overflow-x-scroll"
-					v-text="tos.tex"
+					:tex="tos.tex"
 				/>
 			</div>
 		</div>

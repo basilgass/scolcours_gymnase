@@ -7,12 +7,34 @@
  */
 import { computed, ref } from "vue"
 import { PiMath } from "pimath"
-import FormMaker from "@/Components/Form/FormMaker.vue"
 import type { Fraction } from "pimath/dist/maths/coefficients/fraction"
+import ToolForm, { IToolForm } from "@/Components/Tools/Parts/ToolForm.vue"
+import TexCode from "@/Components/Ui/TexCode.vue"
 
-const fx = ref(""),
-	a = ref(0),
-	b = ref(5)
+const forms: IToolForm[] = [
+	{
+		label: "fonction",
+		type: "text",
+		value: ref(""),
+		fromUrl: "fx"
+	},
+	{
+		label: "borne inférieure",
+		type: "fraction",
+		value: ref(0),
+		fromUrl: "a"
+	},
+	{
+		label: "borne supérieure",
+		type: "fraction",
+		value: ref(5),
+		fromUrl: "b"
+	}
+]
+
+const fx = computed(()=>forms[0].value.value as string)
+const a = computed(()=>forms[1].value.value as string)
+const b = computed(()=>forms[2].value.value as string)
 
 const result = computed(() => {
 	try {
@@ -36,34 +58,14 @@ const result = computed(() => {
 
 <template>
 	<article>
-		<form-maker
-			v-model="fx"
-			label="fonction"
-			from-url="fx"
-			focus
-		/>
-		<form-maker
-			v-model="a"
-			type="fraction"
-			label="borne inférieure"
-			from-url="a"
-		/>
-		<form-maker
-			type="fraction"
-			v-model="b"
-			label="borne supérieure"
-			from-url="b"
-		/>
+		<tool-form :forms="forms" />
 
 		<div v-if="result">
 			<div
 				v-katex="result"
 				class="katex-boxed"
 			/>
-			<p
-				class="text-center text-sm font-extralight text-gray-400"
-				v-text="result"
-			/>
+			<tex-code :tex="result" />
 		</div>
 		<div
 			v-else

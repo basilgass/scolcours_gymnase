@@ -9,11 +9,26 @@
 	import { computed, onMounted, ref } from "vue"
 	import { PiMath } from "pimath"
 	import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"
-	import FormMaker from "@/Components/Form/FormMaker.vue"
+	import ToolForm, { IToolForm } from "@/Components/Tools/Parts/ToolForm.vue"
 
-	const circle1 = ref(""),
-		circle2 = ref(""),
-		maxRadius = ref(20)
+
+	const forms: IToolForm[] = [
+		{
+			label: "Cercle 1",
+			type: "text",
+			value: ref(""),
+			fromUrl: "c1",
+		},
+		{
+			label: "Cercle 2",
+			type: "text",
+			value: ref(""),
+			fromUrl: "c2",
+		},
+	]
+	const circle1 = computed(()=>forms[0].value.value as string)
+	const circle2 = computed(()=>forms[1].value.value as string)
+	const maxRadius = ref(20)
 
 	// Compute the result
 	const result = computed(() => {
@@ -170,8 +185,8 @@
 				break
 		}
 
-		circle1.value = new PiMath.Geometry.Circle(P1, r1).display
-		circle2.value = new PiMath.Geometry.Circle(P2, r2).display
+		forms[0].value.value = new PiMath.Geometry.Circle(P1, r1).display
+		forms[1].value.value = new PiMath.Geometry.Circle(P2, r2).display
 	}
 
 	onMounted(() => {
@@ -183,28 +198,18 @@
 	<div>
 		<div class="grid grid-cols-2 gap-3">
 			<div>
-				<form-maker
-					v-model="circle1"
-					focus
-					font-code
-					from-url="c1"
-				/>
+				<tool-form :forms="forms">
+					<div class="text-center mt-3">
+						<button
+							class="btn btn-primary"
+							@click="generateCircles"
+						>
+							Générer
+						</button>
+					</div>
+				</tool-form>
 
-				<form-maker
-					v-model="circle2"
-					focus
-					font-code
-					from-url="c2"
-				/>
 
-				<div class="text-center mt-3 mb-5">
-					<button
-						class="btn btn-primary"
-						@click="generateCircles"
-					>
-						Générer
-					</button>
-				</div>
 
 				<div v-if="result">
 					<div v-katex.display.boxed.lg="`(\\Gamma_1): ${result.C1}`" />

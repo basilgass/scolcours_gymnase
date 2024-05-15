@@ -5,19 +5,30 @@
  */
 
 // TODO: remove replaceAll('*x', 'x') in drawCode when PiDraw will be fixed
-import { nextTick, onMounted, reactive, ref } from "vue"
+import { computed, nextTick, onMounted, reactive, ref } from "vue"
 import { PiMath } from "pimath"
 import TableOfSigns from "@/Components/Pi/PiTableOfSigns.vue"
 import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"
 import TableOfContents from "@/Components/Ui/TableOfContents.vue"
-import FormMaker from "@/Components/Form/FormMaker.vue"
 
 import type { IExtrema, IZero } from "pimath/dist/maths/algebra/study"
 import type { Polynom } from "pimath/dist/maths/algebra/polynom"
+import ToolForm, { IToolForm } from "@/Components/Tools/Parts/ToolForm.vue"
 
-const root = ref(null),
-	fx = ref("(3x-5)(x+7)/(x-3)"),
-	generate_attempts = ref(0),
+const forms: IToolForm[] = [
+	{
+		label: "Fraction rationnelle",
+		type: "text",
+		value: ref(""),
+		fromUrl: "fx",
+	}
+
+]
+
+const fx = computed(()=>{return forms[0].value.value as string} )
+
+
+const generate_attempts = ref(0),
 	validation = ref(false),
 	validationDescription = ref(""),
 	fraction_rationnelle = reactive({
@@ -51,9 +62,8 @@ async function validation_fx() {
 	validation.value = false
 
 	// Validate the input
-	if (fx.value === "") {
-		return false
-	}
+	if (fx.value === "") return false
+
 	let numerator: Polynom, denominator: Polynom
 
 	const fxSplit = fx.value.split("/")
@@ -155,7 +165,7 @@ function generate_fx() {
 			!genFx.control.trou &&
 			!genFx.control.reduceable
 		) {
-			fx.value = genFx.fx
+			forms[0].value.value = genFx.fx
 			generate_attempts.value = n
 			return
 		}
@@ -163,7 +173,7 @@ function generate_fx() {
 		n++
 	}
 
-	fx.value = genFx.fx
+	forms[0].value.value  = genFx.fx
 	alert("Aucune fonction intéressante générée...")
 }
 
@@ -213,24 +223,9 @@ onMounted(() => {
 </script>
 
 <template>
-	<article
-		v-if="validation"
-		ref="root"
-	>
+	<article>
 		<!-- Value to modify enter -->
-		<form
-			class="max-w-md mx-auto mb-6"
-			@submit.prevent
-		>
-			<form-maker
-				v-model="fx"
-				:focus="true"
-				:input-class="'font-code'"
-				autocomplete="off"
-				label="Fraction rationnelle"
-				from-url="fx"
-			/>
-
+		<tool-form :forms="forms">
 			<div class="flex gap-3 mt-3">
 				<button
 					class="btn btn-primary btn-xs"
@@ -246,12 +241,10 @@ onMounted(() => {
 					générer {{ generate_attempts > 0 ? `(${generate_attempts})` : "" }}
 				</button>
 			</div>
-		</form>
-
-		<hr>
+		</tool-form>
 
 		<!-- Output -->
-		<table-of-contents>
+		<table-of-contents v-if="validation">
 			<div class="grid grid-cols-1 lg:grid-cols-2 gap-x-5 gap-y-20">
 				<!-- Ensemble de définition -->
 				<div class="bg-white rounded border-gray-400 p-4">
