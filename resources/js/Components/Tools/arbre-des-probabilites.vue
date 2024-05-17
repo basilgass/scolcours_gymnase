@@ -12,12 +12,14 @@ const forms: IToolForm[] = [
 	{
 		label: "paramètres",
 		value: ref(""),
-		message: "R=p|f|d/1-9/d,B=p|f|d,S=???"
+		message: "R=p|f|d/1-9/d,B=p|f|d,S=???",
+		fromUrl: 'p'
 	},
 	{
 		label: "code",
 		type: "textarea",
-		value: ref("")
+		value: ref(""),
+		fromUrl: 'code'
 	}
 ]
 
