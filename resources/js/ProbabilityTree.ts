@@ -1,7 +1,8 @@
 import { Dom, ForeignObject, G, SVG, Svg } from "@svgdotjs/svg.js"
-import katex from "katex"
 import type { Fraction } from "pimath/dist/maths/coefficients/fraction"
 import { PiMath } from "pimath"
+import type { Graph } from "pidraw/esm/Graph"
+import katex from "katex"
 
 /**
  * Class to generate a probability tree.
@@ -61,6 +62,7 @@ export class ProbabilityTree {
 	private _svg: { labels: G, lines: G }
 	private _width: number
 	private _height: number
+	private _graphDraw: Graph
 	private _graph: Svg
 	private _config: ProbabilityTreeConfigInterface
 	private _tree: ProbabilityTreeLeafInterface
@@ -74,6 +76,11 @@ export class ProbabilityTree {
 		wrapper.style.width = "100%"
 		wrapper.style.height = "auto"
 		root.appendChild(wrapper)
+
+		// TODO: update ProbaTree with PiDraw
+		// this._graphDraw = new PiDraw(wrapper)
+		// this._graphDraw.getFigure("MAINGRID").hide()
+
 		// Create the SVG element.
 		this._graph = SVG().addTo(wrapper).size("100%", "100%")
 		this._svg = {
@@ -219,6 +226,14 @@ export class ProbabilityTree {
 		this._svg.lines.children().forEach(item => item.remove())
 
 		// Make the viewbox, depending on the _width and _height
+		// TODO: update the viewbox
+		// this._graphDraw.updateLayout({
+		// 	xMin: 0,
+		// 	yMin: 0,
+		// 	xMax: Math.round(this._width / 100),
+		// 	yMax: Math.round((this._height + ((this._config.sequence.length > 0) ? 50 : 0)) / 100)
+		// })
+
 		this._graph.viewbox(0, 0, this._width, this._height + ((this._config.sequence.length > 0) ? 50 : 0))
 
 		// With the depth, get the number of leaves per depth.
@@ -266,7 +281,16 @@ export class ProbabilityTree {
 
 		// add the element
 		this._svg.labels.add(fo)
+
+		// TODO: add the label to the graphDraw
+		// const foDraw = this._graphDraw.point(x,y,undefined, true)
+		// foDraw.displayName = katex.renderToString(value, { displayMode: true })
+		// foDraw.label.isTex = true
+		// foDraw.label.position('mc')
+		// foDraw.hide()
+		// foDraw.update()
 		return fo
+
 	}
 
 	private _addResultLabel(leaf: ProbabilityTreeLeafInterface) {
@@ -292,7 +316,7 @@ export class ProbabilityTree {
 		} else if (this._config.output.result.type === ProbabilityTreeValue.custom) {
 			const [v, asText] = this._config.output.result.values[this._resultLeafIndex].split("/T")
 			this._resultLeafIndex++
-			return v===undefined ? "" : asText!==undefined ? `\\text{ ${v} }`: v
+			return v === undefined ? "" : asText !== undefined ? `\\text{ ${v} }` : v
 		}
 	}
 
@@ -324,7 +348,9 @@ export class ProbabilityTree {
 
 			for (const leaf of branch.leaves) {
 				// Draw the line.
-				this._svg.lines.add(this._graph.line(x, y, posX, posY).stroke({ color: "black" }))
+				this._svg.lines.add(
+					this._graph.line(x, y, posX, posY).stroke({ color: "black" })
+				)
 
 				// add the probability, on half way.
 				const digits = this._config.output.branch.digits
@@ -368,7 +394,7 @@ export class ProbabilityTree {
 		for (const seq of sequence) {
 			const [v, asText] = seq.split("/T")
 			this._addNodeLabel(
-				asText!==undefined ? `\\text{ ${v} }` : v,
+				asText !== undefined ? `\\text{ ${v} }` : v,
 				x, this._height
 			)
 			x += 200

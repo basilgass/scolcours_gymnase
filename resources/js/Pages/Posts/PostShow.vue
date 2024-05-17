@@ -39,7 +39,6 @@ const props = defineProps({
 // Il s'agit surtout d'une mise en page
 const blocks = ref<BlockInterface[]>(props.post.blocks)
 const groupedBlocks = computed(() => {
-	// TODO: work without groups and merge cleverly based on previous / next block
 	// The groupedBlocks might be grouped
 	let arr: BlockInterface[][] = []
 
@@ -144,13 +143,24 @@ onMounted(() => {
 				</div>
 
 				<div>
-					<button
-						class="text-black text-xl"
+					<div
 						v-admin
-						@click="addBlock()"
+						class="flex items-center gap-3 text-black"
 					>
-						<i class="bi bi-plus-circle" />
-					</button>
+						<div
+							v-if="!post.active"
+							class="font-code font-semibold"
+						>
+							{ brouillon }
+						</div>
+
+						<button
+							class="text-xl"
+							@click="addBlock()"
+						>
+							<i class="bi bi-plus-circle" />
+						</button>
+					</div>
 
 					<button
 						v-if="hasData"

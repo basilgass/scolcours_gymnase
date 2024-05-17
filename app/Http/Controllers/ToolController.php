@@ -2,7 +2,7 @@
 
 	namespace App\Http\Controllers;
 
-	use App\Models\Chapter;
+	use App\Http\Resources\ToolResource;
 	use App\Models\Theme;
 	use App\Models\Tool;
 	use Illuminate\Http\Request;
@@ -37,17 +37,24 @@
 			return Inertia::render("Tools/ToolsPage", $data);
 		}
 
-		public function edit(Chapter $chapter)
+		public function edit(Tool $tool)
 		{
-			//
+			return Inertia::render("Tools/ToolsEdit", [
+				'tool'=> ToolResource::make($tool),
+			]);
 		}
 
-		public function update(Request $request, Chapter $chapter)
+		public function update(Request $request, Tool $tool)
 		{
-			//
+			$validation = $request->validate([
+				'title' => ['string', 'required'],
+				'body' => ['string', 'required'],
+			]);
+
+			$tool->update($validation);
 		}
 
-		public function destroy(Chapter $chapter)
+		public function destroy(Tool $tool)
 		{
 			//
 		}

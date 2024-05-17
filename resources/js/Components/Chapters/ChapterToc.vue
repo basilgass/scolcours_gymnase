@@ -146,7 +146,9 @@ const questionStatus = computed(() => {
 			@end="updatePostsOrder"
 		>
 			<template #item="{ element }">
-				<div class="flex gap-3">
+				<div
+					class="flex gap-3"
+				>
 					<button
 						v-if="$page.props.auth.can.admin && moveMode"
 						class="draggable-handle text-xs px-1"
@@ -188,6 +190,8 @@ const questionStatus = computed(() => {
 						/>
 
 						<span v-katex.auto="element.title" />
+
+						<span v-if="!element.active">(brouillon)</span>
 					</Link>
 				</div>
 			</template>

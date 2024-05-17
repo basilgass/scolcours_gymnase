@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use Carbon\Carbon;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -28,6 +29,15 @@ class ChapterResource extends JsonResource
 			$this->blocks;
 		}
 
+		// Filter the posts:
+		// if admin, show all posts.
+		// if not, show only active posts.
+		$posts = $this->posts;
+
+		if (!auth()->user()?->admin) {
+			$posts = $posts->where('active', true);
+		}
+
 		return [
 			'id'         => $this->id,
 			'slug'       => $this->slug,
@@ -39,8 +49,8 @@ class ChapterResource extends JsonResource
 			'meta_title' => $this->meta_title,
 			'block'      => BlockResource::make($this->blocks[ 0 ]),
 			'active'     => $this->active,
-			'updated_at' => $this->updated_at,
-			'posts'      => PostResource::collection($this->posts),
+			'updated_at' => Carbon::parse($this->updated_at)->format('Y-m-d H:i'),
+			'posts'      => PostResource::collection($posts),
 			'challenges' => $this->challenges->map(
 				function ($challenge) {
 					return [

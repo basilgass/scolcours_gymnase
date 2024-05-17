@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import { useForm } from "@inertiajs/vue3"
-import { computed, PropType, ref } from "vue"
-import FormMaker from "@/Components/Form/FormMaker.vue"
+import { PropType } from "vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 import FilteredList from "@/Components/Ui/FilteredList.vue"
 import { ChapterInterface } from "@/types/modelInterfaces"
@@ -13,38 +12,11 @@ const props = defineProps({
 	}
 })
 
-const filterChapter = ref("")
-
 const Form = useForm({
 	slug: "",
 	active: false
 })
 
-const chapterCurrentTheme = ref<string>("")
-const chapterThemes = computed(() => {
-	const themes = props.chapters.map((chapter) => chapter.theme)
-	themes.sort()
-	return [...new Set(themes)]
-})
-
-const filtreredChapters = computed(() => {
-	let chapters = props.chapters.filter(
-		(chapter) =>
-			chapter.theme.slug === chapterCurrentTheme.value ||
-			chapterCurrentTheme.value === ""
-	)
-	if (filterChapter.value !== "") {
-		chapters = chapters.filter(
-			(chapter) =>
-				chapter.slug.includes(filterChapter.value) ||
-				chapter.title.includes(filterChapter.value)
-		)
-	}
-
-	return chapters
-})
-
-//TODO : add a please wait...
 function toggleChapterVisibility(slug, active) {
 	Form.slug = slug
 	Form.active = active
@@ -62,85 +34,49 @@ function toggleChapterVisibility(slug, active) {
 		<article>
 			<filtered-list
 				:list="chapters"
+				filter-by-theme
 				list-class="grid grid-cols-1 gap-2"
 			>
 				<template #card="{item}:{item: ChapterInterface}">
-					<div>
-						<h3 class="text-lg leading-6 font-medium text-gray-900">
-							<Link :href="`/${item.theme.id}/${item.slug}`">
+					<div
+						:key="item.id"
+						v-theme.bg.text="item.theme.id"
+						class="flex justify-between rounded-lg px-3 py-2"
+					>
+						<Link
+							:href="route('chapters.show', [item.slug])"
+							as="div"
+							class="cursor-pointer"
+						>
+							<h3 class="text-lg leading-6 font-medium">
 								{{ item.title }}
-							</Link>
-						</h3>
-						<p class="mt-1 max-w-2xl text-sm text-gray-500">
-							{{ item.slug }}
-						</p>
+							</h3>
+							<p class="mt-1 max-w-2xl text-sm text-gray-200">
+								{{ item.slug }}
+							</p>
+						</Link>
+
+						<div>
+							<div>{{ item.updated_at }}</div>
+							<button
+								:class="{
+									'bg-green-600': item.active,
+									'bg-red-600': !item.active,
+								}"
+								class="btn btn-xs w-full text-white hover:text-gray-800"
+								@click="
+									toggleChapterVisibility(
+										item.slug,
+										!item.active,
+									)
+								"
+							>
+								{{ item.active ? "en ligne" : "caché" }}
+							</button>
+						</div>
 					</div>
 				</template>
 			</filtered-list>
-			<h2 class="text-lg my-2">
-				Chapitres
-			</h2>
-			<form-maker
-				v-model="filterChapter"
-				name="filtrer"
-				title="Filtrer"
-			/>
-			<div class="flex gap-5 items-center mt-3 mb-5">
-				<div>Filtrer par thèmes:</div>
-				<button
-					:class="chapterCurrentTheme === '' ? 'btn-success' : ''"
-					class="btn btn-xs"
-					@click="chapterCurrentTheme = ''"
-				>
-					Tous
-				</button>
-				<button
-					v-for="(theme, id) of chapterThemes"
-					:key="id"
-					:class="chapterCurrentTheme === theme.slug ? 'btn-success' : ''"
-					class="btn btn-xs"
-					@click="chapterCurrentTheme = theme.slug"
-				>
-					{{ theme }}
-				</button>
-			</div>
-
-			<div class="w-full">
-				<div
-					v-for="chapter in filtreredChapters"
-					:key="chapter.slug"
-					class="hover:bg-gray-200 flex justify-between px-4 py-2"
-				>
-					<div>
-						<h3 class="text-lg leading-6 font-medium text-gray-900">
-							<Link :href="`/${chapter.theme}/${chapter.slug}`">
-								{{ chapter.title }}
-							</Link>
-						</h3>
-						<p class="mt-1 max-w-2xl text-sm text-gray-500">
-							{{ chapter.slug }}
-						</p>
-					</div>
-					<div>
-						<div>{{ chapter.updated_at }}</div>
-						<button
-							:class="{
-								'bg-green-600': chapter.active,
-								'bg-red-600': !chapter.active,
-							}"
-							class="btn btn-xs w-full text-white hover:text-gray-800"
-							@click="
-								toggleChapterVisibility(
-									chapter.slug,
-									!chapter.active,
-								)
-							"
-						>
-							{{ chapter.active ? "en ligne" : "caché" }}
-						</button>
-					</div>
-				</div>
-			</div>
 		</article>
 	</section>
 </template>

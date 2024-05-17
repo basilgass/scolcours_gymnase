@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\ChapterResource;
+use App\Http\Resources\ToolResource;
 use App\Http\Resources\UserResource;
 use App\Models\Challenge;
 use App\Models\Chapter;
@@ -102,13 +103,7 @@ class AdminController extends Controller
 		return Inertia::render(
 			'Admin/AdminToolsPage',
 			[
-				'tools'      => Tool::all()->map(function ($tool, $key) {
-					return [
-						'slug'       => $tool->slug,
-						'title'      => $tool->title,
-						'updated_at' => $tool->updated_at->format('d.m.Y H:m')
-					];
-				})
+				'tools'      => ToolResource::collection(Tool::all())
 			]
 		);
 	}
@@ -133,8 +128,11 @@ class AdminController extends Controller
 	{
 		foreach (Storage::disk('tools')->files() as $file) {
 			$slug = substr($file, 0, -4);
-			$lastModified = Storage::disk('tools')->lastModified($file);
 			$existingTools = Tool::where('slug', $slug)->first();
+
+			if($existingTools?->exists()){continue;}
+
+			$lastModified = Storage::disk('tools')->lastModified($file);
 
 			// Les informations dans la base de données sont plus récente - pas de modification à faire.
 			if ($existingTools?->updated_at->greaterThanOrEqualTo(Carbon::createFromTimestamp($lastModified))) {

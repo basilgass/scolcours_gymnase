@@ -29,6 +29,7 @@ const typeList = ref({
 		exercice: "exercise"
 	})
 
+
 const savePost = function() {
 	axios
 		.post(route("posts.update", [props.post.id]), {
@@ -70,6 +71,12 @@ const deletePost = function() {
 			</div>
 
 			<div class="flex gap-3 justify-end">
+				<form-maker
+					v-model="thePost.active"
+					type="switch"
+					label="publié,brouillon"
+				/>
+
 				<button
 					class="btn-primary btn-xs"
 					@click="savePost"
@@ -90,7 +97,7 @@ const deletePost = function() {
 				</confirm-button>
 			</div>
 		</header>
-		
+
 		<div>
 			<form-maker
 				v-model="thePost.title"

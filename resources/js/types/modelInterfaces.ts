@@ -60,6 +60,7 @@ export interface BlockMinInterface {
 
 export interface BlockInterface {
 	id: number;
+	active: boolean;
 	order: number;
 	merge: boolean;
 	blur: boolean;

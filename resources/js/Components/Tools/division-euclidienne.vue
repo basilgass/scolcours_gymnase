@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 /** Tools
  * title: division de polynômes
- * body: division euclidienne avec des polynômes
+ * body: division euclidienne avec des polynômes je fais des modifications.
  * parameters: numerator=Polynom, denominator=Polynom
  * tags: algebre,1M
  */

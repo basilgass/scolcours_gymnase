@@ -27,6 +27,7 @@ class BlockResource extends JsonResource
 			'id' => $this->id,
 			// params
 			'order' => $this->order,
+			'active' => $this->active,
 			'merge' => $this->merge,
 			'blur'=>$this->blur??false,
 			'switch'=>$this->switch,
