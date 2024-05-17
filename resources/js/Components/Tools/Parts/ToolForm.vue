@@ -26,12 +26,14 @@ const tool = inject<Ref<string>>("toolData", ref(""))
 const link = computed(() => {
 	const url = `https://g.scolcours.ch/tools/${tool.value}`
 
-	const params = props.forms
-		.filter(f => f.fromUrl)
-		.map(f => `${f.fromUrl}=${f.value.value}`)
-		.join("&")
+	const items = props.forms.filter(f => f.fromUrl)
 
-	return url + (params === "" ? "" : `?${params}`)
+	if(items.length=== 0) return url
+
+	const query = new URLSearchParams()
+	items.forEach(f => query.append(f.fromUrl, f.value.value as string))
+	
+	return url + `?${query.toString()}`
 })
 
 const formComponents = ref<Array<InstanceType<typeof FormMaker>>>([])
