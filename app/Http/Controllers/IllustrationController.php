@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Block;
 use App\Models\Illustration;
+use App\Models\Question;
 use App\Models\Widget;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -29,22 +30,22 @@ class IllustrationController extends Controller
 	public function store(Block $block, Request $request)
 	{
 		$validation = $request->validate([
-			'code'=>['string', 'nullable'],
-			'parameters'=>['string', 'nullable'],
-			'widget_id'=>['exists:App\Models\Widget,id', 'nullable']
+			'code' => ['string', 'nullable'],
+			'parameters' => ['string', 'nullable'],
+			'widget_id' => ['exists:App\Models\Widget,id', 'nullable']
 		]);
 
-		if(isset($validation['widget_id'])){
+		if (isset($validation['widget_id'])) {
 			$widget = Widget::find($validation['widget_id'])->first();
-		}else{
-			$widget = Widget::where('slug','draw-parser-widget')->first();
+		} else {
+			$widget = Widget::where('slug', 'draw-parser-widget')->first();
 		}
 
 		// creates an empty illustration.
 		$illustration = $block->illustrations()->create([
 			'code' => '',
 			'parameters' => '',
-			'type'=>'',
+			'type' => '',
 			'widget_id' => $widget->id
 		]);
 
@@ -77,11 +78,11 @@ class IllustrationController extends Controller
 		return redirect()->route(
 			'themes.chapters.slide.anchor',
 			[
-				'theme' =>$theme->slug,
-				'chapter' =>$chapter->slug,
-				'order' =>$post->order,
-				'type' =>'illustration',
-				'id' =>$illustration->id
+				'theme' => $theme->slug,
+				'chapter' => $chapter->slug,
+				'order' => $post->order,
+				'type' => 'illustration',
+				'id' => $illustration->id
 			]
 		);
 	}
@@ -91,12 +92,23 @@ class IllustrationController extends Controller
 	 *
 	 * @param int $id
 	 * @return \Inertia\Response
-     */
+	 */
 	public function edit(Illustration $illustration)
 	{
-		return Inertia::render("Illustrations/IllustrationEdit",
+		// Get the post containing the illustration
+		$post = $illustration->block->blockable;
+
+		// If the blockable is a post, extract the chapter and theme.
+		if ($post instanceof Question) {
+			$post = $post->questionable;
+		}
+
+
+		// If the blockable is a post, extract the chapter and theme.
+		return Inertia::render(
+			"Illustrations/IllustrationEdit",
 			[
-				"theme" => $illustration->block->blockable->chapter->theme,
+				"theme" => $post->chapter->theme,
 				"illustration" => $illustration
 			]
 		);
@@ -116,9 +128,9 @@ class IllustrationController extends Controller
 			'css' => ['string', 'nullable'],
 			'code' => ['string'],
 			'parameters' => ['string', 'nullable'],
-			'widget_id'=>['exists:App\Models\Widget,id'],
-//			'value'=>['string'],
-//			'type'=>['string'],
+			'widget_id' => ['exists:App\Models\Widget,id'],
+			//			'value'=>['string'],
+			//			'type'=>['string'],
 		]);
 
 		$illustration->update($validation);
@@ -153,8 +165,9 @@ class IllustrationController extends Controller
 		$filename = time() . '-' . $uploadedFile->getClientOriginalName();
 
 		return \Storage::disk('public')->putFileAs(
-			'illustrations', $uploadedFile, $filename
+			'illustrations',
+			$uploadedFile,
+			$filename
 		);
-
 	}
 }
