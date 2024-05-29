@@ -22,7 +22,7 @@ export type KeyboardObjectType = {
 	grid: string
 	layout: (string | [string, number])[]
 	tex: (value: string) => string // Type of the returned value can be changed according to actual function implementation
-	keys?: {[Key: string]: keyboardKey}
+	keys?: { [Key: string]: keyboardKey }
 }
 
 
@@ -220,8 +220,8 @@ export const keyboards: { [Key: string]: KeyboardObjectType } = {
 			"pi",
 			"e"
 		],
-		tex: function(value) {
-			return buildVectorialTex(value)
+		tex: function (value) {
+			return buildCoordinateTex(value)
 		}
 	},
 	equation: {
@@ -291,7 +291,7 @@ export const keyboards: { [Key: string]: KeyboardObjectType } = {
 			"RR",
 			"!!"
 		],
-		tex: function(value) {
+		tex: function (value) {
 			// Apply this for all splited.
 			return value
 				.split(",")
@@ -363,7 +363,7 @@ export const keyboards: { [Key: string]: KeyboardObjectType } = {
 			"-+",
 			"oo"
 		],
-		tex: function(value) {
+		tex: function (value) {
 			// Apply this for all values.
 			return value
 				.split(",")
@@ -408,7 +408,7 @@ export const keyboards: { [Key: string]: KeyboardObjectType } = {
 			"^2",
 			"^"
 		],
-		tex: function(value) {
+		tex: function (value) {
 			return asciiToTex(value)
 		}
 	},
@@ -502,7 +502,7 @@ export const keyboards: { [Key: string]: KeyboardObjectType } = {
 			"",
 			""
 		],
-		tex: function(value) {
+		tex: function (value) {
 			const [Pnum, Pden] = value.split("/")
 			return Pden === undefined
 				? asciiToTex(Pnum)
@@ -602,7 +602,7 @@ export const keyboards: { [Key: string]: KeyboardObjectType } = {
 			"uu",
 			"oo"
 		],
-		tex: function(value) {
+		tex: function (value) {
 			let tex = asciiToTex(
 				value.replace("RR_+", "RR_(+)").replace("RR_-", "RR_(-)")
 			)
@@ -618,9 +618,8 @@ export const keyboards: { [Key: string]: KeyboardObjectType } = {
 				.split("")
 				.map((c) => {
 					if (c === "]" || c === "[") {
-						const bigBracket = `\\${
-							isOpened ? "right" : "left"
-						} ${c}`
+						const bigBracket = `\\${isOpened ? "right" : "left"
+							} ${c}`
 						isOpened = !isOpened
 						return bigBracket
 					} else {
@@ -666,10 +665,39 @@ export const keyboards: { [Key: string]: KeyboardObjectType } = {
 			"pi",
 			"e"
 		],
-		tex: function(value) {
+		tex: function (value) {
 			return buildVectorialTex(value)
 		}
 	}
+}
+
+function buildCoordinateTex(value: string) {
+	const [...coords] = value.split(";")
+	let lp = "", rp = ""
+
+	if (coords[0].startsWith("(")) {
+		lp = "\\left("
+		coords[0] = coords[0].substring(1)
+		rp = "\\right."
+	}
+
+	if (coords[coords.length - 1].endsWith(")")) {
+		if (lp === "") {
+			lp = "\\left."
+		}
+		rp = "\\right)"
+		coords[coords.length - 1] = coords[coords.length - 1].substring(
+			0,
+			coords[coords.length - 1].length - 1
+		)
+	}
+
+	return `${lp}${coords
+		.map((x) => {
+			const tex = makeExactFromAscii(x)
+			return tex === "" ? "\\phantom{ }" : tex
+		})
+		.join(";")}${rp}`
 }
 
 function buildVectorialTex(value: string) {
