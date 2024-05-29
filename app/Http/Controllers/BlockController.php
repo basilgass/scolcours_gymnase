@@ -6,6 +6,7 @@ use App\Http\Resources\BlockResource;
 use App\Models\Block;
 use App\Models\Chapter;
 use App\Models\Post;
+use App\Models\Question;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -93,7 +94,7 @@ class BlockController extends Controller
 			});
 
 			$block->refresh();
-		}else{
+		} else {
 			// Create the new block, add it at the end of the post.
 			$block = $post->blocks()->create([
 				'title' => '',
@@ -115,6 +116,10 @@ class BlockController extends Controller
 	{
 		// Redirect to the post / show item
 		$post = $block->blockable;
+		if ($post instanceof Question) {
+			$post = $post->questionable;
+		}
+
 		$chapter = $post->chapter;
 		$theme = $chapter->theme;
 
@@ -131,7 +136,8 @@ class BlockController extends Controller
 				]
 			);
 		} else {
-			return redirect()->route('chapters.show',
+			return redirect()->route(
+				'chapters.show',
 				[
 					'chapter' => $chapter->slug
 				]
@@ -147,9 +153,14 @@ class BlockController extends Controller
 	 */
 	public function edit(Block $block)
 	{
+		$post = $block->blockable;
+		if ($post instanceof Question) {
+			$post = $post->questionable;
+		}
+
 		//
 		return Inertia::render("Blocks/BlockEdit", [
-			'theme' => $block->blockable->chapter->theme,
+			'theme' => $post->chapter->theme,
 			'block' => BlockResource::make($block),
 		]);
 	}
@@ -160,7 +171,7 @@ class BlockController extends Controller
 			'blur' => ['boolean', 'required']
 		]);
 
-		$block->blur = $validation[ 'blur' ];
+		$block->blur = $validation['blur'];
 		$block->save();
 		return $block;
 	}
@@ -171,7 +182,7 @@ class BlockController extends Controller
 			'switch' => ['boolean', 'nullable']
 		]);
 
-		$block->switch = $validation[ 'switch' ];
+		$block->switch = $validation['switch'];
 		$block->save();
 		return $block;
 	}
@@ -205,30 +216,26 @@ class BlockController extends Controller
 				$theme = "";
 				$name = basename($file, '.vue');
 				if (count($theme_name) === 2) {
-					$theme = $theme_name[ 0 ];
+					$theme = $theme_name[0];
 				}
 
-				$components[ $file ] = [
+				$components[$file] = [
 					"name"        => $name,
-					"description" => count($content) >= 2 ? explode("</info>", $content[ 1 ])[ 0 ] : "",
+					"description" => count($content) >= 2 ? explode("</info>", $content[1])[0] : "",
 					"theme"       => $theme
 				];
-
 			}
 			return $components;
 		});
-
-
 	}
 
 	public function updateIllustrationsOrder(Block $block, Request $request)
 	{
-		foreach ($request[ 'order' ] as $value) {
-			$block->illustrations->find($value[ 'id' ])->update(['order' => $value[ 'order' ]]);
+		foreach ($request['order'] as $value) {
+			$block->illustrations->find($value['id'])->update(['order' => $value['order']]);
 		}
 
 		return true;
-
 	}
 
 	/**
@@ -252,15 +259,15 @@ class BlockController extends Controller
 			'illustrationsGrid' => ['string', 'nullable']
 		]);
 
-		$block->title = $validation[ 'title' ] ?? '';
-		$block->body = $validation[ 'body' ] ?? null;
-		$block->template = $validation[ 'template' ] ?? null;
-		$block->type = $validation[ 'type' ] ?? '';
-		$block->script = $validation[ 'script' ] ?? null;
-		$block->json = $validation[ 'json' ] ?? null;
-		$block->blur = $validation[ 'blur' ] ?? false;
-		$block->switch = $validation[ 'switch' ] ?? null;
-		$block->illustrationsGrid = $validation[ 'illustrationsGrid' ] ?? null;
+		$block->title = $validation['title'] ?? '';
+		$block->body = $validation['body'] ?? null;
+		$block->template = $validation['template'] ?? null;
+		$block->type = $validation['type'] ?? '';
+		$block->script = $validation['script'] ?? null;
+		$block->json = $validation['json'] ?? null;
+		$block->blur = $validation['blur'] ?? false;
+		$block->switch = $validation['switch'] ?? null;
+		$block->illustrationsGrid = $validation['illustrationsGrid'] ?? null;
 
 		// update the block
 		$block->save();
@@ -277,7 +284,7 @@ class BlockController extends Controller
 		]);
 
 		$block->update([
-			'template' => $validate[ 'template' ] ?? $validate[ 'template' ]
+			'template' => $validate['template'] ?? $validate['template']
 		]);
 
 		return true;
@@ -304,7 +311,7 @@ class BlockController extends Controller
 		]);
 
 		$block->update([
-			'illustrationsGrid' => $validate[ 'grid' ] ?? $validate[ 'grid' ]
+			'illustrationsGrid' => $validate['grid'] ?? $validate['grid']
 		]);
 		$block->save();
 		return true;
@@ -324,11 +331,11 @@ class BlockController extends Controller
 		$index = $blocks->find($block)->order;
 
 		// Get the new index
-		if ($validate[ 'direction' ] === 'top') {
+		if ($validate['direction'] === 'top') {
 			$newIndex = 0;
-		} else if ($validate[ 'direction' ] === 'bottom') {
+		} else if ($validate['direction'] === 'bottom') {
 			$newIndex = count($blocks) - 1;
-		} else if ($validate[ 'direction' ] === 'up') {
+		} else if ($validate['direction'] === 'up') {
 			$newIndex = $index - 1;
 		} else {
 			$newIndex = $index + 1;

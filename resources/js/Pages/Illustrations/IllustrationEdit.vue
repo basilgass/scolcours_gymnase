@@ -121,6 +121,7 @@ function illustrationSave() {
 // Save the illustration to database and go back to the belonging block.
 function illustrationSaveAndEdit() {
 	illustrationSave()
+
 	router.visit(route("blocks.edit", [theIllustration.value.block_id]))
 }
 
