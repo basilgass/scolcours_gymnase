@@ -9,33 +9,41 @@ defineOptions({ layout: LayoutMain })
 const flash = inject<flashInterface>("flash")
 
 const props = defineProps({
-	allThemes: {type: Object as PropType<ThemeInterface[]>, required: true},
-	title: {type: String, required: true}
+	allThemes: { type: Object as PropType<ThemeInterface[]>, required: true },
+	title: { type: String, required: true },
 })
 const title = ref(props.title),
 	themes = ref(props.allThemes),
 	saveConfig = function () {
-		axios.post(route("admin.config.update"), {
-			title: title.value,
-			themes: themes.value,
-			_method: "PATCH"
-		}).then(() => {
-			flash.success("les modifications de configuration ont bien été changées !")
-		}).catch(err => {
-			console.warn(err)
-		})
+		axios
+			.post(route("admin.config.update"), {
+				title: title.value,
+				themes: themes.value,
+				_method: "PATCH",
+			})
+			.then(() => {
+				flash.success(
+					"les modifications de configuration ont bien été changées !"
+				)
+			})
+			.catch((err) => {
+				console.warn(err)
+			})
 	},
 	sortEvent = function () {
-		axios.post(route("admin.config.updateOrder"), {
-			_method: "PATCH",
-			order: themes.value.map((x, index) => {
-				return {id: x.id, order: index + 1}
+		axios
+			.post(route("admin.config.updateOrder"), {
+				_method: "PATCH",
+				order: themes.value.map((x, index) => {
+					return { id: x.id, order: index + 1 }
+				}),
 			})
-		}).then(() => {
-			flash.success("L'ordre des thèmes à bien été enregistré !")
-		}).catch(res => {
-			console.warn("update ordering order: ", res)
-		})
+			.then(() => {
+				flash.success("L'ordre des thèmes à bien été enregistré !")
+			})
+			.catch((res) => {
+				console.warn("update ordering order: ", res)
+			})
 	}
 </script>
 <template>
@@ -49,6 +57,18 @@ const title = ref(props.title),
 			label="titre du site web"
 			name="title"
 		/>
+
+		<div
+			class="text-red-500 bg-blue-500"
+			aria-label="hello wold"
+		>
+			<h2 class="text-2xl">
+				Thèmes
+			</h2>
+			<p class="text-gray-500">
+				Les thèmes sont les couleurs de votre site web
+			</p>
+		</div>
 
 		<div class="flex flex-col gap-3">
 			<draggable
@@ -67,7 +87,10 @@ const title = ref(props.title),
 							<i class="bi bi-arrows-move" />
 						</div>
 						<div
-							:class="element.enabled?'bg-scolcours-'+element.slug:'bg-gray-400'"
+							:class="element.enabled
+								? 'bg-scolcours-' + element.slug
+								: 'bg-gray-400'
+							"
 							class="text-white px-4 py-2 rounded flex-1 grid grid-cols-1 gap-3 place-items-center"
 						>
 							<div>{{ element.title }}</div>

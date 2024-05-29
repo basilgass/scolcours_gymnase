@@ -11,45 +11,44 @@ const props = defineProps({
 	keyboard: { type: Object as PropType<KeyboardInterface>, required: true }
 })
 
-// Used to "move" up the currently keyboard chercker format.
-// let checkerFormat = inject("checkerFormat")
+
 const extraLetters = computed(() => {
-		return props.keyboard.values.length > 0
-			? props.keyboard.values[0].split(",")
-			: []
-	}),
-	kbrdConfig = computed(() => {
-		if (props.keyboard.parameters.length > 0) {
-			let items = props.keyboard.parameters.filter((x) =>
-					x.startsWith("var:")
-				),
-				varName
+	return props.keyboard.values.length > 0
+		? props.keyboard.values[0].split(",")
+		: []
+})
+const kbrdConfig = computed(() => {
+	if (props.keyboard.parameters.length > 0) {
+		let items = props.keyboard.parameters.filter((x) =>
+			x.startsWith("var:")
+		),
+			varName
 
-			if (items.length === 1) {
-				varName = items[0].split(":")[1]
+		if (items.length === 1) {
+			varName = items[0].split(":")[1]
 
-				return {
-					...props.keyboard.config,
-					layout: props.keyboard.config.layout.map((x) => {
-						if (x.includes("x")) {
-							const newKey = (x as string).replace("x", varName)
-							return {
-								key: newKey,
-								display: newKey,
-								type: "math"
-							}
+			return {
+				...props.keyboard.config,
+				layout: props.keyboard.config.layout.map((x) => {
+					if (x.includes("x")) {
+						const newKey = (x as string).replace("x", varName)
+						return {
+							key: newKey,
+							display: newKey,
+							type: "math"
 						}
-						return x
-					})
-				}
+					}
+					return x
+				})
 			}
 		}
-		return props.keyboard.config
-	})
+	}
+	return props.keyboard.config
+})
 
 // Emits change and validate (to trigger a validation manually on the parent)
 const emits = defineEmits(["change", "validate"]),
-	changeEvent = function() {
+	changeEvent = function () {
 		//value = {tex, raw, input}
 
 		// Make the validation.
@@ -110,14 +109,6 @@ defineExpose({
 </script>
 
 <template>
-	<keyboard-display
-		ref="keyboardUI"
-		:extra-letters="extraLetters"
-		:keyboard="kbrdConfig"
-		back
-		class="max-w-xl mx-auto"
-		key-class="bg-white"
-		reset
-		@change="keyboardChange"
-	/>
+	<keyboard-display ref="keyboardUI" :extra-letters="extraLetters" :keyboard="kbrdConfig" back
+		class="max-w-xl mx-auto" key-class="bg-white" reset @change="keyboardChange" />
 </template>

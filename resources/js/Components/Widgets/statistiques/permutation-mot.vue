@@ -247,7 +247,7 @@ function arrangement() {
 }
 
 const isFinished = computed(() => {
-	// No more availableletters and all the divisions are done
+	// No more available letters and all the divisions are done
 	return currentWord.value.length === outputLength.value && divisions.value.every(x => x)
 })
 

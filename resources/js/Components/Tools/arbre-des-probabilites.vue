@@ -5,8 +5,11 @@
  * tags: 3M,3C
  */
 import ToolForm, { IToolForm } from "@/Components/Tools/Parts/ToolForm.vue"
-import { computed, ref } from "vue"
+import { computed, inject, ref } from "vue"
 import PiProbabilityTree from "@/Components/Pi/PiProbabilityTree.vue"
+import { flashInterface } from "@/types"
+
+const flash = inject<flashInterface>('flash')
 
 const forms: IToolForm[] = [
 	{
@@ -22,6 +25,8 @@ const forms: IToolForm[] = [
 		fromUrl: 'code'
 	}
 ]
+
+flash.add('Pour les paramètres, R=p|f|d/1-9/d,B=p|f|d,S=???')
 
 const treeData = computed(() => forms[1].value.value as string)
 const treeParams = computed(() => forms[0].value.value as string)

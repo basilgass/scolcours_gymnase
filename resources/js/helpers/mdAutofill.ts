@@ -45,7 +45,12 @@ export const latexTriggers: TriggersObject = {
 			wrapLastWord(textBefore.slice(0, -2), " \\frac{", "}{"),
 			"}" + textAfter
 		]
-	}
+	},
+	
+}
+
+export const mdTriggers: TriggersObject = {
+	LNK: ["[", "]()"],
 }
 
 export const javascriptTriggers: TriggersObject = {

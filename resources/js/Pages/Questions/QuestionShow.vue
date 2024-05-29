@@ -85,10 +85,11 @@ async function	loadAnswer(show: boolean){
 		// false: resetAnswer
 		const timer = setInterval(() => {
 			// Load the answer on the keyboard
+			
 			if (keyboardComponent.value) {
 				const kbrdComp = keyboardComponent.value.getKeyboard()
 				if (kbrdComp) kbrdComp.loadAnswer(
-					show ? props.question.answer : null
+					show ? props.question.answer.split('\n')[answerId.value] : null
 				)
 			}
 

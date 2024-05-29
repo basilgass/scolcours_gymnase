@@ -6,7 +6,7 @@ import "prismjs/themes/prism.css"
 import "prismjs/components/prism-latex"
 import "prismjs/components/prism-javascript"
 import "prismjs/components/prism-json"
-import { javascriptTriggers, latexTriggers, TriggerFunction, TriggersObject } from "@/helpers/mdAutofill"
+import { javascriptTriggers, latexTriggers, mdTriggers, TriggerFunction, TriggersObject } from "@/helpers/mdAutofill"
 
 /**
  * The value of the code area
@@ -177,14 +177,28 @@ function sync_scroll() {
  * Get the autofill triggers (2 or three letters) based on the language
  *
  */
-const autofillTriggers = computed<TriggersObject>(() => {
+function autofillTriggers(textStart: string){
+	if (props.language === "latex") {
+		// must be in math mode
+		if (
+			textStart.split("\\(").length -
+			textStart.split("\\)").length !== 1 &&
+			textStart.split("\\[").length -
+			textStart.split("\\]").length !== 1
+		) {
+			return mdTriggers
+		}else{
+			return latexTriggers
+		}
+	}
+
 	if (props.language === "latex") {
 		return latexTriggers
 	} else if (props.language === "javascript") {
 		return javascriptTriggers
 	}
 	return {}
-})
+}
 
 // On keydown, grab the selected text.
 // TODO: make a better "selectedText" to handle also wrapping with math attributes ?
@@ -250,24 +264,26 @@ function autofill_do(event: KeyboardEvent, length: number) {
 		textEnd = theValue.value.slice(originalSelectionStart),
 		trigger = textStart.slice(-length)
 
-	// In LaTeX mode, we must be in math mode
-	if (props.language === "latex") {
-		// must be in math mode
-		if (
-			textStart.split("\\(").length -
-			textStart.split("\\)").length !== 1 &&
-			textStart.split("\\[").length -
-			textStart.split("\\]").length !== 1
-		) {
-			return false
-		}
-	}
+	const autofillTrigger = autofillTriggers(textStart)
+
+	// // In LaTeX mode, we must be in math mode
+	// if (props.language === "latex") {
+	// 	// must be in math mode
+	// 	if (
+	// 		textStart.split("\\(").length -
+	// 		textStart.split("\\)").length !== 1 &&
+	// 		textStart.split("\\[").length -
+	// 		textStart.split("\\]").length !== 1
+	// 	) {
+	// 		return false
+	// 	}
+	// }
 
 	// Test the trigger
-	if (Object.hasOwn(autofillTriggers.value, trigger)) {
+	if (Object.hasOwn(autofillTrigger, trigger)) {
 		let pos = 0
-		if (typeof autofillTriggers.value[trigger] === "function") {
-			const [txt1, txt2] = (autofillTriggers.value[trigger] as TriggerFunction)(
+		if (typeof autofillTrigger[trigger] === "function") {
+			const [txt1, txt2] = (autofillTrigger[trigger] as TriggerFunction)(
 				textStart,
 				textEnd
 			)
@@ -278,12 +294,12 @@ function autofill_do(event: KeyboardEvent, length: number) {
 			theValue.value = `${textStart.slice(
 				0,
 				textStart.length - trigger.length
-			)}${autofillTriggers.value[trigger][0]}${
-				autofillTriggers.value[trigger][1]
+			)}${autofillTrigger[trigger][0]}${
+				autofillTrigger[trigger][1]
 			}${textEnd}`
 			pos = target.selectionStart =
 				originalSelectionStart +
-				autofillTriggers.value[trigger][0].length -
+				autofillTrigger[trigger][0].length -
 				trigger.length
 		}
 

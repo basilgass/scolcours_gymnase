@@ -42,7 +42,7 @@ function getComponent(kbrd: string) {
 export interface KeyboardInterface {
 	name: string;
 	checker: CheckerAbstract;
-	checkerOverride?: {[Key: string]: string};
+	checkerOverride?: { [Key: string]: string };
 	parameters: string[];
 	values: string[];
 	config: KeyboardObjectType;
@@ -67,7 +67,7 @@ function getOneKeyboard(kbrd: string): KeyboardInterface {
 
 	const parameters: string[] = [],
 		values: string[] = [],
-		checkerOverride: {[Key: string]: string} = {}
+		checkerOverride: { [Key: string]: string } = {}
 
 	// Split as each lines.
 	const kbrdValues = kbrd.split("\n")
@@ -93,10 +93,10 @@ function getOneKeyboard(kbrd: string): KeyboardInterface {
 	kbrdValues
 		.filter(x => x.startsWith("@"))
 		.forEach(k => {
-			if(k.substring(1).startsWith("if ")){
-				// Special case for the "si" command
-				// @si key?value
-				// remove the "@si " and split the key and value. The value may also contain a "?"
+			if (k.substring(1).startsWith("if ")) {
+				// Special case for the "if" command
+				// @if key?value
+				// remove the "@if " and split the key and value. The value may also contain a "?"
 				const [key, ...values] = k.substring(4).split("?")
 				checkerOverride[key] = values.join('?')
 			}
@@ -108,6 +108,9 @@ function getOneKeyboard(kbrd: string): KeyboardInterface {
 		.forEach(k => {
 			values.push(k)
 		})
+
+
+	console.log('options', options);
 
 	const name = getComponentKeyboardName(value)
 	return {

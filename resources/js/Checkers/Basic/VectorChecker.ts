@@ -14,13 +14,16 @@ const description = `vector,[paramètres]
 
 export class VectorChecker extends CheckerAbstract {
     private secondaryChecker: CheckerAbstract
+    private _colinear: boolean = false
 
-    constructor(config?: string[]|string) {
+    constructor(config?: string[] | string) {
         super(config)
         this.name = name
         this.description = description
 
-        if(this.secondaryCheckerName===undefined) {
+        if (this.config.includes("co")) { this._colinear = true }
+
+        if (this.secondaryCheckerName === undefined) {
             if (this.config.includes("nb")) {
                 this.secondaryCheckerName = "number"
             } else if (this.config.includes("frac")) {
@@ -34,7 +37,7 @@ export class VectorChecker extends CheckerAbstract {
     }
 
     get format(): string {
-        return `Vecteur sous la forme \\(\\begin{pmatrix}a\\\\b\\end{pmatrix}\\)<br>${this.secondaryChecker.format}`
+        return `Vecteur ${this._colinear ? 'colinéaire ' : ''}sous la forme \\(\\begin{pmatrix}a\\\\b\\end{pmatrix}\\)<br>${this.secondaryChecker.format}`
     }
 
     check(expected: string, given: string): { result: boolean; message: string } {

@@ -35,41 +35,45 @@ const root = ref(null),
 	keyboardGridDefault = ref("grid-cols-4")
 
 const theKeyboard = computed(() => {
-		if (props.keyboard === null) {
+	if (props.keyboard === null) {
+		return ""
+	}
+
+	if (typeof props.keyboard === "string") {
+
+		// Parse the keyboard value
+		//TODO: is it still relevant ?
+		const keyboardName = props.keyboard.split("@")[0]
+
+		if (Object.hasOwn(keyboards, keyboardName)) {
+			return keyboardName
+		} else {
 			return ""
 		}
+	}
 
-		if (typeof props.keyboard === "string") {
-
-			// Parse the keyboard value
-			//TODO: is it still relevant ?
-			const keyboardName = props.keyboard.split("@")[0]
-
-			if (Object.hasOwn(keyboards, keyboardName)) {
-				return keyboardName
-			} else {
-				return ""
-			}
-		}
-
-		// It's a custom keyboard
-		return props.keyboard
-	}),
+	// It's a custom keyboard
+	return props.keyboard
+}),
 	keyboardOptions = computed(() => {
 		if (props.extraLetters?.length > 0) {
 			return props.extraLetters.map(x => {
-				const keyDisplay = x.split("||"),
-					d = keyDisplay.length >= 2 ? keyDisplay[1] : keyDisplay[0],
-					isMath = d.startsWith("#") || d.startsWith("\\")
+				const keyDisplay = x.split("||")
+				const display = keyDisplay.length >= 2 ? keyDisplay[1] : keyDisplay[0]
+				const output =
+					keyDisplay.length === 1 ?
+						(keyDisplay[0].startsWith('#') ? keyDisplay[0].substring(1) : keyDisplay[0]) :
+						keyDisplay[1]
+				const isMath = display.startsWith("#") || display.startsWith("\\")
 
 				return {
 					key: keyDisplay[0],
 					visible: true,
 					type: isMath ? "math" : "text",
-					display: d.startsWith("#") ? asciiToTex(d.substring(1)) : d,
+					display: display.startsWith("#") ? asciiToTex(display.substring(1)) : display,
 					span: 0,
 					fn: (value) => {
-						return value + keyDisplay[0]
+						return value + output
 					}
 				}
 			})
@@ -86,12 +90,12 @@ const theKeyboard = computed(() => {
 	})
 
 const btnReset = {
-		label: "tout effacer",
-		icon: "bi bi-trash",
-		span: 1,
-		fn: () => resetKeyStrokes(),
-		atEnd: false
-	},
+	label: "tout effacer",
+	icon: "bi bi-trash",
+	span: 1,
+	fn: () => resetKeyStrokes(),
+	atEnd: false
+},
 	btnAddResponse = {
 		label: "Ajouter",
 		icon: "bi bi-plus-circle",
@@ -127,80 +131,80 @@ const btnReset = {
 	}
 
 const keyboardComputed = computed(() => {
-		const data = []
-		// Loop through all keyboard keys in the layout.
-		for (const key of keyboardData.value.layout) {
-			let kkey, spankey, kdata:keyboardKey,
-				theKey
+	const data = []
+	// Loop through all keyboard keys in the layout.
+	for (const key of keyboardData.value.layout) {
+		let kkey, spankey, kdata: keyboardKey,
+			theKey
 
-			if (typeof key === "string") {
-				kkey = key
-				spankey = 0
-				theKey = keyboardKeys[kkey]
-				// }
-				// TODO: KeyboardDisplay: remove {key, span} ?
-				// else if(key.key !== undefined) {
-				// 	kkey = key.key
-				// 	spankey = key.span?key.span:0
-				// 	theKey = key
-			} else {
-				kkey = key[0]
-				spankey = key[1]
-				theKey = keyboardKeys[kkey]
-			}
-
-			// Span the buttons
-			if (spankey === 2) {
-				spankey = "col-span-2"
-			} else if (spankey === 3) {
-				spankey = "col-span-3"
-			} else if (spankey === 4) {
-				spankey = "col-span-4"
-			} else if (spankey === 5) {
-				spankey = "col-span-5"
-			}
-
-			// Default key code data.
-			kdata = {
-				key: kkey,
-				visible: kkey === "",
-				type: theKey === undefined ? false : theKey.type,
-				display: theKey === undefined ? false : theKey.display,
-				span: spankey,
-				fn: null
-			}
-
-			// Maybe there is a custom keys
-			if (props.customKeys !== undefined && Object.hasOwn(props.customKeys, kkey)) {
-				theKey = props.customKeys[kkey]
-				kdata = {
-					...kdata,
-					...props.customKeys[kkey]
-				}
-			}
-
-			if (theKey === undefined) {
-				kdata.fn = () => answerOutput.value + ""
-			} else {
-				if (theKey.fn === undefined) {
-					kdata.fn = (value) => value + kkey
-				} else {
-					kdata.fn = theKey.fn
-				}
-			}
-
-			// Overrides existing values.
-			if (keyboardData.value.keys !== undefined && keyboardData.value.keys[kkey] !== undefined) {
-				kdata.type = keyboardData.value.keys[kkey].type === undefined ? kdata.type : keyboardData.value.keys[kkey].type
-				kdata.display = keyboardData.value.keys[kkey].display === undefined ? kdata.display : keyboardData.value.keys[kkey].display
-				kdata.fn = keyboardData.value.keys[kkey].fn === undefined ? kdata.fn : keyboardData.value.keys[kkey].fn
-			}
-
-			data.push(kdata)
+		if (typeof key === "string") {
+			kkey = key
+			spankey = 0
+			theKey = keyboardKeys[kkey]
+			// }
+			// TODO: KeyboardDisplay: remove {key, span} ?
+			// else if(key.key !== undefined) {
+			// 	kkey = key.key
+			// 	spankey = key.span?key.span:0
+			// 	theKey = key
+		} else {
+			kkey = key[0]
+			spankey = key[1]
+			theKey = keyboardKeys[kkey]
 		}
 
-		return data
-	}),
+		// Span the buttons
+		if (spankey === 2) {
+			spankey = "col-span-2"
+		} else if (spankey === 3) {
+			spankey = "col-span-3"
+		} else if (spankey === 4) {
+			spankey = "col-span-4"
+		} else if (spankey === 5) {
+			spankey = "col-span-5"
+		}
+
+		// Default key code data.
+		kdata = {
+			key: kkey,
+			visible: kkey === "",
+			type: theKey === undefined ? false : theKey.type,
+			display: theKey === undefined ? false : theKey.display,
+			span: spankey,
+			fn: null
+		}
+
+		// Maybe there is a custom keys
+		if (props.customKeys !== undefined && Object.hasOwn(props.customKeys, kkey)) {
+			theKey = props.customKeys[kkey]
+			kdata = {
+				...kdata,
+				...props.customKeys[kkey]
+			}
+		}
+
+		if (theKey === undefined) {
+			kdata.fn = () => answerOutput.value + ""
+		} else {
+			if (theKey.fn === undefined) {
+				kdata.fn = (value) => value + kkey
+			} else {
+				kdata.fn = theKey.fn
+			}
+		}
+
+		// Overrides existing values.
+		if (keyboardData.value.keys !== undefined && keyboardData.value.keys[kkey] !== undefined) {
+			kdata.type = keyboardData.value.keys[kkey].type === undefined ? kdata.type : keyboardData.value.keys[kkey].type
+			kdata.display = keyboardData.value.keys[kkey].display === undefined ? kdata.display : keyboardData.value.keys[kkey].display
+			kdata.fn = keyboardData.value.keys[kkey].fn === undefined ? kdata.fn : keyboardData.value.keys[kkey].fn
+		}
+
+		data.push(kdata)
+	}
+
+	return data
+}),
 	keyboardCommands = computed(() => {
 		// Return the buttons
 		const commandsBtn = []
@@ -250,7 +254,7 @@ function ButtonKeyClick(key) {
 	changeEvent()
 }
 
-const changeEvent = function() {
+const changeEvent = function () {
 	const output = "",
 		result = keyStrokes.value
 			.map(k => k.fn(output))
@@ -310,132 +314,65 @@ defineExpose({ resetKeyStrokes, wrongAnswer, getTex })
 </script>
 
 <template>
-	<div
-		v-if="theKeyboard!==''"
-		class="keyboard-wrapper"
-	>
+	<div v-if="theKeyboard !== ''" class="keyboard-wrapper">
 		<div class="keyboard-output">
-			<div
-				v-if="mathOutput"
-				class="grid grid-cols-1 min-h-[50px]"
-			>
-				<div
-					v-katex.ascii.left.nomargin="getTex(answerOutput)"
-					class="self-center"
-				/>
+			<div v-if="mathOutput" class="grid grid-cols-1 min-h-[50px]">
+				<div v-katex.ascii.left.nomargin="getTex(answerOutput)" class="self-center" />
 			</div>
-			<div
-				v-if="textOutput"
-				class="grid grid-cols-1 min-h-[40px] italic"
-			>
-				<div
-
-					class="self-center"
-					v-text="answerOutput"
-				/>
+			<div v-if="textOutput" class="grid grid-cols-1 min-h-[40px] italic">
+				<div class="self-center" v-text="answerOutput" />
 			</div>
 		</div>
 
 		<!-- keyboard validate (top version) -->
-		<div
-			v-if="validate && !validateAtBottom"
-			class="keyboard w-full my-3"
-		>
-			<button
-				ref="validateButton"
+		<div v-if="validate && !validateAtBottom" class="keyboard w-full my-3">
+			<button ref="validateButton"
 				:class="`key-cmd ${keyClass} w-full border-green-700 text-green-600 hover:bg-green-100 hover:border-green-800`"
-				@click="btnValidate.fn()"
-			>
+				@click="btnValidate.fn()">
 				<i :class="btnValidate.icon" /> <span class="hidden md:inline md:ml-2">{{ btnValidate.label }}</span>
 			</button>
 		</div>
 
 		<!-- keyboard keys -->
-		<div
-			ref="root"
-			:class="(keyboardData.grid??keyboardGridDefault) + (small?' keyboard-sm':'')"
-			class="grid gap-1 lg:gap-2 keyboard"
-		>
-			<button
-				v-for="(key, index) of keyboardComputed"
-				:key="`key-${key.key}-${index}`"
-				:class="`${keyClass} ${key.span===0?'':key.span} ${key.visible?'invisible':''} ${key.type==='bg'?key.display:''}`"
-				class="key"
-				@click="ButtonKeyClick(key)"
-			>
-				<span
-					v-if="key.type==='math'"
-					v-katex.clear="key.display"
-				/>
-				<i
-					v-else-if="key.type==='icon'"
-					:class="key.display"
-				/>
-				<span
-					v-else-if="key.type==='text'"
-					v-katex.auto="key.display"
-				/>
-				<span
-					v-else-if="key.type!=='bg'"
-					v-html="key.display"
-				/>
+		<div ref="root" :class="(keyboardData.grid ?? keyboardGridDefault) + (small ? ' keyboard-sm' : '')"
+			class="grid gap-1 lg:gap-2 keyboard">
+			<button v-for="(key, index) of keyboardComputed" :key="`key-${key.key}-${index}`"
+				:class="`${keyClass} ${key.span === 0 ? '' : key.span} ${key.visible ? 'invisible' : ''} ${key.type === 'bg' ? key.display : ''}`"
+				class="key" @click="ButtonKeyClick(key)">
+				<span v-if="key.type === 'math'" v-katex.clear="key.display" />
+				<i v-else-if="key.type === 'icon'" :class="key.display" />
+				<span v-else-if="key.type === 'text'" v-katex.auto="key.display" />
+				<span v-else-if="key.type !== 'bg'" v-html="key.display" />
 			</button>
 		</div>
 
 		<!-- keyboard extra buttons -->
-		<div
-			v-if="keyboardOptions.length>0"
-			:class="small?' keyboard-sm':''"
-			class="keyboard flex flex-wrap w-full mt-10 gap-3"
-		>
-			<button
-				v-for="(key, index) of keyboardOptions"
-				:key="`keyboard-options-${index}`"
-				:class="`key ${keyClass} grow`"
-				@click="ButtonKeyClick(key)"
-			>
-				<span
-					v-if="key.type==='math'"
-					v-katex.clear="key.display"
-				/>
-				<span
-					v-else-if="key.type==='text'"
-					v-katex.auto="key.display"
-				/>
+		<div v-if="keyboardOptions.length > 0" :class="small ? ' keyboard-sm' : ''"
+			class="keyboard flex flex-wrap w-full mt-10 gap-3">
+			<button v-for="(key, index) of keyboardOptions" :key="`keyboard-options-${index}`"
+				:class="`key ${keyClass} grow`" @click="ButtonKeyClick(key)">
+				<span v-if="key.type === 'math'" v-katex.clear="key.display" />
+				<span v-else-if="key.type === 'text'" v-katex.auto="key.display" />
 			</button>
 		</div>
 
 		<!-- keyboard commands -->
-		<div
-			v-if="keyboardCommands.length>0"
-			:class="small?' keyboard-sm':''"
-			class="keyboard flex w-full mt-10 gap-3"
-		>
-			<button
-				v-for="(item, index) of keyboardCommands"
-				:key="`keyboard-command-${index}`"
-				:class="`key ${keyClass} grow ${item.atEnd?'order-last':''}`"
-				@click="item.fn()"
-			>
+		<div v-if="keyboardCommands.length > 0" :class="small ? ' keyboard-sm' : ''"
+			class="keyboard flex w-full mt-10 gap-3">
+			<button v-for="(item, index) of keyboardCommands" :key="`keyboard-command-${index}`"
+				:class="`key ${keyClass} grow ${item.atEnd ? 'order-last' : ''}`" @click="item.fn()">
 				<i :class="item.icon" /> <span class="hidden md:inline md:ml-2">{{ item.label }}</span>
 			</button>
 		</div>
 
 		<!-- keyboard validate (bottom version) -->
-		<div
-			v-if="validate && validateAtBottom"
-			class="keyboard w-full my-3"
-		>
-			<button
-				ref="validateButton"
+		<div v-if="validate && validateAtBottom" class="keyboard w-full my-3">
+			<button ref="validateButton"
 				:class="`key-cmd ${keyClass} w-full border-green-700 text-green-600 hover:bg-green-100 hover:border-green-800`"
-				@click="btnValidate.fn()"
-			>
+				@click="btnValidate.fn()">
 				<i :class="btnValidate.icon" /> <span class="hidden md:inline md:ml-2">{{ btnValidate.label }}</span>
 			</button>
 		</div>
 	</div>
 </template>
-<style scoped>
-
-</style>
+<style scoped></style>
