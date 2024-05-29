@@ -110,8 +110,6 @@ function getOneKeyboard(kbrd: string): KeyboardInterface {
 		})
 
 
-	console.log('options', options);
-
 	const name = getComponentKeyboardName(value)
 	return {
 		name,
