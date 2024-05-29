@@ -60,10 +60,7 @@ const theKeyboard = computed(() => {
 			return props.extraLetters.map(x => {
 				const keyDisplay = x.split("||")
 				const display = keyDisplay.length >= 2 ? keyDisplay[1] : keyDisplay[0]
-				const output =
-					keyDisplay.length === 1 ?
-						(keyDisplay[0].startsWith('#') ? keyDisplay[0].substring(1) : keyDisplay[0]) :
-						keyDisplay[1]
+				const output = keyDisplay[0].startsWith('#') ? keyDisplay[0].substring(1) : keyDisplay[0]
 				const isMath = display.startsWith("#") || display.startsWith("\\")
 
 				return {
