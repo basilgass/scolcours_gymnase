@@ -118,9 +118,17 @@ const suggestionEnter = function() {
 
 const suggestionClick = function(index) {
 	if (suggestionsItems.value[index].foreign === words.value[startIndex.value].foreign) {
-		// Continue the game
+		// We found the good word !
 		words.value[startIndex.value].found = true
-		nextWord()
+		
+		// Disabled the input.
+		unknownWordAnswer.value = ""
+
+		// Highlight the word
+		suggestionsItems.value[index].checked = true
+
+		// Continue the game after 1 second.
+		setTimeout(() => nextWord(), 800)
 	} else {
 		words.value[startIndex.value].found = false
 		shake(index)
@@ -137,9 +145,11 @@ const suggestionClick = function(index) {
 }
 
 const defineUnknowns = function(item) {
+	console.log(item.examples);
+	
 	unknownWordForeign.value = item.foreign
-	unknownWordExamples.value = item.examples.split("|")
-	unknownWordDefinition.value = item.definition
+	unknownWordExamples.value = item.examples?item.examples.split("|"):[]
+	unknownWordDefinition.value = item.definition?item.definition:""
 }
 const resetUnknowns = function() {
 	unknownWordAnswer.value = ""
@@ -197,6 +207,7 @@ function shake(index) {
 }
 
 watch(userGuess, () => {
+	// TODO: change watch to computed
 	const txt = userGuess.value.toLowerCase()
 
 	suggestionsItems.value = words.value
@@ -227,6 +238,7 @@ watch(userGuess, () => {
 				foreign: x.foreign,
 				fr: x.fr,
 				hint: false,
+				checked: false,
 				examples: x.examples,
 				definition: x.definition
 			}
@@ -317,7 +329,7 @@ onMounted(() => {
 					class="px-4 py-3 hover:bg-amber-100 transition-all duration-300 cursor-pointer flex justify-between"
 					@click="suggestionClick(index)"
 				>
-					<div>
+					<div><i class="bi bi-check text-green-600" v-if="word.checked"></i>
 						{{ word.foreign }}
 					</div>
 					<transition name="fade-right">
