@@ -95,12 +95,12 @@ if(localStorage.getItem(localStorageKey.value)){
 		<!-- Local storage detection
 		TODO : how to "load" the data ? -> make a component for the "intro" for each games.
 		-->
-		<button
-			v-if="hasLocalData"
+		<!-- <button
+			v-if="hasLocalData && state==='intro'"
 			class="btn-success px-20 py-10 text-2xl"
 		>
 			continuer
-		</button>
+		</button> -->
 
 
 		<!-- load the corresponding game -->

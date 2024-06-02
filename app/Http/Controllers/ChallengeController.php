@@ -36,13 +36,13 @@ class ChallengeController extends Controller
 			'title' => ['string', 'min:5']
 		]);
 
-		$slug = Str::slug($request[ 'title' ]);
+		$slug = Str::slug($request['title']);
 		if (Challenge::where('slug', $slug)->first()) {
 			return redirect()->back();
 		}
 
 		$challenge = $chapter->challenges()->create([
-			'title' => $validation[ 'title' ],
+			'title' => $validation['title'],
 			'slug'  => $slug
 		]);
 
@@ -61,7 +61,7 @@ class ChallengeController extends Controller
 
 	public function update(Challenge $challenge, Request $request)
 	{
-		unset($request[ 'block' ]);
+		unset($request['block']);
 
 		// Save the challenge configuration
 		$validation = $request->validate([
@@ -81,34 +81,34 @@ class ChallengeController extends Controller
 			'bonusLevelLife'    => ['numeric', 'min:0'],
 			'bonusLevelTime'    => ['numeric', 'min:0'],
 		]);
-//
-//		if ($validation['parameters'] === null) {
-//			$validation['parameters'] = 'exact';
-//		}
+		//
+		//		if ($validation['parameters'] === null) {
+		//			$validation['parameters'] = 'exact';
+		//		}
 		$challenge->update($validation);
 
 		// Update the generators
-		$validation = $request->validate([
-			'generators'            => ['array'],
-			'generators.*.id'       => ['exists:App\Models\Generator,id'],
-			'generators.*.title'    => ['string', 'nullable'],
-			'generators.*.slug'     => ['string', 'min:3'],
-			'generators.*.body'     => ['string', 'nullable'],
-			'generators.*.template' => ['string', 'nullable'],
-			'generators.*.keyboard' => ['string'],
-			'generators.*.code'     => ['string'],
-		]);
+		// $validation = $request->validate([
+		// 	'generators'            => ['array'],
+		// 	'generators.*.id'       => ['exists:App\Models\Generator,id'],
+		// 	'generators.*.title'    => ['string', 'nullable'],
+		// 	'generators.*.slug'     => ['string', 'min:3'],
+		// 	'generators.*.body'     => ['string', 'nullable'],
+		// 	'generators.*.template' => ['string', 'nullable'],
+		// 	'generators.*.keyboard' => ['string'],
+		// 	'generators.*.code'     => ['string'],
+		// ]);
 
-		foreach ($validation[ 'generators' ] as $generator) {
-			Generator::find($generator[ 'id' ])?->update([
-				"title"    => $generator[ 'title' ] ?? '',
-				"slug"     => $generator[ 'slug' ] ?? '',
-				"body"     => $generator[ 'body' ] ?? '',
-				"template" => $generator[ 'template' ] ?? '',
-				"keyboard" => $generator[ 'keyboard' ] ?? '',
-				"code"     => $generator[ 'code' ]
-			]);
-		}
+		// foreach ($validation[ 'generators' ] as $generator) {
+		// 	Generator::find($generator[ 'id' ])?->update([
+		// 		"title"    => $generator[ 'title' ] ?? '',
+		// 		"slug"     => $generator[ 'slug' ] ?? '',
+		// 		"body"     => $generator[ 'body' ] ?? '',
+		// 		"template" => $generator[ 'template' ] ?? '',
+		// 		"keyboard" => $generator[ 'keyboard' ] ?? '',
+		// 		"code"     => $generator[ 'code' ]
+		// 	]);
+		// }
 
 		return true;
 	}
@@ -158,7 +158,7 @@ class ChallengeController extends Controller
 	{
 		$challenge->generators()->detach($generator);
 
-		if ($request[ 'destroy' ]) {
+		if ($request['destroy']) {
 			$generator->delete();
 		}
 	}
@@ -172,9 +172,9 @@ class ChallengeController extends Controller
 		]);
 
 		// Update the order
-		foreach ($request[ 'order' ] as $value) {
-			$challenge->generators()->updateExistingPivot($value[ 'id' ], [
-				"order" => $value[ 'order' ]
+		foreach ($request['order'] as $value) {
+			$challenge->generators()->updateExistingPivot($value['id'], [
+				"order" => $value['order']
 			]);
 		}
 
@@ -190,7 +190,7 @@ class ChallengeController extends Controller
 		Challenge::destroy($id);
 
 		// Redirect to ...
-//		return redirect(route('theme.chapter', [$theme, $chapter]));
+		//		return redirect(route('theme.chapter', [$theme, $chapter]));
 		return true;
 	}
 
@@ -218,7 +218,6 @@ class ChallengeController extends Controller
 					"duration" => 5000
 				]
 			);
-
 		}
 		$this->index();
 	}
