@@ -2,10 +2,11 @@
 	"private": true,
 	"type": "module",
 	"scripts": {
-		"dev": "vite",
+		"dev": "vite serve",
 		"build": "vue-tsc && vite build",
 		"ide-helper": "php artisan ide-helper:generate && php artisan ide-helper:meta && php artisan ide-helper:models -R -W",
-		"test": "vitest"
+		"test": "vitest",
+		"lint": "eslint --ext .ts,.vue --fix --no-error-on-unmatched-pattern src"
 	},
 	"devDependencies": {
 		"@headlessui/vue": "^1.7.19",
@@ -16,6 +17,8 @@
 		"@types/file-saver": "^2.0.7",
 		"@types/katex": "^0.16.7",
 		"@types/lodash": "^4.17.0",
+		"@eslint/js": "^9.4.0",
+		"@types/eslint__js": "^8.42.3",
 		"@types/prismjs": "^1.26.3",
 		"@types/three": "^0.163.0",
 		"@typescript-eslint/eslint-plugin": "^7.6.0",
@@ -33,6 +36,7 @@
 		"tailwind-scrollbar": "^3.1.0",
 		"tailwindcss": "^3.4.3",
 		"typescript": "^5.4.5",
+		"typescript-eslint": "^7.12.0",
 		"vite": "^5.2.8",
 		"vitest": "^1.5.0",
 		"vue": "^3.4.21",
@@ -50,7 +54,7 @@
 		"markdown-it-attrs": "^4.1.6",
 		"markdown-it-bracketed-spans": "^1.0.1",
 		"markdown-it-texmath": "^1.0.0",
-		"pidraw": "^0.0.99",
+		"pidraw": "^0.1.8",
 		"pigames": "^0.1.18",
 		"pimath": "^0.0.133",
 		"prismjs": "^1.29.0",

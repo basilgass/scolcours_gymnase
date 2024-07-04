@@ -18,10 +18,7 @@ let props = defineProps({
 	interval = null,
 	updateCounter = ref(0),
 	updateQuizz = function () {
-		router.reload({
-			preserveScroll: true,
-			preserveState: true
-		})
+		router.reload()
 		updateCounter.value++
 	}
 

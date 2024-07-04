@@ -6,9 +6,9 @@
  * tags: geoetrie,1M,2C
  */
 import { computed, ref } from "vue"
-import { numberCorrection } from "pidraw/esm/Calculus"
 import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"
 import ToolForm, { IToolForm } from "@/Components/Tools/Parts/ToolForm.vue"
+import { numberCorrection } from "@/helpers/helperFunctions"
 
 const forms: IToolForm[] = [
 	{
@@ -240,17 +240,13 @@ function formatTriangle(value: triangleRawInterface): triangleInterface {
 			alpha: +value.alpha.toFixed(fixed.value) + "°",
 			beta: +value.beta.toFixed(fixed.value) + "°",
 			gamma: +value.gamma.toFixed(fixed.value) + "°",
-			area: numberCorrection(area, null, null, fixed.value).toString(),
+			area: numberCorrection(area, fixed.value).toString(),
 			radius: numberCorrection(
 				value.a / Math.sin((value.alpha * Math.PI) / 180) / 2,
-				null,
-				null,
 				fixed.value
 			).toString(),
 			radiusI: numberCorrection(
 				(2 * area) / (value.a + value.b + value.c),
-				null,
-				null,
 				fixed.value
 			).toString()
 		}

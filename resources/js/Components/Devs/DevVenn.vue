@@ -1,29 +1,32 @@
-<script setup lang="ts">
+<script
+	setup
+	lang="ts"
+>
 
-import { PiDraw } from "pidraw/esm"
 import { computed, onMounted, ref } from "vue"
 import { PiMath } from "pimath"
 import KeyboardDisplay from "@/Components/Keyboards/KeyboardDisplay.vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
+import PiDraw from "pidraw"
 
 let draw = ref(null),
 	geom,
 	venn,
-	tex = computed(()=>{
+	tex = computed(() => {
 		try {
 			const P = new PiMath.Logicalset(input.value.replaceAll("uu", "|").replaceAll("nn", "&").replaceAll("not", "!"))
 			updateVenn(P)
 			return P.tex
-		}catch(e){
+		} catch (e) {
 			return "\\text{ réponse non reconnue }"
 		}
 	}),
 	result = ref([]),
 	input = ref("")
 
-function updateVenn(P){
+function updateVenn(P) {
 	result.value = P.vennABC()
-	for(const key in venn){
+	for (const key in venn) {
 		venn[key].selected = result.value.includes(key)
 		venn[key].shape.svg.fill(venn[key].selected ? "#cfc" : "#fff")
 	}
@@ -35,11 +38,8 @@ function updateVenn(P){
 // }
 
 function generateSVG() {
-	geom = new PiDraw(draw.value, {width: 470, height:470,
-		grid: {
-			x: 42,
-			y: 42
-		},
+	geom = new PiDraw(draw.value, {
+		width: 470, height: 470,
 		origin: {
 			x: 30,
 			y: 480
@@ -63,24 +63,24 @@ function generateSVG() {
 		geom.point(5, 8, "C"),
 		geom.point(1, 9, "E")
 	]
-	labels.forEach(pt=>{
+	labels.forEach(pt => {
 		pt.hide().label.middle().center()
 	})
 
 	venn = {
-		E: {shape: E, selected: false},
-		A: {shape: A, selected: false},
-		B: {shape: B, selected: false},
-		C: {shape: C, selected: false},
-		AB: {shape: AB, selected: false},
-		AC: {shape: AC, selected: false},
-		BC: {shape: BC, selected: false},
-		ABC: {shape: ABC, selected: false}
+		E: { shape: E, selected: false },
+		A: { shape: A, selected: false },
+		B: { shape: B, selected: false },
+		C: { shape: C, selected: false },
+		AB: { shape: AB, selected: false },
+		AC: { shape: AC, selected: false },
+		BC: { shape: BC, selected: false },
+		ABC: { shape: ABC, selected: false }
 	}
 
 	for (const key in venn) {
 		venn[key].shape.svg.fill("#fff")
-			.on("mouseover", function() {
+			.on("mouseover", function () {
 				this.animate(200).fill("#ddd")
 			})
 			.on("mouseleave", function () {
@@ -96,22 +96,22 @@ function generateSVG() {
 	}
 }
 
-function validate(){
+function validate() {
 	let count = 0
-	for(const key in venn.value){
-		if(venn.value[key].selected && result.value.includes(key)){
-			count ++
+	for (const key in venn.value) {
+		if (venn.value[key].selected && result.value.includes(key)) {
+			count++
 		}
 	}
 
-	if(count===result.value.length){
+	if (count === result.value.length) {
 		alert("bravo")
-	}else{
+	} else {
 		alert(`${count} bonne(s) réponse(s)`)
 	}
 }
 
-onMounted(()=>{
+onMounted(() => {
 	generateSVG()
 
 	// generate()
@@ -120,29 +120,16 @@ onMounted(()=>{
 <template>
 	<div>
 		<div>
-			<form-maker
-				v-model="input"
-				name="Réponse"
-				label="réponse"
-			/>
+			<form-maker v-model="input" name="Réponse" label="réponse" />
 		</div>
 		<div>
 			Affichage : <span v-katex="tex" />
 		</div>
-		<div
-			ref="draw"
-			class="max-w-lg"
-		/>
-		<button
-			class="btn btn-primary"
-			@click="validate"
-		>
+		<div ref="draw" class="max-w-lg" />
+		<button class="btn btn-primary" @click="validate">
 			Valider
 		</button>
 
-		<keyboard-display
-			v-model="input"
-			keyboard="venn@A,B,C"
-		/>
+		<keyboard-display v-model="input" keyboard="venn@A,B,C" />
 	</div>
 </template>

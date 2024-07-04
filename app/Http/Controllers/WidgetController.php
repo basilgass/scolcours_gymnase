@@ -13,7 +13,6 @@ class WidgetController extends Controller
 {
 	public function index()
 	{
-
 	}
 
 	public function refresh()
@@ -43,40 +42,9 @@ class WidgetController extends Controller
 					"component" => $file,
 					"theme_id" => $theme,
 					"description" => count($content) >= 2 ? explode("</info>", $content[1])[0] : ""
-				]);
-
+				]
+			);
 		}
-
-		// Go through each existing illustrations and take the correct one !
-		// TODO: remove these lines once done
-		Illustration::where('value', "image")
-			->update([
-				"widget_id"=> Widget::where("component", "image-widget.vue" )->first()->id
-			]);
-		Illustration::where('value', NULL)
-			->update([
-				"widget_id"=> Widget::where("component", "draw-parser-widget.vue" )->first()->id
-			]);
-		Illustration::where('value', "LIKE", "IllustrationTos%")
-			->update([
-				"widget_id"=> Widget::where("component", "analyse/tableau-de-signes.vue" )->first()->id
-			]);
-		Illustration::where('value', "IllustrationEuclidian")
-			->update([
-				"widget_id"=> Widget::where("component", "algebre/division-euclidienne.vue" )->first()->id
-			]);
-		Illustration::where('value', "IllustrationProbabilityTree")
-			->update([
-				"widget_id"=> Widget::where("component", "statistiques/arbre-des-probabilites.vue" )->first()->id
-			]);
-		Illustration::where('value', "IllustrationStepper")
-			->update([
-				"widget_id"=> Widget::where("component", "etapes-par-etapes.vue" )->first()->id
-			]);
-		Illustration::where('value', "IllustrationValues")
-			->update([
-				"widget_id"=> Widget::where("component", "analyse/tableau-des-valeurs.vue" )->first()->id
-			]);
 
 		return Widget::all();
 	}

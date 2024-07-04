@@ -11,10 +11,7 @@ const props = defineProps({
 })
 
 const updateQuizz = ()=> {
-		router.reload({
-			preserveScroll: true,
-			preserveState: true
-		})
+		router.reload()
 	}
 onMounted(()=>{
 	setInterval(() => updateQuizz(), 2000)

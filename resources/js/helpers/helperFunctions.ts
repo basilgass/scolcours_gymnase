@@ -47,3 +47,6 @@ export function stripFirstCharacter(value: string): string {
 export function stripLastCharacter(value: string): string {
 	return value.substring(0, value.length - 1)
 }
+
+
+export function numberCorrection(value: unknown, corr: number) { return (+value as number).toFixed(corr) }

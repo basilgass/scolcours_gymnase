@@ -5,18 +5,20 @@ options: [rounded:2],[col:width],[table:class]
 
 code: [f(x)=]function (multiple line possible)
 </info>-->
-<script lang="ts" setup>
+<script
+	lang="ts"
+	setup
+>
 import { computed } from "vue"
-import { numberCorrection } from "pidraw/esm/Calculus"
 import type { Polynom } from "pimath/dist/maths/algebra/polynom"
 import { PiMath } from "pimath"
 import type { NumExp } from "pimath/dist/maths/numexp"
 
 let props = defineProps({
-		illustration: { type: Object, required: true }
-	}),
-	params = computed(()=>props.illustration.parameters.split(",")),
-	code = computed(()=>props.illustration.code),
+	illustration: { type: Object, required: true }
+}),
+	params = computed(() => props.illustration.parameters.split(",")),
+	code = computed(() => props.illustration.code),
 	roundedTo = computed(() => {
 		for (let param of params.value) {
 			if (param.startsWith("rounded:")) {
@@ -97,7 +99,7 @@ let props = defineProps({
 					let v = (numExp as NumExp).evaluate({ x: +x })
 					values.push({
 						x,
-						fx: numberCorrection(v, 0, 0, roundedTo.value)
+						fx: +v.toFixed(roundedTo.value)
 					})
 				}
 			}
@@ -131,7 +133,7 @@ function parseMinMaxStep(value: string): number[] {
 		x <= max;
 		x += step
 	) {
-		arr.push(numberCorrection(x, 0, 0, roundedTo.value))
+		arr.push(+x.toFixed(roundedTo.value))
 	}
 
 	return arr
@@ -139,19 +141,10 @@ function parseMinMaxStep(value: string): number[] {
 </script>
 
 <template>
-	<div
-		:class="`scrollbar-scolcours-${$page.props.theme.slug}`"
-		class="overflow-x-auto relative"
-	>
-		<table
-			:class="tableClass"
-			class="border-collapse border border-slate-300"
-		>
+	<div :class="`scrollbar-scolcours-${$page.props.theme.slug}`" class="overflow-x-auto relative">
+		<table :class="tableClass" class="border-collapse border border-slate-300">
 			<tr class="bg-gray-100 font-semibold border-b border-slate-300">
-				<td
-					v-katex="'x'"
-					class="border-r border-slate-300 px-4"
-				/>
+				<td v-katex="'x'" class="border-r border-slate-300 px-4" />
 				<td
 					v-for="(x, index) in tableX"
 					:key="`x-${index}`"
@@ -160,21 +153,13 @@ function parseMinMaxStep(value: string): number[] {
 					class="border-r border-slate-300"
 				/>
 			</tr>
-			<tr
-				v-for="(fx, line) in tableFunctions"
-				:key="fx.name"
-				:style="`height: ${rowHeight}`"
-			>
-				<td
-					v-katex="fx.name"
-					:class="line>0?'border-t':''"
-					class="border-r border-slate-300 px-4"
-				/>
+			<tr v-for="(fx, line) in tableFunctions" :key="fx.name" :style="`height: ${rowHeight}`">
+				<td v-katex="fx.name" :class="line > 0 ? 'border-t' : ''" class="border-r border-slate-300 px-4" />
 				<td
 					v-for="(y, index) in fx.values"
 					:key="`${fx.name}-${index}`"
 					v-katex="y.fx"
-					:class="line>0?'border-t':''"
+					:class="line > 0 ? 'border-t' : ''"
 					class="border-r border-slate-300 px-2"
 				/>
 			</tr>

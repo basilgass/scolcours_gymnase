@@ -22,27 +22,6 @@ const props = defineProps({
 		type: Number,
 		default: 0
 	}
-	// TODO: delete extra props for BlockShow
-	// format: {
-	// 	type: String as PropType<"post" | "formula" | "question">,
-	// 	default: "post"
-	// },
-	// switch: {
-	// 	type: Boolean,
-	// 	default: null
-	// },
-	// forceShow: {
-	// 	type: Boolean,
-	// 	default: false
-	// },
-	// maxIllustration: {
-	// 	type: Number,
-	// 	default: null
-	// },
-	// noDelete: {
-	// 	type: Boolean,
-	// 	default: false
-	// }
 })
 
 // emits

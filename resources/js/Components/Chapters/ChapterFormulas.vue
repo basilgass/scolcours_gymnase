@@ -1,12 +1,15 @@
 <!--
 Affichage d'un formulaire, avec la possibilité de passer d'un formulaire du thème à un autre.
 -->
-<script lang="ts" setup>
+<script
+	lang="ts"
+	setup
+>
 import { inject, Ref, ref } from "vue"
 import BlockShow from "@/Pages/Blocks/BlockShow.vue"
 import { useIntersectionObserver } from "@vueuse/core"
-import { flashInterface } from "@/types/index.js"
 import axios from "axios"
+import { flashInterface } from "@/types"
 
 const props = defineProps({
 	chapterSlug: { type: String, required: true },
@@ -28,15 +31,15 @@ const theFormular = ref([]),
 
 const flash = inject<flashInterface>("flash"),
 	editMode = inject<Ref<boolean>>("editMode")
-const addFormula = function() {
-		axios
-			.post(route("formulas.store", [props.chapterSlug]), {})
-			.then((res) => {
-				flash.success("formule créée")
-				theFormular.value.push(res.data)
-			})
-	},
-	deleteFormular = function(id) {
+const addFormula = function () {
+	axios
+		.post(route("formulas.store", [props.chapterSlug]), {})
+		.then((res) => {
+			flash.success("formule créée")
+			theFormular.value.push(res.data)
+		})
+},
+	deleteFormular = function (id) {
 		axios
 			.post(route("formulas.destroy", [id]), { _method: "DELETE" })
 			.then(() => {
@@ -46,7 +49,7 @@ const addFormula = function() {
 				)
 			})
 	},
-	updateFormulasOrder = function() {
+	updateFormulasOrder = function () {
 		axios
 			.post(route("formulas.updateOrder"), {
 				order: theFormular.value.map((x, index) => {
@@ -64,7 +67,7 @@ const addFormula = function() {
 				console.warn("update ordering order: ", res.data)
 			})
 	},
-	loadFormular = function() {
+	loadFormular = function () {
 		return axios
 			.get(route("chapters.formulas.index", [theSlug.value]))
 			.then((res) => {
@@ -88,7 +91,7 @@ const addFormula = function() {
 				loadingState.value = false
 			})
 	},
-	updateFormular = function(slug) {
+	updateFormular = function (slug) {
 		theSlug.value = slug
 		loadingState.value = true
 		loadFormular()
@@ -103,73 +106,39 @@ const addFormula = function() {
 			</h3>
 		</div>
 
-		<div
-			v-if="themeChapters.length > 0 || editMode"
-			class="flex flex-wrap items-center gap-1 px-5 min-h-[3em]"
-		>
-			<button
-				v-for="item of themeChapters"
-				:key="item.slug"
-				v-katex.auto="item.title"
-				v-theme.btn.text="item.theme.id"
-				:class="{
+		<div v-if="themeChapters.length > 0 || editMode" class="flex flex-wrap items-center gap-1 px-5 min-h-[3em]">
+			<button v-for="item of themeChapters" :key="item.slug" v-katex.auto="item.title"
+				v-theme.btn.text="item.theme.id" :class="{
 					'btn-xs text-xs': item.slug !== theSlug,
 					'font-semibold': item.slug === props.chapterSlug,
-				}"
-				class="transition-all btn"
-				@click="updateFormular(item.slug)"
-			/>
+				}" class="transition-all btn" @click="updateFormular(item.slug)" />
 		</div>
 
 		<div v-if="theFormular.length > 0 || editMode">
-			<div
-				v-if="loadingState"
-				class="px-5 grid place-items-center min-h-[10em]"
-			>
+			<div v-if="loadingState" class="px-5 grid place-items-center min-h-[10em]">
 				à la recherche des formules dans un très gros livre
 			</div>
-			<draggable
-				v-else
-				v-model="theFormular"
-				:class="props.responsive ? 'lg:columns-2 xl:columns-3' : ''"
-				class="columns-1 space-y-5"
-				handle=".draggable-handle"
-				item-key="id"
-				v-bind="{
+			<draggable v-else v-model="theFormular" :class="props.responsive ? 'lg:columns-2 xl:columns-3' : ''"
+				class="columns-1 space-y-5" handle=".draggable-handle" item-key="id" v-bind="{
 					animation: 200,
 					disabled: !$page.props.auth.can.admin,
-				}"
-				@end="updateFormulasOrder"
-			>
+				}" @end="updateFormulasOrder">
 				<template #item="{ element }">
 					<div class="relative">
-						<div
-							v-admin="editMode"
-							class="absolute draggable-handle cursor-pointer -top-3 -left-3 bg-white border rounded-full w-[24px] h-[24px] grid place-items-center"
-						>
+						<div v-admin="editMode"
+							class="absolute draggable-handle cursor-pointer -top-3 -left-3 bg-white border rounded-full w-[24px] h-[24px] grid place-items-center">
 							<i class="bi bi-arrows-move" />
 						</div>
-						<block-show
-							v-if="element.block"
-							:key="element.id"
-							v-theme.border="element.chapter.theme.id"
-							:block="element.block"
-							:max-illustration="1"
+						<block-show v-if="element.block" :key="element.id" v-theme.border="element.chapter.theme.id"
+							:block="element.block" :max-illustration="1"
 							class="break-inside-avoid-column bg-white rounded shadow border-l-4"
-							@destroy="deleteFormular(element.id)"
-						/>
+							@destroy="deleteFormular(element.id)" />
 					</div>
 				</template>
 				<template #footer>
 					<footer>
-						<div
-							v-show="editMode"
-							v-admin
-						>
-							<button
-								class="btn-new"
-								@click="addFormula"
-							>
+						<div v-show="editMode" v-admin>
+							<button class="btn-new" @click="addFormula">
 								Ajouter une formule
 							</button>
 						</div>
@@ -178,10 +147,6 @@ const addFormula = function() {
 			</draggable>
 		</div>
 
-		<div
-			v-if="theFormularErrors !== ''"
-			class="text-red font-code text-xs"
-			v-text="theFormularErrors"
-		/>
+		<div v-if="theFormularErrors !== ''" class="text-red font-code text-xs" v-text="theFormularErrors" />
 	</section>
 </template>

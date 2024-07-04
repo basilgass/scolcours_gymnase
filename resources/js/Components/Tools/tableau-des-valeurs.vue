@@ -6,13 +6,12 @@
  * tags: algebre,1M
  */
 import { computed, ref } from "vue"
-import { numberCorrection } from "pidraw/esm/Calculus"
 import type { Polynom } from "pimath/dist/maths/algebra/polynom"
 import KeyboardDisplay from "@/Components/Keyboards/KeyboardDisplay.vue"
 import { PiMath } from "pimath"
 import type { NumExp } from "pimath/dist/maths/numexp"
 import ToolForm, { IToolForm } from "@/Components/Tools/Parts/ToolForm.vue"
-import { Random } from "pimath/dist/maths/randomization/random"
+import { numberCorrection } from "@/helpers/helperFunctions"
 
 const forms: IToolForm[] = [
 	{
@@ -117,7 +116,7 @@ const fx = computed(() => {
 
 			data.push({
 				x: x.value,
-				fx: numberCorrection(v.value, null, null, +fixed.value),
+				fx: numberCorrection(v.value, +fixed.value),
 				fxTex: v.tex
 			})
 			x.add(vStep)

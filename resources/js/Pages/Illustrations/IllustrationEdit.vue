@@ -1,11 +1,13 @@
-<script lang="ts" setup>
+<script
+	lang="ts"
+	setup
+>
 import { computed, inject, onMounted, PropType, ref } from "vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 import type { IllustrationInterface, widgetInterface } from "@/types/modelInterfaces"
 import FormImageDrop from "@/Components/Form/FormImageDrop.vue"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
-import { parserHelperText } from "pidraw/esm/Parser"
 import { router } from "@inertiajs/vue3"
 import axios from "axios"
 import { flashInterface } from "@/types"
@@ -45,14 +47,14 @@ const currentComponent = computed<widgetInterface>(() => {
 })
 
 // available components.
-const chapterComponents = ref<{ [Key: string]: widgetInterface }>({})
+const chapterComponents = ref<Record<string, widgetInterface>>({})
 
 // Load the list of components
 function loadComponents() {
 	axios
 		.get(route("widgets.components"))
 		.then((res) => {
-			(res.data as Array<widgetInterface>).forEach(comp => {
+			(res.data as widgetInterface[]).forEach(comp => {
 				chapterComponents.value[comp.id] = comp
 			})
 
@@ -78,9 +80,10 @@ const currentLineHelperText = computed<{
 	options: string,
 	description: string
 }>(() => {
-	if (currentComponent.value.slug === "draw-parser-widget") {
-		return parserHelperText(currentLine.value)
-	}
+	// TODO: Parse helper text from the current component.
+	// if (currentComponent.value.slug === "draw-parser-widget") {
+	// 	return parserHelperText(currentLine.value)
+	// }
 	return {
 		parameters: "",
 		options: "",
@@ -160,43 +163,24 @@ onMounted(() => {
 				</div>
 			</div>
 			<div class="self-start grid grid-cols-2 gap-2 items-center flex-wrap">
-				<button
-					class="btn-primary btn-xs"
-					@click="illustrationSave"
-				>
+				<button class="btn-primary btn-xs" @click="illustrationSave">
 					enregistrer
 				</button>
-				<button
-					class="btn-primary btn-xs"
-					@click="illustrationSaveAndEdit"
-				>
+				<button class="btn-primary btn-xs" @click="illustrationSaveAndEdit">
 					enregistrer et éditer
 				</button>
-				<button
-					class="btn-cancel btn-xs"
-					@click="illustrationVisit"
-				>
+				<button class="btn-cancel btn-xs" @click="illustrationVisit">
 					retour
 				</button>
-				<confirm-button
-					class="btn-delete btn-xs"
-					@confirm="illustrationDelete"
-				>
+				<confirm-button class="btn-delete btn-xs" @confirm="illustrationDelete">
 					supprimer
 				</confirm-button>
 			</div>
 			<div v-if="false">
-				<button
-					class="btn btn-xs"
-					@click="copyIllustration"
-				>
+				<button class="btn btn-xs" @click="copyIllustration">
 					<i class="bi bi-clipboard-plus" />
 				</button>
-				<button
-					v-if="hasClipboard"
-					class="btn btn-xs"
-					@click="pasteIllustration"
-				>
+				<button v-if="hasClipboard" class="btn btn-xs" @click="pasteIllustration">
 					<i class="bi bi-clipboard-pulse" />
 				</button>
 			</div>
@@ -209,14 +193,9 @@ onMounted(() => {
 						Sélectionner le module: {{ currentComponent.name }}
 					</h3>
 					<div class="text-xs flex gap-2 flex-wrap px-3 py-2">
-						<button
-							v-for="(data, comp) of chapterComponents"
-							:key="comp"
-							v-theme.btn="data.theme.id"
+						<button v-for="(data, comp) of chapterComponents" :key="comp" v-theme.btn="data.theme.id"
 							:class="theIllustration.widget.id === data.id ? 'font-semibold border-2 shadow scale-110' : ''"
-							class="btn btn-xs transition-all"
-							@click="toggleComponent(data)"
-						>
+							class="btn btn-xs transition-all" @click="toggleComponent(data)">
 							{{ data.name }}
 						</button>
 					</div>
@@ -224,49 +203,31 @@ onMounted(() => {
 
 				<div class="flex-1 px-5">
 					<!-- edition et prévisualisation -->
-					<div
-						class="grid grid-cols-1 md:grid-cols-2 gap-3"
-					>
+					<div class="grid grid-cols-1 md:grid-cols-2 gap-3">
 						<div class="grid grid-cols-1 gap-3">
 							<!-- image illustration -->
-							<div
-								v-if="currentComponent?.component === 'image-widget.vue'"
-								class="col-span-2 mb-5"
-							>
+							<div v-if="currentComponent?.component === 'image-widget.vue'" class="col-span-2 mb-5">
 								<form-image-drop @file-dropped="imageFileDropped" />
 							</div>
 
 							<!-- draw illustration -->
-							<div
-								v-else-if="currentComponent?.component === 'draw-parser-widget.vue'"
-								class="col-span-2 w-full"
-							>
+							<div v-else-if="currentComponent?.component === 'draw-parser-widget.vue'"
+								class="col-span-2 w-full">
 								<div class="mb-3">
-									<form-maker
-										v-model="theIllustration.parameters"
-										class="font-code mt-3 text-xs"
-										inline
-										label="paramètres"
-										sm
-									>
+									<form-maker v-model="theIllustration.parameters" class="font-code mt-3 text-xs"
+										inline label="paramètres" sm>
 										<template #message>
 											grid, axis, x=-5:5, y=-5:5, unit=1:2, tex, nolabel, nopoint
 										</template>
 									</form-maker>
 								</div>
 
-								<form-maker
-									v-model="theIllustration.code"
-									:hide-label="true"
-									:rows="10"
-									input-class="font-code"
-									name="drawData"
-									type="textarea"
-									@current-line="currentLine = $event"
-								/>
+								<form-maker v-model="theIllustration.code" :hide-label="true" :rows="10"
+									input-class="font-code" name="drawData" type="textarea"
+									@current-line="currentLine = $event" />
 
 								<div class="font-code text-xs min-h-[3em] bg-gray-200">
-									<div v-if="theIllustration.code.split('\n\n').length>1">
+									<div v-if="theIllustration.code.split('\n\n').length > 1">
 										%&lt;*&gt; afficher qu'une fois<br>
 										%&lt;...&gt; afficher aux steps indiqués (que suivant) <br>
 										%-FG- couche au premier plan
@@ -276,10 +237,7 @@ onMounted(() => {
 										$a=a,b,...,c/intervalle=valeur[~]<br>
 										~ est optionnel: il désactive les parenthèses autour de la variable
 									</div>
-									<div
-										v-else
-										class="flex justify-between"
-									>
+									<div v-else class="flex justify-between">
 										<div>{{ currentLineHelperText.parameters }}</div>
 										<div>{{ currentLineHelperText.options }}</div>
 
@@ -289,50 +247,21 @@ onMounted(() => {
 							</div>
 
 							<!-- component illustration -->
-							<div
-								v-else
-								class="col-span-2  h-full w-full grid grid-cols-1 items-center"
-							>
-								<form-maker
-									v-model="theIllustration.parameters"
-									label="parametres"
-								/>
-								<form-maker
-									v-model="theIllustration.code"
-									:rows="10"
-									language="latex"
-									type="code"
-								/>
-								<markdown-it
-									v-if="currentComponent"
-									:text="currentComponent.description"
-									class="font-code text-xs min-h-[3em] bg-gray-200"
-								/>
+							<div v-else class="col-span-2  h-full w-full grid grid-cols-1 items-center">
+								<form-maker v-model="theIllustration.parameters" label="parametres" />
+								<form-maker v-model="theIllustration.code" :rows="10" language="latex" type="code" />
+								<markdown-it v-if="currentComponent" :text="currentComponent.description"
+									class="font-code text-xs min-h-[3em] bg-gray-200" />
 							</div>
 						</div>
-						<illustration-show
-							:illustration="theIllustration"
-							class="bg-white"
-							preview
-						/>
+						<illustration-show :illustration="theIllustration" class="bg-white" preview />
 					</div>
 				</div>
 
 				<div class="grid grid-cols-1 md:grid-cols-2 gap-3 w-full p-5">
-					<form-maker
-						v-model="theIllustration.title"
-						inline
-						label="nom de la figure"
-						sm
-					/>
+					<form-maker v-model="theIllustration.title" inline label="nom de la figure" sm />
 
-					<form-maker
-						v-model="theIllustration.css"
-						class="font-code"
-						inline
-						label="css"
-						sm
-					/>
+					<form-maker v-model="theIllustration.css" class="font-code" inline label="css" sm />
 				</div>
 			</div>
 		</main>

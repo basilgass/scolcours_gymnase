@@ -1,8 +1,8 @@
 import { Dom, ForeignObject, G, SVG, Svg } from "@svgdotjs/svg.js"
 import type { Fraction } from "pimath/dist/maths/coefficients/fraction"
 import { PiMath } from "pimath"
-import type { Graph } from "pidraw/esm/Graph"
 import katex from "katex"
+import PiDraw from "pidraw"
 
 /**
  * Class to generate a probability tree.
@@ -17,8 +17,8 @@ import katex from "katex"
  */
 
 // TODO: améliorer la génération d'arbre de probabilité avec des config de couleurs (label, chemin, etc...)
-	// TODO: améliorer les paramètres
-	// TDOD: mettre des commentaires et rendre le code plus clair.
+// TODO: améliorer les paramètres
+// TDOD: mettre des commentaires et rendre le code plus clair.
 
 enum ProbabilityTreeBranchResult {
 	none,
@@ -62,7 +62,7 @@ export class ProbabilityTree {
 	private _svg: { labels: G, lines: G }
 	private _width: number
 	private _height: number
-	private _graphDraw: Graph
+	private _graphDraw: PiDraw
 	private _graph: Svg
 	private _config: ProbabilityTreeConfigInterface
 	private _tree: ProbabilityTreeLeafInterface
@@ -530,7 +530,7 @@ export class ProbabilityTree {
 		if (!Number.isSafeInteger(throws) || throws <= 0 || data.length % 2 === 1) return []
 
 		// Get the number of items
-		const items: { [label: string]: number } = {}
+		const items: Record<string, number> = {}
 		for (let i = 0; i < data.length; i += 2) {
 			items[data[i]] = +data[i + 1]
 		}
@@ -539,9 +539,7 @@ export class ProbabilityTree {
 		return this._parseSimpleInputAddLeaves(items, 1, throws, repeat)
 	}
 
-	private _parseSimpleInputAddLeaves(items: {
-		[label: string]: number
-	}, crtThrow: number, maxThrows: number, repeat: boolean): ProbabilityTreeLeafInterface[] {
+	private _parseSimpleInputAddLeaves(items: Record<string, number>, crtThrow: number, maxThrows: number, repeat: boolean): ProbabilityTreeLeafInterface[] {
 		// Get the max number of items
 		const maxItems = Object.values(items).reduce((a, b) => a + b)
 
@@ -575,13 +573,13 @@ export class ProbabilityTree {
 
 		// Start root leaf
 		let rootLeaf: ProbabilityTreeLeafInterface = {
-				node: "ROOT",
-				leaves: [],
-				number: 0,
-				probability: new PiMath.Fraction(1),
-				branchProbability: []
-			},
-			crtLevel: number = 0
+			node: "ROOT",
+			leaves: [],
+			number: 0,
+			probability: new PiMath.Fraction(1),
+			branchProbability: []
+		},
+			crtLevel = 0
 
 		// Split the data into lines
 		const lines = value.split("\n"),

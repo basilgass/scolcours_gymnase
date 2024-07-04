@@ -8,7 +8,6 @@
 import { computed, ref } from "vue"
 import { PiMath } from "pimath"
 import type { Vector } from "pimath/dist/maths/geometry/vector"
-import { numberCorrection } from "pidraw/esm/Calculus"
 import ToolForm, { IToolForm } from "@/Components/Tools/Parts/ToolForm.vue"
 
 const forms: IToolForm[] = [
@@ -130,7 +129,7 @@ let result = computed(() => {
 				v-if="vectors.length>=2"
 				class="grid grid-cols-2 gap-3"
 			>
-				<div v-katex="`\\angle \\left(${pV1.tex} ; ${pV2.tex} \\right)  = ${numberCorrection(pV1.angleWith(pV2), 0.001, 0.001,2)}`" />
+				<div v-katex="`\\angle \\left(${pV1.tex} ; ${pV2.tex} \\right)  = ${+pV1.angleWith(pV2).toFixed(2)}`" />
 			</div>
 			<div
 				class="py-1 px-3 bg-red-100 border border-red-300 rounded"

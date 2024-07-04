@@ -104,7 +104,6 @@ function storeCurrentPost(){
 }
 
 onMounted(() => {
-	// TODO: save the last visited post or perhaps last question ?
 	storeCurrentPost()
 	if (props.anchor) {
 		nextTick(() => useMenuScrollTo(props.anchor))

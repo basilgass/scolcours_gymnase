@@ -20,10 +20,7 @@ function update() {
 		...theWidget.value
 	}).then((res) => {
 		// Reload the page
-		router.reload({
-			preserveScroll: true,
-			preserveState: true
-		})
+		router.reload()
 
 		theWidget.value = res.data
 

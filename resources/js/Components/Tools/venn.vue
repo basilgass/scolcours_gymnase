@@ -8,9 +8,10 @@
 
 import { computed, onMounted, ref } from "vue"
 import { PiMath } from "pimath"
-import { PiDraw } from "pidraw/esm"
 import KeyboardDisplay from "@/Components/Keyboards/KeyboardDisplay.vue"
 import ToolForm, { IToolForm } from "@/Components/Tools/Parts/ToolForm.vue"
+import PiDraw from "pidraw"
+import { COORDINATE_SYSTEM } from "pidraw/lib/pidraw.common"
 
 const forms: IToolForm[] = [
 	{
@@ -48,17 +49,15 @@ function updateVenn(P) {
 
 function generateSVG() {
 	geom = new PiDraw(draw.value, {
-		width: 470, height: 470,
-		grid: {
-			x: 42,
-			y: 42
-		},
+		width: 470, 
+		height: 470,
 		origin: {
 			x: 30,
 			y: 480
-		}
+		},
+		system: COORDINATE_SYSTEM.CARTESIAN_2D
 	})
-	geom.getGrid().hide()
+
 
 	const E = geom.path("m 10,10 l450,0 0,450 l-450,0 z").fill("blue"),
 		A = geom.path("M117.09765999999999 192.28125A118.57143 118.57143 0 0 0 49.158199999999994 299.49609A118.57143 118.57143 0 0 0 167.72852 418.06836A118.57143 118.57143 0 0 0 237.73046999999997 395.19921999999997A118.57143 118.57143 0 0 1 189.15819999999997 299.49609A118.57143 118.57143 0 0 1 190.55272999999994 281.35546999999997A118.57143 118.57143 0 0 1 117.09765999999993 192.28125Z ", "A"),
@@ -152,6 +151,7 @@ onMounted(() => {
 
 		<div
 			ref="draw"
+			id="draw"
 			class="max-w-lg"
 		/>
 	</article>

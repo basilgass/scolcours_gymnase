@@ -1,8 +1,8 @@
 import katex from "katex/dist/katex.mjs"
 import AsciiMathParser from "../asciimath2tex"
 import { useKatexMacros } from "@/Composables/useHelpers"
-import { numberCorrection } from "pidraw/esm/Calculus"
 import renderMathInElement from "katex/contrib/auto-render"
+import { numberCorrection } from "@/helpers/helperFunctions"
 
 function katexAutoRender(el) {
 	if (el) {
@@ -71,10 +71,7 @@ function katexUpdate(el, binding) {
 	}
 
 	// Make sure rawTex is a string
-	if(!rawTex)rawTex = ""
-
-	// TODO: removed the replaec All -> does it work?
-	// rawTex = rawTex.replaceAll(/\$[a-z]/g, "\\textcolor{red}{A}")
+	if (!rawTex) rawTex = ""
 
 	if (binding.modifiers.auto) {
 		el.innerHTML = rawTex

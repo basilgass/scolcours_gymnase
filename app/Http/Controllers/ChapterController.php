@@ -30,13 +30,13 @@ class ChapterController extends Controller
 	{
 		if (Auth::User()?->admin) {
 			$chapters = $theme->chapters()
-//				->with('challenges')
+				//				->with('challenges')
 				->orderBy('active', 'DESC')
 				->orderBy('title', 'ASC')
 				->get();
 		} else {
 			$chapters = $theme->chapters()
-//				->with('challenges')
+				//				->with('challenges')
 				->where('active', true)
 				->get();
 		}
@@ -69,8 +69,8 @@ class ChapterController extends Controller
 
 
 		$chapter = $theme->chapters()->create([
-			'title' => $validation[ 'title' ],
-			'slug'  => $validation[ 'slug' ],
+			'title' => $validation['title'],
+			'slug'  => $validation['slug'],
 		]);
 
 		// Create a specific block
@@ -79,15 +79,15 @@ class ChapterController extends Controller
 		]);
 
 		return $chapter;
-//		return redirect()->route('themes.chapters.intro', [$theme->slug, $chapter->slug]);
+		//		return redirect()->route('themes.chapters.intro', [$theme->slug, $chapter->slug]);
 	}
 
 	public function create(Theme $theme)
 	{
 		// TODO: route is disabled - does not exist anymore !
-//		return Inertia::render("Chapters/ChapterCreate",[
-//			"theme" => $theme->only('color', 'icon', 'slug', 'title', 'id')
-//		]);
+		//		return Inertia::render("Chapters/ChapterCreate",[
+		//			"theme" => $theme->only('color', 'icon', 'slug', 'title', 'id')
+		//		]);
 	}
 
 
@@ -97,7 +97,7 @@ class ChapterController extends Controller
 			// Used for the page layout
 			"theme"   => ThemeResource::make($theme),
 			// Get the chapter (for next / precvious / ...)
-			"chapter" => fn() => ChapterResource::make($chapter, true),
+			"chapter" => fn () => ChapterResource::make($chapter, true),
 		]);
 	}
 
@@ -123,7 +123,7 @@ class ChapterController extends Controller
 			// Used for the page layout
 			"theme"   => ThemeResource::make($theme),
 			// Get the chapter (for next / previous / ...)
-			"chapter" => fn() => ChapterResource::make($chapter, true),
+			"chapter" => fn () => ChapterResource::make($chapter, true),
 			// The post information
 			"post"    => PostResource::make($post),
 			// Block for a scroll to
@@ -151,8 +151,8 @@ class ChapterController extends Controller
 			"posts.*.id"    => ['required', 'exists:App\Models\Post,id'],
 			"posts.*.order" => ['required', "int", 'min:1']
 		]);
-		foreach ($validation[ 'posts' ] as $row) {
-			$chapter->posts->find($row[ 'id' ])->update(['order' => $row[ 'order' ]]);
+		foreach ($validation['posts'] as $row) {
+			$chapter->posts->find($row['id'])->update(['order' => $row['order']]);
 		}
 
 		return [
@@ -168,24 +168,21 @@ class ChapterController extends Controller
 			'slug'       => ['required', 'min:1', 'max:255'],
 		]);
 
-		$chapter->title = $validation[ 'title' ];
-		$chapter->meta_title = $validation[ 'meta_title' ] ?? null;
-		$chapter->slug = $validation[ 'slug' ];
+		$chapter->title = $validation['title'];
+		$chapter->meta_title = $validation['meta_title'] ?? null;
+		$chapter->slug = $validation['slug'];
 		$chapter->save();
 
 		// Save the corresponding block!
-		// TODO: save the corresponding block automatically !
-		$block = $chapter->blocks[ 0 ];
+		$block = $chapter->blocks[0];
 		$validation = $request->validate([
 			'block'      => ['array'],
 			'block.body' => ['string'],
 		]);
 
 		$block->update([
-			'body' => $validation[ 'block' ][ 'body' ]
+			'body' => $validation['block']['body']
 		]);
-		// Update the illustration
-		// TODO: Chapter - block - illustration : update from ChapterForm
 
 		// Refresh the chapter model
 		$chapter->refresh();
@@ -211,8 +208,6 @@ class ChapterController extends Controller
 				[...$validate]
 			);
 		}
-
-
 	}
 
 	// TO BE REMOVED
@@ -251,12 +246,11 @@ class ChapterController extends Controller
 		return BlockResource::collection($blocks);
 	}
 
-// Get basic info about chapter
+	// Get basic info about chapter
 	public function info(Chapter $chapter)
 	{
 		return [
 			"title" => $chapter->title,
 		];
 	}
-
 }

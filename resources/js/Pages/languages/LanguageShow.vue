@@ -1,4 +1,7 @@
-<script lang="ts" setup>
+<script
+	lang="ts"
+	setup
+>
 
 // Set the main layout.
 import LayoutMain from "@/Layouts/LayoutMain.vue"
@@ -70,7 +73,7 @@ const localStorageKey = computed(() => {
 })
 
 const hasLocalData = ref(false)
-if(localStorage.getItem(localStorageKey.value)){
+if (localStorage.getItem(localStorageKey.value)) {
 	hasLocalData.value = true
 }
 
@@ -80,17 +83,11 @@ if(localStorage.getItem(localStorageKey.value)){
 	<section class="scolcours-container">
 		<ArticleTitle :title="language" />
 
-		<Link
-			:href="`/${language}`"
-			class="hover:pl-2 transition-all duration-300"
-		>
-			<i class="bi bi-arrow-bar-left" /> retour
+		<Link :href="`/${language}`" class="hover:pl-2 transition-all duration-300">
+		<i class="bi bi-arrow-bar-left" /> retour
 		</Link>
 
-		<LanguageUnitsSelector
-			v-show="state==='intro'"
-			v-model="unitsSelection"
-		/>
+		<LanguageUnitsSelector v-show="state === 'intro'" v-model="unitsSelection" />
 
 		<!-- Local storage detection
 		TODO : how to "load" the data ? -> make a component for the "intro" for each games.
@@ -104,11 +101,11 @@ if(localStorage.getItem(localStorageKey.value)){
 
 
 		<!-- load the corresponding game -->
-		<div v-if="words.length>0">
-			<language-list v-if="game==='list'" />
-			<language-type v-else-if="game==='type'" />
-			<language-guess v-else-if="game==='guess'" />
-			<language-memory v-else-if="game==='memory'" />
+		<div v-if="words.length > 0">
+			<language-list v-if="game === 'list'" />
+			<language-type v-else-if="game === 'type'" />
+			<language-guess v-else-if="game === 'guess'" />
+			<language-memory v-else-if="game === 'memory'" />
 		</div>
 	</section>
 </template>

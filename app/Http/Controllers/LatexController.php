@@ -22,14 +22,13 @@ class LatexController extends Controller
 		]);
 
 		// Check if folder exists.
-		$theme = $validation["theme"]??'divers';
+		$theme = $validation["theme"] ?? 'divers';
 		$folder = "pdf/{$theme}/{$validation["slug"]}";
 		if (!Storage::disk('public')->exists($folder)) {
 			Storage::disk('public')->makeDirectory($folder);
 		}
 
 		// Generate a filename
-		// TODO: Generate slug of 4 letters
 		$fileID = Str::random(4);
 		// Check if it is already in the database.
 		while (LatexPdf::whereSlug($fileID)->first()) {
@@ -42,14 +41,14 @@ class LatexController extends Controller
 		$laraTeX = (new LaraTeX($validation["template"]))
 			->with([
 				'title' => $validation["title"],
-				'questions' => $validation["questions"]??[],
-				'content' => $validation["content"]??'',
+				'questions' => $validation["questions"] ?? [],
+				'content' => $validation["content"] ?? '',
 				'slug' => '/download/' . $fileID
 			]);
 
 		$result = $laraTeX->savePdf(
-				Storage::disk('public')->path($fullpath)
-			);
+			Storage::disk('public')->path($fullpath)
+		);
 
 		if ($result) {
 			// Save it to the database.
@@ -77,7 +76,6 @@ class LatexController extends Controller
 				);
 		}
 		return false;
-
 	}
 
 	public function links()
@@ -88,69 +86,68 @@ class LatexController extends Controller
 	public function dry()
 	{
 		return (new LaraTeX)->dryRun();
-
 	}
-//		public function toPng()
-//		{
-//			$outputFile = false;
-//			$latexBinFolder = dirname(config('laratex.binPath'));
-//
-//			$content = "Hello world";
-//			$result = (new LaraTeX('latex.standalone'))->with([
-//				                                                  'standalone' => true,
-//				                                                  'content'    => $content
-//			                                                  ])
-//			                                           ->render();
-//
-//			// Save the file
-//			$compileFolder = storage_path(config('laratex.tempPath'));
-//			File::put($compileFolder . '/temp.tex', $result);
-//
-//			$convertOptions = [
-//				$latexBinFolder . '/latex',
-//				'temp.tex'
-//			];
-//
-//			$home = "C:/websites/scolcours_gymnase/";
-//			if(env('APP_ENV')==='local'){
-//				$localEnv = [
-//					'HOME'        => $home,
-//					'HOMEPATH'    => $home,
-//					'HOMEDRIVE'   => $home,
-//					'USERPROFILE' => $home,
-//				];
-//			}else{
-//				$localEnv = null;
-//			}
-//
-//			$convert = new Process($convertOptions, $compileFolder, $localEnv);
-//			$convert->run();
-//
-//			if (!$convert->isSuccessful()) {
-//				dd('FAILED COMPILE TO DVI', $convertOptions,
-//				   $convert->getOutput(),
-//				   $convert->getErrorOutput());
-//			}
-//
-//
-//			// Convert to png
-//			$convertOptions = [
-//				$latexBinFolder . '/dvipng',
-//				'temp'
-//			];
-//
-//			$convert = new Process($convertOptions, $compileFolder,
-//			                       $localEnv);
-//
-//			$convert->run();
-//
-//
-//			if (!$convert->isSuccessful()) {
-//				dd('FAILED CONVERT TO PNG', $convertOptions, $convert->getOutput(),$convert->getErrorOutput() );
-//			}
-//
-//			return $compileFolder . '/temp.png';
-//		}
+	//		public function toPng()
+	//		{
+	//			$outputFile = false;
+	//			$latexBinFolder = dirname(config('laratex.binPath'));
+	//
+	//			$content = "Hello world";
+	//			$result = (new LaraTeX('latex.standalone'))->with([
+	//				                                                  'standalone' => true,
+	//				                                                  'content'    => $content
+	//			                                                  ])
+	//			                                           ->render();
+	//
+	//			// Save the file
+	//			$compileFolder = storage_path(config('laratex.tempPath'));
+	//			File::put($compileFolder . '/temp.tex', $result);
+	//
+	//			$convertOptions = [
+	//				$latexBinFolder . '/latex',
+	//				'temp.tex'
+	//			];
+	//
+	//			$home = "C:/websites/scolcours_gymnase/";
+	//			if(env('APP_ENV')==='local'){
+	//				$localEnv = [
+	//					'HOME'        => $home,
+	//					'HOMEPATH'    => $home,
+	//					'HOMEDRIVE'   => $home,
+	//					'USERPROFILE' => $home,
+	//				];
+	//			}else{
+	//				$localEnv = null;
+	//			}
+	//
+	//			$convert = new Process($convertOptions, $compileFolder, $localEnv);
+	//			$convert->run();
+	//
+	//			if (!$convert->isSuccessful()) {
+	//				dd('FAILED COMPILE TO DVI', $convertOptions,
+	//				   $convert->getOutput(),
+	//				   $convert->getErrorOutput());
+	//			}
+	//
+	//
+	//			// Convert to png
+	//			$convertOptions = [
+	//				$latexBinFolder . '/dvipng',
+	//				'temp'
+	//			];
+	//
+	//			$convert = new Process($convertOptions, $compileFolder,
+	//			                       $localEnv);
+	//
+	//			$convert->run();
+	//
+	//
+	//			if (!$convert->isSuccessful()) {
+	//				dd('FAILED CONVERT TO PNG', $convertOptions, $convert->getOutput(),$convert->getErrorOutput() );
+	//			}
+	//
+	//			return $compileFolder . '/temp.png';
+	//		}
 
 
 }

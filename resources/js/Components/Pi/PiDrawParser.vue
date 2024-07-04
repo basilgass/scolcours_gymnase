@@ -1,10 +1,11 @@
 <!--
 Affichage d'un PiDraw
-// TODO: doit être remodeler pour plus de robustesse et optimiser
 -->
-<script lang="ts" setup>
+<script
+	lang="ts"
+	setup
+>
 import { computed, inject, onMounted, provide, ref, watch } from "vue"
-import { PiDraw } from "pidraw/esm"
 
 import VueSlider from "vue-slider-component/dist/vue-slider-component.umd.min"
 import "vue-slider-component/theme/material.css"
@@ -12,8 +13,7 @@ import { PiMath } from "pimath"
 import katex from "katex"
 import { useResizeObserver } from "@vueuse/core"
 import PiDrawParserVisibility from "@/Components/Pi/Parts/PiDrawParserVisibility.vue"
-import type { Graph } from "pidraw/esm/Graph"
-import type { Parser } from "pidraw/esm/Parser"
+import PiDraw from "pidraw"
 
 const emits = defineEmits(["update"])
 
@@ -44,8 +44,7 @@ const codeArray = computed(() => {
 })
 
 // Main draving system - not reactive !
-let PiGraph: Graph,
-	PiParser: Parser,
+let PiGraph: PiDraw,
 	PiParserHasErrors = ref(false),
 	figures = ref({})
 
@@ -195,7 +194,7 @@ const stepperStart = ref(false),
 		}
 		return ""
 	}),
-	stepperForeground = function(code: string) {
+	stepperForeground = function (code: string) {
 		const [before, after] = code.split("%-FG-")
 		return [
 			before,
@@ -226,7 +225,7 @@ const drawCode = computed(() => {
 					if (row.split("=")[0].includes("(x)")) {
 						row = row.replaceAll(
 							slider.key,
-							slider.wrap?`(${slider.value})`:`${slider.value}`
+							slider.wrap ? `(${slider.value})` : `${slider.value}`
 						)
 					} else {
 						row = row.replaceAll(slider.key, slider.value)
@@ -254,40 +253,40 @@ const drawCode = computed(() => {
 		const crtIndex = stepperStart.value ? stepperIndex.value : stepperMax.value
 
 		return stepsPart
-				.split("\n\n")
-				.slice(0, crtIndex + 1)
-				.filter((step, index) => {
-					if (step.slice(0, 2) === "%<") {
-						const constrains = step.split("%<")[1].split(">")[0]
+			.split("\n\n")
+			.slice(0, crtIndex + 1)
+			.filter((step, index) => {
+				if (step.slice(0, 2) === "%<") {
+					const constrains = step.split("%<")[1].split(">")[0]
 
-						// It contains just a star : visible only for the corresponding step
-						if (constrains === "*") {
-							return index === crtIndex
-						}
-
-						// Might be a list of comma separated values.
-						const values = constrains
-							.split(",")
-							.map(value => {
-								if (value.includes("-")) {
-									const [min, max] = value.split("-").map(x => +x)
-									const v = []
-									for (let i = min; min <= max; i++) {
-										v.push(i)
-									}
-									return v
-								} else if (Number.isSafeInteger(+value)) {
-									return +value
-								}
-							})
-							.flat()
-
-						return values.indexOf(crtIndex) !== -1
+					// It contains just a star : visible only for the corresponding step
+					if (constrains === "*") {
+						return index === crtIndex
 					}
 
-					return true
-				})
-				.join("\n\n")
+					// Might be a list of comma separated values.
+					const values = constrains
+						.split(",")
+						.map(value => {
+							if (value.includes("-")) {
+								const [min, max] = value.split("-").map(x => +x)
+								const v = []
+								for (let i = min; min <= max; i++) {
+									v.push(i)
+								}
+								return v
+							} else if (Number.isSafeInteger(+value)) {
+								return +value
+							}
+						})
+						.flat()
+
+					return values.indexOf(crtIndex) !== -1
+				}
+
+				return true
+			})
+			.join("\n\n")
 			+ FGPart
 	} else {
 		return outputCode
@@ -300,7 +299,7 @@ function PiParserUpdate(from: string, withSliders = false) {
 
 	// Update the drawing
 	try {
-		PiParser.update(drawCode.value)
+		PiGraph.refresh(drawCode.value)
 		emits("update", PiGraph.figures)
 		PiParserHasErrors.value = false
 	} catch (e) {
@@ -317,44 +316,26 @@ function PiParserUpdate(from: string, withSliders = false) {
 // Build the resizeobserver...
 onMounted(() => {
 	// Default settings
-	PiGraph = new PiDraw(drawWrapper.value, {
-		width: props.width,
-		height: props.height,
-		origin: {
-			x: 200,
-			y: 160
-		},
-		grid: {
-			x: 20,
-			y: 20
-		}
-	})
-
-	// KaTeX converter
-	PiGraph.texConverter = {
-		toTex: katex.renderToString,
-		options: {
+	PiGraph = PiDraw.build(
+		'root',
+		props.draw.parameters ?? '',
+		props.draw.code,
+		(value: string) => katex.renderToString(value, {
 			throwOnError: false,
 			displayMode: true
-		}
-	}
-
-	// Add axis
-	PiGraph.axis()
-
-	// Enable the parser system
-	PiParser = PiGraph.parse("")
+		})
+	)
 
 	// Add a resizeObserver on the draw container
 	useResizeObserver(drawWrapper.value, () => {
-		PiParserUpdate("onResize", true)
-		PiParser.updateLayout(props.draw.parameters??"")
+		// PiParserUpdate("onResize", true)
+		// PiParser.updateLayout(props.draw.parameters ?? "")
 		// PiParser.update(drawCode.value, true)
 	})
 })
 
 // Grab the data when on mouse up for external modifications
-const drawMouseUp = function() {
+const drawMouseUp = function () {
 	emits("update", PiGraph.figures)
 }
 
@@ -373,7 +354,7 @@ watch(
 
 		if (newValue.parameters !== oldValue.parameters) {
 			try {
-				PiParser.updateLayout(newValue.parameters??"")
+				PiGraph.refreshLayout(newValue.parameters ?? "")
 			} catch {
 				console.warn(
 					"Cannot parse (watch props.draw.parameters)",
@@ -388,7 +369,7 @@ defineExpose({ figures })
 
 provide("PiDrawGraph", PiGraph)
 </script>
-
+https://eslint.vuejs.org/rules/max-attributes-per-line.html
 <template>
 	<div :class="PiParserHasErrors ? 'bg-red-100' : ''">
 		<!-- draw graph-->
@@ -396,26 +377,16 @@ provide("PiDrawGraph", PiGraph)
 			ref="drawWrapper"
 			class="katex-m-0 min-w-[50px] min-h-[50px]"
 			@mouseup="drawMouseUp"
+			id="root"
 		/>
 
-		<pi-draw-parser-visibility
-			v-if="PiGraph"
-			:draw="props.draw"
-			:graph="PiGraph"
-		/>
+		<pi-draw-parser-visibility v-if="PiGraph" :draw="props.draw" :graph="PiGraph" />
 
 		<!-- stepper -->
-		<div
-			v-if="stepperMax > 1"
-			class="my-3"
-		>
+		<div v-if="stepperMax > 1" class="my-3">
 			<div v-if="stepperStart">
 				<div class="flex items-center justify-center gap-10">
-					<button
-						:disabled="stepperIndex <= 0"
-						class="px-3 py-2 btn btn-xs"
-						@click="stepperIndex--"
-					>
+					<button :disabled="stepperIndex <= 0" class="px-3 py-2 btn btn-xs" @click="stepperIndex--">
 						<i class="bi bi-chevron-left" />
 					</button>
 					<div>{{ stepperIndex + 1 }} / {{ stepperMax }}</div>
@@ -427,19 +398,11 @@ provide("PiDrawGraph", PiGraph)
 						<i class="bi bi-chevron-right" />
 					</button>
 				</div>
-				<div
-					v-katex.auto="stepperText"
-					class="my-3"
-				/>
+				<div v-katex.auto="stepperText" class="my-3" />
 			</div>
-			<div
-				v-else
-				class="w-full"
-			>
+			<div v-else class="w-full">
 				<button
-					:class="`w-full btn-xs btn-scolcours-${
-						$page.props.theme?.slug || 'main'
-					} tracking-wider d-block`"
+					:class="`w-full btn-xs btn-scolcours-${$page.props.theme?.slug || 'main'} tracking-wider d-block`"
 					@click="stepperStart = true"
 				>
 					Marche à suivre
@@ -448,10 +411,7 @@ provide("PiDrawGraph", PiGraph)
 		</div>
 
 		<!-- slider(s) -->
-		<div
-			v-if="sliders.length > 0 "
-			class="space-y-12 mt-6"
-		>
+		<div v-if="sliders.length > 0" class="space-y-12 mt-6">
 			<vue-slider
 				v-for="(slider, index) of sliders"
 				:key="`slider-${index}`"
