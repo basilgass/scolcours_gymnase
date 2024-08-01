@@ -11,8 +11,8 @@
 import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"
 
 const code = `@begin:static
-O(0,0)
-c=circ O,10
+A(0,0)
+c=circ A,10
 P0(10,0)
 P1(8.67,5)->tex=\\frac{\\pi}{6}/mr/0.5;0
 P2(7.07,7.07)->tex=\\frac{\\pi}{4}/mr/0.5;0.4
@@ -46,12 +46,12 @@ T16(0,-7.07)->tex=\\scriptsize-\\frac{\\sqrt{2}}{2}/rm/0.5;0
 T17(0,-8.6)->tex=\\scriptsize-\\frac{\\sqrt{3}}{2}/rm/0.5;0
 T19(0,-10)->tex=\\scriptsize -1/rb/0.5;0
 T(10,10)->hide
-X1(10,5.77)->tex=\\scriptsize \\frac{\\sqrt{3}}{3}/mr/0.5;
-X2(10,10)->tex=\\scriptsize 1/mr/0.5;
-X3(10,17.3)->tex=\\scriptsize \\sqrt{3}/mr/0.5;
-X4(10,-5.77)->tex=\\scriptsize -\\frac{\\sqrt{3}}{3}/mr/0.5;
-X5(10,-10)->tex=\\scriptsize -1/mr/0.5;
-X6(10,-17.3)->tex=\\scriptsize -\\sqrt{3}/mr/0.5;
+X1(10,5.77)->tex=\\scriptsize \\frac{\\sqrt{3}}{3}/mr/0.5;0
+X2(10,10)->tex=\\scriptsize 1/mr/0.5;0
+X3(10,17.3)->tex=\\scriptsize \\sqrt{3}/mr/0.5;0
+X4(10,-5.77)->tex=\\scriptsize -\\frac{\\sqrt{3}}{3}/mr/0.5;0
+X5(10,-10)->tex=\\scriptsize -1/mr/0.5;0
+X6(10,-17.3)->tex=\\scriptsize -\\sqrt{3}/mr/0.5;0
 t=TP0
 @end:static
 P(7.07,7.07)->drag:c
@@ -59,13 +59,13 @@ C=proj P,x->hide
 S=proj P,y->hide
 c=PC.->dash
 s=PS.->dash
-p0=PO->dot
-p=PO.->w=3
-c1=OC.->green,w=5
-s1=OS.->red,w=5
-a=arc P0,O,P,2->tex=\\theta
+p0=PA->dot
+p=PA.->w=3
+c1=AC.->green,w=5
+s1=AS.->red,w=5
 T=inter p,t
-t1=P0T.->gold,w=5`
+t1=P0T.->gold,w=5
+a=arc P0,A,P->tex=\\theta`
 
 const parameters = `axis,x=-12:12,y=-20:20,ppu=20`
 </script>

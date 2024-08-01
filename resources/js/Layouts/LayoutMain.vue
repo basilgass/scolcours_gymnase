@@ -1,7 +1,4 @@
-<script
-	lang="ts"
-	setup
->
+<script lang="ts" setup>
 import MainHeader from "@/Components/MainHeader.vue"
 import MainFooter from "@/Components/MainFooter.vue"
 import { computed, PropType, provide, ref } from "vue"
@@ -62,7 +59,6 @@ const pageTitle = computed(() => {
 
 <template>
 	<div>
-
 		<Head :title="pageTitle" />
 
 		<!-- Header of the page -->
@@ -86,14 +82,21 @@ const pageTitle = computed(() => {
 
 		<!-- Flash message handler -->
 		<div v-if="flashMessages.length" class="fixed bottom-2 right-2 grid grid-cols-1 gap-3 max-w-[20em]">
-			<flash-message v-for="(message, idx) in flashMessages" :key="`flash-${idx}`" :class="{
-				'bg-red-600/80 text-white': message.type === 'error',
-				'bg-green-600/80 text-white': message.type === 'success',
-				'bg-amber-400/80 text-black': message.type === 'info',
-				'bg-white text-black': message.type === undefined,
-			}" :link="message.config?.link" :timeout="message.config.timeout"
-				@close=" flashMessages = flashMessages.filter((x) => x.id !== $event)" @open="message.id = $event"
-				:message="message.message" />
+			<flash-message
+				v-for="(message, idx) in flashMessages"
+				:key="`flash-${idx}`"
+				:class="{
+					'bg-red-600/80 text-white': message.type === 'error',
+					'bg-green-600/80 text-white': message.type === 'success',
+					'bg-amber-400/80 text-black': message.type === 'info',
+					'bg-white text-black': message.type === undefined,
+				}"
+				:link="message.config?.link"
+				:timeout="message.config.timeout"
+				@close=" flashMessages = flashMessages.filter((x) => x.id !== $event)"
+				@open="message.id = $event"
+				:message="message.message"
+			/>
 		</div>
 	</div>
 </template>

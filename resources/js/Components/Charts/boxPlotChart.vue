@@ -7,8 +7,7 @@ const props = defineProps({
 	chartLabels: {type: Array, default: () => []},
 	chartDataset: {type: [Object, Array], required: true},
 	chartOptions: {
-		type: Object, default: () => {
-		}
+		type: Object, default: () => null
 	},
 	chartLegend: {type: Boolean, default: false},
 	chartColorset: {type: String, default: null}

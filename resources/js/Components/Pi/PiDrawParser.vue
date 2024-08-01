@@ -13,7 +13,10 @@ import { PiMath } from "pimath"
 import katex from "katex"
 import { useResizeObserver } from "@vueuse/core"
 import PiDrawParserVisibility from "@/Components/Pi/Parts/PiDrawParserVisibility.vue"
-import PiDraw from "pidraw"
+
+// TODO: importing directly pidraw is not working - need to import the lib module (Not a big deal... but strange)
+// import { Parser as PiParser } from "pidraw/lib/Parser"
+import { PiParser } from "pidraw"
 
 const emits = defineEmits(["update"])
 
@@ -44,7 +47,7 @@ const codeArray = computed(() => {
 })
 
 // Main draving system - not reactive !
-let PiGraph: PiDraw,
+let PiGraph: PiParser,
 	PiParserHasErrors = ref(false),
 	figures = ref({})
 
@@ -210,7 +213,7 @@ const stepperStart = ref(false),
  */
 const drawCode = computed(() => {
 	let outputCode = props.draw.code
-
+	
 	// Modify the code using the local information (sliders)
 	if (sliders.value.length > 0) {
 		// Remove the lines starting with $ (dollar sign)
@@ -293,6 +296,10 @@ const drawCode = computed(() => {
 	}
 })
 
+const drawParameter = computed(()=> {
+	return props.draw.parameters ?? ""
+})
+
 function PiParserUpdate(from: string, withSliders = false) {
 	// Get the sliders
 	if (withSliders) getSliders()
@@ -316,14 +323,16 @@ function PiParserUpdate(from: string, withSliders = false) {
 // Build the resizeobserver...
 onMounted(() => {
 	// Default settings
-	PiGraph = PiDraw.build(
-		'root',
-		props.draw.parameters ?? '',
-		props.draw.code,
-		(value: string) => katex.renderToString(value, {
-			throwOnError: false,
-			displayMode: true
-		})
+	PiGraph = new PiParser(
+		drawWrapper.value,
+		{
+			parameters: props.draw.parameters ?? '',
+			code: props.draw.code,
+			tex: (value: string) => katex.renderToString(`${value}`, {
+				throwOnError: false,
+				displayMode: true
+			})
+		}
 	)
 
 	// Add a resizeObserver on the draw container
@@ -345,42 +354,51 @@ watch(drawCode, () => {
 	PiParserUpdate("drawCode watcher")
 })
 
-watch(
-	() => props.draw,
-	(newValue, oldValue) => {
-		if (newValue.code !== oldValue.code) {
-			PiParserUpdate("props.draw watcher", true)
-		}
+watch(drawParameter, ()=> {
+	// Watch changes from "inside"
+	PiGraph.refreshLayout(drawParameter.value)
+})
+// watch(
+// 	() => props.draw,
+// 	(newValue, oldValue) => {
+// 		if (newValue.code !== oldValue.code) {
+// 			console.log('update code')
+// 			PiParserUpdate("props.draw watcher", true)
+// 		}
 
-		if (newValue.parameters !== oldValue.parameters) {
-			try {
-				PiGraph.refreshLayout(newValue.parameters ?? "")
-			} catch {
-				console.warn(
-					"Cannot parse (watch props.draw.parameters)",
-					props.draw.params
-				)
-			}
-		}
-	}
-)
+// 		if (newValue.parameters !== oldValue.parameters) {
+// 			try {
+// 				PiGraph.refreshLayout(newValue.parameters ?? "")
+// 			} catch {
+// 				console.warn(
+// 					"Cannot parse (watch props.draw.parameters)",
+// 					props.draw.params
+// 				)
+// 			}
+// 		}
+// 	}
+// )
 
 defineExpose({ figures })
 
 provide("PiDrawGraph", PiGraph)
+
 </script>
-https://eslint.vuejs.org/rules/max-attributes-per-line.html
+
 <template>
-	<div :class="PiParserHasErrors ? 'bg-red-100' : ''">
+	<article :class="PiParserHasErrors ? 'bg-red-100' : ''">
 		<!-- draw graph-->
 		<div
 			ref="drawWrapper"
 			class="katex-m-0 min-w-[50px] min-h-[50px]"
 			@mouseup="drawMouseUp"
-			id="root"
 		/>
 
-		<pi-draw-parser-visibility v-if="PiGraph" :draw="props.draw" :graph="PiGraph" />
+		<pi-draw-parser-visibility 
+			v-if="PiGraph" 
+			:draw="props.draw" 
+			:graph="PiGraph"
+		/>
 
 		<!-- stepper -->
 		<div v-if="stepperMax > 1" class="my-3">
@@ -421,5 +439,5 @@ https://eslint.vuejs.org/rules/max-attributes-per-line.html
 			/>
 			<div v-katex="texOutput" />
 		</div>
-	</div>
+	</article>
 </template>

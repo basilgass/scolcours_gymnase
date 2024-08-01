@@ -10,7 +10,7 @@ import { computed, onMounted, ref } from "vue"
 import { PiMath } from "pimath"
 import KeyboardDisplay from "@/Components/Keyboards/KeyboardDisplay.vue"
 import ToolForm, { IToolForm } from "@/Components/Tools/Parts/ToolForm.vue"
-import PiDraw from "pidraw"
+import { PiGraph as PiDraw } from "pidraw"
 import { COORDINATE_SYSTEM } from "pidraw/lib/pidraw.common"
 
 const forms: IToolForm[] = [
@@ -49,7 +49,7 @@ function updateVenn(P) {
 
 function generateSVG() {
 	geom = new PiDraw(draw.value, {
-		width: 470, 
+		width: 470,
 		height: 470,
 		origin: {
 			x: 30,
@@ -108,7 +108,7 @@ function generateSVG() {
 	}
 }
 
-function updateKbrd($event){
+function updateKbrd($event) {
 	forms[0].value.value = $event.input
 }
 onMounted(() => {
@@ -127,13 +127,13 @@ onMounted(() => {
 			<keyboard-display
 				@change="updateKbrd"
 				:custom-keys="{
-					'A': {type: 'math', display: 'A'},
-					'B': {type: 'math', display: 'B'},
-					'C': {type: 'math', display: 'C'},
-					'|': {type: 'math', display: '\\cup'},
-					'&': {type: 'math', display: '\\cap'},
-					'!': {type: 'math', display: '\\overline{\\textcolor{lightgray}{A}}'},
-					'-': {type: 'math', display: '\\textcolor{lightgray}{A}\\setminus{\\textcolor{lightgray}{B}}'},
+					'A': { type: 'math', display: 'A' },
+					'B': { type: 'math', display: 'B' },
+					'C': { type: 'math', display: 'C' },
+					'|': { type: 'math', display: '\\cup' },
+					'&': { type: 'math', display: '\\cap' },
+					'!': { type: 'math', display: '\\overline{\\textcolor{lightgray}{A}}' },
+					'-': { type: 'math', display: '\\textcolor{lightgray}{A}\\setminus{\\textcolor{lightgray}{B}}' },
 
 				}"
 				:keyboard="{
@@ -142,17 +142,13 @@ onMounted(() => {
 						'A', 'B', 'C',
 						'|', '&', '!',
 						'-', '(', ')',
-						'@back','', '@reset'
+						'@back', '', '@reset'
 					]
 				}"
 				class="my-2"
 			/>
 		</div>
 
-		<div
-			ref="draw"
-			id="draw"
-			class="max-w-lg"
-		/>
+		<div ref="draw" id="draw" class="max-w-lg" />
 	</article>
 </template>

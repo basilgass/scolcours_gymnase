@@ -12,8 +12,8 @@ import { themeDirective } from "@/directives/themeDirectives"
 import { useEditMode } from "./Composables/useEditMode"
 
 // import route from "ziggy-js"
-const appName =
-	window.document.getElementsByTagName("title")[0]?.innerText || "ScolCours"
+// const appName =
+// 	window.document.getElementsByTagName("title")[0]?.innerText || "ScolCours"
 
 createInertiaApp({
 	title: (title) => {

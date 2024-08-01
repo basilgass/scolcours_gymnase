@@ -6,8 +6,8 @@ Affichage de la table des matières.
 import { computed, inject, Ref, ref } from "vue"
 import { router } from "@inertiajs/vue3"
 import FormMaker from "@/Components/Form/FormMaker.vue"
-import { flashInterface } from "@/types/index.js"
 import axios from "axios"
+import { flashInterface } from "@/types"
 
 const props = defineProps({
 	chapter: { type: Object, required: true },

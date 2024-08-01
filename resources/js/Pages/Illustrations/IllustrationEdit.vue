@@ -192,10 +192,16 @@ onMounted(() => {
 					<h3 class="font-semibold">
 						Sélectionner le module: {{ currentComponent.name }}
 					</h3>
+					
 					<div class="text-xs flex gap-2 flex-wrap px-3 py-2">
-						<button v-for="(data, comp) of chapterComponents" :key="comp" v-theme.btn="data.theme.id"
+						<button
+							v-for="(data, comp) of chapterComponents"
+							:key="comp"
+							v-theme.btn="data.theme.id"
 							:class="theIllustration.widget.id === data.id ? 'font-semibold border-2 shadow scale-110' : ''"
-							class="btn btn-xs transition-all" @click="toggleComponent(data)">
+							class="btn btn-xs transition-all"
+							@click="toggleComponent(data)"
+						>
 							{{ data.name }}
 						</button>
 					</div>
@@ -211,20 +217,33 @@ onMounted(() => {
 							</div>
 
 							<!-- draw illustration -->
-							<div v-else-if="currentComponent?.component === 'draw-parser-widget.vue'"
-								class="col-span-2 w-full">
+							<div
+								v-else-if="currentComponent?.component === 'draw-parser-widget.vue'"
+								class="col-span-2 w-full"
+							>
 								<div class="mb-3">
-									<form-maker v-model="theIllustration.parameters" class="font-code mt-3 text-xs"
-										inline label="paramètres" sm>
+									<form-maker
+										v-model="theIllustration.parameters"
+										class="font-code mt-3 text-xs"
+										inline
+										label="paramètres"
+										sm
+									>
 										<template #message>
 											grid, axis, x=-5:5, y=-5:5, unit=1:2, tex, nolabel, nopoint
 										</template>
 									</form-maker>
 								</div>
 
-								<form-maker v-model="theIllustration.code" :hide-label="true" :rows="10"
-									input-class="font-code" name="drawData" type="textarea"
-									@current-line="currentLine = $event" />
+								<form-maker
+									v-model="theIllustration.code"
+									:hide-label="true"
+									:rows="10"
+									input-class="font-code"
+									name="drawData"
+									type="textarea"
+									@current-line="currentLine = $event"
+								/>
 
 								<div class="font-code text-xs min-h-[3em] bg-gray-200">
 									<div v-if="theIllustration.code.split('\n\n').length > 1">
@@ -249,9 +268,17 @@ onMounted(() => {
 							<!-- component illustration -->
 							<div v-else class="col-span-2  h-full w-full grid grid-cols-1 items-center">
 								<form-maker v-model="theIllustration.parameters" label="parametres" />
-								<form-maker v-model="theIllustration.code" :rows="10" language="latex" type="code" />
-								<markdown-it v-if="currentComponent" :text="currentComponent.description"
-									class="font-code text-xs min-h-[3em] bg-gray-200" />
+								<form-maker
+									v-model="theIllustration.code"
+									:rows="10"
+									language="latex"
+									type="code"
+								/>
+								<markdown-it
+									v-if="currentComponent"
+									:text="currentComponent.description"
+									class="font-code text-xs min-h-[3em] bg-gray-200"
+								/>
 							</div>
 						</div>
 						<illustration-show :illustration="theIllustration" class="bg-white" preview />
@@ -259,9 +286,20 @@ onMounted(() => {
 				</div>
 
 				<div class="grid grid-cols-1 md:grid-cols-2 gap-3 w-full p-5">
-					<form-maker v-model="theIllustration.title" inline label="nom de la figure" sm />
+					<form-maker
+						v-model="theIllustration.title"
+						inline
+						label="nom de la figure"
+						sm
+					/>
 
-					<form-maker v-model="theIllustration.css" class="font-code" inline label="css" sm />
+					<form-maker
+						v-model="theIllustration.css"
+						class="font-code"
+						inline
+						label="css"
+						sm
+					/>
 				</div>
 			</div>
 		</main>

@@ -230,7 +230,7 @@ export interface PostQuestionsStatsInterface {
 	type: string;
 	questions: {
 		id: number;
-		users: { [key: string]: number }[];
+		users: Record<string, number>[];
 	}[];
 }
 

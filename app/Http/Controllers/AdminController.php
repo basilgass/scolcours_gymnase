@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\ChapterResource;
 use App\Http\Resources\ToolResource;
 use App\Http\Resources\UserResource;
+use App\Http\Resources\WidgetResource;
 use App\Models\Challenge;
 use App\Models\Chapter;
 use App\Models\Illustration;
@@ -192,7 +193,7 @@ class AdminController extends Controller
 		return Inertia::render(
 			'Admin/AdminWidgetsPage',
 			[
-				"widgets" => Widget::all()
+				"widgets" => WidgetResource::collection(Widget::all())
 			]
 		);
 	}

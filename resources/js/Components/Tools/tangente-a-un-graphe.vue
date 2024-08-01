@@ -6,10 +6,7 @@
  * tags: algebre,2M
  */
 import { computed, ref } from "vue"
-import { Line } from "pimath/dist/maths/geometry/line"
 import { PiMath } from "pimath"
-import type { Fraction } from "pimath/dist/maths/coefficients/fraction"
-import { ISolution } from "pimath/dist/maths/algebra/equation"
 import ToolForm, { IToolForm } from "@/Components/Tools/Parts/ToolForm.vue"
 
 const forms: IToolForm[] = [
@@ -49,11 +46,11 @@ const affine = computed(() => {
 			equ.solve()
 
 
-			let sols: Line[] = equ.solutions
-				.filter((sol: ISolution) => sol.exact !== false)
-				.map((sol: ISolution) => {
+			let sols: PiMath.Line = equ.solutions
+				.filter((sol: PiMath.ISolution) => sol.exact !== false)
+				.map((sol:PiMath.ISolution) => {
 					const x = sol.exact,
-						y = P.evaluate(x as Fraction)
+						y = P.evaluate(x as PiMath.Fraction)
 
 					return new PiMath.Geometry.Line(
 						new PiMath.Geometry.Point(x, y),

@@ -7,7 +7,7 @@ import { computed, onMounted, ref } from "vue"
 import { PiMath } from "pimath"
 import KeyboardDisplay from "@/Components/Keyboards/KeyboardDisplay.vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
-import PiDraw from "pidraw"
+import {PiGraph as PiDraw} from "pidraw"
 
 let draw = ref(null),
 	geom,

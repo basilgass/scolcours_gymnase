@@ -1,1 +1,0 @@
-import{_ as e}from"./_plugin-vue_export-helper-DlAUqK2U.js";import{aK as t,O as c,P as s,b5 as r}from"./@vue-BdJ9S6Xi.js";const a={},n={class:"text-center"},_={class:"text-4xl"},i=s("div",{class:"text-sm"}," powered by Scolcours ",-1);function l(o,d){return t(),c("div",n,[s("div",_,r(o.$page.props.scolcours.title),1),i])}const f=e(a,[["render",l]]);export{f as S};

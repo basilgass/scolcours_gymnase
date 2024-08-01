@@ -19,7 +19,16 @@ const forms: IToolForm[] = [
 	{
 		label: "code",
 		type: "code",
-		value: ref(""),
+		value: ref(`O(0,0)
+A(5,1)
+B(3,8)->drag=grid
+d=OA.
+e=OB.
+T1(6,0)
+T2(6,5)
+t=T1T2
+a=arc A,O,B,2->tex=\\theta
+X=inter t,d->w=10`),
 	}
 ]
 

@@ -2,7 +2,8 @@
 	lang="ts"
 	setup
 >
-import PiDraw from "pidraw"
+import {PiParser as PiDraw} from "pidraw"
+
 import { computed, onMounted, PropType, ref } from "vue"
 
 const props = defineProps({
@@ -34,10 +35,10 @@ function visibilityButtonsInit(): visibilityButtonType[] {
 		
 		// Parse the current row, without creating any element.
 		// const c = parserPreprocess(row) as ParserPrepocessType
-		const c = PiDraw.parse(row)
+		// const c = PiDraw.parse(row)
 
 		// TODO: Button creation must be implemented !
-		console.log(c)
+		// console.log(c)
 		
 		// Check if the "btn" options is here!
 		// const optionCode = Object.values.filter(x => x.split(":")[0] === "btn")

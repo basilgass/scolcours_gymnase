@@ -44,7 +44,7 @@ function refreshWidgets() {
 			>
 				<template #card="{ item }:{ item: widgetInterface}">
 					<div
-						v-theme.border="item.theme.id"
+						v-theme.border="item.theme?.id"
 						class="bg-white border-l-8 px-5 py-2 rounded-r-lg"
 					>
 						<div

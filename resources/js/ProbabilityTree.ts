@@ -2,7 +2,7 @@ import { Dom, ForeignObject, G, SVG, Svg } from "@svgdotjs/svg.js"
 import type { Fraction } from "pimath/dist/maths/coefficients/fraction"
 import { PiMath } from "pimath"
 import katex from "katex"
-import PiDraw from "pidraw"
+import { PiParser } from "pidraw"
 
 /**
  * Class to generate a probability tree.
@@ -62,7 +62,7 @@ export class ProbabilityTree {
 	private _svg: { labels: G, lines: G }
 	private _width: number
 	private _height: number
-	private _graphDraw: PiDraw
+	private _graphDraw: PiParser
 	private _graph: Svg
 	private _config: ProbabilityTreeConfigInterface
 	private _tree: ProbabilityTreeLeafInterface
