@@ -35,7 +35,7 @@ class PidrawUpdate extends Command
 		foreach ($illustrations as $illustration) {
 			// Replace all : to =
 			$code = Str::of($illustration->code)->replaceMatches(
-				'/(w|fill|tex|label|move|btn|riemann|drag)(:)/',
+				'/(w|fill|tex|label|move|btn|riemann|drag|mark)(:)/',
 				'$1='
 			);
 
@@ -43,6 +43,7 @@ class PidrawUpdate extends Command
 				'/(biss)/',
 				'bis'
 			);
+
 			// Replace all Tex with position modifiers (domain to XY)
 			$code = $code->replaceMatches(
 				'/([tl|tc|tr|ml|mc|mr|bl|bc|br]\/[-0-9.]+)(:)/',

@@ -6,7 +6,7 @@ import "prismjs/themes/prism.css"
 import "prismjs/components/prism-latex"
 import "prismjs/components/prism-javascript"
 import "prismjs/components/prism-json"
-import { javascriptTriggers, latexTriggers, mdTriggers, TriggerFunction, TriggersObject } from "@/helpers/mdAutofill"
+import { javascriptTriggers, latexTriggers, mdTriggers, TriggerFunction } from "@/helpers/mdAutofill"
 
 /**
  * The value of the code area

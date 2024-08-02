@@ -8,9 +8,9 @@ import { FormValidationFraction } from "@/Components/Form/FormValidation/FormVal
 import { FormValidationNumber } from "@/Components/Form/FormValidation/FormValidationNumber"
 import type { FormMakerPropsType } from "@/Components/Form/FormMakerInterface"
 import { flashInterface } from "@/types"
-import axios from "axios"
 import { FormValidationVector } from "@/Components/Form/FormValidation/FormValidationVector"
 import { useUrlSearchParams } from "@vueuse/core"
+import axios from "axios"
 
 /**
  * This component is used to generate a form input
