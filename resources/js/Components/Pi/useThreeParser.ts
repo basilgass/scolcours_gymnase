@@ -1,5 +1,6 @@
 import { useResizeObserver } from '@vueuse/core'
 import * as THREE from 'three'
+import { LineGeometry } from 'three/examples/jsm/Addons.js'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { onMounted, Ref } from 'vue'
 
@@ -24,8 +25,8 @@ export function usePiThreeScene(container: Ref<HTMLElement>) {
 
     interface IThreeFigure {
         name: string,
-        figure?: THREE.Object3D,
-        vector?: THREE.Vector3,
+        figure: THREE.Object3D,
+        math: THREE.Vector3 | THREE.Line3 | THREE.Plane | THREE.EllipseCurve,
         raw: (string | number)[],
     }
 
@@ -157,13 +158,17 @@ export function usePiThreeScene(container: Ref<HTMLElement>) {
             .forEach(line => {
                 // Split to code and parameters
                 // <code>-><parameters>
-                const [code, parameters] = line.split('->')
+                const [code, params] = line.split('->')
                 let color: undefined | string = undefined
                 let opacity: undefined | number = undefined
 
+                const parameters = params === undefined ? [] : params.trim().split(',')
                 if (parameters) {
-                    const [key, value] = parameters.split('=')
-                    if (key === 'color') {
+                    // Find the color and opacity
+                    const colorParameter = parameters.filter(param => param.startsWith('color='))
+                    if (colorParameter.length > 0) {
+
+                        const [, value] = colorParameter[0].split('=')
                         const [paramColor, paramOpacity] = value.split('/')
                         color = paramColor
                         opacity = Number(paramOpacity)
@@ -179,14 +184,15 @@ export function usePiThreeScene(container: Ref<HTMLElement>) {
                     const [name, coords] = code.split('(')
 
                     // Show the point ?
-                    const show = coords.endsWith('*')
-                    const [x, y, z] = coords.slice(0, show ? -2 : -1).split(',').map(Number)
+                    const show = parameters.includes('*')
+                    const [x, y, z] = coords.slice(0, -1).split(',').map(Number)
 
                     // Default values of the point
                     figures[name] = {
                         name,
-                        vector: new THREE.Vector3(x, y, z),
-                        raw: [x, y, z]
+                        math: new THREE.Vector3(x, y, z),
+                        raw: [x, y, z],
+                        figure: null
                     }
 
                     if (show) {
@@ -206,22 +212,86 @@ export function usePiThreeScene(container: Ref<HTMLElement>) {
 
                     let [name, points] = code.split('=')
 
-                    const dashed = points.includes('-')
-                    // const segment = points.includes('.')
+                    const dashed = parameters.includes('dash')
+                    const lineType = points.includes('.') ? 'segment' : 'line'
                     points = points.replace(/[.-]/, '')
 
                     const [pt1, pt2] = points.split(/(?=[A-Z])/)
-                    const pt1Vector = figures[pt1].vector
-                    const pt2Vector = figures[pt2].vector
+                    const pt1Vector = figures[pt1].math as THREE.Vector3
+                    const pt2Vector = figures[pt2].math as THREE.Vector3
 
-                    const L = lineFromPoints(pt1Vector, pt2Vector, color, dashed)
+                    const L = lineFromPoints(pt1Vector, pt2Vector, lineType, color, dashed)
                     scene.add(L)
 
                     figures[name] = {
                         name,
                         raw: [pt1, pt2],
-                        figure: L
+                        figure: L,
+                        math: new THREE.Line3(pt1Vector, pt2Vector)
                     }
+                }
+
+                // v=vAB : it's a vector
+                else if (code.match(/^[a-z][0-9]*=v[A-Z][0-9]*[A-Z][0-9]*/)) {
+                    // Default point color
+                    if (!color) color = '#000000'
+
+                    const [name, points] = code.split('=')
+                    const [pt1, pt2] = points.slice(1).split(',')[0].split(/(?=[A-Z])/)
+                    const [length, arrowLength, arrowWidth] = (points.split(',')[1] ?? '')
+                        .split(',')
+                        .filter(x => x !== '').map(Number)
+
+                    const pt1Vector = figures[pt1].math as THREE.Vector3
+                    const pt2Vector = figures[pt2].math as THREE.Vector3
+
+                    const V = new THREE.ArrowHelper(
+                        pt2Vector.clone().sub(pt1Vector).normalize(),
+                        pt1Vector,
+                        length ?? pt1Vector.distanceTo(pt2Vector),
+                        color,
+                        arrowLength ?? 0.6,
+                        arrowWidth ?? 0.4
+                    )
+
+                    scene.add(V)
+
+                    figures[name] = {
+                        name,
+                        raw: [pt1, pt2],
+                        figure: V,
+                        math: new THREE.Line3(pt1Vector, pt2Vector)
+                    }
+                }
+
+                // P=proj A,p : it's a projection of a point A on a plane p
+                else if (code.match(/^[A-Z][0-9]*=proj [A-Z][0-9]*,[a-z][0-9]*/)) {
+                    // Default point color
+                    if (!color) color = '#000000'
+
+                    const [name, points] = code.split('=proj ')
+                    const [pt1, pt2] = points.split(',')
+
+                    const pt1Vector = figures[pt1].math as THREE.Vector3
+                    const plane = figures[pt2].math as THREE.Plane
+
+                    const proj = new THREE.Vector3()
+                    plane.projectPoint(pt1Vector, proj)
+
+                    const geometry = new THREE.SphereGeometry(0.07, 16, 16)
+                    const material = new THREE.MeshBasicMaterial({ color })
+
+                    const sphere = new THREE.Mesh(geometry, material)
+                    sphere.position.set(proj.x, proj.y, proj.z)
+                    scene.add(sphere)
+
+                    figures[name] = {
+                        name,
+                        raw: [pt1, pt2],
+                        figure: sphere,
+                        math: proj
+                    }
+
                 }
 
                 // p=plane A,B,C : it's a plane
@@ -234,9 +304,9 @@ export function usePiThreeScene(container: Ref<HTMLElement>) {
                     const [ptName1, ptName2, ptName3, ...opts] = points.split(',')
                     const [width, height, rotate] = opts.map(Number)
 
-                    const pt1 = figures[ptName1].vector
-                    const pt2 = figures[ptName2].vector
-                    const pt3 = figures[ptName3].vector
+                    const pt1 = figures[ptName1].math as THREE.Vector3
+                    const pt2 = figures[ptName2].math as THREE.Vector3
+                    const pt3 = figures[ptName3].math as THREE.Vector3
 
                     const plane = new THREE.Plane().setFromCoplanarPoints(pt1, pt2, pt3)
                     const geom = new THREE.PlaneGeometry(width ?? 10, height ?? 10)
@@ -260,7 +330,57 @@ export function usePiThreeScene(container: Ref<HTMLElement>) {
                     figures[name] = {
                         name,
                         raw: points.split(','),
-                        figure: mesh
+                        figure: mesh,
+                        math: plane
+                    }
+                }
+
+                // a=arc A,B,C : it's an arc
+                else if (code.split('=arc ').length === 2) {
+                    // Default point color
+                    if (!color) color = '#000000'
+
+                    const [name, points] = code.split('=arc ')
+                    const [ptName1, ptName2, ptName3, radius] = points.split(',')
+                    const pt1 = figures[ptName1].math as THREE.Vector3
+                    const pt2 = figures[ptName2].math as THREE.Vector3
+                    const pt3 = figures[ptName3].math as THREE.Vector3
+                    const r = isNaN(Number(radius)) ? 2 : Number(radius)
+
+                    const AB = pt1.clone().sub(pt2)
+                    const AC = pt3.clone().sub(pt2)
+                    const angle = AB.angleTo(AC)
+
+                    const curve = new THREE.EllipseCurve(0, 0, r, r, 0, angle, false, 0)
+                    const material = new THREE.LineBasicMaterial({ color })
+                    const arc = new THREE.Line(
+                        new THREE.BufferGeometry().setFromPoints(curve.getPoints(50)),
+                        material
+                    )
+
+                    // Rotate the curve to same orientation to the plane
+                    arc.quaternion.setFromUnitVectors(
+                        new THREE.Vector3(0, 0, 1),
+                        AB.clone().cross(AC).normalize()
+                    )
+                    // Move the curve to the center of the arc
+                    arc.position.set(pt2.x, pt2.y, pt2.z)
+
+                    const vertex = new THREE.Vector3()
+                    const attribute = arc.geometry.getAttribute('position')
+                    vertex.fromBufferAttribute(attribute, 0)
+                    arc.localToWorld(vertex)
+
+                    // Turn the angle to match the starting angle
+                    arc.rotateZ(AB.angleTo(vertex.clone().sub(pt2)))
+
+                    scene.add(arc)
+
+                    figures[name] = {
+                        name,
+                        raw: points.split(','),
+                        figure: arc,
+                        math: curve
                     }
                 }
             })
@@ -301,6 +421,7 @@ export function usePiThreeScene(container: Ref<HTMLElement>) {
         scene.add(yAxis)
         scene.add(zAxis)
     }
+
     function sceneGrid(grid = { size: 20, division: 10, color1: 0xdddddd, color2: 0xeeeeee }) {
         const gridXY = new THREE.GridHelper(grid.size, grid.division, grid.color1, grid.color2) // Taille 10, divisions 10, couleur noir
         gridXY.name = 'gridXY'
@@ -322,15 +443,51 @@ export function usePiThreeScene(container: Ref<HTMLElement>) {
         scene.add(gridXZ)
     }
 
-    function lineFromPoints(pt1: THREE.Vector3, pt2: THREE.Vector3, color: string, dashed?: boolean | { dashSize: number, gapSize: number }): THREE.Line {
-        const pt1pt2 = new THREE.Vector3().copy(pt2).sub(pt1).multiplyScalar(20)
-        const pt2pt1 = new THREE.Vector3().copy(pt1).sub(pt2).multiplyScalar(20)
-        const lineGeometry = new THREE.BufferGeometry().setFromPoints([
-            pt1pt2,
-            pt2pt1
-        ])
+    function lineFromPoints(
+        pt1: THREE.Vector3,
+        pt2: THREE.Vector3,
+        type: 'line' | 'segment' | 'vector' | 'halfLine',
+        color: string,
+        dashed?: boolean | { dashSize: number, gapSize: number }
+    ): THREE.Line {
 
-        lineGeometry.translate(pt1.x, pt1.y, pt1.z)
+        const lineGeometry = new THREE.BufferGeometry()
+
+        if (type === 'segment') {
+            lineGeometry.setFromPoints([
+                pt1,
+                pt2
+            ])
+        }
+
+        if (type === 'vector') {
+            lineGeometry.setFromPoints([
+                pt1,
+                pt2
+            ])
+        }
+
+        if (type === 'halfLine') {
+            // TODO: implement halfLine
+
+        }
+
+        if (type === 'line') {
+            // Any other cases (line)
+            const pt1pt2 = new THREE.Vector3().copy(pt2).sub(pt1).multiplyScalar(20)
+            const pt2pt1 = new THREE.Vector3().copy(pt1).sub(pt2).multiplyScalar(20)
+
+            lineGeometry.setFromPoints([
+                pt1pt2,
+                pt2pt1
+            ])
+
+            // Move the line to the correct place
+            lineGeometry.translate(pt1.x, pt1.y, pt1.z)
+
+        }
+
+
         // Create a basic material with a color attribute
         const lineMaterial = dashed ?
             new THREE.LineDashedMaterial(Object.assign(

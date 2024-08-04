@@ -3,8 +3,17 @@ import { ref } from 'vue'
 import PiThreeParser from '../Pi/PiThreeParser.vue'
 import FormMaker from '../Form/FormMaker.vue'
 
-const parameters = ref('')
-const code = ref('')
+const parameters = ref('grid,axis')
+const code = ref(`A(6,0,0)
+B(0,8,0)
+C(0,0,10)->*
+p=plane A,B,C
+O(0,0,6)->*
+P=proj O,p
+v1=vPA
+v2=vPB
+a=arc A,P,B
+`)
 </script>
 <template>
 	<!-- Title -->
