@@ -1,8 +1,12 @@
 import { useResizeObserver } from '@vueuse/core'
 import * as THREE from 'three'
-import { LineGeometry } from 'three/examples/jsm/Addons.js'
+
+import { LineMaterial } from 'three/addons/lines/LineMaterial.js'
+import { LineGeometry } from 'three/addons/lines/LineGeometry.js'
+
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { onMounted, Ref } from 'vue'
+import { Line2 } from 'three/examples/jsm/Addons.js'
 
 export function usePiThreeScene(container: Ref<HTMLElement>) {
 
@@ -161,6 +165,7 @@ export function usePiThreeScene(container: Ref<HTMLElement>) {
                 const [code, params] = line.split('->')
                 let color: undefined | string = undefined
                 let opacity: undefined | number = undefined
+                let width = 1
 
                 const parameters = params === undefined ? [] : params.trim().split(',')
                 if (parameters) {
@@ -172,12 +177,18 @@ export function usePiThreeScene(container: Ref<HTMLElement>) {
                         const [paramColor, paramOpacity] = value.split('/')
                         color = paramColor
                         opacity = Number(paramOpacity)
-
                     }
+
+                    width = Number(
+                        parameters
+                            .filter(param => param.startsWith('w='))
+                            .map(param => param.split('=')[1])[0] ?? width
+                    )
+
                 }
 
                 // A(1, 0, 1) : it's a point
-                if (code.match(/^[A-Z][0-9]*\([0-9.]+,[0-9.]+,[0-9.]+\)[*]?$/)) {
+                if (code.match(/^[A-Z][0-9]*\([-0-9.]+,[-0-9.]+,[-0-9.]+\)[*]?$/)) {
                     // Default point color
                     if (!color) color = '#000000'
 
@@ -213,6 +224,8 @@ export function usePiThreeScene(container: Ref<HTMLElement>) {
                     let [name, points] = code.split('=')
 
                     const dashed = parameters.includes('dash')
+
+
                     const lineType = points.includes('.') ? 'segment' : 'line'
                     points = points.replace(/[.-]/, '')
 
@@ -220,7 +233,7 @@ export function usePiThreeScene(container: Ref<HTMLElement>) {
                     const pt1Vector = figures[pt1].math as THREE.Vector3
                     const pt2Vector = figures[pt2].math as THREE.Vector3
 
-                    const L = lineFromPoints(pt1Vector, pt2Vector, lineType, color, dashed)
+                    const L = lineFromPoints(pt1Vector, pt2Vector, lineType, color, width, dashed)
                     scene.add(L)
 
                     figures[name] = {
@@ -352,11 +365,30 @@ export function usePiThreeScene(container: Ref<HTMLElement>) {
                     const angle = AB.angleTo(AC)
 
                     const curve = new THREE.EllipseCurve(0, 0, r, r, 0, angle, false, 0)
-                    const material = new THREE.LineBasicMaterial({ color })
-                    const arc = new THREE.Line(
-                        new THREE.BufferGeometry().setFromPoints(curve.getPoints(50)),
-                        material
-                    )
+
+
+                    // Fat line system
+                    const lineGeometry = new LineGeometry()
+                    const positions = []
+                    curve.getPoints(50).forEach(pt => {
+                        positions.push(pt.x, pt.y, 0)
+                    })
+                    lineGeometry.setPositions(positions)
+                    const matLine = new LineMaterial({
+                        color,
+                        linewidth: width,
+                        vertexColors: false,
+                        dashed: false,
+                        alphaToCoverage: true
+                    })
+                    const arc = new Line2(lineGeometry, matLine)
+
+                    // Simple line system.
+                    // const material = new THREE.LineBasicMaterial({ color })
+                    // const arc = new THREE.Line(
+                    //     new THREE.BufferGeometry().setFromPoints(curve.getPoints(50)),
+                    //     material
+                    // )
 
                     // Rotate the curve to same orientation to the plane
                     arc.quaternion.setFromUnitVectors(
@@ -367,13 +399,14 @@ export function usePiThreeScene(container: Ref<HTMLElement>) {
                     arc.position.set(pt2.x, pt2.y, pt2.z)
 
                     const vertex = new THREE.Vector3()
-                    const attribute = arc.geometry.getAttribute('position')
-                    vertex.fromBufferAttribute(attribute, 0)
+                    const attribute = arc.geometry.attributes.position
+
+                    // Why 5 ? Because the position is a Float32Array with 3 values (x, y, z) and 2 values for the UV
+                    vertex.fromBufferAttribute(attribute, 5)
                     arc.localToWorld(vertex)
 
                     // Turn the angle to match the starting angle
                     arc.rotateZ(AB.angleTo(vertex.clone().sub(pt2)))
-
                     scene.add(arc)
 
                     figures[name] = {
@@ -448,22 +481,28 @@ export function usePiThreeScene(container: Ref<HTMLElement>) {
         pt2: THREE.Vector3,
         type: 'line' | 'segment' | 'vector' | 'halfLine',
         color: string,
+        width: number,
         dashed?: boolean | { dashSize: number, gapSize: number }
-    ): THREE.Line {
+    ): Line2 {
 
-        const lineGeometry = new THREE.BufferGeometry()
+        // const lineGeometry = new THREE.BufferGeometry()
+        const lineGeometry = new LineGeometry()
 
         if (type === 'segment') {
-            lineGeometry.setFromPoints([
-                pt1,
-                pt2
+            lineGeometry.setPositions([
+                pt1.x, pt1.y, pt1.z,
+                pt2.x, pt2.y, pt2.z
             ])
+            // lineGeometry.setFromPoints([
+            //     pt1,
+            //     pt2
+            // ])
         }
 
         if (type === 'vector') {
-            lineGeometry.setFromPoints([
-                pt1,
-                pt2
+            lineGeometry.setPositions([
+                pt1.x, pt1.y, pt1.z,
+                pt2.x, pt2.y, pt2.z
             ])
         }
 
@@ -477,9 +516,9 @@ export function usePiThreeScene(container: Ref<HTMLElement>) {
             const pt1pt2 = new THREE.Vector3().copy(pt2).sub(pt1).multiplyScalar(20)
             const pt2pt1 = new THREE.Vector3().copy(pt1).sub(pt2).multiplyScalar(20)
 
-            lineGeometry.setFromPoints([
-                pt1pt2,
-                pt2pt1
+            lineGeometry.setPositions([
+                pt1pt2.x, pt1pt2.y, pt1pt2.z,
+                pt2pt1.x, pt2pt1.y, pt2pt1.z
             ])
 
             // Move the line to the correct place
@@ -489,21 +528,28 @@ export function usePiThreeScene(container: Ref<HTMLElement>) {
 
 
         // Create a basic material with a color attribute
-        const lineMaterial = dashed ?
-            new THREE.LineDashedMaterial(Object.assign(
-                {
-                    color,
-                    dashSize: 0.5,
-                    gapSize: 0.2
-                },
-                dashed === true ? {} : dashed
-            ))
-            : new THREE.LineBasicMaterial({ color, })
+        // const lineMaterial = dashed ?
+        //     new THREE.LineDashedMaterial(Object.assign(
+        //         {
+        //             color,
+        //             dashSize: 0.5,
+        //             gapSize: 0.2
+        //         },
+        //         dashed === true ? {} : dashed
+        //     ))
+        //     : new THREE.LineBasicMaterial({ color, })
+        const lineMaterial = new LineMaterial({
+            color,
+            linewidth: width,
+            vertexColors: false,
+            dashed: dashed ? true : false,
+            alphaToCoverage: true
+        })
 
-        const line = new THREE.Line(lineGeometry, lineMaterial)
-        if (dashed) {
-            line.computeLineDistances()
-        }
+        // const line = new THREE.Line(lineGeometry, lineMaterial)
+        const line = new Line2(lineGeometry, lineMaterial)
+        line.scale.set(1, 1, 1)
+        line.computeLineDistances()
 
         return line
     }
