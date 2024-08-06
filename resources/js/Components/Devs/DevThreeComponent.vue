@@ -10,7 +10,8 @@ C(1,1,10)->*
 p=plane A,B,C
 O(0,0,6)->*
 P=proj O,p
-v1=vPA,2
+l=PA->w=2
+v1=vPA,2->color=red,w=6
 v2=vPB,3,1,0.5
 a=arc A,P,B`)
 </script>

@@ -279,7 +279,7 @@ export function usePiThreeScene(container: Ref<HTMLElement>) {
                                 arrowLength,
                                 16
                             ),
-                        new THREE.MeshBasicMaterial({ color: "red" })
+                        new THREE.MeshBasicMaterial({ color })
                     )
                     cone.translateX(pt2End.x)
                     cone.translateY(pt2End.y)
