@@ -270,8 +270,7 @@ export function usePiThreeScene(container: Ref<HTMLElement>) {
                         pt1Start.clone(),
                         // Ending point : move the ending point by half the cone length
                         pt2End.clone().sub(director.clone().multiplyScalar(arrowLength / 2)),
-                        'vector',
-                        "red", 5)
+                        'vector', color, width)
 
                     const cone = new THREE.Mesh(
                         new
