@@ -249,31 +249,56 @@ export function usePiThreeScene(container: Ref<HTMLElement>) {
                     // Default point color
                     if (!color) color = '#000000'
 
-                    const [name, points] = code.split('=')
-                    const [pt1, pt2] = points.slice(1).split(',')[0].split(/(?=[A-Z])/)
-                    const [length, arrowLength, arrowWidth] = (points.split(',')[1] ?? '')
-                        .split(',')
+                    const [name, data] = code.split('=')
+                    const points = data.split(',')
+                    const [pt1, pt2] = points.shift().slice(1).split(/(?=[A-Z])/)
+                    const [length, aLength, aWidth] = points
                         .filter(x => x !== '').map(Number)
-
-                    const pt1Vector = figures[pt1].math as THREE.Vector3
+                    const pt1Start = figures[pt1].math as THREE.Vector3
                     const pt2Vector = figures[pt2].math as THREE.Vector3
 
-                    const V = new THREE.ArrowHelper(
-                        pt2Vector.clone().sub(pt1Vector).normalize(),
-                        pt1Vector,
-                        length ?? pt1Vector.distanceTo(pt2Vector),
-                        color,
-                        arrowLength ?? 0.6,
-                        arrowWidth ?? 0.4
-                    )
+                    const arrowLength = aLength ?? 0.6
+                    const arrowWidth = aWidth ?? 0.2
 
-                    scene.add(V)
+                    const pt2End = length === undefined ? pt2Vector : pt1Start.clone().add(pt2Vector.clone().sub(pt1Start).normalize().multiplyScalar(length))
+
+                    // Replace the line by a Fat line
+                    // V.line.geometry.dispose()
+                    const director = pt2End.clone().sub(pt1Start).normalize()
+                    const line = lineFromPoints(
+                        // Starting point
+                        pt1Start.clone(),
+                        // Ending point : move the ending point by half the cone length
+                        pt2End.clone().sub(director.clone().multiplyScalar(arrowLength / 2)),
+                        'vector',
+                        "red", 5)
+
+                    const cone = new THREE.Mesh(
+                        new
+                            THREE.ConeGeometry(
+                                arrowWidth,
+                                arrowLength,
+                                16
+                            ),
+                        new THREE.MeshBasicMaterial({ color: "red" })
+                    )
+                    cone.translateX(pt2End.x)
+                    cone.translateY(pt2End.y)
+                    cone.translateZ(pt2End.z)
+                    cone.translateOnAxis(pt2Vector.clone().sub(pt1Start).normalize(), -arrowLength / 2)
+                    cone.quaternion.setFromUnitVectors(
+                        new THREE.Vector3(0, 1, 0),
+                        new THREE.Vector3().copy(pt2Vector).sub(pt1Start).normalize()
+                    )
+                    line.add(cone)
+
+                    scene.add(line)
 
                     figures[name] = {
                         name,
                         raw: [pt1, pt2],
-                        figure: V,
-                        math: new THREE.Line3(pt1Vector, pt2Vector)
+                        figure: line,
+                        math: new THREE.Line3(pt1Start, pt2Vector)
                     }
                 }
 
@@ -493,10 +518,6 @@ export function usePiThreeScene(container: Ref<HTMLElement>) {
                 pt1.x, pt1.y, pt1.z,
                 pt2.x, pt2.y, pt2.z
             ])
-            // lineGeometry.setFromPoints([
-            //     pt1,
-            //     pt2
-            // ])
         }
 
         if (type === 'vector') {

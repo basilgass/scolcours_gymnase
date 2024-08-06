@@ -4,16 +4,15 @@ import PiThreeParser from '../Pi/PiThreeParser.vue'
 import FormMaker from '../Form/FormMaker.vue'
 
 const parameters = ref('grid,axis')
-const code = ref(`A(6,0,0)
-B(0,8,0)
-C(0,0,10)->*
+const code = ref(`A(6,2,2)
+B(3,8,3)
+C(1,1,10)->*
 p=plane A,B,C
 O(0,0,6)->*
 P=proj O,p
-v1=vPA
-v2=vPB
-a=arc A,P,B
-`)
+v1=vPA,2
+v2=vPB,3,1,0.5
+a=arc A,P,B`)
 </script>
 <template>
 	<!-- Title -->
