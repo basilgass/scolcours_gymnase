@@ -215,30 +215,7 @@ export function usePiThreeScene(container: Ref<HTMLElement>) {
                     scene.add(sphere)
                     sphere.visible = show
 
-                    const hasLabel = parameters.filter(param => param.startsWith('label='))
-
-                    let label: CSS2DObject
-                    if (hasLabel.length > 0) {
-                        const [, ...values] = hasLabel[0].split('=')
-                        const value = values.join('=')
-                        label = new CSS2DObject(document.createElement('div'))
-                        label.element.textContent = value
-                        label.element.style.textAlign = 'center'
-                        label.center.set(0, 0)
-                        sphere.add(label)
-                    }
-
-                    // Maybe there are some texts to display
-                    const tex = parameters.filter(param => param.startsWith('tex='))
-                    if (tex.length > 0) {
-                        const [, ...values] = tex[0].split('=')
-                        const value = values.join('=')
-                        label = new CSS2DObject(document.createElement('div'))
-                        label.element.innerHTML = katex.renderToString(value)
-                        label.element.classList.add('katex-m-0')
-                        label.center.set(0, 1)
-                        sphere.add(label)
-                    }
+                    const label = addLabel(sphere, parameters)
 
                     // Default values of the point
                     figures[name] = {
@@ -246,7 +223,7 @@ export function usePiThreeScene(container: Ref<HTMLElement>) {
                         math: new THREE.Vector3(x, y, z),
                         raw: [x, y, z],
                         figure: sphere,
-                        label: label ?? null
+                        label
                     }
                 }
 
@@ -360,7 +337,8 @@ export function usePiThreeScene(container: Ref<HTMLElement>) {
                         name,
                         raw: [pt1, pt2],
                         figure: sphere,
-                        math: proj
+                        math: proj,
+                        label: addLabel(sphere, parameters)
                     }
 
                 }
@@ -475,6 +453,34 @@ export function usePiThreeScene(container: Ref<HTMLElement>) {
                     }
                 }
             })
+    }
+
+    function addLabel(obj: THREE.Mesh, parameters: string[]): CSS2DObject | undefined {
+        const hasLabel = parameters.filter(param => param.startsWith('label='))
+        let label: CSS2DObject
+        if (hasLabel.length > 0) {
+            const [, ...values] = hasLabel[0].split('=')
+            const value = values.join('=')
+            label = new CSS2DObject(document.createElement('div'))
+            label.element.textContent = value
+            label.element.style.textAlign = 'center'
+            label.center.set(0, 0)
+            obj.add(label)
+        }
+
+        // Maybe there are some texts to display
+        const tex = parameters.filter(param => param.startsWith('tex='))
+        if (tex.length > 0) {
+            const [, ...values] = tex[0].split('=')
+            const value = values.join('=')
+            label = new CSS2DObject(document.createElement('div'))
+            label.element.innerHTML = katex.renderToString(value)
+            label.element.classList.add('katex-m-0')
+            label.center.set(0, 1)
+            obj.add(label)
+        }
+
+        return label
     }
 
     function sceneAxis(axis = { length: 5, headLength: 0.4, headWidth: 0.2, color: undefined }) {
