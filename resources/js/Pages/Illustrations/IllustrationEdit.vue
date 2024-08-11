@@ -1,7 +1,4 @@
-<script
-	lang="ts"
-	setup
->
+<script lang="ts" setup>
 import { computed, inject, onMounted, PropType, ref } from "vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 import type { IllustrationInterface, widgetInterface } from "@/types/modelInterfaces"
@@ -192,7 +189,7 @@ onMounted(() => {
 					<h3 class="font-semibold">
 						Sélectionner le module: {{ currentComponent.name }}
 					</h3>
-					
+
 					<div class="text-xs flex gap-2 flex-wrap px-3 py-2">
 						<button
 							v-for="(data, comp) of chapterComponents"

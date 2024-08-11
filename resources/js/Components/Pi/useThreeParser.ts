@@ -6,7 +6,8 @@ import { LineGeometry } from 'three/addons/lines/LineGeometry.js'
 
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { onMounted, Ref } from 'vue'
-import { Line2 } from 'three/examples/jsm/Addons.js'
+import { CSS2DRenderer, CSS2DObject, Line2 } from 'three/examples/jsm/Addons.js'
+import katex from "katex/dist/katex.mjs"
 
 export function usePiThreeScene(container: Ref<HTMLElement>) {
 
@@ -14,12 +15,16 @@ export function usePiThreeScene(container: Ref<HTMLElement>) {
     const renderer = new THREE.WebGLRenderer({
         antialias: true
     })
+    const labelRenderer = new CSS2DRenderer()
+    labelRenderer.domElement.style.position = 'absolute'
+    labelRenderer.domElement.style.top = '0px'
+
 
     // 2. Configurer le rendu et l'ajouter au conteneur
     renderer.setClearColor(0xffffff)
     const camera = new THREE.PerspectiveCamera(45, 4 / 3, 0.1, 100)
 
-    const controls = new OrbitControls(camera, renderer.domElement)
+    const controls = new OrbitControls(camera, labelRenderer.domElement)
     controls.minDistance = 5
     controls.maxDistance = 50
     controls.enablePan = true
@@ -32,6 +37,7 @@ export function usePiThreeScene(container: Ref<HTMLElement>) {
         figure: THREE.Object3D,
         math: THREE.Vector3 | THREE.Line3 | THREE.Plane | THREE.EllipseCurve,
         raw: (string | number)[],
+        label?: CSS2DObject
     }
 
     // interface IThreeGrid {
@@ -151,7 +157,11 @@ export function usePiThreeScene(container: Ref<HTMLElement>) {
         // Clear the scene
         for (const item of Object.values(figures)) {
             if (item.figure) {
+                if (item.label) {
+                    item.figure.remove(item.label)
+                }
                 scene.remove(item.figure)
+
             }
         }
 
@@ -184,7 +194,6 @@ export function usePiThreeScene(container: Ref<HTMLElement>) {
                             .filter(param => param.startsWith('w='))
                             .map(param => param.split('=')[1])[0] ?? width
                     )
-
                 }
 
                 // A(1, 0, 1) : it's a point
@@ -198,21 +207,46 @@ export function usePiThreeScene(container: Ref<HTMLElement>) {
                     const show = parameters.includes('*')
                     const [x, y, z] = coords.slice(0, -1).split(',').map(Number)
 
+
+                    const geometry = new THREE.SphereGeometry(0.07, 16, 16)
+                    const material = new THREE.MeshBasicMaterial({ color })
+                    const sphere = new THREE.Mesh(geometry, material)
+                    sphere.position.set(x, y, z)
+                    scene.add(sphere)
+                    sphere.visible = show
+
+                    const hasLabel = parameters.filter(param => param.startsWith('label='))
+
+                    let label: CSS2DObject
+                    if (hasLabel.length > 0) {
+                        const [, ...values] = hasLabel[0].split('=')
+                        const value = values.join('=')
+                        label = new CSS2DObject(document.createElement('div'))
+                        label.element.textContent = value
+                        label.element.style.textAlign = 'center'
+                        label.center.set(0, 0)
+                        sphere.add(label)
+                    }
+
+                    // Maybe there are some texts to display
+                    const tex = parameters.filter(param => param.startsWith('tex='))
+                    if (tex.length > 0) {
+                        const [, ...values] = tex[0].split('=')
+                        const value = values.join('=')
+                        label = new CSS2DObject(document.createElement('div'))
+                        label.element.innerHTML = katex.renderToString(value)
+                        label.element.classList.add('katex-m-0')
+                        label.center.set(0, 1)
+                        sphere.add(label)
+                    }
+
                     // Default values of the point
                     figures[name] = {
                         name,
                         math: new THREE.Vector3(x, y, z),
                         raw: [x, y, z],
-                        figure: null
-                    }
-
-                    if (show) {
-                        const geometry = new THREE.SphereGeometry(0.07, 16, 16)
-                        const material = new THREE.MeshBasicMaterial({ color })
-                        const sphere = new THREE.Mesh(geometry, material)
-                        sphere.position.set(x, y, z)
-                        scene.add(sphere)
-                        figures[name].figure = sphere
+                        figure: sphere,
+                        label: label ?? null
                     }
                 }
 
@@ -577,18 +611,22 @@ export function usePiThreeScene(container: Ref<HTMLElement>) {
     function animate() {
         controls.update()
         renderer.render(scene, camera)
+        labelRenderer.render(scene, camera)
     }
 
     function onResize() {
         const width = container.value.clientWidth
         const height = container.value.clientHeight
         renderer.setSize(width, height)
+        labelRenderer.setSize(width, height)
+
         camera.aspect = width / height
         camera.updateProjectionMatrix()
     }
 
     onMounted(() => {
         container.value.appendChild(renderer.domElement)
+        container.value.appendChild(labelRenderer.domElement)
 
         // Animation
         renderer.setAnimationLoop(animate)
