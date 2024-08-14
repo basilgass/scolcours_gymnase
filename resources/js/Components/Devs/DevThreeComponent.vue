@@ -15,18 +15,18 @@ v1=vPA,2->color=red,w=6
 v2=vPB,3,1,0.5
 a=arc A,P,B`)
 
-code.value = `A(8,0,0)
-B(0,4,0)
-C(0,0,10)
-p=plane A,B,C,20,15
-X(6,6,6)->*,tex=A
-P=proj X,p->tex=H
-n=PX.->color=red,w=2
-Y(2,0,7)
-A=proj Y,p->tex=M
-v=AX.
-d=AP.->dash
-a=arc A,X,P`
+code.value = `G(8,0,0)
+H(0,4,0)
+I(0,0,10)
+p=plane G,H,I,20,15
+A(6,6,6)->*,tex=A
+B=proj A,p->tex=B
+n=BA.->color=red,w=2
+J(2,0,7)
+C=proj J,p->tex=C
+v=CA.
+d=BC.->dash
+a=arc B,A,C->mark`
 </script>
 <template>
 	<!-- Title -->

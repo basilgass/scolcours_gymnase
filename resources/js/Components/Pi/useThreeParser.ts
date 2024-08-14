@@ -409,8 +409,8 @@ export function usePiThreeScene(container: Ref<HTMLElement>) {
                     curve.getPoints(50).forEach(pt => {
                         positions.push(pt.x, pt.y, 0)
                     })
-                    console.log(curve.getPoints(50))
                     lineGeometry.setPositions(positions)
+
                     const matLine = new LineMaterial({
                         color,
                         linewidth: width,
@@ -420,21 +420,38 @@ export function usePiThreeScene(container: Ref<HTMLElement>) {
                     })
                     const arc = new Line2(lineGeometry, matLine)
 
-                    // Simple line system.
-                    // const material = new THREE.LineBasicMaterial({ color })
-                    // const arc = new THREE.Line(
-                    //     new THREE.BufferGeometry().setFromPoints(curve.getPoints(50)),
-                    //     material
-                    // )
+                    // Create a cone to show the direction.
+                    // Use the two last positions points to set the cone position
+                    if (parameters.includes('mark')) {
+                        const cone = new THREE.Mesh(
+                            new THREE.ConeGeometry(0.2, 0.4),
+                            new THREE.MeshBasicMaterial({ color })
+                        )
 
-                    // Rotate the curve to same orientation to the plane
+                        // Move the cone tip to the last point
+                        cone.position.set(curve.getPoint(1).x, curve.getPoint(1).y, 0)
+                        // Rotate the cone to the direction of the arc
+                        const tangent = curve.getTangent(1)
+                        cone.translateX(-tangent.x * 0.2)
+                        cone.translateY(-tangent.y * 0.2)
+                        cone.quaternion.setFromUnitVectors(
+                            new THREE.Vector3(0, 1, 0),
+                            new THREE.Vector3(tangent.x, tangent.y, 0)
+                        )
+
+                        arc.add(cone)
+                    }
+
+                    // Move the arc mesh to the center of the arc
+                    arc.position.set(pt2.x, pt2.y, pt2.z)
+
+                    // Align the arc to the plane
                     arc.quaternion.setFromUnitVectors(
                         new THREE.Vector3(0, 0, 1),
                         AB.clone().cross(AC).normalize()
                     )
-                    // Move the curve to the center of the arc
-                    arc.position.set(pt2.x, pt2.y, pt2.z)
 
+                    // Rotate the arc so that it starts at the first point
                     const vertex = new THREE.Vector3()
                     const attribute = arc.geometry.attributes.position
 
@@ -443,7 +460,10 @@ export function usePiThreeScene(container: Ref<HTMLElement>) {
                     arc.localToWorld(vertex)
 
                     // Turn the angle to match the starting angle
-                    arc.rotateZ(AB.angleTo(vertex.clone().sub(pt2)))
+                    arc.rotateZ(
+                        (parameters.includes('invert') ? -1 : 1) * AB.angleTo(vertex.clone().sub(pt2)))
+
+                    // Add the mesh to the scene.
                     scene.add(arc)
 
                     figures[name] = {
