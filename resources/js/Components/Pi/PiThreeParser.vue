@@ -35,7 +35,7 @@ watch(() => props.draw.code, () => {
 })
 </script>
 <template>
-    <div>
-        <div ref="threeContainer" class="aspect-[4/3]" />
-    </div>
+	<div>
+		<div ref="threeContainer" class="relative aspect-[4/3]" />
+	</div>
 </template>

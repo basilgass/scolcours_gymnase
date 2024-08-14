@@ -409,6 +409,7 @@ export function usePiThreeScene(container: Ref<HTMLElement>) {
                     curve.getPoints(50).forEach(pt => {
                         positions.push(pt.x, pt.y, 0)
                     })
+                    console.log(curve.getPoints(50))
                     lineGeometry.setPositions(positions)
                     const matLine = new LineMaterial({
                         color,
