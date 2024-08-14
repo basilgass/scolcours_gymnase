@@ -8,6 +8,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { onMounted, Ref } from 'vue'
 import { CSS2DRenderer, CSS2DObject, Line2 } from 'three/examples/jsm/Addons.js'
 import katex from "katex/dist/katex.mjs"
+import { outputStruct } from 'three/examples/jsm/nodes/Nodes.js'
 
 export function usePiThreeScene(container: Ref<HTMLElement>) {
 
@@ -349,15 +350,74 @@ export function usePiThreeScene(container: Ref<HTMLElement>) {
                     if (!color) color = '#c5dbec'
                     if (!opacity) opacity = 0.8
 
-                    const [name, points] = code.split('=plane ')
-                    const [ptName1, ptName2, ptName3, ...opts] = points.split(',')
-                    const [width, height, rotate] = opts.map(Number)
+                    let width = 10,
+                        height = 10,
+                        rotate = 0
 
-                    const pt1 = figures[ptName1].math as THREE.Vector3
-                    const pt2 = figures[ptName2].math as THREE.Vector3
-                    const pt3 = figures[ptName3].math as THREE.Vector3
+                    const plane = new THREE.Plane()
+                    const position = new THREE.Vector3()
 
-                    const plane = new THREE.Plane().setFromCoplanarPoints(pt1, pt2, pt3)
+                    const [name, value] = code.split('=plane ')
+                    const data = value.split(',').map(x => x.trim())
+                    // data can be:
+                    // <pt1>,<pt2>,<pt3>,<width>,<height>,<rotate>
+                    // <pt>,<normal>,<width>,<height>,<rotate>
+                    // <equation>,<width>,<height>,<rotate>
+
+                    if (
+                        data[0].includes('=')
+                    ) {
+                        // It's an equation
+                    } else if (
+                        Object.hasOwn(figures, data[0]) &&
+                        Object.hasOwn(figures, data[1]) &&
+                        Object.hasOwn(figures, data[2])
+                    ) {
+                        // It's a three points
+                        const pt1 = figures[data.shift()].math as THREE.Vector3
+                        const pt2 = figures[data.shift()].math as THREE.Vector3
+                        const pt3 = figures[data.shift()].math as THREE.Vector3
+                        plane.setFromCoplanarPoints(pt1, pt2, pt3)
+
+                        position.set(
+                            (pt1.x + pt2.x + pt3.x) / 3,
+                            (pt1.y + pt2.y + pt3.y) / 3,
+                            (pt1.z + pt2.z + pt3.z) / 3,
+                        )
+                    } else if (
+                        Object.hasOwn(figures, data[0]) &&
+                        Object.hasOwn(figures, data[1])
+                    ) {
+                        // It's a point and two other points
+                        const line = figures[data.shift()].math as THREE.Line3
+                        const pt = figures[data.shift()].math as THREE.Vector3
+
+                        // normalise the normal
+                        const normal = new THREE.Vector3()
+                        line.delta(normal).normalize()
+                        plane.setFromNormalAndCoplanarPoint(normal, pt)
+
+                        position.set(
+                            pt.x,
+                            pt.y,
+                            pt.z
+                        )
+                    }
+
+
+                    // const [width, height, rotate] = opts.map(Number)
+                    if (data.length > 0) {
+                        width = Number(data.shift())
+                    }
+                    if (data.length > 0) {
+                        height = Number(data.shift())
+                    }
+                    if (data.length > 0) {
+                        rotate = Number(data.shift())
+                    }
+
+
+
                     const geom = new THREE.PlaneGeometry(width ?? 10, height ?? 10)
                     const material = new THREE.MeshBasicMaterial({
                         color,
@@ -367,18 +427,15 @@ export function usePiThreeScene(container: Ref<HTMLElement>) {
                         opacity,
                     })
                     const mesh = new THREE.Mesh(geom, material)
-                    mesh.position.set(
-                        (pt1.x + pt2.x + pt3.x) / 3,
-                        (pt1.y + pt2.y + pt3.y) / 3,
-                        (pt1.z + pt2.z + pt3.z) / 3,
-                    )
+
+                    mesh.position.set(position.x, position.y, position.z)
                     mesh.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), plane.normal)
                     if (rotate) { mesh.rotateZ(rotate * Math.PI / 180) }
                     scene.add(mesh)
 
                     figures[name] = {
                         name,
-                        raw: points.split(','),
+                        raw: value.split(','),
                         figure: mesh,
                         math: plane
                     }
