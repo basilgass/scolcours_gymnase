@@ -1,12 +1,12 @@
 <script lang="ts" setup>
 import { computed, nextTick, onMounted, ref } from "vue"
 
+import { javascriptTriggers, latexTriggers, mdTriggers, TriggerFunction } from "@/helpers/mdAutofill"
 import Prism from "prismjs"
-import "prismjs/themes/prism.css"
-import "prismjs/components/prism-latex"
 import "prismjs/components/prism-javascript"
 import "prismjs/components/prism-json"
-import { javascriptTriggers, latexTriggers, mdTriggers, TriggerFunction } from "@/helpers/mdAutofill"
+import "prismjs/components/prism-latex"
+import "prismjs/themes/prism.css"
 
 /**
  * The value of the code area
@@ -177,7 +177,7 @@ function sync_scroll() {
  * Get the autofill triggers (2 or three letters) based on the language
  *
  */
-function autofillTriggers(textStart: string){
+function autofillTriggers(textStart: string) {
 	if (props.language === "latex") {
 		// must be in math mode
 		if (
@@ -187,7 +187,7 @@ function autofillTriggers(textStart: string){
 			textStart.split("\\]").length !== 1
 		) {
 			return mdTriggers
-		}else{
+		} else {
 			return latexTriggers
 		}
 	}
@@ -229,9 +229,8 @@ function autofill(event: KeyboardEvent) {
 	if (!applied) autofill_do(event, 2)
 }
 
-function autofill_wrap(event: KeyboardEvent)
-{
-	if(selectedText.value === "") return
+function autofill_wrap(event: KeyboardEvent) {
+	if (selectedText.value === "") return
 
 	// Get the target
 	const target = event.target as HTMLTextAreaElement
@@ -294,9 +293,8 @@ function autofill_do(event: KeyboardEvent, length: number) {
 			theValue.value = `${textStart.slice(
 				0,
 				textStart.length - trigger.length
-			)}${autofillTrigger[trigger][0]}${
-				autofillTrigger[trigger][1]
-			}${textEnd}`
+			)}${autofillTrigger[trigger][0]}${autofillTrigger[trigger][1]
+				}${textEnd}`
 			pos = target.selectionStart =
 				originalSelectionStart +
 				autofillTrigger[trigger][0].length -
@@ -350,7 +348,7 @@ onMounted(() => {
 	<div class="w-full">
 		<div
 			:class="props.wrap ? 'whitespace-pre-wrap' : 'whitespace-pre'"
-			class="tracking-normal font-normal code-input border bg-white language-javascript text-[1.1em] transition-all"
+			class="tracking-normal font-normal code-input border language-javascript text-[1.1em] transition-all"
 		>
 			<textarea
 				ref="inp"
@@ -451,14 +449,14 @@ onMounted(() => {
 .code-input textarea {
 	color: transparent;
 	background: transparent;
-	caret-color: inherit !important; /* Or choose your favourite color */
+	caret-color: inherit !important;
+	/* Or choose your favourite color */
 }
 
 /* Can be scrolled */
 .code-input textarea,
 .code-input pre {
 	overflow: auto !important;
-
 	white-space: inherit;
 	word-spacing: normal;
 	word-break: normal;

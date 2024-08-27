@@ -1,75 +1,75 @@
 <script setup lang="ts">
-import { inject, nextTick, ref } from "vue"
-import { watchDebounced } from "@vueuse/core"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import { flashInterface } from "@/types"
+import { watchDebounced } from "@vueuse/core"
 import axios from "axios"
+import { inject, nextTick, ref } from "vue"
 
 const flash = inject<flashInterface>("flash"),
-		props = defineProps({
-			source: { type: String, required: true },
-			sourceId: { type: Number, required: true },
-			target: { type: String, required: true },
+	props = defineProps({
+		source: { type: String, required: true },
+		sourceId: { type: Number, required: true },
+		target: { type: String, required: true },
+	})
+
+let showMoveTo = ref(false),
+	moveToId = ref(null),
+	moveInput = ref(null),
+	targetName = ref(""),
+	enableMove = async function () {
+		showMoveTo.value = !showMoveTo.value
+		await nextTick(() => {
+			moveInput.value.focus()
 		})
-
-	let showMoveTo = ref(false),
-		moveToId = ref(null),
-		moveInput = ref(null),
-		targetName = ref(""),
-		enableMove = async function () {
-			showMoveTo.value = !showMoveTo.value
-			await nextTick(() => {
-				moveInput.value.focus()
-			})
-		},
-		moveTo = function () {
-			if (targetName.value === "???") {
-				flash.error(`Le ${props.target} n'existe pas.`)
-				return
-			}
-
-			axios
-				.patch(
-					route(`${props.source}s.moveTo.${props.target}`, [
-						props.sourceId,
-						moveToId.value,
-					]),
-					{ _method: "PATCH" },
-				)
-				.then((res) => {
-					flash.success(
-						`Le ${props.source} a bien été déplacé.`,
-						{
-							link: {
-								url: res.data.url,
-								label: res.data.label,
-							},
-							timeout: 10000
-						}
-					)
-				})
-				.catch((res) => {
-					console.warn(res)
-				})
-		},
-		getTargetName = function () {
-			axios
-				.get(route(`${props.target}s.info`, [moveToId.value]))
-				.then((res) => {
-					targetName.value = res.data.title
-				})
-				.catch(() => {
-					targetName.value = "???"
-				})
+	},
+	moveTo = function () {
+		if (targetName.value === "???") {
+			flash.error(`Le ${props.target} n'existe pas.`)
+			return
 		}
 
-	watchDebounced(moveToId, getTargetName, { debounce: 1000, maxWait: 2000 })
+		axios
+			.patch(
+				route(`${props.source}s.moveTo.${props.target}`, [
+					props.sourceId,
+					moveToId.value,
+				]),
+				{ _method: "PATCH" },
+			)
+			.then((res) => {
+				flash.success(
+					`Le ${props.source} a bien été déplacé.`,
+					{
+						link: {
+							url: res.data.url,
+							label: res.data.label,
+						},
+						timeout: 10000
+					}
+				)
+			})
+			.catch((res) => {
+				console.warn(res)
+			})
+	},
+	getTargetName = function () {
+		axios
+			.get(route(`${props.target}s.info`, [moveToId.value]))
+			.then((res) => {
+				targetName.value = res.data.title
+			})
+			.catch(() => {
+				targetName.value = "???"
+			})
+	}
+
+watchDebounced(moveToId, getTargetName, { debounce: 1000, maxWait: 2000 })
 </script>
 <template>
 	<div>
 		<div class="flex gap-3 items-center">
 			<button
-				class="btn btn-xs bg-white hover:bg-orange-100"
+				class="btn btn-xs"
 				@click="enableMove"
 			>
 				déplacer le {{ props.source }}

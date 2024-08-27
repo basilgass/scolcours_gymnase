@@ -1,9 +1,9 @@
 <script setup lang="ts">
 
-import type { IllustrationInterface } from "@/types/modelInterfaces"
-import { computed, PropType } from "vue"
-import { getModule, MODULE_TYPES } from "@/scolcours"
-import EditLink from "@/Components/Ui/EditLink.vue"
+import EditLink from "@/Components/Ui/EditLink.vue";
+import { getModule, MODULE_TYPES } from "@/scolcours";
+import type { IllustrationInterface } from "@/types/modelInterfaces";
+import { computed, PropType } from "vue";
 
 const props = defineProps({
 	illustration: {
@@ -46,6 +46,4 @@ const widgetComponent = computed(() => {
 	</figure>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

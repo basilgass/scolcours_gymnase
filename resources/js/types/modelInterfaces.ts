@@ -1,4 +1,4 @@
-import { ThemeInterface, User } from "@/types/index"
+import { ThemeInterface, User } from "@/types/index";
 
 export interface UserInterface {
 	id: number;
@@ -202,6 +202,14 @@ export interface deckInterface {
 	id: number,
 	title: string,
 	slug: string,
+	chapter: {
+		id: number;
+		slug: number;
+	},
+	theme: {
+		id: number;
+		slug: number;
+	},
 	flipcards: flipcardsInterface[]
 }
 

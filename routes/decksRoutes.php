@@ -19,5 +19,8 @@ Route::middleware("can:admin")->group(function () {
 		->name('flipcards.destroy');
 
 	Route::apiResource('decks', DeckController::class)
-	->only('store', 'update', 'destroy');
+		->only('store', 'update', 'destroy');
+
+	Route::post('decks/updateOrder', [DeckController::class, 'updateOrder'])
+		->name('decks.updateOrder');
 });

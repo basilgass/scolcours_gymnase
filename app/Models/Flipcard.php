@@ -26,9 +26,11 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Flipcard extends Model
 {
-    use HasFactory;
+	use HasFactory;
 
-	protected $with=['blocks'];
+	protected $with = ['blocks'];
+
+	protected $fillable = ['order'];
 
 	public function deck()
 	{

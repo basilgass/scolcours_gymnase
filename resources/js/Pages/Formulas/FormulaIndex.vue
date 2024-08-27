@@ -1,12 +1,12 @@
 <script lang="ts" setup>
 
-import { inject, PropType, ref } from "vue"
-import type { FormulaInterface } from "@/types/modelInterfaces"
-import BlockShow from "@/Pages/Blocks/BlockShow.vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
-import axios from "axios"
-import { flashInterface } from "@/types"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
+import BlockShow from "@/Pages/Blocks/BlockShow.vue"
+import { flashInterface } from "@/types"
+import type { FormulaInterface } from "@/types/modelInterfaces"
+import axios from "axios"
+import { inject, PropType, ref } from "vue"
 
 defineOptions({ layout: LayoutMain })
 
@@ -21,7 +21,6 @@ const props = defineProps({
 
 const theFormulas = ref(props.formulas)
 
-console.log(theFormulas.value[0])
 function updateFormula(formula: FormulaInterface) {
 	axios.patch(route("blocks.update", formula.block.id), {
 		_method: "patch",
@@ -79,7 +78,7 @@ function updateFormula(formula: FormulaInterface) {
 				</div>
 				<block-show
 					:block="formula.block"
-					class="bg-white rounded-r shadows border-l-4"
+					class="rounded-r shadows border-l-4"
 					v-theme.border="formula.chapter.theme.id"
 				/>
 			</div>

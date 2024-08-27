@@ -1,4 +1,7 @@
-<script lang="ts" setup>
+<script
+	lang="ts"
+	setup
+>
 import KeyboardDisplay from "@/Components/Keyboards/KeyboardDisplay.vue"
 import { KeyboardInterface, useKeyboard } from "@/Composables/useKeyboard"
 import { computed, PropType, ref } from "vue"
@@ -19,6 +22,7 @@ const extraLetters = computed(() => {
 })
 const kbrdConfig = computed(() => {
 	if (props.keyboard.parameters.length > 0) {
+		console.log(props.keyboard.parameters)
 		let items = props.keyboard.parameters.filter((x) =>
 			x.startsWith("var:")
 		),
@@ -26,11 +30,10 @@ const kbrdConfig = computed(() => {
 
 		if (items.length === 1) {
 			varName = items[0].split(":")[1]
-
 			return {
 				...props.keyboard.config,
 				layout: props.keyboard.config.layout.map((x) => {
-					if (x.includes("x")) {
+					if (typeof x === 'string' && x.includes("x")) {
 						const newKey = (x as string).replace("x", varName)
 						return {
 							key: newKey,
@@ -109,6 +112,14 @@ defineExpose({
 </script>
 
 <template>
-	<keyboard-display ref="keyboardUI" :extra-letters="extraLetters" :keyboard="kbrdConfig" back
-		class="max-w-xl mx-auto" key-class="bg-white" reset @change="keyboardChange" />
+	<keyboard-display
+		ref="keyboardUI"
+		:extra-letters="extraLetters"
+		:keyboard="kbrdConfig"
+		back
+		class="max-w-xl mx-auto"
+		key-class="bg-white"
+		reset
+		@change="keyboardChange"
+	/>
 </template>

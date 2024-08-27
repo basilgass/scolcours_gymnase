@@ -1,13 +1,13 @@
 <script lang="ts" setup>
-import { inject, PropType, ref } from "vue"
-import { useClipboard } from "@vueuse/core"
-import { useGenerator } from "@/Composables/useGenerator"
-import axios from "axios"
-import { flashInterface, generatedQuestionInterface } from "@/types"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import { asciiToTex } from "@/Composables/keyboardConfig"
+import { useGenerator } from "@/Composables/useGenerator"
+import { flashInterface, generatedQuestionInterface } from "@/types"
 import { ChallengeInterface } from "@/types/modelInterfaces"
 import { usePage } from "@inertiajs/vue3"
+import { useClipboard } from "@vueuse/core"
+import axios from "axios"
+import { inject, PropType, ref } from "vue"
 
 /**
  * This component is used to generate a PDF from a challenge
@@ -56,7 +56,7 @@ const pdfGenereate = () => {
 	pdfError.value = ""
 	pdfLaTeX.value = ""
 
-	// TODO:
+	// TODO: use the route helper
 	axios
 		.post(route("latex.pdf"), {
 			template: "latex.questions",

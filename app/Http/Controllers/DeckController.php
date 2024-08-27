@@ -11,6 +11,7 @@ use Inertia\Inertia;
 
 class DeckController extends Controller
 {
+
 	private array $validationRules = [
 		'slug' => ['string', 'min:3', 'required'],
 		'title' => ['string', 'min:3', 'required']
@@ -22,9 +23,8 @@ class DeckController extends Controller
 	public function index()
 	{
 		return Inertia::render("Decks/DeckIndex", [
-			'decks' => Deck::all()
+			'decks' => DeckResource::collection(Deck::all())
 		]);
-
 	}
 
 	/**
@@ -109,5 +109,14 @@ class DeckController extends Controller
 	public function destroyFlipcard(Flipcard $flipcard)
 	{
 		$flipcard->delete();
+	}
+
+	public function updateOrder(Request $request)
+	{
+		foreach ($request['order'] as $value) {
+			Flipcard::find($value['id'])?->update(['order' => $value['order']]);
+		}
+
+		return true;
 	}
 }

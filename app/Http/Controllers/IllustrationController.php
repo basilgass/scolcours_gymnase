@@ -95,7 +95,7 @@ class IllustrationController extends Controller
 	 */
 	public function edit(Illustration $illustration)
 	{
-		// Get the post containing the illustration
+		// Get the post (or anything) containing the illustration
 		$post = $illustration->block->blockable;
 
 		// If the blockable is a post, extract the chapter and theme.
@@ -103,12 +103,10 @@ class IllustrationController extends Controller
 			$post = $post->questionable;
 		}
 
-
-		// If the blockable is a post, extract the chapter and theme.
 		return Inertia::render(
 			"Illustrations/IllustrationEdit",
 			[
-				"theme" => $post->chapter->theme,
+				"theme" => $post->chapter?->theme,
 				"illustration" => $illustration
 			]
 		);

@@ -1,9 +1,12 @@
 <script setup lang="ts">
 import { onMounted, ref, watch } from 'vue'
-import { usePiThreeScene } from './useThreeParser'
+import { Pi3Draw } from "pithree/lib"
+import katex from 'katex'
+import { useResizeObserver } from '@vueuse/core';
 
+// Container for the three.js scene
 const threeContainer = ref(null)
-const { parse, parseParameters } = usePiThreeScene(threeContainer)
+let draw: Pi3Draw
 
 const props = defineProps({
     draw: {
@@ -17,25 +20,30 @@ const props = defineProps({
     },
 })
 
-onMounted(() => {
-    // Load the configuration
-    parseParameters(props.draw.parameters)
+useResizeObserver(threeContainer.value, () => {
+    if (draw) draw.onResize()
+})
 
-    // Load the code
-    parse(props.draw.code)
+onMounted(() => {
+    draw = new Pi3Draw(threeContainer.value, {
+        parameters: props.draw.parameters,
+        code: props.draw.code,
+        converter: (str: string) => katex.renderToString(str, { throwOnError: false }),
+    }).mount()
 })
 
 watch(() => props.draw.parameters, () => {
     // Watch changes from "inside"
-    parseParameters(props.draw.parameters)
+    draw.refreshLayout(props.draw.parameters)
 })
+
 watch(() => props.draw.code, () => {
     // Watch changes from "inside"
-    parse(props.draw.code)
+    draw.refresh(props.draw.code)
 })
 </script>
 <template>
-	<div>
-		<div ref="threeContainer" class="relative aspect-[4/3]" />
-	</div>
+    <div>
+        <div ref="threeContainer" class="aspect-[4/3]" />
+    </div>
 </template>

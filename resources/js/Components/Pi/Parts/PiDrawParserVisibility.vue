@@ -2,7 +2,7 @@
 	lang="ts"
 	setup
 >
-import {PiParser as PiDraw} from "pidraw"
+import { PiDraw} from "pidraw"
 
 import { computed, onMounted, PropType, ref } from "vue"
 

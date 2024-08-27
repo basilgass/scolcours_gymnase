@@ -1,16 +1,16 @@
 <script lang="ts" setup>
-import LayoutMain from "@/Layouts/LayoutMain.vue"
-import { computed, inject, PropType, ref, unref } from "vue"
-import type { BlockInterface } from "@/types/modelInterfaces"
-import BlockShow from "@/Pages/Blocks/BlockShow.vue"
-import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
-import MoveItemTo from "@/Components/MoveItemTo.vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
+import MoveItemTo from "@/Components/MoveItemTo.vue"
+import SplitView from "@/Components/SplitView.vue"
+import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
+import LayoutMain from "@/Layouts/LayoutMain.vue"
+import BlockShow from "@/Pages/Blocks/BlockShow.vue"
+import { blockTypes } from "@/scolcours"
+import { flashInterface } from "@/types"
+import type { BlockInterface } from "@/types/modelInterfaces"
 import { router } from "@inertiajs/vue3"
 import axios from "axios"
-import { flashInterface } from "@/types"
-import SplitView from "@/Components/SplitView.vue"
-import { blockTypes } from "@/scolcours"
+import { computed, inject, PropType, ref, unref } from "vue"
 
 defineOptions({ layout: LayoutMain })
 
@@ -87,7 +87,7 @@ function addIllustration() {
 		}).catch((res) => {
 			console.warn("add illustration: ", res)
 		}
-	)
+		)
 }
 
 function blockSaveAndVisit() {
@@ -133,7 +133,7 @@ function addScriptsButtons() {
 			</div>
 			<div class="self-start grid grid-cols-2 gap-2 items-center flex-wrap">
 				<button
-					:class="wasEdited?'':'invisible'"
+					:class="wasEdited ? '' : 'invisible'"
 					class="btn-primary btn-xs"
 					@click="saveBlock"
 				>
@@ -141,7 +141,7 @@ function addScriptsButtons() {
 				</button>
 
 				<button
-					:class="wasEdited?'':'invisible'"
+					:class="wasEdited ? '' : 'invisible'"
 					class="btn-primary btn-xs"
 					@click="blockSaveAndVisit"
 				>
@@ -184,13 +184,11 @@ function addScriptsButtons() {
 					/>
 
 					<!-- Boutons pour les types de blocks -->
-					<div
-						class="grid grid-cols-6 gap-2 mt-2"
-					>
+					<div class="grid grid-cols-6 gap-2 mt-2">
 						<button
 							v-for="(item, key) in blockTypes"
 							:key="key"
-							:class=" key === theBlock.type ? 'is-active' : 'bg-white'"
+							:class="key === theBlock.type ? 'is-active' : ''"
 							class="btn btn-xs overflow-clip !px-0"
 							@click="theBlock.type = theBlock.type === key ? '' : key"
 						>
@@ -238,23 +236,23 @@ function addScriptsButtons() {
 						<div class="relative">
 							<div class="absolute right-0 top-[0.6em] flex text-xs z-10">
 								<button
-									:class="{'bg-blue-600 text-white':tab==='markdown'}"
+									:class="{ 'bg-blue-600 text-white': tab === 'markdown' }"
 									class="border-x border-t px-2 py-0 rounded-t transition-all duration-500"
-									@click="tab='markdown'"
+									@click="tab = 'markdown'"
 								>
 									markdown
 								</button>
 								<button
-									:class="{'bg-blue-600 text-white':tab==='script'}"
+									:class="{ 'bg-blue-600 text-white': tab === 'script' }"
 									class="border-x border-t px-2 py-0 rounded-t transition-all duration-500"
-									@click="tab='script'"
+									@click="tab = 'script'"
 								>
 									script
 								</button>
 								<button
-									:class="{'bg-blue-600 text-white':tab==='data'}"
+									:class="{ 'bg-blue-600 text-white': tab === 'data' }"
 									class="border-x border-t px-2 py-0 rounded-t transition-all duration-500"
-									@click="tab='data'"
+									@click="tab = 'data'"
 								>
 									data
 								</button>
@@ -262,7 +260,7 @@ function addScriptsButtons() {
 
 							<div>
 								<form-maker
-									v-show="tab==='markdown'"
+									v-show="tab === 'markdown'"
 									ref="formBody"
 									v-model="theBlock.body"
 									:rows="20"
@@ -270,7 +268,7 @@ function addScriptsButtons() {
 									language="latex"
 									type="code"
 								/>
-								<div v-show="tab==='script'">
+								<div v-show="tab === 'script'">
 									<form-maker
 										v-model="theBlock.script"
 										:rows="20"
@@ -285,7 +283,7 @@ function addScriptsButtons() {
 									</div>
 								</div>
 								<form-maker
-									v-show="tab==='data'"
+									v-show="tab === 'data'"
 									v-model="theBlock.json"
 									:rows="20"
 									label="data"
@@ -297,7 +295,7 @@ function addScriptsButtons() {
 					</div>
 
 					<div class="h-[3.2em] font-code text-xs px-3">
-						<div v-show="tab==='markdown'">
+						<div v-show="tab === 'markdown'">
 							@posts.show,[id] | @blocks.show,[id] | #[item-id]<br>
 							.@text .@bg pour des classes à thème
 						</div>
@@ -313,4 +311,3 @@ function addScriptsButtons() {
 		</main>
 	</article>
 </template>
-

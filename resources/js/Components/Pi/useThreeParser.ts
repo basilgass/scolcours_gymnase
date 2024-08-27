@@ -8,7 +8,6 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { onMounted, Ref } from 'vue'
 import { CSS2DRenderer, CSS2DObject, Line2 } from 'three/examples/jsm/Addons.js'
 import katex from "katex/dist/katex.mjs"
-import { outputStruct } from 'three/examples/jsm/nodes/Nodes.js'
 
 export function usePiThreeScene(container: Ref<HTMLElement>) {
 
@@ -90,21 +89,21 @@ export function usePiThreeScene(container: Ref<HTMLElement>) {
             {
                 axis: false,
                 grid: false,
-                camera: [10, 8, 15, 45, 0.1, 100],
+                camera: [],
                 fog: false
             }, paramConfig)
 
 
         // Camera
-        const [x, y, z, angle, near, far] = config.camera
+        const [x, y, z, fov, near, far] = config.camera
         camera.position.set(
-            Number(x ?? 10),
-            Number(y ?? 10),
-            Number(z ?? 10)
+            Number(x ?? 25),
+            Number(y ?? 15),
+            Number(z ?? 30)
         )
-        camera.fov = Number(angle ?? 45)
+        camera.fov = Number(fov ?? 20)
         camera.near = Number(near ?? 0.1)
-        camera.far = Number(far ?? 100)
+        camera.far = Number(far ?? 2000)
         camera.lookAt(0, 0, 0)
 
         if (config.grid === false) {

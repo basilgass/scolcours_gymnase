@@ -1,16 +1,22 @@
-<script lang="ts" setup>
+<script
+	lang="ts"
+	setup
+>
 
-import { PropType, ref } from "vue"
-import type { deckInterface } from "@/types/modelInterfaces"
-import axios from "axios"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
+import type { deckInterface } from "@/types/modelInterfaces"
+import { router } from "@inertiajs/vue3"
+import axios from "axios"
+import { inject, PropType, ref } from "vue"
 
 defineOptions({ layout: LayoutMain })
 
 const props = defineProps({
 	decks: { type: Array as PropType<deckInterface[]>, required: true }
 })
+console.log(props.decks)
+const editMode = inject<boolean>("editMode")
 
 const theDecks = ref(props.decks)
 
@@ -30,46 +36,57 @@ function addDeck() {
 </script>
 
 <template>
-	<section>
-		<h3 class="text-3xl">
+	<section class="scolcours-container">
+		<h3 class="text-3xl py-4">
 			Decks de révision
 		</h3>
 
-		<div class="grid grid-cols-1 gap-5">
+		<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
 			<div
 				v-for="deck in theDecks"
 				:key="deck.id"
-				class="bg-white border rounded px-3 py-5 flex"
 			>
-				<div>
-					<h3 class="text-xl">
-						{{ deck.title }}
-					</h3>
+				<div
+					v-theme.bg.text.admin
+					v-admin="editMode"
+					class="flex justify-between p-2 items-middle"
+				>
 					<div class="font-code text-xs">
 						{{ deck.slug }}
 					</div>
-				</div>
-
-				<div class="ml-auto flex flex-col gap-3">
-					<Link
-						:href="route('decks.show', [deck.slug])"
-						as="div"
-						class="cursor-pointer"
-					>
-						apprendre
-					</Link>
 					<Link
 						:href="route('decks.edit', [deck.slug])"
-						as="div"
 						class="cursor-pointer"
 					>
-						éditer
+					éditer <i class="bi bi-pencil" />
 					</Link>
+				</div>
+				<div class="relative aspect-video">
+					<div
+						v-theme.border="deck.theme.id ?? ''"
+						class="absolute inset-0 translate-x-2 translate-y-2 bg-white border rounded z-0"
+					/>
+					<div
+						v-theme.border="deck.theme.id ?? ''"
+						class="absolute inset-0 translate-x-1 translate-y-1 bg-white border rounded z-0"
+					/>
+					<div
+						@click="router.visit(route('decks.show', deck.slug))"
+						v-theme.bg.text="deck.theme.id ?? ''"
+						class="absolute inset-0 z-10 border rounded px-3 py-5 grid place-items-center cursor-pointer"
+					>
+						<h3 class="text-xl">
+							{{ deck.title }}
+						</h3>
+					</div>
 				</div>
 			</div>
 		</div>
 
-		<div class="mt-10 flex flex-col gap-5 justify-center max-w-[300px] mx-auto">
+		<div
+			class="mt-10 flex flex-col gap-5 justify-center max-w-[300px] mx-auto"
+			v-admin="editMode"
+		>
 			<form-maker
 				v-model="newDeckTitle"
 				inline-label
@@ -92,6 +109,4 @@ function addDeck() {
 	</section>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

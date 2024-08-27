@@ -26,7 +26,8 @@ J(2,0,7)
 C=proj J,p->tex=C
 v=CA.
 d=BC.->dash
-a=arc B,A,C->mark`
+a=arc B,A,C->mark
+z=plane v,C->color=green/0.4`
 </script>
 <template>
 	<!-- Title -->

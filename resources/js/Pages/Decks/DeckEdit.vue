@@ -1,9 +1,9 @@
 <script lang="ts" setup>
 
-import FlipcardsIndex from "@/Components/Decks/FlipcardsIndex.vue"
-import type { deckInterface } from "@/types/modelInterfaces"
-import { PropType } from "vue"
-import LayoutMain from "@/Layouts/LayoutMain.vue"
+import FlipcardsIndex from "@/Components/Decks/FlipcardsIndex.vue";
+import LayoutMain from "@/Layouts/LayoutMain.vue";
+import type { deckInterface } from "@/types/modelInterfaces";
+import { PropType } from "vue";
 
 defineOptions({ layout: LayoutMain })
 
@@ -20,14 +20,13 @@ const props = defineProps({
 		<div class="font-code text-xs">
 			{{ deck.slug }}
 		</div>
+		<Link :href="route('decks.index')">
+		Retour à la liste des decks
+		</Link>
 
 		<!-- view mode -->
-		<flipcards-index
-			:deck="props.deck"
-		/>
+		<flipcards-index :deck="props.deck" />
 	</section>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

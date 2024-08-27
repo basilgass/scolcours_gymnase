@@ -1,10 +1,14 @@
-<script lang="ts" setup>
+<script
+	lang="ts"
+	setup
+>
 
-import { computed, PropType, ref } from "vue"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
-import { useSwipe } from "@vueuse/core"
+import IllustrationShow from "@/Pages/Illustrations/IllustrationShow.vue"
 import type { deckInterface, flipcardsInterface } from "@/types/modelInterfaces"
+import { useSwipe } from "@vueuse/core"
 import { PiMath } from "pimath"
+import { computed, PropType, ref } from "vue"
 
 const props = defineProps({
 	deck: { type: Object as PropType<deckInterface>, required: true }
@@ -14,18 +18,18 @@ const cardIndex = ref(0),
 	cardSide = ref<"recto" | "verso">("recto"),
 	cardsList = ref<flipcardsInterface[]>(PiMath.Random.shuffle(props.deck.flipcards))
 
-const flip = function() {
+const flip = function () {
 	if (cardSide.value === "recto") {
 		cardSide.value = "verso"
 	}
 }
 
-const restartDeck = function() {
+const restartDeck = function () {
 	cardsList.value.forEach(result => delete result.result)
 	cardIndex.value = 0
 }
 
-const cardResult = function(result: boolean) {
+const cardResult = function (result: boolean) {
 	// On stocke le résultat dans la carte.
 	cardsList.value[cardIndex.value].result = result
 
@@ -77,7 +81,7 @@ const { lengthX, isSwiping } = useSwipe(el, {
 const xClassTranslate = computed(() => {
 	const sign = lengthX.value < 0 ? -1 : 1
 	return isSwiping.value && cardSide.value === "verso" ?
-		`translate: ${-sign * Math.min(Math.abs(lengthX.value)/2, 75)}px` :
+		`translate: ${-sign * Math.min(Math.abs(lengthX.value) / 2, 75)}px` :
 		`translate: 0px`
 })
 
@@ -85,24 +89,24 @@ const xClassTranslate = computed(() => {
 
 <template>
 	<div
-		v-if="cardIndex<cardsList.length"
+		v-if="cardIndex < cardsList.length"
 		ref="el"
 		class="p-3 lg:p-6
 			cursor-pointer
 			relative"
 	>
-		<div class="absolute left-3 lg:left-6 top-[50%] text-red-500">
+		<!-- <div class="absolute left-3 lg:left-6 top-[50%] text-red-500">
 			<i class="bi bi-hand-thumbs-down-fill" />
 		</div>
 		<div class="absolute right-3 lg:right-6 top-[50%] text-green-500">
 			<i class="bi bi-hand-thumbs-up-fill" />
-		</div>
+		</div> -->
 
 		<div
 			:style="xClassTranslate"
 			class="bg-white rounded-xl shadow
 			min-h-[250px] py-20 px-10
-			flex items-center
+			flex flex-col items-center
 			transition-all ease-out duration-500"
 			@click="flip"
 		>
@@ -110,24 +114,30 @@ const xClassTranslate = computed(() => {
 				:text="cardsList[cardIndex][cardSide].body"
 				class="md:text-lg text-center w-full"
 			/>
+
+			<IllustrationShow
+				v-if="cardsList[cardIndex][cardSide].illustrations[0]"
+				:illustration="cardsList[cardIndex][cardSide].illustrations[0]"
+				class="min-w-[100px] max-w-[600px] w-full"
+			/>
 		</div>
 
 
 		<div class="min-h-[3em]">
 			<transition name="fade">
 				<div
-					v-if="cardSide==='verso'"
+					v-if="cardSide === 'verso'"
 					class="flex justify-between w-full px-5 mt-2 transition-opacity duration-500 ease-in-out"
 				>
 					<button
 						class="btn bg-white hover:bg-red-100 transition-colors text-red-600 border border-red-600 px-5 lg:px-10"
-						@click="cardResult( false)"
+						@click="cardResult(false)"
 					>
 						<i class="bi bi-hand-thumbs-down-fill" />
 					</button>
 					<button
 						class="btn bg-white hover:bg-green-100 transition-colors text-green-600 border border-green-600 px-5 lg:px-10"
-						@click="cardResult( true)"
+						@click="cardResult(true)"
 					>
 						<i class="bi bi-hand-thumbs-up-fill" />
 					</button>
@@ -154,6 +164,4 @@ const xClassTranslate = computed(() => {
 	</div>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

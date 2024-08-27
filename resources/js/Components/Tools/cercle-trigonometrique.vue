@@ -54,7 +54,7 @@ X5(10,-10)->tex=\\scriptsize -1/mr/0.5;0
 X6(10,-17.3)->tex=\\scriptsize -\\sqrt{3}/mr/0.5;0
 t=TP0
 @end:static
-P(7.07,7.07)->drag:c
+P(7.07,7.07)->drag=c
 C=proj P,x->hide
 S=proj P,y->hide
 c=PC.->dash
@@ -65,7 +65,7 @@ c1=AC.->green,w=5
 s1=AS.->red,w=5
 T=inter p,t
 t1=P0T.->gold,w=5
-a=arc P0,A,P->tex=\\theta`
+a=arc P0,A,P,2->tex=\\theta`
 
 const parameters = `axis,x=-12:12,y=-20:20,ppu=20`
 </script>

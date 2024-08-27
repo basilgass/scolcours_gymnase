@@ -1,19 +1,19 @@
 <script lang="ts" setup>
 
-import { computed, inject, nextTick, onMounted, PropType, provide, ref } from "vue"
-import type { BlockInterface, ChapterInterface, PostInterface } from "@/types/modelInterfaces"
-import LayoutMain from "@/Layouts/LayoutMain.vue"
-import EditLink from "@/Components/Ui/EditLink.vue"
-import BlockShow from "@/Pages/Blocks/BlockShow.vue"
-import ChapterToc from "@/Components/Chapters/ChapterToc.vue"
 import ChapterFormulasSlider from "@/Components/Chapters/ChapterFormulasSlider.vue"
 import ChapterNav from "@/Components/Chapters/ChapterNav.vue"
-import QuestionsIndex from "@/Pages/Questions/QuestionsIndex.vue"
+import ChapterToc from "@/Components/Chapters/ChapterToc.vue"
+import EditLink from "@/Components/Ui/EditLink.vue"
 import { useMenuScrollTo } from "@/Composables/useHelpers"
-import { PiMath } from "pimath"
-import axios from "axios"
+import LayoutMain from "@/Layouts/LayoutMain.vue"
+import BlockShow from "@/Pages/Blocks/BlockShow.vue"
+import QuestionsIndex from "@/Pages/Questions/QuestionsIndex.vue"
 import { flashInterface } from "@/types"
+import type { BlockInterface, ChapterInterface, PostInterface } from "@/types/modelInterfaces"
 import { usePage } from "@inertiajs/vue3"
+import axios from "axios"
+import { PiMath } from "pimath"
+import { computed, inject, nextTick, onMounted, PropType, provide, ref } from "vue"
 
 defineOptions({ layout: LayoutMain })
 
@@ -137,7 +137,8 @@ onMounted(() => {
 						:href="route('chapters.show', [chapter.slug])"
 						class="hover:pl-2 transition-all"
 					>
-						<i class=" bi bi-chevron-double-right mr-1" />{{ chapter.title }}
+						<i class=" bi bi-chevron-double-right mr-1" />
+						<span v-katex.auto="chapter.title" />
 					</Link>
 				</div>
 

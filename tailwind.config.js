@@ -1,11 +1,6 @@
+/** @type {import('tailwindcss').Config} */
 /* eslint @typescript-eslint/no-var-requires: 0 */
-
-
-// const defaultTheme = require("tailwindcss/defaultTheme")
-// const colors = require("tailwindcss/colors")
 import defaultTheme from "tailwindcss/defaultTheme"
-
-
 const colors = require("tailwindcss/colors")
 
 const toRgba = (hexCode, opacity = 50) => {
@@ -36,8 +31,8 @@ const flattenColorPalette = (obj, sep = "-") =>
 		})(obj),
 	)
 
-/** @type {import('tailwindcss').Config} */
 export default {
+	darkMode: 'selector',
 	content: [
 		"./vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php",
 		"./storage/framework/views/*.php",
@@ -140,9 +135,9 @@ export default {
 			}
 
 			const addColor = (name, color) =>
-				(utilities[`.bg-stripes-${name}`] = {
-					"--stripes-color": color,
-				})
+			(utilities[`.bg-stripes-${name}`] = {
+				"--stripes-color": color,
+			})
 
 			const colors = flattenColorPalette(theme("backgroundColor"))
 			for (let name in colors) {

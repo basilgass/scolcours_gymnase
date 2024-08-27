@@ -158,9 +158,8 @@ class BlockController extends Controller
 			$post = $post->questionable;
 		}
 
-		//
 		return Inertia::render("Blocks/BlockEdit", [
-			'theme' => $post->chapter->theme,
+			'theme' => $post->chapter?->theme,
 			'block' => BlockResource::make($block),
 		]);
 	}

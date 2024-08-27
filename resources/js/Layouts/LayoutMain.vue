@@ -1,10 +1,10 @@
 <script lang="ts" setup>
-import MainHeader from "@/Components/MainHeader.vue"
 import MainFooter from "@/Components/MainFooter.vue"
-import { computed, PropType, provide, ref } from "vue"
+import MainHeader from "@/Components/MainHeader.vue"
 import FlashMessage from "@/Components/Ui/FlashMessage.vue"
-import { Head, usePage } from "@inertiajs/vue3"
 import { flashConfig, flashMessageInterface, ThemeInterface } from "@/types"
+import { Head, usePage } from "@inertiajs/vue3"
+import { computed, PropType, provide, ref } from "vue"
 
 defineProps({
 	theme: {
@@ -58,19 +58,15 @@ const pageTitle = computed(() => {
 </script>
 
 <template>
-	<div>
+	<div class="app-container">
+
 		<Head :title="pageTitle" />
 
 		<!-- Header of the page -->
 		<MainHeader :theme="theme" />
 
-		<div class="my-10 max-w-2xl mx-auto p-5 bg-red-100 border border-red-600 shadow text-red-700">
-			Attention - le site web est en cours de développement. Certaines fonctionnalités peuvent ne pas être
-			disponibles.
-		</div>
-
 		<!-- Container for the "column design" -->
-		<div class="min-h-screen bg-gray-100">
+		<div class="min-h-screen">
 			<!-- Main content -->
 			<main class="min-h-screen">
 				<slot />
@@ -81,7 +77,10 @@ const pageTitle = computed(() => {
 		</div>
 
 		<!-- Flash message handler -->
-		<div v-if="flashMessages.length" class="fixed bottom-2 right-2 grid grid-cols-1 gap-3 max-w-[20em]">
+		<div
+			v-if="flashMessages.length"
+			class="fixed bottom-2 right-2 grid grid-cols-1 gap-3 max-w-[20em]"
+		>
 			<flash-message
 				v-for="(message, idx) in flashMessages"
 				:key="`flash-${idx}`"

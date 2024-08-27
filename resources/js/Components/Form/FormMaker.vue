@@ -1,16 +1,16 @@
 <script lang="ts" setup>
-import { computed, inject, onMounted, ref, useAttrs } from "vue"
 import FormElementCodearea from "@/Components/Form/FormElement/FormElementCodearea.vue"
 import FormElementKeyboard from "@/Components/Form/FormElement/FormElementKeyboard.vue"
 import FormElementSwitch from "@/Components/Form/FormElement/FormElementSwitch.vue"
-import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
+import type { FormMakerPropsType } from "@/Components/Form/FormMakerInterface"
 import { FormValidationFraction } from "@/Components/Form/FormValidation/FormValidationFraction"
 import { FormValidationNumber } from "@/Components/Form/FormValidation/FormValidationNumber"
-import type { FormMakerPropsType } from "@/Components/Form/FormMakerInterface"
-import { flashInterface } from "@/types"
 import { FormValidationVector } from "@/Components/Form/FormValidation/FormValidationVector"
+import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
+import { flashInterface } from "@/types"
 import { useUrlSearchParams } from "@vueuse/core"
 import axios from "axios"
+import { computed, inject, onMounted, ref, useAttrs } from "vue"
 
 /**
  * This component is used to generate a form input
@@ -386,7 +386,7 @@ div.inlineLabel {
 }
 
 input {
-	@apply text-black;
+	/* @apply text-black; */
 	padding-left: v-bind(iconPadding);
 }
 

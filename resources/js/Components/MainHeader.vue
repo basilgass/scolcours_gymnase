@@ -1,19 +1,37 @@
 <!--
 En-tête principal, sensible au thème
 -->
-<script setup lang="ts">
-import { inject, PropType, provide, Ref, ref } from "vue"
+<script
+	setup
+	lang="ts"
+>
 import MainAside from "@/Components/MainAside.vue"
 import DropdownMenu from "@/Components/Ui/DropdownMenu.vue"
 import LogoutButton from "@/Components/Ui/LogoutButton.vue"
 import type { ThemeInterface } from "@/types"
+import { computed, inject, PropType, provide, Ref, ref } from "vue"
 
-defineProps({
-		theme: { type: Object as PropType<ThemeInterface>, required: true },
-	})
+import { useDark, useToggle } from '@vueuse/core'
+const isDark = useDark()
+// TODO: Set dark mode to false by default for now
+isDark.value = false
+const toggleDark = useToggle(isDark)
 
-	const showAside = ref(false),
-		editMode = inject<Ref<boolean>>("editMode")
+const props = defineProps({
+	theme: {
+		type: Object as PropType<ThemeInterface>,
+		default: () => {
+			return { title: "Scolcours", slug: "main" }
+		}
+	},
+})
+
+const computedTheme = computed(() => {
+	return props.theme ? props.theme : { title: "Scolcours", slug: "main" }
+})
+
+const showAside = ref(false),
+	editMode = inject<Ref<boolean>>("editMode")
 
 provide("showAside", showAside)
 
@@ -31,19 +49,27 @@ provide("showAside", showAside)
 					href="/"
 					class="relative min-w-[1em]"
 				>
-					<i class="absolute inset bi bi-house cursor-pointer" />
-					<i class="absolute inset bi bi-house-fill cursor-pointer text-transparent hover:text-white transition-all duration-500" />
+				<i class="absolute inset bi bi-house cursor-pointer" />
+				<i
+					class="absolute inset bi bi-house-fill cursor-pointer text-transparent hover:text-white transition-all duration-500" />
 				</Link>
 
 				<Link
-					:href="theme.slug === 'main' ? `/` : `/${theme.slug}`"
+					:href="computedTheme.slug === 'main' ? `/` : `/${computedTheme.slug}`"
 					class="hover:scale-110 transition-all"
 				>
-					{{ theme.title }}
+				{{ computedTheme.title }}
 				</Link>
 			</div>
 
 			<div class="flex gap-8 items-center">
+				<div
+					v-admin
+					@click="toggleDark()"
+					class="hover:-rotate-[120deg] duration-500 cursor-pointer"
+				>
+					<i :class="isDark ? 'bi bi-moon-fill' : 'bi bi-sun-fill'" />
+				</div>
 				<!-- utilisateur connecté -->
 				<div
 					v-if="$page.props.auth.user"
@@ -61,7 +87,7 @@ provide("showAside", showAside)
 							:href="route('dashboard')"
 							class="hover:bg-gray-100 px-3 py-2"
 						>
-							profil
+						profil
 						</Link>
 
 						<LogoutButton class="hover:bg-gray-100" />
@@ -85,22 +111,20 @@ provide("showAside", showAside)
 			v-admin
 			class="bg-slate-600 py-3"
 		>
-			<div
-				class="scolcours-container flex justify-between items-baseline"
-			>
+			<div class="scolcours-container flex justify-between items-baseline">
 				<div>
 					<Link
 						:href="route('admin')"
 						class="text-xs text-white uppercase"
 					>
-						administrateur
+					administrateur
 					</Link>
 				</div>
 				<button
 					:class="editMode ? 'bg-white/40' : ''"
 					class="btn btn-xs hover:text-black"
 					title="Ctrl+Alt+A"
-					@click="editMode=!editMode"
+					@click="editMode = !editMode"
 				>
 					<span v-show="editMode">
 						<i class="bi bi-pencil mr-2" />

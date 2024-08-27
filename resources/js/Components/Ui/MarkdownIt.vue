@@ -2,14 +2,14 @@
 Affichage d'un texte en markdown.
 -->
 <script setup lang="ts">
-import { computed, ref } from "vue"
 import { useKatexMacros, useMenuScrollTo } from "@/Composables/useHelpers"
 import { router, usePage } from "@inertiajs/vue3"
-import markdownIt from "markdown-it"
-import bracketed from "markdown-it-bracketed-spans"
-import attr from "markdown-it-attrs"
-import tm from "markdown-it-texmath"
 import katex from "katex"
+import markdownIt from "markdown-it"
+import attr from "markdown-it-attrs"
+import bracketed from "markdown-it-bracketed-spans"
+import tm from "markdown-it-texmath"
+import { computed, ref } from "vue"
 
 const root = ref(null)
 

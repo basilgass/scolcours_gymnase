@@ -1,13 +1,13 @@
 <script setup lang="ts">
 
-import LayoutMain from "@/Layouts/LayoutMain.vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
-import type { ChapterInterface } from "@/types/modelInterfaces"
-import { inject, PropType, ref } from "vue"
-import axios from "axios"
+import LayoutMain from "@/Layouts/LayoutMain.vue"
 import { flashInterface } from "@/types"
+import type { ChapterInterface } from "@/types/modelInterfaces"
+import axios from "axios"
+import { inject, PropType, ref } from "vue"
 
 defineOptions({ layout: LayoutMain })
 const flash = inject<flashInterface>("flash")
@@ -89,8 +89,7 @@ function deleteChapter(){
 
 			<form-maker
 				v-model="theChapter.slug"
-				label="Titre"
-				name="title"
+				label="slug"
 			/>
 
 			<div class="grid grid-cols-1 md:grid-cols-2 gap-3">

@@ -1,7 +1,6 @@
-import eslint from '@eslint/js';
-import tseslint from "typescript-eslint";
+import eslint from '@eslint/js'
 import pluginVue from 'eslint-plugin-vue'
-
+import tseslint from "typescript-eslint"
 
 export default tseslint.config(
 	eslint.configs.recommended,
@@ -12,9 +11,11 @@ export default tseslint.config(
 		languageOptions: {
 			parserOptions: {
 				parser: tseslint.parser,
-				project: './tsconfig.json',
+				project: true,
+				tsconfigRootDir: './',
 				extraFileExtensions: ['.vue'],
 				sourceType: 'module',
+				"allowImportExportEverywhere": true,
 			},
 		},
 		rules: {
@@ -41,7 +42,7 @@ export default tseslint.config(
 			"vue/multi-word-component-names": "off",
 			"vue/max-attributes-per-line": ["error", {
 				"singleline": {
-					"max": 3
+					"max": 1
 				},
 				"multiline": {
 					"max": 1

@@ -5,10 +5,10 @@
  * parameters: v1, v2
  * tags: geometrie,1M,2M,3M
  */
-import { computed, ref } from "vue"
+import ToolForm, { IToolForm } from "@/Components/Tools/Parts/ToolForm.vue"
 import { PiMath } from "pimath"
 import type { Vector } from "pimath/dist/maths/geometry/vector"
-import ToolForm, { IToolForm } from "@/Components/Tools/Parts/ToolForm.vue"
+import { computed, ref } from "vue"
 
 const forms: IToolForm[] = [
 	{
@@ -42,6 +42,7 @@ const vectors = computed(()=>{
 
 let result = computed(() => {
 	if(vectors.value.length === 0) return false
+	
 	try {
 		return {
 			v1: pV1.value,

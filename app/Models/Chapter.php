@@ -64,7 +64,7 @@ class Chapter extends Model
 	protected $guarded = [];
 
 	// removed the theme:id,slug
-	protected $with = ['posts','formulas', 'challenges', "relations"];
+	protected $with = ['posts', 'formulas', 'challenges', "relations"];
 
 	public function theme(): \Illuminate\Database\Eloquent\Relations\BelongsTo
 	{
@@ -110,11 +110,12 @@ class Chapter extends Model
 	{
 		return $this->belongsToMany(Chapter::class, "chapter_relation", "chapter_id", "related_id");
 	}
-//
-//	public function questions()
-//	{
-//		return $this->hasManyThrough(Question::class, Exercise::class);
-//	}
+
+	public function decks()
+	{
+		return $this->hasMany(Deck::class);
+	}
+
 	protected function url(): Attribute
 	{
 		return Attribute::make(
@@ -123,16 +124,17 @@ class Chapter extends Model
 	}
 
 	// TODO: Maybe remove this one to include in the Block element.
-	protected function component(): Attribute{
-		if($this->theme === null || $this->slug===null){
+	protected function component(): Attribute
+	{
+		if ($this->theme === null || $this->slug === null) {
 			$path = false;
-		}else {
+		} else {
 			$path = $this->theme->slug . '/' . $this->slug;
 		}
 
-		if(Storage::disk('chapters')->exists($path.'.vue')){
+		if (Storage::disk('chapters')->exists($path . '.vue')) {
 			$component = 'Chapters/' . $path;
-		}else{
+		} else {
 			$component = false;
 		}
 
@@ -144,8 +146,8 @@ class Chapter extends Model
 	public function reorder()
 	{
 		$this->refresh();
-		foreach($this->posts as $index=>$post){
-			$post->update(["order"=>$index+1]);
+		foreach ($this->posts as $index => $post) {
+			$post->update(["order" => $index + 1]);
 		}
 	}
 }

@@ -16,6 +16,7 @@ import { LogChecker } from "@/Checkers/Basic/LogChecker"
 import { ExpChecker } from "@/Checkers/Basic/ExpChecker"
 import { CheckerAbstract } from "@/Checkers/CheckerAbstract"
 import { PrimitiveChecker } from "@/Checkers/Basic/PrimitiveChecker"
+import { CartesianChecker } from "@/Checkers/Basic/CartesianChecker"
 
 export interface CheckerResult {
     result: boolean,
@@ -56,6 +57,9 @@ export function getCheckerClass(checker: string) {
         case "equ":
         case "equation":
             return EquationChecker
+        case "cart":
+        case "cartesian":
+            return CartesianChecker
         case "fn":
         case "function":
             return FunctionChecker
@@ -83,8 +87,8 @@ export function getCheckerClass(checker: string) {
             return LogChecker
         case "exp":
             return ExpChecker
-		case "primitive":
-			return PrimitiveChecker
+        case "primitive":
+            return PrimitiveChecker
         default:
             return StringChecker
     }
@@ -108,8 +112,8 @@ export function getChecker(checker: string, options?: string[]): CheckerAbstract
 }
 
 export function customCheck(checker: string, expected: string, given: string): CheckerResult {
-	const chkSplit = checker.split(',')
-	const [name] = chkSplit
+    const chkSplit = checker.split(',')
+    const [name] = chkSplit
     let [, ...config] = chkSplit
 
     const chkClass = getCheckerClass(name)

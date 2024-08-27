@@ -16,7 +16,7 @@ import PiDrawParserVisibility from "@/Components/Pi/Parts/PiDrawParserVisibility
 
 // TODO: importing directly pidraw is not working - need to import the lib module (Not a big deal... but strange)
 // import { Parser as PiParser } from "pidraw/lib/Parser"
-import { PiParser } from "pidraw"
+import { PiDraw } from "pidraw"
 
 const emits = defineEmits(["update"])
 
@@ -47,7 +47,7 @@ const codeArray = computed(() => {
 })
 
 // Main draving system - not reactive !
-let PiGraph: PiParser,
+let PiGraph: PiDraw,
 	PiParserHasErrors = ref(false),
 	figures = ref({})
 
@@ -323,7 +323,7 @@ function PiParserUpdate(from: string, withSliders = false) {
 // Build the resizeobserver...
 onMounted(() => {
 	// Default settings
-	PiGraph = new PiParser(
+	PiGraph = new PiDraw(
 		drawWrapper.value,
 		{
 			parameters: props.draw.parameters ?? '',

@@ -1,15 +1,15 @@
 <script lang="ts" setup>
-import { computed, inject, onMounted, PropType, ref } from "vue"
-import LayoutMain from "@/Layouts/LayoutMain.vue"
-import type { IllustrationInterface, widgetInterface } from "@/types/modelInterfaces"
 import FormImageDrop from "@/Components/Form/FormImageDrop.vue"
-import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
+import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
+import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
+import LayoutMain from "@/Layouts/LayoutMain.vue"
+import IllustrationShow from "@/Pages/Illustrations/IllustrationShow.vue"
+import { flashInterface } from "@/types"
+import type { IllustrationInterface, widgetInterface } from "@/types/modelInterfaces"
 import { router } from "@inertiajs/vue3"
 import axios from "axios"
-import { flashInterface } from "@/types"
-import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
-import IllustrationShow from "@/Pages/Illustrations/IllustrationShow.vue"
+import { computed, inject, onMounted, PropType, ref } from "vue"
 
 // Define the layout
 defineOptions({ layout: LayoutMain })
@@ -160,24 +160,43 @@ onMounted(() => {
 				</div>
 			</div>
 			<div class="self-start grid grid-cols-2 gap-2 items-center flex-wrap">
-				<button class="btn-primary btn-xs" @click="illustrationSave">
+				<button
+					class="btn-primary btn-xs"
+					@click="illustrationSave"
+				>
 					enregistrer
 				</button>
-				<button class="btn-primary btn-xs" @click="illustrationSaveAndEdit">
+				<button
+					class="btn-primary btn-xs"
+					@click="illustrationSaveAndEdit"
+				>
 					enregistrer et éditer
 				</button>
-				<button class="btn-cancel btn-xs" @click="illustrationVisit">
+				<button
+					class="btn-cancel btn-xs"
+					@click="illustrationVisit"
+				>
 					retour
 				</button>
-				<confirm-button class="btn-delete btn-xs" @confirm="illustrationDelete">
+				<confirm-button
+					class="btn-delete btn-xs"
+					@confirm="illustrationDelete"
+				>
 					supprimer
 				</confirm-button>
 			</div>
 			<div v-if="false">
-				<button class="btn btn-xs" @click="copyIllustration">
+				<button
+					class="btn btn-xs"
+					@click="copyIllustration"
+				>
 					<i class="bi bi-clipboard-plus" />
 				</button>
-				<button v-if="hasClipboard" class="btn btn-xs" @click="pasteIllustration">
+				<button
+					v-if="hasClipboard"
+					class="btn btn-xs"
+					@click="pasteIllustration"
+				>
 					<i class="bi bi-clipboard-pulse" />
 				</button>
 			</div>
@@ -209,7 +228,10 @@ onMounted(() => {
 					<div class="grid grid-cols-1 md:grid-cols-2 gap-3">
 						<div class="grid grid-cols-1 gap-3">
 							<!-- image illustration -->
-							<div v-if="currentComponent?.component === 'image-widget.vue'" class="col-span-2 mb-5">
+							<div
+								v-if="currentComponent?.component === 'image-widget.vue'"
+								class="col-span-2 mb-5"
+							>
 								<form-image-drop @file-dropped="imageFileDropped" />
 							</div>
 
@@ -253,7 +275,10 @@ onMounted(() => {
 										$a=a,b,...,c/intervalle=valeur[~]<br>
 										~ est optionnel: il désactive les parenthèses autour de la variable
 									</div>
-									<div v-else class="flex justify-between">
+									<div
+										v-else
+										class="flex justify-between"
+									>
 										<div>{{ currentLineHelperText.parameters }}</div>
 										<div>{{ currentLineHelperText.options }}</div>
 
@@ -263,8 +288,14 @@ onMounted(() => {
 							</div>
 
 							<!-- component illustration -->
-							<div v-else class="col-span-2  h-full w-full grid grid-cols-1 items-center">
-								<form-maker v-model="theIllustration.parameters" label="parametres" />
+							<div
+								v-else
+								class="col-span-2  h-full w-full grid grid-cols-1 items-center"
+							>
+								<form-maker
+									v-model="theIllustration.parameters"
+									label="parametres"
+								/>
 								<form-maker
 									v-model="theIllustration.code"
 									:rows="10"
@@ -278,7 +309,10 @@ onMounted(() => {
 								/>
 							</div>
 						</div>
-						<illustration-show :illustration="theIllustration" class="bg-white" preview />
+						<illustration-show
+							:illustration="theIllustration"
+							preview
+						/>
 					</div>
 				</div>
 

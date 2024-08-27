@@ -27,12 +27,17 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Deck extends Model
 {
-    use HasFactory;
+	use HasFactory;
 
 	protected $guarded = [];
 
+	public function chapter()
+	{
+		return $this->belongsTo(Chapter::class);
+	}
+
 	public function flipcards()
 	{
-		return $this->hasMany(Flipcard::class);
+		return $this->hasMany(Flipcard::class)->orderBy('order')->orderBy('id');
 	}
 }

@@ -1,9 +1,9 @@
 <script generic="T" lang="ts" setup>
-import { computed, PropType, ref } from "vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import { router, usePage } from "@inertiajs/vue3"
+import { computed, PropType, ref } from "vue"
 
-type FilterItem = {
+interface FilterItem {
 	title: string,
 	slug: string,
 	active: boolean,
@@ -87,6 +87,7 @@ function itemClicked(item) {
 defineSlots<{
 	card(props: { item: T }): unknown,
 	button(),
+	title(),
 	noItemMessage(),
 }>()
 
@@ -99,13 +100,16 @@ const emits = defineEmits<{
 <template>
 	<div>
 		<div class="flex justify-between">
-			<h3
-				v-if="!noTitle"
-				class="text-lg uppercase"
-			>
-				{{ title }}
-			</h3>
-			<div class="flex gap-3">
+			<div>
+				<h3
+					v-if="!noTitle && $slots['title'] === undefined"
+					class="text-lg uppercase my-3"
+				>
+					{{ title }}
+				</h3>
+				<slot name="title" />
+			</div>
+			<div class="flex gap-3 my-auto py-3">
 				<button
 					v-if="props.collapsed !== null"
 					@click="showList = !showList"

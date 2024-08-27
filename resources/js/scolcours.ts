@@ -49,9 +49,9 @@ export enum MODULE_TYPES {
 }
 
 export function getModule(key: string, type: MODULE_TYPES) {
-	if(key===null || key===undefined) return null
+	if (key === null || key === undefined) return null
 
-	const path = `${dynamicModules[type].path}${key}${key.endsWith('.vue')?'':'.vue'}`
+	const path = `${dynamicModules[type].path}${key}${key.endsWith('.vue') ? '' : '.vue'}`
 	if (
 		Object.hasOwn(dynamicModules, type) &&
 		Object.hasOwn(dynamicModules[type].modules, path)
@@ -76,7 +76,7 @@ export const blockTypes = {
 		title: "définition",
 		icon: "bi bi-book",
 		style: {
-			header: "bg-lime-50 text-lime-700",
+			header: "bg-lime-400 text-lime-700",
 			body: "border border-l-8 border-lime-400",
 		},
 	},
@@ -84,7 +84,7 @@ export const blockTypes = {
 		title: "théorème",
 		icon: "bi bi-book",
 		style: {
-			header: "bg-amber-50 text-amber-700",
+			header: "bg-amber-600 text-amber-50",
 			body: "border border-l-8 border-amber-600",
 		},
 	},
@@ -92,7 +92,7 @@ export const blockTypes = {
 		title: "propriété",
 		icon: "bi bi-wrench",
 		style: {
-			header: "bg-purple-50 text-purple-700",
+			header: "bg-purple-600 text-purple-50  dark:bg-purple-600 dark:text-purple-50",
 			body: "border border-l-8 border-purple-600",
 		},
 	},
@@ -100,7 +100,7 @@ export const blockTypes = {
 		title: "remarque",
 		icon: "bi bi-chat",
 		style: {
-			header: "bg-cyan-50 text-cyan-400",
+			header: "bg-cyan-300 text-cyan-700",
 			body: "border border-l-8 border-cyan-300",
 		},
 	},
@@ -116,8 +116,8 @@ export const blockTypes = {
 		title: "attention",
 		icon: "bi bi-exclamation-triangle",
 		style: {
-			header: "bg-red-50 text-red-700",
-			body: "border border-red-300",
+			header: "bg-red-700 text-red-50",
+			body: "border border-red-700",
 		},
 	},
 }

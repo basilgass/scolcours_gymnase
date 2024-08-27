@@ -1,6 +1,6 @@
 import AsciiMathParser from "@/asciimath2tex"
 
-export type keyboardKey = {
+export interface keyboardKey {
 	key: string
 	visible: boolean
 	type: string
@@ -17,12 +17,12 @@ export type keyboardKey = {
  * @property {string[]} layout - The layout of the keyboard object type.
  * @property {function} tex - The function that returns a value based on the given string value.
  */
-export type KeyboardObjectType = {
+export interface KeyboardObjectType {
 	name: string
 	grid: string
-	layout: (string | [string, number])[]
+	layout: (string | [string, number] | { key: string, display: string, type: string })[]
 	tex: (value: string) => string // Type of the returned value can be changed according to actual function implementation
-	keys?: { [Key: string]: keyboardKey }
+	keys?: Record<string, keyboardKey>
 }
 
 
@@ -84,6 +84,7 @@ export const keyboardKeys = {
 	"x^5": { type: "math", display: "x^5" },
 	"x^6": { type: "math", display: "x^6" },
 	"^2": { type: "math", display: "\\textcolor{lightgray}{x}^2" },
+	"^3": { type: "math", display: "\\textcolor{lightgray}{x}^3" },
 	"^": { type: "math", display: "x^y" },
 	"10^": { type: "math", display: "10^x" },
 	sqrt: { type: "math", display: "\\sqrt{\\phantom{x}}" },
@@ -101,6 +102,12 @@ export const keyboardKeys = {
 	"y^4": { type: "math", display: "y^4" },
 	"y^5": { type: "math", display: "y^5" },
 	"y^6": { type: "math", display: "y^6" },
+	z: { type: "math", display: "z" },
+	"z^2": { type: "math", display: "z^2" },
+	"z^3": { type: "math", display: "z^3" },
+	"z^4": { type: "math", display: "z^4" },
+	"z^5": { type: "math", display: "z^5" },
+	"z^6": { type: "math", display: "z^6" },
 	e: { type: "math", display: "\\text{e}" },
 	ln: { type: "math", display: "\\ln" },
 	pi: { type: "math", display: "\\pi" },
@@ -144,7 +151,7 @@ export const keyboardKeys = {
  * @property {string[]} layout - An array representing the layout of the keyboard keys.
  * @property {function} tex - A function that converts the ASCII representation of a key into its corresponding LaTeX representation.
  */
-export const keyboards: { [Key: string]: KeyboardObjectType } = {
+export const keyboards: Record<string, KeyboardObjectType> = {
 	// "qcm": {
 	// 	name: "qcm",
 	// 	grid: "grid-cols-4",
@@ -251,6 +258,19 @@ export const keyboards: { [Key: string]: KeyboardObjectType } = {
 			"0",
 			"/",
 			["=", 2]
+		],
+		tex(value) {
+			return asciiToTex(value)
+		}
+	},
+	cartesian: {
+		name: "cartesian",
+		grid: "grid-cols-6",
+		layout: [
+			"1", "2", "3", "+", "-", "=",
+			"4", "5", "6", "*", "/", "^2",
+			"7", "8", "9", "(", ")", "^3",
+			"", "0", "", "x", "y", "z",
 		],
 		tex(value) {
 			return asciiToTex(value)
