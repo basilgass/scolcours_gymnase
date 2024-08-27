@@ -1,4 +1,7 @@
-<script setup lang="ts">
+<script
+	setup
+	lang="ts"
+>
 
 import EditLink from "@/Components/Ui/EditLink.vue";
 import { getModule, MODULE_TYPES } from "@/scolcours";
@@ -24,6 +27,7 @@ const widgetComponent = computed(() => {
 
 <template>
 	<figure
+		@click.stop
 		:id="`illustration-${illustration.id}`"
 		ref="root"
 		class="relative"

@@ -23,4 +23,7 @@ Route::middleware("can:admin")->group(function () {
 
 	Route::post('decks/updateOrder', [DeckController::class, 'updateOrder'])
 		->name('decks.updateOrder');
+
+	Route::patch('decks/{deck}/assignChapter', [DeckController::class, 'assignChapter'])
+		->name('decks.assignChapter');
 });

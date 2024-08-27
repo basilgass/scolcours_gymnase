@@ -3,7 +3,7 @@
 	setup
 >
 
-import FlipcardsLearn from "@/Components/Decks/FlipcardsLearn.vue";
+import FlipcardsShow from "@/Components/Decks/FlipcardsShow.vue";
 import LayoutFullpage from "@/Layouts/LayoutFullpage.vue";
 import type { deckInterface } from "@/types/modelInterfaces";
 import { PropType } from "vue";
@@ -28,7 +28,7 @@ const props = defineProps({
 		</Link>
 
 		<!-- card mode -->
-		<flipcards-learn :deck="props.deck" />
+		<FlipcardsShow :deck="props.deck" />
 	</section>
 </template>
 

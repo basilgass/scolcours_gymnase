@@ -92,7 +92,9 @@ class DeckController extends Controller
 	public function addFlipcard(Deck $deck)
 	{
 		// Create the flipcard.
-		$flipcard = $deck->flipcards()->create([]);
+		$flipcard = $deck->flipcards()->create([
+			'order' => $deck->flipcards()->count()
+		]);
 
 		// Add the corresponding blocks.
 		$flipcard->blocks()->createMany(
@@ -118,5 +120,18 @@ class DeckController extends Controller
 		}
 
 		return true;
+	}
+
+	public function assignChapter(Request $request, Deck $deck)
+	{
+		$validation = $request->validate([
+			'chapter_id' => ['required', 'exists:chapters,id']
+		]);
+
+		$deck->chapter()->associate($validation['chapter_id']);
+
+		$deck->save();
+
+		return $validation['chapter_id'];
 	}
 }

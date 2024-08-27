@@ -1,7 +1,10 @@
 <!--
 Affichage d'un block , avec toutes les possibilités
 -->
-<script lang="ts" setup>
+<script
+	lang="ts"
+	setup
+>
 import BlockBodyButtons from "@/Components/Blocks/BlockBodyButtons.vue"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 import { useFormattedBody } from "@/Composables/useHelpers"
