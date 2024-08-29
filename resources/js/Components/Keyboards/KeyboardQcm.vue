@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue"
 import { useKeyboard } from "@/Composables/useKeyboard"
-import { asciiToTex } from "@/Composables/keyboardConfig";
-import { log } from "three/examples/jsm/nodes/Nodes.js";
+import { asciiToTex } from "@/Composables/keyboardConfig"
 
 let props = defineProps({
 	keyboard: { type: Object, required: true },
@@ -135,8 +134,8 @@ onMounted(() => {
 			if (ascii) {
 				// remove the #
 				label = label.substring(1)
-				
-				// convert the tex value 
+
+				// convert the tex value
 				if(tex===undefined) tex = asciiToTex(label)
 			}
 
@@ -174,15 +173,22 @@ defineExpose({
 <template>
 	<div>
 		<div class="flex flex-wrap gap-1 md:gap-3 my-5">
-			<button v-for="element of qcmItems" :key="element.key" :class="{
-				'btn-success': element.selected,
-				'bg-white': !element.selected,
-				'w-full': isFullWidth,
-				'flex-1': isFlex,
-			}" class="btn" @click="qcmButtonClick(element)">
-				<span v-if="element.ascii" v-katex.ascii="element.label" />
-				<span v-else-if="isTex" v-katex="element.label" />
-				<span v-else v-katex.auto="element.label" />
+			<button v-for="element of qcmItems"
+				:key="element.key"
+				:class="{
+					'btn-success': element.selected,
+					'bg-white': !element.selected,
+					'w-full': isFullWidth,
+					'flex-1': isFlex,
+				}"
+				class="btn"
+				@click="qcmButtonClick(element)">
+				<span v-if="element.ascii"
+					v-katex.ascii="element.label" />
+				<span v-else-if="isTex"
+					v-katex="element.label" />
+				<span v-else
+					v-katex.auto="element.label" />
 			</button>
 		</div>
 	</div>

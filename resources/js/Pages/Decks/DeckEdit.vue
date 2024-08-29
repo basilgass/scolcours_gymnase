@@ -16,6 +16,7 @@ defineOptions({ layout: LayoutMain })
 
 const flash = inject<flashInterface>("flash")
 
+
 const props = defineProps({
 	deck: { type: Object as PropType<deckInterface>, required: true }
 })

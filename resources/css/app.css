@@ -22,7 +22,7 @@
     }
 
     .scolcours-container {
-        @apply max-w-7xl mx-auto px-1 md:px-5
+        @apply w-full max-w-7xl mx-auto px-1 md:px-5
     }
 }
 

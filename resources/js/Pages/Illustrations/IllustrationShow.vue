@@ -1,19 +1,12 @@
-<script
-	setup
-	lang="ts"
->
+<script setup lang="ts">
+import EditLink from '@/Components/Ui/EditLink.vue'
+import { getModule, MODULE_TYPES } from '@/scolcours'
+import type { IllustrationInterface } from '@/types/modelInterfaces'
+import { computed } from 'vue'
 
-import EditLink from "@/Components/Ui/EditLink.vue";
-import { getModule, MODULE_TYPES } from "@/scolcours";
-import type { IllustrationInterface } from "@/types/modelInterfaces";
-import { computed, PropType } from "vue";
-
-const props = defineProps({
-	illustration: {
-		type: Object as PropType<IllustrationInterface>,
-		required: true
-	}
-})
+const props = defineProps<{
+	illustration: IllustrationInterface
+}>()
 
 // Get the component to display
 const widgetComponent = computed(() => {
@@ -22,25 +15,18 @@ const widgetComponent = computed(() => {
 		MODULE_TYPES.WIDGET
 	)
 })
-
 </script>
 
 <template>
-	<figure
-		@click.stop
+	<figure @click.stop
 		:id="`illustration-${illustration.id}`"
 		ref="root"
-		class="relative"
-	>
-		<edit-link
-			:id="props.illustration.id"
-			route-name="illustrations.edit"
-		/>
+		class="relative">
+		<edit-link :id="props.illustration.id"
+			route-name="illustrations.edit" />
 
-		<component
-			:is="widgetComponent"
-			:illustration="props.illustration"
-		/>
+		<component :is="widgetComponent"
+			:illustration="props.illustration" />
 
 		<figcaption
 			v-if="props.illustration.title"

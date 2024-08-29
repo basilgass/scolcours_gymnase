@@ -1,9 +1,8 @@
-<script setup lang="ts">
+<script
+	setup
+	lang="ts"
+>
 import "@/Layouts/LayoutProjection.vue"
-import LayoutProjection from "@/Layouts/LayoutProjection.vue"
-
-defineOptions({layout: LayoutProjection})
-
 </script>
 
 <template>
@@ -32,9 +31,8 @@ defineOptions({layout: LayoutProjection})
 			<!--				<span v-show="!globalEditMode"> <i class="bi bi-pencil mr-2" /> <span>activer l'édition</span></span>-->
 			<!--			</button>-->
 		</header>
-		<main class="w-full flex-1">
+		<main class="scolcours-container flex-1">
 			<slot />
 		</main>
 	</div>
 </template>
-

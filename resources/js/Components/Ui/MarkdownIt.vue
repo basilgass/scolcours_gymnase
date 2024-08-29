@@ -1,7 +1,10 @@
 <!--
 Affichage d'un texte en markdown.
 -->
-<script setup lang="ts">
+<script
+	setup
+	lang="ts"
+>
 import { useKatexMacros, useMenuScrollTo } from "@/Composables/useHelpers"
 import { router, usePage } from "@inertiajs/vue3"
 import katex from "katex"
@@ -13,79 +16,79 @@ import { computed, ref } from "vue"
 
 const root = ref(null)
 
-	const props = defineProps({
-		text: { type: String, default: "" },
-		delimiters: { type: Array, default: null },
-		customKatex: {type: Boolean, default: false},
+const props = defineProps({
+	text: { type: String, default: "" },
+	delimiters: { type: Array, default: null },
+	customKatex: { type: Boolean, default: false },
+})
+
+
+const md = markdownIt({ html: true })
+	.use(bracketed)
+	.use(attr)
+	.use(tm, {
+		engine: katex,
+		delimiters: props.delimiters ?? ["brackets", "dollars"],
+		katexOptions: {
+			strict: false,
+			macros: useKatexMacros,
+			trust: (context) => context.command.startsWith("\\html"),
+		},
 	})
 
+const mdit = computed(() => {
+	if (!props.text) {
+		return ""
+	}
 
-	const md = markdownIt({ html: true })
-		.use(bracketed)
-		.use(attr)
-		.use(tm, {
-			engine: katex,
-			delimiters: props.delimiters ?? ["brackets", "dollars"],
-			katexOptions: {
-				strict: false,
-				macros: useKatexMacros,
-				trust: (context) => context.command.startsWith("\\html"),
-			},
-		})
+	let output = props.text
 
-	const mdit = computed(() => {
-		if (!props.text) {
-			return ""
+	// Remplace les class courtes en classes complètes.
+	// .@text = .text-scolcours-theme
+	// .@bg = .bg-scolcours-theme
+	output = output.replaceAll(/\.(@[a-z]+)/g, (match) => {
+		const prefix = match.substring(2),
+			theme = usePage().props.theme.slug
+
+		return `.${prefix}-scolcours-${theme}`
+	})
+
+	// Remplace les liens vers les routes par des liens vers les pages
+	output = output.replaceAll(/\(@\S+\)/g, (match) => {
+		const [routeName, ...routeOptions] = match
+			.substring(2, match.length - 1)
+			.split(",")
+
+		try {
+			return `(${route(routeName, routeOptions)})`
+		} catch {
+			return `(${match})`
 		}
-
-		let output = props.text
-
-		// Remplace les class courtes en classes complètes.
-		// .@text = .text-scolcours-theme
-		// .@bg = .bg-scolcours-theme
-		output = output.replaceAll(/\.(@[a-z]+)/g, (match) => {
-			const prefix = match.substring(2),
-				theme = usePage().props.theme.slug
-
-			return `.${prefix}-scolcours-${theme}`
-		})
-
-		// Remplace les liens vers les routes par des liens vers les pages
-		output = output.replaceAll(/\(@\S+\)/g, (match) => {
-			const [routeName, ...routeOptions] = match
-				.substring(2, match.length - 1)
-				.split(",")
-
-			try {
-				return `(${route(routeName, routeOptions)})`
-			} catch {
-				return `(${match})`
-			}
-		})
-
-		return md.render(output)
 	})
 
-	const mdClick = function (event) {
-		if (event.target.tagName === "A") {
-			event.preventDefault()
-			const [url, anchor] = event.target.href.split("#")
+	return md.render(output)
+})
 
-			// l'url peut être de deux formes.
-			// https://url
-			// nom,...paramètres
+const mdClick = function (event) {
+	if (event.target.tagName === "A") {
+		event.preventDefault()
+		const [url, anchor] = event.target.href.split("#")
 
-			if (anchor) {
-				if (url === document.URL) {
-					useMenuScrollTo(anchor)
-				} else {
-					router.visit(event.target.href)
-				}
+		// l'url peut être de deux formes.
+		// https://url
+		// nom,...paramètres
+
+		if (anchor) {
+			if (url === document.URL) {
+				useMenuScrollTo(anchor)
 			} else {
 				router.visit(event.target.href)
 			}
+		} else {
+			router.visit(event.target.href)
 		}
 	}
+}
 </script>
 
 <template>

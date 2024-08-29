@@ -1,15 +1,10 @@
-<script
-	lang="ts"
-	setup
->
+<script lang="ts" setup>
+import FlipcardsShow from "@/Components/Decks/FlipcardsShow.vue"
+import LayoutProjection from "@/Layouts/LayoutProjection.vue"
+import type { deckInterface } from "@/types/modelInterfaces"
+import { PropType } from "vue"
 
-import FlipcardsShow from "@/Components/Decks/FlipcardsShow.vue";
-import LayoutFullpage from "@/Layouts/LayoutFullpage.vue";
-import type { deckInterface } from "@/types/modelInterfaces";
-import { PropType } from "vue";
-
-defineOptions({ layout: LayoutFullpage })
-
+defineOptions({ layout: LayoutProjection })
 const props = defineProps({
 	deck: { type: Object as PropType<deckInterface>, required: true }
 })
@@ -17,15 +12,18 @@ const props = defineProps({
 
 <template>
 	<section>
-		<h3 class="text-3xl">
-			{{ deck.title }}
-		</h3>
-		<div class="font-code text-xs">
-			{{ deck.slug }}
-		</div>
-		<Link :href="route('decks.index')">
-		<i class="bi bi-arrow-left-square mr-3" />retour aux decks
-		</Link>
+		<header class="mb-5">
+			<h3 class="text-3xl">
+				{{ deck.title }}
+			</h3>
+			<div class="font-code text-xs">
+				{{ deck.slug }}
+			</div>
+			<Link :href="route('decks.index')">
+				<i class="bi bi-arrow-left-square mr-3" />
+				retour aux decks
+			</Link>
+		</header>
 
 		<!-- card mode -->
 		<FlipcardsShow :deck="props.deck" />

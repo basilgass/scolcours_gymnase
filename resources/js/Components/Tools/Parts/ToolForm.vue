@@ -36,7 +36,7 @@ const link = computed(() => {
 	return url + `?${query.toString()}`
 })
 
-const formComponents = ref<Array<InstanceType<typeof FormMaker>>>([])
+const formComponents = ref<InstanceType<typeof FormMaker>[]>([])
 
 function addFormRef(element: InstanceType<typeof FormMaker>) {
 	if (formComponents.value.indexOf(element) === -1) {

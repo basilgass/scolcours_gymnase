@@ -1,13 +1,11 @@
-<script
-	lang="ts"
-	setup
->
+<script lang="ts" setup>
 
-import BlockShow from "@/Pages/Blocks/BlockShow.vue"
+import IllustrationShow from "@/Pages/Illustrations/IllustrationShow.vue"
 import type { deckInterface, flipcardsInterface } from "@/types/modelInterfaces"
 import { useSwipe } from "@vueuse/core"
 import { PiMath } from "pimath"
 import { computed, PropType, ref } from "vue"
+import MarkdownIt from "../Ui/MarkdownIt.vue"
 
 const props = defineProps({
 	deck: { type: Object as PropType<deckInterface>, required: true }
@@ -66,11 +64,11 @@ let el = ref(null)
 const { lengthX, isSwiping } = useSwipe(el, {
 	threshold: 50,
 	onSwipeEnd(e, d) {
-		// On évite le swipe par défault (historique)
+		// On évite le swipe par défaut (historique)
 		// La carte doit être sur son côté verso
 		if (cardSide.value === "recto") return
 
-		// On doit avoit une assez grande distance
+		// On doit avoir une assez grande distance
 		if (Math.abs(lengthX.value) < 200) return
 
 		// On applique le résultat.
@@ -87,11 +85,10 @@ const xClassTranslate = computed(() => {
 </script>
 
 <template>
-	<div
+	<article
 		v-if="cardIndex < cardsList.length"
 		ref="el"
-		class="p-3 lg:p-6
-			cursor-pointer
+		class="cursor-pointer
 			relative"
 	>
 		<!-- <div class="absolute left-3 lg:left-6 top-[50%] text-red-500">
@@ -101,14 +98,23 @@ const xClassTranslate = computed(() => {
 			<i class="bi bi-hand-thumbs-up-fill" />
 		</div> -->
 
-		<BlockShow
-			:style="xClassTranslate"
-			class="bg-white rounded-xl shadow
-			min-h-[250px] 
-			transition-all ease-out duration-500"
+		<div
+			:class="xClassTranslate"
+			class="grid place-items-center  bg-white rounded-xl shadow-lg p-5 min-h-[50vh]"
 			@click="flip"
-			:block="cardsList[cardIndex][cardSide]"
-		/>
+		>
+			<!-- body -->
+			<markdown-it
+				class="text-xl md:text-2xl lg:text-3xl xl:text-4xl"
+				:text="cardsList[cardIndex][cardSide].body"
+			/>
+			<!-- Illustration -->
+			<illustration-show
+				v-if="cardsList[cardIndex].recto.illustrations.length > 0"
+				class="h-full w-full max-w-[600px]"
+				:illustration="cardsList[cardIndex][cardSide].illustrations[0]"
+			/>
+		</div>
 
 
 		<div class="min-h-[3em]">
@@ -132,7 +138,7 @@ const xClassTranslate = computed(() => {
 				</div>
 			</transition>
 		</div>
-	</div>
+	</article>
 	<div
 		v-else
 		class="min-w-[300px] min-h-[200px] grid place-items-center"
