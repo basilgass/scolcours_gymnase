@@ -92,6 +92,11 @@ function setLetter(letter: string) {
 	}
 }
 
+function selectLetter(row: number, index: number){
+	if(row === guessId.value){
+		letterId.value = index
+	}
+}
 function backspace() {
 	// Remove the letter in the current position
 	guesses.value[guessId.value].word = guess.value.substring(0, letterId.value) + " " + guess.value.substring(letterId.value + 1)
@@ -255,15 +260,25 @@ const keyboard = computed<Record<string, string>>(() => {
 </script>
 <template>
 	<article class="scolcours-container py-20">
-		<div v-if="!gameIsRunning" class="max-w-lg mx-auto space-y-10">
-			<h2 class="text-2xl">Wordle</h2>
+		<div
+			v-if="!gameIsRunning"
+			class="max-w-lg mx-auto space-y-10"
+		>
+			<h2 class="text-2xl">
+				Wordle
+			</h2>
 			<div class="grid grid-cols-3 gap-5">
 				<form-maker
 					v-model="WORD_LANGUAGE"
 					label="langue"
 					type="select"
 				>
-					<option selected value="fr">français</option>
+					<option
+						selected
+						value="fr"
+					>
+						français
+					</option>
 				</form-maker>
 				<form-maker
 					v-model="WORD_LENGTH"
@@ -276,8 +291,13 @@ const keyboard = computed<Record<string, string>>(() => {
 					type="number"
 				/>
 			</div>
-			<div class="text-center" >
-				<button @click="startGame" class="btn btn-lg btn-primary">commencer</button>
+			<div class="text-center">
+				<button
+					@click="startGame"
+					class="btn btn-lg btn-primary"
+				>
+					commencer
+				</button>
 			</div>
 		</div>
 		<div
@@ -294,7 +314,8 @@ const keyboard = computed<Record<string, string>>(() => {
 						v-for="(letter, i) in value.word"
 						:key="`letter-${index}-${i}`"
 						:class="letterClass(index, i)"
-						class="w-[3em] aspect-square grid place-items-center"
+						class="w-[2em] md:w-[3em] aspect-square grid place-items-center"
+						@click="selectLetter(index, i)"
 					>
 						{{ letter }}
 					</div>
@@ -304,13 +325,13 @@ const keyboard = computed<Record<string, string>>(() => {
 			<div
 				v-for="(row, index) in letterMapping"
 				:key="`row-${index}`"
-				class="flex gap-2 mx-auto"
+				class="flex gap-1 md:gap-2 mx-auto"
 			>
 				<button
 					v-for="letter in row"
 					:key="`key-${letter}`"
 					:class="keyboard[letter]"
-					class="w-[2em] aspect-square grid place-items-center"
+					class="w-[1.5em] md:w-[3em] aspect-square grid place-items-center"
 					s
 					@click="setLetter(letter)"
 				>
@@ -318,7 +339,7 @@ const keyboard = computed<Record<string, string>>(() => {
 				</button>
 				<button
 					v-if="index===2"
-					class="btn bg-white ml-3"
+					class="btn bg-white ml-3 py-0 md:py-3 px-5"
 					@click="backspace"
 				>
 					<i class="bi bi-backspace" />
