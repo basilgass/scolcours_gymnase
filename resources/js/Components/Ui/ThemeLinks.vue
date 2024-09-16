@@ -1,19 +1,22 @@
 <!--
 Génération des liens pour les themes.
 -->
-<script setup lang="ts">
+<script
+	setup
+	lang="ts"
+>
 
 import { usePage } from "@inertiajs/vue3"
 import { computed } from "vue"
 
 const emit = defineEmits(["ClickNavigationLinks"])
-const enabledThemes = computed(()=>{
-	return usePage().props.themes.filter(theme=>theme.enabled)
+const enabledThemes = computed(() => {
+	return usePage().props.themes.filter(theme => theme.enabled)
 })
 
 </script>
 <template>
-	<Link
+	<InertiaLink
 		v-for="theme of enabledThemes"
 		:key="`anchor-${theme.slug}`"
 		:href="route('theme', theme.slug)"
@@ -24,5 +27,5 @@ const enabledThemes = computed(()=>{
 			:class="`${theme.icon}`"
 			class="mr-2"
 		/>{{ theme.title }}
-	</Link>
+	</InertiaLink>
 </template>

@@ -1,5 +1,5 @@
 import { computed, inject, onMounted, onUnmounted, provide, Ref, ref, unref } from "vue"
-import { PiMath } from "pimath"
+import  PiMath from "pimath"
 import { useFormattedBody } from "@/Composables/useHelpers"
 import type { BlockInterface } from "@/types/modelInterfaces"
 
@@ -9,7 +9,7 @@ export function useBlock(blockMaybeRef: BlockInterface | Ref<BlockInterface>) {
 	// The block to be edited.
 	const block = unref(blockMaybeRef)
 
-	let events: { [Key: string]: EventListener }[] = []
+	let events: Record<string, EventListener>[] = []
 	const random = ref(1),
 		postData = inject<Ref<{Object}>>("postData"),
 		eventData = ref({}),

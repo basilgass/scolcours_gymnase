@@ -4,11 +4,14 @@ nombre de vies, niveaux de difficultés, temps et les résultats courants
 
 Pour l'admin, contient également les liens vers les résultats par teams.
 -->
-<script setup lang="ts">
+<script
+	setup
+	lang="ts"
+>
 
 const props = defineProps({
-	challenge: {type: Object, required: true},
-	teams: {type: Object, required: true}
+	challenge: { type: Object, required: true },
+	teams: { type: Object, required: true }
 })
 
 const emits = defineEmits(["start"])
@@ -73,8 +76,7 @@ const emits = defineEmits(["start"])
 
 			<div class="grid w-full gap-4 grid-cols-2">
 				<div
-					class="bg-white aspect-square p-4 rounded-xl border border-gray-200 grid place-items-center shadow"
-				>
+					class="bg-white aspect-square p-4 rounded-xl border border-gray-200 grid place-items-center shadow">
 					<div class="text-center flex flex-col justify-between h-full">
 						<h4 class="text-xl uppercase ">
 							score
@@ -88,8 +90,7 @@ const emits = defineEmits(["start"])
 					</div>
 				</div>
 				<div
-					class="bg-white aspect-square p-4 rounded-xl border border-gray-200 grid place-items-center shadow"
-				>
+					class="bg-white aspect-square p-4 rounded-xl border border-gray-200 grid place-items-center shadow">
 					<div class="text-center flex flex-col justify-between h-full">
 						<h4 class="text-xl uppercase">
 							niveau
@@ -114,7 +115,7 @@ const emits = defineEmits(["start"])
 				Résultats
 			</h3>
 			<div class="flex flex-wrap gap-3">
-				<Link
+				<InertiaLink
 					v-for="team of props.teams"
 					:key="team.id"
 					:href="route('teams.challenge', [team.name, props.challenge.slug])"
@@ -122,7 +123,7 @@ const emits = defineEmits(["start"])
 					class="btn bg-white"
 				>
 					{{ team.name }}
-				</Link>
+				</InertiaLink>
 			</div>
 		</div>
 	</article>

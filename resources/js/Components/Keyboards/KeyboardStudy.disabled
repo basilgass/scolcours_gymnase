@@ -3,7 +3,7 @@
 // TODO: retravailler pour être plus facile à modifier / debogguer
 import { onMounted, PropType, ref } from "vue"
 import katex from "katex"
-import { PiMath } from "pimath"
+import  PiMath from "pimath"
 import KeyboardDisplay from "@/Components/Keyboards/KeyboardDisplay.vue"
 import { customCheck } from "@/Composables/checkersConfig"
 import { KeyboardInterface, useKeyboard } from "@/Composables/useKeyboard"

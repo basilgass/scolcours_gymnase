@@ -3,7 +3,10 @@ Interface pour les "flash message"
 A utiliser en conjonction avec
 const flash = inject('flash')
 -->
-<script lang="ts" setup>
+<script
+	lang="ts"
+	setup
+>
 import { onMounted, PropType, ref } from "vue"
 
 const emits = defineEmits(["open", "close"])
@@ -18,7 +21,7 @@ const props = defineProps({
 })
 
 let show = ref(true),
-	closeFlashMessage = function() {
+	closeFlashMessage = function () {
 		show.value = false
 		emits("close", timeoutId)
 	},
@@ -55,13 +58,13 @@ onMounted(() => {
 				>
 					{{ props.link.url }}
 				</a>
-				<Link
+				<InertiaLink
 					v-else
 					:href="props.link.url"
 					@click="closeFlashMessage"
 				>
 					{{ props.link.label }}
-				</Link>
+				</InertiaLink>
 			</div>
 
 			<!-- close button -->

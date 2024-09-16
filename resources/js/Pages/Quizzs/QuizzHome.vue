@@ -1,4 +1,7 @@
-<script setup lang="ts">
+<script
+	setup
+	lang="ts"
+>
 import { onMounted, PropType } from "vue"
 import { router } from "@inertiajs/vue3"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
@@ -10,10 +13,10 @@ const props = defineProps({
 	quizzSessions: { type: Object as PropType<QuizzSessionInterface[]>, required: true },
 })
 
-const updateQuizz = ()=> {
-		router.reload()
-	}
-onMounted(()=>{
+const updateQuizz = () => {
+	router.reload()
+}
+onMounted(() => {
 	setInterval(() => updateQuizz(), 2000)
 })
 </script>
@@ -26,7 +29,7 @@ onMounted(()=>{
 
 		<div class="h-[80vh] w-full grid place-items-center">
 			<div
-				v-if="props.quizzSessions.length>0"
+				v-if="props.quizzSessions.length > 0"
 				class="flex justify-center max-w-xl gap-5 container"
 			>
 				<div
@@ -40,13 +43,13 @@ onMounted(()=>{
 							v-katex.auto="quizzSession.quizz.title"
 							class="font-semibold"
 						/>
-						<Link
+						<InertiaLink
 							as="button"
 							:class="`btn-scolcours-${quizzSession.quizz.theme?.slug}`"
 							:href="route('quizzs.sessions.show', [quizzSession.shortcode])"
 						>
 							participer
-						</Link>
+						</InertiaLink>
 					</div>
 				</div>
 			</div>

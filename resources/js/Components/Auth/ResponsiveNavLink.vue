@@ -19,10 +19,10 @@ export default {
 </script>
 
 <template>
-	<Link
+	<InertiaLink
 		:class="classes"
 		:href="href"
 	>
 		<slot />
-	</Link>
+	</InertiaLink>
 </template>

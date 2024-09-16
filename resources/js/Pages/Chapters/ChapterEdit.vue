@@ -1,4 +1,7 @@
-<script setup lang="ts">
+<script
+	setup
+	lang="ts"
+>
 
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
@@ -21,7 +24,7 @@ const props = defineProps({
 
 const theChapter = ref(props.chapter)
 
-function saveChapter () {
+function saveChapter() {
 	axios
 		.patch(route("chapters.update", [props.chapter.id]), {
 			_method: "PATCH",
@@ -38,7 +41,7 @@ function saveChapter () {
 		})
 }
 
-function deleteChapter(){
+function deleteChapter() {
 	// TODO: implement deleteChapter
 	console.log("TO BE IMPLEMENTED")
 }
@@ -46,9 +49,7 @@ function deleteChapter(){
 
 <template>
 	<section class="scolcours-container my-5">
-		<div
-			class="flex justify-between items-baseline py-3 mb-5"
-		>
+		<div class="flex justify-between items-baseline py-3 mb-5">
 			<h1>
 				<span class="text-xl md:text-2xl">édition d'un chapitre</span>
 				<span class="text-xs font-code ml-5">(id: {{ props.chapter.id }})</span>
@@ -60,12 +61,12 @@ function deleteChapter(){
 				>
 					enregistrer
 				</button>
-				<Link
+				<InertiaLink
 					class="btn-cancel btn-xs"
 					:href="route('chapters.show', [props.chapter.slug])"
 				>
 					retour
-				</Link>
+				</InertiaLink>
 				<confirm-button
 					disabled="true"
 					class="btn-delete btn-xs"
@@ -108,6 +109,4 @@ function deleteChapter(){
 	</section>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

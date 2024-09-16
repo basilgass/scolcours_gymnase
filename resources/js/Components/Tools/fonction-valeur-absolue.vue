@@ -7,7 +7,7 @@
  */
 import { computed, ref } from "vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
-import { PiMath } from "pimath"
+import  PiMath from "pimath"
 import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"
 import { IToolForm } from "@/Components/Tools/Parts/ToolForm.vue"
 import TexCode from "@/Components/Ui/TexCode.vue"

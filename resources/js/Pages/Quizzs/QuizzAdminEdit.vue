@@ -1,4 +1,7 @@
-<script setup lang="ts">
+<script
+	setup
+	lang="ts"
+>
 import { computed, inject, PropType, ref } from "vue"
 import DialogModal from "@/Components/Ui/DialogModal.vue"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
@@ -12,96 +15,94 @@ import type { ChapterInterface, TeamInterface } from "@/types/modelInterfaces"
 
 defineOptions({ layout: LayoutMain })
 
-	const flash = inject<flashInterface>("flash")
-	const props = defineProps({
-			quizz: { type: Object, required: true },
-			questions: { type: Object, required: true },
-			sessions: { type: Object, required: true },
-			teams: { type: Object as PropType<TeamInterface[]>, required: true },
-			chapters: { type: Object as PropType<ChapterInterface[]>, required: true },
-		}),
-		ongoing = function (session) {
-			return session.current <= session.total && session.enable
-		},
-		theQuizz = ref(props.quizz)
+const flash = inject<flashInterface>("flash")
+const props = defineProps({
+	quizz: { type: Object, required: true },
+	questions: { type: Object, required: true },
+	sessions: { type: Object, required: true },
+	teams: { type: Object as PropType<TeamInterface[]>, required: true },
+	chapters: { type: Object as PropType<ChapterInterface[]>, required: true },
+}),
+	ongoing = function (session) {
+		return session.current <= session.total && session.enable
+	},
+	theQuizz = ref(props.quizz)
 
-	const showQuizzForm = ref(false),
-		quizzUpdate = function () {
-			axios
-				.post(route("quizzs.update", [theQuizz.value.id]), {
-					title: theQuizz.value.title,
-					body: theQuizz.value.body,
-					outro: theQuizz.value.outro,
-					chapter_id: theQuizz.value.chapter,
-					_method: "PATCH",
-				})
-				.then(() => {
-					showQuizzForm.value = false
-					flash.success("le quizz a bien été mis à jour")
-				})
-				.catch((err) => {
-					console.warn(err)
-				})
-		},
-		quizzDestroy = function () {
-			axios
-				.post(route("quizzs.destroy", [theQuizz.value.id]), {
-					_method: "DELETE",
-				})
-				.then(() => {
-					router.visit(route("quizzs.admin"))
-				})
-		}
+const showQuizzForm = ref(false),
+	quizzUpdate = function () {
+		axios
+			.post(route("quizzs.update", [theQuizz.value.id]), {
+				title: theQuizz.value.title,
+				body: theQuizz.value.body,
+				outro: theQuizz.value.outro,
+				chapter_id: theQuizz.value.chapter,
+				_method: "PATCH",
+			})
+			.then(() => {
+				showQuizzForm.value = false
+				flash.success("le quizz a bien été mis à jour")
+			})
+			.catch((err) => {
+				console.warn(err)
+			})
+	},
+	quizzDestroy = function () {
+		axios
+			.post(route("quizzs.destroy", [theQuizz.value.id]), {
+				_method: "DELETE",
+			})
+			.then(() => {
+				router.visit(route("quizzs.admin"))
+			})
+	}
 
-	const showUsersIndex = ref(-1),
-		sessionTeam = ref<string|number>(""),
-		sessionName = ref(""),
-		sessionCreate = function () {
-			axios
-				.post(route("quizzs.sessions.create", [theQuizz.value.id]), {
-					name: sessionName.value,
-					team: sessionTeam.value,
-				})
-				.then(() => {
-					showNewSessionForm.value = false
-					flash.success(
-						`la session ${
-							sessionName.value
-						} a bien été créée pour l'équipe ${
-							props.teams.filter(
-								(x) => +x.id === +sessionTeam.value,
-							)[0].name
-						}`,
-					)
-					// Add the new session
-				})
-				.catch((err) => {
-					console.warn(err)
-				})
-		},
-		sessionDestroy = function (id) {
-			axios
-				.post(route("quizzs.sessions.destroy", [id]), {
-					_method: "DELETE",
-				})
-				.then(() => {
-					flash.success("session supprimée")
-					// remove the deleted session
-				})
-				.catch((err) => {
-					console.warn(err)
-				})
-		},
-		showNewSessionForm = ref(false),
-		sessionCreateEnable = computed(() => {
-			return !(sessionTeam.value === "" || sessionName.value === "")
-		})
+const showUsersIndex = ref(-1),
+	sessionTeam = ref<string | number>(""),
+	sessionName = ref(""),
+	sessionCreate = function () {
+		axios
+			.post(route("quizzs.sessions.create", [theQuizz.value.id]), {
+				name: sessionName.value,
+				team: sessionTeam.value,
+			})
+			.then(() => {
+				showNewSessionForm.value = false
+				flash.success(
+					`la session ${sessionName.value
+					} a bien été créée pour l'équipe ${props.teams.filter(
+						(x) => +x.id === +sessionTeam.value,
+					)[0].name
+					}`,
+				)
+				// Add the new session
+			})
+			.catch((err) => {
+				console.warn(err)
+			})
+	},
+	sessionDestroy = function (id) {
+		axios
+			.post(route("quizzs.sessions.destroy", [id]), {
+				_method: "DELETE",
+			})
+			.then(() => {
+				flash.success("session supprimée")
+				// remove the deleted session
+			})
+			.catch((err) => {
+				console.warn(err)
+			})
+	},
+	showNewSessionForm = ref(false),
+	sessionCreateEnable = computed(() => {
+		return !(sessionTeam.value === "" || sessionName.value === "")
+	})
 
-	// onMounted(() => {
-	// 	console.table(props.quizz)
-	// 	console.table(props.sessions.data)
-	// 	console.table(props.teams)
-	// })
+// onMounted(() => {
+// 	console.table(props.quizz)
+// 	console.table(props.sessions.data)
+// 	console.table(props.teams)
+// })
 </script>
 <template>
 	<section class="my-5 scolcours-container">
@@ -117,12 +118,12 @@ defineOptions({ layout: LayoutMain })
 					supprimer
 				</confirm-button>
 			</div>
-			<Link
+			<InertiaLink
 				:href="route('quizzs.admin')"
 				class="hover:pl-3 transition-all"
 			>
 				<i class="bi bi-arrow-left" /> tous les quizz
-			</Link>
+			</InertiaLink>
 		</div>
 
 		<div class="bg-white border border-slate-200 rounded py-3 px-5">
@@ -290,12 +291,10 @@ defineOptions({ layout: LayoutMain })
 					<td>{{ session.status }}</td>
 					<td>{{ session.total }}</td>
 					<td class="relative">
-						<button
-							@click="
-								showUsersIndex =
-									showUsersIndex === index ? -1 : index
-							"
-						>
+						<button @click="
+							showUsersIndex =
+							showUsersIndex === index ? -1 : index
+							">
 							{{ session.users.length }} étudiants
 						</button>
 						<div
@@ -317,15 +316,12 @@ defineOptions({ layout: LayoutMain })
 						</div>
 					</td>
 					<td>
-						<Link
-							:href="
-								route('quizzs.sessions.dashboard', [
-									session.shortcode,
-								])
-							"
-						>
+						<InertiaLink :href="route('quizzs.sessions.dashboard', [
+							session.shortcode,
+						])
+							">
 							dashboard
-						</Link>
+						</InertiaLink>
 					</td>
 					<td>
 						<confirm-button @confirm="sessionDestroy(session.id)">

@@ -29,6 +29,19 @@ export default tseslint.config(
 				"error",
 				"tab"
 			],
+			"vue/first-attribute-linebreak": [
+				"error",
+				{
+					"multiline": "below",
+					"singleline": "ignore"
+				}
+			],
+			"vue/html-closing-bracket-newline": [
+				"error", {
+					"singleline": "never",
+					"multiline": "always"
+				}
+			],
 			"vue/block-order": [
 				"error",
 				{
@@ -47,7 +60,7 @@ export default tseslint.config(
 				"multiline": {
 					"max": 1
 				}
-			}]
+			}],
 		}
 	},
 )

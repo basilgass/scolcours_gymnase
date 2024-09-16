@@ -1,4 +1,7 @@
-<script setup lang="ts">
+<script
+	setup
+	lang="ts"
+>
 import FilteredList from "@/Components/Ui/FilteredList.vue"
 
 import LayoutMain from "@/Layouts/LayoutMain.vue"
@@ -8,12 +11,12 @@ import type { ChallengeInterface, ChapterInterface, TeamInterface, UserInterface
 defineOptions({ layout: LayoutMain })
 
 
-	const props = defineProps({
-		team: { type: Object as PropType<TeamInterface>, required: true },
-		students: { type: Object as PropType<UserInterface[]>, required: true },
-		chapters: { type: Object as PropType<ChapterInterface[]>, required: true },
-		challenges: { type: Object as PropType<ChallengeInterface[]>, required: true },
-	})
+const props = defineProps({
+	team: { type: Object as PropType<TeamInterface>, required: true },
+	students: { type: Object as PropType<UserInterface[]>, required: true },
+	chapters: { type: Object as PropType<ChapterInterface[]>, required: true },
+	challenges: { type: Object as PropType<ChallengeInterface[]>, required: true },
+})
 </script>
 <template>
 	<article class="scolcours-container">
@@ -21,9 +24,9 @@ defineOptions({ layout: LayoutMain })
 			<h2 class="text-3xl font-semibold">
 				{{ props.team.name }}
 			</h2>
-			<Link :href="route('teams.index')">
+			<InertiaLink :href="route('teams.index')">
 				<i class="bi bi-arrow-left" /> Retour aux équipes
-			</Link>
+			</InertiaLink>
 		</div>
 
 
@@ -34,10 +37,8 @@ defineOptions({ layout: LayoutMain })
 			:title="`${props.students.length} étudiants`"
 		>
 			<template #card="{ item }: { item: string | object }">
-				<div
-					class="bg-white rounded-lg border border-slate-200 p-4 min-h-[3em]"
-				>
-					<i class="bi bi-person mr-3" />{{ (typeof item === "string")?item:item['name'] }}
+				<div class="bg-white rounded-lg border border-slate-200 p-4 min-h-[3em]">
+					<i class="bi bi-person mr-3" />{{ (typeof item === "string") ? item : item['name'] }}
 				</div>
 			</template>
 		</filtered-list>

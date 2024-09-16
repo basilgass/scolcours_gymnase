@@ -1,4 +1,7 @@
-<script lang="ts" setup>
+<script
+	lang="ts"
+	setup
+>
 import FilteredList from "@/Components/Ui/FilteredList.vue"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
@@ -39,7 +42,7 @@ function triggerEnter(items: ChapterInterface[]) {
 			</template>
 
 			<template #card="{ item }: { item: Object }">
-				<Link
+				<InertiaLink
 					:class="{ 'opacity-30 hover:opacity-70 transition-all': +item['active'] === 0, }"
 					class="text-xl
 					block h-full rounded shadow space-y-3
@@ -48,17 +51,17 @@ function triggerEnter(items: ChapterInterface[]) {
 					transition-all"
 					:href="route('themes.chapters.intro', [usePage().props.theme.slug, item['slug']])"
 				>
-				<h3
-					class="text-xl px-5 py-3 rounded-t truncate"
-					v-theme.bg.text
-					v-katex.auto="item['title']"
-				/>
+					<h3
+						class="text-xl px-5 py-3 rounded-t truncate"
+						v-theme.bg.text
+						v-katex.auto="item['title']"
+					/>
 
-				<markdown-it
-					class="px-5 pb-3"
-					:text="item['block']['body']"
-				/>
-				</Link>
+					<markdown-it
+						class="px-5 pb-3"
+						:text="item['block']['body']"
+					/>
+				</InertiaLink>
 			</template>
 		</filtered-list>
 	</section>

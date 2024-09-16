@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import ToolForm, { IToolForm } from "@/Components/Tools/Parts/ToolForm.vue"
+import PiMath from "pimath"
 /** Tools
  * title: quadratique
  * body: calcul d'une fonction quadratique
@@ -6,10 +8,6 @@
  * tags: algebre,1M
  */
 import { computed, ref } from "vue"
-import { PiMath } from "pimath"
-import type { Polynom } from "pimath/dist/maths/algebra/polynom"
-import type { Equation } from "pimath/dist/maths/algebra/equation"
-import ToolForm, { IToolForm } from "@/Components/Tools/Parts/ToolForm.vue"
 
 const forms: IToolForm[] = [
 	{
@@ -36,7 +34,7 @@ const A = computed(()=>forms[0].value.value as string)
 const	B = computed(()=>forms[1].value.value as string)
 const	C = computed(()=>forms[2].value.value as string)
 
-function getPolyFromThreePoints(A, B, C): Polynom {
+function getPolyFromThreePoints(A, B, C): PiMath.Polynom {
 	const P = new PiMath.Equation("y", "ax^2+bx+c"),
 		pA = new PiMath.Geometry.Point(A),
 		pB = new PiMath.Geometry.Point(B),
@@ -44,15 +42,15 @@ function getPolyFromThreePoints(A, B, C): Polynom {
 
 	// TODO: améliorer le calcul et inclure dans PI
 	// y=ax^2+bx+c
-	let Pc: Equation = P.clone()
+	let Pc: PiMath.Equation = P.clone()
 			.replaceBy("x", new PiMath.Polynom(pA.x.display))
 			.replaceBy("y", new PiMath.Polynom(pA.y.display))
-			.isolate("c") as Equation,
-		Pb: Equation = P.clone()
+			.isolate("c") as PiMath.Equation,
+		Pb: PiMath.Equation = P.clone()
 			.replaceBy("x", new PiMath.Polynom(pB.x.display))
 			.replaceBy("y", new PiMath.Polynom(pB.y.display))
 			.replaceBy("c", Pc.right)
-			.isolate("b") as Equation,
+			.isolate("b") as PiMath.Equation,
 		Pa
 
 	// console.log(Pc.tex)
@@ -90,7 +88,7 @@ const result = computed(() => {
 	// A,B,C are given as numbers => ax^2+bx+c
 	// A only is given: it's the polynom !
 
-	let poly: Polynom
+	let poly: PiMath.Polynom
 
 	try {
 		if (A.value.includes("^2")) {

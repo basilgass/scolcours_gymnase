@@ -4,7 +4,7 @@
 >
 
 import { computed, onMounted, ref } from "vue"
-import { PiMath } from "pimath"
+import  PiMath from "pimath"
 import KeyboardDisplay from "@/Components/Keyboards/KeyboardDisplay.vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import {PiGraph as PiDraw} from "pidraw"
@@ -120,16 +120,29 @@ onMounted(() => {
 <template>
 	<div>
 		<div>
-			<form-maker v-model="input" name="Réponse" label="réponse" />
+			<form-maker
+				v-model="input"
+				name="Réponse"
+				label="réponse"
+			/>
 		</div>
 		<div>
 			Affichage : <span v-katex="tex" />
 		</div>
-		<div ref="draw" class="max-w-lg" />
-		<button class="btn btn-primary" @click="validate">
+		<div
+			ref="draw"
+			class="max-w-lg"
+		/>
+		<button
+			class="btn btn-primary"
+			@click="validate"
+		>
 			Valider
 		</button>
 
-		<keyboard-display v-model="input" keyboard="venn@A,B,C" />
+		<keyboard-display
+			v-model="input"
+			keyboard="venn@A,B,C"
+		/>
 	</div>
 </template>

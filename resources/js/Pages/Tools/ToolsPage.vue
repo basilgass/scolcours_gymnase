@@ -1,4 +1,7 @@
-<script lang="ts" setup>
+<script
+	lang="ts"
+	setup
+>
 import { computed, nextTick, onMounted, PropType, provide, ref } from "vue"
 import { ToolInterface } from "@/types"
 import { getModule, MODULE_TYPES } from "@/scolcours"
@@ -85,13 +88,9 @@ const listOfTools = computed(() => {
 
 </script>
 <template>
-	<section
-		class="scolcours-container"
-	>
+	<section class="scolcours-container">
 		<!-- Title -->
-		<div
-			class="flex justify-between items-baseline my-4"
-		>
+		<div class="flex justify-between items-baseline my-4">
 			<h2 class="text-2xl font-extralight">
 				{{ toolName }}
 			</h2>
@@ -99,11 +98,9 @@ const listOfTools = computed(() => {
 
 		<div class="flex gap-3 flex-col md:flex-row">
 			<div class="flex-1 bg-white border rounded px-3 py-2">
-				<component
-					:is="toolComponent"
-				/>
+				<component :is="toolComponent" />
 				<div
-					v-if="toolComponent===null"
+					v-if="toolComponent === null"
 					class="hidden md:grid place-items-center text-xl font-extralight min-h-[60vh]"
 				>
 					sélectionner un outil
@@ -117,21 +114,20 @@ const listOfTools = computed(() => {
 					list-class="grid grid-cols-1 gap-2"
 					no-title
 					search="rechercher un outil"
-					@enter="$event.length===1?changeSlug($event[0].slug):''"
+					@enter="$event.length === 1 ? changeSlug($event[0].slug) : ''"
 				>
-					<template #card="{item}:{item: ToolInterface}">
-						<Link
-							:class="item.slug===toolSlug?'font-semibold':''"
+					<template #card="{ item }: { item: ToolInterface }">
+						<InertiaLink
+							:class="item.slug === toolSlug ? 'font-semibold' : ''"
 							:href="route('tools.tool', [item.slug])"
 							as="div"
 							class="cursor-pointer hover:pl-2 transition-all text-sm"
 						>
 							{{ item.title }}
-						</Link>
+						</InertiaLink>
 					</template>
 				</filtered-list>
 			</div>
 		</div>
 	</section>
 </template>
-

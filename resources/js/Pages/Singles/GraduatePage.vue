@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
 import { computed, ref } from "vue"
-import { PiMath } from "pimath"
+import  PiMath from "pimath"
 import BarChart from "@/Components/Charts/barChart.vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
@@ -14,13 +14,11 @@ const pointsData = ref(""),
 	precision = ref(0.5)
 
 // Nouvelle version, plus logique et stable
-interface baremeInterface {
-	[Key: string]: {
+type baremeInterface = Record<string, {
 		pt: number,
 		note: number,
 		centieme: string
-	};
-}
+	}>;
 
 const bareme = computed<baremeInterface>(() => {
 		if (maxPoints.value <= 0) return {}

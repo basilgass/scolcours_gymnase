@@ -1,6 +1,6 @@
 import { ForeignObject, G } from "@svgdotjs/svg.js"
 import type { Fraction } from "pimath/dist/maths/coefficients/fraction"
-import { PiMath } from "pimath"
+import  PiMath from "pimath"
 import type { Graph } from "pidraw/esm/Graph"
 import katex from "katex"
 import { PiDraw } from "pidraw/esm"

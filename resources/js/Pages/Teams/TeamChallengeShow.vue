@@ -1,4 +1,7 @@
-<script setup lang="ts">
+<script
+	setup
+	lang="ts"
+>
 import { computed } from "vue"
 
 import LayoutMain from "@/Layouts/LayoutMain.vue"
@@ -7,10 +10,10 @@ import StatBar from "@/Components/Ui/StatBar.vue"
 defineOptions({ layout: LayoutMain })
 
 const props = defineProps({
-		team: { type: Object, required: true },
-		challenge: { type: Object, required: true },
-		scores: { type: Object, required: true }
-	}),
+	team: { type: Object, required: true },
+	challenge: { type: Object, required: true },
+	scores: { type: Object, required: true }
+}),
 	showStars = computed(() => {
 		return usersScores.value.filter(item => item.score.stars !== "?").length > 0
 	}),
@@ -49,9 +52,9 @@ const props = defineProps({
 		<h2 class="text-3xl font-semibold">
 			{{ props.team.name }}
 		</h2>
-		<Link :href="route('teams.show', [team.name])">
+		<InertiaLink :href="route('teams.show', [team.name])">
 			<i class="bi bi-arrow-left" /> Retour à l'équipe
-		</Link>
+		</InertiaLink>
 		<h3 class="text-2xl">
 			{{ props.challenge.data.title }}
 		</h3>
@@ -111,13 +114,13 @@ const props = defineProps({
 					</div>
 					<div
 						class="text-4xl"
-						:class="score.score.score==='?'?'invisible':''"
+						:class="score.score.score === '?' ? 'invisible' : ''"
 					>
 						{{ score.score.score }}
 					</div>
 					<div
 						v-show="showStars"
-						:class="!(score.score.score > 0)?'invisible':''"
+						:class="!(score.score.score > 0) ? 'invisible' : ''"
 					>
 						<div class="flex gap-1 justify-center text-xl">
 							<i

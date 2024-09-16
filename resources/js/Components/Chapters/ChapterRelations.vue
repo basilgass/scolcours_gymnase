@@ -1,4 +1,7 @@
-<script setup lang="ts">
+<script
+	setup
+	lang="ts"
+>
 
 import { inject, PropType, Ref, ref } from "vue"
 import axios from "axios"
@@ -6,7 +9,7 @@ import { flashInterface } from "@/types"
 import type { ChapterInterface } from "@/types/modelInterfaces"
 
 const props = defineProps({
-	chapter: {type: Object as PropType<ChapterInterface>, required: true}
+	chapter: { type: Object as PropType<ChapterInterface>, required: true }
 })
 
 const flash = inject<flashInterface>("flash"),
@@ -15,46 +18,44 @@ const flash = inject<flashInterface>("flash"),
 const chapterRelations = ref(props.chapter.relations),
 	modifyRelations = ref(false),
 	allChapters = ref([]),
-	getAllChapters = function(){
-		if(modifyRelations.value){
+	getAllChapters = function () {
+		if (modifyRelations.value) {
 			modifyRelations.value = false
 			return
-		}else if(allChapters.value.length>0){
+		} else if (allChapters.value.length > 0) {
 			modifyRelations.value = true
 			return
 		}
 
 		axios.get(route("chapters.index.min"))
-			.then(res=>{
-				allChapters.value = res.data.filter(ch=>ch.slug!==props.chapter.slug)
+			.then(res => {
+				allChapters.value = res.data.filter(ch => ch.slug !== props.chapter.slug)
 				modifyRelations.value = true
 			})
 			.catch(res => {
 				console.warn(res)
 			})
 	},
-	toggleRelation = function(id) {
+	toggleRelation = function (id) {
 		axios.post(route("chapters.relations.toggle", [props.chapter.id, id]))
 			.then(res => {
 				flash.success("relation correctement mis à jour...")
-				if(res.data!==false){
+				if (res.data !== false) {
 					chapterRelations.value = res.data
 				}
-			}).catch(res=>{
+			}).catch(res => {
 				flash.error(res.data)
 			})
 	}
 </script>
 <template>
-	<div
-		v-if="chapterRelations.length>0 || editMode"
-	>
+	<div v-if="chapterRelations.length > 0 || editMode">
 		<h3 class="uppercase font-extralight mb-2">
 			prérequis
 		</h3>
 
 		<div class="flex flex-wrap gap-3">
-			<Link
+			<InertiaLink
 				v-for="ch of chapterRelations"
 				:key="`related-${ch.slug}`"
 				v-theme.btn="ch.theme.id"
@@ -91,7 +92,7 @@ const chapterRelations = ref(props.chapter.relations),
 					v-katex.auto="chapter.title"
 					v-theme.btn="chapter.theme.id"
 					class="btn-xs"
-					:class="Object.values(chapterRelations).map(x=>x.slug).includes(chapter.slug)?'bg-white text-black':''"
+					:class="Object.values(chapterRelations).map(x => x.slug).includes(chapter.slug) ? 'bg-white text-black' : ''"
 					@click="toggleRelation(chapter.id)"
 				/>
 			</div>

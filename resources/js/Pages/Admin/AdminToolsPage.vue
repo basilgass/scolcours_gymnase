@@ -1,5 +1,8 @@
 AdminChaptersPage.vue
-<script lang="ts" setup>
+<script
+	lang="ts"
+	setup
+>
 import { PropType } from "vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 import type { ToolInterface } from "@/types"
@@ -21,13 +24,13 @@ defineProps({
 			:list="tools"
 			list-class="grid grid-cols-1 gap-3"
 		>
-			<template #card="{item}:{item: ToolInterface}">
+			<template #card="{ item }: { item: ToolInterface }">
 				<div
 					:key="item.id"
 					class="bg-white border rounded"
 				>
 					<header class="flex justify-between border-b px-3 py-2">
-						<Link
+						<InertiaLink
 							as="div"
 							class="cursor-pointer"
 							:href="route('tools.tool', [item.slug])"
@@ -38,11 +41,11 @@ defineProps({
 							<p class="mt-1 max-w-2xl text-sm text-gray-500">
 								{{ item.slug }}
 							</p>
-						</Link>
+						</InertiaLink>
 						<div class="text-xs text-right">
-							<Link :href="route('tools.edit', item.id)">
+							<InertiaLink :href="route('tools.edit', item.id)">
 								<i class="bi bi-pencil" />
-							</Link>
+							</InertiaLink>
 							<div class="text-gray-500">
 								{{ item.updated_at }}
 							</div>

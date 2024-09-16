@@ -1,5 +1,4 @@
-<script setup lang="ts">
-
+<script lang="ts" setup>
 import AlgorithmeDeBissection from "@/Components/Widgets/analyse/algorithme-de-bissection.vue"
 </script>
 <template>

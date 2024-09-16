@@ -1,8 +1,11 @@
-<script setup lang="ts">
+<script
+	setup
+	lang="ts"
+>
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 
 const props = defineProps({
-	quizz: {type: Object, required: true}
+	quizz: { type: Object, required: true }
 })
 </script>
 
@@ -17,13 +20,13 @@ const props = defineProps({
 				<markdown-it :text="props.quizz.outro" />
 			</div>
 
-			<Link
+			<InertiaLink
 				as="button"
 				class="btn bg-white mt-10"
 				href="/"
 			>
 				<i class="bi bi-house-door" /> Retour à l'accueil
-			</Link>
+			</InertiaLink>
 		</div>
 	</article>
 </template>

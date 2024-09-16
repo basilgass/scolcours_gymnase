@@ -2,7 +2,10 @@
 Affichage de la table des matières.
 -->
 
-<script lang="ts" setup>
+<script
+	lang="ts"
+	setup
+>
 import { computed, inject, Ref, ref } from "vue"
 import { router } from "@inertiajs/vue3"
 import FormMaker from "@/Components/Form/FormMaker.vue"
@@ -20,7 +23,7 @@ const editMode = inject<Ref<boolean>>("editMode")
 
 const posts = ref(props.chapter.posts),
 	postsFilterCurrent = ref(""),
-	postsFilter = function(filter) {
+	postsFilter = function (filter) {
 		postsFilterCurrent.value =
 			postsFilterCurrent.value === filter ? "" : filter
 
@@ -38,7 +41,7 @@ const posts = ref(props.chapter.posts),
 		}
 	},
 	moveMode = ref(false),
-	updatePostsOrder = function() {
+	updatePostsOrder = function () {
 		axios
 			.post(route("chapters.updatePostsOrder", [props.chapter.id]), {
 				posts: posts.value.map((post, index) => {
@@ -58,7 +61,7 @@ const posts = ref(props.chapter.posts),
 				}
 			})
 	},
-	addPost = function() {
+	addPost = function () {
 		axios
 			.post(route("chapters.posts.store", [props.chapter.slug]), {
 				title: "nouvel article"
@@ -91,21 +94,19 @@ const questionStatus = computed(() => {
 					table des matières
 				</h3>
 				<button
-					:class="
-						postsFilterCurrent === 'theory'
-							? `text-scolcours-${$page.props.theme.slug}`
-							: ''
-					"
+					:class="postsFilterCurrent === 'theory'
+						? `text-scolcours-${$page.props.theme.slug}`
+						: ''
+						"
 					@click="postsFilter('theory')"
 				>
 					<i class="bi bi-text-paragraph" />
 				</button>
 				<button
-					:class="
-						postsFilterCurrent === 'exercise'
-							? `text-scolcours-${$page.props.theme.slug}`
-							: ''
-					"
+					:class="postsFilterCurrent === 'exercise'
+						? `text-scolcours-${$page.props.theme.slug}`
+						: ''
+						"
 					@click="postsFilter('exercise')"
 				>
 					<i class="bi bi-calculator" />
@@ -146,36 +147,30 @@ const questionStatus = computed(() => {
 			@end="updatePostsOrder"
 		>
 			<template #item="{ element }">
-				<div
-					class="flex gap-3"
-				>
+				<div class="flex gap-3">
 					<button
 						v-if="$page.props.auth.can.admin && moveMode"
 						class="draggable-handle text-xs px-1"
 					>
 						<i class="bi bi-arrows-move" />
 					</button>
-					<Link
-						:class="
-							props.active === element.order
-								? `font-semibold text-scolcours-${$page.props.theme.slug}`
-								: ''
-						"
-						:href="
-							route('themes.chapters.slide', [
-								$page.props.theme.slug,
-								props.chapter.slug,
-								element.order,
-							])
-						"
+					<InertiaLink
+						:class="props.active === element.order
+							? `font-semibold text-scolcours-${$page.props.theme.slug}`
+							: ''
+							"
+						:href="route('themes.chapters.slide', [
+							$page.props.theme.slug,
+							props.chapter.slug,
+							element.order,
+						])
+							"
 						class="block text-left hover:pl-5 transition-all duration flex gap-1"
 					>
-						<i
-							:class="{
-								'bi bi-calculator': element.type === 'exercise',
-								'bi bi-text-paragraph': !element.type,
-							}"
-						/>
+						<i :class="{
+							'bi bi-calculator': element.type === 'exercise',
+							'bi bi-text-paragraph': !element.type,
+						}" />
 
 						<i
 							:class="{
@@ -192,7 +187,7 @@ const questionStatus = computed(() => {
 						<span v-katex.auto="element.title" />
 
 						<span v-if="!element.active">(brouillon)</span>
-					</Link>
+					</InertiaLink>
 				</div>
 			</template>
 		</draggable>

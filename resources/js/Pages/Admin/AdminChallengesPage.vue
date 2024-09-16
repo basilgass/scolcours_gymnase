@@ -1,4 +1,7 @@
-<script lang="ts" setup>
+<script
+	lang="ts"
+	setup
+>
 import { PropType } from "vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 import type { ChallengeInterface } from "@/types/modelInterfaces"
@@ -21,12 +24,12 @@ defineProps({
 				class="hover:bg-gray-200 flex justify-between px-4 py-2"
 			>
 				<div>
-					<Link
+					<InertiaLink
 						:href="route('challenges.show', [challenge.slug])"
 						class="text-lg leading-6 font-medium text-gray-900"
 					>
 						{{ challenge.title }}
-					</Link>
+					</InertiaLink>
 					<p class="mt-1 max-w-2xl text-sm text-gray-500">
 						{{ challenge.slug }}
 					</p>

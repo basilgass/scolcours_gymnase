@@ -19,7 +19,7 @@ import { computed, inject, nextTick, onMounted, ref } from "vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import { LanguageDataInterface } from "@/Pages/languages/LanguageShow.vue"
 import type { TranslationWord } from "@/types/modelInterfaces"
-import { PiMath } from "pimath"
+import  PiMath from "pimath"
 
 interface GuessWord extends TranslationWord {
 	errors: number,
@@ -301,7 +301,10 @@ onMounted(() => {
 				<div class="text-2xl my-10">
 					{{ currentWordForeign }}
 				</div>
-				<div v-show="words[startIndex]?.errors" class="text-red-600">
+				<div
+					v-show="words[startIndex]?.errors"
+					class="text-red-600"
+				>
 					{{ words[startIndex]?.errors }}ème tentative
 				</div>
 			</div>
@@ -353,11 +356,19 @@ onMounted(() => {
 			</div>
 
 			<div class="mt-5 flex gap-3">
-				<button v-show="unknownWordAnswer === ''" class="btn-cancel btn-xs" @click="unknownWord">
+				<button
+					v-show="unknownWordAnswer === ''"
+					class="btn-cancel btn-xs"
+					@click="unknownWord"
+				>
 					Je ne sais pas
 				</button>
 				<div v-text="unknownWordAnswer" />
-				<button v-show="unknownWordAnswer !== ''" class="btn-primary btn-xs" @click="nextWord">
+				<button
+					v-show="unknownWordAnswer !== ''"
+					class="btn-primary btn-xs"
+					@click="nextWord"
+				>
 					continuer
 				</button>
 			</div>
@@ -370,7 +381,10 @@ onMounted(() => {
 				<h2 class="text-xl font-semibold mt-10">
 					{{ unknownWordForeign }}
 				</h2>
-				<div v-if="unknownWordExamples.length > 0" class="mt-5">
+				<div
+					v-if="unknownWordExamples.length > 0"
+					class="mt-5"
+				>
 					<h3 class="border-t text-lg pt-3 mb-3 font-semibold">
 						exemples
 					</h3>
@@ -383,7 +397,10 @@ onMounted(() => {
 					</div>
 				</div>
 
-				<div v-if="unknownWordDefinition.length > 0" class="mt-5">
+				<div
+					v-if="unknownWordDefinition.length > 0"
+					class="mt-5"
+				>
 					<h3 class="border-t text-lg pt-3 mb-3 font-semibold">
 						définition
 					</h3>

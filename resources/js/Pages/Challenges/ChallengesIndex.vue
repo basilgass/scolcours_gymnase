@@ -1,4 +1,7 @@
-<script setup lang="ts">
+<script
+	setup
+	lang="ts"
+>
 
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 
@@ -26,25 +29,25 @@ defineProps({
 				:key="challenge"
 				class="border-b last:border-b-0 pb-2 last:pb-0 flex justify-between items-center"
 			>
-				<Link
+				<InertiaLink
 					:href="`/challenge/${challenge.slug}`"
 					class="hover:underline"
 				>
 					{{ challenge.title }}
-				</Link>
+				</InertiaLink>
 
 				<div
 					v-admin
 					class="flex items-center"
 				>
-					<div v-if="challenge.sessions.length>0">
+					<div v-if="challenge.sessions.length > 0">
 						<div
 							v-for="(qsession) in challenge.sessions"
 							:key="`challenge-session-${qsession.id}`"
 						>
-							<Link :href="qsession.token">
+							<InertiaLink :href="qsession.token">
 								{{ qsession.token }}
-							</Link>
+							</InertiaLink>
 							<i
 								v-admin
 								class="bi bi-stop-fill cursor-pointer px-2"
@@ -53,17 +56,16 @@ defineProps({
 					</div>
 
 					<div v-admin>
-						<Link
+						<InertiaLink
 							:href="`/challenge/${challenge.slug}/start`"
 							as="div"
 							method="post"
 						>
 							<i class="bi bi-play-fill px-2" />
-						</Link>
+						</InertiaLink>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
 </template>
-

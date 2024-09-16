@@ -1,4 +1,7 @@
-<script setup lang="ts">
+<script
+	setup
+	lang="ts"
+>
 
 import { onBeforeUnmount, onMounted, ref } from "vue"
 import QuizzQuestion from "@/Components/Quizzs/QuizzQuestion.vue"
@@ -9,12 +12,12 @@ import QuizzWait from "@/Components/Quizzs/QuizzWait.vue"
 import QuizzHeader from "@/Components/Quizzs/QuizzHeader.vue"
 import LayoutProjection from "@/Layouts/LayoutProjection.vue"
 
-defineOptions({layout: LayoutProjection})
+defineOptions({ layout: LayoutProjection })
 let props = defineProps({
-		quizzSession: {type: Object, required: true},
-		question: {type: [Object, null], required: true},
-		total: {type: Number, required: true}
-	}),
+	quizzSession: { type: Object, required: true },
+	question: { type: [Object, null], required: true },
+	total: { type: Number, required: true }
+}),
 	interval = null,
 	updateCounter = ref(0),
 	updateQuizz = function () {
@@ -32,30 +35,28 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-	<section
-		v-if="props.quizzSession.enable"
-	>
+	<section v-if="props.quizzSession.enable">
 		<!-- En tête lorsque les questions sont en cours -->
 		<quizz-header
-			v-if="props.quizzSession.status==='wait' || props.quizzSession.status==='question'"
+			v-if="props.quizzSession.status === 'wait' || props.quizzSession.status === 'question'"
 			:quizz-session="props.quizzSession"
 		/>
 
 		<section class="mt-12 px-5">
 			<quizz-intro
-				v-if="props.quizzSession.status==='intro'"
+				v-if="props.quizzSession.status === 'intro'"
 				:quizz="props.quizzSession.quizz"
 			/>
 			<quizz-outro
-				v-else-if="props.quizzSession.status==='outro'"
+				v-else-if="props.quizzSession.status === 'outro'"
 				:quizz="props.quizzSession.quizz"
 			/>
 			<quizz-wait
-				v-else-if="props.quizzSession.status==='wait'"
+				v-else-if="props.quizzSession.status === 'wait'"
 				:quizz="props.quizzSession.quizz"
 			/>
 			<quizz-question
-				v-else-if="props.quizzSession.status==='question'"
+				v-else-if="props.quizzSession.status === 'question'"
 				:key="props.question.data.id"
 				:question="props.question.data"
 				:quizz="props.quizzSession.quizz"
@@ -73,13 +74,13 @@ onBeforeUnmount(() => {
 		<div class="flex flex-col gap-4">
 			<div>Le quizz n'est pas activé.</div>
 
-			<Link
+			<InertiaLink
 				as="button"
 				class="inline-block hover:font-semibold"
 				href="/"
 			>
 				Retour à l'accueil
-			</Link>
+			</InertiaLink>
 		</div>
 	</section>
 </template>

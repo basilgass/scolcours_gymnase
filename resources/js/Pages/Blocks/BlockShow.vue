@@ -12,7 +12,7 @@ import BlockShowAdmin from "@/Pages/Blocks/BlockShowAdmin.vue"
 import IllustrationShow from "@/Pages/Illustrations/IllustrationShow.vue"
 import { blockTypeDefault, blockTypes } from "@/scolcours"
 import type { BlockInterface } from "@/types/modelInterfaces"
-import { PiMath } from "pimath"
+import  PiMath from "pimath"
 import { computed, inject, PropType, provide, ref } from "vue"
 
 // Props

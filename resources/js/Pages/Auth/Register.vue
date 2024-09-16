@@ -41,6 +41,7 @@ export default {
 </script>
 
 <template>
+
 	<Head title="Register" />
 
 	<BreezeValidationErrors class="mb-4" />
@@ -108,12 +109,12 @@ export default {
 		</div>
 
 		<div class="flex items-center justify-end mt-4">
-			<Link
+			<InertiaLink
 				:href="route('login')"
 				class="underline text-sm text-gray-600 hover:text-gray-900"
 			>
 				Already registered?
-			</Link>
+			</InertiaLink>
 
 			<BreezeButton
 				:class="{ 'opacity-25': form.processing }"

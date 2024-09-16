@@ -5,7 +5,7 @@ import BreezeGuestLayout from "@/Layouts/LayoutGuest.vue"
 import BreezeInput from "@/Components/Auth/Input.vue"
 import BreezeLabel from "@/Components/Auth/Label.vue"
 import BreezeValidationErrors from "@/Components/Auth/ValidationErrors.vue"
-import {Head, Link} from "@inertiajs/vue3"
+import { Head, Link } from "@inertiajs/vue3"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 
 export default {
@@ -27,7 +27,7 @@ export default {
 		status: String,
 	},
 
-	data () {
+	data() {
 		return {
 			form: this.$inertia.form({
 				email: "",
@@ -38,7 +38,7 @@ export default {
 	},
 
 	methods: {
-		submit () {
+		submit() {
 			this.form.post(this.route("login"), {
 				onFinish: () => this.form.reset("password"),
 			})
@@ -48,6 +48,7 @@ export default {
 </script>
 
 <template>
+
 	<Head title="Connection" />
 
 	<BreezeValidationErrors class="mb-4" />
@@ -98,13 +99,13 @@ export default {
 		</div>
 
 		<div class="flex items-center justify-end mt-4">
-			<Link
+			<InertiaLink
 				v-if="canResetPassword"
 				:href="route('password.request')"
 				class="underline text-sm text-gray-600 hover:text-gray-900"
 			>
 				Mot de passe oublié ?
-			</Link>
+			</InertiaLink>
 
 			<button
 				class="btn-primary ml-4"

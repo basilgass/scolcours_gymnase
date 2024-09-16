@@ -8,7 +8,7 @@ code:
 import { IllustrationInterface } from "@/types/modelInterfaces"
 import { computed, inject, PropType, ref } from "vue"
 import { listeDeMots } from "@/helpers/liste-des-mots-francais"
-import { PiMath } from "pimath"
+import  PiMath from "pimath"
 import { flashInterface } from "@/types"
 
 const flash = inject<flashInterface>("flash")
@@ -40,7 +40,7 @@ const originalCharacters = computed(() => {
  * Get the duplicated characters in the code
  * and the number of each
  */
-const duplicatedCharacters = computed<{ [Key: string]: number }>(() => {
+const duplicatedCharacters = computed<Record<string, number>>(() => {
 	const characters = referenceWord.value
 		.split("")
 		.filter(char => char !== " ")

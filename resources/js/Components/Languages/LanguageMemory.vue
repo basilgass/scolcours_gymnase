@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { inject, ref } from "vue"
-import { PiMath } from "pimath"
+import  PiMath from "pimath"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import { LanguageDataInterface } from "@/Pages/languages/LanguageShow.vue"
 

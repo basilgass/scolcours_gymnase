@@ -37,6 +37,7 @@ export default {
 </script>
 
 <template>
+
 	<Head title="Email Verification" />
 
 	<div class="mb-4 text-sm text-gray-600">
@@ -60,14 +61,14 @@ export default {
 				Resend Verification Email
 			</BreezeButton>
 
-			<Link
+			<InertiaLink
 				:href="route('logout')"
 				as="button"
 				class="underline text-sm text-gray-600 hover:text-gray-900"
 				method="post"
 			>
 				Log Out
-			</Link>
+			</InertiaLink>
 		</div>
 	</form>
 </template>

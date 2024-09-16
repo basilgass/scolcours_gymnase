@@ -1,4 +1,7 @@
-<script setup lang="ts">
+<script
+	setup
+	lang="ts"
+>
 import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 
@@ -12,30 +15,30 @@ defineProps({
 		<ArticleTitle :title="language" />
 
 		<div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-			<Link
+			<InertiaLink
 				:href="`/${language}/memory`"
 				class="text-xl bg-white border rounded hover:scale-105 h-32 grid place-items-center transition-all duration-300"
 			>
 				memory
-			</Link>
-			<Link
+			</InertiaLink>
+			<InertiaLink
 				:href="`/${language}/guess`"
 				class="text-xl bg-white border rounded hover:scale-105 h-32 grid place-items-center transition-all duration-300"
 			>
 				suggestions
-			</Link>
-			<Link
+			</InertiaLink>
+			<InertiaLink
 				:href="`/${language}/type`"
 				class="text-xl bg-white border rounded hover:scale-105 h-32 grid place-items-center transition-all duration-300"
 			>
 				typographie
-			</Link>
-			<Link
+			</InertiaLink>
+			<InertiaLink
 				:href="`/${language}/list`"
 				class="text-xl bg-white border rounded hover:scale-105 h-32 grid place-items-center transition-all duration-300"
 			>
 				liste des mots
-			</Link>
+			</InertiaLink>
 		</div>
 	</article>
 </template>

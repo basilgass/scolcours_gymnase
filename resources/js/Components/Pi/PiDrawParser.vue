@@ -9,7 +9,7 @@ import { computed, inject, onMounted, provide, ref, watch } from "vue"
 
 import VueSlider from "vue-slider-component/dist/vue-slider-component.umd.min"
 import "vue-slider-component/theme/material.css"
-import { PiMath } from "pimath"
+import  PiMath from "pimath"
 import katex from "katex"
 import { useResizeObserver } from "@vueuse/core"
 import PiDrawParserVisibility from "@/Components/Pi/Parts/PiDrawParserVisibility.vue"
@@ -401,10 +401,17 @@ provide("PiDrawGraph", PiGraph)
 		/>
 
 		<!-- stepper -->
-		<div v-if="stepperMax > 1" class="my-3">
+		<div
+			v-if="stepperMax > 1"
+			class="my-3"
+		>
 			<div v-if="stepperStart">
 				<div class="flex items-center justify-center gap-10">
-					<button :disabled="stepperIndex <= 0" class="px-3 py-2 btn btn-xs" @click="stepperIndex--">
+					<button
+						:disabled="stepperIndex <= 0"
+						class="px-3 py-2 btn btn-xs"
+						@click="stepperIndex--"
+					>
 						<i class="bi bi-chevron-left" />
 					</button>
 					<div>{{ stepperIndex + 1 }} / {{ stepperMax }}</div>
@@ -416,9 +423,15 @@ provide("PiDrawGraph", PiGraph)
 						<i class="bi bi-chevron-right" />
 					</button>
 				</div>
-				<div v-katex.auto="stepperText" class="my-3" />
+				<div
+					v-katex.auto="stepperText"
+					class="my-3"
+				/>
 			</div>
-			<div v-else class="w-full">
+			<div
+				v-else
+				class="w-full"
+			>
 				<button
 					:class="`w-full btn-xs btn-scolcours-${$page.props.theme?.slug || 'main'} tracking-wider d-block`"
 					@click="stepperStart = true"
@@ -429,7 +442,10 @@ provide("PiDrawGraph", PiGraph)
 		</div>
 
 		<!-- slider(s) -->
-		<div v-if="sliders.length > 0" class="space-y-12 mt-6">
+		<div
+			v-if="sliders.length > 0"
+			class="space-y-12 mt-6"
+		>
 			<vue-slider
 				v-for="(slider, index) of sliders"
 				:key="`slider-${index}`"

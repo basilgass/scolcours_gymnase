@@ -1,4 +1,7 @@
-<script lang="ts" setup>
+<script
+	lang="ts"
+	setup
+>
 
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 import { PropType } from "vue"
@@ -24,7 +27,7 @@ const props = defineProps({
 
 		<div>
 			<div class="flex gap-5">
-				<Link
+				<InertiaLink
 					v-for="team of props.teams"
 					:key="`id-${team.id}`"
 					:href="route('teams.show', [team.name])"
@@ -35,7 +38,7 @@ const props = defineProps({
 						{{ team.name }}
 					</div>
 					<div>{{ team.users_count }} étudiants</div>
-				</Link>
+				</InertiaLink>
 			</div>
 		</div>
 	</article>

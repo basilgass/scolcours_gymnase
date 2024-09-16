@@ -33,6 +33,11 @@ function themeUpdate(el, binding) {
 		}
 	} else {
 		chapter = usePage().props?.theme?.slug
+
+		if (chapter === undefined && (typeof binding.value === 'string')) {
+			el.classList.add(...binding.value.split(' '))
+			return
+		}
 	}
 
 	// No chapter giver -> use main

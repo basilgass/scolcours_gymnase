@@ -1,4 +1,7 @@
-<script lang="ts" setup>
+<script
+	lang="ts"
+	setup
+>
 
 import { computed, onBeforeUnmount, onMounted, PropType, ref } from "vue"
 import QuizzIntro from "@/Components/Quizzs/QuizzIntro.vue"
@@ -10,13 +13,13 @@ import { resultInterface } from "@/types"
 
 defineOptions({ layout: LayoutProjection })
 let props = defineProps({
-		quizzSession: { type: Object, required: true },
-		results: { type: Object as PropType<resultInterface[]>, default: () => [] },
-		usersCount: { type: Number, required: true }
-	}),
+	quizzSession: { type: Object, required: true },
+	results: { type: Object as PropType<resultInterface[]>, default: () => [] },
+	usersCount: { type: Number, required: true }
+}),
 	interval = null,
 	updateCounter = ref(0),
-	updateQuizz = function() {
+	updateQuizz = function () {
 		router.reload()
 		updateCounter.value++
 	},
@@ -37,7 +40,7 @@ onBeforeUnmount(() => {
 		class="px-5"
 	>
 		<div
-			v-if="liveQuizz.status==='wait' || liveQuizz.status==='question'"
+			v-if="liveQuizz.status === 'wait' || liveQuizz.status === 'question'"
 			class="font-lg bg-black text-white mb-10 flex justify-between items-baseline fixed top-0 left-0 w-full px-5 py-2"
 		>
 			<h2
@@ -50,11 +53,11 @@ onBeforeUnmount(() => {
 		</div>
 
 		<quizz-intro
-			v-if="liveQuizz.status==='intro'"
+			v-if="liveQuizz.status === 'intro'"
 			:quizz="liveQuizz.quizz"
 		/>
 		<quizz-outro
-			v-else-if="liveQuizz.status==='outro'"
+			v-else-if="liveQuizz.status === 'outro'"
 			:quizz="liveQuizz.quizz"
 		/>
 		<quizz-question-projection
@@ -71,13 +74,13 @@ onBeforeUnmount(() => {
 		<div class="flex flex-col gap-4">
 			<div>Le quizz n'est pas activé.</div>
 
-			<Link
+			<InertiaLink
 				as="button"
 				class="inline-block hover:font-semibold"
 				href="/"
 			>
 				Retour à l'accueil
-			</Link>
+			</InertiaLink>
 		</div>
 	</section>
 </template>

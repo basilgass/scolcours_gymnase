@@ -3,7 +3,7 @@
  */
 import { ComputedRef, Ref, unref } from "vue"
 import type { GeneratorInterface, QuestionMinInterface } from "@/types/modelInterfaces"
-import { PiMath } from "pimath"
+import  PiMath from "pimath"
 import { generatedQuestionInterface, generatorResultInterface } from "@/types"
 
 export function useGenerator(generator: GeneratorInterface | ComputedRef<GeneratorInterface>): generatorResultInterface {
@@ -67,7 +67,7 @@ export function useGenerator(generator: GeneratorInterface | ComputedRef<Generat
 		}
 	}
 
-	const dftCode: string = `return {
+	const dftCode = `return {
 	question: "erreur dans la génération de question",
 	answer: "-",
 	keyboard: {

@@ -1,4 +1,7 @@
-<script lang="ts" setup>
+<script
+	lang="ts"
+	setup
+>
 import { computed, PropType } from "vue"
 import { usePage } from "@inertiajs/vue3"
 import type { ChapterInterface } from "@/types/modelInterfaces"
@@ -39,7 +42,7 @@ const nav = computed(() => {
 <template>
 	<div class="grid grid-cols-3 mt-3 px-5 md:px-0">
 		<div class="justify-self-start">
-			<Link
+			<InertiaLink
 				v-if="nav.previous"
 				:class="`btn-scolcours-${$page.props.theme.slug}`"
 				:href="nav.previous"
@@ -48,25 +51,22 @@ const nav = computed(() => {
 				<div class="hidden md:inline">
 					précédant
 				</div>
-			</Link>
+			</InertiaLink>
 		</div>
 		<div class="justify-self-center flex">
-			<Link
+			<InertiaLink
 				:class="`btn-scolcours-${$page.props.theme.slug}`"
-				:href="
-					route('themes.chapters.intro', [
-						$page.props.theme.slug,
-						chapter.slug,
-					])
-				"
+				:href="route('themes.chapters.intro', [
+					$page.props.theme.slug,
+					chapter.slug,
+				])
+					"
 			>
-				<i class="bi bi-house mr-2 hidden md:inline" /><span
-					v-katex.auto="chapter.title"
-				/>
-			</Link>
+				<i class="bi bi-house mr-2 hidden md:inline" /><span v-katex.auto="chapter.title" />
+			</InertiaLink>
 		</div>
 		<div class="justify-self-end">
-			<Link
+			<InertiaLink
 				v-if="nav.next"
 				:class="`btn-scolcours-${$page.props.theme.slug}`"
 				:href="nav.next"
@@ -75,11 +75,9 @@ const nav = computed(() => {
 					suivant
 				</div>
 				<i class="bi bi-box-arrow-in-right ml-0 md:ml-2" />
-			</Link>
+			</InertiaLink>
 		</div>
 	</div>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

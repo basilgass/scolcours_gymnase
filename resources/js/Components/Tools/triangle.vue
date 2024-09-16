@@ -6,7 +6,7 @@
  * tags: geometrie,2M
  */
 import { computed, ref } from "vue"
-import { PiMath } from "pimath"
+import  PiMath from "pimath"
 import ToolForm, { IToolForm } from "@/Components/Tools/Parts/ToolForm.vue"
 
 const forms: IToolForm[] = [

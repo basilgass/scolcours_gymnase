@@ -1,4 +1,7 @@
-<script lang="ts" setup>
+<script
+	lang="ts"
+	setup
+>
 import FlipcardsShow from "@/Components/Decks/FlipcardsShow.vue"
 import LayoutProjection from "@/Layouts/LayoutProjection.vue"
 import type { deckInterface } from "@/types/modelInterfaces"
@@ -19,14 +22,17 @@ const props = defineProps({
 			<div class="font-code text-xs">
 				{{ deck.slug }}
 			</div>
-			<Link :href="route('decks.index')">
+			<InertiaLink :href="route('decks.index')">
 				<i class="bi bi-arrow-left-square mr-3" />
 				retour aux decks
-			</Link>
+			</InertiaLink>
 		</header>
 
 		<!-- card mode -->
-		<FlipcardsShow :deck="props.deck" />
+		<FlipcardsShow
+			class="w-full"
+			:deck="props.deck"
+		/>
 	</section>
 </template>
 

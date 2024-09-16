@@ -1,10 +1,13 @@
-<script setup lang="ts">
+<script
+	setup
+	lang="ts"
+>
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 
 defineOptions({ layout: LayoutMain })
 
 let props = defineProps({
-	courses: {type: Object, required: true}
+	courses: { type: Object, required: true }
 })
 
 </script>
@@ -23,12 +26,12 @@ let props = defineProps({
 			v-admin
 			class="flex flex-col gap-3 my-3 admin-wrapper"
 		>
-			<Link
+			<InertiaLink
 				href="/admin/"
 				class="hover:underline"
 			>
 				Administration
-			</Link>
+			</InertiaLink>
 		</div>
 
 		<div class="bg-white rounder border border-gray-200">
@@ -37,19 +40,17 @@ let props = defineProps({
 			</h2>
 
 			<div class="flex flex-col divide-y divide-gray-200 -pt-3">
-				<Link
+				<InertiaLink
 					v-for="course in props.courses"
 					:key="course.slug"
 					:href="route('themes.chapters.slide', [course.theme, course.slug, course.currentPost])"
 					class="px-5 py-3 hover:px-8 transition-all flex justify-between items-baseline"
 				>
-					<div
-						v-katex.auto="course.title"
-					/>
+					<div v-katex.auto="course.title" />
 					<div class="text-xs">
 						{{ course.currentPost }}<sup>e</sup> page sur {{ course.maxPost }}, {{ course.updated_at }}
 					</div>
-				</Link>
+				</InertiaLink>
 			</div>
 		</div>
 	</section>

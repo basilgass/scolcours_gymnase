@@ -28,7 +28,7 @@ createInertiaApp({
 		const app = createApp({ render: () => h(App, props) })
 
 		// Add global components
-		app.component("Link", Link)
+		app.component("InertiaLink", Link)
 			.component("Head", Head)
 			.component("draggable", draggableComponent)
 			.use(plugin)

@@ -1,5 +1,5 @@
 import { TranslationUnitInterfaceExtended, TranslationWord } from "@/types/modelInterfaces"
-import { PiMath } from "pimath"
+import  PiMath from "pimath"
 
 
 export function useLanguage(units: TranslationUnitInterfaceExtended[]) {

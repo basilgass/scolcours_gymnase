@@ -1,4 +1,7 @@
-<script lang="ts" setup>
+<script
+	lang="ts"
+	setup
+>
 
 import { computed } from "vue"
 import { getModule, MODULE_TYPES } from "@/scolcours"
@@ -7,11 +10,11 @@ import LayoutMain from "@/Layouts/LayoutMain.vue"
 defineOptions({ layout: LayoutMain })
 
 const props = defineProps({
-    dev: {type: String, required: true}
+	dev: { type: String, required: true }
 })
 
 const component = computed(() => {
-    return getModule(props.dev, MODULE_TYPES.DEV)
+	return getModule(props.dev, MODULE_TYPES.DEV)
 })
 
 </script>
@@ -22,14 +25,13 @@ const component = computed(() => {
 		<h1 class="text-2xl">
 			{{ props.dev }}
 		</h1>
-		<Link
+		<InertiaLink
 			class="hover:pl-3 transition-all"
 			href="/dev"
 		>
 			Retour
-		</Link>
+		</InertiaLink>
 	</div>
 
 	<component :is="component" />
 </template>
-

@@ -1,6 +1,6 @@
 import { getCheckerClass } from "@/Composables/checkersConfig"
 import { CheckerAbstract } from "@/Checkers/CheckerAbstract"
-import { PiMath } from "pimath"
+import  PiMath from "pimath"
 import { stripFirstCharacter, stripLastCharacter } from "@/helpers/helperFunctions"
 
 const name = "vector"
@@ -14,7 +14,7 @@ const description = `vector,[paramètres]
 
 export class VectorChecker extends CheckerAbstract {
     private secondaryChecker: CheckerAbstract
-    private _colinear: boolean = false
+    private _colinear = false
 
     constructor(config?: string[] | string) {
         super(config)

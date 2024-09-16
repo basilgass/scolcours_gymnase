@@ -1,4 +1,8 @@
 <script lang="ts" setup>
+import KeyboardDisplay from "@/Components/Keyboards/KeyboardDisplay.vue"
+import ToolForm, { IToolForm } from "@/Components/Tools/Parts/ToolForm.vue"
+import { numberCorrection } from "@/helpers/helperFunctions"
+import PiMath from "pimath"
 /** Tools
  * title: tableau des valeurs d'une fonction
  * body: permet de créer un tableau des valeurs d'une fonction
@@ -6,12 +10,6 @@
  * tags: algebre,1M
  */
 import { computed, ref } from "vue"
-import type { Polynom } from "pimath/dist/maths/algebra/polynom"
-import KeyboardDisplay from "@/Components/Keyboards/KeyboardDisplay.vue"
-import { PiMath } from "pimath"
-import type { NumExp } from "pimath/dist/maths/numexp"
-import ToolForm, { IToolForm } from "@/Components/Tools/Parts/ToolForm.vue"
-import { numberCorrection } from "@/helpers/helperFunctions"
 
 const forms: IToolForm[] = [
 	{
@@ -85,7 +83,7 @@ const fx = computed(() => {
 		return f.value.includes("sin") || f.value.includes("cos") || f.value.includes("tan")
 	}),
 	getTableOfValues = function() {
-		let exp: NumExp | Polynom
+		let exp: PiMath.NumExp | PiMath.Polynom
 
 		if (isNumeric.value || numericParse.value) {
 			exp = new PiMath.NumExp(f.value)
@@ -106,10 +104,10 @@ const fx = computed(() => {
 		while (x.value <= vMax.value) {
 			let v
 			if (Object.hasOwn(exp, "monoms")) {
-				v = (exp as Polynom).evaluate(x)
+				v = (exp as PiMath.Polynom).evaluate(x)
 			} else {
 				v = {
-					value: (exp as NumExp).evaluate({ x: x.value }),
+					value: (exp as PiMath.NumExp).evaluate({ x: x.value }),
 					tex: ""
 				}
 			}

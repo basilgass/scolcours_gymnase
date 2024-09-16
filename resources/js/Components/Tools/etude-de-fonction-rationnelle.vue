@@ -4,16 +4,14 @@
  * body: étude de signe d'une fonction rationnelle.
  */
 
+import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"
+import TableOfSigns from "@/Components/Pi/PiTableOfSigns.vue"
+
+import ToolForm, { IToolForm } from "@/Components/Tools/Parts/ToolForm.vue"
+import TableOfContents from "@/Components/Ui/TableOfContents.vue"
+import PiMath from "pimath"
 // TODO: remove replaceAll('*x', 'x') in drawCode when PiDraw will be fixed
 import { computed, nextTick, onMounted, reactive, ref } from "vue"
-import { PiMath } from "pimath"
-import TableOfSigns from "@/Components/Pi/PiTableOfSigns.vue"
-import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"
-import TableOfContents from "@/Components/Ui/TableOfContents.vue"
-
-import type { IExtrema, IZero } from "pimath/dist/maths/algebra/study"
-import type { Polynom } from "pimath/dist/maths/algebra/polynom"
-import ToolForm, { IToolForm } from "@/Components/Tools/Parts/ToolForm.vue"
 
 const forms: IToolForm[] = [
 	{
@@ -64,7 +62,7 @@ async function validation_fx() {
 	// Validate the input
 	if (fx.value === "") return false
 
-	let numerator: Polynom, denominator: Polynom
+	let numerator: PiMath.Polynom, denominator: PiMath.Polynom
 
 	const fxSplit = fx.value.split("/")
 	try {
@@ -118,7 +116,7 @@ async function validation_fx() {
 			max: 1
 		}
 	// Check the zeroes.
-	const particularPoints: (IZero | IExtrema)[] = [...study.zeroes, ...Object.values(study.derivative.extremes)]
+	const particularPoints: (PiMath.IZero | PiMath.IExtrema)[] = [...study.zeroes, ...Object.values(study.derivative.extremes)]
 
 	// TODO: Check the particular points
 	particularPoints.forEach(zero => {

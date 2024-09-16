@@ -6,8 +6,7 @@
  * tags: geometrie,1M,2M,3M
  */
 import ToolForm, { IToolForm } from "@/Components/Tools/Parts/ToolForm.vue"
-import { PiMath } from "pimath"
-import type { Vector } from "pimath/dist/maths/geometry/vector"
+import PiMath from "pimath"
 import { computed, ref } from "vue"
 
 const forms: IToolForm[] = [
@@ -25,24 +24,24 @@ const forms: IToolForm[] = [
 	}
 ]
 
-const v1 = computed(()=> forms[0].value.value as string)
-const v2 = computed(()=> forms[1].value.value as string)
+const v1 = computed(() => forms[0].value.value as string)
+const v2 = computed(() => forms[1].value.value as string)
 
-const pV1 = computed<Vector>(()=>{
+const pV1 = computed<PiMath.Vector>(() => {
 	return new PiMath.Geometry.Vector(v1.value)
 })
-const pV2 = computed<Vector>(()=>{
+const pV2 = computed<PiMath.Vector>(() => {
 	return new PiMath.Geometry.Vector(v2.value)
 })
 
-const vectors = computed(()=>{
+const vectors = computed(() => {
 	// Get the list of the vectors, remove the empty ones
-	return [pV1.value, pV2.value].filter(v=>v.isNull === false)
+	return [pV1.value, pV2.value].filter(v => v.isNull === false)
 })
 
 let result = computed(() => {
-	if(vectors.value.length === 0) return false
-	
+	if (vectors.value.length === 0) return false
+
 	try {
 		return {
 			v1: pV1.value,
@@ -75,7 +74,7 @@ let result = computed(() => {
 				normes
 			</h3>
 			<div
-				v-if="vectors.length>=1"
+				v-if="vectors.length >= 1"
 				class="grid grid-cols-2 gap-3"
 			>
 				<div
@@ -95,7 +94,7 @@ let result = computed(() => {
 				produit scalaire
 			</h3>
 			<div
-				v-if="vectors.length>=2"
+				v-if="vectors.length >= 2"
 				class="grid grid-cols-2 gap-3"
 			>
 				<div v-katex="`${pV1.tex} \\cdot ${pV2.tex} = ${pV1.scalarProductWithVector(pV2).tex}`" />
@@ -111,10 +110,12 @@ let result = computed(() => {
 				déterminant
 			</h3>
 			<div
-				v-if="vectors.length>=2"
+				v-if="vectors.length >= 2"
 				class="grid grid-cols-2 gap-3"
 			>
-				<div v-katex="`\\begin{vmatrix} ${pV1.x.tex} & ${pV2.x.tex} \\\\ ${pV1.y.tex} & ${pV2.y.tex} \\end{vmatrix} = ${pV1.determinantWithVector(pV2).tex}`" />
+				<div
+					v-katex="`\\begin{vmatrix} ${pV1.x.tex} & ${pV2.x.tex} \\\\ ${pV1.y.tex} & ${pV2.y.tex} \\end{vmatrix} = ${pV1.determinantWithVector(pV2).tex}`"
+				/>
 			</div>
 			<div
 				class="py-1 px-3 bg-red-100 border border-red-300 rounded"
@@ -127,7 +128,7 @@ let result = computed(() => {
 				angle
 			</h3>
 			<div
-				v-if="vectors.length>=2"
+				v-if="vectors.length >= 2"
 				class="grid grid-cols-2 gap-3"
 			>
 				<div v-katex="`\\angle \\left(${pV1.tex} ; ${pV2.tex} \\right)  = ${+pV1.angleWith(pV2).toFixed(2)}`" />

@@ -83,11 +83,17 @@ if (localStorage.getItem(localStorageKey.value)) {
 	<section class="scolcours-container">
 		<ArticleTitle :title="language" />
 
-		<Link :href="`/${language}`" class="hover:pl-2 transition-all duration-300">
-		<i class="bi bi-arrow-bar-left" /> retour
-		</Link>
+		<InertiaLink
+			:href="`/${language}`"
+			class="hover:pl-2 transition-all duration-300"
+		>
+			<i class="bi bi-arrow-bar-left" /> retour
+		</InertiaLink>
 
-		<LanguageUnitsSelector v-show="state === 'intro'" v-model="unitsSelection" />
+		<LanguageUnitsSelector
+			v-show="state === 'intro'"
+			v-model="unitsSelection"
+		/>
 
 		<!-- Local storage detection
 		TODO : how to "load" the data ? -> make a component for the "intro" for each games.

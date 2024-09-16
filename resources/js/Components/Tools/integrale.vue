@@ -1,4 +1,8 @@
 <script setup lang="ts">
+import ToolForm, { IToolForm } from "@/Components/Tools/Parts/ToolForm.vue"
+import TexCode from "@/Components/Ui/TexCode.vue"
+import PiMath from "pimath"
+
 /** Tools
  * title: intégrale entre deux bornes
  * body: calcul d'intégrale entre deux bornes
@@ -6,10 +10,6 @@
  * tags: algebre,3M
  */
 import { computed, ref } from "vue"
-import { PiMath } from "pimath"
-import type { Fraction } from "pimath/dist/maths/coefficients/fraction"
-import ToolForm, { IToolForm } from "@/Components/Tools/Parts/ToolForm.vue"
-import TexCode from "@/Components/Ui/TexCode.vue"
 
 const forms: IToolForm[] = [
 	{
@@ -43,8 +43,8 @@ const result = computed(() => {
 		}
 		const p = new PiMath.Polynom(fx.value),
 			P = p.clone().primitive(),
-			Pa = P.evaluate({x: a.value as unknown as Fraction}),
-			Pb = P.evaluate({x: b.value as unknown as Fraction})
+			Pa = P.evaluate({x: a.value as unknown as PiMath.Fraction}),
+			Pb = P.evaluate({x: b.value as unknown as PiMath.Fraction})
 
 		return `\\int_{${a.value}}^{${b.value}} ${p.tex} \\ dx
 		= \\left. ${P.tex}\\right\\vert_{${a.value}}^{${b.value}}

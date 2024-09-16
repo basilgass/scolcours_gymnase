@@ -2,7 +2,10 @@
 En-tête d'un challenge.
 Contient le bouton de retour au chapitre, le titre, la description et l'édition
 -->
-<script lang="ts" setup>
+<script
+	lang="ts"
+	setup
+>
 
 import { inject, PropType } from "vue"
 import type { ChallengeInterface } from "@/types/modelInterfaces"
@@ -29,31 +32,30 @@ const editMode = inject<boolean>("editMode")
 			</div>
 
 			<!-- Header - return back -->
-			<Link
-				:href="
-					route('themes.chapters.intro', [
-						$page.props.theme.slug,
-						props.challenge.chapter.slug,
-					])
-				"
+			<InertiaLink
+				:href="route('themes.chapters.intro', [
+					$page.props.theme.slug,
+					props.challenge.chapter.slug,
+				])
+					"
 				as="button"
 				class="hover:pl-2 transition-all"
 			>
 				<i class=" bi bi-chevron-double-right mr-1" /><span v-katex.auto="props.challenge.chapter.title" />
-			</Link>
+			</InertiaLink>
 		</div>
 		<div
 			v-admin="editMode"
 			v-theme.bg.text.admin
 			class="py-1 font-code text-sm -mb-2 mt-2"
 		>
-			<Link
+			<InertiaLink
 				:href="route('challenges.edit', [props.challenge.id])"
 				as="button"
 				class="text-xs py-2 px-3 rounded font-code flex place-content-center"
 			>
 				éditer le challenge (id: {{ props.challenge.id }}) <i class="bi bi-pencil ml-2" />
-			</Link>
+			</InertiaLink>
 		</div>
 	</header>
 </template>

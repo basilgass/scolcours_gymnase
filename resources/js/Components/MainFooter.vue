@@ -1,7 +1,10 @@
 <!--
 Pied de page pour les pages principales.
 -->
-<script setup lang="ts">
+<script
+	setup
+	lang="ts"
+>
 import LogoutButton from "@/Components/Ui/LogoutButton.vue"
 import ThemeLinks from "@/Components/Ui/ThemeLinks.vue"
 </script>
@@ -19,49 +22,39 @@ import ThemeLinks from "@/Components/Ui/ThemeLinks.vue"
 				<h3 class="text-lg font-semibold">
 					Enseignement
 				</h3>
-				<Link
+				<InertiaLink
 					:href="route('bareme.show')"
 					class="block transition duration-300 hover:translate-x-2 px-0 md:px-4 py-1"
 				>
-					<i
-						class="mr-2 bi bi-bar-chart"
-					/> barème
-				</Link>
-				<Link
+					<i class="mr-2 bi bi-bar-chart" /> barème
+				</InertiaLink>
+				<InertiaLink
 					:href="route('grapheur.show')"
 					class="block transition duration-300 hover:translate-x-2 px-0 md:px-4 py-1"
 				>
-					<i
-						class="mr-2 bi bi-graph-up"
-					/> grapheur
-				</Link>
+					<i class="mr-2 bi bi-graph-up" /> grapheur
+				</InertiaLink>
 				<h3 class="text-lg mt-5 font-semibold">
 					Langues
 				</h3>
-				<Link
+				<InertiaLink
 					:href="route('translations.index', ['italiano'])"
 					class="block transition duration-300 hover:translate-x-2 px-0 md:px-4 py-1"
 				>
-					<i
-						class="mr-2 bi bi-translate"
-					/> italiano
-				</Link>
-				<Link
+					<i class="mr-2 bi bi-translate" /> italiano
+				</InertiaLink>
+				<InertiaLink
 					:href="route('translations.index', ['english'])"
 					class="block transition duration-300 hover:translate-x-2 px-0 md:px-4 py-1"
 				>
-					<i
-						class="mr-2 bi bi-translate"
-					/> english
-				</Link>
-				<Link
+					<i class="mr-2 bi bi-translate" /> english
+				</InertiaLink>
+				<InertiaLink
 					:href="route('translations.index', ['deutsch'])"
 					class="block transition duration-300 hover:translate-x-2 px-0 md:px-4 py-1"
 				>
-					<i
-						class="mr-2 bi bi-translate"
-					/> deutsch
-				</Link>
+					<i class="mr-2 bi bi-translate" /> deutsch
+				</InertiaLink>
 			</div>
 
 			<div class="md:mx-auto">
@@ -70,35 +63,33 @@ import ThemeLinks from "@/Components/Ui/ThemeLinks.vue"
 				</h3>
 
 				<div v-if="$page.props.auth.user">
-					<Link
+					<InertiaLink
 						:href="route('dashboard')"
 						class="block transition duration-300 hover:translate-x-2 px-0 md:px-4 py-1"
 					>
 						<i class="mr-2 bi bi-person-fill" />{{ $page.props.auth.user.name }}
-					</Link>
-					<Link
+					</InertiaLink>
+					<InertiaLink
 						:href="route('quizzs.index')"
 						class="block transition duration-300 hover:translate-x-2 px-0 md:px-4 py-1"
 					>
 						<i class="mr-2 bi bi-question" />quizz
-					</Link>
+					</InertiaLink>
 
-					<Link
+					<InertiaLink
 						v-if="$page.props.auth.can.admin"
 						:href="route('admin')"
 						class="block transition duration-300 hover:translate-x-2 px-0 md:px-4 py-1"
 					>
 						<i class="mr-2 bi bi-person-workspace" />administration
-					</Link>
+					</InertiaLink>
 
-					<LogoutButton
-						class="block transition duration-300 hover:translate-x-2 px-0 md:px-4 py-1 mt-10"
-					/>
+					<LogoutButton class="block transition duration-300 hover:translate-x-2 px-0 md:px-4 py-1 mt-10" />
 				</div>
 				<div v-else>
-					<Link href="/login">
+					<InertiaLink href="/login">
 						Se connecter
-					</Link>
+					</InertiaLink>
 				</div>
 			</div>
 		</div>

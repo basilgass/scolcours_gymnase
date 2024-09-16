@@ -4,18 +4,17 @@ code: function
 </info>-->
 
 <script lang="ts" setup>
-import { computed, onMounted, PropType, ref } from "vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
-import type { NumExp } from "pimath/dist/maths/numexp"
-import { PiMath } from "pimath"
 
 import { IllustrationInterface } from "@/types/modelInterfaces"
+import PiMath from "pimath"
+import { computed, onMounted, PropType, ref } from "vue"
 
 const props = defineProps({
 	illustration: { type: Object as PropType<IllustrationInterface>, required: true }
 })
 
-type bissection = {
+interface bissection {
 	a: number
 	b: number
 	fa: number
@@ -31,7 +30,7 @@ const f = ref(""),
 	fixed = ref(3),
 	table = ref<bissection[]>([])
 
-const fxExp = computed<NumExp>(() => {
+const fxExp = computed<PiMath.NumExp>(() => {
 	if (f.value === "") return new PiMath.NumExp("0")
 	return new PiMath.NumExp(f.value)
 })

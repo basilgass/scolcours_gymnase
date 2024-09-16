@@ -12,7 +12,7 @@ import KeyboardDisplay from "@/Components/Keyboards/KeyboardDisplay.vue"
 import ToolForm, { IToolForm } from "@/Components/Tools/Parts/ToolForm.vue"
 import { PiGraph as PiDraw } from "pidraw"
 import { COORDINATE_SYSTEM } from "pidraw/lib/pidraw.common"
-import { PiMath } from "pimath"
+import  PiMath from "pimath"
 import { computed, onMounted, ref } from "vue"
 
 const forms: IToolForm[] = [

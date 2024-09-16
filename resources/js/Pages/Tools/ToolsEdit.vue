@@ -1,4 +1,7 @@
-<script setup lang="ts">
+<script
+	setup
+	lang="ts"
+>
 
 import { inject, PropType } from "vue"
 import { flashInterface, ToolInterface } from "@/types"
@@ -15,10 +18,10 @@ const props = defineProps({
 })
 
 const form = useForm({
-		title: props.tool.title,
-		body: props.tool.body
+	title: props.tool.title,
+	body: props.tool.body
 })
-function saveTool () {
+function saveTool() {
 	form.post(route('tools.update', [props.tool.id]),
 		{
 			onSuccess: () => {
@@ -34,9 +37,7 @@ function saveTool () {
 
 <template>
 	<section class="scolcours-container">
-		<div
-			class="flex justify-between items-baseline py-3 mb-5"
-		>
+		<div class="flex justify-between items-baseline py-3 mb-5">
 			<h1>
 				<span class="text-xl md:text-2xl">édition d'un outil</span>
 				<span class="text-xs font-code ml-5">(id: {{ tool.id }})</span>
@@ -48,12 +49,12 @@ function saveTool () {
 				>
 					enregistrer
 				</button>
-				<Link
+				<InertiaLink
 					class="btn-cancel btn-xs"
 					:href="route('tools.tool', [tool.slug])"
 				>
 					retour
-				</Link>
+				</InertiaLink>
 			</div>
 		</div>
 
@@ -73,6 +74,4 @@ function saveTool () {
 	</section>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

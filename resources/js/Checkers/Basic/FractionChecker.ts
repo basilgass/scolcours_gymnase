@@ -1,4 +1,4 @@
-import { PiMath } from "pimath"
+import  PiMath from "pimath"
 import { CheckerAbstract } from "@/Checkers/CheckerAbstract"
 
 const name="fraction"

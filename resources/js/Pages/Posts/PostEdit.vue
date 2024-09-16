@@ -2,7 +2,10 @@
 Formulaire d'édition d'un post
 Utilisé dans PoseShow et PostEditPage (pour l'édition mode développement ?)
 -->
-<script lang="ts" setup>
+<script
+	lang="ts"
+	setup
+>
 import { inject, PropType, ref } from "vue"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
 import MoveItemTo from "@/Components/MoveItemTo.vue"
@@ -22,15 +25,15 @@ const props = defineProps({
 const flash = inject<flashInterface>("flash")
 
 const thePost = ref(props.post)
-if(thePost.value.type===null) thePost.value.type=""
+if (thePost.value.type === null) thePost.value.type = ""
 
 const typeList = ref({
-		article: "",
-		exercice: "exercise"
-	})
+	article: "",
+	exercice: "exercise"
+})
 
 
-const savePost = function() {
+const savePost = function () {
 	axios
 		.post(route("posts.update", [props.post.id]), {
 			...thePost.value,
@@ -40,7 +43,7 @@ const savePost = function() {
 			flash.success("Post enregistré")
 		})
 }
-const deletePost = function() {
+const deletePost = function () {
 	axios
 		.post(route("posts.destroy", [props.post.id]), {
 			_method: "delete"
@@ -83,12 +86,12 @@ const deletePost = function() {
 				>
 					enregistrer
 				</button>
-				<Link
+				<InertiaLink
 					:href="route('posts.show', [props.post.id])"
 					class="btn-cancel btn-xs"
 				>
 					retour au post
-				</Link>
+				</InertiaLink>
 				<confirm-button
 					class="btn-delete btn-xs"
 					@confirm="deletePost"

@@ -45,21 +45,21 @@ provide("showAside", showAside)
 
 		<div class="scolcours-container py-6 flex justify-between items-center">
 			<div class="text-2xl md:text-3xl lg:text-5xl flex gap-5">
-				<Link
+				<InertiaLink
 					href="/"
 					class="relative min-w-[1em]"
 				>
-				<i class="absolute inset bi bi-house cursor-pointer" />
-				<i
-					class="absolute inset bi bi-house-fill cursor-pointer text-transparent hover:text-white transition-all duration-500" />
-				</Link>
+					<i class="absolute inset bi bi-house cursor-pointer" />
+					<i
+						class="absolute inset bi bi-house-fill cursor-pointer text-transparent hover:text-white transition-all duration-500" />
+				</InertiaLink>
 
-				<Link
+				<InertiaLink
 					:href="computedTheme.slug === 'main' ? `/` : `/${computedTheme.slug}`"
 					class="hover:scale-110 transition-all"
 				>
-				{{ computedTheme.title }}
-				</Link>
+					{{ computedTheme.title }}
+				</InertiaLink>
 			</div>
 
 			<div class="flex gap-8 items-center">
@@ -83,12 +83,12 @@ provide("showAside", showAside)
 							</span>
 						</template>
 
-						<Link
+						<InertiaLink
 							:href="route('dashboard')"
 							class="hover:bg-gray-100 px-3 py-2"
 						>
-						profil
-						</Link>
+							profil
+						</InertiaLink>
 
 						<LogoutButton class="hover:bg-gray-100" />
 					</dropdown-menu>
@@ -113,12 +113,12 @@ provide("showAside", showAside)
 		>
 			<div class="scolcours-container flex justify-between items-baseline">
 				<div>
-					<Link
+					<InertiaLink
 						:href="route('admin')"
 						class="text-xs text-white uppercase"
 					>
-					administrateur
-					</Link>
+						administrateur
+					</InertiaLink>
 				</div>
 				<button
 					:class="editMode ? 'bg-white/40' : ''"

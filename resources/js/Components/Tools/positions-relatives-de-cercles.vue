@@ -7,7 +7,7 @@
 	 */
 
 	import { computed, onMounted, ref } from "vue"
-	import { PiMath } from "pimath"
+	import  PiMath from "pimath"
 	import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"
 	import ToolForm, { IToolForm } from "@/Components/Tools/Parts/ToolForm.vue"
 

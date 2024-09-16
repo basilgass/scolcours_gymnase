@@ -1,4 +1,7 @@
-<script lang="ts" setup>
+<script
+	lang="ts"
+	setup
+>
 
 import ChapterFormulasSlider from "@/Components/Chapters/ChapterFormulasSlider.vue"
 import ChapterNav from "@/Components/Chapters/ChapterNav.vue"
@@ -12,7 +15,7 @@ import { flashInterface } from "@/types"
 import type { BlockInterface, ChapterInterface, PostInterface } from "@/types/modelInterfaces"
 import { usePage } from "@inertiajs/vue3"
 import axios from "axios"
-import { PiMath } from "pimath"
+import  PiMath from "pimath"
 import { computed, inject, nextTick, onMounted, PropType, provide, ref } from "vue"
 
 defineOptions({ layout: LayoutMain })
@@ -53,7 +56,7 @@ const iteration = ref(0)
 const postData = ref({})
 
 function loadDataScript() {
-	iteration.value ++
+	iteration.value++
 	try {
 		if (props.post.script) {
 			const F = new Function("PiMath", "iteration", props.post.script)
@@ -74,17 +77,17 @@ provide('postBlocks', blocks)
 
 
 function addBlock(after?: number) {
-		axios.post(
-		route("posts.blocks.store",[props.post.id]),
+	axios.post(
+		route("posts.blocks.store", [props.post.id]),
 		{
-			after: after===undefined ? null: after
+			after: after === undefined ? null : after
 		}
 	).then((res) => {
 		flash.success("Block ajouté avec succès.")
-		if(after===undefined) {
+		if (after === undefined) {
 			blocks.value.push(res.data)
-		}else{
-			blocks.value.splice(after+1, 0, res.data)
+		} else {
+			blocks.value.splice(after + 1, 0, res.data)
 		}
 	}).catch((res) => {
 		flash.error("Erreur lors de l'ajout du block.")
@@ -92,8 +95,8 @@ function addBlock(after?: number) {
 	})
 }
 
-function storeCurrentPost(){
-	if(usePage().props.auth.user === null) return
+function storeCurrentPost() {
+	if (usePage().props.auth.user === null) return
 	axios.post(
 		route("chapters.currentPost", [props.chapter.id]),
 		{
@@ -133,13 +136,13 @@ onMounted(() => {
 						/>
 					</div>
 
-					<Link
+					<InertiaLink
 						:href="route('chapters.show', [chapter.slug])"
 						class="hover:pl-2 transition-all"
 					>
 						<i class=" bi bi-chevron-double-right mr-1" />
 						<span v-katex.auto="chapter.title" />
-					</Link>
+					</InertiaLink>
 				</div>
 
 				<div>
@@ -232,6 +235,4 @@ onMounted(() => {
 	</section>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

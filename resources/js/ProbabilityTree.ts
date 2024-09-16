@@ -1,8 +1,7 @@
 import { Dom, ForeignObject, G, SVG, Svg } from "@svgdotjs/svg.js"
 import katex from "katex"
 import { PiDraw } from "pidraw/lib"
-import { PiMath } from "pimath"
-import type { Fraction } from "pimath/dist/maths/coefficients/fraction"
+import PiMath from "pimath"
 
 /**
  * Class to generate a probability tree.
@@ -50,8 +49,8 @@ interface ProbabilityTreeConfigInterface {
 
 interface ProbabilityTreeLeafInterface {
 	node: string;
-	probability: Fraction;
-	branchProbability?: Fraction[];
+	probability: PiMath.Fraction;
+	branchProbability?: PiMath.Fraction[];
 	number?: number;
 	leaves?: ProbabilityTreeLeafInterface[];
 	result?: string;
@@ -246,7 +245,7 @@ export class ProbabilityTree {
 		// Build the branchProbability.
 		// if it's already here, means it was already calculated -> skip it
 		pathes.forEach(path => {
-			const probabilities: Fraction[] = []
+			const probabilities: PiMath.Fraction[] = []
 			path.forEach(branch => {
 				probabilities.push(branch.probability)
 				if (branch.branchProbability === undefined || branch.branchProbability.length === 0) {

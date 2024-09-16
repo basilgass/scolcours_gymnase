@@ -6,7 +6,7 @@
  * tags: algebre,1M
  */
 import { computed, ref } from "vue"
-import { PiMath } from "pimath"
+import  PiMath from "pimath"
 import ToolForm, { IToolForm } from "@/Components/Tools/Parts/ToolForm.vue"
 import TexCode from "@/Components/Ui/TexCode.vue"
 import KeyboardDisplay from "@/Components/Keyboards/KeyboardDisplay.vue"

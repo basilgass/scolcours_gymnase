@@ -1,4 +1,7 @@
-<script lang="ts" setup>
+<script
+	lang="ts"
+	setup
+>
 import { PropType, ref } from "vue"
 import ChapterToc from "@/Components/Chapters/ChapterToc.vue"
 import ChapterChallenges from "@/Components/Chapters/ChapterChallenges.vue"
@@ -41,37 +44,32 @@ const showTheorem = ref(false)
 
 		<div class="scolcours-container space-y-10">
 			<!-- table des matières -->
-			<ChapterToc
-				:chapter="chapter"
-			/>
+			<ChapterToc :chapter="chapter" />
 
 			<!-- commencer l'aventure -->
 			<div
 				v-if="chapter.posts.length > 0"
 				class="w-full text-center"
 			>
-				<Link
+				<InertiaLink
 					v-theme.bg.text
-					:href="
-						route('themes.chapters.slide', [
-							$page.props.theme.slug,
-							chapter.slug,
-							1,
-						])
-					"
+					:href="route('themes.chapters.slide', [
+						$page.props.theme.slug,
+						chapter.slug,
+						1,
+					])
+						"
 					as="button"
 					class="min-h-[80px] mx-auto w-full md:w-auto md:px-20"
 				>
-					<div
-						class="flex flex-col gap-3 py-3 text-xs font-ultrathin"
-					>
+					<div class="flex flex-col gap-3 py-3 text-xs font-ultrathin">
 						<p>Commencer l'aventure avec</p>
 						<h2
 							v-katex.auto="chapter.posts[0].title"
 							class="text-xl"
 						/>
 					</div>
-				</Link>
+				</InertiaLink>
 			</div>
 
 			<!-- liste des relations -->

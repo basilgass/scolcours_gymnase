@@ -1,5 +1,5 @@
 import { unref } from "vue"
-import { PiMath } from "pimath"
+import  PiMath from "pimath"
 
 export function FormValidationVector(value: string | number): string {
 	if (value) {

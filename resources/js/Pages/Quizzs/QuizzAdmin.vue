@@ -1,4 +1,7 @@
-<script setup lang="ts">
+<script
+	setup
+	lang="ts"
+>
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 import { router } from "@inertiajs/vue3"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
@@ -12,9 +15,9 @@ defineProps({
 	quizzs: { type: Object as PropType<QuizzInterface[]>, required: true },
 })
 
-function createQuizz(){
+function createQuizz() {
 	axios.post(route("quizzs.store"))
-		.then(res=>{
+		.then(res => {
 			router.visit(route("quizzs.admin.quizz", [res.data]))
 		})
 }
@@ -40,7 +43,7 @@ function createQuizz(){
 		</div>
 
 		<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5">
-			<Link
+			<InertiaLink
 				v-for="quizz of quizzs"
 				:key="quizz.id"
 				:href="route('quizzs.admin.quizz', [quizz.id])"
@@ -56,7 +59,7 @@ function createQuizz(){
 					class="text-lg font-semibold"
 				/>
 				<markdown-it :text="quizz.body" />
-			</Link>
+			</InertiaLink>
 		</div>
 	</section>
 </template>

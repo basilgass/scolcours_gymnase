@@ -1,4 +1,7 @@
-<script lang="ts" setup>
+<script
+	lang="ts"
+	setup
+>
 import { useForm } from "@inertiajs/vue3"
 import { PropType } from "vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
@@ -37,13 +40,13 @@ function toggleChapterVisibility(slug, active) {
 				filter-by-theme
 				list-class="grid grid-cols-1 gap-2"
 			>
-				<template #card="{item}:{item: ChapterInterface}">
+				<template #card="{ item }: { item: ChapterInterface }">
 					<div
 						:key="item.id"
 						v-theme.bg.text="item.theme.id"
 						class="flex justify-between rounded-lg px-3 py-2"
 					>
-						<Link
+						<InertiaLink
 							:href="route('chapters.show', [item.slug])"
 							as="div"
 							class="cursor-pointer"
@@ -54,7 +57,7 @@ function toggleChapterVisibility(slug, active) {
 							<p class="mt-1 max-w-2xl text-sm text-gray-200">
 								{{ item.slug }}
 							</p>
-						</Link>
+						</InertiaLink>
 
 						<div>
 							<div>{{ item.updated_at }}</div>
@@ -69,7 +72,7 @@ function toggleChapterVisibility(slug, active) {
 										item.slug,
 										!item.active,
 									)
-								"
+									"
 							>
 								{{ item.active ? "en ligne" : "caché" }}
 							</button>

@@ -4,9 +4,8 @@ Uniquement utilisée dans Posts/Illustrations/Elements/IllustrationEuclidian
 -->
 <script lang="ts" setup>
 
+import PiMath from "pimath"
 import { computed } from "vue"
-import { PiMath } from "pimath"
-import type { Polynom } from "pimath/dist/maths/algebra/polynom"
 
 const props = defineProps({
 	fx: { type: String, default: null },
@@ -18,7 +17,7 @@ const props = defineProps({
 
 const emits = defineEmits(["update"])
 
-function addStep(P: Polynom, degree: number, withParenthesis?: boolean, isFirstStep?: boolean) {
+function addStep(P: PiMath.Polynom, degree: number, withParenthesis?: boolean, isFirstStep?: boolean) {
 	withParenthesis = withParenthesis === undefined ? false : withParenthesis
 	isFirstStep = isFirstStep === undefined ? false : isFirstStep
 

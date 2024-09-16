@@ -71,9 +71,9 @@ watchDebounced(chapterId, getTargetName, { debounce: 1000, maxWait: 2000 })
 				<div class="font-code text-xs">
 					{{ deck.slug }}
 				</div>
-				<Link :href="route('decks.index')">
-				Retour à la liste des decks
-				</Link>
+				<InertiaLink :href="route('decks.index')">
+					Retour à la liste des decks
+				</InertiaLink>
 			</div>
 			<div>
 				<div class="flex">

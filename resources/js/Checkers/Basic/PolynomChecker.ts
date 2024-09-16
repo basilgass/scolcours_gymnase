@@ -1,5 +1,5 @@
-import { PiMath } from "pimath"
 import { CheckerAbstract } from "@/Checkers/CheckerAbstract"
+import PiMath from "pimath"
 
 const name = "polynom"
 const description = `polynom,[paramètres]
@@ -10,7 +10,6 @@ const description = `polynom,[paramètres]
 - d=développé
 - s=forme du sommet \\(a(x-b)^2+c\\)
 `
-
 export class PolynomChecker extends CheckerAbstract {
 	constructor(config: string[] | string) {
 		super(config)

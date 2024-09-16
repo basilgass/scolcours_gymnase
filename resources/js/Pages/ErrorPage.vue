@@ -1,4 +1,7 @@
-<script setup lang="ts">
+<script
+	setup
+	lang="ts"
+>
 
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 
@@ -19,12 +22,12 @@ defineProps({
 			<div>{{ body }}</div>
 
 			<div class="text-center">
-				<Link
+				<InertiaLink
 					class="btn bg-white mt-10"
 					href="/"
 				>
 					Retour à l'accueil
-				</Link>
+				</InertiaLink>
 			</div>
 		</div>
 	</div>

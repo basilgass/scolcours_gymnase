@@ -193,8 +193,7 @@ const deleteChallenge = function () {
 		<!-- Header -->
 		<!-- <template #header> -->
 		<div
-			class="sticky top-0 z-10 bg-white flex justify-between items-baseline border-b border-gray-200 px-5 py-3 mb-5"
-		>
+			class="sticky top-0 z-10 bg-white flex justify-between items-baseline border-b border-gray-200 px-5 py-3 mb-5">
 			<h1>
 				<span class="text-xl md:text-2xl">édition d'un challenge</span>
 				<span class="text-xs font-code ml-5">
@@ -208,12 +207,12 @@ const deleteChallenge = function () {
 				>
 					enregistrer
 				</button>
-				<Link
+				<InertiaLink
 					:href="route('challenges.show', [theChallenge.slug])"
 					class="btn-success btn-xs"
 				>
 					visiter
-				</Link>
+				</InertiaLink>
 				<confirm-button
 					class="btn-delete btn-xs"
 					@confirm="deleteChallenge"
@@ -288,7 +287,7 @@ const deleteChallenge = function () {
 						:label="`vie / ${theChallenge.bonusScoreTrigger > 0
 							? theChallenge.bonusScoreTrigger
 							: 'x'
-						} points`"
+							} points`"
 						name="questionsBonuses1"
 						type="number"
 						sm
@@ -300,7 +299,7 @@ const deleteChallenge = function () {
 						:label="`temps / ${theChallenge.bonusScoreTrigger > 0
 							? theChallenge.bonusScoreTrigger
 							: 'x'
-						} points`"
+							} points`"
 						name="questionsBonuses2"
 						type="number"
 						sm
@@ -411,10 +410,12 @@ const deleteChallenge = function () {
 .draggable-handle {
 	cursor: move;
 }
+
 .ghost {
 	@apply opacity-40;
-	}
-	.flip-list-move {
+}
+
+.flip-list-move {
 	transition: transform 0.5s;
-	}
+}
 </style>

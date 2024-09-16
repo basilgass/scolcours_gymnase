@@ -41,4 +41,5 @@ export interface FormMakerPropsType {
 	},
 	fromUrl?: string;
 	clearable?: boolean;
+  helper?: boolean | string;
 }

@@ -9,10 +9,8 @@ code: [f(x)=]function (multiple line possible)
 	lang="ts"
 	setup
 >
+import PiMath from "pimath"
 import { computed } from "vue"
-import type { Polynom } from "pimath/dist/maths/algebra/polynom"
-import { PiMath } from "pimath"
-import type { NumExp } from "pimath/dist/maths/numexp"
 
 let props = defineProps({
 	illustration: { type: Object, required: true }
@@ -80,7 +78,7 @@ let props = defineProps({
 				name = exp = f
 			}
 
-			let numExp: NumExp | Polynom
+			let numExp: PiMath.NumExp | PiMath.Polynom
 			if (roundedTo.value > 0) {
 				numExp = new PiMath.NumExp(exp)
 			} else {
@@ -90,13 +88,13 @@ let props = defineProps({
 			let values = []
 			for (let x in tableX.value) {
 				if (Object.hasOwn(numExp, '_monoms')) {
-					let v = (numExp as Polynom).evaluate(+x)
+					let v = (numExp as PiMath.Polynom).evaluate(+x)
 					values.push({
 						x,
 						fx: v.tex
 					})
 				} else {
-					let v = (numExp as NumExp).evaluate({ x: +x })
+					let v = (numExp as PiMath.NumExp).evaluate({ x: +x })
 					values.push({
 						x,
 						fx: +v.toFixed(roundedTo.value)
@@ -141,10 +139,19 @@ function parseMinMaxStep(value: string): number[] {
 </script>
 
 <template>
-	<div :class="`scrollbar-scolcours-${$page.props.theme.slug}`" class="overflow-x-auto relative">
-		<table :class="tableClass" class="border-collapse border border-slate-300">
+	<div
+		:class="`scrollbar-scolcours-${$page.props.theme.slug}`"
+		class="overflow-x-auto relative"
+	>
+		<table
+			:class="tableClass"
+			class="border-collapse border border-slate-300"
+		>
 			<tr class="bg-gray-100 font-semibold border-b border-slate-300">
-				<td v-katex="'x'" class="border-r border-slate-300 px-4" />
+				<td
+					v-katex="'x'"
+					class="border-r border-slate-300 px-4"
+				/>
 				<td
 					v-for="(x, index) in tableX"
 					:key="`x-${index}`"
@@ -153,8 +160,16 @@ function parseMinMaxStep(value: string): number[] {
 					class="border-r border-slate-300"
 				/>
 			</tr>
-			<tr v-for="(fx, line) in tableFunctions" :key="fx.name" :style="`height: ${rowHeight}`">
-				<td v-katex="fx.name" :class="line > 0 ? 'border-t' : ''" class="border-r border-slate-300 px-4" />
+			<tr
+				v-for="(fx, line) in tableFunctions"
+				:key="fx.name"
+				:style="`height: ${rowHeight}`"
+			>
+				<td
+					v-katex="fx.name"
+					:class="line > 0 ? 'border-t' : ''"
+					class="border-r border-slate-300 px-4"
+				/>
 				<td
 					v-for="(y, index) in fx.values"
 					:key="`${fx.name}-${index}`"

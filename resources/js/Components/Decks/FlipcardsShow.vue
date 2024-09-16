@@ -1,9 +1,12 @@
-<script lang="ts" setup>
+<script
+	lang="ts"
+	setup
+>
 
 import IllustrationShow from "@/Pages/Illustrations/IllustrationShow.vue"
 import type { deckInterface, flipcardsInterface } from "@/types/modelInterfaces"
 import { useSwipe } from "@vueuse/core"
-import { PiMath } from "pimath"
+import  PiMath from "pimath"
 import { computed, PropType, ref } from "vue"
 import MarkdownIt from "../Ui/MarkdownIt.vue"
 
@@ -100,7 +103,8 @@ const xClassTranslate = computed(() => {
 
 		<div
 			:class="xClassTranslate"
-			class="grid place-items-center  bg-white rounded-xl shadow-lg p-5 min-h-[50vh]"
+			class="grid place-items-center
+			 bg-white rounded-xl shadow-lg p-5 min-h-[50vh]"
 			@click="flip"
 		>
 			<!-- body -->

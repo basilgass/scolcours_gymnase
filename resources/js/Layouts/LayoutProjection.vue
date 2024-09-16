@@ -12,12 +12,12 @@ import "@/Layouts/LayoutProjection.vue"
 			v-theme.bg.admin.text
 			class="py-2 px-4 flex justify-between"
 		>
-			<Link
+			<InertiaLink
 				class="uppercase"
 				:href="route('admin')"
 			>
 				administration
-			</Link>
+			</InertiaLink>
 
 			<!--			<button-->
 			<!--				class="btn btn-xs hover:text-black"-->

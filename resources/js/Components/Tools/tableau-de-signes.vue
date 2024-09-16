@@ -4,12 +4,12 @@
  * body: tableau de signes ou de variations
  */
 import { computed, nextTick, onMounted, reactive, ref } from "vue"
-import { PiMath } from "pimath"
+import  PiMath from "pimath"
 import TableOfSigns from "@/Components/Pi/PiTableOfSigns.vue"
 import { splitIfOutsideParentheses } from "@/helpers/helperFunctions.js"
 import ToolForm, { IToolForm } from "@/Components/Tools/Parts/ToolForm.vue"
 
-type fracRationnelle = {
+interface fracRationnelle {
 	valid: boolean,
 	tos: object | null,
 	dxtos: object | null,
