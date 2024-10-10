@@ -1,4 +1,7 @@
 <script lang="ts" setup>
+import ToolForm, { IToolForm } from "@/Components/Tools/Parts/ToolForm.vue"
+import { useToolsStorage } from "@/Composables/useToolsStorage.ts"
+import { Equation, Fraction, ISolution, Line, Monom, Point, Polynom } from "pimath"
 /** Tools
  * title: tangente à un graphe (fonction polynomiale)
  * body: permet de calculer l'équation cartésienne d'une tangente à un graphe à un point d'abscisse donné.
@@ -6,10 +9,9 @@
  * tags: algebre,2M
  */
 import { computed, ref } from "vue"
-import  PiMath from "pimath"
-import ToolForm, { IToolForm } from "@/Components/Tools/Parts/ToolForm.vue"
 
-const forms: IToolForm[] = [
+const { restoreTool } = useToolsStorage()
+const forms: IToolForm[] = restoreTool([
 	{
 		label: "fonction",
 		type: "text",
@@ -22,39 +24,38 @@ const forms: IToolForm[] = [
 		value: ref("1,0"),
 		fromUrl: "x"
 	}
-]
+])
 
-const fx = computed(()=> forms[0].value.value as string)
-const x = computed(()=> forms[1].value.value as string)
+const fx = computed(() => forms[0].value.value as string)
+const x = computed(() => forms[1].value.value as string)
 
 
-const affine = computed(() => {
+const affine = computed<{ tex: { canonical: string, mxh: string } } | false>(() => {
 	try {
-		const P = new PiMath.Polynom(fx.value)
+		const P = new Polynom(fx.value)
 
 		// The given x is a point
 		if (x.value.includes(",")) {
-			const [a, b] = x.value.split(",").map(y => new PiMath.Fraction(y))
+			const [a, b] = x.value.split(",").map(y => new Fraction(y))
 
 			const dP = P.clone().derivative()
 
-			const equ = new PiMath.Equation(
+			const equ = new Equation(
 				P.clone().subtract(b),
-				dP.clone().multiply(new PiMath.Monom("x")).subtract(dP.clone().multiply(a))
+				dP.clone().multiply(new Monom("x")).subtract(dP.clone().multiply(a))
 			)
 
-			equ.solve()
+			const solutions = equ.solve()
 
+			let sols: Line[] = solutions
+				.filter((sol: ISolution) => sol.exact !== false)
+				.map((sol: ISolution) => {
+					const x: Fraction = sol.exact as Fraction,
+						y: Fraction = P.evaluate(x) as Fraction
 
-			let sols: PiMath.Line = equ.solutions
-				.filter((sol: PiMath.ISolution) => sol.exact !== false)
-				.map((sol:PiMath.ISolution) => {
-					const x = sol.exact,
-						y = P.evaluate(x as PiMath.Fraction)
-
-					return new PiMath.Geometry.Line(
-						new PiMath.Geometry.Point(x, y),
-						new PiMath.Geometry.Point(a, b)
+					return new Line(
+						new Point(x, y),
+						new Point(a, b)
 					)
 				})
 			// y = mx + h => h = b - ma
@@ -62,22 +63,29 @@ const affine = computed(() => {
 
 			return {
 				tex: {
-					mxh: sols.map(sol => sol.tex.mxh).join("\\text{ ou }"),
-					canonical: sols.map(sol => sol.tex.canonical).join("\\text{ ou }")
+					mxh: sols.map(sol => sol.mxh.tex).join("\\text{ ou }"),
+					canonical: sols.map(sol => sol.tex).join("\\text{ ou }")
 				}
 			}
 		}
 
 		// The given x is an abscissa
-		const a = new PiMath.Fraction(x.value),
-			fa = P.evaluate(a)
+		const a = new Fraction(x.value),
+			fa = P.evaluate(a) as Fraction
 
 		const dP = P.derivative(),
-			m = dP.evaluate(a),
+			m: Fraction = dP.evaluate(a) as Fraction,
 			h = fa.clone().subtract(m.clone().multiply(a))
 
-		return new PiMath.Geometry.Line(`y=${m.display}x+(${h.display})`)
-	} catch {
+		const L = new Line(`y=${m.display}x+(${h.display})`)
+		return {
+			tex: {
+				mxh: L.mxh.tex,
+				canonical: L.tex
+			}
+		}
+	} catch (e) {
+		console.log(e)
 		return false
 	}
 

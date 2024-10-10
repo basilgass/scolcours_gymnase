@@ -1,8 +1,8 @@
 <script setup lang="ts">
 
-import { computed, ref } from "vue"
-import  PiMath from "pimath"
 import { useKeyboard } from "@/Composables/useKeyboard"
+import { Random } from "pimath"
+import { computed, ref } from "vue"
 
 const props = defineProps({
 	keyboard: { type: Object, required: true },
@@ -54,10 +54,10 @@ const items = computed(() => {
 		}
 	})
 })
-const randomizeItems = () => {
-	return PiMath.Random.shuffle(items.value)
+function randomizeItems():{id: number, label: string}[] {
+	return Random.shuffle(items.value)
 }
-const sortableItems = ref(randomizeItems())
+const sortableItems = ref<{id: number, label: string}[]>(randomizeItems())
 
 const { loadAnswerToKeyboard } = useKeyboard(props)
 const reset = () => sortableItems.value = randomizeItems()

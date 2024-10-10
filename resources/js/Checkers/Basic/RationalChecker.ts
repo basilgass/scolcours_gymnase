@@ -1,6 +1,7 @@
-import  PiMath from "pimath"
 import { CheckerAbstract } from "@/Checkers/CheckerAbstract"
+import { PolyFactor } from "pimath"
 
+// TODO : Rational checker is not working - convert ot Polyfactors !
 const name = "rational"
 const description = `rational,[paramètres]
 
@@ -35,9 +36,9 @@ export class RationalChecker extends CheckerAbstract {
         let [expectedNum, expectedDen] = expected.split("/")
         if (expectedDen === undefined) expectedDen = "1"
 
-        const givenRationnal = new PiMath.Rational(num, den),
-            givenRationnalReduced = (new PiMath.Rational(num, den)).reduce(),
-            expectedRationnal = (new PiMath.Rational(expectedNum, expectedDen)).reduce()
+        const givenRationnal = new PolyFactor().fromPolynom(num, den),
+            givenRationnalReduced = new PolyFactor().fromPolynom(num, den).reduce(),
+            expectedRationnal = new PolyFactor().fromPolynom(expectedNum, expectedDen).reduce()
 
         // Check if the reduced version of numerator and denominator are the same.
         if (!givenRationnalReduced.numerator.isEqual(expectedRationnal.numerator)) {
@@ -53,29 +54,34 @@ export class RationalChecker extends CheckerAbstract {
             }
         }
 
-        if (this.config.includes("f") || this.config.includes("factors")) {
-            if (!givenRationnal.numerator.isFactorized(num)) {
-                return {
-                    result: false,
-                    message: "le numérateur n'est pas factorisé"
-                }
-            }
-            if (!givenRationnal.denominator.isFactorized(den)) {
-                return {
-                    result: false,
-                    message: "le dénominateur n'est pas factorisé"
-                }
-            }
-        }
-
+		// TODO: RationalCheck must detect if it's factorized, developped or reduced !
+        // if (this.config.includes("f") || this.config.includes("factors")) {
+        //     if (!givenRationnal.numerator.isFactorized(num)) {
+        //         return {
+        //             result: false,
+        //             message: "le numérateur n'est pas factorisé"
+        //         }
+        //     }
+        //     if (!givenRationnal.denominator.isFactorized(den)) {
+        //         return {
+        //             result: false,
+        //             message: "le dénominateur n'est pas factorisé"
+        //         }
+        //     }
+        // }
+		//
+		
         if (this.config.includes("d") || this.config.includes("develop")) {
-            if (!givenRationnal.numerator.isDeveloped(num)) {
+			const num = givenRationnal.numerator
+            if (num.factors.length>1 || !num.factors[1].power.isOne()) {
                 return {
                     result: false,
                     message: "le numérateur n'est pas développé"
                 }
             }
-            if (!givenRationnal.denominator.isDeveloped(den)) {
+
+			const den = givenRationnal.denominator
+			if (den.factors.length>1 || !den.factors[1].power.isOne()) {
                 return {
                     result: false,
                     message: "le dénominateur n'est pas développé"

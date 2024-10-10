@@ -1,4 +1,8 @@
 <script setup lang="ts">
+import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"
+import ToolForm, { IToolForm } from "@/Components/Tools/Parts/ToolForm.vue"
+import { useToolsStorage } from "@/Composables/useToolsStorage.ts"
+
 /** Tools
  * title: graphe
  * body: affichage d'un graphique
@@ -6,10 +10,9 @@
  * tags: algebre,1M
  */
 import { computed, ref } from "vue"
-import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"
-import ToolForm, { IToolForm } from "@/Components/Tools/Parts/ToolForm.vue"
 
-const forms: IToolForm[] = [
+const { restoreTool } = useToolsStorage()
+const forms: IToolForm[] = restoreTool( [
 	{
 		label: "paramètres",
 		type: "text",
@@ -30,7 +33,7 @@ t=T1T2
 a=arc A,O,B,2->tex=\\theta
 X=inter t,d->w=10`),
 	}
-]
+] )
 
 const params = computed(()=>  forms[0].value.value as string)
 const code = computed(()=>  forms[1].value.value as string)

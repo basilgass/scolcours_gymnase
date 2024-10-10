@@ -49,4 +49,5 @@ export function stripLastCharacter(value: string): string {
 }
 
 
-export function numberCorrection(value: unknown, corr: number) { return (+value as number).toFixed(corr) }
+export function numberCorrection(value: unknown, corr = 2) { return (+value as number).toFixed(corr) }
+

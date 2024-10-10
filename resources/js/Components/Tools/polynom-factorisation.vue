@@ -1,4 +1,9 @@
 <script setup lang="ts">
+import KeyboardDisplay from "@/Components/Keyboards/KeyboardDisplay.vue"
+import ToolForm, { IToolForm } from "@/Components/Tools/Parts/ToolForm.vue"
+import TexCode from "@/Components/Ui/TexCode.vue"
+import { useToolsStorage } from "@/Composables/useToolsStorage.ts"
+import { PolyFactor, Polynom } from "pimath"
 /** Tools
  * title: factorisation d'un polynôme
  * body: factorisation d'un polynôme
@@ -6,29 +11,26 @@
  * tags: algebre,1M
  */
 import { computed, ref } from "vue"
-import  PiMath from "pimath"
-import ToolForm, { IToolForm } from "@/Components/Tools/Parts/ToolForm.vue"
-import TexCode from "@/Components/Ui/TexCode.vue"
-import KeyboardDisplay from "@/Components/Keyboards/KeyboardDisplay.vue"
 
-const forms: IToolForm[] = [
+const { restoreTool } = useToolsStorage()
+const forms: IToolForm[] = restoreTool( [
 	{
 		label: "Polynôme",
 		type: "text",
 		value: ref(""),
 		fromUrl: "p"
 	}
-]
+] )
 
 const polynom = computed(() => forms[0].value.value as string)
 
 let result = computed(() => {
 	try {
-		let P = new PiMath.Polynom(polynom.value)
-		P.factorize()
+		let P = new Polynom(polynom.value)
+		const Factors = new PolyFactor().fromPolynom(P)
 
 		return {
-			tex: P.tex + ' = ' + P.texFactors
+			tex: P.tex + ' = ' + Factors.tex
 		}
 	} catch (e) {
 		// console.error(e)

@@ -1,6 +1,6 @@
-import  PiMath from "pimath"
 import { CheckerAbstract } from "@/Checkers/CheckerAbstract"
 import { customCheck } from "@/Composables/checkersConfig"
+import { Equation, Numeric } from "pimath"
 
 const name = "equation"
 const description = `equation,[paramètres]
@@ -95,7 +95,7 @@ export class CartesianChecker extends CheckerAbstract {
 		let A, Q
 
 		try {
-			A = new PiMath.Equation(given)
+			A = new Equation(given)
 		} catch {
 			return {
 				result: false,
@@ -103,7 +103,7 @@ export class CartesianChecker extends CheckerAbstract {
 			}
 		}
 		try {
-			Q = new PiMath.Equation(expected)
+			Q = new Equation(expected)
 		} catch {
 			return {
 				result: false,
@@ -257,7 +257,7 @@ export class CartesianChecker extends CheckerAbstract {
 		if (this.#reduced) {
 			const lcmL = A.left.commonMonom().coefficient.value,
 				lcmR = A.right.commonMonom().coefficient.value,
-				lcm = PiMath.Numeric.lcm(lcmL, lcmR)
+				lcm = Numeric.lcm(lcmL, lcmR)
 
 			if (lcm !== 1) {
 				return {

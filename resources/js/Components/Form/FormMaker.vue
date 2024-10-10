@@ -66,7 +66,7 @@ const props = withDefaults(defineProps<FormMakerPropsType>(), {
 })
 
 // Define the emits
-const emits = defineEmits(["enter", "currentLine"])
+const emits = defineEmits(["enter", "currentLine", 'change'])
 
 const flash = inject<flashInterface>("flash", null)
 
@@ -126,6 +126,7 @@ const placeholderValue = computed(() => {
 
 // On input update, emit the new value in correct format
 function updateInput(e: Event) {
+	emits('change')
 	// TODO: updateInput ?
 }
 

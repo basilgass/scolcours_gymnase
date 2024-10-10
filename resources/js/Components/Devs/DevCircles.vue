@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue"
-import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"
-import  PiMath from "pimath"
 import FormMaker from "@/Components/Form/FormMaker.vue"
+import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
+import { Circle } from "pimath"
+import { onMounted, ref } from "vue"
 
 defineOptions({ layout: LayoutMain })
 
@@ -17,8 +17,9 @@ function updateValue(){
 	intersectionPoints.value = []
 	tangentPerPoints.value = []
 
-	const C = new PiMath.Geometry.Circle(circle.value),
+	const C = new Circle(circle.value),
 		pts = C.getPointsOnCircle()
+
 
 	code.value = `C(${C.center.x.value},${C.center.y.value})
 	c=circ C,${C.radius.value}`
@@ -28,9 +29,9 @@ function updateValue(){
 		const tg = C.tangents(pt)[0]
 		tangents.push(tg)
 		code.value += `\nT${index + 1}(${pt.x.value},${pt.y.value})->tex:T_${index + 1}=@`
-		code.value += `\nt${index + 1}=line ${tg.tex.canonical}`
+		code.value += `\nt${index + 1}=line ${tg.canonical.tex}`
 
-		tangentPerPoints.value.push(`T_${index+1}(${pt.x.tex};${pt.y.tex})\\implies ${tg.tex.canonical}`)
+		tangentPerPoints.value.push(`T_${index+1}(${pt.x.tex};${pt.y.tex})\\implies ${tg.canonical.tex}`)
 	})
 
 	for (let i = 0; i < tangents.length; i++) {

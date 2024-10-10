@@ -9,12 +9,12 @@ code: [f(x)=]function (multiple line possible)
 	lang="ts"
 	setup
 >
-import PiMath from "pimath"
+import { Fraction, NumExp, Polynom } from "pimath"
 import { computed } from "vue"
 
 let props = defineProps({
-	illustration: { type: Object, required: true }
-}),
+		illustration: { type: Object, required: true }
+	}),
 	params = computed(() => props.illustration.parameters.split(",")),
 	code = computed(() => props.illustration.code),
 	roundedTo = computed(() => {
@@ -78,23 +78,23 @@ let props = defineProps({
 				name = exp = f
 			}
 
-			let numExp: PiMath.NumExp | PiMath.Polynom
+			let numExp: NumExp | Polynom
 			if (roundedTo.value > 0) {
-				numExp = new PiMath.NumExp(exp)
+				numExp = new NumExp(exp)
 			} else {
-				numExp = new PiMath.Polynom(exp)
+				numExp = new Polynom(exp)
 			}
 
 			let values = []
 			for (let x in tableX.value) {
-				if (Object.hasOwn(numExp, '_monoms')) {
-					let v = (numExp as PiMath.Polynom).evaluate(+x)
+				if (Object.hasOwn(numExp, "_monoms")) {
+					let v: Fraction = (numExp as Polynom).evaluate(+x) as Fraction
 					values.push({
 						x,
 						fx: v.tex
 					})
 				} else {
-					let v = (numExp as PiMath.NumExp).evaluate({ x: +x })
+					let v = (numExp as NumExp).evaluate({ x: +x })
 					values.push({
 						x,
 						fx: +v.toFixed(roundedTo.value)

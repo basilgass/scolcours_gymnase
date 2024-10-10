@@ -1,7 +1,7 @@
-import { getCheckerClass } from "@/Composables/checkersConfig"
 import { CheckerAbstract } from "@/Checkers/CheckerAbstract"
-import  PiMath from "pimath"
+import { getCheckerClass } from "@/Composables/checkersConfig"
 import { stripFirstCharacter, stripLastCharacter } from "@/helpers/helperFunctions"
+import { Fraction } from "pimath"
 
 const name = "vector"
 const description = `vector,[paramètres]
@@ -85,8 +85,8 @@ export class VectorChecker extends CheckerAbstract {
             let a, b, k
 
             for (let i = 0; i < values.length; i++) {
-                a = new PiMath.Fraction(values[i])
-                b = new PiMath.Fraction(expectedValues[i])
+                a = new Fraction(values[i])
+                b = new Fraction(expectedValues[i])
 
                 if ((a.isZero() && b.isNotZero()) || a.isNotZero() && b.isZero()) {
                     return {
@@ -97,7 +97,7 @@ export class VectorChecker extends CheckerAbstract {
 
                 if (a.isNotZero() && b.isNotZero()) {
                     if (k === undefined) {
-                        k = new PiMath.Fraction(a.clone().divide(b))
+                        k = new Fraction(a.clone().divide(b))
                     } else {
                         if (a.isNotEqual(b.clone().multiply(k))) {
                             return {

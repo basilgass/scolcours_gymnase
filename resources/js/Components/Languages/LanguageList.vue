@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { Random } from "pimath"
 import { computed, inject, Ref, ref } from "vue"
 import { usePage } from "@inertiajs/vue3"
 import DialogModal from "@/Components/Ui/DialogModal.vue"
@@ -6,7 +7,6 @@ import FormMaker from "@/Components/Form/FormMaker.vue"
 import axios from "axios"
 import type { TranslationWord } from "@/types/modelInterfaces"
 import { LanguageDataInterface } from "@/Pages/languages/LanguageShow.vue"
-import  PiMath from "pimath"
 
 const languageData = inject<LanguageDataInterface>('LanguageData')
 
@@ -16,7 +16,7 @@ const editMode = inject<Ref<boolean>>("editMode")
 
 const words = computed(() => {
 	return random.value
-		? PiMath.Random.shuffle(languageData.words.value)
+		? Random.shuffle(languageData.words.value)
 		: languageData.words.value
 })
 

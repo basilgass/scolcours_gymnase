@@ -1,4 +1,10 @@
 <script lang="ts" setup>
+import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"
+import ToolForm, { IToolForm } from "@/Components/Tools/Parts/ToolForm.vue"
+import TexCode from "@/Components/Ui/TexCode.vue"
+import { useToolsStorage } from "@/Composables/useToolsStorage.ts"
+import { numberCorrection } from "@/helpers/helperFunctions"
+
 /** Tools
  * title: trigonométrie dans le triangle quelconque
  * body: permet de calculer les longueurs et angles d'un triangle quelconque
@@ -6,11 +12,9 @@
  * tags: geoetrie,1M,2C
  */
 import { computed, ref } from "vue"
-import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"
-import ToolForm, { IToolForm } from "@/Components/Tools/Parts/ToolForm.vue"
-import { numberCorrection } from "@/helpers/helperFunctions"
 
-const forms: IToolForm[] = [
+const { restoreTool } = useToolsStorage()
+const forms: IToolForm[] = restoreTool( [
 	{
 		label: "a",
 		type: "text",
@@ -53,7 +57,7 @@ const forms: IToolForm[] = [
 		value: ref(3),
 		fromUrl: "round"
 	}
-]
+])
 
 const A = computed(()=>forms[0].value.value as string)
 const B = computed(()=>forms[1].value.value as string)
@@ -163,12 +167,9 @@ const result = computed(() => {
 		}
 		return drawTriangle(result.value.raw.triangle)
 	}),
-	triangleAnswerCode = computed(() => {
+	triangleAnswerCode = computed<string>(() => {
 		if (result.value === false) {
-			return {
-				code: "",
-				parameters: ""
-			}
+			return ""
 		}
 		return `${result.value.triangle.a},${result.value.triangle.b},${result.value.triangle.c},${result.value.triangle.alpha.slice(0, -1)},${result.value.triangle.beta.slice(0, -1)},${result.value.triangle.gamma.slice(0, -1)},${result.value.triangle.area}`
 	}),
@@ -183,10 +184,7 @@ const result = computed(() => {
 	}),
 	triangle2AnswerCode = computed(() => {
 		if (result.value === false) {
-			return {
-				code: "",
-				parameters: ""
-			}
+			return ""
 		}
 		if (result.value.triangle2 === undefined || result.value.triangle2 === null) {
 			return ""
@@ -502,13 +500,13 @@ function makeTriangle(value: triangleRawInterface, alternate?: boolean): triangl
 					</table>
 
 					<pi-draw-parser :draw="triangleDrawCode" />
-					<pre
+					<tex-code
 						class="font-code"
-						v-text="triangleDrawCode.code"
+						:tex="triangleDrawCode.code"
 					/>
-					<pre
+					<tex-code
 						class="font-code"
-						v-text="triangleAnswerCode"
+						:tex="triangleAnswerCode"
 					/>
 				</div>
 
@@ -530,13 +528,13 @@ function makeTriangle(value: triangleRawInterface, alternate?: boolean): triangl
 					</table>
 
 					<pi-draw-parser :draw="triangle2DrawCode" />
-					<pre
+					<tex-code
 						class="font-code"
-						v-text="triangle2DrawCode.code"
+						:tex="triangle2DrawCode.code"
 					/>
-					<pre
+					<tex-code
 						class="font-code"
-						v-text="triangle2AnswerCode"
+						:tex="triangle2AnswerCode"
 					/>
 				</div>
 			</div>

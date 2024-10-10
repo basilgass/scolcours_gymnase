@@ -1,4 +1,8 @@
 <script lang="ts" setup>
+import ToolForm, { IToolForm } from "@/Components/Tools/Parts/ToolForm.vue"
+import TexCode from "@/Components/Ui/TexCode.vue"
+import { useToolsStorage } from "@/Composables/useToolsStorage.ts"
+import { Circle, Point } from "pimath"
 /** Tools
  * title: tangente à un cercle
  * body: calcul de la / les tangente(s) à un cercle passant par un point ou ayant une pente donnée
@@ -6,11 +10,9 @@
  * tags: geometrie,3M
  */
 import { computed, ref } from "vue"
-import  PiMath from "pimath"
-import ToolForm, { IToolForm } from "@/Components/Tools/Parts/ToolForm.vue"
-import TexCode from "@/Components/Ui/TexCode.vue"
 
-const forms: IToolForm[] = [
+const { restoreTool } = useToolsStorage()
+const forms: IToolForm[] = restoreTool([
 	{
 		label: "Equation du cercle",
 		type: "text",
@@ -25,17 +27,18 @@ const forms: IToolForm[] = [
 		fromUrl: "p",
 		message: "Utiliser `a,b` pour les coordonnées d'un point ou `a/b` pour une pente"
 	}
-]
+])
 
 const equ = computed(()=>forms[0].value.value as string)
 const p = computed(()=>forms[1].value.value as string)
 
 let tangentes = computed(() => {
 	try {
-		const C = new PiMath.Geometry.Circle(equ.value)
-		const P = new PiMath.Geometry.Point(p.value)
+		const C = new Circle(equ.value)
+		const P = new Point(p.value)
 		return C.tangents(P)
 	} catch (e) {
+		console.log(e)
 		return false
 	}
 })
@@ -47,11 +50,12 @@ let tangentes = computed(() => {
 
 		<div v-if="tangentes">
 			<div
-				v-for="(tangente,index) of tangentes"
+				v-for="(tangente, index) of tangentes"
 				:key="'tangente-'+index"
 			>
-				<div v-katex.boxed.lg="`${tangente.tex.canonical}`" />
-				<tex-code :tex="tangente.tex.canonical" />
+				<div v-katex.boxed.lg="`${tangente.tex}`" />
+
+				<tex-code :tex="tangente.tex" />
 			</div>
 		</div>
 

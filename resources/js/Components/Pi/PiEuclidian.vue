@@ -4,7 +4,7 @@ Uniquement utilisée dans Posts/Illustrations/Elements/IllustrationEuclidian
 -->
 <script lang="ts" setup>
 
-import PiMath from "pimath"
+import { Polynom } from "pimath"
 import { computed } from "vue"
 
 const props = defineProps({
@@ -17,7 +17,7 @@ const props = defineProps({
 
 const emits = defineEmits(["update"])
 
-function addStep(P: PiMath.Polynom, degree: number, withParenthesis?: boolean, isFirstStep?: boolean) {
+function addStep(P: Polynom, degree: number, withParenthesis?: boolean, isFirstStep?: boolean) {
 	withParenthesis = withParenthesis === undefined ? false : withParenthesis
 	isFirstStep = isFirstStep === undefined ? false : isFirstStep
 
@@ -33,9 +33,9 @@ function addStep(P: PiMath.Polynom, degree: number, withParenthesis?: boolean, i
 				step.push(`\\textcolor{lightgrey}{+0${litteral}}`)
 			} else {
 				// add 0 if it's the only value
-				if(i===0 && step.every(e => e === "")){
+				if (i === 0 && step.every(e => e === "")) {
 					step.push("0")
-				}else {
+				} else {
 					step.push("")
 				}
 			}
@@ -76,9 +76,10 @@ function addStep(P: PiMath.Polynom, degree: number, withParenthesis?: boolean, i
 
 const result = computed(() => {
 		try {
-			const N = new PiMath.Polynom(numerator.value),
-				D = new PiMath.Polynom(denominator.value),
-				euclidian = N.euclidian(D)
+			const N = new Polynom(numerator.value),
+				D = new Polynom(denominator.value)
+
+			const euclidian = N.euclidean(D)
 
 			// For the euclidian division display.
 			const steps = [],
@@ -139,12 +140,8 @@ const result = computed(() => {
 			}
 
 		} catch (e) {
-			// console.error(e)
-			// emits("update", {
-			// 	P: numerator.value,
-			// 	Q: denominator.value,
-			// 	R: ""
-			// })
+			console.error(e)
+
 			return false
 		}
 	}),

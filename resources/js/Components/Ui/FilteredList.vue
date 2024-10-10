@@ -27,7 +27,8 @@ const props = defineProps({
 	listClass: { type: String, default: "flex gap-3 flex-wrap" },
 	noFilterIfLessThan: { type: Number, default: 10 },
 	noTitle: { type: Boolean, default: false },
-	filterByTheme: { type: Boolean, default: false }
+	filterByTheme: { type: Boolean, default: false },
+	focus: {type: Boolean, default: false}
 })
 
 const filteredList = computed<T[]>(() => {
@@ -127,6 +128,7 @@ const emits = defineEmits<{
 				autocomplete="off"
 				class="mb-2"
 				clearable
+				:focus="focus"
 				name="chapter-list"
 				@enter="emits('enter', filteredList)"
 			/>

@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import ToolForm, { IToolForm } from "@/Components/Tools/Parts/ToolForm.vue"
 import TexCode from "@/Components/Ui/TexCode.vue"
-import PiMath from "pimath"
+import { useToolsStorage } from "@/Composables/useToolsStorage.ts"
+import { Fraction, Polynom } from "pimath"
 
 /** Tools
  * title: intégrale entre deux bornes
@@ -11,7 +12,8 @@ import PiMath from "pimath"
  */
 import { computed, ref } from "vue"
 
-const forms: IToolForm[] = [
+const { restoreTool } = useToolsStorage()
+const forms: IToolForm[] = restoreTool( [
 	{
 		label: "fonction",
 		type: "text",
@@ -30,7 +32,7 @@ const forms: IToolForm[] = [
 		value: ref(5),
 		fromUrl: "b"
 	}
-]
+] )
 
 const fx = computed(()=>forms[0].value.value as string)
 const a = computed(()=>forms[1].value.value as string)
@@ -41,14 +43,14 @@ const result = computed(() => {
 		if (fx.value === "") {
 			return "\\text{Aucune fonction...}"
 		}
-		const p = new PiMath.Polynom(fx.value),
+		const p = new Polynom(fx.value),
 			P = p.clone().primitive(),
-			Pa = P.evaluate({x: a.value as unknown as PiMath.Fraction}),
-			Pb = P.evaluate({x: b.value as unknown as PiMath.Fraction})
+			Pa: Fraction = P.evaluate({x: a.value as unknown as Fraction}) as Fraction,
+			Pb: Fraction = P.evaluate({x: b.value as unknown as Fraction}) as Fraction
 
 		return `\\int_{${a.value}}^{${b.value}} ${p.tex} \\ dx
-		= \\left. ${P.tex}\\right\\vert_{${a.value}}^{${b.value}}
-		= ${Pb.frac} - ${Pa.tex} = ${Pb.clone().subtract(Pa).tex} = ${Pb.subtract(Pa).value}`
+		= \\left[ ${P.tex}\\right]_{${a.value}}^{${b.value}}
+		= ${Pb.tex} - ${Pa.tex} = ${Pb.clone().subtract(Pa).tex} = ${Pb.subtract(Pa).value}`
 	} catch (e) {
 		console.error(e)
 		return false

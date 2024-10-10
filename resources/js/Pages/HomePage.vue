@@ -34,34 +34,30 @@ defineProps({
 
 		<ScolCoursLogo class="py-10 scale-150" />
 
-		<div class="flex flex-col md:flex-row w-full">
+		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
 			<InertiaLink
 				v-for="(theme) in $page.props.themes"
 				:key="theme.slug"
 				:class="`bg-scolcours-${theme.slug}`"
 				:href="'/' + theme.slug"
-				class="group
-					w-full md:flex-1 md:hover:flex-[8]
-					h-[8em] hover:h-[15em] md:h-[25em] md:hover:h-[25em]
-					transition-all duration-1000 ease-in-out
+				class="aspect-[2] group
+					transition-all duration-400 ease-in-out
 					text-xl font-thin whitespace-nowrap text-white
-					rounded border overflow-hidden cursor-pointer
+					rounded hover:rounded-xl hover:shadow
+					border overflow-hidden cursor-pointer
+					hover:rotate-[-1deg] hover:scale-105
 					grid grid-cols-1 place-items-center"
 			>
-				<div class="text-center h-full">
+				<div class="text-center space-y-5">
 					<i
 						:class="`${theme.icon}`"
-						class="text-3xl block mt-16 mb-8
-							group-hover:text-5xl
-							transition-all duration-1000 ease-in-out"
+						class="text-3xl block
+							transition-all duration-400 ease-in-out"
 					/>
 					<div
 						class="group-hover:text-right
-								rotate-90 group-hover:rotate-0
-								origin-left translate-x-[50%]
-								group-hover:translate-x-0
 								text-md group-hover:text-2xl
-								transition-all duration-1000 ease-in-out "
+								transition-all duration-400 ease-in-out "
 					>
 						{{ theme.title }}
 					</div>

@@ -1,5 +1,5 @@
 import { CheckerAbstract } from "@/Checkers/CheckerAbstract"
-import PiMath from "pimath"
+import { Polynom } from "pimath"
 
 const name = "polynom"
 const description = `polynom,[paramètres]
@@ -34,9 +34,9 @@ export class PolynomChecker extends CheckerAbstract {
 
 		// Build the polynoms
 		try {
-			A = new PiMath.Polynom(given)
-			Q = new PiMath.Polynom(expected)
-		} catch {
+			A = new Polynom(given)
+			Q = new Polynom(expected)
+		} catch (e) {
 			return {
 				result: false,
 				message: "Le polynôme n'est pas formé correctement.",
@@ -64,7 +64,7 @@ export class PolynomChecker extends CheckerAbstract {
 					!A.isFactorized(
 						given,
 						this.config.includes("f") ||
-							this.config.includes("factor"),
+						this.config.includes("factor"),
 					)
 				) {
 					return {

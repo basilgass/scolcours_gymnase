@@ -1,4 +1,7 @@
 <script lang="ts" setup>
+import ToolForm, { IToolForm } from "@/Components/Tools/Parts/ToolForm.vue"
+import { useToolsStorage } from "@/Composables/useToolsStorage.ts"
+import { Line, Triangle } from "pimath"
 /** Tools
  * title: droites remarquables d'un triangle
  * body: calcul des droites remarquables d'un triangle
@@ -6,10 +9,9 @@
  * tags: geometrie,2M
  */
 import { computed, ref } from "vue"
-import  PiMath from "pimath"
-import ToolForm, { IToolForm } from "@/Components/Tools/Parts/ToolForm.vue"
 
-const forms: IToolForm[] = [
+const { restoreTool } = useToolsStorage()
+const forms: IToolForm[] = restoreTool([
 	{
 		label: "A ou équation BC",
 		type: "text",
@@ -28,24 +30,26 @@ const forms: IToolForm[] = [
 		value: ref("5x+12y-24=0"),
 		fromUrl: "c"
 	}
-]
+])
+
 let A = computed(()=>forms[0].value.value as string)
 const B = computed(()=>forms[1].value.value as string)
 const C = computed(()=>forms[2].value.value as string)
 
 let result = computed(() => {
 	try {
-		let triangle = new PiMath.Geometry.Triangle(
+		let triangle = new Triangle(
 			...A.value.split(","),
 			...B.value.split(","),
 			...C.value.split(",")
 		)
+
 		return {
 			triangle: triangle,
 			extBissectors: {
-				A: new PiMath.Geometry.Line(triangle.A, triangle.remarquables.bisectors.A.d, "perpendicular"),
-				B: new PiMath.Geometry.Line(triangle.B, triangle.remarquables.bisectors.B.d, "perpendicular"),
-				C: new PiMath.Geometry.Line(triangle.C, triangle.remarquables.bisectors.C.d, "perpendicular")
+				A: new Line(triangle.A, triangle.remarquables.bisectors.A.d, "perpendicular"),
+				B: new Line(triangle.B, triangle.remarquables.bisectors.B.d, "perpendicular"),
+				C: new Line(triangle.C, triangle.remarquables.bisectors.C.d, "perpendicular")
 			}
 		}
 	} catch (e) {
@@ -78,53 +82,53 @@ let result = computed(() => {
 				droites
 			</h2>
 			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
-				<div v-katex.boxed="`(d_{AB}): ${result.triangle.lines.AB.tex.canonical}`" />
-				<div v-katex.boxed="`(d_{AC}): ${result.triangle.lines.AC.tex.canonical}`" />
-				<div v-katex.boxed="`(d_{BC}): ${result.triangle.lines.BC.tex.canonical}`" />
+				<div v-katex.boxed="`(d_{AB}): ${result.triangle.lines.AB.tex}`" />
+				<div v-katex.boxed="`(d_{AC}): ${result.triangle.lines.AC.tex}`" />
+				<div v-katex.boxed="`(d_{BC}): ${result.triangle.lines.BC.tex}`" />
 			</div>
 			<h2 class="font-lg">
 				médianes
 			</h2>
 			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 items-baseline">
-				<div v-katex.boxed="`(m_A): ${result.triangle.remarquables.medians.A.tex.canonical}`" />
-				<div v-katex.boxed="`(m_B): ${result.triangle.remarquables.medians.B.tex.canonical}`" />
-				<div v-katex.boxed="`(m_C): ${result.triangle.remarquables.medians.C.tex.canonical}`" />
+				<div v-katex.boxed="`(m_A): ${result.triangle.remarquables.medians.A.tex}`" />
+				<div v-katex.boxed="`(m_B): ${result.triangle.remarquables.medians.B.tex}`" />
+				<div v-katex.boxed="`(m_C): ${result.triangle.remarquables.medians.C.tex}`" />
 				<div v-katex.boxed="`G=${result.triangle.remarquables.medians.intersection.tex}`" />
 			</div>
 			<h2 class="font-lg">
 				médiatrices
 			</h2>
 			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 items-baseline">
-				<div v-katex.boxed="`(m_{AB}): ${result.triangle.remarquables.mediators.AB.tex.canonical}`" />
-				<div v-katex.boxed="`(m_{AC}): ${result.triangle.remarquables.mediators.AC.tex.canonical}`" />
-				<div v-katex.boxed="`(m_{BC}): ${result.triangle.remarquables.mediators.BC.tex.canonical}`" />
+				<div v-katex.boxed="`(m_{AB}): ${result.triangle.remarquables.mediators.AB.tex}`" />
+				<div v-katex.boxed="`(m_{AC}): ${result.triangle.remarquables.mediators.AC.tex}`" />
+				<div v-katex.boxed="`(m_{BC}): ${result.triangle.remarquables.mediators.BC.tex}`" />
 				<div v-katex.boxed="`P=${result.triangle.remarquables.mediators.intersection.tex}`" />
 			</div>
 			<h2 class="font-lg">
 				hauteurs
 			</h2>
 			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 items-baseline">
-				<div v-katex.boxed="`(h_A): ${result.triangle.remarquables.heights.A.tex.canonical}`" />
-				<div v-katex.boxed="`(h_B): ${result.triangle.remarquables.heights.B.tex.canonical}`" />
-				<div v-katex.boxed="`(h_C): ${result.triangle.remarquables.heights.C.tex.canonical}`" />
+				<div v-katex.boxed="`(h_A): ${result.triangle.remarquables.heights.A.tex}`" />
+				<div v-katex.boxed="`(h_B): ${result.triangle.remarquables.heights.B.tex}`" />
+				<div v-katex.boxed="`(h_C): ${result.triangle.remarquables.heights.C.tex}`" />
 				<div v-katex.boxed="`D=${result.triangle.remarquables.heights.intersection.tex}`" />
 			</div>
 			<h2 class="font-lg">
 				bissectrices
 			</h2>
 			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 items-baseline">
-				<div v-katex.boxed="`(b_A): ${result.triangle.remarquables.bisectors.A.tex.canonical}`" />
-				<div v-katex.boxed="`(b_B): ${result.triangle.remarquables.bisectors.B.tex.canonical}`" />
-				<div v-katex.boxed="`(b_C): ${result.triangle.remarquables.bisectors.C.tex.canonical}`" />
+				<div v-katex.boxed="`(b_A): ${result.triangle.remarquables.bisectors.A.tex}`" />
+				<div v-katex.boxed="`(b_B): ${result.triangle.remarquables.bisectors.B.tex}`" />
+				<div v-katex.boxed="`(b_C): ${result.triangle.remarquables.bisectors.C.tex}`" />
 				<div v-katex.boxed="`D=${result.triangle.remarquables.bisectors.intersection.tex}`" />
 			</div>
 			<h2 class="font-lg">
 				bissectrices extérieures
 			</h2>
 			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 items-baseline">
-				<div v-katex.boxed="`(b_A'): ${result.extBissectors.A.tex.canonical}`" />
-				<div v-katex.boxed="`(b_B'): ${result.extBissectors.B.tex.canonical}`" />
-				<div v-katex.boxed="`(b_C'): ${result.extBissectors.C.tex.canonical}`" />
+				<div v-katex.boxed="`(b_A'): ${result.extBissectors.A.tex}`" />
+				<div v-katex.boxed="`(b_B'): ${result.extBissectors.B.tex}`" />
+				<div v-katex.boxed="`(b_C'): ${result.extBissectors.C.tex}`" />
 			</div>
 		</div>
 		<div

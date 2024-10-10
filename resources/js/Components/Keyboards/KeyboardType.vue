@@ -1,10 +1,10 @@
 <script setup lang="ts">
 
 import { useWrongAnswerAnimation } from "@/Composables/useHelpers"
+import { useKeyboard } from "@/Composables/useKeyboard"
+import { Random } from "pimath"
 
 import { nextTick, onMounted, ref } from "vue"
-import  PiMath from "pimath"
-import { useKeyboard } from "@/Composables/useKeyboard"
 
 const props = defineProps({
 	keyboard: {type: Object, required: true},
@@ -45,7 +45,7 @@ const typoButtons = ref(null),
 	generateQuestion = function () {
 		const theWord = props.answer
 
-		answerLetters.value = PiMath.Random.shuffle(theWord.split("")
+		answerLetters.value = Random.shuffle(theWord.split("")
 			.filter(key => excludeLetters.value.indexOf(key) === -1)
 			.map(key => {
 				return {

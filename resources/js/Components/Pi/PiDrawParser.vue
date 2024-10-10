@@ -5,18 +5,19 @@ Affichage d'un PiDraw
 	lang="ts"
 	setup
 >
-import { computed, inject, onMounted, provide, ref, watch } from "vue"
-
-import VueSlider from "vue-slider-component/dist/vue-slider-component.umd.min"
-import "vue-slider-component/theme/material.css"
-import  PiMath from "pimath"
-import katex from "katex"
-import { useResizeObserver } from "@vueuse/core"
 import PiDrawParserVisibility from "@/Components/Pi/Parts/PiDrawParserVisibility.vue"
+import { useResizeObserver } from "@vueuse/core"
+import katex from "katex"
 
 // TODO: importing directly pidraw is not working - need to import the lib module (Not a big deal... but strange)
 // import { Parser as PiParser } from "pidraw/lib/Parser"
 import { PiDraw } from "pidraw"
+import PiMath from "pimath"
+import { computed, inject, onMounted, provide, ref, watch } from "vue"
+
+import VueSlider from "vue-slider-component/dist/vue-slider-component.umd.min"
+import "vue-slider-component/theme/material.css"
+
 
 const emits = defineEmits(["update"])
 
@@ -309,7 +310,7 @@ function PiParserUpdate(from: string, withSliders = false) {
 		PiGraph.refresh(drawCode.value)
 		emits("update", PiGraph.figures)
 		PiParserHasErrors.value = false
-	} catch (e) {
+	} catch {
 		console.warn("Cannot parse from: " + from)
 		console.warn(drawCode.value)
 		PiParserHasErrors.value = true

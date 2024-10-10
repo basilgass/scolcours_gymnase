@@ -1,10 +1,10 @@
 <script lang="ts" setup>
-import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
-import { computed, ref } from "vue"
-import  PiMath from "pimath"
 import BarChart from "@/Components/Charts/barChart.vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
+import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
+import { numberCorrection } from "@/helpers/helperFunctions.ts"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
+import { computed, ref } from "vue"
 
 defineOptions({ layout: LayoutMain })
 const pointsData = ref(""),
@@ -31,7 +31,7 @@ const bareme = computed<baremeInterface>(() => {
 			result = {}
 		while (pt <= maxPoints.value) {
 			const note = calculerLaNote(pt),
-				ptKey = PiMath.Numeric.numberCorrection(pt)
+				ptKey = numberCorrection(pt)
 			result[pt] = {
 				pt: ptKey,
 				note: Math.round(note * 2) / 2,

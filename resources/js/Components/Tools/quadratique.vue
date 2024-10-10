@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import ToolForm, { IToolForm } from "@/Components/Tools/Parts/ToolForm.vue"
-import PiMath from "pimath"
+import { useToolsStorage } from "@/Composables/useToolsStorage.ts"
+import { Equation, Point, Polynom } from "pimath"
 /** Tools
  * title: quadratique
  * body: calcul d'une fonction quadratique
@@ -9,7 +10,8 @@ import PiMath from "pimath"
  */
 import { computed, ref } from "vue"
 
-const forms: IToolForm[] = [
+const { restoreTool } = useToolsStorage()
+const forms: IToolForm[] = restoreTool( [
 	{
 		label: "Point A",
 		type: "text",
@@ -28,45 +30,47 @@ const forms: IToolForm[] = [
 		value: ref("-4,-7"),
 		fromUrl: "C"
 	}
-]
+] )
 
-const A = computed(()=>forms[0].value.value as string)
-const	B = computed(()=>forms[1].value.value as string)
-const	C = computed(()=>forms[2].value.value as string)
+// TODO: optimisation des calculs pour déterminer une quadratique !
+const A = computed(() => forms[0].value.value as string)
+const B = computed(() => forms[1].value.value as string)
+const C = computed(() => forms[2].value.value as string)
 
-function getPolyFromThreePoints(A, B, C): PiMath.Polynom {
-	const P = new PiMath.Equation("y", "ax^2+bx+c"),
-		pA = new PiMath.Geometry.Point(A),
-		pB = new PiMath.Geometry.Point(B),
-		pC = new PiMath.Geometry.Point(C)
+function getPolyFromThreePoints(A, B, C): Polynom {
+	const P = new Equation("y", "ax^2+bx+c"),
+		pA = new Point(A),
+		pB = new Point(B),
+		pC = new Point(C)
 
 	// TODO: améliorer le calcul et inclure dans PI
 	// y=ax^2+bx+c
-	let Pc: PiMath.Equation = P.clone()
-			.replaceBy("x", new PiMath.Polynom(pA.x.display))
-			.replaceBy("y", new PiMath.Polynom(pA.y.display))
-			.isolate("c") as PiMath.Equation,
-		Pb: PiMath.Equation = P.clone()
-			.replaceBy("x", new PiMath.Polynom(pB.x.display))
-			.replaceBy("y", new PiMath.Polynom(pB.y.display))
+
+	let Pc: Equation = P.clone()
+			.replaceBy("x", new Polynom(pA.x.display))
+			.replaceBy("y", new Polynom(pA.y.display))
+			.isolate("c") as Equation,
+		Pb: Equation = P.clone()
+			.replaceBy("x", new Polynom(pB.x.display))
+			.replaceBy("y", new Polynom(pB.y.display))
 			.replaceBy("c", Pc.right)
-			.isolate("b") as PiMath.Equation,
+			.isolate("b") as Equation,
 		Pa
 
 	// console.log(Pc.tex)
 	// console.log(Pb.tex)
 	if (C !== "") {
 		Pa = P.clone()
-			.replaceBy("x", new PiMath.Polynom(pC.x.display))
-			.replaceBy("y", new PiMath.Polynom(pC.y.display))
+			.replaceBy("x", new Polynom(pC.x.display))
+			.replaceBy("y", new Polynom(pC.y.display))
 			.replaceBy("c", Pc.right)
 			.replaceBy("b", Pb.right)
 			.isolate("a")
 	} else {
 		// Le point B est un sommet !
 		// x = -b/2a => b = -2ax
-		Pa = new PiMath.Equation("b = -2a*x")
-			.replaceBy("x", new PiMath.Polynom(pC.x.display))
+		Pa = new Equation("b = -2a*x")
+			.replaceBy("x", new Polynom(pC.x.display))
 
 		Pa.left = Pb.right.clone()
 		Pa.isolate("a")
@@ -88,11 +92,11 @@ const result = computed(() => {
 	// A,B,C are given as numbers => ax^2+bx+c
 	// A only is given: it's the polynom !
 
-	let poly: PiMath.Polynom
+	let poly: Polynom
 
 	try {
 		if (A.value.includes("^2")) {
-			poly = new PiMath.Polynom(A.value)
+			poly = new Polynom(A.value)
 		} else if (!A.value.includes("x") &&
 			!B.value.includes("x") &&
 			!C.value.includes("x")) {
@@ -105,27 +109,30 @@ const result = computed(() => {
 			c = poly.monomByDegree(0).coefficient,
 			delta = b.clone().pow(2).subtract(a.clone().multiply(c).multiply(4))
 
-		const equ = new PiMath.Equation(poly, 0)
-		equ.solve()
+		const equ = new Equation(poly, 0)
+		const solutions = equ.solve()
+		console.log(solutions)
 
-		const sx = b.clone().opposed().divide(a.clone().multiply(2)),
-			sy = delta.clone().opposed().divide(a.clone().multiply(4))
+		const sx = b.clone().opposite().divide(a.clone().multiply(2)),
+			sy = delta.clone().opposite().divide(a.clone().multiply(4))
 
 		// Forme du sommet
 		// a(x-sx)^2+sy
-		const sommet = `${a.isOne()?'':a.isNegativeOne()?'-':a.tex}${sx.isZero()?'x^2':`\\left( x ${sx.clone().opposed().texWithSign} \\right)^2`}${sy.texWithSign}`
+		const sommet = `${a.isOne() ? "" : a.isNegativeOne() ? "-" : a.tex}${sx.isZero() ? "x^2" : `\\left( x ${sx.clone().opposite().texWithSign} \\right)^2`}${sy.texWithSign}`
 
+		// TODO: Handle poly.texFactors with the new PiMath.
 		return {
 			tex: poly.tex,
-			factorise: poly.texFactors,
+			factorise: 'poly.texFactors',
 			sommet,
 			points: {
-				H: new PiMath.Geometry.Point(0, c).tex,
-				S: `\\left( ${sx.tex}; ${ sy.tex} \\right)`,
-				Z: equ.solutions.map(sol=>sol.tex)
+				H: new Point(0, c).tex,
+				S: `\\left( ${sx.tex}; ${sy.tex} \\right)`,
+				Z: solutions.map(sol => sol.tex)
 			}
 		}
 	} catch (e) {
+		console.log(e)
 		return false
 	}
 })
@@ -143,8 +150,8 @@ const result = computed(() => {
 			class="grid grid-cols-1 md:grid-cols-2 gap-5"
 		>
 			<div
-				class="col-span-2 text-lg my-10"
 				v-katex.display.boxed.lg="`f(x) = ${result.tex}`"
+				class="col-span-2 text-lg my-10"
 			/>
 
 			<div>

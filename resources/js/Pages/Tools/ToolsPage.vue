@@ -2,12 +2,13 @@
 	lang="ts"
 	setup
 >
-import { computed, nextTick, onMounted, PropType, provide, ref } from "vue"
-import { ToolInterface } from "@/types"
-import { getModule, MODULE_TYPES } from "@/scolcours"
-import LayoutMain from "@/Layouts/LayoutMain.vue"
 import FilteredList from "@/Components/Ui/FilteredList.vue"
 import { useMenuScrollTo } from "@/Composables/useHelpers"
+import { useToolsStorage } from "@/Composables/useToolsStorage.ts"
+import LayoutMain from "@/Layouts/LayoutMain.vue"
+import { getModule, MODULE_TYPES } from "@/scolcours"
+import { ToolInterface } from "@/types"
+import { computed, nextTick, onMounted, PropType, provide, ref } from "vue"
 
 defineOptions({ layout: LayoutMain })
 const toolSlug = ref(null),
@@ -15,6 +16,10 @@ const toolSlug = ref(null),
 	arraySearch = ref([])
 
 provide("toolData", toolSlug)
+
+const {resetTools} =  useToolsStorage()
+
+
 const props = defineProps({
 	tools: {
 		type: Object as PropType<ToolInterface[]>, default: () => {
@@ -94,6 +99,9 @@ const listOfTools = computed(() => {
 			<h2 class="text-2xl font-extralight">
 				{{ toolName }}
 			</h2>
+			<button @click="resetTools">
+				<i class="bi bi-c-circle" />
+			</button>
 		</div>
 
 		<div class="flex gap-3 flex-col md:flex-row">
@@ -115,6 +123,7 @@ const listOfTools = computed(() => {
 					no-title
 					search="rechercher un outil"
 					@enter="$event.length === 1 ? changeSlug($event[0].slug) : ''"
+					focus
 				>
 					<template #card="{ item }: { item: ToolInterface }">
 						<InertiaLink

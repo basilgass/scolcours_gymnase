@@ -2,236 +2,125 @@
 Affichage d'un tableau de signes ou de croissance.
 // TODO: Refactor the footer.
 -->
-<script setup lang="ts">
-import { computed, ref } from "vue"
-import TexCode from "@/Components/Ui/TexCode.vue"
+<script lang="ts" setup>
+import TableOfSigns from "@/Components/Pi/TableOfSigns.vue"
+import { Point, PolyFactor, type POLYFACTOR_TABLE_OF_SIGNS, type TABLE_OF_SIGNS } from "pimath"
+import { computed } from "vue"
 
-const props = defineProps({
-		tos: {required: true, type: Object},
-		fn: {type: String, default: "f(x)"},
-		minimal: {type: Boolean, default: false},
-		extremes: {type: String, default: null},
-	}),
-	showTex = ref(false)
+export interface PiTableOfSignsPropsType {
+	fx: string,
+	label?: string,
+	previousLabel?: string,
+	minimal?: boolean,
+	texOutput?: boolean,
+	mode?: "signs" | "grows" | "curves"
+}
 
-const fnName = computed(() => {
-		if (props.fn === null) {
-			return "f(x)"
-		}
+const props = withDefaults(defineProps<PiTableOfSignsPropsType>(), {
+	label: "f(x)",
+	previousLabel: "",
+	minimal: false,
+	mode: "signs",
+	texOutput: false
+})
+const emits = defineEmits(['update'])
 
-		return props.fn
-	}),
-	dxName = computed(() => {
-		if (fnName.value.includes("(")) {
-			const [name, x] = fnName.value.split("(")
-			return `${name}'(${x}`
-		}
+const computedPreviousLabel = computed(() => {
+	if(props.previousLabel || props.previousLabel!=="") {
+		return props.previousLabel
+	}
+	
+	const [name, ...items] = props.label.split("(")
+	return `${name}'${items.join("(")}`
+})
 
-		return `\\left(${fnName.value}\\right)'`
+const tos = computed(() => {
+	let fn: PolyFactor
+	try {
+		fn = createPolyFactor()
+	}catch(e){
+		console.log(e)
+		throw new Error("La chaîne de caractères donnée n'est pas un polynôme valide")
+	}
+
+	const dfn = props.mode!=='signs' ? fn.clone().derivative() : null
+	const ddfn = props.mode==='curves' && dfn !== undefined? dfn.clone().derivative() : null
+
+	emits('update', {
+		fx: fn.asRoot.tex,
+		dx: dfn ? dfn.asRoot.tex : "",
+		ddx: ddfn ? ddfn.asRoot.tex : ""
 	})
 
-function displaySigns(index, isGrows?:boolean) {
-	let signs
-	if (isGrows && props.tos.grows) {
-		return props.tos.grows
+	let table_of_signs: POLYFACTOR_TABLE_OF_SIGNS
+	switch (props.mode){
+		case 'signs':
+			table_of_signs = fn.tableOfSigns()
+			break
+		case 'grows':
+			table_of_signs = dfn.tableOfSigns()
+			break
+		case 'curves':
+			table_of_signs = ddfn.tableOfSigns()
+			break
 	}
 
-	signs = [...props.tos.signs[index]]
-	signs.shift()
-	signs.pop()
-
-	return signs
-}
-
-function displayExtremes(index) {
-	const zeroIndex = (index - 1) / 2,
-		zero = props.tos.zeroes[zeroIndex],
-		extreme = props.tos.extremes[zero.tex]
-
-	if (props.extremes) {
-		const labels = props.extremes.split(",")
-		return zeroIndex < labels.length ? labels[zeroIndex] : labels[labels.length - 1]
-	} else if (extreme !== undefined && extreme.label !== undefined) {
-		return `\\substack{ ${extreme.type} \\\\ ${extreme.label} }`
-	} else if (extreme) {
-		return `\\substack{ ${extreme.type} \\\\ \\left(${extreme.tex.x}; ${extreme.tex.y}  \\right) }`
+	return {
+		roots: table_of_signs.roots.map(x => x.tex),
+		signs: table_of_signs.signs,
+		factors: props.minimal ? []: getFactors(table_of_signs),
+		extremes: getExtremes(fn,table_of_signs)
 	}
-	return ""
+
+})
+
+function createPolyFactor(){
+	// TODO: much more robust splitter !
+	const [num, den] = props.fx.split("/")
+
+	if (den === undefined) {
+		return new PolyFactor().fromPolynom(props.fx)
+	}
+
+	const numPF = new PolyFactor().fromPolynom(num)
+	const denPF = new PolyFactor().fromPolynom(den)
+
+	return numPF.divide(denPF)
 }
+
+function getFactors(tos:POLYFACTOR_TABLE_OF_SIGNS) {
+	const arr = tos.factors
+	arr.sort((a, b) => {
+		return b.factor.degree().value - a.factor.degree().value
+	})
+	return arr.map(x => {
+		return { label: x.factor.tex, signs: x.signs }
+	})
+}
+
+function getExtremes(fn: PolyFactor, tos:TABLE_OF_SIGNS) {
+	return tos.roots.map((root, index) => {
+		if (tos.signs[2 * index + 1] !== "z") {
+			return ""
+		}
+		return new Point(
+			root.value,
+			fn.evaluate(root.value)
+		).tex
+	})
+}
+
 </script>
 <template>
-	<div class="table-of-sign-wrapper">
-		<div class="not-prose">
-			<table
-				class="border-r tos border-gray-400 mx-auto"
-			>
-				<thead>
-					<tr>
-						<th class="border-r border-gray-400" />
-						<th>
-							<div
-								class="flex flex-row items-center"
-							>
-								<div
-									v-katex.inline="`-\\infty`"
-									:class="tos.zeroes.length===0?'w-12':'w-6'"
-									class="text-xs pl-1 text-left"
-								/>
-								<div
-									v-for="(zero, n) in tos.zeroes"
-									:key="n"
-									v-katex.inline="zero.tex"
-									class="w-24 text-center hover:bg-white py-2"
-								>
-									/>
-								</div>
-								<div
-									v-katex.inline="`+\\infty`"
-									:class="tos.zeroes.length===0?'w-12':'w-6'"
-									class="text-xs mr-1 text-right"
-								/>
-							</div>
-						</th>
-					</tr>
-				</thead>
-				<tbody v-show="!minimal">
-					<tr
-						v-for="(factor, index) of tos.factors"
-						:key="`tos-${index}`"
-						class="border-t first:border-gray-400"
-					>
-						<td
-							v-katex.inline="factor.tex"
-							class="min-w-[100px] border-r text-center border-gray-400"
-						/>
-						<td>
-							<div class="flex flex-row">
-								<div
-									v-for="(sign, n) of displaySigns(index)"
-									:key="`tos-${index}-cell-${n}`"
-									v-katex.inline="n%2===0?sign:(sign==='z'?'0':'')"
-									:class="{
-										'cell-v-line-d':sign==='d',
-										'cell-v-line': n%2===1,
-										'w-24': tos.zeroes.length===0,
-										'w-12': tos.zeroes.length>0
-									}"
-									class="text-center hover:bg-white py-2"
-								/>
-							</div>
-						</td>
-					</tr>
-				</tbody>
-				<tfoot class="border-t border-t-2 border-gray-400">
-					<tr
-						v-if="tos.type==='grows'"
-						class="border-t border-t-2 border-gray-400"
-					>
-						<td
-							v-katex.inline="`${dxName}`"
-							class="min-w-[100px] border-r text-center border-gray-400"
-						/>
-						<td>
-							<div class="flex flex-row">
-								<div
-									v-for="(sign, n) in displaySigns(tos.signs.length-2)"
-									:key="`tos-foot-cell-${n}`"
-									v-katex.inline="n%2===0?sign:(sign==='z'?'0':'')"
-									:class="{
-										'cell-v-line-d':sign==='d',
-										'cell-v-line': n%2===1,
-										'w-24': tos.zeroes.length===0,
-										'w-12': tos.zeroes.length>0
-									}"
-									class="w-12 text-center hover:bg-white py-2"
-								/>
-							</div>
-						</td>
-					</tr>
-					<tr
-						v-if="tos.type==='grows'"
-						class="border-t border-t-2 border-gray-400"
-					>
-						<td
-							v-katex.inline="`${fnName}`"
-							class="min-w-[100px] border-r text-center border-gray-400"
-						/>
-						<td>
-							<div class="flex flex-row h-16">
-								<div
-									v-for="(sign, n) in displaySigns(tos.signs.length-2, true)"
-									:key="`tos-foot-cell-${n}`"
-									:class="{
-										'cell-v-line-d':sign==='d',
-										'cell-v-line': n%2===1,
-										'w-24': tos.zeroes.length===0,
-										'w-12': tos.zeroes.length>0
-									}"
-
-									class="w-12 text-center hover:bg-white py-2 relative"
-								>
-									<div
-										v-if="n%2===1"
-										v-katex.inline="displayExtremes(n)"
-										class="text-center translate-y-6 absolute left-1/2 -translate-x-1/2 bg-white z-50"
-									/>
-									<i
-										v-else
-										:class="{'bi-arrow-down-right':sign==='-','bi-arrow-up-right':sign==='+'}"
-										class="bi"
-									/>
-								</div>
-							</div>
-						</td>
-					</tr>
-
-					<tr
-						v-if="tos.type===undefined"
-						class="border-t border-t-2 border-gray-400"
-					>
-						<td
-							v-katex.inline="`${fnName}`"
-							class="min-w-[100px] border-r text-center border-gray-400"
-						/>
-						<td>
-							<div class="flex flex-row">
-								<div
-									v-for="(sign, n) in displaySigns(tos.signs.length-1)"
-									:key="`tos-foot-cell-${n}`"
-									v-katex.inline="n%2===0?(sign==='!'?'':sign):(sign==='z'?'0':'')"
-									:class="{
-										'cell-v-line-d':sign==='d',
-										'cell-v-line': n%2===1,
-										'w-24': tos.zeroes.length===0,
-										'w-12': tos.zeroes.length>0,
-										'bg-stripes bg-stripes-red-100 w-18 -mr-6': sign==='!' && n===0,
-										'bg-stripes bg-stripes-red-100 w-18 -ml-6': sign==='!' && n===2*tos.zeroes.length,
-										'bg-stripes bg-stripes-red-100 w-24 -mr-6 -ml-6': sign==='!' && (n!==0 && n!==2*tos.zeroes.length),
-									}"
-									class="w-12 text-center hover:bg-white py-2"
-								/>
-							</div>
-						</td>
-					</tr>
-				</tfoot>
-			</table>
-
-			<div
-				v-if="tos.tex && tos.tex!==''"
-				class="flex flex-col gap-3 mt-5 justify-center"
-			>
-				<button
-					class="text-xs"
-					@click="showTex=!showTex"
-				>
-					Afficher le code TeX
-				</button>
-
-				<tex-code
-					v-show="showTex"
-					:tex="tos.tex"
-				/>
-			</div>
-		</div>
-	</div>
+	<table-of-signs
+		:factors="tos.factors"
+		:label="label"
+		:mode="mode"
+		:previous-label="computedPreviousLabel"
+		:roots="tos.roots"
+		:signs="tos.signs"
+		:extremes="tos.extremes"
+		:tex-output="texOutput"
+		class="mb-10"
+	/>
 </template>

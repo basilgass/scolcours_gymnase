@@ -1,5 +1,5 @@
 import { CheckerAbstract } from "@/Checkers/CheckerAbstract"
-import  PiMath from "pimath"
+import { NumExp } from "pimath"
 
 const name = "exact"
 const description = `exact
@@ -53,8 +53,8 @@ export class ExactChecker extends CheckerAbstract {
 		}
 
 		// Parse the formated answers as a number
-		const expectedNumber = new PiMath.NumExp(expectedExpression)
-		const givenNumber = new PiMath.NumExp(givenExpression)
+		const expectedNumber = new NumExp(expectedExpression)
+		const givenNumber = new NumExp(givenExpression)
 
 		if (expectedNumber.isValid && givenNumber.isValid) {
 			if (

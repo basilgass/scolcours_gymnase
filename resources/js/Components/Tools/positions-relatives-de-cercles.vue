@@ -1,197 +1,200 @@
 <script lang="ts" setup>
-	/** Tools
-	 * title: positions relatives de cercles
-	 * body: permet de déterminer la position relative de cercle ou de générer un exemple
-	 * parameters: \(\Gamma_1\): equation, \(\Gamma_2\): equation
-	 * tags: geoetrie,3M
-	 */
+/** Tools
+ * title: positions relatives de cercles
+ * body: permet de déterminer la position relative de cercle ou de générer un exemple
+ * parameters: \(\Gamma_1\): equation, \(\Gamma_2\): equation
+ * tags: geoetrie,3M
+ */
 
-	import { computed, onMounted, ref } from "vue"
-	import  PiMath from "pimath"
-	import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"
-	import ToolForm, { IToolForm } from "@/Components/Tools/Parts/ToolForm.vue"
+import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"
+import ToolForm, { IToolForm } from "@/Components/Tools/Parts/ToolForm.vue"
+import { useToolsStorage } from "@/Composables/useToolsStorage.ts"
+import { Circle, Numeric, Point, Random } from "pimath"
+import { computed, onMounted, ref } from "vue"
 
 
-	const forms: IToolForm[] = [
-		{
-			label: "Cercle 1",
-			type: "text",
-			value: ref(""),
-			fromUrl: "c1",
-		},
-		{
-			label: "Cercle 2",
-			type: "text",
-			value: ref(""),
-			fromUrl: "c2",
-		},
-	]
-	const circle1 = computed(()=>forms[0].value.value as string)
-	const circle2 = computed(()=>forms[1].value.value as string)
-	const maxRadius = ref(20)
+const { restoreTool } = useToolsStorage()
+const forms: IToolForm[] = restoreTool([
+	{
+		label: "Cercle 1",
+		type: "text",
+		value: ref(""),
+		fromUrl: "c1"
+	},
+	{
+		label: "Cercle 2",
+		type: "text",
+		value: ref(""),
+		fromUrl: "c2"
+	}
+])
+const circle1 = computed(() => forms[0].value.value as string)
+const circle2 = computed(() => forms[1].value.value as string)
+const maxRadius = ref(20)
 
-	// Compute the result
-	const result = computed(() => {
-		try {
-			if (circle1.value === "" || circle2.value === "") {
-				return false
-			}
-			const C1 = new PiMath.Geometry.Circle(circle1.value)
-			const C2 = new PiMath.Geometry.Circle(circle2.value)
-			const r1 = C1.radius.value
-			const r2 = C2.radius.value
-			const d = C1.center.distanceTo(C2.center).value
-
-			// Get the relative position of the circles
-			let position = ""
-			if (d === 0) {
-				if (r1 === r2) {
-					position = "superposés"
-				} else {
-					position = "concentriques"
-				}
-			} else {
-				if (r1 + r2 === d) {
-					position = "tangents externes"
-				} else if (Math.abs(r1 - r2) === d) {
-					position = "tangents internes"
-				} else if (r1 + r2 > d && Math.abs(r1 - r2) < d) {
-					position = "sécants"
-				} else {
-					position = "disjoints"
-				}
-			}
-
-			return {
-				C1: C1.tex,
-				C2: C2.tex,
-				O1: C1.center.tex,
-				O2: C2.center.tex,
-				r1,
-				r2,
-				distance: `\\delta(O_1;O_2) = ${C1.center.distanceTo(C2.center).tex}`,
-				position,
-				draw: {
-					parameters: `axis,grid,x=${Math.min(C1.center.x.value - r1, C2.center.x.value - r2) - 1}:${
-						Math.max(C1.center.x.value + r1, C2.center.x.value + r2) + 1
-					},y=${Math.min(C1.center.y.value - r1, C2.center.y.value - C2.radius.value) - 1}:${
-						Math.max(C1.center.y.value + r1, C2.center.y.value + r2) + 1
-					}`,
-					code: [
-						`P1(${C1.center.x.value},${C1.center.y.value})`,
-						`P2(${C2.center.x.value},${C2.center.y.value})`,
-						`c1=circ P1,${r1}`,
-						`c2=circ P2,${r2}`,
-					].join("\n"),
-				},
-			}
-		} catch (e) {
-			console.error(e)
+// Compute the result
+const result = computed(() => {
+	try {
+		if (circle1.value === "" || circle2.value === "") {
 			return false
 		}
-	})
-	// Generate two points at random distance
-	function getTriple(allowZero = false): number[] {
-		let triple: number[][] = [],
-			d = 0
+		const C1 = new Circle(circle1.value)
+		const C2 = new Circle(circle2.value)
+		const r1 = C1.radius.value
+		const r2 = C2.radius.value
+		const d = C1.center.distanceTo(C2.center).value
 
-		while (triple.length === 0) {
-			// Distance between two points.
-			d = PiMath.Random.number(1, maxRadius.value)
-			// Get a random pythagorean triple
-			triple = PiMath.Numeric.pythagoricianTripletsWithTarget(d, false)
-
-			// remove element containing zero
-			if (!allowZero) {
-				triple = triple.filter((x) => !x.includes(0))
+		// Get the relative position of the circles
+		let position = ""
+		if (d === 0) {
+			if (r1 === r2) {
+				position = "superposés"
+			} else {
+				position = "concentriques"
+			}
+		} else {
+			if (r1 + r2 === d) {
+				position = "tangents externes"
+			} else if (Math.abs(r1 - r2) === d) {
+				position = "tangents internes"
+			} else if (r1 + r2 > d && Math.abs(r1 - r2) < d) {
+				position = "sécants"
+			} else {
+				position = "disjoints"
 			}
 		}
 
-		return PiMath.Random.item(triple)
-	}
-
-	function generatePoints(allowZero = false) {
-		const P1 = PiMath.Random.Geometry.point(),
-			triple = getTriple(allowZero)
-
-		const P2 = new PiMath.Geometry.Point(P1.x.value + triple[0], P1.y.value + triple[1])
-
-		return { P1, P2, triple }
-	}
-
-	const POSITION_RELATIVE = [
-		"tangents internes",
-		"tangents externes",
-		"sécants",
-		"concentriques",
-		"disjoints",
-		"superposés",
-	]
-
-	// Generate random circles
-	function generateCircles() {
-		let { P1, P2, triple } = generatePoints()
-		const pos = PiMath.Random.item(POSITION_RELATIVE),
-			d = triple[2] // distance between the two points
-
-		// Generate the distance depending on POSITION_RELATIVE
-		let r1 = 0,
-			r2 = 0
-		switch (pos) {
-			case "tangents internes":
-				r1 = PiMath.Random.number(d + 1, d * 2)
-				r2 = r1 - d
-				break
-			case "tangents externes":
-				r1 = PiMath.Random.number(1, d - 1)
-				r2 = d - r1
-				break
-			case "sécants":
-				r1 = PiMath.Random.number(1, d * 2)
-				if (r1 < d) {
-					r2 = Math.abs(r1 - d) + PiMath.Random.number(1, 2 * r1) - 1
-				} else {
-					r2 = Math.abs(r1 - d) + PiMath.Random.number(1, 2 * r1) - 1
-				}
-				break
-			case "disjoints":
-				r1 = PiMath.Random.number(2, d * 2)
-
-				if (Math.abs(d - r1) === 1) {
-					if (r1 > d) {
-						r1++
-						r2 = 0
-					} else {
-						r1--
-						r2 = 1
-					}
-				}
-				if (r1 > d) {
-					r2 = r1 - d - PiMath.Random.number(1, Math.min(10, r1 - d - 1))
-				} else {
-					r2 = d - r1 - PiMath.Random.number(1, Math.min(10, d - r1 - 1))
-				}
-
-				break
-			case "concentriques":
-				r1 = PiMath.Random.number(3, 10)
-				r2 = r1 + PiMath.Random.numberSym(Math.min(5, r1 - 1), false)
-				P2 = P1.clone()
-				break
-			case "superposés":
-				r1 = PiMath.Random.number(1, 10)
-				r2 = r1
-				P2 = P1.clone()
-				break
+		return {
+			C1: C1.tex,
+			C2: C2.tex,
+			O1: C1.center.tex,
+			O2: C2.center.tex,
+			r1,
+			r2,
+			distance: `\\delta(O_1;O_2) = ${C1.center.distanceTo(C2.center).tex}`,
+			position,
+			draw: {
+				parameters: `axis,grid,x=${Math.min(C1.center.x.value - r1, C2.center.x.value - r2) - 1}:${
+					Math.max(C1.center.x.value + r1, C2.center.x.value + r2) + 1
+				},y=${Math.min(C1.center.y.value - r1, C2.center.y.value - C2.radius.value) - 1}:${
+					Math.max(C1.center.y.value + r1, C2.center.y.value + r2) + 1
+				}`,
+				code: [
+					`P1(${C1.center.x.value},${C1.center.y.value})`,
+					`P2(${C2.center.x.value},${C2.center.y.value})`,
+					`c1=circ P1,${r1}`,
+					`c2=circ P2,${r2}`
+				].join("\n")
+			}
 		}
+	} catch (e) {
+		console.error(e)
+		return false
+	}
+})
 
-		forms[0].value.value = new PiMath.Geometry.Circle(P1, r1).display
-		forms[1].value.value = new PiMath.Geometry.Circle(P2, r2).display
+// Generate two points at random distance
+function getTriple(allowZero = false): number[] {
+	let triple: number[][] = [],
+		d = 0
+
+	while (triple.length === 0) {
+		// Distance between two points.
+		d = Random.number(1, maxRadius.value)
+		// Get a random pythagorean triple
+		triple = Numeric.pythagoreanTripletsWithTarget(d, false)
+
+		// remove element containing zero
+		if (!allowZero) {
+			triple = triple.filter((x) => !x.includes(0))
+		}
 	}
 
-	onMounted(() => {
-		generateCircles()
-	})
+	return Random.item(triple)
+}
+
+function generatePoints(allowZero = false) {
+	const P1 = Random.point(),
+		triple = getTriple(allowZero)
+
+	const P2 = new Point(P1.x.value + triple[0], P1.y.value + triple[1])
+
+	return { P1, P2, triple }
+}
+
+const POSITION_RELATIVE = [
+	"tangents internes",
+	"tangents externes",
+	"sécants",
+	"concentriques",
+	"disjoints",
+	"superposés"
+]
+
+// Generate random circles
+function generateCircles() {
+	let { P1, P2, triple } = generatePoints()
+	const pos = Random.item(POSITION_RELATIVE),
+		d = triple[2] // distance between the two points
+
+	// Generate the distance depending on POSITION_RELATIVE
+	let r1 = 0,
+		r2 = 0
+	switch (pos) {
+		case "tangents internes":
+			r1 = Random.number(d + 1, d * 2)
+			r2 = r1 - d
+			break
+		case "tangents externes":
+			r1 = Random.number(1, d - 1)
+			r2 = d - r1
+			break
+		case "sécants":
+			r1 = Random.number(1, d * 2)
+			if (r1 < d) {
+				r2 = Math.abs(r1 - d) + Random.number(1, 2 * r1) - 1
+			} else {
+				r2 = Math.abs(r1 - d) + Random.number(1, 2 * r1) - 1
+			}
+			break
+		case "disjoints":
+			r1 = Random.number(2, d * 2)
+
+			if (Math.abs(d - r1) === 1) {
+				if (r1 > d) {
+					r1++
+					r2 = 0
+				} else {
+					r1--
+					r2 = 1
+				}
+			}
+			if (r1 > d) {
+				r2 = r1 - d - Random.number(1, Math.min(10, r1 - d - 1))
+			} else {
+				r2 = d - r1 - Random.number(1, Math.min(10, d - r1 - 1))
+			}
+
+			break
+		case "concentriques":
+			r1 = Random.number(3, 10)
+			r2 = r1 + Random.numberSym(Math.min(5, r1 - 1), false)
+			P2 = P1.clone()
+			break
+		case "superposés":
+			r1 = Random.number(1, 10)
+			r2 = r1
+			P2 = P1.clone()
+			break
+	}
+
+	forms[0].value.value = new Circle(P1, r1).display
+	forms[1].value.value = new Circle(P2, r2).display
+}
+
+onMounted(() => {
+	generateCircles()
+})
 </script>
 
 <template>
@@ -208,7 +211,6 @@
 						</button>
 					</div>
 				</tool-form>
-
 
 
 				<div v-if="result">

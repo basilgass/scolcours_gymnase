@@ -6,7 +6,7 @@
 import IllustrationShow from "@/Pages/Illustrations/IllustrationShow.vue"
 import type { deckInterface, flipcardsInterface } from "@/types/modelInterfaces"
 import { useSwipe } from "@vueuse/core"
-import  PiMath from "pimath"
+import { Random } from "pimath"
 import { computed, PropType, ref } from "vue"
 import MarkdownIt from "../Ui/MarkdownIt.vue"
 
@@ -16,7 +16,7 @@ const props = defineProps({
 
 const cardIndex = ref(0),
 	cardSide = ref<"recto" | "verso">("recto"),
-	cardsList = ref<flipcardsInterface[]>(PiMath.Random.shuffle(props.deck.flipcards))
+	cardsList = ref<flipcardsInterface[]>(Random.shuffle(props.deck.flipcards))
 
 const flip = function () {
 	if (cardSide.value === "recto") {

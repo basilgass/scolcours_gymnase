@@ -6,10 +6,14 @@
  * tags: geometrie,1M,2M,3M
  */
 import ToolForm, { IToolForm } from "@/Components/Tools/Parts/ToolForm.vue"
-import PiMath from "pimath"
+import { useToolsStorage } from "@/Composables/useToolsStorage.ts"
+import { numberCorrection } from "@/helpers/helperFunctions.ts"
+import { Matrix, Vector } from "pimath"
 import { computed, ref } from "vue"
 
-const forms: IToolForm[] = [
+// TODO: allow entering 3d vectors.
+const { restoreTool } = useToolsStorage()
+const forms: IToolForm[] = restoreTool([
 	{
 		label: "Vecteur 1",
 		type: "vector",
@@ -22,16 +26,16 @@ const forms: IToolForm[] = [
 		value: ref(""),
 		fromUrl: "v2"
 	}
-]
+])
 
 const v1 = computed(() => forms[0].value.value as string)
 const v2 = computed(() => forms[1].value.value as string)
 
-const pV1 = computed<PiMath.Vector>(() => {
-	return new PiMath.Geometry.Vector(v1.value)
+const pV1 = computed<Vector>(() => {
+	return new Vector(v1.value)
 })
-const pV2 = computed<PiMath.Vector>(() => {
-	return new PiMath.Geometry.Vector(v2.value)
+const pV2 = computed<Vector>(() => {
+	return new Vector(v2.value)
 })
 
 const vectors = computed(() => {
@@ -79,11 +83,11 @@ let result = computed(() => {
 			>
 				<div
 					v-if="v1"
-					v-katex="`\\overrightarrow{v_1}=\\sqrt{${pV1.normSquare.tex}}=${PiMath.Numeric.numberCorrection(pV1.norm)}`"
+					v-katex="`\\overrightarrow{v_1}=\\sqrt{${pV1.normSquare.tex}}=${numberCorrection(pV1.norm)}`"
 				/>
 				<div
 					v-if="v2"
-					v-katex="`\\overrightarrow{v_2}=\\sqrt{${pV2.normSquare.tex}}=${PiMath.Numeric.numberCorrection(pV2.norm)}`"
+					v-katex="`\\overrightarrow{v_2}=\\sqrt{${pV2.normSquare.tex}}=${numberCorrection(pV2.norm)}`"
 				/>
 			</div>
 
@@ -97,7 +101,7 @@ let result = computed(() => {
 				v-if="vectors.length >= 2"
 				class="grid grid-cols-2 gap-3"
 			>
-				<div v-katex="`${pV1.tex} \\cdot ${pV2.tex} = ${pV1.scalarProductWithVector(pV2).tex}`" />
+				<div v-katex="`${pV1.tex} \\cdot ${pV2.tex} = ${pV1.dot(pV2).tex}`" />
 			</div>
 			<div
 				class="py-1 px-3 bg-red-100 border border-red-300 rounded"
@@ -114,7 +118,7 @@ let result = computed(() => {
 				class="grid grid-cols-2 gap-3"
 			>
 				<div
-					v-katex="`\\begin{vmatrix} ${pV1.x.tex} & ${pV2.x.tex} \\\\ ${pV1.y.tex} & ${pV2.y.tex} \\end{vmatrix} = ${pV1.determinantWithVector(pV2).tex}`"
+					v-katex="`\\begin{vmatrix} ${pV1.x.tex} & ${pV2.x.tex} \\\\ ${pV1.y.tex} & ${pV2.y.tex} \\end{vmatrix} = ${(new Matrix(pV1, pV2)).determinant().tex}`"
 				/>
 			</div>
 			<div
@@ -131,7 +135,7 @@ let result = computed(() => {
 				v-if="vectors.length >= 2"
 				class="grid grid-cols-2 gap-3"
 			>
-				<div v-katex="`\\angle \\left(${pV1.tex} ; ${pV2.tex} \\right)  = ${+pV1.angleWith(pV2).toFixed(2)}`" />
+				<div v-katex="`\\angle \\left(${pV1.tex} ; ${pV2.tex} \\right)  = ${+pV1.angle(pV2).toFixed(2)}`" />
 			</div>
 			<div
 				class="py-1 px-3 bg-red-100 border border-red-300 rounded"

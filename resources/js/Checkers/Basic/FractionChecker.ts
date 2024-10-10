@@ -1,5 +1,5 @@
-import  PiMath from "pimath"
 import { CheckerAbstract } from "@/Checkers/CheckerAbstract"
+import { Fraction } from "pimath"
 
 const name="fraction"
 
@@ -31,8 +31,8 @@ export class FractionChecker extends CheckerAbstract {
         let FAnswer, FExpected
 
         try{
-            FAnswer = new PiMath.Fraction(given)
-            FExpected = new PiMath.Fraction(expected)
+            FAnswer = new Fraction(given)
+            FExpected = new Fraction(expected)
         }catch{
             return {
                 result: false,

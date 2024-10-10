@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import { computed, inject, ref } from "vue"
-import  PiMath from "pimath"
 import type { LanguageDataInterface } from "@/Pages/languages/LanguageShow.vue"
+import { Random } from "pimath"
+import { computed, inject, ref } from "vue"
 
 const languageData = inject<LanguageDataInterface>('LanguageData')
 
@@ -82,7 +82,7 @@ const typoButtons = ref(null),
 			theWord = theWord.split(", -")[0]
 		}
 
-		foreignLetters.value = PiMath.Random.shuffle(theWord.split("")
+		foreignLetters.value = Random.shuffle(theWord.split("")
 			.filter(key => excludeLetters.value.indexOf(key) === -1)
 			.map(key => {
 				return {

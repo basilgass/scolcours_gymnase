@@ -9,6 +9,10 @@
  * localStorage : to keep track of an existing game (to continue it...)
  */
 
+import FormMaker from "@/Components/Form/FormMaker.vue"
+import { LanguageDataInterface } from "@/Pages/languages/LanguageShow.vue"
+import type { TranslationWord } from "@/types/modelInterfaces"
+import { Random } from "pimath"
 /**
  * LanguageGuess - guess the correct word with the n first letters.
  *
@@ -16,10 +20,6 @@
  * localStorage : to keep track of an existing game (to continue it...)
  */
 import { computed, inject, nextTick, onMounted, ref } from "vue"
-import FormMaker from "@/Components/Form/FormMaker.vue"
-import { LanguageDataInterface } from "@/Pages/languages/LanguageShow.vue"
-import type { TranslationWord } from "@/types/modelInterfaces"
-import  PiMath from "pimath"
 
 interface GuessWord extends TranslationWord {
 	errors: number,
@@ -44,7 +44,7 @@ function startGame() {
 	startIndex.value = 0
 
 	// Make the list of words
-	words.value = PiMath.Random.shuffle(languageData.words.value).map(word => {
+	words.value = Random.shuffle(languageData.words.value).map(word => {
 		return {
 			...word,
 			found: false,

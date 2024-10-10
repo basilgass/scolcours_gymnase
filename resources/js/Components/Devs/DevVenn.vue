@@ -3,18 +3,18 @@
 	lang="ts"
 >
 
-import { computed, onMounted, ref } from "vue"
-import  PiMath from "pimath"
-import KeyboardDisplay from "@/Components/Keyboards/KeyboardDisplay.vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
-import {PiGraph as PiDraw} from "pidraw"
+import KeyboardDisplay from "@/Components/Keyboards/KeyboardDisplay.vue"
+import { PiGraph as PiDraw } from "pidraw"
+import { LogicalSet } from "pimath"
+import { computed, onMounted, ref } from "vue"
 
 let draw = ref(null),
 	geom,
 	venn,
 	tex = computed(() => {
 		try {
-			const P = new PiMath.Logicalset(input.value.replaceAll("uu", "|").replaceAll("nn", "&").replaceAll("not", "!"))
+			const P = new LogicalSet(input.value.replaceAll("uu", "|").replaceAll("nn", "&").replaceAll("not", "!"))
 			updateVenn(P)
 			return P.tex
 		} catch (e) {

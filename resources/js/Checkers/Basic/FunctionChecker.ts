@@ -1,5 +1,5 @@
 import { CheckerAbstract } from "@/Checkers/CheckerAbstract"
-import  PiMath from "pimath"
+import { Polynom } from "pimath"
 
 const name = "function"
 const description = `function|fn,[paramètres]
@@ -19,8 +19,8 @@ export class FunctionChecker extends CheckerAbstract {
     }
 
     check(expected: string, given: string): { result: boolean; message: string } {
-        const A = new PiMath.Polynom(given),
-            Q = new PiMath.Polynom(expected)
+        const A = new Polynom(given),
+            Q = new Polynom(expected)
 
         // Must be the same equation.
         if(!A.isEqual(Q)){

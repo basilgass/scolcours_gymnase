@@ -1,25 +1,29 @@
 <script lang="ts" setup>
+import FormMaker from "@/Components/Form/FormMaker.vue"
+import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"
+import { IToolForm } from "@/Components/Tools/Parts/ToolForm.vue"
+import TexCode from "@/Components/Ui/TexCode.vue"
+import { useToolsStorage } from "@/Composables/useToolsStorage.ts"
+import { Equation, Fraction, ISolution, Polynom, Random } from "pimath"
+import { computed, ref } from "vue"
+
+// TODO: .solutions dowes not work
 /** Tools
  * title: Fonction avec des valeurs absolues
  * body: génère et décompose des fonctions avec des valeurs absolues
  * parameters: fonction
  * tags: 1M,2M
  */
-import { computed, ref } from "vue"
-import FormMaker from "@/Components/Form/FormMaker.vue"
-import  PiMath from "pimath"
-import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"
-import { IToolForm } from "@/Components/Tools/Parts/ToolForm.vue"
-import TexCode from "@/Components/Ui/TexCode.vue"
 
-const forms: IToolForm[] = [
+const { restoreTool } = useToolsStorage()
+const forms: IToolForm[] = restoreTool( [
 	{
 		label: "fonction",
 		type: "text",
 		value: ref("abs(3x-3)-4abs(x+1)+2"),
 		fromUrl: "fx"
 	}
-]
+] )
 const fx = computed(()=>forms[0].value.value as string)
 
 const result = computed(() => {
@@ -33,14 +37,14 @@ const root = ref(null),
 	y = ref("-10"),
 	xAsTex = computed(() => {
 		try {
-			return new PiMath.Fraction(x.value).tex
+			return new Fraction(x.value).tex
 		} catch {
 			return ""
 		}
 	}),
 	yAsTex = computed(() => {
 		try {
-			return new PiMath.Fraction(y.value).tex
+			return new Fraction(y.value).tex
 		} catch {
 			return ""
 		}
@@ -52,7 +56,7 @@ const root = ref(null),
 			expr = []
 
 		for (const m of matches) {
-			const P = new PiMath.Polynom(m[1])
+			const P = new Polynom(m[1])
 			for (const z of P.zeroes) {
 				zeroes.push(z)
 			}
@@ -107,9 +111,9 @@ const root = ref(null),
 				try {
 					const zeroes = []
 					for (const e of expr) {
-						const equ = new PiMath.Equation(e.polynom, v)
-						equ.solve()
-						for (const z of equ.solutions) {
+						const equ = new Equation(e.polynom, v)
+						const solutions: ISolution[] = equ.solve()
+						for (const z of solutions) {
 							if (checkValue(z.value, e.borders.min, e.borders.max)) {
 								zeroes.push(z)
 							}
@@ -127,7 +131,7 @@ const root = ref(null),
 			},
 			evaluate: function(v) {
 				try {
-					const Q = new PiMath.Fraction(v)
+					const Q = new Fraction(v)
 
 					return expr.filter(x => {
 						return checkValue(Q.value, x.borders.min, x.borders.max)
@@ -144,26 +148,26 @@ const root = ref(null),
 
 		for (const p of abs) {
 			if (p.polynom.evaluate(v).isNegative()) {
-				fnx = fnx.replace(p.match, `(${p.polynom.clone().opposed().display})`)
+				fnx = fnx.replace(p.match, `(${p.polynom.clone().opposite().display})`)
 			} else {
 				fnx = fnx.replace(p.match, `(${p.polynom.clone().display})`)
 			}
 		}
 
 		return {
-			polynom: new PiMath.Polynom(fnx),
+			polynom: new Polynom(fnx),
 			condition: min === null ? `x\\leq${max.tex}` : (max === null ? `x\\geq${min.tex}` : `${min.tex}\\leq x \\leq ${max.tex}`),
 			borders: { min, max }
 		}
 	},
 	randomAbs = function() {
-		const z1 = PiMath.Random.numberSym(10, false),
-			z2 = PiMath.Random.numberSym(10, false),
-			p1 = new PiMath.Polynom(`x${(z1 > 0 ? "+" : "") + z1}`).multiply(PiMath.Random.numberSym(3, false)),
-			p2 = new PiMath.Polynom(`x${(z2 > 0 ? "+" : "") + z2}`).multiply(PiMath.Random.numberSym(3, false)),
-			k1 = PiMath.Random.numberSym(10, false),
-			k2 = PiMath.Random.numberSym(10, false),
-			k3 = PiMath.Random.numberSym(10)
+		const z1 = Random.numberSym(10, false),
+			z2 = Random.numberSym(10, false),
+			p1 = new Polynom(`x${(z1 > 0 ? "+" : "") + z1}`).multiply(Random.numberSym(3, false)),
+			p2 = new Polynom(`x${(z2 > 0 ? "+" : "") + z2}`).multiply(Random.numberSym(3, false)),
+			k1 = Random.numberSym(10, false),
+			k2 = Random.numberSym(10, false),
+			k3 = Random.numberSym(10)
 
 		// -7abs(x+1)-abs(2x+18)+3
 

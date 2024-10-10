@@ -7,7 +7,7 @@ code: function
 import FormMaker from "@/Components/Form/FormMaker.vue"
 
 import { IllustrationInterface } from "@/types/modelInterfaces"
-import PiMath from "pimath"
+import { NumExp } from "pimath"
 import { computed, onMounted, PropType, ref } from "vue"
 
 const props = defineProps({
@@ -30,9 +30,9 @@ const f = ref(""),
 	fixed = ref(3),
 	table = ref<bissection[]>([])
 
-const fxExp = computed<PiMath.NumExp>(() => {
-	if (f.value === "") return new PiMath.NumExp("0")
-	return new PiMath.NumExp(f.value)
+const fxExp = computed<NumExp>(() => {
+	if (f.value === "") return new NumExp("0")
+	return new NumExp(f.value)
 })
 
 function fx(value: number): number {

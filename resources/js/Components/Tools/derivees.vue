@@ -1,4 +1,8 @@
 <script setup lang="ts">
+import ToolForm, { IToolForm } from "@/Components/Tools/Parts/ToolForm.vue"
+import TexCode from "@/Components/Ui/TexCode.vue"
+import { useToolsStorage } from "@/Composables/useToolsStorage.ts"
+import { Factor, PolyFactor, Polynom } from "pimath"
 /** Tools
  * title: dérivées
  * body: calcul de la dérivée d'une fonction polynomiale ou rationnelle.
@@ -6,11 +10,9 @@
  * tags: algebre,2M
  */
 import { computed, ref } from "vue"
-import  PiMath from "pimath"
-import ToolForm, { IToolForm } from "@/Components/Tools/Parts/ToolForm.vue"
-import TexCode from "@/Components/Ui/TexCode.vue"
 
-const forms: IToolForm[] = [
+const { restoreTool } = useToolsStorage()
+const forms: IToolForm[] = restoreTool( [
 	{
 		label: "fonction à dériver (numérateur)",
 		type: "text",
@@ -23,7 +25,8 @@ const forms: IToolForm[] = [
 		value: ref(""),
 		fromUrl: "d",
 	}
-]
+] )
+
 let numerator = computed(()=>forms[0].value.value as string),
 	denominator = computed(()=>forms[1].value.value as string)
 
@@ -32,19 +35,24 @@ let result = computed(() => {
 	try {
 
 		if(denominator.value.trim()===""){
-			P = new PiMath.Polynom(numerator.value).derivative()
+			P = new Polynom(numerator.value).derivative()
 		}else{
-			P = new PiMath.Rational(numerator.value, denominator.value).derivative()
+			P = new PolyFactor(
+				new Factor(numerator.value),
+				new Factor(denominator.value, -1)
+			).derivative().asRoot
 		}
 
-		// Factorize the polynom / rational
-		P.factorize()
+		// Factorize the polynom / PolyFactor
+		// TODO: Enable factorize !
+		// P.factorize()
 
 		// Compate the tex values (factorized and unfactorized)
-		let tex = P.tex, Ftex = P.texFactors
+		// let tex = P.tex
 
+		let tex = P.tex
 		// Value to display
-		return tex===Ftex?tex:`${ tex } = ${ Ftex }`
+		return `${ tex }`
 	}catch(e){
 		console.error(e)
 		return false

@@ -1,4 +1,8 @@
 <script setup lang="ts">
+import KeyboardDisplay from "@/Components/Keyboards/KeyboardDisplay.vue"
+import ToolForm, { IToolForm } from "@/Components/Tools/Parts/ToolForm.vue"
+import { useToolsStorage } from "@/Composables/useToolsStorage.ts"
+import { Fraction, Polynom } from "pimath"
 /** Tools
  * title: évaluation d'une fonction polynomiale
  * body: évaluation d'une fonction polynomiale
@@ -6,11 +10,9 @@
  * tags: algebre,1M
  */
 import { computed, ref } from "vue"
-import  PiMath from "pimath"
-import KeyboardDisplay from "@/Components/Keyboards/KeyboardDisplay.vue"
-import ToolForm, { IToolForm } from "@/Components/Tools/Parts/ToolForm.vue"
 
-const forms: IToolForm[] = [
+const { restoreTool } = useToolsStorage()
+const forms: IToolForm[] = restoreTool( [
 	{
 		label: "fonction",
 		type: "text",
@@ -24,16 +26,20 @@ const forms: IToolForm[] = [
 		fromUrl: "x",
 		message: "Utiliser un nombre ou une fraction"
 	}
-]
+] )
 
 const f = computed(() => forms[0].value.value),
 	x = computed(() => forms[1].value.value)
 
 const activeInput = ref<number>(0)
 
+function onKeyboardChange(value){
+	console.log(value.input)
+	forms[activeInput.value].value.value=value.input
+}
 const fx = computed(() => {
 	try {
-		const FX = new PiMath.Polynom(f.value),
+		const FX = new Polynom(f.value as string),
 			data = {
 				x: "",
 				fx: "",
@@ -46,16 +52,17 @@ const fx = computed(() => {
 			data.frac = null
 			data.value = null
 		} else {
-			const fB = new PiMath.Fraction(x.value)
+			const fB = new Fraction(x.value as string)
 			data.x = fB.tex
 			data.fx = FX.tex.replace(/x/g, `\\left(${x.value}\\right)`)
-			const value = FX.evaluate(fB)
+			const value: Fraction = FX.evaluate(fB) as Fraction
 			data.frac = value.tex
 			data.value = value.value
 		}
 
 		return data
 	}catch (e) {
+		console.log(e)
 		return false
 	}
 })
@@ -87,7 +94,7 @@ const fx = computed(() => {
 				reset
 				next
 				keyboard="polynom"
-				@change="f=$event"
+				@change="onKeyboardChange"
 				@next="activeInput=1"
 			/>
 			<keyboard-display
@@ -96,7 +103,7 @@ const fx = computed(() => {
 				reset
 				next
 				keyboard="fraction"
-				@change="x=$event"
+				@change="onKeyboardChange"
 				@next="activeInput=0"
 			/>
 		</div>

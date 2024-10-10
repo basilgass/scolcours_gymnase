@@ -5,11 +5,11 @@ code:
 </info>-->
 <script lang="ts" setup>
 
-import { IllustrationInterface } from "@/types/modelInterfaces"
-import { computed, inject, PropType, ref } from "vue"
 import { listeDeMots } from "@/helpers/liste-des-mots-francais"
-import  PiMath from "pimath"
 import { flashInterface } from "@/types"
+import { IllustrationInterface } from "@/types/modelInterfaces"
+import { Random } from "pimath"
+import { computed, inject, PropType, ref } from "vue"
 
 const flash = inject<flashInterface>("flash")
 
@@ -181,7 +181,7 @@ function startOver(init?: boolean) {
 		const mots = listeDeMots
 			.filter(x => randomWordLength.value === 0 || x.length === randomWordLength.value)
 			.filter(x => withoutDuplicates.value ? x.split("").length === new Set(x.split("")).size : true)
-		referenceWord.value = PiMath.Random.item(mots) as unknown as string
+		referenceWord.value = Random.item(mots) as unknown as string
 		return
 	}
 

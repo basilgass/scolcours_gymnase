@@ -1,4 +1,10 @@
 <script lang="ts" setup>
+import KeyboardDisplay from "@/Components/Keyboards/KeyboardDisplay.vue"
+import ToolForm, { IToolForm } from "@/Components/Tools/Parts/ToolForm.vue"
+import TexCode from "@/Components/Ui/TexCode.vue"
+import { useToolsStorage } from "@/Composables/useToolsStorage.ts"
+import { Polynom } from "pimath"
+
 /** Tools
  * title: développement de polynôme
  * body: permet de développer un polynôme plus ou moins complexe.
@@ -6,19 +12,16 @@
  * tags: algebre,1M
  */
 import { computed, ref } from "vue"
-import  PiMath from "pimath"
-import KeyboardDisplay from "@/Components/Keyboards/KeyboardDisplay.vue"
-import ToolForm, { IToolForm } from "@/Components/Tools/Parts/ToolForm.vue"
-import TexCode from "@/Components/Ui/TexCode.vue"
 
-const forms: IToolForm[] = [
+const { restoreTool } = useToolsStorage()
+const forms: IToolForm[] = restoreTool([
 	{
 		label: "Polynôme",
 		type: "text",
 		value: ref(""),
 		fromUrl: "p"
 	}
-]
+] )
 
 const polynom = computed(() => forms[0].value.value as string)
 
@@ -27,7 +30,7 @@ const result = computed(() => {
 		if (polynom.value === "") {
 			return { tex: "\\text{Aucune fonction...}" }
 		}
-		const P = new PiMath.Polynom(polynom.value)
+		const P = new Polynom(polynom.value)
 
 		return {
 			tex: P.tex

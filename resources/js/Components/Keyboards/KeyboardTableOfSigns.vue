@@ -1,11 +1,12 @@
 <script setup lang="ts">
+import KeyboardDisplay from "@/Components/Keyboards/KeyboardDisplay.vue"
+import TableOfSigns from "@/Components/Pi/TableOfSigns.vue"
+import { customCheck } from "@/Composables/checkersConfig"
+import { useKeyboard } from "@/Composables/useKeyboard"
+import { makeStudyFromCode } from "@/Composables/useTos"
+
 // TODO: permettre l'affichage de la réponse.
 import { computed, nextTick, onMounted, ref } from "vue"
-import PiTableOfSigns from "@/Components/Pi/PiTableOfSigns.vue"
-import KeyboardDisplay from "@/Components/Keyboards/KeyboardDisplay.vue"
-import { makeStudyFromCode } from "@/Composables/useTos"
-import { useKeyboard } from "@/Composables/useKeyboard"
-import { customCheck } from "@/Composables/checkersConfig"
 
 const props = defineProps({
 	keyboard: {type: Object, required: true},
@@ -157,7 +158,7 @@ defineExpose({
 // 			raw: getRaw(value)
 // 		}
 // 	}
-
+// TODO: Generate the correct output from the given values !
 </script>
 
 <template>
@@ -165,10 +166,9 @@ defineExpose({
 		<div
 			class="overflow-x-scroll my-5 hidden"
 		>
-			<pi-table-of-signs
-				ref="tosUI"
-				:fn="tosName"
-				:tos="tos"
+			<table-of-signs
+				:roots="[]"
+				:signs="[]"
 			/>
 		</div>
 

@@ -3,7 +3,6 @@
 // TODO: retravailler pour être plus facile à modifier / debogguer
 import { onMounted, PropType, ref } from "vue"
 import katex from "katex"
-import  PiMath from "pimath"
 import KeyboardDisplay from "@/Components/Keyboards/KeyboardDisplay.vue"
 import { customCheck } from "@/Composables/checkersConfig"
 import { KeyboardInterface, useKeyboard } from "@/Composables/useKeyboard"
@@ -468,7 +467,7 @@ function asymptoteToAnswer(item) {
 }
 
 function addAV(value): itemGraphInterface {
-	const pos = (new PiMath.NumExp(value)).evaluate({}),
+	const pos = (new NumExp(value)).evaluate({}),
 		posX = PiGraph.unitsToPixels({
 			x: pos,
 			y: 0
@@ -508,7 +507,7 @@ function addAV(value): itemGraphInterface {
 }
 
 function addAH(value): itemGraphInterface {
-	const pos = (new PiMath.NumExp(value)).evaluate({}),
+	const pos = (new NumExp(value)).evaluate({}),
 		posY = PiGraph.unitsToPixels({
 			x: 0,
 			y: pos
@@ -547,7 +546,7 @@ function addAH(value): itemGraphInterface {
 }
 
 function addAO(value): itemGraphInterface {
-	let line = new PiMath.Geometry.Line(value),
+	let line = new Geometry.Line(value),
 		size = PiGraph.distanceToPixels(1) / 3,
 		A, B, x, y, Apixels, Bpixels
 
@@ -686,11 +685,11 @@ function getCoordinates(value) {
 
 function addPoint(type, xValue, yValue): itemGraphInterface {
 
-	const x = xValue === "" ? 0 : +(new PiMath.NumExp(xValue)).evaluate(),
-		y = yValue === "" ? 0 : +(new PiMath.NumExp(yValue)).evaluate()
+	const x = xValue === "" ? 0 : +(new NumExp(xValue)).evaluate(),
+		y = yValue === "" ? 0 : +(new NumExp(yValue)).evaluate()
 
-	// let x = new PiMath.Fraction(xValue).value,
-	// 	y = new PiMath.Fraction(yValue).value
+	// let x = new Fraction(xValue).value,
+	// 	y = new Fraction(yValue).value
 	let P = PiGraph.point(x, y),
 		pixels = PiGraph.unitsToPixels({ x, y }),
 		bar, text, beziercontrol = BEZIERCONTROL.SMOOTH

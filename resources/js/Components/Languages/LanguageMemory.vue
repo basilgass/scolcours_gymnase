@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-import { inject, ref } from "vue"
-import  PiMath from "pimath"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import { LanguageDataInterface } from "@/Pages/languages/LanguageShow.vue"
+import { Random } from "pimath"
+import { inject, ref } from "vue"
 
 const languageData = inject<LanguageDataInterface>("LanguageData")
 
@@ -40,7 +40,7 @@ const generateCards = function() {
 	}
 
 	cards.value = []
-	for (const word of PiMath.Random.shuffle(cardsList)) {
+	for (const word of Random.shuffle(cardsList)) {
 		cards.value.push({
 			text: word,
 			selected: false,

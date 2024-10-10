@@ -1,8 +1,9 @@
 <script lang="ts" setup>
 import KeyboardDisplay from "@/Components/Keyboards/KeyboardDisplay.vue"
 import ToolForm, { IToolForm } from "@/Components/Tools/Parts/ToolForm.vue"
+import { useToolsStorage } from "@/Composables/useToolsStorage.ts"
 import { numberCorrection } from "@/helpers/helperFunctions"
-import PiMath from "pimath"
+import { Fraction, NumExp, Polynom } from "pimath"
 /** Tools
  * title: tableau des valeurs d'une fonction
  * body: permet de créer un tableau des valeurs d'une fonction
@@ -11,7 +12,8 @@ import PiMath from "pimath"
  */
 import { computed, ref } from "vue"
 
-const forms: IToolForm[] = [
+const { restoreTool } = useToolsStorage()
+const forms: IToolForm[] = restoreTool([
 	{
 		label: "Fonction",
 		type: "text",
@@ -57,7 +59,7 @@ const forms: IToolForm[] = [
 		fromUrl: "float",
 		itemClass: 'col-span-1 md:col-span-2'
 	}
-]
+])
 
 // TODO: tableau des valeurs doit être restructurer pour fonctionner avec des valeurs trigonométriques.
 const f = computed(() => forms[0].value.value as string)
@@ -76,6 +78,7 @@ const fx = computed(() => {
 		try {
 			return getTableOfValues()
 		} catch (e) {
+			console.log(e)
 			return false
 		}
 	}),
@@ -83,31 +86,33 @@ const fx = computed(() => {
 		return f.value.includes("sin") || f.value.includes("cos") || f.value.includes("tan")
 	}),
 	getTableOfValues = function() {
-		let exp: PiMath.NumExp | PiMath.Polynom
+		let exp: NumExp | Polynom
 
 		if (isNumeric.value || numericParse.value) {
-			exp = new PiMath.NumExp(f.value)
+			exp = new NumExp(f.value)
 		} else {
 			try {
-				exp = new PiMath.Polynom(f.value)
+				exp = new Polynom(f.value)
 			} catch {
-				exp = new PiMath.NumExp(f.value)
+				exp = new NumExp(f.value)
 			}
 		}
 
-		let x = new PiMath.Fraction(Math.min(+xMin.value, +xMax.value)),
-			vMax = new PiMath.Fraction(Math.max(+xMin.value, +xMax.value)),
+		let x = new Fraction(Math.min(+xMin.value, +xMax.value)),
+			vMax = new Fraction(Math.max(+xMin.value, +xMax.value)),
 			vStep = +step.value === 0 ? 1 : +step.value,
 			data = [],
 			securityIncrement = 0
 
 		while (x.value <= vMax.value) {
 			let v
-			if (Object.hasOwn(exp, "monoms")) {
-				v = (exp as PiMath.Polynom).evaluate(x)
+			if (exp instanceof Polynom) {
+				// as fraction
+				v = exp.evaluate(x)
 			} else {
+				// as number
 				v = {
-					value: (exp as PiMath.NumExp).evaluate({ x: x.value }),
+					value: exp.evaluate({ x: x.value }),
 					tex: ""
 				}
 			}
@@ -230,7 +235,7 @@ function updateKbrd(event, index) {
 									class="border-r border-gray-500 px-3"
 								/>
 								<td
-									v-katex="`${v.fx}`"
+									v-katex="`${ numericParse ? v.fx : v.fxTex}`"
 									class="px-3"
 								/>
 								<td />

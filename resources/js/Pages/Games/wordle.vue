@@ -1,4 +1,7 @@
-<script lang="ts" setup>
+<script
+	lang="ts"
+	setup
+>
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import { listeDeMots } from "@/helpers/liste-des-mots-francais"
 import { listeDeMots as dictionary } from "@/helpers/liste-des-mots-francais-pli07"
@@ -12,7 +15,7 @@ onKeyStroke([
 	"Backspace", "Enter",
 	"ArrowLeft", "ArrowRight"
 ], (e) => {
-	if(gameIsRunning.value === false) {
+	if (gameIsRunning.value === false) {
 		return
 	}
 
@@ -92,8 +95,8 @@ function setLetter(letter: string) {
 	}
 }
 
-function selectLetter(row: number, index: number){
-	if(row === guessId.value){
+function selectLetter(row: number, index: number) {
+	if (row === guessId.value) {
 		letterId.value = index
 	}
 }
@@ -160,10 +163,10 @@ function validate() {
 	})
 
 	guesses.value[guessId.value] =
-		{
-			word: guess.value,
-			lettersClass
-		}
+	{
+		word: guess.value,
+		lettersClass
+	}
 
 	if (target.value === guess.value) {
 		message.value = "Bravo ! Vous avez trouvé le mot " + target.value
@@ -331,14 +334,13 @@ const keyboard = computed<Record<string, string>>(() => {
 					v-for="letter in row"
 					:key="`key-${letter}`"
 					:class="keyboard[letter]"
-					class="w-[1.5em] md:w-[3em] aspect-square grid place-items-center"
-					s
+					class="w-[8vw] md:w-[3em] aspect-square grid place-items-center"
 					@click="setLetter(letter)"
 				>
 					{{ letter }}
 				</button>
 				<button
-					v-if="index===2"
+					v-if="index === 2"
 					class="btn bg-white ml-3 py-0 md:py-3 px-5"
 					@click="backspace"
 				>
@@ -375,7 +377,6 @@ const keyboard = computed<Record<string, string>>(() => {
 </template>
 
 <style>
-
 .letter-selected {
 	@apply bg-blue-300;
 }

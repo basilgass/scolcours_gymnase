@@ -2,9 +2,11 @@
 
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import { FormMakerInputsType } from "@/Components/Form/FormMakerInterface"
-import { computed, ComputedRef, inject, PropType, ref, Ref, watch } from "vue"
+import { useToolsStorage } from "@/Composables/useToolsStorage.ts"
 import { useClipboard } from "@vueuse/core"
+import { computed, ComputedRef, inject, PropType, ref, Ref, watch } from "vue"
 
+const { storeTool } = useToolsStorage()
 export interface IToolForm {
 	label: string | ComputedRef<string>
 	type?: FormMakerInputsType
@@ -12,14 +14,16 @@ export interface IToolForm {
 	fromUrl?: string,
 	message?: string,
 	itemClass?: string,
-	inline?: boolean
+	inline?: boolean,
+	emit?: boolean
 }
 
 // Define the props
 const props = defineProps({
 	forms: { type: Object as PropType<IToolForm[]>, required: true },
 	formClass: { type: String, default: "" },
-	active: { type: Number, default: null }
+	active: { type: Number, default: null },
+	store: {type: Boolean, default: true }
 })
 
 const tool = inject<Ref<string>>("toolData", ref(""))
@@ -52,6 +56,15 @@ watch(() => props.active, () => {
 		formComponents.value[props.active].focus()
 	}
 })
+
+
+const emits = defineEmits(['updateForm'])
+function onChange(item: IToolForm){
+	storeTool(props.forms)
+	if(item.emit) {
+		emits('updateForm')
+	}
+}
 
 </script>
 
@@ -86,6 +99,8 @@ watch(() => props.active, () => {
 				font-code
 				message-class="text-xs"
 				:inline-label="f.inline"
+				v-bind="$attrs"
+				@change="onChange(f)"
 			/>
 		</div>
 

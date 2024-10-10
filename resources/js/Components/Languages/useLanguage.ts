@@ -1,5 +1,5 @@
 import { TranslationUnitInterfaceExtended, TranslationWord } from "@/types/modelInterfaces"
-import  PiMath from "pimath"
+import { Random } from "pimath"
 
 
 export function useLanguage(units: TranslationUnitInterfaceExtended[]) {
@@ -12,7 +12,7 @@ export function useLanguage(units: TranslationUnitInterfaceExtended[]) {
 			words = words.concat(values)
 		}
 
-		return (random === undefined || random) ? PiMath.Random.shuffle(words) : words
+		return (random === undefined || random) ? Random.shuffle(words) : words
 	}
 
 	return { selectedWords }

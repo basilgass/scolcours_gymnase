@@ -1,8 +1,9 @@
 import { Dom, ForeignObject, G, SVG, Svg } from "@svgdotjs/svg.js"
 import katex from "katex"
-import { PiDraw } from "pidraw/lib"
-import PiMath from "pimath"
+import { Fraction } from "pimath"
 
+
+// TODO: detailed results (R=d) does not show the multiplcation.
 /**
  * Class to generate a probability tree.
  */
@@ -49,8 +50,8 @@ interface ProbabilityTreeConfigInterface {
 
 interface ProbabilityTreeLeafInterface {
 	node: string;
-	probability: PiMath.Fraction;
-	branchProbability?: PiMath.Fraction[];
+	probability: Fraction;
+	branchProbability?: Fraction[];
 	number?: number;
 	leaves?: ProbabilityTreeLeafInterface[];
 	result?: string;
@@ -61,7 +62,6 @@ export class ProbabilityTree {
 	private _svg: { labels: G, lines: G }
 	private _width: number
 	private _height: number
-	private _graphDraw: PiDraw
 	private _graph: Svg
 	private _config: ProbabilityTreeConfigInterface
 	private _tree: ProbabilityTreeLeafInterface
@@ -245,7 +245,7 @@ export class ProbabilityTree {
 		// Build the branchProbability.
 		// if it's already here, means it was already calculated -> skip it
 		pathes.forEach(path => {
-			const probabilities: PiMath.Fraction[] = []
+			const probabilities: Fraction[] = []
 			path.forEach(branch => {
 				probabilities.push(branch.probability)
 				if (branch.branchProbability === undefined || branch.branchProbability.length === 0) {
@@ -303,15 +303,15 @@ export class ProbabilityTree {
 
 		if (this._config.output.result.type === ProbabilityTreeValue.fraction) {
 			const details = this._config.output.result.details === ProbabilityTreeBranchResult.details ? `${leaf.branchProbability.map(x => x.tex).join("\\cdot ")} = ` : ""
-			return `\\scriptsize ${details}${new PiMath.Fraction().xMultiply(...leaf.branchProbability).tex}`
+			return `\\scriptsize ${details}${Fraction.xMultiply(...leaf.branchProbability).tex}`
 		} else if (this._config.output.result.type === ProbabilityTreeValue.value) {
 			const digit = this._config.output.result.digits
 			const details = this._config.output.result.details === ProbabilityTreeBranchResult.details ? `${leaf.branchProbability.map(x => x.value.toFixed(digit)).join("\\cdot ")} = ` : ""
-			return `\\scriptsize ${details}${new PiMath.Fraction().xMultiply(...leaf.branchProbability).value.toFixed(digit)}`
+			return `\\scriptsize ${details}${Fraction.xMultiply(...leaf.branchProbability).value.toFixed(digit)}`
 		} else if (this._config.output.result.type === ProbabilityTreeValue.percent) {
 			const digit = this._config.output.result.digits
 			const details = this._config.output.result.details === ProbabilityTreeBranchResult.details ? `${leaf.branchProbability.map(x => (+x.value * 100).toFixed(digit) + "\\%").join("\\cdot ")} = ` : ""
-			return `\\scriptsize ${details}${(new PiMath.Fraction().xMultiply(...leaf.branchProbability).value * 100).toFixed(digit)}\\% `
+			return `\\scriptsize ${details}${(Fraction.xMultiply(...leaf.branchProbability).value * 100).toFixed(digit)}\\% `
 		} else if (this._config.output.result.type === ProbabilityTreeValue.custom) {
 			const [v, asText] = this._config.output.result.values[this._resultLeafIndex].split("/T")
 			this._resultLeafIndex++
@@ -555,7 +555,7 @@ export class ProbabilityTree {
 			result.push({
 				node: key,
 				number: items[key],
-				probability: new PiMath.Fraction(items[key], maxItems),
+				probability: new Fraction(items[key], maxItems),
 				leaves: crtThrow < maxThrows ? this._parseSimpleInputAddLeaves(nextItems, crtThrow + 1, maxThrows, repeat) : undefined,
 				branchProbability: []
 			})
@@ -575,7 +575,7 @@ export class ProbabilityTree {
 			node: "ROOT",
 			leaves: [],
 			number: 0,
-			probability: new PiMath.Fraction(1),
+			probability: new Fraction(1),
 			branchProbability: []
 		},
 			crtLevel = 0
@@ -648,7 +648,7 @@ export class ProbabilityTree {
 			.reduce((a, b) => a + b)
 
 		root.leaves.forEach(leaf => {
-			leaf.probability = new PiMath.Fraction(leaf.number, maxItems)
+			leaf.probability = new Fraction(leaf.number, maxItems)
 			this._setProbabilityForLeaves(leaf)
 		})
 	}

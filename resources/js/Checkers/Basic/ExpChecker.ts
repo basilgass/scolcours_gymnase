@@ -1,6 +1,6 @@
 import { CheckerAbstract } from "@/Checkers/CheckerAbstract"
 import { splitAtSigns, splitIfOutsideParentheses } from "@/helpers/helperFunctions.js"
-import PiMath from "pimath"
+import { Polynom } from "pimath"
 
 const name = "exp"
 const description = `exp,[paramètres]
@@ -147,12 +147,12 @@ function displayPolynomForSorting(element: string) {
     let poly1, poly2
     if (match) {
         try {
-            poly1 = new PiMath.Polynom(match[1]).reorder().display
+            poly1 = new Polynom(match[1]).reorder().display
         } catch {
             poly1 = match[1] ? match[1] : ""
         }
         try {
-            poly2 = new PiMath.Polynom(match[3]).reorder().display
+            poly2 = new Polynom(match[3]).reorder().display
         } catch {
             poly2 = match[3] ? match[3] : ""
         }
@@ -166,7 +166,7 @@ function displayPolynomForSorting(element: string) {
 
     let poly3
     try{
-        poly3 = new PiMath.Polynom(element).reorder().display
+        poly3 = new Polynom(element).reorder().display
     }catch{
         poly3 = element
     }
