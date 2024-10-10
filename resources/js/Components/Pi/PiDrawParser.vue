@@ -338,7 +338,7 @@ onMounted(() => {
 
 	// Add a resizeObserver on the draw container
 	useResizeObserver(drawWrapper.value, () => {
-		// PiParserUpdate("onResize", true)
+		PiParserUpdate("onResize", true)
 		// PiParser.updateLayout(props.draw.parameters ?? "")
 		// PiParser.update(drawCode.value, true)
 	})

@@ -2,6 +2,7 @@
 	lang="ts"
 	setup
 >
+import FormMaker from "@/Components/Form/FormMaker.vue"
 import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"
 import TableOfSigns from "@/Components/Pi/TableOfSigns.vue"
 
@@ -60,6 +61,15 @@ const study = computed<ETUDE_DE_FONCTION_RATIONNELLE | false>(() => {
 	return makeStudyFromPolynoms(numerator, denominator)
 })
 
+const drawParametersOverride = ref("")
+const draw = computed<{ parameters: string, code: string }>(()=>{
+	if(study.value===false){return null}
+
+	return {
+		parameters: drawParametersOverride.value===''? study.value.draw.parameters : drawParametersOverride.value,
+		code: study.value.draw.code
+	}
+})
 function generate_fx() {
 	let n = 1,
 		genFx
@@ -257,16 +267,22 @@ function getFxWithControls(maxValue: number) {
 					<div v-katex.boxed="study.derivative.fx" />
 
 					<table-of-signs
-						:extremes="study.extremes"
+						:extremes="study.extremes.map(x=>x.tex)"
 						:roots="study.derivative.table_of_signs.roots.map(x=>x.tex)"
 						:signs="study.derivative.table_of_signs.signs"
 						mode="grows"
 					/>
-					<!--										<div-->
-					<!--											v-for="(zero, index) in fraction_rationnelle.extrema"-->
-					<!--											:key="`zero-${index}`"-->
-					<!--											v-katex.boxed="zero"-->
-					<!--										/>-->
+
+					<h3 class="my-5">
+						Coordonnées des points à tangentes horizontales
+					</h3>
+					<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-5">
+						<div
+							v-for="(zero, index) in study.extremes.filter(x=>x.type!=='undefined')"
+							:key="`zero-${index}`"
+							v-katex.boxed="`\\text{${zero.type}}: \\left(${zero.x.tex};${zero.tex}\\right)`"
+						/>
+					</div>
 				</div>
 
 				<!-- Graphe -->
@@ -277,11 +293,17 @@ function getFxWithControls(maxValue: number) {
 
 					<div>
 						<pi-draw-parser
-							:draw="study.draw"
+							:draw="draw"
 							:height="600"
 							:width="800"
 							axis
 							class="max-w-3xl mx-auto"
+						/>
+
+						<form-maker
+							sm
+							v-model="drawParametersOverride"
+							code
 						/>
 
 						<tex-code :tex="study.draw.parameters" />

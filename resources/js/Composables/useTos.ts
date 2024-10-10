@@ -13,6 +13,13 @@ interface ASYMPTOTE {
 	},
 }
 
+interface EXTREMA {
+	value: number,
+	tex: string,
+	type: "min" | "max" | "flat" | "undefined",
+	x: { tex: string, value: number }
+}
+
 export interface ETUDE_DE_FONCTION_RATIONNELLE {
 	fx: string
 	domain: string
@@ -27,7 +34,7 @@ export interface ETUDE_DE_FONCTION_RATIONNELLE {
 		fx: string,
 		table_of_signs: TABLE_OF_SIGNS
 	},
-	extremes: string[],
+	extremes: EXTREMA[],
 	draw: {
 		code: string,
 		parameters: string
@@ -79,6 +86,7 @@ export function makeStudyFromPolyFactor(value: PolyFactor): ETUDE_DE_FONCTION_RA
 
 	// Derivative
 	const dfx = value.clone().derivative().factorize()
+
 	const derivative_fx = `f'(x) = ${dfx.asRoot.tex}`
 	const derivative_table_of_signs = dfx.tableOfSigns()
 	const extremes = PolyFactor_getExtremes(value, dfx, derivative_table_of_signs)
@@ -91,28 +99,11 @@ export function makeStudyFromPolyFactor(value: PolyFactor): ETUDE_DE_FONCTION_RA
 		...dfx.getZeroes().map(item => {
 			return { x: item.value, y: 0 }
 		}),
-		...extremes.filter(item => item !== false).map(item => {
+		...extremes.filter(item => item.type !== 'undefined').map(item => {
 			return { x: item.x.value, y: item.value }
 		})
 	)
-	//
-	// const xMin = Math.min(
-	// 	...factorized.getZeroes().map(x => x.value),
-	// 	...dfx.getZeroes().map(x => x.value)
-	// )
-	// const xMax = Math.max(
-	// 	...factorized.getZeroes().map(x => x.value),
-	// 	...dfx.getZeroes().map(x => x.value)
-	// )
-	//
-	// const yMin = Math.min(
-	// 	...extremes.filter(x => x !== false).map(x => x.value)
-	// )
-	// const yMax = Math.max(
-	// 	...extremes.filter(x => x !== false).map(x => x.value)
-	// )
 
-	console.log(BBox)
 	const parameters = `grid,axis,x=${BBox.x.min}:${BBox.x.max},y=${BBox.y.min}:${BBox.y.max}`
 	let code = `f(x)=${factorized.asRoot.display}->thick,blue`
 
@@ -123,13 +114,13 @@ export function makeStudyFromPolyFactor(value: PolyFactor): ETUDE_DE_FONCTION_RA
 
 	// Draw particular points.
 	// TODO: Filter if some point are the same !
-
+	
 	// roots
 	// TODO: root is in TeX : must be more clever !
 	rootsValues.forEach((root, index) => code += `\nZ${index}(${root},0)->tex=@`)
 
 	// Extremes
-	extremes.filter(x => x !== false).forEach((extreme, index) => {
+	extremes.filter(x => x.type!=='undefined').forEach((extreme, index) => {
 		code += `\nE${index}(${extreme.x.value},${extreme.value})->tex=\\left(${extreme.x.tex};${extreme.tex}\\right)/${extreme.type === "max" ? "t" : "b"}c`
 	})
 
@@ -149,7 +140,7 @@ export function makeStudyFromPolyFactor(value: PolyFactor): ETUDE_DE_FONCTION_RA
 			fx: derivative_fx,
 			table_of_signs: derivative_table_of_signs
 		},
-		extremes: extremes.filter(x => x !== false).map(x => x.tex),
+		extremes,
 		draw: {
 			parameters,
 			code
@@ -221,17 +212,20 @@ function PolyFactor_getAsymptotes_Horizontal_or_Slope(factorized: PolyFactor, de
 	]
 }
 
-function PolyFactor_getExtremes(fx: PolyFactor, dfx: PolyFactor, dfx_table_of_signs): ({
-	value: number,
-	tex: string,
-	type: "min" | "max" | "flat",
-	x: { tex: string, value: number }
-} | false)[] {
+function PolyFactor_getExtremes(fx: PolyFactor, dfx: PolyFactor, dfx_table_of_signs:TABLE_OF_SIGNS): EXTREMA[] {
 
 	return dfx.getZeroes().map((x, index) => {
 		// Evaluate the extremes if needed.
 		if (dfx_table_of_signs.signs[2 * index + 1] === "d") {
-			return false
+			return {
+				x: {
+					tex: x.tex,
+					value: x.value
+				},
+				tex: '',
+				value: NaN,
+				type: 'undefined'
+			}
 		}
 
 		const previousSign = dfx_table_of_signs.signs[2 * index]
