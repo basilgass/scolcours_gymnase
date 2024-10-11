@@ -3,22 +3,31 @@
 	setup
 >
 
+import LanguageGuess from "@/Components/Languages/LanguageGuess.vue"
+import LanguageList from "@/Components/Languages/LanguageList.vue"
+import LanguageMemory from "@/Components/Languages/LanguageMemory.vue"
+import LanguageType from "@/Components/Languages/LanguageType.vue"
+import LanguageUnitsSelector from "@/Components/Languages/LanguageUnitsSelector.vue"
+import { useLanguage } from "@/Components/Languages/useLanguage"
+import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
 // Set the main layout.
 import LayoutMain from "@/Layouts/LayoutMain.vue"
-import { computed, ComputedRef, provide, Ref, ref } from "vue"
 import type { TranslationUnitInterfaceExtended, TranslationWord } from "@/types/modelInterfaces"
-import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
-import LanguageUnitsSelector from "@/Components/Languages/LanguageUnitsSelector.vue"
-import LanguageList from "@/Components/Languages/LanguageList.vue"
-import LanguageType from "@/Components/Languages/LanguageType.vue"
-import LanguageGuess from "@/Components/Languages/LanguageGuess.vue"
-import LanguageMemory from "@/Components/Languages/LanguageMemory.vue"
-import { useLanguage } from "@/Components/Languages/useLanguage"
+import { computed, ComputedRef, provide, Ref, ref } from "vue"
 
+interface BookInterface {
+	id: number,
+	slug: string,
+	name: string
+}
 interface LanguageInterface {
 	game: "list" | "type" | "memory" | "guess",
-	code: "it" | "en" | "de",
-	language: "italiano" | "english" | "deutsch",
+	language: {
+		slug: string,
+		name: string,
+		determinants: string,
+		books: BookInterface[]
+	},
 }
 
 interface LanguagePropsInterface extends LanguageInterface {
@@ -35,18 +44,19 @@ defineOptions({ layout: LayoutMain })
 
 // Degine the props coming in (save for all)
 const props = defineProps<LanguagePropsInterface>()
-
 // Make the units data reactive
-const unitsSelection = ref<TranslationUnitInterfaceExtended[]>(
-	props.units.map(unit => {
-		return {
-			...unit,
-			selected: false,
-			words: []
-		}
-	}))
+/**
+ * props.units.map(unit => {
+ * 		return {
+ * 			...unit,
+ * 			selected: false,
+ * 			words: []
+ * 		}
+ * 	})
+ */
+const unitsSelection = ref<TranslationUnitInterfaceExtended[]>([])
 
-const { selectedWords } = useLanguage(unitsSelection.value)
+const { selectedWords } = useLanguage(unitsSelection)
 
 /** Current game state:
  * intro:   the game is in configuration mode
@@ -59,7 +69,6 @@ const state = ref<"intro" | "running" | "finished">("intro")
 const words = computed(() => selectedWords(false))
 
 provide<LanguageDataInterface>("LanguageData", {
-	code: props.code,
 	language: props.language,
 	game: props.game,
 	state,
@@ -81,10 +90,10 @@ if (localStorage.getItem(localStorageKey.value)) {
 
 <template>
 	<section class="scolcours-container">
-		<ArticleTitle :title="language" />
+		<ArticleTitle :title="language.name" />
 
 		<InertiaLink
-			:href="`/${language}`"
+			:href="`/${language.slug}`"
 			class="hover:pl-2 transition-all duration-300"
 		>
 			<i class="bi bi-arrow-bar-left" /> retour
@@ -92,6 +101,7 @@ if (localStorage.getItem(localStorageKey.value)) {
 
 		<LanguageUnitsSelector
 			v-show="state === 'intro'"
+			:books="language.books"
 			v-model="unitsSelection"
 		/>
 
@@ -104,7 +114,6 @@ if (localStorage.getItem(localStorageKey.value)) {
 		>
 			continuer
 		</button> -->
-
 
 		<!-- load the corresponding game -->
 		<div v-if="words.length > 0">

@@ -5,8 +5,9 @@ namespace App\Models;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 
 /**
@@ -18,7 +19,7 @@ use Illuminate\Support\Carbon;
  * @property string $title
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property-read Collection<int, \App\Models\Translation> $translations
+ * @property-read Collection<int, Translation> $translations
  * @property-read int|null $translations_count
  * @method static Builder|TranslationUnit newModelQuery()
  * @method static Builder|TranslationUnit newQuery()
@@ -33,12 +34,15 @@ use Illuminate\Support\Carbon;
  */
 class TranslationUnit extends Model
 {
-    use HasFactory;
-
 	protected $guarded=[];
 
-	public function translations()
-	{
+	public function translations(): HasMany
+    {
 		return $this->hasMany(Translation::class);
 	}
+
+    public function book(): BelongsTo
+    {
+        return $this->belongsTo(TranslationBook::class);
+    }
 }

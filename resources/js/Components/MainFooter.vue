@@ -55,6 +55,12 @@ import ThemeLinks from "@/Components/Ui/ThemeLinks.vue"
 				>
 					<i class="mr-2 bi bi-translate" /> deutsch
 				</InertiaLink>
+				<InertiaLink
+					:href="route('translations.index', ['espanol'])"
+					class="block transition duration-300 hover:translate-x-2 px-0 md:px-4 py-1"
+				>
+					<i class="mr-2 bi bi-translate" /> español
+				</InertiaLink>
 			</div>
 
 			<div class="md:mx-auto">

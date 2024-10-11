@@ -4,40 +4,32 @@
 >
 import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
+import { TranslationLanguageInterface } from "@/types/modelInterfaces.ts"
 
 defineOptions({ layout: LayoutMain })
-defineProps({
-	language: { type: String, required: true }
-})
+defineProps<{
+	language: TranslationLanguageInterface
+}>()
+
+const games = {
+	memory: 'memory',
+	guess: 'suggestions',
+	type: 'typographie',
+	list: "liste de mots"
+}
 </script>
 <template>
 	<article class="scolcours-container">
-		<ArticleTitle :title="language" />
+		<ArticleTitle :title="language.name" />
 
 		<div class="grid grid-cols-2 md:grid-cols-4 gap-4">
 			<InertiaLink
-				:href="`/${language}/memory`"
+				v-for="(game, key) in games"
+				:key="key"
+				:href="`/${language.slug}/${key}`"
 				class="text-xl bg-white border rounded hover:scale-105 h-32 grid place-items-center transition-all duration-300"
 			>
-				memory
-			</InertiaLink>
-			<InertiaLink
-				:href="`/${language}/guess`"
-				class="text-xl bg-white border rounded hover:scale-105 h-32 grid place-items-center transition-all duration-300"
-			>
-				suggestions
-			</InertiaLink>
-			<InertiaLink
-				:href="`/${language}/type`"
-				class="text-xl bg-white border rounded hover:scale-105 h-32 grid place-items-center transition-all duration-300"
-			>
-				typographie
-			</InertiaLink>
-			<InertiaLink
-				:href="`/${language}/list`"
-				class="text-xl bg-white border rounded hover:scale-105 h-32 grid place-items-center transition-all duration-300"
-			>
-				liste des mots
+				{{ game }}
 			</InertiaLink>
 		</div>
 	</article>

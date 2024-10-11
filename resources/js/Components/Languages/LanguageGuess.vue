@@ -63,7 +63,7 @@ function startGame() {
 }
 
 // Go to next word
-const nextWord = function () {
+const nextWord = function() {
 	// Reset the input (user guess)
 	userGuess.value = ""
 
@@ -93,8 +93,10 @@ const determinants = computed(() => {
 		return ["il ", "la ", "le ", "lo ", "i ", "l'", "gli "]
 	} else if (languageData.language === "english") {
 		return ["a ", "to ", "the ", "an "]
-	} else if (languageData.language === 'deutsch') {
+	} else if (languageData.language === "deutsch") {
 		return ["der ", "die ", "das "]
+	} else if (languageData.language === "espanol") {
+		return []
 	}
 
 	return []
@@ -113,7 +115,7 @@ const unknownWordExamples = ref([])
 const unknownWordDefinition = ref("")
 const unknownCount = ref(0)
 const suggestInput = ref(null)
-const suggestionEnter = function () {
+const suggestionEnter = function() {
 	if (suggestionsItems.value.length === 1) {
 		suggestionClick(0)
 	}
@@ -121,7 +123,7 @@ const suggestionEnter = function () {
 
 let suggestionTimeout: number = null
 
-const suggestionClick = function (index: number) {
+const suggestionClick = function(index: number) {
 	// Highlight the word
 	selectedSuggestion.value = index
 
@@ -135,7 +137,9 @@ const suggestionClick = function (index: number) {
 
 
 		// Continue the game after 1 second.
-		setTimeout(() => { nextWord() }, 800)
+		setTimeout(() => {
+			nextWord()
+		}, 800)
 	} else {
 		words.value[startIndex.value].found = false
 		shake(index)
@@ -152,12 +156,12 @@ const suggestionClick = function (index: number) {
 	saveToLocalStorage()
 }
 
-const defineUnknowns = function (item: TranslationWord) {
+const defineUnknowns = function(item: TranslationWord) {
 	unknownWordForeign.value = item.foreign
 	unknownWordExamples.value = item.examples ? item.examples.split("|") : []
 	unknownWordDefinition.value = item.definition ? item.definition : ""
 }
-const resetUnknowns = function () {
+const resetUnknowns = function() {
 	unknownWordAnswer.value = ""
 	unknownWordForeign.value = ""
 	unknownWordExamples.value = []
@@ -171,7 +175,7 @@ const resetUnknowns = function () {
  * 2. increment the number of errors for this word
  *
  */
-const unknownWord = function () {
+const unknownWord = function() {
 	// duplicate the word
 	const item = { ...words.value[startIndex.value] }
 
@@ -220,6 +224,7 @@ interface ISuggestionItem {
 	examples: string,
 	definition: string
 }
+
 const suggestionsItems = computed<ISuggestionItem[]>(() => {
 	const txt = userGuess.value.toLowerCase()
 
@@ -311,10 +316,10 @@ onMounted(() => {
 
 			<form-maker
 				ref="suggestInput"
-				autcomplete="off"
 				v-model="userGuess"
 				:disabled="unknownWordAnswer !== ''"
 				:label="numberOfLetters > 1 ? `entrer les ${numberOfLetters} premières lettres` : 'entrer la première lettre'"
+				autcomplete="off"
 				name="guess"
 				@keyup="resetUnknowns"
 				@keyup.enter="suggestionEnter"
@@ -342,8 +347,8 @@ onMounted(() => {
 						{{ word.foreign }}
 						<transition name="slide-fade-left">
 							<i
-								class="bi bi-check text-green-600"
 								v-show="selectedSuggestion === index && word.foreign === words[startIndex].foreign"
+								class="bi bi-check text-green-600"
 							/>
 						</transition>
 					</div>

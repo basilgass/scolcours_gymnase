@@ -1,12 +1,23 @@
 <script lang="ts" setup>
 
+import { TranslationUnitInterface, TranslationUnitInterfaceExtended } from "@/types/modelInterfaces"
 import axios from "axios"
-import type { TranslationUnitInterfaceExtended } from "@/types/modelInterfaces"
-import { computed } from "vue"
+import { computed, ref } from "vue"
 
 const units = defineModel<TranslationUnitInterfaceExtended[]>()
 
-const updateUnits = function(item) {
+interface BookInterface {
+	id: number,
+	slug: string,
+	name: string
+}
+defineProps<{
+	books: BookInterface[]
+}>()
+
+const selectedBook = ref(-1)
+
+const updateUnits = function(item: TranslationUnitInterfaceExtended) {
 	// Change the state
 	item.selected = !item.selected
 
@@ -14,7 +25,6 @@ const updateUnits = function(item) {
 	if (item.words.length===0) {
 		axios.get(route("translations.words", [item.id])).then(res => {
 			item.words = res.data
-			console.log(units.value)
 		})
 	}
 }
@@ -26,9 +36,48 @@ const numberOfWords = computed(()=>{
 	}, 0)
 })
 
+function getUnits_from_Book(book_id: number){
+	if(selectedBook.value===book_id){
+		selectedBook.value = -1
+		units.value = []
+		return
+	}
+	selectedBook.value = book_id
+
+	axios.get(route("translations.units", [book_id])).then(res => {
+		units.value = res.data.map((value: TranslationUnitInterface)=>{
+			return {
+				...value,
+				selected: false,
+				words: []
+			}
+		})
+	})
+}
 </script>
+
 <template>
 	<div class="border-y border-gray-400 pt-3 pb-5">
+		<div>
+			<h2 class="text-lg mb-2 uppercase">
+				sélection des livres
+			</h2>
+			<div class="flex flex-col md:flex-row gap-3">
+				<div
+					v-for="book in books"
+					:key="book.id"
+					class="cursor-pointer border rounded
+					md:aspect-square md:max-w-[200px] md:w-1/3 lg:w-1/4
+					py-5 px-3"
+					:class="selectedBook===book.id ? 'bg-green-200': 'bg-white'"
+					@click="getUnits_from_Book(book.id)"
+				>
+					<h2 class="text-lg font-extralight">
+						{{ book.name }}
+					</h2>
+				</div>
+			</div>
+		</div>
 		<div class="flex justify-between font-extralight ">
 			<h2 class="text-lg mb-2 uppercase">
 				sélection des unités
@@ -51,3 +100,7 @@ const numberOfWords = computed(()=>{
 		</div>
 	</div>
 </template>
+
+<style scoped>
+
+</style>

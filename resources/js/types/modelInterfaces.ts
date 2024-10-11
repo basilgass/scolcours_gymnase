@@ -1,4 +1,4 @@
-import { ThemeInterface, User } from "@/types/index";
+import { ThemeInterface, User } from "@/types/index"
 
 export interface UserInterface {
 	id: number;
@@ -267,9 +267,13 @@ export interface QuizzSessionInterface {
 	}
 }
 
+export interface TranslationLanguageInterface{
+	slug: string
+	name: string
+}
+
 export interface TranslationUnitInterface {
 	id: number
-	language: string
 	unit: string
 	title: string
 }

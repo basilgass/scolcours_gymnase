@@ -3,38 +3,28 @@
 namespace App\Http\Controllers;
 
 use App\Models\Translation;
+use App\Models\TranslationBook;
+use App\Models\TranslationLanguage;
 use App\Models\TranslationUnit;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class TranslationController extends Controller
 {
-	public function index($language)
+	public function index(TranslationLanguage $language)
 	{
 		return Inertia::render("languages/LanguageIndex", [
 			"language" => $language
 		]);
 	}
 
-	public function show($language, $game)
+	public function show(TranslationLanguage $language, $game)
 	{
-		$code = "";
-		if ($language === 'italiano') {
-			$code = "it";
-		}
-		if ($language === 'english') {
-			$code = "en";
-		}
-        if ($language === 'deutsch') {
-            $code = "de";
-        }
-
-		$units = TranslationUnit::where('language', $code)->get();
+//		$units = TranslationUnit::where('language', $code)->get();
 
 		return Inertia::render("languages/LanguageShow", [
-			"code" => $code,
 			"language" => $language,
-			"units" => $units,
+            "books" => $language->books,
 			"game" => $game
 		]);
 	}
@@ -75,6 +65,9 @@ class TranslationController extends Controller
 		return true;
 	}
 
+    public function fetchUnits(TranslationBook $book) {
+        return $book->units;
+    }
 	public function fetchWords(TranslationUnit $unit)
 	{
 		return $unit->translations;
