@@ -1,15 +1,15 @@
 <!--
 Affichage du formulaire en menu "slide-in" depuis la gauche.
 -->
-<script setup lang="ts">
+<script lang="ts" setup>
 import ChapterFormulas from "@/Components/Chapters/ChapterFormulas.vue"
 import { ref } from "vue"
 
-let props = defineProps({
-		chapter: { type: Object, required: true }
-	}),
-	afficherFormulaires = ref(false),
-	theChapter = ref(props.chapter)
+defineProps<{
+	chapterSlug: string
+}>()
+
+const afficherFormulaires = ref(false)
 
 </script>
 
@@ -46,7 +46,7 @@ let props = defineProps({
 						<i class="bi bi-x-circle" />
 					</button>
 					<chapter-formulas
-						:chapter-slug="theChapter.slug"
+						:chapter-slug="chapterSlug"
 					/>
 				</div>
 			</div>

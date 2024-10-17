@@ -1,12 +1,12 @@
 <script lang="ts" setup>
 
-import { inject, ref } from "vue"
-import { questionDataInterface } from "@/Pages/Questions/QuestionShow.vue"
-import { userAnswerInterface } from "@/types"
+import { ChallengeAnswerInterface } from "@/Components/Challenges/ChallengeGame.vue"
+import { questionDataInterface } from "@/Components/Questions/QuestionShow.vue"
 import { useWrongAnswerAnimation } from "@/Composables/useHelpers"
+import { userAnswerInterface } from "@/types"
 import { usePage } from "@inertiajs/vue3"
 import axios from "axios"
-import { ChallengeAnswerInterface } from "@/Components/Challenges/ChallengeGame.vue"
+import { inject, ref } from "vue"
 
 const emits = defineEmits<{
 	validate: [event: ChallengeAnswerInterface]
@@ -65,7 +65,7 @@ function validateQuestion() {
 
 function checkResult(): boolean {
 	// answer result
-	let result: boolean = true
+	let result = true
 
 	// index is the current answer alternative
 	let index

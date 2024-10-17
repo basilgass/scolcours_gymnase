@@ -1,9 +1,9 @@
 <script lang="ts" setup>
+import QuestionShow from "@/Components/Questions/QuestionShow.vue"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
-import { PropType, ref } from "vue"
-import type { EvaluationInterface } from "@/types/modelInterfaces"
-import QuestionShow from "@/Pages/Questions/QuestionShow.vue"
 import LayoutProjection from "@/Layouts/LayoutProjection.vue"
+import type { EvaluationInterface } from "@/types/modelInterfaces"
+import { PropType, ref } from "vue"
 
 defineOptions({ layout: LayoutProjection })
 

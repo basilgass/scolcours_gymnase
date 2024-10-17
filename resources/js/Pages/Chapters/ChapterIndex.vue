@@ -2,10 +2,10 @@
 	lang="ts"
 	setup
 >
+import ChapiterIndexCreateAdmin from "@/Components/Chapters/ChapterIndexCreateAdmin.vue"
 import FilteredList from "@/Components/Ui/FilteredList.vue"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
-import ChapiterIndexCreateAdmin from "@/Pages/Chapters/ChapiterIndexCreateAdmin.vue"
 import type { ChapterInterface } from "@/types/modelInterfaces"
 import { router, usePage } from "@inertiajs/vue3"
 import { PropType } from "vue"

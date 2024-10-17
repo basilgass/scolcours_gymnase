@@ -58,8 +58,8 @@ export class ExactChecker extends CheckerAbstract {
 
 		if (expectedNumber.isValid && givenNumber.isValid) {
 			if (
-				expectedNumber.evaluate({}).toFixed(10) ===
-				givenNumber.evaluate({}).toFixed(10)
+				expectedNumber.evaluate().toFixed(10) ===
+				givenNumber.evaluate().toFixed(10)
 			) {
 				if (this.isSoft) {
 					return {

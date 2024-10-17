@@ -6,13 +6,13 @@ Affichage d'un block , avec toutes les possibilités
 	setup
 >
 import BlockBodyButtons from "@/Components/Blocks/BlockBodyButtons.vue"
+import BlockShowAdmin from "@/Components/Blocks/BlockShowAdmin.vue"
+import IllustrationShow from "@/Components/Illustrations/IllustrationShow.vue"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
-import { useFormattedBody } from "@/Composables/useHelpers"
-import BlockShowAdmin from "@/Pages/Blocks/BlockShowAdmin.vue"
-import IllustrationShow from "@/Pages/Illustrations/IllustrationShow.vue"
-import { blockTypeDefault, blockTypes } from "@/scolcours"
-import type { BlockInterface } from "@/types/modelInterfaces"
-import  PiMath from "pimath"
+import { useFormattedBody } from "@/Composables/useHelpers.ts"
+import { blockTypeDefault, blockTypes } from "@/scolcours.ts"
+import type { BlockInterface } from "@/types/modelInterfaces.ts"
+import PiMath from "pimath"
 import { computed, inject, PropType, provide, ref } from "vue"
 
 // Props

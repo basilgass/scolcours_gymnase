@@ -1,19 +1,21 @@
 <script lang="ts" setup>
 
 import FormMaker from "@/Components/Form/FormMaker.vue"
-import { inject, PropType, ref, Ref } from "vue"
+import QuestionShow from "@/Components/Questions/QuestionShow.vue"
+import { useStoreEditMode } from "@/stores/useStoreEditMode.ts"
 import { flashInterface } from "@/types"
+import type { PostInterface, QuestionInterface } from "@/types/modelInterfaces.ts"
 import axios from "axios"
-import QuestionShow from "@/Pages/Questions/QuestionShow.vue"
-import type { PostInterface, QuestionInterface } from "@/types/modelInterfaces"
+import { inject, PropType, ref } from "vue"
 
 const props = defineProps({
 	post: { type: Object as PropType<PostInterface>, required: true },
 	questions: { type: Object as PropType<QuestionInterface[]>, required: true },
-	components: { type: Object as PropType<Array<InstanceType<typeof QuestionShow>>>, required: true }
+	components: { type: Object as PropType<InstanceType<typeof QuestionShow>[]>, required: true }
 })
 
-const editMode = inject<Ref<boolean>>("editMode")
+const  editMode  = useStoreEditMode()
+
 const flash = inject<flashInterface>("flash")
 
 const thePost = ref(props.post)
@@ -120,7 +122,7 @@ const addQuestion = function () {
 </script>
 <template>
 	<div
-		v-admin="editMode"
+		v-admin="editMode.enable"
 		class="bg-slate-600 text-white py-2 px-3 flex gap-6"
 	>
 		<button

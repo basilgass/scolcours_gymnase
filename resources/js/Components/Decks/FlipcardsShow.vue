@@ -3,7 +3,7 @@
 	setup
 >
 
-import IllustrationShow from "@/Pages/Illustrations/IllustrationShow.vue"
+import IllustrationShow from "@/Components/Illustrations/IllustrationShow.vue"
 import type { deckInterface, flipcardsInterface } from "@/types/modelInterfaces"
 import { useSwipe } from "@vueuse/core"
 import { Random } from "pimath"
@@ -91,8 +91,7 @@ const xClassTranslate = computed(() => {
 	<article
 		v-if="cardIndex < cardsList.length"
 		ref="el"
-		class="cursor-pointer
-			relative"
+		class="cursor-pointer relative"
 	>
 		<!-- <div class="absolute left-3 lg:left-6 top-[50%] text-red-500">
 			<i class="bi bi-hand-thumbs-down-fill" />
@@ -103,7 +102,7 @@ const xClassTranslate = computed(() => {
 
 		<div
 			:class="xClassTranslate"
-			class="grid place-items-center
+			class="grid place-items-center relative
 			 bg-white rounded-xl shadow-lg p-5 min-h-[50vh]"
 			@click="flip"
 		>
@@ -114,9 +113,10 @@ const xClassTranslate = computed(() => {
 			/>
 			<!-- Illustration -->
 			<illustration-show
-				v-if="cardsList[cardIndex].recto.illustrations.length > 0"
+				v-if="cardsList[cardIndex][cardSide].illustrations.length > 0"
 				class="h-full w-full max-w-[600px]"
 				:illustration="cardsList[cardIndex][cardSide].illustrations[0]"
+				click-through
 			/>
 		</div>
 

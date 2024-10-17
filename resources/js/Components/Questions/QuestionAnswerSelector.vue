@@ -1,6 +1,6 @@
 <script setup lang="ts">
+import { questionDataInterface } from "@/Components/Questions/QuestionShow.vue"
 import { inject } from "vue"
-import { questionDataInterface } from "@/Pages/Questions/QuestionShow.vue"
 
 const questionData = inject<questionDataInterface>('questionData')
 </script>

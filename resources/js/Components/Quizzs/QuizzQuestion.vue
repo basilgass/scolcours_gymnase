@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import QuestionShow from "@/Pages/Questions/QuestionShow.vue"
+import QuestionShow from "@/Components/Questions/QuestionShow.vue"
 import { QuestionInterface } from "@/types/modelInterfaces"
 
 defineEmits(["validate"])

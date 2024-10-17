@@ -1,9 +1,9 @@
 <script lang="ts" setup>
-import { computed, inject, PropType, watch } from "vue"
+import IllustrationShow from "@/Components/Illustrations/IllustrationShow.vue"
+import { questionDataInterface } from "@/Components/Questions/QuestionShow.vue"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
-import IllustrationShow from "@/Pages/Illustrations/IllustrationShow.vue"
 import { userAnswerInterface } from "@/types"
-import { questionDataInterface } from "@/Pages/Questions/QuestionShow.vue"
+import { computed, inject, PropType, watch } from "vue"
 
 const props = defineProps({
 	userAnswers: { type: Object as PropType<userAnswerInterface[]>, required: true }

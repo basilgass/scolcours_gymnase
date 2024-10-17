@@ -1,56 +1,28 @@
-<script
-	lang="ts"
-	setup
->
+<script lang="ts" setup>
 
+import BlocksIndex from "@/Components/Blocks/BlocksIndex.vue"
 import ChapterFormulasSlider from "@/Components/Chapters/ChapterFormulasSlider.vue"
 import ChapterNav from "@/Components/Chapters/ChapterNav.vue"
 import ChapterToc from "@/Components/Chapters/ChapterToc.vue"
+import QuestionsIndex from "@/Components/Questions/QuestionsIndex.vue"
 import EditLink from "@/Components/Ui/EditLink.vue"
 import { useMenuScrollTo } from "@/Composables/useHelpers"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
-import BlockShow from "@/Pages/Blocks/BlockShow.vue"
-import QuestionsIndex from "@/Pages/Questions/QuestionsIndex.vue"
-import { flashInterface } from "@/types"
 import type { BlockInterface, ChapterInterface, PostInterface } from "@/types/modelInterfaces"
 import { usePage } from "@inertiajs/vue3"
 import axios from "axios"
-import  PiMath from "pimath"
-import { computed, inject, nextTick, onMounted, PropType, provide, ref } from "vue"
+import PiMath from "pimath"
+import { computed, nextTick, onMounted, provide, ref } from "vue"
 
 defineOptions({ layout: LayoutMain })
 
-const editMode = inject<boolean>("editMode")
-const flash = inject<flashInterface>("flash")
+const props = defineProps<{
+	chapter: ChapterInterface,
+	post: PostInterface,
+	anchor: string | null
+}>()
 
-const props = defineProps({
-	post: {
-		type: Object as PropType<PostInterface>,
-		required: true
-	},
-	chapter: {
-		type: Object as PropType<ChapterInterface>,
-		required: true
-	},
-	anchor: {
-		type: [String, null],
-		required: true
-	}
-})
-
-// Les groupedBlocks peuvent être groupé pour former un unique groupe.
-// Il s'agit surtout d'une mise en page
 const blocks = ref<BlockInterface[]>(props.post.blocks)
-const groupedBlocks = computed(() => {
-	// The groupedBlocks might be grouped
-	let arr: BlockInterface[][] = []
-
-	blocks.value.forEach(block => {
-		block.merge === true ? arr[arr.length - 1].push(block) : arr.push([block])
-	})
-
-	return arr
-})
 
 const iteration = ref(0)
 const postData = ref({})
@@ -73,27 +45,10 @@ const hasData = computed(() => {
 loadDataScript()
 
 provide("postData", postData)
+
+// postsBlocks est utilisé dans BlockShowAdmin, juste pour le déplacement des blocks.
 provide('postBlocks', blocks)
 
-
-function addBlock(after?: number) {
-	axios.post(
-		route("posts.blocks.store", [props.post.id]),
-		{
-			after: after === undefined ? null : after
-		}
-	).then((res) => {
-		flash.success("Block ajouté avec succès.")
-		if (after === undefined) {
-			blocks.value.push(res.data)
-		} else {
-			blocks.value.splice(after + 1, 0, res.data)
-		}
-	}).catch((res) => {
-		flash.error("Erreur lors de l'ajout du block.")
-		console.warn("add block: ", res.data)
-	})
-}
 
 function storeCurrentPost() {
 	if (usePage().props.auth.user === null) return
@@ -108,10 +63,12 @@ function storeCurrentPost() {
 
 onMounted(() => {
 	storeCurrentPost()
+
 	if (props.anchor) {
 		nextTick(() => useMenuScrollTo(props.anchor))
 	}
 })
+
 </script>
 
 <template>
@@ -122,7 +79,7 @@ onMounted(() => {
 		>
 			<!-- title -->
 			<div class="scolcours-container flex justify-between">
-				<div>
+				<div class="scolcours-header-left">
 					<div class="flex gap-5 items-baseline">
 						<h1
 							v-katex.auto="post.title"
@@ -145,7 +102,7 @@ onMounted(() => {
 					</InertiaLink>
 				</div>
 
-				<div>
+				<div class="scolcours-header-right">
 					<div
 						v-admin
 						class="flex items-center gap-3 text-black"
@@ -156,13 +113,6 @@ onMounted(() => {
 						>
 							{ brouillon }
 						</div>
-
-						<button
-							class="text-xl"
-							@click="addBlock()"
-						>
-							<i class="bi bi-plus-circle" />
-						</button>
 					</div>
 
 					<button
@@ -180,39 +130,13 @@ onMounted(() => {
 		<!-- show the groupedBlocks, questions and TOC -->
 		<main class="scolcours-container mt-5 space-y-5">
 			<!-- show the groupedBlocks -->
-
-			<article class="flex flex-col gap-4">
-				<div
-					v-for="group in groupedBlocks"
-					:key="group[0].id"
-				>
-					<div
-						class="shadow relative"
-						v-for="(block, index) in group"
-						:key="`block-${block.id}`"
-					>
-						<div
-							v-admin="editMode"
-							class="absolute -right-2 -bottom-2
-											w-[28px] h-[28px]
-											bg-white grid place-items-center pt-[0.15em]
-											rounded-full border shadow hover:bg-black hover:text-white transition-colors duration-500 cursor-pointer"
-							@click="addBlock(block.order)"
-						>
-							<i class="bi bi-plus-circle" />
-						</div>
-						<block-show
-							:block="block"
-							:group-index="index"
-						/>
-					</div>
-				</div>
-			</article>
-
+			<blocks-index
+				:post-id="post.id"
+				v-model="blocks"
+			/>
 
 			<!-- show the questions -->
 			<questions-index
-				:chapter="chapter"
 				:post="post"
 			/>
 
@@ -230,9 +154,8 @@ onMounted(() => {
 			/>
 
 			<!-- Show the formulas -->
-			<chapter-formulas-slider :chapter="chapter" />
+			<chapter-formulas-slider :chapter-slug="chapter.slug" />
 		</main>
 	</section>
 </template>
 
-<style scoped></style>

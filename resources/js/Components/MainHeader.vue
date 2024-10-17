@@ -8,10 +8,12 @@ En-tête principal, sensible au thème
 import MainAside from "@/Components/MainAside.vue"
 import DropdownMenu from "@/Components/Ui/DropdownMenu.vue"
 import LogoutButton from "@/Components/Ui/LogoutButton.vue"
+import { useStoreEditMode } from "@/stores/useStoreEditMode.ts"
 import type { ThemeInterface } from "@/types"
-import { computed, inject, PropType, provide, Ref, ref } from "vue"
 
-import { useDark, useToggle } from '@vueuse/core'
+import { useDark, useToggle } from "@vueuse/core"
+import { computed, PropType, provide, ref } from "vue"
+
 const isDark = useDark()
 // TODO: Set dark mode to false by default for now
 isDark.value = false
@@ -30,10 +32,10 @@ const computedTheme = computed(() => {
 	return props.theme ? props.theme : { title: "Scolcours", slug: "main" }
 })
 
-const showAside = ref(false),
-	editMode = inject<Ref<boolean>>("editMode")
-
+const showAside = ref(false)
 provide("showAside", showAside)
+
+const  editMode  = useStoreEditMode()
 
 </script>
 <template>
@@ -51,7 +53,8 @@ provide("showAside", showAside)
 				>
 					<i class="absolute inset bi bi-house cursor-pointer" />
 					<i
-						class="absolute inset bi bi-house-fill cursor-pointer text-transparent hover:text-white transition-all duration-500" />
+						class="absolute inset bi bi-house-fill cursor-pointer text-transparent hover:text-white transition-all duration-500"
+					/>
 				</InertiaLink>
 
 				<InertiaLink
@@ -121,16 +124,16 @@ provide("showAside", showAside)
 					</InertiaLink>
 				</div>
 				<button
-					:class="editMode ? 'bg-white/40' : ''"
+					:class="editMode.enable ? 'bg-white/40' : ''"
 					class="btn btn-xs hover:text-black"
 					title="Ctrl+Alt+A"
-					@click="editMode = !editMode"
+					@click="editMode.toggle()"
 				>
-					<span v-show="editMode">
+					<span v-show="editMode.enable">
 						<i class="bi bi-pencil mr-2" />
 						<span class="hidden md:inline"> édition activée </span>
 					</span>
-					<span v-show="!editMode">
+					<span v-show="!editMode.enable">
 						<i class="bi bi-pencil mr-2" />
 						<span>activer l'édition</span></span>
 				</button>

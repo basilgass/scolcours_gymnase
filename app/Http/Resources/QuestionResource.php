@@ -50,7 +50,6 @@ class QuestionResource extends JsonResource
 			"order"=>$this->order,
 			"displayIf"=>$this->displayif,
 			"css"=>$this->css,
-			"body" => $this->body,
 			"block" => [
 				'id'=>$this->blocks[0]->id,
 				'title'=>$this->blocks[0]->title,
@@ -58,9 +57,7 @@ class QuestionResource extends JsonResource
 				'illustration'=>$this->blocks[0]->illustrations[0]??null
 			],
 			"answer" => $this->answer,
-			"checker" => $this->checker,
 			"keyboard" => $this->keyboard,
-//			"parameters" => $this->parameters??'',
 			"user" => $userAnswers
 		];
 //        return parent::toArray($request);

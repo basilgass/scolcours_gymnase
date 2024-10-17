@@ -15,6 +15,8 @@ import LayoutMain from "@/Layouts/LayoutMain.vue"
 import type { TranslationUnitInterfaceExtended, TranslationWord } from "@/types/modelInterfaces"
 import { computed, ComputedRef, provide, Ref, ref } from "vue"
 
+defineOptions({ layout: LayoutMain })
+
 interface BookInterface {
 	id: number,
 	slug: string,
@@ -39,8 +41,6 @@ export interface LanguageDataInterface extends LanguageInterface {
 	state: Ref<"intro" | "running" | "finished">,
 	words: ComputedRef<TranslationWord[]>
 }
-
-defineOptions({ layout: LayoutMain })
 
 // Degine the props coming in (save for all)
 const props = defineProps<LanguagePropsInterface>()
@@ -100,6 +100,7 @@ if (localStorage.getItem(localStorageKey.value)) {
 		</InertiaLink>
 
 		<LanguageUnitsSelector
+			class="mt-6"
 			v-show="state === 'intro'"
 			:books="language.books"
 			v-model="unitsSelection"

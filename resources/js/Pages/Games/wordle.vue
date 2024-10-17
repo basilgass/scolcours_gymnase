@@ -6,9 +6,14 @@ import FormMaker from "@/Components/Form/FormMaker.vue"
 import { listeDeMots } from "@/helpers/liste-des-mots-francais"
 import { listeDeMots as dictionary } from "@/helpers/liste-des-mots-francais-pli07"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
+import { useStoreEditMode } from "@/stores/useStoreEditMode.ts"
 import { onKeyStroke } from "@vueuse/core"
 import _ from "lodash"
-import { computed, inject, ref } from "vue"
+import { computed, ref } from "vue"
+
+defineOptions({ layout: LayoutMain })
+
+const editMode = useStoreEditMode()
 
 onKeyStroke([
 	..."abcdefghijklmnopqrstuvwxyz".split(""),
@@ -47,9 +52,7 @@ onKeyStroke([
 	}
 })
 
-defineOptions({ layout: LayoutMain })
 
-const editMode = inject<boolean>("editMode")
 
 interface IGuess {
 	word: string,
@@ -366,7 +369,7 @@ const keyboard = computed<Record<string, string>>(() => {
 				</button>
 				<div>{{ message }}</div>
 			</div>
-			<div v-show="editMode">
+			<div v-show="editMode.enable">
 				<div>Il y a {{ availableWords.length }} mots possible. Le mot à chercher: {{ target }}</div>
 				<div class="font-code">
 					{{ filteredWords.join(", ") }}

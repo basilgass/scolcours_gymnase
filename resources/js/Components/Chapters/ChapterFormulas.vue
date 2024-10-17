@@ -5,7 +5,7 @@ Affichage d'un formulaire, avec la possibilitÃ© de passer d'un formulaire du thÃ
 	lang="ts"
 	setup
 >
-import BlockShow from "@/Pages/Blocks/BlockShow.vue"
+import BlockShow from "@/Components/Blocks/BlockShow.vue"
 import { flashInterface } from "@/types"
 import { useIntersectionObserver } from "@vueuse/core"
 import axios from "axios"

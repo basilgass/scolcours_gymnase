@@ -3,7 +3,7 @@
 	lang="ts"
 >
 
-import { inject, Ref } from "vue"
+import { useStoreEditMode } from "@/stores/useStoreEditMode.ts"
 
 defineProps({
 	id: { type: Number, required: true },
@@ -11,12 +11,13 @@ defineProps({
 	label: { type: String, default: "id: " },
 	inline: { type: Boolean, default: false }
 })
-const editMode = inject<Ref<boolean>>("editMode")
+
+const  editMode  = useStoreEditMode()
 </script>
 
 <template>
 	<InertiaLink
-		v-admin="editMode"
+		v-admin="editMode.enable"
 		class="text-xs"
 		:class="inline ? '' : 'absolute top-0 right-0 bg-white/30 rounded px-3 py-1 z-10'"
 		:href="route(routeName, [id])"

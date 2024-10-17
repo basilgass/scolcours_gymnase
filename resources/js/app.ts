@@ -1,15 +1,17 @@
 import "./bootstrap"
 import "../css/app.css"
+import { adminDirective } from "@/directives/adminDirectives"
+import { katexDirective } from "@/directives/katexDirectives"
+import { themeDirective } from "@/directives/themeDirectives"
+import { createInertiaApp, Head, Link } from "@inertiajs/vue3"
+import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers"
+import { createPinia } from "pinia"
 
 import { createApp, DefineComponent, h } from "vue"
-import { createInertiaApp, Head, Link } from "@inertiajs/vue3"
 import draggableComponent from "vuedraggable/src/vuedraggable.js"
-import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers"
 import { ZiggyVue } from "../../vendor/tightenco/ziggy/dist/vue.m"
-import { katexDirective } from "@/directives/katexDirectives"
-import { adminDirective } from "@/directives/adminDirectives"
-import { themeDirective } from "@/directives/themeDirectives"
-import { useEditMode } from "./Composables/useEditMode"
+
+const pinia = createPinia()
 
 // import route from "ziggy-js"
 // const appName =
@@ -33,16 +35,13 @@ createInertiaApp({
 			.component("draggable", draggableComponent)
 			.use(plugin)
 			.use(ZiggyVue, Ziggy)
+			.use(pinia)
 
 		// add directives
 		app.directive("katex", katexDirective)
 			.directive("admin", adminDirective)
 			.directive("theme", themeDirective)
 			.mixin({ methods: { route } })
-
-		// Provide global variables
-		const editMode = useEditMode()
-		app.provide("editMode", editMode)
 
 		// Mount the app.
 		app.mount(el)

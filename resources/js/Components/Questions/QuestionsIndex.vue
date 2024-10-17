@@ -1,24 +1,18 @@
 <script lang="ts" setup>
-import { computed, inject, PropType, provide, Ref, ref } from "vue"
-import QuestionShow from "@/Pages/Questions/QuestionShow.vue"
-import type { ChapterInterface, PostInterface } from "@/types/modelInterfaces"
-import axios from "axios"
+import QuestionShow from "@/Components/Questions/QuestionShow.vue"
+import QuestionsIndexAdmin from "@/Components/Questions/QuestionsIndexAdmin.vue"
+import { useStoreEditMode } from "@/stores/useStoreEditMode.ts"
 import { flashInterface } from "@/types"
-import QuestionsIndexAdmin from "@/Pages/Questions/QuestionsIndexAdmin.vue"
+import type { PostInterface, QuestionInterface } from "@/types/modelInterfaces.ts"
+import axios from "axios"
+import { computed, inject, provide, ref } from "vue"
 
-const editMode = inject<Ref<boolean>>("editMode")
+const  editMode  = useStoreEditMode()
 const flash = inject<flashInterface>("flash")
 
-const props = defineProps({
-	post: {
-		type: Object as PropType<PostInterface>,
-		required: true
-	},
-	chapter: {
-		type: Object as PropType<ChapterInterface>,
-		required: true
-	}
-})
+const props = defineProps<{
+	post: PostInterface
+}>()
 
 const answeredIds = computed(() => {
 	return props.post.questions
@@ -45,7 +39,7 @@ const questionsGrid = computed(() => {
 
 provide("questionsIds", props.post.questions.map((q) => q.id))
 
-const isQuestionLocked = function(question) {
+const isQuestionLocked = function(question: QuestionInterface) {
 	return !(
 		question.displayIf === null ||
 		question.displayIf
@@ -80,7 +74,7 @@ const updateQuestionsOrder = function() {
 }
 
 
-const questionsComponents = ref<Array<InstanceType<typeof QuestionShow>>>([])
+const questionsComponents = ref<InstanceType<typeof QuestionShow>[]>([])
 function addQuestionRef(element: InstanceType<typeof QuestionShow>) {
 	if (questionsComponents.value.indexOf(element) === -1) {
 		questionsComponents.value.push(element)
@@ -103,8 +97,7 @@ function addQuestionRef(element: InstanceType<typeof QuestionShow>) {
 		</div>
 
 		<questions-index-admin
-			v-admin="editMode"
-			:chapter="chapter"
+			v-admin="editMode.enable"
 			:questions="props.post.questions"
 			:components="questionsComponents"
 			:post="post"
@@ -120,7 +113,7 @@ function addQuestionRef(element: InstanceType<typeof QuestionShow>) {
 			item-key="id"
 			v-bind="{
 				animation: 200,
-				disabled: editMode === false,
+				disabled: !editMode.enable,
 			}"
 			@end="updateQuestionsOrder"
 		>

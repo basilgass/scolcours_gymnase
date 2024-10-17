@@ -5,16 +5,17 @@ Affichage de la liste des challenges pour un chapitre donné.
 	setup
 	lang="ts"
 >
-import DialogModal from "@/Components/Ui/DialogModal.vue"
-import { inject, Ref, ref } from "vue"
-import { useForm } from "@inertiajs/vue3"
 import FormMaker from "@/Components/Form/FormMaker.vue"
+import DialogModal from "@/Components/Ui/DialogModal.vue"
+import { useStoreEditMode } from "@/stores/useStoreEditMode.ts"
+import { useForm } from "@inertiajs/vue3"
+import { ref } from "vue"
 
 let props = defineProps({
 	chapter: { type: Object, required: true }
 })
 
-const editMode = inject<Ref<boolean>>("editMode")
+const  editMode  = useStoreEditMode()
 
 let show = ref(false),
 	form = useForm({
@@ -42,14 +43,14 @@ let show = ref(false),
 					chapter.slug,
 					challenge.slug,
 				])
-					"
+				"
 				as="button"
 				class="min-h-[80px] w-full h-full"
 				type="button"
 			/>
 
 			<div
-				v-show="editMode"
+				v-show="editMode.enable"
 				v-admin
 				class="min-h-[100px] grid place-items-center"
 			>
@@ -65,7 +66,8 @@ let show = ref(false),
 				>
 					<template #header>
 						<div
-							class="bg-white flex justify-between items-baseline border-b border-gray-200 px-5 py-3 mb-5">
+							class="bg-white flex justify-between items-baseline border-b border-gray-200 px-5 py-3 mb-5"
+						>
 							<h1>
 								<span class="text-xl md:text-2xl">créer un challenge</span>
 							</h1>

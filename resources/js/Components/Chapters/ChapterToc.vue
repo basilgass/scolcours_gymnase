@@ -1,88 +1,116 @@
-<!--
-Affichage de la table des matières.
--->
-
 <script
 	lang="ts"
 	setup
 >
-import { computed, inject, Ref, ref } from "vue"
-import { router } from "@inertiajs/vue3"
 import FormMaker from "@/Components/Form/FormMaker.vue"
-import axios from "axios"
+import { useStoreEditMode } from "@/stores/useStoreEditMode.ts"
 import { flashInterface } from "@/types"
+import { ChapterInterface, PostInterface } from "@/types/modelInterfaces.ts"
+import { router } from "@inertiajs/vue3"
+import axios from "axios"
+import { computed, inject, ref } from "vue"
 
-const props = defineProps({
-	chapter: { type: Object, required: true },
-	scroll: { type: Boolean, default: false },
-	active: { type: Number, default: null }
-})
+const props = defineProps<{
+	chapter: ChapterInterface,      // id, slug, posts
+	active?: number                 // Highlight the currently selected post.
+}>()
 
 const flash = inject<flashInterface>("flash")
-const editMode = inject<Ref<boolean>>("editMode")
+const editMode = useStoreEditMode()
 
-const posts = ref(props.chapter.posts),
-	postsFilterCurrent = ref(""),
-	postsFilter = function (filter) {
-		postsFilterCurrent.value =
-			postsFilterCurrent.value === filter ? "" : filter
+const posts = ref(props.chapter.posts)
+const postsFilterCurrent = ref("")
+const postsFilterCurrentMessage = ref("")
 
-		if (postsFilterCurrent.value === "") {
-			posts.value = props.chapter.posts
-		} else {
-			moveMode.value = false
-			posts.value = props.chapter.posts.filter(
-				(x) =>
-					x.type ===
-					(postsFilterCurrent.value === "theory"
-						? null
-						: postsFilterCurrent.value)
-			)
-		}
-	},
-	moveMode = ref(false),
-	updatePostsOrder = function () {
-		axios
-			.post(route("chapters.updatePostsOrder", [props.chapter.id]), {
-				posts: posts.value.map((post, index) => {
-					return {
-						id: post.id,
-						title: post.title,
-						order: index + 1
-					}
-				}),
-				_method: "PATCH"
-			})
-			.then((res) => {
-				flash.success("les posts ont bien été réordré !")
-				// Post has been updated. Go to then new post
-				if (res.data.posts) {
-					posts.value = res.data.posts
-				}
-			})
-	},
-	addPost = function () {
-		axios
-			.post(route("chapters.posts.store", [props.chapter.slug]), {
-				title: "nouvel article"
-			})
-			.then((res) => {
-				router.visit(res.data.redirect)
-			})
-			.catch((err) => console.warn(err))
+const postsFilter = function(filter: string) {
+	// Same filter ? remove the filter
+	postsFilterCurrent.value =
+		postsFilterCurrent.value === filter ? "" : filter
+
+
+	// Si le filtre est vide, on affiche tout.
+	if (postsFilterCurrent.value === "") {
+		posts.value = props.chapter.posts
+		postsFilterCurrentMessage.value = ""
+		return
 	}
 
-const questionStatus = computed(() => {
+	// On désactive le move mode
+	moveMode.value = false
+	if (filter === "en_cours") {
+		posts.value = props.chapter.posts.filter(
+			(post) =>
+				questionStatus.value[post.id] !== null &&
+				questionStatus.value[post.id] < 1
+		)
+		postsFilterCurrentMessage.value = "exercices non terminés"
+		return
+	}
+
+	posts.value = props.chapter.posts.filter(
+		(post) =>
+			post.type === (postsFilterCurrent.value === "theory" ? null : postsFilterCurrent.value)
+	)
+
+	switch (postsFilterCurrent.value){
+		case 'theory':
+			postsFilterCurrentMessage.value = 'théorie'
+			return
+		case 'exercise':
+			postsFilterCurrentMessage.value = 'exercices'
+			return
+	}
+
+}
+const moveMode = ref(false)
+const updatePostsOrder = function() {
+	axios
+		.post(route("chapters.updatePostsOrder", [props.chapter.id]), {
+			posts: posts.value.map((post, index) => {
+				return {
+					id: post.id,
+					title: post.title,
+					order: index + 1
+				}
+			}),
+			_method: "PATCH"
+		})
+		.then((res) => {
+			flash.success("les posts ont bien été réordré !")
+			// Post has been updated. Go to then new post
+			if (res.data.posts) {
+				posts.value = res.data.posts
+			}
+		})
+}
+
+const addPost = function() {
+	axios
+		.post(route("chapters.posts.store", [props.chapter.slug]), {
+			title: "nouvel article"
+		})
+		.then((res) => {
+			router.visit(res.data.redirect)
+		})
+		.catch((err) => console.warn(err))
+}
+
+// Determine si le post à des questions et si toutes les questions on été répondues
+// null: pas de questions
+// number: pourcentage des questions répondues (0 à 1)
+// TODO: rendre le visuel de l'avancée des questions plus mieux bien.
+const questionStatus = computed<Record<number, number | null>>(() => {
 	const result = {}
 	props.chapter.posts.forEach((p) => {
 		result[p.id] =
 			p.questions.length > 0
-				? p.questions.filter((q) => q.user.result).length === p.questions.length
+				? p.questions.filter((q) => q.user.result).length / p.questions.length
 				: null
 	})
 	return result
 })
 </script>
+
 <template>
 	<div
 		v-if="props.chapter.posts"
@@ -97,7 +125,7 @@ const questionStatus = computed(() => {
 					:class="postsFilterCurrent === 'theory'
 						? `text-scolcours-${$page.props.theme.slug}`
 						: ''
-						"
+					"
 					@click="postsFilter('theory')"
 				>
 					<i class="bi bi-text-paragraph" />
@@ -106,15 +134,28 @@ const questionStatus = computed(() => {
 					:class="postsFilterCurrent === 'exercise'
 						? `text-scolcours-${$page.props.theme.slug}`
 						: ''
-						"
+					"
 					@click="postsFilter('exercise')"
 				>
 					<i class="bi bi-calculator" />
 				</button>
+				<button
+					:class="postsFilterCurrent === 'en_cours'
+						? `text-scolcours-${$page.props.theme.slug}`
+						: ''
+					"
+					@click="postsFilter('en_cours')"
+				>
+					<i class="bi bi-check-circle" />
+				</button>
+
+				<div class="text-sm font-extralight">
+					{{ postsFilterCurrentMessage }}
+				</div>
 			</div>
 			<div
 				v-if="$page.props.auth.can.admin"
-				v-show="editMode"
+				v-show="editMode.enable"
 				class="flex gap-3 items-baseline"
 			>
 				<form-maker
@@ -146,7 +187,7 @@ const questionStatus = computed(() => {
 			}"
 			@end="updatePostsOrder"
 		>
-			<template #item="{ element }">
+			<template #item="{ element }: { element: PostInterface }">
 				<div class="flex gap-3">
 					<button
 						v-if="$page.props.auth.can.admin && moveMode"
@@ -154,31 +195,34 @@ const questionStatus = computed(() => {
 					>
 						<i class="bi bi-arrows-move" />
 					</button>
+
 					<InertiaLink
 						:class="props.active === element.order
 							? `font-semibold text-scolcours-${$page.props.theme.slug}`
 							: ''
-							"
+						"
 						:href="route('themes.chapters.slide', [
 							$page.props.theme.slug,
 							props.chapter.slug,
 							element.order,
 						])
-							"
-						class="block text-left hover:pl-5 transition-all duration flex gap-1"
+						"
+						class="text-left hover:pl-5 transition-all duration flex gap-1"
 					>
-						<i :class="{
-							'bi bi-calculator': element.type === 'exercise',
-							'bi bi-text-paragraph': !element.type,
-						}" />
+						<i
+							:class="{
+								'bi bi-calculator': element.type === 'exercise',
+								'bi bi-text-paragraph': !element.type,
+							}"
+						/>
 
 						<i
 							:class="{
 								'bi bi-check-circle-fill text-green-500':
-									questionStatus[element.id],
-								'bi bi-check-circle text-gray-300':
-									questionStatus[element.id] === false,
-								'bi bi-check-circle text-gray-300 invisible':
+									questionStatus[element.id] === 1,
+								'bi bi-check-circle text-green-600':
+									questionStatus[element.id] < 1,
+								'invisible':
 									questionStatus[element.id] === null,
 							}"
 							class="mx-2"

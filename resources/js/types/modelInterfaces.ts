@@ -51,6 +51,15 @@ export interface ChapterMinInterface {
 	posts_length: number;
 }
 
+// TODO: ChapterMiniInterface vs CHapterMinInterface ?
+export interface ChapterMiniInterface {
+	id: number
+	title: string
+	url: string
+	modified: string
+	body: string
+}
+
 export interface BlockMinInterface {
 	id: number
 	title: string
@@ -94,16 +103,19 @@ export interface IllustrationInterface {
 	isNew?: boolean;
 }
 
-export interface QuestionInterface {
+export interface QuestionMinInterface {
+	block: BlockMinInterface;
+	answer: string;
+	keyboard: string;
+	user: {
+		result: boolean
+	};
+}
+export interface QuestionInterface extends QuestionMinInterface{
 	id: number;
 	order: number;
 	displayIf: boolean | string;
 	css: string;
-	body: string;
-	block: BlockMinInterface;
-	answer: string;
-	checker: string;
-	keyboard: string;
 	user: {
 		answer: string
 		result: boolean
@@ -112,15 +124,7 @@ export interface QuestionInterface {
 	};
 }
 
-export interface QuestionMinInterface {
-	body: string;
-	block: BlockMinInterface;
-	answer: string;
-	keyboard: string;
-	user: {
-		result: boolean
-	};
-}
+
 
 //TODD: modify PostInterfae
 export interface PostInterface {

@@ -14,15 +14,16 @@ keyboard -> QuestionUserInput -> QuestionShow
  *      2.d show / hide answer
  */
 
-import { computed, ComputedRef, inject, nextTick, onMounted, PropType, provide, Ref, ref } from "vue"
-import QuestionAdminHeader from "@/Pages/Questions/QuestionShowAdmin.vue"
-import type { QuestionInterface } from "@/types/modelInterfaces"
-import QuestionBlock from "@/Components/Questions/QuestionBlock.vue"
-import { userAnswerInterface } from "@/types"
-import QuestionKeyboard from "@/Components/Questions/QuestionKeyboard.vue"
-import QuestionAnswerDisplay from "@/Components/Questions/QuestionAnswerDisplay.vue"
-import KeyboardBasic from "@/Components/Keyboards/KeyboardBasic.vue"
 import { ChallengeAnswerInterface } from "@/Components/Challenges/ChallengeGame.vue"
+import KeyboardBasic from "@/Components/Keyboards/KeyboardBasic.vue"
+import QuestionAnswerDisplay from "@/Components/Questions/QuestionAnswerDisplay.vue"
+import QuestionBlock from "@/Components/Questions/QuestionBlock.vue"
+import QuestionKeyboard from "@/Components/Questions/QuestionKeyboard.vue"
+import QuestionAdminHeader from "@/Components/Questions/QuestionShowAdmin.vue"
+import { useStoreEditMode } from "@/stores/useStoreEditMode.ts"
+import { userAnswerInterface } from "@/types"
+import type { QuestionInterface } from "@/types/modelInterfaces.ts"
+import { computed, ComputedRef, nextTick, onMounted, PropType, provide, Ref, ref } from "vue"
 
 // Props
 const props = defineProps({
@@ -32,11 +33,10 @@ const props = defineProps({
 	locked: { type: Boolean, default: false },
 	isMinimal: { type: Boolean, default: false }, // TODO: remove isMinimal prop.
 	hideTitle: { type: Boolean, default: false } // TODO: remove hideTitle prop.
-
 })
 
 // EditMode is used to determine the locked status
-const editMode = inject<boolean>("editMode")
+const  editMode  = useStoreEditMode()
 
 // Determine if the question is dynamic (not coming from the DB)
 const isDynamic = props.question.id === undefined
@@ -51,7 +51,7 @@ defineEmits<{
  */
 const theQuestionLocked = computed(() => {
 	//v-if="locked && !editMode.enabled.value"
-	return props.locked && !editMode
+	return props.locked && !editMode.enable
 })
 
 
@@ -167,7 +167,7 @@ export interface questionDataInterface {
 	},
 	// config of the current question
 	// - animation: enables or disable animation (use for "single answer" (quizz)
-	// - dynamic: determines if the question is dynnamically builded or is from DB.
+	// - dynamic: determines if the question is dynamically built or is from DB.
 	config: {
 		animation: boolean,
 		dynamic: boolean
@@ -181,6 +181,7 @@ export interface questionDataInterface {
 const answers = computed(() => {
 	return props.question.answer.split("\n").filter((x) => x !== "")
 })
+
 provide<questionDataInterface>("questionData", {
 	question: props.question,
 	body: ref(""),
@@ -230,7 +231,7 @@ const keyboardComponent = ref<InstanceType<typeof QuestionKeyboard>>(null)
 				v-if="question.order && !props.isMinimal && !isDynamic"
 				v-theme.bg.text="!theQuestionLocked"
 				:class="{
-					'draggable-handle cursor-move': editMode,
+					'draggable-handle cursor-move': editMode.enable,
 					'bg-white': theQuestionLocked
 				}"
 				class="z-10 font-semibold font-code absolute left-1 -top-4 rounded-full border w-8 h-8 grid place-items-center draggable-handle"
@@ -241,7 +242,7 @@ const keyboardComponent = ref<InstanceType<typeof QuestionKeyboard>>(null)
 			<!-- ADMIN HEADER -->
 			<question-admin-header
 				v-if="!isDynamic"
-				v-admin="editMode"
+				v-admin="editMode.enable"
 				:question="question"
 			/>
 

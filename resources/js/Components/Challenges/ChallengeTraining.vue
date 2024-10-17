@@ -1,9 +1,9 @@
 <script lang="ts" setup>
-import { computed, PropType, ref } from "vue"
-import QuestionShow from "@/Pages/Questions/QuestionShow.vue"
+import { ChallengeAnswerInterface } from "@/Components/Challenges/ChallengeGame.vue"
+import QuestionShow from "@/Components/Questions/QuestionShow.vue"
 import { useGenerator } from "@/Composables/useGenerator"
 import type { GeneratorInterface, QuestionInterface } from "@/types/modelInterfaces"
-import { ChallengeAnswerInterface } from "@/Components/Challenges/ChallengeGame.vue"
+import { computed, PropType, ref } from "vue"
 
 const props = defineProps({
 	generator: {

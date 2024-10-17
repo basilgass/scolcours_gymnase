@@ -12,6 +12,7 @@ return new class extends Migration {
             $table->id();
             $table->string('slug');
             $table->string('name');
+            $table->string('cover')->default("");
             $table->foreignIdFor(TranslationLanguage::class)->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
@@ -21,34 +22,37 @@ return new class extends Migration {
         $itBooks = TranslationLanguage::where('slug', 'italiano')->first()->books();
         $itBooks->create(
             [
-                "slug"          => "npi-1",
-                "name"          => "Nuovissimo progetto italiano 1",
+                "slug"  => "npi-1",
+                "name"  => "Nuovissimo progetto italiano 1",
+                "cover" => "/images/npi1_cover.jpg"
             ]
         );
         $itBooks->create(
             [
-                "slug"          => "npi-2",
-                "name"          => "Nuovissimo progetto italiano 2",
+                "slug"  => "npi-2",
+                "name"  => "Nuovissimo progetto italiano 2",
+                "cover" => "/images/npi2_cover.jpg"
             ]
         );
         $itBooks->create(
             [
-                "slug"          => "libro-2",
-                "name"          => "Libro 2",
+                "slug" => "libro-2",
+                "name" => "Libro 2",
             ]
         );
 
         $enBooks = TranslationLanguage::where('slug', 'english')->first()->books();
         $enBooks->create(
             [
-                "slug"          => "life",
-                "name"          => "Life",
+                "slug" => "life",
+                "name" => "Life",
             ]
         );
         $enBooks->create(
             [
-                "slug"          => "nathan",
-                "name"          => "Le vocabulaire anglais (Nathan)",
+                "slug" => "nathan",
+                "name" => "Le vocabulaire anglais (Nathan)",
+                "cover" => "/images/nathan_cover.jpg"
             ]
         );
         $enBooks->create(
@@ -60,8 +64,8 @@ return new class extends Migration {
 
         $deBooks = TranslationLanguage::where('slug', 'deutsch')->first()->books();
         $deBooks->create([
-            "slug"=>"genial-11-vp",
-            "name"=> "Genial 11 VP"
+            "slug" => "genial-11-vp",
+            "name" => "Genial 11 VP"
         ]);
     }
 

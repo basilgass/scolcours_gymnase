@@ -2,15 +2,15 @@
 	lang="ts"
 	setup
 >
-import { computed, inject, ref } from "vue"
+import BlockShow from "@/Components/Blocks/BlockShow.vue"
+import FormMaker from "@/Components/Form/FormMaker.vue"
+import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
-import axios from "axios"
+import { flashInterface } from "@/types"
 import { IllustrationInterface } from "@/types/modelInterfaces"
 import { router } from "@inertiajs/vue3"
-import FormMaker from "@/Components/Form/FormMaker.vue"
-import { flashInterface } from "@/types"
-import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
-import BlockShow from "@/Pages/Blocks/BlockShow.vue"
+import axios from "axios"
+import { inject, ref } from "vue"
 
 
 defineOptions({ layout: LayoutMain })
@@ -193,7 +193,8 @@ const deleteChallenge = function () {
 		<!-- Header -->
 		<!-- <template #header> -->
 		<div
-			class="sticky top-0 z-10 bg-white flex justify-between items-baseline border-b border-gray-200 px-5 py-3 mb-5">
+			class="sticky top-0 z-10 bg-white flex justify-between items-baseline border-b border-gray-200 px-5 py-3 mb-5"
+		>
 			<h1>
 				<span class="text-xl md:text-2xl">édition d'un challenge</span>
 				<span class="text-xs font-code ml-5">
@@ -287,7 +288,7 @@ const deleteChallenge = function () {
 						:label="`vie / ${theChallenge.bonusScoreTrigger > 0
 							? theChallenge.bonusScoreTrigger
 							: 'x'
-							} points`"
+						} points`"
 						name="questionsBonuses1"
 						type="number"
 						sm
@@ -299,7 +300,7 @@ const deleteChallenge = function () {
 						:label="`temps / ${theChallenge.bonusScoreTrigger > 0
 							? theChallenge.bonusScoreTrigger
 							: 'x'
-							} points`"
+						} points`"
 						name="questionsBonuses2"
 						type="number"
 						sm

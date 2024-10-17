@@ -9,7 +9,7 @@ import { FormValidationVector } from "@/Components/Form/FormValidation/FormValid
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 import { flashInterface } from "@/types"
 import { useUrlSearchParams } from "@vueuse/core"
-import axios from "axios"
+import fetchAxios from "axios"
 import { computed, inject, onMounted, ref, useAttrs } from "vue"
 
 /**
@@ -126,7 +126,7 @@ const placeholderValue = computed(() => {
 
 // On input update, emit the new value in correct format
 function updateInput(e: Event) {
-	emits('change')
+	emits('change', e)
 	// TODO: updateInput ?
 }
 
@@ -187,7 +187,7 @@ function onEnter(ev) {
 	if (!props.axios.model || !props.axios.id || !props.axios.column) return
 
 	// Apply the axios
-	axios.patch(
+	fetchAxios.patch(
 		route("api.update.a.value"),
 		{
 			_method: "PATCH",
@@ -315,6 +315,7 @@ defineExpose({ focus: setFocus })
 					v-bind="$attrs"
 					@update="updateInput($event)"
 				/>
+
 				<form-element-keyboard
 					v-else-if="type === 'keyboard'"
 					v-model="theValue as string"
@@ -323,6 +324,7 @@ defineExpose({ focus: setFocus })
 					v-bind="$attrs"
 					@update="updateInput($event)"
 				/>
+
 				<form-element-switch
 					v-else-if="type === 'switch'"
 					v-model="theValue as boolean"

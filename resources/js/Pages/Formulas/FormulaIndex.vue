@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 
+import BlockShow from "@/Components/Blocks/BlockShow.vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
-import BlockShow from "@/Pages/Blocks/BlockShow.vue"
 import { flashInterface } from "@/types"
 import type { FormulaInterface } from "@/types/modelInterfaces"
 import axios from "axios"

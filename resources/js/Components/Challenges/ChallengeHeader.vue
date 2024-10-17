@@ -7,14 +7,15 @@ Contient le bouton de retour au chapitre, le titre, la description et l'édition
 	setup
 >
 
-import { inject, PropType } from "vue"
+import { useStoreEditMode } from "@/stores/useStoreEditMode.ts"
 import type { ChallengeInterface } from "@/types/modelInterfaces"
+import { PropType } from "vue"
 
 const props = defineProps({
 	challenge: { type: Object as PropType<ChallengeInterface>, required: true }
 })
 
-const editMode = inject<boolean>("editMode")
+const  editMode  = useStoreEditMode()
 </script>
 
 <template>
@@ -37,7 +38,7 @@ const editMode = inject<boolean>("editMode")
 					$page.props.theme.slug,
 					props.challenge.chapter.slug,
 				])
-					"
+				"
 				as="button"
 				class="hover:pl-2 transition-all"
 			>
@@ -45,7 +46,7 @@ const editMode = inject<boolean>("editMode")
 			</InertiaLink>
 		</div>
 		<div
-			v-admin="editMode"
+			v-admin="editMode.enable"
 			v-theme.bg.text.admin
 			class="py-1 font-code text-sm -mb-2 mt-2"
 		>

@@ -1,13 +1,14 @@
 <script lang="ts" setup>
 
-import { BlockInterface } from "@/types/modelInterfaces"
-import { inject, PropType, Ref, ref } from "vue"
-import EditLink from "@/Components/Ui/EditLink.vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
-import axios from "axios"
+import EditLink from "@/Components/Ui/EditLink.vue"
+import { useStoreEditMode } from "@/stores/useStoreEditMode.ts"
 import { flashInterface } from "@/types"
+import { BlockInterface } from "@/types/modelInterfaces.ts"
+import axios from "axios"
+import { inject, PropType, Ref, ref } from "vue"
 
-const editMode = inject<boolean>("editMode")
+const  editMode  = useStoreEditMode()
 const flash = inject<flashInterface>("flash")
 const postBlocks = inject<Ref<BlockInterface[]>>("postBlocks", ref([]))
 
@@ -52,7 +53,7 @@ function moveBlock(direction: "top" | "up" | "down" | "bottom") {
 </script>
 <template>
 	<div
-		v-admin="editMode"
+		v-admin="editMode.enable"
 		v-theme.bg.text.admin
 		class="py-1 px-2 flex justify-between items-center"
 	>

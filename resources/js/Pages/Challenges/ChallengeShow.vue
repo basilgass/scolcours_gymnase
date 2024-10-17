@@ -1,14 +1,14 @@
 <script lang="ts" setup>
 
-import { PropType, ref } from "vue"
-import ChallengeHeader from "@/Components/Challenges/ChallengeHeader.vue"
 import ChallengeExport from "@/Components/Challenges/ChallengeExport.vue"
+import ChallengeGame from "@/Components/Challenges/ChallengeGame.vue"
+import ChallengeHeader from "@/Components/Challenges/ChallengeHeader.vue"
+import ChallengeTraining from "@/Components/Challenges/ChallengeTraining.vue"
+import IllustrationShow from "@/Components/Illustrations/IllustrationShow.vue"
+import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 import { ChallengeInterface, TeamInterface } from "@/types/modelInterfaces"
-import ChallengeGame from "@/Components/Challenges/ChallengeGame.vue"
-import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
-import IllustrationShow from "@/Pages/Illustrations/IllustrationShow.vue"
-import ChallengeTraining from "@/Components/Challenges/ChallengeTraining.vue"
+import { PropType, ref } from "vue"
 
 defineOptions({ layout: LayoutMain })
 

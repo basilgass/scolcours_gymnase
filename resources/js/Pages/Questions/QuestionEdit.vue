@@ -2,16 +2,16 @@
 	lang="ts"
 	setup
 >
-import { computed, inject, PropType, ref } from "vue"
-import LayoutMain from "@/Layouts/LayoutMain.vue"
-import type { QuestionInterface } from "@/types/modelInterfaces"
-import axios from "axios"
-import { ClipboardKeyboardInterface, flashInterface } from "@/types"
 import FormMaker from "@/Components/Form/FormMaker.vue"
-import QuestionShow from "@/Pages/Questions/QuestionShow.vue"
-import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
 import MoveItemTo from "@/Components/MoveItemTo.vue"
+import QuestionShow from "@/Components/Questions/QuestionShow.vue"
+import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
+import LayoutMain from "@/Layouts/LayoutMain.vue"
+import { ClipboardKeyboardInterface, flashInterface } from "@/types"
+import type { QuestionInterface } from "@/types/modelInterfaces"
 import { router } from "@inertiajs/vue3"
+import axios from "axios"
+import { computed, inject, PropType, ref } from "vue"
 
 defineOptions({ layout: LayoutMain })
 

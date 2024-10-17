@@ -1,12 +1,12 @@
 <script lang="ts" setup>
-import { computed, inject, ref } from "vue"
-import { KeyboardInterface, useKeyboard } from "@/Composables/useKeyboard"
-import QuestionAnswerSelector from "@/Components/Questions/QuestionAnswerSelector.vue"
-import { questionDataInterface } from "@/Pages/Questions/QuestionShow.vue"
-import { userAnswerInterface } from "@/types"
-import QuestionValidation from "@/Components/Questions/QuestionValidation.vue"
-import KeyboardBasic from "@/Components/Keyboards/KeyboardBasic.vue"
 import { ChallengeAnswerInterface } from "@/Components/Challenges/ChallengeGame.vue"
+import KeyboardBasic from "@/Components/Keyboards/KeyboardBasic.vue"
+import QuestionAnswerSelector from "@/Components/Questions/QuestionAnswerSelector.vue"
+import { questionDataInterface } from "@/Components/Questions/QuestionShow.vue"
+import QuestionValidation from "@/Components/Questions/QuestionValidation.vue"
+import { KeyboardInterface, useKeyboard } from "@/Composables/useKeyboard"
+import { userAnswerInterface } from "@/types"
+import { computed, inject, ref } from "vue"
 
 // const props = defineProps({})
 const questionData = inject<questionDataInterface>("questionData")
@@ -140,7 +140,7 @@ defineExpose({
 		</div>
 
 		<div
-			v-show="showInput==='show'"
+			v-show="showInput!=='hidden'"
 			class="px-3"
 		>
 			<!-- answerId selector -->

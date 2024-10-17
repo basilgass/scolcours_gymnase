@@ -11,6 +11,7 @@ class TranslationBook extends Model
     protected $fillable = [
         'slug',
         'name',
+        'cover'
     ];
 
     public function language(): BelongsTo

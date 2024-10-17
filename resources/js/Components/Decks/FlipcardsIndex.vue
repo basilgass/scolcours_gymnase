@@ -6,9 +6,10 @@
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
+import { useStoreEditMode } from "@/stores/useStoreEditMode.ts"
 import { flashInterface } from "@/types"
 import type { deckInterface } from "@/types/modelInterfaces"
-import { router } from '@inertiajs/vue3'
+import { router } from "@inertiajs/vue3"
 import axios from "axios"
 import { inject, PropType, ref } from "vue"
 
@@ -16,7 +17,7 @@ const props = defineProps({
 	deck: { type: Object as PropType<deckInterface>, required: true }
 })
 
-const editMode = inject<boolean>("editMode")
+const  editMode  = useStoreEditMode()
 const flash = inject<flashInterface>('flash')
 
 const theDeck = ref(props.deck)
@@ -89,7 +90,7 @@ function updateDecksOrder() {
 					<div class="grid grid-cols-2 gap-5">
 						<div class="relative">
 							<form-maker
-								v-if="editMode"
+								v-if="editMode.enable"
 								v-model="element.recto.body"
 								type="code"
 								class="w-full rounded-xl min-h-[200px]"
@@ -111,7 +112,7 @@ function updateDecksOrder() {
 						</div>
 						<div class="relative">
 							<form-maker
-								v-if="editMode"
+								v-if="editMode.enable"
 								v-model="element.verso.body"
 								type="code"
 								class="w-full"
@@ -132,10 +133,10 @@ function updateDecksOrder() {
 							</div>
 						</div>
 					</div>
-					<div v-if="showMarkdown === element.id || !editMode">
+					<div v-if="showMarkdown === element.id || !editMode.enable">
 						<div
 							class="text-lg flex justify-between mt-3"
-							v-show="editMode"
+							v-show="editMode.enable"
 						>
 							<div>Prévisualisation</div>
 							<button @click="showMarkdown = -1">

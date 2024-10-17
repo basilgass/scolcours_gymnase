@@ -1,11 +1,9 @@
 <script lang="ts">
-import { Link } from "@inertiajs/vue3"
 import ScolCoursLogo from "@/Components/ScolcoursLogo.vue"
 
 export default {
 	components: {
 		ScolCoursLogo,
-		Link,
 	}
 }
 </script>

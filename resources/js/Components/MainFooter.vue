@@ -7,6 +7,13 @@ Pied de page pour les pages principales.
 >
 import LogoutButton from "@/Components/Ui/LogoutButton.vue"
 import ThemeLinks from "@/Components/Ui/ThemeLinks.vue"
+
+const langues = {
+	italiano: 'it',
+	english: 'en',
+	espanol: 'es',
+	deutsch: 'de',
+}
 </script>
 <template>
 	<div class="bg-black text-white px-10 mt-24">
@@ -37,30 +44,33 @@ import ThemeLinks from "@/Components/Ui/ThemeLinks.vue"
 				<h3 class="text-lg mt-5 font-semibold">
 					Langues
 				</h3>
-				<InertiaLink
-					:href="route('translations.index', ['italiano'])"
-					class="block transition duration-300 hover:translate-x-2 px-0 md:px-4 py-1"
-				>
-					<i class="mr-2 bi bi-translate" /> italiano
-				</InertiaLink>
-				<InertiaLink
-					:href="route('translations.index', ['english'])"
-					class="block transition duration-300 hover:translate-x-2 px-0 md:px-4 py-1"
-				>
-					<i class="mr-2 bi bi-translate" /> english
-				</InertiaLink>
-				<InertiaLink
-					:href="route('translations.index', ['deutsch'])"
-					class="block transition duration-300 hover:translate-x-2 px-0 md:px-4 py-1"
-				>
-					<i class="mr-2 bi bi-translate" /> deutsch
-				</InertiaLink>
-				<InertiaLink
-					:href="route('translations.index', ['espanol'])"
-					class="block transition duration-300 hover:translate-x-2 px-0 md:px-4 py-1"
-				>
-					<i class="mr-2 bi bi-translate" /> español
-				</InertiaLink>
+				<div class="space-x-4">
+					<InertiaLink
+						v-for="(name,langue) in langues"
+						:href="route('translations.index', [langue])"
+						class="inline-block transition duration-300 hover:translate-x-1"
+					>
+						<i class="mr-1 bi bi-translate" /> {{ langues[langue] }}
+					</InertiaLink>
+				</div>
+				<!--				<InertiaLink-->
+				<!--					:href="route('translations.index', ['english'])"-->
+				<!--					class="block transition duration-300 hover:translate-x-2 px-0 md:px-4 py-1"-->
+				<!--				>-->
+				<!--					<i class="mr-2 bi bi-translate" /> english-->
+				<!--				</InertiaLink>-->
+				<!--				<InertiaLink-->
+				<!--					:href="route('translations.index', ['deutsch'])"-->
+				<!--					class="block transition duration-300 hover:translate-x-2 px-0 md:px-4 py-1"-->
+				<!--				>-->
+				<!--					<i class="mr-2 bi bi-translate" /> deutsch-->
+				<!--				</InertiaLink>-->
+				<!--				<InertiaLink-->
+				<!--					:href="route('translations.index', ['espanol'])"-->
+				<!--					class="block transition duration-300 hover:translate-x-2 px-0 md:px-4 py-1"-->
+				<!--				>-->
+				<!--					<i class="mr-2 bi bi-translate" /> español-->
+				<!--				</InertiaLink>-->
 			</div>
 
 			<div class="md:mx-auto">

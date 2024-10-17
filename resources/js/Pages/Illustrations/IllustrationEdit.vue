@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 import FormImageDrop from "@/Components/Form/FormImageDrop.vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
+import IllustrationShow from "@/Components/Illustrations/IllustrationShow.vue"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
-import IllustrationShow from "@/Pages/Illustrations/IllustrationShow.vue"
 import { flashInterface } from "@/types"
 import type { IllustrationInterface, widgetInterface } from "@/types/modelInterfaces"
 import { router } from "@inertiajs/vue3"

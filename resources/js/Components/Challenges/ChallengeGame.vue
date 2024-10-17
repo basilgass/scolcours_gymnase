@@ -1,7 +1,12 @@
 <script lang="ts" setup>
 
+import ChallengeGameScore from "@/Components/Challenges/ChallengeGameScore.vue"
 import ChallengeIntro from "@/Components/Challenges/ChallengeIntro.vue"
-import { computed, inject, PropType, reactive, ref } from "vue"
+import ChallengeResults from "@/Components/Challenges/ChallengeResults.vue"
+import QuestionShow from "@/Components/Questions/QuestionShow.vue"
+import StatBar from "@/Components/Ui/StatBar.vue"
+import { useGenerator } from "@/Composables/useGenerator"
+import { flashInterface } from "@/types"
 import {
 	ChallengeInterface,
 	ChallengeScoreInterface,
@@ -10,14 +15,9 @@ import {
 	QuestionMinInterface,
 	TeamInterface
 } from "@/types/modelInterfaces"
-import { useGenerator } from "@/Composables/useGenerator"
-import { flashInterface } from "@/types"
-import QuestionShow from "@/Pages/Questions/QuestionShow.vue"
-import ChallengeGameScore from "@/Components/Challenges/ChallengeGameScore.vue"
-import StatBar from "@/Components/Ui/StatBar.vue"
 import { usePage } from "@inertiajs/vue3"
 import axios from "axios"
-import ChallengeResults from "@/Components/Challenges/ChallengeResults.vue"
+import { computed, inject, PropType, reactive, ref } from "vue"
 
 export interface ChallengeAnswerInterface {
 	question: string

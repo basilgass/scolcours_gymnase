@@ -1,17 +1,18 @@
 <script lang="ts" setup>
-import { Random } from "pimath"
-import { computed, inject, Ref, ref } from "vue"
-import { usePage } from "@inertiajs/vue3"
-import DialogModal from "@/Components/Ui/DialogModal.vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
-import axios from "axios"
-import type { TranslationWord } from "@/types/modelInterfaces"
+import DialogModal from "@/Components/Ui/DialogModal.vue"
 import { LanguageDataInterface } from "@/Pages/languages/LanguageShow.vue"
+import { useStoreEditMode } from "@/stores/useStoreEditMode.ts"
+import type { TranslationWord } from "@/types/modelInterfaces"
+import { usePage } from "@inertiajs/vue3"
+import axios from "axios"
+import { Random } from "pimath"
+import { computed, inject, ref } from "vue"
 
 const languageData = inject<LanguageDataInterface>('LanguageData')
 
 // Define the editMode.
-const editMode = inject<Ref<boolean>>("editMode")
+const  editMode  = useStoreEditMode()
 
 
 const words = computed(() => {
@@ -49,7 +50,7 @@ const editWord = ref<{ id: number, foreign: string, fr: string }>({
 })
 // before editing, store the word to edit.
 const editTranslation = function(word) {
-	if (editMode && usePage().props.auth.can.admin) {
+	if (editMode.enable && usePage().props.auth.can.admin) {
 		editWord.value = word
 		showEditForm.value = true
 	}
@@ -121,7 +122,7 @@ const exportList = function() {
 			<div
 				v-for="(item, index) in filteredWords"
 				:key="index"
-				:class="editMode?'hover:bg-amber-100 cursor-pointer':''"
+				:class="editMode.enable?'hover:bg-amber-100 cursor-pointer':''"
 				class="bg-white border rounded grid grid-cols-2 p-3"
 				@click="editTranslation(item)"
 			>

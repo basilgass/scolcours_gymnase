@@ -1,11 +1,10 @@
 <script lang="ts" setup>
-import { computed, nextTick, onMounted, ref } from "vue"
-
 import { javascriptTriggers, latexTriggers, mdTriggers, TriggerFunction } from "@/helpers/mdAutofill"
 import Prism from "prismjs"
 import "prismjs/components/prism-javascript"
 import "prismjs/components/prism-json"
 import "prismjs/components/prism-latex"
+import { computed, nextTick, onMounted, ref } from "vue"
 import "prismjs/themes/prism.css"
 
 /**
@@ -40,7 +39,7 @@ const inp = ref(null)
 const pre = ref(null)
 
 // number of rows
-const currentRows = ref(+props.rows)
+const currentRows = ref(0)
 
 /**
  * Set the focus on the textarea
@@ -326,7 +325,7 @@ function update() {
  * Update the height of the textarea to fit the content
  */
 const areaHeight = computed(() => {
-	const r = (theValue.value ?? "").split("\n").length + 2
+	const r = props.rows > 0 ? props.rows: (theValue.value ?? "").split("\n").length + 2
 	return `${0.5 + Math.max(+currentRows.value, r) * 1.4 + 0.5}rem`
 })
 
@@ -338,10 +337,10 @@ onMounted(() => {
 	if (props.focus) focus()
 
 	// Modify the height to fit everything.
-	currentRows.value = Math.max(
-		(theValue.value ?? "").split("\n").length + 2,
-		+props.rows
-	)
+	// currentRows.value = Math.max(
+	// 	(theValue.value ?? "").split("\n").length + 2,
+	// 	+props.rows
+	// )
 })
 </script>
 <template>

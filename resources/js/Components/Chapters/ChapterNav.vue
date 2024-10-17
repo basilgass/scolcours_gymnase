@@ -2,40 +2,44 @@
 	lang="ts"
 	setup
 >
-import { computed, PropType } from "vue"
-import { usePage } from "@inertiajs/vue3"
 import type { ChapterInterface } from "@/types/modelInterfaces"
+import { usePage } from "@inertiajs/vue3"
+import { computed } from "vue"
 
-const props = defineProps({
-	chapter: {
-		type: Object as PropType<ChapterInterface>,
-		required: true
-	},
-	currentPost: {
-		type: Number,
-		default: null
-	}
-})
+const props = defineProps<{
+	chapter: ChapterInterface, // slug, title, posts.length
+	currentPost: number
+}>()
 
-const nav = computed(() => {
+const nav = computed<{
+	previous: string | false,
+	home: string,
+	next: string | false
+}>(() => {
 
-	const previous = props.currentPost === 1 ?
-		route("themes.chapters.intro", [usePage().props.theme.slug, props.chapter.slug]) :
+	const themeSlug = usePage().props.theme.slug
+
+	const chapterSlug = props.chapter.slug
+	const previous = props.currentPost > 1 ?
 		route("themes.chapters.slide", [
-			usePage().props.theme.slug,
-			props.chapter.slug,
+			themeSlug,
+			chapterSlug,
 			props.currentPost - 1
-		])
+		]) : false
 
-	const next = props.currentPost === props.chapter.posts.length ?
-		null :
+	const home = route("themes.chapters.intro", [
+		themeSlug,
+		chapterSlug
+	])
+
+	const next = props.currentPost < props.chapter.posts.length ?
 		route("themes.chapters.slide", [
-			usePage().props.theme.slug,
-			props.chapter.slug,
+			themeSlug,
+			chapterSlug,
 			props.currentPost + 1
-		])
+		]) : false
 
-	return { previous, next }
+	return { previous, home, next }
 })
 </script>
 
@@ -44,7 +48,7 @@ const nav = computed(() => {
 		<div class="justify-self-start">
 			<InertiaLink
 				v-if="nav.previous"
-				:class="`btn-scolcours-${$page.props.theme.slug}`"
+				v-theme.btn
 				:href="nav.previous"
 			>
 				<i class="bi bi-box-arrow-in-left mr-0 md:mr-2" />
@@ -55,12 +59,8 @@ const nav = computed(() => {
 		</div>
 		<div class="justify-self-center flex">
 			<InertiaLink
-				:class="`btn-scolcours-${$page.props.theme.slug}`"
-				:href="route('themes.chapters.intro', [
-					$page.props.theme.slug,
-					chapter.slug,
-				])
-					"
+				v-theme.btn
+				:href="nav.home"
 			>
 				<i class="bi bi-house mr-2 hidden md:inline" /><span v-katex.auto="chapter.title" />
 			</InertiaLink>
@@ -68,7 +68,7 @@ const nav = computed(() => {
 		<div class="justify-self-end">
 			<InertiaLink
 				v-if="nav.next"
-				:class="`btn-scolcours-${$page.props.theme.slug}`"
+				v-theme.btn
 				:href="nav.next"
 			>
 				<div class="hidden md:inline">

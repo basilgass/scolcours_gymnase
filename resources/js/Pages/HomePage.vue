@@ -5,17 +5,12 @@
 import ScolCoursLogo from "@/Components/ScolcoursLogo.vue"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 import LayoutFullpage from "@/Layouts/LayoutFullpage.vue"
+import { ChapterMiniInterface } from "@/types/modelInterfaces.ts"
 import { PropType } from "vue"
 
 defineOptions({ layout: LayoutFullpage })
 
-interface ChapterMiniInterface {
-	id: number
-	title: string
-	url: string
-	modified: string
-	body: string
-}
+
 
 defineProps({
 	canLogin: { type: Boolean, required: true },

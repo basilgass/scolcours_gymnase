@@ -2,10 +2,10 @@
 Affichage d'un formulaire, avec la possibilité de passer d'un formulaire du thème à un autre.
 -->
 <script setup lang="ts">
-import { computed, ref } from "vue"
-import BlockShow from "@/Pages/Blocks/BlockShow.vue"
+import BlockShow from "@/Components/Blocks/BlockShow.vue"
 import { useIntersectionObserver } from "@vueuse/core"
 import axios from "axios"
+import { computed, ref } from "vue"
 
 const props = defineProps({
 		chapterSlug: { type: String, required: true },

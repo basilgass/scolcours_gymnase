@@ -1,11 +1,11 @@
 <script lang="ts" setup>
-import { computed, inject, nextTick, PropType, ref } from "vue"
-import type { QuestionInterface } from "@/types/modelInterfaces"
-import EditLink from "@/Components/Ui/EditLink.vue"
 import DropdownMenu from "@/Components/Ui/DropdownMenu.vue"
-import axios from "axios"
+import EditLink from "@/Components/Ui/EditLink.vue"
 import type { flashInterface } from "@/types"
+import type { QuestionInterface } from "@/types/modelInterfaces.ts"
 import { router } from "@inertiajs/vue3"
+import axios from "axios"
+import { computed, inject, nextTick, PropType, ref } from "vue"
 
 const flash = inject<flashInterface>("flash")
 
