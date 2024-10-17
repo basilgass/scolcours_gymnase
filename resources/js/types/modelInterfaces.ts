@@ -114,7 +114,7 @@ export interface QuestionMinInterface {
 export interface QuestionInterface extends QuestionMinInterface{
 	id: number;
 	order: number;
-	displayIf: boolean | string;
+	displayIf: null | string;
 	css: string;
 	user: {
 		answer: string
@@ -307,4 +307,11 @@ export interface FormulaInterface {
 		};
 	}
 	block: BlockInterface
+}
+
+export interface BookInterface {
+	id: number,
+	slug: string,
+	name: string,
+	cover: string
 }

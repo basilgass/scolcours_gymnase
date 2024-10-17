@@ -1,10 +1,10 @@
 /* useGenerators
  * Récupération, création de question à partir d'un générateur donné.
  */
-import { ComputedRef, Ref, unref } from "vue"
-import type { GeneratorInterface, QuestionMinInterface } from "@/types/modelInterfaces"
-import  PiMath from "pimath"
 import { generatedQuestionInterface, generatorResultInterface } from "@/types"
+import type { GeneratorInterface, QuestionMinInterface } from "@/types/modelInterfaces"
+import PiMath from "pimath"
+import { ComputedRef, Ref, unref } from "vue"
 
 export function useGenerator(generator: GeneratorInterface | ComputedRef<GeneratorInterface>): generatorResultInterface {
 	function question(
@@ -17,7 +17,6 @@ export function useGenerator(generator: GeneratorInterface | ComputedRef<Generat
 		const generatorUnref = unref(generator)
 
 		return {
-			body: "",
 			block: {
 				id: 0,
 				title: questionUnref.title ?? "",

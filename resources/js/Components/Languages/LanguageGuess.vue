@@ -88,18 +88,8 @@ const nextWord = function() {
 // Save to local storage.
 const userGuess = ref("")
 
-const determinants = computed(() => {
-	if (languageData.language === "italiano") {
-		return ["il ", "la ", "le ", "lo ", "i ", "l'", "gli "]
-	} else if (languageData.language === "english") {
-		return ["a ", "to ", "the ", "an "]
-	} else if (languageData.language === "deutsch") {
-		return ["der ", "die ", "das "]
-	} else if (languageData.language === "espanol") {
-		return []
-	}
-
-	return []
+const determinants = computed<string[]>(() => {
+	return languageData.language.determinants.split(',')
 })
 const suggestionsWrapper = ref(null)
 const currentWordForeign = computed(() => {

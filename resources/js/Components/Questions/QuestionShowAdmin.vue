@@ -18,7 +18,7 @@ const theQuestion = ref(props.question)
 const questionsIds = inject<number[]>("questionsIds", [])
 
 const displayIfIds = computed(() => {
-	if (props.question.displayIf === null || props.question.displayIf===true) return []
+	if (props.question.displayIf === null || props.question.displayIf==="") return []
 
 		return (props.question.displayIf as string)
 			.split(",")

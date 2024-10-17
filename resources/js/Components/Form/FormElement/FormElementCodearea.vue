@@ -325,7 +325,7 @@ function update() {
  * Update the height of the textarea to fit the content
  */
 const areaHeight = computed(() => {
-	const r = props.rows > 0 ? props.rows: (theValue.value ?? "").split("\n").length + 2
+	const r = +props.rows > 0 ? +props.rows: (theValue.value ?? "").split("\n").length + 2
 	return `${0.5 + Math.max(+currentRows.value, r) * 1.4 + 0.5}rem`
 })
 

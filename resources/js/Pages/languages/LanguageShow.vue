@@ -12,16 +12,11 @@ import { useLanguage } from "@/Components/Languages/useLanguage"
 import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
 // Set the main layout.
 import LayoutMain from "@/Layouts/LayoutMain.vue"
-import type { TranslationUnitInterfaceExtended, TranslationWord } from "@/types/modelInterfaces"
+import type { BookInterface, TranslationUnitInterfaceExtended, TranslationWord } from "@/types/modelInterfaces"
 import { computed, ComputedRef, provide, Ref, ref } from "vue"
 
 defineOptions({ layout: LayoutMain })
 
-interface BookInterface {
-	id: number,
-	slug: string,
-	name: string
-}
 interface LanguageInterface {
 	game: "list" | "type" | "memory" | "guess",
 	language: {

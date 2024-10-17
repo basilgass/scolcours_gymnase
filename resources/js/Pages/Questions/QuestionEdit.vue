@@ -38,7 +38,6 @@ let saveQuestion = function () {
 				.post(route("questions.update", [theQuestion.value.id]), {
 					_method: "PATCH",
 					answer: theQuestion.value.answer,
-					checker: theQuestion.value.checker,
 					keyboard: theQuestion.value.keyboard,
 					css: theQuestion.value.css
 				})

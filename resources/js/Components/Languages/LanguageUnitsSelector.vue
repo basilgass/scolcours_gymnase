@@ -1,17 +1,11 @@
 <script lang="ts" setup>
 
-import { TranslationUnitInterface, TranslationUnitInterfaceExtended } from "@/types/modelInterfaces"
+import { BookInterface, TranslationUnitInterface, TranslationUnitInterfaceExtended } from "@/types/modelInterfaces"
 import axios from "axios"
 import { computed, ref } from "vue"
 
 const units = defineModel<TranslationUnitInterfaceExtended[]>()
 
-interface BookInterface {
-	id: number,
-	slug: string,
-	name: string,
-	cover: string
-}
 
 defineProps<{
 	books: BookInterface[]

@@ -6,7 +6,7 @@ import { computed } from "vue"
 
 const props = defineProps<{
 	illustration: IllustrationInterface
-	clickThrough: boolean
+	clickThrough?: boolean
 }>()
 
 // Get the component to display

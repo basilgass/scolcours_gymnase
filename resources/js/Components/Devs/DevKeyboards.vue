@@ -18,8 +18,6 @@ const question = ref<QuestionInterface>({
 		body: "\\($a\\)",
 		illustration: null
 	},
-	body: null,
-	checker: null,
 	css: null,
 	displayIf: null,
 	id: undefined,
