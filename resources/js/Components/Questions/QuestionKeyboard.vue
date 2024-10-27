@@ -4,11 +4,10 @@ import KeyboardBasic from "@/Components/Keyboards/KeyboardBasic.vue"
 import QuestionAnswerSelector from "@/Components/Questions/QuestionAnswerSelector.vue"
 import { questionDataInterface } from "@/Components/Questions/QuestionShow.vue"
 import QuestionValidation from "@/Components/Questions/QuestionValidation.vue"
-import { KeyboardInterface, useKeyboard } from "@/Composables/useKeyboard"
+import { KeyboardInterface, useKeyboard } from "@/Composables/useKeyboard.ts"
 import { userAnswerInterface } from "@/types"
 import { computed, inject, ref } from "vue"
 
-// const props = defineProps({})
 const questionData = inject<questionDataInterface>("questionData")
 
 // Get the keyboard building system
@@ -40,13 +39,13 @@ interface questionAnswerInterface {
 
 const keyboardAnswers = computed<questionAnswerInterface[]>(() => {
 	// The keyboard is wrong...
-	if (!questionData.question.keyboard) {
+	if (!questionData.question.value.keyboard) {
 		return []
 	}
 
 	// Get the keyboards
 	const arr = [],
-		kbrds = getKeyboards(questionData.question.keyboard)
+		kbrds = getKeyboards(questionData.question.value.keyboard)
 
 	questionData.answers.value.forEach((answer: string, index: number) => {
 		arr.push({
@@ -86,12 +85,8 @@ const answerFormat = computed(() => {
 		)
 	}
 
-	// TODO: expose the checker format for other keyboard that "Basic"s
-
 	return ""
 })
-
-// Answers management.
 
 function updateQuestion(event: userAnswerInterface) {
 	questionData.user.answers.value[questionData.answerId.value] = event
@@ -144,9 +139,7 @@ defineExpose({
 			class="px-3"
 		>
 			<!-- answerId selector -->
-			<question-answer-selector
-				:answers-number="questionData.answers.value.length"
-			/>
+			<question-answer-selector />
 
 			<question-validation
 				@validate="$emit('validate', $event )"

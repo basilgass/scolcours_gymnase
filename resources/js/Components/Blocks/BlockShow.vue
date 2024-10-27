@@ -1,31 +1,18 @@
-<!--
-Affichage d'un block , avec toutes les possibilités
--->
-<script
-	lang="ts"
-	setup
->
+<script lang="ts" setup>
 import BlockBodyButtons from "@/Components/Blocks/BlockBodyButtons.vue"
 import BlockShowAdmin from "@/Components/Blocks/BlockShowAdmin.vue"
 import IllustrationShow from "@/Components/Illustrations/IllustrationShow.vue"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 import { useFormattedBody } from "@/Composables/useHelpers.ts"
+import { useScriptLoader } from "@/Composables/useScriptLoader.ts"
 import { blockTypeDefault, blockTypes } from "@/scolcours.ts"
 import type { BlockInterface } from "@/types/modelInterfaces.ts"
-import PiMath from "pimath"
-import { computed, inject, PropType, provide, ref } from "vue"
+import { computed, inject, provide } from "vue"
 
 // Props
-const props = defineProps({
-	block: {
-		type: Object as PropType<BlockInterface>,
-		required: true
-	},
-	groupIndex: {
-		type: Number,
-		default: 0
-	}
-})
+const props = defineProps<{
+	block: BlockInterface
+}>()
 
 // emits
 defineEmits(["destroy"])
@@ -37,14 +24,22 @@ const blockConfig = computed(() => {
 		? blockTypeDefault
 		: blockTypes[props.block.type]
 })
+
 const blockTitle = computed(() => {
 	return !props.block.title
 		? blockConfig.value.title
 		: props.block.title
 })
+const blockTitleClass = computed(() => {
+	return "flex justify-between w-full px-5 py-3 mb-3 text-2xl"
+	+ (props.block.merge ? " pt-10" : "")
+	+ " " + blockConfig.value.style.header
+})
+
 const blockIcon = computed(() => {
 	return blockConfig.value.icon
 })
+
 const blockTemplate = computed(() => {
 	if (!props.block.template) {
 		return {
@@ -144,79 +139,32 @@ const blockTemplate = computed(() => {
 	}
 })
 
-const postData = inject('postData', ref({}))
-// const { blockData, random } = useBlock(props.block)
-const random = ref(1)
-const blockData = computed(() => {
-	try {
-		// Remove the existing events
-		// if (events.length > 0) {
-		// 	for (const [key, value] of Object.entries(events[0])) {
-		// 		document.removeEventListener(key, value, false)
-		// 	}
-		// }
+const postScript = inject("postScript", useScriptLoader(""))
+const blockScript = useScriptLoader(props.block.script, { parent: postScript.data })
+blockScript.run()
+provide("blockScript", blockScript)
+const blockBody = computed(() => useFormattedBody(props.block.body, blockScript.merged))
 
-		// Run the script if there is one.
-		if (props.block.script !== null && random.value > 0) {
-			const F = new Function(
-				"PiMath",
-				"postData",
-				"iteration",
-				props.block.script
-			)
-
-			const result = F(PiMath, postData.value, random.value)
-
-			// // Store events for later removal
-			// if (result.events !== undefined) {
-			// 	events = result.events
-			//
-			// 	// Load the events.
-			// 	Object.keys(events).forEach((key) => {
-			// 		document.addEventListener(key, events[key], false)
-			// 	})
-			//
-			// }
-
-			return {
-				...postData.value,
-				...result
-			}
-		}
-	} catch (e) {
-		console.warn("BlockShow (script generation)", e)
-		return {}
-	}
-
-	return {}
-})
-const blockBody = computed(() => useFormattedBody(props.block.body, blockData))
-provide("blockData", blockData)
-
-//
-// const { bodyData, iteration, blockScript } = useDataMaker()
-//
-// onMounted(()=>{
-// 	blockScript(props.block.script)
-// })
 </script>
 
 <template>
 	<article
 		:id="`block-${block.id}`"
 		:class="blockConfig.style.body"
-		class="rounded bg-white dark:bg-gray-800"
+		class="bg-white dark:bg-gray-800"
 	>
 		<BlockShowAdmin :block="block" />
 
 		<!-- header -->
 		<div
-			v-show="blockTitle"
-			:class="blockConfig.style.header"
-			class="flex justify-between w-full px-5 py-3 mb-3 text-xl"
+			v-show="blockTitle || blockScript.hasData.value"
+			:class="blockTitleClass"
 		>
 			<!-- header left: (generic) icon and title -->
-			<div class="flex gap-3 items-baseline">
+			<div
+				class="flex gap-3 items-baseline"
+				v-theme.text="!block.type"
+			>
 				<i
 					v-if="blockIcon"
 					:class="blockIcon"
@@ -225,15 +173,12 @@ provide("blockData", blockData)
 			</div>
 
 			<!-- buttons for randomize and more... -->
-			<block-body-buttons
-				v-model="random"
-				:block-data="blockData"
-			/>
+			<block-body-buttons />
 		</div>
 
 		<!-- body -->
 		<div
-			:class="blockTemplate.grid + (groupIndex > 0 || (!block.title && !block.type) ? ' pt-3' : '')"
+			:class="blockTemplate.grid + ((!block.title && !block.type) ? ' pt-3' : '')"
 			class="px-5 pb-2"
 		>
 			<markdown-it

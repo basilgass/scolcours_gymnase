@@ -3,21 +3,17 @@
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import EditLink from "@/Components/Ui/EditLink.vue"
 import { useStoreEditMode } from "@/stores/useStoreEditMode.ts"
-import { flashInterface } from "@/types"
 import { BlockInterface } from "@/types/modelInterfaces.ts"
 import axios from "axios"
-import { inject, PropType, Ref, ref } from "vue"
+import { ref } from "vue"
 
 const  editMode  = useStoreEditMode()
-const flash = inject<flashInterface>("flash")
-const postBlocks = inject<Ref<BlockInterface[]>>("postBlocks", ref([]))
 
-const props = defineProps({
-	block: { type: Object as PropType<BlockInterface>, required: true }
-})
+const props = defineProps<{
+	block: BlockInterface
+}>()
 
 const theBlock = ref(props.block)
-
 
 function saveMerge() {
 	const value = !theBlock.value.merge
@@ -37,19 +33,6 @@ function saveMerge() {
 		})
 }
 
-function moveBlock(direction: "top" | "up" | "down" | "bottom") {
-	axios.patch(route("blocks.move", [props.block.id]), {
-		_method: "patch",
-		direction
-	})
-		.then((res) => {
-			flash.success("La block a été déplacé")
-			postBlocks.value = res.data
-		})
-		.catch((res) => {
-			flash.error(res.response.data.message, { timeout: 10 * 1000 })
-		})
-}
 </script>
 <template>
 	<div
@@ -64,38 +47,8 @@ function moveBlock(direction: "top" | "up" | "down" | "bottom") {
 			route-name="blocks.edit"
 		/>
 
-		<div class="flex gap-2 items-baseline">
-			<div class="text-xs">
-				pos: {{ block.order }}
-			</div>
-			<button
-				:class="block.order===0?'text-gray-400':''"
-				:disabled="block.order===0"
-				@click="moveBlock('top')"
-			>
-				<i class="bi bi-chevron-bar-up" />
-			</button>
-			<button
-				:class="block.order===0?'text-gray-400':''"
-				:disabled="block.order===0"
-				@click="moveBlock('up')"
-			>
-				<i class="bi bi-chevron-up" />
-			</button>
-			<button
-				:class="block.order===postBlocks.length-1?'text-gray-400':''"
-				:disabled="block.order===postBlocks.length-1"
-				@click="moveBlock('down')"
-			>
-				<i class="bi bi-chevron-down" />
-			</button>
-			<button
-				:class="block.order===postBlocks.length-1?'text-gray-400':''"
-				:disabled="block.order===postBlocks.length-1"
-				@click="moveBlock('bottom')"
-			>
-				<i class="bi bi-chevron-bar-down" />
-			</button>
+		<div class="draggable-handle cursor-move">
+			<i class="bi bi-arrows-move px-10" />
 		</div>
 
 		<div class="flex gap-2">
@@ -111,7 +64,8 @@ function moveBlock(direction: "top" | "up" | "down" | "bottom") {
 				sm
 			/>
 			<button
-				:class="theBlock.merge?'rotate-180':''"
+				class="transition transition-all"
+				:class="theBlock.merge?'rotate-180':'rotate-0'"
 				@click="saveMerge()"
 			>
 				<i class="bi bi-arrow-bar-up" />

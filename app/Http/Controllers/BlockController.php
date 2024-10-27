@@ -7,11 +7,13 @@ use App\Models\Block;
 use App\Models\Chapter;
 use App\Models\Post;
 use App\Models\Question;
+use Cache;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class BlockController extends Controller
 {
@@ -149,7 +151,7 @@ class BlockController extends Controller
 	 * Show the form for editing the specified resource.
 	 *
 	 * @param int $id
-	 * @return \Inertia\Response
+	 * @return Response
 	 */
 	public function edit(Block $block)
 	{
@@ -205,7 +207,7 @@ class BlockController extends Controller
 
 	public function fetchWidgets()
 	{
-		return \Cache::rememberForever('widgets', function () {
+		return Cache::rememberForever('widgets', function () {
 			$components = [];
 
 			foreach (Storage::disk('illustrations')->allFiles() as $file) {

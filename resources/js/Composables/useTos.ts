@@ -1,5 +1,5 @@
 import { asciiToTex } from "@/Composables/keyboardConfig"
-import { useKeyboard } from "@/Composables/useKeyboard"
+import { useKeyboard } from "@/Composables/useKeyboard.ts"
 import { Fraction, ISolution, PolyFactor, TABLE_OF_SIGNS } from "pimath"
 
 const { keyboards } = useKeyboard()

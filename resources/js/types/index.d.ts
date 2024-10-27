@@ -1,5 +1,5 @@
-import { ComputedRef } from "vue"
 import { ChapterMinInterface, type QuestionMinInterface } from "@/types/modelInterfaces"
+import { ComputedRef } from "vue"
 
 export interface User {
 	id: number
@@ -125,3 +125,21 @@ export interface ClipboardKeyboardInterface {
 	answer: string
 	keyboard: string
 }
+
+export interface buttonInterface {
+	show: boolean
+	icon: string
+	text: string
+}
+
+export interface buttonsInterface {
+	reset?: buttonInterface
+	random?: buttonInterface
+}
+
+export interface BlockScriptType {
+	btn?: buttonsInterface
+	reset?: boolean
+}
+
+export type SCRIPT_TYPE = Record<string, string> & BlockScriptType

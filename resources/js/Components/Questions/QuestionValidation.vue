@@ -31,9 +31,11 @@ function validateQuestion() {
 	if (!result && questionData.config.animation) useWrongAnswerAnimation(validateButton.value)
 
 	// Prepare the emit value
+	// TODO: emitValue from QuestionValidation should not be "ChallengeAnswerInterface"
 	const emitValue: ChallengeAnswerInterface = {
 		question: questionData.body.value,
 		result: result,
+		attempts: 0,    // TODO: added attempts here - must check if it's really used !
 		answer: questionData.user.answers.value.map((a) => a.value.input).join(",")
 	}
 
@@ -44,7 +46,7 @@ function validateQuestion() {
 
 		// It's a question in the database - store the value.
 		axios
-			.post(route("questions.validate", [questionData.question.id]), {
+			.post(route("questions.validate", [questionData.question.value.id]), {
 				...emitValue
 			})
 			.catch((res) => {
@@ -55,11 +57,13 @@ function validateQuestion() {
 				emits("validate", emitValue)
 			})
 			.finally(() => {
-				lockValidationButton.value = false
+				setTimeout(()=>lockValidationButton.value = false, 500)
 			})
 	} else {
-		emits("validate", emitValue)
-		lockValidationButton.value = false
+		setTimeout(()=> {
+			emits("validate", emitValue)
+			lockValidationButton.value = false
+		}, 500)
 	}
 }
 

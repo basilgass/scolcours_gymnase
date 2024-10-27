@@ -3,7 +3,7 @@
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import QuestionShow from "@/Components/Questions/QuestionShow.vue"
 import { advancedKeyboards, keyboards } from "@/Composables/keyboardConfig.ts"
-import { useKeyboard } from "@/Composables/useKeyboard"
+import { useKeyboard } from "@/Composables/useKeyboard.ts"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 import { QuestionInterface } from "@/types/modelInterfaces.ts"
 import { computed, ref, unref, watch } from "vue"

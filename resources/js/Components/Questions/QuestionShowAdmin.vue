@@ -5,17 +5,16 @@ import type { flashInterface } from "@/types"
 import type { QuestionInterface } from "@/types/modelInterfaces.ts"
 import { router } from "@inertiajs/vue3"
 import axios from "axios"
-import { computed, inject, nextTick, PropType, ref } from "vue"
+import { computed, inject, nextTick, ref } from "vue"
 
 const flash = inject<flashInterface>("flash")
 
-const props = defineProps({
-	question: { type: Object as PropType<QuestionInterface>, required: true },
-})
+const props = defineProps<{
+	question: QuestionInterface,
+	ids: number[]
+}>()
 
 const theQuestion = ref(props.question)
-
-const questionsIds = inject<number[]>("questionsIds", [])
 
 const displayIfIds = computed(() => {
 	if (props.question.displayIf === null || props.question.displayIf==="") return []
@@ -72,6 +71,7 @@ function duplicateQuestion(){
 		})
 }
 </script>
+
 <template>
 	<div
 		class="flex items-center justify-between w-full px-3 gap-3 py-2 bg-slate-600 text-white rounded-t"
@@ -97,7 +97,7 @@ function duplicateQuestion(){
 				</template>
 
 				<div
-					v-for="q in questionsIds"
+					v-for="q in props.ids"
 					:key="`display-if-${q}`"
 					class="hover:bg-gray-100 px-3 py-2 font-code"
 				>

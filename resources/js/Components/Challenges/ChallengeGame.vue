@@ -19,10 +19,13 @@ import { usePage } from "@inertiajs/vue3"
 import axios from "axios"
 import { computed, inject, PropType, reactive, ref } from "vue"
 
+// TODO: ChallengeAnswerInterface must be reworked as it is used in QuestionValidation
 export interface ChallengeAnswerInterface {
 	question: string
 	answer: string
-	result: boolean
+	result: boolean,
+	attempts: number,
+	updated_at?: string
 }
 
 export interface ChallengeGameInterface {

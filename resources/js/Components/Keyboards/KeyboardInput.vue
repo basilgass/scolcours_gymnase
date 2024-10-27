@@ -1,17 +1,28 @@
 <script setup lang="ts">
 
-import { computed, nextTick, ref } from "vue"
-import { useKeyboard } from "@/Composables/useKeyboard.js"
 import AsciiMathParser from "@/asciimath2tex"
 import FormMaker from "@/Components/Form/FormMaker.vue"
+import { KeyboardEmitsInterface, KeyboardPropsInterface, useKeyboard } from "@/Composables/useKeyboard.js"
+import { computed, nextTick, ref } from "vue"
 
-//TODO: KeyboardInput doit accepter des "checkers" différents, issus de KeyboardBasic
-let props = defineProps({
-	keyboard: {type: Object, required: true},
-	answer: {type: String}
-})
-let emits = defineEmits(["change", "validate"])
-let changeEvent = async function () {
+const props = defineProps<KeyboardPropsInterface>()
+
+const emits = defineEmits<KeyboardEmitsInterface>()
+
+function onKeyboardChange(): void {
+	onChange()
+}
+
+const { loadAnswer } = useKeyboard(
+	props,
+	onKeyboardChange
+)
+
+let reset = ()=>{inputValue.value = ""}
+
+defineExpose({ reset, loadAnswer, parameters: "" })
+
+let onChange = async function () {
 	await nextTick()
 	// let value = event.target.value
 	emits("change", {
@@ -55,17 +66,7 @@ let	inputValue = ref(""),
 		return kbrds[0].checker
 	})
 
-let {loadAnswerToKeyboard} = useKeyboard(props)
-let reset = ()=>{inputValue.value = ""}
-defineExpose({
-	reset,
-	loadAnswer: (value)=>{
-		loadAnswerToKeyboard(value, reset, changeEvent, (value)=>{
-			inputValue.value = value
-		})
-	},
-	parameters: ""
-})
+
 </script>
 
 <template>
@@ -74,7 +75,7 @@ defineExpose({
 			v-model="inputValue"
 			name="kbrd-input"
 			label="réponse"
-			@input="changeEvent"
+			@input="onChange"
 			@enter="$emit('validate')"
 		/>
 		<div

@@ -120,7 +120,7 @@ export interface QuestionInterface extends QuestionMinInterface{
 		answer: string
 		result: boolean
 		attempts: number
-		update_at: string
+		update_at?: string
 	};
 }
 

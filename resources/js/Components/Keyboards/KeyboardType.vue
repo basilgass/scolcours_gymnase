@@ -1,24 +1,34 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 
 import { useWrongAnswerAnimation } from "@/Composables/useHelpers"
-import { useKeyboard } from "@/Composables/useKeyboard"
+import { KeyboardEmitsInterface, KeyboardPropsInterface, useKeyboard } from "@/Composables/useKeyboard.ts"
 import { Random } from "pimath"
 
 import { nextTick, onMounted, ref } from "vue"
 
-const props = defineProps({
-	keyboard: {type: Object, required: true},
-	answer: {type: String, default: ""}
-})
+const props = defineProps<KeyboardPropsInterface>()
 
-const emits = defineEmits(["change", "validate"])
+const emits = defineEmits<KeyboardEmitsInterface>()
 
-const	changeEvent = async function () {
+function onKeyboardChange(): void {
+	onChange()
+}
+
+const { loadAnswer } = useKeyboard(
+	props,
+	onKeyboardChange
+)
+
+const reset = function() {
+	generateQuestion()
+}
+
+const onChange = async function() {
 	await nextTick()
 
 	// Get the answer
 	const input = currentAnswer(),
-		result = input.length===props.answer.length
+		result = input.length === props.answer.length
 
 	emits("change", {
 		value: {
@@ -32,7 +42,7 @@ const	changeEvent = async function () {
 		}
 	})
 
-	if(result){
+	if (result) {
 		emits("validate")
 	}
 }
@@ -42,7 +52,7 @@ const typoButtons = ref(null),
 	excludeLetters = ref([" ", ",", "'", ".", "!", "?", "(", ")", "-"]),
 	answerLetters = ref([]),
 	resultLetters = ref([]),
-	generateQuestion = function () {
+	generateQuestion = function() {
 		const theWord = props.answer
 
 		answerLetters.value = Random.shuffle(theWord.split("")
@@ -55,7 +65,7 @@ const typoButtons = ref(null),
 			})
 		)
 
-		resultLetters.value = theWord.split("").map((key, index)=>{
+		resultLetters.value = theWord.split("").map((key, index) => {
 			return {
 				index,
 				key: key.toUpperCase(),
@@ -67,7 +77,7 @@ const typoButtons = ref(null),
 		currentIndex.value = 0
 	},
 	currentIndex = ref(-1),
-	validateKey = function (index) {
+	validateKey = function(index) {
 		if (resultLetters.value[currentIndex.value].key === answerLetters.value[index].key) {
 			resultLetters.value[currentIndex.value].visible = true
 			answerLetters.value[index].used = true
@@ -75,51 +85,51 @@ const typoButtons = ref(null),
 			// finished ?
 			currentIndex.value++
 			if (currentIndex.value >= resultLetters.value.length) {
-				changeEvent()
+				onChange()
 				return
 			}
 			while (resultLetters.value[currentIndex.value].visible) {
 				currentIndex.value++
 				if (currentIndex.value >= resultLetters.value.length) {
-					changeEvent()
+					onChange()
 					return
 				}
 			}
-		}else {
+		} else {
 			useWrongAnswerAnimation(typoButtons.value.children[index])
 		}
 
-		changeEvent()
+		onChange()
 	},
-	currentAnswer = function(){
-		return resultLetters.value.map(x=>x.visible?x.key:"").join("")
+	currentAnswer = function() {
+		return resultLetters.value.map(x => x.visible ? x.key : "").join("")
 	}
 
-onMounted(()=>{
-	generateQuestion()
-})
-
-const {loadAnswerToKeyboard} = useKeyboard(props)
-const reset = function(){
-	generateQuestion()
-}
 defineExpose({
 	reset,
-	loadAnswer: (value)=> {
-		loadAnswerToKeyboard(value, reset, changeEvent, ()=>{
-			resultLetters.value.forEach(letter=>{
-				letter.visible = true
-			})
+	loadAnswer: (value) => {
+		loadAnswer(value, {
+				reset,
+				callback: () => {
+					resultLetters.value.forEach(letter => {
+						letter.visible = true
+					})
 
-			answerLetters.value.forEach(letter=>{
-				letter.used = true
-			})
-
-		}
+					answerLetters.value.forEach(letter => {
+						letter.used = true
+					})
+				}
+			}
 		)
 	},
 	parameters: ""
 })
+
+
+onMounted(() => {
+	generateQuestion()
+})
+
 </script>
 
 <template>

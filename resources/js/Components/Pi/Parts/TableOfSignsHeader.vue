@@ -1,6 +1,7 @@
 <script setup lang="ts">
 
 defineProps<{roots: string[]}>()
+
 </script>
 <template>
 	<thead>

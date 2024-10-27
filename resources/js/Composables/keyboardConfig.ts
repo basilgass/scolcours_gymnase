@@ -1,11 +1,11 @@
 import AsciiMathParser from "@/asciimath2tex"
 
 export interface keyboardKey {
-	key: string
-	visible: boolean
 	type: string
 	display: string
-	span: number
+	key?: string
+	visible?: boolean
+	span?: number
 	fn?: (value: string) => string
 }
 
@@ -18,10 +18,10 @@ export interface keyboardKey {
  * @property {function} tex - The function that returns a value based on the given string value.
  */
 export interface KeyboardObjectType {
-	name: string
 	grid: string
 	layout: (string | [string, number] | { key: string, display: string, type: string })[]
-	tex: (value: string) => string // Type of the returned value can be changed according to actual function implementation
+	name?: string
+	tex?: (value: string) => string // Type of the returned value can be changed according to actual function implementation
 	keys?: Record<string, keyboardKey>
 }
 

@@ -7,12 +7,12 @@ import ChapterToc from "@/Components/Chapters/ChapterToc.vue"
 import QuestionsIndex from "@/Components/Questions/QuestionsIndex.vue"
 import EditLink from "@/Components/Ui/EditLink.vue"
 import { useMenuScrollTo } from "@/Composables/useHelpers"
+import { useScriptLoader } from "@/Composables/useScriptLoader.ts"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 import type { BlockInterface, ChapterInterface, PostInterface } from "@/types/modelInterfaces"
 import { usePage } from "@inertiajs/vue3"
 import axios from "axios"
-import PiMath from "pimath"
-import { computed, nextTick, onMounted, provide, ref } from "vue"
+import { nextTick, onMounted, provide, ref } from "vue"
 
 defineOptions({ layout: LayoutMain })
 
@@ -24,30 +24,15 @@ const props = defineProps<{
 
 const blocks = ref<BlockInterface[]>(props.post.blocks)
 
-const iteration = ref(0)
-const postData = ref({})
+// const iteration = ref(0)
+// const postData = ref({})
 
-function loadDataScript() {
-	iteration.value++
-	try {
-		if (props.post.script) {
-			const F = new Function("PiMath", "iteration", props.post.script)
-			postData.value = F(PiMath, iteration.value)
-		}
-	} catch (e) {
-		console.warn("Post script generator error", e)
-		postData.value = {}
-	}
-}
-const hasData = computed(() => {
-	return Object.keys(postData.value).length > 0
-})
-loadDataScript()
+const postScript = useScriptLoader(props.post.script)
+postScript.run()
+provide("postScript", postScript)
 
-provide("postData", postData)
-
-// postsBlocks est utilisé dans BlockShowAdmin, juste pour le déplacement des blocks.
-provide('postBlocks', blocks)
+// TODO : postsBlocks est utilisé dans BlockShowAdmin, juste pour le déplacement des blocks.
+provide("postBlocks", blocks)
 
 
 function storeCurrentPost() {
@@ -116,10 +101,10 @@ onMounted(() => {
 					</div>
 
 					<button
-						v-if="hasData"
-						@click="loadDataScript"
+						v-if="postScript.hasData"
 						v-theme.text
 						class="btn btn-xs bg-white font-semibold hover:shadow"
+						@click="postScript.run()"
 					>
 						<i class="bi bi-shuffle mr-2" />aléatoire
 					</button>
@@ -131,8 +116,8 @@ onMounted(() => {
 		<main class="scolcours-container mt-5 space-y-5">
 			<!-- show the groupedBlocks -->
 			<blocks-index
-				:post-id="post.id"
 				v-model="blocks"
+				:post-id="post.id"
 			/>
 
 			<!-- show the questions -->

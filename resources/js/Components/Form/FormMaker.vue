@@ -66,7 +66,7 @@ const props = withDefaults(defineProps<FormMakerPropsType>(), {
 })
 
 // Define the emits
-const emits = defineEmits(["enter", "currentLine", 'change'])
+const emits = defineEmits(["enter", "currentLine", "change"])
 
 const flash = inject<flashInterface>("flash", null)
 
@@ -126,13 +126,18 @@ const placeholderValue = computed(() => {
 
 // On input update, emit the new value in correct format
 function updateInput(e: Event) {
-	emits('change', e)
+	emits("change", e)
 	// TODO: updateInput ?
 }
 
 const TEXTAREA = ref(null)
 
-function onKeyup() {
+function onKeyup(evt: KeyboardEvent | MouseEvent) {
+	if (evt instanceof KeyboardEvent && evt.key === "Enter" && evt.ctrlKey) {
+		onEnter(evt)
+		return
+	}
+
 	let pos = TEXTAREA.value.selectionStart,
 		lines = (theValue.value as string).split("\n"),
 		lineIndex = (theValue.value as string).substring(0, pos).split("\n").length - 1
@@ -194,7 +199,7 @@ function onEnter(ev) {
 			...props.axios,
 			value: theValue.value
 		})
-		.then(() => {
+		.then((res) => {
 			flash?.success("Valeur enregistrée avec succès.")
 		})
 		.catch((err) => {
@@ -368,7 +373,7 @@ defineExpose({ focus: setFocus })
 
 		<button
 			v-if="props.axios?.button"
-			class="absolute -top-2 right-0 z-10 px-1 border bg-green-500"
+			class="absolute top-0 right-0 z-10 px-1 border bg-green-500"
 			@click="onEnter"
 		>
 			<i

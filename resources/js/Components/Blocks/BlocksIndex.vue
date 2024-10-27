@@ -4,7 +4,7 @@ import { useStoreEditMode } from "@/stores/useStoreEditMode.ts"
 import type { flashInterface } from "@/types"
 import type { BlockInterface } from "@/types/modelInterfaces.ts"
 import axios from "axios"
-import { computed, defineModel, inject } from "vue"
+import { defineModel, inject } from "vue"
 
 const props = defineProps<{
 	postId: number,
@@ -15,21 +15,6 @@ const blocks = defineModel<BlockInterface[]>()
 const editMode = useStoreEditMode()
 
 const flash = inject<flashInterface>("flash")
-
-const groupedBlocks = computed(() => {
-	// The groupedBlocks might be grouped
-	let arr: BlockInterface[][] = []
-
-	blocks.value.forEach(block => {
-		if (block.merge === true) {
-			arr[arr.length - 1].push(block)
-		} else {
-			arr.push([block])
-		}
-	})
-
-	return arr
-})
 
 function addBlock(after?: number) {
 	axios.post(
@@ -50,12 +35,32 @@ function addBlock(after?: number) {
 	})
 }
 
+function updateBlockOrder(){
+	axios.patch(route("posts.updateBlocksOrder", [props.postId]), {
+		order: blocks.value.map((block, index)=>{
+			return {
+				id: block.id,
+				order: index
+			}
+		})
+	}).then(()=>{
+		// Show flash message.
+		flash.success('Les blocks ont bien été ré-ordré.')
+	}).catch((err)=>{
+		// Show flash error message
+		console.log(err.response.data.message)
+		flash.error('Problème de réorganisation des blocks.')
+	})
+
+
+}
+
 </script>
 <template>
 	<article class="flex flex-col gap-4">
 		<div
-			class="text-right"
 			v-admin="editMode.enable"
+			class="text-right"
 		>
 			<button
 				class="addButton"
@@ -64,28 +69,41 @@ function addBlock(after?: number) {
 				<i class="bi bi-plus-circle" />
 			</button>
 		</div>
-		<div
-			v-for="group in groupedBlocks"
-			:key="group[0].id"
+
+		<draggable
+			:list="blocks"
+			class="grid grid-cols-1"
+			item-key="id"
+			handle=".draggable-handle"
+			v-bind="{
+				animation: 300,
+				disabled: !editMode.enable
+			}"
+			@end="updateBlockOrder"
 		>
-			<div
-				v-for="(block, index) in group"
-				:key="`block-${block.id}`"
-				class="shadow relative"
-			>
+			<template #item="{ element, index } : {element: BlockInterface, index: number}">
 				<div
-					v-admin="editMode.enable"
-					class="absolute -right-2 -bottom-2 addButton"
-					@click="addBlock(block.order)"
+					class="relative"
 				>
-					<i class="bi bi-plus-circle" />
+					<div
+						v-admin="editMode.enable"
+						class="absolute -right-2 -bottom-2 addButton"
+						@click="addBlock(element.order)"
+					>
+						<i class="bi bi-plus-circle" />
+					</div>
+
+					<block-show
+						class="overflow-hidden max-w-full"
+						:class="{
+							'mt-10 rounded-t-lg': !element.merge,
+							'rounded-b-lg': !blocks[index+1]?.merge
+						}"
+						:block="element"
+					/>
 				</div>
-				<block-show
-					:block="block"
-					:group-index="index"
-				/>
-			</div>
-		</div>
+			</template>
+		</draggable>
 	</article>
 </template>
 
@@ -96,6 +114,7 @@ function addBlock(after?: number) {
 	hover:bg-black hover:text-white
 	transition-colors duration-500;
 }
+
 .bi::before, [class^="bi-"]::before, [class*=" bi-"]::before {
 	vertical-align: 1px;
 }

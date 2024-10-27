@@ -1,37 +1,19 @@
 <script lang="ts" setup>
-import { computed, PropType } from "vue"
+import { useScriptLoader } from "@/Composables/useScriptLoader.ts"
+import { buttonInterface } from "@/types"
+import { computed, inject } from "vue"
 
-interface buttonInterface {
-	show: boolean
-	icon: string
-	text: string
-}
 
-interface buttonsInterface {
-	reset?: buttonInterface
-	random?: buttonInterface
-}
-
-interface BlockScriptType {
-	btn: buttonsInterface
-	reset?: boolean
-}
-
-const random = defineModel<number>()
-
-const props = defineProps({
-	blockData: {
-		type: Object as PropType<BlockScriptType>,
-		required: true
-	}
-})
+const blockScript = inject('blockScript', useScriptLoader(''))
 
 const hasButtons = computed(() => {
-	return Object.keys(props.blockData).length > 0
+	return Object.keys(blockScript.merged.value).length > 0
 })
+
 const hasCustomButtons = computed(() => {
-	return hasButtons.value && Object.hasOwn(props.blockData, "btn")
+	return hasButtons.value && Object.hasOwn(blockScript.merged.value, "btn")
 })
+
 const randomButton = computed<buttonInterface>(() => {
 	let btn = {
 		icon: "bi bi-shuffle",
@@ -39,39 +21,33 @@ const randomButton = computed<buttonInterface>(() => {
 		show: true
 	}
 
-	if (hasCustomButtons.value && props.blockData.btn.random) {
+	if (hasCustomButtons.value && blockScript.merged.value.btn.random) {
 		return {
 			...btn,
-			...props.blockData.btn.random
+			...blockScript.merged.value.btn.random
 		}
 	}
 
-	if (hasButtons.value) return btn
-
-	return null
+	return btn
 })
+
 const resetButton = computed<buttonInterface>(() => {
 	let btn = {
 		icon: "bi bi-x-square",
 		text: "par défaut",
-		show: random.value > 1
+		show: blockScript.iteration.value > 1
 	}
 
-	if (hasCustomButtons.value && props.blockData.btn.reset) {
+	if (hasCustomButtons.value && blockScript.merged.value.btn.reset) {
 		return {
 			...btn,
-			...props.blockData.btn.reset
+			...blockScript.merged.value.btn.reset
 		}
 	}
-
-	if (props.blockData.reset) return { ...btn }
+	if (blockScript.merged.value.reset) return { ...btn }
 
 	return null
 })
-
-function refresh(reset?: boolean) {
-	reset ? random.value = 1 : random.value++
-}
 
 </script>
 <template>
@@ -83,7 +59,7 @@ function refresh(reset?: boolean) {
 			v-if="resetButton"
 			v-show="resetButton.show"
 			:class="`btn-scolcours-${$page.props.theme.slug} btn-xs tracking-wider d-block`"
-			@click="refresh(true)"
+			@click="blockScript.reset()"
 		>
 			<i
 				v-if="resetButton.icon"
@@ -98,7 +74,7 @@ function refresh(reset?: boolean) {
 			v-show="randomButton.show"
 			v-theme.btn
 			:class="`btn-xs tracking-wider d-block`"
-			@click="refresh()"
+			@click="blockScript.run()"
 		>
 			<i
 				v-if="randomButton.icon"

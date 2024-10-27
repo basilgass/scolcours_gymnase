@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { useForm } from "@inertiajs/vue3"
-import { computed, ref } from "vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
+import { useForm } from "@inertiajs/vue3"
+import { computed, ref } from "vue"
 
 defineOptions({ layout: LayoutMain })
 const traduction = ref(""),
@@ -72,6 +72,13 @@ const form = useForm({
 					@click="form.language='de'"
 				>
 					de
+				</button>
+				<button
+					:class="form.language==='es'?'is-active':'bg-white'"
+					class="btn flex-1"
+					@click="form.language='es'"
+				>
+					es
 				</button>
 			</div>
 

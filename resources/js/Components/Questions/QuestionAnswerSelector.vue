@@ -3,6 +3,7 @@ import { questionDataInterface } from "@/Components/Questions/QuestionShow.vue"
 import { inject } from "vue"
 
 const questionData = inject<questionDataInterface>('questionData')
+
 </script>
 
 <template>

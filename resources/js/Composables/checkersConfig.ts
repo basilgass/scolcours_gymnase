@@ -1,26 +1,27 @@
-import { NumberChecker } from "@/Checkers/Basic/NumberChecker"
-import { PolynomChecker } from "@/Checkers/Basic/PolynomChecker"
-import { ScientificChecker } from "@/Checkers/Basic/ScientificChecker"
-import { StringChecker } from "@/Checkers/Basic/StringChecker"
-import { TableofsignChecker } from "@/Checkers/TableofsignChecker"
-import { SolutionChecker } from "@/Checkers/Basic/SolutionChecker"
-import { ExactChecker } from "@/Checkers/Basic/ExactChecker"
-import { StudyChecker } from "@/Checkers/StudyChecker"
-import { RationalChecker } from "@/Checkers/Basic/RationalChecker"
+import { CartesianChecker } from "@/Checkers/Basic/CartesianChecker"
 import { CoordChecker } from "@/Checkers/Basic/CoordChecker"
-import { VectorChecker } from "@/Checkers/Basic/VectorChecker"
 import { EquationChecker } from "@/Checkers/Basic/EquationChecker"
+import { ExactChecker } from "@/Checkers/Basic/ExactChecker"
+import { ExpChecker } from "@/Checkers/Basic/ExpChecker"
 import { FractionChecker } from "@/Checkers/Basic/FractionChecker"
 import { FunctionChecker } from "@/Checkers/Basic/FunctionChecker"
 import { LogChecker } from "@/Checkers/Basic/LogChecker"
-import { ExpChecker } from "@/Checkers/Basic/ExpChecker"
-import { CheckerAbstract } from "@/Checkers/CheckerAbstract"
+import { NumberChecker } from "@/Checkers/Basic/NumberChecker"
+import { PolynomChecker } from "@/Checkers/Basic/PolynomChecker"
 import { PrimitiveChecker } from "@/Checkers/Basic/PrimitiveChecker"
-import { CartesianChecker } from "@/Checkers/Basic/CartesianChecker"
+import { RationalChecker } from "@/Checkers/Basic/RationalChecker"
+import { ScientificChecker } from "@/Checkers/Basic/ScientificChecker"
+import { SolutionChecker } from "@/Checkers/Basic/SolutionChecker"
+import { StringChecker } from "@/Checkers/Basic/StringChecker"
+import { VectorChecker } from "@/Checkers/Basic/VectorChecker"
+import { CheckerAbstract } from "@/Checkers/CheckerAbstract"
+import { StudyChecker } from "@/Checkers/StudyChecker"
+import { TableofsignChecker } from "@/Checkers/TableofsignChecker"
 
 export interface CheckerResult {
     result: boolean,
-    message: string
+    message: string,
+	index?: number
 }
 
 export const checkersList: string[] = [

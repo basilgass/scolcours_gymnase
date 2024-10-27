@@ -44,8 +44,6 @@
 		"@sgratzl/chartjs-chart-boxplot": "^4.4.2",
 		"@svgdotjs/svg.draggable.js": "^3.0.4",
 		"@svgdotjs/svg.js": "^3.2.4",
-		"@volar/language-server": "2.4.0-alpha.20",
-		"@vue/language-server": "^2.1.6",
 		"bootstrap-icons": "^1.11.3",
 		"chart.js": "^4.4.4",
 		"chartjs-plugin-annotation": "^3.0.1",

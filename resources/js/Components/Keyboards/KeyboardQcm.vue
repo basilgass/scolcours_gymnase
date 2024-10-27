@@ -1,16 +1,44 @@
-<script setup lang="ts">
-import { computed, onMounted, ref } from "vue"
-import { useKeyboard } from "@/Composables/useKeyboard"
+<script lang="ts" setup>
 import { asciiToTex } from "@/Composables/keyboardConfig"
+import { KeyboardEmitsInterface, KeyboardPropsInterface, useKeyboard } from "@/Composables/useKeyboard.ts"
+import { computed, onMounted, ref } from "vue"
 
-let props = defineProps({
-	keyboard: { type: Object, required: true },
-	answer: { type: String },
+const props = defineProps<KeyboardPropsInterface>()
+
+const emits = defineEmits<KeyboardEmitsInterface>()
+
+function onKeyboardChange(): void {
+	onChange()
+}
+
+const { loadAnswer } = useKeyboard(
+	props,
+	onKeyboardChange
+)
+
+let reset = function() {
+	qcmItems.value.forEach(item => item.selected = false)
+}
+
+defineExpose({
+	reset,
+	loadAnswer: (value) => {
+		loadAnswer(value, {
+			reset,
+			callback: (value) => {
+				let keys = value.split(",")
+
+				qcmItems.value.forEach(item => {
+					if (keys.includes(item.key)) {
+						item.selected = true
+					}
+				})
+			}
+		})
+	},
+	parameters: "full (pleine largeur)\nflex (utilisation de flex)\ntex (converti en TeX)"
 })
-
-let emits = defineEmits(["change", "validate"])
-
-let changeEvent = function () {
+let onChange = function() {
 	let answers = qcmSelections(),
 		answersKeys = answers.map(x => x.key)
 
@@ -65,8 +93,8 @@ let changeEvent = function () {
 /* ------------------*/
 // Options du QCM
 let isFullWidth = computed(() => {
-	return props.keyboard.parameters.includes("full")
-}),
+		return props.keyboard.parameters.includes("full")
+	}),
 	isFlex = computed(() => {
 		return props.keyboard.parameters.includes("flex")
 	}),
@@ -80,7 +108,7 @@ let isFullWidth = computed(() => {
 /* ---------------- */
 // Gestion du QCM
 let qcmItems = ref([]),
-	qcmSelections = function () {
+	qcmSelections = function() {
 		// Retourne la ou les valeur(s) sélectionnée(s).
 		let values = [
 			...qcmItems.value
@@ -99,7 +127,7 @@ let qcmItems = ref([]),
 		}
 
 		element.selected = !element.selected
-		changeEvent()
+		onChange()
 	}
 
 /* ---------------*/
@@ -124,10 +152,14 @@ onMounted(() => {
 			let [key, label, tex] = x.split("|")
 
 			// S'il n'y a pas de label
-			if (label === undefined) { label = "" + key }
+			if (label === undefined) {
+				label = "" + key
+			}
 
 			// Si on est en mode TeX, la label peut être la valeur a afficher.
-			if (tex === undefined && isTex.value) { tex = label }
+			if (tex === undefined && isTex.value) {
+				tex = label
+			}
 
 			// Si le label commence par un #, c'est du TeX en mode ASCII.
 			const ascii = label.startsWith("#")
@@ -136,7 +168,7 @@ onMounted(() => {
 				label = label.substring(1)
 
 				// convert the tex value
-				if(tex===undefined) tex = asciiToTex(label)
+				if (tex === undefined) tex = asciiToTex(label)
 			}
 
 			return {
@@ -149,31 +181,13 @@ onMounted(() => {
 		})
 })
 
-let { loadAnswerToKeyboard } = useKeyboard(props)
-let reset = function () {
-	qcmItems.value.forEach(item => item.selected = false)
-}
-defineExpose({
-	reset,
-	loadAnswer: (value) => {
-		loadAnswerToKeyboard(value, reset, changeEvent, (value) => {
-			let keys = value.split(",")
-
-			qcmItems.value.forEach(item => {
-				if (keys.includes(item.key)) {
-					item.selected = true
-				}
-			})
-		})
-	},
-	parameters: "full (pleine largeur)\nflex (utilisation de flex)\ntex (converti en TeX)"
-})
 </script>
 
 <template>
 	<div>
 		<div class="flex flex-wrap gap-1 md:gap-3 my-5">
-			<button v-for="element of qcmItems"
+			<button
+				v-for="element of qcmItems"
 				:key="element.key"
 				:class="{
 					'btn-success': element.selected,
@@ -182,13 +196,20 @@ defineExpose({
 					'flex-1': isFlex,
 				}"
 				class="btn"
-				@click="qcmButtonClick(element)">
-				<span v-if="element.ascii"
-					v-katex.ascii="element.label" />
-				<span v-else-if="isTex"
-					v-katex="element.label" />
-				<span v-else
-					v-katex.auto="element.label" />
+				@click="qcmButtonClick(element)"
+			>
+				<span
+					v-if="element.ascii"
+					v-katex.ascii="element.label"
+				/>
+				<span
+					v-else-if="isTex"
+					v-katex="element.label"
+				/>
+				<span
+					v-else
+					v-katex.auto="element.label"
+				/>
 			</button>
 		</div>
 	</div>

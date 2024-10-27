@@ -1,31 +1,61 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 
+import FormMaker from "@/Components/Form/FormMaker.vue"
 import type { questionDataInterface } from "@/Components/Questions/QuestionShow.vue"
+import { useStoreEditMode } from "@/stores/useStoreEditMode.ts"
 import { inject, ref } from "vue"
 
-const questionData = inject<questionDataInterface>('questionData')
+const  editMode  = useStoreEditMode()
+
+const questionData = inject<questionDataInterface>("questionData")
 
 const showAnswer = ref(false)
 
 function toggle() {
 	// Toggle the display
 	showAnswer.value = !showAnswer.value
-
-	// Emit the event with the change.
-	emits('toggle', showAnswer.value)
+	questionData.loadAnswer(showAnswer.value)
 }
 
-const emits = defineEmits<{
-	toggle: [value: boolean]
-}>()
 </script>
 
 <template>
 	<div
-		v-if="questionData.question.user.result || $page.props.auth.can.admin"
+		v-if="questionData.question.value.user.result || $page.props.auth.can.admin"
 		class="question-footer px-5 py-2"
 	>
-		<div>
+		<div
+			v-admin="editMode.enable"
+			class="flex"
+		>
+			<button
+				class="text-xs text-gray-400 px-2"
+				@click="toggle"
+			>
+				<i
+					v-if="showAnswer"
+					class="bi bi-eye"
+				/>
+				<i
+					v-else
+					class="bi bi-eye-slash"
+				/>
+			</button>
+			<form-maker
+				v-model="questionData.question.value.answer"
+				:axios="{
+					model: 'Question',
+					id: questionData.question.value.id,
+					column: 'answer',
+					button: true
+				}"
+				class="flex-1 font-code"
+				:rows="questionData.question.value.answer.split('\n').length"
+				sm
+				type="textarea"
+			/>
+		</div>
+		<div v-admin="false">
 			<button
 				v-if="!showAnswer"
 				class="text-xs text-gray-400 w-full"
@@ -41,7 +71,7 @@ const emits = defineEmits<{
 			>
 				<div
 					class="text-xs text-center ml-3 font-code font-xs"
-					v-text="questionData.question.answer"
+					v-text="questionData.question.value.answer"
 				/>
 			</div>
 		</div>

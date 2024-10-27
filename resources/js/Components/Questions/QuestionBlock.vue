@@ -2,20 +2,14 @@
 import IllustrationShow from "@/Components/Illustrations/IllustrationShow.vue"
 import { questionDataInterface } from "@/Components/Questions/QuestionShow.vue"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
-import { userAnswerInterface } from "@/types"
-import { computed, inject, PropType, watch } from "vue"
-
-const props = defineProps({
-	userAnswers: { type: Object as PropType<userAnswerInterface[]>, required: true }
-})
+import { computed, inject } from "vue"
 
 const questionData = inject<questionDataInterface>('questionData')
 
 const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
-const answers = computed(() => {
-	return questionData.question.answer.split("\n").filter((x) => x !== "")
-})
+const userAnswers = computed(()=>questionData.user.answers.value)
+
 /**
  * Generate the body based on the answers
  * $a (in TeX mode)
@@ -23,17 +17,19 @@ const answers = computed(() => {
  * @$A (no format), block
  * The letter must be in alphabetic order!
  */
+// TODO: Rework computed body based on answers : more efficient ?
 const body = computed(() => {
-	// Check if the number of answers matched the number of user answers
-	if (props.userAnswers.length !== answers.value.length) {
-		return questionData.question.block.body + "\n\n Il manque des réponses"
+	// Coherence control:
+	// number of answers is the same as the number of variables
+	if (!questionData.answersCoherences.value) {
+		return questionData.question.value.block.body +
+			"\n\n Il manque des réponses {.text-xs .text-center .text-red-500 .bg-red-100 .py-2 .font-code}"
 	}
 
 	// The body that will be manipulated
-	let md = questionData.question.block.body
+	let md = questionData.question.value.block.body
 
-
-	for (let i = 0; i < answers.value.length; i++) {
+	for (let i = 0; i < questionData.answersVariables.value.length; i++) {
 		// Get the current key
 		const key = `\\$${alphabet[i]}`
 
@@ -47,9 +43,8 @@ const body = computed(() => {
 				? "border-blue-600"
 				: "border-red-600"
 
-
 		// Replace all lowercase keys by corresponding TeX value.
-		let replaceValue = props.userAnswers[i].value.tex ? props.userAnswers[i].value.tex : "<\\ ? >"
+		let replaceValue = userAnswers.value[i].value.tex ? userAnswers.value[i].value.tex : "<\\ ? >"
 		md = md.replaceAll(
 			new RegExp(`${key.toLowerCase()}`, "gm"),
 			`\\textcolor{${texColor}}{ ${replaceValue} }`)
@@ -58,22 +53,22 @@ const body = computed(() => {
 		md = md.replaceAll(
 			new RegExp(`\n(${key})`, "gm"),
 			`\n${
-				props.userAnswers[i].value.raw === "" ? "< ? >" : props.userAnswers[i].value.raw
+				userAnswers.value[i].value.raw === "" ? "< ? >" : userAnswers.value[i].value.raw
 			}\n{.border .px-3 .py-1 .${rawColor}}`)
 
 		// Replace all uppercase, without default value
 		md = md.replaceAll(
 			new RegExp(`@(${key})`, "gm"),
 			`\n<div class="border px-3 py-1 ${rawColor}">${
-				props.userAnswers[i].value.raw
+				userAnswers.value[i].value.raw
 			}\n</div>`)
 
 		// Replace all uppercase inline (there must be a space character before)
-		replaceValue = props.userAnswers[i].value.raw ? props.userAnswers[i].value.raw : "<\\ ? >"
+		replaceValue = userAnswers.value[i].value.raw ? userAnswers.value[i].value.raw : "<\\ ? >"
 		md = md.replaceAll(
 			new RegExp(`${key}`, "gm"),
 			`[${
-				props.userAnswers[i].value.raw === "" ? "< ? >" : props.userAnswers[i].value.raw
+				userAnswers.value[i].value.raw === "" ? "< ? >" : userAnswers.value[i].value.raw
 			}]{.border .px-3 .py-1 .${rawColor}}`)
 
 
@@ -81,17 +76,14 @@ const body = computed(() => {
 	return md
 })
 
-watch(body, () => {
-		questionData.body.value = body.value
-})
 </script>
 
 <template>
 	<main class="flex-1 px-3 overflow-x-auto border-b pb-3">
 		<!-- Illustration -->
 		<illustration-show
-			v-if="questionData.question.block.illustration"
-			:illustration="questionData.question.block.illustration"
+			v-if="questionData.question.value.block.illustration"
+			:illustration="questionData.question.value.block.illustration"
 			class="bg-white"
 		/>
 

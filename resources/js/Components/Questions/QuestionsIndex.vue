@@ -1,13 +1,14 @@
 <script lang="ts" setup>
 import QuestionShow from "@/Components/Questions/QuestionShow.vue"
+import QuestionShowAdmin from "@/Components/Questions/QuestionShowAdmin.vue"
 import QuestionsIndexAdmin from "@/Components/Questions/QuestionsIndexAdmin.vue"
 import { useStoreEditMode } from "@/stores/useStoreEditMode.ts"
 import { flashInterface } from "@/types"
 import type { PostInterface, QuestionInterface } from "@/types/modelInterfaces.ts"
 import axios from "axios"
-import { computed, inject, provide, ref } from "vue"
+import { computed, inject, ref } from "vue"
 
-const  editMode  = useStoreEditMode()
+const editMode = useStoreEditMode()
 const flash = inject<flashInterface>("flash")
 
 const props = defineProps<{
@@ -37,7 +38,7 @@ const questionsGrid = computed(() => {
 })
 
 
-provide("questionsIds", props.post.questions.map((q) => q.id))
+const displayIds = computed(()=>props.post.questions.map((q) => q.id))
 
 const isQuestionLocked = function(question: QuestionInterface) {
 	return !(
@@ -67,14 +68,15 @@ const updateQuestionsOrder = function() {
 			flash.success("les questions ont bien été mis à jour !")
 		})
 		.catch((res) => {
-			console.warn(res.data)
-			flash.error("update questions order failed")
+				console.warn(res.data)
+				flash.error("update questions order failed")
 			}
 		)
 }
 
 
 const questionsComponents = ref<InstanceType<typeof QuestionShow>[]>([])
+
 function addQuestionRef(element: InstanceType<typeof QuestionShow>) {
 	if (questionsComponents.value.indexOf(element) === -1) {
 		questionsComponents.value.push(element)
@@ -98,16 +100,16 @@ function addQuestionRef(element: InstanceType<typeof QuestionShow>) {
 
 		<questions-index-admin
 			v-admin="editMode.enable"
-			:questions="props.post.questions"
 			:components="questionsComponents"
 			:post="post"
+			:questions="props.post.questions"
 		/>
 
 		<!-- questions list -->
 		<draggable
 			v-if="post.questions.length"
-			:list="post.questions"
 			:class="questionsGrid"
+			:list="post.questions"
 			class="mt-10"
 			handle=".draggable-handle"
 			item-key="id"
@@ -117,7 +119,7 @@ function addQuestionRef(element: InstanceType<typeof QuestionShow>) {
 			}"
 			@end="updateQuestionsOrder"
 		>
-			<template #item="{ element }">
+			<template #item="{ element }: {element: QuestionInterface}">
 				<question-show
 					:key="element.id"
 					:ref="addQuestionRef"
@@ -125,7 +127,15 @@ function addQuestionRef(element: InstanceType<typeof QuestionShow>) {
 					:locked="isQuestionLocked(element)"
 					:question="element"
 					@validate="element.user=$event"
-				/>
+				>
+					<template #admin-header>
+						<question-show-admin
+							v-admin="editMode.enable"
+							:question="element"
+							:ids="displayIds"
+						/>
+					</template>
+				</question-show>
 			</template>
 		</draggable>
 	</article>

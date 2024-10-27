@@ -6,7 +6,6 @@ export const ToolsModules = import.meta.glob("./Components/Tools/*.vue", {
 export const KeyboardsModules = import.meta.glob([
 	"./Components/Keyboards/*.vue",
 	"!./Components/Keyboards/KeyboardDisplay.vue",
-	"!./Components/Keyboards/KeyboardValidateButton.vue",
 ])
 export const IllustrationsModules = import.meta.glob([
 	"./Components/Posts/Illustrations/Elements/*.vue",

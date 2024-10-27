@@ -1,50 +1,56 @@
-<script setup lang="ts">
-
-import { useKeyboard } from "@/Composables/useKeyboard"
+<script lang="ts" setup>
+import { KeyboardEmitsInterface, KeyboardPropsInterface, useKeyboard } from "@/Composables/useKeyboard.ts"
 import { Random } from "pimath"
 import { computed, ref } from "vue"
 
-const props = defineProps({
-	keyboard: { type: Object, required: true },
-	answer: { type: String }
-})
+const props = defineProps<KeyboardPropsInterface>()
 
-const emits = defineEmits(["change", "validate"]),
-	changeEvent = function() {
-		// On compte le nombre de réponses au bon endroit...
-		let errors = 0
-		for (let i = 1; i <= sortableItems.value.length; i++) {
-			if (sortableItems.value[i - 1].id !== i) {
-				errors++
-			}
+const emits = defineEmits<KeyboardEmitsInterface>()
+
+function onKeyboardChange(): void {
+	onChange()
+}
+
+const { loadAnswer } = useKeyboard(props, onKeyboardChange)
+
+const reset = () => sortableItems.value = randomizeItems()
+
+defineExpose({ reset, loadAnswer })
+
+const onChange = function() {
+	// On compte le nombre de réponses au bon endroit...
+	let errors = 0
+	for (let i = 1; i <= sortableItems.value.length; i++) {
+		if (sortableItems.value[i - 1].id !== i) {
+			errors++
 		}
-
-		emits("change", {
-			value: {
-				input: "",
-				tex: "",
-				raw: isList.value ?
-					sortableItems.value.map(el => `- ${el.label}`).join("\n") :
-					sortableItems.value.map(el => el.label).join(" ")
-			},
-			validation: {
-				result: errors === 0,
-				message: errors > 0 ? `Il y a ${errors} erreur${errors > 1 ? "s" : ""}` : ""
-			}
-		})
 	}
 
-// Liste des élèments qui sont à réordrer.
-const
-	isFullWidth = computed(() => {
-		return props.keyboard.parameters.includes("full")
-	}),
-	isFlex = computed(() => {
-		return props.keyboard.parameters.includes("flex")
-	}),
-	isList = computed(() => {
-		return props.keyboard.parameters.includes("list")
+	emits("change", {
+		value: {
+			input: "",
+			tex: "",
+			raw: isList.value ?
+				sortableItems.value.map(el => `- ${el.label}`).join("\n") :
+				sortableItems.value.map(el => el.label).join(" ")
+		},
+		validation: {
+			result: errors === 0,
+			message: errors > 0 ? `Il y a ${errors} erreur${errors > 1 ? "s" : ""}` : ""
+		}
 	})
+}
+
+// Liste des élèments qui sont à réordrer.
+const isFullWidth = computed(() => {
+	return props.keyboard.parameters.includes("full")
+})
+const isFlex = computed(() => {
+	return props.keyboard.parameters.includes("flex")
+})
+const isList = computed(() => {
+	return props.keyboard.parameters.includes("list")
+})
 
 const items = computed(() => {
 	return props.keyboard.values.map((element, index) => {
@@ -54,23 +60,12 @@ const items = computed(() => {
 		}
 	})
 })
-function randomizeItems():{id: number, label: string}[] {
+
+function randomizeItems(): { id: number, label: string }[] {
 	return Random.shuffle(items.value)
 }
-const sortableItems = ref<{id: number, label: string}[]>(randomizeItems())
 
-const { loadAnswerToKeyboard } = useKeyboard(props)
-const reset = () => sortableItems.value = randomizeItems()
-defineExpose({
-	reset,
-	loadAnswer: (value) => {
-		loadAnswerToKeyboard(value, reset, changeEvent, () => {
-			sortableItems.value = items.value
-		})
-	},
-	parameters: ""
-})
-
+const sortableItems = ref<{ id: number, label: string }[]>(randomizeItems())
 
 </script>
 
@@ -84,7 +79,7 @@ defineExpose({
 			v-bind="{
 				animation: 200,
 			}"
-			@update="changeEvent"
+			@update="onChange"
 		>
 			<template #item="{ element }">
 				<button

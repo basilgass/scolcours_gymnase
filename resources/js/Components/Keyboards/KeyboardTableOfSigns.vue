@@ -1,57 +1,95 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import KeyboardDisplay from "@/Components/Keyboards/KeyboardDisplay.vue"
 import TableOfSigns from "@/Components/Pi/TableOfSigns.vue"
 import { customCheck } from "@/Composables/checkersConfig"
-import { useKeyboard } from "@/Composables/useKeyboard"
-import { makeStudyFromCode } from "@/Composables/useTos"
-
-// TODO: permettre l'affichage de la réponse.
+import { KeyboardEmitsInterface, KeyboardPropsInterface, useKeyboard } from "@/Composables/useKeyboard.ts"
+import { TABLE_OF_SIGNS_VALUES } from "pimath"
 import { computed, nextTick, onMounted, ref } from "vue"
 
-const props = defineProps({
-	keyboard: {type: Object, required: true},
-	answer: {type: String, default: ""}
-})
+// TODO: le clavier TableOfSigns ne fonctionne pas encore correctement (grows, curves ?, etc...)
+const props = defineProps<KeyboardPropsInterface>()
 
-const emits = defineEmits(["change", "validate"]),
-	changeEvent = async function () {
-		await nextTick()
-		const check = customCheck("tos", props.answer, answerValue.value)
+const emits = defineEmits<KeyboardEmitsInterface>()
 
-		emits("change", {
-			value: {
-				input: answerValue.value,
-				tex: "",
-				raw: tosUI.value.$el.innerHTML
-			},
-			validation: {
-				result: check.result,
-				message: check.message
+function onKeyboardChange(): void {
+	onChange()
+}
+
+const { loadAnswer } = useKeyboard(
+	props,
+	onKeyboardChange
+)
+
+const reset = function() {
+	zeroes.value = { input: "", tex: "", raw: "" }
+	signs.value = { input: "", tex: "", raw: "" }
+	grows.value = { input: "", tex: "", raw: "" }
+	coords.value = { input: "", tex: "", raw: "" }
+}
+
+defineExpose({
+	reset,
+	loadAnswer: (value) => {
+		loadAnswer(value, {
+			reset ,
+			callback: (value) =>{
+
+				// Display the correct answer
+				const [z, s, g, c] = value.split("@")
+
+				zeroes.value = { input: z, tex: "", raw: "" }
+				signs.value = { input: s, tex: "", raw: "" }
+				grows.value = { input: g ?? "", tex: "", raw: "" }
+
+				if (c !== undefined) {
+					showKeyboard.value = "coords"
+					coords.value = { input: c, tex: "", raw: "" }
+				}
 			}
 		})
-	}
+	},
+	parameters: "@<name>(x)"
+})
+
+const onChange = async function() {
+	await nextTick()
+	const check = customCheck("tos", props.answer, answerValue.value)
+
+	emits("change", {
+		value: {
+			input: answerValue.value,
+			tex: "",
+			raw: tosUI.value.$el.innerHTML
+		},
+		validation: {
+			result: check.result,
+			message: check.message
+		}
+	})
+}
 
 
 /* FONCTIONS SPECIFIQUES */
 // Les config du clavier TOS
 const tosName = computed(() => { // le nom de la fonction
-		const names = props.keyboard.parameters.filter(x => x.includes("(")&&x.includes(")"))
-		return names.length === 0 ? "f(x)" : names[0]
-	}),
-	withGrows = computed(() => { // s'il y a la croissance
-		return props.answer.split("@").length > 2
-	}),
-	withCoords = computed(() => { // s'il faut donner les coordonnées
-		return props.answer.split("@").length > 3
-	})
+	const names = props.keyboard.parameters.filter(x => x.includes("(") && x.includes(")"))
+	return names.length === 0 ? "f(x)" : names[0]
+})
+const withGrows = computed(() => { // s'il y a la croissance
+	return props.answer.split("@").length > 2
+})
+const withCoords = computed(() => { // s'il faut donner les coordonnées
+	return props.answer.split("@").length > 3
+})
 
 // Le clavier a afficher
-const showKeyboard = ref("zeroes"),
-	changeKeyboard = function (event) {
-		// event = {input, raw, tex}
+const showKeyboard = ref("zeroes")
 
-		// mise à jour du tableau de signes
-		switch (showKeyboard.value) {
+const changeKeyboard = function(event) {
+	// event = {input, raw, tex}
+
+	// mise à jour du tableau de signes
+	switch (showKeyboard.value) {
 		case "zeroes":
 			zeroes.value = event
 			break
@@ -64,21 +102,20 @@ const showKeyboard = ref("zeroes"),
 		case "coords":
 			coords.value = event
 			break
-		}
-
-		changeEvent()
 	}
 
+	onChange()
+}
+
 // Génération de la réponse pour comparaison et de l'affichage.
-const zeroes = ref({input: "", tex: "", raw: ""}),
+// const signs = ref<string>([])
+
+const zeroes = ref({ input: "", tex: "", raw: "" }),
 	zeroesKeyboard = ref(props.keyboard.parameters.includes("float") ? "algebra" : "exact"),
-	signs = ref({input: "", tex: "", raw: ""}),
-	grows = ref({input: "", tex: "", raw: ""}),
-	coords = ref({input: "", tex: "", raw: ""}),
+	signs = ref({ input: "", tex: "", raw: "" }),
+	grows = ref({ input: "", tex: "", raw: "" }),
+	coords = ref({ input: "", tex: "", raw: "" }),
 	tosUI = ref(null),
-	tos = computed(() => {
-		return makeStudyFromCode(answerValue.value, showKeyboard.value === "coords")
-	}),
 	answerValue = computed(() => {
 		let r = `${zeroes.value.input}@${signs.value.input}`
 		if (withGrows.value) {
@@ -92,73 +129,13 @@ const zeroes = ref({input: "", tex: "", raw: ""}),
 	})
 
 // Initialisation au démarrage.
-onMounted(()=>{
-	changeEvent()
-})
-
-const {loadAnswerToKeyboard} =useKeyboard(props)
-const reset = function(){
-	zeroes.value = {input: "", tex: "", raw: ""}
-	signs.value = {input: "", tex: "", raw: ""}
-	grows.value = {input: "", tex: "", raw: ""}
-	coords.value = {input: "", tex: "", raw: ""}
-}
-defineExpose({
-	reset,
-	loadAnswer: (value)=>{
-		loadAnswerToKeyboard(value, reset, changeEvent, (value)=>{
-
-			// Display the correct answer
-			const [z,s,g,c] = value.split("@")
-
-			zeroes.value = {input: z, tex: "", raw: ""}
-			signs.value = {input: s, tex: "", raw: ""}
-			grows.value = {input: g??"", tex: "", raw: ""}
-
-			if(c!==undefined) {
-				showKeyboard.value = "coords"
-				coords.value = {input: c, tex: "", raw: ""}
-			}
-		}
-		)
-	},
-	parameters: "<name>(x)"
+onMounted(() => {
+	onChange()
 })
 
 
-// let resetKeyStrokes = function () {
-// 		zeroes.value = {input: "", tex: "", raw: ""}
-// 		signs.value = {input: "", tex: "", raw: ""}
-// 		grows.value = {input: "", tex: "", raw: ""}
-// 		coords.value = {input: "", tex: "", raw: ""}
-// 	},
-// 	getRaw = function (value) {
-// 		const v = value.split("@")
-//
-// 		zeroes.value.input = v[0]
-// 		signs.value.input = v[1]
-// 		if (withGrows.value) {
-// 			grows.value.input = v[2]
-// 		}
-// 		if (withCoords.value) {
-// 			coords.value.input = v[3]
-// 		}
-//
-// 		nextTick(() => tosUI.value.$el.innerHTML).then(resolve => {
-// 			changeEvent()
-// 			// emits("tex", "")
-// 			// emits("raw", resolve)
-// 		})
-//
-// 		return ""
-// 	},
-// 	getAnswer = function (value) {
-// 		return {
-// 			tex: getTex(value),
-// 			raw: getRaw(value)
-// 		}
-// 	}
-// TODO: Generate the correct output from the given values !
+
+
 </script>
 
 <template>
@@ -167,8 +144,11 @@ defineExpose({
 			class="overflow-x-scroll my-5 hidden"
 		>
 			<table-of-signs
-				:roots="[]"
-				:signs="[]"
+				ref="tosUI"
+				:label="tosName"
+				:mode="'grows'"
+				:roots="zeroes.tex.split(',')"
+				:signs="signs.input.split('') as TABLE_OF_SIGNS_VALUES[]"
 			/>
 		</div>
 
@@ -256,10 +236,10 @@ defineExpose({
 
 			<KeyboardDisplay
 				v-show="showKeyboard==='coords'"
+				:keyboard="zeroesKeyboard"
 				:multiple="true"
 				back
 				key-class="bg-white"
-				:keyboard="zeroesKeyboard"
 				reset
 				@change="changeKeyboard"
 			/>

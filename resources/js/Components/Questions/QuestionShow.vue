@@ -1,8 +1,3 @@
-<!--
-Affichage d'une question
-Envoi de la validation d'une réponse
-keyboard -> QuestionUserInput -> QuestionShow
--->
 <script lang="ts" setup>
 /**
  * QuestionShow
@@ -19,7 +14,6 @@ import KeyboardBasic from "@/Components/Keyboards/KeyboardBasic.vue"
 import QuestionAnswerDisplay from "@/Components/Questions/QuestionAnswerDisplay.vue"
 import QuestionBlock from "@/Components/Questions/QuestionBlock.vue"
 import QuestionKeyboard from "@/Components/Questions/QuestionKeyboard.vue"
-import QuestionAdminHeader from "@/Components/Questions/QuestionShowAdmin.vue"
 import { useStoreEditMode } from "@/stores/useStoreEditMode.ts"
 import { userAnswerInterface } from "@/types"
 import type { QuestionInterface } from "@/types/modelInterfaces.ts"
@@ -36,7 +30,7 @@ const props = defineProps({
 })
 
 // EditMode is used to determine the locked status
-const  editMode  = useStoreEditMode()
+const editMode = useStoreEditMode()
 
 // Determine if the question is dynamic (not coming from the DB)
 const isDynamic = props.question.id === undefined
@@ -64,8 +58,8 @@ const answerId = ref(0)
  * Number of answers for the question
  */
 const answersNumber = computed(
-		() => props.question.answer.split("\n").filter((x) => x !== "").length
-	)
+	() => props.question.answer.split("\n").filter((x) => x !== "").length
+)
 
 /**
  * User given answer.
@@ -76,32 +70,35 @@ const userAnswers = ref<userAnswerInterface[]>([])
  * Load answers to keyboardBlock based on the keyboards component.
  * @param show
  */
-async function	loadAnswer(show: boolean){
-		answerId.value = 0
-		await nextTick()
+async function loadAnswer(show: boolean) {
+	answerId.value = 0
+	await nextTick()
 
-		// if value is
-		// true: loadAnswer
-		// false: resetAnswer
-		const timer = setInterval(() => {
-			// Load the answer on the keyboard
-			
-			if (keyboardComponent.value) {
-				const kbrdComp = keyboardComponent.value.getKeyboard()
-				if (kbrdComp) kbrdComp.loadAnswer(
-					show ? props.question.answer.split('\n')[answerId.value] : null
-				)
-			}
+	// if value is
+	// true: loadAnswer
+	// false: resetAnswer
+	const timer = setInterval(() => {
+		// Load the answer on the keyboard
 
-			// Go to the next part.
-			if (answerId.value === answersNumber.value - 1) {
-				clearInterval(timer)
-				answerId.value = 0
-			} else {
-				answerId.value += 1
-			}
-		}, 100)
-	}
+		if (keyboardComponent.value) {
+			const kbrdComp = keyboardComponent.value.getKeyboard()
+			if (kbrdComp) kbrdComp.loadAnswer(
+				show ? props.question.answer.split("\n")[answerId.value] : null
+			)
+		}
+
+		// Go to the next part.
+		if (answerId.value === answersNumber.value - 1) {
+			clearInterval(timer)
+			answerId.value = 0
+		} else {
+			answerId.value += 1
+		}
+	}, 100)
+}
+
+// Used to load the answers dynamically
+defineExpose({ loadAnswer })
 
 /**
  * Determiner the state of the keyboard visibility.
@@ -110,8 +107,8 @@ async function	loadAnswer(show: boolean){
  * force: the keyboard is visible and CANNOT be toggled.
  */
 const showUserInput = ref<"hidden" | "show" | "force">(
-		props.isMinimal ? "force" : props.showInput ? "show" : "hidden"
-	)
+	props.isMinimal ? "force" : props.showInput ? "show" : "hidden"
+)
 
 /**
  * Initialize the user's answers, based on the available number of answers
@@ -121,7 +118,7 @@ const initUserAnswers = function() {
 	userAnswers.value = []
 
 	// Create the list of empty answers.
-	for (let i = 0; i < answers.value.length; i++) {
+	answers.value.forEach(() => {
 		userAnswers.value.push({
 			value: { input: "", tex: "", raw: "" },
 			validation: {
@@ -130,14 +127,8 @@ const initUserAnswers = function() {
 				message: ""
 			}
 		})
-	}
+	})
 }
-
-/**
- * Expose some function
- * loadAnswer is used in QuestionIndexAdmin to show all answers at once.
- */
-defineExpose({ loadAnswer })
 
 /**
  * When the component is loaded, initialize the userAnswers reactive variable.
@@ -151,13 +142,16 @@ onMounted(() => {
 // Provide data for all children components.
 export interface questionDataInterface {
 	// Question data from database
-	question: QuestionInterface,
+	question: Ref<QuestionInterface>,
 	// updated body string, with the answers inserted.
+	// TODO: Could be removed ?
 	body: Ref<string>
 	// current answer id, if the question has more than one answer
 	answerId: Ref<number>,
 	// list of all answers
 	answers: ComputedRef<string[]>,
+	answersVariables: ComputedRef<string[]>,
+	answersCoherences: ComputedRef<boolean>,
 	// user data
 	// - answers: given by the user
 	// - errors: list of errors once validated
@@ -175,18 +169,39 @@ export interface questionDataInterface {
 	// Get the keyboard component, for access everywhere.
 	keyboard: {
 		component: Ref<InstanceType<typeof KeyboardBasic>>
-	}
+	},
+	// LoadAnswer function
+	loadAnswer: (show: boolean) => void
 }
 
 const answers = computed(() => {
 	return props.question.answer.split("\n").filter((x) => x !== "")
 })
 
+const answersVariables = computed(() => {
+	// Get every "$<key> " values from block.body.
+	const bodyText = props.question.block.body.toLowerCase()
+	const regex = /\$[a-zA-Z](?=\\|\s|$)/g
+	const matches = [...new Set([
+		...bodyText.matchAll(regex)]
+		.map(match => match[0][1])
+	)]
+
+	return matches ? matches : []
+})
+
+const answersCoherences = computed(() => {
+	return answers.value.length === answersVariables.value.length &&
+		userAnswers.value.length === answersVariables.value.length
+})
+
 provide<questionDataInterface>("questionData", {
-	question: props.question,
+	question: ref(props.question),
 	body: ref(""),
 	answerId,
 	answers,
+	answersVariables,
+	answersCoherences,
 	user: {
 		answers: userAnswers,
 		errors: ref([])
@@ -195,7 +210,8 @@ provide<questionDataInterface>("questionData", {
 		animation: true,
 		dynamic: isDynamic
 	},
-	keyboard: null
+	keyboard: null,
+	loadAnswer
 })
 
 
@@ -240,11 +256,7 @@ const keyboardComponent = ref<InstanceType<typeof QuestionKeyboard>>(null)
 			</div>
 
 			<!-- ADMIN HEADER -->
-			<question-admin-header
-				v-if="!isDynamic"
-				v-admin="editMode.enable"
-				:question="question"
-			/>
+			<slot name="admin-header" />
 
 			<!-- QUESTION TITLE -->
 			<div
@@ -255,18 +267,17 @@ const keyboardComponent = ref<InstanceType<typeof QuestionKeyboard>>(null)
 		</header>
 
 		<!-- the body and illustration of question (as block) -->
-		<question-block :user-answers="userAnswers" />
+		<question-block />
 
 		<!-- user input (format, answer selector, keyboard) -->
 		<question-keyboard
+			v-if="answersCoherences"
 			ref="keyboardComponent"
 			v-model:show-input="showUserInput"
 			@validate="$emit('validate', $event)"
 		/>
 
 		<!-- user or admin answer -->
-		<question-answer-display
-			@toggle="loadAnswer($event)"
-		/>
+		<question-answer-display />
 	</article>
 </template>

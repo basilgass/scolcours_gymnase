@@ -1,8 +1,8 @@
-import { Component, unref } from "vue"
+import { CheckerAbstract } from "@/Checkers/CheckerAbstract"
+import { CheckerResult, getChecker } from "@/Composables/checkersConfig"
 import { keyboardKeys, keyboardMaps, KeyboardObjectType, keyboards } from "@/Composables/keyboardConfig"
 import { getModule, MODULE_TYPES } from "@/scolcours.js"
-import { getChecker } from "@/Composables/checkersConfig"
-import { CheckerAbstract } from "@/Checkers/CheckerAbstract"
+import { Component, ref, unref } from "vue"
 
 /**
  * Get the keyboard name for a given component value.
@@ -39,10 +39,32 @@ function getComponent(kbrd: string) {
 	return getModule(`Keyboard${kbrd}`, MODULE_TYPES.KEYBOARD)
 }
 
+export interface KeyboardPropsInterface {
+	answer: string,
+	keyboard: KeyboardInterface
+}
+
+export interface KeyboardEmitsInterface {
+	(e: "change", value: KeyboardOnChangeInterface),
+
+	(e: "validate")
+}
+
+export interface KeyboardInputInterface {
+	input: string,
+	tex: string,
+	raw: string
+}
+
+export interface KeyboardOnChangeInterface {
+	value: KeyboardInputInterface,
+	validation: CheckerResult
+}
+
 export interface KeyboardInterface {
 	name: string;
 	checker: CheckerAbstract;
-	checkerOverride?: { [Key: string]: string };
+	checkerOverride?: Record<string, string>;
 	parameters: string[];
 	values: string[];
 	config: KeyboardObjectType;
@@ -67,7 +89,7 @@ function getOneKeyboard(kbrd: string): KeyboardInterface {
 
 	const parameters: string[] = [],
 		values: string[] = [],
-		checkerOverride: { [Key: string]: string } = {}
+		checkerOverride: Record<string, string> = {}
 
 	// Split as each lines.
 	const kbrdValues = kbrd.split("\n")
@@ -98,7 +120,7 @@ function getOneKeyboard(kbrd: string): KeyboardInterface {
 				// @if key?value
 				// remove the "@if " and split the key and value. The value may also contain a "?"
 				const [key, ...values] = k.substring(4).split("?")
-				checkerOverride[key] = values.join('?')
+				checkerOverride[key] = values.join("?")
 			}
 			parameters.push(k.substring(1))
 		})
@@ -130,30 +152,58 @@ function getKeyboards(kbrdCode: string): KeyboardInterface[] {
 	return unrefKbrd.split("\n\n").map(kbrd => getOneKeyboard(kbrd))
 }
 
-export function useKeyboard(props?) {
-	function loadAnswerToKeyboard(value: string, reset: () => void, changeCallback: (value?: string) => void, callback: (value: string) => void): void {
-		reset()
+export function useKeyboard(
+	props?: KeyboardPropsInterface,
+	onKeyboardChange?: (event: string | KeyboardInputInterface) => void
+) {
 
+	const keyboardInput = ref<KeyboardInputInterface>({ input: "", tex: "", raw: "" })
+
+	function reset() {
+		keyboardInput.value = { input: "", tex: "", raw: "" }
+	}
+
+	function loadAnswer(value: string, config?: {
+		reset?: () => void,
+		callback?: (value?: string) => void
+	}) {
+		// Reset the current value
+		if (config?.reset) {
+			config.reset()
+		} else {
+			reset()
+		}
+
+		// if value is null, reset the display
 		if (value === null) {
-			changeCallback()
+			onKeyboardChange(null)
 			return
 		}
 
-		if (value === undefined) value = props.answer
+		// if value is undefined, set the value to the answer.
+		if (value === undefined && props) {
+			value = props.answer
+		}
 
 		// show always only the first value
-		const firstvalue = value.split("||")[0]
-		callback(firstvalue)
+		const first_value = value.split("||")[0]
+		if (config?.callback) {
+			config.callback(first_value)
+		}
 
-		changeCallback(firstvalue)
+		// Emit change
+		onKeyboardChange(first_value)
 	}
+
 
 	// Return the available functions
 	return {
+		keyboardInput, 			// contains the values exposed by the keyboard.
 		getKeyboards, 			// Main function to recover a keyboard with all it's functionality
 		keyboardKeys, 			// Keyboard keys configuration
 		keyboards,				// List of all available "basic" keyboards with their configuration
 		getComponent,			// Get the component of the keyboard given by name
-		loadAnswerToKeyboard 	// load the answer to the keyboard
+		loadAnswer,				// load the answer to the keyboard
+		reset
 	}
 }
