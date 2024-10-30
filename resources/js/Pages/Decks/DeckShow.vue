@@ -30,7 +30,7 @@ const props = defineProps({
 
 		<!-- card mode -->
 		<FlipcardsShow
-			class="w-full"
+			class="w-full mt-10"
 			:deck="props.deck"
 		/>
 	</section>

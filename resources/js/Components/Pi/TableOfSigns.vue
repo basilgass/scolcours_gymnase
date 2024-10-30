@@ -1,8 +1,9 @@
 <script lang="ts" setup>
 
+import TableOfSignsExtremesLine from "@/Components/Pi/Parts/TableOfSignsExtremesLine.vue"
 import TableOfSignsFactorRow from "@/Components/Pi/Parts/TableOfSignsFactorRow.vue"
 import TableOfSignsHeader from "@/Components/Pi/Parts/TableOfSignsHeader.vue"
-import TableOfSignsGrow from "@/Components/Pi/Parts/TableOfSignsResultLine.vue"
+import TableOfSignsResultLine from "@/Components/Pi/Parts/TableOfSignsResultLine.vue"
 import TexCode from "@/Components/Ui/TexCode.vue"
 import { type TABLE_OF_SIGNS_VALUES } from "pimath"
 import { computed } from "vue"
@@ -24,13 +25,13 @@ const props = withDefaults(defineProps<TableOfSignsType>(), {
 	label: "f(x)",
 	previousLabel: "f'(x)",
 	factors: () => [],
-	extremes: () => [],
+	extremes: null,
 	texOutput: false,
-	resultLine: () => []
+	resultLine: null
 })
 
 const tos_mode = computed(() => {
-	if (props.resultLine.length === 0) {
+	if (!props.resultLine || props.resultLine.length === 0) {
 		return props.mode
 	}
 
@@ -44,10 +45,30 @@ const tos_mode = computed(() => {
 	return "signs"
 })
 const computedGrows = computed(() => {
-	if (props.resultLine.length > 0) {
+	if (props.resultLine !== null) {
 		return props.resultLine
 	}
-	return props.signs
+
+	// automatically convert "z"=zero to
+	// "m" (min) if previous is - and next is +
+	// "M" (max) if previous is + and next is -
+	// "_" (replat) if previous and next are the same.
+	// -z+z- => -m+M-
+
+	const signs = [...props.signs]
+	for (let i = 1; i < signs.length - 1; i++) {
+		if (signs[i] === "z") {
+			if (signs[i - 1] === "-" && signs[i + 1] === "+") {
+				signs[i] = "m" // min
+			} else if (signs[i - 1] === "+" && signs[i + 1] === "-") {
+				signs[i] = "M" // max
+			} else if (signs[i - 1] === signs[i + 1]) {
+				signs[i] = "_" // replat
+			}
+		}
+	}
+
+	return signs
 })
 
 const LaTeX_output = computed(() => {
@@ -69,9 +90,7 @@ ${props.factors.length > 0 ? "\\tkzTabLine{}" : ""}
 <template>
 	<div class="table-of-sign-wrapper">
 		<div class="not-prose">
-			<table
-				class="border-r tos border-gray-400 mx-auto"
-			>
+			<table class="border-r tos border-gray-400 mx-auto">
 				<table-of-signs-header :roots="roots" />
 
 				<tbody v-if="factors.length>0">
@@ -83,6 +102,7 @@ ${props.factors.length > 0 ? "\\tkzTabLine{}" : ""}
 						:signs="factor.signs"
 					/>
 				</tbody>
+
 				<tfoot class="border-t-2 border-gray-400">
 					<table-of-signs-factor-row
 						v-if="tos_mode!=='signs'"
@@ -91,13 +111,18 @@ ${props.factors.length > 0 ? "\\tkzTabLine{}" : ""}
 						:signs="signs"
 					/>
 
-					<table-of-signs-grow
+					<table-of-signs-result-line
 						v-if="tos_mode!=='signs'"
-						:extremes="extremes"
 						:label="label"
 						:mode="tos_mode"
 						:roots="roots"
 						:signs="computedGrows"
+					/>
+
+					<table-of-signs-extremes-line
+						v-if="tos_mode!=='signs' && extremes!==null"
+						:extremes="extremes"
+						:roots="roots"
 					/>
 
 					<table-of-signs-factor-row

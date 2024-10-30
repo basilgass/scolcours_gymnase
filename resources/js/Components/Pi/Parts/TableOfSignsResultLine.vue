@@ -6,9 +6,18 @@ defineProps<{
 	label: string,
 	signs: TABLE_OF_SIGNS_VALUES[],
 	roots: string[],
-	extremes: string[],
 	mode: 'grows'|'curves'
 }>()
+
+function extremeLabel(value: TABLE_OF_SIGNS_VALUES): string{
+	switch (value){
+		case "m": return 'min'
+		case 'M': return 'max'
+		case '_': return 'replace'
+	}
+
+	return ''
+}
 </script>
 
 <template>
@@ -34,12 +43,12 @@ defineProps<{
 						'bg-stripes bg-stripes-red-100 w-24 -mr-6 -ml-6': sign==='h' && (n!==0 && n!==2*roots.length),
 					}"
 
-					class="w-12 text-center hover:bg-white py-2 relative"
+					class="w-12 text-center py-2 relative"
 				>
 					<div
 						v-if="n%2===1"
-						v-katex.inline="extremes[(n-1)/2]"
-						class="text-center translate-y-6 absolute left-1/2 -translate-x-1/2 bg-white z-50"
+						v-katex.inline="`\\text{${extremeLabel(sign)}}`"
+						class="text-center translate-y-6 absolute left-1/2 -translate-x-1/2 z-10"
 					/>
 					<i
 						v-else-if="mode==='grows'"

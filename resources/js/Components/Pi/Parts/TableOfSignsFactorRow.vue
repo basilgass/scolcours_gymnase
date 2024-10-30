@@ -32,39 +32,11 @@ defineProps<{
 						'bg-stripes bg-stripes-red-100 w-18 -ml-6': sign==='h' && n===2*roots.length,
 						'bg-stripes bg-stripes-red-100 w-24 -mr-6 -ml-6': sign==='h' && (n!==0 && n!==2*roots.length),
 					}"
-					class="w-12 text-center hover:bg-white py-2"
+					class="w-12 text-center py-2"
 				/>
 			</div>
 		</td>
 	</tr>
-
-	<!--					<tr-->
-	<!--						v-for="(factor, index) of factors"-->
-	<!--						:key="`tos-${index}`"-->
-	<!--						class="border-t first:border-gray-400"-->
-	<!--					>-->
-	<!--						<td-->
-	<!--							v-katex.inline="factor.label"-->
-	<!--							class="min-w-[100px] border-r text-center border-gray-400"-->
-	<!--						/>-->
-
-	<!--						<td>-->
-	<!--							<div class="flex flex-row">-->
-	<!--								<div-->
-	<!--									v-for="(sign, n) of factor.signs"-->
-	<!--									:key="`tos-${index}-cell-${n}`"-->
-	<!--									v-katex.inline="n%2===0?sign:(sign==='z'?'0':'')"-->
-	<!--									:class="{-->
-	<!--										'cell-v-line-d':sign==='d',-->
-	<!--										'cell-v-line': n%2===1,-->
-	<!--										'w-24': roots.length===0,-->
-	<!--										'w-12': roots.length>0-->
-	<!--									}"-->
-	<!--									class="text-center hover:bg-white py-2"-->
-	<!--								/>-->
-	<!--							</div>-->
-	<!--						</td>-->
-	<!--					</tr>-->
 </template>
 
 <style scoped>

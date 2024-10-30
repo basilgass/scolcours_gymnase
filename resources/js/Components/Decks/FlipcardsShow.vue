@@ -4,11 +4,11 @@
 >
 
 import IllustrationShow from "@/Components/Illustrations/IllustrationShow.vue"
+import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 import type { deckInterface, flipcardsInterface } from "@/types/modelInterfaces"
 import { useSwipe } from "@vueuse/core"
 import { Random } from "pimath"
 import { computed, PropType, ref } from "vue"
-import MarkdownIt from "../Ui/MarkdownIt.vue"
 
 const props = defineProps({
 	deck: { type: Object as PropType<deckInterface>, required: true }
@@ -18,18 +18,18 @@ const cardIndex = ref(0),
 	cardSide = ref<"recto" | "verso">("recto"),
 	cardsList = ref<flipcardsInterface[]>(Random.shuffle(props.deck.flipcards))
 
-const flip = function () {
+const flip = function() {
 	if (cardSide.value === "recto") {
 		cardSide.value = "verso"
 	}
 }
 
-const restartDeck = function () {
+const restartDeck = function() {
 	cardsList.value.forEach(result => delete result.result)
 	cardIndex.value = 0
 }
 
-const cardResult = function (result: boolean) {
+const cardResult = function(result: boolean) {
 	// On stocke le résultat dans la carte.
 	cardsList.value[cardIndex.value].result = result
 
@@ -85,6 +85,13 @@ const xClassTranslate = computed(() => {
 		`translate: 0px`
 })
 
+const countCards = computed(() => {
+	return {
+		correct: cardsList.value.filter(x => x.result).length,
+		asked: cardsList.value.filter(x => Object.hasOwn(x, "result")).length,
+		length: cardsList.value.length
+	}
+})
 </script>
 
 <template>
@@ -93,56 +100,75 @@ const xClassTranslate = computed(() => {
 		ref="el"
 		class="cursor-pointer relative"
 	>
-		<!-- <div class="absolute left-3 lg:left-6 top-[50%] text-red-500">
-			<i class="bi bi-hand-thumbs-down-fill" />
+		<div class="absolute z-10 top-[-1.5rem] w-full flex justify-between">
+			<div>{{ countCards.length }} cartes</div>
+			<div>
+				<span class="text-green-600">{{ countCards.correct }}</span> /
+				{{ countCards.asked }}
+			</div>
 		</div>
-		<div class="absolute right-3 lg:right-6 top-[50%] text-green-500">
-			<i class="bi bi-hand-thumbs-up-fill" />
-		</div> -->
+
+		<transition name="slide-up">
+			<div
+				v-if="cardSide === 'verso'"
+				class="fixed z-10 bottom-[2rem] left-0 flex justify-between w-full px-5 mt-2 transition-all duration-1000 ease-in-out"
+			>
+				<button
+					class="btn bg-white hover:bg-red-100 transition-colors text-red-600 border border-red-600 px-5 lg:px-10"
+					@click="cardResult(false)"
+				>
+					<i class="bi bi-hand-thumbs-down-fill" />
+				</button>
+				<button
+					class="btn bg-white hover:bg-green-100 transition-colors text-green-600 border border-green-600 px-5 lg:px-10"
+					@click="cardResult(true)"
+				>
+					<i class="bi bi-hand-thumbs-up-fill" />
+				</button>
+			</div>
+		</transition>
 
 		<div
-			:class="xClassTranslate"
-			class="grid place-items-center relative
-			 bg-white rounded-xl shadow-lg p-5 min-h-[50vh]"
-			@click="flip"
+			:class="{ 'is-flipped': cardSide==='verso' }"
+			class="relative card transition duration-1000 w-full"
+			@click="cardSide=cardSide==='verso'?'recto':'verso'"
 		>
-			<!-- body -->
-			<markdown-it
-				class="text-xl md:text-2xl lg:text-3xl xl:text-4xl"
-				:text="cardsList[cardIndex][cardSide].body"
-			/>
-			<!-- Illustration -->
-			<illustration-show
-				v-if="cardsList[cardIndex][cardSide].illustrations.length > 0"
-				class="h-full w-full max-w-[600px]"
-				:illustration="cardsList[cardIndex][cardSide].illustrations[0]"
-				click-through
-			/>
-		</div>
-
-
-		<div class="min-h-[3em]">
-			<transition name="fade">
-				<div
-					v-if="cardSide === 'verso'"
-					class="flex justify-between w-full px-5 mt-2 transition-opacity duration-500 ease-in-out"
-				>
-					<button
-						class="btn bg-white hover:bg-red-100 transition-colors text-red-600 border border-red-600 px-5 lg:px-10"
-						@click="cardResult(false)"
-					>
-						<i class="bi bi-hand-thumbs-down-fill" />
-					</button>
-					<button
-						class="btn bg-white hover:bg-green-100 transition-colors text-green-600 border border-green-600 px-5 lg:px-10"
-						@click="cardResult(true)"
-					>
-						<i class="bi bi-hand-thumbs-up-fill" />
-					</button>
+			<div class="card-face front min-h-[60vh]">
+				<div class="bg-white w-full h-full rounded-xl px-5 py-3 grid place-items-center">
+					<!-- body -->
+					<markdown-it
+						:text="cardsList[cardIndex]['recto'].body"
+						class="text-xl md:text-2xl lg:text-3xl xl:text-4xl"
+					/>
+					<!-- Illustration -->
+					<illustration-show
+						v-if="cardsList[cardIndex]['recto'].illustrations.length > 0"
+						:illustration="cardsList[cardIndex]['recto'].illustrations[0]"
+						class="h-full w-full max-w-[600px]"
+						click-through
+					/>
 				</div>
-			</transition>
+			</div>
+			<div class="card-face back min-h-[60vh]">
+				<div class="bg-white w-full h-full rounded-xl px-5 py-3 grid place-items-center">
+					<!-- body -->
+					<markdown-it
+						:text="cardsList[cardIndex]['verso'].body"
+						class="text-xl md:text-2xl lg:text-3xl xl:text-4xl"
+					/>
+					<!-- Illustration -->
+					<illustration-show
+						v-if="cardsList[cardIndex]['verso'].illustrations.length > 0"
+						:illustration="cardsList[cardIndex]['verso'].illustrations[0]"
+						class="h-full w-full max-w-[600px]"
+						click-through
+					/>
+				</div>
+			</div>
 		</div>
 	</article>
+
+
 	<div
 		v-else
 		class="min-w-[300px] min-h-[200px] grid place-items-center"
@@ -162,4 +188,27 @@ const xClassTranslate = computed(() => {
 	</div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.card-face {
+	@apply absolute w-full h-full transition-transform duration-1000 shadow-xl border rounded-xl grid place-items-center;
+	backface-visibility: hidden;
+}
+
+.front {
+	transform: rotateY(0deg);
+}
+
+.back {
+	transform: rotateY(180deg);
+}
+
+.card.is-flipped .front {
+	transform: rotateY(-180deg);
+}
+
+.card.is-flipped .back {
+	transform: rotateY(0deg);
+}
+
+
+</style>

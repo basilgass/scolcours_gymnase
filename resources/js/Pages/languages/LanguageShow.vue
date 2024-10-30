@@ -27,10 +27,6 @@ interface LanguageInterface {
 	},
 }
 
-interface LanguagePropsInterface extends LanguageInterface {
-	units: TranslationUnitInterfaceExtended[]
-}
-
 export interface LanguageDataInterface extends LanguageInterface {
 	units: Ref<TranslationUnitInterfaceExtended[]>,
 	state: Ref<"intro" | "running" | "finished">,
@@ -38,7 +34,8 @@ export interface LanguageDataInterface extends LanguageInterface {
 }
 
 // Degine the props coming in (save for all)
-const props = defineProps<LanguagePropsInterface>()
+const props = defineProps<LanguageInterface>()
+
 // Make the units data reactive
 /**
  * props.units.map(unit => {

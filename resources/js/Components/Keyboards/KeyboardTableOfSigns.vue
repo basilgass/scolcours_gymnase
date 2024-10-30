@@ -45,6 +45,7 @@ defineExpose({
 					showKeyboard.value = "coords"
 					coords.value = { input: c, tex: "", raw: "" }
 				}
+
 			}
 		})
 	},
@@ -78,8 +79,12 @@ const tosName = computed(() => { // le nom de la fonction
 const withGrows = computed(() => { // s'il y a la croissance
 	return props.answer.split("@").length > 2
 })
-const withCoords = computed(() => { // s'il faut donner les coordonnées
+const withExtremes = computed(() => { // s'il faut donner les coordonnées
 	return props.answer.split("@").length > 3
+})
+
+const tosMode = computed<"signs" | "grows" | "curves">(()=>{
+	return withGrows.value ? 'grows': 'signs'
 })
 
 // Le clavier a afficher
@@ -121,7 +126,7 @@ const zeroes = ref({ input: "", tex: "", raw: "" }),
 		if (withGrows.value) {
 			r += `@${grows.value.input}`
 		}
-		if (withCoords.value) {
+		if (withExtremes.value) {
 			r += `@${coords.value.input}`
 		}
 
@@ -146,16 +151,18 @@ onMounted(() => {
 			<table-of-signs
 				ref="tosUI"
 				:label="tosName"
-				:mode="'grows'"
-				:roots="zeroes.tex.split(',')"
+				:mode="tosMode"
+				:roots="zeroes.input.split(',')"
 				:signs="signs.input.split('') as TABLE_OF_SIGNS_VALUES[]"
+				:result-line="grows.input.split('') as TABLE_OF_SIGNS_VALUES[]"
+				:extremes="withExtremes ? coords.input.split(','): null"
 			/>
 		</div>
 
 
 		<div class="max-w-xl mx-auto flex flex-col gap-3 keyboard">
 			<div
-				:class="(withGrows && !withCoords)?'grid-cols-3':'grid-cols-2'"
+				:class="(withGrows && !withExtremes)?'grid-cols-3':'grid-cols-2'"
 				class="grid gap-3"
 			>
 				<button
@@ -181,7 +188,7 @@ onMounted(() => {
 					croissance
 				</button>
 				<button
-					v-if="withCoords"
+					v-if="withExtremes"
 					:class="showKeyboard==='coords'?'btn-primary':''"
 					class="py-0 px-5"
 					@click="showKeyboard='coords'"
@@ -206,11 +213,11 @@ onMounted(() => {
 				:custom-keys="{
 					'd': {type: 'math', display: '\\textcolor{red}{\\Vert}'},
 					'z': {type: 'math', display: '0'},
-					'!': {type: 'bg', display: 'bg-stripes bg-stripes-red-100'}
+					'h': {type: 'bg', display: 'bg-stripes bg-stripes-red-100'}
 				}"
 				:keyboard="{
 					grid: 'grid-cols-6',
-					layout: [['+', 2], ['-', 2], ['!', 2], ['z', 3], ['d', 3], ['@back', 3], ['@reset', 3]]
+					layout: [['+', 2], ['-', 2], ['h', 2], ['z', 3], ['d', 3], ['@back', 3], ['@reset', 3]]
 				}"
 				key-class="bg-white"
 				@change="changeKeyboard"
@@ -225,10 +232,11 @@ onMounted(() => {
 					'M': {type: 'text', display: 'max'},
 					'm': {type: 'text', display: 'min'},
 					'_': {type: 'text', display: 'replat'},
+					'h': {type: 'bg', display: 'bg-stripes bg-stripes-red-100'}
 				}"
 				:keyboard="{
 					grid: 'grid-cols-3',
-					layout: ['+', '-', 'd', 'm', 'M', '_', '', '@back', '@reset']
+					layout: ['+', '-', 'h', 'm', 'M', '_', 'd', '@back', '@reset']
 				}"
 				key-class="bg-white"
 				@change="changeKeyboard"

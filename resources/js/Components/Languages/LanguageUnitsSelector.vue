@@ -6,7 +6,6 @@ import { computed, ref } from "vue"
 
 const units = defineModel<TranslationUnitInterfaceExtended[]>()
 
-
 defineProps<{
 	books: BookInterface[]
 }>()

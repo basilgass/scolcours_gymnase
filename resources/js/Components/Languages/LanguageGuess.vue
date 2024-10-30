@@ -89,7 +89,7 @@ const nextWord = function() {
 const userGuess = ref("")
 
 const determinants = computed<string[]>(() => {
-	return languageData.language.determinants.split(',')
+	return languageData.language.determinants.split(",")
 })
 const suggestionsWrapper = ref(null)
 const currentWordForeign = computed(() => {
@@ -117,14 +117,12 @@ const suggestionClick = function(index: number) {
 	// Highlight the word
 	selectedSuggestion.value = index
 
-
 	if (suggestionsItems.value[index].foreign === words.value[startIndex.value].foreign) {
 		// We found the good word !
 		words.value[startIndex.value].found = true
 
 		// Disabled the input.
 		unknownWordAnswer.value = ""
-
 
 		// Continue the game after 1 second.
 		setTimeout(() => {
@@ -215,24 +213,38 @@ interface ISuggestionItem {
 	definition: string
 }
 
+function stripDeterminant(text: string): string {
+	for (const det of determinants.value) {
+		if (text.startsWith(det)) {
+			return text.substring(det.length).trim()
+		}
+	}
+
+	return text
+}
+
 const suggestionsItems = computed<ISuggestionItem[]>(() => {
-	const txt = userGuess.value.toLowerCase()
+	const txt = stripDeterminant(userGuess.value.toLowerCase())
+
 
 	return words.value
 		.filter(x => {
 			// C'est un rajout qui vient de "Je ne sais pas".
 			if (x.errors > 0) {
+				console.log("Error")
 				return false
 			}
 
 			let translation = x.foreign.toLowerCase()
+
 			// On filtre les déterminants
-			for (const det of determinants.value) {
-				if (translation.startsWith(det)) {
-					translation = translation.substring(det.length)
-					break
-				}
-			}
+			translation = stripDeterminant(translation)
+			// for (const det of determinants.value) {
+			// if (translation.startsWith(det)) {
+			// 	translation = translation.substring(det.length).trim()
+			// 	break
+			// }
+			// }
 
 			// Le mot cherché a moins de lettre que le nombre de lettres actuelles.
 			if (txt === translation) {

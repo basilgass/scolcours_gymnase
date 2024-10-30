@@ -19,7 +19,7 @@ defineProps<{roots: string[]}>()
 					<div
 						v-for="(zero, n) in roots"
 						:key="n"
-						v-katex.inline="zero"
+						v-katex.inline.ascii="zero"
 						class="w-24 text-center hover:bg-white py-2"
 					>
 						/>

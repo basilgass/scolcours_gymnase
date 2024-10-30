@@ -14,6 +14,7 @@ const props = defineProps<{
 	block: BlockInterface
 }>()
 
+
 // emits
 defineEmits(["destroy"])
 
@@ -189,7 +190,7 @@ const blockBody = computed(() => useFormattedBody(props.block.body, blockScript.
 
 			<!-- Block illustrations -->
 			<div
-				v-if="block.illustrations.length > 0"
+				v-if="block.illustrations?.length > 0"
 				:class="blockTemplate.illustration"
 			>
 				<div :class="block.illustrationsGrid">
