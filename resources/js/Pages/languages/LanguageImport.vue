@@ -55,13 +55,16 @@ function getUnits(bookId: number) {
 }
 
 const existingUnits = ref<TranslationUnitInterface[]>([])
-watch(() => form.language, () => form.book = -1)
+watch(() => form.language, () => {
+	form.book = -1
+	resetUnits()
+})
 watch(() => form.book, (prev: number, next: number) => {
 	if (prev !== next) {
-		if (next === -1) {
+		if (form.book === -1) {
 			resetUnits()
 		} else {
-			getUnits(next)
+			getUnits(form.book)
 		}
 	}
 })
