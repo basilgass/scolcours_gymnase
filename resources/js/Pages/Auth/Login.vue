@@ -8,6 +8,7 @@ import BreezeValidationErrors from "@/Components/Auth/ValidationErrors.vue"
 import { Head, Link } from "@inertiajs/vue3"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 
+// TODO: Get rid of all "Auth" default pages.
 export default {
 
 	components: {
@@ -48,7 +49,6 @@ export default {
 </script>
 
 <template>
-
 	<Head title="Connection" />
 
 	<BreezeValidationErrors class="mb-4" />

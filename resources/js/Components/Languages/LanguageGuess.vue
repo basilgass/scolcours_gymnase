@@ -146,14 +146,10 @@ const suggestionClick = function(index: number) {
 
 const defineUnknowns = function(item: TranslationWord) {
 	unknownWordForeign.value = item.foreign
-	unknownWordExamples.value = item.examples ? item.examples.split("|") : []
-	unknownWordDefinition.value = item.definition ? item.definition : ""
 }
 const resetUnknowns = function() {
 	unknownWordAnswer.value = ""
 	unknownWordForeign.value = ""
-	unknownWordExamples.value = []
-	unknownWordDefinition.value = ""
 	selectedSuggestion.value = undefined
 }
 
@@ -209,8 +205,6 @@ interface ISuggestionItem {
 	id: number,
 	foreign: string,
 	fr: string,
-	examples: string,
-	definition: string
 }
 
 function stripDeterminant(text: string): string {
@@ -258,8 +252,6 @@ const suggestionsItems = computed<ISuggestionItem[]>(() => {
 				id: x.id,
 				foreign: x.foreign,
 				fr: x.fr,
-				examples: x.examples,
-				definition: x.definition
 			}
 		})
 })
@@ -388,31 +380,6 @@ onMounted(() => {
 				<h2 class="text-xl font-semibold mt-10">
 					{{ unknownWordForeign }}
 				</h2>
-				<div
-					v-if="unknownWordExamples.length > 0"
-					class="mt-5"
-				>
-					<h3 class="border-t text-lg pt-3 mb-3 font-semibold">
-						exemples
-					</h3>
-					<div class="flex flex-col gap-2">
-						<div
-							v-for="(example, index) in unknownWordExamples"
-							:key="`example-${index}`"
-							v-text="example"
-						/>
-					</div>
-				</div>
-
-				<div
-					v-if="unknownWordDefinition.length > 0"
-					class="mt-5"
-				>
-					<h3 class="border-t text-lg pt-3 mb-3 font-semibold">
-						définition
-					</h3>
-					<div v-text="unknownWordDefinition" />
-				</div>
 			</div>
 		</div>
 

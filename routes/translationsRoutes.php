@@ -27,9 +27,14 @@ Route::whereIn('language', $languages)->group(function () {
 });
 
 
+// Get the list of books
+Route::get('translation/{language:slug}/books', [TranslationController::class, 'fetchBooks'])
+    ->name('translation.books');
+
 // Get the list of units for a book
 Route::get('translation/{book}/units', [TranslationController::class, 'fetchUnits'])
     ->name('translations.units');
+
 // Get the list of words for a unit
 Route::get('translation/{unit}/words', [TranslationController::class, 'fetchWords'])
     ->name('translations.words');
@@ -41,6 +46,9 @@ Route::middleware("can:admin")->group(function () {
         ->name('translations.import');
 
     // POST
+    Route::post('translation/book/create', [TranslationController::class, 'createBook'])
+        ->name('translation.books.create');
+
     Route::post('translation/word', [TranslationController::class, 'create'])
         ->name('translations.create');
 

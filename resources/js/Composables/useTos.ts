@@ -116,7 +116,7 @@ export function makeStudyFromPolyFactor(value: PolyFactor): ETUDE_DE_FONCTION_RA
 	// TODO: Filter if some point are the same !
 	
 	// roots
-	// TODO: root is in TeX : must be more clever !
+	// TODO: root is in TeX : there can be a conflict as it could also be in ascii math.
 	rootsValues.forEach((root, index) => code += `\nZ${index}(${root},0)->tex=@`)
 
 	// Extremes
@@ -183,7 +183,6 @@ function PolyFactor_getAsymptotes_Vertical(reduced: PolyFactor, roots: ISolution
 }
 
 function PolyFactor_getAsymptotes_Horizontal_or_Slope(factorized: PolyFactor, delta_degrees: number): ASYMPTOTE[] {
-	// TODO: Repeated parts...
 	const numerator = factorized.numerator
 	const denominator = factorized.denominator
 	const numDegree = numerator.degree().value
@@ -289,7 +288,6 @@ function getBBox(...items: { x: number, y: number }[]): {
 	}
 }
 
-// TODO: update makeStudyFromCode to the new version (for keyboard)
 export function makeStudyFromCode(code: string, showCoords: boolean, displayMode?: boolean) {
 	const [zeroes, signs, grows, coords] = code.split("@")
 

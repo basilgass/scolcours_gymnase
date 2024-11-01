@@ -60,7 +60,7 @@ export function useWrongAnswerAnimation(btn: HTMLElement) {
  * @param mabyeRefValues
  * @returns {string|null} - The formatted body text or null if body is null.
  */
-export function useFormattedBody(body: string|Ref<string>, mabyeRefValues: Ref<{[Key: string]: string}>): string {
+export function useFormattedBody(body: string|Ref<string>, mabyeRefValues: Ref<Record<string, string>>): string {
 	// No body : no need to continue
 	if (body === null) return null
 
@@ -80,7 +80,6 @@ export function useFormattedBody(body: string|Ref<string>, mabyeRefValues: Ref<{
 	// - - => +
 	// + -  or  - + => -
 	// + + => +
-	// TODO: robust solution to replace the double signs only when "replace" all items.
 	output = output.replaceAll("-REPLACE_VALUE-", "+")
 	output = output.replaceAll("-REPLACE_VALUE+", "-")
 	output = output.replaceAll("+REPLACE_VALUE-", "-")
@@ -90,7 +89,7 @@ export function useFormattedBody(body: string|Ref<string>, mabyeRefValues: Ref<{
 	return output
 }
 
-export const useKatexMacros: { [key: string]: string } = {
+export const useKatexMacros: Record<string, string> = {
 	"\\IR": "\\mathbb{R}",
 	"\\IN": "\\mathbb{N}",
 	"\\ds": "\\displaystyle",

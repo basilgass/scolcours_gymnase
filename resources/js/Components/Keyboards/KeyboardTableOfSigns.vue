@@ -6,7 +6,9 @@ import { KeyboardEmitsInterface, KeyboardPropsInterface, useKeyboard } from "@/C
 import { TABLE_OF_SIGNS_VALUES } from "pimath"
 import { computed, nextTick, onMounted, ref } from "vue"
 
-// TODO: le clavier TableOfSigns ne fonctionne pas encore correctement (grows, curves ?, etc...)
+// TODO: TableOfSigns: mise en évidence de la zone d'édition
+// TODO: TableOfSigns: assistance plus complète (entrée vide, trop d'entrée, ....)
+
 const props = defineProps<KeyboardPropsInterface>()
 
 const emits = defineEmits<KeyboardEmitsInterface>()

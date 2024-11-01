@@ -10,7 +10,7 @@ class TranslationBook extends Model
 {
     protected $fillable = [
         'slug',
-        'name',
+        'title',
         'cover'
     ];
 

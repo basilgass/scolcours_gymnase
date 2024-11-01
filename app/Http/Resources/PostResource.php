@@ -26,6 +26,7 @@ class PostResource extends JsonResource
 			'type' => $this->type,
 			'title' => $this->title,
 			'order' => $this->order,
+            // TODO: drop numberOfVisibleBlocks
 			'numberOfVisibleBlocks' => $this->numberOfVisibleBlocks,
 			'active' => $this->active,
 			'script' => $this->script,

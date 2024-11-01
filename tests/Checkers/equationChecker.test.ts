@@ -1,6 +1,8 @@
 import { expect, test } from "vitest"
 import { EquationChecker } from "../../resources/js/Checkers/Basic/EquationChecker"
 
+// TODO: Checkers
+
 test("should recognize a valid circle equation", () => {
 	const expectedDevelopped = "x^2+y^2-2x+4y+1=0",
 		expectedCentreRadius = "(x-1)^2+(y+2)^2=4"

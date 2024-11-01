@@ -87,7 +87,7 @@ function getUnits_from_Book(book_id: number) {
 					<div
 						class="text-lg font-extralight"
 					>
-						{{ book.name }}
+						{{ book.title }}
 					</div>
 					<div
 						:class="book.id===selectedBook?'':'hidden'"
@@ -107,7 +107,7 @@ function getUnits_from_Book(book_id: number) {
 								class="btn !px-6 text-sm font-extralight"
 								@click.stop="updateUnits(item)"
 							>
-								{{ item.unit }}
+								{{ item.title }}
 							</button>
 						</div>
 					</div>

@@ -278,7 +278,6 @@ export interface TranslationLanguageInterface{
 
 export interface TranslationUnitInterface {
 	id: number
-	unit: string
 	title: string
 }
 
@@ -286,8 +285,6 @@ export interface TranslationWord {
 	id: number,
 	fr: string,
 	foreign: string,
-	definition: string,
-	examples: string
 }
 
 export interface TranslationUnitInterfaceExtended extends TranslationUnitInterface {
@@ -312,6 +309,6 @@ export interface FormulaInterface {
 export interface BookInterface {
 	id: number,
 	slug: string,
-	name: string,
+	title: string,
 	cover: string
 }
