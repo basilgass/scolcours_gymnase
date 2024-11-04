@@ -4,6 +4,7 @@ import FormMaker from "@/Components/Form/FormMaker.vue"
 import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
 import { numberCorrection } from "@/helpers/helperFunctions.ts"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
+import { graduateBackgroundColor, graduateBorderColor } from "@/scolcours.ts"
 import { computed, ref } from "vue"
 
 defineOptions({ layout: LayoutMain })
@@ -15,53 +16,61 @@ const pointsData = ref(""),
 
 // Nouvelle version, plus logique et stable
 type baremeInterface = Record<string, {
-		pt: number,
-		note: number,
-		centieme: string
-	}>;
+	pt: number,
+	note: number,
+	centieme: string
+}>;
 
 const bareme = computed<baremeInterface>(() => {
-		if (maxPoints.value <= 0) return {}
+	if (maxPoints.value <= 0) return {}
+	if (maxPoints.value > 1000) return {}
 
-		if (+pourcentage.value < 0) return {}
+	if (+pourcentage.value < 0) return {}
 
-		if (precision.value <= 0) return {}
+	if (precision.value <= 0) return {}
 
-		let pt = 0,
-			result = {}
-		while (pt <= maxPoints.value) {
-			const note = calculerLaNote(pt),
-				ptKey = numberCorrection(pt)
-			result[pt] = {
-				pt: ptKey,
-				note: Math.round(note * 2) / 2,
-				centieme: note.toFixed(2)
-			}
+	let pt = 0,
+		result = {}
+	while (pt <= maxPoints.value) {
+		const note = calculerLaNote(pt),
+			ptKey = numberCorrection(pt)
 
-			pt = +(pt + precision.value).toFixed(3)
+		result[pt] = {
+			pt: ptKey,
+			note: Math.round(note * 2) / 2,
+			centieme: note.toFixed(2)
 		}
 
-		return result
-	}),
-	pointsParNote = computed<{ note: number, pointsMin: number, pointsMax: number }[]>(() => {
-		// returns [
-		//      {note, pointsDe, pointsA}
-		// ]
-		const arr = []
-		for (let i = 6; i >= 1; i -= 0.5) {
-			const values = Object.values(bareme.value)
-				.filter(x => x.note === i)
-				.map(x => x.pt)
+		pt = +(pt + precision.value).toFixed(3)
+	}
 
-			arr.push({
-				note: i,
-				pointsMin: Math.min(...values),
-				pointsMax: Math.max(...values)
-			})
-		}
+	return result
+})
 
-		return arr
-	})
+const pointsParNote = computed<{ note: number, pointsMin: number, pointsMax: number, points: number[] }[]>(() => {
+	// returns [
+	//      {note, pointsDe, pointsA}
+	// ]
+	const arr = []
+	for (let i = 6; i >= 1; i -= 0.5) {
+		const values = Object.values(bareme.value)
+			.filter(x => x.note === i)
+			.map(x => x.pt)
+
+		const points = values.sort((a,b)=>a-b)
+		arr.push({
+			note: i,
+			points,
+			pointsMin: Math.min(...values),
+			pointsMax: Math.max(...values)
+		})
+	}
+
+	return arr
+})
+const pointsParNoteASC = computed(() => {
+	return pointsParNote.value.toReversed()
+})
 
 function calculerLaNote(pt: number): number {
 	// échelle fédérale.
@@ -142,6 +151,8 @@ const listeDesPoints = computed<number[]>(() => {
 					focus
 					font-code
 					label="points maximum du test"
+					max="1000"
+					min="1"
 					name="points"
 					type="number"
 				/>
@@ -239,79 +250,109 @@ const listeDesPoints = computed<number[]>(() => {
 			</div>
 		</div>
 
-		<div class="grid grid-cols-1 md:grid-cols-2 gap-5 mt-10">
-			<div>
-				<form-maker
-					v-model="pointsData"
-					:rows="17"
-					font-code
-					helper-text="notes séparées par des espaces, des virgules ou à la ligne."
-					label="liste des points"
-					name="points"
-					type="textarea"
-				/>
+		<div class="space-y-2">
+			<h3 class="text-lg font-semibold">
+				Répartition des points
+			</h3>
+
+			<div
+				class="hidden md:grid grid-cols-1 gap-3"
+				v-if="Object.keys(bareme).length<150"
+			>
 				<div
-					v-show="listeDesPointsAvecErreurs.length>0"
-					class="text-red-600 text-sm"
+					v-for="pointsNote in pointsParNoteASC"
+					:key="pointsNote.note"
+					:style="`background-color:${graduateBackgroundColor[(pointsNote.note-1)*2]};border-color:${graduateBorderColor[(pointsNote.note-1)*2]}`"
+					class="px-2 py-1 flex flex-wrap gap-3"
 				>
-					Il y a un ou des points supérieurs au maximum ({{ listeDesPointsAvecErreurs.join(", ") }})
+					<h3 class="flex-1">
+						{{ pointsNote.note }}
+					</h3>
+					<button
+						v-for="pt in pointsNote.points"
+						:key="pt"
+						class="btn btn-xs border-gray-500"
+						@click="pointsData+=' ' + (+pt)"
+					>
+						{{ +pt }}
+					</button>
 				</div>
 			</div>
 
-			<div
-				v-if="listeDesNotes.length>0"
-				class="mt-8 flex flex-col gap-4"
-			>
+			<div class="grid grid-cols-1 md:grid-cols-2 gap-5">
 				<div>
-					<div class="flex gap-2 md:gap-4 xl:gap-10 justify-between text-center">
-						<div
-							class="bg-white p-3 grid place-items-center text-lg border border-slate-100 rounded-xl shadow aspect-square w-full py-8"
-						>
-							<div class="flex flex-col h-full justify-between">
-								<div class="font-extralight">
-									Nombre de notes
-								</div>
-								<div class="font-semibold text-xl">
-									{{ listeDesNotes.length }}
-								</div>
-							</div>
-						</div>
-						<div
-							class="bg-white p-3 grid place-items-center text-lg border border-slate-100 rounded-xl shadow aspect-square w-full py-8"
-						>
-							<div class="flex flex-col h-full justify-between">
-								<div class="font-extralight">
-									Moyenne
-								</div>
-								<div class="font-semibold text-xl">
-									{{ moyenneDesNotes }}
-								</div>
-							</div>
-						</div>
-						<div
-							class="bg-white p-3 grid place-items-center text-lg border border-slate-100 rounded-xl shadow aspect-square w-full py-8"
-						>
-							<div class="flex flex-col h-full justify-between">
-								<div class="font-extralight">
-									Médiane
-								</div>
-								<div class="font-semibold text-xl">
-									{{ medianeDesNotes }}
-								</div>
-							</div>
-						</div>
+					<form-maker
+						v-model="pointsData"
+						:rows="5"
+						font-code
+						helper-text="notes séparées par des espaces, des virgules ou à la ligne."
+						label="liste des points"
+						name="points"
+						type="textarea"
+					/>
+					<div
+						v-show="listeDesPointsAvecErreurs.length>0"
+						class="text-red-600 text-sm"
+					>
+						Il y a un ou des points supérieurs au maximum ({{ listeDesPointsAvecErreurs.join(", ") }})
 					</div>
 				</div>
 
 				<div
-					class="bg-white p-5 w-full border border-slate-100 rounded-xl shadow"
+					v-if="listeDesNotes.length>0"
+					class="mt-8 flex flex-col gap-4"
 				>
-					<bar-chart
-						:chart-dataset="decompteDesNotes"
-						:chart-labels="[1, 1.5,2, 2.5,3, 3.5,4, 4.5,5, 5.5,6]"
-						:chart-options="{scales: { y: { ticks: { stepSize: 1, }, }, }, }"
-						chart-colorset="graduate"
-					/>
+					<div>
+						<div class="flex gap-2 md:gap-4 xl:gap-10 justify-between text-center">
+							<div
+								class="bg-white p-3 grid place-items-center text-lg border border-slate-100 rounded-xl shadow aspect-square w-full py-8"
+							>
+								<div class="flex flex-col h-full justify-between">
+									<div class="font-extralight">
+										Nombre de notes
+									</div>
+									<div class="font-semibold text-xl">
+										{{ listeDesNotes.length }}
+									</div>
+								</div>
+							</div>
+							<div
+								class="bg-white p-3 grid place-items-center text-lg border border-slate-100 rounded-xl shadow aspect-square w-full py-8"
+							>
+								<div class="flex flex-col h-full justify-between">
+									<div class="font-extralight">
+										Moyenne
+									</div>
+									<div class="font-semibold text-xl">
+										{{ moyenneDesNotes }}
+									</div>
+								</div>
+							</div>
+							<div
+								class="bg-white p-3 grid place-items-center text-lg border border-slate-100 rounded-xl shadow aspect-square w-full py-8"
+							>
+								<div class="flex flex-col h-full justify-between">
+									<div class="font-extralight">
+										Médiane
+									</div>
+									<div class="font-semibold text-xl">
+										{{ medianeDesNotes }}
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div
+						class="bg-white p-5 w-full border border-slate-100 rounded-xl shadow"
+					>
+						<bar-chart
+							:chart-dataset="decompteDesNotes"
+							:chart-labels="[1, 1.5,2, 2.5,3, 3.5,4, 4.5,5, 5.5,6]"
+							:chart-options="{scales: { y: { ticks: { stepSize: 1, }, }, }, }"
+							chart-colorset="graduate"
+						/>
+					</div>
 				</div>
 			</div>
 		</div>

@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { Bar } from "vue-chartjs"
-import { computed } from "vue"
+import { graduateBackgroundColor, graduateBorderColor } from "@/scolcours.ts"
+import { CategoryScale } from "chart.js"
 
 import { Chart as ChartJS } from "chart.js/auto"
-import { CategoryScale } from "chart.js"
 import _ from "lodash"
+import { computed } from "vue"
+import { Bar } from "vue-chartjs"
 
 ChartJS.register(CategoryScale)
 
@@ -16,6 +17,7 @@ const props = defineProps({
 	chartLegend: {type: Boolean, default: false},
 	chartColorset: {type: String, default: null}
 })
+
 
 const chartData = computed(() => {
 		const labels = []
@@ -58,32 +60,8 @@ const chartData = computed(() => {
 	chartColors = computed(()=>{
 		if(props.chartColorset==="graduate") {
 			return {
-				backgroundColor: [
-					"rgba(255, 99, 132, 0.2)",
-					"rgba(255, 99, 132, 0.2)",
-					"rgba(255, 99, 132, 0.2)",
-					"rgba(255, 159, 64, 0.2)",
-					"rgba(255, 159, 64, 0.2)",
-					"rgba(255, 205, 86, 0.2)",
-					"rgba(54, 162, 235, 0.2)",
-					"rgba(54, 162, 235, 0.2)",
-					"rgba(75, 192, 192, 0.2)",
-					"rgba(75, 192, 192, 0.2)",
-					"rgba(40,210,72,0.2)",
-				],
-				borderColor: [
-					"rgb(255, 99, 132)",
-					"rgb(255, 99, 132)",
-					"rgb(255, 99, 132)",
-					"rgb(255, 159, 64)",
-					"rgb(255, 159, 64)",
-					"rgb(255, 205, 86)",
-					"rgb(54, 162, 235)",
-					"rgb(54, 162, 235)",
-					"rgb(75, 192, 192)",
-					"rgb(75, 192, 192)",
-					"rgb(201, 203, 207)",
-				],
+				backgroundColor: graduateBackgroundColor,
+				borderColor: graduateBorderColor,
 				borderWidth: 1,
 			}
 		}
