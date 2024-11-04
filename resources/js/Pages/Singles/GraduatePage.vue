@@ -68,9 +68,7 @@ const pointsParNote = computed<{ note: number, pointsMin: number, pointsMax: num
 
 	return arr
 })
-const pointsParNoteASC = computed(() => {
-	return pointsParNote.value.toReversed()
-})
+
 
 function calculerLaNote(pt: number): number {
 	// échelle fédérale.
@@ -256,16 +254,16 @@ const listeDesPoints = computed<number[]>(() => {
 			</h3>
 
 			<div
-				class="hidden md:grid grid-cols-1 gap-3"
+				class="hidden md:grid grid-cols-1 gap-1"
 				v-if="Object.keys(bareme).length<150"
 			>
 				<div
-					v-for="pointsNote in pointsParNoteASC"
+					v-for="pointsNote in pointsParNote"
 					:key="pointsNote.note"
 					:style="`background-color:${graduateBackgroundColor[(pointsNote.note-1)*2]};border-color:${graduateBorderColor[(pointsNote.note-1)*2]}`"
 					class="px-2 py-1 flex flex-wrap gap-3"
 				>
-					<h3 class="flex-1">
+					<h3 class="w-[45px]">
 						{{ pointsNote.note }}
 					</h3>
 					<button
