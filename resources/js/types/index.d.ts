@@ -76,12 +76,14 @@ export interface flashInterface {
 	error: (message: string, config?: flashConfig) => void
 }
 
+export interface KbrdEvent {
+	input: string,
+	tex: string,
+	raw: string
+}
+
 export interface userAnswerInterface {
-	value: {
-		input: string,
-		tex: string,
-		raw: string
-	},
+	value: keyboardEvent,
 	validation: {
 		index: number,
 		result: boolean,

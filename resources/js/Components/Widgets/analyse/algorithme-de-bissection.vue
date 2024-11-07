@@ -8,11 +8,11 @@ import FormMaker from "@/Components/Form/FormMaker.vue"
 
 import { IllustrationInterface } from "@/types/modelInterfaces"
 import { NumExp } from "pimath"
-import { computed, onMounted, PropType, ref } from "vue"
+import { computed, onMounted, ref } from "vue"
 
-const props = defineProps({
-	illustration: { type: Object as PropType<IllustrationInterface>, required: true }
-})
+const props = defineProps<{
+	illustration: IllustrationInterface
+}>()
 
 interface bissection {
 	a: number

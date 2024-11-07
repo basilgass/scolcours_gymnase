@@ -5,6 +5,7 @@ code: rational fraction ou <zero>@<signs>@<croissance>@<extremes>
 <script lang="ts" setup>
 import PiTableOfSigns from "@/Components/Pi/PiTableOfSigns.vue"
 import TableOfSigns from "@/Components/Pi/TableOfSigns.vue"
+import { IllustrationInterface } from "@/types/modelInterfaces.ts"
 import { TABLE_OF_SIGNS_VALUES } from "pimath"
 import { computed } from "vue"
 // Paramètres
@@ -15,9 +16,11 @@ import { computed } from "vue"
 // 1.   PiMath.Rational
 // 2.   <zero>@<signs>@<croissance>@<extremes>
 
-const props = defineProps({
-	illustration: { type: Object, required: true }
-})
+
+const props = defineProps<{
+	illustration: IllustrationInterface
+}>()
+
 const params = computed(() => props.illustration.parameters)
 const code = computed(() => props.illustration.code)
 

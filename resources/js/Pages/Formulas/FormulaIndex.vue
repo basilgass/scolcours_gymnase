@@ -2,24 +2,25 @@
 
 import BlockShow from "@/Components/Blocks/BlockShow.vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
+import FilteredList from "@/Components/Ui/FilteredList.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
+import { useStoreEditMode } from "@/stores/useStoreEditMode.ts"
 import { flashInterface } from "@/types"
 import type { FormulaInterface } from "@/types/modelInterfaces"
 import axios from "axios"
-import { inject, PropType, ref } from "vue"
+import { inject, PropType } from "vue"
 
 defineOptions({ layout: LayoutMain })
 
 const flash = inject<flashInterface>("flash")
+const editMode = useStoreEditMode()
 
-const props = defineProps({
+defineProps({
 	"formulas": {
 		type: Object as PropType<FormulaInterface[]>,
 		required: true
-	},
+	}
 })
-
-const theFormulas = ref(props.formulas)
 
 function updateFormula(formula: FormulaInterface) {
 	axios.patch(route("blocks.update", formula.block.id), {
@@ -35,55 +36,83 @@ function updateFormula(formula: FormulaInterface) {
 		})
 }
 
+function searchFormula(item:FormulaInterface, value: string): boolean {
+	// value is already toLowerString
+	return item.block.title?.includes(value) ||
+		item.block.body?.includes(value)
+
+}
 </script>
 
 <template>
-	<div>
-		<h1>Formular</h1>
+	<main class="scolcours-container">
+		<h1>formulaire</h1>
 
-		<div class="grid grid-cols-1 gap-5">
-			<div
-				v-for="formula in theFormulas"
-				:key="formula.id"
-				class="grid grid-cols-2 gap-3"
-			>
-				<div>
-					<div class="flex">
+		<filtered-list
+			:class="editMode.enable?'': ''"
+			:list="formulas"
+			:filter-by-theme="(item:FormulaInterface)=>item.chapter.theme.slug"
+			:search-function="searchFormula"
+			:list-class="editMode.enable? 'grid grid-cols-1 gap-2': 'grid grid-cols-1 gap-3 md:grid-cols-2 xl:md:grid-cols-3'"
+		>
+			<template #card="{ item }: { item: FormulaInterface }">
+				<div :class="editMode.enable?'grid grid-cols-2 gap-3': ''">
+					<div v-admin="editMode.enable">
+						<div class="flex">
+							<form-maker
+								v-model="item.block.title"
+								class="flex-1"
+								inline-label
+								input-class="rounded-r-none"
+								label="titre"
+								label-class="w-[50px]"
+								sm
+								type="text"
+								@enter="updateFormula(item)"
+							/>
+							<button
+								class="btn-success btn-xs rounded-l-none"
+								@click="updateFormula(item)"
+							>
+								<i class="bi bi-save" />
+							</button>
+						</div>
 						<form-maker
-							v-model="formula.block.title"
-							class="flex-1"
+							v-model="item.block.body"
 							inline-label
-							input-class="rounded-r-none"
-							label="titre"
+							label="body"
 							label-class="w-[50px]"
 							sm
-							type="text"
-							@enter="updateFormula(formula)"
+							type="code"
 						/>
-						<button
-							class="btn-success btn-xs rounded-l-none"
-							@click="updateFormula(formula)"
-						>
-							<i class="bi bi-save" />
-						</button>
 					</div>
-					<form-maker
-						v-model="formula.block.body"
-						inline-label
-						label="body"
-						label-class="w-[50px]"
-						sm
-						type="code"
-					/>
+					<block-show
+						v-theme.border="item.chapter.theme.id"
+						:block="item.block"
+						class="rounded-r shadows border-l-4"
+					>
+						<template #header>
+							<div class="flex justify-between items-baseline px-5 pt-2">
+								<h2
+									v-if="item.block.title"
+									v-theme.text="item.chapter.theme.id"
+									class="text-xl font-extralight"
+								>
+									{{ item.block.title }}
+								</h2>
+								<div
+									v-admin
+									class="text-xs font-code"
+								>
+									id: {{ item.id }}
+								</div>
+							</div>
+						</template>
+					</block-show>
 				</div>
-				<block-show
-					:block="formula.block"
-					class="rounded-r shadows border-l-4"
-					v-theme.border="formula.chapter.theme.id"
-				/>
-			</div>
-		</div>
-	</div>
+			</template>
+		</filtered-list>
+	</main>
 </template>
 
 <style scoped>

@@ -257,6 +257,9 @@
 
     .btn {
         @apply px-5 py-2 rounded-lg no-underline inline-block text-center disabled:cursor-not-allowed disabled:shadow-none transition-colors duration-300;
+    }
+
+    .btn-simple {
         @apply border dark:border-gray-700;
         @apply hover:bg-gray-100 dark:hover:bg-gray-700 hover:shadow;
     }

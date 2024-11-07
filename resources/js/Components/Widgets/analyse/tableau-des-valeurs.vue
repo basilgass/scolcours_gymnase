@@ -9,13 +9,15 @@ code: [f(x)=]function (multiple line possible)
 	lang="ts"
 	setup
 >
+import { IllustrationInterface } from "@/types/modelInterfaces.ts"
 import { Fraction, NumExp, Polynom } from "pimath"
 import { computed } from "vue"
 
-let props = defineProps({
-		illustration: { type: Object, required: true }
-	}),
-	params = computed(() => props.illustration.parameters.split(",")),
+const props = defineProps<{
+	illustration: IllustrationInterface
+}>()
+
+const	params = computed(() => props.illustration.parameters.split(",")),
 	code = computed(() => props.illustration.code),
 	roundedTo = computed(() => {
 		for (let param of params.value) {

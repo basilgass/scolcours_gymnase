@@ -12,6 +12,10 @@ Route::get("chapters/{chapter:slug}/theorems", [ChapterController::class, 'theor
 
 Route::get("formulas", [FormulaController::class, 'index'])
 	->name('formulas.index');
+Route::get('formulas/{formula}', [FormulaController::class, 'getOne'])
+    ->name('formulas.one');
+Route::get('formulas/{formula}', [FormulaController::class, 'getFormulas'])
+    ->name('formulas.multiple');
 
 // Admin routes
 Route::middleware("can:admin")

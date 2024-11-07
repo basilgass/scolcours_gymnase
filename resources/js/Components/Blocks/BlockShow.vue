@@ -11,7 +11,8 @@ import { computed, inject, provide } from "vue"
 
 // Props
 const props = defineProps<{
-	block: BlockInterface
+	block: BlockInterface,
+	noAdmin?: boolean
 }>()
 
 
@@ -154,53 +155,60 @@ const blockBody = computed(() => useFormattedBody(props.block.body, blockScript.
 		:class="blockConfig.style.body"
 		class="bg-white dark:bg-gray-800"
 	>
-		<BlockShowAdmin :block="block" />
+		<BlockShowAdmin
+			v-if="!noAdmin"
+			:block="block"
+		/>
 
 		<!-- header -->
-		<div
-			v-show="blockTitle || blockScript.hasData.value"
-			:class="blockTitleClass"
-		>
-			<!-- header left: (generic) icon and title -->
+		<slot name="header">
 			<div
-				class="flex gap-3 items-baseline"
-				v-theme.text="!block.type"
+				v-show="blockTitle || blockScript.hasData.value"
+				:class="blockTitleClass"
 			>
-				<i
-					v-if="blockIcon"
-					:class="blockIcon"
-				/>
-				<h3 v-katex.auto="blockTitle" />
-			</div>
+				<!-- header left: (generic) icon and title -->
+				<div
+					class="flex gap-3 items-baseline"
+					v-theme.text="!block.type"
+				>
+					<i
+						v-if="blockIcon"
+						:class="blockIcon"
+					/>
+					<h3 v-katex.auto="blockTitle" />
+				</div>
 
-			<!-- buttons for randomize and more... -->
-			<block-body-buttons />
-		</div>
+				<!-- buttons for randomize and more... -->
+				<block-body-buttons />
+			</div>
+		</slot>
 
 		<!-- body -->
-		<div
-			:class="blockTemplate.grid + ((!block.title && !block.type) ? ' pt-3' : '')"
-			class="px-5 pb-2"
-		>
-			<markdown-it
-				v-if="blockBody !== null"
-				:class="blockTemplate.block"
-				:text="blockBody"
-			/>
-
-			<!-- Block illustrations -->
+		<slot name="body">
 			<div
-				v-if="block.illustrations?.length > 0"
-				:class="blockTemplate.illustration"
+				:class="blockTemplate.grid + ((!block.title && !block.type) ? ' pt-3' : '')"
+				class="px-5 pb-2"
 			>
-				<div :class="block.illustrationsGrid">
-					<illustration-show
-						v-for="illustration in block.illustrations"
-						:key="`illustration-${illustration.id}`"
-						:illustration="illustration"
-					/>
+				<markdown-it
+					v-if="blockBody !== null"
+					:class="blockTemplate.block"
+					:text="blockBody"
+				/>
+
+				<!-- Block illustrations -->
+				<div
+					v-if="block.illustrations?.length > 0"
+					:class="blockTemplate.illustration"
+				>
+					<div :class="block.illustrationsGrid">
+						<illustration-show
+							v-for="illustration in block.illustrations"
+							:key="`illustration-${illustration.id}`"
+							:illustration="illustration"
+						/>
+					</div>
 				</div>
 			</div>
-		</div>
+		</slot>
 	</article>
 </template>

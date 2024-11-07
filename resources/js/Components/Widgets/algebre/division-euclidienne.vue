@@ -5,12 +5,14 @@ code: rational fraction
 </info>-->
 <script setup lang="ts">
 
-import { computed } from "vue"
 import PiEuclidian from "@/Components/Pi/PiEuclidian.vue"
+import { IllustrationInterface } from "@/types/modelInterfaces.ts"
+import { computed } from "vue"
 
-const props = defineProps({
-		illustration: {type: Object, required: true}
-	})
+
+const props = defineProps<{
+	illustration: IllustrationInterface
+}>()
 
 const euclidian = computed(()=>{
 	const config = props.illustration.parameters.split(",")

@@ -6,11 +6,17 @@
 
 import { asciiToTex, keyboardKey, KeyboardObjectType } from "@/Composables/keyboardConfig"
 import { useKeyboard } from "@/Composables/useKeyboard.ts"
+import { KbrdEvent } from "@/types"
 import { computed, ref } from "vue"
 
 const { keyboardKeys, keyboards } = useKeyboard()
 
-const emits = defineEmits(["validate", "next", "change", "clear"])
+const emits = defineEmits<{
+	validate: [event: string],
+	next: [],
+	change: [event: KbrdEvent],
+	clear: [event: string]
+}>()
 
 // TODO: Simplify using slots for above / below.
 const props = withDefaults(defineProps<{
@@ -86,7 +92,7 @@ const theKeyboard = computed(() => {
 					type: isMath ? "math" : "text",
 					display: display.startsWith("#") ? asciiToTex(display.substring(1)) : display,
 					span: 0,
-					fn: (value) => {
+					fn: (value: string) => {
 						return value + output
 					}
 				}
@@ -117,7 +123,7 @@ const btnReset = {
 		fn: () => {
 			ButtonKeyClick({
 				key: ",",
-				fn: (value) => value + ","
+				fn: (value: string) => value + ","
 			})
 		},
 		atEnd: false
@@ -288,20 +294,7 @@ const changeEvent = function() {
 }
 const validateButton = ref(null)
 
-function wrongAnswer() {
-	if (validateButton.value) {
-		validateButton.value.style.setProperty("animation-name", "v-shake-horizontal")
-		validateButton.value.style.setProperty("animation-duration", "500ms")
-
-		setTimeout(() => {
-			if (validateButton.value) { // the button may have already disappeared !
-				validateButton.value.style.setProperty("animation-name", "")
-			}
-		}, 500)
-	}
-}
-
-function getTex(value) {
+function getTex(value: string) {
 	const output = []
 
 	for (const v of value.split(",")) {
@@ -310,7 +303,7 @@ function getTex(value) {
 	return output.join(",")
 }
 
-function getTexFromOneValue(value) {
+function getTexFromOneValue(value: string) {
 	if (typeof theKeyboard.value === "string") {
 		return keyboards[theKeyboard.value].tex ? keyboards[theKeyboard.value].tex(value) : value
 	} else {

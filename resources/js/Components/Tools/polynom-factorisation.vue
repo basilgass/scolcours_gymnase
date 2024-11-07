@@ -3,7 +3,8 @@ import KeyboardDisplay from "@/Components/Keyboards/KeyboardDisplay.vue"
 import ToolForm, { IToolForm } from "@/Components/Tools/Parts/ToolForm.vue"
 import TexCode from "@/Components/Ui/TexCode.vue"
 import { useToolsStorage } from "@/Composables/useToolsStorage.ts"
-import { PolyFactor, Polynom } from "pimath"
+import { KbrdEvent } from "@/types"
+import { PolyFactor } from "pimath"
 /** Tools
  * title: factorisation d'un polynôme
  * body: factorisation d'un polynôme
@@ -26,13 +27,13 @@ const polynom = computed(() => forms[0].value.value as string)
 
 let result = computed(() => {
 	try {
-		let P = new Polynom(polynom.value)
-		const Factors = new PolyFactor().fromPolynom(P)
+		const P = new PolyFactor().fromPolynom(polynom.value)
 
+		const factorized = P.factorize()
 		return {
-			tex: P.tex + ' = ' + Factors.tex
+			tex: P.tex + ' = ' + factorized.tex
 		}
-	} catch (e) {
+	} catch {
 		// console.error(e)
 		return {
 			tex: '\\text{ le polynôme n\'est pas reconnu.}'
@@ -40,7 +41,7 @@ let result = computed(() => {
 	}
 })
 
-function updateKbrd(event){
+function updateKbrd(event: KbrdEvent){
 	forms[0].value.value=event.input
 }
 </script>

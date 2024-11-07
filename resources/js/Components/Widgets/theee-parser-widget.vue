@@ -1,16 +1,15 @@
 <script setup lang="ts">
-import { PropType } from "vue"
 import type { IllustrationInterface } from "@/types/modelInterfaces"
 import PiThreeParser from "../Pi/PiThreeParser.vue"
 
-const props = defineProps({
-	illustration: { type: Object as PropType<IllustrationInterface>, required: true },
-})
+defineProps<{
+	illustration: IllustrationInterface
+}>()
 
 </script>
 
 <template>
-	<PiThreeParser :draw="props.illustration" />
+	<PiThreeParser :draw="illustration" />
 </template>
 
 <style scoped></style>

@@ -2,16 +2,16 @@
 	lang="ts"
 	setup
 >
-import { PropType, ref } from "vue"
-import ChapterToc from "@/Components/Chapters/ChapterToc.vue"
 import ChapterChallenges from "@/Components/Chapters/ChapterChallenges.vue"
 import ChapterFormulas from "@/Components/Chapters/ChapterFormulas.vue"
 import ChapterRelations from "@/Components/Chapters/ChapterRelations.vue"
 import ChapterTheorems from "@/Components/Chapters/ChapterTheorems.vue"
+import ChapterToc from "@/Components/Chapters/ChapterToc.vue"
+import EditLink from "@/Components/Ui/EditLink.vue"
 
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 import type { ChapterInterface } from "@/types/modelInterfaces"
-import EditLink from "@/Components/Ui/EditLink.vue"
+import { PropType, ref } from "vue"
 
 defineOptions({ layout: LayoutMain })
 
@@ -57,8 +57,7 @@ const showTheorem = ref(false)
 						$page.props.theme.slug,
 						chapter.slug,
 						1,
-					])
-						"
+					])"
 					as="button"
 					class="min-h-[80px] mx-auto w-full md:w-auto md:px-20"
 				>

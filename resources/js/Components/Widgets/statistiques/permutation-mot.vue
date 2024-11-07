@@ -7,18 +7,15 @@ code:
 
 import { listeDeMots } from "@/helpers/liste-des-mots-francais"
 import { flashInterface } from "@/types"
-import { IllustrationInterface } from "@/types/modelInterfaces"
+import { IllustrationInterface } from "@/types/modelInterfaces.ts"
 import { Random } from "pimath"
-import { computed, inject, PropType, ref } from "vue"
+import { computed, inject, ref } from "vue"
 
 const flash = inject<flashInterface>("flash")
 
-const props = defineProps({
-	illustration: {
-		type: Object as PropType<IllustrationInterface>,
-		required: true
-	}
-})
+const props = defineProps<{
+	illustration: IllustrationInterface
+}>()
 
 const parameters = computed<string[]>(() => {
 	if (!props.illustration.parameters) return []

@@ -1,4 +1,4 @@
-import { IToolForm } from "@/Components/Tools/Parts/ToolForm.vue"
+import { type IToolForm } from "@/Components/Tools/Parts/ToolForm.vue"
 import { inject, ref, Ref } from "vue"
 
 export function useToolsStorage() {
