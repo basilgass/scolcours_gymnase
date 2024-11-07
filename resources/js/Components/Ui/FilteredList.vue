@@ -1,4 +1,4 @@
-<script generic="T" lang="ts" setup>
+<script generic="T extends {id:number}" lang="ts" setup>
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import { router, usePage } from "@inertiajs/vue3"
 import { computed, ref } from "vue"
@@ -13,8 +13,8 @@ interface FilterItem {
 	}
 }
 
-const scolcoursThemes = computed(()=>{
-	return usePage().props.themes.filter(x=>x.slug!=='tools')
+const scolcoursThemes = computed(() => {
+	return usePage().props.themes.filter(x => x.slug !== "tools")
 })
 
 interface FilteredListProps<T> {
@@ -25,7 +25,7 @@ interface FilteredListProps<T> {
 	routeName?: string;
 	routeData?: (item: T) => unknown[];
 	itemTitle?: (item: T) => string;
-	itemBackground?: (item: T) => string;
+	itemBackground?: (item: T) => string | number;
 	itemClass?: string;
 	collapsed?: boolean | null;
 	listClass?: string;
@@ -54,7 +54,7 @@ const props = withDefaults(
 		focus: false
 	})
 
-const filteredList = computed<T[]>(() => {
+const filteredList = computed<(T & { id: number })[]>(() => {
 		// Get the actual list.
 		let arr = props.list
 
@@ -70,7 +70,7 @@ const filteredList = computed<T[]>(() => {
 				if (typeof item === "string") return false
 
 				if (props.filterByTheme === true) {
-					const { theme } = item as FilterItem // destructure for typescript
+					const { theme } = item as unknown as FilterItem // destructure for typescript
 					return theme && theme.slug === selectedTheme.value
 				} else if (!(typeof props.filterByTheme === "boolean")) {
 					return props.filterByTheme(item) === selectedTheme.value
@@ -83,7 +83,7 @@ const filteredList = computed<T[]>(() => {
 		if (checkString !== "") {
 
 			arr = arr.filter((item) => {
-				if(props.searchFunction){
+				if (props.searchFunction) {
 					return props.searchFunction(item, checkString)
 				}
 
@@ -180,9 +180,9 @@ const emits = defineEmits<{
 				<button
 					v-for="(theme, id) of scolcoursThemes"
 					:key="id"
+					v-theme.bg.text="theme.slug"
 					:class="selectedTheme === theme.slug ? '' : 'opacity-40'"
 					class="btn btn-xs transition-transform hover:opacity-100 hover:scale-110"
-					v-theme.bg.text="theme.slug"
 					@click="selectedTheme = theme.slug"
 				>
 					{{ theme.title }}
@@ -195,7 +195,7 @@ const emits = defineEmits<{
 			>
 				<transition-group name="list">
 					<div
-						v-for="(item, index) in filteredList"
+						v-for="(item) in filteredList"
 						:key="`id-${item.id}`"
 					>
 						<slot
