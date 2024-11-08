@@ -9,12 +9,12 @@ code: [f(x)=]function (multiple line possible)
 	lang="ts"
 	setup
 >
-import { IllustrationInterface } from "@/types/modelInterfaces.ts"
+import { WidgetInterface } from "@/types/modelInterfaces.ts"
 import { Fraction, NumExp, Polynom } from "pimath"
 import { computed } from "vue"
 
 const props = defineProps<{
-	illustration: IllustrationInterface
+	illustration: WidgetInterface
 }>()
 
 const	params = computed(() => props.illustration.parameters.split(",")),

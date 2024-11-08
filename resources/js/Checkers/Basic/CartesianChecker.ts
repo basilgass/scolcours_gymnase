@@ -8,7 +8,7 @@ const description = `equation,[paramètres]
 **paramètres**
 - r=réduit
 - circle=forme centre rayon
-- 2d=équation du plan en 2D (ax+by+c=0)
+- 2d=équation de la droite en 2D (ax+by+c=0)
 - mx+h=droite du plan, sous la forme y=mx+h
 - sommet=forme du sommet
 - 3d=équation du plan en 3D (ax+by+cz+d=0)

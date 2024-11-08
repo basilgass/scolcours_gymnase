@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
-import { IllustrationInterface } from "@/types/modelInterfaces.ts"
+import { WidgetInterface } from "@/types/modelInterfaces.ts"
 import { computed, ref } from "vue"
 
 const props = defineProps<{
-	illustration: IllustrationInterface
+	illustration: WidgetInterface
 }>()
 
 	// code are the various steps.

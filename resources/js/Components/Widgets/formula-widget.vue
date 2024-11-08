@@ -1,11 +1,11 @@
 <script lang="ts" setup>
 import BlockShow from "@/Components/Blocks/BlockShow.vue"
-import type { FormulaInterface, IllustrationInterface } from "@/types/modelInterfaces"
+import { FormulaInterface, WidgetInterface } from "@/types/modelInterfaces"
 import axios from "axios"
 import { onMounted, ref } from "vue"
 
 const props = defineProps<{
-	illustration: IllustrationInterface
+	illustration: WidgetInterface
 }>()
 
 const formulas = ref<FormulaInterface[]>([])

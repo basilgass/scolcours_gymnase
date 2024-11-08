@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import type { IllustrationInterface } from "@/types/modelInterfaces"
+import { WidgetInterface } from "@/types/modelInterfaces"
 import { computed } from "vue"
 
 const props = defineProps<{
-	illustration: IllustrationInterface
+	illustration: WidgetInterface
 }>()
 
 const imageSrc = computed(()=>{

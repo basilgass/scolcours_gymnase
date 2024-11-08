@@ -7,25 +7,26 @@ import LayoutMain from "@/Layouts/LayoutMain.vue"
 
 defineOptions({ layout: LayoutMain })
 
-const props = defineProps({
-	pages: {
-		type: Array, default: () => []
-	},
-})
+defineProps<{
+	pages: string[]
+}>()
 
 </script>
 <template>
-	<!-- Title -->
-	<ArticleTitle title="Développement" />
+	<main class="scolcours-container">
+		<!-- Title -->
+		<ArticleTitle title="Développement" />
 
-	<div class="flex flex-col divide-y">
-		<InertiaLink
-			v-for="(page, index) in props.pages"
-			:key="index"
-			:href="route('dev', [page])"
-			class="hover:pl-3 transition-animation duration-300 py-3"
-		>
-			{{ page }}
-		</InertiaLink>
-	</div>
+		<div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
+			<InertiaLink
+				v-for="(page, index) in pages"
+				:key="index"
+				:href="route('dev', [page])"
+				class="hover:pl-4 transition-animation duration-300 p-3
+				bg-white dark:bg-gray-800"
+			>
+				{{ page }}
+			</InertiaLink>
+		</div>
+	</main>
 </template>

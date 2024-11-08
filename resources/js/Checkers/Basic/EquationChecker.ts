@@ -2,6 +2,8 @@ import { CheckerAbstract } from "@/Checkers/CheckerAbstract"
 import { customCheck } from "@/Composables/checkersConfig"
 import { Equation, Numeric } from "pimath"
 
+// TODO: EquationChecker and CartesianChecker overlaps !!!!
+
 const name = "equation"
 const description = `equation,[paramètres]
 

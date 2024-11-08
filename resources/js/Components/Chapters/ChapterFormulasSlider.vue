@@ -18,9 +18,11 @@ const afficherFormulaires = ref(false)
 		<button
 			class="fixed z-20
 			bottom-5 left-0
-			px-4 py-2
+			px-4 py-2 hover:pl-6 transition-all
 			text-xs
-			bg-white rounded-r-full border border-gray-200 shadow"
+			bg-white dark:bg-gray-800 dark:text-white
+			rounded-r-full border border-l-0 border-gray-200
+			shadow dark:shadow-gray-400"
 			@click="afficherFormulaires=!afficherFormulaires"
 		>
 			formulaire
@@ -36,11 +38,16 @@ const afficherFormulaires = ref(false)
 		<transition name="slide-fade">
 			<div
 				v-if="afficherFormulaires"
-				class="fixed z-20 bottom-0 left-0 w-full md:w-[400px] h-full py-3 bg-white border-gray-200 overflow-y-scroll"
+				class="fixed z-20
+				bottom-0 left-0
+				w-full md:w-[400px] h-full
+				py-3
+				bg-white dark:bg-gray-700
+				overflow-y-scroll scrollbar-scolcours"
 			>
 				<div>
 					<button
-						class="absolute top-0 right-0 p-3 text-gray-400"
+						class="absolute top-0 right-0 p-3 text-gray-500 transition-colors hover:text-gray-900 dark:hover:text-gray-200"
 						@click="afficherFormulaires=false"
 					>
 						<i class="bi bi-x-circle" />

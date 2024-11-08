@@ -5,13 +5,13 @@ code: function
 
 <script lang="ts" setup>
 import FormMaker from "@/Components/Form/FormMaker.vue"
+import { WidgetInterface } from "@/types/modelInterfaces.ts"
 
-import { IllustrationInterface } from "@/types/modelInterfaces"
 import { NumExp } from "pimath"
 import { computed, onMounted, ref } from "vue"
 
 const props = defineProps<{
-	illustration: IllustrationInterface
+	illustration: WidgetInterface
 }>()
 
 interface bissection {

@@ -6,12 +6,12 @@ code: rational fraction
 <script setup lang="ts">
 
 import PiEuclidian from "@/Components/Pi/PiEuclidian.vue"
-import { IllustrationInterface } from "@/types/modelInterfaces.ts"
+import { WidgetInterface } from "@/types/modelInterfaces.ts"
 import { computed } from "vue"
 
 
 const props = defineProps<{
-	illustration: IllustrationInterface
+	illustration: WidgetInterface
 }>()
 
 const euclidian = computed(()=>{

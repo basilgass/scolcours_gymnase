@@ -158,15 +158,17 @@
     }
 
     .hover-scolcours-admin {
-        @apply hover:bg-slate-50 hover:border-slate-600 hover:text-slate-600 transition-colors duration-300
+        @apply hover:bg-slate-50 hover:border-slate-600 hover:text-slate-600 transition-colors duration-300;
     }
 
     .scrollbar-scolcours-default {
-        @apply scrollbar scrollbar-w-1 scrollbar-h-1 scrollbar-thumb-rounded-full
+        @apply scrollbar scrollbar-w-1 scrollbar-h-1 scrollbar-thumb-rounded-full;
     }
 
     .scrollbar-scolcours {
-        @apply scrollbar-scolcours-default scrollbar-thumb-gray-700/50
+        @apply scrollbar-scolcours-default
+        scrollbar-thumb-gray-700/50 scrollbar-w-2
+        dark:scrollbar-thumb-gray-500/50;
     }
 
     .scrollbar-scolcours-katex {

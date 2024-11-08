@@ -88,6 +88,10 @@ export interface BlockInterfaceExtended extends BlockInterface {
 	isNew?: boolean
 }
 
+export interface WidgetInterface {
+	parameters: string;
+	code: string;
+}
 export interface IllustrationInterface {
 	id: number;
 	block_id: number;
