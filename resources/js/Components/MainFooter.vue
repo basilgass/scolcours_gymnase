@@ -22,7 +22,14 @@ const langues = {
 				<h3 class="text-lg font-semibold">
 					Plan du site
 				</h3>
-				<ThemeLinks />
+				<ThemeLinks
+					:links="[{
+						title: 'formulaire',
+						slug: 'formulaire',
+						icon: 'bi bi-table',
+						route: 'formulas.index'
+					}]"
+				/>
 			</div>
 
 			<div class="md:mx-auto">

@@ -10,7 +10,7 @@ Route::get("chapters/{chapter:slug}/formulas", [FormulaController::class, 'chapt
 Route::get("chapters/{chapter:slug}/theorems", [ChapterController::class, 'theorems'])
 	->name('chapters.theorems.index');
 
-Route::get("formulas", [FormulaController::class, 'index'])
+Route::get("formulaire", [FormulaController::class, 'index'])
 	->name('formulas.index');
 Route::get('formulas/{formula}', [FormulaController::class, 'getOne'])
     ->name('formulas.one');

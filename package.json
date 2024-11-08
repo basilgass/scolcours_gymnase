@@ -52,7 +52,7 @@
 		"markdown-it-attrs": "^4.2.0",
 		"markdown-it-bracketed-spans": "^1.0.1",
 		"markdown-it-texmath": "^1.0.0",
-		"pidraw": "^0.1.43",
+		"pidraw": "^0.1.44",
 		"pigames": "^0.1.18",
 		"pimath": "^0.1.26",
 		"pinia": "^2.2.4",

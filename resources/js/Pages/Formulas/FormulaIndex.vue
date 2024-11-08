@@ -2,6 +2,7 @@
 
 import BlockShow from "@/Components/Blocks/BlockShow.vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
+import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
 import FilteredList from "@/Components/Ui/FilteredList.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 import { useStoreEditMode } from "@/stores/useStoreEditMode.ts"
@@ -36,7 +37,7 @@ function updateFormula(formula: FormulaInterface) {
 		})
 }
 
-function searchFormula(item:FormulaInterface, value: string): boolean {
+function searchFormula(item: FormulaInterface, value: string): boolean {
 	// value is already toLowerString
 	return item.block.title?.includes(value) ||
 		item.block.body?.includes(value)
@@ -46,17 +47,19 @@ function searchFormula(item:FormulaInterface, value: string): boolean {
 
 <template>
 	<main class="scolcours-container">
-		<h1>formulaire</h1>
+		<article-title
+			title="formulaire"
+		/>
 
 		<filtered-list
 			:class="editMode.enable?'': ''"
-			:list="formulas"
 			:filter-by-theme="(item:FormulaInterface)=>item.chapter.theme.slug"
+			:list="formulas"
+			:list-class="editMode.enable? 'grid grid-cols-1 gap-2': 'columns-xs space-y-4'"
 			:search-function="searchFormula"
-			:list-class="editMode.enable? 'grid grid-cols-1 gap-2': 'grid grid-cols-1 gap-3 md:grid-cols-2 xl:md:grid-cols-3'"
 		>
 			<template #card="{ item }: { item: FormulaInterface }">
-				<div :class="editMode.enable?'grid grid-cols-2 gap-3': ''">
+				<div :class="editMode.enable?'grid grid-cols-2 gap-3': 'break-inside-avoid-column'">
 					<div v-admin="editMode.enable">
 						<div class="flex">
 							<form-maker

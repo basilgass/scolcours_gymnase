@@ -27,6 +27,9 @@
 }
 
 @layer components {
+    .h1 {
+        @apply text-xl md:text-3xl lg:text-5xl;
+    }
 
     /* Just adding the color for JIT */
     .bg-scolcours-main {
