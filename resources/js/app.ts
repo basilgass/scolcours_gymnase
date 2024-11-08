@@ -9,7 +9,8 @@ import { createPinia } from "pinia"
 
 import { createApp, DefineComponent, h } from "vue"
 import draggableComponent from "vuedraggable/src/vuedraggable.js"
-import { ZiggyVue } from "../../vendor/tightenco/ziggy/dist/vue.m"
+
+import { ZiggyVue } from "../../vendor/tightenco/ziggy"
 
 const pinia = createPinia()
 
