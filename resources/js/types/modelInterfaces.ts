@@ -72,7 +72,6 @@ export interface BlockInterface {
 	active: boolean;
 	order: number;
 	merge: boolean;
-	blur: boolean;
 	switch: string | boolean;
 	type: string;
 	title: string;
@@ -139,7 +138,6 @@ export interface PostInterface {
 	title: string;
 	order: number;
 	blockAnchor: number;
-	numberOfVisibleBlocks: number;
 	active: number;
 	script: string;
 	switch: string;
