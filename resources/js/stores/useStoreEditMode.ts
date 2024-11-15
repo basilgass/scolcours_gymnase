@@ -1,12 +1,12 @@
 import { usePage } from "@inertiajs/vue3"
-import { useMagicKeys, whenever } from "@vueuse/core"
+import { useMagicKeys, useStorage, whenever } from "@vueuse/core"
 import { defineStore } from "pinia"
-import { ref } from "vue"
 
+const storageKey = 'scolcours_gymnase_editmode'
 export const useStoreEditMode = defineStore(
 	"editMode",
 	() => {
-		const enable = ref(false)
+		const enable= useStorage(storageKey, false)
 
 		function toggle(){
 			enable.value = !enable.value
