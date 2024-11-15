@@ -166,17 +166,6 @@ class BlockController extends Controller
 		]);
 	}
 
-	public function toggleblur(Request $request, Block $block)
-	{
-		$validation = $request->validate([
-			'blur' => ['boolean', 'required']
-		]);
-
-		$block->blur = $validation['blur'];
-		$block->save();
-		return $block;
-	}
-
 	public function toggleswitch(Request $request, Block $block)
 	{
 		$validation = $request->validate([
@@ -266,7 +255,6 @@ class BlockController extends Controller
 		$block->type = $validation['type'] ?? '';
 		$block->script = $validation['script'] ?? null;
 		$block->json = $validation['json'] ?? null;
-		$block->blur = $validation['blur'] ?? false;
 		$block->switch = $validation['switch'] ?? null;
 		$block->illustrationsGrid = $validation['illustrationsGrid'] ?? null;
 

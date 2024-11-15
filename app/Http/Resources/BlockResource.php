@@ -29,8 +29,6 @@ class BlockResource extends JsonResource
 			'order' => $this->order,
 			'active' => $this->active,
 			'merge' => $this->merge,
-            // TODO: drop blur
-			'blur'=>$this->blur??false,
 			'switch'=>$this->switch,
 			// content
 			'type' => $this->type,

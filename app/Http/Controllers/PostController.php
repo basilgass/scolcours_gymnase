@@ -30,7 +30,6 @@ class PostController extends Controller
 
 		$post = $chapter->posts()->create([
 			'title' => $validation['title'],
-			'numberOfVisibleBlocks' => 0,
 			'order' => count($chapter->posts) + 1
 		]);
 
@@ -65,19 +64,6 @@ class PostController extends Controller
 			'post' => $post
 		]);
 	}
-
-//	public function updateNumberOfVisibleBlocks(Post $post, Request $request)
-//	{
-//		// Validate the post.
-//		$validation = $request->validate([
-//			'numberVisibleBlocks' => ['integer', 'between:0,100'],
-//		]);
-//
-//		$post->numberOfVisibleBlocks = $validation['numberVisibleBlocks'];
-//		$post->save();
-//
-//		return $post;
-//	}
 
 	public function updateBlocksOrder(Post $post, Request $request)
 	{
