@@ -7,7 +7,7 @@ import { BlockInterface } from "@/types/modelInterfaces.ts"
 import axios from "axios"
 import { ref } from "vue"
 
-const  editMode  = useStoreEditMode()
+const editMode = useStoreEditMode()
 
 const props = defineProps<{
 	block: BlockInterface
@@ -33,6 +33,7 @@ function saveMerge() {
 		})
 }
 
+
 </script>
 <template>
 	<div
@@ -40,36 +41,44 @@ function saveMerge() {
 		v-theme.bg.text.admin
 		class="py-1 px-2 flex justify-between items-center"
 	>
-		<edit-link
-			:id="block.id"
-			inline
-			label="block id: "
-			route-name="blocks.edit"
-		/>
-
-		<div class="draggable-handle cursor-move">
-			<i class="bi bi-arrows-move px-10" />
-		</div>
-
-		<div class="flex gap-2">
-			<form-maker
-				v-model="theBlock.template"
-				:axios="{
-					model: 'Block',
-					id: block.id,
-					column: 'template',
-				}"
-				inline-label
-				label="template"
-				sm
+		<slot name="adminLeft">
+			<edit-link
+				:id="block.id"
+				inline
+				label="block id: "
+				route-name="blocks.edit"
 			/>
-			<button
-				class="transition transition-all"
-				:class="theBlock.merge?'rotate-180':'rotate-0'"
-				@click="saveMerge()"
-			>
-				<i class="bi bi-arrow-bar-up" />
-			</button>
-		</div>
+		</slot>
+
+		<slot name="adminCenter">
+			<div class="draggable-handle cursor-move">
+				<i class="bi bi-arrows-move px-10" />
+			</div>
+		</slot>
+
+		<slot name="adminRight">
+			<div class="flex gap-2">
+				<form-maker
+					v-model="theBlock.template"
+					:axios="{
+						model: 'Block',
+						id: block.id,
+						column: 'template',
+					}"
+					inline-label
+					label="[b|i],[md|lg|xl]:[#]b+[#]i"
+					label-class="whitespace-nowrap"
+					input-class="bg-white text-black"
+					sm
+				/>
+				<button
+					:class="theBlock.merge?'rotate-180':'rotate-0'"
+					class="transition transition-all"
+					@click="saveMerge()"
+				>
+					<i class="bi bi-arrow-bar-up" />
+				</button>
+			</div>
+		</slot>
 	</div>
 </template>

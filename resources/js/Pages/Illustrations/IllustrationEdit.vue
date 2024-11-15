@@ -139,9 +139,7 @@ function illustrationDelete() {
 		.then((res) => {
 			flash.add("L'illustration a été supprimée")
 			// Go to the post.
-			console.log(res.data)
 			router.visit(res.data)
-
 		})
 		.catch((error) => console.error(error))
 }
@@ -167,10 +165,10 @@ onMounted(() => {
 					enregistrer
 				</button>
 				<button
-					class="btn-primary btn-xs"
+					class="btn-primary btn-xs flex gap-2"
 					@click="illustrationSaveAndEdit"
 				>
-					enregistrer et éditer
+					<i class="bi bi-save" /> <i class="bi bi-arrow-right" /> <span>block</span>
 				</button>
 				<button
 					class="btn-cancel btn-xs"

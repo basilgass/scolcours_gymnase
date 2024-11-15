@@ -6,8 +6,15 @@ import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 import { useFormattedBody } from "@/Composables/useHelpers.ts"
 import { useScriptLoader } from "@/Composables/useScriptLoader.ts"
 import { blockTypeDefault, blockTypes } from "@/scolcours.ts"
+import { useStoreEditMode } from "@/stores/useStoreEditMode.ts"
+import { flashInterface } from "@/types"
 import type { BlockInterface } from "@/types/modelInterfaces.ts"
+import { router } from "@inertiajs/vue3"
+import axios from "axios"
 import { computed, inject, provide } from "vue"
+
+const editMode = useStoreEditMode()
+const flash = inject<flashInterface>("flash")
 
 // Props
 const props = defineProps<{
@@ -27,20 +34,22 @@ const blockConfig = computed(() => {
 		: blockTypes[props.block.type]
 })
 
+const blockIcon = computed(() => {
+	return blockConfig.value.icon
+})
+
 const blockTitle = computed(() => {
 	return !props.block.title
 		? blockConfig.value.title
 		: props.block.title
 })
+
 const blockTitleClass = computed(() => {
 	return "flex justify-between w-full px-5 py-3 mb-3 text-2xl"
-	+ (props.block.merge ? " pt-10" : "")
-	+ " " + blockConfig.value.style.header
+		+ (props.block.merge ? " pt-10" : "")
+		+ " " + blockConfig.value.style.header
 })
 
-const blockIcon = computed(() => {
-	return blockConfig.value.icon
-})
 
 const blockTemplate = computed(() => {
 	if (!props.block.template) {
@@ -54,6 +63,8 @@ const blockTemplate = computed(() => {
 	const values = props.block.template
 		.split(",")
 		.filter((x) => x !== "")
+
+	console.log(values)
 	// pattern is:
 	// bi,md:b+i,lg:2b+i,xl:i+3b
 	if (values.length === 0) {
@@ -75,7 +86,7 @@ const blockTemplate = computed(() => {
 				? "order-1 col-span-1"
 				: "order-2 col-span-1"
 		]
-
+	
 	for (const value of values) {
 		const media = value.split(":") // ["md", "2b+i"]
 		if (media.length !== 2) {
@@ -145,8 +156,24 @@ const postScript = inject("postScript", useScriptLoader(""))
 const blockScript = useScriptLoader(props.block.script, { parent: postScript.data })
 blockScript.run()
 provide("blockScript", blockScript)
+
 const blockBody = computed(() => useFormattedBody(props.block.body, blockScript.merged))
 
+
+function addIllustration(){
+	axios
+		.post(
+			route("illustrations.store", [props.block.id]),
+			{}
+		)
+		.then((res) => {
+			router.visit(route("illustrations.edit", [res.data.id]))
+			flash.success("une nouvelle illustration a été créée")
+		}).catch((res) => {
+			console.warn("add illustration: ", res)
+		}
+	)
+}
 </script>
 
 <template>
@@ -158,7 +185,17 @@ const blockBody = computed(() => useFormattedBody(props.block.body, blockScript.
 		<BlockShowAdmin
 			v-if="!noAdmin"
 			:block="block"
-		/>
+		>
+			<template #adminLeft>
+				<slot name="adminLeft" />
+			</template>
+			<template #adminCenter>
+				<slot name="adminCenter" />
+			</template>
+			<template #adminRight>
+				<slot name="adminRight" />
+			</template>
+		</BlockShowAdmin>
 
 		<!-- header -->
 		<slot name="header">
@@ -168,8 +205,8 @@ const blockBody = computed(() => useFormattedBody(props.block.body, blockScript.
 			>
 				<!-- header left: (generic) icon and title -->
 				<div
-					class="flex gap-3 items-baseline"
 					v-theme.text="!block.type"
+					class="flex gap-3 items-baseline"
 				>
 					<i
 						v-if="blockIcon"
@@ -210,5 +247,20 @@ const blockBody = computed(() => useFormattedBody(props.block.body, blockScript.
 				</div>
 			</div>
 		</slot>
+
+		<!-- admin footer to add illustrations -->
+		<div
+			v-if="!noAdmin"
+			v-admin="editMode.enable"
+			v-theme.bg.text.admin
+			class="text-xs px-5 py-2 flex justify-between"
+		>
+			<button
+				class="btn btn-xs border border-gray-500"
+				@click="addIllustration"
+			>
+				<i class="bi bi-plus-lg mr-2" /> illustration
+			</button>
+		</div>
 	</article>
 </template>

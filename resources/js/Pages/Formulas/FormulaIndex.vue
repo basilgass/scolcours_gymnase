@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 
-import BlockShow from "@/Components/Blocks/BlockShow.vue"
+import FormulaShow from "@/Components/Blocks/FormulaShow.vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
 import FilteredList from "@/Components/Ui/FilteredList.vue"
@@ -59,7 +59,7 @@ function searchFormula(item: FormulaInterface, value: string): boolean {
 			:search-function="searchFormula"
 		>
 			<template #card="{ item }: { item: FormulaInterface }">
-				<div :class="editMode.enable?'grid grid-cols-2 gap-3': 'break-inside-avoid-column'">
+				<div :class="editMode.enable?'grid grid-cols-2 gap-3': ''">
 					<div v-admin="editMode.enable">
 						<div class="flex">
 							<form-maker
@@ -89,29 +89,7 @@ function searchFormula(item: FormulaInterface, value: string): boolean {
 							type="code"
 						/>
 					</div>
-					<block-show
-						v-theme.border="item.chapter.theme.id"
-						:block="item.block"
-						class="rounded-r shadows border-l-4"
-					>
-						<template #header>
-							<div class="flex justify-between items-baseline px-5 pt-2">
-								<h2
-									v-if="item.block.title"
-									v-theme.text="item.chapter.theme.id"
-									class="text-xl font-extralight"
-								>
-									{{ item.block.title }}
-								</h2>
-								<div
-									v-admin
-									class="text-xs font-code"
-								>
-									id: {{ item.id }}
-								</div>
-							</div>
-						</template>
-					</block-show>
+					<formula-show :formula="item" />
 				</div>
 			</template>
 		</filtered-list>

@@ -10,16 +10,13 @@ import { flashInterface } from "@/types"
 import type { BlockInterface } from "@/types/modelInterfaces"
 import { router } from "@inertiajs/vue3"
 import axios from "axios"
-import { computed, inject, PropType, ref, unref } from "vue"
+import { computed, inject, ref, unref } from "vue"
 
 defineOptions({ layout: LayoutMain })
 
-const props = defineProps({
-	"block": {
-		type: Object as PropType<BlockInterface>,
-		required: true
-	}
-})
+const props = defineProps<{
+	block: BlockInterface
+}>()
 
 const displayStyle = ref<"side-by-side" | "editor" | "preview">("side-by-side")
 
@@ -112,6 +109,19 @@ function addScriptsButtons() {
 
 	theBlock.value.script = script
 }
+
+function deleteIllustration(id: number){
+		axios
+			.post(route("illustrations.destroy", [id]), {
+				_method: "delete"
+			})
+			.then(() => {
+				flash.add("L'illustration a été supprimée")
+				// Go to the post.
+				theBlock.value.illustrations = theBlock.value.illustrations.filter(x=>x.id!==id)
+			})
+			.catch((error) => console.error(error))
+}
 </script>
 
 <template>
@@ -198,25 +208,49 @@ function addScriptsButtons() {
 				</div>
 
 				<!-- gestion des illustrations -->
-				<div v-if="displayStyle === 'side-by-side' || displayStyle === 'preview'">
-					<div class="flex">
-						<form-maker
-							v-model="theBlock.illustrationsGrid"
-							class="flex-1"
-							inline-label
-							input-class="rounded-r-none"
-							label="ILLUSTRATION"
-							label-class="w-[110px]"
-							sm
-							type="text"
-						/>
-						<button
-							class="btn btn-add btn-xs rounded-l-none"
-							@click="addIllustration"
-						>
-							<i class="bi bi-plus-lg" />
-						</button>
+				<div
+					v-if="displayStyle === 'side-by-side' || displayStyle === 'preview'"
+					class="space-y-3"
+				>
+					<h3 class="font-extralight">
+						illustrations
+					</h3>
+					<form-maker
+						v-model="theBlock.illustrationsGrid"
+						class="flex-1"
+						inline-label
+						input-class="rounded-r-none"
+						label="wrapper class"
+						label-class="w-[120px]"
+						sm
+						type="text"
+					/>
+					<div v-if="theBlock.illustrations.length>0">
+						<ul class="list list-inside list-disc space-y-1">
+							<li
+								v-for="illustration in theBlock.illustrations"
+								:key="illustration.id"
+								class="flex justify-between items-baseline"
+							>
+								<span class="text-xs">id: {{ illustration.id }} - {{ illustration.title ?? 'illustration sans titre' }}</span>
+								<confirm-button
+									xs
+									@confirm="deleteIllustration(illustration.id)"
+								>
+									<i class="bi bi-trash" />
+									<template #confirm>
+										<i class="bi bi-hand-thumbs-up" />
+									</template>
+								</confirm-button>
+							</li>
+						</ul>
 					</div>
+					<button
+						class="btn btn-add w-full py-2"
+						@click="addIllustration"
+					>
+						ajouter une illustration
+					</button>
 				</div>
 			</div>
 
@@ -306,6 +340,7 @@ function addScriptsButtons() {
 				<block-show
 					v-if="displayStyle === 'side-by-side' || displayStyle === 'preview'"
 					:block="theBlock"
+					no-admin
 				/>
 			</div>
 		</main>
