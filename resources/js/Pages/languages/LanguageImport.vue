@@ -24,7 +24,29 @@ const form = useForm({
 
 const traduction = ref("")
 const swapFrForeign = ref(false)
+const quizletMode = ref(true)
 const traductions = computed(() => {
+	if(quizletMode.value){
+		const formatedTraduction = []
+
+		const arr = traduction.value.split('\n')
+			.filter(x=>x.trim() !== "")
+
+		while(arr.length>1){
+			const values = [arr.shift().trim(), arr.shift().trim()]
+
+			console.log(arr.length)
+			formatedTraduction.push(
+				{
+					fr: values[swapFrForeign.value ? 1 : 0],
+					foreign: values[swapFrForeign.value ? 0 : 1]
+				}
+			)
+
+		}
+		return formatedTraduction
+	}
+
 	return traduction.value.split("\n")
 		.filter(x => x.trim() !== "" && x.split("\t").length >= 2)
 		.map(x => {
