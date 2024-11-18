@@ -8,6 +8,7 @@ import StatBar from "@/Components/Ui/StatBar.vue"
 import { useGenerator } from "@/Composables/useGenerator"
 import { flashInterface } from "@/types"
 import {
+	ChallengeGameState,
 	ChallengeInterface,
 	ChallengeScoreInterface,
 	GeneratorInterface,
@@ -17,7 +18,7 @@ import {
 } from "@/types/modelInterfaces"
 import { usePage } from "@inertiajs/vue3"
 import axios from "axios"
-import { computed, inject, PropType, reactive, ref } from "vue"
+import { computed, inject, reactive, ref } from "vue"
 
 // TODO: ChallengeAnswerInterface must be reworked as it is used in QuestionValidation
 export interface ChallengeAnswerInterface {
@@ -40,15 +41,12 @@ export interface ChallengeGameInterface {
 
 const flash = inject<flashInterface>("flash")
 const userScore = defineModel<ChallengeScoreInterface>("userScore", { required: true })
-const state = defineModel<'intro'|'running'|'finished'>("state", { required: true })
+const state = defineModel<ChallengeGameState>("state", { required: true })
 
-const props = defineProps({
-	challenge: { type: Object as PropType<ChallengeInterface>, required: true },
-	teams: {
-		type: Object as PropType<TeamInterface[]>, default: () => {
-		}
-	}
-})
+const props = defineProps<{
+	challenge: ChallengeInterface,
+	teams: TeamInterface[]
+}>()
 
 const game = reactive<ChallengeGameInterface>({
 	score: 0,
@@ -177,7 +175,11 @@ function validate(answer: ChallengeAnswerInterface) {
 	answers.value.push(answer)
 
 	// Continue or stop the game
-	answer.result ? successAnswer() : failedAnswer()
+	if (answer.result) {
+		successAnswer()
+	} else {
+		failedAnswer()
+	}
 
 }
 

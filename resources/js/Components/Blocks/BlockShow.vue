@@ -253,7 +253,7 @@ function addIllustration(){
 			v-if="!noAdmin"
 			v-admin="editMode.enable"
 			v-theme.bg.text.admin
-			class="text-xs px-5 py-2 flex justify-between"
+			class="text-xs px-5 py-2 flex justify-between border-b border-b-white"
 		>
 			<button
 				class="btn btn-xs border border-gray-500"

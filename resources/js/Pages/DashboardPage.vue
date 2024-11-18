@@ -3,12 +3,13 @@
 	lang="ts"
 >
 import LayoutMain from "@/Layouts/LayoutMain.vue"
+import { ChapterMinInterface } from "@/types/modelInterfaces.ts"
 
 defineOptions({ layout: LayoutMain })
 
-let props = defineProps({
-	courses: { type: Object, required: true }
-})
+defineProps<{
+	courses: ChapterMinInterface
+}>()
 
 </script>
 <template>
@@ -41,7 +42,7 @@ let props = defineProps({
 
 			<div class="flex flex-col divide-y divide-gray-200 -pt-3">
 				<InertiaLink
-					v-for="course in props.courses"
+					v-for="course in courses"
 					:key="course.slug"
 					:href="route('themes.chapters.slide', [course.theme, course.slug, course.currentPost])"
 					class="px-5 py-3 hover:px-8 transition-all flex justify-between items-baseline"

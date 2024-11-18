@@ -22,18 +22,12 @@ const props = defineProps<{
 	anchor: string | null
 }>()
 
-const blocks = ref<BlockInterface[]>(props.post.blocks)
 
-// const iteration = ref(0)
-// const postData = ref({})
+const blocks = ref<BlockInterface[]>(props.post.blocks)
 
 const postScript = useScriptLoader(props.post.script)
 postScript.run()
 provide("postScript", postScript)
-
-// TODO : postsBlocks est utilisé dans BlockShowAdmin, juste pour le déplacement des blocks.
-provide("postBlocks", blocks)
-
 
 function storeCurrentPost() {
 	if (usePage().props.auth.user === null) return
@@ -101,7 +95,7 @@ onMounted(() => {
 					</div>
 
 					<button
-						v-if="postScript.hasData"
+						v-if="postScript.hasData.value"
 						v-theme.text
 						class="btn btn-xs bg-white font-semibold hover:shadow"
 						@click="postScript.run()"

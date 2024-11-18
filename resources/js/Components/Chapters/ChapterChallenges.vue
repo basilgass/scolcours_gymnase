@@ -1,29 +1,28 @@
 <!--
 Affichage de la liste des challenges pour un chapitre donné.
 -->
-<script
-	setup
-	lang="ts"
->
+<script lang="ts" setup>
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import DialogModal from "@/Components/Ui/DialogModal.vue"
 import { useStoreEditMode } from "@/stores/useStoreEditMode.ts"
+import { ChapterInterface } from "@/types/modelInterfaces.ts"
 import { useForm } from "@inertiajs/vue3"
 import { ref } from "vue"
 
-let props = defineProps({
-	chapter: { type: Object, required: true }
+let props = defineProps<{
+	chapter: ChapterInterface
+}>()
+
+const editMode = useStoreEditMode()
+
+let show = ref(false)
+const form = useForm({
+	title: "nouveau challenge"
 })
 
-const  editMode  = useStoreEditMode()
-
-let show = ref(false),
-	form = useForm({
-		title: "nouveau challenge"
-	}),
-	storeChallenge = function () {
-		form.post(route("chapters.challenges.store", [props.chapter.id]))
-	}
+function storeChallenge() {
+	form.post(route("chapters.challenges.store", [props.chapter.id]))
+}
 </script>
 
 <template>
@@ -80,7 +79,7 @@ let show = ref(false),
 								class="btn btn-primary"
 								@click="storeChallenge"
 							>
-								Créer un nouveau challenge 2
+								Créer un nouveau challenge
 							</button>
 						</div>
 					</template>

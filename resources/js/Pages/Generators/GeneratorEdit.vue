@@ -1,24 +1,23 @@
 <script lang="ts" setup>
 
-import LayoutMain from "@/Layouts/LayoutMain.vue"
-import { computed, inject, PropType, ref } from "vue"
-import { GeneratorInterface } from "@/types/modelInterfaces"
 import FormMaker from "@/Components/Form/FormMaker.vue"
-import  PiMath from "pimath"
-import { useGenerator } from "@/Composables/useGenerator"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
-import axios from "axios"
+import { useGenerator } from "@/Composables/useGenerator"
+import LayoutMain from "@/Layouts/LayoutMain.vue"
 import { flashInterface } from "@/types"
+import { GeneratorInterface } from "@/types/modelInterfaces"
 import { router } from "@inertiajs/vue3"
+import axios from "axios"
+import PiMath from "pimath"
+import { computed, inject, ref } from "vue"
 
 defineOptions({ layout: LayoutMain })
 
 const flash = inject<flashInterface>("flash")
 
-const props = defineProps({
-	generator: { type: Object as PropType<GeneratorInterface>, required: true }
-})
-
+const props = defineProps<{
+	generator: GeneratorInterface
+}>()
 
 const theGenerator = ref(props.generator)
 const randomCounter = ref(1)
@@ -80,7 +79,7 @@ function duplicateGenerator() {
 function deleteGenerator() {
 	axios.post(route("generators.destroy", [props.generator.id]), {
 		_method: "delete"
-	}).then((res) => {
+	}).then(() => {
 		flash.success("Générateur supprimé")
 		router.visit(route("generators.index"))
 	}).catch((err) => {
@@ -105,25 +104,48 @@ function deleteGenerator() {
 				</h1>
 			</div>
 
-			<div class="flex gap-3 justify-end">
-				<button
-					class="btn-primary btn-xs"
-					@click="saveGenerator"
-				>
-					enregistrer
-				</button>
-				<button
-					class="btn-primary btn-xs"
-					@click="duplicateGenerator"
-				>
-					dupliquer
-				</button>
-				<confirm-button
-					class="btn-delete btn-xs"
-					@confirm="deleteGenerator"
-				>
-					supprimer
-				</confirm-button>
+			<div>
+				<div class="flex gap-3 justify-end">
+					<button
+						class="btn-primary btn-xs"
+						@click="saveGenerator"
+					>
+						enregistrer
+					</button>
+					<button
+						class="btn-primary btn-xs"
+						@click="duplicateGenerator"
+					>
+						dupliquer
+					</button>
+					<confirm-button
+						class="btn-delete btn-xs"
+						@confirm="deleteGenerator"
+					>
+						supprimer
+					</confirm-button>
+				</div>
+				<ul class="list my-4">
+					<li
+						v-for="challenge in generator.challenges"
+						:key="`challenge-link-${challenge.id}`"
+						class="flex justify-between gap-3"
+					>
+						{{ challenge.title }}
+						<div class="flex gap-3">
+							<InertiaLink
+								:href="route('challenges.show', [challenge.slug])"
+							>
+								<i class="bi bi-eye" />
+							</InertiaLink>
+							<InertiaLink
+								:href="route('challenges.edit', [challenge.id])"
+							>
+								<i class="bi bi-pencil" />
+							</InertiaLink>
+						</div>
+					</li>
+				</ul>
 			</div>
 		</header>
 

@@ -40,6 +40,7 @@ function deleteFormula(){
 		<template #adminRight>
 			<confirm-button
 				xs
+				btn-class=""
 				@confirm="deleteFormula"
 			>
 				<i class="bi bi-trash" />

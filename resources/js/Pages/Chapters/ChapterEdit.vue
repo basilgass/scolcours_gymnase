@@ -1,7 +1,4 @@
-<script
-	setup
-	lang="ts"
->
+<script setup lang="ts">
 
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
@@ -10,17 +7,15 @@ import LayoutMain from "@/Layouts/LayoutMain.vue"
 import { flashInterface } from "@/types"
 import type { ChapterInterface } from "@/types/modelInterfaces"
 import axios from "axios"
-import { inject, PropType, ref } from "vue"
+import { inject, ref } from "vue"
 
 defineOptions({ layout: LayoutMain })
+
 const flash = inject<flashInterface>("flash")
 
-const props = defineProps({
-	chapter: {
-		type: Object as PropType<ChapterInterface>,
-		required: true
-	}
-})
+const props = defineProps<{
+	chapter: ChapterInterface
+}>()
 
 const theChapter = ref(props.chapter)
 

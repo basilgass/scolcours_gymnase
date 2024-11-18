@@ -7,23 +7,22 @@ import FormMaker from "@/Components/Form/FormMaker.vue"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 import { flashInterface } from "@/types"
-import { IllustrationInterface } from "@/types/modelInterfaces"
+import { ChallengeInterface, IllustrationInterface } from "@/types/modelInterfaces"
 import { router } from "@inertiajs/vue3"
 import axios from "axios"
 import { inject, ref } from "vue"
 
 
 defineOptions({ layout: LayoutMain })
-const props = defineProps({
-	challenge: { type: Object, required: true }
-})
+const props = defineProps<{
+	challenge: ChallengeInterface
+}>()
 
 const flash = inject<flashInterface>("flash")
 
 
 // TODO: move to external component.
-const generatorTab = ref(1),
-	theChallenge = ref(props.challenge)
+const theChallenge = ref(props.challenge)
 
 const updateGeneratorsOrder = function () {
 	// Update the pivot value according to the order
@@ -66,6 +65,7 @@ const addGenerator = function () {
 			router.visit(route('generators.edit', [newGenerator.id]))
 		})
 		.catch(() => {
+			console.error('Pas possible de créer un challenge.')
 		})
 }
 const availableGenerators = ref([])
@@ -238,93 +238,84 @@ const deleteChallenge = function () {
 						v-model="theChallenge.slug"
 						label="slug"
 						name="slug"
+						font-code
+						sm
 					/>
 
 					<h3 class="uppercase mt-10 col-span-3">
 						Paramètres
 					</h3>
-					<form-maker
-						v-model="theChallenge.duration"
-						label="durée"
-						name="questionsDuration"
-						type="number"
-						sm
-						inline-label
-						label-class="w-[150px]"
-					/>
-					<form-maker
-						v-model="theChallenge.lives"
-						label="nombre de vie"
-						name="questionsLives"
-						type="number"
-						sm
-						inline-label
-						label-class="w-[150px]"
-					/>
-					<form-maker
-						v-model="theChallenge.nextLevelAfter"
-						label="maxPoints / niveau"
-						name="questionsLevelTrigger"
-						type="number"
-						sm
-						inline-label
-						label-class="w-[150px]"
-					/>
+					<div class="grid grid-cols-3 gap-3">
+						<form-maker
+							v-model="theChallenge.duration"
+							label="durée"
+							name="questionsDuration"
+							type="number"
+							sm
+						/>
+						<form-maker
+							v-model="theChallenge.lives"
+							label="nombre de vie"
+							name="questionsLives"
+							type="number"
+							sm
+						/>
+						<form-maker
+							v-model="theChallenge.nextLevelAfter"
+							label="maxPoints / niveau"
+							name="questionsLevelTrigger"
+							type="number"
+							sm
+						/>
+					</div>
 
 					<h3 class="uppercase mt-10 col-span-3">
 						Bonus
 					</h3>
-					<form-maker
-						v-model="theChallenge.bonusScoreTrigger"
-						label="score trigger (x)"
-						name="questionsBonuses0"
-						type="number"
-						sm
-						inline-label
-						label-class="w-[150px]"
-					/>
-					<form-maker
-						v-model="theChallenge.bonusScoreLife"
-						:label="`vie / ${theChallenge.bonusScoreTrigger > 0
-							? theChallenge.bonusScoreTrigger
-							: 'x'
-						} points`"
-						name="questionsBonuses1"
-						type="number"
-						sm
-						inline-label
-						label-class="w-[150px]"
-					/>
-					<form-maker
-						v-model="theChallenge.bonusScoreTime"
-						:label="`temps / ${theChallenge.bonusScoreTrigger > 0
-							? theChallenge.bonusScoreTrigger
-							: 'x'
-						} points`"
-						name="questionsBonuses2"
-						type="number"
-						sm
-						inline-label
-						label-class="w-[150px]"
-					/>
-					<form-maker
-						v-model="theChallenge.bonusLevelLife"
-						label="vie / niveau"
-						name="questionsBonuses3"
-						type="number"
-						sm
-						inline-label
-						label-class="w-[150px]"
-					/>
-					<form-maker
-						v-model="theChallenge.bonusLevelTime"
-						label="temps / niveau"
-						name="questionsBonuses4"
-						type="number"
-						sm
-						inline-label
-						label-class="w-[150px]"
-					/>
+
+					<div class="grid grid-cols-3 gap-3">
+						<form-maker
+							v-model="theChallenge.bonusScoreTrigger"
+							label="score trigger (x)"
+							name="questionsBonuses0"
+							type="number"
+							sm
+						/>
+						<form-maker
+							v-model="theChallenge.bonusScoreLife"
+							:label="`vie / ${theChallenge.bonusScoreTrigger > 0
+								? theChallenge.bonusScoreTrigger
+								: 'x'
+							} points`"
+							name="questionsBonuses1"
+							type="number"
+							sm
+						/>
+						<form-maker
+							v-model="theChallenge.bonusScoreTime"
+							:label="`temps / ${theChallenge.bonusScoreTrigger > 0
+								? theChallenge.bonusScoreTrigger
+								: 'x'
+							} points`"
+							name="questionsBonuses2"
+							type="number"
+							sm
+						/>
+						<form-maker
+							v-model="theChallenge.bonusLevelLife"
+							label="vie / niveau"
+							name="questionsBonuses3"
+							type="number"
+							sm
+						/>
+						<form-maker
+							v-model="theChallenge.bonusLevelTime"
+							label="temps / niveau"
+							name="questionsBonuses4"
+							type="number"
+							sm
+						/>
+					</div>
 				</div>
 				<block-show :block="theChallenge.block" />
 			</div>
@@ -353,10 +344,8 @@ const deleteChallenge = function () {
 							</div>
 							<div
 								class="flex-1"
-								@click="generatorTab = element.pivot.order"
-							>
-								{{ element.title }}
-							</div>
+								v-katex.auto.inline="element.title"
+							/>
 							<a
 								:href="route('generators.edit', [element.id])"
 								class="px-3"
@@ -372,34 +361,40 @@ const deleteChallenge = function () {
 						</div>
 					</template>
 					<template #footer>
-						<button
-							class="btn"
-							@click="addGenerator"
-						>
-							<i class="bi bi-plus-sign" /> créer un générateur
-						</button>
-						<button
-							:disabled="attachGeneratorId === ''"
-							class="btn disabled:is-disabled"
-							@click="attachGenerator"
-						>
-							<i class="bi bi-file-arrow-up" />
-						</button>
-						<form-maker
-							v-model="attachGeneratorId"
-							label="générateurs"
-							name="generatorsList"
-							type="select"
-							@click.once="getListOfGenerators"
-						>
-							<option
-								v-for="generator of availableGenerators"
-								:key="`generator-${generator.id}`"
-								:value="generator.id"
+						<div class="flex gap-3 justify-between items-end">
+							<button
+								class="btn btn-add"
+								@click="addGenerator"
 							>
-								{{ generator.title }}
-							</option>
-						</form-maker>
+								<i class="bi bi-plus-sign" /> créer un générateur
+							</button>
+
+							<div class="min-w-[500px] flex items-end">
+								<form-maker
+									v-model="attachGeneratorId"
+									label="attacher un générateur existant"
+									name="generatorsList"
+									type="select"
+									@click.once="getListOfGenerators"
+									class="flex-1"
+								>
+									<option
+										v-for="generator of availableGenerators"
+										:key="`generator-${generator.id}`"
+										:value="generator.id"
+									>
+										{{ generator.title }}
+									</option>
+								</form-maker>
+								<button
+									:disabled="attachGeneratorId === ''"
+									class="btn btn-add disabled:is-disabled rounded-l-none"
+									@click="attachGenerator"
+								>
+									<i class="bi bi-file-arrow-up" />
+								</button>
+							</div>
+						</div>
 					</template>
 				</draggable>
 			</div>

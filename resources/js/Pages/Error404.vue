@@ -6,8 +6,10 @@ import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 
 defineOptions({ layout: LayoutMain })
-defineProps({
-	error: { type: String, default: "erreur inconnue" }
+withDefaults(defineProps<{
+	error?: string
+}>(),{
+	error: 'Erreur inconnue !'
 })
 </script>
 

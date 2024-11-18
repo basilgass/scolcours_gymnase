@@ -42,19 +42,21 @@ function saveMerge() {
 		class="py-1 px-2 flex justify-between items-center"
 	>
 		<slot name="adminLeft">
-			<edit-link
-				:id="block.id"
-				inline
-				label="block id: "
-				route-name="blocks.edit"
-			/>
-		</slot>
+			<div class="flex gap-5 items-baseline">
+				<div class="draggable-handle cursor-move">
+					<i class="bi bi-arrows-move px-3" />
+				</div>
 
-		<slot name="adminCenter">
-			<div class="draggable-handle cursor-move">
-				<i class="bi bi-arrows-move px-10" />
+				<edit-link
+					:id="block.id"
+					inline
+					label="block id: "
+					route-name="blocks.edit"
+				/>
 			</div>
 		</slot>
+
+		<slot name="adminCenter" />
 
 		<slot name="adminRight">
 			<div class="flex gap-2">
@@ -66,9 +68,9 @@ function saveMerge() {
 						column: 'template',
 					}"
 					inline-label
+					input-class="bg-white text-black"
 					label="[b|i],[md|lg|xl]:[#]b+[#]i"
 					label-class="whitespace-nowrap"
-					input-class="bg-white text-black"
 					sm
 				/>
 				<button

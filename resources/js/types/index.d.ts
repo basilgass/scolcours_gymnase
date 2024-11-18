@@ -1,4 +1,5 @@
 import { ChapterMinInterface, type QuestionMinInterface } from "@/types/modelInterfaces"
+import { AxiosError } from "axios"
 import { ComputedRef } from "vue"
 
 export interface User {
@@ -145,3 +146,7 @@ export interface BlockScriptType {
 }
 
 export type SCRIPT_TYPE = Record<string, string> & BlockScriptType
+
+export interface AxiosErrorMessage extends AxiosError {
+	response: {data: {message: string}}
+}

@@ -160,6 +160,7 @@ export interface GeneratorInterface {
 	id: number;
 	slug: string;
 	theme: ThemeInterface;
+	challenges: ChallengeMinInterface[];
 	title: string;
 	body: string;
 	template: string;
@@ -173,6 +174,17 @@ export interface GeneratorInterface {
 export interface ChallengeScoreInterface {
 	score: number,
 	level: number
+}
+
+export type ChallengeGameState = "intro" | "running" | "finished"
+
+export interface ChallengeMinInterface {
+	id: number;
+	slug: string;
+	active: boolean;
+	title: string;
+	chapter: ChapterMinInterface;
+	block: BlockInterface;
 }
 
 export interface ChallengeInterface {

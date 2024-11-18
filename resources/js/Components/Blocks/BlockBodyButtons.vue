@@ -6,8 +6,12 @@ import { computed, inject } from "vue"
 
 const blockScript = inject('blockScript', useScriptLoader(''))
 
+console.log(blockScript.data.value)
+console.log('MERGED', blockScript.merged.value)
+console.log('HAS DATA', blockScript.hasData.value)
+
 const hasButtons = computed(() => {
-	return Object.keys(blockScript.merged.value).length > 0
+	return blockScript.hasData.value
 })
 
 const hasCustomButtons = computed(() => {
