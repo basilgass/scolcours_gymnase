@@ -2,12 +2,13 @@
 	lang="ts"
 	setup
 >
-import type { ChapterInterface } from "@/types/modelInterfaces"
+import type { ChapterShowInterface, PostInterface } from "@/types/modelInterfaces"
 import { usePage } from "@inertiajs/vue3"
 import { computed } from "vue"
 
 const props = defineProps<{
-	chapter: ChapterInterface, // slug, title, posts.length
+	chapter: ChapterShowInterface, // slug, title, posts.length
+	posts: PostInterface[],
 	currentPost: number
 }>()
 
@@ -32,7 +33,7 @@ const nav = computed<{
 		chapterSlug
 	])
 
-	const next = props.currentPost < props.chapter.posts.length ?
+	const next = props.currentPost < props.posts.length ?
 		route("themes.chapters.slide", [
 			themeSlug,
 			chapterSlug,

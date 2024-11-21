@@ -2,11 +2,15 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Question;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use JsonSerializable;
 
+/**
+ * @mixin Question
+ */
 class QuestionResource extends JsonResource
 {
 	// No wrap around the data.
@@ -26,20 +30,9 @@ class QuestionResource extends JsonResource
 	 */
 	public function toArray($request)
 	{
-//		$userAnswers = $this->users->filter(function ($value, $key) {
-//			return $value->id === Auth::user()?->id;
-//		})->values()->map(function ($user) {
-//			return [
-//				'answer' => $user->pivot->answer,
-//				'result' => $user->pivot->result,
-//				'when' => Carbon::parse($user->pivot->created_at)->diffForHumans()
-//			];
-//		});
-
 		// Il n'y a pas de block pour cette question
 		if(count($this->blocks)===0){
 			$this->blocks()->create(['body'=>'Sans contenu']);
-			$this->blocks;
 		}
 
 		// On récupère les réponses de l'utilisateur.

@@ -2,16 +2,16 @@
 	lang="ts"
 	setup
 >
+import FilteredList from "@/Components/Ui/FilteredList.vue"
+import LayoutMain from "@/Layouts/LayoutMain.vue"
+import { ChapterShowInterface } from "@/types/modelInterfaces"
 import { useForm } from "@inertiajs/vue3"
 import { PropType } from "vue"
-import LayoutMain from "@/Layouts/LayoutMain.vue"
-import FilteredList from "@/Components/Ui/FilteredList.vue"
-import { ChapterInterface } from "@/types/modelInterfaces"
 
 defineOptions({ layout: LayoutMain })
 const props = defineProps({
 	chapters: {
-		type: Object as PropType<ChapterInterface[]>, required: true
+		type: Object as PropType<ChapterShowInterface[]>, required: true
 	}
 })
 
@@ -40,7 +40,7 @@ function toggleChapterVisibility(slug, active) {
 				filter-by-theme
 				list-class="grid grid-cols-1 gap-2"
 			>
-				<template #card="{ item }: { item: ChapterInterface }">
+				<template #card="{ item }: { item: ChapterShowInterface }">
 					<div
 						:key="item.id"
 						v-theme.bg.text="item.theme.id"
@@ -72,7 +72,7 @@ function toggleChapterVisibility(slug, active) {
 										item.slug,
 										!item.active,
 									)
-									"
+								"
 							>
 								{{ item.active ? "en ligne" : "caché" }}
 							</button>

@@ -2,12 +2,16 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Challenge;
 use Auth;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use JsonSerializable;
 
+/**
+ * @mixin Challenge
+ */
 class ChallengeResource extends JsonResource
 {
 
@@ -21,10 +25,9 @@ class ChallengeResource extends JsonResource
 	 */
 	public function toArray($request)
 	{
-//        return parent::toArray($request);
+        // TODO: Challenge resource must be reworked.
 		if (count($this->blocks) === 0) {
 			$this->blocks()->create();
-			$this->blocks;
 		}
 
 		$bestScore = $this->scores?->pluck('score')->max()??0;
@@ -36,12 +39,11 @@ class ChallengeResource extends JsonResource
 			$userScore = $this->scores?->where('user_id', Auth::user()->id)->first()->score??0;
 			$userLevel = $this->scores?->where('user_id', Auth::user()->id)->first()->level??0;
 		}
-		//	dd($ch->scores()->where('user_id', Auth::user()->id)->first()->score);
-		//	dd($ch->scores->pluck('score')->max());
-		return [
+
+        return [
 			...parent::toArray($request),
 			'block' => $this->blocks[0],
-			'chapter' => ChapterMinResource::make($this->chapter),
+			'chapter' => ChapterResource::make($this->chapter),
 			'best' => [
 				'score' => $bestScore,
 				'level' => $bestLevel
@@ -50,7 +52,7 @@ class ChallengeResource extends JsonResource
 				'score' => $userScore,
 				'level' => $userLevel
 			],
-			"generators" => $this->generators
+			"generators" => GeneratorResource::collection($this->generators)
 		];
 	}
 }

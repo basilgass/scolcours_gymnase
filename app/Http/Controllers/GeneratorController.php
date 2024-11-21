@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\ChallengeResource;
 use App\Http\Resources\GeneratorResource;
 use App\Models\Generator;
 use Illuminate\Http\Request;
@@ -15,12 +16,15 @@ class GeneratorController extends Controller
 			"generators" => GeneratorResource::collection(Generator::all())
 		]);
 	}
+
 	public function edit(Generator $generator)
 	{
 		return Inertia::render("Generators/GeneratorEdit",
 			[
 				"theme"     => $generator->theme,
-				"generator" => $generator
+				"generator" => $generator,
+                // TODO: Challenges is just used to grab the links : change it to be more generic => (id, title, slug, (route)) !
+                "challenges" => ChallengeResource::collection($generator->challenges),
 			]
 		);
 	}

@@ -6,12 +6,12 @@ use Auth;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Cache;
 
 /**
  * App\Models\Question
@@ -27,10 +27,10 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $updated_at
  * @property string $questionable_type
  * @property int $questionable_id
- * @property-read Collection<int, \App\Models\Block> $blocks
+ * @property-read Collection<int, Block> $blocks
  * @property-read int|null $blocks_count
- * @property-read Model|\Eloquent $questionable
- * @property-read Collection<int, \App\Models\User> $users
+ * @property-read Model|Eloquent $questionable
+ * @property-read Collection<int, User> $users
  * @property-read int|null $users_count
  * @method static Builder|Question newModelQuery()
  * @method static Builder|Question newQuery()
@@ -50,84 +50,95 @@ use Illuminate\Support\Carbon;
  */
 class Question extends Model
 {
-	use HasFactory;
+    protected $guarded = [];
+    protected $with = [];
 
-	protected $guarded = [];
-	protected $with = ['blocks'];
+    public function questionable(): MorphTo
+    {
+        return $this->morphTo();
+    }
 
-	public function questionable(): MorphTo
-	{
-		return $this->morphTo();
-	}
+    public function blocks(): MorphMany
+    {
+        return $this->morphMany(Block::class, 'blockable')->orderBy('order')->orderBy('id');
+    }
 
-	public function blocks(): MorphMany
-	{
-		return $this->morphMany(Block::class, 'blockable')->orderBy('order')->orderBy('id');
-	}
+    public function answersFrom(mixed $ids)
+    {
+        return $this->users()
+            ->whereIn('question_user.user_id', $ids)
+            ->get();
+    }
 
-	public function users(): BelongsToMany
-	{
-		return $this->belongsToMany(User::class)
-			->withTimestamps()
-			->withPivot('result', 'answer', 'attempts');
-	}
+    public function users(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class)
+            ->withTimestamps()
+            ->withPivot('result', 'answer', 'attempts');
+    }
 
-	public function answersFrom(mixed $ids)
-	{
-		return $this->users()
-			->whereIn('question_user.user_id', $ids)
-			->get();
-	}
-	public function answersFromUser(User $user)
-	{
-		$answer = $this->users()
-			->where('question_user.user_id', '=', $user->id)
-			->first();
+    public function clean()
+    {
+        $answers = [];
 
-		if($answer){
-			return [
-				'answer' => $answer->pivot->answer,
-				'result' => $answer->pivot->result,
-				'attempts' => $answer->pivot->attempts,
-				'updated_at' => Carbon::parse($answer->pivot->updated_at)->diffForHumans(),
-			];
-		}
+        if (Auth::user()) {
+            $answers = $this->userAnswers();
 
-		return  [
-			'answer' => "",
-			'result' => false,
-			'attempts' => 0,
-			'updated_at' => null,
-		];
+            // No answer yet ! No need to clean it !
+            if (count($answers) === 0) {
+                return 0;
+            }
 
-	}
-	public function userAnswers()
-	{
-		if (Auth::user()) {
-			return $this->answersFromUser(Auth::user());
-		}
+            // Remove all previous values.
+            foreach ($answers as $id => $answer) {
+                $this->users()->detach(Auth::user()->id);
+            }
+        }
 
-		return collect([]);
-	}
+        return count($answers);
+    }
 
-	public function clean()
-	{
-		$answers = [];
+    public function userAnswers()
+    {
+        if (Auth::user()) {
+            return $this->answersFromUser(Auth::user());
+        }
 
-		if (Auth::user()) {
-			$answers = $this->userAnswers();
+        return collect([]);
+    }
 
-			// No answer yet ! No need to clean it !
-			if (count($answers) === 0) {
-				return 0;
-			}
+    public static function getCacheKey(Question $question, User $user): string
+    {
+        return "question_{$question->id}_user_{$user->id}_answers";
+    }
 
-			// Remove all previous values.
-			foreach ($answers as $id => $answer) {
-				$this->users()->detach(Auth::user()->id);
-			}
-		}
+    public function answersFromUser(User $user)
+    {
+        $cacheKey = Question::getCacheKey($this, $user);
 
-		return count($answers);
-	}
+        $cacheTime = 15 * 60; // 15 minutes
+
+        return Cache::remember($cacheKey, $cacheTime, function () use ($user) {
+            $answer = $this->users()
+                ->where('question_user.user_id', '=', $user->id)
+                ->first();
+
+            if ($answer) {
+                return [
+                    'answer'     => $answer->pivot->answer,
+                    'result'     => $answer->pivot->result,
+                    'attempts'   => $answer->pivot->attempts,
+                    'updated_at' => Carbon::parse($answer->pivot->updated_at)->diffForHumans(),
+                ];
+            }
+
+            return [
+                'answer'     => "",
+                'result'     => false,
+                'attempts'   => 0,
+                'updated_at' => null,
+            ];
+        });
+
+    }
 }

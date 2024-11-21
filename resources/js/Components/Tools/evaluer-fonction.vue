@@ -34,7 +34,6 @@ const f = computed(() => forms[0].value.value),
 const activeInput = ref<number>(0)
 
 function onKeyboardChange(value){
-	console.log(value.input)
 	forms[activeInput.value].value.value=value.input
 }
 const fx = computed(() => {

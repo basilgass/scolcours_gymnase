@@ -2,7 +2,11 @@
 
 namespace App\Http\Resources;
 
+use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Cache;
+use JsonSerializable;
 
 class UserResource extends JsonResource
 {
@@ -12,23 +16,22 @@ class UserResource extends JsonResource
     /**
      * Transform the resource into an array.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
+     * @param  Request  $request
+     * @return array|Arrayable|JsonSerializable
      */
     public function toArray($request)
     {
+        $teams = Cache::remember("user_{$this->id}_teams", 60*60, function(){
+            return $this->teams->only(["id", "name"]);
+        });
+
 		return [
 			"id"=>$this->id,
 			"name"=>$this->name,
 			"firstname"=>$this->firstname,
 			"fullname" => $this->firstname . " " . $this->name,
 			"email"=>$this->email,
-			"teams"=>$this->teams->map(function($team) {
-				return [
-					"id"=>$team->id,
-					"name"=>$team->name,
-				];
-			}),
+			"teams"=>$teams,
 		];
     }
 }

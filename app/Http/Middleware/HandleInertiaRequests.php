@@ -37,9 +37,11 @@ class HandleInertiaRequests extends Middleware
 	public function share(Request $request)
 	{
 		$user = null;
+
 		if($request->user()){
 			$user = UserResource::make($request->user());
 		}
+
 		return array_merge(parent::share($request), [
 			'auth' => [
 				'user' => $user,
@@ -48,9 +50,7 @@ class HandleInertiaRequests extends Middleware
 				]
 			],
 			'scolcours' => Cache::get('scolcours')->toArray(),
-			'themes' => Theme::where("enabled", "=", 1)
-				->orderBy('order')
-				->get()
+			'themes' => Theme::getThemesFromCache()
 				->mapWithKeys(function ($item, $key) {
 				return [
 					$key => [

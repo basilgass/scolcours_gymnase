@@ -3,14 +3,12 @@
 import ScolCoursLogo from "@/Components/ScolcoursLogo.vue"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 import LayoutFullpage from "@/Layouts/LayoutFullpage.vue"
-import { ChapterMiniInterface } from "@/types/modelInterfaces.ts"
+import { ChapterShowInterface } from "@/types/modelInterfaces.ts"
 
 defineOptions({ layout: LayoutFullpage })
 
 defineProps<{
-	canLogin: boolean,
-	canRegister: boolean,
-	newChapters: ChapterMiniInterface[]
+	newChapters: ChapterShowInterface[]
 }>()
 
 </script>
@@ -75,7 +73,7 @@ defineProps<{
 						</div>
 					</div>
 					<markdown-it
-						:text="item.body"
+						:text="item.block.body"
 						class="font-extralight"
 					/>
 				</div>

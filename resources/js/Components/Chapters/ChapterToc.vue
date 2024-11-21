@@ -5,20 +5,21 @@
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import { useStoreEditMode } from "@/stores/useStoreEditMode.ts"
 import { flashInterface } from "@/types"
-import { ChapterInterface, PostInterface } from "@/types/modelInterfaces.ts"
+import { ChapterShowInterface, PostInterface } from "@/types/modelInterfaces.ts"
 import { router } from "@inertiajs/vue3"
 import axios from "axios"
 import { computed, inject, ref } from "vue"
 
 const props = defineProps<{
-	chapter: ChapterInterface,      // id, slug, posts
+	chapter: ChapterShowInterface,      // id, slug, posts
+	posts: PostInterface[],
 	active?: number                 // Highlight the currently selected post.
 }>()
 
 const flash = inject<flashInterface>("flash")
 const editMode = useStoreEditMode()
 
-const posts = ref(props.chapter.posts)
+const posts = ref(props.posts)
 const postsFilterCurrent = ref("")
 const postsFilterCurrentMessage = ref("")
 
@@ -30,7 +31,7 @@ const postsFilter = function(filter: string) {
 
 	// Si le filtre est vide, on affiche tout.
 	if (postsFilterCurrent.value === "") {
-		posts.value = props.chapter.posts
+		posts.value = props.posts
 		postsFilterCurrentMessage.value = ""
 		return
 	}
@@ -38,7 +39,7 @@ const postsFilter = function(filter: string) {
 	// On désactive le move mode
 	moveMode.value = false
 	if (filter === "en_cours") {
-		posts.value = props.chapter.posts.filter(
+		posts.value = props.posts.filter(
 			(post) =>
 				questionStatus.value[post.id] !== null &&
 				questionStatus.value[post.id] < 1
@@ -47,7 +48,7 @@ const postsFilter = function(filter: string) {
 		return
 	}
 
-	posts.value = props.chapter.posts.filter(
+	posts.value = props.posts.filter(
 		(post) =>
 			post.type === (postsFilterCurrent.value === "theory" ? null : postsFilterCurrent.value)
 	)
@@ -101,10 +102,10 @@ const addPost = function() {
 // TODO: rendre le visuel de l'avancée des questions plus mieux bien.
 const questionStatus = computed<Record<number, number | null>>(() => {
 	const result = {}
-	props.chapter.posts.forEach((p) => {
+	props.posts.forEach((p) => {
 		result[p.id] =
-			p.questions.length > 0
-				? p.questions.filter((q) => q.user.result).length / p.questions.length
+			p.questionsInfo.count > 0
+				? p.questionsInfo.answered / p.questionsInfo.count
 				: null
 	})
 	return result
@@ -113,7 +114,7 @@ const questionStatus = computed<Record<number, number | null>>(() => {
 
 <template>
 	<div
-		v-if="props.chapter.posts"
+		v-if="props.posts"
 		class="my-5"
 	>
 		<div class="flex justify-between items-baseline">

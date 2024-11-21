@@ -70,7 +70,6 @@ const extraLetters = computed(() => {
 
 const kbrdConfig = computed(() => {
 	if (props.keyboard.parameters.length > 0) {
-		console.log(props.keyboard.parameters)
 		let items = props.keyboard.parameters.filter((x) =>
 				x.startsWith("var:")
 			),

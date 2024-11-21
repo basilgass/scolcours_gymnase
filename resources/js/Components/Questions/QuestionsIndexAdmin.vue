@@ -4,12 +4,12 @@ import FormMaker from "@/Components/Form/FormMaker.vue"
 import QuestionShow from "@/Components/Questions/QuestionShow.vue"
 import { useStoreEditMode } from "@/stores/useStoreEditMode.ts"
 import { flashInterface } from "@/types"
-import type { PostInterface, QuestionInterface } from "@/types/modelInterfaces.ts"
+import type { PostShowInterface, QuestionInterface } from "@/types/modelInterfaces.ts"
 import axios from "axios"
 import { inject, PropType, ref } from "vue"
 
 const props = defineProps({
-	post: { type: Object as PropType<PostInterface>, required: true },
+	post: { type: Object as PropType<PostShowInterface>, required: true },
 	questions: { type: Object as PropType<QuestionInterface[]>, required: true },
 	components: { type: Object as PropType<InstanceType<typeof QuestionShow>[]>, required: true }
 })

@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from "vue"
 import { BoxPlotChart } from "@sgratzl/chartjs-chart-boxplot"
 import _ from "lodash"
+import { computed, onMounted, ref, watch } from "vue"
 
 const props = defineProps({
 	chartLabels: {type: Array, default: () => []},
@@ -91,10 +91,6 @@ onMounted(() => {
 		data: chartData.value,
 		options: chartOptionsMerged.value
 	})
-	// console.log("DATA")
-	// console.log(chart.data)
-	// console.log("OPTIONS")
-	// console.log(chart.options)
 })
 
 watch(() => props.chartDataset, () => {

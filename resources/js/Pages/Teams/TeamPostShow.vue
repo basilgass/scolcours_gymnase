@@ -2,21 +2,21 @@
 
 <script lang="ts" setup>
 
-import { computed, PropType } from "vue"
+import TeamStatsPerUser from "@/Components/Teams/TeamStatsPerUser.vue"
+import LayoutMain from "@/Layouts/LayoutMain.vue"
 import type {
-	ChapterMinInterface,
+	ChapterInterface,
 	PostQuestionsForOneUserStatsInterface,
 	PostQuestionsStatsInterface,
 	TeamInterface
 } from "@/types/modelInterfaces"
-import TeamStatsPerUser from "@/Components/Teams/TeamStatsPerUser.vue"
-import LayoutMain from "@/Layouts/LayoutMain.vue"
+import { computed, PropType } from "vue"
 
 defineOptions({ layout: LayoutMain })
 
 let props = defineProps({
 	team: { type: Object as PropType<TeamInterface>, required: true },
-	chapter: { type: Object as PropType<ChapterMinInterface>, required: true },
+	chapter: { type: Object as PropType<ChapterInterface>, required: true },
 	stats: { type: Object as PropType<PostQuestionsStatsInterface[]>, required: true }
 })
 

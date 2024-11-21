@@ -3,12 +3,16 @@
 	lang="ts"
 >
 import LayoutMain from "@/Layouts/LayoutMain.vue"
-import { ChapterMinInterface } from "@/types/modelInterfaces.ts"
+import { ChapterInterface } from "@/types/modelInterfaces.ts"
 
+interface DashboardInterface extends ChapterInterface {
+	maxPost: number,
+	currentPost: number,
+}
 defineOptions({ layout: LayoutMain })
 
 defineProps<{
-	courses: ChapterMinInterface
+	courses: DashboardInterface[]
 }>()
 
 </script>

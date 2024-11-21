@@ -27,7 +27,7 @@ const theChallenge = ref(props.challenge)
 const updateGeneratorsOrder = function () {
 	// Update the pivot value according to the order
 	theChallenge.value.generators.forEach(
-		(gen, index) => (gen.pivot.order = index + 1)
+		(gen, index) => (gen.order = index + 1)
 	)
 
 	axios
@@ -38,7 +38,7 @@ const updateGeneratorsOrder = function () {
 			{
 				_method: "PATCH",
 				order: theChallenge.value.generators.map((x) => {
-					return { id: x.id, order: x.pivot.order }
+					return { id: x.id, order: x.order }
 				})
 			}
 		)

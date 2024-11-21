@@ -7,7 +7,8 @@ import { useMenuScrollTo } from "@/Composables/useHelpers"
 import { useToolsStorage } from "@/Composables/useToolsStorage.ts"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 import { getModule, MODULE_TYPES } from "@/scolcours"
-import { ToolInterface } from "@/types"
+
+import { ToolInterface } from "@/types/modelInterfaces.ts"
 import { computed, nextTick, onMounted, PropType, provide, ref } from "vue"
 
 defineOptions({ layout: LayoutMain })

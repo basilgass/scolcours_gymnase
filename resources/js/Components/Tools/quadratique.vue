@@ -57,8 +57,6 @@ function getPolyFromThreePoints(A, B, C): Polynom {
 			.isolate("b") as Equation,
 		Pa
 
-	// console.log(Pc.tex)
-	// console.log(Pb.tex)
 	if (C !== "") {
 		Pa = P.clone()
 			.replaceBy("x", new Polynom(pC.x.display))
@@ -111,7 +109,6 @@ const result = computed(() => {
 
 		const equ = new Equation(poly, 0)
 		const solutions = equ.solve()
-		console.log(solutions)
 
 		const sx = b.clone().opposite().divide(a.clone().multiply(2)),
 			sy = delta.clone().opposite().divide(a.clone().multiply(4))

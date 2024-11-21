@@ -12,8 +12,8 @@ import {
 	ChallengeInterface,
 	ChallengeScoreInterface,
 	GeneratorInterface,
+	QuestionDynamicInterface,
 	QuestionInterface,
-	QuestionMinInterface,
 	TeamInterface
 } from "@/types/modelInterfaces"
 import { usePage } from "@inertiajs/vue3"
@@ -57,7 +57,7 @@ const game = reactive<ChallengeGameInterface>({
 	elapsedTime: 0,
 	remainingTime: 0
 })
-const questions = ref<QuestionMinInterface[]>([])
+const questions = ref<QuestionDynamicInterface[]>([])
 const answers = ref<ChallengeAnswerInterface[]>([])
 const questionId = ref(0)
 

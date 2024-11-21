@@ -2,11 +2,16 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Formula;
+use App\Models\Theme;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use JsonSerializable;
 
+/**
+ * @mixin Formula
+ */
 class FormulaResource extends JsonResource
 {
 
@@ -21,19 +26,11 @@ class FormulaResource extends JsonResource
 	 */
 	public function toArray($request)
 	{
-//        return parent::toArray($request);
+        $theme = Theme::getTheme($this->theme_id);
 
-//		$this->blocks;
 		return [
 			'id' => $this->id,
-			'chapter' => [
-				'id'=> $this->chapter->id,
-				'title'=> $this->chapter->title,
-				'theme' => [
-					'id'=> $this->chapter->theme->id,
-					'slug'=> $this->chapter->theme->slug,
-				],
-			],
+            'theme' => $theme,
 			'order' => $this->blocks[0]->order,
 			'block' => BlockResource::make($this->blocks[0])
 		];

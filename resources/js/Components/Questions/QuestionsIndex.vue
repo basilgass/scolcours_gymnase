@@ -4,7 +4,7 @@ import QuestionShowAdmin from "@/Components/Questions/QuestionShowAdmin.vue"
 import QuestionsIndexAdmin from "@/Components/Questions/QuestionsIndexAdmin.vue"
 import { useStoreEditMode } from "@/stores/useStoreEditMode.ts"
 import { flashInterface } from "@/types"
-import type { PostInterface, QuestionInterface } from "@/types/modelInterfaces.ts"
+import type { PostShowInterface, QuestionInterface } from "@/types/modelInterfaces.ts"
 import axios from "axios"
 import { computed, inject, ref } from "vue"
 
@@ -12,7 +12,7 @@ const editMode = useStoreEditMode()
 const flash = inject<flashInterface>("flash")
 
 const props = defineProps<{
-	post: PostInterface
+	post: PostShowInterface
 }>()
 
 const answeredIds = computed(() => {

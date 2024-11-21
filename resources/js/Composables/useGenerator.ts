@@ -2,7 +2,7 @@
  * Récupération, création de question à partir d'un générateur donné.
  */
 import { generatedQuestionInterface, generatorResultInterface } from "@/types"
-import type { GeneratorInterface, QuestionMinInterface } from "@/types/modelInterfaces"
+import type { GeneratorInterface, QuestionDynamicInterface } from "@/types/modelInterfaces"
 import PiMath from "pimath"
 import { ComputedRef, Ref, unref } from "vue"
 
@@ -10,7 +10,7 @@ export function useGenerator(generator: GeneratorInterface | ComputedRef<Generat
 	function question(
 		value?: Ref<generatedQuestionInterface> | generatedQuestionInterface,
 
-	): QuestionMinInterface {
+	): QuestionDynamicInterface {
 		if (value === undefined) value = randomQuestion()
 
 		const questionUnref = unref(value)

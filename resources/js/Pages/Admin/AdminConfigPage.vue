@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { inject, PropType, ref } from "vue"
-import axios from "axios"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
-import { flashInterface, ThemeInterface } from "@/types"
+import { flashInterface } from "@/types"
+import { ThemeInterface } from "@/types/modelInterfaces.ts"
+import axios from "axios"
+import { inject, PropType, ref } from "vue"
 
 defineOptions({ layout: LayoutMain })
 const flash = inject<flashInterface>("flash")

@@ -35,7 +35,6 @@ const traductions = computed(() => {
 		while(arr.length>1){
 			const values = [arr.shift().trim(), arr.shift().trim()]
 
-			console.log(arr.length)
 			formatedTraduction.push(
 				{
 					fr: values[swapFrForeign.value ? 1 : 0],

@@ -114,24 +114,28 @@ class BlockController extends Controller
 	 * @param int $id
 	 * @return RedirectResponse
 	 */
-	public function show(Block $block)
+	public function show(int $id)
 	{
+        // find the post from the current block and redirect to this post.
+
+
 		// Redirect to the post / show item
 		$post = $block->blockable;
-		if ($post instanceof Question) {
-			$post = $post->questionable;
-		}
+        $post->load(['chapter', 'chapter.theme']);
+        if ($post instanceof Question) {
+            $post = $post->questionable;
+        }
 
-		$chapter = $post->chapter;
-		$theme = $chapter->theme;
+//        $chapter = $post->chapter;
+//		$theme = $chapter->theme;
 
 
 		if ($post instanceof Post) {
 			return redirect()->route(
 				'themes.chapters.slide.anchor',
 				[
-					'theme'   => $theme->slug,
-					'chapter' => $chapter->slug,
+					'theme'   => $post->chapter->theme->slug,
+					'chapter' => $post->chapter->slug,
 					'order'   => $post->order,
 					'type'    => 'block',
 					'id'      => $block->id

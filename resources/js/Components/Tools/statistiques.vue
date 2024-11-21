@@ -6,16 +6,15 @@
  * tags: statistique,2C
  */
 
-// TODO: apparemment, l'output TeX ne correspond pas à ce qui se trouve dans le tableau (pied du tableau)
-import { computed, onMounted, reactive, ref } from "vue"
-
 import BarChart from "@/Components/Charts/barChart.vue"
-import { Chart } from "chart.js"
-import annotationPlugin from "chartjs-plugin-annotation"
-import LineChart from "@/Components/Charts/lineChart.vue"
 import BoxPlotChart from "@/Components/Charts/boxPlotChart.vue"
+import LineChart from "@/Components/Charts/lineChart.vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
+import { Chart } from "chart.js"
+import annotationPlugin from "chartjs-plugin-annotation"
+// TODO: apparemment, l'output TeX ne correspond pas à ce qui se trouve dans le tableau (pied du tableau)
+import { computed, reactive, ref } from "vue"
 
 defineOptions({ layout: LayoutMain })
 
@@ -517,12 +516,6 @@ function stats_median(table, breakPoint = 0.5) {
 
 	return 0
 }
-
-onMounted(() => {
-	console.log(statRaw.value)
-	console.table(statTable.value)
-	console.table(statCentralValues.value)
-})
 
 // OUTPUT
 const tableToTexOutput = computed(() => {

@@ -2,9 +2,13 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Flipcard;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * @mixin Flipcard
+ */
 class FlipcardResource extends JsonResource
 {
 	// No wrap around the data.

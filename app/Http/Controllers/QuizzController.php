@@ -9,8 +9,11 @@ use App\Models\Chapter;
 use App\Models\Quizz;
 use App\Models\QuizzSession;
 use App\Models\Team;
+use Auth;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class QuizzController extends Controller
 {
@@ -19,7 +22,7 @@ class QuizzController extends Controller
 	{
 		// The user is connected.
 		// Check if a quizz session is enabled for this user.
-		$user = \Auth::user();
+		$user = Auth::user();
 
 		if ($user) {
 			$quizzSessions = $user->quizz_sessions
@@ -79,15 +82,15 @@ class QuizzController extends Controller
 		);
 	}
 
-	public function adminQuizz(Quizz $quizz): \Inertia\Response
+	public function adminQuizz(Quizz $quizz): Response
 	{
 
 		$data = [
-			"quizz" => $quizz,
-			"questions" => QuestionResource::collection($quizz->questions),
-			"sessions" => QuizzSessionRessource::collection($quizz->sessions),
-			"teams" => Team::all(),
-			"chapters" => Chapter::all()->map(function ($chapter) {
+            "quizz" => $quizz,
+            "questions" => QuestionResource::collection($quizz->questions),
+            "sessions" => QuizzSessionRessource::collection($quizz->sessions),
+            "teams" => Team::all(),
+            "chapters" => Chapter::all()->map(function ($chapter) {
 				return [
 					'id' => $chapter->id,
 					'title' => $chapter->title,
@@ -105,10 +108,10 @@ class QuizzController extends Controller
 	}
 
 
-	public function show(QuizzSession $quizzSession): \Inertia\Response|\Illuminate\Http\RedirectResponse
+	public function show(QuizzSession $quizzSession): Response|RedirectResponse
 	{
 		// User must be logged in
-		if (!\Auth::user()) {
+		if (!Auth::user()) {
 			return redirect()->route('login');
 		}
 
@@ -123,14 +126,14 @@ class QuizzController extends Controller
 
 		return Inertia::render('Quizzs/QuizzShow',
 			[
-				"quizzSession" => $quizzSession,
-				"question" => $question === null ? null : QuestionResource::make($question),
-				"total" => count($questions)
+                "quizzSession" => $quizzSession,
+                "question" => $question === null ? null : QuestionResource::make($question),
+                "total" => count($questions)
 			]
 		);
 	}
 
-	public function dashboard(QuizzSession $quizzSession): \Inertia\Response
+	public function dashboard(QuizzSession $quizzSession): Response
 	{
 		return Inertia::render('Quizzs/QuizzDashboard',
 			[
@@ -139,7 +142,7 @@ class QuizzController extends Controller
 		);
 	}
 
-	public function projection(QuizzSession $quizzSession): \Inertia\Response
+	public function projection(QuizzSession $quizzSession): Response
 	{
 		// Get all user answers.
 		$usersId = $quizzSession->users->pluck('id');
@@ -161,7 +164,7 @@ class QuizzController extends Controller
 		);
 	}
 
-	public function updateCurrent(QuizzSession $quizzSession, Request $request): \Illuminate\Http\RedirectResponse
+	public function updateCurrent(QuizzSession $quizzSession, Request $request): RedirectResponse
 	{
 		$validate = $request->validate(["index" => ["int", "min:0"]]);
 
@@ -171,7 +174,7 @@ class QuizzController extends Controller
 		return redirect()->route('quizzs.sessions.dashboard', [$quizzSession->shortcode]);
 	}
 
-	public function updateEnable(QuizzSession $quizzSession, Request $request): \Illuminate\Http\RedirectResponse
+	public function updateEnable(QuizzSession $quizzSession, Request $request): RedirectResponse
 	{
 		$validate = $request->validate(["enable" => ["bool"]]);
 

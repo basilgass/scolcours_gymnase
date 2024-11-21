@@ -359,26 +359,6 @@ watch(drawParameter, ()=> {
 	// Watch changes from "inside"
 	PiGraph.refreshLayout(drawParameter.value)
 })
-// watch(
-// 	() => props.draw,
-// 	(newValue, oldValue) => {
-// 		if (newValue.code !== oldValue.code) {
-// 			console.log('update code')
-// 			PiParserUpdate("props.draw watcher", true)
-// 		}
-
-// 		if (newValue.parameters !== oldValue.parameters) {
-// 			try {
-// 				PiGraph.refreshLayout(newValue.parameters ?? "")
-// 			} catch {
-// 				console.warn(
-// 					"Cannot parse (watch props.draw.parameters)",
-// 					props.draw.params
-// 				)
-// 			}
-// 		}
-// 	}
-// )
 
 defineExpose({ figures })
 

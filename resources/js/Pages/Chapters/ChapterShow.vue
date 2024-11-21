@@ -3,21 +3,21 @@
 	setup
 >
 import ChapterChallenges from "@/Components/Chapters/ChapterChallenges.vue"
-import ChapterFormulas from "@/Components/Chapters/ChapterFormulas.vue"
-import ChapterRelations from "@/Components/Chapters/ChapterRelations.vue"
 import ChapterTheorems from "@/Components/Chapters/ChapterTheorems.vue"
 import ChapterToc from "@/Components/Chapters/ChapterToc.vue"
 import EditLink from "@/Components/Ui/EditLink.vue"
 
 import LayoutMain from "@/Layouts/LayoutMain.vue"
-import type { ChapterInterface } from "@/types/modelInterfaces"
-import { PropType, ref } from "vue"
+import { ChallengeInterface, ChapterShowInterface, PostInterface } from "@/types/modelInterfaces"
+import { ref } from "vue"
 
 defineOptions({ layout: LayoutMain })
 
-defineProps({
-	chapter: { type: Object as PropType<ChapterInterface>, required: true }
-})
+defineProps<{
+	chapter: ChapterShowInterface,
+	posts: PostInterface[],
+	challenges: ChallengeInterface[]
+}>()
 
 const showTheorem = ref(false)
 
@@ -44,11 +44,14 @@ const showTheorem = ref(false)
 
 		<div class="scolcours-container space-y-10">
 			<!-- table des matières -->
-			<ChapterToc :chapter="chapter" />
+			<ChapterToc
+				:chapter
+				:posts
+			/>
 
 			<!-- commencer l'aventure -->
 			<div
-				v-if="chapter.posts.length > 0"
+				v-if="posts.length > 0"
 				class="w-full text-center"
 			>
 				<InertiaLink
@@ -64,7 +67,7 @@ const showTheorem = ref(false)
 					<div class="flex flex-col gap-3 py-3 text-xs font-ultrathin">
 						<p>Commencer l'aventure avec</p>
 						<h2
-							v-katex.auto="chapter.posts[0].title"
+							v-katex.auto="posts[0].title"
 							class="text-xl"
 						/>
 					</div>
@@ -72,16 +75,19 @@ const showTheorem = ref(false)
 			</div>
 
 			<!-- liste des relations -->
-			<chapter-relations :chapter="chapter" />
+			<!--			<chapter-relations :chapter="chapter" />-->
 
 			<!-- liste des challenges -->
-			<chapter-challenges :chapter="chapter" />
+			<chapter-challenges
+				:chapter
+				:challenges
+			/>
 
 			<!-- The formulas -->
-			<chapter-formulas
-				:chapter-slug="chapter.slug"
-				responsive
-			/>
+			<!--			<chapter-formulas-->
+			<!--				:chapter-slug="chapter.slug"-->
+			<!--				responsive-->
+			<!--			/>-->
 
 			<div>
 				<button

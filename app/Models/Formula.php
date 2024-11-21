@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Carbon;
 
 /**
@@ -17,9 +19,9 @@ use Illuminate\Support\Carbon;
  * @property int|null $order
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property-read Collection<int, \App\Models\Block> $blocks
+ * @property-read Collection<int, Block> $blocks
  * @property-read int|null $blocks_count
- * @property-read \App\Models\Chapter $chapter
+ * @property-read Chapter $chapter
  * @method static Builder|Formula newModelQuery()
  * @method static Builder|Formula newQuery()
  * @method static Builder|Formula query()
@@ -37,9 +39,14 @@ class Formula extends Model
 	protected $guarded=[];
 	protected $with = ['blocks'];
 
-	public function chapter()
+    public function theme(): BelongsTo
+    {
+        return $this->belongsTo(Theme::class);
+    }
+
+	public function chapters(): BelongsToMany
 	{
-		return $this->belongsTo(Chapter::class);
+		return $this->belongsToMany(Chapter::class);
 	}
 
 	public function blocks()

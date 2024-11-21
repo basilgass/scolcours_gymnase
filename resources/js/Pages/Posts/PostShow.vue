@@ -9,7 +9,7 @@ import EditLink from "@/Components/Ui/EditLink.vue"
 import { useMenuScrollTo } from "@/Composables/useHelpers"
 import { useScriptLoader } from "@/Composables/useScriptLoader.ts"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
-import type { BlockInterface, ChapterInterface, PostInterface } from "@/types/modelInterfaces"
+import type { BlockInterface, ChapterShowInterface, PostInterface, PostShowInterface } from "@/types/modelInterfaces"
 import { usePage } from "@inertiajs/vue3"
 import axios from "axios"
 import { nextTick, onMounted, provide, ref } from "vue"
@@ -17,8 +17,9 @@ import { nextTick, onMounted, provide, ref } from "vue"
 defineOptions({ layout: LayoutMain })
 
 const props = defineProps<{
-	chapter: ChapterInterface,
-	post: PostInterface,
+	chapter: ChapterShowInterface,
+	posts: PostInterface[],
+	post: PostShowInterface,
 	anchor: string | null
 }>()
 
@@ -34,8 +35,7 @@ function storeCurrentPost() {
 	axios.post(
 		route("chapters.currentPost", [props.chapter.id]),
 		{
-			post_id: props.post.id,
-			open: true
+			post_id: props.post.id
 		}
 	)
 }
@@ -121,14 +121,16 @@ onMounted(() => {
 
 			<!-- navigation -->
 			<chapter-nav
-				:chapter="chapter"
+				:chapter
+				:posts
 				:current-post="post.order"
 			/>
 
 			<!-- table of contents -->
 			<chapter-toc
 				:active="post.order"
-				:chapter="chapter"
+				:chapter
+				:posts
 				class="mt-10"
 			/>
 

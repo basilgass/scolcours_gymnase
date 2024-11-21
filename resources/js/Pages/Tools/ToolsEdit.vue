@@ -3,11 +3,12 @@
 	lang="ts"
 >
 
-import { inject, PropType } from "vue"
-import { flashInterface, ToolInterface } from "@/types"
-import LayoutMain from "@/Layouts/LayoutMain.vue"
-import { useForm } from "@inertiajs/vue3"
 import FormMaker from "@/Components/Form/FormMaker.vue"
+import LayoutMain from "@/Layouts/LayoutMain.vue"
+import { flashInterface } from "@/types"
+import { ToolInterface } from "@/types/modelInterfaces.ts"
+import { useForm } from "@inertiajs/vue3"
+import { inject, PropType } from "vue"
 
 defineOptions({ layout: LayoutMain })
 

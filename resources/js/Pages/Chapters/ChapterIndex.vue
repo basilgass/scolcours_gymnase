@@ -3,16 +3,16 @@ import ChapterCard from "@/Components/Chapters/ChapterCard.vue"
 import ChapiterIndexCreateAdmin from "@/Components/Chapters/ChapterIndexCreateAdmin.vue"
 import FilteredList from "@/Components/Ui/FilteredList.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
-import type { ChapterInterface } from "@/types/modelInterfaces"
+import type { ChapterShowInterface } from "@/types/modelInterfaces"
 import { router } from "@inertiajs/vue3"
 
 defineOptions({ layout: LayoutMain })
 
 defineProps<{
-	chapters: ChapterInterface[]
+	chapters: ChapterShowInterface[]
 }>()
 
-function triggerEnter(items: ChapterInterface[]) {
+function triggerEnter(items: ChapterShowInterface[]) {
 	// si il n'y a qu'un élément afficher, on le charge.
 	if (items.length === 1) {
 		router.visit(route("chapters.show", [items[0].slug]))
@@ -36,7 +36,7 @@ function triggerEnter(items: ChapterInterface[]) {
 				<ChapiterIndexCreateAdmin />
 			</template>
 
-			<template #card="{ item }: { item: ChapterInterface }">
+			<template #card="{ item }: { item: ChapterShowInterface }">
 				<chapter-card :chapter="item" />
 			</template>
 		</filtered-list>

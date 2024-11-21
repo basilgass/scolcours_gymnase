@@ -20,9 +20,7 @@ class FormulaController extends Controller
 
     public function index()
     {
-        $formulas = Formula::with('chapter')
-            ->orderBy('chapter_id')
-            ->get();
+        $formulas = Formula::all()->sortBy('theme_id');
 
         return Inertia::render('Formulas/FormulaIndex', [
             'formulas' => FormulaResource::collection($formulas)
@@ -50,6 +48,8 @@ class FormulaController extends Controller
     public function chapterFormular(Chapter $chapter)
     {
         // Get the list of all formulas as JSON ?
+
+        // TODO : what is the use of chapters ? 
         return [
             'formular' => FormulaResource::collection($chapter->formulas),
             'chapters' => $chapter->theme->chapters()

@@ -38,6 +38,7 @@ class Quizz extends Model
     use HasFactory;
 
 	protected $guarded=[];
+
 	public function questions()
 	{
 		return $this->morphMany(Question::class, 'questionable')->orderBy('order')->orderBy('id');

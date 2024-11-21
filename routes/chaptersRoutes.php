@@ -6,15 +6,11 @@ use App\Models\Theme;
 
 // Store the themes cache.
 //Cache::forget('themes');
-$themesList = Cache::rememberForever('themes', function () {
-	try {
-		return Theme::where("enabled", "=", 1)
-			->orderBy('order')
-			->get()->pluck('slug')->toArray();
-	} catch (Exception $exception) {
-		return ["arithmetique", "algebre", "geometrie", "analyse", "statistiques", "jeux", "numeric"];
-	}
-});
+try{
+    $themesList = Theme::getThemesFromCache()->pluck('slug')->toArray();
+}catch(Exception $exception){
+    return Theme::all()->pluck('slug')->toArray();
+}
 
 // Themes and chapters main routes
 // Public routes !

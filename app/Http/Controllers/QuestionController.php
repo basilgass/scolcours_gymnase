@@ -9,6 +9,7 @@ use App\Models\Question;
 use App\Models\Quizz;
 use Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Inertia\Inertia;
 use Inertia\Response;
 use function redirect;
@@ -186,6 +187,9 @@ class QuestionController extends Controller
 			false
 		);
 
+        // Reset the cache for this key.
+        Cache::forget(Question::getCacheKey($question, $user));
+
 		return $validate;
 	}
 
@@ -197,7 +201,13 @@ class QuestionController extends Controller
 		}
 
 		$target = $this->getQuestionable($type, $id);
-		$user->questions()->detach($target->questions->pluck('id'));
+        $user->questions()->detach($target->questions->pluck('id'));
+
+        // Reset all questions cache.
+        $target->questions->each(function($question) use ($user){
+            Cache::forget(Question::getCacheKey($question, $user));
+        });
+        
 		return true;
 	}
 

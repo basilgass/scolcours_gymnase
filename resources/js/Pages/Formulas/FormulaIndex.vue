@@ -9,20 +9,16 @@ import { useStoreEditMode } from "@/stores/useStoreEditMode.ts"
 import { flashInterface } from "@/types"
 import type { FormulaInterface } from "@/types/modelInterfaces"
 import axios from "axios"
-import { inject, PropType } from "vue"
+import { inject } from "vue"
 
 defineOptions({ layout: LayoutMain })
 
 const flash = inject<flashInterface>("flash")
 const editMode = useStoreEditMode()
 
-defineProps({
-	"formulas": {
-		type: Object as PropType<FormulaInterface[]>,
-		required: true
-	}
-})
-
+defineProps<{
+	formulas: FormulaInterface[]
+}>()
 function updateFormula(formula: FormulaInterface) {
 	axios.patch(route("blocks.update", formula.block.id), {
 		_method: "patch",
@@ -53,7 +49,7 @@ function searchFormula(item: FormulaInterface, value: string): boolean {
 
 		<filtered-list
 			:class="editMode.enable?'': ''"
-			:filter-by-theme="(item:FormulaInterface)=>item.chapter.theme.slug"
+			:filter-by-theme="(item:FormulaInterface)=>item.theme.slug"
 			:list="formulas"
 			:list-class="editMode.enable? 'grid grid-cols-1 gap-2': 'columns-xs space-y-4'"
 			:search-function="searchFormula"

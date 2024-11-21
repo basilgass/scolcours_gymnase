@@ -9,7 +9,8 @@ import MainAside from "@/Components/MainAside.vue"
 import DropdownMenu from "@/Components/Ui/DropdownMenu.vue"
 import LogoutButton from "@/Components/Ui/LogoutButton.vue"
 import { useStoreEditMode } from "@/stores/useStoreEditMode.ts"
-import type { ThemeInterface } from "@/types"
+
+import { ThemeInterface } from "@/types/modelInterfaces.ts"
 
 import { useDark, useToggle } from "@vueuse/core"
 import { computed, PropType, provide, ref } from "vue"

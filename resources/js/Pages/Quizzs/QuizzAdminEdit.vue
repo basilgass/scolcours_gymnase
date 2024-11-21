@@ -2,16 +2,16 @@
 	setup
 	lang="ts"
 >
-import { computed, inject, PropType, ref } from "vue"
+import FormMaker from "@/Components/Form/FormMaker.vue"
+import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
 import DialogModal from "@/Components/Ui/DialogModal.vue"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
-import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
-import { router } from "@inertiajs/vue3"
-import FormMaker from "@/Components/Form/FormMaker.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
-import axios from "axios"
 import { flashInterface } from "@/types"
-import type { ChapterInterface, TeamInterface } from "@/types/modelInterfaces"
+import type { ChapterShowInterface, TeamInterface } from "@/types/modelInterfaces"
+import { router } from "@inertiajs/vue3"
+import axios from "axios"
+import { computed, inject, PropType, ref } from "vue"
 
 defineOptions({ layout: LayoutMain })
 
@@ -21,7 +21,7 @@ const props = defineProps({
 	questions: { type: Object, required: true },
 	sessions: { type: Object, required: true },
 	teams: { type: Object as PropType<TeamInterface[]>, required: true },
-	chapters: { type: Object as PropType<ChapterInterface[]>, required: true },
+	chapters: { type: Object as PropType<ChapterShowInterface[]>, required: true },
 }),
 	ongoing = function (session) {
 		return session.current <= session.total && session.enable
@@ -291,10 +291,12 @@ const showUsersIndex = ref(-1),
 					<td>{{ session.status }}</td>
 					<td>{{ session.total }}</td>
 					<td class="relative">
-						<button @click="
-							showUsersIndex =
-							showUsersIndex === index ? -1 : index
-							">
+						<button
+							@click="
+								showUsersIndex =
+									showUsersIndex === index ? -1 : index
+							"
+						>
 							{{ session.users.length }} étudiants
 						</button>
 						<div
@@ -316,10 +318,12 @@ const showUsersIndex = ref(-1),
 						</div>
 					</td>
 					<td>
-						<InertiaLink :href="route('quizzs.sessions.dashboard', [
-							session.shortcode,
-						])
-							">
+						<InertiaLink
+							:href="route('quizzs.sessions.dashboard', [
+								session.shortcode,
+							])
+							"
+						>
 							dashboard
 						</InertiaLink>
 					</td>

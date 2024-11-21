@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Cache;
 
 /**
  * App\Models\Theme
@@ -20,11 +21,11 @@ use Illuminate\Support\Carbon;
  * @property int $enabled
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property-read Collection<int, \App\Models\Chapter> $chapters
+ * @property-read Collection<int, Chapter> $chapters
  * @property-read int|null $chapters_count
- * @property-read Collection<int, \App\Models\Generator> $generators
+ * @property-read Collection<int, Generator> $generators
  * @property-read int|null $generators_count
- * @property-read Collection<int, \App\Models\Widget> $widgets
+ * @property-read Collection<int, Widget> $widgets
  * @property-read int|null $widgets_count
  * @method static Builder|Theme newModelQuery()
  * @method static Builder|Theme newQuery()
@@ -43,6 +44,56 @@ use Illuminate\Support\Carbon;
 class Theme extends Model
 {
     protected $guarded = [];
+
+    /**
+     * @return Collection|Theme[]
+     */
+    public static function getThemesFromCache(): Collection
+    {
+        return Cache::rememberForever('themes', function(){
+            return self::where('enabled', 1)->get();
+        });
+    }
+
+    public static function getTheme($id):Theme
+    {
+        $themes = Theme::getThemesFromCache();
+
+        return $themes->firstWhere('id', $id);
+    }
+
+    /**
+     * @return Collection|Theme[]
+     */
+    public static function refreshCache(): Collection {
+        Cache::forget('themes');
+        return self::getThemesFromCache();
+    }
+
+    protected static function boot (): void
+    {
+        parent::boot();
+
+        // Refresh cache on save or delete
+        static::saved(function(){
+           self::refreshCache();
+        });
+
+        static::deleted(function(){
+            self::refreshCache();
+        });
+    }
+    public function resolveRouteBinding($value, $field = null)
+    {
+        // Fetch from cache
+        $cachedTheme = self::getThemesFromCache();
+
+        // Find the theme by the given field (id or slug)
+        $field = $field ?? $this->getRouteKeyName();
+
+        // Return the model from the cache.
+        return $cachedTheme->firstWhere($field, $value);
+    }
 
     public function chapters()
     {

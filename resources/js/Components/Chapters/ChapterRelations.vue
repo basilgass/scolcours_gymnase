@@ -3,19 +3,20 @@
 	lang="ts"
 >
 
-import { inject, PropType, Ref, ref } from "vue"
-import axios from "axios"
 import { flashInterface } from "@/types"
 import type { ChapterInterface } from "@/types/modelInterfaces"
+import axios from "axios"
+import { inject, Ref, ref } from "vue"
 
-const props = defineProps({
-	chapter: { type: Object as PropType<ChapterInterface>, required: true }
-})
+const props = defineProps<{
+	chapter: ChapterInterface,
+	relations: ChapterInterface[]
+}>()
 
 const flash = inject<flashInterface>("flash"),
 	editMode = inject<Ref<boolean>>("editMode")
 
-const chapterRelations = ref(props.chapter.relations),
+const chapterRelations = ref(props.relations),
 	modifyRelations = ref(false),
 	allChapters = ref([]),
 	getAllChapters = function () {

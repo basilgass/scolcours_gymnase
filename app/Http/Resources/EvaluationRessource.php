@@ -2,9 +2,13 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Evaluation;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * @mixin Evaluation
+ */
 class EvaluationRessource extends JsonResource
 {
 // No wrap around the data.

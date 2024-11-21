@@ -6,7 +6,6 @@ use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\URL;
@@ -26,12 +25,12 @@ use Illuminate\Support\Facades\URL;
  * @property string|null $switch
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property-read Collection<int, \App\Models\Block> $blocks
+ * @property-read Collection<int, Block> $blocks
  * @property-read int|null $blocks_count
- * @property-read \App\Models\Chapter $chapter
- * @property-read Collection<int, \App\Models\Question> $questions
+ * @property-read Chapter $chapter
+ * @property-read Collection<int, Question> $questions
  * @property-read int|null $questions_count
- * @property-read Collection<int, \App\Models\Score> $scores
+ * @property-read Collection<int, Score> $scores
  * @property-read int|null $scores_count
  * @property-read mixed $url
  * @method static Builder|Post newModelQuery()
@@ -53,10 +52,8 @@ use Illuminate\Support\Facades\URL;
  */
 class Post extends Model
 {
-	use HasFactory;
-
 	protected $guarded = [];
-	protected $with = ['blocks', 'questions'];
+	protected $with = [];
 
 	public function chapter()
 	{

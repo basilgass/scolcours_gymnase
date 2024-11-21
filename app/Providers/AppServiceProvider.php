@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\Scolcours;
+use Exception;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cache;
@@ -18,6 +19,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        if ($this->app->environment('local')) {
+            $this->app->register(\Laravel\Telescope\TelescopeServiceProvider::class);
+            $this->app->register(TelescopeServiceProvider::class);
+        }
+
         //
 //		$this->app->singleton('Scolcours', function($app){
 //			try {
@@ -42,7 +48,7 @@ class AppServiceProvider extends ServiceProvider
 		Cache::rememberForever('scolcours', function (){
 			try {
 				return Scolcours::all()->first();
-			}catch (\Exception $exception) {
+			}catch (Exception $exception) {
 				return [];
 			}
 		});

@@ -64,7 +64,6 @@ const blockTemplate = computed(() => {
 		.split(",")
 		.filter((x) => x !== "")
 
-	console.log(values)
 	// pattern is:
 	// bi,md:b+i,lg:2b+i,xl:i+3b
 	if (values.length === 0) {

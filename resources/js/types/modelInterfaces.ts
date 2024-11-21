@@ -1,5 +1,3 @@
-import { ThemeInterface, User } from "@/types/index"
-
 export interface UserInterface {
 	id: number;
 	name: string;
@@ -14,50 +12,32 @@ export interface ChapterInterface {
 	slug: string;
 	title: string;
 	meta_title: string;
-	block: BlockInterface;
+	theme: {
+		id: number
+		slug: string
+	};
 	active: boolean;
+	url: string;
 	updated_at: string;
-	posts: PostInterface[];
-	theme: {
-		id: number
-		slug: string
-	};
-	challenges: {
-		id: number
-		slug: string
-		title: string
-	}[];
-	relations: {
-		id: number
-		slug: string
-		title: string
-		theme: {
-			id: number
-			slug: string
-		};
-	}[];
+	modified: string;
 }
-
-
-export interface ChapterMinInterface {
-	id: number;
-	slug: string;
-	title: string;
-	meta_title: string;
-	theme: {
-		id: number
-		slug: string
-	};
-	posts_length: number;
-}
-
-// TODO: ChapterMiniInterface vs CHapterMinInterface ?
-export interface ChapterMiniInterface {
-	id: number
-	title: string
-	url: string
-	modified: string
-	body: string
+export interface ChapterShowInterface extends ChapterInterface{
+	block: BlockInterface;
+	// posts: PostShowInterface[];
+	// challenges: {
+	// 	id: number
+	// 	slug: string
+	// 	title: string
+	// }[];
+	// relations: {
+	// 	id: number
+	// 	slug: string
+	// 	title: string
+	// 	theme: {
+	// 		id: number
+	// 		slug: string
+	// 	};
+	// }[];
 }
 
 export interface BlockMinInterface {
@@ -91,6 +71,7 @@ export interface WidgetInterface {
 	parameters: string;
 	code: string;
 }
+
 export interface IllustrationInterface {
 	id: number;
 	block_id: number;
@@ -106,7 +87,7 @@ export interface IllustrationInterface {
 	isNew?: boolean;
 }
 
-export interface QuestionMinInterface {
+export interface QuestionDynamicInterface {
 	block: BlockMinInterface;
 	answer: string;
 	keyboard: string;
@@ -114,7 +95,8 @@ export interface QuestionMinInterface {
 		result: boolean
 	};
 }
-export interface QuestionInterface extends QuestionMinInterface{
+
+export interface QuestionInterface extends QuestionDynamicInterface {
 	id: number;
 	order: number;
 	displayIf: null | string;
@@ -128,22 +110,62 @@ export interface QuestionInterface extends QuestionMinInterface{
 }
 
 
-
-//TODD: modify PostInterfae
 export interface PostInterface {
 	id: number;
 	chapter_id: number;
-	chapter: ChapterMinInterface;
 	type: string;
 	title: string;
 	order: number;
-	blockAnchor: number;
 	active: number;
+	updated_at: string;
+	questionsInfo: {
+		count: number,
+		answered: number
+	};
+}
+
+export interface PostShowInterface extends PostInterface{
+	blockAnchor: number;
 	script: string;
 	switch: string;
 	blocks: BlockInterface[];
 	questions: QuestionInterface[];
 	questionsGrid: string;
+}
+
+export interface User {
+	id: number
+	name: string
+	firstname: string
+	fullname: string
+	email: string
+	email_verified_at: string
+	role: string
+}
+
+export interface ThemeInterface {
+	id: string
+	slug: string
+	title: string
+	order: number
+	color: string
+	icon: string
+	enabled: boolean
+}
+
+export interface ThemeAsRelationInterface {
+	id: string
+	slug: string
+	title: string
+}
+
+export interface ToolInterface {
+	id: number
+	slug: string
+	title: string
+	body: string
+	parameters: string
+	updated_at: string
 }
 
 export interface EvaluationInterface {
@@ -159,16 +181,13 @@ export interface EvaluationInterface {
 export interface GeneratorInterface {
 	id: number;
 	slug: string;
-	theme: ThemeInterface;
-	challenges: ChallengeMinInterface[];
 	title: string;
+	theme: ThemeInterface;
 	body: string;
 	template: string;
 	keyboard: string;
 	code: string;
-	pivot: {
-		order: number
-	};
+	order: number;
 }
 
 export interface ChallengeScoreInterface {
@@ -183,7 +202,7 @@ export interface ChallengeMinInterface {
 	slug: string;
 	active: boolean;
 	title: string;
-	chapter: ChapterMinInterface;
+	chapter: ChapterInterface;
 	block: BlockInterface;
 }
 
@@ -202,7 +221,7 @@ export interface ChallengeInterface {
 	bonusLevelLife: number;
 	bonusLevelTime: number;
 	updated_at: string;
-	chapter: ChapterMinInterface;
+	chapter: ChapterInterface;
 	block: BlockInterface;
 	best: ChallengeScoreInterface;
 	user: ChallengeScoreInterface;
@@ -236,11 +255,11 @@ export interface widgetInterface {
 	name: string,
 	slug: string,
 	component: string,
+	description: string,
 	theme: {
 		id: number;
 		slug: number;
 	},
-	description: string,
 	control: boolean
 }
 
@@ -285,7 +304,7 @@ export interface QuizzSessionInterface {
 	}
 }
 
-export interface TranslationLanguageInterface{
+export interface TranslationLanguageInterface {
 	slug: string
 	name: string
 }
@@ -308,15 +327,8 @@ export interface TranslationUnitInterfaceExtended extends TranslationUnitInterfa
 
 export interface FormulaInterface {
 	id: number
+	theme: ThemeAsRelationInterface
 	order: number
-	chapter: {
-		id: number
-		title: string
-		theme: {
-			id: number
-			slug: string
-		};
-	}
 	block: BlockInterface
 }
 

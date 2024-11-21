@@ -1,9 +1,9 @@
 <script lang="ts" setup>
-import { computed, PropType, ref } from "vue"
-import type { ChapterMinInterface, PostQuestionsForOneUserStatsInterface, UserInterface } from "@/types/modelInterfaces"
-import { useIntersectionObserver } from "@vueuse/core"
-import { router } from "@inertiajs/vue3"
 import StatBar from "@/Components/Ui/StatBar.vue"
+import type { ChapterInterface, PostQuestionsForOneUserStatsInterface, UserInterface } from "@/types/modelInterfaces"
+import { router } from "@inertiajs/vue3"
+import { useIntersectionObserver } from "@vueuse/core"
+import { computed, PropType, ref } from "vue"
 
 const props = defineProps({
 	user: {
@@ -11,7 +11,7 @@ const props = defineProps({
 		required: true
 	},
 	chapter: {
-		type: Object as PropType<ChapterMinInterface>,
+		type: Object as PropType<ChapterInterface>,
 		required: true
 	},
 	stats: {

@@ -6,20 +6,20 @@ Utilisé dans PoseShow et PostEditPage (pour l'édition mode développement ?)
 	lang="ts"
 	setup
 >
-import { inject, PropType, ref } from "vue"
-import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
-import MoveItemTo from "@/Components/MoveItemTo.vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
-import axios from "axios"
+import MoveItemTo from "@/Components/MoveItemTo.vue"
+import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 import type { flashInterface } from "@/types"
-import type { PostInterface } from "@/types/modelInterfaces"
+import type { PostShowInterface } from "@/types/modelInterfaces"
 import { router } from "@inertiajs/vue3"
+import axios from "axios"
+import { inject, PropType, ref } from "vue"
 
 defineOptions({ layout: LayoutMain })
 
 const props = defineProps({
-	post: { type: Object as PropType<PostInterface>, required: true }
+	post: { type: Object as PropType<PostShowInterface>, required: true }
 })
 
 const flash = inject<flashInterface>("flash")

@@ -5,7 +5,7 @@ import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
 import { useGenerator } from "@/Composables/useGenerator"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 import { flashInterface } from "@/types"
-import { GeneratorInterface } from "@/types/modelInterfaces"
+import { ChallengeInterface, GeneratorInterface } from "@/types/modelInterfaces"
 import { router } from "@inertiajs/vue3"
 import axios from "axios"
 import PiMath from "pimath"
@@ -16,7 +16,8 @@ defineOptions({ layout: LayoutMain })
 const flash = inject<flashInterface>("flash")
 
 const props = defineProps<{
-	generator: GeneratorInterface
+	generator: GeneratorInterface,
+	challenges: ChallengeInterface[]
 }>()
 
 const theGenerator = ref(props.generator)
@@ -127,7 +128,7 @@ function deleteGenerator() {
 				</div>
 				<ul class="list my-4">
 					<li
-						v-for="challenge in generator.challenges"
+						v-for="challenge in challenges"
 						:key="`challenge-link-${challenge.id}`"
 						class="flex justify-between gap-3"
 					>

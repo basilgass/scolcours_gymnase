@@ -3,14 +3,14 @@
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 import { useStoreEditMode } from "@/stores/useStoreEditMode.ts"
 import { AxiosErrorMessage } from "@/types"
-import { ChapterInterface } from "@/types/modelInterfaces.ts"
+import { ChapterShowInterface } from "@/types/modelInterfaces.ts"
 import { usePage } from "@inertiajs/vue3"
 import axios from "axios"
 import { ref } from "vue"
 
 
 const props = defineProps<{
-	chapter: ChapterInterface
+	chapter: ChapterShowInterface
 }>()
 
 const editMode = useStoreEditMode()

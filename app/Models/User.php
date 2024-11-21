@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Challenges\ChallengeSession;
+use Database\Factories\UserFactory;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -30,24 +31,24 @@ use Laravel\Sanctum\PersonalAccessToken;
  * @property Carbon|null $updated_at
  * @property-read Collection<int, ChallengeSession> $challenges
  * @property-read int|null $challenges_count
- * @property-read Collection<int, \App\Models\Chapter> $chapters
+ * @property-read Collection<int, Chapter> $chapters
  * @property-read int|null $chapters_count
- * @property-read Collection<int, \App\Models\Flipcard> $flipcards
+ * @property-read Collection<int, Flipcard> $flipcards
  * @property-read int|null $flipcards_count
  * @property-read mixed $admin
  * @property-read DatabaseNotificationCollection<int, DatabaseNotification> $notifications
  * @property-read int|null $notifications_count
- * @property-read Collection<int, \App\Models\Question> $questions
+ * @property-read Collection<int, Question> $questions
  * @property-read int|null $questions_count
- * @property-read Collection<int, \App\Models\QuizzSession> $quizz_sessions
+ * @property-read Collection<int, QuizzSession> $quizz_sessions
  * @property-read int|null $quizz_sessions_count
- * @property-read Collection<int, \App\Models\Score> $scores
+ * @property-read Collection<int, Score> $scores
  * @property-read int|null $scores_count
- * @property-read Collection<int, \App\Models\Team> $teams
+ * @property-read Collection<int, Team> $teams
  * @property-read int|null $teams_count
  * @property-read Collection<int, PersonalAccessToken> $tokens
  * @property-read int|null $tokens_count
- * @method static \Database\Factories\UserFactory factory($count = null, $state = [])
+ * @method static UserFactory factory($count = null, $state = [])
  * @method static Builder|User newModelQuery()
  * @method static Builder|User newQuery()
  * @method static Builder|User query()
@@ -98,9 +99,9 @@ class User extends Authenticatable
 		'email_verified_at' => 'datetime',
 	];
 
-	// TODO: restore with teams
-//		protected $with = ['teams'];
 
+    protected $with = [];
+    
 	public function teams()
 	{
 		return $this->belongsToMany(Team::class);

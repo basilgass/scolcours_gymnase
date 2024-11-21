@@ -3,10 +3,10 @@ AdminChaptersPage.vue
 	lang="ts"
 	setup
 >
-import { PropType } from "vue"
-import LayoutMain from "@/Layouts/LayoutMain.vue"
-import type { ToolInterface } from "@/types"
 import FilteredList from "@/Components/Ui/FilteredList.vue"
+import LayoutMain from "@/Layouts/LayoutMain.vue"
+import { ToolInterface } from "@/types/modelInterfaces.ts"
+import { PropType } from "vue"
 
 defineOptions({ layout: LayoutMain })
 defineProps({

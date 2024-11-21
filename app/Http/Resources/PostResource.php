@@ -2,11 +2,15 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Post;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use JsonSerializable;
 
+/**
+ * @mixin Post
+ */
 class PostResource extends JsonResource
 {
 
@@ -20,19 +24,23 @@ class PostResource extends JsonResource
 	 */
 	public function toArray($request)
 	{
+
+        $answeredQuestions = $this->questions->sum(function($question){
+            return $question->userAnswers()['result'];
+        });
+
 		return [
-			'id' => $this->id,
-			'chapter_id' => $this->chapter_id,
-			'type' => $this->type,
-			'title' => $this->title,
-			'order' => $this->order,
-			'active' => $this->active,
-			'script' => $this->script,
-			'switch' => $this->switch,
-			'updated_at' => $this->updated_at,
-			'blocks' => BlockResource::collection($this->blocks),
-			'questions' => QuestionResource::collection($this->questions),
-			'questionsGrid' => $this->questionsGrid
+            'id' => $this->id,
+            'chapter_id' => $this->chapter_id,
+            'type' => $this->type,
+            'title' => $this->title,
+            'order' => $this->order,
+            'active' => $this->active,
+            'updated_at' => $this->updated_at,
+            'questionsInfo' => [
+                'count' => $this->questions->count(),
+                'answered' => $answeredQuestions
+            ],
 		];
 	}
 }

@@ -2,12 +2,15 @@
 
 namespace App\Models;
 
+use Database\Factories\ChapterFactory;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
@@ -24,26 +27,26 @@ use URL;
  * @property int $active
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property-read Collection<int, \App\Models\Block> $blocks
+ * @property-read Collection<int, Block> $blocks
  * @property-read int|null $blocks_count
- * @property-read Collection<int, \App\Models\Challenge> $challenges
+ * @property-read Collection<int, Challenge> $challenges
  * @property-read int|null $challenges_count
  * @property-read mixed $component
- * @property-read Collection<int, \App\Models\Formula> $formulas
+ * @property-read Collection<int, Formula> $formulas
  * @property-read int|null $formulas_count
- * @property-read Collection<int, \App\Models\Post> $posts
+ * @property-read Collection<int, Post> $posts
  * @property-read int|null $posts_count
- * @property-read Collection<int, \App\Models\Question> $questions
+ * @property-read Collection<int, Question> $questions
  * @property-read int|null $questions_count
- * @property-read Collection<int, \App\Models\Quizz> $quizzs
+ * @property-read Collection<int, Quizz> $quizzs
  * @property-read int|null $quizzs_count
  * @property-read Collection<int, Chapter> $relations
  * @property-read int|null $relations_count
- * @property-read \App\Models\Theme $theme
+ * @property-read Theme $theme
  * @property-read mixed $url
- * @property-read Collection<int, \App\Models\User> $users
+ * @property-read Collection<int, User> $users
  * @property-read int|null $users_count
- * @method static \Database\Factories\ChapterFactory factory($count = null, $state = [])
+ * @method static ChapterFactory factory($count = null, $state = [])
  * @method static Builder|Chapter newModelQuery()
  * @method static Builder|Chapter newQuery()
  * @method static Builder|Chapter query()
@@ -63,10 +66,9 @@ class Chapter extends Model
 
 	protected $guarded = [];
 
-	// removed the theme:id,slug
-	protected $with = ['posts', 'formulas', 'challenges', "relations"];
+	protected $with = [];
 
-	public function theme(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+	public function theme(): BelongsTo
 	{
 		return $this->belongsTo(Theme::class);
 	}
@@ -81,9 +83,9 @@ class Chapter extends Model
 		return $this->hasMany(Post::class)->orderBy('order')->orderBy('id');
 	}
 
-	public function formulas(): HasMany
+	public function formulas(): BelongsToMany
 	{
-		return $this->hasMany(Formula::class)->orderBy('order')->orderBy('id');
+		return $this->belongsToMany(Formula::class)->orderBy('order')->orderBy('id');
 	}
 
 	public function challenges(): HasMany

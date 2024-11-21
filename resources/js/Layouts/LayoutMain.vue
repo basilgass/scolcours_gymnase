@@ -2,7 +2,8 @@
 import MainFooter from "@/Components/MainFooter.vue"
 import MainHeader from "@/Components/MainHeader.vue"
 import FlashMessage from "@/Components/Ui/FlashMessage.vue"
-import { flashConfig, flashMessageInterface, ThemeInterface } from "@/types"
+import { flashConfig, flashMessageInterface } from "@/types"
+import { ThemeInterface } from "@/types/modelInterfaces.ts"
 import { Head, usePage } from "@inertiajs/vue3"
 import { computed, PropType, provide, ref } from "vue"
 
@@ -59,7 +60,6 @@ const pageTitle = computed(() => {
 
 <template>
 	<div class="app-container">
-
 		<Head :title="pageTitle" />
 
 		<!-- Header of the page -->

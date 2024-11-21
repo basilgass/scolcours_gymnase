@@ -5,7 +5,7 @@ import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 import { flashInterface } from "@/types"
-import type { ChapterInterface } from "@/types/modelInterfaces"
+import type { ChapterShowInterface } from "@/types/modelInterfaces"
 import axios from "axios"
 import { inject, ref } from "vue"
 
@@ -14,7 +14,7 @@ defineOptions({ layout: LayoutMain })
 const flash = inject<flashInterface>("flash")
 
 const props = defineProps<{
-	chapter: ChapterInterface
+	chapter: ChapterShowInterface
 }>()
 
 const theChapter = ref(props.chapter)

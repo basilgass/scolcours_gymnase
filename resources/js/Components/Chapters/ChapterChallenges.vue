@@ -5,12 +5,13 @@ Affichage de la liste des challenges pour un chapitre donné.
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import DialogModal from "@/Components/Ui/DialogModal.vue"
 import { useStoreEditMode } from "@/stores/useStoreEditMode.ts"
-import { ChapterInterface } from "@/types/modelInterfaces.ts"
+import { ChallengeInterface, ChapterShowInterface } from "@/types/modelInterfaces.ts"
 import { useForm } from "@inertiajs/vue3"
 import { ref } from "vue"
 
 let props = defineProps<{
-	chapter: ChapterInterface
+	chapter: ChapterShowInterface,
+	challenges: ChallengeInterface[]
 }>()
 
 const editMode = useStoreEditMode()
@@ -26,14 +27,14 @@ function storeChallenge() {
 </script>
 
 <template>
-	<div v-if="chapter.challenges">
+	<div v-if="challenges">
 		<h3 class="uppercase font-extralight mb-2">
 			challenges
 		</h3>
 
 		<div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-1 lg:gap-3">
 			<InertiaLink
-				v-for="challenge in chapter.challenges"
+				v-for="challenge in challenges"
 				:key="`challenge-${challenge.id}`"
 				v-katex.auto="challenge.title"
 				:class="`btn-scolcours-${$page.props.theme.slug}`"

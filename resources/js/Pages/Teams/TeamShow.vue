@@ -5,8 +5,8 @@
 import FilteredList from "@/Components/Ui/FilteredList.vue"
 
 import LayoutMain from "@/Layouts/LayoutMain.vue"
+import type { ChallengeInterface, ChapterShowInterface, TeamInterface, UserInterface } from "@/types/modelInterfaces"
 import { PropType } from "vue"
-import type { ChallengeInterface, ChapterInterface, TeamInterface, UserInterface } from "@/types/modelInterfaces"
 
 defineOptions({ layout: LayoutMain })
 
@@ -14,7 +14,7 @@ defineOptions({ layout: LayoutMain })
 const props = defineProps({
 	team: { type: Object as PropType<TeamInterface>, required: true },
 	students: { type: Object as PropType<UserInterface[]>, required: true },
-	chapters: { type: Object as PropType<ChapterInterface[]>, required: true },
+	chapters: { type: Object as PropType<ChapterShowInterface[]>, required: true },
 	challenges: { type: Object as PropType<ChallengeInterface[]>, required: true },
 })
 </script>

@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\ChapterResource;
+use App\Http\Resources\ChapterShowResource;
 use App\Models\Chapter;
 use Auth;
 use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
@@ -14,86 +14,83 @@ use Inertia\Inertia;
 
 class ScolcoursController extends Controller
 {
-	public function index()
-	{
-		$newChapters = Chapter::without(['posts', 'formulas', 'challenges'])
-			->orderBy('updated_at', 'desc')
-			->limit(5)
-			->where('active', true)
-			->get();
+    public function index()
+    {
+        $newChapters = Chapter::with(['theme', 'blocks', 'blocks.illustrations'])
+            ->where('active', true)
+            ->orderBy('updated_at', 'desc')
+            ->limit(5)
+            ->get();
 
-		$newChapters = $newChapters->Map(function (Chapter $item) {
-			return [
-				"id"=>$item->id,
-				"slug"=>$item->slug,
-				"title"=>$item->title,
-				"body" => $item->blocks[0]->body,
-				"url"=>$item->url,
-				"modified"=>$item->updated_at->diffForHumans()
-			];
-		});
+        return Inertia::render('HomePage', [
+            'newChapters' => ChapterShowResource::collection($newChapters)
+        ]);
+    }
 
-		// TODO : canLogin and canRegister could be removed ?
-		return Inertia::render('HomePage', [
-			'canLogin' => Route::has('login'),
-			'canRegister' => Route::has('register'),
-			'newChapters' => $newChapters
-		]);
-	}
+    public function dashboard()
+    {
+//        $courses = Auth::user()->chapters
+//            ->map(function ($chapter) {
+//                return [
+//                    'slug'        => $chapter->slug,
+//                    'title'       => $chapter->title,
+//                    'theme'       => $chapter->theme->slug,
+//                    'currentPost' => $chapter->posts->where('id', $chapter->pivot->post_id)->first()->order,
+//                    'maxPost'     => count($chapter->posts),
+//                    'updated_at'  => Carbon::parse($chapter->pivot->updated_at)->diffForHumans()
+//                ];
+//            });
 
-	public function dashboard()
-	{
-		$courses = Auth::user()->chapters
-			->map(function ($chapter) {
-				return [
-					'slug' => $chapter->slug,
-					'title' => $chapter->title,
-					'theme' => $chapter->theme->slug,
-					'currentPost' => $chapter->posts->where('id', $chapter->pivot->post_id)->first()->order,
-					'maxPost' =>count($chapter->posts),
-					'open' => $chapter->pivot->open,
-					'updated_at' => Carbon::parse($chapter->pivot->updated_at)->diffForHumans()
-				];
-			});
+        $chapters = Auth::user()->chapters;
+        $chapters->load("posts");
 
-		return Inertia::render('DashboardPage', [
-			'courses' => $courses
-		]);
-	}
+        $courses = ChapterResource::collection($chapters)
+            ->map(function($chapter){
+                return $chapter->additional([
+                    'currentPost' => $chapter->posts->where('id', $chapter->pivot->post_id)->first()->order,
+                    'maxPost'=>count($chapter->posts)
+                ]);
+            });
 
-	public function devIndex()
-	{
-		// Get all devs.
-		$devPages = collect(Storage::disk('devs')->files())->map(function ($p) {
-			return pathinfo($p)['filename'];
-		});
+        // $courses = ChapterResource + CurrentPost + MaxPost
+        return Inertia::render('DashboardPage', [
+            'courses' => $courses
+        ]);
+    }
 
-		return Inertia::render("Devs/DevsIndex", [
-			'pages' => $devPages
-		]);
-	}
+    public function devIndex()
+    {
+        // Get all devs.
+        $devPages = collect(Storage::disk('devs')->files())->map(function ($p) {
+            return pathinfo($p)[ 'filename' ];
+        });
 
-	public function dev($page)
-	{
-		return Inertia::render('Devs/DevsShow', [
-			"dev" => $page
-		]);
-	}
+        return Inertia::render("Devs/DevsIndex", [
+            'pages' => $devPages
+        ]);
+    }
 
-	public function download(Request $request)
-	{
-		return response()->streamDownload(function () {
-			echo "hello world";
-		}, 'users.txt');
-		
-		$validate = $request->validate([
-			'svg'=>['string', 'min:2']
-		]);
+    public function dev($page)
+    {
+        return Inertia::render('Devs/DevsShow', [
+            "dev" => $page
+        ]);
+    }
 
-		$content = $validate['svg'];
-		$filename = 'grapheur.svg';
-		return response()->streamDownload(function() use ($content) {
-			echo $content;
-		}, $filename);
-	}
+    public function download(Request $request)
+    {
+        return response()->streamDownload(function () {
+            echo "hello world";
+        }, 'users.txt');
+
+        $validate = $request->validate([
+            'svg' => ['string', 'min:2']
+        ]);
+
+        $content = $validate[ 'svg' ];
+        $filename = 'grapheur.svg';
+        return response()->streamDownload(function () use ($content) {
+            echo $content;
+        }, $filename);
+    }
 }
