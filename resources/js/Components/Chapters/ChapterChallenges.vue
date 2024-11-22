@@ -27,12 +27,14 @@ function storeChallenge() {
 </script>
 
 <template>
-	<div v-if="challenges">
+	<div v-if="challenges.length>0">
 		<h3 class="uppercase font-extralight mb-2">
 			challenges
 		</h3>
 
-		<div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-1 lg:gap-3">
+		<div
+			class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-1 lg:gap-3"
+		>
 			<InertiaLink
 				v-for="challenge in challenges"
 				:key="`challenge-${challenge.id}`"

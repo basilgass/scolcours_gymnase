@@ -47,9 +47,7 @@ class FormulaController extends Controller
      */
     public function chapterFormular(Chapter $chapter)
     {
-        // Get the list of all formulas as JSON ?
-
-        // TODO : what is the use of chapters ? 
+        // TODO : what is the use of chapters ?
         return [
             'formular' => FormulaResource::collection($chapter->formulas),
             'chapters' => $chapter->theme->chapters()
@@ -71,7 +69,13 @@ class FormulaController extends Controller
                         ->has('formulas')
                         ->get()
                         ->map(function ($relation) {
-                            return $relation->only(['slug', 'title']);
+                            return [
+                                'slug'  => $relation->slug,
+                                'title' => $relation->title,
+                                'theme' => [
+                                    'id' => $relation->theme_id
+                                ]
+                            ];
                         })
                 )->unique('slug')
         ];

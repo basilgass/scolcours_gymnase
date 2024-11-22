@@ -3,12 +3,14 @@
 	setup
 >
 import ChapterChallenges from "@/Components/Chapters/ChapterChallenges.vue"
+import ChapterFormulas from "@/Components/Chapters/ChapterFormulas.vue"
+import ChapterRelations from "@/Components/Chapters/ChapterRelations.vue"
 import ChapterTheorems from "@/Components/Chapters/ChapterTheorems.vue"
 import ChapterToc from "@/Components/Chapters/ChapterToc.vue"
 import EditLink from "@/Components/Ui/EditLink.vue"
 
 import LayoutMain from "@/Layouts/LayoutMain.vue"
-import { ChallengeInterface, ChapterShowInterface, PostInterface } from "@/types/modelInterfaces"
+import { ChallengeInterface, ChapterInterface, ChapterShowInterface, PostInterface } from "@/types/modelInterfaces"
 import { ref } from "vue"
 
 defineOptions({ layout: LayoutMain })
@@ -16,7 +18,8 @@ defineOptions({ layout: LayoutMain })
 defineProps<{
 	chapter: ChapterShowInterface,
 	posts: PostInterface[],
-	challenges: ChallengeInterface[]
+	challenges: ChallengeInterface[],
+	relations: ChapterInterface[]
 }>()
 
 const showTheorem = ref(false)
@@ -75,25 +78,27 @@ const showTheorem = ref(false)
 			</div>
 
 			<!-- liste des relations -->
-			<!--			<chapter-relations :chapter="chapter" />-->
+			<chapter-relations
+				:chapter
+				:relations
+			/>
 
 			<!-- liste des challenges -->
 			<chapter-challenges
-				:chapter
 				:challenges
+				:chapter
 			/>
 
 			<!-- The formulas -->
-			<!--			<chapter-formulas-->
-			<!--				:chapter-slug="chapter.slug"-->
-			<!--				responsive-->
-			<!--			/>-->
+			<chapter-formulas
+				:chapter-slug="chapter.slug"
+				responsive
+			/>
 
 			<div>
 				<button
 					v-if="!showTheorem"
-					v-theme.text
-					class="uppercase"
+					class="uppercase font-extralight"
 					@click="showTheorem = true"
 				>
 					Afficher toute la théorie

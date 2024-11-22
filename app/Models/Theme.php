@@ -45,44 +45,47 @@ class Theme extends Model
 {
     protected $guarded = [];
 
+    public static function getTheme($id): Theme
+    {
+        $theme =  Theme::getThemesFromCache()->firstWhere('id', $id);
+
+        // Maybe, the searched theme is inactive.
+        return $theme ?? Theme::find($id);
+    }
+
     /**
      * @return Collection|Theme[]
      */
     public static function getThemesFromCache(): Collection
     {
-        return Cache::rememberForever('themes', function(){
+        return Cache::rememberForever('themes', function () {
             return self::where('enabled', 1)->get();
         });
     }
 
-    public static function getTheme($id):Theme
+    protected static function boot(): void
     {
-        $themes = Theme::getThemesFromCache();
+        parent::boot();
 
-        return $themes->firstWhere('id', $id);
+        // Refresh cache on save or delete
+        static::saved(function () {
+            self::refreshCache();
+        });
+
+        static::deleted(function () {
+            self::refreshCache();
+        });
     }
 
     /**
      * @return Collection|Theme[]
      */
-    public static function refreshCache(): Collection {
+    public static function refreshCache(): Collection
+    {
         Cache::forget('themes');
         return self::getThemesFromCache();
     }
 
-    protected static function boot (): void
-    {
-        parent::boot();
-
-        // Refresh cache on save or delete
-        static::saved(function(){
-           self::refreshCache();
-        });
-
-        static::deleted(function(){
-            self::refreshCache();
-        });
-    }
     public function resolveRouteBinding($value, $field = null)
     {
         // Fetch from cache
@@ -100,14 +103,14 @@ class Theme extends Model
         return $this->hasMany(Chapter::class);
     }
 
-	public function widgets()
-	{
-		return $this->hasMany(Widget::class);
-	}
+    public function widgets()
+    {
+        return $this->hasMany(Widget::class);
+    }
 
-	public function generators()
-	{
-		return $this->hasMany(Generator::class);
-	}
+    public function generators()
+    {
+        return $this->hasMany(Generator::class);
+    }
 
 }

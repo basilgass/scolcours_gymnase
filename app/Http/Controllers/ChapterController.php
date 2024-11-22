@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\BlockResource;
 use App\Http\Resources\ChallengeResource;
-use App\Http\Resources\ChapterMinResource;
 use App\Http\Resources\ChapterResource;
 use App\Http\Resources\ChapterShowResource;
 use App\Http\Resources\PostResource;
@@ -56,7 +55,7 @@ class ChapterController extends Controller
     public function indexMin()
     {
         // Should be admin only
-        return ChapterMinResource::collection(Chapter::all()->sortBy(['theme_id', 'title']));
+        return ChapterResource::collection(Chapter::all()->sortBy(['theme_id', 'title']));
     }
 
     public function store(Theme $theme, Request $request)
@@ -257,7 +256,7 @@ class ChapterController extends Controller
         }
         $chapter->refresh();
 
-        return ChapterMinResource::collection($chapter->relations);
+        return ChapterResource::collection($chapter->relations);
     }
 
     public function theorems(Chapter $chapter)

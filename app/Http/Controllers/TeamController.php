@@ -3,13 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\ChallengeResource;
-use App\Http\Resources\ChapterMinResource;
+use App\Http\Resources\ChapterResource;
 use App\Http\Resources\TeamResource;
 use App\Http\Resources\UserResource;
 use App\Models\Challenge;
 use App\Models\Chapter;
 use App\Models\Team;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -35,13 +36,13 @@ class TeamController extends Controller
 			[
 				'team' => $team,
 				'students' => UserResource::collection($team->users),
-				'chapters' => ChapterMinResource::collection(Chapter::where('active', true)->get()),
+				'chapters' => ChapterResource::collection(Chapter::where('active', true)->get()),
 				'challenges' => ChallengeResource::collection(Challenge::all()),
 			]
 		);
 	}
 
-	public function store(Request $request): \Illuminate\Database\Eloquent\Model|Team
+	public function store(Request $request): Model|Team
 	{
 		$validation = $request->validate([
 			'name' => ['string', 'min:2', 'max:100']
@@ -147,7 +148,7 @@ class TeamController extends Controller
 			[
 				"theme" => $chapter->theme,
 				"team" => TeamResource::make($team),
-				"chapter" => ChapterMinResource::make($chapter),
+				"chapter" => ChapterResource::make($chapter),
 				"stats" => $stats
 			]
 		);

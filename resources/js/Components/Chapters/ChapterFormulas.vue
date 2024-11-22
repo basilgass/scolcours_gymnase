@@ -9,7 +9,6 @@ import FormulaShow from "@/Components/Blocks/FormulaShow.vue"
 import { useStoreEditMode } from "@/stores/useStoreEditMode.ts"
 import { flashInterface } from "@/types"
 import { FormulaInterface } from "@/types/modelInterfaces.ts"
-import { useIntersectionObserver } from "@vueuse/core"
 import axios from "axios"
 import { inject, ref } from "vue"
 
@@ -20,16 +19,10 @@ const props = defineProps({
 
 const formular = ref(null)
 
-useIntersectionObserver(formular, ([{ isIntersecting }]) => {
-	if (isIntersecting && theFormular.value.length === 0) {
-		loadFormular()
-	}
-})
-
 const theFormular = ref([]),
 	theSlug = ref(props.chapterSlug),
 	themeChapters = ref([]),
-	loadingState = ref(true),
+	loadingState = ref(false),
 	theFormularErrors = ref("")
 
 const flash = inject<flashInterface>("flash")
@@ -64,8 +57,9 @@ function updateFormulasOrder() {
 }
 
 function loadFormular() {
-	return axios
-		.get(route("chapters.formulas.index", [theSlug.value]))
+	loadingState.value = true
+
+	axios.get(route("chapters.formulas.index", [theSlug.value]))
 		.then((res) => {
 			theFormular.value = res.data.formular
 			// Add the new chapters to the list
@@ -101,26 +95,36 @@ function destroyFormula(id: number){
 
 <template>
 	<section ref="formular">
-		<div class="px-5 flex justify-between">
-			<h3 class="text-xl uppercase font-extralight mb-2">
+		<div class="flex gap-5 items-baseline">
+			<h3 class="uppercase font-extralight mb-2">
 				Formulaires
 			</h3>
+
+			<button
+				v-theme.btn
+				class="btn-xs"
+				v-if="theFormular.length===0"
+				@click="loadFormular"
+				:disabled="loadingState"
+			>
+				<i class="bi bi-download mr-3" />charger
+			</button>
 		</div>
 
 		<div
 			v-if="themeChapters.length > 0 || editMode.enable"
-			class="flex flex-wrap items-center gap-1 px-5 min-h-[3em]"
+			class="flex flex-wrap items-center gap-1 mb-3 min-h-[3em]"
 		>
 			<button
 				v-for="item of themeChapters"
 				:key="item.slug"
 				v-katex.auto="item.title"
-				v-theme.btn.text="item.theme.id"
+				v-theme.border.text="item.theme.id"
 				:class="{
 					'btn-xs text-xs': item.slug !== theSlug,
 					'font-semibold': item.slug === props.chapterSlug,
 				}"
-				class="transition-all btn"
+				class="transition-all btn border bg-white hover:bg-gray-100"
 				@click="updateFormular(item.slug)"
 			/>
 		</div>
