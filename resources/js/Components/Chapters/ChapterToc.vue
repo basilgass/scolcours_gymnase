@@ -113,10 +113,7 @@ const questionStatus = computed<Record<number, number | null>>(() => {
 </script>
 
 <template>
-	<div
-		v-if="props.posts"
-		class="my-5"
-	>
+	<div v-if="props.posts">
 		<div class="flex justify-between items-baseline">
 			<div class="flex gap-3 items-baseline">
 				<h3 class="uppercase font-extralight mb-2">

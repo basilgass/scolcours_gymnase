@@ -45,7 +45,13 @@ const showTheorem = ref(false)
 			</div>
 		</header>
 
-		<div class="scolcours-container space-y-10">
+		<div class="scolcours-container py-10 space-y-10">
+			<!-- liste des relations -->
+			<chapter-relations
+				:chapter
+				:relations
+			/>
+
 			<!-- table des matières -->
 			<ChapterToc
 				:chapter
@@ -76,12 +82,6 @@ const showTheorem = ref(false)
 					</div>
 				</InertiaLink>
 			</div>
-
-			<!-- liste des relations -->
-			<chapter-relations
-				:chapter
-				:relations
-			/>
 
 			<!-- liste des challenges -->
 			<chapter-challenges

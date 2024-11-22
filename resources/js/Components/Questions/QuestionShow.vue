@@ -78,13 +78,17 @@ async function loadAnswer(show: boolean) {
 	// true: loadAnswer
 	// false: resetAnswer
 	const timer = setInterval(() => {
-		// Load the answer on the keyboard
+		// Load the answer on the keyboard for each answer after 100ms
 
 		if (keyboardComponent.value) {
-			const kbrdComp = keyboardComponent.value.getKeyboard()
-			if (kbrdComp) kbrdComp.loadAnswer(
-				show ? props.question.answer.split("\n")[answerId.value] : null
-			)
+			const kbrdComp:InstanceType<typeof KeyboardBasic> = keyboardComponent.value.getKeyboard()
+			// We have the component.
+			if (kbrdComp) {
+					kbrdComp.loadAnswer(show ? props.question.answer.split("\n")[answerId.value] : '')
+				// kbrdComp.loadAnswer(
+				// 	show ? props.question.answer.split("\n")[answerId.value] : null
+				// )
+			}
 		}
 
 		// Go to the next part.

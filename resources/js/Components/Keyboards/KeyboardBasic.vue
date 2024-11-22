@@ -26,7 +26,7 @@ defineExpose({ reset, loadAnswer })
 
 const onChange = function(event: string | KeyboardInputInterface): void {
 	//value = {tex, raw, input}
-	keyboardInput.value = typeof event === "string" ? { input: event, tex: "", raw: "" } : event
+	keyboardInput.value = typeof event === "string" ? { input: event, tex: event, raw: event } : event
 
 	// Make the validation.
 	// validation = {result: Boolean, message: string}
