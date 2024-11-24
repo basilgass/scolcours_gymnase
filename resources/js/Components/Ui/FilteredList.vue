@@ -8,8 +8,9 @@ interface FilterItem {
 	slug: string,
 	active: boolean,
 	theme: {
+		id: number,
 		slug: string,
-		title: string
+		title: string,
 	}
 }
 
@@ -31,7 +32,7 @@ interface FilteredListProps<T> {
 	listClass?: string;
 	noFilterIfLessThan?: number;
 	noTitle?: boolean;
-	filterByTheme?: boolean | ((item: T) => string);
+	filterByTheme?: boolean | ((item: T) => string | number);
 	focus?: boolean;
 }
 
@@ -62,16 +63,16 @@ const filteredList = computed<(T & { id: number })[]>(() => {
 		const checkString = selectedList.value.trim().toLowerCase()
 
 		// Nothing to do.
-		if (checkString === "" && selectedTheme.value === "") return props.list
+		if (checkString === "" && selectedTheme.value === 0) return props.list
 
 		// filter by theme
-		if (selectedTheme.value !== "") {
+		if (selectedTheme.value !== 0) {
 			arr = arr.filter((item: T) => {
 				if (typeof item === "string") return false
 
 				if (props.filterByTheme === true) {
 					const { theme } = item as unknown as FilterItem // destructure for typescript
-					return theme && theme.slug === selectedTheme.value
+					return theme && theme.id === selectedTheme.value
 				} else if (!(typeof props.filterByTheme === "boolean")) {
 					return props.filterByTheme(item) === selectedTheme.value
 				}
@@ -108,7 +109,7 @@ const filteredList = computed<(T & { id: number })[]>(() => {
 )
 
 const selectedList = ref("")
-const selectedTheme = ref("")
+const selectedTheme = ref<number>(0)
 const showList = ref(props.collapsed !== true)
 
 function itemClicked(item) {
@@ -171,19 +172,19 @@ const emits = defineEmits<{
 			>
 				<div>Filtrer par thèmes:</div>
 				<button
-					:class="selectedTheme === '' ? 'btn-success' : 'opacity-40'"
+					:class="selectedTheme === 0 ? 'btn-success' : 'opacity-40'"
 					class="btn btn-xs"
-					@click="selectedTheme = ''"
+					@click="selectedTheme = 0"
 				>
 					Tous
 				</button>
 				<button
 					v-for="(theme, id) of scolcoursThemes"
 					:key="id"
-					v-theme.bg.text="theme.slug"
-					:class="selectedTheme === theme.slug ? '' : 'opacity-40'"
+					v-theme.bg.text="theme.id"
+					:class="selectedTheme === theme.id ? '' : 'opacity-40'"
 					class="btn btn-xs transition-transform hover:opacity-100 hover:scale-110"
-					@click="selectedTheme = theme.slug"
+					@click="selectedTheme = theme.id"
 				>
 					{{ theme.title }}
 				</button>

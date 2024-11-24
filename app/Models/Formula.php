@@ -5,10 +5,8 @@ namespace App\Models;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Carbon;
 
 /**
@@ -34,19 +32,12 @@ use Illuminate\Support\Carbon;
  */
 class Formula extends Model
 {
-    use HasFactory;
-
 	protected $guarded=[];
 	protected $with = ['blocks'];
 
-    public function theme(): BelongsTo
+	public function chapter(): BelongsTo
     {
-        return $this->belongsTo(Theme::class);
-    }
-
-	public function chapters(): BelongsToMany
-	{
-		return $this->belongsToMany(Chapter::class);
+		return $this->belongsTo(Chapter::class);
 	}
 
 	public function blocks()

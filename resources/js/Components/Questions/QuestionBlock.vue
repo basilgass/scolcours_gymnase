@@ -17,6 +17,7 @@ const userAnswers = computed(()=>questionData.user.answers.value)
  * @$A (no format), block
  * The letter must be in alphabetic order!
  */
+
 // TODO: Rework computed body based on answers : more efficient ?
 const body = computed(() => {
 	// Coherence control:

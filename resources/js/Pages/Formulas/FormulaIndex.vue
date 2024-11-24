@@ -19,6 +19,7 @@ const editMode = useStoreEditMode()
 defineProps<{
 	formulas: FormulaInterface[]
 }>()
+
 function updateFormula(formula: FormulaInterface) {
 	axios.patch(route("blocks.update", formula.block.id), {
 		_method: "patch",
@@ -49,7 +50,7 @@ function searchFormula(item: FormulaInterface, value: string): boolean {
 
 		<filtered-list
 			:class="editMode.enable?'': ''"
-			:filter-by-theme="(item:FormulaInterface)=>item.theme.slug"
+			:filter-by-theme="(item:FormulaInterface)=>item.theme_id"
 			:list="formulas"
 			:list-class="editMode.enable? 'grid grid-cols-1 gap-2': 'columns-xs space-y-4'"
 			:search-function="searchFormula"

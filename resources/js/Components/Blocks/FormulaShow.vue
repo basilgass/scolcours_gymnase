@@ -28,7 +28,7 @@ function deleteFormula(){
 
 <template>
 	<block-show
-		v-theme.border="formula.theme.id"
+		v-theme.border="formula.theme_id"
 		:block="formula.block"
 		class="break-inside-avoid-column rounded-r shadow border-l-4"
 	>
@@ -53,7 +53,7 @@ function deleteFormula(){
 			<div class="flex justify-between items-baseline px-5 pt-2">
 				<h2
 					v-if="formula.block.title"
-					v-theme.text="formula.theme.id"
+					v-theme.text="formula.theme_id"
 					class="text-xl font-extralight"
 				>
 					{{ formula.block.title }}

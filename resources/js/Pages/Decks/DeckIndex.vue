@@ -18,7 +18,6 @@ const props = defineProps({
 	decks: { type: Array as PropType<deckInterface[]>, required: true }
 })
 const editMode = useStoreEditMode()
-
 const theDecks = ref(props.decks)
 
 const newDeckTitle = ref(""),
@@ -45,7 +44,6 @@ function addDeck() {
 		<FilteredList
 			list-class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5"
 			:list="props.decks"
-			filter-by-theme
 		>
 			<template #card="{ item }: { item: deckInterface }">
 				<div :key="item.id">

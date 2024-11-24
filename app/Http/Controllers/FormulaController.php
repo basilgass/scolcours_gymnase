@@ -20,7 +20,7 @@ class FormulaController extends Controller
 
     public function index()
     {
-        $formulas = Formula::all()->sortBy('theme_id');
+        $formulas = Formula::with("chapter")->get();
 
         return Inertia::render('Formulas/FormulaIndex', [
             'formulas' => FormulaResource::collection($formulas)
@@ -35,7 +35,7 @@ class FormulaController extends Controller
     public function getFormulas(string $values)
     {
         $formulas = Formula::whereIn('id', explode(',', $values))
-            ->orderByRaw('FIELD(id,'.$values.')')
+            ->orderByRaw('FIELD(id,' . $values . ')')
             ->get();
         return FormulaResource::collection($formulas);
     }
@@ -91,8 +91,10 @@ class FormulaController extends Controller
     {
         // Get the number of formulas for this chapter
         $n = $chapter->formulas->count();
+
         // Create the post model
         $formula = $chapter->formulas()->create();
+
         $formula->blocks()->create([
             'body'  => 'A modifier...',
             'order' => $n + 1,

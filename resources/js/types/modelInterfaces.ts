@@ -327,7 +327,12 @@ export interface TranslationUnitInterfaceExtended extends TranslationUnitInterfa
 
 export interface FormulaInterface {
 	id: number
-	theme: ThemeAsRelationInterface
+	theme_id: number
+	chapter: {
+		id: number,
+		slug: string,
+		title: string
+	}
 	order: number
 	block: BlockInterface
 }

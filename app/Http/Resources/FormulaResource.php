@@ -3,7 +3,6 @@
 namespace App\Http\Resources;
 
 use App\Models\Formula;
-use App\Models\Theme;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -26,11 +25,14 @@ class FormulaResource extends JsonResource
 	 */
 	public function toArray($request)
 	{
-        $theme = Theme::getTheme($this->theme_id);
-
 		return [
 			'id' => $this->id,
-            'theme' => $theme,
+            'theme_id' => $this->chapter->theme_id,
+            'chapter' => [
+                "id"=> $this->chapter->id,
+                "slug" => $this->chapter->slug,
+                "title" => $this->chapter->title,
+            ],
 			'order' => $this->blocks[0]->order,
 			'block' => BlockResource::make($this->blocks[0])
 		];
