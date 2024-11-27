@@ -7,11 +7,7 @@ interface FilterItem {
 	title: string,
 	slug: string,
 	active: boolean,
-	theme: {
-		id: number,
-		slug: string,
-		title: string,
-	}
+	theme_id?: number
 }
 
 const scolcoursThemes = computed(() => {
@@ -32,7 +28,7 @@ interface FilteredListProps<T> {
 	listClass?: string;
 	noFilterIfLessThan?: number;
 	noTitle?: boolean;
-	filterByTheme?: boolean | ((item: T) => string | number);
+	filterByTheme?: boolean | ((item: T) => number);
 	focus?: boolean;
 }
 
@@ -71,8 +67,9 @@ const filteredList = computed<(T & { id: number })[]>(() => {
 				if (typeof item === "string") return false
 
 				if (props.filterByTheme === true) {
-					const { theme } = item as unknown as FilterItem // destructure for typescript
-					return theme && theme.id === selectedTheme.value
+					// return item.theme_id === selectedTheme.value
+					const filter = item as unknown as FilterItem // destructure for typescript
+					return filter.theme_id === selectedTheme.value
 				} else if (!(typeof props.filterByTheme === "boolean")) {
 					return props.filterByTheme(item) === selectedTheme.value
 				}

@@ -22,7 +22,10 @@ Route::whereIn('theme', $themesList)->group(function () {
 	Route::get('{theme:slug}/{chapter:slug}', [ChapterController::class, 'intro'])
 		->name('themes.chapters.intro');
 
-	Route::get('chapters/{chapter}}/{order}', [ChapterController::class, 'slide'])
+    Route::get("chapters/{chapter:slug}/theorems", [ChapterController::class, 'getTheoremsFromChapter'])
+        ->name('chapters.theorems.index');
+
+    Route::get('chapters/{chapter}}/{order}', [ChapterController::class, 'slide'])
 		->name('chapters.slide');
 
 	Route::get('chapter/{chapter:slug}', function (Chapter $chapter) {

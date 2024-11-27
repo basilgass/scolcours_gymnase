@@ -25,9 +25,9 @@ class PostResource extends JsonResource
 	public function toArray($request)
 	{
 
-        $answeredQuestions = $this->questions->sum(function($question){
-            return $question->userAnswers()['result'];
-        });
+//        $answeredQuestions = $this->questions->sum(function($question){
+//            return $question->userAnswers()['result'];
+//        });
 
 		return [
             'id' => $this->id,
@@ -38,8 +38,8 @@ class PostResource extends JsonResource
             'active' => $this->active,
             'updated_at' => $this->updated_at,
             'questionsInfo' => [
-                'count' => $this->questions->count(),
-                'answered' => $answeredQuestions
+                'count' => $this->questions_count,
+                'answered' => $this->answered_questions_count??0
             ],
 		];
 	}

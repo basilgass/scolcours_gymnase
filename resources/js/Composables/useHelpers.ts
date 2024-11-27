@@ -1,3 +1,4 @@
+import { usePage } from "@inertiajs/vue3"
 import { Ref, unref } from "vue"
 
 /**
@@ -10,7 +11,7 @@ export function useMenuScrollToClass(className: string) {
 	el.scrollIntoView({
 		block: "start",
 		behavior: "smooth",
-		inline: "start",
+		inline: "start"
 	})
 }
 
@@ -28,7 +29,7 @@ export function useMenuScrollTo(id?: string) {
 	el.scrollIntoView({
 		block: "start",
 		behavior: "smooth",
-		inline: "start",
+		inline: "start"
 	})
 }
 
@@ -60,7 +61,7 @@ export function useWrongAnswerAnimation(btn: HTMLElement) {
  * @param mabyeRefValues
  * @returns {string|null} - The formatted body text or null if body is null.
  */
-export function useFormattedBody(body: string|Ref<string>, mabyeRefValues: Ref<Record<string, string>>): string {
+export function useFormattedBody(body: string | Ref<string>, mabyeRefValues: Ref<Record<string, string>>): string {
 	// No body : no need to continue
 	if (body === null) return null
 
@@ -94,5 +95,20 @@ export const useKatexMacros: Record<string, string> = {
 	"\\IN": "\\mathbb{N}",
 	"\\ds": "\\displaystyle",
 	"\\vect": "\\overrightarrow",
-	"\\dx": "\\hspace{0.5em}\\text{d}x",
+	"\\dx": "\\hspace{0.5em}\\text{d}x"
+}
+
+
+export function useTheme(id: number) {
+	const theme = usePage().props.themes.find(theme => +theme.id === +id)
+
+	return theme ?? {
+		id: null,
+		slug: null,
+		title: null,
+		order: null,
+		color: null,
+		icon: null,
+		enabled: null
+	}
 }

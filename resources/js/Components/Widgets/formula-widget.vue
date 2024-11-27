@@ -42,7 +42,7 @@ onMounted(() => {
 				<div class="flex justify-between items-baseline px-5 pt-2">
 					<h2
 						v-if="formula.block.title"
-						v-theme.text="formula.theme.id"
+						v-theme.text="formula.theme_id"
 						class="text-xl font-extralight"
 					>
 						{{ formula.block.title }}

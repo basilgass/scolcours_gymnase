@@ -6,9 +6,9 @@
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import FilteredList from "@/Components/Ui/FilteredList.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
+import DeckGroup from "@/Pages/Decks/DeckGroup.vue"
 import { useStoreEditMode } from "@/stores/useStoreEditMode.ts"
 import type { deckInterface } from "@/types/modelInterfaces"
-import { router } from "@inertiajs/vue3"
 import axios from "axios"
 import { PropType, ref } from "vue"
 
@@ -44,56 +44,13 @@ function addDeck() {
 		<FilteredList
 			list-class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5"
 			:list="props.decks"
+			filter-by-theme
 		>
 			<template #card="{ item }: { item: deckInterface }">
-				<div :key="item.id">
-					<div
-						v-theme.bg.text.admin
-						v-admin="editMode.enable"
-						class="flex justify-between p-2 items-middle"
-					>
-						<div class="font-code text-xs">
-							{{ item.slug }}
-						</div>
-						<InertiaLink
-							:href="route('decks.edit', [item.slug])"
-							class="cursor-pointer"
-						>
-							éditer <i class="bi bi-pencil" />
-						</InertiaLink>
-					</div>
-					<div class="relative aspect-video group">
-						<div
-							v-theme.bg.text="item.theme.id === null ? 'bg-white text-black' : item.theme.id"
-							class="absolute inset-0
-							translate-x-2 translate-y-2
-							opacity-30
-							border rounded z-0"
-						/>
-						<div
-							v-theme.bg.text="item.theme.id === null ? 'bg-white text-black' : item.theme.id"
-							class="absolute inset-0
-							translate-x-1 translate-y-1
-							group-hover:translate-x-0 group-hover:translate-y-0
-							transition-all duration-600 ease-in-out
-							opacity-65
-							border rounded z-0"
-						/>
-						<div
-							@click="router.visit(route('decks.show', item.slug))"
-							v-theme.bg.text="item.theme.id === null ? 'bg-white text-black' : item.theme.id"
-							class="absolute inset-0 z-10
-							border rounded px-3 py-5
-							group-hover:-translate-x-2 group-hover:-translate-y-2
-							transition-all duration-600 ease-in-out
-							grid place-items-center cursor-pointer"
-						>
-							<h3 class="text-xl">
-								{{ item.title }}
-							</h3>
-						</div>
-					</div>
-				</div>
+				<deck-group
+					:key="item.id"
+					:deck="item"
+				/>
 			</template>
 		</FilteredList>
 
@@ -124,4 +81,3 @@ function addDeck() {
 	</section>
 </template>
 
-<style scoped></style>

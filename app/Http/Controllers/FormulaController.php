@@ -15,12 +15,22 @@ class FormulaController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth')->except(['chapterFormular', 'show']);
+        $this->middleware('auth')->except(['getFormulasFromChapter', 'show']);
     }
 
     public function index()
     {
         $formulas = Formula::with("chapter")->get();
+
+        return Inertia::render('Formulas/FormulaIndex', [
+            'formulas' => FormulaResource::collection($formulas)
+        ]);
+    }
+
+    public function ChaptersFormulas(Chapter $chapter)
+    {
+        $formulas = Formula::with("chapter")
+            ->where('chapter_id', '=', $chapter->id)->get();
 
         return Inertia::render('Formulas/FormulaIndex', [
             'formulas' => FormulaResource::collection($formulas)
@@ -45,7 +55,7 @@ class FormulaController extends Controller
      *
      * @return Formula[]|Collection
      */
-    public function chapterFormular(Chapter $chapter)
+    public function getFormulasFromChapter(Chapter $chapter)
     {
         // TODO : what is the use of chapters ?
         return [

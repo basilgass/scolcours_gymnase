@@ -55,12 +55,15 @@ const toggleRelation = function(id) {
 }
 </script>
 <template>
-	<div v-if="chapterRelations.length > 0 || editMode.enable">
+	<div>
 		<h3 class="uppercase font-extralight mb-2">
 			prérequis
 		</h3>
 
-		<div class="flex flex-wrap gap-3">
+		<div
+			v-if="chapterRelations.length > 0"
+			class="flex flex-wrap gap-3"
+		>
 			<InertiaLink
 				v-for="ch of chapterRelations"
 				:key="`related-${ch.slug}`"
@@ -69,6 +72,13 @@ const toggleRelation = function(id) {
 				:href="route('chapters.show', [ch.slug])"
 				as="button"
 				class="btn-xs"
+			/>
+		</div>
+		<div v-else>
+			Il n'y a pas de prérequis pour le chapitre
+			<span
+				v-theme.text
+				v-katex.auto="chapter.title"
 			/>
 		</div>
 

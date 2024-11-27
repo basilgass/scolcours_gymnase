@@ -51,7 +51,7 @@ const theTheoremsFiltered = computed(() => {
 		.slice(0, 5)
 })
 
-const groups = {
+const groups:Record<string, 'theorem'|'property'|'definition'> = {
 	"théorèmes": "theorem",
 	"propriétés": "property",
 	"définitions": "definition"
@@ -72,8 +72,8 @@ function toggleGroup(name: "theorem" | "property" | "definition") {
 		</div>
 
 		<div v-else-if="theTheorems.length > 0">
-			<div class="my-5">
-				<h3 class="text-xl uppercase font-extralight mb-2">
+			<div class="mb-2">
+				<h3 class="uppercase font-extralight mb-2">
 					Théorie
 				</h3>
 				<div class="flex flex-wrap text-xs gap-1">

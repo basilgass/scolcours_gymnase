@@ -25,13 +25,9 @@ class DeckResource extends JsonResource
         // Get theme from cache
         $theme = isset($this->chapter) ? Theme::getTheme($this->chapter->theme_id) : null;
 
-        // TODO: subgroup of theme is not necessary, as the theme object is always accessible in frontend ???
         return [
             ...parent::toArray($request),
-            "theme"     => [
-                'id' => $theme?->id,
-                'slug' => $theme?->slug,
-            ],
+            "theme_id"  => $theme?->id,
             'chapter'   => [
                 'id'   => $this->chapter_id,
                 'slug' => $this->chapter?->slug

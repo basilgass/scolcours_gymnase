@@ -1,17 +1,15 @@
 <?php
 
 // Formulas routes
-use App\Http\Controllers\ChapterController;
 use App\Http\Controllers\FormulaController;
 
 // Public routes
-Route::get("chapters/{chapter:slug}/formulas", [FormulaController::class, 'chapterFormular'])
+Route::get("chapters/{chapter:slug}/formulas", [FormulaController::class, 'getFormulasFromChapter'])
 	->name('chapters.formulas.index');
-Route::get("chapters/{chapter:slug}/theorems", [ChapterController::class, 'theorems'])
-	->name('chapters.theorems.index');
 
 Route::get("formulaire", [FormulaController::class, 'index'])
 	->name('formulas.index');
+
 Route::get('formulas/{formula}', [FormulaController::class, 'getOne'])
     ->name('formulas.one');
 Route::get('formulas/{formula}', [FormulaController::class, 'getFormulas'])

@@ -27,13 +27,14 @@ function storeChallenge() {
 </script>
 
 <template>
-	<div v-if="challenges.length>0">
+	<div>
 		<h3 class="uppercase font-extralight mb-2">
 			challenges
 		</h3>
 
 		<div
-			class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-1 lg:gap-3"
+			v-if="challenges.length>0"
+			class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 lg:gap-8"
 		>
 			<InertiaLink
 				v-for="challenge in challenges"
@@ -47,57 +48,57 @@ function storeChallenge() {
 				])
 				"
 				as="button"
-				class="min-h-[80px] w-full h-full"
+				class="min-h-[4rem] w-full h-full"
 				type="button"
 			/>
+		</div>
 
-			<div
-				v-show="editMode.enable"
-				v-admin
-				class="min-h-[100px] grid place-items-center"
+		<div
+			v-show="editMode.enable"
+			v-admin
+			class="min-h-[100px] grid place-items-center"
+		>
+			<button
+				class="btn-new"
+				@click="show = true"
 			>
-				<button
-					class="btn-new"
-					@click="show = true"
-				>
-					Nouveau challenge
-				</button>
-				<dialog-modal
-					v-model="show"
-					class="max-w-[30em]"
-				>
-					<template #header>
-						<div
-							class="bg-white flex justify-between items-baseline border-b border-gray-200 px-5 py-3 mb-5"
-						>
-							<h1>
-								<span class="text-xl md:text-2xl">créer un challenge</span>
-							</h1>
-						</div>
-					</template>
-
-					<template #footer>
-						<div class="bg-white flex justify-end items-baseline border-t border-gray-200 px-5 py-3 mt-5">
-							<button
-								class="btn btn-primary"
-								@click="storeChallenge"
-							>
-								Créer un nouveau challenge
-							</button>
-						</div>
-					</template>
-					<div class="px-5">
-						<form-maker
-							v-model="form.title"
-							:focus="true"
-							label="Nouveau challenge"
-							name="newChallenge"
-							@cancel="show = false"
-							@enter="storeChallenge"
-						/>
+				Nouveau challenge
+			</button>
+			<dialog-modal
+				v-model="show"
+				class="max-w-[30em]"
+			>
+				<template #header>
+					<div
+						class="bg-white flex justify-between items-baseline border-b border-gray-200 px-5 py-3 mb-5"
+					>
+						<h1>
+							<span class="text-xl md:text-2xl">créer un challenge</span>
+						</h1>
 					</div>
-				</dialog-modal>
-			</div>
+				</template>
+
+				<template #footer>
+					<div class="bg-white flex justify-end items-baseline border-t border-gray-200 px-5 py-3 mt-5">
+						<button
+							class="btn btn-primary"
+							@click="storeChallenge"
+						>
+							Créer un nouveau challenge
+						</button>
+					</div>
+				</template>
+				<div class="px-5">
+					<form-maker
+						v-model="form.title"
+						:focus="true"
+						label="Nouveau challenge"
+						name="newChallenge"
+						@cancel="show = false"
+						@enter="storeChallenge"
+					/>
+				</div>
+			</dialog-modal>
 		</div>
 	</div>
 </template>

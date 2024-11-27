@@ -33,21 +33,32 @@ function deleteFormula(){
 		class="break-inside-avoid-column rounded-r shadow border-l-4"
 	>
 		<template #adminLeft>
-			<div class="text-xs font-code">
-				F: {{ formula.id }} / B: {{ formula.block.id }}
+			<div class="text-xs flex gap-3 items-baseline">
+				<i class="bi bi-arrows-move draggable-handle" />
+				<div class="font-code">
+					F: {{ formula.id }} / B: {{ formula.block.id }}
+				</div>
 			</div>
 		</template>
 		<template #adminRight>
-			<confirm-button
-				xs
-				btn-class=""
-				@confirm="deleteFormula"
-			>
-				<i class="bi bi-trash" />
-				<template #confirm>
-					<i class="bi bi-hand-thumbs-up" />
-				</template>
-			</confirm-button>
+			<div class="flex gap-3 items-baseline">
+				<InertiaLink
+					class="text-xs"
+					:href="route('blocks.edit', [formula.block.id])"
+				>
+					<i class="bi bi-pencil" />
+				</InertiaLink>
+				<confirm-button
+					xs
+					btn-class=""
+					@confirm="deleteFormula"
+				>
+					<i class="bi bi-trash" />
+					<template #confirm>
+						<i class="bi bi-hand-thumbs-up" />
+					</template>
+				</confirm-button>
+			</div>
 		</template>
 		<template #header>
 			<div class="flex justify-between items-baseline px-5 pt-2">

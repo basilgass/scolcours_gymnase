@@ -10,7 +10,7 @@ import { useStoreEditMode } from "@/stores/useStoreEditMode.ts"
 import { flashInterface } from "@/types"
 import { FormulaInterface } from "@/types/modelInterfaces.ts"
 import axios from "axios"
-import { inject, ref } from "vue"
+import { inject, onMounted, ref } from "vue"
 
 const props = defineProps({
 	chapterSlug: { type: String, required: true },
@@ -91,6 +91,10 @@ function updateFormular(slug: string) {
 function destroyFormula(id: number){
 	theFormular.value = theFormular.value.filter(x=>x.id!==id)
 }
+
+onMounted(()=>{
+	loadFormular()
+})
 </script>
 
 <template>
@@ -99,16 +103,6 @@ function destroyFormula(id: number){
 			<h3 class="uppercase font-extralight mb-2">
 				Formulaires
 			</h3>
-
-			<button
-				v-theme.btn
-				class="btn-xs"
-				v-if="theFormular.length===0"
-				@click="loadFormular"
-				:disabled="loadingState"
-			>
-				<i class="bi bi-download mr-3" />charger
-			</button>
 		</div>
 
 		<div

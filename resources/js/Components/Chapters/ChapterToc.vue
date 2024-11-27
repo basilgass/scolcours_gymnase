@@ -14,6 +14,7 @@ const props = defineProps<{
 	chapter: ChapterShowInterface,      // id, slug, posts
 	posts: PostInterface[],
 	active?: number                 // Highlight the currently selected post.
+	vertical?: boolean
 }>()
 
 const flash = inject<flashInterface>("flash")
@@ -116,9 +117,10 @@ const questionStatus = computed<Record<number, number | null>>(() => {
 	<div v-if="props.posts">
 		<div class="flex justify-between items-baseline">
 			<div class="flex gap-3 items-baseline">
-				<h3 class="uppercase font-extralight mb-2">
+				<h3 class="uppercase font-extralight mb-5">
 					table des matières
 				</h3>
+
 				<button
 					:class="postsFilterCurrent === 'theory'
 						? `text-scolcours-${$page.props.theme.slug}`
@@ -176,7 +178,8 @@ const questionStatus = computed<Record<number, number | null>>(() => {
 		<draggable
 			v-if="posts.length"
 			v-model="posts"
-			class="columns-1 md:columns-2 lg:columns-3 column-toc gap-8 space-y-4"
+			class="columns-1 column-toc gap-8 space-y-4"
+			:class="vertical?'':'md:columns-2 lg:columns-3'"
 			handle=".draggable-handle"
 			item-key="id"
 			v-bind="{
@@ -205,7 +208,7 @@ const questionStatus = computed<Record<number, number | null>>(() => {
 							element.order,
 						])
 						"
-						class="text-left hover:pl-5 transition-all duration flex gap-1"
+						class="text-left hover:pl-1 transition-all duration flex gap-1"
 					>
 						<i
 							:class="{
@@ -223,7 +226,7 @@ const questionStatus = computed<Record<number, number | null>>(() => {
 								'invisible':
 									questionStatus[element.id] === null,
 							}"
-							class="mx-2"
+							class="mx-1"
 						/>
 
 						<span v-katex.auto="element.title" />

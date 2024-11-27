@@ -144,7 +144,7 @@ export interface User {
 }
 
 export interface ThemeInterface {
-	id: string
+	id: number
 	slug: string
 	title: string
 	order: number
@@ -154,7 +154,7 @@ export interface ThemeInterface {
 }
 
 export interface ThemeAsRelationInterface {
-	id: string
+	id: number
 	slug: string
 	title: string
 }
@@ -243,10 +243,7 @@ export interface deckInterface {
 		id: number;
 		slug: number;
 	},
-	theme: {
-		id: number;
-		slug: number;
-	},
+	theme_id: number,
 	flipcards: flipcardsInterface[]
 }
 

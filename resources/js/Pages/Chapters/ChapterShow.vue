@@ -22,7 +22,9 @@ defineProps<{
 	relations: ChapterInterface[]
 }>()
 
+const currentTab = ref<"requires" | "formulas" | "challenges" | "theorems" | undefined>(undefined)
 const showTheorem = ref(false)
+const showFormular = ref(false)
 
 </script>
 <template>
@@ -45,15 +47,8 @@ const showTheorem = ref(false)
 			</div>
 		</header>
 
-		<div class="scolcours-container py-10 space-y-10">
-			<!-- liste des relations -->
-			<chapter-relations
-				:chapter
-				:relations
-			/>
-
-			<!-- table des matières -->
-			<ChapterToc
+		<main class="scolcours-container py-10 space-y-12">
+			<chapter-toc
 				:chapter
 				:posts
 			/>
@@ -71,7 +66,7 @@ const showTheorem = ref(false)
 						1,
 					])"
 					as="button"
-					class="min-h-[80px] mx-auto w-full md:w-auto md:px-20"
+					class="min-h-[80px] mx-auto w-full md:w-auto md:px-20 rounded-xl shadow"
 				>
 					<div class="flex flex-col gap-3 py-3 text-xs font-ultrathin">
 						<p>Commencer l'aventure avec</p>
@@ -83,32 +78,81 @@ const showTheorem = ref(false)
 				</InertiaLink>
 			</div>
 
+			<!--Liste d'icône design pour afficher les éléments -->
+			<div class="w-full flex justify-center gap-4 mb-5">
+				<div
+					v-theme.bg.text
+					class="aspect-square w-[120px] grid place-items-center rounded-2xl
+						hover:shadow transition-all cursor-pointer"
+					@click="currentTab = 'requires'"
+				>
+					<div class="text-center space-y-2">
+						<i class="bi bi-card-checklist text-3xl" />
+						<p>prérequis</p>
+					</div>
+				</div>
+				<div
+					v-theme.bg.text
+					class="aspect-square w-[120px] grid place-items-center rounded-2xl
+						hover:shadow transition-all cursor-pointer"
+					@click="showFormular = true; currentTab = 'formulas'"
+				>
+					<div class="text-center space-y-2">
+						<i class="bi bi-table text-3xl" />
+						<p>formulaire</p>
+					</div>
+				</div>
+				<div
+					v-theme.bg.text
+					class="aspect-square w-[120px] grid place-items-center rounded-2xl
+						hover:shadow transition-all cursor-pointer"
+					@click="currentTab = 'challenges'"
+				>
+					<div class="text-center space-y-2">
+						<i class="bi bi-patch-question text-3xl" />
+						<p>challenges</p>
+					</div>
+				</div>
+				<div
+					v-theme.bg.text
+					class="aspect-square w-[120px] grid place-items-center rounded-2xl
+						hover:shadow transition-all cursor-pointer"
+					@click="showTheorem = true; currentTab = 'theorems'"
+				>
+					<div class="text-center space-y-2">
+						<i class="bi bi-journal-bookmark text-3xl" />
+						<p>théorie</p>
+					</div>
+				</div>
+			</div>
+
+			<!-- liste des prérequis -->
+			<chapter-relations
+				v-show="currentTab==='requires'"
+				:chapter
+				:relations
+			/>
+
+			<!-- liste des formules -->
+			<chapter-formulas
+				v-if="showFormular"
+				v-show="currentTab==='formulas'"
+				:chapter-slug="chapter.slug"
+			/>
+
 			<!-- liste des challenges -->
 			<chapter-challenges
+				v-show="currentTab==='challenges'"
 				:challenges
 				:chapter
 			/>
 
-			<!-- The formulas -->
-			<chapter-formulas
+			<!-- liste des théorèmes -->
+			<chapter-theorems
+				v-if="showTheorem"
+				v-show="currentTab==='theorems'"
 				:chapter-slug="chapter.slug"
-				responsive
 			/>
-
-			<div>
-				<button
-					v-if="!showTheorem"
-					class="uppercase font-extralight"
-					@click="showTheorem = true"
-				>
-					Afficher toute la théorie
-				</button>
-				<chapter-theorems
-					v-else
-					:chapter-slug="chapter.slug"
-					class="mt-20"
-				/>
-			</div>
-		</div>
+		</main>
 	</section>
 </template>

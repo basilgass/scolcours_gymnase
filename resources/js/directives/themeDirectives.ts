@@ -2,6 +2,7 @@ import { usePage } from "@inertiajs/vue3"
 
 function themeUpdate(el, binding) {
 	const themes = usePage().props.themes.map((theme) => theme.slug)
+
 	const keys = ["btn", "bg", "text", "border", "active", "scrollbar"]
 
 	let chapter: string

@@ -97,32 +97,34 @@ class ChapterController extends Controller
     {
 
         $chapter->load([
-            'posts'=>function($query){
-                $query->with('questions')->where('active', true);
+            'blocks',
+            'posts' => function ($query) {
+                $query->withCounts()->where('active', true);
             },
             'challenges',
             'relations'
         ]);
 
-
         return Inertia::render('Chapters/ChapterShow', [
             // Used for the page layout
-            "theme"   => ThemeResource::make($theme),
+            "theme"      => ThemeResource::make($theme),
             // Get the chapter (for next / precvious / ...)
-            "chapter" => fn() => ChapterResource::make($chapter),
+            "chapter"    => fn() => ChapterShowResource::make($chapter),
             // Get the posts.
-            "posts" => fn() => PostResource::collection($chapter->posts),
+            "posts"      => fn() => PostResource::collection($chapter->posts),
             // Get the challenges.
             "challenges" => fn() => ChallengeResource::collection($chapter->challenges),
             // Get the relations.
-            "relations" => fn() => ChapterResource::collection($chapter->relations),
+            "relations"  => fn() => ChapterResource::collection($chapter->relations),
         ]);
     }
 
     public function slide(Theme $theme, Chapter $chapter, int $order, string $type = null, int $id = null)
     {
         $chapter->load([
-            'posts',
+            'posts'=>function($query){
+                $query->withCounts()->where('active', true);
+            },
             'posts.blocks',
             'posts.questions',
             'posts.questions.blocks',
@@ -151,7 +153,7 @@ class ChapterController extends Controller
             "theme"   => ThemeResource::make($theme),
             // Get the chapter (for next / previous / ...)
             "chapter" => fn() => ChapterResource::make($chapter),
-            "posts" => fn() => PostResource::collection($chapter->posts),
+            "posts"   => fn() => PostResource::collection($chapter->posts),
             // The post information
             "post"    => PostShowResource::make($post),
             // Block for a scroll to
@@ -259,7 +261,7 @@ class ChapterController extends Controller
         return ChapterResource::collection($chapter->relations);
     }
 
-    public function theorems(Chapter $chapter)
+    public function getTheoremsFromChapter(Chapter $chapter)
     {
         // Get all [theorem / propreties and definition] blocks from all post in the chapter.
         $blocks = $chapter->posts->map(function ($post) {

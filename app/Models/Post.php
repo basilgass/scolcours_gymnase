@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\URL;
 
 /**
@@ -54,6 +55,16 @@ class Post extends Model
 {
 	protected $guarded = [];
 	protected $with = [];
+
+    public function scopeWithCounts($query): void
+    {
+        $query->withCount('questions')
+            ->withCount(['questions as answered_questions_count' => function ($query) {
+                $query->whereHas('users', function ($query) {
+                    $query->where('question_user.user_id', Auth::id());
+                });
+            }]);
+    }
 
 	public function chapter()
 	{
