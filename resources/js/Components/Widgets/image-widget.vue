@@ -6,6 +6,7 @@ const props = defineProps<{
 	illustration: WidgetInterface
 }>()
 
+
 const imageSrc = computed(()=>{
 	const code = props.illustration.code
 	if (code.startsWith('data:image/')) {

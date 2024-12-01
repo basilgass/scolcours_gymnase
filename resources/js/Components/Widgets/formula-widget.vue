@@ -1,4 +1,7 @@
-<script lang="ts" setup>
+<script
+	lang="ts"
+	setup
+>
 import BlockShow from "@/Components/Blocks/BlockShow.vue"
 import { FormulaInterface, WidgetInterface } from "@/types/modelInterfaces"
 import axios from "axios"
@@ -11,7 +14,15 @@ const props = defineProps<{
 const formulas = ref<FormulaInterface[]>([])
 
 onMounted(() => {
-	const ids = props.illustration.code.split('\n').join(',')
+	// props.illustrations.code is like:
+	// <id1>[,some parameters]
+	// <id2>[,some parameters]
+	// <id3>[,some parameters]
+	const ids = props.illustration.code
+		.split('\n')
+		.map(line => line.split(',')[0])
+		.join(',')
+
 	axios.get(route("formulas.multiple", [ids]))
 		.then(res => {
 			// Sort the value to match the id's order
@@ -22,12 +33,10 @@ onMounted(() => {
 </script>
 
 <template>
-	<div
-		class="grid
+	<div class="grid
 	grid-cols-1 md:grid-cols-2 lg:grid-cols-3
 	gap-5
-	place-items-center"
-	>
+	place-items-center">
 		<block-show
 			v-for="formula in formulas"
 			:key="formula.id"
@@ -59,6 +68,4 @@ onMounted(() => {
 	</div>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

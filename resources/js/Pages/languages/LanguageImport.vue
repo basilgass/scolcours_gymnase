@@ -24,7 +24,7 @@ const form = useForm({
 
 const traduction = ref("")
 const swapFrForeign = ref(false)
-const quizletMode = ref(true)
+const quizletMode = ref(false)
 const traductions = computed(() => {
 	if(quizletMode.value){
 		const formatedTraduction = []
@@ -162,6 +162,13 @@ function importerLesTraductions() {
 					v-model="swapFrForeign"
 					:label="`inverser français et ${form.language}`"
 					name="swapLanguage"
+					type="switch"
+				/>
+
+				<form-maker
+					v-model="quizletMode"
+					:label="`mode quizlet`"
+					name="quizletMode"
 					type="switch"
 				/>
 			</div>
