@@ -1,10 +1,12 @@
 <script setup lang="ts">
 
 import { type TABLE_OF_SIGNS_VALUES } from "pimath"
+// TODO: extremeType should be in pimath, with TABLE_OF_SIGNS_VALUES
+type TABLE_OF_SIGNS_VALUES_WITH_EXTREMES = TABLE_OF_SIGNS_VALUES | 'm' | 'M' | '_'
 
 defineProps<{
 	label: string,
-	signs: TABLE_OF_SIGNS_VALUES[],
+	signs: TABLE_OF_SIGNS_VALUES_WITH_EXTREMES[],
 	roots: string[]
 }>()
 </script>

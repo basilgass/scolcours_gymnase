@@ -2,14 +2,17 @@
 
 import { type TABLE_OF_SIGNS_VALUES } from "pimath"
 
+// TODO: extremeType should be in pimath, with TABLE_OF_SIGNS_VALUES
+type TABLE_OF_SIGNS_VALUES_WITH_EXTREMES = TABLE_OF_SIGNS_VALUES | 'm' | 'M' | '_'
 defineProps<{
 	label: string,
-	signs: TABLE_OF_SIGNS_VALUES[],
+	signs: TABLE_OF_SIGNS_VALUES_WITH_EXTREMES[],
 	roots: string[],
 	mode: 'grows'|'curves'
 }>()
 
-function extremeLabel(value: TABLE_OF_SIGNS_VALUES): string{
+
+function extremeLabel(value: TABLE_OF_SIGNS_VALUES_WITH_EXTREMES): string{
 	switch (value){
 		case "m": return 'min'
 		case 'M': return 'max'

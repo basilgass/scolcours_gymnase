@@ -8,15 +8,18 @@ import TexCode from "@/Components/Ui/TexCode.vue"
 import { type TABLE_OF_SIGNS_VALUES } from "pimath"
 import { computed } from "vue"
 
+// TODO: extremeType should be in pimath, with TABLE_OF_SIGNS_VALUES
+type TABLE_OF_SIGNS_VALUES_WITH_EXTREMES = TABLE_OF_SIGNS_VALUES | "m" | "M" | "_"
+
 interface TableOfSignsType {
 	roots: string[],
-	signs: TABLE_OF_SIGNS_VALUES[],
+	signs: TABLE_OF_SIGNS_VALUES_WITH_EXTREMES[],
 	mode?: "signs" | "grows" | "curves"
 	label?: string,
 	previousLabel?: string,
-	factors?: { label: string, signs: TABLE_OF_SIGNS_VALUES[] }[],
+	factors?: { label: string, signs: TABLE_OF_SIGNS_VALUES_WITH_EXTREMES[] }[],
 	extremes?: string[],
-	resultLine?: TABLE_OF_SIGNS_VALUES[],
+	resultLine?: TABLE_OF_SIGNS_VALUES_WITH_EXTREMES[],
 	texOutput?: boolean
 }
 
