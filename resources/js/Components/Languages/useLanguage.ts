@@ -5,11 +5,12 @@ import { Ref } from "vue"
 
 export function useLanguage(units:Ref<TranslationUnitInterfaceExtended[]>) {
 
-
 	const selectedWords = function(random?: boolean): TranslationWord[] {
 		// All words available
 		let words = []
-		for (const values of units.value.map(x => x.words)) {
+		const selectedUnits = units.value.filter(x => x.selected)
+
+		for (const values of selectedUnits.map(x => x.words)) {
 			words = words.concat(values)
 		}
 
