@@ -21,23 +21,9 @@ export interface ChapterInterface {
 	updated_at: string;
 	modified: string;
 }
+
 export interface ChapterShowInterface extends ChapterInterface{
 	block: BlockInterface;
-	// posts: PostShowInterface[];
-	// challenges: {
-	// 	id: number
-	// 	slug: string
-	// 	title: string
-	// }[];
-	// relations: {
-	// 	id: number
-	// 	slug: string
-	// 	title: string
-	// 	theme: {
-	// 		id: number
-	// 		slug: string
-	// 	};
-	// }[];
 }
 
 export interface BlockMinInterface {

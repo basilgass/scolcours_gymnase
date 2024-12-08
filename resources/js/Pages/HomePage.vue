@@ -7,9 +7,11 @@ import { ChapterShowInterface } from "@/types/modelInterfaces.ts"
 
 defineOptions({ layout: LayoutFullpage })
 
-defineProps<{
+const props = defineProps<{
 	newChapters: ChapterShowInterface[]
 }>()
+
+console.log(props.newChapters)
 
 </script>
 
