@@ -117,7 +117,7 @@ class BlockController extends Controller
 	public function show(int $id)
 	{
         // find the post from the current block and redirect to this post.
-
+		$block = Block::find($id);
 
 		// Redirect to the post / show item
 		$post = $block->blockable;

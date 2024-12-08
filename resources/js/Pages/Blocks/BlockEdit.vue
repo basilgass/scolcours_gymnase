@@ -19,7 +19,6 @@ const props = defineProps<{
 }>()
 
 const displayStyle = ref<"side-by-side" | "editor" | "preview">("side-by-side")
-
 const flash = inject<flashInterface>("flash")
 const tab = ref<"markdown" | "script" | "data">("markdown")
 
@@ -40,6 +39,7 @@ const wasEdited = computed(() => {
 
 function visitBlock() {
 	// Check if the block has been modified
+	console.log(route("blocks.show", [theBlock.value.id]))
 	router.visit(route("blocks.show", [theBlock.value.id]))
 }
 
