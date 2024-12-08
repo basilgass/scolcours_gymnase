@@ -12,7 +12,7 @@ class WidgetResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
-        $theme = Theme::getTheme($this->theme_id);
+		$theme = isset($this->theme_id) ? Theme::getTheme($this->theme_id) : null;
 
         return [
             'id'          => $this->id,

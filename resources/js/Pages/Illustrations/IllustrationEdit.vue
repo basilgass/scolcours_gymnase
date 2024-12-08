@@ -211,7 +211,7 @@ onMounted(() => {
 						<button
 							v-for="(data, comp) of chapterComponents"
 							:key="comp"
-							v-theme.btn="data.theme.id"
+							v-theme.btn="data.theme?.id ?? 0"
 							:class="theIllustration.widget.id === data.id ? 'font-semibold border-2 shadow scale-110' : ''"
 							class="btn btn-xs transition-all"
 							@click="toggleComponent(data)"
