@@ -18,6 +18,9 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [ScolcoursController::class, 'index'])
 	->name('home');
 
+Route::get('/search/{terms}', [ScolcoursController::class, 'search'])
+	->name('scolcours.search');
+
 // Profile de l'utilisateur
 Route::get('/dashboard', [ScolcoursController::class, 'dashboard'])
 	->middleware(['auth', 'verified'])

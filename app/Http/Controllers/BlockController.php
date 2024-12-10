@@ -266,6 +266,9 @@ class BlockController extends Controller
 		$block->save();
 		$block->update();
 
+		// change the updated_at value of the blockable
+		$block->blockable->touch();
+
 		// Return the updated block
 		return BlockResource::make($block);
 	}

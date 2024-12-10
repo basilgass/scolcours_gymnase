@@ -22,7 +22,7 @@ Route::whereIn('language', $languages)->group(function () {
 
 // Show a game
     Route::get("{language:slug}/{game}", [TranslationController::class, "show"])
-        ->where('game', 'memory|guess|list|type')
+        ->where('game', 'memory|guess|list|type|deck')
         ->name('translations.show');
 });
 

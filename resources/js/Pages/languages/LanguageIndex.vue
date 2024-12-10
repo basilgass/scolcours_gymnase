@@ -15,7 +15,8 @@ const games = {
 	memory: 'memory',
 	guess: 'suggestions',
 	type: 'typographie',
-	list: "liste de mots"
+	list: "liste de mots",
+	deck: "deck de cartes",
 }
 </script>
 <template>

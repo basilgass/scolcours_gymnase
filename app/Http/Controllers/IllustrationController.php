@@ -127,11 +127,16 @@ class IllustrationController extends Controller
 			'code' => ['string'],
 			'parameters' => ['string', 'nullable'],
 			'widget_id' => ['exists:App\Models\Widget,id'],
-			//			'value'=>['string'],
-			//			'type'=>['string'],
 		]);
 
 		$illustration->update($validation);
+
+		// change the updated_at of the block
+		$illustration->block->touch();
+
+		// change the updated_at of the blockable
+		$illustration->block->blockable->touch();
+
 
 		return $illustration;
 	}

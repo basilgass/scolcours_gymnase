@@ -14,6 +14,7 @@ import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 import type { BookInterface, TranslationUnitInterfaceExtended, TranslationWord } from "@/types/modelInterfaces"
 import { computed, ComputedRef, provide, Ref, ref } from "vue"
+import LanguageDecks from "@/Components/Languages/LanguageDecks.vue"
 
 defineOptions({ layout: LayoutMain })
 
@@ -114,6 +115,7 @@ if (localStorage.getItem(localStorageKey.value)) {
 			<language-type v-else-if="game === 'type'" />
 			<language-guess v-else-if="game === 'guess'" />
 			<language-memory v-else-if="game === 'memory'" />
+			<language-decks v-else-if="game === 'deck'" />
 		</div>
 	</section>
 </template>

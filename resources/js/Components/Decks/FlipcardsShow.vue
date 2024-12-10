@@ -5,36 +5,40 @@
 
 import IllustrationShow from "@/Components/Illustrations/IllustrationShow.vue"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
-import type { deckInterface, flipcardsInterface } from "@/types/modelInterfaces"
-import { useSwipe } from "@vueuse/core"
-import { Random } from "pimath"
-import { computed, PropType, ref } from "vue"
+import type {deckInterface, flipcardsInterface} from "@/types/modelInterfaces"
+import {useSwipe} from "@vueuse/core"
+import {Random} from "pimath"
+import {computed, nextTick, PropType, ref} from "vue"
 
 const props = defineProps({
-	deck: { type: Object as PropType<deckInterface>, required: true }
+	deck: {type: Object as PropType<deckInterface>, required: true}
 })
 
 const cardIndex = ref(0),
 	cardSide = ref<"recto" | "verso">("recto"),
+	cardHide = ref<boolean>(false),
 	cardsList = ref<flipcardsInterface[]>(Random.shuffle(props.deck.flipcards))
 
-const flip = function() {
+const flip = function () {
 	if (cardSide.value === "recto") {
 		cardSide.value = "verso"
 	}
 }
 
-const restartDeck = function() {
+const restartDeck = function () {
 	cardsList.value.forEach(result => delete result.result)
 	cardIndex.value = 0
 }
 
-const cardResult = function(result: boolean) {
+const cardResult = function (result: boolean) {
+	// On cache la carte
+	cardHide.value = true
+	// On retourne la carte
+	cardSide.value = "recto"
 	// On stocke le résultat dans la carte.
 	cardsList.value[cardIndex.value].result = result
 
 	// Aller à la carte suivante.
-	cardSide.value = "recto"
 	cardIndex.value++
 
 	// Il n'y a plus d'élément qui sont non résolu - on s'arrête !
@@ -61,10 +65,16 @@ const cardResult = function(result: boolean) {
 			break
 		}
 	}
+
+	setTimeout(() => {
+		cardHide.value = false
+	}, 500)
+	//
+
 }
 
 let el = ref(null)
-const { lengthX, isSwiping } = useSwipe(el, {
+const {lengthX, isSwiping} = useSwipe(el, {
 	threshold: 50,
 	onSwipeEnd(e, d) {
 		// On évite le swipe par défaut (historique)
@@ -78,12 +88,12 @@ const { lengthX, isSwiping } = useSwipe(el, {
 		cardResult(d !== "right")
 	}
 })
-const xClassTranslate = computed(() => {
-	const sign = lengthX.value < 0 ? -1 : 1
-	return isSwiping.value && cardSide.value === "verso" ?
-		`translate: ${-sign * Math.min(Math.abs(lengthX.value) / 2, 75)}px` :
-		`translate: 0px`
-})
+// const xClassTranslate = computed(() => {
+// 	const sign = lengthX.value < 0 ? -1 : 1
+// 	return isSwiping.value && cardSide.value === "verso" ?
+// 		`translate: ${-sign * Math.min(Math.abs(lengthX.value) / 2, 75)}px` :
+// 		`translate: 0px`
+// })
 
 const countCards = computed(() => {
 	return {
@@ -134,7 +144,9 @@ const countCards = computed(() => {
 			@click="cardSide=cardSide==='verso'?'recto':'verso'"
 		>
 			<div class="card-face front min-h-[60vh]">
-				<div class="bg-white w-full h-full rounded-xl px-5 py-3 grid place-items-center">
+				<div
+					class="bg-white w-full h-full rounded-xl px-5 py-3 grid place-items-center"
+				>
 					<!-- body -->
 					<markdown-it
 						:text="cardsList[cardIndex]['recto'].body"
@@ -150,7 +162,10 @@ const countCards = computed(() => {
 				</div>
 			</div>
 			<div class="card-face back min-h-[60vh]">
-				<div class="bg-white w-full h-full rounded-xl px-5 py-3 grid place-items-center">
+				<div
+					class="bg-white w-full h-full rounded-xl px-5 py-3 grid place-items-center"
+					:class="cardHide?'invisible':''"
+				>
 					<!-- body -->
 					<markdown-it
 						:text="cardsList[cardIndex]['verso'].body"
@@ -190,7 +205,7 @@ const countCards = computed(() => {
 
 <style scoped>
 .card-face {
-	@apply absolute w-full h-full transition-transform duration-1000 shadow-xl border rounded-xl grid place-items-center;
+	@apply absolute w-full h-full transition-transform duration-500 shadow-xl border rounded-xl grid place-items-center;
 	backface-visibility: hidden;
 }
 

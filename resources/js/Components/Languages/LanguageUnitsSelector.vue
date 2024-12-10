@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 
-import { BookInterface, TranslationUnitInterface, TranslationUnitInterfaceExtended } from "@/types/modelInterfaces"
+import {BookInterface, TranslationUnitInterface, TranslationUnitInterfaceExtended} from "@/types/modelInterfaces"
 import axios from "axios"
-import { computed, ref } from "vue"
+import {computed, ref} from "vue"
 
 const units = defineModel<TranslationUnitInterfaceExtended[]>()
 
@@ -12,15 +12,16 @@ defineProps<{
 
 const selectedBook = ref(-1)
 
-const updateUnits = function(item: TranslationUnitInterfaceExtended) {
+const updateUnits = function (item: TranslationUnitInterfaceExtended) {
 	// Change the state
 	item.selected = !item.selected
 
 	// Load the missing words
 	if (item.words.length === 0) {
-		axios.get(route("translations.words", [item.id])).then(res => {
-			item.words = res.data
-		})
+		axios.get(route("translations.words", [item.id]))
+			.then(res => {
+				item.words = res.data
+			})
 	}
 }
 
