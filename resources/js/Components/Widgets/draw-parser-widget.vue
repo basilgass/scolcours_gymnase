@@ -11,6 +11,7 @@ defineProps<{
 
 <template>
 	<pi-draw-parser
+		class="dark:invert"
 		:draw="illustration"
 	/>
 </template>
