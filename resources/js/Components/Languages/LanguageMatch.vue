@@ -8,8 +8,7 @@ import {useLanguage} from "@/Components/Languages/useLanguage.ts"
 const languageData = inject<LanguageDataInterface>("LanguageData")
 
 const cardTimeout = ref(1),
-	showAllCards = ref(false),
-	numberOfCards = ref(12)
+	numberOfCards = ref(4)
 
 const {startGame, continueGame, currentWords, selectedWordsIndex} = useLanguage(languageData, {
 	numberOfWords: numberOfCards
@@ -18,20 +17,29 @@ const {startGame, continueGame, currentWords, selectedWordsIndex} = useLanguage(
 const cards = ref([])
 
 watch(selectedWordsIndex, () => {
-	const cardsList = []
+	let left = []
+	let right = []
 	for (const word of currentWords.value) {
-		cardsList.push(word.foreign)
-		cardsList.push(word.fr)
-	}
-
-	cards.value = Random.shuffle(cardsList).map((word) => {
-		return {
-			text: word,
+		right.push({
+			text: word.fr,
 			selected: false,
 			found: false
-		}
-	})
+		})
+		left.push({
+			text: word.foreign,
+			selected: false,
+			found: false
+		})
+	}
 
+	left = Random.shuffle(left)
+	right = Random.shuffle(right)
+
+	cards.value = []
+	for(let i=0; i<left.length; i++) {
+		cards.value.push(left[i])
+		cards.value.push(right[i])
+	}
 })
 
 const selectCard = function (card) {
@@ -77,7 +85,7 @@ const selectCard = function (card) {
 					setTimeout(()=>{
 						// Make next group of items.
 						continueGame()
-					}, 1000)
+					}, 500)
 
 				}
 				return
@@ -89,14 +97,14 @@ const selectCard = function (card) {
 		selectedCards.map((c) => {
 			c.selected = false
 		})
-	}, cardTimeout.value * 1000)
+	}, cardTimeout.value * 800)
 }
 </script>
 <template>
 	<article>
 		<div
 			v-if="cards.length > 0"
-			class="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-6 gap-3 lg:gap-4"
+			class="grid grid-cols-2 gap-x-6 lg:gap-x-12 xl:gap-x-24 gap-y-4"
 		>
 			<div
 				v-for="(card, index) in cards"
@@ -110,12 +118,12 @@ const selectCard = function (card) {
 				}"
 				class="text-lg border rounded-lg h-24 grid place-items-center p-3 transform-all duration-300"
 				@click="
-					showAllCards || card.found || card.selected
+					card.found || card.selected
 						? null
 						: selectCard(card)
 				"
 			>
-				<span v-show="showAllCards || card.found || card.selected">
+				<span>
 					{{ card.text }}
 				</span>
 			</div>
@@ -130,15 +138,8 @@ const selectCard = function (card) {
 					<form-maker
 						v-model="numberOfCards"
 						label="nombre de cartes"
-						max="100"
-						min="10"
-						type="number"
-					/>
-					<form-maker
-						v-model="cardTimeout"
-						label="durée d'affichage [seconde(s)]"
-						max="5"
-						min="1"
+						max="20"
+						min="4"
 						type="number"
 					/>
 				</div>
@@ -156,17 +157,8 @@ const selectCard = function (card) {
 		</div>
 		<div
 			v-else
-			class="mt-10 grid grid-cols-3 w-full"
+			class="mt-10 grid w-full"
 		>
-			<div>
-				<button
-					class="btn btn-xs bg-white"
-					@click="showAllCards = !showAllCards"
-				>
-					Afficher toutes les fiches
-				</button>
-			</div>
-
 			<div class="text-center">
 				Mots {{ selectedWordsIndex + 1 }} à
 				{{ selectedWordsIndex + 1 + numberOfCards }} sur

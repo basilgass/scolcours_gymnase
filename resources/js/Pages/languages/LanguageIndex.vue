@@ -17,6 +17,7 @@ const games = {
 	type: 'typographie',
 	list: "liste de mots",
 	deck: "deck de cartes",
+	match: "association de mots",
 }
 </script>
 <template>

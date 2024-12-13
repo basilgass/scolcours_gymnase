@@ -1,18 +1,9 @@
 <script lang="ts" setup>
 
 import ScolCoursLogo from "@/Components/ScolcoursLogo.vue"
-import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 import LayoutFullpage from "@/Layouts/LayoutFullpage.vue"
-import { ChapterShowInterface } from "@/types/modelInterfaces.ts"
-import ScolcoursSearch from "@/Components/ScolcoursSearch.vue"
 
-defineOptions({ layout: LayoutFullpage })
-
-// const props = defineProps<{
-// 	newChapters: ChapterShowInterface[]
-// }>()
-//
-// console.log(props.newChapters)
+defineOptions({layout: LayoutFullpage})
 
 </script>
 
@@ -22,8 +13,6 @@ defineOptions({ layout: LayoutFullpage })
 		<!--		<Head title="" />-->
 
 		<ScolCoursLogo class="py-10 scale-150" />
-
-		<scolcours-search />
 
 		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
 			<InertiaLink
@@ -55,34 +44,5 @@ defineOptions({ layout: LayoutFullpage })
 				</div>
 			</InertiaLink>
 		</div>
-
-		<!--		<div class="space-y-10">-->
-		<!--			<h2 class="text-center text-xl">-->
-		<!--				Dernières mises à jour-->
-		<!--			</h2>-->
-		<!--			<div class="grid gap-3 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">-->
-		<!--				<div-->
-		<!--					v-for="item of newChapters"-->
-		<!--					:key="item.id"-->
-		<!--					class="bg-white border border-gray-300 rounded py-2 px-3 cursor-pointer"-->
-		<!--					@click="$inertia.visit(item.url)"-->
-		<!--				>-->
-		<!--					<div class="flex justify-between items-center mb-2">-->
-		<!--						<h3-->
-		<!--							v-katex.auto="item.title"-->
-		<!--							class="font-normal text-lg"-->
-		<!--						/>-->
-
-		<!--						<div class="text-xs">-->
-		<!--							{{ item.modified }}-->
-		<!--						</div>-->
-		<!--					</div>-->
-		<!--					<markdown-it-->
-		<!--						:text="item.block.body"-->
-		<!--						class="font-extralight"-->
-		<!--					/>-->
-		<!--				</div>-->
-		<!--			</div>-->
-		<!--		</div>-->
 	</div>
 </template>

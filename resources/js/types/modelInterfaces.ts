@@ -301,6 +301,8 @@ export interface TranslationWord {
 	id: number,
 	fr: string,
 	foreign: string,
+	result?: boolean,
+	errors?: number
 }
 
 export interface TranslationUnitInterfaceExtended extends TranslationUnitInterface {

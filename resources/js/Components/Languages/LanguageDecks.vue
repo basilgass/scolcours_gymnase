@@ -1,30 +1,17 @@
 <script lang="ts" setup>
-import FormMaker from "@/Components/Form/FormMaker.vue"
 import {LanguageDataInterface} from "@/Pages/languages/LanguageShow.vue"
-import {Random} from "pimath"
-import {computed, inject, ref} from "vue"
-import DeckIndex from "@/Pages/Decks/DeckIndex.vue"
-import type {BlockInterface, deckInterface, flipcardsInterface} from "@/types/modelInterfaces.ts"
+import {computed, inject} from "vue"
+import type {BlockInterface, deckInterface} from "@/types/modelInterfaces.ts"
 import FlipcardsShow from "@/Components/Decks/FlipcardsShow.vue"
+import {useLanguage} from "@/Components/Languages/useLanguage.ts"
 
+// languageData is the reactive data from the parent component.
+// it contains all the words, units, and the current state of the game.
 const languageData = inject<LanguageDataInterface>("LanguageData")
 
-console.log(languageData)
-const startIndex = ref(0),
-	cards = ref<flipcardsInterface[]>([]),
-	cardTimeout = ref(1),
-	showAllCards = ref(false),
-	numberOfCards = ref(12),
-	gamePaused = ref(true),
-	gameStopped = ref(true)
-
-const startGame = function () {
-	generateCards()
-}
-const continueGame = function () {
-	startIndex.value = startIndex.value + numberOfCards.value + 1
-	generateCards()
-}
+// useLanguage is a composable function that returns the selected unit's words
+// and provide de methods to run the game.
+const {startGame} = useLanguage(languageData)
 
 function makeBlockFromString(str: string): BlockInterface {
 	return {
@@ -44,10 +31,8 @@ function makeBlockFromString(str: string): BlockInterface {
 	}
 }
 
-const generateCards = function () {
-
-	// Generate a deck.
-	cards.value = languageData.words.value.map((word, index) => {
+const cards = computed(()=>{
+	return languageData.words.value.map((word, index) => {
 		return {
 			id: index,
 			recto: makeBlockFromString(word.foreign),
@@ -55,10 +40,7 @@ const generateCards = function () {
 			result: null
 		}
 	})
-
-	gameStopped.value = false
-	gamePaused.value = false
-}
+})
 
 const deck = computed<deckInterface | null>(() => {
 	if (languageData.language.books.length === 0) {
@@ -87,7 +69,7 @@ const deck = computed<deckInterface | null>(() => {
 			/>
 		</div>
 
-		<div v-if="gameStopped">
+		<div v-if="languageData.state.value==='intro'">
 			<div class="my-3">
 				<h2 class="text-lg font-extralight mb-2 uppercase">
 					configuration du deck
@@ -104,35 +86,6 @@ const deck = computed<deckInterface | null>(() => {
 					@click="startGame"
 				>
 					Commencer
-				</button>
-			</div>
-		</div>
-		<div
-			v-else
-			class="mt-10 grid grid-cols-3 w-full"
-		>
-			<div>
-				<button
-					class="btn btn-xs bg-white"
-					@click="showAllCards = !showAllCards"
-				>
-					Afficher toutes les fiches
-				</button>
-			</div>
-
-			<div class="text-center">
-				Mots {{ startIndex + 1 }} à
-				{{ startIndex + 1 + numberOfCards }} sur
-				{{ languageData.words.value.length }}
-			</div>
-
-			<div>
-				<button
-					v-show="gamePaused"
-					class="btn btn-xs bg-success"
-					@click="continueGame"
-				>
-					Continuer le jeu
 				</button>
 			</div>
 		</div>

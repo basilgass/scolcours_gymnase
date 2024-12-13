@@ -1,107 +1,83 @@
 <script lang="ts" setup>
-import type { LanguageDataInterface } from "@/Pages/languages/LanguageShow.vue"
-import { Random } from "pimath"
-import { computed, inject, ref } from "vue"
+import type {LanguageDataInterface} from "@/Pages/languages/LanguageShow.vue"
+import {Random} from "pimath"
+import {inject, ref, watch} from "vue"
+import {useLanguage} from "@/Components/Languages/useLanguage.ts"
+import {shake} from "@/helpers/helperFunctions.ts"
 
 const languageData = inject<LanguageDataInterface>('LanguageData')
-
-const localStorageKey = computed(() => {
-		return `scolcours_type_${languageData.language}`
-	})
+const {startGame, continueGame, selectedWordsIndex, currentWords} = useLanguage(languageData)
 
 /**
  * Gestion du jeu.
  */
-const	startIndex = ref(0),
-	currentWord = computed(() => {
-		return languageData.words.value[startIndex.value]
-	})
-
-const startGame = function() {
-	if (languageData.units.value.length === 0) {
-		alert("sélectionner au moins une unité !")
-		return
-	}
-
-	// The game has been started - store the value in the localStorage.
-	saveToLocalStorage()
-
+// TOOD: typo game is the same than the question type -> make one component for both
+watch(selectedWordsIndex, () => {
 	buildResult()
+})
 
-	languageData.state.value = "running"
+const typoButtons = ref(null)
+const excludeLetters = ref([" ", ",", "'", ".", "!", "?", "(", ")", "-"])
+const foreignLetters = ref([])
+const resultLetters = ref([])
 
-}
+function buildResult() {
+	let theWord = currentWords.value[0].foreign
 
-const continueGame = function() {
-	startIndex.value++
-
-	if (startIndex.value === languageData.words.value.length) {
-		alert("Félicitations - tu as fait tout ton voc !")
-		languageData.state.value = "intro"
-	} else {
-		buildResult()
+	// Modify the word
+	if (theWord.endsWith(", a, i, e")) {
+		theWord = theWord.split(", a, i, e")[0]
 	}
-}
+	if (theWord.endsWith(", i")) {
+		theWord = theWord.split(", i")[0]
+	}
+	if (theWord.split(", -").length === 2) {
+		theWord = theWord.split(", -")[0]
+	}
 
-function shake(item) {
-	item.style.setProperty("animation-name", "v-shake-horizontal")
-	item.style.setProperty("animation-duration", "500ms")
-
-	setTimeout(() => {
-		item.style.setProperty("animation-name", "")
-	}, 500)
-}
-
-function saveToLocalStorage(addToIndex?: number) {
-	localStorage.setItem(localStorageKey.value,
-		JSON.stringify(
-			{
-				"index": startIndex.value + (addToIndex ? addToIndex : 0),
-				"words": languageData.words.value
-			}
-		)
-	)
-}
-
-
-const typoButtons = ref(null),
-	excludeLetters = ref([" ", ",", "'", ".", "!", "?", "(", ")", "-"]),
-	foreignLetters = ref([]),
-	resultLetters = ref([]),
-	buildResult = function() {
-		let theWord = currentWord.value.foreign
-
-		// Modify the word
-		if (theWord.endsWith(", a, i, e")) {
-			theWord = theWord.split(", a, i, e")[0]
-		}
-		if (theWord.endsWith(", i")) {
-			theWord = theWord.split(", i")[0]
-		}
-		if (theWord.split(", -").length === 2) {
-			theWord = theWord.split(", -")[0]
-		}
-
-		foreignLetters.value = Random.shuffle(theWord.split("")
-			.filter(key => excludeLetters.value.indexOf(key) === -1)
-			.map(key => {
-				return {
-					key: key.toUpperCase(),
-					used: false
-				}
-			})
-		)
-
-		resultLetters.value = theWord.split("").map((key, index) => {
+	foreignLetters.value = Random.shuffle(theWord.split("")
+		.filter(key => excludeLetters.value.indexOf(key) === -1)
+		.map(key => {
 			return {
-				index,
 				key: key.toUpperCase(),
-				visible: excludeLetters.value.indexOf(key) !== -1
+				used: false
 			}
 		})
+	)
 
-		// Tell we are watching the first letter
-		currentIndex.value = 0
+	resultLetters.value = theWord.split("").map((key, index) => {
+		return {
+			index,
+			key: key.toUpperCase(),
+			visible: excludeLetters.value.indexOf(key) !== -1
+		}
+	})
+
+	// Tell we are watching the first letter
+	currentIndex.value = 0
+	while (resultLetters.value[currentIndex.value].visible) {
+		currentIndex.value++
+		if (currentIndex.value >= resultLetters.value.length) {
+			continueGame()
+			return
+		}
+	}
+
+}
+
+const currentIndex = ref(-1)
+
+function validateKey(index) {
+	if (resultLetters.value[currentIndex.value].key === foreignLetters.value[index].key) {
+		resultLetters.value[currentIndex.value].visible = true
+		foreignLetters.value[index].used = true
+
+		// finished ?
+		currentIndex.value++
+		if (currentIndex.value >= resultLetters.value.length) {
+			continueGame()
+			return
+		}
 		while (resultLetters.value[currentIndex.value].visible) {
 			currentIndex.value++
 			if (currentIndex.value >= resultLetters.value.length) {
@@ -109,32 +85,10 @@ const typoButtons = ref(null),
 				return
 			}
 		}
-
-
-	},
-	currentIndex = ref(-1),
-	validateKey = function(index) {
-		if (resultLetters.value[currentIndex.value].key === foreignLetters.value[index].key) {
-			resultLetters.value[currentIndex.value].visible = true
-			foreignLetters.value[index].used = true
-
-			// finished ?
-			currentIndex.value++
-			if (currentIndex.value >= resultLetters.value.length) {
-				continueGame()
-				return
-			}
-			while (resultLetters.value[currentIndex.value].visible) {
-				currentIndex.value++
-				if (currentIndex.value >= resultLetters.value.length) {
-					continueGame()
-					return
-				}
-			}
-		} else {
-			shake(typoButtons.value.children[index])
-		}
+	} else {
+		shake(typoButtons.value.children[index])
 	}
+}
 
 </script>
 <template>
@@ -167,12 +121,12 @@ const typoButtons = ref(null),
 				v-admin
 				class="bg-grey-300 border border-600 rounded"
 			>
-				{{ currentWord.fr }} --> {{ currentWord.foreign }}
+				{{ currentWords[0].fr }} --> {{ currentWords[0].foreign }}
 			</div>
 
 			<div class="space-y-10">
 				<div class="text-xl text-center">
-					{{ currentWord.fr }}
+					{{ currentWords[0].fr }}
 				</div>
 
 				<div class="flex flex-wrap gap-2 justify-center bg-white px-5 py-3 text-lg">

@@ -7,19 +7,21 @@ import type { TranslationWord } from "@/types/modelInterfaces"
 import { usePage } from "@inertiajs/vue3"
 import axios from "axios"
 import { Random } from "pimath"
-import { computed, inject, ref } from "vue"
+import {computed, inject, ref} from "vue"
+import {useLanguage} from "@/Components/Languages/useLanguage.ts"
 
 const languageData = inject<LanguageDataInterface>('LanguageData')
+const {getListOfWordsFromUnits} = useLanguage(languageData)
 
+const words = computed(()=>{
+	if(languageData.units) {
+		return getListOfWordsFromUnits(random.value)
+	}
+
+	return []
+})
 // Define the editMode.
 const  editMode  = useStoreEditMode()
-
-
-const words = computed(() => {
-	return random.value
-		? Random.shuffle(languageData.words.value)
-		: languageData.words.value
-})
 
 // game specific functions.
 
@@ -71,7 +73,8 @@ const updateTranslation = function() {
  * TODO: export as excel list.
  */
 const exportList = function() {
-
+	// TODO: export as excel list.
+	alert("Pour l'instant, l'export n'est pas encore opérationnel !")
 }
 
 </script>
@@ -82,7 +85,7 @@ const exportList = function() {
 		>
 			<form-maker
 				v-model="fr_foreign"
-				:label="`français,${languageData.language}`"
+				:label="`français,${languageData.language.name}`"
 				type="switch"
 			/>
 
@@ -93,7 +96,6 @@ const exportList = function() {
 				type="switch"
 			/>
 		</div>
-
 
 		<div class="mt-5 flex items-end w-full gap-3">
 			<div class="flex-1 ">
@@ -107,7 +109,7 @@ const exportList = function() {
 			<button
 				:class="filteredWords.length===0?'bg-gray-300':'btn-primary'"
 				:disabled="filteredWords.length===0"
-				class="btn"
+				class="btn disabled:opacity-50"
 				@click="exportList"
 			>
 				exporter

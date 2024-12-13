@@ -1,91 +1,38 @@
-<script
-	lang="ts"
-	setup
->
-/**
- * LanguageGuess - guess the correct word with the n first letters.
- *
- * options:
- * localStorage : to keep track of an existing game (to continue it...)
- */
+<script lang="ts" setup>
 
 import FormMaker from "@/Components/Form/FormMaker.vue"
-import { LanguageDataInterface } from "@/Pages/languages/LanguageShow.vue"
-import type { TranslationWord } from "@/types/modelInterfaces"
-import { Random } from "pimath"
-/**
- * LanguageGuess - guess the correct word with the n first letters.
- *
- * options:
- * localStorage : to keep track of an existing game (to continue it...)
- */
-import { computed, inject, nextTick, onMounted, ref } from "vue"
-
-interface GuessWord extends TranslationWord {
-	errors: number,
-	found: boolean
-}
-
-// Get the data from the parent, in particular the "words"
-const languageData = inject<LanguageDataInterface>("LanguageData")
-
-// List of words
-const words = ref<GuessWord[]>([])
+import {LanguageDataInterface} from "@/Pages/languages/LanguageShow.vue"
+import type {TranslationWord} from "@/types/modelInterfaces"
+import {computed, inject, nextTick, ref} from "vue"
+import {useLanguage} from "@/Components/Languages/useLanguage.ts"
+import {shake} from "@/helpers/helperFunctions.ts"
 
 // Game configuration
 const numberOfLetters = ref(2)
 
-// Start the game
-const startIndex = ref(0)
+// Default gameplay
+const languageData = inject<LanguageDataInterface>("LanguageData")
+const {startGame, continueGame, selectedWords, selectedWordsIndex} = useLanguage(languageData, {
+	startGameCallback: () => {
+		nextTick(() => suggestInput.value.focus())
+	}
+})
 
-function startGame() {
-
-	// Set the startIndex to zero (initialize)
-	startIndex.value = 0
-
-	// Make the list of words
-	words.value = Random.shuffle(languageData.words.value).map(word => {
-		return {
-			...word,
-			found: false,
-			errors: 0
-		}
-	})
-
-	// The game has been started - store actual data to localStorage
-	saveToLocalStorage()
-
-	// Change state of the game.
-	languageData.state.value = "running"
-
-	// Select the input.
-	nextTick(() => suggestInput.value.focus())
-}
-
-// Go to next word
-const nextWord = function() {
+function nextWord(){
 	// Reset the input (user guess)
 	userGuess.value = ""
-
-	// Go to the next word
-	startIndex.value++
 
 	// Hide the answer helper.
 	resetUnknowns()
 
-	// If the game reaches the end of the words list, stop it !
-	if (startIndex.value === words.value.length) {
-		alert("Félicitations - tu as fait tout ton voc !")
-		languageData.state.value = "finished"
-		return
-	}
+	// Continue the game
+	continueGame()
 
 	// if the game is not finished, select the input.
 	nextTick(() => suggestInput.value.focus())
 }
 
-
-// Save to local storage.
+// Specific gameplay
 const userGuess = ref("")
 
 const determinants = computed<string[]>(() => {
@@ -93,10 +40,7 @@ const determinants = computed<string[]>(() => {
 })
 const suggestionsWrapper = ref(null)
 const currentWordForeign = computed(() => {
-	if (words.value.length === 0) {
-		return ""
-	}
-	return words.value[startIndex.value].fr
+	return selectedWords.value[selectedWordsIndex.value].fr
 })
 
 const unknownWordAnswer = ref("")
@@ -105,7 +49,7 @@ const unknownWordExamples = ref([])
 const unknownWordDefinition = ref("")
 const unknownCount = ref(0)
 const suggestInput = ref(null)
-const suggestionEnter = function() {
+const suggestionEnter = function () {
 	if (suggestionsItems.value.length === 1) {
 		suggestionClick(0)
 	}
@@ -113,13 +57,13 @@ const suggestionEnter = function() {
 
 let suggestionTimeout: number = null
 
-const suggestionClick = function(index: number) {
+const suggestionClick = function (index: number) {
 	// Highlight the word
 	selectedSuggestion.value = index
 
-	if (suggestionsItems.value[index].foreign === words.value[startIndex.value].foreign) {
+	if (suggestionsItems.value[index].foreign === selectedWords.value[selectedWordsIndex.value].foreign) {
 		// We found the good word !
-		words.value[startIndex.value].found = true
+		selectedWords.value[selectedWordsIndex.value].result = true
 
 		// Disabled the input.
 		unknownWordAnswer.value = ""
@@ -129,8 +73,8 @@ const suggestionClick = function(index: number) {
 			nextWord()
 		}, 800)
 	} else {
-		words.value[startIndex.value].found = false
-		shake(index)
+		selectedWords.value[selectedWordsIndex.value].result = false
+		shake(suggestionsWrapper.value.children[index])
 
 		defineUnknowns(suggestionsItems.value[index])
 		window.clearTimeout(suggestionTimeout)
@@ -141,13 +85,13 @@ const suggestionClick = function(index: number) {
 	}
 
 	// On sauvegarde la valeur en mémoire...
-	saveToLocalStorage()
+	// saveToLocalStorage()
 }
 
-const defineUnknowns = function(item: TranslationWord) {
+const defineUnknowns = function (item: TranslationWord) {
 	unknownWordForeign.value = item.foreign
 }
-const resetUnknowns = function() {
+const resetUnknowns = function () {
 	unknownWordAnswer.value = ""
 	unknownWordForeign.value = ""
 	selectedSuggestion.value = undefined
@@ -159,9 +103,9 @@ const resetUnknowns = function() {
  * 2. increment the number of errors for this word
  *
  */
-const unknownWord = function() {
+const unknownWord = function () {
 	// duplicate the word
-	const item = { ...words.value[startIndex.value] }
+	const item = {...selectedWords.value[selectedWordsIndex.value]}
 
 	// increment the number of errors
 	if (!item.errors) {
@@ -171,7 +115,7 @@ const unknownWord = function() {
 	}
 
 	// Add it to the end of the words list.
-	words.value.push({ ...item })
+	selectedWords.value.push({...item})
 
 	// Increment the global unknown words / errors.
 	unknownCount.value++
@@ -183,29 +127,13 @@ const unknownWord = function() {
 	defineUnknowns(item)
 
 	// update the localStorage with the new values.
-	saveToLocalStorage(1)
+	// saveToLocalStorage(1)
 
 	// reset the suggestion input
 	userGuess.value = ""
 
 }
 
-function shake(index: number) {
-	const item = suggestionsWrapper.value.children[index]
-
-	item.style.setProperty("animation-name", "v-shake-horizontal")
-	item.style.setProperty("animation-duration", "500ms")
-
-	setTimeout(() => {
-		item.style.setProperty("animation-name", "")
-	}, 500)
-}
-
-interface ISuggestionItem {
-	id: number,
-	foreign: string,
-	fr: string,
-}
 
 function stripDeterminant(text: string): string {
 	for (const det of determinants.value) {
@@ -217,15 +145,14 @@ function stripDeterminant(text: string): string {
 	return text
 }
 
-const suggestionsItems = computed<ISuggestionItem[]>(() => {
+const suggestionsItems = computed<TranslationWord[]>(() => {
 	const txt = stripDeterminant(userGuess.value.toLowerCase())
 
 
-	return words.value
+	return selectedWords.value
 		.filter(x => {
 			// C'est un rajout qui vient de "Je ne sais pas".
 			if (x.errors > 0) {
-				console.log("Error")
 				return false
 			}
 
@@ -233,12 +160,6 @@ const suggestionsItems = computed<ISuggestionItem[]>(() => {
 
 			// On filtre les déterminants
 			translation = stripDeterminant(translation)
-			// for (const det of determinants.value) {
-			// if (translation.startsWith(det)) {
-			// 	translation = translation.substring(det.length).trim()
-			// 	break
-			// }
-			// }
 
 			// Le mot cherché a moins de lettre que le nombre de lettres actuelles.
 			if (txt === translation) {
@@ -247,51 +168,45 @@ const suggestionsItems = computed<ISuggestionItem[]>(() => {
 
 			// On retourne uniquement s'il commence
 			return txt.length >= numberOfLetters.value && translation.startsWith(txt)
-		}).map(x => {
-			return {
-				id: x.id,
-				foreign: x.foreign,
-				fr: x.fr,
-			}
 		})
 })
 const selectedSuggestion = ref<number>(undefined)
 
-const localStorageKey = computed(() => {
-	return `scolcours_guess_${languageData.language}`
-})
 
-function saveToLocalStorage(addToIndex?: number) {
-	localStorage.setItem(localStorageKey.value,
-		JSON.stringify(
-			{
-				"index": startIndex.value + (addToIndex ? addToIndex : 0),
-				"words": words.value,
-				"unknowns": unknownCount.value
-			}
-		)
-	)
-}
-
-function removeFromLocalStorage() {
-	localStorage.removeItem(localStorageKey.value)
-}
-
-onMounted(() => {
-	const previousData = localStorage.getItem(localStorageKey.value)
-	if (previousData) {
-		if (confirm("Il y a des valeurs en mémoire... continuer ?")) {
-			const localData = JSON.parse(previousData)
-			words.value = localData.words as GuessWord[]
-			startIndex.value = localData.index as number
-			unknownCount.value = localData.unknowns as number
-
-			languageData.state.value = "running"
-		} else {
-			removeFromLocalStorage()
-		}
-	}
-})
+// TODO: Language system : restore the game from localStorage -> make something global
+// const localStorageKey = computed(() => {
+// 	return `scolcours_guess_${languageData.language}`
+// })
+//
+// function saveToLocalStorage(addToIndex?: number) {
+// 	localStorage.setItem(localStorageKey.value,
+// 		JSON.stringify(
+// 			{
+// 				"index": startIndex.value + (addToIndex ? addToIndex : 0),
+// 				"words": words.value,
+// 				"unknowns": unknownCount.value
+// 			}
+// 		)
+// 	)
+// }
+// function removeFromLocalStorage() {
+// 	localStorage.removeItem(localStorageKey.value)
+// }
+// onMounted(() => {
+// 	const previousData = localStorage.getItem(localStorageKey.value)
+// 	if (previousData) {
+// 		if (confirm("Il y a des valeurs en mémoire... continuer ?")) {
+// 			const localData = JSON.parse(previousData)
+// 			words.value = localData.words as GuessWord[]
+// 			startIndex.value = localData.index as number
+// 			unknownCount.value = localData.unknowns as number
+//
+// 			languageData.state.value = "running"
+// 		} else {
+// 			removeFromLocalStorage()
+// 		}
+// 	}
+// })
 </script>
 <template>
 	<article>
@@ -301,10 +216,10 @@ onMounted(() => {
 					{{ currentWordForeign }}
 				</div>
 				<div
-					v-show="words[startIndex]?.errors"
+					v-show="selectedWords[selectedWordsIndex]?.errors"
 					class="text-red-600"
 				>
-					{{ words[startIndex]?.errors }}ème tentative
+					{{ selectedWords[selectedWordsIndex]?.errors }}ème tentative
 				</div>
 			</div>
 
@@ -320,7 +235,7 @@ onMounted(() => {
 			/>
 
 			<div class="text-xs flex justify-between">
-				<div>Mot {{ startIndex + 1 }} sur {{ words.length }}</div>
+				<div>Mot {{ selectedWordsIndex + 1 }} sur {{ selectedWords.length }}</div>
 				<div v-if="unknownCount > 0">
 					{{ unknownCount }} erreur{{ unknownCount > 1 ? "s" : "" }}
 				</div>
@@ -341,7 +256,7 @@ onMounted(() => {
 						{{ word.foreign }}
 						<transition name="slide-fade-left">
 							<i
-								v-show="selectedSuggestion === index && word.foreign === words[startIndex].foreign"
+								v-show="selectedSuggestion === index && word.foreign === selectedWords[selectedWordsIndex].foreign"
 								class="bi bi-check text-green-600"
 							/>
 						</transition>
