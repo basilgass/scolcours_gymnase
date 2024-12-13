@@ -76,4 +76,9 @@ class GeneratorController extends Controller
 	{
 		$generator->delete();
 	}
+
+	public function find(Generator $generator)
+	{
+		return $generator;
+	}
 }

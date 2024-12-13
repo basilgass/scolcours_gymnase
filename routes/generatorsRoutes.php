@@ -2,6 +2,9 @@
 
 use App\Http\Controllers\GeneratorController;
 
+Route::get('generators/{generator}', [GeneratorController::class, 'find'])
+	->name('generators.find');
+
 Route::middleware("can:admin")->group(function () {
 	// GET
 	Route::get('generators', [GeneratorController::class, 'index'])
