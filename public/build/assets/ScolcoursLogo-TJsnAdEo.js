@@ -1,1 +1,0 @@
-import{_ as t}from"./_plugin-vue_export-helper-DlAUqK2U.js";import{L as r,M as c,N as o,U as a}from"./@vue-DU__iDCU.js";const n={},i={class:"text-center"},l={class:"text-4xl"};function p(e,s){return r(),c("div",i,[o("div",l,a(e.$page.props.scolcours.title),1),s[0]||(s[0]=o("div",{class:"text-sm"}," powered by Scolcours ",-1))])}const m=t(n,[["render",p]]);export{m as S};
