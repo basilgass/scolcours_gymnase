@@ -1,0 +1,1 @@
+import{r as c}from"./call-bind-apply-helpers-B22ippET.js";import{r as u}from"./gopd-C1lCZ5Qs.js";var e,n;function g(){if(n)return e;n=1;var i=c(),o=u(),f=[].__proto__===Array.prototype,r=f&&o&&o(Object.prototype,"__proto__"),p=Object,a=p.getPrototypeOf;return e=r&&typeof r.get=="function"?i([r.get]):typeof a=="function"?function(t){return a(t==null?t:p(t))}:!1,e}export{g as r};
