@@ -36,7 +36,7 @@ const link = computed(() => {
 
 	const query = new URLSearchParams()
 	items.forEach(f => query.append(f.fromUrl, f.value.value as string))
-	
+
 	return url + `?${query.toString()}`
 })
 
@@ -97,7 +97,7 @@ function onChange(item: IToolForm){
 				:message="f.message"
 				:type="f.type? f.type : 'text'"
 				font-code
-				message-class="text-xs"
+				message-class="!text-xs"
 				:inline-label="f.inline"
 				v-bind="$attrs"
 				@change="onChange(f)"

@@ -24,7 +24,7 @@ const forms: IToolForm[] = restoreTool( [
 		label: "code",
 		type: "textarea",
 		value: ref(""),
-		fromUrl: 'code'
+		fromUrl: 'code',
 	}
 ] )
 

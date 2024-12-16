@@ -364,12 +364,16 @@ defineExpose({ focus: setFocus })
 		</div>
 
 		<!-- Display a helper message, via message slot or message prop -->
-		<slot name="message" />
-		<markdown-it
-			v-if="props.message"
+		<slot
+			name="message"
 			:class="props.messageClass"
-			:text="props.message"
-		/>
+		>
+			<markdown-it
+				v-if="props.message"
+				:class="props.messageClass"
+				:text="props.message"
+			/>
+		</slot>
 
 		<button
 			v-if="props.axios?.button"
