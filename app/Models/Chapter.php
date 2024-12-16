@@ -65,7 +65,7 @@ class Chapter extends Model
 
 	protected $guarded = [];
 
-	protected $with = [];
+	protected $with = ['blocks'];
 
 	public function theme(): BelongsTo
 	{

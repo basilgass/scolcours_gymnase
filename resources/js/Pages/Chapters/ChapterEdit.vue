@@ -8,6 +8,7 @@ import { flashInterface } from "@/types"
 import type { ChapterShowInterface } from "@/types/modelInterfaces"
 import axios from "axios"
 import { inject, ref } from "vue"
+import {router} from "@inertiajs/vue3"
 
 defineOptions({ layout: LayoutMain })
 
@@ -37,8 +38,19 @@ function saveChapter() {
 }
 
 function deleteChapter() {
-	// TODO: implement deleteChapter
-	console.log("TO BE IMPLEMENTED")
+	const slug = props.chapter.theme.slug
+
+	axios.delete(route("chapters.destroy", [props.chapter.id]))
+		.then(() => {
+			flash.success("Le chapitre a été supprimé")
+			router.visit(route('theme', [slug]))
+		})
+		.catch((res) => {
+			flash.error(
+				"Erreur lors de la suppression du chapitre...",
+			)
+			console.warn(res)
+		})
 }
 </script>
 
@@ -63,7 +75,6 @@ function deleteChapter() {
 					retour
 				</InertiaLink>
 				<confirm-button
-					disabled="true"
 					class="btn-delete btn-xs"
 					@confirm="deleteChapter"
 				>

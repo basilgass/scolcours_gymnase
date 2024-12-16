@@ -60,8 +60,9 @@ Route::whereIn('theme', $themesList)->group(function () {
 			->name('chapters.index.min');
 		Route::post('chapters/{chapter}/relations/{related}', [ChapterController::class, 'toggleRelated'])
 			->name('chapters.relations.toggle');
+
 	});
-	
+
 	// Get basic chapter info
 	Route::get('chapters/{chapter}/info', [ChapterController::class, 'info'])
 		->name('chapters.info');

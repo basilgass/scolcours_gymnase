@@ -37,6 +37,7 @@ class ChapterResource extends JsonResource
 				'id' => $theme->id,
 				'slug' => $theme->slug
 			],
+			'block' =>  BlockResource::make($this->blocks[0]),
 			'active' => $this->active,
 			'url' => $this->url,
 			'updated_at' => Carbon::parse($this->updated_at)->format('Y-m-d H:i'),

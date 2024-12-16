@@ -16,6 +16,10 @@ export interface ChapterInterface {
 		id: number
 		slug: string
 	};
+	block: {
+		id: number,
+		body: string
+	},
 	active: boolean;
 	url: string;
 	updated_at: string;

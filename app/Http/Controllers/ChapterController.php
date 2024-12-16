@@ -171,7 +171,8 @@ class ChapterController extends Controller
 
     public function destroy(Chapter $chapter)
     {
-        //
+        $chapter->delete();
+		return true;
     }
 
     public function updatePostsOrder(Chapter $chapter, Request $request)
