@@ -32,14 +32,14 @@ class WidgetController extends Controller
 
 			$widgets[] = [$theme, $theme_name];
 
-			Widget::updateOrCreate(
+			// Should create a widget if it doesn't exist.
+			Widget::firstOrCreate(
 				[
 					"component" => $file
 				],
 				[
 					"name" => $name,
 					"slug" => $name,
-					"component" => $file,
 					"theme_id" => $theme,
 					"description" => count($content) >= 2 ? explode("</info>", $content[1])[0] : ""
 				]
