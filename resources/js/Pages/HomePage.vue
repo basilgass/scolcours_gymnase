@@ -18,7 +18,7 @@ defineOptions({layout: LayoutFullpage})
 			<InertiaLink
 				v-for="(theme) in $page.props.themes"
 				:key="theme.slug"
-				:class="`bg-scolcours-${theme.slug}`"
+				v-theme.bg="theme.slug"
 				:href="'/' + theme.slug"
 				class="aspect-[2] group
 					transition-all duration-400 ease-in-out

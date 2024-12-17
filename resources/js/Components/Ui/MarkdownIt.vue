@@ -50,7 +50,7 @@ const mdit = computed(() => {
 		const prefix = match.substring(2),
 			theme = usePage().props.theme.slug
 
-		return `.${prefix}-scolcours-${theme}`
+		return `.${prefix}-${theme}-500`
 	})
 
 	// Remplace les liens vers les routes par des liens vers les pages

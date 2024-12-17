@@ -6,6 +6,9 @@
 @import 'scolcours/inputs.css';
 @import "scolcours/typo.css";
 @import "scolcours/effects.css";
+@import "scolcours/katexBase.css";
+@import "scolcours/tableossigns.css";
+@import "scolcours/button.css";
 
 @tailwind base;
 @tailwind components;
@@ -13,10 +16,9 @@
 
 @layer base {
     body {
-        @apply font-light tracking-wide bg-gray-100;
+        @apply font-light tracking-wide bg-gray-100 dark:bg-gray-900;
     }
 
-    /*overflow-x-hidden*/
     .font-code {
         font-family: 'Source Code Pro', monospace;
     }
@@ -36,134 +38,6 @@
         background-color: chocolate
     }
 
-    .bg-scolcours-algebre {
-        @apply bg-blue-500
-    }
-
-    .bg-scolcours-analyse {
-        @apply bg-amber-500
-    }
-
-    .bg-scolcours-geometrie {
-        @apply bg-purple-500
-    }
-
-    .bg-scolcours-statistiques {
-        @apply bg-cyan-500
-    }
-
-    .bg-scolcours-jeux {
-        @apply bg-orange-500
-    }
-
-    .bg-scolcours-tools {
-        @apply bg-pink-400
-    }
-
-    .bg-scolcours-arithmetique {
-        @apply bg-lime-500
-    }
-
-    .bg-scolcours-admin {
-        @apply bg-slate-600
-    }
-
-    .text-scolcours-algebre {
-        @apply text-blue-500
-    }
-
-    .text-scolcours-analyse {
-        @apply text-amber-500
-    }
-
-    .text-scolcours-geometrie {
-        @apply text-purple-500
-    }
-
-    .text-scolcours-statistiques {
-        @apply text-cyan-500
-    }
-
-    .text-scolcours-jeux {
-        @apply text-orange-500
-    }
-
-    .text-scolcours-tools {
-        @apply text-pink-400
-    }
-
-    .text-scolcours-arithmetique {
-        @apply text-lime-500
-    }
-
-    .text-scolcours-admin {
-        @apply text-slate-600
-    }
-
-    .border-scolcours-algebre {
-        @apply border-blue-300
-    }
-
-    .border-scolcours-analyse {
-        @apply border-amber-300
-    }
-
-    .border-scolcours-geometrie {
-        @apply border-purple-300
-    }
-
-    .border-scolcours-statistiques {
-        @apply border-cyan-300
-    }
-
-    .border-scolcours-jeux {
-        @apply border-orange-300
-    }
-
-    .border-scolcours-tools {
-        @apply border-pink-300
-    }
-
-    .border-scolcours-arithmetique {
-        @apply border-lime-300
-    }
-
-    .border-scolcours-admin {
-        @apply border-slate-300
-    }
-
-    .hover-scolcours-algebre {
-        @apply hover:bg-blue-50 hover:border-blue-500 hover:text-blue-500 transition-colors duration-300
-    }
-
-    .hover-scolcours-analyse {
-        @apply hover:bg-amber-50 hover:border-amber-500 hover:text-amber-500 transition-colors duration-300
-    }
-
-    .hover-scolcours-geometrie {
-        @apply hover:bg-purple-50 hover:border-purple-500 hover:text-purple-500 transition-colors duration-300
-    }
-
-    .hover-scolcours-statistiques {
-        @apply hover:bg-cyan-50 hover:border-cyan-500 hover:text-cyan-500 transition-colors duration-300
-    }
-
-    .hover-scolcours-jeux {
-        @apply hover:bg-orange-50 hover:border-orange-500 hover:text-orange-500 transition-colors duration-300
-    }
-
-    .hover-scolcours-tools {
-        @apply hover:bg-pink-50 hover:border-pink-500 hover:text-pink-500 transition-colors duration-300
-    }
-
-    .hover-scolcours-arithmetique {
-        @apply hover:bg-lime-50 hover:border-lime-500 hover:text-lime-500 transition-colors duration-300
-    }
-
-    .hover-scolcours-admin {
-        @apply hover:bg-slate-50 hover:border-slate-600 hover:text-slate-600 transition-colors duration-300;
-    }
-
     .scrollbar-scolcours-default {
         @apply scrollbar scrollbar-w-1 scrollbar-h-1 scrollbar-thumb-rounded-full;
     }
@@ -174,84 +48,6 @@
         dark:scrollbar-thumb-gray-500/50;
     }
 
-    .scrollbar-scolcours-katex {
-        @apply scrollbar-scolcours-default scrollbar-thumb-amber-700/50
-    }
-
-    .scrollbar-scolcours-algebre {
-        @apply scrollbar-scolcours-default scrollbar-thumb-blue-500 scrollbar-track-blue-50
-    }
-
-    .scrollbar-scolcours-analyse {
-        @apply scrollbar-scolcours-default scrollbar-thumb-pink-500 scrollbar-track-pink-50
-    }
-
-    .scrollbar-scolcours-geometrie {
-        @apply scrollbar-scolcours-default scrollbar-thumb-pink-500 scrollbar-track-pink-50
-    }
-
-    .scrollbar-scolcours-statistiques {
-        @apply scrollbar-scolcours-default scrollbar-thumb-pink-500 scrollbar-track-pink-50
-    }
-
-    .scrollbar-scolcours-jeux {
-        @apply scrollbar-scolcours-default scrollbar-thumb-pink-500 scrollbar-track-pink-50
-    }
-
-    .scrollbar-scolcours-tools {
-        @apply scrollbar-scolcours-default scrollbar-thumb-pink-400 scrollbar-track-pink-50
-    }
-
-    .scrollbar-scolcours-arithmetique {
-        @apply scrollbar-scolcours-default scrollbar-thumb-lime-400 scrollbar-track-lime-50
-    }
-
-    .scrollbar-scolcours-admin {
-        @apply scrollbar-scolcours-default scrollbar-thumb-slate-400 scrollbar-track-slate-50
-    }
-
-    .md-danger {
-        @apply bg-red-300
-    }
-
-    .md-success {
-        @apply bg-green-300
-    }
-
-    .katex-boxed .katex-display {
-        @apply bg-amber-700/5 px-5 py-4 my-2 rounded overflow-x-auto scrollbar-scolcours-katex;
-    }
-
-    .katex-boxed.katex-boxed-lg .katex-display {
-        @apply py-10;
-    }
-
-    .katex-inline-boxed span:not(.katex-display)>.katex {
-        @apply bg-amber-700/5 px-3 inline-block align-middle max-w-full py-1 rounded;
-    }
-
-    .katex-left .katex-display>.katex>.katex-html {
-        @apply text-left;
-    }
-
-    .katex-right .katex-display>.katex>.katex-html {
-        @apply text-right;
-    }
-
-    .katex-m-0 .katex-display {
-        margin-top: 0;
-        margin-bottom: 0;
-    }
-
-    .katex-m-1 .katex-display {
-        margin-top: 0.3em;
-        margin-bottom: 0.3em;
-    }
-
-    .katex-output {
-        @apply font-code w-full bg-gray-100 p-2 appearance-none focus:border-slate-400 focus:outline-none focus:ring-0;
-    }
-
     .admin-wrapper {
         @apply flex justify-between gap-3 items-baseline bg-amber-100 rounded border border-dashed border-amber-600 px-3 py-2;
     }
@@ -260,101 +56,7 @@
         @apply w-full flex justify-between gap-3 items-baseline;
     }
 
-    .btn {
-        @apply px-5 py-2 rounded-lg no-underline inline-block text-center disabled:cursor-not-allowed disabled:shadow-none transition-colors duration-300;
-    }
 
-    .btn-simple {
-        @apply border dark:border-gray-700;
-        @apply hover:bg-gray-100 dark:hover:bg-gray-700 hover:shadow;
-    }
-
-    .btn-primary {
-        @apply btn bg-blue-600 text-white hover:bg-blue-700;
-    }
-
-    .btn-success {
-        @apply btn bg-green-600 text-white hover:bg-green-700;
-    }
-
-    .btn-add {
-        @apply btn bg-blue-600 text-white hover:bg-teal-700;
-    }
-
-    .btn-new {
-        @apply btn w-full h-full min-h-[100px] border-2 border-blue-600 border-dashed text-blue-900 bg-blue-100 hover:bg-blue-200;
-    }
-
-    .btn-new-inline {
-        @apply btn border-2 border-blue-600 border-dashed text-blue-900 bg-blue-100 hover:bg-blue-200;
-    }
-
-    .btn-delete {
-        @apply btn bg-red-600 text-white hover:bg-red-700;
-    }
-
-    .btn-update {
-        @apply btn bg-orange-500 text-white hover:bg-orange-700;
-    }
-
-    .btn-cancel,
-    .btn-error,
-    .btn-warning {
-        @apply btn bg-orange-600 text-white hover:bg-orange-700;
-    }
-
-    .btn-edit {
-        @apply btn bg-cyan-600 text-white hover:bg-cyan-700;
-    }
-
-    .btn-xl {
-        @apply px-10 py-5 rounded-xl text-lg
-    }
-
-    .btn-xs {
-        @apply !px-2 !py-1 text-xs
-    }
-
-    .btn-form {
-        @apply uppercase font-semibold text-xs;
-    }
-
-    .btn-scolcours-algebre {
-        @apply btn bg-blue-500 text-white hover:bg-blue-100 hover:border-blue-500 hover:text-blue-500 transition-colors duration-300
-    }
-
-    .btn-scolcours-analyse {
-        @apply btn bg-amber-500 text-white hover:bg-amber-100 hover:border-amber-500 hover:text-amber-500 transition-colors duration-300
-    }
-
-    .btn-scolcours-geometrie {
-        @apply btn bg-purple-500 text-white hover:bg-purple-100 hover:border-purple-500 hover:text-purple-500 transition-colors duration-300
-    }
-
-    .btn-scolcours-statistiques {
-        @apply btn bg-cyan-500 text-white hover:bg-cyan-100 hover:border-cyan-500 hover:text-cyan-500 transition-colors duration-300
-    }
-
-    .btn-scolcours-jeux {
-        @apply btn bg-orange-500 text-white hover:bg-orange-100 hover:border-orange-500 hover:text-orange-500 transition-colors duration-300
-    }
-
-    .btn-scolcours-tools {
-        @apply btn bg-pink-400 text-white hover:bg-pink-100 hover:border-pink-500 hover:text-pink-500 transition-colors duration-300
-    }
-
-    .btn-scolcours-arithmetique {
-        @apply btn bg-lime-500 text-white hover:bg-lime-100 hover:border-lime-500 hover:text-lime-500 transition-colors duration-300
-    }
-
-    .is-active {
-        @apply bg-blue-100 border-blue-600;
-        @apply dark:border-blue-400 dark:text-blue-600;
-    }
-
-    .is-disabled {
-        @apply bg-gray-100 border-gray-200 text-gray-300
-    }
 
     .list-space {
         @apply list-outside ml-3
@@ -363,34 +65,6 @@
     .list-space>li {
         @apply pl-5
     }
-
-
-    .tos .cell-v-line:after {
-        content: "";
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 50%;
-        border-left: 1px dashed #bbb;
-        transform: translate(-50%);
-        pointer-events: none;
-    }
-
-    .tos .cell-v-line-d:after {
-        content: "";
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 50%;
-        border-left: 1px double #e00c0c;
-        transform: translate(-50%);
-        pointer-events: none;
-    }
-
-    .tos .cell-v-line {
-        position: relative;
-    }
-
 
     dialog::backdrop {
         background: rgba(20, 20, 20, 0.2);
@@ -408,19 +82,15 @@
         @apply dark:text-white;
     }
 
-    .katex-display {
-        @apply dark:border-amber-400 dark:border-2;
-    }
-
     input,
     textarea,
     .code-input {
         @apply bg-white dark:bg-gray-800 dark:text-white dark:border-gray-700;
     }
 
-}
+	.column-toc {
+		column-rule-style: solid;
+		column-rule-color: #e8e8e8;
+	}
 
-.column-toc {
-    column-rule-style: solid;
-    column-rule-color: #e8e8e8;
 }

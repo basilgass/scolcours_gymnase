@@ -1,6 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 /* eslint @typescript-eslint/no-var-requires: 0 */
 import defaultTheme from "tailwindcss/defaultTheme"
+
 const colors = require("tailwindcss/colors")
 
 const toRgba = (hexCode, opacity = 50) => {
@@ -25,7 +26,7 @@ const flattenColorPalette = (obj, sep = "-") =>
 				...Object.keys(o).map((k) =>
 					typeof o[k] === "object"
 						? _flatten(o[k], k + sep)
-						: { [p + k]: o[k] },
+						: {[p + k]: o[k]},
 				),
 			)
 		})(obj),
@@ -44,13 +45,11 @@ export default {
 	],
 	safelist: [
 		{
-			pattern: /bg-(red|green|blue|amber)-(500|600)/,
+			pattern: /(bg|border|text)-(algebre|analyse|geometrie|statistiques|jeux|tools|arithmetique|admin)-(50|300|500|600)/,
+			variants: ["dark", "hover", "focus"],
 		},
 		{
-			pattern: /border-(red|green|blue|amber)-(500|600)/,
-		},
-		{
-			pattern: /text-(red|green|blue|amber)-(500|600)/,
+			pattern: /(bg|border|text)-(red|green|blue|amber)-(500|600)/,
 		},
 		{
 			pattern: /col-span-([1-9])/,
@@ -87,10 +86,14 @@ export default {
 			},
 			colors: {
 				gray: colors.neutral,
-				lime: colors.lime,
-				cyan: colors.cyan,
-				amber: colors.amber,
-				orange: colors.orange,
+				algebre: colors.blue,
+				analyse: colors.amber,
+				geometrie: colors.purple,
+				statistiques: colors.cyan,
+				jeux: colors.orange,
+				tools: colors.pink,
+				arithmetique: colors.lime,
+				admin: colors.slate,
 			},
 			maxHeight: {
 				"1/2": "50vh",
@@ -117,6 +120,7 @@ export default {
 			"focus",
 			"responsive",
 			"active",
+			"dark",
 		],
 		scale: ["responsive", "hover", "group-hover"],
 		padding: ["hover", "responsive"],
@@ -125,7 +129,7 @@ export default {
 		borderRadius: ["responsive", "hover"],
 	},
 	plugins: [
-		function ({ addUtilities, theme }) {
+		function ({addUtilities, theme}) {
 			const utilities = {
 				".bg-stripes": {
 					backgroundImage:
@@ -135,9 +139,9 @@ export default {
 			}
 
 			const addColor = (name, color) =>
-			(utilities[`.bg-stripes-${name}`] = {
-				"--stripes-color": color,
-			})
+				(utilities[`.bg-stripes-${name}`] = {
+					"--stripes-color": color,
+				})
 
 			const colors = flattenColorPalette(theme("backgroundColor"))
 			for (let name in colors) {
@@ -158,7 +162,7 @@ export default {
 
 		require("@tailwindcss/typography"),
 		require("@tailwindcss/container-queries"),
-		require("tailwind-scrollbar")({ nocompatible: true }),
+		require("tailwind-scrollbar")({nocompatible: true}),
 		// require('@formkit/themes/tailwindcss'),
 	],
 }

@@ -1,0 +1,44 @@
+@layer components {
+	.katex-display {
+		@apply dark:border-amber-400 dark:border-2 select-none;
+	}
+
+	.katex-boxed .katex-display {
+		@apply bg-amber-700/5 px-5 py-4 my-2 rounded overflow-x-auto katex-scrollbar;
+	}
+
+	.katex-boxed.katex-boxed-lg .katex-display {
+		@apply py-10;
+	}
+
+	.katex-inline-boxed span:not(.katex-display)>.katex {
+		@apply bg-amber-700/5 px-3 inline-block align-middle max-w-full py-1 rounded;
+	}
+
+	.katex-left .katex-display>.katex>.katex-html {
+		@apply text-left;
+	}
+
+	.katex-right .katex-display>.katex>.katex-html {
+		@apply text-right;
+	}
+
+	.katex-m-0 .katex-display {
+		margin-top: 0;
+		margin-bottom: 0;
+	}
+
+	.katex-m-1 .katex-display {
+		margin-top: 0.3em;
+		margin-bottom: 0.3em;
+	}
+
+	.katex-output {
+		@apply font-code w-full bg-gray-100 p-2 appearance-none focus:border-slate-400 focus:outline-none focus:ring-0;
+	}
+
+	.katex-scrollbar {
+		@apply scrollbar-scolcours-default scrollbar-thumb-amber-700/50
+	}
+
+}

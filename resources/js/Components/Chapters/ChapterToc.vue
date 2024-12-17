@@ -123,7 +123,7 @@ const questionStatus = computed<Record<number, number | null>>(() => {
 
 				<button
 					:class="postsFilterCurrent === 'theory'
-						? `text-scolcours-${$page.props.theme.slug}`
+						? `text-${$page.props.theme.slug}-500`
 						: ''
 					"
 					@click="postsFilter('theory')"
@@ -132,7 +132,7 @@ const questionStatus = computed<Record<number, number | null>>(() => {
 				</button>
 				<button
 					:class="postsFilterCurrent === 'exercise'
-						? `text-scolcours-${$page.props.theme.slug}`
+						? `text-${$page.props.theme.slug}-500`
 						: ''
 					"
 					@click="postsFilter('exercise')"
@@ -141,7 +141,7 @@ const questionStatus = computed<Record<number, number | null>>(() => {
 				</button>
 				<button
 					:class="postsFilterCurrent === 'en_cours'
-						? `text-scolcours-${$page.props.theme.slug}`
+						? `text-${$page.props.theme.slug}-500`
 						: ''
 					"
 					@click="postsFilter('en_cours')"
@@ -199,7 +199,7 @@ const questionStatus = computed<Record<number, number | null>>(() => {
 
 					<InertiaLink
 						:class="props.active === element.order
-							? `font-semibold text-scolcours-${$page.props.theme.slug}`
+							? `font-semibold text-${$page.props.theme.slug}-500`
 							: ''
 						"
 						:href="route('themes.chapters.slide', [

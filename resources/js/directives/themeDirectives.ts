@@ -1,16 +1,17 @@
-import { usePage } from "@inertiajs/vue3"
+import {usePage} from "@inertiajs/vue3"
+
 
 function themeUpdate(el, binding) {
 	const themes = usePage().props.themes.map((theme) => theme.slug)
 
-	const keys = ["btn", "bg", "text", "border", "active", "scrollbar"]
+	const keys = ["btn", "bg", "text", "border", "active", "scrollbar", "hover"]
 
 	let chapter: string
 
 	// Remove all classes from el matching the pattern "<key>-scolcours-<theme>"
 	if (el) {
 		keys.forEach((key) => {
-			el.classList.remove(new RegExp(`${key}-scolcours-.*`))
+			el.classList.remove(new RegExp(`${key}-scolcours-[${themes.join('|')}]`))
 		})
 	}
 
@@ -45,11 +46,24 @@ function themeUpdate(el, binding) {
 	if (chapter === undefined) chapter = 'main'
 
 	Object.keys(binding.modifiers).forEach((key) => {
+		console.log(key)
 		if (keys.indexOf(key) !== -1) {
 			if (key === "text" && Object.hasOwn(binding.modifiers, "bg")) {
 				el.classList.add("text-white")
+			} else if (key === "hover") {
+				console.log('ADDING HOVER CLASSES')
+				el.classList.add(
+					`hover:bg-${chapter}-50`,
+					`hover:border-${chapter}-500`,
+					`hover:text-${chapter}-500`,
+					'transition-colors',
+					'duration-300'
+				)
 			} else {
-				el.classList.add(`${key}-scolcours-${chapter}`)
+				el.classList.add(`${key}-${chapter}-500`)
+
+				// TODO: add the dark mode here ?
+				// el.classList.add(`dark:${key}-${chapter}-500`)
 			}
 		}
 	})

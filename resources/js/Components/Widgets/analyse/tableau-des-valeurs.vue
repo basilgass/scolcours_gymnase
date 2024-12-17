@@ -142,8 +142,7 @@ function parseMinMaxStep(value: string): number[] {
 
 <template>
 	<div
-		:class="`scrollbar-scolcours-${$page.props.theme.slug}`"
-		class="overflow-x-auto relative"
+		class="overflow-x-auto relative scrollbar-scolcours"
 	>
 		<table
 			:class="tableClass"

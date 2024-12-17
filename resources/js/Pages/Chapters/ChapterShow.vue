@@ -49,6 +49,8 @@ const showFormular = ref(false)
 
 		<main class="scolcours-container py-10 space-y-12">
 			<chapter-toc
+				v-theme.border
+				class="box"
 				:chapter
 				:posts
 			/>
@@ -78,19 +80,24 @@ const showFormular = ref(false)
 				</InertiaLink>
 			</div>
 
+			<!-- liste des prérequis -->
+			<chapter-relations
+				v-theme.border
+				class="box"
+				:chapter
+				:relations
+			/>
+
+			<!-- liste des challenges -->
+			<chapter-challenges
+				v-theme.border
+				class="box"
+				:challenges
+				:chapter
+			/>
+
 			<!--Liste d'icône design pour afficher les éléments -->
 			<div class="w-full flex justify-center gap-4 mb-5">
-				<div
-					v-theme.bg.text
-					class="aspect-square w-[120px] grid place-items-center rounded-2xl
-						hover:shadow transition-all cursor-pointer"
-					@click="currentTab = 'requires'"
-				>
-					<div class="text-center space-y-2">
-						<i class="bi bi-card-checklist text-3xl" />
-						<p>prérequis</p>
-					</div>
-				</div>
 				<div
 					v-theme.bg.text
 					class="aspect-square w-[120px] grid place-items-center rounded-2xl
@@ -102,17 +109,7 @@ const showFormular = ref(false)
 						<p>formulaire</p>
 					</div>
 				</div>
-				<div
-					v-theme.bg.text
-					class="aspect-square w-[120px] grid place-items-center rounded-2xl
-						hover:shadow transition-all cursor-pointer"
-					@click="currentTab = 'challenges'"
-				>
-					<div class="text-center space-y-2">
-						<i class="bi bi-patch-question text-3xl" />
-						<p>challenges</p>
-					</div>
-				</div>
+
 				<div
 					v-theme.bg.text
 					class="aspect-square w-[120px] grid place-items-center rounded-2xl
@@ -126,33 +123,28 @@ const showFormular = ref(false)
 				</div>
 			</div>
 
-			<!-- liste des prérequis -->
-			<chapter-relations
-				v-show="currentTab==='requires'"
-				:chapter
-				:relations
-			/>
 
 			<!-- liste des formules -->
-			<chapter-formulas
-				v-if="showFormular"
-				v-show="currentTab==='formulas'"
-				:chapter-slug="chapter.slug"
-			/>
+			<div>
+				<chapter-formulas
+					v-if="showFormular"
+					v-show="currentTab==='formulas'"
+					:chapter-slug="chapter.slug"
+				/>
 
-			<!-- liste des challenges -->
-			<chapter-challenges
-				v-show="currentTab==='challenges'"
-				:challenges
-				:chapter
-			/>
 
-			<!-- liste des théorèmes -->
-			<chapter-theorems
-				v-if="showTheorem"
-				v-show="currentTab==='theorems'"
-				:chapter-slug="chapter.slug"
-			/>
+				<!-- liste des théorèmes -->
+				<chapter-theorems
+					v-if="showTheorem"
+					v-show="currentTab==='theorems'"
+					:chapter-slug="chapter.slug"
+				/>
+			</div>
 		</main>
 	</section>
 </template>
+<style scoped>
+.box {
+	@apply bg-white dark:bg-gray-900 border rounded-xl px-5 py-3;
+}
+</style>
