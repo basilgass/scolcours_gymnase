@@ -272,7 +272,7 @@ const selectedSuggestion = ref<number>(undefined)
 			<div class="mt-5 flex gap-3">
 				<button
 					v-show="unknownWordAnswer === ''"
-					class="btn-cancel btn-xs"
+					class="btn btn-cancel btn-xs"
 					@click="unknownWord"
 				>
 					Je ne sais pas
@@ -280,7 +280,7 @@ const selectedSuggestion = ref<number>(undefined)
 				<div v-text="unknownWordAnswer" />
 				<button
 					v-show="unknownWordAnswer !== ''"
-					class="btn-primary btn-xs"
+					class="btn btn-primary btn-xs"
 					@click="nextWord"
 				>
 					continuer
@@ -316,7 +316,7 @@ const selectedSuggestion = ref<number>(undefined)
 			<div class="grid place-items-center mt-12">
 				<button
 					v-show="languageData.units.value.length > 0"
-					class="btn-primary px-20 py-10 text-2xl"
+					class="btn btn-primary px-20 py-10 text-2xl"
 					@click="startGame"
 				>
 					Commencer

@@ -127,19 +127,19 @@ let hasClipboard = computed(() => {
 					</button>
 
 					<button
-						class="btn-primary btn-xs"
+						class="btn btn-primary btn-xs"
 						@click="saveQuestion"
 					>
 						enregistrer
 					</button>
 					<InertiaLink
-						class="btn-cancel btn-xs"
+						class="btn btn-cancel btn-xs"
 						:href="route('questions.show', [theQuestion.id])"
 					>
 						retour
 					</InertiaLink>
 					<confirm-button
-						class="btn-delete btn-xs"
+						class="btn btn-delete btn-xs"
 						@confirm="deleteQuestion"
 					>
 						supprimer

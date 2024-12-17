@@ -159,25 +159,25 @@ onMounted(() => {
 			</div>
 			<div class="self-start grid grid-cols-2 gap-2 items-center flex-wrap">
 				<button
-					class="btn-primary btn-xs"
+					class="btn btn-primary btn-xs"
 					@click="illustrationSave"
 				>
 					enregistrer
 				</button>
 				<button
-					class="btn-primary btn-xs flex gap-2"
+					class="btn btn-primary btn-xs flex gap-2"
 					@click="illustrationSaveAndEdit"
 				>
 					<i class="bi bi-save" /> <i class="bi bi-arrow-right" /> <span>block</span>
 				</button>
 				<button
-					class="btn-cancel btn-xs"
+					class="btn btn-cancel btn-xs"
 					@click="illustrationVisit"
 				>
 					retour
 				</button>
 				<confirm-button
-					class="btn-delete btn-xs"
+					class="btn btn-delete btn-xs"
 					@confirm="illustrationDelete"
 				>
 					supprimer

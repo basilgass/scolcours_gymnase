@@ -81,19 +81,19 @@ const deletePost = function () {
 				/>
 
 				<button
-					class="btn-primary btn-xs"
+					class="btn btn-primary btn-xs"
 					@click="savePost"
 				>
 					enregistrer
 				</button>
 				<InertiaLink
 					:href="route('posts.show', [props.post.id])"
-					class="btn-cancel btn-xs"
+					class="btn btn-cancel btn-xs"
 				>
 					retour au post
 				</InertiaLink>
 				<confirm-button
-					class="btn-delete btn-xs"
+					class="btn btn-delete btn-xs"
 					@confirm="deletePost"
 				>
 					supprimer
@@ -114,8 +114,8 @@ const deletePost = function () {
 				<button
 					v-for="(key, name) of typeList"
 					:key="'btn-' + name"
-					:class="thePost.type === key ? 'btn-primary' : 'btn'"
-					class="btn-xs"
+					:class="thePost.type === key ? 'btn-primary' : ''"
+					class="btn btn-xs"
 					@click="thePost.type = key"
 				>
 					{{ name }}

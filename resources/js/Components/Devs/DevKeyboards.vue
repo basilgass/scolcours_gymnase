@@ -124,8 +124,13 @@ function validate(evt) {
 	<!-- Title -->
 	<div
 		ref="root"
-		class="grid grid-cols-2 gap-3"
+		class="scolcours-container grid grid-cols-2 gap-3"
 	>
+		<div>
+			<button v-theme.btn="'algebre'">
+				HELLO WORLD
+			</button>
+		</div>
 		<div>
 			<form-maker
 				v-model="question.keyboard"

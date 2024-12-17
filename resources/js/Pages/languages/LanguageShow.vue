@@ -121,7 +121,7 @@ const wrongWords = computed(() => {
 
 			<div>
 				<button
-					class="btn-primary px-20 py-10 text-2xl"
+					class="btn btn-primary px-20 py-10 text-2xl"
 					@click="state='intro'"
 				>
 					Retour à la configuration

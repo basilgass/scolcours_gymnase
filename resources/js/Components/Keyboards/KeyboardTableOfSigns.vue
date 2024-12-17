@@ -168,14 +168,14 @@ onMounted(() => {
 				class="grid gap-3"
 			>
 				<button
-					:class="showKeyboard==='zeroes'?'btn-primary':''"
+					:class="showKeyboard==='zeroes'?'btn btn-primary':''"
 					class="py-0 px-5"
 					@click="showKeyboard='zeroes'"
 				>
 					zéros
 				</button>
 				<button
-					:class="showKeyboard==='signs'?'btn-primary':''"
+					:class="showKeyboard==='signs'?'btn btn-primary':''"
 					class="py-0 px-5"
 					@click="showKeyboard='signs'"
 				>
@@ -183,7 +183,7 @@ onMounted(() => {
 				</button>
 				<button
 					v-if="withGrows"
-					:class="showKeyboard==='grows'?'btn-primary':''"
+					:class="showKeyboard==='grows'?'btn btn-primary':''"
 					class="py-0 px-5"
 					@click="showKeyboard='grows'"
 				>
@@ -191,7 +191,7 @@ onMounted(() => {
 				</button>
 				<button
 					v-if="withExtremes"
-					:class="showKeyboard==='coords'?'btn-primary':''"
+					:class="showKeyboard==='coords'?'btn btn-primary':''"
 					class="py-0 px-5"
 					@click="showKeyboard='coords'"
 				>

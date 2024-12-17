@@ -156,7 +156,7 @@ onMounted(()=>{
 							v-admin
 						>
 							<button
-								class="btn-new"
+								class="btn btn-new"
 								@click="addFormula"
 							>
 								Ajouter une formule

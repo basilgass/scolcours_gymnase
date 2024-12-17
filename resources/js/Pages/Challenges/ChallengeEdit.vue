@@ -203,19 +203,19 @@ const deleteChallenge = function () {
 			</h1>
 			<div class="flex gap-3 justify-end">
 				<button
-					class="btn-primary btn-xs"
+					class="btn btn-primary btn-xs"
 					@click="saveChallenge"
 				>
 					enregistrer
 				</button>
 				<InertiaLink
 					:href="route('challenges.show', [theChallenge.slug])"
-					class="btn-success btn-xs"
+					class="btn btn-success btn-xs"
 				>
 					visiter
 				</InertiaLink>
 				<confirm-button
-					class="btn-delete btn-xs"
+					class="btn btn-delete btn-xs"
 					@confirm="deleteChallenge"
 				>
 					supprimer

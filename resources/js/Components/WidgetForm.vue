@@ -68,7 +68,7 @@ const isModified = computed(() => {
 
 			<button
 				v-show="isModified"
-				class="btn-xs mt-3 float-right btn-primary"
+				class="btn btn-xs mt-3 float-right btn-primary"
 				@click="update"
 			>
 				mise à jour

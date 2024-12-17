@@ -81,7 +81,7 @@ function updateDecksOrder() {
 							<i class="bi bi-arrows-move mr-2" />id: {{ element.id }}
 						</div>
 						<confirm-button
-							class="btn-delete btn-xs"
+							class="btn btn-delete btn-xs"
 							@confirm="deleteFlipcard(element.id)"
 						>
 							supprimer

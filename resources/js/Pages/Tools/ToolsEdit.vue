@@ -51,7 +51,7 @@ function saveTool() {
 					enregistrer
 				</button>
 				<InertiaLink
-					class="btn-cancel btn-xs"
+					class="btn btn-cancel btn-xs"
 					:href="route('tools.tool', [tool.slug])"
 				>
 					retour

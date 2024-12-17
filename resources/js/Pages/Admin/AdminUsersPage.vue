@@ -286,7 +286,7 @@ function editUserStore(){
 					<!-- suppression -->
 					<button
 						v-if="deleteMode"
-						class="btn-delete btn-xs ml-3"
+						class="btn btn-delete btn-xs ml-3"
 						@click="destroyUser(user.id)"
 					>
 						Supprimer
@@ -362,13 +362,13 @@ function editUserStore(){
 
 				<div class="flex gap-3">
 					<button
-						class="btn-primary btn-xs"
+						class="btn btn-primary btn-xs"
 						@click="editUserStore"
 					>
 						enregistrer
 					</button>
 					<button
-						class="btn-cancel btn-xs"
+						class="btn btn-cancel btn-xs"
 						@click="editUserShow=false"
 					>
 						annuler

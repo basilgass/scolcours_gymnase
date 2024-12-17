@@ -108,7 +108,7 @@ export default {
 			</InertiaLink>
 
 			<button
-				class="btn-primary ml-4"
+				class="btn btn-primary ml-4"
 				:class="{ 'opacity-25': form.processing }"
 				:disabled="form.processing"
 			>

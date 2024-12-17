@@ -71,7 +71,7 @@ function searchFormula(item: FormulaInterface, value: string): boolean {
 								@enter="updateFormula(item)"
 							/>
 							<button
-								class="btn-success btn-xs rounded-l-none"
+								class="btn btn-success btn-xs rounded-l-none"
 								@click="updateFormula(item)"
 							>
 								<i class="bi bi-save" />

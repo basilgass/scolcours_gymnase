@@ -108,19 +108,19 @@ function deleteGenerator() {
 			<div>
 				<div class="flex gap-3 justify-end">
 					<button
-						class="btn-primary btn-xs"
+						class="btn btn-primary btn-xs"
 						@click="saveGenerator"
 					>
 						enregistrer
 					</button>
 					<button
-						class="btn-primary btn-xs"
+						class="btn btn-primary btn-xs"
 						@click="duplicateGenerator"
 					>
 						dupliquer
 					</button>
 					<confirm-button
-						class="btn-delete btn-xs"
+						class="btn btn-delete btn-xs"
 						@confirm="deleteGenerator"
 					>
 						supprimer

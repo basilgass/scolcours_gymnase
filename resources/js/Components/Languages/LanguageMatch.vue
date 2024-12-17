@@ -148,7 +148,7 @@ const selectCard = function (card) {
 			<div class="grid place-items-center mt-12">
 				<button
 					v-show="languageData.units.value.length > 0"
-					class="btn-primary px-20 py-10 text-2xl"
+					class="btn btn-primary px-20 py-10 text-2xl"
 					@click="startGame"
 				>
 					Commencer

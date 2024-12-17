@@ -63,19 +63,19 @@ function deleteChapter() {
 			</h1>
 			<div class="flex gap-3 justify-end">
 				<button
-					class="btn-primary btn-xs"
+					class="btn btn-primary btn-xs"
 					@click="saveChapter"
 				>
 					enregistrer
 				</button>
 				<InertiaLink
-					class="btn-cancel btn-xs"
+					class="btn btn-cancel btn-xs"
 					:href="route('chapters.show', [props.chapter.slug])"
 				>
 					retour
 				</InertiaLink>
 				<confirm-button
-					class="btn-delete btn-xs"
+					class="btn btn-delete btn-xs"
 					@confirm="deleteChapter"
 				>
 					supprimer

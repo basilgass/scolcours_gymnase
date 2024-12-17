@@ -144,7 +144,7 @@ function deleteIllustration(id: number){
 			<div class="self-start grid grid-cols-2 gap-2 items-center flex-wrap">
 				<button
 					:class="wasEdited ? '' : 'invisible'"
-					class="btn-primary btn-xs"
+					class="btn btn-primary btn-xs"
 					@click="saveBlock"
 				>
 					<i class="bi bi-save" />
@@ -152,20 +152,20 @@ function deleteIllustration(id: number){
 
 				<button
 					:class="wasEdited ? '' : 'invisible'"
-					class="btn-primary btn-xs"
+					class="btn btn-primary btn-xs"
 					@click="blockSaveAndVisit"
 				>
 					<i class="bi bi-save mr-1" /> et visiter
 				</button>
 
 				<button
-					class="btn-cancel btn-xs"
+					class="btn btn-cancel btn-xs"
 					@click="visitBlock"
 				>
 					visiter
 				</button>
 				<confirm-button
-					class="btn-delete btn-xs"
+					class="btn btn-delete btn-xs"
 					@confirm="deleteBlock"
 				>
 					supprimer

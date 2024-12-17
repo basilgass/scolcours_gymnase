@@ -167,7 +167,7 @@ const questionStatus = computed<Record<number, number | null>>(() => {
 					type="switch"
 				/>
 				<button
-					class="btn-new-inline btn-xs"
+					class="btn btn-new-inline btn-xs"
 					@click="addPost"
 				>
 					Ajouter un article {{ posts.length + 1 }}

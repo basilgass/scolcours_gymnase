@@ -45,7 +45,7 @@ export default {
 	],
 	safelist: [
 		{
-			pattern: /(bg|border|text)-(algebre|analyse|geometrie|statistiques|jeux|tools|arithmetique|admin)-(50|300|500|600)/,
+			pattern: /(bg|border|text)-(algebre|analyse|geometrie|statistiques|jeux|tools|arithmetique|admin|main)-(50|300|500|600)/,
 			variants: ["dark", "hover", "focus"],
 		},
 		{
@@ -85,6 +85,12 @@ export default {
 				0: "0%",
 			},
 			colors: {
+				main: {
+					50: "#fff2e6",
+					300: "#ffb366",
+					500: "#D2691E",
+					600: "#cc5200"
+				},
 				gray: colors.neutral,
 				algebre: colors.blue,
 				analyse: colors.amber,

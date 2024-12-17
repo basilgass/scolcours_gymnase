@@ -90,7 +90,7 @@ const toggleRelation = function(id) {
 			<div class="mb-3">
 				<button
 					v-admin
-					class="btn-new-inline"
+					class="btn btn-new-inline"
 					@click="getAllChapters"
 				>
 					nouvelle relation

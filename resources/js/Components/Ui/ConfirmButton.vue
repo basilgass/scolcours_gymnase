@@ -2,8 +2,8 @@
 import { computed, ref } from "vue"
 
 const props = defineProps({
-	btnClass: { type: String, default: "btn-success" },
-	confirmClass: { type: String, default: "btn-warning" },
+	btnClass: { type: String, default: "btn btn-success" },
+	confirmClass: { type: String, default: "btn btn-warning" },
 	confirmText: { type: String, default: "vraiment ?" },
 	xs: { type: Boolean, default: false }
 })
@@ -29,7 +29,6 @@ const confirmClick = ref(false),
 <template>
 	<button
 		:class="buttonClass"
-		class="btn"
 		@click="btnClick"
 	>
 		<span v-show="!confirmClick"><slot /></span>

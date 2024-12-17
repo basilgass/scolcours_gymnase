@@ -59,7 +59,7 @@ function storeChallenge() {
 			class="min-h-[100px] grid place-items-center"
 		>
 			<button
-				class="btn-new"
+				class="btn btn-new"
 				@click="show = true"
 			>
 				Nouveau challenge

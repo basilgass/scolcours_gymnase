@@ -4,7 +4,7 @@ import {usePage} from "@inertiajs/vue3"
 function themeUpdate(el, binding) {
 	const themes = usePage().props.themes.map((theme) => theme.slug)
 
-	const keys = ["btn", "bg", "text", "border", "active", "scrollbar", "hover"]
+	const keys = ["btn", "bg", "text", "border"]
 
 	let chapter: string
 
@@ -46,19 +46,21 @@ function themeUpdate(el, binding) {
 	if (chapter === undefined) chapter = 'main'
 
 	Object.keys(binding.modifiers).forEach((key) => {
-		console.log(key)
+		if (key === "hover" || key === "btn") {
+			el.classList.add(
+				`hover:bg-${chapter}-50`,
+				`hover:border-${chapter}-500`,
+				`hover:text-${chapter}-500`,
+				'transition-colors',
+				'duration-300'
+			)
+		}
+
 		if (keys.indexOf(key) !== -1) {
 			if (key === "text" && Object.hasOwn(binding.modifiers, "bg")) {
 				el.classList.add("text-white")
-			} else if (key === "hover") {
-				console.log('ADDING HOVER CLASSES')
-				el.classList.add(
-					`hover:bg-${chapter}-50`,
-					`hover:border-${chapter}-500`,
-					`hover:text-${chapter}-500`,
-					'transition-colors',
-					'duration-300'
-				)
+			} else if (key==='btn'){
+				el.classList.add(`btn-${chapter}`)
 			} else {
 				el.classList.add(`${key}-${chapter}-500`)
 
