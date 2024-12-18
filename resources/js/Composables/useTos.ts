@@ -55,7 +55,7 @@ export function makeStudyFromPolynoms(numerator: string, denominator: string): E
 
 export function makeStudyFromPolyFactor(value: PolyFactor): ETUDE_DE_FONCTION_RATIONNELLE {
 	const factorized = value.factorize()
-	const reduced = factorized.reduce()
+	const reduced = factorized.clone().reduce()
 
 	// const numeratorRoots = factorized.numerator.getZeroes()
 	const denominatorsRoots = factorized.denominator.getZeroes()
@@ -114,7 +114,7 @@ export function makeStudyFromPolyFactor(value: PolyFactor): ETUDE_DE_FONCTION_RA
 
 	// Draw particular points.
 	// TODO: Filter if some point are the same !
-	
+
 	// roots
 	// TODO: root is in TeX : there can be a conflict as it could also be in ascii math.
 	rootsValues.forEach((root, index) => code += `\nZ${index}(${root},0)->tex=@`)
@@ -170,7 +170,7 @@ function PolyFactor_getAsymptotes_Vertical(reduced: PolyFactor, roots: ISolution
 		if (Number.isFinite(evaluatedValue.value)) {
 			return {
 				tex: `\\lim_{x\\to ${valueAsTex} } f(x) = ${evaluatedValue.tex} \\implies \\text{point limite}: \\left(${valueAsTex};${evaluatedValue.tex}\\right)`,
-				draw: `P${index + 1}(${value.value};${evaluatedValue.value})->red`
+				draw: `P${index + 1}(${value.value},${evaluatedValue.value})->o=10,color=red,fill=white,tex=\\left(${value.tex};${evaluatedValue.tex}\\right)/bc`
 			}
 		} else {
 			return {

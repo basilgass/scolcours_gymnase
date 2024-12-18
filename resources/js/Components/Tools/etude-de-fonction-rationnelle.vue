@@ -24,13 +24,13 @@ const forms: IToolForm[] = restoreTool([
 	{
 		label: "Fraction rationnelle",
 		type: "text",
-		value: ref(""),
+		value: ref("6x^3+36x^2-192/24x^2-96"),
 		fromUrl: "fx"
 	},
 	{
 		label: "effectuer l'étude de fonction",
 		type: "switch",
-		value: ref(false),
+		value: ref(true),
 		fromUrl: "autoUpdate"
 	}
 ])
