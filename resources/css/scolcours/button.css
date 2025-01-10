@@ -4,6 +4,7 @@
 		text-center
 		rounded-lg
 		no-underline
+		cursor-pointer
 		disabled:cursor-not-allowed disabled:shadow-none
 		transition-colors duration-300;
 	}
@@ -45,7 +46,6 @@
 	.btn-xs {
 		@apply !px-2 !py-1 text-xs
 	}
-
 
 
 	.btn-algebre {

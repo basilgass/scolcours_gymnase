@@ -18,47 +18,43 @@ import { type ETUDE_DE_FONCTION_RATIONNELLE, makeStudyFromPolynoms } from "@/Com
 import { Numeric, Random } from "pimath"
 import { computed, ref } from "vue"
 
-// TODO: remove replaceAll('*x', 'x') in drawCode when PiDraw will be fixed
 const { restoreTool } = useToolsStorage()
 const forms: IToolForm[] = restoreTool([
 	{
-		label: "Fraction rationnelle",
+		label: "numérateur",
 		type: "text",
-		value: ref("6x^3+36x^2-192/24x^2-96"),
-		fromUrl: "fx"
+		value: ref("6x^3+36x^2-192"),
+		fromUrl: "numerateur"
 	},
 	{
-		label: "effectuer l'étude de fonction",
-		type: "switch",
-		value: ref(true),
-		fromUrl: "autoUpdate"
+		label: "dénominateur",
+		type: "text",
+		value: ref("24x^2-96"),
+		fromUrl: "denominator"
 	}
 ])
 
 // Value from the form.
 const fx = computed(() => {
-	return forms[0].value.value as string
-})
-const autoUpdate = computed(()=>{
-	return forms[1].value.value as boolean
+	if(forms[1].value.value) {
+		return `(${forms[0].value.value})/(${forms[1].value.value})`
+	}else{
+		return forms[0].value.value
+	}
 })
 
+// const autoUpdate = computed(()=>{
+// 	return false // forms[1].value.value as boolean
+// })
+const autoUpdate = ref(false)
 
 const generate_attempts = ref(0)
 const study = computed<ETUDE_DE_FONCTION_RATIONNELLE | false>(() => {
-	const split: string[] = fx.value.split("/")
-
 	if(!autoUpdate.value){
 		return false
 	}
 
-	if (split.length > 2) {
-		return false
-	}
-
-	const [numerator, denominator] = fx.value.split("/")
-
-	return makeStudyFromPolynoms(numerator, denominator)
+	return makeStudyFromPolynoms(forms[0].value.value.toString(), forms[1].value.value.toString())
 })
 
 const drawParametersOverride = ref("")
@@ -81,7 +77,8 @@ function generate_fx() {
 			!genFx.control.trou &&
 			!genFx.control.reduceable
 		) {
-			forms[0].value.value = genFx.fx
+			forms[0].value.value = genFx.numerator
+			forms[1].value.value = genFx.denominator
 			generate_attempts.value = n
 			return
 		}
@@ -121,8 +118,10 @@ function getFxWithControls(maxValue: number) {
 		c2 = (c > 0 ? "+" : "") + (c !== 0 ? c : ""),
 		d2 = d === 1 ? "" : (d === -1 ? "-" : d),
 		e2 = (e > 0 ? "+" : "") + e
+
 	return {
-		fx: `${a2}(x${b2})(x${c2})/${d2}x${e2}`,
+		numerator: `${a2}(x${b2})(x${c2})`,
+		denominator: `${d2}x${e2}`,
 		control: {
 			slope,
 			oao,
@@ -133,10 +132,6 @@ function getFxWithControls(maxValue: number) {
 	}
 }
 
-//
-// onMounted(() => {
-// 	validation_fx()
-// })
 </script>
 
 <template>
@@ -146,7 +141,17 @@ function getFxWithControls(maxValue: number) {
 			:forms="forms"
 			form-class="grid grid-cols-1 gap-3"
 		>
-			<div class="flex gap-3 mt-3 w-full justify-center">
+			<div class="flex gap-3 mt-3 w-full justify-between">
+				<div
+					class="btn btn-primary flex flex-col gap-3"
+					@click="autoUpdate=true"
+				>
+					<div>
+						étudier la fonction
+					</div>
+					<div v-katex.ascii="`f(x) = ${fx}`" />
+				</div>
+
 				<button
 					class="btn btn-primary"
 					@click.prevent="generate_fx"
