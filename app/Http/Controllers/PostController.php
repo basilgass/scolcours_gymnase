@@ -18,8 +18,6 @@ class PostController extends Controller
 
     public function index()
     {
-        // TODO : make a single post page view...
-        //		return Inertia::render("Tools", $data);
     }
 
     public function store(Chapter $chapter, Request $request)

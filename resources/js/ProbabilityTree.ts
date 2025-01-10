@@ -1,13 +1,6 @@
 import { Dom, ForeignObject, G, SVG, Svg } from "@svgdotjs/svg.js"
 import katex from "katex"
 import { Fraction } from "pimath"
-
-
-// TODO: detailed results (R=d) does not show the multiplcation.
-/**
- * Class to generate a probability tree.
- */
-
 /**
  * Process:
  * 1. Transform a string input to data
@@ -16,9 +9,10 @@ import { Fraction } from "pimath"
  * 4. Generate the _svg output
  */
 
-// TODO: améliorer la génération d'arbre de probabilité avec des config de couleurs (label, chemin, etc...)
 // TODO: améliorer les paramètres
-// TDOD: mettre des commentaires et rendre le code plus clair.
+// TODO: modifier les paramètres des résultats: R=f[/d] | R=p:<d>[/d]
+// TODO: améliorer la génération d'arbre de probabilité avec des config de couleurs (label, chemin, etc...)
+// TODO: mettre des commentaires et rendre le code plus clair.
 
 enum ProbabilityTreeBranchResult {
 	none,

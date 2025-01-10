@@ -2,15 +2,15 @@
 import FormElementCodearea from "@/Components/Form/FormElement/FormElementCodearea.vue"
 import FormElementKeyboard from "@/Components/Form/FormElement/FormElementKeyboard.vue"
 import FormElementSwitch from "@/Components/Form/FormElement/FormElementSwitch.vue"
-import type { FormMakerPropsType } from "@/Components/Form/FormMakerInterface"
-import { FormValidationFraction } from "@/Components/Form/FormValidation/FormValidationFraction"
-import { FormValidationNumber } from "@/Components/Form/FormValidation/FormValidationNumber"
-import { FormValidationVector } from "@/Components/Form/FormValidation/FormValidationVector"
+import type {FormMakerPropsType} from "@/Components/Form/FormMakerInterface"
+import {FormValidationFraction} from "@/Components/Form/FormValidation/FormValidationFraction"
+import {FormValidationNumber} from "@/Components/Form/FormValidation/FormValidationNumber"
+import {FormValidationVector} from "@/Components/Form/FormValidation/FormValidationVector"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
-import { flashInterface } from "@/types"
-import { useUrlSearchParams } from "@vueuse/core"
+import {flashInterface} from "@/types"
+import {useUrlSearchParams} from "@vueuse/core"
 import fetchAxios from "axios"
-import { computed, inject, onMounted, ref, useAttrs } from "vue"
+import {computed, inject, onMounted, ref, useAttrs} from "vue"
 
 /**
  * This component is used to generate a form input
@@ -215,7 +215,7 @@ onMounted(() => {
 		theValue.value = params[props.fromUrl]
 	}
 })
-defineExpose({ focus: setFocus })
+defineExpose({focus: setFocus})
 </script>
 
 <template>
@@ -297,6 +297,24 @@ defineExpose({ focus: setFocus })
 					@input="updateInput($event)"
 					@keyup.enter="onEnter"
 				>
+
+				<!-- color input -->
+				<!-- TODO: resolve hard coded height -->
+				<div
+					v-else-if="type === 'color'"
+					:style="`background-color: ${theValue}`"
+					:class="combinedInputClass"
+					class="!p-0 border-0 h-[1.7rem]"
+				>
+					<input
+						v-model="theValue"
+						class="opacity-0"
+						type="color"
+						v-bind="$attrs"
+						@input="updateInput($event)"
+					>
+				</div>
+
 				<!-- select type input -->
 				<select
 					v-else-if="type === 'select'"

@@ -57,7 +57,6 @@ class FormulaController extends Controller
      */
     public function getFormulasFromChapter(Chapter $chapter)
     {
-        // TODO : what is the use of chapters ?
         return [
             'formular' => FormulaResource::collection($chapter->formulas),
             'chapters' => $chapter->theme->chapters()
@@ -72,7 +71,6 @@ class FormulaController extends Controller
                             'id' => $chapter->theme_id
                         ]
                     ];
-//					return $chapter->only(['slug', 'title', 'theme_id']);
                 })
                 ->concat(
                     $chapter->relations()

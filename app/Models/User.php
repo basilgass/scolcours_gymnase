@@ -101,7 +101,7 @@ class User extends Authenticatable
 
 
     protected $with = [];
-    
+
 	public function teams()
 	{
 		return $this->belongsToMany(Team::class);
@@ -109,7 +109,6 @@ class User extends Authenticatable
 
 	public function challenges()
 	{
-		// TODO: challenge session is disabled !
 		return $this->hasMany(ChallengeSession::class);
 	}
 

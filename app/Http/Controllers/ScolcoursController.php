@@ -19,25 +19,7 @@ class ScolcoursController extends Controller
 {
 	public function index()
 	{
-
-//		// TODO: remove once all touch are updated ... Then, it will just be needed to check the latest "posts.updated_at" instead of "blocks.updated_at"
-//		$latestBlocks = DB::table('blocks')
-//			->select('posts.chapter_id', DB::raw('MAX(blocks.updated_at) as latest_block_updated_at'))
-//			->join('posts', 'blocks.blockable_id', '=', 'posts.id')
-//			->where('blocks.blockable_type', Post::class)
-//			->groupBy('posts.chapter_id');
-//
-//		$newChapters = Chapter::with(['theme', 'blocks', 'posts.blocks', 'posts.blocks.illustrations'])
-//			->where('chapters.active', true)
-//			->joinSub($latestBlocks, 'latest_blocks', function ($join) {
-//				$join->on('chapters.id', '=', 'latest_blocks.chapter_id');
-//			})
-//			->orderBy('latest_blocks.latest_block_updated_at', 'desc')
-//			->limit(5)
-//			->get(['chapters.*', 'latest_blocks.latest_block_updated_at']);
-
 		return Inertia::render('HomePage', [
-//			'newChapters' => ChapterShowResource::collection($newChapters)
 		]);
 	}
 

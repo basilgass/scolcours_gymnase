@@ -1,18 +1,19 @@
 <script lang="ts" setup>
 
-import { fnInterface } from "@/Pages/Singles/GraphPage.vue"
-import { computed, nextTick, onMounted, ref, watch } from "vue"
+import {fnInterface, fnStyle} from "@/Pages/Singles/GraphPage.vue"
+import {computed, nextTick, onMounted, ref, watch} from "vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import DropdownMenu from "@/Components/Ui/DropdownMenu.vue"
 
-// TODO: Make a better color selector
-const colors = ["blue", "red", "green", "orange", "purple", "magenta", "cyan"]
-
 const fx = defineModel<fnInterface>()
+
+const availableStyles: fnStyle[] = ['plain', 'dash', 'dot']
 
 const editor = ref(null)
 
 const isEditing = ref(false)
+
+const showAdvanced = ref(false)
 
 // Formatting the output
 const fxAsTex = computed(() => {
@@ -27,8 +28,8 @@ watch(isEditing, (newVal) => {
 	}
 })
 
-onMounted(()=>{
-	isEditing.value = fx.value.isNew??false
+onMounted(() => {
+	isEditing.value = fx.value.isNew ?? false
 	fx.value.isNew = false
 })
 
@@ -39,7 +40,7 @@ defineEmits<{
 
 <template>
 	<div
-		class="bg-white rounded border flex flex-col gap-3 relative"
+		class="bg-white rounded border flex flex-col gap-3 relative pb-3"
 	>
 		<div
 			class="absolute -top-3 -right-3 w-7 h-7 rounded-full
@@ -47,6 +48,16 @@ defineEmits<{
 			@click="$emit('destroy')"
 		>
 			<i class="bi bi-trash" />
+		</div>
+		<div
+			class="absolute -bottom-3 left-0 right-0 m-auto w-5 h-5 rounded-full
+			bg-white grid place-items-center z-10 border cursor-pointer"
+			@click="showAdvanced = !showAdvanced"
+		>
+			<i
+				class="bi text-xs"
+				:class="showAdvanced?'bi-dash-circle':'bi-plus-circle'"
+			/>
 		</div>
 		<div
 			:style="`border-color: ${fx.color}`"
@@ -64,33 +75,70 @@ defineEmits<{
 			/>
 			<div
 				v-else
-				v-katex.inline="`${fx.name}(${fx.type}) = ${fxAsTex}`"
+				v-katex.ascii.inline="`${fx.name}(${fx.type}) = ${fxAsTex}`"
 				class="cursor-pointer"
 				@click="isEditing = true"
 			/>
 		</div>
-		<div class="grid grid-cols-3 gap-3 px-3 pb-3 align-top">
+		<div class="grid grid-cols-3 gap-3 px-3 align-top">
+			<form-maker
+				v-model="fx.color"
+				label="couleur"
+				type="color"
+				list="colors"
+			/>
+
 			<dropdown-menu class="pt-1">
 				<template
 					#button
 				>
-					<div class="text-xs">
-						couleur
+					<div class="space-y-1">
+						<div class="text-xs">
+							style
+						</div>
+
+						<div
+							class="divide-y-2 divide-black border rounded px-3"
+							:class="{
+								'divide-solid':fx.style==='plain',
+								'divide-dashed':fx.style==='dash',
+								'divide-dotted':fx.style==='dot',
+							}"
+						>
+							<div class="h-[0.75em]" />
+							<div class="h-[0.75em]" />
+						</div>
 					</div>
-					<div
-						:style="`background-color:${fx.color}`"
-						class="h-[1.5em] w-full mt-1 rounded"
-					/>
 				</template>
 
+
 				<div
-					v-for="color in colors"
-					:key="color"
-					:style="`background-color:${color}`"
-					class="h-[2em] cursor-pointer hover:scale-105"
-					@click="fx.color = color"
-				/>
+					v-for="s in availableStyles"
+					:key="s"
+					class="cursor-pointer hover:scale-105 divide-y-2 divide-black max-w[3em] px-3"
+					:class="{
+						'divide-solid':s==='plain',
+						'divide-dashed':s==='dash',
+						'divide-dotted':s==='dot',
+					}"
+					@click="fx.style = s"
+				>
+					<div class="h-[1em]" />
+					<div class="h-[1em]" />
+				</div>
 			</dropdown-menu>
+		</div>
+
+		<div
+			v-show="showAdvanced"
+			class="grid grid-cols-3 gap-3 px-3 align-top"
+		>
+			<form-maker
+				v-model="fx.width"
+				label="épaisseur"
+				type="number"
+				sm
+			/>
 
 			<form-maker
 				v-model="fx.samples"

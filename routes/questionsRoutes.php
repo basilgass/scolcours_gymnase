@@ -2,10 +2,6 @@
 
 use App\Http\Controllers\QuestionController;
 
-// TODO: check removing apiResources for posts.questions is still working.
-//Route::apiResource('posts.questions', QuestionController::class)
-//	->shallow();
-
 // Store and validate an answer for a user.
 Route::post('questions/{question}/validate', [QuestionController::class, 'storeAnswer'])
 	->middleware('auth', 'verified')
@@ -24,7 +20,7 @@ Route::middleware("can:admin")
 		// Get
 		Route::get('questions/{question}/edit', [QuestionController::class, 'edit'])
 			->name('questions.edit');
-		
+
 		// Post
 		Route::post('questions/{question}/duplicate', [QuestionController::class, 'duplicate'])
 			->name('questions.duplicate');

@@ -3,10 +3,6 @@
 use App\Http\Controllers\BlockController;
 use App\Http\Controllers\PostController;
 
-// TODO: Check that getting the components is no more used.
-//Route::get('blocks/components', [BlockController::class, 'fetchWidgets'])
-//    ->name('illustrations.components');
-
 // Go to a particular block from a post -> redirects to themes.chapters.slide.anchor
 Route::get('blocks/{block}', [BlockController::class, 'show'])
 	->name('blocks.show');

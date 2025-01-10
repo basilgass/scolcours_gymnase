@@ -4,6 +4,7 @@ export type FormMakerInputsType =
 	"email" |
 	"password" |
 	"number" |
+	"color" |
 	"textarea" |
 	"select" |
 	"checkbox" |

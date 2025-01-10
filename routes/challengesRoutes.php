@@ -17,7 +17,6 @@ Route::middleware("can:admin")->group(function (){
 		->name("challenges.destroy");
 
 	// Generators handling inside the challenge
-	// TODO: make the generators route more "customisable"
 	Route::get('challenges/{challenge}/generators', [ChallengeController::class, 'indexGenerator'])
 		->name('challenges.generators.index');
 	Route::patch('challenges/{challenge}/generators/order', [ChallengeController::class, "updateGeneratorsOrder"])

@@ -28,7 +28,6 @@ Route::middleware('can:admin')->group(function () {
 	Route::patch('illustrations/{illustration}/update', [IllustrationController::class, 'update'])
 		->name('illustrations.update');
 
-	// TODO: Move blocks illustrations to block or keep it in Illustrations
 	Route::patch('blocks/{block}/illustrations/updateOrder', [BlockController::class, 'updateIllustrationsOrder'])
 		->name('blocks.illustrations.order');
 	Route::patch('blocks/{block}/updateIllustrationsGrid', [BlockController::class, 'updateIllustrationsGrid'])

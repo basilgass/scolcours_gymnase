@@ -1,18 +1,24 @@
 <script lang="ts" setup>
 import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
-import { computed, ref, watch } from "vue"
+import {computed, ref, watch} from "vue"
 
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 import GrapheurFunction from "@/Components/Grapheur/GrapheurFunction.vue"
 
-defineOptions({ layout: LayoutMain })
+// TODO: e^(x/(x-3)) ne fonctionne pas avec des samples plus grand que 5...
+
+defineOptions({layout: LayoutMain})
+
+export type fnStyle = 'plain' | 'dot' | 'dash'
 
 export interface fnInterface {
 	name: string
 	fx: string
 	type: "x" | "t"
 	color: string
+	style: fnStyle
+	width?: number
 	samples?: number
 	domain?: string
 	isNew?: boolean
@@ -23,14 +29,18 @@ const fonctions = ref<fnInterface[]>([
 		name: "f",
 		type: "x",
 		fx: "3x+5",
-		color: "blue"
+		color: "blue",
+		style: 'plain'
 	}
 ])
 
 // Current function
 const fx = ref("")
 const letters = "f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z,a,b,c,d,e".split(",")
-const colors = ["blue", "red", "green", "orange", "purple", "magenta", "cyan"]
+
+// const colors = ["blue", "red", "green", "orange", "purple", "magenta", "cyan"]
+const colors = ["#0000FF", "#FF0000", "#008000", "#FFA500", "#800080", "#FF00FF", "#00FFFF"]
+
 
 const drawParams = ref("axis,grid,x=-10:10,y=-10:10")
 
@@ -61,25 +71,43 @@ const sliders = computed(() => {
 	return paramsValues.value.map(p => {
 		return `${p.key}=${p.value}`
 	}).join("\n") + "\n"
-	//
-	// return params.value.map(p=>{
-	// 	return `${p}=-5,-4,...,5`
-	// }).join('\n')
 })
 
 // Generate the code
 const code = computed(() => {
 	return sliders.value +
 		fonctions.value.map((f, index) => {
-			let config = []
-			if (f.samples) config.push(`@${f.samples}`)
-			if (f.domain) config.push(`${f.domain}`)
+			let config = [f.fx]
 
-			if (config.length > 0) {
-				return `${letters[index]}(${f.type})=${f.fx},${config.join(",")}->${f.color}`
+			// Samples if given
+			if (f.samples) {
+				config.push(`${f.samples}`)
 			}
 
-			return `${letters[index]}(${f.type})=${f.fx}->${f.color}`
+			// Domain if given
+			if (f.domain) {
+				const [a, b] = f.domain.split(":")
+				if (b) {
+					config.push(`${a}:${b}`)
+				} else {
+					config.push(`${a}:`)
+				}
+			}
+
+			let style: string[] = []
+
+			// Color
+			style.push(`color=${f.color}`)
+
+			if (f.style !== 'plain') {
+				style.push(`${f.style}`)
+			}
+
+			if(f.width){
+				style.push(`w=${f.width}`)
+			}
+
+			return `${letters[index]}(${f.type})=${config.join(",")}->${style.join(',')}`
 		}).join("\n")
 })
 
@@ -90,6 +118,7 @@ function addFunction(type: "x" | "t" = "x") {
 		fx: fx.value,
 		type,
 		color: colors[fonctions.value.length],
+		style: 'plain',
 		isNew: true
 	})
 	fx.value = ""
@@ -107,7 +136,7 @@ function addFunction(type: "x" | "t" = "x") {
 
 		<div class="flex gap-3 items-start">
 			<div>
-				<div class="w-[350px] flex flex-col gap-3">
+				<div class="w-[300px] flex flex-col gap-3">
 					<GrapheurFunction
 						v-for="(fx, index) in fonctions"
 						:key="`fx-${index}`"

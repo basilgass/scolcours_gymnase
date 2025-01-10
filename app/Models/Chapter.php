@@ -126,7 +126,6 @@ class Chapter extends Model
 		);
 	}
 
-	// TODO: Maybe remove this one to include in the Block element.
 	protected function component(): Attribute
 	{
 		if ($this->theme === null || $this->slug === null) {

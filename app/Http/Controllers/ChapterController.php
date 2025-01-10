@@ -81,15 +81,10 @@ class ChapterController extends Controller
         ]);
 
         return $chapter;
-        //		return redirect()->route('themes.chapters.intro', [$theme->slug, $chapter->slug]);
     }
 
     public function create(Theme $theme)
     {
-        // TODO: route is disabled - does not exist anymore !
-        //		return Inertia::render("Chapters/ChapterCreate",[
-        //			"theme" => $theme->only('color', 'icon', 'slug', 'title', 'id')
-        //		]);
     }
 
 

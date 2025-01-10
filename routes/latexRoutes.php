@@ -1,7 +1,6 @@
 <?php
 
 // Latex download - migrate to custom controller
-// TODO: Implement back the PDF output.
 use App\Http\Controllers\LatexController;
 
 Route::get('/latex/dry', [LatexController::class, 'dry']);
