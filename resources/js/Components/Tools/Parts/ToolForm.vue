@@ -1,12 +1,13 @@
 <script lang="ts" setup>
 
 import FormMaker from "@/Components/Form/FormMaker.vue"
-import { FormMakerInputsType } from "@/Components/Form/FormMakerInterface"
-import { useToolsStorage } from "@/Composables/useToolsStorage.ts"
-import { useClipboard } from "@vueuse/core"
-import { computed, ComputedRef, inject, PropType, ref, Ref, watch } from "vue"
+import {FormMakerInputsType} from "@/Components/Form/FormMakerInterface"
+import {useToolsStorage} from "@/Composables/useToolsStorage.ts"
+import {useClipboard} from "@vueuse/core"
+import {computed, ComputedRef, inject, PropType, ref, Ref, watch} from "vue"
 
-const { storeTool } = useToolsStorage()
+const {storeTool} = useToolsStorage()
+
 export interface IToolForm {
 	label: string | ComputedRef<string>
 	type?: FormMakerInputsType
@@ -20,10 +21,11 @@ export interface IToolForm {
 
 // Define the props
 const props = defineProps({
-	forms: { type: Object as PropType<IToolForm[]>, required: true },
-	formClass: { type: String, default: "" },
-	active: { type: Number, default: null },
-	store: {type: Boolean, default: true }
+	forms: {type: Object as PropType<IToolForm[]>, required: true},
+	formClass: {type: String, default: ""},
+	active: {type: Number, default: null},
+	store: {type: Boolean, default: true},
+	generateButton: {type: Boolean, default: false},
 })
 
 const tool = inject<Ref<string>>("toolData", ref(""))
@@ -32,7 +34,7 @@ const link = computed(() => {
 
 	const items = props.forms.filter(f => f.fromUrl)
 
-	if(items.length=== 0) return url
+	if (items.length === 0) return url
 
 	const query = new URLSearchParams()
 	items.forEach(f => query.append(f.fromUrl, f.value.value as string))
@@ -48,7 +50,7 @@ function addFormRef(element: InstanceType<typeof FormMaker>) {
 	}
 }
 
-const { copy, copied } = useClipboard()
+const {copy, copied} = useClipboard()
 
 // Allow to change the focus based on the active state.
 watch(() => props.active, () => {
@@ -58,10 +60,11 @@ watch(() => props.active, () => {
 })
 
 
-const emits = defineEmits(['updateForm'])
-function onChange(item: IToolForm){
+const emits = defineEmits(['updateForm', 'generate'])
+
+function onChange(item: IToolForm) {
 	storeTool(props.forms)
-	if(item.emit) {
+	if (item.emit) {
 		emits('updateForm')
 	}
 }
@@ -75,13 +78,22 @@ function onChange(item: IToolForm){
 	>
 		<div class="flex justify-between">
 			<h3>Données</h3>
-			<button>
-				<i
-					:class="copied ? 'bi-check-lg text-green-600' : 'bi-share text-gray-400'"
-					class="bi text-lg"
-					@click="copy(link)"
-				/>
-			</button>
+			<div class="flex gap-3">
+				<button
+					v-if="generateButton"
+					class="btn btn-primary btn-xs"
+					@click="emits('generate')"
+				>
+					générer
+				</button>
+				<button>
+					<i
+						:class="copied ? 'bi-check-lg text-green-600' : 'bi-share text-gray-400'"
+						class="bi text-lg"
+						@click="copy(link)"
+					/>
+				</button>
+			</div>
 		</div>
 
 		<div :class="formClass">

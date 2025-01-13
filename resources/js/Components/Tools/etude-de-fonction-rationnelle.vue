@@ -6,6 +6,10 @@ import FormMaker from "@/Components/Form/FormMaker.vue"
 import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"
 import TableOfSigns from "@/Components/Pi/TableOfSigns.vue"
 
+// TODO: reformat code, in particular the generateFX function
+// TODO: rework UI to make it more user friendly.
+
+
 /** Chapter
  * title: étude de fonction rationnelle
  * body: étude de signe d'une fonction rationnelle.
@@ -137,29 +141,27 @@ function getFxWithControls(maxValue: number) {
 <template>
 	<article>
 		<!-- Value to modify enter -->
-		<tool-form
-			:forms="forms"
-			form-class="grid grid-cols-1 gap-3"
-		>
-			<div class="flex gap-3 mt-3 w-full justify-between">
-				<div
-					class="btn btn-primary flex flex-col gap-3"
-					@click="autoUpdate=true"
-				>
-					<div>
-						étudier la fonction
+		<div class="flex gap-3 items-start">
+			<tool-form
+				class="flex-1"
+				:forms="forms"
+				form-class="grid grid-cols-1 gap-3"
+				generate-button
+				@generate="generate_fx"
+			>
+				<div class="flex gap-3 mt-3 w-full justify-center">
+					<div
+						class="btn btn-primary flex flex-col gap-3"
+						@click="autoUpdate=true"
+					>
+						<div>
+							étudier la fonction
+						</div>
+						<div v-katex.ascii="`f(x) = ${fx}`" />
 					</div>
-					<div v-katex.ascii="`f(x) = ${fx}`" />
 				</div>
-
-				<button
-					class="btn btn-primary"
-					@click.prevent="generate_fx"
-				>
-					générer {{ generate_attempts > 0 ? `(${generate_attempts})` : "" }}
-				</button>
-			</div>
-		</tool-form>
+			</tool-form>
+		</div>
 
 		<!-- Output -->
 		<table-of-contents v-if="study!==false">
