@@ -6,7 +6,7 @@ import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 import { flashInterface } from "@/types"
-import type { IllustrationInterface, widgetInterface } from "@/types/modelInterfaces"
+import type { IllustrationInterface, WidgetInterface } from "@/types/modelInterfaces"
 import { router } from "@inertiajs/vue3"
 import axios from "axios"
 import { computed, inject, onMounted, PropType, ref } from "vue"
@@ -29,7 +29,7 @@ const flash = inject<flashInterface>("flash")
 const theIllustration = ref<IllustrationInterface>(props.illustration)
 
 // current component
-const currentComponent = computed<widgetInterface>(() => {
+const currentComponent = computed<WidgetInterface>(() => {
 	return chapterComponents.value[theIllustration.value.widget.id] !== undefined ?
 		chapterComponents.value[theIllustration.value.widget.id]
 		: {
@@ -44,14 +44,14 @@ const currentComponent = computed<widgetInterface>(() => {
 })
 
 // available components.
-const chapterComponents = ref<Record<string, widgetInterface>>({})
+const chapterComponents = ref<Record<string, WidgetInterface>>({})
 
 // Load the list of components
 function loadComponents() {
 	axios
 		.get(route("widgets.components"))
 		.then((res) => {
-			(res.data as widgetInterface[]).forEach(comp => {
+			(res.data as WidgetInterface[]).forEach(comp => {
 				chapterComponents.value[comp.id] = comp
 			})
 
@@ -60,7 +60,7 @@ function loadComponents() {
 }
 
 // Change the current component.
-function toggleComponent(component: widgetInterface) {
+function toggleComponent(component: WidgetInterface) {
 	theIllustration.value.widget_id = component.id
 	theIllustration.value.widget = component
 }

@@ -45,5 +45,4 @@ class Formula extends Model
 		return $this->morphMany(Block::class, 'blockable');
 	}
 
-
 }

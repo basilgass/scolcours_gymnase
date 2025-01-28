@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { WidgetInterface } from "@/types/modelInterfaces"
+import { WidgetPropsInterface } from "@/types/modelInterfaces"
 import PiThreeParser from "../Pi/PiThreeParser.vue"
 
 defineProps<{
-	illustration: WidgetInterface
+	illustration: WidgetPropsInterface
 }>()
 
 </script>

@@ -12,11 +12,16 @@ Route::middleware("can:admin")->group(function () {
 	Route::get('decks/{deck:slug}/edit', [DeckController::class, "edit"])
 		->name('decks.edit');
 
+	Route::get('flipcards/{flipcard}', [DeckController::class, 'getFlipcards'])
+		->name('flipcards.multiple');
+
 	Route::post('decks/{deck}/addFlipcard', [DeckController::class, "addFlipcard"])
 		->name('decks.addFlipcard');
 
 	Route::delete('flipcards/{flipcard}/destroy', [DeckController::class, 'destroyFlipcard'])
 		->name('flipcards.destroy');
+
+
 
 	Route::apiResource('decks', DeckController::class)
 		->only('store', 'update', 'destroy');
@@ -26,4 +31,6 @@ Route::middleware("can:admin")->group(function () {
 
 	Route::patch('decks/{deck}/assignChapter', [DeckController::class, 'assignChapter'])
 		->name('decks.assignChapter');
+
+
 });

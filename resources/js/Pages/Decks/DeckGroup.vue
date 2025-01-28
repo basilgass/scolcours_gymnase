@@ -2,12 +2,12 @@
 
 import { useTheme } from "@/Composables/useHelpers.ts"
 import { useStoreEditMode } from "@/stores/useStoreEditMode.ts"
-import { deckInterface } from "@/types/modelInterfaces.ts"
+import { DeckInterface } from "@/types/modelInterfaces.ts"
 import { router } from "@inertiajs/vue3"
 import { computed } from "vue"
 
 const props = defineProps<{
-	deck: deckInterface
+	deck: DeckInterface
 }>()
 
 const editMode = useStoreEditMode()

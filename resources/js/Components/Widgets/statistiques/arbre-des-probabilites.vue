@@ -7,10 +7,10 @@ code: 1. (name: simple) [rootname\n]A,3,B,2,5[,*] -> A is three times, B is two 
 <script setup lang="ts">
 
 import PiProbabilityTree from "@/Components/Pi/PiProbabilityTree.vue"
-import { WidgetInterface } from "@/types/modelInterfaces"
+import { WidgetPropsInterface } from "@/types/modelInterfaces"
 
 defineProps<{
-	illustration: WidgetInterface
+	illustration: WidgetPropsInterface
 }>()
 
 

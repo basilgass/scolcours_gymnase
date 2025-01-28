@@ -1,14 +1,14 @@
 <script lang="ts" setup>
 
 import FormMaker from "@/Components/Form/FormMaker.vue"
-import type { widgetInterface } from "@/types/modelInterfaces"
+import type { WidgetInterface } from "@/types/modelInterfaces"
 import { computed, inject, PropType, ref } from "vue"
 import axios from "axios"
 import { router } from "@inertiajs/vue3"
 import { flashInterface } from "@/types"
 
 const props = defineProps({
-	widget: { type: Object as PropType<widgetInterface>, required: true }
+	widget: { type: Object as PropType<WidgetInterface>, required: true }
 })
 const theWidget = ref({ ...props.widget })
 

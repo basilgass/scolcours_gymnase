@@ -10,6 +10,7 @@ import { router } from "@inertiajs/vue3"
 import axios from "axios"
 import PiMath from "pimath"
 import { computed, inject, ref } from "vue"
+import GeneratorsExamples from "@/Components/Elements/GeneratorsExamples.vue"
 
 defineOptions({ layout: LayoutMain })
 
@@ -21,45 +22,6 @@ const props = defineProps<{
 }>()
 
 const theGenerator = ref(props.generator)
-const randomCounter = ref(1)
-const generateErrors = ref("")
-const generateQuestions = computed(() => {
-	// Define the number of question to generate and display
-	const nbQuestions = 5
-
-	// Make the generation only if there is at least some code...
-	// randomCounter.value >= 1 make the computed property generate again on change...
-	if (theGenerator.value.code !== "" && randomCounter.value >= 1) {
-
-		// Output array
-		const arr = []
-
-		// Try to generate
-		try {
-			// let F = makeFunction(currentGenerator.value.code)
-			const F = new Function("PiMath", theGenerator.value.code)
-			for (let i = 0; i < nbQuestions; i++) {
-				const result = F(PiMath)
-				if (
-					result &&
-					Object.hasOwn(result, "question") &&
-					Object.hasOwn(result, "answer")
-				) {
-					arr.push(
-						useGenerator(theGenerator.value)
-							.question(result)
-					)
-				}
-			}
-
-			return arr
-		} catch (err) {
-			generateErrors.value = err
-			//console.warn(err)
-		}
-	}
-	return []
-})
 
 function saveGenerator() {
 	axios.post(route("generators.update", [props.generator.id]), {
@@ -89,6 +51,10 @@ function deleteGenerator() {
 	})
 }
 
+function historyBack(){
+	window.history.back()
+}
+
 </script>
 
 <template>
@@ -107,6 +73,12 @@ function deleteGenerator() {
 
 			<div>
 				<div class="flex gap-3 justify-end">
+					<button
+						class="btn btn-primary btn-xs"
+						@click="historyBack"
+					>
+						retour
+					</button>
 					<button
 						class="btn btn-primary btn-xs"
 						@click="saveGenerator"
@@ -210,40 +182,12 @@ function deleteGenerator() {
 				type="code"
 			/>
 
-
-			<div class="min-w-[250px]">
-				<div class="flex justify-between">
-					<h3>Exemples</h3>
-					<button
-						class="btn-xs"
-						@click="randomCounter++"
-					>
-						générer
-					</button>
-				</div>
-				<div
-					v-if="generateQuestions.length > 0"
-					class="font-code flex flex-col gap-3"
-				>
-					<div
-						v-for="(question, idx) of generateQuestions"
-						:key="`question-${idx}`"
-						class="border rounded shadow bg-white px-2 flex justify-between items-baseline py-2"
-					>
-						<div v-katex.auto="question.block.body.replaceAll('$a','\\ ?')" />
-						<div
-							class="text-xs"
-							v-text="question.answer"
-						/>
-					</div>
-				</div>
-				<div
-					v-if="generateErrors"
-					class="text-red-700 text-xs"
-				>
-					{{ generateErrors }}
-				</div>
-			</div>
+			<generators-examples
+				class="min-w-[250px]"
+				generate-on-mounted
+				:questions-number="5"
+				:generator="generator"
+			/>
 		</div>
 	</section>
 </template>

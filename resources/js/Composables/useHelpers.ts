@@ -15,6 +15,15 @@ export function useMenuScrollToClass(className: string) {
 	})
 }
 
+export function useMenuScrollToData(dataName: string, dataValue: unknown) {
+	const el = document.querySelector(`[data-${dataName}="${dataValue}"]`)
+	el.scrollIntoView({
+		block: "start",
+		behavior: "smooth",
+		inline: "start"
+	})
+}
+
 /**
  * Scrolls the page to a specified element with smooth behavior.
  * If no element is specified, scrolls to the top of the page.

@@ -29,6 +29,8 @@ Route::prefix('admin')
 			->name('admin.tools');
 		Route::get('/challenges', [AdminController::class, 'challenges'])
 			->name('admin.challenges');
+		Route::get('/generators', [AdminController::class, 'generators'])
+			->name('admin.generators');
 		Route::get('/widgets', [AdminController::class, 'widgets'])
 			->name('admin.widgets');
 		Route::get('/widgets/refresh', [WidgetController::class, 'refresh'])

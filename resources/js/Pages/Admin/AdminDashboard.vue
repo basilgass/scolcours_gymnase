@@ -16,6 +16,7 @@ const links2 = [
 	{ title: "chapitres", route: "admin.chapters", icon: 'bi bi-book' },
 	{ title: "outils", route: "admin.tools", icon: 'bi bi-wrench' },
 	{ title: "challenges", route: "admin.challenges", icon: 'bi bi-pencil-square' },
+	{ title: "générateurs", route: "admin.generators", icon: 'bi bi-shuffle' },
 	{ title: "widgets", route: "admin.widgets", icon: 'bi bi-nut' },
 ]
 

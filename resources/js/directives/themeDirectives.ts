@@ -8,11 +8,23 @@ function themeUpdate(el, binding) {
 
 	let chapter: string
 
-	// Remove all classes from el matching the pattern "<key>-scolcours-<theme>"
+	// Remove all classes from el matching the pattern "<key>-<theme>????"
 	if (el) {
 		keys.forEach((key) => {
-			el.classList.remove(new RegExp(`${key}-scolcours-[${themes.join('|')}]`))
+			themes.forEach((theme) => {
+				const regex = new RegExp(`${key}-${theme}-\\d+`)
+				el.classList.forEach((className) => {
+					if (regex.test(className)) {
+						el.classList.remove(className)
+					}
+				})
+			})
 		})
+
+		// Remove the text-white class if bg is not set
+		if (Object.hasOwn(binding.modifiers, "bg") && binding.value===0) {
+			el.classList.remove("text-white")
+		}
 	}
 
 	if (binding.value === false || binding.value === 0 || binding.value === "") return

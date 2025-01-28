@@ -156,7 +156,10 @@ const listOfTools = computed(() => {
 					break-inside-avoid-column cursor-pointer"
 					:href="route('tools.tool', [item.slug])"
 				>
-					<header class="border-b font-semibold px-3 py-2">
+					<header
+						class="border-b font-semibold px-3 py-2"
+						v-theme.bg.text="item.theme_id ?? 0"
+					>
 						{{ item.title }}
 					</header>
 					<div class="px-3 py-2 font-extralight text-sm">

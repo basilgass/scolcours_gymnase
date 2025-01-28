@@ -66,9 +66,8 @@ function deleteFormula(){
 					v-if="formula.block.title"
 					v-theme.text="formula.theme_id"
 					class="text-xl font-extralight"
-				>
-					{{ formula.block.title }}
-				</h2>
+					v-katex.auto="formula.block.title"
+				/>
 			</div>
 		</template>
 	</block-show>

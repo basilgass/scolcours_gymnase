@@ -5,13 +5,13 @@ Affichage de la liste des challenges pour un chapitre donné.
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import DialogModal from "@/Components/Ui/DialogModal.vue"
 import { useStoreEditMode } from "@/stores/useStoreEditMode.ts"
-import { ChallengeInterface, ChapterShowInterface } from "@/types/modelInterfaces.ts"
+import {ChallengeMinInterface, ChapterShowInterface} from "@/types/modelInterfaces.ts"
 import { useForm } from "@inertiajs/vue3"
 import { ref } from "vue"
 
 let props = defineProps<{
 	chapter: ChapterShowInterface,
-	challenges: ChallengeInterface[]
+	challenges: ChallengeMinInterface[]
 }>()
 
 const editMode = useStoreEditMode()

@@ -134,4 +134,12 @@ class DeckController extends Controller
 
 		return $validation['chapter_id'];
 	}
+
+	public function getFlipcards(string $values)
+	{
+		$flipcards = Flipcard::whereIn('id', explode(',', $values))
+			->orderByRaw('FIELD(id,' . $values . ')')
+			->get();
+		return FlipcardResource::collection($flipcards);
+	}
 }

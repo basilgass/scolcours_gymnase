@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import {LanguageDataInterface} from "@/Pages/languages/LanguageShow.vue"
 import {computed, inject} from "vue"
-import type {BlockInterface, deckInterface} from "@/types/modelInterfaces.ts"
+import type {BlockInterface, DeckInterface} from "@/types/modelInterfaces.ts"
 import FlipcardsShow from "@/Components/Decks/FlipcardsShow.vue"
 import {useLanguage} from "@/Components/Languages/useLanguage.ts"
 
@@ -42,7 +42,7 @@ const cards = computed(()=>{
 	})
 })
 
-const deck = computed<deckInterface | null>(() => {
+const deck = computed<DeckInterface | null>(() => {
 	if (languageData.language.books.length === 0) {
 		return null
 	}

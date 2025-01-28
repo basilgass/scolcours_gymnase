@@ -2,7 +2,7 @@
 import WidgetForm from "@/Components/WidgetForm.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 import { PropType } from "vue"
-import type { widgetInterface } from "@/types/modelInterfaces"
+import type { WidgetInterface } from "@/types/modelInterfaces"
 import axios from "axios"
 import { router } from "@inertiajs/vue3"
 import FilteredList from "@/Components/Ui/FilteredList.vue"
@@ -10,7 +10,7 @@ import FilteredList from "@/Components/Ui/FilteredList.vue"
 defineOptions({ layout: LayoutMain })
 
 defineProps({
-	widgets: { type: Object as PropType<widgetInterface[]>, required: true }
+	widgets: { type: Object as PropType<WidgetInterface[]>, required: true }
 })
 
 function refreshWidgets() {
@@ -42,7 +42,7 @@ function refreshWidgets() {
 				title="chapitres"
 				:no-filter-if-less-than="0"
 			>
-				<template #card="{ item }:{ item: widgetInterface}">
+				<template #card="{ item }:{ item: WidgetInterface}">
 					<div
 						v-theme.border="item.theme?.id"
 						class="bg-white border-l-8 px-5 py-2 rounded-r-lg"

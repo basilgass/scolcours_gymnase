@@ -3,12 +3,12 @@
 	setup
 >
 import BlockShow from "@/Components/Blocks/BlockShow.vue"
-import { FormulaInterface, WidgetInterface } from "@/types/modelInterfaces"
+import { FormulaInterface, WidgetPropsInterface } from "@/types/modelInterfaces"
 import axios from "axios"
 import { onMounted, ref } from "vue"
 
 const props = defineProps<{
-	illustration: WidgetInterface
+	illustration: WidgetPropsInterface
 }>()
 
 const formulas = ref<FormulaInterface[]>([])
@@ -33,10 +33,12 @@ onMounted(() => {
 </script>
 
 <template>
-	<div class="grid
+	<div
+		class="grid
 	grid-cols-1 md:grid-cols-2 lg:grid-cols-3
 	gap-5
-	place-items-center">
+	place-items-center"
+	>
 		<block-show
 			v-for="formula in formulas"
 			:key="formula.id"

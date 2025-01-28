@@ -7,7 +7,7 @@ import FlipcardsIndex from "@/Components/Decks/FlipcardsIndex.vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 import { flashInterface } from "@/types"
-import type { deckInterface } from "@/types/modelInterfaces"
+import type { DeckInterface } from "@/types/modelInterfaces"
 import { watchDebounced } from "@vueuse/core"
 import axios from "axios"
 import { inject, PropType, ref } from "vue"
@@ -18,7 +18,7 @@ const flash = inject<flashInterface>("flash")
 
 
 const props = defineProps({
-	deck: { type: Object as PropType<deckInterface>, required: true }
+	deck: { type: Object as PropType<DeckInterface>, required: true }
 })
 
 const chapterId = ref<undefined | number>(undefined)

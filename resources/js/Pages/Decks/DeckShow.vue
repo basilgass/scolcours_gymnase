@@ -4,12 +4,12 @@
 >
 import FlipcardsShow from "@/Components/Decks/FlipcardsShow.vue"
 import LayoutProjection from "@/Layouts/LayoutProjection.vue"
-import type { deckInterface } from "@/types/modelInterfaces"
+import type { DeckInterface } from "@/types/modelInterfaces"
 import { PropType } from "vue"
 
 defineOptions({ layout: LayoutProjection })
 const props = defineProps({
-	deck: { type: Object as PropType<deckInterface>, required: true }
+	deck: { type: Object as PropType<DeckInterface>, required: true }
 })
 </script>
 

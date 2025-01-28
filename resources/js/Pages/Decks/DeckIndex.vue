@@ -8,14 +8,14 @@ import FilteredList from "@/Components/Ui/FilteredList.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 import DeckGroup from "@/Pages/Decks/DeckGroup.vue"
 import { useStoreEditMode } from "@/stores/useStoreEditMode.ts"
-import type { deckInterface } from "@/types/modelInterfaces"
+import type { DeckInterface } from "@/types/modelInterfaces"
 import axios from "axios"
 import { PropType, ref } from "vue"
 
 defineOptions({ layout: LayoutMain })
 
 const props = defineProps({
-	decks: { type: Array as PropType<deckInterface[]>, required: true }
+	decks: { type: Array as PropType<DeckInterface[]>, required: true }
 })
 const editMode = useStoreEditMode()
 const theDecks = ref(props.decks)
@@ -46,7 +46,7 @@ function addDeck() {
 			:list="props.decks"
 			filter-by-theme
 		>
-			<template #card="{ item }: { item: deckInterface }">
+			<template #card="{ item }: { item: DeckInterface }">
 				<deck-group
 					:key="item.id"
 					:deck="item"

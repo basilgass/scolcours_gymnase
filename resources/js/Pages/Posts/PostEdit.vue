@@ -29,7 +29,8 @@ if (thePost.value.type === null) thePost.value.type = ""
 
 const typeList = ref({
 	article: "",
-	exercice: "exercise"
+	exercice: "exercise",
+	"savoir faire": "howto",
 })
 
 

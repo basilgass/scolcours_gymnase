@@ -53,15 +53,6 @@ export interface BlockInterface {
 	json: string;
 }
 
-export interface BlockInterfaceExtended extends BlockInterface {
-	isNew?: boolean
-}
-
-export interface WidgetInterface {
-	parameters: string;
-	code: string;
-}
-
 export interface IllustrationInterface {
 	id: number;
 	block_id: number;
@@ -71,7 +62,7 @@ export interface IllustrationInterface {
 	value: string;
 	type: string;
 	widget_id: number;
-	widget: widgetInterface;
+	widget: WidgetInterface;
 	parameters: string;
 	code: string;
 	isNew?: boolean;
@@ -143,18 +134,13 @@ export interface ThemeInterface {
 	enabled: boolean
 }
 
-export interface ThemeAsRelationInterface {
-	id: number
-	slug: string
-	title: string
-}
-
 export interface ToolInterface {
 	id: number
 	slug: string
 	title: string
 	body: string
 	parameters: string
+	theme_id: number
 	updated_at: string
 }
 
@@ -196,6 +182,12 @@ export interface ChallengeMinInterface {
 	block: BlockInterface;
 }
 
+export interface ChallengeMinInterface {
+	id: number;
+	slug: string;
+	title: string;
+}
+
 export interface ChallengeInterface {
 	id: number;
 	slug: string;
@@ -218,14 +210,14 @@ export interface ChallengeInterface {
 	generators: GeneratorInterface[];
 }
 
-export interface flipcardsInterface {
+export interface FlipcardsInterface {
 	id: number,
 	recto: BlockInterface,
 	verso: BlockInterface,
 	result?: boolean
 }
 
-export interface deckInterface {
+export interface DeckInterface {
 	id: number,
 	title: string,
 	slug: string,
@@ -234,10 +226,10 @@ export interface deckInterface {
 		slug: number;
 	},
 	theme_id: number,
-	flipcards: flipcardsInterface[]
+	flipcards: FlipcardsInterface[]
 }
 
-export interface widgetInterface {
+export interface WidgetInterface {
 	id: number,
 	name: string,
 	slug: string,
@@ -249,6 +241,12 @@ export interface widgetInterface {
 	},
 	control: boolean
 }
+
+export interface WidgetPropsInterface {
+	parameters: string;
+	code: string;
+}
+
 
 export interface TeamInterface {
 	id: number,

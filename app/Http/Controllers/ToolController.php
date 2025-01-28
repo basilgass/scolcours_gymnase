@@ -12,9 +12,12 @@
 	{
 		public function index()
 		{
-			$data = ["theme"    => Theme::where('slug', 'tools')->first()];
-			$data['tools'] = Tool::orderBy('title')->get();
-			$data['tool'] = null;
+			$data = [
+				"theme"    => Theme::where('slug', 'tools')->first(),
+				"tools" => Tool::orderBy('title')->get(),
+				"tool" => null,
+			];
+
 			return Inertia::render("Tools/ToolsPage", $data);
 		}
 
@@ -49,6 +52,7 @@
 			$validation = $request->validate([
 				'title' => ['string', 'required'],
 				'body' => ['string', 'required'],
+				'theme_id' => ['integer', 'exists:App\Models\Theme,id', 'nullable'],
 			]);
 
 			$tool->update($validation);

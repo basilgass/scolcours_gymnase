@@ -7,7 +7,6 @@ const description = `tos,[paramètres]
 **paramètres**
 aucun
 `
-
 export class TableofsignChecker extends CheckerAbstract {
     private grows: boolean
     private coords: boolean

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import type {GeneratorInterface, QuestionInterface, WidgetInterface} from "@/types/modelInterfaces.ts"
+import type {GeneratorInterface, QuestionInterface, WidgetPropsInterface} from "@/types/modelInterfaces.ts"
 import QuestionShow from "@/Components/Questions/QuestionShow.vue"
 import {computed, onMounted, ref} from "vue"
 import {useGenerator} from "@/Composables/useGenerator.ts"
@@ -8,7 +8,7 @@ import {ChallengeAnswerInterface} from "@/Components/Challenges/ChallengeGame.vu
 import axios from "axios"
 
 const props = defineProps<{
-	illustration: WidgetInterface
+	illustration: WidgetPropsInterface
 }>()
 
 const generator = ref<GeneratorInterface|false>(false)

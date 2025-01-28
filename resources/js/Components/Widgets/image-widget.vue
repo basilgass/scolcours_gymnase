@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { WidgetInterface } from "@/types/modelInterfaces"
+import { WidgetPropsInterface } from "@/types/modelInterfaces"
 import { computed } from "vue"
 
 const props = defineProps<{
-	illustration: WidgetInterface
+	illustration: WidgetPropsInterface
 }>()
 
 

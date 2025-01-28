@@ -8,13 +8,13 @@ import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 import { useStoreEditMode } from "@/stores/useStoreEditMode.ts"
 import { flashInterface } from "@/types"
-import type { deckInterface } from "@/types/modelInterfaces"
+import type { DeckInterface } from "@/types/modelInterfaces"
 import { router } from "@inertiajs/vue3"
 import axios from "axios"
 import { inject, PropType, ref } from "vue"
 
 const props = defineProps({
-	deck: { type: Object as PropType<deckInterface>, required: true }
+	deck: { type: Object as PropType<DeckInterface>, required: true }
 })
 
 const  editMode  = useStoreEditMode()

@@ -8,6 +8,7 @@ use App\Http\Resources\UserResource;
 use App\Http\Resources\WidgetResource;
 use App\Models\Challenge;
 use App\Models\Chapter;
+use App\Models\Generator;
 use App\Models\Illustration;
 use App\Models\Scolcours;
 use App\Models\Team;
@@ -36,7 +37,7 @@ class AdminController extends Controller
 		return Inertia::render(
 			'Admin/AdminConfigPage',
 			[
-				"title"     => $scolcours->title,
+				"title" => $scolcours->title,
 				"allThemes" => Theme::orderBy('order')->get()
 			]
 		);
@@ -46,9 +47,9 @@ class AdminController extends Controller
 	{
 		// Validation
 		$validation = $request->validate([
-			'title'            => ['string', 'min:2'],
-			'themes'           => ['array'],
-			'themes.*.slug'    => ['string', 'exists:App\Models\Theme,slug'],
+			'title' => ['string', 'min:2'],
+			'themes' => ['array'],
+			'themes.*.slug' => ['string', 'exists:App\Models\Theme,slug'],
 			'themes.*.enabled' => ['boolean'],
 		]);
 
@@ -70,8 +71,8 @@ class AdminController extends Controller
 	public function configUpdateOrder(Request $request)
 	{
 		$validation = $request->validate([
-			'order'         => ['array'],
-			'order.*.id'    => ['exists:App\Models\Theme'],
+			'order' => ['array'],
+			'order.*.id' => ['exists:App\Models\Theme'],
 			'order.*.order' => ['int', 'min:1'],
 		]);
 
@@ -93,7 +94,7 @@ class AdminController extends Controller
 		return Inertia::render(
 			'Admin/AdminChaptersPage',
 			[
-				'chapters'   => ChapterResource::collection(Chapter::all())
+				'chapters' => ChapterResource::collection(Chapter::all())
 			]
 		);
 	}
@@ -105,7 +106,7 @@ class AdminController extends Controller
 		return Inertia::render(
 			'Admin/AdminToolsPage',
 			[
-				'tools'      => ToolResource::collection(Tool::all())
+				'tools' => ToolResource::collection(Tool::all())
 			]
 		);
 	}
@@ -117,11 +118,21 @@ class AdminController extends Controller
 			[
 				'challenges' => Challenge::all()->map(function ($tool, $key) {
 					return [
-						'slug'       => $tool->slug,
-						'title'      => $tool->title,
+						'slug' => $tool->slug,
+						'title' => $tool->title,
 						'updated_at' => $tool->updated_at->format('d.m.Y H:m'),
 					];
 				})
+			]
+		);
+	}
+
+	public function generators()
+	{
+		return Inertia::render(
+			'Admin/AdminGeneratorsPage',
+			[
+				'generators' => Generator::all()
 			]
 		);
 	}
@@ -162,14 +173,14 @@ class AdminController extends Controller
 
 			// Les paramètrs
 			if (preg_match("/\*\sparameters:\s?(.+)/", $content, $parameters)) {
-				$parameters = collect(explode(",", $parameters[1]))->map(fn ($x) => trim($x));
+				$parameters = collect(explode(",", $parameters[1]))->map(fn($x) => trim($x));
 			} else {
 				$parameters = collect([]);
 			}
 
 			// Les tags
 			if (preg_match("/\*\stags:\s?(.+)/", $content, $tags)) {
-				$tags = collect(explode(",", $tags[1]))->map(fn ($x) => trim($x));
+				$tags = collect(explode(",", $tags[1]))->map(fn($x) => trim($x));
 			} else {
 				$tags = collect([]);
 			}
@@ -180,8 +191,8 @@ class AdminController extends Controller
 					"slug" => $slug
 				],
 				[
-					"title"      => $title,
-					"body"       => $body,
+					"title" => $title,
+					"body" => $body,
 					"parameters" => $parameters
 				]
 			);
@@ -212,8 +223,8 @@ class AdminController extends Controller
 	public function createUsers(Request $request)
 	{
 		$validation = $request->validate([
-			"users"    => ['required'],
-			"users.*"  => ['email'],
+			"users" => ['required'],
+			"users.*" => ['email'],
 			'password' => ['required', 'string', 'min:6']
 		]);
 
@@ -229,10 +240,10 @@ class AdminController extends Controller
 			}
 
 			User::create([
-				'name'      => ucwords($name),
+				'name' => ucwords($name),
 				'firstname' => ucwords($firstname ?? ""),
-				'email'     => $email,
-				'password'  => Hash::make($validation['password']),
+				'email' => $email,
+				'password' => Hash::make($validation['password']),
 			]);
 		}
 
@@ -242,7 +253,7 @@ class AdminController extends Controller
 	public function updateUser(User $user, Request $request)
 	{
 		$request->validate([
-			'name'      => 'required',
+			'name' => 'required',
 			'firstname' => 'required'
 		]);
 
@@ -287,10 +298,10 @@ class AdminController extends Controller
 	public function updateAValue(Request $request)
 	{
 		$request->validate([
-			'model'  => ["string"],
-			'id'     => ["int"],
+			'model' => ["string"],
+			'id' => ["int"],
 			'column' => ["string"],
-			'value'  => ["string", "nullable"]
+			'value' => ["string", "nullable"]
 		]);
 
 		// Get the model

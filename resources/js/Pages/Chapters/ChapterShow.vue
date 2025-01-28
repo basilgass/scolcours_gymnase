@@ -1,7 +1,5 @@
-<script
-	lang="ts"
-	setup
->
+<script lang="ts" setup>
+
 import ChapterChallenges from "@/Components/Chapters/ChapterChallenges.vue"
 import ChapterFormulas from "@/Components/Chapters/ChapterFormulas.vue"
 import ChapterRelations from "@/Components/Chapters/ChapterRelations.vue"
@@ -10,7 +8,12 @@ import ChapterToc from "@/Components/Chapters/ChapterToc.vue"
 import EditLink from "@/Components/Ui/EditLink.vue"
 
 import LayoutMain from "@/Layouts/LayoutMain.vue"
-import { ChallengeInterface, ChapterInterface, ChapterShowInterface, PostInterface } from "@/types/modelInterfaces"
+import {
+	ChallengeMinInterface,
+	ChapterInterface,
+	ChapterShowInterface,
+	PostInterface
+} from "@/types/modelInterfaces"
 import { ref } from "vue"
 
 defineOptions({ layout: LayoutMain })
@@ -18,7 +21,7 @@ defineOptions({ layout: LayoutMain })
 defineProps<{
 	chapter: ChapterShowInterface,
 	posts: PostInterface[],
-	challenges: ChallengeInterface[],
+	challenges: ChallengeMinInterface[],
 	relations: ChapterInterface[]
 }>()
 
@@ -144,6 +147,7 @@ const showFormular = ref(false)
 	</section>
 </template>
 <style scoped>
+
 .box {
 	@apply bg-white dark:bg-gray-900 border rounded-xl px-5 py-3;
 }
