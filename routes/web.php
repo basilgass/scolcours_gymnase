@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [ScolcoursController::class, 'index'])
 	->name('home');
 
-Route::get('/search/{terms}', [ScolcoursController::class, 'search'])
+Route::get('/search/{type}/{terms}', [ScolcoursController::class, 'search'])
 	->name('scolcours.search');
 
 // Profile de l'utilisateur
@@ -28,8 +28,6 @@ Route::get('/dashboard', [ScolcoursController::class, 'dashboard'])
 
 require __DIR__ . '/adminRoutes.php';
 require __DIR__ . '/auth.php';
-
-
 require __DIR__ . '/translationsRoutes.php';	// 20.03.2024
 require __DIR__ . '/questionsRoutes.php';	// 19.03.2024
 require __DIR__ . '/blocksRoutes.php';	// 19.03.2024

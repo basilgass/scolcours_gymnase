@@ -31,9 +31,9 @@ class ScolcoursController extends Controller
 		$courses = ChapterResource::collection($chapters)
 			->map(function ($chapter) {
 				return $chapter->additional([
-					'currentPost' => $chapter->posts->where('id', $chapter->pivot->post_id)->first()->order,
-					'maxPost' => count($chapter->posts)
-				]);
+												'currentPost' => $chapter->posts->where('id', $chapter->pivot->post_id)->first()->order,
+												'maxPost'     => count($chapter->posts)
+											]);
 			});
 
 		// $courses = ChapterResource + CurrentPost + MaxPost
@@ -68,8 +68,8 @@ class ScolcoursController extends Controller
 //		}, 'users.txt');
 
 		$validate = $request->validate([
-			'svg' => ['string', 'min:2']
-		]);
+										   'svg' => ['string', 'min:2']
+									   ]);
 
 		$content = $validate['svg'];
 		$filename = 'grapheur.svg';
@@ -78,10 +78,11 @@ class ScolcoursController extends Controller
 		}, $filename);
 	}
 
-	public function search(string $terms)
+	public function search(string $type, string $terms)
 	{
-		// category: 'chapter' | 'post' | 'challenge' | 'quizz' | 'deck' | 'tool'
-		// Do the search only if $terms has at least two caracters.
+		// export type searchFilter = 'chapters' | 'posts' | 'challenges' | 'quizzes' | 'decks' | 'tools' | 'howtos'
+
+		// Do the search only if $terms has at least two characters.
 		if (strlen($terms) < 2) {
 			return [];
 		}
@@ -90,24 +91,28 @@ class ScolcoursController extends Controller
 
 		// Chapters
 		// Search in title, slug and blocks.body
-		$found[] = [
-			'type' => 'chapter',
-			'items' => $this->searchChapters($terms)
-		];
+		if ($type === 'all' or $type === 'chapters') {
+			$found['chapters'] = $this->searchChapters($terms);
+		}
 
 		// Posts
 		// Search in title and slug
-		$found[] = [
-			'type' => 'post',
-			'items' => $this->searchPosts($terms)
-		];
+		if ($type === 'all' or $type === 'posts') {
+			$found['posts'] = $this->searchPosts($terms);
+
+
+		}
+
+		if ($type === 'howtos') {
+			$found['howtos'] = $this->searchPosts($terms, 'howto');
+		}
+
 
 		// Blocks
 		// Search in title and body
-		$found[] = [
-			'type' => 'block',
-			'items' => $this->searchBlocks($terms)
-		];
+		if ($type === 'all' or $type === 'blocks') {
+			$found['blocks'] = $this->searchBlocks($terms);
+		}
 
 		// Challenges
 
@@ -117,19 +122,25 @@ class ScolcoursController extends Controller
 	public function searchChapters(string $terms)
 	{
 		return Chapter::with(['blocks'])
-				->where('title', 'like', '%' . $terms . '%')
-				->orWhere('slug', 'like', '%' . $terms . '%')
-				->orWhereHas('blocks', function ($query) use ($terms) {
-					$query->where('title', 'like', '%' . $terms . '%')
-						->orWhere('body', 'like', '%' . $terms . '%');
-				})
-				->get();
+			->where('title', 'like', '%' . $terms . '%')
+			->orWhere('slug', 'like', '%' . $terms . '%')
+			->orWhereHas('blocks', function ($query) use ($terms) {
+				$query->where('title', 'like', '%' . $terms . '%')
+					->orWhere('body', 'like', '%' . $terms . '%');
+			})
+			->get();
 	}
 
-	public function searchPosts(string $terms)
+	public function searchPosts(string $terms, string $type = null)
 	{
-		return Post::where('title', 'like', '%' . $terms . '%')
-			->orWhere('slug', 'like', '%' . $terms . '%')
+		if ($type === 'howto') {
+			return Post::where('title', 'like', '%' . $terms . '%')
+				->where('type', '=', $type)
+				->get();
+		}
+
+		return Post::with(['chapter'])
+			->where('title', 'like', '%' . $terms . '%')
 			->get();
 	}
 
