@@ -13,9 +13,14 @@ const props = defineProps({
 	allThemes: { type: Object as PropType<ThemeInterface[]>, required: true },
 	title: { type: String, required: true },
 })
+
 const title = ref(props.title),
-	themes = ref(props.allThemes),
-	saveConfig = function () {
+	themes = ref(props.allThemes.map(theme=>{
+		theme.enabled = !!theme.enabled
+		return theme
+	}))
+function saveConfig () {
+	console.log('SAVE CONFIG')
 		axios
 			.post(route("admin.config.update"), {
 				title: title.value,
@@ -30,8 +35,8 @@ const title = ref(props.title),
 			.catch((err) => {
 				console.warn(err)
 			})
-	},
-	sortEvent = function () {
+	}
+function sortEvent() {
 		axios
 			.post(route("admin.config.updateOrder"), {
 				_method: "PATCH",
@@ -48,66 +53,53 @@ const title = ref(props.title),
 	}
 </script>
 <template>
-	<section class="flex flex-col gap-5">
-		<h1 class="text-3xl pt-5">
-			Configuration du site web
-		</h1>
+	<main class="scolcours-container">
+		<section class="flex flex-col gap-5">
+			<h1 class="text-3xl pt-5">
+				Configuration du site web
+			</h1>
 
-		<form-maker
-			v-model="title"
-			label="titre du site web"
-			name="title"
-		/>
+			<form-maker
+				v-model="title"
+				label="titre du site web"
+				name="title"
+			/>
 
-		<div
-			class="text-red-500 bg-blue-500"
-			aria-label="hello wold"
-		>
-			<h2 class="text-2xl">
-				Thèmes
-			</h2>
-			<p class="text-gray-500">
-				Les thèmes sont les couleurs de votre site web
-			</p>
-		</div>
+			<div class="flex flex-col gap-3">
+				<draggable
+					v-model="themes"
+					item-key="id"
+					class="flex flex-col gap-3"
+					handle=".draggable-handle"
+					v-bind="{
+						animation: 200,
+					}"
+					@update="sortEvent"
+				>
+					<template #item="{ element }: {element: ThemeInterface}">
+						<div class="flex gap-3 items-center">
+							<div class="text-3xl draggable-handle cursor-move">
+								<i class="bi bi-arrows-move" />
+							</div>
+							<div
+								v-theme.bg.text="element.slug"
+								class="text-white px-4 py-2 rounded flex-1 grid grid-cols-1 gap-3 place-items-center"
+							>
+								<div>{{ element.title }}</div>
+								<i :class="`${element.icon}`" />
+							</div>
 
-		<div class="flex flex-col gap-3">
-			<draggable
-				v-model="themes"
-				item-key="id"
-				class="flex flex-col gap-3"
-				handle=".draggable-handle"
-				v-bind="{
-					animation: 200,
-				}"
-				@update="sortEvent"
-			>
-				<template #item="{ element }">
-					<div class="flex gap-3 items-center">
-						<div class="text-3xl draggable-handle cursor-move">
-							<i class="bi bi-arrows-move" />
+							<form-maker
+								type="switch"
+								v-model="element.enabled"
+								:name="`${element}-enabled`"
+								label="activé,désactivé"
+								@change="saveConfig"
+							/>
 						</div>
-						<div
-							:class="element.enabled
-								? 'bg-scolcours-' + element.slug
-								: 'bg-gray-400'
-							"
-							class="text-white px-4 py-2 rounded flex-1 grid grid-cols-1 gap-3 place-items-center"
-						>
-							<div>{{ element.title }}</div>
-							<i :class="`${element.icon}`" />
-						</div>
-
-						<form-maker
-							type="switch"
-							v-model="element.enabled"
-							:name="`${element}-enabled`"
-							label="activé,désactivé"
-							@input="saveConfig"
-						/>
-					</div>
-				</template>
-			</draggable>
-		</div>
-	</section>
+					</template>
+				</draggable>
+			</div>
+		</section>
+	</main>
 </template>

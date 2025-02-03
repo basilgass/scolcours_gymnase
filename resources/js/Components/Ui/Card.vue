@@ -1,9 +1,14 @@
 <script setup lang="ts">
 
+withDefaults(defineProps<{
+	withThemes: boolean
+}>(), {
+	withThemes: false
+})
 </script>
 
 <template>
-	<div class="bg-white dark:bg-gray-900">
+	<div :class="withThemes?'':'bg-white dark:bg-slate-900'">
 		<header
 			v-if="$slots['header']"
 			class="px-3 py-2 border-b"

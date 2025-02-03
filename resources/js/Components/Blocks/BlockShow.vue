@@ -12,6 +12,7 @@ import type { BlockInterface } from "@/types/modelInterfaces.ts"
 import { router } from "@inertiajs/vue3"
 import axios from "axios"
 import { computed, inject, provide } from "vue"
+import {blockTemplate} from "@/helpers/blockTemplate.ts"
 
 const editMode = useStoreEditMode()
 const flash = inject<flashInterface>("flash")
@@ -51,105 +52,10 @@ const blockTitleClass = computed(() => {
 })
 
 
-const blockTemplate = computed(() => {
-	if (!props.block.template) {
-		return {
-			grid: "grid grid-cols-1 gap-3",
-			block: "",
-			illustration: ""
-		}
-	}
-
-	const values = props.block.template
-		.split(",")
-		.filter((x) => x !== "")
-
-	// pattern is:
-	// bi,md:b+i,lg:2b+i,xl:i+3b
-	if (values.length === 0) {
-		return {
-			grid: "grid grid-cols-1 gap-3",
-			block: "",
-			illustration: ""
-		}
-	}
-
-	const grid = ["grid grid-cols-1 gap-3"],
-		block = [
-			values[0][0] === "b"
-				? "order-1 col-span-1"
-				: "order-2 col-span-1"
-		],
-		illustration = [
-			values[0][0] === "i"
-				? "order-1 col-span-1"
-				: "order-2 col-span-1"
-		]
-	
-	for (const value of values) {
-		const media = value.split(":") // ["md", "2b+i"]
-		if (media.length !== 2) {
-			continue
-		}
-
-		if (["md", "lg", "xl"].indexOf(media[0]) !== -1) {
-			if (media[1].includes("+")) {
-				// md:b+i or md:3b+i or ...
-				const sizes = media[1].split("+").map((v) => {
-					return v.slice(0, -1) === "" ? 1 : +v.slice(0, -1)
-				}) // [2, 1]
-
-				// define grid size for the media query
-				grid.push(
-					`${media[0]}:grid-cols-${sizes[0] + sizes[1]}`
-				)
-
-				// define elements.
-				for (let j = 0; j < sizes.length; j++) {
-					if (sizes[j] === 0) {
-						// Must be hidden.
-						if (value[0].includes("b")) {
-							block.push(`${media[0]}:hidden`)
-						} else {
-							illustration.push(`${media[0]}:hidden`)
-						}
-					} else {
-						if (value[j].includes("b")) {
-							block.push(
-								`${media[0]}:order-${j + 1} ${media[0]
-								}:col-span-${sizes[j]}`
-							)
-						} else {
-							illustration.push(
-								`${media[0]}:order-${j + 1} ${media[0]
-								}:col-span-${sizes[j]}`
-							)
-						}
-					}
-				}
-			} else {
-				// md:bi or md:ib
-				grid.push(`${media[0]}:grid-cols-1`)
-				block.push(
-					media[1][0] === "b"
-						? `${media[0]}:order-1 ${media[0]}:col-span-1`
-						: `${media[0]}:order-2 ${media[0]}:col-span-1`
-				)
-				illustration.push(
-					media[1][0] === "i"
-						? `${media[0]}:order-1 ${media[0]}:col-span-1`
-						: `${media[0]}:order-2 ${media[0]}:col-span-1`
-				)
-			}
-		}
-	}
-
-	return {
-		grid: grid.join(" "),
-		block: block.join(" "),
-		illustration: illustration.join(" ")
-	}
+const elementsClasses = computed(() => {
+	return blockTemplate(props.block.template)
 })
+
 
 const postScript = inject("postScript", useScriptLoader(""))
 const blockScript = useScriptLoader(props.block.script, { parent: postScript.data })
@@ -222,19 +128,19 @@ function addIllustration(){
 		<!-- body -->
 		<slot name="body">
 			<div
-				:class="blockTemplate.grid + ((!block.title && !block.type) ? ' pt-3' : '')"
+				:class="elementsClasses.grid + ((!block.title && !block.type) ? ' pt-3' : '')"
 				class="px-5 pb-2"
 			>
 				<markdown-it
 					v-if="blockBody !== null"
-					:class="blockTemplate.block"
+					:class="elementsClasses.block"
 					:text="blockBody"
 				/>
 
 				<!-- Block illustrations -->
 				<div
 					v-if="block.illustrations?.length > 0"
-					:class="blockTemplate.illustration"
+					:class="elementsClasses.illustration"
 				>
 					<div :class="block.illustrationsGrid">
 						<illustration-show

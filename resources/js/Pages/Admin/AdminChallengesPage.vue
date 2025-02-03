@@ -2,13 +2,14 @@
 	lang="ts"
 	setup
 >
-import { PropType } from "vue"
+import {PropType} from "vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
-import type { ChallengeInterface } from "@/types/modelInterfaces"
+import type {ChallengeInterface} from "@/types/modelInterfaces"
+import Card from "@/Components/Ui/Card.vue"
 
-defineOptions({ layout: LayoutMain })
+defineOptions({layout: LayoutMain})
 defineProps({
-	challenges: { type: Object as PropType<ChallengeInterface[]>, required: true }
+	challenges: {type: Object as PropType<ChallengeInterface[]>, required: true}
 })
 
 </script>
@@ -17,28 +18,28 @@ defineProps({
 		<h1 class="text-3xl pt-5 mb-10">
 			administration des challenges
 		</h1>
-		<div class="w-full">
-			<div
+		<div class="w-full grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
+			<card
 				v-for="challenge in challenges"
 				:key="challenge.slug"
-				class="hover:bg-gray-200 flex justify-between px-4 py-2"
+				v-theme.bg.text="challenge.theme_id"
+				with-themes
 			>
 				<div>
 					<InertiaLink
 						:href="route('challenges.show', [challenge.slug])"
-						class="text-lg leading-6 font-medium text-gray-900"
-					>
-						{{ challenge.title }}
-					</InertiaLink>
-					<p class="mt-1 max-w-2xl text-sm text-gray-500">
+						class="text-lg leading-6 font-medium"
+						v-katex.auto="challenge.title"
+					/>
+					<p class="max-w-2xl text-sm font-code">
 						{{ challenge.slug }}
 					</p>
+					<div class=" mt-3 flex justify-between text-xs font-code">
+						<div>{{ challenge.updated_at }}</div>
+						<div>Is activated</div>
+					</div>
 				</div>
-				<div>
-					<div>{{ challenge.updated_at }}</div>
-					<div>Is activated</div>
-				</div>
-			</div>
+			</card>
 		</div>
 	</section>
 </template>

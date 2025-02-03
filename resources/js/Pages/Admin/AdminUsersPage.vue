@@ -159,197 +159,199 @@ function editUserStore(){
 
 </script>
 <template>
-	<div class="flex justify-between items-baseline">
-		<h1 class="text-3xl pt-5">
-			Gestion des utilisateurs
-		</h1>
-		<button
-			class="btn btn-add btn-xs"
-			@click="addMode=!addMode"
-		>
-			ajouter des utilisateurs
-		</button>
-	</div>
-
-	<section
-		v-show="addMode"
-		class="my-10 bg-gray-100 rounded-xl border border-gray-400 px-3 py-5"
-	>
-		<h2 class="text-lg">
-			Ajouter des utilisateurs
-		</h2>
-
-		<div class="grid grid-cols-2 gap-3">
-			<textarea
-				v-model="usersEmails"
-				class="p-3"
-				rows="10"
-			/>
-			<div>
-				<div
-					v-for="email of usersEmailsList"
-					:key="email"
-				>
-					{{ email }}
-				</div>
-			</div>
+	<main class="scolcours-container">
+		<div class="flex justify-between items-baseline">
+			<h1 class="text-3xl pt-5">
+				Gestion des utilisateurs
+			</h1>
+			<button
+				class="btn btn-add btn-xs"
+				@click="addMode=!addMode"
+			>
+				ajouter des utilisateurs
+			</button>
 		</div>
 
-		<form-maker
-			v-model="form.password"
-			label="mot de passe"
-			name="password"
-		/>
-		<button
-			class="btn btn-primary"
-			@click="addUsers"
+		<section
+			v-show="addMode"
+			class="my-10 bg-gray-100 rounded-xl border border-gray-400 px-3 py-5"
 		>
-			Ajouter {{ usersEmailsList.length }} utilisateur(s)
-		</button>
-	</section>
-
-	<section>
-		<!-- titre -->
-		<div class="flex justify-between">
-			<h2 class="text-xl">
-				Utilisateurs
+			<h2 class="text-lg">
+				Ajouter des utilisateurs
 			</h2>
 
-			<form-maker
-				v-model="deleteMode"
-				label="mode suppression"
-				name="deleteSwitch"
-				sm
-				type="switch"
-			/>
-			<form-maker
-				v-model="teamsMode"
-				label="assignation des équipes"
-				name="teamsSwitch"
-				sm
-				type="switch"
-			/>
-		</div>
+			<div class="grid grid-cols-2 gap-3">
+				<textarea
+					v-model="usersEmails"
+					class="p-3"
+					rows="10"
+				/>
+				<div>
+					<div
+						v-for="email of usersEmailsList"
+						:key="email"
+					>
+						{{ email }}
+					</div>
+				</div>
+			</div>
 
-		<!-- choix des team -->
-		<div
-			v-if="usersTeams.length>0"
-			class="flex gap-3 flex-wrap mb-3"
-		>
+			<form-maker
+				v-model="form.password"
+				label="mot de passe"
+				name="password"
+			/>
 			<button
-				:class="selectedTeam===''?'is-active':'bg-white'"
-				class="btn btn-xs"
-				@click="selectedTeam=''"
+				class="btn btn-primary"
+				@click="addUsers"
 			>
-				Tous
+				Ajouter {{ usersEmailsList.length }} utilisateur(s)
 			</button>
-			<button
-				:class="selectedTeam==='_'?'is-active':'bg-white'"
-				class="btn btn-xs"
-				@click="selectedTeam='_'"
-			>
-				~ vide ~
-			</button>
-			<button
-				v-for="team of usersTeams"
-				:key="team"
-				:class="selectedTeam===team?'is-active':'bg-white'"
-				class="btn btn-xs"
-				@click="selectedTeam=team"
-			>
-				{{ team }}
-			</button>
-		</div>
+		</section>
 
-		<!-- liste des utilisateurs -->
-		<div class="bg-white">
+		<section>
+			<!-- titre -->
+			<div class="flex justify-between">
+				<h2 class="text-xl">
+					Utilisateurs
+				</h2>
+
+				<form-maker
+					v-model="deleteMode"
+					label="mode suppression"
+					name="deleteSwitch"
+					sm
+					type="switch"
+				/>
+				<form-maker
+					v-model="teamsMode"
+					label="assignation des équipes"
+					name="teamsSwitch"
+					sm
+					type="switch"
+				/>
+			</div>
+
+			<!-- choix des team -->
 			<div
-				v-for="user of selectedUsers"
-				:key="user.id"
-				class="odd:bg-gray-50 px-5 py-4 flex justify-between"
+				v-if="usersTeams.length>0"
+				class="flex gap-3 flex-wrap mb-3"
 			>
-				<div class="user-wrapper-left flex justify-between w-full">
-					<div>
-						<h2 class="text-lg">
-							{{ user.fullname }}
-						</h2>
-						<div class="text-xs">
-							{{ user.email }}
+				<button
+					:class="selectedTeam===''?'is-active':'bg-white'"
+					class="btn btn-xs"
+					@click="selectedTeam=''"
+				>
+					Tous
+				</button>
+				<button
+					:class="selectedTeam==='_'?'is-active':'bg-white'"
+					class="btn btn-xs"
+					@click="selectedTeam='_'"
+				>
+					~ vide ~
+				</button>
+				<button
+					v-for="team of usersTeams"
+					:key="team"
+					:class="selectedTeam===team?'is-active':'bg-white'"
+					class="btn btn-xs"
+					@click="selectedTeam=team"
+				>
+					{{ team }}
+				</button>
+			</div>
+
+			<!-- liste des utilisateurs -->
+			<div class="bg-white">
+				<div
+					v-for="user of selectedUsers"
+					:key="user.id"
+					class="odd:bg-gray-50 px-5 py-4 flex justify-between"
+				>
+					<div class="user-wrapper-left flex justify-between w-full">
+						<div>
+							<h2 class="text-lg">
+								{{ user.fullname }}
+							</h2>
+							<div class="text-xs">
+								{{ user.email }}
+							</div>
+						</div>
+						<div v-show="!teamsMode">
+							{{ user.teams.map(team => team.name).join(",") }}
 						</div>
 					</div>
-					<div v-show="!teamsMode">
-						{{ user.teams.map(team => team.name).join(",") }}
-					</div>
-				</div>
 
-				<div class="user-wrapper-right">
-					<!-- suppression -->
-					<button
-						v-if="deleteMode"
-						class="btn btn-delete btn-xs ml-3"
-						@click="destroyUser(user.id)"
-					>
-						Supprimer
-					</button>
-
-					<!-- assignation des équipes -->
-					<div
-						v-if="teamsMode"
-						class="flex gap-3"
-					>
+					<div class="user-wrapper-right">
+						<!-- suppression -->
 						<button
-							v-for="team of theTeams"
-							:key="`team-${user.id}-${team.id}`"
-							:class="user.teams.find(search=>search.name===team.name)?'is-active':'bg-white'"
-							class="btn btn-xs"
-							@click="updateTeam(user.id, team.id)"
+							v-if="deleteMode"
+							class="btn btn-delete btn-xs ml-3"
+							@click="destroyUser(user.id)"
 						>
-							{{ team.name }}
+							Supprimer
 						</button>
-					</div>
 
-					<!-- édition du nom / prénom -->
-					<div>
-						<button
-							class="btn btn-xs"
-							@click="editUser(user.id)"
+						<!-- assignation des équipes -->
+						<div
+							v-if="teamsMode"
+							class="flex gap-3"
 						>
-							éditer
-						</button>
+							<button
+								v-for="team of theTeams"
+								:key="`team-${user.id}-${team.id}`"
+								:class="user.teams.find(search=>search.name===team.name)?'is-active':'bg-white'"
+								class="btn btn-xs"
+								@click="updateTeam(user.id, team.id)"
+							>
+								{{ team.name }}
+							</button>
+						</div>
+
+						<!-- édition du nom / prénom -->
+						<div>
+							<button
+								class="btn btn-xs"
+								@click="editUser(user.id)"
+							>
+								éditer
+							</button>
+						</div>
 					</div>
 				</div>
 			</div>
-		</div>
 
-		<!-- gestion des équipes -->
-		<div class="mt-10 bg-white py-3 px-5 border">
-			<h2 class="text-xl mb-5">
-				gestion des équipes
-			</h2>
-			<form-maker
-				v-model="newTeam"
-				label="nouvelle équipe"
-				name="newTeam"
-			/>
-			<button
-				class="btn btn-xs btn-add"
-				@click="storeTeam"
-			>
-				créer
-			</button>
-
-			<div>
-				<h3>supprimer une équipe</h3>
-				<confirm-button
-					v-for="team of theTeams"
-					:key="`destroy-${team.id}`"
-					@confirm="destroyTeam(team.id)"
+			<!-- gestion des équipes -->
+			<div class="mt-10 bg-white py-3 px-5 border">
+				<h2 class="text-xl mb-5">
+					gestion des équipes
+				</h2>
+				<form-maker
+					v-model="newTeam"
+					label="nouvelle équipe"
+					name="newTeam"
+				/>
+				<button
+					class="btn btn-xs btn-add"
+					@click="storeTeam"
 				>
-					{{ team.name }}
-				</confirm-button>
+					créer
+				</button>
+
+				<div>
+					<h3>supprimer une équipe</h3>
+					<confirm-button
+						v-for="team of theTeams"
+						:key="`destroy-${team.id}`"
+						@confirm="destroyTeam(team.id)"
+					>
+						{{ team.name }}
+					</confirm-button>
+				</div>
 			</div>
-		</div>
-	</section>
+		</section>
+	</main>
 
 	<dialog-modal v-model="editUserShow">
 		<template

@@ -116,10 +116,11 @@ class AdminController extends Controller
 		return Inertia::render(
 			'Admin/AdminChallengesPage',
 			[
-				'challenges' => Challenge::all()->map(function ($tool, $key) {
+				'challenges' => Challenge::all()->map(function (Challenge $tool, $key) {
 					return [
 						'slug' => $tool->slug,
 						'title' => $tool->title,
+						'theme_id' => $tool->chapter->theme_id,
 						'updated_at' => $tool->updated_at->format('d.m.Y H:m'),
 					];
 				})

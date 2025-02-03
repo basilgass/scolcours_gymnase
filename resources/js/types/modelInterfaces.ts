@@ -204,6 +204,7 @@ export interface ChallengeInterface {
 	bonusLevelTime: number;
 	updated_at: string;
 	chapter: ChapterInterface;
+	theme_id: number;
 	block: BlockInterface;
 	best: ChallengeScoreInterface;
 	user: ChallengeScoreInterface;

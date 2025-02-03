@@ -66,7 +66,7 @@ export default {
 			variants: ["lg", "md", "xl"],
 		},
 		{
-			pattern: /order-([1-2])/,
+			pattern: /order-([1-2]|last|first)/,
 			variants: ["lg", "md", "xl"],
 		},
 	],
