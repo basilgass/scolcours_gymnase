@@ -10,17 +10,13 @@ export class StringChecker extends CheckerAbstract {
 		this.description = description
 	}
 
-	get format(): string {
-		return "réponse textuelle"
+	readonly format = "réponse textuelle"
+
+	checkFormat(value: string): string {
+		return value ? "" : "Veuillez entrer une réponse"
 	}
 
-	check(
-		expected: string,
-		given: string,
-	): { result: boolean; message: string } {
-		return {
-			result: expected === given.toString(),
-			message: "",
-		}
+	checkValue(value: string): string {
+		return value ? "" : "Veuillez entrer une réponse"
 	}
 }

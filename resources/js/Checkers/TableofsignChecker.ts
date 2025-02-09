@@ -8,7 +8,7 @@ const description = `tos,[paramètres]
 aucun
 `
 export class TableofsignChecker extends CheckerAbstract {
-    private grows: boolean
+	private grows: boolean
     private coords: boolean
     private secondaryChecker: CheckerAbstract
 
@@ -33,82 +33,66 @@ export class TableofsignChecker extends CheckerAbstract {
         return "Tableau de signes"
     }
 
-    check(expected: string, given: string): { result: boolean; message: string } {
-        if (expected !== given) {
-            const zeroes = {
-                    expected: expected.split("@")[0],
-                    provided: given.split("@")[0]
-                },
-                signs = {
-                    expected: expected.split("@")[1],
-                    provided: given.split("@")[1] ?? ""
-                },
-                grows = {
-                    expected: expected.split("@")[2] ?? "",
-                    provided: given.split("@")[2] ?? ""
-                },
-                coords = {
-                    expected: expected.split("@")[3] ?? "",
-                    provided: given.split("@")[3] ?? ""
-                }
+	checkFormat(value: string): string {
+		return value ? "" : "Veuillez donner une réponse !"
+	}
 
-            if (zeroes.expected !== zeroes.provided) {
-                //TODO: compare each zeroes...
-                return {
-                    result: false,
-                    message: "les zéros ne sont pas justes"
-                }
-            }
+	checkValue(value: string): string {
+		if (this.answer !== value) {
+			const zeroes = {
+					expected: this.answer.split("@")[0],
+					provided: value.split("@")[0]
+				},
+				signs = {
+					expected: this.answer.split("@")[1],
+					provided: value.split("@")[1] ?? ""
+				},
+				grows = {
+					expected: this.answer.split("@")[2] ?? "",
+					provided: value.split("@")[2] ?? ""
+				},
+				coords = {
+					expected: this.answer.split("@")[3] ?? "",
+					provided: value.split("@")[3] ?? ""
+				}
 
-            if (signs.expected !== signs.provided) {
-                return {
-                    result: false,
-                    message: "les signes ne sont pas justes"
-                }
-            }
+			if (zeroes.expected !== zeroes.provided) {
+				//TODO: compare each zeroes...
+				return "les zéros ne sont pas justes"
+			}
 
-            if (grows.expected !== grows.provided) {
-                return {
-                    result: false,
-                    message: "la croissance n'est pas juste"
-                }
-            }
+			if (signs.expected !== signs.provided) {
+				return "les signes ne sont pas justes"
+			}
 
-            // Check the coordinates
-            if (coords.expected.length > 0) {
-                const expectedCoordinates = coords.expected.split(","),
-                    providedCoordinates = coords.provided.split(",")
+			if (grows.expected !== grows.provided) {
+				return "la croissance n'est pas juste"
+			}
 
-                if (expectedCoordinates.length !== providedCoordinates.length) {
-                    return {
-                        result: false,
-                        message: "toutes les valeurs des extrêmes n'ont pas été données..."
-                    }
-                }
+			// Check the coordinates
+			if (coords.expected.length > 0) {
+				const expectedCoordinates = coords.expected.split(","),
+					providedCoordinates = coords.provided.split(",")
 
-                for (let i = 0; i < expectedCoordinates.length; i++) {
-                    const check = this.secondaryChecker.check(expectedCoordinates[i], providedCoordinates[i])
+				if (expectedCoordinates.length !== providedCoordinates.length) {
+					return "toutes les valeurs des extrêmes n'ont pas été données..."
+				}
 
-                    if (!check.result) {
-                        return {
-                            result: false,
-                            message: `il y a une erreur avec ${i === 0 ? "la 1ère" : "la " + (i + 1) + "ème"} coordonnée`
-                        }
-                    }
-                }
-            }
+				for (let i = 0; i < expectedCoordinates.length; i++) {
+					const check = this.secondaryChecker.check(expectedCoordinates[i], providedCoordinates[i])
+
+					if (!check.result) {
+						return `il y a une erreur avec ${i === 0 ? "la 1ère" : "la " + (i + 1) + "ème"} coordonnée`
+					}
+				}
+			}
 
 
-            return {
-                result: false,
-                message: "Il y a une erreur dans le tableau de signes."
-            }
-        }
+			return "Il y a une erreur dans le tableau de signes."
+		}
 
-        return {
-            result: true,
-            message: ""
-        }
-    }
+		return ""
+	}
+
 
 }

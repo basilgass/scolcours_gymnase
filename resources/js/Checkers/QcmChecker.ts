@@ -1,17 +1,23 @@
+import {CheckerAbstract} from "@/Checkers/CheckerAbstract.ts"
+
 const name = "qcm"
 const description = "qcm,[paramètres]"
 
-export function QcmChecker(options){
-	options = options ?? []
+export class QcmChecker extends CheckerAbstract{
+	readonly format = ""
 
-	return {
-		name, description,
-		format: () => {
-			return null
-		},
-		check: (expectedAnswer, answer = []) => {
-			return null
-		}
+	constructor(config: string[]|string){
+		super(config)
+		this.name = name
+		this.description = description
 	}
+	checkFormat(value: string): string {
+		return value ? "" : "Veuillez donner une réponse"
+	}
+
+	checkValue(value: string): string {
+		return value ? "" : "Veuillez donner une réponse"
+	}
+
 
 }

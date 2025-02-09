@@ -70,46 +70,24 @@ export class CartesianChecker extends CheckerAbstract {
 		return `équation ${opts.join(", ")}`
 	}
 
-	check(
-		expected: string,
-		given: string,
-	): { result: boolean; message: string } {
-		if (!given.includes("=")) {
-			return {
-				result: false,
-				message: "il manque un signe d'égalité.",
-			}
+
+	checkFormat(value: string): string {
+		if (!value.includes("=")) {
+			return "il manque un signe d'égalité."
 		}
 
-		// If expected and given are the same, it is correct.
-		if (expected === given) {
-			return {
-				result: true,
-				message: "",
-			}
+		try {
+			new Equation(value)
+		} catch {
+			return "l'équation n'est pas correctement formée."
 		}
+	}
 
-
+	checkValue(value: string): string {
 
 		// Contrôle des données
-		let A, Q
-
-		try {
-			A = new Equation(given)
-		} catch {
-			return {
-				result: false,
-				message: "l'équation n'est pas correctement formée.",
-			}
-		}
-		try {
-			Q = new Equation(expected)
-		} catch {
-			return {
-				result: false,
-				message: "la réponse n'est pas correctement formée.",
-			}
-		}
+		const A = new Equation(value)
+		const Q = new Equation(this.answer)
 
 		// Must be the same equation.
 		const A2 = A.clone().moveLeft(),
@@ -119,10 +97,7 @@ export class CartesianChecker extends CheckerAbstract {
 
 		// L'expression de gauche est soit égale, soit opposée.
 		if (!A2.isLinearTo(Q2)) {
-			return {
-				result: false,
-				message: "l'équation n'est pas juste.",
-			}
+			return "l'équation n'est pas juste."
 		}
 
 
@@ -135,10 +110,7 @@ export class CartesianChecker extends CheckerAbstract {
 			// ax+by=0
 			// Allows x=c, y=c
 			if (A.right.variables.length > 0) {
-				return {
-					result: false,
-					message: "Toutes les variables doivent être à gauche.",
-				}
+				return  "Toutes les variables doivent être à gauche."
 			}
 
 			if (
@@ -146,10 +118,7 @@ export class CartesianChecker extends CheckerAbstract {
 				!A.right.isZero()
 			) {
 				// There are two variables : everything must be right
-				return {
-					result: false,
-					message: "l'équation n'est pas correctement formée.",
-				}
+				return  "l'équation n'est pas correctement formée."
 			}
 		}
 
@@ -164,10 +133,7 @@ export class CartesianChecker extends CheckerAbstract {
 				(A.left.variables.length === 1 && !A.left.monoms[0].coefficient.isOne())
 			) {
 				// There are two variables : everything must be right
-				return {
-					result: false,
-					message: "Il faut isoler la variable y à gauche.",
-				}
+				return "Il faut isoler la variable y à gauche."
 			}
 		}
 
@@ -176,21 +142,18 @@ export class CartesianChecker extends CheckerAbstract {
 			// Left or right part must be correctly formed.
 			// y = [a](x-b)^2[ + c]
 			// y = [a]x^2[ + c]
-			const [left, right] = given.split("="),
-				[eLeft, eRight] = expected.split("=")
+			const [left, right] = value.split("="),
+				[eLeft, eRight] = this.answer.split("=")
 
 			const polynomY = left === "y" ? left : right,
 				polynomSommet = left === "y" ? right : left,
 				expectedSommet = eLeft === "y" ? eRight : eLeft
 
 			if (polynomY !== "y") {
-				return {
-					result: false,
-					message: "Un côté de l'équation doit juste être (y)",
-				}
+				return "Un côté de l'équation doit juste être (y)"
 			}
 
-			return customCheck("polynom,s", expectedSommet, polynomSommet)
+			return customCheck("polynom,s", expectedSommet, polynomSommet).message
 		}
 
 		if (this.#circle) {
@@ -202,10 +165,7 @@ export class CartesianChecker extends CheckerAbstract {
 
 			// Must be a polynom of degree 2 in x and y.
 			if (A.degree("x").value !== 2 || A.degree("y").value !== 2) {
-				return {
-					result: false,
-					message: "L'équation n'a pas les bons degrés.",
-				}
+				return "L'équation n'a pas les bons degrés."
 			}
 
 			// One part of the equation must be of degree zero.
@@ -217,20 +177,16 @@ export class CartesianChecker extends CheckerAbstract {
 				A.left.degree("y").value === 2 &&
 				A.right.degree("y").isZero()
 			) {
-				center = given.split("=")[0]
+				center = value.split("=")[0]
 			} else if (
 				A.right.degree("x").value === 2 &&
 				A.left.degree("x").isZero() &&
 				A.right.degree("y").value === 2 &&
 				A.left.degree("y").isZero()
 			) {
-				center = given.split("=")[1]
+				center = value.split("=")[1]
 			} else {
-				return {
-					result: false,
-					message:
-						"L'équation n'est pas correctement formée pour la forme centre - rayon.",
-				}
+				return "L'équation n'est pas correctement formée pour la forme centre - rayon."
 			}
 
 			// radius should be ok and does not need more checks
@@ -245,12 +201,9 @@ export class CartesianChecker extends CheckerAbstract {
 				center === "x^2+y^2" ||
 				center === "y^2+x^2"
 			) {
-				return { result: true, message: "" }
+				return ""
 			} else {
-				return {
-					result: false,
-					message: "L'équation n'est pas dans le bon format.",
-				}
+				return "L'équation n'est pas dans le bon format."
 			}
 		}
 
@@ -260,17 +213,11 @@ export class CartesianChecker extends CheckerAbstract {
 				lcm = Numeric.lcm(lcmL, lcmR)
 
 			if (lcm !== 1) {
-				return {
-					result: false,
-					message: "l'équation n'est pas réduite.",
-				}
+				return "l'équation n'est pas réduite."
 			}
 		}
 
 		// If all tests passes, it is correct !
-		return {
-			result: true,
-			message: "",
-		}
+		return ""
 	}
 }

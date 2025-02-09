@@ -10232,7 +10232,6 @@ export const listeDeMots = [
 	"BINGHAM",
 	"BINGHAMCANYON",
 	"BINGO",
-	"BINGO",
 	"BINGOS",
 	"BINIC",
 	"BINIOU",

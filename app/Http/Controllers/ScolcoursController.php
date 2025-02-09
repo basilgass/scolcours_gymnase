@@ -150,4 +150,24 @@ class ScolcoursController extends Controller
 			->orWhere('body', 'like', '%' . $terms . '%')
 			->get();
 	}
+
+	public function dico(string $language, int $number = 1, string $size='infinity', string $common = '1')
+	{
+		// Query from the database dictionary table.
+		// $size is the number of the letter in the word column
+		// $number is the number of word to fetch.
+		$query = DB::table('dictionary')
+			->where('language', $language)
+			->where('common', $common);
+		if(is_int(+$size)) {
+			$query->whereRaw('CHAR_LENGTH(word) = ?', [$size]);
+		}
+
+		$words = $query
+			->inRandomOrder()
+			->limit($number)
+			->pluck('word');
+
+		return $words;
+	}
 }

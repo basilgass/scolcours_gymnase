@@ -1,4 +1,4 @@
-import { CheckerAbstract } from "@/Checkers/CheckerAbstract"
+import {CheckerAbstract} from "@/Checkers/CheckerAbstract"
 
 const name = "number",
 	description = `number|nb,[paramètres]
@@ -9,7 +9,8 @@ const name = "number",
 `
 
 export class NumberChecker extends CheckerAbstract {
-	private _isStrict: boolean
+	private readonly _isStrict: boolean
+
 	constructor(config?: string[] | string) {
 		super(config)
 		this.name = name
@@ -28,62 +29,43 @@ export class NumberChecker extends CheckerAbstract {
 			: `réponse avec ${this.config[0]} chiffre(s) après la virgule`
 	}
 
-	check(
-		expected: string,
-		given: string,
-	): { result: boolean; message: string } {
-		const nbDigits = +this.config[0],
-			nbExpectedDigits = (expected.split(".")[1] || []).length
-
-		if (nbExpectedDigits !== nbDigits && this._isStrict) {
-			return {
-				result: false,
-				message:
-					"Problème dans la configuration du checker ou de la réponse",
-			}
+	checkFormat(value: string): string {
+		if (isNaN(+value)) {
+			return "Veuillez entrer un nombre"
 		}
 
-		// Le résultat est exactement ce qui est demandé
-		if (given === expected) {
-			return {
-				result: true,
-				message: "",
-			}
+		return ""
+	}
+
+	checkValue(value: string): string {
+		const nbDigits = +this.config[0],
+			nbExpectedDigits = (this.answer.split(".")[1] || []).length
+
+		if (nbExpectedDigits !== nbDigits && this._isStrict) {
+			return "Problème dans la configuration du checker ou de la réponse"
 		}
 
 		if (!this._isStrict) {
-			if (+given === +expected) {
-				return {
-					result: true,
-					message: "",
-				}
+			if (+value === +this.answer) {
+				return ""
 			}
 		}
 
 		// Nombre de décimales de la réponse
-		const crtDigits: string = given.split(".")[1] || ""
+		const crtDigits: string = value.split(".")[1] || ""
 
 		// Le nombre de chiffres après la virgule n'est pas juste
 		if (crtDigits.length !== nbDigits) {
-			return {
-				result: false,
-				message: `Il faut ${nbDigits} chiffre(s) après la virgule.`,
-			}
+			return `Il faut ${nbDigits} chiffre(s) après la virgule.`
 		}
 
 		// Le dernier chiffre n'est pas juste - il s'agit peut être d'un problème d'arrondi ?
 		const lastDigit = +crtDigits[crtDigits.length - 1],
-			lastExpectedDigit = +expected[expected.length - 1]
+			lastExpectedDigit = +this.answer[this.answer.length - 1]
 		if (Math.abs(lastDigit - lastExpectedDigit) === 1) {
-			return {
-				result: false,
-				message: "Peut être un problème d'arrondi ?",
-			}
+			return "Peut être un problème d'arrondi ?"
 		}
 
-		return {
-			result: false,
-			message: "",
-		}
+		return	""
 	}
 }

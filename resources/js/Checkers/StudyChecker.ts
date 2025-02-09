@@ -1,4 +1,4 @@
-import { CheckerAbstract } from "@/Checkers/CheckerAbstract"
+import {CheckerAbstract} from "@/Checkers/CheckerAbstract"
 
 const name = "study"
 const description = `study
@@ -8,66 +8,55 @@ aucun
 `
 
 export class StudyChecker extends CheckerAbstract {
-    constructor(config:string[]|string) {
-        super(config)
-        this.name = name
-        this.description = description
-    }
+	constructor(config: string[] | string) {
+		super(config)
+		this.name = name
+		this.description = description
+	}
 
-    check(expected: string, given: string): { result: boolean; message: string } {
-        const arrayAnswer = given.split(",").sort(),
-            arrayExpected = expected.split(",").sort(),
-            d = arrayExpected.length - arrayAnswer.length
 
-        if (d > 0) {
-            return {
-                result: false,
-                message: `il manque ${d} élément${d > 1 ? "s" : ""}`
-            }
-        } else if (d < 0) {
-            return {
-                result: false,
-                message: `il y a ${-d} élément${-d > 1 ? "s" : ""} en trop`
-            }
-        }
+	readonly format = "Tracer le graphe"
 
-        const erreurs = [],
-            traceErrors = []
-        for (let i = 0; i <= arrayAnswer.length; i++) {
-            if (arrayAnswer[i] !== arrayExpected[i]) {
+	checkFormat(value: string): string {
+		return value ? "" : "Le format est obligatoire"
+	}
 
-                if (arrayExpected[i].split("&")[0] === arrayAnswer[i].split("&")[0]) {
-                    traceErrors.push(i + 1)
-                } else {
-                    erreurs.push(i + 1)
-                }
-            }
-        }
+	checkValue(value: string): string {
+		const arrayAnswer = value.split(",").sort(),
+			arrayExpected = this.answer.split(",").sort(),
+			d = arrayExpected.length - arrayAnswer.length
 
-        if (erreurs.length > 0) {
-            return {
-                result: false,
-                message: `il y a ${erreurs.length} erreur${erreurs.length > 1 ? "s" : ""}`
-            }
-        }
+		if (d > 0) {
+			return `il manque ${d} élément${d > 1 ? "s" : ""}`
+		} else if (d < 0) {
+			return `il y a ${-d} élément${-d > 1 ? "s" : ""} en trop`
+		}
 
-        if (traceErrors.length > 0) {
-            return {
-                result: false,
-                message: `il y a ${traceErrors.length} erreur${traceErrors.length > 1 ? "s" : ""} dans le tracé`
-            }
-        }
+		const erreurs = [],
+			traceErrors = []
+		for (let i = 0; i <= arrayAnswer.length; i++) {
+			if (arrayAnswer[i] !== arrayExpected[i]) {
 
-        return {
-            result: true,
-            message: ""
-        }
+				if (arrayExpected[i].split("&")[0] === arrayAnswer[i].split("&")[0]) {
+					traceErrors.push(i + 1)
+				} else {
+					erreurs.push(i + 1)
+				}
+			}
+		}
 
-    }
+		if (erreurs.length > 0) {
+			return `il y a ${erreurs.length} erreur${erreurs.length > 1 ? "s" : ""}`
+		}
 
-    get format(): string {
-        return "Tracer le graphe"
-    }
+		if (traceErrors.length > 0) {
+			return `il y a ${traceErrors.length} erreur${traceErrors.length > 1 ? "s" : ""} dans le tracé`
+		}
+
+		return ""
+
+	}
+
 
 }
 

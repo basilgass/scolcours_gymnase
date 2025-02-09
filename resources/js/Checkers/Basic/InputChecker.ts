@@ -1,3 +1,5 @@
+import {CheckerAbstract} from "@/Checkers/CheckerAbstract.ts"
+
 const name = "input"
 const description = `input,[paramètres]
 
@@ -5,17 +7,21 @@ const description = `input,[paramètres]
 - checker
 `
 
-export function InputChecker(options){
-	// options = options??[]
-
-	return {
-		name, description,
-		format: () => {
-			return null
-		},
-		check: (expectedAnswer, answer = []) => {
-			return null
-		}
+export class InputChecker extends CheckerAbstract {
+	constructor(config?: string[] | string) {
+		super(config)
+		this.name = name
+		this.description = description
 	}
 
+
+	readonly format = "Réponse textuelle"
+
+	checkFormat(): string {
+		return ""
+	}
+
+	checkValue(): string {
+		return ""
+	}
 }

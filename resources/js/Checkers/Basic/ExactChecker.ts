@@ -1,5 +1,5 @@
-import { CheckerAbstract } from "@/Checkers/CheckerAbstract"
-import { NumExp } from "pimath"
+import {CheckerAbstract} from "@/Checkers/CheckerAbstract"
+import {NumExp} from "pimath"
 
 const name = "exact"
 const description = `exact
@@ -10,6 +10,7 @@ soft = valeur numérique juste, mais pas sous la forme attendue
 
 export class ExactChecker extends CheckerAbstract {
 	private isSoft: boolean
+
 	constructor(config: string[] | string) {
 		super(config)
 		this.name = name
@@ -18,38 +19,27 @@ export class ExactChecker extends CheckerAbstract {
 		this.isSoft = this.config.includes("soft")
 	}
 
-	get format(): string {
-		return "réponse sous forme exacte, réduite"
+	readonly format = "réponse sous forme exacte, réduite"
+
+	checkFormat(value: string): string {
+		return value ? "" : "il faut donner une réponse"
 	}
 
-	check(
-		expected: string,
-		given: string,
-	): { result: boolean; message: string } {
+	checkValue(value: string): string {
 		// Le résultat est exactement ce qui est demandé
-		const stringAnswer = given.toString(),
+		const stringAnswer = value.toString(),
 			asciiAnswer = stringAnswer.startsWith("#")
 				? stringAnswer.substring(1)
 				: stringAnswer
 
-		if (asciiAnswer === expected.toString()) {
-			return {
-				result: true,
-				message: "",
-			}
-		}
-
 		// Parse the expected answer as a number
 		// Replace "sqrt" by "sqrt(" and ")" by ")", then evaluate
-		const expectedExpression = expected.replace(/sqrt([0-9]+)/g, "sqrt($1)")
+		const expectedExpression = this.answer.replace(/sqrt([0-9]+)/g, "sqrt($1)")
 		const givenExpression = asciiAnswer.replace(/sqrt([0-9]+)/g, "sqrt($1)")
 
 		// Maybe with the reformating, the answers is exactly the same.
 		if (expectedExpression === givenExpression) {
-			return {
-				result: true,
-				message: "",
-			}
+			return  ""
 		}
 
 		// Parse the formated answers as a number
@@ -62,29 +52,21 @@ export class ExactChecker extends CheckerAbstract {
 				givenNumber.evaluate().toFixed(10)
 			) {
 				if (this.isSoft) {
-					return {
-						result: true,
-						message: "",
-					}
+					return  ""
 				}
 
 				const message: string[] = [
 					"La réponse donnée est juste, mais pas sous la forme attendue.",
 				]
 
-				if (given.includes("/sqrt")) {
+				if (value.includes("/sqrt")) {
 					message.push("Il y a encore une racine au dénominateur")
 				}
-				return {
-					result: false,
-					message: message.join("<br/>"),
-				}
+				return message.join("<br/>")
 			}
 		}
 
-		return {
-			result: false,
-			message: "La réponse donnée n'est pas juste.",
-		}
+		return  "La réponse donnée n'est pas juste."
 	}
+
 }

@@ -1,5 +1,5 @@
-import { CheckerAbstract } from "@/Checkers/CheckerAbstract"
-import { NumExp } from "pimath"
+import {CheckerAbstract} from "@/Checkers/CheckerAbstract"
+import {NumExp} from "pimath"
 
 const name = "log"
 const description = `log,[paramètres]
@@ -14,100 +14,75 @@ export class LogChecker extends CheckerAbstract {
 		this.description = description
 	}
 
-	get format(): string {
-		return "réponse sous la forme \\(\\log(a)-3/5\\)"
+	readonly format = "réponse sous la forme \\(\\log(a)-3/5\\)"
+
+	checkFormat(value: string): string {
+		// Il ne peut pas y avoir de point.
+		if (value.includes(".")) {
+			return "La réponse n'est pas sous forme exact (nombres entiers)"
+		}
+
+		const ND: string[] = value.split("/")
+		if (ND.length > 2) {
+			// TODO: on devrait autoriser les fractions dans le log - ne pas les compter si c'est entre deux parenthèses...
+
+			return "La réponse ne peut contenir qu'une seule barre de fraction."
+		}
+
+		return ""
 	}
 
-	check(expected: string, given: string): { result: boolean; message: string } {
-		{
-			// Le résultat est exactement ce qui est demandé
-			const stringAnswer = given.toString(),
-				asciiAnswer = stringAnswer.startsWith("#") ? stringAnswer.substring(1) : stringAnswer
+	checkValue(value: string): string {
 
-			if (asciiAnswer === expected.toString()) {
-				return {
-					result: true,
-					message: ""
-				}
-			}
+		// TODO: asciiAnswer = stringAnswer.startsWith("#") ? stringAnswer.substring(1) : stringAnswer
 
-			// Il ne peut pas y avoir de point.
-			if (asciiAnswer.includes(".")) {
-				return {
-					result: false,
-					message: "La réponse n'est pas sous forme exact (nombres entiers)"
-				}
-			}
-
-			// Il ne doit y avoir qu'une fraction.
-			const ND: string[] = asciiAnswer.split("/")
-			if (ND.length > 2) {
-				// TODO: on devrait autoriser les fractions dans le log - ne pas les compter si c'est entre deux parenthèses...
-
-				return {
-					result: false,
-					message: "La réponse ne peut contenir qu'une seule barre de fraction."
-				}
-			}
-
-			let userN, userD
+		const ND: string[] = value.split("/")
+		// Il ne doit y avoir qu'une fraction.
+		let userN, userD
+		try {
+			userN = new NumExp(ND[0]).evaluate()
+		} catch {
+			return `${ND.length === 1 ? "La réponse" : "Le numérateur"} n'est pas correctement formé.`
+		}
+		if (ND.length === 2) {
 			try {
-				userN = new NumExp(ND[0]).evaluate()
+				userD = new NumExp(ND[1]).evaluate()
 			} catch {
-				return {
-					result: false,
-					message: `${ND.length === 1 ? "La réponse" : "Le numérateur"} n'est pas correctement formé.`
-				}
+				return "Le dénominateur n'est pas correctement formé."
 			}
-			if (ND.length === 2) {
-				try {
-					userD = new NumExp(ND[1]).evaluate()
-				} catch {
-					return {
-						result: false,
-						message: "Le dénominateur n'est pas correctement formé."
-					}
-				}
-			} else {
-				userD = 1
-			}
+		} else {
+			userD = 1
+		}
 
 
-			const [expN, expD] = expected.split("/")
-			let expNValue: number, expDValue: number
+		const [expN, expD] = this.answer.split("/")
+		let expNValue: number, expDValue: number
+		try {
+			expNValue = new NumExp(expN).evaluate()
+		} catch {
+			// Do nothing
+		}
+		if (expD === undefined) {
+			expDValue = 1
+		} else {
 			try {
-				expNValue = new NumExp(expN).evaluate()
+				expDValue = new NumExp(expD).evaluate()
 			} catch {
 				// Do nothing
 			}
-			if (expD === undefined) {
-				expDValue = 1
-			} else {
-				try {
-					expDValue = new NumExp(expD).evaluate()
-				} catch {
-					// Do nothing
-				}
-			}
-
-
-			const answerDecimal = userN / userD,
-				expectedDecimal = expNValue / expDValue
-
-			if (answerDecimal.toFixed(8) !== expectedDecimal.toFixed(8)) {
-				return {
-					result: false,
-					message: "La répnse sous forme exacte ne donne pas la bonne valeur."
-				}
-			}
-
-			return {
-				result: true,
-				message: ""
-			}
 		}
 
+
+		const answerDecimal = userN / userD,
+			expectedDecimal = expNValue / expDValue
+
+		if (answerDecimal.toFixed(8) !== expectedDecimal.toFixed(8)) {
+			return  "La réponse sous forme exacte ne donne pas la bonne valeur."
+		}
+
+		return ""
 	}
+
 
 }
 

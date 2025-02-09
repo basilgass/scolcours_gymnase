@@ -1,54 +1,325 @@
-import { EquationChecker } from "@/Checkers/Basic/EquationChecker.ts"
-import { describe, expect, test } from "vitest"
+import {EquationChecker} from "@/Checkers/Basic/EquationChecker.ts"
+import {describe, expect, test} from "vitest"
+import {NumberChecker} from "@/Checkers/Basic/NumberChecker.ts"
+import {FractionChecker} from "@/Checkers/Basic/FractionChecker.ts"
+import {InputChecker} from "@/Checkers/Basic/InputChecker.ts"
+import {StringChecker} from "@/Checkers/Basic/StringChecker.ts"
+import {ScientificChecker} from "@/Checkers/Basic/ScientificChecker.ts"
+import {CoordChecker} from "@/Checkers/Basic/CoordChecker.ts"
 
-describe.todo("cartesian equation checker", ()=>{
+describe.todo("cartesian equation checker", () => {
 	test.todo("should recognize a line in 2d: ax+by+c=0 ")
 	test.todo("should recognize a line in 2d: y=mx+h")
 	test.todo("should recognize a quadratic at peak form: y=a(x-s_x)^2+s_y")
-	test("should recognize a valid circle equation", () => {
+	test.todo("should recognize a valid circle equation", () => {
 		const expectedDeveloped = "x^2+y^2-2x+4y+1=0",
 			expectedCentreRadius = "(x-1)^2+(y+2)^2=4"
 
 		const checker = new EquationChecker(["circle"])
 
 		expect(checker.check(expectedCentreRadius, expectedDeveloped).result)
-			.toBe(false)
+			.toEqual(false)
 		expect(checker.check(expectedCentreRadius, expectedCentreRadius).result,)
-			.toBe(true)
-		expect(checker.check("x^2+y^2=5", "y^2+x^2=5").result).toBe(true)
+			.toEqual(true)
+		expect(checker.check("x^2+y^2=5", "y^2+x^2=5").result).toEqual(true)
 	})
 	test.todo('should recognize a 3d plane: ax+by+cz+d=0')
 })
-describe.todo("coordinates checker", ()=>{
-	test.todo('should recognize a 2d vector with numbers')
+describe("coordinates checker", () => {
+	test('detect exact value', () => {
+		const config = ''
+		const expected = '(2;3)'
+		const given = '(2;3)'
+
+		const checker = new CoordChecker(config)
+		const result = checker.check(expected, given)
+
+		expect(result.result).toBeTruthy()
+	})
+
+	test('missing parenthesis', () => {
+		const config = ''
+		const checker = new CoordChecker(config)
+
+		const expected = '(2;3)'
+		const wrongValues = ['(2;3', '2;3', '2;3)']
+		for (const given in wrongValues) {
+			const result = checker.check(expected, given)
+
+			expect(result.result).toBeFalsy()
+			expect(result.message).toEqual("des coordonnées commencent et se terminent par des parenthèses")
+		}
+	})
+
+	test('wrong number of values', () => {
+		const config = ''
+		const checker = new CoordChecker(config)
+
+		const expected = '(2;3)'
+		const wrongValues = ['(2)', '(2;3;4)']
+		for (const given of wrongValues) {
+			const result = checker.check(expected, given)
+
+			expect(result.result).toBeFalsy()
+			expect([
+				"des coordonnées ont au moins deux valeurs, séparées par un \\(;\\)",
+				"la dimension de la coordonnées ne correspond pas"]
+			).toContain(result.message)
+		}
+	})
+
+	test('should recognize a 2d vector with numbers', () => {
+		const config = "nb"
+		const checker = new CoordChecker(config)
+
+		const expected = "(2;3)"
+		const given = "(2;4)"
+		const result = checker.check(expected, given)
+
+		expect(result.result).toBeFalsy()
+	})
 	test.todo('should recognize a 2d vector with fractions')
 	test.todo('should recognize a nth vector with numbers')
 	test.todo('should recognize a nth vector with fractions')
 })
-describe.todo("equation checker", ()=>{
+describe.todo("equation checker", () => {
 	// TODO: overlap with cartesian checker !
 })
-describe.todo("exact checker", ()=>{
+describe.todo("exact checker", () => {
 	test.todo('should recognize same value, but in different form')
 })
 describe.todo("exponential checker")
-describe.todo("fraction checker")
+describe("fraction checker", () => {
+	test('detect exact value', () => {
+		const config = ''
+		const expected = '2/3'
+		const given = '2/3'
+
+		const checker = new FractionChecker(config)
+		const result = checker.check(expected, given)
+
+		expect(result.result).toBeTruthy()
+	})
+
+	test('similar fraction, not reduced', () => {
+		const config = ''
+		const expected = '2/3'
+		const given = '4/6'
+
+		const checker = new FractionChecker(config)
+		const result = checker.check(expected, given)
+
+		expect(result.result).toBeTruthy()
+	})
+
+	test('similar fraction, reduced', () => {
+		const config = 'r'
+		const expected = '2/3'
+		const given = '4/6'
+
+		const checker = new FractionChecker(config)
+		const result = checker.check(expected, given)
+
+		expect(result.result).toBeFalsy()
+		expect(result.message).toEqual('La fraction n\'est pas réduite.')
+	})
+
+	test('wrong formatted fraction', () => {
+		const config = 'r'
+		const expected = '-2/3'
+		const given = '2/-3'
+
+		const checker = new FractionChecker(config)
+		const result = checker.check(expected, given)
+
+		expect(result.result).toBeFalsy()
+		expect(result.message).toEqual('Le dénominateur doit être positif.')
+	})
+})
 describe.todo("function checker")
-describe.todo("input checker")
+describe("input checker", () => {
+	test('detect exact value', () => {
+		const config = ''
+		const expected = 'hello world'
+		const given = 'hello world'
+		const givenError = 'hello'
+
+		const checker = new InputChecker(config)
+		const check = checker.check(expected, given)
+		const checkError = checker.check(expected, givenError)
+
+		expect(check.result).toBeTruthy()
+		expect(checkError.result).toBeFalsy()
+	})
+})
 describe.todo("logarithm checker")
-describe.todo("number checker")
+describe("number checker", () => {
+	test('detect exact value', () => {
+		const config = '3'
+		const expected = '1.234'
+		const given = '1.234'
+
+		const checker = new NumberChecker(config)
+		const result = checker.check(expected, given)
+
+		expect(result.result).toBeTruthy()
+	})
+
+	test('detect similar value, not strict', () => {
+		const config = '3'
+		const expected = '1.230'
+		const given = '1.23'
+
+		const checker = new NumberChecker(config)
+		const result = checker.check(expected, given)
+
+		expect(result.result).toBeTruthy()
+	})
+	test('detect similar value, strict', () => {
+		const config = '3,s'
+		const expected = '1.230'
+		const given = '1.23'
+		const given0 = '1.230'
+
+		const checker = new NumberChecker(config)
+		const result = checker.check(expected, given)
+		const result0 = checker.check(expected, given0)
+
+		expect(result.result).toBeFalsy()
+		expect(result0.result).toBeTruthy()
+	})
+
+	test('wrong number of decimals', () => {
+		const config = '3'
+		const expected = '1.234'
+		const given = '1.23'
+
+		const checker = new NumberChecker(config)
+		const result = checker.check(expected, given)
+
+		expect(result.result).toBeFalsy()
+		expect(result.message).toEqual('Il faut 3 chiffre(s) après la virgule.')
+	})
+
+	test('near answer detection', () => {
+		const config = '3'
+		const expected = '1.234'
+		const given = '1.235'
+		const given1 = '1.233'
+		const given2 = '1.236'
+
+		const checker = new NumberChecker(config)
+		const result = checker.check(expected, given)
+		const result1 = checker.check(expected, given1)
+		const result2 = checker.check(expected, given2)
+
+		expect(result.result).toBeFalsy()
+		expect(result.message).toEqual('Peut être un problème d\'arrondi ?')
+
+		expect(result1.result).toBeFalsy()
+		expect(result1.message).toEqual('Peut être un problème d\'arrondi ?')
+
+		expect(result2.result).toBeFalsy()
+		expect(result2.message).to.not.equal('Peut être un problème d\'arrondi ?')
+	})
+})
 describe.todo("polynom checker")
 describe.todo("primitive checker")
 describe.todo("rational checker")
-describe.todo("scientific checker")
+describe("scientific checker", () => {
+	test('detect exact value', () => {
+		const config = '3'
+		const expected = '1.234*10^-2'
+		const given = '1.234*10^-2'
+
+		const checker = new ScientificChecker(config)
+		const result = checker.check(expected, given)
+
+		expect(result.result).toBeTruthy()
+	})
+
+	test('wrong 10th power', () => {
+		const config = '3'
+		const expected = '1.234*10^-2'
+		const given = '1.234*10^2'
+
+		const checker = new ScientificChecker(config)
+		const result = checker.check(expected, given)
+
+		expect(result.result).toBeFalsy()
+		expect(result.message).toEqual("l'ordre de grandeur n'est pas juste...")
+
+	})
+
+	test('near answer detection', () => {
+		const config = '3'
+		const expected = '1.234*10^-2'
+		const given = '1.233*10^-2'
+
+		const checker = new ScientificChecker(config)
+		const result = checker.check(expected, given)
+
+		expect(result.result).toBeFalsy()
+		expect(result.message).toContain('erreur dans la partie significative: ')
+	})
+
+	test('10th exponential is missing', () => {
+		const config = '3'
+		const expected = '1.234*10^-2'
+		const given = '1.234'
+
+		const checker = new ScientificChecker(config)
+		const result = checker.check(expected, given)
+
+		expect(result.result).toBeFalsy()
+		expect(result.message).toEqual("le format de réponse n'est pas une notation scientifique.")
+	})
+
+	test('value is less than one, but more than 10', () => {
+		const config = '3'
+		const expected = '1.234*10^-2'
+
+		const checker = new ScientificChecker(config)
+
+		const unitsValue = ['10', '2', '0', '-1', '-2', '-10']
+		const unitsResult = [false, true, false, true, true, false]
+
+		for (let i = 0; i < unitsValue.length; i++) {
+			const given = `${unitsValue[i]}.234*10^-2`
+			const result = checker.check(expected, given)
+
+			expect(result.result).toBeFalsy()
+
+			if (!unitsResult[i]) {
+				expect(result.message).toEqual("la partie significative n'est pas entre 1 et 10 (non compris)")
+			} else {
+				expect(result.message).not.toEqual("la partie significative n'est pas entre 1 et 10 (non compris)")
+			}
+		}
+	})
+})
 describe.todo("solution checker")
-describe.todo("string checker")
+describe("string checker", () => {
+	test('detect exact value', () => {
+		const config = ''
+		const expected = 'hello world'
+		const given = 'hello world'
+		const givenError = 'hello'
+
+		const checker = new StringChecker(config)
+		const check = checker.check(expected, given)
+		const checkError = checker.check(expected, givenError)
+
+		expect(check.result).toBeTruthy()
+		expect(checkError.result).toBeFalsy()
+	})
+})
 describe.todo("vector checker")
 
-describe.todo("order checker")
-describe.todo("qcm checker")
-describe.todo("study checker")
-describe.todo("table of signs checker")
-describe.todo("type checker")
+// describe.todo("order checker")
+// describe.todo("qcm checker")
+// describe.todo("study checker")
+// describe.todo("table of signs checker")
+// describe.todo("type checker")
 
 

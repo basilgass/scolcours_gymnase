@@ -19,56 +19,6 @@ export class FractionChecker extends CheckerAbstract {
         this.expectReduced = this.config.includes("r") || this.config.includes("reduced")
     }
 
-    check(expected: string, given: string): { result: boolean; message: string } {
-        // Le résultat est exactement ce qui est demandé
-        if(given===expected){
-            return {
-                result: true,
-                message: ""
-            }
-        }
-
-        let FAnswer, FExpected
-
-        try{
-            FAnswer = new Fraction(given)
-            FExpected = new Fraction(expected)
-        }catch{
-            return {
-                result: false,
-                message: "La fraction n'est pas formatée correctement."
-            }
-        }
-
-        if(FAnswer.isNotEqual(FExpected)){
-            return {
-                result: false,
-                message: "La réponse donnée n'est pas juste."
-            }
-        }
-
-        if(FAnswer.denominator<0){
-            return {
-                result: false,
-                message: "Le dénominateur doit être positif."
-            }
-        }
-
-        if(!FAnswer.isReduced() && this.expectReduced){
-            return {
-                result: false,
-                message: "La fraction n'est pas réduite."
-            }
-        }
-
-
-        return {
-            result: true,
-            message: ""
-        }
-
-    }
-
     get format(): string {
         const opts = []
         if (this.expectReduced) {
@@ -77,6 +27,35 @@ export class FractionChecker extends CheckerAbstract {
 
         return `réponse sous forme de fraction ${opts.join(",")}`
     }
+
+	checkFormat(value: string): string {
+		try {
+			new Fraction(value)
+			return ""
+		}catch {
+			return "La fraction n'est pas formatée correctement."
+		}
+	}
+
+	checkValue(value: string): string {
+
+		const FAnswer = new Fraction(value)
+		const FExpected = new Fraction(this.answer)
+
+		if(FAnswer.isNotEqual(FExpected)){
+			return  "La réponse donnée n'est pas juste."
+		}
+
+		if(FAnswer.denominator<0){
+			return  "Le dénominateur doit être positif."
+		}
+
+		if(!FAnswer.isReduced() && this.expectReduced){
+			return  "La fraction n'est pas réduite."
+		}
+
+		return ""
+	}
 
 
 }

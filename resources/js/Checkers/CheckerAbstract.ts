@@ -1,76 +1,134 @@
-import { CheckerResult } from "@/Composables/checkersConfig"
+import {CheckerResult} from "@/Composables/checkersConfig"
 
 export abstract class CheckerAbstract {
-    protected constructor(config?: string[] | string) {
-        if (config === undefined) {
-            this._config = []
-        } else if (typeof config === "string") {
-            this._config = config.split(',')
-        } else {
-            this._config = [...config]
-        }
+	protected constructor(config?: string[] | string) {
+		if (config === undefined) {
+			this._config = []
+		} else if (typeof config === "string") {
+			this._config = config.split(',')
+		} else {
+			this._config = [...config]
+		}
 
-        // Sub-checker : we suppose that everything after is for the sub-checker
-        const [, chk] = this._config.join(',').split('checker:')
-        if (chk !== undefined) {
-            const [chkName, ...opts] = chk.split(',')
-            this._secondaryCheckerName = chkName
-            this._secondaryCheckerOptions = opts || []
-        }
-    }
+		// Sub-checker : we suppose that everything after is for the sub-checker
+		const [, chk] = this._config.join(',').split('checker:')
+		if (chk !== undefined) {
+			const [chkName, ...opts] = chk.split(',')
+			this._secondaryCheckerName = chkName
+			this._secondaryCheckerOptions = opts || []
+		}
+	}
 
-    protected _secondaryCheckerName?: string
+	protected _secondaryCheckerName?: string
 
-    get secondaryCheckerName(): string {
-        return this._secondaryCheckerName
-    }
+	get secondaryCheckerName(): string {
+		return this._secondaryCheckerName
+	}
 
-    set secondaryCheckerName(value: string) {
-        this._secondaryCheckerName = value
-    }
+	set secondaryCheckerName(value: string) {
+		this._secondaryCheckerName = value
+	}
 
-    protected _secondaryCheckerOptions?: string[]
+	protected _secondaryCheckerOptions?: string[]
 
-    get secondaryCheckerOptions(): string[] {
-        return this._secondaryCheckerOptions
-    }
+	get secondaryCheckerOptions(): string[] {
+		return this._secondaryCheckerOptions
+	}
 
-    set secondaryCheckerOptions(value: string[]) {
-        this._secondaryCheckerOptions = value
-    }
+	set secondaryCheckerOptions(value: string[]) {
+		this._secondaryCheckerOptions = value
+	}
 
-    protected _config: string[]
+	protected _config: string[]
 
-    get config(): string[] {
-        return this._config
-    }
+	get config(): string[] {
+		return this._config
+	}
 
-    set config(value: string[]) {
-        this._config = value
-    }
+	set config(value: string[]) {
+		this._config = value
+	}
 
-    protected _name: string
+	protected _name: string
 
-    get name(): string {
-        return this._name
-    }
+	get name(): string {
+		return this._name
+	}
 
-    set name(value: string) {
-        this._name = value
-    }
+	set name(value: string) {
+		this._name = value
+	}
 
-    protected _description: string
+	protected _description: string
 
-    get description(): string {
-        return this._description
-    }
+	get description(): string {
+		return this._description
+	}
 
-    set description(value: string) {
-        this._description = value
-    }
+	set description(value: string) {
+		this._description = value
+	}
 
-    abstract get format(): string
+	protected _answer: string
 
-    abstract check(expected: string, given: string): CheckerResult
+	get answer(): string {
+		return this._answer
+	}
+
+	set answer(value: string) {
+		this._answer = value
+	}
+
+	abstract get format(): string
+
+	check(expected: string, given: string): CheckerResult {
+		// Define the answer
+		this.answer = expected
+
+		// No value given
+		if (given === "") {
+			return {
+				result: false,
+				message: "Veuillez entrer une valeur"
+			}
+		}
+
+		// The result is exactly what is expected
+		let message = ""
+		if (expected === given) {
+			return {
+				result: true,
+				message
+			}
+		}
+
+		// The format is wrong
+		message = this.checkFormat(given)
+		if (message !== "") {
+			return {
+				result: false,
+				message,
+			}
+		}
+
+		// The value is not correct
+		message = this.checkValue(given)
+		if (message !== "") {
+			return {
+				result: false,
+				message,
+			}
+		}
+
+		// All tests passed => answer is correct
+		return {
+			result: true,
+			message: "",
+		}
+	}
+
+	abstract checkFormat(value: string): string
+
+	abstract checkValue(value: string): string
 }
 

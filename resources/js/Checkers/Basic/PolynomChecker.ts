@@ -17,104 +17,6 @@ export class PolynomChecker extends CheckerAbstract {
 		this.description = description
 	}
 
-	check(
-		expected: string,
-		given: string,
-	): { result: boolean; message: string } {
-		// Make sur the polynom is constructable
-		let A, Q
-
-		// Exact answer given
-		if (given === expected) {
-			return {
-				result: true,
-				message: "",
-			}
-		}
-
-		// Build the polynoms
-		try {
-			A = new Polynom(given)
-			Q = new Polynom(expected)
-		} catch (e) {
-			return {
-				result: false,
-				message: "Le polynôme n'est pas formé correctement.",
-			}
-		}
-
-		// Polynom must be equals.
-		if (!Q.isEqual(A)) {
-			return {
-				result: false,
-				message: "Le polynôme n'est pas le même.",
-			}
-		}
-
-		/** Polynom checker config */
-		// Factorized
-		if (
-			this.config.includes("f") ||
-			this.config.includes("factor") ||
-			this.config.includes("F") ||
-			this.config.includes("FACTORS")
-		) {
-			try {
-				if (
-					!A.isFactorized(
-						given,
-						this.config.includes("f") ||
-						this.config.includes("factor"),
-					)
-				) {
-					return {
-						result: false,
-						message:
-							"Le polynôme n'est pas (entièrement) factorisé.",
-					}
-				}
-			} catch {
-				return {
-					result: false,
-					message: "Le polynôme n'est pas (entièrement) factorisé.",
-				}
-			}
-		}
-
-		// Developed
-		if (this.config.includes("d") || this.config.includes("develop")) {
-			if (!A.isDeveloped(given)) {
-				return {
-					result: false,
-					message: "Le polynôme n'est pas (entièrement) développé.",
-				}
-			}
-		}
-
-		// Forme du sommet
-		if (this.config.includes("s") || this.config.includes("sommet")) {
-			if (
-				given.match(
-					/(-?[\d]+(\/\d+)?)?\(x([+-](\d+(\/\d+)?)?)?\)\^2([+-]\d+(\/\d+)?)?/,
-				) ||
-				given.match(/(-?[\d]+(\/\d+)?)?x\^2([+-]\d+(\/\d+)?)?/)
-			) {
-				return { result: true, message: "" }
-			} else {
-				return {
-					result: false,
-					message: "L'équation n'est pas dans le bon format.",
-				}
-			}
-		}
-
-		// If all tests passes, it is correct !
-		return {
-			result: true,
-			message: "",
-		}
-	}
-
 	get format(): string {
 		const opts = []
 
@@ -134,4 +36,75 @@ export class PolynomChecker extends CheckerAbstract {
 
 		return `polynôme ${opts.join(", ")}`
 	}
+
+	checkFormat(value: string): string {
+		try {
+			new Polynom(value)
+			return ""
+		} catch{
+			return "Le polynôme n'est pas formé correctement."
+		}
+	}
+
+	checkValue(value: string): string {
+		// Make sur the polynom is constructable
+		const A = new Polynom(value)
+		const Q = new Polynom(this.answer)
+
+		// Polynom must be equals.
+		if (!Q.isEqual(A)) {
+			return "Le polynôme n'est pas le même."
+		}
+
+		/** Polynom checker config */
+		// Factorized
+		if (
+			this.config.includes("f") ||
+			this.config.includes("factor") ||
+			this.config.includes("F") ||
+			this.config.includes("FACTORS")
+		) {
+			try {
+				// TODO: Check if the polynom is fully factorized
+				// if (
+				// 	!A.isFactorized(
+				// 		value,
+				// 		this.config.includes("f") ||
+				// 		this.config.includes("factor"),
+				// 	)
+				// ) {
+				// 	return "Le polynôme n'est pas (entièrement) factorisé."
+				// }
+				return ""
+			} catch {
+				return "Le polynôme n'est pas (entièrement) factorisé."
+			}
+		}
+
+		// Developed
+		if (this.config.includes("d") || this.config.includes("develop")) {
+			if (!A.isDeveloped(value)) {
+				return "Le polynôme n'est pas (entièrement) développé."
+			}
+		}
+
+		// Forme du sommet
+		if (this.config.includes("s") || this.config.includes("sommet")) {
+			if (
+				value.match(
+					/(-?[\d]+(\/\d+)?)?\(x([+-](\d+(\/\d+)?)?)?\)\^2([+-]\d+(\/\d+)?)?/,
+				) ||
+				value.match(/(-?[\d]+(\/\d+)?)?x\^2([+-]\d+(\/\d+)?)?/)
+			) {
+				return ""
+			} else {
+				return "L'équation n'est pas dans le bon format."
+			}
+		}
+
+		// If all tests passes, it is correct !
+		return ""
+
+	}
+
 }

@@ -1,7 +1,7 @@
-import { CheckerAbstract } from "@/Checkers/CheckerAbstract"
-import { ExpChecker } from "@/Checkers/Basic/ExpChecker"
-import { LogChecker } from "@/Checkers/Basic/LogChecker"
-import { PolynomChecker } from "@/Checkers/Basic/PolynomChecker"
+import {CheckerAbstract} from "@/Checkers/CheckerAbstract"
+import {ExpChecker} from "@/Checkers/Basic/ExpChecker"
+import {LogChecker} from "@/Checkers/Basic/LogChecker"
+import {PolynomChecker} from "@/Checkers/Basic/PolynomChecker"
 
 const name = "primitive"
 const description = `primitive,[paramètres]
@@ -11,61 +11,43 @@ aucun
 `
 
 export class PrimitiveChecker extends CheckerAbstract {
-    constructor(config?: string[] | string) {
-        super(config)
-        this.name = name
-        this.description = description
-    }
+	constructor(config?: string[] | string) {
+		super(config)
+		this.name = name
+		this.description = description
+	}
 
-    get format(): string {
-        return "primitive d'une fonction"
-    }
+	readonly format = "primitive d'une fonction"
 
-    check(expected: string, given: string): {
-        result: boolean;
-        message: string
-    } {
-        // Le résultat est exactement ce qui est demandé
-        const asciiAnswer = given.startsWith("#") ? given.substring(1) : given
+	checkFormat(value: string): string {
+		return value ? "" : "Veuillez entrer une réponse"
+	}
 
-        if (asciiAnswer === expected) {
-            return {
-                result: true,
-                message: ""
-            }
-        }
-
-		// S'il y a une exponentielle ou un logarithme.
-		// TODO: manière plus robuste de contrôler un polynôme "complexe"
+	checkValue(value: string): string {
 		let subchk
-		if(given.includes("e")){
+		if (value.includes("e")) {
 			subchk = new ExpChecker(this._config)
-		}else if(given.includes('ln')){
-			console.log('INCLUDE LN')
+		} else if (value.includes('ln')) {
 			subchk = new LogChecker(this._config)
-		}else{
+		} else {
 			subchk = new PolynomChecker(this._config)
 		}
 
 		// On vérifie sans la constante !
 		const result = subchk.check(
-			expected.replaceAll('+c',''),
-			given.replaceAll('+c','')
+			this.answer.replaceAll('+c', ''),
+			value.replaceAll('+c', '')
 		)
 
-		if(!result.result){
-			return result
+		if (!result.result) {
+			return result.message
 		}
 
-		const s = given.split('+c').length
-		if(s!==2){
-			return {
-				result: false,
-				message: s===1?"il manque la constante.":`il y a ${s-1} constantes...`
-			}
+		const s = value.split('+c').length
+		if (s !== 2) {
+			return s === 1 ? "il manque la constante." : `il y a ${s - 1} constantes...`
 		}
 
-		return result
-    }
-
+		return result.message
+	}
 }

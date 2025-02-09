@@ -10,22 +10,15 @@ export class TypeChecker extends CheckerAbstract {
         this.description = description
     }
 
-    check(expected: string, given: string): { result: boolean; message: string } {
-        if (given === expected) {
-            return {
-                result: true,
-                message: ""
-            }
-        } else {
-            return {
-                result: false,
-                message: "La réponse donnée n'est pas juste."
-            }
-        }
-    }
 
-    get format(): string {
-        return "Cliquer sur les bonnes lettres."
-    }
+    readonly format = "Cliquer sur les bonnes lettres."
+
+	checkFormat(value: string): string {
+		return value ? "" : "Aucune réponse donnée"
+	}
+
+	checkValue(value: string): string {
+		return value ? "" : "Aucune réponse donnée"
+	}
 
 }

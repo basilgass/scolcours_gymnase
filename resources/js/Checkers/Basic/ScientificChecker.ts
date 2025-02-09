@@ -19,58 +19,41 @@ export class ScientificChecker extends CheckerAbstract {
         this.digits = isNaN(+this.config[0])?0:+this.config[0]
     }
 
-    check(expected: string, given: string): { result: boolean; message: string } {
-        // Le résultat est exactement ce qui est demandé
-        if (given === expected) {
-            return {
-                result: true,
-                message: ""
-            }
-        }
-
-        // On vérifie que le format est bien de type scientifique.
-        const PS = +(given.split("*")[0]),
-            OG = +(given.split("10^")[1] || 0),
-            ePS = +(expected.split("*")[0]),
-            eOG = +(expected.split("10^")[1] || 0)
-
-        if (!given.includes("*10^")) {
-            return {
-                result: false,
-                message: "le format de réponse n'est pas une notation scientifique."
-            }
-        }
-
-        // On vérifie la partie significative
-        if (PS < 1 || PS >= 10) {
-            return {
-                result: false,
-                message: "la partie significative n'est pas entre 1 et 10 (non compris)"
-            }
-        }
-
-        if (PS !== ePS) {
-            return {
-                result: false,
-                message: "erreur dans la partie significative: " + customCheck(`number,${this.digits}`, ePS.toString(), PS.toString()).message
-            }
-        }
-
-
-        // On vérifie l'ordre de grandeur.
-        if (OG !== eOG) {
-            return {
-                result: false,
-                message: "l'ordre de grandeur n'est pas juste.."
-            }
-        }
-
-    }
 
     get format(): string {
         return this.digits ?
             "réponse en notation scientifique" :
             `réponse en notation scientifique à ${this.digits} chiffre(s) significatif(s)`
     }
+
+	checkFormat(value: string): string {
+		return value ? "" : "la réponse est vide."
+	}
+
+	checkValue(value: string): string {
+		// On vérifie que le format est bien de type scientifique.
+		const PS = +(value.split("*")[0]),
+			OG = +(value.split("10^")[1] || 0),
+			ePS = +(this.answer.split("*")[0]),
+			eOG = +(this.answer.split("10^")[1] || 0)
+
+		// On vérifie la partie significative
+		if (Math.abs(PS) < 1 || Math.abs(PS) >= 10) {
+			return "la partie significative n'est pas entre 1 et 10 (non compris)"
+		}
+
+		if (PS !== ePS) {
+			return "erreur dans la partie significative: " + customCheck(`number,${this.digits}`, ePS.toString(), PS.toString()).message
+		}
+
+		if (!value.includes("*10^")) {
+			return "le format de réponse n'est pas une notation scientifique."
+		}
+
+		// On vérifie l'ordre de grandeur.
+		if (OG !== eOG) {
+			return "l'ordre de grandeur n'est pas juste..."
+		}
+	}
 
 }

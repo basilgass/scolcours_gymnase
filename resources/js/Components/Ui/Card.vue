@@ -1,7 +1,7 @@
 <script setup lang="ts">
 
 withDefaults(defineProps<{
-	withThemes: boolean
+	withThemes?: boolean
 }>(), {
 	withThemes: false
 })

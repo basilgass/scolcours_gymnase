@@ -1,6 +1,6 @@
-import { CheckerAbstract } from "@/Checkers/CheckerAbstract"
-import { customCheck } from "@/Composables/checkersConfig"
-import { Equation, Numeric } from "pimath"
+import {CheckerAbstract} from "@/Checkers/CheckerAbstract"
+import {customCheck} from "@/Composables/checkersConfig"
+import {Equation, Numeric} from "pimath"
 
 // TODO: EquationChecker and CartesianChecker overlaps !!!!
 
@@ -57,43 +57,25 @@ export class EquationChecker extends CheckerAbstract {
 		return `équation ${opts.join(", ")}`
 	}
 
-	check(
-		expected: string,
-		given: string,
-	): { result: boolean; message: string } {
-		if (!given.includes("=")) {
-			return {
-				result: false,
-				message: "il manque un signe d'égalité.",
-			}
+	checkFormat(value: string): string {
+		if (!value.includes("=")) {
+			return "il manque un signe d'égalité."
 		}
-
-		// If expected and given are the same, it is correct.
-		if (expected === given) {
-			return {
-				result: true,
-				message: "",
-			}
-		}
-
-		let A, Q
 
 		try {
-			A = new Equation(given)
+			new Equation(value)
+
+			return ""
 		} catch {
-			return {
-				result: false,
-				message: "l'équation n'est pas correctement formée.",
-			}
+			return "l'équation n'est pas correctement formée."
 		}
-		try {
-			Q = new Equation(expected)
-		} catch {
-			return {
-				result: false,
-				message: "la réponse n'est pas correctement formée.",
-			}
-		}
+
+	}
+
+	checkValue(value: string): string {
+
+		const A = new Equation(value)
+		const Q = new Equation(this.answer)
 
 		// Must be the same equation.
 		const A2 = A.clone().moveLeft(),
@@ -103,18 +85,12 @@ export class EquationChecker extends CheckerAbstract {
 
 		// L'expression de gauche est soit égale, soit opposée.
 		if (!A2.isLinearTo(Q2)) {
-			return {
-				result: false,
-				message: "l'équation n'est pas juste.",
-			}
+			return "l'équation n'est pas juste."
 		}
 
 		if (this.isCanonical) {
 			if (!A.right.isZero() && !A.left.isZero()) {
-				return {
-					result: false,
-					message: "l'équation n'est pas sous sa forme canonique.",
-				}
+				return  "l'équation n'est pas sous sa forme canonique."
 			}
 		}
 
@@ -127,10 +103,7 @@ export class EquationChecker extends CheckerAbstract {
 
 			// Must be a polynom of degree 2 in x and y.
 			if (A.degree("x").value !== 2 || A.degree("y").value !== 2) {
-				return {
-					result: false,
-					message: "L'équation n'a pas les bons degrés.",
-				}
+				return "L'équation n'a pas les bons degrés."
 			}
 
 			// One part of the equation must be of degree zero.
@@ -142,20 +115,16 @@ export class EquationChecker extends CheckerAbstract {
 				A.left.degree("y").value === 2 &&
 				A.right.degree("y").isZero()
 			) {
-				center = given.split("=")[0]
+				center = value.split("=")[0]
 			} else if (
 				A.right.degree("x").value === 2 &&
 				A.left.degree("x").isZero() &&
 				A.right.degree("y").value === 2 &&
 				A.left.degree("y").isZero()
 			) {
-				center = given.split("=")[1]
+				center = value.split("=")[1]
 			} else {
-				return {
-					result: false,
-					message:
-						"L'équation n'est pas correctement formée pour la forme centre - rayon.",
-				}
+				return "L'équation n'est pas correctement formée pour la forme centre - rayon."
 			}
 
 			// radius should be ok and does not need more checks
@@ -170,12 +139,9 @@ export class EquationChecker extends CheckerAbstract {
 				center === "x^2+y^2" ||
 				center === "y^2+x^2"
 			) {
-				return { result: true, message: "" }
+				return ""
 			} else {
-				return {
-					result: false,
-					message: "L'équation n'est pas dans le bon format.",
-				}
+				return "L'équation n'est pas dans le bon format."
 			}
 		}
 
@@ -184,21 +150,18 @@ export class EquationChecker extends CheckerAbstract {
 			// Left or right part must be correctly formed.
 			// y = [a](x-b)^2[ + c]
 			// y = [a]x^2[ + c]
-			const [left, right] = given.split("="),
-				[eLeft, eRight] = expected.split("=")
+			const [left, right] = value.split("="),
+				[eLeft, eRight] = this.answer.split("=")
 
 			const polynomY = left === "y" ? left : right,
 				polynomSommet = left === "y" ? right : left,
 				expectedSommet = eLeft === "y" ? eRight : eLeft
 
 			if (polynomY !== "y") {
-				return {
-					result: false,
-					message: "Un côté de l'équation doit juste être (y)",
-				}
+				return "Un côté de l'équation doit juste être (y)"
 			}
 
-			return customCheck("polynom,s", expectedSommet, polynomSommet)
+			return customCheck("polynom,s", expectedSommet, polynomSommet).message
 		}
 
 		if (this.isReduced) {
@@ -207,17 +170,11 @@ export class EquationChecker extends CheckerAbstract {
 				lcm = Numeric.lcm(lcmL, lcmR)
 
 			if (lcm !== 1) {
-				return {
-					result: false,
-					message: "l'équation n'est pas réduite.",
-				}
+				return "l'équation n'est pas réduite."
 			}
 		}
 
 		// If all tests passes, it is correct !
-		return {
-			result: true,
-			message: "",
-		}
+		return ""
 	}
 }

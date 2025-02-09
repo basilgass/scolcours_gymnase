@@ -30,74 +30,53 @@ export class CoordChecker extends CheckerAbstract {
         this.secondaryChecker = new (getCheckerClass(this.secondaryCheckerName))(this.secondaryCheckerOptions)
     }
 
-    check(expected: string, given: string): { result: boolean; message: string } {
-        if (expected === given) {
-            return {
-                result: true,
-                message: ""
-            }
-        }
+    readonly format = "Coordonnées d'un point sous la forme \\((a;b)\\)"
 
-        // Manque les parenthèses
-        if (given[0] !== "(" || given[given.length - 1] !== ")") {
-            return {
-                result: false,
-                message: "des coordonnées commencent et se terminent par des parenthèses"
-            }
-        }
+	checkFormat(value: string): string {
+		// Manque les parenthèses
+		if (value[0] !== "(" || value[value.length - 1] !== ")") {
+			return "des coordonnées commencent et se terminent par des parenthèses"
+		}
 
-        // On récupère les valeurs
-        const values = given.split(";"),
-            expectedValues = expected.split(";")
+	}
 
-        if (values.length === 1) {
-            return {
-                result: false,
-                message: "des coordonnées ont au moins deux valeurs, séparées par un \\(;\\)"
-            }
-        }
+	checkValue(value: string): string {
 
-        if (values.length !== expectedValues.length) {
-            return {
-                result: false,
-                message: "la dimension de la coordonnées ne correspond pas"
-            }
-        }
+		// On récupère les valeurs
+		const values = value.split(";"),
+			expectedValues = this.answer.split(";")
 
-        // remove the parentese from the first and last value.
-        values[0] = stripFirstCharacter(values[0])
-        values[values.length - 1] = stripLastCharacter(values[values.length - 1])
+		if (values.length === 1) {
+			return "des coordonnées ont au moins deux valeurs, séparées par un \\(;\\)"
+		}
 
-        if (expectedValues[0].startsWith("(")) {
-            expectedValues[0] = stripFirstCharacter(expectedValues[0])
-        }
+		if (values.length !== expectedValues.length) {
+			return "la dimension de la coordonnées ne correspond pas"
+		}
 
-        if (expectedValues[expectedValues.length - 1].endsWith(")")) {
-            expectedValues[expectedValues.length - 1] = stripLastCharacter(expectedValues[expectedValues.length - 1])
-        }
+		// remove the parentese from the first and last value.
+		values[0] = stripFirstCharacter(values[0])
+		values[values.length - 1] = stripLastCharacter(values[values.length - 1])
+
+		if (expectedValues[0].startsWith("(")) {
+			expectedValues[0] = stripFirstCharacter(expectedValues[0])
+		}
+
+		if (expectedValues[expectedValues.length - 1].endsWith(")")) {
+			expectedValues[expectedValues.length - 1] = stripLastCharacter(expectedValues[expectedValues.length - 1])
+		}
 
 
-        // let eChecker = ExactChecker(config)
-        for (let i = 0; i < values.length; i++) {
-            const result = this.secondaryChecker.check(expectedValues[i], values[i])
-            if (!result.result) {
-                return {
-                    result: false,
-                    message: `la ${i === 0 ? "1ère" : (i + 1) + "ème"} coordonnée n'est pas juste.<br>${result.message}`
-                }
-            }
-        }
+		// let eChecker = ExactChecker(config)
+		for (let i = 0; i < values.length; i++) {
+			const result = this.secondaryChecker.check(expectedValues[i], values[i])
+			if (!result.result) {
+				return `la ${i === 0 ? "1ère" : (i + 1) + "ème"} coordonnée n'est pas juste.<br>${result.message}`
+			}
+		}
 
-        // tous les tests sont passés ! La réponse est donc juste
-        return {
-            result: true,
-            message: ""
-        }
-
-    }
-
-    get format(): string {
-        return "Coordonnées d'un point sous la forme \\((a;b)\\)"
-    }
+		// tous les tests sont passés ! La réponse est donc juste
+		return ""
+	}
 
 }
