@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 import KeyboardDisplay from "@/Components/Keyboards/KeyboardDisplay.vue"
 import TableOfSigns from "@/Components/Pi/TableOfSigns.vue"
-import { customCheck } from "@/Composables/checkersConfig"
-import { KeyboardEmitsInterface, KeyboardPropsInterface, useKeyboard } from "@/Composables/useKeyboard.ts"
-import { TABLE_OF_SIGNS_VALUES } from "pimath"
-import { computed, nextTick, onMounted, ref } from "vue"
+import {KeyboardEmitsInterface, KeyboardPropsInterface, useKeyboard} from "@/Composables/useKeyboard.ts"
+import {TABLE_OF_SIGNS_VALUES} from "pimath"
+import {computed, nextTick, onMounted, ref} from "vue"
+import {PiChecker} from "pichecker"
 
 // TODO: TableOfSigns: mise en évidence de la zone d'édition
 // TODO: TableOfSigns: assistance plus complète (entrée vide, trop d'entrée, ....)
@@ -17,35 +17,35 @@ function onKeyboardChange(): void {
 	onChange()
 }
 
-const { loadAnswer } = useKeyboard(
+const {loadAnswer} = useKeyboard(
 	props,
 	onKeyboardChange
 )
 
-const reset = function() {
-	zeroes.value = { input: "", tex: "", raw: "" }
-	signs.value = { input: "", tex: "", raw: "" }
-	grows.value = { input: "", tex: "", raw: "" }
-	coords.value = { input: "", tex: "", raw: "" }
+const reset = function () {
+	zeroes.value = {input: "", tex: "", raw: ""}
+	signs.value = {input: "", tex: "", raw: ""}
+	grows.value = {input: "", tex: "", raw: ""}
+	coords.value = {input: "", tex: "", raw: ""}
 }
 
 defineExpose({
 	reset,
 	loadAnswer: (value) => {
 		loadAnswer(value, {
-			reset ,
-			callback: (value) =>{
+			reset,
+			callback: (value) => {
 
 				// Display the correct answer
 				const [z, s, g, c] = value.split("@")
 
-				zeroes.value = { input: z, tex: "", raw: "" }
-				signs.value = { input: s, tex: "", raw: "" }
-				grows.value = { input: g ?? "", tex: "", raw: "" }
+				zeroes.value = {input: z, tex: "", raw: ""}
+				signs.value = {input: s, tex: "", raw: ""}
+				grows.value = {input: g ?? "", tex: "", raw: ""}
 
 				if (c !== undefined) {
 					showKeyboard.value = "coords"
-					coords.value = { input: c, tex: "", raw: "" }
+					coords.value = {input: c, tex: "", raw: ""}
 				}
 
 			}
@@ -54,9 +54,11 @@ defineExpose({
 	parameters: "@<name>(x)"
 })
 
-const onChange = async function() {
+const pichecker = new PiChecker("tos")
+const onChange = async function () {
 	await nextTick()
-	const check = customCheck("tos", props.answer, answerValue.value)
+	// const check = customCheck("tos", props.answer, answerValue.value)
+	const check = pichecker.check(props.answer, answerValue.value)
 
 	emits("change", {
 		value: {
@@ -85,14 +87,14 @@ const withExtremes = computed(() => { // s'il faut donner les coordonnées
 	return props.answer.split("@").length > 3
 })
 
-const tosMode = computed<"signs" | "grows" | "curves">(()=>{
-	return withGrows.value ? 'grows': 'signs'
+const tosMode = computed<"signs" | "grows" | "curves">(() => {
+	return withGrows.value ? 'grows' : 'signs'
 })
 
 // Le clavier a afficher
 const showKeyboard = ref("zeroes")
 
-const changeKeyboard = function(event) {
+const changeKeyboard = function (event) {
 	// event = {input, raw, tex}
 
 	// mise à jour du tableau de signes
@@ -117,11 +119,11 @@ const changeKeyboard = function(event) {
 // Génération de la réponse pour comparaison et de l'affichage.
 // const signs = ref<string>([])
 
-const zeroes = ref({ input: "", tex: "", raw: "" }),
+const zeroes = ref({input: "", tex: "", raw: ""}),
 	zeroesKeyboard = ref(props.keyboard.parameters.includes("float") ? "algebra" : "exact"),
-	signs = ref({ input: "", tex: "", raw: "" }),
-	grows = ref({ input: "", tex: "", raw: "" }),
-	coords = ref({ input: "", tex: "", raw: "" }),
+	signs = ref({input: "", tex: "", raw: ""}),
+	grows = ref({input: "", tex: "", raw: ""}),
+	coords = ref({input: "", tex: "", raw: ""}),
 	tosUI = ref(null),
 	answerValue = computed(() => {
 		let r = `${zeroes.value.input}@${signs.value.input}`
@@ -139,8 +141,6 @@ const zeroes = ref({ input: "", tex: "", raw: "" }),
 onMounted(() => {
 	onChange()
 })
-
-
 
 
 </script>

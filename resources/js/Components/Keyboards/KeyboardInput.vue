@@ -2,8 +2,12 @@
 
 import AsciiMathParser from "@/asciimath2tex"
 import FormMaker from "@/Components/Form/FormMaker.vue"
-import { KeyboardEmitsInterface, KeyboardPropsInterface, useKeyboard } from "@/Composables/useKeyboard.js"
-import { computed, nextTick, ref } from "vue"
+import {computed, nextTick, ref} from "vue"
+import {
+	KeyboardEmitsInterface,
+	KeyboardPropsInterface,
+	useKeyboard
+} from "@/Composables/useKeyboard.js"
 
 const props = defineProps<KeyboardPropsInterface>()
 
@@ -13,22 +17,24 @@ function onKeyboardChange(): void {
 	onChange()
 }
 
-const { loadAnswer } = useKeyboard(
+const {loadAnswer} = useKeyboard(
 	props,
 	onKeyboardChange
 )
 
-let reset = ()=>{inputValue.value = ""}
+let reset = () => {
+	inputValue.value = ""
+}
 
-defineExpose({ reset, loadAnswer, parameters: "" })
+defineExpose({reset, loadAnswer, parameters: ""})
 
 let onChange = async function () {
 	await nextTick()
 	// let value = event.target.value
 	emits("change", {
-		value:		{
+		value: {
 			input: inputValue.value,
-			tex: isTex.value?inputValue.value:new AsciiMathParser().parse(inputValue.value),
+			tex: isTex.value ? inputValue.value : new AsciiMathParser().parse(inputValue.value),
 			raw: inputValue.value
 		},
 		validation: checker.value.check(props.answer, inputValue.value)
@@ -38,12 +44,12 @@ let onChange = async function () {
 /* ------------------*/
 const {getKeyboards} = useKeyboard()
 
-let	inputValue = ref(""),
-	isTex = computed(()=>{
+let inputValue = ref(""),
+	isTex = computed(() => {
 		return props.keyboard.parameters.includes("tex")
 	}),
-	checker = computed(()=>{
-		if(props.keyboard.parameters.length===0){
+	checker = computed(() => {
+		if (props.keyboard.parameters.length === 0) {
 			return {
 				check: () => {
 					return {message: "il n'y a pas de contrôle...", result: false}
@@ -52,7 +58,7 @@ let	inputValue = ref(""),
 		}
 
 		const kbrds = getKeyboards(props.keyboard.parameters[0])
-		if(kbrds===null || kbrds.length===0) {
+		if (kbrds === null || kbrds.length === 0) {
 			return {
 				check: () => {
 					return {message: "il n'y a pas de contrôle...", result: false}
@@ -63,7 +69,10 @@ let	inputValue = ref(""),
 			}
 		}
 
-		return kbrds[0].checker
+		return {
+			check: kbrds[0].checker.check,
+			format: kbrds[0].checker.checker.format
+		}
 	})
 
 

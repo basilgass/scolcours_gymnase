@@ -1,14 +1,14 @@
 <script lang="ts" setup>
 
 import KeyboardDisplay from "@/Components/Keyboards/KeyboardDisplay.vue"
-import { CheckerResult } from "@/Composables/checkersConfig.ts"
 import {
 	KeyboardEmitsInterface,
 	KeyboardInputInterface,
 	KeyboardPropsInterface,
 	useKeyboard
 } from "@/Composables/useKeyboard.ts"
-import { computed } from "vue"
+import {computed} from "vue"
+import type {CheckerResult} from "pichecker"
 
 // General keyboard config - all keyboards shares the same
 // props, emits, keyboardInput,
@@ -20,13 +20,13 @@ function onKeyboardChange(event: string | KeyboardInputInterface): void {
 	onChange(event)
 }
 
-const { loadAnswer, keyboardInput, reset } = useKeyboard(props, onKeyboardChange)
+const {loadAnswer, keyboardInput, reset} = useKeyboard(props, onKeyboardChange)
 
-defineExpose({ reset, loadAnswer })
+defineExpose({reset, loadAnswer})
 
-const onChange = function(event: string | KeyboardInputInterface): void {
+const onChange = function (event: string | KeyboardInputInterface): void {
 	//value = {tex, raw, input}
-	keyboardInput.value = typeof event === "string" ? { input: event, tex: event, raw: event } : event
+	keyboardInput.value = typeof event === "string" ? {input: event, tex: event, raw: event} : event
 
 	// Make the validation.
 	// validation = {result: Boolean, message: string}
@@ -58,7 +58,7 @@ const onChange = function(event: string | KeyboardInputInterface): void {
 	})
 
 	// emit change event
-	emits("change", { value: keyboardInput.value, validation })
+	emits("change", {value: keyboardInput.value, validation})
 }
 
 
