@@ -44,7 +44,7 @@ const kbrds = computed(() => {
 			return "ce clavier n'existe pas..."
 		}
 
-		return kbrds.value[kbrdId.value].checker.checker.format
+		return kbrds.value[kbrdId.value].checker.format
 
 	}),
 	kbrdsJson = computed(() => {

@@ -81,7 +81,7 @@ const answerFormat = computed(() => {
 			.map((x) => x.split("format:")[1])[0]
 		return (
 			customOutput ??
-			currentKeyboard.value.checker.checker.format
+			currentKeyboard.value.checker.format
 		)
 	}
 

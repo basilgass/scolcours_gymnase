@@ -44,7 +44,7 @@ const showKeyboardHelper = ref(false),
 	}),
 	currentLineKeyboardDescription = computed(() => {
 		const checker = new PiChecker(currentLineKeyboardKey.value)
-		return checker.checker.description
+		return checker.description
 	}),
 	currentLineKeyboards = computed(() => {
 		return Object.keys(checkersList)

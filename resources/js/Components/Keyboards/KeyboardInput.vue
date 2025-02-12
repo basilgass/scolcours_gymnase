@@ -71,7 +71,7 @@ let inputValue = ref(""),
 
 		return {
 			check: kbrds[0].checker.check,
-			format: kbrds[0].checker.checker.format
+			format: kbrds[0].checker.format
 		}
 	})
 
