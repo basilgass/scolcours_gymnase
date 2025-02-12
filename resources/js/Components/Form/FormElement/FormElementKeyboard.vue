@@ -1,11 +1,11 @@
 <script lang="ts" setup>
-import { computed, onMounted, ref } from "vue"
+import {computed, onMounted, ref} from "vue"
 import "prismjs/themes/prism.css"
 import "prismjs/components/prism-latex"
 import "prismjs/components/prism-javascript"
 import "prismjs/components/prism-json"
-import { checkersList, getChecker } from "@/Composables/checkersConfig"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
+import {CHECKERS, checkersList, PiChecker} from "pichecker"
 
 const theValue = defineModel<string>()
 
@@ -22,11 +22,11 @@ function focusFn(select: boolean) {
 	}
 }
 
-defineExpose({ focus: focusFn })
+defineExpose({focus: focusFn})
 // const emits = defineEmits(["update"])
 const props = defineProps({
-	rows: { type: Number, default: 2 },
-	focus: { type: Boolean, default: false }
+	rows: {type: Number, default: 2},
+	focus: {type: Boolean, default: false}
 })
 
 const update = () => {
@@ -43,22 +43,17 @@ const showKeyboardHelper = ref(false),
 		return currentLine.value.split(",")[0]
 	}),
 	currentLineKeyboardDescription = computed(() => {
-		if (checkersList.includes(currentLineKeyboardKey.value)) {
-			return getChecker(currentLineKeyboardKey.value).description
-		}
-
-		return ""
+		const checker = new PiChecker(currentLineKeyboardKey.value)
+		return checker.checker.description
 	}),
 	currentLineKeyboards = computed(() => {
-		return checkersList.filter((x) =>
-			x.startsWith(currentLineKeyboardKey.value)
-		)
+		return Object.keys(checkersList)
+			.map((x: CHECKERS) => x.toString())
+			.filter((x: string) =>
+				x.startsWith(currentLineKeyboardKey.value)
+			)
 	}),
 	keyboardHelper = computed(() => {
-		if (!checkersList.includes(currentLineKeyboardKey.value)) {
-			return currentLineKeyboards.value.join(", ")
-		}
-
 		return `${currentLineKeyboardDescription.value}\n- @format:custom format`
 	})
 const onKeyup = () => {
@@ -84,9 +79,9 @@ const tabber = () => {
 }
 
 const currentRows = computed(() => {
-	try{
+	try {
 		return Math.max(props.rows, theValue.value.split("\n").length + 1)
-	}catch(e){
+	} catch {
 		return props.rows
 	}
 })

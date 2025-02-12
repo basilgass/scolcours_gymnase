@@ -1,8 +1,9 @@
-import { CheckerAbstract } from "@/Checkers/CheckerAbstract"
-import { CheckerResult, getChecker } from "@/Composables/checkersConfig"
-import { keyboardKeys, keyboardMaps, KeyboardObjectType, keyboards } from "@/Composables/keyboardConfig"
-import { getModule, MODULE_TYPES } from "@/scolcours.js"
-import { Component, ref, unref } from "vue"
+import {getModule, MODULE_TYPES} from "@/scolcours.js"
+import {Component, ref, unref} from "vue"
+import type {CheckerResult} from "pichecker"
+import {keyboardKeys, keyboardMaps, KeyboardObjectType, keyboards} from "@/Composables/keyboardConfig.ts"
+import {PiChecker} from "pichecker"
+
 
 /**
  * Get the keyboard name for a given component value.
@@ -63,7 +64,7 @@ export interface KeyboardOnChangeInterface {
 
 export interface KeyboardInterface {
 	name: string;
-	checker: CheckerAbstract;
+	checker: PiChecker;
 	checkerOverride?: Record<string, string>;
 	parameters: string[];
 	values: string[];
@@ -133,9 +134,11 @@ function getOneKeyboard(kbrd: string): KeyboardInterface {
 
 
 	const name = getComponentKeyboardName(value)
+
+	// tODO: rework getting a checker component.
 	return {
 		name,
-		checker: getChecker(value, options),
+		checker: new PiChecker(`${value},${options.join(',')}`),
 		checkerOverride,
 		parameters,
 		values,
@@ -157,10 +160,10 @@ export function useKeyboard(
 	onKeyboardChange?: (event: string | KeyboardInputInterface) => void
 ) {
 
-	const keyboardInput = ref<KeyboardInputInterface>({ input: "", tex: "", raw: "" })
+	const keyboardInput = ref<KeyboardInputInterface>({input: "", tex: "", raw: ""})
 
 	function reset() {
-		keyboardInput.value = { input: "", tex: "", raw: "" }
+		keyboardInput.value = {input: "", tex: "", raw: ""}
 	}
 
 	function loadAnswer(value: string, config?: {
