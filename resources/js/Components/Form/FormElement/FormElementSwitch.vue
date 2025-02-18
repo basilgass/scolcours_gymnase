@@ -66,7 +66,7 @@ const switchContainerClass = computed(() => {
 	</div>
 </template>
 
-<style scoped>
+<style scoped lang="postcss">
 .switch {
 	@apply border rounded-full relative transition-colors
 	w-[36px] h-[23px];

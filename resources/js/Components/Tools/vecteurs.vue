@@ -104,7 +104,7 @@ let result = computed(() => {
 				<div v-katex="`${pV1.tex} \\cdot ${pV2.tex} = ${pV1.dot(pV2).tex}`" />
 			</div>
 			<div
-				class="py-1 px-3 bg-red-100 border border-red-300 rounded"
+				class="py-1 px-3 bg-red-100 border border-red-300 rounded-sm"
 				v-else
 			>
 				il faut deux vecteurs !
@@ -122,7 +122,7 @@ let result = computed(() => {
 				/>
 			</div>
 			<div
-				class="py-1 px-3 bg-red-100 border border-red-300 rounded"
+				class="py-1 px-3 bg-red-100 border border-red-300 rounded-sm"
 				v-else
 			>
 				il faut deux vecteurs
@@ -138,7 +138,7 @@ let result = computed(() => {
 				<div v-katex="`\\angle \\left(${pV1.tex} ; ${pV2.tex} \\right)  = ${+pV1.angle(pV2).toFixed(2)}`" />
 			</div>
 			<div
-				class="py-1 px-3 bg-red-100 border border-red-300 rounded"
+				class="py-1 px-3 bg-red-100 border border-red-300 rounded-sm"
 				v-else
 			>
 				il faut deux vecteurs

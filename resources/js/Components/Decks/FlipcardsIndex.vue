@@ -170,5 +170,3 @@ function updateDecksOrder() {
 		</div>
 	</article>
 </template>
-
-<style scoped></style>

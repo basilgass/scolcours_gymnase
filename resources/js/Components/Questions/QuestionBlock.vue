@@ -93,6 +93,4 @@ const body = computed(() => {
 	</main>
 </template>
 
-<style scoped>
 
-</style>

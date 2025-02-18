@@ -8,15 +8,15 @@ En-tête principal, sensible au thème
 import MainAside from "@/Components/MainAside.vue"
 import DropdownMenu from "@/Components/Ui/DropdownMenu.vue"
 import LogoutButton from "@/Components/Ui/LogoutButton.vue"
-import { useStoreEditMode } from "@/stores/useStoreEditMode.ts"
+import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
 
-import { ThemeInterface } from "@/types/modelInterfaces.ts"
+import {ThemeInterface} from "@/types/modelInterfaces.ts"
 
-import { useDark, useToggle } from "@vueuse/core"
-import { computed, PropType, provide, ref } from "vue"
+import {useDark, useToggle} from "@vueuse/core"
+import {computed, PropType, provide, ref} from "vue"
 
-const isDark = useDark()
 // TODO: Set dark mode to false by default for now
+const isDark = useDark()
 isDark.value = false
 const toggleDark = useToggle(isDark)
 
@@ -24,19 +24,19 @@ const props = defineProps({
 	theme: {
 		type: Object as PropType<ThemeInterface>,
 		default: () => {
-			return { title: "Scolcours", slug: "main" }
+			return {title: "Scolcours", slug: "main"}
 		}
 	},
 })
 
 const computedTheme = computed(() => {
-	return props.theme ? props.theme : { title: "Scolcours", slug: "main" }
+	return props.theme ? props.theme : {title: "Scolcours", slug: "main"}
 })
 
 const showAside = ref(false)
 provide("showAside", showAside)
 
-const  editMode  = useStoreEditMode()
+const editMode = useStoreEditMode()
 
 </script>
 <template>

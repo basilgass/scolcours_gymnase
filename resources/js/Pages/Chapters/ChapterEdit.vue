@@ -115,4 +115,4 @@ function deleteChapter() {
 	</section>
 </template>
 
-<style scoped></style>
+

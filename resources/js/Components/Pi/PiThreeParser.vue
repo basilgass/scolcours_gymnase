@@ -46,7 +46,7 @@ watch(() => props.draw.code, () => {
 	<div>
 		<div
 			ref="threeContainer"
-			class="aspect-[4/3]"
+			class="aspect-4/3"
 		/>
 	</div>
 </template>

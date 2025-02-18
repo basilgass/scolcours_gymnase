@@ -448,4 +448,3 @@ const answerOutput = computed(() => {
 		</div>
 	</div>
 </template>
-<style scoped></style>

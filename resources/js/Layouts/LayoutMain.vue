@@ -2,16 +2,16 @@
 import MainFooter from "@/Components/MainFooter.vue"
 import MainHeader from "@/Components/MainHeader.vue"
 import FlashMessage from "@/Components/Ui/FlashMessage.vue"
-import { flashConfig, flashMessageInterface } from "@/types"
-import { ThemeInterface } from "@/types/modelInterfaces.ts"
-import { Head, usePage } from "@inertiajs/vue3"
-import { computed, PropType, provide, ref } from "vue"
+import {flashConfig, flashMessageInterface} from "@/types"
+import {ThemeInterface} from "@/types/modelInterfaces.ts"
+import {Head, usePage} from "@inertiajs/vue3"
+import {computed, PropType, provide, ref} from "vue"
 
 defineProps({
 	theme: {
 		type: Object as PropType<ThemeInterface>,
 		default: () => {
-			return { title: "Scolcours", slug: "main" }
+			return {title: "Scolcours", slug: "main"}
 		}
 	}
 })
@@ -24,14 +24,14 @@ function addFlashMessage(
 	config: flashConfig
 ) {
 	flashMessages.value.push({
-		id: null,
-		message,
-		type,
-		config: {
-			timeout: 1000 * 2,
-			...config
+			id: null,
+			message,
+			type,
+			config: {
+				timeout: 1000 * 2,
+				...config
+			}
 		}
-	}
 	)
 }
 
@@ -59,22 +59,19 @@ const pageTitle = computed(() => {
 </script>
 
 <template>
-	<div class="app-container">
+	<div>
 		<Head :title="pageTitle" />
 
 		<!-- Header of the page -->
 		<MainHeader :theme="theme" />
 
 		<!-- Container for the "column design" -->
-		<div class="min-h-screen">
+		<main class="scolcours-container">
 			<!-- Main content -->
-			<main class="min-h-screen">
-				<slot />
-			</main>
-
-			<!-- Footer of the page -->
-			<main-footer />
-		</div>
+			<slot />
+		</main>
+		<!-- Footer of the page -->
+		<main-footer />
 
 		<!-- Flash message handler -->
 		<div
@@ -99,4 +96,4 @@ const pageTitle = computed(() => {
 		</div>
 	</div>
 </template>
-<style scoped></style>
+

@@ -49,7 +49,7 @@ function TOS_update(value){
 		/>
 
 		<!-- Tableau de signes -->
-		<div class="bg-white rounded border-gray-400 p-4">
+		<div class="bg-white rounded-sm border-gray-400 p-4">
 			<h2 class="chapter-menu text-lg mb-10">
 				{{ mode==='signs' ? "Tableau de signes" : mode==="grows" ? "Tableau de croissance" : "Tableau de courbure" }}
 			</h2>

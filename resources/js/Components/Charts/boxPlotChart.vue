@@ -108,7 +108,3 @@ watch(() => props.chartOptions, () => {
 		<canvas ref="graph" />
 	</div>
 </template>
-
-<style scoped>
-
-</style>

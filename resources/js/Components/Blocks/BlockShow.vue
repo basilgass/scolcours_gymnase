@@ -85,7 +85,7 @@ function addIllustration(){
 	<article
 		:id="`block-${block.id}`"
 		:class="blockConfig.style.body"
-		class="bg-white dark:bg-gray-800"
+		class="bg-box"
 	>
 		<BlockShowAdmin
 			v-if="!noAdmin"

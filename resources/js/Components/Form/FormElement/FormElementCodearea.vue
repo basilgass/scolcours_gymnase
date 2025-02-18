@@ -382,7 +382,7 @@ onMounted(() => {
 	</div>
 </template>
 
-<style scoped>
+<style scoped lang="postcss">
 .code-input {
 	/* Allow other elems to be inside */
 	position: relative;

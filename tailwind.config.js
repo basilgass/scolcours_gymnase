@@ -2,7 +2,7 @@
 /* eslint @typescript-eslint/no-var-requires: 0 */
 import defaultTheme from "tailwindcss/defaultTheme"
 
-const colors = require("tailwindcss/colors")
+// const colors = require("tailwindcss/colors")
 
 const toRgba = (hexCode, opacity = 50) => {
 	let hex = hexCode.replace("#", "")
@@ -166,9 +166,9 @@ export default {
 			addUtilities(utilities)
 		},
 
-		require("@tailwindcss/typography"),
-		require("@tailwindcss/container-queries"),
-		require("tailwind-scrollbar")({nocompatible: true}),
+		// require("@tailwindcss/typography"),
+		// require("@tailwindcss/container-queries"),
+		// require("tailwind-scrollbar")({nocompatible: true}),
 		// require('@formkit/themes/tailwindcss'),
 	],
 }

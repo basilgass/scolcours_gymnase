@@ -6,22 +6,23 @@ Affichage d'un formulaire, avec la possibilitÃ© de passer d'un formulaire du thÃ
 	setup
 >
 import FormulaShow from "@/Components/Blocks/FormulaShow.vue"
-import { useStoreEditMode } from "@/stores/useStoreEditMode.ts"
-import { flashInterface } from "@/types"
-import { FormulaInterface } from "@/types/modelInterfaces.ts"
+import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
+import {flashInterface} from "@/types"
+import {ChapterInterface, FormulaInterface} from "@/types/modelInterfaces.ts"
 import axios from "axios"
-import { inject, onMounted, ref } from "vue"
+import {inject, onMounted, ref} from "vue"
+import ScButton from "@/Components/Ui/scButton.vue"
 
 const props = defineProps({
-	chapterSlug: { type: String, required: true },
-	responsive: { type: Boolean, default: false }
+	chapterSlug: {type: String, required: true},
+	responsive: {type: Boolean, default: false}
 })
 
 const formular = ref(null)
 
 const theFormular = ref([]),
 	theSlug = ref(props.chapterSlug),
-	themeChapters = ref([]),
+	themeChapters = ref<ChapterInterface[]>([]),
 	loadingState = ref(false),
 	theFormularErrors = ref("")
 
@@ -41,7 +42,7 @@ function updateFormulasOrder() {
 	axios
 		.post(route("formulas.updateOrder"), {
 			order: theFormular.value.map((x, index) => {
-				return { id: x.id, order: index }
+				return {id: x.id, order: index}
 			})
 		})
 		.then(() => {
@@ -70,6 +71,7 @@ function loadFormular() {
 					)
 				) {
 					themeChapters.value.push(chapter)
+					console.log(chapter)
 				}
 			})
 			// themeChapters.value = res.data.chapters
@@ -88,11 +90,11 @@ function updateFormular(slug: string) {
 	loadFormular()
 }
 
-function destroyFormula(id: number){
-	theFormular.value = theFormular.value.filter(x=>x.id!==id)
+function destroyFormula(id: number) {
+	theFormular.value = theFormular.value.filter(x => x.id !== id)
 }
 
-onMounted(()=>{
+onMounted(() => {
 	loadFormular()
 })
 </script>
@@ -109,18 +111,17 @@ onMounted(()=>{
 			v-if="themeChapters.length > 0 || editMode.enable"
 			class="flex flex-wrap items-center gap-1 mb-3 min-h-[3em]"
 		>
-			<button
+			<sc-button
 				v-for="item of themeChapters"
 				:key="item.slug"
-				v-katex.auto="item.title"
-				v-theme.border.text="item.theme.id"
-				:class="{
-					'btn-xs text-xs': item.slug !== theSlug,
-					'font-semibold': item.slug === props.chapterSlug,
-				}"
-				class="transition-all btn border bg-white hover:bg-gray-100"
+				:theme="item.theme.id"
+				:outline="item.slug !== theSlug"
+				:active="item.slug === props.chapterSlug"
+				xs
 				@click="updateFormular(item.slug)"
-			/>
+			>
+				<div v-katex.auto="item.title" />
+			</sc-button>
 		</div>
 
 		<div v-if="theFormular.length > 0 || editMode.enable">

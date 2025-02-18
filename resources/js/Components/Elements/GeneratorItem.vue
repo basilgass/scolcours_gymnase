@@ -41,7 +41,3 @@ const hasErrors = ref(false)
 		/>
 	</div>
 </template>
-
-<style scoped>
-
-</style>

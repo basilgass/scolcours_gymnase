@@ -107,7 +107,7 @@ function updateBlockOrder(){
 	</article>
 </template>
 
-<style scoped>
+<style scoped lang="postcss">
 .addButton {
 	@apply cursor-pointer
 	bg-white text-xl w-[20px] h-[20px] rounded-full z-10

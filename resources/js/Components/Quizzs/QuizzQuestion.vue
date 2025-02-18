@@ -12,7 +12,7 @@ let props = defineProps({
 <template>
 	<article>
 		<question-show
-			class="max-w-xl mx-auto bg-white border rounded"
+			class="max-w-xl mx-auto bg-white border rounded-sm"
 			:question="props.question as QuestionInterface"
 			show-input
 			is-minimal

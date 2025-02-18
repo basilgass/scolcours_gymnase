@@ -1,0 +1,11 @@
+
+
+@utility scrollbar-scolcours-default {
+	@apply scrollbar scrollbar-w-1 scrollbar-h-1 scrollbar-thumb-rounded-full;
+}
+
+@utility scrollbar-scolcours {
+	@apply scrollbar-scolcours-default
+	scrollbar-thumb-gray-700/50 scrollbar-w-2
+	dark:scrollbar-thumb-gray-500/50;
+}

@@ -129,7 +129,7 @@ function checkResult(): boolean {
 		<!-- Error messages -->
 		<div
 			v-if="questionData.user.errors.value.length > 0"
-			class="max-w-xl mx-auto border bg-red-50 border-red-600 p-3 rounded my-2"
+			class="max-w-xl mx-auto border bg-red-50 border-red-600 p-3 rounded-sm my-2"
 		>
 			<div
 				v-for="(msg, index) in questionData.user.errors.value"
@@ -141,6 +141,4 @@ function checkResult(): boolean {
 	</div>
 </template>
 
-<style scoped>
 
-</style>

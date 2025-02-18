@@ -126,7 +126,7 @@ const showUsersIndex = ref(-1),
 			</InertiaLink>
 		</div>
 
-		<div class="bg-white border border-slate-200 rounded py-3 px-5">
+		<div class="bg-white border border-slate-200 rounded-sm py-3 px-5">
 			<h2
 				class="text-2xl"
 				v-text="theQuizz.title"
@@ -301,7 +301,7 @@ const showUsersIndex = ref(-1),
 						</button>
 						<div
 							v-show="index === showUsersIndex"
-							class="absolute right-0 w-[250px] max-h-[30em] overflow-y-auto bg-white shadow p-3 flex flex-col gap-3 z-10"
+							class="absolute right-0 w-[250px] max-h-[30em] overflow-y-auto bg-white shadow-sm p-3 flex flex-col gap-3 z-10"
 						>
 							<button
 								class="text-right text-slate-300"

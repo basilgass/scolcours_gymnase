@@ -61,4 +61,4 @@ function refreshWidgets() {
 	</div>
 </template>
 
-<style scoped></style>
+

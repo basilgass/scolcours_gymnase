@@ -40,7 +40,7 @@ defineEmits<{
 
 <template>
 	<div
-		class="bg-white rounded border flex flex-col gap-3 relative pb-3"
+		class="bg-white rounded-sm border flex flex-col gap-3 relative pb-3"
 	>
 		<div
 			class="absolute -top-3 -right-3 w-7 h-7 rounded-full
@@ -98,7 +98,7 @@ defineEmits<{
 						</div>
 
 						<div
-							class="divide-y-2 divide-black border rounded px-3"
+							class="divide-y-2 divide-black border rounded-sm px-3"
 							:class="{
 								'divide-solid':fx.style==='plain',
 								'divide-dashed':fx.style==='dash',
@@ -159,7 +159,3 @@ defineEmits<{
 		</div>
 	</div>
 </template>
-
-<style scoped>
-
-</style>

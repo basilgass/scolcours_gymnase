@@ -1,86 +1,109 @@
 import {usePage} from "@inertiajs/vue3"
 
+function getThemes(): string[] {
+	return usePage().props.themes.map((theme) => theme.slug)
+}
 
-function themeUpdate(el, binding) {
-	const themes = usePage().props.themes.map((theme) => theme.slug)
+function getCurrentTheme(): string | null {
+	return usePage().props?.theme?.slug || null
+}
 
-	const keys = ["btn", "bg", "text", "border"]
+const keys = ["btn", "bg", "text", "border"]
 
-	let chapter: string
+function clearThemeClasses(el: HTMLElement): void {
+	const themes = getThemes()
 
-	// Remove all classes from el matching the pattern "<key>-<theme>????"
-	if (el) {
-		keys.forEach((key) => {
-			themes.forEach((theme) => {
-				const regex = new RegExp(`${key}-${theme}-\\d+`)
-				el.classList.forEach((className) => {
-					if (regex.test(className)) {
-						el.classList.remove(className)
+	keys.forEach((key) => {
+		themes.forEach((theme) => {
+			const regex = new RegExp(`${key}-${theme}-\\d+`)
+			el.classList.forEach((className) => {
+				if (regex.test(className)) {
+					el.classList.remove(className)
+
+					// If removing a border-*-* item, also remove border.
+					if (key === 'border') {
+						el.classList.remove('border')
 					}
-				})
+				}
 			})
 		})
+	})
 
-		// Remove the text-white class if bg is not set
-		if (Object.hasOwn(binding.modifiers, "bg") && binding.value===0) {
-			el.classList.remove("text-white")
-		}
-	}
+	// Remove the text-white class if bg is not set
+	el.classList.remove("text-white")
+}
 
-	if (binding.value === false || binding.value === 0 || binding.value === "") return
+export function getThemeChapter(value?: string | boolean | number, modifiers?: Record<string, boolean>): string {
+	const themes = getThemes()
 
 	if (
-		Object.hasOwn(binding.modifiers, "admin") ||
-		binding.value === "admin"
+		modifiers &&
+		Object.hasOwn(modifiers, "admin") ||
+		value === "admin"
 	) {
-		chapter = "admin"
-	} else if (themes.indexOf(binding.value) !== -1) {
-		chapter = binding.value
-	} else if (typeof binding.value === "number") {
+		return "admin"
+	} else if (typeof value === 'string' && themes.indexOf(value) !== -1) {
+		return value
+	} else if (typeof value === "number") {
 		// it's a number -> get the theme id.
 		const theme = usePage().props.themes.filter(
-			(th) => +th.id === +binding.value
+			(th) => +th.id === +value
 		)
 
 		if (theme.length === 1) {
-			chapter = theme[0].slug
-		}
-	} else {
-		chapter = usePage().props?.theme?.slug
-
-		if (chapter === undefined && (typeof binding.value === 'string')) {
-			el.classList.add(...binding.value.split(' '))
-			return
+			return theme[0].slug
 		}
 	}
 
-	// No chapter giver -> use main
-	if (chapter === undefined) chapter = 'main'
+	return getCurrentTheme() ?? 'scolcours'
+}
 
-	Object.keys(binding.modifiers).forEach((key) => {
-		if (key === "hover" || key === "btn") {
-			el.classList.add(
-				`hover:bg-${chapter}-50`,
-				`hover:border-${chapter}-500`,
-				`hover:text-${chapter}-500`,
-				'transition-colors',
-				'duration-300'
-			)
-		}
-
-		if (keys.indexOf(key) !== -1) {
-			if (key === "text" && Object.hasOwn(binding.modifiers, "bg")) {
-				el.classList.add("text-white")
-			} else if (key==='btn'){
-				el.classList.add(`btn-${chapter}`)
-			} else {
-				el.classList.add(`${key}-${chapter}-500`)
-
-				// TODO: add the dark mode here ?
-				// el.classList.add(`dark:${key}-${chapter}-500`)
+export function getThemeClasses(chapter: string, modifiers: Record<string, boolean>) {
+	const classesList: string[] = []
+	Object.keys(modifiers)
+		.forEach((key) => {
+			// TODO: Check if it's still used for buttons ? I think it should be removed.
+			if (key === "hover" || key === "btn") {
+				classesList.push(
+					`hover:bg-${chapter}-50`,
+					`hover:border-${chapter}-500`,
+					`hover:text-${chapter}-500`,
+					'transition-colors',
+					'duration-300'
+				)
 			}
-		}
+
+			if (keys.indexOf(key) !== -1) {
+				if (key === "text" && Object.hasOwn(modifiers, "bg")) {
+					classesList.push("text-white")
+				} else {
+					classesList.push(`${key}-${chapter}`)
+
+					// TODO: add the dark mode here ?
+					// el.classList.add(`dark:${key}-${chapter}-500`)
+				}
+			}
+		})
+
+	return classesList
+}
+
+function setThemeClasses(el: HTMLElement, chapter: string, modifiers: Record<string, boolean>): void {
+	getThemeClasses(chapter, modifiers).forEach((value: string) => {
+		el.classList.add(value)
 	})
+}
+
+function themeUpdate(el, binding) {
+	clearThemeClasses(el)
+
+	if (binding.value === false || binding.value === 0 || binding.value === "") return
+
+	setThemeClasses(
+		el,
+		getThemeChapter(binding.value, binding.modifiers),
+		binding.modifiers
+	)
 }
 
 export const themeDirective = {

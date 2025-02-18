@@ -55,9 +55,9 @@ function selectQuestion(index: number) {
 					v-for="i in theQuestions.length"
 					:key="`question-${i}`"
 					:class="{
-						'border-4 border-blue-600 !bg-blue-100 text-blue-800':
+						'border-4 border-blue-600 bg-blue-100! text-blue-800':
 							i - 1 === questionIndex,
-						'!bg-green-600 border-green-800 text-white':
+						'bg-green-600! border-green-800 text-white':
 							theQuestions[i - 1].user.result,
 					}"
 					class="z-10 rounded-full font-lg bg-white font-semibold border w-12 h-12 grid place-items-center cursor-pointer transition-all"
@@ -86,4 +86,4 @@ function selectQuestion(index: number) {
 	</article>
 </template>
 
-<style scoped></style>
+

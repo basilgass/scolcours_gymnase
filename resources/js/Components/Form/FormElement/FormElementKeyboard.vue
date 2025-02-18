@@ -115,7 +115,7 @@ const currentRows = computed(() => {
 			>
 				<markdown-it
 					:text="keyboardHelper"
-					class="font-code !text-[12px] mt-5 bg-gray-200 border border-gray-300 p-3 shadow rounded"
+					class="font-code text-[12px]! mt-5 bg-gray-200 border border-gray-300 p-3 shadow-sm rounded-sm"
 				/>
 			</div>
 		</transition>

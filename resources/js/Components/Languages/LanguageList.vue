@@ -125,7 +125,7 @@ const exportList = function() {
 				v-for="(item, index) in filteredWords"
 				:key="index"
 				:class="editMode.enable?'hover:bg-amber-100 cursor-pointer':''"
-				class="bg-white border rounded grid grid-cols-2 p-3"
+				class="bg-white border rounded-sm grid grid-cols-2 p-3"
 				@click="editTranslation(item)"
 			>
 				<div>

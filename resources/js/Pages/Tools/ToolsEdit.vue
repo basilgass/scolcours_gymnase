@@ -75,4 +75,4 @@ function saveTool() {
 	</section>
 </template>
 
-<style scoped></style>
+

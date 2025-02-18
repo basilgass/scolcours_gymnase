@@ -203,7 +203,7 @@ const countCards = computed(() => {
 	</div>
 </template>
 
-<style scoped>
+<style scoped lang="postcss">
 .card-face {
 	@apply absolute w-full h-full transition-transform duration-500 shadow-xl border rounded-xl grid place-items-center;
 	backface-visibility: hidden;

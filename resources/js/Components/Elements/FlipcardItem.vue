@@ -18,7 +18,7 @@ const cardHide = ref<boolean>(false)
 <template>
 	<div
 		:class="{ 'is-flipped': cardSide==='verso' }"
-		class="relative card transition duration-1000 w-full aspect-[4/3]"
+		class="relative card transition duration-1000 w-full aspect-4/3"
 		@click="cardSide=cardSide==='verso'?'recto':'verso'"
 	>
 		<div class="card-face front ">
@@ -61,7 +61,7 @@ const cardHide = ref<boolean>(false)
 	</div>
 </template>
 
-<style scoped>
+<style scoped lang="postcss">
 
 .card-face {
 	@apply absolute w-full h-full transition-transform duration-500 shadow-xl border rounded-xl grid place-items-center;

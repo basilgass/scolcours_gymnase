@@ -48,5 +48,3 @@ function click($event: MouseEvent){
 		/>
 	</figure>
 </template>
-
-<style scoped></style>

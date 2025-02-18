@@ -117,7 +117,7 @@ defineExpose({
 			<button
 				v-if="showInput==='hidden'"
 				v-theme.bg.text
-				class="flex gap-2 justify-center items-center mx-auto px-2 py-2 rounded-xl shadow hover:shadow-none w-full"
+				class="flex gap-2 justify-center items-center mx-auto px-2 py-2 rounded-xl shadow-sm hover:shadow-none w-full"
 				@click="showInput='show'"
 			>
 				<i class="text-xl bi bi-calculator" /><span class="hidden md:inline-block"> donner la réponse</span>
@@ -159,6 +159,4 @@ defineExpose({
 	</div>
 </template>
 
-<style scoped>
 
-</style>

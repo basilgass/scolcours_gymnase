@@ -44,7 +44,7 @@ function addGenerator() {
 			Gestion des générateurs
 		</h1>
 
-		<div class="bg-white max-w-lg mx-auto px-3 py-2 shadow rounded">
+		<div class="bg-white max-w-lg mx-auto px-3 py-2 shadow-sm rounded-sm">
 			<form-maker
 				v-model="slug"
 				label="nouveau générateur (slug)"
@@ -84,6 +84,4 @@ function addGenerator() {
 	</section>
 </template>
 
-<style scoped>
 
-</style>

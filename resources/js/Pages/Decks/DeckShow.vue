@@ -36,4 +36,4 @@ const props = defineProps({
 	</section>
 </template>
 
-<style scoped></style>
+

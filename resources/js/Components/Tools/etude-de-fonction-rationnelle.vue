@@ -167,7 +167,7 @@ function getFxWithControls(maxValue: number) {
 		<table-of-contents v-if="study!==false">
 			<div class="grid grid-cols-1 lg:grid-cols-2 gap-x-5 gap-y-20">
 				<!-- Ensemble de définition -->
-				<div class="bg-white rounded border-gray-400 p-4">
+				<div class="bg-white rounded-sm border-gray-400 p-4">
 					<h2 class="chapter-menu text-lg mb-10">
 						Fonction
 					</h2>
@@ -175,7 +175,7 @@ function getFxWithControls(maxValue: number) {
 				</div>
 
 				<!--				Ensemble de définition-->
-				<div class="bg-white rounded border-gray-400 p-4">
+				<div class="bg-white rounded-sm border-gray-400 p-4">
 					<h2 class="chapter-menu text-lg mb-10">
 						Ensemble de définition
 					</h2>
@@ -183,7 +183,7 @@ function getFxWithControls(maxValue: number) {
 				</div>
 
 				<!-- Tableau de signes -->
-				<div class="bg-white rounded border-gray-400 p-4">
+				<div class="bg-white rounded-sm border-gray-400 p-4">
 					<h2 class="chapter-menu text-lg mb-10">
 						Tableau de signes
 					</h2>
@@ -197,7 +197,7 @@ function getFxWithControls(maxValue: number) {
 				</div>
 
 				<!-- Racines -->
-				<div class="bg-white rounded border-gray-400 p-4">
+				<div class="bg-white rounded-sm border-gray-400 p-4">
 					<h2 class="chapter-menu text-lg mb-10">
 						Racines de la fonction
 					</h2>
@@ -210,7 +210,7 @@ function getFxWithControls(maxValue: number) {
 				<!-- Asymptotes verticales et horizontales -->
 				<div
 					v-if="study.asymptotes.vertical.length > 0"
-					class="bg-white rounded border-gray-400 p-4"
+					class="bg-white rounded-sm border-gray-400 p-4"
 				>
 					<h2 class="chapter-menu text-lg mb-10">
 						Asymptotes verticales ou points limites
@@ -225,7 +225,7 @@ function getFxWithControls(maxValue: number) {
 
 				<div
 					v-if="study.asymptotes.horizontal.length > 0"
-					class="bg-white rounded border-gray-400 p-4"
+					class="bg-white rounded-sm border-gray-400 p-4"
 				>
 					<h2 class="chapter-menu text-lg mb-10">
 						Asymptotes horizontales
@@ -248,7 +248,7 @@ function getFxWithControls(maxValue: number) {
 				<!-- Asymptotes obliques -->
 				<div
 					v-if="study.asymptotes.slope.length > 0"
-					class="bg-white rounded border-gray-400 p-4"
+					class="bg-white rounded-sm border-gray-400 p-4"
 				>
 					<h2 class="chapter-menu text-lg mb-10">
 						Asymptotes obliques
@@ -267,7 +267,7 @@ function getFxWithControls(maxValue: number) {
 					</div>
 				</div>
 
-				<div class="bg-white rounded border-gray-400 p-4">
+				<div class="bg-white rounded-sm border-gray-400 p-4">
 					<h2 class="chapter-menu text-lg mb-10">
 						Variation
 					</h2>
@@ -293,7 +293,7 @@ function getFxWithControls(maxValue: number) {
 				</div>
 
 				<!-- Graphe -->
-				<div class="bg-white rounded border-gray-400 p-4 lg:col-span-2">
+				<div class="bg-white rounded-sm border-gray-400 p-4 lg:col-span-2">
 					<h2 class="chapter-menu text-lg mb-10">
 						Représentation graphique
 					</h2>

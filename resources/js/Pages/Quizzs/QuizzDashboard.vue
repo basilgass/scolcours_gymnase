@@ -35,7 +35,7 @@ const updateEnable = function (enable) {
 
 <template>
 	<section class="py-10">
-		<div class="bg-white rounded border border-slate-200 p-4">
+		<div class="bg-white rounded-sm border border-slate-200 p-4">
 			<h2
 				v-katex.auto="liveQuizz.quizz.title"
 				class="font-semibold text-lg mb-3"

@@ -111,7 +111,7 @@ const listOfTools = computed(() => {
 			</div>
 
 			<div class="flex gap-3 flex-col md:flex-row">
-				<div class="flex-1 bg-white border rounded px-3 py-2">
+				<div class="flex-1 bg-white border rounded-sm px-3 py-2">
 					<component :is="toolComponent" />
 				</div>
 

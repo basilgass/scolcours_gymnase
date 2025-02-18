@@ -22,7 +22,7 @@ const emits = defineEmits(["start"])
 	<article class="flex flex-col gap-3">
 		<!-- Description du challenge -->
 		<div class="grid grid-cols-3 gap-3 w-[30em] mx-auto">
-			<div class="bg-white aspect-square p-4 rounded-xl border border-gray-200 grid place-items-center shadow">
+			<div class="bg-white aspect-square p-4 rounded-xl border border-gray-200 grid place-items-center shadow-sm">
 				<div class="text-center flex flex-col justify-between h-full">
 					<i class="text-5xl bi bi-heart" />
 					<div class="text-3xl">
@@ -34,7 +34,7 @@ const emits = defineEmits(["start"])
 				</div>
 			</div>
 
-			<div class="bg-white aspect-square p-4 rounded-xl border border-gray-200 grid place-items-center shadow">
+			<div class="bg-white aspect-square p-4 rounded-xl border border-gray-200 grid place-items-center shadow-sm">
 				<div class="text-center flex flex-col justify-between h-full">
 					<i class="text-5xl bi bi-chevron-double-up" />
 					<div class="text-3xl">
@@ -46,7 +46,7 @@ const emits = defineEmits(["start"])
 				</div>
 			</div>
 
-			<div class="bg-white aspect-square p-4 rounded-xl border border-gray-200 grid place-items-center shadow">
+			<div class="bg-white aspect-square p-4 rounded-xl border border-gray-200 grid place-items-center shadow-sm">
 				<div class="text-center flex flex-col justify-between h-full">
 					<i class="text-5xl bi bi-clock" />
 					<div class="text-3xl">
@@ -76,7 +76,7 @@ const emits = defineEmits(["start"])
 
 			<div class="grid w-full gap-4 grid-cols-2">
 				<div
-					class="bg-white aspect-square p-4 rounded-xl border border-gray-200 grid place-items-center shadow">
+					class="bg-white aspect-square p-4 rounded-xl border border-gray-200 grid place-items-center shadow-sm">
 					<div class="text-center flex flex-col justify-between h-full">
 						<h4 class="text-xl uppercase ">
 							score
@@ -90,7 +90,7 @@ const emits = defineEmits(["start"])
 					</div>
 				</div>
 				<div
-					class="bg-white aspect-square p-4 rounded-xl border border-gray-200 grid place-items-center shadow">
+					class="bg-white aspect-square p-4 rounded-xl border border-gray-200 grid place-items-center shadow-sm">
 					<div class="text-center flex flex-col justify-between h-full">
 						<h4 class="text-xl uppercase">
 							niveau

@@ -30,7 +30,7 @@ function deleteFormula(){
 	<block-show
 		v-theme.border="formula.theme_id"
 		:block="formula.block"
-		class="break-inside-avoid-column rounded-r shadow border-l-4"
+		class="break-inside-avoid-column rounded-r shadow-sm border-l-4"
 	>
 		<template #adminLeft>
 			<div class="text-xs flex gap-3 items-baseline">
@@ -72,7 +72,3 @@ function deleteFormula(){
 		</template>
 	</block-show>
 </template>
-
-<style scoped>
-
-</style>

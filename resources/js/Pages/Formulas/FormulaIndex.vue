@@ -93,6 +93,4 @@ function searchFormula(item: FormulaInterface, value: string): boolean {
 	</main>
 </template>
 
-<style scoped>
 
-</style>

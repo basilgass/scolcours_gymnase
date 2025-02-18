@@ -1,12 +1,12 @@
 <script lang="ts" setup>
 
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
-import { useStoreEditMode } from "@/stores/useStoreEditMode.ts"
-import { AxiosErrorMessage } from "@/types"
-import { ChapterShowInterface } from "@/types/modelInterfaces.ts"
-import { usePage } from "@inertiajs/vue3"
+import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
+import {AxiosErrorMessage} from "@/types"
+import {ChapterShowInterface} from "@/types/modelInterfaces.ts"
+import {usePage} from "@inertiajs/vue3"
 import axios from "axios"
-import { ref } from "vue"
+import {ref} from "vue"
 
 
 const props = defineProps<{
@@ -22,7 +22,7 @@ function activate() {
 	axios.patch(
 		route('toggleChapterActive', [props.chapter.slug]),
 		{active: isActive.value}
-	).catch((res: AxiosErrorMessage)=>{
+	).catch((res: AxiosErrorMessage) => {
 		console.log(res.response.data.message)
 	})
 
@@ -45,14 +45,15 @@ function activate() {
 				</button>
 			</div>
 		</div>
+
 		<InertiaLink
 			:class="{ 'opacity-30 hover:opacity-70 transition-all': !isActive }"
 			:href="route('themes.chapters.intro', [usePage().props.theme.slug, chapter.slug])"
 			class="text-xl
-									block h-full rounded-b shadow space-y-3
-									bg-white dark:bg-gray-800
-									cursor-pointer
-									transition-all"
+					block h-full rounded-b-lg shadow space-y-3
+					bg-white dark:bg-gray-800
+					cursor-pointer
+					transition-all"
 		>
 			<h3
 				v-katex.auto="chapter['title']"
@@ -67,7 +68,3 @@ function activate() {
 		</InertiaLink>
 	</div>
 </template>
-
-<style scoped>
-
-</style>

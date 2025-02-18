@@ -104,4 +104,4 @@ watchDebounced(chapterId, getTargetName, { debounce: 1000, maxWait: 2000 })
 	</section>
 </template>
 
-<style scoped></style>
+

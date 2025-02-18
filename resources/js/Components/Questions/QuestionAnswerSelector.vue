@@ -34,6 +34,4 @@ const questionData = inject<questionDataInterface>('questionData')
 	</div>
 </template>
 
-<style scoped>
 
-</style>

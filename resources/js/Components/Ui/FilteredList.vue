@@ -206,7 +206,7 @@ const emits = defineEmits<{
 							v-katex.auto="props.itemTitle(item)"
 							v-theme.bg.text="props.itemBackground(item)"
 							:class="props.itemClass + (props.routeName ? ' cursor-pointer' : '')"
-							class="p-4 border border-gray-200 rounded hover:scale-105 hover:shadow transition-all h-full"
+							class="p-4 border border-gray-200 rounded-sm hover:scale-105 hover:shadow-sm transition-all h-full"
 							@click="itemClicked(item)"
 						/>
 					</div>

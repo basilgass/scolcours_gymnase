@@ -40,6 +40,4 @@ const gaugeValue = computed(()=>{
 	</div>
 </template>
 
-<style scoped>
 
-</style>

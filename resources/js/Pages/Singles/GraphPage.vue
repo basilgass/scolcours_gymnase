@@ -159,7 +159,7 @@ function addFunction(type: "x" | "t" = "x") {
 
 					<div
 						v-if="params.length>0"
-						class="bg-white p-3 rounded border w-[350px] flex flex-col gap-3"
+						class="bg-white p-3 rounded-sm border w-[350px] flex flex-col gap-3"
 					>
 						<div>
 							<h2 class="font-extralight text-lg">
@@ -197,7 +197,7 @@ function addFunction(type: "x" | "t" = "x") {
 
 				<div class="text-xs">
 					<h2>code généré</h2>
-					<pre class="font-code bg-white mt-1 border rounded p-2">{{ code }}</pre>
+					<pre class="font-code bg-white mt-1 border rounded-sm p-2">{{ code }}</pre>
 				</div>
 			</div>
 		</div>

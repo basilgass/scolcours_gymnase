@@ -53,7 +53,7 @@ function updateTool() {
 		</div>
 
 		<div
-			class="bg-white border rounded"
+			class="bg-white border rounded-sm"
 		>
 			<header
 				class="flex justify-between border-b px-3 py-2"
@@ -86,7 +86,3 @@ function updateTool() {
 		</div>
 	</div>
 </template>
-
-<style scoped>
-
-</style>

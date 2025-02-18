@@ -78,4 +78,4 @@ function toggle() {
 	</div>
 </template>
 
-<style scoped></style>
+

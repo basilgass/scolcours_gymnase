@@ -6,6 +6,7 @@ import { numberCorrection } from "@/helpers/helperFunctions.ts"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 import { graduateBackgroundColor, graduateBorderColor } from "@/scolcours.ts"
 import { computed, ref } from "vue"
+import ScButton from "@/Components/Ui/scButton.vue"
 
 defineOptions({ layout: LayoutMain })
 const pointsData = ref(""),
@@ -155,10 +156,10 @@ const listeDesPoints = computed<number[]>(() => {
 					type="number"
 				/>
 
-				<div class="flex items-end align-bottom gap-3 flex-grow">
+				<div class="flex items-end align-bottom gap-3 grow">
 					<form-maker
 						v-model.number="precision"
-						class="grow"
+						class="w-[100px]"
 						font-code
 						label="précision"
 						name="precision"
@@ -169,27 +170,30 @@ const listeDesPoints = computed<number[]>(() => {
 									: +precision
 						"
 					/>
-					<button
-						:class="+precision === 1 ? 'is-active' : 'bg-white'"
-						class="btn px-10"
+					<sc-button
+						class="min-w-[50px]"
+						:active="+precision === 1"
 						@click="precision = 1"
+						xs
 					>
 						1
-					</button>
-					<button
-						:class="+precision === 0.5 ? 'is-active' : 'bg-white'"
-						class="btn px-10"
+					</sc-button>
+					<sc-button
+						class="min-w-[50px]"
+						:active="+precision === 0.5"
 						@click="precision = 0.5"
+						xs
 					>
 						0.5
-					</button>
-					<button
-						:class="+precision === 0.1 ? 'is-active' : 'bg-white'"
-						class="btn px-10"
+					</sc-button>
+					<sc-button
+						class="min-w-[50px]"
+						:active="+precision === 0.1"
 						@click="precision = 0.1"
+						xs
 					>
 						0.1
-					</button>
+					</sc-button>
 				</div>
 
 				<form-maker
@@ -204,13 +208,8 @@ const listeDesPoints = computed<number[]>(() => {
 			</div>
 
 			<div
-				class="min-w-[9em] w-full bg-white rounded border border-slate-100 p-3"
+				class="min-w-[9em] w-full rounded-sm border border-slate-100 p-3"
 			>
-				<!--				<div-->
-				<!--					class="mb-3 py-2 text-center font-code bg-slate-700 text-slate-100"-->
-				<!--				>-->
-				<!--					mode compact-->
-				<!--				</div>-->
 				<table class="table tab w-full text-center font-code text-xl">
 					<thead>
 						<tr class="font-semibold">
@@ -225,7 +224,7 @@ const listeDesPoints = computed<number[]>(() => {
 						<tr
 							v-for="item in pointsParNote"
 							:key="`range-${item.note}`"
-							class="odd:bg-amber-100"
+							class="odd:bg-amber-100 dark:odd:bg-sky-900"
 						>
 							<td>{{ item.pointsMin }}</td>
 							<td>{{ item.pointsMax }}</td>
@@ -303,7 +302,7 @@ const listeDesPoints = computed<number[]>(() => {
 					<div>
 						<div class="flex gap-2 md:gap-4 xl:gap-10 justify-between text-center">
 							<div
-								class="bg-white p-3 grid place-items-center text-lg border border-slate-100 rounded-xl shadow aspect-square w-full py-8"
+								class="bg-main p-3 grid place-items-center text-lg border border-slate-100 rounded-xl shadow-sm aspect-square w-full py-8"
 							>
 								<div class="flex flex-col h-full justify-between">
 									<div class="font-extralight">
@@ -315,7 +314,7 @@ const listeDesPoints = computed<number[]>(() => {
 								</div>
 							</div>
 							<div
-								class="bg-white p-3 grid place-items-center text-lg border border-slate-100 rounded-xl shadow aspect-square w-full py-8"
+								class="bg-main p-3 grid place-items-center text-lg border border-slate-100 rounded-xl shadow-sm aspect-square w-full py-8"
 							>
 								<div class="flex flex-col h-full justify-between">
 									<div class="font-extralight">
@@ -327,7 +326,7 @@ const listeDesPoints = computed<number[]>(() => {
 								</div>
 							</div>
 							<div
-								class="bg-white p-3 grid place-items-center text-lg border border-slate-100 rounded-xl shadow aspect-square w-full py-8"
+								class="bg-main p-3 grid place-items-center text-lg border border-slate-100 rounded-xl shadow-sm aspect-square w-full py-8"
 							>
 								<div class="flex flex-col h-full justify-between">
 									<div class="font-extralight">
@@ -342,7 +341,7 @@ const listeDesPoints = computed<number[]>(() => {
 					</div>
 
 					<div
-						class="bg-white p-5 w-full border border-slate-100 rounded-xl shadow"
+						class="bg-main p-5 w-full border border-slate-100 rounded-xl shadow-sm"
 					>
 						<bar-chart
 							:chart-dataset="decompteDesNotes"

@@ -16,7 +16,7 @@ const langues = {
 }
 </script>
 <template>
-	<div class="bg-black text-white px-10 mt-24">
+	<div class="bg-slate-950 text-slate-400 px-10 mt-24">
 		<div class="max-w-5xl mx-auto py-10 grid grid-cols-1 md:grid-cols-3 gap-5">
 			<div class="md:mx-auto">
 				<h3 class="text-lg font-semibold">
@@ -117,7 +117,7 @@ const langues = {
 			</div>
 		</div>
 
-		<div class="pb-5 text-center text-sm text-gray-400">
+		<div class="pb-5 text-center text-sm text-slate-400">
 			<span>Ce site est à usage mathématiques uniquement</span>
 		</div>
 	</div>

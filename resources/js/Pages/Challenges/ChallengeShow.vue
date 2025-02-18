@@ -52,7 +52,7 @@ let selector = ref(0)
 				<div class="flex flex-col md:flex-row flex-wrap gap-1 md:gap-5">
 					<div
 						:class="selector === 0 ? 'is-active' : 'text-gray-400'"
-						class="px-3 md:px-10 py-1 md:py-5 rounded hover:shadow min-w-[150px] border-2 cursor-pointer transition-all"
+						class="px-3 md:px-10 py-1 md:py-5 rounded-sm hover:shadow-sm min-w-[150px] border-2 cursor-pointer transition-all"
 						@click="selector = 0"
 					>
 						<div class="flex gap-3 items-center md:justify-center">
@@ -68,7 +68,7 @@ let selector = ref(0)
 						:class="
 							selector === index + 1 ? 'is-active' : 'text-gray-400'
 						"
-						class="px-3 py-1 md:py-5 rounded hover:shadow min-w-[150px] border cursor-pointer transition-all"
+						class="px-3 py-1 md:py-5 rounded-sm hover:shadow-sm min-w-[150px] border cursor-pointer transition-all"
 						@click="selector = index + 1"
 					>
 						<div class="flex gap-3 items-center md:justify-center">

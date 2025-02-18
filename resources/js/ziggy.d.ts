@@ -270,7 +270,7 @@ declare module 'ziggy-js' {
             "binding": "id"
         }
     ],
-    "blocks.blur": [
+    "blocks.blur-sm": [
         {
             "name": "block",
             "required": true,

@@ -53,7 +53,7 @@ const  editMode  = useStoreEditMode()
 			<InertiaLink
 				:href="route('challenges.edit', [props.challenge.id])"
 				as="button"
-				class="text-xs py-2 px-3 rounded font-code flex place-content-center"
+				class="text-xs py-2 px-3 rounded-sm font-code flex place-content-center"
 			>
 				éditer le challenge (id: {{ props.challenge.id }}) <i class="bi bi-pencil ml-2" />
 			</InertiaLink>

@@ -84,4 +84,4 @@ function toggleChapterVisibility(slug, active) {
 	</section>
 </template>
 
-<style scoped></style>
+

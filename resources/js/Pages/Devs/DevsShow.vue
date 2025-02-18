@@ -3,14 +3,14 @@
 	setup
 >
 
-import { computed } from "vue"
-import { getModule, MODULE_TYPES } from "@/scolcours"
+import {computed} from "vue"
+import {getModule, MODULE_TYPES} from "@/scolcours"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 
-defineOptions({ layout: LayoutMain })
+defineOptions({layout: LayoutMain})
 
 const props = defineProps({
-	dev: { type: String, required: true }
+	dev: {type: String, required: true}
 })
 
 const component = computed(() => {

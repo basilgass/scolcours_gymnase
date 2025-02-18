@@ -26,6 +26,4 @@ const imageSrc = computed(()=>{
 	>
 </template>
 
-<style scoped>
 
-</style>

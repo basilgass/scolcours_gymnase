@@ -199,7 +199,7 @@ function deleteIllustration(id: number){
 							v-for="(item, key) in blockTypes"
 							:key="key"
 							:class="key === theBlock.type ? 'is-active' : ''"
-							class="btn btn-xs overflow-clip !px-0"
+							class="btn btn-xs overflow-clip px-0!"
 							@click="theBlock.type = theBlock.type === key ? '' : key"
 						>
 							{{ item.title }}

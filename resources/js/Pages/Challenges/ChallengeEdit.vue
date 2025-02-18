@@ -337,7 +337,7 @@ const deleteChallenge = function () {
 					<template #item="{ element }">
 						<div
 							:key="`${element.id}`"
-							class="flex gap-3 items-baseline bg-white py-2 pl-2 pr-3 rounded hover:shadow transition"
+							class="flex gap-3 items-baseline bg-white py-2 pl-2 pr-3 rounded-sm hover:shadow-sm transition"
 						>
 							<div class="drag-handler cursor-move">
 								<i class="text-xl bi bi-list" />
@@ -402,7 +402,7 @@ const deleteChallenge = function () {
 	</div>
 </template>
 
-<style scoped>
+<style scoped lang="postcss">
 .draggable-handle {
 	cursor: move;
 }

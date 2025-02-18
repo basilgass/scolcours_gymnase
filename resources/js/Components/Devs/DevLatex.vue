@@ -62,7 +62,7 @@ defineOptions({ layout: LayoutMain })
 		<textarea
 			v-model="content"
 			rows="10"
-			class="w-full p-3 rounded"
+			class="w-full p-3 rounded-sm"
 		/>
 
 		<button

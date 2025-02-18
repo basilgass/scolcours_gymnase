@@ -131,7 +131,7 @@ const setValue = function (col, row) {
 					>
 						<div
 							:class="{
-								'w-[3em] h-[3em] bg-white border rounded-sm': row%2===1 && col%2===1,
+								'w-[3em] h-[3em] bg-white border rounded-xs': row%2===1 && col%2===1,
 								'w-[1em] h-[3em]': row%2===1 && col%2===0,
 								'w-[3em] h-[1em]': row%2===0 && col%2===1,
 								'w-[1em] h-[1em]': row%2===0 && col%2===0,

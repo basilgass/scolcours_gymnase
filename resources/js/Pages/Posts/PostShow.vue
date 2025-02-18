@@ -66,7 +66,7 @@ onMounted(() => {
 						/>
 						<edit-link
 							:id="post.id"
-							class="!text-black top-1"
+							class="text-black! top-1"
 							inline
 							route-name="posts.edit"
 						/>
@@ -97,7 +97,7 @@ onMounted(() => {
 					<button
 						v-if="postScript.hasData.value"
 						v-theme.text
-						class="btn btn-xs bg-white font-semibold hover:shadow"
+						class="btn btn-xs bg-white font-semibold hover:shadow-sm"
 						@click="postScript.run()"
 					>
 						<i class="bi bi-shuffle mr-2" />aléatoire

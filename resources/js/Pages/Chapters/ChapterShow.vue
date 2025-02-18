@@ -8,15 +8,11 @@ import ChapterToc from "@/Components/Chapters/ChapterToc.vue"
 import EditLink from "@/Components/Ui/EditLink.vue"
 
 import LayoutMain from "@/Layouts/LayoutMain.vue"
-import {
-	ChallengeMinInterface,
-	ChapterInterface,
-	ChapterShowInterface,
-	PostInterface
-} from "@/types/modelInterfaces"
-import { ref } from "vue"
+import {ChallengeMinInterface, ChapterInterface, ChapterShowInterface, PostInterface} from "@/types/modelInterfaces"
+import {ref} from "vue"
+import ScButton from "@/Components/Ui/scButton.vue"
 
-defineOptions({ layout: LayoutMain })
+defineOptions({layout: LayoutMain})
 
 defineProps<{
 	chapter: ChapterShowInterface,
@@ -33,21 +29,21 @@ const showFormular = ref(false)
 <template>
 	<section>
 		<header
-			v-theme.bg.text
-			class="py-6 lg:flex-row justify-between bg-opacity-80"
+			class="py-6 flex items-baseline justify-between"
 		>
 			<!-- title -->
-			<div class="scolcours-container relative">
-				<edit-link
-					:id="chapter.id"
-					class="!text-black top-1 right-3"
-					route-name="chapters.edit"
-				/>
-				<h1
-					v-katex.auto="chapter.title"
-					class="text-xl md:text-3xl l:text-5xl"
-				/>
-			</div>
+			<h1
+				v-theme.text
+				v-katex.auto="chapter.title"
+				class="text-xl md:text-3xl l:text-5xl font-semibold"
+			/>
+
+			<edit-link
+				class="border rounded-full px-2 py-1"
+				:id="chapter.id"
+				route-name="chapters.edit"
+				inline
+			/>
 		</header>
 
 		<main class="scolcours-container py-10 space-y-12">
@@ -63,15 +59,9 @@ const showFormular = ref(false)
 				v-if="posts.length > 0"
 				class="w-full text-center"
 			>
-				<InertiaLink
-					v-theme.bg.text
-					:href="route('themes.chapters.slide', [
-						$page.props.theme.slug,
-						chapter.slug,
-						1,
-					])"
-					as="button"
-					class="min-h-[80px] mx-auto w-full md:w-auto md:px-20 rounded-xl shadow"
+				<sc-button
+					class="min-w-[200px] md:px-20 rounded-xl"
+					theme
 				>
 					<div class="flex flex-col gap-3 py-3 text-xs font-ultrathin">
 						<p>Commencer l'aventure avec</p>
@@ -80,12 +70,11 @@ const showFormular = ref(false)
 							class="text-xl"
 						/>
 					</div>
-				</InertiaLink>
+				</sc-button>
 			</div>
 
 			<!-- liste des prérequis -->
 			<chapter-relations
-				v-theme.border
 				class="box"
 				:chapter
 				:relations
@@ -93,7 +82,6 @@ const showFormular = ref(false)
 
 			<!-- liste des challenges -->
 			<chapter-challenges
-				v-theme.border
 				class="box"
 				:challenges
 				:chapter
@@ -101,29 +89,31 @@ const showFormular = ref(false)
 
 			<!--Liste d'icône design pour afficher les éléments -->
 			<div class="w-full flex justify-center gap-4 mb-5">
-				<div
-					v-theme.bg.text
-					class="aspect-square w-[120px] grid place-items-center rounded-2xl
-						hover:shadow transition-all cursor-pointer"
+				<sc-button
+					theme
+					class="aspect-square w-[120px]
+						grid place-items-center
+						hover:rounded-[20px]"
 					@click="showFormular = true; currentTab = 'formulas'"
 				>
 					<div class="text-center space-y-2">
 						<i class="bi bi-table text-3xl" />
 						<p>formulaire</p>
 					</div>
-				</div>
+				</sc-button>
 
-				<div
-					v-theme.bg.text
-					class="aspect-square w-[120px] grid place-items-center rounded-2xl
-						hover:shadow transition-all cursor-pointer"
+				<sc-button
+					theme
+					class="aspect-square w-[120px]
+						grid place-items-center
+						hover:rounded-[20px]"
 					@click="showTheorem = true; currentTab = 'theorems'"
 				>
 					<div class="text-center space-y-2">
 						<i class="bi bi-journal-bookmark text-3xl" />
 						<p>théorie</p>
 					</div>
-				</div>
+				</sc-button>
 			</div>
 
 
@@ -146,7 +136,7 @@ const showFormular = ref(false)
 		</main>
 	</section>
 </template>
-<style scoped>
+<style scoped lang="postcss">
 
 .box {
 	@apply bg-white dark:bg-gray-900 border rounded-xl px-5 py-3;

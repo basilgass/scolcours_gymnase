@@ -27,6 +27,4 @@ function setTheme(id: number) {
 	</div>
 </template>
 
-<style scoped>
 
-</style>

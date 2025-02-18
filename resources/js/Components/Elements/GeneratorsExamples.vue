@@ -71,7 +71,7 @@ onMounted(() => {
 			<div
 				v-for="(question, idx) of generatedQuestions"
 				:key="`question-${idx}`"
-				class="border rounded shadow bg-white px-2 flex justify-between items-baseline py-2"
+				class="border rounded-sm shadow-sm bg-white px-2 flex justify-between items-baseline py-2"
 			>
 				<div v-katex.auto="question.block.body.replaceAll('$a','\\ ?')" />
 				<div
@@ -88,7 +88,3 @@ onMounted(() => {
 		</div>
 	</article>
 </template>
-
-<style scoped>
-
-</style>

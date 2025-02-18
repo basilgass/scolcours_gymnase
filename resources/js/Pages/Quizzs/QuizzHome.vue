@@ -35,7 +35,7 @@ onMounted(() => {
 				<div
 					v-for="quizzSession in props.quizzSessions"
 					:key="quizzSession.shortcode"
-					class="bg-white border transition-all rounded grid place-items-center p-5 w-full md:w-1/2"
+					class="bg-white border transition-all rounded-sm grid place-items-center p-5 w-full md:w-1/2"
 					:class="`border-scolcours-${quizzSession.quizz.theme?.slug}`"
 				>
 					<div class="text-center flex flex-col gap-4">

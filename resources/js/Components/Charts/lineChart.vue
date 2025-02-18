@@ -95,7 +95,3 @@ const chartData = computed(() => {
 		/>
 	</div>
 </template>
-
-<style scoped>
-
-</style>

@@ -88,8 +88,8 @@ const combinedInputClass = computed(() => {
 	return `${props.inputClass} ${props.sm ? "text-xs p-1" : "p-2"}  ${
 		props.fontCode ? "font-code" : ""
 	} ${
-		(props.withIcon || props.prepend) ? "border-r-[1px] border-y-[1px] rounded-r" : "border-[1px] rounded"
-	} w-full border-slate-200 appearance-none focus:border-slate-400 focus:outline-none focus:ring-0 focus:shadow transition`
+		(props.withIcon || props.prepend) ? "border-r-[1px] border-y-[1px] rounded-r" : "border-[1px] rounded-sm"
+	} w-full border-slate-200 appearance-none focus:border-slate-400 focus:outline-hidden focus:ring-0 focus:shadow-sm transition`
 })
 
 // calculate the label combined class
@@ -304,7 +304,7 @@ defineExpose({focus: setFocus})
 					v-else-if="type === 'color'"
 					:style="`background-color: ${theValue}`"
 					:class="combinedInputClass"
-					class="!p-0 border-0 h-[1.7rem]"
+					class="p-0! border-0 h-[1.7rem]"
 				>
 					<input
 						v-model="theValue"
@@ -410,9 +410,9 @@ defineExpose({focus: setFocus})
 	</div>
 </template>
 
-<style scoped>
+<style scoped  lang="postcss">
 div.inlineLabel {
-	@apply flex items-center gap-3;
+	@apply flex items-center gap-[3];
 }
 
 input {

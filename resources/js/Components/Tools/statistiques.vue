@@ -832,7 +832,7 @@ const tableToTexOutput = computed(() => {
 				</h4>
 				<pre
 					v-show="showTex"
-					class="font-code border rounded bg-gray-200 p-3 overflow-x-scroll"
+					class="font-code border rounded-sm bg-gray-200 p-3 overflow-x-scroll"
 				>{{ tableToTexOutput }}</pre>
 			</div>
 

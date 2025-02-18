@@ -40,7 +40,3 @@ defineProps<{
 		</td>
 	</tr>
 </template>
-
-<style scoped>
-
-</style>

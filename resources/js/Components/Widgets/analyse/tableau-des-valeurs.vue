@@ -21,7 +21,7 @@ const	params = computed(() => props.illustration.parameters.split(",")),
 	code = computed(() => props.illustration.code),
 	roundedTo = computed(() => {
 		for (let param of params.value) {
-			if (param.startsWith("rounded:")) {
+			if (param.startsWith("rounded-sm:")) {
 				let [, rounded] = param.split(":")
 				return +rounded
 			}

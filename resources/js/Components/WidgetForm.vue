@@ -77,6 +77,4 @@ const isModified = computed(() => {
 	</article>
 </template>
 
-<style scoped>
 
-</style>

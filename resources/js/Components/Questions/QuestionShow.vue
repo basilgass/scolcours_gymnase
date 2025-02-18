@@ -226,7 +226,7 @@ const keyboardComponent = ref<InstanceType<typeof QuestionKeyboard>>(null)
 	<article
 		:id="`question-${question.id}`"
 		:class="{
-			'rounded border h-full': !props.isMinimal,
+			'rounded-sm border h-full': !props.isMinimal,
 			'bg-gray-50 border-gray-200':
 				!props.question.user.result && !props.isMinimal,
 			'bg-green-50 border-green-600/60':
@@ -238,7 +238,7 @@ const keyboardComponent = ref<InstanceType<typeof QuestionKeyboard>>(null)
 		<transition name="fade">
 			<div
 				v-if="theQuestionLocked"
-				class="w-full h-full font-extralight text-lg min-h-[5em] px-5 absolute inset-0 bg-gradient-to-b from-gray-100 to-gray-50 z-10 grid text-center place-items-center"
+				class="w-full h-full font-extralight text-lg min-h-[5em] px-5 absolute inset-0 bg-linear-to-b from-gray-100 to-gray-50 z-10 grid text-center place-items-center"
 			>
 				<i class="bi bi-question-lg text-8xl text-gray-300" />
 			</div>

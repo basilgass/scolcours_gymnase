@@ -109,7 +109,7 @@ function onChange(item: IToolForm) {
 				:message="f.message"
 				:type="f.type? f.type : 'text'"
 				font-code
-				message-class="!text-xs"
+				message-class="text-xs!"
 				:inline-label="f.inline"
 				v-bind="$attrs"
 				@change="onChange(f)"
@@ -120,6 +120,4 @@ function onChange(item: IToolForm) {
 	</form>
 </template>
 
-<style scoped>
 
-</style>

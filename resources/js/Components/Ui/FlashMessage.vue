@@ -39,7 +39,7 @@ onMounted(() => {
 	<transition name="flash-message">
 		<div
 			v-if="show"
-			class="rounded px-10 py-5 flex flex-col gap-6 relative"
+			class="rounded-sm px-10 py-5 flex flex-col gap-6 relative"
 			v-bind="$attrs"
 		>
 			<!-- Message to display -->

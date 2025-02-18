@@ -1,96 +1,103 @@
 /*Bootstrap icons font*/
-@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css");
-@import url("https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.css");
+@import url('https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css') layer(base);
+@import url('https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.css') layer(base);
+
+@import 'tailwindcss';
 
 /* Custom imports */
-@import 'scolcours/inputs.css';
-@import "scolcours/typo.css";
-@import "scolcours/effects.css";
-@import "scolcours/katexBase.css";
-@import "scolcours/tableossigns.css";
-@import "scolcours/button.css";
+@import "./scolcours/theme.css";
+@import './scolcours/effects.css';
+@import './scolcours/katexBase.css';
+/*@import './scolcours/x_inputs.css.backup';*/
+/*@import './scolcours/x_typo.css.backup' layer(base);*/
+/*@import './scolcours/x_tableossigns.css.backup';*/
+/*@import './scolcours/button.css';*/
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* Plugins imports */
+@plugin '@tailwindcss/typography';
+@plugin 'tailwind-scrollbar';
+@custom-variant hover (&:hover);
+
+/*@config '../../tailwind.config.js';*/
+
+/*@layer base {*/
+/*	*,*/
+/*	::after,*/
+/*	::before,*/
+/*	::backdrop,*/
+/*	::file-selector-button {*/
+/*		border-color: var(--color-gray-200, currentColor);*/
+/*	}*/
+/*}*/
+
+
+@utility admin-wrapper {
+	@apply flex justify-between gap-3 items-baseline bg-amber-100 rounded-sm border border-dashed border-amber-600 px-3 py-2;
+}
+
+@utility admin-wrapper-row {
+	@apply w-full flex justify-between gap-3 items-baseline;
+}
+
+@utility list-space {
+	@apply list-outside ml-3;
+
+	& > li {
+		@apply pl-5;
+	}
+}
+
+@utility block-flex {
+	@apply flex flex-row flex-wrap gap-4 items-baseline list-none;
+}
+
+/*@utility app-container {*/
+/*	@apply bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100;*/
+/*}*/
+
+
+@utility prose {
+	@apply dark:text-white;
+}
+
+@utility code-input {
+	@apply bg-white dark:bg-gray-800 dark:text-white dark:border-gray-700;
+}
+
+@utility column-toc {
+	column-rule-style: solid;
+	column-rule-color: #e8e8e8;
+}
+
+@utility font-code {
+	font-family: 'Source Code Pro', monospace;
+}
+
+@utility scolcours-container {
+	@apply container w-full max-w-7xl mx-auto px-1 md:px-5
+}
+
+@utility bg-main {
+	@apply bg-slate-100 text-slate-900 dark:bg-slate-900 dark:text-slate-200;
+}
+
+@utility bg-box {
+	@apply bg-slate-200 text-slate-900 dark:bg-slate-700 dark:text-slate-200;
+}
 
 @layer base {
-    body {
-        @apply font-light tracking-wide bg-gray-100 dark:bg-gray-900;
-    }
 
-    .font-code {
-        font-family: 'Source Code Pro', monospace;
-    }
+	body {
+		@apply font-light tracking-wide bg-main;
+	}
 
-    .scolcours-container {
-        @apply w-full max-w-7xl mx-auto px-1 md:px-5
-    }
+
 }
 
 @layer components {
-    .h1 {
-        @apply text-xl md:text-3xl lg:text-5xl;
-    }
 
-    /* Just adding the color for JIT */
-    .bg-scolcours-main {
-        background-color: chocolate
-    }
-
-    .scrollbar-scolcours-default {
-        @apply scrollbar scrollbar-w-1 scrollbar-h-1 scrollbar-thumb-rounded-full;
-    }
-
-    .scrollbar-scolcours {
-        @apply scrollbar-scolcours-default
-        scrollbar-thumb-gray-700/50 scrollbar-w-2
-        dark:scrollbar-thumb-gray-500/50;
-    }
-
-    .admin-wrapper {
-        @apply flex justify-between gap-3 items-baseline bg-amber-100 rounded border border-dashed border-amber-600 px-3 py-2;
-    }
-
-    .admin-wrapper-row {
-        @apply w-full flex justify-between gap-3 items-baseline;
-    }
-
-
-
-    .list-space {
-        @apply list-outside ml-3
-    }
-
-    .list-space>li {
-        @apply pl-5
-    }
-
-    dialog::backdrop {
-        background: rgba(20, 20, 20, 0.2);
-    }
-
-    .block-flex {
-        @apply flex flex-row flex-wrap gap-4 items-baseline list-none
-    }
-
-    .app-container {
-        @apply bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100;
-    }
-
-    .prose {
-        @apply dark:text-white;
-    }
-
-    input,
-    textarea,
-    .code-input {
-        @apply bg-white dark:bg-gray-800 dark:text-white dark:border-gray-700;
-    }
-
-	.column-toc {
-		column-rule-style: solid;
-		column-rule-color: #e8e8e8;
+	dialog::backdrop {
+		background: rgba(20, 20, 20, 0.2);
 	}
 
 }

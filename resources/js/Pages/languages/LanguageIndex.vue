@@ -29,7 +29,7 @@ const games = {
 				v-for="(game, key) in games"
 				:key="key"
 				:href="`/${language.slug}/${key}`"
-				class="text-xl bg-white border rounded hover:scale-105 h-32 grid place-items-center transition-all duration-300"
+				class="text-xl bg-white border rounded-sm hover:scale-105 h-32 grid place-items-center transition-all duration-300"
 			>
 				{{ game }}
 			</InertiaLink>

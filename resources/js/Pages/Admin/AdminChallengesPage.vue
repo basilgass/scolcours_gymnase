@@ -44,4 +44,4 @@ defineProps({
 	</section>
 </template>
 
-<style scoped></style>
+

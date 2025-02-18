@@ -53,7 +53,3 @@ function onFound(event: searchResult){
 		</div>
 	</main>
 </template>
-
-<style scoped>
-
-</style>

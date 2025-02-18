@@ -13,7 +13,7 @@ const language = defineModel<string>()
 		<button
 			v-for="lang in languages"
 			:key="lang"
-			class="btn hover:shadow"
+			class="btn hover:shadow-sm"
 			:class="{
 				'bg-white': language!==lang,
 				'is-active': language===lang
@@ -24,7 +24,3 @@ const language = defineModel<string>()
 		</button>
 	</article>
 </template>
-
-<style scoped>
-
-</style>

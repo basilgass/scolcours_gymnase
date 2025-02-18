@@ -21,35 +21,35 @@ const props = defineProps({
 	<footer>
 		<div class="grid grid-cols-3 gap-6">
 			<div
-				class="col-span-2 rounded-xl border border-gray-200 bg-white shadow text-xl md:text-2xl text-center p-2 md:p-10 flex flex-col justify-between gap-4"
+				class="col-span-2 rounded-xl border border-gray-200 bg-white shadow-sm text-xl md:text-2xl text-center p-2 md:p-10 flex flex-col justify-between gap-4"
 			>
 				<div>Score</div>
 				<div>{{ results.score }}</div>
 			</div>
 
 			<div
-				class="rounded-xl border border-gray-200 bg-white shadow text-xl md:text-2xl text-center p-2 md:p-10 flex flex-col justify-between gap-4"
+				class="rounded-xl border border-gray-200 bg-white shadow-sm text-xl md:text-2xl text-center p-2 md:p-10 flex flex-col justify-between gap-4"
 			>
 				<div>Meilleures scores</div>
 				<div>{{ Math.max(props.challenge.user.score, results.score) }} / {{ props.challenge.best.score }}</div>
 			</div>
 
 			<div
-				class="rounded-xl border border-gray-200 bg-white shadow text-xl md:text-2xl text-center p-2 md:p-10 flex flex-col justify-between gap-4"
+				class="rounded-xl border border-gray-200 bg-white shadow-sm text-xl md:text-2xl text-center p-2 md:p-10 flex flex-col justify-between gap-4"
 			>
 				<div>Vie(s)</div>
 				<div>{{ results.lives - results.death }}</div>
 			</div>
 
 			<div
-				class="rounded-xl border border-gray-200 bg-white shadow text-xl md:text-2xl text-center p-2 md:p-10 flex flex-col justify-between gap-4"
+				class="rounded-xl border border-gray-200 bg-white shadow-sm text-xl md:text-2xl text-center p-2 md:p-10 flex flex-col justify-between gap-4"
 			>
 				<div>Erreur(s)</div>
 				<div>{{ results.death }}</div>
 			</div>
 
 			<div
-				class="rounded-xl border border-gray-200 bg-white shadow text-xl md:text-2xl text-center p-2 md:p-10 flex flex-col justify-between gap-4"
+				class="rounded-xl border border-gray-200 bg-white shadow-sm text-xl md:text-2xl text-center p-2 md:p-10 flex flex-col justify-between gap-4"
 			>
 				<div>Temps restant</div>
 				<div>{{ Math.max(results.remainingTime- results.elapsedTime, 0) }} s</div>

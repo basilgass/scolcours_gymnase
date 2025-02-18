@@ -32,14 +32,14 @@ function visibilityButtonsInit(): visibilityButtonType[] {
 
 	// There is at least one button.
 	for (const row of props.draw.code.split("\n")) {
-		
+
 		// Parse the current row, without creating any element.
 		// const c = parserPreprocess(row) as ParserPrepocessType
 		// const c = PiDraw.parse(row)
 
 		// TODO: Button creation must be implemented !
 		// console.log(c)
-		
+
 		// Check if the "btn" options is here!
 		// const optionCode = Object.values.filter(x => x.split(":")[0] === "btn")
 		// if (optionCode.length === 1) {
@@ -172,7 +172,10 @@ onMounted(() => {
 <template>
 	<div>
 		<!-- visibility buttons -->
-		<div v-if="availableBtns.length > 0" class="w-full flex flex-wrap gap-3 mt-2">
+		<div
+			v-if="availableBtns.length > 0"
+			class="w-full flex flex-wrap gap-3 mt-2"
+		>
 			<button
 				v-for="btn of availableBtns"
 				:key="btn.figure"
@@ -183,5 +186,3 @@ onMounted(() => {
 		</div>
 	</div>
 </template>
-
-<style scoped></style>

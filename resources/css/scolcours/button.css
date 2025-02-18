@@ -1,91 +1,87 @@
-@layer components {
-	.btn {
-		@apply inline-block px-5 py-2
+@utility btn {
+  @apply inline-block px-5 py-2
 		text-center
 		rounded-lg
 		no-underline
 		cursor-pointer
 		disabled:cursor-not-allowed disabled:shadow-none
 		transition-colors duration-300;
-	}
-
-	.btn-primary {
-		@apply bg-blue-600 text-white
-		hover:bg-blue-700;
-	}
-
-	.btn-success {
-		@apply bg-green-600 text-white hover:bg-green-700;
-	}
-
-	.btn-add {
-		@apply bg-blue-600 text-white hover:bg-teal-700;
-	}
-
-	.btn-new {
-		@apply btn w-full h-full min-h-[100px] border-2 border-blue-600 border-dashed text-blue-900 bg-blue-100 hover:bg-blue-200;
-	}
-
-	.btn-new-inline {
-		@apply border-2 border-blue-600 border-dashed text-blue-900 bg-blue-100 hover:bg-blue-200;
-	}
-
-	.btn-delete {
-		@apply bg-red-600 text-white hover:bg-red-700;
-	}
-
-	.btn-cancel,
-	.btn-warning {
-		@apply bg-orange-600 text-white hover:bg-orange-700;
-	}
-
-	.btn-xl {
-		@apply px-10 py-5 rounded-xl text-lg
-	}
-
-	.btn-xs {
-		@apply !px-2 !py-1 text-xs
-	}
-
-
-	.btn-algebre {
-		@apply btn bg-blue-500 text-white border hover:bg-blue-100 hover:border-blue-500 hover:text-blue-500 transition-colors duration-300
-	}
-
-	.btn-analyse {
-		@apply btn bg-amber-500 text-white border hover:bg-amber-100 hover:border-amber-500 hover:text-amber-500 transition-colors duration-300
-	}
-
-	.btn-geometrie {
-		@apply btn bg-purple-500 text-white border hover:bg-purple-100 hover:border-purple-500 hover:text-purple-500 transition-colors duration-300
-	}
-
-	.btn-statistiques {
-		@apply btn bg-cyan-500 text-white border hover:bg-cyan-100 hover:border-cyan-500 hover:text-cyan-500 transition-colors duration-300
-	}
-
-	.btn-jeux {
-		@apply btn bg-orange-500 text-white border hover:bg-orange-100 hover:border-orange-500 hover:text-orange-500 transition-colors duration-300
-	}
-
-	.btn-tools {
-		@apply btn bg-pink-400 text-white border hover:bg-pink-100 hover:border-pink-500 hover:text-pink-500 transition-colors duration-300
-	}
-
-	.btn-arithmetique {
-		@apply btn bg-lime-500 text-white border hover:bg-lime-100 hover:border-lime-500 hover:text-lime-500 transition-colors duration-300
-	}
-
-
 }
 
-@layer utilities {
-	.is-active {
-		@apply bg-blue-100 border-blue-600;
-		@apply dark:border-blue-400 dark:text-blue-600;
-	}
+@utility btn-primary {
+  @apply bg-blue-600 text-white
+		hover:bg-blue-700;
+}
 
-	.is-disabled {
-		@apply bg-gray-100 border-gray-200 text-gray-300
-	}
+@utility btn-success {
+  @apply bg-green-600 text-white hover:bg-green-700;
+}
+
+@utility btn-add {
+  @apply bg-blue-600 text-white hover:bg-teal-700;
+}
+
+@utility btn-new {
+  @apply btn w-full h-full min-h-[100px] border-2 border-blue-600 border-dashed text-blue-900 bg-blue-100 hover:bg-blue-200;
+}
+
+@utility btn-new-inline {
+  @apply border-2 border-blue-600 border-dashed text-blue-900 bg-blue-100 hover:bg-blue-200;
+}
+
+@utility btn-delete {
+  @apply bg-red-600 text-white hover:bg-red-700;
+}
+
+@utility btn-cancel {
+  @apply bg-orange-600 text-white hover:bg-orange-700;
+}
+
+@utility btn-warning {
+  @apply bg-orange-600 text-white hover:bg-orange-700;
+}
+
+@utility btn-xl {
+  @apply px-10 py-5 rounded-xl text-lg;
+}
+
+@utility btn-xs {
+  @apply px-2! py-1! text-xs;
+}
+
+@utility btn-algebre {
+  @apply btn bg-blue-500 text-white border hover:bg-blue-100 hover:border-blue-500 hover:text-blue-500 transition-colors duration-300;
+}
+
+@utility btn-analyse {
+  @apply btn bg-amber-500 text-white border hover:bg-amber-100 hover:border-amber-500 hover:text-amber-500 transition-colors duration-300;
+}
+
+@utility btn-geometrie {
+  @apply btn bg-purple-500 text-white border hover:bg-purple-100 hover:border-purple-500 hover:text-purple-500 transition-colors duration-300;
+}
+
+@utility btn-statistiques {
+  @apply btn bg-cyan-500 text-white border hover:bg-cyan-100 hover:border-cyan-500 hover:text-cyan-500 transition-colors duration-300;
+}
+
+@utility btn-jeux {
+  @apply btn bg-orange-500 text-white border hover:bg-orange-100 hover:border-orange-500 hover:text-orange-500 transition-colors duration-300;
+}
+
+@utility btn-tools {
+  @apply btn bg-pink-400 text-white border hover:bg-pink-100 hover:border-pink-500 hover:text-pink-500 transition-colors duration-300;
+}
+
+@utility btn-arithmetique {
+  @apply btn bg-lime-500 text-white border hover:bg-lime-100 hover:border-lime-500 hover:text-lime-500 transition-colors duration-300;
+}
+
+@utility is-active {
+  @apply bg-blue-100 border-blue-600;
+  @apply dark:border-blue-400 dark:text-blue-600;
+}
+
+@utility is-disabled {
+  @apply bg-gray-100 border-gray-200 text-gray-300;
 }

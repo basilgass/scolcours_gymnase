@@ -119,7 +119,7 @@ function validateKey(index) {
 		<div v-else>
 			<div
 				v-admin
-				class="bg-grey-300 border border-600 rounded"
+				class="bg-grey-300 border border-600 rounded-sm"
 			>
 				{{ currentWords[0].fr }} --> {{ currentWords[0].foreign }}
 			</div>
@@ -156,10 +156,10 @@ function validateKey(index) {
 						v-for="(key, index) in foreignLetters"
 						:key="`${key.key}-${index}`"
 						:class="{
-							'bg-white hover:scale-105 hover:shadow': !key.used,
+							'bg-white hover:scale-105 hover:shadow-sm': !key.used,
 							'bg-gray-200 disabled text-gray-400 cursor-not-allowed': key.used
 						}"
-						class="p-2 w-14 h-14 border border-gray-200 rounded transition-all"
+						class="p-2 w-14 h-14 border border-gray-200 rounded-sm transition-all"
 						@click="key.used?'':validateKey(index)"
 					>
 						{{ key.key }}

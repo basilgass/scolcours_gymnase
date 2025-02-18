@@ -12,4 +12,4 @@ defineProps<{
 	<PiThreeParser :draw="illustration" />
 </template>
 
-<style scoped></style>
+

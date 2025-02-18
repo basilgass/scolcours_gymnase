@@ -23,6 +23,4 @@ const { copy, copied } = useClipboard()
 	</div>
 </template>
 
-<style scoped>
 
-</style>

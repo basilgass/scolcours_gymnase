@@ -259,7 +259,7 @@ startOver(true)
 				v-for="index of outputLength"
 				:key="`output-${index}`"
 				:class="currentLetter=== index ? 'bg-blue-300' : ''"
-				class="border border-gray-600 shadow bg-white grid place-items-center w-12 h-12"
+				class="border border-gray-600 shadow-sm bg-white grid place-items-center w-12 h-12"
 			>
 				{{ currentWord[index - 1] ?? "" }}
 			</div>
@@ -277,7 +277,7 @@ startOver(true)
 				<button
 					v-for="(element, index) of availableLetters"
 					:key="`${element}-${index}`"
-					class="border bg-gray-300 p-4 key !px-4 hover:shadow"
+					class="border bg-gray-300 p-4 key px-4! hover:shadow-sm"
 					@click="addLetter(element)"
 				>
 					{{ element }}

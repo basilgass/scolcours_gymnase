@@ -244,7 +244,7 @@ const selectedSuggestion = ref<number>(undefined)
 			<div
 				v-if="suggestionsItems.length > 0"
 				ref="suggestionsWrapper"
-				class="suggestions flex flex-col bg-white border rounded my-4 divide-y"
+				class="suggestions flex flex-col bg-white border rounded-sm my-4 divide-y"
 			>
 				<div
 					v-for="(word, index) in suggestionsItems"

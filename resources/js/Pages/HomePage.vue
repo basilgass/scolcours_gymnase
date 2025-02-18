@@ -9,9 +9,7 @@ defineOptions({layout: LayoutFullpage})
 
 
 <template>
-	<div class="space-y-10 bg-gray-100">
-		<!--		<Head title="" />-->
-
+	<div class="space-y-10">
 		<ScolCoursLogo />
 
 		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -23,8 +21,8 @@ defineOptions({layout: LayoutFullpage})
 				class="aspect-[2] group
 					transition-all duration-400 ease-in-out
 					text-xl font-thin whitespace-nowrap text-white
-					rounded hover:rounded-xl hover:shadow
-					border overflow-hidden cursor-pointer
+					rounded-md hover:rounded-xl hover:shadow-xs
+					overflow-hidden cursor-pointer
 					hover:rotate-[-1deg] hover:scale-105
 					grid grid-cols-1 place-items-center"
 			>

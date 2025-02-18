@@ -50,7 +50,7 @@ function createBook(){
 			{{ b.title }} ({{ b.slug }} / {{ b.id }})
 		</button>
 		<div
-			class="flex flex-col items-end border rounded p-3 bg-white"
+			class="flex flex-col items-end border rounded-sm p-3 bg-white"
 			v-if="book===-1"
 		>
 			<form-maker
@@ -74,7 +74,3 @@ function createBook(){
 		</div>
 	</article>
 </template>
-
-<style scoped>
-
-</style>

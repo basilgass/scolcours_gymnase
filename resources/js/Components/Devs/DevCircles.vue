@@ -71,7 +71,7 @@ onMounted(() => {
 				parameters: 'x=-10:10,y=-10:10,axis,grid',
 				code: code
 			}"
-			class="max-w-full mx-auto border rounded bg-white"
+			class="max-w-full mx-auto border rounded-sm bg-white"
 		/>
 		<div
 			v-for="(item, index) in tangentPerPoints"

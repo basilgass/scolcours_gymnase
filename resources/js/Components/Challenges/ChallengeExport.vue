@@ -177,5 +177,3 @@ const pdfGenereate = () => {
 		</div>
 	</div>
 </template>
-
-<style scoped></style>

@@ -83,7 +83,7 @@ function sortEvent() {
 							</div>
 							<div
 								v-theme.bg.text="element.slug"
-								class="text-white px-4 py-2 rounded flex-1 grid grid-cols-1 gap-3 place-items-center"
+								class="text-white px-4 py-2 rounded-sm flex-1 grid grid-cols-1 gap-3 place-items-center"
 							>
 								<div>{{ element.title }}</div>
 								<i :class="`${element.icon}`" />

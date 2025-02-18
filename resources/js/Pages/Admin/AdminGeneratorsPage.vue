@@ -34,6 +34,4 @@ defineProps({
 	</main>
 </template>
 
-<style scoped>
 
-</style>
