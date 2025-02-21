@@ -17,6 +17,7 @@ export type FormMakerInputsType =
 
 export interface FormMakerPropsType {
 	autoSize?: boolean;
+	disabled?: boolean;
 	focus?: boolean;
 	fontCode?: boolean;
 	inlineLabel?: boolean;
