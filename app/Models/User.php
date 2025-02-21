@@ -140,7 +140,7 @@ class User extends Authenticatable
 	public function chapters()
 	{
 		return $this->belongsToMany(Chapter::class)
-			->withPivot('open', 'post_id', 'updated_at')
+			->withPivot('post_id', 'updated_at')
 			->orderBy('pivot_updated_at', 'desc');
 	}
 

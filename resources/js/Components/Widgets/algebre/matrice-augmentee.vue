@@ -182,18 +182,28 @@ onMounted(() => {
 
 </script>
 <template>
-	<div class="augmented-matrix-wrapper flex justify-center gap-3">
-		<div v-katex="result" />
+	<div class="augmented-matrix-wrapper">
+		<div class="flex justify-center gap-3">
+			<div v-katex="result" />
 
-		<div class="flex flex-col my-4 gap-3">
-			<matrice-augmentee-boutons
-				v-for="index of matrix_dimension.n"
-				:key="`C${index}`"
-				class="pl-10"
-				:current-line="index-1"
-				:number-of-lines="matrix_dimension.n"
-				@validate="updateMatrix"
-			/>
+			<div class="flex flex-col my-4 gap-3">
+				<matrice-augmentee-boutons
+					v-for="index of matrix_dimension.n"
+					:key="`C${index}`"
+					class="pl-10"
+					:current-line="index-1"
+					:number-of-lines="matrix_dimension.n"
+					@validate="updateMatrix"
+				/>
+			</div>
 		</div>
+
+		<ol class="list-inside list-decimal">
+			<li
+				v-for="(op, index) in list_of_operations"
+				:key="`op-${index}`"
+				v-katex.auto.inline="op.description"
+			/>
+		</ol>
 	</div>
 </template>

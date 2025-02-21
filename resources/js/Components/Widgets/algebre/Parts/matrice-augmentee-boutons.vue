@@ -13,7 +13,8 @@ export interface matriceAugmenteeInterface {
 	target: number,
 	operation: `+` | '*' | 'x',
 	value: string, // can be a number or a fraction
-	reference: number | null
+	reference: number | null,
+	description: string
 }
 
 const emits = defineEmits<{
@@ -86,6 +87,8 @@ const showValidateButton = computed(() => {
 		}
 		return checkValue(value) && checkLineReference(+reference)
 	}
+
+	return false
 })
 
 function validate() {
@@ -102,14 +105,33 @@ function validate() {
 	// Controls
 	emits('validate', {
 		target: props.currentLine,
-		operation: operation.value,
+		operation: operation.value as '+' | '*' | 'x',
 		value,
-		reference: (reference && !isNaN(+reference)) ? +reference - 1 : null
+		reference: (reference && !isNaN(+reference)) ? +reference - 1 : null,
+		description: operationDescription(props.currentLine, operation.value as '+' | '*' | 'x', value, reference ? +reference - 1 : null)
 	})
 
 	// Reset the elements.
 	operation.value = ""
 	opValue.value = ""
+}
+
+function operationDescription(target: number,
+							  operation: `+` | '*' | 'x',
+							  value: string, // can be a number or a fraction
+							  reference: number | null){
+	if (operation === 'x') {
+		return `Permutation de la ligne ${target + 1} avec la ligne ${+value+1}`
+	}
+
+	if (operation === '*') {
+		return `Multiplication de la ligne ${target + 1} par \\(${new Fraction(value).tex}\\)`
+	}
+
+	if (operation === '+') {
+		return `Ajout de \\(${new Fraction(value).tex}\\) fois la ligne ${+reference + 1} à la ligne ${target + 1}`
+	}
+
 }
 </script>
 
