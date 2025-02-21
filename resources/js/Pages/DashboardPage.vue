@@ -11,6 +11,7 @@ interface DashboardInterface extends ChapterInterface {
 }
 defineOptions({ layout: LayoutMain })
 
+// TODO: amélioer le dashboard
 defineProps<{
 	courses: DashboardInterface[]
 }>()
