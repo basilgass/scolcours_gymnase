@@ -7,7 +7,7 @@ import {
 	KeyboardPropsInterface,
 	useKeyboard
 } from "@/Composables/useKeyboard.ts"
-import {computed} from "vue"
+import {computed, ref} from "vue"
 import type {CheckerResult} from "pichecker"
 
 // General keyboard config - all keyboards shares the same
@@ -22,7 +22,6 @@ function onKeyboardChange(event: string | KeyboardInputInterface): void {
 
 const {loadAnswer, keyboardInput, reset} = useKeyboard(props, onKeyboardChange)
 
-defineExpose({reset, loadAnswer})
 
 const onChange = function (event: string | KeyboardInputInterface): void {
 	//value = {tex, raw, input}
@@ -61,6 +60,12 @@ const onChange = function (event: string | KeyboardInputInterface): void {
 	emits("change", {value: keyboardInput.value, validation})
 }
 
+const keyboardUI = ref<InstanceType<typeof KeyboardDisplay>>()
+
+function resetKeyboard(): void {
+	reset()
+	keyboardUI.value.resetKeyStrokes()
+}
 
 const extraLetters = computed(() => {
 	return props.keyboard.values.length > 0
@@ -96,6 +101,7 @@ const kbrdConfig = computed(() => {
 	return props.keyboard.config
 })
 
+defineExpose({reset: resetKeyboard, loadAnswer})
 </script>
 
 <template>

@@ -6,11 +6,22 @@ code: matrix
 <script setup lang="ts">
 
 import {WidgetPropsInterface} from "@/types/modelInterfaces.ts"
-import MatriceAugmenteeBoutons, {
-	matriceAugmenteeInterface
-} from "@/Components/Widgets/algebre/Parts/matrice-augmentee-boutons.vue"
-import {computed, onMounted, ref, watch} from "vue"
+import {computed, onMounted, reactive, ref, watch} from "vue"
 import {Fraction, Polynom} from "pimath"
+import KeyboardBasic from "@/Components/Keyboards/KeyboardBasic.vue"
+import {useKeyboard} from "@/Composables/useKeyboard.ts"
+import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
+
+export interface matriceAugmenteeInterface {
+	target: number,
+	operation: `+` | `-` | '*' | '/' | 'x',
+	value: string, // can be a number or a fraction
+	reference: number | null,
+	description: string
+}
+
+
+const {getKeyboards} = useKeyboard()
 
 const props = defineProps<{
 	illustration: WidgetPropsInterface
@@ -60,6 +71,59 @@ const matrix_dimension = computed(() => {
 })
 
 const list_of_operations = ref<matriceAugmenteeInterface[]>([])
+
+const hoverItem = ref("")
+const operationData = reactive<matriceAugmenteeInterface>({
+	operation: null,
+	value: null,
+	description: null,
+	reference: null,
+	target: null
+})
+const valueKeyboard = ref(null)
+
+function selectLine(lineIndex: number) {
+	if (operationData.target === null) {
+		operationData.target = lineIndex
+	} else {
+		operationData.reference = lineIndex
+	}
+}
+
+const operationDescription = computed(() => {
+	if (operationData.target === null) {
+		return "Sélectionner une ligne..."
+	}
+
+	if (operationData.operation === null) {
+		return `Que faire pour la <code>ligne ${operationData.target + 1}</code> ?`
+	}
+
+	const op = operationData.operation
+	const verb = op === '+' ? "ajouter à" : op === '-' ? "soustraire à" : op === '*' ? "multiplier" : op === "/" ? "diviser" : "permuter"
+	let value = ""
+
+	let scalar: string
+	if (operationData.value === null) {
+		scalar = "??"
+	} else {
+		try {
+			scalar = new Fraction(operationData.value).tex
+		} catch {
+			scalar = "??"
+		}
+	}
+
+	if (op === '+' || op === '-') {
+		value = `\\(${scalar}\\) fois la <code>ligne ${operationData.reference === null ? "..." : operationData.reference + 1}</code>`
+	} else if (op === '*' || op === '/') {
+		value = `par \\(${scalar}\\)`
+	} else if (op === 'x') {
+		value = `avec la <code>ligne ${operationData.reference + 1}</code>`
+	}
+
+	return `${verb} la <code>ligne ${operationData.target === null ? "..." : operationData.target + 1}</code> ${value}`
+})
 
 function createPolynomMatrix() {
 	const number_of_lines = left.value.length
@@ -119,37 +183,73 @@ function updateMatrix(operation: matriceAugmenteeInterface) {
 	const matrixLine = matrix[operation.target]
 	const value = new Fraction(operation.value)
 
-	if (operation.operation === '+' && operation.reference !== null) {
-		const referenceLine = matrix[operation.reference]
-		matrixLine.forEach((polynom, index) => {
-			// console.log('add L',referenceLine[index].tex , 'multiplied by', value)
-			polynom.add(
-				referenceLine[index].clone().multiply(value)
-			)
-		})
+	switch (operation.operation) {
+		case "+":
+		case "-": {
+			const referenceLine = matrix[operation.reference]
 
-	} else if (operation.operation === '*') {
-		matrixLine.forEach(polynom => {
-			// console.log('multiply', polynom.tex, 'by', +operation.value)
-			polynom.multiply(value)
-		})
-	} else if (operation.operation === 'x') {
-		// console.log('swap ', operation.target, +operation.value)
-		swapLines(matrix, operation.target, +operation.value)
+			matrixLine.forEach((polynom, index) => {
+				if (operation.operation === '+') {
+					polynom.add(
+						referenceLine[index].clone().multiply(value)
+					)
+				} else {
+					polynom.subtract(
+						referenceLine[index].clone().multiply(value)
+					)
+				}
+			})
+			break
+		}
+
+		case "*":
+		case "/": {
+			matrixLine.forEach(polynom => {
+				// console.log('multiply', polynom.tex, 'by', +operation.value)
+				if (operation.operation === '*') {
+					polynom.multiply(value)
+				} else {
+					polynom.divide(value)
+				}
+			})
+			break
+		}
+		case "x":
+			swapLines(matrix, operation.target, operation.reference)
 	}
 
-	list_of_operations.value.push(operation)
+	list_of_operations.value.push({
+		...operation,
+		description: operationDescription.value
+	})
+
+	// Reset du operationData
+	operationData.operation = null
+	operationData.value = null
+	operationData.description = null
+	operationData.reference = null
+	operationData.target = null
+
+	valueKeyboard.value.reset()
+
 }
 
-const result = computed(() => {
+const result = computed<
+	{
+		tex: string,
+		flatten: Polynom[],
+		matrix: Polynom[][]
+	} | false
+>(() => {
 	try {
 		if (left.value.length === 0) {
-			return "\\text{Aucune matrice donnée...}"
+			return {tex: "\\text{Aucune matrice donnée...}", flatten: [], matrix: []}
 		}
 
 		if (matrix === false) {
-			return false
+			return {tex: "\\text{Aucune matrice donnée...}", flatten: [], matrix: []}
 		}
+
 		if (list_of_operations.value.length > -1) {
 			let tex = "\\left(\\begin{array}{" + "c".repeat(matrix_dimension.value.m) + "|c" + "}"
 
@@ -160,10 +260,13 @@ const result = computed(() => {
 			tex += convertPolynomToTex(matrix).map(line => line.join("&")).join("\\\\[0.8em]")
 			tex += "\\end{array}\\right)"
 
-			return tex
+			return {
+				tex,
+				flatten: matrix.flat(),
+				matrix
+			}
 		}
-	} catch (e) {
-		console.error(e)
+	} catch {
 		return false
 	}
 
@@ -182,28 +285,122 @@ onMounted(() => {
 
 </script>
 <template>
-	<div class="augmented-matrix-wrapper">
-		<div class="flex justify-center gap-3">
-			<div v-katex="result" />
+	<div class="augmented-matrix-wrapper grid place-items-center">
+		<div class="flex items-stretch my-6">
+			<div class="relative inline-block">
+				<svg
+					class="absolute left-0 h-full"
+					viewBox="0 0 20 100"
+					preserveAspectRatio="none"
+					xmlns="http://www.w3.org/2000/svg"
+				>
+					<path
+						d="M18,0 C5,10 5,90 18,100"
+						stroke="black"
+						fill="transparent"
+						stroke-width="1"
+					/>
+				</svg>
 
-			<div class="flex flex-col my-4 gap-3">
-				<matrice-augmentee-boutons
-					v-for="index of matrix_dimension.n"
-					:key="`C${index}`"
-					class="pl-10"
-					:current-line="index-1"
-					:number-of-lines="matrix_dimension.n"
-					@validate="updateMatrix"
+				<!-- Parenthèse droite -->
+				<svg
+					class="absolute right-0 h-full"
+					viewBox="0 0 20 100"
+					preserveAspectRatio="none"
+					xmlns="http://www.w3.org/2000/svg"
+				>
+					<path
+						d="M2,0 C15,10 15,90 2,100"
+						stroke="black"
+						fill="transparent"
+						stroke-width="1"
+					/>
+				</svg>
+
+				<!-- info hover -->
+				<div
+					class="absolute left-[50%] translate-x-[-50%] -bottom-4 text-xs"
+					v-katex.inline="hoverItem"
 				/>
+
+				<!-- Grille -->
+				<div
+					class="flex flex-col px-4 py-1"
+					v-if="result!==false && result.matrix.length>0"
+				>
+					<div
+						v-for="(line, lineIndex) in result.matrix"
+						:key="`line-${lineIndex}`"
+						class="flex gap-2"
+						:class="{
+							'bg-green-200': lineIndex===operationData.target,
+							'bg-blue-200': lineIndex===operationData.reference
+						}"
+						@click="selectLine(lineIndex)"
+					>
+						<div
+							v-for="(item, index) in line"
+							:key="`a_${lineIndex}${index}`"
+							v-katex.inline="item.tex"
+							class="w-10 py-2 text-center cursor-pointer"
+							:class="index===matrix_dimension.m ? 'border-l border-red-500 px-2':''"
+							@mouseenter="hoverItem=index<matrix_dimension.m ? `a_{{${lineIndex+1}}{${index+1}}}`: ''"
+							@mouseleave="hoverItem=''"
+						/>
+					</div>
+				</div>
 			</div>
 		</div>
 
-		<ol class="list-inside list-decimal">
-			<li
-				v-for="(op, index) in list_of_operations"
-				:key="`op-${index}`"
-				v-katex.auto.inline="op.description"
+		<div class="py-10 space-y-10">
+			<markdown-it
+				:text="operationDescription"
+				class="text-center border p-3 bg-gray-50"
 			/>
-		</ol>
+
+			<div
+				class="flex gap-3 justify-center *:border *:px-3 *:py-1 *:rounded"
+			>
+				<button @click="operationData.operation='+'">
+					ajouter
+				</button>
+				<button @click="operationData.operation='-'">
+					soustraire
+				</button>
+				<button @click="operationData.operation='*'">
+					multiplier
+				</button>
+				<button @click="operationData.operation='/'">
+					diviser
+				</button>
+				<button @click="operationData.operation='x'">
+					permuter
+				</button>
+			</div>
+
+			<div v-show="operationData.operation!== null && operationData.operation!=='x'">
+				<!--demande d'un nombre-->
+				<keyboard-basic
+					ref="valueKeyboard"
+					answer=""
+					:keyboard="getKeyboards('fraction')[0]"
+					@change="operationData.value = $event.value.input"
+				/>
+			</div>
+
+			<div class="text-center">
+				<button
+					@click="updateMatrix(operationData)"
+					class="rounded px-10 py-5 bg-blue-500 text-white"
+				>
+					Valider
+				</button>
+			</div>
+
+			<markdown-it
+				:text="list_of_operations.map((x, i)=>`${i+1}. ${x.description}`).join('\n')"
+				class="border p-3 bg-gray-50"
+			/>
+		</div>
 	</div>
 </template>

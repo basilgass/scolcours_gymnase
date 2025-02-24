@@ -4,12 +4,12 @@
  * emits: ["validate", "next", "change", "clear"]
  */
 
-import { asciiToTex, keyboardKey, KeyboardObjectType } from "@/Composables/keyboardConfig"
-import { useKeyboard } from "@/Composables/useKeyboard.ts"
-import { KbrdEvent } from "@/types"
-import { computed, ref } from "vue"
+import {asciiToTex, keyboardKey, KeyboardObjectType} from "@/Composables/keyboardConfig"
+import {useKeyboard} from "@/Composables/useKeyboard.ts"
+import {KbrdEvent} from "@/types"
+import {computed, ref} from "vue"
 
-const { keyboardKeys, keyboards } = useKeyboard()
+const {keyboardKeys, keyboards} = useKeyboard()
 
 const emits = defineEmits<{
 	validate: [event: string],
@@ -262,7 +262,7 @@ function resetKeyStrokes() {
 }
 
 function backKeyStrokes() {
-	ButtonKeyClick({ key: "@back" })
+	ButtonKeyClick({key: "@back"})
 	changeEvent()
 	emits("clear", "")
 }
@@ -279,7 +279,7 @@ function ButtonKeyClick(key) {
 	changeEvent()
 }
 
-const changeEvent = function() {
+const changeEvent = function () {
 	const output = "",
 		result = keyStrokes.value
 			.map(k => k.fn(output))
@@ -319,7 +319,7 @@ const answerOutput = computed(() => {
 		.join("")
 })
 
-// defineExpose({ resetKeyStrokes, wrongAnswer, getTex })
+defineExpose({resetKeyStrokes})
 </script>
 
 <template>
