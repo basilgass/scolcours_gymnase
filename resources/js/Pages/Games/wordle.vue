@@ -9,7 +9,7 @@ import FormMaker from "@/Components/Form/FormMaker.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
 import {onKeyStroke} from "@vueuse/core"
-import {computed, ref} from "vue"
+import {computed, onMounted, ref} from "vue"
 import axios from "axios"
 
 defineOptions({layout: LayoutMain})
@@ -63,7 +63,10 @@ const WORD_LENGTH = ref<number>(5)
 const WORD_LANGUAGE = ref<string>("fr")
 const GUESSES_LIMIT = ref<number>(6)
 const gameIsRunning = ref(false)
+
 const target = ref<string>("")
+const nextWord = ref<string>("")
+
 const guesses = ref<IGuess[]>([])
 const guessId = ref<number>(0)
 const letterId = ref<number>(0)
@@ -73,23 +76,28 @@ const guess = computed<string>(() => {
 	return guesses.value[guessId.value]?.word ?? ""
 })
 
-async function startGame() {
-	gameIsRunning.value = true
-	// Choose a word
-	// The word must be "WORD_LENGTH" characters long
-	// The word must not have more than 2 same letters.
-	await axios.get(route('dico.fetch', {
+function prepareNextWord() {
+	axios.get(route('dico.fetch', {
 			language: WORD_LANGUAGE.value,
 			number: 1,
 			size: WORD_LENGTH.value
 		}
 	))
 		.then(response => {
-			target.value = response.data[0]
+			nextWord.value = response.data[0]
 		})
 		.catch(error => {
 			console.error(error)
 		})
+}
+async function startGame() {
+	gameIsRunning.value = true
+
+	target.value = nextWord.value
+	// Choose a word
+	// The word must be "WORD_LENGTH" characters long
+	// The word must not have more than 2 same letters.
+	prepareNextWord()
 
 
 	// target.value = _.sample(availableWords.value)
@@ -273,6 +281,10 @@ const keyboard = computed<Record<string, string>>(() => {
 		})
 	})
 	return dict
+})
+
+onMounted(()=>{
+	prepareNextWord()
 })
 
 </script>

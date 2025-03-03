@@ -5,11 +5,12 @@ code:
 </info>-->
 <script lang="ts" setup>
 
-import { listeDeMots } from "@/helpers/liste-des-mots-francais"
-import { flashInterface } from "@/types"
-import { WidgetPropsInterface } from "@/types/modelInterfaces.ts"
-import { Random } from "pimath"
-import { computed, inject, ref } from "vue"
+// TODO: doit être reformaté pour une meilleure lisibilité
+
+import {flashInterface} from "@/types"
+import {WidgetPropsInterface} from "@/types/modelInterfaces.ts"
+import {computed, inject, onMounted, ref} from "vue"
+import axios from "axios"
 
 const flash = inject<flashInterface>("flash")
 
@@ -85,7 +86,7 @@ const outputLength = computed(() => {
 })
 
 // Determine if the words to use can contain duplicated letters or not, based on the existing parameter: dup
-const withoutDuplicates = computed(() => {
+const withoutDuplicateLetters = computed(() => {
 	// If the number of letters from the reference word is different than the output length, we must not have duplicates !
 	if (outputLength.value !== referenceWord.value.length) return true
 
@@ -146,7 +147,7 @@ function applyDivision(index: number, value: number, letter: string) {
 	// Flash a message
 	flash.success(
 		`Il y a \\(${value}! = ${factoriel(value)}\\) façons de réarranger les lettres ${letter}`,
-		{ timeout: 5 * 1000 }
+		{timeout: 5 * 1000}
 	)
 }
 
@@ -157,7 +158,30 @@ function factoriel(n) {
 	return n * factoriel(n - 1)
 }
 
-function startOver(init?: boolean) {
+const searchingForAWord = ref(false)
+
+const nextWord = ref<string>("")
+
+function prepareNextWord() {
+	axios.get(
+		route("dico.fetch", {
+				language: 'fr',
+				number: 1,
+				size: randomWordLength.value,
+			common: 1,
+				withoutDuplicateLetters: withoutDuplicateLetters.value ? 1 : 0
+			}
+		))
+		.then(response => {
+			return nextWord.value = response.data[0]
+		})
+		.catch(error => {
+			console.log(error.response.data.message)
+			return []
+		})
+}
+
+async function startOver(init?: boolean) {
 	// On n'est pas en initialisation - nouveau mot.
 	if (!init) wordTries.value++
 
@@ -174,11 +198,14 @@ function startOver(init?: boolean) {
 		wordTries.value > 0
 	) {
 
+		searchingForAWord.value = true
+
 		// Filter the list of word to show only the words with the right length
-		const mots = listeDeMots
-			.filter(x => randomWordLength.value === 0 || x.length === randomWordLength.value)
-			.filter(x => withoutDuplicates.value ? x.split("").length === new Set(x.split("")).size : true)
-		referenceWord.value = Random.item(mots) as unknown as string
+		referenceWord.value = nextWord.value
+
+		prepareNextWord()
+
+		searchingForAWord.value = false
 		return
 	}
 
@@ -234,7 +261,7 @@ function arrangement() {
 
 	// currentWord length is smaller  outputLength : not finished
 	if (currentWord.value.length < outputLength.value) {
-		return `${ name } = ${numerator}`
+		return `${name} = ${numerator}`
 	}
 
 	// currentWord is same length than the outputLength -> it's finished and must display more data
@@ -250,9 +277,21 @@ const isFinished = computed(() => {
 
 // Load the first word
 startOver(true)
+
+onMounted(()=>{
+	prepareNextWord()
+})
+
 </script>
 <template>
-	<article>
+	<article class="relative">
+		<div
+			v-if="searchingForAWord"
+			class="grid place-items-center absolute inset-0 bg-gray-800 bg-opacity-95 text-white"
+		>
+			<p>à la recherche d'un mot</p>
+		</div>
+
 		<!-- CurrentWord -->
 		<div class="display-word flex gap-4 p-3 bg-gray-200">
 			<div
