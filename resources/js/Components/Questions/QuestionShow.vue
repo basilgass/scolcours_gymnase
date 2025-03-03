@@ -21,7 +21,7 @@ import QuestionFooter from "@/Components/Questions/Parts/QuestionFooter.vue"
 import QuestionBlock from "@/Components/Questions/Parts/QuestionBlock.vue"
 import QuestionAnswer from "@/Components/Questions/Parts/QuestionAnswer.vue"
 import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
-import {nextTick, provide, ref, useTemplateRef} from "vue"
+import {provide, ref, useTemplateRef} from "vue"
 import type {QuestionInterface} from "@/types/modelInterfaces.ts"
 import type {
 	questionDataInterface,
