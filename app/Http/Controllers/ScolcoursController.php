@@ -170,4 +170,15 @@ class ScolcoursController extends Controller
 
 		return $words;
 	}
+
+	public function wordExistsInDictionary(string $language, string $word)
+	{
+		// TODO: Pour l'instant, tous les mots sont en majuscule, sans accent. Il faudra peut-être changer ça.
+		$found = DB::table('dictionary')
+			->where('language', $language)
+			->where('word', $word)
+			->exists();
+
+		return $found;
+	}
 }

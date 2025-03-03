@@ -13,6 +13,11 @@ Route::post('/grapheur/svg/download', [ScolcoursController::class, "download"])
 
 
 
+// Check if a word is in the dictionary
+Route::get('/dico/check/{language}/{word}', [ScolcoursController::class, 'wordExistsInDictionary'])
+	->name('dico.exists');
+
 // Get a word from the dictionary
-Route::get('/dico/{language}/{number?}/{size?}/{common?}', [ScolcoursController::class, 'dico'])
+Route::get('/dico/{language}/{number}/{size}/{common?}', [ScolcoursController::class, 'dico'])
 	->name('dico.fetch');
+
