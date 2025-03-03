@@ -1,144 +1,93 @@
 <script lang="ts" setup>
-import { asciiToTex } from "@/Composables/keyboardConfig"
-import { KeyboardEmitsInterface, KeyboardPropsInterface, useKeyboard } from "@/Composables/useKeyboard.ts"
-import { computed, onMounted, ref } from "vue"
+import {asciiToTex} from "@/Composables/keyboardConfig"
+import {
+	KeyboardEmitsInterface,
+	KeyboardExposeInterface,
+	KeyboardInputInterface,
+	KeyboardPropsInterface
+} from "@/Composables/useKeyboard.ts"
+import {computed, onMounted, ref} from "vue"
 
+// props.keyboard
 const props = defineProps<KeyboardPropsInterface>()
 
+// emits change
 const emits = defineEmits<KeyboardEmitsInterface>()
 
-function onKeyboardChange(): void {
-	onChange()
+// emit change event
+// TODO: Change this event to receive only the input as a string
+function onChange(): void {
+	setInput().then((x) => emits("change", x))
 }
 
-const { loadAnswer } = useKeyboard(
-	props,
-	onKeyboardChange
-)
+async function setInput(value?: string): Promise<KeyboardInputInterface> {
 
-let reset = function() {
-	qcmItems.value.forEach(item => item.selected = false)
-}
+	if (value !== undefined) {
+		let keys = value.split(",")
 
-defineExpose({
-	reset,
-	loadAnswer: (value) => {
-		loadAnswer(value, {
-			reset,
-			callback: (value) => {
-				let keys = value.split(",")
-
-				qcmItems.value.forEach(item => {
-					if (keys.includes(item.key)) {
-						item.selected = true
-					}
-				})
-			}
+		// (un)select each item
+		qcmItems.value.forEach(item => {
+			item.selected = keys.includes(item.key)
 		})
-	},
-	parameters: "full (pleine largeur)\nflex (utilisation de flex)\ntex (converti en TeX)"
-})
-let onChange = function() {
-	let answers = qcmSelections(),
-		answersKeys = answers.map(x => x.key)
-
-	// On parcourt toutes les réponses
-	let goodAnswers = props.answer.split(",")
-	// props.answer = "1,2|3,5|6|7"
-	// answersKeys = [1,3,5]
-
-	// le nombre de réponses données doit être le bon.
-	let result = goodAnswers.length === answersKeys.length,
-		message = ""
-
-	// Chaque réponse doit se trouver dans une liste et uniquement dans une.
-	if (result) {
-		for (let key of answersKeys) {
-			for (let index in goodAnswers) {
-				if (goodAnswers[index].split("|").includes(key)) {
-					// remove this item
-					goodAnswers.splice(Number(index), 1)
-					break
-				}
-			}
-		}
-		// There should be no more good answers...
-		result = goodAnswers.length === 0
-
-		if (!result) {
-			message = `il y a ${goodAnswers.length > 1 ? "des" : "une"}  ${goodAnswers.length} réponse${goodAnswers.length > 1 ? "s" : ""} fausse${goodAnswers.length > 1 ? "s" : ""}.`
-		}
-	} else {
-		let delta = goodAnswers.length - answersKeys.length
-		if (delta > 0) {
-			message = `il manque ${delta} réponse${delta > 1 ? "s" : ""}`
-		} else {
-			message = `il y a ${-delta} réponse${delta > 1 ? "s" : ""} en trop.`
-		}
 	}
 
-	emits("change", {
-		value: {
-			input: answersKeys.join(","),
-			tex: answers.map(x => x.tex).join(", "),
-			raw: answers.map(x => x.label).join(", ")
-		},
-		validation: {
-			result,
-			message
-		}
-	})
+	const answers = qcmSelections()
+	const answersKeys = answers.map(x => x.key)
+
+	return {
+		input: answersKeys.join(","),
+		tex: answers.map(x => x.tex).join(", "),
+		raw: answers.map(x => x.label).join(", ")
+	}
 }
+
+defineExpose<KeyboardExposeInterface>({
+	setInput,
+	parameters: "full (pleine largeur)\nflex (utilisation de flex)\ntex (converti en TeX)"
+})
 
 /* ------------------*/
 // Options du QCM
-let isFullWidth = computed(() => {
-		return props.keyboard.parameters.includes("full")
-	}),
-	isFlex = computed(() => {
-		return props.keyboard.parameters.includes("flex")
-	}),
-	isTex = computed(() => {
-		return props.keyboard.parameters.includes("tex")
-	}),
-	multiAnswers = computed(() => {
-		return props.answer.split(",").length > 1
-	})
+const inRandomOrder = computed(()=>{
+	return props.keyboard.parameters.includes("random")
+})
+const isFullWidth = computed(() => {
+	return props.keyboard.parameters.includes("full")
+})
+const isFlex = computed(() => {
+	return props.keyboard.parameters.includes("flex")
+})
+const isTex = computed(() => {
+	return props.keyboard.parameters.includes("tex")
+})
+const multiAnswers = computed(() => {
+	return props.reference.split(",").length > 1
+})
 
 /* ---------------- */
 // Gestion du QCM
-let qcmItems = ref([]),
-	qcmSelections = function() {
-		// Retourne la ou les valeur(s) sélectionnée(s).
-		let values = [
-			...qcmItems.value
-				.filter((x) => x.selected)
-		]
+let qcmItems = ref([])
 
-		//.map((x) => x[output ? output : "display"]),
-		// TODO: Check sorting order.
-		values.sort((a, b) => a.key < b.key ? -1 : 1)
-		return values
-	},
-	qcmButtonClick = (element) => {
-		if (!multiAnswers.value) {
-			// Si on n'est pas dans une "Multi-réponses", on désactive tout.
-			qcmItems.value.forEach((e) => (e.selected = false))
-		}
+function qcmSelections() {
+	// Retourne la ou les valeur(s) sélectionnée(s).
+	let values = [
+		...qcmItems.value
+			.filter((x) => x.selected)
+	]
 
-		element.selected = !element.selected
-		onChange()
+	values.sort((a, b) => a.key < b.key ? -1 : 1)
+	return values
+}
+
+function qcmButtonClick(element) {
+	if (!multiAnswers.value) {
+		// Si on n'est pas dans une "Multi-réponses", on désactive tout.
+		qcmItems.value.forEach((e) => (e.selected = false))
 	}
 
-/* ---------------*/
-// Gestion du QCM avec plusieurs réponses.
-// let	multiAnswersId = ref(0),
-// 	multiAnswersDelete = function(){
-// 		multiAnswersId.value--
-// 	},
-// 	multiAnswersAdd = function(){
-// 		multiAnswersId.value++
-// 	}
+	element.selected = !element.selected
+	onChange()
+}
 
 onMounted(() => {
 	// Build the Items.
@@ -146,8 +95,8 @@ onMounted(() => {
 	// key|Tex
 	// TeX
 
-
-	qcmItems.value = props.keyboard.values
+	// TODO: Reformat conversion code <key>|<label>|<TeX>
+	const items = props.keyboard.values
 		.map((x) => {
 			let [key, label, tex] = x.split("|")
 
@@ -179,6 +128,12 @@ onMounted(() => {
 				selected: false
 			}
 		})
+
+	if(inRandomOrder.value) {
+		items.sort(() => Math.random() - 0.5)
+	}
+
+	qcmItems.value = items
 })
 
 </script>

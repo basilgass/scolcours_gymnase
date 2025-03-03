@@ -4,6 +4,7 @@
  * emits: ["validate", "next", "change", "clear"]
  */
 
+// TODO: Reformat to be more concise and clear !
 import {asciiToTex, keyboardKey, KeyboardObjectType} from "@/Composables/keyboardConfig"
 import {useKeyboard} from "@/Composables/useKeyboard.ts"
 import {KbrdEvent} from "@/types"
@@ -53,203 +54,206 @@ const props = withDefaults(defineProps<{
 })
 
 
-const root = ref(null),
-	keyStrokes = ref([]),
-	keyboardGridDefault = ref("grid-cols-4")
+const root = ref(null)
+const keyStrokes = ref([])
+const keyboardGridDefault = ref("grid-cols-4")
 
 const theKeyboard = computed(() => {
-		if (props.keyboard === null) {
-			return ""
-		}
-
-		if (typeof props.keyboard === "string") {
-
-			// Parse the keyboard value
-			//TODO: is it still relevant ?
-			const keyboardName = props.keyboard.split("@")[0]
-
-			if (Object.hasOwn(keyboards, keyboardName)) {
-				return keyboardName
-			} else {
-				return ""
-			}
-		}
-
-		// It's a custom keyboard
-		return props.keyboard
-	}),
-	keyboardOptions = computed(() => {
-		if (props.extraLetters?.length > 0) {
-			return props.extraLetters.map(x => {
-				const keyDisplay = x.split("||")
-				const display = keyDisplay.length >= 2 ? keyDisplay[1] : keyDisplay[0]
-				const output = keyDisplay[0].startsWith("#") ? keyDisplay[0].substring(1) : keyDisplay[0]
-				const isMath = display.startsWith("#") || display.startsWith("\\")
-
-				return {
-					key: keyDisplay[0],
-					visible: true,
-					type: isMath ? "math" : "text",
-					display: display.startsWith("#") ? asciiToTex(display.substring(1)) : display,
-					span: 0,
-					fn: (value: string) => {
-						return value + output
-					}
-				}
-			})
-		}
-
-		return []
-	}),
-	keyboardData = computed<KeyboardObjectType>(() => {
-		if (typeof theKeyboard.value === "string") {
-			return keyboards[theKeyboard.value]
-		}
-
-		return props.keyboard as KeyboardObjectType
-	})
-
-const btnReset = {
-		label: "tout effacer",
-		icon: "bi bi-trash",
-		span: 1,
-		fn: () => resetKeyStrokes(),
-		atEnd: false
-	},
-	btnAddResponse = {
-		label: "Ajouter",
-		icon: "bi bi-plus-circle",
-		span: 1,
-		fn: () => {
-			ButtonKeyClick({
-				key: ",",
-				fn: (value: string) => value + ","
-			})
-		},
-		atEnd: false
-	},
-	btnBack = {
-		label: "effacer",
-		icon: "bi bi-backspace",
-		span: 1,
-		fn: () => backKeyStrokes(),
-		atEnd: false
-	},
-	btnNext = {
-		label: "suivant",
-		icon: "bi bi-arrow-bar-right",
-		span: 1,
-		fn: () => emits("next"),
-		atEnd: false
-	},
-	btnValidate = {
-		label: "valider",
-		icon: "bi bi-check",
-		span: 3,
-		fn: () => emits("validate", answerOutput.value),
-		atEnd: false
+	if (props.keyboard === null) {
+		return ""
 	}
 
+	if (typeof props.keyboard === "string") {
+
+		// Parse the keyboard value
+		//TODO: is it still relevant ?
+		const keyboardName = props.keyboard.split("@")[0]
+
+		if (Object.hasOwn(keyboards, keyboardName)) {
+			return keyboardName
+		} else {
+			return ""
+		}
+	}
+
+	// It's a custom keyboard
+	return props.keyboard
+})
+
+const keyboardOptions = computed(() => {
+	if (props.extraLetters?.length > 0) {
+		return props.extraLetters.map(x => {
+			const keyDisplay = x.split("||")
+			const display = keyDisplay.length >= 2 ? keyDisplay[1] : keyDisplay[0]
+			const output = keyDisplay[0].startsWith("#") ? keyDisplay[0].substring(1) : keyDisplay[0]
+			const isMath = display.startsWith("#") || display.startsWith("\\")
+
+			return {
+				key: keyDisplay[0],
+				visible: true,
+				type: isMath ? "math" : "text",
+				display: display.startsWith("#") ? asciiToTex(display.substring(1)) : display,
+				span: 0,
+				fn: (value: string) => {
+					return value + output
+				}
+			}
+		})
+	}
+
+	return []
+})
+
+const keyboardData = computed<KeyboardObjectType>(() => {
+	if (typeof theKeyboard.value === "string") {
+		return keyboards[theKeyboard.value]
+	}
+
+	return props.keyboard as KeyboardObjectType
+})
+
+const btnReset = {
+	label: "tout effacer",
+	icon: "bi bi-trash",
+	span: 1,
+	fn: () => resetKeyStrokes(),
+	atEnd: false
+}
+const btnAddResponse = {
+	label: "Ajouter",
+	icon: "bi bi-plus-circle",
+	span: 1,
+	fn: () => {
+		ButtonKeyClick({
+			key: ",",
+			fn: (value: string) => value + ","
+		})
+	},
+	atEnd: false
+}
+const btnBack = {
+	label: "effacer",
+	icon: "bi bi-backspace",
+	span: 1,
+	fn: () => backKeyStrokes(),
+	atEnd: false
+}
+const btnNext = {
+	label: "suivant",
+	icon: "bi bi-arrow-bar-right",
+	span: 1,
+	fn: () => emits("next"),
+	atEnd: false
+}
+const btnValidate = {
+	label: "valider",
+	icon: "bi bi-check",
+	span: 3,
+	fn: () => emits("validate", answerOutput.value),
+	atEnd: false
+}
+
 const keyboardComputed = computed(() => {
-		const data = []
-		// Loop through all keyboard keys in the layout.
-		for (const key of keyboardData.value.layout) {
-			let kkey, spankey, kdata: keyboardKey,
-				theKey
+	const data = []
+	// Loop through all keyboard keys in the layout.
+	for (const key of keyboardData.value.layout) {
+		let kkey, spankey, kdata: keyboardKey,
+			theKey
 
-			if (typeof key === "string") {
-				kkey = key
-				spankey = 0
-				theKey = keyboardKeys[kkey]
-				// }
-				// TODO: KeyboardDisplay: remove {key, span} ?
-				// else if(key.key !== undefined) {
-				// 	kkey = key.key
-				// 	spankey = key.span?key.span:0
-				// 	theKey = key
-			} else if (Array.isArray(key)) {
-				kkey = key[0]
-				spankey = key[1]
-				theKey = keyboardKeys[kkey]
-			} else {
-				// TODO: really not good...
-				kkey = Object.hasOwn(key, "key") ? key.key : ""
-				spankey = 0
-				theKey = key
-			}
+		if (typeof key === "string") {
+			kkey = key
+			spankey = 0
+			theKey = keyboardKeys[kkey]
+			// }
+			// TODO: KeyboardDisplay: remove {key, span} ?
+			// else if(key.key !== undefined) {
+			// 	kkey = key.key
+			// 	spankey = key.span?key.span:0
+			// 	theKey = key
+		} else if (Array.isArray(key)) {
+			kkey = key[0]
+			spankey = key[1]
+			theKey = keyboardKeys[kkey]
+		} else {
+			// TODO: really not good...
+			kkey = Object.hasOwn(key, "key") ? key.key : ""
+			spankey = 0
+			theKey = key
+		}
 
-			// Span the buttons
-			if (spankey === 2) {
-				spankey = "col-span-2"
-			} else if (spankey === 3) {
-				spankey = "col-span-3"
-			} else if (spankey === 4) {
-				spankey = "col-span-4"
-			} else if (spankey === 5) {
-				spankey = "col-span-5"
-			}
+		// Span the buttons
+		if (spankey === 2) {
+			spankey = "col-span-2"
+		} else if (spankey === 3) {
+			spankey = "col-span-3"
+		} else if (spankey === 4) {
+			spankey = "col-span-4"
+		} else if (spankey === 5) {
+			spankey = "col-span-5"
+		}
 
-			// Default key code data.
+		// Default key code data.
+		kdata = {
+			key: kkey,
+			visible: kkey === "",
+			type: theKey === undefined ? false : theKey.type,
+			display: theKey === undefined ? false : theKey.display,
+			span: spankey,
+			fn: null
+		}
+
+		// Maybe there is a custom keys
+		if (props.customKeys && Object.hasOwn(props.customKeys, kkey)) {
+			theKey = props.customKeys[kkey]
 			kdata = {
-				key: kkey,
-				visible: kkey === "",
-				type: theKey === undefined ? false : theKey.type,
-				display: theKey === undefined ? false : theKey.display,
-				span: spankey,
-				fn: null
+				...kdata,
+				...props.customKeys[kkey]
 			}
+		}
 
-			// Maybe there is a custom keys
-			if (props.customKeys && Object.hasOwn(props.customKeys, kkey)) {
-				theKey = props.customKeys[kkey]
-				kdata = {
-					...kdata,
-					...props.customKeys[kkey]
-				}
-			}
-
-			if (theKey === undefined) {
-				kdata.fn = () => answerOutput.value + ""
+		if (theKey === undefined) {
+			kdata.fn = () => answerOutput.value + ""
+		} else {
+			if (theKey.fn === undefined) {
+				kdata.fn = (value) => value + kkey
 			} else {
-				if (theKey.fn === undefined) {
-					kdata.fn = (value) => value + kkey
-				} else {
-					kdata.fn = theKey.fn
-				}
+				kdata.fn = theKey.fn
 			}
-
-			// Overrides existing values.
-			if (keyboardData.value.keys !== undefined && keyboardData.value.keys[kkey] !== undefined) {
-				kdata.type = keyboardData.value.keys[kkey].type === undefined ? kdata.type : keyboardData.value.keys[kkey].type
-				kdata.display = keyboardData.value.keys[kkey].display === undefined ? kdata.display : keyboardData.value.keys[kkey].display
-				kdata.fn = keyboardData.value.keys[kkey].fn === undefined ? kdata.fn : keyboardData.value.keys[kkey].fn
-			}
-
-			data.push(kdata)
 		}
 
-		return data
-	}),
-	keyboardCommands = computed(() => {
-		// Return the buttons
-		const commandsBtn = []
-
-		if (props.back) {
-			commandsBtn.push(btnBack)
-		}
-		if (props.reset) {
-			commandsBtn.push(btnReset)
-		}
-		if (props.multiple) {
-			commandsBtn.push(btnAddResponse)
-		}
-		if (props.next) {
-			commandsBtn.push(btnNext)
+		// Overrides existing values.
+		if (keyboardData.value.keys !== undefined && keyboardData.value.keys[kkey] !== undefined) {
+			kdata.type = keyboardData.value.keys[kkey].type === undefined ? kdata.type : keyboardData.value.keys[kkey].type
+			kdata.display = keyboardData.value.keys[kkey].display === undefined ? kdata.display : keyboardData.value.keys[kkey].display
+			kdata.fn = keyboardData.value.keys[kkey].fn === undefined ? kdata.fn : keyboardData.value.keys[kkey].fn
 		}
 
-		return commandsBtn
+		data.push(kdata)
+	}
 
-	})
+	return data
+})
+
+const keyboardCommands = computed(() => {
+	// Return the buttons
+	const commandsBtn = []
+
+	if (props.back) {
+		commandsBtn.push(btnBack)
+	}
+	if (props.reset) {
+		commandsBtn.push(btnReset)
+	}
+	if (props.multiple) {
+		commandsBtn.push(btnAddResponse)
+	}
+	if (props.next) {
+		commandsBtn.push(btnNext)
+	}
+
+	return commandsBtn
+
+})
 
 function resetKeyStrokes() {
 	keyStrokes.value = []
@@ -280,10 +284,11 @@ function ButtonKeyClick(key) {
 }
 
 const changeEvent = function () {
-	const output = "",
-		result = keyStrokes.value
-			.map(k => k.fn(output))
-			.join("")
+	const output = ""
+
+	const result = keyStrokes.value
+		.map(k => k.fn(output))
+		.join("")
 
 	emits("change", {
 		input: result,
@@ -320,6 +325,7 @@ const answerOutput = computed(() => {
 })
 
 defineExpose({resetKeyStrokes})
+
 </script>
 
 <template>

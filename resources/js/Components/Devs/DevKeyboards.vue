@@ -25,7 +25,6 @@ const question = ref<QuestionInterface>({
 	order: 1,
 	user: {
 		answer: "",
-		attempts: 0,
 		result: false,
 		update_at: ""
 	}
@@ -44,7 +43,7 @@ const kbrds = computed(() => {
 			return "ce clavier n'existe pas..."
 		}
 
-		return kbrds.value[kbrdId.value].checker.format
+		return kbrds.value[kbrdId.value].checker.checker.format
 
 	}),
 	kbrdsJson = computed(() => {

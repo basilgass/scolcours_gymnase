@@ -27,17 +27,24 @@ const theQuestion = computed(() => {
 })
 
 function nextQuestion(checkerResult: ChallengeAnswerInterface): void {
-	if (checkerResult.result) counter.value++
+	if (checkerResult.result){
+		setTimeout(()=>{
+			counter.value++
+		}, 500)
+
+	}
+
 }
 
 
 onMounted(() => {
-	axios.get(route('generators.find', [props.illustration.parameters]))
-		.then(res => {
-			generator.value = res.data
-			console.log(generator.value)
-		})
-		.catch(err => console.error(err))
+	if(+props.illustration.parameters>0) {
+		axios.get(route('generators.find', [props.illustration.parameters]))
+			.then(res => {
+				generator.value = res.data
+			})
+			.catch(err => console.error(err))
+	}
 })
 
 </script>

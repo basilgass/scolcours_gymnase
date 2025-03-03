@@ -20,7 +20,7 @@ import { usePage } from "@inertiajs/vue3"
 import axios from "axios"
 import { computed, inject, reactive, ref } from "vue"
 
-// TODO: ChallengeAnswerInterface must be reworked as it is used in QuestionValidation
+// TODO: ChallengeAnswerInterface must be reworked as it is used in QuestionAnswerValidation
 export interface ChallengeAnswerInterface {
 	question: string
 	answer: string

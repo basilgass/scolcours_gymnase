@@ -9,7 +9,7 @@ import {WidgetPropsInterface} from "@/types/modelInterfaces.ts"
 import {computed, onMounted, reactive, ref, watch} from "vue"
 import {Fraction, Polynom} from "pimath"
 import KeyboardBasic from "@/Components/Keyboards/KeyboardBasic.vue"
-import {useKeyboard} from "@/Composables/useKeyboard.ts"
+import {KeyboardInterface, useKeyboard} from "@/Composables/useKeyboard.ts"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 
 export interface matriceAugmenteeInterface {
@@ -383,8 +383,8 @@ onMounted(() => {
 				<keyboard-basic
 					ref="valueKeyboard"
 					answer=""
-					:keyboard="getKeyboards('fraction')[0]"
-					@change="operationData.value = $event.value.input"
+					:keyboard="getKeyboards('fraction')[0].keyboard"
+					@change="operationData.value = $event.input"
 				/>
 			</div>
 

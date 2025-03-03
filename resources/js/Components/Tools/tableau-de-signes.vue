@@ -24,7 +24,6 @@ const forms: IToolForm[] = restoreTool([
 		emit: true
 	}
 ])
-
 const fx = computed(() => forms[0].value.value as string)
 const mode = computed(() => forms[1].value.value as boolean ? "signs" : "grows")
 

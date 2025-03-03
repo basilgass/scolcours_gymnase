@@ -51,10 +51,12 @@ export function getModule(key: string, type: MODULE_TYPES) {
 	if (key === null || key === undefined) return null
 
 	const path = `${dynamicModules[type].path}${key}${key.endsWith('.vue') ? '' : '.vue'}`
+
 	if (
 		Object.hasOwn(dynamicModules, type) &&
 		Object.hasOwn(dynamicModules[type].modules, path)
 	) {
+
 		return defineAsyncComponent(
 			dynamicModules[type].modules[path],
 		)

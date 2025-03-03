@@ -1,9 +1,8 @@
 import {getModule, MODULE_TYPES} from "@/scolcours.js"
 import {Component, ref, unref} from "vue"
-import type {CheckerResult} from "pichecker"
-import {keyboardKeys, keyboardMaps, KeyboardObjectType, keyboards} from "@/Composables/keyboardConfig.ts"
 import {PiChecker} from "pichecker"
-
+import {keyboardKeys, keyboardMaps, KeyboardObjectType, keyboards} from "@/Composables/keyboardConfig.ts"
+import {questionValidatorInterface} from "@/Components/Questions/QuestionInterface.ts"
 
 /**
  * Get the keyboard name for a given component value.
@@ -41,14 +40,12 @@ function getComponent(kbrd: string) {
 }
 
 export interface KeyboardPropsInterface {
-	answer: string,
-	keyboard: KeyboardInterface
+	keyboard: KeyboardInterface,
+	reference?: string
 }
 
 export interface KeyboardEmitsInterface {
-	(e: "change", value: KeyboardOnChangeInterface),
-
-	(e: "validate")
+	change: [value: KeyboardInputInterface]
 }
 
 export interface KeyboardInputInterface {
@@ -57,22 +54,26 @@ export interface KeyboardInputInterface {
 	raw: string
 }
 
-export interface KeyboardOnChangeInterface {
-	value: KeyboardInputInterface,
-	validation: CheckerResult
+export interface KeyboardExposeInterface {
+	setInput: (value?: string) => Promise<KeyboardInputInterface>,
+	parameters: string
 }
 
 export interface KeyboardInterface {
 	name: string;
-	checker: PiChecker;
-	checkerOverride?: Record<string, string>;
 	parameters: string[];
 	values: string[];
 	config: KeyboardObjectType;
 	component: Component | null;
 }
 
-function getOneKeyboard(kbrd: string): KeyboardInterface {
+export interface KeyboardCheckerInterface {
+	name: string,
+	checker: PiChecker;
+	checkerOverride?: Record<string, string>;
+}
+
+function getOneKeyboard(kbrd: string): Partial<questionValidatorInterface> {
 	/* A kbrd code is defined like this:
 	*
 	 * keyboard name					-> name
@@ -135,20 +136,23 @@ function getOneKeyboard(kbrd: string): KeyboardInterface {
 
 	const name = getComponentKeyboardName(value)
 
-	// tODO: rework getting a checker component.
 	return {
-		name,
-		checker: new PiChecker(`${value},${options.join(',')}`),
-		checkerOverride,
-		parameters,
-		values,
-		config,
-		component: getComponent(name)
+		keyboard: {
+			name,
+			parameters,
+			values,
+			config,
+			component: getComponent(name)
+		},
+		checker: {
+			name,
+			checker: new PiChecker(`${value},${options.join(',')}`),
+			checkerOverride
+		}
 	}
-
 }
 
-function getKeyboards(kbrdCode: string): KeyboardInterface[] {
+function getKeyboards(kbrdCode: string): Partial<questionValidatorInterface>[] {
 	const unrefKbrd = unref(kbrdCode)
 
 	if (!unrefKbrd) return null
@@ -171,31 +175,31 @@ export function useKeyboard(
 		callback?: (value?: string) => void
 	}) {
 		// Reset the current value
-		if (config?.reset) {
-			config.reset()
-		} else {
-			reset()
-		}
-
-		// if value is null, reset the display
-		if (value === null) {
-			onKeyboardChange(null)
-			return
-		}
-
-		// if value is undefined, set the value to the answer.
-		if (value === undefined && props) {
-			value = props.answer
-		}
-
-		// show always only the first value
-		const first_value = value.split("||")[0]
-		if (config?.callback) {
-			config.callback(first_value)
-		}
-
-		// Emit change
-		onKeyboardChange(first_value)
+		// if (config?.reset) {
+		// 	config.reset()
+		// } else {
+		// 	reset()
+		// }
+		//
+		// // if value is null, reset the display
+		// if (value === null) {
+		// 	onKeyboardChange(null)
+		// 	return
+		// }
+		//
+		// // if value is undefined, set the value to the answer.
+		// if (value === undefined && props) {
+		// 	value = props.answer
+		// }
+		//
+		// // show always only the first value
+		// const first_value = value.split("||")[0]
+		// if (config?.callback) {
+		// 	config.callback(first_value)
+		// }
+		//
+		// // Emit change
+		// onKeyboardChange(first_value)
 	}
 
 

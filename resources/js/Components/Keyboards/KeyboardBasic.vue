@@ -1,71 +1,44 @@
 <script lang="ts" setup>
+/**
+ * Affichage du clavier
+ */
 
 import KeyboardDisplay from "@/Components/Keyboards/KeyboardDisplay.vue"
 import {
-	KeyboardEmitsInterface,
-	KeyboardInputInterface,
-	KeyboardPropsInterface,
-	useKeyboard
+	KeyboardEmitsInterface, KeyboardExposeInterface,
+	type KeyboardInputInterface,
+	type KeyboardPropsInterface
 } from "@/Composables/useKeyboard.ts"
-import {computed, ref} from "vue"
-import type {CheckerResult} from "pichecker"
+import {computed} from "vue"
 
-// General keyboard config - all keyboards shares the same
-// props, emits, keyboardInput,
+// props.keyboard
 const props = defineProps<KeyboardPropsInterface>()
 
+// emits change
 const emits = defineEmits<KeyboardEmitsInterface>()
 
-function onKeyboardChange(event: string | KeyboardInputInterface): void {
-	onChange(event)
+// emit change event
+// TODO: Change this event to receive only the input as a string
+function onChange(event: KeyboardInputInterface): void {
+	setInput(event.input).then((x) => emits("change", x))
 }
 
-const {loadAnswer, keyboardInput, reset} = useKeyboard(props, onKeyboardChange)
-
-
-const onChange = function (event: string | KeyboardInputInterface): void {
-	//value = {tex, raw, input}
-	keyboardInput.value = typeof event === "string" ? {input: event, tex: event, raw: event} : event
-
-	// Make the validation.
-	// validation = {result: Boolean, message: string}
-	let validation: CheckerResult = {
-		result: false,
-		message: "",
-		index: 0
+async function setInput(value: string): Promise<KeyboardInputInterface> {
+	return {
+		input: value,
+		tex: props.keyboard.config.tex(value),
+		raw: ""
 	}
-
-	props.answer.split("||").forEach((anAnswer, index) => {
-		if (!validation.result) {
-			// checker overrides
-			if (props.keyboard.checkerOverride && Object.hasOwn(props.keyboard.checkerOverride, keyboardInput.value.input)) {
-				validation = {
-					result: false,
-					message: props.keyboard.checkerOverride[keyboardInput.value.input],
-					index
-				}
-			} else {
-				validation = {
-					...props.keyboard.checker.check(
-						anAnswer,
-						keyboardInput.value.input
-					),
-					index
-				}
-			}
-		}
-	})
-
-	// emit change event
-	emits("change", {value: keyboardInput.value, validation})
 }
 
-const keyboardUI = ref<InstanceType<typeof KeyboardDisplay>>()
+defineExpose<KeyboardExposeInterface>({
+	setInput,
+	parameters: ""
+})
 
-function resetKeyboard(): void {
-	reset()
-	keyboardUI.value.resetKeyStrokes()
-}
+/**
+ * Keyboards custom configuration
+ */
 
 const extraLetters = computed(() => {
 	return props.keyboard.values.length > 0
@@ -101,7 +74,7 @@ const kbrdConfig = computed(() => {
 	return props.keyboard.config
 })
 
-defineExpose({reset: resetKeyboard, loadAnswer})
+
 </script>
 
 <template>

@@ -72,7 +72,6 @@ function resetAnswers() {
 			for (const i in theQuestions.value) {
 				theQuestions.value[i].user.answer = ""
 				theQuestions.value[i].user.result = false
-				theQuestions.value[i].user.attempts = 0
 			}
 
 			flash.success("Les réponses ont bien été réinitialisées.")
@@ -86,9 +85,9 @@ function showAnswers() {
 	props.components.forEach((component) => {
 		if (component) {
 			if (isAnswersShown.value) {
-				component.loadAnswer(false) //reset the answer
+				component.loadAnswers(false) //reset the answer
 			} else {
-				component.loadAnswer(true) // show the answer
+				component.loadAnswers(true) // show the answer
 			}
 
 		}

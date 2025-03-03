@@ -5,16 +5,16 @@ import TableOfSignsFactorRow from "@/Components/Pi/Parts/TableOfSignsFactorRow.v
 import TableOfSignsHeader from "@/Components/Pi/Parts/TableOfSignsHeader.vue"
 import TableOfSignsResultLine from "@/Components/Pi/Parts/TableOfSignsResultLine.vue"
 import TexCode from "@/Components/Ui/TexCode.vue"
-import { type TABLE_OF_SIGNS_VALUES } from "pimath"
-import { computed } from "vue"
+import {type TABLE_OF_SIGNS_VALUES} from "pimath"
+import {computed, onMounted} from "vue"
 
 // TODO: extremeType should be in pimath, with TABLE_OF_SIGNS_VALUES
-type TABLE_OF_SIGNS_VALUES_WITH_EXTREMES = TABLE_OF_SIGNS_VALUES | "m" | "M" | "_"
+export type TABLE_OF_SIGNS_VALUES_WITH_EXTREMES = TABLE_OF_SIGNS_VALUES | "m" | "M" | "_" | "I"
 
 interface TableOfSignsType {
 	roots: string[],
 	signs: TABLE_OF_SIGNS_VALUES_WITH_EXTREMES[],
-	mode?: "signs" | "grows" | "curves"
+	mode?: "auto" | "signs" | "grows" | "curves"
 	label?: string,
 	previousLabel?: string,
 	factors?: { label: string, signs: TABLE_OF_SIGNS_VALUES_WITH_EXTREMES[] }[],
@@ -26,37 +26,52 @@ interface TableOfSignsType {
 const props = withDefaults(defineProps<TableOfSignsType>(), {
 	mode: "signs",
 	label: "f(x)",
-	previousLabel: "f'(x)",
+	previousLabel: null,
 	factors: () => [],
 	extremes: null,
 	texOutput: false,
 	resultLine: null
 })
 
-const tos_mode = computed(() => {
-	if (!props.resultLine || props.resultLine.length === 0) {
+const tosMode = computed<'signs' | 'grows' | 'curves'>(() => {
+	if (props.mode !== 'auto') {
 		return props.mode
 	}
 
-	if (props.resultLine.filter(x => x === "+" || x === "-").length > 0) {
-		return "grows"
-	}
-	if (props.resultLine.filter(x => x === "u" || x === "n").length > 0) {
-		return "curves"
+	if (props.resultLine === null) {
+		return 'signs'
 	}
 
-	return "signs"
+	if (props.resultLine.includes('u') ||
+		props.resultLine.includes('n') ||
+		props.resultLine.includes('I')) {
+		return 'curves'
+	}
+
+	return 'grows'
 })
+
+const computedPreviousLabel = computed(() => {
+	if (props.previousLabel) {
+		return props.previousLabel
+	}
+
+	const functionName = props.label.split("(")[0]
+	if (props.mode === 'grows') {
+		return `${functionName}'(x)`
+	}
+	if (props.mode === 'curves') {
+		return `${functionName}''(x)`
+	}
+
+	return `${functionName}(x)`
+})
+
 const computedGrows = computed(() => {
 	if (props.resultLine !== null) {
 		return props.resultLine
 	}
 
-	// automatically convert "z"=zero to
-	// "m" (min) if previous is - and next is +
-	// "M" (max) if previous is + and next is -
-	// "_" (replat) if previous and next are the same.
-	// -z+z- => -m+M-
 
 	const signs = [...props.signs]
 	for (let i = 1; i < signs.length - 1; i++) {
@@ -108,28 +123,28 @@ ${props.factors.length > 0 ? "\\tkzTabLine{}" : ""}
 
 				<tfoot class="border-t-2 border-gray-400">
 					<table-of-signs-factor-row
-						v-if="tos_mode!=='signs'"
-						:label="previousLabel"
+						v-if="tosMode!=='signs'"
+						:label="computedPreviousLabel"
 						:roots="roots"
 						:signs="signs"
 					/>
 
 					<table-of-signs-result-line
-						v-if="tos_mode!=='signs'"
+						v-if="tosMode!=='signs'"
 						:label="label"
-						:mode="tos_mode"
+						:mode="tosMode"
 						:roots="roots"
 						:signs="computedGrows"
 					/>
 
 					<table-of-signs-extremes-line
-						v-if="tos_mode!=='signs' && extremes!==null"
+						v-if="tosMode!=='signs' && extremes!==null"
 						:extremes="extremes"
 						:roots="roots"
 					/>
 
 					<table-of-signs-factor-row
-						v-if="tos_mode==='signs'"
+						v-if="tosMode==='signs'"
 						:label="label"
 						:roots="roots"
 						:signs="signs"

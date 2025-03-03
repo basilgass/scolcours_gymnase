@@ -3,7 +3,7 @@
 import { type TABLE_OF_SIGNS_VALUES } from "pimath"
 
 // TODO: extremeType should be in pimath, with TABLE_OF_SIGNS_VALUES
-type TABLE_OF_SIGNS_VALUES_WITH_EXTREMES = TABLE_OF_SIGNS_VALUES | 'm' | 'M' | '_'
+type TABLE_OF_SIGNS_VALUES_WITH_EXTREMES = TABLE_OF_SIGNS_VALUES | 'm' | 'M' | '_' | 'I'
 defineProps<{
 	label: string,
 	signs: TABLE_OF_SIGNS_VALUES_WITH_EXTREMES[],
@@ -11,12 +11,12 @@ defineProps<{
 	mode: 'grows'|'curves'
 }>()
 
-
 function extremeLabel(value: TABLE_OF_SIGNS_VALUES_WITH_EXTREMES): string{
 	switch (value){
 		case "m": return 'min'
 		case 'M': return 'max'
-		case '_': return 'replace'
+		case '_': return 'replat'
+		case "I": return "infl."
 	}
 
 	return ''
@@ -54,12 +54,12 @@ function extremeLabel(value: TABLE_OF_SIGNS_VALUES_WITH_EXTREMES): string{
 						class="text-center translate-y-6 absolute left-1/2 -translate-x-1/2 z-10"
 					/>
 					<i
-						v-else-if="mode==='grows'"
+						v-else-if="mode==='grows' && sign!=='h'"
 						:class="{'bi-arrow-down-right':sign==='-','bi-arrow-up-right':sign==='+'}"
 						class="bi"
 					/>
 					<span
-						v-else-if="mode==='curves'"
+						v-else-if="mode==='curves' && sign!=='h'"
 						v-katex.inline="sign==='u' ? '\\cup' : '\\cap'"
 					/>
 				</div>
