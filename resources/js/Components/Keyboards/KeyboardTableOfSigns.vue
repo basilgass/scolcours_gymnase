@@ -1,94 +1,84 @@
 <script lang="ts" setup>
 import KeyboardDisplay from "@/Components/Keyboards/KeyboardDisplay.vue"
 import TableOfSigns from "@/Components/Pi/TableOfSigns.vue"
-import {KeyboardEmitsInterface, KeyboardPropsInterface, useKeyboard} from "@/Composables/useKeyboard.ts"
+import {
+	KeyboardEmitsInterface,
+	KeyboardExposeInterface,
+	type KeyboardInputInterface,
+	KeyboardPropsInterface
+} from "@/Composables/useKeyboard.ts"
 import {TABLE_OF_SIGNS_VALUES} from "pimath"
 import {computed, nextTick, onMounted, ref} from "vue"
-import {PiChecker} from "pichecker"
-
-// TODO: TableOfSigns: mise en évidence de la zone d'édition
-// TODO: TableOfSigns: assistance plus complète (entrée vide, trop d'entrée, ....)
 
 const props = defineProps<KeyboardPropsInterface>()
 
 const emits = defineEmits<KeyboardEmitsInterface>()
 
-function onKeyboardChange(): void {
-	onChange()
+function onChange(value?: string) {
+	setInput(value).then((x) => emits("change", x))
 }
 
-const {loadAnswer} = useKeyboard(
-	props,
-	onKeyboardChange
-)
+async function setInput(value?: string): Promise<KeyboardInputInterface> {
+	// Display the correct answer
+	if (value !== undefined) {
+		const [z, s, g, c] = value.split("@")
 
-const reset = function () {
-	zeroes.value = {input: "", tex: "", raw: ""}
-	signs.value = {input: "", tex: "", raw: ""}
-	grows.value = {input: "", tex: "", raw: ""}
-	coords.value = {input: "", tex: "", raw: ""}
+		zeroes.value = {input: z, tex: "", raw: ""}
+		signs.value = {input: s ?? "", tex: "", raw: ""}
+		grows.value = {input: g ?? "", tex: "", raw: ""}
+
+		if (c !== undefined) {
+			showKeyboard.value = "coords"
+			coords.value = {input: c, tex: "", raw: ""}
+		}
+	}
+	// Wait for the DOM to be updated.
+	await nextTick()
+
+	return {
+		input: answerValue.value,
+		tex: "",
+		raw: tosUI.value.$el.innerHTML
+	}
 }
 
-defineExpose({
-	reset,
-	loadAnswer: (value) => {
-		loadAnswer(value, {
-			reset,
-			callback: (value) => {
-
-				// Display the correct answer
-				const [z, s, g, c] = value.split("@")
-
-				zeroes.value = {input: z, tex: "", raw: ""}
-				signs.value = {input: s, tex: "", raw: ""}
-				grows.value = {input: g ?? "", tex: "", raw: ""}
-
-				if (c !== undefined) {
-					showKeyboard.value = "coords"
-					coords.value = {input: c, tex: "", raw: ""}
-				}
-
-			}
-		})
-	},
+defineExpose<KeyboardExposeInterface>({
+	setInput,
 	parameters: "@<name>(x)"
 })
 
-const pichecker = new PiChecker("tos")
-const onChange = async function () {
-	await nextTick()
-	// const check = customCheck("tos", props.answer, answerValue.value)
-	const check = pichecker.check(props.answer, answerValue.value)
-
-	emits("change", {
-		value: {
-			input: answerValue.value,
-			tex: "",
-			raw: tosUI.value.$el.innerHTML
-		},
-		validation: {
-			result: check.result,
-			message: check.message
-		}
-	})
-}
-
+/**
+ * Keyboards custom configuration
+ */
 
 /* FONCTIONS SPECIFIQUES */
-// Les config du clavier TOS
-const tosName = computed(() => { // le nom de la fonction
+// Les configurations du clavier TOS
+const tosName = computed(() => {
+	// le nom de la fonction
 	const names = props.keyboard.parameters.filter(x => x.includes("(") && x.includes(")"))
 	return names.length === 0 ? "f(x)" : names[0]
 })
-const withGrows = computed(() => { // s'il y a la croissance
-	return props.answer.split("@").length > 2
+
+const withGrows = computed(() => {
+	return props.reference.split("@").length > 2 &&
+		props.reference.split("@")[2].match(/[+-]/g)
 })
-const withExtremes = computed(() => { // s'il faut donner les coordonnées
-	return props.answer.split("@").length > 3
+
+const withCurves = computed (()=>{
+	return props.reference.split("@").length > 2 &&
+		props.reference.split("@")[2].match(/[un]/g)
+})
+
+const withExtremes = computed(() => {
+	// s'il faut donner les coordonnées
+	return props.reference.split("@").length > 3
 })
 
 const tosMode = computed<"signs" | "grows" | "curves">(() => {
-	return withGrows.value ? 'grows' : 'signs'
+	if(withGrows.value) return "grows"
+	if(withCurves.value) return "curves"
+
+	return "signs"
 })
 
 // Le clavier a afficher
@@ -106,6 +96,7 @@ const changeKeyboard = function (event) {
 			signs.value = event
 			break
 		case "grows":
+		case "curves":
 			grows.value = event
 			break
 		case "coords":
@@ -117,8 +108,6 @@ const changeKeyboard = function (event) {
 }
 
 // Génération de la réponse pour comparaison et de l'affichage.
-// const signs = ref<string>([])
-
 const zeroes = ref({input: "", tex: "", raw: ""}),
 	zeroesKeyboard = ref(props.keyboard.parameters.includes("float") ? "algebra" : "exact"),
 	signs = ref({input: "", tex: "", raw: ""}),
@@ -190,6 +179,14 @@ onMounted(() => {
 					croissance
 				</button>
 				<button
+					v-if="withCurves"
+					:class="showKeyboard==='curves'?'btn btn-primary':''"
+					class="py-0 px-5"
+					@click="showKeyboard='curves'"
+				>
+					courbure
+				</button>
+				<button
 					v-if="withExtremes"
 					:class="showKeyboard==='coords'?'btn btn-primary':''"
 					class="py-0 px-5"
@@ -200,6 +197,7 @@ onMounted(() => {
 			</div>
 
 			<!-- Add keyboard to input the zeros -->
+
 			<KeyboardDisplay
 				v-show="showKeyboard==='zeroes'"
 				:keyboard="zeroesKeyboard"
@@ -239,6 +237,23 @@ onMounted(() => {
 				:keyboard="{
 					grid: 'grid-cols-3',
 					layout: ['+', '-', 'h', 'm', 'M', '_', 'd', '@back', '@reset']
+				}"
+				key-class="bg-white"
+				@change="changeKeyboard"
+			/>
+
+			<KeyboardDisplay
+				v-show="showKeyboard==='curves'"
+				:custom-keys="{
+					'u': {type: 'math', display: '\\cup'},
+					'n': {type: 'math', display: '\\cap'},
+					'd': {type: 'math', display: '\\textcolor{red}{\\Vert}'},
+					'I': {type: 'text', display: 'infl.'},
+					'h': {type: 'bg', display: 'bg-stripes bg-stripes-red-100'}
+				}"
+				:keyboard="{
+					grid: 'grid-cols-4',
+					layout: ['u', 'n', 'I', 'h', '@back', '@reset', '', 'd']
 				}"
 				key-class="bg-white"
 				@change="changeKeyboard"

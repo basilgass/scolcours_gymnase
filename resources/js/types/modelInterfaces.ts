@@ -85,7 +85,6 @@ export interface QuestionInterface extends QuestionDynamicInterface {
 	user: {
 		answer: string
 		result: boolean
-		attempts: number
 		update_at?: string
 	};
 }

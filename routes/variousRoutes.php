@@ -13,6 +13,13 @@ Route::post('/grapheur/svg/download', [ScolcoursController::class, "download"])
 
 
 
+// Check if a word is in the dictionary
+Route::get('/dico/check/{language}/{word}', [ScolcoursController::class, 'wordExistsInDictionary'])
+	->name('dico.exists');
+
 // Get a word from the dictionary
-Route::get('/dico/{language}/{number?}/{size?}/{common?}', [ScolcoursController::class, 'dico'])
+// TODO: merge size,number and common to a comma separate string
+// TODO: add a no-duplicate letter option
+Route::get('/dico/{language}/{number?}/{size?}/{common?}/{withoutDuplicateLetters?}', [ScolcoursController::class, 'dico'])
 	->name('dico.fetch');
+

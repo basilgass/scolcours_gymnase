@@ -1,130 +1,113 @@
 <script lang="ts" setup>
 
-import { useWrongAnswerAnimation } from "@/Composables/useHelpers"
-import { KeyboardEmitsInterface, KeyboardPropsInterface, useKeyboard } from "@/Composables/useKeyboard.ts"
-import { Random } from "pimath"
+import {useWrongAnswerAnimation} from "@/Composables/useHelpers"
+import {
+	KeyboardEmitsInterface,
+	KeyboardExposeInterface,
+	KeyboardInputInterface,
+	KeyboardPropsInterface,
+} from "@/Composables/useKeyboard.ts"
+import {Random} from "pimath"
 
-import { nextTick, onMounted, ref } from "vue"
+import {onMounted, ref} from "vue"
 
+// props.keyboard
 const props = defineProps<KeyboardPropsInterface>()
 
+// emits change
 const emits = defineEmits<KeyboardEmitsInterface>()
 
-function onKeyboardChange(): void {
-	onChange()
+// emit change event
+// TODO: Change this event to receive only the input as a string
+function onChange(): void {
+	setInput().then((x) => emits("change", x))
 }
 
-const { loadAnswer } = useKeyboard(
-	props,
-	onKeyboardChange
-)
+async function setInput(value?: string): Promise<KeyboardInputInterface> {
+	if (value !== undefined) {
+		resultLetters.value.forEach((x) => {
+			x.visible = value === props.reference
+		})
+	}
 
-const reset = function() {
-	generateQuestion()
-}
+	const userAnswer = resultLetters.value.map(x => x.visible ? x.key : "").join("")
 
-const onChange = async function() {
-	await nextTick()
-
-	// Get the answer
-	const input = currentAnswer(),
-		result = input.length === props.answer.length
-
-	emits("change", {
-		value: {
-			input,
-			tex: "",
-			raw: input
-		},
-		validation: {
-			result,
-			message: ""
-		}
-	})
-
-	if (result) {
-		emits("validate")
+	return {
+		input: userAnswer,
+		tex: "",
+		raw: userAnswer
 	}
 }
 
+defineExpose<KeyboardExposeInterface>({
+	setInput,
+	parameters: ""
+})
+
+/**
+ * Keyboards custom configuration
+ */
+
+
 /* ------------------*/
-const typoButtons = ref(null),
-	excludeLetters = ref([" ", ",", "'", ".", "!", "?", "(", ")", "-"]),
-	answerLetters = ref([]),
-	resultLetters = ref([]),
-	generateQuestion = function() {
-		const theWord = props.answer
+const typoButtons = ref(null)
+const excludeLetters = ref([" ", ",", "'", ".", "!", "?", "(", ")", "-"])
+const answerLetters = ref([])
+const resultLetters = ref([])
 
-		answerLetters.value = Random.shuffle(theWord.split("")
-			.filter(key => excludeLetters.value.indexOf(key) === -1)
-			.map(key => {
-				return {
-					key: key.toUpperCase(),
-					used: false
-				}
-			})
-		)
+const currentIndex = ref(-1)
 
-		resultLetters.value = theWord.split("").map((key, index) => {
+function generateQuestion() {
+	const theWord = props.reference
+
+	answerLetters.value = Random.shuffle(theWord.split("")
+		.filter(key => excludeLetters.value.indexOf(key) === -1)
+		.map(key => {
 			return {
-				index,
 				key: key.toUpperCase(),
-				visible: excludeLetters.value.indexOf(key) !== -1
+				used: false
 			}
 		})
+	)
 
-		// Tell we are watching the first letter
-		currentIndex.value = 0
-	},
-	currentIndex = ref(-1),
-	validateKey = function(index) {
-		if (resultLetters.value[currentIndex.value].key === answerLetters.value[index].key) {
-			resultLetters.value[currentIndex.value].visible = true
-			answerLetters.value[index].used = true
+	resultLetters.value = theWord.split("").map((key, index) => {
+		return {
+			index,
+			key: key.toUpperCase(),
+			visible: excludeLetters.value.indexOf(key) !== -1
+		}
+	})
 
-			// finished ?
+	// Tell we are watching the first letter
+	currentIndex.value = 0
+}
+
+const validateKey = function (index) {
+	if (resultLetters.value[currentIndex.value].key === answerLetters.value[index].key) {
+		resultLetters.value[currentIndex.value].visible = true
+		answerLetters.value[index].used = true
+
+		// finished ?
+		currentIndex.value++
+		if (currentIndex.value >= resultLetters.value.length) {
+			onChange()
+			// TODO: Question: auto validation trigger !
+			alert('DONE')
+			return
+		}
+		while (resultLetters.value[currentIndex.value].visible) {
 			currentIndex.value++
 			if (currentIndex.value >= resultLetters.value.length) {
 				onChange()
 				return
 			}
-			while (resultLetters.value[currentIndex.value].visible) {
-				currentIndex.value++
-				if (currentIndex.value >= resultLetters.value.length) {
-					onChange()
-					return
-				}
-			}
-		} else {
-			useWrongAnswerAnimation(typoButtons.value.children[index])
 		}
-
-		onChange()
-	},
-	currentAnswer = function() {
-		return resultLetters.value.map(x => x.visible ? x.key : "").join("")
+	} else {
+		useWrongAnswerAnimation(typoButtons.value.children[index])
 	}
 
-defineExpose({
-	reset,
-	loadAnswer: (value) => {
-		loadAnswer(value, {
-				reset,
-				callback: () => {
-					resultLetters.value.forEach(letter => {
-						letter.visible = true
-					})
-
-					answerLetters.value.forEach(letter => {
-						letter.used = true
-					})
-				}
-			}
-		)
-	},
-	parameters: ""
-})
-
+	onChange()
+}
 
 onMounted(() => {
 	generateQuestion()

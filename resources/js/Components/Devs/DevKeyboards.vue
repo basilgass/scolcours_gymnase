@@ -25,7 +25,6 @@ const question = ref<QuestionInterface>({
 	order: 1,
 	user: {
 		answer: "",
-		attempts: 0,
 		result: false,
 		update_at: ""
 	}

@@ -84,7 +84,7 @@ function addQuestionRef(element: InstanceType<typeof QuestionShow>) {
 }
 </script>
 <template>
-	<article>
+	<article :class="editMode.enable?'pb-10':''">
 		<!-- title -->
 		<div
 			v-if="post.questions.length"
@@ -120,22 +120,21 @@ function addQuestionRef(element: InstanceType<typeof QuestionShow>) {
 			@end="updateQuestionsOrder"
 		>
 			<template #item="{ element }: {element: QuestionInterface}">
-				<question-show
-					:key="element.id"
-					:ref="addQuestionRef"
-					:class="element.css ?? ''"
-					:locked="isQuestionLocked(element)"
-					:question="element"
-					@validate="element.user=$event"
-				>
-					<template #admin-header>
-						<question-show-admin
-							v-admin="editMode.enable"
-							:question="element"
-							:ids="displayIds"
-						/>
-					</template>
-				</question-show>
+				<div class="question-wrapper">
+					<question-show-admin
+						v-admin="editMode.enable"
+						:question="element"
+						:ids="displayIds"
+					/>
+					<question-show
+						:key="element.id"
+						:ref="addQuestionRef"
+						:class="element.css ?? ''"
+						:locked="isQuestionLocked(element)"
+						:question="element"
+						@validate="element.user=$event"
+					/>
+				</div>
 			</template>
 		</draggable>
 	</article>

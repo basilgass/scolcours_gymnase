@@ -46,6 +46,7 @@ const mdit = computed(() => {
 	// Remplace les class courtes en classes complètes.
 	// .@text = .text-scolcours-theme
 	// .@bg = .bg-scolcours-theme
+	// TODO: attention, au passage à Tailwind4, il faudra mettre à jour ici !
 	output = output.replaceAll(/\.(@[a-z]+)/g, (match) => {
 		const prefix = match.substring(2),
 			theme = usePage().props.theme.slug
@@ -94,7 +95,7 @@ const mdClick = function (event) {
 <template>
 	<div
 		ref="root"
-		class="prose lg:prose-lg max-w-full"
+		class="prose lg:prose-lg max-w-full item"
 		:class="{
 			'katex-boxed': !customKatex,
 		}"

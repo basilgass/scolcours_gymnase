@@ -4,7 +4,7 @@ code: rational fraction ou <zero>@<signs>@<croissance>@<extremes>
 </info>-->
 <script lang="ts" setup>
 import PiTableOfSigns from "@/Components/Pi/PiTableOfSigns.vue"
-import TableOfSigns from "@/Components/Pi/TableOfSigns.vue"
+import TableOfSigns, {TABLE_OF_SIGNS_VALUES_WITH_EXTREMES} from "@/Components/Pi/TableOfSigns.vue"
 import { WidgetPropsInterface } from "@/types/modelInterfaces.ts"
 import { TABLE_OF_SIGNS_VALUES } from "pimath"
 import { computed } from "vue"
@@ -26,7 +26,7 @@ const code = computed(() => props.illustration.code)
 
 
 const config = computed(() => {
-	return props.illustration.parameters.split(",")
+	return props.illustration.parameters?.split(",") ?? []
 })
 
 // Function name
@@ -62,35 +62,18 @@ const use_Pi_table_of_signs = computed(() => {
 const custom_table_of_signs = computed<{
 	roots: string[],
 	signs: TABLE_OF_SIGNS_VALUES[],
-	result: string[],
+	result: TABLE_OF_SIGNS_VALUES_WITH_EXTREMES[],
 	extremes: string[]
 }>(() => {
 	const [roots, signs, result, extremes] = code.value.split("@")
 
 	return {
 		roots: roots.split(","),
-		signs: signs.split(",") as TABLE_OF_SIGNS_VALUES[],
-		result: result.split(","),
-		extremes: extremes.split(",")
+		signs: signs?.split("") as TABLE_OF_SIGNS_VALUES[] ?? [],
+		result: (result?.split("") as TABLE_OF_SIGNS_VALUES_WITH_EXTREMES[]) ?? [],
+		extremes: extremes?.split(",") ?? []
 	}
-	// return makeStudyFromCode(code.value, code.value.split("@").length === 4, true)
 })
-// const tableOfSigns = computed(() => {
-// 	if (code.value.includes("@")) {
-// 		// Building manually
-// 		return makeStudyFromCode(code.value, code.value.split("@").length === 4, true)
-// 	}
-//
-// 	const [num, den] = code.value.split("/"),
-// 		p = new PolyFactor().fromPolynom(num, den)
-//
-// 	const study = p.study("signs" + (params.value ? ("," + params.value) : ""))
-// 	if (config.value.includes("dx")) {
-// 		return study.derivative
-// 	} else {
-// 		return study.signs
-// 	}
-// })
 
 </script>
 
@@ -104,9 +87,10 @@ const custom_table_of_signs = computed<{
 	/>
 	<table-of-signs
 		:label="fnName"
+		:mode="'auto'"
 		:roots="custom_table_of_signs.roots"
 		:signs="custom_table_of_signs.signs"
-		:result="custom_table_of_signs.result"
+		:result-line="custom_table_of_signs.result"
 		:extremes="custom_table_of_signs.extremes"
 	/>
 </template>

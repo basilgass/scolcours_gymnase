@@ -1,45 +1,53 @@
 <script lang="ts" setup>
-import { KeyboardEmitsInterface, KeyboardPropsInterface, useKeyboard } from "@/Composables/useKeyboard.ts"
-import { Random } from "pimath"
-import { computed, ref } from "vue"
+import type {
+	KeyboardEmitsInterface,
+	KeyboardExposeInterface,
+	KeyboardInputInterface,
+	KeyboardPropsInterface,
+} from "@/Composables/useKeyboard.ts"
+import {Random} from "pimath"
+import {computed, ref} from "vue"
 
+// props.keyboard
 const props = defineProps<KeyboardPropsInterface>()
 
+// emits change
 const emits = defineEmits<KeyboardEmitsInterface>()
 
-function onKeyboardChange(): void {
-	onChange()
+// emit change event
+// TODO: Change this event to receive only the input as a string
+function onChange(event: KeyboardInputInterface): void {
+	setInput(event.input).then((x) => emits("change", x))
 }
 
-const { loadAnswer } = useKeyboard(props, onKeyboardChange)
-
-const reset = () => sortableItems.value = randomizeItems()
-
-defineExpose({ reset, loadAnswer })
-
-const onChange = function() {
-	// On compte le nombre de réponses au bon endroit...
-	let errors = 0
-	for (let i = 1; i <= sortableItems.value.length; i++) {
-		if (sortableItems.value[i - 1].id !== i) {
-			errors++
+async function setInput(value: string): Promise<KeyboardInputInterface> {
+	if (value !== undefined) {
+		if (value === '-') {
+			// Automatic list
+			sortableItems.value = items.value
+		}else if (value===''){
+			// Random order
+			sortableItems.value = Random.shuffle(items.value)
 		}
 	}
+	return {
+		input: "",
+		tex: "",
+		raw: isList.value ?
+			sortableItems.value.map(el => `- ${el.label}`).join("\n") :
+			sortableItems.value.map(el => el.label).join(" ")
+	}
 
-	emits("change", {
-		value: {
-			input: "",
-			tex: "",
-			raw: isList.value ?
-				sortableItems.value.map(el => `- ${el.label}`).join("\n") :
-				sortableItems.value.map(el => el.label).join(" ")
-		},
-		validation: {
-			result: errors === 0,
-			message: errors > 0 ? `Il y a ${errors} erreur${errors > 1 ? "s" : ""}` : ""
-		}
-	})
 }
+
+defineExpose<KeyboardExposeInterface>({
+	setInput,
+	parameters: "full (pleine largeur)\nflex (utilisation de flex)\ntex (converti en TeX)\nlist (affichage d'une liste)"
+})
+
+/**
+ * Keyboards custom configuration
+ */
 
 // Liste des élèments qui sont à réordrer.
 const isFullWidth = computed(() => {
@@ -52,7 +60,7 @@ const isList = computed(() => {
 	return props.keyboard.parameters.includes("list")
 })
 
-const items = computed(() => {
+const items = computed(()=>{
 	return props.keyboard.values.map((element, index) => {
 		return {
 			id: index + 1,
@@ -61,11 +69,7 @@ const items = computed(() => {
 	})
 })
 
-function randomizeItems(): { id: number, label: string }[] {
-	return Random.shuffle(items.value)
-}
-
-const sortableItems = ref<{ id: number, label: string }[]>(randomizeItems())
+const sortableItems = ref<{ id: number, label: string }[]>(Random.shuffle(items.value))
 
 </script>
 

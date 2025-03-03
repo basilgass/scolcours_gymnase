@@ -2,7 +2,7 @@
 
 import { type TABLE_OF_SIGNS_VALUES } from "pimath"
 // TODO: extremeType should be in pimath, with TABLE_OF_SIGNS_VALUES
-type TABLE_OF_SIGNS_VALUES_WITH_EXTREMES = TABLE_OF_SIGNS_VALUES | 'm' | 'M' | '_'
+type TABLE_OF_SIGNS_VALUES_WITH_EXTREMES = TABLE_OF_SIGNS_VALUES | 'm' | 'M' | '_' | 'I'
 
 defineProps<{
 	label: string,

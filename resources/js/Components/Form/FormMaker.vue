@@ -41,6 +41,7 @@ const noLabelForms = ["switch"]
 // Default props
 const props = withDefaults(defineProps<FormMakerPropsType>(), {
 	// Set the type of the input
+	disabled: false,
 	fontCode: false,
 	helper: false,
 	inlineLabel: false,
@@ -262,6 +263,7 @@ defineExpose({focus: setFocus})
 					:class="combinedInputClass"
 					:placeholder="placeholderValue"
 					:type="type"
+					:disabled="disabled"
 					v-bind="$attrs"
 					@input="updateInput($event)"
 					@keyup="validate()"
@@ -272,6 +274,7 @@ defineExpose({focus: setFocus})
 					ref="TEXTAREA"
 					v-model="theValue as string"
 					:class="combinedInputClass"
+					:disabled="disabled"
 					v-bind="$attrs"
 					@input="updateInput($event)"
 					@keyup="onKeyup"
@@ -283,6 +286,7 @@ defineExpose({focus: setFocus})
 					:class="combinedInputClass"
 					:placeholder="placeholderValue"
 					:step="props.step"
+					:disabled="disabled"
 					type="number"
 					v-bind="$attrs"
 					@input="updateInput($event)"
@@ -292,6 +296,7 @@ defineExpose({focus: setFocus})
 					v-else-if="type === 'checkbox'"
 					v-model="theValue as boolean"
 					:class="combinedInputClass"
+					:disabled="disabled"
 					type="checkbox"
 					v-bind="$attrs"
 					@input="updateInput($event)"
@@ -310,6 +315,7 @@ defineExpose({focus: setFocus})
 						v-model="theValue"
 						class="opacity-0"
 						type="color"
+						:disabled="disabled"
 						v-bind="$attrs"
 						@input="updateInput($event)"
 					>
@@ -320,6 +326,7 @@ defineExpose({focus: setFocus})
 					v-else-if="type === 'select'"
 					v-model="theValue"
 					:class="combinedInputClass"
+					:disabled="disabled"
 					v-bind="$attrs"
 					@input="updateInput($event)"
 				>
@@ -333,6 +340,7 @@ defineExpose({focus: setFocus})
 					:auto-size="props.autoSize"
 					:class="combinedInputClass"
 					:focus="props.focus"
+					:disabled="disabled"
 					:language="props.language"
 					:resizeable="props.resizable"
 					v-bind="$attrs"
@@ -344,6 +352,7 @@ defineExpose({focus: setFocus})
 					v-model="theValue as string"
 					:class="combinedInputClass"
 					:focus="props.focus"
+					:disabled="disabled"
 					v-bind="$attrs"
 					@update="updateInput($event)"
 				/>
@@ -353,6 +362,7 @@ defineExpose({focus: setFocus})
 					v-model="theValue as boolean"
 					:class="combinedInputClass"
 					:label="props.label"
+					:disabled="disabled"
 					:sm="props.sm"
 					v-bind="$attrs"
 					@update="updateInput($event)"

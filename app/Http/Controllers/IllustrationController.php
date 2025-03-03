@@ -124,10 +124,15 @@ class IllustrationController extends Controller
 		$validation = $request->validate([
 			'title' => ['string', 'nullable'],
 			'css' => ['string', 'nullable'],
-			'code' => ['string'],
+			'code' => ['string', 'nullable'],
 			'parameters' => ['string', 'nullable'],
 			'widget_id' => ['exists:App\Models\Widget,id'],
 		]);
+
+		// if code is null, change it to empty string.
+		if ($validation['code'] === null) {
+			$validation['code'] = '';
+		}
 
 		$illustration->update($validation);
 

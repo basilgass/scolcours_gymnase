@@ -151,7 +151,7 @@ class ScolcoursController extends Controller
 			->get();
 	}
 
-	public function dico(string $language, int $number = 1, string $size='infinity', string $common = '1')
+	public function dico(string $language, int $number = 1, string $size='infinity', string $common = '1', bool $withoutDuplicateLetters = false)
 	{
 		// Query from the database dictionary table.
 		// $size is the number of the letter in the word column
@@ -159,9 +159,17 @@ class ScolcoursController extends Controller
 		$query = DB::table('dictionary')
 			->where('language', $language)
 			->where('common', $common);
-		if(is_int(+$size)) {
+
+		if($withoutDuplicateLetters){
+			// TODO: comme tous les mots sont en majuscule, c'est ok...
+			$query->whereRaw('word REGEXP ?', "^(?!.*([A-Z])\\1).*$");
+		}
+
+		if(is_int(+$size) AND $size>0) {
 			$query->whereRaw('CHAR_LENGTH(word) = ?', [$size]);
 		}
+
+//		return $query->toRawSql();
 
 		$words = $query
 			->inRandomOrder()
@@ -169,5 +177,16 @@ class ScolcoursController extends Controller
 			->pluck('word');
 
 		return $words;
+	}
+
+	public function wordExistsInDictionary(string $language, string $word)
+	{
+		// TODO: Pour l'instant, tous les mots sont en majuscule, sans accent. Il faudra peut-être changer ça.
+		$found = DB::table('dictionary')
+			->where('language', $language)
+			->where('word', $word)
+			->exists();
+
+		return $found;
 	}
 }

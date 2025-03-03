@@ -2,79 +2,50 @@
 
 import AsciiMathParser from "@/asciimath2tex"
 import FormMaker from "@/Components/Form/FormMaker.vue"
-import {computed, nextTick, ref} from "vue"
+import {computed, ref} from "vue"
 import {
 	KeyboardEmitsInterface,
+	KeyboardExposeInterface,
+	KeyboardInputInterface,
 	KeyboardPropsInterface,
-	useKeyboard
 } from "@/Composables/useKeyboard.js"
 
+// props.keyboard
 const props = defineProps<KeyboardPropsInterface>()
 
+// emits change
 const emits = defineEmits<KeyboardEmitsInterface>()
 
-function onKeyboardChange(): void {
-	onChange()
+// emit change event
+// TODO: Change this event to receive only the input as a string
+function onChange(): void {
+	setInput().then((x) => emits("change", x))
 }
 
-const {loadAnswer} = useKeyboard(
-	props,
-	onKeyboardChange
-)
-
-let reset = () => {
-	inputValue.value = ""
+async function setInput(value?: string): Promise<KeyboardInputInterface> {
+	const valueToUpdate = value ? value : inputValue.value
+	return {
+		input: valueToUpdate,
+		tex: isTex.value ? valueToUpdate : new AsciiMathParser().parse(valueToUpdate),
+		raw: valueToUpdate
+	}
 }
 
-defineExpose({reset, loadAnswer, parameters: ""})
+defineExpose<KeyboardExposeInterface>({
+	setInput,
+	parameters: ""
+})
 
-let onChange = async function () {
-	await nextTick()
-	// let value = event.target.value
-	emits("change", {
-		value: {
-			input: inputValue.value,
-			tex: isTex.value ? inputValue.value : new AsciiMathParser().parse(inputValue.value),
-			raw: inputValue.value
-		},
-		validation: checker.value.check(props.answer, inputValue.value)
-	})
-}
+/**
+ * Keyboards custom configuration
+ */
 
-/* ------------------*/
-const {getKeyboards} = useKeyboard()
+let inputValue = ref("")
 
-let inputValue = ref(""),
-	isTex = computed(() => {
-		return props.keyboard.parameters.includes("tex")
-	}),
-	checker = computed(() => {
-		if (props.keyboard.parameters.length === 0) {
-			return {
-				check: () => {
-					return {message: "il n'y a pas de contrôle...", result: false}
-				}
-			}
-		}
-
-		const kbrds = getKeyboards(props.keyboard.parameters[0])
-		if (kbrds === null || kbrds.length === 0) {
-			return {
-				check: () => {
-					return {message: "il n'y a pas de contrôle...", result: false}
-				},
-				format: () => {
-					return ""
-				}
-			}
-		}
-
-		return {
-			check: kbrds[0].checker.check,
-			format: kbrds[0].checker.checker.format
-		}
-	})
-
+// TODO: isTex from KeyboardInput: is it really useful ?
+const isTex = computed(() => {
+	return props.keyboard.parameters.includes("tex")
+})
 
 </script>
 
@@ -85,11 +56,11 @@ let inputValue = ref(""),
 			name="kbrd-input"
 			label="réponse"
 			@input="onChange"
-			@enter="$emit('validate')"
 		/>
 		<div
-			v-katex.auto="checker.format"
 			class="text-center text-xs text-gray-400"
-		/>
+		>
+			FORMAT ?
+		</div>
 	</div>
 </template>

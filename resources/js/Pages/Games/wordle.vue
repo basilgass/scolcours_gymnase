@@ -2,16 +2,17 @@
 	lang="ts"
 	setup
 >
-import FormMaker from "@/Components/Form/FormMaker.vue"
-import { listeDeMots } from "@/helpers/liste-des-mots-francais"
-import { listeDeMots as dictionary } from "@/helpers/liste-des-mots-francais-pli07"
-import LayoutMain from "@/Layouts/LayoutMain.vue"
-import { useStoreEditMode } from "@/stores/useStoreEditMode.ts"
-import { onKeyStroke } from "@vueuse/core"
-import _ from "lodash"
-import { computed, ref } from "vue"
 
-defineOptions({ layout: LayoutMain })
+//TODO: Refactor pour le rendre plus propre et structuré.
+
+import FormMaker from "@/Components/Form/FormMaker.vue"
+import LayoutMain from "@/Layouts/LayoutMain.vue"
+import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
+import {onKeyStroke} from "@vueuse/core"
+import {computed, onMounted, ref} from "vue"
+import axios from "axios"
+
+defineOptions({layout: LayoutMain})
 
 const editMode = useStoreEditMode()
 
@@ -53,7 +54,6 @@ onKeyStroke([
 })
 
 
-
 interface IGuess {
 	word: string,
 	lettersClass: string[]
@@ -63,7 +63,10 @@ const WORD_LENGTH = ref<number>(5)
 const WORD_LANGUAGE = ref<string>("fr")
 const GUESSES_LIMIT = ref<number>(6)
 const gameIsRunning = ref(false)
+
 const target = ref<string>("")
+const nextWord = ref<string>("")
+
 const guesses = ref<IGuess[]>([])
 const guessId = ref<number>(0)
 const letterId = ref<number>(0)
@@ -73,21 +76,45 @@ const guess = computed<string>(() => {
 	return guesses.value[guessId.value]?.word ?? ""
 })
 
-function startGame() {
+function prepareNextWord() {
+	axios.get(route('dico.fetch', {
+			language: WORD_LANGUAGE.value,
+			number: 1,
+			size: WORD_LENGTH.value
+		}
+	))
+		.then(response => {
+			nextWord.value = response.data[0]
+		})
+		.catch(error => {
+			console.error(error)
+		})
+}
+async function startGame() {
 	gameIsRunning.value = true
+
+	target.value = nextWord.value
 	// Choose a word
 	// The word must be "WORD_LENGTH" characters long
 	// The word must not have more than 2 same letters.
-	target.value = _.sample(availableWords.value)
+	prepareNextWord()
+
+
+	// target.value = _.sample(availableWords.value)
 
 	// Reset guesses
-	guesses.value = Array.from({ length: GUESSES_LIMIT.value }, () => ({ word: " ".repeat(WORD_LENGTH.value), lettersClass: [] }))
+	guesses.value = Array.from({length: GUESSES_LIMIT.value}, () => ({
+		word: " ".repeat(WORD_LENGTH.value),
+		lettersClass: []
+	}))
 	guessId.value = 0
 
 	letterId.value = 0
 }
 
 function setLetter(letter: string) {
+	message.value = ""
+
 	// Current word
 
 	// replace the nth letter
@@ -103,7 +130,10 @@ function selectLetter(row: number, index: number) {
 		letterId.value = index
 	}
 }
+
 function backspace() {
+	message.value = ""
+
 	// Remove the letter in the current position
 	guesses.value[guessId.value].word = guess.value.substring(0, letterId.value) + " " + guess.value.substring(letterId.value + 1)
 
@@ -125,8 +155,20 @@ function letterClass(row: number, index: number) {
 	return guesses.value[row].lettersClass[index] ?? "letter-unknown"
 }
 
-function validate() {
-	if (dictionary.indexOf(guess.value) === -1) {
+async function validate() {
+	const wordExists = await axios.get(route('dico.exists', {
+		language: WORD_LANGUAGE.value,
+		word: guess.value
+	}))
+		.then(response => {
+			return response.data
+		})
+		.catch(error => {
+			console.error(error)
+			return false
+		})
+
+	if (!wordExists) {
 		message.value = "Le mot n'existe pas !"
 		return
 	}
@@ -166,10 +208,10 @@ function validate() {
 	})
 
 	guesses.value[guessId.value] =
-	{
-		word: guess.value,
-		lettersClass
-	}
+		{
+			word: guess.value,
+			lettersClass
+		}
 
 	if (target.value === guess.value) {
 		message.value = "Bravo ! Vous avez trouvé le mot " + target.value
@@ -196,28 +238,6 @@ const letterMapping = [
 	"ASDFGHJKL",
 	"YXCVBNM"
 ]
-
-const dictionaryWords = computed<string[]>(() => {
-	return dictionary.filter(x => x.length === WORD_LENGTH.value)
-})
-
-const availableWords = computed<string[]>(() => {
-	return listeDeMots.filter(x => x.length === WORD_LENGTH.value)
-		.filter(word => {
-			const letterCount: Record<string, number> = {}
-			return word.split("").every(letter => {
-				if (letterCount[letter] === undefined) {
-					letterCount[letter] = 0
-				}
-				letterCount[letter]++
-				return letterCount[letter] <= 2
-			})
-		})
-})
-const filteredWords = computed<string[]>(() => {
-	if (guess.value.trim().length === 0) return []
-	return dictionaryWords.value.filter(word => word.startsWith(guess.value.trim()))
-})
 
 const keyboard = computed<Record<string, string>>(() => {
 	const dict: Record<string, string> = {}
@@ -261,6 +281,10 @@ const keyboard = computed<Record<string, string>>(() => {
 		})
 	})
 	return dict
+})
+
+onMounted(()=>{
+	prepareNextWord()
 })
 
 </script>
@@ -320,7 +344,7 @@ const keyboard = computed<Record<string, string>>(() => {
 						v-for="(letter, i) in value.word"
 						:key="`letter-${index}-${i}`"
 						:class="letterClass(index, i)"
-						class="w-[2em] md:w-[3em] aspect-square grid place-items-center"
+						class="w-[2em] md:w-[3em] aspect-square grid place-items-center cursor-pointer"
 						@click="selectLetter(index, i)"
 					>
 						{{ letter }}
@@ -370,10 +394,7 @@ const keyboard = computed<Record<string, string>>(() => {
 				<div>{{ message }}</div>
 			</div>
 			<div v-show="editMode.enable">
-				<div>Il y a {{ availableWords.length }} mots possible. Le mot à chercher: {{ target }}</div>
-				<div class="font-code">
-					{{ filteredWords.join(", ") }}
-				</div>
+				<div>Le mot à chercher: {{ target }}</div>
 			</div>
 		</div>
 	</article>
