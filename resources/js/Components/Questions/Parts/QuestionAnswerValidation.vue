@@ -55,22 +55,39 @@ function updateAnswersValidation(): CheckerResult[] {
 	 *
 	 */
 
-	// TODO: permettre des réponses multiples (||)
 	// TODO: permettre un mix de plusieurs réponses (@mix:)
 	questionData.validators.value.forEach((validator, index) => {
-		const answer = validator.answer
-		const userAnswer = questionData.user.answers.value[index].input
+		/** answer peut-être
+		 * 		<réponse>
+		 * 		<réponse>||<réponse>  (plusieurs réponses possibles)
+		 * 		@mix:<réponse>\n@mix:<réponse> (les réponses ne sont pas ordrées)
+		 */
+
+		// Toutes les réponses autorisées.
+		const allowedAnswers: string[] = validator.answer.split('||').map(a => a.trim())
+
+		// La réponse de l'utilisateur
+		const userAnswer: string = questionData.user.answers.value[index].input
+
+		// Le système de checker
 		const checker: PiChecker = validator.checker.checker
 
-		const result = userAnswer !== undefined ?
-			checker.check(userAnswer, answer) :
-			{
-				result: false,
-				message: "Vous n'avez pas répondu à la question",
-				index: 0
-			}
+		// On vérifie si la réponse de l'utilisateur est dans les réponses autorisées
+		const results: CheckerResult[] = []
+		allowedAnswers.forEach((answer, index) => {
+			results.push(
+				userAnswer !== undefined ?
+					checker.check(userAnswer, answer) :
+					{
+						result: false,
+						message: "Vous n'avez pas répondu à la question",
+						index
+					}
+			)
+		})
 
-		validation.push(result)
+		// On prend soit le résultat correct, soit le premier résultat faux
+		validation.push(results.find(r => r.result) || results[0])
 	})
 
 	return validation
