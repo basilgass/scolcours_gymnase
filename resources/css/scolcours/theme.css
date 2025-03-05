@@ -3,9 +3,9 @@
 	--color-scolcours: oklch(0.634 0.155 50.266);
 	--color-scolcours-dark: oklch(0.36 0.106 43.578);
 
-	--color-geometrie-light: oklch(0.827 0.119 306.383);    /*300*/
-	--color-geometrie: oklch(0.627 0.265 303.900);            /*500*/
-	--color-geometrie-dark: oklch(0.381 0.176 304.987);        /*900*/
+	--color-geometrie-light: oklch(0.827 0.119 306.383);    	/*300*/
+	--color-geometrie: oklch(0.627 0.265 303.900);            	/*500*/
+	--color-geometrie-dark: oklch(0.381 0.176 304.987);        	/*900*/
 
 	--color-algebre-light: oklch(0.809 0.105 251.813);
 	--color-algebre: oklch(0.623 0.214 259.815);

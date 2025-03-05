@@ -1,16 +1,18 @@
 <script lang="ts" setup>
 import DialogModal from "@/Components/Ui/DialogModal.vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
-import { nextTick, ref } from "vue"
+import {nextTick, ref} from "vue"
 import axios from "axios"
-import { router, usePage } from "@inertiajs/vue3"
+import {router, usePage} from "@inertiajs/vue3"
+import ScButton from "@/Components/Ui/scButton.vue"
 
 const createChapterModal = ref(false)
 const createChapterTitle = ref("")
 
 const input = ref(null)
-async function onShowModal(){
-	createChapterModal.value=true
+
+async function onShowModal() {
+	createChapterModal.value = true
 	await nextTick()
 	input.value.focus()
 	input.value
@@ -27,13 +29,13 @@ function createChapter() {
 </script>
 <template>
 	<div>
-		<button
-			v-theme.btn
-			class="btn-xs"
+		<sc-button
+			type="add"
 			@click="onShowModal"
 		>
-			Créer un chapitre
-		</button>
+			<i class="bi bi-plus-circle mr-3" />Créer un chapitre
+		</sc-button>
+
 		<dialog-modal
 			v-model="createChapterModal"
 			class="max-w-md"

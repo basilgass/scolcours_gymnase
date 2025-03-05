@@ -2,11 +2,11 @@
 
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
-import {AxiosErrorMessage} from "@/types"
+import {AxiosErrorMessage, flashInterface} from "@/types"
 import {ChapterShowInterface} from "@/types/modelInterfaces.ts"
 import {usePage} from "@inertiajs/vue3"
 import axios from "axios"
-import {ref} from "vue"
+import {inject, ref} from "vue"
 
 
 const props = defineProps<{
@@ -15,14 +15,22 @@ const props = defineProps<{
 
 const editMode = useStoreEditMode()
 
+const flash = inject<flashInterface>("flash")
+
+
 const isActive = ref<boolean>(!!props.chapter.active)
 
 function activate() {
 	isActive.value = !isActive.value
+
 	axios.patch(
-		route('toggleChapterActive', [props.chapter.slug]),
+		route('toggleChapterActive', {
+			chapter: props.chapter.slug
+		}),
 		{active: isActive.value}
-	).catch((res: AxiosErrorMessage) => {
+	).then(() => {
+		flash.success(`${props.chapter.slug} est ${isActive.value ? 'visible' : 'caché'}.`)
+	}).catch((res: AxiosErrorMessage) => {
 		console.log(res.response.data.message)
 	})
 
@@ -38,7 +46,10 @@ function activate() {
 		>
 			<div>id: {{ chapter.id }}</div>
 			<div class="flex gap-4">
-				<button @click="activate">
+				<button
+					@click="activate"
+					class="cursor-pointer"
+				>
 					<i
 						:class="isActive ? 'bi bi-eye':'bi bi-eye-slash'"
 					/>
@@ -48,7 +59,10 @@ function activate() {
 
 		<InertiaLink
 			:class="{ 'opacity-30 hover:opacity-70 transition-all': !isActive }"
-			:href="route('themes.chapters.intro', [usePage().props.theme.slug, chapter.slug])"
+			:href="route('themes.chapters.intro', {
+				theme: usePage().props.theme.slug,
+				chapter: chapter.slug
+			})"
 			class="text-xl
 					block h-full rounded-b-lg shadow space-y-3
 					bg-white dark:bg-gray-800
@@ -58,7 +72,7 @@ function activate() {
 			<h3
 				v-katex.auto="chapter['title']"
 				v-theme.bg.text
-				class="text-xl px-5 py-3 truncate"
+				class="text-xl px-5 py-3 truncate  rounded-t"
 			/>
 
 			<markdown-it

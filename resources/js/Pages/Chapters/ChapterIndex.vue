@@ -19,10 +19,7 @@ function triggerEnter(items: ChapterShowInterface[]) {
 		return
 	}
 }
-
-
 </script>
-
 
 <template>
 	<section class="scolcours-container">

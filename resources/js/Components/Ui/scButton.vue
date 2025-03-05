@@ -29,7 +29,7 @@ const btnTheme = computed(() => {
 	}
 
 	return {
-		"add": "bg-green-500 text-white",
+		"add": "bg-green-500 dark:bg-green-600 text-white",
 		"edit": "bg-purple-500 text-white",
 		"active": "bg-sky-500 text-white",
 	}
@@ -60,7 +60,7 @@ const btnClass = computed(() => {
 		)
 
 	} else if (props.type) {
-		classes.push(btnTheme[props.type] ?? "")
+		classes.push(btnTheme.value[props.type] ?? "")
 
 	}
 

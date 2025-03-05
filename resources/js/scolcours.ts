@@ -77,7 +77,7 @@ export const blockTypes = {
 		title: "définition",
 		icon: "bi bi-book",
 		style: {
-			header: "bg-lime-400 text-lime-700",
+			header: "bg-lime-400 text-lime-900",
 			body: "border border-l-8 border-lime-400",
 		},
 	},

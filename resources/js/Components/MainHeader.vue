@@ -17,7 +17,7 @@ import {computed, PropType, provide, ref} from "vue"
 
 // TODO: Set dark mode to false by default for now
 const isDark = useDark()
-isDark.value = false
+// isDark.value = false
 const toggleDark = useToggle(isDark)
 
 const props = defineProps({

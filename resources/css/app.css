@@ -17,6 +17,7 @@
 @plugin '@tailwindcss/typography';
 @plugin 'tailwind-scrollbar';
 @custom-variant hover (&:hover);
+@custom-variant dark (&:where(.dark, .dark *));
 
 /*@config '../../tailwind.config.js';*/
 
