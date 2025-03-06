@@ -5,7 +5,7 @@ import {getThemeChapter, getThemeClasses} from "@/directives/themeDirectives.ts"
 
 export type buttonTypes = "add" | "edit"
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
 	active?: boolean
 	theme?: boolean | string | number
 	type?: buttonTypes
@@ -13,7 +13,15 @@ const props = defineProps<{
 	href?: string | false
 	xs?: boolean
 	xl?: boolean
-}>()
+}>(), {
+	active: false,
+	theme: false,
+	type: "default",
+	outline: false,
+	href: false,
+	xs: false,
+	xl: false,
+})
 
 defineEmits<{
 	click: () => void
@@ -22,6 +30,7 @@ defineEmits<{
 const btnTheme = computed(() => {
 	if (props.outline) {
 		return {
+			"default": "border border-gray-500 text-gray-500",
 			"add": "border border-green-500 text-green-500",
 			"edit": "border border-purple-500 text-purple-500",
 			"active": "border border-sky-500 text-sky-500",
@@ -29,6 +38,7 @@ const btnTheme = computed(() => {
 	}
 
 	return {
+		"default": "bg-slate-50 border border-slate-300 dark:bg-slate-800 dark:border-slate-600",
 		"add": "bg-green-600 dark:bg-green-800 text-white",
 		"edit": "bg-purple-600 dark:bg-purple-800 text-white",
 		"active": "bg-sky-400 dark:bg-sky-600 text-white",

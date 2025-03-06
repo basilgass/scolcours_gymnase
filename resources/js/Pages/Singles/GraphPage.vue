@@ -5,6 +5,7 @@ import {computed, ref, watch} from "vue"
 
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 import GrapheurFunction from "@/Components/Grapheur/GrapheurFunction.vue"
+import ScButton from "@/Components/Ui/scButton.vue"
 
 // TODO: e^(x/(x-3)) ne fonctionne pas avec des samples plus grand que 5...
 
@@ -145,14 +146,14 @@ function addFunction(type: "x" | "t" = "x") {
 					/>
 
 					<div class="grid grid-cols-2 gap-4 place-items-center">
-						<button
+						<sc-button
 							v-katex="`f(x)`"
-							class="btn btn-xs  w-full bg-white"
+							class="w-full"
 							@click=" addFunction('x')"
 						/>
-						<button
+						<sc-button
 							v-katex="`f(t)`"
-							class="btn btn-xs  w-full bg-white"
+							class="w-full"
 							@click=" addFunction('t')"
 						/>
 					</div>
@@ -186,7 +187,7 @@ function addFunction(type: "x" | "t" = "x") {
 						parameters: drawParams,
 						code
 					}"
-					class="bg-white p-3 rounded-lg border"
+					class="bg-white dark:bg-slate-600 p-3 rounded-lg border"
 				/>
 
 				<form-maker
@@ -197,7 +198,7 @@ function addFunction(type: "x" | "t" = "x") {
 
 				<div class="text-xs">
 					<h2>code généré</h2>
-					<pre class="font-code bg-white mt-1 border rounded-sm p-2">{{ code }}</pre>
+					<pre class="font-code mt-1 border border-slate-300 dark:border-slate-600 rounded-sm p-2">{{ code }}</pre>
 				</div>
 			</div>
 		</div>

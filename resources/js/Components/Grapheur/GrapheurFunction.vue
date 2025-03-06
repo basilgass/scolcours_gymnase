@@ -40,18 +40,26 @@ defineEmits<{
 
 <template>
 	<div
-		class="bg-white rounded-sm border flex flex-col gap-3 relative pb-3"
+		class="flex flex-col gap-3 relative pb-3 rounded-sm
+		bg-slate-50 dark:bg-slate-800
+		border border-slate-300 dark:border-slate-600"
 	>
 		<div
 			class="absolute -top-3 -right-3 w-7 h-7 rounded-full
-			bg-white grid place-items-center z-10 border cursor-pointer"
+			bg-slate-50 dark:bg-slate-800
+			border-slate-300 dark:border-slate-600
+			text-black dark:text-slate-300
+			grid place-items-center z-10 border cursor-pointer"
 			@click="$emit('destroy')"
 		>
 			<i class="bi bi-trash" />
 		</div>
 		<div
 			class="absolute -bottom-3 left-0 right-0 m-auto w-5 h-5 rounded-full
-			bg-white grid place-items-center z-10 border cursor-pointer"
+			bg-slate-50 dark:bg-slate-800
+			border-slate-300 dark:border-slate-600
+			text-black dark:text-slate-300
+			grid place-items-center z-10 border cursor-pointer"
 			@click="showAdvanced = !showAdvanced"
 		>
 			<i
