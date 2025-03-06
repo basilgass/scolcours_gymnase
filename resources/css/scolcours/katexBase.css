@@ -4,7 +4,7 @@
  */
 
 @utility katex-display {
-  @apply dark:border-amber-400 dark:border-2 select-none;
+  @apply dark:border-amber-400/20 dark:border-1 select-none;
 
   .katex-boxed & {
     @apply bg-amber-700/5 px-5 py-4 my-2 rounded-sm overflow-x-auto katex-scrollbar;
