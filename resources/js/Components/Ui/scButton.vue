@@ -29,9 +29,9 @@ const btnTheme = computed(() => {
 	}
 
 	return {
-		"add": "bg-green-500 dark:bg-green-600 text-white",
-		"edit": "bg-purple-500 text-white",
-		"active": "bg-sky-500 text-white",
+		"add": "bg-green-600 dark:bg-green-800 text-white",
+		"edit": "bg-purple-600 dark:bg-purple-800 text-white",
+		"active": "bg-sky-400 dark:bg-sky-600 text-white",
 	}
 })
 

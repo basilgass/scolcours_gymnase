@@ -86,7 +86,7 @@ export function getThemeClasses(chapter: string, modifiers: Record<string, boole
 
 					if(key==='text' || key==='border') {
 						// TODO: reformat themeDirectives and check the "light" color (used in dark mode !)
-						classesList.push(`dark:${key}-${chapter}-light`)
+						// classesList.push(`dark:${key}-${chapter}-light`)
 					}
 
 					// TODO: add the dark mode here ?

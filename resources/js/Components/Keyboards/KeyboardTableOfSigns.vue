@@ -203,7 +203,6 @@ onMounted(() => {
 				:keyboard="zeroesKeyboard"
 				:multiple="true"
 				back
-				key-class="bg-white"
 				reset
 				@change="changeKeyboard"
 			/>
@@ -219,7 +218,6 @@ onMounted(() => {
 					grid: 'grid-cols-6',
 					layout: [['+', 2], ['-', 2], ['h', 2], ['z', 3], ['d', 3], ['@back', 3], ['@reset', 3]]
 				}"
-				key-class="bg-white"
 				@change="changeKeyboard"
 			/>
 
@@ -238,7 +236,6 @@ onMounted(() => {
 					grid: 'grid-cols-3',
 					layout: ['+', '-', 'h', 'm', 'M', '_', 'd', '@back', '@reset']
 				}"
-				key-class="bg-white"
 				@change="changeKeyboard"
 			/>
 
@@ -255,7 +252,6 @@ onMounted(() => {
 					grid: 'grid-cols-4',
 					layout: ['u', 'n', 'I', 'h', '@back', '@reset', '', 'd']
 				}"
-				key-class="bg-white"
 				@change="changeKeyboard"
 			/>
 
@@ -264,7 +260,6 @@ onMounted(() => {
 				:keyboard="zeroesKeyboard"
 				:multiple="true"
 				back
-				key-class="bg-white"
 				reset
 				@change="changeKeyboard"
 			/>

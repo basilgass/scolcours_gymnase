@@ -14,9 +14,10 @@
 import {useWrongAnswerAnimation} from "@/Composables/useHelpers.ts"
 import {usePage} from "@inertiajs/vue3"
 import axios from "axios"
-import {computed, inject, ref} from "vue"
+import {computed, inject, ref, useTemplateRef} from "vue"
 import {questionDataInterface, questionResultInterface} from "@/Components/Questions/QuestionInterface.ts"
 import type {CheckerResult, PiChecker} from "pichecker"
+import ScButton from "@/Components/Ui/scButton.vue"
 
 const emits = defineEmits<{
 	validate: [event: questionResultInterface]
@@ -24,10 +25,9 @@ const emits = defineEmits<{
 
 const questionData = inject<questionDataInterface>("questionData")
 
-const isDynamic = computed(() => !questionData.question.value.id)
 const lockValidationButton = ref(false)
 
-const validateButton = ref(null)
+const validateButton = useTemplateRef<InstanceType<typeof ScButton>>('validateButton')
 
 const userAnswers = computed(() => {
 	return questionData.user.answers.value.map((a) => a.input).join(",")
@@ -75,15 +75,23 @@ function updateAnswersValidation(): CheckerResult[] {
 		// On vérifie si la réponse de l'utilisateur est dans les réponses autorisées
 		const results: CheckerResult[] = []
 		allowedAnswers.forEach((answer, index) => {
-			results.push(
-				userAnswer !== undefined ?
-					checker.check(userAnswer, answer) :
-					{
-						result: false,
-						message: "Vous n'avez pas répondu à la question",
-						index
-					}
-			)
+			try {
+				results.push(
+					userAnswer !== undefined ?
+						checker.check(userAnswer, answer) :
+						{
+							result: false,
+							message: "Vous n'avez pas répondu à la question",
+							index
+						}
+				)
+			}catch{
+				results.push({
+					result: false,
+					message: "Format de la réponse non reconnu.",
+					index
+				})
+			}
 		})
 
 		// On prend soit le résultat correct, soit le premier résultat faux
@@ -138,10 +146,14 @@ function validateQuestion() {
 	const result = reduceAnswersValidation(validations)
 
 	// La réponse est fausse -> effet visuel
-	if (!result && questionData.config.animation) useWrongAnswerAnimation(validateButton.value)
+	if (!result && questionData.config.animation) {
+		useWrongAnswerAnimation(validateButton.value.$el)
+	}
 
 	// Afficher les messages d'erreurs
-	errorMessages.value = validations.filter(v => !v.result).map(v => v.message)
+	errorMessages.value = validations.map((v, index) => {
+		return v.result ? "": `${index+1}. ${v.message}`
+	}).filter(msg=>msg!=="")
 
 	// émettre au parents les modifications
 	questionResult.value = emitToParent(result)
@@ -157,9 +169,9 @@ function validateQuestion() {
 <template>
 	<div class="question-validation-wrapper">
 		<div class="max-w-xl mx-auto keyboard mb-5">
-			<button
+			<sc-button
 				ref="validateButton"
-				v-theme.btn
+				theme
 				:class="{
 					'cursor-not-allowed': lockValidationButton,
 				}"
@@ -182,19 +194,24 @@ function validateQuestion() {
 				<p v-else>
 					<i class="bi bi-check" /> <span class="hidden md:inline md:ml-2">Valider</span>
 				</p>
-			</button>
+			</sc-button>
 		</div>
 
 		<!-- Error messages -->
 		<div
 			v-if="errorMessages.length > 0"
-			class="max-w-xl mx-auto border bg-red-50 border-red-600 p-3 rounded my-2"
+			class="max-w-xl mx-auto
+			 p-3  my-2
+			border rounded
+			text-red-600 dark:text-red-100
+			bg-red-100 dark:bg-red-900
+			border-red-600 dark:border-red-700"
 		>
 			<div
 				v-for="(msg, index) in errorMessages"
 				:key="`error-${index}`"
 				v-katex.auto="msg"
-				class="text-red-600 text-xs"
+				class="text-xs"
 			/>
 		</div>
 	</div>

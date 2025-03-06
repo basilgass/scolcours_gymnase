@@ -1,7 +1,8 @@
 <script generic="T extends {id:number}" lang="ts" setup>
 import FormMaker from "@/Components/Form/FormMaker.vue"
-import { router, usePage } from "@inertiajs/vue3"
-import { computed, ref } from "vue"
+import {router, usePage} from "@inertiajs/vue3"
+import {computed, ref} from "vue"
+import ScButton from "@/Components/Ui/scButton.vue"
 
 interface FilterItem {
 	title: string,
@@ -11,7 +12,8 @@ interface FilterItem {
 }
 
 const scolcoursThemes = computed(() => {
-	return usePage().props.themes.filter(x => x.slug !== "tools")
+	return usePage().props.themes
+		.filter(x => x.slug !== "tools" && x.slug !== "jeux")
 })
 
 interface FilteredListProps<T> {
@@ -165,26 +167,21 @@ const emits = defineEmits<{
 
 			<div
 				v-if="filterByTheme"
-				class="flex gap-5 items-center mt-3 mb-5"
+				class="flex flex-wrap gap-5 items-center mt-3 mb-5"
 			>
 				<div>Filtrer par thèmes:</div>
-				<button
-					:class="selectedTheme === 0 ? 'btn-success' : 'opacity-40'"
-					class="btn btn-xs"
-					@click="selectedTheme = 0"
-				>
-					Tous
-				</button>
-				<button
+
+				<sc-button
 					v-for="(theme, id) of scolcoursThemes"
 					:key="id"
-					v-theme.bg.text="theme.id"
-					:class="selectedTheme === theme.id ? '' : 'opacity-40'"
-					class="btn btn-xs transition-transform hover:opacity-100 hover:scale-110"
-					@click="selectedTheme = theme.id"
+					:theme="theme.id"
+					:outline="selectedTheme!==theme.id"
+					@click="selectedTheme = selectedTheme !== theme.id ? theme.id : 0"
+					xs
+					class="flex-1"
 				>
 					{{ theme.title }}
-				</button>
+				</sc-button>
 			</div>
 
 			<div
