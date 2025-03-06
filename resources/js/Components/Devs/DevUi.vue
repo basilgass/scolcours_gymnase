@@ -2,8 +2,9 @@
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 import ScButton, {buttonTypes} from "@/Components/Ui/scButton.vue"
 import {ref} from "vue"
+import FormMaker from "@/Components/Form/FormMaker.vue"
 
-defineOptions({ layout: LayoutMain })
+defineOptions({layout: LayoutMain})
 
 const themes = {
 	'main': [
@@ -13,6 +14,14 @@ const themes = {
 		'text-main-light border border-main-light dark:text-main-light dark:border-main-light',
 		'text-main border border-main dark:text-main dark:border-main',
 		'text-main-dark border border-main-dark dark:text-main-dark dark:border-main-dark',
+	],
+	'scolcours': [
+		'bg-scolcours-light dark:bg-scolcours-light',
+		'bg-scolcours dark:bg-scolcours',
+		'bg-scolcours-dark dark:bg-scolcours-dark',
+		'text-scolcours-light border border-scolcours-light dark:text-scolcours-light dark:border-scolcours-light',
+		'text-scolcours border border-scolcours dark:text-scolcours dark:border-scolcours',
+		'text-scolcours-dark border border-scolcours-dark dark:text-scolcours-dark dark:border-scolcours-dark',
 	],
 	'algebre': [
 		'bg-algebre-light dark:bg-algebre-light',
@@ -80,7 +89,7 @@ const themes = {
 	],
 }
 
-const btnTypes:buttonTypes[] = [
+const btnTypes: buttonTypes[] = [
 	'add',
 	'edit',
 ]
@@ -141,7 +150,8 @@ const blockTypes = {
 	},
 }
 
-const detailsOpen = ref<('theme'|'buttons'|'blocks')[]>(['blocks'])
+type groupsUiType = 'theme' | 'buttons' | 'blocks' | 'forms'
+const detailsOpen = ref<groupsUiType>(['forms'])
 </script>
 
 <template>
@@ -254,9 +264,33 @@ const detailsOpen = ref<('theme'|'buttons'|'blocks')[]>(['blocks'])
 						/>{{ block.title }}
 					</div>
 					<div class="p-3">
-						Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium id molestiae nam nobis recusandae sapiente, voluptas! Amet autem exercitationem nulla odit ratione suscipit ut. Cupiditate et magnam quibusdam saepe tempore?
+						Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium id molestiae nam nobis
+						recusandae sapiente, voluptas! Amet autem exercitationem nulla odit ratione suscipit ut.
+						Cupiditate et magnam quibusdam saepe tempore?
 					</div>
 				</div>
+			</div>
+		</details>
+
+		<details :open="detailsOpen.includes('forms')">
+			<summary class="text-lg">
+				Forms
+			</summary>
+			<div>
+				<form-maker
+					label="demande d'un texte"
+					placeholder="placeholder"
+				/>
+				<form-maker
+					sm
+					label="demande d'un texte"
+					placeholder="placeholder"
+				/>
+				<form-maker
+					label="demande d'un texte"
+					placeholder="placeholder"
+					with-icon
+				/>
 			</div>
 		</details>
 	</div>

@@ -16,6 +16,8 @@ import {computed, inject, onMounted, ref, useAttrs} from "vue"
  * This component is used to generate a form input
  */
 
+// TODO: Externalize every input type in a separate file : do dynamic import ?
+
 // Define the model value.
 const theValue = defineModel({
 	set(value) {
@@ -86,11 +88,25 @@ const showLabel = computed(() => {
 
 // calculate the input combined class
 const combinedInputClass = computed(() => {
-	return `${props.inputClass} ${props.sm ? "text-xs p-1" : "p-2"}  ${
-		props.fontCode ? "font-code" : ""
-	} ${
-		(props.withIcon || props.prepend) ? "border-r-[1px] border-y-[1px] rounded-r" : "border-[1px] rounded-sm"
-	} w-full border-slate-200 appearance-none focus:border-slate-400 focus:outline-hidden focus:ring-0 focus:shadow-sm transition`
+	const classValue:string[] = [props.inputClass]
+
+	if(props.sm){
+		classValue.push("text-xs p-1")
+	}else{
+		classValue.push("p-2")
+	}
+
+	if(props.withIcon || props.prepend) {
+		classValue.push("border-r-[1px] border-y-[1px] rounded-r")
+	}else{
+		classValue.push("border-[1px] rounded-sm")
+	}
+
+	classValue.push("w-full appearance-none transition")
+	classValue.push("bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-500")
+	classValue.push("focus:border-slate-400 focus:outline-hidden focus:ring-0 focus:shadow-sm")
+
+	return classValue.join(' ')
 })
 
 // calculate the label combined class
@@ -243,7 +259,7 @@ defineExpose({focus: setFocus})
 				<div
 					v-if="props.withIcon"
 					:class="props.sm? 'py-1' : 'py-2' "
-					class="w-8 grid place-items-center border rounded-l text-gray-400"
+					class="w-8 grid place-items-center border rounded-l text-gray-400 bg-slate-200 dark:bg-slate-900"
 				>
 					<i :class="iconClass" />
 				</div>

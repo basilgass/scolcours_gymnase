@@ -42,11 +42,14 @@ const editMode = useStoreEditMode()
 <template>
 	<header
 		v-theme.bg.text
-		class="border-b border-black/30"
+		class="shadow"
 	>
 		<MainAside />
 
-		<div class="scolcours-container py-6 flex justify-between items-center">
+		<div
+			class="scolcours-container py-6
+		flex justify-between items-center"
+		>
 			<div class="text-2xl md:text-3xl lg:text-5xl flex gap-5">
 				<InertiaLink
 					href="/"
@@ -68,9 +71,8 @@ const editMode = useStoreEditMode()
 
 			<div class="flex gap-8 items-center">
 				<div
-					v-admin
 					@click="toggleDark()"
-					class="hover:-rotate-[120deg] duration-500 cursor-pointer"
+					class="hover:-rotate-[120deg] duration-500 cursor-pointer p-3"
 				>
 					<i :class="isDark ? 'bi bi-moon-fill' : 'bi bi-sun-fill'" />
 				</div>

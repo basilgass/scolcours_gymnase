@@ -95,7 +95,7 @@ const mdClick = function (event) {
 <template>
 	<div
 		ref="root"
-		class="prose lg:prose-lg max-w-full item"
+		class="prose dark:prose-invert lg:prose-lg max-w-full item"
 		:class="{
 			'katex-boxed': !customKatex,
 		}"

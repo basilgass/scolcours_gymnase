@@ -16,7 +16,7 @@ const langues = {
 }
 </script>
 <template>
-	<div class="bg-slate-950 text-slate-400 px-10 mt-24">
+	<div class="bg-slate-950 text-slate-300 px-10 mt-24">
 		<div class="max-w-5xl mx-auto py-10 grid grid-cols-1 md:grid-cols-3 gap-5">
 			<div class="md:mx-auto">
 				<h3 class="text-lg font-semibold">
@@ -36,6 +36,14 @@ const langues = {
 				<h3 class="text-lg font-semibold">
 					Enseignement
 				</h3>
+
+				<InertiaLink
+					:href="route('theme', {theme: 'tools'})"
+					class="block transition duration-300 hover:translate-x-2 px-0 md:px-4 py-1"
+				>
+					<i class="mr-2 bi bi-wrench" /> boîte à outils
+				</InertiaLink>
+
 				<InertiaLink
 					:href="route('bareme.show')"
 					class="block transition duration-300 hover:translate-x-2 px-0 md:px-4 py-1"
@@ -60,24 +68,6 @@ const langues = {
 						<i class="mr-1 bi bi-translate" /> {{ langues[langue] }}
 					</InertiaLink>
 				</div>
-				<!--				<InertiaLink-->
-				<!--					:href="route('translations.index', ['english'])"-->
-				<!--					class="block transition duration-300 hover:translate-x-2 px-0 md:px-4 py-1"-->
-				<!--				>-->
-				<!--					<i class="mr-2 bi bi-translate" /> english-->
-				<!--				</InertiaLink>-->
-				<!--				<InertiaLink-->
-				<!--					:href="route('translations.index', ['deutsch'])"-->
-				<!--					class="block transition duration-300 hover:translate-x-2 px-0 md:px-4 py-1"-->
-				<!--				>-->
-				<!--					<i class="mr-2 bi bi-translate" /> deutsch-->
-				<!--				</InertiaLink>-->
-				<!--				<InertiaLink-->
-				<!--					:href="route('translations.index', ['espanol'])"-->
-				<!--					class="block transition duration-300 hover:translate-x-2 px-0 md:px-4 py-1"-->
-				<!--				>-->
-				<!--					<i class="mr-2 bi bi-translate" /> español-->
-				<!--				</InertiaLink>-->
 			</div>
 
 			<div class="md:mx-auto">
@@ -117,7 +107,7 @@ const langues = {
 			</div>
 		</div>
 
-		<div class="pb-5 text-center text-sm text-slate-400">
+		<div class="pb-5 text-center text-sm text-slate-400 font-extralight">
 			<span>Ce site est à usage mathématiques uniquement</span>
 		</div>
 	</div>

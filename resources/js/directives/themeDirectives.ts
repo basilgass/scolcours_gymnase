@@ -4,8 +4,8 @@ function getThemes(): string[] {
 	return usePage().props.themes.map((theme) => theme.slug)
 }
 
-function getCurrentTheme(): string | null {
-	return usePage().props?.theme?.slug || null
+function getCurrentTheme(): string  {
+	return usePage().props?.theme?.slug || "scolcours"
 }
 
 const keys = ["btn", "bg", "text", "border"]

@@ -28,7 +28,7 @@
 	@inertiaHead
 
 </head>
-<body class="font-sans antialiased min-h-screen">
+<body class="bg-slate-100 dark:bg-slate-900 font-sans antialiased min-h-screen">
 @inertia
 <div id="modal-dialog"></div>
 </body>

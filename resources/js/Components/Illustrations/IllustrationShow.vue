@@ -44,7 +44,10 @@ function click($event: MouseEvent){
 		<figcaption
 			v-if="props.illustration.title"
 			v-katex.auto="props.illustration.title"
-			class="text-center text-xs border border-gray-200 bg-gray-100 py-1 mt-3"
+			class="text-center text-xs
+			py-1 mt-3
+			bg-slate-100 dark:bg-slate-700
+			border border-slate-200 dark:border-slate-600"
 		/>
 	</figure>
 </template>

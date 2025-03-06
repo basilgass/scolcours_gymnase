@@ -53,8 +53,9 @@ onMounted(() => {
 <template>
 	<section>
 		<header
-			v-theme.bg.text
-			class="py-2 lg:flex-row justify-between bg-opacity-80"
+			v-theme.text
+			class="h-[80px] w-full py-2
+			lg:flex-row justify-between"
 		>
 			<!-- title -->
 			<div class="scolcours-container flex justify-between">
@@ -62,7 +63,7 @@ onMounted(() => {
 					<div class="flex gap-5 items-baseline">
 						<h1
 							v-katex.auto="post.title"
-							class="text-LG md:text-2xl l:text-3xl"
+							class="text-lg md:text-3xl l:text-5xl font-semibold"
 						/>
 						<edit-link
 							:id="post.id"

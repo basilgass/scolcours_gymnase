@@ -46,8 +46,8 @@ const nav = computed<{
 </script>
 
 <template>
-	<div class="grid grid-cols-3 mt-3 px-5 md:px-0">
-		<div class="justify-self-start">
+	<div class="grid grid-cols-2 gap-3 md:gap-1 md:grid-cols-3 mt-3 px-5 md:px-0">
+		<div class="order-2 md:order-1 justify-self-start">
 			<sc-button
 				v-if="nav.previous"
 				theme
@@ -59,15 +59,16 @@ const nav = computed<{
 				</div>
 			</sc-button>
 		</div>
-		<div class="justify-self-center flex">
+		<div class="order-1 col-span-2 md:order-2 md:col-span-1 justify-self-center flex w-full">
 			<sc-button
+				class="w-full"
 				theme
 				:href="nav.home"
 			>
 				<i class="bi bi-house mr-2 hidden md:inline" /><span v-katex.auto="chapter.title" />
 			</sc-button>
 		</div>
-		<div class="justify-self-end">
+		<div class="order-3 justify-self-end">
 			<sc-button
 				v-if="nav.next"
 				theme

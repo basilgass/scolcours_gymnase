@@ -16,11 +16,11 @@ defineOptions({layout: LayoutFullpage})
 			<InertiaLink
 				v-for="(theme) in $page.props.themes"
 				:key="theme.slug"
-				v-theme.bg="theme.slug"
+				v-theme.bg.text="theme.slug"
 				:href="'/' + theme.slug"
 				class="aspect-[2] group
 					transition-all duration-400 ease-in-out
-					text-xl font-thin whitespace-nowrap text-white
+					text-xl font-thin whitespace-nowrap
 					rounded-md hover:rounded-xl hover:shadow-xs
 					overflow-hidden cursor-pointer
 					hover:rotate-[-1deg] hover:scale-105

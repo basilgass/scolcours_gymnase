@@ -151,13 +151,15 @@ const listOfTools = computed(() => {
 			<template #card="{ item }: { item: ToolInterface }">
 				<InertiaLink
 					as="div"
-					class="bg-white dark:bg-gray-900 rounded border min-h-[6em]
+					class="bg-white dark:bg-gray-900 rounded
+					border border-slate-300 dark:border-slate-700
+					min-h-[6em]
 					hover:scale-105 transition-all
 					break-inside-avoid-column cursor-pointer"
 					:href="route('tools.tool', [item.slug])"
 				>
 					<header
-						class="border-b font-semibold px-3 py-2"
+						class="border-b border-slate-300 dark:border-slate-700 font-semibold px-3 py-2 bg-slate-100 dark:bg-slate-700"
 						v-theme.bg.text="item.theme_id ?? 0"
 					>
 						{{ item.title }}
