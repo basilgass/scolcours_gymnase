@@ -84,7 +84,6 @@ const kbrdConfig = computed(() => {
 		:keyboard="kbrdConfig"
 		back
 		class="max-w-xl mx-auto"
-		key-class="bg-white"
 		reset
 		@change="onChange"
 	/>

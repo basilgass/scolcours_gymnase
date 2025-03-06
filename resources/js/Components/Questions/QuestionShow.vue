@@ -120,9 +120,9 @@ async function loadAnswers(show: boolean) {
 	<article
 		:id="`question-${question.id}`"
 		:class="{
-			'bg-gray-50 border-gray-200':
+			'bg-gray-50 border-gray-200 dark:bg-gray-800 dark:border-gray-700':
 				!props.question.user.result,
-			'bg-green-50 border-green-600/60':
+			'bg-green-50 dark:bg-green-950 border-green-600/60':
 				props.question.user.result,
 		}"
 		class="relative flex flex-col rounded border h-full"
@@ -131,7 +131,12 @@ async function loadAnswers(show: boolean) {
 		<transition name="fade">
 			<div
 				v-if="locked && !editMode.enable"
-				class="w-full h-full font-extralight text-lg min-h-[5em] px-5 absolute inset-0 bg-gradient-to-b from-gray-100 to-gray-50 z-10 grid text-center place-items-center"
+				v-theme.gradient
+				class="w-full h-full
+				font-extralight text-lg
+				min-h-[5em] px-5 absolute inset-0
+				z-10 grid
+				text-center place-items-center"
 			>
 				<i class="bi bi-question-lg text-8xl text-gray-300" />
 			</div>

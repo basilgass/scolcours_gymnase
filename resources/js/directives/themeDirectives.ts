@@ -8,7 +8,7 @@ function getCurrentTheme(): string  {
 	return usePage().props?.theme?.slug || "scolcours"
 }
 
-const keys = ["btn", "bg", "text", "border"]
+const keys = ["btn", "bg", "text", "border", "gradient", "from", "to"]
 
 function clearThemeClasses(el: HTMLElement): void {
 	const themes = getThemes()
@@ -76,6 +76,11 @@ export function getThemeClasses(chapter: string, modifiers: Record<string, boole
 			if (keys.indexOf(key) !== -1) {
 				if (key === "text" && Object.hasOwn(modifiers, "bg")) {
 					classesList.push("text-white")
+				}else if(key==='gradient'){
+					classesList.push(`bg-linear-to-t`)
+					classesList.push(`from-${chapter}`)
+					classesList.push(`to-${chapter}-light`)
+					classesList.push(`dark:to-${chapter}-dark`)
 				} else {
 					classesList.push(`${key}-${chapter}`)
 

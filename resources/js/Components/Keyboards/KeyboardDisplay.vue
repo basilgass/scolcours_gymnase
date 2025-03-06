@@ -48,7 +48,7 @@ const props = withDefaults(defineProps<{
 	mathOutput: false,
 	textOutput: false,
 	small: false,
-	keyClass: "bg-gray-50",
+	keyClass: "bg-slate-100 border-slate-200 hover:bg-slate-50 dark:bg-slate-700 border-slate-600 hover:bg-slate-600 border rounded py-1 px-2 transition-colors",
 	extraLetters: () => [],
 	customKeys: null
 })
@@ -377,8 +377,8 @@ defineExpose({resetKeyStrokes})
 			<button
 				v-for="(key, index) of keyboardComputed"
 				:key="`key-${key.key}-${index}`"
-				:class="`${keyClass} ${key.span === 0 ? '' : key.span} ${key.visible ? 'invisible' : ''} ${key.type === 'bg' ? key.display : ''}`"
 				class="key"
+				:class="`${keyClass} ${key.span === 0 ? '' : key.span} ${key.visible ? 'invisible' : ''} ${key.type === 'bg' ? key.display : ''}`"
 				@click="ButtonKeyClick(key)"
 			>
 				<span

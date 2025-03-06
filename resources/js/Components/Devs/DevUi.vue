@@ -14,6 +14,8 @@ const themes = {
 		'text-main-light border border-main-light dark:text-main-light dark:border-main-light',
 		'text-main border border-main dark:text-main dark:border-main',
 		'text-main-dark border border-main-dark dark:text-main-dark dark:border-main-dark',
+		'bg-linear-to-t from-main to-main-light dark:to-main-dark',
+		'bg-linear-to-t from-main to-main-dark dark:to-main-light',
 	],
 	'scolcours': [
 		'bg-scolcours-light dark:bg-scolcours-light',
@@ -22,6 +24,8 @@ const themes = {
 		'text-scolcours-light border border-scolcours-light dark:text-scolcours-light dark:border-scolcours-light',
 		'text-scolcours border border-scolcours dark:text-scolcours dark:border-scolcours',
 		'text-scolcours-dark border border-scolcours-dark dark:text-scolcours-dark dark:border-scolcours-dark',
+		'bg-linear-to-t from-scolcours to-scolcours-light dark:to-scolcours-dark',
+		'bg-linear-to-t from-scolcours to-scolcours-dark dark:to-scolcours-light',
 	],
 	'algebre': [
 		'bg-algebre-light dark:bg-algebre-light',
@@ -30,6 +34,8 @@ const themes = {
 		'text-algebre-light border border-algebre-light dark:text-algebre-light dark:border-algebre-light',
 		'text-algebre border border-algebre dark:text-algebre dark:border-algebre',
 		'text-algebre-dark border border-algebre-dark dark:text-algebre-dark dark:border-algebre-dark',
+		'bg-linear-to-t from-algebre to-algebre-light dark:to-algebre-dark',
+		'bg-linear-to-t from-algebre to-algebre-dark dark:to-algebre-light',
 	],
 	'analyse': [
 		'bg-analyse-light dark:bg-analyse-light',
@@ -38,6 +44,8 @@ const themes = {
 		'text-analyse-light border border-analyse-light dark:text-analyse-light dark:border-analyse-light',
 		'text-analyse border border-analyse dark:text-analyse dark:border-analyse',
 		'text-analyse-dark border border-analyse-dark dark:text-analyse-dark dark:border-analyse-dark',
+		'bg-linear-to-t from-analyse to-analyse-light dark:to-analyse-dark',
+		'bg-linear-to-t from-analyse to-analyse-dark dark:to-analyse-light',
 	],
 	'geometrie': [
 		'bg-geometrie-light dark:bg-geometrie-light',
@@ -46,6 +54,8 @@ const themes = {
 		'text-geometrie-light border border-geometrie-light dark:text-geometrie-light dark:border-geometrie-light',
 		'text-geometrie border border-geometrie dark:text-geometrie dark:border-geometrie',
 		'text-geometrie-dark border border-geometrie-dark dark:text-geometrie-dark dark:border-geometrie-dark',
+		'bg-linear-to-t from-geometrie to-geometrie-light dark:to-geometrie-dark',
+		'bg-linear-to-t from-geometrie to-geometrie-dark dark:to-geometrie-light',
 	],
 	'statistiques': [
 		'bg-statistiques-light dark:bg-statistiques-light',
@@ -54,6 +64,8 @@ const themes = {
 		'text-statistiques-light border border-statistiques-light dark:text-statistiques-light dark:border-statistiques-light',
 		'text-statistiques border border-statistiques dark:text-statistiques dark:border-statistiques',
 		'text-statistiques-dark border border-statistiques-dark dark:text-statistiques-dark dark:border-statistiques-dark',
+		'bg-linear-to-t from-statistiques to-statistiques-light dark:to-statistiques-dark',
+		'bg-linear-to-t from-statistiques to-statistiques-dark dark:to-statistiques-light',
 	],
 	'jeux': [
 		'bg-jeux-light dark:bg-jeux-light',
@@ -62,6 +74,8 @@ const themes = {
 		'text-jeux-light border border-jeux-light dark:text-jeux-light dark:border-jeux-light',
 		'text-jeux border border-jeux dark:text-jeux dark:border-jeux',
 		'text-jeux-dark border border-jeux-dark dark:text-jeux-dark dark:border-jeux-dark',
+		'bg-linear-to-t from-jeux to-jeux-light dark:to-jeux-dark',
+		'bg-linear-to-t from-jeux to-jeux-dark dark:to-jeux-light',
 	],
 	'tools': [
 		'bg-tools-light dark:bg-tools-light',
@@ -70,6 +84,8 @@ const themes = {
 		'text-tools-light border border-tools-light dark:text-tools-light dark:border-tools-light',
 		'text-tools border border-tools dark:text-tools dark:border-tools',
 		'text-tools-dark border border-tools-dark dark:text-tools-dark dark:border-tools-dark',
+		'bg-linear-to-t from-tools to-tools-light dark:to-tools-dark',
+		'bg-linear-to-t from-tools to-tools-dark dark:to-tools-light',
 	],
 	'arithmetique': [
 		'bg-arithmetique-light dark:bg-arithmetique-light',
@@ -78,6 +94,8 @@ const themes = {
 		'text-arithmetique-light border border-arithmetique-light dark:text-arithmetique-light dark:border-arithmetique-light',
 		'text-arithmetique border border-arithmetique dark:text-arithmetique dark:border-arithmetique',
 		'text-arithmetique-dark border border-arithmetique-dark dark:text-arithmetique-dark dark:border-arithmetique-dark',
+		'bg-linear-to-t from-arithmetique to-arithmetique-light dark:to-arithmetique-dark',
+		'bg-linear-to-t from-arithmetique to-arithmetique-dark dark:to-arithmetique-light',
 	],
 	'admin': [
 		'bg-admin-light dark:bg-admin-light',
@@ -86,6 +104,8 @@ const themes = {
 		'text-admin-light border border-admin-light dark:text-admin-light dark:border-admin-light',
 		'text-admin border border-admin dark:text-admin dark:border-admin',
 		'text-admin-dark border border-admin-dark dark:text-admin-dark dark:border-admin-dark',
+		'bg-linear-to-t from-admin to-admin-light dark:to-admin-dark',
+		'bg-linear-to-t from-admin to-admin-dark dark:to-admin-light',
 	],
 }
 
