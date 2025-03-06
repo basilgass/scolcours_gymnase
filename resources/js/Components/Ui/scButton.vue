@@ -3,7 +3,7 @@
 import {computed} from "vue"
 import {getThemeChapter, getThemeClasses} from "@/directives/themeDirectives.ts"
 
-export type buttonTypes = "add" | "edit"
+export type buttonTypes = "add" | "edit" | "default"
 
 const props = withDefaults(defineProps<{
 	active?: boolean

@@ -297,7 +297,7 @@ onMounted(()=>{
 			<div
 				v-for="index of outputLength"
 				:key="`output-${index}`"
-				:class="currentLetter=== index ? 'bg-blue-300' : ''"
+				:class="currentLetter=== index ? 'bg-sky-300' : ''"
 				class="border border-gray-600 shadow-sm bg-white grid place-items-center w-12 h-12"
 			>
 				{{ currentWord[index - 1] ?? "" }}

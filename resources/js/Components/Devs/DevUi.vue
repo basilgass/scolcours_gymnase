@@ -161,7 +161,7 @@ const blockTypes = {
 }
 
 type groupsUiType = 'theme' | 'buttons' | 'blocks' | 'forms'
-const detailsOpen = ref<groupsUiType>(['buttons'])
+const detailsOpen = ref<groupsUiType[]>(['buttons'])
 </script>
 
 <template>

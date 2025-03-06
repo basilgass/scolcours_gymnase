@@ -400,7 +400,7 @@ onMounted(()=>{
 	</article>
 </template>
 
-<style>
+<style scoped lang="postcss">
 .letter-selected {
 	@apply bg-blue-300;
 }
