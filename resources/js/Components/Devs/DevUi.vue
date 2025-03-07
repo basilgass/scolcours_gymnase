@@ -161,7 +161,7 @@ const blockTypes = {
 }
 
 type groupsUiType = 'theme' | 'buttons' | 'blocks' | 'forms'
-const detailsOpen = ref<groupsUiType[]>(['buttons'])
+const detailsOpen = ref<groupsUiType[]>(['forms'])
 </script>
 
 <template>
@@ -192,7 +192,7 @@ const detailsOpen = ref<groupsUiType[]>(['buttons'])
 			<summary class="text-lg">
 				Boutons
 			</summary>
-			<div class="flex flex-col gap-3">
+			<div class="flex flex-col gap-3 bg-content p-3">
 				<div class="flex flex-wrap gap-3">
 					<!-- boutons themes -->
 					<sc-button
@@ -212,6 +212,9 @@ const detailsOpen = ref<groupsUiType[]>(['buttons'])
 
 				<div class="flex gap-3">
 					<!-- boutons types petits -->
+					<sc-button xs>
+						par défaut
+					</sc-button>
 					<sc-button
 						v-for="type in btnTypes"
 						:type="type"
@@ -235,6 +238,7 @@ const detailsOpen = ref<groupsUiType[]>(['buttons'])
 
 				<div class="flex gap-3">
 					<!-- boutons types normaux -->
+					<sc-button>par défaut</sc-button>
 					<sc-button
 						v-for="type in btnTypes"
 						:type="type"
@@ -253,6 +257,9 @@ const detailsOpen = ref<groupsUiType[]>(['buttons'])
 				</div>
 				<div class="flex gap-3">
 					<!-- boutons types larges -->
+					<sc-button xl>
+						par défaut
+					</sc-button>
 					<sc-button
 						v-for="type in btnTypes"
 						:type="type"
@@ -309,7 +316,7 @@ const detailsOpen = ref<groupsUiType[]>(['buttons'])
 			<summary class="text-lg">
 				Forms
 			</summary>
-			<div>
+			<div class="bg-content p-3">
 				<form-maker
 					label="demande d'un texte"
 					placeholder="placeholder"

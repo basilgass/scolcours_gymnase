@@ -1,5 +1,6 @@
 import {usePage} from "@inertiajs/vue3"
 
+// REFACTOR: reformat this file
 function getThemes(): string[] {
 	return usePage().props.themes.map((theme) => theme.slug)
 }
@@ -60,6 +61,12 @@ export function getThemeChapter(value?: string | boolean | number, modifiers?: R
 
 export function getThemeClasses(chapter: string, modifiers: Record<string, boolean>) {
 	const classesList: string[] = []
+
+	if(modifiers.admin){
+		modifiers.bg = true
+		modifiers.text = true
+	}
+
 	Object.keys(modifiers)
 		.forEach((key) => {
 			// TODO: Check if it's still used for buttons ? I think it should be removed.
@@ -74,15 +81,19 @@ export function getThemeClasses(chapter: string, modifiers: Record<string, boole
 			}
 
 			if (keys.indexOf(key) !== -1) {
-				if (key === "text" && Object.hasOwn(modifiers, "bg")) {
-					classesList.push("text-white")
+				if (key === "text" && Object.hasOwn(modifiers, "bg") && chapter!=='admin') {
+						classesList.push("text-white")
 				}else if(key==='gradient'){
 					classesList.push(`bg-linear-to-t`)
 					classesList.push(`from-${chapter}`)
 					classesList.push(`to-${chapter}-light`)
 					classesList.push(`dark:to-${chapter}-dark`)
 				} else {
-					classesList.push(`${key}-${chapter}`)
+					if(chapter==='admin'){
+						classesList.push(`admin-content`)
+					}else {
+						classesList.push(`${key}-${chapter}`)
+					}
 
 					if(key==='text' || key==='border') {
 						// TODO: reformat themeDirectives and check the "light" color (used in dark mode !)

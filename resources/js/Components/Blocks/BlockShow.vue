@@ -85,7 +85,7 @@ function addIllustration(){
 	<article
 		:id="`block-${block.id}`"
 		:class="blockConfig.style.body"
-		class="bg-white dark:bg-slate-800"
+		class="bg-content"
 	>
 		<BlockShowAdmin
 			v-if="!noAdmin"
@@ -157,8 +157,8 @@ function addIllustration(){
 		<div
 			v-if="!noAdmin"
 			v-admin="editMode.enable"
-			v-theme.bg.text.admin
-			class="text-xs px-5 py-2 flex justify-between border-b border-b-white"
+			v-theme.admin
+			class="text-xs px-5 py-2 flex justify-between border-t"
 		>
 			<button
 				class="btn btn-xs border border-gray-500"

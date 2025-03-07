@@ -3,7 +3,7 @@
 import {computed} from "vue"
 import {getThemeChapter, getThemeClasses} from "@/directives/themeDirectives.ts"
 
-export type buttonTypes = "add" | "edit" | "default"
+export type buttonTypes = "add" | "edit" | "admin" | "default"
 
 const props = withDefaults(defineProps<{
 	active?: boolean
@@ -33,14 +33,16 @@ const btnTheme = computed(() => {
 			"default": "border border-gray-500 text-gray-500",
 			"add": "border border-green-500 text-green-500",
 			"edit": "border border-purple-500 text-purple-500",
+			"admin": "border border-sky-500 text-sky-500",
 			"active": "border border-sky-500 text-sky-500",
 		}
 	}
 
 	return {
-		"default": "bg-slate-50 border border-slate-300 dark:bg-slate-800 dark:border-slate-600",
+		"default": "bg-action border",
 		"add": "bg-green-600 dark:bg-green-800 text-white",
 		"edit": "bg-purple-600 dark:bg-purple-800 text-white",
+		"admin": "bg-sky-600 dark:bg-sky-800 text-white",
 		"active": "bg-sky-400 dark:bg-sky-600 text-white",
 	}
 })

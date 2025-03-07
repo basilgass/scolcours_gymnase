@@ -9,16 +9,9 @@ import MainAside from "@/Components/MainAside.vue"
 import DropdownMenu from "@/Components/Ui/DropdownMenu.vue"
 import LogoutButton from "@/Components/Ui/LogoutButton.vue"
 import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
-
 import {ThemeInterface} from "@/types/modelInterfaces.ts"
-
-import {useDark, useToggle} from "@vueuse/core"
 import {computed, PropType, provide, ref} from "vue"
-
-// TODO: Set dark mode to false by default for now
-const isDark = useDark()
-// isDark.value = false
-const toggleDark = useToggle(isDark)
+import ScButton from "@/Components/Ui/scButton.vue"
 
 const props = defineProps({
 	theme: {
@@ -70,12 +63,6 @@ const editMode = useStoreEditMode()
 			</div>
 
 			<div class="flex gap-8 items-center">
-				<div
-					@click="toggleDark()"
-					class="hover:-rotate-[120deg] duration-500 cursor-pointer p-3"
-				>
-					<i :class="isDark ? 'bi bi-moon-fill' : 'bi bi-sun-fill'" />
-				</div>
 				<!-- utilisateur connecté -->
 				<div
 					v-if="$page.props.auth.user"
@@ -126,20 +113,16 @@ const editMode = useStoreEditMode()
 						administrateur
 					</InertiaLink>
 				</div>
-				<button
-					:class="editMode.enable ? 'bg-white/40' : ''"
-					class="btn btn-xs hover:text-black"
+				<sc-button
+					type="admin"
+					:outline="!editMode.enable"
+					xs
 					title="Ctrl+Alt+A"
 					@click="editMode.toggle()"
 				>
-					<span v-show="editMode.enable">
-						<i class="bi bi-pencil mr-2" />
-						<span class="hidden md:inline"> édition activée </span>
-					</span>
-					<span v-show="!editMode.enable">
-						<i class="bi bi-pencil mr-2" />
-						<span>activer l'édition</span></span>
-				</button>
+					<i class="bi bi-pencil mr-2" />
+					{{ editMode.enable ? 'édition activée' : 'édition désactivée' }}
+				</sc-button>
 			</div>
 		</div>
 	</header>

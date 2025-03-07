@@ -8,7 +8,7 @@ withDefaults(defineProps<{
 </script>
 
 <template>
-	<div :class="withThemes?'':'bg-white dark:bg-slate-900'">
+	<div :class="withThemes?'':'bg-content'">
 		<header
 			v-if="$slots['header']"
 			class="px-3 py-2 border-b"

@@ -7,6 +7,7 @@ Pied de page pour les pages principales.
 >
 import LogoutButton from "@/Components/Ui/LogoutButton.vue"
 import ThemeLinks from "@/Components/Ui/ThemeLinks.vue"
+import DarkModeSwitch from "@/Components/Ui/DarkModeSwitch.vue"
 
 const langues = {
 	italiano: 'it',
@@ -97,13 +98,18 @@ const langues = {
 						<i class="mr-2 bi bi-person-workspace" />administration
 					</InertiaLink>
 
-					<LogoutButton class="block transition duration-300 hover:translate-x-2 px-0 md:px-4 py-1 mt-10" />
+					<LogoutButton class="block transition duration-300 hover:translate-x-2 px-0 md:px-4 py-1 mt-4" />
 				</div>
 				<div v-else>
 					<InertiaLink href="/login">
 						Se connecter
 					</InertiaLink>
 				</div>
+
+				<h3 class="text-lg font-semibold mt-5">
+					Interface
+				</h3>
+				<dark-mode-switch />
 			</div>
 		</div>
 

@@ -2,6 +2,7 @@
 import { useScriptLoader } from "@/Composables/useScriptLoader.ts"
 import { buttonInterface } from "@/types"
 import { computed, inject } from "vue"
+import ScButton from "@/Components/Ui/scButton.vue"
 
 
 const blockScript = inject('blockScript', useScriptLoader(''))
@@ -53,12 +54,14 @@ const resetButton = computed<buttonInterface>(() => {
 <template>
 	<div
 		v-if="hasButtons"
-		class="flex gap-3"
+		class="flex gap-3 items-end"
 	>
-		<button
+		<sc-button
 			v-if="resetButton"
 			v-show="resetButton.show"
-			:class="`btn-scolcours-${$page.props.theme.slug} btn-xs tracking-wider d-block`"
+			theme
+			xs
+			class="tracking-wider d-block"
 			@click="blockScript.reset()"
 		>
 			<i
@@ -67,13 +70,14 @@ const resetButton = computed<buttonInterface>(() => {
 				class="mr-2"
 			/>
 			<span v-katex.auto="resetButton.text" />
-		</button>
+		</sc-button>
 
-		<button
+		<sc-button
 			v-if="randomButton"
 			v-show="randomButton.show"
-			v-theme.btn
-			:class="`btn-xs tracking-wider d-block`"
+			theme
+			xs
+			class="tracking-wider d-block"
 			@click="blockScript.run()"
 		>
 			<i
@@ -82,6 +86,6 @@ const resetButton = computed<buttonInterface>(() => {
 				class="mr-2"
 			/>
 			<span v-katex.auto="randomButton.text" />
-		</button>
+		</sc-button>
 	</div>
 </template>

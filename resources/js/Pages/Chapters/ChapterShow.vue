@@ -11,6 +11,7 @@ import LayoutMain from "@/Layouts/LayoutMain.vue"
 import {ChallengeMinInterface, ChapterInterface, ChapterShowInterface, PostInterface} from "@/types/modelInterfaces"
 import {ref} from "vue"
 import ScButton from "@/Components/Ui/scButton.vue"
+import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
 
 defineOptions({layout: LayoutMain})
 
@@ -20,6 +21,8 @@ defineProps<{
 	challenges: ChallengeMinInterface[],
 	relations: ChapterInterface[]
 }>()
+
+const editMode = useStoreEditMode()
 
 const currentTab = ref<"requires" | "formulas" | "challenges" | "theorems" | undefined>(undefined)
 const showTheorem = ref(false)
@@ -46,10 +49,9 @@ const showFormular = ref(false)
 			/>
 		</header>
 
-		<main class="scolcours-container py-10 space-y-12">
+		<main class=" py-10 space-y-12">
 			<chapter-toc
 				v-theme.border
-				class="box"
 				:chapter
 				:posts
 			/>
@@ -62,6 +64,11 @@ const showFormular = ref(false)
 				<sc-button
 					class="min-w-[200px] md:px-20 rounded-xl"
 					theme
+					:href="route('themes.chapters.slide', {
+						theme: chapter.theme.slug,
+						chapter: chapter.slug,
+						order: posts[0].order,
+					})"
 				>
 					<div class="flex flex-col gap-3 py-3 text-xs font-ultrathin">
 						<p>Commencer l'aventure avec</p>
@@ -75,14 +82,13 @@ const showFormular = ref(false)
 
 			<!-- liste des prérequis -->
 			<chapter-relations
-				class="box"
 				:chapter
 				:relations
 			/>
 
 			<!-- liste des challenges -->
 			<chapter-challenges
-				class="box"
+				v-if="challenges.length>0 || ($page.props.auth.can.admin && editMode.enable)"
 				:challenges
 				:chapter
 			/>

@@ -11,8 +11,12 @@ import { createApp, DefineComponent, h } from "vue"
 import draggableComponent from "vuedraggable/src/vuedraggable.js"
 
 import { ZiggyVue } from "../../vendor/tightenco/ziggy"
+import {useDark} from "@vueuse/core"
 
 const pinia = createPinia()
+
+// Enable dark mode
+useDark()
 
 // import route from "ziggy-js"
 // const appName =

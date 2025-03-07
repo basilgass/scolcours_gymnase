@@ -1,36 +1,45 @@
 @theme {
+	/* chocolate */
 	--color-scolcours-light: oklch(0.816 0.065 57.45);
 	--color-scolcours: oklch(0.634 0.155 50.266);
 	--color-scolcours-dark: oklch(0.36 0.106 43.578);
 
+	/* purple */
 	--color-geometrie-light: oklch(0.827 0.119 306.383);    	/*300*/
 	--color-geometrie: oklch(0.627 0.265 303.900);            	/*500*/
 	--color-geometrie-dark: oklch(0.381 0.176 304.987);        	/*900*/
 
+	/* blue */
 	--color-algebre-light: oklch(0.809 0.105 251.813);
 	--color-algebre: oklch(0.623 0.214 259.815);
 	--color-algebre-dark: oklch(0.379 0.146 265.522);
 
+	/* amber */
 	--color-analyse-light: oklch(0.879 0.169 91.605);
 	--color-analyse: oklch(0.769 0.188 70.08);
 	--color-analyse-dark: oklch(0.414 0.112 45.904);
 
+	/* cyan */
 	--color-statistiques-light: oklch(0.865 0.127 207.078);
 	--color-statistiques: oklch(0.715 0.143 215.221);
 	--color-statistiques-dark: oklch(0.398 0.07 227.392);
 
+	/* orange */
 	--color-jeux-light: oklch(0.837 0.128 66.29);
 	--color-jeux: oklch(0.705 0.213 47.604);
 	--color-jeux-dark: oklch(0.408 0.123 38.172);
 
+	/* pink */
 	--color-tools-light: oklch(0.823 0.12 346.018);
 	--color-tools: oklch(0.656 0.241 354.308);
 	--color-tools-dark: oklch(0.408 0.153 2.432);
 
+	/* lime */
 	--color-arithmetique-light: oklch(0.897 0.196 126.665);
 	--color-arithmetique: oklch(0.768 0.233 130.85);
 	--color-arithmetique-dark: oklch(0.405 0.101 131.063);
 
+	/* slate */
 	--color-admin-light: oklch(0.869 0.022 252.894);
 	--color-admin: oklch(0.554 0.046 257.417);
 	--color-admin-dark: oklch(0.208 0.042 265.755);

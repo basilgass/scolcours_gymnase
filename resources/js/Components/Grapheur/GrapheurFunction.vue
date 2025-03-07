@@ -41,14 +41,11 @@ defineEmits<{
 <template>
 	<div
 		class="flex flex-col gap-3 relative pb-3 rounded-sm
-		bg-slate-50 dark:bg-slate-800
-		border border-slate-300 dark:border-slate-600"
+		bg-content border"
 	>
 		<div
 			class="absolute -top-3 -right-3 w-7 h-7 rounded-full
-			bg-slate-50 dark:bg-slate-800
-			border-slate-300 dark:border-slate-600
-			text-black dark:text-slate-300
+			bg-content
 			grid place-items-center z-10 border cursor-pointer"
 			@click="$emit('destroy')"
 		>
@@ -56,9 +53,7 @@ defineEmits<{
 		</div>
 		<div
 			class="absolute -bottom-3 left-0 right-0 m-auto w-5 h-5 rounded-full
-			bg-slate-50 dark:bg-slate-800
-			border-slate-300 dark:border-slate-600
-			text-black dark:text-slate-300
+			bg-content
 			grid place-items-center z-10 border cursor-pointer"
 			@click="showAdvanced = !showAdvanced"
 		>

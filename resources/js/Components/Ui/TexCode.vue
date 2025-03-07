@@ -7,6 +7,7 @@ const props = defineProps({
 })
 
 const { copy, copied } = useClipboard()
+
 </script>
 
 <template>

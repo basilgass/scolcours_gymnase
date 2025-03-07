@@ -10,7 +10,7 @@ import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
 import {flashInterface} from "@/types"
 import {ChapterInterface, FormulaInterface} from "@/types/modelInterfaces.ts"
 import axios from "axios"
-import {inject, onMounted, ref} from "vue"
+import {inject, onMounted, ref, useTemplateRef} from "vue"
 import ScButton from "@/Components/Ui/scButton.vue"
 
 const props = defineProps({
@@ -18,7 +18,7 @@ const props = defineProps({
 	responsive: {type: Boolean, default: false}
 })
 
-const formular = ref(null)
+const formular = useTemplateRef<HTMLElement>('formular')
 
 const theFormular = ref([]),
 	theSlug = ref(props.chapterSlug),

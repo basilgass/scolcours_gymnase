@@ -4,6 +4,7 @@
 >
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 import { ChapterInterface } from "@/types/modelInterfaces.ts"
+import ScButton from "@/Components/Ui/scButton.vue"
 
 interface DashboardInterface extends ChapterInterface {
 	maxPost: number,
@@ -19,7 +20,7 @@ defineProps<{
 
 </script>
 <template>
-	<section class="scolcours-container">
+	<section class="">
 		<div class="flex flex-col mt-2">
 			<div class="font-extralight uppercase -mb-1">
 				profil de
@@ -31,14 +32,15 @@ defineProps<{
 
 		<div
 			v-admin
-			class="flex flex-col gap-3 my-3 admin-wrapper"
+			class="flex  my-3"
 		>
-			<InertiaLink
+			<sc-button
+				type="admin"
 				href="/admin/"
 				class="hover:underline"
 			>
 				Administration
-			</InertiaLink>
+			</sc-button>
 		</div>
 
 		<!--		<div class="bg-white rounder border border-gray-200">-->

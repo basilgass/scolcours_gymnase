@@ -4,42 +4,30 @@ Utilisé principalement pour l'édition des blocks
 -->
 <script setup lang="ts">
 
-import { ref } from "vue"
+const showModal = defineModel()
 
-const emits = defineEmits([
-	"update:modelValue", "cancel"
-])
-
-const  props = defineProps({
-	modelValue: Boolean
-})
-
-// Detect the change of the modelValue.
-// watch(()=>props.modelValue, (val)=>{
-// 	if(val){root.value.showModal()}else{root.value.close()}
-// })
-
-const root = ref(null)
+const emits = defineEmits<{
+	"cancel": []
+}>()
 
 function doCancel(){
+	showModal.value = false
 	emits("cancel")
-	emits("update:modelValue", false)
 }
 </script>
 
 <template>
 	<Teleport
-		v-if="props.modelValue"
+		v-if="showModal"
 		to="body"
 	>
 		<div
-			class="fixed inset-0 bg-gray-800/60 grid place-items-center z-50"
+			class="fixed inset-0 bg-slate-500/70 dark:bg-slate-950/70 grid place-items-center z-50"
 			@mousedown.self="doCancel"
 		>
 			<div
-				ref="root"
 				v-bind="$attrs"
-				class="grid bg-white rounded-lg max-w-[1600px] w-[90%] max-h-[95vh] overflow-auto"
+				class="grid bg-content border rounded-lg max-w-[1600px] w-[90%] max-h-[95vh] overflow-auto"
 			>
 				<div class="flex flex-col">
 					<div v-if="$slots.header">

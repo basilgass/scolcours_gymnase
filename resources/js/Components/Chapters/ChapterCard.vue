@@ -41,7 +41,7 @@ function activate() {
 	<div class="w-full break-inside-avoid-column">
 		<div
 			v-admin="editMode.enable"
-			v-theme.bg.text.admin
+			v-theme.admin
 			class="px-3 py-1 text-xs flex justify-between"
 		>
 			<div>id: {{ chapter.id }}</div>

@@ -2,10 +2,10 @@
 
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import EditLink from "@/Components/Ui/EditLink.vue"
-import { useStoreEditMode } from "@/stores/useStoreEditMode.ts"
-import { BlockInterface } from "@/types/modelInterfaces.ts"
+import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
+import {BlockInterface} from "@/types/modelInterfaces.ts"
 import axios from "axios"
-import { ref } from "vue"
+import {ref} from "vue"
 
 const editMode = useStoreEditMode()
 
@@ -38,8 +38,8 @@ function saveMerge() {
 <template>
 	<div
 		v-admin="editMode.enable"
-		v-theme.bg.text.admin
-		class="py-1 px-2 flex justify-between items-center"
+		v-theme.admin
+		class="py-1 px-2 flex justify-between items-center font-code"
 	>
 		<slot name="adminLeft">
 			<div class="flex gap-5 items-baseline">
@@ -68,7 +68,6 @@ function saveMerge() {
 						column: 'template',
 					}"
 					inline-label
-					input-class="bg-white text-black"
 					label="[b|i],[md|lg|xl]:[#]b+[#]i"
 					label-class="whitespace-nowrap"
 					sm

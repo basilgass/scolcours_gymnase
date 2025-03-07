@@ -47,7 +47,7 @@ const  editMode  = useStoreEditMode()
 		</div>
 		<div
 			v-admin="editMode.enable"
-			v-theme.bg.text.admin
+			v-theme.admin
 			class="py-1 font-code text-sm -mb-2 mt-2"
 		>
 			<InertiaLink

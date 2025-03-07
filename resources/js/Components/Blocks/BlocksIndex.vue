@@ -94,10 +94,10 @@ function updateBlockOrder(){
 					</div>
 
 					<block-show
-						class="overflow-hidden max-w-full"
+						class="overflow-hidden max-w-full border-x"
 						:class="{
-							'mt-10 rounded-t-lg': !element.merge,
-							'rounded-b-lg': !blocks[index+1]?.merge
+							'mt-10 rounded-t-lg border-t': !element.merge,
+							'rounded-b-lg border-b': !blocks[index+1]?.merge
 						}"
 						:block="element"
 					/>

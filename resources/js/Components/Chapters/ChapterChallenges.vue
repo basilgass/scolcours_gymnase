@@ -8,6 +8,7 @@ import { useStoreEditMode } from "@/stores/useStoreEditMode.ts"
 import {ChallengeMinInterface, ChapterShowInterface} from "@/types/modelInterfaces.ts"
 import { useForm } from "@inertiajs/vue3"
 import { ref } from "vue"
+import ScButton from "@/Components/Ui/scButton.vue"
 
 let props = defineProps<{
 	chapter: ChapterShowInterface,
@@ -36,20 +37,18 @@ function storeChallenge() {
 			v-if="challenges.length>0"
 			class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 lg:gap-8"
 		>
-			<InertiaLink
+			<sc-button
 				v-for="challenge in challenges"
 				:key="`challenge-${challenge.id}`"
 				v-katex.auto="challenge.title"
-				:class="`btn-scolcours-${$page.props.theme.slug}`"
+				theme
 				:href="route('chapters.challenge', [
 					$page.props.theme.slug,
 					chapter.slug,
 					challenge.slug,
 				])
 				"
-				as="button"
-				class="min-h-[4rem] w-full h-full"
-				type="button"
+				class="py-5"
 			/>
 		</div>
 
@@ -58,12 +57,13 @@ function storeChallenge() {
 			v-admin
 			class="min-h-[100px] grid place-items-center"
 		>
-			<button
-				class="btn btn-new"
+			<sc-button
+				type="add"
 				@click="show = true"
 			>
 				Nouveau challenge
-			</button>
+			</sc-button>
+
 			<dialog-modal
 				v-model="show"
 				class="max-w-[30em]"

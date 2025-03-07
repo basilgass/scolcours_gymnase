@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import DialogModal from "@/Components/Ui/DialogModal.vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
-import {nextTick, ref} from "vue"
+import {nextTick, ref, useTemplateRef} from "vue"
 import axios from "axios"
 import {router, usePage} from "@inertiajs/vue3"
 import ScButton from "@/Components/Ui/scButton.vue"
@@ -9,17 +9,19 @@ import ScButton from "@/Components/Ui/scButton.vue"
 const createChapterModal = ref(false)
 const createChapterTitle = ref("")
 
-const input = ref(null)
+const input =useTemplateRef<InstanceType<typeof FormMaker>>('input')
 
 async function onShowModal() {
 	createChapterModal.value = true
 	await nextTick()
+
 	input.value.focus()
-	input.value
 }
 
 function createChapter() {
-	axios.post(route("themes.chapters.store", [usePage().props.theme.slug]), {
+	axios.post(route("themes.chapters.store", {
+		theme: usePage().props.theme.slug
+	}), {
 		title: createChapterTitle.value
 	})
 		.then((res) => {
@@ -45,7 +47,7 @@ function createChapter() {
 					nouveau chapitre
 				</h2>
 			</template>
-			<div class="p-5 flex  gap-3">
+			<div class="p-5 flex items-end gap-3">
 				<form-maker
 					ref="input"
 					v-model="createChapterTitle"
@@ -55,14 +57,13 @@ function createChapter() {
 					@enter="createChapter"
 					font-code
 				/>
-				<button
+				<sc-button
 					v-admin
-					v-theme.btn
-					class="btn-xs "
-					@enter="createChapter"
+					theme
+					@click="createChapter"
 				>
 					créer
-				</button>
+				</sc-button>
 			</div>
 		</dialog-modal>
 	</div>

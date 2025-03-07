@@ -5,14 +5,15 @@ Affichage d'un formulaire, avec la possibilit√© de passer d'un formulaire du th√
 import BlockShow from "@/Components/Blocks/BlockShow.vue"
 import { useIntersectionObserver } from "@vueuse/core"
 import axios from "axios"
-import { computed, ref } from "vue"
+import {computed, ref, useTemplateRef} from "vue"
 
 const props = defineProps({
 	chapterSlug: { type: String, required: true },
 	responsive: { type: Boolean, default: false }
 })
 
-const theoremsList = ref(null)
+const theoremsList = useTemplateRef<HTMLElement>('theoremsList')
+
 useIntersectionObserver(theoremsList, ([{ isIntersecting }]) => {
 	if (isIntersecting && theTheorems.value.length === 0) {
 		loadTheorems()

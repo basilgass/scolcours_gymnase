@@ -8,6 +8,7 @@ import { flashInterface } from "@/types"
 import type { ChapterInterface } from "@/types/modelInterfaces"
 import axios from "axios"
 import { inject, ref } from "vue"
+import ScButton from "@/Components/Ui/scButton.vue"
 
 const props = defineProps<{
 	chapter: ChapterInterface,
@@ -64,14 +65,12 @@ const toggleRelation = function(id) {
 			v-if="chapterRelations.length > 0"
 			class="flex flex-wrap gap-3"
 		>
-			<InertiaLink
+			<sc-button
 				v-for="ch of chapterRelations"
 				:key="`related-${ch.slug}`"
 				v-katex.auto="ch.title"
-				v-theme.btn="ch.theme.id"
+				:theme="ch.theme.id"
 				:href="route('chapters.show', [ch.slug])"
-				as="button"
-				class="btn-xs"
 			/>
 		</div>
 		<div v-else>
@@ -88,26 +87,26 @@ const toggleRelation = function(id) {
 			class="my-5"
 		>
 			<div class="mb-3">
-				<button
+				<sc-button
 					v-admin
+					type="add"
 					class="btn btn-new-inline"
 					@click="getAllChapters"
 				>
 					nouvelle relation
-				</button>
+				</sc-button>
 			</div>
 
 			<div
 				v-show="modifyRelations"
 				class="flex flex-wrap gap-3"
 			>
-				<button
+				<sc-button
 					v-for="chapter of searchChapters"
 					:key="chapter.slug"
 					v-katex.auto="chapter.title"
-					v-theme.btn="chapter.theme.id"
-					:class="Object.values(chapterRelations).map(x => x.slug).includes(chapter.slug) ? 'bg-white text-black' : ''"
-					class="btn-xs"
+					:theme="chapter.theme.id"
+					:outline="!Object.values(chapterRelations).map(x => x.slug).includes(chapter.slug)"
 					@click="toggleRelation(chapter.id)"
 				/>
 			</div>

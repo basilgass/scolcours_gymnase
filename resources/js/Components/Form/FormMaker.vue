@@ -88,7 +88,14 @@ const showLabel = computed(() => {
 
 // calculate the input combined class
 const combinedInputClass = computed(() => {
-	const classValue:string[] = [props.inputClass]
+	const classValue:string[] = []
+
+	classValue.push(props.inputClass ?
+		props.inputClass :
+		"bg-slate-50 text-slate-900 dark:bg-slate-800 dark:text-slate-200 border-slate-200 dark:border-slate-500"
+	)
+	classValue.push("w-full appearance-none transition")
+	classValue.push("focus:border-slate-400 focus:outline-hidden focus:ring-0 focus:shadow-sm")
 
 	if(props.sm){
 		classValue.push("text-xs p-1")
@@ -101,10 +108,6 @@ const combinedInputClass = computed(() => {
 	}else{
 		classValue.push("border-[1px] rounded-sm")
 	}
-
-	classValue.push("w-full appearance-none transition")
-	classValue.push("bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-500")
-	classValue.push("focus:border-slate-400 focus:outline-hidden focus:ring-0 focus:shadow-sm")
 
 	return classValue.join(' ')
 })
@@ -438,7 +441,11 @@ defineExpose({focus: setFocus})
 
 <style scoped  lang="postcss">
 div.inlineLabel {
-	@apply flex items-center gap-[3];
+	display: flex;
+	align-items: center;
+}
+div.inlineLabel>label {
+	margin-right: 0.5rem;
 }
 
 input {

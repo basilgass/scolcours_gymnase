@@ -46,8 +46,7 @@ function click($event: MouseEvent){
 			v-katex.auto="props.illustration.title"
 			class="text-center text-xs
 			py-1 mt-3
-			bg-slate-100 dark:bg-slate-700
-			border border-slate-200 dark:border-slate-600"
+			bg-content border"
 		/>
 	</figure>
 </template>

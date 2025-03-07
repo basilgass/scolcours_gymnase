@@ -20,7 +20,7 @@ const theme = computed(() => {
 	<div>
 		<div
 			v-admin="editMode.enable"
-			v-theme.bg.text.admin
+			v-theme.admin
 			class="flex justify-between p-2 items-middle"
 		>
 			<div class="font-code text-xs">
