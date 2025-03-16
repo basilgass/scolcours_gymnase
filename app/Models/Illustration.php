@@ -24,21 +24,21 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $updated_at
  * @property-read \App\Models\Block $block
  * @property-read \App\Models\Widget|null $widget
- * @method static Builder|Illustration newModelQuery()
- * @method static Builder|Illustration newQuery()
- * @method static Builder|Illustration query()
- * @method static Builder|Illustration whereBlockId($value)
- * @method static Builder|Illustration whereCode($value)
- * @method static Builder|Illustration whereCreatedAt($value)
- * @method static Builder|Illustration whereCss($value)
- * @method static Builder|Illustration whereId($value)
- * @method static Builder|Illustration whereOrder($value)
- * @method static Builder|Illustration whereParameters($value)
- * @method static Builder|Illustration whereTitle($value)
- * @method static Builder|Illustration whereType($value)
- * @method static Builder|Illustration whereUpdatedAt($value)
- * @method static Builder|Illustration whereValue($value)
- * @method static Builder|Illustration whereWidgetId($value)
+ * @method static Builder<static>|Illustration newModelQuery()
+ * @method static Builder<static>|Illustration newQuery()
+ * @method static Builder<static>|Illustration query()
+ * @method static Builder<static>|Illustration whereBlockId($value)
+ * @method static Builder<static>|Illustration whereCode($value)
+ * @method static Builder<static>|Illustration whereCreatedAt($value)
+ * @method static Builder<static>|Illustration whereCss($value)
+ * @method static Builder<static>|Illustration whereId($value)
+ * @method static Builder<static>|Illustration whereOrder($value)
+ * @method static Builder<static>|Illustration whereParameters($value)
+ * @method static Builder<static>|Illustration whereTitle($value)
+ * @method static Builder<static>|Illustration whereType($value)
+ * @method static Builder<static>|Illustration whereUpdatedAt($value)
+ * @method static Builder<static>|Illustration whereValue($value)
+ * @method static Builder<static>|Illustration whereWidgetId($value)
  * @mixin Eloquent
  */
 class Illustration extends Model

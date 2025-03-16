@@ -69,8 +69,8 @@ const custom_table_of_signs = computed<{
 
 	return {
 		roots: roots.split(","),
-		signs: signs?.split("") as TABLE_OF_SIGNS_VALUES[] ?? [],
-		result: (result?.split("") as TABLE_OF_SIGNS_VALUES_WITH_EXTREMES[]) ?? [],
+		signs: signs?.split("") as TABLE_OF_SIGNS_VALUES[] ?? undefined,
+		result: (result?.split("") as TABLE_OF_SIGNS_VALUES_WITH_EXTREMES[]) ?? undefined,
 		extremes: extremes?.split(",") ?? []
 	}
 })
@@ -83,9 +83,9 @@ const custom_table_of_signs = computed<{
 		:fx="code"
 		:label="fnName"
 		:minimal="minimal"
-		class="max-w-lg mx-auto"
 	/>
 	<table-of-signs
+		v-else
 		:label="fnName"
 		:mode="'auto'"
 		:roots="custom_table_of_signs.roots"

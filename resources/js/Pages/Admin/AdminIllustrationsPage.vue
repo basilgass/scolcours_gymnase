@@ -1,35 +1,54 @@
 <script setup lang="ts">
 
-import { computed, PropType, ref } from "vue"
+// TODO: Permettre la modification des illustrations directement.
+// TODO: pagination des illustrations
+// TODO: chargement asynchrone...
+// REFORMAT : (LOW) Refactor this component to use the new syntax
+
+
+import {computed, defineAsyncComponent, PropType, ref} from "vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
-import type { IllustrationInterface } from "@/types/modelInterfaces"
-import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"
+import type {IllustrationInterface} from "@/types/modelInterfaces"
+import ErrorBoundary from "@/Components/errorBoundary.vue"
 
-defineOptions({ layout: LayoutMain })
+const asyncComponent = defineAsyncComponent(()=>{
+	return import('@/Components/Pi/PiDrawParser.vue')
+})
+defineOptions({layout: LayoutMain})
 
 const props = defineProps({
 	illustrations: {type: Object as PropType<IllustrationInterface[]>, required: true}
 })
 
-const search = ref(""),
-	listOfIllustrations = computed(()=>{
-		if(search.value===""){
-			return props.illustrations
-		}
+const search = ref("")
+const listOfIllustrations = computed<IllustrationInterface[]>(() => {
 
-		const searchLC = search.value.toLowerCase()
+	if (showErrorsOnly.value) {
+		return props.illustrations.filter(item => illustrationsWithErrors.value.includes(item.id))
+	}
 
-		return props.illustrations.filter(item =>
+	if (search.value === "") {
+		return props.illustrations
+	}
+
+	const searchLC = search.value.toLowerCase()
+
+	return props.illustrations
+		.filter(item =>
 			item.parameters?.toLowerCase().includes(searchLC) ||
 			item.code.toLowerCase().includes(searchLC)
 		)
-	})
+})
+
+const illustrationsWithErrors = ref<number[]>([])
+const showErrorsOnly = ref<boolean>(false)
 </script>
 <template>
 	<h1 class="text-3xl pt-5">
 		Contrôle des illustrations
 	</h1>
+
 
 	<div>
 		<form-maker
@@ -39,14 +58,21 @@ const search = ref(""),
 		/>
 	</div>
 
-	<section class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
+	<div @click="showErrorsOnly=!showErrorsOnly">
+		erreurs : {{ illustrationsWithErrors }}
+	</div>
+
+
+	<section class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 mt-10">
 		<div
 			v-for="illustration in listOfIllustrations"
 			:key="illustration.id"
-			class="bg-white rounded-lg shadow-md"
+			class="bg-content border rounded-lg shadow-md"
 		>
-			<h2 class="bg-gray-200 mb-3 px-3 py-1">
-				{{ illustration.title }} (id: {{ illustration.id }})
+			<h2 class="mb-3 px-3 py-1 bg-slate-300 dark:bg-slate-600 flex justify-between">
+				<span v-katex.auto="illustration.title" />
+
+				<span class="text-xs">{{ illustration.id }}</span>
 			</h2>
 			<div class="p-2 grid grid-cols-1 md:grid-cols-2 gap-3 font-code">
 				<div class="flex flex-col gap-3">
@@ -64,8 +90,21 @@ const search = ref(""),
 						sm
 					/>
 				</div>
-					
-				<pi-draw-parser :draw="illustration" />
+
+				<error-boundary
+					:reset-key="illustration.parameters + illustration.code"
+					@error="illustrationsWithErrors.push(illustration.id)"
+				>
+					<suspense>
+						<asyncComponent :draw="illustration" />
+						<template #fallback>
+							Chargement...
+						</template>
+					</suspense>
+					<template #error>
+						Erreur dans l'illustration
+					</template>
+				</error-boundary>
 			</div>
 		</div>
 	</section>

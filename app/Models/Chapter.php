@@ -26,37 +26,39 @@ use URL;
  * @property int $active
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property-read Collection<int, Block> $blocks
+ * @property-read Collection<int, \App\Models\Block> $blocks
  * @property-read int|null $blocks_count
- * @property-read Collection<int, Challenge> $challenges
+ * @property-read Collection<int, \App\Models\Challenge> $challenges
  * @property-read int|null $challenges_count
  * @property-read mixed $component
- * @property-read Collection<int, Formula> $formulas
+ * @property-read Collection<int, \App\Models\Deck> $decks
+ * @property-read int|null $decks_count
+ * @property-read Collection<int, \App\Models\Formula> $formulas
  * @property-read int|null $formulas_count
- * @property-read Collection<int, Post> $posts
+ * @property-read Collection<int, \App\Models\Post> $posts
  * @property-read int|null $posts_count
- * @property-read Collection<int, Question> $questions
+ * @property-read Collection<int, \App\Models\Question> $questions
  * @property-read int|null $questions_count
- * @property-read Collection<int, Quizz> $quizzs
+ * @property-read Collection<int, \App\Models\Quizz> $quizzs
  * @property-read int|null $quizzs_count
  * @property-read Collection<int, Chapter> $relations
  * @property-read int|null $relations_count
- * @property-read Theme $theme
+ * @property-read \App\Models\Theme $theme
  * @property-read mixed $url
- * @property-read Collection<int, User> $users
+ * @property-read Collection<int, \App\Models\User> $users
  * @property-read int|null $users_count
- * @method static ChapterFactory factory($count = null, $state = [])
- * @method static Builder|Chapter newModelQuery()
- * @method static Builder|Chapter newQuery()
- * @method static Builder|Chapter query()
- * @method static Builder|Chapter whereActive($value)
- * @method static Builder|Chapter whereCreatedAt($value)
- * @method static Builder|Chapter whereId($value)
- * @method static Builder|Chapter whereMetaTitle($value)
- * @method static Builder|Chapter whereSlug($value)
- * @method static Builder|Chapter whereThemeId($value)
- * @method static Builder|Chapter whereTitle($value)
- * @method static Builder|Chapter whereUpdatedAt($value)
+ * @method static \Database\Factories\ChapterFactory factory($count = null, $state = [])
+ * @method static Builder<static>|Chapter newModelQuery()
+ * @method static Builder<static>|Chapter newQuery()
+ * @method static Builder<static>|Chapter query()
+ * @method static Builder<static>|Chapter whereActive($value)
+ * @method static Builder<static>|Chapter whereCreatedAt($value)
+ * @method static Builder<static>|Chapter whereId($value)
+ * @method static Builder<static>|Chapter whereMetaTitle($value)
+ * @method static Builder<static>|Chapter whereSlug($value)
+ * @method static Builder<static>|Chapter whereThemeId($value)
+ * @method static Builder<static>|Chapter whereTitle($value)
+ * @method static Builder<static>|Chapter whereUpdatedAt($value)
  * @mixin Eloquent
  */
 class Chapter extends Model

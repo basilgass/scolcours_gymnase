@@ -27,25 +27,25 @@ use Illuminate\Support\Facades\Cache;
  * @property Carbon|null $updated_at
  * @property string $questionable_type
  * @property int $questionable_id
- * @property-read Collection<int, Block> $blocks
+ * @property-read Collection<int, \App\Models\Block> $blocks
  * @property-read int|null $blocks_count
- * @property-read Model|Eloquent $questionable
- * @property-read Collection<int, User> $users
+ * @property-read Model|\Eloquent $questionable
+ * @property-read Collection<int, \App\Models\User> $users
  * @property-read int|null $users_count
- * @method static Builder|Question newModelQuery()
- * @method static Builder|Question newQuery()
- * @method static Builder|Question query()
- * @method static Builder|Question whereAnswer($value)
- * @method static Builder|Question whereChecker($value)
- * @method static Builder|Question whereCreatedAt($value)
- * @method static Builder|Question whereCss($value)
- * @method static Builder|Question whereDisplayif($value)
- * @method static Builder|Question whereId($value)
- * @method static Builder|Question whereKeyboard($value)
- * @method static Builder|Question whereOrder($value)
- * @method static Builder|Question whereQuestionableId($value)
- * @method static Builder|Question whereQuestionableType($value)
- * @method static Builder|Question whereUpdatedAt($value)
+ * @method static Builder<static>|Question newModelQuery()
+ * @method static Builder<static>|Question newQuery()
+ * @method static Builder<static>|Question query()
+ * @method static Builder<static>|Question whereAnswer($value)
+ * @method static Builder<static>|Question whereChecker($value)
+ * @method static Builder<static>|Question whereCreatedAt($value)
+ * @method static Builder<static>|Question whereCss($value)
+ * @method static Builder<static>|Question whereDisplayif($value)
+ * @method static Builder<static>|Question whereId($value)
+ * @method static Builder<static>|Question whereKeyboard($value)
+ * @method static Builder<static>|Question whereOrder($value)
+ * @method static Builder<static>|Question whereQuestionableId($value)
+ * @method static Builder<static>|Question whereQuestionableType($value)
+ * @method static Builder<static>|Question whereUpdatedAt($value)
  * @mixin Eloquent
  */
 class Question extends Model

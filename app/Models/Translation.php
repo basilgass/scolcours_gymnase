@@ -15,22 +15,18 @@ use Illuminate\Support\Carbon;
  * @property int $translation_unit_id
  * @property string $foreign
  * @property string $fr
- * @property string|null $definition
- * @property string|null $examples
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property-read TranslationUnit|null $unit
- * @method static Builder|Translation newModelQuery()
- * @method static Builder|Translation newQuery()
- * @method static Builder|Translation query()
- * @method static Builder|Translation whereCreatedAt($value)
- * @method static Builder|Translation whereDefinition($value)
- * @method static Builder|Translation whereExamples($value)
- * @method static Builder|Translation whereForeign($value)
- * @method static Builder|Translation whereFr($value)
- * @method static Builder|Translation whereId($value)
- * @method static Builder|Translation whereTranslationUnitId($value)
- * @method static Builder|Translation whereUpdatedAt($value)
+ * @property-read \App\Models\TranslationUnit|null $unit
+ * @method static Builder<static>|Translation newModelQuery()
+ * @method static Builder<static>|Translation newQuery()
+ * @method static Builder<static>|Translation query()
+ * @method static Builder<static>|Translation whereCreatedAt($value)
+ * @method static Builder<static>|Translation whereForeign($value)
+ * @method static Builder<static>|Translation whereFr($value)
+ * @method static Builder<static>|Translation whereId($value)
+ * @method static Builder<static>|Translation whereTranslationUnitId($value)
+ * @method static Builder<static>|Translation whereUpdatedAt($value)
  * @mixin Eloquent
  */
 class Translation extends Model

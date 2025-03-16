@@ -8,6 +8,7 @@ import LayoutMain from "@/Layouts/LayoutMain.vue"
 import axios from "axios"
 import { PropType } from "vue"
 import type { QuizzInterface } from "@/types/modelInterfaces"
+import ScButton from "@/Components/Ui/scButton.vue"
 
 defineOptions({ layout: LayoutMain })
 
@@ -35,12 +36,12 @@ function createQuizz() {
 					Administration
 				</h2>
 
-				<button
-					class="btn btn-add btn-xs"
+				<sc-button
+					type="add"
 					@click="createQuizz"
 				>
 					Nouveau quizz
-				</button>
+				</sc-button>
 			</div>
 
 			<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5">
@@ -50,8 +51,8 @@ function createQuizz() {
 					:href="route('quizzs.admin.quizz', [quizz.id])"
 					class="flex flex-col gap-5
 				cursor-pointer
-				bg-white
-				border border-slate-100 rounded
+				bg-content
+				border rounded
 				px-5 py-5
 				hover:scale-105 transition-transform"
 				>

@@ -13,13 +13,13 @@ class LatexController extends Controller
 	public function latex(Request $data) // POST request
 	{
 		$validation = $data->validate([
-			'template' => ['required', 'string', 'in:latex.questions,latex.standalone,latex.simple'],
-			'title' => 'required|string',
-			'content' => 'string',
-			'questions' => 'array',
-			'slug' => 'required|string',
-			'theme' => 'string',
-		]);
+										  'template'  => ['required', 'string', 'in:latex.questions,latex.standalone,latex.simple'],
+										  'title'     => 'required|string',
+										  'content'   => 'string',
+										  'questions' => 'array',
+										  'slug'      => 'required|string',
+										  'theme'     => 'string',
+									  ]);
 
 		// Check if folder exists.
 		$theme = $validation["theme"] ?? 'divers';
@@ -38,13 +38,25 @@ class LatexController extends Controller
 		$filename = $fileID . '.pdf';
 		$fullpath = $folder . '/' . $filename;
 
+		// control that the content does not contain any malicious code
+		// TODO: validate the questions to make sure it does not contain malicious code
+//		$questions = $validation['questions'] ?? [];
+//		if($validation['questions'] !== strip_tags($validation['questions'])){
+//			$questions = e($validation['questions']);
+//		}
+
+		$content = $validation['content'] ?? '';
+		if($validation['content'] !== strip_tags($validation['content'])){
+			$content = e($validation['content']);
+		}
+
 		$laraTeX = (new LaraTeX($validation["template"]))
 			->with([
-				'title' => $validation["title"],
-				'questions' => $validation["questions"] ?? [],
-				'content' => $validation["content"] ?? '',
-				'slug' => '/download/' . $fileID
-			]);
+					   'title'     => $validation["title"],
+					   'questions' => $validation["questions"] ?? [],
+					   'content'   => $content,
+					   'slug'      => '/download/' . $fileID
+				   ]);
 
 		$result = $laraTeX->savePdf(
 			Storage::disk('public')->path($fullpath)
@@ -53,10 +65,10 @@ class LatexController extends Controller
 		if ($result) {
 			// Save it to the database.
 			$pdf = LatexPdf::create([
-				'slug' => $fileID,
-				'name' => $validation["slug"] . '.pdf',
-				'url' => $fullpath
-			]);
+										'slug' => $fileID,
+										'name' => $validation["slug"] . '.pdf',
+										'url'  => $fullpath
+									]);
 
 			$pdf->tex = $laraTeX->render();
 			return $pdf;

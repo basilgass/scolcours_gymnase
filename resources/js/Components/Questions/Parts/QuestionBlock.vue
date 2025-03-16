@@ -119,7 +119,7 @@ function replace_ABC_without_placeholder(md: string, key: string, answer: keyboa
 </script>
 
 <template>
-	<main class="flex-1 px-3 overflow-x-auto border-b pb-3">
+	<main class="flex-1 px-3 overflow-x-auto pb-3">
 		<!-- Illustration -->
 		<illustration-show
 			v-if="questionData.question.value.block.illustration"

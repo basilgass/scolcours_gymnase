@@ -24,19 +24,19 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Evaluation> $evaluations
  * @property-read int|null $evaluations_count
  * @property-read \App\Models\Theme $theme
- * @method static \Illuminate\Database\Eloquent\Builder|Generator newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Generator newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Generator query()
- * @method static \Illuminate\Database\Eloquent\Builder|Generator whereBody($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Generator whereCode($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Generator whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Generator whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Generator whereKeyboard($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Generator whereSlug($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Generator whereTemplate($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Generator whereThemeId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Generator whereTitle($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Generator whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Generator newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Generator newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Generator query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Generator whereBody($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Generator whereCode($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Generator whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Generator whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Generator whereKeyboard($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Generator whereSlug($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Generator whereTemplate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Generator whereThemeId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Generator whereTitle($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Generator whereUpdatedAt($value)
  * @mixin \Eloquent
  */
 class Generator extends Model

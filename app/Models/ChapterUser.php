@@ -10,9 +10,9 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @property-read \App\Models\Chapter|null $chapter
  * @property-read \App\Models\User|null $user
- * @method static \Illuminate\Database\Eloquent\Builder|ChapterUser newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|ChapterUser newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|ChapterUser query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ChapterUser newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ChapterUser newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ChapterUser query()
  * @mixin \Eloquent
  */
 class ChapterUser extends Model

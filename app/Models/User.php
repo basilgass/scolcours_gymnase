@@ -29,39 +29,39 @@ use Laravel\Sanctum\PersonalAccessToken;
  * @property string|null $remember_token
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
+ * @property-read Collection<int, \App\Models\Card> $cards
+ * @property-read int|null $cards_count
  * @property-read Collection<int, ChallengeSession> $challenges
  * @property-read int|null $challenges_count
- * @property-read Collection<int, Chapter> $chapters
+ * @property-read Collection<int, \App\Models\Chapter> $chapters
  * @property-read int|null $chapters_count
- * @property-read Collection<int, Flipcard> $flipcards
- * @property-read int|null $flipcards_count
  * @property-read mixed $admin
  * @property-read DatabaseNotificationCollection<int, DatabaseNotification> $notifications
  * @property-read int|null $notifications_count
- * @property-read Collection<int, Question> $questions
+ * @property-read Collection<int, \App\Models\Question> $questions
  * @property-read int|null $questions_count
- * @property-read Collection<int, QuizzSession> $quizz_sessions
+ * @property-read Collection<int, \App\Models\QuizzSession> $quizz_sessions
  * @property-read int|null $quizz_sessions_count
- * @property-read Collection<int, Score> $scores
+ * @property-read Collection<int, \App\Models\Score> $scores
  * @property-read int|null $scores_count
- * @property-read Collection<int, Team> $teams
+ * @property-read Collection<int, \App\Models\Team> $teams
  * @property-read int|null $teams_count
  * @property-read Collection<int, PersonalAccessToken> $tokens
  * @property-read int|null $tokens_count
- * @method static UserFactory factory($count = null, $state = [])
- * @method static Builder|User newModelQuery()
- * @method static Builder|User newQuery()
- * @method static Builder|User query()
- * @method static Builder|User whereCreatedAt($value)
- * @method static Builder|User whereEmail($value)
- * @method static Builder|User whereEmailVerifiedAt($value)
- * @method static Builder|User whereFirstname($value)
- * @method static Builder|User whereId($value)
- * @method static Builder|User whereName($value)
- * @method static Builder|User wherePassword($value)
- * @method static Builder|User whereRememberToken($value)
- * @method static Builder|User whereRole($value)
- * @method static Builder|User whereUpdatedAt($value)
+ * @method static \Database\Factories\UserFactory factory($count = null, $state = [])
+ * @method static Builder<static>|User newModelQuery()
+ * @method static Builder<static>|User newQuery()
+ * @method static Builder<static>|User query()
+ * @method static Builder<static>|User whereCreatedAt($value)
+ * @method static Builder<static>|User whereEmail($value)
+ * @method static Builder<static>|User whereEmailVerifiedAt($value)
+ * @method static Builder<static>|User whereFirstname($value)
+ * @method static Builder<static>|User whereId($value)
+ * @method static Builder<static>|User whereName($value)
+ * @method static Builder<static>|User wherePassword($value)
+ * @method static Builder<static>|User whereRememberToken($value)
+ * @method static Builder<static>|User whereRole($value)
+ * @method static Builder<static>|User whereUpdatedAt($value)
  * @mixin Eloquent
  */
 class User extends Authenticatable
@@ -119,9 +119,9 @@ class User extends Authenticatable
 			->withPivot('result', 'answer', 'attempts');
 	}
 
-	public function flipcards()
+	public function cards()
 	{
-		return $this->belongsToMany(Flipcard::class)
+		return $this->belongsToMany(Card::class)
 			->withTimestamps()
 			->withPivot('success');
 	}
@@ -142,6 +142,11 @@ class User extends Authenticatable
 		return $this->belongsToMany(Chapter::class)
 			->withPivot('post_id', 'updated_at')
 			->orderBy('pivot_updated_at', 'desc');
+	}
+
+	public function decks()
+	{
+		return $this->hasMany(UserDeck::class);
 	}
 
 	public function getAdminAttribute()

@@ -68,7 +68,7 @@ const props = defineProps({
 				<div
 					v-for="score in usersHallOfFame"
 					:key="score.user.name"
-					class="bg-white px-3 py-1 flex"
+					class="bg-content px-3 py-1 flex"
 				>
 					<stat-bar
 						:max="maxScore"

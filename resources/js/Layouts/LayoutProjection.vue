@@ -3,35 +3,28 @@
 	lang="ts"
 >
 import "@/Layouts/LayoutProjection.vue"
+import DarkModeSwitch from "@/Components/Ui/DarkModeSwitch.vue"
 </script>
 
 <template>
-	<div class="min-h-screen flex flex-col bg-gray-100">
+	<div class="min-h-screen relative">
 		<header
-			v-admin
-			v-theme.bg.admin.text
-			class="py-2 px-4 flex justify-between"
+			class="bg-content
+			w-full py-1 px-4
+			flex justify-between items-baseline
+			fixed bottom-0 left-0 "
 		>
 			<InertiaLink
+				v-admin
 				class="uppercase"
 				:href="route('admin')"
 			>
 				administration
 			</InertiaLink>
 
-			<!--			<button-->
-			<!--				class="btn btn-xs hover:text-black"-->
-			<!--				:class="globalEditMode?'bg-white/40':''"-->
-			<!--				title="Ctrl+Alt+A"-->
-			<!--				@click="globalEditMode=!globalEditMode"-->
-			<!--			>-->
-			<!--				<span v-show="globalEditMode"> <i class="bi bi-pencil mr-2" /> <span-->
-			<!--					class="hidden md:inline"-->
-			<!--				>édition activée</span></span>-->
-			<!--				<span v-show="!globalEditMode"> <i class="bi bi-pencil mr-2" /> <span>activer l'édition</span></span>-->
-			<!--			</button>-->
+			<dark-mode-switch />
 		</header>
-		<main class="scolcours-container flex-1">
+		<main class="w-[100vw] h-[100vh]">
 			<slot />
 		</main>
 	</div>

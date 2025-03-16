@@ -9,7 +9,7 @@ import {
 	type KeyboardInputInterface,
 	type KeyboardPropsInterface
 } from "@/Composables/useKeyboard.ts"
-import {computed} from "vue"
+import {computed, useTemplateRef} from "vue"
 
 // props.keyboard
 const props = defineProps<KeyboardPropsInterface>()
@@ -23,6 +23,8 @@ function onChange(event: KeyboardInputInterface): void {
 	setInput(event.input).then((x) => emits("change", x))
 }
 
+const keyboardUI = useTemplateRef('keyboardUI')
+
 async function setInput(value: string): Promise<KeyboardInputInterface> {
 	return {
 		input: value,
@@ -32,6 +34,7 @@ async function setInput(value: string): Promise<KeyboardInputInterface> {
 }
 
 defineExpose<KeyboardExposeInterface>({
+	reset: ()=>keyboardUI.value.resetKeyStrokes(),
 	setInput,
 	parameters: ""
 })

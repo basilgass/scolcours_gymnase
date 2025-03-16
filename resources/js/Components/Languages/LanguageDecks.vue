@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import {LanguageDataInterface} from "@/Pages/languages/LanguageShow.vue"
 import {computed, inject} from "vue"
-import type {BlockInterface, DeckInterface} from "@/types/modelInterfaces.ts"
-import FlipcardsShow from "@/Components/Decks/FlipcardsShow.vue"
+import type {BlockInterface, DeckInterface, UserDeckCardsInterface} from "@/types/modelInterfaces.ts"
+import CardsShow from "@/Components/Decks/CardsShow.vue"
 import {useLanguage} from "@/Components/Languages/useLanguage.ts"
 
 // languageData is the reactive data from the parent component.
@@ -13,6 +13,7 @@ const languageData = inject<LanguageDataInterface>("LanguageData")
 // and provide de methods to run the game.
 const {startGame} = useLanguage(languageData)
 
+// TODO: centralize makeBlock
 function makeBlockFromString(str: string): BlockInterface {
 	return {
 		id: 0,
@@ -53,10 +54,11 @@ const deck = computed<DeckInterface | null>(() => {
 		slug: null,
 		chapter: {id: 0, slug: null},
 		theme_id: 0,
-		flipcards: cards.value
+		cards: cards.value
 	}
 })
 
+// BUG: Refactor this to use UserDeckCardsInterface - it shoud be buggy actually
 </script>
 <template>
 	<article>
@@ -64,8 +66,8 @@ const deck = computed<DeckInterface | null>(() => {
 			v-if="cards.length > 0"
 			class="min-h-[80vh] my-10"
 		>
-			<flipcards-show
-				:deck="deck"
+			<cards-show
+				:cards="deck.cards as unknown as UserDeckCardsInterface[]"
 			/>
 		</div>
 

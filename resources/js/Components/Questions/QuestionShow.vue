@@ -149,6 +149,15 @@ async function loadAnswers(show: boolean) {
 		<question-block />
 
 		<!-- user input (format, answer selector, keyboard) -->
+		<hr
+			:class="{
+				'bg-content':
+					!props.question.user.result,
+				'border-green-600/60':
+					props.question.user.result,
+			}"
+		>
+
 		<question-answer
 			ref="questionAnswerWrapper"
 			v-model:show-input="showUserInput"

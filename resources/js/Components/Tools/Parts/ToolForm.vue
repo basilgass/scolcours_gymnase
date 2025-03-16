@@ -59,6 +59,7 @@ watch(() => props.active, () => {
 	}
 })
 
+const showForm = ref(true)
 
 const emits = defineEmits(['updateForm', 'generate'])
 
@@ -68,6 +69,7 @@ function onChange(item: IToolForm) {
 		emits('updateForm')
 	}
 }
+
 
 </script>
 
@@ -93,10 +95,22 @@ function onChange(item: IToolForm) {
 						@click="copy(link)"
 					/>
 				</button>
+				<button @click="showForm = !showForm">
+					<i
+						class="text-gray-400"
+						:class="{
+							'bi bi-code': !showForm,
+							'bi bi-x-lg': showForm
+						}"
+					/>
+				</button>
 			</div>
 		</div>
 
-		<div :class="formClass">
+		<div
+			:class="formClass"
+			v-show="showForm"
+		>
 			<form-maker
 				v-for="(f, index) in forms"
 				:key="`form-${index}`"

@@ -21,16 +21,16 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\QuizzSession> $sessions
  * @property-read int|null $sessions_count
  * @property-read \App\Models\Theme|null $theme
- * @method static \Illuminate\Database\Eloquent\Builder|Quizz newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Quizz newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Quizz query()
- * @method static \Illuminate\Database\Eloquent\Builder|Quizz whereBody($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Quizz whereChapterId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Quizz whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Quizz whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Quizz whereOutro($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Quizz whereTitle($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Quizz whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Quizz newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Quizz newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Quizz query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Quizz whereBody($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Quizz whereChapterId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Quizz whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Quizz whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Quizz whereOutro($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Quizz whereTitle($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Quizz whereUpdatedAt($value)
  * @mixin \Eloquent
  */
 class Quizz extends Model

@@ -41,6 +41,9 @@ async function setInput(value: string): Promise<KeyboardInputInterface> {
 }
 
 defineExpose<KeyboardExposeInterface>({
+	reset: () => {
+		//TODO: add a reset function
+	},
 	setInput,
 	parameters: "full (pleine largeur)\nflex (utilisation de flex)\ntex (converti en TeX)\nlist (affichage d'une liste)"
 })

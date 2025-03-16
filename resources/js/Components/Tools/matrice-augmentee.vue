@@ -15,17 +15,17 @@ const forms: IToolForm[] = restoreTool([
 	{
 		label: "matrice",
 		type: "textarea",
-		value: ref(`1 2 3
-4 5 6
-7 8 9`),
+		value: ref(`2 1 -1
+1 2 1
+3 -1 2`),
 		fromUrl: "matrix",
 	},
 	{
 		label: "droite",
 		type: "textarea",
-		value: ref(`3
-1
--3`),
+		value: ref(`1
+8
+7`),
 		fromUrl: "droite"
 	}
 ])
@@ -45,7 +45,6 @@ const result = computed(() => {
 				line
 		}).join('\n')
 
-		console.log(code)
 		return {
 			code,
 			parameters: ""
@@ -68,7 +67,7 @@ const result = computed(() => {
 
 		<div
 			v-if="result"
-			class="my-10 space-y-10"
+			class="my-10"
 		>
 			<matrice-augmentee
 				:illustration="result"

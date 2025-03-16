@@ -106,10 +106,15 @@ const langues = {
 					</InertiaLink>
 				</div>
 
-				<h3 class="text-lg font-semibold mt-5">
-					Interface
-				</h3>
-				<dark-mode-switch />
+				<!-- TODO: add dark mode switch -->
+				<div
+					class="mt-5"
+				>
+					<h3 class="text-lg font-semibold">
+						Interface
+					</h3>
+					<dark-mode-switch />
+				</div>
 			</div>
 		</div>
 

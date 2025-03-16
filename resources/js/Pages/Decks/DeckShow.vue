@@ -2,36 +2,41 @@
 	lang="ts"
 	setup
 >
-import FlipcardsShow from "@/Components/Decks/FlipcardsShow.vue"
 import LayoutProjection from "@/Layouts/LayoutProjection.vue"
-import type { DeckInterface } from "@/types/modelInterfaces"
-import { PropType } from "vue"
+import type {UserDeckCardsInterface, UserDeckInterface} from "@/types/modelInterfaces"
+import CardsShow from "@/Components/Decks/CardsShow.vue"
 
-defineOptions({ layout: LayoutProjection })
-const props = defineProps({
-	deck: { type: Object as PropType<DeckInterface>, required: true }
-})
+defineOptions({layout: LayoutProjection})
+
+const props = defineProps<{
+	deck: UserDeckInterface,
+	cards: UserDeckCardsInterface[]
+}>()
+
 </script>
 
 <template>
 	<section>
-		<header class="mb-5">
+		<header class="h-[6rem] p-3 bg-content">
 			<h3 class="text-3xl">
 				{{ deck.title }}
 			</h3>
-			<div class="font-code text-xs">
-				{{ deck.slug }}
-			</div>
+
 			<InertiaLink :href="route('decks.index')">
 				<i class="bi bi-arrow-left-square mr-3" />
 				retour aux decks
 			</InertiaLink>
 		</header>
 
+
 		<!-- card mode -->
-		<FlipcardsShow
-			class="w-full mt-10"
-			:deck="props.deck"
+		<cards-show
+			class="h-[calc(100vh-10rem)]
+			max-w-[calc(100vw-2rem)]
+			lg:max-w-3xl
+			xl:max-w-4xl
+			mx-auto"
+			:cards
 		/>
 	</section>
 </template>

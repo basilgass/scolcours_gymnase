@@ -9,6 +9,7 @@ import type { TeamInterface, UserInterface } from "@/types/modelInterfaces"
 import type { flashInterface } from "@/types"
 import DialogModal from "@/Components/Ui/DialogModal.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
+import ScButton from "@/Components/Ui/scButton.vue"
 
 defineOptions({ layout: LayoutMain })
 
@@ -164,12 +165,13 @@ function editUserStore(){
 			<h1 class="text-3xl pt-5">
 				Gestion des utilisateurs
 			</h1>
-			<button
-				class="btn btn-add btn-xs"
+			<sc-button
+				type="add"
+				xs
 				@click="addMode=!addMode"
 			>
 				ajouter des utilisateurs
-			</button>
+			</sc-button>
 		</div>
 
 		<section
@@ -263,11 +265,11 @@ function editUserStore(){
 			</div>
 
 			<!-- liste des utilisateurs -->
-			<div class="bg-white">
+			<div class="flex flex-col gap-3">
 				<div
 					v-for="user of selectedUsers"
 					:key="user.id"
-					class="odd:bg-gray-50 px-5 py-4 flex justify-between"
+					class="bg-content border px-5 py-4 flex justify-between"
 				>
 					<div class="user-wrapper-left flex justify-between w-full">
 						<div>
@@ -323,7 +325,7 @@ function editUserStore(){
 			</div>
 
 			<!-- gestion des équipes -->
-			<div class="mt-10 bg-white py-3 px-5 border">
+			<div class="mt-10 bg-content py-3 px-5 border">
 				<h2 class="text-xl mb-5">
 					gestion des équipes
 				</h2>
@@ -332,22 +334,25 @@ function editUserStore(){
 					label="nouvelle équipe"
 					name="newTeam"
 				/>
-				<button
-					class="btn btn-xs btn-add"
+				<sc-button
+					type="add"
+					xs
 					@click="storeTeam"
 				>
 					créer
-				</button>
+				</sc-button>
 
 				<div>
 					<h3>supprimer une équipe</h3>
-					<confirm-button
-						v-for="team of theTeams"
-						:key="`destroy-${team.id}`"
-						@confirm="destroyTeam(team.id)"
-					>
-						{{ team.name }}
-					</confirm-button>
+					<div class="flex gap-3">
+						<confirm-button
+							v-for="team of theTeams"
+							:key="`destroy-${team.id}`"
+							@confirm="destroyTeam(team.id)"
+						>
+							{{ team.name }}
+						</confirm-button>
+					</div>
 				</div>
 			</div>
 		</section>

@@ -24,35 +24,33 @@ use Illuminate\Support\Facades\URL;
  * @property string|null $illustrationsGrid
  * @property string|null $script
  * @property int|null $switch
- * @property mixed|null $json
+ * @property string|null $json
  * @property string $blockable_type
  * @property int $blockable_id
- * @property int $blur
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property-read Model|\Eloquent $blockable
  * @property-read Collection<int, \App\Models\Illustration> $illustrations
  * @property-read int|null $illustrations_count
  * @property-read mixed $url
- * @method static Builder|Block newModelQuery()
- * @method static Builder|Block newQuery()
- * @method static Builder|Block query()
- * @method static Builder|Block whereBlockableId($value)
- * @method static Builder|Block whereBlockableType($value)
- * @method static Builder|Block whereBlur($value)
- * @method static Builder|Block whereBody($value)
- * @method static Builder|Block whereCreatedAt($value)
- * @method static Builder|Block whereId($value)
- * @method static Builder|Block whereIllustrationsGrid($value)
- * @method static Builder|Block whereJson($value)
- * @method static Builder|Block whereMerge($value)
- * @method static Builder|Block whereOrder($value)
- * @method static Builder|Block whereScript($value)
- * @method static Builder|Block whereSwitch($value)
- * @method static Builder|Block whereTemplate($value)
- * @method static Builder|Block whereTitle($value)
- * @method static Builder|Block whereType($value)
- * @method static Builder|Block whereUpdatedAt($value)
+ * @method static Builder<static>|Block newModelQuery()
+ * @method static Builder<static>|Block newQuery()
+ * @method static Builder<static>|Block query()
+ * @method static Builder<static>|Block whereBlockableId($value)
+ * @method static Builder<static>|Block whereBlockableType($value)
+ * @method static Builder<static>|Block whereBody($value)
+ * @method static Builder<static>|Block whereCreatedAt($value)
+ * @method static Builder<static>|Block whereId($value)
+ * @method static Builder<static>|Block whereIllustrationsGrid($value)
+ * @method static Builder<static>|Block whereJson($value)
+ * @method static Builder<static>|Block whereMerge($value)
+ * @method static Builder<static>|Block whereOrder($value)
+ * @method static Builder<static>|Block whereScript($value)
+ * @method static Builder<static>|Block whereSwitch($value)
+ * @method static Builder<static>|Block whereTemplate($value)
+ * @method static Builder<static>|Block whereTitle($value)
+ * @method static Builder<static>|Block whereType($value)
+ * @method static Builder<static>|Block whereUpdatedAt($value)
  * @mixin Eloquent
  */
 class Block extends Model

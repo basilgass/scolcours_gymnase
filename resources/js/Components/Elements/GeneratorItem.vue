@@ -13,7 +13,7 @@ const hasErrors = ref(false)
 
 <template>
 	<div
-		class="grid grid-cols-1 md:grid-cols-2 gap-3 bg-white p-5 rounded-lg"
+		class="grid grid-cols-1 md:grid-cols-2 gap-3 bg-content p-5 rounded-lg"
 		:class="hasErrors?'border-l-8 border-l-red-600':''"
 		:data-withErrors="hasErrors"
 	>

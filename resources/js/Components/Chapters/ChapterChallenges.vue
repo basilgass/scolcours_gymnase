@@ -66,11 +66,11 @@ function storeChallenge() {
 
 			<dialog-modal
 				v-model="show"
-				class="max-w-[30em]"
+				class="max-w-[30em] bg-content"
 			>
 				<template #header>
 					<div
-						class="bg-white flex justify-between items-baseline border-b border-gray-200 px-5 py-3 mb-5"
+						class="flex justify-between items-baseline border-b px-5 py-3 mb-5"
 					>
 						<h1>
 							<span class="text-xl md:text-2xl">créer un challenge</span>
@@ -79,13 +79,13 @@ function storeChallenge() {
 				</template>
 
 				<template #footer>
-					<div class="bg-white flex justify-end items-baseline border-t border-gray-200 px-5 py-3 mt-5">
-						<button
-							class="btn btn-primary"
+					<div class="flex justify-end items-baseline border-t px-5 py-3 mt-5">
+						<sc-button
+							type="add"
 							@click="storeChallenge"
 						>
 							Créer un nouveau challenge
-						</button>
+						</sc-button>
 					</div>
 				</template>
 				<div class="px-5">

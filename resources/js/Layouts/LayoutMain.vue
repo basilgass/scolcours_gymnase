@@ -66,7 +66,7 @@ const pageTitle = computed(() => {
 		<MainHeader :theme="theme" />
 
 		<!-- Container for the "column design" -->
-		<main class="scolcours-container">
+		<main class="scolcours-container min-h-[75vh]">
 			<!-- Main content -->
 			<slot />
 		</main>

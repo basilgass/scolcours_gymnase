@@ -25,17 +25,17 @@
  * @property-read Challenge $challenge
  * @property-read Collection<int, \App\Models\Challenges\ChallengeUser> $users
  * @property-read int|null $users_count
- * @method static Builder|ChallengeSession newModelQuery()
- * @method static Builder|ChallengeSession newQuery()
- * @method static Builder|ChallengeSession query()
- * @method static Builder|ChallengeSession whereChallengeId($value)
- * @method static Builder|ChallengeSession whereCreatedAt($value)
- * @method static Builder|ChallengeSession whereDuration($value)
- * @method static Builder|ChallengeSession whereId($value)
- * @method static Builder|ChallengeSession whereOpen($value)
- * @method static Builder|ChallengeSession whereToken($value)
- * @method static Builder|ChallengeSession whereUpdatedAt($value)
- * @method static Builder|ChallengeSession whereUserId($value)
+ * @method static Builder<static>|ChallengeSession newModelQuery()
+ * @method static Builder<static>|ChallengeSession newQuery()
+ * @method static Builder<static>|ChallengeSession query()
+ * @method static Builder<static>|ChallengeSession whereChallengeId($value)
+ * @method static Builder<static>|ChallengeSession whereCreatedAt($value)
+ * @method static Builder<static>|ChallengeSession whereDuration($value)
+ * @method static Builder<static>|ChallengeSession whereId($value)
+ * @method static Builder<static>|ChallengeSession whereOpen($value)
+ * @method static Builder<static>|ChallengeSession whereToken($value)
+ * @method static Builder<static>|ChallengeSession whereUpdatedAt($value)
+ * @method static Builder<static>|ChallengeSession whereUserId($value)
  * @mixin Eloquent
  */
 class ChallengeSession extends Model

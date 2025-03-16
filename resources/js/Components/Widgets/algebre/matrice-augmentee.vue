@@ -6,11 +6,12 @@ code: matrix
 <script setup lang="ts">
 
 import {WidgetPropsInterface} from "@/types/modelInterfaces.ts"
-import {computed, onMounted, reactive, ref, watch} from "vue"
+import {computed, onMounted, reactive, ref, useTemplateRef, watch} from "vue"
 import {Fraction, Polynom} from "pimath"
 import KeyboardBasic from "@/Components/Keyboards/KeyboardBasic.vue"
-import {KeyboardInterface, useKeyboard} from "@/Composables/useKeyboard.ts"
+import {useKeyboard} from "@/Composables/useKeyboard.ts"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
+import TexCode from "@/Components/Ui/TexCode.vue"
 
 export interface matriceAugmenteeInterface {
 	target: number,
@@ -80,11 +81,15 @@ const operationData = reactive<matriceAugmenteeInterface>({
 	reference: null,
 	target: null
 })
-const valueKeyboard = ref(null)
+const valueKeyboard = useTemplateRef('valueKeyboard')
 
 function selectLine(lineIndex: number) {
 	if (operationData.target === null) {
 		operationData.target = lineIndex
+	} else if (operationData.target === lineIndex) {
+		operationData.target = null
+	} else if (operationData.reference === lineIndex) {
+		operationData.reference = null
 	} else {
 		operationData.reference = lineIndex
 	}
@@ -173,6 +178,38 @@ function swapLines<T>(arr: T[], index1: number, index2: number): void {
 function initMatrix() {
 	list_of_operations.value = []
 	matrix = createPolynomMatrix()
+
+	if (result.value) {
+		matrixTex.value.push({
+			tex: result.value?.tex,
+			description: ''
+		})
+	}
+}
+
+function getShortDescription(operation: matriceAugmenteeInterface): string {
+	if (operation.operation === 'x') {
+		return `L_${operation.target} \\longleftrightarrow L_${operation.reference}`
+	}
+
+	if (operation.operation === '*') {
+		return `${operation.value} \\cdot L_${operation.target}`
+	}
+
+	if (operation.operation === '/') {
+		return `L_${operation.target} \\div ${operation.value}`
+	}
+
+	if (operation.operation === '+') {
+		return `L_${operation.target} + ${operation.value} \\cdot L_${operation.reference}`
+	}
+
+	if (operation.operation === '-') {
+		return `L_${operation.target} - ${operation.value} \\cdot L_${operation.reference}`
+	}
+
+	return ''
+
 }
 
 function updateMatrix(operation: matriceAugmenteeInterface) {
@@ -223,6 +260,12 @@ function updateMatrix(operation: matriceAugmenteeInterface) {
 		description: operationDescription.value
 	})
 
+	// Store the current matrix.
+	matrixTex.value.push({
+		tex: result.value === false ? '' : result.value.tex,
+		description: getShortDescription(operation)
+	})
+
 	// Reset du operationData
 	operationData.operation = null
 	operationData.value = null
@@ -233,6 +276,39 @@ function updateMatrix(operation: matriceAugmenteeInterface) {
 	valueKeyboard.value.reset()
 
 }
+
+const operationIsComplete = computed(() => {
+	const operation = operationData
+	if (operation.target === null) {
+		return false
+	}
+
+	if (operation.operation === 'x') {
+		if (operation.reference === null ||
+			operation.target === operation.reference
+		) {
+			return false
+		}
+	}
+
+	if (operation.operation === '*' || operation.operation === '/') {
+		if (+operation.value === 0) {
+			return false
+		}
+	}
+
+	if (operation.operation === '+' || operation.operation === '-') {
+		if (operation.reference === null ||
+			operation.target === operation.reference ||
+			+operation.value === 0
+		) {
+			return false
+		}
+	}
+
+
+	return true
+})
 
 const result = computed<
 	{
@@ -273,6 +349,40 @@ const result = computed<
 	return false
 })
 
+const matrixPerLine = ref<number>(3)
+const matrixTex = ref<{
+	tex: string,
+	description: string
+}[]>([])
+
+const matrixTexToAligned = computed<string>(() => {
+
+	if (!result.value || matrixTex.value.length === 0) {
+		return ''
+	}
+
+	const arr: string[] = [`& && ${matrixTex.value[0].tex}`]
+
+	for (let i = 1; i < matrixTex.value.length; i++) {
+		arr.push(`& \\stackrel{ ${
+			matrixTex.value[i].description
+		} }{\\Longleftrightarrow} && ${
+			matrixTex.value[i].tex
+		}`)
+	}
+
+	const arrAvecRetourALaLigne:string[] = []
+
+	arr.forEach((line, index) => {
+		if(index % matrixPerLine.value === 0 && index!==0) {
+			arrAvecRetourALaLigne.push('\\\\[1.5em]')
+		}
+		arrAvecRetourALaLigne.push(line)
+	})
+
+	return `\\begin{aligned} ${arrAvecRetourALaLigne.join('')} \\end{aligned}`
+})
+
 
 watch(() => props.illustration.code, () => {
 	initMatrix()
@@ -296,7 +406,7 @@ onMounted(() => {
 				>
 					<path
 						d="M18,0 C5,10 5,90 18,100"
-						stroke="black"
+						stroke="currentColor"
 						fill="transparent"
 						stroke-width="1"
 					/>
@@ -311,7 +421,7 @@ onMounted(() => {
 				>
 					<path
 						d="M2,0 C15,10 15,90 2,100"
-						stroke="black"
+						stroke="currentColor"
 						fill="transparent"
 						stroke-width="1"
 					/>
@@ -333,8 +443,8 @@ onMounted(() => {
 						:key="`line-${lineIndex}`"
 						class="flex gap-2"
 						:class="{
-							'bg-green-200': lineIndex===operationData.target,
-							'bg-blue-200': lineIndex===operationData.reference
+							'bg-green-200 dark:bg-green-800': lineIndex===operationData.target,
+							'bg-blue-200 dark:bg-blue-800': lineIndex===operationData.reference
 						}"
 						@click="selectLine(lineIndex)"
 					>
@@ -352,10 +462,10 @@ onMounted(() => {
 			</div>
 		</div>
 
-		<div class="py-10 space-y-10">
+		<div class="py-10 space-y-10 w-full">
 			<markdown-it
 				:text="operationDescription"
-				class="text-center border p-3 bg-gray-50"
+				class="text-center border p-3 bg-content"
 			/>
 
 			<div
@@ -390,8 +500,10 @@ onMounted(() => {
 
 			<div class="text-center">
 				<button
+					v-show="operationIsComplete"
 					@click="updateMatrix(operationData)"
-					class="rounded px-10 py-5 bg-blue-500 text-white"
+					class="rounded px-10 py-5 bg-blue-500 text-white
+						cursor-pointer disabled:cursor-not-allowed"
 				>
 					Valider
 				</button>
@@ -399,7 +511,14 @@ onMounted(() => {
 
 			<markdown-it
 				:text="list_of_operations.map((x, i)=>`${i+1}. ${x.description}`).join('\n')"
-				class="border p-3 bg-gray-50"
+				class="border p-3 bg-content"
+			/>
+
+			<!--			<div v-katex="matrixTexToAligned" />-->
+			<tex-code
+				:tex="matrixTexToAligned"
+				title="matrice augmentée"
+				slug="matrice-augmentee"
 			/>
 		</div>
 	</div>

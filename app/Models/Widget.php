@@ -20,17 +20,17 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Illustration> $illustration
  * @property-read int|null $illustration_count
  * @property-read \App\Models\Theme|null $theme
- * @method static \Illuminate\Database\Eloquent\Builder|Widget newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Widget newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Widget query()
- * @method static \Illuminate\Database\Eloquent\Builder|Widget whereComponent($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Widget whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Widget whereDescription($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Widget whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Widget whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Widget whereSlug($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Widget whereThemeId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Widget whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Widget newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Widget newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Widget query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Widget whereComponent($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Widget whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Widget whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Widget whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Widget whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Widget whereSlug($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Widget whereThemeId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Widget whereUpdatedAt($value)
  * @mixin \Eloquent
  */
 class Widget extends Model

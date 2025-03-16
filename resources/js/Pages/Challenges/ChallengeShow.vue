@@ -9,6 +9,7 @@ import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 import { ChallengeGameState, ChallengeInterface, ChallengeScoreInterface, TeamInterface } from "@/types/modelInterfaces"
 import { ref } from "vue"
+import ScButton from "@/Components/Ui/scButton.vue"
 
 defineOptions({ layout: LayoutMain })
 
@@ -50,9 +51,10 @@ let selector = ref(0)
 				class="my-10"
 			>
 				<div class="flex flex-col md:flex-row flex-wrap gap-1 md:gap-5">
-					<div
-						:class="selector === 0 ? 'is-active' : 'text-gray-400'"
-						class="px-3 md:px-10 py-1 md:py-5 rounded-sm hover:shadow-sm min-w-[150px] border-2 cursor-pointer transition-all"
+					<sc-button
+						:outline="selector !== 0"
+						theme
+						class="px-3 md:px-10 py-1 md:py-5 rounded-sm min-w-[150px] cursor-pointer transition-all"
 						@click="selector = 0"
 					>
 						<div class="flex gap-3 items-center md:justify-center">
@@ -61,14 +63,13 @@ let selector = ref(0)
 								Challenge
 							</h2>
 						</div>
-					</div>
-					<div
+					</sc-button>
+					<sc-button
 						v-for="(gen, index) of challenge.generators"
 						:key="`generator-selector-${gen.slug}`"
-						:class="
-							selector === index + 1 ? 'is-active' : 'text-gray-400'
-						"
-						class="px-3 py-1 md:py-5 rounded-sm hover:shadow-sm min-w-[150px] border cursor-pointer transition-all"
+						theme
+						:outline="selector !== index + 1"
+						class="px-3 py-1 md:py-5 rounded-sm min-w-[150px] cursor-pointer transition-all"
 						@click="selector = index + 1"
 					>
 						<div class="flex gap-3 items-center md:justify-center">
@@ -78,7 +79,7 @@ let selector = ref(0)
 								class="text-lg"
 							/>
 						</div>
-					</div>
+					</sc-button>
 				</div>
 			</div>
 

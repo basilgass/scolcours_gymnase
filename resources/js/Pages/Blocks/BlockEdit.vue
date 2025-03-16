@@ -11,6 +11,7 @@ import type { BlockInterface } from "@/types/modelInterfaces"
 import { router } from "@inertiajs/vue3"
 import axios from "axios"
 import { computed, inject, ref, unref } from "vue"
+import ScButton from "@/Components/Ui/scButton.vue"
 
 defineOptions({ layout: LayoutMain })
 
@@ -142,31 +143,33 @@ function deleteIllustration(id: number){
 				/>
 			</div>
 			<div class="self-start grid grid-cols-2 gap-2 items-center flex-wrap">
-				<button
+				<sc-button
+					type="save"
 					:class="wasEdited ? '' : 'invisible'"
-					class="btn btn-primary btn-xs"
 					@click="saveBlock"
+					xs
 				>
 					<i class="bi bi-save" />
-				</button>
+				</sc-button>
 
-				<button
+				<sc-button
 					:class="wasEdited ? '' : 'invisible'"
-					class="btn btn-primary btn-xs"
+					type="save"
+					xs
 					@click="blockSaveAndVisit"
 				>
 					<i class="bi bi-save mr-1" /> et visiter
-				</button>
+				</sc-button>
 
-				<button
-					class="btn btn-cancel btn-xs"
+				<sc-button
+					xs
 					@click="visitBlock"
 				>
 					visiter
-				</button>
+				</sc-button>
 				<confirm-button
-					class="btn btn-delete btn-xs"
 					@confirm="deleteBlock"
+					xs
 				>
 					supprimer
 				</confirm-button>
@@ -195,15 +198,16 @@ function deleteIllustration(id: number){
 
 					<!-- Boutons pour les types de blocks -->
 					<div class="grid grid-cols-6 gap-2 mt-2">
-						<button
+						<sc-button
 							v-for="(item, key) in blockTypes"
 							:key="key"
-							:class="key === theBlock.type ? 'is-active' : ''"
-							class="btn btn-xs overflow-clip px-0!"
+							:active="key === theBlock.type"
+							class="overflow-clip px-0!"
+							xs
 							@click="theBlock.type = theBlock.type === key ? '' : key"
 						>
 							{{ item.title }}
-						</button>
+						</sc-button>
 					</div>
 				</div>
 

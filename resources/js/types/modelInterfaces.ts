@@ -210,13 +210,12 @@ export interface ChallengeInterface {
 	generators: GeneratorInterface[];
 }
 
-export interface FlipcardsInterface {
-	id: number,
+export interface CardInterface {
 	recto: BlockInterface,
 	verso: BlockInterface,
 	result?: boolean
 }
-
+//TODO: DeckInterface might be obsolete ?
 export interface DeckInterface {
 	id: number,
 	title: string,
@@ -226,7 +225,42 @@ export interface DeckInterface {
 		slug: number;
 	},
 	theme_id: number,
-	flipcards: FlipcardsInterface[]
+	cards: CardInterface[]
+}
+
+export interface UserDeckInterface {
+	id: number,
+	user_id: number,
+	title: string,
+	description: string,
+	running: boolean,
+	created_at: string,
+	updated_at: string,
+	time_spent: {
+		total: number,
+		min: number,
+		max: number
+	},
+	appearances: {
+		min: number,
+		max: number
+	},
+	average: number,
+	number_of_cards: number
+}
+
+export interface UserDeckCardsInterface {
+	id: number,
+	user_deck_id: number,
+	blocks: BlockInterface[],
+	current_status: number,
+	current_appearances: number,
+	current_time_spent: number,
+	appearances: number,
+	success: number,
+	time_spent: number,
+	created_at: boolean,
+	updated_at: string
 }
 
 export interface WidgetInterface {

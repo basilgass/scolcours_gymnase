@@ -1,5 +1,7 @@
 <script setup lang="ts">
 
+import ScButton from "@/Components/Ui/scButton.vue"
+
 defineProps<{
 	languages: string[]
 }>()
@@ -10,17 +12,13 @@ const language = defineModel<string>()
 
 <template>
 	<article class="flex gap-3">
-		<button
+		<sc-button
 			v-for="lang in languages"
 			:key="lang"
-			class="btn hover:shadow-sm"
-			:class="{
-				'bg-white': language!==lang,
-				'is-active': language===lang
-			}"
+			:outline="language!==lang"
 			@click="language=lang"
 		>
 			{{ lang }}
-		</button>
+		</sc-button>
 	</article>
 </template>

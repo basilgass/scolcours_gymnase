@@ -16,15 +16,15 @@ use Illuminate\Support\Carbon;
  * @property string $url
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @method static Builder|LatexPdf newModelQuery()
- * @method static Builder|LatexPdf newQuery()
- * @method static Builder|LatexPdf query()
- * @method static Builder|LatexPdf whereCreatedAt($value)
- * @method static Builder|LatexPdf whereId($value)
- * @method static Builder|LatexPdf whereName($value)
- * @method static Builder|LatexPdf whereSlug($value)
- * @method static Builder|LatexPdf whereUpdatedAt($value)
- * @method static Builder|LatexPdf whereUrl($value)
+ * @method static Builder<static>|LatexPdf newModelQuery()
+ * @method static Builder<static>|LatexPdf newQuery()
+ * @method static Builder<static>|LatexPdf query()
+ * @method static Builder<static>|LatexPdf whereCreatedAt($value)
+ * @method static Builder<static>|LatexPdf whereId($value)
+ * @method static Builder<static>|LatexPdf whereName($value)
+ * @method static Builder<static>|LatexPdf whereSlug($value)
+ * @method static Builder<static>|LatexPdf whereUpdatedAt($value)
+ * @method static Builder<static>|LatexPdf whereUrl($value)
  * @mixin Eloquent
  */
 class LatexPdf extends Model

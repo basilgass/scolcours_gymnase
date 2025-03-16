@@ -5,12 +5,12 @@ Affichage d'un PiDraw
 	lang="ts"
 	setup
 >
+
+// REFACTOR: need to completely rework this component
 import PiDrawParserVisibility from "@/Components/Pi/Parts/PiDrawParserVisibility.vue"
 import { useResizeObserver } from "@vueuse/core"
 import katex from "katex"
 
-// TODO: importing directly pidraw is not working - need to import the lib module (Not a big deal... but strange)
-// import { Parser as PiParser } from "pidraw/lib/Parser"
 import { PiDraw } from "pidraw"
 import PiMath from "pimath"
 import { computed, inject, onMounted, provide, ref, watch } from "vue"
@@ -214,7 +214,7 @@ const stepperStart = ref(false),
  */
 const drawCode = computed(() => {
 	let outputCode = props.draw.code
-	
+
 	// Modify the code using the local information (sliders)
 	if (sliders.value.length > 0) {
 		// Remove the lines starting with $ (dollar sign)
@@ -321,7 +321,7 @@ function PiParserUpdate(from: string, withSliders = false) {
 // Create the non reactive objects on mounted
 // PiGraph : display SVG
 // PiParser: convert string code to PiGraph data
-// Build the resizeobserver...
+// Build the resize observer...
 onMounted(() => {
 	// Default settings
 	PiGraph = new PiDraw(
@@ -367,7 +367,10 @@ provide("PiDrawGraph", PiGraph)
 </script>
 
 <template>
-	<article :class="PiParserHasErrors ? 'bg-red-100' : ''">
+	<article
+		class="dark:bg-slate-600"
+		:class="PiParserHasErrors ? 'bg-red-100' : ''"
+	>
 		<!-- draw graph-->
 		<div
 			ref="drawWrapper"
@@ -375,9 +378,9 @@ provide("PiDrawGraph", PiGraph)
 			@mouseup="drawMouseUp"
 		/>
 
-		<pi-draw-parser-visibility 
-			v-if="PiGraph" 
-			:draw="props.draw" 
+		<pi-draw-parser-visibility
+			v-if="PiGraph"
+			:draw="props.draw"
 			:graph="PiGraph"
 		/>
 

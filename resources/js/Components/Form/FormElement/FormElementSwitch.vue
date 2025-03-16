@@ -1,19 +1,23 @@
 <script lang="ts" setup>
-import { computed } from "vue"
+import {computed} from "vue"
 
-const emits = defineEmits(["update"])
-const theValue = defineModel<boolean>()
+const emits = defineEmits<{
+	'update': [value: boolean]
+}>()
+
+const switchValue = defineModel<boolean>()
 
 defineOptions({
 	inheritAttrs: false
 })
 
 const props = defineProps({
-	focus: { type: Boolean, default: false },
-	label: { type: String, default: "" },
-	enabledClass: { type: String, default: "bg-blue-700" },
-	disabledClass: { type: String, default: "bg-red-700" },
-	sm: { type: Boolean, default: false }
+	focus: {type: Boolean, default: false},
+	label: {type: String, default: ""},
+	enabledClass: {type: String, default: "bg-blue-700"},
+	disabledClass: {type: String, default: "bg-red-700"},
+	sm: {type: Boolean, default: false},
+	xl: {type: Boolean, default: false},
 })
 
 const enabledLabel = computed(() => {
@@ -25,78 +29,52 @@ const disabledLabel = computed(() => {
 })
 
 function updateSwitch() {
-	theValue.value = !theValue.value
-	emits("update", theValue)
+	switchValue.value = !switchValue.value
+	emits("update", switchValue.value)
 }
 
-const switchContainerClass = computed(() => {
-	return `${theValue.value ? props.enabledClass : props.disabledClass}${props.sm ? " sm" : ""}`
-})
+// TODO: Add the color and more smart computed classes: ${switchValue? enabledClass:disabledClass}
 </script>
 <template>
 	<div
-		:class="props.sm?' text-xs':''"
-		class="flex gap-3 cursor-pointer"
+		:class="`flex gap-3 cursor-pointer
+		${sm?'text-xs':xl?'text-lg':''}`"
 		@click="updateSwitch"
 	>
 		<div
 			v-katex.auto="enabledLabel"
-			:class="`${theValue?'text-black':'text-gray-400'}`"
+			:class="`${switchValue?'opacity-100':'opacity-60'}`"
 			class="transition-colors"
 		/>
 		<div
-			:class="switchContainerClass"
-			class="switch"
+			class="border rounded-full relative transition-colors"
+			:class="[{
+				'w-[25px] h-[16px]': sm,
+				'w-[36px] h-[23px]': !xl && !sm,
+				'w-[45px] h-[25px]': xl,
+			}, switchValue? enabledClass: disabledClass]"
 		>
 			<div
+				class="absolute rounded-full transition-all"
 				:class="{
-					'enabled': theValue,
-					'sm': props.sm
+					'top-[2px] w-[10px] h-[10px]': sm,
+					'top-[2px] w-[17px] h-[17px]': !xl && !sm,
+					'top-[3px] w-[17px] h-[17px]': xl,
+					'left-[1px]': sm && switchValue,
+					'left-[2px]': (!sm && !xl) && switchValue,
+					'left-[3px]': xl && switchValue,
+					'left-[11px]': sm && !switchValue,
+					'left-[16px]': (!sm && !xl) && !switchValue,
+					'left-[22px]': xl && !switchValue,
 				}"
-				class="switch-button"
 			>
 				<div class="bg-white border h-full w-full rounded-full" />
 			</div>
 		</div>
 		<div
 			v-katex.auto="disabledLabel"
-			:class="!theValue?'text-black':'text-gray-400'"
+			:class="`${switchValue?'opacity-60':'opacity-100'}`"
 			class="transition-colors"
 		/>
 	</div>
 </template>
-
-<style scoped lang="postcss">
-.switch {
-	@apply border rounded-full relative transition-colors
-	w-[36px] h-[23px];
-}
-.switch-button {
-	@apply absolute rounded-full transition-all
-	left-[2px] top-[2px] w-[17px] h-[17px];
-}
-.switch-button.enabled {
-	@apply left-[16px];
-}
-
-.switch.xl {
-	@apply w-[45px] h-[25px];
-}
-.switch-button.xl {
-	@apply left-[3px] top-[3px] w-[17px] h-[17px];
-}
-.switch-button.xl.enabled {
-	@apply left-[22px];
-}
-
-.switch.sm {
-	@apply w-[25px] h-[16px];
-}
-.switch-button.sm {
-	@apply top-[2px] w-[10px] h-[10px];
-}
-
-.switch-button.sm.enabled {
-	@apply left-[11px];
-}
-</style>

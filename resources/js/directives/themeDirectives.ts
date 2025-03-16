@@ -5,25 +5,33 @@ function getThemes(): string[] {
 	return usePage().props.themes.map((theme) => theme.slug)
 }
 
-function getCurrentTheme(): string  {
+function getCurrentTheme(): string {
 	return usePage().props?.theme?.slug || "scolcours"
 }
 
-const keys = ["btn", "bg", "text", "border", "gradient", "from", "to"]
+const keys = ["btn", "bg", "text", "border", "outline", "gradient", "from", "to"]
 
 function clearThemeClasses(el: HTMLElement): void {
 	const themes = getThemes()
 
 	keys.forEach((key) => {
 		themes.forEach((theme) => {
-			const regex = new RegExp(`${key}-${theme}-\\d+`)
+
+			const regex = new RegExp(`${key}-${theme}[(-dark)|(-light)]?`)
 			el.classList.forEach((className) => {
 				if (regex.test(className)) {
 					el.classList.remove(className)
+					console.log(className)
 
 					// If removing a border-*-* item, also remove border.
 					if (key === 'border') {
 						el.classList.remove('border')
+					}
+
+					if (key === 'outline') {
+						el.classList.remove('outline')
+						el.classList.remove('outline-1')
+						el.classList.remove('outline-2')
 					}
 				}
 			})
@@ -62,7 +70,7 @@ export function getThemeChapter(value?: string | boolean | number, modifiers?: R
 export function getThemeClasses(chapter: string, modifiers: Record<string, boolean>) {
 	const classesList: string[] = []
 
-	if(modifiers.admin){
+	if (modifiers.admin) {
 		modifiers.bg = true
 		modifiers.text = true
 	}
@@ -70,34 +78,38 @@ export function getThemeClasses(chapter: string, modifiers: Record<string, boole
 	Object.keys(modifiers)
 		.forEach((key) => {
 			// TODO: Check if it's still used for buttons ? I think it should be removed.
-			if (key === "hover" || key === "btn") {
-				classesList.push(
-					`hover:bg-${chapter}-50`,
-					`hover:border-${chapter}-500`,
-					`hover:text-${chapter}-500`,
-					'transition-colors',
-					'duration-300'
-				)
-			}
+			// if (key === "hover" || key === "btn") {
+			// 	classesList.push(
+			// 		`hover:bg-${chapter}-50`,
+			// 		`hover:border-${chapter}-500`,
+			// 		`hover:text-${chapter}-500`,
+			// 		'transition-colors',
+			// 		'duration-300'
+			// 	)
+			// }
 
 			if (keys.indexOf(key) !== -1) {
-				if (key === "text" && Object.hasOwn(modifiers, "bg") && chapter!=='admin') {
-						classesList.push("text-white")
-				}else if(key==='gradient'){
+				if (key === "text" && Object.hasOwn(modifiers, "bg") && chapter !== 'admin') {
+					classesList.push("text-white")
+				} else if (key === 'gradient') {
 					classesList.push(`bg-linear-to-t`)
 					classesList.push(`from-${chapter}`)
 					classesList.push(`to-${chapter}-light`)
 					classesList.push(`dark:to-${chapter}-dark`)
 				} else {
-					if(chapter==='admin'){
+					if (chapter === 'admin') {
 						classesList.push(`admin-content`)
-					}else {
+					} else {
 						classesList.push(`${key}-${chapter}`)
 					}
 
-					if(key==='text' || key==='border') {
+					if (key === 'border') {
+						classesList.push(`border`)
 						// TODO: reformat themeDirectives and check the "light" color (used in dark mode !)
 						// classesList.push(`dark:${key}-${chapter}-light`)
+					}
+					if(key==='outline'){
+						classesList.push('outline-2')
 					}
 
 					// TODO: add the dark mode here ?

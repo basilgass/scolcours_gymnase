@@ -21,16 +21,16 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read \App\Models\Quizz $quizz
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\User> $users
  * @property-read int|null $users_count
- * @method static \Illuminate\Database\Eloquent\Builder|QuizzSession newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|QuizzSession newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|QuizzSession query()
- * @method static \Illuminate\Database\Eloquent\Builder|QuizzSession whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|QuizzSession whereEnable($value)
- * @method static \Illuminate\Database\Eloquent\Builder|QuizzSession whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|QuizzSession whereIndex($value)
- * @method static \Illuminate\Database\Eloquent\Builder|QuizzSession whereQuizzId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|QuizzSession whereShortcode($value)
- * @method static \Illuminate\Database\Eloquent\Builder|QuizzSession whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|QuizzSession newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|QuizzSession newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|QuizzSession query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|QuizzSession whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|QuizzSession whereEnable($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|QuizzSession whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|QuizzSession whereIndex($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|QuizzSession whereQuizzId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|QuizzSession whereShortcode($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|QuizzSession whereUpdatedAt($value)
  * @mixin \Eloquent
  */
 class QuizzSession extends Model

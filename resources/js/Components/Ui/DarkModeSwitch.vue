@@ -5,6 +5,7 @@ import {useDark, useToggle} from "@vueuse/core"
 const isDark = useDark()
 // isDark.value = false
 const toggleDark = useToggle(isDark)
+toggleDark(false)
 
 
 </script>
@@ -13,6 +14,7 @@ const toggleDark = useToggle(isDark)
 	<div
 		class="flex items-baseline cursor-pointer"
 		@click="toggleDark()"
+		v-admin
 	>
 		<div
 

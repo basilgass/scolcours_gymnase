@@ -4,8 +4,9 @@ Affichage d'un tableau de signes ou de croissance.
 -->
 <script lang="ts" setup>
 import TableOfSigns from "@/Components/Pi/TableOfSigns.vue"
-import { Point, PolyFactor, type POLYFACTOR_TABLE_OF_SIGNS, type TABLE_OF_SIGNS } from "pimath"
-import { computed } from "vue"
+import {Point, PolyFactor, type POLYFACTOR_TABLE_OF_SIGNS, type TABLE_OF_SIGNS} from "pimath"
+import {computed} from "vue"
+
 
 export interface PiTableOfSignsPropsType {
 	fx: string,
@@ -23,28 +24,29 @@ const props = withDefaults(defineProps<PiTableOfSignsPropsType>(), {
 	mode: "signs",
 	texOutput: false
 })
+
 const emits = defineEmits(['update'])
 
 const computedPreviousLabel = computed(() => {
-	if(props.previousLabel || props.previousLabel!=="") {
+	if (props.previousLabel !== "") {
 		return props.previousLabel
 	}
-	
+
 	const [name, ...items] = props.label.split("(")
-	return `${name}'${items.join("(")}`
+	return `${name}HELLO${items.join("(")}`
 })
 
 const tos = computed(() => {
 	let fn: PolyFactor
 	try {
 		fn = createPolyFactor()
-	}catch(e){
+	} catch (e) {
 		console.log(e)
 		throw new Error("La chaîne de caractères donnée n'est pas un polynôme valide")
 	}
 
-	const dfn = props.mode!=='signs' ? fn.clone().derivative() : null
-	const ddfn = props.mode==='curves' && dfn !== undefined? dfn.clone().derivative() : null
+	const dfn = props.mode !== 'signs' ? fn.clone().derivative() : null
+	const ddfn = props.mode === 'curves' && dfn !== undefined ? dfn.clone().derivative() : null
 
 	emits('update', {
 		fx: fn.asRoot.tex,
@@ -53,7 +55,7 @@ const tos = computed(() => {
 	})
 
 	let table_of_signs: POLYFACTOR_TABLE_OF_SIGNS
-	switch (props.mode){
+	switch (props.mode) {
 		case 'signs':
 			table_of_signs = fn.tableOfSigns()
 			break
@@ -68,37 +70,41 @@ const tos = computed(() => {
 	return {
 		roots: table_of_signs.roots.map(x => x.tex),
 		signs: table_of_signs.signs,
-		factors: props.minimal ? []: getFactors(table_of_signs),
-		extremes: getExtremes(fn,table_of_signs)
+		factors: props.minimal ? [] : getFactors(table_of_signs),
+		extremes: getExtremes(fn, table_of_signs)
 	}
 
 })
 
-function createPolyFactor(){
+function createPolyFactor() {
 	// TODO: much more robust splitter !
 	const [num, den] = props.fx.split("/")
 
 	if (den === undefined) {
-		return new PolyFactor().fromPolynom(props.fx)
+		return new PolyFactor().fromPolynom(props.fx).factorize()
 	}
 
-	const numPF = new PolyFactor().fromPolynom(num)
-	const denPF = new PolyFactor().fromPolynom(den)
-
-	return numPF.divide(denPF)
+	// TODO: non nécessaire d'ajouter factorize() une fois la mise à jour de PiMath faite !
+	return new PolyFactor().fromPolynom(num, den).factorize()
 }
 
-function getFactors(tos:POLYFACTOR_TABLE_OF_SIGNS) {
+function getFactors(tos: POLYFACTOR_TABLE_OF_SIGNS) {
 	const arr = tos.factors
+
 	arr.sort((a, b) => {
 		return b.factor.degree().value - a.factor.degree().value
 	})
+
+
 	return arr.map(x => {
-		return { label: x.factor.tex, signs: x.signs }
+		return {
+			label: x.factor.power.value > 0 ? x.factor.tex : x.factor.clone().inverse().tex,
+			signs: x.signs
+		}
 	})
 }
 
-function getExtremes(fn: PolyFactor, tos:TABLE_OF_SIGNS) {
+function getExtremes(fn: PolyFactor, tos: TABLE_OF_SIGNS) {
 	return tos.roots.map((root, index) => {
 		if (tos.signs[2 * index + 1] !== "z") {
 			return ""

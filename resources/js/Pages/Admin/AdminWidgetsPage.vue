@@ -6,6 +6,7 @@ import type { WidgetInterface } from "@/types/modelInterfaces"
 import axios from "axios"
 import { router } from "@inertiajs/vue3"
 import FilteredList from "@/Components/Ui/FilteredList.vue"
+import ScButton from "@/Components/Ui/scButton.vue"
 
 defineOptions({ layout: LayoutMain })
 
@@ -27,12 +28,11 @@ function refreshWidgets() {
 			<h1 class="text-3xl pt-5 mb-10">
 				Gestion des widgets
 			</h1>
-			<button
-				class="btn bg-white"
+			<sc-button
 				@click="refreshWidgets"
 			>
 				mise à jour
-			</button>
+			</sc-button>
 		</div>
 
 		<div class="flex flex-col gap-4">
@@ -45,7 +45,7 @@ function refreshWidgets() {
 				<template #card="{ item }:{ item: WidgetInterface}">
 					<div
 						v-theme.border="item.theme?.id"
-						class="bg-white border-l-8 px-5 py-2 rounded-r-lg"
+						class="bg-content border-l-8 px-5 py-2 rounded-r-lg"
 					>
 						<div
 							:class="!item.control?'text-red-600':''"

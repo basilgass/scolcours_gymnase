@@ -145,7 +145,7 @@ const placeholderValue = computed(() => {
 
 
 // On input update, emit the new value in correct format
-function updateInput(e: Event) {
+function updateInput(e: Event | boolean) {
 	emits("change", e)
 	// TODO: updateInput ?
 }

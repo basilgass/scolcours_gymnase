@@ -3,36 +3,19 @@
 	setup
 >
 
-import FormMaker from "@/Components/Form/FormMaker.vue"
-import FilteredList from "@/Components/Ui/FilteredList.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
-import DeckGroup from "@/Pages/Decks/DeckGroup.vue"
-import { useStoreEditMode } from "@/stores/useStoreEditMode.ts"
-import type { DeckInterface } from "@/types/modelInterfaces"
-import axios from "axios"
-import { PropType, ref } from "vue"
+import type {DeckInterface, UserDeckInterface} from "@/types/modelInterfaces"
+import {PropType} from "vue"
+import BlockShow from "@/Components/Blocks/BlockShow.vue"
+import ScButton from "@/Components/Ui/scButton.vue"
 
-defineOptions({ layout: LayoutMain })
+defineOptions({layout: LayoutMain})
 
 const props = defineProps({
-	decks: { type: Array as PropType<DeckInterface[]>, required: true }
+	decks: {type: Array as PropType<UserDeckInterface[]>, required: true}
 })
-const editMode = useStoreEditMode()
-const theDecks = ref(props.decks)
 
-const newDeckTitle = ref(""),
-	newDeckSlug = ref("")
 
-function addDeck() {
-	axios.post(route("decks.store"),
-		{
-			title: newDeckTitle.value,
-			slug: newDeckSlug.value
-		})
-		.then(res => {
-			theDecks.value.push(res.data)
-		})
-}
 </script>
 
 <template>
@@ -41,42 +24,39 @@ function addDeck() {
 			Decks de révision
 		</h3>
 
-		<FilteredList
-			list-class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5"
-			:list="props.decks"
-			filter-by-theme
-		>
-			<template #card="{ item }: { item: DeckInterface }">
-				<deck-group
-					:key="item.id"
-					:deck="item"
-				/>
-			</template>
-		</FilteredList>
-
-
 		<div
-			class="mt-10 flex flex-col gap-5 justify-center max-w-[300px] mx-auto"
-			v-admin="editMode.enable"
+			v-if="decks.length>0"
+			class="flex flex-col gap-3"
 		>
-			<form-maker
-				v-model="newDeckTitle"
-				inline-label
-				label="titre"
-				type="text"
-			/>
-			<form-maker
-				v-model="newDeckSlug"
-				inline-label
-				label="slug"
-				type="text"
-			/>
-			<button
-				class="btn btn-add"
-				@click="addDeck"
+			<div
+				v-for="deck in decks"
+				:key="deck.id"
+				class="bg-content p-3 flex justify-between"
 			>
-				ajouter un deck
-			</button>
+				<div>
+					<h3
+						v-katex.auto="deck.title"
+						class="font-semibold"
+					/>
+					<div v-katex.auto="deck.description" />
+
+					<div>{{ deck.number_of_cards }} cartes</div>
+
+
+					<details>
+						<summary>
+							voir le code
+						</summary>
+						<pre>{{ deck }}</pre>
+					</details>
+				</div>
+
+				<div>
+					<sc-button :href="route('decks.show', deck.id)">
+						{{ deck.running ? 'continuer' : 'commencer' }}
+					</sc-button>
+				</div>
+			</div>
 		</div>
 	</section>
 </template>

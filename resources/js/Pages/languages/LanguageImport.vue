@@ -173,7 +173,7 @@ function importerLesTraductions() {
 				/>
 			</div>
 
-			<div class="bg-white">
+			<div class="bg-content">
 				<table class="w-full">
 					<thead>
 						<tr class="text-left">
@@ -189,7 +189,7 @@ function importerLesTraductions() {
 						<tr
 							v-for="(item, index) of traductions"
 							:key="index"
-							class="odd:bg-amber-100"
+							class="odd:bg-amber-100 dark:odd:bg-slate-700"
 						>
 							<td class="p-2">
 								{{ item.fr }}

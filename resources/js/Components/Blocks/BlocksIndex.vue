@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 import BlockShow from "@/Components/Blocks/BlockShow.vue"
-import { useStoreEditMode } from "@/stores/useStoreEditMode.ts"
-import type { flashInterface } from "@/types"
-import type { BlockInterface } from "@/types/modelInterfaces.ts"
+import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
+import type {flashInterface} from "@/types"
+import type {BlockInterface} from "@/types/modelInterfaces.ts"
 import axios from "axios"
-import { defineModel, inject } from "vue"
+import {defineModel, inject} from "vue"
 
 const props = defineProps<{
 	postId: number,
@@ -35,18 +35,18 @@ function addBlock(after?: number) {
 	})
 }
 
-function updateBlockOrder(){
+function updateBlockOrder() {
 	axios.patch(route("posts.updateBlocksOrder", [props.postId]), {
-		order: blocks.value.map((block, index)=>{
+		order: blocks.value.map((block, index) => {
 			return {
 				id: block.id,
 				order: index
 			}
 		})
-	}).then(()=>{
+	}).then(() => {
 		// Show flash message.
 		flash.success('Les blocks ont bien été ré-ordré.')
-	}).catch((err)=>{
+	}).catch((err) => {
 		// Show flash error message
 		console.log(err.response.data.message)
 		flash.error('Problème de réorganisation des blocks.')
@@ -63,10 +63,13 @@ function updateBlockOrder(){
 			class="text-right"
 		>
 			<button
-				class="addButton"
+				class="bg-action text-xl
+					 w-[24px] h-[24px] z-10
+					rounded-full border
+					cursor-pointer"
 				@click="addBlock()"
 			>
-				<i class="bi bi-plus-circle" />
+				<i class="bi bi-plus" />
 			</button>
 		</div>
 
@@ -85,13 +88,17 @@ function updateBlockOrder(){
 				<div
 					class="relative"
 				>
-					<div
+					<button
 						v-admin="editMode.enable"
-						class="absolute -right-2 -bottom-2 addButton"
+						class="absolute -right-2 -bottom-2
+							bg-action text-xl
+							w-[24px] h-[24px] z-10
+							rounded-full border
+							cursor-pointer"
 						@click="addBlock(element.order)"
 					>
-						<i class="bi bi-plus-circle" />
-					</div>
+						<i class="bi bi-plus" />
+					</button>
 
 					<block-show
 						class="overflow-hidden max-w-full border-x"
@@ -107,13 +114,7 @@ function updateBlockOrder(){
 	</article>
 </template>
 
-<style scoped lang="postcss">
-.addButton {
-	@apply cursor-pointer
-	bg-white text-xl w-[20px] h-[20px] rounded-full z-10
-	hover:bg-black hover:text-white
-	transition-colors duration-500;
-}
+<style scoped>
 
 .bi::before, [class^="bi-"]::before, [class*=" bi-"]::before {
 	vertical-align: 1px;

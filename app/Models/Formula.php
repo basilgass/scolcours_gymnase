@@ -17,17 +17,17 @@ use Illuminate\Support\Carbon;
  * @property int|null $order
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property-read Collection<int, Block> $blocks
+ * @property-read Collection<int, \App\Models\Block> $blocks
  * @property-read int|null $blocks_count
- * @property-read Chapter $chapter
- * @method static Builder|Formula newModelQuery()
- * @method static Builder|Formula newQuery()
- * @method static Builder|Formula query()
- * @method static Builder|Formula whereChapterId($value)
- * @method static Builder|Formula whereCreatedAt($value)
- * @method static Builder|Formula whereId($value)
- * @method static Builder|Formula whereOrder($value)
- * @method static Builder|Formula whereUpdatedAt($value)
+ * @property-read \App\Models\Chapter $chapter
+ * @method static Builder<static>|Formula newModelQuery()
+ * @method static Builder<static>|Formula newQuery()
+ * @method static Builder<static>|Formula query()
+ * @method static Builder<static>|Formula whereChapterId($value)
+ * @method static Builder<static>|Formula whereCreatedAt($value)
+ * @method static Builder<static>|Formula whereId($value)
+ * @method static Builder<static>|Formula whereOrder($value)
+ * @method static Builder<static>|Formula whereUpdatedAt($value)
  * @mixin Eloquent
  */
 class Formula extends Model

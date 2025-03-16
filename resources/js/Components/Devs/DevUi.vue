@@ -6,14 +6,23 @@ import FormMaker from "@/Components/Form/FormMaker.vue"
 
 defineOptions({layout: LayoutMain})
 
+type groupsUiType = 'theme' | 'buttons' | 'blocks' | 'forms'
+const detailsOpen = ref<groupsUiType[]>(['buttons'])
+
 const themes = {
 	'scolcours': [
 		'bg-scolcours-light dark:bg-scolcours-light',
 		'bg-scolcours dark:bg-scolcours',
 		'bg-scolcours-dark dark:bg-scolcours-dark',
+
 		'text-scolcours-light border border-scolcours-light dark:text-scolcours-light dark:border-scolcours-light',
 		'text-scolcours border border-scolcours dark:text-scolcours dark:border-scolcours',
 		'text-scolcours-dark border border-scolcours-dark dark:text-scolcours-dark dark:border-scolcours-dark',
+
+		'outline-2 outline-scolcours-light dark:outline-scolcours-light',
+		'outline-2 outline-scolcours dark:outline-scolcours',
+		'outline-2 outline-scolcours-dark dark:outline-scolcours-dark',
+
 		'bg-linear-to-t from-scolcours to-scolcours-light dark:to-scolcours-dark',
 		'bg-linear-to-t from-scolcours to-scolcours-dark dark:to-scolcours-light',
 	],
@@ -21,9 +30,15 @@ const themes = {
 		'bg-algebre-light dark:bg-algebre-light',
 		'bg-algebre dark:bg-algebre',
 		'bg-algebre-dark dark:bg-algebre-dark',
+
 		'text-algebre-light border border-algebre-light dark:text-algebre-light dark:border-algebre-light',
 		'text-algebre border border-algebre dark:text-algebre dark:border-algebre',
 		'text-algebre-dark border border-algebre-dark dark:text-algebre-dark dark:border-algebre-dark',
+
+		'outline-2 outline-algebre-light dark:outline-algebre-light',
+		'outline-2 outline-algebre dark:outline-algebre',
+		'outline-2 outline-algebre-dark dark:outline-algebre-dark',
+
 		'bg-linear-to-t from-algebre to-algebre-light dark:to-algebre-dark',
 		'bg-linear-to-t from-algebre to-algebre-dark dark:to-algebre-light',
 	],
@@ -31,9 +46,15 @@ const themes = {
 		'bg-analyse-light dark:bg-analyse-light',
 		'bg-analyse dark:bg-analyse',
 		'bg-analyse-dark dark:bg-analyse-dark',
+
 		'text-analyse-light border border-analyse-light dark:text-analyse-light dark:border-analyse-light',
 		'text-analyse border border-analyse dark:text-analyse dark:border-analyse',
 		'text-analyse-dark border border-analyse-dark dark:text-analyse-dark dark:border-analyse-dark',
+
+		'outline-2 outline-analyse-light dark:outline-analyse-light',
+		'outline-2 outline-analyse dark:outline-analyse',
+		'outline-2 outline-analyse-dark dark:outline-analyse-dark',
+
 		'bg-linear-to-t from-analyse to-analyse-light dark:to-analyse-dark',
 		'bg-linear-to-t from-analyse to-analyse-dark dark:to-analyse-light',
 	],
@@ -41,9 +62,15 @@ const themes = {
 		'bg-geometrie-light dark:bg-geometrie-light',
 		'bg-geometrie dark:bg-geometrie',
 		'bg-geometrie-dark dark:bg-geometrie-dark',
+
 		'text-geometrie-light border border-geometrie-light dark:text-geometrie-light dark:border-geometrie-light',
 		'text-geometrie border border-geometrie dark:text-geometrie dark:border-geometrie',
 		'text-geometrie-dark border border-geometrie-dark dark:text-geometrie-dark dark:border-geometrie-dark',
+
+		'outline-2 outline-geometrie-light dark:outline-geometrie-light',
+		'outline-2 outline-geometrie dark:outline-geometrie',
+		'outline-2 outline-geometrie-dark dark:outline-geometrie-dark',
+
 		'bg-linear-to-t from-geometrie to-geometrie-light dark:to-geometrie-dark',
 		'bg-linear-to-t from-geometrie to-geometrie-dark dark:to-geometrie-light',
 	],
@@ -51,9 +78,15 @@ const themes = {
 		'bg-statistiques-light dark:bg-statistiques-light',
 		'bg-statistiques dark:bg-statistiques',
 		'bg-statistiques-dark dark:bg-statistiques-dark',
+
 		'text-statistiques-light border border-statistiques-light dark:text-statistiques-light dark:border-statistiques-light',
 		'text-statistiques border border-statistiques dark:text-statistiques dark:border-statistiques',
 		'text-statistiques-dark border border-statistiques-dark dark:text-statistiques-dark dark:border-statistiques-dark',
+
+		'outline-2 outline-statistiques-light dark:outline-statistiques-light',
+		'outline-2 outline-statistiques dark:outline-statistiques',
+		'outline-2 outline-statistiques-dark dark:outline-statistiques-dark',
+
 		'bg-linear-to-t from-statistiques to-statistiques-light dark:to-statistiques-dark',
 		'bg-linear-to-t from-statistiques to-statistiques-dark dark:to-statistiques-light',
 	],
@@ -61,9 +94,15 @@ const themes = {
 		'bg-jeux-light dark:bg-jeux-light',
 		'bg-jeux dark:bg-jeux',
 		'bg-jeux-dark dark:bg-jeux-dark',
+
 		'text-jeux-light border border-jeux-light dark:text-jeux-light dark:border-jeux-light',
 		'text-jeux border border-jeux dark:text-jeux dark:border-jeux',
 		'text-jeux-dark border border-jeux-dark dark:text-jeux-dark dark:border-jeux-dark',
+
+		'outline-2 outline-jeux-light dark:outline-jeux-light',
+		'outline-2 outline-jeux dark:outline-jeux',
+		'outline-2 outline-jeux-dark dark:outline-jeux-dark',
+
 		'bg-linear-to-t from-jeux to-jeux-light dark:to-jeux-dark',
 		'bg-linear-to-t from-jeux to-jeux-dark dark:to-jeux-light',
 	],
@@ -71,9 +110,15 @@ const themes = {
 		'bg-tools-light dark:bg-tools-light',
 		'bg-tools dark:bg-tools',
 		'bg-tools-dark dark:bg-tools-dark',
+
 		'text-tools-light border border-tools-light dark:text-tools-light dark:border-tools-light',
 		'text-tools border border-tools dark:text-tools dark:border-tools',
 		'text-tools-dark border border-tools-dark dark:text-tools-dark dark:border-tools-dark',
+
+		'outline-2 outline-tools-light dark:outline-tools-light',
+		'outline-2 outline-tools dark:outline-tools',
+		'outline-2 outline-tools-dark dark:outline-tools-dark',
+
 		'bg-linear-to-t from-tools to-tools-light dark:to-tools-dark',
 		'bg-linear-to-t from-tools to-tools-dark dark:to-tools-light',
 	],
@@ -81,9 +126,15 @@ const themes = {
 		'bg-arithmetique-light dark:bg-arithmetique-light',
 		'bg-arithmetique dark:bg-arithmetique',
 		'bg-arithmetique-dark dark:bg-arithmetique-dark',
+
 		'text-arithmetique-light border border-arithmetique-light dark:text-arithmetique-light dark:border-arithmetique-light',
 		'text-arithmetique border border-arithmetique dark:text-arithmetique dark:border-arithmetique',
 		'text-arithmetique-dark border border-arithmetique-dark dark:text-arithmetique-dark dark:border-arithmetique-dark',
+
+		'outline-2 outline-arithmetique-light dark:outline-arithmetique-light',
+		'outline-2 outline-arithmetique dark:outline-arithmetique',
+		'outline-2 outline-arithmetique-dark dark:outline-arithmetique-dark',
+
 		'bg-linear-to-t from-arithmetique to-arithmetique-light dark:to-arithmetique-dark',
 		'bg-linear-to-t from-arithmetique to-arithmetique-dark dark:to-arithmetique-light',
 	],
@@ -91,9 +142,15 @@ const themes = {
 		'bg-admin-light dark:bg-admin-light',
 		'bg-admin dark:bg-admin',
 		'bg-admin-dark dark:bg-admin-dark',
+
 		'text-admin-light border border-admin-light dark:text-admin-light dark:border-admin-light',
 		'text-admin border border-admin dark:text-admin dark:border-admin',
 		'text-admin-dark border border-admin-dark dark:text-admin-dark dark:border-admin-dark',
+
+		'outline-2 outline-admin-light dark:outline-admin-light',
+		'outline-2 outline-admin dark:outline-admin',
+		'outline-2 outline-admin-dark dark:outline-admin-dark',
+
 		'bg-linear-to-t from-admin to-admin-light dark:to-admin-dark',
 		'bg-linear-to-t from-admin to-admin-dark dark:to-admin-light',
 	],
@@ -160,8 +217,8 @@ const blockTypes = {
 	},
 }
 
-type groupsUiType = 'theme' | 'buttons' | 'blocks' | 'forms'
-const detailsOpen = ref<groupsUiType[]>(['forms'])
+
+const value = ref(false)
 </script>
 
 <template>
@@ -199,6 +256,24 @@ const detailsOpen = ref<groupsUiType[]>(['forms'])
 						v-for="theme in Object.keys(themes)"
 						:theme="theme"
 						:key="`btn-${theme}`"
+						class="h-[60px] w-[180px]"
+					>
+						<div class="flex gap-3">
+							<i class="bi bi-brush" />
+							<div class="hidden md:inline">
+								{{ theme }}
+							</div>
+						</div>
+					</sc-button>
+				</div>
+
+				<div class="flex flex-wrap gap-3">
+					<!-- boutons themes -->
+					<sc-button
+						v-for="theme in Object.keys(themes)"
+						:theme="theme"
+						:key="`btn-${theme}`"
+						outline
 						class="h-[60px] w-[180px]"
 					>
 						<div class="flex gap-3">
@@ -331,6 +406,27 @@ const detailsOpen = ref<groupsUiType[]>(['forms'])
 					placeholder="placeholder"
 					with-icon
 				/>
+
+
+				<div class="flex gap-3 justify-between items-center mt-3">
+					<form-maker
+						type="switch"
+						sm
+						v-model="value"
+						label="active,not active"
+					/>
+					<form-maker
+						type="switch"
+						v-model="value"
+						label="active,not active"
+					/>
+					<form-maker
+						type="switch"
+						xl
+						v-model="value"
+						label="active,not active"
+					/>
+				</div>
 			</div>
 		</details>
 	</div>

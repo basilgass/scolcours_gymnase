@@ -20,17 +20,17 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read int|null $generators_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Question> $questions
  * @property-read int|null $questions_count
- * @method static \Illuminate\Database\Eloquent\Builder|Evaluation newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Evaluation newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Evaluation query()
- * @method static \Illuminate\Database\Eloquent\Builder|Evaluation whereBody($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Evaluation whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Evaluation whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Evaluation whereRandomOrder($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Evaluation whereSlug($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Evaluation whereTitle($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Evaluation whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Evaluation whereUserId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Evaluation newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Evaluation newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Evaluation query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Evaluation whereBody($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Evaluation whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Evaluation whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Evaluation whereRandomOrder($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Evaluation whereSlug($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Evaluation whereTitle($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Evaluation whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Evaluation whereUserId($value)
  * @mixin \Eloquent
  */
 class Evaluation extends Model

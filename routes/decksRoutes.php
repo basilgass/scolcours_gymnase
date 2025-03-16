@@ -5,21 +5,29 @@ use App\Http\Controllers\DeckController;
 // Must be a verified user
 Route::get('decks', [DeckController::class, 'index'])
 	->name('decks.index');
-Route::get('decks/{deck:slug}', [DeckController::class, 'show'])
-	->name('decks.show');
+
+Route::middleware(['auth:sanctum', 'verified'])->group(function () {
+	Route::get('decks/{deck}', [DeckController::class, 'show'])
+		->name('decks.show');
+});
+
+// TODO: This route is to display a formated deck.
+//Route::get('decks/{deck:slug}', [DeckController::class, 'show'])
+//	->name('decks.show');
+
 
 Route::middleware("can:admin")->group(function () {
 	Route::get('decks/{deck:slug}/edit', [DeckController::class, "edit"])
 		->name('decks.edit');
 
-	Route::get('flipcards/{flipcard}', [DeckController::class, 'getFlipcards'])
-		->name('flipcards.multiple');
+	Route::get('cards/{card}', [DeckController::class, 'getCards'])
+		->name('cards.multiple');
 
-	Route::post('decks/{deck}/addFlipcard', [DeckController::class, "addFlipcard"])
-		->name('decks.addFlipcard');
+	Route::post('decks/{deck}/addCard', [DeckController::class, "addCard"])
+		->name('decks.addCard');
 
-	Route::delete('flipcards/{flipcard}/destroy', [DeckController::class, 'destroyFlipcard'])
-		->name('flipcards.destroy');
+	Route::delete('cards/{card}/destroy', [DeckController::class, 'destroyCard'])
+		->name('cards.destroy');
 
 
 

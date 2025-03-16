@@ -11,18 +11,21 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $id
  * @property string $slug
  * @property string $title
+ * @property int|null $chapter_id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Flipcard> $flipcards
- * @property-read int|null $flipcards_count
- * @method static \Illuminate\Database\Eloquent\Builder|Deck newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Deck newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Deck query()
- * @method static \Illuminate\Database\Eloquent\Builder|Deck whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Deck whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Deck whereSlug($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Deck whereTitle($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Deck whereUpdatedAt($value)
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Card> $cards
+ * @property-read int|null $cards_count
+ * @property-read \App\Models\Chapter|null $chapter
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Deck newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Deck newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Deck query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Deck whereChapterId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Deck whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Deck whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Deck whereSlug($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Deck whereTitle($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Deck whereUpdatedAt($value)
  * @mixin \Eloquent
  */
 class Deck extends Model
@@ -36,8 +39,8 @@ class Deck extends Model
 		return $this->belongsTo(Chapter::class);
 	}
 
-	public function flipcards()
+	public function cards()
 	{
-		return $this->hasMany(Flipcard::class)->orderBy('order')->orderBy('id');
+		return $this->hasMany(Card::class)->orderBy('order')->orderBy('id');
 	}
 }

@@ -9,6 +9,8 @@ Pour l'admin, contient également les liens vers les résultats par teams.
 	lang="ts"
 >
 
+import ScButton from "@/Components/Ui/scButton.vue"
+
 const props = defineProps({
 	challenge: { type: Object, required: true },
 	teams: { type: Object, required: true }
@@ -22,7 +24,7 @@ const emits = defineEmits(["start"])
 	<article class="flex flex-col gap-3">
 		<!-- Description du challenge -->
 		<div class="grid grid-cols-3 gap-3 w-[30em] mx-auto">
-			<div class="bg-white aspect-square p-4 rounded-xl border border-gray-200 grid place-items-center shadow-sm">
+			<div class="bg-content aspect-square p-4 rounded-xl border border-gray-200 grid place-items-center shadow-sm">
 				<div class="text-center flex flex-col justify-between h-full">
 					<i class="text-5xl bi bi-heart" />
 					<div class="text-3xl">
@@ -34,7 +36,7 @@ const emits = defineEmits(["start"])
 				</div>
 			</div>
 
-			<div class="bg-white aspect-square p-4 rounded-xl border border-gray-200 grid place-items-center shadow-sm">
+			<div class="bg-content aspect-square p-4 rounded-xl border border-gray-200 grid place-items-center shadow-sm">
 				<div class="text-center flex flex-col justify-between h-full">
 					<i class="text-5xl bi bi-chevron-double-up" />
 					<div class="text-3xl">
@@ -46,7 +48,7 @@ const emits = defineEmits(["start"])
 				</div>
 			</div>
 
-			<div class="bg-white aspect-square p-4 rounded-xl border border-gray-200 grid place-items-center shadow-sm">
+			<div class="bg-content aspect-square p-4 rounded-xl border border-gray-200 grid place-items-center shadow-sm">
 				<div class="text-center flex flex-col justify-between h-full">
 					<i class="text-5xl bi bi-clock" />
 					<div class="text-3xl">
@@ -76,7 +78,8 @@ const emits = defineEmits(["start"])
 
 			<div class="grid w-full gap-4 grid-cols-2">
 				<div
-					class="bg-white aspect-square p-4 rounded-xl border border-gray-200 grid place-items-center shadow-sm">
+					class="bg-content aspect-square p-4 rounded-xl border border-gray-200 grid place-items-center shadow-sm"
+				>
 					<div class="text-center flex flex-col justify-between h-full">
 						<h4 class="text-xl uppercase ">
 							score
@@ -90,7 +93,8 @@ const emits = defineEmits(["start"])
 					</div>
 				</div>
 				<div
-					class="bg-white aspect-square p-4 rounded-xl border border-gray-200 grid place-items-center shadow-sm">
+					class="bg-content aspect-square p-4 rounded-xl border border-gray-200 grid place-items-center shadow-sm"
+				>
 					<div class="text-center flex flex-col justify-between h-full">
 						<h4 class="text-xl uppercase">
 							niveau
@@ -115,15 +119,13 @@ const emits = defineEmits(["start"])
 				Résultats
 			</h3>
 			<div class="flex flex-wrap gap-3">
-				<InertiaLink
+				<sc-button
 					v-for="team of props.teams"
 					:key="team.id"
 					:href="route('teams.challenge', [team.name, props.challenge.slug])"
-					as="button"
-					class="btn bg-white"
 				>
 					{{ team.name }}
-				</InertiaLink>
+				</sc-button>
 			</div>
 		</div>
 	</article>

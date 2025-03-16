@@ -6,8 +6,9 @@ import TableOfSignsHeader from "@/Components/Pi/Parts/TableOfSignsHeader.vue"
 import TableOfSignsResultLine from "@/Components/Pi/Parts/TableOfSignsResultLine.vue"
 import TexCode from "@/Components/Ui/TexCode.vue"
 import {type TABLE_OF_SIGNS_VALUES} from "pimath"
-import {computed, onMounted} from "vue"
+import {computed} from "vue"
 
+// TODO: implement an "auto-width" for the table of signs
 // TODO: extremeType should be in pimath, with TABLE_OF_SIGNS_VALUES
 export type TABLE_OF_SIGNS_VALUES_WITH_EXTREMES = TABLE_OF_SIGNS_VALUES | "m" | "M" | "_" | "I"
 
@@ -33,6 +34,7 @@ const props = withDefaults(defineProps<TableOfSignsType>(), {
 	resultLine: null
 })
 
+
 const tosMode = computed<'signs' | 'grows' | 'curves'>(() => {
 	if (props.mode !== 'auto') {
 		return props.mode
@@ -57,15 +59,18 @@ const computedPreviousLabel = computed(() => {
 	}
 
 	const functionName = props.label.split("(")[0]
-	if (props.mode === 'grows') {
+
+	if (tosMode.value === 'grows') {
 		return `${functionName}'(x)`
 	}
-	if (props.mode === 'curves') {
+
+	if (tosMode.value === 'curves') {
 		return `${functionName}''(x)`
 	}
 
 	return `${functionName}(x)`
 })
+
 
 const computedGrows = computed(() => {
 	if (props.resultLine !== null) {
@@ -107,7 +112,7 @@ ${props.factors.length > 0 ? "\\tkzTabLine{}" : ""}
 </script>
 <template>
 	<div class="table-of-sign-wrapper">
-		<div class="not-prose">
+		<div class="not-prose overflow-x-scroll katex-scrollbar pb-3">
 			<table class="border-r tos border-gray-400 mx-auto">
 				<table-of-signs-header :roots="roots" />
 

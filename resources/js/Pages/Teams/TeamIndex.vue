@@ -32,7 +32,7 @@ const props = defineProps({
 					:key="`id-${team.id}`"
 					:href="route('teams.show', [team.name])"
 					as="button"
-					class="bg-white px-4 py-2 border border-gray-200 rounded-sm hover:scale-105 hover:shadow-sm transition-all flex flex-col gap-2"
+					class="bg-content px-4 py-2 border rounded-sm hover:scale-105 hover:shadow-sm transition-all flex flex-col gap-2"
 				>
 					<div class="font-semibold text-xl">
 						{{ team.name }}

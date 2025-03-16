@@ -4,6 +4,7 @@ import {ToolInterface} from "@/types/modelInterfaces.ts"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import ThemeSelector from "@/Components/Ui/ThemeSelector.vue"
 import axios from "axios"
+import ScButton from "@/Components/Ui/scButton.vue"
 
 const tool = defineModel<ToolInterface>('tool')
 
@@ -44,16 +45,21 @@ function updateTool() {
 
 
 			<theme-selector
+				xs
 				v-model="tool.theme_id"
+				@change="updateTool"
 			/>
 
-			<button @click="updateTool">
-				Enregristrer
-			</button>
+			<sc-button
+				@click="updateTool"
+				:theme="tool.theme_id"
+			>
+				Enregistrer
+			</sc-button>
 		</div>
 
 		<div
-			class="bg-white border rounded-sm"
+			class="bg-content border rounded-sm"
 		>
 			<header
 				class="flex justify-between border-b px-3 py-2"

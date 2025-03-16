@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, ref } from "vue"
+import ScButton from "@/Components/Ui/scButton.vue"
 
 const props = defineProps({
 	btnClass: { type: String, default: "btn btn-success" },
@@ -10,10 +11,6 @@ const props = defineProps({
 const emits = defineEmits(["confirm"])
 
 const confirmClick = ref(false),
-	buttonClass = computed(() => {
-		const cl = props.xs ? "btn-xs " : ""
-		return cl + (confirmClick.value ? props.confirmClass : props.btnClass)
-	}),
 	btnClick = function() {
 		if (!confirmClick.value) {
 			confirmClick.value = true
@@ -27,8 +24,9 @@ const confirmClick = ref(false),
 </script>
 
 <template>
-	<button
-		:class="buttonClass"
+	<sc-button
+		:type="confirmClick?'confirm':'delete'"
+		:xs
 		@click="btnClick"
 	>
 		<span v-show="!confirmClick"><slot /></span>
@@ -40,5 +38,5 @@ const confirmClick = ref(false),
 				{{ props.confirmText }}
 			</slot>
 		</span>
-	</button>
+	</sc-button>
 </template>

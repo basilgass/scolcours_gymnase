@@ -51,7 +51,6 @@ const showFormular = ref(false)
 
 		<main class=" py-10 space-y-12">
 			<chapter-toc
-				v-theme.border
 				:chapter
 				:posts
 			/>
@@ -142,9 +141,3 @@ const showFormular = ref(false)
 		</main>
 	</section>
 </template>
-<style scoped lang="postcss">
-
-.box {
-	@apply bg-white dark:bg-gray-900 border rounded-xl px-5 py-3;
-}
-</style>

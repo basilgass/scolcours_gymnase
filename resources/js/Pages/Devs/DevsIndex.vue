@@ -23,7 +23,7 @@ defineProps<{
 				:key="index"
 				:href="route('dev', [page])"
 				class="hover:pl-4 transition-animation duration-300 p-3
-				bg-white dark:bg-gray-800"
+				bg-content border"
 			>
 				{{ page }}
 			</InertiaLink>

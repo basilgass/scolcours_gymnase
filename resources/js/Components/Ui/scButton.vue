@@ -3,7 +3,7 @@
 import {computed} from "vue"
 import {getThemeChapter, getThemeClasses} from "@/directives/themeDirectives.ts"
 
-export type buttonTypes = "add" | "edit" | "admin" | "default"
+export type buttonTypes = "add" | "edit" | "save" | "admin" | "default" | "confirm" | "delete"
 
 const props = withDefaults(defineProps<{
 	active?: boolean
@@ -27,23 +27,31 @@ defineEmits<{
 	click: () => void
 }>()
 
+//TODO: redesign the colors for the buttons
+// TODO: The filled button must also have the color.
 const btnTheme = computed(() => {
 	if (props.outline) {
 		return {
-			"default": "border border-gray-500 text-gray-500",
-			"add": "border border-green-500 text-green-500",
-			"edit": "border border-purple-500 text-purple-500",
-			"admin": "border border-sky-500 text-sky-500",
-			"active": "border border-sky-500 text-sky-500",
+			"default": "outline outline-gray-500 text-gray-300",
+			"add": "outline outline-green-500 text-green-500",
+			"save": "outline outline-blue-500 text-blue-500",
+			"edit": "outline outline-purple-500 text-purple-500",
+			"admin": "outline outline-sky-500 text-sky-500",
+			"active": "outline outline-sky-500 text-sky-500",
+			"delete": "outline outline-orange-500 text-orange-500",
+			"confirm": "outline outline-red-500 text-red-500",
 		}
 	}
 
 	return {
-		"default": "bg-action border",
-		"add": "bg-green-600 dark:bg-green-800 text-white",
-		"edit": "bg-purple-600 dark:bg-purple-800 text-white",
-		"admin": "bg-sky-600 dark:bg-sky-800 text-white",
-		"active": "bg-sky-400 dark:bg-sky-600 text-white",
+		"default": "outline-2 bg-action",
+		"add": "bg-green-600 dark:bg-green-800 outline outline-green-600 dark:outline-green-800 text-white",
+		"edit": "bg-purple-600 dark:bg-purple-800 outline outline-purple-600 dark:outline-purple-800 text-white",
+		"save": "bg-blue-600 dark:bg-blue-800 outline outline-blue-600 dark:outline-blue-800 text-white",
+		"admin": "bg-sky-600 dark:bg-sky-800 outline outline-sky-600 dark:outline-sky-800 text-white",
+		"active": "bg-sky-400 dark:bg-sky-600 outline outline-sky-400 dark:outline-sky-600 text-white",
+		"delete": "bg-orange-400 dark:bg-orange-600 outline outline-orange-400 dark:outline-orange-600 text-white",
+		"confirm": "bg-red-400 dark:bg-red-600 outline outline-red-400 dark:outline-red-600 text-white",
 	}
 })
 
@@ -51,11 +59,11 @@ const themeModifiers = computed(() => {
 	if (props.outline) {
 		return {border: true, text: true}
 	}
-	return {bg: true, text: true}
+	return {bg: true, text: true, outline: true}
 })
 
 const btnClass = computed(() => {
-	const classes: string[] = []
+	const classes: string[] = ['outline']
 
 	if (props.active) {
 		classes.push(btnTheme.value.active)

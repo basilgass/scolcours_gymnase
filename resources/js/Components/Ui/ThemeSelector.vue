@@ -1,29 +1,39 @@
 <script setup lang="ts">
 
 import {usePage} from "@inertiajs/vue3"
+import ScButton from "@/Components/Ui/scButton.vue"
 
+withDefaults(defineProps<{
+	xs?: boolean
+}>(),{
+	xs: false
+})
 const themes = usePage().props.themes
-
-
 const theme = defineModel<number>()
+
+const emits = defineEmits<{
+	change: [value: number]
+}>()
+
 function setTheme(id: number) {
 	theme.value = id === theme.value ? 0 : id
+	emits('change', theme.value)
 }
 
 </script>
 
 <template>
-	<div class="flex flex-wrap gap-3 w-full">
-		<button
+	<div class="flex flex-wrap gap-3 w-full items-center">
+		<sc-button
 			v-for="item in themes"
 			:key="item.id"
+			:theme="item.id"
+			:xs
+			:outline="+theme!==+item.id"
 			@click="setTheme(item.id)"
-			v-theme.bg.text="item.id"
-			class="btn btn-xs flex-1"
-			:class="+theme===+item.id ? 'opacity-100' : 'opacity-50'"
 		>
 			{{ item.title }}
-		</button>
+		</sc-button>
 	</div>
 </template>
 

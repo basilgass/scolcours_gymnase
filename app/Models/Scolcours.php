@@ -12,13 +12,13 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $title
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @method static \Illuminate\Database\Eloquent\Builder|Scolcours newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Scolcours newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Scolcours query()
- * @method static \Illuminate\Database\Eloquent\Builder|Scolcours whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Scolcours whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Scolcours whereTitle($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Scolcours whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Scolcours newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Scolcours newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Scolcours query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Scolcours whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Scolcours whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Scolcours whereTitle($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Scolcours whereUpdatedAt($value)
  * @mixin \Eloquent
  */
 class Scolcours extends Model

@@ -3,7 +3,7 @@
 	setup
 >
 
-import FlipcardsIndex from "@/Components/Decks/FlipcardsIndex.vue"
+import CardsIndex from "@/Components/Decks/CardsIndex.vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 import { flashInterface } from "@/types"
@@ -100,7 +100,7 @@ watchDebounced(chapterId, getTargetName, { debounce: 1000, maxWait: 2000 })
 		</div>
 
 		<!-- view mode -->
-		<flipcards-index :deck="props.deck" />
+		<cards-index :deck="props.deck" />
 	</section>
 </template>
 

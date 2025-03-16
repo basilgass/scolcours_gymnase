@@ -55,6 +55,7 @@ export interface KeyboardInputInterface {
 }
 
 export interface KeyboardExposeInterface {
+	reset: ()=>void,
 	setInput: (value?: string) => Promise<KeyboardInputInterface>,
 	parameters: string
 }

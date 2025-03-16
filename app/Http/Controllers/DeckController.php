@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\DeckResource;
-use App\Http\Resources\FlipcardResource;
+use App\Http\Resources\CardResource;
+use App\Http\Resources\UserDeckCardResource;
+use App\Http\Resources\UserDeckResource;
+use App\Models\Card;
 use App\Models\Deck;
-use App\Models\Flipcard;
+use App\Models\UserDeck;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -13,7 +15,7 @@ class DeckController extends Controller
 {
 
 	private array $validationRules = [
-		'slug' => ['string', 'min:3', 'required'],
+		'slug'  => ['string', 'min:3', 'required'],
 		'title' => ['string', 'min:3', 'required']
 	];
 
@@ -22,8 +24,11 @@ class DeckController extends Controller
 	 */
 	public function index()
 	{
+		// Get the user decks.
+		$userDecks = \Auth::user()?->decks ?? [];
+
 		return Inertia::render("Decks/DeckIndex", [
-			'decks' => DeckResource::collection(Deck::all())
+			'decks' => UserDeckResource::collection($userDecks)
 		]);
 	}
 
@@ -51,10 +56,11 @@ class DeckController extends Controller
 	/**
 	 * Display the specified resource.
 	 */
-	public function show(Deck $deck)
+	public function show(UserDeck $deck)
 	{
 		return Inertia::render("Decks/DeckShow", [
-			'deck' => DeckResource::make($deck)
+			'deck' => UserDeckResource::make($deck),
+			'cards' => UserDeckCardResource::collection($deck->cards)
 		]);
 	}
 
@@ -64,7 +70,7 @@ class DeckController extends Controller
 	public function edit(Deck $deck)
 	{
 		return Inertia::render("Decks/DeckEdit", [
-			'deck' => DeckResource::make($deck)
+			'deck' => UserDeckResource::make($deck)
 		]);
 	}
 
@@ -89,15 +95,15 @@ class DeckController extends Controller
 		Deck::destroy($deck->id);
 	}
 
-	public function addFlipcard(Deck $deck)
+	public function addCard(Deck $deck)
 	{
-		// Create the flipcard.
-		$flipcard = $deck->flipcards()->create([
-			'order' => $deck->flipcards()->count()
-		]);
+		// Create the card.
+		$card = $deck->cards()->create([
+										   'order' => $deck->cards()->count()
+									   ]);
 
 		// Add the corresponding blocks.
-		$flipcard->blocks()->createMany(
+		$card->blocks()->createMany(
 			[
 				['body' => ' recto '],
 				['body' => ' verso ']
@@ -105,18 +111,18 @@ class DeckController extends Controller
 		);
 
 
-		return FlipcardResource::make($flipcard);
+		return CardResource::make($card);
 	}
 
-	public function destroyFlipcard(Flipcard $flipcard)
+	public function destroyCard(Card $card)
 	{
-		$flipcard->delete();
+		$card->delete();
 	}
 
 	public function updateOrder(Request $request)
 	{
 		foreach ($request['order'] as $value) {
-			Flipcard::find($value['id'])?->update(['order' => $value['order']]);
+			Card::find($value['id'])?->update(['order' => $value['order']]);
 		}
 
 		return true;
@@ -125,8 +131,8 @@ class DeckController extends Controller
 	public function assignChapter(Request $request, Deck $deck)
 	{
 		$validation = $request->validate([
-			'chapter_id' => ['required', 'exists:chapters,id']
-		]);
+											 'chapter_id' => ['required', 'exists:chapters,id']
+										 ]);
 
 		$deck->chapter()->associate($validation['chapter_id']);
 
@@ -135,11 +141,11 @@ class DeckController extends Controller
 		return $validation['chapter_id'];
 	}
 
-	public function getFlipcards(string $values)
+	public function getCards(string $values)
 	{
-		$flipcards = Flipcard::whereIn('id', explode(',', $values))
+		$cards = Card::whereIn('id', explode(',', $values))
 			->orderByRaw('FIELD(id,' . $values . ')')
 			->get();
-		return FlipcardResource::collection($flipcards);
+		return CardResource::collection($cards);
 	}
 }

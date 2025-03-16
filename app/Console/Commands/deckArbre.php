@@ -51,14 +51,14 @@ class deckArbre extends Command
 
             $filepath = '@/images/arbre/'.$filename.'.jpg';
 
-            // Create a flipcard.
-            $flipcard = $deck->flipcards()->create([
+            // Create a card.
+            $card = $deck->cards()->create([
                 'order' => $count
             ]);
             $count++;
 
             // Add cards.
-            $blocks = $flipcard->blocks()->createMany(
+            $blocks = $card->blocks()->createMany(
                 [
                     [
                         'title' => ' quel est cet arbre ? ',

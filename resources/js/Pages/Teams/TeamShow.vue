@@ -37,7 +37,7 @@ const props = defineProps({
 			:title="`${props.students.length} étudiants`"
 		>
 			<template #card="{ item }: { item: string | object }">
-				<div class="bg-white rounded-lg border border-slate-200 p-4 min-h-[3em]">
+				<div class="bg-content rounded-lg border p-4 min-h-[3em]">
 					<i class="bi bi-person mr-3" />{{ (typeof item === "string") ? item : item['name'] }}
 				</div>
 			</template>

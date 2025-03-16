@@ -42,25 +42,5 @@ defineProps<{
 				Administration
 			</sc-button>
 		</div>
-
-		<!--		<div class="bg-white rounder border border-gray-200">-->
-		<!--			<h2 class="text-xl p-5 border-b border-gray-200 uppercase font-extralight">-->
-		<!--				Dernières modifications-->
-		<!--			</h2>-->
-
-		<!--			<div class="flex flex-col divide-y divide-gray-200 -pt-3">-->
-		<!--				<InertiaLink-->
-		<!--					v-for="course in courses"-->
-		<!--					:key="course.slug"-->
-		<!--					:href="route('themes.chapters.slide', [course.theme, course.slug, course.currentPost])"-->
-		<!--					class="px-5 py-3 hover:px-8 transition-all flex justify-between items-baseline"-->
-		<!--				>-->
-		<!--					<div v-katex.auto="course.title" />-->
-		<!--					<div class="text-xs">-->
-		<!--						{{ course.currentPost }}<sup>e</sup> page sur {{ course.maxPost }}, {{ course.updated_at }}-->
-		<!--					</div>-->
-		<!--				</InertiaLink>-->
-		<!--			</div>-->
-		<!--		</div>-->
 	</section>
 </template>

@@ -17,15 +17,15 @@
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property-read \App\Models\Challenges\ChallengeSession|null $session
- * @method static Builder|ChallengeUser newModelQuery()
- * @method static Builder|ChallengeUser newQuery()
- * @method static Builder|ChallengeUser query()
- * @method static Builder|ChallengeUser whereChallengeSessionId($value)
- * @method static Builder|ChallengeUser whereCreatedAt($value)
- * @method static Builder|ChallengeUser whereId($value)
- * @method static Builder|ChallengeUser whereScore($value)
- * @method static Builder|ChallengeUser whereToken($value)
- * @method static Builder|ChallengeUser whereUpdatedAt($value)
+ * @method static Builder<static>|ChallengeUser newModelQuery()
+ * @method static Builder<static>|ChallengeUser newQuery()
+ * @method static Builder<static>|ChallengeUser query()
+ * @method static Builder<static>|ChallengeUser whereChallengeSessionId($value)
+ * @method static Builder<static>|ChallengeUser whereCreatedAt($value)
+ * @method static Builder<static>|ChallengeUser whereId($value)
+ * @method static Builder<static>|ChallengeUser whereScore($value)
+ * @method static Builder<static>|ChallengeUser whereToken($value)
+ * @method static Builder<static>|ChallengeUser whereUpdatedAt($value)
  * @mixin Eloquent
  */
 class ChallengeUser extends Model

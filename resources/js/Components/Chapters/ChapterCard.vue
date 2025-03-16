@@ -64,8 +64,7 @@ function activate() {
 				chapter: chapter.slug
 			})"
 			class="text-xl
-					block h-full rounded-b-lg shadow space-y-3
-					bg-white dark:bg-gray-800
+					block h-full rounded-b-lg shadow
 					cursor-pointer
 					transition-all"
 		>
@@ -77,7 +76,7 @@ function activate() {
 
 			<markdown-it
 				:text="chapter['block']['body']"
-				class="px-5 pb-3"
+				class="px-5 py-3 bg-content border-x border-b"
 			/>
 		</InertiaLink>
 	</div>

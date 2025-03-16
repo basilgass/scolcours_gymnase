@@ -262,7 +262,7 @@ onMounted(() => {
 									@current-line="currentLine = $event"
 								/>
 
-								<div class="font-code text-xs min-h-[3em] bg-gray-200">
+								<div class="font-code text-xs min-h-[3em]">
 									<div v-if="theIllustration.code.split('\n\n').length > 1">
 										%&lt;*&gt; afficher qu'une fois<br>
 										%&lt;...&gt; afficher aux steps indiqués (que suivant) <br>
@@ -303,11 +303,12 @@ onMounted(() => {
 								<markdown-it
 									v-if="currentComponent"
 									:text="currentComponent.description"
-									class="font-code text-xs min-h-[3em] bg-gray-200"
+									class="font-code !text-xs min-h-[3em]"
 								/>
 							</div>
 						</div>
 						<illustration-show
+							class="bg-content p-5 border"
 							:illustration="theIllustration"
 							preview
 						/>
