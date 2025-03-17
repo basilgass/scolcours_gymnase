@@ -262,13 +262,12 @@ const listeDesPoints = computed<number[]>(() => {
 					:style="`background-color:${graduateBackgroundColor[(pointsNote.note-1)*2]};border-color:${graduateBorderColor[(pointsNote.note-1)*2]}`"
 					class="px-2 py-1 flex flex-wrap gap-3"
 				>
-					<h3 class="w-[45px]">
+					<h3 class="w-[45px] font-semibold">
 						{{ pointsNote.note }}
 					</h3>
 					<button
 						v-for="pt in pointsNote.points"
 						:key="pt"
-						class="btn btn-xs border-gray-500"
 						@click="pointsData+=' ' + (+pt)"
 					>
 						{{ +pt }}

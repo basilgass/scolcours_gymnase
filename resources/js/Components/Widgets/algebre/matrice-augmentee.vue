@@ -469,7 +469,7 @@ onMounted(() => {
 			/>
 
 			<div
-				class="flex gap-3 justify-center *:border *:px-3 *:py-1 *:rounded"
+				class="flex flex-wrap gap-3 justify-center *:border *:px-3 *:py-1 *:rounded"
 			>
 				<button @click="operationData.operation='+'">
 					ajouter

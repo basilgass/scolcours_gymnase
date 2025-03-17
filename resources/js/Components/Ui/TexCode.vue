@@ -48,7 +48,8 @@ function downladPdf(){
 			document.location.href = route("latex.download", [res.data.slug])
 		})
 		.catch((err: AxiosErrorMessage) => {
-			console.log(err.response.data.message)
+			flash.error(err.response.data.message)
+			// console.log(err.response.data.message)
 			// pdfError.value = err.response.data.message
 		})
 }
@@ -67,12 +68,12 @@ function downladPdf(){
 						class="bi"
 						:class="copied ? 'bi-check-lg text-green-600' : 'bi-clipboard-fill'"
 					/>
-					{{ copied ? 'copié' : 'copier' }}
+					<span class="hidden md:inline md:ml-2">{{ copied ? 'copié' : 'copier' }}</span>
 				</button>
 
 				<button @click="downladPdf">
 					<i class="bi bi-download" />
-					télécharger
+					<span class="hidden md:inline md:ml-2">télécharger</span>
 				</button>
 
 				<button @click="showTexCode = !showTexCode">
@@ -82,7 +83,7 @@ function downladPdf(){
 							'bi bi-code': !showTexCode
 						}"
 					/>
-					{{ showTexCode ? 'cacher' : 'afficher' }}
+					<span class="hidden md:inline md:ml-2">{{ showTexCode ? 'cacher' : 'afficher' }}</span>
 				</button>
 			</div>
 		</div>
