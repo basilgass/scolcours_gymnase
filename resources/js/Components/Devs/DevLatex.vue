@@ -4,6 +4,7 @@ import { inject, onMounted, ref } from "vue"
 import { flashInterface } from "@/types"
 import axios from "axios"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
+import ScButton from "@/Components/Ui/scButton.vue"
 
 defineOptions({ layout: LayoutMain })
 	const flash = inject<flashInterface>("flash")
@@ -65,12 +66,11 @@ defineOptions({ layout: LayoutMain })
 			class="w-full p-3 rounded-sm"
 		/>
 
-		<button
-			class="btn"
+		<sc-button
 			@click="makePDF"
 		>
 			to pdf
-		</button>
+		</sc-button>
 
 		<div>
 			<div

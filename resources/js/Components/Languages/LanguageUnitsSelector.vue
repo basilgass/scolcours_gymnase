@@ -3,6 +3,7 @@
 import {BookInterface, TranslationUnitInterface, TranslationUnitInterfaceExtended} from "@/types/modelInterfaces"
 import axios from "axios"
 import {computed, ref} from "vue"
+import ScButton from "@/Components/Ui/scButton.vue"
 
 const units = defineModel<TranslationUnitInterfaceExtended[]>()
 
@@ -101,15 +102,15 @@ function getUnits_from_Book(book_id: number) {
 						@click.stop
 					>
 						<div class="flex flex-wrap gap-2">
-							<button
+							<sc-button
 								v-for="(item, key) of units"
 								:key="key"
-								:class="item.selected?'btn-success':'bg-white'"
-								class="btn px-6! text-sm font-extralight"
-								@click.stop="updateUnits(item)"
+								:active="item.selected"
+								xs
+								@click="updateUnits(item)"
 							>
 								{{ item.title }}
-							</button>
+							</sc-button>
 						</div>
 					</div>
 				</div>

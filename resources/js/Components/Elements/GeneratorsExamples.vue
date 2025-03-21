@@ -2,6 +2,7 @@
 import {GeneratorInterface} from "@/types/modelInterfaces.ts"
 import {onMounted, ref} from "vue"
 import {useGenerator} from "@/Composables/useGenerator.ts"
+import ScButton from "@/Components/Ui/scButton.vue"
 
 const props = withDefaults(
 	defineProps<{
@@ -57,12 +58,12 @@ onMounted(() => {
 	<article>
 		<div class="flex justify-between">
 			<h3>Exemples</h3>
-			<button
-				class="btn-xs"
+			<sc-button
+				xs
 				@click="generateQuestions()"
 			>
 				générer
-			</button>
+			</sc-button>
 		</div>
 		<div
 			v-if="generatedQuestions.length > 0"

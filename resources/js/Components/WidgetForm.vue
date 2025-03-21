@@ -6,6 +6,7 @@ import { computed, inject, PropType, ref } from "vue"
 import axios from "axios"
 import { router } from "@inertiajs/vue3"
 import { flashInterface } from "@/types"
+import ScButton from "@/Components/Ui/scButton.vue"
 
 const props = defineProps({
 	widget: { type: Object as PropType<WidgetInterface>, required: true }
@@ -66,13 +67,14 @@ const isModified = computed(() => {
 				type="textarea"
 			/>
 
-			<button
+			<sc-button
 				v-show="isModified"
-				class="btn btn-xs mt-3 float-right btn-primary"
+				type="primary"
+				class="mt-3 float-right"
 				@click="update"
 			>
 				mise à jour
-			</button>
+			</sc-button>
 		</div>
 	</article>
 </template>

@@ -9,6 +9,7 @@ import {
 } from "@/Composables/useKeyboard.ts"
 import {TABLE_OF_SIGNS_VALUES} from "pimath"
 import {computed, nextTick, onMounted, ref} from "vue"
+import ScButton from "@/Components/Ui/scButton.vue"
 
 const props = defineProps<KeyboardPropsInterface>()
 
@@ -67,7 +68,7 @@ const withGrows = computed(() => {
 		props.reference.split("@")[2].match(/[+-]/g)
 })
 
-const withCurves = computed (()=>{
+const withCurves = computed(() => {
 	return props.reference.split("@").length > 2 &&
 		props.reference.split("@")[2].match(/[un]/g)
 })
@@ -78,8 +79,8 @@ const withExtremes = computed(() => {
 })
 
 const tosMode = computed<"signs" | "grows" | "curves">(() => {
-	if(withGrows.value) return "grows"
-	if(withCurves.value) return "curves"
+	if (withGrows.value) return "grows"
+	if (withCurves.value) return "curves"
 
 	return "signs"
 })
@@ -159,44 +160,49 @@ onMounted(() => {
 				:class="(withGrows && !withExtremes)?'grid-cols-3':'grid-cols-2'"
 				class="grid gap-3"
 			>
-				<button
-					:class="showKeyboard==='zeroes'?'btn btn-primary':''"
+				<sc-button
+					:outline="showKeyboard!=='zeroes'"
+					theme
 					class="py-0 px-5"
 					@click="showKeyboard='zeroes'"
 				>
 					zéros
-				</button>
-				<button
-					:class="showKeyboard==='signs'?'btn btn-primary':''"
+				</sc-button>
+				<sc-button
+					:outline="showKeyboard!=='signs'"
+					theme
 					class="py-0 px-5"
 					@click="showKeyboard='signs'"
 				>
 					signes
-				</button>
-				<button
+				</sc-button>
+				<sc-button
 					v-if="withGrows"
-					:class="showKeyboard==='grows'?'btn btn-primary':''"
+					theme
+					:outline="showKeyboard!=='grows'"
 					class="py-0 px-5"
 					@click="showKeyboard='grows'"
 				>
 					croissance
-				</button>
-				<button
+				</sc-button>
+				<sc-button
 					v-if="withCurves"
-					:class="showKeyboard==='curves'?'btn btn-primary':''"
+					theme
+					:outline="showKeyboard!=='curves'"
 					class="py-0 px-5"
 					@click="showKeyboard='curves'"
 				>
 					courbure
-				</button>
-				<button
+				</sc-button>
+				<sc-button
 					v-if="withExtremes"
-					:class="showKeyboard==='coords'?'btn btn-primary':''"
+					theme
+					:outline="showKeyboard!=='coords'"
 					class="py-0 px-5"
 					@click="showKeyboard='coords'"
 				>
 					coordonnées
-				</button>
+				</sc-button>
 			</div>
 
 			<!-- Add keyboard to input the zeros -->

@@ -1,11 +1,13 @@
-import { type IToolForm } from "@/Components/Tools/Parts/ToolForm.vue"
-import { inject, ref, Ref } from "vue"
+import {type IToolForm} from "@/Components/Tools/Parts/ToolForm.vue"
+import {inject} from "vue"
+import {ToolInterface} from "@/types/modelInterfaces.ts"
 
 export function useToolsStorage() {
-	const tool = inject<Ref<string>>("toolData", ref(""))
+
+	const toolSlug = inject('toolSlug')
 
 // Save or restore the input from sessionstorage
-	const storeKey = `ScolCours-Tools-${tool.value}`
+	const storeKey = `ScolCours-Tools-${toolSlug}`
 
 	function storeTool(forms: IToolForm[]) {
 		const data = forms.map(x => x.value.value)
@@ -28,19 +30,19 @@ export function useToolsStorage() {
 		return forms
 	}
 
-	function resetTool(){
+	function resetTool() {
 		sessionStorage.removeItem(storeKey)
 	}
-	function resetTools(){
-		console.log('reset tools')
+
+	function resetTools() {
 		let n = sessionStorage.length
-		while(n--){
+		while (n--) {
 			const key = sessionStorage.key(n)
-			if(key.startsWith('ScolCours-Tools-')){
+			if (key.startsWith('ScolCours-Tools-')) {
 				sessionStorage.removeItem(key)
 			}
 		}
 	}
 
-	return { storeKey, storeTool, restoreTool, resetTool, resetTools }
+	return {storeKey, storeTool, restoreTool, resetTool, resetTools}
 }

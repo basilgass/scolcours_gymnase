@@ -9,6 +9,7 @@ import axios from "axios"
 import { Random } from "pimath"
 import {computed, inject, ref} from "vue"
 import {useLanguage} from "@/Components/Languages/useLanguage.ts"
+import ScButton from "@/Components/Ui/scButton.vue"
 
 const languageData = inject<LanguageDataInterface>('LanguageData')
 const {getListOfWordsFromUnits} = useLanguage(languageData)
@@ -106,14 +107,14 @@ const exportList = function() {
 				/>
 			</div>
 
-			<button
-				:class="filteredWords.length===0?'bg-gray-300':'btn-primary'"
+			<sc-button
+				:active="filteredWords.length>0"
 				:disabled="filteredWords.length===0"
-				class="btn disabled:opacity-50"
+				class="disabled:opacity-50"
 				@click="exportList"
 			>
 				exporter
-			</button>
+			</sc-button>
 		</div>
 		<div>Il y a {{ words.length }} mots</div>
 
@@ -145,12 +146,12 @@ const exportList = function() {
 			</template>
 			<template #footer>
 				<div class="text-right px-3 py-5">
-					<button
-						class="btn btn-primary"
+					<sc-button
+						type="primary"
 						@click="updateTranslation"
 					>
 						enregistrer
-					</button>
+					</sc-button>
 				</div>
 			</template>
 			<div class="px-3">

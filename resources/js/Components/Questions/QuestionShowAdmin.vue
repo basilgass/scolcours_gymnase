@@ -74,7 +74,7 @@ function duplicateQuestion(){
 
 <template>
 	<div
-		class="flex items-center justify-between w-full px-3 gap-3 py-2 bg-slate-600 text-white rounded-t"
+		class="flex items-center justify-between w-full px-3 gap-3 py-2 admin-content rounded-t"
 	>
 		<edit-link
 			:id="question.id"

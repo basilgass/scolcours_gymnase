@@ -11,6 +11,7 @@ import type { DeckInterface } from "@/types/modelInterfaces"
 import { watchDebounced } from "@vueuse/core"
 import axios from "axios"
 import { inject, PropType, ref } from "vue"
+import ScButton from "@/Components/Ui/scButton.vue"
 
 defineOptions({ layout: LayoutMain })
 
@@ -85,12 +86,12 @@ watchDebounced(chapterId, getTargetName, { debounce: 1000, maxWait: 2000 })
 						font-code
 						@enter="assignChapter"
 					/>
-					<button
-						class="btn btn-xs"
+					<sc-button
+						xs
 						@click="assignChapter"
 					>
 						OK
-					</button>
+					</sc-button>
 				</div>
 				<div
 					class="text-xs text-gray-500 font-code"

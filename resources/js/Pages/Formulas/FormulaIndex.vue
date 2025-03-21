@@ -10,6 +10,7 @@ import { flashInterface } from "@/types"
 import type { FormulaInterface } from "@/types/modelInterfaces"
 import axios from "axios"
 import { inject } from "vue"
+import ScButton from "@/Components/Ui/scButton.vue"
 
 defineOptions({ layout: LayoutMain })
 
@@ -70,12 +71,14 @@ function searchFormula(item: FormulaInterface, value: string): boolean {
 								type="text"
 								@enter="updateFormula(item)"
 							/>
-							<button
-								class="btn btn-success btn-xs rounded-l-none"
+							<sc-button
+								type="success"
+								xs
+								class="rounded-l-none"
 								@click="updateFormula(item)"
 							>
 								<i class="bi bi-save" />
-							</button>
+							</sc-button>
 						</div>
 						<form-maker
 							v-model="item.block.body"

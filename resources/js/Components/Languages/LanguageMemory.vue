@@ -4,6 +4,7 @@ import {LanguageDataInterface} from "@/Pages/languages/LanguageShow.vue"
 import {Random} from "pimath"
 import {inject, ref, watch} from "vue"
 import {useLanguage} from "@/Components/Languages/useLanguage.ts"
+import ScButton from "@/Components/Ui/scButton.vue"
 
 const languageData = inject<LanguageDataInterface>("LanguageData")
 
@@ -145,13 +146,14 @@ const selectCard = function (card) {
 			</div>
 
 			<div class="grid place-items-center mt-12">
-				<button
+				<sc-button
 					v-show="languageData.units.value.length > 0"
-					class="btn btn-primary px-20 py-10 text-2xl"
+					type="primary"
+					class="px-20 py-10 text-2xl"
 					@click="startGame"
 				>
 					Commencer
-				</button>
+				</sc-button>
 			</div>
 		</div>
 		<div
@@ -159,12 +161,12 @@ const selectCard = function (card) {
 			class="mt-10 grid grid-cols-3 w-full"
 		>
 			<div>
-				<button
-					class="btn btn-xs bg-white"
+				<sc-button
+					xs
 					@click="showAllCards = !showAllCards"
 				>
 					Afficher toutes les fiches
-				</button>
+				</sc-button>
 			</div>
 
 			<div class="text-center">

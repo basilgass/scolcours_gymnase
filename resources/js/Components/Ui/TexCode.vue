@@ -1,36 +1,36 @@
 <script setup lang="ts">
 
-import { useClipboard } from "@vueuse/core"
+import {useClipboard} from "@vueuse/core"
 import {inject, ref} from "vue"
 import axios from "axios"
 import {AxiosErrorMessage, flashInterface} from "@/types"
 
 const flash = inject<flashInterface>("flash")
 const props = withDefaults(defineProps<{
-	tex: string,
-	hide?: boolean,
-	title?: string,
-	slug?: string
-}>(),
+		tex: string,
+		hide?: boolean,
+		title?: string,
+		slug?: string
+	}>(),
 	{
 		hide: false,
 		title: "Code TeX",
 		slug: "tools"
 	})
 
-const { copy, copied } = useClipboard()
+const {copy, copied} = useClipboard()
 
 const showTexCode = ref(false)
 
 // TODO: mettre le downloadPDF dans un "useDownloadPDF" avec pleins d'options.
-function downladPdf(){
+function downladPdf() {
 	axios
 		.post(route("latex.pdf"), {
 			template: "latex.simple",
 			title: props.title,
 			slug: props.slug,
 			theme: "divers",
-			content: `\\[ ${ props.tex } \\]`
+			content: `\\[ ${props.tex} \\]`
 		})
 		.then((res) => {
 			flash.success(
@@ -63,6 +63,7 @@ function downladPdf(){
 			<div class="flex gap-3">
 				<button
 					@click="copy(props.tex)"
+					class="cursor-pointer hover:underline"
 				>
 					<i
 						class="bi"
@@ -71,12 +72,18 @@ function downladPdf(){
 					<span class="hidden md:inline md:ml-2">{{ copied ? 'copié' : 'copier' }}</span>
 				</button>
 
-				<button @click="downladPdf">
+				<button
+					@click="downladPdf"
+					class="cursor-pointer  hover:underline"
+				>
 					<i class="bi bi-download" />
 					<span class="hidden md:inline md:ml-2">télécharger</span>
 				</button>
 
-				<button @click="showTexCode = !showTexCode">
+				<button
+					@click="showTexCode = !showTexCode"
+					class="cursor-pointer hover:underline"
+				>
 					<i
 						:class="{
 							'bi bi-x-lg': showTexCode,

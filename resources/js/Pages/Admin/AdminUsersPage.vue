@@ -1,21 +1,21 @@
 <script lang="ts" setup>
 
-import { computed, inject, PropType, ref } from "vue"
-import { router, useForm } from "@inertiajs/vue3"
+import {computed, inject, PropType, ref} from "vue"
+import {router, useForm} from "@inertiajs/vue3"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import axios from "axios"
-import type { TeamInterface, UserInterface } from "@/types/modelInterfaces"
-import type { flashInterface } from "@/types"
+import type {TeamInterface, UserInterface} from "@/types/modelInterfaces"
+import type {flashInterface} from "@/types"
 import DialogModal from "@/Components/Ui/DialogModal.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 import ScButton from "@/Components/Ui/scButton.vue"
 
-defineOptions({ layout: LayoutMain })
+defineOptions({layout: LayoutMain})
 
 const props = defineProps({
-		users: { type: Object as PropType<UserInterface[]>, required: true },
-		teams: { type: Object as PropType<TeamInterface[]>, required: true }
+		users: {type: Object as PropType<UserInterface[]>, required: true},
+		teams: {type: Object as PropType<TeamInterface[]>, required: true}
 	}),
 	theUsers = ref(props.users),
 	theTeams = ref(props.teams)
@@ -55,10 +55,10 @@ function addUsers() {
 const deleteMode = ref(false)
 
 function destroyUser(id) {
-	axios.post(route("admin.users.destroy", [id]), { _method: "delete" }).then((res) => {
+	axios.post(route("admin.users.destroy", [id]), {_method: "delete"}).then((res) => {
 		if (res.data) {
 			// Reload the page.
-			router.reload({ only: ["users"] })
+			router.reload({only: ["users"]})
 		}
 	})
 }
@@ -85,7 +85,7 @@ const usersTeams = computed(() => {
 		}
 	}),
 	newTeam = ref(""),
-	storeTeam = function() {
+	storeTeam = function () {
 		axios.post(route("teams.store"), {
 				"name": newTeam.value
 			}
@@ -96,9 +96,9 @@ const usersTeams = computed(() => {
 				console.error(res.response.data.message)
 			)
 	},
-	updateTeam = function(userId: number, teamId: number) {
+	updateTeam = function (userId: number, teamId: number) {
 		axios.post(route("users.team.toggle", [userId, teamId]),
-			{ _method: "PATCH" })
+			{_method: "PATCH"})
 			.then(res => {
 				// update the button
 				theUsers.value.forEach(user => {
@@ -111,9 +111,9 @@ const usersTeams = computed(() => {
 				console.error(res)
 			})
 	},
-	destroyTeam = function(teamId) {
+	destroyTeam = function (teamId) {
 		axios.post(route("teams.destroy", [teamId]),
-			{ _method: "DELETE" }
+			{_method: "DELETE"}
 		).then(res => {
 			theTeams.value = theTeams.value.filter(x => x.name !== res.data)
 		}).catch(res => {
@@ -132,12 +132,12 @@ const editUserForm = ref({
 function editUser(id) {
 	const user = theUsers.value.find(x => x.id === id)
 	editUserForm.value.id = user.id
-	editUserForm.value.name =user.name
-	editUserForm.value.firstname =user.firstname
+	editUserForm.value.name = user.name
+	editUserForm.value.firstname = user.firstname
 	editUserShow.value = true
 }
 
-function editUserStore(){
+function editUserStore() {
 	axios.post(route("admin.users.update", [editUserForm.value.id]), {
 		...editUserForm.value,
 		_method: "PATCH"
@@ -145,7 +145,7 @@ function editUserStore(){
 		editUserShow.value = false
 		// update the user
 		theUsers.value.forEach(user => {
-			if(user.id === editUserForm.value.id){
+			if (user.id === editUserForm.value.id) {
 				user.name = editUserForm.value.name
 				user.firstname = editUserForm.value.firstname
 				user.fullname = res.data.fullname
@@ -203,12 +203,12 @@ function editUserStore(){
 				label="mot de passe"
 				name="password"
 			/>
-			<button
-				class="btn btn-primary"
+			<sc-button
+				type="primary"
 				@click="addUsers"
 			>
 				Ajouter {{ usersEmailsList.length }} utilisateur(s)
-			</button>
+			</sc-button>
 		</section>
 
 		<section>
@@ -239,29 +239,29 @@ function editUserStore(){
 				v-if="usersTeams.length>0"
 				class="flex gap-3 flex-wrap mb-3"
 			>
-				<button
-					:class="selectedTeam===''?'is-active':'bg-white'"
-					class="btn btn-xs"
+				<sc-button
+					:active="selectedTeam===''"
+					xs
 					@click="selectedTeam=''"
 				>
 					Tous
-				</button>
-				<button
-					:class="selectedTeam==='_'?'is-active':'bg-white'"
-					class="btn btn-xs"
+				</sc-button>
+				<sc-button
+					:active="selectedTeam==='_'"
+					xs
 					@click="selectedTeam='_'"
 				>
 					~ vide ~
-				</button>
-				<button
+				</sc-button>
+				<sc-button
 					v-for="team of usersTeams"
 					:key="team"
-					:class="selectedTeam===team?'is-active':'bg-white'"
-					class="btn btn-xs"
+					:active="selectedTeam===team"
+					xs
 					@click="selectedTeam=team"
 				>
 					{{ team }}
-				</button>
+				</sc-button>
 			</div>
 
 			<!-- liste des utilisateurs -->
@@ -287,39 +287,38 @@ function editUserStore(){
 
 					<div class="user-wrapper-right">
 						<!-- suppression -->
-						<button
+						<sc-button
 							v-if="deleteMode"
-							class="btn btn-delete btn-xs ml-3"
+							type="delete"
+							xs
 							@click="destroyUser(user.id)"
 						>
 							Supprimer
-						</button>
+						</sc-button>
 
 						<!-- assignation des équipes -->
 						<div
 							v-if="teamsMode"
 							class="flex gap-3"
 						>
-							<button
+							<sc-button
 								v-for="team of theTeams"
 								:key="`team-${user.id}-${team.id}`"
-								:class="user.teams.find(search=>search.name===team.name)?'is-active':'bg-white'"
-								class="btn btn-xs"
+								:active="!!user.teams.find(search=>search.name===team.name)"
+								xs
 								@click="updateTeam(user.id, team.id)"
 							>
 								{{ team.name }}
-							</button>
+							</sc-button>
 						</div>
 
 						<!-- édition du nom / prénom -->
-						<div>
-							<button
-								class="btn btn-xs"
-								@click="editUser(user.id)"
-							>
-								éditer
-							</button>
-						</div>
+						<sc-button
+							xs
+							@click="editUser(user.id)"
+						>
+							éditer
+						</sc-button>
 					</div>
 				</div>
 			</div>
@@ -368,18 +367,20 @@ function editUserStore(){
 				</h2>
 
 				<div class="flex gap-3">
-					<button
-						class="btn btn-primary btn-xs"
+					<sc-button
+						type="primary"
+						xs
 						@click="editUserStore"
 					>
 						enregistrer
-					</button>
-					<button
-						class="btn btn-cancel btn-xs"
+					</sc-button>
+					<sc-button
+						type="cancel"
+						xs
 						@click="editUserShow=false"
 					>
 						annuler
-					</button>
+					</sc-button>
 				</div>
 			</div>
 		</template>

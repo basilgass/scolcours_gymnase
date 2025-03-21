@@ -69,12 +69,13 @@ function createBook() {
 				sm
 			/>
 
-			<button
-				class="btn btn-add mt-3"
+			<sc-button
+				type="add"
+				class="mt-3"
 				@click="createBook"
 			>
 				Créer
-			</button>
+			</sc-button>
 		</div>
 	</article>
 </template>

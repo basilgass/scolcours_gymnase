@@ -21,6 +21,7 @@ import { useToolsStorage } from "@/Composables/useToolsStorage.ts"
 import { type ETUDE_DE_FONCTION_RATIONNELLE, makeStudyFromPolynoms } from "@/Composables/useTos.ts"
 import { Numeric, Random } from "pimath"
 import { computed, ref } from "vue"
+import ScButton from "@/Components/Ui/scButton.vue"
 
 const { restoreTool } = useToolsStorage()
 const forms: IToolForm[] = restoreTool([
@@ -150,15 +151,16 @@ function getFxWithControls(maxValue: number) {
 				@generate="generate_fx"
 			>
 				<div class="flex gap-3 mt-3 w-full justify-center">
-					<div
-						class="btn btn-primary flex flex-col gap-3"
+					<sc-button
+						type="primary"
+						class="flex flex-col gap-3"
 						@click="autoUpdate=true"
 					>
 						<div>
 							étudier la fonction
 						</div>
 						<div v-katex.ascii="`f(x) = ${fx}`" />
-					</div>
+					</sc-button>
 				</div>
 			</tool-form>
 		</div>

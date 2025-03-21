@@ -4,9 +4,9 @@ import FormMaker from "@/Components/Form/FormMaker.vue"
 import {FormMakerInputsType} from "@/Components/Form/FormMakerInterface"
 import {useToolsStorage} from "@/Composables/useToolsStorage.ts"
 import {useClipboard} from "@vueuse/core"
-import {computed, ComputedRef, inject, PropType, ref, Ref, watch} from "vue"
-
-const {storeTool} = useToolsStorage()
+import {computed, ComputedRef, inject, ref, Ref, watch} from "vue"
+import ScButton from "@/Components/Ui/scButton.vue"
+import {router} from "@inertiajs/vue3"
 
 export interface IToolForm {
 	label: string | ComputedRef<string>
@@ -19,18 +19,28 @@ export interface IToolForm {
 	emit?: boolean
 }
 
-// Define the props
-const props = defineProps({
-	forms: {type: Object as PropType<IToolForm[]>, required: true},
-	formClass: {type: String, default: ""},
-	active: {type: Number, default: null},
-	store: {type: Boolean, default: true},
-	generateButton: {type: Boolean, default: false},
-})
+const toolSlug = inject("toolSlug")
 
-const tool = inject<Ref<string>>("toolData", ref(""))
+// Define the props
+const props = withDefaults(defineProps<{
+		forms: IToolForm[],
+		formClass?: string,
+		active?: number | null,
+		store?: boolean,
+		generateButton?: boolean
+	}>(),
+	{
+		formClass: "",
+		active: null,
+		store: true,
+		generateButton: false
+	}
+)
+
+const {storeTool, resetTool} = useToolsStorage()
+
 const link = computed(() => {
-	const url = `https://g.scolcours.ch/tools/${tool.value}`
+	const url = `https://g.scolcours.ch/tools/${toolSlug}`
 
 	const items = props.forms.filter(f => f.fromUrl)
 
@@ -70,6 +80,12 @@ function onChange(item: IToolForm) {
 	}
 }
 
+function resetFormTool(){
+	resetTool()
+
+	router.reload()
+}
+
 
 </script>
 
@@ -81,12 +97,17 @@ function onChange(item: IToolForm) {
 		<div class="flex justify-between">
 			<h3>Données</h3>
 			<div class="flex gap-3">
-				<button
+				<sc-button
 					v-if="generateButton"
-					class="btn btn-primary btn-xs"
+					xs
+					type="primary"
 					@click="emits('generate')"
 				>
 					générer
+				</sc-button>
+
+				<button @click="resetFormTool">
+					@
 				</button>
 				<button>
 					<i
@@ -95,6 +116,7 @@ function onChange(item: IToolForm) {
 						@click="copy(link)"
 					/>
 				</button>
+
 				<button @click="showForm = !showForm">
 					<i
 						class="text-gray-400"

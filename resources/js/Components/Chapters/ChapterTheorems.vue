@@ -6,6 +6,7 @@ import BlockShow from "@/Components/Blocks/BlockShow.vue"
 import { useIntersectionObserver } from "@vueuse/core"
 import axios from "axios"
 import {computed, ref, useTemplateRef} from "vue"
+import ScButton from "@/Components/Ui/scButton.vue"
 
 const props = defineProps({
 	chapterSlug: { type: String, required: true },
@@ -78,14 +79,14 @@ function toggleGroup(name: "theorem" | "property" | "definition") {
 					Théorie
 				</h3>
 				<div class="flex flex-wrap text-xs gap-1">
-					<button
+					<sc-button
 						v-for="(key, name) in groups"
-						:class="(showGroup==='' || showGroup===key) ? 'is-active' : ''"
-						class="btn btn-xs"
+						:active="showGroup==='' || showGroup===key"
+						xs
 						@click="toggleGroup(key)"
 					>
 						{{ name }}
-					</button>
+					</sc-button>
 				</div>
 			</div>
 

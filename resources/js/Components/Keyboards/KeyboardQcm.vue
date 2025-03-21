@@ -7,6 +7,7 @@ import {
 	KeyboardPropsInterface
 } from "@/Composables/useKeyboard.ts"
 import {computed, onMounted, ref} from "vue"
+import ScButton from "@/Components/Ui/scButton.vue"
 
 // props.keyboard
 const props = defineProps<KeyboardPropsInterface>()
@@ -144,16 +145,15 @@ onMounted(() => {
 <template>
 	<div>
 		<div class="flex flex-wrap gap-1 md:gap-3 my-5">
-			<button
+			<sc-button
 				v-for="element of qcmItems"
 				:key="element.key"
 				:class="{
-					'btn-success': element.selected,
-					'bg-white': !element.selected,
 					'w-full': isFullWidth,
 					'flex-1': isFlex,
 				}"
-				class="btn"
+				:outline="!element.selected"
+				theme
 				@click="qcmButtonClick(element)"
 			>
 				<span
@@ -168,7 +168,7 @@ onMounted(() => {
 					v-else
 					v-katex.auto="element.label"
 				/>
-			</button>
+			</sc-button>
 		</div>
 	</div>
 </template>

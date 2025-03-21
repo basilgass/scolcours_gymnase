@@ -7,6 +7,7 @@ import type {
 } from "@/Composables/useKeyboard.ts"
 import {Random} from "pimath"
 import {computed, ref} from "vue"
+import ScButton from "@/Components/Ui/scButton.vue"
 
 // props.keyboard
 const props = defineProps<KeyboardPropsInterface>()
@@ -89,13 +90,12 @@ const sortableItems = ref<{ id: number, label: string }[]>(Random.shuffle(items.
 			@update="onChange"
 		>
 			<template #item="{ element }">
-				<button
+				<sc-button
 					v-katex.auto="element.label"
 					:class="{
 						'w-full': isFullWidth,
 						'flex-1': isFlex,
 					}"
-					class="btn bg-white"
 				/>
 			</template>
 		</draggable>

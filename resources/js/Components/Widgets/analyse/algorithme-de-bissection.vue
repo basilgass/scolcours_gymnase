@@ -9,6 +9,7 @@ import { WidgetPropsInterface } from "@/types/modelInterfaces.ts"
 
 import { NumExp } from "pimath"
 import { computed, onMounted, ref } from "vue"
+import ScButton from "@/Components/Ui/scButton.vue"
 
 const props = defineProps<{
 	illustration: WidgetPropsInterface
@@ -173,21 +174,23 @@ onMounted(() => {
 			</div>
 
 			<div class="flex gap-4 justify-center mt-10">
-				<button
+				<sc-button
 					:disabled="!controleAB"
-					class="btn btn-primary px-10 py-4 text-lg disabled:bg-gray-300 disabled:text-gray-500"
+					type="primary"
+					class="px-10 py-4 text-lg disabled:bg-gray-300 disabled:text-gray-500"
 					@click="commencer"
 				>
 					commencer
-				</button>
-				<button
+				</sc-button>
+				<sc-button
 					v-admin
 					:disabled="!controleAB"
-					class="btn btn-primary px-10 py-4 text-lg disabled:bg-gray-300 disabled:text-gray-500"
+					type="primary"
+					class="px-10 py-4 text-lg disabled:bg-gray-300 disabled:text-gray-500"
 					@click="auto"
 				>
 					automatique
-				</button>
+				</sc-button>
 			</div>
 		</div>
 
@@ -234,10 +237,11 @@ onMounted(() => {
 								v-if="index<table.length-1"
 								v-katex="rnd(row.a)"
 							/>
-							<button
+							<sc-button
 								v-else
 								v-katex.nomargin="rnd(row.a)"
-								class="btn btn-delete w-full"
+								type="delete"
+								class="w-full"
 								@click="garderLaBorne('b')"
 							/>
 						</td>
@@ -250,10 +254,11 @@ onMounted(() => {
 								v-if="index<table.length-1"
 								v-katex="rnd(row.b)"
 							/>
-							<button
+							<sc-button
 								v-else
 								v-katex.nomargin="rnd(row.b)"
-								class="btn btn-delete w-full"
+								type="delete"
+								class="w-full"
 								@click="garderLaBorne('a')"
 							/>
 						</td>
@@ -281,12 +286,13 @@ onMounted(() => {
 			</table>
 
 			<div class="flex justify-center mt-10">
-				<button
-					class="btn btn-primary px-10 py-4 text-lg"
+				<sc-button
+					type="primary"
+					class="px-10 py-4 text-lg"
 					@click="recommencer"
 				>
 					recommencer
-				</button>
+				</sc-button>
 			</div>
 		</div>
 	</div>

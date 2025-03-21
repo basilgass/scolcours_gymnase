@@ -233,23 +233,26 @@ export interface UserDeckInterface {
 	user_id: number,
 	title: string,
 	description: string,
-	running: boolean,
+	running: number,
 	created_at: string,
 	updated_at: string,
+
 	time_spent: {
 		total: number,
 		min: number,
 		max: number
 	},
+
 	appearances: {
 		min: number,
 		max: number
 	},
+
 	average: number,
 	number_of_cards: number
 }
 
-export interface UserDeckCardsInterface {
+export interface UserCardInterface {
 	id: number,
 	user_deck_id: number,
 	blocks: BlockInterface[],
@@ -259,7 +262,7 @@ export interface UserDeckCardsInterface {
 	appearances: number,
 	success: number,
 	time_spent: number,
-	created_at: boolean,
+	created_at: string,
 	updated_at: string
 }
 

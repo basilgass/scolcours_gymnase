@@ -347,7 +347,9 @@ onMounted(() => {
 	<div class="w-full">
 		<div
 			:class="props.wrap ? 'whitespace-pre-wrap' : 'whitespace-pre'"
-			class="tracking-normal font-normal code-input border language-javascript text-[1.1em] transition-all"
+			class="tracking-normal font-normal code-input
+			bg-content
+			border language-javascript text-[1.1em] transition-all"
 		>
 			<textarea
 				ref="inp"

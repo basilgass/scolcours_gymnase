@@ -12,6 +12,7 @@ import type { DeckInterface } from "@/types/modelInterfaces"
 import { router } from "@inertiajs/vue3"
 import axios from "axios"
 import { inject, PropType, ref } from "vue"
+import ScButton from "@/Components/Ui/scButton.vue"
 
 const props = defineProps({
 	deck: { type: Object as PropType<DeckInterface>, required: true }
@@ -84,7 +85,7 @@ function updateDecksOrder() {
 							<i class="bi bi-arrows-move mr-2" />id: {{ element.id }}
 						</div>
 						<confirm-button
-							class="btn btn-delete btn-xs"
+							xs
 							@confirm="deleteCard(element.id)"
 						>
 							supprimer
@@ -164,12 +165,12 @@ function updateDecksOrder() {
 
 
 		<div class="text-center mt-20">
-			<button
-				class="btn btn-add"
+			<sc-button
+				type="add"
 				@click="addCard"
 			>
 				Ajouter une carte
-			</button>
+			</sc-button>
 		</div>
 	</article>
 </template>

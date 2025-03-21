@@ -9,6 +9,7 @@ import type { ChapterShowInterface } from "@/types/modelInterfaces"
 import axios from "axios"
 import { inject, ref } from "vue"
 import {router} from "@inertiajs/vue3"
+import ScButton from "@/Components/Ui/scButton.vue"
 
 defineOptions({ layout: LayoutMain })
 
@@ -62,20 +63,22 @@ function deleteChapter() {
 				<span class="text-xs font-code ml-5">(id: {{ props.chapter.id }})</span>
 			</h1>
 			<div class="flex gap-3 justify-end">
-				<button
-					class="btn btn-primary btn-xs"
+				<sc-button
+					type="primary"
+					xs
 					@click="saveChapter"
 				>
 					enregistrer
-				</button>
-				<InertiaLink
-					class="btn btn-cancel btn-xs"
+				</sc-button>
+				<sc-button
+					type="cancel"
+					xs
 					:href="route('chapters.show', [props.chapter.slug])"
 				>
 					retour
-				</InertiaLink>
+				</sc-button>
 				<confirm-button
-					class="btn btn-delete btn-xs"
+					xs
 					@confirm="deleteChapter"
 				>
 					supprimer

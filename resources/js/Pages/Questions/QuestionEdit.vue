@@ -12,6 +12,7 @@ import type { QuestionInterface } from "@/types/modelInterfaces"
 import { router } from "@inertiajs/vue3"
 import axios from "axios"
 import { computed, inject, PropType, ref } from "vue"
+import ScButton from "@/Components/Ui/scButton.vue"
 
 defineOptions({ layout: LayoutMain })
 
@@ -111,35 +112,39 @@ let hasClipboard = computed(() => {
 						(id: {{ theQuestion.id }})
 					</span>
 				</h1>
-				<div class="flex gap-3 justify-end">
-					<button
-						class="btn btn-xs"
+				<div class="flex gap-3 justify-end items-baseline">
+					<sc-button
+						xs
 						@click="copyQuestion"
+						class="outline-0"
 					>
 						<i class="bi bi-clipboard-plus" />
-					</button>
-					<button
+					</sc-button>
+					<sc-button
 						v-if="hasClipboard"
-						class="btn btn-xs"
+						xs
 						@click="pasteQuestion"
+						class="outline-0"
 					>
 						<i class="bi bi-clipboard-pulse" />
-					</button>
+					</sc-button>
 
-					<button
-						class="btn btn-primary btn-xs"
+					<sc-button
+						xs
+						type="primary"
 						@click="saveQuestion"
 					>
 						enregistrer
-					</button>
-					<InertiaLink
-						class="btn btn-cancel btn-xs"
+					</sc-button>
+					<sc-button
+						xs
+						type="primary"
 						:href="route('questions.show', [theQuestion.id])"
 					>
 						retour
-					</InertiaLink>
+					</sc-button>
 					<confirm-button
-						class="btn btn-delete btn-xs"
+						xs
 						@confirm="deleteQuestion"
 					>
 						supprimer

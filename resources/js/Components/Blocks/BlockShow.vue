@@ -13,6 +13,7 @@ import { router } from "@inertiajs/vue3"
 import axios from "axios"
 import { computed, inject, provide } from "vue"
 import {blockTemplate} from "@/helpers/blockTemplate.ts"
+import ScButton from "@/Components/Ui/scButton.vue"
 
 const editMode = useStoreEditMode()
 const flash = inject<flashInterface>("flash")
@@ -160,12 +161,13 @@ function addIllustration(){
 			v-theme.admin
 			class="text-xs px-5 py-2 flex justify-between border-t"
 		>
-			<button
-				class="btn btn-xs border border-gray-500"
+			<sc-button
+				xs
+				type="add"
 				@click="addIllustration"
 			>
 				<i class="bi bi-plus-lg mr-2" /> illustration
-			</button>
+			</sc-button>
 		</div>
 	</article>
 </template>

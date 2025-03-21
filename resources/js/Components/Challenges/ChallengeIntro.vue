@@ -62,13 +62,13 @@ const emits = defineEmits(["start"])
 		</div>
 
 		<!-- Bouton pour commencer -->
-		<button
-			v-theme.btn.text
+		<sc-button
+			theme
 			class="min-w-[20em] mx-auto py-4 text-2xl hover:scale-105 transition-all"
 			@click="emits('start')"
 		>
 			Commencer le challenge
-		</button>
+		</sc-button>
 
 		<!-- Résultat du challenge pour l'utilisateur -->
 		<div class="min-w-[20em] mx-auto">

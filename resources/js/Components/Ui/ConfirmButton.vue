@@ -3,8 +3,6 @@ import { computed, ref } from "vue"
 import ScButton from "@/Components/Ui/scButton.vue"
 
 const props = defineProps({
-	btnClass: { type: String, default: "btn btn-success" },
-	confirmClass: { type: String, default: "btn btn-warning" },
 	confirmText: { type: String, default: "vraiment ?" },
 	xs: { type: Boolean, default: false }
 })
@@ -25,7 +23,7 @@ const confirmClick = ref(false),
 
 <template>
 	<sc-button
-		:type="confirmClick?'confirm':'delete'"
+		:type="confirmClick?'cancel':'delete'"
 		:xs
 		@click="btnClick"
 	>

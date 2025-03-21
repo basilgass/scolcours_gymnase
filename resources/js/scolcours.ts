@@ -150,3 +150,4 @@ export const graduateBorderColor = [
 	"rgb(75, 192, 192)",	// 5.5
 	"rgb(201, 203, 207)",	// 6
 ]
+

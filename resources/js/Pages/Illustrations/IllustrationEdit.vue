@@ -10,6 +10,7 @@ import type { IllustrationInterface, WidgetInterface } from "@/types/modelInterf
 import { router } from "@inertiajs/vue3"
 import axios from "axios"
 import { computed, inject, onMounted, PropType, ref } from "vue"
+import ScButton from "@/Components/Ui/scButton.vue"
 
 // Define the layout
 defineOptions({ layout: LayoutMain })
@@ -208,16 +209,16 @@ onMounted(() => {
 					</h3>
 
 					<div class="text-xs flex gap-2 flex-wrap px-3 py-2">
-						<button
+						<sc-button
 							v-for="(data, comp) of chapterComponents"
 							:key="comp"
-							v-theme.btn="data.theme?.id ?? 0"
+							theme="data.theme?.id ?? 0"
 							:class="theIllustration.widget.id === data.id ? 'font-semibold border-2 shadow-sm scale-110' : ''"
 							class="btn btn-xs transition-all"
 							@click="toggleComponent(data)"
 						>
 							{{ data.name }}
-						</button>
+						</sc-button>
 					</div>
 				</div>
 

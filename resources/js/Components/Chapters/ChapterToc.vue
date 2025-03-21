@@ -9,6 +9,7 @@ import { ChapterShowInterface, PostInterface } from "@/types/modelInterfaces.ts"
 import { router } from "@inertiajs/vue3"
 import axios from "axios"
 import { computed, inject, ref } from "vue"
+import ScButton from "@/Components/Ui/scButton.vue"
 
 const props = defineProps<{
 	chapter: ChapterShowInterface,      // id, slug, posts
@@ -166,12 +167,13 @@ const questionStatus = computed<Record<number, number | null>>(() => {
 					sm
 					type="switch"
 				/>
-				<button
-					class="btn btn-new-inline btn-xs"
+				<sc-button
+					xs
+					type="add"
 					@click="addPost"
 				>
 					Ajouter un article {{ posts.length + 1 }}
-				</button>
+				</sc-button>
 			</div>
 		</div>
 

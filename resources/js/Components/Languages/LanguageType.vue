@@ -4,6 +4,7 @@ import {Random} from "pimath"
 import {inject, ref, watch} from "vue"
 import {useLanguage} from "@/Components/Languages/useLanguage.ts"
 import {shake} from "@/helpers/helperFunctions.ts"
+import ScButton from "@/Components/Ui/scButton.vue"
 
 const languageData = inject<LanguageDataInterface>('LanguageData')
 const {startGame, continueGame, selectedWordsIndex, currentWords} = useLanguage(languageData)
@@ -107,13 +108,14 @@ function validateKey(index) {
 			</div>
 
 			<div class="grid place-items-center mt-12">
-				<button
+				<sc-button
 					v-show="languageData.units.value.length>0"
-					class="btn btn-primary px-20 py-10 text-2xl"
+					type="primary"
+					class="px-20 py-10 text-2xl"
 					@click="startGame"
 				>
 					Commencer
-				</button>
+				</sc-button>
 			</div>
 		</div>
 		<div v-else>

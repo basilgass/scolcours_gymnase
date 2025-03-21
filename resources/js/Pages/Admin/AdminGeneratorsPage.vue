@@ -5,6 +5,7 @@ import {GeneratorInterface} from "@/types/modelInterfaces.ts"
 import GeneratorItem from "@/Components/Elements/GeneratorItem.vue"
 import FilteredList from "@/Components/Ui/FilteredList.vue"
 import {useMenuScrollToData} from "@/Composables/useHelpers.ts"
+import ScButton from "@/Components/Ui/scButton.vue"
 
 defineOptions({layout: LayoutMain})
 defineProps({
@@ -17,12 +18,12 @@ defineProps({
 	<main
 		class="scolcours-container"
 	>
-		<button
-			class="btn btn-algebre"
+		<sc-button
+			type="danger"
 			@click="useMenuScrollToData('withErrors', true)"
 		>
 			Rechercher la première erreur
-		</button>
+		</sc-button>
 		<filtered-list
 			:list="generators"
 			list-class="flex flex-col gap-12"

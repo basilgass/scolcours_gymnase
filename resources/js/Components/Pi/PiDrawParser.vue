@@ -17,6 +17,7 @@ import { computed, inject, onMounted, provide, ref, watch } from "vue"
 
 import VueSlider from "vue-slider-component/dist/vue-slider-component.umd.min"
 import "vue-slider-component/theme/material.css"
+import ScButton from "@/Components/Ui/scButton.vue"
 
 
 const emits = defineEmits(["update"])
@@ -391,21 +392,23 @@ provide("PiDrawGraph", PiGraph)
 		>
 			<div v-if="stepperStart">
 				<div class="flex items-center justify-center gap-10">
-					<button
+					<sc-button
 						:disabled="stepperIndex <= 0"
-						class="px-3 py-2 btn btn-xs"
+						class="px-3 py-2"
+						xs
 						@click="stepperIndex--"
 					>
 						<i class="bi bi-chevron-left" />
-					</button>
+					</sc-button>
 					<div>{{ stepperIndex + 1 }} / {{ stepperMax }}</div>
-					<button
+					<sc-button
 						:disabled="stepperIndex >= stepperMax - 1"
-						class="px-3 py-2 btn btn-xs"
+						class="px-3 py-2"
+						xs
 						@click="stepperIndex++"
 					>
 						<i class="bi bi-chevron-right" />
-					</button>
+					</sc-button>
 				</div>
 				<div
 					v-katex.auto="stepperText"
@@ -416,12 +419,14 @@ provide("PiDrawGraph", PiGraph)
 				v-else
 				class="w-full"
 			>
-				<button
-					:class="`w-full btn-xs btn-scolcours-${$page.props.theme?.slug || 'main'} tracking-wider d-block`"
+				<sc-button
+					theme
+					xs
+					:class="`w-full tracking-wider d-block`"
 					@click="stepperStart = true"
 				>
 					Marche à suivre
-				</button>
+				</sc-button>
 			</div>
 		</div>
 

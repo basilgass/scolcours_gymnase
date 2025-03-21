@@ -4,6 +4,7 @@ import { Futoshiki } from "pigames/build/module/lib/futoshiki"
 import { nextTick, reactive, ref } from "vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
+import ScButton from "@/Components/Ui/scButton.vue"
 
 defineOptions({ layout: LayoutMain })
 
@@ -110,12 +111,12 @@ const setValue = function (col, row) {
 				v-model="size"
 				name="nombre de colonnes"
 			/>
-			<button
-				class="btn btn-primary"
+			<sc-button
+				type="primary"
 				@click="start"
 			>
 				commencer
-			</button>
+			</sc-button>
 		</div>
 
 		<div v-if="gameStarted">

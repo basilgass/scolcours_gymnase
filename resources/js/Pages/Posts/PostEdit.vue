@@ -15,6 +15,7 @@ import type { PostShowInterface } from "@/types/modelInterfaces"
 import { router } from "@inertiajs/vue3"
 import axios from "axios"
 import { inject, PropType, ref } from "vue"
+import ScButton from "@/Components/Ui/scButton.vue"
 
 defineOptions({ layout: LayoutMain })
 
@@ -74,27 +75,29 @@ const deletePost = function () {
 				/>
 			</div>
 
-			<div class="flex gap-3 justify-end">
+			<div class="flex gap-3 justify-end items-baseline">
 				<form-maker
+					sm
 					v-model="thePost.active"
 					type="switch"
 					label="publié,brouillon"
 				/>
 
-				<button
-					class="btn btn-primary btn-xs"
+				<sc-button
+					xs
+					type="primary"
 					@click="savePost"
 				>
 					enregistrer
-				</button>
-				<InertiaLink
+				</sc-button>
+				<sc-button
 					:href="route('posts.show', [props.post.id])"
-					class="btn btn-cancel btn-xs"
+					xs
 				>
 					retour au post
-				</InertiaLink>
+				</sc-button>
 				<confirm-button
-					class="btn btn-delete btn-xs"
+					xs
 					@confirm="deletePost"
 				>
 					supprimer

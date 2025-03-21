@@ -1,13 +1,16 @@
 <script setup lang="ts">
 import LayoutMain from "@/Layouts/LayoutMain.vue"
-import ScButton, {buttonTypes} from "@/Components/Ui/scButton.vue"
+import ScButton from "@/Components/Ui/scButton.vue"
 import {ref} from "vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
+import {buttonConfig, buttonTypes} from "@/buttonConfig.ts"
 
 defineOptions({layout: LayoutMain})
 
 type groupsUiType = 'theme' | 'buttons' | 'blocks' | 'forms'
 const detailsOpen = ref<groupsUiType[]>(['buttons'])
+
+const btnTypes: buttonTypes[] = Object.keys(buttonConfig) as buttonTypes[]
 
 const themes = {
 	'scolcours': [
@@ -156,16 +159,6 @@ const themes = {
 	],
 }
 
-const btnTypes: buttonTypes[] = [
-	'add',
-	'edit'
-]
-
-const btnIcons = {
-	'add': 'bi-plus',
-	'edit': 'bi-pencil'
-}
-
 const blockTypes = {
 	definition: {
 		title: "définition",
@@ -217,14 +210,13 @@ const blockTypes = {
 	},
 }
 
-
 const value = ref(false)
 </script>
 
 <template>
 	<div class="space-y-4">
 		<details :open="detailsOpen.includes('theme')">
-			<summary class="text-lg">
+			<summary class="text-lg cursor-pointer">
 				Thème
 			</summary>
 			<div
@@ -246,120 +238,74 @@ const value = ref(false)
 		</details>
 
 		<details :open="detailsOpen.includes('buttons')">
-			<summary class="text-lg">
+			<summary class="text-lg cursor-pointer">
 				Boutons
 			</summary>
-			<div class="flex flex-col gap-3 bg-content p-3">
-				<div class="flex flex-wrap gap-3">
-					<!-- boutons themes -->
-					<sc-button
-						v-for="theme in Object.keys(themes)"
-						:theme="theme"
-						:key="`btn-${theme}`"
-						class="h-[60px] w-[180px]"
-					>
-						<div class="flex gap-3">
-							<i class="bi bi-brush" />
-							<div class="hidden md:inline">
+			<div class="flex flex-col gap-3">
+				<div
+					class="flex flex-col gap-3 p-3 bg-content"
+					v-for="(outline) in [false, true]"
+					:key="`button-style-${outline ? 'outline': 'regular'}`"
+				>
+					<h3 class="text-lg">
+						boutons {{ outline ? 'contours (outline)' : 'réguliers' }}
+					</h3>
+					<div class="flex flex-wrap gap-3">
+						<!-- boutons themes -->
+						<sc-button
+							v-for="theme in Object.keys(themes)"
+							:theme="theme"
+							:key="`btn-${theme}`"
+							class="h-[60px] w-[180px]"
+							:outline
+						>
+							<div class="flex gap-3">
+								<i class="bi bi-brush" />
 								{{ theme }}
 							</div>
-						</div>
-					</sc-button>
-				</div>
+						</sc-button>
+					</div>
 
-				<div class="flex flex-wrap gap-3">
-					<!-- boutons themes -->
-					<sc-button
-						v-for="theme in Object.keys(themes)"
-						:theme="theme"
-						:key="`btn-${theme}`"
-						outline
-						class="h-[60px] w-[180px]"
-					>
-						<div class="flex gap-3">
-							<i class="bi bi-brush" />
-							<div class="hidden md:inline">
-								{{ theme }}
-							</div>
-						</div>
-					</sc-button>
-				</div>
+					<div class="flex flex-wrap gap-3">
+						<!-- boutons types petits -->
+						<sc-button
+							v-for="type in btnTypes"
+							:type="type"
+							xs
+							:outline
+							icon
+							:key="`btn-${type}-xs`"
+						/>
+					</div>
 
-				<div class="flex gap-3">
-					<!-- boutons types petits -->
-					<sc-button xs>
-						par défaut
-					</sc-button>
-					<sc-button
-						v-for="type in btnTypes"
-						:type="type"
-						xs
-						:key="`btn-${type}-xs`"
-					>
-						<div class="flex gap-3">
-							<i :class="`bi ${btnIcons[type]}`" />
-							<div class="hidden md:inline">
-								{{ type }}
-							</div>
-						</div>
-					</sc-button>
-					<sc-button
-						xs
-						active
-					>
-						actif
-					</sc-button>
-				</div>
+					<div class="flex flex-wrap gap-3">
+						<!-- boutons types normaux -->
+						<sc-button
+							v-for="type in btnTypes"
+							:type="type"
+							:outline
+							icon
+							:key="`btn-${type}`"
+						/>
+					</div>
 
-				<div class="flex gap-3">
-					<!-- boutons types normaux -->
-					<sc-button>par défaut</sc-button>
-					<sc-button
-						v-for="type in btnTypes"
-						:type="type"
-						:key="`btn-${type}`"
-					>
-						<div class="flex gap-3">
-							<i :class="`bi ${btnIcons[type]}`" />
-							<div class="hidden md:inline">
-								{{ type }}
-							</div>
-						</div>
-					</sc-button>
-					<sc-button active>
-						actif
-					</sc-button>
-				</div>
-				<div class="flex gap-3">
-					<!-- boutons types larges -->
-					<sc-button xl>
-						par défaut
-					</sc-button>
-					<sc-button
-						v-for="type in btnTypes"
-						:type="type"
-						xl
-						:key="`btn-${type}-xl`"
-					>
-						<div class="flex gap-3">
-							<i :class="`bi ${btnIcons[type]}`" />
-							<div class="hidden md:inline">
-								{{ type }}
-							</div>
-						</div>
-					</sc-button>
-					<sc-button
-						xl
-						active
-					>
-						actif
-					</sc-button>
+					<div class="flex flex-wrap gap-3">
+						<!-- boutons types larges -->
+						<sc-button
+							v-for="type in btnTypes"
+							:type="type"
+							xl
+							:outline
+							icon
+							:key="`btn-${type}-xl`"
+						/>
+					</div>
 				</div>
 			</div>
 		</details>
 
 		<details :open="detailsOpen.includes('blocks')">
-			<summary class="text-lg">
+			<summary class="text-lg cursor-pointer">
 				Blocks
 			</summary>
 			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -388,7 +334,7 @@ const value = ref(false)
 		</details>
 
 		<details :open="detailsOpen.includes('forms')">
-			<summary class="text-lg">
+			<summary class="text-lg cursor-pointer">
 				Forms
 			</summary>
 			<div class="bg-content p-3">

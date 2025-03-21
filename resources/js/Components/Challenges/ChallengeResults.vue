@@ -7,6 +7,7 @@ Permet de recommencer le challenge.
 import { PropType } from "vue"
 import { ChallengeInterface } from "@/types/modelInterfaces"
 import { ChallengeAnswerInterface, ChallengeGameInterface } from "@/Components/Challenges/ChallengeGame.vue"
+import ScButton from "@/Components/Ui/scButton.vue"
 
 const emits = defineEmits(["start", "cancel"])
 const props = defineProps({
@@ -57,21 +58,23 @@ const props = defineProps({
 		</div>
 
 		<div class="flex gap-5 justify-center my-10">
-			<button
-				class="btn-xl hover:scale-110 transition-all"
-				v-theme.btn
+			<sc-button
+				xl
+				class="hover:scale-110 transition-all"
+				theme
 				@click="emits('start')"
 			>
 				Recommencer
-			</button>
+			</sc-button>
 
-			<button
-				class="btn-xl hover:scale-110 transition-all"
+			<sc-button
+				xl
+				class="hover:scale-110 transition-all"
 				@click="emits('cancel')"
-				v-theme.btn
+				theme
 			>
 				Fermer
-			</button>
+			</sc-button>
 		</div>
 
 		<div class="mt-5 border-t">

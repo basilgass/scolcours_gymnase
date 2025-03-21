@@ -11,6 +11,7 @@ import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
 import {onKeyStroke} from "@vueuse/core"
 import {computed, onMounted, ref} from "vue"
 import axios from "axios"
+import ScButton from "@/Components/Ui/scButton.vue"
 
 defineOptions({layout: LayoutMain})
 
@@ -90,6 +91,7 @@ function prepareNextWord() {
 			console.error(error)
 		})
 }
+
 async function startGame() {
 	gameIsRunning.value = true
 
@@ -283,13 +285,23 @@ const keyboard = computed<Record<string, string>>(() => {
 	return dict
 })
 
-onMounted(()=>{
+onMounted(() => {
 	prepareNextWord()
+
+	nextWord.value = "PATOU"
+
+	startGame()
+
+	"CAPOT".split("").forEach(letter => {
+		setLetter(letter)
+	})
+	validate()
 })
 
 </script>
 <template>
 	<article class="scolcours-container py-20">
+		<!-- configuration -->
 		<div
 			v-if="!gameIsRunning"
 			class="max-w-lg mx-auto space-y-10"
@@ -322,14 +334,17 @@ onMounted(()=>{
 				/>
 			</div>
 			<div class="text-center">
-				<button
+				<sc-button
 					@click="startGame"
-					class="btn btn-lg btn-primary"
+					xl
+					type="primary"
 				>
 					commencer
-				</button>
+				</sc-button>
 			</div>
 		</div>
+
+		<!-- game is running -->
 		<div
 			v-if="gameIsRunning"
 			class="flex flex-col items-center gap-5"
@@ -340,15 +355,22 @@ onMounted(()=>{
 					:key="`word-${index}`"
 					class="flex gap-2"
 				>
-					<div
+					<sc-button
 						v-for="(letter, i) in value.word"
 						:key="`letter-${index}-${i}`"
-						:class="letterClass(index, i)"
-						class="w-[2em] md:w-[3em] aspect-square grid place-items-center cursor-pointer"
+						:class="{
+							'bg-blue-200': letterClass(index, i) === 'letter-selected',
+							'bg-gray-300' : letterClass(index, i) === 'letter-wrong',
+							'bg-gray-400 text-gray-700': letterClass(index, i) === 'letter-not-present',
+							'outline-orange-400 bg-orange-200 text-orange-800': letterClass(index, i) === 'letter-misplaced',
+							'outline-green-600 bg-green-300 text-green-800': letterClass(index, i) === 'letter-correct'
+						}"
+						p0
+						class="w-[2em] md:w-[3em] aspect-square border border-slate-400 text-lg font-semibold"
 						@click="selectLetter(index, i)"
 					>
 						{{ letter }}
-					</div>
+					</sc-button>
 				</div>
 			</div>
 
@@ -357,71 +379,54 @@ onMounted(()=>{
 				:key="`row-${index}`"
 				class="flex gap-1 md:gap-2 mx-auto"
 			>
-				<button
+				<sc-button
 					v-for="letter in row"
 					:key="`key-${letter}`"
-					:class="keyboard[letter]"
+					:class="{
+						'bg-blue-200': keyboard[letter] === 'letter-selected',
+						'bg-gray-300' : keyboard[letter] === 'letter-wrong',
+						'bg-gray-400 text-gray-700': keyboard[letter] === 'letter-not-present',
+						'outline-orange-400 bg-orange-200 text-orange-800': keyboard[letter] === 'letter-misplaced',
+						'outline-green-600 bg-green-300 text-green-800': keyboard[letter] === 'letter-correct'
+					}"
+					p0
 					class="w-[8vw] md:w-[3em] aspect-square grid place-items-center"
 					@click="setLetter(letter)"
 				>
 					{{ letter }}
-				</button>
-				<button
+				</sc-button>
+				<sc-button
 					v-if="index === 2"
-					class="btn bg-white ml-3 py-0 md:py-3 px-5"
+					class="ml-3 py-0 md:py-3 px-5"
 					@click="backspace"
 				>
 					<i class="bi bi-backspace" />
-				</button>
+				</sc-button>
 			</div>
+
 			<div class="flex flex-col gap-5">
-				<button
+				<sc-button
 					v-if="guessId < GUESSES_LIMIT"
-					:class="guess.includes(' ') ? 'bg-gray-100' : 'bg-blue-300 hover:bg-blue-400'"
+					:outline="guess.includes(' ')"
 					:disabled="guess.includes(' ')"
-					class="btn px-20"
+					class="outline px-20"
 					@click="validate"
 				>
 					{{ guess.includes(" ") ? "mot à compléter" : "valider" }}
-				</button>
-				<button
+				</sc-button>
+				<sc-button
 					v-else
-					class="btn bg-orange-300 hover:bg-orange-400"
+					type="primary"
 					@click="startGame"
 				>
 					Nouveau mot
-				</button>
+				</sc-button>
 				<div>{{ message }}</div>
 			</div>
+
 			<div v-show="editMode.enable">
 				<div>Le mot à chercher: {{ target }}</div>
 			</div>
 		</div>
 	</article>
 </template>
-
-<style scoped lang="postcss">
-.letter-selected {
-	@apply bg-blue-300;
-}
-
-.letter-unknown {
-	@apply bg-gray-300;
-}
-
-.letter-not-present {
-	@apply bg-gray-600 text-white;
-}
-
-.letter-wrong {
-	@apply bg-gray-300;
-}
-
-.letter-misplaced {
-	@apply bg-orange-600 text-white;
-}
-
-.letter-correct {
-	@apply bg-green-600 text-white;
-}
-</style>

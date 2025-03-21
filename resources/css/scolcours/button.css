@@ -1,87 +1,88 @@
-@utility btn {
-  @apply inline-block px-5 py-2
-		text-center
-		rounded-lg
-		no-underline
+@layer components {
+	.btn {
+		@apply text-center no-underline
+		rounded-xl
+		border outline-none
 		cursor-pointer
 		disabled:cursor-not-allowed disabled:shadow-none
-		transition-colors duration-300;
-}
+		hover:outline-2 hover:outline-offset-2 hover:outline-dotted
+		transition-all duration-150;
+	}
 
-@utility btn-primary {
-  @apply bg-blue-600 text-white
-		hover:bg-blue-700;
-}
+	.btn-active {
+		@apply bg-sky-400 dark:bg-sky-600
+		outline-sky-400 dark:outline-sky-600
+		hover:outline-sky-600
+		text-white;
+	}
 
-@utility btn-success {
-  @apply bg-green-600 text-white hover:bg-green-700;
-}
+	.btn-admin {
+		@apply bg-slate-600 dark:bg-slate-800
+		outline-slate-600 dark:outline-slate-800
+		text-white;
+	}
 
-@utility btn-add {
-  @apply bg-blue-600 text-white hover:bg-teal-700;
-}
+	.btn-default {
+		@apply bg-slate-100 dark:bg-slate-800
+		outline-slate-400 dark:outline-slate-600
+		text-slate-800;
+	}
 
-@utility btn-new {
-  @apply btn w-full h-full min-h-[100px] border-2 border-blue-600 border-dashed text-blue-900 bg-blue-100 hover:bg-blue-200;
-}
+	.btn-primary {
+		@apply bg-blue-400 dark:bg-blue-600
+		outline-blue-400 dark:outline-blue-600
+		text-white;
+	}
 
-@utility btn-new-inline {
-  @apply border-2 border-blue-600 border-dashed text-blue-900 bg-blue-100 hover:bg-blue-200;
-}
+	.btn-edit {
+		@apply bg-purple-600 dark:bg-purple-800
+		outline-purple-600 dark:outline-purple-800
+		text-white;
+	}
 
-@utility btn-delete {
-  @apply bg-red-600 text-white hover:bg-red-700;
-}
+	.btn-cancel {
+		@apply bg-amber-400 dark:bg-amber-600
+		outline-amber-400 dark:outline-amber-600
+		text-white;
+	}
 
-@utility btn-cancel {
-  @apply bg-orange-600 text-white hover:bg-orange-700;
-}
+	.btn-danger {
+		@apply bg-red-400 dark:bg-red-600
+		outline-red-400 dark:outline-red-600
+		text-white;
+	}
 
-@utility btn-warning {
-  @apply bg-orange-600 text-white hover:bg-orange-700;
-}
+	.btn-success {
+		@apply bg-green-400 dark:bg-green-600
+		outline-green-400 dark:outline-green-600
+		text-white;
+	}
 
-@utility btn-xl {
-  @apply px-10 py-5 rounded-xl text-lg;
-}
+	.btn-outline-active {
+		@apply outline-sky-500 text-sky-500;
+	}
 
-@utility btn-xs {
-  @apply px-2! py-1! text-xs;
-}
+	.btn-outline-admin {
+		@apply outline-slate-500 text-slate-500;
+	}
 
-@utility btn-algebre {
-  @apply btn bg-blue-500 text-white border hover:bg-blue-100 hover:border-blue-500 hover:text-blue-500 transition-colors duration-300;
-}
+	.btn-outline-primary {
+		@apply outline-green-500 text-green-500;
+	}
 
-@utility btn-analyse {
-  @apply btn bg-amber-500 text-white border hover:bg-amber-100 hover:border-amber-500 hover:text-amber-500 transition-colors duration-300;
-}
+	.btn-outline-edit {
+		@apply outline-red-500 text-red-500;
+	}
 
-@utility btn-geometrie {
-  @apply btn bg-purple-500 text-white border hover:bg-purple-100 hover:border-purple-500 hover:text-purple-500 transition-colors duration-300;
-}
+	.btn-outline-cancel {
+		@apply outline-orange-500 text-orange-500;
+	}
 
-@utility btn-statistiques {
-  @apply btn bg-cyan-500 text-white border hover:bg-cyan-100 hover:border-cyan-500 hover:text-cyan-500 transition-colors duration-300;
-}
+	.btn-outline-danger {
+		@apply outline-red-500 text-red-500;
+	}
 
-@utility btn-jeux {
-  @apply btn bg-orange-500 text-white border hover:bg-orange-100 hover:border-orange-500 hover:text-orange-500 transition-colors duration-300;
-}
-
-@utility btn-tools {
-  @apply btn bg-pink-400 text-white border hover:bg-pink-100 hover:border-pink-500 hover:text-pink-500 transition-colors duration-300;
-}
-
-@utility btn-arithmetique {
-  @apply btn bg-lime-500 text-white border hover:bg-lime-100 hover:border-lime-500 hover:text-lime-500 transition-colors duration-300;
-}
-
-@utility is-active {
-  @apply bg-blue-100 border-blue-600;
-  @apply dark:border-blue-400 dark:text-blue-600;
-}
-
-@utility is-disabled {
-  @apply bg-gray-100 border-gray-200 text-gray-300;
+	.btn-outline-success {
+		@apply outline-green-500 text-green-500;
+	}
 }

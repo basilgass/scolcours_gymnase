@@ -11,6 +11,7 @@ import { ChallengeInterface, IllustrationInterface } from "@/types/modelInterfac
 import { router } from "@inertiajs/vue3"
 import axios from "axios"
 import { inject, ref } from "vue"
+import ScButton from "@/Components/Ui/scButton.vue"
 
 
 defineOptions({ layout: LayoutMain })
@@ -202,20 +203,22 @@ const deleteChallenge = function () {
 				</span>
 			</h1>
 			<div class="flex gap-3 justify-end">
-				<button
-					class="btn btn-primary btn-xs"
+				<sc-button
+					type="primary"
+					xs
 					@click="saveChallenge"
 				>
 					enregistrer
-				</button>
-				<InertiaLink
+				</sc-button>
+				<sc-button
 					:href="route('challenges.show', [theChallenge.slug])"
-					class="btn btn-success btn-xs"
+					type="success"
+					xs
 				>
 					visiter
-				</InertiaLink>
+				</sc-button>
 				<confirm-button
-					class="btn btn-delete btn-xs"
+					xs
 					@confirm="deleteChallenge"
 				>
 					supprimer
@@ -362,12 +365,12 @@ const deleteChallenge = function () {
 					</template>
 					<template #footer>
 						<div class="flex gap-3 justify-between items-end">
-							<button
-								class="btn btn-add"
+							<sc-button
+								type="add"
 								@click="addGenerator"
 							>
 								<i class="bi bi-plus-sign" /> créer un générateur
-							</button>
+							</sc-button>
 
 							<div class="min-w-[500px] flex items-end">
 								<form-maker
@@ -386,13 +389,13 @@ const deleteChallenge = function () {
 										{{ generator.title }}
 									</option>
 								</form-maker>
-								<button
+								<sc-button
 									:disabled="attachGeneratorId === ''"
-									class="btn btn-add disabled:is-disabled rounded-l-none"
+									type="add"
 									@click="attachGenerator"
 								>
 									<i class="bi bi-file-arrow-up" />
-								</button>
+								</sc-button>
 							</div>
 						</div>
 					</template>

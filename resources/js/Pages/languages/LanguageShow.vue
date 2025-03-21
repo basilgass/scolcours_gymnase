@@ -57,6 +57,7 @@ const unitsSelection = ref<TranslationUnitInterfaceExtended[]>([])
 const state = ref<"intro" | "running" | "finished">("intro")
 
 const words = ref<TranslationWord[]>([])
+
 provide<LanguageDataInterface>("LanguageData", {
 	language: props.language,
 	game: props.game,

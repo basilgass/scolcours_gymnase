@@ -90,7 +90,6 @@ const toggleRelation = function(id) {
 				<sc-button
 					v-admin
 					type="add"
-					class="btn btn-new-inline"
 					@click="getAllChapters"
 				>
 					nouvelle relation

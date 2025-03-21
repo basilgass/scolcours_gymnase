@@ -4,9 +4,8 @@
 >
 
 import LayoutMain from "@/Layouts/LayoutMain.vue"
-import type {DeckInterface, UserDeckInterface} from "@/types/modelInterfaces"
+import type {UserDeckInterface} from "@/types/modelInterfaces"
 import {PropType} from "vue"
-import BlockShow from "@/Components/Blocks/BlockShow.vue"
 import ScButton from "@/Components/Ui/scButton.vue"
 
 defineOptions({layout: LayoutMain})

@@ -12,15 +12,41 @@ import KeyboardBasic from "@/Components/Keyboards/KeyboardBasic.vue"
 import {useKeyboard} from "@/Composables/useKeyboard.ts"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 import TexCode from "@/Components/Ui/TexCode.vue"
+import ScButton from "@/Components/Ui/scButton.vue"
+
+type operationType = `+` | `-` | '*' | '/' | 'x'
 
 export interface matriceAugmenteeInterface {
 	target: number,
-	operation: `+` | `-` | '*' | '/' | 'x',
+	operation: operationType,
 	value: string, // can be a number or a fraction
 	reference: number | null,
 	description: string
 }
 
+const buttonsConfig: { label: string, value: operationType }[] = [
+	{
+		label: "ajouter",
+		value: "+"
+	},
+	{
+		label: "soustraire",
+		value: "-"
+	},
+	{
+		label: "multiplier",
+		value: "*"
+	},
+	{
+		label: "diviser",
+		value: "/"
+	},
+	{
+		label: "permuter",
+		value: "x"
+	},
+
+]
 
 const {getKeyboards} = useKeyboard()
 
@@ -192,23 +218,18 @@ function getShortDescription(operation: matriceAugmenteeInterface): string {
 		return `L_${operation.target} \\longleftrightarrow L_${operation.reference}`
 	}
 
+	const F = new Fraction(operation.value)
+
 	if (operation.operation === '*') {
-		return `${operation.value} \\cdot L_${operation.target}`
+		return `${F.tex} \\cdot L_${operation.target}`
 	}
 
 	if (operation.operation === '/') {
-		return `L_${operation.target} \\div ${operation.value}`
+		return `\\frac{ L_${operation.target} }{ ${F.tex} }`
 	}
 
-	if (operation.operation === '+') {
-		return `L_${operation.target} + ${operation.value} \\cdot L_${operation.reference}`
-	}
-
-	if (operation.operation === '-') {
-		return `L_${operation.target} - ${operation.value} \\cdot L_${operation.reference}`
-	}
-
-	return ''
+	// (operation.operation === '+' || operation.operation === '-')
+	return `L_${operation.target} ${operation.operation} ${F.value < 0 ? `\\left(${F.tex}\\right)` : F.tex} \\cdot L_${operation.reference}`
 
 }
 
@@ -280,6 +301,10 @@ function updateMatrix(operation: matriceAugmenteeInterface) {
 const operationIsComplete = computed(() => {
 	const operation = operationData
 	if (operation.target === null) {
+		return false
+	}
+
+	if (operation.operation === null) {
 		return false
 	}
 
@@ -371,10 +396,10 @@ const matrixTexToAligned = computed<string>(() => {
 		}`)
 	}
 
-	const arrAvecRetourALaLigne:string[] = []
+	const arrAvecRetourALaLigne: string[] = []
 
 	arr.forEach((line, index) => {
-		if(index % matrixPerLine.value === 0 && index!==0) {
+		if (index % matrixPerLine.value === 0 && index !== 0) {
 			arrAvecRetourALaLigne.push('\\\\[1.5em]')
 		}
 		arrAvecRetourALaLigne.push(line)
@@ -463,41 +488,6 @@ onMounted(() => {
 		</div>
 
 		<div class="py-10 space-y-10 w-full">
-			<markdown-it
-				:text="operationDescription"
-				class="text-center border p-3 bg-content"
-			/>
-
-			<div
-				class="flex flex-wrap gap-3 justify-center *:border *:px-3 *:py-1 *:rounded"
-			>
-				<button @click="operationData.operation='+'">
-					ajouter
-				</button>
-				<button @click="operationData.operation='-'">
-					soustraire
-				</button>
-				<button @click="operationData.operation='*'">
-					multiplier
-				</button>
-				<button @click="operationData.operation='/'">
-					diviser
-				</button>
-				<button @click="operationData.operation='x'">
-					permuter
-				</button>
-			</div>
-
-			<div v-show="operationData.operation!== null && operationData.operation!=='x'">
-				<!--demande d'un nombre-->
-				<keyboard-basic
-					ref="valueKeyboard"
-					answer=""
-					:keyboard="getKeyboards('fraction')[0].keyboard"
-					@change="operationData.value = $event.input"
-				/>
-			</div>
-
 			<div class="text-center">
 				<button
 					v-show="operationIsComplete"
@@ -510,11 +500,42 @@ onMounted(() => {
 			</div>
 
 			<markdown-it
+				:text="operationDescription"
+				class="text-center border p-3 bg-content"
+			/>
+
+			<div
+				class="flex flex-wrap gap-3 justify-center"
+			>
+				<sc-button
+					v-for="button in buttonsConfig"
+					:key="button.value"
+					@click="operationData.operation=button.value"
+
+					:active="operationData.operation===button.value"
+				>
+					{{ button.label }}
+				</sc-button>
+			</div>
+
+			<div v-show="operationData.operation!== null && operationData.operation!=='x'">
+				<!--demande d'un nombre-->
+				<keyboard-basic
+					ref="valueKeyboard"
+					answer=""
+					:keyboard="getKeyboards('fraction')[0].keyboard"
+					@change="operationData.value = $event.input"
+				/>
+			</div>
+
+			<markdown-it
 				:text="list_of_operations.map((x, i)=>`${i+1}. ${x.description}`).join('\n')"
 				class="border p-3 bg-content"
 			/>
 
-			<!--			<div v-katex="matrixTexToAligned" />-->
+			<div class="overflow-x-auto">
+				<div v-katex="matrixTexToAligned" />
+			</div>
 			<tex-code
 				:tex="matrixTexToAligned"
 				title="matrice augmentée"

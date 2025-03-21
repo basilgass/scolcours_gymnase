@@ -4,6 +4,7 @@ import { flashInterface } from "@/types"
 import { watchDebounced } from "@vueuse/core"
 import axios from "axios"
 import { inject, nextTick, ref } from "vue"
+import ScButton from "@/Components/Ui/scButton.vue"
 
 const flash = inject<flashInterface>("flash"),
 	props = defineProps({
@@ -68,12 +69,14 @@ watchDebounced(moveToId, getTargetName, { debounce: 1000, maxWait: 2000 })
 <template>
 	<div>
 		<div class="flex gap-3 items-center">
-			<button
-				class="btn btn-xs"
+			<sc-button
+				xs
 				@click="enableMove"
+				type="edit"
+				outline
 			>
 				déplacer le {{ props.source }}
-			</button>
+			</sc-button>
 
 			<form-maker
 				with-icon

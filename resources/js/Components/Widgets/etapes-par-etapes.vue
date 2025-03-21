@@ -2,6 +2,7 @@
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 import { WidgetPropsInterface } from "@/types/modelInterfaces.ts"
 import { computed, ref } from "vue"
+import ScButton from "@/Components/Ui/scButton.vue"
 
 const props = defineProps<{
 	illustration: WidgetPropsInterface
@@ -228,22 +229,22 @@ code: texte séparé par %STEP
 		/>
 		<markdown-it :text="step?.body" />
 		<div class="flex justify-between">
-			<button
-				v-theme.btn
+			<sc-button
+				theme
 				:class="stepIndex === 0 ? 'invisible' : ''"
 				@click="stepIndex--"
 			>
 				<i class="bi bi-chevron-left mr-3 -ml-2" />précédant
-			</button>
+			</sc-button>
 
-			<button
-				v-theme.btn
+			<sc-button
+				theme
 				:class="stepIndex === steps.length - 1 ? 'invisible' : ''"
 				@click="stepIndex++"
 			>
 				<span v-katex.auto="nextStep?.title" />
 				<i class="bi bi-chevron-right ml-3 -mr-2" />
-			</button>
+			</sc-button>
 		</div>
 	</div>
 </template>

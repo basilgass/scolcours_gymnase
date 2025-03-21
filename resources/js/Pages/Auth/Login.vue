@@ -7,11 +7,13 @@ import BreezeLabel from "@/Components/Auth/Label.vue"
 import BreezeValidationErrors from "@/Components/Auth/ValidationErrors.vue"
 import { Head, Link } from "@inertiajs/vue3"
 import FormMaker from "@/Components/Form/FormMaker.vue"
+import ScButton from "@/Components/Ui/scButton.vue"
 
 // TODO: Get rid of all "Auth" default pages.
 export default {
 
 	components: {
+		ScButton,
 		FormMaker,
 		BreezeButton,
 		BreezeCheckbox,
@@ -107,13 +109,14 @@ export default {
 				Mot de passe oublié ?
 			</InertiaLink>
 
-			<button
-				class="btn btn-primary ml-4"
+			<sc-button
+				type="primary"
+				class="ml-4"
 				:class="{ 'opacity-25': form.processing }"
 				:disabled="form.processing"
 			>
 				Se connecter
-			</button>
+			</sc-button>
 		</div>
 	</form>
 </template>

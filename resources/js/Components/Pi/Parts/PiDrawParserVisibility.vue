@@ -5,6 +5,7 @@
 import { PiDraw} from "pidraw"
 
 import { computed, onMounted, PropType, ref } from "vue"
+import ScButton from "@/Components/Ui/scButton.vue"
 
 const props = defineProps({
 	graph: { type: Object as PropType<PiDraw>, required: true },
@@ -176,11 +177,11 @@ onMounted(() => {
 			v-if="availableBtns.length > 0"
 			class="w-full flex flex-wrap gap-3 mt-2"
 		>
-			<button
+			<sc-button
 				v-for="btn of availableBtns"
 				:key="btn.figure"
 				v-katex.auto="`${btn.visible ? 'cacher' : 'afficher'} ${btn.label}`"
-				class="btn btn-xs"
+				xs
 				@click="visibilityButtonsToggle(btn)"
 			/>
 		</div>

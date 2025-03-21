@@ -7,6 +7,7 @@ import { flashInterface } from "@/types"
 import type { PostShowInterface, QuestionInterface } from "@/types/modelInterfaces.ts"
 import axios from "axios"
 import { inject, PropType, ref } from "vue"
+import ScButton from "@/Components/Ui/scButton.vue"
 
 const props = defineProps({
 	post: { type: Object as PropType<PostShowInterface>, required: true },
@@ -122,7 +123,7 @@ const addQuestion = function () {
 <template>
 	<div
 		v-admin="editMode.enable"
-		class="bg-slate-600 text-white py-2 px-3 flex gap-6"
+		class="admin-content py-2 px-3 flex gap-6"
 	>
 		<button
 			class="text-xl"
@@ -145,18 +146,22 @@ const addQuestion = function () {
 			<div class="text-sm">
 				apparitions
 			</div>
-			<button
-				class="btn btn-xs"
+			<sc-button
+				xs
+				outline
+				type="admin"
 				@click="addDisplayIf"
 			>
 				<i class="bi bi-bar-chart" />
-			</button>
-			<button
-				class="btn btn-xs"
+			</sc-button>
+			<sc-button
+				xs
+				outline
+				type="admin"
 				@click="removeDisplayIf"
 			>
 				<i class="bi bi-trash" />
-			</button>
+			</sc-button>
 		</div>
 
 
@@ -164,8 +169,10 @@ const addQuestion = function () {
 			<div class="text-sm">
 				réponses
 			</div>
-			<button
-				class="btn btn-xs"
+			<sc-button
+				xs
+				outline
+				type="admin"
 				@click="showAnswers"
 			>
 				<i
@@ -176,13 +183,15 @@ const addQuestion = function () {
 					v-else
 					class="bi bi-eye-slash"
 				/>
-			</button>
-			<button
-				class="btn btn-xs"
+			</sc-button>
+			<sc-button
+				xs
+				outline
+				type="admin"
 				@click="resetAnswers"
 			>
 				<i class="bi bi-trash" />
-			</button>
+			</sc-button>
 		</div>
 	</div>
 </template>

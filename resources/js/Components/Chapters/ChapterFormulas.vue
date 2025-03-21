@@ -156,12 +156,12 @@ onMounted(() => {
 							v-show="editMode.enable"
 							v-admin
 						>
-							<button
-								class="btn btn-new"
+							<sc-button
+								type="add"
 								@click="addFormula"
 							>
 								Ajouter une formule
-							</button>
+							</sc-button>
 						</div>
 					</footer>
 				</template>

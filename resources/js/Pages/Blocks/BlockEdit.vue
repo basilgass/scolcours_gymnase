@@ -249,12 +249,13 @@ function deleteIllustration(id: number){
 							</li>
 						</ul>
 					</div>
-					<button
-						class="btn btn-add w-full py-2"
+					<sc-button
+						type="add"
+						class="w-full py-2"
 						@click="addIllustration"
 					>
 						ajouter une illustration
-					</button>
+					</sc-button>
 				</div>
 			</div>
 

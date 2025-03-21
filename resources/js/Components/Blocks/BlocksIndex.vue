@@ -55,6 +55,8 @@ function updateBlockOrder() {
 
 }
 
+// TODO: button with the bi-plus-circle-fill icon could be enhanced.
+
 </script>
 <template>
 	<article class="flex flex-col gap-4">
@@ -65,11 +67,10 @@ function updateBlockOrder() {
 			<button
 				class="bg-action text-xl
 					 w-[24px] h-[24px] z-10
-					rounded-full border
 					cursor-pointer"
 				@click="addBlock()"
 			>
-				<i class="bi bi-plus" />
+				<i class="bi bi-plus-circle" />
 			</button>
 		</div>
 
@@ -91,13 +92,12 @@ function updateBlockOrder() {
 					<button
 						v-admin="editMode.enable"
 						class="absolute -right-2 -bottom-2
-							bg-action text-xl
-							w-[24px] h-[24px] z-10
-							rounded-full border
+							text-xl
+							w-[24px] h-[24px] z-10 transparent
 							cursor-pointer"
 						@click="addBlock(element.order)"
 					>
-						<i class="bi bi-plus" />
+						<i class="bi bi-plus-circle-fill" />
 					</button>
 
 					<block-show
@@ -113,10 +113,3 @@ function updateBlockOrder() {
 		</draggable>
 	</article>
 </template>
-
-<style scoped>
-
-.bi::before, [class^="bi-"]::before, [class*=" bi-"]::before {
-	vertical-align: 1px;
-}
-</style>

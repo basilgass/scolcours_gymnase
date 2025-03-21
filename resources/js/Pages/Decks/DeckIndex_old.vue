@@ -11,6 +11,7 @@ import { useStoreEditMode } from "@/stores/useStoreEditMode.ts"
 import type { DeckInterface } from "@/types/modelInterfaces"
 import axios from "axios"
 import { PropType, ref } from "vue"
+import ScButton from "@/Components/Ui/scButton.vue"
 
 defineOptions({ layout: LayoutMain })
 
@@ -73,12 +74,12 @@ function addDeck() {
 				label="slug"
 				type="text"
 			/>
-			<button
-				class="btn btn-add"
+			<sc-button
+				type="add"
 				@click="addDeck"
 			>
 				ajouter un deck
-			</button>
+			</sc-button>
 		</div>
 	</section>
 </template>

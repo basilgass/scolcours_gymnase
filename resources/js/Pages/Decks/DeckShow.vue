@@ -3,21 +3,29 @@
 	setup
 >
 import LayoutProjection from "@/Layouts/LayoutProjection.vue"
-import type {UserDeckCardsInterface, UserDeckInterface} from "@/types/modelInterfaces"
-import CardsShow from "@/Components/Decks/CardsShow.vue"
+import type {UserCardInterface, UserDeckInterface} from "@/types/modelInterfaces"
+import DeckCards from "@/Components/Decks/DeckCards.vue"
 
 defineOptions({layout: LayoutProjection})
 
-const props = defineProps<{
-	deck: UserDeckInterface,
-	cards: UserDeckCardsInterface[]
-}>()
+withDefaults(defineProps<{
+		deck: UserDeckInterface,
+		cards: UserCardInterface[],
+		hideTitle: boolean
+	}>(),
+	{
+		hideTitle: true
+	}
+)
 
 </script>
 
 <template>
 	<section>
-		<header class="h-[6rem] p-3 bg-content">
+		<header
+			v-if="!hideTitle"
+			class="h-[6rem] p-3 bg-content"
+		>
 			<h3 class="text-3xl">
 				{{ deck.title }}
 			</h3>
@@ -30,7 +38,7 @@ const props = defineProps<{
 
 
 		<!-- card mode -->
-		<cards-show
+		<deck-cards
 			class="h-[calc(100vh-10rem)]
 			max-w-[calc(100vw-2rem)]
 			lg:max-w-3xl

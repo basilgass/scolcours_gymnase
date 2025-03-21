@@ -8,6 +8,7 @@ import KeyboardDisplay from "@/Components/Keyboards/KeyboardDisplay.vue"
 import { PiGraph as PiDraw } from "pidraw"
 import { LogicalSet } from "pimath"
 import { computed, onMounted, ref } from "vue"
+import ScButton from "@/Components/Ui/scButton.vue"
 
 let draw = ref(null),
 	geom,
@@ -133,12 +134,12 @@ onMounted(() => {
 			ref="draw"
 			class="max-w-lg"
 		/>
-		<button
-			class="btn btn-primary"
+		<sc-button
+			type="primary"
 			@click="validate"
 		>
 			Valider
-		</button>
+		</sc-button>
 
 		<keyboard-display
 			v-model="input"

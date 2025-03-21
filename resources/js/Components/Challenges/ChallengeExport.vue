@@ -8,6 +8,8 @@ import { usePage } from "@inertiajs/vue3"
 import { useClipboard } from "@vueuse/core"
 import axios from "axios"
 import { inject, PropType, ref } from "vue"
+import ScButton from "@/Components/Ui/scButton.vue"
+import TexCode from "@/Components/Ui/TexCode.vue"
 
 /**
  * This component is used to generate a PDF from a challenge
@@ -103,13 +105,13 @@ const pdfGenereate = () => {
 				sm
 			/>
 
-			<button
-				v-theme.btn
-				class="btn btn-xs ml-auto"
+			<sc-button
+				theme
+				xs
 				@click="pdfGenereate"
 			>
 				générer
-			</button>
+			</sc-button>
 		</div>
 		<div class="flex flex-col gap-3">
 			<div
@@ -138,30 +140,7 @@ const pdfGenereate = () => {
 			v-if="pdfLaTeX"
 			class="my-10"
 		>
-			<div class="flex justify-between mb-3">
-				<h3 class="font-code text-gray-600">
-					Code LaTeX
-				</h3>
-				<button
-					v-if="!copied"
-					class="btn btn-xs"
-					@click="copy(pdfLaTeX)"
-				>
-					<i class="bi bi-clipboard" /> copier
-				</button>
-				<div v-else>
-					<button
-						class="btn btn-xs btn-success"
-						disabled
-					>
-						<i class="bi bi-clipboard-check" /> copié !
-					</button>
-				</div>
-			</div>
-			<pre
-				class="bg-gray-100 overflow-y-auto overflow-x-auto max-h-screen"
-				v-text="pdfLaTeX"
-			/>
+			<tex-code :tex="pdfLaTeX" />
 		</div>
 		<div
 			v-if="pdfError"

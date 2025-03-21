@@ -6,6 +6,7 @@ import TexCode from "@/Components/Ui/TexCode.vue"
 import { useToolsStorage } from "@/Composables/useToolsStorage.ts"
 import { Equation, Fraction, ISolution, Polynom, Random } from "pimath"
 import { computed, ref } from "vue"
+import ScButton from "@/Components/Ui/scButton.vue"
 
 // TODO: .solutions dowes not work
 /** Tools
@@ -200,12 +201,11 @@ const root = ref(null),
 						/>
 					</div>
 
-					<button
-						class="btn bg-white"
+					<sc-button
 						@click="randomAbs"
 					>
 						aléatoire
-					</button>
+					</sc-button>
 				</div>
 
 				<div

@@ -7,6 +7,7 @@ import LayoutMain from "@/Layouts/LayoutMain.vue"
 import { ChapterShowInterface } from "@/types/modelInterfaces"
 import { useForm } from "@inertiajs/vue3"
 import { PropType } from "vue"
+import ScButton from "@/Components/Ui/scButton.vue"
 
 defineOptions({ layout: LayoutMain })
 const props = defineProps({
@@ -61,12 +62,10 @@ function toggleChapterVisibility(slug, active) {
 
 						<div>
 							<div>{{ item.updated_at }}</div>
-							<button
-								:class="{
-									'bg-green-600': item.active,
-									'bg-red-600': !item.active,
-								}"
-								class="btn btn-xs w-full text-white hover:text-gray-800"
+							<sc-button
+								:type="item.active ? 'success' : 'danger'"
+								xs
+								class="w-full"
 								@click="
 									toggleChapterVisibility(
 										item.slug,
@@ -75,7 +74,7 @@ function toggleChapterVisibility(slug, active) {
 								"
 							>
 								{{ item.active ? "en ligne" : "caché" }}
-							</button>
+							</sc-button>
 						</div>
 					</div>
 				</template>

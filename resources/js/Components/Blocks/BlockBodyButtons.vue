@@ -4,13 +4,15 @@ import { buttonInterface } from "@/types"
 import { computed, inject } from "vue"
 import ScButton from "@/Components/Ui/scButton.vue"
 
-
+// Récupération des scripts de block
 const blockScript = inject('blockScript', useScriptLoader(''))
 
+// Détermine si le block a des boutons pour gérer les scripts
 const hasButtons = computed(() => {
 	return blockScript.hasData.value
 })
 
+// Détermine si le block doit afficher des boutons personnalisés
 const hasCustomButtons = computed(() => {
 	return hasButtons.value && Object.hasOwn(blockScript.merged.value, "btn")
 })

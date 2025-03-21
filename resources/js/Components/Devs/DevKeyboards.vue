@@ -7,6 +7,7 @@ import { useKeyboard } from "@/Composables/useKeyboard.ts"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 import { QuestionInterface } from "@/types/modelInterfaces.ts"
 import { computed, ref, unref, watch } from "vue"
+import ScButton from "@/Components/Ui/scButton.vue"
 
 defineOptions({ layout: LayoutMain })
 
@@ -126,9 +127,9 @@ function validate(evt) {
 		class="scolcours-container grid grid-cols-2 gap-3"
 	>
 		<div>
-			<button v-theme.btn="'algebre'">
+			<sc-button theme="algebre">
 				HELLO WORLD
-			</button>
+			</sc-button>
 		</div>
 		<div>
 			<form-maker

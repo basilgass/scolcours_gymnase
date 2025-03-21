@@ -1,9 +1,12 @@
 <script lang="ts" setup>
 import {LanguageDataInterface} from "@/Pages/languages/LanguageShow.vue"
 import {computed, inject} from "vue"
-import type {BlockInterface, DeckInterface, UserDeckCardsInterface} from "@/types/modelInterfaces.ts"
-import CardsShow from "@/Components/Decks/CardsShow.vue"
+import type {BlockInterface, DeckInterface, UserCardInterface, UserDeckInterface} from "@/types/modelInterfaces.ts"
+import DeckCards from "@/Components/Decks/DeckCards.vue"
 import {useLanguage} from "@/Components/Languages/useLanguage.ts"
+import {makeUserCard, makeUserDeck} from "@/helpers/makeModel.ts"
+import DeckShow from "@/Pages/Decks/DeckShow.vue"
+import ScButton from "@/Components/Ui/scButton.vue"
 
 // languageData is the reactive data from the parent component.
 // it contains all the words, units, and the current state of the game.
@@ -13,52 +16,20 @@ const languageData = inject<LanguageDataInterface>("LanguageData")
 // and provide de methods to run the game.
 const {startGame} = useLanguage(languageData)
 
-// TODO: centralize makeBlock
-function makeBlockFromString(str: string): BlockInterface {
-	return {
-		id: 0,
-		title: null,
-		active: true,
-		order: null,
-		merge: null,
-		switch: null,
-		type: str,
-		body: str,
-		template: null,
-		illustrationsGrid: null,
-		illustrations: [],
-		script: null,
-		json: null
-	}
-}
-
-const cards = computed(()=>{
+const cards = computed<UserCardInterface[]>(()=>{
 	return languageData.words.value.map((word, index) => {
-		return {
-			id: index,
-			recto: makeBlockFromString(word.foreign),
-			verso: makeBlockFromString(word.fr),
-			result: null
-		}
+		return makeUserCard(word.foreign, word.fr)
 	})
 })
 
-const deck = computed<DeckInterface | null>(() => {
+const deck = computed<UserDeckInterface | null>(() => {
 	if (languageData.language.books.length === 0) {
 		return null
 	}
 
-	return {
-		id: 0,
-		title: languageData.language.name,
-		slug: null,
-		chapter: {id: 0, slug: null},
-		theme_id: 0,
-		cards: cards.value
-	}
+	return makeUserDeck(`deck de ${languageData.language.name}`, cards.value)
 })
 
-// BUG: Refactor this to use UserDeckCardsInterface - it shoud be buggy actually
 </script>
 <template>
 	<article>
@@ -66,29 +37,23 @@ const deck = computed<DeckInterface | null>(() => {
 			v-if="cards.length > 0"
 			class="min-h-[80vh] my-10"
 		>
-			<cards-show
-				:cards="deck.cards as unknown as UserDeckCardsInterface[]"
+			<deck-show
+				:deck
+				:cards
+				hide-title
 			/>
 		</div>
 
 		<div v-if="languageData.state.value==='intro'">
-			<div class="my-3">
-				<h2 class="text-lg font-extralight mb-2 uppercase">
-					configuration du deck
-				</h2>
-				<div class="flex gap-3">
-					direction
-				</div>
-			</div>
-
 			<div class="grid place-items-center mt-12">
-				<button
+				<sc-button
 					v-show="languageData.units.value.length > 0"
-					class="btn btn-primary px-20 py-10 text-2xl"
+					class="px-20 py-10 text-2xl"
+					type="primary"
 					@click="startGame"
 				>
 					Commencer
-				</button>
+				</sc-button>
 			</div>
 		</div>
 	</article>

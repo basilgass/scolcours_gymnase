@@ -18,7 +18,12 @@
 				"tool" => null,
 			];
 
-			return Inertia::render("Tools/ToolsPage", $data);
+			return Inertia::render("Tools/ToolsIndex", $data);
+		}
+
+		public function fetch()
+		{
+			return ToolResource::collection(Tool::all());
 		}
 
 		public function create()
@@ -37,7 +42,7 @@
 			$data['tools'] = Tool::all();
 			$data['tool'] = $tool;
 
-			return Inertia::render("Tools/ToolsPage", $data);
+			return Inertia::render("Tools/ToolsShow", $data);
 		}
 
 		public function edit(Tool $tool)

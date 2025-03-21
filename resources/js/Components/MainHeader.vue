@@ -102,16 +102,19 @@ const editMode = useStoreEditMode()
 		<!-- ligne administration -->
 		<div
 			v-admin
-			class="bg-slate-600 py-3"
+			class="admin-content py-3"
 		>
 			<div class="scolcours-container flex justify-between items-baseline">
 				<div>
-					<InertiaLink
+					<sc-button
 						:href="route('admin')"
-						class="text-xs text-white uppercase"
+						class="uppercase"
+						xs
+						type="admin"
+						outline
 					>
 						administrateur
-					</InertiaLink>
+					</sc-button>
 				</div>
 				<sc-button
 					type="admin"

@@ -2,23 +2,26 @@
 
 import {computed} from "vue"
 import {getThemeChapter, getThemeClasses} from "@/directives/themeDirectives.ts"
-
-export type buttonTypes = "add" | "edit" | "save" | "admin" | "default" | "confirm" | "delete"
+import {buttonConfig, type buttonTypes} from "@/buttonConfig.ts"
 
 const props = withDefaults(defineProps<{
 	active?: boolean
 	theme?: boolean | string | number
 	type?: buttonTypes
+	icon?: boolean | string
 	outline?: boolean
 	href?: string | false
 	xs?: boolean
 	xl?: boolean
+	p0?: boolean
 }>(), {
 	active: false,
 	theme: false,
 	type: "default",
+	icon: false,
 	outline: false,
 	href: false,
+	p0: false,
 	xs: false,
 	xl: false,
 })
@@ -27,68 +30,55 @@ defineEmits<{
 	click: () => void
 }>()
 
-//TODO: redesign the colors for the buttons
-// TODO: The filled button must also have the color.
-const btnTheme = computed(() => {
-	if (props.outline) {
-		return {
-			"default": "outline outline-gray-500 text-gray-300",
-			"add": "outline outline-green-500 text-green-500",
-			"save": "outline outline-blue-500 text-blue-500",
-			"edit": "outline outline-purple-500 text-purple-500",
-			"admin": "outline outline-sky-500 text-sky-500",
-			"active": "outline outline-sky-500 text-sky-500",
-			"delete": "outline outline-orange-500 text-orange-500",
-			"confirm": "outline outline-red-500 text-red-500",
-		}
-	}
-
-	return {
-		"default": "outline-2 bg-action",
-		"add": "bg-green-600 dark:bg-green-800 outline outline-green-600 dark:outline-green-800 text-white",
-		"edit": "bg-purple-600 dark:bg-purple-800 outline outline-purple-600 dark:outline-purple-800 text-white",
-		"save": "bg-blue-600 dark:bg-blue-800 outline outline-blue-600 dark:outline-blue-800 text-white",
-		"admin": "bg-sky-600 dark:bg-sky-800 outline outline-sky-600 dark:outline-sky-800 text-white",
-		"active": "bg-sky-400 dark:bg-sky-600 outline outline-sky-400 dark:outline-sky-600 text-white",
-		"delete": "bg-orange-400 dark:bg-orange-600 outline outline-orange-400 dark:outline-orange-600 text-white",
-		"confirm": "bg-red-400 dark:bg-red-600 outline outline-red-400 dark:outline-red-600 text-white",
-	}
-})
-
 const themeModifiers = computed(() => {
 	if (props.outline) {
-		return {border: true, text: true}
+		return {border: true, outline: true, text: true}
 	}
 	return {bg: true, text: true, outline: true}
 })
 
-const btnClass = computed(() => {
-	const classes: string[] = ['outline']
+const btnClass = computed<string>(() => {
+	const classes: string[] = []
 
 	if (props.active) {
-		classes.push(btnTheme.value.active)
-
+		classes.push(buttonConfig['active'][props.outline ? 'outline' : 'fill'])
 	} else if (props.theme) {
 		const chapter = getThemeChapter(props.theme)
 
 		classes.push(
-			props.outline ? 'border': '',
+			props.outline ? 'border' : '',
 			...getThemeClasses(
 				chapter,
 				themeModifiers.value
 			)
 		)
 
-	} else if (props.type) {
-		classes.push(btnTheme.value[props.type] ?? "")
-
+	} else {
+		classes.push(buttonConfig[props.type][props.outline ? 'outline' : 'fill'])
 	}
 
 	// Ajoute les valeurs par défaut
-	classes.push("inline-block text-center rounded-lg no-underline cursor-pointer disabled:cursor-not-allowed disabled:shadow-none transition-all duration-300")
-	classes.push(props.xs ? "px-2 py-1 text-xs" : props.xl ? "px-6 py-3 text-xl" : "px-5 py-2")
+	classes.push(
+		props.xs ? "text-xs" :
+			props.xl ? "text-xl" :
+				"")
+	classes.push(
+		props.xs ? "px-2 py-1" :
+			props.xl ? "px-6 py-3" :
+				props.p0 ? "p-0" :
+					"px-5 py-2")
 
 	return classes.filter(x => x !== '').join(' ')
+})
+
+const iconClass = computed<string>(()=>{
+	if(props.icon===false){return ''}
+
+	if(props.icon === true){
+		return buttonConfig[props.type].icon
+	}
+
+	return props.icon
 })
 </script>
 
@@ -96,17 +86,32 @@ const btnClass = computed(() => {
 	<InertiaLink
 		v-if="href"
 		:class="btnClass"
+		class="flex gap-2 btn"
 		:href="href"
+		as="button"
 	>
-		<slot />
+		<i
+			v-if="iconClass"
+			:class="iconClass"
+		/>
+		<slot>
+			{{ buttonConfig[type].label }}
+		</slot>
 	</InertiaLink>
 
 	<button
 		v-else
 		:class="btnClass"
+		class="flex gap-2 items-center justify-around btn"
 		@click="$emit('click')"
 	>
-		<slot />
+		<i
+			v-if="iconClass"
+			:class="iconClass"
+		/>
+		<slot>
+			{{ buttonConfig[type].label }}
+		</slot>
 	</button>
 </template>
 

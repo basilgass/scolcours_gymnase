@@ -19,6 +19,7 @@ import {
 	SPHERE3_RELATIVE_POSITION,
 	Vector
 } from "pimath"
+import ScButton from "@/Components/Ui/scButton.vue"
 
 const {restoreTool} = useToolsStorage()
 const forms: IToolForm[] = restoreTool([
@@ -439,11 +440,11 @@ function posRel_sphere_sphere(equ1: Equation, equ2: Equation): posRelativeInterf
 	<article>
 		<tool-form :forms="forms">
 			<div class="text-center mt-3">
-				<button
-					class="btn btn-primary"
+				<sc-button
+					type="primary"
 				>
 					Générer
-				</button>
+				</sc-button>
 			</div>
 		</tool-form>
 

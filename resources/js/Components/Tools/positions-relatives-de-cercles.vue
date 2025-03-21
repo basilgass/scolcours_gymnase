@@ -11,6 +11,7 @@ import ToolForm, { IToolForm } from "@/Components/Tools/Parts/ToolForm.vue"
 import { useToolsStorage } from "@/Composables/useToolsStorage.ts"
 import { Circle, Numeric, Point, Random } from "pimath"
 import { computed, onMounted, ref } from "vue"
+import ScButton from "@/Components/Ui/scButton.vue"
 
 
 const { restoreTool } = useToolsStorage()
@@ -203,12 +204,12 @@ onMounted(() => {
 			<div>
 				<tool-form :forms="forms">
 					<div class="text-center mt-3">
-						<button
-							class="btn btn-primary"
+						<sc-button
+							type="primary"
 							@click="generateCircles"
 						>
 							Générer
-						</button>
+						</sc-button>
 					</div>
 				</tool-form>
 

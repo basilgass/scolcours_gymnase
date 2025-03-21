@@ -9,7 +9,7 @@ function getCurrentTheme(): string {
 	return usePage().props?.theme?.slug || "scolcours"
 }
 
-const keys = ["btn", "bg", "text", "border", "outline", "gradient", "from", "to"]
+const keys = ["bg", "text", "border", "outline", "gradient", "from", "to"]
 
 function clearThemeClasses(el: HTMLElement): void {
 	const themes = getThemes()
@@ -21,7 +21,6 @@ function clearThemeClasses(el: HTMLElement): void {
 			el.classList.forEach((className) => {
 				if (regex.test(className)) {
 					el.classList.remove(className)
-					console.log(className)
 
 					// If removing a border-*-* item, also remove border.
 					if (key === 'border') {
@@ -77,17 +76,6 @@ export function getThemeClasses(chapter: string, modifiers: Record<string, boole
 
 	Object.keys(modifiers)
 		.forEach((key) => {
-			// TODO: Check if it's still used for buttons ? I think it should be removed.
-			// if (key === "hover" || key === "btn") {
-			// 	classesList.push(
-			// 		`hover:bg-${chapter}-50`,
-			// 		`hover:border-${chapter}-500`,
-			// 		`hover:text-${chapter}-500`,
-			// 		'transition-colors',
-			// 		'duration-300'
-			// 	)
-			// }
-
 			if (keys.indexOf(key) !== -1) {
 				if (key === "text" && Object.hasOwn(modifiers, "bg") && chapter !== 'admin') {
 					classesList.push("text-white")
@@ -105,15 +93,10 @@ export function getThemeClasses(chapter: string, modifiers: Record<string, boole
 
 					if (key === 'border') {
 						classesList.push(`border`)
-						// TODO: reformat themeDirectives and check the "light" color (used in dark mode !)
-						// classesList.push(`dark:${key}-${chapter}-light`)
 					}
 					if(key==='outline'){
 						classesList.push('outline-2')
 					}
-
-					// TODO: add the dark mode here ?
-					// el.classList.add(`dark:${key}-${chapter}-500`)
 				}
 			}
 		})

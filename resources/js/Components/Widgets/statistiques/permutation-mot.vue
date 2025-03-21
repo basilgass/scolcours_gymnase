@@ -11,6 +11,7 @@ import {flashInterface} from "@/types"
 import {WidgetPropsInterface} from "@/types/modelInterfaces.ts"
 import {computed, inject, onMounted, ref} from "vue"
 import axios from "axios"
+import ScButton from "@/Components/Ui/scButton.vue"
 
 const flash = inject<flashInterface>("flash")
 
@@ -338,13 +339,13 @@ onMounted(()=>{
 				class="flex justify-center gap-4"
 			>
 				<div>{{ char }} <span v-katex="'\\longrightarrow'" /> {{ value }} fois</div>
-				<button
-					:class="divisions[index] ? 'btn-primary' : 'btn-secondary'"
-					class="btn btn-xs"
+				<sc-button
+					:otuline="!divisions[index]"
+					xs
 					@click="applyDivision(index, value, char as string)"
 				>
 					diviser par <span v-katex="`${value}!`" />
-				</button>
+				</sc-button>
 			</div>
 		</div>
 
@@ -360,13 +361,13 @@ onMounted(()=>{
 
 		<!-- Nouveau mot -->
 		<div class="p-3">
-			<button
+			<sc-button
 				v-if="isFinished"
-				class="btn btn-primary"
+				type="primary"
 				@click="startOver()"
 			>
 				Nouveau mot
-			</button>
+			</sc-button>
 		</div>
 	</article>
 </template>

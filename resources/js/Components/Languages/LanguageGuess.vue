@@ -6,6 +6,7 @@ import type {TranslationWord} from "@/types/modelInterfaces"
 import {computed, inject, nextTick, ref} from "vue"
 import {useLanguage} from "@/Components/Languages/useLanguage.ts"
 import {shake} from "@/helpers/helperFunctions.ts"
+import ScButton from "@/Components/Ui/scButton.vue"
 
 // Game configuration
 const numberOfLetters = ref(2)
@@ -270,21 +271,23 @@ const selectedSuggestion = ref<number>(undefined)
 			</div>
 
 			<div class="mt-5 flex gap-3">
-				<button
+				<sc-button
 					v-show="unknownWordAnswer === ''"
-					class="btn btn-cancel btn-xs"
+					type="cancel"
+					xs
 					@click="unknownWord"
 				>
 					Je ne sais pas
-				</button>
+				</sc-button>
 				<div v-text="unknownWordAnswer" />
-				<button
+				<sc-button
 					v-show="unknownWordAnswer !== ''"
-					class="btn btn-primary btn-xs"
+					type="primary"
+					xs
 					@click="nextWord"
 				>
 					continuer
-				</button>
+				</sc-button>
 			</div>
 
 			<div
@@ -314,13 +317,14 @@ const selectedSuggestion = ref<number>(undefined)
 			</div>
 
 			<div class="grid place-items-center mt-12">
-				<button
+				<sc-button
 					v-show="languageData.units.value.length > 0"
-					class="btn btn-primary px-20 py-10 text-2xl"
+					type="primary"
+					class="px-20 py-10 text-2xl"
 					@click="startGame"
 				>
 					Commencer
-				</button>
+				</sc-button>
 			</div>
 		</div>
 	</article>

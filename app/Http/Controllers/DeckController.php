@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\CardResource;
-use App\Http\Resources\UserDeckCardResource;
+use App\Http\Resources\UserCardResource;
 use App\Http\Resources\UserDeckResource;
 use App\Models\Card;
 use App\Models\Deck;
@@ -60,7 +60,7 @@ class DeckController extends Controller
 	{
 		return Inertia::render("Decks/DeckShow", [
 			'deck' => UserDeckResource::make($deck),
-			'cards' => UserDeckCardResource::collection($deck->cards)
+			'cards' => UserCardResource::collection($deck->cards)
 		]);
 	}
 
