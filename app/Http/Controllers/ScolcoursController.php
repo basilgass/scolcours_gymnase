@@ -189,4 +189,9 @@ class ScolcoursController extends Controller
 
 		return $found;
 	}
+
+	public function qrcode()
+	{
+		return Inertia::render('QRCode', []);
+	}
 }

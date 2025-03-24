@@ -23,3 +23,5 @@ Route::get('/dico/check/{language}/{word}', [ScolcoursController::class, 'wordEx
 Route::get('/dico/{language}/{number?}/{size?}/{common?}/{withoutDuplicateLetters?}', [ScolcoursController::class, 'dico'])
 	->name('dico.fetch');
 
+Route::get('/qr/', [ScolcoursController::class, 'qrcode'])
+	->name('qrcode.show');
