@@ -1,8 +1,7 @@
 <script lang="ts" setup>
 import {LanguageDataInterface} from "@/Pages/languages/LanguageShow.vue"
 import {computed, inject} from "vue"
-import type {BlockInterface, DeckInterface, UserCardInterface, UserDeckInterface} from "@/types/modelInterfaces.ts"
-import DeckCards from "@/Components/Decks/DeckCards.vue"
+import type {UserCardInterface, UserDeckInterface} from "@/types/modelInterfaces.ts"
 import {useLanguage} from "@/Components/Languages/useLanguage.ts"
 import {makeUserCard, makeUserDeck} from "@/helpers/makeModel.ts"
 import DeckShow from "@/Pages/Decks/DeckShow.vue"
@@ -16,9 +15,9 @@ const languageData = inject<LanguageDataInterface>("LanguageData")
 // and provide de methods to run the game.
 const {startGame} = useLanguage(languageData)
 
-const cards = computed<UserCardInterface[]>(()=>{
-	return languageData.words.value.map((word, index) => {
-		return makeUserCard(word.foreign, word.fr)
+const cards = computed<UserCardInterface[]>(() => {
+	return languageData.words.value.map((word) => {
+		return makeUserCard(word.fr, word.foreign)
 	})
 })
 

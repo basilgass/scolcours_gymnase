@@ -153,7 +153,7 @@ const operationDescription = computed(() => {
 		value = `avec la <code>ligne ${operationData.reference + 1}</code>`
 	}
 
-	return `${verb} la <code>ligne ${operationData.target === null ? "..." : operationData.target + 1}</code> ${value}`
+	return `${verb} la <code>ligne ${operationData.target + 1}</code> ${value}`
 })
 
 function createPolynomMatrix() {
@@ -204,6 +204,7 @@ function swapLines<T>(arr: T[], index1: number, index2: number): void {
 function initMatrix() {
 	list_of_operations.value = []
 	matrix = createPolynomMatrix()
+	matrixTex.value = []
 
 	if (result.value) {
 		matrixTex.value.push({
@@ -214,22 +215,23 @@ function initMatrix() {
 }
 
 function getShortDescription(operation: matriceAugmenteeInterface): string {
+
 	if (operation.operation === 'x') {
-		return `L_${operation.target} \\longleftrightarrow L_${operation.reference}`
+		return `L_${operation.target + 1} \\longleftrightarrow L_${operation.reference + 1}`
 	}
 
 	const F = new Fraction(operation.value)
 
 	if (operation.operation === '*') {
-		return `${F.tex} \\cdot L_${operation.target}`
+		return `${F.tex} \\cdot L_${operation.target + 1}`
 	}
 
 	if (operation.operation === '/') {
-		return `\\frac{ L_${operation.target} }{ ${F.tex} }`
+		return `\\frac{ L_${operation.target + 1} }{ ${F.tex} }`
 	}
 
 	// (operation.operation === '+' || operation.operation === '-')
-	return `L_${operation.target} ${operation.operation} ${F.value < 0 ? `\\left(${F.tex}\\right)` : F.tex} \\cdot L_${operation.reference}`
+	return `L_${operation.target + 1} ${operation.operation} ${F.value < 0 ? `\\left(${F.tex}\\right)` : F.tex} \\cdot L_${operation.reference + 1}`
 
 }
 
@@ -477,7 +479,7 @@ onMounted(() => {
 							v-for="(item, index) in line"
 							:key="`a_${lineIndex}${index}`"
 							v-katex.inline="item.tex"
-							class="w-10 py-2 text-center cursor-pointer"
+							class="w-16 py-2 text-center cursor-pointer"
 							:class="index===matrix_dimension.m ? 'border-l border-red-500 px-2':''"
 							@mouseenter="hoverItem=index<matrix_dimension.m ? `a_{{${lineIndex+1}}{${index+1}}}`: ''"
 							@mouseleave="hoverItem=''"
