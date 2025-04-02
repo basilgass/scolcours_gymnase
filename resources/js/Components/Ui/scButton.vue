@@ -86,7 +86,7 @@ const iconClass = computed<string>(()=>{
 	<InertiaLink
 		v-if="href"
 		:class="btnClass"
-		class="flex gap-2 btn"
+		class="flex items-baseline gap-2 btn"
 		:href="href"
 		as="button"
 	>
@@ -102,7 +102,7 @@ const iconClass = computed<string>(()=>{
 	<button
 		v-else
 		:class="btnClass"
-		class="flex gap-2 items-center justify-around btn"
+		class="flex gap-2 items-center justify-center btn"
 		@click="$emit('click')"
 	>
 		<i

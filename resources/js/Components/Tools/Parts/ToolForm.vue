@@ -82,8 +82,9 @@ function onChange(item: IToolForm) {
 
 function resetFormTool(){
 	resetTool()
-
-	router.reload()
+	router.visit(
+		route('tools.show', {tool: toolSlug})
+	)
 }
 
 
@@ -96,28 +97,38 @@ function resetFormTool(){
 	>
 		<div class="flex justify-between">
 			<h3>Données</h3>
-			<div class="flex gap-3">
+			<div class="flex gap-3 text-gray-400">
 				<sc-button
 					v-if="generateButton"
 					xs
-					type="primary"
+					type="generate"
+					icon
 					@click="emits('generate')"
 				>
 					générer
 				</sc-button>
 
-				<button @click="resetFormTool">
+				<button
+					@click="resetFormTool"
+					class="cursor-pointer"
+					title="Réinitialiser les données"
+				>
 					@
 				</button>
-				<button>
+				<button class="cursor-pointer">
 					<i
-						:class="copied ? 'bi-check-lg text-green-600' : 'bi-share text-gray-400'"
-						class="bi text-lg"
+						:class="copied ? 'bi-check-lg text-green-600' : 'bi-share'"
+						class="bi text-lg "
 						@click="copy(link)"
+						title="Copier le lien"
 					/>
 				</button>
 
-				<button @click="showForm = !showForm">
+				<button
+					@click="showForm = !showForm"
+					class="cursor-pointer"
+					title="Afficher le formulaire"
+				>
 					<i
 						class="text-gray-400"
 						:class="{

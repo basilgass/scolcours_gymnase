@@ -11,6 +11,7 @@ export type buttonTypes =
     "default" |
     "delete" |
     "edit" |
+	"generate" |
     "primary" |
 	"save" |
 	"success"
@@ -64,6 +65,12 @@ export const buttonConfig: Record<buttonTypes, { label: string, icon: string, ou
         outline: "btn-outline-edit",
         fill: "btn-edit"
     },
+	"generate": {
+		label: "principal",
+		icon: "bi bi-shuffle",
+		outline: "btn-outline-primary",
+		fill: "btn-primary"
+	},
     "primary": {
         label: "principal",
         icon: "",

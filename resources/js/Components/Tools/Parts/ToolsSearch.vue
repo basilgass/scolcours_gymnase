@@ -1,8 +1,8 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 
 import {ToolInterface} from "@/types/modelInterfaces.ts"
 import FilteredList from "@/Components/Ui/FilteredList.vue"
-import {computed, onMounted, ref} from "vue"
+import {computed, onMounted, ref, useTemplateRef} from "vue"
 import axios from "axios"
 import {AxiosErrorMessage} from "@/types"
 import {router} from "@inertiajs/vue3"
@@ -43,13 +43,17 @@ async function getTools() {
 function goToTool(slug: string | false): string {
 	if (slug === false) return route('tools.index')
 
-	return route('tools.tool', {slug})
+	return route('tools.show', {slug})
 }
 
 onMounted(() => {
-
 	getTools()
+})
 
+// TODO: make the typing correctly for useTemplateRef <InstanceType<typeof FilteredList>>
+const filterListRef = useTemplateRef('filterListRef')
+defineExpose({
+	focus: ()=>filterListRef.value.focus()
 })
 
 </script>
@@ -58,26 +62,27 @@ onMounted(() => {
 	<div class="h-[95vh]">
 		<filtered-list
 			v-if="availableTools.length>0"
+			ref="filterListRef"
 			:list="listOfTools"
+			focus
 			list-class="columns-1 md:columns-3 lg:columns-4 xl:columns-5 space-y-5"
 			no-title
 			search="rechercher un outil"
 			@enter="router.visit(goToTool($event.length===1 ? $event[0].slug : false))"
-			focus
 		>
 			<template #card="{ item }: { item: ToolInterface }">
 				<InertiaLink
+					:href="goToTool(item.slug)"
 					as="div"
 					class="bg-white dark:bg-gray-900 rounded
 						border border-slate-300 dark:border-slate-700
 						min-h-[6em]
 						hover:scale-105 transition-all
 						break-inside-avoid-column cursor-pointer"
-					:href="goToTool(item.slug)"
 				>
 					<header
-						class="border-b border-slate-300 dark:border-slate-700 font-semibold px-3 py-2"
 						v-theme.bg.text="item.theme_id ?? 0"
+						class="border-b border-slate-300 dark:border-slate-700 font-semibold px-3 py-2"
 					>
 						{{ item.title }}
 					</header>

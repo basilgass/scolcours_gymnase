@@ -10,7 +10,7 @@ Route::get('tools/list', [ToolController::class, 'fetch'])
 	->name('tools.fetch');
 
 Route::get('tools/{tool:slug}', [ToolController::class, 'show'])
-	->name('tools.tool');
+	->name('tools.show');
 
 
 

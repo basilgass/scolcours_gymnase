@@ -2,32 +2,42 @@
 Génère un modal
 Utilisé principalement pour l'édition des blocks
 -->
-<script setup lang="ts">
+<script lang="ts" setup>
 
-const showModal = defineModel()
+import {useMagicKeys} from "@vueuse/core"
+
+const showModal = defineModel<boolean>()
 
 const emits = defineEmits<{
 	"cancel": []
 }>()
 
-function doCancel(){
+useMagicKeys({
+	passive: false,
+	onEventFired: (e) => {
+		if (e.key === 'Escape') {
+			doCancel()
+		}
+	}
+})
+
+function doCancel() {
 	showModal.value = false
 	emits("cancel")
 }
+
 </script>
 
 <template>
-	<Teleport
-		v-if="showModal"
-		to="body"
-	>
+	<Teleport to="body">
 		<div
+			v-show="showModal"
 			class="fixed inset-0 bg-slate-500/70 dark:bg-slate-950/70 grid place-items-center z-50"
 			@mousedown.self="doCancel"
 		>
 			<div
-				v-bind="$attrs"
 				class="grid bg-content border rounded-lg max-w-[1600px] w-[90%] max-h-[95vh] overflow-auto"
+				v-bind="$attrs"
 			>
 				<div class="flex flex-col">
 					<div v-if="$slots.header">

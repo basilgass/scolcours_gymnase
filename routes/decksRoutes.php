@@ -9,6 +9,9 @@ Route::get('decks', [DeckController::class, 'index'])
 Route::middleware(['auth:sanctum', 'verified'])->group(function () {
 	Route::get('decks/{deck}', [DeckController::class, 'show'])
 		->name('decks.show');
+
+	Route::post('decks/cards/{card}/update', [DeckController::class, 'updateCard'])
+		->name('decks.updateCard');
 });
 
 // TODO: This route is to display a formated deck.

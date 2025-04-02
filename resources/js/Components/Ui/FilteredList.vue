@@ -1,7 +1,7 @@
 <script generic="T extends {id:number}" lang="ts" setup>
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import {router, usePage} from "@inertiajs/vue3"
-import {computed, ref} from "vue"
+import {computed, ref, useTemplateRef} from "vue"
 import ScButton from "@/Components/Ui/scButton.vue"
 
 interface FilterItem {
@@ -127,8 +127,14 @@ defineSlots<{
 const emits = defineEmits<{
 	enter: [event: T[]],
 	unique: [item: T],
-	empty: [value: boolean]
+	empty: [value: boolean],
 }>()
+
+const filterInput = useTemplateRef<InstanceType<typeof FormMaker>>('filterInput')
+defineExpose({
+	focus: ()=>filterInput.value.focus()
+})
+
 </script>
 <template>
 	<div>
@@ -155,6 +161,7 @@ const emits = defineEmits<{
 		<div v-show="showList">
 			<form-maker
 				v-show="props.list.length >= noFilterIfLessThan"
+				ref="filterInput"
 				v-model="selectedList"
 				:focus="focus"
 				:label="search===null?`filtrer les ${title}`:search"
@@ -174,11 +181,11 @@ const emits = defineEmits<{
 				<sc-button
 					v-for="(theme, id) of scolcoursThemes"
 					:key="id"
-					:theme="theme.id"
 					:outline="selectedTheme!==theme.id"
-					@click="selectedTheme = selectedTheme !== theme.id ? theme.id : 0"
-					xs
+					:theme="theme.id"
 					class="flex-1"
+					xs
+					@click="selectedTheme = selectedTheme !== theme.id ? theme.id : 0"
 				>
 					{{ theme.title }}
 				</sc-button>

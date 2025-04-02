@@ -213,7 +213,6 @@ export interface ChallengeInterface {
 export interface CardInterface {
 	recto: BlockInterface,
 	verso: BlockInterface,
-	result?: boolean
 }
 //TODO: DeckInterface might be obsolete ?
 export interface DeckInterface {
@@ -256,7 +255,7 @@ export interface UserCardInterface {
 	id: number,
 	user_deck_id: number,
 	blocks: BlockInterface[],
-	current_status: number,
+	current_score: number,
 	current_appearances: number,
 	current_time_spent: number,
 	appearances: number,

@@ -6,12 +6,12 @@ import LayoutMain from "@/Layouts/LayoutMain.vue"
 import {getModule, MODULE_TYPES} from "@/scolcours"
 
 import {ToolInterface} from "@/types/modelInterfaces.ts"
-import {computed, provide, ref} from "vue"
+import {computed, nextTick, provide, ref, useTemplateRef, watch} from "vue"
 import DialogModal from "@/Components/Ui/DialogModal.vue"
 import ToolsSearch from "@/Components/Tools/Parts/ToolsSearch.vue"
+import {useMagicKeys} from "@vueuse/core"
 
 defineOptions({layout: LayoutMain})
-
 
 const props = defineProps<{
 	tool: ToolInterface
@@ -25,9 +25,31 @@ const toolComponent = computed(() => {
 
 const showDialog = ref(false)
 
+useMagicKeys({
+	passive: false,
+	onEventFired: (e) => {
+		if (e.ctrlKey && e.key === 'k' && e.type === 'keydown') {
+			e.preventDefault()
+			showDialog.value = true
+		}
+	}
+})
+
+const toolsSearchRef = useTemplateRef<InstanceType<typeof ToolsSearch>>('toolsSearchRef')
+watch(showDialog, (newVal) => {
+	if(newVal){
+		// Focus
+		nextTick(()=>{
+			toolsSearchRef.value.focus()
+		})
+
+	}
+})
+
+
 </script>
 <template>
-	<section class="scolcours-container">
+	<section>
 		<div v-if="toolComponent">
 			<!-- Title -->
 			<div class="flex justify-between items-baseline my-4">
@@ -61,6 +83,8 @@ const showDialog = ref(false)
 		v-model="showDialog"
 		class="px-5 pb-5"
 	>
-		<tools-search />
+		<keep-alive>
+			<tools-search ref="toolsSearchRef" />
+		</keep-alive>
 	</dialog-modal>
 </template>

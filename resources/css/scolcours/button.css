@@ -67,7 +67,7 @@
 	}
 
 	.btn-outline-primary {
-		@apply outline-green-500 text-green-500;
+		@apply outline-blue-500 text-blue-500;
 	}
 
 	.btn-outline-edit {

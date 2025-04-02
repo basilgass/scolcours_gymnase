@@ -24,10 +24,10 @@ class UserCardResource extends JsonResource
 		return [
 			"id"      => $this->id,
 			"user_id" => $this->user_id,
-			"blocks"    => $this->cardable->blocks,
+			"blocks"  => $this->cardable->blocks,
 
-			"current_status"      => $this->current_status,
-			"current_appereances" => $this->current_appearances,
+			"current_score"       => $this->current_score,
+			"current_appearances" => $this->current_appearances,
 			"current_time_spent"  => $this->current_time_spent,
 
 			"appearances" => $this->appearances,

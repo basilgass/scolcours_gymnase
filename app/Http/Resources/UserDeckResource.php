@@ -26,7 +26,7 @@ class UserDeckResource extends JsonResource
 			"user_id" => $this->user_id,
 			"title" => $this->title,
 			"description" => $this->description,
-			"running" => $this->cards->contains(fn($card) => $card->current_status === 0),
+			"running" => $this->cards->contains(fn($card) => $card->current_score < 1),
 			"created_at" => $this->created_at,
 			"updated_at" => $this->updated_at,
 

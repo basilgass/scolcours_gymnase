@@ -52,7 +52,7 @@ function saveTool() {
 				</button>
 				<InertiaLink
 					class="btn btn-cancel btn-xs"
-					:href="route('tools.tool', [tool.slug])"
+					:href="route('tools.show', [tool.slug])"
 				>
 					retour
 				</InertiaLink>

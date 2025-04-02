@@ -8,10 +8,10 @@ import DeckCards from "@/Components/Decks/DeckCards.vue"
 
 defineOptions({layout: LayoutProjection})
 
-withDefaults(defineProps<{
+const props = withDefaults(defineProps<{
 		deck: UserDeckInterface,
 		cards: UserCardInterface[],
-		hideTitle: boolean
+		hideTitle?: boolean
 	}>(),
 	{
 		hideTitle: true
@@ -39,9 +39,7 @@ withDefaults(defineProps<{
 
 		<!-- card mode -->
 		<deck-cards
-			class="h-[calc(100vh-10rem)]
-			max-w-[calc(100vw-2rem)]
-			lg:max-w-3xl
+			class="lg:max-w-3xl
 			xl:max-w-4xl
 			mx-auto"
 			:cards

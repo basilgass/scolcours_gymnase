@@ -7,6 +7,7 @@ use App\Http\Resources\UserCardResource;
 use App\Http\Resources\UserDeckResource;
 use App\Models\Card;
 use App\Models\Deck;
+use App\Models\UserCard;
 use App\Models\UserDeck;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -59,7 +60,7 @@ class DeckController extends Controller
 	public function show(UserDeck $deck)
 	{
 		return Inertia::render("Decks/DeckShow", [
-			'deck' => UserDeckResource::make($deck),
+			'deck'  => UserDeckResource::make($deck),
 			'cards' => UserCardResource::collection($deck->cards)
 		]);
 	}
@@ -147,5 +148,21 @@ class DeckController extends Controller
 			->orderByRaw('FIELD(id,' . $values . ')')
 			->get();
 		return CardResource::collection($cards);
+	}
+
+	public function updateCard(UserCard $card): UserCardResource
+	{
+		$validation = request()->validate([
+											  'current_score'       => ['numeric'],
+											  'current_appearances' => ['integer'],
+											  'current_time_spent'  => ['integer'],
+											  'appearances'         => ['integer'],
+											  'success'             => ['integer'],
+											  'time_spent'          => ['integer'],
+										  ]);
+
+		$card->update($validation);
+
+		return UserCardResource::make($card);
 	}
 }

@@ -68,7 +68,7 @@ function updateTool() {
 				<InertiaLink
 					as="div"
 					class="cursor-pointer"
-					:href="route('tools.tool', [tool.slug])"
+					:href="route('tools.show', [tool.slug])"
 				>
 					<h3 class="text-lg leading-6 font-medium">
 						{{ tool.title }}

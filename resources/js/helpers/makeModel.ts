@@ -1,5 +1,4 @@
 import {BlockInterface, CardInterface, UserCardInterface, UserDeckInterface} from "@/types/modelInterfaces.ts"
-import card from "@/Components/Ui/Card.vue"
 
 export function makeBlock(body: string, title?: string): BlockInterface {
 	return {
@@ -24,7 +23,6 @@ export function makeCard(usercard: UserCardInterface): CardInterface {
 		return {
 			recto: makeBlock('aucune carte créée'),
 			verso: makeBlock('aucune carte créée'),
-			result: false
 		}
 	}
 
@@ -33,7 +31,6 @@ export function makeCard(usercard: UserCardInterface): CardInterface {
 		return {
 			recto: usercard.blocks[0],
 			verso: usercard.blocks[1],
-			result: false
 		}
 	}
 
@@ -43,7 +40,6 @@ export function makeCard(usercard: UserCardInterface): CardInterface {
 		return {
 			recto: makeBlock(usercard.blocks[0].title),
 			verso: usercard.blocks[0],
-			result: false
 		}
 	}
 
@@ -55,7 +51,6 @@ export function makeCard(usercard: UserCardInterface): CardInterface {
 		return {
 			recto: makeBlock(parts[0] + '"\\]'), // on suppose d'office que le "=" est dans partie TeX.
 			verso: makeBlock(body), // le verso est la réponse, soit tout le block.
-			result: false
 		}
 	}
 
@@ -64,7 +59,6 @@ export function makeCard(usercard: UserCardInterface): CardInterface {
 	return {
 		recto: makeBlock('carte non gérée'),
 		verso: makeBlock('carte non gérée'),
-		result: false
 	}
 }
 
@@ -104,7 +98,7 @@ export function makeUserCard(
 			typeof recto === 'string' ? makeBlock(recto as string) : recto as BlockInterface,
 			typeof verso === 'string' ? makeBlock(verso as string) : verso as BlockInterface,
 		],
-		current_status: 0,
+		current_score: 0,
 		current_appearances: 0,
 		current_time_spent: 0,
 		appearances: 0,

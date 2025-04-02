@@ -1,12 +1,11 @@
 import {type IToolForm} from "@/Components/Tools/Parts/ToolForm.vue"
 import {inject} from "vue"
-import {ToolInterface} from "@/types/modelInterfaces.ts"
 
 export function useToolsStorage() {
 
 	const toolSlug = inject('toolSlug')
 
-// Save or restore the input from sessionstorage
+	// Save or restore the input from sessionstorage
 	const storeKey = `ScolCours-Tools-${toolSlug}`
 
 	function storeTool(forms: IToolForm[]) {
@@ -17,7 +16,6 @@ export function useToolsStorage() {
 	function restoreTool(forms: IToolForm[]): IToolForm[] {
 		const storedData = sessionStorage.getItem(storeKey)
 		if (storedData) {
-
 			const data: (string | number | boolean)[] = JSON.parse(storedData)
 
 			if (data.length === forms.length) {
