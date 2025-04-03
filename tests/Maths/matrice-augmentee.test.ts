@@ -194,9 +194,9 @@ describe('matrice augmentée - auto solve', () => {
 
 	test('auto solve completely random row', () => {
 		const M = matrixSolver.arrayToMatrix([
-			3,1,5,1,
-			7,13,11,8,
-			9,15,17,7,
+			3, 1, 5, 1,
+			7, 13, 11, 8,
+			9, 15, 17, 7,
 		], 4)
 
 		const MS = new matrixSolver(M, 3)
@@ -206,6 +206,27 @@ describe('matrice augmentée - auto solve', () => {
 		expect(MS.matrix[0][3].display).toBe('71/44')
 		expect(MS.matrix[1][3].display).toBe('21/44')
 		expect(MS.matrix[2][3].display).toBe('-19/22')
+
+	})
+
+	test('auto solve : 2.12', () => {
+		const M = matrixSolver.arrayToMatrix([
+			2, 0, 2, 1, 0,
+			0, 1, 4, 0, 0,
+			3, 1, 7, -4, 0,
+			4, -1, 0, -1, 0
+		], 5)
+
+		const MS = new matrixSolver(M, 4)
+
+		MS.solve()
+
+		expect(MS.matrix[0][0].display).toBe('1')
+		expect(MS.matrix[1][1].display).toBe('1')
+		expect(MS.matrix[2][3].display).toBe('1')
+		MS.matrix[3].forEach((aij) => {
+			expect(aij.display).toBe('0')
+		})
 
 	})
 })

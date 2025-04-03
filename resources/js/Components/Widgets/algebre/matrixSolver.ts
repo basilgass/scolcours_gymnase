@@ -26,7 +26,7 @@ export class matrixSolver {
 		this.#matrix = matrix
 		this.#operations = []
 		this.#pivot = {row: 0, col: 0}
-		this.#separatorIndex = matrix[0].length
+		this.#separatorIndex = separator ?? matrix[0].length
 	}
 
 	get original(): Fraction[][] {
@@ -106,11 +106,22 @@ export class matrixSolver {
 
 		const maxIndex = separatorIndex ?? row.length
 
-		// Une des valeurs a une fraction
+		/** On ne peut pas avoir une pgcd dans les situations suivantes:
+		 * - une des valeurs est une fraction
+		 * - une des valeurs est 1 ou -1.
+		 *
+		 * On regarde toutes les valeurs qui sont avant le séparateur maxIndex
+		 * */
+
 		if (
 			row
-				.filter((_, i) => i < maxIndex)
-				.some(value => !value.isRelative())
+				.filter((value, i) => {
+					return i < maxIndex && !value.isZero()
+				})
+				.some(value => {
+					return !value.isRelative()
+						|| value.clone().abs().isOne()
+				})
 		) {
 			return 0
 		}
@@ -154,8 +165,7 @@ export class matrixSolver {
 		this.restore()
 
 		// La première colonne commence par 1 et n'a plus que des zéros.
-		while (this.#pivot.col < this.#separatorIndex) {
-
+		while (this.#pivot.col < this.#separatorIndex && this.#pivot.row < this.#matrix.length) {
 			// Les operations pour la colonne en cours.
 			let stepOperations: Partial<matriceAugmenteeInterface>[] = []
 
@@ -266,7 +276,7 @@ export class matrixSolver {
 			const gcd = matrixSolver.gcd(this.#matrix, i, this.#separatorIndex)
 			const value = this.#matrix[i][pivot.col].value
 
-			if (gcd !== Math.abs(value)) {
+			if (gcd === 0 || gcd !== Math.abs(value)) {
 				continue
 			}
 
@@ -310,9 +320,17 @@ export class matrixSolver {
 		for (let lineIndex = pivot.row; lineIndex < this.#matrix.length; lineIndex++) {
 			const x = this.#matrix[lineIndex][pivot.col].clone()
 
+			if (x.isZero()) {
+				continue
+			}
+
 			for (let line2Index = pivot.row; line2Index < this.#matrix.length; line2Index++) {
 				if (lineIndex !== line2Index) {
 					const y = this.#matrix[line2Index][pivot.col]
+
+					if (y.isZero()) {
+						continue
+					}
 
 					// (-x+1)/y=n
 					const F = x.clone().opposite().add(1).divide(y)
@@ -335,10 +353,15 @@ export class matrixSolver {
 		for (let lineIndex = pivot.row; lineIndex < this.#matrix.length; lineIndex++) {
 			const x = this.#matrix[lineIndex][pivot.col].clone()
 
+			if (x.isZero()) {
+				continue
+			}
 			for (let line2Index = pivot.row; line2Index < this.#matrix.length; line2Index++) {
 				if (lineIndex !== line2Index) {
 					const y = this.#matrix[line2Index][pivot.col]
-
+					if (y.isZero()) {
+						continue
+					}
 					// (-x-1)/y=n
 					const F = x.clone().opposite().subtract(1).divide(y)
 					if (F.isRelative()) {
