@@ -1,1 +1,0 @@
-import{d as n,e as o,O as a,P as i}from"./@vue-sdZLaU5y.js";const c=["src"],m=n({__name:"image-widget",props:{illustration:{}},setup(t){const s=t,r=o(()=>{const e=s.illustration.code;return e.startsWith("data:image/")?e:e.startsWith("@")?e.substring(1):"\\storage\\"+e});return(e,l)=>(i(),a("img",{src:r.value,alt:"image non disponible"},null,8,c))}});export{m as default};
