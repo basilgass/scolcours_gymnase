@@ -339,7 +339,11 @@ export const keyboards: Record<string, KeyboardObjectType> = {
 	fraction: {
 		name: "fraction",
 		grid: "grid-cols-3",
-		layout: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "-", "0", "/"],
+		layout: [
+			"1", "2", "3",
+			"4", "5", "6",
+			"7", "8", "9",
+			"-", "0", "/"],
 		tex(value) {
 			return asciiToTex(value)
 		}

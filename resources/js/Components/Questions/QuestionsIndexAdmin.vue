@@ -2,11 +2,11 @@
 
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import QuestionShow from "@/Components/Questions/QuestionShow.vue"
-import { useStoreEditMode } from "@/stores/useStoreEditMode.ts"
-import { flashInterface } from "@/types"
-import type { PostShowInterface, QuestionInterface } from "@/types/modelInterfaces.ts"
+import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
+import {flashInterface} from "@/types"
+import type {PostShowInterface, QuestionInterface} from "@/types/modelInterfaces.ts"
 import axios from "axios"
-import { inject, PropType, ref } from "vue"
+import {inject, PropType, ref} from "vue"
 import ScButton from "@/Components/Ui/scButton.vue"
 
 const props = defineProps({
@@ -125,12 +125,13 @@ const addQuestion = function () {
 		v-admin="editMode.enable"
 		class="admin-content py-2 px-3 flex gap-6"
 	>
-		<button
-			class="text-xl"
+		<sc-button
+			type="add"
+			xs
 			@click="addQuestion"
 		>
-			<i class="bi bi-plus-circle" />
-		</button>
+			<i class="bi bi-plus-lg" />
+		</sc-button>
 		<div class="flex-1 flex gap-2">
 			<form-maker
 				v-model="thePost.questionsGrid"

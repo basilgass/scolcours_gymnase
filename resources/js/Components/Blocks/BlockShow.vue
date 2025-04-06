@@ -3,15 +3,15 @@ import BlockBodyButtons from "@/Components/Blocks/BlockBodyButtons.vue"
 import BlockShowAdmin from "@/Components/Blocks/BlockShowAdmin.vue"
 import IllustrationShow from "@/Components/Illustrations/IllustrationShow.vue"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
-import { useFormattedBody } from "@/Composables/useHelpers.ts"
-import { useScriptLoader } from "@/Composables/useScriptLoader.ts"
-import { blockTypeDefault, blockTypes } from "@/scolcours.ts"
-import { useStoreEditMode } from "@/stores/useStoreEditMode.ts"
-import { flashInterface } from "@/types"
-import type { BlockInterface } from "@/types/modelInterfaces.ts"
-import { router } from "@inertiajs/vue3"
+import {useFormattedBody} from "@/Composables/useHelpers.ts"
+import {useScriptLoader} from "@/Composables/useScriptLoader.ts"
+import {blockTypeDefault, blockTypes} from "@/scolcours.ts"
+import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
+import {flashInterface} from "@/types"
+import type {BlockInterface} from "@/types/modelInterfaces.ts"
+import {router} from "@inertiajs/vue3"
 import axios from "axios"
-import { computed, inject, provide } from "vue"
+import {computed, inject, provide} from "vue"
 import {blockTemplate} from "@/helpers/blockTemplate.ts"
 import ScButton from "@/Components/Ui/scButton.vue"
 
@@ -46,12 +46,6 @@ const blockTitle = computed(() => {
 		: props.block.title
 })
 
-const blockTitleClass = computed(() => {
-	return "flex justify-between w-full px-5 py-3 mb-3 text-2xl"
-		+ (props.block.merge ? " pt-10" : "")
-		+ " " + blockConfig.value.style.header
-})
-
 
 const elementsClasses = computed(() => {
 	return blockTemplate(props.block.template)
@@ -59,14 +53,14 @@ const elementsClasses = computed(() => {
 
 
 const postScript = inject("postScript", useScriptLoader(""))
-const blockScript = useScriptLoader(props.block.script, { parent: postScript.data })
+const blockScript = useScriptLoader(props.block.script, {parent: postScript.data})
 blockScript.run()
 provide("blockScript", blockScript)
 
 const blockBody = computed(() => useFormattedBody(props.block.body, blockScript.merged))
 
 
-function addIllustration(){
+function addIllustration() {
 	axios
 		.post(
 			route("illustrations.store", [props.block.id]),
@@ -107,12 +101,17 @@ function addIllustration(){
 		<slot name="header">
 			<div
 				v-show="blockTitle || blockScript.hasData.value"
-				:class="blockTitleClass"
+				class="flex justify-between
+					w-full
+					px-2 md:px-5 py-2 md:py-3
+					mb-3"
+				:class="(props.block.merge ? ' pt-10' : '') + ' ' +
+					blockConfig.style.header"
 			>
 				<!-- header left: (generic) icon and title -->
 				<div
 					v-theme.text="!block.type"
-					class="flex gap-3 items-baseline"
+					class="flex gap-3 items-baseline text-sm md:text-lg lg:text-2xl"
 				>
 					<i
 						v-if="blockIcon"

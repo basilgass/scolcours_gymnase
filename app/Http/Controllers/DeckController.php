@@ -6,6 +6,7 @@ use App\Http\Resources\CardResource;
 use App\Http\Resources\UserCardResource;
 use App\Http\Resources\UserDeckResource;
 use App\Models\Card;
+use App\Models\Chapter;
 use App\Models\Deck;
 use App\Models\UserCard;
 use App\Models\UserDeck;
@@ -164,5 +165,19 @@ class DeckController extends Controller
 		$card->update($validation);
 
 		return UserCardResource::make($card);
+	}
+
+	public function fetchAvailableDecks()
+	{
+		$decks = Deck::withCount('cards')
+			->get();
+		
+		$chapters = Chapter::withCount('formulas')
+			->has('formulas')->get();
+
+		return [
+			"decks"    => $decks,
+			"chapters" => $chapters,
+		];
 	}
 }

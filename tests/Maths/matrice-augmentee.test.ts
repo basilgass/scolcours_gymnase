@@ -229,4 +229,24 @@ describe('matrice augmentée - auto solve', () => {
 		})
 
 	})
+
+	test('auto solve : 2.15', () => {
+		const M = matrixSolver.arrayToMatrix([
+			1, 1, 1, 5, 2,
+			1, 1, 2, -1, 3,
+			1, 2, 3, 3, -1,
+		], 5)
+
+		const MS = new matrixSolver(M, 3)
+
+		MS.solve()
+
+		expect(MS.matrix[0][3].display).toBe('1')
+		expect(MS.matrix[1][3].display).toBe('10')
+		expect(MS.matrix[2][3].display).toBe('-6')
+
+		expect(MS.matrix[0][4].display).toBe('6')
+		expect(MS.matrix[1][4].display).toBe('-5')
+		expect(MS.matrix[2][4].display).toBe('1')
+	})
 })

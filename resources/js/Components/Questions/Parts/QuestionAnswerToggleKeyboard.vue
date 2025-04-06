@@ -2,6 +2,7 @@
 
 import {inject} from "vue"
 import {questionDataInterface, questionUserInputDisplayType} from "@/Components/Questions/QuestionInterface.ts"
+import ScButton from "@/Components/Ui/scButton.vue"
 
 const questionData = inject<questionDataInterface>('questionData')
 
@@ -14,14 +15,14 @@ function toggleKeyboard(value: questionUserInputDisplayType) {
 	<div
 		class="text-right text-sm py-3 px-3"
 	>
-		<button
+		<sc-button
 			v-if="questionData.config.showInput.value==='hide'"
-			v-theme.bg.text
 			class="flex gap-2 justify-center items-center mx-auto px-2 py-2 rounded-xl shadow hover:shadow-none w-full"
 			@click="toggleKeyboard('show')"
+			theme
 		>
 			<i class="text-xl bi bi-calculator" /><span class="hidden md:inline-block"> donner la réponse</span>
-		</button>
+		</sc-button>
 		<button
 			v-else
 			class="px-5 group text-red-600"

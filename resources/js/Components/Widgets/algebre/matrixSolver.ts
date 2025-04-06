@@ -157,6 +157,10 @@ export class matrixSolver {
 		this.#matrix = this.#original.map(row => row.map(v => v.clone()))
 	}
 
+	column(colIndex: number): Fraction[] {
+		return this.#matrix.map(x=>x[colIndex])
+	}
+
 	solve(): Partial<matriceAugmenteeInterface>[] {
 		this.#operations = []
 		this.#pivot = {row: 0, col: 0}
@@ -238,6 +242,7 @@ export class matrixSolver {
 		return op
 	}
 
+
 	checkColumn(pivot: pivotInterface): boolean {
 		// il doit y avoir au moins une valeur au pivot ou en-dessus
 		return this.#matrix
@@ -247,8 +252,8 @@ export class matrixSolver {
 	}
 
 	moveOneToPivot(pivot: pivotInterface): Partial<matriceAugmenteeInterface>[] {
-		const lineWithOne = this.#matrix.findIndex(line => {
-			return line[pivot.col].isOne()
+		const lineWithOne = this.#matrix.findIndex((line, i) => {
+			return i>pivot.row && line[pivot.col].isOne()
 		})
 
 		// Il n'y a pas de un

@@ -5,14 +5,14 @@ Affichage d'un texte en markdown.
 	setup
 	lang="ts"
 >
-import { useKatexMacros, useMenuScrollTo } from "@/Composables/useHelpers"
-import { router, usePage } from "@inertiajs/vue3"
+import {useKatexMacros, useMenuScrollTo} from "@/Composables/useHelpers"
+import {router, usePage} from "@inertiajs/vue3"
 import katex from "katex"
 import markdownIt from "markdown-it"
 import attr from "markdown-it-attrs"
 import bracketed from "markdown-it-bracketed-spans"
 import tm from "markdown-it-texmath"
-import { computed, ref } from "vue"
+import {computed, ref} from "vue"
 
 const root = ref(null)
 
@@ -66,6 +66,9 @@ const mdit = computed(() => {
 			return `(${match})`
 		}
 	})
+
+	// Remplace les caractères invisibles (pour les "placeholders" de macros)
+	output = output.replaceAll('‎', '')
 
 	return md.render(output)
 })

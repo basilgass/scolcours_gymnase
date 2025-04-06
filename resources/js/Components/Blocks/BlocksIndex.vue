@@ -5,6 +5,7 @@ import type {flashInterface} from "@/types"
 import type {BlockInterface} from "@/types/modelInterfaces.ts"
 import axios from "axios"
 import {defineModel, inject} from "vue"
+import {router} from "@inertiajs/vue3"
 
 const props = defineProps<{
 	postId: number,
@@ -24,11 +25,9 @@ function addBlock(after?: number) {
 		}
 	).then((res) => {
 		flash.success("Block ajouté avec succès.")
-		if (after === undefined) {
-			blocks.value.push(res.data)
-		} else {
-			blocks.value.splice(after + 1, 0, res.data)
-		}
+
+		// On va éditer le post directemnt
+		router.visit(route('blocks.edit', {block: res.data.id}))
 	}).catch((res) => {
 		flash.error("Erreur lors de l'ajout du block.")
 		console.warn("add block: ", res.data)
@@ -103,8 +102,8 @@ function updateBlockOrder() {
 					<block-show
 						class="overflow-hidden max-w-full border-x"
 						:class="{
-							'mt-10 rounded-t-lg border-t': !element.merge,
-							'rounded-b-lg border-b': !blocks[index+1]?.merge
+							'mt-10 rounded-tl-sm rounded-tr-lg border-t': !element.merge,
+							'rounded-bl-sm rounded-br-lg border-b': !blocks[index+1]?.merge
 						}"
 						:block="element"
 					/>

@@ -110,19 +110,15 @@ const showInstruction = ref(false)
 			/>
 
 			<div>
-				<div
-					class="flex gap-3 justify-end cursor-pointer"
+				<sc-button
+					:icon="showInstruction ? 'bi bi-x-lg' : 'bi-eye'"
+					:active="showInstruction"
+					xs
 					@click="showInstruction=!showInstruction"
 				>
-					<sc-button
-						:icon="showInstruction ? 'bi bi-x-lg' : 'bi-eye'"
-						:active="showInstruction"
-						xs
-					>
-						instructions
-					</sc-button>
-				</div>
-
+					instructions
+				</sc-button>
+				
 				<markdown-it
 					v-show="showInstruction"
 					:text="instructions"

@@ -6,6 +6,9 @@ use App\Http\Controllers\DeckController;
 Route::get('decks', [DeckController::class, 'index'])
 	->name('decks.index');
 
+Route::get('decks/fetch', [DeckController::class, 'fetchAvailableDecks'])
+	->name('decks.fetch');
+
 Route::middleware(['auth:sanctum', 'verified'])->group(function () {
 	Route::get('decks/{deck}', [DeckController::class, 'show'])
 		->name('decks.show');
@@ -14,11 +17,10 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
 		->name('decks.updateCard');
 });
 
+
 // TODO: This route is to display a formated deck.
 //Route::get('decks/{deck:slug}', [DeckController::class, 'show'])
 //	->name('decks.show');
-
-
 Route::middleware("can:admin")->group(function () {
 	Route::get('decks/{deck:slug}/edit', [DeckController::class, "edit"])
 		->name('decks.edit');
@@ -31,7 +33,6 @@ Route::middleware("can:admin")->group(function () {
 
 	Route::delete('cards/{card}/destroy', [DeckController::class, 'destroyCard'])
 		->name('cards.destroy');
-
 
 
 	Route::apiResource('decks', DeckController::class)

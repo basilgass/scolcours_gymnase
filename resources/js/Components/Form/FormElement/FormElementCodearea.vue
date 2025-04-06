@@ -1,36 +1,37 @@
 <script lang="ts" setup>
-import { javascriptTriggers, latexTriggers, mdTriggers, TriggerFunction } from "@/helpers/mdAutofill"
+import {javascriptTriggers, latexTriggers, mdTriggers, TriggerFunction} from "@/helpers/mdAutofill"
 import Prism from "prismjs"
 import "prismjs/components/prism-javascript"
 import "prismjs/components/prism-json"
 import "prismjs/components/prism-latex"
-import { computed, nextTick, onMounted, ref } from "vue"
+import {computed, nextTick, onMounted, ref} from "vue"
 import "prismjs/themes/prism.css"
 
+// TODO: Refactor : déplacer les fonctions d'éditions dans un .ts dédié: useAutofill(target)
 /**
  * The value of the code area
  */
 const theValue = defineModel<string>()
 
-defineOptions({ inheritAttrs: false })
+defineOptions({inheritAttrs: false})
 
 // Define the type of code (JS, LaTeX, JSON)
 Prism.manual = true
 
 // Expose the focus function
-defineExpose({ focus: focusFn })
+defineExpose({focus: focusFn})
 
 // Define the emits
 // const emits = defineEmits(["update"])
 
 // Define the props
 const props = defineProps({
-	rows: { type: [Number, String], default: 4 },
-	focus: { type: Boolean, default: false },
-	language: { type: String, default: "javascript" },
-	wrap: { type: Boolean, default: true },
-	resizeable: { type: Boolean, default: false },
-	autoSize: { type: Boolean, default: false }
+	rows: {type: [Number, String], default: 4},
+	focus: {type: Boolean, default: false},
+	language: {type: String, default: "javascript"},
+	wrap: {type: Boolean, default: true},
+	resizeable: {type: Boolean, default: false},
+	autoSize: {type: Boolean, default: false}
 })
 
 // Input component
@@ -75,7 +76,7 @@ const highlighted = computed(() => {
 				Prism.languages.javascript,
 				"javascript"
 			)
-		} catch (e) {
+		} catch {
 			return theValue.value
 		}
 	}
@@ -147,6 +148,20 @@ function tabber(event: KeyboardEvent) {
 	// Target is the textarea
 	const target = event.target as HTMLTextAreaElement
 
+	// Go to the next ‎
+	if (theValue.value.includes('‎')) {
+		const firstLRM = theValue.value.indexOf("‎")
+
+		// Replace the first LRM by a space and select it.
+		theValue.value = theValue.value.replace('‎', ' ')
+
+		nextTick(() => {
+			target.selectionStart = firstLRM
+			target.selectionEnd = firstLRM + 1
+		})
+		return
+	}
+
 	/* enable tab character */
 	const text = theValue.value,
 		originalSelectionStart = target.selectionStart,
@@ -156,7 +171,7 @@ function tabber(event: KeyboardEvent) {
 	// Add the tab character
 	theValue.value = `${textStart}\t${textEnd}`
 
-	// Update the caret positoin on next update
+	// Update the caret position on next update
 	nextTick(() => {
 		target.selectionEnd = target.selectionStart =
 			originalSelectionStart + 1
@@ -204,6 +219,14 @@ function autofillTriggers(textStart: string) {
 const selectedText = ref("")
 
 function grabSelectedText(event: KeyboardEvent) {
+	if((event.code === 'ArrowUp' || event.code === 'ArrowDown') && event.ctrlKey) {
+		// increase the (, [, {, |,\vert
+		event.preventDefault()
+		autofill_increase(event)
+		return
+	}
+
+
 	const target = event.target as HTMLTextAreaElement
 	const start = target.selectionStart,
 		end = target.selectionEnd
@@ -221,6 +244,11 @@ function autofill(event: KeyboardEvent) {
 		return
 	}
 
+	if (event.code === 'Space' && event.ctrlKey) {
+		// add ampersand instead of space.
+		autofill_replace(event, ' & ')
+	}
+
 	// Test the three letters triggers.
 	const applied = autofill_do(event, 3)
 
@@ -228,6 +256,67 @@ function autofill(event: KeyboardEvent) {
 	if (!applied) autofill_do(event, 2)
 }
 
+function autofill_replace(event: KeyboardEvent, key_output:string) {
+	// Get the target
+	const target = event.target as HTMLTextAreaElement
+
+	// Get the text before and after the caret
+	const originalSelectionStart = target.selectionStart
+	const textStart = theValue.value.slice(0, originalSelectionStart)
+	const textEnd = theValue.value.slice(originalSelectionStart)
+
+	theValue.value = `${textStart}${key_output}${textEnd}`
+
+	nextTick(() => {
+		target.selectionEnd = target.selectionStart =
+			originalSelectionStart + key_output.length + selectedText.value.length
+	})
+}
+
+function autofill_increase(event: KeyboardEvent) {
+	// Get the target
+	const target = event.target as HTMLTextAreaElement
+
+	// Get the text before and after the caret
+	const originalSelectionStart = target.selectionStart
+	let textStart = theValue.value.slice(0, originalSelectionStart)
+	const textEnd = theValue.value.slice(originalSelectionStart)
+
+	// textEnd must start with one of the available item.
+	const specialChars = ["(", ")", "[", "]", "{", "}", "\\lbrace", "\\rbrace", "\\vert", "\\Vert"]
+	if(specialChars.some(char=>textEnd.startsWith(char))) {
+
+		// Get the end of the textStart
+		if(event.code==='ArrowUp') {
+			if (textStart.endsWith('\\Big')) {
+				return
+			} else if (textStart.endsWith('\\big')) {
+				textStart = textStart.slice(0, -4) + "\\Big"
+			} else {
+				textStart += '\\big'
+			}
+		}else if(event.code==='ArrowDown') {
+			if (textStart.endsWith('\\Big')) {
+				textStart = textStart.slice(0, -4) + "\\big"
+			} else if (textStart.endsWith('\\big')) {
+				textStart = textStart.slice(0, -4)
+			} else {
+				return
+			}
+		}
+
+		// Add the wrapper
+		theValue.value = `${textStart}${textEnd}`
+
+		// Update the caret position on nextTick
+		nextTick(() => {
+			target.selectionEnd = target.selectionStart = textStart.length
+		})
+	}
+
+}
+
+// TODO: update the autofill_wrap system...
 function autofill_wrap(event: KeyboardEvent) {
 	if (selectedText.value === "") return
 
@@ -240,7 +329,10 @@ function autofill_wrap(event: KeyboardEvent) {
 		textEnd = theValue.value.slice(originalSelectionStart)
 
 	// Get the ending wrapper
-	const wrapperEnd = event.key === "(" ? ")" : event.key === "[" ? "]" : "}"
+	const wrapperEnd = event.key === "(" ? ")" :
+		event.key === "[" ? "]" :
+			event.key === "{" ? "}" :
+				""
 
 	// Add the wrapper
 	theValue.value = `${textStart}${selectedText.value}${wrapperEnd}${textEnd}`
@@ -257,29 +349,17 @@ function autofill_do(event: KeyboardEvent, length: number) {
 	const target = event.target as HTMLTextAreaElement
 
 	// Get the text before and after the caret
-	const originalSelectionStart = target.selectionStart,
-		textStart = theValue.value.slice(0, originalSelectionStart),
-		textEnd = theValue.value.slice(originalSelectionStart),
-		trigger = textStart.slice(-length)
+	const originalSelectionStart = target.selectionStart
+	const textStart = theValue.value.slice(0, originalSelectionStart)
+	const textEnd = theValue.value.slice(originalSelectionStart)
+	const trigger = textStart.slice(-length)
 
 	const autofillTrigger = autofillTriggers(textStart)
-
-	// // In LaTeX mode, we must be in math mode
-	// if (props.language === "latex") {
-	// 	// must be in math mode
-	// 	if (
-	// 		textStart.split("\\(").length -
-	// 		textStart.split("\\)").length !== 1 &&
-	// 		textStart.split("\\[").length -
-	// 		textStart.split("\\]").length !== 1
-	// 	) {
-	// 		return false
-	// 	}
-	// }
 
 	// Test the trigger
 	if (Object.hasOwn(autofillTrigger, trigger)) {
 		let pos = 0
+
 		if (typeof autofillTrigger[trigger] === "function") {
 			const [txt1, txt2] = (autofillTrigger[trigger] as TriggerFunction)(
 				textStart,
@@ -289,11 +369,15 @@ function autofill_do(event: KeyboardEvent, length: number) {
 			pos = txt1.length
 		} else {
 			// It's a code action.
+			// Update all @ characters by an blank unicode character.
+			const txt1 = autofillTrigger[trigger][0].replaceAll('@', '‎')
+			const txt2 = autofillTrigger[trigger][1].replaceAll('@', '‎')
+
 			theValue.value = `${textStart.slice(
 				0,
 				textStart.length - trigger.length
-			)}${autofillTrigger[trigger][0]}${autofillTrigger[trigger][1]
-				}${textEnd}`
+			)}${txt1}${txt2}${textEnd}`
+
 			pos = target.selectionStart =
 				originalSelectionStart +
 				autofillTrigger[trigger][0].length -
@@ -302,7 +386,11 @@ function autofill_do(event: KeyboardEvent, length: number) {
 
 		// Update the caret position on nextTick
 		nextTick(() => {
-			target.selectionEnd = pos
+			if (theValue.value.includes('‎')) {
+				tabber(event)
+			} else {
+				target.selectionEnd = pos
+			}
 		})
 
 		// Trigger applied
@@ -325,7 +413,7 @@ function update() {
  * Update the height of the textarea to fit the content
  */
 const areaHeight = computed(() => {
-	const r = +props.rows > 0 ? +props.rows: (theValue.value ?? "").split("\n").length + 2
+	const r = +props.rows > 0 ? +props.rows : (theValue.value ?? "").split("\n").length + 2
 	return `${0.5 + Math.max(+currentRows.value, r) * 1.4 + 0.5}rem`
 })
 

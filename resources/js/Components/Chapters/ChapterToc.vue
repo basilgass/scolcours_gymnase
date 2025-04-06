@@ -3,12 +3,12 @@
 	setup
 >
 import FormMaker from "@/Components/Form/FormMaker.vue"
-import { useStoreEditMode } from "@/stores/useStoreEditMode.ts"
-import { flashInterface } from "@/types"
-import { ChapterShowInterface, PostInterface } from "@/types/modelInterfaces.ts"
-import { router } from "@inertiajs/vue3"
+import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
+import {flashInterface} from "@/types"
+import {ChapterShowInterface, PostInterface} from "@/types/modelInterfaces.ts"
+import {router} from "@inertiajs/vue3"
 import axios from "axios"
-import { computed, inject, ref } from "vue"
+import {computed, inject, ref} from "vue"
 import ScButton from "@/Components/Ui/scButton.vue"
 
 const props = defineProps<{
@@ -93,7 +93,7 @@ const addPost = function() {
 			title: "nouvel article"
 		})
 		.then((res) => {
-			router.visit(res.data.redirect)
+			router.visit(route("posts.edit", {post: res.data.post.id}))
 		})
 		.catch((err) => console.warn(err))
 }

@@ -10,11 +10,11 @@ import FormMaker from "@/Components/Form/FormMaker.vue"
 import MoveItemTo from "@/Components/MoveItemTo.vue"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
-import type { flashInterface } from "@/types"
-import type { PostShowInterface } from "@/types/modelInterfaces"
-import { router } from "@inertiajs/vue3"
+import type {flashInterface} from "@/types"
+import type {PostShowInterface} from "@/types/modelInterfaces"
+import {router} from "@inertiajs/vue3"
 import axios from "axios"
-import { inject, PropType, ref } from "vue"
+import {inject, PropType, ref} from "vue"
 import ScButton from "@/Components/Ui/scButton.vue"
 
 defineOptions({ layout: LayoutMain })
@@ -115,15 +115,16 @@ const deletePost = function () {
 			/>
 
 			<div class="flex gap-3 my-3">
-				<button
+				<sc-button
 					v-for="(key, name) of typeList"
 					:key="'btn-' + name"
-					:class="thePost.type === key ? 'btn-primary' : ''"
-					class="btn btn-xs"
+					theme
+					xs
+					:outline="thePost.type!==key"
 					@click="thePost.type = key"
 				>
 					{{ name }}
-				</button>
+				</sc-button>
 			</div>
 
 			<div class="flex flex-col">

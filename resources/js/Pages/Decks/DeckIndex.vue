@@ -7,6 +7,7 @@ import LayoutMain from "@/Layouts/LayoutMain.vue"
 import type {UserDeckInterface} from "@/types/modelInterfaces"
 import {PropType} from "vue"
 import ScButton from "@/Components/Ui/scButton.vue"
+import MakeADeck from "@/Components/Decks/MakeADeck.vue"
 
 defineOptions({layout: LayoutMain})
 
@@ -18,10 +19,12 @@ const props = defineProps({
 </script>
 
 <template>
-	<section class="scolcours-container">
+	<section>
 		<h3 class="text-3xl py-4">
 			Decks de révision
 		</h3>
+
+		<make-a-deck />
 
 		<div
 			v-if="decks.length>0"

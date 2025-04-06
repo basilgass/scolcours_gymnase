@@ -3,16 +3,17 @@ export type TriggerFunction = (
 	textAfter: string
 ) => [string, string]
 
-export type TriggersObject = {
-	[key: string]: [string, string] | TriggerFunction
-}
+export type TriggersObject = Record<string, [string, string] | TriggerFunction>;
 
 export const latexTriggers: TriggersObject = {
 	BPM: ["\\begin{pmatrix}", "\\end{pmatrix}"],
 	BAL: ["\\begin{aligned}\n", "\n\\end{aligned}"],
 	BEQ: ["\\begin{array}{rl|l}\n", "\n\\end{array}"],
+	BFN: ["\\begin{array}{rcll}\n@ : & @ & \\longrightarrow & @ \\\\\n & @ & \\longmapsto & @ \n\\end{array}", ""],
 	BFR: ["\\frac{", "}{}"],
 	LIM: ["\\lim_{x\to ", "}\\ "],
+	"|->": ["\\longmapsto", ""],
+	"-->": ["\\longrightarrow ", ""],
 	"<->": ["\\Longleftrightarrow ", ""],
 	"=>": ["\\implies ", ""],
 	"**": ["\\cdot ", ""],
@@ -34,9 +35,21 @@ export const latexTriggers: TriggersObject = {
 	},
 	"(.": ["\\left(", "\\right)"],
 	"[.": ["\\left[", "\\right]"],
-	TT: (textBefore, textAfter) => {
+	'.bb': (textBefore, textAfter) =>{
 		return [
-			wrapLastWord(textBefore.slice(0, -2), " \\text{", "} "),
+			wrapLastWord(textBefore.slice(0, -3), " \\mathbb{", "} "),
+			textAfter
+		]
+	},
+	'.ca': (textBefore, textAfter) =>{
+		return [
+			wrapLastWord(textBefore.slice(0, -3), " \\mathcal{", "} "),
+			textAfter
+		]
+	},
+	".tt": (textBefore, textAfter) => {
+		return [
+			wrapLastWord(textBefore.slice(0, -3), " \\text{", "} "),
 			textAfter
 		]
 	},
@@ -46,7 +59,7 @@ export const latexTriggers: TriggersObject = {
 			"}" + textAfter
 		]
 	},
-	
+
 }
 
 export const mdTriggers: TriggersObject = {
