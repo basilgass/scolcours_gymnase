@@ -37,12 +37,14 @@ const props = withDefaults(
 		question: QuestionInterface,
 		locked?: boolean,
 		showInput?: questionUserInputDisplayType | '' | boolean,
-		singleAnswer?: boolean
+		singleAnswer?: boolean,
+		isDynamic?: boolean
 	}>(),
 	{
 		locked: false,
 		showInput: false,
-		singleAnswer: false
+		singleAnswer: false,
+		isDynamic: false,
 	}
 )
 
@@ -97,6 +99,7 @@ provide<questionDataInterface>("questionData", {
 	config: {
 		animation: true,
 		showInput: showUserInput,
+		isDynamic: props.isDynamic,
 	},
 	validators,
 	currentKeyboard,

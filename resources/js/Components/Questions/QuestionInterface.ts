@@ -30,6 +30,7 @@ export interface questionDataInterface {
 	config: {
 		animation: boolean,
 		showInput: Ref<questionUserInputDisplayType>,
+		isDynamic: boolean,
 	},
 	// Get the keyboard component, for access everywhere.
 	validators: ComputedRef<questionValidatorInterface[]>,

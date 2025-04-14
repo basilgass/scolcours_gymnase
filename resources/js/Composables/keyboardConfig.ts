@@ -41,6 +41,9 @@ export const advancedKeyboards = {
 	},
 	Study: {
 		name: "Study"
+	},
+	Matrix: {
+		name: "Matrix"
 	}
 }
 

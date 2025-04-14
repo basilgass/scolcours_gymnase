@@ -107,7 +107,7 @@ function reduceAnswersValidation(validations: CheckerResult[]): boolean {
 
 async function saveToDB(emitValue: questionResultInterface) {
 	// It's a dynamic question
-	if (!(questionData.question.value.id > 0)) {
+	if (!(questionData.question.value.id > 0) || questionData.config.isDynamic) {
 		return
 	}
 

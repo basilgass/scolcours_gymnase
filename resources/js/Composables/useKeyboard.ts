@@ -30,6 +30,8 @@ function getComponentKeyboardName(value: string): string {
 			return "Input"
 		case "type":
 			return "Type"
+		case "matrix":
+			return "Matrix"
 		default:
 			return "Basic"
 	}
@@ -55,7 +57,7 @@ export interface KeyboardInputInterface {
 }
 
 export interface KeyboardExposeInterface {
-	reset: ()=>void,
+	reset: () => void,
 	setInput: (value?: string) => Promise<KeyboardInputInterface>,
 	parameters: string
 }
@@ -106,11 +108,17 @@ function getOneKeyboard(kbrd: string): Partial<questionValidatorInterface> {
 	options = options ?? []
 
 	// Get the display config for this keyboard.
-	if (Object.hasOwn(keyboards, value)) {
-		config = keyboards[value]
-	} else if (Object.hasOwn(keyboards, keyboardMaps(value))) {
-		config = keyboards[keyboardMaps(value)]
-	} else {
+	config = getKeyboardConfig(value)
+
+	if (config === undefined && options.length > 0) {
+		options.forEach((option) => {
+			if (config === undefined) {
+				config = getKeyboardConfig(option)
+			}
+		})
+	}
+
+	if (config === undefined) {
 		config = keyboards["exact"]
 	}
 
@@ -137,6 +145,21 @@ function getOneKeyboard(kbrd: string): Partial<questionValidatorInterface> {
 
 	const name = getComponentKeyboardName(value)
 
+	console.log({
+		keyboard: {
+			name,
+			parameters,
+			values,
+			config,
+			component: getComponent(name)
+		},
+		checker: {
+			name,
+			checker: new PiChecker(`${value},${options.join(',')}`),
+			checkerOverride
+		}
+	})
+
 	return {
 		keyboard: {
 			name,
@@ -151,6 +174,17 @@ function getOneKeyboard(kbrd: string): Partial<questionValidatorInterface> {
 			checkerOverride
 		}
 	}
+}
+
+function getKeyboardConfig(key: string): KeyboardObjectType {
+
+	if (Object.hasOwn(keyboards, key)) {
+		return keyboards[key]
+	} else if (Object.hasOwn(keyboards, keyboardMaps(key))) {
+		return keyboards[keyboardMaps(key)]
+	}
+
+	return undefined
 }
 
 function getKeyboards(kbrdCode: string): Partial<questionValidatorInterface>[] {

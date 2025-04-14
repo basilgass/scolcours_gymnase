@@ -14,6 +14,7 @@ import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 import TexCode from "@/Components/Ui/TexCode.vue"
 import ScButton from "@/Components/Ui/scButton.vue"
 import {matrixSolver} from "@/Components/Widgets/algebre/matrixSolver.ts"
+import PiMatrix from "@/Components/Pi/Parts/PiMatrix.vue"
 
 type operationType = `+` | `-` | '*' | '/' | 'x'
 
@@ -100,7 +101,6 @@ const matrix_dimension = computed(() => {
 
 const list_of_operations = ref<Partial<matriceAugmenteeInterface>[]>([])
 
-const hoverItem = ref("")
 const operationData = reactive<matriceAugmenteeInterface>({
 	operation: null,
 	value: null,
@@ -109,18 +109,6 @@ const operationData = reactive<matriceAugmenteeInterface>({
 	target: null
 })
 const valueKeyboard = useTemplateRef('valueKeyboard')
-
-function selectLine(lineIndex: number) {
-	if (operationData.target === null) {
-		operationData.target = lineIndex
-	} else if (operationData.target === lineIndex) {
-		operationData.target = null
-	} else if (operationData.reference === lineIndex) {
-		operationData.reference = null
-	} else {
-		operationData.reference = lineIndex
-	}
-}
 
 function getOperationDescription(operation: Partial<matriceAugmenteeInterface>): string {
 	if (operation.target === null) {
@@ -358,7 +346,9 @@ const operationIsComplete = computed<boolean>(() => {
 		return !(operation.reference === null || operation.target === operation.reference)
 	}
 
-	if(operation.value===null || operation.value==='') { return false }
+	if (operation.value === null || operation.value === '') {
+		return false
+	}
 
 	try {
 		const F = new Fraction(operation?.value)
@@ -467,69 +457,14 @@ onMounted(() => {
 <template>
 	<div class="augmented-matrix-wrapper">
 		<div class="flex justify-center my-6">
-			<div class="relative inline-block min-h-[6rem] min-w-[200px]">
-				<svg
-					class="absolute left-0 h-full"
-					preserveAspectRatio="none"
-					viewBox="0 0 20 100"
-					xmlns="http://www.w3.org/2000/svg"
-				>
-					<path
-						d="M18,0 C5,10 5,90 18,100"
-						fill="transparent"
-						stroke="currentColor"
-						stroke-width="1"
-					/>
-				</svg>
-
-				<!-- Parenthèse droite -->
-				<svg
-					class="absolute right-0 h-full"
-					preserveAspectRatio="none"
-					viewBox="0 0 20 100"
-					xmlns="http://www.w3.org/2000/svg"
-				>
-					<path
-						d="M2,0 C15,10 15,90 2,100"
-						fill="transparent"
-						stroke="currentColor"
-						stroke-width="1"
-					/>
-				</svg>
-
-				<!-- info hover -->
-				<div
-					v-katex.inline="hoverItem"
-					class="absolute left-[50%] translate-x-[-50%] -bottom-4 text-xs"
-				/>
-
-				<!-- Grille -->
-				<div
-					v-if="result!==false && result.matrix.length>0"
-					class="grid grid-cols-1"
-				>
-					<div
-						v-for="(line, lineIndex) in result.matrix"
-						:key="`line-${lineIndex}`"
-						:class="{
-							'bg-green-200 dark:bg-green-800': lineIndex===operationData.target,
-							'bg-blue-200 dark:bg-blue-800': lineIndex===operationData.reference
-						}"
-						class="flex gap-2"
-						@click="selectLine(lineIndex)"
-					>
-						<div
-							v-for="(item, index) in line"
-							:key="`a_${lineIndex}${index}`"
-							v-katex.inline="item.tex"
-							:class="index===matrix_dimension.m ? 'border-l border-red-500 px-2':''"
-							class="w-20 py-2 text-center cursor-pointer"
-							@mouseenter="hoverItem=index<matrix_dimension.m ? `a_{{${lineIndex+1}}{${index+1}}}`: ''"
-							@mouseleave="hoverItem=''"
-						/>
-					</div>
-				</div>
-			</div>
+			<pi-matrix
+				v-if="result!==false && result.matrix.length>0"
+				:matrix="result.matrix"
+				:dimension="matrix_dimension.m"
+				v-model:target="operationData.target"
+				v-model:reference="operationData.reference"
+				selection-mode="rows"
+			/>
 		</div>
 
 		<div class="py-10 space-y-10 w-full">
