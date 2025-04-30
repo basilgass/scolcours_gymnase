@@ -90,8 +90,6 @@ class ChapterController extends Controller
 
 	public function intro(Theme $theme, Chapter $chapter)
 	{
-
-		// TODO: Optimize DB access ->load(...) make more than 10 queries
 		$chapter->load([
 						   'blocks',
 						   'posts' => function ($query) {

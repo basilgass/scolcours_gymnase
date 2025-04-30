@@ -15,6 +15,7 @@ export const latexTriggers: TriggersObject = {
 	"|->": ["\\longmapsto", ""],
 	"-->": ["\\longrightarrow ", ""],
 	"<->": ["\\Longleftrightarrow ", ""],
+	"x->": ["\\xrightarrow{ @ }", ""],
 	"=>": ["\\implies ", ""],
 	"**": ["\\cdot ", ""],
 	"==": ["&= ", ""],
@@ -35,27 +36,28 @@ export const latexTriggers: TriggersObject = {
 	},
 	"(.": ["\\left(", "\\right)"],
 	"[.": ["\\left[", "\\right]"],
+	"{.": ["\\left\\lbrace", "\\right\\rbrace"],
 	'.bb': (textBefore, textAfter) =>{
 		return [
-			wrapLastWord(textBefore.slice(0, -3), " \\mathbb{", "} "),
+			wrapLastWord(textBefore.slice(0, -3), "\\mathbb{", "}"),
 			textAfter
 		]
 	},
 	'.ca': (textBefore, textAfter) =>{
 		return [
-			wrapLastWord(textBefore.slice(0, -3), " \\mathcal{", "} "),
+			wrapLastWord(textBefore.slice(0, -3), "\\mathcal{", "}"),
 			textAfter
 		]
 	},
 	".tt": (textBefore, textAfter) => {
 		return [
-			wrapLastWord(textBefore.slice(0, -3), " \\text{", "} "),
+			wrapLastWord(textBefore.slice(0, -3), "\\text{", "}"),
 			textAfter
 		]
 	},
 	"//": (textBefore, textAfter) => {
 		return [
-			wrapLastWord(textBefore.slice(0, -2), " \\frac{", "}{"),
+			wrapLastWord(textBefore.slice(0, -2), "\\frac{", "}{"),
 			"}" + textAfter
 		]
 	},

@@ -1,10 +1,10 @@
 <script setup lang="ts">
 
-import {Fraction} from "pimath"
+import {Polynom} from "pimath"
 import {ref} from "vue"
 
 const props = withDefaults(defineProps<{
-		matrix: Fraction[][],
+		matrix: Polynom[][],
 		dimension: number | null,
 		selectionMode?: false | 'rows' | 'columns' | 'item',
 	}>(),

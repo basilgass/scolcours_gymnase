@@ -38,13 +38,7 @@ class LatexController extends Controller
 		$filename = $fileID . '.pdf';
 		$fullpath = $folder . '/' . $filename;
 
-		// control that the content does not contain any malicious code
 		// TODO: validate the questions to make sure it does not contain malicious code
-//		$questions = $validation['questions'] ?? [];
-//		if($validation['questions'] !== strip_tags($validation['questions'])){
-//			$questions = e($validation['questions']);
-//		}
-
 		$content = $validation['content'] ?? '';
 		if($validation['content'] !== strip_tags($validation['content'])){
 			$content = e($validation['content']);

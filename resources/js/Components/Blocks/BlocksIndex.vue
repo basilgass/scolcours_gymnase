@@ -54,8 +54,6 @@ function updateBlockOrder() {
 
 }
 
-// TODO: button with the bi-plus-circle-fill icon could be enhanced.
-
 </script>
 <template>
 	<article class="flex flex-col gap-4">

@@ -100,6 +100,7 @@ provide<questionDataInterface>("questionData", {
 		animation: true,
 		showInput: showUserInput,
 		isDynamic: props.isDynamic,
+		raw: props.question.keyboard
 	},
 	validators,
 	currentKeyboard,

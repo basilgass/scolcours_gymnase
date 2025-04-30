@@ -316,7 +316,6 @@ let timerInterval: ReturnType<typeof setInterval> = null,
 			/>
 
 			<!-- question display -->
-			<!-- TODO: reload the question without reloading the whole component (key trick) -->
 			<question-show
 				:key="`level-${game.level}-question-${questionId}`"
 				:question="questions[questionId] as QuestionInterface"

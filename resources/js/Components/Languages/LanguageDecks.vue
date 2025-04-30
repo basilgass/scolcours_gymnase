@@ -4,7 +4,7 @@ import {computed, inject} from "vue"
 import type {UserCardInterface, UserDeckInterface} from "@/types/modelInterfaces.ts"
 import {useLanguage} from "@/Components/Languages/useLanguage.ts"
 import {makeUserCard, makeUserDeck} from "@/helpers/makeModel.ts"
-import DeckShow from "@/Pages/Decks/DeckShow.vue"
+import UserdeckShow from "@/Pages/Decks/UserdeckShow.vue"
 import ScButton from "@/Components/Ui/scButton.vue"
 
 // languageData is the reactive data from the parent component.
@@ -36,7 +36,7 @@ const deck = computed<UserDeckInterface | null>(() => {
 			v-if="cards.length > 0"
 			class="min-h-[80vh] my-10"
 		>
-			<deck-show
+			<userdeck-show
 				:deck
 				:cards
 				hide-title

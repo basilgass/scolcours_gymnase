@@ -2,7 +2,7 @@
 
 import {computed} from "vue"
 import {getThemeChapter, getThemeClasses} from "@/directives/themeDirectives.ts"
-import {buttonConfig, type buttonTypes} from "@/buttonConfig.ts"
+import {buttonConfig, type buttonTypes} from "@/button.config.ts"
 
 const props = withDefaults(defineProps<{
 	active?: boolean

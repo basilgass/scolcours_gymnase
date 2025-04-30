@@ -1,13 +1,13 @@
 import {BlockInterface, CardInterface, UserCardInterface, UserDeckInterface} from "@/types/modelInterfaces.ts"
 
-export function makeBlock(body: string, title?: string): BlockInterface {
+export function makeBlock(body: string, title?: string, type?: string): BlockInterface {
 	return {
 		id: -1,
 		active: true,
 		order: 0,
 		merge: false,
 		switch: false,
-		type: '',
+		type: type ?? '',
 		title: title ?? '',
 		body,
 		template: '',
@@ -19,7 +19,9 @@ export function makeBlock(body: string, title?: string): BlockInterface {
 }
 
 export function makeCard(usercard: UserCardInterface): CardInterface {
-	if (usercard.blocks.length === 0) {
+	if (!usercard.blocks || usercard.blocks.length === 0) {
+		console.log('makeCard: usercard.blocks is empty or undefined')
+		console.log(usercard)
 		return {
 			recto: makeBlock('aucune carte créée'),
 			verso: makeBlock('aucune carte créée'),

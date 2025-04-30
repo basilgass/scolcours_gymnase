@@ -1,18 +1,20 @@
 <script lang="ts" setup>
-import type {
+import {
+	getOneKeyboard,
 	KeyboardEmitsInterface,
 	KeyboardExposeInterface,
 	KeyboardInputInterface,
 	KeyboardPropsInterface,
 } from "@/Composables/useKeyboard.ts"
-import {computed, onMounted, ref} from "vue"
+import {computed, inject, onMounted, ref} from "vue"
 import KeyboardDisplay from "@/Components/Keyboards/KeyboardDisplay.vue"
 import PiMatrix from "@/Components/Pi/Parts/PiMatrix.vue"
 import {Fraction, Polynom} from "pimath"
+import {questionDataInterface} from "@/Components/Questions/QuestionInterface.ts"
+import ScButton from "@/Components/Ui/scButton.vue"
 
 // props.keyboard
 const props = defineProps<KeyboardPropsInterface>()
-
 
 // emits change
 const emits = defineEmits<KeyboardEmitsInterface>()
@@ -76,6 +78,9 @@ defineExpose<KeyboardExposeInterface>({
  * Keyboards custom configuration
  */
 
+// Get the checker from above.
+const questionData = inject<questionDataInterface>('questionData')
+
 // TODO: Move all these (duplicate) function to a class or something better
 function matrixToTex(matrix: string[][], dim: {rows: number, columns: number}): string{
 
@@ -90,6 +95,11 @@ function matrixToTex(matrix: string[][], dim: {rows: number, columns: number}): 
 // Values settings
 const values = ref<string[][]>([])
 const aij = ref<{ row: number, column: number } | null>(null)
+const valuesKeyboard = computed<string>(()=>{
+	const [_,kbrd] = questionData.config.raw.split('\n')[0].split('checker:')
+
+	return kbrd ? getOneKeyboard(kbrd).keyboard.config.name: 'fraction'
+})
 
 
 // Dimension settings
@@ -100,11 +110,10 @@ const dimension = ref<{ rows: number, columns: number }>({
 })
 const hasFixedDimension = computed<boolean>(() => fixedDimension.value[0] !== null)
 const fixedDimension = computed<[number, number]>(() => {
-	let dim: number[] = [null, null]
+	let dim: [number, number] = [null, null]
 	props.keyboard.parameters.forEach(value => {
 		if (value.match(/dim=\d+x\d+/)) {
-			dim = value.split('dim=')[1].split('x').map(Number)
-			return [null, null]
+			dim = value.split('dim=')[1].split('x').map(Number) as [number, number]
 		}
 	})
 	return dim
@@ -194,16 +203,16 @@ onMounted(() => {
 				v-katex.inline="`${ dimension.rows ?? 'm' } \\times ${dimension.columns ?? 'n'}`"
 			/>
 		</div>
-		<button
+		<sc-button
 			v-if="!hasFixedDimension"
 			@click="switchKeyboard"
 			v-show="dimension.columns && dimension.rows"
 		>
 			dim à valeurs
-		</button>
+		</sc-button>
 
 		<pi-matrix
-			:matrix="values.map(row=>row.map(x=>new Fraction(x)))"
+			:matrix="values.map(row=>row.map(x=>new Polynom(x)))"
 			:dimension="dimension.columns"
 			selection-mode="item"
 			v-model:aij="aij"
@@ -222,7 +231,7 @@ onMounted(() => {
 			<KeyboardDisplay
 				v-else
 				:key="`aij-${aij?.row}-${aij?.column}`"
-				:keyboard="keyboard.config.name"
+				:keyboard="valuesKeyboard"
 				:disabled="aij===null"
 				:class="aij===null?'cursor-not-allowed opacity-20':''"
 				back

@@ -211,6 +211,7 @@ export interface ChallengeInterface {
 }
 
 export interface CardInterface {
+	id: number,
 	recto: BlockInterface,
 	verso: BlockInterface,
 }

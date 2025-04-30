@@ -16,7 +16,7 @@ import {usePage} from "@inertiajs/vue3"
 import axios from "axios"
 import {computed, inject, ref, useTemplateRef} from "vue"
 import {questionDataInterface, questionResultInterface} from "@/Components/Questions/QuestionInterface.ts"
-import type {CheckerResult, PiChecker} from "pichecker"
+import type {CheckerResult, PiChecker} from "@/Checkers"
 import ScButton from "@/Components/Ui/scButton.vue"
 
 const emits = defineEmits<{

@@ -5,15 +5,18 @@ import IllustrationShow from "@/Components/Illustrations/IllustrationShow.vue"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
-import { flashInterface } from "@/types"
-import type { IllustrationInterface, WidgetInterface } from "@/types/modelInterfaces"
-import { router } from "@inertiajs/vue3"
+import {flashInterface} from "@/types"
+import type {IllustrationInterface, WidgetInterface} from "@/types/modelInterfaces"
+import {router} from "@inertiajs/vue3"
 import axios from "axios"
-import { computed, inject, onMounted, PropType, ref } from "vue"
+import {computed, inject, onMounted, PropType, ref} from "vue"
 import ScButton from "@/Components/Ui/scButton.vue"
+import Card from "@/Components/Ui/Card.vue"
+
+// TODO: Remettre le copier/coller d'une illustration.
 
 // Define the layout
-defineOptions({ layout: LayoutMain })
+defineOptions({layout: LayoutMain})
 
 // Props definition
 const props = defineProps({
@@ -38,7 +41,7 @@ const currentComponent = computed<WidgetInterface>(() => {
 			name: " ? ",
 			slug: null,
 			component: null,
-			theme: { id: null, slug: null },
+			theme: {id: null, slug: null},
 			description: "module inconnu",
 			control: false
 		}
@@ -153,32 +156,33 @@ onMounted(() => {
 <template>
 	<article class="my-5 scolcours-container">
 		<header class="mb-5 flex justify-between">
-			<div>
-				<div class="text-3xl">
-					édition d'une illustration
-				</div>
+			<div class="text-3xl">
+				édition d'une illustration
 			</div>
 			<div class="self-start grid grid-cols-2 gap-2 items-center flex-wrap">
-				<button
-					class="btn btn-primary btn-xs"
+				<sc-button
+					xs
+					type="primary"
 					@click="illustrationSave"
 				>
 					enregistrer
-				</button>
-				<button
-					class="btn btn-primary btn-xs flex gap-2"
+				</sc-button>
+				<sc-button
+					xs
+					type="primary"
 					@click="illustrationSaveAndEdit"
 				>
 					<i class="bi bi-save" /> <i class="bi bi-arrow-right" /> <span>block</span>
-				</button>
-				<button
-					class="btn btn-cancel btn-xs"
+				</sc-button>
+				<sc-button
+					type="cancel"
+					xs
 					@click="illustrationVisit"
 				>
 					retour
-				</button>
+				</sc-button>
 				<confirm-button
-					class="btn btn-delete btn-xs"
+					xs
 					@confirm="illustrationDelete"
 				>
 					supprimer
@@ -200,138 +204,137 @@ onMounted(() => {
 				</button>
 			</div>
 		</header>
-		<main>
-			<div class="flex flex-col h-full">
-				<!-- sélection du widget -->
-				<div class="px-5 border-b">
-					<h3 class="font-semibold">
-						Sélectionner le module: {{ currentComponent.name }}
-					</h3>
+		<main class="flex flex-col h-full">
+			<!-- sélection du widget -->
+			<Card class="mb-3">
+				<h3 class="font-semibold mb-3">
+					Sélectionner le module: {{ currentComponent.name }}
+				</h3>
 
-					<div class="text-xs flex gap-2 flex-wrap px-3 py-2">
-						<sc-button
-							v-for="(data, comp) of chapterComponents"
-							:key="comp"
-							theme="data.theme?.id ?? 0"
-							:class="theIllustration.widget.id === data.id ? 'font-semibold border-2 shadow-sm scale-110' : ''"
-							class="btn btn-xs transition-all"
-							@click="toggleComponent(data)"
-						>
-							{{ data.name }}
-						</sc-button>
-					</div>
+				<div class="text-xs flex flex-wrap gap-2 w-full">
+					<sc-button
+						v-for="(data, comp) of chapterComponents"
+						:key="comp"
+						theme="data.theme?.id ?? 0"
+						:outline="theIllustration.widget.id !== data.id"
+						class="btn btn-xs transition-all"
+						@click="toggleComponent(data)"
+					>
+						{{ data.name }}
+					</sc-button>
 				</div>
+			</Card>
 
-				<div class="flex-1 px-5">
-					<!-- edition et prévisualisation -->
-					<div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-						<div class="grid grid-cols-1 gap-3">
-							<!-- image illustration -->
-							<div
-								v-if="currentComponent?.component === 'image-widget.vue'"
-								class="col-span-2 mb-5"
-							>
-								<form-image-drop @file-dropped="imageFileDropped" />
-							</div>
+			<div class="flex-1">
+				<!-- edition et prévisualisation -->
+				<div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+					<div class="grid grid-cols-1 gap-3">
+						<!-- image illustration -->
+						<div
+							v-if="currentComponent?.component === 'image-widget.vue'"
+							class="col-span-2 mb-5"
+						>
+							<form-image-drop @file-dropped="imageFileDropped" />
+						</div>
 
-							<!-- draw illustration -->
-							<div
-								v-else-if="currentComponent?.component === 'draw-parser-widget.vue'"
-								class="col-span-2 w-full"
-							>
-								<div class="mb-3">
-									<form-maker
-										v-model="theIllustration.parameters"
-										class="font-code mt-3 text-xs"
-										inline
-										label="paramètres"
-										sm
-									>
-										<template #message>
-											grid, axis, x=-5:5, y=-5:5, unit=1:2, tex, nolabel, nopoint
-										</template>
-									</form-maker>
-								</div>
-
-								<form-maker
-									v-model="theIllustration.code"
-									:hide-label="true"
-									:rows="10"
-									input-class="font-code"
-									name="drawData"
-									type="textarea"
-									@current-line="currentLine = $event"
-								/>
-
-								<div class="font-code text-xs min-h-[3em]">
-									<div v-if="theIllustration.code.split('\n\n').length > 1">
-										%&lt;*&gt; afficher qu'une fois<br>
-										%&lt;...&gt; afficher aux steps indiqués (que suivant) <br>
-										%-FG- couche au premier plan
-									</div>
-									<hr>
-									<div v-if="currentLine.startsWith('$')">
-										$a=a,b,...,c/intervalle=valeur[~]<br>
-										~ est optionnel: il désactive les parenthèses autour de la variable
-									</div>
-									<div
-										v-else
-										class="flex justify-between"
-									>
-										<div>{{ currentLineHelperText.parameters }}</div>
-										<div>{{ currentLineHelperText.options }}</div>
-
-										<div>{{ currentLineHelperText.description }}</div>
-									</div>
-								</div>
-							</div>
-
-							<!-- component illustration -->
-							<div
-								v-else
-								class="col-span-2  h-full w-full grid grid-cols-1 items-center"
-							>
+						<!-- draw illustration -->
+						<div
+							v-else-if="currentComponent?.component === 'draw-parser-widget.vue'"
+							class="col-span-2 w-full"
+						>
+							<div class="mb-3">
 								<form-maker
 									v-model="theIllustration.parameters"
-									label="parametres"
-								/>
-								<form-maker
-									v-model="theIllustration.code"
-									:rows="10"
-									language="latex"
-									type="code"
-								/>
-								<markdown-it
-									v-if="currentComponent"
-									:text="currentComponent.description"
-									class="font-code !text-xs min-h-[3em]"
-								/>
+									class="font-code mt-3 text-xs"
+									inline
+									label="paramètres"
+									sm
+								>
+									<template #message>
+										grid, axis, x=-5:5, y=-5:5, unit=1:2, tex, nolabel, nopoint
+									</template>
+								</form-maker>
+							</div>
+
+							<form-maker
+								v-model="theIllustration.code"
+								:hide-label="true"
+								:rows="10"
+								input-class="font-code"
+								name="drawData"
+								type="textarea"
+								@current-line="currentLine = $event"
+							/>
+
+							<div class="font-code text-xs min-h-[3em]">
+								<div v-if="theIllustration.code.split('\n\n').length > 1">
+									%&lt;*&gt; afficher qu'une fois<br>
+									%&lt;...&gt; afficher aux steps indiqués (que suivant) <br>
+									%-FG- couche au premier plan
+								</div>
+								<hr>
+								<div v-if="currentLine.startsWith('$')">
+									$a=a,b,...,c/intervalle=valeur[~]<br>
+									~ est optionnel: il désactive les parenthèses autour de la variable
+								</div>
+								<div
+									v-else
+									class="flex justify-between"
+								>
+									<div>{{ currentLineHelperText.parameters }}</div>
+									<div>{{ currentLineHelperText.options }}</div>
+
+									<div>{{ currentLineHelperText.description }}</div>
+								</div>
 							</div>
 						</div>
-						<illustration-show
-							class="bg-content p-5 border"
-							:illustration="theIllustration"
-							preview
-						/>
+
+						<!-- component illustration -->
+						<div
+							v-else
+							class="col-span-2 h-full w-full flex flex-col gap-3"
+						>
+							<form-maker
+								v-model="theIllustration.parameters"
+								label="parametres"
+							/>
+							<form-maker
+								v-model="theIllustration.code"
+								:rows="10"
+								language="latex"
+								type="code"
+							/>
+							<markdown-it
+								v-if="currentComponent"
+								:text="currentComponent.description"
+								class="font-code !text-xs min-h-[3em]"
+							/>
+						</div>
 					</div>
-				</div>
 
-				<div class="grid grid-cols-1 md:grid-cols-2 gap-3 w-full p-5">
-					<form-maker
-						v-model="theIllustration.title"
-						inline
-						label="nom de la figure"
-						sm
-					/>
-
-					<form-maker
-						v-model="theIllustration.css"
-						class="font-code"
-						inline
-						label="css"
-						sm
+					<illustration-show
+						class="bg-content p-5 border"
+						:illustration="theIllustration"
+						preview
 					/>
 				</div>
+			</div>
+
+			<div class="grid grid-cols-1 md:grid-cols-2 gap-3 w-full p-5">
+				<form-maker
+					v-model="theIllustration.title"
+					inline
+					label="nom de la figure"
+					sm
+				/>
+
+				<form-maker
+					v-model="theIllustration.css"
+					class="font-code"
+					inline
+					label="css"
+					sm
+				/>
 			</div>
 		</main>
 	</article>

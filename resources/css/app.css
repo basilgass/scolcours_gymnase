@@ -38,7 +38,7 @@
 	.bg-content {
 		@apply bg-white dark:bg-slate-800
 		text-slate-900 dark:text-slate-100
-		border-slate-300 dark:border-slate-500;
+		border-slate-200 dark:border-slate-600;
 	}
 
 	.admin-content {
@@ -46,6 +46,7 @@
 		text-admin-dark dark:text-admin-light
 		border-slate-400 dark:border-slate-600;
 	}
+
 	.bg-action {
 		@apply bg-slate-100 outline-slate-400
 		hover:bg-slate-200 hover:outline-slate-500
@@ -64,11 +65,28 @@
 	column-rule-style: solid;
 	column-rule-width: 1px;
 	column-rule-color: #0f172b; /*slate-900*/
-	@variant dark{
+	@variant dark {
 		column-rule-color: #f1f5f9; /*slate-100*/
 	}
 }
 
 @utility font-code {
 	font-family: 'Source Code Pro', monospace;
+}
+
+@utility cancel-* {
+	position: relative;
+	display: inline-block;
+	&::before {
+		content: '';
+		position: absolute;
+		width: 100%;
+		right: 0;
+		top: 50%;
+		border-top-style: solid;
+		border-top-width: thin;
+		border-top-color: --value(--color-*);
+		transform: skewY(-40deg);
+		pointer-events: none;
+	}
 }

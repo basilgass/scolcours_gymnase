@@ -5,7 +5,7 @@ import IllustrationShow from "@/Components/Illustrations/IllustrationShow.vue"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 import {useFormattedBody} from "@/Composables/useHelpers.ts"
 import {useScriptLoader} from "@/Composables/useScriptLoader.ts"
-import {blockTypeDefault, blockTypes} from "@/scolcours.ts"
+import { blockTypes } from "@/block.config.ts"
 import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
 import {flashInterface} from "@/types"
 import type {BlockInterface} from "@/types/modelInterfaces.ts"
@@ -32,7 +32,15 @@ defineEmits(["destroy"])
 // Block display style computed properties
 const blockConfig = computed(() => {
 	return blockTypes[props.block.type] === undefined
-		? blockTypeDefault
+		? {
+			style: {
+				body: "",
+				header: "",
+				illustration: ""
+			},
+			icon: "",
+			title: ""
+		}
 		: blockTypes[props.block.type]
 })
 
@@ -111,7 +119,7 @@ function addIllustration() {
 				<!-- header left: (generic) icon and title -->
 				<div
 					v-theme.text="!block.type"
-					class="flex gap-3 items-baseline text-sm md:text-lg lg:text-2xl"
+					class="flex gap-3 items-baseline text-lg md:text-xl lg:text-2xl font-semibold"
 				>
 					<i
 						v-if="blockIcon"

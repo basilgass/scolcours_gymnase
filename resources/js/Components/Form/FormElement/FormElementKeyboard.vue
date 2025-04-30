@@ -5,7 +5,7 @@ import "prismjs/components/prism-latex"
 import "prismjs/components/prism-javascript"
 import "prismjs/components/prism-json"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
-import {CHECKERS, checkersList, PiChecker} from "pichecker"
+import {type CHECKERS, checkersList, PiChecker} from "@/Checkers"
 
 const theValue = defineModel<string>()
 
@@ -47,7 +47,7 @@ const showKeyboardHelper = ref(false),
 		return checker.description
 	}),
 	currentLineKeyboards = computed(() => {
-		return Object.keys(checkersList)
+		return Object.keys(checkersList())
 			.map((x: CHECKERS) => x.toString())
 			.filter((x: string) =>
 				x.startsWith(currentLineKeyboardKey.value)

@@ -3,24 +3,24 @@
 	setup
 >
 
-import CardsIndex from "@/Components/Decks/CardsIndex.vue"
+import DeckCardsIndex from "@/Components/Decks/DeckCardsIndex.vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
-import { flashInterface } from "@/types"
-import type { DeckInterface } from "@/types/modelInterfaces"
-import { watchDebounced } from "@vueuse/core"
+import {flashInterface} from "@/types"
+import type {CardInterface, DeckInterface} from "@/types/modelInterfaces"
+import {watchDebounced} from "@vueuse/core"
 import axios from "axios"
-import { inject, PropType, ref } from "vue"
+import {inject, ref} from "vue"
 import ScButton from "@/Components/Ui/scButton.vue"
 
-defineOptions({ layout: LayoutMain })
+defineOptions({layout: LayoutMain})
 
 const flash = inject<flashInterface>("flash")
 
-
-const props = defineProps({
-	deck: { type: Object as PropType<DeckInterface>, required: true }
-})
+const props = defineProps<{
+	deck: DeckInterface,
+	cards: CardInterface[]
+}>()
 
 const chapterId = ref<undefined | number>(undefined)
 const chapterTitle = ref("???")
@@ -60,7 +60,8 @@ function assignChapter() {
 			chapterId.value = undefined
 		})
 }
-watchDebounced(chapterId, getTargetName, { debounce: 1000, maxWait: 2000 })
+
+watchDebounced(chapterId, getTargetName, {debounce: 1000, maxWait: 2000})
 </script>
 <template>
 	<section class="my-5 scolcours-container">
@@ -101,7 +102,10 @@ watchDebounced(chapterId, getTargetName, { debounce: 1000, maxWait: 2000 })
 		</div>
 
 		<!-- view mode -->
-		<cards-index :deck="props.deck" />
+		<deck-cards-index
+			:deck="props.deck"
+			:cards="props.cards"
+		/>
 	</section>
 </template>
 

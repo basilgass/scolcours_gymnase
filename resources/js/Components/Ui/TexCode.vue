@@ -57,7 +57,7 @@ function downladPdf() {
 
 <template>
 	<div>
-		<div class="text-xs opacity-50 mb-2 flex justify-between">
+		<div class="text-xs opacity-50 flex justify-between">
 			<div>code TeX</div>
 
 			<div class="flex gap-3">
@@ -94,9 +94,10 @@ function downladPdf() {
 				</button>
 			</div>
 		</div>
+
 		<div
 			v-show="showTexCode"
-			class="relative text-xs text-gray-600 border bg-gray-100 px-3 py-2"
+			class="relative text-xs text-gray-600 border bg-gray-100 px-3 mt-2 py-2"
 		>
 			<div
 				class="font-code"

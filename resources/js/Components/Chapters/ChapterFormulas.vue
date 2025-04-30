@@ -46,13 +46,12 @@ function updateFormulasOrder() {
 			})
 		})
 		.then(() => {
-			// TODO : flash message !
 			flash.success(
 				"L'ordre des formules à bien été enregistré !"
 			)
 		})
 		.catch((res) => {
-			// toDO: Show error message
+			flash.error("Erreur lors de la mise à jour de l'ordre des formules")
 			console.warn("update ordering order: ", res.data)
 		})
 }

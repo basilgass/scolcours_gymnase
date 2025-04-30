@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref, watch } from "vue"
-import { Pi3Draw } from "pithree/lib"
+import { Pi3Draw } from "pithree"
 import katex from "katex"
 import { useResizeObserver } from "@vueuse/core"
 
@@ -30,6 +30,7 @@ onMounted(() => {
         code: props.draw.code,
         converter: (str: string) => katex.renderToString(str, { throwOnError: false }),
     }).mount()
+
 })
 
 watch(() => props.draw.parameters, () => {

@@ -46,9 +46,7 @@ class Card extends Model
 
 	public function users()
 	{
-		// TODO : modify users to usercards
 		$this->belongsToMany(UserCard::class)
 			->withTimestamps();
-//			->withPivot('success');
 	}
 }

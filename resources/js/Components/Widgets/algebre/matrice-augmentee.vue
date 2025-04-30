@@ -1,7 +1,9 @@
 <!--<info>
-parameters: auto
+parameters: auto,no-ui,solve,n=<number>
 
-code: matrix
+code:
+a b c|x
+d e f|y
 </info>-->
 <script lang="ts" setup>
 
@@ -15,6 +17,18 @@ import TexCode from "@/Components/Ui/TexCode.vue"
 import ScButton from "@/Components/Ui/scButton.vue"
 import {matrixSolver} from "@/Components/Widgets/algebre/matrixSolver.ts"
 import PiMatrix from "@/Components/Pi/Parts/PiMatrix.vue"
+
+const props = defineProps<{
+	illustration: WidgetPropsInterface
+}>()
+
+const params = computed(() => props.illustration.parameters.split(','))
+const showInteractivity = computed(() => {
+	return !params.value.includes('no-ui')
+})
+const showOutput = computed(() => {
+	return !params.value.includes('no-output')
+})
 
 type operationType = `+` | `-` | '*' | '/' | 'x'
 
@@ -51,10 +65,6 @@ const buttonsConfig: { label: string, value: operationType }[] = [
 ]
 
 const {getKeyboards} = useKeyboard()
-
-const props = defineProps<{
-	illustration: WidgetPropsInterface
-}>()
 
 let matrix: false | ((Polynom[])[]) = []
 
@@ -409,7 +419,14 @@ const result = computed<{ tex: string, flatten: Polynom[], matrix: Polynom[][] }
 	return false
 })
 
-const matrixPerLine = ref<number>(3)
+const matrixPerLine = computed<number>(()=>{
+	const n = params.value.filter(x=>x.startsWith('n='))
+	if(n.length>0){
+		return Number(n[0].split('=')[1]) ?? 3
+	}
+
+	return 3
+})
 const matrixTex = ref<{
 	tex: string,
 	description: string
@@ -450,24 +467,31 @@ watch(() => props.illustration.code, () => {
 
 onMounted(() => {
 	initMatrix()
+
+	if(params.value.includes('auto') && !showInteractivity.value){
+		autoSolve()
+	}
 })
 
 
 </script>
 <template>
 	<div class="augmented-matrix-wrapper">
-		<div class="flex justify-center my-6">
-			<pi-matrix
-				v-if="result!==false && result.matrix.length>0"
-				:matrix="result.matrix"
-				:dimension="matrix_dimension.m"
-				v-model:target="operationData.target"
-				v-model:reference="operationData.reference"
-				selection-mode="rows"
-			/>
-		</div>
+		<div
+			v-show="showInteractivity"
+			class="pt-10 pb-10 space-y-10 w-full"
+		>
+			<div class="flex justify-center">
+				<pi-matrix
+					v-if="result!==false && result.matrix.length>0"
+					:matrix="result.matrix"
+					:dimension="matrix_dimension.m"
+					v-model:target="operationData.target"
+					v-model:reference="operationData.reference"
+					selection-mode="rows"
+				/>
+			</div>
 
-		<div class="py-10 space-y-10 w-full">
 			<markdown-it
 				:text="operationDescription"
 				class="text-center border p-3"
@@ -486,9 +510,7 @@ onMounted(() => {
 				</sc-button>
 			</div>
 
-			<div
-				class="flex flex-wrap gap-3 justify-center"
-			>
+			<div class="flex flex-wrap gap-3 justify-center">
 				<sc-button
 					v-for="button in buttonsConfig"
 					:key="button.value"
@@ -533,7 +555,6 @@ onMounted(() => {
 				</div>
 			</div>
 
-			<div v-katex.boxed="matrixTexToAligned" />
 
 			<div>
 				<sc-button
@@ -543,6 +564,11 @@ onMounted(() => {
 					auto solve
 				</sc-button>
 			</div>
+		</div>
+
+		<div v-if="showOutput">
+			<div v-katex.boxed="matrixTexToAligned" />
+
 			<tex-code
 				:tex="matrixTexToAligned"
 				slug="matrice-augmentee"

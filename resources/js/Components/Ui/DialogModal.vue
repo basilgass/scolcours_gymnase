@@ -36,7 +36,7 @@ function doCancel() {
 			@mousedown.self="doCancel"
 		>
 			<div
-				class="grid bg-content border rounded-lg max-w-[1600px] w-[90%] max-h-[95vh] overflow-auto"
+				class="grid bg-content border rounded-lg max-w-[95vw] w-[90%] h-[90%] max-h-[95vh] overflow-auto"
 				v-bind="$attrs"
 			>
 				<div class="flex flex-col">

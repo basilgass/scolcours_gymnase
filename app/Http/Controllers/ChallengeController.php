@@ -225,7 +225,10 @@ class ChallengeController extends Controller
     public function index()
     {
         // TODO: get all challenges with the "opened" sessions only...
-        $challenges = Challenge::with('sessions')->orderBy('title')->get();
+        $challenges = Challenge::with('sessions')
+			->orderBy('title')
+			->get();
+
         return Inertia::render('ChallengesIndex', [
             'challenges' => $challenges
         ]);

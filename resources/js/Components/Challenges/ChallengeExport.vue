@@ -58,7 +58,6 @@ const pdfGenereate = () => {
 	pdfError.value = ""
 	pdfLaTeX.value = ""
 
-	// TODO: use the route helper
 	axios
 		.post(route("latex.pdf"), {
 			template: "latex.questions",

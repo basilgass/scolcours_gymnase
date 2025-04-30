@@ -10,13 +10,13 @@
  */
 
 import type {UserCardInterface} from "@/types/modelInterfaces"
-import {computed, onMounted, reactive, ref, useTemplateRef} from "vue"
-import CardItem from "@/Components/Decks/CardItem.vue"
+import {computed, onMounted, reactive, ref} from "vue"
+import DeckCardItem from "@/Components/Decks/Parts/DeckCardItem.vue"
 import ScButton from "@/Components/Ui/scButton.vue"
 import {makeCard} from "@/helpers/makeModel.ts"
 import {usePage} from "@inertiajs/vue3"
 import axios from "axios"
-
+import DeckPotfolioItem from "@/Components/Decks/Parts/DeckPotfolioItem.vue"
 
 const props = defineProps<{
 	cards: UserCardInterface[]
@@ -24,9 +24,18 @@ const props = defineProps<{
 
 const cardsList = ref<UserCardInterface[]>(props.cards)
 
-// const cardIndex = ref(0)
 const cardSide = ref<"recto" | "verso">("recto")
 const currentCard = ref<UserCardInterface>()
+
+const summaryList = computed<UserCardInterface[]>(() => {
+	const arr = cardsList.value
+		.filter(card => card.current_appearances > 1)
+		.toSorted((a, b) => {
+			return b.current_appearances - a.current_appearances
+		})
+
+	return arr
+})
 
 function getNextCard() {
 	// Logique concernant la suite du deck
@@ -106,10 +115,17 @@ const restartDeck = function () {
  * correct: number of cards that have been correctly answered
  */
 const countCards = computed(() => {
+	const correct = cardsList.value.reduce((acc, card) => {
+		return acc + (card.current_score ?? 0)
+	}, 0)
+	const asked = cardsList.value.filter(x => x.current_score !== 0).length
+	const length = cardsList.value.length
+	console.log(correct, asked, length)
 	return {
-		correct: cardsList.value.filter(x => x.current_score === 1).length,
-		asked: cardsList.value.filter(x => x.current_score !== 0).length,
-		length: cardsList.value.length
+		correct,
+		asked,
+		length,
+		progress: Math.round(correct / length * 100)
 	}
 })
 
@@ -133,13 +149,18 @@ async function updateCard(result: boolean) {
 	// The card has appeared
 	currentCard.value.current_appearances++
 
-	// Traitement de la carte:
-	// result = true => increase the score
-	// result = false => decrease the score
+	// Init the card score.
+	// currentCard.value.current_score = result ? 1 : 0
+
 	if (result) {
-		currentCard.value.current_score = Math.min(1, currentCard.value.current_score * 2)
+		currentCard.value.current_score =
+			currentCard.value.current_score === null ? 1 :
+				currentCard.value.current_score === 0 ? 1 / currentCard.value.current_appearances + 1 :
+					Math.min(1, currentCard.value.current_score * 2)
 	} else {
-		currentCard.value.current_score = Math.max(0.125, currentCard.value.current_score / 2)
+		currentCard.value.current_score =
+			currentCard.value.current_score === null ? 0 :
+				Math.max(0.125, currentCard.value.current_score / 2)
 	}
 
 
@@ -179,7 +200,13 @@ async function updateCard(result: boolean) {
 <template>
 	<article
 		v-if="currentCard"
-		class="cursor-pointer relative w-full flex flex-col gap-5 p-5"
+		class="cursor-pointer
+		relative
+		lg:max-w-3xl
+			xl:max-w-4xl
+			mx-auto
+		flex flex-col gap-5
+		p-5"
 	>
 		<!-- affichage des boutons pour valider ou non la carte -->
 		<transition name="slide-up">
@@ -214,16 +241,15 @@ async function updateCard(result: boolean) {
 
 		<!-- affichage des statistiques -->
 		<div class="w-full flex justify-between">
-			<div>score: {{ currentCard.current_score }}</div>
+			<div>score: {{ currentCard.current_score === null ? 'nouvelle carte' : currentCard.current_score }}</div>
 			<div>{{ countCards.length }} cartes</div>
 			<div>
-				<span class="text-green-600">{{ countCards.correct }}</span> /
-				{{ countCards.asked }}
+				<span class="text-green-600">{{ countCards.progress }}%</span>
 			</div>
 		</div>
 
 		<!-- afficher de la carte -->
-		<CardItem
+		<DeckCardItem
 			v-model="cardSide"
 			:key="`card-${currentCard.id}`"
 			:card="makeCard(currentCard)"
@@ -235,7 +261,7 @@ async function updateCard(result: boolean) {
 	<!-- Le deck est terminé -->
 	<div
 		v-else
-		class="min-w-[300px] min-h-[200px] grid place-items-center"
+		class="grid grid-cols-1 px-10 my-20"
 	>
 		<div class="text-center flex flex-col gap-10">
 			<div class="font-code text-3xl">
@@ -245,9 +271,53 @@ async function updateCard(result: boolean) {
 			<sc-button
 				@click="restartDeck"
 				class="py-5"
+				type="primary"
 			>
 				recommencer
 			</sc-button>
+		</div>
+		<div class="mt-20 space-y-10">
+			<h3 class="text-3xl text-center font-semibold">
+				Classement
+			</h3>
+
+			<div class="flex gap-5 justify-center flex-wrap">
+				<div class="bg-content size-[150px] grid place-items-center">
+					<div class="text-center">
+						<div class="text-3xl">
+							{{ 100 - Math.round(summaryList.length / cardsList.length * 100) }}<span class="text-lg">%</span>
+						</div>
+						<div>
+							de réussites
+						</div>
+					</div>
+				</div>
+
+				<div class="bg-content size-[150px] grid place-items-center">
+					<div class="text-center">
+						<div class="text-3xl">
+							{{ summaryList.length }}
+						</div>
+						<div>
+							cartes non sues
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="flex flex-col gap-5">
+				<div
+					v-for="card in summaryList"
+					:key="`summary-card-${card.id}`"
+				>
+					<div>
+						{{ card.current_appearances }} essais
+					</div>
+					<deck-potfolio-item
+						class="grid grid-cols-2 gap-2"
+						:card="makeCard(card)"
+					/>
+				</div>
+			</div>
 		</div>
 	</div>
 </template>

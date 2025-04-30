@@ -3,13 +3,17 @@ import LayoutMain from "@/Layouts/LayoutMain.vue"
 import ScButton from "@/Components/Ui/scButton.vue"
 import {ref} from "vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
-import {buttonConfig, buttonTypes} from "@/buttonConfig.ts"
+import {buttonConfig, buttonTypes} from "@/button.config.ts"
+import {blockTypes} from "@/block.config.ts"
+import BlockShow from "@/Components/Blocks/BlockShow.vue"
+import {makeBlock} from "@/helpers/makeModel.ts"
 
 defineOptions({layout: LayoutMain})
 
 type groupsUiType = 'theme' | 'buttons' | 'blocks' | 'forms'
-const detailsOpen = ref<groupsUiType[]>(['buttons'])
+const detailsOpen = ref<groupsUiType[]>(['blocks'])
 
+const loremIpsum = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium id molestiae nam nobis recusandae sapiente, voluptas! Amet autem exercitationem nulla odit ratione suscipit ut. Cupiditate et magnam quibusdam saepe tempore?'
 const btnTypes: buttonTypes[] = Object.keys(buttonConfig) as buttonTypes[]
 
 const themes = {
@@ -159,62 +163,14 @@ const themes = {
 	],
 }
 
-const blockTypes = {
-	definition: {
-		title: "définition",
-		icon: "bi bi-book",
-		style: {
-			header: "bg-lime-400 text-lime-900 dark:bg-lime-600 dark:text-lime-200",
-			body: "border-lime-400 dark:border-lime-600",
-		},
-	},
-	theorem: {
-		title: "théorème",
-		icon: "bi bi-book",
-		style: {
-			header: "bg-amber-600 text-amber-50 dark:bg-amber-700 dark:text-amber-300",
-			body: "border-amber-600 dark:border-amber-700",
-		},
-	},
-	property: {
-		title: "propriété",
-		icon: "bi bi-wrench",
-		style: {
-			header: "bg-purple-600 text-purple-50 dark:bg-purple-700 dark:text-purple-200",
-			body: "border-purple-600 dark:border-purple-700",
-		},
-	},
-	remark: {
-		title: "remarque",
-		icon: "bi bi-chat",
-		style: {
-			header: "bg-cyan-300 text-cyan-700 dark:bg-cyan-500 dark:text-cyan-100",
-			body: "border-cyan-300 dark:border-cyan-500",
-		},
-	},
-	example: {
-		title: "exemple",
-		icon: "bi bi-calculator",
-		style: {
-			header: "bg-gray-200 text-gray-800 dark:bg-gray-400 dark:text-gray-100",
-			body: "border-gray-200 dark:border-gray-400",
-		},
-	},
-	danger: {
-		title: "attention",
-		icon: "bi bi-exclamation-triangle",
-		style: {
-			header: "bg-red-700 text-red-50 dark:bg-red-900 dark:text-red-100",
-			body: "border border-red-700 dark:border-red-900",
-		},
-	},
-}
-
 const value = ref(false)
 </script>
 
 <template>
 	<div class="space-y-4">
+		<div class="cancel-red-800 h-[150px] w-[120px] bg-blue-100">
+			Hello world
+		</div>
 		<details :open="detailsOpen.includes('theme')">
 			<summary class="text-lg cursor-pointer">
 				Thème
@@ -309,27 +265,11 @@ const value = ref(false)
 				Blocks
 			</summary>
 			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-				<div
-					v-for="block in blockTypes"
-					class="border border-l-8"
-					:class="block.style.body"
+				<block-show
+					v-for="(block, key) in blockTypes"
 					:key="block.title"
-				>
-					<div
-						class="px-1 py-3"
-						:class="block.style.header"
-					>
-						<i
-							class="mr-3"
-							:class="block.icon"
-						/>{{ block.title }}
-					</div>
-					<div class="p-3">
-						Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium id molestiae nam nobis
-						recusandae sapiente, voluptas! Amet autem exercitationem nulla odit ratione suscipit ut.
-						Cupiditate et magnam quibusdam saepe tempore?
-					</div>
-				</div>
+					:block="makeBlock(loremIpsum, undefined, key)"
+				/>
 			</div>
 		</details>
 

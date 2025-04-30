@@ -1,8 +1,8 @@
 import {getModule, MODULE_TYPES} from "@/scolcours.js"
 import {Component, ref, unref} from "vue"
-import {PiChecker} from "pichecker"
 import {keyboardKeys, keyboardMaps, KeyboardObjectType, keyboards} from "@/Composables/keyboardConfig.ts"
 import {questionValidatorInterface} from "@/Components/Questions/QuestionInterface.ts"
+import {PiChecker} from "@/Checkers"
 
 /**
  * Get the keyboard name for a given component value.
@@ -76,7 +76,7 @@ export interface KeyboardCheckerInterface {
 	checkerOverride?: Record<string, string>;
 }
 
-function getOneKeyboard(kbrd: string): Partial<questionValidatorInterface> {
+export function getOneKeyboard(kbrd: string): Partial<questionValidatorInterface> {
 	/* A kbrd code is defined like this:
 	*
 	 * keyboard name					-> name
@@ -142,23 +142,7 @@ function getOneKeyboard(kbrd: string): Partial<questionValidatorInterface> {
 			values.push(k)
 		})
 
-
 	const name = getComponentKeyboardName(value)
-
-	console.log({
-		keyboard: {
-			name,
-			parameters,
-			values,
-			config,
-			component: getComponent(name)
-		},
-		checker: {
-			name,
-			checker: new PiChecker(`${value},${options.join(',')}`),
-			checkerOverride
-		}
-	})
 
 	return {
 		keyboard: {
@@ -166,7 +150,7 @@ function getOneKeyboard(kbrd: string): Partial<questionValidatorInterface> {
 			parameters,
 			values,
 			config,
-			component: getComponent(name)
+			component: getComponent(name),
 		},
 		checker: {
 			name,

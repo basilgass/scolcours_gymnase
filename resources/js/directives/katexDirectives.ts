@@ -1,5 +1,5 @@
 import katex from "katex/dist/katex.mjs"
-import AsciiMathParser from "../asciimath2tex"
+import AsciiMathParser from "@/asciimath2tex.ts"
 import { useKatexMacros } from "@/Composables/useHelpers"
 import renderMathInElement from "katex/contrib/auto-render"
 import { numberCorrection } from "@/helpers/helperFunctions"

@@ -52,15 +52,15 @@
 		"markdown-it-attrs": "^4.3.1",
 		"markdown-it-bracketed-spans": "^1.0.1",
 		"markdown-it-texmath": "^1.0.0",
-		"pichecker": "^0.0.6",
 		"pidraw": "^0.1.46",
 		"pigames": "^0.1.18",
 		"pimath": "^0.1.32",
 		"pinia": "^3.0.1",
-		"pithree": "^0.0.4",
+		"pithree": "^0.1.1",
 		"prismjs": "^1.29.0",
 		"qrcode.vue": "^3.6.0",
 		"vue-chartjs": "^5.3.2",
+		"vue-mermaid-string": "^7.0.0",
 		"vue-slider-component": "4.1.0-beta.7",
 		"vuedraggable": "^4.1.0"
 	}
