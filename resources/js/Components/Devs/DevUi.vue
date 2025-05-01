@@ -10,12 +10,23 @@ import {makeBlock} from "@/helpers/makeModel.ts"
 
 defineOptions({layout: LayoutMain})
 
-type groupsUiType = 'theme' | 'buttons' | 'blocks' | 'forms'
-const detailsOpen = ref<groupsUiType[]>(['blocks'])
+type groupsUiType = 'theme' | 'buttons' | 'blocks' | 'forms' | 'definition'
+const detailsOpen = ref<groupsUiType[]>([])
 
 const loremIpsum = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium id molestiae nam nobis recusandae sapiente, voluptas! Amet autem exercitationem nulla odit ratione suscipit ut. Cupiditate et magnam quibusdam saepe tempore?'
 const btnTypes: buttonTypes[] = Object.keys(buttonConfig) as buttonTypes[]
 
+const definitionClasses = {
+	'scolcours': 'def-scolcours',
+	'algebre': 'def-algebre',
+	'analyse': 'def-analyse',
+	'geometrie': 'def-geometrie',
+	'statistiques': 'def-statistiques',
+	'jeux': 'def-jeux',
+	'tools': 'def-tools',
+	'arithmetique': 'def-arithmetique',
+	'admin': 'def-admin',
+}
 const themes = {
 	'scolcours': [
 		'bg-scolcours-light dark:bg-scolcours-light',
@@ -171,6 +182,21 @@ const value = ref(false)
 		<div class="cancel-red-800 h-[150px] w-[120px] bg-blue-100">
 			Hello world
 		</div>
+
+		<details :open="detailsOpen.includes('definition')">
+			<summary class="text-lg cursor-pointer">
+				Définition (mise en évidence)
+			</summary>
+			<div class="flex flex-col gap-2">
+				<div
+					v-for="key in Object.keys(definitionClasses)"
+					:key="`def-${key}`"
+				>
+					Mise en évidence de la défition du <span :class="definitionClasses[key]">{{ key }}</span> dans une phrase.
+				</div>
+			</div>
+		</details>
+
 		<details :open="detailsOpen.includes('theme')">
 			<summary class="text-lg cursor-pointer">
 				Thème

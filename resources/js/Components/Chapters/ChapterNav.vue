@@ -2,15 +2,15 @@
 	lang="ts"
 	setup
 >
-import type { ChapterShowInterface, PostInterface } from "@/types/modelInterfaces"
-import { usePage } from "@inertiajs/vue3"
-import { computed } from "vue"
+import type {ChapterShowInterface, PostInterface} from "@/types/modelInterfaces"
+import {usePage} from "@inertiajs/vue3"
+import {computed} from "vue"
 import ScButton from "@/Components/Ui/scButton.vue"
 
 const props = defineProps<{
 	chapter: ChapterShowInterface, // slug, title, posts.length
 	posts: PostInterface[],
-	currentPost: number
+	currentPostId: number
 }>()
 
 const nav = computed<{
@@ -19,29 +19,29 @@ const nav = computed<{
 	next: string | false
 }>(() => {
 
+	// Le theme en cours
 	const themeSlug = usePage().props.theme.slug
 
+	// Le chapitre en cours
 	const chapterSlug = props.chapter.slug
-	const previous = props.currentPost > 1 ?
-		route("themes.chapters.slide", [
-			themeSlug,
-			chapterSlug,
-			props.currentPost - 1
-		]) : false
+
+	// currentPost order
+	const currentPostIndex: number = props.posts
+		.findIndex(post => post.id === props.currentPostId)
+
+	// On récupère la page précédant.
+	const previous = props.posts[currentPostIndex].order > 1 ?
+		route("posts.show", [props.posts[currentPostIndex-1].id]) : false
 
 	const home = route("themes.chapters.intro", [
 		themeSlug,
 		chapterSlug
 	])
 
-	const next = props.currentPost < props.posts.length ?
-		route("themes.chapters.slide", [
-			themeSlug,
-			chapterSlug,
-			props.currentPost + 1
-		]) : false
+	const next = props.posts[currentPostIndex].order < props.posts.length ?
+		route("posts.show", [props.posts[currentPostIndex+1].id]) : false
 
-	return { previous, home, next }
+	return {previous, home, next}
 })
 </script>
 

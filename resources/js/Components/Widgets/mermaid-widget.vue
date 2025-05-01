@@ -4,51 +4,31 @@
 >
 import {WidgetPropsInterface} from "@/types/modelInterfaces"
 import {computed} from "vue"
-import VueMermaidString from 'vue-mermaid-string'
+import MermaidDiagram from "@/Components/MermaidDiagram.vue"
+import type {MermaidConfig} from "mermaid"
 
+// TODO: est-il possible de réduire la taille de vue-mermaid-string, en faisant ma propre version et en passant par un CDN ?
 const props = defineProps<{
 	illustration: WidgetPropsInterface
 }>()
 
-const options = computed<{
-	theme: string
-}>(() => {
+const config = computed<Partial<MermaidConfig>>(() => {
 	const data = props.illustration.parameters.split(',')
 	const theme = ['default', 'dark', 'forest', 'neutral'].includes(data[0]) ? data[0] : 'neutral'
-	const look = ['classic', 'handDrawn'].includes(data[1]) ? data[1] : 'classic'
-
-	// if(theme==='base'){
-	// TODO: Mermaid: handle custom color ?
-	// 	return {
-	// 		theme,
-	// 		'themeVariables': {
-	// 			'primaryColor': '#25bb70',
-	// 			'primaryTextColor': '#fff',
-	// 			'primaryBorderColor': '#7C0000',
-	// 			'lineColor': '#F8B229',
-	// 			'secondaryColor': '#006100',
-	// 			'tertiaryColor': '#fff'
-	// 		}
-	// 	}
-	// }
+	const look = ['classic', 'handDrawn', 'neo'].includes(data[1]) ? data[1] : 'classic'
 
 	return {
 		theme,
 		look,
-	}
-})
-const pre = computed(() => {
-	return props.illustration.code
+	} as MermaidConfig
 })
 
 </script>
 
 <template>
-	<vue-mermaid-string
-		:key="JSON.stringify(options)"
-		class="flex justify-center"
-		:value="pre"
-		:options
+	<mermaid-diagram
+		:content="props.illustration.code"
+		:config
 	/>
 </template>
 

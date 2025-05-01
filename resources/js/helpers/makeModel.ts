@@ -23,6 +23,7 @@ export function makeCard(usercard: UserCardInterface): CardInterface {
 		console.log('makeCard: usercard.blocks is empty or undefined')
 		console.log(usercard)
 		return {
+			id: 0,
 			recto: makeBlock('aucune carte créée'),
 			verso: makeBlock('aucune carte créée'),
 		}
@@ -31,6 +32,7 @@ export function makeCard(usercard: UserCardInterface): CardInterface {
 	// On a deux blocks: un rector, un verso.
 	if (usercard.blocks.length === 2) {
 		return {
+			id: 0,
 			recto: usercard.blocks[0],
 			verso: usercard.blocks[1],
 		}
@@ -40,6 +42,7 @@ export function makeCard(usercard: UserCardInterface): CardInterface {
 	// S'il y a un titre, le titre est le recto, le block est le verso.
 	if (usercard.blocks[0].title) {
 		return {
+			id: 0,
 			recto: makeBlock(usercard.blocks[0].title),
 			verso: usercard.blocks[0],
 		}
@@ -51,6 +54,7 @@ export function makeCard(usercard: UserCardInterface): CardInterface {
 
 	if (parts.length >= 2) {
 		return {
+			id: 0,
 			recto: makeBlock(parts[0] + '"\\]'), // on suppose d'office que le "=" est dans partie TeX.
 			verso: makeBlock(body), // le verso est la réponse, soit tout le block.
 		}
@@ -59,6 +63,7 @@ export function makeCard(usercard: UserCardInterface): CardInterface {
 	// Il n'y a pas de signe égal... le block n'est pas gérable automatiquement
 
 	return {
+		id: 0,
 		recto: makeBlock('carte non gérée'),
 		verso: makeBlock('carte non gérée'),
 	}

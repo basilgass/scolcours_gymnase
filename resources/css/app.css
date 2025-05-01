@@ -90,3 +90,13 @@
 		pointer-events: none;
 	}
 }
+
+@utility def-* {
+	background: color-mix(in oklch, --value(--color-*) 5%, transparent);
+	color: --value(--color-*);
+	/*bg-algebre/10 hover:bg-algebre/30 text-algebre*/
+	@apply font-semibold mx-1 px-2 border rounded transition;
+	&:hover {
+		background: color-mix(in oklch, --value(--color-*) 20%, transparent);
+	}
+}

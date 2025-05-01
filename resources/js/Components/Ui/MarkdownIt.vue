@@ -17,13 +17,13 @@ import {computed, ref} from "vue"
 const root = ref(null)
 
 const props = defineProps({
-	text: { type: String, default: "" },
-	delimiters: { type: Array, default: null },
-	customKatex: { type: Boolean, default: false },
+	text: {type: String, default: ""},
+	delimiters: {type: Array, default: null},
+	customKatex: {type: Boolean, default: false},
 })
 
 
-const md = markdownIt({ html: true })
+const md = markdownIt({html: true})
 	.use(bracketed)
 	.use(attr)
 	.use(tm, {
@@ -44,12 +44,13 @@ const mdit = computed(() => {
 	let output = props.text
 
 	// Remplace les class courtes en classes complètes.
-	// .@text = .text-scolcours-theme
-	// .@bg = .bg-scolcours-theme
+	// .@text = .text-<theme>
+	// .@bg = .bg-<theme>
+	// .@def = .def-<theme>
 	// TODO: attention, au passage à Tailwind4, il faudra mettre à jour ici !
 	output = output.replaceAll(/\.(@[a-z]+)/g, (match) => {
-		const prefix = match.substring(2),
-			theme = usePage().props.theme.slug
+		const prefix = match.substring(2)
+		const theme = usePage().props.theme.slug
 
 		return `.${prefix}-${theme}`
 	})

@@ -336,7 +336,7 @@ function deleteIllustration(id: number){
 					<div class="h-[3.2em] font-code text-xs px-3">
 						<div v-show="tab === 'markdown'">
 							@posts.show,[id] | @blocks.show,[id] | #[item-id]<br>
-							.@text .@bg pour des classes à thème
+							.@text .@bg .@def pour des classes à thème
 						</div>
 					</div>
 				</div>

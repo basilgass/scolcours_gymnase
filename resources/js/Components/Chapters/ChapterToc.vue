@@ -200,7 +200,7 @@ const questionStatus = computed<Record<number, number | null>>(() => {
 					</button>
 
 					<InertiaLink
-						:class="props.active === element.order
+						:class="props.active === element.id
 							? `font-semibold text-${$page.props.theme.slug}-500`
 							: ''
 						"

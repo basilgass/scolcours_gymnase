@@ -13,6 +13,8 @@ import type { BlockInterface, ChapterShowInterface, PostInterface, PostShowInter
 import { usePage } from "@inertiajs/vue3"
 import axios from "axios"
 import { nextTick, onMounted, provide, ref } from "vue"
+import PostEdit from "@/Pages/Posts/PostEdit.vue"
+import PostInlineEdit from "@/Components/Posts/PostInlineEdit.vue"
 
 defineOptions({ layout: LayoutMain })
 
@@ -23,9 +25,9 @@ const props = defineProps<{
 	anchor: string | null
 }>()
 
+const showEdit = ref(false)
 
 const blocks = ref<BlockInterface[]>(props.post.blocks)
-
 const postScript = useScriptLoader(props.post.script)
 postScript.run()
 provide("postScript", postScript)
@@ -54,8 +56,7 @@ onMounted(() => {
 	<section>
 		<header
 			v-theme.text
-			class="h-[80px] w-full py-2
-			lg:flex-row justify-between"
+			class="min-h-[80px] w-full py-2"
 		>
 			<!-- title -->
 			<div class="scolcours-container flex justify-between">
@@ -124,12 +125,12 @@ onMounted(() => {
 			<chapter-nav
 				:chapter
 				:posts
-				:current-post="post.order"
+				:current-post-id="post.id"
 			/>
 
 			<!-- table of contents -->
 			<chapter-toc
-				:active="post.order"
+				:active="post.id"
 				:chapter
 				:posts
 				class="mt-10"

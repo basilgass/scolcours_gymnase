@@ -93,7 +93,11 @@ class ChapterController extends Controller
 		$chapter->load([
 						   'blocks',
 						   'posts' => function ($query) {
-							   $query->withCounts()->where('active', true);
+								if(Auth::user()?->admin) {
+									$query->withCounts(); //->where('active', true);
+								}else{
+									$query->withCounts()->where('active', true);
+								}
 						   },
 						   'challenges',
 						   'relations'
@@ -130,7 +134,11 @@ class ChapterController extends Controller
 	{
 		$chapter->load([
 						   'posts' => function ($query) {
-							   $query->withCounts()->where('active', true);
+							   if(Auth::user()?->admin) {
+								   $query->withCounts(); //->where('active', true);
+							   }else{
+								   $query->withCounts()->where('active', true);
+							   }
 						   },
 						   'posts.blocks',
 						   'posts.questions',
