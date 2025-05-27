@@ -3,7 +3,10 @@
 		"target": "ESNext",
 		"module": "ESNext",
 		"moduleResolution": "bundler",
-		"lib": ["DOM", "ESNext"],
+		"lib": [
+			"DOM",
+			"ESNext"
+		],
 		"strict": false,
 		"jsx": "preserve",
 		"resolveJsonModule": true,
@@ -15,9 +18,8 @@
 		"forceConsistentCasingInFileNames": true,
 		"allowImportingTsExtensions": true,
 		"paths": {
-			"@/*": [
-				"./resources/js/*"
-			]
+			"@/*": ["./resources/js/*"],
+			"pidraw/*": ["./node_modules/pidraw/*"],
 		}
 	},
 	"include": [
@@ -25,7 +27,7 @@
 		"resources/js/**/*.d.ts",
 		"resources/js/**/*.vue",
 		"tests/**/*.ts",
-		"*.config.js",
+		"*.config.js"
 	],
 	"exclude": [
 		"node_modules"

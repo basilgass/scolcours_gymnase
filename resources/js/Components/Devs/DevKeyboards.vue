@@ -175,7 +175,7 @@ function validate(evt) {
 				v-model="kbrdsJson"
 				:rows="20"
 				language="json"
-				type="code"
+				type="codearea"
 			/>
 		</div>
 		<div>

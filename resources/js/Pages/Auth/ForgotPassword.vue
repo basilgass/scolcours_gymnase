@@ -1,48 +1,28 @@
-<script>
-import BreezeButton from "@/Components/Auth/Button.vue"
-import BreezeGuestLayout from "@/Layouts/LayoutGuest.vue"
-import BreezeInput from "@/Components/Auth/Input.vue"
-import BreezeLabel from "@/Components/Auth/Label.vue"
-import BreezeValidationErrors from "@/Components/Auth/ValidationErrors.vue"
-import { Head } from "@inertiajs/vue3"
+<script setup lang="ts">
+import {Head, useForm} from "@inertiajs/vue3"
+import LayoutGuest from "@/Layouts/LayoutGuest.vue"
+import FormMaker from "@/Components/Form/FormMaker.vue"
+import ScButton from "@/Components/Ui/scButton.vue"
 
-export default {
+defineOptions({layout: LayoutGuest})
+defineProps<{
+	status: string | null
+}>()
 
-	components: {
-		BreezeButton,
-		BreezeInput,
-		BreezeLabel,
-		BreezeValidationErrors,
-		Head,
-	},
-	layout: BreezeGuestLayout,
+const form = useForm({
+	email: ""
+})
 
-	props: {
-		status: String,
-	},
-
-	data() {
-		return {
-			form: this.$inertia.form({
-				email: ""
-			})
-		}
-	},
-
-	methods: {
-		submit() {
-			this.form.post(this.route("password.email"))
-		}
-	}
+function submit() {
+	form.post(route("password.email"))
 }
 </script>
 
 <template>
-	<Head title="Forgot Password" />
+	<Head title="Mot de passe oublié ?" />
 
 	<div class="mb-4 text-sm text-gray-600">
-		Forgot your password? No problem. Just let us know your email address and we will email you a password reset
-		link that will allow you to choose a new one.
+		Vous avez oublié votre mot de passe ?
 	</div>
 
 	<div
@@ -52,32 +32,25 @@ export default {
 		{{ status }}
 	</div>
 
-	<BreezeValidationErrors class="mb-4" />
-
 	<form @submit.prevent="submit">
-		<div>
-			<BreezeLabel
-				for="email"
-				value="Email"
-			/>
-			<BreezeInput
-				id="email"
-				v-model="form.email"
-				autocomplete="username"
-				autofocus
-				class="mt-1 block w-full"
-				required
-				type="email"
-			/>
-		</div>
+		<form-maker
+			label="Email"
+			autocomplete="username"
+			focus
+			required
+			type="email"
+			v-model="form.email"
+		/>
+
 
 		<div class="flex items-center justify-end mt-4">
-			<BreezeButton
+			<sc-button
 				:class="{ 'opacity-25': form.processing }"
 				:disabled="form.processing"
+				type="primary"
 			>
-				Email Password Reset Link
-			</BreezeButton>
+				Envoyer un lien de récupération
+			</sc-button>
 		</div>
 	</form>
 </template>

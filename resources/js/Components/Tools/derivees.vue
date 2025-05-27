@@ -68,7 +68,7 @@ let result = computed(() => {
 		<div v-if="result">
 			<div
 				v-if="numerator.trim()!==''"
-				v-katex="result"
+				v-katex.boxed="result"
 			/>
 			<tex-code :tex="result" />
 		</div>

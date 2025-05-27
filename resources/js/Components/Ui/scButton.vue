@@ -34,7 +34,7 @@ const themeModifiers = computed(() => {
 	if (props.outline) {
 		return {border: true, outline: true, text: true}
 	}
-	return {bg: true, text: true, outline: true}
+	return {bg: true, text: true, border: true, outline: true}
 })
 
 const btnClass = computed<string>(() => {

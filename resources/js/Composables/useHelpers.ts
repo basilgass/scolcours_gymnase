@@ -1,5 +1,5 @@
-import { usePage } from "@inertiajs/vue3"
-import { Ref, unref } from "vue"
+import {usePage} from "@inertiajs/vue3"
+import {Ref, unref} from "vue"
 
 /**
  * Scrolls the page to the element with the specified class.
@@ -97,6 +97,24 @@ export function useFormattedBody(body: string | Ref<string>, mabyeRefValues: Ref
 	output = output.replaceAll("REPLACE_VALUE", "")
 
 	return output
+}
+
+export function replaceDoubleSigns(text: string): string {
+	return text
+		.replaceAll('++', '+')
+		.replaceAll('--', '+')
+		.replaceAll('+-', '-')
+		.replaceAll('-+', '-')
+}
+
+export function dynamicText(rawText: string, keys: Record<string, string | number>): string {
+	let result = ''+rawText
+
+	Object.keys(keys).forEach(key => {
+		result = result.replaceAll(key, `${keys[key]}`)
+	})
+
+	return replaceDoubleSigns(result)
 }
 
 export const useKatexMacros: Record<string, string> = {

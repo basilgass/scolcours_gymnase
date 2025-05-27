@@ -11,7 +11,7 @@ import {makeBlock} from "@/helpers/makeModel.ts"
 defineOptions({layout: LayoutMain})
 
 type groupsUiType = 'theme' | 'buttons' | 'blocks' | 'forms' | 'definition'
-const detailsOpen = ref<groupsUiType[]>([])
+const detailsOpen = ref<groupsUiType[]>(['buttons'])
 
 const loremIpsum = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium id molestiae nam nobis recusandae sapiente, voluptas! Amet autem exercitationem nulla odit ratione suscipit ut. Cupiditate et magnam quibusdam saepe tempore?'
 const btnTypes: buttonTypes[] = Object.keys(buttonConfig) as buttonTypes[]

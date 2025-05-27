@@ -1,417 +1,175 @@
-<!--
-Affichage d'un PiDraw
--->
 <script
 	lang="ts"
 	setup
 >
 
-// REFACTOR: need to completely rework this component
-import PiDrawParserVisibility from "@/Components/Pi/Parts/PiDrawParserVisibility.vue"
-import { useResizeObserver } from "@vueuse/core"
-import katex from "katex"
-
-import { PiDraw } from "pidraw"
-import PiMath from "pimath"
-import { computed, inject, onMounted, provide, ref, watch } from "vue"
-
-import VueSlider from "vue-slider-component/dist/vue-slider-component.umd.min"
-import "vue-slider-component/theme/material.css"
+import type {PiDraw} from "pidraw"
+import {computed, inject, onMounted, ref, watch} from "vue"
 import ScButton from "@/Components/Ui/scButton.vue"
+import VueSlider from "vue-3-slider-component"
+import {IDrawStep, type IPiDrawProps, ISlider, PiDraw_Parse_Code} from "@/Components/Pi/PiDrawHelper.ts"
+import {useScriptLoader} from "@/Composables/useScriptLoader.ts"
+import PiDrawDisplay from "@/Components/Pi/Parts/PiDrawDisplay.vue"
+import {dynamicText, replaceDoubleSigns} from "@/Composables/useHelpers.ts"
 
+const props = withDefaults(defineProps<IPiDrawProps & { theme?: string | number | false }>(),
+	{
+		width: 400,
+		height: 320,
+		theme: false
+	}
+)
 
-const emits = defineEmits(["update"])
+const emits = defineEmits<{
+	drawClick: [PiGrah: PiDraw],
+	update: [PiGrah: PiDraw],
+}>()
 
-// Get the script value
-const postData = inject("postData", ref({}))
+// Set the current step index
+const stepIndex = ref(-1)
 
-// SVG drawing container
-const drawWrapper = ref<HTMLElement>(null)
+// Tex display
+const tex = ref<string | undefined>(undefined)
 
-// Incoming props
-const props = defineProps({
-	width: { type: Number, default: 400 },
-	height: { type: Number, default: 320 },
-	draw: {
-		type: Object,
-		default: () => {
-			return {
-				code: "",
-				parameters: ""
-			}
+// List of all block steps
+const steps = ref<IDrawStep[]>([])
+const foreground = ref<string[]>([])
+
+// List of all sliders
+const sliders = ref<ISlider[]>([])
+
+// Current block RAW value
+const currentStep = computed<IDrawStep>(() => {
+	if (steps.value.length === 0) {
+		return {
+			body: "",
+			code: []
 		}
-	},
+	}
+
+	const step = steps.value[Math.max(stepIndex.value, 0)] ?? {
+		body: "",
+		code: []
+	}
+
+	return {
+		body: step.body,
+		code: [
+			...foreground.value,
+			...step.code
+		]
+	}
 })
 
-// Line by line code
-const codeArray = computed(() => {
-	return props.draw.code.split("\n")
+onMounted(() => {
+	updateData()
 })
 
-// Main draving system - not reactive !
-let PiGraph: PiDraw,
-	PiParserHasErrors = ref(false),
-	figures = ref({})
+function updateData() {
+	// On props.code change, rebuild the ref values.
+	const data = PiDraw_Parse_Code(props.draw.code)
 
-// ------------------------
-// SLIDER PART
-// Sliders reactivity and methods
-const sliders = ref([])
+	tex.value = data.tex
+	steps.value = data.steps
+	foreground.value = data.foreground
+	sliders.value = data.sliders
+}
+
+watch(() => props.draw.code, () => {
+	updateData()
+})
 
 // Display text with sliders modifications.
-const texOutput = computed(() => {
+const texComputed = computed(() => {
 	// Get the output code: starting with $tex=
-	let tex = codeArray.value.filter(line => line.startsWith("$tex="))[0]
-	if (tex === undefined) return ""
+	if (tex.value === undefined) {
+		return ""
+	}
 
 	// Get the raw code
-	tex = tex.split("$tex=")[1]
+	let t = tex.value
 
 	// Update the raw code with the sliders values.
 	sliders.value.forEach((slider) => {
-		tex = tex.replaceAll(slider.key, slider.value)
+		t = t.replaceAll(slider.key, slider.value.toString())
 	})
 
 	// Return the tex code (reformatted)
-	return tex
-		.replaceAll("+-", "-")
-		.replaceAll("--", "+")
+	return replaceDoubleSigns(t)
 })
 
-/** Get the sliders from the "header" of the code parts
- * $NAME=a,b,...,c/interval=default
- */
-function getSliders() {
-	// All slider are like: $a=...
-	sliders.value = []
-	for (const row of codeArray.value) {
-		if (row[0] === "$") {
-			const rowData = row.split("="),
-				rowKey = rowData.shift(),
-				rowItem = rowData.join("=")
+const blockScript = inject('blockScript', useScriptLoader(""))
+const drawScript = useScriptLoader("", {parent: blockScript.data})
+const dynamicValues = computed<Record<string, string | number>>(() => {
+	const dict: Record<string, string | number> = {}
+	Object.keys(drawScript.merged.value).forEach(key => {
+		dict[`$${key}`] = drawScript.merged.value[key]
+	})
+	sliders.value.forEach((slider) => {
+		dict[slider.key] = slider.value
+	})
 
-			// TeX output : no need to process
-			if (rowKey === "$tex") continue
-
-			// $a=a,b,...,c/interval=default
-			// interval not given => interval = b-a
-			// b-a: marks separation... or maybe all given manually !
-			// default value given at start.
-			// prevent parenthesis wrap
-
-			if (rowItem !== "") {
-				let marks = rowItem.match(/^([-0-9.,]+)/),
-					a: number,
-					b: number,
-					c: number,
-					marksInterval: number,
-					interval = rowItem.match(/\/([0-9.]+)/),
-					dft = rowItem.match(/=([-0-9.]+)/),
-					wrap = !rowItem.match(/~$/)
-
-				if (marks) {
-					marks = marks[1].split(",")
-					if (marks.includes("...")) {
-						if (marks.length === 3) {
-							// a,...,c
-							a = +marks[0]
-							marksInterval = 1
-							c = +marks[2]
-
-							if (c <= a) {
-								continue
-							}
-
-							marks = []
-							for (let i = a; i <= c; i++) {
-								marks.push(i)
-							}
-						} else if (marks.length === 4) {
-							a = +marks[0]
-							b = +marks[1]
-							marksInterval = b - a
-							c = +marks[3]
-
-							if (marksInterval <= 0.01) {
-								continue
-							}
-							marks = []
-							for (let i = a; i <= c; i += marksInterval) {
-								marks.push(
-									PiMath.Numeric.numberCorrection(i)
-								)
-							}
-						}
-					} else {
-						marks = marks.map((x: number) => +x)
-					}
-				} else {
-					continue
-				}
-
-				if (interval) {
-					interval = +interval[1]
-				} else {
-					interval = PiMath.Numeric.numberCorrection(
-						marks[1] - marks[0]
-					)
-				}
-
-				if (dft) {
-					dft = +dft[1]
-				} else {
-					dft = marks[0]
-				}
-
-				sliders.value.push({
-					key: rowKey,
-					value: dft,
-					wrap,
-					options: {
-						min: marks[0],
-						max: marks[marks.length - 1],
-						interval: interval,
-						marks: marks,
-						tooltip: "none"
-					}
-				})
-			}
-		}
-	}
-}
-
-// ------------------------
-// STEPPER PARTS
-const stepperStart = ref(false),
-	stepperMax = computed(() => props.draw.code
-		.split("\n\n")
-		.filter((step: string) => !step.startsWith("%-FG-"))
-		.length
-	),
-	stepperIndex = ref(0),
-	stepperText = computed(() => {
-		const step = drawCode.value.split("\n\n")[stepperIndex.value]
-		if (step !== undefined) {
-			const steps = step.split("\n")
-			if (steps[0].startsWith("%")) {
-				return steps[0].substring(1)
-			}
-		}
-		return ""
-	}),
-	stepperForeground = function (code: string) {
-		const [before, after] = code.split("%-FG-")
-		return [
-			before,
-			(after === undefined || after.trim() === "") ? "" : after
-		]
-	}
-
+	return dict
+})
 /**
  * DrawCode system
  * 1. apply sliders values
  * 2. apply scripts values
  * 3. apply steppers values.
  */
-const drawCode = computed(() => {
-	let outputCode = props.draw.code
-
-	// Modify the code using the local information (sliders)
-	if (sliders.value.length > 0) {
-		// Remove the lines starting with $ (dollar sign)
-		const code = outputCode
-			.split("\n")
-			.filter((row: string) => row[0] !== "$")
-
-		// Modify the value of all variables ($a, $b, ...)
-		outputCode = code
-			.map((row: string) => {
-				sliders.value.forEach((slider) => {
-					if (row.split("=")[0].includes("(x)")) {
-						row = row.replaceAll(
-							slider.key,
-							slider.wrap ? `(${slider.value})` : `${slider.value}`
-						)
-					} else {
-						row = row.replaceAll(slider.key, slider.value)
-					}
-				})
-				return row
-			})
-			.join("\n")
-	}
-
-	// Modify the code according to the script level
-	if (Object.values(postData.value).length > 0) {
-		for (const key in postData.value) {
-			outputCode = outputCode.replaceAll(
-				`$${key}`,
-				postData.value[key]
-			)
-		}
-	}
-
-	// Split the code
-	if (stepperMax.value > 1) {
-		const [stepsPart, FGPart] = stepperForeground(outputCode)
-
-		const crtIndex = stepperStart.value ? stepperIndex.value : stepperMax.value
-
-		return stepsPart
-			.split("\n\n")
-			.slice(0, crtIndex + 1)
-			.filter((step, index) => {
-				if (step.slice(0, 2) === "%<") {
-					const constrains = step.split("%<")[1].split(">")[0]
-
-					// It contains just a star : visible only for the corresponding step
-					if (constrains === "*") {
-						return index === crtIndex
-					}
-
-					// Might be a list of comma separated values.
-					const values = constrains
-						.split(",")
-						.map(value => {
-							if (value.includes("-")) {
-								const [min, max] = value.split("-").map(x => +x)
-								const v = []
-								for (let i = min; min <= max; i++) {
-									v.push(i)
-								}
-								return v
-							} else if (Number.isSafeInteger(+value)) {
-								return +value
-							}
-						})
-						.flat()
-
-					return values.indexOf(crtIndex) !== -1
-				}
-
-				return true
-			})
-			.join("\n\n")
-			+ FGPart
-	} else {
-		return outputCode
-	}
+const drawCode = computed<string>(() => {
+	return dynamicText(currentStep.value.code.join('\n'), dynamicValues.value)
 })
 
-const drawParameter = computed(()=> {
+const drawParameter = computed(() => {
 	return props.draw.parameters ?? ""
 })
 
-function PiParserUpdate(from: string, withSliders = false) {
-	// Get the sliders
-	if (withSliders) getSliders()
-
-	// Update the drawing
-	try {
-		PiGraph.refresh(drawCode.value)
-		emits("update", PiGraph.figures)
-		PiParserHasErrors.value = false
-	} catch {
-		console.warn("Cannot parse from: " + from)
-		console.warn(drawCode.value)
-		PiParserHasErrors.value = true
-	}
-}
-
-
-// Create the non reactive objects on mounted
-// PiGraph : display SVG
-// PiParser: convert string code to PiGraph data
-// Build the resize observer...
-onMounted(() => {
-	// Default settings
-	PiGraph = new PiDraw(
-		drawWrapper.value,
-		{
-			parameters: props.draw.parameters ?? '',
-			code: props.draw.code,
-			tex: (value: string) => katex.renderToString(`${value}`, {
-				throwOnError: false,
-				displayMode: true
-			})
-		}
-	)
-
-	// Add a resizeObserver on the draw container
-	useResizeObserver(drawWrapper.value, () => {
-		PiParserUpdate("onResize", true)
-		// PiParser.updateLayout(props.draw.parameters ?? "")
-		// PiParser.update(drawCode.value, true)
-	})
-})
-
 // Grab the data when on mouse up for external modifications
-const drawMouseUp = function () {
-	emits("update", PiGraph.figures)
+const drawMouseUp = function (evt: PiDraw) {
+	emits("update", evt)
 }
-
-// TODO: make PiDrawParser much better vue compatible (reactive) and using computed properties.
-watch(drawCode, () => {
-	// Watch changes from "inside"
-	PiParserUpdate("drawCode watcher")
-})
-
-watch(drawParameter, ()=> {
-	// Watch changes from "inside"
-	PiGraph.refreshLayout(drawParameter.value)
-})
-
-defineExpose({ figures })
-
-provide("PiDrawGraph", PiGraph)
 
 </script>
 
 <template>
 	<article
 		class="dark:bg-slate-600"
-		:class="PiParserHasErrors ? 'bg-red-100' : ''"
 	>
 		<!-- draw graph-->
-		<div
-			ref="drawWrapper"
-			class="katex-m-0 min-w-[50px] min-h-[50px]"
-			@mouseup="drawMouseUp"
-		/>
-
-		<pi-draw-parser-visibility
-			v-if="PiGraph"
-			:draw="props.draw"
-			:graph="PiGraph"
+		<pi-draw-display
+			:code="drawCode"
+			:parameters="drawParameter"
+			@draw-click="drawMouseUp"
 		/>
 
 		<!-- stepper -->
 		<div
-			v-if="stepperMax > 1"
+			v-if="steps.length > 1"
 			class="my-3"
 		>
-			<div v-if="stepperStart">
+			<div v-if="stepIndex>=0">
 				<div class="flex items-center justify-center gap-10">
 					<sc-button
-						:disabled="stepperIndex <= 0"
+						:disabled="stepIndex < 0"
 						class="px-3 py-2"
 						xs
-						@click="stepperIndex--"
+						@click="stepIndex--"
 					>
 						<i class="bi bi-chevron-left" />
 					</sc-button>
-					<div>{{ stepperIndex + 1 }} / {{ stepperMax }}</div>
+					<div>{{ stepIndex + 1 }} / {{ steps.length }}</div>
 					<sc-button
-						:disabled="stepperIndex >= stepperMax - 1"
+						:disabled="stepIndex >= steps.length - 1"
 						class="px-3 py-2"
 						xs
-						@click="stepperIndex++"
+						@click="stepIndex++"
 					>
 						<i class="bi bi-chevron-right" />
 					</sc-button>
 				</div>
 				<div
-					v-katex.auto="stepperText"
+					v-katex.auto="currentStep.body"
 					class="my-3"
 				/>
 			</div>
@@ -423,7 +181,7 @@ provide("PiDrawGraph", PiGraph)
 					theme
 					xs
 					:class="`w-full tracking-wider d-block`"
-					@click="stepperStart = true"
+					@click="stepIndex = 0"
 				>
 					Marche à suivre
 				</sc-button>
@@ -440,9 +198,22 @@ provide("PiDrawGraph", PiGraph)
 				:key="`slider-${index}`"
 				v-model="slider.value"
 				v-bind="slider.options"
-				@change="slider.value"
+				:process-style="{
+					backgroundColor: `var(--color-${theme})`
+				}"
+				:rail-style="{
+					backgroundColor: `var(--color-${theme}-light)`
+				}"
+				:dot-style="{
+					backgroundColor: `var(--color-${theme})`
+				}"
 			/>
-			<div v-katex="texOutput" />
+			<div v-katex="texComputed" />
+		</div>
+
+		<div class="grid grid-cols-2 gap-3">
+			<pre class="border border-slate-200 p-2">{{ dynamicValues }}</pre>
+			<pre class="border border-slate-200 p-2">{{ drawCode }}</pre>
 		</div>
 	</article>
 </template>

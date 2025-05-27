@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DeckController;
+
 //TODO: Reformat routes to clearly differentiate Deck, Card, UserDeck and UserCard routes.
 Route::get('decks', [DeckController::class, 'index'])
 	->name('decks.index');

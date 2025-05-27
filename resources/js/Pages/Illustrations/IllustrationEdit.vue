@@ -262,7 +262,7 @@ onMounted(() => {
 								:rows="10"
 								input-class="font-code"
 								name="drawData"
-								type="textarea"
+								type="codearea"
 								@current-line="currentLine = $event"
 							/>
 
@@ -302,7 +302,7 @@ onMounted(() => {
 								v-model="theIllustration.code"
 								:rows="10"
 								language="latex"
-								type="code"
+								type="codearea"
 							/>
 							<markdown-it
 								v-if="currentComponent"

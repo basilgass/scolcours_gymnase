@@ -76,7 +76,7 @@ class DeckController extends Controller
 
 		$deck->cards;
 		return Inertia::render("Decks/DeckEdit", [
-			'deck' => $deck,
+			'deck'  => $deck,
 			'cards' => CardResource::collection($deck->cards)
 		]);
 	}
@@ -304,7 +304,7 @@ class DeckController extends Controller
 	public function portfolio(UserDeck $deck)
 	{
 		return Inertia::render('Decks/UserdeckPortfolio', [
-			"deck"=> UserDeckResource::make($deck),
+			"deck"  => UserDeckResource::make($deck),
 			'cards' => UserCardResource::collection($deck->cards)
 		]);
 	}

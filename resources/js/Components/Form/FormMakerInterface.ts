@@ -1,3 +1,15 @@
+export interface FormElementExpose {
+	focus: () => void
+	validate: () => string[]
+}
+
+export interface FormElementEmits {
+	update: [e: string | boolean | number | undefined],
+	focus: [],
+	blur: [],
+	errors: [e: string[]]
+}
+
 export type FormMakerInputsType =
 	"id" |
 	"text" |
@@ -14,6 +26,33 @@ export type FormMakerInputsType =
 	"fraction" |
 	"vector"
 	;
+
+export type FormElementType =
+	"text" | "number" | "password" | "email" | "color" | "range" | // Basic elements
+	"id" |
+	"textarea" |
+	"select" | // TODO: handle select FormMaker element.
+	"fraction" |
+	"vector" |
+	"switch" |
+	"codearea" |
+	"keyboard"
+
+export interface FormMakerPropsNewType {
+	type?: FormElementType,
+	label?: string
+	icon?: boolean | string
+	prepend?: string
+	inlineLabel?: boolean
+	btn?: boolean | string
+	clearable?: boolean
+	message?: string
+	xs?: boolean
+	sm?: boolean
+	xl?: boolean
+	focus?: boolean
+	output?: boolean | string
+}
 
 export interface FormMakerPropsType {
 	autoSize?: boolean;
@@ -43,5 +82,5 @@ export interface FormMakerPropsType {
 	},
 	fromUrl?: string;
 	clearable?: boolean;
-  helper?: boolean | string;
+	helper?: boolean | string;
 }

@@ -6,13 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- *
+ * 
  *
  * @property int $id
  * @property int $user_deck_id
  * @property string $cardable_type
  * @property int $cardable_id
- * @property int|null $current_score
+ * @property float|null $current_score
  * @property int $current_appearances
  * @property int $current_time_spent
  * @property int $appearances

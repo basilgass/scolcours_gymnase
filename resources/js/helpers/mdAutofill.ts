@@ -65,7 +65,7 @@ export const latexTriggers: TriggersObject = {
 }
 
 export const mdTriggers: TriggersObject = {
-	LNK: ["[", "]()"],
+	LNK: ["[@](@)", ""],
 }
 
 export const javascriptTriggers: TriggersObject = {

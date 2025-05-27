@@ -1,0 +1,95 @@
+<script setup lang="ts">
+
+import {onMounted, ref, useTemplateRef, watch} from "vue"
+import {PiDraw} from "pidraw"
+import {useResizeObserver} from "@vueuse/core"
+import katex from "katex"
+import PiDrawAnimation from "@/Components/Pi/Parts/PiDrawAnimation.vue"
+
+const props = defineProps<{
+	code: string,
+	parameters: string
+}>()
+
+let PiGraph: PiDraw
+
+const emits = defineEmits<{
+	drawClick: [PiGrah: PiDraw],
+	update: [PiGrah: PiDraw],
+}>()
+
+
+const drawWrapper = useTemplateRef<HTMLElement>('drawWrapper')
+const PiParserHasErrors = ref(false)
+const showAnimation = ref(false)
+
+function PiParserUpdate(from?: string) {
+	// Update the drawing
+	try {
+		PiGraph.refresh(props.code)
+		emits("update", PiGraph)
+		PiParserHasErrors.value = false
+		showAnimation.value = PiGraph?.animation.canBeAnimated() ?? false
+	} catch {
+		console.log(from)
+		PiParserHasErrors.value = true
+	}
+}
+
+watch(() => props.code, () => {
+	PiParserUpdate("drawCode watcher")
+})
+
+watch(() => props.parameters, () => {
+	try {
+		PiGraph.refreshLayout(props.parameters)
+	} catch {
+		console.error(props.parameters)
+	}
+})
+
+
+const drawMouseUp = function () {
+	emits("drawClick", PiGraph)
+}
+
+// Default settings
+onMounted(() => {
+	PiGraph = new PiDraw(
+		drawWrapper.value,
+		{
+			parameters: props.parameters ?? "",
+			code: props.code ?? "",
+			tex: (value: string) => katex.renderToString(`${value}`, {
+				throwOnError: false,
+				displayMode: true
+			})
+		}
+	)
+
+// Add a resizeObserver on the draw container
+	useResizeObserver(drawWrapper.value, () => {
+		PiParserUpdate("onResize")
+	})
+})
+
+</script>
+
+<template>
+	<!-- draw graph-->
+	<div>
+		<div
+			ref="drawWrapper"
+			class="katex-m-0 min-w-[50px] min-h-[50px]"
+			@mouseup="drawMouseUp"
+		/>
+		<pi-draw-animation
+			v-show="showAnimation"
+			:draw="PiGraph"
+		/>
+	</div>
+</template>
+
+<style scoped>
+
+</style>

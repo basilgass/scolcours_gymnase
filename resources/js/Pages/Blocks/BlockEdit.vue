@@ -5,15 +5,15 @@ import MoveItemTo from "@/Components/MoveItemTo.vue"
 import SplitView from "@/Components/SplitView.vue"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
-import { blockTypes } from "@/block.config.ts"
-import { flashInterface } from "@/types"
-import type { BlockInterface } from "@/types/modelInterfaces"
-import { router } from "@inertiajs/vue3"
+import {blockTypes} from "@/block.config.ts"
+import {flashInterface} from "@/types"
+import type {BlockInterface} from "@/types/modelInterfaces"
+import {router} from "@inertiajs/vue3"
 import axios from "axios"
-import { computed, inject, ref, unref } from "vue"
+import {computed, inject, ref, unref} from "vue"
 import ScButton from "@/Components/Ui/scButton.vue"
 
-defineOptions({ layout: LayoutMain })
+defineOptions({layout: LayoutMain})
 
 const props = defineProps<{
 	block: BlockInterface
@@ -25,7 +25,7 @@ const tab = ref<"markdown" | "script" | "data">("markdown")
 
 const theBlock = ref<BlockInterface>(props.block)
 
-const originalBlock = unref({ ...props.block })
+const originalBlock = unref({...props.block})
 const wasEdited = computed(() => {
 	return originalBlock.title !== theBlock.value.title
 		|| originalBlock.body !== theBlock.value.body
@@ -85,7 +85,7 @@ function addIllustration() {
 		}).catch((res) => {
 			console.warn("add illustration: ", res)
 		}
-		)
+	)
 }
 
 function blockSaveAndVisit() {
@@ -111,17 +111,17 @@ function addScriptsButtons() {
 	theBlock.value.script = script
 }
 
-function deleteIllustration(id: number){
-		axios
-			.post(route("illustrations.destroy", [id]), {
-				_method: "delete"
-			})
-			.then(() => {
-				flash.add("L'illustration a été supprimée")
-				// Go to the post.
-				theBlock.value.illustrations = theBlock.value.illustrations.filter(x=>x.id!==id)
-			})
-			.catch((error) => console.error(error))
+function deleteIllustration(id: number) {
+	axios
+		.post(route("illustrations.destroy", [id]), {
+			_method: "delete"
+		})
+		.then(() => {
+			flash.add("L'illustration a été supprimée")
+			// Go to the post.
+			theBlock.value.illustrations = theBlock.value.illustrations.filter(x => x.id !== id)
+		})
+		.catch((error) => console.error(error))
 }
 </script>
 
@@ -179,14 +179,13 @@ function deleteIllustration(id: number){
 		<!-- editor and preview -->
 		<main>
 			<div
-				:class="{
-					'grid-cols-2': displayStyle === 'side-by-side',
-					'grid-cols-1': displayStyle !== 'side-by-side'
-				}"
-				class="grid gap-3"
+				class="flex gap-3"
 			>
 				<!-- Titre et type du block -->
-				<div v-if="displayStyle === 'side-by-side' || displayStyle === 'editor'">
+				<div
+					v-if="displayStyle === 'side-by-side' || displayStyle === 'editor'"
+					class="flex-1"
+				>
 					<form-maker
 						v-model="theBlock.title"
 						inline-label
@@ -197,12 +196,16 @@ function deleteIllustration(id: number){
 					/>
 
 					<!-- Boutons pour les types de blocks -->
-					<div class="grid grid-cols-6 gap-2 mt-2">
+					<div
+						class="grid gap-2 mt-2 grid-cols-4"
+						:class="{
+							'md:grid-cols-8': displayStyle==='editor',
+						}"
+					>
 						<sc-button
 							v-for="(item, key) in blockTypes"
 							:key="key"
-							:active="key === theBlock.type"
-							class="overflow-clip px-0!"
+							:class="key !== theBlock.type ? blockTypes[key].style.body : blockTypes[key].style.header"
 							xs
 							@click="theBlock.type = theBlock.type === key ? '' : key"
 						>
@@ -214,7 +217,7 @@ function deleteIllustration(id: number){
 				<!-- gestion des illustrations -->
 				<div
 					v-if="displayStyle === 'side-by-side' || displayStyle === 'preview'"
-					class="space-y-3"
+					class="space-y-3 flex-1"
 				>
 					<h3 class="font-extralight">
 						illustrations
@@ -222,13 +225,19 @@ function deleteIllustration(id: number){
 					<form-maker
 						v-model="theBlock.illustrationsGrid"
 						class="flex-1"
-						inline-label
 						input-class="rounded-r-none"
 						label="wrapper class"
 						label-class="w-[120px]"
 						sm
+						inline-label
 						type="text"
-					/>
+					>
+						<template #message>
+							<div class="text-xs">
+								gère la grille englobant la ou les illustrations du block
+							</div>
+						</template>
+					</form-maker>
 					<div v-if="theBlock.illustrations.length>0">
 						<ul class="list list-inside list-disc space-y-1">
 							<li
@@ -236,7 +245,9 @@ function deleteIllustration(id: number){
 								:key="illustration.id"
 								class="flex justify-between items-baseline"
 							>
-								<span class="text-xs">id: {{ illustration.id }} - {{ illustration.title ?? 'illustration sans titre' }}</span>
+								<span class="text-xs">id: {{
+									illustration.id
+								}} - {{ illustration.title ?? 'illustration sans titre' }}</span>
 								<confirm-button
 									xs
 									@confirm="deleteIllustration(illustration.id)"
@@ -260,20 +271,16 @@ function deleteIllustration(id: number){
 			</div>
 
 			<div
-				:class="{
-					'grid-cols-2': displayStyle === 'side-by-side',
-					'grid-cols-1': displayStyle !== 'side-by-side'
-				}"
-				class="grid gap-3 mt-4"
+				class="flex gap-3 mt-4"
 			>
 				<div
 					v-if="displayStyle === 'side-by-side' || displayStyle === 'editor'"
-					class="w-full h-full"
+					class="w-full h-full flex-1"
 				>
 					<div>
 						<!-- corps et preview -->
 						<div class="relative">
-							<div class="absolute right-0 top-[0.6em] flex text-xs z-10">
+							<div class="absolute right-0 top-[-1.3em] flex text-xs z-10">
 								<button
 									:class="{ 'bg-blue-600 text-white': tab === 'markdown' }"
 									class="border-x border-t px-2 py-0 rounded-t transition-all duration-500"
@@ -297,39 +304,36 @@ function deleteIllustration(id: number){
 								</button>
 							</div>
 
-							<div>
+							<form-maker
+								v-show="tab === 'markdown'"
+								ref="formBody"
+								v-model="theBlock.body"
+								:rows="20"
+								label="corps"
+								language="latex"
+								type="codearea"
+							/>
+							<div v-show="tab === 'script'">
 								<form-maker
-									v-show="tab === 'markdown'"
-									ref="formBody"
-									v-model="theBlock.body"
+									v-model="theBlock.script"
 									:rows="20"
-									label="corps"
-									language="latex"
-									type="code"
+									label="script"
+									language="javascript"
+									type="codearea"
 								/>
-								<div v-show="tab === 'script'">
-									<form-maker
-										v-model="theBlock.script"
-										:rows="20"
-										label="script"
-										language="javascript"
-										type="code"
-									/>
-									<div class="flex">
-										<button @click="addScriptsButtons">
-											ajouter des boutons
-										</button>
-									</div>
+								<div class="flex">
+									<button @click="addScriptsButtons">
+										ajouter des boutons
+									</button>
 								</div>
-								<form-maker
-									v-show="tab === 'data'"
-									v-model="theBlock.json"
-									:rows="20"
-									label="data"
-									language="json"
-									type="textarea"
-								/>
 							</div>
+							<form-maker
+								v-show="tab === 'data'"
+								v-model="theBlock.json"
+								:rows="20"
+								language="json"
+								type="codearea"
+							/>
 						</div>
 					</div>
 
@@ -345,6 +349,7 @@ function deleteIllustration(id: number){
 				<block-show
 					v-if="displayStyle === 'side-by-side' || displayStyle === 'preview'"
 					:block="theBlock"
+					class="flex-1"
 					no-admin
 				/>
 			</div>

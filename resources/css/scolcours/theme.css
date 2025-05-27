@@ -43,4 +43,7 @@
 	--color-admin-light: oklch(0.869 0.022 252.894);
 	--color-admin: oklch(0.554 0.046 257.417);
 	--color-admin-dark: oklch(0.208 0.042 265.755);
+
+	/* Font size very small */
+	--text-tiny: 0.625rem;
 }

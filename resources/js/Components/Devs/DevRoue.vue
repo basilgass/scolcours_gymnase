@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from "vue"
-import VueSlider from "vue-slider-component/dist/vue-slider-component.umd.min"
-import "vue-slider-component/theme/material.css"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
+import VueSlider from "vue-3-slider-component"
 
 defineOptions({ layout: LayoutMain })
 let vitesse = ref("0"),

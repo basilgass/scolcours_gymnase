@@ -12,14 +12,14 @@ import axios from "axios"
 import {router} from "@inertiajs/vue3"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
 import DialogModal from "@/Components/Ui/DialogModal.vue"
+import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
 
 defineOptions({layout: LayoutMain})
+const editMode = useStoreEditMode()
 
 const props = defineProps({
 	decks: {type: Array as PropType<UserDeckInterface[]>, required: true}
 })
-
-console.log(props.decks)
 
 const showCreate = ref(false)
 
@@ -41,7 +41,7 @@ function onCreated() {
 	<section>
 		<header class="flex justify-between items-baseline">
 			<h3 class="text-3xl py-4">
-				Decks de révision
+				Decks de révisions
 			</h3>
 
 			<sc-button
@@ -88,7 +88,7 @@ function onCreated() {
 					<div>{{ deck.number_of_cards }} cartes</div>
 
 
-					<details>
+					<details v-admin="editMode.enable">
 						<summary>
 							voir le code
 						</summary>
@@ -96,13 +96,20 @@ function onCreated() {
 					</details>
 				</div>
 
-				<div>
-					<sc-button :href="route('decks.show', deck.id)">
+				<div class="flex gap-3 items-baseline">
+					<sc-button
+						xs
+						:type="deck.running ? 'primary' : 'success'"
+						:href="route('decks.show', deck.id)"
+					>
 						{{ deck.running ? 'continuer' : 'commencer' }}
 					</sc-button>
 
-					<confirm-button @confirm="deleteUserDeck(deck.id)">
-						supprimer
+					<confirm-button
+						xs
+						@confirm="deleteUserDeck(deck.id)"
+					>
+						<i class="bi bi-trash mx-1" />
 					</confirm-button>
 				</div>
 			</div>

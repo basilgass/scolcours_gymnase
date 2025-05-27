@@ -76,7 +76,7 @@ function toggleAnswer(){
 				@click="toggleAnswer"
 			>
 				<div
-					class="text-xs text-center ml-3 font-code font-xs"
+					class="text-xs text-center ml-3 font-code"
 					v-text="questionData.question.value.answer"
 				/>
 			</div>

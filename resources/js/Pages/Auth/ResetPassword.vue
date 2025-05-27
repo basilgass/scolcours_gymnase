@@ -1,107 +1,71 @@
-<script>
-import BreezeButton from "@/Components/Auth/Button.vue"
-import BreezeGuestLayout from "@/Layouts/LayoutGuest.vue"
-import BreezeInput from "@/Components/Auth/Input.vue"
-import BreezeLabel from "@/Components/Auth/Label.vue"
-import BreezeValidationErrors from "@/Components/Auth/ValidationErrors.vue"
-import { Head } from "@inertiajs/vue3"
+<script setup lang="ts">
+import LayoutGuest from "@/Layouts/LayoutGuest.vue"
+import {Head, useForm} from "@inertiajs/vue3"
+import FormMaker from "@/Components/Form/FormMaker.vue"
+import ScButton from "@/Components/Ui/scButton.vue"
 
-export default {
+defineOptions({layout: LayoutGuest})
 
-	components: {
-		BreezeButton,
-		BreezeInput,
-		BreezeLabel,
-		BreezeValidationErrors,
-		Head,
-	},
-	layout: BreezeGuestLayout,
+const props = defineProps<{
+	email: string,
+	token: string,
+}>()
 
-	props: {
-		email: String,
-		token: String,
-	},
+const form = useForm({
+	token: props.token,
+	email: props.email,
+	password: "",
+	password_confirmation: "",
+})
 
-	data() {
-		return {
-			form: this.$inertia.form({
-				token: this.token,
-				email: this.email,
-				password: "",
-				password_confirmation: "",
-			})
-		}
-	},
-
-	methods: {
-		submit() {
-			this.form.post(this.route("password.update"), {
-				onFinish: () => this.form.reset("password", "password_confirmation"),
-			})
-		}
-	}
+function submit() {
+	form.post(route("password.update"), {
+		onFinish: () => form.reset("password", "password_confirmation"),
+	})
 }
+
 </script>
 
 <template>
 	<Head title="Reset Password" />
 
-	<BreezeValidationErrors class="mb-4" />
-
 	<form @submit.prevent="submit">
-		<div>
-			<BreezeLabel
-				for="email"
-				value="Email"
-			/>
-			<BreezeInput
-				id="email"
-				v-model="form.email"
-				autocomplete="username"
-				autofocus
-				class="mt-1 block w-full"
-				required
-				type="email"
-			/>
-		</div>
+		<form-maker
+			type="email"
+			label="email"
+			v-model="form.email"
+			autocomplete="username"
+			focus
+			required
+		/>
 
-		<div class="mt-4">
-			<BreezeLabel
-				for="password"
-				value="Password"
-			/>
-			<BreezeInput
-				id="password"
-				v-model="form.password"
-				autocomplete="new-password"
-				class="mt-1 block w-full"
-				required
-				type="password"
-			/>
-		</div>
+		<form-maker
+			class="mt-4"
+			type="password"
+			label="nouveau mot de passe"
+			v-model="form.password"
+			autocomplete="new-password"
+			required
+		/>
 
-		<div class="mt-4">
-			<BreezeLabel
-				for="password_confirmation"
-				value="Confirm Password"
-			/>
-			<BreezeInput
-				id="password_confirmation"
-				v-model="form.password_confirmation"
-				autocomplete="new-password"
-				class="mt-1 block w-full"
-				required
-				type="password"
-			/>
-		</div>
+		<form-maker
+			class="mt-4"
+			type="password"
+			label="confirmer le mot de passe"
+			v-model="form.password_confirmation"
+			autocomplete="new-password"
+			required
+		/>
+
 
 		<div class="flex items-center justify-end mt-4">
-			<BreezeButton
+			<sc-button
+				type="primary"
 				:class="{ 'opacity-25': form.processing }"
 				:disabled="form.processing"
 			>
 				Reset Password
-			</BreezeButton>
+			</sc-button>
 		</div>
 	</form>
 </template>

@@ -59,7 +59,7 @@ defineExpose({
 </script>
 
 <template>
-	<div class="h-[95vh]">
+	<div>
 		<filtered-list
 			v-if="availableTools.length>0"
 			ref="filterListRef"

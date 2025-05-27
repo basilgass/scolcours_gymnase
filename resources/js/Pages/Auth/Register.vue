@@ -1,128 +1,80 @@
-<script>
-import BreezeButton from "@/Components/Auth/Button.vue"
-import BreezeGuestLayout from "@/Layouts/LayoutGuest.vue"
-import BreezeInput from "@/Components/Auth/Input.vue"
-import BreezeLabel from "@/Components/Auth/Label.vue"
-import BreezeValidationErrors from "@/Components/Auth/ValidationErrors.vue"
-import { Head, Link } from "@inertiajs/vue3"
+<script setup lang="ts">
+import LayoutGuest from "@/Layouts/LayoutGuest.vue"
+import {Head, useForm} from "@inertiajs/vue3"
+import ScButton from "@/Components/Ui/scButton.vue"
+import FormMaker from "@/Components/Form/FormMaker.vue"
 
-export default {
+defineOptions({layout: LayoutGuest})
 
-	components: {
-		BreezeButton,
-		BreezeInput,
-		BreezeLabel,
-		BreezeValidationErrors,
-		Head,
-		Link,
-	},
-	layout: BreezeGuestLayout,
+const form = useForm({
+	name: "",
+	email: "",
+	password: "",
+	password_confirmation: "",
+	terms: false,
+})
 
-	data() {
-		return {
-			form: this.$inertia.form({
-				name: "",
-				email: "",
-				password: "",
-				password_confirmation: "",
-				terms: false,
-			})
-		}
-	},
-
-	methods: {
-		submit() {
-			this.form.post(this.route("register"), {
-				onFinish: () => this.form.reset("password", "password_confirmation"),
-			})
-		}
-	}
+function submit() {
+	form.post(route("register"), {
+		onFinish: () => form.reset("password", "password_confirmation"),
+	})
 }
 </script>
 
 <template>
-
 	<Head title="Register" />
 
-	<BreezeValidationErrors class="mb-4" />
 
 	<form @submit.prevent="submit">
-		<div>
-			<BreezeLabel
-				for="name"
-				value="Name"
-			/>
-			<BreezeInput
-				id="name"
-				v-model="form.name"
-				autocomplete="name"
-				autofocus
-				class="mt-1 block w-full"
-				required
-				type="text"
-			/>
-		</div>
+		<form-maker
+			label="nom"
+			v-model="form.name"
+			autocomplete="name"
+			focus
+			required
+		/>
 
-		<div class="mt-4">
-			<BreezeLabel
-				for="email"
-				value="Email"
-			/>
-			<BreezeInput
-				id="email"
-				v-model="form.email"
-				autocomplete="username"
-				class="mt-1 block w-full"
-				required
-				type="email"
-			/>
-		</div>
+		<form-maker
+			class="mt-4"
+			label="e-mail"
+			autocomplete="username"
+			v-model="form.email"
+			required
+			type="email"
+		/>
 
-		<div class="mt-4">
-			<BreezeLabel
-				for="password"
-				value="Password"
-			/>
-			<BreezeInput
-				id="password"
-				v-model="form.password"
-				autocomplete="new-password"
-				class="mt-1 block w-full"
-				required
-				type="password"
-			/>
-		</div>
+		<form-maker
+			label="mot de passe"
+			type="password"
+			v-model="form.password"
+			autocomplete="new-password"
+			required
+		/>
 
-		<div class="mt-4">
-			<BreezeLabel
-				for="password_confirmation"
-				value="Confirm Password"
-			/>
-			<BreezeInput
-				id="password_confirmation"
-				v-model="form.password_confirmation"
-				autocomplete="new-password"
-				class="mt-1 block w-full"
-				required
-				type="password"
-			/>
-		</div>
+		<form-maker
+			label="confirmer le mot de passe"
+			type="password"
+			autocomplete="new-password"
+			required
+			v-model="form.password_confirmation"
+		/>
 
 		<div class="flex items-center justify-end mt-4">
 			<InertiaLink
 				:href="route('login')"
 				class="underline text-sm text-gray-600 hover:text-gray-900"
 			>
-				Already registered?
+				Déjà enregistré ?
 			</InertiaLink>
 
-			<BreezeButton
+			<sc-button
+				type="primary"
 				:class="{ 'opacity-25': form.processing }"
 				:disabled="form.processing"
 				class="ml-4"
 			>
-				Register
-			</BreezeButton>
+				Enregistrer
+			</sc-button>
 		</div>
 	</form>
 </template>

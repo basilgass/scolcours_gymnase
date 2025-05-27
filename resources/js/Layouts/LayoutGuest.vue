@@ -1,19 +1,19 @@
-<script lang="ts">
+<script setup lang="ts">
 import ScolCoursLogo from "@/Components/ScolcoursLogo.vue"
+import Card from "@/Components/Ui/Card.vue"
+import {router} from "@inertiajs/vue3"
 
-export default {
-	components: {
-		ScolCoursLogo,
-	}
-}
 </script>
 
 <template>
 	<div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100">
-		<ScolCoursLogo />
+		<ScolCoursLogo
+			class="cursor-pointer"
+			@click="router.visit(route('home'))"
+		/>
 
-		<div class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg">
+		<Card class="min-w-md max-w-lg mx-auto">
 			<slot />
-		</div>
+		</Card>
 	</div>
 </template>

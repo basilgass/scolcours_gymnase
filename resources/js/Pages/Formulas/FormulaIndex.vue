@@ -86,7 +86,7 @@ function searchFormula(item: FormulaInterface, value: string): boolean {
 							label="body"
 							label-class="w-[50px]"
 							sm
-							type="code"
+							type="codearea"
 						/>
 					</div>
 					<formula-show :formula="item" />

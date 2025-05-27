@@ -99,7 +99,7 @@ function updateDecksOrder() {
 							<form-maker
 								v-if="editMode.enable"
 								v-model="element.recto.body"
-								type="code"
+								type="codearea"
 								class="w-full rounded-xl min-h-[200px]"
 								rows="10"
 								@focus="showMarkdown = element.id"
@@ -121,7 +121,7 @@ function updateDecksOrder() {
 							<form-maker
 								v-if="editMode.enable"
 								v-model="element.verso.body"
-								type="code"
+								type="codearea"
 								class="w-full"
 								rows="10"
 								@focus="showMarkdown = element.id"

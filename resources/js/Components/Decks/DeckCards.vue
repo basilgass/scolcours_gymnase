@@ -120,7 +120,7 @@ const countCards = computed(() => {
 	}, 0)
 	const asked = cardsList.value.filter(x => x.current_score !== 0).length
 	const length = cardsList.value.length
-	console.log(correct, asked, length)
+
 	return {
 		correct,
 		asked,

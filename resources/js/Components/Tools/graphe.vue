@@ -21,7 +21,7 @@ const forms: IToolForm[] = restoreTool( [
 	},
 	{
 		label: "code",
-		type: "code",
+		type: "codearea",
 		value: ref(`O(0,0)
 A(5,1)
 B(3,8)->drag=grid

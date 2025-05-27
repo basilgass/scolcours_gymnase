@@ -30,7 +30,7 @@ const cardClass = computed<string>(() => {
 	>
 		<header
 			v-if="$slots['header']"
-			class="px-3 py-2 border-b"
+			class="px-3 py-2 border-b border-b-inherit"
 		>
 			<slot name="header" />
 		</header>

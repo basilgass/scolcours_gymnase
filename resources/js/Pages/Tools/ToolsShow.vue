@@ -37,9 +37,9 @@ useMagicKeys({
 
 const toolsSearchRef = useTemplateRef<InstanceType<typeof ToolsSearch>>('toolsSearchRef')
 watch(showDialog, (newVal) => {
-	if(newVal){
+	if (newVal) {
 		// Focus
-		nextTick(()=>{
+		nextTick(() => {
 			toolsSearchRef.value.focus()
 		})
 
@@ -56,8 +56,11 @@ watch(showDialog, (newVal) => {
 				<h2 class="text-2xl font-extralight">
 					{{ tool.title }}
 				</h2>
-				<button @click="showDialog = true">
-					<span class="hidden md:inline">rechercher</span> <i class="bi bi-search" />
+				<button
+					@click="showDialog = true"
+					class="cursor-pointer"
+				>
+					<span class="hidden md:inline">rechercher (ctrl+k)</span> <i class="bi bi-search" />
 				</button>
 			</div>
 

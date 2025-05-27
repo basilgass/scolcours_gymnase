@@ -6,17 +6,15 @@ import ChapterNav from "@/Components/Chapters/ChapterNav.vue"
 import ChapterToc from "@/Components/Chapters/ChapterToc.vue"
 import QuestionsIndex from "@/Components/Questions/QuestionsIndex.vue"
 import EditLink from "@/Components/Ui/EditLink.vue"
-import { useMenuScrollTo } from "@/Composables/useHelpers"
-import { useScriptLoader } from "@/Composables/useScriptLoader.ts"
+import {useMenuScrollTo} from "@/Composables/useHelpers"
+import {useScriptLoader} from "@/Composables/useScriptLoader.ts"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
-import type { BlockInterface, ChapterShowInterface, PostInterface, PostShowInterface } from "@/types/modelInterfaces"
-import { usePage } from "@inertiajs/vue3"
+import type {BlockInterface, ChapterShowInterface, PostInterface, PostShowInterface} from "@/types/modelInterfaces"
+import {usePage} from "@inertiajs/vue3"
 import axios from "axios"
-import { nextTick, onMounted, provide, ref } from "vue"
-import PostEdit from "@/Pages/Posts/PostEdit.vue"
-import PostInlineEdit from "@/Components/Posts/PostInlineEdit.vue"
+import {nextTick, onMounted, provide, ref} from "vue"
 
-defineOptions({ layout: LayoutMain })
+defineOptions({layout: LayoutMain})
 
 const props = defineProps<{
 	chapter: ChapterShowInterface,
@@ -24,8 +22,6 @@ const props = defineProps<{
 	post: PostShowInterface,
 	anchor: string | null
 }>()
-
-const showEdit = ref(false)
 
 const blocks = ref<BlockInterface[]>(props.post.blocks)
 const postScript = useScriptLoader(props.post.script)

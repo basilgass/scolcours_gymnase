@@ -1,43 +1,30 @@
-<script>
-import BreezeButton from "@/Components/Auth/Button.vue"
-import BreezeGuestLayout from "@/Layouts/LayoutGuest.vue"
-import { Head, Link } from "@inertiajs/vue3"
+<script setup lang="ts">
 
-export default {
+// TODO : changer le texte en français.
 
-	components: {
-		BreezeButton,
-		Head,
-		Link,
-	},
-	layout: BreezeGuestLayout,
+import {Head, useForm} from "@inertiajs/vue3"
+import ScButton from "@/Components/Ui/scButton.vue"
+import LayoutGuest from "@/Layouts/LayoutGuest.vue"
+import {computed} from "vue"
 
-	props: {
-		status: String,
-	},
+defineOptions({layout: LayoutGuest})
 
-	data() {
-		return {
-			form: this.$inertia.form()
-		}
-	},
+const props = defineProps<{
+	status: string | null
+}>()
 
-	computed: {
-		verificationLinkSent() {
-			return this.status === "verification-link-sent"
-		}
-	},
+const form = useForm({})
 
-	methods: {
-		submit() {
-			this.form.post(this.route("verification.send"))
-		},
-	}
+const verificationLinkSent = computed(() => {
+	return props.status === "verification-link-sent"
+})
+
+function submit() {
+	form.post(route("verification.send"))
 }
 </script>
 
 <template>
-
 	<Head title="Email Verification" />
 
 	<div class="mb-4 text-sm text-gray-600">
@@ -54,12 +41,13 @@ export default {
 
 	<form @submit.prevent="submit">
 		<div class="mt-4 flex items-center justify-between">
-			<BreezeButton
+			<sc-button
+				type="primary"
 				:class="{ 'opacity-25': form.processing }"
 				:disabled="form.processing"
 			>
 				Resend Verification Email
-			</BreezeButton>
+			</sc-button>
 
 			<InertiaLink
 				:href="route('logout')"

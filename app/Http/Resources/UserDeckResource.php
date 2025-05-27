@@ -21,12 +21,24 @@ class UserDeckResource extends JsonResource
 	 */
 	public function toArray(Request $request): array
 	{
+		$running = true;
+		// Check the cards:
+		// If all are null => false
+		// If all are 1 => false
+		if(
+			$this->cards->every(fn($card) => $card->current_score===null)
+			or
+			$this->cards->every(fn($card) => $card->current_score===1.0)
+		){
+			$running = false;
+		}
+
 		return [
 			"id" => $this->id,
 			"user_id" => $this->user_id,
 			"title" => $this->title,
 			"description" => $this->description,
-			"running" => $this->cards->contains(fn($card) => $card->current_score!==null && $card->current_score < 1),
+			"running" => $running,
 			"created_at" => $this->created_at,
 			"updated_at" => $this->updated_at,
 

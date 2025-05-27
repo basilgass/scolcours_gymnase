@@ -1,18 +1,23 @@
 import { SCRIPT_TYPE } from "@/types"
 import PiMath from "pimath"
-import { computed, MaybeRef, ref, unref } from "vue"
+import {computed, isRef, MaybeRef, ref, unref} from "vue"
 
 
 export function useScriptLoader(script: string, config?: {
 	parent?: MaybeRef<SCRIPT_TYPE>
 }) {
-	const data = ref<SCRIPT_TYPE>({})
 	const iteration = ref(0)
+	const data = ref<SCRIPT_TYPE>({})
 
 	const parentData = computed<SCRIPT_TYPE>(() => {
 		if (config && config.parent) {
-			return unref(config.parent)
+			if(isRef(config.parent)) {
+				return config.parent.value  as SCRIPT_TYPE
+			}else{
+				return config.parent as SCRIPT_TYPE
+			}
 		}
+
 		return {}
 	})
 

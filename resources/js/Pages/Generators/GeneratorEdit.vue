@@ -156,7 +156,7 @@ function historyBack(){
 					inline-label
 					label="template"
 					label-class="w-[110px]"
-					type="code"
+					type="codearea"
 				/>
 
 				<form-maker
@@ -179,7 +179,7 @@ function historyBack(){
 				label="générateur de questions"
 				language="javascript"
 				resizable
-				type="code"
+				type="codearea"
 			/>
 
 			<generators-examples

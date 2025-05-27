@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 
 import FormMaker from "@/Components/Form/FormMaker.vue"
-import {FormMakerInputsType} from "@/Components/Form/FormMakerInterface"
+import {FormElementType, FormMakerInputsType} from "@/Components/Form/FormMakerInterface"
 import {useToolsStorage} from "@/Composables/useToolsStorage.ts"
 import {useClipboard} from "@vueuse/core"
 import {computed, ComputedRef, inject, ref, Ref, watch} from "vue"
@@ -10,7 +10,7 @@ import {router} from "@inertiajs/vue3"
 
 export interface IToolForm {
 	label: string | ComputedRef<string>
-	type?: FormMakerInputsType
+	type?: FormElementType
 	value: Ref<string | boolean | number>
 	fromUrl?: string,
 	message?: string,
@@ -92,11 +92,16 @@ function resetFormTool(){
 
 <template>
 	<form
-		class="border-b -mx-3 px-3 pb-3"
+		class="border-content border-b -mx-3 px-3 pb-3"
 		@submit.prevent
 	>
 		<div class="flex justify-between">
-			<h3>Données</h3>
+			<h3
+				@click="showForm = !showForm"
+				class="cursor-pointer"
+			>
+				Données
+			</h3>
 			<div class="flex gap-3 text-gray-400">
 				<sc-button
 					v-if="generateButton"

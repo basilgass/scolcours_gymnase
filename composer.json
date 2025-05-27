@@ -13,7 +13,7 @@
 		"inertiajs/inertia-laravel": "^v2",
 		"laravel/framework": "^v12",
 		"laravel/sanctum": "^v4",
-		"laravel/telescope": "*",
+		"laravel/telescope": "^v5.7.0",
 		"laravel/tinker": "^v2",
 		"tightenco/ziggy": "^v2"
 	},

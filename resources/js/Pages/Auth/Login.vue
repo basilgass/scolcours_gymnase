@@ -1,59 +1,31 @@
-<script>
-import BreezeButton from "@/Components/Auth/Button.vue"
-import BreezeCheckbox from "@/Components/Auth/Checkbox.vue"
-import BreezeGuestLayout from "@/Layouts/LayoutGuest.vue"
-import BreezeInput from "@/Components/Auth/Input.vue"
-import BreezeLabel from "@/Components/Auth/Label.vue"
-import BreezeValidationErrors from "@/Components/Auth/ValidationErrors.vue"
-import { Head, Link } from "@inertiajs/vue3"
+<script setup lang="ts">
+import {Head, useForm} from "@inertiajs/vue3"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import ScButton from "@/Components/Ui/scButton.vue"
+import LayoutGuest from "@/Layouts/LayoutGuest.vue"
 
-// TODO: Get rid of all "Auth" default pages.
-export default {
+defineOptions({layout: LayoutGuest})
 
-	components: {
-		ScButton,
-		FormMaker,
-		BreezeButton,
-		BreezeCheckbox,
-		BreezeInput,
-		BreezeLabel,
-		BreezeValidationErrors,
-		Head,
-		Link,
-	},
-	layout: BreezeGuestLayout,
+defineProps<{
+	canResetPassword: boolean,
+	status: string | null,
+}>()
 
-	props: {
-		canResetPassword: Boolean,
-		status: String,
-	},
+const form = useForm({
+	email: "",
+	password: "",
+	remember: false,
+})
 
-	data() {
-		return {
-			form: this.$inertia.form({
-				email: "",
-				password: "",
-				remember: false
-			})
-		}
-	},
-
-	methods: {
-		submit() {
-			this.form.post(this.route("login"), {
-				onFinish: () => this.form.reset("password"),
-			})
-		}
-	}
+function submit() {
+	form.post(route('login'), {
+		onFinish: () => form.reset('password'),
+	})
 }
 </script>
 
 <template>
 	<Head title="Connection" />
-
-	<BreezeValidationErrors class="mb-4" />
 
 	<div
 		v-if="status"
@@ -62,7 +34,10 @@ export default {
 		{{ status }}
 	</div>
 
-	<form @submit.prevent="submit">
+
+	<form
+		@submit.prevent="submit"
+	>
 		<div>
 			<form-maker
 				id="email"
@@ -92,10 +67,11 @@ export default {
 
 		<div class="block mt-4">
 			<label class="flex items-center">
-				<BreezeCheckbox
-					v-model:checked="form.remember"
-					name="remember"
-				/>
+				<input
+					v-model="form.remember"
+					class="rounded-sm border-gray-300 text-indigo-600 shadow-xs focus:border-indigo-300 focus:ring-3 focus:ring-indigo-200 focus:ring-opacity-50"
+					type="checkbox"
+				>
 				<span class="ml-2 text-sm text-gray-600">Rester connecter ?</span>
 			</label>
 		</div>

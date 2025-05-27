@@ -168,8 +168,8 @@ let hasClipboard = computed(() => {
 					inline-label
 					label="titre"
 					label-class="w-[60px]"
-					sm
 					type="text"
+					sm
 				/>
 
 				<form-maker
@@ -177,8 +177,8 @@ let hasClipboard = computed(() => {
 					inline-label
 					label="CSS"
 					label-class="w-[60px]"
-					sm
 					type="text"
+					sm
 				/>
 
 				<form-maker
@@ -189,7 +189,7 @@ let hasClipboard = computed(() => {
 					language="latex"
 					message="\$a = TeX, \$A = texte, @$A = format spéciaux"
 					message-class="text-[12px]"
-					type="code"
+					type="codearea"
 				/>
 
 				<form-maker

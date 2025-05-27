@@ -38,15 +38,19 @@ z=plane v,C->color=green/0.4`
 
 		<div class="grid grid-cols-1 md:grid-cols-2 gap-3">
 			<div class="flex flex-col gap-2">
-				<FormMaker font-code sm v-model="parameters" />
 				<FormMaker
-					type="code"
+					font-code
+					sm
+					v-model="parameters"
+				/>
+				<FormMaker
+					type="codearea"
 					font-code
 					sm
 					v-model="code"
 				/>
 			</div>
-			
+
 			<PiThreeParser :draw="{ code, parameters }" />
 		</div>
 	</div>
