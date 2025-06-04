@@ -57,7 +57,7 @@ const emits = defineEmits<{
 			class="flex-1 relative"
 		>
 			<div
-				class="absolute left-0 right-0"
+				class="absolute left-0 right-0 whitespace-nowrap"
 				:class="xs ? 'text-tiny top-[-1rem]': 'text-sm top-[-1.2rem]'"
 			>
 				<label

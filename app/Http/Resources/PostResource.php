@@ -40,7 +40,7 @@ class PostResource extends JsonResource
             'questionsInfo' => [
                 'count' => $this->questions_count,
                 'answered' => $this->answered_questions_count??0
-            ],
+            ]
 		];
 	}
 }

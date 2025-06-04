@@ -100,7 +100,7 @@ function updateBlockOrder() {
 					<block-show
 						class="overflow-hidden max-w-full border-x"
 						:class="{
-							'mt-10 rounded-tl-sm rounded-tr-lg border-t': !element.merge,
+							'mt-10 rounded-tl-sm rounded-tr-lg border-t': !element.merge && index>0,
 							'rounded-bl-sm rounded-br-lg border-b': !blocks[index+1]?.merge
 						}"
 						:block="element"

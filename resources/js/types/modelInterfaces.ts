@@ -26,7 +26,7 @@ export interface ChapterInterface {
 	modified: string;
 }
 
-export interface ChapterShowInterface extends ChapterInterface{
+export interface ChapterShowInterface extends ChapterInterface {
 	block: BlockInterface;
 }
 
@@ -104,7 +104,7 @@ export interface PostInterface {
 	};
 }
 
-export interface PostShowInterface extends PostInterface{
+export interface PostShowInterface extends PostInterface {
 	blockAnchor: number;
 	script: string;
 	switch: string;
@@ -215,6 +215,7 @@ export interface CardInterface {
 	recto: BlockInterface,
 	verso: BlockInterface,
 }
+
 //TODO: DeckInterface might be obsolete ?
 export interface DeckInterface {
 	id: number,
@@ -366,4 +367,35 @@ export interface BookInterface {
 	slug: string,
 	title: string,
 	cover: string
+}
+
+
+export interface CourseInterface {
+	id: number,
+	title: string,
+	slug: string,
+	theme_id: number,
+	block: BlockInterface,
+	lessons: LessonInterface[]
+	created_at: string,
+	updated_at: string,
+}
+
+export interface LessonInterface {
+	id: number,
+	title: string,
+	course_id: number,
+	requires: number[],
+	calendar: {
+		opened_at: string | null,
+		scheduled_at: string | null,
+		remaining_days: number,
+		diffForHumans: string,
+		is_opened: boolean,
+	},
+	lessonable: PostInterface | UserDeckInterface | ChallengeInterface | QuizzInterface | null,
+	lessonable_type: 'Post' | 'Challenge' | 'Deck' | 'Quizz' | null,
+	parameters: Record<string, unknown>,
+	created_at: string,
+	updated_at: string,
 }

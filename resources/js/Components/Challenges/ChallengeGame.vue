@@ -5,20 +5,20 @@ import ChallengeIntro from "@/Components/Challenges/ChallengeIntro.vue"
 import ChallengeResults from "@/Components/Challenges/ChallengeResults.vue"
 import QuestionShow from "@/Components/Questions/QuestionShow.vue"
 import StatBar from "@/Components/Ui/StatBar.vue"
-import { useGenerator } from "@/Composables/useGenerator"
-import { flashInterface } from "@/types"
+import {useGenerator} from "@/Composables/useGenerator"
+import {flashInterface} from "@/types"
 import {
 	ChallengeGameState,
 	ChallengeInterface,
 	ChallengeScoreInterface,
 	GeneratorInterface,
 	QuestionDynamicInterface,
-	QuestionInterface,
-	TeamInterface
+	QuestionInterface
 } from "@/types/modelInterfaces"
-import { usePage } from "@inertiajs/vue3"
+import {usePage} from "@inertiajs/vue3"
 import axios from "axios"
-import { computed, inject, reactive, ref } from "vue"
+import {computed, inject, reactive, ref, watch} from "vue"
+import {useStoreLesson, useStoreLessonInterface} from "@/stores/useStoreLesson.ts"
 
 // TODO: ChallengeAnswerInterface must be reworked as it is used in QuestionAnswerValidation
 export interface ChallengeAnswerInterface {
@@ -40,13 +40,17 @@ export interface ChallengeGameInterface {
 }
 
 const flash = inject<flashInterface>("flash")
-const userScore = defineModel<ChallengeScoreInterface>("userScore", { required: true })
-const state = defineModel<ChallengeGameState>("state", { required: true })
 
 const props = defineProps<{
 	challenge: ChallengeInterface,
-	teams: TeamInterface[]
 }>()
+
+const emits = defineEmits<{
+	stateChange: [value: ChallengeGameState]
+}>()
+
+const userScore = ref<ChallengeScoreInterface>(props.challenge.user)
+const state = ref<ChallengeGameState>("intro")
 
 const game = reactive<ChallengeGameInterface>({
 	score: 0,
@@ -100,7 +104,7 @@ function start() {
 	// Interval -> move it to specific place !
 	timerInterval = setInterval(() => {
 		game.elapsedTime += timerIntervalSpeed.value / 1000
-		if (game.elapsedTime > game.remainingTime ) {
+		if (game.elapsedTime > game.remainingTime) {
 			stop()
 		}
 	}, timerIntervalSpeed.value)
@@ -123,13 +127,17 @@ function stop() {
 	store()
 }
 
+const lessonScore = useStoreLesson()
+
 /**
  * Store the user score to the database.
  * (if the user is logged in)
  */
-function store(){
+function store() {
 	// Check if the user is logged in.
 	if (usePage().props.auth.user) {
+
+		lessonScore.updateChallenge(game.score)
 
 		axios
 			.post(route("scores.challenge", [props.challenge.id]), {
@@ -285,6 +293,10 @@ function failedAnswer() {
 let timerInterval: ReturnType<typeof setInterval> = null,
 	timerIntervalSpeed = ref(1000)
 
+
+watch(state, () => {
+	emits('stateChange', state.value)
+})
 </script>
 
 <template>
@@ -294,7 +306,6 @@ let timerInterval: ReturnType<typeof setInterval> = null,
 		<challenge-intro
 			v-if="state==='intro'"
 			:challenge="challenge"
-			:teams="teams"
 			class="mt-4"
 			@start="start"
 		/>

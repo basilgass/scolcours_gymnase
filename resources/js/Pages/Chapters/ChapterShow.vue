@@ -12,6 +12,7 @@ import {ChallengeMinInterface, ChapterInterface, ChapterShowInterface, PostInter
 import {ref} from "vue"
 import ScButton from "@/Components/Ui/scButton.vue"
 import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
+import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
 
 defineOptions({layout: LayoutMain})
 
@@ -31,23 +32,14 @@ const showFormular = ref(false)
 </script>
 <template>
 	<section>
-		<header
-			class="py-6 flex items-baseline justify-between"
-		>
-			<!-- title -->
-			<h1
-				v-theme.text
-				v-katex.auto="chapter.title"
-				class="text-xl md:text-3xl l:text-5xl font-semibold"
-			/>
-
-			<edit-link
-				class="border rounded-full px-2 py-1"
-				:id="chapter.id"
-				route-name="chapters.edit"
-				inline
-			/>
-		</header>
+		<article-title
+			v-theme.text
+			:title="chapter.title"
+			:edit-link="{
+				label: chapter.id,
+				url: route('chapters.edit', {id: chapter.id})
+			}"
+		/>
 
 		<main class=" py-10 space-y-12">
 			<chapter-toc

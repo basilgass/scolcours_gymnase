@@ -9,18 +9,18 @@ import MainAside from "@/Components/MainAside.vue"
 import DropdownMenu from "@/Components/Ui/DropdownMenu.vue"
 import LogoutButton from "@/Components/Ui/LogoutButton.vue"
 import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
-import {ThemeInterface} from "@/types/modelInterfaces.ts"
-import {computed, PropType, provide, ref} from "vue"
+import {computed, provide, ref} from "vue"
 import ScButton from "@/Components/Ui/scButton.vue"
+import {ThemeInterface} from "@/types/modelInterfaces.ts"
 
-const props = defineProps({
-	theme: {
-		type: Object as PropType<ThemeInterface>,
-		default: () => {
-			return {title: "Scolcours", slug: "main"}
-		}
-	},
+const props = withDefaults(defineProps<{
+	theme: Partial<ThemeInterface>
+}>(), {
+	theme: () => {
+		return {title: "Scolcours", slug: "main"}
+	}
 })
+
 
 const computedTheme = computed(() => {
 	return props.theme ? props.theme : {title: "Scolcours", slug: "main"}

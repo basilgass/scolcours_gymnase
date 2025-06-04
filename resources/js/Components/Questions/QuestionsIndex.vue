@@ -7,6 +7,8 @@ import { flashInterface } from "@/types"
 import type { PostShowInterface, QuestionInterface } from "@/types/modelInterfaces.ts"
 import axios from "axios"
 import { computed, inject, ref } from "vue"
+import type {questionResultInterface} from "@/Components/Questions/QuestionInterface.ts"
+import {useStoreLesson} from "@/stores/useStoreLesson.ts"
 
 const editMode = useStoreEditMode()
 const flash = inject<flashInterface>("flash")
@@ -82,6 +84,18 @@ function addQuestionRef(element: InstanceType<typeof QuestionShow>) {
 		questionsComponents.value.push(element)
 	}
 }
+
+const emits = defineEmits<{
+	validate: [event: questionResultInterface]
+}>()
+
+const lessonScore = useStoreLesson()
+
+function onValidate(element: QuestionInterface, event: questionResultInterface){
+	element.user=event
+	// Must trigger an event upstairs...
+	lessonScore.updatePost(props.post)
+}
 </script>
 <template>
 	<article :class="editMode.enable?'pb-10':''">
@@ -132,7 +146,7 @@ function addQuestionRef(element: InstanceType<typeof QuestionShow>) {
 						:class="element.css ?? ''"
 						:locked="isQuestionLocked(element)"
 						:question="element"
-						@validate="element.user=$event"
+						@validate="onValidate(element, $event)"
 					/>
 				</div>
 			</template>

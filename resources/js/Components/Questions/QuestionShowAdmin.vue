@@ -1,11 +1,11 @@
 <script lang="ts" setup>
 import DropdownMenu from "@/Components/Ui/DropdownMenu.vue"
 import EditLink from "@/Components/Ui/EditLink.vue"
-import type { flashInterface } from "@/types"
-import type { QuestionInterface } from "@/types/modelInterfaces.ts"
-import { router } from "@inertiajs/vue3"
+import type {flashInterface} from "@/types"
+import type {QuestionInterface} from "@/types/modelInterfaces.ts"
+import {router} from "@inertiajs/vue3"
 import axios from "axios"
-import { computed, inject, nextTick, ref } from "vue"
+import {computed, inject, nextTick, ref} from "vue"
 
 const flash = inject<flashInterface>("flash")
 
@@ -17,15 +17,15 @@ const props = defineProps<{
 const theQuestion = ref(props.question)
 
 const displayIfIds = computed(() => {
-	if (props.question.displayIf === null || props.question.displayIf==="") return []
+	if (props.question.displayIf === null || props.question.displayIf === "") return []
 
-		return (props.question.displayIf as string)
-			.split(",")
-			.map((id) => +id)
+	return (props.question.displayIf as string)
+		.split(",")
+		.map((id) => +id)
 })
 
 
-const toggleDisplayId = async function(id) {
+const toggleDisplayId = async function (id) {
 	if (id === -1) {
 		theQuestion.value.displayIf = null
 	} else {
@@ -63,10 +63,10 @@ const toggleDisplayId = async function(id) {
 		})
 }
 
-function duplicateQuestion(){
+function duplicateQuestion() {
 	axios
 		.post(route('questions.duplicate', [props.question.id]))
-		.then((res)=>{
+		.then((res) => {
 			router.visit(route('questions.edit', [res.data.id]))
 		})
 }
@@ -77,8 +77,8 @@ function duplicateQuestion(){
 		class="flex items-center justify-between w-full px-3 gap-3 py-2 admin-content rounded-t"
 	>
 		<edit-link
-			:id="question.id"
-			route-name="questions.edit"
+			:label="question.id"
+			:href="route('questions.edit', {id: question.id})"
 			inline
 		/>
 

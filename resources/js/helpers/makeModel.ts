@@ -20,8 +20,6 @@ export function makeBlock(body: string, title?: string, type?: string): BlockInt
 
 export function makeCard(usercard: UserCardInterface): CardInterface {
 	if (!usercard.blocks || usercard.blocks.length === 0) {
-		console.log('makeCard: usercard.blocks is empty or undefined')
-		console.log(usercard)
 		return {
 			id: 0,
 			recto: makeBlock('aucune carte créée'),

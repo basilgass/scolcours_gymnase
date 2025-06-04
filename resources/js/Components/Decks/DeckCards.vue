@@ -176,6 +176,13 @@ async function updateCard(result: boolean) {
 
 	// Si l'utilisateur est connecté, on envoie les données au serveur
 	if (usePage().props.auth.user) {
+
+		// userdeck_id = -1 : it's a virtual deck
+		if(currentCard.value.user_deck_id===-1){
+			return
+		}
+
+
 		axios.post(route('decks.updateCard', {
 				card: currentCard.value.id
 			}), {

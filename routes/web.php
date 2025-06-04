@@ -45,6 +45,7 @@ require __DIR__ . '/devRoutes.php'; // REFACTOR: Routes with API: devRoutes.php
 require __DIR__ . '/toolsRoutes.php'; // REFACTOR: Routes with API: toolsRoutes.php
 require __DIR__ . '/quizzsRoutes.php'; // REFACTOR: Routes with API: quizzsRoutes.php
 require __DIR__ . '/evaluationRoutes.php'; // REFACTOR: Routes with API: evaluationRoutes.php
+require __DIR__ . '/coursesRoutes.php'; // REFACTOR: Routes with API: coursesRoutes.php
 
 require __DIR__ . '/gamesRoutes.php'; // REFACTOR: Routes with API: gamesRoutes.php
 require __DIR__ . '/latexRoutes.php'; // REFACTOR: Routes with API: latexRoutes.php

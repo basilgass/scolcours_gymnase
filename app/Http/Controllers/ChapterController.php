@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\BlockResource;
-use App\Http\Resources\ChallengeResource;
 use App\Http\Resources\ChapterResource;
 use App\Http\Resources\ChapterShowResource;
 use App\Http\Resources\PostResource;
@@ -93,11 +92,11 @@ class ChapterController extends Controller
 		$chapter->load([
 						   'blocks',
 						   'posts' => function ($query) {
-								if(Auth::user()?->admin) {
-									$query->withCounts(); //->where('active', true);
-								}else{
-									$query->withCounts()->where('active', true);
-								}
+							   if (Auth::user()?->admin) {
+								   $query->withCounts(); //->where('active', true);
+							   } else {
+								   $query->withCounts()->where('active', true);
+							   }
 						   },
 						   'challenges',
 						   'relations'
@@ -134,9 +133,9 @@ class ChapterController extends Controller
 	{
 		$chapter->load([
 						   'posts' => function ($query) {
-							   if(Auth::user()?->admin) {
+							   if (Auth::user()?->admin) {
 								   $query->withCounts(); //->where('active', true);
-							   }else{
+							   } else {
 								   $query->withCounts()->where('active', true);
 							   }
 						   },
@@ -163,7 +162,7 @@ class ChapterController extends Controller
 			$anchor = sprintf("%s-%s", $type, $model->id);
 		}
 
-		return Inertia::render('Posts/PostShow', [
+		return Inertia::render('Chapters/ChapterPostShow', [
 			// Used for the page layout
 			"theme"   => ThemeResource::make($theme),
 			// Get the chapter (for next / previous / ...)
@@ -243,9 +242,11 @@ class ChapterController extends Controller
 
 		if ($user?->exists) {
 
-			$validate = $request->validate([
-											   'post_id' => ['required', 'exists:App\Models\Post,id'],
-										   ]);
+			$validate = $request->validate(
+				[
+					'post_id' => ['required', 'exists:App\Models\Post,id'],
+				]
+			);
 
 			$user->chapters()->detach($chapter->id);
 			$user->chapters()->attach(

@@ -1,15 +1,16 @@
 <script lang="ts" setup>
 import FormMaker from "@/Components/Form/FormMaker.vue"
-import { asciiToTex } from "@/Composables/keyboardConfig"
-import { useGenerator } from "@/Composables/useGenerator"
-import { flashInterface, generatedQuestionInterface } from "@/types"
-import { ChallengeInterface } from "@/types/modelInterfaces"
-import { usePage } from "@inertiajs/vue3"
-import { useClipboard } from "@vueuse/core"
+import {asciiToTex} from "@/Composables/keyboardConfig"
+import {useGenerator} from "@/Composables/useGenerator"
+import {flashInterface, generatedQuestionInterface} from "@/types"
+import {ChallengeInterface} from "@/types/modelInterfaces"
+import {usePage} from "@inertiajs/vue3"
+import {useClipboard} from "@vueuse/core"
 import axios from "axios"
-import { inject, PropType, ref } from "vue"
+import {inject, PropType, ref} from "vue"
 import ScButton from "@/Components/Ui/scButton.vue"
 import TexCode from "@/Components/Ui/TexCode.vue"
+import Card from "@/Components/Ui/Card.vue"
 
 /**
  * This component is used to generate a PDF from a challenge
@@ -32,7 +33,7 @@ const pdfQuestionWrapper = ref("\\( @ \\)")
 const pdfError = ref("")
 const pdfLaTeX = ref("")
 
-const { copy, copied } = useClipboard({ source: pdfLaTeX })
+const {copy, copied} = useClipboard({source: pdfLaTeX})
 
 const pdfGenereate = () => {
 	let questions: generatedQuestionInterface[] = []
@@ -90,50 +91,46 @@ const pdfGenereate = () => {
 <template>
 	<div
 		v-admin
-		class="mt-10 -mx-5 p-5 border-t"
+		class="border-content border-t"
 	>
-		<div class="flex gap-5 mb-5">
-			<h3 class="text-xl font-semibold">
-				pdf
-			</h3>
+		<sc-button
+			class="mx-auto my-10"
+			theme
+			@click="pdfGenereate"
+			xl
+		>
+			générer un pdf
+		</sc-button>
 
+		<Card>
+			<template #header>
+				configuration
+			</template>
 			<form-maker
 				v-model="pdfQuestionWrapper"
 				inline-label
 				label="wrapper"
+				class="max-w-[300px]"
 				sm
 			/>
-
-			<sc-button
-				theme
-				xs
-				@click="pdfGenereate"
-			>
-				générer
-			</sc-button>
-		</div>
-		<div class="flex flex-col gap-3">
-			<div
+		</Card>
+		<h4 class="font-[400] mt-8 mb-4">
+			Nombre de questions par générateurs
+		</h4>
+		<div class="flex gap-3">
+			<Card
 				v-for="(gen, index) of props.challenge.generators"
 				:key="`pdf-${gen.slug}`"
-				class="flex gap-3 items-center"
+				class="overflow-hidden"
 			>
-				<div class="flex gap-3">
-					<i class="bi bi-calculator text-xl" />
-					<h2
-						v-katex.auto="gen.title"
-						class="text-lg"
-					/>
-				</div>
-
 				<form-maker
 					v-model="pdfGeneratorNb[index]"
-					class="w-[200px]"
-					inline-label
+					class="max-w-[150px]"
 					type="number"
 					with-icon
+					:label="gen.title"
 				/>
-			</div>
+			</Card>
 		</div>
 		<div
 			v-if="pdfLaTeX"

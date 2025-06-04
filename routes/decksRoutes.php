@@ -14,8 +14,13 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
 	Route::get('decks/{deck}', [DeckController::class, 'show'])
 		->name('decks.show');
 
+
+
 	Route::get('decks/{deck}/portfolio', [DeckController::class, 'portfolio'])
 		->name('decks.userdecks.portfolio');
+
+	Route::get('decks/{deck}/cards/fetch', [DeckController::class, 'fetchCards'])
+		->name('decks.cards.fetch');
 
 	Route::post('decks/cards/{card}/update', [DeckController::class, 'updateCard'])
 		->name('decks.updateCard');

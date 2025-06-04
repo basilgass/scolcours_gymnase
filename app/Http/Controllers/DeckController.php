@@ -156,6 +156,12 @@ class DeckController extends Controller
 		return CardResource::collection($cards);
 	}
 
+	public function fetchCards(Deck $deck)
+	{
+		$cards = CardResource::collection($deck->cards);
+		return $cards;
+	}
+
 	public function updateCard(UserCard $card): UserCardResource
 	{
 		$validation = request()->validate([

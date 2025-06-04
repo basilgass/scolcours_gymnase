@@ -34,7 +34,7 @@ const cardClass = computed<string>(() => {
 		>
 			<slot name="header" />
 		</header>
-		<main class="p-3 flex-1">
+		<main class="flex-1 px-3">
 			<slot />
 		</main>
 		<footer

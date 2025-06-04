@@ -1,49 +1,69 @@
 <script lang="ts" setup>
 
 import ChallengeExport from "@/Components/Challenges/ChallengeExport.vue"
-import ChallengeGame from "@/Components/Challenges/ChallengeGame.vue"
-import ChallengeHeader from "@/Components/Challenges/ChallengeHeader.vue"
-import ChallengeTraining from "@/Components/Challenges/ChallengeTraining.vue"
-import IllustrationShow from "@/Components/Illustrations/IllustrationShow.vue"
-import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
-import { ChallengeGameState, ChallengeInterface, ChallengeScoreInterface, TeamInterface } from "@/types/modelInterfaces"
-import { ref } from "vue"
+import {ChallengeGameState, ChallengeInterface, TeamInterface} from "@/types/modelInterfaces"
+import {ref} from "vue"
 import ScButton from "@/Components/Ui/scButton.vue"
+import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
+import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
+import ChallengeDisplay from "@/Components/Challenges/ChallengeDisplay.vue"
+import BlockShow from "@/Components/Blocks/BlockShow.vue"
 
-defineOptions({ layout: LayoutMain })
+defineOptions({layout: LayoutMain})
+
+const editMode = useStoreEditMode()
 
 const props = defineProps<{
 	challenge: ChallengeInterface,
 	teams: TeamInterface[]
 }>()
 
-const userScore = ref<ChallengeScoreInterface>(props.challenge.user)
+const selector = ref(0)
+
 const state = ref<ChallengeGameState>("intro")
-let selector = ref(0)
 
 </script>
 
 <template>
 	<section>
 		<!-- Challenge title and description -->
-		<challenge-header :challenge="challenge" />
+		<article-title
+			v-theme.text
+			:title="challenge.title"
+			:return-link="{
+				label: challenge.chapter.title,
+				url: route('chapters.show', {slug: challenge.chapter.slug})
+			}"
+			:edit-link="{
+				label: challenge.id,
+				url: route('challenges.edit', {id: challenge.id})
+			}"
+		/>
 
-		<div class="scolcours-container">
-			<article>
-				<!-- the body / question of the challenge -->
-				<markdown-it
-					:text="props.challenge.block.body"
-					class="mt-5"
-				/>
+		<!-- Gestion administrateur -->
+		<div
+			v-admin="editMode.enable"
+			v-theme.admin
+			class="my-3 border-t p-3"
+		>
+			<h3 class="uppercase pb-3 font-extralight">
+				Résultats des équipes
+			</h3>
+			<div class="flex flex-wrap gap-3">
+				<sc-button
+					v-for="team of props.teams"
+					:key="team.id"
+					xs
+					:href="route('teams.challenge', [team.name, props.challenge.slug])"
+				>
+					{{ team.name }}
+				</sc-button>
+			</div>
+		</div>
 
-				<!-- illustration -->
-				<illustration-show
-					v-if="props.challenge.block.illustrations.length"
-					:illustration="props.challenge.block.illustrations[0]"
-					class="max-w-[30em] mx-auto"
-				/>
-			</article>
+		<div>
+			<block-show :block="challenge.block" />
 
 			<!-- Création du menu - permet de faire le choix entre le challenge ou l'entraînement -->
 			<div
@@ -83,18 +103,10 @@ let selector = ref(0)
 				</div>
 			</div>
 
-			<challenge-game
-				v-if="selector===0"
-				v-model:state="state"
-				v-model:user-score="userScore"
-				:challenge="challenge"
-				:teams="teams"
-			/>
-
-			<challenge-training
-				v-else
-				:generator="challenge.generators[selector-1]"
-				:key="challenge.generators[selector-1].slug"
+			<challenge-display
+				:challenge
+				:selector
+				@state-change="state=$event"
 			/>
 
 			<!-- export to pdf - admin only ! -->

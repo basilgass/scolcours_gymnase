@@ -33,7 +33,6 @@ function saveMerge() {
 		})
 }
 
-
 </script>
 <template>
 	<div
@@ -48,10 +47,9 @@ function saveMerge() {
 				</div>
 
 				<edit-link
-					:id="block.id"
+					:label="`block ${block.id}`"
+					:href="route('blocks.edit', block.id)"
 					inline
-					label="block id: "
-					route-name="blocks.edit"
 				/>
 			</div>
 		</slot>
@@ -74,7 +72,7 @@ function saveMerge() {
 				/>
 				<button
 					:class="theBlock.merge?'rotate-180':'rotate-0'"
-					class="transition transition-all"
+					class="transition-all"
 					@click="saveMerge()"
 				>
 					<i class="bi bi-arrow-bar-up" />

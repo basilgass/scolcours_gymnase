@@ -5,13 +5,15 @@ import FlashMessage from "@/Components/Ui/FlashMessage.vue"
 import {flashConfig, flashMessageInterface} from "@/types"
 import {ThemeInterface} from "@/types/modelInterfaces.ts"
 import {Head, usePage} from "@inertiajs/vue3"
-import {computed, PropType, provide, ref} from "vue"
+import {computed, provide, ref} from "vue"
 
-defineProps({
-	theme: {
-		type: Object as PropType<ThemeInterface>,
-		default: () => {
-			return {title: "Scolcours", slug: "main"}
+withDefaults(defineProps<{
+	theme: Partial<ThemeInterface>
+}>(), {
+	theme: () => {
+		return {
+			title: 'Scolcours',
+			slug: 'main'
 		}
 	}
 })
@@ -46,6 +48,7 @@ provide("flash", {
 })
 
 
+// TODO: Change the pageTitle funciton to be more glabal (chapter, post, challenge, ...)
 const pageTitle = computed(() => {
 	if (usePage()?.props?.chapter) {
 		return usePage().props.chapter.meta_title

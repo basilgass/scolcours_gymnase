@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import EditLink from "@/Components/Ui/EditLink.vue"
-import { getModule, MODULE_TYPES } from "@/scolcours.ts"
-import type { IllustrationInterface } from "@/types/modelInterfaces.ts"
-import { computed } from "vue"
+import {getModule, MODULE_TYPES} from "@/scolcours.ts"
+import type {IllustrationInterface} from "@/types/modelInterfaces.ts"
+import {computed} from "vue"
 
 const props = defineProps<{
 	illustration: IllustrationInterface
@@ -17,8 +17,10 @@ const widgetComponent = computed(() => {
 	)
 })
 
-function click($event: MouseEvent){
-	if(props.clickThrough){return}
+function click($event: MouseEvent) {
+	if (props.clickThrough) {
+		return
+	}
 
 	$event.stopPropagation()
 }
@@ -32,8 +34,8 @@ function click($event: MouseEvent){
 		class="relative"
 	>
 		<edit-link
-			:id="props.illustration.id"
-			route-name="illustrations.edit"
+			:label="`illustration ${illustration.id}`"
+			:href="route('illustrations.edit', illustration.id)"
 		/>
 
 		<component

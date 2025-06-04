@@ -12,8 +12,7 @@ Pour l'admin, contient également les liens vers les résultats par teams.
 import ScButton from "@/Components/Ui/scButton.vue"
 
 const props = defineProps({
-	challenge: { type: Object, required: true },
-	teams: { type: Object, required: true }
+	challenge: { type: Object, required: true }
 })
 
 const emits = defineEmits(["start"])
@@ -107,25 +106,6 @@ const emits = defineEmits(["start"])
 						</div>
 					</div>
 				</div>
-			</div>
-		</div>
-
-		<!-- Gestion administrateur -->
-		<div
-			v-admin
-			class="mt-10 border-t -mx-3 px-3"
-		>
-			<h3 class="uppercase py-3 font-extralight">
-				Résultats
-			</h3>
-			<div class="flex flex-wrap gap-3">
-				<sc-button
-					v-for="team of props.teams"
-					:key="team.id"
-					:href="route('teams.challenge', [team.name, props.challenge.slug])"
-				>
-					{{ team.name }}
-				</sc-button>
 			</div>
 		</div>
 	</article>

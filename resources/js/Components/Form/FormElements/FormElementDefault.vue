@@ -8,7 +8,7 @@ defineOptions({
 	inheritAttrs: false
 })
 
-const value = defineModel<string>()
+const value = defineModel<string|number>()
 const input = useTemplateRef('input')
 
 const props = defineProps<FormMakerPropsNewType>()
