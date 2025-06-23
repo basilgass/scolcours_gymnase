@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use App\Http\Resources\UserResource;
 use App\Models\Theme;
+use App\Support\ThemeResolver;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Inertia\Middleware;
@@ -23,7 +24,7 @@ class HandleInertiaRequests extends Middleware
 	 * @param Request $request
 	 * @return string|null
 	 */
-	public function version(Request $request)
+	public function version(Request $request): ?string
 	{
 		return parent::version($request);
 	}
@@ -34,34 +35,35 @@ class HandleInertiaRequests extends Middleware
 	 * @param Request $request
 	 * @return array
 	 */
-	public function share(Request $request)
+	public function share(Request $request): array
 	{
 		$user = null;
 
-		if($request->user()){
+		if ($request->user()) {
 			$user = UserResource::make($request->user());
 		}
 
 		return array_merge(parent::share($request), [
-			'auth' => [
+			'auth'      => [
 				'user' => $user,
-				'can' => [
+				'can'  => [
 					'admin' => $request->user()?->admin
 				]
 			],
 			'scolcours' => Cache::get('scolcours')->toArray(),
-			'themes' => Theme::getThemesFromCache()
-				->mapWithKeys(function ($item, $key) {
-				return [
-					$key => [
-						'id' => $item->id,
-						'slug' => $item->slug,
-						'title' => $item->title,
-						'icon' => $item->icon,
-						'enabled'=>$item->enabled
-					]
-				];
-			})
+			'theme'     => ThemeResolver::resolve(),
+			'themes'    => Theme::getThemesFromCache()
+			                    ->mapWithKeys(function ($item, $key) {
+				                    return [
+					                    $key => [
+						                    'id'      => $item->id,
+						                    'slug'    => $item->slug,
+						                    'title'   => $item->title,
+						                    'icon'    => $item->icon,
+						                    'enabled' => $item->enabled
+					                    ]
+				                    ];
+			                    })
 		]);
 	}
 }

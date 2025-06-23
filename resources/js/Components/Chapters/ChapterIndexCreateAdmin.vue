@@ -19,7 +19,7 @@ async function onShowModal() {
 }
 
 function createChapter() {
-	axios.post(route("themes.chapters.store", {
+	axios.post(route("api.themes.chapters.store", {
 		theme: usePage().props.theme.slug
 	}), {
 		title: createChapterTitle.value

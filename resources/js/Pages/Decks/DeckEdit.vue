@@ -18,8 +18,7 @@ defineOptions({layout: LayoutMain})
 const flash = inject<flashInterface>("flash")
 
 const props = defineProps<{
-	deck: DeckInterface,
-	cards: CardInterface[]
+	deck: DeckInterface
 }>()
 
 const chapterId = ref<undefined | number>(undefined)
@@ -32,7 +31,7 @@ const getTargetName = function () {
 		return
 	}
 	axios
-		.get(route(`chapters.info`, [chapterId.value]))
+		.get(route(`api.chapters.info`, [chapterId.value]))
 		.then((res) => {
 			chapterTitle.value = res.data.title
 
@@ -47,11 +46,11 @@ function assignChapter() {
 		return
 	}
 
-	axios.post(route("decks.assignChapter", [props.deck.id]), {
+	axios.post(route("api.decks.updateChapter", [props.deck.id]), {
 		_method: "PATCH",
 		chapter_id: chapterId.value
 	})
-		.then((res) => {
+		.then(() => {
 			flash.success(`Le deck a été assigné au chapitre ${chapterTitle.value}`)
 			chapterId.value = undefined
 		})
@@ -104,7 +103,6 @@ watchDebounced(chapterId, getTargetName, {debounce: 1000, maxWait: 2000})
 		<!-- view mode -->
 		<deck-cards-index
 			:deck="props.deck"
-			:cards="props.cards"
 		/>
 	</section>
 </template>

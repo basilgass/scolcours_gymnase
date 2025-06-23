@@ -6,10 +6,13 @@ use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\URL;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * App\Models\Block
@@ -55,21 +58,34 @@ use Illuminate\Support\Facades\URL;
  */
 class Block extends Model
 {
-	use HasFactory;
+	protected $fillable = [
+		"order",
+		"title",
+		"body",
+		"type",
+		"script",
+		"switch",
+		"json",
+		"blockable_id",
+		"blockable_type",
+		"template",
+		"illustrationsGrid",
+		"merge",
+		"url",
+	];
 
-	protected $guarded = [];
 	protected $with = ['illustrations'];
-
 	protected $casts = [
 		'merge' => 'boolean'
 	];
+	protected $touches = ['blockable'];
 
-	public function blockable()
+	public function blockable(): MorphTo
 	{
 		return $this->morphTo();
 	}
 
-	public function duplicate()
+	public function duplicate(): Block
 	{
 		// Duplicate the block
 		$clonedBlock = $this->replicate();
@@ -91,10 +107,27 @@ class Block extends Model
 		return $clonedBlock;
 	}
 
-	public function illustrations()
+	public function illustrations(): Builder|HasMany|Block
 	{
 		return $this->hasMany(Illustration::class)->orderBy('order')->orderBy('id');
 	}
+
+	public function redirectToBlockable()
+	{
+		if (!$this->blockable) {
+			abort(404);
+		}
+
+		$base = strtolower(class_basename($this->blockable)) . 's.show';
+
+		//vérifier si la route existe
+		if (Route::has($base)) {
+			return redirect()->route($base, $this->blockable);
+		}
+
+		abort(404, 'Unknown blockable type.');
+	}
+
 
 	protected function url(): Attribute
 	{

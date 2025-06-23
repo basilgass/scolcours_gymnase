@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\HasUrlTrait;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -32,8 +33,11 @@ use Illuminate\Support\Carbon;
  */
 class Formula extends Model
 {
+	use HasUrlTrait;
+
 	protected $guarded=[];
 	protected $with = ['blocks'];
+	protected $appends = ['url'];
 
 	public function chapter(): BelongsTo
     {

@@ -76,6 +76,24 @@ export function getModule(key: string, type: MODULE_TYPES) {
 	return null
 }
 
+export function slugify(titre: string): string {
+	return titre
+		// Supprimer les commandes LaTeX (ex: \alpha, \frac{a}{b}, \sqrt, etc.)
+		.replace(/\\[a-zA-Z]+(\{[^}]*\})*/g, '')
+		// Normaliser les caractères accentués
+		.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+		// Transformer en minuscules
+		.toLowerCase()
+		// Remplacer les espaces et séparateurs par des tirets
+		.replace(/[\s\-_–—]+/g, '-')
+		// Supprimer les caractères non alphanumériques et tirets
+		.replace(/[^a-z0-9-]/g, '')
+		// Supprimer les tirets multiples
+		.replace(/-+/g, '-')
+		// Supprimer les tirets en début/fin
+		.replace(/^-|-$/g, '')
+}
+
 export const graduateBackgroundColor = [
 	"rgba(255, 99, 132, 0.2)",	// 1
 	"rgba(255, 99, 132, 0.2)",	// 1.5

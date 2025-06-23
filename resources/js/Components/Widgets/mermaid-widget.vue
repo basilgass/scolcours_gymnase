@@ -6,6 +6,7 @@ import {WidgetPropsInterface} from "@/types/modelInterfaces"
 import {computed} from "vue"
 import MermaidDiagram from "@/Components/MermaidDiagram.vue"
 import type {MermaidConfig} from "mermaid"
+import {MermaidEmits} from "@/Composables/useMermaidDispatcher.ts"
 
 
 // TODO: est-il possible de réduire la taille de vue-mermaid-string, en faisant ma propre version et en passant par un CDN ?
@@ -24,12 +25,19 @@ const config = computed<Partial<MermaidConfig>>(() => {
 	} as MermaidConfig
 })
 
+const emits = defineEmits<MermaidEmits>()
+
+function onNodeClick(node: string, event: MouseEvent){
+	emits('nodeClick', node, event)
+}
+
 </script>
 
 <template>
 	<mermaid-diagram
 		:content="props.illustration.code"
 		:config
+		@node-click="onNodeClick"
 	/>
 </template>
 

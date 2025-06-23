@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\HasQuestionsTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -35,7 +36,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Evaluation extends Model
 {
-    use HasFactory;
+	use HasQuestionsTrait;
 
     protected $with = ['generators', 'questions'];
 
@@ -46,10 +47,4 @@ class Evaluation extends Model
             ->orderByPivot('order');
     }
 
-    public function questions()
-    {
-        return $this->morphMany(Question::class, 'questionable')
-            ->orderBy('order')
-            ->orderBy('id');
-    }
 }

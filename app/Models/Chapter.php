@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use Database\Factories\ChapterFactory;
+use App\Traits\HasUrlTrait;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -10,9 +10,11 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Storage;
 use URL;
 
 /**
@@ -64,17 +66,18 @@ use URL;
 class Chapter extends Model
 {
 	use HasFactory;
+	use HasUrlTrait;
 
 	protected $guarded = [];
-
 	protected $with = ['blocks'];
+	protected $appends = ['url'];
 
 	public function theme(): BelongsTo
 	{
 		return $this->belongsTo(Theme::class);
 	}
 
-	public function blocks()
+	public function blocks(): MorphMany
 	{
 		return $this->morphMany(Block::class, 'blockable');
 	}
@@ -85,10 +88,11 @@ class Chapter extends Model
 	}
 
 	public function formulas(): HasMany
-    {
-		return $this->hasMany(Formula::class)
-            ->orderBy('order')
-            ->orderBy('id');
+	{
+		return $this
+			->hasMany(Formula::class)
+			->orderBy('order')
+			->orderBy('id');
 	}
 
 	public function challenges(): HasMany
@@ -96,58 +100,32 @@ class Chapter extends Model
 		return $this->hasMany(Challenge::class);
 	}
 
-	public function questions()
+	public function questions(): MorphToMany
 	{
 		return $this->morphedByMany(Question::class, Post::class);
 	}
 
-	public function users()
+	public function users(): BelongsToMany
 	{
 		return $this->belongsToMany(User::class);
 	}
 
-	public function quizzs()
+	public function quizzs(): Builder|HasMany|Chapter
 	{
 		return $this->hasMany(Quizz::class);
 	}
 
-	public function relations()
+	public function relations(): BelongsToMany
 	{
 		return $this->belongsToMany(Chapter::class, "chapter_relation", "chapter_id", "related_id");
 	}
 
-	public function decks()
+	public function decks(): Builder|HasMany|Chapter
 	{
 		return $this->hasMany(Deck::class);
 	}
 
-	protected function url(): Attribute
-	{
-		return Attribute::make(
-			get: fn() => URL::route('themes.chapters.intro', [$this->theme->slug, $this->slug], false)
-		);
-	}
-
-	protected function component(): Attribute
-	{
-		if ($this->theme === null || $this->slug === null) {
-			$path = false;
-		} else {
-			$path = $this->theme->slug . '/' . $this->slug;
-		}
-
-		if (Storage::disk('chapters')->exists($path . '.vue')) {
-			$component = 'Chapters/' . $path;
-		} else {
-			$component = false;
-		}
-
-		return Attribute::make(
-			get: fn() => $component
-		);
-	}
-
-	public function reorder()
+	public function reorder(): void
 	{
 		$this->refresh();
 		foreach ($this->posts as $index => $post) {

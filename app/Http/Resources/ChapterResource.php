@@ -40,7 +40,7 @@ class ChapterResource extends JsonResource
 			],
 			'block'      => BlockResource::make($this->blocks[0]),
 			'active'     => $this->active,
-			'url'        => URL::route('themes.chapters.intro', [$theme->slug, $this->slug], false),
+			'url'        => URL::route('themes.chapters.show', [$theme->slug, $this->slug], false),
 			'updated_at' => Carbon::parse($this->updated_at)->format('Y-m-d H:i'),
 			'modified'   => isset($this->latest_block_updated_at) ?
 				Carbon::make($this->latest_block_updated_at)->diffForHumans() :

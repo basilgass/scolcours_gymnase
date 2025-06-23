@@ -11,7 +11,7 @@ const tool = defineModel<ToolInterface>('tool')
 
 // save the tool
 function updateTool() {
-	axios.post(route('tools.update', tool.value.id), {
+	axios.post(route('admin.tools.update', tool.value.id), {
 		title: tool.value.title,
 		body: tool.value.body,
 		theme_id: tool.value.theme_id
@@ -78,7 +78,7 @@ function updateTool() {
 					</p>
 				</InertiaLink>
 				<div class="text-xs text-right">
-					<InertiaLink :href="route('tools.edit', tool.id)">
+					<InertiaLink :href="route('admin.tools.edit', tool.id)">
 						<i class="bi bi-pencil" />
 					</InertiaLink>
 					<div class="opacity-60">

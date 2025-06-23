@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Support\Carbon;
 
 /**
@@ -42,22 +43,32 @@ use Illuminate\Support\Carbon;
  */
 class Score extends Model
 {
-    use HasFactory;
+	use HasFactory;
 
-	protected $guarded=[];
+	protected $fillable = [
+		"user_id",
+		"data",
+		"attempts",
+		"is_resolved",
+		"score",
+	];
 
-	public function users()
-	{
-		return $this->belongsToMany(User::class);
-	}
+	protected $casts = [
+		'data' => 'array'
+	];
 
-	public function challenges()
-	{
-		return $this->belongsToMany(Challenge::class);
-	}
-
-	public function scoreable(): \Illuminate\Database\Eloquent\Relations\MorphTo
+	/**
+	 * Permet de récupérer les modèles qui ont un score:
+	 * Post, Questiom, Deck, Card, Challenge, Generator
+	 * @return MorphTo
+	 */
+	public function scoreable(): MorphTo
 	{
 		return $this->morphTo();
+	}
+
+	public function user()
+	{
+		return $this->belongsTo(User::class);
 	}
 }

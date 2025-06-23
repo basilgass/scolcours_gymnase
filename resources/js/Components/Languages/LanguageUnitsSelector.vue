@@ -13,13 +13,14 @@ defineProps<{
 
 const selectedBook = ref(-1)
 
+
 const updateUnits = function (item: TranslationUnitInterfaceExtended) {
 	// Change the state
 	item.selected = !item.selected
 
 	// Load the missing words
 	if (item.words.length === 0) {
-		axios.get(route("translations.words", [item.id]))
+		axios.get(route("api.voc.units.words.index", {unit: item.id}))
 			.then(res => {
 				item.words = res.data
 			})
@@ -42,16 +43,27 @@ function getUnits_from_Book(book_id: number) {
 	selectedBook.value = book_id
 	units.value = []
 
-	axios.get(route("translations.units", [book_id])).then(res => {
-		units.value = res.data.map((value: TranslationUnitInterface) => {
-			return {
-				...value,
-				selected: false,
-				words: []
-			}
+	axios.get(route("api.voc.books.units.index", {book: book_id}))
+		.then(res => {
+			units.value = res.data.map((value: TranslationUnitInterface) => {
+				return {
+					...value,
+					selected: false,
+					words: []
+				}
+			})
 		})
-	})
 }
+
+// TODO: Loading books async or not ?
+// onMounted(() => {
+// 	axios.get(route('voc.languages.books.index', {language: 2}))
+// 		.then(res => {
+// 			console.log(res.data)
+// 		})
+//
+// })
+
 </script>
 
 <template>

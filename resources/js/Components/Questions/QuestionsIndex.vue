@@ -2,11 +2,11 @@
 import QuestionShow from "@/Components/Questions/QuestionShow.vue"
 import QuestionShowAdmin from "@/Components/Questions/QuestionShowAdmin.vue"
 import QuestionsIndexAdmin from "@/Components/Questions/QuestionsIndexAdmin.vue"
-import { useStoreEditMode } from "@/stores/useStoreEditMode.ts"
-import { flashInterface } from "@/types"
-import type { PostShowInterface, QuestionInterface } from "@/types/modelInterfaces.ts"
+import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
+import {flashInterface} from "@/types"
+import type {PostShowInterface, QuestionInterface} from "@/types/modelInterfaces.ts"
 import axios from "axios"
-import { computed, inject, ref } from "vue"
+import {computed, inject, ref} from "vue"
 import type {questionResultInterface} from "@/Components/Questions/QuestionInterface.ts"
 import {useStoreLesson} from "@/stores/useStoreLesson.ts"
 
@@ -19,7 +19,7 @@ const props = defineProps<{
 
 const answeredIds = computed(() => {
 	return props.post.questions
-		.filter((question) => question.user.result)
+		.filter((question) => question.user.is_resolved)
 		.map((question) => +question.id)
 })
 
@@ -40,29 +40,29 @@ const questionsGrid = computed(() => {
 })
 
 
-const displayIds = computed(()=>props.post.questions.map((q) => q.id))
+const displayIds = computed(() => props.post.questions.map((q) => q.id))
 
-const isQuestionLocked = function(question: QuestionInterface) {
+const isQuestionLocked = function (question: QuestionInterface) {
 	return !(
 		question.displayIf === null ||
-		question.displayIf
-			.split(",")
+		question.displayIf === undefined ||
+		question.displayIf.split(",")
 			.map((id) => +id)
 			.every((id) => answeredIds.value.indexOf(id) !== -1)
 	)
 }
 
-const updateQuestionsOrder = function() {
+const updateQuestionsOrder = function () {
 	axios
 		.post(
-			route("questions.updateOrder", [
+			route("api.questions.updateOrder", [
 				"Post",
 				props.post.id
 			]),
 			{
 				_method: "PATCH",
 				order: props.post.questions.map((x, index) => {
-					return { id: x.id, order: index + 1 }
+					return {id: x.id, order: index + 1}
 				})
 			}
 		)
@@ -85,16 +85,17 @@ function addQuestionRef(element: InstanceType<typeof QuestionShow>) {
 	}
 }
 
-const emits = defineEmits<{
+defineEmits<{
 	validate: [event: questionResultInterface]
 }>()
 
 const lessonScore = useStoreLesson()
 
-function onValidate(element: QuestionInterface, event: questionResultInterface){
-	element.user=event
-	// Must trigger an event upstairs...
-	lessonScore.updatePost(props.post)
+function onValidate(element: QuestionInterface, event: questionResultInterface) {
+	element.user.is_resolved = event.result
+
+	//TODO: LessonScore update Must trigger an event upstairs...
+	lessonScore.update(props.post)
 }
 </script>
 <template>

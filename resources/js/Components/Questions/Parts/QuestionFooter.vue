@@ -5,8 +5,9 @@
  */
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
-import {inject, ref} from "vue"
+import {computed, inject, ref} from "vue"
 import type {questionDataInterface} from "@/Components/Questions/QuestionInterface.ts"
+import {ScoreQuestionDataInterface} from "@/types/modelInterfaces.ts"
 
 const editMode = useStoreEditMode()
 
@@ -14,22 +15,28 @@ const questionData = inject<questionDataInterface>("questionData")
 
 const showAnswer = ref(false)
 
-const emits  = defineEmits<{
+const emits = defineEmits<{
 	loadAnswers: [ev: boolean]
 }>()
 
-function toggleAnswer(){
+function toggleAnswer() {
 	showAnswer.value = !showAnswer.value
 
 	emits('loadAnswers', showAnswer.value)
 }
+
+
+const previousAnswers = computed<string[]>(() => {
+	return (questionData.user.score.value.data as ScoreQuestionDataInterface)?.answers ?? []
+})
 </script>
 
 <template>
 	<div
-		v-if="questionData.question.value.user.result || $page.props.auth.can.admin"
+		v-if="questionData.user.score.value.is_resolved || $page.props.auth.can.admin"
 		class="question-footer px-5 py-2"
 	>
+		<div> {{ previousAnswers.join(', ') }}</div>
 		<div
 			v-admin="editMode.enable"
 			class="flex"
@@ -47,19 +54,19 @@ function toggleAnswer(){
 					class="bi bi-eye-slash"
 				/>
 			</button>
-			<form-maker
-				v-model="questionData.question.value.answer"
-				:axios="{
-					model: 'Question',
-					id: questionData.question.value.id,
-					column: 'answer',
-					button: true
-				}"
-				class="flex-1 font-code"
-				:rows="questionData.question.value.answer.split('\n').length"
-				sm
-				type="textarea"
-			/>
+			<!--			<form-maker-->
+			<!--				v-model="questionData.user.answer"-->
+			<!--				:axios="{-->
+			<!--					model: 'Question',-->
+			<!--					id: questionData.question.id,-->
+			<!--					column: 'answer',-->
+			<!--					button: true-->
+			<!--				}"-->
+			<!--				class="flex-1 font-code"-->
+			<!--				:rows="questionData.answers.values.length"-->
+			<!--				sm-->
+			<!--				type="textarea"-->
+			<!--			/>-->
 		</div>
 		<div v-admin="false">
 			<button
@@ -77,7 +84,7 @@ function toggleAnswer(){
 			>
 				<div
 					class="text-xs text-center ml-3 font-code"
-					v-text="questionData.question.value.answer"
+					v-text="questionData.answers.values"
 				/>
 			</div>
 		</div>

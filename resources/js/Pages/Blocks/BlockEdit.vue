@@ -40,13 +40,12 @@ const wasEdited = computed(() => {
 
 function visitBlock() {
 	// Check if the block has been modified
-	console.log(route("blocks.show", [theBlock.value.id]))
 	router.visit(route("blocks.show", [theBlock.value.id]))
 }
 
 function saveBlock() {
 	axios
-		.post(route("blocks.update", [theBlock.value.id]), {
+		.post(route("api.blocks.update", [theBlock.value.id]), {
 			...theBlock.value,
 			_method: "PATCH"
 		})
@@ -61,7 +60,7 @@ function saveBlock() {
 
 function deleteBlock() {
 	axios
-		.post(route("blocks.destroy", [theBlock.value.id]), {
+		.post(route("api.blocks.destroy", [theBlock.value.id]), {
 			_method: "delete"
 		})
 		.then((res) => {
@@ -76,11 +75,11 @@ function deleteBlock() {
 function addIllustration() {
 	axios
 		.post(
-			route("illustrations.store", [theBlock.value.id]),
+			route("api.illustrations.store", [theBlock.value.id]),
 			{}
 		)
 		.then((res) => {
-			router.visit(route("illustrations.edit", [res.data.id]))
+			router.visit(route("admin.illustrations.edit", [res.data.id]))
 			flash.success("une nouvelle illustration a été créée")
 		}).catch((res) => {
 			console.warn("add illustration: ", res)
@@ -113,7 +112,7 @@ function addScriptsButtons() {
 
 function deleteIllustration(id: number) {
 	axios
-		.post(route("illustrations.destroy", [id]), {
+		.post(route("api.illustrations.destroy", [id]), {
 			_method: "delete"
 		})
 		.then(() => {

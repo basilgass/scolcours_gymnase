@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use App\Traits\HasScoresTrait;
+use App\Traits\HasUrlTrait;
 use Auth;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Support\Carbon;
@@ -50,95 +51,47 @@ use Illuminate\Support\Facades\Cache;
  */
 class Question extends Model
 {
-    protected $guarded = [];
-    protected $with = [];
+	use HasUrlTrait;
+	use HasScoresTrait;
 
-    public function questionable(): MorphTo
-    {
-        return $this->morphTo();
-    }
+	protected $fillable = [
+		'order',
+		'displayif',
+		'css',
+		'answer',
+		'keyboard',
+	];
+	protected $appends = ['url'];
 
-    public function blocks(): MorphMany
-    {
-        return $this->morphMany(Block::class, 'blockable')->orderBy('order')->orderBy('id');
-    }
+	/**
+	 * permet de récupérer le modèle qui contient cette question.
+	 * @return MorphTo
+	 */
+	public function questionable(): MorphTo
+	{
+		return $this->morphTo();
+	}
 
-    public function answersFrom(mixed $ids)
-    {
-        return $this->users()
-            ->whereIn('question_user.user_id', $ids)
-            ->get();
-    }
+	/**
+	 * Liste des Block de la question
+	 * @return MorphMany
+	 */
+	public function blocks(): MorphMany
+	{
+		return $this->morphMany(Block::class, 'blockable')->orderBy('order')->orderBy('id');
+	}
 
-    public function users(): BelongsToMany
-    {
-        return $this->belongsToMany(User::class)
-            ->withTimestamps()
-            ->withPivot('result', 'answer', 'attempts');
-    }
+	public function resetAnswer(): void
+	{
+		$user = Auth::user();
 
-    public function clean()
-    {
-        $answers = [];
+		if ($user) {
+			// Remove the cache
+			// BUG: Remove the cache might not work anymore ?
+			Cache::forget(Question::getCacheKey($user));
 
-        if (Auth::user()) {
-            $answers = $this->userAnswers();
-
-            // No answer yet ! No need to clean it !
-            if (count($answers) === 0) {
-                return 0;
-            }
-
-            // Remove all previous values.
-            foreach ($answers as $id => $answer) {
-                $this->users()->detach(Auth::user()->id);
-            }
-        }
-
-        return count($answers);
-    }
-
-    public function userAnswers()
-    {
-        if (Auth::user()) {
-            return $this->answersFromUser(Auth::user());
-        }
-
-        return collect([]);
-    }
-
-    public static function getCacheKey(Question $question, User $user): string
-    {
-        return "question_{$question->id}_user_{$user->id}_answers";
-    }
-
-    public function answersFromUser(User $user)
-    {
-        $cacheKey = Question::getCacheKey($this, $user);
-
-        $cacheTime = 15 * 60; // 15 minutes
-
-        return Cache::remember($cacheKey, $cacheTime, function () use ($user) {
-            $answer = $this->users()
-                ->where('question_user.user_id', '=', $user->id)
-                ->first();
-
-            if ($answer) {
-                return [
-                    'answer'     => $answer->pivot->answer,
-                    'result'     => $answer->pivot->result,
-                    'attempts'   => $answer->pivot->attempts,
-                    'updated_at' => Carbon::parse($answer->pivot->updated_at)->diffForHumans(),
-                ];
-            }
-
-            return [
-                'answer'     => "",
-                'result'     => false,
-                'attempts'   => 0,
-                'updated_at' => null,
-            ];
-        });
-
-    }
+			// Delete the score record
+			$this->scoreFor($user)?->delete();
+		}
+	}
 }

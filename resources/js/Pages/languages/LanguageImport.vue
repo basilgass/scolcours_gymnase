@@ -3,10 +3,11 @@ import FormMaker from "@/Components/Form/FormMaker.vue"
 import LanguageAdminBook from "@/Components/Languages/admin/LanguageAdminBook.vue"
 import LanguageAdminSelector from "@/Components/Languages/admin/LanguageAdminSelector.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
-import { TranslationUnitInterface } from "@/types/modelInterfaces.ts"
-import { useForm } from "@inertiajs/vue3"
+import {TranslationUnitInterface} from "@/types/modelInterfaces.ts"
+import {useForm} from "@inertiajs/vue3"
 import axios from "axios"
-import { computed, ref, watch } from "vue"
+import {computed, ref, watch} from "vue"
+import Card from "@/Components/Ui/Card.vue"
 
 // Concept
 // 1. sélectionner une langue
@@ -14,7 +15,7 @@ import { computed, ref, watch } from "vue"
 // 3. sélectionner un chapitre ou en créer un
 // 4. importer les traductions.
 
-defineOptions({ layout: LayoutMain })
+defineOptions({layout: LayoutMain})
 
 const form = useForm({
 	language: "",
@@ -26,13 +27,13 @@ const traduction = ref("")
 const swapFrForeign = ref(false)
 const quizletMode = ref(false)
 const traductions = computed(() => {
-	if(quizletMode.value){
+	if (quizletMode.value) {
 		const formatedTraduction = []
 
 		const arr = traduction.value.split('\n')
-			.filter(x=>x.trim() !== "")
+			.filter(x => x.trim() !== "")
 
-		while(arr.length>1){
+		while (arr.length > 1) {
 			const values = [arr.shift().trim(), arr.shift().trim()]
 
 			formatedTraduction.push(
@@ -66,7 +67,7 @@ function resetUnits() {
 }
 
 function getUnits(bookId: number) {
-	axios.get(route("translations.units", bookId))
+	axios.get(route("api.voc.books.units.index", {book: bookId}))
 		.then(res => {
 			existingUnits.value = res.data
 			return
@@ -92,6 +93,7 @@ watch(() => form.book, (prev: number, next: number) => {
 
 
 function importerLesTraductions() {
+	// ROUTE : voc.create n'exist pas
 	form
 		.transform((data) => {
 			return {
@@ -99,7 +101,7 @@ function importerLesTraductions() {
 				translations: traductions.value
 			}
 		})
-		.post(route("translations.create"))
+		.post(route("api.voc.units.words.store"))
 }
 
 </script>
@@ -122,15 +124,16 @@ function importerLesTraductions() {
 				:language="form.language"
 			/>
 
-			<ul class="list list-inside list-disc">
+			<div class="flex gap-3">
 				<!-- existing units -->
-				<li
+				<Card
 					v-for="unit in existingUnits"
 					:key="unit.id"
+					class="p-3"
 				>
 					{{ unit.title }}
-				</li>
-			</ul>
+				</Card>
+			</div>
 		</div>
 
 

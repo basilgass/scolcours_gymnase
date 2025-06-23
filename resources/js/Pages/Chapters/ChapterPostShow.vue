@@ -20,12 +20,13 @@ const props = defineProps<{
 
 function storeCurrentPost() {
 	if (usePage().props.auth.user === null) return
-	axios.post(
-		route("chapters.currentPost", [props.chapter.id]),
-		{
-			post_id: props.post.id
-		}
-	)
+	// TODO: Manage page history
+	// axios.post(
+	// 	route("chapters.currentPost", [props.chapter.id]),
+	// 	{
+	// 		post_id: props.post.id
+	// 	}
+	// )
 }
 
 storeCurrentPost()
@@ -38,7 +39,7 @@ storeCurrentPost()
 		:post
 		:return-link="{
 			label: chapter.title,
-			url: route('chapters.show', {slug: chapter.slug})
+			url: route('chapters.show', {chapter: chapter.slug})
 		}"
 	>
 		<template #footer>

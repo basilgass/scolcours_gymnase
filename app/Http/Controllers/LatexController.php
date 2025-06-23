@@ -12,7 +12,7 @@ class LatexController extends Controller
 {
 	public function latex(Request $data) // POST request
 	{
-		$validation = $data->validate([
+		$validated = $data->validate([
 										  'template'  => ['required', 'string', 'in:latex.questions,latex.standalone,latex.simple'],
 										  'title'     => 'required|string',
 										  'content'   => 'string',
@@ -22,8 +22,8 @@ class LatexController extends Controller
 									  ]);
 
 		// Check if folder exists.
-		$theme = $validation["theme"] ?? 'divers';
-		$folder = "pdf/{$theme}/{$validation["slug"]}";
+		$theme = $validated["theme"] ?? 'divers';
+		$folder = "pdf/{$theme}/{$validated["slug"]}";
 		if (!Storage::disk('public')->exists($folder)) {
 			Storage::disk('public')->makeDirectory($folder);
 		}
@@ -39,15 +39,15 @@ class LatexController extends Controller
 		$fullpath = $folder . '/' . $filename;
 
 		// TODO: validate the questions to make sure it does not contain malicious code
-		$content = $validation['content'] ?? '';
-		if($validation['content'] !== strip_tags($validation['content'])){
-			$content = e($validation['content']);
+		$content = $validated['content'] ?? '';
+		if($validated['content'] !== strip_tags($validated['content'])){
+			$content = e($validated['content']);
 		}
 
-		$laraTeX = (new LaraTeX($validation["template"]))
+		$laraTeX = (new LaraTeX($validated["template"]))
 			->with([
-					   'title'     => $validation["title"],
-					   'questions' => $validation["questions"] ?? [],
+					   'title'     => $validated["title"],
+					   'questions' => $validated["questions"] ?? [],
 					   'content'   => $content,
 					   'slug'      => '/download/' . $fileID
 				   ]);
@@ -60,7 +60,7 @@ class LatexController extends Controller
 			// Save it to the database.
 			$pdf = LatexPdf::create([
 										'slug' => $fileID,
-										'name' => $validation["slug"] . '.pdf',
+										'name' => $validated["slug"] . '.pdf',
 										'url'  => $fullpath
 									]);
 

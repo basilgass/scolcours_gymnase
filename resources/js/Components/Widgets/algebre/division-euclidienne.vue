@@ -15,7 +15,7 @@ const props = defineProps<{
 }>()
 
 const euclidian = computed(()=>{
-	const config = props.illustration.parameters.split(",")
+	const config = props.illustration.parameters.split(",")??[]
 	return {
 		fx: props.illustration.code,
 		name: config.filter(x=>x.includes("(x)"))[0]||"f(x)",

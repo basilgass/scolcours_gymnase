@@ -48,7 +48,7 @@ function saveMerge() {
 
 				<edit-link
 					:label="`block ${block.id}`"
-					:href="route('blocks.edit', block.id)"
+					:href="route('admin.blocks.edit', block.id)"
 					inline
 				/>
 			</div>

@@ -24,7 +24,7 @@ const props = defineProps<{
 const theGenerator = ref(props.generator)
 
 function saveGenerator() {
-	axios.post(route("generators.update", [props.generator.id]), {
+	axios.post(route("api.generators.update", [props.generator.id]), {
 		...theGenerator.value,
 		_method: "patch"
 	}).then(() => {
@@ -40,7 +40,7 @@ function duplicateGenerator() {
 }
 
 function deleteGenerator() {
-	axios.post(route("generators.destroy", [props.generator.id]), {
+	axios.post(route("api.generators.destroy", [props.generator.id]), {
 		_method: "delete"
 	}).then(() => {
 		flash.success("Générateur supprimé")
@@ -112,7 +112,7 @@ function historyBack(){
 								<i class="bi bi-eye" />
 							</InertiaLink>
 							<InertiaLink
-								:href="route('challenges.edit', [challenge.id])"
+								:href="route('admin.challenges.edit', [challenge.id])"
 							>
 								<i class="bi bi-pencil" />
 							</InertiaLink>

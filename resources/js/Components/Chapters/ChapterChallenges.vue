@@ -6,7 +6,7 @@ import FormMaker from "@/Components/Form/FormMaker.vue"
 import DialogModal from "@/Components/Ui/DialogModal.vue"
 import { useStoreEditMode } from "@/stores/useStoreEditMode.ts"
 import {ChallengeMinInterface, ChapterShowInterface} from "@/types/modelInterfaces.ts"
-import { useForm } from "@inertiajs/vue3"
+import {useForm, usePage} from "@inertiajs/vue3"
 import { ref } from "vue"
 import ScButton from "@/Components/Ui/scButton.vue"
 
@@ -23,7 +23,7 @@ const form = useForm({
 })
 
 function storeChallenge() {
-	form.post(route("chapters.challenges.store", [props.chapter.id]))
+	form.post(route("api.chapters.challenges.store", [props.chapter.id]))
 }
 </script>
 
@@ -42,11 +42,11 @@ function storeChallenge() {
 				:key="`challenge-${challenge.id}`"
 				v-katex.auto="challenge.title"
 				theme
-				:href="route('chapters.challenge', [
-					$page.props.theme.slug,
-					chapter.slug,
-					challenge.slug,
-				])
+				:href="route('chapters.challenges.show', {
+					theme: $page.props.theme.slug,
+					chapter: chapter.slug,
+					challenge: challenge.slug
+				})
 				"
 				class="py-5"
 			/>

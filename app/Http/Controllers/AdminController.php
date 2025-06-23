@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
+// REFACTOR: A retravailler complètement
 class AdminController extends Controller
 {
 	public function show()
@@ -46,7 +47,7 @@ class AdminController extends Controller
 	public function configUpdate(Request $request)
 	{
 		// Validation
-		$validation = $request->validate([
+		$validated = $request->validate([
 			'title' => ['string', 'min:2'],
 			'themes' => ['array'],
 			'themes.*.slug' => ['string', 'exists:App\Models\Theme,slug'],
@@ -54,12 +55,12 @@ class AdminController extends Controller
 		]);
 
 		$scolcours = Scolcours::find(1);
-		$scolcours->title = $validation['title'];
+		$scolcours->title = $validated['title'];
 		$scolcours->save();
 
 		Cache::delete('scolcours');
 
-		foreach ($validation['themes'] as $theme) {
+		foreach ($validated['themes'] as $theme) {
 			$model = Theme::where('slug', $theme["slug"])->first();
 			$model->enabled = $theme['enabled'];
 			$model->save();
@@ -70,13 +71,13 @@ class AdminController extends Controller
 
 	public function configUpdateOrder(Request $request)
 	{
-		$validation = $request->validate([
+		$validated = $request->validate([
 			'order' => ['array'],
 			'order.*.id' => ['exists:App\Models\Theme'],
 			'order.*.order' => ['int', 'min:1'],
 		]);
 
-		foreach ($validation['order'] as $value) {
+		foreach ($validated['order'] as $value) {
 			Theme::find($value['id'])->update([
 				'order' => $value['order']
 			]);
@@ -223,13 +224,13 @@ class AdminController extends Controller
 
 	public function createUsers(Request $request)
 	{
-		$validation = $request->validate([
+		$validated = $request->validate([
 			"users" => ['required'],
 			"users.*" => ['email'],
 			'password' => ['required', 'string', 'min:6']
 		]);
 
-		foreach ($validation['users'] as $email) {
+		foreach ($validated['users'] as $email) {
 			$username = explode("@", $email)[0];
 			$firstname_name = explode(".", $username);
 			if (count($firstname_name) == 1) {
@@ -244,7 +245,7 @@ class AdminController extends Controller
 				'name' => ucwords($name),
 				'firstname' => ucwords($firstname ?? ""),
 				'email' => $email,
-				'password' => Hash::make($validation['password']),
+				'password' => Hash::make($validated['password']),
 			]);
 		}
 
@@ -315,8 +316,4 @@ class AdminController extends Controller
 		return $model;
 	}
 
-	public function dev()
-	{
-		return Inertia::render('Admin/AdminDev');
-	}
 }

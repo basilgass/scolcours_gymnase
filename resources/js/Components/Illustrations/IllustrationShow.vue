@@ -35,7 +35,7 @@ function click($event: MouseEvent) {
 	>
 		<edit-link
 			:label="`illustration ${illustration.id}`"
-			:href="route('illustrations.edit', illustration.id)"
+			:href="route('admin.illustrations.edit', illustration.id)"
 		/>
 
 		<component

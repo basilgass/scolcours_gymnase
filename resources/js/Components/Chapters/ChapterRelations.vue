@@ -33,6 +33,7 @@ const getAllChapters = function() {
 		return
 	}
 
+	// REFACTOR : à quoi sert chapters.indes.min ?
 	axios.get(route("chapters.index.min"))
 		.then(res => {
 			searchChapters.value = res.data.filter(ch => ch.slug !== props.chapter.slug)
@@ -44,7 +45,7 @@ const getAllChapters = function() {
 }
 
 const toggleRelation = function(id) {
-	axios.post(route("chapters.relations.toggle", [props.chapter.id, id]))
+	axios.post(route("api.chapters.relations.toggle", [props.chapter.id, id]))
 		.then(res => {
 			flash.success("relation correctement mis à jour...")
 			if (res.data !== false) {
@@ -90,6 +91,7 @@ const toggleRelation = function(id) {
 				<sc-button
 					v-admin
 					type="add"
+					icon
 					@click="getAllChapters"
 				>
 					nouvelle relation

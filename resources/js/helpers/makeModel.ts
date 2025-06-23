@@ -1,4 +1,4 @@
-import {BlockInterface, CardInterface, UserCardInterface, UserDeckInterface} from "@/types/modelInterfaces.ts"
+import {BlockInterface, CardInterface, DeckInterface} from "@/types/modelInterfaces.ts"
 
 export function makeBlock(body: string, title?: string, type?: string): BlockInterface {
 	return {
@@ -18,98 +18,35 @@ export function makeBlock(body: string, title?: string, type?: string): BlockInt
 	}
 }
 
-export function makeCard(usercard: UserCardInterface): CardInterface {
-	if (!usercard.blocks || usercard.blocks.length === 0) {
-		return {
-			id: 0,
-			recto: makeBlock('aucune carte créée'),
-			verso: makeBlock('aucune carte créée'),
-		}
-	}
+export function makeDeck(
+	title: string,
+	cards: CardInterface[]
+): DeckInterface {
 
-	// On a deux blocks: un rector, un verso.
-	if (usercard.blocks.length === 2) {
-		return {
-			id: 0,
-			recto: usercard.blocks[0],
-			verso: usercard.blocks[1],
-		}
-	}
-
-	// On a un block.
-	// S'il y a un titre, le titre est le recto, le block est le verso.
-	if (usercard.blocks[0].title) {
-		return {
-			id: 0,
-			recto: makeBlock(usercard.blocks[0].title),
-			verso: usercard.blocks[0],
-		}
-	}
-
-	// S'il n'y a pas de titre, on coupe sur le signe égal du block, si il y en a un.
-	const body = usercard.blocks[0].body
-	const parts = body.split('=') // On coupe sur le signe égal.
-
-	if (parts.length >= 2) {
-		return {
-			id: 0,
-			recto: makeBlock(parts[0] + '"\\]'), // on suppose d'office que le "=" est dans partie TeX.
-			verso: makeBlock(body), // le verso est la réponse, soit tout le block.
-		}
-	}
-
-	// Il n'y a pas de signe égal... le block n'est pas gérable automatiquement
-
-	return {
-		id: 0,
-		recto: makeBlock('carte non gérée'),
-		verso: makeBlock('carte non gérée'),
-	}
-}
-
-export function makeUserDeck(title: string, cards: UserCardInterface[]): UserDeckInterface {
 	return {
 		id: -1,
-		user_id: 0,
 		title,
-		description: '',
-		running: 0,
-		created_at: new Date().toISOString().replace('Z', '.000000Z'), // current date
-		updated_at: new Date().toISOString().replace('Z', '.000000Z'), // current date
-
-		time_spent: {
-			total: 0,
-			min: 0,
-			max: 0
-		},
-
-		appearances: {
-			min: 0,
-			max: 0
-		},
-		average: 0,
-		number_of_cards: cards.length,
+		slug: title,
+		chapter_id: 0,
+		cards_count: cards.length,
+		cards,
 	}
 }
 
-export function makeUserCard(
+export function makeCard(
 	recto: string | BlockInterface,
-	verso: string | BlockInterface
-): UserCardInterface {
+	verso: string | BlockInterface,
+): CardInterface {
 	return {
 		id: -1,
-		user_deck_id: -1,
-		blocks: [
-			typeof recto === 'string' ? makeBlock(recto as string) : recto as BlockInterface,
-			typeof verso === 'string' ? makeBlock(verso as string) : verso as BlockInterface,
-		],
-		current_score: 0,
-		current_appearances: 0,
-		current_time_spent: 0,
-		appearances: 0,
-		success: 0,
-		time_spent: 0,
-		created_at: new Date().toISOString().replace('Z', '.000000Z'), // current date
-		updated_at: new Date().toISOString().replace('Z', '.000000Z') // current date
+		recto: typeof recto === 'string' ? makeBlock(recto) : recto,
+		verso: typeof verso === 'string' ? makeBlock(verso) : verso,
+		score: {
+			id: -1,
+			score: 0,
+			appearances: 0,
+			success: 0,
+			time_spent: 0,
+		}
 	}
 }

@@ -2396,9 +2396,9 @@ namespace PHPSTORM_META {
     override(\tap(0), type(0));
     override(\optional(0), type(0));
 
-            registerArgumentsSet('auth', 
+            registerArgumentsSet('auth',
 'viewTelescope','admin',);
-        registerArgumentsSet('configs', 
+        registerArgumentsSet('configs',
 'app.name','app.env','app.debug','app.url','app.frontend_url',
 'app.asset_url','app.timezone','app.locale','app.fallback_locale','app.faker_locale',
 'app.cipher','app.key','app.previous_keys','app.maintenance.driver','app.maintenance.store',
@@ -2499,11 +2499,11 @@ namespace PHPSTORM_META {
 'ignition.solution_providers','ignition.ignored_solution_providers','ignition.enable_runnable_solutions','ignition.remote_sites_path','ignition.local_sites_path',
 'ignition.housekeeping_endpoint_prefix','ignition.settings_file_path','ignition.recorders','ignition.open_ai_key','ignition.with_stack_frame_arguments',
 'ignition.argument_reducers','tinker.commands','tinker.alias','tinker.dont_alias',);
-        registerArgumentsSet('middleware', 
+        registerArgumentsSet('middleware',
 'web','api','auth','auth.basic','cache.headers',
 'can','guest','password.confirm','signed','throttle',
 'verified',);
-        registerArgumentsSet('routes', 
+        registerArgumentsSet('routes',
 'telescope-toolbar.baseJs','telescope-toolbar.styling','telescope-toolbar.render','telescope-toolbar.show','sanctum.csrf-cookie',
 'ignition.healthCheck','ignition.executeSolution','ignition.updateConfig','telescope','home','scolcours.search',
 'dashboard','admin','admin.dev','admin.config','admin.config.update',
@@ -2521,7 +2521,7 @@ namespace PHPSTORM_META {
 'blocks.switch','blocks.moveTo.post','posts.moveTo.chapter','blocks.move','blocks.destroy',
 'illustrations.show','illustrations.edit','illustrations.store','images.upload','illustrations.update',
 'blocks.illustrations.order','blocks.updateIllustrationsGrid','illustrations.destroy','chapters.formulas.index','formulas.index',
-'formulas.multiple','formulas.store','formulas.duplicate','formulas.updateOrder','formulas.destroy',
+'formulas.fetch','formulas.store','formulas.duplicate','formulas.updateOrder','formulas.destroy',
 'posts.show','posts.edit','posts.info','chapters.posts.store','posts.update',
 'posts.updateBlocksOrder','posts.updateQuestionsGrid','posts.destroy','scores.post','scores.challenge',
 'generators.find','generators.index','generators.edit','generators.store','generators.update',
@@ -2530,19 +2530,19 @@ namespace PHPSTORM_META {
 'challenges.generators.detach','challenges.edit','challenges.team','teams.index','teams.show',
 'teams.challenge','teams.chapters.stats','decks.index','decks.fetch',
 'decks.show','decks.userdecks.portfolio','decks.updateCard','decks.userdecks.create','decks.userdecks.destroy',
-'decks.edit','cards.multiple','decks.addCard','cards.destroy','decks.store',
+'decks.edit','cards.fetch','decks.addCard','cards.destroy','decks.store',
 'decks.update','decks.destroy','decks.updateOrder','decks.assignChapter','dev',
 'dev.index','tools','tools.fetch','tools.show','tools.edit',
-'tools.update','quizzs.index','quizzs.sessions.show','quizzs.admin',
-'quizzs.admin.quizz','quizzs.sessions.dashboard','quizzs.sessions.projection','quizzs.store','quizzs.destroy',
+'tools.update','quizzs.index','quizzs.sessions.show','admin.quizzs',
+'admin.quizzs.quizz','quizzs.sessions.dashboard','quizzs.sessions.projection','quizzs.store','quizzs.destroy',
 'quizzs.sessions.create','quizzs.sessions.destroy','quizzs.sessions.updateCurrent','quizzs.sessions.updateEnable','quizzs.update',
 'evaluations.show','latex.pdf','latex.links',
 'latex.download','bareme.show','grapheur.show',
 'grapheur.download','dico.exists','dico.fetch','qrcode.show','theme',
 'themes.chapters.intro','chapters.theorems.index','chapters.slide','chapters.show','themes.chapters.slide',
-'themes.chapters.slide.anchor','chapters.edit','themes.chapters.store','chapters.update','chapters.destroy',
+'themes.chapters.posts.anchor','chapters.edit','themes.chapters.store','chapters.update','chapters.destroy',
 'chapters.currentPost','chapters.updatePostsOrder','chapters.index.min','chapters.relations.toggle','chapters.info',);
-        registerArgumentsSet('views', 
+        registerArgumentsSet('views',
 'app','latex.common.latex-header','latex.common.latex-template','latex.questions','latex.simple',
 'latex.standalone','laravel-exceptions-renderer::components.card','laravel-exceptions-renderer::components.context','laravel-exceptions-renderer::components.editor','laravel-exceptions-renderer::components.header',
 'laravel-exceptions-renderer::components.icons.chevron-down','laravel-exceptions-renderer::components.icons.chevron-up','laravel-exceptions-renderer::components.icons.computer-desktop','laravel-exceptions-renderer::components.icons.moon','laravel-exceptions-renderer::components.icons.sun',
@@ -2552,7 +2552,7 @@ namespace PHPSTORM_META {
 'laravel-exceptions::minimal','notifications::email','pagination::bootstrap-4','pagination::bootstrap-5','pagination::default',
 'pagination::semantic-ui','pagination::simple-bootstrap-4','pagination::simple-bootstrap-5','pagination::simple-default','pagination::simple-tailwind',
 'pagination::tailwind','telescope::layout',);
-        registerArgumentsSet('translations', 
+        registerArgumentsSet('translations',
 'auth.failed','auth.password','auth.throttle','pagination.previous','pagination.next',
 'passwords.reset','passwords.sent','passwords.throttled','passwords.token','passwords.user',
 'validation.accepted','validation.accepted_if','validation.active_url','validation.after','validation.after_or_equal',
@@ -2607,12 +2607,12 @@ namespace PHPSTORM_META {
 'validation-inline.same','validation-inline.size.array','validation-inline.size.file','validation-inline.size.numeric','validation-inline.size.string',
 'validation-inline.starts_with','validation-inline.string','validation-inline.timezone','validation-inline.unique','validation-inline.uploaded',
 'validation-inline.url','validation-inline.uuid','validation-inline.custom.attribute-name.rule-name','validation.attached','validation.relatable',);
-        registerArgumentsSet('env', 
+        registerArgumentsSet('env',
 'APP_NAME','APP_ENV','APP_KEY','APP_DEBUG','APP_URL',
 'LOG_CHANNEL','LOG_LEVEL','DB_CONNECTION','DB_HOST','DB_PORT',
 'DB_DATABASE','DB_USERNAME','DB_PASSWORD','BROADCAST_DRIVER','CACHE_DRIVER',
 'FILESYSTEM_DRIVER','QUEUE_CONNECTION','SESSION_DRIVER','SESSION_LIFETIME',);
-        
+
                 expectedArguments(\Illuminate\Support\Facades\Gate::has(), 0, argumentsSet('auth'));
     expectedArguments(\Illuminate\Support\Facades\Gate::allows(), 0, argumentsSet('auth'));
     expectedArguments(\Illuminate\Support\Facades\Gate::denies(), 0, argumentsSet('auth'));
@@ -2676,5 +2676,5 @@ namespace PHPSTORM_META {
                 expectedArguments(\Illuminate\Contracts\Translation\Translator::get(), 0, argumentsSet('translations'));
                 expectedArguments(\env(), 0, argumentsSet('env'));
                 expectedArguments(\Illuminate\Support\Env::get(), 0, argumentsSet('env'));
-            
+
 }

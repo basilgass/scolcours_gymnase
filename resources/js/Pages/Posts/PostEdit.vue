@@ -37,7 +37,7 @@ const typeList = ref({
 
 const savePost = function () {
 	axios
-		.post(route("posts.update", [props.post.id]), {
+		.post(route("api.posts.update", [props.post.id]), {
 			...thePost.value,
 			_method: "patch"
 		})
@@ -47,7 +47,7 @@ const savePost = function () {
 }
 const deletePost = function () {
 	axios
-		.post(route("posts.destroy", [props.post.id]), {
+		.post(route("api.posts.destroy", [props.post.id]), {
 			_method: "delete"
 		})
 		.then((res) => {

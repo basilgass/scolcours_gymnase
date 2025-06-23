@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('illustrations', function (Blueprint $table) {
-			$table->text('code')->change();
+	        $table->renameColumn('current_status', 'current_score');
         });
     }
 

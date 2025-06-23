@@ -8,7 +8,7 @@ import {Head, usePage} from "@inertiajs/vue3"
 import {computed, provide, ref} from "vue"
 
 withDefaults(defineProps<{
-	theme: Partial<ThemeInterface>
+	theme?: Partial<ThemeInterface>
 }>(), {
 	theme: () => {
 		return {
@@ -48,7 +48,7 @@ provide("flash", {
 })
 
 
-// TODO: Change the pageTitle funciton to be more glabal (chapter, post, challenge, ...)
+// TODO: Change the pageTitle function to be more global (chapter, post, challenge, ...)
 const pageTitle = computed(() => {
 	if (usePage()?.props?.chapter) {
 		return usePage().props.chapter.meta_title

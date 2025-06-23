@@ -3,27 +3,27 @@ import LayoutMain from "@/Layouts/LayoutMain.vue"
 import {
 	ChallengeInterface,
 	CourseInterface,
+	DeckInterface,
 	LessonInterface,
 	PostShowInterface,
-	UserDeckInterface
+	ScoreInterface
 } from "@/types/modelInterfaces.ts"
 import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
 import Card from "@/Components/Ui/Card.vue"
 import PostDisplay from "@/Components/Posts/PostDisplay.vue"
 import {Link as InertiaLink} from "@inertiajs/vue3"
 import ChallengeDisplay from "@/Components/Challenges/ChallengeDisplay.vue"
-import LessonIsNotOpened from "@/Components/Courses/LessonIsNotOpened.vue"
 import LessonIsUnknwon from "@/Components/Courses/LessonIsUnknwon.vue"
 import {computed, ref} from "vue"
 import {useStoreLesson} from "@/stores/useStoreLesson.ts"
-import UserdeckShow from "@/Pages/Decks/UserdeckShow.vue"
 import DeckDisplay from "@/Pages/Decks/DeckDisplay.vue"
 
 defineOptions({layout: LayoutMain})
 
 const props = defineProps<{
-	course: CourseInterface
-	lesson: LessonInterface
+	course: CourseInterface,
+	lesson: LessonInterface,
+	score: ScoreInterface,
 }>()
 
 const menuToggle = ref(true)
@@ -32,7 +32,6 @@ const menuToggle = ref(true)
 const lessonScore = useStoreLesson()
 
 lessonScore.init(props.lesson)
-
 const lessonResult = computed<number>(() => {
 	return Math.round(lessonScore.current / lessonScore.target * 100)
 })
@@ -53,12 +52,12 @@ const lessonResult = computed<number>(() => {
 
 		<div class="flex flex-col sm:flex-row gap-3 w-full">
 			<article class="flex-1">
-				<lesson-is-not-opened
-					v-if="!lesson.calendar.is_opened"
-					:lesson
-				/>
+				<!--				<lesson-is-not-opened-->
+				<!--					v-if="!lesson.calendar.is_opened"-->
+				<!--					:lesson-->
+				<!--				/>-->
 				<post-display
-					v-else-if="lesson.lessonable_type==='Post'"
+					v-if="lesson.lessonable_type==='Post'"
 					no-title
 					:post="lesson.lessonable as PostShowInterface"
 				/>
@@ -69,7 +68,7 @@ const lessonResult = computed<number>(() => {
 				/>
 				<deck-display
 					v-else-if="lesson.lessonable_type==='Deck'"
-					:deck="lesson.lessonable as UserDeckInterface"
+					:deck="lesson.lessonable as DeckInterface"
 				/>
 				<lesson-is-unknwon v-else />
 			</article>
@@ -109,7 +108,6 @@ const lessonResult = computed<number>(() => {
 								v-theme.text="l.id===lesson.id"
 								:class="{
 									'font-semibold': l.id===lesson.id,
-									'text-slate-400': !l.calendar.is_opened
 								}"
 							>
 								<i
@@ -121,14 +119,13 @@ const lessonResult = computed<number>(() => {
 								/>
 								<InertiaLink
 									class="flex-1 whitespace-nowrap overflow-hidden overflow-ellipsis"
-									:href="route('lessons.show', {course: course.slug, lesson: l.id})"
-									:disabled="!l.calendar.is_opened"
+									:href="route('students.lessons.show', {course: course.slug, lesson: l.id})"
 									v-katex.auto="l.title"
 									:title="l.title"
 								/>
-								<div v-show="l.calendar.remaining_days>0">
-									{{ l.calendar.remaining_days }}j
-								</div>
+								<!--								<div v-show="l.calendar.remaining_days>0">-->
+								<!--									{{ l.calendar.remaining_days }}j-->
+								<!--								</div>-->
 							</div>
 						</div>
 					</Card>

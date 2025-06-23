@@ -1,19 +1,27 @@
 <script setup lang="ts">
-import {onMounted, onUnmounted, ref, useTemplateRef} from "vue"
+import {computed, onMounted, onUnmounted, ref, useTemplateRef} from "vue"
 import type {FormElementEmits, FormElementExpose, FormMakerPropsNewType} from "@/Components/Form/FormMakerInterface.ts"
 import FormMakerWrapper from "@/Components/Form/FormMakerWrapper.vue"
 
+// REFORMAT : rendre le composant plus propre et fonctionnel ?
 defineOptions({
 	inheritAttrs: false
 })
 
-const value = defineModel<string>()
+const value = defineModel<string | Record<string, string>>()
+
 const input = useTemplateRef<HTMLDivElement>('input')
 const errors = ref<string[]>([])
 
-const props = defineProps<FormMakerPropsNewType & {
-	choices: string[] | Record<string, string>
-}>()
+const props = withDefaults(defineProps<FormMakerPropsNewType & {
+		choices: string[] | Record<string, string>,
+		labelMap?: (element: unknown) => string,
+	}>(),
+	{
+		labelMap: (element: unknown) => {
+			return element as string
+		}
+	})
 
 defineExpose<FormElementExpose>({
 	focus: () => input.value?.focus(),
@@ -35,12 +43,21 @@ function onChange() {
 const open = ref<boolean>(false)
 
 function onSelect(key: number | string, choice: string) {
-	value.value = Array.isArray(
-		props.choices
-	) ? choice : key as string
+	value.value = choice
+	// value.value = Array.isArray(
+	// 	props.choices
+	// ) ? choice : key as string
 
 	open.value = false
 }
+
+const currentValue = computed(() => {
+	if (value.value === undefined) {
+		return 'choisir...'
+	}
+
+	return props.choices[value.value as string] ?? value.value
+})
 
 function clickOutsideEvent(event: MouseEvent) {
 	if (open.value && !(input.value === event.target || input.value.contains(event.target as Node))) {
@@ -54,6 +71,7 @@ onMounted(() => {
 onUnmounted(() => {
 	document.body.removeEventListener('click', clickOutsideEvent)
 })
+
 </script>
 
 <template>
@@ -71,19 +89,22 @@ onUnmounted(() => {
 				class="px-2 py-1 w-full focus:outline-hidden focus:ring-0"
 				@click="open = !open"
 				@blur="open = false"
-			>
-				value
-			</div>
+				v-katex.auto="labelMap(currentValue)"
+			/>
 			<div
 				v-show="open"
-				class="select-menu absolute right-0 left-0 bottom-0 translate-y-[105%] shadow bg-content border rounded"
+				class="select-menu
+				absolute right-0 left-0 top-full
+				mt-1
+				max-h-[300px] overflow-y-scroll
+				shadow bg-content border rounded"
 			>
 				<div
 					v-for="(choice, key) in choices"
 					:key="`choice-${key}`"
-					class="hover:bg-slate-100 px-2 py-3"
+					class="hover:bg-slate-100 px-2 py-3 cursor-pointer transition-all"
 					@click="onSelect(key, choice as string)"
-					v-katex.auto="choice"
+					v-katex.auto="labelMap(choice)"
 				/>
 			</div>
 		</div>

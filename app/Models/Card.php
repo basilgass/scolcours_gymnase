@@ -2,8 +2,11 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Traits\HasScoresTrait;
+use App\Traits\HasUrlTrait;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 /**
  * App\Models\Card
@@ -28,25 +31,20 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Card extends Model
 {
-	use HasFactory;
+	use HasScoresTrait;
+	use HasUrlTrait;
 
 	protected $with = ['blocks'];
-
 	protected $fillable = ['order'];
+	protected $appends = ['url'];
 
-	public function deck()
+	public function deck(): BelongsTo
 	{
 		return $this->belongsTo(Deck::class);
 	}
 
-	public function blocks()
+	public function blocks(): MorphMany
 	{
 		return $this->morphMany(Block::class, 'blockable')->orderBy('order')->orderBy('id');
-	}
-
-	public function users()
-	{
-		$this->belongsToMany(UserCard::class)
-			->withTimestamps();
 	}
 }

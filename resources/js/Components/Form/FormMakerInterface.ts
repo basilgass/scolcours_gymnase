@@ -4,7 +4,8 @@ export interface FormElementExpose {
 }
 
 export interface FormElementEmits {
-	update: [e: string | boolean | number | undefined],
+	update: [value: string | boolean | number | Record<string, string> | undefined ],
+	enter: [value: string | boolean | number | Record<string, string>  | undefined ],
 	focus: [],
 	blur: [],
 	errors: [e: string[]]
@@ -29,20 +30,22 @@ export type FormMakerInputsType =
 
 export type FormElementType =
 	"text" | "number" | "password" | "email" | "color" | "range" | // Basic elements
+	"date" | "datetime-local" |
 	"id" |
 	"textarea" |
-	"select" | // TODO: handle select FormMaker element.
+	"select" | "search" | // TODO: handle select FormMaker element.
 	"fraction" |
 	"vector" |
 	"switch" |
 	"codearea" |
-	"keyboard"
+	"keyboard" |
+	"theme" | "chapter"
 
 export interface FormMakerPropsNewType {
 	type?: FormElementType,
 	label?: string
 	icon?: boolean | string
-	prepend?: string
+	prepend?: boolean | string
 	inlineLabel?: boolean
 	btn?: boolean | string
 	clearable?: boolean
@@ -52,6 +55,7 @@ export interface FormMakerPropsNewType {
 	xl?: boolean
 	focus?: boolean
 	output?: boolean | string
+	inputClass?: false |string
 }
 
 export interface FormMakerPropsType {

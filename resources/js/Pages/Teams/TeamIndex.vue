@@ -30,7 +30,7 @@ const props = defineProps({
 				<InertiaLink
 					v-for="team of props.teams"
 					:key="`id-${team.id}`"
-					:href="route('teams.show', [team.name])"
+					:href="route('admin.teams.show', [team.name])"
 					as="button"
 					class="bg-content px-4 py-2 border rounded-sm hover:scale-105 hover:shadow-sm transition-all flex flex-col gap-2"
 				>

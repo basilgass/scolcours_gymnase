@@ -16,6 +16,7 @@ class PostResource extends JsonResource
 
 	// No wrap around the data.
 	public static $wrap = null;
+
 	/**
 	 * Transform the resource into an array.
 	 *
@@ -30,17 +31,17 @@ class PostResource extends JsonResource
 //        });
 
 		return [
-            'id' => $this->id,
-            'chapter_id' => $this->chapter_id,
-            'type' => $this->type,
-            'title' => $this->title,
-            'order' => $this->order,
-            'active' => $this->active,
-            'updated_at' => $this->updated_at,
-            'questionsInfo' => [
-                'count' => $this->questions_count,
-                'answered' => $this->answered_questions_count??0
-            ]
+			'id'            => $this->id,
+			'chapter_id'    => $this->chapter_id,
+			'type'          => $this->type,
+			'title'         => $this->title,
+			'order'         => $this->order,
+			'active'        => $this->active,
+			'updated_at'    => $this->updated_at,
+			'questionsInfo' => [
+				'count'    => $this->questions_count,
+				'answered' => $this->answered_questions_count ?? 0
+			]
 		];
 	}
 }

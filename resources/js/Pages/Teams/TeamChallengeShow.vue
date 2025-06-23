@@ -52,7 +52,7 @@ const props = defineProps({
 		<h2 class="text-3xl font-semibold">
 			{{ props.team.name }}
 		</h2>
-		<InertiaLink :href="route('teams.show', [team.name])">
+		<InertiaLink :href="route('admin.teams.show', [team.name])">
 			<i class="bi bi-arrow-left" /> Retour à l'équipe
 		</InertiaLink>
 		<h3 class="text-2xl">

@@ -45,7 +45,7 @@ const toggleDisplayId = async function (id) {
 
 	axios
 		.post(
-			route("questions.updateDisplayIf", {
+			route("api.questions.updateDisplayIf", {
 				question: theQuestion.value.id
 			}),
 			{
@@ -65,9 +65,9 @@ const toggleDisplayId = async function (id) {
 
 function duplicateQuestion() {
 	axios
-		.post(route('questions.duplicate', [props.question.id]))
+		.post(route('api.questions.duplicate', [props.question.id]))
 		.then((res) => {
-			router.visit(route('questions.edit', [res.data.id]))
+			router.visit(route('admin.questions.edit', [res.data.id]))
 		})
 }
 </script>
@@ -78,7 +78,7 @@ function duplicateQuestion() {
 	>
 		<edit-link
 			:label="question.id"
-			:href="route('questions.edit', {id: question.id})"
+			:href="route('admin.questions.edit', {id: question.id})"
 			inline
 		/>
 

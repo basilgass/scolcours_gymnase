@@ -68,7 +68,7 @@ const postsFilter = function(filter: string) {
 const moveMode = ref(false)
 const updatePostsOrder = function() {
 	axios
-		.post(route("chapters.updatePostsOrder", [props.chapter.id]), {
+		.post(route("api.chapters.updatePostsOrder", [props.chapter.id]), {
 			posts: posts.value.map((post, index) => {
 				return {
 					id: post.id,
@@ -89,11 +89,12 @@ const updatePostsOrder = function() {
 
 const addPost = function() {
 	axios
-		.post(route("chapters.posts.store", [props.chapter.slug]), {
-			title: "nouvel article"
+		.post(route("api.posts.store"), {
+			title: "nouvel article",
+			chapter_id: props.chapter.id
 		})
 		.then((res) => {
-			router.visit(route("posts.edit", {post: res.data.post.id}))
+			router.visit(route("admin.posts.edit", {post: res.data.id}))
 		})
 		.catch((err) => console.warn(err))
 }
@@ -204,7 +205,7 @@ const questionStatus = computed<Record<number, number | null>>(() => {
 							? `font-semibold text-${$page.props.theme.slug}-500`
 							: ''
 						"
-						:href="route('themes.chapters.slide', [
+						:href="route('themes.chapters.posts.show', [
 							$page.props.theme.slug,
 							props.chapter.slug,
 							element.order,

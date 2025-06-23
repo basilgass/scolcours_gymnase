@@ -22,7 +22,7 @@ defineProps<{
 }>()
 
 function updateFormula(formula: FormulaInterface) {
-	axios.patch(route("blocks.update", formula.block.id), {
+	axios.patch(route("api.blocks.update", formula.block.id), {
 		_method: "patch",
 		...formula.block
 	})

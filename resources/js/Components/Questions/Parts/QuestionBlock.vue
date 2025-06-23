@@ -24,25 +24,25 @@ const body = computed(() => {
 	// Coherence control:
 	// number of answers is the same as the number of variables
 	// TODO: answersCoherences n'est utilisé qu'ici !!!
-	if (!questionData.answersCoherences.value) {
-		return questionData.question.value.block.body +
+	if (!questionData.answers.coherences.value) {
+		return questionData.block.value.body +
 			"\n\n Il manque des réponses {.text-xs .text-center .text-red-500 .bg-red-100 .py-2 .font-code}"
 	}
 
 	// The body that will be manipulated
-	let md = questionData.question.value.block.body
+	let md = questionData.block.value.body
 
-	for (let i = 0; i < questionData.answersVariables.value.length; i++) {
+	for (let i = 0; i < questionData.answers.variables.value.length; i++) {
 		const key = makeKey(i)
 		const answer: keyboardEventInterface = questionData.user.answers.value[i]
 
 		// Determiner the color to display...
 		const texColor =
-			i === questionData.answerId.value
+			i === questionData.current.id.value
 				? "cornflowerblue"
 				: "red"
 		const rawColor =
-			i === questionData.answerId.value
+			i === questionData.current.id.value
 				? "border-blue-600"
 				: "border-red-600"
 
@@ -122,8 +122,8 @@ function replace_ABC_without_placeholder(md: string, key: string, answer: keyboa
 	<main class="flex-1 px-3 overflow-x-auto pb-3">
 		<!-- Illustration -->
 		<illustration-show
-			v-if="questionData.question.value.block.illustration"
-			:illustration="questionData.question.value.block.illustration"
+			v-if="questionData.block.value.illustration"
+			:illustration="questionData.block.value.illustration"
 			class="bg-white"
 		/>
 

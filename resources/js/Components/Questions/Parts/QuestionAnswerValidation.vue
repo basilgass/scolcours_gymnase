@@ -7,7 +7,7 @@
  * - compiler les réponses globalement (once)
  * - sauvegarder en DB si nécessaire
  * - [animation pour signifier une erreur]
- * - modifier le statut de la question
+ * - modifier le statut de la question.
  */
 
 
@@ -18,6 +18,8 @@ import {computed, inject, ref, useTemplateRef} from "vue"
 import {questionDataInterface, questionResultInterface} from "@/Components/Questions/QuestionInterface.ts"
 import type {CheckerResult, PiChecker} from "@/Checkers"
 import ScButton from "@/Components/Ui/scButton.vue"
+import {AxiosErrorMessage} from "@/types"
+import {ScoreQuestionDataInterface} from "@/types/modelInterfaces.ts"
 
 const emits = defineEmits<{
 	validate: [event: questionResultInterface]
@@ -63,7 +65,7 @@ function updateAnswersValidation(): CheckerResult[] {
 		 * 		@mix:<réponse>\n@mix:<réponse> (les réponses ne sont pas ordrées)
 		 */
 
-		// Toutes les réponses autorisées.
+			// Toutes les réponses autorisées.
 		const allowedAnswers: string[] = validator.answer.split('||').map(a => a.trim())
 
 		// La réponse de l'utilisateur
@@ -85,7 +87,7 @@ function updateAnswersValidation(): CheckerResult[] {
 							index
 						}
 				)
-			}catch{
+			} catch {
 				results.push({
 					result: false,
 					message: "Format de la réponse non reconnu.",
@@ -98,6 +100,10 @@ function updateAnswersValidation(): CheckerResult[] {
 		validation.push(results.find(r => r.result) || results[0])
 	})
 
+	// Update the score.
+	questionData.user.score.value.score = validation
+		.filter(v => v.result).length / validation.length
+
 	return validation
 }
 
@@ -105,9 +111,9 @@ function reduceAnswersValidation(validations: CheckerResult[]): boolean {
 	return validations.every(validation => validation.result)
 }
 
-async function saveToDB(emitValue: questionResultInterface) {
+async function saveToDB() {
 	// It's a dynamic question
-	if (!(questionData.question.value.id > 0) || questionData.config.isDynamic) {
+	if (!(questionData.question.id > 0) || questionData.config.isDynamic) {
 		return
 	}
 
@@ -116,17 +122,43 @@ async function saveToDB(emitValue: questionResultInterface) {
 		return
 	}
 
-	axios
-		.post(route("questions.validate", [questionData.question.value.id]), {
-			...emitValue
-		})
-		.catch((res) => {
-			console.warn("Il y a une erreur lors du chargement de la réponse.")
-			console.warn(res.response.data.message)
-		})
+	// current score = number of correct answer / total question.
+	// const score = questionData.useFsavetor
+
+	const previousAnswers: string[] = (questionData.user.score.value.data as ScoreQuestionDataInterface)?.answers ?? []
+	const currentAnswers: string = questionData.user.answers.value.map(answer => answer.input).join('\n')
+
+	const isAlreadyAnswered = questionData.user.score.value.is_resolved
+
+	questionData.user.score.value.is_resolved =
+		questionData.user.score.value.is_resolved ||
+		questionData.user.score.value.score === 1
+
+	// TODO: est-ce qu'il faut quand même remettre à jour les données si la réponse est déjà donnée ?
+	if (!isAlreadyAnswered) {
+		console.log('PATCH')
+		axios.patch(route("api.scores.update", {score: questionData.user.score.value.id}),
+			{
+				score: questionData.user.score.value.score,
+				is_resolved: questionData.user.score.value.is_resolved,
+				data: {
+					'answers': [
+						currentAnswers,
+						...previousAnswers
+					]
+				}
+			})
+			.then(() => {
+				console.log('SUCCESS')
+			})
+			.catch((res: AxiosErrorMessage) => {
+				console.warn("Il y a une erreur lors du chargement de la réponse.")
+				console.warn(res.response.data.message)
+			})
+	}
 }
 
-function emitToParent(result): questionResultInterface {
+function emitToParent(result: boolean): questionResultInterface {
 	const emitValue: questionResultInterface = {
 		result,
 		answer: userAnswers.value
@@ -141,8 +173,10 @@ function validateQuestion() {
 	// Disable the button
 	lockValidationButton.value = true
 
+	// Liste brute des réponses et succès
 	const validations = updateAnswersValidation()
 
+	// Défini le résultat final
 	const result = reduceAnswersValidation(validations)
 
 	// La réponse est fausse -> effet visuel
@@ -152,16 +186,18 @@ function validateQuestion() {
 
 	// Afficher les messages d'erreurs
 	errorMessages.value = validations.map((v, index) => {
-		return v.result ? "": `${index+1}. ${v.message}`
-	}).filter(msg=>msg!=="")
-
-	// émettre au parents les modifications
-	questionResult.value = emitToParent(result)
+		return v.result ? "" : `${index + 1}. ${v.message}`
+	}).filter(msg => msg !== "")
 
 	// Sauvegarde dans la base de donnée
-	saveToDB(questionResult.value)
+	saveToDB()
 		.then(() => {
-			setTimeout(() => lockValidationButton.value = false, 500)
+			setTimeout(() => {
+				lockValidationButton.value = false
+
+				// émettre au parent les modifications
+				questionResult.value = emitToParent(result)
+			}, 500)
 		})
 }
 </script>
@@ -188,8 +224,8 @@ function validateQuestion() {
 				>
 					Entrer une réponse...
 				</p>
-				<p v-else-if="userAnswersCount<questionData.answers.value.length">
-					{{ userAnswersCount }} réponse(s) sur {{ questionData.answers.value.length }}
+				<p v-else-if="userAnswersCount<questionData.answers.values.value.length">
+					{{ userAnswersCount }} réponse(s) sur {{ questionData.answers.values.value.length }}
 				</p>
 				<p v-else>
 					<i class="bi bi-check" /> <span class="hidden md:inline md:ml-2">Valider</span>

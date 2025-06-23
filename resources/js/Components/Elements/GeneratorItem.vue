@@ -28,7 +28,7 @@ const hasErrors = ref(false)
 
 			<div>
 				<InertiaLink
-					:href="route('generators.edit', [generator.id])"
+					:href="route('admin.generators.edit', [generator.id])"
 				>
 					Editer <i class="bi bi-pencil" />
 				</InertiaLink>

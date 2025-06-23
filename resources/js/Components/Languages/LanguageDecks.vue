@@ -1,32 +1,30 @@
 <script lang="ts" setup>
 import {LanguageDataInterface} from "@/Pages/languages/LanguageShow.vue"
 import {computed, inject} from "vue"
-import type {UserCardInterface, UserDeckInterface} from "@/types/modelInterfaces.ts"
+import type {CardInterface, DeckInterface} from "@/types/modelInterfaces.ts"
 import {useLanguage} from "@/Components/Languages/useLanguage.ts"
-import {makeUserCard, makeUserDeck} from "@/helpers/makeModel.ts"
-import UserdeckShow from "@/Pages/Decks/UserdeckShow.vue"
+import {makeCard, makeDeck} from "@/helpers/makeModel.ts"
 import ScButton from "@/Components/Ui/scButton.vue"
+import DeckDisplay from "@/Pages/Decks/DeckDisplay.vue"
 
-// languageData is the reactive data from the parent component.
-// it contains all the words, units, and the current state of the game.
 const languageData = inject<LanguageDataInterface>("LanguageData")
 
 // useLanguage is a composable function that returns the selected unit's words
 // and provide de methods to run the game.
 const {startGame} = useLanguage(languageData)
 
-const cards = computed<UserCardInterface[]>(() => {
+const cards = computed<CardInterface[]>(() => {
 	return languageData.words.value.map((word) => {
-		return makeUserCard(word.fr, word.foreign)
+		return makeCard(word.fr, word.foreign)
 	})
 })
 
-const deck = computed<UserDeckInterface | null>(() => {
+const deck = computed<DeckInterface | null>(() => {
 	if (languageData.language.books.length === 0) {
 		return null
 	}
 
-	return makeUserDeck(`deck de ${languageData.language.name}`, cards.value)
+	return makeDeck(`deck de ${languageData.language.name}`, cards.value)
 })
 
 </script>
@@ -36,9 +34,8 @@ const deck = computed<UserDeckInterface | null>(() => {
 			v-if="cards.length > 0"
 			class="min-h-[80vh] my-10"
 		>
-			<userdeck-show
+			<deck-display
 				:deck
-				:cards
 				hide-title
 			/>
 		</div>

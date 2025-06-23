@@ -1,11 +1,8 @@
 <script lang="ts" setup>
 import {computed, onMounted, ref} from "vue"
-import "prismjs/themes/prism.css"
-import "prismjs/components/prism-latex"
-import "prismjs/components/prism-javascript"
-import "prismjs/components/prism-json"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 import {type CHECKERS, checkersList, PiChecker} from "@/Checkers"
+import FormMakerWrapper from "@/Components/Form/FormMakerWrapper.vue"
 
 const theValue = defineModel<string>()
 
@@ -88,36 +85,40 @@ const currentRows = computed(() => {
 
 </script>
 <template>
-	<div class="w-full">
-		<textarea
-			ref="inp"
-			v-model="theValue"
-			:rows="currentRows"
-			class="w-full transition-all font-code"
-			v-bind="$attrs"
-			@blur="showKeyboardHelper = false"
-			@focus="showKeyboardHelper = true"
-			@input="update"
-			@keyup="onKeyup"
-			@mouseup="onKeyup"
-			@keydown.tab.prevent="tabber"
-			@current-line="currentLine = $event"
-		/>
-		<div class="font-code text-xs">
-			laisser une ligne vide entre deux claviers<br>
-			@if &lt;réponse&gt;?&lt;message&gt;
-		</div>
-
-		<transition name="fade">
-			<div
-				v-if="showKeyboardHelper"
-				class="fixed right-2 bottom-2 w-[60vw] md:w-[40vw] lg:w-[30vw] z-10"
-			>
-				<markdown-it
-					:text="keyboardHelper"
-					class="font-code text-[12px]! mt-5 bg-gray-200 border border-gray-300 p-3 shadow-sm rounded-sm"
-				/>
+	<form-maker-wrapper
+		v-bind="{...$attrs,...props}"
+	>
+		<div class="bg-gray-200">
+			<textarea
+				ref="inp"
+				v-model="theValue"
+				:rows="currentRows"
+				class="w-full px-2 py-1 focus:outline-hidden focus:ring-0 font-code border-b bg-content border-content"
+				v-bind="$attrs"
+				@blur="showKeyboardHelper = false"
+				@focus="showKeyboardHelper = true"
+				@input="update"
+				@keyup="onKeyup"
+				@mouseup="onKeyup"
+				@keydown.tab.prevent="tabber"
+				@current-line="currentLine = $event"
+			/>
+			<div class="font-code text-xs">
+				laisser une ligne vide entre deux claviers<br>
+				@if &lt;réponse&gt;?&lt;message&gt;
 			</div>
-		</transition>
-	</div>
+
+			<transition name="fade">
+				<div
+					v-if="showKeyboardHelper"
+					class="fixed right-2 bottom-2 w-[60vw] md:w-[40vw] lg:w-[30vw] z-10"
+				>
+					<markdown-it
+						:text="keyboardHelper"
+						class="font-code text-[12px]! mt-5 bg-gray-200 border border-gray-300 p-3 shadow-sm rounded-sm"
+					/>
+				</div>
+			</transition>
+		</div>
+	</form-maker-wrapper>
 </template>

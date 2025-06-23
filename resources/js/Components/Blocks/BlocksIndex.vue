@@ -17,25 +17,28 @@ const editMode = useStoreEditMode()
 
 const flash = inject<flashInterface>("flash")
 
-function addBlock(after?: number) {
+function addBlock(after = -1) {
 	axios.post(
-		route("posts.blocks.store", [props.postId]),
+		route("api.blocks.store"),
 		{
-			after: after === undefined ? null : after
+			target_id: props.postId,
+			target_type: 'post',
+			order: after === undefined ? null : after+1
 		}
 	).then((res) => {
 		flash.success("Block ajouté avec succès.")
-
-		// On va éditer le post directemnt
-		router.visit(route('blocks.edit', {block: res.data.id}))
+		// On va éditer le post directement
+		router.visit(route('admin.blocks.edit', {block: res.data.id}))
 	}).catch((res) => {
 		flash.error("Erreur lors de l'ajout du block.")
-		console.warn("add block: ", res.data)
+		console.error(
+			res.response.data.message
+		)
 	})
 }
 
 function updateBlockOrder() {
-	axios.patch(route("posts.updateBlocksOrder", [props.postId]), {
+	axios.patch(route("api.posts.blocks.order", [props.postId]), {
 		order: blocks.value.map((block, index) => {
 			return {
 				id: block.id,
@@ -92,7 +95,7 @@ function updateBlockOrder() {
 							text-xl
 							w-[24px] h-[24px] z-10 transparent
 							cursor-pointer"
-						@click="addBlock(element.order)"
+						@click="addBlock(index)"
 					>
 						<i class="bi bi-plus-circle-fill" />
 					</button>

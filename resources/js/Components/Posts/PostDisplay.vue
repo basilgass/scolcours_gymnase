@@ -47,7 +47,7 @@ onMounted(() => {
 						:return-link
 						:edit-link="{
 							label: post.id,
-							url: route('posts.edit', {id: post.id})
+							url: route('admin.posts.edit', {id: post.id})
 						}"
 					/>
 				</div>

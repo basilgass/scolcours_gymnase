@@ -1,14 +1,14 @@
 <script lang="ts" setup>
-import {javascriptTriggers, latexTriggers, mdTriggers, TriggerFunction} from "@/helpers/mdAutofill"
+import {javascriptTriggers, latexTriggers, mdTriggers} from "@/helpers/mdAutofill"
+import {computed, ref} from "vue"
+import {FormElementEmits, FormElementExpose, FormMakerPropsNewType} from "@/Components/Form/FormMakerInterface.ts"
+import {useTextEditor} from "@/Composables/useTextEditor.ts"
+import {latex_macros} from "@/helpers/Macros/latex_macros.ts"
 import Prism from "prismjs"
 import "prismjs/components/prism-javascript"
 import "prismjs/components/prism-json"
 import "prismjs/components/prism-latex"
-import {computed, nextTick, ref, useTemplateRef, watch} from "vue"
 import "prismjs/themes/prism.css"
-import {FormElementEmits, FormElementExpose, FormMakerPropsNewType} from "@/Components/Form/FormMakerInterface.ts"
-import {useTextEditor} from "@/Composables/useTextEditor.ts"
-import {latex_macros} from "@/helpers/Macros/latex_macros.ts"
 
 interface FormElementCodeareaPropsInterface extends FormMakerPropsNewType {
 	rows?: number,
@@ -110,12 +110,12 @@ function sync_scroll() {
 	pre.value.scrollLeft = textareaRef.value.scrollLeft
 }
 
-const codeTriggers = computed(()=>{
-	if(props.language==='javascript'){
+const codeTriggers = computed(() => {
+	if (props.language === 'javascript') {
 		return javascriptTriggers
 	}
 
-	if(props.language==='latex'){
+	if (props.language === 'latex') {
 		return isInMathEnv.value ? latexTriggers : mdTriggers
 	}
 

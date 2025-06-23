@@ -56,17 +56,6 @@ defineEmits<{
 	validate: [event: questionResultInterface]
 }>()
 
-const {
-	answersVariables,
-	answerId,
-	userAnswers,
-	answersCoherences,
-	answers,
-	validators,
-	currentKeyboard,
-	currentChecker
-} = useQuestion(props.question)
-
 // Used to load the answers dynamically
 defineExpose({loadAnswers})
 
@@ -85,35 +74,35 @@ const showUserInput = ref<questionUserInputDisplayType>(
 
 const questionAnswerWrapper = useTemplateRef<typeof QuestionAnswer>('questionAnswerWrapper')
 
-provide<questionDataInterface>("questionData", {
-	question: ref(props.question),
-	body: ref(""),
-	answerId,
-	answers,
-	answersVariables,
-	answersCoherences,
-	user: {
-		answers: userAnswers,
-		errors: ref([])
-	},
-	config: {
-		animation: true,
-		showInput: showUserInput,
-		isDynamic: props.isDynamic,
-		raw: props.question.keyboard
-	},
-	validators,
-	currentKeyboard,
-	currentChecker
+// REFACTOR: Duplicata entre questionData.question.user = questionData.user.score
+const questionData = useQuestion(props.question, {
+	animation: true,
+	showInput: showUserInput,
+	isDynamic: props.isDynamic,
+	raw: props.question.keyboard
 })
+
+console.log(questionData.question.id, questionData.user.score.value)
+/**
+ * QuestionAnswer: .validators, .user.answers, .config, .answerId
+ * QuestionAnswerSelector: .answers, .answerId
+ * QuestionAnswerToggleKeyboard: .config
+ * QuestionAnswerValidation: .user.answers, .validators, .user.score, .question.id, .config, .answers
+ * QuestionBlock: .answersCoherences, .question.block, .answersVariables, .user.answers, .answerId
+ * QuestionFooter: .user.score, .question.answer, .question.id
+ * Keyboards***: .config
+ *
+ * Valeurs utiles:
+ */
+provide<questionDataInterface>("questionData", questionData)
 
 async function loadAnswers(show: boolean) {
 	questionAnswerWrapper.value.getKeyboards().forEach((keyboard, index) => {
 		keyboard.setInput(show ?
-			answers.value[index] :
+			questionData.answers.values.value[index] :
 			'')
 			.then((x) => {
-				userAnswers.value[index] = x
+				questionData.user.answers.value[index] = x
 			})
 	})
 }
@@ -125,9 +114,9 @@ async function loadAnswers(show: boolean) {
 		:id="`question-${question.id}`"
 		:class="{
 			'bg-gray-50 border-gray-200 dark:bg-gray-800 dark:border-gray-700':
-				!props.question.user.result,
+				!questionData.user.score.value.is_resolved,
 			'bg-green-50 dark:bg-green-950 border-green-600/60':
-				props.question.user.result,
+				questionData.user.score.value.is_resolved,
 		}"
 		class="relative flex flex-col rounded border h-full"
 	>
@@ -156,9 +145,9 @@ async function loadAnswers(show: boolean) {
 		<hr
 			:class="{
 				'bg-content':
-					!props.question.user.result,
+					!questionData.user.score.value.is_resolved,
 				'border-green-600/60':
-					props.question.user.result,
+					questionData.user.score.value.is_resolved,
 			}"
 		>
 

@@ -17,7 +17,7 @@ const emits = defineEmits<{
 }>()
 function deleteFormula(){
 	const id = props.formula.id
-	axios.post(route('formulas.destroy', [props.formula.id]), {
+	axios.post(route('api.formulas.destroy', [props.formula.id]), {
 		_method: "delete"
 	}).then(()=>{
 		flash.success('La formule a bien été supprimée.')
@@ -44,7 +44,7 @@ function deleteFormula(){
 			<div class="flex gap-3 items-baseline">
 				<InertiaLink
 					class="text-xs"
-					:href="route('blocks.edit', [formula.block.id])"
+					:href="route('admin.blocks.edit', [formula.block.id])"
 				>
 					<i class="bi bi-pencil" />
 				</InertiaLink>

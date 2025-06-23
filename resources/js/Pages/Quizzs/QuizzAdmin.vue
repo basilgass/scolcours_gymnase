@@ -17,9 +17,10 @@ defineProps({
 })
 
 function createQuizz() {
-	axios.post(route("quizzs.store"))
+	axios.post(route("api.quizzs.store"))
 		.then(res => {
-			router.visit(route("quizzs.admin.quizz", [res.data]))
+			// ROUTE : make it more restfull
+			router.visit(route("admin.quizzs.quizz", [res.data]))
 		})
 }
 </script>
@@ -48,7 +49,7 @@ function createQuizz() {
 				<InertiaLink
 					v-for="quizz of quizzs"
 					:key="quizz.id"
-					:href="route('quizzs.admin.quizz', [quizz.id])"
+					:href="route('admin.quizzs.quizz', [quizz.id])"
 					class="flex flex-col gap-5
 				cursor-pointer
 				bg-content

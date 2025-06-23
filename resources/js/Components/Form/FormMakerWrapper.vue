@@ -1,18 +1,19 @@
 <script setup lang="ts">
 
 import {type FormMakerPropsNewType} from "@/Components/Form/FormMakerInterface.ts"
+import {computed} from "vue"
 
 interface FormMakerWrapperInterface extends FormMakerPropsNewType {
 	errors?: string[]
 	labelClass?: string
 }
 
-withDefaults(defineProps<FormMakerWrapperInterface>(),
+const props = withDefaults(defineProps<FormMakerWrapperInterface>(),
 	{
-		label: '',
+		label: "",
 		type: 'text',
 		icon: false,
-		prepend: "",
+		prepend: false,
 		inlineLabel: false,
 		labelClass: '',
 		btn: false,
@@ -21,14 +22,25 @@ withDefaults(defineProps<FormMakerWrapperInterface>(),
 		xl: false,
 		sm: false,
 		xs: false,
+		inputClass: false
 	})
 
-const value = defineModel<string | boolean | number>()
+const value = defineModel<string | boolean | number | Record<string, string>>()
 
 const emits = defineEmits<{
 	focus: [],
 	buttonClick: [e: MouseEvent],
 }>()
+
+const inputClassComputed = computed(() => {
+	return props.inputClass ?
+		props.inputClass :
+		'bg-slate-50 text-slate-900 ' +
+		'border border-slate-200 rounded ' +
+		'dark:bg-slate-800 dark:text-slate-200 ' +
+		'dark:border-slate-500 ' +
+		'focus-within:border-slate-400 focus-within:shadow-sm'
+})
 
 </script>
 
@@ -71,12 +83,8 @@ const emits = defineEmits<{
 				class="w-full
 				flex items-stretch
 				appearance-none transition
-				focus:outline-hidden focus:ring-0
-				bg-slate-50 text-slate-900
-				border border-slate-200 rounded
-				dark:bg-slate-800 dark:text-slate-200
-				dark:border-slate-500
-				focus-within:border-slate-400 focus-within:shadow-sm"
+				focus:outline-hidden focus:ring-0"
+				:class="inputClassComputed"
 			>
 				<div
 					v-if="icon || prepend"

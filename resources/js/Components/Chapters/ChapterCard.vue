@@ -24,7 +24,7 @@ function activate() {
 	isActive.value = !isActive.value
 
 	axios.patch(
-		route('toggleChapterActive', {
+		route('admin.chapters.toggleActive', {
 			chapter: props.chapter.slug
 		}),
 		{active: isActive.value}
@@ -59,8 +59,8 @@ function activate() {
 
 		<InertiaLink
 			:class="{ 'opacity-30 hover:opacity-70 transition-all': !isActive }"
-			:href="route('themes.chapters.intro', {
-				theme: usePage().props.theme.slug,
+			:href="route('themes.chapters.show', {
+				theme: chapter.theme.slug,
 				chapter: chapter.slug
 			})"
 			class="text-xl

@@ -1,19 +1,25 @@
 // useMermaidDispatcher.ts
-type MermaidHandler = (id: string) => void
+
+
+type MermaidHandler = (id: string, event:MouseEvent) => void
+
+export interface MermaidEmits {
+	nodeClick: [nodeId: string, event: MouseEvent]
+}
 
 const callbacks = new Map<string, MermaidHandler>()
 
 declare global {
 	interface Window {
-		mermaidClickDispatcher?: (nodeId: string) => void
+		mermaidClickDispatcher?: (nodeId: string, event: MouseEvent) => void
 	}
 }
 
 // Définir immédiatement la fonction globale
 if (typeof window !== 'undefined' && typeof window.mermaidClickDispatcher !== 'function') {
-	window.mermaidClickDispatcher = (nodeId: string) => {
+	window.mermaidClickDispatcher = (nodeId: string, event: MouseEvent) => {
 		for (const [, cb] of callbacks) {
-			cb(nodeId)
+			cb(nodeId, event)
 		}
 	}
 }

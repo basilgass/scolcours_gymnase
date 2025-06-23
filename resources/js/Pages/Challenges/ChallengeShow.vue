@@ -37,7 +37,7 @@ const state = ref<ChallengeGameState>("intro")
 			}"
 			:edit-link="{
 				label: challenge.id,
-				url: route('challenges.edit', {id: challenge.id})
+				url: route('admin.challenges.edit', {id: challenge.id})
 			}"
 		/>
 
@@ -55,7 +55,7 @@ const state = ref<ChallengeGameState>("intro")
 					v-for="team of props.teams"
 					:key="team.id"
 					xs
-					:href="route('teams.challenge', [team.name, props.challenge.slug])"
+					:href="route('admin.teams.challenges.show', [team.name, props.challenge.slug])"
 				>
 					{{ team.name }}
 				</sc-button>

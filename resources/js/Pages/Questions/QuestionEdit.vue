@@ -28,7 +28,7 @@ let saveQuestion = function () {
 	let illustrations = []
 
 	axios
-		.post(route("blocks.update", [theQuestion.value.block.id]), {
+		.post(route("api.blocks.update", [theQuestion.value.block.id]), {
 			_method: "PATCH",
 			title: theQuestion.value.block.title,
 			body: theQuestion.value.block.body,
@@ -36,7 +36,7 @@ let saveQuestion = function () {
 		})
 		.then(() => {
 			axios
-				.post(route("questions.update", [theQuestion.value.id]), {
+				.post(route("api.questions.update", [theQuestion.value.id]), {
 					_method: "PATCH",
 					answer: theQuestion.value.answer,
 					keyboard: theQuestion.value.keyboard,
@@ -59,7 +59,7 @@ let saveQuestion = function () {
 },
 	deleteQuestion = function () {
 		axios
-			.post(route("questions.destroy", [props.question.id]), {
+			.post(route("api.questions.destroy", [props.question.id]), {
 				_method: "delete"
 			})
 			.then((res) => {

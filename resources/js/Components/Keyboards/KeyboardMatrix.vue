@@ -9,7 +9,7 @@ import {
 import {computed, inject, onMounted, ref} from "vue"
 import KeyboardDisplay from "@/Components/Keyboards/KeyboardDisplay.vue"
 import PiMatrix from "@/Components/Pi/Parts/PiMatrix.vue"
-import {Fraction, Polynom} from "pimath"
+import {Polynom} from "pimath"
 import {questionDataInterface} from "@/Components/Questions/QuestionInterface.ts"
 import ScButton from "@/Components/Ui/scButton.vue"
 
@@ -25,19 +25,18 @@ function onChange(event: KeyboardInputInterface): void {
 }
 
 async function setInput(value?: string): Promise<KeyboardInputInterface> {
-	if(value ==="") {
+	if (value === "") {
 		// Reset des réponses.
-		if(!hasFixedDimension.value){
+		if (!hasFixedDimension.value) {
 			dimension.value = {rows: null, columns: null}
 			showDimensionKeyboard.value = true
 			values.value = []
-		}else{
-			values.value = Array.from({ length: dimension.value.rows }, () => Array.from({ length: dimension.value.columns }, () => ""))
+		} else {
+			values.value = Array.from({length: dimension.value.rows}, () => Array.from({length: dimension.value.columns}, () => ""))
 		}
 
 
-
-	}else if (value !== undefined) {
+	} else if (value !== undefined) {
 		const [dim, v] = value.split(";")
 
 		const [rows, columns] = dim.split("x").map(Number)
@@ -46,13 +45,13 @@ async function setInput(value?: string): Promise<KeyboardInputInterface> {
 			rows: rows ?? 1
 		}
 
-		values.value = Array.from({ length: rows }, () => Array.from({ length: columns }, () => ""))
+		values.value = Array.from({length: rows}, () => Array.from({length: columns}, () => ""))
 
 		let row = 0, column = 0
 		v.split(',').forEach((a) => {
 			values.value[row][column] = a
 			column++
-			if(column%dimension.value.columns===0){
+			if (column % dimension.value.columns === 0) {
 				column = 0
 				row++
 			}
@@ -82,11 +81,11 @@ defineExpose<KeyboardExposeInterface>({
 const questionData = inject<questionDataInterface>('questionData')
 
 // TODO: Move all these (duplicate) function to a class or something better
-function matrixToTex(matrix: string[][], dim: {rows: number, columns: number}): string{
+function matrixToTex(matrix: string[][], dim: { rows: number, columns: number }): string {
 
 	let tex = "\\left(\\begin{array}{" + "c".repeat(dim.columns) + "}"
 
-	tex += matrix.map(row=>row.map(a=>new Polynom(a).tex)).map(line => line.join("&")).join("\\\\[0.8em]")
+	tex += matrix.map(row => row.map(a => new Polynom(a).tex)).map(line => line.join("&")).join("\\\\[0.8em]")
 	tex += "\\end{array}\\right)"
 
 	return tex
@@ -95,10 +94,10 @@ function matrixToTex(matrix: string[][], dim: {rows: number, columns: number}): 
 // Values settings
 const values = ref<string[][]>([])
 const aij = ref<{ row: number, column: number } | null>(null)
-const valuesKeyboard = computed<string>(()=>{
-	const [_,kbrd] = questionData.config.raw.split('\n')[0].split('checker:')
+const valuesKeyboard = computed<string>(() => {
+	const [_, kbrd] = questionData.config.raw.split('\n')[0].split('checker:')
 
-	return kbrd ? getOneKeyboard(kbrd).keyboard.config.name: 'fraction'
+	return kbrd ? getOneKeyboard(kbrd).keyboard.config.name : 'fraction'
 })
 
 

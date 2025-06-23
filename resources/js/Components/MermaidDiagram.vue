@@ -2,11 +2,13 @@
 
 import {computed, onMounted, onUnmounted, ref, useTemplateRef, watch} from "vue"
 import mermaid, {MermaidConfig} from "mermaid"
-import {registerMermaidHandler, unregisterMermaidHandler} from "@/Composables/useMermaidDispatcher.ts"
+import {MermaidEmits, registerMermaidHandler, unregisterMermaidHandler} from "@/Composables/useMermaidDispatcher.ts"
+import {useResizeObserver} from "@vueuse/core"
 
 const props = withDefaults(defineProps<{
 		content: string,
 		config?: MermaidConfig
+		resizeObserver?: boolean
 	}>(),
 	{
 		config: () => {
@@ -14,12 +16,11 @@ const props = withDefaults(defineProps<{
 				theme: 'forest',
 				look: 'handDrawn'
 			}
-		}
+		},
+		resizeObserver: false
 	})
 
-const emits = defineEmits<{
-	nodeClick: [id: string]
-}>()
+const emits = defineEmits<MermaidEmits>()
 
 // Le composant dans lequel insérer le svg.
 const el = useTemplateRef<HTMLElement>('el')
@@ -37,6 +38,7 @@ function genSvgId() {
 	}
 }
 
+
 const diagram = computed<string>(() => {
 	return props.content.replace(
 		/^(\s*click\s+[^\s]+\s*)$/gm,
@@ -49,14 +51,12 @@ async function updateGraph(graphDefinition: string) {
 		return
 	}
 
-	console.log(graphDefinition)
-
 	// nettoie anciens handlers
 	unregisterMermaidHandler(svgId.value)
 
 	// Bind events.
-	registerMermaidHandler(svgId.value, (nodeId) => {
-		emits('nodeClick', nodeId)
+	registerMermaidHandler(svgId.value, (nodeId: string, event: MouseEvent) => {
+		emits('nodeClick', nodeId, event)
 	})
 
 	// Render
@@ -78,6 +78,12 @@ onMounted(() => {
 	})
 
 	updateGraph(diagram.value)
+
+	if (props.resizeObserver) {
+		useResizeObserver(el, () => {
+			updateGraph(diagram.value)
+		})
+	}
 })
 
 onUnmounted(() => {
@@ -91,6 +97,7 @@ watch(diagram, async () => {
 
 	await updateGraph(diagram.value)
 })
+
 
 </script>
 

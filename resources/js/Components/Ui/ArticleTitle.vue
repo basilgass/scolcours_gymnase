@@ -6,6 +6,7 @@ import {computed} from "vue"
 const props = defineProps<{
 	title: string,
 	subtitle?: string,
+	prefix?: string,
 	head?: string,
 	returnLink?: {
 		label: string,
@@ -34,10 +35,17 @@ const editLabel = computed<string>(() => {
 		class="w-full"
 	>
 		<div class="flex gap-3 items-baseline justify-between">
-			<h1
-				v-katex.auto="title"
-				class="text-4xl lg:text-5xl xl:text-6xl font-[400]"
-			/>
+			<div>
+				<div
+					v-if="prefix"
+					v-katex.auto="prefix"
+					class="text-lg lg:text-xl font-[400] -mb-2"
+				/>
+				<h1
+					v-katex.auto="title ?? 'sans titre'"
+					class="text-3xl lg:text-4xl font-[400]"
+				/>
+			</div>
 			<edit-link
 				v-if="editLink"
 				:label="editLabel"

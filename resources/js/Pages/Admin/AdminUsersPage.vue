@@ -86,7 +86,7 @@ const usersTeams = computed(() => {
 	}),
 	newTeam = ref(""),
 	storeTeam = function () {
-		axios.post(route("teams.store"), {
+		axios.post(route("api.teams.store"), {
 				"name": newTeam.value
 			}
 		).then(res => {
@@ -97,7 +97,7 @@ const usersTeams = computed(() => {
 			)
 	},
 	updateTeam = function (userId: number, teamId: number) {
-		axios.post(route("users.team.toggle", [userId, teamId]),
+		axios.post(route("admin.teams.toggleUser", {user: userId, team: teamId}),
 			{_method: "PATCH"})
 			.then(res => {
 				// update the button

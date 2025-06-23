@@ -36,22 +36,22 @@ class QuestionResource extends JsonResource
 		}
 
 		// On récupère les réponses de l'utilisateur.
-		$userAnswers = $this->userAnswers();
+		$userScores = $this->userScores();
 
 		return [
 			"id" => $this->id,
 			"order"=>$this->order,
-			"displayIf"=>$this->displayif,
+			"displayIf"=>$this->display_if,
 			"css"=>$this->css,
 			"block" => [
 				'id'=>$this->blocks[0]->id,
 				'title'=>$this->blocks[0]->title,
-				'body'=>$this->blocks[0]->body,
+				'body'=>$this->blocks[0]->body ?? "",
 				'illustration'=>$this->blocks[0]->illustrations[0]??null
 			],
 			"answer" => $this->answer,
 			"keyboard" => $this->keyboard,
-			"user" => $userAnswers
+			"user" => $userScores
 		];
 //        return parent::toArray($request);
 	}

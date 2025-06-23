@@ -165,7 +165,7 @@ const nextWord = ref<string>("")
 
 function prepareNextWord() {
 	axios.get(
-		route("dico.fetch", {
+		route("api.dico.fetch", {
 				language: 'fr',
 				number: 1,
 				size: randomWordLength.value,

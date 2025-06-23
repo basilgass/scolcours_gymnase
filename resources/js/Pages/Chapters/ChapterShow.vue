@@ -37,7 +37,7 @@ const showFormular = ref(false)
 			:title="chapter.title"
 			:edit-link="{
 				label: chapter.id,
-				url: route('chapters.edit', {id: chapter.id})
+				url: route('admin.chapters.edit', {id: chapter.id})
 			}"
 		/>
 
@@ -50,12 +50,11 @@ const showFormular = ref(false)
 			<!-- commencer l'aventure -->
 			<div
 				v-if="posts.length > 0"
-				class="w-full text-center"
 			>
 				<sc-button
-					class="min-w-[200px] md:px-20 rounded-xl"
+					class="min-w-[200px] md:px-20 rounded-xl mx-auto"
 					theme
-					:href="route('themes.chapters.slide', {
+					:href="route('themes.chapters.posts.show', {
 						theme: chapter.theme.slug,
 						chapter: chapter.slug,
 						order: posts[0].order,

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\HasQuestionsTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -35,14 +36,10 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Quizz extends Model
 {
-    use HasFactory;
+    use HasQuestionsTrait;
 
 	protected $guarded=[];
 
-	public function questions()
-	{
-		return $this->morphMany(Question::class, 'questionable')->orderBy('order')->orderBy('id');
-	}
 
 	public function sessions()
 	{

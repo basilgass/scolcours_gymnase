@@ -3,40 +3,54 @@
 	setup
 >
 
-/**
- * DeckCards
- * This component is used to display a deck of cards.
- * It handles the logic of the deck.
- */
-
-import type {UserCardInterface} from "@/types/modelInterfaces"
+import type {CardInterface} from "@/types/modelInterfaces"
 import {computed, onMounted, reactive, ref} from "vue"
 import DeckCardItem from "@/Components/Decks/Parts/DeckCardItem.vue"
 import ScButton from "@/Components/Ui/scButton.vue"
-import {makeCard} from "@/helpers/makeModel.ts"
 import {usePage} from "@inertiajs/vue3"
 import axios from "axios"
 import DeckPotfolioItem from "@/Components/Decks/Parts/DeckPotfolioItem.vue"
 
+interface CardInterfaceExtended extends CardInterface {
+	current_appearances: number,
+	current_score: number,
+	current_time_spent: number,
+}
+
 const props = defineProps<{
-	cards: UserCardInterface[]
+	cards: CardInterface[]
 }>()
 
-const cardsList = ref<UserCardInterface[]>(props.cards)
+/**
+ * Formatted cards list
+ */
+const cardsList = ref<CardInterfaceExtended[]>(props.cards.map((card) => {
+	return {
+		...card,
+		// On ajoute les valeurs éphémères.
+		current_appearances: 0,
+		current_score: 0,
+		current_time_spent: 0,
+	}
+}))
 
+// Current card
+const currentCard = ref<CardInterfaceExtended>()
 const cardSide = ref<"recto" | "verso">("recto")
-const currentCard = ref<UserCardInterface>()
 
-const summaryList = computed<UserCardInterface[]>(() => {
-	const arr = cardsList.value
+
+// Retourne la liste filtrée et dans l'ordre descend d'apparition
+const summaryList = computed<CardInterfaceExtended[]>(() => {
+	return cardsList.value
 		.filter(card => card.current_appearances > 1)
 		.toSorted((a, b) => {
 			return b.current_appearances - a.current_appearances
 		})
-
-	return arr
 })
 
+// On récupère la carte suivante aléatoirement, en fonction :
+// - du score
+// - du nombre d'apparitions
 function getNextCard() {
 	// Logique concernant la suite du deck
 	// 1. Il n'y a plus d'élément qui sont non résolu - on s'arrête !
@@ -106,15 +120,12 @@ const restartDeck = function () {
 	getNextCard()
 }
 
-/**
- * Cards statistics
- * @type {ComputedRef<{correct: number, asked: number, length: number}>}
- *
- * length: number of cards in the deck
- * asked: number of cards that have been asked
- * correct: number of cards that have been correctly answered
- */
-const countCards = computed(() => {
+const countCards = computed<{
+	correct: number
+	asked: number
+	length: number
+	progress: number
+}>(() => {
 	const correct = cardsList.value.reduce((acc, card) => {
 		return acc + (card.current_score ?? 0)
 	}, 0)
@@ -170,20 +181,14 @@ async function updateCard(result: boolean) {
 
 	currentCard.value.current_time_spent += durationInSeconds
 
-	currentCard.value.success = currentCard.value.success + (result ? 1 : 0)
-	currentCard.value.appearances = currentCard.value.appearances + 1
-	currentCard.value.time_spent = currentCard.value.time_spent + durationInSeconds
+	// TODO: Valeurs globales - à conserver sous forme de JSON ?
+	currentCard.value.score.success = currentCard.value.score.success + (result ? 1 : 0)
+	currentCard.value.score.appearances = currentCard.value.score.appearances + 1
+	currentCard.value.score.time_spent = currentCard.value.score.time_spent + durationInSeconds
 
 	// Si l'utilisateur est connecté, on envoie les données au serveur
-	if (usePage().props.auth.user) {
-
-		// userdeck_id = -1 : it's a virtual deck
-		if(currentCard.value.user_deck_id===-1){
-			return
-		}
-
-
-		axios.post(route('decks.updateCard', {
+	if (usePage().props.auth.user && currentCard.value.id > 0) {
+		axios.post(route('api.cards.update', {
 				card: currentCard.value.id
 			}), {
 				...currentCard.value
@@ -250,6 +255,7 @@ async function updateCard(result: boolean) {
 		<div class="w-full flex justify-between">
 			<div>score: {{ currentCard.current_score === null ? 'nouvelle carte' : currentCard.current_score }}</div>
 			<div>{{ countCards.length }} cartes</div>
+			§
 			<div>
 				<span class="text-green-600">{{ countCards.progress }}%</span>
 			</div>
@@ -259,7 +265,7 @@ async function updateCard(result: boolean) {
 		<DeckCardItem
 			v-model="cardSide"
 			:key="`card-${currentCard.id}`"
-			:card="makeCard(currentCard)"
+			:card="currentCard"
 			@flip="flipCard"
 		/>
 	</article>
@@ -292,7 +298,8 @@ async function updateCard(result: boolean) {
 				<div class="bg-content size-[150px] grid place-items-center">
 					<div class="text-center">
 						<div class="text-3xl">
-							{{ 100 - Math.round(summaryList.length / cardsList.length * 100) }}<span class="text-lg">%</span>
+							{{ 100 - Math.round(summaryList.length / cardsList.length * 100) }}
+							<span class="text-lg">%</span>
 						</div>
 						<div>
 							de réussites
@@ -321,7 +328,7 @@ async function updateCard(result: boolean) {
 					</div>
 					<deck-potfolio-item
 						class="grid grid-cols-2 gap-2"
-						:card="makeCard(card)"
+						:card="card"
 					/>
 				</div>
 			</div>

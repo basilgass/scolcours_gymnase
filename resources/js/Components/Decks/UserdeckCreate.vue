@@ -25,8 +25,7 @@ const flash = inject<flashInterface>("flash")
 const decks = ref<AvailableDecksInterface[]>([])
 
 function fetchDecks(): void {
-	console.log('FETCH')
-	axios.get(route('decks.fetch'))
+	axios.get(route('api.decks.index'))
 		.then(response => {
 			decks.value = response.data.decks as AvailableDecksInterface[]
 		})
@@ -65,22 +64,22 @@ const cardsCount = computed(() => {
 })
 
 /** création du deck */
-const userdeckTitle = ref<string>('')
-function createUserDeck(){
-	// axios call.
-	axios.post(route('decks.userdecks.create', {
-		title: userdeckTitle.value,
-		decks: selectedDecks.value
-	}))
-		.then(()=>{
-			emits('created')
-			flash.success('Nouveau deck crée avec succès')
-
-		})
-		.catch((res: AxiosErrorMessage)=>{
-			flash.error(res.response.data.message)
-		})
-}
+// const userdeckTitle = ref<string>('')
+// function createUserDeck(){
+// 	// axios call.
+// 	axios.post(route('decks.userdecks.create', {
+// 		title: userdeckTitle.value,
+// 		decks: selectedDecks.value
+// 	}))
+// 		.then(()=>{
+// 			emits('created')
+// 			flash.success('Nouveau deck crée avec succès')
+//
+// 		})
+// 		.catch((res: AxiosErrorMessage)=>{
+// 			flash.error(res.response.data.message)
+// 		})
+// }
 
 onMounted(() => {
 	fetchDecks()
@@ -94,22 +93,22 @@ onMounted(() => {
 				<h2 class="text-xl">
 					nouveau deck
 				</h2>
-				<form-maker
-					label="titre"
-					v-model="userdeckTitle"
-					placeholder="titre du deck"
-				/>
+				<!--				<form-maker-->
+				<!--					label="titre"-->
+				<!--					v-model="userdeckTitle"-->
+				<!--					placeholder="titre du deck"-->
+				<!--				/>-->
 			</div>
 			<div class="flex flex-col gap-2">
 				<div><i class="bi bi-cart mr-3" />{{ selection.length }} decks pour {{ cardsCount }} carte(s)</div>
-				<sc-button
-					type="add"
-					@click="createUserDeck"
-					:outline="userdeckTitle.length<=5"
-					:disabled="userdeckTitle.length<=5"
-				>
-					créer
-				</sc-button>
+				<!--				<sc-button-->
+				<!--					type="add"-->
+				<!--					@click="createUserDeck"-->
+				<!--					:outline="userdeckTitle.length<=5"-->
+				<!--					:disabled="userdeckTitle.length<=5"-->
+				<!--				>-->
+				<!--					créer-->
+				<!--				</sc-button>-->
 			</div>
 		</div>
 

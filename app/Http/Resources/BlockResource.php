@@ -36,7 +36,7 @@ class BlockResource extends JsonResource
 			'body' => $this->body,
 			'template' => $this->template,
 			'illustrationsGrid' => $this->illustrationsGrid,
-			'illustrations' => $this->illustrations,
+			'illustrations' => IllustrationResource::collection($this->illustrations),
 			// script and data
 			'script' => $this->script,
 			'json' => $this->json,

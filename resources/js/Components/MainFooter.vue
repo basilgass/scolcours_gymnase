@@ -63,7 +63,7 @@ const langues = {
 				<div class="space-x-4">
 					<InertiaLink
 						v-for="(name,langue) in langues"
-						:href="route('translations.index', [langue])"
+						:href="route('voc.index', [langue])"
 						class="inline-block transition duration-300 hover:translate-x-1"
 					>
 						<i class="mr-1 bi bi-translate" /> {{ langues[langue] }}
@@ -78,7 +78,7 @@ const langues = {
 
 				<div v-if="$page.props.auth.user">
 					<InertiaLink
-						:href="route('dashboard')"
+						:href="route('users.dashboard')"
 						class="block transition duration-300 hover:translate-x-2 px-0 md:px-4 py-1"
 					>
 						<i class="mr-2 bi bi-person-fill" />{{ $page.props.auth.user.name }}
@@ -92,7 +92,7 @@ const langues = {
 
 					<InertiaLink
 						v-if="$page.props.auth.can.admin"
-						:href="route('admin')"
+						:href="route('admin.index')"
 						class="block transition duration-300 hover:translate-x-2 px-0 md:px-4 py-1"
 					>
 						<i class="mr-2 bi bi-person-workspace" />administration

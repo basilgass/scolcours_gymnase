@@ -26,7 +26,7 @@ defineEmits<{
 
 // Current validator, keyboard and checker
 const currentValidator = computed<questionValidatorInterface>(() => {
-	return questionData.validators.value[questionData.answerId.value]
+	return questionData.validators.value[questionData.current.id.value]
 })
 
 /**
@@ -101,7 +101,7 @@ defineExpose({
 				:is="validator.keyboard.component"
 				:key="`keyboard-id-${index}`"
 				ref="keyboardComponent"
-				v-show="questionData.answerId.value === index"
+				v-show="questionData.current.id.value === index"
 				:reference="validator.answer"
 				:keyboard="validator.keyboard"
 				@change="updateQuestion($event, index)"

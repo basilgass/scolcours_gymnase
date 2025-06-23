@@ -28,7 +28,7 @@ export function useGenerator(generator: GeneratorInterface | ComputedRef<Generat
 			keyboard: questionUnref.keyboard ?? generatorUnref.keyboard,
 			answer: "" + questionUnref.answer,
 			user: {
-				result: false
+				is_resolved: false
 			}
 		}
 	}

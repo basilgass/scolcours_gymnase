@@ -5,7 +5,6 @@
 
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
-import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
 import {flashInterface} from "@/types"
 import type {CardInterface, DeckInterface} from "@/types/modelInterfaces"
@@ -16,19 +15,18 @@ import ScButton from "@/Components/Ui/scButton.vue"
 import DeckCardItemSide from "@/Components/Decks/Parts/DeckCardItemSide.vue"
 
 const props = defineProps<{
-	deck: DeckInterface,
-	cards: CardInterface[],
+	deck: DeckInterface
 }>()
 
 const editMode = useStoreEditMode()
 const flash = inject<flashInterface>('flash')
 
-const theCards = ref(props.cards)
+const theCards = ref(props.deck.cards)
 
 const showMarkdown = ref(-1)
 
 function addCard() {
-	axios.post(route("decks.addCard", [props.deck.id]))
+	axios.post(route("api.decks.cards.store", [props.deck.id]))
 		.then(res => {
 			theCards.value.push(res.data)
 		})
@@ -47,11 +45,8 @@ function deleteCard(cardId) {
 
 function updateDecksOrder() {
 
-	console.log(theCards.value.map((x, index) => {
-		return {id: x.id, order: index}
-	}))
 	axios
-		.post(route("decks.updateOrder"), {
+		.post(route("api.decks.cards.order"), {
 			order: theCards.value.map((x, index) => {
 				return {id: x.id, order: index}
 			})
@@ -101,7 +96,7 @@ function updateDecksOrder() {
 								v-model="element.recto.body"
 								type="codearea"
 								class="w-full rounded-xl min-h-[200px]"
-								rows="10"
+								:rows="10"
 								@focus="showMarkdown = element.id"
 								:axios="{
 									model: 'Block',
@@ -112,7 +107,7 @@ function updateDecksOrder() {
 							/>
 							<div
 								class="absolute right-0 bottom-0 p-2 cursor-pointer z-10"
-								@click="router.visit(route('blocks.edit', element.recto.id))"
+								@click="router.visit(route('admin.blocks.edit', element.recto.id))"
 							>
 								<i class="bi bi-pencil" />
 							</div>
@@ -123,7 +118,7 @@ function updateDecksOrder() {
 								v-model="element.verso.body"
 								type="codearea"
 								class="w-full"
-								rows="10"
+								:rows="10"
 								@focus="showMarkdown = element.id"
 								:axios="{
 									model: 'Block',
@@ -134,7 +129,7 @@ function updateDecksOrder() {
 							/>
 							<div
 								class="absolute right-0 bottom-0 p-2 cursor-pointer z-10"
-								@click="router.visit(route('blocks.edit', element.verso.id))"
+								@click="router.visit(route('admin.blocks.edit', element.verso.id))"
 							>
 								<i class="bi bi-pencil" />
 							</div>

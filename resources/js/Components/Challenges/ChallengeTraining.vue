@@ -4,7 +4,7 @@ import QuestionShow from "@/Components/Questions/QuestionShow.vue"
 import {useGenerator} from "@/Composables/useGenerator"
 import type {GeneratorInterface, QuestionInterface} from "@/types/modelInterfaces"
 import {computed, PropType, ref} from "vue"
-import {useStoreLesson, useStoreLessonInterface} from "@/stores/useStoreLesson.ts"
+import {useStoreLesson} from "@/stores/useStoreLesson.ts"
 
 const props = defineProps({
 	generator: {
@@ -33,7 +33,11 @@ function nextQuestion(checkerResult: ChallengeAnswerInterface): void {
 		numberOfCorrectAnswerInARow.value++
 		counter.value++
 
-		lessonScore.updateChallenge(numberOfCorrectAnswerInARow.value)
+		// Update score value
+		lessonScore.update(numberOfCorrectAnswerInARow.value)
+
+		// TODO : If the user is connected, update score value in DB.
+
 	} else {
 		numberOfCorrectAnswerInARow.value = 0
 	}

@@ -34,14 +34,14 @@ const showAside = inject('showAside', false)
 						/>
 						<InertiaLink
 							class="text-lg mt-5 px-4"
-							:href="route('home')"
+							:href="route('scolcours.index')"
 						>
 							ScolCours
 						</InertiaLink>
 					</div>
 
 					<InertiaLink
-						:href="route('home')"
+						:href="route('scolcours.index')"
 						class="block transition duration-300 hover:translate-x-2 px-4 py-1"
 						@click="showAside = false"
 					>
@@ -55,7 +55,7 @@ const showAside = inject('showAside', false)
 							v-admin
 							as="button"
 							class="block transition duration-300 hover:translate-x-2 px-0 md:px-4 py-1"
-							:href="route('admin')"
+							:href="route('admin.index')"
 							@click="showAside = false"
 						>
 							administration
@@ -64,7 +64,7 @@ const showAside = inject('showAside', false)
 							v-admin
 							as="button"
 							class="block transition duration-300 hover:translate-x-2 px-0 md:px-4 py-1"
-							:href="route('dev.index')"
+							:href="route('admin.dev.index')"
 							@click="showAside = false"
 						>
 							développement

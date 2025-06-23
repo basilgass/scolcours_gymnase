@@ -17,7 +17,7 @@ const books = ref<BookInterface[]>()
 
 watch(() => props.language, () => {
 	// load asynchronously the list of books for this language.
-	axios.get(route('translation.books', [props.language]))
+	axios.get(route('api.voc.languages.books.index', {language: props.language}))
 		.then(res => {
 			books.value = res.data
 		})
@@ -26,9 +26,7 @@ const bookTitle = ref<string>("")
 const bookSlug = ref<string>("")
 
 function createBook() {
-	axios.post(route('translation.books.create'), {
-		language: props.language,
-		slug: bookSlug.value,
+	axios.post(route('api.voc.languages.books.store', {language: props.language}), {slug: bookSlug.value,
 		title: bookTitle.value
 	}).then(res => {
 		books.value.push(res.data)
@@ -46,6 +44,7 @@ function createBook() {
 			<sc-button
 				v-for="b in books"
 				:key="b.id"
+				type="admin"
 				:outline="book!==b.id"
 				@click="book === b.id ? book = -1 : book = b.id"
 				class="text-left"

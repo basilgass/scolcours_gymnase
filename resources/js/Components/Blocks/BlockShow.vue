@@ -71,11 +71,11 @@ const blockBody = computed(() => useFormattedBody(props.block.body, blockScript.
 function addIllustration() {
 	axios
 		.post(
-			route("illustrations.store", [props.block.id]),
+			route("api.illustrations.store", [props.block.id]),
 			{}
 		)
 		.then((res) => {
-			router.visit(route("illustrations.edit", [res.data.id]))
+			router.visit(route("admin.illustrations.edit", [res.data.id]))
 			flash.success("une nouvelle illustration a été créée")
 		}).catch((res) => {
 			console.warn("add illustration: ", res)

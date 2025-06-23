@@ -1,18 +1,51 @@
 import {ComputedRef, Ref} from "vue"
-import type {QuestionInterface} from "@/types/modelInterfaces.ts"
+import {BlockMinInterface, QuestionInterface, ScoreInterface} from "@/types/modelInterfaces.ts"
 import type KeyboardBasic from "@/Components/Keyboards/KeyboardBasic.vue"
 import type {KeyboardCheckerInterface, KeyboardInputInterface, KeyboardInterface} from "@/Composables/useKeyboard.ts"
-import QuestionAnswer from "@/Components/Questions/Parts/QuestionAnswer.vue"
 
 export type keyboardComponentType = InstanceType<typeof KeyboardBasic>
 export type questionUserInputDisplayType = "hide" | "show" | "force"
+
+export interface questionConfigInterface {
+	animation: boolean,
+	showInput: Ref<questionUserInputDisplayType>,
+	isDynamic: boolean,
+	raw: string
+}
+
 export interface questionDataInterface {
+	question: {
+		id: number
+	},
+	block: ComputedRef<BlockMinInterface>,
+	current: {
+		id: Ref<number>,
+		keyboard: ComputedRef<KeyboardInterface>,
+		checker: ComputedRef<KeyboardCheckerInterface>
+	},
+	user: {
+		answer: Ref<string>
+		answers: Ref<KeyboardInputInterface[]>,
+		score: Ref<ScoreInterface>,
+		errors: Ref<string[]>
+	},
+	answers: {
+		values: ComputedRef<string[]>,
+		variables: ComputedRef<string[]>,
+		coherences: ComputedRef<boolean>
+	},
+	validators: ComputedRef<questionValidatorInterface[]>,
+	config: questionConfigInterface
+}
+
+export interface questionDataInterfaceOLD {
 	// Question data from database
 	question: Ref<QuestionInterface>,
 	// updated body string, with the answers inserted.
 	body: Ref<string>
 	// current answer id, if the question has more than one answer
 	answerId: Ref<number>,
+	// Score
 	// list of all answers
 	answersVariables: ComputedRef<string[]>,
 	answersCoherences: ComputedRef<boolean>,
@@ -22,7 +55,8 @@ export interface questionDataInterface {
 	// - errors: list of errors once validated
 	user: {
 		answers: Ref<KeyboardInputInterface[]>,
-		errors: Ref<string[]>
+		errors: Ref<string[]>,
+		score: Ref<ScoreInterface>,
 	},
 	// config of the current question
 	// - animation: enables or disable animation (use for "single answer" (quizz)
@@ -44,6 +78,7 @@ export interface keyboardEventInterface {
 	tex: string,
 	raw: string
 }
+
 /**
  * Keyboard data:
  * key: $a

@@ -2,14 +2,16 @@
 
 namespace App\Models;
 
+use App\Traits\HasQuestionsTrait;
+use App\Traits\HasScoresTrait;
+use App\Traits\HasUrlTrait;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\URL;
+use Znck\Eloquent\Traits\BelongsToThrough;
 
 /**
  * App\Models\Post
@@ -52,18 +54,32 @@ use Illuminate\Support\Facades\URL;
  */
 class Post extends Model
 {
+	use HasUrlTrait;
+	use HasQuestionsTrait;
+	use HasScoresTrait;
+	use BelongsToThrough;
+
 	protected $guarded = [];
 	protected $with = [];
+	protected $appends = ['url'];
 
-    public function scopeWithCounts($query): void
-    {
-        $query->withCount('questions')
-            ->withCount(['questions as answered_questions_count' => function ($query) {
-                $query->whereHas('users', function ($query) {
-                    $query->where('question_user.user_id', Auth::id());
-                });
-            }]);
-    }
+	public function scopeWithCounts($query): void
+	{
+		$query
+			->withCount('questions')
+			->withCount([
+				'questions as answered_questions_count' => function ($query) {
+					$query->whereHas('users', function ($query) {
+						$query->where('scores.user_id', Auth::id());
+					});
+				}
+			]);
+	}
+
+	public function theme()
+	{
+		return $this->belongsToThrough(Theme::class, Chapter::class);
+	}
 
 	public function chapter()
 	{
@@ -77,26 +93,10 @@ class Post extends Model
 
 	public function lessons()
 	{
-		return $this->morphMany(Lesson::class, 'lessonable')
+		return $this
+			->morphMany(Lesson::class, 'lessonable')
 			->orderBy('order')
 			->orderBy('id');
 	}
 
-	public function questions()
-	{
-		return $this->morphMany(Question::class, 'questionable')->orderBy('order')->orderBy('id');
-	}
-
-	public function scores()
-	{
-		return $this->morphMany(Score::class, 'scoreable');
-	}
-
-	protected function url(): Attribute
-	{
-		return Attribute::make(
-			get: fn() => URL::route('themes.chapters.slide', [$this->chapter->theme->slug, $this->chapter->slug, $this->order], false)
-//			get: fn() => [$this->chapter->theme->slug, $this->chapter->slug, $this->order]
-		);
-	}
 }

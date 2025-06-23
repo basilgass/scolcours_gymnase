@@ -117,8 +117,8 @@ class User extends Authenticatable
 	public function questions()
 	{
 		return $this->belongsToMany(Question::class)
-			->withTimestamps()
-			->withPivot('result', 'answer', 'attempts');
+			->withTimestamps();
+//			->withPivot('result', 'answer', 'attempts');
 	}
 
 	public function cards()
@@ -138,13 +138,13 @@ class User extends Authenticatable
 	{
 		return $this->hasMany(Score::class);
 	}
-
-	public function chapters()
-	{
-		return $this->belongsToMany(Chapter::class)
-			->withPivot('post_id', 'updated_at')
-			->orderBy('pivot_updated_at', 'desc');
-	}
+//
+//	public function chapters()
+//	{
+//		return $this->belongsToMany(Chapter::class)
+//			->withPivot('post_id', 'updated_at')
+//			->orderBy('pivot_updated_at', 'desc');
+//	}
 
 	public function decks()
 	{

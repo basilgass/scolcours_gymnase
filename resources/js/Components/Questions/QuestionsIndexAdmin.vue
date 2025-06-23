@@ -6,30 +6,30 @@ import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
 import {flashInterface} from "@/types"
 import type {PostShowInterface, QuestionInterface} from "@/types/modelInterfaces.ts"
 import axios from "axios"
-import {inject, PropType, ref} from "vue"
+import {inject, ref} from "vue"
 import ScButton from "@/Components/Ui/scButton.vue"
 
-const props = defineProps({
-	post: { type: Object as PropType<PostShowInterface>, required: true },
-	questions: { type: Object as PropType<QuestionInterface[]>, required: true },
-	components: { type: Object as PropType<InstanceType<typeof QuestionShow>[]>, required: true }
-})
+const props = defineProps<{
+	post: PostShowInterface,
+	questions: QuestionInterface[],
+	components: InstanceType<typeof QuestionShow>[]
+}>()
 
-const  editMode  = useStoreEditMode()
+const editMode = useStoreEditMode()
 
 const flash = inject<flashInterface>("flash")
 
 const thePost = ref(props.post)
 const theQuestions = ref(props.questions)
 
-const removeDisplayIf = function() {
+const removeDisplayIf = function () {
 		theQuestions.value.forEach((question) => {
 			question.displayIf = null
 		})
 		// Save to database.
 		storeDisplayIf()
 	},
-	addDisplayIf = function() {
+	addDisplayIf = function () {
 		// Add displayIf by increment.
 		theQuestions.value.forEach((question, index) => {
 			if (index > 0) {
@@ -41,9 +41,9 @@ const removeDisplayIf = function() {
 		// Save to database.
 		storeDisplayIf()
 	},
-	storeDisplayIf = function() {
+	storeDisplayIf = function () {
 		axios
-			.post(route("questions.batch.updateDisplayIf"), {
+			.post(route("api.questions.batch.updateDisplayIf"), {
 				_method: "PATCH",
 				values: theQuestions.value.map((question) => {
 					return {
@@ -67,12 +67,12 @@ const removeDisplayIf = function() {
 function resetAnswers() {
 	axios
 		.patch(
-			route("questions.answers.reset", ["Post", props.post.id])
+			route("api.posts.answers.reset", {post: props.post.id})
 		)
 		.then(() => {
 			for (const i in theQuestions.value) {
-				theQuestions.value[i].user.answer = ""
-				theQuestions.value[i].user.result = false
+				theQuestions.value[i].user.data = {'answers': []}
+				theQuestions.value[i].user.is_resolved = false
 			}
 
 			flash.success("Les réponses ont bien été réinitialisées.")
@@ -100,11 +100,10 @@ function showAnswers() {
 const addQuestion = function () {
 	axios
 		.post(
-			route("questions.storeTo", [
-				"Post",
-				props.post.id,
-			]),
+			route("api.questions.store"),
 			{
+				target_type: 'post',
+				target_id: props.post.id,
 				math: false,
 				mathAppend: "",
 				body: "nouvelle question",

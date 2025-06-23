@@ -23,7 +23,7 @@ onMounted(() => {
 		.map(line => line.split(',')[0])
 		.join(',')
 
-	axios.get(route("formulas.multiple", [ids]))
+	axios.get(route("api.formulas.fetch", [ids]))
 		.then(res => {
 			// Sort the value to match the id's order
 			formulas.value = res.data

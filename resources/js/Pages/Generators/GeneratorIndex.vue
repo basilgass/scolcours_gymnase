@@ -23,14 +23,14 @@ const themeId = ref(1)
 function addGenerator() {
 	if (slug.value === "") return
 
-	axios.post(route("generators.store"), {
+	axios.post(route("api.generators.store"), {
 		slug: slug.value,
 		theme_id: themeId.value
 	})
 		.then((res) => {
 			slug.value = ""
 			flash.success("Générateur ajouté")
-			router.visit(route("generators.edit", [res.data]))
+			router.visit(route("admin.generators.edit", [res.data]))
 		})
 		.catch((res) => {
 			console.log(res.response.data)

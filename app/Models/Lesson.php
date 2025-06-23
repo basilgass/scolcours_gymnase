@@ -2,12 +2,23 @@
 
 namespace App\Models;
 
+use App\Traits\HasUrlTrait;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 
 class Lesson extends Model
 {
+	use HasUrlTrait;
+
 	protected $fillable = [];
+	protected $appends = ['url'];
+
+	protected function casts(): array
+	{
+		return [
+			'parameters' => 'array',
+		];
+	}
 
 	public function lessonable()
 	{
@@ -21,24 +32,16 @@ class Lesson extends Model
 
 	public function blocks()
 	{
-		return $this->morphMany(Block::class, 'blockable')
+		return $this
+			->morphMany(Block::class, 'blockable')
 			->orderBy('order')
 			->orderBy('id');
 	}
 
-	protected function casts(): array
-	{
-		return [
-			'opened_at'    => 'datetime',
-			'scheduled_at' => 'datetime',
-			'parameters'   => 'array',
-		];
-	}
-
-	protected function remainingDays(): Attribute
-	{
-		return Attribute::make(
-			get: fn() => (int) -$this->scheduled_at->diffInDays()
-		);
-	}
+//	protected function remainingDays(): Attribute
+//	{
+//		return Attribute::make(
+//			get: fn() => (int)-$this->scheduled_at->diffInDays()
+//		);
+//	}
 }

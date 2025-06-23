@@ -33,7 +33,7 @@ const nav = computed<{
 	const previous = props.posts[currentPostIndex].order > 1 ?
 		route("posts.show", [props.posts[currentPostIndex-1].id]) : false
 
-	const home = route("themes.chapters.intro", [
+	const home = route("themes.chapters.show", [
 		themeSlug,
 		chapterSlug
 	])

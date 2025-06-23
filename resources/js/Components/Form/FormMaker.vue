@@ -4,16 +4,25 @@ import {defineAsyncComponent, h, shallowRef, watch} from "vue"
 import FormMakeLoader from "@/Components/Form/FormMakeLoader.vue"
 import FormMakerError from "@/Components/Form/FormMakerError.vue"
 import {FormElementComponents} from "@/scolcours.ts"
-import {FormElementExpose, FormElementType, FormMakerPropsNewType} from "@/Components/Form/FormMakerInterface.ts"
+import {
+	FormElementEmits,
+	FormElementExpose,
+	FormElementType,
+	FormMakerPropsNewType
+} from "@/Components/Form/FormMakerInterface.ts"
+
+defineOptions({ inheritAttrs: false })
 
 const props = withDefaults(defineProps<FormMakerPropsNewType>(),
 	{
 		type: 'text',
 		icon: false,
-		prepend: ""
+		prepend: false
 	})
 
 defineExpose<FormElementExpose>()
+
+const emits = defineEmits<FormElementEmits>()
 
 function loadComponent(type: FormElementType) {
 	// Default inputs, without configuration.
@@ -24,9 +33,11 @@ function loadComponent(type: FormElementType) {
 		'password',
 		'number',
 		'color',
+		'range',
 		'date',
-		'range'
+		'datetime-local'
 	]
+
 	if (Object.hasOwn(FormElementComponents, type)) {
 		return defineAsyncComponent({
 			loader: FormElementComponents[type],
@@ -61,6 +72,11 @@ watch(() => props.type, (newType) => {
 	<component
 		:is="currentComponent"
 		v-bind="{...$attrs,...props}"
+		@update="emits('update', $event)"
+		@enter="emits('enter', $event)"
+		@focus="emits('focus')"
+		@blur="emits('blur')"
+		@errors="emits('errors', $event)"
 	/>
 </template>
 

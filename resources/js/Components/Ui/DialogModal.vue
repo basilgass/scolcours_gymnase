@@ -46,7 +46,10 @@ function doCancel() {
 					<div class="flex-1 h-full">
 						<slot />
 					</div>
-					<div v-if="$slots.footer">
+					<div
+						v-if="$slots.footer"
+						class="mt-3"
+					>
 						<slot name="footer" />
 					</div>
 				</div>

@@ -28,7 +28,7 @@ const games = {
 			<InertiaLink
 				v-for="(game, key) in games"
 				:key="key"
-				:href="`/${language.slug}/${key}`"
+				:href="route('voc.show', {language: language.slug, game: key})"
 				class="text-xl bg-white border rounded-sm hover:scale-105 h-32 grid place-items-center transition-all duration-300"
 			>
 				{{ game }}

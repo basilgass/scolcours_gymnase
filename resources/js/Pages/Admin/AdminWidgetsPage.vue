@@ -15,6 +15,7 @@ defineProps({
 })
 
 function refreshWidgets() {
+	// ROUTE : route doesn not exist
 	axios.get(route("admin.widgets.refresh"))
 		.then(() => {
 			router.reload()

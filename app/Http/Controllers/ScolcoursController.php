@@ -25,39 +25,20 @@ class ScolcoursController extends Controller
 
 	public function dashboard()
 	{
-		$chapters = Auth::user()->chapters;
-		$chapters->load("posts");
+//		$chapters = Auth::user()->chapters;
+//		$chapters->load("posts");
 
-		$courses = ChapterResource::collection($chapters)
-			->map(function ($chapter) {
-				return $chapter->additional([
-												'currentPost' => $chapter->posts->where('id', $chapter->pivot->post_id)->first()->order,
-												'maxPost'     => count($chapter->posts)
-											]);
-			});
+//		$courses = ChapterResource::collection($chapters)
+//			->map(function ($chapter) {
+//				return $chapter->additional([
+//												'currentPost' => $chapter->posts->where('id', $chapter->pivot->post_id)->first()->order,
+//												'maxPost'     => count($chapter->posts)
+//											]);
+//			});
 
 		// $courses = ChapterResource + CurrentPost + MaxPost
 		return Inertia::render('DashboardPage', [
-			'courses' => $courses
-		]);
-	}
-
-	public function devIndex()
-	{
-		// Get all devs.
-		$devPages = collect(Storage::disk('devs')->files())->map(function ($p) {
-			return pathinfo($p)['filename'];
-		});
-
-		return Inertia::render("Devs/DevsIndex", [
-			'pages' => $devPages
-		]);
-	}
-
-	public function dev($page)
-	{
-		return Inertia::render('Devs/DevsShow', [
-			"dev" => $page
+			'courses' => []
 		]);
 	}
 

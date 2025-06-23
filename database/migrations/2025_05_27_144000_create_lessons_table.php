@@ -12,8 +12,6 @@ return new class extends Migration {
 			$table->id();
 			$table->foreignIdFor(Course::class)->constrained()->cascadeOnDelete();
 			$table->string('requires')->nullable();
-			$table->timestamp('opened_at')->nullable();
-			$table->timestamp('scheduled_at')->nullable();
 			$table->morphs('lessonable'); //accepts posts, challenges, decks, quizz, ...
 			$table->json('parameters')->nullable(); // configures the lessonable...
 			$table->timestamps();

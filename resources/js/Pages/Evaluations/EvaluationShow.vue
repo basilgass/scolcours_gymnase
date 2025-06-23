@@ -58,7 +58,7 @@ function selectQuestion(index: number) {
 						'border-4 border-blue-600 bg-blue-100! text-blue-800':
 							i - 1 === questionIndex,
 						'bg-green-600! border-green-800 text-white':
-							theQuestions[i - 1].user.result,
+							theQuestions[i - 1].user.is_resolved,
 					}"
 					class="z-10 rounded-full font-lg bg-white font-semibold border w-12 h-12 grid place-items-center cursor-pointer transition-all"
 					@click="selectQuestion(i)"

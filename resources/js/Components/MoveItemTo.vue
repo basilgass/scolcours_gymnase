@@ -1,16 +1,16 @@
 <script setup lang="ts">
 import FormMaker from "@/Components/Form/FormMaker.vue"
-import { flashInterface } from "@/types"
-import { watchDebounced } from "@vueuse/core"
+import {flashInterface} from "@/types"
+import {watchDebounced} from "@vueuse/core"
 import axios from "axios"
-import { inject, nextTick, ref } from "vue"
+import {inject, nextTick, ref} from "vue"
 import ScButton from "@/Components/Ui/scButton.vue"
 
 const flash = inject<flashInterface>("flash"),
 	props = defineProps({
-		source: { type: String, required: true },
-		sourceId: { type: Number, required: true },
-		target: { type: String, required: true },
+		source: {type: String, required: true},
+		sourceId: {type: Number, required: true},
+		target: {type: String, required: true},
 	})
 
 let showMoveTo = ref(false),
@@ -20,7 +20,7 @@ let showMoveTo = ref(false),
 	enableMove = async function () {
 		showMoveTo.value = !showMoveTo.value
 		await nextTick(() => {
-			moveInput.value.focus()
+			// moveInput.value.focus()
 		})
 	},
 	moveTo = function () {
@@ -29,15 +29,21 @@ let showMoveTo = ref(false),
 			return
 		}
 
+		// REFACTOR : route(`${props.source}s.move` - a mettre en explicite.
 		axios
 			.patch(
-				route(`${props.source}s.moveTo.${props.target}`, [
-					props.sourceId,
-					moveToId.value,
-				]),
-				{ _method: "PATCH" },
+				route(`${props.source}s.move`,
+					{
+						block: props.sourceId,
+					}),
+				{
+					_method: "PATCH",
+					target_id: moveToId.value,
+					target_type: props.target,
+				},
 			)
 			.then((res) => {
+				console.log(res.data)
 				flash.success(
 					`Le ${props.source} a bien été déplacé.`,
 					{
@@ -54,6 +60,8 @@ let showMoveTo = ref(false),
 			})
 	},
 	getTargetName = function () {
+
+		// REFACTOR : route(`${props.source}s.move` - a mettre en explicite.
 		axios
 			.get(route(`${props.target}s.info`, [moveToId.value]))
 			.then((res) => {
@@ -64,7 +72,7 @@ let showMoveTo = ref(false),
 			})
 	}
 
-watchDebounced(moveToId, getTargetName, { debounce: 1000, maxWait: 2000 })
+watchDebounced(moveToId, getTargetName, {debounce: 1000, maxWait: 2000})
 </script>
 <template>
 	<div>

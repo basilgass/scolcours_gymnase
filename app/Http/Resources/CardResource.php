@@ -24,10 +24,25 @@ class CardResource extends JsonResource
 	public function toArray(Request $request): array
 	{
 		$blocks = $this->blocks;
+
 		return [
 			"id" => $this->id,
+
 			"recto" => BlockResource::make($blocks[0]),
-			"verso" => BlockResource::make($blocks[1])
+			"verso" => BlockResource::make($blocks[1]), // maybe there is no blocks1 => means it muse be processed.
+
+			"score" => $this->when(
+				$this->relationLoaded('scores'),
+				function () {
+					// On retourne le score de l'utilisateur connecté s'il existe
+					$score = $this->scores->first();
+					return $score ? [
+						"id" => $score->id,
+						"score"=>$score->score,
+						...$score->data
+					] : null;
+				}
+			),
 		];
 	}
 }

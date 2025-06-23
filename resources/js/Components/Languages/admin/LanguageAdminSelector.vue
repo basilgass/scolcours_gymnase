@@ -15,6 +15,7 @@ const language = defineModel<string>()
 		<sc-button
 			v-for="lang in languages"
 			:key="lang"
+			type="admin"
 			:outline="language!==lang"
 			@click="language=lang"
 		>

@@ -31,7 +31,7 @@ const props = defineProps({
 			<div
 				class="rounded-xl border border-gray-200 bg-white shadow-sm text-xl md:text-2xl text-center p-2 md:p-10 flex flex-col justify-between gap-4"
 			>
-				<div>Meilleures scores</div>
+				<div>Meilleures score</div>
 				<div>{{ Math.max(props.challenge.user.score, results.score) }} / {{ props.challenge.best.score }}</div>
 			</div>
 

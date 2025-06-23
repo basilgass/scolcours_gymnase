@@ -2,7 +2,7 @@
 import {computed, useAttrs, useTemplateRef} from "vue"
 import {FormElementEmits, FormElementExpose, FormMakerPropsNewType} from "@/Components/Form/FormMakerInterface.ts"
 
-const value = defineModel<boolean>()
+const value = defineModel<boolean | number>()
 const input = useTemplateRef('input')
 
 const props = defineProps<FormMakerPropsNewType>()
@@ -27,12 +27,12 @@ const disabledLabel = computed(() => {
 	return props.label.split(",")[1] || ""
 })
 
-const enabledClass = computed(()=>{
+const enabledClass = computed(() => {
 
-		return useAttrs()['enabled-class'] ?? 'bg-blue-700'
+	return useAttrs()['enabled-class'] ?? 'bg-blue-700'
 })
 
-const disabledClass = computed(()=>{
+const disabledClass = computed(() => {
 	return useAttrs()['disabled-class'] ?? 'bg-red-700'
 })
 

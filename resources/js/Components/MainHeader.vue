@@ -14,7 +14,7 @@ import ScButton from "@/Components/Ui/scButton.vue"
 import {ThemeInterface} from "@/types/modelInterfaces.ts"
 
 const props = withDefaults(defineProps<{
-	theme: Partial<ThemeInterface>
+	theme?: Partial<ThemeInterface>
 }>(), {
 	theme: () => {
 		return {title: "Scolcours", slug: "main"}
@@ -77,7 +77,7 @@ const editMode = useStoreEditMode()
 						</template>
 
 						<InertiaLink
-							:href="route('dashboard')"
+							:href="route('users.dashboard')"
 							class="hover:bg-gray-100 px-3 py-2"
 						>
 							profil
@@ -107,7 +107,7 @@ const editMode = useStoreEditMode()
 			<div class="scolcours-container flex justify-between items-baseline">
 				<div>
 					<sc-button
-						:href="route('admin')"
+						:href="route('admin.index')"
 						class="uppercase"
 						xs
 						type="admin"

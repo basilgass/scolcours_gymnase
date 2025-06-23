@@ -31,7 +31,7 @@ const editMode = useStoreEditMode()
 
 function addFormula() {
 	axios
-		.post(route("formulas.store", [props.chapterSlug]), {})
+		.post(route("api.formulas.store", [props.chapterSlug]), {})
 		.then((res) => {
 			flash.success("formule créée")
 			theFormular.value.push(res.data)
@@ -40,7 +40,7 @@ function addFormula() {
 
 function updateFormulasOrder() {
 	axios
-		.post(route("formulas.updateOrder"), {
+		.post(route("api.formulas.updateOrder"), {
 			order: theFormular.value.map((x, index) => {
 				return {id: x.id, order: index}
 			})
@@ -59,7 +59,7 @@ function updateFormulasOrder() {
 function loadFormular() {
 	loadingState.value = true
 
-	axios.get(route("chapters.formulas.index", [theSlug.value]))
+	axios.get(route("api.chapters.formulas.index", [theSlug.value]))
 		.then((res) => {
 			theFormular.value = res.data.formular
 			// Add the new chapters to the list
@@ -70,7 +70,6 @@ function loadFormular() {
 					)
 				) {
 					themeChapters.value.push(chapter)
-					console.log(chapter)
 				}
 			})
 			// themeChapters.value = res.data.chapters

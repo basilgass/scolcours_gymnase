@@ -6,18 +6,20 @@ import BlockShow from "@/Components/Blocks/BlockShow.vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
-import { flashInterface } from "@/types"
-import { ChallengeInterface, IllustrationInterface } from "@/types/modelInterfaces"
-import { router } from "@inertiajs/vue3"
+import {flashInterface} from "@/types"
+import {ChallengeInterface, IllustrationInterface} from "@/types/modelInterfaces"
+import {router, usePage} from "@inertiajs/vue3"
 import axios from "axios"
-import { inject, ref } from "vue"
+import {inject, ref} from "vue"
 import ScButton from "@/Components/Ui/scButton.vue"
 
 
-defineOptions({ layout: LayoutMain })
+defineOptions({layout: LayoutMain})
 const props = defineProps<{
 	challenge: ChallengeInterface
 }>()
+
+console.log(usePage().props)
 
 const flash = inject<flashInterface>("flash")
 
@@ -33,13 +35,13 @@ const updateGeneratorsOrder = function () {
 
 	axios
 		.post(
-			route("challenges.generators.updateOrder", [
+			route("api.challenges.generators.updateOrder", [
 				theChallenge.value.id
 			]),
 			{
 				_method: "PATCH",
 				order: theChallenge.value.generators.map((x) => {
-					return { id: x.id, order: x.order }
+					return {id: x.id, order: x.order}
 				})
 			}
 		)
@@ -55,7 +57,7 @@ const updateGeneratorsOrder = function () {
 const addGenerator = function () {
 	axios
 		.post(
-			route("challenges.generators.store", [
+			route("api.challenges.generators.store", [
 				theChallenge.value.id
 			])
 		)
@@ -63,7 +65,7 @@ const addGenerator = function () {
 			theChallenge.value.generators = res.data
 			// Go and edit the new generator.
 			const newGenerator = res.data.pop()
-			router.visit(route('generators.edit', [newGenerator.id]))
+			router.visit(route('admin.generators.edit', [newGenerator.id]))
 		})
 		.catch(() => {
 			console.error('Pas possible de créer un challenge.')
@@ -75,7 +77,7 @@ const getListOfGenerators = function () {
 	if (availableGenerators.value.length === 0) {
 		axios
 			.get(
-				route("challenges.generators.index", [
+				route("api.challenges.generators.index", [
 					theChallenge.value.id
 				])
 			)
@@ -89,7 +91,7 @@ const attachGenerator = function () {
 	if (attachGeneratorId.value !== "") {
 		axios
 			.post(
-				route("challenges.generators.attach", [
+				route("api.challenges.generators.attach", [
 					theChallenge.value.id,
 					attachGeneratorId.value
 				])
@@ -103,7 +105,7 @@ const attachGenerator = function () {
 const detachGenerator = function (id, destroy) {
 	axios
 		.post(
-			route("challenges.generators.detach", [
+			route("api.challenges.generators.detach", [
 				theChallenge.value.id,
 				id
 			]),
@@ -125,10 +127,8 @@ const theIllustration = ref<IllustrationInterface>(
 			order: 1,
 			css: "",
 			title: "",
-			type: "draw",
 			code: "",
 			parameters: "",
-			value: "",
 			block_id: null,
 			widget_id: null,
 			widget: null
@@ -140,7 +140,7 @@ const saveChallenge = function () {
 	// 2- Save the challenge configuration
 	// 3- Save the generators
 	axios
-		.patch(route("blocks.update", [theChallenge.value.block.id]), {
+		.patch(route("api.blocks.update", [theChallenge.value.block.id]), {
 			_method: "PATCH",
 			body: theChallenge.value.block.body,
 			illustrations:
@@ -151,7 +151,7 @@ const saveChallenge = function () {
 		.then(() => {
 			axios
 				.patch(
-					route("challenges.update", [props.challenge.id]),
+					route("api.challenges.update", [props.challenge.id]),
 					{
 						...theChallenge.value,
 						_method: "PATCH"
@@ -169,7 +169,7 @@ const saveChallenge = function () {
 }
 const deleteChallenge = function () {
 	axios
-		.post(route("challenges.destroy", [props.challenge.id]), {
+		.post(route("api.challenges.destroy", [props.challenge.id]), {
 			_method: "delete"
 		})
 		.then((res) => {
@@ -350,7 +350,7 @@ const deleteChallenge = function () {
 								v-katex.auto.inline="element.title"
 							/>
 							<a
-								:href="route('generators.edit', [element.id])"
+								:href="route('admin.generators.edit', [element.id])"
 								class="px-3"
 							>
 								id: {{ element.id }} <i class="bi bi-pencil" />
@@ -374,21 +374,22 @@ const deleteChallenge = function () {
 
 							<div class="min-w-[500px] flex items-end">
 								<form-maker
+									v-model="attachGenerator"
+									label="attacher un générateur existant"
+									type="search"
+									:fetch="route('api.generators.index')"
+								/>
+								<form-maker
+									v-show="false"
 									v-model="attachGeneratorId"
 									label="attacher un générateur existant"
 									name="generatorsList"
 									type="select"
 									@click.once="getListOfGenerators"
 									class="flex-1"
-								>
-									<option
-										v-for="generator of availableGenerators"
-										:key="`generator-${generator.id}`"
-										:value="generator.id"
-									>
-										{{ generator.title }}
-									</option>
-								</form-maker>
+									:choices="availableGenerators"
+									:label-map="(item)=>item.title"
+								/>
 								<sc-button
 									:disabled="attachGeneratorId === ''"
 									type="add"

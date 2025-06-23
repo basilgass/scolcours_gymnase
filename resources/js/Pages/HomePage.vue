@@ -2,6 +2,7 @@
 
 import ScolCoursLogo from "@/Components/ScolcoursLogo.vue"
 import LayoutFullpage from "@/Layouts/LayoutFullpage.vue"
+import axios from "axios"
 
 defineOptions({layout: LayoutFullpage})
 

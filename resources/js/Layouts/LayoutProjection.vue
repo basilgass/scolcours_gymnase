@@ -17,7 +17,7 @@ import DarkModeSwitch from "@/Components/Ui/DarkModeSwitch.vue"
 			<InertiaLink
 				v-admin
 				class="uppercase"
-				:href="route('admin')"
+				:href="route('admin.index')"
 			>
 				administration
 			</InertiaLink>

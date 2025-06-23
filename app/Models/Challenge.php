@@ -3,12 +3,14 @@
 namespace App\Models;
 
 use App\Models\Challenges\ChallengeSession;
+use App\Traits\HasScoresTrait;
+use App\Traits\HasUrlTrait;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
+use Znck\Eloquent\Traits\BelongsToThrough;
 
 /**
  * App\Models\Challenge
@@ -63,12 +65,23 @@ use Illuminate\Support\Carbon;
  */
 class Challenge extends Model
 {
+	use HasScoresTrait;
+	use HasUrlTrait;
+	use BelongsToThrough;
+
 	protected $guarded = [];
 	protected $with = ['blocks', 'scores', 'generators'];
+	protected $appends = ['url'];
+
 
 	public function chapter()
 	{
 		return $this->belongsTo(Chapter::class);
+	}
+
+	public function theme()
+	{
+		return $this->belongsToThrough(Theme::class, Chapter::class);
 	}
 
 	public function sessions()
@@ -81,27 +94,16 @@ class Challenge extends Model
 		return $this->morphMany(Block::class, 'blockable');
 	}
 
-	public function scores()
-	{
-		return $this->morphMany(Score::class, 'scoreable');
-//		return $this->hasMany(Score::class);
-	}
-
 	public function generators()
 	{
-		return $this->morphToMany(Generator::class, 'generatorable')
+		return $this
+			->morphToMany(Generator::class, 'generatorable')
 			->withPivot('order')
 			->orderByPivot('order');
 	}
+
 	public function getRunningAttribute()
 	{
 		return $this->sessions->where('open', 'is', true);
-	}
-
-	protected function url(): Attribute
-	{
-		return Attribute::make(
-			get: fn() => "Chapters/{$this->chapter->theme->slug}/{$this->chapter->slug}/challenges/{$this->slug}"
-		);
 	}
 }

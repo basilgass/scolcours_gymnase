@@ -13,7 +13,7 @@ const props = defineProps({
 
 const updateCurrent = function (index) {
 	router.post(
-		route("quizzs.sessions.updateCurrent", [liveQuizz.value.shortcode]),
+		route("api.quizzs.sessions.updateCurrent", [liveQuizz.value.shortcode]),
 		{ index },
 		{
 			preserveState: true,
@@ -23,7 +23,7 @@ const updateCurrent = function (index) {
 }
 const updateEnable = function (enable) {
 	router.post(
-		route("quizzs.sessions.updateEnable", [liveQuizz.value.shortcode]),
+		route("api.quizzs.sessions.updateEnable", [liveQuizz.value.shortcode]),
 		{ enable },
 		{
 			preserveState: true,

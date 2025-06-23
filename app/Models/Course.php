@@ -2,27 +2,41 @@
 
 namespace App\Models;
 
+use App\Traits\HasUrlTrait;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class Course extends Model
 {
-	protected $with = ['blocks', 'lessons'];
+	use HasUrlTrait;
 
-	public function blocks(): \Illuminate\Database\Eloquent\Relations\MorphMany
+	protected $with = ['blocks', 'lessons'];
+	protected $appends = ['url'];
+
+	protected $fillable = [
+		"title",
+		"slug",
+		"theme_id",
+	];
+
+	public function blocks(): MorphMany
 	{
-		return $this->morphMany(Block::class, 'blockable')
+		return $this
+			->morphMany(Block::class, 'blockable')
 			->orderBy('order')
 			->orderBy('id');
 	}
 
-	public function lessons(): \Illuminate\Database\Eloquent\Relations\HasMany|Course
+	public function lessons(): HasMany|Course
 	{
-		return $this->hasMany(Lesson::class)
-			->orderBy('scheduled_at');
+		return $this->hasMany(Lesson::class);
 	}
 
-	protected $fillable = [
-		'name',
-		'slug',
-	];
+	public function theme(): BelongsTo
+	{
+		return $this->belongsTo(Theme::class);
+	}
+
 }

@@ -18,7 +18,7 @@ import {
 import {usePage} from "@inertiajs/vue3"
 import axios from "axios"
 import {computed, inject, reactive, ref, watch} from "vue"
-import {useStoreLesson, useStoreLessonInterface} from "@/stores/useStoreLesson.ts"
+import {useStoreLesson} from "@/stores/useStoreLesson.ts"
 
 // TODO: ChallengeAnswerInterface must be reworked as it is used in QuestionAnswerValidation
 export interface ChallengeAnswerInterface {
@@ -137,10 +137,10 @@ function store() {
 	// Check if the user is logged in.
 	if (usePage().props.auth.user) {
 
-		lessonScore.updateChallenge(game.score)
+		lessonScore.update(game.score)
 
 		axios
-			.post(route("scores.challenge", [props.challenge.id]), {
+			.post(route("api.scores.challenge", [props.challenge.id]), {
 				score: game.score,
 				level: game.level
 			})

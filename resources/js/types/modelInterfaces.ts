@@ -59,10 +59,10 @@ export interface IllustrationInterface {
 	order: number;
 	title: string;
 	css: string;
-	value: string;
-	type: string;
+
 	widget_id: number;
 	widget: WidgetInterface;
+
 	parameters: string;
 	code: string;
 	isNew?: boolean;
@@ -73,7 +73,7 @@ export interface QuestionDynamicInterface {
 	answer: string;
 	keyboard: string;
 	user: {
-		result: boolean
+		is_resolved: boolean
 	};
 }
 
@@ -82,11 +82,7 @@ export interface QuestionInterface extends QuestionDynamicInterface {
 	order: number;
 	displayIf: null | string;
 	css: string;
-	user: {
-		answer: string
-		result: boolean
-		update_at?: string
-	};
+	user: ScoreInterface;
 }
 
 
@@ -214,57 +210,22 @@ export interface CardInterface {
 	id: number,
 	recto: BlockInterface,
 	verso: BlockInterface,
+	score?: {
+		id: number,
+		score: number,
+		appearances: number,
+		success: number,
+		time_spent: number,
+	}
 }
 
-//TODO: DeckInterface might be obsolete ?
 export interface DeckInterface {
 	id: number,
 	title: string,
 	slug: string,
-	chapter: {
-		id: number;
-		slug: number;
-	},
-	theme_id: number,
+	chapter_id: number,
+	cards_count: number,
 	cards: CardInterface[]
-}
-
-export interface UserDeckInterface {
-	id: number,
-	user_id: number,
-	title: string,
-	description: string,
-	running: number,
-	created_at: string,
-	updated_at: string,
-
-	time_spent: {
-		total: number,
-		min: number,
-		max: number
-	},
-
-	appearances: {
-		min: number,
-		max: number
-	},
-
-	average: number,
-	number_of_cards: number
-}
-
-export interface UserCardInterface {
-	id: number,
-	user_deck_id: number,
-	blocks: BlockInterface[],
-	current_score: number,
-	current_appearances: number,
-	current_time_spent: number,
-	appearances: number,
-	success: number,
-	time_spent: number,
-	created_at: string,
-	updated_at: string
 }
 
 export interface WidgetInterface {
@@ -315,6 +276,7 @@ export interface PostQuestionsForOneUserStatsInterface {
 
 export interface QuizzInterface {
 	id: number
+	slug: string
 	title: string
 	body: string
 }
@@ -386,16 +348,41 @@ export interface LessonInterface {
 	title: string,
 	course_id: number,
 	requires: number[],
-	calendar: {
-		opened_at: string | null,
-		scheduled_at: string | null,
-		remaining_days: number,
-		diffForHumans: string,
-		is_opened: boolean,
-	},
-	lessonable: PostInterface | UserDeckInterface | ChallengeInterface | QuizzInterface | null,
+	lessonable: PostInterface | DeckInterface | ChallengeInterface | QuizzInterface | null,
 	lessonable_type: 'Post' | 'Challenge' | 'Deck' | 'Quizz' | null,
 	parameters: Record<string, unknown>,
 	created_at: string,
 	updated_at: string,
+}
+
+export interface ScoreQuestionDataInterface {
+	answers: string[]
+}
+
+export interface ScoreChallengeInterface {
+	level: number
+}
+
+export interface ScoreDeckInterface {
+
+}
+
+export interface ScoreGeneratorInterface {
+
+}
+
+type ScoreDataInterface = ScoreQuestionDataInterface |
+	ScoreChallengeInterface |
+	ScoreDeckInterface |
+	ScoreGeneratorInterface
+
+export interface ScoreInterface {
+	id: number,
+	user_id: number,
+	score: number,
+	level: number,
+	is_resolved: boolean,
+	attempts: number,
+	data: ScoreDataInterface,
+	updated_at: string
 }

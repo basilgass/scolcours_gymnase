@@ -24,7 +24,7 @@ const props = defineProps({
 			<h2 class="text-3xl font-semibold">
 				{{ props.team.name }}
 			</h2>
-			<InertiaLink :href="route('teams.index')">
+			<InertiaLink :href="route('admin.teams.index')">
 				<i class="bi bi-arrow-left" /> Retour aux équipes
 			</InertiaLink>
 		</div>

@@ -4,6 +4,7 @@
 >
 import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
+import axios from "axios"
 
 defineOptions({ layout: LayoutMain })
 
@@ -21,7 +22,7 @@ defineProps<{
 			<InertiaLink
 				v-for="(page, index) in pages"
 				:key="index"
-				:href="route('dev', [page])"
+				:href="route('admin.dev.show', [page])"
 				class="hover:pl-4 transition-animation duration-300 p-3
 				bg-content border"
 			>

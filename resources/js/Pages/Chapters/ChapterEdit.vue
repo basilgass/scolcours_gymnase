@@ -23,7 +23,7 @@ const theChapter = ref(props.chapter)
 
 function saveChapter() {
 	axios
-		.patch(route("chapters.update", [props.chapter.id]), {
+		.patch(route("api.chapters.update", [props.chapter.id]), {
 			_method: "PATCH",
 			...theChapter.value,
 		})
@@ -41,7 +41,7 @@ function saveChapter() {
 function deleteChapter() {
 	const slug = props.chapter.theme.slug
 
-	axios.delete(route("chapters.destroy", [props.chapter.id]))
+	axios.delete(route("api.chapters.destroy", [props.chapter.id]))
 		.then(() => {
 			flash.success("Le chapitre a été supprimé")
 			router.visit(route('theme', [slug]))
