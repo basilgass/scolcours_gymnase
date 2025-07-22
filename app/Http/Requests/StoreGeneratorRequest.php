@@ -9,7 +9,7 @@ class StoreGeneratorRequest extends FormRequest
 	public function rules(): array
 	{
 		return [
-			'theme_id' => ['required', 'exists:themes'],
+			'theme_id' => ['required', 'exists:themes,id'],
 			'slug'     => ['required'],
 		];
 	}

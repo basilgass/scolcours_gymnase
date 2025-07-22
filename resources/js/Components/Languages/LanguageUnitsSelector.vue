@@ -20,7 +20,7 @@ const updateUnits = function (item: TranslationUnitInterfaceExtended) {
 
 	// Load the missing words
 	if (item.words.length === 0) {
-		axios.get(route("api.voc.units.words.index", {unit: item.id}))
+		axios.get(route("api.admin.voc.units.words.index", {unit: item.id}))
 			.then(res => {
 				item.words = res.data
 			})
@@ -43,7 +43,7 @@ function getUnits_from_Book(book_id: number) {
 	selectedBook.value = book_id
 	units.value = []
 
-	axios.get(route("api.voc.books.units.index", {book: book_id}))
+	axios.get(route("api.admin.voc.books.units.index", {book: book_id}))
 		.then(res => {
 			units.value = res.data.map((value: TranslationUnitInterface) => {
 				return {

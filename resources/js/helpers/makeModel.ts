@@ -27,9 +27,10 @@ export function makeDeck(
 		id: -1,
 		title,
 		slug: title,
-		chapter_id: 0,
 		cards_count: cards.length,
 		cards,
+		chapter: null, // TODO: chapter missing ?
+		user: null
 	}
 }
 
@@ -41,12 +42,12 @@ export function makeCard(
 		id: -1,
 		recto: typeof recto === 'string' ? makeBlock(recto) : recto,
 		verso: typeof verso === 'string' ? makeBlock(verso) : verso,
-		score: {
+		user: {
 			id: -1,
 			score: 0,
-			appearances: 0,
-			success: 0,
-			time_spent: 0,
+			attempts: 0,
+			data: null,
+			is_resolved: false,
 		}
 	}
 }

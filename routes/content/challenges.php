@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\api\ChallengeApiController;
 use App\Http\Controllers\web\ChallengeController;
 
@@ -12,34 +13,28 @@ Route::middleware('web')
 
 	     // Challenge route show.
 	     // REFACTOR : use resource
+
 	     Route::get('{theme:slug}/{chapter:slug}/challenges/{challenge:slug}', [ChallengeController::class, 'show'])
-		     ->withoutScopedBindings()
+	          ->withoutScopedBindings()
 	          ->name('chapters.challenges.show');
-
-
-	     // Students routes
-	     Route::middleware('students')
-	          ->prefix('students')
-	          ->as('students.')
-	          ->group(function () {
-
-	          });
 
 	     // Admin routes
 	     Route::middleware('admin')
-	          ->prefix('admin')
 	          ->as('admin.')
 	          ->group(function () {
 
-				  Route::resource('challenges', ChallengeController::class)
-					  ->only(['index', 'show', 'edit']);
+		          // ROUTE: Ces routes sont elles utiles ?
+		          Route::resource('challenges', ChallengeController::class)
+		               ->only(['edit']);
 
-		          // TODO: Refactor this path.
+		          // ROUTE: Refactor this path.
 		          Route::get('{theme:slug}/{chapter:slug}/challenges/{challenge:slug}/team/{team:name}', [ChallengeApiController::class, 'teams'])
 		               ->withoutScopedBindings()
 		               ->name('challenges.team');
 	          });
      });
+
+
 
 
 Route::middleware('api')
@@ -49,14 +44,10 @@ Route::middleware('api')
 	     // Public api.
 
 
-	     // Students api
-	     Route::middleware('students')
-	          ->group(function () {
-
-	          });
-
 	     // Admin api
 	     Route::middleware('admin')
+	          ->prefix('admin')
+	          ->as('admin.')
 	          ->group(function () {
 
 		          Route::apiResource('chapters.challenges', ChallengeApiController::class)

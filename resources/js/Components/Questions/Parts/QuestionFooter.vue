@@ -3,11 +3,10 @@
  * Affiche la réponse en bas d'une question (si l'utilisateur l'a déjà répondu)
  * Pour l'admin, permet de modifier la réponse.
  */
-import FormMaker from "@/Components/Form/FormMaker.vue"
 import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
 import {computed, inject, ref} from "vue"
 import type {questionDataInterface} from "@/Components/Questions/QuestionInterface.ts"
-import {ScoreQuestionDataInterface} from "@/types/modelInterfaces.ts"
+import {ScoreQuestionDataInterface} from "@/types/scoreInterfaces.ts"
 
 const editMode = useStoreEditMode()
 
@@ -27,13 +26,13 @@ function toggleAnswer() {
 
 
 const previousAnswers = computed<string[]>(() => {
-	return (questionData.user.score.value.data as ScoreQuestionDataInterface)?.answers ?? []
+	return (questionData.user.score.value?.data as ScoreQuestionDataInterface)?.answers ?? []
 })
 </script>
 
 <template>
 	<div
-		v-if="questionData.user.score.value.is_resolved || $page.props.auth.can.admin"
+		v-if="questionData.user.score.value?.is_resolved || $page.props.auth.can.admin"
 		class="question-footer px-5 py-2"
 	>
 		<div> {{ previousAnswers.join(', ') }}</div>

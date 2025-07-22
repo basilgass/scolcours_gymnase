@@ -9,7 +9,7 @@ defineOptions({ layout: LayoutMain })
 const links1 = [
 	{ title: "configuration générale", route: "admin.config.index", icon: 'bi bi-gear' },
 	{ title: "utilisateurs", route: "admin.users.index", icon: 'bi bi-person' },
-	{ title: "équipes", route: "teams.index", icon: 'bi-person-lines-fill' },
+	{ title: "équipes", route: "admin.teams.index", icon: 'bi-person-lines-fill' },
 ]
 
 const links2 = [

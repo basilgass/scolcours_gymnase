@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\api\ToolApiController;
 use App\Http\Controllers\web\ToolController;
 
@@ -10,20 +11,12 @@ Route::middleware('web')
 	          ->only(['index', 'show']);
 
 
-	     // Students routes
-	     Route::middleware('students')
-		     ->prefix('students')
-		     ->as('students.')
-	          ->group(function () {
-
-	          });
-
 	     // Admin routes
 	     Route::middleware('admin')
 	          ->prefix('admin')
 	          ->as('admin.')
 	          ->group(function () {
-		          Route::get('tools', [ToolController::class, 'index'])
+		          Route::get('tools', [AdminController::class, 'tools'])
 		               ->name('tools.index');
 
 		          Route::get('tools/{tool}/edit', [ToolController::class, 'edit'])
@@ -49,6 +42,8 @@ Route::middleware('api')
 
 	     // Admin api
 	     Route::middleware('admin')
+		     ->prefix('admin')
+		     ->as('admin.')
 	          ->group(function () {
 
 		          Route::apiResource('tools', ToolApiController::class);

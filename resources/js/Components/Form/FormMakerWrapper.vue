@@ -81,7 +81,7 @@ const inputClassComputed = computed(() => {
 			</div>
 			<div
 				class="w-full
-				flex items-stretch
+				flex items-baseline
 				appearance-none transition
 				focus:outline-hidden focus:ring-0"
 				:class="inputClassComputed"
@@ -130,6 +130,9 @@ const inputClassComputed = computed(() => {
 							<i :class="btn===true ? 'bi bi-pencil': btn" />
 						</slot>
 					</button>
+				</div>
+				<div v-else-if="$slots['button']">
+					<slot name="button" />
 				</div>
 			</div>
 

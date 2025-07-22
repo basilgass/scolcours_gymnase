@@ -18,7 +18,7 @@ const theBlock = ref(props.block)
 function saveMerge() {
 	const value = !theBlock.value.merge
 
-	axios.patch(route("api.update.a.value", {
+	axios.patch(route("api.admin.update.a.value", {
 		_method: "patch",
 		model: "Block",
 		id: props.block.id,
@@ -38,7 +38,7 @@ function saveMerge() {
 	<div
 		v-admin="editMode.enable"
 		v-theme.admin
-		class="py-1 px-2 flex justify-between items-center font-code"
+		class="py-1 px-2 flex justify-between items-center font-code @container"
 	>
 		<slot name="adminLeft">
 			<div class="flex gap-5 items-baseline">
@@ -57,7 +57,7 @@ function saveMerge() {
 		<slot name="adminCenter" />
 
 		<slot name="adminRight">
-			<div class="flex gap-2">
+			<div class="gap-2 hidden @md:flex">
 				<form-maker
 					v-model="theBlock.template"
 					:axios="{

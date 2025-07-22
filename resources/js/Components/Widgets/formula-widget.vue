@@ -3,9 +3,10 @@
 	setup
 >
 import BlockShow from "@/Components/Blocks/BlockShow.vue"
-import { FormulaInterface, WidgetPropsInterface } from "@/types/modelInterfaces"
+import {FormulaInterface, WidgetPropsInterface} from "@/types/modelInterfaces"
 import axios from "axios"
-import { onMounted, ref } from "vue"
+import {onMounted, ref} from "vue"
+import {AxiosErrorMessage} from "@/types"
 
 const props = defineProps<{
 	illustration: WidgetPropsInterface
@@ -21,12 +22,17 @@ onMounted(() => {
 	const ids = props.illustration.code
 		.split('\n')
 		.map(line => line.split(',')[0])
-		.join(',')
+		.map(Number)
 
-	axios.get(route("api.formulas.fetch", [ids]))
+	axios.get(route("api.admin.formulas.index", {
+		ids: ids
+	}))
 		.then(res => {
 			// Sort the value to match the id's order
 			formulas.value = res.data
+		})
+		.catch((err: AxiosErrorMessage) => {
+			console.warn(err.response.data.message)
 		})
 })
 
@@ -34,8 +40,7 @@ onMounted(() => {
 
 <template>
 	<div
-		class="grid
-	grid-cols-1 md:grid-cols-2 lg:grid-cols-3
+		class="flex flex-wrap
 	gap-5
 	place-items-center"
 	>

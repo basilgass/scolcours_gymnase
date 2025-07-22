@@ -3,26 +3,27 @@ import {ChallengeAnswerInterface} from "@/Components/Challenges/ChallengeGame.vu
 import QuestionShow from "@/Components/Questions/QuestionShow.vue"
 import {useGenerator} from "@/Composables/useGenerator"
 import type {GeneratorInterface, QuestionInterface} from "@/types/modelInterfaces"
-import {computed, PropType, ref} from "vue"
-import {useStoreLesson} from "@/stores/useStoreLesson.ts"
+import {computed, ref} from "vue"
+import {useStoreScore} from "@/stores/useStoreScore.ts"
+import {ScoreChallengeDataInterface} from "@/types/scoreInterfaces.ts"
 
-const props = defineProps({
-	generator: {
-		type: Object as PropType<GeneratorInterface>,
-		required: true
-	}
-})
+const props = defineProps<{
+	generator: GeneratorInterface
+}>()
 
 /**
  * The current question counter, used to updated correctly the question
  */
 const counter = ref(0)
-const numberOfCorrectAnswerInARow = ref(0)
 
 /**
  * Lesson information
  */
-const lessonScore = useStoreLesson()
+// const lessonScore = useStoreLesson()
+// const {score: scoreValue, update: scoreUpdate} = useScore(props.generator.user)
+
+const scoreStore = useStoreScore()
+const score = await scoreStore.getScore<ScoreChallengeDataInterface>('Generator', props.generator.id)
 
 /**
  * Display the next question
@@ -30,16 +31,14 @@ const lessonScore = useStoreLesson()
  */
 function nextQuestion(checkerResult: ChallengeAnswerInterface): void {
 	if (checkerResult.result) {
-		numberOfCorrectAnswerInARow.value++
+		score.score++
 		counter.value++
 
 		// Update score value
-		lessonScore.update(numberOfCorrectAnswerInARow.value)
-
-		// TODO : If the user is connected, update score value in DB.
+		scoreStore.updateScore(score)
 
 	} else {
-		numberOfCorrectAnswerInARow.value = 0
+		score.score = 0
 	}
 }
 

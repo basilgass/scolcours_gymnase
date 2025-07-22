@@ -22,7 +22,7 @@ defineProps<{
 
 const emit = defineEmits(["ClickNavigationLinks"])
 const enabledThemes = computed<ThemeLinks[]>(() => {
-	return usePage().props.themes.filter(theme => theme.enabled)
+	return Object.values(usePage().props.themes).filter(theme => theme.enabled)
 })
 
 </script>

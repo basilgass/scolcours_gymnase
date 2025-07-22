@@ -3,7 +3,7 @@
 	lang="ts"
 >
 import { onMounted, PropType } from "vue"
-import { router } from "@inertiajs/vue3"
+import {router, usePage} from "@inertiajs/vue3"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 import type { QuizzSessionInterface } from "@/types/modelInterfaces"
 
@@ -36,7 +36,7 @@ onMounted(() => {
 					v-for="quizzSession in props.quizzSessions"
 					:key="quizzSession.shortcode"
 					class="bg-white border transition-all rounded-sm grid place-items-center p-5 w-full md:w-1/2"
-					:class="`border-scolcours-${quizzSession.quizz.theme?.slug}`"
+					:class="`border-scolcours-${usePage().props.themes[quizzSession.quizz.theme_id]?.slug}`"
 				>
 					<div class="text-center flex flex-col gap-4">
 						<h3
@@ -45,7 +45,7 @@ onMounted(() => {
 						/>
 						<InertiaLink
 							as="button"
-							:class="`btn-scolcours-${quizzSession.quizz.theme?.slug}`"
+							:class="`btn-scolcours-${usePage().props.themes[quizzSession.quizz.theme_id]?.slug}`"
 							:href="route('quizzs.sessions.show', [quizzSession.shortcode])"
 						>
 							participer

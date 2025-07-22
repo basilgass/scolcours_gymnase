@@ -33,7 +33,7 @@ class FormulaResource extends JsonResource
                 "slug" => $this->chapter->slug,
                 "title" => $this->chapter->title,
             ],
-			'order' => $this->blocks[0]->order,
+			'order' => $this->order,
 			'block' => BlockResource::make($this->blocks[0])
 		];
 	}

@@ -44,11 +44,11 @@ function toggleChapterVisibility(slug, active) {
 				<template #card="{ item }: { item: ChapterShowInterface }">
 					<div
 						:key="item.id"
-						v-theme.bg.text="item.theme.id"
+						v-theme.bg.text="item.theme_id"
 						class="flex justify-between rounded-lg px-3 py-2"
 					>
 						<InertiaLink
-							:href="route('chapters.show', [item.slug])"
+							:href="route('chapters.show', [item.id])"
 							as="div"
 							class="cursor-pointer"
 						>

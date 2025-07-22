@@ -6,7 +6,6 @@ import ChapterToc from "@/Components/Chapters/ChapterToc.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 import type {ChapterShowInterface, PostInterface, PostShowInterface} from "@/types/modelInterfaces"
 import {usePage} from "@inertiajs/vue3"
-import axios from "axios"
 import PostDisplay from "@/Components/Posts/PostDisplay.vue"
 
 defineOptions({layout: LayoutMain})
@@ -34,33 +33,35 @@ storeCurrentPost()
 </script>
 
 <template>
-	<post-display
-		:chapter
-		:post
-		:return-link="{
-			label: chapter.title,
-			url: route('chapters.show', {chapter: chapter.slug})
-		}"
-	>
-		<template #footer>
-			<!-- navigation -->
-			<chapter-nav
-				:chapter
-				:posts
-				:current-post-id="post.id"
-			/>
+	<suspense>
+		<post-display
+			:chapter
+			:post
+			:return-link="{
+				label: chapter.title,
+				url: route('chapters.show', {chapter: chapter.id})
+			}"
+		>
+			<template #footer>
+				<!-- navigation -->
+				<chapter-nav
+					:chapter
+					:posts
+					:current-post-id="post.id"
+				/>
 
-			<!-- table of contents -->
-			<chapter-toc
-				:active="post.id"
-				:chapter
-				:posts
-				class="mt-10"
-			/>
+				<!-- table of contents -->
+				<chapter-toc
+					:active="post.id"
+					:chapter
+					:posts
+					class="mt-10"
+				/>
 
-			<!-- Show the formulas -->
-			<chapter-formulas-slider :chapter-slug="chapter.slug" />
-		</template>
-	</post-display>
+				<!-- Show the formulas -->
+				<chapter-formulas-slider :chapter />
+			</template>
+		</post-display>
+	</suspense>
 </template>
 

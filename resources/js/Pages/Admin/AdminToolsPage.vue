@@ -6,11 +6,7 @@ AdminChaptersPage.vue
 import FilteredList from "@/Components/Ui/FilteredList.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 import {ToolInterface} from "@/types/modelInterfaces.ts"
-import {inject, PropType} from "vue"
-import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
-import axios from "axios"
-import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
-import type {flashInterface} from "@/types"
+import {PropType} from "vue"
 import ToolEditItem from "@/Components/Elements/ToolEditItem.vue"
 
 defineOptions({layout: LayoutMain})

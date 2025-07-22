@@ -23,7 +23,7 @@ const form = useForm({
 })
 
 function storeChallenge() {
-	form.post(route("api.chapters.challenges.store", [props.chapter.id]))
+	form.post(route("api.admin.chapters.challenges.store", [props.chapter.id]))
 }
 </script>
 
@@ -66,11 +66,11 @@ function storeChallenge() {
 
 			<dialog-modal
 				v-model="show"
-				class="max-w-[30em] bg-content"
+				class="max-w-[450px] h-auto bg-content"
 			>
 				<template #header>
 					<div
-						class="flex justify-between items-baseline border-b px-5 py-3 mb-5"
+						class="flex justify-between items-baseline border-b border-content px-5 py-3 mb-5"
 					>
 						<h1>
 							<span class="text-xl md:text-2xl">créer un challenge</span>
@@ -79,7 +79,7 @@ function storeChallenge() {
 				</template>
 
 				<template #footer>
-					<div class="flex justify-end items-baseline border-t px-5 py-3 mt-5">
+					<div class="flex justify-end items-baseline border-t border-content px-5 py-3 mt-5">
 						<sc-button
 							type="add"
 							@click="storeChallenge"

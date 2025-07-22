@@ -70,7 +70,7 @@ class Challenge extends Model
 	use BelongsToThrough;
 
 	protected $guarded = [];
-	protected $with = ['blocks', 'scores', 'generators'];
+	protected $with = ['blocks'];
 	protected $appends = ['url'];
 
 

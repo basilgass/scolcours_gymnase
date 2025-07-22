@@ -44,7 +44,7 @@ onMounted(() => {
 	}else{
 		const id = props.illustration.code
 
-		axios.get(route("api.cards.fetch", [id]))
+		axios.get(route("api.students.cards.fetch", [id]))
 			.then(res => {
 				// Sort the value to match the id's order
 				recto.value = res.data[0].recto

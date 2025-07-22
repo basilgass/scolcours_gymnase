@@ -2,27 +2,6 @@
 
 use App\Http\Controllers\api\ScoreApiController;
 
-//Route::middleware('web')
-//     ->group(function () {
-//	     // Public routes.
-//
-//	     // Students routes
-//	     Route::middleware('students')
-//	          ->prefix('students')
-//	          ->as('students.')
-//	          ->group(function () {
-//
-//	          });
-//
-//	     // Admin routes
-//	     Route::middleware('admin')
-//	          ->prefix('admin')
-//	          ->as('admin.')
-//	          ->group(function () {
-//
-//	          });
-//     });
-
 
 Route::middleware('api')
      ->prefix('api')
@@ -33,17 +12,20 @@ Route::middleware('api')
 
 	     // Students api
 	     Route::middleware('students')
+	          ->prefix('students')
+	          ->as('students.')
 	          ->group(function () {
 
-		          Route::prefix('scores')
-		               ->group(function () {
-						   // Save a score - id of the score must be known
-			               Route::apiResource('scores', ScoreApiController::class)
-				               ->only(['show', 'update']);
-//			               Route::post('/scores/{score}/update', [ScoreApiController::class, 'update'])
-//			                    ->name('update');
+		          // Save a score - id of the score must be known
+		          Route::apiResource('scores', ScoreApiController::class)
+		               ->only(['index', 'show', 'update']);
 
-						   // REFACTOR: These two routes must be removed.
+		          Route::prefix('scores')
+			          ->group(function () {
+			               Route::patch('reset', [ScoreApiController::class, "reset"])
+			                    ->name('reset');
+
+			               // ROUTE: These two routes must be removed.
 			               Route::post('/post/{post}/update', [ScoreApiController::class, 'updatePostScore'])
 			                    ->name('post');
 			               Route::post('/challenge/{challenge}/update', [ScoreApiController::class, 'updateChallengeScore'])
@@ -54,8 +36,10 @@ Route::middleware('api')
 
 	     // Admin api
 	     Route::middleware('admin')
+		     ->as('admin.')
 	          ->group(function () {
-
+		          Route::delete('/scores', [ScoreApiController::class, 'destroyMultiple'])
+			          ->name('scores.destroy.multiple');
 	          });
 
      });

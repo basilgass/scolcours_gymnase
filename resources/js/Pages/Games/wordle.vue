@@ -78,7 +78,7 @@ const guess = computed<string>(() => {
 })
 
 function prepareNextWord() {
-	axios.get(route('api.dico.fetch', {
+	axios.get(route('api.admin.dico.fetch', {
 			language: WORD_LANGUAGE.value,
 			number: 1,
 			size: WORD_LENGTH.value
@@ -158,7 +158,7 @@ function letterClass(row: number, index: number) {
 }
 
 async function validate() {
-	const wordExists = await axios.get(route('api.dico.exists', {
+	const wordExists = await axios.get(route('api.admin.dico.exists', {
 		language: WORD_LANGUAGE.value,
 		word: guess.value
 	}))

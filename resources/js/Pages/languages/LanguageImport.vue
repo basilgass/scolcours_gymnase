@@ -101,7 +101,7 @@ function importerLesTraductions() {
 				translations: traductions.value
 			}
 		})
-		.post(route("api.voc.units.words.store"))
+		.post(route("api.admin.voc.units.words.store"))
 }
 
 </script>

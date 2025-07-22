@@ -61,7 +61,7 @@ const editTranslation = function(word) {
 }
 // update the translation to the DB.
 const updateTranslation = function() {
-	axios.post(route("api.voc.words.update", [editWord.value.id]), {
+	axios.post(route("api.admin.voc.words.update", [editWord.value.id]), {
 		...editWord.value,
 		_method: "PATCH"
 	}).then(() => {

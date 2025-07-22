@@ -12,6 +12,8 @@ const props = defineProps<FormMakerPropsNewType & {
 	catchTab?: boolean
 }>()
 
+const model = defineModel<string>()
+
 defineExpose<FormElementExpose>({
 	focus: () => textareaRef.value?.focus(),
 	validate: () => []
@@ -19,7 +21,9 @@ defineExpose<FormElementExpose>({
 
 const emits = defineEmits<FormElementEmits>()
 
-const {textareaValue, textareaRef} = useTextEditor('input')
+const {textareaValue, textareaRef} = useTextEditor('input', {
+	model
+})
 
 </script>
 

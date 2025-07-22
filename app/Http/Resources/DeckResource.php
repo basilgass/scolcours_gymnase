@@ -2,12 +2,12 @@
 
 namespace App\Http\Resources;
 
-use App\Models\UserDeck;
+use App\Models\Deck;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
- * @mixin UserDeck
+ * @mixin Deck
  */
 class DeckResource extends JsonResource
 {
@@ -25,14 +25,16 @@ class DeckResource extends JsonResource
 			"id"          => $this->id,
 			"user_id"     => $this->user_id,
 			"title"       => $this->title,
-			'chapter_id'    => $this->chapter_id,
+			"slug"        => $this->slug,
+			'chapter'     => ChapterResource::make($this->chapter),
 			"created_at"  => $this->created_at,
 			"updated_at"  => $this->updated_at,
 			"cards_count" => $this->cards_count ?? $this->cards?->count(),
 			"cards"       => CardResource::collection($this->when(
 				$this->relationLoaded('cards'),
 				fn() => $this->cards
-			) ?? []),//
+			) ?? []),
+//			"user"        => $this->userScores(),
 		];
 	}
 }

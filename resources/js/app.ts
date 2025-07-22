@@ -23,10 +23,6 @@ dayjs.locale('fr')
 // Enable dark mode
 useDark()
 
-// import route from "ziggy-js"
-// const appName =
-// 	window.document.getElementsByTagName("title")[0]?.innerText || "ScolCours"
-
 axios.get('/sanctum/csrf-cookie').then(async () => {
 	await createInertiaApp({
 		title: (title) => {

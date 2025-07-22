@@ -7,21 +7,25 @@ Affichage d'un formulaire, avec la possibilité de passer d'un formulaire du th�
 >
 import FormulaShow from "@/Components/Blocks/FormulaShow.vue"
 import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
-import {flashInterface} from "@/types"
+import {AxiosResponseModel, flashInterface} from "@/types"
 import {ChapterInterface, FormulaInterface} from "@/types/modelInterfaces.ts"
 import axios from "axios"
 import {inject, onMounted, ref, useTemplateRef} from "vue"
 import ScButton from "@/Components/Ui/scButton.vue"
+import {router} from "@inertiajs/vue3"
 
-const props = defineProps({
-	chapterSlug: {type: String, required: true},
-	responsive: {type: Boolean, default: false}
-})
+const props = withDefaults(defineProps<{
+		chapter: ChapterInterface,
+		responsive?: boolean
+	}>(),
+	{
+		responsive: false
+	})
 
+const currentChapterId = ref(props.chapter.id)
 const formular = useTemplateRef<HTMLElement>('formular')
 
 const theFormular = ref([]),
-	theSlug = ref(props.chapterSlug),
 	themeChapters = ref<ChapterInterface[]>([]),
 	loadingState = ref(false),
 	theFormularErrors = ref("")
@@ -31,16 +35,19 @@ const editMode = useStoreEditMode()
 
 function addFormula() {
 	axios
-		.post(route("api.formulas.store", [props.chapterSlug]), {})
-		.then((res) => {
+		.post(route("api.admin.chapters.formulas.store", [props.chapter.id]), {})
+		.then((res: AxiosResponseModel<FormulaInterface>) => {
 			flash.success("formule créée")
 			theFormular.value.push(res.data)
+
+			// Go and edit the new formula
+			router.visit(route('admin.blocks.edit', {id: res.data.block.id}))
 		})
 }
 
 function updateFormulasOrder() {
 	axios
-		.post(route("api.formulas.updateOrder"), {
+		.post(route("api.admin.formulas.updateOrder"), {
 			order: theFormular.value.map((x, index) => {
 				return {id: x.id, order: index}
 			})
@@ -59,14 +66,16 @@ function updateFormulasOrder() {
 function loadFormular() {
 	loadingState.value = true
 
-	axios.get(route("api.chapters.formulas.index", [theSlug.value]))
+	axios.get(route("api.chapters.formulas.index", {
+		chapter: props.chapter.id
+	}))
 		.then((res) => {
 			theFormular.value = res.data.formular
 			// Add the new chapters to the list
 			res.data.chapters.forEach((chapter) => {
 				if (
 					!themeChapters.value.find(
-						(x) => x.slug === chapter.slug
+						(x) => x.id === chapter.id
 					)
 				) {
 					themeChapters.value.push(chapter)
@@ -82,8 +91,8 @@ function loadFormular() {
 		})
 }
 
-function updateFormular(slug: string) {
-	theSlug.value = slug
+function updateFormular(value: ChapterInterface) {
+	currentChapterId.value = value.id
 	loadingState.value = true
 	loadFormular()
 }
@@ -111,12 +120,12 @@ onMounted(() => {
 		>
 			<sc-button
 				v-for="item of themeChapters"
-				:key="item.slug"
-				:theme="item.theme.id"
-				:outline="item.slug !== theSlug"
-				:active="item.slug === props.chapterSlug"
+				:key="item.id"
+				:theme="item.theme_id"
+				:outline="item.id !== currentChapterId"
+				:active="item.id === chapter.id"
 				xs
-				@click="updateFormular(item.slug)"
+				@click="updateFormular(item)"
 			>
 				<div v-katex.auto="item.title" />
 			</sc-button>

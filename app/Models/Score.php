@@ -43,14 +43,14 @@ use Illuminate\Support\Carbon;
  */
 class Score extends Model
 {
-	use HasFactory;
-
 	protected $fillable = [
 		"user_id",
 		"data",
 		"attempts",
 		"is_resolved",
 		"score",
+		'scoreable_id',
+		'scoreable_type'
 	];
 
 	protected $casts = [

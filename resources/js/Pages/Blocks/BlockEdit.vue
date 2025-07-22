@@ -26,6 +26,7 @@ const tab = ref<"markdown" | "script" | "data">("markdown")
 const theBlock = ref<BlockInterface>(props.block)
 
 const originalBlock = unref({...props.block})
+
 const wasEdited = computed(() => {
 	return originalBlock.title !== theBlock.value.title
 		|| originalBlock.body !== theBlock.value.body
@@ -39,13 +40,12 @@ const wasEdited = computed(() => {
 
 
 function visitBlock() {
-	// Check if the block has been modified
-	router.visit(route("blocks.show", [theBlock.value.id]))
+	router.visit(route("blocks.show", {block: theBlock.value.id}))
 }
 
 function saveBlock() {
 	axios
-		.post(route("api.blocks.update", [theBlock.value.id]), {
+		.post(route("api.admin.blocks.update", [theBlock.value.id]), {
 			...theBlock.value,
 			_method: "PATCH"
 		})
@@ -59,23 +59,31 @@ function saveBlock() {
 }
 
 function deleteBlock() {
-	axios
-		.post(route("api.blocks.destroy", [theBlock.value.id]), {
-			_method: "delete"
-		})
-		.then((res) => {
-			flash.add("Le block a été supprimé")
-			// Go to the post.
-			router.visit(res.data)
+	const block_id = theBlock.value.id
 
+	axios.get(route("api.admin.blocks.blockable.url", {block: block_id}))
+		.then((res) => {
+			console.log(res.data)
+			axios
+				.post(route("api.admin.blocks.destroy", [theBlock.value.id]), {
+					_method: "delete"
+				})
+				.then(() => {
+					flash.add("Le block a été supprimé")
+
+					// Go to the blockable item.
+					router.visit(res.data)
+
+				})
+				.catch((error) => console.error(error))
 		})
-		.catch((error) => console.error(error))
+
 }
 
 function addIllustration() {
 	axios
 		.post(
-			route("api.illustrations.store", [theBlock.value.id]),
+			route("api.admin.blocks.illustrations.store", {block: theBlock.value.id}),
 			{}
 		)
 		.then((res) => {
@@ -112,7 +120,7 @@ function addScriptsButtons() {
 
 function deleteIllustration(id: number) {
 	axios
-		.post(route("api.illustrations.destroy", [id]), {
+		.post(route("api.admin.illustrations.destroy", [id]), {
 			_method: "delete"
 		})
 		.then(() => {

@@ -21,19 +21,9 @@ class LessonController extends Controller
 	public function show(Course $course, Lesson $lesson)
 	{
 		$user = Auth::user();
-		// Get the score for the user / lesson. If no score, create a new one.
-		$score = $lesson->lessonable
-			->scores()
-			->where("user_id", $user->id)
-			->first();
 
-		if (!$score) {
-			$score = $lesson->lessonable->scores()->create([
-				"user_id" => $user->id,
-				"score"   => 0, // Default score
-			]);
-		}
-
+		// Get the score for the user
+		$score = $lesson->lessonable->userScores();
 
 		return Inertia::render("Courses/LessonShow", [
 			"course" => CourseResource::make($course),

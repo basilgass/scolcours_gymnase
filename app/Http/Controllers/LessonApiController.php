@@ -25,6 +25,15 @@ class LessonApiController extends Controller
 
 	public function update(Request $request, Lesson $lesson)
 	{
+		$validated = $request->validate([
+			'requires' => ['string', 'nullable'],
+			'parameters'=>['array', 'nullable']
+		]);
+
+		$lesson->update($validated);
+		$lesson->refresh();
+
+		return LessonResource::make($lesson);
 	}
 
 	public function destroy(Lesson $lesson)

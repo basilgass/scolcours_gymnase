@@ -18,7 +18,6 @@ import {
 import {usePage} from "@inertiajs/vue3"
 import axios from "axios"
 import {computed, inject, reactive, ref, watch} from "vue"
-import {useStoreLesson} from "@/stores/useStoreLesson.ts"
 
 // TODO: ChallengeAnswerInterface must be reworked as it is used in QuestionAnswerValidation
 export interface ChallengeAnswerInterface {
@@ -44,6 +43,7 @@ const flash = inject<flashInterface>("flash")
 const props = defineProps<{
 	challenge: ChallengeInterface,
 }>()
+
 
 const emits = defineEmits<{
 	stateChange: [value: ChallengeGameState]
@@ -127,8 +127,6 @@ function stop() {
 	store()
 }
 
-const lessonScore = useStoreLesson()
-
 /**
  * Store the user score to the database.
  * (if the user is logged in)
@@ -137,10 +135,8 @@ function store() {
 	// Check if the user is logged in.
 	if (usePage().props.auth.user) {
 
-		lessonScore.update(game.score)
-
 		axios
-			.post(route("api.scores.challenge", [props.challenge.id]), {
+			.post(route("api.admin.scores.challenge", [props.challenge.id]), {
 				score: game.score,
 				level: game.level
 			})

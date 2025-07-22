@@ -26,8 +26,8 @@ Route::middleware('web')
 
 	     // Admin routes
 	     Route::middleware('admin')
-		     ->prefix('admin')
 		     ->as('admin.')
+		     ->prefix('admin')
 		     ->group(function () {
 
 
@@ -54,17 +54,12 @@ Route::middleware('api')
      ->prefix('api')
 	->as('api.')
      ->group(function () {
-	     // Public api.
 
-
-	     // Students api
-	     Route::middleware('students')
-	          ->group(function () {
-
-	          });
 
 	     // Admin api
 	     Route::middleware('admin')
+		     ->prefix('admin')
+		     ->as('admin.')
 	          ->group(function () {
 
 		          Route::apiResource('quizzs', QuizzApiController::class);

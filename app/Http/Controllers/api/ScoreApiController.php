@@ -13,10 +13,47 @@ use Illuminate\Http\Request;
 
 class ScoreApiController extends Controller
 {
+	public function index(Request $request)
+	{
+		$request->validate([
+			'type' => ['required', 'string'],
+			'ids'  => ['required', 'array'], // ou 'array' si tu envoies un tableau
+		]);
+
+
+		// Post | Question | Deck | Card | Challenge | Generator | Lesson
+		$ids = $request->input('ids');
+		$type = 'App\\Models\\' . ucfirst($request->input('type')); // ou directement passé en FQCN
+
+		$userId = Auth::id();
+		// récupérer les scores existants
+		$existingScores = Score::where('user_id', $userId)
+		                       ->where('scoreable_type', $type)
+		                       ->whereIn('scoreable_id', $ids)
+		                       ->get()
+		                       ->keyBy('scoreable_id');
+
+		// créer ceux qui manquent
+		$missingScores = collect($ids)
+			->filter(fn($id) => !$existingScores->has($id))
+			->map(fn($id) => Score::create([
+				'user_id'        => $userId,
+				'scoreable_type' => $type,
+				'scoreable_id'   => $id,
+				'score'          => 0, // ou null, selon ton modèle
+			]));
+
+		// fusionner les deux
+		$allScores = $existingScores->values()->merge($missingScores);
+
+		return ScoreResource::collection($allScores);
+	}
+
 	public function show(Score $score)
 	{
 		return ScoreResource::make($score);
 	}
+
 	// REFACTOR: store is not used anymore.
 	public function store(Request $request)
 	{
@@ -60,8 +97,21 @@ class ScoreApiController extends Controller
 		// Recreate the cache for this element.
 		$score->scoreable->updateCache($score);
 
+		$score->refresh();
 
-		return response()->noContent();
+		return ScoreResource::make($score);
+	}
+
+	public function reset(Score $score)
+	{
+		$score->score = 0;
+		$score->is_resolved = false;
+		$score->attempts = 0;
+		$score->data = NULL;
+		$score->save();
+		$score->refresh();
+
+		return ScoreResource::make($score);
 	}
 
 	// ROUTE: these route are no more used.
@@ -110,6 +160,14 @@ class ScoreApiController extends Controller
 	public function updateChallengeScore(Challenge $challenge, Request $request)
 	{
 		return $this->updateScore($challenge, $request);
+	}
+
+	public function destroyMultiple(Request $request)
+	{
+		$ids = $request->input('ids', []);
+		Score::whereIn('id', $ids)->delete();
+
+		return response()->noContent(); // 204
 	}
 
 }

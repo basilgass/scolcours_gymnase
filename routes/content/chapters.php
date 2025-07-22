@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\api\ChapterApiController;
 use App\Http\Controllers\web\ChapterController;
 use App\Models\Chapter;
@@ -9,8 +10,13 @@ Route::middleware('web')
 	     // Public routes.
 	     Route::resource('chapters', ChapterController::class)
 	          ->only(['index']);
-		 Route::get('chapters/{chapter:slug}', [ChapterController::class, 'show'])
-			 ->name('chapters.show');
+
+	     Route::get('chapters/{chapter}', function (Chapter $chapter) {
+		     return redirect()->route('themes.chapters.show', [
+			     "theme"   => $chapter->theme,
+			     "chapter" => $chapter
+		     ]);
+	     })->name('chapters.show');
 
 	     // Public routes
 	     Route::get('{theme:slug}/', [ChapterController::class, 'index'])
@@ -20,10 +26,8 @@ Route::middleware('web')
 	          ->name('themes.chapters.show');
 
 
-
 	     Route::get('chapters/{chapter}}/{order}', [ChapterController::class, 'slide'])
 	          ->name('chapters.slide');
-
 
 
 	     Route::get('{theme:slug}/{chapter:slug}/{order}', [ChapterController::class, 'slide'])
@@ -35,28 +39,16 @@ Route::middleware('web')
 
 
 
-	     // Redirection
-//	     Route::get('chapter/{chapter:slug}', function (Chapter $chapter) {
-//		     return redirect()->route('themes.chapters.intro', [$chapter->theme->slug, $chapter->slug]);
-//	     })->name('chapters.show');
-
-
-	     // Students routes
-	     Route::middleware('students')
-		     ->prefix('students')
-		     ->as('students.')
-	          ->group(function () {
-
-	          });
-
-
 	     // Admin routes
 	     Route::middleware('admin')
-		     ->prefix('admin')
-		     ->as('admin.')
-		     ->group(function () {
+	          ->as('admin.')
+	          ->group(function () {
 		          Route::resource('chapters', ChapterController::class)
-		               ->only(['show', 'index', 'edit']);
+		               ->only(['edit']);
+
+				  // ROUTE: this admin / chapters route must be moved to another route file?
+				  Route::get('admin/chapters',[AdminController::class, 'chapters'])
+					  ->name('index');
 	          });
      });
 
@@ -74,18 +66,18 @@ Route::middleware('api')
 	     Route::get("chapters/{chapter:slug}/theorems", [ChapterApiController::class, 'getTheoremsFromChapter'])
 	          ->name('chapters.theorems.index');
 
-	     // Students api
-	     Route::middleware('students')
-	          ->group(function () {
-
-	          });
-
 	     // Admin api
 	     Route::middleware('admin')
+	          ->prefix('admin')
+	          ->as('admin.')
 	          ->group(function () {
 
 		          Route::apiResource('themes.chapters', ChapterApiController::class)
-		               ->shallow();
+		               ->shallow()
+		               ->only(['index', 'store', 'update', 'destroy']);
+
+		          Route::get('chapters/fetch', [ChapterApiController::class, 'index'])
+		               ->name('chapters.index');
 
 		          Route::prefix('chapters')
 		               ->as('chapters.')

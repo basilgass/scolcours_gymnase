@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\updateCardRequest;
 use App\Http\Resources\CardResource;
 use App\Models\Card;
 use App\Models\Deck;
@@ -24,23 +25,53 @@ class CardApiController extends Controller
 
 	public function store(Request $request, Deck $deck)
 	{
-		// Create the card.
-		$card = $deck->cards()->create([
-			'order' => $deck->cards()->count()
-		]);
+		// Validate the request.
+		if ($request->reference_block_id) {
+			$card = $deck->cards()->create([
+				'order'                    => $deck->cards()->count(),
+				'reference_block_id'       => $request->reference_block_id,
+				'reference_block_splitter' => $request->reference_block_splitter ?? null
+			]);
+		} else {
+			// Create the card.
+			$card = $deck->cards()->create([
+				'order' => $deck->cards()->count()
+			]);
 
-		// Add the corresponding blocks.
-		$card->blocks()->createMany(
-			[
-				['body' => ' recto '],
-				['body' => ' verso ']
-			]
-		);
+			// Add the corresponding blocks.
+			$card->blocks()->createMany(
+				[
+					['body' => ' recto '],
+					['body' => ' verso ']
+				]
+			);
+		}
 
 		return CardResource::make($card);
 	}
 
-	public function update(Request $request, Card $card)
+	public function update(updateCardRequest $request, Card $card)
+	{
+		$blocks = $request->input('blocks');
+
+		foreach (['recto', 'verso'] as $side) {
+			$card->blocks()->where('id', $blocks[$side]['id'])->update([
+				'body' => $blocks[$side]['body'],
+			]);
+		}
+
+		return CardResource::make($card);
+	}
+
+	// REFACTOR: this update must be for the students !
+
+	public function destroy(Card $card)
+	{
+		$card->delete();
+		return response()->noContent();
+	}
+
+	public function updateCard(Request $request, Card $card)
 	{
 		$validated = $request->validate([
 			'current_score'       => ['numeric'],
@@ -66,12 +97,5 @@ class CardApiController extends Controller
 		             ->orderByRaw('FIELD(id,' . $values . ')')
 		             ->get();
 		return CardResource::collection($cards);
-	}
-
-
-	public function destroy(Card $card)
-	{
-		$card->delete();
-		return response()->noContent();
 	}
 }

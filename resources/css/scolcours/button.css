@@ -1,6 +1,7 @@
 @layer components {
 	.btn {
 		@apply text-center no-underline
+			bg-white dark:bg-gray-900
 		rounded-xl
 		border outline-none
 		cursor-pointer

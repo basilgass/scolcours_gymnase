@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\HasScoresTrait;
 use Illuminate\Database\Eloquent\Model;
 
 // A generator belongs to Challenge, Evaluation, and many more
@@ -42,6 +43,7 @@ use Illuminate\Database\Eloquent\Model;
 class Generator extends Model
 {
 	protected $guarded = [];
+	use HasScoresTrait;
 
 	public function theme(): \Illuminate\Database\Eloquent\Relations\BelongsTo
 	{
@@ -50,13 +52,15 @@ class Generator extends Model
 
 	public function challenges(): \Illuminate\Database\Eloquent\Relations\MorphToMany
 	{
-		return $this->morphedByMany(Challenge::class, 'generatorable')
+		return $this
+			->morphedByMany(Challenge::class, 'generatorable')
 			->withPivot('order');
 	}
 
 	public function evaluations(): \Illuminate\Database\Eloquent\Relations\MorphToMany
 	{
-		return $this->morphedByMany(Evaluation::class, 'generatorable')
+		return $this
+			->morphedByMany(Evaluation::class, 'generatorable')
 			->withPivot('order');
 	}
 }

@@ -2,17 +2,18 @@
 
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
-import { useGenerator } from "@/Composables/useGenerator"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
-import { flashInterface } from "@/types"
-import { ChallengeInterface, GeneratorInterface } from "@/types/modelInterfaces"
-import { router } from "@inertiajs/vue3"
+import {flashInterface} from "@/types"
+import {ChallengeInterface, GeneratorInterface} from "@/types/modelInterfaces"
+import {router} from "@inertiajs/vue3"
 import axios from "axios"
-import PiMath from "pimath"
-import { computed, inject, ref } from "vue"
+import {inject, ref} from "vue"
 import GeneratorsExamples from "@/Components/Elements/GeneratorsExamples.vue"
+import ScButton from "@/Components/Ui/scButton.vue"
 
-defineOptions({ layout: LayoutMain })
+// REFACTOR: retravailler les générateurs.
+
+defineOptions({layout: LayoutMain})
 
 const flash = inject<flashInterface>("flash")
 
@@ -24,7 +25,7 @@ const props = defineProps<{
 const theGenerator = ref(props.generator)
 
 function saveGenerator() {
-	axios.post(route("api.generators.update", [props.generator.id]), {
+	axios.post(route("api.admin.generators.update", [props.generator.id]), {
 		...theGenerator.value,
 		_method: "patch"
 	}).then(() => {
@@ -40,18 +41,18 @@ function duplicateGenerator() {
 }
 
 function deleteGenerator() {
-	axios.post(route("api.generators.destroy", [props.generator.id]), {
+	axios.post(route("api.admin.generators.destroy", [props.generator.id]), {
 		_method: "delete"
 	}).then(() => {
 		flash.success("Générateur supprimé")
-		router.visit(route("generators.index"))
+		router.visit(route("admin.generators.index"))
 	}).catch((err) => {
 		console.log(err)
 		flash.error("Erreur lors de la suppression")
 	})
 }
 
-function historyBack(){
+function historyBack() {
 	window.history.back()
 }
 
@@ -71,54 +72,35 @@ function historyBack(){
 				</h1>
 			</div>
 
-			<div>
-				<div class="flex gap-3 justify-end">
-					<button
-						class="btn btn-primary btn-xs"
-						@click="historyBack"
-					>
-						retour
-					</button>
-					<button
-						class="btn btn-primary btn-xs"
-						@click="saveGenerator"
-					>
-						enregistrer
-					</button>
-					<button
-						class="btn btn-primary btn-xs"
-						@click="duplicateGenerator"
-					>
-						dupliquer
-					</button>
-					<confirm-button
-						class="btn btn-delete btn-xs"
-						@confirm="deleteGenerator"
-					>
-						supprimer
-					</confirm-button>
-				</div>
-				<ul class="list my-4">
-					<li
-						v-for="challenge in challenges"
-						:key="`challenge-link-${challenge.id}`"
-						class="flex justify-between gap-3"
-					>
-						{{ challenge.title }}
-						<div class="flex gap-3">
-							<InertiaLink
-								:href="route('challenges.show', [challenge.slug])"
-							>
-								<i class="bi bi-eye" />
-							</InertiaLink>
-							<InertiaLink
-								:href="route('admin.challenges.edit', [challenge.id])"
-							>
-								<i class="bi bi-pencil" />
-							</InertiaLink>
-						</div>
-					</li>
-				</ul>
+			<div class="flex gap-3 justify-end">
+				<sc-button
+					type="cancel"
+					xs
+					@click="historyBack"
+				>
+					retour
+				</sc-button>
+				<sc-button
+					type="save"
+					xs
+					@click="saveGenerator"
+				>
+					enregistrer
+				</sc-button>
+				<sc-button
+					type="add"
+					disabled
+					xs
+					@click="duplicateGenerator"
+				>
+					dupliquer
+				</sc-button>
+				<confirm-button
+					xs
+					@confirm="deleteGenerator"
+				>
+					supprimer
+				</confirm-button>
 			</div>
 		</header>
 
@@ -152,18 +134,14 @@ function historyBack(){
 
 			<div>
 				<form-maker
-					v-model=" theGenerator.template"
-					inline-label
+					v-model="theGenerator.template"
 					label="template"
-					label-class="w-[110px]"
 					type="codearea"
 				/>
 
 				<form-maker
-					v-model=" theGenerator.keyboard"
-					inline-label
+					v-model="theGenerator.keyboard"
 					label="clavier"
-					label-class="w-[110px]"
 					type="keyboard"
 				/>
 			</div>
@@ -188,6 +166,33 @@ function historyBack(){
 				:questions-number="5"
 				:generator="generator"
 			/>
+		</div>
+
+		<div class="my-4 bg-content">
+			<h3 class="font-semibold border-content border-b p-3">
+				generatorable
+			</h3>
+			<ul class="list p-3">
+				<li
+					v-for="challenge in challenges"
+					:key="`challenge-link-${challenge.id}`"
+					class="flex justify-between gap-3"
+				>
+					<div>{{ challenge.title }}</div>
+					<div class="flex gap-3">
+						<InertiaLink
+							:href="route('challenges.show', [challenge.slug])"
+						>
+							<i class="bi bi-eye" />
+						</InertiaLink>
+						<InertiaLink
+							:href="route('admin.challenges.edit', [challenge.id])"
+						>
+							<i class="bi bi-pencil" />
+						</InertiaLink>
+					</div>
+				</li>
+			</ul>
 		</div>
 	</section>
 </template>

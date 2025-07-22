@@ -86,7 +86,7 @@ const usersTeams = computed(() => {
 	}),
 	newTeam = ref(""),
 	storeTeam = function () {
-		axios.post(route("api.teams.store"), {
+		axios.post(route("api.admin.teams.store"), {
 				"name": newTeam.value
 			}
 		).then(res => {

@@ -25,6 +25,12 @@ class IllustrationRequest extends FormRequest
 
 	protected function prepareForValidation(): void
 	{
+		if(!$this->has('code')){
+			$this->merge([
+				"code"=>""
+			]);
+		}
+
 		if (!$this->has('widget_id')) {
 			$this->merge([
 				'widget_id' => \App\Models\Widget::where('slug', 'draw-parser-widget')->value('id'),

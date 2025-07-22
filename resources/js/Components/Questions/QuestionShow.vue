@@ -82,7 +82,6 @@ const questionData = useQuestion(props.question, {
 	raw: props.question.keyboard
 })
 
-console.log(questionData.question.id, questionData.user.score.value)
 /**
  * QuestionAnswer: .validators, .user.answers, .config, .answerId
  * QuestionAnswerSelector: .answers, .answerId
@@ -114,9 +113,9 @@ async function loadAnswers(show: boolean) {
 		:id="`question-${question.id}`"
 		:class="{
 			'bg-gray-50 border-gray-200 dark:bg-gray-800 dark:border-gray-700':
-				!questionData.user.score.value.is_resolved,
+				!questionData.user?.score.value?.is_resolved,
 			'bg-green-50 dark:bg-green-950 border-green-600/60':
-				questionData.user.score.value.is_resolved,
+				questionData.user?.score.value?.is_resolved,
 		}"
 		class="relative flex flex-col rounded border h-full"
 	>
@@ -145,9 +144,9 @@ async function loadAnswers(show: boolean) {
 		<hr
 			:class="{
 				'bg-content':
-					!questionData.user.score.value.is_resolved,
+					!questionData.user.score.value?.is_resolved,
 				'border-green-600/60':
-					questionData.user.score.value.is_resolved,
+					questionData.user.score.value?.is_resolved,
 			}"
 		>
 

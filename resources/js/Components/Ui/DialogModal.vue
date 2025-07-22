@@ -36,14 +36,17 @@ function doCancel() {
 			@mousedown.self="doCancel"
 		>
 			<div
-				class="grid bg-content border rounded-lg max-w-[95vw] w-[90%] h-[90%] max-h-[95vh] overflow-auto"
+				class="bg-content border rounded-lg
+				w-[90%] h-[90%]
+				max-w-[95vw] max-h-[95vh]
+				overflow-auto"
 				v-bind="$attrs"
 			>
-				<div class="flex flex-col">
+				<div class="w-full h-full flex flex-col">
 					<div v-if="$slots.header">
 						<slot name="header" />
 					</div>
-					<div class="flex-1 h-full">
+					<div class="flex-1 overflow-y-auto">
 						<slot />
 					</div>
 					<div

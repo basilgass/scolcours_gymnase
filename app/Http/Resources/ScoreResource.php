@@ -19,6 +19,8 @@ class ScoreResource extends JsonResource
 			'is_resolved'    => $this->is_resolved,
 			'attempts'       => $this->attempts,
 			'data'           => $this->data,
+			'scoreable_id'   => $this->scoreable_id,
+			'scoreable_type' => $this->scoreable_type,
 			'updated_at'     => Carbon::parse($this->updated_at)->diffForHumans()
 		];
 	}

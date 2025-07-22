@@ -8,7 +8,7 @@ import { flashInterface } from "@/types"
 import type { ChapterShowInterface } from "@/types/modelInterfaces"
 import axios from "axios"
 import { inject, ref } from "vue"
-import {router} from "@inertiajs/vue3"
+import {router, usePage} from "@inertiajs/vue3"
 import ScButton from "@/Components/Ui/scButton.vue"
 
 defineOptions({ layout: LayoutMain })
@@ -23,7 +23,7 @@ const theChapter = ref(props.chapter)
 
 function saveChapter() {
 	axios
-		.patch(route("api.chapters.update", [props.chapter.id]), {
+		.patch(route("api.admin.chapters.update", [props.chapter.id]), {
 			_method: "PATCH",
 			...theChapter.value,
 		})
@@ -39,12 +39,12 @@ function saveChapter() {
 }
 
 function deleteChapter() {
-	const slug = props.chapter.theme.slug
+	const slug = usePage().props.themes[props.chapter.theme_id].slug
 
-	axios.delete(route("api.chapters.destroy", [props.chapter.id]))
+	axios.delete(route("api.admin.chapters.destroy", [props.chapter.id]))
 		.then(() => {
 			flash.success("Le chapitre a été supprimé")
-			router.visit(route('theme', [slug]))
+			router.visit(route('theme', {slug}))
 		})
 		.catch((res) => {
 			flash.error(
@@ -73,7 +73,7 @@ function deleteChapter() {
 				<sc-button
 					type="cancel"
 					xs
-					:href="route('chapters.show', [props.chapter.slug])"
+					:href="route('chapters.show', [props.chapter.id])"
 				>
 					retour
 				</sc-button>

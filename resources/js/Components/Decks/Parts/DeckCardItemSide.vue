@@ -33,7 +33,7 @@ withDefaults(defineProps<{
 			/>
 			<!-- Illustration -->
 			<illustration-show
-				v-if="block.illustrations.length > 0"
+				v-if="block?.illustrations?.length > 0"
 				:illustration="block.illustrations[0]"
 				class="h-full w-full max-w-[600px]"
 				click-through

@@ -30,28 +30,28 @@ class ChallengeResource extends JsonResource
 			$this->blocks()->create();
 		}
 
-		$bestScore = $this->scores?->pluck('score')->max()??0;
-		$bestLevel = $this->scores?->pluck('level')->max()??0;
-		$userScore = 0;
-		$userLevel = 0;
+//		$bestScore = $this->scores?->pluck('score')->max()??0;
+//		$bestLevel = $this->scores?->pluck('level')->max()??0;
+//		$userScore = 0;
+//		$userLevel = 0;
 
-		if(Auth::user()){
-			$userScore = $this->scores?->where('user_id', Auth::user()->id)->first()->score??0;
-			$userLevel = $this->scores?->where('user_id', Auth::user()->id)->first()->level??0;
-		}
+//		if(Auth::user()){
+//			$userScore = $this->scores?->where('user_id', Auth::user()->id)->first()->score??0;
+//			$userLevel = $this->scores?->where('user_id', Auth::user()->id)->first()->level??0;
+//		}
 
         return [
 			...parent::toArray($request),
 			'block' => $this->blocks[0],
 			'chapter' => ChapterResource::make($this->chapter),
-			'best' => [
-				'score' => $bestScore,
-				'level' => $bestLevel
-			],
-			'user' => [
-				'score' => $userScore,
-				'level' => $userLevel
-			],
+//			'best' => [
+//				'score' => $bestScore,
+//				'level' => $bestLevel
+//			],
+//			'user' => [
+//				'score' => $userScore,
+//				'level' => $userLevel
+//			],
 			"generators" => GeneratorResource::collection($this->generators)
 		];
 	}

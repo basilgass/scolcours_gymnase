@@ -16,7 +16,7 @@ const theWidget = ref({ ...props.widget })
 const flash = inject<flashInterface>("flash")
 
 function update() {
-	axios.patch(route("api.widgets.update", [props.widget.id]), {
+	axios.patch(route("api.admin.widgets.update", [props.widget.id]), {
 		_method: "PATCH",
 		...theWidget.value
 	}).then((res) => {

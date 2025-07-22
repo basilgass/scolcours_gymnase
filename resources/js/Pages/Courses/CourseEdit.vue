@@ -1,13 +1,16 @@
 <script setup lang="ts">
 
 import LayoutMain from "@/Layouts/LayoutMain.vue"
-import {ChapterInterface, CourseInterface, LessonInterface} from "@/types/modelInterfaces.ts"
+import {CourseInterface, LessonInterface} from "@/types/modelInterfaces.ts"
 import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
-import {ref} from "vue"
+import {inject, ref} from "vue"
 import Card from "@/Components/Ui/Card.vue"
 import CourseLessonEdit from "@/Components/Courses/CourseLessonEdit.vue"
 import CourseGraph from "@/Components/Courses/CourseGraph.vue"
+import axios from "axios"
+import {AxiosErrorMessage, flashInterface} from "@/types"
+import LessonTypeIcon from "@/Components/Courses/LessonTypeIcon.vue"
 
 defineOptions({layout: LayoutMain})
 
@@ -15,43 +18,42 @@ const props = defineProps<{
 	course: CourseInterface
 }>()
 
-const theCourse = ref(props.course)
-//
-// const courseRange = computed(() => {
-// 	const dates = props.course.lessons.map((lesson: LessonInterface) => {
-// 		return [lesson.calendar.opened_at, lesson.calendar.scheduled_at]
-// 	}).flat()
-//
-// 	dates.sort()
-//
-// 	const minTime = new Date(dates[0]).getTime()
-// 	const maxTime = new Date(dates[dates.length - 1]).getTime()
-//
-// 	return {
-// 		min: minTime,
-// 		max: maxTime,
-// 		total: maxTime - minTime
-// 	}
-// })
+const flash = inject<flashInterface>('flash')
+const theCourse = ref<CourseInterface>(props.course)
+
 
 function addLesson() {
-	// Se mettre en mode "panier de leçon". On parcours ensuite le site avec la possibtilité d'ajouter le cours.
+	// Se mettre en mode "panier de leçon". On parcourt ensuite le site avec la possibilité d'ajouter le cours.
 }
 
 const itemSource = ref<LessonInterface>(undefined)
 const counter = ref(1)
-function onClick(lesson:LessonInterface, event: MouseEvent){
-	if(itemSource.value && event.ctrlKey){
+
+function onClick(lesson: LessonInterface, event: MouseEvent) {
+	if (itemSource.value) {
 		// Toggle requires to the itemSource.
-		toggleIdInPlace(lesson.requires, itemSource.value.id)
+		toggleIdInPlace(itemSource.value.requires, lesson.id)
 		counter.value++
+
+		// Mise à jour de la DB.
+		axios.patch(route('api.admin.lessons.update', {lesson: itemSource.value.id}), {
+			requires: itemSource.value.requires.join(','),
+			parameters: itemSource.value.parameters
+		}).then(() => {
+			flash.success('Le cours a été mis à jour')
+		}).catch((err: AxiosErrorMessage) => {
+			flash.error('Il y a un problème avec ce cours.')
+			console.warn(err.response.data.message)
+		})
 		return
 	}
-
-	itemSource.value = lesson
 }
 
-function toggleIdInPlace(array: (string|number)[], id: string|number): void {
+function setItemSource(lesson: LessonInterface) {
+	itemSource.value = lesson.id === itemSource.value?.id ? undefined : lesson
+}
+
+function toggleIdInPlace(array: (string | number)[], id: string | number): void {
 	const index = array.indexOf(id)
 	if (index === -1) {
 		array.push(id)
@@ -96,20 +98,37 @@ function toggleIdInPlace(array: (string|number)[], id: string|number): void {
 					<Card
 						v-for="lesson in theCourse.lessons"
 						:key="`lesson-${lesson.id}`"
+						:class="{
+							' bg-blue-100 border-blue-600 text-blue-600': itemSource?.id===lesson.id
+						}"
 					>
 						<template #header>
-							<div class="flex justify-between">
-								<div class="flex gap-3 items-baseline">
-									<div class="font-code w-[16px] text-xs">
-										{{ lesson.id }}
-									</div>
+							<div
+								class="flex justify-between"
+							>
+								<div
+									class="flex gap-3 items-baseline cursor-pointer"
+									@click="setItemSource(lesson)"
+								>
+									<lesson-type-icon :lesson />
+
 									<div
 										class="text-lg font-[400]"
-										v-katex.auto="lesson.lessonable.title"
+										v-katex.auto="lesson.lessonable?.title"
 									/>
+									<div class="font-code w-[16px] text-xs">
+										({{ lesson.id }})
+									</div>
 								</div>
 
-								<div>{{ lesson.requires }}</div>
+								<div v-if="itemSource?.id===lesson.id">
+									{{ lesson.requires }}
+								</div>
+								<i
+									v-else-if="itemSource"
+									@click="onClick(lesson, $event)"
+									class="bi bi-link text-xl text-blue-600 cursor-pointer"
+								/>
 							</div>
 						</template>
 						<course-lesson-edit
@@ -128,7 +147,6 @@ function toggleIdInPlace(array: (string|number)[], id: string|number): void {
 					</div>
 				</div>
 				<div>
-					<div>Source: {{ itemSource?.lessonable.title ?? 'aucun' }}</div>
 					<course-graph
 						:key="counter"
 						:course

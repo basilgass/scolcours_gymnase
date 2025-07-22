@@ -64,7 +64,7 @@ const showAside = inject('showAside', false)
 							v-admin
 							as="button"
 							class="block transition duration-300 hover:translate-x-2 px-0 md:px-4 py-1"
-							:href="route('admin.dev.index')"
+							:href="route('dev.index')"
 							@click="showAside = false"
 						>
 							développement

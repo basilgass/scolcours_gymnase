@@ -39,7 +39,7 @@ function flip() {
 		}"
 		class="relative
 		card
-		aspect-[4/3] portrait:aspect-[3/4]
+		aspect-[4/3] portrait:aspect-square
 		max-h-[calc(100vh-10rem)] max-w-[95vw]
 		transition duration-1000"
 		@click="flip"

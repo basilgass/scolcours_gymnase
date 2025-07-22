@@ -1,5 +1,5 @@
 import { ChapterInterface, type QuestionDynamicInterface, ThemeInterface, User } from "@/types/modelInterfaces"
-import { AxiosError } from "axios"
+import {AxiosError, AxiosResponse} from "axios"
 import { ComputedRef } from "vue"
 
 
@@ -120,6 +120,9 @@ export interface BlockScriptType {
 
 export type SCRIPT_TYPE = Record<string, string> & BlockScriptType
 
+export interface AxiosResponseModel<T> extends  AxiosResponse {
+	data: T
+}
 export interface AxiosErrorMessage extends AxiosError {
 	response: {data: {message: string}}
 }

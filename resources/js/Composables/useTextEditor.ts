@@ -1,10 +1,14 @@
 import {computed, onMounted, onUnmounted, Ref, ref, useTemplateRef, watch} from "vue"
 import {IMacro, IMacroRecords} from "@/helpers/Macros/macros_interface.ts"
+import {latex_macros} from "@/helpers/Macros/latex_macros.ts"
+import {javascript_macros} from "@/helpers/Macros/javascript_macros.ts"
+import {json_macros} from "@/helpers/Macros/json_macros.ts"
 
 // TODO: add auto closing \begin / \end
 // TODO: accept parameters macros (js, md+latex)
 // TODO: a macro with space key set to true must have the template surrounded with one space.
 
+type availableLanguageType = "latex" | "javascript" | "json"
 const indentUnit = '\t' // 2 espaces
 const invisibleCharacter = "‎"
 
@@ -21,9 +25,16 @@ function isModifierKey(e: KeyboardEvent): boolean {
 	return ['Alt', 'Control', 'Shift', 'Meta'].includes(e.key)
 }
 
+function getMacros(language: availableLanguageType): IMacroRecords {
+	return language === 'javascript' ? javascript_macros :
+		language === 'json' ? json_macros :
+			latex_macros
+}
+
 function generateMacrosCharacters(
 	macros: IMacroRecords
 ): { maxsize: number, characters: string[] } {
+
 	const keys = [...Object.keys(macros)]
 	const allCharacters = [...keys.map(key => key.split('')).flat()]
 
@@ -34,14 +45,20 @@ function generateMacrosCharacters(
 }
 
 export function useTextEditor(AreaRefName: string, options?: {
+	language?: availableLanguageType,
 	model?: Ref<string>,
-	macros?: IMacroRecords,
 	allowTab?: boolean
 }) {
 
+	const language = options?.language ?? 'latex'
+	const macros = getMacros(language)
+
 	// Configuration of the text editor
-	const macros = options?.macros ?? {}
-	const {maxsize: macroKeyMaxSize, characters: macrosCharacters} = generateMacrosCharacters(macros)
+	const {
+		maxsize: macroKeyMaxSize,
+		characters: macrosCharacters
+	} = generateMacrosCharacters(macros)
+
 	const allowTab = ref(options?.allowTab ?? true)
 
 	// Editor area and modelValue
@@ -57,6 +74,7 @@ export function useTextEditor(AreaRefName: string, options?: {
 
 	/** MathMode detection */
 	const isInMathEnv = ref<boolean>(false)
+
 	function checkIfInMathEnv() {
 		const el = textareaRef.value
 		if (!el) {
@@ -154,7 +172,7 @@ export function useTextEditor(AreaRefName: string, options?: {
 
 		// Handle the last n keys.
 		if (!isModifierKey(e)) {
-			if(!macrosCharacters.includes(e.key)) {
+			if (!macrosCharacters.includes(e.key)) {
 				lastCharacters.value = []
 				return
 			}
@@ -250,7 +268,7 @@ export function useTextEditor(AreaRefName: string, options?: {
 
 	function removeTabStops(): string {
 		const el = textareaRef.value
-		if(!el) return
+		if (!el) return
 
 		// Cut the value in two parts.
 		// Remove the invisible characters
@@ -310,7 +328,10 @@ export function useTextEditor(AreaRefName: string, options?: {
 			macros[lastKey.value] ??
 			undefined
 
-		if (!macro || macro.math !== isInMathEnv.value) {
+		if (
+			!macro ||
+			(language==='latex' && macro.math !== isInMathEnv.value)
+		) {
 			return
 		}
 
@@ -369,6 +390,7 @@ export function useTextEditor(AreaRefName: string, options?: {
 
 		el.selectionStart = el.selectionEnd = newCursor
 	}
+
 	function deindenter() {
 		const el = textareaRef.value
 
@@ -393,10 +415,11 @@ export function useTextEditor(AreaRefName: string, options?: {
 		el.selectionStart = el.selectionEnd = cursor - 1
 	}
 
-	function updateValue(value: string){
+	function updateValue(value: string) {
 		modelValue.value = value
 		textareaRef.value.value = value
 	}
+
 	watch(modelValue, (val) => {
 		const el = textareaRef.value
 		if (el && el.value !== val) {

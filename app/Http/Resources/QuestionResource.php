@@ -35,9 +35,6 @@ class QuestionResource extends JsonResource
 			$this->blocks()->create(['body'=>'Sans contenu']);
 		}
 
-		// On récupère les réponses de l'utilisateur.
-		$userScores = $this->userScores();
-
 		return [
 			"id" => $this->id,
 			"order"=>$this->order,
@@ -51,7 +48,7 @@ class QuestionResource extends JsonResource
 			],
 			"answer" => $this->answer,
 			"keyboard" => $this->keyboard,
-			"user" => $userScores
+//			"user" => $this->userScores()
 		];
 //        return parent::toArray($request);
 	}

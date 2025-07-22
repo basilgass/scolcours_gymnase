@@ -33,7 +33,7 @@ const state = ref<ChallengeGameState>("intro")
 			:title="challenge.title"
 			:return-link="{
 				label: challenge.chapter.title,
-				url: route('chapters.show', {slug: challenge.chapter.slug})
+				url: route('chapters.show', {id: challenge.chapter.id})
 			}"
 			:edit-link="{
 				label: challenge.id,

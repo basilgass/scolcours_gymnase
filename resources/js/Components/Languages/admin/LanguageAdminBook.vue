@@ -26,7 +26,7 @@ const bookTitle = ref<string>("")
 const bookSlug = ref<string>("")
 
 function createBook() {
-	axios.post(route('api.voc.languages.books.store', {language: props.language}), {slug: bookSlug.value,
+	axios.post(route('api.admin.voc.languages.books.store', {language: props.language}), {slug: bookSlug.value,
 		title: bookTitle.value
 	}).then(res => {
 		books.value.push(res.data)

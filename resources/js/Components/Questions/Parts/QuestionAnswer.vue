@@ -90,10 +90,12 @@ defineExpose({
 			<!-- answerId selector -->
 			<question-answer-selector />
 
-			<question-answer-validation
-				:checker="currentValidator.checker"
-				@validate="$emit('validate', $event )"
-			/>
+			<suspense>
+				<question-answer-validation
+					:checker="currentValidator.checker"
+					@validate="$emit('validate', $event )"
+				/>
+			</suspense>
 
 			<!-- keyboard component -->
 			<component

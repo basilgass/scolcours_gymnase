@@ -15,11 +15,25 @@ use Illuminate\Support\Str;
 
 class ChapterApiController extends Controller
 {
-	public function index(Theme $theme)
+	public function index(Request $request, Theme $theme = null)
 	{
-		return ChapterResource::collection($theme->chapters);
-	}
+		if ($theme) {
+			// appelée via /api/themes/{theme}/chapters
+			return ChapterResource::collection($theme->chapters);
+		}
 
+		// appelée via /api/chapters
+		$query = Chapter::query();
+
+		if ($request->filled('ids')) {
+			$ids = explode(',', $request->input('ids'));
+			$query->whereIn('id', $ids);
+		}
+
+		$query->orderBy('title');
+
+		return ChapterResource::collection($query->get());
+	}
 
 	public function store(Theme $theme, Request $request)
 	{

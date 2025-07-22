@@ -15,7 +15,7 @@ defineProps({
 })
 
 function refreshWidgets() {
-	// ROUTE : route doesn not exist
+	// ROUTE : route does not exist
 	axios.get(route("admin.widgets.refresh"))
 		.then(() => {
 			router.reload()
@@ -45,7 +45,7 @@ function refreshWidgets() {
 			>
 				<template #card="{ item }:{ item: WidgetInterface}">
 					<div
-						v-theme.border="item.theme?.id"
+						v-theme.border="item.theme_id"
 						class="bg-content border-l-8 px-5 py-2 rounded-r-lg"
 					>
 						<div

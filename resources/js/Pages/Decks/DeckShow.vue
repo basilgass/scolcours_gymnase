@@ -4,9 +4,10 @@
 >
 import LayoutProjection from "@/Layouts/LayoutProjection.vue"
 import type {DeckInterface} from "@/types/modelInterfaces"
-import DeckCards from "@/Components/Decks/DeckCards.vue"
+import DeckDisplay from "@/Pages/Decks/DeckDisplay.vue"
 
 defineOptions({layout: LayoutProjection})
+
 
 const props = withDefaults(defineProps<{
 		deck: DeckInterface,
@@ -37,9 +38,9 @@ const props = withDefaults(defineProps<{
 
 
 		<!--		 card mode -->
-		<deck-cards
-			:cards="deck.cards"
-		/>
+		<suspense>
+			<deck-display :deck />
+		</suspense>
 	</section>
 </template>
 

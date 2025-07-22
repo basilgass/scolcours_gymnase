@@ -20,6 +20,7 @@ const props = withDefaults(defineProps<FormMakerPropsNewType>(),
 		prepend: false
 	})
 
+const value = defineModel<unknown>()
 defineExpose<FormElementExpose>()
 
 const emits = defineEmits<FormElementEmits>()
@@ -66,18 +67,25 @@ watch(() => props.type, (newType) => {
 	currentComponent.value = loadComponent(newType)
 })
 
+defineSlots<{button: unknown}>()
+
 </script>
 
 <template>
 	<component
 		:is="currentComponent"
+		v-model="value"
 		v-bind="{...$attrs,...props}"
 		@update="emits('update', $event)"
 		@enter="emits('enter', $event)"
 		@focus="emits('focus')"
 		@blur="emits('blur')"
 		@errors="emits('errors', $event)"
-	/>
+	>
+		<template #button>
+			<slot name="button" />
+		</template>
+	</component>
 </template>
 
 <style scoped>

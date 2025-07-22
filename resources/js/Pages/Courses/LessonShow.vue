@@ -3,7 +3,7 @@ import LayoutMain from "@/Layouts/LayoutMain.vue"
 import {
 	ChallengeInterface,
 	CourseInterface,
-	DeckInterface,
+	DeckInterface, GeneratorInterface,
 	LessonInterface,
 	PostShowInterface,
 	ScoreInterface
@@ -14,9 +14,14 @@ import PostDisplay from "@/Components/Posts/PostDisplay.vue"
 import {Link as InertiaLink} from "@inertiajs/vue3"
 import ChallengeDisplay from "@/Components/Challenges/ChallengeDisplay.vue"
 import LessonIsUnknwon from "@/Components/Courses/LessonIsUnknwon.vue"
-import {computed, ref} from "vue"
-import {useStoreLesson} from "@/stores/useStoreLesson.ts"
+import {ref} from "vue"
 import DeckDisplay from "@/Pages/Decks/DeckDisplay.vue"
+import DialogModal from "@/Components/Ui/DialogModal.vue"
+import FormulaSearch from "@/Components/FormulaSearch.vue"
+import LessonTypeIcon from "@/Components/Courses/LessonTypeIcon.vue"
+import ChallengeTraining from "@/Components/Challenges/ChallengeTraining.vue"
+import {ScoreLessonDataInterface} from "@/types/scoreInterfaces.ts"
+import {useStoreScore} from "@/stores/useStoreScore.ts"
 
 defineOptions({layout: LayoutMain})
 
@@ -27,14 +32,13 @@ const props = defineProps<{
 }>()
 
 const menuToggle = ref(true)
-// TODO: title on InertiaLink with v-katex
 
-const lessonScore = useStoreLesson()
+const scoreStore = useStoreScore()
+const score = await scoreStore.getScore<ScoreLessonDataInterface>('Lesson', props.lesson.id)
 
-lessonScore.init(props.lesson)
-const lessonResult = computed<number>(() => {
-	return Math.round(lessonScore.current / lessonScore.target * 100)
-})
+
+const showFormularDialog = ref(false)
+
 
 </script>
 
@@ -44,8 +48,8 @@ const lessonResult = computed<number>(() => {
 			<article-title
 				:title="lesson.title"
 				:return-link="{
-					label: 'retour',
-					url: ''
+					label: 'retour au cours',
+					url: route('students.courses.show', {course: course.slug})
 				}"
 			/>
 		</header>
@@ -64,7 +68,11 @@ const lessonResult = computed<number>(() => {
 				<challenge-display
 					v-else-if="lesson.lessonable_type==='Challenge'"
 					:challenge="lesson.lessonable as ChallengeInterface"
-					:selector="lesson.parameters.selector as number ?? 0"
+					:selector="0"
+				/>
+				<challenge-training
+					v-else-if="lesson.lessonable_type==='Generator'"
+					:generator="lesson.lessonable as GeneratorInterface"
 				/>
 				<deck-display
 					v-else-if="lesson.lessonable_type==='Deck'"
@@ -110,13 +118,7 @@ const lessonResult = computed<number>(() => {
 									'font-semibold': l.id===lesson.id,
 								}"
 							>
-								<i
-									:class="{
-										'bi bi-book': l.lessonable_type==='Post',
-										'bi bi-question': l.lessonable_type==='Challenge',
-										'bi bi-copy': l.lessonable_type==='Deck',
-									}"
-								/>
+								<lesson-type-icon :lesson="l" />
 								<InertiaLink
 									class="flex-1 whitespace-nowrap overflow-hidden overflow-ellipsis"
 									:href="route('students.lessons.show', {course: course.slug, lesson: l.id})"
@@ -135,6 +137,7 @@ const lessonResult = computed<number>(() => {
 							<div
 								class="flex justify-between cursor-pointer"
 								:title="menuToggle?'':'formulaire'"
+								@click="showFormularDialog=true"
 							>
 								<div v-show="menuToggle">
 									formulaire
@@ -147,7 +150,7 @@ const lessonResult = computed<number>(() => {
 					</Card>
 
 					<Card
-						:class="lessonResult>=100 ? 'bg-green-100 border-green-600 text-green-600':''"
+						:class="score.is_resolved ? 'bg-green-100 border-green-600 text-green-600':''"
 					>
 						<template #header>
 							<div
@@ -158,7 +161,7 @@ const lessonResult = computed<number>(() => {
 									score
 								</div>
 								<div class="whitespace-nowrap">
-									{{ lessonResult }} %
+									{{ score.score }} %
 								</div>
 							</div>
 						</template>
@@ -166,6 +169,26 @@ const lessonResult = computed<number>(() => {
 				</div>
 			</aside>
 		</div>
+
+		<dialog-modal v-model="showFormularDialog">
+			<template #header>
+				<div class="p-3 flex justify-between">
+					<h3
+						class="text-2xl font-semibold"
+					>
+						Formulaire
+					</h3>
+					<i
+						class="bi bi-x-lg cursor-pointer"
+						@click="showFormularDialog=false"
+					/>
+				</div>
+			</template>
+			<formula-search
+				class="px-3 pb-3"
+				:theme-id="course.theme_id"
+			/>
+		</dialog-modal>
 	</main>
 </template>
 

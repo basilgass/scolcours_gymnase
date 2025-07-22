@@ -3,9 +3,11 @@ export interface FormElementExpose {
 	validate: () => string[]
 }
 
+// REFACTOR: FormElementEmits doit exporter des "ModelInterface"
+//string | boolean | number | Record<string, string>  | undefined
 export interface FormElementEmits {
-	update: [value: string | boolean | number | Record<string, string> | undefined ],
-	enter: [value: string | boolean | number | Record<string, string>  | undefined ],
+	update: [value: unknown],
+	enter: [value: unknown],
 	focus: [],
 	blur: [],
 	errors: [e: string[]]
@@ -55,7 +57,7 @@ export interface FormMakerPropsNewType {
 	xl?: boolean
 	focus?: boolean
 	output?: boolean | string
-	inputClass?: false |string
+	inputClass?: false | string
 }
 
 export interface FormMakerPropsType {

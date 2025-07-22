@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\DevController;
-use App\Http\Controllers\ScolcoursController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,7 +15,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware(['web', 'admin'])
+Route::middleware('admin')
      ->prefix('admin')
      ->as('admin.')
      ->group(function () {
@@ -88,14 +87,15 @@ Route::middleware(['web', 'admin'])
 	          });
 
 
-	     Route::prefix('dev')
-	          ->as('dev.')
-	          ->group(function () {
-		          Route::get('/', [DevController::class, 'index'])
-		               ->name('index');
-		          Route::get('/{dev}', [DevController::class, 'show'])
-		               ->name('show');
-	          });
+     });
 
 
+Route::middleware('admin')
+     ->prefix('dev')
+     ->as('dev.')
+     ->group(function () {
+	     Route::get('/', [DevController::class, 'index'])
+	          ->name('index');
+	     Route::get('/{dev}', [DevController::class, 'show'])
+	          ->name('show');
      });

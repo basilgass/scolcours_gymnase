@@ -3,105 +3,85 @@
 	setup
 >
 
-import DeckCardsIndex from "@/Components/Decks/DeckCardsIndex.vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
-import {flashInterface} from "@/types"
-import type {CardInterface, DeckInterface} from "@/types/modelInterfaces"
-import {watchDebounced} from "@vueuse/core"
-import axios from "axios"
-import {inject, ref} from "vue"
+import type {ChapterInterface, DeckInterface} from "@/types/modelInterfaces"
+import {computed, inject, ref} from "vue"
+import DeckCardsEditIndex from "@/Components/Decks/Parts/DeckCardsEditIndex.vue"
+import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
+import {slugify} from "@/scolcours.ts"
+import Card from "@/Components/Ui/Card.vue"
 import ScButton from "@/Components/Ui/scButton.vue"
+import {AxiosErrorMessage, flashInterface} from "@/types"
+import axios from "axios"
 
 defineOptions({layout: LayoutMain})
-
-const flash = inject<flashInterface>("flash")
 
 const props = defineProps<{
 	deck: DeckInterface
 }>()
 
-const chapterId = ref<undefined | number>(undefined)
-const chapterTitle = ref("???")
+const flash = inject<flashInterface>('flash')
 
-const getTargetName = function () {
+const theTitle = ref<string>(props.deck.title)
+const theSlug = computed<string>(() => slugify(theTitle.value))
+const chapter = ref<ChapterInterface>(props.deck.chapter)
 
-	if (chapterId.value === undefined) {
-		chapterTitle.value = "???"
-		return
-	}
+function updateDeck() {
 	axios
-		.get(route(`api.chapters.info`, [chapterId.value]))
-		.then((res) => {
-			chapterTitle.value = res.data.title
-
+		.patch(route('api.admin.decks.update', {deck: props.deck.id}), {
+			title: theTitle.value,
+			slug: theSlug.value,
+			chapter_id: chapter.value.id
 		})
-		.catch(() => {
-			chapterTitle.value = "???"
-		})
-}
-
-function assignChapter() {
-	if (chapterTitle.value === "???") {
-		return
-	}
-
-	axios.post(route("api.decks.updateChapter", [props.deck.id]), {
-		_method: "PATCH",
-		chapter_id: chapterId.value
-	})
 		.then(() => {
-			flash.success(`Le deck a été assigné au chapitre ${chapterTitle.value}`)
-			chapterId.value = undefined
+			flash.success('Le deck a bien été enregistré')
 		})
-		.catch(() => {
-			flash.error(`Le deck n'a pas pu être assigné au chapitre ${chapterTitle.value}`)
-			chapterId.value = undefined
+		.catch((err: AxiosErrorMessage) => {
+			console.warn(err.response.data.message)
+			flash.error('Problème lors de l\'enregistrement du deck')
 		})
 }
-
-watchDebounced(chapterId, getTargetName, {debounce: 1000, maxWait: 2000})
 </script>
 <template>
 	<section class="my-5 scolcours-container">
-		<div class="flex justify-between">
-			<div>
-				<h3 class="text-3xl">
-					{{ deck.title }}
-				</h3>
-				<div class="font-code text-xs">
-					{{ deck.slug }}
-				</div>
-				<InertiaLink :href="route('decks.index')">
-					Retour à la liste des decks
-				</InertiaLink>
-			</div>
-			<div>
-				<div class="flex">
-					<FormMaker
-						v-model.number="chapterId"
-						label="Chapitre"
-						label-as-placeholder
-						sm
-						font-code
-						@enter="assignChapter"
-					/>
+		<article-title
+			:title="theTitle"
+			:subtitle="theSlug"
+			:return-link="{
+				label:'retour à la liste des decks',
+				url: route('decks.index')
+			}"
+		/>
+
+		<Card>
+			<template #header>
+				<div class="flex justify-between">
+					<div>modifier le deck</div>
 					<sc-button
 						xs
-						@click="assignChapter"
+						type="save"
+						icon
+						@click="updateDeck"
 					>
-						OK
+						enregistrer
 					</sc-button>
 				</div>
-				<div
-					class="text-xs text-gray-500 font-code"
-					v-katex.auto="chapterTitle"
-				/>
-			</div>
-		</div>
+			</template>
+			<form-maker v-model="theTitle" />
+			<form-maker
+				v-model="chapter"
+				type="chapter"
+				label="Chapitre"
+				class="mt-6 bg-content p-3"
+				sm
+				font-code
+			/>
+		</Card>
 
 		<!-- view mode -->
-		<deck-cards-index
+		<deck-cards-edit-index
+			class="mt-12"
 			:deck="props.deck"
 		/>
 	</section>

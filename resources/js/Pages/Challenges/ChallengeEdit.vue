@@ -19,8 +19,6 @@ const props = defineProps<{
 	challenge: ChallengeInterface
 }>()
 
-console.log(usePage().props)
-
 const flash = inject<flashInterface>("flash")
 
 
@@ -35,7 +33,7 @@ const updateGeneratorsOrder = function () {
 
 	axios
 		.post(
-			route("api.challenges.generators.updateOrder", [
+			route("api.admin.challenges.generators.updateOrder", [
 				theChallenge.value.id
 			]),
 			{
@@ -57,7 +55,7 @@ const updateGeneratorsOrder = function () {
 const addGenerator = function () {
 	axios
 		.post(
-			route("api.challenges.generators.store", [
+			route("api.admin.challenges.generators.store", [
 				theChallenge.value.id
 			])
 		)
@@ -77,7 +75,7 @@ const getListOfGenerators = function () {
 	if (availableGenerators.value.length === 0) {
 		axios
 			.get(
-				route("api.challenges.generators.index", [
+				route("api.admin.challenges.generators.index", [
 					theChallenge.value.id
 				])
 			)
@@ -91,7 +89,7 @@ const attachGenerator = function () {
 	if (attachGeneratorId.value !== "") {
 		axios
 			.post(
-				route("api.challenges.generators.attach", [
+				route("api.admin.challenges.generators.attach", [
 					theChallenge.value.id,
 					attachGeneratorId.value
 				])
@@ -105,7 +103,7 @@ const attachGenerator = function () {
 const detachGenerator = function (id, destroy) {
 	axios
 		.post(
-			route("api.challenges.generators.detach", [
+			route("api.admin.challenges.generators.detach", [
 				theChallenge.value.id,
 				id
 			]),
@@ -140,7 +138,7 @@ const saveChallenge = function () {
 	// 2- Save the challenge configuration
 	// 3- Save the generators
 	axios
-		.patch(route("api.blocks.update", [theChallenge.value.block.id]), {
+		.patch(route("api.admin.blocks.update", [theChallenge.value.block.id]), {
 			_method: "PATCH",
 			body: theChallenge.value.block.body,
 			illustrations:
@@ -151,7 +149,7 @@ const saveChallenge = function () {
 		.then(() => {
 			axios
 				.patch(
-					route("api.challenges.update", [props.challenge.id]),
+					route("api.admin.challenges.update", [props.challenge.id]),
 					{
 						...theChallenge.value,
 						_method: "PATCH"
@@ -169,7 +167,7 @@ const saveChallenge = function () {
 }
 const deleteChallenge = function () {
 	axios
-		.post(route("api.challenges.destroy", [props.challenge.id]), {
+		.post(route("api.admin.challenges.destroy", [props.challenge.id]), {
 			_method: "delete"
 		})
 		.then((res) => {
@@ -177,7 +175,7 @@ const deleteChallenge = function () {
 				// go back
 				router.visit(
 					route("chapters.show", [
-						props.challenge.chapter.slug
+						props.challenge.chapter.id
 					])
 				)
 				flash.success(
@@ -374,21 +372,10 @@ const deleteChallenge = function () {
 
 							<div class="min-w-[500px] flex items-end">
 								<form-maker
-									v-model="attachGenerator"
-									label="attacher un générateur existant"
-									type="search"
-									:fetch="route('api.generators.index')"
-								/>
-								<form-maker
-									v-show="false"
 									v-model="attachGeneratorId"
 									label="attacher un générateur existant"
-									name="generatorsList"
-									type="select"
-									@click.once="getListOfGenerators"
-									class="flex-1"
-									:choices="availableGenerators"
-									:label-map="(item)=>item.title"
+									type="search"
+									:fetch="route('api.admin.generators.index')"
 								/>
 								<sc-button
 									:disabled="attachGeneratorId === ''"

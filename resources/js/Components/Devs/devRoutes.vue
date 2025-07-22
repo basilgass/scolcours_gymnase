@@ -12,11 +12,11 @@ watchDebounced(name, getRoute, {debounce: 1000, maxWait: 2000})
 
 function getRoute(value: { id: number, title: string } | string) {
 
-	const [n, ...params] = typeof value === 'string' ?
-		value.split(',') :
-		name.value.title.split(',')
+	const [n, params] = typeof value === 'string' ?
+		value.split('?') :
+		name.value.title.split('?')
 
-	axios.get(route(n, params))
+	axios.get(route(n, params?.split('&')??[]))
 		.then((res) => {
 			result.value = res.data
 		})

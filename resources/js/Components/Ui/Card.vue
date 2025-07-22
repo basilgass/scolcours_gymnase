@@ -5,21 +5,33 @@ import {computed} from "vue"
 
 const props = withDefaults(defineProps<{
 	theme?: false | number | string
+	borderTheme?: false | number | string
 }>(), {
-	theme: false
+	theme: false,
+	borderTheme: false
 })
 
 const cardClass = computed<string>(() => {
-	if (!props.theme) {
-		return ''
+	if (props.theme) {
+		const chapter = getThemeChapter(props.theme)
+
+		return getThemeClasses(
+			chapter,
+			{bg: true, text: true}
+		).join(' ')
 	}
 
-	const chapter = getThemeChapter(props.theme)
+	if(props.borderTheme){
+		const chapter = getThemeChapter(props.borderTheme)
 
-	return getThemeClasses(
-		chapter,
-		{bg: true, text: true}
-	).join(' ')
+		return getThemeClasses(
+			chapter,
+			{border: true}
+		).join(' ')
+	}
+
+
+	return ''
 })
 </script>
 

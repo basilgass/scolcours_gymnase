@@ -1,0 +1,83 @@
+/**
+ * Score table
+ * - user_id		int
+ * - score			float
+ * - attempts		int
+ * - is_resolved	bool
+ * - data			custom
+ * - scoreable_type	<scoreableClassName>
+ * - scoreable_id	int
+ */
+
+export type scoreableClassName =
+	'Post' |
+	'Question' |
+	'Deck' |
+	'Card' |
+	'Challenge' |
+	'Generator' |
+	'Lesson'
+
+/**
+ * Question score (QuestionAnswerValidation.vue)
+ * - score = 0 ou 1
+ * - data: {
+ * 		answers: string[]	Liste des réponses
+ * 		}
+ */
+
+export interface ScoreQuestionDataInterface {
+	answers: string[]
+}
+
+
+/**
+ * Deck store (DeckDisplay.vue) : is it used ?
+ */
+export interface ScoreDeckDataInterface {
+
+}
+
+/**
+ * Card score (DeckCards.vue)
+ * - score = 0 à 1 (current weight)
+ * - data: {
+ *     current_score: 0 à 1 => poids actuel
+ *     current_appearances: int => nombre d'apparitions de la carte
+ *     current_time_spent: float => durée en secondes
+ *     appearances: int => nombre d'apparition au total
+ *     success: int =>
+ *     time_spent: float => durée totale passée sur la carte en seconde.
+ * }
+ */
+export interface ScoreCardDataInterface {
+	current_score: number
+	current_appearances: number
+	current_time_spent: number
+	appearances: number
+	success: number
+	time_spent: number
+}
+
+export interface ScoreChallengeDataInterface {
+	level: number
+}
+
+/**
+ * Generator score (ChallengeTraining.vue)
+ */
+export interface ScoreGeneratorDataInterface {
+
+}
+
+export interface ScoreLessonDataInterface {
+
+}
+
+export type ScoreDataInterface =
+	ScoreQuestionDataInterface |
+	ScoreDeckDataInterface |
+	ScoreCardDataInterface |
+	ScoreChallengeDataInterface |
+	ScoreGeneratorDataInterface |
+	ScoreLessonDataInterface

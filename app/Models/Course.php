@@ -39,4 +39,8 @@ class Course extends Model
 		return $this->belongsTo(Theme::class);
 	}
 
+	public function users()
+	{
+		return $this->belongsToMany(User::class);
+	}
 }

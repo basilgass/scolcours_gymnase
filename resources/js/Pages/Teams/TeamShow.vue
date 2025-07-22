@@ -45,7 +45,7 @@ const props = defineProps({
 
 		<div class="grid grid-cols-1 md:grid-cols-2 gap-5">
 			<filtered-list
-				:item-background="(item) => item.theme.id"
+				:item-background="(item) => item.theme_id"
 				:list="props.chapters"
 				:route-data="(item) => [props.team.name, item.slug]"
 				:route-name="'teams.chapters.stats'"
@@ -54,7 +54,7 @@ const props = defineProps({
 			/>
 
 			<filtered-list
-				:item-background="(item) => item.chapter.theme.id"
+				:item-background="(item) => item.chapter.theme_id"
 				:list="props.challenges"
 				:route-data="(item) => [props.team.name, item.slug]"
 				:route-name="'teams.challenge'"

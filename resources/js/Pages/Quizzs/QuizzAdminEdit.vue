@@ -31,7 +31,7 @@ const props = defineProps({
 const showQuizzForm = ref(false),
 	quizzUpdate = function () {
 		axios
-			.post(route("api.quizzs.update", [theQuizz.value.id]), {
+			.post(route("api.admin.quizzs.update", [theQuizz.value.id]), {
 				title: theQuizz.value.title,
 				body: theQuizz.value.body,
 				outro: theQuizz.value.outro,
@@ -48,7 +48,7 @@ const showQuizzForm = ref(false),
 	},
 	quizzDestroy = function () {
 		axios
-			.post(route("api.quizzs.destroy", [theQuizz.value.id]), {
+			.post(route("api.admin.quizzs.destroy", [theQuizz.value.id]), {
 				_method: "DELETE",
 			})
 			.then(() => {
@@ -61,7 +61,7 @@ const showUsersIndex = ref(-1),
 	sessionName = ref(""),
 	sessionCreate = function () {
 		axios
-			.post(route("api.quizzs.sessions.create", [theQuizz.value.id]), {
+			.post(route("api.admin.quizzs.sessions.create", [theQuizz.value.id]), {
 				name: sessionName.value,
 				team: sessionTeam.value,
 			})
@@ -82,7 +82,7 @@ const showUsersIndex = ref(-1),
 	},
 	sessionDestroy = function (id) {
 		axios
-			.post(route("api.quizzs.sessions.destroy", [id]), {
+			.post(route("api.admin.quizzs.sessions.destroy", [id]), {
 				_method: "DELETE",
 			})
 			.then(() => {

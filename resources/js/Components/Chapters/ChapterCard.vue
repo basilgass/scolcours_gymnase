@@ -6,12 +6,14 @@ import {AxiosErrorMessage, flashInterface} from "@/types"
 import {ChapterShowInterface} from "@/types/modelInterfaces.ts"
 import {usePage} from "@inertiajs/vue3"
 import axios from "axios"
-import {inject, ref} from "vue"
+import {computed, inject, ref} from "vue"
 
 
 const props = defineProps<{
 	chapter: ChapterShowInterface
 }>()
+
+const themeSlug = computed<string>(()=>usePage().props.themes[props.chapter.theme_id].slug)
 
 const editMode = useStoreEditMode()
 
@@ -60,7 +62,7 @@ function activate() {
 		<InertiaLink
 			:class="{ 'opacity-30 hover:opacity-70 transition-all': !isActive }"
 			:href="route('themes.chapters.show', {
-				theme: chapter.theme.slug,
+				theme: themeSlug,
 				chapter: chapter.slug
 			})"
 			class="text-xl

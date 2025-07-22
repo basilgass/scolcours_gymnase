@@ -9,10 +9,13 @@ interface FilterItem {
 	slug: string,
 	active: boolean,
 	theme_id?: number
+	theme?: {
+		id: number
+	}
 }
 
 const scolcoursThemes = computed(() => {
-	return usePage().props.themes
+	return Object.values(usePage().props.themes)
 		.filter(x => x.slug !== "tools" && x.slug !== "jeux")
 })
 
@@ -31,6 +34,7 @@ interface FilteredListProps<T> {
 	noFilterIfLessThan?: number;
 	noTitle?: boolean;
 	filterByTheme?: boolean | ((item: T) => number);
+	filterByThemeOnLoad?: number;
 	focus?: boolean;
 }
 
@@ -50,6 +54,7 @@ const props = withDefaults(
 		noTitle: false,
 		filterByTheme: false,
 		searchFunction: null,
+		filterByThemeOnLoad: 0,
 		focus: false
 	})
 
@@ -71,7 +76,8 @@ const filteredList = computed<(T & { id: number })[]>(() => {
 				if (props.filterByTheme === true) {
 					// return item.theme_id === selectedTheme.value
 					const filter = item as unknown as FilterItem // destructure for typescript
-					return filter.theme_id === selectedTheme.value
+					return filter.theme_id === selectedTheme.value ||
+						filter.theme?.id === selectedTheme.value
 				} else if (!(typeof props.filterByTheme === "boolean")) {
 					return props.filterByTheme(item) === selectedTheme.value
 				}
@@ -108,7 +114,7 @@ const filteredList = computed<(T & { id: number })[]>(() => {
 )
 
 const selectedList = ref("")
-const selectedTheme = ref<number>(0)
+const selectedTheme = ref<number>(props.filterByThemeOnLoad)
 const showList = ref(props.collapsed !== true)
 
 function itemClicked(item) {
@@ -158,7 +164,10 @@ defineExpose({
 			</div>
 		</div>
 
-		<div v-show="showList">
+		<div
+			v-show="showList"
+			class="flex flex-col w-full"
+		>
 			<form-maker
 				v-show="props.list.length >= noFilterIfLessThan"
 				ref="filterInput"
@@ -174,7 +183,7 @@ defineExpose({
 
 			<div
 				v-if="filterByTheme"
-				class="flex flex-wrap gap-5 items-center mt-3 mb-5"
+				class="flex flex-wrap gap-5 items-center mt-1 mb-12"
 			>
 				<div>Filtrer par thèmes:</div>
 

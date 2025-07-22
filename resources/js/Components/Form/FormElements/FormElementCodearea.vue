@@ -3,7 +3,6 @@ import {javascriptTriggers, latexTriggers, mdTriggers} from "@/helpers/mdAutofil
 import {computed, ref} from "vue"
 import {FormElementEmits, FormElementExpose, FormMakerPropsNewType} from "@/Components/Form/FormMakerInterface.ts"
 import {useTextEditor} from "@/Composables/useTextEditor.ts"
-import {latex_macros} from "@/helpers/Macros/latex_macros.ts"
 import Prism from "prismjs"
 import "prismjs/components/prism-javascript"
 import "prismjs/components/prism-json"
@@ -12,7 +11,7 @@ import "prismjs/themes/prism.css"
 
 interface FormElementCodeareaPropsInterface extends FormMakerPropsNewType {
 	rows?: number,
-	language?: string,
+	language?: "latex"|"json"|"javascript",
 	wrap?: boolean,
 	resizeable?: boolean,
 	autoSize?: boolean
@@ -97,8 +96,8 @@ const {
 	textareaRef, isInMathEnv,
 	currentLine
 } = useTextEditor('input', {
-	model: theValue,
-	macros: latex_macros
+	language: props.language,
+	model: theValue
 })
 
 /**
@@ -146,6 +145,8 @@ const areaHeight = computed(() => {
 				class="w-full"
 				v-bind="$attrs"
 				@scroll="sync_scroll"
+				@focus="emits('focus')"
+				@blur="emits('blur')"
 			/>
 			<pre ref="pre"><code
 				class="w-full"

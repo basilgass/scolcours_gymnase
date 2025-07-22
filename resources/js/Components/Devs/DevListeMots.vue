@@ -16,7 +16,7 @@ function getWords(){
 		return
 	}
 
-	axios.get(route('api.dico.fetch', {
+	axios.get(route('api.admin.dico.fetch', {
 		language: 'fr',
 		size: nbCar.value
 	}))

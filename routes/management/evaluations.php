@@ -8,21 +8,6 @@ Route::middleware('web')
 	     Route::get('evaluations/{evaluation}', [EvaluationController::class, 'show'])
 	          ->name('evaluations.show');
 
-	     // Students routes
-	     Route::middleware('students')
-		     ->prefix('students')
-		     ->as('students.')
-	          ->group(function () {
-
-	          });
-
-	     // Admin routes
-	     Route::middleware('admin')
-		     ->prefix('admin')
-		     ->as('admin.')
-		     ->group(function () {
-
-	          });
      });
 
 

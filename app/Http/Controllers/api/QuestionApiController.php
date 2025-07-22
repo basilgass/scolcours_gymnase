@@ -14,6 +14,7 @@ use App\Traits\ResolvesTarget;
 use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 
 class QuestionApiController extends Controller
 {
@@ -170,10 +171,28 @@ class QuestionApiController extends Controller
 			'displayIf' => ['string', 'nullable']
 		]);
 
-		$question->displayIf = $validated['displayIf'];
+		$question->display_if = $validated['displayIf'];
 		$question->save();
 
 		return true;
+	}
+
+	public function updateBatchDisplayIf(Request $request)
+	{
+		$validated = $request->validate([
+			"updates"=> ["required", "array"],
+			'updates.*.id' => ['required', 'integer', 'exists:questions,id'],
+			'updates.*.display_if' => ['nullable', 'integer']
+		]);
+
+		DB::transaction(function () use ($validated) {
+			foreach ($validated['updates'] as $data) {
+				Question::where('id', $data['id'])->update([
+					'display_if' => $data['display_if']
+				]);
+			}
+		});
+
 	}
 
 	public function updateQuestionsDisplayIf(Request $request): bool

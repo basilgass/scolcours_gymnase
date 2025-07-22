@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Models\Challenges\ChallengeSession;
-use Database\Factories\UserFactory;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -102,7 +101,7 @@ class User extends Authenticatable
 	];
 
 
-    protected $with = [];
+	protected $with = [];
 
 	public function teams()
 	{
@@ -116,21 +115,24 @@ class User extends Authenticatable
 
 	public function questions()
 	{
-		return $this->belongsToMany(Question::class)
+		return $this
+			->belongsToMany(Question::class)
 			->withTimestamps();
-//			->withPivot('result', 'answer', 'attempts');
+		//			->withPivot('result', 'answer', 'attempts');
 	}
 
 	public function cards()
 	{
-		return $this->belongsToMany(Card::class)
+		return $this
+			->belongsToMany(Card::class)
 			->withTimestamps()
 			->withPivot('success');
 	}
 
 	public function quizz_sessions()
 	{
-		return $this->belongsToMany(QuizzSession::class)
+		return $this
+			->belongsToMany(QuizzSession::class)
 			->withTimestamps();
 	}
 
@@ -138,17 +140,10 @@ class User extends Authenticatable
 	{
 		return $this->hasMany(Score::class);
 	}
-//
-//	public function chapters()
-//	{
-//		return $this->belongsToMany(Chapter::class)
-//			->withPivot('post_id', 'updated_at')
-//			->orderBy('pivot_updated_at', 'desc');
-//	}
 
-	public function decks()
+	public function courses()
 	{
-		return $this->hasMany(UserDeck::class);
+		return $this->belongsToMany(Course::class);
 	}
 
 	public function getAdminAttribute()

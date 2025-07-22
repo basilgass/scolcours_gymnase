@@ -9,17 +9,9 @@ Route::middleware('web')
 	     Route::resource('posts', PostController::class)
 	          ->only(['index', 'show']);
 
-	     // Students routes
-	     Route::middleware('students')
-	          ->prefix('students')
-	          ->as('students.')
-	          ->group(function () {
-
-	          });
 
 	     // Admin routes
 	     Route::middleware('admin')
-	          ->prefix('admin')
 	          ->as('admin.')
 	          ->group(function () {
 		          Route::resource('posts', PostController::class)
@@ -34,22 +26,21 @@ Route::middleware('api')
      ->as('api.')
      ->group(function () {
 	     // Public api.
+	     Route::apiResource('posts', PostApiController::class)
+	          ->only(['index', 'show']);
 
 	     //REFACTOR Récupère juste le titre du modèle - à généraliser ?
 	     Route::get('posts/{post}/info', [PostApiController::class, 'info'])
 	          ->name('posts.info');
 
 
-	     // Students api
-	     Route::middleware('students')
-	          ->group(function () {
-
-	          });
-
 	     // Admin api
 	     Route::middleware('admin')
+		     ->prefix('admin')
+		     ->as('admin.')
 	          ->group(function () {
-		          Route::apiResource('posts', PostApiController::class);
+		          Route::apiResource('posts', PostApiController::class)
+		          ->only(['store', 'update', 'destroy']);
 
 		          Route::prefix('posts')
 		               ->as('posts.')

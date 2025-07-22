@@ -8,23 +8,8 @@ Route::middleware('web')
 	     // Public routes.
 	     Route::resource('formulaire', FormulaController::class)
 	          ->names('formulas')
-	          ->only(['index']);
-
-	     // Students routes
-	     Route::middleware('students')
-		     ->prefix('students')
-		     ->as('students.')
-	          ->group(function () {
-
-	          });
-
-	     // Admin routes
-	     Route::middleware('admin')
-		     ->prefix('admin')
-		     ->as('admin.')
-		     ->group(function () {
-
-	          });
+		     ->parameters(['formulaire' => 'formula'])
+	          ->only(['index', 'show']);
      });
 
 
@@ -33,22 +18,21 @@ Route::middleware('api')
      ->as('api.')
      ->group(function () {
 	     // Public api.
-	     Route::get("chapters/{chapter:slug}/formulas", [FormulaApiController::class, 'getFormulasFromChapter'])
+	     Route::apiResource('formulas', FormulaApiController::class)
+	          ->only(['index', 'show']);
+
+	     Route::get("formulas/chapters/{chapter}", [FormulaApiController::class, 'getFormulasFromChapter'])
 	          ->name('chapters.formulas.index');
-	     Route::get('formulas/{formula}', [FormulaApiController::class, 'fetch'])
-	          ->name('formulas.fetch');
 
-
-	     // Students api
-	     Route::middleware('students')
-	          ->group(function () {
-
-	          });
 
 	     // Admin api
 	     Route::middleware('admin')
+		     ->prefix('admin')
+		     ->as('admin.')
 	          ->group(function () {
-		          Route::apiResource('formulas', FormulaApiController::class);
+		          Route::apiResource('chapters.formulas', FormulaApiController::class)
+		               ->shallow()
+		               ->only(['store', 'update', 'destroy']);
 
 		          Route::prefix('formulas')
 		               ->as('formulas.')

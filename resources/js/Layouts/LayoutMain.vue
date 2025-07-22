@@ -21,7 +21,7 @@ withDefaults(defineProps<{
 const flashMessages = ref<flashMessageInterface[]>([])
 
 function addFlashMessage(
-	message,
+	message: string,
 	type: "success" | "info" | "error",
 	config: flashConfig
 ) {

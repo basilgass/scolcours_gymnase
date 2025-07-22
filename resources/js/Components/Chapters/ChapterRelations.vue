@@ -3,12 +3,13 @@
 	setup
 >
 
-import { useStoreEditMode } from "@/stores/useStoreEditMode.ts"
-import { flashInterface } from "@/types"
-import type { ChapterInterface } from "@/types/modelInterfaces"
+import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
+import {flashInterface} from "@/types"
+import type {ChapterInterface, ThemeInterface} from "@/types/modelInterfaces"
 import axios from "axios"
-import { inject, ref } from "vue"
+import {inject, ref} from "vue"
 import ScButton from "@/Components/Ui/scButton.vue"
+import FilteredList from "@/Components/Ui/FilteredList.vue"
 
 const props = defineProps<{
 	chapter: ChapterInterface,
@@ -24,7 +25,7 @@ const chapterRelations = ref(props.relations)
 const modifyRelations = ref(false)
 const searchChapters = ref([])
 
-const getAllChapters = function() {
+const getAllChapters = function () {
 	if (modifyRelations.value) {
 		modifyRelations.value = false
 		return
@@ -34,8 +35,9 @@ const getAllChapters = function() {
 	}
 
 	// REFACTOR : à quoi sert chapters.indes.min ?
-	axios.get(route("chapters.index.min"))
+	axios.get(route("api.admin.chapters.index"))
 		.then(res => {
+			console.log(res.data)
 			searchChapters.value = res.data.filter(ch => ch.slug !== props.chapter.slug)
 			modifyRelations.value = true
 		})
@@ -44,8 +46,9 @@ const getAllChapters = function() {
 		})
 }
 
-const toggleRelation = function(id) {
-	axios.post(route("api.chapters.relations.toggle", [props.chapter.id, id]))
+const toggleRelation = function (id) {
+	console.log('TOGGLE', formChapter.value)
+	axios.post(route("api.admin.chapters.relations.toggle", [props.chapter.id, id]))
 		.then(res => {
 			flash.success("relation correctement mis à jour...")
 			if (res.data !== false) {
@@ -55,6 +58,8 @@ const toggleRelation = function(id) {
 		flash.error(res.data)
 	})
 }
+
+const formChapter = ref<ChapterInterface>()
 </script>
 <template>
 	<div>
@@ -70,8 +75,10 @@ const toggleRelation = function(id) {
 				v-for="ch of chapterRelations"
 				:key="`related-${ch.slug}`"
 				v-katex.auto="ch.title"
-				:theme="ch.theme.id"
-				:href="route('chapters.show', [ch.slug])"
+				:theme="ch.theme_id"
+				:href="route('chapters.show', [ch.id])"
+				xs
+				outline
 			/>
 		</div>
 		<div v-else>
@@ -98,19 +105,23 @@ const toggleRelation = function(id) {
 				</sc-button>
 			</div>
 
-			<div
+			<filtered-list
 				v-show="modifyRelations"
+				:list="searchChapters"
+				filter-by-theme
 				class="flex flex-wrap gap-3"
 			>
-				<sc-button
-					v-for="chapter of searchChapters"
-					:key="chapter.slug"
-					v-katex.auto="chapter.title"
-					:theme="chapter.theme.id"
-					:outline="!Object.values(chapterRelations).map(x => x.slug).includes(chapter.slug)"
-					@click="toggleRelation(chapter.id)"
-				/>
-			</div>
+				<template #card="{item}: {item: ChapterInterface}">
+					<sc-button
+						:key="item.slug"
+						v-katex.auto="item.title"
+						:theme="item.theme_id"
+						:outline="!Object.values(chapterRelations).map(x => x.slug).includes(item.slug)"
+						@click="toggleRelation(item.id)"
+						xs
+					/>
+				</template>
+			</filtered-list>
 		</div>
 	</div>
 </template>

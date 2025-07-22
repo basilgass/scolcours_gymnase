@@ -45,16 +45,14 @@ class RouteServiceProvider extends ServiceProvider
 
 		Route::bind('theme', function ($value) {
 			try {
-				$themesList = Theme::getThemesFromCache()->pluck('slug')->toArray();
+				$themes = Theme::getThemesFromCache();
 			} catch (\Exception $e) {
-				$themesList = Theme::all()->pluck('slug')->toArray();
+				$themes = Theme::all();
 			}
 
-			if (in_array($value, $themesList, true)) {
-				return Theme::where('slug', $value)->firstOrFail();
-			}
-
-			abort(404);
+			return $themes->firstWhere('id', $value)
+				?? $themes->firstWhere('slug', $value)
+				?? abort(404);
 		});
 
 

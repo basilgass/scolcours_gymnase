@@ -33,6 +33,7 @@ const iconValue = computed(() => {
 <template>
 	<form-maker-wrapper
 		v-bind="{...$attrs,...props}"
+		v-model="value"
 		:icon="iconValue"
 	>
 		<input

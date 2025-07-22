@@ -1,3 +1,11 @@
+import {ComputedRef, Ref} from "vue"
+import {lessonableClassName, lessonableModel, LessonParametersInterface} from "@/types/lessonInterfaces.ts"
+import {
+	ScoreCardDataInterface, ScoreDataInterface, ScoreDeckDataInterface,
+	ScoreGeneratorDataInterface, ScoreLessonDataInterface,
+	ScoreQuestionDataInterface
+} from "@/types/scoreInterfaces.ts"
+
 export interface UserInterface {
 	id: number;
 	name: string;
@@ -12,10 +20,7 @@ export interface ChapterInterface {
 	slug: string;
 	title: string;
 	meta_title: string;
-	theme: {
-		id: number
-		slug: string
-	};
+	theme_id: number;
 	block: {
 		id: number,
 		body: string
@@ -82,7 +87,7 @@ export interface QuestionInterface extends QuestionDynamicInterface {
 	order: number;
 	displayIf: null | string;
 	css: string;
-	user: ScoreInterface;
+	user: ScoreInterface<ScoreQuestionDataInterface>;
 }
 
 
@@ -119,6 +124,11 @@ export interface User {
 	role: string
 }
 
+export interface ThemeNameInterface {
+	id: number,
+	slug: string
+}
+
 export interface ThemeInterface {
 	id: number
 	slug: string
@@ -153,12 +163,13 @@ export interface GeneratorInterface {
 	id: number;
 	slug: string;
 	title: string;
-	theme: ThemeInterface;
+	theme_id: number;
 	body: string;
 	template: string;
 	keyboard: string;
 	code: string;
 	order: number;
+	user: ScoreInterface<ScoreGeneratorDataInterface>
 }
 
 export interface ChallengeScoreInterface {
@@ -208,24 +219,39 @@ export interface ChallengeInterface {
 
 export interface CardInterface {
 	id: number,
-	recto: BlockInterface,
-	verso: BlockInterface,
-	score?: {
-		id: number,
-		score: number,
-		appearances: number,
-		success: number,
-		time_spent: number,
+	recto: null | BlockInterface,
+	verso: null | BlockInterface,
+	reference?: null | {
+		block: BlockInterface,
+		splitter: undefined | null | 'title' | string
 	}
+	user?: Partial<ScoreInterface<ScoreCardDataInterface>>
+}
+
+export interface CardInterfaceExtended extends CardInterface {
+	current_appearances: number,
+	current_score: number,
+	current_time_spent: number,
 }
 
 export interface DeckInterface {
 	id: number,
 	title: string,
 	slug: string,
-	chapter_id: number,
+	chapter: ChapterInterface,
 	cards_count: number,
-	cards: CardInterface[]
+	cards: CardInterface[],
+	user: ScoreInterface<ScoreDeckDataInterface>
+}
+
+export interface provideDeckData {
+	currentCardId: Ref<number>,
+	cards: Ref<CardInterfaceExtended[]>,
+	intro: Ref<boolean>,
+	running: ComputedRef<boolean>,
+	loggedIn: ComputedRef<boolean>,
+	done: () => void,
+	reset: () => void
 }
 
 export interface WidgetInterface {
@@ -234,10 +260,7 @@ export interface WidgetInterface {
 	slug: string,
 	component: string,
 	description: string,
-	theme: {
-		id: number;
-		slug: number;
-	},
+	theme_id: number,
 	control: boolean
 }
 
@@ -285,7 +308,7 @@ export interface QuizzSessionInterface {
 	shortcode: string
 	quizz: {
 		title: string
-		theme: ThemeInterface
+		theme_id: number
 	}
 }
 
@@ -343,46 +366,27 @@ export interface CourseInterface {
 	updated_at: string,
 }
 
-export interface LessonInterface {
+export interface LessonInterface<T extends LessonParametersInterface = LessonParametersInterface> {
 	id: number,
 	title: string,
 	course_id: number,
 	requires: number[],
-	lessonable: PostInterface | DeckInterface | ChallengeInterface | QuizzInterface | null,
-	lessonable_type: 'Post' | 'Challenge' | 'Deck' | 'Quizz' | null,
-	parameters: Record<string, unknown>,
+	lessonable: lessonableModel | null,
+	lessonable_type: lessonableClassName | null,
+	parameters: T,
+	user: ScoreInterface<ScoreLessonDataInterface>;
 	created_at: string,
 	updated_at: string,
 }
 
-export interface ScoreQuestionDataInterface {
-	answers: string[]
-}
-
-export interface ScoreChallengeInterface {
-	level: number
-}
-
-export interface ScoreDeckInterface {
-
-}
-
-export interface ScoreGeneratorInterface {
-
-}
-
-type ScoreDataInterface = ScoreQuestionDataInterface |
-	ScoreChallengeInterface |
-	ScoreDeckInterface |
-	ScoreGeneratorInterface
-
-export interface ScoreInterface {
+export interface ScoreInterface<T extends ScoreDataInterface = ScoreDataInterface> {
 	id: number,
 	user_id: number,
 	score: number,
-	level: number,
+	scoreable_id: number,
+	scoreable_type: string,
 	is_resolved: boolean,
 	attempts: number,
-	data: ScoreDataInterface,
+	data: T,
 	updated_at: string
 }

@@ -5,24 +5,25 @@ import ChapterFormulas from "@/Components/Chapters/ChapterFormulas.vue"
 import ChapterRelations from "@/Components/Chapters/ChapterRelations.vue"
 import ChapterTheorems from "@/Components/Chapters/ChapterTheorems.vue"
 import ChapterToc from "@/Components/Chapters/ChapterToc.vue"
-import EditLink from "@/Components/Ui/EditLink.vue"
 
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 import {ChallengeMinInterface, ChapterInterface, ChapterShowInterface, PostInterface} from "@/types/modelInterfaces"
-import {ref} from "vue"
+import {computed, ref} from "vue"
 import ScButton from "@/Components/Ui/scButton.vue"
 import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
 import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
+import {usePage} from "@inertiajs/vue3"
 
 defineOptions({layout: LayoutMain})
 
-defineProps<{
+const props = defineProps<{
 	chapter: ChapterShowInterface,
 	posts: PostInterface[],
 	challenges: ChallengeMinInterface[],
 	relations: ChapterInterface[]
 }>()
 
+const theme = computed(()=> usePage().props.themes[props.chapter.theme_id] )
 const editMode = useStoreEditMode()
 
 const currentTab = ref<"requires" | "formulas" | "challenges" | "theorems" | undefined>(undefined)
@@ -55,7 +56,7 @@ const showFormular = ref(false)
 					class="min-w-[200px] md:px-20 rounded-xl mx-auto"
 					theme
 					:href="route('themes.chapters.posts.show', {
-						theme: chapter.theme.slug,
+						theme: theme.slug,
 						chapter: chapter.slug,
 						order: posts[0].order,
 					})"
@@ -118,7 +119,7 @@ const showFormular = ref(false)
 				<chapter-formulas
 					v-if="showFormular"
 					v-show="currentTab==='formulas'"
-					:chapter-slug="chapter.slug"
+					:chapter="chapter"
 				/>
 
 

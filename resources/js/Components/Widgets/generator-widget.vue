@@ -39,7 +39,7 @@ function nextQuestion(checkerResult: ChallengeAnswerInterface): void {
 
 onMounted(() => {
 	if(+props.illustration.parameters>0) {
-		axios.get(route('api.generators.fetch', [props.illustration.parameters]))
+		axios.get(route('api.admin.generators.fetch', [props.illustration.parameters]))
 			.then(res => {
 				generator.value = res.data
 			})

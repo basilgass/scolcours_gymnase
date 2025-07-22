@@ -90,21 +90,21 @@ class Theme extends Model
         return self::getThemesFromCache();
     }
 
-    public function resolveRouteBinding($value, $field = null)
-    {
-        // Fetch from cache
-        $cachedTheme = self::getThemesFromCache();
-
-        // Find the theme by the given field (id or slug)
-        $field = $field ?? $this->getRouteKeyName();
-
-        // Return the model from the cache.
-        return $cachedTheme->firstWhere($field, $value);
-    }
+//    public function resolveRouteBinding($value, $field = null)
+//    {
+//        // Fetch from cache
+//        $cachedTheme = self::getThemesFromCache();
+//
+//        // Find the theme by the given field (id or slug)
+//        $field = $field ?? $this->getRouteKeyName();
+//
+//        // Return the model from the cache.
+//        return $cachedTheme->firstWhere($field, $value);
+//    }
 
     public function chapters(): HasMany
     {
-        return $this->hasMany(Chapter::class);
+        return $this->hasMany(Chapter::class)->orderBy('title');
     }
 
     public function widgets(): HasMany

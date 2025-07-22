@@ -14,6 +14,7 @@ import axios from "axios"
 import {computed, inject, provide} from "vue"
 import {blockTemplate} from "@/helpers/blockTemplate.ts"
 import ScButton from "@/Components/Ui/scButton.vue"
+import IllustrationIndex from "@/Components/Illustrations/IllustrationIndex.vue"
 
 const editMode = useStoreEditMode()
 const flash = inject<flashInterface>("flash")
@@ -71,11 +72,11 @@ const blockBody = computed(() => useFormattedBody(props.block.body, blockScript.
 function addIllustration() {
 	axios
 		.post(
-			route("api.illustrations.store", [props.block.id]),
+			route("api.admin.blocks.illustrations.store", {block: props.block.id}),
 			{}
 		)
 		.then((res) => {
-			router.visit(route("admin.illustrations.edit", [res.data.id]))
+			router.visit(route("admin.illustrations.edit", {illustration: res.data.id}))
 			flash.success("une nouvelle illustration a été créée")
 		}).catch((res) => {
 			console.warn("add illustration: ", res)
@@ -150,13 +151,7 @@ function addIllustration() {
 					v-if="block.illustrations?.length > 0"
 					:class="elementsClasses.illustration"
 				>
-					<div :class="block.illustrationsGrid">
-						<illustration-show
-							v-for="illustration in block.illustrations"
-							:key="`illustration-${illustration.id}`"
-							:illustration="illustration"
-						/>
-					</div>
+					<illustration-index :block />
 				</div>
 			</div>
 		</slot>

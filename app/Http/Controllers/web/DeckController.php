@@ -27,11 +27,26 @@ class DeckController extends Controller
 
 		if (auth()->check()) {
 			$userId = auth()->id();
-			$cards->load([
-				'scores' => function ($query) use ($userId) {
-					$query->where('user_id', $userId);
-				}
+
+			// Load the deck score
+			$deck->load([
+				'scoreForAuth',
+				'cards.scoreForAuth'
 			]);
+
+			if (!$deck->scores->first()) {
+				$score = $deck->scores()->create([
+					'user_id' => $userId,
+					'score'   => 0
+				]);
+			}
+
+			// Load the cards score
+			//			$cards->load([
+			//				'scores' => function ($query) use ($userId) {
+			//					$query->where('user_id', $userId);
+			//				}
+			//			]);
 
 			// Créer les scores manquants
 			foreach ($cards as $card) {
@@ -55,11 +70,12 @@ class DeckController extends Controller
 			}
 
 			// Recharger les scores après création
-			$cards->load([
-				'scores' => function ($query) use ($userId) {
-					$query->where('user_id', $userId);
-				}
-			]);
+			// TODO: removed the load here !
+			//			$cards->load([
+			//				'scores' => function ($query) use ($userId) {
+			//					$query->where('user_id', $userId);
+			//				}
+			//			]);
 		}
 
 		return Inertia::render("Decks/DeckShow", [

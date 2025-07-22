@@ -41,7 +41,7 @@ const currentComponent = computed<WidgetInterface>(() => {
 			name: " ? ",
 			slug: null,
 			component: null,
-			theme: {id: null, slug: null},
+			theme_id: null,
 			description: "module inconnu",
 			control: false
 		}
@@ -53,7 +53,7 @@ const chapterComponents = ref<Record<string, WidgetInterface>>({})
 // Load the list of components
 function loadComponents() {
 	axios
-		.get(route("api.widgets.index"))
+		.get(route("api.admin.widgets.index"))
 		.then((res) => {
 			(res.data as WidgetInterface[]).forEach(comp => {
 				chapterComponents.value[comp.id] = comp
@@ -110,7 +110,7 @@ function pasteIllustration() {
 // Save the illustration to database
 function illustrationSave() {
 	axios
-		.post(route("api.illustrations.update", [theIllustration.value.id]), {
+		.post(route("api.admin.illustrations.update", [theIllustration.value.id]), {
 			...theIllustration.value,
 			_method: "PATCH"
 		})
@@ -137,7 +137,7 @@ function illustrationVisit() {
 // Delete the illustration
 function illustrationDelete() {
 	axios
-		.post(route("api.illustrations.destroy", [theIllustration.value.id]), {
+		.post(route("api.admin.illustrations.destroy", [theIllustration.value.id]), {
 			_method: "delete"
 		})
 		.then((res) => {

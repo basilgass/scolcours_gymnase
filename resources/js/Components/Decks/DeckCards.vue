@@ -3,50 +3,18 @@
 	setup
 >
 
-import type {CardInterface} from "@/types/modelInterfaces"
-import {computed, onMounted, reactive, ref} from "vue"
+import type {CardInterfaceExtended, provideDeckData} from "@/types/modelInterfaces"
+import {computed, inject, onMounted, reactive, ref} from "vue"
 import DeckCardItem from "@/Components/Decks/Parts/DeckCardItem.vue"
 import ScButton from "@/Components/Ui/scButton.vue"
-import {usePage} from "@inertiajs/vue3"
-import axios from "axios"
-import DeckPotfolioItem from "@/Components/Decks/Parts/DeckPotfolioItem.vue"
+import {useStoreScore} from "@/stores/useStoreScore.ts"
+import {ScoreCardDataInterface} from "@/types/scoreInterfaces.ts"
 
-interface CardInterfaceExtended extends CardInterface {
-	current_appearances: number,
-	current_score: number,
-	current_time_spent: number,
-}
-
-const props = defineProps<{
-	cards: CardInterface[]
-}>()
-
-/**
- * Formatted cards list
- */
-const cardsList = ref<CardInterfaceExtended[]>(props.cards.map((card) => {
-	return {
-		...card,
-		// On ajoute les valeurs éphémères.
-		current_appearances: 0,
-		current_score: 0,
-		current_time_spent: 0,
-	}
-}))
-
-// Current card
-const currentCard = ref<CardInterfaceExtended>()
+const deckData = inject<provideDeckData>('deckData')
+const currentCard = ref<CardInterfaceExtended | null>(null)
 const cardSide = ref<"recto" | "verso">("recto")
 
-
-// Retourne la liste filtrée et dans l'ordre descend d'apparition
-const summaryList = computed<CardInterfaceExtended[]>(() => {
-	return cardsList.value
-		.filter(card => card.current_appearances > 1)
-		.toSorted((a, b) => {
-			return b.current_appearances - a.current_appearances
-		})
-})
+// Retourne la liste filtrée et dans l'ordre descendant d'apparition
 
 // On récupère la carte suivante aléatoirement, en fonction :
 // - du score
@@ -55,13 +23,13 @@ function getNextCard() {
 	// Logique concernant la suite du deck
 	// 1. Il n'y a plus d'élément qui sont non résolu - on s'arrête !
 	// 2. On recherche la prochaine carte qui a un current_score autre que 1
-	const availableCards = cardsList.value.filter(card => card.current_score !== 1)
+	const availableCards = deckData.cards.value.filter(card => card.current_score !== 1)
 
 	if (availableCards.length === 0) {
-		currentCard.value = undefined
+		// C'est terminé ! Lancer l'update du deck.
+		deckData.done()
 		return
 	}
-
 
 	// Get the next item.
 	const weights = availableCards.map(card => {
@@ -74,6 +42,7 @@ function getNextCard() {
 	for (let i = 0; i < availableCards.length; i++) {
 		if (random < weights[i]) {
 			currentCard.value = availableCards[i]
+			deckData.currentCardId.value = currentCard.value.id
 			return
 		}
 
@@ -87,6 +56,7 @@ onMounted(() => {
 	getNextCard()
 })
 
+
 /**
  * Determine the result of the card.
  * true: the user knows the answer
@@ -96,48 +66,36 @@ onMounted(() => {
  */
 function cardResult(result: boolean) {
 	// Sauvegarde des données de la carte.
-	updateCard(result).finally(() => {
-		// On retourne la carte (pour l'effet visuel)
-		cardSide.value = "recto"
+	updateCard(result)
+		.finally(() => {
+			// On retourne la carte (pour l'effet visuel)
+			cardSide.value = "recto"
 
-		// Aller à la carte suivante.
-		// cardIndex.value++
-		getNextCard()
-	})
+			// Aller à la carte suivante.
+			// cardIndex.value++
+			getNextCard()
+		})
 }
+
 
 /**
  * Restart the deck of cards.
  * Available only when the deck is finished.
  */
 const restartDeck = function () {
-	cardsList.value.forEach(item => {
-		item.current_score = 0.5
-		item.current_appearances = 0
-		item.current_time_spent = 0
-	})
-
 	getNextCard()
 }
 
-const countCards = computed<{
-	correct: number
-	asked: number
-	length: number
-	progress: number
-}>(() => {
-	const correct = cardsList.value.reduce((acc, card) => {
+const deckProgression = computed<number>(() => {
+	// Somme des scores.
+	const correct = deckData.cards.value.reduce((acc, card) => {
 		return acc + (card.current_score ?? 0)
 	}, 0)
-	const asked = cardsList.value.filter(x => x.current_score !== 0).length
-	const length = cardsList.value.length
 
-	return {
-		correct,
-		asked,
-		length,
-		progress: Math.round(correct / length * 100)
-	}
+	// Nombre total de cartes.
+	const length = deckData.cards.value.length
+
+	return Math.round(correct / length * 100)
 })
 
 /**
@@ -153,59 +111,80 @@ function flipCard() {
 	if (cardSide.value === 'verso') {
 		currentCardStats.numberOfFlips++
 	}
+
+}
+
+async function updateCard_toDB(result: boolean, durationInSeconds: number) {
+	// Si l'utilisateur n'est pas connecté ou s'il s'agit d'une carte virtuel.
+	if (!deckData.loggedIn.value || !(currentCard.value.id > 0)) {
+		return
+	}
+
+	const scoreStore = useStoreScore()
+	const score = await scoreStore.getScore<ScoreCardDataInterface>('Card', currentCard.value.id)
+
+	// Update the current score.
+	score.data.current_score = currentCard.value.current_score
+	score.data.current_appearances = currentCard.value.current_appearances
+	score.data.current_time_spent = currentCard.value.current_time_spent
+
+	// Update the overall score attempts.
+	score.data.appearances++
+	score.data.success += result ? 1 : 0
+	score.data.time_spent += durationInSeconds
+
+	// Sauvegarder directement dans le score de la carte.
+	scoreStore.updateScore(score)
+		.then(() => {
+			// Que faire après une mise à jour de la carte ?
+			const index = deckData.cards.value.findIndex(card => card.id === currentCard.value?.id)
+			if (index) {
+				deckData.cards.value[index] = currentCard.value
+			}
+		})
 }
 
 async function updateCard(result: boolean) {
-
-	// The card has appeared
+	// La carte est apparue - incrément
 	currentCard.value.current_appearances++
-
-	// Init the card score.
-	// currentCard.value.current_score = result ? 1 : 0
-
-	if (result) {
-		currentCard.value.current_score =
-			currentCard.value.current_score === null ? 1 :
-				currentCard.value.current_score === 0 ? 1 / currentCard.value.current_appearances + 1 :
-					Math.min(1, currentCard.value.current_score * 2)
-	} else {
-		currentCard.value.current_score =
-			currentCard.value.current_score === null ? 0 :
-				Math.max(0.125, currentCard.value.current_score / 2)
-	}
-
 
 	// Calcul du temps de réponse
 	currentCardStats.endTime = Date.now()
 	const durationInSeconds = Math.round((currentCardStats.endTime - currentCardStats.startTime) / 1000)
-
 	currentCard.value.current_time_spent += durationInSeconds
 
-	// TODO: Valeurs globales - à conserver sous forme de JSON ?
-	currentCard.value.score.success = currentCard.value.score.success + (result ? 1 : 0)
-	currentCard.value.score.appearances = currentCard.value.score.appearances + 1
-	currentCard.value.score.time_spent = currentCard.value.score.time_spent + durationInSeconds
+	// Calculs du score actuel.
+	currentCard.value.current_score = updateCard_currentScore(result)
 
-	// Si l'utilisateur est connecté, on envoie les données au serveur
-	if (usePage().props.auth.user && currentCard.value.id > 0) {
-		axios.post(route('api.cards.update', {
-				card: currentCard.value.id
-			}), {
-				...currentCard.value
-			}
-		).then(() => {
-			// Replace the card in the list
-			const index = cardsList.value.findIndex(card => card.id === currentCard.value?.id)
+	updateCard_toDB(result, durationInSeconds)
+}
 
-			if (index) {
-				cardsList.value[index] = currentCard.value
-			}
-		}).catch(err => {
-			console.error(err)
-		})
+function updateCard_currentScore(result: boolean): number {
+	if (result) {
+		// si c'est le premier : score = 1
+		if (currentCard.value.current_score === null) {
+			return 1
+		}
+
+		if (currentCard.value.current_score === 0) {
+			return Math.max(0.125, 1 / currentCard.value.current_appearances)
+		}
+
+		return Math.min(1, currentCard.value.current_score * 2)
 	}
 
+	// La réponse est mauvaise.
+	if (currentCard.value.current_score === null ||
+		currentCard.value.current_score === 0 ||
+		currentCard.value.current_score <= 0.125
+	) {
+		return 0
+	}
+
+	return Math.max(0.125, currentCard.value.current_score / 2)
 }
+
+defineExpose({restartDeck})
 
 </script>
 
@@ -253,11 +232,14 @@ async function updateCard(result: boolean) {
 
 		<!-- affichage des statistiques -->
 		<div class="w-full flex justify-between">
-			<div>score: {{ currentCard.current_score === null ? 'nouvelle carte' : currentCard.current_score }}</div>
-			<div>{{ countCards.length }} cartes</div>
-			§
 			<div>
-				<span class="text-green-600">{{ countCards.progress }}%</span>
+				score: {{
+					currentCard.current_score === null ? 'nouvelle carte' : `${Math.round(currentCard.current_score * 100)}%`
+				}}
+			</div>
+			<div>{{ deckData.cards.value.length }} cartes</div>
+			<div>
+				<span class="text-green-600">{{ deckProgression }}%</span>
 			</div>
 		</div>
 
@@ -269,70 +251,5 @@ async function updateCard(result: boolean) {
 			@flip="flipCard"
 		/>
 	</article>
-
-
-	<!-- Le deck est terminé -->
-	<div
-		v-else
-		class="grid grid-cols-1 px-10 my-20"
-	>
-		<div class="text-center flex flex-col gap-10">
-			<div class="font-code text-3xl">
-				Bravo ! Le deck de cartes est terminé !
-			</div>
-
-			<sc-button
-				@click="restartDeck"
-				class="py-5"
-				type="primary"
-			>
-				recommencer
-			</sc-button>
-		</div>
-		<div class="mt-20 space-y-10">
-			<h3 class="text-3xl text-center font-semibold">
-				Classement
-			</h3>
-
-			<div class="flex gap-5 justify-center flex-wrap">
-				<div class="bg-content size-[150px] grid place-items-center">
-					<div class="text-center">
-						<div class="text-3xl">
-							{{ 100 - Math.round(summaryList.length / cardsList.length * 100) }}
-							<span class="text-lg">%</span>
-						</div>
-						<div>
-							de réussites
-						</div>
-					</div>
-				</div>
-
-				<div class="bg-content size-[150px] grid place-items-center">
-					<div class="text-center">
-						<div class="text-3xl">
-							{{ summaryList.length }}
-						</div>
-						<div>
-							cartes non sues
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="flex flex-col gap-5">
-				<div
-					v-for="card in summaryList"
-					:key="`summary-card-${card.id}`"
-				>
-					<div>
-						{{ card.current_appearances }} essais
-					</div>
-					<deck-potfolio-item
-						class="grid grid-cols-2 gap-2"
-						:card="card"
-					/>
-				</div>
-			</div>
-		</div>
-	</div>
 </template>
 

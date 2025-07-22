@@ -45,7 +45,7 @@ class BlockApiController extends Controller
 			return $parent->url;
 		}
 
-		return true;
+		return response()->noContent();
 	}
 
 	public function updatePartial(UpdateBlockRequest $request, Block $block)
@@ -107,5 +107,15 @@ class BlockApiController extends Controller
 			'url'   => $blockable->url,
 			'label' => $blockable->title,
 		];
+	}
+
+	public function fetchBlockableUrl(Block $block)
+	{
+		return $block->redirectUrl();
+	}
+
+	public function storeIllustration(Block $block)
+	{
+
 	}
 }

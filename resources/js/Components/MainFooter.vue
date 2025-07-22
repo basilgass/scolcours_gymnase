@@ -35,8 +35,15 @@ const langues = {
 
 			<div class="md:mx-auto">
 				<h3 class="text-lg font-semibold">
-					Enseignement
+					Liens
 				</h3>
+
+				<InertiaLink
+					:href="route('decks.index')"
+					class="block transition duration-300 hover:translate-x-2 px-0 md:px-4 py-1"
+				>
+					<i class="mr-2 bi bi-wrench" /> decks
+				</InertiaLink>
 
 				<InertiaLink
 					:href="route('theme', {theme: 'tools'})"

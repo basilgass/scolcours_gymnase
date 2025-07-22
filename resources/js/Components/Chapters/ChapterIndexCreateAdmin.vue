@@ -19,13 +19,13 @@ async function onShowModal() {
 }
 
 function createChapter() {
-	axios.post(route("api.themes.chapters.store", {
+	axios.post(route("api.admin.themes.chapters.store", {
 		theme: usePage().props.theme.slug
 	}), {
 		title: createChapterTitle.value
 	})
 		.then((res) => {
-			router.visit(route("chapters.show", [res.data.slug]))
+			router.visit(route("chapters.show", [res.data.id]))
 		})
 }
 </script>
@@ -40,7 +40,7 @@ function createChapter() {
 
 		<dialog-modal
 			v-model="createChapterModal"
-			class="max-w-md"
+			class="max-w-md h-auto"
 		>
 			<template #header>
 				<h2 class="pt-3 px-5 text-2xl">

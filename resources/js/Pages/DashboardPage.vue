@@ -42,5 +42,14 @@ defineProps<{
 				Administration
 			</sc-button>
 		</div>
+
+		<div
+			class="flex"
+			my-3
+		>
+			<sc-button :href="route('courses.index')">
+				Mes cours
+			</sc-button>
+		</div>
 	</section>
 </template>

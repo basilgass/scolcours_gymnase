@@ -19,7 +19,7 @@ const flash = inject<flashInterface>("flash")
 
 function addBlock(after = -1) {
 	axios.post(
-		route("api.blocks.store"),
+		route("api.admin.blocks.store"),
 		{
 			target_id: props.postId,
 			target_type: 'post',
@@ -38,7 +38,7 @@ function addBlock(after = -1) {
 }
 
 function updateBlockOrder() {
-	axios.patch(route("api.posts.blocks.order", [props.postId]), {
+	axios.patch(route("api.admin.posts.blocks.order", [props.postId]), {
 		order: blocks.value.map((block, index) => {
 			return {
 				id: block.id,

@@ -11,6 +11,7 @@ use App\Http\Resources\ThemeResource;
 use App\Models\Block;
 use App\Models\Chapter;
 use App\Models\Illustration;
+use App\Models\Post;
 use App\Models\Question;
 use App\Models\Theme;
 use Illuminate\Support\Facades\Auth;
@@ -79,10 +80,10 @@ class ChapterController extends Controller
 			// Get the relations.
 			"relations"  => fn() => $chapter->relations->map(function ($relation) {
 				return [
-					'id'    => $relation->id,
-					'slug'  => $relation->slug,
-					'title' => $relation->title,
-					'theme' => ['id' => $relation->theme_id]
+					'id'       => $relation->id,
+					'slug'     => $relation->slug,
+					'title'    => $relation->title,
+					'theme_id' => $relation->theme_id
 				];
 			}),
 		]);
@@ -97,25 +98,35 @@ class ChapterController extends Controller
 
 	public function slide(Theme $theme, Chapter $chapter, int $order, string $type = null, int $id = null)
 	{
-		$chapter->load(
-			[
-				'posts' => function ($query) {
-					if (Auth::user()?->admin) {
-						$query->withCounts(); //->where('active', true);
-					} else {
-						$query->withCounts()->where('active', true);
-					}
-				},
-				'posts.blocks',
-				'posts.questions',
-				'posts.questions.blocks',
-				'challenges',
-				'relations'
-			]
-		);
+		//		$chapter->load(
+		//			[
+		//				'posts' => function ($query) {
+		//					if (Auth::user()?->admin) {
+		//						$query->withCounts(); //->where('active', true);
+		//					} else {
+		//						$query->withCounts()->where('active', true);
+		//					}
+		//				},
+		//				'posts.blocks',
+		//				'posts.blocks.illustrations',
+		//				'posts.questions',
+		//				'posts.questions.blocks',
+		//				'posts.questions.blocks.illustrations',
+		//			]
+		//		);
+		//
+		//		$post = $chapter->posts->where('order', "=", $order)->first();
 
-		$post = $chapter->posts->where('order', "=", $order)->first();
-
+		$post = Post::with([
+			'blocks.illustrations',
+			'questions.blocks.illustrations',
+		])
+		            ->where('chapter_id', $chapter->id)
+		            ->where('order', $order)
+		            ->when(!Auth::user()?->admin, function ($query) {
+			            $query->where('active', true);
+		            })
+		            ->firstOrFail();
 
 		$anchor = null;
 		if ($type !== null && $id !== null) {
@@ -134,6 +145,7 @@ class ChapterController extends Controller
 		return Inertia::render('Chapters/ChapterPostShow', [
 			// Get the chapter (for next / previous / ...)
 			"chapter" => fn() => ChapterResource::make($chapter),
+			// Utilisé pour la navigation et le menu.
 			"posts"   => fn() => PostResource::collection($chapter->posts),
 			// The post information
 			"post"    => PostShowResource::make($post),

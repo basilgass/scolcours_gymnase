@@ -94,7 +94,7 @@ function sortEvent() {
 								v-model="element.enabled"
 								:name="`${element}-enabled`"
 								label="activé,désactivé"
-								@change="saveConfig"
+								@update="saveConfig"
 							/>
 						</div>
 					</template>

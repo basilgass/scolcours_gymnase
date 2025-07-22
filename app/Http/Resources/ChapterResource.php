@@ -34,10 +34,7 @@ class ChapterResource extends JsonResource
 			'slug'       => $this->slug,
 			'title'      => $this->title,
 			'meta_title' => $this->meta_title,
-			'theme'      => [
-				'id'   => $this->theme_id,
-				'slug' => $theme->slug
-			],
+			'theme_id'      => $this->theme_id,
 			'block'      => BlockResource::make($this->blocks[0]),
 			'active'     => $this->active,
 			'url'        => URL::route('themes.chapters.show', [$theme->slug, $this->slug], false),

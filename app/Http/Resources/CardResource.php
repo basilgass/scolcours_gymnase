@@ -28,21 +28,15 @@ class CardResource extends JsonResource
 		return [
 			"id" => $this->id,
 
-			"recto" => BlockResource::make($blocks[0]),
-			"verso" => BlockResource::make($blocks[1]), // maybe there is no blocks1 => means it muse be processed.
+			"recto" => $this->hasBlocks() ? BlockResource::make($blocks[0]) : null,
+			"verso" => $this->hasBlocks() ? BlockResource::make($blocks[1]) : null,
 
-			"score" => $this->when(
-				$this->relationLoaded('scores'),
-				function () {
-					// On retourne le score de l'utilisateur connecté s'il existe
-					$score = $this->scores->first();
-					return $score ? [
-						"id" => $score->id,
-						"score"=>$score->score,
-						...$score->data
-					] : null;
-				}
-			),
+			"reference" => $this->hasReference() ? [
+				"block"       => $this->reference_block,
+				"block_splitter" => $this->reference_block_splitter
+			] : null,
+
+//			"user" => $this->userScores(),
 		];
 	}
 }

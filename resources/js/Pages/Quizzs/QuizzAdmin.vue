@@ -17,7 +17,7 @@ defineProps({
 })
 
 function createQuizz() {
-	axios.post(route("api.quizzs.store"))
+	axios.post(route("api.admin.quizzs.store"))
 		.then(res => {
 			// ROUTE : make it more restfull
 			router.visit(route("admin.quizzs.quizz", [res.data]))

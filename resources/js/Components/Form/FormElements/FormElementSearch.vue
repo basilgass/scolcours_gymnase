@@ -70,12 +70,12 @@ const searchValue = ref<string>("")
 const choices = ref<T[]>([])
 
 function loadChoices() {
-	if(props.list){
-		choices.value = props.list.map((title, id) => ({ id, title })) as T[]
+	if (props.list) {
+		choices.value = props.list.map((title, id) => ({id, title})) as T[]
 		return
 	}
 
-	if(props.fetch) {
+	if (props.fetch) {
 		axios.get(props.fetch + (searchValue.value.length > 0 ? '?search=' + searchValue.value : ''))
 			.then(res => {
 				choices.value = res.data
@@ -92,8 +92,9 @@ function loadChoices() {
 function normalize(str: string): string {
 	return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase()
 }
-const filteredChoices = computed(()=>{
-	if(props.dynamic || searchValue.value===""){
+
+const filteredChoices = computed(() => {
+	if (props.dynamic || searchValue.value === "") {
 		return choices.value
 	}
 
@@ -121,9 +122,9 @@ function clickOutsideEvent(event: MouseEvent) {
 }
 
 onMounted(() => {
-	if(props.dynamic) {
+	if (props.dynamic) {
 		watchDebounced(searchValue, loadChoices, {debounce: 300, maxWait: 1000})
-	}else {
+	} else {
 		loadChoices()
 	}
 	document.body.addEventListener('click', clickOutsideEvent)

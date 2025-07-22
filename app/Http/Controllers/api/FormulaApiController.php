@@ -7,14 +7,30 @@ use App\Http\Resources\FormulaResource;
 use App\Models\Chapter;
 use App\Models\Formula;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 class FormulaApiController extends Controller
 {
-	public function index()
+	public function index(Request $request)
 	{
+		if ($request->input('ids')) {
+			return $this->fetch($request->input('ids'));
+		}
+
+		if($request->input('chapter_id')) {
+			$chapter = Chapter::find($request->input('chapter_id'));
+			return FormulaResource::collection($chapter->formulas);
+		}
+
 		$formulas = Formula::with("chapter")->get();
+		return FormulaResource::collection($formulas);
+	}
+
+	public function fetch($values)
+	{
+		$formulas = Formula::whereIn('id', $values)
+		                   ->orderByRaw('FIELD(id,' . implode(",", $values) . ')')
+		                   ->get();
 		return FormulaResource::collection($formulas);
 	}
 
@@ -29,11 +45,12 @@ class FormulaApiController extends Controller
 		$n = $chapter->formulas->count();
 
 		// Create the post model
-		$formula = $chapter->formulas()->create();
+		$formula = $chapter->formulas()->create([
+			'order' => $n + 1
+		]);
 
 		$formula->blocks()->create([
-			'body'  => 'A modifier...',
-			'order' => $n + 1,
+			'body' => 'A modifier...'
 		]);
 
 		$formula->blocks;
@@ -45,14 +62,6 @@ class FormulaApiController extends Controller
 	public function destroy(Formula $formula)
 	{
 		$formula->delete();
-	}
-
-	public function fetch(string $values)
-	{
-		$formulas = Formula::whereIn('id', explode(',', $values))
-		                   ->orderByRaw('FIELD(id,' . $values . ')')
-		                   ->get();
-		return FormulaResource::collection($formulas);
 	}
 
 	/**
@@ -71,7 +80,8 @@ class FormulaApiController extends Controller
 				->get()
 				->map(function ($chapter) {
 					return [
-						'slug'  => $chapter->slug,
+						'id'    => $chapter->id,
+						//						'slug'  => $chapter->slug,
 						'title' => $chapter->title,
 						'theme' => [
 							'id' => $chapter->theme_id
@@ -85,14 +95,15 @@ class FormulaApiController extends Controller
 						->get()
 						->map(function ($relation) {
 							return [
-								'slug'  => $relation->slug,
+								//'slug'  => $relation->slug,
+								'id'    => $relation->id,
 								'title' => $relation->title,
 								'theme' => [
 									'id' => $relation->theme_id
 								]
 							];
-						})
-				)->unique('slug')
+						})->toArray()
+				)->unique('id')
 		];
 	}
 
@@ -100,7 +111,7 @@ class FormulaApiController extends Controller
 	 * Store a newly created resource in storage.
 	 *
 	 * @param Request $request
-	 * @return RedirectResponse
+	 * @return \Illuminate\Http\Response
 	 */
 
 
@@ -110,7 +121,7 @@ class FormulaApiController extends Controller
 			Formula::find($value['id'])?->update(['order' => $value['order']]);
 		}
 
-		return true;
+		return response()->noContent();
 	}
 
 

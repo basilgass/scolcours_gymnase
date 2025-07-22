@@ -17,7 +17,7 @@ const emits = defineEmits<{
 }>()
 function deleteFormula(){
 	const id = props.formula.id
-	axios.post(route('api.formulas.destroy', [props.formula.id]), {
+	axios.post(route('api.admin.formulas.destroy', [props.formula.id]), {
 		_method: "delete"
 	}).then(()=>{
 		flash.success('La formule a bien été supprimée.')
@@ -34,9 +34,9 @@ function deleteFormula(){
 	>
 		<template #adminLeft>
 			<div class="text-xs flex gap-3 items-baseline">
-				<i class="bi bi-arrows-move draggable-handle" />
+				<i class="bi bi-arrows-move cursor-move draggable-handle" />
 				<div class="font-code">
-					F: {{ formula.id }} / B: {{ formula.block.id }}
+					F: {{ formula.id }} / B: {{ formula.block.id }} / O: {{ formula.order }}
 				</div>
 			</div>
 		</template>

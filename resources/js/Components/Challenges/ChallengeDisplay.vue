@@ -2,10 +2,9 @@
 // Affiche un challenge, avec la "selection" (game, training)
 import ChallengeGame from "@/Components/Challenges/ChallengeGame.vue"
 import ChallengeTraining from "@/Components/Challenges/ChallengeTraining.vue"
-import {ChallengeGameState, ChallengeInterface} from "@/types/modelInterfaces"
-import {ref} from "vue"
+import {ChallengeInterface} from "@/types/modelInterfaces"
 
-const props = defineProps<{
+defineProps<{
 	challenge: ChallengeInterface,
 	selector: number,
 }>()

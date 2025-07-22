@@ -22,7 +22,7 @@ defineProps<{
 			<InertiaLink
 				v-for="(page, index) in pages"
 				:key="index"
-				:href="route('admin.dev.show', [page])"
+				:href="route('dev.show', [page])"
 				class="hover:pl-4 transition-animation duration-300 p-3
 				bg-content border"
 			>

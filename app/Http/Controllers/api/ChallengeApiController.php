@@ -100,6 +100,7 @@ class ChallengeApiController extends Controller
 
 	public function storeGenerator(Request $request, Challenge $challenge)
 	{
+		// REFACTOR: Must be moved to GeneratorApiController and the corresponding route removed.
 		// Get the order
 		$order = count($challenge->generators) + 1;
 
@@ -108,6 +109,7 @@ class ChallengeApiController extends Controller
 			'theme_id' => $challenge->chapter->theme->id,
 			'slug'     => $challenge->chapter->slug . '-' . $challenge->slug . '-' . $order,
 			'title'    => '',
+			'template'=> '\\[question = answer\\]',
 			'code'     => 'return {question: "", answer: ""}',
 		]);
 

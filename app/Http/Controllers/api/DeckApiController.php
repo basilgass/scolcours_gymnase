@@ -5,9 +5,7 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\DeckRequest;
 use App\Http\Requests\ReorderRequest;
-use App\Http\Resources\CardResource;
 use App\Http\Resources\DeckResource;
-use App\Models\Card;
 use App\Models\Chapter;
 use App\Models\Deck;
 use Illuminate\Database\Eloquent\Model;
@@ -26,13 +24,15 @@ class DeckApiController extends Controller
 
 	public function show(Deck $deck)
 	{
-		$deck->load('cards');
+		$deck->load('cards.scoreForAuth');
 		return DeckResource::make($deck);
 	}
 
-	public function store(DeckRequest $request): Model|Deck
+	public function store(DeckRequest $request): DeckResource
 	{
-		return Deck::create($request->validated());
+		$deck = Deck::create($request->validated());
+
+		return DeckResource::make($deck);
 	}
 
 
@@ -43,19 +43,21 @@ class DeckApiController extends Controller
 		return response()->noContent();
 	}
 
-	public function reorderCards(ReorderRequest $request)
+	public function reorderCards(Deck $deck, ReorderRequest $request)
 	{
 		$request->setModelTable('cards');
 		$validated = $request->validated();
 
 		foreach ($validated['order'] as $value) {
-			$deck->cards()->where('id', $value['id'])->update(['order' => $value['order']]);
+			$deck->cards
+				->find($value['id'])
+				->update(['order' => $value['order']]);
 		}
 
 		return response()->noContent();
 	}
 
-	public function update(DeckRequest $request, Deck $deck): Deck
+	public function update(DeckRequest $request, Deck $deck): DeckResource
 	{
 		// Validate the deck
 		$deck->update($request->validated());

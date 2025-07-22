@@ -15,7 +15,7 @@ defineProps<{
 function triggerEnter(items: ChapterShowInterface[]) {
 	// si il n'y a qu'un élément afficher, on le charge.
 	if (items.length === 1) {
-		router.visit(route("chapters.show", [items[0].slug]))
+		router.visit(route("chapters.show", [items[0].id]))
 		return
 	}
 }

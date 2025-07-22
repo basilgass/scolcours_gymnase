@@ -4,6 +4,7 @@ import FormMaker from "@/Components/Form/FormMaker.vue"
 import ScButton from "@/Components/Ui/scButton.vue"
 import LayoutGuest from "@/Layouts/LayoutGuest.vue"
 
+// TODO: créer un component pour le login: permet d'ajouter le login à différents endroits, sans redirection.
 defineOptions({layout: LayoutGuest})
 
 defineProps<{

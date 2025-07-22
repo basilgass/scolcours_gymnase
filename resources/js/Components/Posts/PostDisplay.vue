@@ -7,6 +7,8 @@ import type {BlockInterface, PostShowInterface} from "@/types/modelInterfaces"
 import {nextTick, onMounted, provide, ref} from "vue"
 import {useMenuScrollTo} from "@/Composables/useHelpers.ts"
 import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
+import ContentSeparator from "@/Components/Ui/ContentSeparator.vue"
+import {useStoreScore} from "@/stores/useStoreScore.ts"
 
 const props = defineProps<{
 	post: PostShowInterface,
@@ -22,6 +24,24 @@ const blocks = ref<BlockInterface[]>(props.post.blocks)
 const postScript = useScriptLoader(props.post.script)
 postScript.run()
 provide("postScript", postScript)
+
+const scoreStore = useStoreScore()
+const score = await scoreStore.getScore('Post', props.post.id)
+
+
+function updatePostScore() {
+	// Mise à jour du score du post.
+	const nb_of_questions = props.post.questions.length
+	const answered_questions = props.post.questions.filter(question => question.user.is_resolved).length
+	score.score = Math.round(answered_questions / nb_of_questions * 100)
+	score.is_resolved = nb_of_questions === answered_questions
+
+	scoreStore.updateScore(score)
+		.then(() => {
+			// TODO: update lesson
+		})
+}
+
 
 onMounted(() => {
 	if (props.anchor) {
@@ -85,9 +105,12 @@ onMounted(() => {
 				:post-id="post.id"
 			/>
 
+			<content-separator />
+
 			<!-- show the questions -->
 			<questions-index
 				:post="post"
+				@validate="updatePostScore"
 			/>
 
 			<slot name="footer" />

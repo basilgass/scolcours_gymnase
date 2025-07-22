@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\URL;
@@ -74,7 +75,8 @@ class Block extends Model
 		"url",
 	];
 
-	protected $with = ['illustrations'];
+//	protected $with = ['illustrations'];
+
 	protected $casts = [
 		'merge' => 'boolean'
 	];
@@ -112,22 +114,39 @@ class Block extends Model
 		return $this->hasMany(Illustration::class)->orderBy('order')->orderBy('id');
 	}
 
-	public function redirectToBlockable()
+	public function redirectUrl():string|null
 	{
 		if (!$this->blockable) {
-			abort(404);
+			return null;
 		}
 
 		$base = strtolower(class_basename($this->blockable)) . 's.show';
 
 		//vérifier si la route existe
 		if (Route::has($base)) {
-			return redirect()->route($base, $this->blockable);
+			return route($base, $this->blockable);
 		}
 
-		abort(404, 'Unknown blockable type.');
-	}
+		if(Route::has('students.'.$base)){
+			return route('students.'.$base, $this->blockable);
+		}
 
+		if(Route::has('admin.'.$base)){
+			return route('admin.'.$base, $this->blockable);
+		}
+
+		return null;
+	}
+	public function redirectToBlockable():RedirectResponse
+	{
+		$url = $this->redirectUrl();
+
+		if(!$url){
+			abort(404);
+		}
+
+		return redirect($url);
+	}
 
 	protected function url(): Attribute
 	{

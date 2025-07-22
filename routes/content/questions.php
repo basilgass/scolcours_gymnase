@@ -11,23 +11,12 @@ Route::middleware('web')
 	     Route::resource('questions', QuestionController::class)
 	          ->only(['show']);
 
-
-	     // Students routes
-	     Route::middleware('students')
-		     ->prefix('students')
-		     ->as('students.')
-	          ->group(function () {
-
-	          });
-
-
 	     // Admin routes
 	     Route::middleware('admin')
-		     ->prefix('admin')
-		     ->as('admin.')
-		     ->group(function () {
-				 Route::resource('questions', QuestionController::class)
-					 ->only(['index', 'show', 'edit']);
+	          ->as('admin.')
+	          ->group(function () {
+		          Route::resource('questions', QuestionController::class)
+		               ->only(['index', 'edit']);
 
 	          });
      });
@@ -35,15 +24,18 @@ Route::middleware('web')
 
 Route::middleware('api')
      ->prefix('api')
-	->as('api.')
+     ->as('api.')
      ->group(function () {
 	     // Public api.
 
 
 	     // Students api
 	     Route::middleware('students')
+		     ->prefix('students')
+		     ->as('students.')
 	          ->group(function () {
 
+				  // ROUTE: this route does not exist
 		          Route::post('questions/{question}/validate', [QuestionApiController::class, 'storeAnswer'])
 		               ->name('questions.validate');
 
@@ -51,6 +43,8 @@ Route::middleware('api')
 
 	     // Admin api
 	     Route::middleware('admin')
+		     ->prefix('admin')
+		     ->as('admin.')
 	          ->group(function () {
 		          Route::apiResource('questions', QuestionApiController::class);
 
@@ -66,7 +60,7 @@ Route::middleware('api')
 			               Route::patch('update/order/for/{type}/{id}', [QuestionApiController::class, 'updateQuestionsOrder'])
 			                    ->name('updateOrder');
 
-			               Route::patch('patch/update/displayIf', [QuestionApiController::class, 'updateQuestionsDisplayIf'])
+			               Route::patch('batch/displayIf', [QuestionApiController::class, 'updateBatchDisplayIf'])
 			                    ->name('batch.updateDisplayIf');
 
 			               Route::patch('{question}/update/displayIf', [QuestionApiController::class, 'updateQuestionDisplayIf'])
@@ -74,7 +68,7 @@ Route::middleware('api')
 
 			               Route::patch('{question}/moveTo/{post}', [QuestionApiController::class, 'moveToPost'])
 			                    ->name('moveTo.post');
-				   });
+		               });
 
 
 	          });

@@ -37,7 +37,7 @@ const typeList = ref({
 
 const savePost = function () {
 	axios
-		.post(route("api.posts.update", [props.post.id]), {
+		.post(route("api.admin.posts.update", [props.post.id]), {
 			...thePost.value,
 			_method: "patch"
 		})
@@ -46,13 +46,14 @@ const savePost = function () {
 		})
 }
 const deletePost = function () {
+	const chapter_id = props.post.chapter_id
 	axios
-		.post(route("api.posts.destroy", [props.post.id]), {
+		.post(route("api.admin.posts.destroy", [props.post.id]), {
 			_method: "delete"
 		})
 		.then((res) => {
 			flash.success("Post supprimé")
-			router.visit(res.data)
+			router.visit(route('chapters.show', chapter_id))
 		})
 }
 </script>

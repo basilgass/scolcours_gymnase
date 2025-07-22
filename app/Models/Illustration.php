@@ -5,6 +5,7 @@ namespace App\Models;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
 
 /**
@@ -43,16 +44,26 @@ use Illuminate\Support\Carbon;
  */
 class Illustration extends Model
 {
-	protected $guarded = [];
+	protected $fillable = [
+		"parameters",
+		"code",
+		"widget_id",
+		"css",
+		"title",
+		"order",
+		"block_id",
+		"value",
+		"type",
+	];
 
 	protected $with = ['widget'];
 
-	public function block()
+	public function block(): BelongsTo
 	{
 		return $this->belongsTo(Block::class);
 	}
 
-	public function widget()
+	public function widget(): BelongsTo
 	{
 		return $this->belongsTo(Widget::class);
 	}

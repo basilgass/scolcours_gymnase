@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Carbon;
 
 /**
@@ -35,7 +36,10 @@ class Formula extends Model
 {
 	use HasUrlTrait;
 
-	protected $guarded=[];
+	protected $fillable =[
+		"order",
+	];
+
 	protected $with = ['blocks'];
 	protected $appends = ['url'];
 
@@ -44,7 +48,7 @@ class Formula extends Model
 		return $this->belongsTo(Chapter::class);
 	}
 
-	public function blocks()
+	public function blocks(): MorphMany
 	{
 		return $this->morphMany(Block::class, 'blockable');
 	}

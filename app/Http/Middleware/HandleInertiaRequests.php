@@ -55,7 +55,7 @@ class HandleInertiaRequests extends Middleware
 			'themes'    => Theme::getThemesFromCache()
 			                    ->mapWithKeys(function ($item, $key) {
 				                    return [
-					                    $key => [
+					                    $item->id => [
 						                    'id'      => $item->id,
 						                    'slug'    => $item->slug,
 						                    'title'   => $item->title,

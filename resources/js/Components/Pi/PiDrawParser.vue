@@ -11,6 +11,9 @@ import {IDrawStep, type IPiDrawProps, ISlider, PiDraw_Parse_Code} from "@/Compon
 import {useScriptLoader} from "@/Composables/useScriptLoader.ts"
 import PiDrawDisplay from "@/Components/Pi/Parts/PiDrawDisplay.vue"
 import {dynamicText, replaceDoubleSigns} from "@/Composables/useHelpers.ts"
+import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
+
+const editMode = useStoreEditMode()
 
 const props = withDefaults(defineProps<IPiDrawProps & { theme?: string | number | false }>(),
 	{
@@ -211,7 +214,10 @@ const drawMouseUp = function (evt: PiDraw) {
 			<div v-katex="texComputed" />
 		</div>
 
-		<div class="grid grid-cols-2 gap-3">
+		<div
+			class="grid grid-cols-2 gap-3"
+			v-admin="editMode.enable"
+		>
 			<pre class="border border-slate-200 p-2">{{ dynamicValues }}</pre>
 			<pre class="border border-slate-200 p-2">{{ drawCode }}</pre>
 		</div>

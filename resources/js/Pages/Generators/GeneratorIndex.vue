@@ -23,7 +23,7 @@ const themeId = ref(1)
 function addGenerator() {
 	if (slug.value === "") return
 
-	axios.post(route("api.generators.store"), {
+	axios.post(route("api.admin.generators.store"), {
 		slug: slug.value,
 		theme_id: themeId.value
 	})
@@ -74,7 +74,7 @@ function addGenerator() {
 		</div>
 
 		<filtered-list
-			:item-background="(item) => item.theme.id"
+			:item-background="(item) => item.theme_id"
 			:item-title="(item)=>item.title===''?item.slug:item.title"
 			:list="generators"
 			:route-data="(item) => [item.id]"

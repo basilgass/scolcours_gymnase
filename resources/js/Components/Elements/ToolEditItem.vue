@@ -5,22 +5,27 @@ import FormMaker from "@/Components/Form/FormMaker.vue"
 import ThemeSelector from "@/Components/Ui/ThemeSelector.vue"
 import axios from "axios"
 import ScButton from "@/Components/Ui/scButton.vue"
+import {inject} from "vue"
+import {AxiosErrorMessage, flashConfig, flashInterface} from "@/types"
 
 const tool = defineModel<ToolInterface>('tool')
 
+const flash = inject<flashInterface>('flash')
 
 // save the tool
 function updateTool() {
-	axios.post(route('admin.tools.update', tool.value.id), {
+	axios.post(route('api.admin.tools.update', {tool: tool.value.id}), {
 		title: tool.value.title,
 		body: tool.value.body,
-		theme_id: tool.value.theme_id
+		theme_id: tool.value.theme_id,
+		_method: "PATCH"
 	})
-		.then(response => {
-			console.log(response.data)
+		.then(() => {
+			flash.success("L'outils à bien été enregistré.")
 		})
-		.catch(error => {
-			console.log(error)
+		.catch((error: AxiosErrorMessage) => {
+			flash.error("Il y a eu un problème lors de l'enregistrement de l'outil.")
+			console.warn(error)
 		})
 }
 </script>
@@ -68,7 +73,7 @@ function updateTool() {
 				<InertiaLink
 					as="div"
 					class="cursor-pointer"
-					:href="route('tools.show', [tool.slug])"
+					:href="route('tools.show', {tool: tool.slug})"
 				>
 					<h3 class="text-lg leading-6 font-medium">
 						{{ tool.title }}

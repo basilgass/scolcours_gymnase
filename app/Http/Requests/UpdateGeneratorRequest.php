@@ -13,7 +13,7 @@ class UpdateGeneratorRequest extends FormRequest
 			'slug'     => ['required', 'min:3'],
 			'keyboard' => ['required', 'string'],
 			'code'     => ['required', 'string'],
-			'theme_id' => ['nullable', 'exists:themes'],
+			'theme_id' => ['nullable', 'exists:themes,id'],
 			'body'     => ['nullable', 'string'],
 			'template' => ['nullable', 'string'],
 		];

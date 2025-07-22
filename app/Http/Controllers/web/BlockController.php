@@ -25,7 +25,7 @@ class BlockController extends Controller
 	public function edit(Block $block)
 	{
 		return Inertia::render('Blocks/BlockEdit', [
-			'block'=>BlockResource::make($block)
+			'block'=>BlockResource::make($block),
 		]);
 	}
 }

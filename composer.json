@@ -16,8 +16,7 @@
 		"laravel/telescope": "^v5.7.0",
 		"laravel/tinker": "^v2",
 		"staudenmeir/belongs-to-through": "^2.17",
-		"tightenco/ziggy": "^v2",
-		"": ""
+		"tightenco/ziggy": "^v2"
 	},
 	"require-dev": {
 		"barryvdh/laravel-ide-helper": "^v3",

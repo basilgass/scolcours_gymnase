@@ -1,0 +1,1 @@
+import{d as s,F as o,G as n,R as l}from"./@vue-CkoPVkar.js";const t=s({__name:"LessonTypeIcon",props:{lesson:{}},setup(a){return(e,p)=>(n(),o("i",{class:l({"bi bi-book":e.lesson.lessonable_type==="Post","bi bi-question":e.lesson.lessonable_type==="Challenge"||e.lesson.lessonable_type==="Generator","bi bi-copy":e.lesson.lessonable_type==="Deck"})},null,2))}});export{t as _};

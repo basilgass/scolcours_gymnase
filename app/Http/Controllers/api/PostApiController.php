@@ -17,6 +17,8 @@ class PostApiController extends Controller
 
 	public function index()
 	{
+		// REFACTOR: list of indexes for the Posts index api.
+		return PostShowResource::collection(Post::all());
 	}
 
 	public function show(Post $post)

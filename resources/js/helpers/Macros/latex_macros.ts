@@ -44,7 +44,7 @@ const latex_macros_suffix: IMacroRecords = {
 
 }
 
-export const latex_macros: Record<string, IMacro> = {
+export const latex_macros: IMacroRecords = {
 	"BPM": {
 		math: true,
 		template: '\\begin{pmatrix}\n\t@\n\\end{pmatrix}'

@@ -6,9 +6,11 @@ import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
 import {flashInterface} from "@/types"
 import type {PostShowInterface, QuestionInterface} from "@/types/modelInterfaces.ts"
 import axios from "axios"
-import {computed, inject, ref} from "vue"
+import {computed, inject, onMounted, ref} from "vue"
 import type {questionResultInterface} from "@/Components/Questions/QuestionInterface.ts"
-import {useStoreLesson} from "@/stores/useStoreLesson.ts"
+import {useStoreScore} from "@/stores/useStoreScore.ts"
+import {util} from "prismjs"
+import {ScoreQuestionDataInterface} from "@/types/scoreInterfaces.ts"
 
 const editMode = useStoreEditMode()
 const flash = inject<flashInterface>("flash")
@@ -17,9 +19,27 @@ const props = defineProps<{
 	post: PostShowInterface
 }>()
 
+const questions = ref<Partial<QuestionInterface>[]>([])
+
+const storeScore = useStoreScore()
+
+onMounted(() => {
+	// Charger les scores des questions
+	const ids = props.post.questions
+		.filter((question) => question.user === undefined)
+		.map(question => question.id)
+
+	storeScore.getScores<ScoreQuestionDataInterface>('Question', ids).then(scores => {
+		questions.value = props.post.questions.map((question) => {
+			question.user = scores.find(score => score.scoreable_id === question.id)
+			return question
+		})
+	})
+})
+
 const answeredIds = computed(() => {
-	return props.post.questions
-		.filter((question) => question.user.is_resolved)
+	return questions.value
+		.filter((question) => question.user?.is_resolved)
 		.map((question) => +question.id)
 })
 
@@ -38,9 +58,7 @@ const questionsGrid = computed(() => {
 
 	return grid + " gap-x-3 gap-y-6"
 })
-
-
-const displayIds = computed(() => props.post.questions.map((q) => q.id))
+const displayIds = computed(() => questions.value.map((q) => q.id))
 
 const isQuestionLocked = function (question: QuestionInterface) {
 	return !(
@@ -55,13 +73,13 @@ const isQuestionLocked = function (question: QuestionInterface) {
 const updateQuestionsOrder = function () {
 	axios
 		.post(
-			route("api.questions.updateOrder", [
+			route("api.admin.questions.updateOrder", [
 				"Post",
 				props.post.id
 			]),
 			{
 				_method: "PATCH",
-				order: props.post.questions.map((x, index) => {
+				order: questions.value.map((x, index) => {
 					return {id: x.id, order: index + 1}
 				})
 			}
@@ -89,14 +107,6 @@ defineEmits<{
 	validate: [event: questionResultInterface]
 }>()
 
-const lessonScore = useStoreLesson()
-
-function onValidate(element: QuestionInterface, event: questionResultInterface) {
-	element.user.is_resolved = event.result
-
-	//TODO: LessonScore update Must trigger an event upstairs...
-	lessonScore.update(props.post)
-}
 </script>
 <template>
 	<article :class="editMode.enable?'pb-10':''">
@@ -117,14 +127,14 @@ function onValidate(element: QuestionInterface, event: questionResultInterface) 
 			v-admin="editMode.enable"
 			:components="questionsComponents"
 			:post="post"
-			:questions="props.post.questions"
+			:questions="questions"
 		/>
 
 		<!-- questions list -->
 		<draggable
-			v-if="post.questions.length"
+			v-if="questions.length"
 			:class="questionsGrid"
-			:list="post.questions"
+			:list="questions"
 			class="mt-10"
 			handle=".draggable-handle"
 			item-key="id"
@@ -147,7 +157,7 @@ function onValidate(element: QuestionInterface, event: questionResultInterface) 
 						:class="element.css ?? ''"
 						:locked="isQuestionLocked(element)"
 						:question="element"
-						@validate="onValidate(element, $event)"
+						@validate="$emit('validate', $event)"
 					/>
 				</div>
 			</template>

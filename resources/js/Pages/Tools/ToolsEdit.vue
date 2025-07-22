@@ -23,7 +23,7 @@ const form = useForm({
 	body: props.tool.body
 })
 function saveTool() {
-	form.post(route('api.tools.update', [props.tool.id]),
+	form.post(route('api.admin.tools.update', [props.tool.id]),
 		{
 			onSuccess: () => {
 				flash.success("L'outil a été enregistré")

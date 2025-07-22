@@ -2,7 +2,7 @@ import {usePage} from "@inertiajs/vue3"
 
 // REFACTOR: reformat this file
 function getThemes(): string[] {
-	return usePage().props.themes.map((theme) => theme.slug)
+	return Object.values(usePage().props.themes).map((theme) => theme.slug)
 }
 
 function getCurrentTheme(): string {
@@ -54,12 +54,10 @@ export function getThemeChapter(value?: string | boolean | number, modifiers?: R
 		return value
 	} else if (typeof value === "number") {
 		// it's a number -> get the theme id.
-		const theme = usePage().props.themes.filter(
-			(th) => +th.id === +value
-		)
+		const theme = usePage().props.themes[+value]
 
-		if (theme.length === 1) {
-			return theme[0].slug
+		if (theme) {
+			return theme.slug
 		}
 	}
 

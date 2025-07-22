@@ -2,15 +2,19 @@
 
 namespace App\Models;
 
+use App\Traits\HasScoresTrait;
 use App\Traits\HasUrlTrait;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 
 class Lesson extends Model
 {
 	use HasUrlTrait;
+	use HasScoresTrait;
 
-	protected $fillable = [];
+	protected $fillable = [
+		"requires",
+		"parameters",
+	];
 	protected $appends = ['url'];
 
 	protected function casts(): array
@@ -38,10 +42,10 @@ class Lesson extends Model
 			->orderBy('id');
 	}
 
-//	protected function remainingDays(): Attribute
-//	{
-//		return Attribute::make(
-//			get: fn() => (int)-$this->scheduled_at->diffInDays()
-//		);
-//	}
+	//	protected function remainingDays(): Attribute
+	//	{
+	//		return Attribute::make(
+	//			get: fn() => (int)-$this->scheduled_at->diffInDays()
+	//		);
+	//	}
 }

@@ -6,14 +6,14 @@ import {CourseInterface, LessonInterface} from "@/types/modelInterfaces.ts"
 import {router} from "@inertiajs/vue3"
 import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
 import CourseGraph from "@/Components/Courses/CourseGraph.vue"
-import MermaidDiagram from "@/Components/MermaidDiagram.vue"
+import AdminHeader from "@/Components/Admin/AdminHeader.vue"
+import ScButton from "@/Components/Ui/scButton.vue"
 
 defineOptions({layout: LayoutMain})
 
 const props = defineProps<{
 	course: CourseInterface
 }>()
-
 
 //
 // function generateMermaidGantt(lessons: LessonInterface[]): string {
@@ -48,26 +48,40 @@ const props = defineProps<{
 
 
 function nodeClickedCourse(lesson: LessonInterface) {
-		router.visit(route('students.lessons.show', {
-			course: props.course.slug,
-			lesson: lesson.id
-		}))
+	router.visit(route('students.lessons.show', {
+		course: props.course.slug,
+		lesson: lesson.id
+	}))
 }
 </script>
 
 <template>
-	<main>
-		<article-title
-			:title="course.title"
-			theme
-		/>
+	<admin-header>
+		<sc-button
+			type="edit"
+			icon
+			xs
+			:href="route('admin.courses.edit', {course: props.course.slug})"
+		>
+			éditer le cours
+		</sc-button>
+	</admin-header>
 
-		<block-show :block="course.block" />
+	<article-title
+		:title="course.title"
+		theme
+		:return-link="{
+			label: 'Retour à mes cours',
+			url: route('courses.index')
+		}"
+	/>
 
-		<course-graph
-			:course
-			@node-click="nodeClickedCourse"
-		/>
-	</main>
+
+	<block-show :block="course.block" />
+
+	<course-graph
+		:course
+		@node-click="nodeClickedCourse"
+	/>
 </template>
 

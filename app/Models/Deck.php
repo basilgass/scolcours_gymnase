@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\HasScoresTrait;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -34,7 +35,10 @@ use Illuminate\Support\Carbon;
  */
 class Deck extends Model
 {
+	use HasScoresTrait;
+
 	protected $guarded = [];
+	protected $with = [];
 
 	public function chapter(): BelongsTo
 	{

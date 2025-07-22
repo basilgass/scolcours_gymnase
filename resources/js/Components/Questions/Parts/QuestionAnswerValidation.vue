@@ -13,13 +13,12 @@
 
 import {useWrongAnswerAnimation} from "@/Composables/useHelpers.ts"
 import {usePage} from "@inertiajs/vue3"
-import axios from "axios"
 import {computed, inject, ref, useTemplateRef} from "vue"
 import {questionDataInterface, questionResultInterface} from "@/Components/Questions/QuestionInterface.ts"
 import type {CheckerResult, PiChecker} from "@/Checkers"
 import ScButton from "@/Components/Ui/scButton.vue"
-import {AxiosErrorMessage} from "@/types"
-import {ScoreQuestionDataInterface} from "@/types/modelInterfaces.ts"
+import {useStoreScore} from "@/stores/useStoreScore.ts"
+import {ScoreQuestionDataInterface} from "@/types/scoreInterfaces.ts"
 
 const emits = defineEmits<{
 	validate: [event: questionResultInterface]
@@ -45,6 +44,10 @@ const questionResult = ref<questionResultInterface>({
 	result: false,
 	answer: ""
 })
+
+
+const scoreStore = useStoreScore()
+const score = await scoreStore.getScore('Question', questionData.question.id)
 
 function updateAnswersValidation(): CheckerResult[] {
 	// Make the validation.
@@ -100,9 +103,9 @@ function updateAnswersValidation(): CheckerResult[] {
 		validation.push(results.find(r => r.result) || results[0])
 	})
 
-	// Update the score.
-	questionData.user.score.value.score = validation
-		.filter(v => v.result).length / validation.length
+	// // Update the score.
+	// score.value.score = validation
+	// 	.filter(v => v.result).length / validation.length
 
 	return validation
 }
@@ -111,51 +114,40 @@ function reduceAnswersValidation(validations: CheckerResult[]): boolean {
 	return validations.every(validation => validation.result)
 }
 
-async function saveToDB() {
-	// It's a dynamic question
-	if (!(questionData.question.id > 0) || questionData.config.isDynamic) {
+async function saveToDB(validations: CheckerResult[]) {
+	if (
+		!(questionData.question.id > 0) || questionData.config.isDynamic || // It's a dynamic question
+		!usePage().props.auth.user ||	// user is not connected
+		score.is_resolved // question is already resolved.
+	) {
 		return
 	}
 
-	// The user is not logged in
-	if (!usePage().props.auth.user) {
-		return
-	}
+	// score value
+	score.score = validations
+		.filter(v => v.result)
+		.length / validations.length
 
-	// current score = number of correct answer / total question.
-	// const score = questionData.useFsavetor
+	// score resolved.
+	score.is_resolved =
+		score.is_resolved ||
+		score.score === 1
 
-	const previousAnswers: string[] = (questionData.user.score.value.data as ScoreQuestionDataInterface)?.answers ?? []
+	// data = list of answers and previous answers.
+	// only update if it's a new answer, not already in the list.
+	const previousAnswers: string[] = (score.data as ScoreQuestionDataInterface)?.answers ?? []
 	const currentAnswers: string = questionData.user.answers.value.map(answer => answer.input).join('\n')
-
-	const isAlreadyAnswered = questionData.user.score.value.is_resolved
-
-	questionData.user.score.value.is_resolved =
-		questionData.user.score.value.is_resolved ||
-		questionData.user.score.value.score === 1
-
-	// TODO: est-ce qu'il faut quand même remettre à jour les données si la réponse est déjà donnée ?
-	if (!isAlreadyAnswered) {
-		console.log('PATCH')
-		axios.patch(route("api.scores.update", {score: questionData.user.score.value.id}),
-			{
-				score: questionData.user.score.value.score,
-				is_resolved: questionData.user.score.value.is_resolved,
-				data: {
-					'answers': [
-						currentAnswers,
-						...previousAnswers
-					]
-				}
-			})
-			.then(() => {
-				console.log('SUCCESS')
-			})
-			.catch((res: AxiosErrorMessage) => {
-				console.warn("Il y a une erreur lors du chargement de la réponse.")
-				console.warn(res.response.data.message)
-			})
+	if (!previousAnswers.includes(currentAnswers)) {
+		score.data = {
+			'answers': [
+				currentAnswers,
+				...previousAnswers
+			]
+		}
 	}
+
+
+	scoreStore.updateScore(score)
 }
 
 function emitToParent(result: boolean): questionResultInterface {
@@ -190,7 +182,7 @@ function validateQuestion() {
 	}).filter(msg => msg !== "")
 
 	// Sauvegarde dans la base de donnée
-	saveToDB()
+	saveToDB(validations)
 		.then(() => {
 			setTimeout(() => {
 				lockValidationButton.value = false

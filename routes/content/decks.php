@@ -13,20 +13,13 @@ Route::middleware('web')
 	          ->name('decks.portfolio');
 
 
-	     // Students routes
-	     Route::middleware('students')
-		     ->prefix('students')
-		     ->as('students.')
-	          ->group(function () {
-
-	          });
 
 	     // Admin routes
 	     Route::middleware('admin')
-		     ->prefix('admin')
 		     ->as('admin.')
 		     ->group(function () {
-
+			     Route::resource('decks', DeckController::class)
+			          ->only(['edit']);
 	          });
      });
 
@@ -40,14 +33,10 @@ Route::middleware('api')
 	          ->only(['index', 'show']);
 
 
-	     // Students api
-	     Route::middleware('students')
-	          ->group(function () {
-
-	          });
-
 	     // Admin api
 	     Route::middleware('admin')
+		     ->prefix('admin')
+		     ->as('admin.')
 	          ->group(function () {
 
 		          Route::apiResource('decks', DeckApiController::class);
@@ -55,7 +44,7 @@ Route::middleware('api')
 		          Route::prefix('decks')
 		               ->as('decks.')
 		               ->group(function () {
-			               Route::post('{deck}/cards/order', [DeckApiController::class, 'reorderCards'])
+			               Route::patch('{deck}/cards/order', [DeckApiController::class, 'reorderCards'])
 			                    ->name('cards.order');
 			               Route::patch('{deck}/updateChapter', [DeckApiController::class, 'updateChapter'])
 			                    ->name('updateChapter');
