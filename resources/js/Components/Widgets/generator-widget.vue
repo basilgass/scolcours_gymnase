@@ -4,14 +4,15 @@ import type {GeneratorInterface, QuestionInterface, WidgetPropsInterface} from "
 import QuestionShow from "@/Components/Questions/QuestionShow.vue"
 import {computed, onMounted, ref} from "vue"
 import {useGenerator} from "@/Composables/useGenerator.ts"
-import {ChallengeAnswerInterface} from "@/Components/Challenges/ChallengeGame.vue"
 import axios from "axios"
+import {ChallengeAnswerInterface} from "@/types/challengeInterface.ts"
+import {questionResultInterface} from "@/Components/Questions/QuestionInterface.ts"
 
 const props = defineProps<{
 	illustration: WidgetPropsInterface
 }>()
 
-const generator = ref<GeneratorInterface|false>(false)
+const generator = ref<GeneratorInterface | false>(false)
 const counter = ref(0)
 
 const theQuestion = computed(() => {
@@ -26,9 +27,9 @@ const theQuestion = computed(() => {
 	return false
 })
 
-function nextQuestion(checkerResult: ChallengeAnswerInterface): void {
-	if (checkerResult.result){
-		setTimeout(()=>{
+function nextQuestion(checkerResult: questionResultInterface): void {
+	if (checkerResult.result) {
+		setTimeout(() => {
 			counter.value++
 		}, 500)
 
@@ -38,7 +39,7 @@ function nextQuestion(checkerResult: ChallengeAnswerInterface): void {
 
 
 onMounted(() => {
-	if(+props.illustration.parameters>0) {
+	if (+props.illustration.parameters > 0) {
 		axios.get(route('api.admin.generators.fetch', [props.illustration.parameters]))
 			.then(res => {
 				generator.value = res.data

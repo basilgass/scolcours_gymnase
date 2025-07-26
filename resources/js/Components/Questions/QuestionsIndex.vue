@@ -9,8 +9,8 @@ import axios from "axios"
 import {computed, inject, onMounted, ref} from "vue"
 import type {questionResultInterface} from "@/Components/Questions/QuestionInterface.ts"
 import {useStoreScore} from "@/stores/useStoreScore.ts"
-import {util} from "prismjs"
 import {ScoreQuestionDataInterface} from "@/types/scoreInterfaces.ts"
+import PleaseWait from "@/Components/Ui/PleaseWait.vue"
 
 const editMode = useStoreEditMode()
 const flash = inject<flashInterface>("flash")
@@ -36,6 +36,7 @@ onMounted(() => {
 		})
 	})
 })
+
 
 const answeredIds = computed(() => {
 	return questions.value
@@ -162,5 +163,10 @@ defineEmits<{
 				</div>
 			</template>
 		</draggable>
+		<please-wait
+			v-else
+			class="min-h-[300px] grid place-items-center text-xl"
+			text="Chargement des questions..."
+		/>
 	</article>
 </template>

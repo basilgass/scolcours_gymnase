@@ -38,7 +38,7 @@ function onClick(lesson: LessonInterface, event: MouseEvent) {
 		// Mise à jour de la DB.
 		axios.patch(route('api.admin.lessons.update', {lesson: itemSource.value.id}), {
 			requires: itemSource.value.requires.join(','),
-			parameters: itemSource.value.parameters
+			parameters: itemSource.value.scoreRules
 		}).then(() => {
 			flash.success('Le cours a été mis à jour')
 		}).catch((err: AxiosErrorMessage) => {
@@ -112,10 +112,10 @@ function toggleIdInPlace(array: (string | number)[], id: string | number): void 
 								>
 									<lesson-type-icon :lesson />
 
-									<div
-										class="text-lg font-[400]"
-										v-katex.auto="lesson.lessonable?.title"
-									/>
+									<!--									<div-->
+									<!--										class="text-lg font-[400]"-->
+									<!--										v-katex.auto="lesson.lessonable?.title"-->
+									<!--									/>-->
 									<div class="font-code w-[16px] text-xs">
 										({{ lesson.id }})
 									</div>

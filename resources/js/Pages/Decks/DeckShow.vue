@@ -9,7 +9,7 @@ import DeckDisplay from "@/Pages/Decks/DeckDisplay.vue"
 defineOptions({layout: LayoutProjection})
 
 
-const props = withDefaults(defineProps<{
+withDefaults(defineProps<{
 		deck: DeckInterface,
 		hideTitle?: boolean
 	}>(),

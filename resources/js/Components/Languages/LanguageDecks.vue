@@ -34,10 +34,12 @@ const deck = computed<DeckInterface | null>(() => {
 			v-if="cards.length > 0"
 			class="min-h-[80vh] my-10"
 		>
-			<deck-display
-				:deck
-				hide-title
-			/>
+			<suspense>
+				<deck-display
+					:deck
+					hide-title
+				/>
+			</suspense>
 		</div>
 
 		<div v-if="languageData.state.value==='intro'">

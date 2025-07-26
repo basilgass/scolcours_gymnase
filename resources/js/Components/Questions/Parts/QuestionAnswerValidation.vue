@@ -34,6 +34,10 @@ const userAnswers = computed(() => {
 	return questionData.user.answers.value.map((a) => a.input).join(",")
 })
 
+const UserTexAnswers = computed(() => {
+	return questionData.user.answers.value.map((a) => a.tex).join(",")
+})
+
 const userAnswersCount = computed(() => {
 	return questionData.user.answers.value.filter(x => x.input.trim() !== '').length
 })
@@ -42,9 +46,9 @@ const errorMessages = ref<string[]>([])
 
 const questionResult = ref<questionResultInterface>({
 	result: false,
-	answer: ""
+	answer: "",
+	tex: ""
 })
-
 
 const scoreStore = useStoreScore()
 const score = await scoreStore.getScore('Question', questionData.question.id)
@@ -60,7 +64,6 @@ function updateAnswersValidation(): CheckerResult[] {
 	 *
 	 */
 
-	// TODO: permettre un mix de plusieurs réponses (@mix:)
 	questionData.validators.value.forEach((validator, index) => {
 		/** answer peut-être
 		 * 		<réponse>
@@ -103,10 +106,6 @@ function updateAnswersValidation(): CheckerResult[] {
 		validation.push(results.find(r => r.result) || results[0])
 	})
 
-	// // Update the score.
-	// score.value.score = validation
-	// 	.filter(v => v.result).length / validation.length
-
 	return validation
 }
 
@@ -135,6 +134,7 @@ async function saveToDB(validations: CheckerResult[]) {
 
 	// data = list of answers and previous answers.
 	// only update if it's a new answer, not already in the list.
+	// TODO: Scores data must be handled inside useStoreScore !
 	const previousAnswers: string[] = (score.data as ScoreQuestionDataInterface)?.answers ?? []
 	const currentAnswers: string = questionData.user.answers.value.map(answer => answer.input).join('\n')
 	if (!previousAnswers.includes(currentAnswers)) {
@@ -153,7 +153,8 @@ async function saveToDB(validations: CheckerResult[]) {
 function emitToParent(result: boolean): questionResultInterface {
 	const emitValue: questionResultInterface = {
 		result,
-		answer: userAnswers.value
+		answer: userAnswers.value,
+		tex: UserTexAnswers.value
 	}
 
 	emits('validate', emitValue)

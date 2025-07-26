@@ -56,7 +56,6 @@ class Post extends Model
 {
 	use HasUrlTrait;
 	use HasQuestionsTrait;
-	use HasScoresTrait;
 	use BelongsToThrough;
 
 	protected $guarded = [];

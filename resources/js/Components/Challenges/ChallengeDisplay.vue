@@ -14,16 +14,17 @@ defineProps<{
 <template>
 	<section>
 		<div class="scolcours-container">
-			<challenge-game
-				v-if="selector===0"
-				:challenge="challenge"
-			/>
-
-			<challenge-training
-				v-else
-				:generator="challenge.generators[selector-1]"
-				:key="challenge.generators[selector-1].slug"
-			/>
+			<suspense v-if="selector===0">
+				<challenge-game
+					:challenge="challenge"
+				/>
+			</suspense>
+			<suspense v-else>
+				<challenge-training
+					:generator="challenge.generators[selector-1]"
+					:key="challenge.generators[selector-1].slug"
+				/>
+			</suspense>
 		</div>
 	</section>
 </template>

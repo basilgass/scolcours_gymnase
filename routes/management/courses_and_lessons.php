@@ -44,6 +44,7 @@ Route::middleware('api')
      ->as('api.')
      ->group(function () {
 
+
 	     // Students api
 	     Route::middleware('students')
 	          ->prefix('students')

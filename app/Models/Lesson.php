@@ -13,14 +13,14 @@ class Lesson extends Model
 
 	protected $fillable = [
 		"requires",
-		"parameters",
+		"scoreRules",
 	];
 	protected $appends = ['url'];
 
 	protected function casts(): array
 	{
 		return [
-			'parameters' => 'array',
+			'scoreRules' => 'array',
 		];
 	}
 

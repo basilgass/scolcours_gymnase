@@ -63,22 +63,22 @@ trait HasScoresTrait
 		};
 
 		return ScoreResource::make($score);
-
-		return Cache::remember($cacheKey, $this->cacheTime,
-			function () use ($user) {
-				$score = $this->scoreFor($user);
-
-				// Le score n'existe pas ? On le créé.
-				if (!$score) {
-					// The score does not exist and the user is connected.
-					$score = $this->scores()->create([
-						"user_id" => $user->id,
-						"score"   => 0,
-					]);
-				};
-
-				return ScoreResource::make($score);
-			});
+//
+//		return Cache::remember($cacheKey, $this->cacheTime,
+//			function () use ($user) {
+//				$score = $this->scoreFor($user);
+//
+//				// Le score n'existe pas ? On le créé.
+//				if (!$score) {
+//					// The score does not exist and the user is connected.
+//					$score = $this->scores()->create([
+//						"user_id" => $user->id,
+//						"score"   => 0,
+//					]);
+//				};
+//
+//				return ScoreResource::make($score);
+//			});
 	}
 
 	public function getCacheKey(User $user): string

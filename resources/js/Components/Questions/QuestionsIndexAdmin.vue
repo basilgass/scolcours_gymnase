@@ -9,6 +9,7 @@ import axios from "axios"
 import {inject, ref} from "vue"
 import ScButton from "@/Components/Ui/scButton.vue"
 import {useStoreScore} from "@/stores/useStoreScore.ts"
+import {router} from "@inertiajs/vue3"
 
 const props = defineProps<{
 	post: PostShowInterface,
@@ -71,25 +72,9 @@ function storeDisplayIf() {
 function resetAnswers() {
 	const storeScore = useStoreScore()
 	storeScore.reset(props.questions.map(q=>q.user.id))
-		.then(() => {
-			console.log('RESET')
-			// theQuestions.value.forEach(q => {
-			// 	q.user.data = {'answers': []}
-			// 	q.is_resolved = false
-			// })
+		.then(()=>{
+			// TODO: Reload the page.
 		})
-	// axios
-	// 	.patch(
-	// 		route("api.admin.posts.answers.reset", {post: props.post.id})
-	// 	)
-	// 	.then(() => {
-	// 		for (const i in theQuestions.value) {
-	// 			theQuestions.value[i].user.data = {'answers': []}
-	// 			theQuestions.value[i].user.is_resolved = false
-	// 		}
-	//
-	// 		flash.success("Les réponses ont bien été réinitialisées.")
-	// 	})
 }
 
 

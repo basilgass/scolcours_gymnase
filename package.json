@@ -54,6 +54,7 @@
 		"markdown-it-bracketed-spans": "^1.0.1",
 		"markdown-it-texmath": "^1.0.0",
 		"mermaid": "^11.7.0",
+		"mitt": "^3.0.1",
 		"pidraw": "^0.2.1",
 		"pigames": "^0.1.18",
 		"pimath": "^0.1.32",

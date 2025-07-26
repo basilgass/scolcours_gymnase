@@ -23,7 +23,6 @@ const props = defineProps<{
 
 const scoreStore = useStoreScore()
 const score = await scoreStore.getScore('Deck', props.deck.id)
-const cardsScore = await scoreStore.getScores('Card', props.deck.cards.map(x => x.id))
 
 const cards = ref<CardInterfaceExtended[]>(props.deck.cards
 	.map((card) => {
@@ -65,29 +64,16 @@ provide<provideDeckData>('deckData', {
 
 		// update the deck score.
 		scoreStore.updateScore(score)
-			.then(() => {
-				// TODO: update lesson
-			})
-			.catch((err) => {
-				console.warn(err)
-			})
-
 	},
 	reset: async () => {
-		console.log('RESET FUNCTION AS ASYNC')
 		const ids = cards.value.map(card => card.id)
-		console.log('IDS', ids.join(','))
 		const scores = await scoreStore.getScores('Card', ids)
-
-		console.log('SCORES UPDATED')
 
 		scores.forEach(score => {
 			scoreStore.resetData(score)
 		})
 
-		console.log('SCORES ARE UPDATED')
-
-		// Mise à zéro des information des cartes.
+		// Mise à zéro des informations des cartes.
 		cards.value.forEach((card) => {
 			// On ajoute les valeurs éphémères.
 			card.current_appearances = 0

@@ -2,9 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\ChallengeResource;
+use App\Http\Resources\DeckResource;
+use App\Http\Resources\GeneratorResource;
 use App\Http\Resources\LessonResource;
+use App\Http\Resources\PostShowResource;
+use App\Models\Challenge;
 use App\Models\Course;
+use App\Models\Deck;
+use App\Models\Generator;
 use App\Models\Lesson;
+use App\Models\Post;
 use Illuminate\Http\Request;
 
 class LessonApiController extends Controller
@@ -39,4 +47,5 @@ class LessonApiController extends Controller
 	public function destroy(Lesson $lesson)
 	{
 	}
+
 }

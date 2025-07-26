@@ -1,6 +1,7 @@
 import {ComputedRef, Ref} from "vue"
-import {lessonableClassName, lessonableModel, LessonParametersInterface} from "@/types/lessonInterfaces.ts"
+import {lessonableClassName, lessonableModel, LessonScoreRulesInterface} from "@/types/lessonInterfaces.ts"
 import {
+	scoreableClassName,
 	ScoreCardDataInterface, ScoreDataInterface, ScoreDeckDataInterface,
 	ScoreGeneratorDataInterface, ScoreLessonDataInterface,
 	ScoreQuestionDataInterface
@@ -366,14 +367,14 @@ export interface CourseInterface {
 	updated_at: string,
 }
 
-export interface LessonInterface<T extends LessonParametersInterface = LessonParametersInterface> {
+export interface LessonInterface<T extends LessonScoreRulesInterface = LessonScoreRulesInterface> {
 	id: number,
 	title: string,
 	course_id: number,
 	requires: number[],
-	lessonable: lessonableModel | null,
+	lessonable_id: number | null,
 	lessonable_type: lessonableClassName | null,
-	parameters: T,
+	scoreRules: T,
 	user: ScoreInterface<ScoreLessonDataInterface>;
 	created_at: string,
 	updated_at: string,
@@ -384,7 +385,7 @@ export interface ScoreInterface<T extends ScoreDataInterface = ScoreDataInterfac
 	user_id: number,
 	score: number,
 	scoreable_id: number,
-	scoreable_type: string,
+	scoreable_type: scoreableClassName,
 	is_resolved: boolean,
 	attempts: number,
 	data: T,

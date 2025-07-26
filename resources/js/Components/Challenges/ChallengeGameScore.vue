@@ -1,11 +1,13 @@
 <script setup lang="ts">
-
-import { PropType } from "vue"
-import { ChallengeInterface } from "@/types/modelInterfaces"
-import { ChallengeGameInterface } from "@/Components/Challenges/ChallengeGame.vue"
+/**
+ * Lorsque le challenge est en cours, affiche la barre supérieur avec les scores actuels.
+ */
+import {PropType} from "vue"
+import {ChallengeInterface} from "@/types/modelInterfaces"
+import {ChallengeGameInterface} from "@/types/challengeInterface.ts"
 
 defineProps({
-	challenge: { type: Object as PropType<ChallengeInterface>, required: true },
+	challenge: {type: Object as PropType<ChallengeInterface>, required: true},
 	game: {type: Object as PropType<ChallengeGameInterface>, required: true}
 })
 

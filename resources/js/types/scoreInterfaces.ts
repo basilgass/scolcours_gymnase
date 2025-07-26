@@ -10,7 +10,6 @@
  */
 
 export type scoreableClassName =
-	'Post' |
 	'Question' |
 	'Deck' |
 	'Card' |
@@ -40,7 +39,7 @@ export interface ScoreDeckDataInterface {
 
 /**
  * Card score (DeckCards.vue)
- * - score = 0 à 1 (current weight)
+ * - score = 0 à 1 ??? a quoi sert ce score ?
  * - data: {
  *     current_score: 0 à 1 => poids actuel
  *     current_appearances: int => nombre d'apparitions de la carte
@@ -60,14 +59,20 @@ export interface ScoreCardDataInterface {
 }
 
 export interface ScoreChallengeDataInterface {
-	level: number
+	current_score: number,
+	current_level: number,
+	level: number,
 }
 
 /**
  * Generator score (ChallengeTraining.vue)
+ * score: max consecutive success
+ * data: {
+ *     current_score: consecutive success.
+ * }
  */
 export interface ScoreGeneratorDataInterface {
-
+	current_score: number
 }
 
 export interface ScoreLessonDataInterface {

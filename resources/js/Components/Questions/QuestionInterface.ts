@@ -101,5 +101,6 @@ export interface checkAnswerInterface {
 
 export interface questionResultInterface {
 	answer: string,
-	result: boolean
+	result: boolean,
+	tex: string
 }

@@ -42,6 +42,8 @@ Route::middleware('api')
      ->as('api.')
      ->group(function () {
 	     // Public api.
+	     Route::apiResource('challenges', ChallengeApiController::class)
+		     ->only(['index', 'show']);
 
 
 	     // Admin api

@@ -10,33 +10,15 @@ import {flashInterface} from "@/types"
 import {
 	ChallengeGameState,
 	ChallengeInterface,
-	ChallengeScoreInterface,
 	GeneratorInterface,
 	QuestionDynamicInterface,
 	QuestionInterface
 } from "@/types/modelInterfaces"
-import {usePage} from "@inertiajs/vue3"
-import axios from "axios"
 import {computed, inject, reactive, ref, watch} from "vue"
-
-// TODO: ChallengeAnswerInterface must be reworked as it is used in QuestionAnswerValidation
-export interface ChallengeAnswerInterface {
-	question: string
-	answer: string
-	result: boolean,
-	attempts: number,
-	updated_at?: string
-}
-
-export interface ChallengeGameInterface {
-	score: number,
-	level: number,
-	levelScore: number,
-	lives: number,
-	death: number,
-	elapsedTime: number,
-	remainingTime: number,
-}
+import {useStoreScore} from "@/stores/useStoreScore.ts"
+import {ScoreChallengeDataInterface} from "@/types/scoreInterfaces.ts"
+import {ChallengeAnswerInterface, ChallengeGameInterface} from "@/types/challengeInterface.ts"
+import {questionResultInterface} from "@/Components/Questions/QuestionInterface.ts"
 
 const flash = inject<flashInterface>("flash")
 
@@ -45,13 +27,7 @@ const props = defineProps<{
 }>()
 
 
-const emits = defineEmits<{
-	stateChange: [value: ChallengeGameState]
-}>()
-
-const userScore = ref<ChallengeScoreInterface>(props.challenge.user)
 const state = ref<ChallengeGameState>("intro")
-
 const game = reactive<ChallengeGameInterface>({
 	score: 0,
 	level: 0,
@@ -61,17 +37,21 @@ const game = reactive<ChallengeGameInterface>({
 	elapsedTime: 0,
 	remainingTime: 0
 })
+const questionId = ref(0)
 const questions = ref<QuestionDynamicInterface[]>([])
 const answers = ref<ChallengeAnswerInterface[]>([])
-const questionId = ref(0)
 
 const generator = computed<GeneratorInterface>(() => {
 	if (props.challenge.generators.length === 0) return null
 	return props.challenge.generators[Math.min(game.level - 1, props.challenge.generators.length - 1)]
 })
 
+const emits = defineEmits<{
+	stateChange: [value: ChallengeGameState]
+}>()
+
+
 function generate() {
-	//TODO: maybe reduce the number of generated questions
 	// Generate a number of question
 	questions.value = useGenerator(generator.value).list(20)
 		.map(g => useGenerator(generator.value).question(g))
@@ -120,63 +100,60 @@ function stop() {
 	clearInterval(timerInterval)
 	timerInterval = null
 
-	// Change state
-	state.value = 'finished'
-
 	// Store the new values
 	store()
+
+	// Change state
+	state.value = 'finished'
 }
 
 /**
  * Store the user score to the database.
  * (if the user is logged in)
  */
+const scoreStore = useStoreScore()
+const score = await scoreStore.getScore<ScoreChallengeDataInterface>('Challenge', props.challenge.id)
+
 function store() {
-	// Check if the user is logged in.
-	if (usePage().props.auth.user) {
+	// Résultat du challenge
+	const delta = game.score - score.score
 
-		axios
-			.post(route("api.admin.scores.challenge", [props.challenge.id]), {
-				score: game.score,
-				level: game.level
-			})
-			.then((res) => {
-				if (res.data) {
-					// Output the updated information
-					const delta =
-						res.data.updated.score - res.data.previous.score
+	// Mise à jour des scores globaux.
+	score.score = Math.max(game.score, score.score)
+	score.data.level = Math.max(game.level, score.data.level)
 
-					if (delta > 0) {
-						userScore.value.score = Math.max(
-							userScore.value.score,
-							res.data.updated.score
-						)
-						userScore.value.level = Math.max(
-							userScore.value.level,
-							res.data.updated.level
-						)
-						flash.success(
-							`Bravo, vous avez amélioré votre score de ${delta} point${
-								delta > 1 ? "s" : ""
-							}`
-						)
-					} else {
-						flash.info(
-							"Vous n'avez pas amélioré votre score... dommage !"
-						)
-					}
-				}
-			})
-	}
+	// Mise à jour des scores courants
+	score.data.current_score = game.score
+	score.data.current_level = game.level
+	scoreStore.updateScore(score)
+		.then(() => {
+			if (delta > 0) {
+				flash.success(
+					`Bravo, vous avez amélioré votre score de ${delta} point${
+						delta > 1 ? "s" : ""
+					}`
+				)
+			} else {
+				flash.info(
+					"Vous n'avez pas amélioré votre score... dommage !"
+				)
+			}
+		})
 }
 
 /**
  * Validate the answer: success or fail
  * @param answer
  */
-function validate(answer: ChallengeAnswerInterface) {
+function validate(answer: questionResultInterface) {
 	// store the answer
-	answers.value.push(answer)
+	const question = questions.value[questionId.value].block.body
+		.replace("$a", answer.tex)
+
+	answers.value.push({
+		question,
+		...answer
+	})
 
 	// Continue or stop the game
 	if (answer.result) {
@@ -301,7 +278,8 @@ watch(state, () => {
 	>
 		<challenge-intro
 			v-if="state==='intro'"
-			:challenge="challenge"
+			:challenge
+			:score
 			class="mt-4"
 			@start="start"
 		/>
@@ -335,8 +313,9 @@ watch(state, () => {
 			v-if="state==='finished'"
 			class="flex flex-col gap-2"
 			:results="game"
-			:answers="answers"
-			:challenge="challenge"
+			:answers
+			:challenge
+			:score
 			@cancel="state='intro'"
 			@start="start"
 		/>

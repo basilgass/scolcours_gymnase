@@ -10,10 +10,13 @@ Pour l'admin, contient également les liens vers les résultats par teams.
 >
 
 import ScButton from "@/Components/Ui/scButton.vue"
+import {ChallengeInterface, ScoreInterface} from "@/types/modelInterfaces.ts"
+import {ScoreChallengeDataInterface} from "@/types/scoreInterfaces.ts"
 
-const props = defineProps({
-	challenge: { type: Object, required: true }
-})
+defineProps<{
+	challenge: ChallengeInterface,
+	score: ScoreInterface<ScoreChallengeDataInterface>
+}>()
 
 const emits = defineEmits(["start"])
 
@@ -23,7 +26,9 @@ const emits = defineEmits(["start"])
 	<article class="flex flex-col gap-3">
 		<!-- Description du challenge -->
 		<div class="grid grid-cols-3 gap-3 w-[30em] mx-auto">
-			<div class="bg-content aspect-square p-4 rounded-xl border border-gray-200 grid place-items-center shadow-sm">
+			<div
+				class="bg-content aspect-square p-4 rounded-xl border border-gray-200 grid place-items-center shadow-sm"
+			>
 				<div class="text-center flex flex-col justify-between h-full">
 					<i class="text-5xl bi bi-heart" />
 					<div class="text-3xl">
@@ -35,7 +40,9 @@ const emits = defineEmits(["start"])
 				</div>
 			</div>
 
-			<div class="bg-content aspect-square p-4 rounded-xl border border-gray-200 grid place-items-center shadow-sm">
+			<div
+				class="bg-content aspect-square p-4 rounded-xl border border-gray-200 grid place-items-center shadow-sm"
+			>
 				<div class="text-center flex flex-col justify-between h-full">
 					<i class="text-5xl bi bi-chevron-double-up" />
 					<div class="text-3xl">
@@ -47,7 +54,9 @@ const emits = defineEmits(["start"])
 				</div>
 			</div>
 
-			<div class="bg-content aspect-square p-4 rounded-xl border border-gray-200 grid place-items-center shadow-sm">
+			<div
+				class="bg-content aspect-square p-4 rounded-xl border border-gray-200 grid place-items-center shadow-sm"
+			>
 				<div class="text-center flex flex-col justify-between h-full">
 					<i class="text-5xl bi bi-clock" />
 					<div class="text-3xl">
@@ -84,10 +93,10 @@ const emits = defineEmits(["start"])
 							score
 						</h4>
 						<div class="text-3xl">
-							{{ props.challenge.user.score }}
+							{{ score.data.current_score }}
 						</div>
 						<div class="text-sm">
-							meilleur: {{ props.challenge.best.score }}
+							meilleur: {{ score.score }}
 						</div>
 					</div>
 				</div>
@@ -99,10 +108,10 @@ const emits = defineEmits(["start"])
 							niveau
 						</h4>
 						<div class="text-3xl">
-							{{ props.challenge.user.level }}
+							{{ score.data.current_level }}
 						</div>
 						<div class="text-sm">
-							meilleur: {{ props.challenge.best.level }}
+							meilleur: {{ score.data.level }}
 						</div>
 					</div>
 				</div>

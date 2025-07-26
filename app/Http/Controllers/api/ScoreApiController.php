@@ -16,13 +16,21 @@ class ScoreApiController extends Controller
 	public function index(Request $request)
 	{
 		$request->validate([
-			'type' => ['required', 'string'],
-			'ids'  => ['required', 'array'], // ou 'array' si tu envoies un tableau
+			'type' => ['string'],
+			'ids'  => ['required', 'array']
 		]);
+
+		$ids = $request->input('ids');
+
+		if(!$request->has('type')){
+			// On retourne les scores par leur ids directement.
+			$scores = Score::whereIn('id', $ids)->get();
+			return ScoreResource::collection($scores);
+		}
 
 
 		// Post | Question | Deck | Card | Challenge | Generator | Lesson
-		$ids = $request->input('ids');
+
 		$type = 'App\\Models\\' . ucfirst($request->input('type')); // ou directement passé en FQCN
 
 		$userId = Auth::id();
@@ -125,7 +133,6 @@ class ScoreApiController extends Controller
 		$validate = $request->validate([
 			'score' => ['int', 'min:0'],
 			'level' => ['nullable', 'int', 'min:1'],
-			'stars' => ['nullable', 'int', 'min:0', 'max:5'],
 		]);
 
 		$currentScore = null;

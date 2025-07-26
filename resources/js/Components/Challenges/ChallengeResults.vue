@@ -4,18 +4,25 @@ Permet de recommencer le challenge.
 -->
 <script lang="ts" setup>
 
-import { PropType } from "vue"
-import { ChallengeInterface } from "@/types/modelInterfaces"
-import { ChallengeAnswerInterface, ChallengeGameInterface } from "@/Components/Challenges/ChallengeGame.vue"
+import {ChallengeInterface, ScoreInterface} from "@/types/modelInterfaces"
 import ScButton from "@/Components/Ui/scButton.vue"
+import {ChallengeAnswerInterface, ChallengeGameInterface} from "@/types/challengeInterface.ts"
+import {ScoreChallengeDataInterface} from "@/types/scoreInterfaces.ts"
+import {onMounted} from "vue"
 
 const emits = defineEmits(["start", "cancel"])
-const props = defineProps({
-	answers: {type:Object as PropType<ChallengeAnswerInterface[]>, required: true},
-	results: { type: Object as PropType<ChallengeGameInterface>, required: true },
-	challenge: { type: Object as PropType<ChallengeInterface>, required: true }
-})
 
+defineProps<{
+	challenge: ChallengeInterface,
+	answers: ChallengeAnswerInterface[],	// utiliser par afficher la liste des réponses
+	results: ChallengeGameInterface,
+	score: ScoreInterface<ScoreChallengeDataInterface>
+}>()
+
+
+onMounted(()=>{
+	console.log('challenge resulte mounted')
+})
 </script>
 
 <template>
@@ -32,7 +39,7 @@ const props = defineProps({
 				class="rounded-xl border border-gray-200 bg-white shadow-sm text-xl md:text-2xl text-center p-2 md:p-10 flex flex-col justify-between gap-4"
 			>
 				<div>Meilleures score</div>
-				<div>{{ Math.max(props.challenge.user.score, results.score) }} / {{ props.challenge.best.score }}</div>
+				<div>{{ Math.max(score.data.current_score, results.score) }} / {{ score.score }}</div>
 			</div>
 
 			<div
@@ -53,7 +60,7 @@ const props = defineProps({
 				class="rounded-xl border border-gray-200 bg-white shadow-sm text-xl md:text-2xl text-center p-2 md:p-10 flex flex-col justify-between gap-4"
 			>
 				<div>Temps restant</div>
-				<div>{{ Math.max(results.remainingTime- results.elapsedTime, 0) }} s</div>
+				<div>{{ Math.max(results.remainingTime - results.elapsedTime, 0) }} s</div>
 			</div>
 		</div>
 
@@ -85,10 +92,10 @@ const props = defineProps({
 				<div
 					v-for="(answer, id) of answers"
 					:key="`answer-${id}`"
-					class="relative py-1 border"
+					class="relative px-3 py-1 border rounded"
 					:class="answer.result?'bg-green-100/90 border-green-600':'bg-red-100/90 border-red-600'"
 				>
-					<div v-katex.auto="answer.question" />
+					<div v-katex.auto.left="answer.question" />
 					<div
 						v-text="answer.answer"
 						class="absolute top-0 right-1 text-gray-600 text-sm font-code"
