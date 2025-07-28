@@ -8,8 +8,10 @@ Route::middleware('web')
      ->group(function () {
 	     // Public routes.
 	     Route::resource('tools', ToolController::class)
+		     ->parameters([
+				 "tools"=>"tool:slug",
+		     ])
 	          ->only(['index', 'show']);
-
 
 	     // Admin routes
 	     Route::middleware('admin')

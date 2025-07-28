@@ -14,7 +14,6 @@ toggleDark(false)
 	<div
 		class="flex items-baseline cursor-pointer"
 		@click="toggleDark()"
-		v-admin
 	>
 		<div
 

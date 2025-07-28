@@ -9,7 +9,7 @@ Un bouton pour se déloguer, tout simple, sans mise en forme.
 <template>
 	<InertiaLink
 		as="button"
-		class="text-left px-3 py-2 whitespace-nowrap"
+		class="text-left px-3 py-2 whitespace-nowrap cursor-pointer"
 		href="/logout"
 		method="post"
 	>

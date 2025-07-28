@@ -172,6 +172,9 @@ function validateQuestion() {
 	// Défini le résultat final
 	const result = reduceAnswersValidation(validations)
 
+	// émettre au parent les modifications et mise à jour du résultat de la question
+	questionResult.value = emitToParent(result)
+
 	// La réponse est fausse -> effet visuel
 	if (!result && questionData.config.animation) {
 		useWrongAnswerAnimation(validateButton.value.$el)
@@ -187,9 +190,6 @@ function validateQuestion() {
 		.then(() => {
 			setTimeout(() => {
 				lockValidationButton.value = false
-
-				// émettre au parent les modifications
-				questionResult.value = emitToParent(result)
 			}, 500)
 		})
 }

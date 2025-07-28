@@ -202,9 +202,13 @@ export const useStoreScore = defineStore(
 			const promise = (async () => {
 				let check = validateMatchingScores<T>(type, ids)
 
+				console.log(type, ids, check)
 				// Un score a été trouvé.
 				if (check.valid) {
+					console.log('SCORE IN STORE')
 					return check.result
+				}else{
+					console.log('')
 				}
 
 				if (check.duplicates) {

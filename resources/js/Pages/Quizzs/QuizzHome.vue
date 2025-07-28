@@ -2,7 +2,7 @@
 	setup
 	lang="ts"
 >
-import { onMounted, PropType } from "vue"
+import {onMounted, onUnmounted, PropType} from "vue"
 import {router, usePage} from "@inertiajs/vue3"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 import type { QuizzSessionInterface } from "@/types/modelInterfaces"
@@ -16,8 +16,15 @@ const props = defineProps({
 const updateQuizz = () => {
 	router.reload()
 }
+
+let checkForUpdate = null
 onMounted(() => {
-	setInterval(() => updateQuizz(), 2000)
+	checkForUpdate = setInterval(() => updateQuizz(), 2000)
+})
+onUnmounted(()=>{
+	if(checkForUpdate){
+		clearInterval(checkForUpdate)
+	}
 })
 </script>
 

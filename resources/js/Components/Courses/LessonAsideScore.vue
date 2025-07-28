@@ -143,7 +143,6 @@ async function update_lesson_score(model: lessonableModel, updatedScore?: ScoreI
 			return
 		}
 	} else{
-		console.log('NO MATCH')
 		return
 	}
 

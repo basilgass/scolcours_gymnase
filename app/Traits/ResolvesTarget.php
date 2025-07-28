@@ -3,9 +3,12 @@
 namespace App\Traits;
 
 use App\Models\Block;
+use App\Models\Challenge;
 use App\Models\Chapter;
 use App\Models\Course;
+use App\Models\Deck;
 use App\Models\Formula;
+use App\Models\Generator;
 use App\Models\Lesson;
 use App\Models\Post;
 use App\Models\Question;
@@ -13,13 +16,16 @@ use App\Models\Question;
 trait ResolvesTarget
 {
 	protected array $allowedTargets = [
-		'block'    => Block::class,
-		'post'     => Post::class,
-		'question' => Question::class,
-		'formula'  => Formula::class,
-		'chapter'  => Chapter::class,
-		'lesson'   => Lesson::class,
-		'course'   => Course::class,
+		'block'     => Block::class,
+		'post'      => Post::class,
+		'question'  => Question::class,
+		'formula'   => Formula::class,
+		'chapter'   => Chapter::class,
+		'lesson'    => Lesson::class,
+		'course'    => Course::class,
+		'deck'      => Deck::class,
+		'challenge' => Challenge::class,
+		'generator' => Generator::class,
 	];
 
 	protected array $allowedWiths = [
@@ -50,18 +56,4 @@ trait ResolvesTarget
 		return $query->findOrFail($id);
 	}
 
-	protected function resolveTarget2(array $validated, string $with = null)
-	{
-		$class = 'App\\Models\\' . ucfirst($validated['target_type']);
-
-		if (!class_exists($class)) {
-			abort(422, 'Invalid target class: ' . $validated['target_type']);
-		}
-
-		if ($with) {
-			return $class::with($with)->findOrFail($validated['target_id']);
-		} else {
-			return $class::findOrFail($validated['target_id']);
-		}
-	}
 }

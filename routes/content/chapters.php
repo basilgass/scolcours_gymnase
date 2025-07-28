@@ -58,6 +58,9 @@ Route::middleware('api')
      ->as('api.')
      ->group(function () {
 	     // Public api.
+	     Route::apiResource('themes.chapters', ChapterApiController::class)
+	          ->shallow()
+	          ->only(['index']);
 
 	     // Get basic chapter info
 	     Route::get('chapters/{chapter}/info', [ChapterApiController::class, 'info'])
@@ -65,6 +68,9 @@ Route::middleware('api')
 
 	     Route::get("chapters/{chapter:slug}/theorems", [ChapterApiController::class, 'getTheoremsFromChapter'])
 	          ->name('chapters.theorems.index');
+
+		 Route::get("chapters/{chapter:slug}/posts", [ChapterApiController::class, 'getPosts'])
+			 ->name('chapters.posts');
 
 	     // Admin api
 	     Route::middleware('admin')
@@ -74,7 +80,7 @@ Route::middleware('api')
 
 		          Route::apiResource('themes.chapters', ChapterApiController::class)
 		               ->shallow()
-		               ->only(['index', 'store', 'update', 'destroy']);
+		               ->only(['store', 'update', 'destroy']);
 
 		          Route::get('chapters/fetch', [ChapterApiController::class, 'index'])
 		               ->name('chapters.index');

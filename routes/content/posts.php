@@ -29,6 +29,7 @@ Route::middleware('api')
 	     Route::apiResource('posts', PostApiController::class)
 	          ->only(['index', 'show']);
 
+
 	     //REFACTOR Récupère juste le titre du modèle - à généraliser ?
 	     Route::get('posts/{post}/info', [PostApiController::class, 'info'])
 	          ->name('posts.info');

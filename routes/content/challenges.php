@@ -53,8 +53,8 @@ Route::middleware('api')
 	          ->group(function () {
 
 		          Route::apiResource('chapters.challenges', ChallengeApiController::class)
+			          ->only(['store', 'update', 'destroy'])
 		               ->shallow();
-
 
 		          Route::prefix('challenges')
 		               ->as('challenges.')

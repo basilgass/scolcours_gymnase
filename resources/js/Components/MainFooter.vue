@@ -91,6 +91,12 @@ const langues = {
 						<i class="mr-2 bi bi-person-fill" />{{ $page.props.auth.user.name }}
 					</InertiaLink>
 					<InertiaLink
+						:href="route('courses.index')"
+						class="block transition duration-300 hover:translate-x-2 px-0 md:px-4 py-1"
+					>
+						<i class="mr-2 bi bi-book" />cours
+					</InertiaLink>
+					<InertiaLink
 						:href="route('quizzs.index')"
 						class="block transition duration-300 hover:translate-x-2 px-0 md:px-4 py-1"
 					>
@@ -113,9 +119,9 @@ const langues = {
 					</InertiaLink>
 				</div>
 
-				<!-- TODO: add dark mode switch -->
 				<div
 					class="mt-5"
+					v-admin
 				>
 					<h3 class="text-lg font-semibold">
 						Interface

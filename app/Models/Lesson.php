@@ -14,6 +14,8 @@ class Lesson extends Model
 	protected $fillable = [
 		"requires",
 		"scoreRules",
+		"lessonable_type",
+		"lessonable_id"
 	];
 	protected $appends = ['url'];
 

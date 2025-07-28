@@ -51,7 +51,6 @@ provide<provideDeckData>('deckData', {
 		if (intro.value) {
 			return
 		}
-
 		currentCardId.value = null
 		const number_of_first_resolved = cards.value
 			.filter(card => card.current_appearances === 1)
@@ -83,7 +82,6 @@ provide<provideDeckData>('deckData', {
 
 		flipcards.value.restartDeck()
 		intro.value = false
-
 	}
 })
 

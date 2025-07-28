@@ -1,16 +1,25 @@
 <script setup lang="ts">
 
 import LayoutMain from "@/Layouts/LayoutMain.vue"
-import {CourseInterface, LessonInterface} from "@/types/modelInterfaces.ts"
+import {
+	ChallengeInterface,
+	ChapterInterface,
+	CourseInterface,
+	DeckInterface, GeneratorInterface,
+	LessonInterface,
+	PostShowInterface
+} from "@/types/modelInterfaces.ts"
 import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
-import {inject, ref} from "vue"
+import {inject, onMounted, ref} from "vue"
 import Card from "@/Components/Ui/Card.vue"
 import CourseLessonEdit from "@/Components/Courses/CourseLessonEdit.vue"
 import CourseGraph from "@/Components/Courses/CourseGraph.vue"
-import axios from "axios"
-import {AxiosErrorMessage, flashInterface} from "@/types"
+import {AxiosErrorMessage, AxiosResponseModel, flashInterface} from "@/types"
 import LessonTypeIcon from "@/Components/Courses/LessonTypeIcon.vue"
+import ScButton from "@/Components/Ui/scButton.vue"
+import {lessonableClassName} from "@/types/lessonInterfaces.ts"
+import axios from "axios"
 
 defineOptions({layout: LayoutMain})
 
@@ -21,11 +30,107 @@ const props = defineProps<{
 const flash = inject<flashInterface>('flash')
 const theCourse = ref<CourseInterface>(props.course)
 
-
-function addLesson() {
-	// Se mettre en mode "panier de leçon". On parcourt ensuite le site avec la possibilité d'ajouter le cours.
+function updateCourse() {
+	axios.patch(route('api.admin.courses.update', {course: theCourse.value.id}), {
+		title: theCourse.value.title,
+		slug: theCourse.value.slug,
+		theme_id: theCourse.value.theme_id
+	})
+		.then((res: AxiosResponseModel<CourseInterface>) => {
+			console.log(res.data)
+		})
+		.catch((err: AxiosErrorMessage) => {
+			console.warn(err.response.data.message)
+		})
 }
 
+
+const chapter = ref<ChapterInterface>()
+const posts = ref<PostShowInterface[]>([])
+
+function loadPosts() {
+	posts.value = []
+
+	if (!chapter.value) {
+		return
+	}
+
+	axios.get(route("api.chapters.posts", {chapter: chapter.value}))
+		.then((res: AxiosResponseModel<PostShowInterface[]>) => {
+			posts.value = res.data
+		})
+}
+
+function addLesson(type: lessonableClassName, id: number) {
+	axios
+		.post(route('api.admin.courses.lessons.store', {course: props.course.id}), {
+			"target_type": type.toLowerCase(),
+			"target_id": id
+		})
+		.then((res: AxiosResponseModel<LessonInterface>) => {
+			theCourse.value.lessons.push(res.data)
+		})
+		.catch((err: AxiosErrorMessage) => {
+			console.warn(err.response.data.message)
+		})
+}
+
+function addPost(post: PostShowInterface) {
+	addLesson('Post', post.id)
+}
+
+function addAllPosts() {
+	const coursesPostIds: number[] = theCourse.value.lessons
+		.filter((lesson) => {
+			return lesson.lessonable_type === 'Post'
+		}).map(lesson => lesson.lessonable_id)
+
+	const newPostIds = posts.value.filter(post => !coursesPostIds.includes(post.id))
+		.map(post => post.id)
+
+	axios
+		.post(route('api.admin.courses.lessons.posts.store', {course: props.course.id}), {
+			"ids": newPostIds
+		})
+		.then((res: AxiosResponseModel<LessonInterface[]>) => {
+			theCourse.value.lessons.push(...res.data)
+		})
+		.catch((err: AxiosErrorMessage) => {
+			console.warn(err.response.data.message)
+		})
+}
+
+
+const deck = ref<DeckInterface>()
+
+function addDeck(deck: DeckInterface) {
+	addLesson('Deck', deck.id)
+}
+
+const availableChallenges = ref<ChallengeInterface[]>([])
+
+function addChallenge(challenge: ChallengeInterface) {
+	addLesson('Challenge', challenge.id)
+}
+
+const availableGenerators = ref<GeneratorInterface[]>([])
+
+function addGenerator(challenge: GeneratorInterface) {
+	addLesson('Generator', challenge.id)
+}
+
+function deleteLesson(lesson: LessonInterface) {
+	axios.delete(route("api.admin.lessons.destroy", {lesson: lesson.id}))
+		.then(() => {
+			const index = theCourse.value.lessons.findIndex(l => l.id === lesson.id)
+
+			if (index) {
+				theCourse.value.lessons.splice(index, 1)
+			}
+		})
+}
+
+// Gestion des leçons pour les relations
 const itemSource = ref<LessonInterface>(undefined)
 const counter = ref(1)
 
@@ -61,6 +166,26 @@ function toggleIdInPlace(array: (string | number)[], id: string | number): void 
 		array.splice(index, 1)
 	}
 }
+
+onMounted(() => {
+	axios
+		.get(route('api.challenges.index'))
+		.then((res: AxiosResponseModel<ChallengeInterface[]>) => {
+			availableChallenges.value = res.data
+		})
+		.catch((err: AxiosErrorMessage) => {
+			console.warn(err.response.data.message)
+		})
+
+	axios
+		.get(route('api.generators.index'))
+		.then((res: AxiosResponseModel<GeneratorInterface[]>) => {
+			availableGenerators.value = res.data
+		})
+		.catch((err: AxiosErrorMessage) => {
+			console.warn(err.response.data.message)
+		})
+})
 </script>
 
 <template>
@@ -87,6 +212,127 @@ function toggleIdInPlace(array: (string | number)[], id: string | number): void 
 				theme-key="id"
 				v-model="theCourse.theme_id"
 			/>
+
+			<sc-button
+				type="save"
+				@click="updateCourse"
+			>
+				enregistrer
+			</sc-button>
+		</div>
+
+		<div>
+			<div>Choix du chapitre</div>
+			<form-maker
+				type="chapter"
+				v-model="chapter"
+				@update="loadPosts"
+			/>
+
+			<div class="grid grid-cols-1 gap-3">
+				<div
+					v-for="post in posts"
+					:key="`post-${post.id}`"
+				>
+					<Card>
+						<template #header>
+							<div class="flex justify-between">
+								<div v-katex.auto="post.title" />
+								<div>{{ post.id }}</div>
+							</div>
+						</template>
+						<div class="flex justify-end">
+							<sc-button
+								type="add"
+								icon
+								xs
+								@click="addPost(post)"
+							>
+								ajouter
+							</sc-button>
+						</div>
+					</Card>
+				</div>
+			</div>
+
+			<sc-button
+				type="add"
+				icon
+				xs
+				@click="addAllPosts"
+			>
+				ajouter tous les articles
+			</sc-button>
+		</div>
+
+		<div>
+			<div>Choix d'un deck</div>
+			<form-maker
+				type="deck"
+				v-model="deck"
+			/>
+			<Card v-if="deck">
+				<template #header>
+					<div v-katex.auto="deck.title" />
+				</template>
+
+				<div class="flex justify-end">
+					<sc-button
+						type="add"
+						icon
+						xs
+						@click="addDeck(deck)"
+					>
+						ajouter
+					</sc-button>
+				</div>
+			</Card>
+		</div>
+
+		<div v-if="availableChallenges.length>0">
+			<div>Choix d'un challenge</div>
+			<Card
+				v-for="challenge in availableChallenges"
+				:key="`challenge-${challenge.id}`"
+			>
+				<template #header>
+					<div v-katex.auto="challenge.title" />
+				</template>
+
+				<div class="flex justify-end">
+					<sc-button
+						type="add"
+						icon
+						xs
+						@click="addChallenge(challenge)"
+					>
+						ajouter
+					</sc-button>
+				</div>
+			</Card>
+		</div>
+
+		<div v-if="availableGenerators.length>0">
+			<div>Choix d'un challenge</div>
+			<Card
+				v-for="generator in availableGenerators"
+				:key="`generator-${generator.id}`"
+			>
+				<template #header>
+					<div v-katex.auto="generator.title" />
+				</template>
+
+				<div class="flex justify-end">
+					<sc-button
+						type="add"
+						icon
+						xs
+						@click="addGenerator(generator)"
+					>
+						ajouter
+					</sc-button>
+				</div>
+			</Card>
 		</div>
 
 		<article>
@@ -112,10 +358,10 @@ function toggleIdInPlace(array: (string | number)[], id: string | number): void 
 								>
 									<lesson-type-icon :lesson />
 
-									<!--									<div-->
-									<!--										class="text-lg font-[400]"-->
-									<!--										v-katex.auto="lesson.lessonable?.title"-->
-									<!--									/>-->
+									<div
+										class="text-lg font-[400]"
+										v-katex.auto="lesson.title"
+									/>
 									<div class="font-code w-[16px] text-xs">
 										({{ lesson.id }})
 									</div>
@@ -134,17 +380,17 @@ function toggleIdInPlace(array: (string | number)[], id: string | number): void 
 						<course-lesson-edit
 							:lesson
 						/>
+						<template #footer>
+							<sc-button
+								type="delete"
+								icon
+								xs
+								@click="deleteLesson(lesson)"
+							>
+								supprimer
+							</sc-button>
+						</template>
 					</Card>
-
-					<div
-						class="mt-10 py-10
-							 border border-dashed rounded
-							  bg-blue-100 border-blue-600 text-blue-600
-							  text-center cursor-pointer"
-						@click="addLesson"
-					>
-						<i class="bi bi-plus-circle mr-2" />ajouter une leçon...
-					</div>
 				</div>
 				<div>
 					<course-graph

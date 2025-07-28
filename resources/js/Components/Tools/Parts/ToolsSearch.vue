@@ -31,7 +31,7 @@ const listOfTools = computed(() => {
 const availableTools = ref<ToolInterface[]>([])
 
 async function getTools() {
-	axios.get(route('api.admin.tools.index'))
+	axios.get(route('api.tools.index'))
 		.then((res) => {
 			availableTools.value = res.data as ToolInterface[]
 		})

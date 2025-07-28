@@ -134,7 +134,7 @@ async function updateCard_toDB(result: boolean, durationInSeconds: number) {
 	score.data.time_spent += durationInSeconds
 
 	// Sauvegarder directement dans le score de la carte.
-	scoreStore.updateScore(score)
+	scoreStore.updateScore(score, true)
 		.then(() => {
 			// Que faire après une mise à jour de la carte ?
 			const index = deckData.cards.value.findIndex(card => card.id === currentCard.value?.id)

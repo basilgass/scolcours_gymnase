@@ -44,7 +44,6 @@ Route::middleware('api')
      ->as('api.')
      ->group(function () {
 
-
 	     // Students api
 	     Route::middleware('students')
 	          ->prefix('students')
@@ -62,6 +61,9 @@ Route::middleware('api')
 
 		          Route::apiResource('courses.lessons', LessonApiController::class)
 		               ->shallow();
+
+				  Route::post('courses/{course}/lessons/posts', [LessonApiController::class, "storePosts"])
+					  ->name('courses.lessons.posts.store');
 
 		          Route::get('courses/lessonables', [CourseApiController::class, 'fetchLessonables'])
 		               ->name('courses.lessonables');

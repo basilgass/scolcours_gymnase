@@ -17,6 +17,13 @@ use function redirect;
 
 class ChallengeApiController extends Controller
 {
+	public function index()
+	{
+		$challenges = Challenge::orderBy('title')
+		                       ->get();
+		return ChallengeResource::collection($challenges);
+	}
+
 	public function show(Challenge $challenge)
 	{
 		if (count($challenge->blocks) === 0) {
@@ -176,17 +183,6 @@ class ChallengeApiController extends Controller
 		$this->index();
 	}
 
-	public function index()
-	{
-		// TODO: get all challenges with the "opened" sessions only...
-		$challenges = Challenge::with('sessions')
-		                       ->orderBy('title')
-		                       ->get();
-
-		return Inertia::render('ChallengesIndex', [
-			'challenges' => $challenges
-		]);
-	}
 
 	public function teams(Theme $theme, Chapter $chapter, Challenge $challenge, Team $team)
 	{

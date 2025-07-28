@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\TargetClassRequest;
 use App\Http\Resources\ChallengeResource;
 use App\Http\Resources\DeckResource;
 use App\Http\Resources\GeneratorResource;
@@ -13,10 +14,13 @@ use App\Models\Deck;
 use App\Models\Generator;
 use App\Models\Lesson;
 use App\Models\Post;
+use App\Traits\ResolvesTarget;
 use Illuminate\Http\Request;
 
 class LessonApiController extends Controller
 {
+	use ResolvesTarget;
+
 	public function index(Course $course)
 	{
 		return LessonResource::collection($course->lessons);
@@ -27,8 +31,36 @@ class LessonApiController extends Controller
 		return LessonResource::make($lesson);
 	}
 
-	public function store(Request $request, Course $course)
+	public function store(TargetClassRequest $request, Course $course)
 	{
+		// Get the lessonable item.
+		$lessonable = $this->resolveTarget($request->validated());
+
+		$lesson = $course->lessons()->create([
+			'lessonable_type'=> get_class($lessonable),
+			'lessonable_id'=>$lessonable->id,
+		]);
+
+		return LessonResource::make($lesson);
+	}
+
+	public function storePosts(Request $request, Course $course)
+	{
+		$validated = $request->validate([
+			"ids"=> ["required", "array"],
+			"ids.*"=>["numeric"]
+		]);
+
+		$ids = $validated["ids"];
+		$lessons = [];
+		foreach ($ids as $id){
+			$lessons[] = $course->lessons()->create([
+				'lessonable_type'=> Post::class,
+				'lessonable_id'=>$id,
+			]);
+		}
+
+		return LessonResource::collection($lessons);
 	}
 
 	public function update(Request $request, Lesson $lesson)
@@ -46,6 +78,7 @@ class LessonApiController extends Controller
 
 	public function destroy(Lesson $lesson)
 	{
+		$lesson->delete();
 	}
 
 }

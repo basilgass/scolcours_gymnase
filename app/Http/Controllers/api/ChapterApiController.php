@@ -5,12 +5,12 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\BlockResource;
 use App\Http\Resources\ChapterResource;
+use App\Http\Resources\PostResource;
 use App\Http\Resources\PostShowResource;
 use App\Models\Chapter;
 use App\Models\Theme;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class ChapterApiController extends Controller
@@ -148,6 +148,11 @@ class ChapterApiController extends Controller
 		$chapter->refresh();
 
 		return ChapterResource::collection($chapter->relations);
+	}
+
+	public function getPosts(Chapter $chapter)
+	{
+		return PostResource::collection($chapter->posts);
 	}
 
 	public function getTheoremsFromChapter(Chapter $chapter)

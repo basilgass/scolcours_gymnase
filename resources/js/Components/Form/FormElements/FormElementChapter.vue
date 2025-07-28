@@ -2,7 +2,7 @@
 import {onMounted, ref, watch} from "vue"
 import {ChapterInterface, ThemeInterface} from "@/types/modelInterfaces.ts"
 import axios from "axios"
-import {AxiosErrorMessage} from "@/types"
+import {AxiosErrorMessage, AxiosResponseModel} from "@/types"
 import {FormElementEmits} from "@/Components/Form/FormMakerInterface.ts"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import ScButton from "@/Components/Ui/scButton.vue"
@@ -72,8 +72,8 @@ function updateAvailableChapters() {
 		return
 	}
 
-	axios.get(route('api.admin.themes.chapters.index', {theme: selectedTheme.value}))
-		.then((res: { data: ChapterInterface[] }) => {
+	axios.get(route('api.themes.chapters.index', {theme: selectedTheme.value}))
+		.then((res: AxiosResponseModel<ChapterInterface[]>) => {
 			availableChapters.value = res.data
 		})
 		.catch((err: AxiosErrorMessage) => {
