@@ -95,7 +95,6 @@ const updateQuestionsOrder = function () {
 		)
 }
 
-
 const questionsComponents = ref<InstanceType<typeof QuestionShow>[]>([])
 
 function addQuestionRef(element: InstanceType<typeof QuestionShow>) {
@@ -132,41 +131,43 @@ defineEmits<{
 		/>
 
 		<!-- questions list -->
-		<draggable
-			v-if="questions.length"
-			:class="questionsGrid"
-			:list="questions"
-			class="mt-10"
-			handle=".draggable-handle"
-			item-key="id"
-			v-bind="{
-				animation: 200,
-				disabled: !editMode.enable,
-			}"
-			@end="updateQuestionsOrder"
-		>
-			<template #item="{ element }: {element: QuestionInterface}">
-				<div class="question-wrapper">
-					<question-show-admin
-						v-admin="editMode.enable"
-						:question="element"
-						:ids="displayIds"
-					/>
-					<question-show
-						:key="element.id"
-						:ref="addQuestionRef"
-						:class="element.css ?? ''"
-						:locked="isQuestionLocked(element)"
-						:question="element"
-						@validate="$emit('validate', $event)"
-					/>
-				</div>
-			</template>
-		</draggable>
-		<please-wait
-			v-else
-			class="min-h-[300px] grid place-items-center text-xl"
-			text="Chargement des questions..."
-		/>
+		<div>
+			<draggable
+				v-if="questions.length"
+				:class="questionsGrid"
+				:list="questions"
+				class="mt-10"
+				handle=".draggable-handle"
+				item-key="id"
+				v-bind="{
+					animation: 200,
+					disabled: !editMode.enable,
+				}"
+				@end="updateQuestionsOrder"
+			>
+				<template #item="{ element }: {element: QuestionInterface}">
+					<div class="question-wrapper">
+						<question-show-admin
+							v-admin="editMode.enable"
+							:question="element"
+							:ids="displayIds"
+						/>
+						<question-show
+							:key="element.id"
+							:ref="addQuestionRef"
+							:class="element.css ?? ''"
+							:locked="isQuestionLocked(element)"
+							:question="element"
+							@validate="$emit('validate', $event)"
+						/>
+					</div>
+				</template>
+			</draggable>
+			<please-wait
+				v-else
+				class="min-h-[300px] grid place-items-center text-xl"
+				text="Actuellement, aucune question..."
+			/>
+		</div>
 	</article>
 </template>

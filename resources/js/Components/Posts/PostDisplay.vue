@@ -91,7 +91,6 @@ onMounted(() => {
 
 			<!-- show the questions -->
 			<questions-index
-				v-if="post.questions.length>0"
 				:post="post"
 			/>
 
