@@ -12,6 +12,23 @@ defineOptions({
 
 const inp = ref(null)
 
+const availableKeyboards = [
+	"nb",
+	"frac",
+	"sol",
+	"scn",
+	"equ",
+	"fn",
+	"log",
+	"exp",
+	"tos",
+	"study",
+	"order",
+	"qcm",
+	"input",
+	"type",
+	"matrix"
+]
 function focusFn(select: boolean) {
 	inp.value.focus()
 	if (select === true) {
@@ -106,6 +123,16 @@ const currentRows = computed(() => {
 			<div class="font-code text-xs">
 				laisser une ligne vide entre deux claviers<br>
 				@if &lt;réponse&gt;?&lt;message&gt;
+			</div>
+			<div class="flex gap-3 mt-2">
+				<div
+					class="font-code cursor-pointer text-xs"
+					v-for="k in availableKeyboards"
+					:key="`available-${k}`"
+					@click="inp.value=k"
+				>
+					{{ k }}
+				</div>
 			</div>
 
 			<transition name="fade">

@@ -36,6 +36,9 @@ class QuestionApiController extends Controller
 		$validated = $request->validated();
 		$questionable = $this->resolveTarget($validated, 'questions');
 
+		// Add the new order.
+		$nb_questions = $questionable->questions->count();
+		$validated['order'] = $nb_questions+1;
 		// Create the question new way.
 		$question = $questionable->questions()->create($validated);
 

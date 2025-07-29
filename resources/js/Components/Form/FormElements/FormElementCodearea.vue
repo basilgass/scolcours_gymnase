@@ -11,7 +11,7 @@ import "prismjs/themes/prism.css"
 
 interface FormElementCodeareaPropsInterface extends FormMakerPropsNewType {
 	rows?: number,
-	language?: "latex"|"json"|"javascript",
+	language?: "latex" | "json" | "javascript",
 	wrap?: boolean,
 	resizeable?: boolean,
 	autoSize?: boolean

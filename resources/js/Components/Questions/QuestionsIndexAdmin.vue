@@ -114,6 +114,9 @@ const addQuestion = function () {
 			theQuestions.value.push({
 				...res.data,
 			})
+
+			// Go to the new question.
+			router.visit(route('admin.questions.edit', {question: res.data.id}))
 		})
 }
 </script>

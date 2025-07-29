@@ -198,6 +198,7 @@ export function useTextEditor(AreaRefName: string, options?: {
 		checkIfInMathEnv()
 		updateCurrentLine()
 		removeTabStops()
+		return
 	}
 
 	function handleInput() {
@@ -270,18 +271,26 @@ export function useTextEditor(AreaRefName: string, options?: {
 		const el = textareaRef.value
 		if (!el) return
 
-		// Cut the value in two parts.
-		// Remove the invisible characters
-		// reubild the string
-		// place the cursor
-		const cursor = el.selectionStart
+		const { selectionStart, selectionEnd, value } = el
 
-		const textBefore = el.value.slice(0, cursor).replaceAll(invisibleCharacter, '')
-		const textAfter = el.value.slice(cursor).replaceAll(invisibleCharacter, '')
+		// Compter les caractères invisibles avant et dans la sélection
+		const before = value.slice(0, selectionStart)
+		const selected = value.slice(selectionStart, selectionEnd)
+		const after = value.slice(selectionEnd)
 
-		updateValue(textBefore + textAfter)
-		el.selectionStart = el.selectionEnd = textBefore.length
+		const beforeClean = before.replaceAll(invisibleCharacter, '')
+		const selectedClean = selected.replaceAll(invisibleCharacter, '')
+		const afterClean = after.replaceAll(invisibleCharacter, '')
 
+		const newValue = beforeClean + selectedClean + afterClean
+
+		// Nouveaux index de sélection
+		const newSelectionStart = beforeClean.length
+		const newSelectionEnd = newSelectionStart + selectedClean.length
+
+		updateValue(newValue)
+		el.selectionStart = newSelectionStart
+		el.selectionEnd = newSelectionEnd
 	}
 
 	function goToNextTabStop(el: HTMLTextAreaElement): boolean {
