@@ -7,17 +7,18 @@ import MoveItemTo from "@/Components/MoveItemTo.vue"
 import QuestionShow from "@/Components/Questions/QuestionShow.vue"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
-import { ClipboardKeyboardInterface, flashInterface } from "@/types"
-import type { QuestionInterface } from "@/types/modelInterfaces"
-import { router } from "@inertiajs/vue3"
+import {ClipboardKeyboardInterface, flashInterface} from "@/types"
+import type {QuestionInterface} from "@/types/modelInterfaces"
+import {router} from "@inertiajs/vue3"
 import axios from "axios"
-import { computed, inject, PropType, ref } from "vue"
+import {computed, inject, onMounted, PropType, ref, useTemplateRef} from "vue"
 import ScButton from "@/Components/Ui/scButton.vue"
+import {questionDataInterface} from "@/Components/Questions/QuestionInterface.ts"
 
-defineOptions({ layout: LayoutMain })
+defineOptions({layout: LayoutMain})
 
 const props = defineProps({
-	question: { type: Object as PropType<QuestionInterface>, required: true }
+	question: {type: Object as PropType<QuestionInterface>, required: true}
 })
 
 const theQuestion = ref(props.question)
@@ -25,38 +26,38 @@ const theQuestion = ref(props.question)
 const flash = inject<flashInterface>("flash")
 
 let saveQuestion = function () {
-	let illustrations = []
+		let illustrations = []
 
-	axios
-		.post(route("api.admin.blocks.update", [theQuestion.value.block.id]), {
-			_method: "PATCH",
-			title: theQuestion.value.block.title,
-			body: theQuestion.value.block.body,
-			illustrations
-		})
-		.then(() => {
-			axios
-				.post(route("api.admin.questions.update", [theQuestion.value.id]), {
-					_method: "PATCH",
-					answer: theQuestion.value.answer,
-					keyboard: theQuestion.value.keyboard,
-					css: theQuestion.value.css
-				})
-				.then(() => {
-					flash.success("La question a été sauvegardée.")
-				})
-				.catch((error) => {
-					flash.error(
-						"Une erreur est survenue - voir la console"
-					)
-					console.warn(error)
-				})
-		})
-		.catch((error) => {
-			flash.error("Une erreur est survenue - voir la console")
-			console.warn(error)
-		})
-},
+		axios
+			.post(route("api.admin.blocks.update", [theQuestion.value.block.id]), {
+				_method: "PATCH",
+				title: theQuestion.value.block.title,
+				body: theQuestion.value.block.body,
+				illustrations
+			})
+			.then(() => {
+				axios
+					.post(route("api.admin.questions.update", [theQuestion.value.id]), {
+						_method: "PATCH",
+						answer: theQuestion.value.answer,
+						keyboard: theQuestion.value.keyboard,
+						css: theQuestion.value.css
+					})
+					.then(() => {
+						flash.success("La question a été sauvegardée.")
+					})
+					.catch((error) => {
+						flash.error(
+							"Une erreur est survenue - voir la console"
+						)
+						console.warn(error)
+					})
+			})
+			.catch((error) => {
+				flash.error("Une erreur est survenue - voir la console")
+				console.warn(error)
+			})
+	},
 	deleteQuestion = function () {
 		axios
 			.post(route("api.admin.questions.destroy", [props.question.id]), {
@@ -73,8 +74,8 @@ let saveQuestion = function () {
 // TODO: Move the copy/paste to a composable.
 // TODO: add a timeout for the localStorage.
 let hasClipboard = computed(() => {
-	return sessionStorage.getItem("scolcours-clipboard-question") !== null
-}),
+		return sessionStorage.getItem("scolcours-clipboard-question") !== null
+	}),
 	copyQuestion = function () {
 		sessionStorage.setItem(
 			"scolcours-clipboard-question",
@@ -99,6 +100,8 @@ let hasClipboard = computed(() => {
 			theQuestion.value.keyboard = paste.keyboard
 		}
 	}
+
+
 </script>
 <template>
 	<section class="my-5 scolcours-container">
@@ -213,10 +216,12 @@ let hasClipboard = computed(() => {
 			<question-show
 				:class="theQuestion.css"
 				:question="theQuestion"
+				ref="questionRef"
 				class="min-w-[350px] md:max-w-[40vw]"
 				is-dynamic
 				show-input
 				show-title
+				editor-mode
 			/>
 		</div>
 	</section>

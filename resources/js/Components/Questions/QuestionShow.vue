@@ -23,7 +23,8 @@ import QuestionAnswer from "@/Components/Questions/Parts/QuestionAnswer.vue"
 import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
 import {provide, ref, useTemplateRef} from "vue"
 import type {QuestionInterface} from "@/types/modelInterfaces.ts"
-import type {
+import {
+	keyboardComponentType,
 	questionDataInterface,
 	questionResultInterface,
 	questionUserInputDisplayType
@@ -38,13 +39,15 @@ const props = withDefaults(
 		locked?: boolean,
 		showInput?: questionUserInputDisplayType | '' | boolean,
 		singleAnswer?: boolean,
-		isDynamic?: boolean
+		isDynamic?: boolean,
+		editorMode?: boolean
 	}>(),
 	{
 		locked: false,
 		showInput: false,
 		singleAnswer: false,
 		isDynamic: false,
+		editorMode: false
 	}
 )
 
@@ -56,8 +59,6 @@ defineEmits<{
 	validate: [event: questionResultInterface]
 }>()
 
-// Used to load the answers dynamically
-defineExpose({loadAnswers})
 
 /**
  * Determiner the state of the keyboard visibility.
@@ -74,14 +75,15 @@ const showUserInput = ref<questionUserInputDisplayType>(
 
 const questionAnswerWrapper = useTemplateRef<typeof QuestionAnswer>('questionAnswerWrapper')
 
+
 // REFACTOR: Duplicata entre questionData.question.user = questionData.user.score
 const questionData = useQuestion(props.question, {
 	animation: true,
 	showInput: showUserInput,
 	isDynamic: props.isDynamic,
-	raw: props.question.keyboard
+	raw: props.question.keyboard,
+	editorMode: props.editorMode
 })
-
 /**
  * QuestionAnswer: .validators, .user.answers, .config, .answerId
  * QuestionAnswerSelector: .answers, .answerId
@@ -105,6 +107,13 @@ async function loadAnswers(show: boolean) {
 			})
 	})
 }
+
+// Used to load the answers dynamically
+defineExpose({
+	loadAnswers,
+	questionData
+})
+
 
 </script>
 

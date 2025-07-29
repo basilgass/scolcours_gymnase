@@ -10,7 +10,8 @@ export interface questionConfigInterface {
 	animation: boolean,
 	showInput: Ref<questionUserInputDisplayType>,
 	isDynamic: boolean,
-	raw: string
+	raw: string,
+	editorMode: boolean
 }
 
 export interface questionDataInterface {

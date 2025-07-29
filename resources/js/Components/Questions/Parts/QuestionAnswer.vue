@@ -9,13 +9,13 @@ import QuestionAnswerSelector from "@/Components/Questions/Parts/QuestionAnswerS
 import QuestionAnswerValidation from "@/Components/Questions/Parts/QuestionAnswerValidation.vue"
 import {computed, inject, useTemplateRef} from "vue"
 import {
-	keyboardComponentType,
 	questionDataInterface,
 	questionResultInterface,
 	questionValidatorInterface
 } from "@/Components/Questions/QuestionInterface.ts"
 import QuestionAnswerToggleKeyboard from "@/Components/Questions/Parts/QuestionAnswerToggleKeyboard.vue"
 import type {KeyboardInputInterface} from "@/Composables/useKeyboard.ts"
+import KeyboardBasic from "@/Components/Keyboards/KeyboardBasic.vue"
 
 const questionData = inject<questionDataInterface>("questionData")
 
@@ -57,17 +57,21 @@ function updateQuestion(event: KeyboardInputInterface, index: number) {
 	questionData.user.answers.value[index] = event
 }
 
-// Update the keyboard on question global data.
-// const keyboardUI = ref<keyboardComponentType[]>(null)
-const keyboardComponentsRefs = useTemplateRef<keyboardComponentType[]>('keyboardComponent')
-
-// // TODO: can be removed ?
-defineExpose({
-	getKeyboards(): keyboardComponentType[] {
-		return keyboardComponentsRefs.value
+// REFACTOR: actuellement, c'est pourri. Il faut lier les paramètres du keyboard avec les paramètres du checker, via un store ?
+const keyboardComponent = useTemplateRef<InstanceType<typeof KeyboardBasic>>("keyboardComponent")
+const keyboardParameters = computed(() => {
+	if (!questionData.config.editorMode) {
+		return ""
 	}
+	if (questionData.current.keyboard.value.name === '') {
+		return ''
+	}
+	if (!keyboardComponent.value) {
+		return ""
+	}
+	const id = questionData.current.id.value
+	return keyboardComponent.value[id].parameters
 })
-
 </script>
 
 <template>
@@ -108,6 +112,13 @@ defineExpose({
 				:keyboard="validator.keyboard"
 				@change="updateQuestion($event, index)"
 			/>
+
+			<div
+				v-if="questionData.config.editorMode && keyboardComponent"
+				class="fixed left-2 bottom-2 w-[60vw] md:w-[40vw] lg:w-[30vw] z-10"
+			>
+				<pre class="font-code text-[12px]! mt-5 bg-gray-200 border border-gray-300 p-3 shadow-sm rounded-sm">{{ keyboardParameters }}</pre>
+			</div>
 		</div>
 	</div>
 </template>
