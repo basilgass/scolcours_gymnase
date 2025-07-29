@@ -33,4 +33,9 @@ class Team extends Model
 	{
 		return $this->belongsToMany(User::class)->orderBy('name')->orderBy('firstname');
 	}
+
+	public function courses()
+	{
+		return $this->belongsToMany(Course::class);
+	}
 }

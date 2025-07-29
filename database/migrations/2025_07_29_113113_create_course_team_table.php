@@ -1,0 +1,27 @@
+<?php
+
+use App\Models\Course;
+use App\Models\Team;
+use App\Models\User;
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration {
+	public function up(): void
+	{
+		Schema::create('course_team', function (Blueprint $table) {
+			$table->id();
+
+			$table->foreignIdFor(Team::class)->constrained()->cascadeOnDelete();
+			$table->foreignIdFor(Course::class)->constrained()->cascadeOnDelete();
+
+			$table->timestamps();
+		});
+	}
+
+	public function down(): void
+	{
+		Schema::dropIfExists('course_team');
+	}
+};

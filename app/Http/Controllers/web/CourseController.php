@@ -26,11 +26,13 @@ class CourseController extends Controller
 			]);
 		}
 
-		$courses = $user->admin ? Course::all() : $user->courses;
+		$teamCourses = $user->teams->flatMap->courses;
+		$userCourses = $user->courses;
 
 		// Version si admin
 		return Inertia::render("Courses/CourseIndex", [
-			"courses" => $courses ? CourseResource::collection($courses) : []
+			"teamCourses" => CourseResource::collection($teamCourses),
+			"userCourses" => CourseResource::collection($userCourses)
 		]);
 	}
 

@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Challenges\ChallengeSession;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -103,17 +104,17 @@ class User extends Authenticatable
 
 	protected $with = [];
 
-	public function teams()
+	public function teams(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
 	{
 		return $this->belongsToMany(Team::class);
 	}
 
-	public function challenges()
+	public function challenges(): User|Builder|\Illuminate\Database\Eloquent\Relations\HasMany
 	{
 		return $this->hasMany(ChallengeSession::class);
 	}
 
-	public function questions()
+	public function questions(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
 	{
 		return $this
 			->belongsToMany(Question::class)
@@ -121,7 +122,8 @@ class User extends Authenticatable
 		//			->withPivot('result', 'answer', 'attempts');
 	}
 
-	public function cards()
+	// TODO: user->cards encore utile ?
+	public function cards(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
 	{
 		return $this
 			->belongsToMany(Card::class)
@@ -129,25 +131,37 @@ class User extends Authenticatable
 			->withPivot('success');
 	}
 
-	public function quizz_sessions()
+	public function quizz_sessions(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
 	{
 		return $this
 			->belongsToMany(QuizzSession::class)
 			->withTimestamps();
 	}
 
-	public function scores()
+	public function scores(): User|Builder|\Illuminate\Database\Eloquent\Relations\HasMany
 	{
 		return $this->hasMany(Score::class);
 	}
 
-	public function courses()
+	public function courses(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
 	{
 		return $this->belongsToMany(Course::class);
 	}
 
-	public function getAdminAttribute()
+	public function admin(): Attribute
 	{
-		return $this->role === 'admin';
+		return Attribute::get(function () {
+			return $this->role === 'admin';
+		});
+	}
+
+	public function allCourses(): Attribute
+	{
+		return Attribute::get(
+			function () {
+				$directCourses = $this->courses;
+				$teamCourses = $this->teams->flatMap->courses;
+				return $directCourses->merge($teamCourses)->unique('id')->values();
+			});
 	}
 }

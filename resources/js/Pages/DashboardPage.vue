@@ -3,38 +3,39 @@
 	lang="ts"
 >
 import LayoutMain from "@/Layouts/LayoutMain.vue"
-import { ChapterInterface } from "@/types/modelInterfaces.ts"
 import ScButton from "@/Components/Ui/scButton.vue"
+import Card from "@/Components/Ui/Card.vue"
+import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
+import {CourseInterface, TeamInterface} from "@/types/modelInterfaces.ts"
+import {computed} from "vue"
+import CourseCard from "@/Components/Courses/CourseCard.vue"
 
-interface DashboardInterface extends ChapterInterface {
-	maxPost: number,
-	currentPost: number,
-}
-defineOptions({ layout: LayoutMain })
+defineOptions({layout: LayoutMain})
 
-// TODO: amélioer le dashboard
-defineProps<{
-	courses: DashboardInterface[]
+// TODO: améliorer le dashboard
+const props = defineProps<{
+	teams: TeamInterface[],
+	// teamCourses: CourseInterface[]
+	// userCourses: CourseInterface[]
 }>()
 
+
+const teamsName = computed(() => props.teams.map(team => team.name).join(', '))
 
 </script>
 <template>
 	<section class="">
-		<div class="flex flex-col mt-2">
-			<div class="font-extralight uppercase -mb-1">
-				profil de
+		<div class="flex justify-between items-end">
+			<div class="flex flex-col mt-2">
+				<div class="font-extralight uppercase -mb-1">
+					profil de
+				</div>
+				<div class="text-3xl">
+					{{ $page.props.auth.user.fullname }}
+				</div>
 			</div>
-			<div class="text-3xl">
-				{{ $page.props.auth.user.fullname }}
-			</div>
-		</div>
-
-		<div
-			v-admin
-			class="flex  my-3"
-		>
 			<sc-button
+				v-admin
 				type="admin"
 				href="/admin/"
 				class="hover:underline"
@@ -43,13 +44,11 @@ defineProps<{
 			</sc-button>
 		</div>
 
-		<div
-			class="flex"
-			my-3
-		>
-			<sc-button :href="route('courses.index')">
-				Mes cours
-			</sc-button>
+		<div class="flex gap-3">
+			<h3 class="font-semibold">
+				équipes
+			</h3>
+			<div>{{ teamsName }}</div>
 		</div>
 	</section>
 </template>

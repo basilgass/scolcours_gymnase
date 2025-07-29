@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\ChapterResource;
 use App\Http\Resources\ChapterShowResource;
+use App\Http\Resources\CourseResource;
+use App\Http\Resources\TeamResource;
 use App\Models\Block;
 use App\Models\Chapter;
 use App\Models\Post;
@@ -37,8 +39,14 @@ class ScolcoursController extends Controller
 //			});
 
 		// $courses = ChapterResource + CurrentPost + MaxPost
+
+		$user = Auth::user();
+		$teams = $user->teams;
+
 		return Inertia::render('DashboardPage', [
-			'courses' => []
+//			'userCourses' => CourseResource::collection($user->courses),
+//			'teamCourses' => CourseResource::collection($teams->flatMap->courses),
+			'teams' => TeamResource::collection($teams),
 		]);
 	}
 

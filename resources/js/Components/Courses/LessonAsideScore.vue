@@ -35,7 +35,12 @@ async function post_scores(post: PostShowInterface) {
 	await storeScore.getScores(model, ids)
 		.then(
 			(scores) => {
-				lessonScore.value.score = Math.round(scores.filter(s => s.is_resolved).length / scores.length * 100)
+				if(scores.length===0){
+					// Il n'y a pas de questions
+					lessonScore.value.score = 100
+				}else {
+					lessonScore.value.score = Math.round(scores.filter(s => s.is_resolved).length / scores.length * 100)
+				}
 				lessonScore.value.is_resolved = lessonScore.value.score === 100
 			})
 		.catch((err) => {

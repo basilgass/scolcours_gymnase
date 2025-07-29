@@ -202,13 +202,9 @@ export const useStoreScore = defineStore(
 			const promise = (async () => {
 				let check = validateMatchingScores<T>(type, ids)
 
-				console.log(type, ids, check)
 				// Un score a été trouvé.
 				if (check.valid) {
-					console.log('SCORE IN STORE')
 					return check.result
-				}else{
-					console.log('')
 				}
 
 				if (check.duplicates) {
@@ -299,14 +295,6 @@ export const useStoreScore = defineStore(
 				scores.value.splice(index, 1, score)
 				return
 			}
-
-			// Ne fais la mise à jour que si les valeurs sont différentes,
-			// if (
-			// 	scores.value[index].score === score.score &&
-			// 	scores.value[index].is_resolved === score.is_resolved
-			// ) {
-			// 	return
-			// }
 
 			axios.patch(
 				route('api.students.scores.update', {score: score.id}),

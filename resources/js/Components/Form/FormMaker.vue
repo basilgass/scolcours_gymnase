@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import {defineAsyncComponent, h, shallowRef, watch} from "vue"
+import {defineAsyncComponent, h, shallowRef, useTemplateRef, watch} from "vue"
 import FormMakeLoader from "@/Components/Form/FormMakeLoader.vue"
 import FormMakerError from "@/Components/Form/FormMakerError.vue"
 import {FormElementComponents} from "@/scolcours.ts"
@@ -10,8 +10,12 @@ import {
 	FormElementType,
 	FormMakerPropsNewType
 } from "@/Components/Form/FormMakerInterface.ts"
+import FormMaker from "@/Components/Form/FormMaker.vue"
 
-defineOptions({ inheritAttrs: false })
+// REFACTOR: rework FormMaker -> use provide / inject
+// REFACTOR: defineExpose must be explicitly defined everywher -> use provide / inject instead ?
+
+defineOptions({inheritAttrs: false})
 
 const props = withDefaults(defineProps<FormMakerPropsNewType>(),
 	{
@@ -21,7 +25,19 @@ const props = withDefaults(defineProps<FormMakerPropsNewType>(),
 	})
 
 const value = defineModel<unknown>()
-defineExpose<FormElementExpose>()
+
+const compRef = useTemplateRef<InstanceType<typeof FormMaker>>('element')
+
+defineExpose<FormElementExpose>({
+	focus: () => {
+		console.log('focus')
+		compRef.value?.focus?.()
+	},
+	validate: () => {
+		console.log('validate')
+		return []
+	}
+})
 
 const emits = defineEmits<FormElementEmits>()
 
@@ -67,13 +83,14 @@ watch(() => props.type, (newType) => {
 	currentComponent.value = loadComponent(newType)
 })
 
-defineSlots<{button: unknown}>()
+defineSlots<{ button: unknown }>()
 
 </script>
 
 <template>
 	<component
 		:is="currentComponent"
+		ref="element"
 		v-model="value"
 		v-bind="{...$attrs,...props}"
 		@update="emits('update', $event)"

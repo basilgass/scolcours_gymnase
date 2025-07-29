@@ -20,7 +20,6 @@ const props = defineProps<{
 }>()
 
 const questions = ref<Partial<QuestionInterface>[]>([])
-
 const storeScore = useStoreScore()
 
 onMounted(() => {
@@ -29,12 +28,13 @@ onMounted(() => {
 		.filter((question) => question.user === undefined)
 		.map(question => question.id)
 
-	storeScore.getScores<ScoreQuestionDataInterface>('Question', ids).then(scores => {
-		questions.value = props.post.questions.map((question) => {
-			question.user = scores.find(score => score.scoreable_id === question.id)
-			return question
+	storeScore.getScores<ScoreQuestionDataInterface>('Question', ids)
+		.then(scores => {
+			questions.value = props.post.questions.map((question) => {
+				question.user = scores.find(score => score.scoreable_id === question.id)
+				return question
+			})
 		})
-	})
 })
 
 

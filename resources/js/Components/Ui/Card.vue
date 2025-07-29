@@ -6,9 +6,11 @@ import {computed} from "vue"
 const props = withDefaults(defineProps<{
 	theme?: false | number | string
 	borderTheme?: false | number | string
+	noInsideBorder?: boolean
 }>(), {
 	theme: false,
-	borderTheme: false
+	borderTheme: false,
+	noInsideBorder: false
 })
 
 const cardClass = computed<string>(() => {
@@ -42,7 +44,10 @@ const cardClass = computed<string>(() => {
 	>
 		<header
 			v-if="$slots['header']"
-			class="px-3 py-2 border-b border-b-inherit"
+			class="px-3 py-2"
+			:class="{
+				'border-b border-b-inherit': !noInsideBorder
+			}"
 		>
 			<slot name="header" />
 		</header>
@@ -52,6 +57,9 @@ const cardClass = computed<string>(() => {
 		<footer
 			v-if="$slots['footer']"
 			class="px-3"
+			:class="{
+				'border-t border-t-inherit': !noInsideBorder
+			}"
 		>
 			<slot name="footer" />
 		</footer>

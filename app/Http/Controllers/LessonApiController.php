@@ -36,10 +36,17 @@ class LessonApiController extends Controller
 		// Get the lessonable item.
 		$lessonable = $this->resolveTarget($request->validated());
 
-		$lesson = $course->lessons()->create([
-			'lessonable_type'=> get_class($lessonable),
-			'lessonable_id'=>$lessonable->id,
-		]);
+		$lessonData = [
+			'lessonable_type' => get_class($lessonable),
+			'lessonable_id'   => $lessonable->id,
+		];
+
+		if ($request->has('scoreRules')) {
+			$lessonData['scoreRules'] = $request->get('scoreRules');
+		}
+
+		$lesson = $course->lessons()->create($lessonData);
+
 
 		return LessonResource::make($lesson);
 	}

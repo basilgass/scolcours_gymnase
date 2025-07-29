@@ -2,14 +2,18 @@
 
 import {LessonInterface} from "@/types/modelInterfaces.ts"
 
-// const lesson = defineModel<LessonInterface>('lesson')
+defineProps<{
+	lesson: LessonInterface
+}>()
 
 // TODO: edition d'un cours
 </script>
 
 <template>
 	<div class="flex max-w-sm gap-3">
-		l'éditon d'un cours est à retrvailler
+		<div class="font-code">
+			{{ lesson.scoreRules }}
+		</div>
 		<!--		<div-->
 		<!--			v-if="lesson.lessonable_type==='Challenge'"-->
 		<!--			class="flex gap-3"-->

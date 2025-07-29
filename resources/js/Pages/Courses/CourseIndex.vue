@@ -2,8 +2,6 @@
 
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 import {CourseInterface} from "@/types/modelInterfaces.ts"
-import Card from "@/Components/Ui/Card.vue"
-import BlockShow from "@/Components/Blocks/BlockShow.vue"
 import ScButton from "@/Components/Ui/scButton.vue"
 import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
 import axios from "axios"
@@ -13,11 +11,13 @@ import DialogModal from "@/Components/Ui/DialogModal.vue"
 import {computed, ref} from "vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import {slugify} from "@/scolcours.ts"
+import CourseCard from "@/Components/Courses/CourseCard.vue"
 
 defineOptions({layout: LayoutMain})
 
 defineProps<{
-	courses: CourseInterface[]
+	teamCourses: CourseInterface[],
+	userCourses: CourseInterface[]
 }>()
 
 // TODO: La création d'un objet avec titre + slug peut être généraliser à plusieurs autres (chapitres, posts, ... à l'aide éventuellement d'un FormMakerDialog ?
@@ -61,6 +61,7 @@ function addCourse() {
 				</sc-button>
 			</div>
 		</div>
+
 		<div v-else>
 			<div
 				v-admin
@@ -76,42 +77,39 @@ function addCourse() {
 				<div>Droite</div>
 			</div>
 
-			<div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-				<Card
-					v-for="course in courses"
-					:key="course.id"
-				>
-					<template #header>
-						<h1
-							class="text-lg md:text-xl lg:text-2xl"
-							v-katex.auto="course.title"
+			<div class="grid grid-cols-1 md:grid-cols-2 gap-10 mt-10">
+				<div>
+					<h2 class="text-lg md:text-2xl mb-5">
+						Cours de classe
+					</h2>
+					<div class="flex flex-col gap-3">
+						<course-card
+							v-for="course in teamCourses"
+							:key="`team-${course.id}`"
+							:course
 						/>
-					</template>
-
-					<block-show
-						v-if="course.block"
-						:block="course.block"
-					/>
+					</div>
+				</div>
+				<div>
+					<h2 class="text-lg md:text-2xl mb-5">
+						Cours personnalisés
+					</h2>
+					<div
+						v-if="userCourses.length===0"
+					>
+						Vous n'avez pas de cours personnalisé.
+					</div>
 					<div
 						v-else
-						class="font-code"
+						class="flex flex-col gap-3"
 					>
-						Il n'y a pas de description pour ce cours... quel dommage !
+						<course-card
+							v-for="course in userCourses"
+							:key="`perso-${course.id}`"
+							:course
+						/>
 					</div>
-
-					<template #footer>
-						<div class="flex justify-end">
-							<sc-button
-								xs
-								type="primary"
-								class="my-3"
-								:href="route('students.courses.show', { course: course.slug })"
-							>
-								Commencer le cours <i class="bi bi-arrow-right" />
-							</sc-button>
-						</div>
-					</template>
-				</Card>
+				</div>
 			</div>
 
 			<dialog-modal

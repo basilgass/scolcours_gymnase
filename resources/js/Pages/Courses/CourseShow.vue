@@ -15,38 +15,6 @@ const props = defineProps<{
 	course: CourseInterface
 }>()
 
-//
-// function generateMermaidGantt(lessons: LessonInterface[]): string {
-// 	const lines: string[] = [
-// 		'gantt',
-// 		'title Planification des leçons',
-// 		'dateFormat  YYYY-MM-DD',
-// 		'todayMarker stroke-width:5px,stroke:#0f0,opacity:0.5',
-// 		// 'section Leçons'
-// 	]
-//
-// 	lessons.forEach((lesson, idx) => {
-// 		// Dates fictives pour l'exemple, à adapter selon vos données
-// 		const start = lesson.calendar.opened_at.split('T')[0]
-// 		const end = lesson.calendar.scheduled_at.split('T')[0]
-// 		const tag = lesson.calendar.remaining_days<0?
-// 			'crit, ':
-// 				lesson.calendar.is_opened?'active, ': ''
-//
-// 		lines.push(`${lesson.title.replaceAll(':', '-')} :${tag} node${lesson.id}, ${start}, ${end}`)
-// 	})
-//
-// 	// lines.push(...[
-// 	// 	'',
-// 	// 	'%% Définition de la classe',
-// 	// 	'classDef custom1 fill:#f96,stroke:#333,stroke-width:2px;',
-// 	// 	'class node2,node4,node7 custom1;'
-// 	// ])
-// 	console.log(lines)
-// 	return lines.join('\n')
-// }
-
-
 function nodeClickedCourse(lesson: LessonInterface) {
 	router.visit(route('students.lessons.show', {
 		course: props.course.slug,
@@ -76,12 +44,13 @@ function nodeClickedCourse(lesson: LessonInterface) {
 		}"
 	/>
 
+	<div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+		<block-show :block="course.block" />
 
-	<block-show :block="course.block" />
-
-	<course-graph
-		:course
-		@node-click="nodeClickedCourse"
-	/>
+		<course-graph
+			:course
+			@node-click="nodeClickedCourse"
+		/>
+	</div>
 </template>
 

@@ -18,6 +18,16 @@ const inputTypes: FormElementType[] = ['text', 'number', 'fraction', 'vector', '
 const type = ref<FormElementType>('text')
 
 const value = ref("something written here")
+
+const json = ref({
+	hello: 'world',
+	foo: 5
+})
+
+function updateJson(value){
+	console.log(value)
+	console.log(json.value)
+}
 </script>
 
 <template>
@@ -82,7 +92,7 @@ const value = ref("something written here")
 			/>
 		</Card>
 
-		<Card class="max-w-2xl mx-auto mt-10">
+		<Card class="col-span-2 max-w-2xl mx-auto mt-10">
 			<template #header>
 				configuration
 			</template>
@@ -155,6 +165,18 @@ const value = ref("something written here")
 				<div>{{ currentLine }}</div>
 				<div>Curseur dans environnement math : {{ mathMode }}</div>
 			</div>
+		</Card>
+
+		<Card>
+			<form-maker
+				type="json"
+				:map="{
+					hello: 'text',
+					foo: 'number'
+				}"
+				v-model="json"
+				@update="updateJson"
+			/>
 		</Card>
 	</article>
 </template>

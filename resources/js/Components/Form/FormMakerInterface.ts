@@ -41,6 +41,7 @@ export type FormElementType =
 	"switch" |
 	"codearea" |
 	"keyboard" |
+	"json" |
 	"theme" | "chapter" | "deck"
 
 export interface FormMakerPropsNewType {

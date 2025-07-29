@@ -17,8 +17,8 @@ export interface LessonDeckScoreRules {
 }
 
 export interface LessonPostScoreRules {
-	target: number,
-	question_ids?: number[]
+	target?: number,
+	question_ids?: number[] // TODO: FormMaker Json type cannot handle this.
 }
 
 export type lessonableClassName = 'Post' | 'Challenge' | 'Deck' | 'Generator'

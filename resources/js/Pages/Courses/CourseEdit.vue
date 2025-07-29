@@ -1,25 +1,29 @@
 <script setup lang="ts">
+// REFACTOR: retravailler l'édition d'un cours
+// TODO: pour l'instant, on ne peut pas modifier les paramètres d'une leçon.
 
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 import {
 	ChallengeInterface,
 	ChapterInterface,
 	CourseInterface,
-	DeckInterface, GeneratorInterface,
+	DeckInterface,
+	GeneratorInterface,
 	LessonInterface,
 	PostShowInterface
 } from "@/types/modelInterfaces.ts"
 import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
-import {inject, onMounted, ref} from "vue"
+import {computed, inject, ref} from "vue"
 import Card from "@/Components/Ui/Card.vue"
 import CourseLessonEdit from "@/Components/Courses/CourseLessonEdit.vue"
 import CourseGraph from "@/Components/Courses/CourseGraph.vue"
 import {AxiosErrorMessage, AxiosResponseModel, flashInterface} from "@/types"
 import LessonTypeIcon from "@/Components/Courses/LessonTypeIcon.vue"
 import ScButton from "@/Components/Ui/scButton.vue"
-import {lessonableClassName} from "@/types/lessonInterfaces.ts"
+import {lessonableClassName, LessonScoreRulesInterface} from "@/types/lessonInterfaces.ts"
 import axios from "axios"
+import {FormElementType} from "@/Components/Form/FormMakerInterface.ts"
 
 defineOptions({layout: LayoutMain})
 
@@ -29,6 +33,8 @@ const props = defineProps<{
 
 const flash = inject<flashInterface>('flash')
 const theCourse = ref<CourseInterface>(props.course)
+
+const lessonable: lessonableClassName[] = ['Post', 'Deck', 'Challenge', 'Generator']
 
 function updateCourse() {
 	axios.patch(route('api.admin.courses.update', {course: theCourse.value.id}), {
@@ -62,10 +68,14 @@ function loadPosts() {
 }
 
 function addLesson(type: lessonableClassName, id: number) {
+
+	const rules = Object.keys(scoreRules.value).length > 0 ? scoreRules.value : undefined
+
 	axios
 		.post(route('api.admin.courses.lessons.store', {course: props.course.id}), {
 			"target_type": type.toLowerCase(),
-			"target_id": id
+			"target_id": id,
+			scoreRules: rules
 		})
 		.then((res: AxiosResponseModel<LessonInterface>) => {
 			theCourse.value.lessons.push(res.data)
@@ -75,8 +85,36 @@ function addLesson(type: lessonableClassName, id: number) {
 		})
 }
 
-function addPost(post: PostShowInterface) {
-	addLesson('Post', post.id)
+const showAddTab = ref<lessonableClassName>(undefined)
+
+function toggleTab(tab: lessonableClassName) {
+	if (showAddTab.value === tab) {
+		showAddTab.value = undefined
+
+		return
+	}
+
+	if (tab === 'Challenge' && availableChallenges.value.length === 0) {
+		loadChallenges()
+	}
+
+	if (tab === 'Generator' && availableGenerators.value.length === 0) {
+		loadGenerators()
+	}
+
+	switch (tab) {
+		case "Post":
+		case "Deck":
+			scoreRules.value = {}
+			break
+		case "Challenge":
+		case "Generator":
+			scoreRules.value = {target: 10}
+			break
+		default:
+			scoreRules.value = {}
+	}
+	showAddTab.value = tab
 }
 
 function addAllPosts() {
@@ -100,31 +138,17 @@ function addAllPosts() {
 		})
 }
 
-
 const deck = ref<DeckInterface>()
-
-function addDeck(deck: DeckInterface) {
-	addLesson('Deck', deck.id)
-}
-
 const availableChallenges = ref<ChallengeInterface[]>([])
-
-function addChallenge(challenge: ChallengeInterface) {
-	addLesson('Challenge', challenge.id)
-}
-
 const availableGenerators = ref<GeneratorInterface[]>([])
-
-function addGenerator(challenge: GeneratorInterface) {
-	addLesson('Generator', challenge.id)
-}
+const scoreRules = ref<LessonScoreRulesInterface>(undefined)
 
 function deleteLesson(lesson: LessonInterface) {
 	axios.delete(route("api.admin.lessons.destroy", {lesson: lesson.id}))
 		.then(() => {
 			const index = theCourse.value.lessons.findIndex(l => l.id === lesson.id)
 
-			if (index) {
+			if (index !== undefined) {
 				theCourse.value.lessons.splice(index, 1)
 			}
 		})
@@ -167,7 +191,7 @@ function toggleIdInPlace(array: (string | number)[], id: string | number): void 
 	}
 }
 
-onMounted(() => {
+function loadChallenges() {
 	axios
 		.get(route('api.challenges.index'))
 		.then((res: AxiosResponseModel<ChallengeInterface[]>) => {
@@ -176,7 +200,9 @@ onMounted(() => {
 		.catch((err: AxiosErrorMessage) => {
 			console.warn(err.response.data.message)
 		})
+}
 
+function loadGenerators() {
 	axios
 		.get(route('api.generators.index'))
 		.then((res: AxiosResponseModel<GeneratorInterface[]>) => {
@@ -185,7 +211,24 @@ onMounted(() => {
 		.catch((err: AxiosErrorMessage) => {
 			console.warn(err.response.data.message)
 		})
+
+}
+
+const lessonJsonMap = computed<Record<string, FormElementType>>(() => {
+	switch (showAddTab.value) {
+		case "Post":
+			return {target: 'number', question_ids: 'text'}// TODO: FormMaker Json type cannot handle this.
+		case "Challenge":
+			return {target: "number", level: "number", occurences: "number"}
+		case "Generator":
+			return {target: "number", occurences: "number"}
+		case "Deck":
+			return {target: "number"}
+		default:
+			return {}
+	}
 })
+
 </script>
 
 <template>
@@ -199,145 +242,206 @@ onMounted(() => {
 			}"
 		/>
 
-		<div>
-			<form-maker v-model="theCourse.title" />
-			<form-maker
-				xs
-				disabled
-				v-model="theCourse.slug"
-			/>
-			<form-maker
-				label="thème du cours"
-				type="theme"
-				theme-key="id"
-				v-model="theCourse.theme_id"
-			/>
+		<Card
+			class="max-w-xl mx-auto"
+		>
+			<div class="flex flex-col gap-3 mb-3">
+				<form-maker v-model="theCourse.title" />
+				<form-maker
+					xs
+					disabled
+					v-model="theCourse.slug"
+				/>
+				<form-maker
+					label="thème du cours"
+					type="theme"
+					theme-key="id"
+					v-model="theCourse.theme_id"
+				/>
+			</div>
 
-			<sc-button
-				type="save"
-				@click="updateCourse"
-			>
-				enregistrer
-			</sc-button>
-		</div>
+			<template #footer>
+				<div class="flex justify-end py-3">
+					<sc-button
+						type="save"
+						@click="updateCourse"
+						xs
+					>
+						enregistrer
+					</sc-button>
+				</div>
+			</template>
+		</Card>
 
-		<div>
-			<div>Choix du chapitre</div>
-			<form-maker
-				type="chapter"
-				v-model="chapter"
-				@update="loadPosts"
-			/>
-
-			<div class="grid grid-cols-1 gap-3">
-				<div
-					v-for="post in posts"
-					:key="`post-${post.id}`"
+		<Card class="my-10">
+			<div class="flex gap-3 py-3">
+				<sc-button
+					v-for="t in lessonable"
+					:key="`tab-btn-${t}`"
+					xs
+					:active="showAddTab===t"
+					@click="toggleTab(t)"
 				>
-					<Card>
-						<template #header>
-							<div class="flex justify-between">
-								<div v-katex.auto="post.title" />
-								<div>{{ post.id }}</div>
+					{{ t }}
+				</sc-button>
+			</div>
+		</Card>
+
+		<div class="flex gap-3 my-10">
+			<div class="flex-1 py-3">
+				<div class="max-h-[40vh] overflow-y-scroll">
+					<div v-show="!showAddTab">
+						Sélectionner une leçon à ajouter...
+					</div>
+
+					<div
+						v-show="showAddTab==='Post'"
+						class="space-y-10"
+					>
+						<Card>
+							<div class="py-3">
+								<div>Choix du chapitre</div>
+								<form-maker
+									type="chapter"
+									v-model="chapter"
+									@update="loadPosts"
+								/>
 							</div>
-						</template>
-						<div class="flex justify-end">
-							<sc-button
-								type="add"
-								icon
-								xs
-								@click="addPost(post)"
+							<template #footer>
+								<div class="flex justify-end py-1">
+									<sc-button
+										v-show="posts.length>0"
+										type="add"
+										icon
+										xs
+										@click="addAllPosts"
+									>
+										ajouter tous les articles
+									</sc-button>
+								</div>
+							</template>
+						</Card>
+
+						<div class="grid grid-cols-1 gap-3">
+							<Card
+								v-for="post in posts"
+								:key="`post-${post.id}`"
 							>
-								ajouter
-							</sc-button>
+								<template #header>
+									<div class="flex justify-between">
+										<div v-katex.auto="post.title" />
+										<div>{{ post.id }}</div>
+									</div>
+								</template>
+								<div class="flex justify-end py-1">
+									<sc-button
+										type="add"
+										icon
+										xs
+										@click="addLesson('Post', post.id)"
+									>
+										ajouter
+									</sc-button>
+								</div>
+							</Card>
 						</div>
-					</Card>
+					</div>
+
+					<div v-show="showAddTab==='Deck'">
+						<div>Choix d'un deck</div>
+						<form-maker
+							type="deck"
+							v-model="deck"
+						/>
+
+						<Card v-if="deck">
+							<template #header>
+								<div v-katex.auto="deck.title" />
+							</template>
+
+							<div class="flex justify-end">
+								<sc-button
+									type="add"
+									icon
+									xs
+									@click="addLesson('Deck', deck.id)"
+								>
+									ajouter
+								</sc-button>
+							</div>
+						</Card>
+					</div>
+
+					<div v-show="showAddTab==='Challenge'">
+						<div>Choix d'un challenge</div>
+						<div class="flex flex-col gap-3">
+							<Card
+								v-for="challenge in availableChallenges"
+								:key="`challenge-${challenge.id}`"
+							>
+								<template #header>
+									<div v-katex.auto="challenge.title" />
+								</template>
+
+								<div class="flex justify-end">
+									<sc-button
+										type="add"
+										icon
+										xs
+										@click="addLesson('Challenge', challenge.id)"
+									>
+										ajouter
+									</sc-button>
+								</div>
+							</Card>
+						</div>
+					</div>
+
+					<div v-show="showAddTab==='Generator'">
+						<div>Choix d'un générateur</div>
+
+						<div class="flex flex-col gap-3">
+							<Card
+								v-for="generator in availableGenerators"
+								:key="`generator-${generator.id}`"
+							>
+								<template #header>
+									<div v-katex.auto="generator.title" />
+								</template>
+
+								<div class="flex justify-end">
+									<sc-button
+										type="add"
+										icon
+										xs
+										@click="addLesson('Generator', generator.id)"
+									>
+										ajouter
+									</sc-button>
+								</div>
+							</Card>
+						</div>
+					</div>
 				</div>
 			</div>
 
-			<sc-button
-				type="add"
-				icon
-				xs
-				@click="addAllPosts"
-			>
-				ajouter tous les articles
-			</sc-button>
-		</div>
-
-		<div>
-			<div>Choix d'un deck</div>
-			<form-maker
-				type="deck"
-				v-model="deck"
-			/>
-			<Card v-if="deck">
+			<Card class="min-w-[300px]">
 				<template #header>
-					<div v-katex.auto="deck.title" />
+					Score rules
 				</template>
 
-				<div class="flex justify-end">
-					<sc-button
-						type="add"
-						icon
-						xs
-						@click="addDeck(deck)"
-					>
-						ajouter
-					</sc-button>
-				</div>
+				<form-maker
+					v-if="Object.keys(lessonJsonMap).length>0"
+					type="json"
+					:map="lessonJsonMap"
+					v-model="scoreRules"
+				/>
 			</Card>
 		</div>
 
-		<div v-if="availableChallenges.length>0">
-			<div>Choix d'un challenge</div>
-			<Card
-				v-for="challenge in availableChallenges"
-				:key="`challenge-${challenge.id}`"
-			>
-				<template #header>
-					<div v-katex.auto="challenge.title" />
-				</template>
-
-				<div class="flex justify-end">
-					<sc-button
-						type="add"
-						icon
-						xs
-						@click="addChallenge(challenge)"
-					>
-						ajouter
-					</sc-button>
-				</div>
-			</Card>
-		</div>
-
-		<div v-if="availableGenerators.length>0">
-			<div>Choix d'un challenge</div>
-			<Card
-				v-for="generator in availableGenerators"
-				:key="`generator-${generator.id}`"
-			>
-				<template #header>
-					<div v-katex.auto="generator.title" />
-				</template>
-
-				<div class="flex justify-end">
-					<sc-button
-						type="add"
-						icon
-						xs
-						@click="addGenerator(generator)"
-					>
-						ajouter
-					</sc-button>
-				</div>
-			</Card>
-		</div>
 
 		<article>
 			<h2>Leçons</h2>
-
 
 			<div class="grid grid-cols-1 md:grid-cols-2 gap-3">
 				<div class="flex flex-col gap-3">

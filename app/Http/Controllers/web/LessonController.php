@@ -27,9 +27,9 @@ class LessonController extends Controller
 	{
 	}
 
-	public function show(Course $course, int $lessonPos)
+	public function show(Course $course, Lesson $lesson)
 	{
-		$lesson = $course->lessons[$lessonPos-1];
+//		$lesson = $course->lessons[$lessonPos-1];
 
 		return Inertia::render("Courses/LessonShow", [
 			"course" => CourseResource::make($course),
