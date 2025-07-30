@@ -22,8 +22,6 @@ Route::get('/', [ScolcoursController::class, 'index'])
 Route::get('/search/{type}/{terms}', [ScolcoursController::class, 'search'])
      ->name('scolcours.search');
 
-
-
 // Profile de l'utilisateur
 Route::get('/dashboard', [ScolcoursController::class, 'dashboard'])
      ->middleware(['auth', 'verified'])

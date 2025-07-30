@@ -45,10 +45,6 @@ Route::middleware('web')
 	          ->group(function () {
 		          Route::resource('chapters', ChapterController::class)
 		               ->only(['edit']);
-
-				  // ROUTE: this admin / chapters route must be moved to another route file?
-				  Route::get('admin/chapters',[AdminController::class, 'chapters'])
-					  ->name('index');
 	          });
      });
 

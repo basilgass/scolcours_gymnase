@@ -89,7 +89,6 @@ Route::middleware('admin')
 
      });
 
-
 Route::middleware('admin')
      ->prefix('dev')
      ->as('dev.')
