@@ -1,6 +1,6 @@
-import {CheckerAbstract} from "../CheckerAbstract";
-import {NumberChecker} from "./NumberChecker";
-import {CHECKERS} from "../checker.config";
+import {CheckerAbstract} from "../CheckerAbstract"
+import {NumberChecker} from "./NumberChecker"
+import {CHECKERS} from "../checker.config"
 
 const name = "scientific"
 const description = `scientific|scn,[paramètres]
@@ -19,14 +19,15 @@ export class ScientificChecker extends CheckerAbstract {
         this.description = description
         this.digits = isNaN(+this.config[0])?0:+this.config[0]
 
+		console.log(this.digits)
 		this.secondaryChecker = new NumberChecker([this.digits.toString()])
     }
 
 
     get format(): string {
         return this.digits ?
-            "réponse en notation scientifique" :
-            `réponse en notation scientifique à ${this.digits} chiffre(s) significatif(s)`
+			`réponse en notation scientifique à ${this.digits} chiffre(s) significatif(s)`:
+			"réponse en notation scientifique"
     }
 
 

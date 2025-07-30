@@ -66,8 +66,8 @@ Route::middleware('api')
 			               Route::patch('{question}/update/displayIf', [QuestionApiController::class, 'updateQuestionDisplayIf'])
 			                    ->name('updateDisplayIf');
 
-			               Route::patch('{question}/moveTo/{post}', [QuestionApiController::class, 'moveToPost'])
-			                    ->name('moveTo.post');
+			               Route::patch('{question}/move', [QuestionApiController::class, 'move'])
+			                    ->name('move');
 		               });
 
 

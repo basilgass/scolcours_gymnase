@@ -9,6 +9,7 @@ import QuestionAnswerSelector from "@/Components/Questions/Parts/QuestionAnswerS
 import QuestionAnswerValidation from "@/Components/Questions/Parts/QuestionAnswerValidation.vue"
 import {computed, inject, useTemplateRef} from "vue"
 import {
+	keyboardComponentType,
 	questionDataInterface,
 	questionResultInterface,
 	questionValidatorInterface
@@ -23,6 +24,15 @@ const questionData = inject<questionDataInterface>("questionData")
 defineEmits<{
 	validate: [event: questionResultInterface]
 }>()
+
+// Cette partie est utilisée pour afficher la réponse depuis l'extérieur.
+const keyboardComponentsRefs = useTemplateRef<keyboardComponentType[]>('keyboardComponent')
+defineExpose({
+	getKeyboards(): keyboardComponentType[] {
+		return keyboardComponentsRefs.value
+	}
+})
+
 
 // Current validator, keyboard and checker
 const currentValidator = computed<questionValidatorInterface>(() => {
@@ -58,7 +68,6 @@ function updateQuestion(event: KeyboardInputInterface, index: number) {
 }
 
 // REFACTOR: actuellement, c'est pourri. Il faut lier les paramètres du keyboard avec les paramètres du checker, via un store ?
-const keyboardComponent = useTemplateRef<InstanceType<typeof KeyboardBasic>>("keyboardComponent")
 const keyboardParameters = computed(() => {
 	if (!questionData.config.editorMode) {
 		return ""
@@ -66,11 +75,11 @@ const keyboardParameters = computed(() => {
 	if (questionData.current.keyboard.value.name === '') {
 		return ''
 	}
-	if (!keyboardComponent.value) {
+	if (!keyboardComponentsRefs.value) {
 		return ""
 	}
 	const id = questionData.current.id.value
-	return keyboardComponent.value[id].parameters
+	return keyboardComponentsRefs.value[id].parameters
 })
 </script>
 
@@ -114,7 +123,7 @@ const keyboardParameters = computed(() => {
 			/>
 
 			<div
-				v-if="questionData.config.editorMode && keyboardComponent"
+				v-if="questionData.config.editorMode && keyboardComponentsRefs"
 				class="fixed left-2 bottom-2 w-[60vw] md:w-[40vw] lg:w-[30vw] z-10"
 			>
 				<pre class="font-code text-[12px]! mt-5 bg-gray-200 border border-gray-300 p-3 shadow-sm rounded-sm">{{ keyboardParameters }}</pre>

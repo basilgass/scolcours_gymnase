@@ -4,6 +4,7 @@ namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreQuestionRequest;
+use App\Http\Requests\TargetClassRequest;
 use App\Http\Requests\UpdateQuestionRequest;
 use App\Http\Resources\QuestionResource;
 use App\Models\Post;
@@ -216,16 +217,37 @@ class QuestionApiController extends Controller
 	}
 
 	// Move the question to another Post.
-	public function moveToPost(Question $question, Post $post): array
+	public function move(Question $question, TargetClassRequest $request): array
 	{
+		$questionable = $this->resolveTarget($request->validated());
 
-		$question->questionable()->associate($post);
-		$question->order = count($post->questions) + 2;
+		$question->questionable()->associate($questionable);
+		$question->order = count($questionable->questions) + 2;
 		$question->save();
 
 		return [
-			'url'   => $post->url,
-			'label' => $post->title,
+			'url'   => $questionable->url,
+			'label' => $questionable->title,
 		];
 	}
+
+	/**
+	 * public function move(Block $block, TargetClassRequest $request)
+	 * {
+	 * $blockable = $this->resolveTarget($request->validated());
+	 *
+	 * $block->update([
+	 * 'blockable_id'   => $blockable->id,
+	 * 'blockable_type' => get_class($blockable),
+	 * 'order'          => count($blockable->blocks) + 2
+	 * ]);
+	 *
+	 * $block->refresh();
+	 *
+	 * return [
+	 * 'url'   => $blockable->url,
+	 * 'label' => $blockable->title,
+	 * ];
+	 * }
+	 */
 }

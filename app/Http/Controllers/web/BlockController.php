@@ -24,7 +24,19 @@ class BlockController extends Controller
 
 	public function edit(Block $block)
 	{
+		$blockable = $block->blockable;
+
+		$theme = null;
+
+		if(isset($blockable->theme)) {
+			$theme = $blockable->theme;
+		}elseif(isset($blockable->chapter)) {
+			$theme = $blockable->chapter->theme;
+		}
+
+
 		return Inertia::render('Blocks/BlockEdit', [
+			'theme'=>$theme,
 			'block'=>BlockResource::make($block),
 		]);
 	}

@@ -70,6 +70,8 @@ Route::middleware('api')
 			               Route::post('image/upload', [IllustrationApiController::class, "upload"])
 			                    ->name('images.upload');
 
+						   // TOOD: add move the illustration
+
 		               });
 
 	          });
