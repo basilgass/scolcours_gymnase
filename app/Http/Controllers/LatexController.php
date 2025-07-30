@@ -12,6 +12,7 @@ class LatexController extends Controller
 {
 	public function latex(Request $data) // POST request
 	{
+		// TODO: Faire un formrequest.
 		$validated = $data->validate([
 			'template'  => ['required', 'string', 'in:latex.questions,latex.standalone,latex.simple'],
 			'title'     => ['required', 'string'],
