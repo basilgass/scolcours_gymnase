@@ -37,6 +37,7 @@ const {copy, copied} = useClipboard({source: pdfLaTeX})
 
 const pdfGenereate = () => {
 	let questions: generatedQuestionInterface[] = []
+
 	pdfGeneratorNb.value.forEach((nb, index) => {
 		for (let i = 0; i < nb; i++) {
 			questions.push(
@@ -83,6 +84,7 @@ const pdfGenereate = () => {
 			document.location.href = route("latex.download", [res.data.slug])
 		})
 		.catch((err) => {
+			console.warn(err)
 			pdfError.value = err.response.data.message
 		})
 }
