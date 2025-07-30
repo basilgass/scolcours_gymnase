@@ -32,7 +32,7 @@ const theTheorems = ref([]),
 
 const loadTheorems = function() {
 	return axios
-		.get(route("api.admin.chapters.theorems.index", [theSlug.value]))
+		.get(route("api.chapters.theorems.index", [theSlug.value]))
 		.then((res) => {
 			theTheorems.value = res.data
 		})
