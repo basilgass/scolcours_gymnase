@@ -126,7 +126,7 @@ defineExpose({
 			'bg-green-50 dark:bg-green-950 border-green-600/60':
 				questionData.user?.score.value?.is_resolved,
 		}"
-		class="relative flex flex-col rounded border h-full"
+		class="flex flex-col rounded border h-full"
 	>
 		<!-- Cover if question cannot yet be answered -->
 		<transition name="fade">

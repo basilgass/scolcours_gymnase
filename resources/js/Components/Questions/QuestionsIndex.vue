@@ -107,6 +107,14 @@ defineEmits<{
 	validate: [event: questionResultInterface]
 }>()
 
+
+function removeQuestion(id: number){
+	const pos = questions.value.findIndex(q=>q.id===id)
+
+	if(pos===undefined){return}
+
+	questions.value.splice(pos, 1)
+}
 </script>
 <template>
 	<article :class="editMode.enable?'pb-10':''">
@@ -146,11 +154,12 @@ defineEmits<{
 				@end="updateQuestionsOrder"
 			>
 				<template #item="{ element }: {element: QuestionInterface}">
-					<div class="question-wrapper">
+					<div class="question-wrapper h-fit">
 						<question-show-admin
 							v-admin="editMode.enable"
 							:question="element"
 							:ids="displayIds"
+							@removed="removeQuestion(element.id)"
 						/>
 						<question-show
 							:key="element.id"

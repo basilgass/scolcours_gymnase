@@ -11,6 +11,8 @@ import ScButton from "@/Components/Ui/scButton.vue"
 import FormulaShow from "@/Components/Blocks/FormulaShow.vue"
 import PleaseWait from "@/Components/Ui/PleaseWait.vue"
 
+// TODO: Ajouter une recherche par thème / chapitre
+
 const flash = inject<flashInterface>("flash")
 const editMode = useStoreEditMode()
 
@@ -38,7 +40,6 @@ function searchFormula(item: FormulaInterface, value: string): boolean {
 	// value is already toLowerString
 	return item.block.title?.includes(value) ||
 		item.block.body?.includes(value)
-
 }
 
 onMounted(() => {

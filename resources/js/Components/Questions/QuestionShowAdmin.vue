@@ -1,11 +1,13 @@
 <script lang="ts" setup>
 import DropdownMenu from "@/Components/Ui/DropdownMenu.vue"
 import EditLink from "@/Components/Ui/EditLink.vue"
-import type {flashInterface} from "@/types"
+import type {AxiosErrorMessage, flashInterface} from "@/types"
 import type {QuestionInterface} from "@/types/modelInterfaces.ts"
 import {router} from "@inertiajs/vue3"
 import axios from "axios"
 import {computed, inject, nextTick, ref} from "vue"
+import MoveItemTo from "@/Components/MoveItemTo.vue"
+import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
 
 const flash = inject<flashInterface>("flash")
 
@@ -13,6 +15,11 @@ const props = defineProps<{
 	question: QuestionInterface,
 	ids: number[]
 }>()
+
+const emits = defineEmits<{
+	removed: []
+}>()
+
 
 const theQuestion = ref(props.question)
 
@@ -71,17 +78,45 @@ function duplicateQuestion() {
 			router.visit(route('admin.questions.edit', [res.data.id]))
 		})
 }
+
+function deleteQuestion() {
+	axios
+		.delete(route("api.admin.questions.destroy", {question: props.question.id}))
+		.then(() => {
+			flash.success("la question a été supprimée")
+			emits('removed')
+		})
+		.catch((err: AxiosErrorMessage) => {
+			console.warn(err)
+		})
+}
+
 </script>
 
 <template>
 	<div
 		class="flex items-center justify-between w-full px-3 gap-3 py-2 admin-content rounded-t"
 	>
-		<edit-link
-			:label="question.id"
-			:href="route('admin.questions.edit', {id: question.id})"
-			inline
-		/>
+		<div class="flex gap-2 items-start">
+			<edit-link
+				:label="question.id"
+				:href="route('admin.questions.edit', {id: question.id})"
+				inline
+			/>
+			<move-item-to
+				:source-id="question.id"
+				source="question"
+				target="post"
+				@moved="emits('removed')"
+			/>
+
+			<confirm-button
+				xs
+				@confirm="deleteQuestion"
+			>
+				<i class="bi bi-trash" />
+			</confirm-button>
+		</div>
 
 		<div class="flex gap-2">
 			<button

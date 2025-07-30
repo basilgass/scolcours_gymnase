@@ -14,6 +14,10 @@ const props = defineProps<{
 	target: 'post' | 'chapter'
 }>()
 
+const emits = defineEmits<{
+	moved: [target: {target_type: string, target_id: number}]
+}>()
+
 
 let showMoveTo = ref(false)
 const moveToId = ref(null)
@@ -50,17 +54,17 @@ function moveTo() {
 	}
 
 	// REFACTOR : route(`${props.source}s.move` - a mettre en explicite.
+	const urlData =			{
+		target_id: moveToId.value,
+		target_type: props.target,
+	}
 	axios
 		.patch(
 			getUrl(),
-			{
-				_method: "PATCH",
-				target_id: moveToId.value,
-				target_type: props.target,
-			},
+			urlData
 		)
 		.then((res) => {
-			console.log(res.data)
+			emits('moved', urlData)
 			flash.success(
 				`Le ${props.source} a bien été déplacé.`,
 				{
@@ -101,7 +105,7 @@ watchDebounced(moveToId, getTargetName, {debounce: 1000, maxWait: 2000})
 				type="edit"
 				outline
 			>
-				déplacer le {{ props.source }}
+				move
 			</sc-button>
 
 			<div

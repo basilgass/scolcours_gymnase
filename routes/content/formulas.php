@@ -10,6 +10,7 @@ Route::middleware('web')
 	          ->names('formulas')
 		     ->parameters(['formulaire' => 'formula'])
 	          ->only(['index', 'show']);
+
      });
 
 

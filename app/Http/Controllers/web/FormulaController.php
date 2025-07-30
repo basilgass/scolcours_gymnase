@@ -12,8 +12,6 @@ class FormulaController extends Controller
 {
 	public function index()
 	{
-		$formulas = Formula::with("chapter")->get();
-
 		return Inertia::render('Formulas/FormulaIndex');
 	}
 
