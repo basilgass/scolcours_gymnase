@@ -19,7 +19,6 @@ export class ScientificChecker extends CheckerAbstract {
         this.description = description
         this.digits = isNaN(+this.config[0])?0:+this.config[0]
 
-		console.log(this.digits)
 		this.secondaryChecker = new NumberChecker([this.digits.toString()])
     }
 
