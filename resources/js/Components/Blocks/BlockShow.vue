@@ -1,11 +1,10 @@
 <script lang="ts" setup>
 import BlockBodyButtons from "@/Components/Blocks/BlockBodyButtons.vue"
 import BlockShowAdmin from "@/Components/Blocks/BlockShowAdmin.vue"
-import IllustrationShow from "@/Components/Illustrations/IllustrationShow.vue"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 import {useFormattedBody} from "@/Composables/useHelpers.ts"
 import {useScriptLoader} from "@/Composables/useScriptLoader.ts"
-import { blockTypes } from "@/block.config.ts"
+import {blockTypes} from "@/block.config.ts"
 import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
 import {flashInterface} from "@/types"
 import type {BlockInterface} from "@/types/modelInterfaces.ts"

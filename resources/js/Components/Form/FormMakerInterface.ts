@@ -10,7 +10,8 @@ export interface FormElementEmits {
 	enter: [value: unknown],
 	focus: [],
 	blur: [],
-	errors: [e: string[]]
+	errors: [e: string[]],
+	button: []
 }
 
 export type FormMakerInputsType =

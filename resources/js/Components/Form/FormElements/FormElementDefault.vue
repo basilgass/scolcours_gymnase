@@ -35,6 +35,7 @@ const iconValue = computed(() => {
 		v-bind="{...$attrs,...props}"
 		v-model="value"
 		:icon="iconValue"
+		@button-click="emits('button')"
 	>
 		<input
 			ref="input"

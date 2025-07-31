@@ -13,6 +13,7 @@ class UpdateBlockRequest extends FormRequest
 			'body'              => ['nullable', 'string'],
 			'template'          => ['nullable', 'string'],
 			'type'              => ['nullable', 'string'],
+			'merge'             => ['nullable', 'boolean'],
 			'script'            => ['nullable', 'string'],
 			'json'              => ['nullable', 'string'],
 			'switch'            => ['nullable', 'boolean'],

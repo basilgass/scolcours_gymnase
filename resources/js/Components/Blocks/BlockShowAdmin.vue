@@ -5,9 +5,11 @@ import EditLink from "@/Components/Ui/EditLink.vue"
 import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
 import {BlockInterface} from "@/types/modelInterfaces.ts"
 import axios from "axios"
-import {ref} from "vue"
+import {inject, ref} from "vue"
+import {flashInterface} from "@/types"
 
 const editMode = useStoreEditMode()
+const flash = inject<flashInterface>('flash')
 
 const props = defineProps<{
 	block: BlockInterface
@@ -18,13 +20,9 @@ const theBlock = ref(props.block)
 function saveMerge() {
 	const value = !theBlock.value.merge
 
-	axios.patch(route("api.admin.update.a.value", {
-		_method: "patch",
-		model: "Block",
-		id: props.block.id,
-		column: "merge",
-		value
-	}))
+	axios.patch(route('api.admin.blocks.update', {block: props.block.id}), {
+		merge: value
+	})
 		.then(() => {
 			theBlock.value.merge = value
 		})
@@ -33,6 +31,17 @@ function saveMerge() {
 		})
 }
 
+function updateTemplate() {
+	axios.patch(route('api.admin.blocks.update', {block: props.block.id}), {
+		template: theBlock.value.template
+	})
+		.then(() => {
+			flash.success('Le nouveau template a bien été enregistré.')
+		})
+		.catch((res) => {
+			console.warn(res.response.data.message)
+		})
+}
 </script>
 <template>
 	<div
@@ -60,16 +69,15 @@ function saveMerge() {
 			<div class="gap-2 hidden @md:flex">
 				<form-maker
 					v-model="theBlock.template"
-					:axios="{
-						model: 'Block',
-						id: block.id,
-						column: 'template',
-					}"
 					inline-label
 					label="[b|i],[md|lg|xl]:[#]b+[#]i"
 					label-class="whitespace-nowrap"
 					sm
+					@enter="updateTemplate"
+					btn="bi bi-save"
+					@button="updateTemplate"
 				/>
+
 				<button
 					:class="theBlock.merge?'rotate-180':'rotate-0'"
 					class="transition-all"

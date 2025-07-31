@@ -98,6 +98,7 @@ defineSlots<{ button: unknown }>()
 		@focus="emits('focus')"
 		@blur="emits('blur')"
 		@errors="emits('errors', $event)"
+		@button="emits('button')"
 	>
 		<template #button>
 			<slot name="button" />
