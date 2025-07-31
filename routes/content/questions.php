@@ -31,11 +31,11 @@ Route::middleware('api')
 
 	     // Students api
 	     Route::middleware('students')
-		     ->prefix('students')
-		     ->as('students.')
+	          ->prefix('students')
+	          ->as('students.')
 	          ->group(function () {
 
-				  // ROUTE: this route does not exist
+		          // ROUTE: this route does not exist
 		          Route::post('questions/{question}/validate', [QuestionApiController::class, 'storeAnswer'])
 		               ->name('questions.validate');
 
@@ -43,8 +43,8 @@ Route::middleware('api')
 
 	     // Admin api
 	     Route::middleware('admin')
-		     ->prefix('admin')
-		     ->as('admin.')
+	          ->prefix('admin')
+	          ->as('admin.')
 	          ->group(function () {
 		          Route::apiResource('questions', QuestionApiController::class);
 
@@ -53,9 +53,6 @@ Route::middleware('api')
 		               ->group(function () {
 			               Route::post('{question}/duplicate', [QuestionApiController::class, 'duplicate'])
 			                    ->name('duplicate');
-
-			               Route::post('store', [QuestionApiController::class, 'store'])
-			                    ->name('store');
 
 			               Route::patch('update/order/for/{type}/{id}', [QuestionApiController::class, 'updateQuestionsOrder'])
 			                    ->name('updateOrder');

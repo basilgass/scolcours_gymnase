@@ -50,12 +50,7 @@ Route::middleware('admin')
 		               ->name('index');
 	          });
 
-	     Route::prefix('generators')
-	          ->as('generators.')
-	          ->group(function () {
-		          Route::get('/', [AdminController::class, 'generators'])
-		               ->name('index');
-	          });
+
 
 	     Route::prefix('widgets')
 	          ->as('widgets.')
