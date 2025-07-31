@@ -11,6 +11,7 @@ use App\Models\Post;
 use App\Models\Question;
 use App\Models\Quizz;
 use App\Models\Score;
+use App\Traits\CanMoveToTarget;
 use App\Traits\ResolvesTarget;
 use Auth;
 use Illuminate\Http\Request;
@@ -20,6 +21,7 @@ use Illuminate\Support\Facades\DB;
 class QuestionApiController extends Controller
 {
 	use ResolvesTarget;
+	use CanMoveToTarget;
 
 	public function index()
 	{
@@ -219,16 +221,21 @@ class QuestionApiController extends Controller
 	// Move the question to another Post.
 	public function move(Question $question, TargetClassRequest $request): array
 	{
-		$questionable = $this->resolveTarget($request->validated());
+		$target = $this->resolveTarget($request->validated());
+		return $this->moveToTarget(
+			$question, 'questions', $target, 'questionable'
+		);
 
-		$question->questionable()->associate($questionable);
-		$question->order = count($questionable->questions) + 2;
-		$question->save();
-
-		return [
-			'url'   => $questionable->url,
-			'label' => $questionable->title,
-		];
+//		$maxOrder = $questionable->questions()->max('order') ?? 0;
+//
+//		$question->questionable()->associate($questionable);
+//		$question->order = $maxOrder+1;
+//		$question->save();
+//
+//		return [
+//			'url'   => $questionable->url,
+//			'label' => $questionable->title,
+//		];
 	}
 
 	/**

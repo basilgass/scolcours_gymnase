@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\AdminController;
 use App\Http\Controllers\api\ChapterApiController;
 use App\Http\Controllers\web\ChapterController;
 use App\Models\Chapter;
@@ -11,6 +10,7 @@ Route::middleware('web')
 	     Route::resource('chapters', ChapterController::class)
 	          ->only(['index']);
 
+	     // ROUTE: Rendre les choses plus logique (dans le Controller, et déplacer le "slide" dans une autre fonction.
 	     Route::get('chapters/{chapter}', function (Chapter $chapter) {
 		     return redirect()->route('themes.chapters.show', [
 			     "theme"   => $chapter->theme,
@@ -37,11 +37,16 @@ Route::middleware('web')
 	          ->where('type', 'block|illustration|question')
 	          ->name('themes.chapters.posts.anchor');
 
+		 Route::get('chaptersTest/{chapter}/edit', function($chapter){
+			 dd($chapter);
+		 });
 
 
 	     // Admin routes
+	     // ROUTE: ajotuer ->prefix('admin') à toutes les routes web admin
 	     Route::middleware('admin')
 	          ->as('admin.')
+		     ->prefix('admin')
 	          ->group(function () {
 		          Route::resource('chapters', ChapterController::class)
 		               ->only(['edit']);
@@ -65,8 +70,8 @@ Route::middleware('api')
 	     Route::get("chapters/{chapter:slug}/theorems", [ChapterApiController::class, 'getTheoremsFromChapter'])
 	          ->name('chapters.theorems.index');
 
-		 Route::get("chapters/{chapter:slug}/posts", [ChapterApiController::class, 'getPosts'])
-			 ->name('chapters.posts');
+	     Route::get("chapters/{chapter:slug}/posts", [ChapterApiController::class, 'getPosts'])
+	          ->name('chapters.posts');
 
 	     // Admin api
 	     Route::middleware('admin')

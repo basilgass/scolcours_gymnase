@@ -5,7 +5,6 @@ import {CHECKERS} from "../checker.config"
 const name = "scientific"
 const description = `scientific|scn,[paramètres]
 
-//TODO: scn: mode stricte
 **paramètres**
 - [1,2,3,4,...]: nombre de chiffre après la virgule
 - s: strict (1.2 ne passe pas pour 1.20)

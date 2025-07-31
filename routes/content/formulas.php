@@ -43,6 +43,10 @@ Route::middleware('api')
 
 			               Route::post('{formula}/duplicate', [FormulaApiController::class, 'duplicate'])
 			                    ->name('duplicate');
+
+			               Route::patch('{formula}/move',
+				               [FormulaApiController::class, 'move'])
+			                    ->name('move');
 		               });
 	          });
 

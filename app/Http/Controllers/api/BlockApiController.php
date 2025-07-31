@@ -9,11 +9,13 @@ use App\Http\Requests\TargetClassRequest;
 use App\Http\Requests\UpdateBlockRequest;
 use App\Http\Resources\BlockResource;
 use App\Models\Block;
+use App\Traits\CanMoveToTarget;
 use App\Traits\ResolvesTarget;
 
 class BlockApiController extends Controller
 {
 	use ResolvesTarget;
+	use CanMoveToTarget;
 
 	public function index()
 	{
@@ -93,15 +95,18 @@ class BlockApiController extends Controller
 
 	public function move(Block $block, TargetClassRequest $request)
 	{
+		$target = $this->resolveTarget($request->validated());
+		return $this->moveToTarget(
+			$block, 'blocks', $target, 'blockable'
+		);
+
 		$blockable = $this->resolveTarget($request->validated());
 
-		$block->update([
-			'blockable_id'   => $blockable->id,
-			'blockable_type' => get_class($blockable),
-			'order'          => count($blockable->blocks) + 2
-		]);
+		$maxOrder = $blockable->blocks()->max('order') ?? 0;
 
-		$block->refresh();
+		$block->blockable()->associate($blockable);
+		$block->order = $maxOrder+1;
+		$block->save();
 
 		return [
 			'url'   => $blockable->url,

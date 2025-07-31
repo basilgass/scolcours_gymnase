@@ -98,6 +98,7 @@ export abstract class CheckerAbstract {
             }
         }
 
+		// The value given is a usual error, handled by an @error:<value> <description>
         // The value is not correct
         message = this.checkValue(given)
         if (message !== "") {

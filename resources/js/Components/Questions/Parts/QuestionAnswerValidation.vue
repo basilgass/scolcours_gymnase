@@ -84,15 +84,21 @@ function updateAnswersValidation(): CheckerResult[] {
 		const results: CheckerResult[] = []
 		allowedAnswers.forEach((answer, index) => {
 			try {
-				results.push(
-					userAnswer !== undefined ?
-						checker.check(userAnswer, answer) :
-						{
-							result: false,
-							message: "Vous n'avez pas répondu à la question",
-							index
-						}
-				)
+				if (userAnswer === undefined) {
+					results.push({
+						result: false,
+						message: "Vous n'avez pas répondu à la question",
+						index
+					})
+				} else {
+					const chk = checker.check(userAnswer, answer)
+
+					if (questionData.current.checker.value.checkerOverride[userAnswer]) {
+						chk.message = questionData.current.checker.value.checkerOverride[userAnswer]
+					}
+					results.push(chk)
+				}
+
 			} catch {
 				results.push({
 					result: false,

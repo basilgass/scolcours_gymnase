@@ -1,11 +1,6 @@
-import type {IMacro, IMacroRecords} from "@/helpers/Macros/macros_interface.ts"
+import type {IMacroRecords} from "@/helpers/Macros/macros_interface.ts"
 
 const latex_macros_suffix: IMacroRecords = {
-	'..-': {
-		suffix: true,
-		math: false,
-		template: '\\( @ \\) '
-	},
 	'.fr': {
 		suffix: true,
 		math: true,
@@ -20,6 +15,16 @@ const latex_macros_suffix: IMacroRecords = {
 		suffix: true,
 		math: true,
 		template: '\\text{ @ }'
+	},
+	'.ca': {
+		suffix: true,
+		math: true,
+		template: '\\mathcal{ @ }'
+	},
+	'.bb': {
+		suffix: true,
+		math: true,
+		template: '\\mathbb{ @ }'
 	},
 	'.,': {
 		suffix: true,
@@ -44,6 +49,31 @@ const latex_macros_suffix: IMacroRecords = {
 
 }
 
+const md_macros: IMacroRecords = {
+	"DEF": {
+		math: false,
+		template: "[@]{.@@def@}"
+	},
+	"$$": {
+		math: false,
+		template: "\\[\n\t@\n\\]"
+	},
+	".m": {
+		suffix: true,
+		math: false,
+		template: "\\( @ \\)",
+	},
+	"LKP": {
+		suffix: false,
+		math: false,
+		template: "[@](@@posts.show,@)"
+	},
+	"LKB": {
+		suffix: false,
+		math: false,
+		template: "[@](@@blocks.show,@)"
+	}
+}
 export const latex_macros: IMacroRecords = {
 	"BPM": {
 		math: true,
@@ -100,5 +130,6 @@ export const latex_macros: IMacroRecords = {
 		template: "\\implies",
 		space: true
 	},
+	...md_macros,
 	...latex_macros_suffix
 }

@@ -9,7 +9,7 @@ import ScButton from "@/Components/Ui/scButton.vue"
 const flash = inject<flashInterface>("flash")
 
 const props = defineProps<{
-	source: 'block' | 'question' | 'post',
+	source: 'block' | 'question' | 'post' | 'formula',
 	sourceId: number,
 	target: 'post' | 'chapter'
 }>()
@@ -44,6 +44,10 @@ function getUrl() {
 		return route('api.admin.posts.move', [props.sourceId])
 	}
 
+	if (props.source === 'formula') {
+		return route('api.admin.formulas.move', [props.sourceId])
+	}
+
 	return null
 }
 
@@ -58,6 +62,7 @@ function moveTo() {
 		target_id: moveToId.value,
 		target_type: props.target,
 	}
+
 	axios
 		.patch(
 			getUrl(),

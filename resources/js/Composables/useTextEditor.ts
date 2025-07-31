@@ -3,6 +3,8 @@ import {IMacro, IMacroRecords} from "@/helpers/Macros/macros_interface.ts"
 import {latex_macros} from "@/helpers/Macros/latex_macros.ts"
 import {javascript_macros} from "@/helpers/Macros/javascript_macros.ts"
 import {json_macros} from "@/helpers/Macros/json_macros.ts"
+import {useMagicKeys, whenever} from "@vueuse/core"
+import {greekLaTeX} from "@/helpers/greekLaTeX.ts"
 
 // TODO: add auto closing \begin / \end
 // TODO: accept parameters macros (js, md+latex)
@@ -39,7 +41,7 @@ function generateMacrosCharacters(
 	const allCharacters = [...keys.map(key => key.split('')).flat()]
 
 	return {
-		maxsize: Math.max(...keys.map(x => x.length)),
+		maxsize: Math.max(0, ...keys.map(x => x.length)),
 		characters: [...new Set(allCharacters)]
 	}
 }
@@ -49,7 +51,6 @@ export function useTextEditor(AreaRefName: string, options?: {
 	model?: Ref<string>,
 	allowTab?: boolean
 }) {
-
 	const language = options?.language ?? 'latex'
 	const macros = getMacros(language)
 
@@ -201,9 +202,37 @@ export function useTextEditor(AreaRefName: string, options?: {
 		return
 	}
 
-	function handleInput() {
+	function handleInput(event: InputEvent) {
 		const el = textareaRef.value
 		if (!el) return
+
+		if (greekMode.value) {
+			// Reset greekmode.
+			greekMode.value = false
+
+			const greek = greekLaTeX[event.data]
+
+			if (!greek) {
+				// Not a greek letter
+				return
+			}
+
+			const latex = isInMathEnv.value
+				? greek
+				: `\\( ${greek} \\) `
+
+			const pos = el.selectionStart
+			const result = el.value.slice(0, pos - 1)
+				+ latex
+				+ el.value.slice(pos)
+
+			updateValue(result)
+
+			el.selectionStart = el.selectionEnd = pos + latex.length - 1
+
+			return
+		}
+
 
 		// const start = cursor - fullMatch.length
 		// const end = cursor
@@ -234,6 +263,11 @@ export function useTextEditor(AreaRefName: string, options?: {
 
 			// Select the first tab stop
 			goToNextTabStop(el)
+
+			// Reset the keys
+			lastCharacters.value = []
+
+			return
 		}
 
 		updateSelection()
@@ -254,24 +288,27 @@ export function useTextEditor(AreaRefName: string, options?: {
 		if (!el) return
 
 		const spaceCharacter = space ? ' ' : ''
-		const templateWitheEnd = template.endsWith('@') ?
-			spaceCharacter + template + spaceCharacter :
-			spaceCharacter + template + spaceCharacter + '@'
+		const templateWithEnd = template.endsWith('@')
+			? spaceCharacter + template + spaceCharacter
+			: spaceCharacter + template + spaceCharacter + '@'
 
-		// reconstruire le texte avec tabStops supprimés
-		let pos = templateWitheEnd.indexOf('@')
-		if (pos === -1) {
-			pos = templateWitheEnd.length
-		}
+		// Remplace d'abord les @@ par un placeholder temporaire
+		const placeholder = '__LITERAL_AT__'
+		let result = templateWithEnd.replaceAll('@@', placeholder)
 
-		return templateWitheEnd.replaceAll('@', invisibleCharacter)
+		// Remplace les @ restants par le caractère invisible
+		result = result.replaceAll('@', invisibleCharacter)
+		// Remet les @@ en @
+		result = result.replaceAll(placeholder, '@')
+
+		return result
 	}
 
 	function removeTabStops(): string {
 		const el = textareaRef.value
 		if (!el) return
 
-		const { selectionStart, selectionEnd, value } = el
+		const {selectionStart, selectionEnd, value} = el
 
 		// Compter les caractères invisibles avant et dans la sélection
 		const before = value.slice(0, selectionStart)
@@ -332,28 +369,33 @@ export function useTextEditor(AreaRefName: string, options?: {
 			return
 		}
 
-		// Detect suffix macros.
-		const macro = macros[lastKey.value] ??
-			macros[lastKey.value] ??
-			undefined
+		// On teste tous les suffixes possibles de lastKey.value
+		for (let i = 0; i < lastKey.value.length; i++) {
+			const key = lastKey.value.slice(i)
+			const macro = macros[key]
 
+			if (
+				macro &&
+				macro.suffix &&
+				(language !== 'latex' || macro.math === isInMathEnv.value)
+			) {
+				// On récupère le mot avant la macro suffixe
+				const word = getWordBefore(el.value.slice(0, el.selectionStart - key.length)) ?? ''
+				return {key, ...macro, word}
+			}
+		}
+
+		// Sinon, on teste la macro "normale" (non suffix)
+		const macro = macros[lastKey.value]
 		if (
-			!macro ||
-			(language==='latex' && macro.math !== isInMathEnv.value)
+			macro &&
+			!macro.suffix &&
+			(language !== 'latex' || macro.math === isInMathEnv.value)
 		) {
-			return
+			return {key: lastKey.value, ...macro, word: ''}
 		}
 
-		// Correct environnement, with a template.
-		const word = macro.suffix ?
-			getWordBefore(el.value.slice(0, el.selectionStart - lastKey.value.length))
-			: ''
-
-		return {
-			key: lastKey.value,
-			...macro,
-			word
-		}
+		return undefined
 	}
 
 	function getWordBefore(text: string) {
@@ -428,6 +470,19 @@ export function useTextEditor(AreaRefName: string, options?: {
 		modelValue.value = value
 		textareaRef.value.value = value
 	}
+
+	const {Ctrl_G} = useMagicKeys({
+		passive: false,
+		onEventFired(e) {
+			if (e.ctrlKey && e.key === 'g' && e.type === 'keydown')
+				e.preventDefault()
+		}
+	})
+	const greekMode = ref<boolean>(false)
+
+	whenever(Ctrl_G, () => {
+		greekMode.value = true
+	})
 
 	watch(modelValue, (val) => {
 		const el = textareaRef.value

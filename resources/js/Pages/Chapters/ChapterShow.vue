@@ -38,7 +38,7 @@ const showFormular = ref(false)
 			:title="chapter.title"
 			:edit-link="{
 				label: chapter.id,
-				url: route('admin.chapters.edit', {id: chapter.id})
+				url: route('admin.chapters.edit', {chapter: chapter.id})
 			}"
 		/>
 

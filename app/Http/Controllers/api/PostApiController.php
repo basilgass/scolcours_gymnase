@@ -8,12 +8,14 @@ use App\Http\Requests\TargetClassRequest;
 use App\Http\Resources\PostShowResource;
 use App\Models\Chapter;
 use App\Models\Post;
+use App\Traits\CanMoveToTarget;
 use App\Traits\ResolvesTarget;
 use Illuminate\Http\Request;
 
 class PostApiController extends Controller
 {
 	use ResolvesTarget;
+	use CanMoveToTarget;
 
 	public function index()
 	{
@@ -63,7 +65,6 @@ class PostApiController extends Controller
 	}
 
 
-
 	public function reorderBlocks(Post $post, ReorderRequest $request)
 	{
 		$request->setModelTable('blocks');
@@ -71,18 +72,6 @@ class PostApiController extends Controller
 
 		foreach ($validated['order'] as $value) {
 			$post->blocks->find($value['id'])->update(['order' => $value['order']]);
-		}
-
-		return response()->noContent();
-	}
-
-	public function reorderQuestions(Post $post, ReorderRequest $request)
-	{
-		$request->setModelTable('questions');
-		$validated = $request->validated();
-
-		foreach ($validated['order'] as $value) {
-			$post->questions->find($value['id'])->update(['order' => $value['order']]);
 		}
 
 		return response()->noContent();
@@ -111,6 +100,18 @@ class PostApiController extends Controller
 		return PostShowResource::make($post);
 	}
 
+	public function reorderQuestions(Post $post, ReorderRequest $request)
+	{
+		$request->setModelTable('questions');
+		$validated = $request->validated();
+
+		foreach ($validated['order'] as $value) {
+			$post->questions->find($value['id'])->update(['order' => $value['order']]);
+		}
+
+		return response()->noContent();
+	}
+
 	public function updateQuestionsGrid(Post $post, Request $request)
 	{
 		$validate = $request->validate([
@@ -136,19 +137,21 @@ class PostApiController extends Controller
 
 	public function move(Post $post, TargetClassRequest $request)
 	{
-		$chapter = $this->resolveTarget($request->validated());
-
-		$post->update([
-			'chapter_id' => $chapter->id,
-			'order'      => count($chapter->posts) + 2
-		]);
-
-		$post->refresh();
-
-		return [
-			'url'   => $chapter->url,
-			'label' => $chapter->title,
-		];
+		$target = $this->resolveTarget($request->validated());
+		return $this->moveToTarget(
+			$post, 'posts', $target, 'chapter'
+		);
+//
+//		$maxOrder = $chapter->posts()->max('order') ?? 0;
+//
+//		$post->chapter()->associate($chapter);
+//		$post->order = $maxOrder + 1;
+//		$post->save();
+//
+//		return [
+//			'url'   => $chapter->url,
+//			'label' => $chapter->title,
+//		];
 	}
 
 	// Get basic info about a post

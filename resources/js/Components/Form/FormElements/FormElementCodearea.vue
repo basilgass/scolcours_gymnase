@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import {javascriptTriggers, latexTriggers, mdTriggers} from "@/helpers/mdAutofill"
 import {computed, ref} from "vue"
 import {FormElementEmits, FormElementExpose, FormMakerPropsNewType} from "@/Components/Form/FormMakerInterface.ts"
 import {useTextEditor} from "@/Composables/useTextEditor.ts"
@@ -8,6 +7,9 @@ import "prismjs/components/prism-javascript"
 import "prismjs/components/prism-json"
 import "prismjs/components/prism-latex"
 import "prismjs/themes/prism.css"
+import {latex_macros} from "@/helpers/Macros/latex_macros.ts"
+import {javascript_macros} from "@/helpers/Macros/javascript_macros.ts"
+import {json_macros} from "@/helpers/Macros/json_macros.ts"
 
 interface FormElementCodeareaPropsInterface extends FormMakerPropsNewType {
 	rows?: number,
@@ -111,14 +113,14 @@ function sync_scroll() {
 
 const codeTriggers = computed(() => {
 	if (props.language === 'javascript') {
-		return javascriptTriggers
+		return javascript_macros
 	}
 
-	if (props.language === 'latex') {
-		return isInMathEnv.value ? latexTriggers : mdTriggers
+	if (props.language === 'json') {
+		return json_macros
 	}
 
-	return mdTriggers
+	return latex_macros
 })
 
 /**
@@ -170,6 +172,10 @@ const areaHeight = computed(() => {
 				v-for="key in Object.keys(codeTriggers)"
 				:key="key"
 				class="border border-slate-200 rounded text-xs font-code px-2"
+				:class="{
+					'bg-blue-100': codeTriggers[key].math,
+					'bg-white': !codeTriggers[key].math
+				}"
 			>
 				{{ key }}
 			</button>

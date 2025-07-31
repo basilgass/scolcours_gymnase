@@ -6,6 +6,7 @@ import { flashInterface } from "@/types"
 import { FormulaInterface } from "@/types/modelInterfaces.ts"
 import axios from "axios"
 import { inject } from "vue"
+import MoveItemTo from "@/Components/MoveItemTo.vue"
 
 const flash = inject<flashInterface>("flash")
 const props = defineProps<{
@@ -42,6 +43,12 @@ function deleteFormula(){
 		</template>
 		<template #adminRight>
 			<div class="flex gap-3 items-baseline">
+				<move-item-to
+					source="formula"
+					:source-id="formula.id"
+					target="chapter"
+					@moved="emits('destroy', formula.id)"
+				/>
 				<InertiaLink
 					class="text-xs"
 					:href="route('admin.blocks.edit', [formula.block.id])"

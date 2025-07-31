@@ -21,7 +21,6 @@ export function useQuestion(mayBeRefOrGetter: QuestionInterface, config: questio
 	// Score object
 	const userScore = ref(question.value.user)
 
-
 	// List of all answers
 	const correctAnswers = computed<string[]>(() => {
 		return question.value.answer.split("\n").filter((x) => x !== "")
@@ -106,17 +105,4 @@ export function useQuestion(mayBeRefOrGetter: QuestionInterface, config: questio
 		validators,
 		config
 	}
-	//
-	// return {
-	// 	// question,
-	// 	// answerId,
-	// 	answers,
-	// 	answersVariables,
-	// 	answersCoherences,
-	// 	// userAnswers,
-	// 	// userScore,
-	// 	// validators,
-	// 	// currentKeyboard,
-	// 	// currentChecker,
-	// }
 }

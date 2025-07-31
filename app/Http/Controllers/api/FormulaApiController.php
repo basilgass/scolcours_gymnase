@@ -3,21 +3,27 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\TargetClassRequest;
 use App\Http\Resources\FormulaResource;
 use App\Models\Chapter;
 use App\Models\Formula;
+use App\Traits\CanMoveToTarget;
+use App\Traits\ResolvesTarget;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 
 class FormulaApiController extends Controller
 {
+	use ResolvesTarget;
+	use CanMoveToTarget;
+
 	public function index(Request $request)
 	{
 		if ($request->input('ids')) {
 			return $this->fetch($request->input('ids'));
 		}
 
-		if($request->input('chapter_id')) {
+		if ($request->input('chapter_id')) {
 			$chapter = Chapter::find($request->input('chapter_id'));
 			return FormulaResource::collection($chapter->formulas);
 		}
@@ -133,4 +139,13 @@ class FormulaApiController extends Controller
 
 		return FormulaResource::make($newFormula);
 	}
+
+	public function move(Formula $formula, TargetClassRequest $request)
+	{
+		$target = $this->resolveTarget($request->validated());
+		return $this->moveToTarget(
+			$formula, 'formulas', $target, 'chapter'
+		);
+	}
+
 }
