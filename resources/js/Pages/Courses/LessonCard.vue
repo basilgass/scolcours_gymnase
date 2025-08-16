@@ -28,7 +28,7 @@ const isPast = computed(() => {
 
 const scheduled_at = ref(
 	props.lesson.scheduled_at
-		? dayjs(props.lesson.scheduled_at).format('YYYY-MM-DDTHH:MM')
+		? dayjs(props.lesson.scheduled_at).format('YYYY-MM-DDTHH:mm')
 		: ""
 )
 
