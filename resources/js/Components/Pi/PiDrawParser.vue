@@ -24,8 +24,8 @@ const props = withDefaults(defineProps<IPiDrawProps & { theme?: string | number 
 )
 
 const emits = defineEmits<{
-	drawClick: [PiGrah: PiDraw],
-	update: [PiGrah: PiDraw],
+	drawClick: [{ draw: PiDraw, mouse: MouseEvent }],
+	update: [draw: PiDraw],
 }>()
 
 // Set the current step index
@@ -129,8 +129,9 @@ const drawParameter = computed(() => {
 })
 
 // Grab the data when on mouse up for external modifications
-const drawMouseUp = function (evt: PiDraw) {
-	emits("update", evt)
+const drawMouseUp = function (evt: {draw: PiDraw, mouse: MouseEvent}) {
+	emits("update", evt.draw)
+	emits("drawClick", evt)
 }
 
 </script>

@@ -4,11 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\ChallengeResource;
 use App\Http\Resources\ChapterResource;
+use App\Http\Resources\CourseResource;
 use App\Http\Resources\ToolResource;
 use App\Http\Resources\UserResource;
+use App\Http\Resources\UserTeamResource;
 use App\Http\Resources\WidgetResource;
 use App\Models\Challenge;
 use App\Models\Chapter;
+use App\Models\Course;
 use App\Models\Generator;
 use App\Models\Illustration;
 use App\Models\Scolcours;
@@ -214,10 +217,11 @@ class AdminController extends Controller
 
 	public function users()
 	{
+		$users = User::with('teams')->get();
 		return Inertia::render(
 			'Admin/AdminUsersPage',
 			[
-				"users" => UserResource::collection(User::all()),
+				"users" => UserResource::collection($users),
 				"teams" => Team::all()
 			]
 		);
@@ -274,19 +278,6 @@ class AdminController extends Controller
 		return true;
 	}
 
-	public function activate(Chapter $chapter, Request $request)
-	{
-		$request->validate([
-			'active' => ['required', 'boolean']
-		]);
-
-		// Update the chapter
-		$chapter->active = $request->active;
-		$chapter->save();
-
-//		return redirect()->route('admin.pages');
-	}
-
 
 	public function illustrations()
 	{
@@ -298,23 +289,17 @@ class AdminController extends Controller
 		);
 	}
 
-	public function updateAValue(Request $request)
+	public function courses()
 	{
-		$request->validate([
-			'model' => ["string"],
-			'id' => ["int"],
-			'column' => ["string"],
-			'value' => ["string", "nullable"]
-		]);
 
-		// Get the model
-		$model = app('App\\Models\\' . $request->model);
-		$model = $model::find($request->id);
+		$courses = Course::with('teams')->get();
 
-		$model[$request->column] = $request->value;
-		$model->save();
-
-		return $model;
+		return Inertia::render(
+			'Admin/AdminCoursesPage',
+			[
+				'courses' => CourseResource::collection($courses),
+				'teams'=>UserTeamResource::collection(Team::all())
+			]
+		);
 	}
-
 }

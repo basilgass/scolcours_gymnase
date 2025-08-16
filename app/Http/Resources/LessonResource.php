@@ -14,6 +14,7 @@ class LessonResource extends JsonResource
 	 */
 	public function toArray(Request $request): array
 	{
+		$scheduled_at = $this->calendars?->first()?->scheduled_at ?? null;
 		return [
 			'id'              => $this->id,
 			'course_id'       => $this->course_id,
@@ -22,6 +23,8 @@ class LessonResource extends JsonResource
 			'lessonable_id'   => (int)$this->lessonable_id,
 			'lessonable_type' => class_basename($this->lessonable_type),
 			'scoreRules'      => $this->scoreRules,
+			'remaining_time'  => $scheduled_at?->diffForHumans(),
+			'scheduled_at'    => $scheduled_at,
 			'created_at'      => $this->created_at,
 			'updated_at'      => $this->updated_at,
 		];

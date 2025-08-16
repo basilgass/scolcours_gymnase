@@ -4,19 +4,33 @@ import {CourseInterface} from "@/types/modelInterfaces.ts"
 import BlockShow from "@/Components/Blocks/BlockShow.vue"
 import ScButton from "@/Components/Ui/scButton.vue"
 import Card from "@/Components/Ui/Card.vue"
+import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
 
 const props = defineProps<{
 	course: CourseInterface
 }>()
+
+const editMode = useStoreEditMode()
 </script>
 
 <template>
 	<Card>
 		<template #header>
-			<h1
-				class="text-lg md:text-xl lg:text-2xl"
-				v-katex.auto="course.title"
-			/>
+			<div class="flex justify-between">
+				<h1
+					class="text-lg md:text-xl lg:text-2xl"
+					v-katex.auto="course.title"
+				/>
+				<sc-button
+					v-admin="editMode.enable"
+					type="edit"
+					icon
+					xs
+					:href="route('admin.courses.edit', {course: course.slug})"
+				>
+					éditer le cours
+				</sc-button>
+			</div>
 		</template>
 
 		<block-show

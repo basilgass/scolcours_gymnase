@@ -10,9 +10,6 @@ use App\Http\Resources\UserResource;
 use App\Models\Challenge;
 use App\Models\Chapter;
 use App\Models\Team;
-use App\Models\User;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class TeamController extends Controller
@@ -21,11 +18,10 @@ class TeamController extends Controller
 	{
 		return Inertia::render("Teams/TeamIndex", [
 			'teams' => Team::with('users')->get()->map(function ($team) {
-				$team->users_count = $team->users->count();
 				return [
-					'id' => $team->id,
-					'name' => $team->name,
-					'users_count' => $team->users_count,
+					'id'          => $team->id,
+					'name'        => $team->name,
+					'users_count' => $team->users->count(),
 				];
 			})
 		]);
@@ -35,9 +31,9 @@ class TeamController extends Controller
 	{
 		return Inertia::render("Teams/TeamShow",
 			[
-				'team' => $team,
-				'students' => UserResource::collection($team->users),
-				'chapters' => ChapterResource::collection(Chapter::where('active', true)->get()),
+				'team'       => $team,
+				'students'   => UserResource::collection($team->users),
+				'chapters'   => ChapterResource::collection(Chapter::where('active', true)->get()),
 				'challenges' => ChallengeResource::collection(Challenge::all()),
 			]
 		);
@@ -52,9 +48,9 @@ class TeamController extends Controller
 			->values()->all();
 
 		return Inertia::render("Teams/TeamChallengeShow", [
-			'team' => $team,
+			'team'      => $team,
 			'challenge' => ChallengeResource::make($challenge),
-			'scores' => $scores
+			'scores'    => $scores
 		]);
 	}
 
@@ -80,16 +76,16 @@ class TeamController extends Controller
 
 		foreach ($data as $post) {
 			$stat = [
-				"id" => $post->id,
-				"title" => $post->title,
-				"type" => $post->type,
+				"id"        => $post->id,
+				"title"     => $post->title,
+				"type"      => $post->type,
 				"questions" => []
 			];
 
 
 			foreach ($post->questions as $question) {
 				$statQuestion = [
-					"id" => $question->id,
+					"id"    => $question->id,
 					"users" => []
 				];
 
@@ -112,9 +108,9 @@ class TeamController extends Controller
 		return Inertia::render(
 			'Teams/TeamPostShow',
 			[
-				"team" => TeamResource::make($team),
+				"team"    => TeamResource::make($team),
 				"chapter" => ChapterResource::make($chapter),
-				"stats" => $stats
+				"stats"   => $stats
 			]
 		);
 	}

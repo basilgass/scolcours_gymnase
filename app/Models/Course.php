@@ -31,7 +31,9 @@ class Course extends Model
 
 	public function lessons(): HasMany|Course
 	{
-		return $this->hasMany(Lesson::class);
+		return $this->hasMany(Lesson::class)
+			->orderBy('order')
+			->orderBy('id');
 	}
 
 	public function theme(): BelongsTo

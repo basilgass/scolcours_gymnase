@@ -33,7 +33,7 @@ const props = defineProps<{
 
 const flash = inject<flashInterface>('flash')
 const theCourse = ref<CourseInterface>(props.course)
-
+const lessons = ref<LessonInterface[]>(props.course.lessons)
 const lessonable: lessonableClassName[] = ['Post', 'Deck', 'Challenge', 'Generator']
 
 function updateCourse() {
@@ -229,6 +229,27 @@ const lessonJsonMap = computed<Record<string, FormElementType>>(() => {
 	}
 })
 
+function updateLessonsOrder() {
+	axios
+		.post(
+			route("api.admin.courses.lessons.updateOrder", {course: props.course.id}),
+			{
+				_method: "PATCH",
+				order: lessons.value.map((x, index) => {
+					return {id: x.id, order: index + 1}
+				})
+			}
+		)
+		.then(() => {
+			flash.success("les leçons ont bien été mis à jour !")
+		})
+		.catch((res) => {
+				console.warn(res.data)
+				flash.error("update lessons order failed")
+			}
+		)
+}
+
 </script>
 
 <template>
@@ -237,8 +258,8 @@ const lessonJsonMap = computed<Record<string, FormElementType>>(() => {
 			prefix="édition"
 			:title="course.title"
 			:return-link="{
-				label: 'retour aux cours',
-				url: route('courses.index')
+				label: 'retour à la liste des cours',
+				url: route('admin.courses.index')
 			}"
 		/>
 
@@ -443,13 +464,21 @@ const lessonJsonMap = computed<Record<string, FormElementType>>(() => {
 		<article>
 			<h2>Leçons</h2>
 
-			<div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-				<div class="flex flex-col gap-3">
+			<draggable
+				v-if="lessons.length"
+				:list="lessons"
+				class="mt-10 grid grid-cols-1 gap-3"
+				handle=".draggable-handle"
+				item-key="id"
+				v-bind="{
+					animation: 200,
+				}"
+				@end="updateLessonsOrder"
+			>
+				<template #item="{ element }: {element: LessonInterface}">
 					<Card
-						v-for="lesson in theCourse.lessons"
-						:key="`lesson-${lesson.id}`"
 						:class="{
-							' bg-blue-100 border-blue-600 text-blue-600': itemSource?.id===lesson.id
+							' bg-blue-100 border-blue-600 text-blue-600': itemSource?.id===element.id
 						}"
 					>
 						<template #header>
@@ -458,52 +487,63 @@ const lessonJsonMap = computed<Record<string, FormElementType>>(() => {
 							>
 								<div
 									class="flex gap-3 items-baseline cursor-pointer"
-									@click="setItemSource(lesson)"
+									@click="setItemSource(element)"
 								>
-									<lesson-type-icon :lesson />
+									<i class="bi bi-arrows-move draggable-handle" />
+									<lesson-type-icon :lesson="element" />
 
 									<div
 										class="text-lg font-[400]"
-										v-katex.auto="lesson.title"
+										v-katex.auto="element.title"
 									/>
 									<div class="font-code w-[16px] text-xs">
-										({{ lesson.id }})
+										({{ element.id }})
 									</div>
 								</div>
 
-								<div v-if="itemSource?.id===lesson.id">
-									{{ lesson.requires }}
+								<div v-if="itemSource?.id===element.id">
+									{{ element.requires }}
 								</div>
 								<i
 									v-else-if="itemSource"
-									@click="onClick(lesson, $event)"
+									@click="onClick(element, $event)"
 									class="bi bi-link text-xl text-blue-600 cursor-pointer"
 								/>
 							</div>
 						</template>
+
 						<course-lesson-edit
-							:lesson
+							:lesson="element"
 						/>
 						<template #footer>
-							<sc-button
-								type="delete"
-								icon
-								xs
-								@click="deleteLesson(lesson)"
-							>
-								supprimer
-							</sc-button>
+							<div class="flex justify-between">
+								<div />
+								<sc-button
+									type="delete"
+									icon
+									xs
+									@click="deleteLesson(element)"
+								>
+									supprimer
+								</sc-button>
+							</div>
 						</template>
 					</Card>
-				</div>
-				<div>
-					<course-graph
-						:key="counter"
-						:course
-						@node-click="onClick"
-					/>
-				</div>
-			</div>
+				</template>
+			</draggable>
+
+			<!--			<div class="grid grid-cols-1 md:grid-cols-2 gap-3">-->
+			<!--				<div class="flex flex-col gap-3">-->
+			<!--					-->
+			<!--				</div>-->
+			<!--				<div>-->
+			<!--					<course-graph-->
+			<!--						:key="counter"-->
+			<!--						:course-->
+			<!--						@node-click="onClick"-->
+			<!--					/>-->
+			<!--				</div>-->
+			<!--			</div>-->
 		</article>
 	</main>
 </template>

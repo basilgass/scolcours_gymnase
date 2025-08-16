@@ -6,10 +6,12 @@ import LayoutMain from "@/Layouts/LayoutMain.vue"
 
 defineOptions({ layout: LayoutMain })
 
+// TODO: Créer une page spécifique pour l'admin des teams
 const links1 = [
 	{ title: "configuration générale", route: "admin.config.index", icon: 'bi bi-gear' },
 	{ title: "utilisateurs", route: "admin.users.index", icon: 'bi bi-person' },
 	{ title: "équipes", route: "admin.teams.index", icon: 'bi-person-lines-fill' },
+	{ title: "cours", route: "admin.courses.index", icon: 'bi-person-lines-fill' },
 ]
 
 const links2 = [

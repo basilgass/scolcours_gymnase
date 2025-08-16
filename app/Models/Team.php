@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Calendars\TeamCalendar;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -25,8 +25,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Team extends Model
 {
-    use HasFactory;
-
+	protected $with = [];
 	protected $guarded = [];
 
 	public function users()
@@ -37,5 +36,17 @@ class Team extends Model
 	public function courses()
 	{
 		return $this->belongsToMany(Course::class);
+	}
+
+	public function calendars()
+	{
+		return $this->hasMany(TeamCalendar::class);
+	}
+
+	public function lesson_calendars()
+	{
+		return $this
+			->hasMany(LessonCalendar::class)
+			->where('team_id', $this->id);
 	}
 }

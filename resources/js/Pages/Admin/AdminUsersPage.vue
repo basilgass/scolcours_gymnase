@@ -1,25 +1,29 @@
 <script lang="ts" setup>
 
-import {computed, inject, PropType, ref} from "vue"
+import {computed, inject, ref} from "vue"
 import {router, useForm} from "@inertiajs/vue3"
-import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import axios from "axios"
 import type {TeamInterface, UserInterface} from "@/types/modelInterfaces"
-import type {flashInterface} from "@/types"
+import type {AxiosErrorMessage, AxiosResponseModel, flashInterface} from "@/types"
 import DialogModal from "@/Components/Ui/DialogModal.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 import ScButton from "@/Components/Ui/scButton.vue"
+import AdminTeamManager from "@/Components/Admin/Parts/AdminTeamManager.vue"
+
+// TODO: créer un composant pour chaque utilisateur - plus propre ?
 
 defineOptions({layout: LayoutMain})
 
-const props = defineProps({
-		users: {type: Object as PropType<UserInterface[]>, required: true},
-		teams: {type: Object as PropType<TeamInterface[]>, required: true}
-	}),
-	theUsers = ref(props.users),
-	theTeams = ref(props.teams)
+const props = defineProps<{
+	users: UserInterface[],
+	teams: TeamInterface[]
+}>()
 
+const theUsers = ref(props.users)
+const theTeams = ref(props.teams)
+
+console.log(props.users[0])
 const flash = inject<flashInterface>("flash")
 
 const usersEmails = ref(""),
@@ -55,7 +59,7 @@ function addUsers() {
 const deleteMode = ref(false)
 
 function destroyUser(id) {
-	axios.post(route("admin.users.destroy", [id]), {_method: "delete"}).then((res) => {
+	axios.post(route("api.admin.users.destroy", [id]), {_method: "delete"}).then((res) => {
 		if (res.data) {
 			// Reload the page.
 			router.reload({only: ["users"]})
@@ -65,61 +69,26 @@ function destroyUser(id) {
 
 const usersTeams = computed(() => {
 
-		return [
-			...new Set([...theUsers.value
-				.filter(user => user.teams)
-				.map(user => user.teams.flatMap(team => team.name))
-				.flat()
-			])
-		]
-	}),
-	teamsMode = ref(false),
-	selectedTeam = ref(""),
-	selectedUsers = computed(() => {
-		if (selectedTeam.value === "") {
-			return theUsers.value
-		} else if (selectedTeam.value === "_") {
-			return theUsers.value.filter(user => user.teams.length === 0)
-		} else {
-			return theUsers.value.filter(user => user.teams.find(team => team.name === selectedTeam.value))
-		}
-	}),
-	newTeam = ref(""),
-	storeTeam = function () {
-		axios.post(route("api.admin.teams.store"), {
-				"name": newTeam.value
-			}
-		).then(res => {
-			theTeams.value.push(res.data)
-		})
-			.catch(res =>
-				console.error(res.response.data.message)
-			)
-	},
-	updateTeam = function (userId: number, teamId: number) {
-		axios.post(route("admin.teams.toggleUser", {user: userId, team: teamId}),
-			{_method: "PATCH"})
-			.then(res => {
-				// update the button
-				theUsers.value.forEach(user => {
-					if (user.id === userId) {
-						user.teams = res.data.teams
-					}
-				})
-			})
-			.catch(res => {
-				console.error(res)
-			})
-	},
-	destroyTeam = function (teamId) {
-		axios.post(route("teams.destroy", [teamId]),
-			{_method: "DELETE"}
-		).then(res => {
-			theTeams.value = theTeams.value.filter(x => x.name !== res.data)
-		}).catch(res => {
-			console.error(res.response.data.message)
-		})
+	return [
+		...new Set([...theUsers.value
+			.filter(user => user.teams)
+			.map(user => user.teams.flatMap(team => team.name))
+			.flat()
+		])
+	]
+})
+const teamsMode = ref(false)
+const selectedTeam = ref<string>("")
+
+const selectedUsers = computed(() => {
+	if (selectedTeam.value === "") {
+		return theUsers.value
+	} else if (selectedTeam.value === "_") {
+		return theUsers.value.filter(user => user.teams.length === 0)
+	} else {
+		return theUsers.value.filter(user => user.teams.find(team => team.name === selectedTeam.value))
 	}
+})
 
 
 const editUserShow = ref(false)
@@ -156,6 +125,25 @@ function editUserStore() {
 		console.error(res.response.data.message)
 		flash.error("Erreur lors de la modification")
 	})
+}
+
+function updateUserTeam(userId: number, teamId: number) {
+	axios
+		.patch(route("api.admin.teams.toggleUser", {
+			user: userId,
+			team: teamId
+		}))
+		.then((res: AxiosResponseModel<UserInterface>) => {
+			// update the button
+			theUsers.value.forEach(user => {
+				if (user.id === userId) {
+					user.teams = res.data.teams
+				}
+			})
+		})
+		.catch((res: AxiosErrorMessage) => {
+			console.error(res.response.data.message)
+		})
 }
 
 </script>
@@ -211,6 +199,13 @@ function editUserStore() {
 			</sc-button>
 		</section>
 
+		<!-- gestion des équipes -->
+		<admin-team-manager
+			class="max-w-xl mx-auto"
+			:teams
+			@destroy-team="theTeams = theTeams.filter(team=>team.id!==$event)"
+			@store-team="theTeams.push($event)"
+		/>
 		<section>
 			<!-- titre -->
 			<div class="flex justify-between">
@@ -263,6 +258,10 @@ function editUserStore() {
 					{{ team }}
 				</sc-button>
 			</div>
+			<div v-else>
+				aucune équipe
+			</div>
+
 
 			<!-- liste des utilisateurs -->
 			<div class="flex flex-col gap-3">
@@ -272,16 +271,38 @@ function editUserStore() {
 					class="bg-content border px-5 py-4 flex justify-between"
 				>
 					<div class="user-wrapper-left flex justify-between w-full">
-						<div>
-							<h2 class="text-lg">
-								{{ user.fullname }}
-							</h2>
-							<div class="text-xs">
-								{{ user.email }}
+						<div class="flex gap-3 items-start">
+							<sc-button
+								xs
+								@click="editUser(user.id)"
+								type="edit"
+								class="inline"
+								icon
+								outline
+								no-label
+							/>
+
+							<div>
+								<h2 class="text-lg">
+									{{ user.fullname }}
+								</h2>
+								<div class="text-xs">
+									{{ user.email }}
+								</div>
 							</div>
 						</div>
-						<div v-show="!teamsMode">
-							{{ user.teams.map(team => team.name).join(",") }}
+						<div
+							v-show="!teamsMode"
+							class="flex flex-gap gap-3 items-start"
+						>
+							<sc-button
+								v-for="team of user.teams"
+								:key="`user-${user.id}-${team.id}`"
+								xs
+								@click="selectedTeam=team.name"
+							>
+								{{ team.name }}
+							</sc-button>
 						</div>
 					</div>
 
@@ -306,51 +327,11 @@ function editUserStore() {
 								:key="`team-${user.id}-${team.id}`"
 								:active="!!user.teams.find(search=>search.name===team.name)"
 								xs
-								@click="updateTeam(user.id, team.id)"
+								@click="updateUserTeam(user.id, team.id)"
 							>
 								{{ team.name }}
 							</sc-button>
 						</div>
-
-						<!-- édition du nom / prénom -->
-						<sc-button
-							xs
-							@click="editUser(user.id)"
-						>
-							éditer
-						</sc-button>
-					</div>
-				</div>
-			</div>
-
-			<!-- gestion des équipes -->
-			<div class="mt-10 bg-content py-3 px-5 border">
-				<h2 class="text-xl mb-5">
-					gestion des équipes
-				</h2>
-				<form-maker
-					v-model="newTeam"
-					label="nouvelle équipe"
-					name="newTeam"
-				/>
-				<sc-button
-					type="add"
-					xs
-					@click="storeTeam"
-				>
-					créer
-				</sc-button>
-
-				<div>
-					<h3>supprimer une équipe</h3>
-					<div class="flex gap-3">
-						<confirm-button
-							v-for="team of theTeams"
-							:key="`destroy-${team.id}`"
-							@confirm="destroyTeam(team.id)"
-						>
-							{{ team.name }}
-						</confirm-button>
 					</div>
 				</div>
 			</div>

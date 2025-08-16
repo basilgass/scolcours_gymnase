@@ -38,8 +38,7 @@ Route::middleware('admin')
 	          ->group(function () {
 		          Route::get('/', [AdminController::class, 'chapters'])
 		               ->name('index');
-		          Route::patch('/{chapter:slug}', [AdminController::class, 'activate'])
-		               ->name('toggleActive');
+
 	          });
 
 
@@ -49,8 +48,6 @@ Route::middleware('admin')
 		          Route::get('/', [AdminController::class, 'challenges'])
 		               ->name('index');
 	          });
-
-
 
 	     Route::prefix('widgets')
 	          ->as('widgets.')
@@ -73,6 +70,12 @@ Route::middleware('admin')
 		               ->name('destroy');
 	          });
 
+		 Route::prefix('courses')
+			 ->as('courses.')
+			 ->group(function(){
+				 Route::get('/', [AdminController::class, 'courses'])
+				      ->name('index');
+			 });
 
 	     Route::prefix('illustrations')
 	          ->as('illustrations.')
@@ -93,3 +96,17 @@ Route::middleware('admin')
 	     Route::get('/{dev}', [DevController::class, 'show'])
 	          ->name('show');
      });
+
+
+Route::middleware('api')
+	->prefix('api')
+	->as('api')
+	->group(function(){
+		Route::middleware('admin')
+			->prefix('admin')
+			->as('admin')
+			->group(function(){
+
+
+			});
+	});

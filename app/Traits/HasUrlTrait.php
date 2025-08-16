@@ -3,6 +3,7 @@
 namespace App\Traits;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Support\Facades\Route;
 use Str;
 
 trait HasUrlTrait
@@ -12,9 +13,16 @@ trait HasUrlTrait
 		return Attribute::get(function () {
 			$className = class_basename($this);
 			$routeBaseName = Str::plural(Str::snake($className));
-			$routeName = $routeBaseName . '.show';
 
-			return route($routeName, $this);
+			$prefixes = ['student.', 'admin.', ''];
+
+			foreach ($prefixes as $prefix) {
+				$routeName = $prefix . $routeBaseName . '.show';
+				if (Route::has($routeName)) {
+					return route($routeName, $this);
+				}
+			}
+			return null;
 		});
 	}
 }

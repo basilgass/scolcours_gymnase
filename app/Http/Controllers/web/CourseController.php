@@ -4,12 +4,9 @@ namespace App\Http\Controllers\web;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CourseResource;
-use App\Models\Challenge;
+use App\Http\Resources\UserTeamResource;
 use App\Models\Course;
-use App\Models\Deck;
-use App\Models\Generator;
-use App\Models\Post;
-use Illuminate\Http\Request;
+use App\Models\Team;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
@@ -22,17 +19,22 @@ class CourseController extends Controller
 		// L'utilisateur n'est pas connecté
 		if (!$user) {
 			return Inertia::render("Courses/CourseIndex", [
-				"courses" => []
+				"teamCourses" => [],
+				"userCourses" => []
 			]);
 		}
 
-		$teamCourses = $user->teams->flatMap->courses;
-		$userCourses = $user->courses;
+		if ($user->admin and 1 === 0) {
+			// Version si admin
+			$teamCourses = Course::all();
+		} else {
+			$user->load(['teams', 'teams.courses']);
+			$teamCourses = $user->courses;
+		}
 
-		// Version si admin
 		return Inertia::render("Courses/CourseIndex", [
+			"teams"       => UserTeamResource::collection($user->teams),
 			"teamCourses" => CourseResource::collection($teamCourses),
-			"userCourses" => CourseResource::collection($userCourses)
 		]);
 	}
 
@@ -46,20 +48,20 @@ class CourseController extends Controller
 			abort(403, 'Accès non autorisé.');
 		}
 
+		$matchingTeam = $course->teams->intersect($user->teams)->first();
+
 		// Charge les leçons et le modèle polymorphe lessonable
-		$course->load(['lessons.lessonable']);
+		$course->load([
+			'lessons.lessonable',
+			'lessons.calendars' => function ($query) use ($matchingTeam) {
+				$query->where('team_id', $matchingTeam->id);
+			}
+		]);
 
 		return Inertia::render("Courses/CourseShow", [
+			"team"   => UserTeamResource::make($matchingTeam),
 			"course" => CourseResource::make($course),
 		]);
-	}
-
-	public function create()
-	{
-	}
-
-	public function store(Request $request)
-	{
 	}
 
 	public function edit(Course $course)
@@ -73,16 +75,19 @@ class CourseController extends Controller
 		]);
 	}
 
-	public function update(Request $request, $id)
+	public function showTeam(Course $course, Team $team)
 	{
+		$course->load([
+			'lessons.lessonable',
+			'lessons.calendars' => function ($query) use ($team) {
+				$query->where('team_id', $team->id);
+			}
+		]);
+
+		return Inertia::render("Courses/CourseShow", [
+			"team"   => UserTeamResource::make($team),
+			"course" => CourseResource::make($course),
+		]);
 	}
 
-	public function destroy($id)
-	{
-	}
-
-	public function addLesson(Course $course)
-	{
-
-	}
 }

@@ -28,32 +28,31 @@ class TeamApiController extends Controller
 		return TeamResource::make($team);
 	}
 
-	public function store(Request $request): Model|Team
+	public function store(Request $request)
 	{
 		$validated = $request->validate([
 			'name' => ['string', 'min:2', 'max:100']
 		]);
 
-		return Team::create(["name" => $validated['name']]);
+		$team = Team::create(["name" => $validated['name']]);
+		return TeamResource::make($team);
 	}
 
 	public function destroy(Team $team)
 	{
-		$name = $team->name;
+		$id = $team->id;
 		$team->delete();
-		return $name;
+		return $id;
 	}
 
-	public function toggle(User $user, Team $team): array
+	public function toggle(Team $team, User $user): array
 	{
-		$updatedTeam = $team->name;
-
 		if ($user->teams->contains($team->id)) {
 			$user->teams()->detach($team->id);
-			$updatedTeam = null;
 		} else {
 			$user->teams()->attach($team);
 		}
+
 		$user->save();
 		$user->refresh();
 

@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\api\ChapterApiController;
 use App\Http\Controllers\web\ChapterController;
 use App\Models\Chapter;
+use Illuminate\Support\Facades\Route;
 
 Route::middleware('web')
      ->group(function () {
@@ -89,6 +91,8 @@ Route::middleware('api')
 		          Route::prefix('chapters')
 		               ->as('chapters.')
 		               ->group(function () {
+			               Route::patch('/{chapter:slug}/toggleActiveState', [ChapterApiController::class, 'activate'])
+			                    ->name('toggleActive');
 			               Route::post('{chapter}/currentPost', [ChapterApiController::class, 'updateCurrentPost'])
 			                    ->name('currentPost');
 			               Route::patch('{chapter}/ordering', [ChapterApiController::class, 'updatePostsOrder'])

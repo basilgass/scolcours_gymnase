@@ -48,5 +48,9 @@ const iconValue = computed(() => {
 			@focus="emits('focus')"
 			@blur="emits('blur')"
 		>
+
+		<template #button>
+			<slot name="button" />
+		</template>
 	</form-maker-wrapper>
 </template>

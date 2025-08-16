@@ -1,56 +1,57 @@
 <script setup lang="ts">
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
-import { flashInterface } from "@/types"
-import { ThemeInterface } from "@/types/modelInterfaces.ts"
+import {flashInterface} from "@/types"
+import {ThemeInterface} from "@/types/modelInterfaces.ts"
 import axios from "axios"
-import { inject, PropType, ref } from "vue"
+import {inject, PropType, ref} from "vue"
 
-defineOptions({ layout: LayoutMain })
+defineOptions({layout: LayoutMain})
 const flash = inject<flashInterface>("flash")
 
 const props = defineProps({
-	allThemes: { type: Object as PropType<ThemeInterface[]>, required: true },
-	title: { type: String, required: true },
+	allThemes: {type: Object as PropType<ThemeInterface[]>, required: true},
+	title: {type: String, required: true},
 })
 
 const title = ref(props.title),
-	themes = ref(props.allThemes.map(theme=>{
+	themes = ref(props.allThemes.map(theme => {
 		theme.enabled = !!theme.enabled
 		return theme
 	}))
-function saveConfig () {
-	console.log('SAVE CONFIG')
-		axios
-			.post(route("admin.config.update"), {
-				title: title.value,
-				themes: themes.value,
-				_method: "PATCH",
-			})
-			.then(() => {
-				flash.success(
-					"les modifications de configuration ont bien été changées !"
-				)
-			})
-			.catch((err) => {
-				console.warn(err)
-			})
-	}
+
+function saveConfig() {
+	axios
+		.post(route("admin.config.update"), {
+			title: title.value,
+			themes: themes.value,
+			_method: "PATCH",
+		})
+		.then(() => {
+			flash.success(
+				"les modifications de configuration ont bien été changées !"
+			)
+		})
+		.catch((err) => {
+			console.warn(err)
+		})
+}
+
 function sortEvent() {
-		axios
-			.post(route("admin.config.updateOrder"), {
-				_method: "PATCH",
-				order: themes.value.map((x, index) => {
-					return { id: x.id, order: index + 1 }
-				}),
-			})
-			.then(() => {
-				flash.success("L'ordre des thèmes à bien été enregistré !")
-			})
-			.catch((res) => {
-				console.warn("update ordering order: ", res)
-			})
-	}
+	axios
+		.post(route("admin.config.updateOrder"), {
+			_method: "PATCH",
+			order: themes.value.map((x, index) => {
+				return {id: x.id, order: index + 1}
+			}),
+		})
+		.then(() => {
+			flash.success("L'ordre des thèmes à bien été enregistré !")
+		})
+		.catch((res) => {
+			console.warn("update ordering order: ", res)
+		})
+}
 </script>
 <template>
 	<main class="scolcours-container">

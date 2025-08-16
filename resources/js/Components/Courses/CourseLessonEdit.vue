@@ -1,16 +1,45 @@
 <script setup lang="ts">
 
 import {LessonInterface} from "@/types/modelInterfaces.ts"
+import {inject, ref} from "vue"
+import ScButton from "@/Components/Ui/scButton.vue"
+import {AxiosErrorMessage, flashInterface} from "@/types"
+import axios from "axios"
 
-defineProps<{
+const props = defineProps<{
 	lesson: LessonInterface
 }>()
+
+const flash = inject<flashInterface>('flash')
+
+const scoreRules = ref(props.lesson.scoreRules)
+
+function updateLesson() {
+	axios
+		.patch(route('api.admin.lessons.update', {lesson: props.lesson.id}), {
+			scoreRules: scoreRules.value
+		})
+		.then(() => {
+			flash.success('La leçon a bien été mise à jour.')
+		})
+		.catch((err: AxiosErrorMessage) => {
+			console.warn(err.response.data.message)
+		})
+}
 
 // TODO: edition d'un cours
 </script>
 
 <template>
 	<div class="flex max-w-sm gap-3">
+		<div>
+			<sc-button
+				type="save"
+				icon
+				xs
+				@click="updateLesson"
+			/>
+		</div>
 		<div class="font-code">
 			{{ lesson.scoreRules }}
 		</div>

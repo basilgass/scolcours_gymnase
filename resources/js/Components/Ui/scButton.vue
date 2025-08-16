@@ -14,6 +14,7 @@ const props = withDefaults(defineProps<{
 	xs?: boolean
 	xl?: boolean
 	p0?: boolean
+	noLabel?: boolean
 }>(), {
 	active: false,
 	theme: false,
@@ -24,6 +25,7 @@ const props = withDefaults(defineProps<{
 	p0: false,
 	xs: false,
 	xl: false,
+	noLabel: false
 })
 
 defineEmits<{
@@ -95,7 +97,7 @@ const iconClass = computed<string>(()=>{
 			:class="iconClass"
 		/>
 		<slot>
-			{{ buttonConfig[type].label }}
+			<span v-if="!noLabel">{{ buttonConfig[type].label }}</span>
 		</slot>
 	</InertiaLink>
 
@@ -110,7 +112,7 @@ const iconClass = computed<string>(()=>{
 			:class="iconClass"
 		/>
 		<slot>
-			{{ buttonConfig[type].label }}
+			<span v-if="!noLabel">{{ buttonConfig[type].label }}</span>
 		</slot>
 	</button>
 </template>

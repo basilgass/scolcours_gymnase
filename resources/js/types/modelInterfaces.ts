@@ -1,9 +1,12 @@
 import {ComputedRef, Ref} from "vue"
-import {lessonableClassName, lessonableModel, LessonScoreRulesInterface} from "@/types/lessonInterfaces.ts"
+import {lessonableClassName, LessonScoreRulesInterface} from "@/types/lessonInterfaces.ts"
 import {
 	scoreableClassName,
-	ScoreCardDataInterface, ScoreDataInterface, ScoreDeckDataInterface,
-	ScoreGeneratorDataInterface, ScoreLessonDataInterface,
+	ScoreCardDataInterface,
+	ScoreDataInterface,
+	ScoreDeckDataInterface,
+	ScoreGeneratorDataInterface,
+	ScoreLessonDataInterface,
 	ScoreQuestionDataInterface
 } from "@/types/scoreInterfaces.ts"
 
@@ -13,7 +16,7 @@ export interface UserInterface {
 	firstname: string;
 	fullname: string;
 	email: string;
-	teams: { id: number, name: string }[];
+	teams?: { id: number, name: string }[];
 }
 
 export interface ChapterInterface {
@@ -270,11 +273,20 @@ export interface WidgetPropsInterface {
 	code: string;
 }
 
-
 export interface TeamInterface {
 	id: number,
 	name: string,
 	users: UserInterface[]
+}
+
+export interface UserTeamInterface {
+	id: number,
+	name: string,
+	calendar: {
+		id: number,
+		day: number,	// 0, 1, 2, 3, 4, 5, 6, 7
+		time: string,    // hh:mm:ss
+	}[]
 }
 
 export interface PostQuestionsStatsInterface {
@@ -362,7 +374,8 @@ export interface CourseInterface {
 	slug: string,
 	theme_id: number,
 	block: BlockInterface,
-	lessons: LessonInterface[]
+	lessons: LessonInterface[],
+	teams?: UserTeamInterface[],
 	created_at: string,
 	updated_at: string,
 }
@@ -375,7 +388,9 @@ export interface LessonInterface<T extends LessonScoreRulesInterface = LessonSco
 	lessonable_id: number | null,
 	lessonable_type: lessonableClassName | null,
 	scoreRules: T,
-	user: ScoreInterface<ScoreLessonDataInterface>;
+	user: ScoreInterface<ScoreLessonDataInterface>,
+	scheduled_at: string,
+	remaining_time: string,
 	created_at: string,
 	updated_at: string,
 }

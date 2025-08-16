@@ -143,11 +143,6 @@ class User extends Authenticatable
 		return $this->hasMany(Score::class);
 	}
 
-	public function courses(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
-	{
-		return $this->belongsToMany(Course::class);
-	}
-
 	public function admin(): Attribute
 	{
 		return Attribute::get(function () {
@@ -155,13 +150,11 @@ class User extends Authenticatable
 		});
 	}
 
-	public function allCourses(): Attribute
+	public function courses(): Attribute
 	{
-		return Attribute::get(
-			function () {
-				$directCourses = $this->courses;
-				$teamCourses = $this->teams->flatMap->courses;
-				return $directCourses->merge($teamCourses)->unique('id')->values();
-			});
+		return Attribute::get(function(){
+			return $this->teams->flatMap->courses->unique('id');
+		});
 	}
+
 }

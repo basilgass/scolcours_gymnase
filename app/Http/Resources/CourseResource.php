@@ -18,6 +18,7 @@ class CourseResource extends JsonResource
 			'block'      => BlockResource::make($this->blocks[0]),
 			'lessons'    => LessonResource::collection($this->whenLoaded('lessons')),
 			'theme_id'   => $this->theme_id,
+			'teams'      => $this->whenLoaded('teams'),
 			'created_at' => $this->created_at,
 			'updated_at' => $this->updated_at,
 		];

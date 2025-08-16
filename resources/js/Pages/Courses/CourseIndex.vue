@@ -1,7 +1,7 @@
 <script setup lang="ts">
 
 import LayoutMain from "@/Layouts/LayoutMain.vue"
-import {CourseInterface} from "@/types/modelInterfaces.ts"
+import {CourseInterface, UserTeamInterface} from "@/types/modelInterfaces.ts"
 import ScButton from "@/Components/Ui/scButton.vue"
 import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
 import axios from "axios"
@@ -12,13 +12,16 @@ import {computed, ref} from "vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import {slugify} from "@/scolcours.ts"
 import CourseCard from "@/Components/Courses/CourseCard.vue"
+import CourseCalendar from "@/Components/Courses/CourseCalendar.vue"
 
 defineOptions({layout: LayoutMain})
 
-defineProps<{
+const props = defineProps<{
+	teams: UserTeamInterface[],
 	teamCourses: CourseInterface[],
-	userCourses: CourseInterface[]
+	// userCourses: CourseInterface[]
 }>()
+
 
 // TODO: La création d'un objet avec titre + slug peut être généraliser à plusieurs autres (chapitres, posts, ... à l'aide éventuellement d'un FormMakerDialog ?
 const showCreate = ref(false)
@@ -33,7 +36,6 @@ function addCourse() {
 		slug: newCourseSlug.value
 	})
 		.then((res: { data: CourseInterface }) => {
-			console.log(res.data)
 			router.visit(route('admin.courses.edit', {id: res.data.id}))
 		})
 		.catch((err: AxiosErrorMessage) => {
@@ -77,38 +79,16 @@ function addCourse() {
 				<div>Droite</div>
 			</div>
 
-			<div class="grid grid-cols-1 md:grid-cols-2 gap-10 mt-10">
-				<div>
-					<h2 class="text-lg md:text-2xl mb-5">
-						Cours de classe
-					</h2>
-					<div class="flex flex-col gap-3">
-						<course-card
-							v-for="course in teamCourses"
-							:key="`team-${course.id}`"
-							:course
-						/>
-					</div>
-				</div>
-				<div>
-					<h2 class="text-lg md:text-2xl mb-5">
-						Cours personnalisés
-					</h2>
-					<div
-						v-if="userCourses.length===0"
-					>
-						Vous n'avez pas de cours personnalisé.
-					</div>
-					<div
-						v-else
-						class="flex flex-col gap-3"
-					>
-						<course-card
-							v-for="course in userCourses"
-							:key="`perso-${course.id}`"
-							:course
-						/>
-					</div>
+			<div>
+				<h2 class="text-lg md:text-2xl mb-5">
+					Cours de classe
+				</h2>
+				<div class="flex flex-col gap-3">
+					<course-card
+						v-for="course in teamCourses"
+						:key="`team-${course.id}`"
+						:course
+					/>
 				</div>
 			</div>
 

@@ -14,8 +14,8 @@ const props = defineProps<{
 let PiGraph: PiDraw
 
 const emits = defineEmits<{
-	drawClick: [PiGrah: PiDraw],
-	update: [PiGrah: PiDraw],
+	drawClick: [{ draw: PiDraw, mouse: MouseEvent }],
+	update: [draw: PiDraw],
 }>()
 
 
@@ -49,8 +49,8 @@ watch(() => props.parameters, () => {
 })
 
 
-const drawMouseUp = function () {
-	emits("drawClick", PiGraph)
+const drawMouseUp = function (event: MouseEvent) {
+	emits("drawClick", {draw: PiGraph, mouse: event})
 }
 
 // Default settings

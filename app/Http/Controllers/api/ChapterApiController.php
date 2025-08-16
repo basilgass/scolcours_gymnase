@@ -177,4 +177,17 @@ class ChapterApiController extends Controller
 			"title" => $chapter->title,
 		];
 	}
+
+	public function activate(Chapter $chapter, Request $request)
+	{
+		$request->validate([
+			'active' => ['required', 'boolean']
+		]);
+
+		// Update the chapter
+		$chapter->active = $request->active;
+		$chapter->save();
+
+		return ChapterResource::make($chapter);
+	}
 }
