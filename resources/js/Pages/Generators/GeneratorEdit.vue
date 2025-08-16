@@ -10,6 +10,7 @@ import axios from "axios"
 import {inject, ref} from "vue"
 import GeneratorsExamples from "@/Components/Elements/GeneratorsExamples.vue"
 import ScButton from "@/Components/Ui/scButton.vue"
+import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 
 // REFACTOR: retravailler les générateurs.
 
@@ -129,6 +130,11 @@ function historyBack() {
 					label-class="w-[110px]"
 					name="generatorBody"
 					type="textarea"
+				/>
+
+				<markdown-it
+					:text="theGenerator.body"
+					class="bg-content ml-[110px]"
 				/>
 			</div>
 
