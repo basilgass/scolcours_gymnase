@@ -51,6 +51,7 @@ const lessons = ref<LessonInterface[]>(props.course.lessons)
 				:key="`lesson-${lesson.id}`"
 			>
 				<lesson-card
+					:course
 					:lesson
 					:team
 				/>

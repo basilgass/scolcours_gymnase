@@ -1,7 +1,7 @@
 <script setup lang="ts">
 
 import Card from "@/Components/Ui/Card.vue"
-import {LessonInterface, UserTeamInterface} from "@/types/modelInterfaces.ts"
+import {CourseInterface, LessonInterface, UserTeamInterface} from "@/types/modelInterfaces.ts"
 import {computed, inject, ref} from "vue"
 import dayjs from "dayjs"
 import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
@@ -9,8 +9,10 @@ import FormMaker from "@/Components/Form/FormMaker.vue"
 import axios from "axios"
 import {AxiosErrorMessage, flashInterface} from "@/types"
 import LessonTeamCalendar from "@/Pages/Courses/LessonTeamCalendar.vue"
+import ScButton from "@/Components/Ui/scButton.vue"
 
 const props = defineProps<{
+	course: CourseInterface
 	lesson: LessonInterface,
 	team: UserTeamInterface
 }>()
@@ -31,7 +33,11 @@ const scheduled_at = ref(
 )
 
 
-function updateLesson() {
+function updateLesson(value?: string) {
+	if (value) {
+		scheduled_at.value = value
+	}
+
 	axios
 		.patch(route('api.admin.teams.lessons.update', {
 			lesson: props.lesson.id,
@@ -51,10 +57,19 @@ function updateLesson() {
 <template>
 	<Card>
 		<template #header>
-			<h3
-				v-katex.auto="lesson.title"
-				class="text-lg md:text-xl"
-			/>
+			<div class="flex justify-between">
+				<h3
+					v-katex.auto="lesson.title"
+					class="text-lg md:text-xl"
+				/>
+				<sc-button
+					xs
+					:href="route('students.lessons.show', {course: course.slug, lesson: lesson.id})"
+				>
+					<i class="bi bi-eye"> voir
+					</i>
+				</sc-button>
+			</div>
 		</template>
 		<div>
 			<p
@@ -91,8 +106,8 @@ function updateLesson() {
 				<div>
 					<lesson-team-calendar
 						:calendar="team.calendar"
-						@button-click="scheduled_at=$event"
-						:n="3"
+						@button-click="updateLesson($event)"
+						:n="4"
 					/>
 				</div>
 			</div>
