@@ -126,8 +126,6 @@ function switchKeyboard(value?: boolean): void {
 	}
 
 	showDimensionKeyboard.value = !showDimensionKeyboard.value
-
-
 }
 
 function onKeyboardChange(event: KeyboardInputInterface): void {
@@ -211,7 +209,7 @@ onMounted(() => {
 		</sc-button>
 
 		<pi-matrix
-			:matrix="values.map(row=>row.map(x=>new Polynom(x)))"
+			:matrix="values.map(row=>row.map(x=>x===''?null:new Polynom(x)))"
 			:dimension="dimension.columns"
 			selection-mode="item"
 			v-model:aij="aij"

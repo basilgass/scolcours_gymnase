@@ -114,7 +114,7 @@ function onItemSelection(rowIndex: number, colIndex: number) {
 				<td
 					v-for="(item, colIndex) in row"
 					:key="`a_${rowIndex}${colIndex}`"
-					v-katex.inline="item.tex"
+					v-katex.inline="item?.tex?? '?'"
 					:class="{
 						'border-l border-red-500 px-2': colIndex===dimension,
 						'outline bg-green-300/50 outline-green-600 rounded-xl': (selectionMode==='item' && aij?.row===rowIndex && aij?.column===colIndex),
