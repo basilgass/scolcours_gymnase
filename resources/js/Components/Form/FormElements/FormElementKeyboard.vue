@@ -120,20 +120,24 @@ const currentRows = computed(() => {
 				@keydown.tab.prevent="tabber"
 				@current-line="currentLine = $event"
 			/>
-			<div class="font-code text-xs">
-				laisser une ligne vide entre deux claviers<br>
-				@if &lt;réponse&gt;?&lt;message&gt;
-			</div>
-			<div class="flex gap-3 mt-2">
-				<div
-					class="font-code cursor-pointer text-xs"
-					v-for="k in availableKeyboards"
-					:key="`available-${k}`"
-					@click="inp.value=k"
-				>
-					{{ k }}
+			<div class="font-code text-xs flex flex-col gap-3">
+				<p>laisser une ligne vide entre deux claviers</p>
+				<ul class="list list-inside list-disc">
+					<li>@if &lt;réponse&gt;?&lt;message&gt;<br></li>
+					<li>touche supplémentaire: [valeur] ou [asciiMath]||[label]</li>
+				</ul>
+				<div class="flex gap-3">
+					<div
+						class="font-code cursor-pointer text-xs hover:font-semibold"
+						v-for="k in availableKeyboards"
+						:key="`available-${k}`"
+						@click="inp.value=k"
+					>
+						{{ k }}
+					</div>
 				</div>
 			</div>
+
 
 			<transition name="fade">
 				<div

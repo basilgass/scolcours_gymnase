@@ -9,6 +9,7 @@ Route::middleware('web')
 	     // Admin routes
 	     Route::middleware('admin')
 	          ->as('admin.')
+		     ->prefix('admin')
 	          ->group(function () {
 		          Route::resource('generators', GeneratorController::class)
 		               ->only(['index', 'show', 'edit']);

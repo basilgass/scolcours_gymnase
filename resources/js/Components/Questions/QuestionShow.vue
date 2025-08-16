@@ -24,7 +24,6 @@ import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
 import {provide, ref, useTemplateRef} from "vue"
 import type {QuestionInterface} from "@/types/modelInterfaces.ts"
 import {
-	keyboardComponentType,
 	questionDataInterface,
 	questionResultInterface,
 	questionUserInputDisplayType

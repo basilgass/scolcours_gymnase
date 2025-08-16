@@ -42,7 +42,14 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Generator extends Model
 {
-	protected $guarded = [];
+	protected $fillable = [
+		"theme_id",
+		"slug",
+		"template",
+		"keyboard",
+		"code",
+	];
+
 	use HasScoresTrait;
 
 	public function theme(): \Illuminate\Database\Eloquent\Relations\BelongsTo

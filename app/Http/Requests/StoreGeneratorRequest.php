@@ -11,6 +11,9 @@ class StoreGeneratorRequest extends FormRequest
 		return [
 			'theme_id' => ['required', 'exists:themes,id'],
 			'slug'     => ['required'],
+			'code'     => ['required'],
+			'template' => ['required'],
+			'keyboard' => ['required'],
 		];
 	}
 
