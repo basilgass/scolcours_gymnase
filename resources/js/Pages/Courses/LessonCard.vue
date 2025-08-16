@@ -91,6 +91,7 @@ function updateLesson() {
 				<div>
 					<lesson-team-calendar
 						:calendar="team.calendar"
+						@button-click="scheduled_at=$event"
 						:n="3"
 					/>
 				</div>

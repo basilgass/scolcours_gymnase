@@ -2,23 +2,45 @@
 
 import {computed} from "vue"
 import dayjs from "dayjs"
+import ScButton from "@/Components/Ui/scButton.vue"
 
 const props = defineProps<{
 	calendar: { id: number, day: number, time: string }[],
 	n: number
 }>()
 
+const emits = defineEmits<{
+	buttonClick: [value: string]
+}>()
+
 // Obtenir le jour et l'heure actuels
 const now = dayjs()
 const currentDay = now.day() === 0 ? 7 : now.day() // dayjs: 0=dimanche, ici 7=dimanche
-const currentTime =now.format("HH:mm")
+const currentTime = now.format("HH:mm")
+const lessonDuration = 45
+
+function buttonLabel(date: string, time: string, before: boolean): string {
+	return dayjs(date + 'T' + time)
+		.add(before ? 0 : lessonDuration, 'minute')
+		.locale('fr')
+		.format('dddd DD.MM.YYYY, à HH[h]mm')
+
+}
 
 // Trouver le cours en cours
 function isOngoing(course: { day: number, time: string }) {
 	if (course.day !== currentDay) return false
 	const start = dayjs(`${now.format("YYYY-MM-DD")}T${course.time}`)
-	const end = start.add(45, "minute")
+	const end = start.add(lessonDuration, "minute")
 	return now.isAfter(start) && now.isBefore(end)
+}
+
+function onButtonClick(value: { id: number, day: number, time: string, date: string }, before: boolean) {
+	const datetimeLocal = dayjs(value.date + 'T' + value.time)
+		.add(before ? 0 : lessonDuration, 'minute')
+		.format('YYYY-MM-DDTHH:mm')
+
+	emits('buttonClick', datetimeLocal)
 }
 
 const nextCourses = computed(() => {
@@ -75,13 +97,26 @@ const nextCourses = computed(() => {
 	<div>
 		<template v-if="nextCourses.length">
 			<div class="flex gap-3">
-				<button
+				<div
 					v-for="(course, idx) in nextCourses"
 					:key="course.id"
-					:class="isOngoing(course) && idx===0?'bg-green-200':'bg-red-200'"
+					class="flex flex-col gap-3"
 				>
-					{{ course.date }} / {{ course.day }} à {{ course.time }}
-				</button>
+					<sc-button
+						xs
+						:outline="isOngoing(course) && idx===0"
+						@click="onButtonClick(course, true)"
+					>
+						{{ buttonLabel(course.date, course.time, true) }}
+					</sc-button>
+					<sc-button
+						xs
+						:outline="isOngoing(course) && idx===0"
+						@click="onButtonClick(course, false)"
+					>
+						{{ buttonLabel(course.date, course.time, false) }}
+					</sc-button>
+				</div>
 			</div>
 		</template>
 		<template v-else>
@@ -90,12 +125,3 @@ const nextCourses = computed(() => {
 	</div>
 </template>
 
-<style scoped>
-.btn {
-	margin: 0.5em;
-	padding: 0.5em 1em;
-	background: #e0e7ff;
-	border: 1px solid #6366f1;
-	border-radius: 4px;
-}
-</style>

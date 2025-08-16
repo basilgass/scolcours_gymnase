@@ -515,6 +515,7 @@ function updateLessonsOrder() {
 						<course-lesson-edit
 							:lesson="element"
 						/>
+
 						<template #footer>
 							<div class="flex justify-between">
 								<div />
