@@ -78,7 +78,7 @@ function addGenerator() {
 			:item-title="(item)=>item.title===''?item.slug:item.title"
 			:list="generators"
 			:route-data="(item) => [item.id]"
-			:route-name="'generators.edit'"
+			:route-name="'admin.generators.edit'"
 			title="générateurs"
 		/>
 	</section>

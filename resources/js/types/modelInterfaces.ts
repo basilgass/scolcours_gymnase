@@ -173,7 +173,7 @@ export interface GeneratorInterface {
 	keyboard: string;
 	code: string;
 	order: number;
-	user: ScoreInterface<ScoreGeneratorDataInterface>
+	user?: ScoreInterface<ScoreGeneratorDataInterface>
 }
 
 export interface ChallengeScoreInterface {
