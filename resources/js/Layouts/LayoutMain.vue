@@ -5,9 +5,9 @@ import FlashMessage from "@/Components/Ui/FlashMessage.vue"
 import {flashConfig, flashMessageInterface} from "@/types"
 import {ThemeInterface} from "@/types/modelInterfaces.ts"
 import {Head, usePage} from "@inertiajs/vue3"
-import {computed, provide, ref} from "vue"
+import {computed, provide, ref, watch} from "vue"
 
-withDefaults(defineProps<{
+const props = withDefaults(defineProps<{
 	theme?: Partial<ThemeInterface>
 }>(), {
 	theme: () => {
@@ -17,6 +17,12 @@ withDefaults(defineProps<{
 		}
 	}
 })
+
+const currentTheme = ref(props.theme ? props.theme: {title: "Scolcours", slug: "main"})
+watch(()=>props.theme, ()=>{
+	currentTheme.value = props.theme ? props.theme: {title: "Scolcours", slug: "main"}
+})
+
 
 const flashMessages = ref<flashMessageInterface[]>([])
 

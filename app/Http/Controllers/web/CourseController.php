@@ -43,7 +43,10 @@ class CourseController extends Controller
 		$user = Auth::user();
 
 		// On vérifie que l'utilisateur a le droit d'afficher le cours.
-		if (!$user || (!$user->admin && !$user->courses->contains($course->id))) {
+		if (
+			!$user ||
+			(!$user->admin && !$user->courses->pluck('id')->contains($course->id))
+		) {
 			// TODO: gérer les erreurs de navigation de manière plus classe
 			abort(403, 'Accès non autorisé.');
 		}

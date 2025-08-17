@@ -120,6 +120,18 @@ const fixedDimension = computed<[number, number]>(() => {
 
 
 function switchKeyboard(value?: boolean): void {
+	if(hasFixedDimension.value){
+		// Les dimensions sont fixées
+		showDimensionKeyboard.value = false
+		return
+	}
+
+	if(!dimension.value.columns || !dimension.value.rows){
+		// Si une des dimensions n'est pas données, on affiche le clavier des dimensions.
+		showDimensionKeyboard.value = true
+		return
+	}
+
 	if (value !== undefined) {
 		showDimensionKeyboard.value = value
 		return
@@ -144,7 +156,18 @@ function updateDimension(value: string): void {
 	if (m < 1) {
 		m = null
 	}
+
 	if (n < 1) {
+		n = null
+	}
+
+	if (m >= 10){
+		// on évite les valeurs trop grandes.
+		m = null
+	}
+
+	if(n >= 10) {
+		// on évite les valeurs trop grandes.
 		n = null
 	}
 

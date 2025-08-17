@@ -12,7 +12,7 @@ function getCurrentTheme(): string {
 const keys = ["bg", "text", "border", "outline", "gradient", "from", "to"]
 
 function clearThemeClasses(el: HTMLElement): void {
-	const themes = getThemes()
+	const themes = ['scolcours', ...getThemes()]
 
 	keys.forEach((key) => {
 		themes.forEach((theme) => {

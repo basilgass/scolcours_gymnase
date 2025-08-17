@@ -4,8 +4,6 @@
 >
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 import ScButton from "@/Components/Ui/scButton.vue"
-import Card from "@/Components/Ui/Card.vue"
-import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 import {CourseInterface, TeamInterface} from "@/types/modelInterfaces.ts"
 import {computed} from "vue"
 import CourseCard from "@/Components/Courses/CourseCard.vue"
@@ -15,6 +13,7 @@ defineOptions({layout: LayoutMain})
 // TODO: améliorer le dashboard
 const props = defineProps<{
 	teams: TeamInterface[],
+	courses: CourseInterface,
 	// teamCourses: CourseInterface[]
 	// userCourses: CourseInterface[]
 }>()
@@ -49,6 +48,19 @@ const teamsName = computed(() => props.teams.map(team => team.name).join(', '))
 				équipes
 			</h3>
 			<div>{{ teamsName }}</div>
+		</div>
+
+		<div class="mt-24">
+			<h3 class="text-xl uppercase font-extralight">
+				Liste des cours
+			</h3>
+			<div class="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
+				<course-card
+					v-for="course in courses"
+					:key="`course-${course.id}`"
+					:course
+				/>
+			</div>
 		</div>
 	</section>
 </template>
