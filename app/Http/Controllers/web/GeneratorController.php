@@ -24,6 +24,14 @@ class GeneratorController extends Controller
 //		]);
 	}
 
+	public function show(Generator $generator)
+	{
+		return Inertia::render("Generators/GeneratorShow",
+			[
+				"generator"  => GeneratorResource::make($generator),
+			]
+		);
+	}
 
 	public function edit(Generator $generator)
 	{

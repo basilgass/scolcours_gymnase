@@ -5,10 +5,8 @@ import type {GeneratorInterface, QuestionInterface} from "@/types/modelInterface
 import {computed, onMounted, ref} from "vue"
 import {useStoreScore} from "@/stores/useStoreScore.ts"
 import {ScoreGeneratorDataInterface} from "@/types/scoreInterfaces.ts"
-import {ChallengeAnswerInterface} from "@/types/challengeInterface.ts"
 import {questionResultInterface} from "@/Components/Questions/QuestionInterface.ts"
 
-// TODO: remove the
 const props = defineProps<{
 	generator: GeneratorInterface
 }>()

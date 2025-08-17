@@ -6,6 +6,9 @@ use App\Http\Controllers\web\GeneratorController;
 Route::middleware('web')
      ->group(function () {
 
+	     Route::resource('generators', GeneratorController::class)
+	          ->only(['show']);
+
 	     // Admin routes
 	     Route::middleware('admin')
 	          ->as('admin.')
