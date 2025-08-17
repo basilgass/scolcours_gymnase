@@ -12,6 +12,7 @@ class updateCourseRequest extends FormRequest
 			'theme_id' => ['required', 'exists:themes,id'],
 			'slug'     => ['required'],
 			'title'    => ['required'],
+			'body'     => ['nullable', 'string'],
 		];
 	}
 

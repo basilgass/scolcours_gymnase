@@ -32,11 +32,11 @@ class CourseApiController extends Controller
 
 	public function update(updateCourseRequest $request, Course $course)
 	{
-		dump($request->validated());
-		return
-			$course->update($request->validated());
-		//		$course->refresh();
+		$course->update($request->validated());
+		$course->blocks[0]->body = $request->has('body') ? $request->input('body') : null;
+		$course->blocks[0]->save();
 
+		$course->refresh();
 		return CourseResource::make($course);
 	}
 

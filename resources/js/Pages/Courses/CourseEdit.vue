@@ -24,6 +24,7 @@ import ScButton from "@/Components/Ui/scButton.vue"
 import {lessonableClassName, LessonScoreRulesInterface} from "@/types/lessonInterfaces.ts"
 import axios from "axios"
 import {FormElementType} from "@/Components/Form/FormMakerInterface.ts"
+import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 
 defineOptions({layout: LayoutMain})
 
@@ -40,7 +41,8 @@ function updateCourse() {
 	axios.patch(route('api.admin.courses.update', {course: theCourse.value.id}), {
 		title: theCourse.value.title,
 		slug: theCourse.value.slug,
-		theme_id: theCourse.value.theme_id
+		theme_id: theCourse.value.theme_id,
+		body: theCourse.value.block.body,
 	})
 		.then((res: AxiosResponseModel<CourseInterface>) => {
 			console.log(res.data)
@@ -264,7 +266,7 @@ function updateLessonsOrder() {
 		/>
 
 		<Card
-			class="max-w-xl mx-auto"
+			class="max-w-2xl mx-auto"
 		>
 			<div class="flex flex-col gap-3 mb-3">
 				<form-maker v-model="theCourse.title" />
@@ -279,6 +281,18 @@ function updateLessonsOrder() {
 					theme-key="id"
 					v-model="theCourse.theme_id"
 				/>
+
+				<div class="mt-5 mb-1 uppercase">
+					description du cours
+				</div>
+				<div class="grid grid-cols-1 gap-3 md:grid-cols-2">
+					<form-maker
+						label="description du cours"
+						type="codearea"
+						v-model="theCourse.block.body"
+					/>
+					<markdown-it :text="theCourse.block.body" />
+				</div>
 			</div>
 
 			<template #footer>
