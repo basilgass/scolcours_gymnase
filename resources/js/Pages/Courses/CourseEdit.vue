@@ -272,7 +272,6 @@ function updateLessonsOrder() {
 				<form-maker v-model="theCourse.title" />
 				<form-maker
 					xs
-					disabled
 					v-model="theCourse.slug"
 				/>
 				<form-maker
