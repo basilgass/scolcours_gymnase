@@ -43,11 +43,13 @@ use Illuminate\Database\Eloquent\Model;
 class Generator extends Model
 {
 	protected $fillable = [
-		"theme_id",
-		"slug",
-		"template",
-		"keyboard",
 		"code",
+		"keyboard",
+		"template",
+		"body",
+		"title",
+		"slug",
+		"theme_id",
 	];
 
 	use HasScoresTrait;

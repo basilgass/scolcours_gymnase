@@ -75,7 +75,7 @@ class Block extends Model
 		"url",
 	];
 
-//	protected $with = ['illustrations'];
+	protected $with = ['illustrations'];
 
 	protected $casts = [
 		'merge' => 'boolean'

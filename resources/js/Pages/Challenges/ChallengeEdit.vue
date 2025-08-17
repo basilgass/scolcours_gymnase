@@ -117,6 +117,7 @@ const detachGenerator = function (id, destroy) {
 		})
 }
 
+console.log(props.challenge)
 const theIllustration = ref<IllustrationInterface>(
 	props.challenge.block.illustrations.length > 0
 		? props.challenge.block.illustrations[0]
