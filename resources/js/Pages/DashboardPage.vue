@@ -13,11 +13,8 @@ defineOptions({layout: LayoutMain})
 // TODO: améliorer le dashboard
 const props = defineProps<{
 	teams: TeamInterface[],
-	courses: CourseInterface,
-	// teamCourses: CourseInterface[]
-	// userCourses: CourseInterface[]
+	courses: CourseInterface[],
 }>()
-
 
 const teamsName = computed(() => props.teams.map(team => team.name).join(', '))
 

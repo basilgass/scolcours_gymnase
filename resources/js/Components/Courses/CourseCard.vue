@@ -6,7 +6,7 @@ import ScButton from "@/Components/Ui/scButton.vue"
 import Card from "@/Components/Ui/Card.vue"
 import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
 
-const props = defineProps<{
+defineProps<{
 	course: CourseInterface
 }>()
 
