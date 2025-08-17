@@ -37,6 +37,11 @@ const generated = ref<boolean>(false)
 				>
 					Editer <i class="bi bi-pencil" />
 				</InertiaLink>
+				<InertiaLink
+					:href="route('generators.show', [generator.id])"
+				>
+					Voir <i class="bi bi-eye" />
+				</InertiaLink>
 			</div>
 		</div>
 		<generators-examples
