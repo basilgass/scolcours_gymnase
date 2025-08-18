@@ -2,7 +2,7 @@
 
 import Card from "@/Components/Ui/Card.vue"
 import LessonTypeIcon from "@/Components/Courses/LessonTypeIcon.vue"
-import {ref} from "vue"
+import {computed, ref} from "vue"
 import {CourseInterface, LessonInterface} from "@/types/modelInterfaces.ts"
 import FormulaSearch from "@/Components/FormulaSearch.vue"
 import DialogModal from "@/Components/Ui/DialogModal.vue"
@@ -15,9 +15,46 @@ const props = defineProps<{
 	lessonable: lessonableModel
 }>()
 
-const menuToggle = ref(true)
+const menuToggle = ref<boolean>(true)
 
 const showFormularDialog = ref(false)
+
+const showFullCourseMenu = ref<boolean>(false)
+
+const currentLessonIndex = computed(() => {
+	return props.course.lessons.findIndex(lesson => lesson.id === props.lesson.id)
+})
+const prevLesson = computed(() => {
+	return currentLessonIndex.value > 0
+		? props.course.lessons[currentLessonIndex.value - 1]
+		: null
+})
+const prevCounter = computed(() => {
+	if (currentLessonIndex.value < 2) {
+		return ""
+	}
+
+	const s = currentLessonIndex.value - 1 > 1 ? 's' : ''
+
+	return `${currentLessonIndex.value - 1} leçon${s} précédente${s}`
+})
+
+const nextLesson = computed(() => {
+	return currentLessonIndex.value < props.course.lessons.length - 1
+		? props.course.lessons[currentLessonIndex.value + 1]
+		: null
+
+})
+
+const nextCounter = computed(() => {
+	if (currentLessonIndex.value >= props.course.lessons.length - 2) {
+		return ""
+	}
+
+	const s = currentLessonIndex.value < props.course.lessons.length - 3 ? 's' : ''
+
+	return `encore ${props.course.lessons.length - currentLessonIndex.value - 2} leçon${s}...`
+})
 
 
 </script>
@@ -48,25 +85,92 @@ const showFormularDialog = ref(false)
 					</div>
 				</template>
 				<div
-					class="space-y-1 py-3"
 					v-if="menuToggle"
+					class="flex flex-col gap-3 py-3"
 				>
+					<div class="flex flex-col gap-1">
+						<div
+							v-if="prevCounter"
+							class="text-xs text-slate-500 mb-2"
+						>
+							{{ prevCounter }}
+						</div>
+						<div
+							v-if="prevLesson"
+							class="flex gap-2 hover:pl-1 transition-all"
+						>
+							<lesson-type-icon :lesson="prevLesson" />
+							<InertiaLink
+								class="flex-1 whitespace-nowrap overflow-hidden overflow-ellipsis"
+								:href="route('students.lessons.show', {course: course.slug, lesson: prevLesson.id})"
+								v-katex.auto="prevLesson.title"
+								:title="prevLesson.title"
+							/>
+						</div>
+
+						<div
+							class="flex gap-2 hover:pl-1 transition-all font-semibold"
+							v-theme.text
+						>
+							<lesson-type-icon :lesson="lesson" />
+							<InertiaLink
+								class="flex-1 whitespace-nowrap overflow-hidden overflow-ellipsis"
+								:href="route('students.lessons.show', {course: course.slug, lesson: lesson.id})"
+								v-katex.auto="lesson.title"
+								:title="lesson.title"
+							/>
+						</div>
+
+						<div
+							v-if="nextLesson"
+							class="flex gap-2 hover:pl-1 transition-all"
+						>
+							<lesson-type-icon :lesson="nextLesson" />
+							<InertiaLink
+								class="flex-1 whitespace-nowrap overflow-hidden overflow-ellipsis"
+								:href="route('students.lessons.show', {course: course.slug, lesson: nextLesson.id})"
+								v-katex.auto="nextLesson.title"
+								:title="nextLesson.title"
+							/>
+						</div>
+
+						<div
+							v-if="nextCounter"
+							class="text-xs text-slate-500 mt-2"
+						>
+							{{ nextCounter }}
+						</div>
+					</div>
+
 					<div
-						v-for="l in course.lessons"
-						:key="`goto-${l.id}`"
-						class="flex gap-2 hover:pl-1 transition-all"
-						v-theme.text="l.id===lesson.id"
-						:class="{
-							'font-semibold': l.id===lesson.id,
-						}"
+						class="cursor-pointer text-slate-500 text-sm italic"
+						@click="showFullCourseMenu=!showFullCourseMenu"
 					>
-						<lesson-type-icon :lesson="l" />
-						<InertiaLink
-							class="flex-1 whitespace-nowrap overflow-hidden overflow-ellipsis"
-							:href="route('students.lessons.show', {course: course.slug, lesson: l.id})"
-							v-katex.auto="l.title"
-							:title="l.title"
-						/>
+						<i class="bi bi-three-dots-vertical" />{{ showFullCourseMenu ? 'cacher' : 'afficher' }} le menu
+						complet
+					</div>
+					<div
+						v-if="showFullCourseMenu"
+						class="space-y-1 py-3"
+					>
+						<div
+
+							v-for="l in course.lessons"
+							:key="`goto-${l.id}`"
+							class="flex gap-2 hover:pl-1 transition-all"
+							v-theme.text="l.id===lesson.id"
+							:class="{
+								'font-semibold': l.id===lesson.id,
+							}"
+						>
+							<lesson-type-icon :lesson="l" />
+							<InertiaLink
+								class="flex-1 whitespace-nowrap overflow-hidden overflow-ellipsis"
+								:href="route('students.lessons.show', {course: course.slug, lesson: l.id})"
+								v-katex.auto="l.title"
+								:title="l.title"
+							/>
+						</div>
 					</div>
 				</div>
 			</Card>
