@@ -372,6 +372,8 @@ export interface CourseInterface {
 	id: number,
 	title: string,
 	slug: string,
+	status: 'not yet started' | 'active' | 'finished',
+	scheduled_at: string,
 	theme_id: number,
 	block: BlockInterface,
 	lessons: LessonInterface[],

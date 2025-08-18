@@ -23,7 +23,7 @@ const cardClass = computed<string>(() => {
 		).join(' ')
 	}
 
-	if(props.borderTheme){
+	if (props.borderTheme) {
 		const chapter = getThemeChapter(props.borderTheme)
 
 		return getThemeClasses(
@@ -39,7 +39,7 @@ const cardClass = computed<string>(() => {
 
 <template>
 	<div
-		class="rounded bg-content border flex flex-col"
+		class="rounded bg-content border flex flex-col break-inside-avoid"
 		:class="cardClass"
 	>
 		<header
