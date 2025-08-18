@@ -46,6 +46,7 @@ function updateCourse() {
 	})
 		.then((res: AxiosResponseModel<CourseInterface>) => {
 			console.log(res.data)
+			flash.success("Le cours a bien été enregistré.")
 		})
 		.catch((err: AxiosErrorMessage) => {
 			console.warn(err.response.data.message)

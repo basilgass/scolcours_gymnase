@@ -8,6 +8,7 @@ import AdminHeader from "@/Components/Admin/AdminHeader.vue"
 import ScButton from "@/Components/Ui/scButton.vue"
 import {ref} from "vue"
 import LessonCard from "@/Pages/Courses/LessonCard.vue"
+import LessonIconLegend from "@/Pages/Courses/LessonIconLegend.vue"
 
 defineOptions({layout: LayoutMain})
 
@@ -46,17 +47,16 @@ const lessons = ref<LessonInterface[]>(props.course.lessons)
 		<block-show :block="course.block" />
 
 		<div class="mt-10 grid grid-cols-1 gap-3">
-			<div
+			<lesson-card
+				class="w-xl mx-auto"
 				v-for="lesson in lessons"
 				:key="`lesson-${lesson.id}`"
-			>
-				<lesson-card
-					:course
-					:lesson
-					:team
-				/>
-			</div>
+				:course
+				:lesson
+				:team
+			/>
 		</div>
+		<lesson-icon-legend class="justify-center mt-24" />
 	</section>
 </template>
 

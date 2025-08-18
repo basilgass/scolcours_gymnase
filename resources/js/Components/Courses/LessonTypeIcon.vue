@@ -1,18 +1,26 @@
 <script setup lang="ts">
 
-import {LessonInterface} from "@/types/modelInterfaces.ts"
+import {lessonableClassName} from "@/types/lessonInterfaces.ts"
 
-defineProps<{
-	lesson: LessonInterface
-}>()
+withDefaults(defineProps<{
+	lesson: { lessonable_type: lessonableClassName },
+	xl?: boolean
+	xs?: boolean
+}>(), {
+	xl: false,
+	xs: false
+})
 </script>
 
 <template>
 	<i
 		:class="{
 			'bi bi-book': lesson.lessonable_type==='Post',
-			'bi bi-question': lesson.lessonable_type==='Challenge' || lesson.lessonable_type==='Generator',
+			'bi bi-patch-question': lesson.lessonable_type==='Challenge',
+			'bi bi-question': lesson.lessonable_type==='Generator',
 			'bi bi-copy': lesson.lessonable_type==='Deck',
+			'text-xl': xl,
+			'text-xs': xs,
 		}"
 	/>
 </template>
