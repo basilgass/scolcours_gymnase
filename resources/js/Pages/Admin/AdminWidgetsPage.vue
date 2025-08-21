@@ -1,26 +1,32 @@
 <script lang="ts" setup>
 import WidgetForm from "@/Components/WidgetForm.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
-import { PropType } from "vue"
-import type { WidgetInterface } from "@/types/modelInterfaces"
+import {PropType} from "vue"
+import type {WidgetInterface} from "@/types/modelInterfaces"
 import axios from "axios"
-import { router } from "@inertiajs/vue3"
+import {router} from "@inertiajs/vue3"
 import FilteredList from "@/Components/Ui/FilteredList.vue"
 import ScButton from "@/Components/Ui/scButton.vue"
+import {AxiosErrorMessage} from "@/types"
 
-defineOptions({ layout: LayoutMain })
+defineOptions({layout: LayoutMain})
 
 defineProps({
-	widgets: { type: Object as PropType<WidgetInterface[]>, required: true }
+	widgets: {type: Object as PropType<WidgetInterface[]>, required: true}
 })
 
 function refreshWidgets() {
 	// ROUTE : route does not exist
-	axios.get(route("admin.widgets.refresh"))
+	axios
+		.get(
+			route("api.admin.widgets.refresh")
+		)
 		.then(() => {
 			router.reload()
 		})
-		.catch((err) => console.warn(err))
+		.catch(
+			(err: AxiosErrorMessage) => console.warn(err)
+		)
 }
 </script>
 <template>

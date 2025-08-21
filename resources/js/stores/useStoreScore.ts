@@ -7,7 +7,7 @@ import axios from "axios"
 import {scoreableClassName, ScoreDataInterface} from "@/types/scoreInterfaces.ts"
 
 const pendingGetScores = new Map<string, Promise<ScoreInterface[]>>()
-const pendingScoreById = new Map<string, Map<number, Promise<ScoreInterface>>>()
+const pendingScoreById = new Map<string, Map<string, Promise<ScoreInterface>>>()
 
 function makeKey(type: scoreableClassName, ids: number[]): string {
 	const sortedIds = [...ids].sort((a, b) => a - b)
@@ -178,11 +178,29 @@ export const useStoreScore = defineStore(
 			return updateScore(score)
 		}
 
+		// Vérifie si une promise est en attente pour une clé donnée dans les valeurs du Map
+		function getPendingPromiseForKey(key: string): Promise<ScoreInterface> | undefined {
+			for (const perIdMap of pendingScoreById.values()) {
+				if (perIdMap.has(key)) {
+					return perIdMap.get(key)
+				}
+			}
+			return undefined
+		}
+
 		// Récupère le score d'un modèle
 		async function getScore<T extends ScoreDataInterface>(type: scoreableClassName, id: number): Promise<ScoreInterface<T>> {
+			// l'id n'est pas conforme - retourne un score "faux"
 			if (id === undefined || id <= 0) {
 				return fakeScore<T>(type, id)
 			}
+
+			const pending = getPendingPromiseForKey(makeKey(type, [id]))
+			if (pending) {
+				return pending as Promise<ScoreInterface<T>>
+			}
+
+			// On recherche le score en faisant une recherche multiple sur un élément.
 			const scores = await getScores<T>(type, [id])
 			if (!scores.length) throw new Error(`Score not found for ${type}#${id}`)
 			return scores[0]
@@ -227,17 +245,18 @@ export const useStoreScore = defineStore(
 			pendingGetScores.set(key, promise)
 
 			// Création de la map par id
-			const perIdMap = pendingScoreById.get(key) ?? new Map<number, Promise<ScoreInterface>>()
+			const perIdMap = pendingScoreById.get(key) ?? new Map<string, Promise<ScoreInterface>>()
 			pendingScoreById.set(key, perIdMap)
 
 			ids.forEach(id => {
-				if (!perIdMap.has(id)) {
+				const keyId = makeKey(type, [id])
+				if (!perIdMap.has(keyId)) {
 					const p = promise.then(scores => {
 						const match = scores.find(s => s.scoreable_id === id)
 						if (!match) throw new Error(`Score ${id} not found in group ${key}`)
 						return match
 					})
-					perIdMap.set(id, p)
+					perIdMap.set(keyId, p)
 				}
 			})
 
@@ -246,7 +265,6 @@ export const useStoreScore = defineStore(
 				pendingGetScores.delete(key)
 				pendingScoreById.delete(key)
 			})
-
 
 			return promise
 		}
@@ -272,7 +290,7 @@ export const useStoreScore = defineStore(
 			const affectedScores = await axios
 				.get(route('api.students.scores.index', {ids: scoreIds}))
 
-			affectedScores.data.forEach((score: ScoreInterface)=>{
+			affectedScores.data.forEach((score: ScoreInterface) => {
 				score.score = 0
 				score.is_resolved = false
 				score.data = defaultScoreData(score.scoreable_type)

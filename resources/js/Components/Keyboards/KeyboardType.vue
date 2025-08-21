@@ -18,8 +18,10 @@ const props = defineProps<KeyboardPropsInterface>()
 const emits = defineEmits<KeyboardEmitsInterface>()
 
 // emit change event
-// TODO: Change this event to receive only the input as a string
 function onChange(): void {
+	if(answerLetters.value.every(letter=>letter.used)){
+		// TOOD: should trigger the validation button automatically.
+	}
 	setInput().then((x) => emits("change", x))
 }
 
@@ -55,8 +57,8 @@ defineExpose<KeyboardExposeInterface>({
 /* ------------------*/
 const typoButtons = ref(null)
 const excludeLetters = ref([" ", ",", "'", ".", "!", "?", "(", ")", "-"])
-const answerLetters = ref([])
-const resultLetters = ref([])
+const answerLetters = ref<{key: string, used: boolean}[]>([])
+const resultLetters = ref<{index: number, key: string, visible: boolean}[]>([])
 
 const currentIndex = ref(-1)
 
@@ -94,8 +96,6 @@ const validateKey = function (index) {
 		currentIndex.value++
 		if (currentIndex.value >= resultLetters.value.length) {
 			onChange()
-			// TODO: Question: auto validation trigger !
-			alert('DONE')
 			return
 		}
 		while (resultLetters.value[currentIndex.value].visible) {

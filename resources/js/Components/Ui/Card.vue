@@ -7,10 +7,14 @@ const props = withDefaults(defineProps<{
 	theme?: false | number | string
 	borderTheme?: false | number | string
 	noInsideBorder?: boolean
+	success?: boolean
+	error?: boolean
 }>(), {
 	theme: false,
 	borderTheme: false,
-	noInsideBorder: false
+	noInsideBorder: false,
+	success: false,
+	error: false
 })
 
 const cardClass = computed<string>(() => {
@@ -30,6 +34,14 @@ const cardClass = computed<string>(() => {
 			chapter,
 			{border: true}
 		).join(' ')
+	}
+
+	if(props.success){
+		return 'bg-green-100 border-green-400'
+	}
+
+	if(props.error){
+		return 'bg-red-100 border-red-400'
 	}
 
 

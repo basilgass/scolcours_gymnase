@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\api\WidgetApiController;
 
-
 Route::middleware('api')
      ->prefix('api')
      ->as('api.')
@@ -21,11 +20,10 @@ Route::middleware('api')
 		     ->prefix('admin')
 		     ->as('admin.')
 	          ->group(function () {
-		          Route::apiResource('widgets', WidgetApiController::class);
-
 		          Route::get('widgets/refresh', [WidgetApiController::class, 'refresh'])
 		               ->name('widgets.refresh');
 
+		          Route::apiResource('widgets', WidgetApiController::class);
 	          });
 
      });

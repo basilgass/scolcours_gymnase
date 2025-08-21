@@ -78,6 +78,8 @@ export function checkerNameToEnum(name: string): CHECKERS {
             return CHECKERS.PRIMITIVE
 		case "matrix":
 			return CHECKERS.MATRIX
+		case "type":
+			return CHECKERS.TYPE
         default:
             return CHECKERS.STRING
     }

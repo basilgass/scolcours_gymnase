@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import {computed, onMounted, ref, watch} from "vue"
+import {computed, inject, onMounted, ref, watch} from "vue"
 import {useStoreScore} from "@/stores/useStoreScore.ts"
 import Card from "@/Components/Ui/Card.vue"
 import {
@@ -17,12 +17,15 @@ import {
 	ScoreGeneratorDataInterface,
 	ScoreLessonDataInterface
 } from "@/types/scoreInterfaces.ts"
+import {flashInterface} from "@/types"
 
 const props = defineProps<{
 	lesson: LessonInterface,
 	lessonable: lessonableModel
 	menuToggle: boolean
 }>()
+
+const flash = inject<flashInterface>('flash')
 
 const storeScore = useStoreScore()
 const lessonScore = ref<ScoreInterface<ScoreLessonDataInterface>>()
@@ -35,13 +38,14 @@ async function post_scores(post: PostShowInterface) {
 	await storeScore.getScores(model, ids)
 		.then(
 			(scores) => {
-				if(scores.length===0){
+				if (scores.length === 0) {
 					// Il n'y a pas de questions
 					lessonScore.value.score = 100
-				}else {
+				} else {
 					lessonScore.value.score = Math.round(scores.filter(s => s.is_resolved).length / scores.length * 100)
 				}
 				lessonScore.value.is_resolved = lessonScore.value.score === 100
+
 			})
 		.catch((err) => {
 			console.warn(err)
@@ -73,6 +77,8 @@ async function challenge_scores(challenge: ChallengeInterface) {
 
 	if (!rules.occurrences || lessonScore.value.score === rules.occurrences) {
 		lessonScore.value.is_resolved = true
+
+		flash.success('Score demandé atteint')
 	}
 }
 
@@ -93,6 +99,8 @@ async function generator_scores(generator: GeneratorInterface) {
 
 		if (!rules.occurrences || lessonScore.value.score === rules.occurrences) {
 			lessonScore.value.is_resolved = true
+
+			flash.success('Score demandé atteint')
 		}
 	}
 }
@@ -106,7 +114,7 @@ async function deck_scores(deck: DeckInterface) {
 	lessonScore.value.is_resolved = score.is_resolved
 }
 
-const lessonResult = computed(() => {
+const displayLessonResult = computed(() => {
 	if (!lessonScore.value) {
 		return 'chargement...'
 	}
@@ -119,7 +127,7 @@ const lessonResult = computed(() => {
 			const rules = props.lesson.scoreRules as LessonGeneratorScoreRules
 			return lessonScore.value.is_resolved ?
 				`100 %` :
-				`${(refScore.value ?? 0) % rules.target} / ${rules.target} => ${lessonScore.value.score} / ${rules.occurrences??1}`
+				`${(refScore.value ?? 0) % rules.target} / ${rules.target} => ${lessonScore.value.score} / ${rules.occurrences ?? 1}`
 		}
 		case "Challenge": {
 			const rules = props.lesson.scoreRules as LessonChallengeScoreRules
@@ -147,7 +155,7 @@ async function update_lesson_score(model: lessonableModel, updatedScore?: ScoreI
 		} else {
 			return
 		}
-	} else{
+	} else {
 		return
 	}
 
@@ -226,7 +234,7 @@ watch(() => storeScore.version, () => {
 					score
 				</div>
 				<div class="whitespace-nowrap">
-					{{ lessonResult }}
+					{{ displayLessonResult }}
 				</div>
 			</div>
 		</template>

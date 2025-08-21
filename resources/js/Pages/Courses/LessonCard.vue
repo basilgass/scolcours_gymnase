@@ -1,8 +1,8 @@
 <script setup lang="ts">
 
 import Card from "@/Components/Ui/Card.vue"
-import {CourseInterface, LessonInterface, UserTeamInterface} from "@/types/modelInterfaces.ts"
-import {computed, inject, ref} from "vue"
+import {CourseInterface, LessonInterface, ScoreInterface, UserTeamInterface} from "@/types/modelInterfaces.ts"
+import {computed, inject, onMounted, ref} from "vue"
 import dayjs from "dayjs"
 import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
 import FormMaker from "@/Components/Form/FormMaker.vue"
@@ -12,6 +12,7 @@ import LessonTeamCalendar from "@/Pages/Courses/LessonTeamCalendar.vue"
 import {router} from "@inertiajs/vue3"
 import LessonTypeIcon from "@/Components/Courses/LessonTypeIcon.vue"
 import ScButton from "@/Components/Ui/scButton.vue"
+import {useStoreScore} from "@/stores/useStoreScore.ts"
 
 const props = defineProps<{
 	course: CourseInterface
@@ -22,8 +23,10 @@ const props = defineProps<{
 const editMode = useStoreEditMode()
 const flash = inject<flashInterface>('flash')
 
+const scoreStore = useStoreScore()
+const score = ref<ScoreInterface>(null)
 const isPast = computed(() => {
-	return props.lesson.scheduled_at
+	return score.value && !isDone.value && props.lesson.scheduled_at
 		? dayjs(props.lesson.scheduled_at).isBefore(dayjs())
 		: false
 })
@@ -65,11 +68,23 @@ function cardClick() {
 		)
 	)
 }
+
+const isDone = computed(() => {
+	return score.value?.is_resolved ?? false
+})
+
+onMounted(() => {
+	scoreStore
+		.getScore('Lesson', props.lesson.id)
+		.then(res => score.value = res)
+})
 </script>
 
 <template>
 	<Card
 		class="hover:shadow hover:scale-101 transition-all"
+		:success="isDone"
+		:error="isPast"
 	>
 		<div
 			class="flex justify-between py-5 cursor-pointer"
@@ -96,10 +111,11 @@ function cardClick() {
 			</div>
 		</div>
 		<template #footer>
-			<div class="flex justify-between text-xs text-slate-500 py-1">
-				<div
-					:class="isPast?'bg-red-100 border border-red-500':''"
-				>
+			<div
+				v-show="score"
+				class="flex justify-between text-xs text-slate-500 py-1"
+			>
+				<div>
 					La leçon {{ isPast ? 'était' : 'est' }} à terminer {{ lesson.remaining_time }}
 				</div>
 				<div>
