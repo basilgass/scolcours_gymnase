@@ -10,6 +10,7 @@ const props = defineProps({
 	barLabel: { type: String, default: "" },
 	barClass: { type: String, default: "h-[2em]" },
 	barLabelClass: { type: String, default: "" },
+	bgClass: {type: String, default: "bg-white"},
 	inverted: { type: Boolean, default: false }
 })
 
@@ -43,10 +44,61 @@ const barClassComputed = computed(() => {
 
 	return barClass.join(" ")
 })
+
+const bgClassComputed = computed(() => {
+	const barClass = [props.barClass]
+
+	if (props.inverted) {
+		if (percent.value > 0.75) {
+			barClass.push("bg-red-300/30")
+		} else if (percent.value < 0.30) {
+			barClass.push("bg-green-400/30")
+		} else {
+			barClass.push("bg-amber-300/30")
+		}
+	} else {
+		if (percent.value > 0.75) {
+			barClass.push("bg-green-400/30")
+		} else if (percent.value < 0.30) {
+			barClass.push("bg-red-300/30")
+		} else {
+			barClass.push("bg-amber-300/30")
+		}
+	}
+
+	return barClass.join(" ")
+})
+
+const boxClassComputed = computed(()=>{
+	const barClass = [props.bgClass]
+
+	if (props.inverted) {
+		if (percent.value > 0.75) {
+			barClass.push("border", "border-red-200")
+		} else if (percent.value < 0.30) {
+			barClass.push("border", "border-green-400")
+		} else {
+			barClass.push("border", "border-amber-400")
+		}
+	} else {
+		if (percent.value > 0.75) {
+			barClass.push("border", "border-green-400")
+		} else if (percent.value < 0.30) {
+			barClass.push("border", "border-red-200")
+		} else {
+			barClass.push("border", "border-amber-400")
+		}
+	}
+
+	return barClass.join(" ")
+})
 </script>
 
 <template>
-	<div class="flex flex-row gap-5 w-full items-center">
+	<div
+		class="flex flex-row gap-5 w-full items-center"
+		:class="boxClassComputed"
+	>
 		<slot name="label">
 			<h2
 				v-if="label!==''"
@@ -64,7 +116,7 @@ const barClassComputed = computed(() => {
 				</slot>
 			</div>
 			<div
-				:class="barClassComputed"
+				:class="bgClassComputed"
 				:style="`width:${percent*100}%`"
 				class="flex bar transition-all duration-500 ease-in-out"
 			/>

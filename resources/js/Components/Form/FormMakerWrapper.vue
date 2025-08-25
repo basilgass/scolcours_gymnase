@@ -48,7 +48,7 @@ const inputClassComputed = computed(() => {
 	<div
 		class="w-full flex"
 		:class="{
-			'mt-[1.5rem]': !inlineLabel,
+			'mt-[1.5rem]': !inlineLabel && label,
 			'text-xs': xs,
 			'text-sm': sm,
 			'text-xl': xl

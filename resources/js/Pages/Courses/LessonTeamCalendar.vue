@@ -61,7 +61,7 @@ const nextCourses = computed(() => {
 	// Trouver le prochain cours à partir de maintenant
 	let idx = sortedCalendar.findIndex(course => {
 		if (course.day < currentWeekDay) return false
-		if (course.day === currentWeekDay && course.time <= currentTime) return false
+		// if (course.day === currentWeekDay && course.time <= currentTime) return false
 		return true
 	})
 
@@ -78,6 +78,7 @@ const nextCourses = computed(() => {
 
 		result.push({
 			...course,
+			is_today: courseDate.isSame(dayjs(), 'day'),
 			date: courseDate.format("YYYY-MM-DD"),
 		})
 
@@ -104,14 +105,16 @@ const nextCourses = computed(() => {
 				>
 					<sc-button
 						xs
-						:outline="isOngoing(course) && idx===0"
+						:outline="!course.is_today"
+						theme
 						@click="onButtonClick(course, true)"
 					>
 						{{ buttonLabel(course.date, course.time, true) }}
 					</sc-button>
 					<sc-button
 						xs
-						:outline="isOngoing(course) && idx===0"
+						:outline="!course.is_today"
+						theme
 						@click="onButtonClick(course, false)"
 					>
 						{{ buttonLabel(course.date, course.time, false) }}

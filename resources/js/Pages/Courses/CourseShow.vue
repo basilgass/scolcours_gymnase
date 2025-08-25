@@ -46,11 +46,9 @@ const lessonsByDate = computed<Record<string, LessonInterface[]>>(() => {
 		}
 	})
 
-	return grouped
-})
+	grouped['non planifié'] = props.course.lessons.filter(lesson => !lesson.scheduled_at)
 
-const lessonUnplanned = computed<LessonInterface[]>(() => {
-	return props.course.lessons.filter(lesson => !lesson.scheduled_at)
+	return grouped
 })
 
 export interface ILessonStats {
@@ -62,6 +60,7 @@ export interface ILessonStats {
 
 const lesson_stats = ref<Record<string, ILessonStats>>({})
 const users = ref<UserInterface[]>([])
+const selected_user_id = ref(0)
 function loadStats() {
 	axios.get(route('api.admin.teams.users', {team: props.team.id}))
 		.then((res: AxiosResponseModel<UserInterface[]>)=>{
@@ -137,13 +136,26 @@ onMounted(() => {
 		</div>
 
 		<!-- Liste des étudiants -->
-		<div v-if="editMode.enable && users.length">
-			<div
+		<div
+			v-if="editMode.enable && users.length"
+			class="flex gap-3 flex-wrap"
+		>
+			<sc-button
+				theme
+				:outline="selected_user_id!==0"
+				@click="selected_user_id=0"
+			>
+				Tous
+			</sc-button>
+			<sc-button
 				v-for="user in users"
 				:key="`user-${user.id}`"
+				theme
+				:outline="selected_user_id!==user.id"
+				@click="selected_user_id=user.id"
 			>
 				{{ user.fullname }}
-			</div>
+			</sc-button>
 		</div>
 
 
@@ -165,32 +177,10 @@ onMounted(() => {
 					<lesson-card
 						v-for="lesson in elements"
 						:key="`lesson-${lesson.id}`"
-
 						:course
 						:lesson
 						:team
-						:stats="lesson_stats[lesson.id]"
-					/>
-				</div>
-			</div>
-
-			<div>
-				<h3 class="text-lg font-semibold my-3">
-					Non planifié
-				</h3>
-				<div
-					:class="{
-						'grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3': !editMode.enable,
-						'grid grid-cols-1 gap-3': editMode.enable,
-					}"
-				>
-					<lesson-card
-						v-for="lesson in lessonUnplanned"
-						:key="`lesson-${lesson.id}`"
-						:course
-						:lesson
-						:team
-						:stats="lesson_stats[lesson.id]"
+						:stats="lesson_stats?.[lesson.id]"
 					/>
 				</div>
 			</div>

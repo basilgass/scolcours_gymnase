@@ -20,7 +20,7 @@ const props = defineProps<{
 	course: CourseInterface
 	lesson: LessonInterface,
 	team: UserTeamInterface,
-	stats: ILessonStats
+	stats?: ILessonStats,
 }>()
 
 const editMode = useStoreEditMode()
@@ -118,11 +118,11 @@ onMounted(() => {
 
 			<template #footer>
 				<div
-					v-show="score"
+					v-if="score"
 					class="flex justify-between text-xs text-slate-500 py-1"
 				>
 					<div>
-						La leçon {{ isPast ? 'était' : 'est' }} à terminer {{ lesson.remaining_time }}
+						<span v-if="!score.is_resolved && lesson.remaining_time">La leçon {{ isPast ? 'était' : 'est' }} à terminer {{ lesson.remaining_time }}</span>
 					</div>
 					<div>
 						<span v-if="lesson.scheduled_at">
@@ -137,37 +137,37 @@ onMounted(() => {
 		</Card>
 		<div
 			v-admin="editMode.enable"
-			class="flex-2/3"
+			class="flex-2/3 flex flex-col gap-3"
 		>
 			<stat-bar
+				v-if="stats"
 				v-admin="editMode.enable"
 				:max="100"
-				:value="(stats?.resolved_scores)/(stats?.total_scores)*100"
+				:value="(stats.resolved_scores)/(stats.total_scores)*100"
 			/>
 
-			<div
+			<Card
 				v-theme.admin
 				class="flex-2/3"
 				v-admin="editMode.enable"
 			>
-				<div>
-					modifier la date pour la leçon {{ lesson.id }}, l'équipe {{ team.name }} (id: {{ team.id }}})
+				<div class="flex gap-3 items-top py-3">
 					<form-maker
+						class="max-w-[250px] "
 						type="datetime-local"
 						v-model="scheduled_at"
 						btn
 						@button="updateLesson"
 					/>
-				</div>
 
-				<div>
 					<lesson-team-calendar
+						class="flex-1"
 						:calendar="team.calendar"
 						@button-click="updateLesson($event)"
 						:n="4"
 					/>
 				</div>
-			</div>
+			</Card>
 		</div>
 	</div>
 </template>
