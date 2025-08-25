@@ -46,7 +46,7 @@ onMounted(() => {
 			</h3>
 			<div
 				v-if="courses.length"
-				class="columns-3 space-y-3"
+				class="columns-1 md:columns-2 xl:columns-3 space-y-3"
 			>
 				<course-card
 					v-for="course in courses"

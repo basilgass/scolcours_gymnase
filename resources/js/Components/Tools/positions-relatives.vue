@@ -263,7 +263,11 @@ const positionRelative = computed<posRelativeInterface>(() => {
 		return posRel_sphere_sphere(objet1, objet2)
 	}
 
-	return "???"
+	return {
+		objet1: null,
+		objet2: null,
+		position: "???"
+	}
 })
 
 function posRel_droite2d_droite2d(equ1: Equation, equ2: Equation): posRelativeInterface {
