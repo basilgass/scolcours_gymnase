@@ -8,8 +8,7 @@ import MermaidDiagram from "@/Components/MermaidDiagram.vue"
 import type {MermaidConfig} from "mermaid"
 import {MermaidEmits} from "@/Composables/useMermaidDispatcher.ts"
 
-
-// TODO: est-il possible de réduire la taille de vue-mermaid-string, en faisant ma propre version et en passant par un CDN ?
+// REFACTOR : mermaid.js is huge...find smaller version, better version or custom version ?
 const props = defineProps<{
 	illustration: WidgetPropsInterface
 }>()

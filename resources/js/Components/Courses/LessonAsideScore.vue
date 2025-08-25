@@ -166,7 +166,6 @@ async function update_lesson_score(model: lessonableModel, updatedScore?: ScoreI
 async function resetScore() {
 
 	if (props.lesson.lessonable_type === 'Post') {
-		// TODO: Reset des questions par l'utilisateur !
 		const post = props.lessonable as PostShowInterface
 		await storeScore.reset(post.questions.map(q => q.user.id))
 	}

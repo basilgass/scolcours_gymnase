@@ -56,6 +56,7 @@
 		"mermaid": "^11.7.0",
 		"mitt": "^3.0.1",
 		"pidraw": "^0.2.1",
+		"piexpression": "^0.1.0",
 		"pigames": "^0.1.18",
 		"pimath": "^0.1.33",
 		"pinia": "^3.0.3",
@@ -64,6 +65,7 @@
 		"qrcode.vue": "^3.6.0",
 		"vue-3-slider-component": "^1.0.2",
 		"vue-chartjs": "^5.3.2",
+		"vue-component-type-helpers": "^3.0.6",
 		"vue-mermaid-string": "^7.0.0",
 		"vuedraggable": "^4.1.0"
 	}

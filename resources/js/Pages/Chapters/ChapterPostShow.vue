@@ -5,7 +5,6 @@ import ChapterNav from "@/Components/Chapters/ChapterNav.vue"
 import ChapterToc from "@/Components/Chapters/ChapterToc.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 import type {ChapterShowInterface, PostInterface, PostShowInterface} from "@/types/modelInterfaces"
-import {usePage} from "@inertiajs/vue3"
 import PostDisplay from "@/Components/Posts/PostDisplay.vue"
 import {useStoreScore} from "@/stores/useStoreScore.ts"
 
@@ -17,19 +16,6 @@ const props = defineProps<{
 	post: PostShowInterface,
 	anchor: string | null
 }>()
-
-function storeCurrentPost() {
-	if (usePage().props.auth.user === null) return
-	// TODO: Manage page history
-	// axios.post(
-	// 	route("chapters.currentPost", [props.chapter.id]),
-	// 	{
-	// 		post_id: props.post.id
-	// 	}
-	// )
-}
-
-storeCurrentPost()
 
 // Charge les scores des questions en une seule fois
 const useScore = useStoreScore()

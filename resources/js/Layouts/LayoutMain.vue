@@ -54,7 +54,7 @@ provide("flash", {
 })
 
 
-// TODO: Change the pageTitle function to be more global (chapter, post, challenge, ...)
+// REFACTOR: Change the pageTitle function to be more global (chapter, post, challenge, ...)
 const pageTitle = computed(() => {
 	if (usePage()?.props?.chapter) {
 		return usePage().props.chapter.meta_title

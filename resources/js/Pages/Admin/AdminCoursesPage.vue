@@ -2,7 +2,7 @@
 
 import {CourseInterface, TeamInterface, UserTeamInterface} from "@/types/modelInterfaces.ts"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
-import {inject} from "vue"
+import {inject, ref} from "vue"
 import {AxiosErrorMessage, AxiosResponseModel, flashInterface} from "@/types"
 import Card from "@/Components/Ui/Card.vue"
 import ScButton from "@/Components/Ui/scButton.vue"
@@ -16,11 +16,23 @@ const props = defineProps<{
 	teams: UserTeamInterface[]
 }>()
 
+const theCourses = ref<CourseInterface[]>(props.courses)
+
 function toggleTeam(course: CourseInterface, team: UserTeamInterface){
 	axios
 		.patch(route('api.admin.courses.toggle-team', {course: course.id, team: team.id}))
-		.then((res)=>{
-			// TODO: Mettre à jour la carte de la leçon.
+		.then((res: AxiosResponseModel<boolean>)=>{
+			if(res.data) {
+				// On ajoute la team
+				theCourses.value
+					.find(c => course.id === c.id)
+					.teams.push(team)
+			}else{
+				// On supprime la team
+				const c = theCourses.value.findIndex(c=>course.id === c.id)
+				const t = theCourses.value[c].teams.findIndex(t=>t.id===team.id)
+				theCourses.value[c].teams.splice(t, 1)
+			}
 			flash.success('édition effectuée')
 		})
 		.catch((err: AxiosErrorMessage)=>{
@@ -34,7 +46,7 @@ function toggleTeam(course: CourseInterface, team: UserTeamInterface){
 	<section>
 		<div class="grid grid-cols-1 gap-3 mt-10">
 			<Card
-				v-for="course in courses"
+				v-for="course in theCourses"
 				:key="course.id"
 			>
 				<template #header>

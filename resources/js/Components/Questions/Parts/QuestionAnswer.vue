@@ -16,7 +16,6 @@ import {
 } from "@/Components/Questions/QuestionInterface.ts"
 import QuestionAnswerToggleKeyboard from "@/Components/Questions/Parts/QuestionAnswerToggleKeyboard.vue"
 import type {KeyboardInputInterface} from "@/Composables/useKeyboard.ts"
-import KeyboardBasic from "@/Components/Keyboards/KeyboardBasic.vue"
 
 const questionData = inject<questionDataInterface>("questionData")
 

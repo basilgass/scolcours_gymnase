@@ -7,8 +7,7 @@ import {useMagicKeys, whenever} from "@vueuse/core"
 import {greekLaTeX} from "@/helpers/greekLaTeX.ts"
 
 // TODO: add auto closing \begin / \end
-// TODO: accept parameters macros (js, md+latex)
-// TODO: a macro with space key set to true must have the template surrounded with one space.
+// TODO: allow Ctrl+arrowUp/Down to increase/decrease parenthesis with \big, \Big, \huge, \left and same for matching brace.
 
 type availableLanguageType = "latex" | "javascript" | "json"
 const indentUnit = '\t' // 2 espaces

@@ -7,6 +7,7 @@ use App\Http\Resources\ChallengeResource;
 use App\Http\Resources\ChapterResource;
 use App\Http\Resources\TeamResource;
 use App\Http\Resources\UserResource;
+use App\Http\Resources\UserTeamResource;
 use App\Models\Challenge;
 use App\Models\Chapter;
 use App\Models\Team;
@@ -62,5 +63,9 @@ class TeamApiController extends Controller
 		];
 	}
 
+	public function users(Team $team)
+	{
+		return UserResource::collection($team->users);
+	}
 
 }

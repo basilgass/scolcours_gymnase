@@ -1,5 +1,5 @@
 <script setup lang="ts">
-
+// parameters: tex
 import AsciiMathParser from "@/asciimath2tex"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import {computed, ref} from "vue"
@@ -17,7 +17,6 @@ const props = defineProps<KeyboardPropsInterface>()
 const emits = defineEmits<KeyboardEmitsInterface>()
 
 // emit change event
-// TODO: Change this event to receive only the input as a string
 function onChange(): void {
 	setInput().then((x) => emits("change", x))
 }
@@ -33,7 +32,7 @@ async function setInput(value?: string): Promise<KeyboardInputInterface> {
 
 defineExpose<KeyboardExposeInterface>({
 	reset: () => {
-		//TODO: add a reset function
+		//no reset function
 	},
 	setInput,
 	parameters: ""
@@ -45,7 +44,6 @@ defineExpose<KeyboardExposeInterface>({
 
 let inputValue = ref("")
 
-// TODO: isTex from KeyboardInput: is it really useful ?
 const isTex = computed(() => {
 	return props.keyboard.parameters.includes("tex")
 })

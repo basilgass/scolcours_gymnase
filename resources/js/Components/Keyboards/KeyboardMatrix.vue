@@ -66,8 +66,8 @@ async function setInput(value?: string): Promise<KeyboardInputInterface> {
 }
 
 defineExpose<KeyboardExposeInterface>({
-	reset: () => {
-		//TODO: add a reset function
+	reset: ()=>{
+		// TODO: reset function
 	},
 	setInput,
 	parameters: "full (pleine largeur)\nflex (utilisation de flex)\ntex (converti en TeX)\nlist (affichage d'une liste)"
@@ -80,7 +80,7 @@ defineExpose<KeyboardExposeInterface>({
 // Get the checker from above.
 const questionData = inject<questionDataInterface>('questionData')
 
-// TODO: Move all these (duplicate) function to a class or something better
+// REFACTOR: Move all these (duplicate) function to a class or something better
 function matrixToTex(matrix: string[][], dim: { rows: number, columns: number }): string {
 
 	let tex = "\\left(\\begin{array}{" + "c".repeat(dim.columns) + "}"

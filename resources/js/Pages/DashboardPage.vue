@@ -10,7 +10,6 @@ import CourseCard from "@/Components/Courses/CourseCard.vue"
 
 defineOptions({layout: LayoutMain})
 
-// TODO: améliorer le dashboard
 const props = defineProps<{
 	teams: TeamInterface[],
 	courses: CourseInterface[],

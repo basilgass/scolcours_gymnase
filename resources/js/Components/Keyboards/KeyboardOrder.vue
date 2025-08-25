@@ -16,7 +16,6 @@ const props = defineProps<KeyboardPropsInterface>()
 const emits = defineEmits<KeyboardEmitsInterface>()
 
 // emit change event
-// TODO: Change this event to receive only the input as a string
 function onChange(event: KeyboardInputInterface): void {
 	setInput(event.input).then((x) => emits("change", x))
 }
@@ -42,8 +41,8 @@ async function setInput(value: string): Promise<KeyboardInputInterface> {
 }
 
 defineExpose<KeyboardExposeInterface>({
-	reset: () => {
-		//TODO: add a reset function
+	reset: ()=>{
+		// TODO: reset function
 	},
 	setInput,
 	parameters: "full (pleine largeur)\nflex (utilisation de flex)\ntex (converti en TeX)\nlist (affichage d'une liste)"

@@ -19,9 +19,7 @@ interface FormElementCodeareaPropsInterface extends FormMakerPropsNewType {
 	autoSize?: boolean
 }
 
-// Refactor : déplacer les fonctions d'éditions dans un .ts dédié: useAutofill(target)
 // REFACTOR: reformater le code
-// TODO: les boutons "triggers" doivent permettre d'insérer le code.
 /**
  * The value of the code area
  */

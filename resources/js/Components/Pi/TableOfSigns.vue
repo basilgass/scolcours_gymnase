@@ -9,7 +9,6 @@ import {type TABLE_OF_SIGNS_VALUES} from "pimath"
 import {computed} from "vue"
 
 // TODO: implement an "auto-width" for the table of signs
-// TODO: extremeType should be in pimath, with TABLE_OF_SIGNS_VALUES
 export type TABLE_OF_SIGNS_VALUES_WITH_EXTREMES = TABLE_OF_SIGNS_VALUES | "m" | "M" | "_" | "I"
 
 interface TableOfSignsType {

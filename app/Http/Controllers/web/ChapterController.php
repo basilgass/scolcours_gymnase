@@ -117,16 +117,17 @@ class ChapterController extends Controller
 		//
 		//		$post = $chapter->posts->where('order', "=", $order)->first();
 
-		$post = Post::with([
-			'blocks.illustrations',
-			'questions.blocks.illustrations',
-		])
-		            ->where('chapter_id', $chapter->id)
+		$post = Post::where('chapter_id', $chapter->id)
 		            ->where('order', $order)
 		            ->when(!Auth::user()?->admin, function ($query) {
 			            $query->where('active', true);
 		            })
 		            ->firstOrFail();
+		$post->load([
+			'blocks.illustrations',
+			'questions',
+			'questions.blocks.illustrations'
+		]);
 
 		$anchor = null;
 		if ($type !== null && $id !== null) {
@@ -141,6 +142,16 @@ class ChapterController extends Controller
 			}
 			$anchor = sprintf("%s-%s", $type, $model->id);
 		}
+
+		$chapter->load([
+			"posts"=>function ($query) {
+				if (Auth::user()?->admin) {
+					$query->withCounts(); //->where('active', true);
+				} else {
+					$query->withCounts()->where('active', true);
+				}
+			}
+		]);
 
 		return Inertia::render('Chapters/ChapterPostShow', [
 			// Get the chapter (for next / previous / ...)

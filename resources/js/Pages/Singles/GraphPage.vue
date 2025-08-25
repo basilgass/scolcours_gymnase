@@ -7,8 +7,6 @@ import LayoutMain from "@/Layouts/LayoutMain.vue"
 import GrapheurFunction from "@/Components/Grapheur/GrapheurFunction.vue"
 import ScButton from "@/Components/Ui/scButton.vue"
 
-// TODO: e^(x/(x-3)) ne fonctionne pas avec des samples plus grand que 5...
-
 defineOptions({layout: LayoutMain})
 
 export type fnStyle = 'plain' | 'dot' | 'dash'

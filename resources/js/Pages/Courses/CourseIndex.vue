@@ -23,7 +23,6 @@ const props = defineProps<{
 }>()
 
 
-// TODO: La création d'un objet avec titre + slug peut être généraliser à plusieurs autres (chapitres, posts, ... à l'aide éventuellement d'un FormMakerDialog ?
 const showCreate = ref(false)
 const newCourseTitle = ref("")
 const newCourseSlug = computed(() => {

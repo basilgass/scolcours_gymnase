@@ -11,12 +11,6 @@
  *      3.d keyboard display
  * 4. QuestionFooter -> show answer, admin answer quick edition
  */
-
-/**
- * TODO: Article class : simplify and remove the isMinimal prop
- *
- */
-
 import QuestionFooter from "@/Components/Questions/Parts/QuestionFooter.vue"
 import QuestionBlock from "@/Components/Questions/Parts/QuestionBlock.vue"
 import QuestionAnswer from "@/Components/Questions/Parts/QuestionAnswer.vue"

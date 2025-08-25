@@ -69,7 +69,8 @@ class Post extends Model
 			->withCount([
 				'questions as answered_questions_count' => function ($query) {
 					$query->whereHas('users', function ($query) {
-						$query->where('scores.user_id', Auth::id());
+						$query->where('scores.user_id', Auth::id())
+						->where('scores.is_resolved', 1);
 					});
 				}
 			]);

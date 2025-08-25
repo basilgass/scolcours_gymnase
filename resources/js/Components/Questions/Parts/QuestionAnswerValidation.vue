@@ -141,7 +141,6 @@ async function saveToDB(validations: CheckerResult[]) {
 
 	// data = list of answers and previous answers.
 	// only update if it's a new answer, not already in the list.
-	// TODO: Scores data must be handled inside useStoreScore !
 	const previousAnswers: string[] = (score.data as ScoreQuestionDataInterface)?.answers ?? []
 	const currentAnswers: string = questionData.user.answers.value.map(answer => answer.input).join('\n')
 	if (!previousAnswers.includes(currentAnswers)) {

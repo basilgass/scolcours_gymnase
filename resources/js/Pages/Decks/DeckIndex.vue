@@ -67,7 +67,6 @@ function destroyDeck(id: number) {
 }
 
 
-// TODO: à modifier - WIP
 const deckIsRunning = ref(false)
 
 </script>

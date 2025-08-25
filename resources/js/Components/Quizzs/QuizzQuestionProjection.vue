@@ -19,7 +19,6 @@ const props = defineProps({
 			: " - - "
 	})
 
-// TODO: add a chart of the results
 </script>
 
 <template>

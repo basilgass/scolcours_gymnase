@@ -3,6 +3,7 @@
 import {ToolInterface} from "@/types/modelInterfaces.ts"
 import FilteredList from "@/Components/Ui/FilteredList.vue"
 import {computed, onMounted, ref, useTemplateRef} from "vue"
+import type { ComponentExposed } from 'vue-component-type-helpers'
 import axios from "axios"
 import {AxiosErrorMessage} from "@/types"
 import {router} from "@inertiajs/vue3"
@@ -14,8 +15,6 @@ const listOfTools = computed(() => {
 		foundTools = [...availableTools.value]
 	} else {
 		const search = toolSearch.value.toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu, "")
-
-		// TODO: availableTools devrait avoir un mapping concernant la recherche pour enlever les aceents.
 
 		foundTools = availableTools.value.filter(tool =>
 			tool.slug.includes(search) ||
@@ -50,8 +49,7 @@ onMounted(() => {
 	getTools()
 })
 
-// TODO: make the typing correctly for useTemplateRef <InstanceType<typeof FilteredList>>
-const filterListRef = useTemplateRef('filterListRef')
+const filterListRef = useTemplateRef<ComponentExposed<typeof FilteredList>>('filterListRef')
 defineExpose({
 	focus: ()=>filterListRef.value.focus()
 })

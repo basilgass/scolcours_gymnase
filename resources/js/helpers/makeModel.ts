@@ -29,7 +29,7 @@ export function makeDeck(
 		slug: title,
 		cards_count: cards.length,
 		cards,
-		chapter: null, // TODO: chapter missing ?
+		chapter: null,
 		user: null
 	}
 }

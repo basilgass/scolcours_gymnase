@@ -25,7 +25,7 @@ const posts = ref(props.posts)
 const postsFilterCurrent = ref("")
 const postsFilterCurrentMessage = ref("")
 
-const postsFilter = function(filter: string) {
+const postsFilter = function (filter: string) {
 	// Same filter ? remove the filter
 	postsFilterCurrent.value =
 		postsFilterCurrent.value === filter ? "" : filter
@@ -55,7 +55,7 @@ const postsFilter = function(filter: string) {
 			post.type === (postsFilterCurrent.value === "theory" ? null : postsFilterCurrent.value)
 	)
 
-	switch (postsFilterCurrent.value){
+	switch (postsFilterCurrent.value) {
 		case 'theory':
 			postsFilterCurrentMessage.value = 'théorie'
 			return
@@ -66,7 +66,7 @@ const postsFilter = function(filter: string) {
 
 }
 const moveMode = ref(false)
-const updatePostsOrder = function() {
+const updatePostsOrder = function () {
 	axios
 		.post(route("api.admin.chapters.updatePostsOrder", [props.chapter.id]), {
 			posts: posts.value.map((post, index) => {
@@ -87,7 +87,7 @@ const updatePostsOrder = function() {
 		})
 }
 
-const addPost = function() {
+const addPost = function () {
 	axios
 		.post(route("api.admin.posts.store"), {
 			title: "nouvel article",
@@ -102,7 +102,6 @@ const addPost = function() {
 // Determine si le post à des questions et si toutes les questions on été répondues
 // null: pas de questions
 // number: pourcentage des questions répondues (0 à 1)
-// TODO: rendre le visuel de l'avancée des questions plus mieux bien.
 const questionStatus = computed<Record<number, number | null>>(() => {
 	const result = {}
 	props.posts.forEach((p) => {
@@ -225,7 +224,9 @@ const questionStatus = computed<Record<number, number | null>>(() => {
 								'bi bi-check-circle-fill text-green-500':
 									questionStatus[element.id] === 1,
 								'bi bi-check-circle text-green-600':
-									questionStatus[element.id] < 1,
+									questionStatus[element.id] < 1 && questionStatus[element.id] > 0,
+								'bi bi-check-circle text-orange-400 opacity-50':
+									questionStatus[element.id] === 0,
 								'invisible':
 									questionStatus[element.id] === null,
 							}"

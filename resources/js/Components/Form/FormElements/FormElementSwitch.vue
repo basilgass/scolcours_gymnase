@@ -41,7 +41,6 @@ function updateSwitch() {
 	emits("update", value.value)
 }
 
-// TODO: Add the color and more smart computed classes: ${switchValue? enabledClass:disabledClass}
 </script>
 <template>
 	<div class="inline-block">

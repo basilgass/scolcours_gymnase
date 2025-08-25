@@ -1,6 +1,7 @@
-import {CheckerAbstract} from "../CheckerAbstract";
-import {Polynom} from "pimath";
-import {CHECKERS} from "../checker.config";
+import {CheckerAbstract} from "../CheckerAbstract"
+import {Polynom} from "pimath"
+import {CHECKERS} from "../checker.config"
+import {checkPolynomIsFactorized} from "@/Checkers"
 
 const name = "polynom"
 const description = `polynom,[paramètres]
@@ -11,6 +12,7 @@ const description = `polynom,[paramètres]
 - d=développé
 - s=forme du sommet \\(a(x-b)^2+c\\)
 `
+
 export class PolynomChecker extends CheckerAbstract {
 	constructor(config: string[] | string) {
 		super(config)
@@ -42,7 +44,7 @@ export class PolynomChecker extends CheckerAbstract {
 		try {
 			new Polynom(value)
 			return ""
-		} catch{
+		} catch {
 			return "Le polynôme n'est pas formé correctement."
 		}
 	}
@@ -66,17 +68,9 @@ export class PolynomChecker extends CheckerAbstract {
 			this.config.includes("FACTORS")
 		) {
 			try {
-				// TODO: Check if the polynom is fully factorized
-				// if (
-				// 	!A.isFactorized(
-				// 		value,
-				// 		this.config.includes("f") ||
-				// 		this.config.includes("factor"),
-				// 	)
-				// ) {
-				// 	return "Le polynôme n'est pas (entièrement) factorisé."
-				// }
-				return ""
+				return checkPolynomIsFactorized(value)
+					? ""
+					: "Le polynôme n'est pas (entièrement) factorisé."
 			} catch {
 				return "Le polynôme n'est pas (entièrement) factorisé."
 			}

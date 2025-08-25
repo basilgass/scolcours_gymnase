@@ -59,6 +59,8 @@ Route::middleware('api')
 			               Route::delete('/{team}/destroy', [TeamApiController::class, "destroy"])
 			                    ->name('destroy');
 
+						   Route::get('/{team}/users', [TeamApiController::class, 'users'])
+							   ->name('users');
 		               });
 	          });
 

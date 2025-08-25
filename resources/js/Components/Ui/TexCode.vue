@@ -4,6 +4,7 @@ import {useClipboard} from "@vueuse/core"
 import {inject, ref} from "vue"
 import axios from "axios"
 import {AxiosErrorMessage, flashInterface} from "@/types"
+import {usePdf} from "@/Composables/useDownloadPdf.ts"
 
 const flash = inject<flashInterface>("flash")
 const props = withDefaults(defineProps<{
@@ -22,36 +23,9 @@ const {copy, copied} = useClipboard()
 
 const showTexCode = ref(false)
 
-// TODO: mettre le downloadPDF dans un "useDownloadPDF" avec pleins d'options.
-function downladPdf() {
-	axios
-		.post(route("latex.pdf"), {
-			template: "latex.simple",
-			title: props.title,
-			slug: props.slug,
-			theme: "divers",
-			content: `\\[ ${props.tex} \\]`
-		})
-		.then((res) => {
-			flash.success(
-				"PDF généré avec succès",
-				{
-					link: {
-						label: "Voir le PDF",
-						url: route("latex.download", [res.data.slug]),
-						external: true
-					},
-					timeout: 5000
-				}
-			)
-
-			document.location.href = route("latex.download", [res.data.slug])
-		})
-		.catch((err: AxiosErrorMessage) => {
-			flash.error(err.response.data.message)
-			// console.log(err.response.data.message)
-			// pdfError.value = err.response.data.message
-		})
+const pdf = usePdf()
+function downloadPdf(){
+	pdf.LaTeX(props.title,props.slug,props.tex)
 }
 </script>
 
@@ -73,7 +47,7 @@ function downladPdf() {
 				</button>
 
 				<button
-					@click="downladPdf"
+					@click="downloadPdf"
 					class="cursor-pointer  hover:underline"
 				>
 					<i class="bi bi-download" />

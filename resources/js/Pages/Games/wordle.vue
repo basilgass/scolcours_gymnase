@@ -3,7 +3,7 @@
 	setup
 >
 
-//TODO: Refactor pour le rendre plus propre et structuré.
+//REFACTOR: Refactor pour le rendre plus propre et structuré.
 
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"

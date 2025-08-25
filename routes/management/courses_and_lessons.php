@@ -68,6 +68,9 @@ Route::middleware('api')
 
 		          Route::get('courses/lessonables', [CourseApiController::class, 'fetchLessonables'])
 		               ->name('courses.lessonables');
+
+				  Route::get('course/{course}/team/{team}/stats', [CourseApiController::class, 'teamStats'])
+					  ->name('courses.teams.stats');
 	          });
 
      });

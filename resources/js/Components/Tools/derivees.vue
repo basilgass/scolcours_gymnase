@@ -43,16 +43,10 @@ let result = computed(() => {
 			).derivative().asRoot
 		}
 
-		// Factorize the polynom / PolyFactor
-		// TODO: Enable factorize !
-		// P.factorize()
+		// REFACTOR : Factorize the polynom / PolyFactor
 
-		// Compate the tex values (factorized and unfactorized)
-		// let tex = P.tex
-
-		let tex = P.tex
 		// Value to display
-		return `${ tex }`
+		return `${ P.tex }`
 	}catch(e){
 		console.error(e)
 		return false

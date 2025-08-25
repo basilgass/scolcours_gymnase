@@ -13,11 +13,14 @@ import {router} from "@inertiajs/vue3"
 import LessonTypeIcon from "@/Components/Courses/LessonTypeIcon.vue"
 import ScButton from "@/Components/Ui/scButton.vue"
 import {useStoreScore} from "@/stores/useStoreScore.ts"
+import {ILessonStats} from "@/Pages/Courses/CourseShow.vue"
+import StatBar from "@/Components/Ui/StatBar.vue"
 
 const props = defineProps<{
 	course: CourseInterface
 	lesson: LessonInterface,
-	team: UserTeamInterface
+	team: UserTeamInterface,
+	stats: ILessonStats
 }>()
 
 const editMode = useStoreEditMode()
@@ -70,7 +73,7 @@ function cardClick() {
 }
 
 const isDone = computed(() => {
-	return score.value?.is_resolved ?? false
+	return !!score.value?.is_resolved
 })
 
 onMounted(() => {
@@ -81,56 +84,70 @@ onMounted(() => {
 </script>
 
 <template>
-	<Card
-		class="hover:shadow hover:scale-101 transition-all"
-		:success="isDone"
-		:error="isPast"
-	>
-		<div
-			class="flex justify-between py-5 cursor-pointer"
-			@click="cardClick"
+	<div class="flex gap-5 w-full">
+		<Card
+			class="hover:shadow hover:scale-101 transition-all"
+			:class="editMode.enable ? 'flex-1/3': 'flex-1'"
+			:success="isDone"
+			:error="isPast"
 		>
-			<div class="flex gap-3 items-baseline">
-				<lesson-type-icon
-					:lesson
-					xl
-				/>
-				<h3
-					v-katex.auto="lesson.title"
-					class="text-lg md:text-xl"
-				/>
-			</div>
-			<div>
-				<sc-button
-					xs
-					type="primary"
-					outline
-				>
-					<i class="px-4 text-lg -my-1 bi bi-arrow-right" />
-				</sc-button>
-			</div>
-		</div>
-		<template #footer>
 			<div
-				v-show="score"
-				class="flex justify-between text-xs text-slate-500 py-1"
+				class="flex justify-between py-5 cursor-pointer"
+				@click="cardClick"
 			>
-				<div>
-					La leçon {{ isPast ? 'était' : 'est' }} à terminer {{ lesson.remaining_time }}
+				<div class="flex gap-3 items-baseline">
+					<lesson-type-icon
+						:lesson
+						xl
+					/>
+					<h3
+						v-katex.auto="lesson.title"
+						class="text-lg md:text-xl"
+					/>
 				</div>
 				<div>
-					<span v-if="lesson.scheduled_at">
-						{{ dayjs(lesson.scheduled_at).format('DD MMMM YYYY, [à] HH[h]mm') }}
-					</span>
-					<span v-else>
-						non planifié
-					</span>
+					<sc-button
+						xs
+						type="primary"
+						outline
+					>
+						<i class="px-4 text-lg -my-1 bi bi-arrow-right" />
+					</sc-button>
 				</div>
 			</div>
 
+			<template #footer>
+				<div
+					v-show="score"
+					class="flex justify-between text-xs text-slate-500 py-1"
+				>
+					<div>
+						La leçon {{ isPast ? 'était' : 'est' }} à terminer {{ lesson.remaining_time }}
+					</div>
+					<div>
+						<span v-if="lesson.scheduled_at">
+							{{ dayjs(lesson.scheduled_at).format('DD MMMM YYYY, [à] HH[h]mm') }}
+						</span>
+						<span v-else>
+							non planifié
+						</span>
+					</div>
+				</div>
+			</template>
+		</Card>
+		<div
+			v-admin="editMode.enable"
+			class="flex-2/3"
+		>
+			<stat-bar
+				v-admin="editMode.enable"
+				:max="100"
+				:value="(stats?.resolved_scores)/(stats?.total_scores)*100"
+			/>
+
 			<div
 				v-theme.admin
-				class="-mx-3 p-3"
+				class="flex-2/3"
 				v-admin="editMode.enable"
 			>
 				<div>
@@ -151,8 +168,8 @@ onMounted(() => {
 					/>
 				</div>
 			</div>
-		</template>
-	</Card>
+		</div>
+	</div>
 </template>
 
 <style scoped>

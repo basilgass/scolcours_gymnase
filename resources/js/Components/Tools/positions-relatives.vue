@@ -1,9 +1,5 @@
 <script setup lang="ts">
-// TODO: positions relatives ne fonctionne pas - il faut la retravailler !
-// disable type checking for this file.
-// @ts-nocheck
-
-
+// CHECK: est-ce que cela fonctionne correctement ?
 import {useToolsStorage} from "@/Composables/useToolsStorage.ts"
 import {computed, ref} from "vue"
 import ToolForm, {IToolForm} from "@/Components/Tools/Parts/ToolForm.vue"
@@ -291,7 +287,7 @@ function posRel_droite2d_cercle(equ1: Equation, equ2: Equation): posRelativeInte
 	const r = circle2.radius.value
 
 	return {
-		objet1: line,
+		objet1: line1,
 		objet2: circle2,
 		position: d === r ? 'tangentes' :
 			d < r ? 'sécantes' : 'disjoints'

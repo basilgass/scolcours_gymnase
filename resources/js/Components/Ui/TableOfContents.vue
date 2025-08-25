@@ -1,6 +1,5 @@
 <!--
 Création d'une table des matières dynamique
-TODO: déplacer dans les composants, le simplifier ou supprimer ?
 -->
 <script setup lang="ts">
 	// Génère une table des matières en récupérant les titres ".chapter-menu"

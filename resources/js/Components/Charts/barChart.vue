@@ -9,7 +9,6 @@ import { Bar } from "vue-chartjs"
 
 ChartJS.register(CategoryScale)
 
-
 const props = defineProps({
 	chartLabels: {type: Array, default: () => []},
 	chartDataset: {type: [Object, Array], required: true},
@@ -17,7 +16,6 @@ const props = defineProps({
 	chartLegend: {type: Boolean, default: false},
 	chartColorset: {type: String, default: null}
 })
-
 
 const chartData = computed(() => {
 		const labels = []

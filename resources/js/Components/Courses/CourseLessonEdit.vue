@@ -1,10 +1,12 @@
 <script setup lang="ts">
 
 import {LessonInterface} from "@/types/modelInterfaces.ts"
-import {inject, ref} from "vue"
+import {computed, inject, ref} from "vue"
 import ScButton from "@/Components/Ui/scButton.vue"
 import {AxiosErrorMessage, flashInterface} from "@/types"
 import axios from "axios"
+import FormMaker from "@/Components/Form/FormMaker.vue"
+import {useCourse} from "@/Pages/Courses/useCourse.ts"
 
 const props = defineProps<{
 	lesson: LessonInterface
@@ -27,7 +29,10 @@ function updateLesson() {
 		})
 }
 
-// TODO: edition d'un cours
+const jsonMap = computed(()=>{
+	return useCourse().lessonScoreRulesMap(props.lesson.lessonable_type)
+})
+
 </script>
 
 <template>
@@ -41,27 +46,13 @@ function updateLesson() {
 			/>
 		</div>
 		<div class="font-code">
-			{{ lesson.scoreRules }}
+			<form-maker
+				label="configuration"
+				type="json"
+				:map="jsonMap"
+				v-model="scoreRules"
+			/>
 		</div>
-		<!--		<div-->
-		<!--			v-if="lesson.lessonable_type==='Challenge'"-->
-		<!--			class="flex gap-3"-->
-		<!--		>-->
-		<!--			<div>{{ lesson.parameters.selector }}</div>-->
-		<!--			<div>{{ lesson.parameters.target }}</div>-->
-		<!--		</div>-->
-		<!--		<div v-else-if="lesson.lessonable_type==='Deck'">-->
-		<!--			Deck-->
-		<!--		</div>-->
-		<!--		<div v-else-if="lesson.lessonable_type==='Post'">-->
-		<!--			<div>Nombre de questions: {{ lesson.lessonable.questions.length }}</div>-->
-		<!--		</div>-->
-		<!--		<div v-else-if="lesson.lessonable_type==='Quizz'">-->
-		<!--			Quizz-->
-		<!--		</div>-->
-		<!--		<div v-else-if="lesson.lessonable_type==='Generator'">-->
-		<!--			Generator-->
-		<!--		</div>-->
 	</div>
 </template>
 

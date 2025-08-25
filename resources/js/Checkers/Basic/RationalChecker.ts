@@ -1,7 +1,5 @@
-// TODO : Rational checker is not working - convert ot Polyfactors !
-import {CheckerAbstract} from "../CheckerAbstract";
-import {PolyFactor} from "pimath";
-import {CHECKERS} from "../checker.config";
+import {CheckerAbstract, CHECKERS} from "@/Checkers"
+import {PolyFactor} from "pimath"
 
 const name = "rational"
 const description = `rational,[paramètres]
@@ -13,10 +11,17 @@ const description = `rational,[paramètres]
 `
 
 export class RationalChecker extends CheckerAbstract {
+	#reduced: boolean
+	#factorized: boolean
+	#developed: boolean
 	constructor(config: string[] | string) {
 		super(config)
 		this.type = CHECKERS.RATIONAL
 		this.description = description
+
+		this.#factorized = this.config.includes("f") || this.config.includes("factors")
+		this.#developed = this.config.includes("d") || this.config.includes("develop")
+		this.#reduced = this.config.includes("r") || this.config.includes("reduced")
 	}
 
 	get format(): string {
@@ -40,7 +45,6 @@ export class RationalChecker extends CheckerAbstract {
 			return "Il semble qu'il y ait une erreur quelque part..."
 		}
 
-
 		let [num, den] = value.split("/")
 		if (den === undefined) den = "1"
 		let [expectedNum, expectedDen] = this.answer.split("/")
@@ -50,7 +54,6 @@ export class RationalChecker extends CheckerAbstract {
 			givenRationnalReduced = new PolyFactor().fromPolynom(num, den).reduce(),
 			expectedRationnal = new PolyFactor().fromPolynom(expectedNum, expectedDen).reduce()
 
-		// Check if the reduced version of numerator and denominator are the same.
 		if (!givenRationnalReduced.numerator.isEqual(expectedRationnal.numerator)) {
 			return "le numérateur ne correspond pas à la réponse"
 		}
@@ -58,24 +61,19 @@ export class RationalChecker extends CheckerAbstract {
 			return "le dénominateur ne correspond pas à la réponse"
 		}
 
-		// TODO: RationalCheck must detect if it's factorized, developped or reduced !
-		// if (this.config.includes("f") || this.config.includes("factors")) {
-		//     if (!givenRationnal.numerator.isFactorized(num)) {
-		//         return {
-		//             result: false,
-		//             message: "le numérateur n'est pas factorisé"
-		//         }
-		//     }
-		//     if (!givenRationnal.denominator.isFactorized(den)) {
-		//         return {
-		//             result: false,
-		//             message: "le dénominateur n'est pas factorisé"
-		//         }
-		//     }
-		// }
-		//
+		if (this.#factorized) {
+			const Nfactorized = givenRationnal.numerator.factorize()
+		    if (Nfactorized.factors.length!==givenRationnal.numerator.factors.length) {
+		       return "le numérateur n'est pas factorisé"
+		    }
+			const Dfactorized = givenRationnal.denominator.factorize()
+			if (Dfactorized.factors.length!==givenRationnal.denominator.factors.length) {
+		        return "le dénominateur n'est pas factorisé"
+		    }
+		}
 
-		if (this.config.includes("d") || this.config.includes("develop")) {
+
+		if (this.#developed) {
 			const num = givenRationnal.numerator
 			if (num.factors.length > 1 || !num.factors[1].power.isOne()) {
 				return "le numérateur n'est pas développé"
@@ -87,8 +85,7 @@ export class RationalChecker extends CheckerAbstract {
 			}
 		}
 
-		// Check if it is reduced.
-		if (this.config.includes("r") || this.config.includes("reduced")) {
+		if (this.#reduced) {
 			if (!givenRationnal.numerator.isEqual(givenRationnalReduced.numerator)) {
 				return "la fraction rationnelle n'est pas réduite !"
 			}

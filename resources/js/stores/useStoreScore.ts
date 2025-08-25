@@ -77,7 +77,6 @@ export const useStoreScore = defineStore(
 
 		// Faux score : utilie si l'utilisateur n'est pas connecté par exemple.
 		function fakeScore<T extends ScoreDataInterface>(type: scoreableClassName, id: number): ScoreInterface<T> {
-			// TODO: un fake score doit aussi ajouter le data de manière correcte
 			return {
 				id: scores.value.length + 1,
 				user_id: null,

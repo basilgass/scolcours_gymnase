@@ -11,12 +11,11 @@ import {inject, PropType, ref} from "vue"
 import ScButton from "@/Components/Ui/scButton.vue"
 import TexCode from "@/Components/Ui/TexCode.vue"
 import Card from "@/Components/Ui/Card.vue"
+import {usePdf} from "@/Composables/useDownloadPdf.ts"
 
 /**
  * This component is used to generate a PDF from a challenge
- * Actually, it's only visible for administrators
- * TODO: make PDF generator available for everyone
- * TODO: reformat ChallengeExport.vue
+ * REFACTOR: reformat ChallengeExport.vue
  */
 
 const props = defineProps({
@@ -26,8 +25,6 @@ const props = defineProps({
 	}
 })
 
-const flash = inject<flashInterface>("flash")
-
 const pdfGeneratorNb = ref<number[]>(Array(props.challenge.generators.length).fill(10))
 const pdfQuestionWrapper = ref("\\( @ \\)")
 const pdfError = ref("")
@@ -35,10 +32,13 @@ const pdfLaTeX = ref("")
 
 const {copy, copied} = useClipboard({source: pdfLaTeX})
 
+const MAX_QUESTIONS_PER_GENERATOR = 30
 const pdfGenereate = () => {
 	let questions: generatedQuestionInterface[] = []
 
-	pdfGeneratorNb.value.forEach((nb, index) => {
+	const maxQuestions = pdfGeneratorNb.value.map(nb => Math.min(nb, MAX_QUESTIONS_PER_GENERATOR))
+
+	maxQuestions.forEach((nb, index) => {
 		for (let i = 0; i < nb; i++) {
 			questions.push(
 				useGenerator(props.challenge.generators[index]).random()
@@ -60,39 +60,18 @@ const pdfGenereate = () => {
 	pdfError.value = ""
 	pdfLaTeX.value = ""
 
-	axios
-		.post(route("latex.pdf"), {
-			template: "latex.questions",
-			title: props.challenge.title,
-			slug: props.challenge.slug,
-			theme: usePage().props.theme ? usePage().props.theme.slug : "divers",
-			questions: questions
-		})
-		.then((res) => {
-			pdfLaTeX.value = res.data.tex
-			flash.success(
-				"PDF généré avec succès",
-				{
-					link: {
-						label: "Voir le PDF",
-						url: route("latex.download", [res.data.slug]),
-						external: true
-					},
-					timeout: 5000
-				}
-			)
-			document.location.href = route("latex.download", [res.data.slug])
-		})
-		.catch((err) => {
-			console.warn(err)
-			pdfError.value = err.response.data.message
-		})
+	usePdf().download({
+		template: "latex.questions",
+		title: props.challenge.title,
+		slug: props.challenge.slug,
+		theme: usePage().props.theme ? usePage().props.theme.slug : "divers",
+		questions
+	})
 }
 </script>
 
 <template>
 	<div
-		v-admin
 		class="border-content border-t"
 	>
 		<sc-button
@@ -129,6 +108,8 @@ const pdfGenereate = () => {
 					v-model="pdfGeneratorNb[index]"
 					class="max-w-[150px]"
 					type="number"
+					:max="MAX_QUESTIONS_PER_GENERATOR"
+					:min="0"
 					with-icon
 					:label="gen.title"
 				/>

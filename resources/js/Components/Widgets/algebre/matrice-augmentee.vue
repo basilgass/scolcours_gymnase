@@ -163,13 +163,11 @@ const operationDescription = computed(() => {
 function createPolynomMatrix() {
 	const number_of_lines = left.value.length
 
-	if (right.value.length === 1 && right.value[0][0] === 'id') {
-		// TODO : Création de la matrice identité de taille number_of_lines
-	}
+
+	const right_is_id_matrix = right.value.length === 0 || (right.value.length === 1 && right.value[0][0] === 'id')
 
 	// Même nombre de lignes
-	if (number_of_lines !== right.value.length) {
-		// console.log(number_of_lines, right.value.length)
+	if (!right_is_id_matrix && number_of_lines !== right.value.length) {
 		return false
 	}
 
@@ -181,9 +179,16 @@ function createPolynomMatrix() {
 		left.value[i].forEach((value: string) => {
 			matrixLine.push(new Polynom(value))
 		})
-		right.value[i].forEach((value: string) => {
-			matrixLine.push(new Polynom(value))
-		})
+
+		if(right_is_id_matrix) {
+			left.value[i].forEach((_, index) => {
+				matrixLine.push(new Polynom(index===i ? '1': '0'))
+			})
+		}else{
+			right.value[i].forEach((value: string) => {
+				matrixLine.push(new Polynom(value))
+			})
+		}
 
 		output.push(matrixLine)
 	}
@@ -210,6 +215,7 @@ function initMatrix(refreshOnly?: boolean) {
 	}
 
 	matrix = createPolynomMatrix()
+
 	matrixTex.value = []
 
 	if (result.value) {

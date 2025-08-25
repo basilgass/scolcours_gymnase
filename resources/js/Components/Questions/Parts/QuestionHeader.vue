@@ -1,6 +1,4 @@
 <script setup lang="ts">
-// TODO: voir s'il est possible d'avoir un header "dynamique", avec un slot
-
 import {QuestionInterface} from "@/types/modelInterfaces.ts"
 import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
 

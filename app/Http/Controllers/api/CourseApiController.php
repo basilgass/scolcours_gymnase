@@ -7,6 +7,7 @@ use App\Http\Requests\CourseStoreRequest;
 use App\Http\Requests\updateCourseRequest;
 use App\Http\Resources\CourseResource;
 use App\Models\Course;
+use App\Models\Score;
 use App\Models\Team;
 
 class CourseApiController extends Controller
@@ -50,11 +51,13 @@ class CourseApiController extends Controller
 		$attached = $course->teams()->where('teams.id', $team->id)->exists();
 
 		if ($attached) {
+			$status = false;
 			$course->teams()->detach($team->id);
 		} else {
+			$status = true;
 			$course->teams()->attach($team->id);
 		}
-		return response()->noContent();
+		return $status;
 	}
 
 	public function fetchLessonables(Course $course)
@@ -66,5 +69,33 @@ class CourseApiController extends Controller
 		// Get the challenges
 		// Get the decks
 		// Get... ???
+	}
+
+	public function teamStats(Course $course, Team $team)
+	{
+		// Récupère tous les utilisateurs de l'équipe
+		$users = $team->users;
+
+		// Récupère les ids des lessons.
+		$ids = $course->lessons->pluck('id');
+
+		// Récupère tous les scores des utilisateurs pour les leçons concernées.
+		$scores = Score::whereIn('user_id', $users->pluck('id'))
+		               ->where('scoreable_type', 'App\Models\Lesson')
+		               ->whereIn('scoreable_id', $ids)
+		               ->get();
+
+		$stats = [];
+		foreach ($ids as $lessonId) {
+			$lessonScores = $scores->where('scoreable_id', $lessonId);
+			$stats[$lessonId] = [
+				'users_id'        => $lessonScores->pluck('user_id'),
+				'lesson_id'       => $lessonId,
+				'total_scores'    => $lessonScores->count(),
+				'resolved_scores' => $lessonScores->where('is_resolved', true)->count(),
+			];
+		}
+
+		return $stats;
 	}
 }

@@ -1,6 +1,6 @@
-import {CheckerAbstract} from "../CheckerAbstract";
-import {Polynom} from "pimath";
-import {CHECKERS} from "../checker.config";
+import {CheckerAbstract} from "../CheckerAbstract"
+import {Polynom} from "pimath"
+import {CHECKERS} from "../checker.config"
 
 const name = "function"
 const description = `function|fn,[paramètres]
@@ -10,21 +10,20 @@ const description = `function|fn,[paramètres]
 `
 
 export class FunctionChecker extends CheckerAbstract {
-    private isDevelopped: boolean
+    private developed: boolean
     constructor(config:string[]|string) {
         super(config)
         this.type = CHECKERS.FUNCTION
         this.description = description
 
-        this.isDevelopped = (this.config.includes("d") || this.config.includes("developped") || this.config.includes("dev"))
+        this.developed = (this.config.includes("d") || this.config.includes("developed") || this.config.includes("dev"))
     }
 
     get format(): string {
         const opts = []
 
-        if (this.isDevelopped) {
-            // TODO: develop function does not work for now...
-            opts.push("développée")
+        if (this.developed) {
+            opts.push("développée réduite")
         }
 
         return `fonction ${opts.join(", ")}`
@@ -37,6 +36,17 @@ export class FunctionChecker extends CheckerAbstract {
 		// Must be the same equation.
 		if(!A.isEqual(Q)){
 			return  "la fonction n'est pas juste."
+		}
+
+		if(this.developed){
+			// La fonction ne doit pas avoir de parenthèses.
+			if(value.includes('(')||value.includes(')')){
+				return "la fonction doit être développée (pas de parenthèses)"
+			}
+
+			if(A.monoms.length !== Q.monoms.lenght){
+				return "la fonction doit être réduite."
+			}
 		}
 
 		return ""

@@ -82,7 +82,7 @@ const selectCard = function (card) {
 
 				// On vérifie si tout est terminé
 				if (cards.value.every((x) => x.found)) {
-					// TODO: make an animation to remove all cards
+					// DESIGN: make an animation to remove all cards
 					setTimeout(()=>{
 						// Make next group of items.
 						continueGame()

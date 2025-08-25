@@ -8,6 +8,7 @@ use App\Http\Resources\LessonResource;
 use App\Models\Course;
 use App\Models\Lesson;
 use App\Models\Post;
+use App\Models\Score;
 use App\Models\Team;
 use App\Traits\ResolvesTarget;
 use Illuminate\Http\Request;

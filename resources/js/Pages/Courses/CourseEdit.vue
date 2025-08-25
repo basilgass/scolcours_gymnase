@@ -1,6 +1,5 @@
 <script setup lang="ts">
 // REFACTOR: retravailler l'édition d'un cours
-// TODO: pour l'instant, on ne peut pas modifier les paramètres d'une leçon.
 
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 import {
@@ -17,7 +16,6 @@ import FormMaker from "@/Components/Form/FormMaker.vue"
 import {computed, inject, ref} from "vue"
 import Card from "@/Components/Ui/Card.vue"
 import CourseLessonEdit from "@/Components/Courses/CourseLessonEdit.vue"
-import CourseGraph from "@/Components/Courses/CourseGraph.vue"
 import {AxiosErrorMessage, AxiosResponseModel, flashInterface} from "@/types"
 import LessonTypeIcon from "@/Components/Courses/LessonTypeIcon.vue"
 import ScButton from "@/Components/Ui/scButton.vue"
@@ -25,6 +23,7 @@ import {lessonableClassName, LessonScoreRulesInterface} from "@/types/lessonInte
 import axios from "axios"
 import {FormElementType} from "@/Components/Form/FormMakerInterface.ts"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
+import {useCourse} from "@/Pages/Courses/useCourse.ts"
 
 defineOptions({layout: LayoutMain})
 
@@ -218,18 +217,7 @@ function loadGenerators() {
 }
 
 const lessonJsonMap = computed<Record<string, FormElementType>>(() => {
-	switch (showAddTab.value) {
-		case "Post":
-			return {target: 'number', question_ids: 'text'}// TODO: FormMaker Json type cannot handle this.
-		case "Challenge":
-			return {target: "number", level: "number", occurrences: "number"}
-		case "Generator":
-			return {target: "number", occurrences: "number"}
-		case "Deck":
-			return {target: "number"}
-		default:
-			return {}
-	}
+	return useCourse().lessonScoreRulesMap(showAddTab.value)
 })
 
 function updateLessonsOrder() {

@@ -69,8 +69,10 @@ function makeSlider(slider: string): ISlider | null {
 		const [a, b, c] = values
 		const marksInterval = b - a
 
-		// TODO: handle if c is not a multilple of a + k*marksInterval (vue-slider error)
-		for (let i = a; i <= c; i += marksInterval) {
+		const c2 = (c - a) % marksInterval === 0
+			? c
+			: a + Math.ceil((c - a) / marksInterval) * marksInterval
+		for (let i = a; i <= c2; i += marksInterval) {
 			marks.push(i)
 		}
 	} else {

@@ -74,7 +74,6 @@ const updateTranslation = function() {
  * TODO: export as excel list.
  */
 const exportList = function() {
-	// TODO: export as excel list.
 	alert("Pour l'instant, l'export n'est pas encore opérationnel !")
 }
 

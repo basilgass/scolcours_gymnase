@@ -20,7 +20,6 @@ export class matrixSolver {
 	#pivot: { row: number, col: number }
 	#separatorIndex: number
 
-	// TODO: Manage separator
 	constructor(matrix: Fraction[][], separator?: number) {
 		this.#original = matrix.map(row => row.map(v => v.clone()))
 		this.#matrix = matrix

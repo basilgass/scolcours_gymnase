@@ -44,8 +44,8 @@ async function setInput(value?: string): Promise<KeyboardInputInterface> {
 }
 
 defineExpose<KeyboardExposeInterface>({
-	reset: () => {
-		//TODO: add a reset function
+	reset: ()=>{
+		// TODO: reset function
 	},
 	setInput,
 	parameters: "@<name>(x)"

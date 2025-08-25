@@ -29,7 +29,6 @@ const el = useTemplateRef<HTMLElement>('el')
 const svgId = ref<string>(genSvgId())
 
 function genSvgId() {
-	// TODO: Passer à nanoid ?
 	const max = 1000000
 	return `mermaid-svg-${genId(max)}`
 

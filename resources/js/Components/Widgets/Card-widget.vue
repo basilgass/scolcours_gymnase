@@ -6,6 +6,7 @@ import {BlockInterface, WidgetPropsInterface} from "@/types/modelInterfaces"
 import {onMounted, ref} from "vue"
 import CardItem from "@/Components/Elements/CardItem.vue"
 import axios from "axios"
+import {makeBlock} from "@/helpers/makeModel.ts"
 
 const props = defineProps<{
 	illustration: WidgetPropsInterface
@@ -13,25 +14,6 @@ const props = defineProps<{
 
 const recto = ref<BlockInterface>()
 const verso = ref<BlockInterface>()
-
-// TODO: centralize makeBlock
-function makeBlock(body: string): BlockInterface {
-	return {
-		id: -1,
-		active: true,
-		order: 0,
-		merge: false,
-		switch: false,
-		type: '',
-		title: '',
-		body,
-		template: '',
-		illustrationsGrid: '',
-		illustrations: [],
-		script: '',
-		json: ''
-	}
-}
 
 onMounted(() => {
 	// props.illustrations.code is two texts, separated by --- (three dashes)

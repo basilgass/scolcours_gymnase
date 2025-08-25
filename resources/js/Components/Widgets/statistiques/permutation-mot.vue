@@ -5,7 +5,7 @@ code:
 </info>-->
 <script lang="ts" setup>
 
-// TODO: doit être reformaté pour une meilleure lisibilité
+// REFACTOR: doit être reformaté pour une meilleure lisibilité
 
 import {flashInterface} from "@/types"
 import {WidgetPropsInterface} from "@/types/modelInterfaces.ts"

@@ -11,8 +11,6 @@ import ScButton from "@/Components/Ui/scButton.vue"
 import FormulaShow from "@/Components/Blocks/FormulaShow.vue"
 import PleaseWait from "@/Components/Ui/PleaseWait.vue"
 
-// TODO: Ajouter une recherche par thème / chapitre
-
 const flash = inject<flashInterface>("flash")
 const editMode = useStoreEditMode()
 

@@ -36,7 +36,7 @@ export type FormElementType =
 	"date" | "datetime-local" |
 	"id" |
 	"textarea" |
-	"select" | "search" | // TODO: handle select FormMaker element.
+	"select" | "search" |
 	"fraction" |
 	"vector" |
 	"switch" |

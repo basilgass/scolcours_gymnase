@@ -47,7 +47,6 @@ const mdit = computed(() => {
 	// .@text = .text-<theme>
 	// .@bg = .bg-<theme>
 	// .@def = .def-<theme>
-	// TODO: attention, au passage à Tailwind4, il faudra mettre à jour ici !
 	output = output.replaceAll(/\.(@[a-z]+)/g, (match) => {
 		const prefix = match.substring(2)
 		const theme = usePage().props.theme.slug

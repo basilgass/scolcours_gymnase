@@ -55,15 +55,6 @@ function getUnits_from_Book(book_id: number) {
 		})
 }
 
-// TODO: Loading books async or not ?
-// onMounted(() => {
-// 	axios.get(route('voc.languages.books.index', {language: 2}))
-// 		.then(res => {
-// 			console.log(res.data)
-// 		})
-//
-// })
-
 </script>
 
 <template>

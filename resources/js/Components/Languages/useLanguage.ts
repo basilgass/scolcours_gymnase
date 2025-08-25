@@ -49,7 +49,7 @@ export function useLanguage(languageData: LanguageDataInterface, options?: {
 			return
 		}
 
-		// Check if there is at least one unit selected
+		// there is at least one unit selected
 		const selectedUnits = languageData.units.value.filter(x => x.selected)
 
 		if (selectedUnits.length === 0) {
@@ -57,8 +57,10 @@ export function useLanguage(languageData: LanguageDataInterface, options?: {
 			return
 		}
 
+		// tous les mots (pas besoin de les rendre aléatoires)
+		languageData.words.value = getListOfWordsFromUnits(false)
+
 		// Get the selected words
-		languageData.words.value = getListOfWordsFromUnits() // toDO: remove this line
 		selectedWords.value = getListOfWordsFromUnits().map(x=>{
 			return {
 				...x,

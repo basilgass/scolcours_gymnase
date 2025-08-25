@@ -18,7 +18,6 @@ const props = defineProps<KeyboardPropsInterface>()
 const emits = defineEmits<KeyboardEmitsInterface>()
 
 // emit change event
-// TODO: Change this event to receive only the input as a string
 function onChange(event: KeyboardInputInterface): void {
 	setInput(event.input).then((x) => emits("change", x))
 }

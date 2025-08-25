@@ -13,16 +13,12 @@ import axios from "axios"
 import {inject, ref} from "vue"
 import ScButton from "@/Components/Ui/scButton.vue"
 
-
 defineOptions({layout: LayoutMain})
 const props = defineProps<{
 	challenge: ChallengeInterface
 }>()
 
 const flash = inject<flashInterface>("flash")
-
-
-// TODO: move to external component.
 const theChallenge = ref(props.challenge)
 
 const updateGeneratorsOrder = function () {
@@ -71,20 +67,20 @@ const addGenerator = function () {
 }
 const availableGenerators = ref([])
 const attachGeneratorId = ref("")
-const getListOfGenerators = function () {
-	if (availableGenerators.value.length === 0) {
-		axios
-			.get(
-				route("api.admin.challenges.generators.index", [
-					theChallenge.value.id
-				])
-			)
-			.then((res) => (availableGenerators.value = res.data))
-			.catch((res) => {
-				console.warn(res.response.data.message)
-			})
-	}
-}
+// const getListOfGenerators = function () {
+// 	if (availableGenerators.value.length === 0) {
+// 		axios
+// 			.get(
+// 				route("api.admin.challenges.generators.index", [
+// 					theChallenge.value.id
+// 				])
+// 			)
+// 			.then((res) => (availableGenerators.value = res.data))
+// 			.catch((res) => {
+// 				console.warn(res.response.data.message)
+// 			})
+// 	}
+// }
 const attachGenerator = function () {
 	if (attachGeneratorId.value !== "") {
 		axios
