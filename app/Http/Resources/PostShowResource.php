@@ -28,6 +28,7 @@ class PostShowResource extends PostResource
 			...parent::toArray($request),
 			'script'        => $this->script,
 			'switch'        => $this->switch,
+			'calculator'    => $this->calculator,
 			'blocks'        => BlockResource::collection($this->blocks),
 			'questions'     => QuestionResource::collection($this->questions),
 			'questionsGrid' => $this->questionsGrid,

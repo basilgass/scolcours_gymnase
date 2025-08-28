@@ -18,6 +18,7 @@ import axios from "axios"
 import {AxiosErrorMessage, AxiosResponseModel} from "@/types"
 import BarChart from "@/Components/Charts/barChart.vue"
 import StatBar from "@/Components/Ui/StatBar.vue"
+import LessonTypeIcon from "@/Components/Courses/LessonTypeIcon.vue";
 
 defineOptions({layout: LayoutMain})
 
@@ -186,10 +187,16 @@ onMounted(() => {
 				:key="`stats-${lesson.id}`"
 				class="flex gap-3"
 			>
-				<div
-					class="text-xs w-[300px] whitespace-nowrap overflow-hidden"
-					v-katex.auto="lesson.title"
-				/>
+				<div class="flex gap-2">
+					<lesson-type-icon
+						:lesson
+						xs
+					/>
+					<div
+						class="text-xs w-[300px] whitespace-nowrap overflow-hidden"
+						v-katex.auto="lesson.title"
+					/>
+				</div>
 				<stat-bar
 					class="text-xs"
 					:max="100"

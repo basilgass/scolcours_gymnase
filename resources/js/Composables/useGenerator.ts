@@ -62,7 +62,8 @@ export function useGenerator(generator: GeneratorInterface | ComputedRef<Generat
 
 			return result
 		} catch (e) {
-			throw new Error("Erreur dans la génération de la question")
+			console.warn(e)
+			throw new Error("Erreur dans la génération de la question (voir la console pour plus détails)")
 		}
 	}
 

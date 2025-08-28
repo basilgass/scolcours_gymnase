@@ -61,8 +61,12 @@ const json = computed(() => {
 const rValue: Record<string, Ref<string | number>> = {}
 
 function buildValues() {
+	if (!props.map) {
+		return
+	}
+
 	Object.keys(props.map).forEach(key => {
-		rValue[key] = ref(theValue.value[key] ?? '')
+		rValue[key] = ref(theValue.value?.[key] ?? '')
 	})
 }
 

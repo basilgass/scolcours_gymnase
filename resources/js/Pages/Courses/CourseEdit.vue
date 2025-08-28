@@ -24,6 +24,7 @@ import axios from "axios"
 import {FormElementType} from "@/Components/Form/FormMakerInterface.ts"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 import {useCourse} from "@/Pages/Courses/useCourse.ts"
+import ConfirmButton from "@/Components/Ui/ConfirmButton.vue";
 
 defineOptions({layout: LayoutMain})
 
@@ -521,14 +522,12 @@ function updateLessonsOrder() {
 						<template #footer>
 							<div class="flex justify-between">
 								<div />
-								<sc-button
-									type="delete"
-									icon
+								<confirm-button
 									xs
-									@click="deleteLesson(element)"
+									@confirm="deleteLesson(element)"
 								>
 									supprimer
-								</sc-button>
+								</confirm-button>
 							</div>
 						</template>
 					</Card>
