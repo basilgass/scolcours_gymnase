@@ -23,7 +23,6 @@ class CourseApiController extends Controller
 
 	public function store(CourseStoreRequest $request)
 	{
-
 		$course = Course::create($request->validated());
 
 		$course->blocks()->create();
@@ -43,6 +42,9 @@ class CourseApiController extends Controller
 
 	public function destroy(Course $course)
 	{
+		$course->delete();
+
+		return response()->noContent();
 	}
 
 	public function toggleTeam(Course $course, Team $team)

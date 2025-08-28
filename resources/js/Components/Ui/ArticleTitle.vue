@@ -46,12 +46,14 @@ const editLabel = computed<string>(() => {
 					class="text-3xl lg:text-4xl font-[400]"
 				/>
 			</div>
-			<edit-link
-				v-if="editLink"
-				:label="editLabel"
-				:href="editLink.url"
-				inline
-			/>
+			<slot name="right">
+				<edit-link
+					v-if="editLink"
+					:label="editLabel"
+					:href="editLink.url"
+					inline
+				/>
+			</slot>
 		</div>
 		<h3
 			v-if="subtitle!==null"

@@ -22,25 +22,6 @@ const props = defineProps<{
 	// userCourses: CourseInterface[]
 }>()
 
-
-const showCreate = ref(false)
-const newCourseTitle = ref("")
-const newCourseSlug = computed(() => {
-	return slugify(newCourseTitle.value)
-})
-
-function addCourse() {
-	axios.post(route('api.admin.courses.store'), {
-		title: newCourseTitle.value,
-		slug: newCourseSlug.value
-	})
-		.then((res: { data: CourseInterface }) => {
-			router.visit(route('admin.courses.edit', {id: res.data.id}))
-		})
-		.catch((err: AxiosErrorMessage) => {
-			console.log(err.response.data.message)
-		})
-}
 </script>
 
 <template>
@@ -64,20 +45,6 @@ function addCourse() {
 		</div>
 
 		<div v-else>
-			<div
-				v-admin
-				class="admin-content p-3 flex justify-between"
-			>
-				<sc-button
-					type="add"
-					xs
-					@click="showCreate = true"
-				>
-					<i class="bi bi-plus-circle mr-2" />Créer un nouveau cours
-				</sc-button>
-				<div>Droite</div>
-			</div>
-
 			<div>
 				<h2 class="text-lg md:text-2xl mb-5">
 					Cours de classe
@@ -91,35 +58,6 @@ function addCourse() {
 				</div>
 			</div>
 
-			<dialog-modal
-				v-model="showCreate"
-				class="w-[300px] h-auto p-3"
-			>
-				<div>
-					<h2 class="text-lg font-extralight">
-						Créer un nouveau cours
-					</h2>
-					<form-maker
-						v-model="newCourseTitle"
-						label="titre"
-					/>
-					<form-maker
-						v-model="newCourseSlug"
-						disabled
-						label="slug"
-					/>
-				</div>
-				<template #footer>
-					<sc-button
-						type="add"
-						xs
-						class="w-full"
-						@click="addCourse"
-					>
-						<i class="bi bi-plus-circle mr-2" />Créer un nouveau cours
-					</sc-button>
-				</template>
-			</dialog-modal>
 		</div>
 	</main>
 </template>

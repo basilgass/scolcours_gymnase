@@ -1,12 +1,18 @@
 <script setup lang="ts">
 
-import {CourseInterface, TeamInterface, UserTeamInterface} from "@/types/modelInterfaces.ts"
+import {CourseInterface, UserTeamInterface} from "@/types/modelInterfaces.ts"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
-import {inject, ref} from "vue"
+import {computed, inject, ref} from "vue"
 import {AxiosErrorMessage, AxiosResponseModel, flashInterface} from "@/types"
 import Card from "@/Components/Ui/Card.vue"
 import ScButton from "@/Components/Ui/scButton.vue"
 import axios from "axios"
+import ArticleTitle from "@/Components/Ui/ArticleTitle.vue";
+import FormMaker from "@/Components/Form/FormMaker.vue";
+import DialogModal from "@/Components/Ui/DialogModal.vue";
+import {slugify} from "@/scolcours.ts";
+import {router} from "@inertiajs/vue3";
+import ConfirmButton from "@/Components/Ui/ConfirmButton.vue";
 
 defineOptions({layout: LayoutMain})
 const flash = inject<flashInterface>("flash")
@@ -16,26 +22,54 @@ const props = defineProps<{
 	teams: UserTeamInterface[]
 }>()
 
-const theCourses = ref<CourseInterface[]>(props.courses)
+const showCreate = ref(false)
+const newCourseTitle = ref("")
+const newCourseSlug = computed(() => {
+	return slugify(newCourseTitle.value)
+})
 
-function toggleTeam(course: CourseInterface, team: UserTeamInterface){
+function addCourse() {
+	axios.post(route('api.admin.courses.store'), {
+		title: newCourseTitle.value,
+		slug: newCourseSlug.value
+	})
+		.then((res: { data: CourseInterface }) => {
+			router.visit(route('admin.courses.edit', {course: res.data.slug}))
+		})
+		.catch((err: AxiosErrorMessage) => {
+			console.log(err.response.data.message)
+		})
+}
+
+function deleteCourse(id: number){
+	axios.delete(route('api.admin.courses.destroy', {id}))
+		.then(()=>{
+			const index = theCourses.value.findIndex(course=>course.id===id)
+			theCourses.value.splice(index, 1)
+		})
+		.catch((err:AxiosErrorMessage)=>{
+			console.warn(err.response.data.message)
+		})
+}
+const theCourses = ref<CourseInterface[]>(props.courses)
+function toggleTeam(course: CourseInterface, team: UserTeamInterface) {
 	axios
 		.patch(route('api.admin.courses.toggle-team', {course: course.id, team: team.id}))
-		.then((res: AxiosResponseModel<boolean>)=>{
-			if(res.data) {
+		.then((res: AxiosResponseModel<boolean>) => {
+			if (res.data) {
 				// On ajoute la team
 				theCourses.value
 					.find(c => course.id === c.id)
 					.teams.push(team)
-			}else{
+			} else {
 				// On supprime la team
-				const c = theCourses.value.findIndex(c=>course.id === c.id)
-				const t = theCourses.value[c].teams.findIndex(t=>t.id===team.id)
+				const c = theCourses.value.findIndex(c => course.id === c.id)
+				const t = theCourses.value[c].teams.findIndex(t => t.id === team.id)
 				theCourses.value[c].teams.splice(t, 1)
 			}
 			flash.success('édition effectuée')
 		})
-		.catch((err: AxiosErrorMessage)=>{
+		.catch((err: AxiosErrorMessage) => {
 			console.warn(err.response.data.message)
 			flash.error('problème')
 		})
@@ -44,6 +78,25 @@ function toggleTeam(course: CourseInterface, team: UserTeamInterface){
 
 <template>
 	<section>
+		<div>
+			<article-title
+				title="gestion des cours"
+				:return-link="{
+				url: route('admin.index'),
+				label: 'retour à l\'administration'
+			}"
+			>
+				<template #right><sc-button
+					type="add"
+					xs
+					@click="showCreate = true"
+				>
+					<i class="bi bi-plus-circle mr-2" />Créer un nouveau cours
+				</sc-button></template>
+			</article-title>
+
+			<div>Droite</div>
+		</div>
 		<div class="grid grid-cols-1 gap-3 mt-10">
 			<Card
 				v-for="course in theCourses"
@@ -68,6 +121,11 @@ function toggleTeam(course: CourseInterface, team: UserTeamInterface){
 								icon
 								:href="route('admin.courses.edit', {course: course.slug})"
 							/>
+							<confirm-button
+								icon
+								xs
+								@confirm="deleteCourse(course.id)"
+							>supprimer</confirm-button>
 						</div>
 					</div>
 				</template>
@@ -85,6 +143,36 @@ function toggleTeam(course: CourseInterface, team: UserTeamInterface){
 				</div>
 			</Card>
 		</div>
+
+		<dialog-modal
+			v-model="showCreate"
+			class="w-[300px] h-auto p-3"
+		>
+			<div>
+				<h2 class="text-lg font-extralight">
+					Créer un nouveau cours
+				</h2>
+				<form-maker
+					v-model="newCourseTitle"
+					label="titre"
+				/>
+				<form-maker
+					v-model="newCourseSlug"
+					disabled
+					label="slug"
+				/>
+			</div>
+			<template #footer>
+				<sc-button
+					type="add"
+					xs
+					class="w-full"
+					@click="addCourse"
+				>
+					<i class="bi bi-plus-circle mr-2" />Créer un nouveau cours
+				</sc-button>
+			</template>
+		</dialog-modal>
 	</section>
 </template>
 

@@ -6,6 +6,7 @@ use App\Models\Course;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Collection;
 
 /** @mixin Course */
 class CourseResource extends JsonResource
@@ -17,7 +18,7 @@ class CourseResource extends JsonResource
 
 		$userTeamIds = \Auth::user()->teams->pluck('id');
 
-		if ($lessons && $lessons->count() > 0) {
+		if ($lessons instanceof Collection && $lessons->count() > 0) {
 			$scheduledDates = collect($lessons)
 				->flatMap(fn($lesson) => $lesson->calendars->whereIn('team_id', $userTeamIds)->pluck('scheduled_at')
 				);
