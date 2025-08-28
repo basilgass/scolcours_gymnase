@@ -14,7 +14,7 @@ const props = defineProps<{
 
 const flash = inject<flashInterface>('flash')
 
-const scoreRules = ref(props.lesson.scoreRules)
+const scoreRules = ref(props.lesson.scoreRules ?? {})
 
 function updateLesson() {
 	axios
