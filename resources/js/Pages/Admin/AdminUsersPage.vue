@@ -34,11 +34,14 @@ const usersEmails = ref(""),
 	})
 
 
-const addMode = ref(false),
-	form = useForm({
-		users: [],
-		password: "GymnaseScolcours"
-	})
+const addMode = ref(false)
+const form = useForm<{
+	users: string[],
+	password: string
+}>({
+	users: [],
+	password: "GymnaseScolcours"
+})
 
 function addUsers() {
 	form.transform((data) => ({

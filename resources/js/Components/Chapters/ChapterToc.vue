@@ -160,7 +160,7 @@ const availablePostTypes = computed(()=>{
 					:key="`filter-${key}`"
 					v-theme.text="postsFilterCurrent===key"
 					:title="el.title"
-					@click="postsFilter(key)"
+					@click="postsFilter(key as string)"
 				>
 					<i :class="el.icon" />
 				</button>
