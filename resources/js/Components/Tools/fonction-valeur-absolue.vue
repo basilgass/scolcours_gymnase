@@ -7,6 +7,7 @@ import { useToolsStorage } from "@/Composables/useToolsStorage.ts"
 import { Equation, Fraction, ISolution, Polynom, Random } from "pimath"
 import { computed, ref } from "vue"
 import ScButton from "@/Components/Ui/scButton.vue"
+import Card from "@/Components/Ui/Card.vue"
 
 // TODO: .solutions dowes not work
 /** Tools
@@ -187,7 +188,7 @@ const root = ref(null),
 
 <template>
 	<article>
-		<div v-if="result">
+		<Card v-if="result">
 			<!-- Title -->
 			<div ref="root">
 				<div class="grid grid-cols-1 gap-3 md:grid-cols-3 items-end">
@@ -242,12 +243,12 @@ const root = ref(null),
 					<tex-code :tex="draw.code" />
 				</div>
 			</div>
-		</div>
-		<div
+		</Card>
+		<Card
 			v-else
 			class="text-red-700 text-sm"
 		>
 			Une erreur s'est produite avec vos données.
-		</div>
+		</Card>
 	</article>
 </template>

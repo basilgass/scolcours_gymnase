@@ -10,6 +10,7 @@ import { useToolsStorage } from "@/Composables/useToolsStorage.ts"
  * tags: algebre,1M
  */
 import { computed, ref } from "vue"
+import Card from "@/Components/Ui/Card.vue"
 
 const { restoreTool } = useToolsStorage()
 const forms: IToolForm[] = restoreTool( [
@@ -44,13 +45,15 @@ const code = computed(()=>  forms[1].value.value as string)
 	<article>
 		<tool-form :forms="forms" />
 
-		<pi-draw-parser
-			:width="800"
-			:height="800"
-			:draw="{
-				code: code,
-				parameters: params
-			}"
-		/>
+		<Card>
+			<pi-draw-parser
+				:width="800"
+				:height="800"
+				:draw="{
+					code: code,
+					parameters: params
+				}"
+			/>
+		</Card>
 	</article>
 </template>

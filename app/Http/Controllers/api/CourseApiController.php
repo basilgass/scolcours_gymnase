@@ -88,11 +88,12 @@ class CourseApiController extends Controller
 		$stats = [];
 		foreach ($ids as $lessonId) {
 			$lessonScores = $scores->where('scoreable_id', $lessonId);
+			$resolvedScores = $lessonScores->where('is_resolved', true);
 			$stats[$lessonId] = [
-				'users_id'        => $lessonScores->pluck('user_id'),
+				'users_id'        => $resolvedScores->pluck('user_id'),
 				'lesson_id'       => $lessonId,
 				'total_scores'    => $lessonScores->count(),
-				'resolved_scores' => $lessonScores->where('is_resolved', true)->count(),
+				'resolved_scores' => $resolvedScores->count(),
 			];
 		}
 

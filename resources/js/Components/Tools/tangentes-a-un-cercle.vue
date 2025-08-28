@@ -9,7 +9,10 @@ import { Circle, Point } from "pimath"
  * parameters: equ=equation, valeur=Point/Fraction
  * tags: geometrie,3M
  */
+
+// BUG : ne fonctionne pas avec une pente.
 import { computed, ref } from "vue"
+import Card from "@/Components/Ui/Card.vue"
 
 const { restoreTool } = useToolsStorage()
 const forms: IToolForm[] = restoreTool([
@@ -48,7 +51,7 @@ let tangentes = computed(() => {
 	<article>
 		<tool-form :forms="forms" />
 
-		<div v-if="tangentes">
+		<Card v-if="tangentes">
 			<div
 				v-for="(tangente, index) of tangentes"
 				:key="'tangente-'+index"
@@ -57,7 +60,7 @@ let tangentes = computed(() => {
 
 				<tex-code :tex="tangente.tex" />
 			</div>
-		</div>
+		</Card>
 
 		<div
 			v-else

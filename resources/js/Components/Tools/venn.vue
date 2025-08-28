@@ -13,6 +13,7 @@ import katex from "katex"
 import { PiGraph } from "pidraw"
 import { LogicalSet } from "pimath"
 import { computed, onMounted, ref } from "vue"
+import Card from "@/Components/Ui/Card.vue"
 
 const { restoreTool } = useToolsStorage()
 const forms: IToolForm[] = restoreTool([
@@ -118,40 +119,44 @@ onMounted(() => {
 
 <template>
 	<article class="grid grid-cols-1 md:grid-cols-2 gap-3">
-		<div class="flex flex-col gap-5">
+		<div class="flex flex-col">
 			<tool-form :forms="forms" />
 
-			<div v-katex.boxed.lg="tex" />
+			<Card>
+				<div v-katex.boxed.lg="tex" />
 
-			<keyboard-display
-				@change="updateKbrd"
-				:custom-keys="{
-					'A': { type: 'math', display: 'A' },
-					'B': { type: 'math', display: 'B' },
-					'C': { type: 'math', display: 'C' },
-					'|': { type: 'math', display: '\\cup' },
-					'&': { type: 'math', display: '\\cap' },
-					'!': { type: 'math', display: '\\overline{\\textcolor{lightgray}{A}}' },
-					'-': { type: 'math', display: '\\textcolor{lightgray}{A}\\setminus{\\textcolor{lightgray}{B}}' },
+				<keyboard-display
+					@change="updateKbrd"
+					:custom-keys="{
+						'A': { type: 'math', display: 'A' },
+						'B': { type: 'math', display: 'B' },
+						'C': { type: 'math', display: 'C' },
+						'|': { type: 'math', display: '\\cup' },
+						'&': { type: 'math', display: '\\cap' },
+						'!': { type: 'math', display: '\\overline{\\textcolor{lightgray}{A}}' },
+						'-': { type: 'math', display: '\\textcolor{lightgray}{A}\\setminus{\\textcolor{lightgray}{B}}' },
 
-				}"
-				:keyboard="{
-					grid: 'grid-cols-3',
-					layout: [
-						'A', 'B', 'C',
-						'|', '&', '!',
-						'-', '(', ')',
-						'@back', '', '@reset'
-					]
-				}"
-				class="my-2"
-			/>
+					}"
+					:keyboard="{
+						grid: 'grid-cols-3',
+						layout: [
+							'A', 'B', 'C',
+							'|', '&', '!',
+							'-', '(', ')',
+							'@back', '', '@reset'
+						]
+					}"
+					class="my-2"
+				/>
+			</Card>
 		</div>
 
-		<div
-			ref="draw"
-			id="draw"
-			class="max-w-lg"
-		/>
+		<Card>
+			<div
+				ref="draw"
+				id="draw"
+				class="max-w-lg"
+			/>
+		</Card>
 	</article>
 </template>

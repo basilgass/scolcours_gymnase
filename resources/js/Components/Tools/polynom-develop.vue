@@ -12,6 +12,7 @@ import { Polynom } from "pimath"
  * tags: algebre,1M
  */
 import { computed, ref } from "vue"
+import Card from "@/Components/Ui/Card.vue"
 
 const { restoreTool } = useToolsStorage()
 const forms: IToolForm[] = restoreTool([
@@ -51,25 +52,27 @@ function updateKbrd(event){
 	<article>
 		<tool-form :forms="forms" />
 
-		<div v-if="result">
-			<div v-katex.display.boxed.lg="`${result.tex}`" />
+		<Card>
+			<div v-if="result">
+				<div v-katex.display.boxed.lg="`${result.tex}`" />
 
-			<tex-code :tex="result.tex" />
-		</div>
-		<div
-			v-else
-			class="text-red-700 text-sm"
-		>
-			Une erreur s'est produite avec vos données.
-		</div>
+				<tex-code :tex="result.tex" />
+			</div>
+			<div
+				v-else
+				class="text-red-700 text-sm"
+			>
+				Une erreur s'est produite avec vos données.
+			</div>
 
-		<keyboard-display
-			class="mt-3"
-			back
-			keyboard="polynom"
-			next
-			reset
-			@change="updateKbrd"
-		/>
+			<keyboard-display
+				class="mt-3"
+				back
+				keyboard="polynom"
+				next
+				reset
+				@change="updateKbrd"
+			/>
+		</Card>
 	</article>
 </template>

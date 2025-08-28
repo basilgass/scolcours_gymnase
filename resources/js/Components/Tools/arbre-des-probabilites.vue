@@ -9,7 +9,9 @@ import ToolForm, { IToolForm } from "@/Components/Tools/Parts/ToolForm.vue"
 import { useToolsStorage } from "@/Composables/useToolsStorage.ts"
 import { flashInterface } from "@/types"
 import { computed, inject, ref } from "vue"
+import Card from "@/Components/Ui/Card.vue"
 
+// TODO: documentation dans la page
 const flash = inject<flashInterface>('flash')
 
 const { restoreTool } = useToolsStorage()
@@ -39,9 +41,11 @@ const treeParams = computed(() => forms[0].value.value as string)
 	<article>
 		<tool-form :forms="forms" />
 
-		<pi-probability-tree
-			:tree-data="treeData"
-			:tree-params="treeParams"
-		/>
+		<Card>
+			<pi-probability-tree
+				:tree-data="treeData"
+				:tree-params="treeParams"
+			/>
+		</Card>
 	</article>
 </template>

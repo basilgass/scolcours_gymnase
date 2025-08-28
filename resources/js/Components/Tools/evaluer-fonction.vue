@@ -10,6 +10,7 @@ import { Fraction, Polynom } from "pimath"
  * tags: algebre,1M
  */
 import { computed, ref } from "vue"
+import Card from "@/Components/Ui/Card.vue"
 
 const { restoreTool } = useToolsStorage()
 const forms: IToolForm[] = restoreTool( [
@@ -74,37 +75,41 @@ const fx = computed(() => {
 			:active="activeInput"
 		/>
 
-		<div class="h-24 flex items-center justify-center">
-			<div v-if="fx">
-				<div v-katex="`f\\left(${fx.x}\\right) = ${fx.fx} ${fx.frac?'='+fx.frac:''} ${fx.value?'='+fx.value:''}`" />
+		<Card>
+			<div class="h-24 flex items-center justify-center">
+				<div v-if="fx">
+					<div
+						v-katex="`f\\left(${fx.x}\\right) = ${fx.fx} ${fx.frac?'='+fx.frac:''} ${fx.value?'='+fx.value:''}`"
+					/>
+				</div>
+				<div
+					v-else
+					class="text-red-700 text-sm bg-red-100 w-full py-5 text-center"
+				>
+					Une erreur s'est produite lors de l'introduction des coordonnées.
+				</div>
 			</div>
-			<div
-				v-else
-				class="text-red-700 text-sm bg-red-100 w-full py-5 text-center"
-			>
-				Une erreur s'est produite lors de l'introduction des coordonnées.
-			</div>
-		</div>
 
-		<div class="mt-2">
-			<keyboard-display
-				v-show="activeInput===0"
-				back
-				reset
-				next
-				keyboard="polynom"
-				@change="onKeyboardChange"
-				@next="activeInput=1"
-			/>
-			<keyboard-display
-				v-show="activeInput===1"
-				back
-				reset
-				next
-				keyboard="fraction"
-				@change="onKeyboardChange"
-				@next="activeInput=0"
-			/>
-		</div>
+			<div class="mt-2">
+				<keyboard-display
+					v-show="activeInput===0"
+					back
+					reset
+					next
+					keyboard="polynom"
+					@change="onKeyboardChange"
+					@next="activeInput=1"
+				/>
+				<keyboard-display
+					v-show="activeInput===1"
+					back
+					reset
+					next
+					keyboard="fraction"
+					@change="onKeyboardChange"
+					@next="activeInput=0"
+				/>
+			</div>
+		</Card>
 	</article>
 </template>

@@ -61,18 +61,43 @@ export interface ILessonStats {
 const lesson_stats = ref<Record<string, ILessonStats>>({})
 const users = ref<UserInterface[]>([])
 const selected_user_id = ref(0)
+
+const selected_user_stats = computed<Record<string, ILessonStats>>(()=>{
+	if(!lesson_stats.value){
+		return {}
+	}
+
+	if(selected_user_id.value===0){
+		return lesson_stats.value
+	}
+
+
+	const userStats:Record<string, ILessonStats> = {}
+	for(let id in lesson_stats.value){
+		userStats[id] = {
+			users_id: [],
+			lesson_id: +id,
+			resolved_scores: lesson_stats.value[+id].users_id.includes(selected_user_id.value)?1:0,
+			total_scores: 1
+		}
+	}
+
+	return userStats
+})
 function loadStats() {
 	axios.get(route('api.admin.teams.users', {team: props.team.id}))
 		.then((res: AxiosResponseModel<UserInterface[]>)=>{
 			users.value = res.data
 		})
 
+	console.log('LOADING STATS...')
 	axios.get(route('api.admin.courses.teams.stats', {
 		team: props.team.id,
 		course: props.course.id
 	}))
 		.then((res: AxiosResponseModel<Record<string, ILessonStats>>) => {
 			lesson_stats.value = res.data
+			console.log('STATS UPDATED')
 		})
 		.catch((err: AxiosErrorMessage) => {
 			console.warn(err.response.data.message)
@@ -123,43 +148,78 @@ onMounted(() => {
 			class="mb-10"
 		/>
 
-		<!-- Liste des dates du cours. -->
-		<div class="flex gap-3">
+		<div
+			v-admin="editMode.enable"
+			v-if="lesson_stats && users.length"
+			class="my-6"
+		>
+			<!-- Liste des étudiants -->
 			<div
-				v-for="(_, day) in lessonsByDate"
-				:key="`btn-${day}`"
+				v-if="editMode.enable && users.length"
+				class="flex gap-3 flex-wrap"
 			>
-				<sc-button @click="useMenuScrollToData('key', `lesson-day-${day}`)">
-					{{ dayjs(day).format('DD MMMM YYYY') }}
+				<sc-button
+					theme
+					:outline="selected_user_id!==0"
+					@click="selected_user_id=0"
+					xs
+				>
+					Tous
+				</sc-button>
+				<sc-button
+					v-for="user in users"
+					:key="`user-${user.id}`"
+					theme
+					:outline="selected_user_id!==user.id"
+					@click="selected_user_id=user.id"
+					xs
+				>
+					{{ user.fullname }}
 				</sc-button>
 			</div>
-		</div>
 
-		<!-- Liste des étudiants -->
-		<div
-			v-if="editMode.enable && users.length"
-			class="flex gap-3 flex-wrap"
-		>
-			<sc-button
-				theme
-				:outline="selected_user_id!==0"
-				@click="selected_user_id=0"
+			<h3 class="text-lg uppercase mb-3">
+				statistiques de {{ selected_user_id=== 0 ? team.name : users.find(user=>user.id===selected_user_id).fullname }}
+			</h3>
+			<div
+				v-for="lesson in course.lessons"
+				:key="`stats-${lesson.id}`"
+				class="flex gap-3"
 			>
-				Tous
-			</sc-button>
-			<sc-button
-				v-for="user in users"
-				:key="`user-${user.id}`"
-				theme
-				:outline="selected_user_id!==user.id"
-				@click="selected_user_id=user.id"
-			>
-				{{ user.fullname }}
-			</sc-button>
+				<div
+					class="text-xs w-[300px] whitespace-nowrap overflow-hidden"
+					v-katex.auto="lesson.title"
+				/>
+				<stat-bar
+					class="text-xs"
+					:max="100"
+					:value="selected_user_stats[lesson.id]?.total_scores === 0 ? 0 : (selected_user_stats[lesson.id]?.resolved_scores)/(selected_user_stats[lesson.id]?.total_scores)*100"
+				>
+					<template #bar>
+						{{ selected_user_stats[lesson.id]?.resolved_scores }} / {{ selected_user_stats[lesson.id]?.total_scores }}
+					</template>
+				</stat-bar>
+			</div>
 		</div>
 
 
 		<div class="flex flex-col gap-10">
+			<!-- Liste des dates du cours. -->
+			<div class="flex gap-3">
+				<h3>dates planifiées </h3>
+				<div
+					v-for="(_, day) in lessonsByDate"
+					:key="`btn-${day}`"
+				>
+					<sc-button
+						xs
+						@click="useMenuScrollToData('key', `lesson-day-${day}`)"
+					>
+						{{ dayjs(day).format('DD MMMM YYYY') }}
+					</sc-button>
+				</div>
+			</div>
+
 			<div
 				v-for="(elements, day) in lessonsByDate"
 				:key="`lesson-day-${day}`"

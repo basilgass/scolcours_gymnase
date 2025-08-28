@@ -15,6 +15,7 @@ import { Chart } from "chart.js"
 import annotationPlugin from "chartjs-plugin-annotation"
 // TODO: apparemment, l'output TeX ne correspond pas à ce qui se trouve dans le tableau (pied du tableau)
 import { computed, reactive, ref } from "vue"
+import Card from "@/Components/Ui/Card.vue"
 
 defineOptions({ layout: LayoutMain })
 
@@ -655,57 +656,62 @@ const tableToTexOutput = computed(() => {
 <template>
 	<!-- Title -->
 	<article>
-		<div class="grid grid-cols-1 md:grid-cols-6">
-			<form-maker
-				v-model.number="statConfig.samples"
-				label="samples"
-			/>
-			<form-maker
-				v-model.number="statConfig.min"
-				label="valeur modale minmale"
-			/>
-			<form-maker
-				v-model.number="statConfig.max"
-				label="valeur modale maximale"
-			/>
-			<form-maker
-				v-model.number="statConfig.length"
-				label="amplitude de la classe"
-			/>
-			<form-maker
-				v-model.number="statConfig.skew"
-				label="biais de la distribution"
-			/>
-			<form-maker
-				v-model.number="statConfig.flatten"
-				label="applatissement de la distribution"
-			/>
+		<Card class="my-6">
+			<div class="grid grid-cols-1 md:grid-cols-6">
+				<form-maker
+					v-model.number="statConfig.samples"
+					label="samples"
+				/>
+				<form-maker
+					v-model.number="statConfig.min"
+					label="valeur modale minmale"
+				/>
+				<form-maker
+					v-model.number="statConfig.max"
+					label="valeur modale maximale"
+				/>
+				<form-maker
+					v-model.number="statConfig.length"
+					label="amplitude de la classe"
+				/>
+				<form-maker
+					v-model.number="statConfig.skew"
+					label="biais de la distribution"
+				/>
+				<form-maker
+					v-model.number="statConfig.flatten"
+					label="applatissement de la distribution"
+				/>
 
-			<form-maker
-				v-model="statConfig.percent"
-				label="en pourcent"
-				name="percent"
-				type="switch"
-			/>
+				<form-maker
+					v-model="statConfig.percent"
+					label="en pourcent"
+					name="percent"
+					type="switch"
+				/>
 
-			<form-maker
-				v-model="statConfig.round"
-				label="précision"
-				max="5"
-				min="0"
-				type="number"
-			/>
-		</div>
+				<form-maker
+					v-model="statConfig.round"
+					label="précision"
+					max="5"
+					min="0"
+					type="number"
+				/>
+			</div>
 
-		<div>
-			<form-maker
-				v-model="statCustomNi"
-				label="valeurs custom pour ni"
-			/>
-		</div>
-
-		<div v-if="statTable.length > 0">
-			<h2>Tableau des valeurs</h2>
+			<div>
+				<form-maker
+					v-model="statCustomNi"
+					label="valeurs custom pour ni"
+				/>
+			</div>
+		</Card>
+		<Card v-if="statTable.length > 0">
+			<template #header>
+				<h2 class="text-lg">
+					Tableau des valeurs
+				</h2>
+			</template>
 			<table class="w-full text-center table-fixed">
 				<thead class="bg-gray-600 text-white">
 					<tr>
@@ -943,6 +949,6 @@ const tableToTexOutput = computed(() => {
 					/>
 				</div>
 			</div>
-		</div>
+		</Card>
 	</article>
 </template>

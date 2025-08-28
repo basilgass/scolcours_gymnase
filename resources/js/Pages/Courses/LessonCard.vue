@@ -20,7 +20,6 @@ const props = defineProps<{
 	course: CourseInterface
 	lesson: LessonInterface,
 	team: UserTeamInterface,
-	stats?: ILessonStats,
 }>()
 
 const editMode = useStoreEditMode()
@@ -139,13 +138,6 @@ onMounted(() => {
 			v-admin="editMode.enable"
 			class="flex-2/3 flex flex-col gap-3"
 		>
-			<stat-bar
-				v-if="stats"
-				v-admin="editMode.enable"
-				:max="100"
-				:value="(stats.resolved_scores)/(stats.total_scores)*100"
-			/>
-
 			<Card
 				v-theme.admin
 				class="flex-2/3"

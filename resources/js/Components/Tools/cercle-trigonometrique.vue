@@ -9,6 +9,7 @@
  * tags: géométrie,1M,2C,2M
  */
 import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"
+import Card from "@/Components/Ui/Card.vue"
 
 const code = `@begin:static
 A(0,0)
@@ -67,11 +68,11 @@ T=inter p,t
 t1=P0T.->gold,w=5
 a=arc P0,A,P,2->tex=\\theta`
 
-const parameters = `axis,x=-12:12,y=-20:20,ppu=20`
+const parameters = `axis,x=-13:13,y=-18:18,ppu=20`
 </script>
 
 <template>
-	<div class="bg-white max-w-3xl mx-auto">
+	<Card class="max-w-xl mx-auto">
 		<pi-draw-parser :draw="{ code: code, parameters: parameters }" />
-	</div>
+	</Card>
 </template>

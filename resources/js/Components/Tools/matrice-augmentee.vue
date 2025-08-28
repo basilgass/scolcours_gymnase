@@ -13,6 +13,7 @@ import {Matrix, Random, Vector} from "pimath"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 import instructions from "./Parts/matrice-augmentee-instructions.md?raw"
 import ScButton from "@/Components/Ui/scButton.vue"
+import Card from "@/Components/Ui/Card.vue"
 
 const {restoreTool} = useToolsStorage()
 const forms: IToolForm[] = restoreTool([
@@ -101,9 +102,8 @@ const showInstruction = ref(false)
 			@generate="genererMatrice"
 		/>
 
-		<div
+		<Card
 			v-if="result"
-			class="my-10"
 		>
 			<matrice-augmentee
 				:illustration="result"
@@ -118,13 +118,13 @@ const showInstruction = ref(false)
 				>
 					instructions
 				</sc-button>
-				
+
 				<markdown-it
 					v-show="showInstruction"
 					:text="instructions"
 				/>
 			</div>
-		</div>
+		</Card>
 		<div
 			v-else
 			class="text-red-700 text-sm"

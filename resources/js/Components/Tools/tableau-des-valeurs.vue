@@ -11,6 +11,7 @@ import { Fraction, NumExp, Polynom } from "pimath"
  * tags: algebre,1M
  */
 import { computed, ref } from "vue"
+import Card from "@/Components/Ui/Card.vue"
 
 const { restoreTool } = useToolsStorage()
 const forms: IToolForm[] = restoreTool([
@@ -62,6 +63,7 @@ const forms: IToolForm[] = restoreTool([
 ])
 
 // TODO: tableau des valeurs doit être restructurer pour fonctionner avec des valeurs trigonométriques.
+// TODO: permettre un export TeX ou Excel.
 const f = computed(() => forms[0].value.value as string)
 const xMin = computed(() => forms[1].value.value as string)
 const xMax = computed(() => forms[2].value.value as string)
@@ -149,7 +151,7 @@ function updateKbrd(event, index) {
 		/>
 
 
-		<div class="mt-2">
+		<Card class="mb-6">
 			<keyboard-display
 				v-show="activeInput===0"
 				back
@@ -195,9 +197,9 @@ function updateKbrd(event, index) {
 				@change="updateKbrd($event, 4)"
 				@next="activeInput=0"
 			/>
-		</div>
+		</Card>
 
-		<div class="flex items-center justify-center">
+		<Card class="flex items-center justify-center">
 			<div
 				v-if="fx"
 				class="w-full"
@@ -294,6 +296,6 @@ function updateKbrd(event, index) {
 			>
 				Une erreur s'est produite lors de l'introduction des coordonnées.
 			</div>
-		</div>
+		</Card>
 	</article>
 </template>

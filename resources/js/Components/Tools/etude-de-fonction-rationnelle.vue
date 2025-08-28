@@ -22,6 +22,7 @@ import { type ETUDE_DE_FONCTION_RATIONNELLE, makeStudyFromPolynoms } from "@/Com
 import { Numeric, Random } from "pimath"
 import { computed, ref } from "vue"
 import ScButton from "@/Components/Ui/scButton.vue"
+import Card from "@/Components/Ui/Card.vue"
 
 const { restoreTool } = useToolsStorage()
 const forms: IToolForm[] = restoreTool([
@@ -142,184 +143,184 @@ function getFxWithControls(maxValue: number) {
 <template>
 	<article>
 		<!-- Value to modify enter -->
-		<div class="flex gap-3 items-start">
-			<tool-form
-				class="flex-1"
-				:forms="forms"
-				form-class="grid grid-cols-1 gap-3"
-				generate-button
-				@generate="generate_fx"
-			>
-				<div class="flex gap-3 mt-3 w-full justify-center">
-					<sc-button
-						type="primary"
-						class="flex flex-col gap-3"
-						@click="autoUpdate=true"
-					>
-						<div>
-							étudier la fonction
-						</div>
-						<div v-katex.ascii="`f(x) = ${fx}`" />
-					</sc-button>
-				</div>
-			</tool-form>
-		</div>
+		<tool-form
+			class="flex-1"
+			:forms="forms"
+			form-class="grid grid-cols-1 gap-3"
+			generate-button
+			@generate="generate_fx"
+		>
+			<div class="flex gap-3 mt-3 w-full justify-center">
+				<sc-button
+					type="primary"
+					class="flex flex-col gap-3"
+					@click="autoUpdate=true"
+				>
+					<div>
+						étudier la fonction
+					</div>
+					<div v-katex.ascii="`f(x) = ${fx}`" />
+				</sc-button>
+			</div>
+		</tool-form>
 
 		<!-- Output -->
-		<table-of-contents v-if="study!==false">
-			<div class="grid grid-cols-1 lg:grid-cols-2 gap-x-5 gap-y-20">
-				<!-- Ensemble de définition -->
-				<div class="bg-white rounded-sm border-gray-400 p-4">
-					<h2 class="chapter-menu text-lg mb-10">
-						Fonction
-					</h2>
-					<div v-katex.boxed="study.fx" />
-				</div>
+		<Card>
+			<table-of-contents v-if="study!==false">
+				<div class="grid grid-cols-1 lg:grid-cols-2 gap-x-5 gap-y-20">
+					<!-- Ensemble de définition -->
+					<div class="bg-white rounded-sm border-gray-400 p-4">
+						<h2 class="chapter-menu text-lg mb-10">
+							Fonction
+						</h2>
+						<div v-katex.boxed="study.fx" />
+					</div>
 
-				<!--				Ensemble de définition-->
-				<div class="bg-white rounded-sm border-gray-400 p-4">
-					<h2 class="chapter-menu text-lg mb-10">
-						Ensemble de définition
-					</h2>
-					<div v-katex.boxed="`ED_f=${study.domain}`" />
-				</div>
+					<!--				Ensemble de définition-->
+					<div class="bg-white rounded-sm border-gray-400 p-4">
+						<h2 class="chapter-menu text-lg mb-10">
+							Ensemble de définition
+						</h2>
+						<div v-katex.boxed="`ED_f=${study.domain}`" />
+					</div>
 
-				<!-- Tableau de signes -->
-				<div class="bg-white rounded-sm border-gray-400 p-4">
-					<h2 class="chapter-menu text-lg mb-10">
-						Tableau de signes
-					</h2>
+					<!-- Tableau de signes -->
+					<div class="bg-white rounded-sm border-gray-400 p-4">
+						<h2 class="chapter-menu text-lg mb-10">
+							Tableau de signes
+						</h2>
 
-					<table-of-signs
-						:roots="study.table_of_signs.roots.map(x=>x.tex)"
-						:signs="study.table_of_signs.signs"
-						class="px-10"
-						mode="signs"
-					/>
-				</div>
-
-				<!-- Racines -->
-				<div class="bg-white rounded-sm border-gray-400 p-4">
-					<h2 class="chapter-menu text-lg mb-10">
-						Racines de la fonction
-					</h2>
-
-					<div
-						v-katex.boxed="study.roots"
-					/>
-				</div>
-
-				<!-- Asymptotes verticales et horizontales -->
-				<div
-					v-if="study.asymptotes.vertical.length > 0"
-					class="bg-white rounded-sm border-gray-400 p-4"
-				>
-					<h2 class="chapter-menu text-lg mb-10">
-						Asymptotes verticales ou points limites
-					</h2>
-
-					<div
-						v-for="(item, index) in study.asymptotes.vertical"
-						:key="`etude-av-${index}`"
-						v-katex.boxed="item.tex"
-					/>
-				</div>
-
-				<div
-					v-if="study.asymptotes.horizontal.length > 0"
-					class="bg-white rounded-sm border-gray-400 p-4"
-				>
-					<h2 class="chapter-menu text-lg mb-10">
-						Asymptotes horizontales
-					</h2>
-
-					<div
-						v-for="(item, index) in study.asymptotes.horizontal"
-						:key="`etude-ah-${index}`"
-					>
-						<div v-katex.boxed="`${item.tex}`" />
-						<div v-katex.boxed="`${item.delta.tex}`" />
 						<table-of-signs
-							:roots="item.delta.table_of_signs.roots.map(x=>x.tex)"
-							:signs="item.delta.table_of_signs.signs"
+							:roots="study.table_of_signs.roots.map(x=>x.tex)"
+							:signs="study.table_of_signs.signs"
+							class="px-10"
+							mode="signs"
 						/>
 					</div>
-				</div>
 
+					<!-- Racines -->
+					<div class="bg-white rounded-sm border-gray-400 p-4">
+						<h2 class="chapter-menu text-lg mb-10">
+							Racines de la fonction
+						</h2>
 
-				<!-- Asymptotes obliques -->
-				<div
-					v-if="study.asymptotes.slope.length > 0"
-					class="bg-white rounded-sm border-gray-400 p-4"
-				>
-					<h2 class="chapter-menu text-lg mb-10">
-						Asymptotes obliques
-					</h2>
-
-					<div
-						v-for="(item, index) in study.asymptotes.slope"
-						:key="`etude-ao-${index}`"
-					>
-						<div v-katex.boxed="`${item.tex}`" />
-						<div v-katex.boxed="`${item.delta.tex}`" />
-						<table-of-signs
-							:roots="item.delta.table_of_signs.roots.map(x=>x.tex)"
-							:signs="item.delta.table_of_signs.signs"
-						/>
-					</div>
-				</div>
-
-				<div class="bg-white rounded-sm border-gray-400 p-4">
-					<h2 class="chapter-menu text-lg mb-10">
-						Variation
-					</h2>
-					<div v-katex.boxed="study.derivative.fx" />
-
-					<table-of-signs
-						:extremes="study.extremes.map(x=>x.tex)"
-						:roots="study.derivative.table_of_signs.roots.map(x=>x.tex)"
-						:signs="study.derivative.table_of_signs.signs"
-						mode="grows"
-					/>
-
-					<h3 class="my-5">
-						Coordonnées des points à tangentes horizontales
-					</h3>
-					<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-5">
 						<div
-							v-for="(zero, index) in study.extremes.filter(x=>x.type!=='undefined')"
-							:key="`zero-${index}`"
-							v-katex.boxed="`\\text{${zero.type}}: \\left(${zero.x.tex};${zero.tex}\\right)`"
+							v-katex.boxed="study.roots"
 						/>
 					</div>
-				</div>
 
-				<!-- Graphe -->
-				<div class="bg-white rounded-sm border-gray-400 p-4 lg:col-span-2">
-					<h2 class="chapter-menu text-lg mb-10">
-						Représentation graphique
-					</h2>
+					<!-- Asymptotes verticales et horizontales -->
+					<div
+						v-if="study.asymptotes.vertical.length > 0"
+						class="bg-white rounded-sm border-gray-400 p-4"
+					>
+						<h2 class="chapter-menu text-lg mb-10">
+							Asymptotes verticales ou points limites
+						</h2>
 
-					<div>
-						<pi-draw-parser
-							:draw="draw"
-							:height="600"
-							:width="800"
-							axis
-							class="max-w-3xl mx-auto"
+						<div
+							v-for="(item, index) in study.asymptotes.vertical"
+							:key="`etude-av-${index}`"
+							v-katex.boxed="item.tex"
+						/>
+					</div>
+
+					<div
+						v-if="study.asymptotes.horizontal.length > 0"
+						class="bg-white rounded-sm border-gray-400 p-4"
+					>
+						<h2 class="chapter-menu text-lg mb-10">
+							Asymptotes horizontales
+						</h2>
+
+						<div
+							v-for="(item, index) in study.asymptotes.horizontal"
+							:key="`etude-ah-${index}`"
+						>
+							<div v-katex.boxed="`${item.tex}`" />
+							<div v-katex.boxed="`${item.delta.tex}`" />
+							<table-of-signs
+								:roots="item.delta.table_of_signs.roots.map(x=>x.tex)"
+								:signs="item.delta.table_of_signs.signs"
+							/>
+						</div>
+					</div>
+
+
+					<!-- Asymptotes obliques -->
+					<div
+						v-if="study.asymptotes.slope.length > 0"
+						class="bg-white rounded-sm border-gray-400 p-4"
+					>
+						<h2 class="chapter-menu text-lg mb-10">
+							Asymptotes obliques
+						</h2>
+
+						<div
+							v-for="(item, index) in study.asymptotes.slope"
+							:key="`etude-ao-${index}`"
+						>
+							<div v-katex.boxed="`${item.tex}`" />
+							<div v-katex.boxed="`${item.delta.tex}`" />
+							<table-of-signs
+								:roots="item.delta.table_of_signs.roots.map(x=>x.tex)"
+								:signs="item.delta.table_of_signs.signs"
+							/>
+						</div>
+					</div>
+
+					<div class="bg-white rounded-sm border-gray-400 p-4">
+						<h2 class="chapter-menu text-lg mb-10">
+							Variation
+						</h2>
+						<div v-katex.boxed="study.derivative.fx" />
+
+						<table-of-signs
+							:extremes="study.extremes.map(x=>x.tex)"
+							:roots="study.derivative.table_of_signs.roots.map(x=>x.tex)"
+							:signs="study.derivative.table_of_signs.signs"
+							mode="grows"
 						/>
 
-						<form-maker
-							sm
-							v-model="drawParametersOverride"
-							code
-						/>
+						<h3 class="my-5">
+							Coordonnées des points à tangentes horizontales
+						</h3>
+						<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-5">
+							<div
+								v-for="(zero, index) in study.extremes.filter(x=>x.type!=='undefined')"
+								:key="`zero-${index}`"
+								v-katex.boxed="`\\text{${zero.type}}: \\left(${zero.x.tex};${zero.tex}\\right)`"
+							/>
+						</div>
+					</div>
 
-						<tex-code :tex="study.draw.parameters" />
-						<tex-code :tex="study.draw.code" />
+					<!-- Graphe -->
+					<div class="bg-white rounded-sm border-gray-400 p-4 lg:col-span-2">
+						<h2 class="chapter-menu text-lg mb-10">
+							Représentation graphique
+						</h2>
+
+						<div>
+							<pi-draw-parser
+								:draw="draw"
+								:height="600"
+								:width="800"
+								axis
+								class="max-w-3xl mx-auto"
+							/>
+
+							<form-maker
+								sm
+								v-model="drawParametersOverride"
+								code
+							/>
+
+							<tex-code :tex="study.draw.parameters" />
+							<tex-code :tex="study.draw.code" />
+						</div>
 					</div>
 				</div>
-			</div>
-		</table-of-contents>
+			</table-of-contents>
+		</Card>
 	</article>
 </template>

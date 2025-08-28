@@ -1,16 +1,17 @@
 <script lang="ts" setup>
-import ToolForm, { IToolForm } from "@/Components/Tools/Parts/ToolForm.vue"
-import { useToolsStorage } from "@/Composables/useToolsStorage.ts"
-import { Equation, Fraction, ISolution, Line, Monom, Point, Polynom } from "pimath"
+import ToolForm, {IToolForm} from "@/Components/Tools/Parts/ToolForm.vue"
+import {useToolsStorage} from "@/Composables/useToolsStorage.ts"
+import {Equation, Fraction, ISolution, Line, Monom, Point, Polynom} from "pimath"
 /** Tools
  * title: tangente à un graphe (fonction polynomiale)
  * body: permet de calculer l'équation cartésienne d'une tangente à un graphe à un point d'abscisse donné.
  * parameters: fx=fonction polynomiale, x=abscisse du point de tangence
  * tags: algebre,2M
  */
-import { computed, ref } from "vue"
+import {computed, ref} from "vue"
+import Card from "@/Components/Ui/Card.vue"
 
-const { restoreTool } = useToolsStorage()
+const {restoreTool} = useToolsStorage()
 const forms: IToolForm[] = restoreTool([
 	{
 		label: "fonction",
@@ -96,15 +97,17 @@ const affine = computed<{ tex: { canonical: string, mxh: string } } | false>(() 
 	<article>
 		<tool-form :forms="forms" />
 
-		<div v-if="affine">
-			<div v-katex.boxed.lg="`${affine.tex.mxh}`" />
-			<div v-katex.boxed.lg="`${affine.tex.canonical}`" />
-		</div>
-		<div
-			v-else
-			class="text-red-700 text-sm"
-		>
-			Une erreur s'est produite lors de l'introduction des coordonnées.
-		</div>
+		<Card>
+			<div v-if="affine">
+				<div v-katex.boxed.lg="`${affine.tex.mxh}`" />
+				<div v-katex.boxed.lg="`${affine.tex.canonical}`" />
+			</div>
+			<div
+				v-else
+				class="text-red-700 text-sm"
+			>
+				Une erreur s'est produite lors de l'introduction des coordonnées.
+			</div>
+		</Card>
 	</article>
 </template>

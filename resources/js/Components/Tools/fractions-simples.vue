@@ -10,6 +10,7 @@ import {Equation, Factor, Fraction, LinearSystem, Monom, PolyFactor, Polynom, Ra
  * tags: algebre,3M
  */
 import {computed, ref} from "vue"
+import Card from "@/Components/Ui/Card.vue"
 
 const {restoreTool} = useToolsStorage()
 const forms: IToolForm[] = restoreTool([
@@ -195,16 +196,18 @@ let result = computed(() => {
 
 <template>
 	<article>
-		<tool-form :forms="forms" />
+		<tool-form :forms="forms">
+			<button @click="generate">
+				générer
+			</button>
+		</tool-form>
 
-		<button @click="generate">
-			générer
-		</button>
-		<div v-if="result">
+
+		<Card v-if="result">
 			<div v-katex.display.boxed.lg="`${result.tex}`" />
 
 			<tex-code :tex="result.tex" />
-		</div>
+		</Card>
 		<div
 			v-else
 			class="text-red-700 text-sm"

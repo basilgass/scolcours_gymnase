@@ -10,6 +10,7 @@ import { Line, Point, Vector } from "pimath"
  * tags: algebre,1M
  */
 import { computed, ref } from "vue"
+import Card from "@/Components/Ui/Card.vue"
 
 // Define the forms
 const { restoreTool } = useToolsStorage()
@@ -66,7 +67,7 @@ const affine = computed(() => {
 	<article>
 		<tool-form :forms="forms" />
 
-		<div v-if="affine">
+		<Card v-if="affine">
 			<div>
 				<div v-katex="`${affine.mxh}`" />
 				<div v-katex="`${affine.canonical}`" />
@@ -75,7 +76,7 @@ const affine = computed(() => {
 			</div>
 
 			<tex-code :tex="`${affine.mxh}\n${affine.canonical}\n${affine.equation}\n${affine.parametric}`" />
-		</div>
+		</Card>
 		<div
 			v-else
 			class="text-red-700 text-xs"

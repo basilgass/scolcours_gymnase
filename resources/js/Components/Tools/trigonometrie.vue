@@ -12,6 +12,7 @@ import { numberCorrection } from "@/helpers/helperFunctions"
  * tags: geoetrie,1M,2C
  */
 import { computed, ref } from "vue"
+import Card from "@/Components/Ui/Card.vue"
 
 const { restoreTool } = useToolsStorage()
 const forms: IToolForm[] = restoreTool( [
@@ -477,78 +478,80 @@ function makeTriangle(value: triangleRawInterface, alternate?: boolean): triangl
 			form-class="grid grid-cols-1 md:grid-cols-3 gap-4"
 		/>
 
-		<div
-			v-if="result"
-			class="my-10"
-		>
-			<div class="grid grid-cols-2 gap-4">
-				<div v-if="result.triangle">
-					<table>
-						<tr
-							v-for="(value, key) in result.triangle"
-							:key="`triangle-${key}`"
-						>
-							<td
-								v-katex="`${labels[key]}=`"
-								class="w-[50px] text-right bg-gray-100 font-semibold px-4"
-							/>
-							<td
-								v-katex.left="value"
-								class="px-4"
-							/>
-						</tr>
-					</table>
+		<Card>
+			<div
+				v-if="result"
+				class="my-10"
+			>
+				<div class="grid grid-cols-2 gap-4">
+					<div v-if="result.triangle">
+						<table>
+							<tr
+								v-for="(value, key) in result.triangle"
+								:key="`triangle-${key}`"
+							>
+								<td
+									v-katex="`${labels[key]}=`"
+									class="w-[50px] text-right bg-gray-100 font-semibold px-4"
+								/>
+								<td
+									v-katex.left="value"
+									class="px-4"
+								/>
+							</tr>
+						</table>
 
-					<pi-draw-parser :draw="triangleDrawCode" />
-					<tex-code
-						class="font-code"
-						:tex="triangleDrawCode.code"
-					/>
-					<tex-code
-						class="font-code"
-						:tex="triangleAnswerCode"
-					/>
+						<pi-draw-parser :draw="triangleDrawCode" />
+						<tex-code
+							class="font-code"
+							:tex="triangleDrawCode.code"
+						/>
+						<tex-code
+							class="font-code"
+							:tex="triangleAnswerCode"
+						/>
+					</div>
+
+					<div v-if="result.triangle2">
+						<table>
+							<tr
+								v-for="(value, key) in result.triangle2"
+								:key="`triangle-${key}`"
+							>
+								<td
+									v-katex="`${labels[key]}=`"
+									class="w-[50px] text-right bg-gray-100 font-semibold px-4"
+								/>
+								<td
+									v-katex.left="value"
+									class="px-4"
+								/>
+							</tr>
+						</table>
+
+						<pi-draw-parser :draw="triangle2DrawCode" />
+						<tex-code
+							class="font-code"
+							:tex="triangle2DrawCode.code"
+						/>
+						<tex-code
+							class="font-code"
+							:tex="triangle2AnswerCode"
+						/>
+					</div>
 				</div>
-
-				<div v-if="result.triangle2">
-					<table>
-						<tr
-							v-for="(value, key) in result.triangle2"
-							:key="`triangle-${key}`"
-						>
-							<td
-								v-katex="`${labels[key]}=`"
-								class="w-[50px] text-right bg-gray-100 font-semibold px-4"
-							/>
-							<td
-								v-katex.left="value"
-								class="px-4"
-							/>
-						</tr>
-					</table>
-
-					<pi-draw-parser :draw="triangle2DrawCode" />
-					<tex-code
-						class="font-code"
-						:tex="triangle2DrawCode.code"
-					/>
-					<tex-code
-						class="font-code"
-						:tex="triangle2AnswerCode"
-					/>
-				</div>
+				<div
+					v-if="result.text"
+					class="text-center text-red-700"
+					v-text="result.text"
+				/>
 			</div>
 			<div
-				v-if="result.text"
-				class="text-center text-red-700"
-				v-text="result.text"
-			/>
-		</div>
-		<div
-			v-else
-			class="text-red-700 text-sm text-center mt-5"
-		>
-			Une erreur s'est produite avec vos données.
-		</div>
+				v-else
+				class="text-red-700 text-sm text-center mt-5"
+			>
+				Une erreur s'est produite avec vos données.
+			</div>
+		</Card>
 	</article>
 </template>

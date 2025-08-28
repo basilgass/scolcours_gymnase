@@ -11,6 +11,7 @@ import { Fraction, Polynom } from "pimath"
  * tags: algebre,3M
  */
 import { computed, ref } from "vue"
+import Card from "@/Components/Ui/Card.vue"
 
 const { restoreTool } = useToolsStorage()
 const forms: IToolForm[] = restoreTool( [
@@ -62,13 +63,13 @@ const result = computed(() => {
 	<article>
 		<tool-form :forms="forms" />
 
-		<div v-if="result">
+		<Card v-if="result">
 			<div
 				v-katex="result"
 				class="katex-boxed"
 			/>
 			<tex-code :tex="result" />
-		</div>
+		</Card>
 		<div
 			v-else
 			class="text-red-700 text-sm"

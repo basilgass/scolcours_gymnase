@@ -12,6 +12,8 @@ import { useToolsStorage } from "@/Composables/useToolsStorage.ts"
 import { Circle, Numeric, Point, Random } from "pimath"
 import { computed, onMounted, ref } from "vue"
 import ScButton from "@/Components/Ui/scButton.vue"
+import Card from "@/Components/Ui/Card.vue"
+import CardItem from "@/Components/Elements/CardItem.vue"
 
 
 const { restoreTool } = useToolsStorage()
@@ -214,7 +216,7 @@ onMounted(() => {
 				</tool-form>
 
 
-				<div v-if="result">
+				<Card v-if="result">
 					<div v-katex.display.boxed.lg="`(\\Gamma_1): ${result.C1}`" />
 					<div v-katex.display.boxed="`O_1=${result.O1}\\quad r_1 = ${result.r1}`" />
 					<div
@@ -222,10 +224,10 @@ onMounted(() => {
 						class="mt-10"
 					/>
 					<div v-katex.display.boxed="`O_2=${result.O2}\\quad r_2 = ${result.r2}`" />
-				</div>
+				</Card>
 			</div>
 
-			<div
+			<Card
 				v-if="result"
 				class="flex flex-col gap-3"
 			>
@@ -235,13 +237,13 @@ onMounted(() => {
 					<span class="font-semibold text-lg">{{ result.position }}</span>.
 				</div>
 				<pi-draw-parser :draw="result.draw" />
-			</div>
-			<div
+			</Card>
+			<Card
 				v-else
 				class="text-red-700 text-sm"
 			>
 				Une erreur s'est produite avec vos données.
-			</div>
+			</Card>
 		</div>
 	</div>
 </template>

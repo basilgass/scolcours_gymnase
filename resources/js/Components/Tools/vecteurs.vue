@@ -10,6 +10,7 @@ import { useToolsStorage } from "@/Composables/useToolsStorage.ts"
 import { numberCorrection } from "@/helpers/helperFunctions.ts"
 import { Matrix, Vector } from "pimath"
 import { computed, ref } from "vue"
+import Card from "@/Components/Ui/Card.vue"
 
 // TODO: allow entering 3d vectors.
 const { restoreTool } = useToolsStorage()
@@ -62,7 +63,7 @@ let result = computed(() => {
 	<article>
 		<tool-form :forms="forms" />
 
-		<div
+		<Card
 			v-if="result"
 			class="katex-boxed "
 		>
@@ -118,7 +119,7 @@ let result = computed(() => {
 				class="grid grid-cols-2 gap-3"
 			>
 				<div
-					v-katex="`\\begin{vmatrix} ${pV1.x.tex} & ${pV2.x.tex} \\\\ ${pV1.y.tex} & ${pV2.y.tex} \\end{vmatrix} = ${(new Matrix(pV1, pV2)).determinant().tex}`"
+					v-katex="`\\begin{vmatrix} ${pV1.x.tex} & ${pV2.x.tex} \\\\ ${pV1.y.tex} & ${pV2.y.tex} \\end{vmatrix} = ${pV1 && pV2 ? new Matrix().fromVectors(pV1,pV2).determinant().tex : ''}`"
 				/>
 			</div>
 			<div
@@ -143,6 +144,6 @@ let result = computed(() => {
 			>
 				il faut deux vecteurs
 			</div>
-		</div>
+		</Card>
 	</article>
 </template>

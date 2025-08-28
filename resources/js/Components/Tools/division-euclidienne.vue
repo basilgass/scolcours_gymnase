@@ -10,6 +10,7 @@ import { useToolsStorage } from "@/Composables/useToolsStorage.ts"
  * tags: algebre,1M
  */
 import { computed, ref } from "vue"
+import Card from "@/Components/Ui/Card.vue"
 
 // Define the forms
 const { restoreTool } = useToolsStorage()
@@ -37,10 +38,12 @@ const denominator = computed(() => forms[1].value.value)
 	<article>
 		<tool-form :forms="forms" />
 
-		<pi-euclidian
-			:fx="`${numerator}/${denominator}`"
-			asymptote
-			fundamental
-		/>
+		<Card>
+			<pi-euclidian
+				:fx="`${numerator}/${denominator}`"
+				asymptote
+				fundamental
+			/>
+		</Card>
 	</article>
 </template>

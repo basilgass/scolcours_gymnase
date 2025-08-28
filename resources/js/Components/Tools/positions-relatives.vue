@@ -1,7 +1,6 @@
 <script setup lang="ts">
-// CHECK: est-ce que cela fonctionne correctement ?
 import {useToolsStorage} from "@/Composables/useToolsStorage.ts"
-import {computed, ref} from "vue"
+import {computed, onMounted, ref, watch} from "vue"
 import ToolForm, {IToolForm} from "@/Components/Tools/Parts/ToolForm.vue"
 import {
 	Circle,
@@ -16,6 +15,13 @@ import {
 	Vector
 } from "pimath"
 import ScButton from "@/Components/Ui/scButton.vue"
+import Card from "@/Components/Ui/Card.vue"
+
+const ObjectTypeSortOrder: objectType[] = ['point', 'droite', 'cercle', 'plan', 'sphère', "indéterminé"]
+
+function sortObjects(a: ObjectTypeInterface, b: ObjectTypeInterface): number {
+	return ObjectTypeSortOrder.indexOf(a.type) - ObjectTypeSortOrder.indexOf(b.type)
+}
 
 const {restoreTool} = useToolsStorage()
 const forms: IToolForm[] = restoreTool([
@@ -32,6 +38,7 @@ const forms: IToolForm[] = restoreTool([
 		fromUrl: "o2"
 	}
 ])
+
 type objectType = 'point' | 'droite' | 'cercle' | 'plan' | 'sphère' | 'indéterminé'
 const objet1_asString = computed<string>(() => forms[0].value.value as string)
 const objet2_asString = computed<string>(() => forms[1].value.value as string)
@@ -44,25 +51,26 @@ interface ObjectTypeInterface {
 	type: objectType
 }
 
-interface posRelativeInterface {
-	objet1: ObjectTypeInterface,
-	objet2: ObjectTypeInterface,
-	position: string
-}
+const isRecognized = computed(() => {
+	return objet1.value && objet2.value
+})
 
 function parseString(value: string): ObjectTypeInterface[] {
 	// (a,b) or (a,b,c) -> point
-	// (a,b)+k(d,e) or (a,b,c)+k(d,e,f) -> line
-	// (a,b,c)+k(d,e,f)+l(g,h,i) -> plane
-	// (a,b,c)+r -> sphere
+	// (a,b)+k(d,e) -> line
+	// (a,b)+r -> circle
+	// (a,b,c)+k(d,e,f) -> line3
+	// (a,b,c)+k(d,e,f)+l(g,h,i) -> plane3
+	// (a,b,c)+r -> sphere3
 	// equation -> 2dline, plane, circle or sphere
 	//
 	// values can be <number> or <number>/<number>
 	const nb = "-?\\d+(?:\\.\\d+)?(?:\\/\\d+)?"
 
 	const point = new RegExp(`^\\((${nb}),(${nb})(?:,(${nb}))?\\)$`, 'g')
-	if (point.test(value)) {
-		const [, x, y, z] = point.exec(value) as string[]
+		.exec(value) as string[]
+	if (point) {
+		const [, x, y, z] = point
 
 		if (z !== undefined) {
 			return [{
@@ -71,6 +79,7 @@ function parseString(value: string): ObjectTypeInterface[] {
 				type: 'point'
 			}]
 		}
+
 		return [{
 			pi: new Point(x, y),
 			dimension: 2,
@@ -79,8 +88,9 @@ function parseString(value: string): ObjectTypeInterface[] {
 	}
 
 	const line = new RegExp(`^\\((${nb}),(${nb})\\)\\+k\\((${nb}),(${nb})\\)$`, 'g')
-	if (line.test(value)) {
-		const [, x1, y1, x2, y2] = line.exec(value) as string[]
+		.exec(value) as string[]
+	if (line) {
+		const [, x1, y1, x2, y2] = line
 
 		return [{
 			pi: new Line().fromPointAndDirection(
@@ -93,8 +103,9 @@ function parseString(value: string): ObjectTypeInterface[] {
 	}
 
 	const line3 = new RegExp(`^\\((${nb}),(${nb}),(${nb})\\)\\+k\\((${nb}),(${nb}),(${nb})\\)$`, 'g')
-	if (line3.test(value)) {
-		const [, x1, y1, z1, x2, y2, z2] = line3.exec(value) as string[]
+		.exec(value) as string[]
+	if (line3) {
+		const [, x1, y1, z1, x2, y2, z2] = line3
 
 		return [{
 			pi: new Line3(
@@ -108,8 +119,9 @@ function parseString(value: string): ObjectTypeInterface[] {
 	}
 
 	const plane = new RegExp(`^\\((${nb}),(${nb}),(${nb})\\)\\+k\\((${nb}),(${nb}),(${nb})\\)\\+l\\((${nb}),(${nb}),(${nb})\\)$`, 'g')
-	if (plane.test(value)) {
-		const [, x1, y1, z1, x2, y2, z2, x3, y3, z3] = plane.exec(value) as string[]
+		.exec(value) as string[]
+	if (plane) {
+		const [, x1, y1, z1, x2, y2, z2, x3, y3, z3] = plane
 
 		return [{
 			pi: new Plane3({
@@ -126,9 +138,10 @@ function parseString(value: string): ObjectTypeInterface[] {
 		]
 	}
 
-	const circle = new RegExp(`^\\((${nb}),(${nb})\\)\\+r\\((${nb})\\)$`, 'g')
-	if (circle.test(value)) {
-		const [, x, y, r] = circle.exec(value) as string[]
+	const circle = new RegExp(`^\\((${nb}),(${nb})\\)\\+r(${nb})$`, 'g')
+		.exec(value) as string[]
+	if (circle) {
+		const [, x, y, r] = circle
 
 		return [{
 			pi: new Circle(new Point(x, y), new Fraction(r)),
@@ -137,9 +150,10 @@ function parseString(value: string): ObjectTypeInterface[] {
 		}]
 	}
 
-	const sphere = new RegExp(`^\\((${nb}),(${nb}),(${nb})\\)\\+r\\((${nb})\\)$`, 'g')
-	if (sphere.test(value)) {
-		const [, x, y, z, r] = sphere.exec(value) as string[]
+	const sphere = new RegExp(`^\\((${nb}),(${nb}),(${nb})\\)\\+r(${nb})$`, 'g')
+		.exec(value) as string[]
+	if (sphere) {
+		const [, x, y, z, r] = sphere
 
 		return [{
 			pi: new Sphere3(new Point(x, y, z), r),
@@ -149,12 +163,71 @@ function parseString(value: string): ObjectTypeInterface[] {
 	}
 
 	// Means it's an equation
-	return reconObjectFromEquation(new Equation(value))
-
+	try {
+		const equ = new Equation(value)
+		return reconObjectFromEquation(equ)
+	} catch {
+		return []
+	}
 }
 
+const objets1 = computed<ObjectTypeInterface[] | null>(() => {
+	try {
+		return parseString(objet1_asString.value)
+	} catch {
+		return null
+	}
+})
+
+const objets2 = computed<ObjectTypeInterface[] | null>(() => {
+	try {
+		return parseString(objet2_asString.value)
+	} catch {
+		return null
+	}
+})
+
+const objet1Index = ref(0)
+
+const objet2Index = computed(() => {
+	// calcul automatiquement la valeur en fonction de l'objet 1.
+	if (objet1.value === undefined) {
+		return undefined
+	}
+
+	const dim = objet1.value.dimension
+	return objets2.value.findIndex(obj => obj.dimension === dim)
+})
+
+const objet1 = computed(() => {
+	return objets1.value[objet1Index.value]
+})
+const objet2 = computed(() => {
+	return objets2.value[objet2Index.value]
+})
+
+function autoSelect() {
+	if (objets2.value.length === 1) {
+		const dim = objets2.value[0].dimension
+		objet1Index.value = objets1.value.findIndex(obj => {
+			return obj.dimension === dim
+		})
+	}
+}
+
+watch(objets2, () => {
+	autoSelect()
+})
+
+onMounted(() => {
+	autoSelect()
+})
+
+
+// ------------------ THINGS TO MODIFY !!!! -------------------
 function reconObjectFromEquation(equ: Equation): ObjectTypeInterface[] {
-	if (equ.degree().value > 2 || equ.degree().value === 0) {
+	const degree = equ.degree().value
+	if (degree > 2 || degree === 0) {
 		return [{
 			pi: undefined,
 			dimension: undefined,
@@ -162,7 +235,7 @@ function reconObjectFromEquation(equ: Equation): ObjectTypeInterface[] {
 		}]
 	}
 
-	if (equ.degree().value === 1) {
+	if (degree === 1) {
 		// droite 2d, plan
 		const arr: ObjectTypeInterface[] = [
 			{
@@ -179,7 +252,8 @@ function reconObjectFromEquation(equ: Equation): ObjectTypeInterface[] {
 				type: 'droite'
 			})
 		}
-		return arr
+
+		return arr.toSorted(sortObjects)
 	}
 
 	// Il ne reste plus que les équations de degré 2
@@ -208,150 +282,89 @@ function reconObjectFromEquation(equ: Equation): ObjectTypeInterface[] {
 
 }
 
-function reduceObjects(o1: ObjectTypeInterface[], o2: ObjectTypeInterface[]): [ObjectTypeInterface, ObjectTypeInterface] {
-	// on prend comme référence le tableau qui n'a qu'un élément
-	const dim = o2.length === 1 ? o2[0].dimension : o1[0].dimension ?? 0
+const positionRelative = computed<string>(() => {
+	const [obj1, obj2] = [objet1.value, objet2.value].sort(sortObjects)
 
-	// On ne garde que les objets de même dimension
-	return [
-		o1.filter(x => x.dimension === dim)[0] ?? {pi: undefined, dimension: undefined, type: 'indéterminé'},
-		o2.filter(x => x.dimension === dim)[0] ?? {pi: undefined, dimension: undefined, type: 'indéterminé'}
-	]
-}
-
-const positionRelative = computed<posRelativeInterface>(() => {
-	const [objet1, objet2] = reduceObjects(parseString(objet1_asString.value), parseString(objet2_asString.value))
-
-	if (objet1.type === 'indéterminé' || objet2.type === 'indéterminé') {
-		return {
-			objet1,
-			objet2,
-			position: "indéterminée"
-		}
+	if (obj1.type === 'indéterminé' || obj2.type === 'indéterminé') {
+		return "indéterminée"
 	}
 
-	if (objet1.dimension === 2) {
-		if (objet1.type === 'droite' && objet2.type === 'droite') {
-			return posRel_droite2d_droite2d(objet1, objet2)
+	try {
+		if (obj1.dimension === 2) {
+			console.log(obj1)
+			// On est en deux dimensions
+			if (obj1.type === 'droite' && obj2.type === 'droite') {
+				return posRel_droite2d_droite2d(obj1.pi, obj2.pi)
+			}
+
+			if (obj1.type === 'droite' && obj2.type === 'cercle') {
+				return posRel_droite2d_cercle(obj1.pi, obj2.pi)
+			}
+
+			if (obj1.type === 'cercle' && obj2.type === 'cercle') {
+				return posRel_cercle_cercle(obj1.pi, obj2.pi)
+			}
 		}
 
-		if (objet1.type === 'droite' && objet2.type === 'cercle') {
-			return posRel_droite2d_cercle(objet1, objet2)
+		if (objet1.value.type === 'plan' && objet2.value.type === 'plan') {
+			return posRel_plan_plan(obj1.pi, obj2.pi)
 		}
 
-		if (objet1.type === 'cercle' && objet2.type === 'droite') {
-			return posRel_droite2d_cercle(objet2, objet1)
+		if (objet1.value.type === 'plan' && objet2.value.type === 'sphère') {
+			return posRel_plan_sphere(obj1.pi, obj2.pi)
 		}
 
-		if (objet1.type === 'cercle' && objet2.type === 'cercle') {
-			return posRel_cercle_cercle(objet1, objet2)
+		if (objet1.value.type === 'sphère' && objet2.value.type === 'sphère') {
+			return posRel_sphere_sphere(obj1.pi, obj2.pi)
 		}
+	} catch (err) {
+		console.log(err)
+		// Do nothing.
 	}
 
-	if (objet1.type === 'plan' && objet2.type === 'plan') {
-		return posRel_plan_plan(objet1, objet2)
-	}
-
-	if (objet1.type === 'plan' && objet2.type === 'sphère') {
-		return posRel_plan_sphere(objet1, objet2)
-	}
-	if (objet1.type === 'sphère' && objet2.type === 'plan') {
-		return posRel_plan_sphere(objet2, objet1)
-	}
-
-	if (objet1.type === 'sphère' && objet2.type === 'sphère') {
-		return posRel_sphere_sphere(objet1, objet2)
-	}
-
-	return {
-		objet1: null,
-		objet2: null,
-		position: "???"
-	}
+	return "???"
 })
 
-function posRel_droite2d_droite2d(equ1: Equation, equ2: Equation): posRelativeInterface {
-	const line1 = new Line().fromEquation(equ1)
-	const line2 = new Line().fromEquation(equ2)
-
-	return {
-		objet1: line1,
-		objet2: line2,
-		position: line1.isParallelTo(line2) ? 'parallèles' :
-			line1.isSameAs(line2) ? 'confondues' : 'sécantes'
-	}
+function posRel_droite2d_droite2d(line1: Line, line2: Line): string {
+	return line1.isParallelTo(line2) ? 'parallèles' :
+		line1.isSameAs(line2) ? 'confondues' : 'sécantes'
 }
 
-function posRel_droite2d_cercle(equ1: Equation, equ2: Equation): posRelativeInterface {
-	const line1 = new Line().fromEquation(equ1)
-	const circle2 = new Circle(equ2)
-
-
+function posRel_droite2d_cercle(line1: Line, circle2: Circle): string {
 	const d = line1.distanceTo(circle2.center).value
 	const r = circle2.radius.value
 
-	return {
-		objet1: line1,
-		objet2: circle2,
-		position: d === r ? 'tangentes' :
-			d < r ? 'sécantes' : 'disjoints'
-	}
+	return d === r ? 'tangentes' :
+		d < r ? 'sécantes' : 'disjoints'
 }
 
-function posRel_cercle_cercle(equ1: Equation, equ2: Equation): posRelativeInterface {
-	const c1 = new Circle(equ1)
-	const c2 = new Circle(equ2)
+function posRel_cercle_cercle(c1: Circle, c2: Circle): string {
 
 	const d = c1.center.distanceTo(c2.center).value
 
 	if (d === 0) {
-		return {
-			objet1: c1,
-			objet2: c2,
-			position: c1.radius.value === c2.radius.value ? 'superposés' : 'concentriques'
-		}
+		return c1.radius.value === c2.radius.value ? 'superposés' : 'concentriques'
 	}
 
 	const r1 = c1.radius.value
 	const r2 = c2.radius.value
 
 	if (Math.abs(r1 - r2) > d) {
-		return {
-			objet1: c1,
-			objet2: c2,
-			position: "intérieurs"
-		}
+		return "intérieurs"
 	}
 
 	if (Math.abs(r1 - r2) === d) {
-		return {
-			objet1: c1,
-			objet2: c2,
-			position: "tangents intérieurement"
-		}
-	}
-
-	if (r1 + r2 < d) {
-		return {
-			objet1: c1,
-			objet2: c2,
-			position: "sécants"
-		}
+		return "tangents intérieurement"
 	}
 
 	if (r1 + r2 === d) {
-		return {
-			objet1: c1,
-			objet2: c2,
-			position: "tangents extérieurement"
-		}
+		return "tangents extérieurement"
 	}
 
-	return {
-		objet1: c1,
-		objet2: c2,
-		position: "disjoints"
+	if (r1 + r2 > d) {
+		return "disjoints"
 	}
+	return "sécants"
 }
 
 // TODO: position relatives entre d'autres objets à faire...
@@ -367,46 +380,24 @@ function posRel_cercle_cercle(equ1: Equation, equ2: Equation): posRelativeInterf
 //
 // }
 
-function posRel_plan_plan(equ1: Equation, equ2: Equation): posRelativeInterface {
-	const p1 = new Plane3({equation: equ1})
-	const p2 = new Plane3({equation: equ2})
-
+function posRel_plan_plan(p1: Plane3, p2: Plane3): string {
 	if (!p1.normal.isColinearTo(p2.normal)) {
-		return {
-			objet1: p1,
-			objet2: p2,
-			position: "sécants"
-		}
+		return "sécants"
 	}
 
-	return {
-		objet1: p1,
-		objet2: p2,
-		position: p1.distanceTo(p2.point) === 0 ? "confondus" : "parallèles"
-	}
+	return p1.distanceTo(p2.point) === 0 ? "confondus" : "parallèles"
 }
 
-function posRel_plan_sphere(equ: Equation, sphere: Equation): posRelativeInterface {
-	const p = new Plane3({equation: equ})
-	const s = new Sphere3().fromEquation(sphere)
-
+function posRel_plan_sphere(p: Plane3, s: Sphere3): string {
 	const d = p.distanceTo(s.center)
 	const r = s.radius.value
 
-	return {
-		objet1: p,
-		objet2: s,
-		position: d === r ? "tangents" :
-			d < r ? "sécants" : "disjoints"
-	}
+	return d === r ? "tangents" :
+		d < r ? "sécants" : "disjoints"
 
 }
 
-function posRel_sphere_sphere(equ1: Equation, equ2: Equation): posRelativeInterface {
-	const s1 = new Sphere3().fromEquation(equ1)
-	const s2 = new Sphere3().fromEquation(equ2)
-
-	const posRel = s1.relativePosition(s2)
+function posRel_sphere_sphere(s1: Sphere3, s2: Sphere3): string {
 
 	function getSpherePosition(posRel: SPHERE3_RELATIVE_POSITION): string {
 		switch (posRel) {
@@ -427,11 +418,7 @@ function posRel_sphere_sphere(equ1: Equation, equ2: Equation): posRelativeInterf
 		}
 	}
 
-	return {
-		objet1: s1,
-		objet2: s2,
-		position: getSpherePosition(posRel)
-	}
+	return getSpherePosition(s1.relativePosition(s2))
 
 }
 </script>
@@ -439,28 +426,131 @@ function posRel_sphere_sphere(equ1: Equation, equ2: Equation): posRelativeInterf
 <template>
 	<article>
 		<tool-form :forms="forms">
-			<div class="text-center mt-3">
-				<sc-button
-					type="primary"
-				>
-					Générer
-				</sc-button>
+			<div>
+				<table>
+					<tr>
+						<td class="font-semibold pr-5">
+							point
+						</td>
+						<td class="font-code pr-5">
+							(a,b)
+						</td>
+						<td />
+					</tr>
+					<tr>
+						<td class="font-semibold pr-5">
+							ligne
+						</td>
+						<td class="font-code pr-5">
+							(a,b)+k(c,d)
+						</td>
+						<td class="font-code">
+							équation
+						</td>
+					</tr>
+					<tr>
+						<td class="font-semibold pr-5">
+							cercle
+						</td>
+						<td class="font-code pr-5">
+							(a,b)+r&lt;rayon&gt;
+						</td>
+						<td class="font-code">
+							équation
+						</td>
+					</tr>
+					<tr>
+						<td class="font-semibold pr-5">
+							point 3D
+						</td>
+						<td class="font-code pr-5">
+							(a,b,c)
+						</td>
+						<td />
+					</tr>
+					<tr>
+						<td class="font-semibold pr-5">
+							ligne 3D
+						</td>
+						<td class="font-code pr-5">
+							(a,b,c)+k(d,e,f)
+						</td>
+						<td />
+					</tr>
+					<tr>
+						<td class="font-semibold pr-5">
+							plan 3D
+						</td>
+						<td class="font-code pr-5">
+							(a,b,c)+k(d,e,f)+l(g,h,i)
+						</td>
+						<td class="font-code">
+							équation
+						</td>
+					</tr>
+					<tr>
+						<td class="font-semibold pr-5">
+							cercle 3D
+						</td>
+						<td class="font-code pr-5">
+							(a,b,c)+r&lt;rayon&gt;
+						</td>
+						<td class="font-code">
+							équation
+						</td>
+					</tr>
+				</table>
+				<div class="text-center mt-3">
+					<sc-button
+						type="primary"
+					>
+						Générer
+					</sc-button>
+				</div>
 			</div>
 		</tool-form>
 
-		<div v-if="positionRelative">
-			<div>{{ positionRelative.objet1.type }} <span v-katex="positionRelative.objet1.pi.tex" /></div>
-			<div>{{ positionRelative.objet2.type }} <span v-katex="positionRelative.objet2.pi.tex" /></div>
-		</div>
-		<div v-else>
-			Un des deux polynômes n'est pas reconnu
+		<div class="grid grid-cols-2 gap-3">
+			<Card>
+				<template #header>
+					<h3 class="text-lg uppercase">
+						premier objet
+					</h3>
+				</template>
+				<div
+					v-for="(obj, index) in objets1"
+					:key="`obj1-${index}`"
+					@click="objet1Index = index"
+					class="cursor-pointer p-2"
+					:class="index===objet1Index?'bg-green-100':''"
+				>
+					<span v-katex="obj.pi.tex" /> - {{ obj.type }} {{ obj.dimension }}D
+				</div>
+			</Card>
+			<Card>
+				<template #header>
+					<h3 class="text-lg uppercase">
+						deuxième objet
+					</h3>
+				</template>
+				<div
+					v-for="(obj, index) in objets2"
+					:key="`obj2-${index}`"
+					class="p-2"
+					:class="index===objet2Index?'bg-green-100':''"
+				>
+					<span v-katex="obj.pi.tex" /> - {{ obj.type }} {{ obj.dimension }}D
+				</div>
+			</Card>
 		</div>
 
-		<div>Positions relatives: {{ positionRelative.position }}</div>
+		<Card
+			v-if="isRecognized"
+			class="my-12 max-w-lg mx-auto text-xl font-semibold text-center space-y-6"
+		>
+			<p>Positions relatives</p>
+			<p>{{ positionRelative }}</p>
+		</Card>
 	</article>
 </template>
-
-<style scoped lang="postcss">
-
-</style>
 

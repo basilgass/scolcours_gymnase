@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import ToolForm, { IToolForm } from "@/Components/Tools/Parts/ToolForm.vue"
 import { useToolsStorage } from "@/Composables/useToolsStorage.ts"
-import { Equation, Point, Polynom } from "pimath"
+import {Equation, Point, PolyFactor, Polynom} from "pimath"
 /** Tools
  * title: quadratique
  * body: calcul d'une fonction quadratique
@@ -9,6 +9,7 @@ import { Equation, Point, Polynom } from "pimath"
  * tags: algebre,1M
  */
 import { computed, ref } from "vue"
+import Card from "@/Components/Ui/Card.vue"
 
 const { restoreTool } = useToolsStorage()
 const forms: IToolForm[] = restoreTool( [
@@ -120,7 +121,7 @@ const result = computed(() => {
 		// TODO: Handle poly.texFactors with the new PiMath.
 		return {
 			tex: poly.tex,
-			factorise: 'poly.texFactors',
+			factorise: new PolyFactor().fromPolynom(poly).factorize().tex,
 			sommet,
 			points: {
 				H: new Point(0, c).tex,
@@ -142,48 +143,50 @@ const result = computed(() => {
 			form-class="grid grid-cols-1 md:grid-cols-3 gap-3"
 		/>
 
-		<div
-			v-if="result"
-			class="grid grid-cols-1 md:grid-cols-2 gap-5"
-		>
+		<Card>
 			<div
-				v-katex.display.boxed.lg="`f(x) = ${result.tex}`"
-				class="col-span-2 text-lg my-10"
-			/>
+				v-if="result"
+				class="grid grid-cols-1 md:grid-cols-2 gap-5"
+			>
+				<div
+					v-katex.display.boxed.lg="`f(x) = ${result.tex}`"
+					class="col-span-2 text-lg my-10"
+				/>
 
-			<div>
-				<h2 class="font-semibold">
-					forme factorisée
-				</h2>
-				<div v-katex.display.boxed.lg="`f(x) = ${result.factorise}`" />
+				<div>
+					<h2 class="font-semibold">
+						forme factorisée
+					</h2>
+					<div v-katex.display.boxed.lg="`f(x) = ${result.factorise}`" />
 
-				<h2 class="font-semibold">
-					forme du sommet
-				</h2>
-				<div v-katex.display.boxed.lg="`f(x) = ${result.sommet}`" />
-			</div>
+					<h2 class="font-semibold">
+						forme du sommet
+					</h2>
+					<div v-katex.display.boxed.lg="`f(x) = ${result.sommet}`" />
+				</div>
 
-			<div>
-				<h2 class="font-semibold">
-					points caractéristiques
-				</h2>
+				<div>
+					<h2 class="font-semibold">
+						points caractéristiques
+					</h2>
 
-				<div class="grid grid-cols-2">
-					<div v-katex.display.boxed.lg="`H = ${result.points.H}`" />
-					<div v-katex.display.boxed.lg="`S = ${result.points.S}`" />
-					<div
-						v-for="(sol, idx) of result.points.Z"
-						:key="sol"
-						v-katex.display.boxed.lg="`z_${idx+1} = ${sol}`"
-					/>
+					<div class="grid grid-cols-2">
+						<div v-katex.display.boxed.lg="`H = ${result.points.H}`" />
+						<div v-katex.display.boxed.lg="`S = ${result.points.S}`" />
+						<div
+							v-for="(sol, idx) of result.points.Z"
+							:key="sol"
+							v-katex.display.boxed.lg="`z_${idx+1} = ${sol}`"
+						/>
+					</div>
 				</div>
 			</div>
-		</div>
-		<div
-			v-else
-			class="text-red-700 text-sm"
-		>
-			Une erreur s'est produite avec vos données.
-		</div>
+			<div
+				v-else
+				class="text-red-700 text-sm"
+			>
+				Une erreur s'est produite avec vos données.
+			</div>
+		</Card>
 	</article>
 </template>

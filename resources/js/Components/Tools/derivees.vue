@@ -10,6 +10,7 @@ import { Factor, PolyFactor, Polynom } from "pimath"
  * tags: algebre,2M
  */
 import { computed, ref } from "vue"
+import Card from "@/Components/Ui/Card.vue"
 
 const { restoreTool } = useToolsStorage()
 const forms: IToolForm[] = restoreTool( [
@@ -59,13 +60,13 @@ let result = computed(() => {
 	<article>
 		<tool-form :forms="forms" />
 
-		<div v-if="result">
+		<Card v-if="result">
 			<div
 				v-if="numerator.trim()!==''"
 				v-katex.boxed="result"
 			/>
 			<tex-code :tex="result" />
-		</div>
+		</Card>
 		<div
 			v-else
 			class="text-red-700 text-sm"

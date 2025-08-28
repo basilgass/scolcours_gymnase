@@ -7,6 +7,7 @@ import { useToolsStorage } from "@/Composables/useToolsStorage.ts"
  * body: tableau de signes ou de variations
  */
 import { computed, ref } from "vue"
+import Card from "@/Components/Ui/Card.vue"
 
 const { restoreTool } = useToolsStorage()
 const forms: IToolForm[] = restoreTool([
@@ -48,10 +49,12 @@ function TOS_update(value){
 		/>
 
 		<!-- Tableau de signes -->
-		<div class="bg-white rounded-sm border-gray-400 p-4">
-			<h2 class="chapter-menu text-lg mb-10">
-				{{ mode==='signs' ? "Tableau de signes" : mode==="grows" ? "Tableau de croissance" : "Tableau de courbure" }}
-			</h2>
+		<Card>
+			<template #header>
+				<h2 class="text-lg">
+					{{ mode==='signs' ? "Tableau de signes" : mode==="grows" ? "Tableau de croissance" : "Tableau de courbure" }}
+				</h2>
+			</template>
 
 			<div
 				class="grid grid-cols-1 gap-3"
@@ -71,6 +74,6 @@ function TOS_update(value){
 				class="px-10"
 				@update="TOS_update"
 			/>
-		</div>
+		</Card>
 	</article>
 </template>

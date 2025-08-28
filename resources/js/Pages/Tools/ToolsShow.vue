@@ -64,21 +64,16 @@ watch(showDialog, (newVal) => {
 				</button>
 			</div>
 
-			<div
-				class="bg-content border
-						rounded-sm px-3 py-2"
-			>
-				<suspense>
-					<component :is="toolComponent" />
-					<template #fallback>
-						<div
-							class="font-code h-[80vh] grid place-items-center"
-						>
-							Chargement du composant
-						</div>
-					</template>
-				</suspense>
-			</div>
+			<suspense>
+				<component :is="toolComponent" />
+				<template #fallback>
+					<div
+						class="font-code h-[80vh] grid place-items-center"
+					>
+						Chargement du composant
+					</div>
+				</template>
+			</suspense>
 		</div>
 	</section>
 

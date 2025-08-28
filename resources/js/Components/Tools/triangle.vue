@@ -1,16 +1,17 @@
 <script lang="ts" setup>
-import ToolForm, { IToolForm } from "@/Components/Tools/Parts/ToolForm.vue"
-import { useToolsStorage } from "@/Composables/useToolsStorage.ts"
-import { Line, Triangle } from "pimath"
+import ToolForm, {IToolForm} from "@/Components/Tools/Parts/ToolForm.vue"
+import {useToolsStorage} from "@/Composables/useToolsStorage.ts"
+import {Line, Triangle} from "pimath"
 /** Tools
  * title: droites remarquables d'un triangle
  * body: calcul des droites remarquables d'un triangle
  * parameters: a, b, c=coord ou équation
  * tags: geometrie,2M
  */
-import { computed, ref } from "vue"
+import {computed, ref} from "vue"
+import Card from "@/Components/Ui/Card.vue"
 
-const { restoreTool } = useToolsStorage()
+const {restoreTool} = useToolsStorage()
 const forms: IToolForm[] = restoreTool([
 	{
 		label: "A ou équation BC",
@@ -32,9 +33,9 @@ const forms: IToolForm[] = restoreTool([
 	}
 ])
 
-let A = computed(()=>forms[0].value.value as string)
-const B = computed(()=>forms[1].value.value as string)
-const C = computed(()=>forms[2].value.value as string)
+let A = computed(() => forms[0].value.value as string)
+const B = computed(() => forms[1].value.value as string)
+const C = computed(() => forms[2].value.value as string)
 
 let result = computed(() => {
 	try {
@@ -66,7 +67,7 @@ let result = computed(() => {
 			form-class="grid grid-cols-1 md:grid-cols-3 gap-3"
 		/>
 
-		<div
+		<Card
 			v-if="result"
 			class="my-10"
 		>
@@ -130,7 +131,7 @@ let result = computed(() => {
 				<div v-katex.boxed="`(b_B'): ${result.extBissectors.B.tex}`" />
 				<div v-katex.boxed="`(b_C'): ${result.extBissectors.C.tex}`" />
 			</div>
-		</div>
+		</Card>
 		<div
 			v-else
 			class="text-red-700 text-sm text-center mt-5"
