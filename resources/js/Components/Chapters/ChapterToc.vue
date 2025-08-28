@@ -113,7 +113,7 @@ const questionStatus = computed<Record<number, number | null>>(() => {
 	return result
 })
 
-const postTypes = {
+const postTypes:Record<string, { label: string, icon: string, title: string, active: boolean }> = {
 	theory: {
 		label: 'théorie',
 		icon: 'bi bi-book',

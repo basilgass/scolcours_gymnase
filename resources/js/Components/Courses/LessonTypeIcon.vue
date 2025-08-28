@@ -3,7 +3,7 @@
 import {lessonableClassName} from "@/types/lessonInterfaces.ts"
 
 withDefaults(defineProps<{
-	lesson: { lessonable_type: lessonableClassName, lessonable_tag: 'exercise' | 'howto' | null },
+	lesson: { lessonable_type: lessonableClassName, lessonable_tag?: 'exercise' | 'howto' | null },
 	xl?: boolean
 	xs?: boolean
 }>(), {
@@ -15,7 +15,7 @@ withDefaults(defineProps<{
 <template>
 	<i
 		:class="{
-			'bi bi-book': lesson.lessonable_type==='Post' && lesson.lessonable_tag===null,
+			'bi bi-book': lesson.lessonable_type==='Post' && !lesson.lessonable_tag,
 			'bi bi-journal': lesson.lessonable_type==='Post' && lesson.lessonable_tag==='exercise',
 			'bi bi-card-checklist': lesson.lessonable_type==='Post' && lesson.lessonable_tag==='howto',
 			'bi bi-patch-question': lesson.lessonable_type==='Challenge',
