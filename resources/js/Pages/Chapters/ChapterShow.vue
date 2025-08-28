@@ -107,7 +107,7 @@ const showFormular = ref(false)
 					@click="showTheorem = true; currentTab = 'theorems'"
 				>
 					<div class="text-center space-y-2">
-						<i class="bi bi-journal-bookmark text-3xl" />
+						<i class="bi bi-book text-3xl" />
 						<p>théorie</p>
 					</div>
 				</sc-button>

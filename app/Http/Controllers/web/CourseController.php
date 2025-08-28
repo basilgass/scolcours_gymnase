@@ -24,13 +24,9 @@ class CourseController extends Controller
 			]);
 		}
 
-		if ($user->admin and 1 === 0) {
-			// Version si admin
-			$teamCourses = Course::all();
-		} else {
-			$user->load(['teams', 'teams.courses']);
-			$teamCourses = $user->courses;
-		}
+
+		$user->load(['teams', 'teams.courses']);
+		$teamCourses = $user->courses;
 
 		return Inertia::render("Courses/CourseIndex", [
 			"teams"       => UserTeamResource::collection($user->teams),
@@ -61,6 +57,7 @@ class CourseController extends Controller
 			}
 		]);
 
+		// For all courses with a lessonable_type of App/Models/Post, get the Post->type
 		return Inertia::render("Courses/CourseShow", [
 			"team"   => UserTeamResource::make($matchingTeam),
 			"course" => CourseResource::make($course),

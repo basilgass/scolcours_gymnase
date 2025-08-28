@@ -23,6 +23,7 @@ class LessonResource extends JsonResource
 			'title'           => $this->lessonable->title,
 			'lessonable_id'   => (int)$this->lessonable_id,
 			'lessonable_type' => class_basename($this->lessonable_type),
+			'lessonable_tag'  => $this->lessonable->type ?? null,
 			'scoreRules'      => $this->scoreRules,
 			'remaining_time'  => $scheduled_at?->diffForHumans(),
 			'scheduled_at'    => $scheduled_at,

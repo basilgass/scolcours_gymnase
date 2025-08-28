@@ -112,6 +112,39 @@ const questionStatus = computed<Record<number, number | null>>(() => {
 	})
 	return result
 })
+
+const postTypes = {
+	theory: {
+		label: 'théorie',
+		icon: 'bi bi-book',
+		title: 'afficher la théorie',
+		active: props.posts.some(post => post.type === null)
+	},
+	exercise: {
+		label: 'exercices',
+		icon: 'bi bi-journal',
+		title: 'afficher les exercices',
+		active: props.posts.some(post => post.type === 'exercise')
+	},
+	howto: {
+		label: 'savoir faire',
+		icon: 'bi bi-card-checklist',
+		title: 'afficher les savoirs faire',
+		active: props.posts.some(post => post.type === 'howto')
+	},
+	en_cours: {
+		label: 'en cours',
+		icon: 'bi bi-check-circle',
+		title: 'afficher les exercices non terminés',
+		active: true
+	}
+}
+
+const availablePostTypes = computed(()=>{
+	return Object.fromEntries(
+		Object.entries(postTypes).filter(([_, v]) => v.active)
+	)
+})
 </script>
 
 <template>
@@ -123,31 +156,13 @@ const questionStatus = computed<Record<number, number | null>>(() => {
 				</h3>
 
 				<button
-					:class="postsFilterCurrent === 'theory'
-						? `text-${$page.props.theme.slug}-500`
-						: ''
-					"
-					@click="postsFilter('theory')"
+					v-for="(el, key) in availablePostTypes"
+					:key="`filter-${key}`"
+					v-theme.text="postsFilterCurrent===key"
+					:title="el.title"
+					@click="postsFilter(key)"
 				>
-					<i class="bi bi-text-paragraph" />
-				</button>
-				<button
-					:class="postsFilterCurrent === 'exercise'
-						? `text-${$page.props.theme.slug}-500`
-						: ''
-					"
-					@click="postsFilter('exercise')"
-				>
-					<i class="bi bi-calculator" />
-				</button>
-				<button
-					:class="postsFilterCurrent === 'en_cours'
-						? `text-${$page.props.theme.slug}-500`
-						: ''
-					"
-					@click="postsFilter('en_cours')"
-				>
-					<i class="bi bi-check-circle" />
+					<i :class="el.icon" />
 				</button>
 
 				<div class="text-sm font-extralight">
@@ -213,9 +228,11 @@ const questionStatus = computed<Record<number, number | null>>(() => {
 						class="text-left hover:pl-1 transition-all duration flex gap-1"
 					>
 						<i
+							class="opacity-50"
 							:class="{
-								'bi bi-calculator': element.type === 'exercise',
-								'bi bi-text-paragraph': !element.type,
+								'bi bi-journal': element.type === 'exercise',
+								'bi bi-card-checklist': element.type === 'howto',
+								'bi bi-book': !element.type,
 							}"
 						/>
 

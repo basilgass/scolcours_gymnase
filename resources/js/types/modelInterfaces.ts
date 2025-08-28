@@ -389,6 +389,7 @@ export interface LessonInterface<T extends LessonScoreRulesInterface = LessonSco
 	requires: number[],
 	lessonable_id: number | null,
 	lessonable_type: lessonableClassName | null,
+	lessonable_tag: 'exercise' | 'howto' | null,
 	scoreRules: T,
 	user: ScoreInterface<ScoreLessonDataInterface>,
 	scheduled_at: string,
