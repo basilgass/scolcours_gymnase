@@ -66,7 +66,7 @@ async function setInput(value?: string): Promise<KeyboardInputInterface> {
 }
 
 defineExpose<KeyboardExposeInterface>({
-	reset: ()=>{
+	reset: () => {
 		// TODO: reset function
 	},
 	setInput,
@@ -85,7 +85,13 @@ function matrixToTex(matrix: string[][], dim: { rows: number, columns: number })
 
 	let tex = "\\left(\\begin{array}{" + "c".repeat(dim.columns) + "}"
 
-	tex += matrix.map(row => row.map(a => new Polynom(a).tex)).map(line => line.join("&")).join("\\\\[0.8em]")
+	tex += matrix.map(row => row.map(a => {
+		try {
+			return new Polynom(a).tex
+		} catch {
+			return a
+		}
+	})).map(line => line.join("&")).join("\\\\[0.8em]")
 	tex += "\\end{array}\\right)"
 
 	return tex
@@ -120,13 +126,13 @@ const fixedDimension = computed<[number, number]>(() => {
 
 
 function switchKeyboard(value?: boolean): void {
-	if(hasFixedDimension.value){
+	if (hasFixedDimension.value) {
 		// Les dimensions sont fixées
 		showDimensionKeyboard.value = false
 		return
 	}
 
-	if(!dimension.value.columns || !dimension.value.rows){
+	if (!dimension.value.columns || !dimension.value.rows) {
 		// Si une des dimensions n'est pas données, on affiche le clavier des dimensions.
 		showDimensionKeyboard.value = true
 		return
@@ -161,12 +167,12 @@ function updateDimension(value: string): void {
 		n = null
 	}
 
-	if (m >= 10){
+	if (m >= 10) {
 		// on évite les valeurs trop grandes.
 		m = null
 	}
 
-	if(n >= 10) {
+	if (n >= 10) {
 		// on évite les valeurs trop grandes.
 		n = null
 	}
@@ -214,14 +220,29 @@ onMounted(() => {
 	}
 })
 
+// BUG: problème d'affichage si le polynome n'est pas reconnu.
+const pimatrixDisplay = computed(() => {
+	return values.value.map(row => row.map(x => {
+		if (x === '') {
+			return null
+		}
+
+		try {
+			return new Polynom(x)
+		} catch {
+			return null
+		}
+	}))
+})
+
 </script>
 
 <template>
 	<div class="flex flex-col gap-3 items-center">
 		<div v-if="!hasFixedDimension">
 			Dimension de la matrice: <span
-				v-katex.inline="`${ dimension.rows ?? 'm' } \\times ${dimension.columns ?? 'n'}`"
-			/>
+			v-katex.inline="`${ dimension.rows ?? 'm' } \\times ${dimension.columns ?? 'n'}`"
+		/>
 		</div>
 		<sc-button
 			v-if="!hasFixedDimension"
@@ -232,7 +253,7 @@ onMounted(() => {
 		</sc-button>
 
 		<pi-matrix
-			:matrix="values.map(row=>row.map(x=>x===''?null:new Polynom(x)))"
+			:matrix="pimatrixDisplay"
 			:dimension="dimension.columns"
 			selection-mode="item"
 			v-model:aij="aij"
