@@ -84,7 +84,7 @@ onMounted(() => {
 			@mouseup="drawMouseUp"
 		/>
 		<pi-draw-animation
-			v-show="showAnimation"
+			v-if="showAnimation"
 			:draw="PiGraph"
 		/>
 	</div>

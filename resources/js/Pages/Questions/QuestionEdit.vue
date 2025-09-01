@@ -71,8 +71,6 @@ let saveQuestion = function () {
 	}
 
 // Handle copy and paste.
-// TODO: Move the copy/paste to a composable.
-// TODO: add a timeout for the localStorage.
 let hasClipboard = computed(() => {
 		return sessionStorage.getItem("scolcours-clipboard-question") !== null
 	}),

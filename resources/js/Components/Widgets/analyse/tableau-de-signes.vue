@@ -44,16 +44,6 @@ const minimal = computed(() => {
 	return !!(config.value.includes("minimal") || config.value.includes("min"))
 })
 
-// Define the extremes values if given.
-// const extremes = computed(() => {
-// 	const extremes = config.value.filter(x => x.startsWith("extrema=")).map(x => x.split("extrema=")[1])
-//
-// 	if (extremes.length === 1) {
-// 		return extremes[0].split("|")
-// 	}
-// 	return null
-// })
-
 // Define the way the table of signs is generated.
 const use_Pi_table_of_signs = computed(() => {
 	return !code.value.includes("@")

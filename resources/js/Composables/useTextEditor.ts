@@ -6,9 +6,6 @@ import {json_macros} from "@/helpers/Macros/json_macros.ts"
 import {useMagicKeys, whenever} from "@vueuse/core"
 import {greekLaTeX} from "@/helpers/greekLaTeX.ts"
 
-// TODO: add auto closing \begin / \end
-// TODO: allow Ctrl+arrowUp/Down to increase/decrease parenthesis with \big, \Big, \huge, \left and same for matching brace.
-
 type availableLanguageType = "latex" | "javascript" | "json"
 const indentUnit = '\t' // 2 espaces
 const invisibleCharacter = "‎"
@@ -64,6 +61,11 @@ export function useTextEditor(AreaRefName: string, options?: {
 	// Editor area and modelValue
 	const textareaRef = useTemplateRef<HTMLTextAreaElement>(AreaRefName)
 	const modelValue = options?.model ?? ref<string>("")
+
+	function isTextareaFocused(): boolean {
+		const el = textareaRef.value
+		return el === document.activeElement
+	}
 
 	// Editor information
 	// Last n characters
@@ -470,17 +472,112 @@ export function useTextEditor(AreaRefName: string, options?: {
 		textareaRef.value.value = value
 	}
 
-	const {Ctrl_G} = useMagicKeys({
+	const {Ctrl_G, Ctrl_ArrowUp, Ctrl_ArrowDown} = useMagicKeys({
 		passive: false,
 		onEventFired(e) {
-			if (e.ctrlKey && e.key === 'g' && e.type === 'keydown')
+			if (e.ctrlKey && e.key === 'g' && e.type === 'keydown') {
 				e.preventDefault()
+				return
+			}
+
+			if (e.ctrlKey && (e.key === 'ArrowUp' || e.key === 'ArrowDown')) {
+				e.preventDefault()
+				return
+			}
+
 		}
 	})
 	const greekMode = ref<boolean>(false)
 
 	whenever(Ctrl_G, () => {
-		greekMode.value = true
+		if (isTextareaFocused()) {
+			greekMode.value = true
+		}
+	})
+
+	function changeParenthesisSize(direction: 'increase' | 'decrease') {
+		// AI_CODE: merci l'IA
+		const el = textareaRef.value
+		if (!el) return
+
+		const cursor = el.selectionStart
+		const value = el.value
+		const nextChar = value[cursor]
+
+		const openChars = ['(', '[', '{', '\\lbrace']
+		const closeChars = [')', ']', '}', '\\rbrace']
+
+		// Cherche le prochain caractère ou séquence
+		function getNextToken(value: string, cursor: number): string | undefined {
+			for (const token of [...openChars, ...closeChars]) {
+				if (value.slice(cursor, cursor + token.length) === token) {
+					return token
+				}
+			}
+			return undefined
+		}
+
+		const nextToken = getNextToken(value, cursor)
+		const isOpen = openChars.includes(nextToken ?? '')
+		const isClose = closeChars.includes(nextToken ?? '')
+		if (!isOpen && !isClose) return
+
+		const sizes = ['\\big', '\\Big', '\\left', '\\right'] //  '\\bigg', '\\Bigg'
+		let found = -1
+
+		for (let i = sizes.length - 1; i >= 0; i--) {
+			const prefix = sizes[i]
+			if (value.slice(cursor - prefix.length, cursor) === prefix) {
+				found = i
+				break
+			}
+		}
+
+		let newPrefix = ''
+		if (direction === 'increase') {
+			if (found < sizes.length - 1 && found >= 0) {
+				newPrefix = sizes[found + 1]
+			} else if (found === -1) {
+				newPrefix = sizes[0]
+			} else {
+				newPrefix = isOpen ? '\\left' : '\\right'
+			}
+		} else {
+			if (found > 0) {
+				newPrefix = sizes[found - 1]
+			} else if (found === 0) {
+				newPrefix = ''
+			} else if (found === -1) {
+				return // rien à réduire
+			} else {
+				newPrefix = ''
+			}
+		}
+
+		let newValue
+		let newCursor = cursor
+		if (found >= 0) {
+			newValue = value.slice(0, cursor - sizes[found].length) + newPrefix + value.slice(cursor)
+			newCursor = cursor - sizes[found].length + newPrefix.length
+		} else {
+			newValue = value.slice(0, cursor) + newPrefix + value.slice(cursor)
+			newCursor = cursor + newPrefix.length
+		}
+
+		updateValue(newValue)
+		el.selectionStart = el.selectionEnd = newCursor
+	}
+
+	whenever(Ctrl_ArrowUp, () => {
+		if (isTextareaFocused() && isInMathEnv.value) {
+			changeParenthesisSize('increase')
+
+		}
+	})
+	whenever(Ctrl_ArrowDown, () => {
+		if (isTextareaFocused()) {
+			changeParenthesisSize('decrease')
+		}
 	})
 
 	watch(modelValue, (val) => {

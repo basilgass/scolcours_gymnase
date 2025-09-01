@@ -1,20 +1,18 @@
 <script lang="ts" setup>
-import ToolForm, { IToolForm } from "@/Components/Tools/Parts/ToolForm.vue"
+import ToolForm, {IToolForm} from "@/Components/Tools/Parts/ToolForm.vue"
 import TexCode from "@/Components/Ui/TexCode.vue"
-import { useToolsStorage } from "@/Composables/useToolsStorage.ts"
-import { Circle, Point } from "pimath"
+import {useToolsStorage} from "@/Composables/useToolsStorage.ts"
+import {Circle, Fraction, Point} from "pimath"
 /** Tools
  * title: tangente à un cercle
  * body: calcul de la / les tangente(s) à un cercle passant par un point ou ayant une pente donnée
  * parameters: equ=equation, valeur=Point/Fraction
  * tags: geometrie,3M
  */
-
-// BUG : ne fonctionne pas avec une pente.
-import { computed, ref } from "vue"
+import {computed, ref} from "vue"
 import Card from "@/Components/Ui/Card.vue"
 
-const { restoreTool } = useToolsStorage()
+const {restoreTool} = useToolsStorage()
 const forms: IToolForm[] = restoreTool([
 	{
 		label: "Equation du cercle",
@@ -24,7 +22,7 @@ const forms: IToolForm[] = restoreTool([
 		message: "Utiliser `a,b` pour les coordonnées d'un point"
 	},
 	{
-		label: computed(() => equ.value.includes(',')?'Point':'Pente'),
+		label: computed(() => equ.value.includes(',') ? 'Point' : 'Pente'),
 		type: "text",
 		value: ref("7,9"),
 		fromUrl: "p",
@@ -32,18 +30,44 @@ const forms: IToolForm[] = restoreTool([
 	}
 ])
 
-const equ = computed(()=>forms[0].value.value as string)
-const p = computed(()=>forms[1].value.value as string)
+const equ = computed(() => forms[0].value.value as string)
+const p = computed(() => forms[1].value.value as string)
 
-let tangentes = computed(() => {
+const circle = computed(() => {
 	try {
-		const C = new Circle(equ.value)
-		const P = new Point(p.value)
-		return C.tangents(P)
-	} catch (e) {
-		console.log(e)
+		return new Circle(equ.value)
+	} catch {
+		null
+	}
+})
+const point = computed(() => {
+	if (p.value.includes(',')) {
+		return new Point(p.value)
+	}
+	return null
+})
+const slope = computed(() => {
+	try {
+		return new Fraction(p.value)
+	} catch {
+		return null
+	}
+})
+let tangentes = computed(() => {
+	if (!circle.value) {
 		return false
 	}
+
+	if (point.value) {
+		return circle.value.tangents(point.value)
+	}
+
+	if (slope.value) {
+		return circle.value.tangents(slope.value)
+	}
+
+	return false
+
 })
 </script>
 

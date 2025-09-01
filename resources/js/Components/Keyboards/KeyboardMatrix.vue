@@ -67,7 +67,7 @@ async function setInput(value?: string): Promise<KeyboardInputInterface> {
 
 defineExpose<KeyboardExposeInterface>({
 	reset: () => {
-		// TODO: reset function
+		// reset function
 	},
 	setInput,
 	parameters: "full (pleine largeur)\nflex (utilisation de flex)\ntex (converti en TeX)\nlist (affichage d'une liste)"
@@ -220,7 +220,6 @@ onMounted(() => {
 	}
 })
 
-// BUG: problème d'affichage si le polynome n'est pas reconnu.
 const pimatrixDisplay = computed(() => {
 	return values.value.map(row => row.map(x => {
 		if (x === '') {
@@ -230,7 +229,7 @@ const pimatrixDisplay = computed(() => {
 		try {
 			return new Polynom(x)
 		} catch {
-			return null
+			return x
 		}
 	}))
 })
@@ -241,8 +240,8 @@ const pimatrixDisplay = computed(() => {
 	<div class="flex flex-col gap-3 items-center">
 		<div v-if="!hasFixedDimension">
 			Dimension de la matrice: <span
-			v-katex.inline="`${ dimension.rows ?? 'm' } \\times ${dimension.columns ?? 'n'}`"
-		/>
+				v-katex.inline="`${ dimension.rows ?? 'm' } \\times ${dimension.columns ?? 'n'}`"
+			/>
 		</div>
 		<sc-button
 			v-if="!hasFixedDimension"

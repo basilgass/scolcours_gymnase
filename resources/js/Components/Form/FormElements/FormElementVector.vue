@@ -35,7 +35,7 @@ function validate(): string[] {
 
 	// Est de la forme <fraction>,<fraction>,<fraction>,...
 	const composants = value.value
-		.substring(1) // remove the first parenthsis
+		.substring(1) // remove the first parenthesis
 		.split(',')
 
 	for (let i = 0; i < composants.length; i++) {
@@ -61,6 +61,7 @@ function validate(): string[] {
 }
 
 function onChange() {
+	console.log('update value', value.value)
 	errors.value = validate()
 	emits('errors', errors.value)
 	emits('update', value.value)

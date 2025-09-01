@@ -283,9 +283,8 @@ export const useStoreScore = defineStore(
 			return {valid, result, duplicates}
 		}
 
-// Supprime les scores d'un utilisateur.
+		// Supprime les scores d'un utilisateur.
 		async function reset(scoreIds: number[]) {
-			// TODO: Multi reset score => needs to make multi update.
 			const affectedScores = await axios
 				.get(route('api.students.scores.index', {ids: scoreIds}))
 

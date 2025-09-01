@@ -8,7 +8,6 @@ import TexCode from "@/Components/Ui/TexCode.vue"
 import {type TABLE_OF_SIGNS_VALUES} from "pimath"
 import {computed} from "vue"
 
-// TODO: implement an "auto-width" for the table of signs
 export type TABLE_OF_SIGNS_VALUES_WITH_EXTREMES = TABLE_OF_SIGNS_VALUES | "m" | "M" | "_" | "I"
 
 interface TableOfSignsType {
@@ -99,7 +98,8 @@ const LaTeX_output = computed(() => {
 	}
 
 	// TODO: the tex output doesn't handle grows and curves extra lines !
-	return `\\begin{tikzpicture}
+	if (tosMode.value === 'signs') {
+		return `\\begin{tikzpicture}
 \\tkzTabInit[lgt=2,espcl=1.2]
 {/1,${props.factors.map(x => `\\(${x.label}\\)/1`).join(",")},/.1,\\(${props.label}\\)/1}
 {\\footnotesize \\(-\\infty\\), ${props.roots.map(x => `\\(${x}\\)`).join(",")}, \\footnotesize \\(+\\infty\\)}
@@ -107,11 +107,23 @@ ${props.factors.map(x => `\\tkzTabLine{ ,${x.signs.join(",")} }\n`)}
 ${props.factors.length > 0 ? "\\tkzTabLine{}" : ""}
 \\tkzTabLine{,${props.signs.join(",")}}
 \\end{tikzpicture}`
+	}
+
+	if(tosMode.value==='grows'){
+		return ""
+	}
+
+	if(tosMode.value === 'curves'){
+		return ""
+	}
+
+	// Never !
+	return `le mode n'a pas pu être détecté correctement: ${tosMode.value}`
 })
 </script>
 <template>
 	<div class="table-of-sign-wrapper">
-		<div class="not-prose overflow-x-scroll katex-scrollbar pb-3">
+		<div class="not-prose overflow-x-auto overflow-y-auto pb-3">
 			<table class="border-r tos border-gray-400 mx-auto">
 				<table-of-signs-header :roots="roots" />
 

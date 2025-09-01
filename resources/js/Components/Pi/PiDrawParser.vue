@@ -27,7 +27,7 @@ const emits = defineEmits<{
 	drawClick: [{ draw: PiDraw, mouse: MouseEvent }],
 	update: [draw: PiDraw],
 }>()
-
+const showCode = ref(false)
 // Set the current step index
 const stepIndex = ref(-1)
 
@@ -141,11 +141,22 @@ const drawMouseUp = function (evt: {draw: PiDraw, mouse: MouseEvent}) {
 		class="dark:bg-slate-600"
 	>
 		<!-- draw graph-->
-		<pi-draw-display
-			:code="drawCode"
-			:parameters="drawParameter"
-			@draw-click="drawMouseUp"
-		/>
+		<div class="relative">
+			<pi-draw-display
+				:code="drawCode"
+				:parameters="drawParameter"
+				@draw-click="drawMouseUp"
+			/>
+			<div
+				v-if="editMode.enable"
+				class="absolute bottom-1 right-2"
+			>
+				<i
+					@click="showCode=!showCode"
+					class="cursor-pointer bi bi-code"
+				/>
+			</div>
+		</div>
 
 		<!-- stepper -->
 		<div
@@ -215,9 +226,10 @@ const drawMouseUp = function (evt: {draw: PiDraw, mouse: MouseEvent}) {
 			<div v-katex="texComputed" />
 		</div>
 
+
 		<div
-			class="grid grid-cols-2 gap-3"
-			v-admin="editMode.enable"
+			v-if="editMode.enable && showCode"
+			class="grid grid-cols-2 gap-3 mt-3"
 		>
 			<pre class="border border-slate-200 p-2">{{ dynamicValues }}</pre>
 			<pre class="border border-slate-200 p-2">{{ drawCode }}</pre>

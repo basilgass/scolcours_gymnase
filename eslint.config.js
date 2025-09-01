@@ -12,7 +12,7 @@ export default tseslint.config(
 			parserOptions: {
 				parser: tseslint.parser,
 				project: true,
-				tsconfigRootDir: './',
+				tsconfigRootDir: 'C:/websites/scolcours_gymnase',
 				extraFileExtensions: ['.vue'],
 				sourceType: 'module',
 				"allowImportExportEverywhere": true,

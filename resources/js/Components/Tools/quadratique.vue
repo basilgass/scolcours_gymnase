@@ -33,7 +33,6 @@ const forms: IToolForm[] = restoreTool( [
 	}
 ] )
 
-// TODO: optimisation des calculs pour déterminer une quadratique !
 const A = computed(() => forms[0].value.value as string)
 const B = computed(() => forms[1].value.value as string)
 const C = computed(() => forms[2].value.value as string)
@@ -44,9 +43,7 @@ function getPolyFromThreePoints(A, B, C): Polynom {
 		pB = new Point(B),
 		pC = new Point(C)
 
-	// TODO: améliorer le calcul et inclure dans PI
 	// y=ax^2+bx+c
-
 	let Pc: Equation = P.clone()
 			.replaceBy("x", new Polynom(pA.x.display))
 			.replaceBy("y", new Polynom(pA.y.display))
@@ -118,10 +115,9 @@ const result = computed(() => {
 		// a(x-sx)^2+sy
 		const sommet = `${a.isOne() ? "" : a.isNegativeOne() ? "-" : a.tex}${sx.isZero() ? "x^2" : `\\left( x ${sx.clone().opposite().texWithSign} \\right)^2`}${sy.texWithSign}`
 
-		// TODO: Handle poly.texFactors with the new PiMath.
 		return {
 			tex: poly.tex,
-			factorise: new PolyFactor().fromPolynom(poly).factorize().tex,
+			factorise: new PolyFactor().fromPolynom(poly).factorize().reduce().tex,
 			sommet,
 			points: {
 				H: new Point(0, c).tex,

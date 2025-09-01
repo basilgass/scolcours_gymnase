@@ -24,7 +24,7 @@ onMounted(() => {
 		.map(line => line.split(',')[0])
 		.map(Number)
 
-	axios.get(route("api.admin.formulas.index", {
+	axios.get(route("api.formulas.index", {
 		ids: ids
 	}))
 		.then(res => {

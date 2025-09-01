@@ -13,12 +13,10 @@ import {useStoreScore} from "@/stores/useStoreScore.ts"
 import dayjs from "dayjs"
 import {useMenuScrollToData} from "@/Composables/useHelpers.ts"
 import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
-import Card from "@/Components/Ui/Card.vue"
 import axios from "axios"
 import {AxiosErrorMessage, AxiosResponseModel} from "@/types"
-import BarChart from "@/Components/Charts/barChart.vue"
 import StatBar from "@/Components/Ui/StatBar.vue"
-import LessonTypeIcon from "@/Components/Courses/LessonTypeIcon.vue";
+import LessonTypeIcon from "@/Components/Courses/LessonTypeIcon.vue"
 
 defineOptions({layout: LayoutMain})
 
@@ -63,35 +61,35 @@ const lesson_stats = ref<Record<string, ILessonStats>>({})
 const users = ref<UserInterface[]>([])
 const selected_user_id = ref(0)
 
-const selected_user_stats = computed<Record<string, ILessonStats>>(()=>{
-	if(!lesson_stats.value){
+const selected_user_stats = computed<Record<string, ILessonStats>>(() => {
+	if (!lesson_stats.value) {
 		return {}
 	}
 
-	if(selected_user_id.value===0){
+	if (selected_user_id.value === 0) {
 		return lesson_stats.value
 	}
 
 
-	const userStats:Record<string, ILessonStats> = {}
-	for(let id in lesson_stats.value){
+	const userStats: Record<string, ILessonStats> = {}
+	for (let id in lesson_stats.value) {
 		userStats[id] = {
 			users_id: [],
 			lesson_id: +id,
-			resolved_scores: lesson_stats.value[+id].users_id.includes(selected_user_id.value)?1:0,
+			resolved_scores: lesson_stats.value[+id].users_id.includes(selected_user_id.value) ? 1 : 0,
 			total_scores: 1
 		}
 	}
 
 	return userStats
 })
+
 function loadStats() {
 	axios.get(route('api.admin.teams.users', {team: props.team.id}))
-		.then((res: AxiosResponseModel<UserInterface[]>)=>{
+		.then((res: AxiosResponseModel<UserInterface[]>) => {
 			users.value = res.data
 		})
 
-	console.log('LOADING STATS...')
 	axios.get(route('api.admin.courses.teams.stats', {
 		team: props.team.id,
 		course: props.course.id
@@ -99,17 +97,6 @@ function loadStats() {
 		.then((res: AxiosResponseModel<Record<string, ILessonStats>>) => {
 			lesson_stats.value = res.data
 			console.log('STATS UPDATED')
-		})
-		.catch((err: AxiosErrorMessage) => {
-			console.warn(err.response.data.message)
-		})
-}
-
-function loasStatsLesson(lesson: LessonInterface) {
-	// TODO: update des stats pour une leçon uniquement...
-	axios.get(route())
-		.then(() => {
-			// update data.
 		})
 		.catch((err: AxiosErrorMessage) => {
 			console.warn(err.response.data.message)
@@ -179,9 +166,19 @@ onMounted(() => {
 				</sc-button>
 			</div>
 
-			<h3 class="text-lg uppercase mb-3">
-				statistiques de {{ selected_user_id=== 0 ? team.name : users.find(user=>user.id===selected_user_id).fullname }}
-			</h3>
+			<div class="flex justify-between">
+				<h3 class="text-lg uppercase mb-3">
+					statistiques de
+					{{ selected_user_id === 0 ? team.name : users.find(user => user.id === selected_user_id).fullname }}
+				</h3>
+				<sc-button
+					type="primary"
+					outline
+					@click="loadStats"
+				>
+					rafraîchier
+				</sc-button>
+			</div>
 			<div
 				v-for="lesson in course.lessons"
 				:key="`stats-${lesson.id}`"
@@ -203,7 +200,8 @@ onMounted(() => {
 					:value="selected_user_stats[lesson.id]?.total_scores === 0 ? 0 : (selected_user_stats[lesson.id]?.resolved_scores)/(selected_user_stats[lesson.id]?.total_scores)*100"
 				>
 					<template #bar>
-						{{ selected_user_stats[lesson.id]?.resolved_scores }} / {{ selected_user_stats[lesson.id]?.total_scores }}
+						{{ selected_user_stats[lesson.id]?.resolved_scores }} /
+						{{ selected_user_stats[lesson.id]?.total_scores }}
 					</template>
 				</stat-bar>
 			</div>

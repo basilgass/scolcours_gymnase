@@ -34,7 +34,7 @@ const getAllChapters = function () {
 		return
 	}
 
-	// REFACTOR : à quoi sert chapters.indes.min ?
+	// REFACTOR : à quoi sert chapters.index.min ?
 	axios.get(route("api.admin.chapters.index"))
 		.then(res => {
 			console.log(res.data)
