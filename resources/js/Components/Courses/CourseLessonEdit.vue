@@ -14,6 +14,8 @@ const props = defineProps<{
 
 const flash = inject<flashInterface>('flash')
 
+const showScoreRules = ref(false)
+
 const scoreRules = ref(props.lesson.scoreRules ?? {})
 
 function updateLesson() {
@@ -36,22 +38,34 @@ const jsonMap = computed(()=>{
 </script>
 
 <template>
-	<div class="flex max-w-sm gap-3">
-		<div>
-			<sc-button
-				type="save"
-				icon
-				xs
-				@click="updateLesson"
-			/>
+	<div>
+		<div
+			v-if="!showScoreRules"
+			@click="showScoreRules=true"
+			class="cursor-pointer text-xs font-code -mt-2 -my-3"
+		>
+			afficher les règles
 		</div>
-		<div class="font-code">
-			<form-maker
-				label="configuration"
-				type="json"
-				:map="jsonMap"
-				v-model="scoreRules"
-			/>
+		<div
+			v-else
+			class="flex max-w-sm gap-3"
+		>
+			<div>
+				<sc-button
+					type="save"
+					icon
+					xs
+					@click="updateLesson"
+				/>
+			</div>
+			<div class="font-code">
+				<form-maker
+					label="configuration"
+					type="json"
+					:map="jsonMap"
+					v-model="scoreRules"
+				/>
+			</div>
 		</div>
 	</div>
 </template>

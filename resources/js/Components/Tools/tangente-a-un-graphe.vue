@@ -10,6 +10,7 @@ import {Equation, Fraction, ISolution, Line, Monom, Point, Polynom} from "pimath
  */
 import {computed, ref} from "vue"
 import Card from "@/Components/Ui/Card.vue"
+import ToolError from "@/Components/Tools/Parts/ToolError.vue"
 
 const {restoreTool} = useToolsStorage()
 const forms: IToolForm[] = restoreTool([
@@ -86,7 +87,7 @@ const affine = computed<{ tex: { canonical: string, mxh: string } } | false>(() 
 			}
 		}
 	} catch (e) {
-		console.log(e)
+		console.warn(e)
 		return false
 	}
 
@@ -97,17 +98,10 @@ const affine = computed<{ tex: { canonical: string, mxh: string } } | false>(() 
 	<article>
 		<tool-form :forms="forms" />
 
-		<Card>
-			<div v-if="affine">
-				<div v-katex.boxed.lg="`${affine.tex.mxh}`" />
-				<div v-katex.boxed.lg="`${affine.tex.canonical}`" />
-			</div>
-			<div
-				v-else
-				class="text-red-700 text-sm"
-			>
-				Une erreur s'est produite lors de l'introduction des coordonnées.
-			</div>
+		<Card v-if="affine">
+			<div v-katex.boxed.lg="`${affine.tex.mxh}`" />
+			<div v-katex.boxed.lg="`${affine.tex.canonical}`" />
 		</Card>
+		<tool-error v-else />
 	</article>
 </template>

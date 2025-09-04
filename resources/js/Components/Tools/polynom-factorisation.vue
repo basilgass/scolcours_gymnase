@@ -1,28 +1,29 @@
 <script setup lang="ts">
 import KeyboardDisplay from "@/Components/Keyboards/KeyboardDisplay.vue"
-import ToolForm, { IToolForm } from "@/Components/Tools/Parts/ToolForm.vue"
+import ToolForm, {IToolForm} from "@/Components/Tools/Parts/ToolForm.vue"
 import TexCode from "@/Components/Ui/TexCode.vue"
-import { useToolsStorage } from "@/Composables/useToolsStorage.ts"
-import { KbrdEvent } from "@/types"
-import { PolyFactor } from "pimath"
+import {useToolsStorage} from "@/Composables/useToolsStorage.ts"
+import {KbrdEvent} from "@/types"
+import {PolyFactor} from "pimath"
 /** Tools
  * title: factorisation d'un polynôme
  * body: factorisation d'un polynôme
  * parameters: polynome
  * tags: algebre,1M
  */
-import { computed, ref } from "vue"
+import {computed, ref} from "vue"
 import Card from "@/Components/Ui/Card.vue"
+import ToolError from "@/Components/Tools/Parts/ToolError.vue"
 
-const { restoreTool } = useToolsStorage()
-const forms: IToolForm[] = restoreTool( [
+const {restoreTool} = useToolsStorage()
+const forms: IToolForm[] = restoreTool([
 	{
 		label: "Polynôme",
 		type: "text",
 		value: ref(""),
 		fromUrl: "p"
 	}
-] )
+])
 
 const polynom = computed(() => forms[0].value.value as string)
 
@@ -42,8 +43,8 @@ let result = computed(() => {
 	}
 })
 
-function updateKbrd(event: KbrdEvent){
-	forms[0].value.value=event.input
+function updateKbrd(event: KbrdEvent) {
+	forms[0].value.value = event.input
 }
 </script>
 
@@ -57,13 +58,7 @@ function updateKbrd(event: KbrdEvent){
 
 				<tex-code :tex="result.tex" />
 			</div>
-			<div
-				v-else
-				class="text-red-700 text-sm"
-			>
-				Une erreur s'est produite avec vos données.
-			</div>
-
+			<tool-error v-else />
 
 			<keyboard-display
 				class="mt-3"

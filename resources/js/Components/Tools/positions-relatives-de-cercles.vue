@@ -7,16 +7,16 @@
  */
 
 import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"
-import ToolForm, { IToolForm } from "@/Components/Tools/Parts/ToolForm.vue"
-import { useToolsStorage } from "@/Composables/useToolsStorage.ts"
-import { Circle, Numeric, Point, Random } from "pimath"
-import { computed, onMounted, ref } from "vue"
+import ToolForm, {IToolForm} from "@/Components/Tools/Parts/ToolForm.vue"
+import {useToolsStorage} from "@/Composables/useToolsStorage.ts"
+import {Circle, Numeric, Point, Random} from "pimath"
+import {computed, onMounted, ref} from "vue"
 import ScButton from "@/Components/Ui/scButton.vue"
 import Card from "@/Components/Ui/Card.vue"
-import CardItem from "@/Components/Elements/CardItem.vue"
+import ToolError from "@/Components/Tools/Parts/ToolError.vue"
 
 
-const { restoreTool } = useToolsStorage()
+const {restoreTool} = useToolsStorage()
 const forms: IToolForm[] = restoreTool([
 	{
 		label: "Cercle 1",
@@ -122,7 +122,7 @@ function generatePoints(allowZero = false) {
 
 	const P2 = new Point(P1.x.value + triple[0], P1.y.value + triple[1])
 
-	return { P1, P2, triple }
+	return {P1, P2, triple}
 }
 
 const POSITION_RELATIVE = [
@@ -136,7 +136,7 @@ const POSITION_RELATIVE = [
 
 // Generate random circles
 function generateCircles() {
-	let { P1, P2, triple } = generatePoints()
+	let {P1, P2, triple} = generatePoints()
 	const pos = Random.item(POSITION_RELATIVE),
 		d = triple[2] // distance between the two points
 
@@ -225,6 +225,7 @@ onMounted(() => {
 					/>
 					<div v-katex.display.boxed="`O_2=${result.O2}\\quad r_2 = ${result.r2}`" />
 				</Card>
+				<tool-error v-else />
 			</div>
 
 			<Card

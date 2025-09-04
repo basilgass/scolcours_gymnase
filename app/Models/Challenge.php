@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Challenges\ChallengeSession;
+use App\Traits\HasLessonTrait;
 use App\Traits\HasScoresTrait;
 use App\Traits\HasUrlTrait;
 use Eloquent;
@@ -68,6 +69,7 @@ class Challenge extends Model
 	use HasScoresTrait;
 	use HasUrlTrait;
 	use BelongsToThrough;
+	use HasLessonTrait;
 
 	protected $guarded = [];
 	protected $with = ['blocks'];

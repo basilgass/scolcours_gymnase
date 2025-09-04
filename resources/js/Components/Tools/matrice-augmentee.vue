@@ -14,6 +14,7 @@ import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 import instructions from "./Parts/matrice-augmentee-instructions.md?raw"
 import ScButton from "@/Components/Ui/scButton.vue"
 import Card from "@/Components/Ui/Card.vue"
+import ToolError from "@/Components/Tools/Parts/ToolError.vue"
 
 const {restoreTool} = useToolsStorage()
 const forms: IToolForm[] = restoreTool([
@@ -102,9 +103,7 @@ const showInstruction = ref(false)
 			@generate="genererMatrice"
 		/>
 
-		<Card
-			v-if="result"
-		>
+		<Card v-if="result">
 			<matrice-augmentee
 				:illustration="result"
 			/>
@@ -125,12 +124,7 @@ const showInstruction = ref(false)
 				/>
 			</div>
 		</Card>
-		<div
-			v-else
-			class="text-red-700 text-sm"
-		>
-			Une erreur s'est produite avec vos données.
-		</div>
+		<tool-error v-else />
 	</article>
 </template>
 

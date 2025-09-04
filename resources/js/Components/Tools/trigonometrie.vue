@@ -1,9 +1,9 @@
 <script lang="ts" setup>
 import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"
-import ToolForm, { IToolForm } from "@/Components/Tools/Parts/ToolForm.vue"
+import ToolForm, {IToolForm} from "@/Components/Tools/Parts/ToolForm.vue"
 import TexCode from "@/Components/Ui/TexCode.vue"
-import { useToolsStorage } from "@/Composables/useToolsStorage.ts"
-import { numberCorrection } from "@/helpers/helperFunctions"
+import {useToolsStorage} from "@/Composables/useToolsStorage.ts"
+import {numberCorrection} from "@/helpers/helperFunctions"
 
 /** Tools
  * title: trigonométrie dans le triangle quelconque
@@ -11,11 +11,12 @@ import { numberCorrection } from "@/helpers/helperFunctions"
  * parameters: a=nombre, b=numbre, c=nombre, alpha=nombre, beta=nombre, gamma=nombre
  * tags: geoetrie,1M,2C
  */
-import { computed, ref } from "vue"
+import {computed, ref} from "vue"
 import Card from "@/Components/Ui/Card.vue"
+import ToolError from "@/Components/Tools/Parts/ToolError.vue"
 
-const { restoreTool } = useToolsStorage()
-const forms: IToolForm[] = restoreTool( [
+const {restoreTool} = useToolsStorage()
+const forms: IToolForm[] = restoreTool([
 	{
 		label: "a",
 		type: "text",
@@ -60,13 +61,13 @@ const forms: IToolForm[] = restoreTool( [
 	}
 ])
 
-const A = computed(()=>forms[0].value.value as string)
-const B = computed(()=>forms[1].value.value as string)
-const C = computed(()=>forms[2].value.value as string)
-const alpha = computed(()=>forms[3].value.value as string)
-const beta = computed(()=>forms[4].value.value as string)
-const gamma = computed(()=>forms[5].value.value as string)
-const fixed = computed(()=>forms[6].value.value as number)
+const A = computed(() => forms[0].value.value as string)
+const B = computed(() => forms[1].value.value as string)
+const C = computed(() => forms[2].value.value as string)
+const alpha = computed(() => forms[3].value.value as string)
+const beta = computed(() => forms[4].value.value as string)
+const gamma = computed(() => forms[5].value.value as string)
+const fixed = computed(() => forms[6].value.value as number)
 
 const labels = {
 	a: "a",
@@ -478,80 +479,70 @@ function makeTriangle(value: triangleRawInterface, alternate?: boolean): triangl
 			form-class="grid grid-cols-1 md:grid-cols-3 gap-4"
 		/>
 
-		<Card>
-			<div
-				v-if="result"
-				class="my-10"
-			>
-				<div class="grid grid-cols-2 gap-4">
-					<div v-if="result.triangle">
-						<table>
-							<tr
-								v-for="(value, key) in result.triangle"
-								:key="`triangle-${key}`"
-							>
-								<td
-									v-katex="`${labels[key]}=`"
-									class="w-[50px] text-right bg-gray-100 font-semibold px-4"
-								/>
-								<td
-									v-katex.left="value"
-									class="px-4"
-								/>
-							</tr>
-						</table>
+		<Card v-if="result">
+			<div class="grid grid-cols-2 gap-4">
+				<div v-if="result.triangle">
+					<table>
+						<tr
+							v-for="(value, key) in result.triangle"
+							:key="`triangle-${key}`"
+						>
+							<td
+								v-katex="`${labels[key]}=`"
+								class="w-[50px] text-right bg-gray-100 font-semibold px-4"
+							/>
+							<td
+								v-katex.left="value"
+								class="px-4"
+							/>
+						</tr>
+					</table>
 
-						<pi-draw-parser :draw="triangleDrawCode" />
-						<tex-code
-							class="font-code"
-							:tex="triangleDrawCode.code"
-						/>
-						<tex-code
-							class="font-code"
-							:tex="triangleAnswerCode"
-						/>
-					</div>
-
-					<div v-if="result.triangle2">
-						<table>
-							<tr
-								v-for="(value, key) in result.triangle2"
-								:key="`triangle-${key}`"
-							>
-								<td
-									v-katex="`${labels[key]}=`"
-									class="w-[50px] text-right bg-gray-100 font-semibold px-4"
-								/>
-								<td
-									v-katex.left="value"
-									class="px-4"
-								/>
-							</tr>
-						</table>
-
-						<pi-draw-parser :draw="triangle2DrawCode" />
-						<tex-code
-							class="font-code"
-							:tex="triangle2DrawCode.code"
-						/>
-						<tex-code
-							class="font-code"
-							:tex="triangle2AnswerCode"
-						/>
-					</div>
+					<pi-draw-parser :draw="triangleDrawCode" />
+					<tex-code
+						class="font-code"
+						:tex="triangleDrawCode.code"
+					/>
+					<tex-code
+						class="font-code"
+						:tex="triangleAnswerCode"
+					/>
 				</div>
-				<div
-					v-if="result.text"
-					class="text-center text-red-700"
-					v-text="result.text"
-				/>
+
+				<div v-if="result.triangle2">
+					<table>
+						<tr
+							v-for="(value, key) in result.triangle2"
+							:key="`triangle-${key}`"
+						>
+							<td
+								v-katex="`${labels[key]}=`"
+								class="w-[50px] text-right bg-gray-100 font-semibold px-4"
+							/>
+							<td
+								v-katex.left="value"
+								class="px-4"
+							/>
+						</tr>
+					</table>
+
+					<pi-draw-parser :draw="triangle2DrawCode" />
+					<tex-code
+						class="font-code"
+						:tex="triangle2DrawCode.code"
+					/>
+					<tex-code
+						class="font-code"
+						:tex="triangle2AnswerCode"
+					/>
+				</div>
 			</div>
 			<div
-				v-else
-				class="text-red-700 text-sm text-center mt-5"
-			>
-				Une erreur s'est produite avec vos données.
-			</div>
+				v-if="result.text"
+				class="text-center text-red-700"
+				v-text="result.text"
+			/>
 		</Card>
+		<tool-error v-else />
 	</article>
 </template>

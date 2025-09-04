@@ -6,7 +6,7 @@ import {CourseInterface, LessonInterface, UserInterface, UserTeamInterface} from
 import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
 import AdminHeader from "@/Components/Admin/AdminHeader.vue"
 import ScButton from "@/Components/Ui/scButton.vue"
-import {computed, onMounted, ref} from "vue"
+import {computed, inject, onMounted, ref} from "vue"
 import LessonCard from "@/Pages/Courses/LessonCard.vue"
 import LessonIconLegend from "@/Pages/Courses/LessonIconLegend.vue"
 import {useStoreScore} from "@/stores/useStoreScore.ts"
@@ -14,13 +14,14 @@ import dayjs from "dayjs"
 import {useMenuScrollToData} from "@/Composables/useHelpers.ts"
 import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
 import axios from "axios"
-import {AxiosErrorMessage, AxiosResponseModel} from "@/types"
+import {AxiosErrorMessage, AxiosResponseModel, flashInterface} from "@/types"
 import StatBar from "@/Components/Ui/StatBar.vue"
 import LessonTypeIcon from "@/Components/Courses/LessonTypeIcon.vue"
 
 defineOptions({layout: LayoutMain})
 
 const editMode = useStoreEditMode()
+const flash = inject<flashInterface>('flash')
 
 const props = defineProps<{
 	course: CourseInterface,
@@ -34,14 +35,20 @@ scoreStore.getScores(
 	props.course.lessons.map(lesson => lesson.id)
 )
 
+const hidePastDate = ref(true)
 const lessonsByDate = computed<Record<string, LessonInterface[]>>(() => {
 	const grouped: Record<string, LessonInterface[]> = {}
 
+
 	props.course.lessons.forEach(lesson => {
 		if (lesson.scheduled_at) {
-			const dateStr = dayjs(lesson.scheduled_at).format("YYYY-MM-DD")
-			if (!grouped[dateStr]) grouped[dateStr] = []
-			grouped[dateStr].push(lesson)
+			const d = dayjs(lesson.scheduled_at)
+			if(!hidePastDate.value || d.isAfter(dayjs().subtract(1, 'day'), 'day')){
+				const dateStr = d.format("YYYY-MM-DD")
+
+				if (!grouped[dateStr]) grouped[dateStr] = []
+				grouped[dateStr].push(lesson)
+			}
 		}
 	})
 
@@ -96,7 +103,8 @@ function loadStats() {
 	}))
 		.then((res: AxiosResponseModel<Record<string, ILessonStats>>) => {
 			lesson_stats.value = res.data
-			console.log('STATS UPDATED')
+
+			flash.success('Les statistiques ont été mise à jour.')
 		})
 		.catch((err: AxiosErrorMessage) => {
 			console.warn(err.response.data.message)
@@ -166,7 +174,7 @@ onMounted(() => {
 				</sc-button>
 			</div>
 
-			<div class="flex justify-between">
+			<div class="flex justify-between items-baseline">
 				<h3 class="text-lg uppercase mb-3">
 					statistiques de
 					{{ selected_user_id === 0 ? team.name : users.find(user => user.id === selected_user_id).fullname }}
@@ -175,8 +183,9 @@ onMounted(() => {
 					type="primary"
 					outline
 					@click="loadStats"
+					xs
 				>
-					rafraîchier
+					<i class="bi bi-arrow-clockwise" /> rafraîchir
 				</sc-button>
 			</div>
 			<div
@@ -209,6 +218,18 @@ onMounted(() => {
 
 
 		<div class="flex flex-col gap-10">
+			<div class="flex gap-3">
+				<sc-button @click="hidePastDate = !hidePastDate">
+					<i
+						:class="{
+							'bi-eye-slash': !hidePastDate,
+							'bi-eye': hidePastDate
+						}"
+					/> {{ hidePastDate ? 'afficher': 'cacher' }} les leçons passées
+				</sc-button>
+			</div>
+
+
 			<!-- Liste des dates du cours. -->
 			<div class="flex gap-3">
 				<h3>dates planifiées </h3>
@@ -224,6 +245,7 @@ onMounted(() => {
 					</sc-button>
 				</div>
 			</div>
+
 
 			<div
 				v-for="(elements, day) in lessonsByDate"

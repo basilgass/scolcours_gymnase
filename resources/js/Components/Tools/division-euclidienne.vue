@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import PiEuclidian from "@/Components/Pi/PiEuclidian.vue"
-import ToolForm, { IToolForm } from "@/Components/Tools/Parts/ToolForm.vue"
-import { useToolsStorage } from "@/Composables/useToolsStorage.ts"
+import ToolForm, {IToolForm} from "@/Components/Tools/Parts/ToolForm.vue"
+import {useToolsStorage} from "@/Composables/useToolsStorage.ts"
 
 /** Tools
  * title: division de polynômes
@@ -9,12 +9,12 @@ import { useToolsStorage } from "@/Composables/useToolsStorage.ts"
  * parameters: numerator=Polynom, denominator=Polynom
  * tags: algebre,1M
  */
-import { computed, ref } from "vue"
+import {computed, ref} from "vue"
 import Card from "@/Components/Ui/Card.vue"
 
 // Define the forms
-const { restoreTool } = useToolsStorage()
-const forms: IToolForm[] = restoreTool( [
+const {restoreTool} = useToolsStorage()
+const forms: IToolForm[] = restoreTool([
 	{
 		label: "numérateur",
 		type: "text",
@@ -27,7 +27,7 @@ const forms: IToolForm[] = restoreTool( [
 		value: ref("x-5"),
 		fromUrl: "d"
 	}
-] )
+])
 
 const numerator = computed(() => forms[0].value.value)
 const denominator = computed(() => forms[1].value.value)

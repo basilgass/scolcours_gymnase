@@ -7,12 +7,19 @@ import {BlockInterface} from "@/types/modelInterfaces.ts"
 import axios from "axios"
 import {inject, ref} from "vue"
 import {flashInterface} from "@/types"
+import MoveItemTo from "@/Components/MoveItemTo.vue"
+import {router} from "@inertiajs/vue3"
+import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
 
 const editMode = useStoreEditMode()
 const flash = inject<flashInterface>('flash')
 
 const props = defineProps<{
 	block: BlockInterface
+}>()
+
+const emits = defineEmits<{
+	moved: [target: {id: number, target_type: string, target_id: number}]
 }>()
 
 const theBlock = ref(props.block)
@@ -42,6 +49,29 @@ function updateTemplate() {
 			console.warn(res.response.data.message)
 		})
 }
+
+function deleteBlock() {
+	const block_id = theBlock.value.id
+
+	axios.get(route("api.admin.blocks.blockable.url", {block: block_id}))
+		.then((res) => {
+			console.log(res.data)
+			axios
+				.post(route("api.admin.blocks.destroy", [theBlock.value.id]), {
+					_method: "delete"
+				})
+				.then(() => {
+					flash.add("Le block a été supprimé")
+
+					// Go to the blockable item.
+					router.visit(res.data)
+
+				})
+				.catch((error) => console.error(error))
+		})
+
+}
+
 </script>
 <template>
 	<div
@@ -60,6 +90,21 @@ function updateTemplate() {
 					:href="route('admin.blocks.edit', block.id)"
 					inline
 				/>
+
+				<move-item-to
+					:source-id="block.id"
+					source="block"
+					target="post"
+					@moved="emits('moved', $event)"
+				/>
+
+				<confirm-button
+					@confirm="deleteBlock"
+					xs
+					icon
+				>
+					supprimer
+				</confirm-button>
 			</div>
 		</slot>
 
@@ -70,8 +115,7 @@ function updateTemplate() {
 				<form-maker
 					v-model="theBlock.template"
 					inline-label
-					label="[b|i],[md|lg|xl]:[#]b+[#]i"
-					label-class="whitespace-nowrap"
+					placeholder="[b|i],[md|lg|xl]:[#]b+[#]i"
 					sm
 					@enter="updateTemplate"
 					btn="bi bi-save"

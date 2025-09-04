@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\HasLessonTrait;
 use App\Traits\HasScoresTrait;
 use Illuminate\Database\Eloquent\Model;
 
@@ -53,6 +54,7 @@ class Generator extends Model
 	];
 
 	use HasScoresTrait;
+	use HasLessonTrait;
 
 	public function theme(): \Illuminate\Database\Eloquent\Relations\BelongsTo
 	{

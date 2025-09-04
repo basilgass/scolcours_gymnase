@@ -5,17 +5,17 @@ import PiProbabilityTree from "@/Components/Pi/PiProbabilityTree.vue"
  * body: création d'un arbre pondéré
  * tags: 3M,3C
  */
-import ToolForm, { IToolForm } from "@/Components/Tools/Parts/ToolForm.vue"
-import { useToolsStorage } from "@/Composables/useToolsStorage.ts"
-import { flashInterface } from "@/types"
-import { computed, inject, ref } from "vue"
+import ToolForm, {IToolForm} from "@/Components/Tools/Parts/ToolForm.vue"
+import {useToolsStorage} from "@/Composables/useToolsStorage.ts"
+import {flashInterface} from "@/types"
+import {computed, inject, ref} from "vue"
 import Card from "@/Components/Ui/Card.vue"
 
 // TODO: documentation dans la page
 const flash = inject<flashInterface>('flash')
 
-const { restoreTool } = useToolsStorage()
-const forms: IToolForm[] = restoreTool( [
+const {restoreTool} = useToolsStorage()
+const forms: IToolForm[] = restoreTool([
 	{
 		label: "paramètres",
 		value: ref(""),
@@ -28,7 +28,7 @@ const forms: IToolForm[] = restoreTool( [
 		value: ref(""),
 		fromUrl: 'code',
 	}
-] )
+])
 
 flash.add('Pour les paramètres, R=p|f|d/1-9/d,B=p|f|d,S=???')
 

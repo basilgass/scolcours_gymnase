@@ -10,6 +10,7 @@ import {Line, Triangle} from "pimath"
  */
 import {computed, ref} from "vue"
 import Card from "@/Components/Ui/Card.vue"
+import ToolError from "@/Components/Tools/Parts/ToolError.vue"
 
 const {restoreTool} = useToolsStorage()
 const forms: IToolForm[] = restoreTool([
@@ -67,10 +68,7 @@ let result = computed(() => {
 			form-class="grid grid-cols-1 md:grid-cols-3 gap-3"
 		/>
 
-		<Card
-			v-if="result"
-			class="my-10"
-		>
+		<Card v-if="result">
 			<h2 class="font-lg">
 				sommets
 			</h2>
@@ -132,11 +130,6 @@ let result = computed(() => {
 				<div v-katex.boxed="`(b_C'): ${result.extBissectors.C.tex}`" />
 			</div>
 		</Card>
-		<div
-			v-else
-			class="text-red-700 text-sm text-center mt-5"
-		>
-			Une erreur s'est produite avec vos données.
-		</div>
+		<tool-error v-else />
 	</article>
 </template>

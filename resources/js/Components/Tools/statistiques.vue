@@ -6,6 +6,7 @@
  * tags: statistique,2C
  */
 
+// REFACTOR: use ToolBody
 import BarChart from "@/Components/Charts/barChart.vue"
 import BoxPlotChart from "@/Components/Charts/boxPlotChart.vue"
 import LineChart from "@/Components/Charts/lineChart.vue"

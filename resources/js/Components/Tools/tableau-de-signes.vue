@@ -1,15 +1,15 @@
 <script lang="ts" setup>
 import PiTableOfSigns from "@/Components/Pi/PiTableOfSigns.vue"
-import ToolForm, { IToolForm } from "@/Components/Tools/Parts/ToolForm.vue"
-import { useToolsStorage } from "@/Composables/useToolsStorage.ts"
+import ToolForm, {IToolForm} from "@/Components/Tools/Parts/ToolForm.vue"
+import {useToolsStorage} from "@/Composables/useToolsStorage.ts"
 /** Chapter
  * title: tableau de signes ou de variations
  * body: tableau de signes ou de variations
  */
-import { computed, ref } from "vue"
+import {computed, ref} from "vue"
 import Card from "@/Components/Ui/Card.vue"
 
-const { restoreTool } = useToolsStorage()
+const {restoreTool} = useToolsStorage()
 const forms: IToolForm[] = restoreTool([
 	{
 		label: "fonction",
@@ -31,7 +31,8 @@ const mode = computed(() => forms[1].value.value as boolean ? "signs" : "grows")
 const fxTex = ref('')
 const dxTex = ref('')
 const ddxTex = ref('')
-function TOS_update(value){
+
+function TOS_update(value) {
 	fxTex.value = value.fx
 	dxTex.value = value.dx
 	ddxTex.value = value.ddx
@@ -52,7 +53,9 @@ function TOS_update(value){
 		<Card>
 			<template #header>
 				<h2 class="text-lg">
-					{{ mode==='signs' ? "Tableau de signes" : mode==="grows" ? "Tableau de croissance" : "Tableau de courbure" }}
+					{{
+						mode === 'signs' ? "Tableau de signes" : mode === "grows" ? "Tableau de croissance" : "Tableau de courbure"
+					}}
 				</h2>
 			</template>
 

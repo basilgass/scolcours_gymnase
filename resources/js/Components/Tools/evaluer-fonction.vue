@@ -1,19 +1,20 @@
 <script setup lang="ts">
 import KeyboardDisplay from "@/Components/Keyboards/KeyboardDisplay.vue"
-import ToolForm, { IToolForm } from "@/Components/Tools/Parts/ToolForm.vue"
-import { useToolsStorage } from "@/Composables/useToolsStorage.ts"
-import { Fraction, Polynom } from "pimath"
+import ToolForm, {IToolForm} from "@/Components/Tools/Parts/ToolForm.vue"
+import {useToolsStorage} from "@/Composables/useToolsStorage.ts"
+import {Fraction, Polynom} from "pimath"
 /** Tools
  * title: évaluation d'une fonction polynomiale
  * body: évaluation d'une fonction polynomiale
  * parameters: fx=Fonction (texte), b=Nombre ou Fraction
  * tags: algebre,1M
  */
-import { computed, ref } from "vue"
+import {computed, ref} from "vue"
 import Card from "@/Components/Ui/Card.vue"
+import ToolError from "@/Components/Tools/Parts/ToolError.vue"
 
-const { restoreTool } = useToolsStorage()
-const forms: IToolForm[] = restoreTool( [
+const {restoreTool} = useToolsStorage()
+const forms: IToolForm[] = restoreTool([
 	{
 		label: "fonction",
 		type: "text",
@@ -27,16 +28,17 @@ const forms: IToolForm[] = restoreTool( [
 		fromUrl: "x",
 		message: "Utiliser un nombre ou une fraction"
 	}
-] )
+])
 
 const f = computed(() => forms[0].value.value),
 	x = computed(() => forms[1].value.value)
 
 const activeInput = ref<number>(0)
 
-function onKeyboardChange(value){
-	forms[activeInput.value].value.value=value.input
+function onKeyboardChange(value) {
+	forms[activeInput.value].value.value = value.input
 }
+
 const fx = computed(() => {
 	try {
 		const FX = new Polynom(f.value as string),
@@ -61,7 +63,7 @@ const fx = computed(() => {
 		}
 
 		return data
-	}catch (e) {
+	} catch (e) {
 		console.log(e)
 		return false
 	}
@@ -82,12 +84,7 @@ const fx = computed(() => {
 						v-katex="`f\\left(${fx.x}\\right) = ${fx.fx} ${fx.frac?'='+fx.frac:''} ${fx.value?'='+fx.value:''}`"
 					/>
 				</div>
-				<div
-					v-else
-					class="text-red-700 text-sm bg-red-100 w-full py-5 text-center"
-				>
-					Une erreur s'est produite lors de l'introduction des coordonnées.
-				</div>
+				<tool-error v-else />
 			</div>
 
 			<div class="mt-2">

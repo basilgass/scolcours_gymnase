@@ -3,8 +3,9 @@ import FormMaker from "@/Components/Form/FormMaker.vue"
 import {flashInterface} from "@/types"
 import {watchDebounced} from "@vueuse/core"
 import axios from "axios"
-import {inject, nextTick, ref} from "vue"
+import {computed, inject, nextTick, ref} from "vue"
 import ScButton from "@/Components/Ui/scButton.vue"
+import DialogModal from "@/Components/Ui/DialogModal.vue"
 
 const flash = inject<flashInterface>("flash")
 
@@ -15,19 +16,19 @@ const props = defineProps<{
 }>()
 
 const emits = defineEmits<{
-	moved: [target: {target_type: string, target_id: number}]
+	moved: [target: { id: number, target_type: string, target_id: number }]
 }>()
 
 
 let showMoveTo = ref(false)
 const moveToId = ref(null)
 const moveInput = ref(null)
-const targetName = ref("")
+const targetName = ref("???")
 
 async function enableMove() {
 	showMoveTo.value = !showMoveTo.value
 	await nextTick(() => {
-		// moveInput.value.focus()
+		moveInput.value.focus()
 	})
 }
 
@@ -51,6 +52,10 @@ function getUrl() {
 	return null
 }
 
+const canMoveTo = computed(() => {
+	return targetName.value && targetName.value !== '???'
+})
+
 function moveTo() {
 	if (targetName.value === "???") {
 		flash.error(`Le ${props.target} n'existe pas.`)
@@ -58,7 +63,8 @@ function moveTo() {
 	}
 
 	// REFACTOR : route(`${props.source}s.move` - a mettre en explicite.
-	const urlData =			{
+	const urlData = {
+		id: props.sourceId,
 		target_id: moveToId.value,
 		target_type: props.target,
 	}
@@ -99,52 +105,70 @@ function getTargetName() {
 		})
 }
 
-watchDebounced(moveToId, getTargetName, {debounce: 1000, maxWait: 2000})
+watchDebounced(
+	moveToId,
+	getTargetName,
+	{
+		debounce: 500,
+		maxWait: 1000
+	}
+)
 </script>
 <template>
 	<div>
-		<div class="flex gap-3 items-center">
+		<div class="flex flex-col gap-3 items-center">
 			<sc-button
 				xs
 				@click="enableMove"
 				type="edit"
 				outline
 			>
-				move
+				<i class="bi bi-upload" />move
 			</sc-button>
+		</div>
 
-			<div
-				v-if="showMoveTo"
-				class="flex items-end"
-			>
-				<form-maker
-					with-icon
-					type="id"
-					ref="moveInput"
-					v-model.number="moveToId"
-					class="rounded-r-none max-w-[6em]"
-					:label="`${source} vers ${target}`"
-					sm
-					font-code
-					@enter="moveTo"
-				/>
-				<sc-button
-					type="primary"
-					v-if="targetName"
-					class="rounded-l-none"
-					@click="moveTo"
-					xs
-				>
-					<i class="bi bi-check" />
-				</sc-button>
-			</div>
-		</div>
-		<div
-			class="text-gray-400 italic flex gap-3"
-			v-if="showMoveTo"
+		<dialog-modal
+			v-model="showMoveTo"
+			class="max-w-sm h-auto"
 		>
-			<i class="bi bi-chevron-double-right" />
-			<div v-katex.auto="targetName" />
-		</div>
+			<template #header>
+				<h1 class="text-xl p-3">
+					déplacer {{ source }} vers {{ target }}
+				</h1>
+			</template>
+			<div class="p-3">
+				<div class="flex items-end">
+					<form-maker
+						with-icon
+						type="id"
+						ref="moveInput"
+						v-model.number="moveToId"
+						class="rounded-r-none "
+						:label="`${source} vers ${target}`"
+						font-code
+						@enter="moveTo"
+						@input="targetName = '???'"
+					/>
+				</div>
+				<div
+					class="text-gray-400 italic flex gap-3 text-xs"
+					v-if="showMoveTo"
+				>
+					<i class="bi bi-chevron-double-right" />
+					<div v-katex.auto="targetName" />
+				</div>
+			</div>
+			<template #footer>
+				<div class="flex justify-end p-3">
+					<sc-button
+						type="primary"
+						:disabled="!canMoveTo"
+						@click="moveTo"
+					>
+						déplacer
+					</sc-button>
+				</div>
+			</template>
+		</dialog-modal>
 	</div>
 </template>

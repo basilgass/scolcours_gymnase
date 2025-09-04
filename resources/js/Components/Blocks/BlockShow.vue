@@ -26,7 +26,10 @@ const props = defineProps<{
 
 
 // emits
-defineEmits(["destroy"])
+const emits = defineEmits<{
+	destroy: [],
+	moved: [target: {id: number, target_type: string, target_id: number}]
+}>()
 
 
 // Block display style computed properties
@@ -93,6 +96,7 @@ function addIllustration() {
 		<BlockShowAdmin
 			v-if="!noAdmin"
 			:block="block"
+			@moved="emits('moved', $event)"
 		>
 			<template #adminLeft>
 				<slot name="adminLeft" />

@@ -421,6 +421,7 @@ function posRel_sphere_sphere(s1: Sphere3, s2: Sphere3): string {
 	return getSpherePosition(s1.relativePosition(s2))
 
 }
+
 </script>
 
 <template>

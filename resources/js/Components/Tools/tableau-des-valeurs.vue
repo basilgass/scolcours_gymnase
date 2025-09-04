@@ -10,11 +10,12 @@ import {Fraction, NumExp, Polynom} from "pimath"
  * parameters: fx=Fonction (texte), min=Nombre ou Fraction, max=Nombre ou Fraction, pas=Nombre ou Fraction
  * tags: algebre,1M
  */
-import {computed, ref, watch} from "vue"
+import {computed, onMounted, ref, watch} from "vue"
 import Card from "@/Components/Ui/Card.vue"
 import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"
 import {WidgetPropsInterface} from "@/types/modelInterfaces.ts"
 import FormMaker from "@/Components/Form/FormMaker.vue"
+import ToolError from "@/Components/Tools/Parts/ToolError.vue"
 
 const {restoreTool} = useToolsStorage()
 const forms: IToolForm[] = restoreTool([
@@ -150,12 +151,19 @@ const getTableOfValues = function (): ITableOfValue[] {
 	return data
 }
 
-watch(fx, () => {
+function checkIfNumeric() {
 	if (fx.value && fx.value?.length > 0) {
 		if (!numericParse.value && fx.value[0].fxTex === '') {
 			forms.find(f => f.label === 'numérique').value.value = true
 		}
 	}
+}
+
+watch(fx, () => {
+	checkIfNumeric()
+})
+onMounted(() => {
+	checkIfNumeric()
 })
 
 function updateKbrd(event, index) {
@@ -180,6 +188,7 @@ const drawParamsAuto = computed(() => {
 
 	return `axis,grid,x=${xMin.value}:${xMax.value},y=${yMin * scale - 1}:${yMax * scale + 1},unitY=${unitY}`
 })
+
 const draw = computed<WidgetPropsInterface>(() => {
 	if (fx.value === false) {
 		return null
@@ -250,87 +259,79 @@ const draw = computed<WidgetPropsInterface>(() => {
 			/>
 		</Card>
 
-		<Card>
+
+		<Card v-if="fx">
 			<div
-				v-if="fx"
+				v-katex.ascii="`f(x) = ${f}`"
+				class="katex-boxed"
+			/>
+
+			<div
+				class="overflow-x-auto"
 			>
 				<div
-					v-katex.ascii="`f(x) = ${f}`"
-					class="katex-boxed"
-				/>
-
-				<div
-					class="overflow-x-auto"
+					class="relative"
+					:class="{
+						'columns-1 md:columns-2 lg:columns-3 xl:columns-4': verticalTable,
+						'flex flex-row': !verticalTable
+					}"
 				>
 					<div
-						class="relative"
+						class="bg-analyse-dark text-white *:border-analyse break-inside-avoid-column"
 						:class="{
-							'columns-1 md:columns-2 lg:columns-3 xl:columns-4': verticalTable,
-							'flex flex-row': !verticalTable
+							'flex flex-row': verticalTable,
+							'flex flex-col': !verticalTable
 						}"
 					>
 						<div
-							class="bg-analyse-dark text-white *:border-analyse break-inside-avoid-column"
 							:class="{
-								'flex flex-row': verticalTable,
-								'flex flex-col': !verticalTable
+								'w-[100px] border border-b-0': verticalTable,
+								'w-[100px] border-b': !verticalTable
 							}"
-						>
-							<div
-								:class="{
-									'w-[100px] border border-b-0': verticalTable,
-									'w-[100px] border-b': !verticalTable
-								}"
-								v-katex="`x`"
-							/>
-							<div
-								:class="{
-									'flex-1 border-t border-r': verticalTable,
-									'w-[100px] border-b flex-1 grid place-items-center ': !verticalTable
-								}"
-								v-katex="`f(x)`"
-							/>
-						</div>
+							v-katex="`x`"
+						/>
 						<div
-							v-for="v of fx"
-							:key="`item-${v.x}`"
-							class="min-w-[4em]
+							:class="{
+								'flex-1 border-t border-r': verticalTable,
+								'w-[100px] border-b flex-1 grid place-items-center ': !verticalTable
+							}"
+							v-katex="`f(x)`"
+						/>
+					</div>
+					<div
+						v-for="v of fx"
+						:key="`item-${v.x}`"
+						class="min-w-[4em]
 							border-analyse border border-b-0
 							*:border-analyse
 							 break-inside-avoid-column"
-							:class="{
-								'flex flex-row': verticalTable,
-								'flex flex-col min-w-[100px] border-r-0 last:border-r': !verticalTable
-							}"
-						>
-							<div
-								class="grid place-items-center
+						:class="{
+							'flex flex-row': verticalTable,
+							'flex flex-col min-w-[100px] border-r-0 last:border-r': !verticalTable
+						}"
+					>
+						<div
+							class="grid place-items-center
 								bg-analyse-light"
-								:class="{
-									'border-r w-[100px] place-self-stretch': verticalTable,
-									'border-b': !verticalTable
-								}"
-								v-katex="`${v.x}`"
-							/>
-							<div
-								class=""
-								:class="{
-									'flex-1': verticalTable,
-									'flex-1 grid place-items-center border-b': !verticalTable
-								}"
-								v-katex="`${ numericParse ? v.fx : v.fxTex}`"
-							/>
-						</div>
+							:class="{
+								'border-r w-[100px] place-self-stretch': verticalTable,
+								'border-b': !verticalTable
+							}"
+							v-katex="`${v.x}`"
+						/>
+						<div
+							class=""
+							:class="{
+								'flex-1': verticalTable,
+								'flex-1 grid place-items-center border-b': !verticalTable
+							}"
+							v-katex="`${ numericParse ? v.fx : v.fxTex}`"
+						/>
 					</div>
 				</div>
 			</div>
-			<div
-				v-else
-				class="text-red-700 text-sm bg-red-100 w-full py-5 text-center"
-			>
-				Une erreur s'est produite lors de l'introduction des coordonnées.
-			</div>
 		</Card>
+		<tool-error v-else />
 
 		<Card if="draw">
 			<form-maker

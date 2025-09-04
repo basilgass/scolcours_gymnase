@@ -57,29 +57,6 @@ function saveBlock() {
 			console.error(error)
 		})
 }
-
-function deleteBlock() {
-	const block_id = theBlock.value.id
-
-	axios.get(route("api.admin.blocks.blockable.url", {block: block_id}))
-		.then((res) => {
-			console.log(res.data)
-			axios
-				.post(route("api.admin.blocks.destroy", [theBlock.value.id]), {
-					_method: "delete"
-				})
-				.then(() => {
-					flash.add("Le block a été supprimé")
-
-					// Go to the blockable item.
-					router.visit(res.data)
-
-				})
-				.catch((error) => console.error(error))
-		})
-
-}
-
 function addIllustration() {
 	axios
 		.post(
@@ -143,11 +120,6 @@ function deleteIllustration(id: number) {
 				<div class="text-3xl">
 					édition d'un bloc
 				</div>
-				<move-item-to
-					:source-id="theBlock.id"
-					source="block"
-					target="post"
-				/>
 			</div>
 			<div class="self-start grid grid-cols-2 gap-2 items-center flex-wrap">
 				<sc-button
@@ -174,12 +146,6 @@ function deleteIllustration(id: number) {
 				>
 					visiter
 				</sc-button>
-				<confirm-button
-					@confirm="deleteBlock"
-					xs
-				>
-					supprimer
-				</confirm-button>
 			</div>
 		</header>
 

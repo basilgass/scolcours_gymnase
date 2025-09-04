@@ -10,6 +10,7 @@ import {router} from "@inertiajs/vue3"
 import axios from "axios"
 import {computed, inject, ref} from "vue"
 import ScButton from "@/Components/Ui/scButton.vue"
+import PostTypeIcon from "@/Components/Posts/PostTypeIcon.vue"
 
 const props = defineProps<{
 	chapter: ChapterShowInterface,      // id, slug, posts
@@ -227,13 +228,9 @@ const availablePostTypes = computed(()=>{
 						"
 						class="text-left hover:pl-1 transition-all duration flex gap-1"
 					>
-						<i
+						<post-type-icon
+							:post="element"
 							class="opacity-50"
-							:class="{
-								'bi bi-journal': element.type === 'exercise',
-								'bi bi-card-checklist': element.type === 'howto',
-								'bi bi-book': !element.type,
-							}"
 						/>
 
 						<i

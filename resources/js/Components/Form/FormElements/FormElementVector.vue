@@ -61,7 +61,6 @@ function validate(): string[] {
 }
 
 function onChange() {
-	console.log('update value', value.value)
 	errors.value = validate()
 	emits('errors', errors.value)
 	emits('update', value.value)

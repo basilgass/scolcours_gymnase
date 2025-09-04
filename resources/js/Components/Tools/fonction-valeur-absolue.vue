@@ -1,11 +1,11 @@
 <script lang="ts" setup>
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"
-import { IToolForm } from "@/Components/Tools/Parts/ToolForm.vue"
+import {IToolForm} from "@/Components/Tools/Parts/ToolForm.vue"
 import TexCode from "@/Components/Ui/TexCode.vue"
-import { useToolsStorage } from "@/Composables/useToolsStorage.ts"
-import { Equation, Fraction, ISolution, Polynom, Random } from "pimath"
-import { computed, ref } from "vue"
+import {useToolsStorage} from "@/Composables/useToolsStorage.ts"
+import {Equation, Fraction, ISolution, Polynom, Random} from "pimath"
+import {computed, ref} from "vue"
 import ScButton from "@/Components/Ui/scButton.vue"
 import Card from "@/Components/Ui/Card.vue"
 
@@ -17,19 +17,19 @@ import Card from "@/Components/Ui/Card.vue"
  * tags: 1M,2M
  */
 
-const { restoreTool } = useToolsStorage()
-const forms: IToolForm[] = restoreTool( [
+const {restoreTool} = useToolsStorage()
+const forms: IToolForm[] = restoreTool([
 	{
 		label: "fonction",
 		type: "text",
 		value: ref("abs(3x-3)-4abs(x+1)+2"),
 		fromUrl: "fx"
 	}
-] )
-const fx = computed(()=>forms[0].value.value as string)
+])
+const fx = computed(() => forms[0].value.value as string)
 
 const result = computed(() => {
-	return { tex: "" }
+	return {tex: ""}
 
 })
 
@@ -109,7 +109,7 @@ const root = ref(null),
 			absTex,
 			tex: `f(x) = ${absTex} = \\begin{cases}${expr.map(x => `${x.polynom.display} &\\text{si}\\quad ${x.condition}`).join("\\\\")}\\end{cases}`,
 			drawCode: expr.map(x => `${x.polynom.display},${x.borders.min === null ? -20 : x.borders.min.value}:${x.borders.max === null ? 20 : x.borders.max.value}`),
-			solve: function(v) {
+			solve: function (v) {
 				try {
 					const zeroes = []
 					for (const e of expr) {
@@ -131,7 +131,7 @@ const root = ref(null),
 					}
 				}
 			},
-			evaluate: function(v) {
+			evaluate: function (v) {
 				try {
 					const Q = new Fraction(v)
 
@@ -144,7 +144,7 @@ const root = ref(null),
 			}
 		}
 	}),
-	getOneExpression = function(fn, abs, min, max) {
+	getOneExpression = function (fn, abs, min, max) {
 		const v = min === null ? max.value - 1 : (max === null ? min.value + 1 : (max.value + min.value) / 2)
 		let fnx = "" + fn
 
@@ -159,10 +159,10 @@ const root = ref(null),
 		return {
 			polynom: new Polynom(fnx),
 			condition: min === null ? `x\\leq${max.tex}` : (max === null ? `x\\geq${min.tex}` : `${min.tex}\\leq x \\leq ${max.tex}`),
-			borders: { min, max }
+			borders: {min, max}
 		}
 	},
-	randomAbs = function() {
+	randomAbs = function () {
 		const z1 = Random.numberSym(10, false),
 			z2 = Random.numberSym(10, false),
 			p1 = new Polynom(`x${(z1 > 0 ? "+" : "") + z1}`).multiply(Random.numberSym(3, false)),
@@ -188,9 +188,12 @@ const root = ref(null),
 
 <template>
 	<article>
-		<Card v-if="result">
-			<!-- Title -->
-			<div ref="root">
+		<!-- Title -->
+		<div
+			ref="root"
+			class="space-y-6"
+		>
+			<Card>
 				<div class="grid grid-cols-1 gap-3 md:grid-cols-3 items-end">
 					<div
 						class="md:col-span-2"
@@ -213,7 +216,9 @@ const root = ref(null),
 					v-katex="expression.tex"
 					class="katex-boxed mb-10"
 				/>
+			</Card>
 
+			<Card>
 				<div class="grid grid-cols-1 gap-4 md:grid-cols-2 katex-boxed">
 					<div>
 						<h3>évaluer la fonction <span v-katex="`f(${xAsTex})`" /></h3>
@@ -236,19 +241,13 @@ const root = ref(null),
 						<div v-katex="`f(x)=${yAsTex}\\implies \\mathcal S = ${expression.solve(y).tex}`" />
 					</div>
 				</div>
+			</Card>
 
-				<div class="max-w-lg space-y-3">
-					<pi-draw-parser :draw="draw" />
+			<Card class="max-w-lg space-y-3 mx-auto">
+				<pi-draw-parser :draw="draw" />
 
-					<tex-code :tex="draw.code" />
-				</div>
-			</div>
-		</Card>
-		<Card
-			v-else
-			class="text-red-700 text-sm"
-		>
-			Une erreur s'est produite avec vos données.
-		</Card>
+				<tex-code :tex="draw.code" />
+			</Card>
+		</div>
 	</article>
 </template>

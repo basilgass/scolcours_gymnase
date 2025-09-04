@@ -11,6 +11,7 @@ import {Circle, Fraction, Point} from "pimath"
  */
 import {computed, ref} from "vue"
 import Card from "@/Components/Ui/Card.vue"
+import ToolError from "@/Components/Tools/Parts/ToolError.vue"
 
 const {restoreTool} = useToolsStorage()
 const forms: IToolForm[] = restoreTool([
@@ -85,14 +86,6 @@ let tangentes = computed(() => {
 				<tex-code :tex="tangente.tex" />
 			</div>
 		</Card>
-
-		<div
-			v-else
-			class="text-red-700 text-sm"
-		>
-			Une erreur s'est produite lors de l'introduction des coordonnées.
-		</div>
-
-		<div />
+		<tool-error v-else />
 	</article>
 </template>

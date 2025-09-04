@@ -1,19 +1,20 @@
 <script setup lang="ts">
-import ToolForm, { IToolForm } from "@/Components/Tools/Parts/ToolForm.vue"
+import ToolForm, {IToolForm} from "@/Components/Tools/Parts/ToolForm.vue"
 import TexCode from "@/Components/Ui/TexCode.vue"
-import { useToolsStorage } from "@/Composables/useToolsStorage.ts"
-import { Factor, PolyFactor, Polynom } from "pimath"
+import {useToolsStorage} from "@/Composables/useToolsStorage.ts"
+import {Factor, PolyFactor, Polynom} from "pimath"
 /** Tools
  * title: dérivées
  * body: calcul de la dérivée d'une fonction polynomiale ou rationnelle.
  * parameters: fn=Function
  * tags: algebre,2M
  */
-import { computed, ref } from "vue"
+import {computed, ref} from "vue"
 import Card from "@/Components/Ui/Card.vue"
+import ToolError from "@/Components/Tools/Parts/ToolError.vue"
 
-const { restoreTool } = useToolsStorage()
-const forms: IToolForm[] = restoreTool( [
+const {restoreTool} = useToolsStorage()
+const forms: IToolForm[] = restoreTool([
 	{
 		label: "fonction à dériver (numérateur)",
 		type: "text",
@@ -26,18 +27,18 @@ const forms: IToolForm[] = restoreTool( [
 		value: ref(""),
 		fromUrl: "d",
 	}
-] )
+])
 
-let numerator = computed(()=>forms[0].value.value as string),
-	denominator = computed(()=>forms[1].value.value as string)
+let numerator = computed(() => forms[0].value.value as string),
+	denominator = computed(() => forms[1].value.value as string)
 
 let result = computed(() => {
-	let  P
+	let P
 	try {
 
-		if(denominator.value.trim()===""){
+		if (denominator.value.trim() === "") {
 			P = new Polynom(numerator.value).derivative()
-		}else{
+		} else {
 			P = new PolyFactor(
 				new Factor(numerator.value),
 				new Factor(denominator.value, -1)
@@ -47,8 +48,8 @@ let result = computed(() => {
 		// REFACTOR : Factorize the polynom / PolyFactor
 
 		// Value to display
-		return `${ P.tex }`
-	}catch(e){
+		return `${P.tex}`
+	} catch (e) {
 		console.error(e)
 		return false
 	}
@@ -67,11 +68,6 @@ let result = computed(() => {
 			/>
 			<tex-code :tex="result" />
 		</Card>
-		<div
-			v-else
-			class="text-red-700 text-sm"
-		>
-			Une erreur s'est produite avec vos données.
-		</div>
+		<tool-error v-else />
 	</article>
 </template>

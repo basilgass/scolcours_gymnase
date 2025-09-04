@@ -106,7 +106,6 @@ watch(selectedTheme, () => {
 		<div class="grid grid-cols-1 gap-3">
 			<form-maker
 				v-if="theme===undefined"
-				class="-mt-5"
 				v-model="selectedTheme"
 				type="theme"
 			/>

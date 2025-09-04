@@ -68,7 +68,7 @@ const cardClass = computed<string>(() => {
 		</main>
 		<footer
 			v-if="$slots['footer']"
-			class="px-3"
+			class="px-3 py-1"
 			:class="{
 				'border-t border-t-inherit': !noInsideBorder
 			}"

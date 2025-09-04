@@ -61,34 +61,3 @@ export interface FormMakerPropsNewType {
 	output?: boolean | string
 	inputClass?: false | string
 }
-
-export interface FormMakerPropsType {
-	autoSize?: boolean;
-	disabled?: boolean;
-	focus?: boolean;
-	fontCode?: boolean;
-	inlineLabel?: boolean;
-	inputClass?: string;
-	label?: string;
-	labelAsPlaceholder?: boolean;
-	labelClass?: string;
-	language?: "javascript" | "latex" | "json";
-	message?: string;
-	messageClass?: string;
-	placeholder?: string;
-	prepend?: string;
-	resizable?: boolean;
-	sm?: boolean;
-	step?: number | string;
-	type?: FormMakerInputsType;
-	withIcon?: boolean | string;
-	axios?: {
-		model: "Post" | "Block" | "Question" | "Chapter",
-		id: number,
-		column: string,
-		button?: boolean | string
-	},
-	fromUrl?: string;
-	clearable?: boolean;
-	helper?: boolean | string;
-}

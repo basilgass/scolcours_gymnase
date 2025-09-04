@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import ToolForm, { IToolForm } from "@/Components/Tools/Parts/ToolForm.vue"
-import { useToolsStorage } from "@/Composables/useToolsStorage.ts"
+import ToolForm, {IToolForm} from "@/Components/Tools/Parts/ToolForm.vue"
+import {useToolsStorage} from "@/Composables/useToolsStorage.ts"
 import {Equation, Point, PolyFactor, Polynom} from "pimath"
 /** Tools
  * title: quadratique
@@ -8,11 +8,12 @@ import {Equation, Point, PolyFactor, Polynom} from "pimath"
  * parameters: a=Point, b=Point, c=Point (optionnel)
  * tags: algebre,1M
  */
-import { computed, ref } from "vue"
+import {computed, ref} from "vue"
 import Card from "@/Components/Ui/Card.vue"
+import ToolError from "@/Components/Tools/Parts/ToolError.vue"
 
-const { restoreTool } = useToolsStorage()
-const forms: IToolForm[] = restoreTool( [
+const {restoreTool} = useToolsStorage()
+const forms: IToolForm[] = restoreTool([
 	{
 		label: "Point A",
 		type: "text",
@@ -31,7 +32,7 @@ const forms: IToolForm[] = restoreTool( [
 		value: ref("-4,-7"),
 		fromUrl: "C"
 	}
-] )
+])
 
 const A = computed(() => forms[0].value.value as string)
 const B = computed(() => forms[1].value.value as string)
@@ -139,9 +140,8 @@ const result = computed(() => {
 			form-class="grid grid-cols-1 md:grid-cols-3 gap-3"
 		/>
 
-		<Card>
+		<Card v-if="result">
 			<div
-				v-if="result"
 				class="grid grid-cols-1 md:grid-cols-2 gap-5"
 			>
 				<div
@@ -177,12 +177,7 @@ const result = computed(() => {
 					</div>
 				</div>
 			</div>
-			<div
-				v-else
-				class="text-red-700 text-sm"
-			>
-				Une erreur s'est produite avec vos données.
-			</div>
 		</Card>
+		<tool-error v-else />
 	</article>
 </template>

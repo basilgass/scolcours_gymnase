@@ -53,8 +53,10 @@ function updateBlockOrder() {
 		console.log(err.response.data.message)
 		flash.error('Problème de réorganisation des blocks.')
 	})
+}
 
-
+function removeBlock(block: {id: number, target_type: string, target_id: number}) {
+	blocks.value = blocks.value.filter(b=>b.id!==block.id)
 }
 
 </script>
@@ -107,6 +109,7 @@ function updateBlockOrder() {
 							'rounded-bl-sm rounded-br-lg border-b': !blocks[index+1]?.merge
 						}"
 						:block="element"
+						@moved="removeBlock($event)"
 					/>
 				</div>
 			</template>

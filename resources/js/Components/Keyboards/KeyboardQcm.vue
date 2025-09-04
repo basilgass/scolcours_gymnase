@@ -37,7 +37,9 @@ async function setInput(value?: string): Promise<KeyboardInputInterface> {
 	return {
 		input: answersKeys.join(","),
 		tex: answers.map(x => x.tex).join(", "),
-		raw: answers.map(x => x.label).join(", ")
+		raw: asList.value
+			? answers.map(x => `- ${x.label}`).join("\n")
+			: answers.map(x => x.label).join(", ")
 	}
 }
 
@@ -46,7 +48,7 @@ defineExpose<KeyboardExposeInterface>({
 		// reset function
 	},
 	setInput,
-	parameters: "full (pleine largeur)\nflex (utilisation de flex)\ntex (converti en TeX)"
+	parameters: "full (pleine largeur)\nflex (utilisation de flex)\ntex (converti en TeX)\nlist (affichage sous forme de liste)"
 })
 
 /* ------------------*/
@@ -65,6 +67,9 @@ const isTex = computed(() => {
 })
 const multiAnswers = computed(() => {
 	return props.reference.split(",").length > 1
+})
+const asList = computed(() => {
+	return props.keyboard.parameters.includes("list")
 })
 
 /* ---------------- */

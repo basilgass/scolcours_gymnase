@@ -24,7 +24,8 @@ import axios from "axios"
 import {FormElementType} from "@/Components/Form/FormMakerInterface.ts"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 import {useCourse} from "@/Pages/Courses/useCourse.ts"
-import ConfirmButton from "@/Components/Ui/ConfirmButton.vue";
+import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
+import PostTypeIcon from "@/Components/Posts/PostTypeIcon.vue"
 
 defineOptions({layout: LayoutMain})
 
@@ -313,7 +314,7 @@ function updateLessonsOrder() {
 
 		<div class="flex gap-3 my-10">
 			<div class="flex-1 py-3">
-				<div class="max-h-[40vh] overflow-y-scroll">
+				<div class="max-h-[80vh] overflow-y-scroll">
 					<div v-show="!showAddTab">
 						Sélectionner une leçon à ajouter...
 					</div>
@@ -325,6 +326,7 @@ function updateLessonsOrder() {
 						<Card>
 							<div class="py-3">
 								<div>Choix du chapitre</div>
+
 								<form-maker
 									type="chapter"
 									v-model="chapter"
@@ -346,25 +348,27 @@ function updateLessonsOrder() {
 							</template>
 						</Card>
 
-						<div class="grid grid-cols-1 gap-3">
+						<div class="grid grid-cols-1 gap-1">
 							<Card
 								v-for="post in posts"
 								:key="`post-${post.id}`"
 							>
-								<template #header>
-									<div class="flex justify-between">
-										<div v-katex.auto="post.title" />
-										<div>{{ post.id }}</div>
+								<div class="flex justify-between">
+									<div class="flex gap-2">
+										<post-type-icon
+											:post
+										/>
+										<div
+											v-katex.auto="post.title"
+										/>
 									</div>
-								</template>
-								<div class="flex justify-end py-1">
 									<sc-button
 										type="add"
 										icon
 										xs
 										@click="addLesson('Post', post.id)"
 									>
-										ajouter
+										ajouter {{ post.id }}
 									</sc-button>
 								</div>
 							</Card>
@@ -533,19 +537,6 @@ function updateLessonsOrder() {
 					</Card>
 				</template>
 			</draggable>
-
-			<!--			<div class="grid grid-cols-1 md:grid-cols-2 gap-3">-->
-			<!--				<div class="flex flex-col gap-3">-->
-			<!--					-->
-			<!--				</div>-->
-			<!--				<div>-->
-			<!--					<course-graph-->
-			<!--						:key="counter"-->
-			<!--						:course-->
-			<!--						@node-click="onClick"-->
-			<!--					/>-->
-			<!--				</div>-->
-			<!--			</div>-->
 		</article>
 	</main>
 </template>

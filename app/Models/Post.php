@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\HasLessonTrait;
 use App\Traits\HasQuestionsTrait;
 use App\Traits\HasScoresTrait;
 use App\Traits\HasUrlTrait;
@@ -9,6 +10,8 @@ use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Znck\Eloquent\Traits\BelongsToThrough;
@@ -57,6 +60,7 @@ class Post extends Model
 	use HasUrlTrait;
 	use HasQuestionsTrait;
 	use BelongsToThrough;
+	use HasLessonTrait;
 
 	protected $guarded = [];
 	protected $with = [];
@@ -76,27 +80,19 @@ class Post extends Model
 			]);
 	}
 
-	public function theme()
+	public function theme(): \Znck\Eloquent\Relations\BelongsToThrough
 	{
 		return $this->belongsToThrough(Theme::class, Chapter::class);
 	}
 
-	public function chapter()
+	public function chapter(): BelongsTo
 	{
 		return $this->belongsTo(Chapter::class);
 	}
 
-	public function blocks()
+	public function blocks(): MorphMany
 	{
 		return $this->morphMany(Block::class, 'blockable')->orderBy('order')->orderBy('id');
-	}
-
-	public function lessons()
-	{
-		return $this
-			->morphMany(Lesson::class, 'lessonable')
-			->orderBy('order')
-			->orderBy('id');
 	}
 
 }

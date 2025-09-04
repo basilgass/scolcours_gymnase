@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\HasLessonTrait;
 use App\Traits\HasScoresTrait;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
@@ -36,6 +37,7 @@ use Illuminate\Support\Carbon;
 class Deck extends Model
 {
 	use HasScoresTrait;
+	use HasLessonTrait;
 
 	protected $guarded = [];
 	protected $with = [];

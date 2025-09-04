@@ -1,9 +1,9 @@
 <script lang="ts" setup>
 import KeyboardDisplay from "@/Components/Keyboards/KeyboardDisplay.vue"
-import ToolForm, { IToolForm } from "@/Components/Tools/Parts/ToolForm.vue"
+import ToolForm, {IToolForm} from "@/Components/Tools/Parts/ToolForm.vue"
 import TexCode from "@/Components/Ui/TexCode.vue"
-import { useToolsStorage } from "@/Composables/useToolsStorage.ts"
-import { Polynom } from "pimath"
+import {useToolsStorage} from "@/Composables/useToolsStorage.ts"
+import {Polynom} from "pimath"
 
 /** Tools
  * title: développement de polynôme
@@ -11,10 +11,11 @@ import { Polynom } from "pimath"
  * parameters: polynôme
  * tags: algebre,1M
  */
-import { computed, ref } from "vue"
+import {computed, ref} from "vue"
 import Card from "@/Components/Ui/Card.vue"
+import ToolError from "@/Components/Tools/Parts/ToolError.vue"
 
-const { restoreTool } = useToolsStorage()
+const {restoreTool} = useToolsStorage()
 const forms: IToolForm[] = restoreTool([
 	{
 		label: "Polynôme",
@@ -22,14 +23,14 @@ const forms: IToolForm[] = restoreTool([
 		value: ref(""),
 		fromUrl: "p"
 	}
-] )
+])
 
 const polynom = computed(() => forms[0].value.value as string)
 
 const result = computed(() => {
 	try {
 		if (polynom.value === "") {
-			return { tex: "\\text{Aucune fonction...}" }
+			return {tex: "\\text{Aucune fonction...}"}
 		}
 		const P = new Polynom(polynom.value)
 
@@ -43,8 +44,8 @@ const result = computed(() => {
 	}
 })
 
-function updateKbrd(event){
-	forms[0].value.value=event.input
+function updateKbrd(event) {
+	forms[0].value.value = event.input
 }
 </script>
 
@@ -52,18 +53,15 @@ function updateKbrd(event){
 	<article>
 		<tool-form :forms="forms" />
 
+
 		<Card>
 			<div v-if="result">
 				<div v-katex.display.boxed.lg="`${result.tex}`" />
 
 				<tex-code :tex="result.tex" />
 			</div>
-			<div
-				v-else
-				class="text-red-700 text-sm"
-			>
-				Une erreur s'est produite avec vos données.
-			</div>
+			<tool-error v-else />
+
 
 			<keyboard-display
 				class="mt-3"

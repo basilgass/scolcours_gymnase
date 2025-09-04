@@ -14,6 +14,7 @@ import Card from "@/Components/Ui/Card.vue"
 import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"
 import {WidgetPropsInterface} from "@/types/modelInterfaces.ts"
 import PiThreeParser from "@/Components/Pi/PiThreeParser.vue"
+import ToolError from "@/Components/Tools/Parts/ToolError.vue"
 
 const {restoreTool} = useToolsStorage()
 const forms: IToolForm[] = restoreTool([
@@ -65,7 +66,7 @@ const pV3 = computed<Vector>(() => {
 
 const vectors = computed(() => {
 	// Get the list of the vectors, remove the empty ones
-	return [pV1.value, pV2.value, pV3.value].filter(v => v!==null && v.isNull === false)
+	return [pV1.value, pV2.value, pV3.value].filter(v => v !== null && v.isNull === false)
 })
 
 let result = computed(() => {
@@ -157,7 +158,7 @@ const draw3D = computed<WidgetPropsInterface>(() => {
 		<tool-form :forms="forms" />
 
 		<Card
-			v-if="result===true"
+			v-if="result"
 			class="katex-boxed "
 		>
 			<div
@@ -297,11 +298,6 @@ const draw3D = computed<WidgetPropsInterface>(() => {
 				{{ draw3D }}
 			</div>
 		</Card>
-		<div
-			v-else
-			class="font-code text-center boredr border-dashed border-red-600 bg-red-50 py-10 px-3"
-		>
-			{{ result }}
-		</div>
+		<tool-error v-else />
 	</article>
 </template>

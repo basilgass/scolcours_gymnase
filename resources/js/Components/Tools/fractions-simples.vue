@@ -11,6 +11,7 @@ import {Equation, Factor, Fraction, LinearSystem, Monom, PolyFactor, Polynom, Ra
  */
 import {computed, ref} from "vue"
 import Card from "@/Components/Ui/Card.vue"
+import ToolError from "@/Components/Tools/Parts/ToolError.vue"
 
 const {restoreTool} = useToolsStorage()
 const forms: IToolForm[] = restoreTool([
@@ -73,7 +74,7 @@ function simpleFractions(polyfactor: PolyFactor): PolyFactor[] {
 		const factor_power = factor.power.value
 		const factor_degree = factor.polynom.degree().value
 
-		for (let power = 1; power <=factor_power; power++) {
+		for (let power = 1; power <= factor_power; power++) {
 			const factor_at_defined_power = factor.clone()
 			factor_at_defined_power.power = power
 
@@ -131,17 +132,17 @@ function simpleFractions(polyfactor: PolyFactor): PolyFactor[] {
 	const linear = new LinearSystem(...equations)
 
 	const solutions = linear.solveMatrix()
-	solutions.forEach((value, index)=>{
+	solutions.forEach((value, index) => {
 		const letter = letters[index]
 
 		// Replace in all numerator_polynom the letter by the value.
-		numerator_polynoms.forEach(polynom=>{
+		numerator_polynoms.forEach(polynom => {
 			polynom.replaceBy(letter, new Polynom(value)).reduce()
 		})
 	})
 
 	// Make the solutions
-	for(let i=0; i<numerator_polynoms.length; i++){
+	for (let i = 0; i < numerator_polynoms.length; i++) {
 		fractions.push(
 			new PolyFactor().fromPolynom(numerator_polynoms[i]).divide(new PolyFactor(denominator_factors[i])).reduce()
 		)
@@ -150,20 +151,20 @@ function simpleFractions(polyfactor: PolyFactor): PolyFactor[] {
 	return fractions
 }
 
-function generate(){
+function generate() {
 	const p1 = Random.polynom({
 		degree: 1, unit: true, fraction: false
 	})
 
-	const p2 =Random.polynom({
+	const p2 = Random.polynom({
 		degree: 1, unit: true, fraction: false
 	})
 
-	const rnd = Random.number(0,2)
-	if(rnd===1){
+	const rnd = Random.number(0, 2)
+	if (rnd === 1) {
 		p1.pow(2)
 	}
-	if(rnd===2){
+	if (rnd === 2) {
 		p2.pow(2)
 	}
 
@@ -184,11 +185,8 @@ let result = computed(() => {
 			tex: P.asRoot.tex + ' = ' + simple_fractions.map(x => x.asRoot.tex).join('+')
 		}
 	} catch (e) {
-
-		console.error(e)
-		return {
-			tex: '\\text{ le polynôme n\'est pas reconnu.}'
-		}
+		console.warn(e)
+		return false
 	}
 })
 
@@ -208,11 +206,6 @@ let result = computed(() => {
 
 			<tex-code :tex="result.tex" />
 		</Card>
-		<div
-			v-else
-			class="text-red-700 text-sm"
-		>
-			Une erreur s'est produite avec vos données.
-		</div>
+		<tool-error v-else />
 	</article>
 </template>

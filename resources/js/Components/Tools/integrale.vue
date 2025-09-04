@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import ToolForm, { IToolForm } from "@/Components/Tools/Parts/ToolForm.vue"
+import ToolForm, {IToolForm} from "@/Components/Tools/Parts/ToolForm.vue"
 import TexCode from "@/Components/Ui/TexCode.vue"
-import { useToolsStorage } from "@/Composables/useToolsStorage.ts"
-import { Fraction, Polynom } from "pimath"
+import {useToolsStorage} from "@/Composables/useToolsStorage.ts"
+import {Fraction, Polynom} from "pimath"
 
 /** Tools
  * title: intégrale entre deux bornes
@@ -10,11 +10,12 @@ import { Fraction, Polynom } from "pimath"
  * parameters: fx=Polynom, a=Fraction, b=Fraction
  * tags: algebre,3M
  */
-import { computed, ref } from "vue"
+import {computed, ref} from "vue"
 import Card from "@/Components/Ui/Card.vue"
+import ToolError from "@/Components/Tools/Parts/ToolError.vue"
 
-const { restoreTool } = useToolsStorage()
-const forms: IToolForm[] = restoreTool( [
+const {restoreTool} = useToolsStorage()
+const forms: IToolForm[] = restoreTool([
 	{
 		label: "fonction",
 		type: "text",
@@ -33,11 +34,11 @@ const forms: IToolForm[] = restoreTool( [
 		value: ref(5),
 		fromUrl: "b"
 	}
-] )
+])
 
-const fx = computed(()=>forms[0].value.value as string)
-const a = computed(()=>forms[1].value.value as string)
-const b = computed(()=>forms[2].value.value as string)
+const fx = computed(() => forms[0].value.value as string)
+const a = computed(() => forms[1].value.value as string)
+const b = computed(() => forms[2].value.value as string)
 
 const result = computed(() => {
 	try {
@@ -70,12 +71,7 @@ const result = computed(() => {
 			/>
 			<tex-code :tex="result" />
 		</Card>
-		<div
-			v-else
-			class="text-red-700 text-sm"
-		>
-			Une erreur s'est produite avec vos données.
-		</div>
+		<tool-error v-else />
 	</article>
 </template>
 
