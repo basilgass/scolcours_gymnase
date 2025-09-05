@@ -37,7 +37,7 @@ const previousAnswers = computed<string[]>(() => {
 	>
 		<div> {{ previousAnswers.join(', ') }}</div>
 		<div
-			v-admin="editMode.enable"
+			v-if="editMode.enable || questionData.user.score.value?.is_resolved"
 			class="flex"
 		>
 			<button
