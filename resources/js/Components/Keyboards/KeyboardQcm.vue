@@ -36,10 +36,10 @@ async function setInput(value?: string): Promise<KeyboardInputInterface> {
 
 	return {
 		input: answersKeys.join(","),
-		tex: answers.map(x => x.tex).join(", "),
+		tex: answers.map(x => x.tex).join(joinCharacter.value),
 		raw: asList.value
 			? answers.map(x => `- ${x.label}`).join("\n")
-			: answers.map(x => x.label).join(", ")
+			: answers.map(x => x.label).join(joinCharacter.value)
 	}
 }
 
@@ -48,7 +48,7 @@ defineExpose<KeyboardExposeInterface>({
 		// reset function
 	},
 	setInput,
-	parameters: "full (pleine largeur)\nflex (utilisation de flex)\ntex (converti en TeX)\nlist (affichage sous forme de liste)"
+	parameters: "full (pleine largeur)\nflex (utilisation de flex)\ntex (converti en TeX)\nlist (affichage sous forme de liste)\njoin:<caractère>\n\n<key>||<label?>||<TeX?>"
 })
 
 /* ------------------*/
@@ -70,6 +70,13 @@ const multiAnswers = computed(() => {
 })
 const asList = computed(() => {
 	return props.keyboard.parameters.includes("list")
+})
+const joinCharacter = computed(()=>{
+	const key = 'join:'
+
+	const join = props.keyboard.parameters.find(p=>p.startsWith(key))
+
+	return join? join.substring(key.length) : ", "
 })
 
 /* ---------------- */
@@ -113,7 +120,7 @@ onMounted(() => {
 				label = "" + key
 			}
 
-			// Si on est en mode TeX, la label peut être la valeur a afficher.
+			// Si on est en mode TeX, le label peut être la valeur à afficher.
 			if (tex === undefined && isTex.value) {
 				tex = label
 			}

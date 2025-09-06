@@ -31,13 +31,22 @@ const previousAnswers = computed<string[]>(() => {
 </script>
 
 <template>
-	<div
-		v-if="questionData.user.score.value?.is_resolved || $page.props.auth.can.admin"
-		class="question-footer px-5 py-2"
-	>
-		<div> {{ previousAnswers.join(', ') }}</div>
+	<div class="question-footer px-5 py-2">
 		<div
-			v-if="editMode.enable || questionData.user.score.value?.is_resolved"
+			v-if="previousAnswers.length"
+			class="font-code text-xs flex gap-2"
+		>
+			<div>vos réponses:</div>
+			<div
+				v-for="a in previousAnswers"
+				:key="a"
+			>
+				{{ a }}
+			</div>
+		</div>
+
+		<div
+			v-admin="editMode.enable"
 			class="flex"
 		>
 			<button
@@ -53,21 +62,8 @@ const previousAnswers = computed<string[]>(() => {
 					class="bi bi-eye-slash"
 				/>
 			</button>
-			<!--			<form-maker-->
-			<!--				v-model="questionData.user.answer"-->
-			<!--				:axios="{-->
-			<!--					model: 'Question',-->
-			<!--					id: questionData.question.id,-->
-			<!--					column: 'answer',-->
-			<!--					button: true-->
-			<!--				}"-->
-			<!--				class="flex-1 font-code"-->
-			<!--				:rows="questionData.answers.values.length"-->
-			<!--				sm-->
-			<!--				type="textarea"-->
-			<!--			/>-->
 		</div>
-		<div v-admin="false">
+		<div v-if="questionData.user.score.value?.is_resolved">
 			<button
 				v-if="!showAnswer"
 				class="text-xs text-gray-400 w-full"
