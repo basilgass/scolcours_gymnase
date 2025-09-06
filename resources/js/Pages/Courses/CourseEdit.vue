@@ -83,6 +83,7 @@ function addLesson(type: lessonableClassName, id: number) {
 		})
 		.then((res: AxiosResponseModel<LessonInterface>) => {
 			theCourse.value.lessons.push(res.data)
+			updateLessonsOrder()
 		})
 		.catch((err: AxiosErrorMessage) => {
 			console.warn(err.response.data.message)
@@ -136,6 +137,7 @@ function addAllPosts() {
 		})
 		.then((res: AxiosResponseModel<LessonInterface[]>) => {
 			theCourse.value.lessons.push(...res.data)
+			updateLessonsOrder()
 		})
 		.catch((err: AxiosErrorMessage) => {
 			console.warn(err.response.data.message)
