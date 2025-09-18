@@ -11,6 +11,7 @@ import QuizzQuestionProjection from "@/Components/Quizzs/QuizzQuestionProjection
 import LayoutProjection from "@/Layouts/LayoutProjection.vue"
 import {QuizzInterface, QuizzSessionInterface, ScoreInterface} from "@/types/modelInterfaces.ts"
 import {ScoreQuestionDataInterface} from "@/types/scoreInterfaces.ts"
+import QuizzHeader from "@/Components/Quizzs/QuizzHeader.vue"
 
 defineOptions({layout: LayoutProjection})
 
@@ -43,21 +44,8 @@ onBeforeUnmount(() => {
 <template>
 	<section
 		v-if="liveQuizz.enable"
-		class="pt-10"
 	>
-		<header
-			class="font-lg bg-black text-white
-			flex justify-between items-baseline
-			fixed top-0 left-0 w-full px-5 py-2"
-		>
-			<h2
-				v-katex.auto="liveQuizz.quizz.title"
-				class="text-white"
-			/>
-			<div class="text-xs text-gray-100">
-				Question {{ liveQuizz.current }} sur {{ liveQuizz.total }}
-			</div>
-		</header>
+		<quizz-header :quizz-session="liveQuizz" />
 
 		<quizz-intro
 			v-if="liveQuizz.status === 'intro'"

@@ -1,14 +1,10 @@
 <script setup lang="ts">
 
-import {computed} from "vue"
+import {QuizzSessionInterface} from "@/types/modelInterfaces.ts"
 
-const props = defineProps({
-	quizzSession: {type: Object, required: true},
-})
-
-const gaugeValue = computed(()=>{
-	return (props.quizzSession.index-1)/props.quizzSession.total*100
-})
+const props = defineProps<{
+	quizzSession: QuizzSessionInterface
+}>()
 </script>
 
 <template>
@@ -24,19 +20,8 @@ const gaugeValue = computed(()=>{
 			class="text-white"
 		/>
 
-		<div class="flex gap-3 h-full w-full sm:w-64 items-center">
-			<div class="h-4 relative flex-1">
-				<div
-					:style="`width: ${gaugeValue}%`"
-					class="bg-slate-400 h-full rounded-full absolute left-0 t-0 transition-all"
-				/>
-				<div
-					class="border border-slate-200 w-full h-full rounded-full absolute left-0 t-0"
-				/>
-			</div>
-			<div class="text-xs text-gray-100">
-				{{ props.quizzSession.index }} sur {{ props.quizzSession.total }}
-			</div>
+		<div>
+			{{ props.quizzSession.current }} sur {{ props.quizzSession.total }}
 		</div>
 	</div>
 </template>
