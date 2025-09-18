@@ -17,17 +17,29 @@ class QuestionController extends Controller
 	public function show(Question $question)
 	{
 		// Go to the question.
-		return redirect()->route(
-			'themes.chapters.posts.anchor',
-			[
-				'theme'   => $question->questionable->chapter->theme->slug,
-				'chapter' => $question->questionable->chapter->slug,
-				'order'   => $question->questionable->order,
-				'type'    => 'question',
-				'id'      => $question->id
-			]
-		);
+		$target = $question->questionable;
 
+		if(class_basename($target)==='Post') {
+			return redirect()->route(
+				'themes.chapters.posts.anchor',
+				[
+					'theme'   => $target->chapter->theme->slug,
+					'chapter' => $target->chapter->slug,
+					'order'   => $target->order,
+					'type'    => 'question',
+					'id'      => $question->id
+				]
+			);
+		}
+
+		if(class_basename($target)==='Quizz') {
+			return redirect()->route(
+				'admin.quizzs.edit',
+				[
+					"quizz" => $target->id
+				]
+			);
+		}
 	}
 
 	public function edit(Question $question): Response
