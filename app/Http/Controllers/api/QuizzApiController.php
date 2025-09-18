@@ -15,7 +15,9 @@ class QuizzApiController extends Controller
 
 	public function store(Request $request)
 	{
-		$quizz = Quizz::create();
+		$quizz = Quizz::create([
+			"title" => "sans titre",
+		]);
 
 		$quizz->blocks()->create([
 			'title'=>'intro'

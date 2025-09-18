@@ -1,7 +1,7 @@
 import type {QuestionInterface} from "@/types/modelInterfaces.ts"
 import axios from "axios"
 import {AxiosErrorMessage, AxiosResponseModel, flashInterface} from "@/types"
-import {inject, ref, Ref} from "vue"
+import {inject, ref, Ref, watch} from "vue"
 import {useStoreScore} from "@/stores/useStoreScore.ts"
 import QuestionShow from "@/Components/Questions/QuestionShow.vue"
 import {router} from "@inertiajs/vue3"
@@ -132,13 +132,20 @@ export function useQuestionAdmin(
 
 			})
 			.catch((res) => {
-					console.warn(res.data)
 					flash.error("update questions order failed")
 				}
 			)
 
 	}
+	watch(questions, (newValue, preValue)=>{
+		const newIds = newValue.map(q=>q.id).join(',')
+		const oldIds = preValue.map(q=>q.id).join(',')
 
+		if(oldIds!=='' && oldIds!==newIds){
+			console.log('update questions orders')
+			updateQuestionsOrder()
+		}
+	})
 	function updateGrid(grid: string) {
 		axios.patch(
 			route('api.admin.posts.updateQuestionsGrid', {

@@ -73,7 +73,7 @@ function quizzDestroy() {
 					v-katex.auto="theQuizz.title"
 				/>
 				<div class="font-code text-xs">
-					{{ theQuizz.chapter.title }}
+					{{ theQuizz.chapter?.title }}
 				</div>
 			</div>
 		</header>
