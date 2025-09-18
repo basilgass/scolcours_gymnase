@@ -132,7 +132,7 @@ export function useQuestionAdmin(
 
 			})
 			.catch((res) => {
-					flash.error("update questions order failed")
+					flash?.error("update questions order failed")
 				}
 			)
 
@@ -142,7 +142,6 @@ export function useQuestionAdmin(
 		const oldIds = preValue.map(q=>q.id).join(',')
 
 		if(oldIds!=='' && oldIds!==newIds){
-			console.log('update questions orders')
 			updateQuestionsOrder()
 		}
 	})
