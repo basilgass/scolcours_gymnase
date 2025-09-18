@@ -1,7 +1,7 @@
-import {CheckerAbstract} from "@/Checkers"
+import {CheckerAbstract, CheckerResult, CHECKERS} from "@/Checkers"
 import {braceSorter} from "@/Checkers/checkerHelperFunctions.ts"
-import {CHECKERS} from "@/Checkers"
 import AsciiMathParser from "@/asciimath2tex.ts"
+import {partial} from "lodash"
 
 const name = "solution"
 const description = `solution|sol,[paramètres]
@@ -14,6 +14,7 @@ export class SolutionChecker extends CheckerAbstract {
 
 	constructor(config?: string[] | string) {
 		super(config)
+
 		this.type = CHECKERS.SOLUTION
 		this.description = description
 
@@ -24,22 +25,22 @@ export class SolutionChecker extends CheckerAbstract {
 	}
 
 
-	override checkValue(value: string): string {
+	override checkValue(value: string): CheckerResult {
 		// Ensemble vide / réelles entre accolades.
-		if (isEmptyOrReal(value)) {
-			// IR ou (vide) est entre accolade.
-			if (value === `{${this.answer}} `) {
-				return `${new AsciiMathParser().parse(
-					this.answer,
-				)} est déjà un ensemble.`
-			}
-
-			// De toute façon, ce n'est pas le bonne ensemble de solution.
-			return "Ce n'est pas le bon ensemble de solution."
-		} else if (isEmptyOrReal(this.answer)) {
-			// la réponse donnée n'est pas un cas particulier, mais on devrait l'avoir...
-			return "Ce n'est pas le bon ensemble de solution."
+		if (isEmptyOrReal(value, true)) {
+			return this.makeCheckerResult(
+				`${new AsciiMathParser().parse(
+					value.slice(1, -1), // enlever le premier et le dernier caractère
+				)} est déjà un ensemble.`,
+				value === `{${this.answer}} `
+			)
 		}
+
+		if (isEmptyOrReal(this.answer) && isEmptyOrReal(value)) {
+			// la réponse donnée n'est pas un cas particulier, mais on devrait l'avoir...
+			return this.makeCheckerResult("Ce n'est pas le bon ensemble de solution.")
+		}
+
 
 		// La réponse donnée et espérée ne sont pas des cas particuliers
 
@@ -47,20 +48,22 @@ export class SolutionChecker extends CheckerAbstract {
 		if (this.answer.startsWith("{")) {
 			if (!value.startsWith("{")) {
 				// Manque les accolades
-				return "L'ensemble des solutions doit avoir des \\(\\{ \\}\\)."
+				return this.makeCheckerResult("L'ensemble des solutions doit avoir des \\(\\{ \\}\\).")
 			}
 
 			// vérifie qu'il y a bien le bon nombre d'accolades ouvrantes et fermantes
 			if (value.split("{").length !== value.split("}").length) {
-				return "Le nombre d'accolades ouvrantes est différent des fermantes."
+				return this.makeCheckerResult("Le nombre d'accolades ouvrantes est différent des fermantes.")
 			}
 		}
 
 		// Si la solution est avec intervalle mais pas la réponse.
 		if (isWithInterval(this.answer) && !isWithInterval(value)) {
-			return isWithInterval(this.answer)
-				? "La solution contient un intervalle."
-				: "La solution ne contient pas d'intervalle."
+			return this.makeCheckerResult(
+				isWithInterval(this.answer)
+					? "La solution contient un intervalle."
+					: "La solution ne contient pas d'intervalle."
+			)
 		}
 
 		// La solution n'est pas un intervalle.
@@ -73,42 +76,106 @@ export class SolutionChecker extends CheckerAbstract {
 			const givenValues = value
 				.substring(1, value.length - 1)
 				.split(";")
-			let correctAnswers = 0
 
-			expectedValues.forEach((checkValue) => {
+			// différence sur le nombre de réponses
+			const diff = expectedValues.length - givenValues.length
 
+			const errors: string[] = []
+			let partialOnly = true
 
-				for (let i = 0; i < givenValues.length; i++) {
-					if (
-						this.secondaryChecker?.check(checkValue, givenValues[i]).result ?? false
-					) {
-						givenValues.splice(i, 1)
-						correctAnswers++
-						break
-					}
-				}
-			})
-
-			if (correctAnswers !== expectedValues.length) {
-				return `Il y a ${correctAnswers} réponse(s) juste sur ${expectedValues.length}`
-			} else {
-				return ""
+			if (diff !== 0) {
+				errors.push(diff > 0
+					? `Il manque ${diff} réponse${diff > 1 ? 's' : ''}.`
+					: `Il y a ${-diff} réponse${diff < -1 ? 's' : ''} en trop.`
+				)
+				partialOnly = false
 			}
+
+			givenValues.forEach((given: string, count: number)=>{
+				const results = expectedValues
+					.map(checkValue => this.secondaryChecker.check(given, checkValue))
+
+				// Une réponse correcte existe.
+				const index = results
+					.findIndex((value) => value.result)
+				if (index !== -1) {
+					// Un résultat correspondant a été trouvé :
+					// on l'enlève de la liste des réponses possibles.
+					expectedValues.splice(index, 1)
+					return
+				}
+
+				// On recherche une réponse partielle
+				const partial = results
+					.findIndex(value => value.partial)
+
+				if (partial!==-1) {
+					// Une réponse partielle a été trouvée.
+					// on l'enlève de la liste des réponses possibles.
+					expectedValues.splice(partial, 1)
+					// On rajoute l'erreur.
+					errors.push(`(${count+1}) ${results[partial].message}`)
+					return
+				}
+
+				// Aucune réponse ne correspond - c'est vraiment faux
+				partialOnly = false
+				errors.push(`(${count+1}) aucune réponse ne correspond dans les solutions.`)
+
+			})
+			//
+			// expectedValues.forEach((checkValue) => {
+			// 	const results = givenValues
+			// 		.map(given => this.secondaryChecker.check(given, checkValue))
+			//
+			// 	const givenIndex = results
+			// 		.findIndex((value) => value.result)
+			// 	if (givenIndex !== -1) {
+			// 		// Un résultat correspondant à été trouvé.
+			// 		givenValues.splice(givenIndex, 1)
+			// 		return
+			// 	}
+			//
+			// 	// On recherche la première valeur avec partiel
+			// 	const givenPartialResult = results
+			// 		.find(value => value.partial)
+			//
+			// 	if (!givenPartialResult) {
+			// 		console.log(checkValue, givenValues)
+			// 		// Aucune réponse partielle trouvée
+			// 		partialOnly = false
+			// 		errors.push("Une réponse ne fait pas partie des solutions.")
+			// 		return
+			// 	}
+			//
+			// 	errors.push(givenPartialResult.message)
+			//
+			// })
+
+			return this.makeCheckerResult(
+				errors.length > 0
+					? errors.join('<br/>')
+					: "",
+				partialOnly
+			)
 		}
 
 		// La solution peut être du type IR\setminus {a;b;c}
 
 		// Ce n'est pas dans le bon ordre (cas des ensembles, pas des intervalles)
 		if (!this.answer.includes("]") && !this.answer.includes("[")) {
-			const inBracketsExpectedValue = braceSorter(this.answer),
-				inBracketsGivenValue = braceSorter(value)
+			const inBracketsExpectedValue = braceSorter(this.answer)
+			const inBracketsGivenValue = braceSorter(value)
 
-			return inBracketsGivenValue === inBracketsExpectedValue
-				? ""
-				: "Une ou plusieurs valeurs sont fausses."
+			return this.makeCheckerResult(
+				inBracketsGivenValue === inBracketsExpectedValue
+					? ""
+					: "Une ou plusieurs valeurs sont fausses."
+			)
 		}
 
-		return ""
+		// Tous les tests ont passé - ne devrait jamais arriver !
+		return this.makeCheckerResult()
 	}
 }
 
@@ -116,14 +183,10 @@ function isWithInterval(value: string): boolean {
 	return value.includes("[") || value.includes("]")
 }
 
-function isEmptyOrReal(value: string): boolean {
-	return (
-		value === "!!" ||
-		value === "RR" ||
-		value === "RR^**" ||
-		value === "RR_+" ||
-		value === "RR_+^**" ||
-		value === "RR_-" ||
-		value === "RR_-^**"
-	)
+function isEmptyOrReal(value: string, withExtraBraces = false): boolean {
+	return realSets.some(s => withExtraBraces
+		? `{${s}}` === value
+		: s === value)
 }
+
+const realSets = ['!!', 'RR', "RR^**", "RR_+", "RR_+^**", "RR_-", "RR_-^**"]

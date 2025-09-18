@@ -1,5 +1,6 @@
 import {Equation, Numeric, Polynom} from "pimath"
 import type {CheckerAbstract} from "@/Checkers/CheckerAbstract.ts"
+import {CheckerResult} from "@/Checkers/checker.config.ts"
 
 export function checkMinMaxEquation(value: string, answer: string, secondaryChecker: CheckerAbstract): string {
 	// Come from Polynom checker.

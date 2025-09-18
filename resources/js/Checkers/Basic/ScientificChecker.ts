@@ -1,6 +1,6 @@
 import {CheckerAbstract} from "../CheckerAbstract"
 import {NumberChecker} from "./NumberChecker"
-import {CHECKERS} from "../checker.config"
+import {CheckerResult, CHECKERS} from "../checker.config"
 
 const name = "scientific"
 const description = `scientific|scn,[paramètres]
@@ -29,7 +29,7 @@ export class ScientificChecker extends CheckerAbstract {
     }
 
 
-	override checkValue(value: string): string {
+	override checkValue(value: string): CheckerResult {
 		// On vérifie que le format est bien de type scientifique.
 		const PS = +(value.split("*")[0]),
 			OG = +(value.split("10^")[1] || 0),
@@ -38,24 +38,24 @@ export class ScientificChecker extends CheckerAbstract {
 
 		// On vérifie la partie significative
 		if (Math.abs(PS) < 1 || Math.abs(PS) >= 10) {
-			return "la partie significative n'est pas entre 1 et 10 (non compris)"
+			return this.makeCheckerResult("la partie significative n'est pas entre 1 et 10 (non compris)")
 		}
 
 		if (PS !== ePS) {
-			return "erreur dans la partie significative: " +
-				this.secondaryChecker?.check(ePS.toString(), PS.toString()).message
+			return this.makeCheckerResult("erreur dans la partie significative: " +
+				this.secondaryChecker?.check(ePS.toString(), PS.toString()).message)
 		}
 
 		if (!value.includes("*10^")) {
-			return "le format de réponse n'est pas une notation scientifique."
+			return this.makeCheckerResult("le format de réponse n'est pas une notation scientifique.")
 		}
 
 		// On vérifie l'ordre de grandeur.
 		if (OG !== eOG) {
-			return "l'ordre de grandeur n'est pas juste..."
+			return this.makeCheckerResult("l'ordre de grandeur n'est pas juste...")
 		}
 
-		return ""
+		return this.makeCheckerResult()
 	}
 
 }

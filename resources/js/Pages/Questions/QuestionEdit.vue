@@ -152,12 +152,6 @@ let hasClipboard = computed(() => {
 					</confirm-button>
 				</div>
 			</div>
-
-			<move-item-to
-				:source-id="theQuestion.id"
-				source="question"
-				target="post"
-			/>
 		</div>
 		<div class="flex flex-col md:flex-row gap-3 px-5 pb-5">
 			<form

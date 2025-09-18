@@ -1,23 +1,49 @@
 <script setup lang="ts">
 import QuestionShow from "@/Components/Questions/QuestionShow.vue"
-import { QuestionInterface } from "@/types/modelInterfaces"
+import {QuestionInterface, QuizzInterface, ScoreInterface} from "@/types/modelInterfaces"
+import {useStoreScore} from "@/stores/useStoreScore.ts"
+import {onMounted, ref} from "vue"
+import {ScoreQuestionDataInterface} from "@/types/scoreInterfaces.ts"
 
 defineEmits(["validate"])
-let props = defineProps({
-	quizz: {type: Object, required: true},
-	question: {type: Object, required: true}
+const props = defineProps<{
+	question: QuestionInterface
+}>()
+
+const scoreStore = useStoreScore()
+const score = ref<ScoreInterface<ScoreQuestionDataInterface>>(null)
+
+onMounted(()=>{
+	scoreStore.getScore('Question', props.question.id)
+		.then((res: ScoreInterface<ScoreQuestionDataInterface>)=>{
+			score.value = res
+		})
 })
 </script>
 
 <template>
-	<article>
+	<div>
+		<div
+			v-if="score===null"
+			class="grid place-items-center min-h-[200px] font-code text-xl"
+		>
+			chargement de la question...
+		</div>
 		<question-show
+			v-else-if="score.data.answers.length===0"
 			class="max-w-xl mx-auto bg-white border rounded-sm"
-			:question="props.question as QuestionInterface"
+			:question
 			show-input
-			is-minimal
-			single-answer
 			@validate="$emit('validate')"
 		/>
-	</article>
+		<div
+			v-else
+			class="grid place-items-center min-h-[200px] font-code text-xl"
+		>
+			<div class="space-y-5">
+				<p>Vous avez déjà répondu à cette question.</p>
+				<p>Merci de patienter...</p>
+			</div>
+		</div>
+	</div>
 </template>

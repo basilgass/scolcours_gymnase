@@ -42,11 +42,14 @@ class QuestionApiController extends Controller
 		// Add the new order.
 		$nb_questions = $questionable->questions->count();
 		$validated['order'] = $nb_questions+1;
+
 		// Create the question new way.
 		$question = $questionable->questions()->create($validated);
 
 		// Create the question's block
-		$question->blocks()->create();
+		$question->blocks()->create([
+			"body"=>"sans contenu"
+		]);
 
 		return QuestionResource::make($question);
 	}

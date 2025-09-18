@@ -9,6 +9,7 @@ class QuizzSessionRessource extends JsonResource
 {
 	// No wrap around the data.
 	public static $wrap = null;
+
 	/**
 	 * Transform the resource into an array.
 	 *
@@ -17,21 +18,19 @@ class QuizzSessionRessource extends JsonResource
 	public function toArray(Request $request): array
 	{
 		return [
-            'id'=>$this->id,
-            'shortcode' => $this->shortcode,
-            'quizz' => [
-				'id' => $this->quizz->id,
+			'id'        => $this->id,
+			'shortcode' => $this->shortcode,
+			'quizz'     => [
+				'id'    => $this->quizz->id,
 				'title' => $this->quizz->title,
-				'body' => $this->quizz->body,
-				'outro' => $this->quizz->outro,
 			],
-            'enable' => $this->enable,
-            'current' => $this->index,
-            'status' =>$this->status,
-            'total' =>$this->total,
-            'questions' => QuestionResource::collection($this->quizz->questions),
-            "users" => UserResource::collection($this->users)
+			'enable'    => $this->enable,
+			'current'   => $this->index,
+			'status'    => $this->status,
+			'total'     => count($this->quizz->questions),
+			'questions' => QuestionResource::collection($this->quizz->questions),
+			"users"     => UserResource::collection($this->users)
 		];
-//        return parent::toArray($request);
+		//        return parent::toArray($request);
 	}
 }

@@ -63,7 +63,7 @@ const cardClass = computed<string>(() => {
 		>
 			<slot name="header" />
 		</header>
-		<main class="flex-1 p-3">
+		<main class="flex-1 w-full p-3">
 			<slot />
 		</main>
 		<footer

@@ -8,14 +8,14 @@ import DarkModeSwitch from "@/Components/Ui/DarkModeSwitch.vue"
 
 <template>
 	<div class="min-h-screen relative">
-		<header
+		<footer
 			class="bg-content
 			w-full py-1 px-4
 			flex justify-between items-baseline
 			fixed bottom-0 left-0 "
+			v-admin
 		>
 			<InertiaLink
-				v-admin
 				class="uppercase"
 				:href="route('admin.index')"
 			>
@@ -23,7 +23,7 @@ import DarkModeSwitch from "@/Components/Ui/DarkModeSwitch.vue"
 			</InertiaLink>
 
 			<dark-mode-switch />
-		</header>
+		</footer>
 		<main class="w-[100vw] h-[100vh]">
 			<slot />
 		</main>

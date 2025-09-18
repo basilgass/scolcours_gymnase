@@ -60,12 +60,14 @@ export class PiChecker {
 	constructor(config?: string) {
 		// Split the config to get the main checker and the sub checker
 		// name,a,b,c,[checker:name,d,e,f,g]
-
 		const [mainCheckerConfig, subCheckerConfig] = config?.split("checker:") ?? []
 
 		this.#checker = this.#loadCheckerTo(mainCheckerConfig ?? '')
+
 		if (subCheckerConfig !== undefined) {
 			this.#checker.secondaryChecker = this.#loadCheckerTo(subCheckerConfig)
+		}else{
+			this.#checker.secondaryChecker = this.#loadCheckerTo('exact')
 		}
 
 		return this
@@ -99,8 +101,8 @@ export class PiChecker {
 		this.#checker.secondaryChecker = value
 	}
 
-	check(value: string, answer: string): CheckerResult {
-		return this.#checker.check(value, answer)
+	check(givenValue: string, expectedAnswer: string): CheckerResult {
+		return this.#checker.check(givenValue, expectedAnswer)
 	}
 
 	#parseConfig(config: string): { checker: CHECKERS, options: string[] } {

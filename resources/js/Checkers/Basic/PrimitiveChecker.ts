@@ -1,8 +1,8 @@
-import {CheckerAbstract} from "../CheckerAbstract";
-import {ExpChecker} from "./ExpChecker";
-import {LogChecker} from "./LogChecker";
-import {PolynomChecker} from "./PolynomChecker";
-import {CHECKERS} from "../checker.config";
+import {CheckerAbstract} from "../CheckerAbstract"
+import {ExpChecker} from "./ExpChecker"
+import {LogChecker} from "./LogChecker"
+import {PolynomChecker} from "./PolynomChecker"
+import {CheckerResult, CHECKERS} from "../checker.config"
 
 const name = "primitive"
 const description = `primitive,[paramètres]
@@ -21,7 +21,7 @@ export class PrimitiveChecker extends CheckerAbstract {
 	readonly format = "primitive d'une fonction"
 
 
-	override checkValue(value: string): string {
+	override checkValue(value: string): CheckerResult {
 		let subchk
 		if (value.includes("e")) {
 			subchk = new ExpChecker(this._config)
@@ -38,14 +38,14 @@ export class PrimitiveChecker extends CheckerAbstract {
 		)
 
 		if (!result.result) {
-			return result.message
+			return this.makeCheckerResult(result.message)
 		}
 
 		const s = value.split('+c').length
 		if (s !== 2) {
-			return s === 1 ? "il manque la constante." : `il y a ${s - 1} constantes...`
+			return this.makeCheckerResult(s === 1 ? "il manque la constante." : `il y a ${s - 1} constantes...`)
 		}
 
-		return result.message
+		return this.makeCheckerResult()
 	}
 }

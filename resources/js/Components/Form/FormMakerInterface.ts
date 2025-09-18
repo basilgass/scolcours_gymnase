@@ -43,7 +43,7 @@ export type FormElementType =
 	"codearea" |
 	"keyboard" |
 	"json" |
-	"theme" | "chapter" | "deck"
+	"theme" | "chapter" | "deck" | 'team'
 
 export interface FormMakerPropsNewType {
 	type?: FormElementType,

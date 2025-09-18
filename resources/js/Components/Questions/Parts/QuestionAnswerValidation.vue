@@ -100,7 +100,6 @@ function updateAnswersValidation(): CheckerResult[] {
 				}
 
 			} catch (err) {
-				console.log(err)
 				results.push({
 					result: false,
 					message: "Format de la réponse non reconnu.",
@@ -187,9 +186,15 @@ function validateQuestion() {
 	}
 
 	// Afficher les messages d'erreurs
-	errorMessages.value = validations.map((v, index) => {
-		return v.result ? "" : `${index + 1}. ${v.message}`
-	}).filter(msg => msg !== "")
+	errorMessages.value = validations
+		.map((v, index) => {
+			if(questionData.answers.variables.value.length===1) {
+				return v.result ? "" : `${v.message}`
+			}else {
+				return v.result ? "" : `${index + 1}. ${v.message}`
+			}
+		})
+		.filter(msg => msg !== "")
 
 	// Sauvegarde dans la base de donnée
 	saveToDB(validations)

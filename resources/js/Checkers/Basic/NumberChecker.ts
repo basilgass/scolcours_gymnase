@@ -1,5 +1,5 @@
-import {CheckerAbstract} from "../CheckerAbstract";
-import {CHECKERS} from "../checker.config";
+import {CheckerAbstract} from "../CheckerAbstract"
+import {CheckerResult, CHECKERS} from "../checker.config"
 
 const name = "number",
 	description = `number|nb,[paramètres]
@@ -38,35 +38,44 @@ export class NumberChecker extends CheckerAbstract {
 		return ""
 	}
 
-	override checkValue(value: string): string {
-		const nbDigits = +this.config[0],
-			nbExpectedDigits = (this.answer.split(".")[1] || []).length
+	override checkValue(value: string): CheckerResult {
+		const nbDigits = +this.config[0]
+		const [expectedUnit, expectedDigits] = this.answer.split(".")
+		const nbExpectedDigits = expectedDigits?.length ?? 0
 
 		if (nbExpectedDigits !== nbDigits && this._isStrict) {
-			return "Problème dans la configuration du checker ou de la réponse"
+			return this.makeCheckerResult("Problème dans la configuration du checker ou de la réponse")
 		}
 
 		if (!this._isStrict) {
 			if (+value === +this.answer) {
-				return ""
+				return this.makeCheckerResult()
 			}
 		}
 
-		// Nombre de décimales de la réponse
-		const crtDigits: string = value.split(".")[1] || ""
+		const [unit, digits] = value.split(".")
+		if (+unit !== +expectedUnit) {
+			return this.makeCheckerResult("la partie entière n'est pas juste.")
+		}
 
 		// Le nombre de chiffres après la virgule n'est pas juste
-		if (crtDigits.length !== nbDigits) {
-			return `Il faut ${nbDigits} chiffre(s) après la virgule.`
+		if (digits.length > nbDigits) {
+			return this.makeCheckerResult(
+				`Il faut ${nbDigits} chiffre(s) après la virgule.`,
+				(+digits).toFixed(nbDigits) === expectedDigits
+			)
 		}
 
 		// Le dernier chiffre n'est pas juste - il s'agit peut être d'un problème d'arrondi ?
-		const lastDigit = +crtDigits[crtDigits.length - 1],
+		const lastDigit = +digits[digits.length - 1],
 			lastExpectedDigit = +this.answer[this.answer.length - 1]
 		if (Math.abs(lastDigit - lastExpectedDigit) === 1) {
-			return "Peut être un problème d'arrondi ?"
+			return this.makeCheckerResult(
+				"Peut être un problème d'arrondi ?",
+				true
+			)
 		}
 
-		return	"La réponse n'est pas juste."
+		return this.makeCheckerResult("La réponse n'est pas juste.")
 	}
 }

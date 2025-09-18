@@ -1,7 +1,8 @@
-import {Equation, Numeric} from "pimath"
+import {Equation} from "pimath"
 import {
 	checkCircle,
 	CheckerAbstract,
+	CheckerResult,
 	CHECKERS,
 	checkMinMaxEquation,
 	checkReducedEquation,
@@ -93,7 +94,7 @@ export class CartesianChecker extends CheckerAbstract {
 		return ""
 	}
 
-	override checkValue(value: string): string {
+	override checkValue(value: string): CheckerResult {
 
 		// Contrôle des données
 		const A = new Equation(value)
@@ -107,7 +108,7 @@ export class CartesianChecker extends CheckerAbstract {
 
 		// L'expression de gauche est soit égale, soit opposée.
 		if (!A2.isLinearTo(Q2)) {
-			return "l'équation n'est pas juste."
+			return this.makeCheckerResult("l'équation n'est pas juste.")
 		}
 
 
@@ -119,7 +120,7 @@ export class CartesianChecker extends CheckerAbstract {
 			// ax+by=0
 			// Allows x=c, y=c
 			if (A.right.variables.length > 0) {
-				return "Toutes les variables doivent être à gauche."
+				return this.makeCheckerResult("Toutes les variables doivent être à gauche.")
 			}
 
 			if (
@@ -127,7 +128,7 @@ export class CartesianChecker extends CheckerAbstract {
 				!A.right.isZero()
 			) {
 				// There are two variables : everything must be right
-				return "l'équation n'est pas correctement formée."
+				return this.makeCheckerResult("l'équation n'est pas correctement formée.")
 			}
 		}
 
@@ -142,23 +143,23 @@ export class CartesianChecker extends CheckerAbstract {
 				(A.left.variables.length === 1 && !A.left.monoms[0].coefficient.isOne())
 			) {
 				// There are two variables : everything must be right
-				return "Il faut isoler la variable y à gauche."
+				return this.makeCheckerResult("Il faut isoler la variable y à gauche.")
 			}
 		}
 
 		if (this.#minmax) {
-			return checkMinMaxEquation(value, this.answer, this.secondaryChecker)
+			return this.makeCheckerResult(checkMinMaxEquation(value, this.answer, this.secondaryChecker))
 		}
 
 		if (this.#circle) {
-			return checkCircle(value, A)
+			return this.makeCheckerResult(checkCircle(value, A))
 		}
 
 		if (this.#reduced) {
-			return checkReducedEquation(A)
+			return this.makeCheckerResult(checkReducedEquation(A))
 		}
 
 		// If all tests passes, it is correct !
-		return ""
+		return this.makeCheckerResult()
 	}
 }

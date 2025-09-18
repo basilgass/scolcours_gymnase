@@ -123,7 +123,7 @@ class PostApiController extends Controller
 		]);
 		$post->save();
 
-		return response()->noContent();
+		return $validate;
 	}
 
 	public function resetAnswers(Post $post)

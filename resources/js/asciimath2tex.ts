@@ -161,6 +161,7 @@ export default class AsciiMathParser {
 			{"asciimath":"TT","tex":"\\top"},
 			{"asciimath":"+-","tex":"\\pm"},
 			{"asciimath":"O/","tex":"\\emptyset"},
+			{"asciimath":"!!","tex":"\\varnothing"},
 			{"asciimath":"oo","tex":"\\infty"},
 			{"asciimath":":.","tex":"\\therefore"},
 			{"asciimath":":'","tex":"\\because"},

@@ -72,6 +72,12 @@ export function getThemeClasses(chapter: string, modifiers: Record<string, boole
 		modifiers.text = true
 	}
 
+	const intensity = modifiers.light
+	? '-light'
+		: modifiers.dark
+	? '-dark'
+			: ''
+
 	Object.keys(modifiers)
 		.forEach((key) => {
 			if (keys.indexOf(key) !== -1) {
@@ -86,7 +92,7 @@ export function getThemeClasses(chapter: string, modifiers: Record<string, boole
 					if (chapter === 'admin') {
 						classesList.push(`admin-content`)
 					} else {
-						classesList.push(`${key}-${chapter}`)
+						classesList.push(`${key}-${chapter}${intensity}`)
 					}
 
 					if (key === 'border') {

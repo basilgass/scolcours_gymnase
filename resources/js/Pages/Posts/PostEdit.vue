@@ -32,6 +32,8 @@ const typeList = ref({
 	article: "",
 	exercice: "exercise",
 	"savoir faire": "howto",
+	"quizz": "quizz",
+	"évaluation": "test"
 })
 
 

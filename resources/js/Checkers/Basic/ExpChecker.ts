@@ -1,7 +1,7 @@
 import {CheckerAbstract} from "../CheckerAbstract"
 import {splitAtSigns, splitIfOutsideParentheses} from "../checkerHelperFunctions.ts"
 import {Polynom} from "pimath"
-import {CHECKERS} from "../checker.config"
+import {CheckerResult, CHECKERS} from "../checker.config"
 
 const name = "exp"
 const description = `exp,[paramètres]
@@ -19,7 +19,7 @@ export class ExpChecker extends CheckerAbstract {
 
     readonly format = "polynôme avec des exponentielles <br/>\\((x-3)e^{x^2-3}\\)"
 
-    override checkValue(value: string): string {
+    override checkValue(value: string): CheckerResult {
         // plusieurs possible:
         // ae^(polynom)
         // ae^(polynom) + be^(polynom)
@@ -31,23 +31,23 @@ export class ExpChecker extends CheckerAbstract {
             [eN, eD] = splitIfOutsideParentheses(this.answer, "/")
 
         if (D === undefined && eD !== undefined) {
-            return "Un dénominateur est attendu..."
+            return this.makeCheckerResult("Un dénominateur est attendu...")
         }
 
         if (D !== undefined && eD === undefined) {
-            return "Aucun dénominateur n'est prévu dans cette réponse."
+            return this.makeCheckerResult("Aucun dénominateur n'est prévu dans cette réponse.")
         }
 
         const resultatNumerateur = expCompare(eN, N)
 
-        if (resultatNumerateur !== "") return resultatNumerateur
+        if (resultatNumerateur !== "") return this.makeCheckerResult(resultatNumerateur)
 
         // On contrôle les dénominateurs
         if (D !== undefined && eD !== undefined) {
-            return expCompare(eD, D)
+            return this.makeCheckerResult(expCompare(eD, D))
         }
 
-        return ""
+        return this.makeCheckerResult()
     }
 
 }

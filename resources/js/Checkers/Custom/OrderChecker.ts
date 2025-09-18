@@ -1,5 +1,5 @@
-import {CheckerAbstract} from "../CheckerAbstract";
-import {CHECKERS} from "../checker.config";
+import {CheckerAbstract} from "../CheckerAbstract"
+import {CheckerResult, CHECKERS} from "../checker.config"
 
 const name = "order"
 const description = `order,[paramètres]
@@ -17,5 +17,9 @@ export class OrderChecker extends CheckerAbstract {
 	}
 
 	readonly format = ""
+
+	checkValue(value: string): CheckerResult {
+		return this.makeCheckerResult("La réponse n'est pas correcte")
+	}
 
 }

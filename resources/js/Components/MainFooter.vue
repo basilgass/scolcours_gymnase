@@ -97,7 +97,7 @@ const langues = {
 						<i class="mr-2 bi bi-book" />cours
 					</InertiaLink>
 					<InertiaLink
-						:href="route('quizzs.index')"
+						:href="route('admin.quizzs.index')"
 						class="block transition duration-300 hover:translate-x-2 px-0 md:px-4 py-1"
 					>
 						<i class="mr-2 bi bi-question" />quizz

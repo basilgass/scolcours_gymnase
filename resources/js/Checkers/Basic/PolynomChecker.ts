@@ -1,6 +1,6 @@
 import {CheckerAbstract} from "../CheckerAbstract"
 import {Polynom} from "pimath"
-import {CHECKERS} from "../checker.config"
+import {CheckerResult, CHECKERS} from "../checker.config"
 import {checkPolynomIsFactorized} from "@/Checkers"
 
 const name = "polynom"
@@ -49,14 +49,14 @@ export class PolynomChecker extends CheckerAbstract {
 		}
 	}
 
-	override checkValue(value: string): string {
+	override checkValue(value: string): CheckerResult {
 		// Make sur the polynom is constructable
 		const A = new Polynom(value)
 		const Q = new Polynom(this.answer)
 
 		// Polynom must be equals.
 		if (!Q.isEqual(A)) {
-			return "Le polynôme n'est pas le même."
+			return this.makeCheckerResult("Le polynôme n'est pas le même.")
 		}
 
 		/** Polynom checker config */
@@ -68,18 +68,22 @@ export class PolynomChecker extends CheckerAbstract {
 			this.config.includes("FACTORS")
 		) {
 			try {
-				return checkPolynomIsFactorized(value)
-					? ""
-					: "Le polynôme n'est pas (entièrement) factorisé."
+				return this.makeCheckerResult(
+					checkPolynomIsFactorized(value)
+						? ""
+						: "Le polynôme n'est pas (entièrement) factorisé."
+				)
 			} catch {
-				return "Le polynôme n'est pas (entièrement) factorisé."
+				return this.makeCheckerResult(
+					"Le polynôme n'est pas (entièrement) factorisé."
+				)
 			}
 		}
 
 		// Developed
 		if (this.config.includes("d") || this.config.includes("develop")) {
 			if (!A.isDeveloped(value)) {
-				return "Le polynôme n'est pas (entièrement) développé."
+				return this.makeCheckerResult("Le polynôme n'est pas (entièrement) développé.")
 			}
 		}
 
@@ -91,14 +95,14 @@ export class PolynomChecker extends CheckerAbstract {
 				) ||
 				value.match(/(-?[\d]+(\/\d+)?)?x\^2([+-]\d+(\/\d+)?)?/)
 			) {
-				return ""
+				return this.makeCheckerResult()
 			} else {
-				return "L'équation n'est pas dans le bon format."
+				return this.makeCheckerResult("L'équation n'est pas dans le bon format.")
 			}
 		}
 
 		// If all tests passes, it is correct !
-		return ""
+		return this.makeCheckerResult()
 
 	}
 

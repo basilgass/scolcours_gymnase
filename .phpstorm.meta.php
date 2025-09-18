@@ -2533,7 +2533,7 @@ namespace PHPSTORM_META {
 'decks.edit','cards.fetch','decks.addCard','cards.destroy','decks.store',
 'decks.update','decks.destroy','decks.updateOrder','decks.assignChapter','dev',
 'dev.index','tools','tools.fetch','tools.show','tools.edit',
-'tools.update','quizzs.index','quizzs.sessions.show','admin.quizzs',
+'tools.update','quizzs.index','quizzs.sessions.show','admin.quizz',
 'admin.quizzs.quizz','quizzs.sessions.dashboard','quizzs.sessions.projection','quizzs.store','quizzs.destroy',
 'quizzs.sessions.create','quizzs.sessions.destroy','quizzs.sessions.updateCurrent','quizzs.sessions.updateEnable','quizzs.update',
 'evaluations.show','latex.pdf','latex.links',

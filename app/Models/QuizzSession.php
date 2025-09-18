@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Http\Resources\QuestionResource;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 /**
  * App\Models\QuizzSession
@@ -35,11 +36,32 @@ use Illuminate\Database\Eloquent\Model;
  */
 class QuizzSession extends Model
 {
-	use HasFactory;
-
 	protected $guarded = [];
 
-	protected $appends = ['status', 'total'];
+	protected $casts = [
+		'enable' => 'boolean'
+	];
+
+	protected $appends = ['status'];
+
+
+	protected static function booted()
+	{
+		static::creating(function($session){
+			if(empty($session->shortcode)){
+				$session->shortcode = static::generateUniqueShortcode();
+			}
+		});
+	}
+
+	protected static function generateUniqueShortcode(int $length = 5): string
+	{
+		do {
+			$code = Str::upper(Str::random($length));
+		}while (static::where('shortcode', $code)->exists());
+
+		return $code;
+	}
 
 	public function quizz()
 	{
@@ -48,45 +70,38 @@ class QuizzSession extends Model
 
 	public function users()
 	{
-		return $this->belongsToMany(User::class, 'quizz_session_user')
+		return $this
+			->belongsToMany(User::class, 'quizz_session_user')
 			->withTimestamps();
-//			->withPivot('result', 'answer', 'attempts');
-//		return $this->morphedByMany(User::class, Question::class);
 	}
 
 	public function getQuestionAttribute()
 	{
 		if ($this->index > 0 && $this->index <= count($this->quizz->questions)) {
-			return $this->quizz->questions[$this->index-1];
+			return QuestionResource::make($this->quizz->questions[$this->index - 1]);
 		}
 
 		return null;
 	}
 
-	public function getTotalAttribute()
-	{
-		return count($this->quizz->questions);
-	}
-
 	public function getStatusAttribute(): string
 	{
 		// Le quizz n'a pas commencé
-		if($this->index===0){return 'intro';}
+		if ($this->index === 0) {
+			return 'intro';
+		}
 
 		// Le quizz est terminé
-		if($this->index>=count($this->quizz->questions)+1){return 'outro';}
+		if ($this->index >= count($this->quizz->questions) + 1) {
+			return 'outro';
+		}
 
 		// Le quizz est en cours.
-		if(\Auth::user()) {
-			// Determine if the current question has already been answered.
-			if ($this->question->users->where('id', \Auth::id())->first()?->pivot->attempts>0) {
-				return "wait";
-			}
-
+		if (\Auth::user()) {
 			return 'question';
 		}
 
 		// L'utilisateur n'est pas connecté
-		return "l'utilisateur n'est pas connecté";
+		return "error";
 	}
 }

@@ -1,6 +1,7 @@
 export interface CheckerResult {
     result: boolean,
     message: string,
+	partial?: boolean
     index?: number
 }
 

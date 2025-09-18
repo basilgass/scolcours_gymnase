@@ -91,7 +91,12 @@ onMounted(() => {
 
 			<!-- show the questions -->
 			<questions-index
-				:post="post"
+				:container="{
+					id: post.id,
+					type: 'Post',
+					questionsGrid: post.questionsGrid
+				}"
+				:questions="post.questions"
 			/>
 
 			<slot name="footer" />

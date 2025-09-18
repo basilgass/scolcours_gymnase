@@ -2,7 +2,7 @@ import {CheckerAbstract} from "../CheckerAbstract"
 import {stripFirstCharacter, stripLastCharacter} from "../checkerHelperFunctions.ts"
 import {Fraction} from "pimath"
 import {ExactChecker} from "./ExactChecker"
-import {CHECKERS} from "../checker.config"
+import {CheckerResult, CHECKERS} from "../checker.config"
 
 const name = "vector"
 const description = `vector,[paramètres]
@@ -15,21 +15,23 @@ const description = `vector,[paramètres]
 
 export class VectorChecker extends CheckerAbstract {
 
-    private _colinear = false
+	private _colinear = false
 
-    constructor(config?: string[] | string) {
-        super(config)
-        this.type = CHECKERS.VECTOR
-        this.description = description
+	constructor(config?: string[] | string) {
+		super(config)
+		this.type = CHECKERS.VECTOR
+		this.description = description
 
-        if (this.config.includes("co")) { this._colinear = true }
+		if (this.config.includes("co")) {
+			this._colinear = true
+		}
 
 		this.secondaryChecker = new ExactChecker()
-    }
+	}
 
-    get format(): string {
-        return `Vecteur ${this._colinear ? 'colinéaire ' : ''}sous la forme \\(\\begin{pmatrix}a\\\\b\\end{pmatrix}\\)<br>${this.secondaryChecker?.format}`
-    }
+	get format(): string {
+		return `Vecteur ${this._colinear ? 'colinéaire ' : ''}sous la forme \\(\\begin{pmatrix}a\\\\b\\end{pmatrix}\\)<br>${this.secondaryChecker?.format}`
+	}
 
 	override checkFormat(value: string): string {
 
@@ -40,18 +42,18 @@ export class VectorChecker extends CheckerAbstract {
 		return ""
 	}
 
-	override checkValue(value: string): string {
+	override checkValue(value: string): CheckerResult {
 		// On récupère les valeurs
 		const values = value.split(";"),
 			expectedValues = this.answer.split(";")
 
 
 		if (values.length === 1) {
-			return "des vecteurs ont au moins deux valeurs"
+			return this.makeCheckerResult("des vecteurs ont au moins deux valeurs")
 		}
 
 		if (values.length !== expectedValues.length) {
-			return "la dimension du vecteur ne correspond pas"
+			return this.makeCheckerResult("la dimension du vecteur ne correspond pas")
 		}
 
 		// remove the parentese from the first and last value.
@@ -75,7 +77,7 @@ export class VectorChecker extends CheckerAbstract {
 				b = new Fraction(expectedValues[i])
 
 				if ((a.isZero() && b.isNotZero()) || a.isNotZero() && b.isZero()) {
-					return `la ${i + 1}e composante est fausse.`
+					return this.makeCheckerResult(`la ${i + 1}e composante est fausse.`)
 				}
 
 				if (a.isNotZero() && b.isNotZero()) {
@@ -83,23 +85,17 @@ export class VectorChecker extends CheckerAbstract {
 						k = new Fraction(a.clone().divide(b))
 					} else {
 						if (a.isNotEqual(b.clone().multiply(k))) {
-							return `la ${i + 1}e composante n'est pas proportionnelle`
+							return this.makeCheckerResult(`la ${i + 1}e composante n'est pas proportionnelle`)
 						}
 					}
 				}
 			}
-		} else {
-			for (let i = 0; i < values.length; i++) {
-				const result = this.secondaryChecker?.check(expectedValues[i], values[i])??{result: false, message: ""}
-				if (!result.result) {
-					return `la ${i === 0 ? "1ère" : (i + 1) + "ème"} composante n'est pas juste.<br>${result.message}`
-				}
-			}
 		}
 
-
-		// tous les tests sont passés ! La réponse est donc juste
-		return ""
+		return this.secondaryCheckValues(
+			values, expectedValues,
+			(i: number, message: string) => `la ${i === 0 ? "1ère" : (i + 1) + "ème"} composante n'est pas juste.<br>${message}`
+		)
 
 	}
 

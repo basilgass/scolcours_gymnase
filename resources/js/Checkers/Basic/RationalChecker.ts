@@ -1,4 +1,4 @@
-import {CheckerAbstract, CHECKERS} from "@/Checkers"
+import {CheckerAbstract, CheckerResult, CHECKERS} from "@/Checkers"
 import {PolyFactor} from "pimath"
 
 const name = "rational"
@@ -40,9 +40,9 @@ export class RationalChecker extends CheckerAbstract {
 	}
 
 
-	override checkValue(value: string): string {
+	override checkValue(value: string): CheckerResult {
 		if (this.answer === '!!' || value === '!!') {
-			return "Il semble qu'il y ait une erreur quelque part..."
+			return this.makeCheckerResult("Il semble qu'il y ait une erreur quelque part...")
 		}
 
 		let [num, den] = value.split("/")
@@ -55,20 +55,20 @@ export class RationalChecker extends CheckerAbstract {
 			expectedRationnal = new PolyFactor().fromPolynom(expectedNum, expectedDen).reduce()
 
 		if (!givenRationnalReduced.numerator.isEqual(expectedRationnal.numerator)) {
-			return "le numérateur ne correspond pas à la réponse"
+			return this.makeCheckerResult("le numérateur ne correspond pas à la réponse")
 		}
 		if (!givenRationnalReduced.denominator.isEqual(expectedRationnal.denominator)) {
-			return "le dénominateur ne correspond pas à la réponse"
+			return this.makeCheckerResult("le dénominateur ne correspond pas à la réponse")
 		}
 
 		if (this.#factorized) {
 			const Nfactorized = givenRationnal.numerator.factorize()
 		    if (Nfactorized.factors.length!==givenRationnal.numerator.factors.length) {
-		       return "le numérateur n'est pas factorisé"
+		       return this.makeCheckerResult("le numérateur n'est pas factorisé")
 		    }
 			const Dfactorized = givenRationnal.denominator.factorize()
 			if (Dfactorized.factors.length!==givenRationnal.denominator.factors.length) {
-		        return "le dénominateur n'est pas factorisé"
+		        return this.makeCheckerResult("le dénominateur n'est pas factorisé")
 		    }
 		}
 
@@ -76,23 +76,23 @@ export class RationalChecker extends CheckerAbstract {
 		if (this.#developed) {
 			const num = givenRationnal.numerator
 			if (num.factors.length > 1 || !num.factors[1].power.isOne()) {
-				return "le numérateur n'est pas développé"
+				return this.makeCheckerResult("le numérateur n'est pas développé")
 			}
 
 			const den = givenRationnal.denominator
 			if (den.factors.length > 1 || !den.factors[1].power.isOne()) {
-				return "le dénominateur n'est pas développé"
+				return this.makeCheckerResult("le dénominateur n'est pas développé")
 			}
 		}
 
 		if (this.#reduced) {
 			if (!givenRationnal.numerator.isEqual(givenRationnalReduced.numerator)) {
-				return "la fraction rationnelle n'est pas réduite !"
+				return this.makeCheckerResult("la fraction rationnelle n'est pas réduite !")
 			}
 		}
 
 		// If all tests passes, it is correct !
-		return ""
+		return this.makeCheckerResult()
 
 	}
 

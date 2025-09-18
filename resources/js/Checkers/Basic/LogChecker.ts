@@ -1,6 +1,6 @@
 import {CheckerAbstract} from "../CheckerAbstract"
 import {NumExp} from "pimath"
-import {CHECKERS} from "../checker.config"
+import {CheckerResult, CHECKERS} from "../checker.config"
 
 const name = "log"
 const description = `log,[paramètres]
@@ -36,20 +36,20 @@ export class LogChecker extends CheckerAbstract {
 		return ""
 	}
 
-	override checkValue(value: string): string {
+	override checkValue(value: string): CheckerResult {
 		const ND: string[] = value.split("/")
 		// Il ne doit y avoir qu'une fraction.
 		let userN, userD
 		try {
 			userN = new NumExp(ND[0]).evaluate()
 		} catch {
-			return `${ND.length === 1 ? "La réponse" : "Le numérateur"} n'est pas correctement formé.`
+			return this.makeCheckerResult(`${ND.length === 1 ? "La réponse" : "Le numérateur"} n'est pas correctement formé.`)
 		}
 		if (ND.length === 2) {
 			try {
 				userD = new NumExp(ND[1]).evaluate()
 			} catch {
-				return "Le dénominateur n'est pas correctement formé."
+				return this.makeCheckerResult("Le dénominateur n'est pas correctement formé.")
 			}
 		} else {
 			userD = 1
@@ -81,10 +81,10 @@ export class LogChecker extends CheckerAbstract {
 			expectedDecimal = expNValue / expDValue
 
 		if (answerDecimal.toFixed(8) !== expectedDecimal.toFixed(8)) {
-			return "La réponse sous forme exacte ne donne pas la bonne valeur."
+			return this.makeCheckerResult("La réponse sous forme exacte ne donne pas la bonne valeur.")
 		}
 
-		return ""
+		return this.makeCheckerResult()
 	}
 
 

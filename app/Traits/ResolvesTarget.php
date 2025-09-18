@@ -12,6 +12,7 @@ use App\Models\Generator;
 use App\Models\Lesson;
 use App\Models\Post;
 use App\Models\Question;
+use App\Models\Quizz;
 
 trait ResolvesTarget
 {
@@ -26,6 +27,7 @@ trait ResolvesTarget
 		'deck'      => Deck::class,
 		'challenge' => Challenge::class,
 		'generator' => Generator::class,
+		'quizz'     => Quizz::class,
 	];
 
 	protected array $allowedWiths = [

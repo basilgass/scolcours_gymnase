@@ -3,122 +3,31 @@
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import QuestionShow from "@/Components/Questions/QuestionShow.vue"
 import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
-import {AxiosErrorMessage, flashInterface} from "@/types"
-import type {PostShowInterface, QuestionInterface} from "@/types/modelInterfaces.ts"
-import axios from "axios"
-import {inject, ref} from "vue"
+import type {QuestionInterface} from "@/types/modelInterfaces.ts"
 import ScButton from "@/Components/Ui/scButton.vue"
-import {useStoreScore} from "@/stores/useStoreScore.ts"
-import {router} from "@inertiajs/vue3"
-
-const props = defineProps<{
-	post: PostShowInterface,
-	questions: Partial<QuestionInterface>[],
-	components: InstanceType<typeof QuestionShow>[]
-}>()
+import {useQuestionAdmin} from "@/Components/Questions/useQuestionAdmin.ts"
 
 const editMode = useStoreEditMode()
 
-const flash = inject<flashInterface>("flash")
-
-const thePost = ref(props.post)
-const theQuestions = ref(props.questions)
-
-function removeDisplayIf() {
-	theQuestions.value.forEach((question) => {
-		question.displayIf = null
-	})
-	// Save to database.
-	storeDisplayIf()
-}
-
-function addDisplayIf() {
-	// Add displayIf by increment.
-	theQuestions.value.forEach((question, index) => {
-		if (index > 0) {
-			question.displayIf =
-				theQuestions.value[index - 1].id.toString()
-		}
-	})
-
-	// Save to database.
-	storeDisplayIf()
-}
-
-function storeDisplayIf() {
-	axios
-		.post(route("api.admin.questions.batch.updateDisplayIf"), {
-			_method: "PATCH",
-			updates: theQuestions.value.map((question) => {
-				return {
-					id: question.id,
-					display_if: question.displayIf
-				}
-			})
-		})
-		.then(() => {
-			flash.success(
-				"L'affichage conditionnel a bien été enregistré."
-			)
-		})
-		.catch((res: AxiosErrorMessage) => {
-			console.log(res.response.data.message)
-			flash.error(
-				"Il y a eu un problème avec l'affichage conditionnel."
-			)
-		})
-}
-
-function resetAnswers() {
-	const storeScore = useStoreScore()
-	storeScore.reset(props.questions.map(q=>q.user.id))
-		.then(()=>{
-			// TODO: Reload the page.
-		})
-}
+const props = defineProps<{
+	container: {
+		id: number,
+		type: 'Post' | 'Quizz',// TODO: move this to an interface.
+		questionsGrid?: string
+	},
+	components: InstanceType<typeof QuestionShow>[]
+}>()
 
 
-const isAnswersShown = ref(false)
+const questions = defineModel<Partial<QuestionInterface>[]>('questions')
+const grid = defineModel<string>('grid')
 
-function showAnswers() {
-	props.components.forEach((component) => {
-		if (component) {
-			if (isAnswersShown.value) {
-				component.loadAnswers(false) //reset the answer
-			} else {
-				component.loadAnswers(true) // show the answer
-			}
+const questionsAdmin = useQuestionAdmin(
+	props.container,
+	questions,
+	props.components
+)
 
-		}
-	})
-
-	isAnswersShown.value = !isAnswersShown.value
-}
-
-const addQuestion = function () {
-	axios
-		.post(
-			route("api.admin.questions.store"),
-			{
-				target_type: 'post',
-				target_id: props.post.id,
-				math: false,
-				mathAppend: "",
-				body: "nouvelle question",
-				answer: "-",
-				keyboard: "-"
-			},
-		)
-		.then((res) => {
-			// Add the question.
-			theQuestions.value.push({
-				...res.data,
-			})
-
-			// Go to the new question.
-			router.visit(route('admin.questions.edit', {question: res.data.id}))
-		})
-}
 </script>
 <template>
 	<div
@@ -128,18 +37,18 @@ const addQuestion = function () {
 		<sc-button
 			type="add"
 			xs
-			@click="addQuestion"
+			@click="questionsAdmin.add"
 		>
 			<i class="bi bi-plus-lg" />
 		</sc-button>
 		<div class="flex-1 flex gap-2">
 			<form-maker
-				v-model="thePost.questionsGrid"
-				:axios="{ model: 'Post', id: post.id, column: 'questionsGrid' }"
+				v-model="grid"
 				class="flex-1"
 				inline-label
 				label="grille"
 				sm
+				@enter="questionsAdmin.updateGrid(grid)"
 			/>
 		</div>
 
@@ -151,7 +60,7 @@ const addQuestion = function () {
 				xs
 				outline
 				type="admin"
-				@click="addDisplayIf"
+				@click="questionsAdmin.displayIf.auto"
 			>
 				<i class="bi bi-bar-chart" />
 			</sc-button>
@@ -159,7 +68,7 @@ const addQuestion = function () {
 				xs
 				outline
 				type="admin"
-				@click="removeDisplayIf"
+				@click="questionsAdmin.displayIf.remove"
 			>
 				<i class="bi bi-trash" />
 			</sc-button>
@@ -174,10 +83,10 @@ const addQuestion = function () {
 				xs
 				outline
 				type="admin"
-				@click="showAnswers"
+				@click="questionsAdmin.answers.show"
 			>
 				<i
-					v-if="isAnswersShown"
+					v-if="questionsAdmin.answers.isShown"
 					class="bi bi-eye"
 				/>
 				<i
@@ -189,7 +98,7 @@ const addQuestion = function () {
 				xs
 				outline
 				type="admin"
-				@click="resetAnswers"
+				@click="questionsAdmin.answers.reset"
 			>
 				<i class="bi bi-trash" />
 			</sc-button>

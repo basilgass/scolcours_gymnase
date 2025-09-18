@@ -2,19 +2,24 @@
 	setup
 	lang="ts"
 >
-import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
-import { router } from "@inertiajs/vue3"
+import {router} from "@inertiajs/vue3"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 import axios from "axios"
-import { PropType } from "vue"
-import type { QuizzInterface } from "@/types/modelInterfaces"
+import type {QuizzInterface, QuizzSessionInterface, TeamInterface} from "@/types/modelInterfaces"
 import ScButton from "@/Components/Ui/scButton.vue"
+import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
+import {AxiosErrorMessage, AxiosResponseModel} from "@/types"
+import {computed, onMounted, reactive, ref} from "vue"
+import QuizzSessionItem from "@/Components/Quizzs/QuizzSessionItem.vue"
+import Card from "@/Components/Ui/Card.vue"
+import FormMaker from "@/Components/Form/FormMaker.vue"
 
-defineOptions({ layout: LayoutMain })
+type QuizzSessionsType = Record<number, QuizzSessionInterface[]>
+defineOptions({layout: LayoutMain})
 
-defineProps({
-	quizzs: { type: Object as PropType<QuizzInterface[]>, required: true },
-})
+const props = defineProps<{
+	quizzs: QuizzInterface[]
+}>()
 
 function createQuizz() {
 	axios.post(route("api.admin.quizzs.store"))
@@ -23,47 +28,187 @@ function createQuizz() {
 			router.visit(route("admin.quizzs.quizz", [res.data]))
 		})
 }
+
+const sessions = reactive<QuizzSessionsType>({})
+
+const activeSessions = computed<QuizzSessionsType>(() => {
+	const active: QuizzSessionsType = {}
+
+	Object.keys(sessions).forEach(key => {
+		active[key] = sessions[key]
+			.filter(session => session.status !== 'outro')
+	})
+
+	return active
+})
+
+const pastSessions = computed<QuizzSessionsType>(() => {
+	const past: QuizzSessionsType = {}
+
+	Object.keys(sessions).forEach(key => {
+		past[key] = sessions[key]
+			.filter(session => session.status === 'outro')
+	})
+
+	return past
+})
+
+function loadSessions(id: number) {
+
+	axios
+		.get(route('api.admin.quizzs.sessions.index', {quizz: id}))
+		.then((res: AxiosResponseModel<QuizzSessionInterface[]>) => {
+			sessions[id] = res.data.filter(session => session.current !== 0)
+		})
+		.catch((err: AxiosErrorMessage) => {
+			console.log(err.response.data.message)
+		})
+}
+
+function createSession(id: number) {
+	axios.post(
+		route('api.admin.quizzs.sessions.store', {quizz: id}),
+		{
+			team: team.value.id
+		}
+	).then((res: AxiosResponseModel<QuizzSessionInterface>) => {
+		if (!Object.hasOwn(sessions, id)) {
+			sessions[id] = []
+		}
+
+		sessions[id].push(res.data)
+
+	}).catch((res: AxiosErrorMessage) => {
+		console.log(res)
+	})
+}
+
+function destroySession(quizzId: number, sessionId: number) {
+	axios.delete(
+		route('api.admin.sessions.destroy', {session: sessionId})
+	).then((res: AxiosResponseModel<[number, boolean]>) => {
+		sessions[quizzId] = sessions[quizzId]
+			.filter(session => session.id !== sessionId)
+	})
+}
+
+const team = ref<TeamInterface>(null)
+
+onMounted(() => {
+	props.quizzs.forEach(quizz => {
+		sessions[quizz.id] = quizz.sessions
+	})
+})
 </script>
 
 
 <template>
-	<main class="scolcours-container">
-		<section>
-			<h1 class="text-2xl pt-10">
-				Quizz
-			</h1>
-			<div class="flex justify-between pb-10">
-				<h2 class="text-xl">
-					Administration
-				</h2>
+	<section>
+		<article-title
+			title="quizz"
+			:return-link="{
+				url: route('admin.index'),
+				label: 'administration'
+			}"
+		/>
 
+		<div class="flex">
+			<div />
+			<div class="flex-1" />
+			<div>
 				<sc-button
 					type="add"
+					xs
 					@click="createQuizz"
 				>
 					Nouveau quizz
 				</sc-button>
 			</div>
+		</div>
 
-			<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5">
-				<InertiaLink
-					v-for="quizz of quizzs"
-					:key="quizz.id"
-					:href="route('admin.quizzs.quizz', [quizz.id])"
-					class="flex flex-col gap-5
-				cursor-pointer
-				bg-content
-				border rounded
-				px-5 py-5
-				hover:scale-105 transition-transform"
-				>
-					<h3
-						v-katex.auto="quizz.title"
-						class="text-lg font-semibold"
+		<div class="mt-10">
+			<card
+				v-for="quizz of quizzs"
+				:key="quizz.id"
+			>
+				<template #header>
+					<div class="flex justify-between">
+						<h2
+							v-katex.auto="quizz.title"
+							class="font-xl"
+						/>
+						<div class="flex gap-3">
+							<sc-button
+								type="edit"
+								xs
+								:href="route('admin.quizzs.edit', {quizz: quizz.id})"
+								icon
+							>
+								éditer
+							</sc-button>
+						</div>
+					</div>
+				</template>
+
+
+				<div class="flex justify-between">
+					<form-maker
+						type="team"
+						label="classes"
+						v-model="team"
 					/>
-					<markdown-it :text="quizz.body" />
-				</InertiaLink>
-			</div>
-		</section>
-	</main>
+
+					<sc-button
+						type="add"
+						xs
+						@click="createSession(quizz.id)"
+						v-if="quizz.questions_count && team!==null"
+					>
+						créer une session
+					</sc-button>
+				</div>
+
+				<div>
+					<div
+						class="space-y-3"
+					>
+						<quizz-session-item
+							v-for="session in activeSessions[quizz.id]"
+							:key="`session-${session.id}`"
+							:session
+							@destroy="destroySession(quizz.id, session.id)"
+						/>
+					</div>
+				</div>
+
+				<template #footer>
+					<details>
+						<summary
+							class="cursor-pointer"
+							@click="loadSessions(quizz.id)"
+						>
+							charger les anciennes sessions
+						</summary>
+						<div
+							v-if="pastSessions[quizz.id]?.length>0"
+							class="space-y-3"
+						>
+							<quizz-session-item
+								:session
+								v-for="session in pastSessions[quizz.id]"
+								:key="`session-${session.id}`"
+								@destroy="destroySession(quizz.id, session.id)"
+							/>
+						</div>
+						<div
+							v-else
+							class="text-center min-h-[3em]"
+						>
+							Aucune session
+						</div>
+					</details>
+				</template>
+			</card>
+		</div>
+	</section>
 </template>

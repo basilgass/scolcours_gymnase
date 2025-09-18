@@ -8,6 +8,7 @@ import FormulaSearch from "@/Components/FormulaSearch.vue"
 import DialogModal from "@/Components/Ui/DialogModal.vue"
 import LessonAsideScore from "@/Components/Courses/LessonAsideScore.vue"
 import {lessonableModel} from "@/types/lessonInterfaces.ts"
+import {Link as InertiaLink} from "@inertiajs/vue3"
 
 const props = defineProps<{
 	course: CourseInterface,
@@ -218,6 +219,34 @@ const nextCounter = computed(() => {
 				:theme-id="course.theme_id"
 			/>
 		</dialog-modal>
+
+		<div
+			class="sm:hidden
+				fixed bottom-0 left-0 w-full
+				grid grid-cols-3 items-center p-3
+				bg-content text-sm border-content border-t-2 z-20"
+		>
+			<div @click="showFormularDialog=true">
+				<i
+					class="bi bi-book-half mr-1"
+				/> formulaire
+			</div>
+
+			<InertiaLink
+				:href="route('students.courses.show', {course: course.slug})"
+				class="text-center"
+			>
+				<i class="bi bi-house" />
+			</InertiaLink>
+
+			<InertiaLink
+				v-if="nextLesson"
+				:href="route('students.lessons.show', {course: course.slug, lesson: nextLesson.id})"
+				class="text-right"
+			>
+				suivant <i class="bi bi-chevron-right" />
+			</InertiaLink>
+		</div>
 	</aside>
 </template>
 

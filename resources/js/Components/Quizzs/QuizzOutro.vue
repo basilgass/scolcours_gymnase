@@ -2,30 +2,29 @@
 	setup
 	lang="ts"
 >
-import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
-import ScButton from "@/Components/Ui/scButton.vue"
+import {QuizzInterface} from "@/types/modelInterfaces.ts"
+import {computed} from "vue"
+import BlockShow from "@/Components/Blocks/BlockShow.vue"
 
-const props = defineProps({
-	quizz: {type: Object, required: true}
+const props = defineProps<{
+	quizz: QuizzInterface
+}>()
+
+const outro = computed(() => {
+	const block = props.quizz.outro
+	block.title = props.quizz.title
+
+	return block
 })
 </script>
 
 <template>
-	<article class="grid place-items-center min-h-screen">
-		<div>
-			<div class="grid grid-cols-1 gap-4">
-				<h1 class="text-lg md:text-xl lg:text-2xl">
-					{{ props.quizz.title }}
-				</h1>
-
-				<markdown-it :text="props.quizz.outro" />
-			</div>
-
-			<sc-button
-				href="/"
-			>
-				<i class="bi bi-house-door" /> Retour à l'accueil
-			</sc-button>
+	<article class="grid place-items-center h-screen w-screen p-5">
+		<div class="space-y-4 w-full max-w-2xl">
+			<block-show
+				class="min-h-[24rem]"
+				:block="outro"
+			/>
 		</div>
 	</article>
 </template>

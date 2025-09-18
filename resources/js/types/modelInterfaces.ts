@@ -312,17 +312,27 @@ export interface PostQuestionsForOneUserStatsInterface {
 
 export interface QuizzInterface {
 	id: number
-	slug: string
 	title: string
-	body: string
+	intro: BlockInterface,
+	outro: BlockInterface,
+	questions_count: number,
+	chapter: ChapterInterface,
+	sessions: QuizzSessionInterface[]
 }
 
 export interface QuizzSessionInterface {
+	id : number,
 	shortcode: string
 	quizz: {
+		id: number
 		title: string
-		theme_id: number
-	}
+	},
+	enable: boolean,
+	current: number,
+	status: 'intro' | 'outro' | 'question' | 'error',
+	total: number,
+	questions: QuestionInterface[],
+	users: UserInterface[]
 }
 
 export interface TranslationLanguageInterface {

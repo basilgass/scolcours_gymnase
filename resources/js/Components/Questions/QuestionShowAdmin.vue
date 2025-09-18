@@ -13,12 +13,14 @@ const flash = inject<flashInterface>("flash")
 
 const props = defineProps<{
 	question: QuestionInterface,
-	ids: number[]
+	questions: Partial<QuestionInterface>[]
 }>()
 
 const emits = defineEmits<{
 	removed: []
 }>()
+
+const questionsIds = computed(()=>props.questions.map((q) => q.id))
 
 
 const theQuestion = ref(props.question)
@@ -133,7 +135,7 @@ function deleteQuestion() {
 				</template>
 
 				<div
-					v-for="q in props.ids"
+					v-for="q in questionsIds"
 					:key="`display-if-${q}`"
 					class="hover:bg-gray-100 px-3 py-2 font-code"
 				>

@@ -15,7 +15,7 @@ import QuestionFooter from "@/Components/Questions/Parts/QuestionFooter.vue"
 import QuestionBlock from "@/Components/Questions/Parts/QuestionBlock.vue"
 import QuestionAnswer from "@/Components/Questions/Parts/QuestionAnswer.vue"
 import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
-import {provide, ref, useTemplateRef} from "vue"
+import {onMounted, provide, ref, useTemplateRef} from "vue"
 import type {QuestionInterface} from "@/types/modelInterfaces.ts"
 import {
 	questionDataInterface,
@@ -31,16 +31,18 @@ const props = withDefaults(
 		question: QuestionInterface,
 		locked?: boolean,
 		showInput?: questionUserInputDisplayType | '' | boolean,
-		singleAnswer?: boolean,
 		isDynamic?: boolean,
-		editorMode?: boolean
+		editorMode?: boolean,
+		blockOnly?: boolean,
+		autoAnswer?: boolean
 	}>(),
 	{
 		locked: false,
 		showInput: false,
-		singleAnswer: false,
 		isDynamic: false,
-		editorMode: false
+		editorMode: false,
+		display: false,
+		autoAnswer: false
 	}
 )
 
@@ -92,9 +94,11 @@ provide<questionDataInterface>("questionData", questionData)
 
 async function loadAnswers(show: boolean) {
 	questionAnswerWrapper.value.getKeyboards().forEach((keyboard, index) => {
-		keyboard.setInput(show ?
-			questionData.answers.values.value[index] :
-			'')
+		keyboard.setInput(
+			show
+				? questionData.answers.values.value[index]
+				: ''
+		)
 			.then((x) => {
 				questionData.user.answers.value[index] = x
 			})
@@ -107,7 +111,13 @@ defineExpose({
 	questionData
 })
 
-
+onMounted(() => {
+	if (props.autoAnswer) {
+		setTimeout(() => {
+			loadAnswers(true)
+		}, 200)
+	}
+})
 </script>
 
 <template>
@@ -137,13 +147,17 @@ defineExpose({
 		</transition>
 
 		<!-- Header: number, title and admin -->
-		<question-header :question />
+		<question-header
+			v-show="!blockOnly"
+			:question
+		/>
 
 		<!-- the body and illustration of question (as block) -->
 		<question-block />
 
 		<!-- user input (format, answer selector, keyboard) -->
 		<hr
+			v-show="!blockOnly"
 			:class="{
 				'bg-content':
 					!questionData.user.score.value?.is_resolved,
@@ -153,6 +167,7 @@ defineExpose({
 		>
 
 		<question-answer
+			v-show="!blockOnly"
 			ref="questionAnswerWrapper"
 			v-model:show-input="showUserInput"
 			@validate="$emit('validate', $event)"
@@ -160,6 +175,7 @@ defineExpose({
 
 		<!-- Footer: show answer, admin answer quick edition -->
 		<question-footer
+			v-show="!blockOnly"
 			@load-answers="loadAnswers"
 		/>
 	</article>

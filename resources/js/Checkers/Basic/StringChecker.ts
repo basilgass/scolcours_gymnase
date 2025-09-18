@@ -1,5 +1,5 @@
-import {CheckerAbstract} from "../CheckerAbstract";
-import {CHECKERS} from "../checker.config";
+import {CheckerAbstract} from "../CheckerAbstract"
+import {CheckerResult, CHECKERS} from "../checker.config"
 
 const name = "string"
 const description = "string"
@@ -12,5 +12,9 @@ export class StringChecker extends CheckerAbstract {
 	}
 
 	readonly format = "réponse textuelle"
+
+	checkValue(value: string): CheckerResult {
+		return this.makeCheckerResult("La réponse n'est pas correcte")
+	}
 
 }

@@ -3,27 +3,33 @@
 	setup
 >
 
-import { computed, onBeforeUnmount, onMounted, PropType, ref } from "vue"
+import {computed, onBeforeUnmount, onMounted, ref} from "vue"
 import QuizzIntro from "@/Components/Quizzs/QuizzIntro.vue"
 import QuizzOutro from "@/Components/Quizzs/QuizzOutro.vue"
-import { router } from "@inertiajs/vue3"
+import {router} from "@inertiajs/vue3"
 import QuizzQuestionProjection from "@/Components/Quizzs/QuizzQuestionProjection.vue"
 import LayoutProjection from "@/Layouts/LayoutProjection.vue"
-import { resultInterface } from "@/types"
+import {QuizzInterface, QuizzSessionInterface, ScoreInterface} from "@/types/modelInterfaces.ts"
+import {ScoreQuestionDataInterface} from "@/types/scoreInterfaces.ts"
 
-defineOptions({ layout: LayoutProjection })
-let props = defineProps({
-	quizzSession: { type: Object, required: true },
-	results: { type: Object as PropType<resultInterface[]>, default: () => [] },
-	usersCount: { type: Number, required: true }
-}),
-	interval = null,
-	updateCounter = ref(0),
-	updateQuizz = function () {
-		router.reload()
-		updateCounter.value++
-	},
-	liveQuizz = computed(() => props.quizzSession.data)
+defineOptions({layout: LayoutProjection})
+
+let props = defineProps<{
+	quizz: QuizzInterface,
+	quizzSession: QuizzSessionInterface,
+	scores: ScoreInterface<ScoreQuestionDataInterface>[],
+	usersCount: number
+}>()
+
+let interval = null
+const updateCounter = ref(0)
+
+function updateQuizz() {
+	router.reload()
+	updateCounter.value++
+}
+
+const liveQuizz = computed(() => props.quizzSession)
 
 onMounted(() => {
 	interval = setInterval(() => updateQuizz(), 2000)
@@ -37,11 +43,12 @@ onBeforeUnmount(() => {
 <template>
 	<section
 		v-if="liveQuizz.enable"
-		class="px-5"
+		class="pt-10"
 	>
-		<div
-			v-if="liveQuizz.status === 'wait' || liveQuizz.status === 'question'"
-			class="font-lg bg-black text-white mb-10 flex justify-between items-baseline fixed top-0 left-0 w-full px-5 py-2"
+		<header
+			class="font-lg bg-black text-white
+			flex justify-between items-baseline
+			fixed top-0 left-0 w-full px-5 py-2"
 		>
 			<h2
 				v-katex.auto="liveQuizz.quizz.title"
@@ -50,23 +57,25 @@ onBeforeUnmount(() => {
 			<div class="text-xs text-gray-100">
 				Question {{ liveQuizz.current }} sur {{ liveQuizz.total }}
 			</div>
-		</div>
+		</header>
 
 		<quizz-intro
 			v-if="liveQuizz.status === 'intro'"
-			:quizz="liveQuizz.quizz"
+			:quizz
 		/>
 		<quizz-outro
 			v-else-if="liveQuizz.status === 'outro'"
-			:quizz="liveQuizz.quizz"
+			:quizz
 		/>
+
 		<quizz-question-projection
 			v-else
 			:quizz-session="liveQuizz"
-			:results="props.results"
+			:scores="props.scores"
 			:users-count="props.usersCount"
 		/>
 	</section>
+
 	<section
 		v-else
 		class="w-full min-h-[100vh] grid place-items-center"
@@ -75,7 +84,6 @@ onBeforeUnmount(() => {
 			<div>Le quizz n'est pas activé.</div>
 
 			<InertiaLink
-				as="button"
 				class="inline-block hover:font-semibold"
 				href="/"
 			>

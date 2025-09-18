@@ -1,6 +1,6 @@
-import {CheckerAbstract} from "../CheckerAbstract";
-import {NumExp} from "pimath";
-import {CHECKERS} from "../checker.config";
+import {CheckerAbstract} from "../CheckerAbstract"
+import {Fraction, NumExp} from "pimath"
+import {CheckerResult, CHECKERS} from "../checker.config"
 
 const name = "exact"
 const description = `exact
@@ -22,7 +22,7 @@ export class ExactChecker extends CheckerAbstract {
 
 	readonly format = "réponse sous forme exacte, réduite"
 
-	override checkValue(value: string): string {
+	override checkValue(value: string): CheckerResult {
 		// Le résultat est exactement ce qui est demandé
 		const stringAnswer = value.toString(),
 			asciiAnswer = stringAnswer.startsWith("#")
@@ -36,7 +36,7 @@ export class ExactChecker extends CheckerAbstract {
 
 		// Maybe with the reformating, the answers is exactly the same.
 		if (expectedExpression === givenExpression) {
-			return  ""
+			return this.makeCheckerResult()
 		}
 
 		// Parse the formated answers as a number
@@ -49,21 +49,36 @@ export class ExactChecker extends CheckerAbstract {
 				givenNumber.evaluate().toFixed(10)
 			) {
 				if (this.isSoft) {
-					return  ""
+					return this.makeCheckerResult()
 				}
 
 				const message: string[] = [
 					"La réponse donnée est juste, mais pas sous la forme attendue.",
 				]
 
+				// Contrôle si c'est une fraction.
+				if(isFraction(this.answer) && isFraction(value)){
+					const F = new Fraction(value)
+					if(!F.isReduced()){
+						message.push('Il faut réduire la fraction.')
+					}
+				}
+
 				if (value.includes("/sqrt")) {
 					message.push("Il y a encore une racine au dénominateur")
 				}
-				return message.join("<br/>")
+
+				return this.makeCheckerResult(message.join("<br/>"), true)
 			}
 		}
 
-		return  "La réponse donnée n'est pas juste."
+		return this.makeCheckerResult("La réponse donnée n'est pas juste.")
 	}
 
+}
+
+
+function isFraction(value: string){
+	const [num, den] = value.split('/')
+	return !isNaN(+num) && (den===undefined || !isNaN(+den))
 }

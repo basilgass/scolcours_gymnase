@@ -16,4 +16,8 @@ export class TypeChecker extends CheckerAbstract {
 	check(expected: string, given: string): CheckerResult {
 		return super.check(expected.toUpperCase(), given.toUpperCase())
 	}
+
+	checkValue(value: string): CheckerResult {
+		return this.makeCheckerResult("La réponse n'est pas correcte")
+	}
 }

@@ -1,5 +1,5 @@
-import {CheckerAbstract} from "../CheckerAbstract";
-import {CHECKERS} from "../checker.config";
+import {CheckerAbstract} from "../CheckerAbstract"
+import {CheckerResult, CHECKERS} from "../checker.config"
 
 const name = "study"
 const description = `study
@@ -17,15 +17,15 @@ export class StudyChecker extends CheckerAbstract {
 
 	readonly format = "Tracer le graphe"
 
-	override checkValue(value: string): string {
+	override checkValue(value: string): CheckerResult {
 		const arrayAnswer = value.split(",").sort(),
 			arrayExpected = this.answer.split(",").sort(),
 			d = arrayExpected.length - arrayAnswer.length
 
 		if (d > 0) {
-			return `il manque ${d} élément${d > 1 ? "s" : ""}`
+			return this.makeCheckerResult(`il manque ${d} élément${d > 1 ? "s" : ""}`)
 		} else if (d < 0) {
-			return `il y a ${-d} élément${-d > 1 ? "s" : ""} en trop`
+			return this.makeCheckerResult(`il y a ${-d} élément${-d > 1 ? "s" : ""} en trop`)
 		}
 
 		const erreurs = [],
@@ -42,14 +42,14 @@ export class StudyChecker extends CheckerAbstract {
 		}
 
 		if (erreurs.length > 0) {
-			return `il y a ${erreurs.length} erreur${erreurs.length > 1 ? "s" : ""}`
+			return this.makeCheckerResult(`il y a ${erreurs.length} erreur${erreurs.length > 1 ? "s" : ""}`)
 		}
 
 		if (traceErrors.length > 0) {
-			return `il y a ${traceErrors.length} erreur${traceErrors.length > 1 ? "s" : ""} dans le tracé`
+			return this.makeCheckerResult(`il y a ${traceErrors.length} erreur${traceErrors.length > 1 ? "s" : ""} dans le tracé`)
 		}
 
-		return ""
+		return this.makeCheckerResult()
 
 	}
 

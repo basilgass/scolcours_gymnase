@@ -1,135 +1,91 @@
 <script setup lang="ts">
-import { computed } from "vue"
-import { router } from "@inertiajs/vue3"
-import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
+import {computed, ref} from "vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
+import {QuizzSessionInterface} from "@/types/modelInterfaces.ts"
+import axios from "axios"
+import Card from "@/Components/Ui/Card.vue"
+import QuestionShow from "@/Components/Questions/QuestionShow.vue"
+import {AxiosResponseModel} from "@/types"
 
-defineOptions({ layout: LayoutMain })
+defineOptions({layout: LayoutMain})
 
-const props = defineProps({
-		quizzSession: { type: Object, required: true },
-	}),
-	liveQuizz = computed(() => props.quizzSession.data)
+const props = defineProps<{
+	quizzSession: QuizzSessionInterface
+}>()
+const liveQuizz = ref<QuizzSessionInterface>(props.quizzSession)
 
-const updateCurrent = function (index) {
-	router.post(
-		route("api.admin.quizzs.sessions.updateCurrent", [liveQuizz.value.shortcode]),
-		{ index },
-		{
-			preserveState: true,
-			preserveScroll: true,
-		}
-	)
+const updateCurrent = function (index: number) {
+	if (index === liveQuizz.value.current) {
+		return
+	}
+
+	axios.patch(
+		route("api.admin.quizzs.sessions.updateCurrent", {quizzSession: liveQuizz.value.id}),
+		{index},
+	).then((res: AxiosResponseModel<QuizzSessionInterface>) => {
+		liveQuizz.value = res.data
+	})
 }
-const updateEnable = function (enable) {
-	router.post(
-		route("api.admin.quizzs.sessions.updateEnable", [liveQuizz.value.shortcode]),
-		{ enable },
-		{
-			preserveState: true,
-			preserveScroll: true,
-		}
-	)
-}
+
+const outroIndex = computed(() => liveQuizz.value.questions.length + 1)
+
+const toc = computed(() => {
+	return [
+		"introduction",
+		...liveQuizz.value.questions.map(question => question.block.title || "sans titre"),
+		"récapitulatif"
+	]
+})
+
+// REFACTOR: changer le QuizzDashboard pour être plus efficient et facile à utiliser.
 </script>
 
 <template>
-	<section class="py-10">
-		<div class="bg-white rounded-sm border border-slate-200 p-4">
-			<h2
-				v-katex.auto="liveQuizz.quizz.title"
-				class="font-semibold text-lg mb-3"
-			/>
-			<markdown-it :text="liveQuizz.quizz.body" />
-		</div>
+	<section class="py-10 space-y-3">
+		<div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+			<card>
+				<template #header>
+					<h2
+						v-katex.auto="liveQuizz.quizz.title"
+						class="font-semibold text-lg"
+					/>
+					<h3 class="font-code">
+						{{ liveQuizz.current }} - {{ liveQuizz.status }}
+					</h3>
+				</template>
 
-		<div class="max-w-xl mx-auto h-32 my-20">
-			<button
-				v-if="liveQuizz.enable"
-				class="btn is-active w-full h-full"
-				@click="updateEnable(false)"
-			>
-				En cours...
-			</button>
-			<button
-				v-else
-				class="btn btn-success w-full h-full"
-				@click="updateEnable(true)"
-			>
-				Démarrer
-			</button>
-		</div>
-
-		<table class="max-w-xl mx-auto mt-10">
-			<tr
-				class="border-y border-slate-200"
-				:class="liveQuizz.current === 0 ? 'is-active' : ''"
-			>
-				<td class="h-16 px-4 w-full">
-					Introduction
-				</td>
-				<td class="w-64">
-					<button
-						v-show="liveQuizz.current !== 0"
-						class="btn h-full w-64 bg-white"
-						@click="updateCurrent(0)"
+				<div class="grid grid-cols-1 gap-2">
+					<div
+						v-for="(title, index) in toc"
+						:key="`toc-${index}`"
+						class="flex items-center"
 					>
-						set
-					</button>
-				</td>
-			</tr>
-			<tr
-				v-for="(question, index) in liveQuizz.questions"
-				:key="`q-${question.id}`"
-				class="border-y border-slate-200"
-				:class="liveQuizz.current === index + 1 ? 'is-active' : ''"
-			>
-				<td class="h-16 px-4">
-					{{ question.block.title || "sans titre" }}
-				</td>
-				<td class="w-64">
-					<div class="flex gap-3">
-						<button
-							v-show="liveQuizz.current !== (index+1)"
-							class="btn h-full w-64 bg-white"
-							@click="updateCurrent(index + 1)"
-						>
-							set
-						</button>
-						<button
-							class="btn h-full w-64 bg-white"
-						>
-							réponses
-						</button>
-						<button
-							class="btn h-full w-64 bg-white"
-						>
-							solution
-						</button>
+						<div
+							class="grid grid-cols-2 py-1 cursor-pointer rounded flex-1"
+							:class="{
+								'bg-blue-100 border border-blue-400  px-3 font-semibold': liveQuizz.current === index
+							}"
+							@click="updateCurrent(index)"
+							v-katex.auto="title"
+						/>
+						<div class="pl-3 w-[80px] flex justify-around items-center opacity-20">
+							<i class="cursor-pointer bi bi-123" />
+							<i class="cursor-pointer bi bi-bar-chart" />
+							<i class="cursor-pointer bi bi-cloud" />
+						</div>
 					</div>
-				</td>
-			</tr>
-			<tr
-				class="border-y border-slate-200"
-				:class="
-					liveQuizz.current > liveQuizz.questions.length
-						? 'is-active'
-						: ''
-				"
-			>
-				<td class="h-16 px-4">
-					Récapitulatif
-				</td>
-				<td class="w-64">
-					<button
-						v-show="liveQuizz.current !== (liveQuizz.questions.length + 1)"
-						class="btn h-full w-64 bg-white"
-						@click="updateCurrent(liveQuizz.questions.length + 1)"
-					>
-						set
-					</button>
-				</td>
-			</tr>
-		</table>
+				</div>
+			</card>
+
+			<div v-if="liveQuizz.status==='question'">
+				<question-show
+					:question="liveQuizz.questions[liveQuizz.current-1]"
+					editor-mode
+					class="max-w-lg mx-auto"
+					block-only
+					auto-answer
+				/>
+			</div>
+		</div>
 	</section>
 </template>

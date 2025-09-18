@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Traits\HasQuestionsTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 /**
  * App\Models\Quizz
@@ -54,5 +55,10 @@ class Quizz extends Model
 	public function theme()
 	{
 		return $this->hasOneThrough(Theme::class, Chapter::class, 'id', 'id', 'chapter_id', 'id');
+	}
+
+	public function blocks(): MorphMany
+	{
+		return $this->morphMany(Block::class, 'blockable')->orderBy('order')->orderBy('id');
 	}
 }

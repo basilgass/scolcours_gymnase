@@ -1,23 +1,34 @@
 <script setup lang="ts">
-import { computed, PropType } from "vue"
+import {computed} from "vue"
 import InfoTile from "@/Components/Ui/InfoTile.vue"
-import { resultInterface } from "@/types"
+import {QuizzSessionInterface, ScoreInterface} from "@/types/modelInterfaces.ts"
+import {ScoreQuestionDataInterface} from "@/types/scoreInterfaces.ts"
 
 
-const props = defineProps({
-		quizzSession: { type: Object, required: true },
-		usersCount: { type: Number, required: true },
-		results: { type: Object as PropType<resultInterface[]>, required: true },
-	}),
-	nbAnswers = computed(() => props.results.length),
-	nbCorrect = computed(
-		() => props.results.filter((x) => x.pivot.result).length
-	),
-	ratioCorrect = computed(() => {
-		return nbAnswers.value > 0
-			? ((nbCorrect.value / nbAnswers.value) * 100).toFixed()
-			: " - - "
-	})
+const props = defineProps<{
+	quizzSession: QuizzSessionInterface,
+	usersCount: number,
+	scores: ScoreInterface<ScoreQuestionDataInterface>[]
+}>()
+
+const nbAnswers = computed(() => props.scores.filter(score => score.data?.answers?.length > 0).length)
+const MIN_ANSWERS_BEFORE_DISPLAY = Math.min(Math.floor(props.usersCount / 2), 10)
+
+const nbCorrect = computed(
+	() => props.scores.filter((score) => score.is_resolved).length
+)
+
+const ratioCorrect = computed(() => {
+	return nbAnswers.value > 0
+		? ((nbCorrect.value / nbAnswers.value) * 100).toFixed()
+		: " - - "
+})
+
+const answers = computed(() => {
+	const answeredScores = props.scores.filter(score => score.data !== null)
+
+	return [...new Set(answeredScores.map(score => score.data.answers[0]))]
+})
 
 </script>
 
@@ -39,7 +50,7 @@ const props = defineProps({
 			</info-tile>
 
 			<info-tile
-				v-if="nbAnswers > props.usersCount * 0.1"
+				v-if="nbAnswers >= MIN_ANSWERS_BEFORE_DISPLAY"
 				class="col-span-1 md:col-span-2"
 			>
 				<template #title>
@@ -47,9 +58,9 @@ const props = defineProps({
 				</template>
 				<div class="flex flex-wrap gap-10">
 					<div
-						v-for="(result, index) in props.results"
+						v-for="(answer, index) in answers"
 						:key="`result-${index}`"
-						v-katex="result.pivot.answer"
+						v-katex.ascii="answer"
 					/>
 				</div>
 			</info-tile>

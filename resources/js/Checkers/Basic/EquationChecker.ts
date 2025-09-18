@@ -1,5 +1,5 @@
 import {Equation} from "pimath"
-import {CHECKERS, checkMinMaxEquation, checkReducedEquation} from "@/Checkers"
+import {CheckerResult, CHECKERS, checkMinMaxEquation, checkReducedEquation} from "@/Checkers"
 import {CheckerAbstract} from "@/Checkers/CheckerAbstract"
 import {checkCircle} from "@/Checkers/checkerCheckFunctions.ts"
 
@@ -71,7 +71,7 @@ export class EquationChecker extends CheckerAbstract {
 
 	}
 
-	override checkValue(value: string): string {
+	override checkValue(value: string): CheckerResult {
 
 		const A = new Equation(value)
 		const Q = new Equation(this.answer)
@@ -84,28 +84,34 @@ export class EquationChecker extends CheckerAbstract {
 
 		// L'expression de gauche est soit égale, soit opposée.
 		if (!A2.isLinearTo(Q2)) {
-			return "l'équation n'est pas juste."
+			return this.makeCheckerResult("l'équation n'est pas juste.")
 		}
 
 		if (this.isCanonical) {
 			if (!A.right.isZero() && !A.left.isZero()) {
-				return "l'équation n'est pas sous sa forme canonique."
+				return this.makeCheckerResult("l'équation n'est pas sous sa forme canonique.", true)
 			}
 		}
 
 		if (this.isCentreRayon) {
-			return checkCircle(value, A)
+			return this.makeCheckerResult(
+				checkCircle(value, A)
+			)
 		}
 
 		if (this.isSommet) {
-			return checkMinMaxEquation(value, this.answer, this.secondaryChecker)
+			return this.makeCheckerResult(
+				checkMinMaxEquation(value, this.answer, this.secondaryChecker)
+			)
 		}
 
 		if (this.isReduced) {
-			return checkReducedEquation(A)
+			return this.makeCheckerResult(
+				checkReducedEquation(A)
+			)
 		}
 
 		// If all tests passes, it is correct !
-		return ""
+		return this.makeCheckerResult()
 	}
 }

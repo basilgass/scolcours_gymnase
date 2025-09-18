@@ -49,15 +49,15 @@ Route::middleware('api')
 		     ->as('admin.')
 	          ->group(function () {
 
+		          Route::apiResource('teams', TeamApiController::class)
+		               ->only('index', 'show', 'store', 'destroy');
+
 		          Route::prefix('teams')
 		               ->as('teams.')
 		               ->group(function () {
+
 			               Route::patch('/{team}/toggle/{user}', [TeamApiController::class, "toggle"])
 			                    ->name('toggleUser');
-			               Route::post('/store', [TeamApiController::class, "store"])
-			                    ->name('store');
-			               Route::delete('/{team}/destroy', [TeamApiController::class, "destroy"])
-			                    ->name('destroy');
 
 						   Route::get('/{team}/users', [TeamApiController::class, 'users'])
 							   ->name('users');

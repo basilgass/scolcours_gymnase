@@ -3,27 +3,30 @@
 	lang="ts"
 >
 
-import { onBeforeUnmount, onMounted, ref } from "vue"
+import {onBeforeUnmount, onMounted, ref} from "vue"
 import QuizzQuestion from "@/Components/Quizzs/QuizzQuestion.vue"
 import QuizzIntro from "@/Components/Quizzs/QuizzIntro.vue"
 import QuizzOutro from "@/Components/Quizzs/QuizzOutro.vue"
-import { router } from "@inertiajs/vue3"
+import {router} from "@inertiajs/vue3"
 import QuizzWait from "@/Components/Quizzs/QuizzWait.vue"
 import QuizzHeader from "@/Components/Quizzs/QuizzHeader.vue"
 import LayoutProjection from "@/Layouts/LayoutProjection.vue"
+import {QuestionInterface, QuizzInterface, QuizzSessionInterface} from "@/types/modelInterfaces.ts"
 
-defineOptions({ layout: LayoutProjection })
-let props = defineProps({
-	quizzSession: { type: Object, required: true },
-	question: { type: [Object, null], required: true },
-	total: { type: Number, required: true }
-}),
-	interval = null,
-	updateCounter = ref(0),
-	updateQuizz = function () {
-		router.reload()
-		updateCounter.value++
-	}
+defineOptions({layout: LayoutProjection})
+
+let props = defineProps<{
+	quizz: QuizzInterface,
+	quizzSession: QuizzSessionInterface,
+	question?: QuestionInterface
+}>()
+let interval = null
+const updateCounter = ref(0)
+
+function updateQuizz() {
+	router.reload()
+	updateCounter.value++
+}
 
 onMounted(() => {
 	interval = setInterval(() => updateQuizz(), 2000)
@@ -35,35 +38,32 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-	<section v-if="props.quizzSession.enable">
+	<section
+		v-if="quizzSession.enable"
+	>
 		<!-- En tête lorsque les questions sont en cours -->
 		<quizz-header
-			v-if="props.quizzSession.status === 'wait' || props.quizzSession.status === 'question'"
-			:quizz-session="props.quizzSession"
+			v-if="quizzSession.status === 'question'"
+			:quizz-session="quizzSession"
 		/>
 
-		<section class="mt-12 px-5">
+		<section class="pt-24 pb-8">
 			<quizz-intro
-				v-if="props.quizzSession.status === 'intro'"
-				:quizz="props.quizzSession.quizz"
+				v-if="quizzSession.status === 'intro'"
+				:quizz
 			/>
 			<quizz-outro
-				v-else-if="props.quizzSession.status === 'outro'"
-				:quizz="props.quizzSession.quizz"
-			/>
-			<quizz-wait
-				v-else-if="props.quizzSession.status === 'wait'"
-				:quizz="props.quizzSession.quizz"
+				v-else-if="quizzSession.status === 'outro'"
+				:quizz
 			/>
 			<quizz-question
-				v-else-if="props.quizzSession.status === 'question'"
-				:key="props.question.data.id"
-				:question="props.question.data"
-				:quizz="props.quizzSession.quizz"
+				v-else-if="quizzSession.status === 'question'"
+				:key="props.question.id"
+				:question="props.question"
 				@validate="updateQuizz"
 			/>
 			<div v-else>
-				Apparemment, il y a un problème avec {{ props.quizzSession.status }}
+				Apparemment, il y a un problème avec {{ quizzSession.status }}
 			</div>
 		</section>
 	</section>

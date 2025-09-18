@@ -59,7 +59,7 @@ const answerFormat = computed(() => {
 		)
 	}
 
-	return ""
+	return currentValidator.value.checker.checker.format
 })
 
 function updateQuestion(event: KeyboardInputInterface, index: number) {
@@ -119,6 +119,7 @@ const keyboardParameters = computed(() => {
 				:reference="validator.answer"
 				:keyboard="validator.keyboard"
 				@change="updateQuestion($event, index)"
+				class="touch-manipulation"
 			/>
 
 			<div

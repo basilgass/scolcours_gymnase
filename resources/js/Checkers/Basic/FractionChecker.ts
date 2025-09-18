@@ -1,8 +1,8 @@
-import {CheckerAbstract} from "../CheckerAbstract";
-import {Fraction} from "pimath";
-import {CHECKERS} from "../checker.config";
+import {CheckerAbstract} from "../CheckerAbstract"
+import {Fraction} from "pimath"
+import {CheckerResult, CHECKERS} from "../checker.config"
 
-const name="fraction"
+const name = "fraction"
 
 const description = `fraction,[paramètres]
 
@@ -11,51 +11,52 @@ const description = `fraction,[paramètres]
 `
 
 export class FractionChecker extends CheckerAbstract {
-    private expectReduced: boolean
-    constructor(config?:string[]|string) {
-        super(config)
-        this.type = CHECKERS.FRACTION
-        this.description = description
+	private expectReduced: boolean
 
-        this.expectReduced = this.config.includes("r") || this.config.includes("reduced")
-    }
+	constructor(config?: string[] | string) {
+		super(config)
+		this.type = CHECKERS.FRACTION
+		this.description = description
 
-    get format(): string {
-        const opts = []
-        if (this.expectReduced) {
-            opts.push("réduite")
-        }
+		this.expectReduced = this.config.includes("r") || this.config.includes("reduced")
+	}
 
-        return `réponse sous forme de fraction ${opts.join(",")}`
-    }
+	get format(): string {
+		const opts = []
+		if (this.expectReduced) {
+			opts.push("réduite")
+		}
+
+		return `réponse sous forme de fraction ${opts.join(",")}`
+	}
 
 	override checkFormat(value: string): string {
 		try {
 			new Fraction(value)
 			return ""
-		}catch {
+		} catch {
 			return "La fraction n'est pas formatée correctement."
 		}
 	}
 
-	override checkValue(value: string): string {
+	override checkValue(value: string): CheckerResult {
 
 		const FAnswer = new Fraction(value)
 		const FExpected = new Fraction(this.answer)
 
-		if(FAnswer.isNotEqual(FExpected)){
-			return  "La réponse donnée n'est pas juste."
+		if (FAnswer.isNotEqual(FExpected)) {
+			return this.makeCheckerResult("La réponse donnée n'est pas juste.")
 		}
 
-		if(FAnswer.denominator<0){
-			return  "Le dénominateur doit être positif."
+		if (FAnswer.denominator < 0) {
+			return this.makeCheckerResult("Le dénominateur doit être positif.", true)
 		}
 
-		if(!FAnswer.isReduced() && this.expectReduced){
-			return  "La fraction n'est pas réduite."
+		if (!FAnswer.isReduced() && this.expectReduced) {
+			return this.makeCheckerResult("La fraction n'est pas réduite.", true)
 		}
 
-		return ""
+		return this.makeCheckerResult()
 	}
 
 

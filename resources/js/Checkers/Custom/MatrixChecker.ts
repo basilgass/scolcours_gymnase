@@ -1,5 +1,5 @@
 import {CheckerAbstract} from "../CheckerAbstract"
-import {CHECKERS} from "../checker.config"
+import {CheckerResult, CHECKERS} from "../checker.config"
 import {ExactChecker} from "@/Checkers"
 
 const name = "matrix"
@@ -24,8 +24,6 @@ export class MatrixChecker extends CheckerAbstract {
 
 		this.#fixedDimension = (config as string[])
 			.filter(x => x.startsWith('dim:'))[0]?.split('dim:')[1] ?? undefined
-
-		this.secondaryChecker = new ExactChecker()
 	}
 
 	parse(value: string): { dimension: dimensionType, values: string[] } {
@@ -40,11 +38,10 @@ export class MatrixChecker extends CheckerAbstract {
 	}
 
 	get format(): string {
-		return this.#fixedDimension ? `Matrice (${this.#fixedDimension})` : 'Matrice'
+		return `${this.#fixedDimension ? ` Matrice($ { this.#fixedDimension } ) ` : 'Matrice'}<br/>${this.secondaryChecker?.format}`
 	}
 
-	override checkValue(value: string): string {
-
+	override checkValue(value: string): CheckerResult {
 		const answerData = this.parse(this.answer)
 		const givenData = this.parse(value)
 
@@ -53,42 +50,36 @@ export class MatrixChecker extends CheckerAbstract {
 		if (givenData.dimension.rows === 0 ||
 			isNaN(givenData.dimension.columns) ||
 			givenData.dimension.columns === 0) {
-			return "il faut donner les dimensions de la matrice."
+			return this.makeCheckerResult("il faut donner les dimensions de la matrice.")
 		}
 
 		if (givenData.dimension.rows !== answerData.dimension.rows ||
 			givenData.dimension.columns !== answerData.dimension.columns) {
-			return "les dimensions de la matrice ne sont pas juste."
+			return this.makeCheckerResult("les dimensions de la matrice ne sont pas juste.")
 		}
 
 		// Les valeurs données ne sont pas suffisantes
 		const nbOfValues = givenData.dimension.rows * givenData.dimension.columns
 		if (givenData.values.length !== nbOfValues) {
-			return givenData.values.length < nbOfValues
-				? "il manque des valeurs par rapport aux dimensions de la matrice"
-				: "il y a trop de valeurs par rapport aux dimensions de la matrice"
+			return this.makeCheckerResult(
+				givenData.values.length < nbOfValues
+					? "il manque des valeurs par rapport aux dimensions de la matrice"
+					: "il y a trop de valeurs par rapport aux dimensions de la matrice"
+			)
 		}
 
 		// Les valeurs doivent correspondre, dans l'ordre.
-		const valuesErrors: string[] = []
+		const n = givenData.dimension.columns
 
-		for (let i = 0; i < givenData.values.length; i++) {
-			const givenValue = givenData.values[i]
-			const expectedValue = answerData.values[i]
-
-			const msg = this.secondaryChecker.check(expectedValue, givenValue).message
-
-			if (msg) {
-				const n = givenData.dimension.columns
-				const row = Math.floor(i / n)+1
-				const col = i % n+1
-				valuesErrors.push(`a_{ ${row}${col} }`)
+		return this.secondaryCheckValues(
+			givenData.values,
+			answerData.values,
+			(i: number, message: string)=>{
+				const row = Math.floor(i / n) + 1
+				const col = i % n + 1
+				return `\\(a_{ ${row}${col} }\\): ${message}`
 			}
-		}
-
-		return valuesErrors.length > 0
-		? `les valeurs suivantes sont fausses: \\(${valuesErrors.join(', ')}\\)`
-			:""
+		)
 	}
 
 

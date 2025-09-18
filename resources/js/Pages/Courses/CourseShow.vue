@@ -2,13 +2,18 @@
 
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 import BlockShow from "@/Components/Blocks/BlockShow.vue"
-import {CourseInterface, LessonInterface, UserInterface, UserTeamInterface} from "@/types/modelInterfaces.ts"
+import {
+	CourseInterface,
+	LessonInterface,
+	ScoreInterface,
+	UserInterface,
+	UserTeamInterface
+} from "@/types/modelInterfaces.ts"
 import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
 import AdminHeader from "@/Components/Admin/AdminHeader.vue"
 import ScButton from "@/Components/Ui/scButton.vue"
 import {computed, inject, onMounted, ref} from "vue"
-import LessonCard from "@/Pages/Courses/LessonCard.vue"
-import LessonIconLegend from "@/Pages/Courses/LessonIconLegend.vue"
+import LessonIconLegend from "@/Components/Courses/LessonIconLegend.vue"
 import {useStoreScore} from "@/stores/useStoreScore.ts"
 import dayjs from "dayjs"
 import {useMenuScrollToData} from "@/Composables/useHelpers.ts"
@@ -17,6 +22,11 @@ import axios from "axios"
 import {AxiosErrorMessage, AxiosResponseModel, flashInterface} from "@/types"
 import StatBar from "@/Components/Ui/StatBar.vue"
 import LessonTypeIcon from "@/Components/Courses/LessonTypeIcon.vue"
+import {ScoreLessonDataInterface} from "@/types/scoreInterfaces.ts"
+import LessonDrop from "@/Components/Courses/LessonDrop.vue"
+import LessonByDates from "@/Components/Courses/LessonByDates.vue"
+import Card from "@/Components/Ui/Card.vue"
+import LessonDrops from "@/Components/Courses/LessonDrops.vue"
 
 defineOptions({layout: LayoutMain})
 
@@ -30,32 +40,63 @@ const props = defineProps<{
 
 // Load all scores for these lessons.
 const scoreStore = useStoreScore()
-scoreStore.getScores(
-	"Lesson",
-	props.course.lessons.map(lesson => lesson.id)
-)
+const scores = ref<Record<number, ScoreInterface<ScoreLessonDataInterface>>>({})
+scoreStore
+	.getScores(
+		"Lesson",
+		props.course.lessons.map(lesson => lesson.id)
+	)
+	.then((res: ScoreInterface<ScoreLessonDataInterface>[]) => {
+		res.forEach(score => {
+			scores.value[score.scoreable_id] = score
+		})
+	})
 
-const hidePastDate = ref(true)
 const lessonsByDate = computed<Record<string, LessonInterface[]>>(() => {
 	const grouped: Record<string, LessonInterface[]> = {}
-
-
 	props.course.lessons.forEach(lesson => {
 		if (lesson.scheduled_at) {
 			const d = dayjs(lesson.scheduled_at)
-			if(!hidePastDate.value || d.isAfter(dayjs().subtract(1, 'day'), 'day')){
-				const dateStr = d.format("YYYY-MM-DD")
+			const dateStr = d.format("YYYY-MM-DD")
 
-				if (!grouped[dateStr]) grouped[dateStr] = []
-				grouped[dateStr].push(lesson)
-			}
+			if (!grouped[dateStr]) grouped[dateStr] = []
+			grouped[dateStr].push(lesson)
 		}
 	})
 
-	grouped['non planifié'] = props.course.lessons.filter(lesson => !lesson.scheduled_at)
+	const unplanned = props.course.lessons.filter(lesson => !lesson.scheduled_at)
+
+	if(unplanned.length>0) {
+		grouped[UNPLANNED] = unplanned
+	}
 
 	return grouped
 })
+
+const orderedDate = computed(() => {
+	const dates = Object.keys(lessonsByDate.value)
+	dates.sort()
+	return dates
+})
+
+const UNPLANNED = 'non planifié'
+const futurDate = computed(() => {
+	return orderedDate.value.filter(day => day !== UNPLANNED && dayjs(day).isAfter(dayjs(), 'day'))
+})
+const thisDate = computed(() => {
+	const today = dayjs().format("YYYY-MM-DD")
+
+	return orderedDate.value.includes(today) ? today : null
+})
+const pastDate = computed(() => {
+	return orderedDate.value.filter(day => day !== UNPLANNED && dayjs(day).isBefore(dayjs(), 'day'))
+})
+
+function afficherDate(day: string, short?: boolean): string {
+	return day === UNPLANNED
+		? day
+		: dayjs(day).format(short ? 'dd DD.MM.YYYY' : 'DD MMMM YYYY')
+}
 
 export interface ILessonStats {
 	lesson_id: number,
@@ -217,62 +258,119 @@ onMounted(() => {
 		</div>
 
 
-		<div class="flex flex-col gap-10">
-			<div class="flex gap-3">
-				<sc-button @click="hidePastDate = !hidePastDate">
-					<i
-						:class="{
-							'bi-eye-slash': !hidePastDate,
-							'bi-eye': hidePastDate
-						}"
-					/> {{ hidePastDate ? 'afficher': 'cacher' }} les leçons passées
-				</sc-button>
-			</div>
-
-
-			<!-- Liste des dates du cours. -->
-			<div class="flex gap-3">
-				<h3>dates planifiées </h3>
-				<div
-					v-for="(_, day) in lessonsByDate"
-					:key="`btn-${day}`"
+		<card
+			v-if="thisDate"
+			class="mb-3"
+		>
+			<template #header>
+				<h3
+					class="font-semibold cursor-pointer"
+					@click="useMenuScrollToData('key', `lesson-day-${thisDate}`)"
 				>
-					<sc-button
-						xs
+					Aujourd'hui
+				</h3>
+			</template>
+			<lesson-drops
+				:course
+				:lessons="lessonsByDate[thisDate]"
+				:team
+			/>
+		</card>
+		<div class="grid grid-cols-2 lg:grid-cols-7 gap-3">
+			<card
+				v-for="day in orderedDate"
+				:key="`lesson-day-tag-${day}`"
+				v-show="day!==UNPLANNED"
+			>
+				<template #header>
+					<h3
+						class="font-semibold cursor-pointer"
 						@click="useMenuScrollToData('key', `lesson-day-${day}`)"
 					>
-						{{ dayjs(day).format('DD MMMM YYYY') }}
-					</sc-button>
-				</div>
-			</div>
+						{{ afficherDate(day, true) }}
+					</h3>
+				</template>
+				<lesson-drops
+					:course
+					:lessons="lessonsByDate[day]"
+					:team
+				/>
+			</card>
+		</div>
 
-
+		<div class="flex justify-center mt-4">
 			<div
-				v-for="(elements, day) in lessonsByDate"
-				:key="`lesson-day-${day}`"
-				:data-key="`lesson-day-${day}`"
+				v-theme.bg.light
+				class="p-3 rounded-lg"
 			>
-				<h3 class="text-lg font-semibold my-3">
-					{{ dayjs(day).format('DD MMMM YYYY') }}
-				</h3>
-				<div
-					:class="{
-						'grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3': !editMode.enable,
-						'grid grid-cols-1 gap-3': editMode.enable,
-					}"
-				>
-					<lesson-card
-						v-for="lesson in elements"
-						:key="`lesson-${lesson.id}`"
-						:course
-						:lesson
-						:team
-						:stats="lesson_stats?.[lesson.id]"
-					/>
-				</div>
+				<i class="bi bi-exclamation-triangle text-xl mr-3" />Les leçons dans l'encadré de couleur sont en devoirs, à faire <span class="font-semibold">avant</span> le cours !
 			</div>
 		</div>
 
+
+		<div class="space-y-12 mt-12">
+			<Card v-if="thisDate">
+				<template #header>
+					<h3 class="text-xl font-semibold">
+						Leçons du {{ afficherDate(thisDate) }}
+					</h3>
+				</template>
+				<lesson-by-dates
+					:course
+					:team
+					:dates="[thisDate]"
+					:lessons="lessonsByDate"
+				/>
+			</Card>
+
+			<Card v-if="futurDate.length">
+				<template #header>
+					<h3 class="text-xl font-semibold">
+						Leçons futures
+					</h3>
+				</template>
+
+				<lesson-by-dates
+					:course
+					:team
+					:dates="futurDate"
+					:lessons="lessonsByDate"
+				/>
+			</Card>
+
+			<Card
+				v-if="pastDate.length"
+			>
+				<template #header>
+					<h3 class="text-xl font-semibold">
+						Leçons passées
+					</h3>
+				</template>
+				<lesson-by-dates
+					:course
+					:team
+					:dates="pastDate"
+					:lessons="lessonsByDate"
+				/>
+			</Card>
+
+			<Card
+				v-if="lessonsByDate[UNPLANNED]?.length"
+				class="opacity-30"
+			>
+				<template #header>
+					<h3 class="text-xl font-semibold">
+						Leçons non planifiés
+					</h3>
+				</template>
+				<lesson-by-dates
+					:course
+					:team
+					:dates="[UNPLANNED]"
+					:lessons="lessonsByDate"
+				/>
+			</Card>
+		</div>
 		<lesson-icon-legend class="justify-center mt-24" />
 	</section>
 </template>
