@@ -120,19 +120,23 @@ class Block extends Model
 			return null;
 		}
 
-		$base = strtolower(class_basename($this->blockable)) . 's.show';
+		$baseShow = strtolower(class_basename($this->blockable)) . 's.show';
+		$baseEdit = strtolower(class_basename($this->blockable)) . 's.edit';
 
 		//vérifier si la route existe
-		if (Route::has($base)) {
-			return route($base, $this->blockable);
+		if (Route::has($baseShow)) {
+			return route($baseShow, $this->blockable);
 		}
 
-		if(Route::has('students.'.$base)){
-			return route('students.'.$base, $this->blockable);
+		if(Route::has('students.'.$baseShow)){
+			return route('students.'.$baseShow, $this->blockable);
 		}
 
-		if(Route::has('admin.'.$base)){
-			return route('admin.'.$base, $this->blockable);
+		if(Route::has('admin.'.$baseShow)){
+			return route('admin.'.$baseShow, $this->blockable);
+		}
+		if(Route::has('admin.'.$baseEdit)){
+			return route('admin.'.$baseEdit, $this->blockable);
 		}
 
 		return null;

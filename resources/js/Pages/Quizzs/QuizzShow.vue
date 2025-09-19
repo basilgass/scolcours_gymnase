@@ -55,6 +55,7 @@ onBeforeUnmount(() => {
 			<quizz-outro
 				v-else-if="quizzSession.status === 'outro'"
 				:quizz
+				:quizz-session
 			/>
 			<quizz-question
 				v-else-if="quizzSession.status === 'question'"
