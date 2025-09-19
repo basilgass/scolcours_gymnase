@@ -7,6 +7,7 @@ use App\Models\Quizz;
 use App\Models\QuizzSession;
 use App\Models\Team;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class QuizzSessionApiController extends Controller
 {
@@ -29,8 +30,13 @@ class QuizzSessionApiController extends Controller
 			"team" => ['int', 'exists:App\Models\Team,id']
 		]);
 
+		$team = Team::find($validated['team']);
+
 		// création d'un shortcode de 4-5 lettres majuscules.
-		$session = $quizz->sessions()->create();
+		$shortcode = $this->generateUniqueShortcode();
+		$session = $quizz->sessions()->create([
+			'shortcode' => $team->name . '-' . $shortcode
+		]);
 
 		// Get the users from the team
 		$team = Team::find($validated['team']);
@@ -52,5 +58,14 @@ class QuizzSessionApiController extends Controller
 		$id = $session->id;
 		$result = $session->delete();
 		return [$id, $result];
+	}
+
+	public function generateUniqueShortcode(int $length = 3): string
+	{
+		do {
+			$code = Str::upper(Str::random($length));
+		}while (QuizzSession::where('shortcode', $code)->exists());
+
+		return $code;
 	}
 }

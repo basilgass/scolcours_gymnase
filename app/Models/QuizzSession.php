@@ -44,25 +44,6 @@ class QuizzSession extends Model
 
 	protected $appends = ['status'];
 
-
-	protected static function booted()
-	{
-		static::creating(function($session){
-			if(empty($session->shortcode)){
-				$session->shortcode = static::generateUniqueShortcode();
-			}
-		});
-	}
-
-	protected static function generateUniqueShortcode(int $length = 5): string
-	{
-		do {
-			$code = Str::upper(Str::random($length));
-		}while (static::where('shortcode', $code)->exists());
-
-		return $code;
-	}
-
 	public function quizz()
 	{
 		return $this->belongsTo(Quizz::class);
