@@ -15,7 +15,7 @@ import QuestionFooter from "@/Components/Questions/Parts/QuestionFooter.vue"
 import QuestionBlock from "@/Components/Questions/Parts/QuestionBlock.vue"
 import QuestionAnswer from "@/Components/Questions/Parts/QuestionAnswer.vue"
 import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
-import {onMounted, provide, ref, useTemplateRef} from "vue"
+import {onMounted, provide, ref, useTemplateRef, watch} from "vue"
 import type {QuestionInterface} from "@/types/modelInterfaces.ts"
 import {
 	questionDataInterface,
@@ -118,6 +118,10 @@ onMounted(() => {
 		}, 200)
 	}
 })
+
+watch(()=>props.autoAnswer, ()=>{
+	loadAnswers(props.autoAnswer)
+})
 </script>
 
 <template>
@@ -148,7 +152,7 @@ onMounted(() => {
 
 		<!-- Header: number, title and admin -->
 		<question-header
-			v-show="!blockOnly"
+			:show-number="!blockOnly"
 			:question
 		/>
 

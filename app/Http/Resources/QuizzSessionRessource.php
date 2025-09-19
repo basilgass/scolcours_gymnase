@@ -27,6 +27,8 @@ class QuizzSessionRessource extends JsonResource
 			'enable'    => $this->enable,
 			'current'   => $this->index,
 			'status'    => $this->status,
+			'showAnswer' => $this->show_answer,
+			'projection' => $this->projection_template,
 			'total'     => count($this->quizz->questions),
 			'questions' => QuestionResource::collection($this->quizz->questions),
 			"users"     => UserResource::collection($this->users)

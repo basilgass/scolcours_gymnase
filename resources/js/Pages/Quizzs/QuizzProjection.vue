@@ -42,41 +42,42 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-	<section
-		v-if="liveQuizz.enable"
-	>
+	<div class="h-screen w-screen">
 		<quizz-header :quizz-session="liveQuizz" />
+		<section
+			v-if="liveQuizz.enable"
+			class="py-[3rem] grid place-items-center h-[calc(100%-6rem)]"
+		>
+			<quizz-intro
+				v-if="liveQuizz.status === 'intro'"
+				:quizz
+			/>
+			<quizz-outro
+				v-else-if="liveQuizz.status === 'outro'"
+				:quizz
+			/>
+			<quizz-question-projection
+				v-else
+				:quizz-session="liveQuizz"
+				:scores="props.scores"
+				:users-count="props.usersCount"
+			/>
+		</section>
 
-		<quizz-intro
-			v-if="liveQuizz.status === 'intro'"
-			:quizz
-		/>
-		<quizz-outro
-			v-else-if="liveQuizz.status === 'outro'"
-			:quizz
-		/>
-
-		<quizz-question-projection
+		<section
 			v-else
-			:quizz-session="liveQuizz"
-			:scores="props.scores"
-			:users-count="props.usersCount"
-		/>
-	</section>
+			class="w-full min-h-[100vh] grid place-items-center"
+		>
+			<div class="flex flex-col gap-4">
+				<div>Le quizz n'est pas activé.</div>
 
-	<section
-		v-else
-		class="w-full min-h-[100vh] grid place-items-center"
-	>
-		<div class="flex flex-col gap-4">
-			<div>Le quizz n'est pas activé.</div>
-
-			<InertiaLink
-				class="inline-block hover:font-semibold"
-				href="/"
-			>
-				Retour à l'accueil
-			</InertiaLink>
-		</div>
-	</section>
+				<InertiaLink
+					class="inline-block hover:font-semibold"
+					href="/"
+				>
+					Retour à l'accueil
+				</InertiaLink>
+			</div>
+		</section>
+	</div>
 </template>

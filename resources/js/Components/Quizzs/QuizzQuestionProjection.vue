@@ -3,6 +3,7 @@ import {computed} from "vue"
 import InfoTile from "@/Components/Ui/InfoTile.vue"
 import {QuizzSessionInterface, ScoreInterface} from "@/types/modelInterfaces.ts"
 import {ScoreQuestionDataInterface} from "@/types/scoreInterfaces.ts"
+import QuestionShow from "@/Components/Questions/QuestionShow.vue"
 
 
 const props = defineProps<{
@@ -33,7 +34,7 @@ const answers = computed(() => {
 </script>
 
 <template>
-	<article class="grid place-items-center min-h-screen">
+	<article class="grid grid-cols-2 max-w-3xl gap-12">
 		<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
 			<info-tile class="max-w-lg text-3xl">
 				<template #title>
@@ -50,13 +51,16 @@ const answers = computed(() => {
 			</info-tile>
 
 			<info-tile
-				v-if="nbAnswers >= MIN_ANSWERS_BEFORE_DISPLAY"
+
 				class="col-span-1 md:col-span-2"
 			>
 				<template #title>
 					Réponses
 				</template>
-				<div class="flex flex-wrap gap-10">
+				<div
+					v-if="nbAnswers >= MIN_ANSWERS_BEFORE_DISPLAY"
+					class="flex flex-wrap gap-10"
+				>
 					<div
 						v-for="(answer, index) in answers"
 						:key="`result-${index}`"
@@ -64,6 +68,15 @@ const answers = computed(() => {
 					/>
 				</div>
 			</info-tile>
+		</div>
+
+		<div class="self-start">
+			<question-show
+				:key="quizzSession.current"
+				:question="quizzSession.questions[quizzSession.current-1]"
+				block-only
+				:auto-answer="quizzSession.showAnswer"
+			/>
 		</div>
 	</article>
 </template>

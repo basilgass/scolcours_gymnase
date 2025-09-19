@@ -330,6 +330,8 @@ export interface QuizzSessionInterface {
 	enable: boolean,
 	current: number,
 	status: 'intro' | 'outro' | 'question' | 'error',
+	showAnswer: boolean,
+	projection: string, // TODO: define projection value.
 	total: number,
 	questions: QuestionInterface[],
 	users: UserInterface[]

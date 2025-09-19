@@ -17,14 +17,12 @@ const intro = computed(() => {
 </script>
 
 <template>
-	<article class="grid place-items-center h-screen w-screen p-5">
-		<div class="space-y-4 w-full max-w-2xl">
-			<block-show
-				class="min-h-[24rem]"
-				:block="intro"
-			/>
+	<article class="scolcours-container space-y-5">
+		<block-show
+			class="min-h-[24rem] w-full max-w-2xl mx-auto"
+			:block="intro"
+		/>
 
-			<quizz-icon-wait class="text-center mt-20" />
-		</div>
+		<quizz-icon-wait class="text-center mt-20" />
 	</article>
 </template>

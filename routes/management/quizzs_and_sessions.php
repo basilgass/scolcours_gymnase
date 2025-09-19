@@ -70,6 +70,9 @@ Route::middleware('api')
 		          Route::patch('quizz/{quizzSession}/updateCurrent', [QuizzApiController::class, "updateCurrent"])
 		               ->name('quizzs.sessions.updateCurrent');
 
+		          Route::patch('quizz/{quizzSession}/updateShowAnswer', [QuizzApiController::class, "updateShowAnswer"])
+		               ->name('quizzs.sessions.updateShowAnswer');
+
 		          Route::patch('quizz/{quizzSession}/updateEnable', [QuizzApiController::class, "updateEnable"])
 		               ->name('quizzs.sessions.updateEnable');
 

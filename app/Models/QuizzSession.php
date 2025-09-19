@@ -39,7 +39,8 @@ class QuizzSession extends Model
 	protected $guarded = [];
 
 	protected $casts = [
-		'enable' => 'boolean'
+		'enable' => 'boolean',
+		'show_answer' => 'boolean'
 	];
 
 	protected $appends = ['status'];

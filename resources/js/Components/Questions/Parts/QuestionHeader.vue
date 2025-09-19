@@ -2,9 +2,12 @@
 import {QuestionInterface} from "@/types/modelInterfaces.ts"
 import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
 
-defineProps<{
+withDefaults(defineProps<{
 	question: QuestionInterface,
-}>()
+	showNumber?: boolean
+}>(), {
+	showNumber: true
+})
 
 const editMode = useStoreEditMode()
 
@@ -14,7 +17,7 @@ const editMode = useStoreEditMode()
 	<header class="flex flex-col relative">
 		<!-- QUESTION NUMBER -->
 		<div
-			v-if="question.order>0"
+			v-if="question.order>0 && showNumber"
 			v-theme.bg.text
 			:class="{
 				'draggable-handle cursor-move': editMode.enable,

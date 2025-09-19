@@ -41,6 +41,15 @@ class QuizzApiController extends Controller
 		$validate = $request->validate(["index" => ["int", "min:0"]]);
 
 		$quizzSession->index = $validate["index"];
+		$quizzSession->show_answer = false;
+		$quizzSession->save();
+
+		return QuizzSessionRessource::make($quizzSession);
+	}
+
+	public function updateShowAnswer(QuizzSession $quizzSession)
+	{
+		$quizzSession->show_answer = !$quizzSession->show_answer;
 		$quizzSession->save();
 
 		return QuizzSessionRessource::make($quizzSession);

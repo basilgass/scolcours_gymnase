@@ -6,6 +6,7 @@ import axios from "axios"
 import Card from "@/Components/Ui/Card.vue"
 import QuestionShow from "@/Components/Questions/QuestionShow.vue"
 import {AxiosResponseModel} from "@/types"
+import ScButton from "@/Components/Ui/scButton.vue"
 
 defineOptions({layout: LayoutMain})
 
@@ -14,7 +15,7 @@ const props = defineProps<{
 }>()
 const liveQuizz = ref<QuizzSessionInterface>(props.quizzSession)
 
-const updateCurrent = function (index: number) {
+function updateCurrent(index: number) {
 	if (index === liveQuizz.value.current) {
 		return
 	}
@@ -22,6 +23,14 @@ const updateCurrent = function (index: number) {
 	axios.patch(
 		route("api.admin.quizzs.sessions.updateCurrent", {quizzSession: liveQuizz.value.id}),
 		{index},
+	).then((res: AxiosResponseModel<QuizzSessionInterface>) => {
+		liveQuizz.value = res.data
+	})
+}
+
+function updateShowAnswer() {
+	axios.patch(
+		route('api.admin.quizzs.sessions.updateShowAnswer', {quizzSession: liveQuizz.value.id})
 	).then((res: AxiosResponseModel<QuizzSessionInterface>) => {
 		liveQuizz.value = res.data
 	})
@@ -42,7 +51,7 @@ const toc = computed(() => {
 
 <template>
 	<section class="py-10 space-y-3">
-		<div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+		<div class="grid grid-cols-1 md:grid-cols-2 gap-3 grid-flow-col-dense">
 			<card>
 				<template #header>
 					<h2
@@ -68,16 +77,17 @@ const toc = computed(() => {
 							@click="updateCurrent(index)"
 							v-katex.auto="title"
 						/>
-						<div class="pl-3 w-[80px] flex justify-around items-center opacity-20">
-							<i class="cursor-pointer bi bi-123" />
-							<i class="cursor-pointer bi bi-bar-chart" />
-							<i class="cursor-pointer bi bi-cloud" />
+						<div class="pl-3 w-[80px] flex justify-around items-center">
+							templates
 						</div>
 					</div>
 				</div>
 			</card>
 
-			<div v-if="liveQuizz.status==='question'">
+			<div
+				v-if="liveQuizz.status==='question'"
+				class="space-y-3 self-start"
+			>
 				<question-show
 					:question="liveQuizz.questions[liveQuizz.current-1]"
 					editor-mode
@@ -85,6 +95,18 @@ const toc = computed(() => {
 					block-only
 					auto-answer
 				/>
+
+				<sc-button
+					type="primary"
+					:outline="!liveQuizz.showAnswer"
+					xs
+					class="w-full"
+					@click="updateShowAnswer"
+				>
+					<i
+						class="cursor-pointer bi bi-eye mr-3"
+					/> afficher/cacher la réponse
+				</sc-button>
 			</div>
 		</div>
 	</section>
