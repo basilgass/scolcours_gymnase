@@ -64,18 +64,18 @@ const langues = {
 				>
 					<i class="mr-2 bi bi-graph-up" /> grapheur
 				</InertiaLink>
-				<h3 class="text-lg mt-5 font-semibold">
-					Langues
-				</h3>
-				<div class="space-x-4">
-					<InertiaLink
-						v-for="(name,langue) in langues"
-						:href="route('voc.index', [langue])"
-						class="inline-block transition duration-300 hover:translate-x-1"
-					>
-						<i class="mr-1 bi bi-translate" /> {{ langues[langue] }}
-					</InertiaLink>
-				</div>
+				<!--				<h3 class="text-lg mt-5 font-semibold">-->
+				<!--					Langues-->
+				<!--				</h3>-->
+				<!--				<div class="space-x-4">-->
+				<!--					<InertiaLink-->
+				<!--						v-for="(name,langue) in langues"-->
+				<!--						:href="route('voc.index', [langue])"-->
+				<!--						class="inline-block transition duration-300 hover:translate-x-1"-->
+				<!--					>-->
+				<!--						<i class="mr-1 bi bi-translate" /> {{ langues[langue] }}-->
+				<!--					</InertiaLink>-->
+				<!--				</div>-->
 			</div>
 
 			<div class="md:mx-auto">

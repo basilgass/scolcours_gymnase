@@ -5,6 +5,7 @@ use App\Http\Controllers\api\Translations\TranslationUnitController;
 use App\Http\Controllers\api\Translations\TranslationWordController;
 use App\Http\Controllers\web\TranslationController;
 
+/**
 Route::middleware('web')
      ->group(function () {
 	     // Public routes.
@@ -90,3 +91,4 @@ Route::middleware('api')
 	          });
 
      });
+**/
