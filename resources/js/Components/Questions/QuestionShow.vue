@@ -92,11 +92,12 @@ const questionData = useQuestion(props.question, {
  */
 provide<questionDataInterface>("questionData", questionData)
 
-async function loadAnswers(show: boolean) {
+async function loadAnswers(event: { show: boolean, value?: string }) {
+
 	questionAnswerWrapper.value.getKeyboards().forEach((keyboard, index) => {
 		keyboard.setInput(
-			show
-				? questionData.answers.values.value[index]
+			event.show
+				? (event.value ?? questionData.answers.values.value[index])
 				: ''
 		)
 			.then((x) => {
@@ -114,13 +115,13 @@ defineExpose({
 onMounted(() => {
 	if (props.autoAnswer) {
 		setTimeout(() => {
-			loadAnswers(true)
+			loadAnswers({show: true})
 		}, 200)
 	}
 })
 
-watch(()=>props.autoAnswer, ()=>{
-	loadAnswers(props.autoAnswer)
+watch(() => props.autoAnswer, () => {
+	loadAnswers({show: props.autoAnswer})
 })
 </script>
 

@@ -4,7 +4,7 @@
  * Pour l'admin, permet de modifier la réponse.
  */
 import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
-import {computed, inject, ref} from "vue"
+import {computed, inject, ref, watch} from "vue"
 import type {questionDataInterface} from "@/Components/Questions/QuestionInterface.ts"
 import {ScoreQuestionDataInterface} from "@/types/scoreInterfaces.ts"
 
@@ -15,19 +15,19 @@ const questionData = inject<questionDataInterface>("questionData")
 const showAnswer = ref(false)
 
 const emits = defineEmits<{
-	loadAnswers: [ev: boolean]
+	loadAnswers: [{ show: boolean, value?: string }]
 }>()
 
-function toggleAnswer() {
-	showAnswer.value = !showAnswer.value
-
-	emits('loadAnswers', showAnswer.value)
+function toggleAnswer(value?: string) {
+	showAnswer.value = value===undefined ? !showAnswer.value : true
+	emits('loadAnswers', {show: showAnswer.value, value})
 }
 
 
 const previousAnswers = computed<string[]>(() => {
 	return (questionData.user.score.value?.data as ScoreQuestionDataInterface)?.answers ?? []
 })
+
 </script>
 
 <template>
@@ -37,11 +37,15 @@ const previousAnswers = computed<string[]>(() => {
 			class="font-code text-xs flex gap-2"
 		>
 			<div>vos réponses:</div>
-			<div
-				v-for="a in previousAnswers"
-				:key="a"
-			>
-				{{ a }}
+			<div class="flex-1 flex flex-wrap gap-2">
+				<div
+					v-for="a in previousAnswers"
+					:key="a"
+					class="cursor-pointer hover:font-semibold"
+					@click="toggleAnswer(a)"
+				>
+					{{ a }}
+				</div>
 			</div>
 		</div>
 
@@ -67,7 +71,7 @@ const previousAnswers = computed<string[]>(() => {
 			<button
 				v-if="!showAnswer"
 				class="text-xs text-gray-400 w-full"
-				@click="toggleAnswer"
+				@click="toggleAnswer()"
 			>
 				<i class="bi bi-eye mr-2" />voir la réponse
 			</button>
@@ -75,7 +79,7 @@ const previousAnswers = computed<string[]>(() => {
 			<div
 				v-else
 				class="cursor-pointer overflow-x-auto scrollbar-scolcours"
-				@click="toggleAnswer"
+				@click="toggleAnswer()"
 			>
 				<div
 					class="text-xs text-center ml-3 font-code"

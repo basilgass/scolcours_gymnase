@@ -51,7 +51,9 @@ const questionResult = ref<questionResultInterface>({
 })
 
 const scoreStore = useStoreScore()
-const score = await scoreStore.getScore('Question', questionData.question.id)
+// const score = await scoreStore.getScore('Question', questionData.question.id)
+
+const score = questionData.user.score
 
 function updateAnswersValidation(): CheckerResult[] {
 	// Make the validation.
@@ -123,27 +125,28 @@ async function saveToDB(validations: CheckerResult[]) {
 	if (
 		!(questionData.question.id > 0) || questionData.config.isDynamic || // It's a dynamic question
 		!usePage().props.auth.user ||	// user is not connected
-		score.is_resolved // question is already resolved.
+		score.value.is_resolved // question is already resolved.
 	) {
 		return
 	}
 
 	// score value
-	score.score = validations
+	score.value.score = validations
 		.filter(v => v.result)
 		.length / validations.length
 
 	// score resolved.
-	score.is_resolved =
-		score.is_resolved ||
-		score.score === 1
+	score.value.is_resolved =
+		score.value.is_resolved ||
+		score.value.score === 1
 
 	// data = list of answers and previous answers.
 	// only update if it's a new answer, not already in the list.
-	const previousAnswers: string[] = (score.data as ScoreQuestionDataInterface)?.answers ?? []
+	const previousAnswers: string[] = (score.value.data as ScoreQuestionDataInterface)?.answers ?? []
 	const currentAnswers: string = questionData.user.answers.value.map(answer => answer.input).join('\n')
+
 	if (!previousAnswers.includes(currentAnswers)) {
-		score.data = {
+		score.value.data = {
 			'answers': [
 				currentAnswers,
 				...previousAnswers
@@ -151,8 +154,7 @@ async function saveToDB(validations: CheckerResult[]) {
 		}
 	}
 
-
-	scoreStore.updateScore(score)
+	scoreStore.updateScore(score.value)
 }
 
 function emitToParent(result: boolean): questionResultInterface {

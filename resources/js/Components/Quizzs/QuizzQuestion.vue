@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import QuestionShow from "@/Components/Questions/QuestionShow.vue"
-import {QuestionInterface, QuizzInterface, ScoreInterface} from "@/types/modelInterfaces"
+import {QuestionInterface, ScoreInterface} from "@/types/modelInterfaces"
 import {useStoreScore} from "@/stores/useStoreScore.ts"
 import {onMounted, ref} from "vue"
 import {ScoreQuestionDataInterface} from "@/types/scoreInterfaces.ts"
@@ -13,9 +13,9 @@ const props = defineProps<{
 const scoreStore = useStoreScore()
 const score = ref<ScoreInterface<ScoreQuestionDataInterface>>(null)
 
-onMounted(()=>{
+onMounted(() => {
 	scoreStore.getScore('Question', props.question.id)
-		.then((res: ScoreInterface<ScoreQuestionDataInterface>)=>{
+		.then((res: ScoreInterface<ScoreQuestionDataInterface>) => {
 			score.value = res
 		})
 })
@@ -25,9 +25,9 @@ onMounted(()=>{
 	<div>
 		<div
 			v-if="score===null"
-			class="grid place-items-center min-h-[200px] font-code text-xl"
+			class="grid place-items-center min-h-[200px] font-code text-xl p-10"
 		>
-			chargement de la question...
+			<div>chargement de la question...</div>
 		</div>
 		<question-show
 			v-else-if="score.data.answers.length===0"
@@ -38,7 +38,7 @@ onMounted(()=>{
 		/>
 		<div
 			v-else
-			class="grid place-items-center min-h-[200px] font-code text-xl"
+			class="grid place-items-center min-h-[200px] font-code text-xl p-10"
 		>
 			<div class="space-y-5">
 				<p>Vous avez déjà répondu à cette question.</p>
