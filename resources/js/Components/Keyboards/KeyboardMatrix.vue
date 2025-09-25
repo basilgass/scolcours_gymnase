@@ -87,11 +87,14 @@ function matrixToTex(matrix: string[][], dim: { rows: number, columns: number })
 
 	tex += matrix.map(row => row.map(a => {
 		try {
-			return new Polynom(a).tex
+			return numericOutput.value
+				? a
+				: new Polynom(a).tex
 		} catch {
 			return a
 		}
 	})).map(line => line.join("&")).join("\\\\[0.8em]")
+
 	tex += "\\end{array}\\right)"
 
 	return tex
@@ -123,7 +126,9 @@ const fixedDimension = computed<[number, number]>(() => {
 	})
 	return dim
 })
-
+const numericOutput = computed<boolean>(() => {
+	return props.keyboard.parameters.includes('decimal')
+})
 
 function switchKeyboard(value?: boolean): void {
 	if (hasFixedDimension.value) {
@@ -227,13 +232,16 @@ const pimatrixDisplay = computed(() => {
 		}
 
 		try {
-			return new Polynom(x)
+			return numericOutput.value
+				? x
+				: new Polynom(x)
 		} catch {
 			return x
 		}
 	}))
 })
 
+console.log(aij.value)
 </script>
 
 <template>
