@@ -9,7 +9,7 @@ c d
 <script lang="ts" setup>
 
 import {WidgetPropsInterface} from "@/types/modelInterfaces.ts"
-import {computed, ref} from "vue"
+import {computed} from "vue"
 import PiMarkovGraph from "@/Components/Pi/PiDrawComponents/PiMarkovGraph.vue"
 import {Fraction, Matrix} from "pimath"
 
@@ -19,18 +19,20 @@ const props = defineProps<{
 
 const params = computed(() => props.illustration.parameters.split(','))
 
-const digits = computed<number>(()=>{
-	if(params.value.includes('f') || params.value.includes('frac')){
+const digits = computed<number>(() => {
+	if (params.value.includes('f') || params.value.includes('frac')) {
 		return 0
 	}
 
-	if (params.value.includes('%') || params.value.includes('d.100') ){
+	if (params.value.includes('%') || params.value.includes('d.100')) {
 		return 100
 	}
 
-	const d = params.value.find(p=>p.startsWith('d.'))
+	const d = params.value.find(p => p.startsWith('d.'))
 
-	if(!d){return 2}
+	if (!d) {
+		return 2
+	}
 
 	return Number(d.split('d.')[1])
 })
@@ -61,15 +63,15 @@ const matrix = computed<Fraction[][]>(() => {
 	const input = props.illustration.code
 		.split('\n').slice(1)
 		.map(row => row.split(' ')
-			.map(n=> {
-				try{
+			.map(n => {
+				try {
 					return new Fraction(n)
-				}catch{
+				} catch {
 					return new Fraction()
 				}
 			})
 			.filter(n => !n.isNaN())
-			.map(n=> divideBy100 ? n.divide(100) : n)
+			.map(n => divideBy100 ? n.divide(100) : n)
 		)
 
 	const m: number[][] = []

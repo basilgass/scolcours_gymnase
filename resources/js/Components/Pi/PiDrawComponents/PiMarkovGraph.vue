@@ -22,7 +22,7 @@ const props = withDefaults(defineProps<{
 	radius?: number,
 	digits?: number
 }>(), {
-	parameters: "x=-6:6,y=-6:6,ppu=35,no-points",
+	parameters: "",
 	labels: () => ["A", "B", "C", "D"],
 	deltaP: 3,
 	radius: 1,
@@ -30,6 +30,19 @@ const props = withDefaults(defineProps<{
 })
 
 const showTeX = ref(false)
+
+const calculatedParameters = computed(() => {
+	if (props.parameters === '') {
+		if (nodes.value === 2) {
+			return "x=-6:6,y=-3:3,ppu=35,no-points"
+		}
+
+		return "x=-6:6,y=-6:6,ppu=35,no-points"
+
+	}
+
+	return props.parameters
+})
 
 const nodes = computed(() => props.labels.length)
 const theMatrix = computed(() => {
@@ -53,17 +66,18 @@ const theLabels = computed(() => {
 	return props.labels.filter(x => x.trim() !== '')
 })
 
-function getValue(aij: Polynom):string|number{
-	if(props.digits===0){
+function getValue(aij: Polynom): string | number {
+	if (props.digits === 0) {
 		return aij.tex
 	}
 
-	if(props.digits===100){
-		return (aij.value*100).toFixed(0) + '\\%'
+	if (props.digits === 100) {
+		return (aij.value * 100).toFixed(0) + '\\%'
 	}
 
 	return +aij.value.toFixed(props.digits)
 }
+
 const code = computed(() => {
 	if (theMatrix.value === null) {
 		return ""
@@ -110,7 +124,7 @@ function drawPoint(point: Point, label: string, params?: string): string {
 
 function drawArrow(letter: string,
 				   anchor1: XY, anchor2: XY, point: XY,
-				   value: string|number, pos: string,
+				   value: string | number, pos: string,
 				   smooth: number
 ): string[] {
 	const n: string[] = []
@@ -199,15 +213,16 @@ function markovGraph4() {
 </script>
 
 <template>
-	<div class="max-w-md">
+	<div>
 		<pi-draw-parser
 			v-bind="$attrs"
 			v-if="matrix"
 			:draw="{
-				parameters, code
+				parameters:calculatedParameters,
+				code
 			}"
 		/>
-		<div>
+		<div v-admin>
 			<div
 				class="flex w-full justify-end text-xs cursor-pointer"
 				@click="showTeX = !showTeX"
