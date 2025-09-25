@@ -12,6 +12,7 @@ import PiMatrix from "@/Components/Pi/Parts/PiMatrix.vue"
 import {Polynom} from "pimath"
 import {questionDataInterface} from "@/Components/Questions/QuestionInterface.ts"
 import ScButton from "@/Components/Ui/scButton.vue"
+import {KeyboardObjectType} from "@/Composables/keyboardConfig.ts"
 
 // config: decimal
 
@@ -247,7 +248,23 @@ const pimatrixDisplay = computed(() => {
 	}))
 })
 
-console.log(aij.value)
+const matrixDimKeyboard: KeyboardObjectType = {
+	name :'dimMatrix',
+	grid: "grid-cols-3",
+	layout: [
+		["x",3],
+		"1", "2", "3",
+		"4", "5", "6",
+		"7", "8", "9",
+		"", "0", ""
+	],
+	keys: {
+		"x": {
+			type: "math",
+			display: "\\times",
+		}
+	}
+}
 </script>
 
 <template>
@@ -276,10 +293,9 @@ console.log(aij.value)
 		<div class="w-full">
 			<KeyboardDisplay
 				v-if="showDimensionKeyboard"
-				keyboard="number"
+				:keyboard="matrixDimKeyboard"
 				back
 				reset
-				:extra-letters="['x']"
 				@change="onKeyboardChange"
 			/>
 			<KeyboardDisplay
