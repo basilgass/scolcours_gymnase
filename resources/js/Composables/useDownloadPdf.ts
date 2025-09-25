@@ -2,8 +2,6 @@ import axios from "axios"
 import {AxiosErrorMessage} from "@/types"
 import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
 
-const flash = useStoreFlashMessage()
-
 export interface pdf_config {
 	title: string,
 	slug: string,
@@ -17,6 +15,8 @@ export function usePdf() {
 	function LaTeX(title: string, slug: string, tex: string) {
 		download({title, slug, tex})
 	}
+
+	const flash = useStoreFlashMessage()
 
 	function download(content: pdf_config) {
 		axios

@@ -4,6 +4,7 @@ import FlashMessage from "@/Components/Ui/FlashMessage.vue"
 import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
 
 const flash = useStoreFlashMessage()
+
 </script>
 
 <template>

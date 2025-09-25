@@ -7,8 +7,6 @@ import QuestionShow from "@/Components/Questions/QuestionShow.vue"
 import {router} from "@inertiajs/vue3"
 import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
 
-const flash = useStoreFlashMessage()
-
 export interface questionsContainerInterface {
 	id: number,
 	type: 'Post' | 'Quizz',// TODO: move this to an interface.
@@ -20,7 +18,7 @@ export function useQuestionAdmin(
 	questions: Ref<Partial<QuestionInterface>[]>,
 	components: InstanceType<typeof QuestionShow>[]
 ) {
-
+	const flash = useStoreFlashMessage()
 
 	function addQuestion() {
 		axios
