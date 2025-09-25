@@ -122,7 +122,7 @@ function deleteIllustration(){
 
 <template>
 	<div
-		class="flex items-center justify-between w-full px-3 gap-3 py-2 admin-content rounded-t"
+		class="flex flex-col md:flex-row md:items-center justify-between w-full px-3 gap-3 py-2 admin-content rounded-t"
 	>
 		<div class="flex gap-2 items-start">
 			<edit-link
@@ -163,13 +163,15 @@ function deleteIllustration(){
 		</div>
 
 		<div class="flex gap-2">
-			<button
-				class="text-xs px-2"
+			<sc-button
+				type="add"
+				xs
+				outline
 				title="dupliquer"
 				@click="duplicateQuestion"
 			>
 				<i class="bi bi-clipboard-plus" />
-			</button>
+			</sc-button>
 			<dropdown-menu prevent-close>
 				<template #button>
 					<i class="bi bi-eye" />

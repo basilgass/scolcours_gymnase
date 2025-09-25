@@ -11,13 +11,13 @@ c d
 import {WidgetPropsInterface} from "@/types/modelInterfaces.ts"
 import {computed} from "vue"
 import PiMarkovGraph from "@/Components/Pi/PiDrawComponents/PiMarkovGraph.vue"
-import {Fraction, Matrix} from "pimath"
+import {Fraction} from "pimath"
 
 const props = defineProps<{
 	illustration: WidgetPropsInterface
 }>()
 
-const params = computed(() => props.illustration.parameters.split(','))
+const params = computed(() => props.illustration.parameters?.split(',')??[])
 
 const digits = computed<number>(() => {
 	if (params.value.includes('f') || params.value.includes('frac')) {
