@@ -65,7 +65,7 @@ function addIllustration() {
 			{}
 		)
 		.then((res) => {
-			router.visit(route("admin.illustrations.edit", [res.data.id]))
+			router.visit(route("admin.illustrations.edit", {illustration: res.data.id}))
 			flash.success("une nouvelle illustration a été créée")
 		}).catch((res) => {
 			console.warn("add illustration: ", res)

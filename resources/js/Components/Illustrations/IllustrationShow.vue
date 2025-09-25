@@ -24,6 +24,7 @@ function click($event: MouseEvent) {
 
 	$event.stopPropagation()
 }
+
 </script>
 
 <template>
@@ -35,7 +36,7 @@ function click($event: MouseEvent) {
 	>
 		<edit-link
 			:label="`illustration ${illustration.id}`"
-			:href="route('admin.illustrations.edit', illustration.id)"
+			:href="route('admin.illustrations.edit', {illustration:illustration.id})"
 		/>
 
 		<component

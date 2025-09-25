@@ -15,7 +15,7 @@ defineOptions({
 })
 
 const props = withDefaults(defineProps<{
-	matrix: Fraction[][],
+	matrix: string[][],
 	labels?: string[]
 	parameters?: string,
 	deltaP?: number,
@@ -48,7 +48,7 @@ const nodes = computed(() => props.labels.length)
 const theMatrix = computed(() => {
 	const matrix = props.matrix
 		.map(row =>
-			row.filter(n => !n.isNaN())
+			row.filter(n => n.trim()!=='')
 		)
 
 	const dim = matrix.length
@@ -60,53 +60,58 @@ const theMatrix = computed(() => {
 		return null
 	}
 
-	return new Matrix().fromValues(matrix)
+	return matrix
 })
 const theLabels = computed(() => {
 	return props.labels.filter(x => x.trim() !== '')
 })
 
-function getValue(aij: Polynom): string | number {
-	if (props.digits === 0) {
-		return aij.tex
-	}
-
-	if (props.digits === 100) {
-		return (aij.value * 100).toFixed(0) + '\\%'
-	}
-
-	return +aij.value.toFixed(props.digits)
-}
+// function getValue(aij: Polynom): string | number {
+// 	if (props.digits === 0) {
+// 		return aij.tex
+// 	}
+//
+// 	if (props.digits === 100) {
+// 		return (aij.value * 100).toFixed(0) + '\\%'
+// 	}
+//
+// 	return +aij.value.toFixed(props.digits)
+// }
 
 const code = computed(() => {
 	if (theMatrix.value === null) {
 		return ""
 	}
+
 	const {points, anchors} = makeMarkovGraph()
 
 	let n = points.map((p, index) => drawPoint(p, `N${index + 1}`, `tex=${theLabels.value[index] ?? ''}/mc`))
 	n = [...n, ...points.map((_, index) => `c${index + 1}=circ N${index + 1},${props.radius}`)]
 
-	theMatrix.value.forEach((aij, row, column) => {
-		if (aij.value !== 0) {
-			const letter = `P${row}${column}`
-			const data = anchors[row][column]
-			const A1 = circleAnchors(points[row], +data[0])
-			const A2 = circleAnchors(points[column], +data[1])
+	for(let row = 0; row<theMatrix.value.length; row++){
+		for(let column=0; column<theMatrix.value[row].length; column++){
+			const aij = theMatrix.value[row][column]
+			if(aij!=='0'){
+				const letter = `P${row}${column}`
+				const data = anchors[row][column]
+				const A1 = circleAnchors(points[row], +data[0])
+				const A2 = circleAnchors(points[column], +data[1])
 
-			const P = {x: (A1.x + A2.x) / 2 + (+data[2]), y: (A1.y + A2.y) / 2 + (+data[3])}
+				const P = {x: (A1.x + A2.x) / 2 + (+data[2]), y: (A1.y + A2.y) / 2 + (+data[3])}
 
-			n = [...n,
-				...drawArrow(letter,
-					A1,
-					A2,
-					P,
-					getValue(aij),
-					data[4].toString(),
-					0.3
-				)]
+				n = [...n,
+					...drawArrow(letter,
+						A1,
+						A2,
+						P,
+						aij,
+						data[4].toString(),
+						0.3
+					)]
+			}
 		}
-	})
+	}
+
 
 	return n.join('\n')
 })

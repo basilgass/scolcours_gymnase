@@ -17,6 +17,8 @@ const props = defineProps<{
 	illustration: WidgetPropsInterface
 }>()
 
+console.log(props.illustration.code)
+
 const params = computed(() => props.illustration.parameters?.split(',')??[])
 
 const digits = computed<number>(() => {
@@ -63,22 +65,15 @@ const matrix = computed<Fraction[][]>(() => {
 	const input = props.illustration.code
 		.split('\n').slice(1)
 		.map(row => row.split(' ')
-			.map(n => {
-				try {
-					return new Fraction(n)
-				} catch {
-					return new Fraction()
-				}
-			})
-			.filter(n => !n.isNaN())
-			.map(n => divideBy100 ? n.divide(100) : n)
+			.filter(n => n.trim()!=='')
+			.map(n => divideBy100 ? ((+n)/100).toString() : n)
 		)
 
-	const m: number[][] = []
+	const m: string[][] = []
 	for (let row = 0; row < nodes.value; row++) {
-		const rowValues: number[] = []
+		const rowValues: string[] = []
 		for (let col = 0; col < nodes.value; col++) {
-			rowValues.push(input[row]?.[col] ?? new Fraction().zero())
+			rowValues.push(input[row]?.[col] ?? '0')
 		}
 		m.push(rowValues)
 	}

@@ -61,6 +61,28 @@ const body = computed(() => {
 	return md
 })
 
+const illustration = computed(()=>{
+	let code = questionData.block.value.illustration.code
+	for (let i = 0; i < questionData.answers.variables.value.length; i++) {
+		const key = makeKey(i)
+		const answer: keyboardEventInterface = questionData.user.answers.value[i]
+
+		const texColor =
+			i === questionData.current.id.value
+				? "cornflowerblue"
+				: "red"
+
+		// Replace all lowercase keys by corresponding TeX value.
+		code = replace_abc_toTex(code, key, answer, texColor)
+	}
+
+	console.log(code)
+
+	return {
+		...questionData.block.value.illustration,
+		code
+	}
+})
 function makeKey(i: number): string {
 	return `\\$${alphabet[i]}`
 }
@@ -77,11 +99,11 @@ function replace_abc_toTex(md: string, key: string, answer: keyboardEventInterfa
 	// console.log('MATCH', md.match(r))
 	return md.replaceAll(
 		new RegExp(`${key.toLowerCase()}`, "gm"),
-		`\\textcolor{${color}}{ ${
+		`\\textcolor{${color}}{${
 			answer.tex ?
 				answer.tex :
-				"<\\ ? >"
-		} }`)
+				"<\\;?>"
+		}}`)
 }
 
 function replace_ABC_toBlock(md: string, key: string, answer: keyboardEventInterface, color: string): string {
@@ -123,7 +145,7 @@ function replace_ABC_without_placeholder(md: string, key: string, answer: keyboa
 		<!-- Illustration -->
 		<illustration-show
 			v-if="questionData.block.value.illustration"
-			:illustration="questionData.block.value.illustration"
+			:illustration
 			class="bg-white"
 		/>
 
