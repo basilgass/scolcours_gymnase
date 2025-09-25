@@ -72,7 +72,7 @@
 	}
 
 	.btn-outline-edit {
-		@apply outline-red-500 text-red-500;
+		@apply outline-purple-500 text-purple-500;
 	}
 
 	.btn-outline-cancel {

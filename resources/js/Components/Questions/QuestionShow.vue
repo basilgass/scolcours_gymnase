@@ -151,7 +151,7 @@ watch(() => props.autoAnswer, () => {
 			</div>
 		</transition>
 
-		<!-- Header: number, title and admin -->
+		<!-- Header: number, title -->
 		<question-header
 			:show-number="!blockOnly"
 			:question

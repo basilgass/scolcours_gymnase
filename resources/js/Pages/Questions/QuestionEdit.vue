@@ -24,79 +24,79 @@ const theQuestion = ref(props.question)
 
 const flash = useStoreFlashMessage()
 
-let saveQuestion = function () {
-		let illustrations = []
+function saveQuestion() {
+	axios
+		.post(route("api.admin.blocks.update", [theQuestion.value.block.id]), {
+			_method: "PATCH",
+			title: theQuestion.value.block.title,
+			body: theQuestion.value.block.body
+		})
+		.then(() => {
+			axios
+				.post(route("api.admin.questions.update", [theQuestion.value.id]), {
+					_method: "PATCH",
+					answer: theQuestion.value.answer,
+					keyboard: theQuestion.value.keyboard,
+					css: theQuestion.value.css
+				})
+				.then(() => {
+					flash.success("La question a été sauvegardée.")
+				})
+				.catch((error) => {
+					flash.error(
+						"Une erreur est survenue - voir la console"
+					)
+					console.warn(error)
+				})
+		})
+		.catch((error) => {
+			flash.error("Une erreur est survenue - voir la console")
+			console.warn(error)
+		})
+}
 
-		axios
-			.post(route("api.admin.blocks.update", [theQuestion.value.block.id]), {
-				_method: "PATCH",
-				title: theQuestion.value.block.title,
-				body: theQuestion.value.block.body,
-				illustrations
-			})
-			.then(() => {
-				axios
-					.post(route("api.admin.questions.update", [theQuestion.value.id]), {
-						_method: "PATCH",
-						answer: theQuestion.value.answer,
-						keyboard: theQuestion.value.keyboard,
-						css: theQuestion.value.css
-					})
-					.then(() => {
-						flash.success("La question a été sauvegardée.")
-					})
-					.catch((error) => {
-						flash.error(
-							"Une erreur est survenue - voir la console"
-						)
-						console.warn(error)
-					})
-			})
-			.catch((error) => {
-				flash.error("Une erreur est survenue - voir la console")
-				console.warn(error)
-			})
-	},
-	deleteQuestion = function () {
-		axios
-			.post(route("api.admin.questions.destroy", [props.question.id]), {
-				_method: "delete"
-			})
-			.then((res) => {
-				flash.success("la question a été supprimée")
-				router.visit(res.data)
-			})
-			.catch((err) => console.warn(err))
-	}
+function deleteQuestion() {
+	axios
+		.post(route("api.admin.questions.destroy", [props.question.id]), {
+			_method: "delete"
+		})
+		.then((res) => {
+			flash.success("la question a été supprimée")
+			router.visit(res.data)
+		})
+		.catch((err) => console.warn(err))
+}
 
 // Handle copy and paste.
-let hasClipboard = computed(() => {
-		return sessionStorage.getItem("scolcours-clipboard-question") !== null
-	}),
-	copyQuestion = function () {
-		sessionStorage.setItem(
-			"scolcours-clipboard-question",
+const hasClipboard = computed(() => {
+	return sessionStorage.getItem("scolcours-clipboard-question") !== null
+})
 
-			JSON.stringify({
-				title: theQuestion.value.block.title,
-				body: theQuestion.value.block.body,
-				css: theQuestion.value.css,
-				answer: theQuestion.value.answer,
-				keyboard: theQuestion.value.keyboard
-			})
-		)
-	},
-	pasteQuestion = function () {
-		let pasteCB = sessionStorage.getItem("scolcours-clipboard-question")
-		if (pasteCB !== null) {
-			const paste: ClipboardKeyboardInterface = JSON.parse(pasteCB)
-			theQuestion.value.block.title = paste.title
-			theQuestion.value.block.body = paste.body
-			theQuestion.value.css = paste.css
-			theQuestion.value.answer = paste.answer
-			theQuestion.value.keyboard = paste.keyboard
-		}
+function copyQuestion() {
+	sessionStorage.setItem(
+		"scolcours-clipboard-question",
+
+		JSON.stringify({
+			title: theQuestion.value.block.title,
+			body: theQuestion.value.block.body,
+			css: theQuestion.value.css,
+			answer: theQuestion.value.answer,
+			keyboard: theQuestion.value.keyboard
+		})
+	)
+}
+
+function pasteQuestion() {
+	let pasteCB = sessionStorage.getItem("scolcours-clipboard-question")
+	if (pasteCB !== null) {
+		const paste: ClipboardKeyboardInterface = JSON.parse(pasteCB)
+		theQuestion.value.block.title = paste.title
+		theQuestion.value.block.body = paste.body
+		theQuestion.value.css = paste.css
+		theQuestion.value.answer = paste.answer
+		theQuestion.value.keyboard = paste.keyboard
 	}
+}
 
 
 </script>
@@ -154,7 +154,7 @@ let hasClipboard = computed(() => {
 		</div>
 		<div class="flex flex-col md:flex-row gap-3 px-5 pb-5">
 			<form
-				class="flex-1 flex flex-col gap-2 font-code"
+				class="flex-1 flex flex-col gap-3 font-code"
 				@submit.prevent
 			>
 				<form-maker
