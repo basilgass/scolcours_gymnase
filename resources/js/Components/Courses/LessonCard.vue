@@ -13,6 +13,7 @@ import {router} from "@inertiajs/vue3"
 import LessonTypeIcon from "@/Components/Courses/LessonTypeIcon.vue"
 import ScButton from "@/Components/Ui/scButton.vue"
 import {useStoreScore} from "@/stores/useStoreScore.ts"
+import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
 
 const props = defineProps<{
 	course: CourseInterface
@@ -21,7 +22,7 @@ const props = defineProps<{
 }>()
 
 const editMode = useStoreEditMode()
-const flash = inject<flashInterface>('flash')
+const flash = useStoreFlashMessage()
 
 const scoreStore = useStoreScore()
 const score = ref<ScoreInterface>(null)

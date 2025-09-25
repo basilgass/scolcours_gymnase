@@ -55,7 +55,7 @@ const previousAnswers = computed<string[]>(() => {
 		>
 			<button
 				class="text-xs text-gray-400 px-2"
-				@click="toggleAnswer"
+				@click="toggleAnswer()"
 			>
 				<i
 					v-if="showAnswer"

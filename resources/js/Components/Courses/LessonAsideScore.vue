@@ -18,6 +18,7 @@ import {
 	ScoreLessonDataInterface
 } from "@/types/scoreInterfaces.ts"
 import {flashInterface} from "@/types"
+import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
 
 const props = defineProps<{
 	lesson: LessonInterface,
@@ -25,7 +26,7 @@ const props = defineProps<{
 	menuToggle: boolean
 }>()
 
-const flash = inject<flashInterface>('flash')
+const flash = useStoreFlashMessage()
 
 const storeScore = useStoreScore()
 const lessonScore = ref<ScoreInterface<ScoreLessonDataInterface>>()

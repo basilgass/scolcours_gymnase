@@ -1,16 +1,16 @@
 <script lang="ts" setup>
 import DropdownMenu from "@/Components/Ui/DropdownMenu.vue"
 import EditLink from "@/Components/Ui/EditLink.vue"
-import type {AxiosErrorMessage, flashInterface} from "@/types"
+import type {AxiosErrorMessage} from "@/types"
 import type {QuestionInterface} from "@/types/modelInterfaces.ts"
 import {router} from "@inertiajs/vue3"
 import axios from "axios"
-import {computed, inject, nextTick, ref} from "vue"
+import {computed, nextTick, ref} from "vue"
 import MoveItemTo from "@/Components/MoveItemTo.vue"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
+import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
 
-const flash = inject<flashInterface>("flash")
-
+const flash = useStoreFlashMessage()
 const props = defineProps<{
 	question: QuestionInterface,
 	questions: Partial<QuestionInterface>[]
@@ -20,7 +20,7 @@ const emits = defineEmits<{
 	removed: []
 }>()
 
-const questionsIds = computed(()=>props.questions.map((q) => q.id))
+const questionsIds = computed(() => props.questions.map((q) => q.id))
 
 
 const theQuestion = ref(props.question)

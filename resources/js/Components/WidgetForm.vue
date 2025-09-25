@@ -1,19 +1,19 @@
 <script lang="ts" setup>
 
 import FormMaker from "@/Components/Form/FormMaker.vue"
-import type { WidgetInterface } from "@/types/modelInterfaces"
-import { computed, inject, PropType, ref } from "vue"
+import type {WidgetInterface} from "@/types/modelInterfaces"
+import {computed, PropType, ref} from "vue"
 import axios from "axios"
-import { router } from "@inertiajs/vue3"
-import { flashInterface } from "@/types"
+import {router} from "@inertiajs/vue3"
 import ScButton from "@/Components/Ui/scButton.vue"
+import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
 
 const props = defineProps({
-	widget: { type: Object as PropType<WidgetInterface>, required: true }
+	widget: {type: Object as PropType<WidgetInterface>, required: true}
 })
-const theWidget = ref({ ...props.widget })
+const theWidget = ref({...props.widget})
 
-const flash = inject<flashInterface>("flash")
+const flash = useStoreFlashMessage()
 
 function update() {
 	axios.patch(route("api.admin.widgets.update", [props.widget.id]), {
@@ -28,9 +28,9 @@ function update() {
 
 		flash.success("Le widget a été mis à jour")
 	}).catch((res) => {
-			console.error(res.response.data.message)
+		console.error(res.response.data.message)
 		flash.error("Une erreur est survenue:" + res.response.data.message)
-		})
+	})
 }
 
 const isModified = computed(() => {

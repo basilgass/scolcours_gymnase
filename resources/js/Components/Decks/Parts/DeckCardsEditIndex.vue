@@ -10,13 +10,13 @@ import {inject, ref} from "vue"
 import ScButton from "@/Components/Ui/scButton.vue"
 import DeckCardEdit from "@/Components/Decks/Parts/DeckCardEdit.vue"
 import DeckCardsEditDynamics from "@/Components/Decks/Parts/DeckCardsEditDynamics.vue"
+import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
 
 const props = defineProps<{
 	deck: DeckInterface
 }>()
 
-const flash = inject<flashInterface>('flash')
-
+const flash = useStoreFlashMessage()
 const theCards = ref(props.deck.cards)
 
 

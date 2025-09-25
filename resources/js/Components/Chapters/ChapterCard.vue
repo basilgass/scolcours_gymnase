@@ -7,6 +7,7 @@ import {ChapterShowInterface} from "@/types/modelInterfaces.ts"
 import {usePage} from "@inertiajs/vue3"
 import axios from "axios"
 import {computed, inject, ref} from "vue"
+import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
 
 
 const props = defineProps<{
@@ -17,7 +18,7 @@ const themeSlug = computed<string>(()=>usePage().props.themes[props.chapter.them
 
 const editMode = useStoreEditMode()
 
-const flash = inject<flashInterface>("flash")
+const flash = useStoreFlashMessage()
 
 
 const isActive = ref<boolean>(!!props.chapter.active)

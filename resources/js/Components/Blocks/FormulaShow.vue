@@ -7,8 +7,10 @@ import { FormulaInterface } from "@/types/modelInterfaces.ts"
 import axios from "axios"
 import { inject } from "vue"
 import MoveItemTo from "@/Components/MoveItemTo.vue"
+import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
 
-const flash = inject<flashInterface>("flash")
+const flash = useStoreFlashMessage()
+
 const props = defineProps<{
 	formula: FormulaInterface
 }>()

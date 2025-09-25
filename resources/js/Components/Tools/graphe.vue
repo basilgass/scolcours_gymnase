@@ -43,10 +43,14 @@ const code = computed(()=>  forms[1].value.value as string)
 </script>
 
 <template>
-	<article>
-		<tool-form :forms="forms" />
+	<article class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+		<tool-form
+			form-class="space-y-3"
+			:forms="forms"
+			:rows="15"
+		/>
 
-		<Card>
+		<Card class="col-span-1 lg:col-span-2">
 			<pi-draw-parser
 				:width="800"
 				:height="800"

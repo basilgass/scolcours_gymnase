@@ -5,12 +5,12 @@ import FormMaker from "@/Components/Form/FormMaker.vue"
 import ThemeSelector from "@/Components/Ui/ThemeSelector.vue"
 import axios from "axios"
 import ScButton from "@/Components/Ui/scButton.vue"
-import {inject} from "vue"
-import {AxiosErrorMessage, flashConfig, flashInterface} from "@/types"
+import {AxiosErrorMessage} from "@/types"
+import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
 
 const tool = defineModel<ToolInterface>('tool')
 
-const flash = inject<flashInterface>('flash')
+const flash = useStoreFlashMessage()
 
 // save the tool
 function updateTool() {

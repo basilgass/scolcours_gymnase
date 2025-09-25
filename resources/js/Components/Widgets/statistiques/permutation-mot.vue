@@ -7,14 +7,13 @@ code:
 
 // REFACTOR: doit être reformaté pour une meilleure lisibilité
 
-import {flashInterface} from "@/types"
 import {WidgetPropsInterface} from "@/types/modelInterfaces.ts"
-import {computed, inject, onMounted, ref} from "vue"
+import {computed, onMounted, ref} from "vue"
 import axios from "axios"
 import ScButton from "@/Components/Ui/scButton.vue"
+import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
 
-const flash = inject<flashInterface>("flash")
-
+const flash = useStoreFlashMessage()
 const props = defineProps<{
 	illustration: WidgetPropsInterface
 }>()
@@ -169,7 +168,7 @@ function prepareNextWord() {
 				language: 'fr',
 				number: 1,
 				size: randomWordLength.value,
-			common: 1,
+				common: 1,
 				withoutDuplicateLetters: withoutDuplicateLetters.value ? 1 : 0
 			}
 		))
@@ -279,7 +278,7 @@ const isFinished = computed(() => {
 // Load the first word
 startOver(true)
 
-onMounted(()=>{
+onMounted(() => {
 	prepareNextWord()
 })
 

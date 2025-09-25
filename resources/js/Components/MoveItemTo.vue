@@ -1,14 +1,13 @@
 <script setup lang="ts">
 import FormMaker from "@/Components/Form/FormMaker.vue"
-import {flashInterface} from "@/types"
 import {watchDebounced} from "@vueuse/core"
 import axios from "axios"
-import {computed, inject, nextTick, ref} from "vue"
+import {computed, nextTick, ref} from "vue"
 import ScButton from "@/Components/Ui/scButton.vue"
 import DialogModal from "@/Components/Ui/DialogModal.vue"
+import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
 
-const flash = inject<flashInterface>("flash")
-
+const flash = useStoreFlashMessage()
 const props = defineProps<{
 	source: 'block' | 'question' | 'post' | 'formula',
 	sourceId: number,

@@ -92,7 +92,7 @@ function resetFormTool() {
 </script>
 
 <template>
-	<Card class="my-6">
+	<Card>
 		<template #header>
 			<div class="flex justify-between">
 				<h3

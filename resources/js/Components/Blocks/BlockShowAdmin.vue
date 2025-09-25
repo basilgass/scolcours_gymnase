@@ -10,9 +10,10 @@ import {flashInterface} from "@/types"
 import MoveItemTo from "@/Components/MoveItemTo.vue"
 import {router} from "@inertiajs/vue3"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
+import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
 
 const editMode = useStoreEditMode()
-const flash = inject<flashInterface>('flash')
+const flash = useStoreFlashMessage()
 
 const props = defineProps<{
 	block: BlockInterface
@@ -61,7 +62,7 @@ function deleteBlock() {
 					_method: "delete"
 				})
 				.then(() => {
-					flash.add("Le block a été supprimé")
+					flash.success("Le block a été supprimé")
 
 					// Go to the blockable item.
 					router.visit(res.data)

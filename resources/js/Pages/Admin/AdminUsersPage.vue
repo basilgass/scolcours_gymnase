@@ -1,15 +1,16 @@
 <script lang="ts" setup>
 
-import {computed, inject, ref} from "vue"
+import {computed, ref} from "vue"
 import {router, useForm} from "@inertiajs/vue3"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import axios from "axios"
 import type {TeamInterface, UserInterface} from "@/types/modelInterfaces"
-import type {AxiosErrorMessage, AxiosResponseModel, flashInterface} from "@/types"
+import type {AxiosErrorMessage, AxiosResponseModel} from "@/types"
 import DialogModal from "@/Components/Ui/DialogModal.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 import ScButton from "@/Components/Ui/scButton.vue"
 import AdminTeamManager from "@/Components/Admin/Parts/AdminTeamManager.vue"
+import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
 
 // TODO: créer un composant pour chaque utilisateur - plus propre ?
 
@@ -23,9 +24,7 @@ const props = defineProps<{
 const theUsers = ref(props.users)
 const theTeams = ref(props.teams)
 
-console.log(props.users[0])
-const flash = inject<flashInterface>("flash")
-
+const flash = useStoreFlashMessage()
 const usersEmails = ref(""),
 	usersEmailsList = computed(() => {
 		const sep = usersEmails.value.includes(";") ? ";" : "\n"

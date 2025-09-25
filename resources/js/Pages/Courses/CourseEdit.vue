@@ -13,10 +13,10 @@ import {
 } from "@/types/modelInterfaces.ts"
 import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
-import {computed, inject, ref} from "vue"
+import {computed, ref} from "vue"
 import Card from "@/Components/Ui/Card.vue"
 import CourseLessonEdit from "@/Components/Courses/CourseLessonEdit.vue"
-import {AxiosErrorMessage, AxiosResponseModel, flashInterface} from "@/types"
+import {AxiosErrorMessage, AxiosResponseModel} from "@/types"
 import LessonTypeIcon from "@/Components/Courses/LessonTypeIcon.vue"
 import ScButton from "@/Components/Ui/scButton.vue"
 import {lessonableClassName, LessonScoreRulesInterface} from "@/types/lessonInterfaces.ts"
@@ -26,6 +26,7 @@ import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 import {useCourse} from "@/Pages/Courses/useCourse.ts"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
 import PostTypeIcon from "@/Components/Posts/PostTypeIcon.vue"
+import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
 
 defineOptions({layout: LayoutMain})
 
@@ -33,7 +34,7 @@ const props = defineProps<{
 	course: CourseInterface
 }>()
 
-const flash = inject<flashInterface>('flash')
+const flash = useStoreFlashMessage()
 const theCourse = ref<CourseInterface>(props.course)
 const lessons = ref<LessonInterface[]>(props.course.lessons)
 const lessonable: lessonableClassName[] = ['Post', 'Deck', 'Challenge', 'Generator']

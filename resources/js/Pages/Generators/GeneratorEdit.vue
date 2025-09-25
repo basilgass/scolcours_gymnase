@@ -3,20 +3,20 @@
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
-import {flashInterface} from "@/types"
 import {ChallengeInterface, GeneratorInterface} from "@/types/modelInterfaces"
 import {router} from "@inertiajs/vue3"
 import axios from "axios"
-import {inject, ref} from "vue"
+import {ref} from "vue"
 import GeneratorsExamples from "@/Components/Elements/GeneratorsExamples.vue"
 import ScButton from "@/Components/Ui/scButton.vue"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
+import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
 
 // REFACTOR: retravailler les générateurs.
 
 defineOptions({layout: LayoutMain})
 
-const flash = inject<flashInterface>("flash")
+const flash = useStoreFlashMessage()
 
 const props = defineProps<{
 	generator: GeneratorInterface,

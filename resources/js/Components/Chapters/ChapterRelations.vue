@@ -4,19 +4,19 @@
 >
 
 import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
-import {flashInterface} from "@/types"
-import type {ChapterInterface, ThemeInterface} from "@/types/modelInterfaces"
+import type {ChapterInterface} from "@/types/modelInterfaces"
 import axios from "axios"
-import {inject, ref} from "vue"
+import {ref} from "vue"
 import ScButton from "@/Components/Ui/scButton.vue"
 import FilteredList from "@/Components/Ui/FilteredList.vue"
+import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
 
 const props = defineProps<{
 	chapter: ChapterInterface,
 	relations: ChapterInterface[]
 }>()
 
-const flash = inject<flashInterface>("flash")
+const flash = useStoreFlashMessage()
 
 const editMode = useStoreEditMode()
 

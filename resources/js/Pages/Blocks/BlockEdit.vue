@@ -1,17 +1,16 @@
 <script lang="ts" setup>
 import BlockShow from "@/Components/Blocks/BlockShow.vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
-import MoveItemTo from "@/Components/MoveItemTo.vue"
 import SplitView from "@/Components/SplitView.vue"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 import {blockTypes} from "@/block.config.ts"
-import {flashInterface} from "@/types"
 import type {BlockInterface} from "@/types/modelInterfaces"
 import {router} from "@inertiajs/vue3"
 import axios from "axios"
-import {computed, inject, ref, unref} from "vue"
+import {computed, ref, unref} from "vue"
 import ScButton from "@/Components/Ui/scButton.vue"
+import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
 
 defineOptions({layout: LayoutMain})
 
@@ -20,7 +19,8 @@ const props = defineProps<{
 }>()
 
 const displayStyle = ref<"side-by-side" | "editor" | "preview">("side-by-side")
-const flash = inject<flashInterface>("flash")
+const flash = useStoreFlashMessage()
+
 const tab = ref<"markdown" | "script" | "data">("markdown")
 
 const theBlock = ref<BlockInterface>(props.block)
@@ -57,6 +57,7 @@ function saveBlock() {
 			console.error(error)
 		})
 }
+
 function addIllustration() {
 	axios
 		.post(
@@ -101,7 +102,7 @@ function deleteIllustration(id: number) {
 			_method: "delete"
 		})
 		.then(() => {
-			flash.add("L'illustration a été supprimée")
+			flash.success("L'illustration a été supprimée")
 			// Go to the post.
 			theBlock.value.illustrations = theBlock.value.illustrations.filter(x => x.id !== id)
 		})

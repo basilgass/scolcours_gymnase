@@ -3,17 +3,16 @@
 	setup
 >
 import FormMaker from "@/Components/Form/FormMaker.vue"
-import MoveItemTo from "@/Components/MoveItemTo.vue"
 import QuestionShow from "@/Components/Questions/QuestionShow.vue"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
-import {ClipboardKeyboardInterface, flashInterface} from "@/types"
+import {ClipboardKeyboardInterface} from "@/types"
 import type {QuestionInterface} from "@/types/modelInterfaces"
 import {router} from "@inertiajs/vue3"
 import axios from "axios"
-import {computed, inject, onMounted, PropType, ref, useTemplateRef} from "vue"
+import {computed, PropType, ref} from "vue"
 import ScButton from "@/Components/Ui/scButton.vue"
-import {questionDataInterface} from "@/Components/Questions/QuestionInterface.ts"
+import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
 
 defineOptions({layout: LayoutMain})
 
@@ -23,7 +22,7 @@ const props = defineProps({
 
 const theQuestion = ref(props.question)
 
-const flash = inject<flashInterface>("flash")
+const flash = useStoreFlashMessage()
 
 let saveQuestion = function () {
 		let illustrations = []

@@ -1,11 +1,10 @@
 <script lang="ts" setup>
 import MainFooter from "@/Components/MainFooter.vue"
 import MainHeader from "@/Components/MainHeader.vue"
-import FlashMessage from "@/Components/Ui/FlashMessage.vue"
-import {flashConfig, flashMessageInterface} from "@/types"
 import {ThemeInterface} from "@/types/modelInterfaces.ts"
 import {Head, usePage} from "@inertiajs/vue3"
-import {computed, provide, ref, watch} from "vue"
+import {computed, ref, watch} from "vue"
+import FlashContainer from "@/Components/Ui/FlashContainer.vue"
 
 const props = withDefaults(defineProps<{
 	theme?: Partial<ThemeInterface>
@@ -18,40 +17,40 @@ const props = withDefaults(defineProps<{
 	}
 })
 
-const currentTheme = ref(props.theme ? props.theme: {title: "Scolcours", slug: "main"})
-watch(()=>props.theme, ()=>{
-	currentTheme.value = props.theme ? props.theme: {title: "Scolcours", slug: "main"}
+const currentTheme = ref(props.theme ? props.theme : {title: "Scolcours", slug: "main"})
+watch(() => props.theme, () => {
+	currentTheme.value = props.theme ? props.theme : {title: "Scolcours", slug: "main"}
 })
 
 
-const flashMessages = ref<flashMessageInterface[]>([])
-
-function addFlashMessage(
-	message: string,
-	type: "success" | "info" | "error",
-	config: flashConfig
-) {
-	flashMessages.value.push({
-			id: null,
-			message,
-			type,
-			config: {
-				timeout: 1000 * 2,
-				...config
-			}
-		}
-	)
-}
-
-provide("flash", {
-	add: addFlashMessage,
-	success: (message, config: flashConfig) =>
-		addFlashMessage(message, "success", config),
-	info: (message, config: flashConfig) =>
-		addFlashMessage(message, "info", config),
-	error: (message, config: flashConfig) =>
-		addFlashMessage(message, "error", config)
-})
+// const flashMessages = ref<flashMessageInterface[]>([])
+//
+// function addFlashMessage(
+// 	message: string,
+// 	type: "success" | "info" | "error",
+// 	config: flashConfig
+// ) {
+// 	flashMessages.value.push({
+// 			id: null,
+// 			message,
+// 			type,
+// 			config: {
+// 				timeout: 1000 * 2,
+// 				...config
+// 			}
+// 		}
+// 	)
+// }
+//
+// provide("flash", {
+// 	add: addFlashMessage,
+// 	success: (message, config: flashConfig) =>
+// 		addFlashMessage(message, "success", config),
+// 	info: (message, config: flashConfig) =>
+// 		addFlashMessage(message, "info", config),
+// 	error: (message, config: flashConfig) =>
+// 		addFlashMessage(message, "error", config)
+// })
 
 
 // REFACTOR: Change the pageTitle function to be more global (chapter, post, challenge, ...)
@@ -83,26 +82,7 @@ const pageTitle = computed(() => {
 		<main-footer />
 
 		<!-- Flash message handler -->
-		<div
-			v-if="flashMessages.length"
-			class="fixed bottom-2 right-2 grid grid-cols-1 gap-3 max-w-[20em]"
-		>
-			<flash-message
-				v-for="(message, idx) in flashMessages"
-				:key="`flash-${idx}`"
-				:class="{
-					'bg-red-600/80 text-white': message.type === 'error',
-					'bg-green-600/80 text-white': message.type === 'success',
-					'bg-amber-400/80 text-black': message.type === 'info',
-					'bg-white text-black': message.type === undefined,
-				}"
-				:link="message.config?.link"
-				:timeout="message.config.timeout"
-				@close=" flashMessages = flashMessages.filter((x) => x.id !== $event)"
-				@open="message.id = $event"
-				:message="message.message"
-			/>
-		</div>
+		<flash-container />
 	</div>
 </template>
 

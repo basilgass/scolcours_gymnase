@@ -5,23 +5,24 @@
 
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
-import { flashInterface } from "@/types"
-import { ToolInterface } from "@/types/modelInterfaces.ts"
-import { useForm } from "@inertiajs/vue3"
-import { inject, PropType } from "vue"
+import {ToolInterface} from "@/types/modelInterfaces.ts"
+import {useForm} from "@inertiajs/vue3"
+import {PropType} from "vue"
+import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
 
-defineOptions({ layout: LayoutMain })
+defineOptions({layout: LayoutMain})
 
-const flash = inject<flashInterface>("flash")
+const flash = useStoreFlashMessage()
 
 const props = defineProps({
-	tool: { type: Object as PropType<ToolInterface>, required: true }
+	tool: {type: Object as PropType<ToolInterface>, required: true}
 })
 
 const form = useForm({
 	title: props.tool.title,
 	body: props.tool.body
 })
+
 function saveTool() {
 	form.post(route('api.admin.tools.update', [props.tool.id]),
 		{

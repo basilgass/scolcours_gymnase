@@ -12,26 +12,26 @@ import {
 import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
 import AdminHeader from "@/Components/Admin/AdminHeader.vue"
 import ScButton from "@/Components/Ui/scButton.vue"
-import {computed, inject, onMounted, ref} from "vue"
+import {computed, onMounted, ref} from "vue"
 import LessonIconLegend from "@/Components/Courses/LessonIconLegend.vue"
 import {useStoreScore} from "@/stores/useStoreScore.ts"
 import dayjs from "dayjs"
 import {useMenuScrollToData} from "@/Composables/useHelpers.ts"
 import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
 import axios from "axios"
-import {AxiosErrorMessage, AxiosResponseModel, flashInterface} from "@/types"
+import {AxiosErrorMessage, AxiosResponseModel} from "@/types"
 import StatBar from "@/Components/Ui/StatBar.vue"
 import LessonTypeIcon from "@/Components/Courses/LessonTypeIcon.vue"
 import {ScoreLessonDataInterface} from "@/types/scoreInterfaces.ts"
-import LessonDrop from "@/Components/Courses/LessonDrop.vue"
 import LessonByDates from "@/Components/Courses/LessonByDates.vue"
 import Card from "@/Components/Ui/Card.vue"
 import LessonDrops from "@/Components/Courses/LessonDrops.vue"
+import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
 
 defineOptions({layout: LayoutMain})
 
 const editMode = useStoreEditMode()
-const flash = inject<flashInterface>('flash')
+const flash = useStoreFlashMessage()
 
 const props = defineProps<{
 	course: CourseInterface,
@@ -66,7 +66,7 @@ const lessonsByDate = computed<Record<string, LessonInterface[]>>(() => {
 
 	const unplanned = props.course.lessons.filter(lesson => !lesson.scheduled_at)
 
-	if(unplanned.length>0) {
+	if (unplanned.length > 0) {
 		grouped[UNPLANNED] = unplanned
 	}
 
@@ -303,7 +303,8 @@ onMounted(() => {
 				v-theme.bg.light
 				class="p-3 rounded-lg"
 			>
-				<i class="bi bi-exclamation-triangle text-xl mr-3" />Les leçons dans l'encadré de couleur sont en devoirs, à faire <span class="font-semibold">avant</span> le cours !
+				<i class="bi bi-exclamation-triangle text-xl mr-3" />Les leçons dans l'encadré de couleur sont en
+				devoirs, à faire <span class="font-semibold">avant</span> le cours !
 			</div>
 		</div>
 

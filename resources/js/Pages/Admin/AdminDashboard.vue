@@ -24,7 +24,7 @@ const links2 = [
 
 const links3 = [
 	{ title: "quizz", route: "admin.quizzs.index", icon: 'bi bi-person-raised-hand' },
-	{ title: "import des langues", route: "admin.voc.import", icon: 'bi bi-translate' },
+	// { title: "import des langues", route: "admin.voc.import", icon: 'bi bi-translate' },
 ]
 
 </script>

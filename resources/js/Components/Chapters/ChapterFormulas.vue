@@ -13,6 +13,7 @@ import axios from "axios"
 import {inject, onMounted, ref, useTemplateRef} from "vue"
 import ScButton from "@/Components/Ui/scButton.vue"
 import {router} from "@inertiajs/vue3"
+import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
 
 const props = withDefaults(defineProps<{
 		chapter: ChapterInterface,
@@ -30,7 +31,7 @@ const theFormular = ref([]),
 	loadingState = ref(false),
 	theFormularErrors = ref("")
 
-const flash = inject<flashInterface>("flash")
+const flash = useStoreFlashMessage()
 const editMode = useStoreEditMode()
 
 function addFormula() {

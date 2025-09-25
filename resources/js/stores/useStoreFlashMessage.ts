@@ -1,9 +1,40 @@
-import { defineStore } from "pinia"
+import {defineStore} from "pinia"
+import {flashConfig, flashMessageInterface, flashType} from "@/types"
+import {ref} from "vue"
 
 // TODO: build the FlashMessage system as a Pinia Store.
 export const useStoreFlashMessage = defineStore(
 	'flashMessage',
-	()=>{
-		return {}
+	() => {
+
+		const messages = ref<flashMessageInterface[]>([])
+
+		function addFlashMessage(
+			message: string,
+			type: flashType,
+			config: flashConfig = {}
+		) {
+			messages.value.push({
+					id: null,
+					message,
+					type,
+					config: {
+						timeout: 1000 * 2,
+						...config
+					}
+				}
+			)
+		}
+
+		return {
+			messages,
+			add: addFlashMessage,
+			success: (message: string, config?: flashConfig) =>
+				addFlashMessage(message, "success", config),
+			info: (message: string, config?: flashConfig) =>
+				addFlashMessage(message, "info", config),
+			error: (message: string, config?: flashConfig) =>
+				addFlashMessage(message, "error", config)
+		}
 	}
 )

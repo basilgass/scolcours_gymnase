@@ -1,7 +1,7 @@
 <script setup lang="ts">
 
-import {inject, onMounted, ref} from "vue"
-import {AxiosResponseModel, flashInterface} from "@/types"
+import {onMounted, ref} from "vue"
+import {AxiosResponseModel} from "@/types"
 import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
 import type {FormulaInterface} from "@/types/modelInterfaces.ts"
 import axios from "axios"
@@ -10,8 +10,9 @@ import FormMaker from "@/Components/Form/FormMaker.vue"
 import ScButton from "@/Components/Ui/scButton.vue"
 import FormulaShow from "@/Components/Blocks/FormulaShow.vue"
 import PleaseWait from "@/Components/Ui/PleaseWait.vue"
+import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
 
-const flash = inject<flashInterface>("flash")
+const flash = useStoreFlashMessage()
 const editMode = useStoreEditMode()
 
 const formulas = ref<FormulaInterface[]>([])

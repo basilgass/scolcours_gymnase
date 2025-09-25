@@ -6,6 +6,7 @@ import type {BlockInterface} from "@/types/modelInterfaces.ts"
 import axios from "axios"
 import {defineModel, inject} from "vue"
 import {router} from "@inertiajs/vue3"
+import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
 
 const props = defineProps<{
 	postId: number,
@@ -15,7 +16,7 @@ const blocks = defineModel<BlockInterface[]>()
 
 const editMode = useStoreEditMode()
 
-const flash = inject<flashInterface>("flash")
+const flash = useStoreFlashMessage()
 
 function addBlock(after = -1) {
 	axios.post(

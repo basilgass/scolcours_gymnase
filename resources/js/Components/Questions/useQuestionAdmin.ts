@@ -1,12 +1,13 @@
 import type {QuestionInterface} from "@/types/modelInterfaces.ts"
 import axios from "axios"
-import {AxiosErrorMessage, AxiosResponseModel, flashInterface} from "@/types"
-import {inject, ref, Ref, watch} from "vue"
+import {AxiosErrorMessage, AxiosResponseModel} from "@/types"
+import {ref, Ref, watch} from "vue"
 import {useStoreScore} from "@/stores/useStoreScore.ts"
 import QuestionShow from "@/Components/Questions/QuestionShow.vue"
 import {router} from "@inertiajs/vue3"
+import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
 
-const flash = inject<flashInterface>('flash')
+const flash = useStoreFlashMessage()
 
 export interface questionsContainerInterface {
 	id: number,
@@ -102,9 +103,9 @@ export function useQuestionAdmin(
 		components.forEach((component) => {
 			if (component) {
 				if (isAnswersShown.value) {
-					component.loadAnswers(false) //reset the answer
+					component.loadAnswers({show: false}) //reset the answer
 				} else {
-					component.loadAnswers(true) // show the answer
+					component.loadAnswers({show: true}) // show the answer
 				}
 
 			}
@@ -137,14 +138,16 @@ export function useQuestionAdmin(
 			)
 
 	}
-	watch(questions, (newValue, preValue)=>{
-		const newIds = newValue.map(q=>q.id).join(',')
-		const oldIds = preValue.map(q=>q.id).join(',')
 
-		if(oldIds!=='' && oldIds!==newIds){
+	watch(questions, (newValue, preValue) => {
+		const newIds = newValue.map(q => q.id).join(',')
+		const oldIds = preValue.map(q => q.id).join(',')
+
+		if (oldIds !== '' && oldIds !== newIds) {
 			updateQuestionsOrder()
 		}
 	})
+
 	function updateGrid(grid: string) {
 		axios.patch(
 			route('api.admin.posts.updateQuestionsGrid', {

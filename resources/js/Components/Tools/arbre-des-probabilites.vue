@@ -7,13 +7,12 @@ import PiProbabilityTree from "@/Components/Pi/PiProbabilityTree.vue"
  */
 import ToolForm, {IToolForm} from "@/Components/Tools/Parts/ToolForm.vue"
 import {useToolsStorage} from "@/Composables/useToolsStorage.ts"
-import {flashInterface} from "@/types"
-import {computed, inject, ref} from "vue"
+import {computed, ref} from "vue"
 import Card from "@/Components/Ui/Card.vue"
+import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
 
 // TODO: documentation dans la page
-const flash = inject<flashInterface>('flash')
-
+const flash = useStoreFlashMessage()
 const {restoreTool} = useToolsStorage()
 const forms: IToolForm[] = restoreTool([
 	{
@@ -30,7 +29,7 @@ const forms: IToolForm[] = restoreTool([
 	}
 ])
 
-flash.add('Pour les paramètres, R=p|f|d/1-9/d,B=p|f|d,S=???')
+flash.info('Pour les paramètres, R=p|f|d/1-9/d,B=p|f|d,S=???')
 
 const treeData = computed(() => forms[1].value.value as string)
 const treeParams = computed(() => forms[0].value.value as string)

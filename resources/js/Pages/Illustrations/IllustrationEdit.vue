@@ -5,13 +5,13 @@ import IllustrationShow from "@/Components/Illustrations/IllustrationShow.vue"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
-import {flashInterface} from "@/types"
 import type {IllustrationInterface, WidgetInterface} from "@/types/modelInterfaces"
 import {router} from "@inertiajs/vue3"
 import axios from "axios"
-import {computed, inject, onMounted, PropType, ref} from "vue"
+import {computed, onMounted, PropType, ref} from "vue"
 import ScButton from "@/Components/Ui/scButton.vue"
 import Card from "@/Components/Ui/Card.vue"
+import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
 
 // TODO: Remettre le copier/coller d'une illustration.
 
@@ -27,7 +27,7 @@ const props = defineProps({
 })
 
 // Flash message
-const flash = inject<flashInterface>("flash")
+const flash = useStoreFlashMessage()
 
 // reactive illustration data.
 const theIllustration = ref<IllustrationInterface>(props.illustration)
@@ -141,7 +141,7 @@ function illustrationDelete() {
 			_method: "delete"
 		})
 		.then((res) => {
-			flash.add("L'illustration a été supprimée")
+			flash.success("L'illustration a été supprimée")
 			// Go to the post.
 			router.visit(res.data)
 		})

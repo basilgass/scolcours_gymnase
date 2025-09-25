@@ -6,19 +6,19 @@ import BlockShow from "@/Components/Blocks/BlockShow.vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
-import {flashInterface} from "@/types"
 import {ChallengeInterface, IllustrationInterface} from "@/types/modelInterfaces"
-import {router, usePage} from "@inertiajs/vue3"
+import {router} from "@inertiajs/vue3"
 import axios from "axios"
-import {inject, ref} from "vue"
+import {ref} from "vue"
 import ScButton from "@/Components/Ui/scButton.vue"
+import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
 
 defineOptions({layout: LayoutMain})
 const props = defineProps<{
 	challenge: ChallengeInterface
 }>()
 
-const flash = inject<flashInterface>("flash")
+const flash = useStoreFlashMessage()
 const theChallenge = ref(props.challenge)
 
 const updateGeneratorsOrder = function () {

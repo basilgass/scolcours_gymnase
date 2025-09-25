@@ -7,12 +7,13 @@ import {AxiosErrorMessage, flashInterface} from "@/types"
 import axios from "axios"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import {useCourse} from "@/Pages/Courses/useCourse.ts"
+import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
 
 const props = defineProps<{
 	lesson: LessonInterface
 }>()
 
-const flash = inject<flashInterface>('flash')
+const flash = useStoreFlashMessage()
 
 const showScoreRules = ref(false)
 

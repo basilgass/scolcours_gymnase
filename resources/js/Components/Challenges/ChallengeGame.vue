@@ -19,8 +19,9 @@ import {useStoreScore} from "@/stores/useStoreScore.ts"
 import {ScoreChallengeDataInterface} from "@/types/scoreInterfaces.ts"
 import {ChallengeAnswerInterface, ChallengeGameInterface} from "@/types/challengeInterface.ts"
 import {questionResultInterface} from "@/Components/Questions/QuestionInterface.ts"
+import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
 
-const flash = inject<flashInterface>("flash")
+const flash = useStoreFlashMessage()
 
 const props = defineProps<{
 	challenge: ChallengeInterface,

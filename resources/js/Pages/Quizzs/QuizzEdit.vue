@@ -4,20 +4,21 @@
 >
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
-import {flashInterface} from "@/types"
 import type {QuestionInterface, QuizzInterface, QuizzSessionInterface, TeamInterface} from "@/types/modelInterfaces"
 import {router} from "@inertiajs/vue3"
 import axios from "axios"
-import {inject, ref} from "vue"
+import {ref} from "vue"
 import QuestionsIndex from "@/Components/Questions/QuestionsIndex.vue"
 import BlockShow from "@/Components/Blocks/BlockShow.vue"
 import ScButton from "@/Components/Ui/scButton.vue"
 import Card from "@/Components/Ui/Card.vue"
 import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
+import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
 
 defineOptions({layout: LayoutMain})
 
-const flash = inject<flashInterface>("flash")
+const flash = useStoreFlashMessage()
+
 const props = defineProps<{
 	quizz: QuizzInterface,
 	questions: QuestionInterface[],

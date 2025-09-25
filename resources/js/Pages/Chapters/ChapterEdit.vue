@@ -4,16 +4,16 @@ import FormMaker from "@/Components/Form/FormMaker.vue"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
-import { flashInterface } from "@/types"
-import type { ChapterShowInterface } from "@/types/modelInterfaces"
+import type {ChapterShowInterface} from "@/types/modelInterfaces"
 import axios from "axios"
-import { inject, ref } from "vue"
+import {ref} from "vue"
 import {router, usePage} from "@inertiajs/vue3"
 import ScButton from "@/Components/Ui/scButton.vue"
+import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
 
-defineOptions({ layout: LayoutMain })
+defineOptions({layout: LayoutMain})
 
-const flash = inject<flashInterface>("flash")
+const flash = useStoreFlashMessage()
 
 const props = defineProps<{
 	chapter: ChapterShowInterface

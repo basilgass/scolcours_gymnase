@@ -2,21 +2,21 @@
 
 import {CourseInterface, UserTeamInterface} from "@/types/modelInterfaces.ts"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
-import {computed, inject, ref} from "vue"
-import {AxiosErrorMessage, AxiosResponseModel, flashInterface} from "@/types"
+import {computed, ref} from "vue"
+import {AxiosErrorMessage, AxiosResponseModel} from "@/types"
 import Card from "@/Components/Ui/Card.vue"
 import ScButton from "@/Components/Ui/scButton.vue"
 import axios from "axios"
-import ArticleTitle from "@/Components/Ui/ArticleTitle.vue";
-import FormMaker from "@/Components/Form/FormMaker.vue";
-import DialogModal from "@/Components/Ui/DialogModal.vue";
-import {slugify} from "@/scolcours.ts";
-import {router} from "@inertiajs/vue3";
-import ConfirmButton from "@/Components/Ui/ConfirmButton.vue";
+import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
+import FormMaker from "@/Components/Form/FormMaker.vue"
+import DialogModal from "@/Components/Ui/DialogModal.vue"
+import {slugify} from "@/scolcours.ts"
+import {router} from "@inertiajs/vue3"
+import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
+import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
 
 defineOptions({layout: LayoutMain})
-const flash = inject<flashInterface>("flash")
-
+const flash = useStoreFlashMessage()
 const props = defineProps<{
 	courses: CourseInterface[],
 	teams: UserTeamInterface[]
@@ -41,17 +41,19 @@ function addCourse() {
 		})
 }
 
-function deleteCourse(id: number){
+function deleteCourse(id: number) {
 	axios.delete(route('api.admin.courses.destroy', {id}))
-		.then(()=>{
-			const index = theCourses.value.findIndex(course=>course.id===id)
+		.then(() => {
+			const index = theCourses.value.findIndex(course => course.id === id)
 			theCourses.value.splice(index, 1)
 		})
-		.catch((err:AxiosErrorMessage)=>{
+		.catch((err: AxiosErrorMessage) => {
 			console.warn(err.response.data.message)
 		})
 }
+
 const theCourses = ref<CourseInterface[]>(props.courses)
+
 function toggleTeam(course: CourseInterface, team: UserTeamInterface) {
 	axios
 		.patch(route('api.admin.courses.toggle-team', {course: course.id, team: team.id}))
@@ -82,17 +84,19 @@ function toggleTeam(course: CourseInterface, team: UserTeamInterface) {
 			<article-title
 				title="gestion des cours"
 				:return-link="{
-				url: route('admin.index'),
-				label: 'retour à l\'administration'
-			}"
+					url: route('admin.index'),
+					label: 'retour à l\'administration'
+				}"
 			>
-				<template #right><sc-button
-					type="add"
-					xs
-					@click="showCreate = true"
-				>
-					<i class="bi bi-plus-circle mr-2" />Créer un nouveau cours
-				</sc-button></template>
+				<template #right>
+					<sc-button
+						type="add"
+						xs
+						@click="showCreate = true"
+					>
+						<i class="bi bi-plus-circle mr-2" />Créer un nouveau cours
+					</sc-button>
+				</template>
 			</article-title>
 
 			<div>Droite</div>
@@ -125,7 +129,9 @@ function toggleTeam(course: CourseInterface, team: UserTeamInterface) {
 								icon
 								xs
 								@confirm="deleteCourse(course.id)"
-							>supprimer</confirm-button>
+							>
+								supprimer
+							</confirm-button>
 						</div>
 					</div>
 				</template>

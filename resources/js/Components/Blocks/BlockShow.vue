@@ -6,7 +6,6 @@ import {useFormattedBody} from "@/Composables/useHelpers.ts"
 import {useScriptLoader} from "@/Composables/useScriptLoader.ts"
 import {blockTypes} from "@/block.config.ts"
 import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
-import {flashInterface} from "@/types"
 import type {BlockInterface} from "@/types/modelInterfaces.ts"
 import {router} from "@inertiajs/vue3"
 import axios from "axios"
@@ -14,9 +13,10 @@ import {computed, inject, provide} from "vue"
 import {blockTemplate} from "@/helpers/blockTemplate.ts"
 import ScButton from "@/Components/Ui/scButton.vue"
 import IllustrationIndex from "@/Components/Illustrations/IllustrationIndex.vue"
+import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
 
 const editMode = useStoreEditMode()
-const flash = inject<flashInterface>("flash")
+const flash = useStoreFlashMessage()
 
 // Props
 const props = defineProps<{
@@ -28,7 +28,7 @@ const props = defineProps<{
 // emits
 const emits = defineEmits<{
 	destroy: [],
-	moved: [target: {id: number, target_type: string, target_id: number}]
+	moved: [target: { id: number, target_type: string, target_id: number }]
 }>()
 
 

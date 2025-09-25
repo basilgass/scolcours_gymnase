@@ -3,9 +3,9 @@
 import IllustrationShow from "@/Components/Illustrations/IllustrationShow.vue"
 import {BlockInterface, IllustrationInterface} from "@/types/modelInterfaces.ts"
 import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
-import {inject, ref} from "vue"
+import {ref} from "vue"
 import axios from "axios"
-import type {flashInterface} from "@/types"
+import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
 
 const props = defineProps<{
 	block: BlockInterface
@@ -14,7 +14,7 @@ const illustrations = ref<IllustrationInterface[]>(props.block.illustrations)
 
 const editMode = useStoreEditMode()
 
-const flash = inject<flashInterface>("flash")
+const flash = useStoreFlashMessage()
 
 function updateIllustrationsOrder() {
 	axios.patch(route("api.admin.blocks.illustrations.order", {block: props.block.id}), {

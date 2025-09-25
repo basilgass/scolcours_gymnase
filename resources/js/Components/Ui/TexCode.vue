@@ -1,12 +1,11 @@
 <script setup lang="ts">
 
 import {useClipboard} from "@vueuse/core"
-import {inject, ref} from "vue"
-import axios from "axios"
-import {AxiosErrorMessage, flashInterface} from "@/types"
+import {ref} from "vue"
 import {usePdf} from "@/Composables/useDownloadPdf.ts"
+import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
 
-const flash = inject<flashInterface>("flash")
+const flash = useStoreFlashMessage()
 const props = withDefaults(defineProps<{
 		tex: string,
 		hide?: boolean,
@@ -24,8 +23,9 @@ const {copy, copied} = useClipboard()
 const showTexCode = ref(false)
 
 const pdf = usePdf()
-function downloadPdf(){
-	pdf.LaTeX(props.title,props.slug,props.tex)
+
+function downloadPdf() {
+	pdf.LaTeX(props.title, props.slug, props.tex)
 }
 </script>
 

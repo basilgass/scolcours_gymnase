@@ -10,20 +10,20 @@ import FormMaker from "@/Components/Form/FormMaker.vue"
 import MoveItemTo from "@/Components/MoveItemTo.vue"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
-import type {flashInterface} from "@/types"
 import type {PostShowInterface} from "@/types/modelInterfaces"
 import {router} from "@inertiajs/vue3"
 import axios from "axios"
-import {inject, PropType, ref} from "vue"
+import {PropType, ref} from "vue"
 import ScButton from "@/Components/Ui/scButton.vue"
+import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
 
-defineOptions({ layout: LayoutMain })
+defineOptions({layout: LayoutMain})
 
 const props = defineProps({
-	post: { type: Object as PropType<PostShowInterface>, required: true }
+	post: {type: Object as PropType<PostShowInterface>, required: true}
 })
 
-const flash = inject<flashInterface>("flash")
+const flash = useStoreFlashMessage()
 
 const thePost = ref(props.post)
 if (thePost.value.type === null) thePost.value.type = ""

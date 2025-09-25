@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import LayoutMain from "@/Layouts/LayoutMain.vue"
-import {inject, PropType, ref} from "vue"
+import {PropType, ref} from "vue"
 import {GeneratorInterface} from "@/types/modelInterfaces.ts"
 import GeneratorItem from "@/Components/Elements/GeneratorItem.vue"
 import FilteredList from "@/Components/Ui/FilteredList.vue"
@@ -9,14 +9,13 @@ import ScButton from "@/Components/Ui/scButton.vue"
 import axios from "axios"
 import {router} from "@inertiajs/vue3"
 import FormMaker from "@/Components/Form/FormMaker.vue"
-import {flashInterface} from "@/types"
+import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
 
 defineOptions({layout: LayoutMain})
 defineProps({
 	generators: {type: Object as PropType<GeneratorInterface[]>, required: true}
 })
-const flash = inject<flashInterface>('flash')
-
+const flash = useStoreFlashMessage()
 
 const slug = ref("")
 const themeId = ref(1)

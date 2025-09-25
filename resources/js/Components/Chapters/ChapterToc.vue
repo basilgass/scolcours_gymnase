@@ -11,6 +11,7 @@ import axios from "axios"
 import {computed, inject, ref} from "vue"
 import ScButton from "@/Components/Ui/scButton.vue"
 import PostTypeIcon from "@/Components/Posts/PostTypeIcon.vue"
+import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
 
 const props = defineProps<{
 	chapter: ChapterShowInterface,      // id, slug, posts
@@ -19,7 +20,7 @@ const props = defineProps<{
 	vertical?: boolean
 }>()
 
-const flash = inject<flashInterface>("flash")
+const flash = useStoreFlashMessage()
 const editMode = useStoreEditMode()
 
 const posts = ref(props.posts)

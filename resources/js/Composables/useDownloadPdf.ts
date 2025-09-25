@@ -1,9 +1,8 @@
 import axios from "axios"
-import {AxiosErrorMessage, flashInterface} from "@/types"
-import {inject} from "vue"
+import {AxiosErrorMessage} from "@/types"
+import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
 
-// BUG: flash does not work in composable -> need to move to a pinia store !
-const flash = inject<flashInterface>('flash')
+const flash = useStoreFlashMessage()
 
 export interface pdf_config {
 	title: string,

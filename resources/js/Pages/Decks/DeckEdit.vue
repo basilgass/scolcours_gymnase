@@ -6,14 +6,15 @@
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 import type {ChapterInterface, DeckInterface} from "@/types/modelInterfaces"
-import {computed, inject, ref} from "vue"
+import {computed, ref} from "vue"
 import DeckCardsEditIndex from "@/Components/Decks/Parts/DeckCardsEditIndex.vue"
 import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
 import {slugify} from "@/scolcours.ts"
 import Card from "@/Components/Ui/Card.vue"
 import ScButton from "@/Components/Ui/scButton.vue"
-import {AxiosErrorMessage, flashInterface} from "@/types"
+import {AxiosErrorMessage} from "@/types"
 import axios from "axios"
+import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
 
 defineOptions({layout: LayoutMain})
 
@@ -21,7 +22,7 @@ const props = defineProps<{
 	deck: DeckInterface
 }>()
 
-const flash = inject<flashInterface>('flash')
+const flash = useStoreFlashMessage()
 
 const theTitle = ref<string>(props.deck.title)
 const theSlug = computed<string>(() => slugify(theTitle.value))

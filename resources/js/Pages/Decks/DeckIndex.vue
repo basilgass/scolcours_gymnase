@@ -5,22 +5,23 @@
 
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 import {ChapterInterface, DeckInterface} from "@/types/modelInterfaces"
-import {computed, inject, PropType, reactive, ref} from "vue"
+import {computed, PropType, reactive, ref} from "vue"
 import ScButton from "@/Components/Ui/scButton.vue"
 import axios from "axios"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
 import DialogModal from "@/Components/Ui/DialogModal.vue"
 import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
 import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
-import {AxiosErrorMessage, AxiosResponseModel, flashInterface} from "@/types"
+import {AxiosErrorMessage, AxiosResponseModel} from "@/types"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import {slugify} from "@/scolcours.ts"
 import FilteredList from "@/Components/Ui/FilteredList.vue"
+import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
 
 defineOptions({layout: LayoutMain})
 const editMode = useStoreEditMode()
 
-const flash = inject<flashInterface>('flash')
+const flash = useStoreFlashMessage()
 
 const props = defineProps({
 	decks: {type: Array as PropType<DeckInterface[]>, required: true}

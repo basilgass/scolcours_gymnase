@@ -11,10 +11,10 @@ import ScButton from "@/Components/Ui/scButton.vue"
 import {AxiosErrorMessage, flashInterface} from "@/types"
 import axios from "axios"
 import {computedCard} from "@/Components/Decks/Parts/DeckCardMaker.ts"
+import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
 
 const editMode = useStoreEditMode()
-const flash = inject<flashInterface>('flash')
-
+const flash = useStoreFlashMessage()
 const props = defineProps<{ card: CardInterface }>()
 const editableCard = ref<CardInterface>(computedCard(props.card))
 

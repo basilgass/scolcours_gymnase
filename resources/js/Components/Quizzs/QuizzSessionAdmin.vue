@@ -2,15 +2,14 @@
 
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
 import type {QuizzSessionInterface, TeamInterface} from "@/types/modelInterfaces.ts"
-import {computed, inject, ref} from "vue"
+import {computed, ref} from "vue"
 import axios from "axios"
-import {flashInterface} from "@/types"
 import DialogModal from "@/Components/Ui/DialogModal.vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import ScButton from "@/Components/Ui/scButton.vue"
+import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
 
-const flash = inject<flashInterface>('flash')
-
+const flash = useStoreFlashMessage()
 const props = defineProps<{
 	quizzId: number,
 	sessions: QuizzSessionInterface[],
@@ -25,6 +24,7 @@ const sessionName = ref("")
 function ongoing(session: QuizzSessionInterface) {
 	return session.current <= session.total && session.enable
 }
+
 function sessionCreate() {
 	axios
 		.post(route("api.admin.quizzs.sessions.create", [props.quizzId]), {
