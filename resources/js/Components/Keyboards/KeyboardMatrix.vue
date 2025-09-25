@@ -108,7 +108,11 @@ const aij = ref<{ row: number, column: number } | null>(null)
 const valuesKeyboard = computed<string>(() => {
 	const [_, kbrd] = questionData.config.raw.split('\n')[0].split('checker:')
 
-	return kbrd ? getOneKeyboard(kbrd).keyboard.config.name : 'fraction'
+	return kbrd
+		? getOneKeyboard(kbrd).keyboard.config.name
+		: numericOutput.value
+			? 'number'
+			: 'fraction'
 })
 
 
