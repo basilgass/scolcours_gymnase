@@ -13,6 +13,8 @@ import {Polynom} from "pimath"
 import {questionDataInterface} from "@/Components/Questions/QuestionInterface.ts"
 import ScButton from "@/Components/Ui/scButton.vue"
 
+// config: decimal
+
 // props.keyboard
 const props = defineProps<KeyboardPropsInterface>()
 
