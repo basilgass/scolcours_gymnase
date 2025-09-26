@@ -79,7 +79,9 @@ class Question extends Model
 	 */
 	public function blocks(): MorphMany
 	{
-		return $this->morphMany(Block::class, 'blockable')->orderBy('order')->orderBy('id');
+		return $this->morphMany(Block::class, 'blockable')
+		            ->orderBy('order')
+		            ->orderBy('id');
 	}
 
 	public function resetAnswer(): void

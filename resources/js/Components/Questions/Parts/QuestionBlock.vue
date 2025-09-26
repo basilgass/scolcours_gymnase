@@ -76,8 +76,6 @@ const illustration = computed(()=>{
 		code = replace_abc_toTex(code, key, answer, texColor)
 	}
 
-	console.log(code)
-
 	return {
 		...questionData.block.value.illustration,
 		code

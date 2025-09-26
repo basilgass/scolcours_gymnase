@@ -10,6 +10,7 @@ const description = `solution|sol,[paramètres]
 checker = par défaut, c'est le "exact"
 `
 
+// TODO: SolutionChecker a revoir pour plus de cohérence.
 export class SolutionChecker extends CheckerAbstract {
 
 	constructor(config?: string[] | string) {
@@ -36,15 +37,14 @@ export class SolutionChecker extends CheckerAbstract {
 			)
 		}
 
-		if (isEmptyOrReal(this.answer) && isEmptyOrReal(value)) {
+		if (isEmptyOrReal(this.answer) && !isEmptyOrReal(value)) {
 			// la réponse donnée n'est pas un cas particulier, mais on devrait l'avoir...
 			return this.makeCheckerResult("Ce n'est pas le bon ensemble de solution.")
 		}
 
-
 		// La réponse donnée et espérée ne sont pas des cas particuliers
 
-		// La solution espérée est avec des accolades
+		// La solution espérée est avec des accolades: contrôle que les accolades sont présents et le bon nombre
 		if (this.answer.startsWith("{")) {
 			if (!value.startsWith("{")) {
 				// Manque les accolades
@@ -123,34 +123,6 @@ export class SolutionChecker extends CheckerAbstract {
 				errors.push(`(${count+1}) aucune réponse ne correspond dans les solutions.`)
 
 			})
-			//
-			// expectedValues.forEach((checkValue) => {
-			// 	const results = givenValues
-			// 		.map(given => this.secondaryChecker.check(given, checkValue))
-			//
-			// 	const givenIndex = results
-			// 		.findIndex((value) => value.result)
-			// 	if (givenIndex !== -1) {
-			// 		// Un résultat correspondant à été trouvé.
-			// 		givenValues.splice(givenIndex, 1)
-			// 		return
-			// 	}
-			//
-			// 	// On recherche la première valeur avec partiel
-			// 	const givenPartialResult = results
-			// 		.find(value => value.partial)
-			//
-			// 	if (!givenPartialResult) {
-			// 		console.log(checkValue, givenValues)
-			// 		// Aucune réponse partielle trouvée
-			// 		partialOnly = false
-			// 		errors.push("Une réponse ne fait pas partie des solutions.")
-			// 		return
-			// 	}
-			//
-			// 	errors.push(givenPartialResult.message)
-			//
-			// })
 
 			return this.makeCheckerResult(
 				errors.length > 0
@@ -174,8 +146,9 @@ export class SolutionChecker extends CheckerAbstract {
 			)
 		}
 
-		// Tous les tests ont passé - ne devrait jamais arriver !
-		return this.makeCheckerResult()
+
+		// tODO: Aucune aide à a la résolution des intervalles.
+		return this.makeCheckerResult("Les solutions données ne sont pas justes.")
 	}
 }
 

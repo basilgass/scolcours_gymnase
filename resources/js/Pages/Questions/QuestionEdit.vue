@@ -6,13 +6,19 @@ import FormMaker from "@/Components/Form/FormMaker.vue"
 import QuestionShow from "@/Components/Questions/QuestionShow.vue"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
-import {ClipboardKeyboardInterface} from "@/types"
-import type {QuestionInterface} from "@/types/modelInterfaces"
+import {AxiosResponseModel, ClipboardKeyboardInterface} from "@/types"
+import type {
+	BlockInterface,
+	IllustrationInterface,
+	QuestionDynamicInterface,
+	QuestionInterface
+} from "@/types/modelInterfaces"
 import {router} from "@inertiajs/vue3"
 import axios from "axios"
 import {computed, PropType, ref} from "vue"
 import ScButton from "@/Components/Ui/scButton.vue"
 import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
+import IllustrationIndex from "@/Components/Illustrations/IllustrationIndex.vue"
 
 defineOptions({layout: LayoutMain})
 
@@ -99,6 +105,35 @@ function pasteQuestion() {
 }
 
 
+function addIllustration(){
+	if(theQuestion.value.block.illustration){
+		return
+	}
+
+	axios
+		.post(
+			route("api.admin.blocks.illustrations.store", {block: theQuestion.value.block.id}),
+			{}
+		)
+		.then((res: AxiosResponseModel<IllustrationInterface>) => {
+			// router.visit(route("admin.illustrations.edit", [res.data.id]))
+			flash.success("une nouvelle illustration a été créée")
+			theQuestion.value.block.illustration = res.data
+		}).catch((res) => {
+			console.warn("add illustration: ", res)
+		}
+	)
+}
+function deleteIllustration(){
+	axios.delete(
+		route('api.admin.illustrations.destroy', {illustration: theQuestion.value.block.illustration.id})
+	).then(()=>{
+		theQuestion.value.block.illustration = null
+		flash.success("L'illustration a bien été supprimée.")
+	})
+}
+
+
 </script>
 <template>
 	<section class="my-5 scolcours-container">
@@ -154,7 +189,7 @@ function pasteQuestion() {
 		</div>
 		<div class="flex flex-col md:flex-row gap-3 px-5 pb-5">
 			<form
-				class="flex-1 flex flex-col gap-3 font-code"
+				class="space-y-3 font-code"
 				@submit.prevent
 			>
 				<form-maker
@@ -174,6 +209,39 @@ function pasteQuestion() {
 					type="text"
 					sm
 				/>
+
+
+				<div class="grid grid-cols-3 gap-5">
+					<sc-button
+						v-if="!theQuestion.block.illustration"
+						type="add"
+						xs
+						outline
+						@click="addIllustration"
+					>
+						<i class="bi bi-image" />
+					</sc-button>
+					<confirm-button
+						v-else
+						xs
+						@confirm="deleteIllustration"
+					>
+						<i class="bi bi-image" /> => <i class="bi bi-trash" />
+					</confirm-button>
+
+					<sc-button
+						disabled
+						xs
+					>
+						bouton 1
+					</sc-button>
+					<sc-button
+						disabled
+						xs
+					>
+						bouton 2
+					</sc-button>
+				</div>
 
 				<form-maker
 					ref="formBody"

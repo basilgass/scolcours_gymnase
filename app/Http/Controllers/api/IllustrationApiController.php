@@ -4,6 +4,8 @@ namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\IllustrationRequest;
+use App\Http\Resources\BlockResource;
+use App\Http\Resources\IllustrationResource;
 use App\Models\Block;
 use App\Models\Illustration;
 use Illuminate\Http\Request;
@@ -24,7 +26,7 @@ class IllustrationApiController extends Controller
 
 		$block->touch();
 
-		return $illustration->fresh();
+		return IllustrationResource::make($illustration);
 	}
 
 	public function update(IllustrationRequest $request, Illustration $illustration)

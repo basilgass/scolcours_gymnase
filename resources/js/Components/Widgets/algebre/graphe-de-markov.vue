@@ -9,15 +9,14 @@ c d
 <script lang="ts" setup>
 
 import {WidgetPropsInterface} from "@/types/modelInterfaces.ts"
-import {computed} from "vue"
+import {computed, onMounted} from "vue"
 import PiMarkovGraph from "@/Components/Pi/PiDrawComponents/PiMarkovGraph.vue"
 import {Fraction} from "pimath"
+import type {PiDraw} from "pidraw/types"
 
 const props = defineProps<{
 	illustration: WidgetPropsInterface
 }>()
-
-console.log(props.illustration.code)
 
 const params = computed(() => props.illustration.parameters?.split(',')??[])
 
@@ -81,11 +80,22 @@ const matrix = computed<Fraction[][]>(() => {
 	return m
 })
 
+const emits = defineEmits<{
+	drawClick: [{ draw: PiDraw, mouse: MouseEvent }],
+	update: [draw: PiDraw],
+}>()
+
+const drawMouseUp = function (evt: {draw: PiDraw, mouse: MouseEvent}) {
+	emits("update", evt.draw)
+	emits("drawClick", evt)
+}
+
 </script>
 <template>
 	<pi-markov-graph
 		:labels
 		:matrix
 		:digits
+		@draw-click="drawMouseUp"
 	/>
 </template>

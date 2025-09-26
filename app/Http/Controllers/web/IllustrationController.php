@@ -14,17 +14,21 @@ class IllustrationController extends Controller
 	public function edit(Illustration $illustration)
 	{
 		// Get the post (or anything) containing the illustration
-		$post = $illustration->block->blockable;
+		$parent = $illustration->block->blockable;
 
 		// If the blockable is a post, extract the chapter and theme.
-		if ($post instanceof Question) {
-			$post = $post->questionable;
-		}
+//		if ($parent instanceof Question) {
+//			$parent = $parent->questionable;
+//		}
 
 		return Inertia::render(
 			"Illustrations/IllustrationEdit",
 			[
-				"illustration" => IllustrationResource::make($illustration)
+				"illustration" => IllustrationResource::make($illustration),
+				"parent"       => [
+					"id"=> $parent->id,
+					"type"=> class_basename($parent)
+				]
 			]
 		);
 	}

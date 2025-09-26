@@ -2,19 +2,28 @@
 import EditLink from "@/Components/Ui/EditLink.vue"
 import {getModule, MODULE_TYPES} from "@/scolcours.ts"
 import type {IllustrationInterface} from "@/types/modelInterfaces.ts"
-import {computed} from "vue"
+import {computed, onMounted, ref, watch} from "vue"
 
 const props = defineProps<{
 	illustration: IllustrationInterface
 	clickThrough?: boolean
 }>()
 
-// Get the component to display
-const widgetComponent = computed(() => {
+
+function getWidget(){
 	return getModule(
 		props.illustration.widget ? props.illustration.widget.component : null,
 		MODULE_TYPES.WIDGET
 	)
+}
+
+// Get the component to display
+let widgetComponent = getWidget()
+
+watch(()=>props.illustration, (newValue, oldValue)=>{
+	if(newValue.widget.slug!==oldValue.widget.slug){
+		widgetComponent = getWidget()
+	}
 })
 
 function click($event: MouseEvent) {

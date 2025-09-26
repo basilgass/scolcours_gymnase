@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import {onMounted, ref, useTemplateRef, watch} from "vue"
+import {nextTick, onMounted, onUnmounted, ref, useTemplateRef, watch} from "vue"
 import {PiDraw} from "pidraw"
 import {useResizeObserver} from "@vueuse/core"
 import katex from "katex"
@@ -25,6 +25,7 @@ const showAnimation = ref(false)
 
 function PiParserUpdate(from?: string) {
 	// Update the drawing
+	// TODO: PiGraph.refresh should be more smart: if it's the same code, but just the label changing, just update the labels.
 	try {
 		PiGraph.refresh(props.code)
 		emits("update", PiGraph)

@@ -92,32 +92,6 @@ function deleteQuestion() {
 		})
 }
 
-function addIllustration(){
-	if(theQuestion.value.block.illustration){
-		return
-	}
-
-	axios
-		.post(
-			route("api.admin.blocks.illustrations.store", {block: theQuestion.value.block.id}),
-			{}
-		)
-		.then((res) => {
-			router.visit(route("admin.illustrations.edit", [res.data.id]))
-			flash.success("une nouvelle illustration a été créée")
-		}).catch((res) => {
-			console.warn("add illustration: ", res)
-		}
-	)
-}
-function deleteIllustration(){
-	axios.delete(
-		route('api.admin.illustrations.destroy', {illustration: theQuestion.value.block.illustration.id})
-	).then(()=>{
-		theQuestion.value.block.illustration = null
-		flash.success("L'illustration a bien été supprimée.")
-	})
-}
 </script>
 
 <template>
@@ -136,23 +110,6 @@ function deleteIllustration(){
 				target="post"
 				@moved="emits('removed')"
 			/>
-
-			<sc-button
-				v-if="!theQuestion.block.illustration"
-				type="add"
-				xs
-				outline
-				@click="addIllustration"
-			>
-				<i class="bi bi-image" />
-			</sc-button>
-			<confirm-button
-				v-else
-				xs
-				@confirm="deleteIllustration"
-			>
-				<i class="bi bi-image" /> => <i class="bi bi-trash" />
-			</confirm-button>
 
 			<confirm-button
 				xs

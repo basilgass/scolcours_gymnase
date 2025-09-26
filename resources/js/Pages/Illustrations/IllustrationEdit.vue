@@ -8,7 +8,7 @@ import LayoutMain from "@/Layouts/LayoutMain.vue"
 import type {IllustrationInterface, WidgetInterface} from "@/types/modelInterfaces"
 import {router} from "@inertiajs/vue3"
 import axios from "axios"
-import {computed, onMounted, PropType, ref} from "vue"
+import {computed, onMounted, ref} from "vue"
 import ScButton from "@/Components/Ui/scButton.vue"
 import Card from "@/Components/Ui/Card.vue"
 import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
@@ -19,13 +19,15 @@ import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
 defineOptions({layout: LayoutMain})
 
 // Props definition
-const props = defineProps({
-	illustration: {
-		type: Object as PropType<IllustrationInterface>,
-		required: true
+const props = defineProps<{
+	illustration: IllustrationInterface,
+	parent: {
+		id: number,
+		type: "" | "Question"
 	}
-})
+}>()
 
+console.log(props.parent)
 // Flash message
 const flash = useStoreFlashMessage()
 
@@ -126,11 +128,17 @@ function illustrationSave() {
 function illustrationSaveAndEdit() {
 	illustrationSave()
 
+	if (props.parent.type === 'Question') {
+		router.visit(route("admin.questions.edit", {question: props.parent.id}))
+		return
+	}
+
 	router.visit(route("admin.blocks.edit", [theIllustration.value.block_id]))
 }
 
 // Visit the belonging block (no save, no edit)
 function illustrationVisit() {
+	// TODO: n'existe pas
 	router.visit(route("illustrations.show", [theIllustration.value.id]))
 }
 
@@ -172,7 +180,7 @@ onMounted(() => {
 					type="primary"
 					@click="illustrationSaveAndEdit"
 				>
-					<i class="bi bi-save" /> <i class="bi bi-arrow-right" /> <span>block</span>
+					<i class="bi bi-save" /> <i class="bi bi-arrow-right" /> <span>{{ parent.type ?? "Block" }}</span>
 				</sc-button>
 				<sc-button
 					type="cancel"

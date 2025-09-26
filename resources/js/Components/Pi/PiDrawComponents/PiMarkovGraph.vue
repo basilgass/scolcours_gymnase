@@ -4,6 +4,7 @@
 import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"
 import {computed, ref} from "vue"
 import {Fraction, Matrix, Point, Polynom} from "pimath"
+import type {PiDraw} from "pidraw/types"
 
 interface XY {
 	x: number,
@@ -215,6 +216,15 @@ function markovGraph4() {
 	return {points, anchors}
 }
 
+const emits = defineEmits<{
+	drawClick: [{ draw: PiDraw, mouse: MouseEvent }],
+	update: [draw: PiDraw],
+}>()
+
+const drawMouseUp = function (evt: {draw: PiDraw, mouse: MouseEvent}) {
+	emits("update", evt.draw)
+	emits("drawClick", evt)
+}
 </script>
 
 <template>
@@ -226,6 +236,7 @@ function markovGraph4() {
 				parameters:calculatedParameters,
 				code
 			}"
+			@draw-click="drawMouseUp"
 		/>
 		<div v-admin>
 			<div
