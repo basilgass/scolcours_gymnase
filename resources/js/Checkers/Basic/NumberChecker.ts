@@ -1,4 +1,4 @@
-import {CheckerAbstract} from "../CheckerAbstract"
+import {CheckerAbstract, makeCheckerResult} from "../CheckerAbstract"
 import {CheckerResult, CHECKERS} from "../checker.config"
 
 const name = "number",
@@ -44,23 +44,23 @@ export class NumberChecker extends CheckerAbstract {
 		const nbExpectedDigits = expectedDigits?.length ?? 0
 
 		if (nbExpectedDigits !== nbDigits && this._isStrict) {
-			return this.makeCheckerResult("Problème dans la configuration du checker ou de la réponse")
+			return makeCheckerResult("Problème dans la configuration du checker ou de la réponse")
 		}
 
 		if (!this._isStrict) {
 			if (+value === +this.answer) {
-				return this.makeCheckerResult()
+				return makeCheckerResult()
 			}
 		}
 
 		const [unit, digits] = value.split(".")
 		if (+unit !== +expectedUnit) {
-			return this.makeCheckerResult("la partie entière n'est pas juste.")
+			return makeCheckerResult("la partie entière n'est pas juste.")
 		}
 
 		// Le nombre de chiffres après la virgule n'est pas juste
 		if (digits.length > nbDigits) {
-			return this.makeCheckerResult(
+			return makeCheckerResult(
 				`Il faut ${nbDigits} chiffre(s) après la virgule.`,
 				(+digits).toFixed(nbDigits) === expectedDigits
 			)
@@ -70,12 +70,12 @@ export class NumberChecker extends CheckerAbstract {
 		const lastDigit = +digits[digits.length - 1],
 			lastExpectedDigit = +this.answer[this.answer.length - 1]
 		if (Math.abs(lastDigit - lastExpectedDigit) === 1) {
-			return this.makeCheckerResult(
+			return makeCheckerResult(
 				"Peut être un problème d'arrondi ?",
 				true
 			)
 		}
 
-		return this.makeCheckerResult("La réponse n'est pas juste.")
+		return makeCheckerResult("La réponse n'est pas juste.")
 	}
 }

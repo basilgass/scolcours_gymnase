@@ -5,7 +5,7 @@ import {
 	CheckerResult,
 	CHECKERS,
 	checkMinMaxEquation,
-	checkReducedEquation,
+	checkReducedEquation, makeCheckerResult,
 	PolynomChecker
 } from "@/Checkers"
 
@@ -108,7 +108,7 @@ export class CartesianChecker extends CheckerAbstract {
 
 		// L'expression de gauche est soit égale, soit opposée.
 		if (!A2.isLinearTo(Q2)) {
-			return this.makeCheckerResult("l'équation n'est pas juste.")
+			return makeCheckerResult("l'équation n'est pas juste.")
 		}
 
 
@@ -120,7 +120,7 @@ export class CartesianChecker extends CheckerAbstract {
 			// ax+by=0
 			// Allows x=c, y=c
 			if (A.right.variables.length > 0) {
-				return this.makeCheckerResult("Toutes les variables doivent être à gauche.")
+				return makeCheckerResult("Toutes les variables doivent être à gauche.")
 			}
 
 			if (
@@ -128,7 +128,7 @@ export class CartesianChecker extends CheckerAbstract {
 				!A.right.isZero()
 			) {
 				// There are two variables : everything must be right
-				return this.makeCheckerResult("l'équation n'est pas correctement formée.")
+				return makeCheckerResult("l'équation n'est pas correctement formée.")
 			}
 		}
 
@@ -143,23 +143,23 @@ export class CartesianChecker extends CheckerAbstract {
 				(A.left.variables.length === 1 && !A.left.monoms[0].coefficient.isOne())
 			) {
 				// There are two variables : everything must be right
-				return this.makeCheckerResult("Il faut isoler la variable y à gauche.")
+				return makeCheckerResult("Il faut isoler la variable y à gauche.")
 			}
 		}
 
 		if (this.#minmax) {
-			return this.makeCheckerResult(checkMinMaxEquation(value, this.answer, this.secondaryChecker))
+			return makeCheckerResult(checkMinMaxEquation(value, this.answer, this.secondaryChecker))
 		}
 
 		if (this.#circle) {
-			return this.makeCheckerResult(checkCircle(value, A))
+			return makeCheckerResult(checkCircle(value, A))
 		}
 
 		if (this.#reduced) {
-			return this.makeCheckerResult(checkReducedEquation(A))
+			return makeCheckerResult(checkReducedEquation(A))
 		}
 
 		// If all tests passes, it is correct !
-		return this.makeCheckerResult()
+		return makeCheckerResult()
 	}
 }

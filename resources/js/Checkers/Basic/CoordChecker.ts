@@ -1,4 +1,4 @@
-import {CheckerAbstract} from "../CheckerAbstract"
+import {CheckerAbstract, makeCheckerResult} from "../CheckerAbstract"
 import {stripFirstCharacter, stripLastCharacter} from "../checkerHelperFunctions.ts"
 import {ExactChecker} from "./ExactChecker"
 import {CheckerResult, CHECKERS} from "../checker.config"
@@ -39,11 +39,11 @@ export class CoordChecker extends CheckerAbstract {
 			expectedValues = this.answer.split(";")
 
 		if (values.length === 1) {
-			return this.makeCheckerResult("des coordonnées ont au moins deux valeurs, séparées par un \\(;\\)")
+			return makeCheckerResult("des coordonnées ont au moins deux valeurs, séparées par un \\(;\\)")
 		}
 
 		if (values.length !== expectedValues.length) {
-			return this.makeCheckerResult("la dimension de la coordonnées ne correspond pas")
+			return makeCheckerResult("la dimension de la coordonnées ne correspond pas")
 		}
 
 		// remove the parentese from the first and last value.

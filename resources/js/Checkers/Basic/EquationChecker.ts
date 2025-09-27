@@ -1,5 +1,5 @@
 import {Equation} from "pimath"
-import {CheckerResult, CHECKERS, checkMinMaxEquation, checkReducedEquation} from "@/Checkers"
+import {CheckerResult, CHECKERS, checkMinMaxEquation, checkReducedEquation, makeCheckerResult} from "@/Checkers"
 import {CheckerAbstract} from "@/Checkers/CheckerAbstract"
 import {checkCircle} from "@/Checkers/checkerCheckFunctions.ts"
 
@@ -84,34 +84,34 @@ export class EquationChecker extends CheckerAbstract {
 
 		// L'expression de gauche est soit égale, soit opposée.
 		if (!A2.isLinearTo(Q2)) {
-			return this.makeCheckerResult("l'équation n'est pas juste.")
+			return makeCheckerResult("l'équation n'est pas juste.")
 		}
 
 		if (this.isCanonical) {
 			if (!A.right.isZero() && !A.left.isZero()) {
-				return this.makeCheckerResult("l'équation n'est pas sous sa forme canonique.", true)
+				return makeCheckerResult("l'équation n'est pas sous sa forme canonique.", true)
 			}
 		}
 
 		if (this.isCentreRayon) {
-			return this.makeCheckerResult(
+			return makeCheckerResult(
 				checkCircle(value, A)
 			)
 		}
 
 		if (this.isSommet) {
-			return this.makeCheckerResult(
+			return makeCheckerResult(
 				checkMinMaxEquation(value, this.answer, this.secondaryChecker)
 			)
 		}
 
 		if (this.isReduced) {
-			return this.makeCheckerResult(
+			return makeCheckerResult(
 				checkReducedEquation(A)
 			)
 		}
 
 		// If all tests passes, it is correct !
-		return this.makeCheckerResult()
+		return makeCheckerResult()
 	}
 }

@@ -1,4 +1,4 @@
-import {CheckerAbstract} from "../CheckerAbstract"
+import {CheckerAbstract, makeCheckerResult} from "../CheckerAbstract"
 import {ExpChecker} from "./ExpChecker"
 import {LogChecker} from "./LogChecker"
 import {PolynomChecker} from "./PolynomChecker"
@@ -38,14 +38,14 @@ export class PrimitiveChecker extends CheckerAbstract {
 		)
 
 		if (!result.result) {
-			return this.makeCheckerResult(result.message)
+			return makeCheckerResult(result.message)
 		}
 
 		const s = value.split('+c').length
 		if (s !== 2) {
-			return this.makeCheckerResult(s === 1 ? "il manque la constante." : `il y a ${s - 1} constantes...`)
+			return makeCheckerResult(s === 1 ? "il manque la constante." : `il y a ${s - 1} constantes...`)
 		}
 
-		return this.makeCheckerResult()
+		return makeCheckerResult()
 	}
 }

@@ -1,4 +1,4 @@
-import {CheckerAbstract} from "../CheckerAbstract"
+import {CheckerAbstract, makeCheckerResult} from "../CheckerAbstract"
 import {NumberChecker} from "./NumberChecker"
 import {CheckerResult, CHECKERS} from "../checker.config"
 
@@ -38,24 +38,24 @@ export class ScientificChecker extends CheckerAbstract {
 
 		// On vérifie la partie significative
 		if (Math.abs(PS) < 1 || Math.abs(PS) >= 10) {
-			return this.makeCheckerResult("la partie significative n'est pas entre 1 et 10 (non compris)")
+			return makeCheckerResult("la partie significative n'est pas entre 1 et 10 (non compris)")
 		}
 
 		if (PS !== ePS) {
-			return this.makeCheckerResult("erreur dans la partie significative: " +
+			return makeCheckerResult("erreur dans la partie significative: " +
 				this.secondaryChecker?.check(ePS.toString(), PS.toString()).message)
 		}
 
 		if (!value.includes("*10^")) {
-			return this.makeCheckerResult("le format de réponse n'est pas une notation scientifique.")
+			return makeCheckerResult("le format de réponse n'est pas une notation scientifique.")
 		}
 
 		// On vérifie l'ordre de grandeur.
 		if (OG !== eOG) {
-			return this.makeCheckerResult("l'ordre de grandeur n'est pas juste...")
+			return makeCheckerResult("l'ordre de grandeur n'est pas juste...")
 		}
 
-		return this.makeCheckerResult()
+		return makeCheckerResult()
 	}
 
 }

@@ -1,5 +1,12 @@
 import {type CheckerResult, CHECKERS} from "./checker.config"
 
+export function makeCheckerResult(message?: string, partial?: boolean): CheckerResult {
+	return {
+		message,
+		result: message===undefined || message === '',
+		partial: partial===true
+	}
+}
 export abstract class CheckerAbstract {
 	protected constructor(config?: string[] | string) {
 		this._description = ""
@@ -122,17 +129,10 @@ export abstract class CheckerAbstract {
 		}
 
 		if (errors.length) {
-			return this.makeCheckerResult(errors.join('<br/>'), partialOnly)
+			return makeCheckerResult(errors.join('<br/>'), partialOnly)
 		}
 
-		return this.makeCheckerResult()
-	}
-	makeCheckerResult(message?: string, partial?: boolean): CheckerResult {
-		return {
-			message,
-			result: message===undefined || message === '',
-			partial: partial===true
-		}
+		return makeCheckerResult()
 	}
 }
 

@@ -1,4 +1,4 @@
-import {CheckerAbstract} from "../CheckerAbstract"
+import {CheckerAbstract, makeCheckerResult} from "../CheckerAbstract"
 import {stripFirstCharacter, stripLastCharacter} from "../checkerHelperFunctions.ts"
 import {Fraction} from "pimath"
 import {ExactChecker} from "./ExactChecker"
@@ -49,11 +49,11 @@ export class VectorChecker extends CheckerAbstract {
 
 
 		if (values.length === 1) {
-			return this.makeCheckerResult("des vecteurs ont au moins deux valeurs")
+			return makeCheckerResult("des vecteurs ont au moins deux valeurs")
 		}
 
 		if (values.length !== expectedValues.length) {
-			return this.makeCheckerResult("la dimension du vecteur ne correspond pas")
+			return makeCheckerResult("la dimension du vecteur ne correspond pas")
 		}
 
 		// remove the parentese from the first and last value.
@@ -77,7 +77,7 @@ export class VectorChecker extends CheckerAbstract {
 				b = new Fraction(expectedValues[i])
 
 				if ((a.isZero() && b.isNotZero()) || a.isNotZero() && b.isZero()) {
-					return this.makeCheckerResult(`la ${i + 1}e composante est fausse.`)
+					return makeCheckerResult(`la ${i + 1}e composante est fausse.`)
 				}
 
 				if (a.isNotZero() && b.isNotZero()) {
@@ -85,7 +85,7 @@ export class VectorChecker extends CheckerAbstract {
 						k = new Fraction(a.clone().divide(b))
 					} else {
 						if (a.isNotEqual(b.clone().multiply(k))) {
-							return this.makeCheckerResult(`la ${i + 1}e composante n'est pas proportionnelle`)
+							return makeCheckerResult(`la ${i + 1}e composante n'est pas proportionnelle`)
 						}
 					}
 				}

@@ -1,4 +1,4 @@
-import {CheckerAbstract} from "../CheckerAbstract"
+import {CheckerAbstract, makeCheckerResult} from "../CheckerAbstract"
 import {CheckerResult, CHECKERS} from "../checker.config"
 
 const name = "study"
@@ -23,9 +23,9 @@ export class StudyChecker extends CheckerAbstract {
 			d = arrayExpected.length - arrayAnswer.length
 
 		if (d > 0) {
-			return this.makeCheckerResult(`il manque ${d} élément${d > 1 ? "s" : ""}`)
+			return makeCheckerResult(`il manque ${d} élément${d > 1 ? "s" : ""}`)
 		} else if (d < 0) {
-			return this.makeCheckerResult(`il y a ${-d} élément${-d > 1 ? "s" : ""} en trop`)
+			return makeCheckerResult(`il y a ${-d} élément${-d > 1 ? "s" : ""} en trop`)
 		}
 
 		const erreurs = [],
@@ -42,14 +42,14 @@ export class StudyChecker extends CheckerAbstract {
 		}
 
 		if (erreurs.length > 0) {
-			return this.makeCheckerResult(`il y a ${erreurs.length} erreur${erreurs.length > 1 ? "s" : ""}`)
+			return makeCheckerResult(`il y a ${erreurs.length} erreur${erreurs.length > 1 ? "s" : ""}`)
 		}
 
 		if (traceErrors.length > 0) {
-			return this.makeCheckerResult(`il y a ${traceErrors.length} erreur${traceErrors.length > 1 ? "s" : ""} dans le tracé`)
+			return makeCheckerResult(`il y a ${traceErrors.length} erreur${traceErrors.length > 1 ? "s" : ""} dans le tracé`)
 		}
 
-		return this.makeCheckerResult()
+		return makeCheckerResult()
 
 	}
 

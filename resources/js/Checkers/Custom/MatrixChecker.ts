@@ -1,4 +1,4 @@
-import {CheckerAbstract} from "../CheckerAbstract"
+import {CheckerAbstract, makeCheckerResult} from "../CheckerAbstract"
 import {CheckerResult, CHECKERS} from "../checker.config"
 import {ExactChecker} from "@/Checkers"
 
@@ -50,18 +50,18 @@ export class MatrixChecker extends CheckerAbstract {
 		if (givenData.dimension.rows === 0 ||
 			isNaN(givenData.dimension.columns) ||
 			givenData.dimension.columns === 0) {
-			return this.makeCheckerResult("il faut donner les dimensions de la matrice.")
+			return makeCheckerResult("il faut donner les dimensions de la matrice.")
 		}
 
 		if (givenData.dimension.rows !== answerData.dimension.rows ||
 			givenData.dimension.columns !== answerData.dimension.columns) {
-			return this.makeCheckerResult("les dimensions de la matrice ne sont pas juste.")
+			return makeCheckerResult("les dimensions de la matrice ne sont pas juste.")
 		}
 
 		// Les valeurs données ne sont pas suffisantes
 		const nbOfValues = givenData.dimension.rows * givenData.dimension.columns
 		if (givenData.values.length !== nbOfValues) {
-			return this.makeCheckerResult(
+			return makeCheckerResult(
 				givenData.values.length < nbOfValues
 					? "il manque des valeurs par rapport aux dimensions de la matrice"
 					: "il y a trop de valeurs par rapport aux dimensions de la matrice"

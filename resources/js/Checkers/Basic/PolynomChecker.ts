@@ -1,4 +1,4 @@
-import {CheckerAbstract} from "../CheckerAbstract"
+import {CheckerAbstract, makeCheckerResult} from "../CheckerAbstract"
 import {Polynom} from "pimath"
 import {CheckerResult, CHECKERS} from "../checker.config"
 import {checkPolynomIsFactorized} from "@/Checkers"
@@ -56,7 +56,7 @@ export class PolynomChecker extends CheckerAbstract {
 
 		// Polynom must be equals.
 		if (!Q.isEqual(A)) {
-			return this.makeCheckerResult("Le polynôme n'est pas le même.")
+			return makeCheckerResult("Le polynôme n'est pas le même.")
 		}
 
 		/** Polynom checker config */
@@ -68,13 +68,13 @@ export class PolynomChecker extends CheckerAbstract {
 			this.config.includes("FACTORS")
 		) {
 			try {
-				return this.makeCheckerResult(
+				return makeCheckerResult(
 					checkPolynomIsFactorized(value)
 						? ""
 						: "Le polynôme n'est pas (entièrement) factorisé."
 				)
 			} catch {
-				return this.makeCheckerResult(
+				return makeCheckerResult(
 					"Le polynôme n'est pas (entièrement) factorisé."
 				)
 			}
@@ -83,7 +83,7 @@ export class PolynomChecker extends CheckerAbstract {
 		// Developed
 		if (this.config.includes("d") || this.config.includes("develop")) {
 			if (!A.isDeveloped(value)) {
-				return this.makeCheckerResult("Le polynôme n'est pas (entièrement) développé.")
+				return makeCheckerResult("Le polynôme n'est pas (entièrement) développé.")
 			}
 		}
 
@@ -95,14 +95,14 @@ export class PolynomChecker extends CheckerAbstract {
 				) ||
 				value.match(/(-?[\d]+(\/\d+)?)?x\^2([+-]\d+(\/\d+)?)?/)
 			) {
-				return this.makeCheckerResult()
+				return makeCheckerResult()
 			} else {
-				return this.makeCheckerResult("L'équation n'est pas dans le bon format.")
+				return makeCheckerResult("L'équation n'est pas dans le bon format.")
 			}
 		}
 
 		// If all tests passes, it is correct !
-		return this.makeCheckerResult()
+		return makeCheckerResult()
 
 	}
 

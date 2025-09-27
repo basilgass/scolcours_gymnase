@@ -1,4 +1,4 @@
-import {CheckerAbstract} from "../CheckerAbstract"
+import {CheckerAbstract, makeCheckerResult} from "../CheckerAbstract"
 import {Polynom} from "pimath"
 import {CheckerResult, CHECKERS} from "../checker.config"
 
@@ -35,21 +35,21 @@ export class FunctionChecker extends CheckerAbstract {
 
 		// Must be the same equation.
 		if(!A.isEqual(Q)){
-			return  this.makeCheckerResult("la fonction n'est pas juste.")
+			return  makeCheckerResult("la fonction n'est pas juste.")
 		}
 
 		if(this.developed){
 			// La fonction ne doit pas avoir de parenthèses.
 			if(value.includes('(')||value.includes(')')){
-				return this.makeCheckerResult("la fonction doit être développée (pas de parenthèses)")
+				return makeCheckerResult("la fonction doit être développée (pas de parenthèses)")
 			}
 
 			if(A.monoms.length !== Q.monoms.lenght){
-				return this.makeCheckerResult("la fonction doit être réduite.")
+				return makeCheckerResult("la fonction doit être réduite.")
 			}
 		}
 
-		return this.makeCheckerResult()
+		return makeCheckerResult()
 	}
 
 }

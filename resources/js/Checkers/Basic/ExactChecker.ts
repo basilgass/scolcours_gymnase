@@ -1,4 +1,4 @@
-import {CheckerAbstract} from "../CheckerAbstract"
+import {CheckerAbstract, makeCheckerResult} from "../CheckerAbstract"
 import {Fraction, NumExp} from "pimath"
 import {CheckerResult, CHECKERS} from "../checker.config"
 
@@ -36,7 +36,7 @@ export class ExactChecker extends CheckerAbstract {
 
 		// Maybe with the reformating, the answers is exactly the same.
 		if (expectedExpression === givenExpression) {
-			return this.makeCheckerResult()
+			return makeCheckerResult()
 		}
 
 		// Parse the formated answers as a number
@@ -49,7 +49,7 @@ export class ExactChecker extends CheckerAbstract {
 				givenNumber.evaluate().toFixed(10)
 			) {
 				if (this.isSoft) {
-					return this.makeCheckerResult()
+					return makeCheckerResult()
 				}
 
 				const message: string[] = [
@@ -68,11 +68,11 @@ export class ExactChecker extends CheckerAbstract {
 					message.push("Il y a encore une racine au dénominateur")
 				}
 
-				return this.makeCheckerResult(message.join("<br/>"), true)
+				return makeCheckerResult(message.join("<br/>"), true)
 			}
 		}
 
-		return this.makeCheckerResult("La réponse donnée n'est pas juste.")
+		return makeCheckerResult("La réponse donnée n'est pas juste.")
 	}
 
 }

@@ -1,4 +1,4 @@
-import {CheckerAbstract} from "../CheckerAbstract"
+import {CheckerAbstract, makeCheckerResult} from "../CheckerAbstract"
 import {splitAtSigns, splitIfOutsideParentheses} from "../checkerHelperFunctions.ts"
 import {Polynom} from "pimath"
 import {CheckerResult, CHECKERS} from "../checker.config"
@@ -31,23 +31,23 @@ export class ExpChecker extends CheckerAbstract {
             [eN, eD] = splitIfOutsideParentheses(this.answer, "/")
 
         if (D === undefined && eD !== undefined) {
-            return this.makeCheckerResult("Un dénominateur est attendu...")
+            return makeCheckerResult("Un dénominateur est attendu...")
         }
 
         if (D !== undefined && eD === undefined) {
-            return this.makeCheckerResult("Aucun dénominateur n'est prévu dans cette réponse.")
+            return makeCheckerResult("Aucun dénominateur n'est prévu dans cette réponse.")
         }
 
         const resultatNumerateur = expCompare(eN, N)
 
-        if (resultatNumerateur !== "") return this.makeCheckerResult(resultatNumerateur)
+        if (resultatNumerateur !== "") return makeCheckerResult(resultatNumerateur)
 
         // On contrôle les dénominateurs
         if (D !== undefined && eD !== undefined) {
-            return this.makeCheckerResult(expCompare(eD, D))
+            return makeCheckerResult(expCompare(eD, D))
         }
 
-        return this.makeCheckerResult()
+        return makeCheckerResult()
     }
 
 }

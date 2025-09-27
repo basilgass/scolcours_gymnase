@@ -1,4 +1,4 @@
-import {CheckerAbstract} from "../CheckerAbstract"
+import {CheckerAbstract, makeCheckerResult} from "../CheckerAbstract"
 import {ExactChecker} from "../Basic"
 import {CheckerResult, CHECKERS} from "../checker.config"
 import {NumExp} from "piexpression"
@@ -56,7 +56,7 @@ export class TableofsignChecker extends CheckerAbstract {
 			if (zeroes.expected.length !== zeroes.provided.length) {
 				const diff = zeroes.expected.length - zeroes.provided.length
 
-				return this.makeCheckerResult(
+				return makeCheckerResult(
 					diff < 0
 						? "il y a trop de zéros"
 						: "il manque des zéros")
@@ -66,7 +66,7 @@ export class TableofsignChecker extends CheckerAbstract {
 			const zeroesValues = zeroes.provided.map(z => new NumExp(z).evaluate())
 			const isSorted = zeroesValues.every((val, i, arr) => i === 0 || arr[i - 1] <= val)
 			if (!isSorted) {
-				return this.makeCheckerResult("les zéros ne sont pas dans l'ordre croissant")
+				return makeCheckerResult("les zéros ne sont pas dans l'ordre croissant")
 			}
 
 			const expectedValues = zeroes.expected.map(z => new NumExp(z).evaluate())
@@ -77,7 +77,7 @@ export class TableofsignChecker extends CheckerAbstract {
 
 			if (diffIndexes.length > 0) {
 				const positions = diffIndexes.map(i => `${i + 1}${i === 0 ? "er" : "ème"}`).join(", ")
-				return this.makeCheckerResult(
+				return makeCheckerResult(
 					diffIndexes.length === 1
 						? `le ${positions} zéro est faux`
 						: `les ${positions} zéros sont faux`
@@ -86,13 +86,13 @@ export class TableofsignChecker extends CheckerAbstract {
 
 
 			if (signs.expected !== signs.provided) {
-				return this.makeCheckerResult(
+				return makeCheckerResult(
 					"les signes ne sont pas justes"
 				)
 			}
 
 			if (grows.expected !== grows.provided) {
-				return this.makeCheckerResult(
+				return makeCheckerResult(
 					"la croissance n'est pas juste"
 				)
 			}
@@ -103,11 +103,11 @@ export class TableofsignChecker extends CheckerAbstract {
 					providedCoordinates = coords.provided.split(",")
 
 				if (expectedCoordinates.length > providedCoordinates.length) {
-					return this.makeCheckerResult("toutes les valeurs des extrêmes n'ont pas été données...")
+					return makeCheckerResult("toutes les valeurs des extrêmes n'ont pas été données...")
 				}
 
 				if (expectedCoordinates.length < providedCoordinates.length) {
-					return this.makeCheckerResult("il y a trop de valeurs d'extrèmes !")
+					return makeCheckerResult("il y a trop de valeurs d'extrèmes !")
 				}
 
 				return this.secondaryCheckValues(
@@ -118,10 +118,10 @@ export class TableofsignChecker extends CheckerAbstract {
 			}
 
 
-			return this.makeCheckerResult("Il y a une erreur dans le tableau de signes.")
+			return makeCheckerResult("Il y a une erreur dans le tableau de signes.")
 		}
 
-		return this.makeCheckerResult()
+		return makeCheckerResult()
 	}
 
 

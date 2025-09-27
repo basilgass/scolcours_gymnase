@@ -1,4 +1,4 @@
-import {CheckerAbstract} from "../CheckerAbstract"
+import {CheckerAbstract, makeCheckerResult} from "../CheckerAbstract"
 import {CheckerResult, CHECKERS} from "../checker.config"
 
 const name = "qcm"
@@ -14,7 +14,7 @@ export class QcmChecker extends CheckerAbstract{
 	}
 
 	checkValue(value: string): CheckerResult {
-		return this.makeCheckerResult("La réponse n'est pas correcte")
+		return makeCheckerResult("La réponse n'est pas correcte")
 	}
 
 }

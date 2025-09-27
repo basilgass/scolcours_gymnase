@@ -1,4 +1,4 @@
-import {CheckerAbstract} from "../CheckerAbstract"
+import {CheckerAbstract, makeCheckerResult} from "../CheckerAbstract"
 import {NumExp} from "pimath"
 import {CheckerResult, CHECKERS} from "../checker.config"
 
@@ -43,13 +43,13 @@ export class LogChecker extends CheckerAbstract {
 		try {
 			userN = new NumExp(ND[0]).evaluate()
 		} catch {
-			return this.makeCheckerResult(`${ND.length === 1 ? "La réponse" : "Le numérateur"} n'est pas correctement formé.`)
+			return makeCheckerResult(`${ND.length === 1 ? "La réponse" : "Le numérateur"} n'est pas correctement formé.`)
 		}
 		if (ND.length === 2) {
 			try {
 				userD = new NumExp(ND[1]).evaluate()
 			} catch {
-				return this.makeCheckerResult("Le dénominateur n'est pas correctement formé.")
+				return makeCheckerResult("Le dénominateur n'est pas correctement formé.")
 			}
 		} else {
 			userD = 1
@@ -81,10 +81,10 @@ export class LogChecker extends CheckerAbstract {
 			expectedDecimal = expNValue / expDValue
 
 		if (answerDecimal.toFixed(8) !== expectedDecimal.toFixed(8)) {
-			return this.makeCheckerResult("La réponse sous forme exacte ne donne pas la bonne valeur.")
+			return makeCheckerResult("La réponse sous forme exacte ne donne pas la bonne valeur.")
 		}
 
-		return this.makeCheckerResult()
+		return makeCheckerResult()
 	}
 
 

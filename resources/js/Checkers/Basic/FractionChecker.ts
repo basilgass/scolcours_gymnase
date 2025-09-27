@@ -1,4 +1,4 @@
-import {CheckerAbstract} from "../CheckerAbstract"
+import {CheckerAbstract, makeCheckerResult} from "../CheckerAbstract"
 import {Fraction} from "pimath"
 import {CheckerResult, CHECKERS} from "../checker.config"
 
@@ -45,18 +45,18 @@ export class FractionChecker extends CheckerAbstract {
 		const FExpected = new Fraction(this.answer)
 
 		if (FAnswer.isNotEqual(FExpected)) {
-			return this.makeCheckerResult("La réponse donnée n'est pas juste.")
+			return makeCheckerResult("La réponse donnée n'est pas juste.")
 		}
 
 		if (FAnswer.denominator < 0) {
-			return this.makeCheckerResult("Le dénominateur doit être positif.", true)
+			return makeCheckerResult("Le dénominateur doit être positif.", true)
 		}
 
 		if (!FAnswer.isReduced() && this.expectReduced) {
-			return this.makeCheckerResult("La fraction n'est pas réduite.", true)
+			return makeCheckerResult("La fraction n'est pas réduite.", true)
 		}
 
-		return this.makeCheckerResult()
+		return makeCheckerResult()
 	}
 
 
