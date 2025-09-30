@@ -38,7 +38,7 @@ const circle = computed(() => {
 	try {
 		return new Circle(equ.value)
 	} catch {
-		null
+		return null
 	}
 })
 const point = computed(() => {

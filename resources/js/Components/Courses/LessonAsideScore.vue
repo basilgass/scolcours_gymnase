@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import {computed, inject, onMounted, ref, watch} from "vue"
+import {computed, onMounted, ref, watch} from "vue"
 import {useStoreScore} from "@/stores/useStoreScore.ts"
 import Card from "@/Components/Ui/Card.vue"
 import {
@@ -17,7 +17,6 @@ import {
 	ScoreGeneratorDataInterface,
 	ScoreLessonDataInterface
 } from "@/types/scoreInterfaces.ts"
-import {flashInterface} from "@/types"
 import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
 
 const props = defineProps<{

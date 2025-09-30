@@ -4,15 +4,7 @@ import LayoutMain from "@/Layouts/LayoutMain.vue"
 import {CourseInterface, UserTeamInterface} from "@/types/modelInterfaces.ts"
 import ScButton from "@/Components/Ui/scButton.vue"
 import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
-import axios from "axios"
-import {router} from "@inertiajs/vue3"
-import {AxiosErrorMessage} from "@/types"
-import DialogModal from "@/Components/Ui/DialogModal.vue"
-import {computed, ref} from "vue"
-import FormMaker from "@/Components/Form/FormMaker.vue"
-import {slugify} from "@/scolcours.ts"
 import CourseCard from "@/Components/Courses/CourseCard.vue"
-import CourseCalendar from "@/Components/Courses/CourseCalendar.vue"
 
 defineOptions({layout: LayoutMain})
 
@@ -57,7 +49,6 @@ const props = defineProps<{
 					/>
 				</div>
 			</div>
-
 		</div>
 	</main>
 </template>

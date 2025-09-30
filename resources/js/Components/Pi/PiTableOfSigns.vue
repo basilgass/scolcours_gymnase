@@ -3,7 +3,7 @@ Affichage d'un tableau de signes ou de croissance.
 -->
 <script lang="ts" setup>
 import TableOfSigns from "@/Components/Pi/TableOfSigns.vue"
-import {Point, PolyFactor, type POLYFACTOR_TABLE_OF_SIGNS, type TABLE_OF_SIGNS} from "pimath"
+import {PolyFactor, type POLYFACTOR_TABLE_OF_SIGNS, type TABLE_OF_SIGNS} from "pimath"
 import {computed} from "vue"
 
 

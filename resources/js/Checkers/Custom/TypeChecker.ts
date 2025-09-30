@@ -1,7 +1,7 @@
 import {CheckerAbstract, makeCheckerResult} from "../CheckerAbstract"
 import {CheckerResult, CHECKERS} from "../checker.config"
 
-const name = "type"
+// const name = "type"
 const description = "type"
 
 export class TypeChecker extends CheckerAbstract {

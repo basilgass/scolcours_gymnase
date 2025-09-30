@@ -1,15 +1,15 @@
 <script lang="ts" setup>
-import { computed, ref } from "vue"
+import {ref} from "vue"
 import ScButton from "@/Components/Ui/scButton.vue"
 
 const props = defineProps({
-	confirmText: { type: String, default: "vraiment ?" },
-	xs: { type: Boolean, default: false }
+	confirmText: {type: String, default: "vraiment ?"},
+	xs: {type: Boolean, default: false}
 })
 const emits = defineEmits(["confirm"])
 
 const confirmClick = ref(false),
-	btnClick = function() {
+	btnClick = function () {
 		if (!confirmClick.value) {
 			confirmClick.value = true
 			setTimeout(() => {

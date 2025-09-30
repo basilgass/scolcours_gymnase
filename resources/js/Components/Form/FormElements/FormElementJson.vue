@@ -86,10 +86,10 @@ watch(() => props.map, () => buildValues())
 	<div>
 		<div class="flex flex-col gap-3">
 			<form-maker
-				v-for="(type, element) in map"
+				v-for="(typeMap, element) in map"
 				ref="elements"
 				:key="element"
-				:type="type"
+				:type="typeMap"
 				:label="element"
 				v-model="rValue[element].value"
 				@update="onChange"

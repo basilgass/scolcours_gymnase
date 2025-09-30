@@ -137,7 +137,7 @@ function addFunction(type: "x" | "t" = "x") {
 			<div>
 				<div class="w-[300px] flex flex-col gap-3">
 					<GrapheurFunction
-						v-for="(fx, index) in fonctions"
+						v-for="(_, index) in fonctions"
 						:key="`fx-${index}`"
 						v-model="fonctions[index]"
 						@destroy="fonctions.splice(index, 1)"

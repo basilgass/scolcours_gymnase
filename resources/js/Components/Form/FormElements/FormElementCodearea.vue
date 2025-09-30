@@ -92,9 +92,7 @@ const highlighted = computed(() => {
 })
 
 const {
-	currentSelectedText,
-	textareaRef, isInMathEnv,
-	currentLine
+	textareaRef
 } = useTextEditor('input', {
 	language: props.language,
 	model: theValue

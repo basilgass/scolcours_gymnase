@@ -3,7 +3,7 @@
 
 import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"
 import {computed, ref} from "vue"
-import {Fraction, Matrix, Point, Polynom} from "pimath"
+import {Point} from "pimath"
 import type {PiDraw} from "pidraw/types"
 
 interface XY {
@@ -49,7 +49,7 @@ const nodes = computed(() => props.labels.length)
 const theMatrix = computed(() => {
 	const matrix = props.matrix
 		.map(row =>
-			row.filter(n => n.trim()!=='')
+			row.filter(n => n.trim() !== '')
 		)
 
 	const dim = matrix.length
@@ -89,10 +89,10 @@ const code = computed(() => {
 	let n = points.map((p, index) => drawPoint(p, `N${index + 1}`, `tex=${theLabels.value[index] ?? ''}/mc`))
 	n = [...n, ...points.map((_, index) => `c${index + 1}=circ N${index + 1},${props.radius}`)]
 
-	for(let row = 0; row<theMatrix.value.length; row++){
-		for(let column=0; column<theMatrix.value[row].length; column++){
+	for (let row = 0; row < theMatrix.value.length; row++) {
+		for (let column = 0; column < theMatrix.value[row].length; column++) {
 			const aij = theMatrix.value[row][column]
-			if(aij!=='0'){
+			if (aij !== '0') {
 				const letter = `P${row}${column}`
 				const data = anchors[row][column]
 				const A1 = circleAnchors(points[row], +data[0])
@@ -221,7 +221,7 @@ const emits = defineEmits<{
 	update: [draw: PiDraw],
 }>()
 
-const drawMouseUp = function (evt: {draw: PiDraw, mouse: MouseEvent}) {
+const drawMouseUp = function (evt: { draw: PiDraw, mouse: MouseEvent }) {
 	emits("update", evt.draw)
 	emits("drawClick", evt)
 }

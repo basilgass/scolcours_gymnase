@@ -14,7 +14,7 @@ import {
 } from "@/types/modelInterfaces.ts"
 import {lessonableModel} from "@/types/lessonInterfaces.ts"
 
-const props = defineProps<{
+defineProps<{
 	lessonable: lessonableModel,
 	lesson: LessonInterface
 }>()

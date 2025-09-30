@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import {onMounted, ref} from "vue"
 import ScButton from "@/Components/Ui/scButton.vue"
-import {TeamInterface, ThemeInterface} from "@/types/modelInterfaces.ts"
+import {TeamInterface} from "@/types/modelInterfaces.ts"
 import FormMakerWrapper from "@/Components/Form/FormMakerWrapper.vue"
 import axios from "axios"
 import {AxiosResponseModel} from "@/types"
@@ -39,11 +39,12 @@ onMounted(() => {
 })
 
 const teams = ref<TeamInterface[]>([])
-function loadTeams(){
+
+function loadTeams() {
 	axios.get(
 		route('api.admin.teams.index')
 	)
-		.then((res: AxiosResponseModel<TeamInterface[]>)=>{
+		.then((res: AxiosResponseModel<TeamInterface[]>) => {
 			teams.value = res.data
 		})
 }

@@ -165,7 +165,7 @@ function deleteLesson(lesson: LessonInterface) {
 const itemSource = ref<LessonInterface>(undefined)
 const counter = ref(1)
 
-function onClick(lesson: LessonInterface, event: MouseEvent) {
+function onClick(lesson: LessonInterface) {
 	if (itemSource.value) {
 		// Toggle requires to the itemSource.
 		toggleIdInPlace(itemSource.value.requires, lesson.id)
@@ -516,7 +516,7 @@ function updateLessonsOrder() {
 								</div>
 								<i
 									v-else-if="itemSource"
-									@click="onClick(element, $event)"
+									@click="onClick(element)"
 									class="bi bi-link text-xl text-blue-600 cursor-pointer"
 								/>
 							</div>

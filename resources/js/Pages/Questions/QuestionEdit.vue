@@ -7,18 +7,12 @@ import QuestionShow from "@/Components/Questions/QuestionShow.vue"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 import {AxiosResponseModel, ClipboardKeyboardInterface} from "@/types"
-import type {
-	BlockInterface,
-	IllustrationInterface,
-	QuestionDynamicInterface,
-	QuestionInterface
-} from "@/types/modelInterfaces"
+import type {IllustrationInterface, QuestionInterface} from "@/types/modelInterfaces"
 import {router} from "@inertiajs/vue3"
 import axios from "axios"
 import {computed, PropType, ref} from "vue"
 import ScButton from "@/Components/Ui/scButton.vue"
 import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
-import IllustrationIndex from "@/Components/Illustrations/IllustrationIndex.vue"
 
 defineOptions({layout: LayoutMain})
 
@@ -105,8 +99,8 @@ function pasteQuestion() {
 }
 
 
-function addIllustration(){
-	if(theQuestion.value.block.illustration){
+function addIllustration() {
+	if (theQuestion.value.block.illustration) {
 		return
 	}
 
@@ -124,10 +118,11 @@ function addIllustration(){
 		}
 	)
 }
-function deleteIllustration(){
+
+function deleteIllustration() {
 	axios.delete(
 		route('api.admin.illustrations.destroy', {illustration: theQuestion.value.block.illustration.id})
-	).then(()=>{
+	).then(() => {
 		theQuestion.value.block.illustration = null
 		flash.success("L'illustration a bien été supprimée.")
 	})

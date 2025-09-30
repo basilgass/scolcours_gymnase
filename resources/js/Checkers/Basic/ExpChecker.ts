@@ -3,7 +3,7 @@ import {splitAtSigns, splitIfOutsideParentheses} from "../checkerHelperFunctions
 import {Polynom} from "pimath"
 import {CheckerResult, CHECKERS} from "../checker.config"
 
-const name = "exp"
+// const name = "exp"
 const description = `exp,[paramètres]
 
 **paramètres**

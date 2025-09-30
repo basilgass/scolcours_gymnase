@@ -1,7 +1,7 @@
 import {CheckerAbstract, makeCheckerResult} from "../CheckerAbstract"
 import {CheckerResult, CHECKERS} from "../checker.config"
 
-const name = "string"
+// const name = "string"
 const description = "string"
 
 export class StringChecker extends CheckerAbstract {

@@ -1,7 +1,7 @@
 import {CheckerAbstract, CheckerResult, CHECKERS, makeCheckerResult} from "@/Checkers"
 import {PolyFactor} from "pimath"
 
-const name = "rational"
+// const name = "rational"
 const description = `rational,[paramètres]
 
 **paramètres**

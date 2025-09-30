@@ -3,11 +3,10 @@
 import ScolCoursLogo from "@/Components/ScolcoursLogo.vue"
 import LayoutFullpage from "@/Layouts/LayoutFullpage.vue"
 import axios from "axios"
-import {router, usePage} from "@inertiajs/vue3"
-import {computed, onMounted, ref} from "vue"
+import {usePage} from "@inertiajs/vue3"
+import {onMounted, ref} from "vue"
 import {AxiosErrorMessage, AxiosResponseModel} from "@/types"
 import {CourseInterface, UserInterface} from "@/types/modelInterfaces.ts"
-import Card from "@/Components/Ui/Card.vue"
 import CourseCard from "@/Components/Courses/CourseCard.vue"
 import ScButton from "@/Components/Ui/scButton.vue"
 

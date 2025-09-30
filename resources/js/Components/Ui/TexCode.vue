@@ -3,9 +3,7 @@
 import {useClipboard} from "@vueuse/core"
 import {ref} from "vue"
 import {usePdf} from "@/Composables/useDownloadPdf.ts"
-import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
 
-const flash = useStoreFlashMessage()
 const props = withDefaults(defineProps<{
 		tex: string,
 		hide?: boolean,

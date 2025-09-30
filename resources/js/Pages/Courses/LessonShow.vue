@@ -4,12 +4,11 @@ import {CourseInterface, LessonInterface} from "@/types/modelInterfaces.ts"
 import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
 import LessonMain from "@/Components/Courses/LessonMain.vue"
 import LessonAside from "@/Components/Courses/LessonAside.vue"
-import {onMounted} from "vue"
 import {lessonableModel} from "@/types/lessonInterfaces.ts"
 
 defineOptions({layout: LayoutMain})
 
-const props = defineProps<{
+defineProps<{
 	course: CourseInterface,
 	lesson: LessonInterface,
 	lessonable: lessonableModel

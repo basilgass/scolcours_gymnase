@@ -1,33 +1,42 @@
 <script setup lang="ts">
-import { Line } from "vue-chartjs"
-import { computed } from "vue"
+import {Line} from "vue-chartjs"
+import {computed} from "vue"
 import _ from "lodash"
 
-const props = defineProps({
-	chartLabels: {type: Array, default: () => []},
-	chartDataset: {type: [Object, Array], required: true},
-	chartOptions: {type: Object, default: () => {}},
-	chartLegend: {type: Boolean, default: false},
-	chartColorset: {type: String, default: null}
-})
+// REFACTOR: faire le typing de lineChart correctement.
+const props = withDefaults(
+	defineProps<{
+		chartDataset: unknown,
+		chartLabels?: string[],
+		chartOptions?: unknown,
+		chartLegend?: boolean,
+		chartColorset?: string
+	}>(),
+	{
+		chartLabels: ()=>[],
+		chartOptions: null,
+		chartLegend: false,
+		chartColorset: null
+	}
+)
 
 const chartData = computed(() => {
 		const labels = []
-		if (props.chartLabels.length>0) {
+		if (props.chartLabels.length > 0) {
 			labels["labels"] = props.chartLabels
 		}
 
 		let datasets = []
-		if(Array.isArray(props.chartDataset)){
-			if(Object.hasOwn(props.chartDataset[0], "data")){
+		if (Array.isArray(props.chartDataset)) {
+			if (Object.hasOwn(props.chartDataset[0], "data")) {
 				datasets = props.chartDataset
-			}else{
+			} else {
 				datasets = [{
 					data: props.chartDataset,
 					...chartColors.value
 				}]
 			}
-		}else{
+		} else {
 			datasets = [props.chartDataset]
 		}
 
@@ -36,8 +45,8 @@ const chartData = computed(() => {
 			datasets
 		}
 	}),
-	chartOptionsMerged = computed(()=>{
-		const opts= {
+	chartOptionsMerged = computed(() => {
+		const opts = {
 			responsive: true,
 			maintainAspectRatio: true,
 			plugins: {
@@ -49,8 +58,8 @@ const chartData = computed(() => {
 
 		return _.merge(opts, props.chartOptions)
 	}),
-	chartColors = computed(()=>{
-		if(props.chartColorset==="graduate") {
+	chartColors = computed(() => {
+		if (props.chartColorset === "graduate") {
 			return {
 				backgroundColor: [
 					"rgba(255, 99, 132, 0.2)",

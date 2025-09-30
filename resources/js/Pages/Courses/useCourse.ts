@@ -1,4 +1,4 @@
-import {lessonableClassName, lessonableModel} from "@/types/lessonInterfaces.ts"
+import {lessonableClassName} from "@/types/lessonInterfaces.ts"
 import {FormElementType} from "@/Components/Form/FormMakerInterface.ts"
 
 

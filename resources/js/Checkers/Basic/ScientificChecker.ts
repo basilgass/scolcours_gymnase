@@ -2,7 +2,7 @@ import {CheckerAbstract, makeCheckerResult} from "../CheckerAbstract"
 import {NumberChecker} from "./NumberChecker"
 import {CheckerResult, CHECKERS} from "../checker.config"
 
-const name = "scientific"
+// const name = "scientific"
 const description = `scientific|scn,[paramètres]
 
 **paramètres**

@@ -2,11 +2,11 @@
 
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
-import {AxiosErrorMessage, flashInterface} from "@/types"
+import {AxiosErrorMessage} from "@/types"
 import {ChapterShowInterface} from "@/types/modelInterfaces.ts"
 import {usePage} from "@inertiajs/vue3"
 import axios from "axios"
-import {computed, inject, ref} from "vue"
+import {computed, ref} from "vue"
 import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
 
 
@@ -14,7 +14,7 @@ const props = defineProps<{
 	chapter: ChapterShowInterface
 }>()
 
-const themeSlug = computed<string>(()=>usePage().props.themes[props.chapter.theme_id].slug)
+const themeSlug = computed<string>(() => usePage().props.themes[props.chapter.theme_id].slug)
 
 const editMode = useStoreEditMode()
 

@@ -2,7 +2,7 @@ import {CheckerAbstract, makeCheckerResult} from "../CheckerAbstract"
 import {Fraction, NumExp} from "pimath"
 import {CheckerResult, CHECKERS} from "../checker.config"
 
-const name = "exact"
+// const name = "exact"
 const description = `exact
 
 **paramètres**

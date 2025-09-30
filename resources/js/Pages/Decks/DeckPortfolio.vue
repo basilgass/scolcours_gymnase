@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import LayoutMain from "@/Layouts/LayoutMain.vue"
-import {CardInterface, DeckInterface} from "@/types/modelInterfaces.ts"
+import {DeckInterface} from "@/types/modelInterfaces.ts"
 import DeckPotfolioItem from "@/Components/Decks/Parts/DeckPotfolioItem.vue"
 import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
 

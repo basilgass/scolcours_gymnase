@@ -130,7 +130,7 @@ export function useQuestionAdmin(
 				flash.success("les questions ont bien été mis à jour !")
 
 			})
-			.catch((res) => {
+			.catch(() => {
 					flash?.error("update questions order failed")
 				}
 			)

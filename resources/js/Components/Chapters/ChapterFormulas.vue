@@ -7,10 +7,10 @@ Affichage d'un formulaire, avec la possibilitÃ© de passer d'un formulaire du thÃ
 >
 import FormulaShow from "@/Components/Blocks/FormulaShow.vue"
 import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
-import {AxiosResponseModel, flashInterface} from "@/types"
+import {AxiosResponseModel} from "@/types"
 import {ChapterInterface, FormulaInterface} from "@/types/modelInterfaces.ts"
 import axios from "axios"
-import {inject, onMounted, ref, useTemplateRef} from "vue"
+import {onMounted, ref, useTemplateRef} from "vue"
 import ScButton from "@/Components/Ui/scButton.vue"
 import {router} from "@inertiajs/vue3"
 import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"

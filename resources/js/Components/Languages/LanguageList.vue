@@ -1,12 +1,11 @@
 <script lang="ts" setup>
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import DialogModal from "@/Components/Ui/DialogModal.vue"
-import { LanguageDataInterface } from "@/Pages/languages/LanguageShow.vue"
-import { useStoreEditMode } from "@/stores/useStoreEditMode.ts"
-import type { TranslationWord } from "@/types/modelInterfaces"
-import { usePage } from "@inertiajs/vue3"
+import {LanguageDataInterface} from "@/Pages/languages/LanguageShow.vue"
+import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
+import type {TranslationWord} from "@/types/modelInterfaces"
+import {usePage} from "@inertiajs/vue3"
 import axios from "axios"
-import { Random } from "pimath"
 import {computed, inject, ref} from "vue"
 import {useLanguage} from "@/Components/Languages/useLanguage.ts"
 import ScButton from "@/Components/Ui/scButton.vue"
@@ -14,15 +13,15 @@ import ScButton from "@/Components/Ui/scButton.vue"
 const languageData = inject<LanguageDataInterface>('LanguageData')
 const {getListOfWordsFromUnits} = useLanguage(languageData)
 
-const words = computed(()=>{
-	if(languageData.units) {
+const words = computed(() => {
+	if (languageData.units) {
 		return getListOfWordsFromUnits(random.value)
 	}
 
 	return []
 })
 // Define the editMode.
-const  editMode  = useStoreEditMode()
+const editMode = useStoreEditMode()
 
 // game specific functions.
 
@@ -52,7 +51,7 @@ const editWord = ref<{ id: number, foreign: string, fr: string }>({
 	id: null, foreign: null, fr: null
 })
 // before editing, store the word to edit.
-const editTranslation = function(word) {
+const editTranslation = function (word) {
 	if (editMode.enable && usePage().props.auth.can.admin) {
 		editWord.value = word
 		showEditForm.value = true
@@ -60,7 +59,7 @@ const editTranslation = function(word) {
 
 }
 // update the translation to the DB.
-const updateTranslation = function() {
+const updateTranslation = function () {
 	axios.post(route("api.admin.voc.words.update", [editWord.value.id]), {
 		...editWord.value,
 		_method: "PATCH"
@@ -73,7 +72,7 @@ const updateTranslation = function() {
  * Export list as excel
  * TODO: export as excel list.
  */
-const exportList = function() {
+const exportList = function () {
 	alert("Pour l'instant, l'export n'est pas encore opérationnel !")
 }
 

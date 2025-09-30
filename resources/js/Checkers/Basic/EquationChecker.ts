@@ -3,7 +3,7 @@ import {CheckerResult, CHECKERS, checkMinMaxEquation, checkReducedEquation, make
 import {CheckerAbstract} from "@/Checkers/CheckerAbstract"
 import {checkCircle} from "@/Checkers/checkerCheckFunctions.ts"
 
-const name = "equation"
+// const name = "equation"
 const description = `equation,[paramètres]
 
 **paramètres**

@@ -1,6 +1,5 @@
 <script setup lang="ts">
 
-import PiMarkovGraph from "@/Components/Pi/PiDrawComponents/PiMarkovGraph.vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import {computed, ref} from "vue"
 import GrapheDeMarkov from "@/Components/Widgets/algebre/graphe-de-markov.vue"
@@ -20,7 +19,7 @@ const nodes = computed(() => {
 })
 
 
-const illustration = computed(()=>{
+const illustration = computed(() => {
 	return {
 		parameters: '',
 		code: `${labelInput.value}\n${matrixInput.value}`

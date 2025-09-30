@@ -4,7 +4,7 @@ import {Fraction} from "pimath"
 import {ExactChecker} from "./ExactChecker"
 import {CheckerResult, CHECKERS} from "../checker.config"
 
-const name = "vector"
+// const name = "vector"
 const description = `vector,[paramètres]
 
 **paramètres**

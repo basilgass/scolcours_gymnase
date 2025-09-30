@@ -3,7 +3,7 @@
 import {CourseInterface, LessonInterface, UserTeamInterface} from "@/types/modelInterfaces.ts"
 import LessonDrop from "@/Components/Courses/LessonDrop.vue"
 import {computed} from "vue"
-import dayjs, {Dayjs} from "dayjs"
+import dayjs from "dayjs"
 
 const props = defineProps<{
 	course: CourseInterface,
@@ -22,7 +22,7 @@ function toMinutes(time: string): number {
 }
 
 const firstTimeOfTheDayInMinutes = computed(() => {
-	if(props.lessons.length===0){
+	if (props.lessons.length === 0) {
 		return null
 	}
 
@@ -30,9 +30,9 @@ const firstTimeOfTheDayInMinutes = computed(() => {
 	const times: number[] = props.team.calendar
 		.filter((calendar) => calendar.day === day)
 		.map((calendar) => toMinutes(calendar.time))
-		.filter(time => time!==null)
+		.filter(time => time !== null)
 
-	if(times.length===0){
+	if (times.length === 0) {
 		return null
 	}
 
@@ -41,7 +41,7 @@ const firstTimeOfTheDayInMinutes = computed(() => {
 
 
 const beforeLessons = computed(() => {
-	if(firstTimeOfTheDayInMinutes.value===null){
+	if (firstTimeOfTheDayInMinutes.value === null) {
 		return []
 	}
 
@@ -52,7 +52,7 @@ const beforeLessons = computed(() => {
 	})
 })
 const duringLessons = computed(() => {
-	if(firstTimeOfTheDayInMinutes.value===null){
+	if (firstTimeOfTheDayInMinutes.value === null) {
 		return props.lessons
 	}
 

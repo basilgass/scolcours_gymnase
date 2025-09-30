@@ -2,7 +2,7 @@ import {CheckerAbstract, makeCheckerResult} from "../CheckerAbstract"
 import {Fraction} from "pimath"
 import {CheckerResult, CHECKERS} from "../checker.config"
 
-const name = "fraction"
+// const name = "fraction"
 
 const description = `fraction,[paramètres]
 

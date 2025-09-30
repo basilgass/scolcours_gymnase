@@ -2,12 +2,10 @@
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import {asciiToTex} from "@/Composables/keyboardConfig"
 import {useGenerator} from "@/Composables/useGenerator"
-import {flashInterface, generatedQuestionInterface} from "@/types"
+import {generatedQuestionInterface} from "@/types"
 import {ChallengeInterface} from "@/types/modelInterfaces"
 import {usePage} from "@inertiajs/vue3"
-import {useClipboard} from "@vueuse/core"
-import axios from "axios"
-import {inject, PropType, ref} from "vue"
+import {PropType, ref} from "vue"
 import ScButton from "@/Components/Ui/scButton.vue"
 import TexCode from "@/Components/Ui/TexCode.vue"
 import Card from "@/Components/Ui/Card.vue"
@@ -29,8 +27,6 @@ const pdfGeneratorNb = ref<number[]>(Array(props.challenge.generators.length).fi
 const pdfQuestionWrapper = ref("\\( @ \\)")
 const pdfError = ref("")
 const pdfLaTeX = ref("")
-
-const {copy, copied} = useClipboard({source: pdfLaTeX})
 
 const MAX_QUESTIONS_PER_GENERATOR = 30
 const pdfGenereate = () => {

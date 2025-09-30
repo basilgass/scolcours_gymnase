@@ -45,15 +45,15 @@ function quizzUpdate() {
 		})
 }
 
-function quizzDestroy() {
-	axios
-		.post(route("api.admin.quizzs.destroy", [theQuizz.value.id]), {
-			_method: "DELETE",
-		})
-		.then(() => {
-			router.visit(route("admin.quizzs.index"))
-		})
-}
+// function quizzDestroy() {
+// 	axios
+// 		.post(route("api.admin.quizzs.destroy", [theQuizz.value.id]), {
+// 			_method: "DELETE",
+// 		})
+// 		.then(() => {
+// 			router.visit(route("admin.quizzs.index"))
+// 		})
+// }
 
 </script>
 <template>

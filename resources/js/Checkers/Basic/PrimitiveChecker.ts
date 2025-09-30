@@ -4,7 +4,7 @@ import {LogChecker} from "./LogChecker"
 import {PolynomChecker} from "./PolynomChecker"
 import {CheckerResult, CHECKERS} from "../checker.config"
 
-const name = "primitive"
+// const name = "primitive"
 const description = `primitive,[paramètres]
 
 **paramètres**

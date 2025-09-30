@@ -7,29 +7,36 @@ const flash = inject('flash')
 	lang="ts"
 	setup
 >
-import { onMounted, PropType, ref } from "vue"
+import {onMounted, ref} from "vue"
 
 const emits = defineEmits(["open", "close"])
-const props = defineProps({
-	message: { type: String, default: "aucun message :(" },
-	timeout: { type: Number, default: 1000 * 5 },
-	link: {
-		type: Object as PropType<{ label: string, external?: boolean, url: string }>, default: () => {
-		}
-	},
-	tex: { type: Boolean, default: false }
-})
+const props = withDefaults(defineProps<{
+		message: string
+		timeout?: number
+		link?: {
+			label: string,
+			url: string,
+			external?: boolean,
+		},
+		tex?: boolean
+	}>()
+	, {
+		timeout: 1000 * 5,
+		link: null,
+		tex: false
+	})
 
-let show = ref(true),
-	closeFlashMessage = function () {
-		show.value = false
-		emits("close", timeoutId)
-	},
-	timeoutId
+const show = ref(true)
+
+let timeoutId: number
+
+function closeFlashMessage() {
+	show.value = false
+	emits("close", timeoutId)
+}
 
 
 onMounted(() => {
-
 	timeoutId = setTimeout(() => closeFlashMessage(), props.timeout)
 	emits("open", timeoutId)
 })

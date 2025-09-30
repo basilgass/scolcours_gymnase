@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import LayoutMain from "@/Layouts/LayoutMain.vue"
-import {Equation, Factor, Fraction, LinearSystem, PolyFactor, Polynom, Random} from "pimath"
-import {computed, ref} from "vue"
+import {Factor, PolyFactor, Polynom, Random} from "pimath"
+import {computed} from "vue"
 import TexCode from "@/Components/Ui/TexCode.vue"
 
 defineOptions({layout: LayoutMain})
@@ -113,7 +113,7 @@ function generateFractionSimple() {
 	const max_degree_of_polynom = 1
 	const max_power_of_factor = 2
 	const max_global_power = 3
-	const allow_x_monom = true
+	// const allow_x_monom = true
 
 
 	const numeratorFactors: Factor[] = []
@@ -126,7 +126,7 @@ function generateFractionSimple() {
 
 		const remaining_degrees = max_global_power - current_degree
 
-		if(remaining_degrees <= 0) {
+		if (remaining_degrees <= 0) {
 			break
 		}
 
@@ -145,7 +145,7 @@ function generateFractionSimple() {
 
 		for (let i = 1; i <= power; i++) {
 			const num = new Factor(Random.polynom({
-				degree: polynom_degree-1,
+				degree: polynom_degree - 1,
 				allowNullMonom: false,
 				unit: false
 			}))

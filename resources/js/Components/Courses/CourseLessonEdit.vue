@@ -1,9 +1,9 @@
 <script setup lang="ts">
 
 import {LessonInterface} from "@/types/modelInterfaces.ts"
-import {computed, inject, ref} from "vue"
+import {computed, ref} from "vue"
 import ScButton from "@/Components/Ui/scButton.vue"
-import {AxiosErrorMessage, flashInterface} from "@/types"
+import {AxiosErrorMessage} from "@/types"
 import axios from "axios"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import {useCourse} from "@/Pages/Courses/useCourse.ts"
@@ -32,7 +32,7 @@ function updateLesson() {
 		})
 }
 
-const jsonMap = computed(()=>{
+const jsonMap = computed(() => {
 	return useCourse().lessonScoreRulesMap(props.lesson.lessonable_type)
 })
 

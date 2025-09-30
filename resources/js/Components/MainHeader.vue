@@ -9,7 +9,7 @@ import MainAside from "@/Components/MainAside.vue"
 import DropdownMenu from "@/Components/Ui/DropdownMenu.vue"
 import LogoutButton from "@/Components/Ui/LogoutButton.vue"
 import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
-import {computed, provide, ref, watch} from "vue"
+import {computed, provide, ref} from "vue"
 import ScButton from "@/Components/Ui/scButton.vue"
 import {ThemeInterface} from "@/types/modelInterfaces.ts"
 
@@ -30,7 +30,6 @@ const showAside = ref(false)
 provide("showAside", showAside)
 
 const editMode = useStoreEditMode()
-
 
 
 </script>

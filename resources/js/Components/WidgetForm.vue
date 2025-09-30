@@ -37,9 +37,9 @@ const isModified = computed(() => {
 	if (props.widget.name !== theWidget.value.name) return true
 	if (props.widget.slug !== theWidget.value.slug) return true
 	if (props.widget.component !== theWidget.value.component) return true
-	if (props.widget.description !== theWidget.value.description) return true
 
-	return false
+
+	return props.widget.description !== theWidget.value.description
 })
 </script>
 

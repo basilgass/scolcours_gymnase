@@ -3,10 +3,10 @@
 	setup
 >
 
-import {AxiosErrorMessage, AxiosResponseModel, flashInterface} from "@/types"
+import {AxiosErrorMessage, AxiosResponseModel} from "@/types"
 import type {BlockInterface, CardInterface, DeckInterface, FormulaInterface} from "@/types/modelInterfaces"
 import axios from "axios"
-import {inject, ref} from "vue"
+import {ref} from "vue"
 import ScButton from "@/Components/Ui/scButton.vue"
 import DeckCardEdit from "@/Components/Decks/Parts/DeckCardEdit.vue"
 import DeckCardsEditDynamics from "@/Components/Decks/Parts/DeckCardsEditDynamics.vue"

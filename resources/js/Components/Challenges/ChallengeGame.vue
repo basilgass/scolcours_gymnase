@@ -6,7 +6,6 @@ import ChallengeResults from "@/Components/Challenges/ChallengeResults.vue"
 import QuestionShow from "@/Components/Questions/QuestionShow.vue"
 import StatBar from "@/Components/Ui/StatBar.vue"
 import {useGenerator} from "@/Composables/useGenerator"
-import {flashInterface} from "@/types"
 import {
 	ChallengeGameState,
 	ChallengeInterface,
@@ -14,7 +13,7 @@ import {
 	QuestionDynamicInterface,
 	QuestionInterface
 } from "@/types/modelInterfaces"
-import {computed, inject, reactive, ref, watch} from "vue"
+import {computed, reactive, ref, watch} from "vue"
 import {useStoreScore} from "@/stores/useStoreScore.ts"
 import {ScoreChallengeDataInterface} from "@/types/scoreInterfaces.ts"
 import {ChallengeAnswerInterface, ChallengeGameInterface} from "@/types/challengeInterface.ts"

@@ -2,10 +2,8 @@
 
 import BlockShow from "@/Components/Blocks/BlockShow.vue"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
-import { flashInterface } from "@/types"
-import { FormulaInterface } from "@/types/modelInterfaces.ts"
+import {FormulaInterface} from "@/types/modelInterfaces.ts"
 import axios from "axios"
-import { inject } from "vue"
 import MoveItemTo from "@/Components/MoveItemTo.vue"
 import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
 
@@ -18,11 +16,12 @@ const props = defineProps<{
 const emits = defineEmits<{
 	destroy: [event: number]
 }>()
-function deleteFormula(){
+
+function deleteFormula() {
 	const id = props.formula.id
 	axios.post(route('api.admin.formulas.destroy', [props.formula.id]), {
 		_method: "delete"
-	}).then(()=>{
+	}).then(() => {
 		flash.success('La formule a bien été supprimée.')
 		emits('destroy', id)
 	})

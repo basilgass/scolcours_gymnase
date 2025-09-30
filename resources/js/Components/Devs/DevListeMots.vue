@@ -2,17 +2,17 @@
 
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
-import { computed, ref } from "vue"
+import {ref} from "vue"
 import axios from "axios"
 
-defineOptions({ layout: LayoutMain })
+defineOptions({layout: LayoutMain})
 
 const nbCar = ref(5)
 
 const words = ref<string[]>([])
 
-function getWords(){
-	if(nbCar.value===0){
+function getWords() {
+	if (nbCar.value === 0) {
 		return
 	}
 

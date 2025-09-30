@@ -2,7 +2,7 @@ import {CheckerAbstract, makeCheckerResult} from "../CheckerAbstract"
 import {NumExp} from "pimath"
 import {CheckerResult, CHECKERS} from "../checker.config"
 
-const name = "log"
+// const name = "log"
 const description = `log,[paramètres]
 
 **paramètres**

@@ -1,7 +1,7 @@
 import {CheckerAbstract, makeCheckerResult} from "../CheckerAbstract"
 import {CheckerResult, CHECKERS} from "../checker.config"
 
-const name = "qcm"
+// const name = "qcm"
 const description = "qcm,[paramètres]"
 
 export class QcmChecker extends CheckerAbstract{

@@ -2,7 +2,7 @@ import {CheckerAbstract, makeCheckerResult} from "../CheckerAbstract"
 import {Polynom} from "pimath"
 import {CheckerResult, CHECKERS} from "../checker.config"
 
-const name = "function"
+// const name = "function"
 const description = `function|fn,[paramètres]
 
 **paramètres**

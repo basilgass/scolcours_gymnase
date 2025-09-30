@@ -189,14 +189,14 @@ export function useTextEditor(AreaRefName: string, options?: {
 
 	}
 
-	function handleKeyup(e: KeyboardEvent) {
+	function handleKeyup() {//e: KeyboardEvent
 		checkIfInMathEnv()
 		updateSelection()
 		updateCurrentLine()
 		return
 	}
 
-	function handleClick(e: MouseEvent) {
+	function handleClick() { // e: MouseEvent
 		checkIfInMathEnv()
 		updateCurrentLine()
 		removeTabStops()
@@ -502,7 +502,6 @@ export function useTextEditor(AreaRefName: string, options?: {
 
 		const cursor = el.selectionStart
 		const value = el.value
-		const nextChar = value[cursor]
 
 		const openChars = ['(', '[', '{', '\\lbrace']
 		const closeChars = [')', ']', '}', '\\rbrace']

@@ -178,10 +178,7 @@ function getKeyboards(kbrdCode: string): Partial<questionValidatorInterface>[] {
 	return unrefKbrd.split("\n\n").map(kbrd => getOneKeyboard(kbrd))
 }
 
-export function useKeyboard(
-	props?: KeyboardPropsInterface,
-	onKeyboardChange?: (event: string | KeyboardInputInterface) => void
-) {
+export function useKeyboard() {
 
 	const keyboardInput = ref<KeyboardInputInterface>({input: "", tex: "", raw: ""})
 
@@ -189,37 +186,37 @@ export function useKeyboard(
 		keyboardInput.value = {input: "", tex: "", raw: ""}
 	}
 
-	function loadAnswer(value: string, config?: {
-		reset?: () => void,
-		callback?: (value?: string) => void
-	}) {
-		// Reset the current value
-		// if (config?.reset) {
-		// 	config.reset()
-		// } else {
-		// 	reset()
-		// }
-		//
-		// // if value is null, reset the display
-		// if (value === null) {
-		// 	onKeyboardChange(null)
-		// 	return
-		// }
-		//
-		// // if value is undefined, set the value to the answer.
-		// if (value === undefined && props) {
-		// 	value = props.answer
-		// }
-		//
-		// // show always only the first value
-		// const first_value = value.split("||")[0]
-		// if (config?.callback) {
-		// 	config.callback(first_value)
-		// }
-		//
-		// // Emit change
-		// onKeyboardChange(first_value)
-	}
+	// function loadAnswer(value: string, config?: {
+	// 	reset?: () => void,
+	// 	callback?: (value?: string) => void
+	// }) {
+	// 	// Reset the current value
+	// 	// if (config?.reset) {
+	// 	// 	config.reset()
+	// 	// } else {
+	// 	// 	reset()
+	// 	// }
+	// 	//
+	// 	// // if value is null, reset the display
+	// 	// if (value === null) {
+	// 	// 	onKeyboardChange(null)
+	// 	// 	return
+	// 	// }
+	// 	//
+	// 	// // if value is undefined, set the value to the answer.
+	// 	// if (value === undefined && props) {
+	// 	// 	value = props.answer
+	// 	// }
+	// 	//
+	// 	// // show always only the first value
+	// 	// const first_value = value.split("||")[0]
+	// 	// if (config?.callback) {
+	// 	// 	config.callback(first_value)
+	// 	// }
+	// 	//
+	// 	// // Emit change
+	// 	// onKeyboardChange(first_value)
+	// }
 
 
 	// Return the available functions
@@ -228,8 +225,8 @@ export function useKeyboard(
 		getKeyboards, 			// Main function to recover a keyboard with all it's functionality
 		keyboardKeys, 			// Keyboard keys configuration
 		keyboards,				// List of all available "basic" keyboards with their configuration
-		getComponent,			// Get the component of the keyboard given by name
-		loadAnswer,				// load the answer to the keyboard
+		// getComponent,			// Get the component of the keyboard given by name
+		// loadAnswer,				// load the answer to the keyboard
 		reset
 	}
 }

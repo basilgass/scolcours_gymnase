@@ -9,7 +9,7 @@ c d
 <script lang="ts" setup>
 
 import {WidgetPropsInterface} from "@/types/modelInterfaces.ts"
-import {computed, onMounted} from "vue"
+import {computed} from "vue"
 import PiMarkovGraph from "@/Components/Pi/PiDrawComponents/PiMarkovGraph.vue"
 import {Fraction} from "pimath"
 import type {PiDraw} from "pidraw/types"
@@ -18,7 +18,7 @@ const props = defineProps<{
 	illustration: WidgetPropsInterface
 }>()
 
-const params = computed(() => props.illustration.parameters?.split(',')??[])
+const params = computed(() => props.illustration.parameters?.split(',') ?? [])
 
 const digits = computed<number>(() => {
 	if (params.value.includes('f') || params.value.includes('frac')) {
@@ -64,8 +64,8 @@ const matrix = computed<Fraction[][]>(() => {
 	const input = props.illustration.code
 		.split('\n').slice(1)
 		.map(row => row.split(' ')
-			.filter(n => n.trim()!=='')
-			.map(n => divideBy100 ? ((+n)/100).toString() : n)
+			.filter(n => n.trim() !== '')
+			.map(n => divideBy100 ? ((+n) / 100).toString() : n)
 		)
 
 	const m: string[][] = []
@@ -85,7 +85,7 @@ const emits = defineEmits<{
 	update: [draw: PiDraw],
 }>()
 
-const drawMouseUp = function (evt: {draw: PiDraw, mouse: MouseEvent}) {
+const drawMouseUp = function (evt: { draw: PiDraw, mouse: MouseEvent }) {
 	emits("update", evt.draw)
 	emits("drawClick", evt)
 }

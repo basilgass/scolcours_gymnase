@@ -65,22 +65,7 @@ const addGenerator = function () {
 			console.error('Pas possible de créer un challenge.')
 		})
 }
-const availableGenerators = ref([])
 const attachGeneratorId = ref("")
-// const getListOfGenerators = function () {
-// 	if (availableGenerators.value.length === 0) {
-// 		axios
-// 			.get(
-// 				route("api.admin.challenges.generators.index", [
-// 					theChallenge.value.id
-// 				])
-// 			)
-// 			.then((res) => (availableGenerators.value = res.data))
-// 			.catch((res) => {
-// 				console.warn(res.response.data.message)
-// 			})
-// 	}
-// }
 const attachGenerator = function () {
 	if (attachGeneratorId.value !== "") {
 		axios

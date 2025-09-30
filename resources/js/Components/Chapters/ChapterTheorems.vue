@@ -81,6 +81,7 @@ function toggleGroup(name: "theorem" | "property" | "definition") {
 				<div class="flex flex-wrap text-xs gap-1">
 					<sc-button
 						v-for="(key, name) in groups"
+						:key="`${key}-${name}`"
 						:active="showGroup==='' || showGroup===key"
 						xs
 						@click="toggleGroup(key)"

@@ -4,8 +4,6 @@
  * This component is used to display a card in a deck.
  * It is only a display component, it does not handle any logic.
  */
-import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
-import IllustrationShow from "@/Components/Illustrations/IllustrationShow.vue"
 import {CardInterface} from "@/types/modelInterfaces"
 import {ref} from "vue"
 import DeckCardItemSide from "@/Components/Decks/Parts/DeckCardItemSide.vue"
@@ -21,8 +19,6 @@ const cardSide = defineModel<'recto' | 'verso'>()
 const emits = defineEmits<{
 	flip: [e: 'recto' | 'verso']
 }>()
-
-const cardHide = ref<boolean>(false)
 
 function flip() {
 	// Change the cardside

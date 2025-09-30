@@ -4,10 +4,10 @@ Affichage de la liste des challenges pour un chapitre donné.
 <script lang="ts" setup>
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import DialogModal from "@/Components/Ui/DialogModal.vue"
-import { useStoreEditMode } from "@/stores/useStoreEditMode.ts"
+import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
 import {ChallengeMinInterface, ChapterShowInterface} from "@/types/modelInterfaces.ts"
-import {useForm, usePage} from "@inertiajs/vue3"
-import { ref } from "vue"
+import {useForm} from "@inertiajs/vue3"
+import {ref} from "vue"
 import ScButton from "@/Components/Ui/scButton.vue"
 
 let props = defineProps<{

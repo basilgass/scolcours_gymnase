@@ -1,7 +1,7 @@
 import {CheckerAbstract, makeCheckerResult} from "../CheckerAbstract"
 import {CheckerResult, CHECKERS} from "../checker.config"
 
-const name = "study"
+// const name = "study"
 const description = `study
 
 **paramètres**

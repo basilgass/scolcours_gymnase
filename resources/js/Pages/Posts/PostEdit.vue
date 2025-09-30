@@ -53,7 +53,7 @@ const deletePost = function () {
 		.post(route("api.admin.posts.destroy", [props.post.id]), {
 			_method: "delete"
 		})
-		.then((res) => {
+		.then(() => {
 			flash.success("Post supprimé")
 			router.visit(route('chapters.show', chapter_id))
 		})

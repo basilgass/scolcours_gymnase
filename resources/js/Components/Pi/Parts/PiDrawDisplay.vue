@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import {nextTick, onMounted, onUnmounted, ref, useTemplateRef, watch} from "vue"
+import {onMounted, ref, useTemplateRef, watch} from "vue"
 import {PiDraw} from "pidraw"
 import {useResizeObserver} from "@vueuse/core"
 import katex from "katex"

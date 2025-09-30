@@ -1,7 +1,7 @@
 <script setup lang="ts">
 
 import LessonCard from "@/Components/Courses/LessonCard.vue"
-import {CourseInterface, LessonInterface, TeamInterface, UserTeamInterface} from "@/types/modelInterfaces.ts"
+import {CourseInterface, LessonInterface, UserTeamInterface} from "@/types/modelInterfaces.ts"
 import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
 import dayjs from "dayjs"
 import {LessonScoreRulesInterface} from "@/types/lessonInterfaces.ts"

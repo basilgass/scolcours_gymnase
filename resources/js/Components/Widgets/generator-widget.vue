@@ -5,7 +5,6 @@ import QuestionShow from "@/Components/Questions/QuestionShow.vue"
 import {computed, onMounted, ref} from "vue"
 import {useGenerator} from "@/Composables/useGenerator.ts"
 import axios from "axios"
-import {ChallengeAnswerInterface} from "@/types/challengeInterface.ts"
 import {questionResultInterface} from "@/Components/Questions/QuestionInterface.ts"
 
 const props = defineProps<{

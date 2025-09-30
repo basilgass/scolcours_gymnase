@@ -4,7 +4,7 @@
  * Pour l'admin, permet de modifier la réponse.
  */
 import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
-import {computed, inject, ref, watch} from "vue"
+import {computed, inject, ref} from "vue"
 import type {questionDataInterface} from "@/Components/Questions/QuestionInterface.ts"
 import {ScoreQuestionDataInterface} from "@/types/scoreInterfaces.ts"
 
@@ -19,7 +19,7 @@ const emits = defineEmits<{
 }>()
 
 function toggleAnswer(value?: string) {
-	showAnswer.value = value===undefined ? !showAnswer.value : true
+	showAnswer.value = value === undefined ? !showAnswer.value : true
 	emits('loadAnswers', {show: showAnswer.value, value})
 }
 

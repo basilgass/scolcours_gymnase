@@ -21,29 +21,29 @@ const percent = computed(() => {
 const statLabelComputed = computed(() => {
 	return props.barLabel || `${props.value} / ${props.max}`
 })
-const barClassComputed = computed(() => {
-	const barClass = [props.barClass]
-
-	if (props.inverted) {
-		if (percent.value > 0.75) {
-			barClass.push("bg-red-300/30", "border", "border-red-200")
-		} else if (percent.value < 0.30) {
-			barClass.push("bg-green-400/30", "border", "border-green-400")
-		} else {
-			barClass.push("bg-amber-300/30", "border", "border-amber-400")
-		}
-	} else {
-		if (percent.value > 0.75) {
-			barClass.push("bg-green-400/30", "border", "border-green-400")
-		} else if (percent.value < 0.30) {
-			barClass.push("bg-red-300/30", "border", "border-red-200")
-		} else {
-			barClass.push("bg-amber-300/30", "border", "border-amber-400")
-		}
-	}
-
-	return barClass.join(" ")
-})
+// const barClassComputed = computed(() => {
+// 	const barClass = [props.barClass]
+//
+// 	if (props.inverted) {
+// 		if (percent.value > 0.75) {
+// 			barClass.push("bg-red-300/30", "border", "border-red-200")
+// 		} else if (percent.value < 0.30) {
+// 			barClass.push("bg-green-400/30", "border", "border-green-400")
+// 		} else {
+// 			barClass.push("bg-amber-300/30", "border", "border-amber-400")
+// 		}
+// 	} else {
+// 		if (percent.value > 0.75) {
+// 			barClass.push("bg-green-400/30", "border", "border-green-400")
+// 		} else if (percent.value < 0.30) {
+// 			barClass.push("bg-red-300/30", "border", "border-red-200")
+// 		} else {
+// 			barClass.push("bg-amber-300/30", "border", "border-amber-400")
+// 		}
+// 	}
+//
+// 	return barClass.join(" ")
+// })
 
 const bgClassComputed = computed(() => {
 	const barClass = [props.barClass]

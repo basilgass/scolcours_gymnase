@@ -9,7 +9,7 @@ import {
 	PolynomChecker
 } from "@/Checkers"
 
-const name = "equation"
+// const name = "equation"
 const description = `equation,[paramètres]
 
 **paramètres**

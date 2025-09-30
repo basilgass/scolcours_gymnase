@@ -47,7 +47,7 @@ function updateIllustrationsOrder() {
 		}"
 		@end="updateIllustrationsOrder"
 	>
-		<template #item="{ element, index } : {element: IllustrationInterface, index: number}">
+		<template #item="{ element } : {element: IllustrationInterface, index: number}">
 			<div
 				class="relative"
 				:key="`illustration-${element.id}`"

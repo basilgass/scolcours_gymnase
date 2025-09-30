@@ -2,7 +2,7 @@
 import EditLink from "@/Components/Ui/EditLink.vue"
 import {getModule, MODULE_TYPES} from "@/scolcours.ts"
 import type {IllustrationInterface} from "@/types/modelInterfaces.ts"
-import {computed, onMounted, ref, watch} from "vue"
+import {watch} from "vue"
 
 const props = defineProps<{
 	illustration: IllustrationInterface
@@ -10,7 +10,7 @@ const props = defineProps<{
 }>()
 
 
-function getWidget(){
+function getWidget() {
 	return getModule(
 		props.illustration.widget ? props.illustration.widget.component : null,
 		MODULE_TYPES.WIDGET
@@ -20,8 +20,8 @@ function getWidget(){
 // Get the component to display
 let widgetComponent = getWidget()
 
-watch(()=>props.illustration, (newValue, oldValue)=>{
-	if(newValue.widget.slug!==oldValue.widget.slug){
+watch(() => props.illustration, (newValue, oldValue) => {
+	if (newValue.widget.slug !== oldValue.widget.slug) {
 		widgetComponent = getWidget()
 	}
 })

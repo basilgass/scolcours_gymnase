@@ -4,11 +4,10 @@
 >
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
-import {flashInterface} from "@/types"
 import {ChapterShowInterface, PostInterface} from "@/types/modelInterfaces.ts"
 import {router} from "@inertiajs/vue3"
 import axios from "axios"
-import {computed, inject, ref} from "vue"
+import {computed, ref} from "vue"
 import ScButton from "@/Components/Ui/scButton.vue"
 import PostTypeIcon from "@/Components/Posts/PostTypeIcon.vue"
 import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
@@ -115,7 +114,7 @@ const questionStatus = computed<Record<number, number | null>>(() => {
 	return result
 })
 
-const postTypes:Record<string, { label: string, icon: string, title: string, active: boolean }> = {
+const postTypes: Record<string, { label: string, icon: string, title: string, active: boolean }> = {
 	theory: {
 		label: 'théorie',
 		icon: 'bi bi-book',
@@ -142,7 +141,7 @@ const postTypes:Record<string, { label: string, icon: string, title: string, act
 	}
 }
 
-const availablePostTypes = computed(()=>{
+const availablePostTypes = computed(() => {
 	return Object.fromEntries(
 		Object.entries(postTypes).filter(([_, v]) => v.active)
 	)

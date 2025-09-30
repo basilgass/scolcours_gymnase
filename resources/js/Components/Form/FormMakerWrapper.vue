@@ -22,7 +22,8 @@ const props = withDefaults(defineProps<FormMakerWrapperInterface>(),
 		xl: false,
 		sm: false,
 		xs: false,
-		inputClass: false
+		inputClass: false,
+		errors: ()=>[]
 	})
 
 const value = defineModel<string | boolean | number | Record<string, string>>()

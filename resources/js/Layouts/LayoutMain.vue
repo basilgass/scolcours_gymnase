@@ -3,7 +3,7 @@ import MainFooter from "@/Components/MainFooter.vue"
 import MainHeader from "@/Components/MainHeader.vue"
 import {ThemeInterface} from "@/types/modelInterfaces.ts"
 import {Head, usePage} from "@inertiajs/vue3"
-import {computed, onMounted, ref, watch} from "vue"
+import {computed, ref, watch} from "vue"
 import FlashContainer from "@/Components/Ui/FlashContainer.vue"
 
 const props = withDefaults(defineProps<{

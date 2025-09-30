@@ -1,10 +1,9 @@
 <script lang="ts" setup>
-import {onMounted, ref, watch} from "vue"
-import {ChapterInterface, DeckInterface, ThemeInterface} from "@/types/modelInterfaces.ts"
+import {onMounted, ref} from "vue"
+import {DeckInterface, ThemeInterface} from "@/types/modelInterfaces.ts"
 import axios from "axios"
 import {AxiosErrorMessage, AxiosResponseModel} from "@/types"
 import {FormElementEmits} from "@/Components/Form/FormMakerInterface.ts"
-import FormMaker from "@/Components/Form/FormMaker.vue"
 import ScButton from "@/Components/Ui/scButton.vue"
 
 // REFACTOR: transformer en un "suggestion list"

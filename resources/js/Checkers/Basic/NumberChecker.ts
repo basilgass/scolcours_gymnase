@@ -1,8 +1,8 @@
 import {CheckerAbstract, makeCheckerResult} from "../CheckerAbstract"
 import {CheckerResult, CHECKERS} from "../checker.config"
 
-const name = "number",
-	description = `number|nb,[paramètres]
+// const name = "number",
+const description = `number|nb,[paramètres]
 
 **paramètres**
 - [1,2,3,4,...]: nombre de chiffres après la virgule
@@ -43,23 +43,38 @@ export class NumberChecker extends CheckerAbstract {
 		const [expectedUnit, expectedDigits] = this.answer.split(".")
 		const nbExpectedDigits = expectedDigits?.length ?? 0
 
+		const answerValue = +this.answer
+		const givenValue = +value
+
 		if (nbExpectedDigits !== nbDigits && this._isStrict) {
 			return makeCheckerResult("Problème dans la configuration du checker ou de la réponse")
 		}
 
 		if (!this._isStrict) {
-			if (+value === +this.answer) {
+			if (givenValue === answerValue) {
 				return makeCheckerResult()
 			}
 		}
 
+		if(givenValue === -answerValue){
+			return makeCheckerResult("Peut être un problème de signe...")
+		}
+
 		const [unit, digits] = value.split(".")
 		if (+unit !== +expectedUnit) {
-			return makeCheckerResult("la partie entière n'est pas juste.")
+			if(+unit === -expectedUnit){
+				return makeCheckerResult("Problème de signe sur la partie entière.")
+			}
+
+			if(+digits===+expectedDigits) {
+				return makeCheckerResult("la partie entière n'est pas juste.")
+			}
+
+			return makeCheckerResult("La réponse n'est pas juste.")
 		}
 
 		// Le nombre de chiffres après la virgule n'est pas juste
-		if (digits.length > nbDigits) {
+		if (digits.length !== nbDigits) {
 			return makeCheckerResult(
 				`Il faut ${nbDigits} chiffre(s) après la virgule.`,
 				(+digits).toFixed(nbDigits) === expectedDigits

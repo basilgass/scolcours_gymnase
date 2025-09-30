@@ -5,8 +5,7 @@ import EditLink from "@/Components/Ui/EditLink.vue"
 import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
 import {BlockInterface} from "@/types/modelInterfaces.ts"
 import axios from "axios"
-import {inject, ref} from "vue"
-import {flashInterface} from "@/types"
+import {ref} from "vue"
 import MoveItemTo from "@/Components/MoveItemTo.vue"
 import {router} from "@inertiajs/vue3"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
@@ -20,7 +19,7 @@ const props = defineProps<{
 }>()
 
 const emits = defineEmits<{
-	moved: [target: {id: number, target_type: string, target_id: number}]
+	moved: [target: { id: number, target_type: string, target_id: number }]
 }>()
 
 const theBlock = ref(props.block)

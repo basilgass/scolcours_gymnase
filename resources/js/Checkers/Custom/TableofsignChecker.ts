@@ -3,7 +3,7 @@ import {ExactChecker} from "../Basic"
 import {CheckerResult, CHECKERS} from "../checker.config"
 import {NumExp} from "piexpression"
 
-const name = "tos"
+// const name = "tos"
 const description = `tos,[paramètres]
 
 **paramètres**

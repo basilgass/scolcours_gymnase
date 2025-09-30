@@ -18,7 +18,7 @@ let draw = ref(null),
 			const P = new LogicalSet(input.value.replaceAll("uu", "|").replaceAll("nn", "&").replaceAll("not", "!"))
 			updateVenn(P)
 			return P.tex
-		} catch (e) {
+		} catch {
 			return "\\text{ réponse non reconnue }"
 		}
 	}),

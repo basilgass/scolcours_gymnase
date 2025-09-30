@@ -3,7 +3,6 @@ import {computed, ref, useTemplateRef} from "vue"
 import {FormElementEmits, FormElementExpose, FormMakerPropsNewType} from "@/Components/Form/FormMakerInterface.ts"
 import {Fraction} from "pimath"
 import FormMakerWrapper from "@/Components/Form/FormMakerWrapper.vue"
-import {data} from "autoprefixer"
 
 defineOptions({
 	inheritAttrs: false

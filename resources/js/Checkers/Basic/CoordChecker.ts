@@ -3,7 +3,7 @@ import {stripFirstCharacter, stripLastCharacter} from "../checkerHelperFunctions
 import {ExactChecker} from "./ExactChecker"
 import {CheckerResult, CHECKERS} from "../checker.config"
 
-const name = "coord"
+// const name = "coord"
 const description = `coord,[paramètres]
 
 **paramètres**

@@ -37,7 +37,7 @@ const result = computed(() => {
 		return {
 			tex: P.tex
 		}
-	} catch (e) {
+	} catch {
 		return {
 			tex: "\\text{ le polynôme n'est pas reconnu.}"
 		}

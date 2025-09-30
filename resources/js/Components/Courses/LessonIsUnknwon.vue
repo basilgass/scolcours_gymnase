@@ -1,6 +1,5 @@
 <script setup lang="ts">
 
-import CardItem from "@/Components/Elements/CardItem.vue"
 import Card from "@/Components/Ui/Card.vue"
 </script>
 

@@ -9,12 +9,12 @@ import LogoutButton from "@/Components/Ui/LogoutButton.vue"
 import ThemeLinks from "@/Components/Ui/ThemeLinks.vue"
 import DarkModeSwitch from "@/Components/Ui/DarkModeSwitch.vue"
 
-const langues = {
-	italiano: 'it',
-	english: 'en',
-	espanol: 'es',
-	deutsch: 'de',
-}
+// const langues = {
+// 	italiano: 'it',
+// 	english: 'en',
+// 	espanol: 'es',
+// 	deutsch: 'de',
+// }
 </script>
 <template>
 	<div class="bg-slate-950 text-slate-300 px-10 mt-24">

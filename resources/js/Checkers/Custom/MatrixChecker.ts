@@ -1,8 +1,7 @@
 import {CheckerAbstract, makeCheckerResult} from "../CheckerAbstract"
 import {CheckerResult, CHECKERS} from "../checker.config"
-import {ExactChecker} from "@/Checkers"
 
-const name = "matrix"
+// const name = "matrix"
 const description = `matrix,[paramètres]
 
 **paramètres**
@@ -74,7 +73,7 @@ export class MatrixChecker extends CheckerAbstract {
 		return this.secondaryCheckValues(
 			givenData.values,
 			answerData.values,
-			(i: number, message: string)=>{
+			(i: number, message: string) => {
 				const row = Math.floor(i / n) + 1
 				const col = i % n + 1
 				return `\\(a_{ ${row}${col} }\\): ${message}`

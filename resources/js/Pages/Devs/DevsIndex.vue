@@ -4,9 +4,8 @@
 >
 import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
-import axios from "axios"
 
-defineOptions({ layout: LayoutMain })
+defineOptions({layout: LayoutMain})
 
 defineProps<{
 	pages: string[]

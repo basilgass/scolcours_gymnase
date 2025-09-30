@@ -35,8 +35,6 @@ function updateShowAnswer() {
 	})
 }
 
-const outroIndex = computed(() => liveQuizz.value.questions.length + 1)
-
 const toc = computed(() => {
 	return [
 		"introduction",

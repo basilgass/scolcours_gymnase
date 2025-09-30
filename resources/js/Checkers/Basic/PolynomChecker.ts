@@ -3,7 +3,7 @@ import {Polynom} from "pimath"
 import {CheckerResult, CHECKERS} from "../checker.config"
 import {checkPolynomIsFactorized} from "@/Checkers"
 
-const name = "polynom"
+// const name = "polynom"
 const description = `polynom,[paramètres]
 
 **paramètres**

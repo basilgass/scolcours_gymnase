@@ -27,8 +27,8 @@ const horaire = [
 	"15:55",
 ]
 
-function hasCourse(day: number, time: string){
-	return props.team.calendar.find(cal=>cal.day==day && cal.time===time)
+function hasCourse(day: number, time: string) {
+	return props.team.calendar.find(cal => cal.day == day && cal.time === time)
 }
 
 </script>
@@ -37,7 +37,10 @@ function hasCourse(day: number, time: string){
 	<div>
 		<div class="grid grid-cols-6">
 			<div />
-			<div v-for="day in 5">
+			<div
+				v-for="day in 5"
+				:key="`day-${day}`"
+			>
 				{{ dayNames[day] }}
 			</div>
 		</div>
@@ -45,9 +48,10 @@ function hasCourse(day: number, time: string){
 			v-for="(debut, periode) in horaire"
 			class="grid grid-cols-6"
 		>
-			<div>{{ debut }}, p{{ periode+1 }}</div>
+			<div>{{ debut }}, p{{ periode + 1 }}</div>
 			<div
 				v-for="day in 5"
+				:key="`day-btn-${day}`"
 				:class="hasCourse(day, debut)?'bg-blue-500':''"
 			>
 				COURS?
