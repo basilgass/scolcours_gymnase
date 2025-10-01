@@ -13,11 +13,16 @@ export class TypeChecker extends CheckerAbstract {
 
 	readonly format = "Cliquer sur les bonnes lettres."
 
-	check(expected: string, given: string): CheckerResult {
-		return super.check(expected.toUpperCase(), given.toUpperCase())
-	}
+	// check(expected: string, given: string): CheckerResult {
+	// 	return super.check(expected.toUpperCase(), given.toUpperCase())
+	// }
 
 	checkValue(value: string): CheckerResult {
-		return makeCheckerResult("La réponse n'est pas correcte")
+		if(value.toUpperCase()!==this.answer.toUpperCase()){
+			return makeCheckerResult("La réponse n'est pas correcte")
+		}
+
+		return makeCheckerResult()
+
 	}
 }

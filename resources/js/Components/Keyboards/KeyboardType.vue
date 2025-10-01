@@ -21,7 +21,9 @@ const emits = defineEmits<KeyboardEmitsInterface>()
 function onChange(): void {
 	if(answerLetters.value.every(letter=>letter.used)){
 		// TOOD: should trigger the validation button automatically.
+
 	}
+
 	setInput().then((x) => emits("change", x))
 }
 

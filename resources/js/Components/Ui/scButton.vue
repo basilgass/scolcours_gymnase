@@ -29,7 +29,7 @@ const props = withDefaults(defineProps<{
 })
 
 defineEmits<{
-	click: () => void
+	click: []
 }>()
 
 const themeModifiers = computed(() => {

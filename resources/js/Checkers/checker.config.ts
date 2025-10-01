@@ -35,7 +35,7 @@ export enum CHECKERS {
 }
 
 export function checkerNameToEnum(name: string): CHECKERS {
-    switch (name) {
+    switch (name.toLowerCase()) {
         case "exact":
             return CHECKERS.EXACT
         case "polynom":

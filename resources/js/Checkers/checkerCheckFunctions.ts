@@ -15,7 +15,7 @@ export function checkMinMaxEquation(value: string, answer: string, secondaryChec
 
 	return polynomY !== "y"
 		? "Un côté de l'équation doit juste être (y)"
-		: secondaryChecker?.check(expectedSommet, polynomSommet).message ?? ""
+		: secondaryChecker?.check(polynomSommet, expectedSommet).message ?? ""
 }
 
 export function checkReducedEquation(A: Equation): string {

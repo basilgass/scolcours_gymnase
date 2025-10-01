@@ -1,1 +1,0 @@
-import{d as s,F as n,G as r,H as t,Z as o,S as i}from"./@vue-mHX2EraA.js";const c=s({__name:"PleaseWait",props:{text:{}},setup(l){return(a,e)=>(r(),n("div",null,[t("p",null,[e[0]||(e[0]=t("i",{class:"bi bi-watch"},null,-1)),o(" "+i(a.text??"merci de patienter..."),1)])]))}});export{c as _};
