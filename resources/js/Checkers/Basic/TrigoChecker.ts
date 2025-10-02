@@ -45,8 +45,8 @@ export class TrigoChecker extends CheckerAbstract {
 			return makeCheckerResult("Il ne faut pas ajouter la périodicité")
 		}
 
-		const angleF = new Fraction(angle.replace('pi', ''))
-		const answerAngleF = new Fraction(answerAngle.replace('pi', ''))
+		const angleF = parseAngle(angle)
+		const answerAngleF = parseAngle(answerAngle)
 		if(!angleF.isEqual(answerAngleF)){
 			return makeCheckerResult("L'angle n'est pas juste.")
 		}
@@ -55,8 +55,8 @@ export class TrigoChecker extends CheckerAbstract {
 		}
 
 		if(periodic && answerPeriodic){
-			const periodicF = new Fraction(periodic.replace('pi', ''))
-			const answerPeriodicF = new Fraction(answerPeriodic.replace('pi', ''))
+			const periodicF = parseAngle(periodic)
+			const answerPeriodicF = parseAngle(answerPeriodic)
 
 			if(!periodicF.isEqual(answerPeriodicF)){
 				return makeCheckerResult("La partie périodique n'est pas juste.")
@@ -71,4 +71,18 @@ export class TrigoChecker extends CheckerAbstract {
 		return makeCheckerResult()
 	}
 
+}
+
+function parseAngle(value: string): Fraction{
+	const [num, den] = value.split('/')
+
+	const F = new Fraction()
+
+	F.numerator = num==='pi' ? 1 : Number(num.replace('pi', ''))
+
+	if(den && !isNaN(+den)){
+		F.denominator = +den
+	}
+
+	return F
 }
