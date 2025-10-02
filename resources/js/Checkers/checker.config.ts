@@ -22,6 +22,7 @@ export enum CHECKERS {
     RATIONAL = "rational",
     SCIENTIFIC = "scientific",
     SOLUTION = "solution",
+	TRIGO = "trigo",
     STRING = "string",
     VECTOR = "vector",
 
@@ -81,6 +82,8 @@ export function checkerNameToEnum(name: string): CHECKERS {
 			return CHECKERS.MATRIX
 		case "type":
 			return CHECKERS.TYPE
+		case "trigo":
+			return CHECKERS.TRIGO
         default:
             return CHECKERS.STRING
     }

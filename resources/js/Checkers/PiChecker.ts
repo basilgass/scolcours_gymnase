@@ -20,6 +20,7 @@ import {
 	VectorChecker
 } from "./Basic"
 import {MatrixChecker, OrderChecker, QcmChecker, StudyChecker, TableofsignChecker, TypeChecker} from "./Custom"
+import {TrigoChecker} from "@/Checkers/Basic/TrigoChecker.ts"
 
 type CheckerClass = (new (...args: any[]) => CheckerAbstract)
 
@@ -42,6 +43,7 @@ export function checkersList(): Record<CHECKERS, CheckerClass> {
 	list[CHECKERS.SCIENTIFIC] = ScientificChecker
 	list[CHECKERS.SOLUTION] = SolutionChecker
 	list[CHECKERS.STRING] = StringChecker
+	list[CHECKERS.TRIGO] = TrigoChecker
 	list[CHECKERS.VECTOR] = VectorChecker
 
 	list[CHECKERS.ORDER] = OrderChecker

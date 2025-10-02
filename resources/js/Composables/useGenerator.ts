@@ -5,6 +5,7 @@ import { generatedQuestionInterface, generatorResultInterface } from "@/types"
 import type { GeneratorInterface, QuestionDynamicInterface } from "@/types/modelInterfaces"
 import PiMath from "pimath"
 import { ComputedRef, Ref, unref } from "vue"
+import AsciiMathParser from "@/asciimath2tex.ts"
 
 export function useGenerator(generator: GeneratorInterface | ComputedRef<GeneratorInterface>): generatorResultInterface {
 	function question(
@@ -52,7 +53,7 @@ export function useGenerator(generator: GeneratorInterface | ComputedRef<Generat
 
 	function randomQuestion(): generatedQuestionInterface {
 		const g = unref(generator)
-		const F = new Function("PiMath", g.code)
+		const F = new Function("PiMath", "PiMath2", g.code)
 
 		try {
 			const result = F(PiMath)

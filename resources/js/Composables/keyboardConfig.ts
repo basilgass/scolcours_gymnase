@@ -83,82 +83,83 @@ export function keyboardMaps(kbrd: string): string {
  * @property {string} display - The display value of the key.
  */
 export const keyboardKeys = {
-	"0": { type: "math", display: "0" },
-	"1": { type: "math", display: "1" },
-	"2": { type: "math", display: "2" },
-	"3": { type: "math", display: "3" },
-	"4": { type: "math", display: "4" },
-	"5": { type: "math", display: "5" },
-	"6": { type: "math", display: "6" },
-	"7": { type: "math", display: "7" },
-	"8": { type: "math", display: "8" },
-	"9": { type: "math", display: "9" },
-	"+": { type: "math", display: "+" },
-	"-": { type: "math", display: "-" },
-	"*": { type: "math", display: "\\times" },
-	"/": { type: "math", display: "\\div" },
-	x: { type: "math", display: "x" },
-	"x^2": { type: "math", display: "x^2" },
-	"x^3": { type: "math", display: "x^3" },
-	"x^4": { type: "math", display: "x^4" },
-	"x^5": { type: "math", display: "x^5" },
-	"x^6": { type: "math", display: "x^6" },
-	"^2": { type: "math", display: "\\textcolor{lightgray}{x}^2" },
-	"^3": { type: "math", display: "\\textcolor{lightgray}{x}^3" },
-	"^": { type: "math", display: "x^y" },
-	"10^": { type: "math", display: "10^x" },
-	sqrt: { type: "math", display: "\\sqrt{\\phantom{x}}" },
-	"root(3)": { type: "math", display: "\\sqrt[3]{\\phantom{x}}" },
-	"root(": { type: "math", display: "\\sqrt[n]{\\phantom{x}}" },
-	log: { type: "math", display: "\\log" },
-	_: { type: "math", display: "\\textcolor{lightgray}{\\log}_a" },
+	"0": {type: "math", display: "0"},
+	"1": {type: "math", display: "1"},
+	"2": {type: "math", display: "2"},
+	"3": {type: "math", display: "3"},
+	"4": {type: "math", display: "4"},
+	"5": {type: "math", display: "5"},
+	"6": {type: "math", display: "6"},
+	"7": {type: "math", display: "7"},
+	"8": {type: "math", display: "8"},
+	"9": {type: "math", display: "9"},
+	"+": {type: "math", display: "+"},
+	"-": {type: "math", display: "-"},
+	"*": {type: "math", display: "\\times"},
+	"/": {type: "math", display: "\\div"},
+	x: {type: "math", display: "x"},
+	k: {type: "math", display: "k"},
+	"x^2": {type: "math", display: "x^2"},
+	"x^3": {type: "math", display: "x^3"},
+	"x^4": {type: "math", display: "x^4"},
+	"x^5": {type: "math", display: "x^5"},
+	"x^6": {type: "math", display: "x^6"},
+	"^2": {type: "math", display: "\\textcolor{lightgray}{x}^2"},
+	"^3": {type: "math", display: "\\textcolor{lightgray}{x}^3"},
+	"^": {type: "math", display: "x^y"},
+	"10^": {type: "math", display: "10^x"},
+	sqrt: {type: "math", display: "\\sqrt{\\phantom{x}}"},
+	"root(3)": {type: "math", display: "\\sqrt[3]{\\phantom{x}}"},
+	"root(": {type: "math", display: "\\sqrt[n]{\\phantom{x}}"},
+	log: {type: "math", display: "\\log"},
+	_: {type: "math", display: "\\textcolor{lightgray}{\\log}_a"},
 	"|": {
 		type: "math",
 		display: "\\big\\vert \\textcolor{lightgray}{x} \\big\\vert"
 	},
-	y: { type: "math", display: "y" },
-	"y^2": { type: "math", display: "y^2" },
-	"y^3": { type: "math", display: "y^3" },
-	"y^4": { type: "math", display: "y^4" },
-	"y^5": { type: "math", display: "y^5" },
-	"y^6": { type: "math", display: "y^6" },
-	z: { type: "math", display: "z" },
-	"z^2": { type: "math", display: "z^2" },
-	"z^3": { type: "math", display: "z^3" },
-	"z^4": { type: "math", display: "z^4" },
-	"z^5": { type: "math", display: "z^5" },
-	"z^6": { type: "math", display: "z^6" },
-	e: { type: "math", display: "\\text{e}" },
-	ln: { type: "math", display: "\\ln" },
-	pi: { type: "math", display: "\\pi" },
-	"(": { type: "math", display: "(" },
-	")": { type: "math", display: ")" },
-	"{": { type: "math", display: "\\{" },
-	"}": { type: "math", display: "\\}" },
-	"[": { type: "math", display: "[" },
-	"]": { type: "math", display: "]" },
-	"=": { type: "math", display: "=" },
-	" ": { type: "math", display: "\\cdot" },
-	".": { type: "math", display: "." },
-	";": { type: "math", display: ";" },
-	RR: { type: "math", display: "\\mathbb{R}" },
-	"RR_+": { type: "math", display: "\\mathbb{R}_+" },
-	"RR_-": { type: "math", display: "\\mathbb{R}_-" },
-	"^**": { type: "math", display: "\\textcolor{lightgray}{\\mathbb{R}}^*" },
+	y: {type: "math", display: "y"},
+	"y^2": {type: "math", display: "y^2"},
+	"y^3": {type: "math", display: "y^3"},
+	"y^4": {type: "math", display: "y^4"},
+	"y^5": {type: "math", display: "y^5"},
+	"y^6": {type: "math", display: "y^6"},
+	z: {type: "math", display: "z"},
+	"z^2": {type: "math", display: "z^2"},
+	"z^3": {type: "math", display: "z^3"},
+	"z^4": {type: "math", display: "z^4"},
+	"z^5": {type: "math", display: "z^5"},
+	"z^6": {type: "math", display: "z^6"},
+	e: {type: "math", display: "\\text{e}"},
+	ln: {type: "math", display: "\\ln"},
+	pi: {type: "math", display: "\\pi"},
+	"(": {type: "math", display: "("},
+	")": {type: "math", display: ")"},
+	"{": {type: "math", display: "\\{"},
+	"}": {type: "math", display: "\\}"},
+	"[": {type: "math", display: "["},
+	"]": {type: "math", display: "]"},
+	"=": {type: "math", display: "="},
+	" ": {type: "math", display: "\\cdot"},
+	".": {type: "math", display: "."},
+	";": {type: "math", display: ";"},
+	RR: {type: "math", display: "\\mathbb{R}"},
+	"RR_+": {type: "math", display: "\\mathbb{R}_+"},
+	"RR_-": {type: "math", display: "\\mathbb{R}_-"},
+	"^**": {type: "math", display: "\\textcolor{lightgray}{\\mathbb{R}}^*"},
 	"\\\\": {
 		type: "math",
 		display: "\\setminus \\textcolor{lightgray}{ E } "
 	},
-	"+c": { type: "math", display: "+c" },
-	uu: { type: "math", display: "\\cup" },
-	not: { type: "math", display: "\\neg" },
-	nn: { type: "math", display: "\\cap" },
-	oo: { type: "math", display: "\\infty" },
-	"+-": { type: "math", display: "\\pm" },
-	"-+": { type: "math", display: "\\mp" },
-	"!!": { type: "math", display: "\\varnothing" },
-	"@reset": { type: "icon", display: "bi bi-trash" },
-	"@back": { type: "icon", display: "bi bi-backspace" }
+	"+c": {type: "math", display: "+c"},
+	uu: {type: "math", display: "\\cup"},
+	not: {type: "math", display: "\\neg"},
+	nn: {type: "math", display: "\\cap"},
+	oo: {type: "math", display: "\\infty"},
+	"+-": {type: "math", display: "\\pm"},
+	"-+": {type: "math", display: "\\mp"},
+	"!!": {type: "math", display: "\\varnothing"},
+	"@reset": {type: "icon", display: "bi bi-trash"},
+	"@back": {type: "icon", display: "bi bi-backspace"}
 }
 
 /**
@@ -663,7 +664,7 @@ export const keyboards: Record<string, KeyboardObjectType> = {
 				.map((c) => {
 					if (c === "]" || c === "[") {
 						const bigBracket = `\\${isOpened ? "right" : "left"
-							} ${c}`
+						} ${c}`
 						isOpened = !isOpened
 						return bigBracket
 					} else {
@@ -677,6 +678,38 @@ export const keyboards: Record<string, KeyboardObjectType> = {
 			}
 
 			return tex
+		}
+	},
+	trigo: {
+		name: "trigo",
+		grid: "grid-cols-4",
+		layout: [
+			"1", "2", "3", "/",
+			"4", "5", "6", "+",
+			"7", "8", "9", "pi",
+			"", "0", "", "k",
+		],
+		tex(value) {
+			// the trigo input should be 2pi/3+k2pi/2
+			// convert to: (2pi)/3+k*2pi
+			const [angle, periodic] = value.split('+')
+			const [num, den] = angle.split('/')
+			const [, p] = periodic ? periodic.split('k') : ''
+			const [pnum, pden] = p ? p.split('/') : ''
+
+			let result = den!==undefined ? `(${num})/${den}` : num
+			if (periodic!==undefined) {
+				result += `+`
+			}
+			if (p!==undefined) {
+				result += 'k'
+			}
+
+			if (pnum) {
+				result += pden!==undefined ? `(${pnum})/${pden}` : pnum
+			}
+
+			return asciiToTex(result)
 		}
 	},
 	vector: {

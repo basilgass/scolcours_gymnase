@@ -1,0 +1,74 @@
+import {CheckerAbstract, makeCheckerResult} from "../CheckerAbstract"
+import {NumberChecker} from "./NumberChecker"
+import {CheckerResult, CHECKERS} from "../checker.config"
+import {FractionChecker} from "@/Checkers"
+import {Fraction} from "pimath"
+
+// const name = "scientific"
+const description = `trigo,s[ingle],[paramètres]
+
+**paramètres**
+`
+
+export class TrigoChecker extends CheckerAbstract {
+	private withPeriodic: boolean
+    constructor(config:string[]|string) {
+        super(config)
+        this.type = CHECKERS.TRIGO
+        this.description = description
+
+		this.withPeriodic = !(this.config.includes('s') || this.config.includes('single'))
+
+		this.secondaryChecker = new FractionChecker('r')
+    }
+
+
+    get format(): string {
+		if(this.withPeriodic) {
+			return "réponse en radians : \\( \\dfrac{5\\pi}{3}+k\\dfrac{2\\pi}{5}\\)"
+		}else{
+			return "réponse en radians : \\(\\dfrac{5\\pi}{2}\\)"
+		}
+    }
+
+
+	override checkValue(value: string): CheckerResult {
+		console.log(value)
+		const [angle, periodic] = value.split('+k')
+		const [answerAngle, answerPeriodic] = this.answer.split('+k')
+
+		if(answerPeriodic && !periodic){
+			return makeCheckerResult("Il faut ajouter la périodicité")
+		}
+
+		if(!answerPeriodic && periodic){
+			return makeCheckerResult("Il ne faut pas ajouter la périodicité")
+		}
+
+		const angleF = new Fraction(angle.replace('pi', ''))
+		const answerAngleF = new Fraction(answerAngle.replace('pi', ''))
+		if(!angleF.isEqual(answerAngleF)){
+			return makeCheckerResult("L'angle n'est pas juste.")
+		}
+		if(!angleF.isReduced()){
+			return makeCheckerResult("L'angle n'est pas réduit.", true)
+		}
+
+		if(periodic && answerPeriodic){
+			const periodicF = new Fraction(periodic.replace('pi', ''))
+			const answerPeriodicF = new Fraction(answerPeriodic.replace('pi', ''))
+
+			if(!periodicF.isEqual(answerPeriodicF)){
+				return makeCheckerResult("La partie périodique n'est pas juste.")
+			}
+			if(!periodicF.isReduced()){
+				return makeCheckerResult("La partie périodique n'est pas réduite.", true)
+			}
+
+		}
+
+
+		return makeCheckerResult()
+	}
+
+}
