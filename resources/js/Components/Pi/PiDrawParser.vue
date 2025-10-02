@@ -12,6 +12,7 @@ import {useScriptLoader} from "@/Composables/useScriptLoader.ts"
 import PiDrawDisplay from "@/Components/Pi/Parts/PiDrawDisplay.vue"
 import {dynamicText, replaceDoubleSigns} from "@/Composables/useHelpers.ts"
 import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
+import {usePage} from "@inertiajs/vue3"
 
 const editMode = useStoreEditMode()
 
@@ -19,9 +20,10 @@ const props = withDefaults(defineProps<IPiDrawProps & { theme?: string | number 
 	{
 		width: 400,
 		height: 320,
-		theme: false
+		theme: usePage().props.theme?.slug ?? 'scolcours'
 	}
 )
+
 
 const emits = defineEmits<{
 	drawClick: [{ draw: PiDraw, mouse: MouseEvent }],
