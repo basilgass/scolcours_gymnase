@@ -4,6 +4,11 @@
 
 @import 'tailwindcss';
 
+/* safe list */
+@source inline('{sm:,md:,lg:,xl:,}grid-cols-{{1..12}}');
+@source inline('{sm:,md:,lg:,xl:,}col-span-{{1..6}}');
+
+
 /* Custom imports */
 @import "./scolcours/theme.css";
 @import './scolcours/effects.css';
