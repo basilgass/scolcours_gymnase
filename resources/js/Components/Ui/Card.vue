@@ -4,8 +4,8 @@ import {getThemeChapter, getThemeClasses} from "@/directives/themeDirectives.ts"
 import {computed} from "vue"
 
 const props = withDefaults(defineProps<{
-	theme?: false | number | string
-	borderTheme?: false | number | string
+	theme?: boolean | number | string
+	borderTheme?: boolean | number | string
 	noInsideBorder?: boolean
 	success?: boolean
 	error?: boolean

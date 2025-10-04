@@ -27,6 +27,7 @@ import LessonByDates from "@/Components/Courses/LessonByDates.vue"
 import Card from "@/Components/Ui/Card.vue"
 import LessonDrops from "@/Components/Courses/LessonDrops.vue"
 import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
+import {lessonIconsColors} from "@/types/lessonInterfaces.ts"
 
 defineOptions({layout: LayoutMain})
 
@@ -245,7 +246,7 @@ onMounted(() => {
 					/>
 				</div>
 				<stat-bar
-					class="text-xs"
+					class="text-[0.6rem]"
 					:max="100"
 					:value="selected_user_stats[lesson.id]?.total_scores === 0 ? 0 : (selected_user_stats[lesson.id]?.resolved_scores)/(selected_user_stats[lesson.id]?.total_scores)*100"
 				>
@@ -257,30 +258,12 @@ onMounted(() => {
 			</div>
 		</div>
 
-
-		<card
-			v-if="thisDate"
-			class="mb-3"
-		>
-			<template #header>
-				<h3
-					class="font-semibold cursor-pointer"
-					@click="useMenuScrollToData('key', `lesson-day-${thisDate}`)"
-				>
-					Aujourd'hui
-				</h3>
-			</template>
-			<lesson-drops
-				:course
-				:lessons="lessonsByDate[thisDate]"
-				:team
-			/>
-		</card>
-		<div class="grid grid-cols-2 lg:grid-cols-7 gap-3">
+		<div class="columns-1 md:columns-2 xl:columns-4 space-y-5">
 			<card
 				v-for="day in orderedDate"
 				:key="`lesson-day-tag-${day}`"
 				v-show="day!==UNPLANNED"
+				:theme="day===thisDate"
 			>
 				<template #header>
 					<h3
@@ -298,7 +281,7 @@ onMounted(() => {
 			</card>
 		</div>
 
-		<div class="flex justify-center mt-4">
+		<div class="flex justify-center mt-12">
 			<div
 				v-theme.bg.light
 				class="p-3 rounded-lg"
@@ -308,71 +291,7 @@ onMounted(() => {
 			</div>
 		</div>
 
-
-		<div class="space-y-12 mt-12">
-			<Card v-if="thisDate">
-				<template #header>
-					<h3 class="text-xl font-semibold">
-						Leçons du {{ afficherDate(thisDate) }}
-					</h3>
-				</template>
-				<lesson-by-dates
-					:course
-					:team
-					:dates="[thisDate]"
-					:lessons="lessonsByDate"
-				/>
-			</Card>
-
-			<Card v-if="futurDate.length">
-				<template #header>
-					<h3 class="text-xl font-semibold">
-						Leçons futures
-					</h3>
-				</template>
-
-				<lesson-by-dates
-					:course
-					:team
-					:dates="futurDate"
-					:lessons="lessonsByDate"
-				/>
-			</Card>
-
-			<Card
-				v-if="pastDate.length"
-			>
-				<template #header>
-					<h3 class="text-xl font-semibold">
-						Leçons passées
-					</h3>
-				</template>
-				<lesson-by-dates
-					:course
-					:team
-					:dates="pastDate"
-					:lessons="lessonsByDate"
-				/>
-			</Card>
-
-			<Card
-				v-if="lessonsByDate[UNPLANNED]?.length"
-				class="opacity-30"
-			>
-				<template #header>
-					<h3 class="text-xl font-semibold">
-						Leçons non planifiés
-					</h3>
-				</template>
-				<lesson-by-dates
-					:course
-					:team
-					:dates="[UNPLANNED]"
-					:lessons="lessonsByDate"
-				/>
-			</Card>
-		</div>
-		<lesson-icon-legend class="justify-center mt-24" />
+		<lesson-icon-legend class="mt-5" />
 	</section>
 </template>
 

@@ -68,7 +68,7 @@ const duringLessons = computed(() => {
 	<div class="space-y-4">
 		<div
 			v-if="beforeLessons.length"
-			class="flex gap-1 flex-wrap
+			class="flex gap-1 flex-col
 			-mx-3 -mt-3 p-3 mb-3
 			"
 			v-theme.bg.light
@@ -83,7 +83,7 @@ const duringLessons = computed(() => {
 
 		<div
 			v-if="duringLessons.length"
-			class="flex gap-1 flex-wrap"
+			class="flex gap-1 flex-col"
 		>
 			<lesson-drop
 				v-for="lesson in duringLessons"

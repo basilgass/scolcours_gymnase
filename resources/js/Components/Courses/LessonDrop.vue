@@ -3,8 +3,9 @@
 import {CourseInterface, LessonInterface, ScoreInterface} from "@/types/modelInterfaces.ts"
 import {computed, onMounted, ref} from "vue"
 import dayjs from "dayjs"
-import LessonTypeIcon from "@/Components/Courses/LessonTypeIcon.vue"
 import {useStoreScore} from "@/stores/useStoreScore.ts"
+import LessonTypeIcon from "@/Components/Courses/LessonTypeIcon.vue"
+import {lessonIconsColors} from "@/types/lessonInterfaces.ts"
 
 const props = defineProps<{
 	course: CourseInterface
@@ -23,7 +24,14 @@ const isDone = computed(() => {
 	return !!score.value?.is_resolved
 })
 
-const tooltip = ref(false)
+const dropColorClass = computed(()=>{
+	if(isDone.value){return lessonIconsColors.done}
+
+	if(isPast.value){return lessonIconsColors.past}
+
+	return lessonIconsColors.empty
+})
+
 onMounted(() => {
 	scoreStore
 		.getScore('Lesson', props.lesson.id)
@@ -36,29 +44,20 @@ onMounted(() => {
 	<InertiaLink
 		as="div"
 		:href="route('students.lessons.show', {course: course.slug, lesson: lesson.id})"
-		class="relative w-8 h-8 rounded-full cursor-pointer grid place-items-center border"
-		:class="{
-			'bg-green-100 text-green-600 border-green-300': isDone,
-			'bg-red-100 text-red-600 border-red-300':isPast,
-			'bg-blue-100 text-blue-600 border-blue-300': !isPast && !isDone
-		}"
-		@mouseenter="tooltip=true"
-		@mouseleave="tooltip=false"
+		class="cursor-pointer hover:pl-1 transition-all"
 	>
-		<lesson-type-icon :lesson />
-
-		<transition name="fade">
+		<div class="flex gap-3">
 			<div
-				v-show="tooltip"
-				class="absolute
-					-top-12 px-3 py-2
-					text-center
-					whitespace-nowrap overflow-hidden
-					bg-content border shadow
-					"
+				class="relative w-8 h-8 rounded-full grid place-items-center border"
+				:class="dropColorClass"
+			>
+				<lesson-type-icon :lesson />
+			</div>
+			<div
 				v-katex.auto="lesson.title"
+				class="whitespace-nowrap overflow-hidden"
 			/>
-		</transition>
+		</div>
 	</InertiaLink>
 </template>
 
