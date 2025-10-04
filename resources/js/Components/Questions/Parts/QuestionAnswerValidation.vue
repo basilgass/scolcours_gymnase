@@ -101,7 +101,8 @@ function updateAnswersValidation(): CheckerResult[] {
 					results.push(chk)
 				}
 
-			} catch {
+			} catch (e){
+				console.log(e)
 				results.push({
 					result: false,
 					message: "Format de la réponse non reconnu.",
