@@ -96,19 +96,36 @@ const currentLineHelperText = computed<{
 
 // Copy / Paste illustration
 const hasClipboard = computed(() => {
-	console.log('SESSION STORAGE CHECK')
 	return sessionStorage.getItem("scolcours-clipboard-illustration") !== null
 })
 
 
 function copyIllustration() {
-	sessionStorage.setItem("scolcours-clipboard-illustration", JSON.stringify(theIllustration.value))
+	sessionStorage.setItem(
+		"scolcours-clipboard-illustration",
+
+		JSON.stringify({
+			parameters: theIllustration.value.parameters,
+			code: theIllustration.value.code,
+			title: theIllustration.value.title,
+			css: theIllustration.value.css,
+			widget_id: theIllustration.value.widget_id,
+			widget: theIllustration.value.widget
+		})
+	)
 }
 
 function pasteIllustration() {
 	const clipboard = sessionStorage.getItem("scolcours-clipboard-illustration")
 	if (clipboard) {
-		theIllustration.value = JSON.parse(clipboard)
+		const paste = JSON.parse(clipboard)
+
+		theIllustration.value.parameters = paste.parameters
+		theIllustration.value.code = paste.code
+		theIllustration.value.title = paste.title
+		theIllustration.value.css = paste.css
+		theIllustration.value.widget_id = paste.widget_id
+		theIllustration.value.widget = paste.widget
 	}
 }
 

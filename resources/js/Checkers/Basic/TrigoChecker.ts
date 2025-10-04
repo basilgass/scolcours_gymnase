@@ -5,7 +5,7 @@ import {FractionChecker} from "@/Checkers"
 import {Fraction} from "pimath"
 
 // const name = "scientific"
-const description = `trigo,s[ingle],[paramètres]
+const description = `trigo,p[eriodic],[paramètres]
 
 **paramètres**
 `
@@ -17,7 +17,7 @@ export class TrigoChecker extends CheckerAbstract {
         this.type = CHECKERS.TRIGO
         this.description = description
 
-		this.withPeriodic = !(this.config.includes('s') || this.config.includes('single'))
+		this.withPeriodic = this.config.includes('p') || this.config.includes('periodic')
 
 		this.secondaryChecker = new FractionChecker('r')
     }
@@ -33,7 +33,6 @@ export class TrigoChecker extends CheckerAbstract {
 
 
 	override checkValue(value: string): CheckerResult {
-		console.log(value)
 		const [angle, periodic] = value.split('+k')
 		const [answerAngle, answerPeriodic] = this.answer.split('+k')
 

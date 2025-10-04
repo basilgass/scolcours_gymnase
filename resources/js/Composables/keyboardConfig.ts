@@ -684,10 +684,10 @@ export const keyboards: Record<string, KeyboardObjectType> = {
 		name: "trigo",
 		grid: "grid-cols-4",
 		layout: [
-			"1", "2", "3", "/",
-			"4", "5", "6", "+",
-			"7", "8", "9", "pi",
-			"", "0", "", "k",
+			"1", "2", "3", "-",
+			"4", "5", "6", "/",
+			"7", "8", "9", "+",
+			"0", "", "pi", "k",
 		],
 		tex(value) {
 			// the trigo input should be 2pi/3+k2pi/2
