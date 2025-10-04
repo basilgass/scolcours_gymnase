@@ -95,12 +95,16 @@ class Block extends Model
 
 		// Duplicate the illustrations.
 		foreach ($this->illustrations as $illustration) {
-			$clonedBlock->illustrations()->create([
-				'title'      => $illustration->title,
-				'type'       => $illustration->type,
-				'code'       => $illustration->code,
-				'parameters' => $illustration->parameters
-			]);
+			$clonedIllustration = $illustration->replicate(['block_id']);
+			$clonedIllustration->block_id = $clonedBlock->id;
+			$clonedIllustration->save();
+
+//			$clonedBlock->illustrations()->create([
+//				'title'      => $illustration->title,
+//				'type'       => $illustration->type,
+//				'code'       => $illustration->code,
+//				'parameters' => $illustration->parameters
+//			]);
 		}
 
 		$clonedBlock->save();

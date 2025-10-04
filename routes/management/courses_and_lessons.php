@@ -34,6 +34,8 @@ Route::middleware('web')
 
 		          Route::get('cours/{course:slug}/edit', [CourseController::class, 'edit'])
 		               ->name('courses.edit');
+		          Route::get('cours/{course:slug}/{team:name}/dashboard', [CourseController::class, 'dashboard'])
+		               ->name('courses.dashboard');
 		          Route::get('cours/{course:slug}/{team:name}', [CourseController::class, 'showTeam'])
 		               ->name('courses.show-team');
 	          });

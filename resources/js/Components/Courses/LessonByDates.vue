@@ -5,13 +5,15 @@ import {CourseInterface, LessonInterface, UserTeamInterface} from "@/types/model
 import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
 import dayjs from "dayjs"
 import {LessonScoreRulesInterface} from "@/types/lessonInterfaces.ts"
+import {ref} from "vue"
+import Card from "@/Components/Ui/Card.vue"
 
 const editMode = useStoreEditMode()
 
 const props = defineProps<{
 	course: CourseInterface
 	team: UserTeamInterface
-	dates: string[],
+	day: string,
 	lessons: Record<string, LessonInterface<LessonScoreRulesInterface>[]>
 }>()
 
@@ -20,32 +22,43 @@ function afficherDate(day: string): string {
 		? day
 		: dayjs(day).format('DD MMMM YYYY')
 }
+
+const showDetails = ref(false)
 </script>
 
 <template>
-	<div class="flex flex-col gap-10">
-		<div
-			v-for="day in dates"
-			:key="`lesson-day-${day}`"
-			:data-key="`lesson-day-${day}`"
-		>
-			<h3 class="text-lg my-3">
+	<card>
+		<template #header>
+			<h3
+				class="text-lg font-semibold my-3"
+			>
 				{{ afficherDate(day) }}
 			</h3>
-			<div
+		</template>
+
+		<div
+			class="font-code cursor-pointer"
+			@click="showDetails=!showDetails"
+		>
+			<i
+				class="bi inline-block text-xs transition-all"
 				:class="{
-					'grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3': !editMode.enable,
-					'grid grid-cols-1 gap-3': editMode.enable,
+					'bi-triangle rotate-90': !showDetails,
+					'bi-triangle-fill rotate-180': showDetails
 				}"
-			>
-				<lesson-card
-					v-for="lesson in lessons[day]"
-					:key="`lesson-${lesson.id}`"
-					:course
-					:lesson
-					:team
-				/>
-			</div>
+			/> {{ lessons[day].length }} cours
 		</div>
-	</div>
+		<div
+			v-if="showDetails"
+			class="mt-3 grid grid-cols-1 gap-3"
+		>
+			<lesson-card
+				v-for="lesson in lessons[day]"
+				:key="`lesson-${lesson.id}`"
+				:course
+				:lesson
+				:team
+			/>
+		</div>
+	</card>
 </template>

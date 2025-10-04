@@ -36,29 +36,32 @@ class CourseController extends Controller
 
 	public function show(Course $course)
 	{
-		$user = Auth::user();
+		return $this->renderCourseWithTeam($course, "Courses/CourseShow");
+	}
 
-		// On vérifie que l'utilisateur a le droit d'afficher le cours.
-		if (
-			!$user ||
-			(!$user->admin && !$user->courses->pluck('id')->contains($course->id))
-		) {
-			// TODO: gérer les erreurs de navigation de manière plus classe
-			abort(403, 'Accès non autorisé.');
+	private function renderCourseWithTeam(Course $course, $view, $matchingTeam=null)
+	{
+		if(!$matchingTeam) {
+			$user = Auth::user();
+
+			if (
+				!$user ||
+				(!$user->admin && !$user->courses->pluck('id')->contains($course->id))
+			) {
+				abort(403, 'Accès non autorisé.');
+			}
+
+			$matchingTeam = $course->teams->intersect($user->teams)->first();
+
+			$course->load([
+				'lessons.lessonable',
+				'lessons.calendars' => function ($query) use ($matchingTeam) {
+					$query->where('team_id', $matchingTeam->id);
+				}
+			]);
 		}
 
-		$matchingTeam = $course->teams->intersect($user->teams)->first();
-
-		// Charge les leçons et le modèle polymorphe lessonable
-		$course->load([
-			'lessons.lessonable',
-			'lessons.calendars' => function ($query) use ($matchingTeam) {
-				$query->where('team_id', $matchingTeam->id);
-			}
-		]);
-
-		// For all courses with a lessonable_type of App/Models/Post, get the Post->type
-		return Inertia::render("Courses/CourseShow", [
+		return Inertia::render($view, [
 			"team"   => UserTeamResource::make($matchingTeam),
 			"course" => CourseResource::make($course),
 		]);
@@ -73,6 +76,11 @@ class CourseController extends Controller
 		return Inertia::render("Courses/CourseEdit", [
 			"course" => CourseResource::make($course),
 		]);
+	}
+
+	public function dashboard(Course $course, Team $team)
+	{
+		return $this->renderCourseWithTeam($course, "Courses/CourseShowDashboard", $team);
 	}
 
 	public function showTeam(Course $course, Team $team)

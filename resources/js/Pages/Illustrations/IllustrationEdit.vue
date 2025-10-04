@@ -95,15 +95,18 @@ const currentLineHelperText = computed<{
 })
 
 // Copy / Paste illustration
-const hasClipboard = ref(false)
+const hasClipboard = computed(() => {
+	console.log('SESSION STORAGE CHECK')
+	return sessionStorage.getItem("scolcours-clipboard-illustration") !== null
+})
+
 
 function copyIllustration() {
-	localStorage.setItem("illustrationClipboard", JSON.stringify(theIllustration.value))
-	hasClipboard.value = true
+	sessionStorage.setItem("scolcours-clipboard-illustration", JSON.stringify(theIllustration.value))
 }
 
 function pasteIllustration() {
-	const clipboard = localStorage.getItem("illustrationClipboard")
+	const clipboard = sessionStorage.getItem("scolcours-clipboard-illustration")
 	if (clipboard) {
 		theIllustration.value = JSON.parse(clipboard)
 	}
@@ -163,9 +166,27 @@ onMounted(() => {
 
 <template>
 	<article class="my-5 scolcours-container">
-		<header class="mb-5 flex justify-between">
-			<div class="text-3xl">
+		<header class="mb-5 flex justify-between gap-5">
+			<div class="text-3xl flex-1">
 				édition d'une illustration
+			</div>
+
+			<div>
+				<sc-button
+					xs
+					@click="copyIllustration"
+					class="outline-0"
+				>
+					<i class="bi bi-clipboard-plus" />
+				</sc-button>
+				<sc-button
+					v-if="hasClipboard"
+					xs
+					@click="pasteIllustration"
+					class="outline-0"
+				>
+					<i class="bi bi-clipboard-pulse" />
+				</sc-button>
 			</div>
 			<div class="self-start grid grid-cols-2 gap-2 items-center flex-wrap">
 				<sc-button
