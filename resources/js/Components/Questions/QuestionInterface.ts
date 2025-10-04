@@ -11,7 +11,7 @@ export interface questionConfigInterface {
 	showInput: Ref<questionUserInputDisplayType>,
 	isDynamic: boolean,
 	raw: string,
-	editorMode: boolean
+	editorMode: boolean,
 }
 
 export interface questionDataInterface {

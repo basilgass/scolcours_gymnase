@@ -20,6 +20,9 @@ import ScButton from "@/Components/Ui/scButton.vue"
 import {useStoreScore} from "@/stores/useStoreScore.ts"
 import {ScoreQuestionDataInterface} from "@/types/scoreInterfaces.ts"
 
+interface CheckerResultWithIndex extends CheckerResult {
+	index: number
+}
 const emits = defineEmits<{
 	validate: [event: questionResultInterface]
 }>()
@@ -55,26 +58,30 @@ const scoreStore = useStoreScore()
 
 const score = questionData.user.score
 
-function updateAnswersValidation(): CheckerResult[] {
+function updateAnswersValidation(): CheckerResultWithIndex[] {
 	// Make the validation.
 	// validation = {result: Boolean, message: string, index: number}
-	let validation: CheckerResult[] = []
+	let validation: CheckerResultWithIndex[] = []
 
 	/** Il faut comparer
 	 * - questionData.answers: string[]
 	 * - questionData.user.answers: string[]
-	 *
 	 */
+	let firstAnswerIndex = -1
 
 	questionData.validators.value.forEach((validator, index) => {
 		/** answer peut-être
 		 * 		<réponse>
-		 * 		<réponse>||<réponse>  (plusieurs réponses possibles)
-		 * 		@mix:<réponse>\n@mix:<réponse> (les réponses ne sont pas ordrées)
+		 * 		<réponse>||<réponse>  (plusieurs réponses possibles - réponses non alignées)
+		 * 		<réponse>&&<réponse> (les réponses sont alignées (toutes index 1 ou 2)
 		 */
 
 			// Toutes les réponses autorisées.
-		const allowedAnswers: string[] = validator.answer.split('||').map(a => a.trim())
+		const allowedAnswers: string[] = validator.answer
+				.split(/\|\||&&/)
+				.map(a => a.trim())
+
+		const isAnswerIndexConstrained = validator.answer.includes('&&')
 
 		// La réponse de l'utilisateur
 		const userAnswer: string = questionData.user.answers.value[index].input
@@ -83,8 +90,16 @@ function updateAnswersValidation(): CheckerResult[] {
 		const checker: PiChecker = validator.checker.checker
 
 		// On vérifie si la réponse de l'utilisateur est dans les réponses autorisées
-		const results: CheckerResult[] = []
+		const results: CheckerResultWithIndex[] = []
 		allowedAnswers.forEach((answer, index) => {
+
+			// On est dans un cas où il y a plusieurs réponses possibles, mais qui doivent être alignées.
+			if(isAnswerIndexConstrained && firstAnswerIndex>=0){
+				if(index!==firstAnswerIndex){
+					return
+				}
+			}
+
 			try {
 				if (userAnswer === undefined) {
 					results.push({
@@ -98,11 +113,19 @@ function updateAnswersValidation(): CheckerResult[] {
 					if (questionData.current.checker.value.checkerOverride[userAnswer]) {
 						chk.message = questionData.current.checker.value.checkerOverride[userAnswer]
 					}
-					results.push(chk)
+
+					results.push({
+						...chk,
+						index
+					})
+
+					if(chk.result && firstAnswerIndex===-1){
+						firstAnswerIndex = index
+					}
 				}
 
-			} catch (e){
-				console.log(e)
+			} catch (e) {
+				console.warn(e)
 				results.push({
 					result: false,
 					message: "Format de la réponse non reconnu.",
@@ -118,7 +141,7 @@ function updateAnswersValidation(): CheckerResult[] {
 	return validation
 }
 
-function reduceAnswersValidation(validations: CheckerResult[]): boolean {
+function reduceAnswersValidation(validations: CheckerResultWithIndex[]): boolean {
 	return validations.every(validation => validation.result)
 }
 
@@ -191,9 +214,9 @@ function validateQuestion() {
 	// Afficher les messages d'erreurs
 	errorMessages.value = validations
 		.map((v, index) => {
-			if(questionData.answers.variables.value.length===1) {
+			if (questionData.answers.variables.value.length === 1) {
 				return v.result ? "" : `${v.message}`
-			}else {
+			} else {
 				return v.result ? "" : `${index + 1}. ${v.message}`
 			}
 		})

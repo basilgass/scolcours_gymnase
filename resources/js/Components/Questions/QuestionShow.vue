@@ -18,6 +18,7 @@ import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
 import {onMounted, provide, ref, useTemplateRef, watch} from "vue"
 import type {QuestionInterface} from "@/types/modelInterfaces.ts"
 import {
+	keyboardComponentType,
 	questionDataInterface,
 	questionResultInterface,
 	questionUserInputDisplayType
@@ -94,10 +95,12 @@ provide<questionDataInterface>("questionData", questionData)
 
 async function loadAnswers(event: { show: boolean, value?: string }) {
 
-	questionAnswerWrapper.value.getKeyboards().forEach((keyboard, index) => {
+	questionAnswerWrapper.value.getKeyboards().forEach((keyboard: keyboardComponentType, index: number) => {
+		// Default value - on ne prend que la première si c'est une multi-valeur
+		const value = questionData.answers.values.value[index].split('||')[0]
 		keyboard.setInput(
 			event.show
-				? (event.value ?? questionData.answers.values.value[index])
+				? (event.value ?? value)
 				: ''
 		)
 			.then((x) => {
