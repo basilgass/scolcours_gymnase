@@ -5,10 +5,15 @@ import {
 	KeyboardInputInterface,
 	KeyboardPropsInterface
 } from "@/Composables/useKeyboard.ts"
-import {computed, onMounted, ref} from "vue"
-import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"
 import {PiDraw} from "pidraw/types"
 import {Point} from "pimath"
+import {computed, onMounted, ref} from "vue"
+import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"
+
+interface PiDrawPoint {
+	x: number,
+	y: number
+}
 
 // props.keyboard
 const props = defineProps<KeyboardPropsInterface>()
@@ -17,21 +22,54 @@ const props = defineProps<KeyboardPropsInterface>()
 const emits = defineEmits<KeyboardEmitsInterface>()
 
 // emit change event
+let pidraw: PiDraw = null
+
 function onChange(value?: { draw: PiDraw, mouse: MouseEvent }): void {
-	setInput(value).then((x) => emits("change", x))
+	pidraw = value.draw
+	setInput().then((x) => emits("change", x))
 }
 
-async function setInput(value?: { draw: PiDraw, mouse: MouseEvent }): Promise<KeyboardInputInterface> {
+async function setInput(value?: string): Promise<KeyboardInputInterface> {
+
+	// { draw: PiDraw, mouse: MouseEvent }
 
 	if (value !== undefined) {
 		// Il faut déplacer les points.
+		const coords = value.split(',').map(v => {
+			const [x, y] = v.substring(1, v.length - 1).split(';').map(Number)
+			return {x, y}
+		})
 
+		if (coords.length !== points.value.length) {
+			pidraw.refresh(code.value)
+			return {input: '', tex: "", raw: ""}
+		}
+
+		points.value.forEach((key, index) => {
+			const pixels = pidraw.toPixels(coords[index])
+
+			const pts: PiDrawPoint[] = [
+				pidraw.figures[key] as unknown as PiDrawPoint,
+				pidraw.figures[`${key}_drag`] as unknown as PiDrawPoint
+			]
+
+			pts.forEach(pt => {
+				if (pt) {
+					pt.x = pixels.x
+					pt.y = pixels.y
+				}
+
+			})
+		})
+
+		pidraw.update([], true)
+		return {input: value, tex: "", raw: value}
 	}
 
 
 	// Get all draggable points
-	const pts = points.value.map(key => (value.draw.figures[key] as Point) ?? null).filter(x => x !== null)
-	const input = pts.map(pt=> {
+	const pts = points.value.map(key => (pidraw.figures[key] as Point) ?? null).filter(x => x !== null)
+	const input = pts.map(pt => {
 		const {x, y} = pt.coordinates
 		return `(${x};${y})`
 	}).join(',')
@@ -69,6 +107,9 @@ onMounted(() => {
 	code.value = props.keyboard.values.join('\n')
 })
 
+function onComponentMounted(draw: PiDraw) {
+	pidraw = draw
+}
 </script>
 
 <template>
@@ -76,6 +117,7 @@ onMounted(() => {
 		<pi-draw-parser
 			:draw
 			@draw-click="onChange"
+			@mounted="onComponentMounted"
 		/>
 	</div>
 </template>
