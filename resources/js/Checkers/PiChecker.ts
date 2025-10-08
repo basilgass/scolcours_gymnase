@@ -21,6 +21,7 @@ import {
 } from "./Basic"
 import {MatrixChecker, OrderChecker, QcmChecker, StudyChecker, TableofsignChecker, TypeChecker} from "./Custom"
 import {TrigoChecker} from "@/Checkers/Basic/TrigoChecker.ts"
+import {DrawChecker} from "@/Checkers/Custom/DrawChecker.ts"
 
 type CheckerClass = (new (...args: any[]) => CheckerAbstract)
 
@@ -52,6 +53,7 @@ export function checkersList(): Record<CHECKERS, CheckerClass> {
 	list[CHECKERS.TABLE_OF_SIGNS] = TableofsignChecker
 	list[CHECKERS.TYPE] = TypeChecker
 	list[CHECKERS.MATRIX] = MatrixChecker
+	list[CHECKERS.DRAW] = DrawChecker
 
 	return list as Record<CHECKERS, CheckerClass>
 }

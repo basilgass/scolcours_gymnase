@@ -4,7 +4,7 @@
 >
 
 import type {PiDraw} from "pidraw"
-import {computed, inject, onMounted, ref, watch} from "vue"
+import {computed, inject, onMounted, ref, useTemplateRef, watch} from "vue"
 import ScButton from "@/Components/Ui/scButton.vue"
 import VueSlider from "vue-3-slider-component"
 import {IDrawStep, type IPiDrawProps, ISlider, PiDraw_Parse_Code} from "@/Components/Pi/PiDrawHelper.ts"
@@ -24,10 +24,16 @@ const props = withDefaults(defineProps<IPiDrawProps & { theme?: string | number 
 	}
 )
 
+const displayRef = useTemplateRef<InstanceType<typeof PiDrawDisplay>>('displayRef')
+function getPiDraw(): PiDraw{
+	return displayRef.value?.getPiDraw() ?? null
+}
+defineExpose({getPiDraw})
 
 const emits = defineEmits<{
 	drawClick: [{ draw: PiDraw, mouse: MouseEvent }],
 	update: [draw: PiDraw],
+	mounted: [draw: PiDraw]
 }>()
 const showCode = ref(false)
 // Set the current step index
@@ -131,7 +137,7 @@ const drawParameter = computed(() => {
 })
 
 // Grab the data when on mouse up for external modifications
-const drawMouseUp = function (evt: {draw: PiDraw, mouse: MouseEvent}) {
+const drawMouseUp = function (evt: { draw: PiDraw, mouse: MouseEvent }) {
 	emits("update", evt.draw)
 	emits("drawClick", evt)
 }
@@ -145,8 +151,10 @@ const drawMouseUp = function (evt: {draw: PiDraw, mouse: MouseEvent}) {
 		<!-- draw graph-->
 		<div class="relative">
 			<pi-draw-display
+				ref="displayRef"
 				:code="drawCode"
 				:parameters="drawParameter"
+				@mounted="emits('mounted', $event)"
 				@draw-click="drawMouseUp"
 			/>
 			<div

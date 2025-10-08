@@ -26,27 +26,6 @@ export interface KeyboardObjectType {
 }
 
 
-export const advancedKeyboards = {
-	Order: {
-		name: "Order"
-	},
-	Qcm: {
-		name: "questions à choix multiple"
-	},
-	Tos: {
-		name: "Tableau de signes"
-	},
-	Type: {
-		name: "Typographie"
-	},
-	Study: {
-		name: "Study"
-	},
-	Matrix: {
-		name: "Matrix"
-	}
-}
-
 /**
  * Returns the corresponding type of keyboard given a checker parameter.
  *

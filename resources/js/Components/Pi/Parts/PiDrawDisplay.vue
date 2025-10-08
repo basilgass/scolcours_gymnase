@@ -16,7 +16,14 @@ let PiGraph: PiDraw
 const emits = defineEmits<{
 	drawClick: [{ draw: PiDraw, mouse: MouseEvent }],
 	update: [draw: PiDraw],
+	mounted: [draw: PiDraw]
 }>()
+
+function getPiDraw(): PiDraw {
+	return PiGraph// méthode svg.js → contenu complet du <svg>
+}
+
+defineExpose({ getPiDraw })
 
 
 const drawWrapper = useTemplateRef<HTMLElement>('drawWrapper')
@@ -72,6 +79,8 @@ onMounted(() => {
 	useResizeObserver(drawWrapper.value, () => {
 		PiParserUpdate("onResize")
 	})
+
+	emits("mounted", PiGraph)
 })
 
 </script>

@@ -10,8 +10,14 @@
  */
 import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"
 import Card from "@/Components/Ui/Card.vue"
+import {computed, ref, useTemplateRef} from "vue"
+import FormMaker from "@/Components/Form/FormMaker.vue"
 
-const code = `@begin:static
+const isInteractive = ref(true)
+
+
+const code = computed(() => {
+	return `@begin:static
 A(0,0)
 c=circ A,10
 P0(10,0)
@@ -54,7 +60,7 @@ X4(10,-5.77)->tex=\\scriptsize -\\frac{\\sqrt{3}}{3}/mr/0.5;0,fill=black,o=4
 X5(10,-10)->tex=\\scriptsize -1/mr/0.5;0,fill=black,o=4
 X6(10,-17.3)->tex=\\scriptsize -\\sqrt{3}/mr/0.5;0,fill=black,o=4
 t=T20P0
-@end:static
+@end:static` + (isInteractive.value ? `
 P(7.07,7.07)->drag=c
 C=proj P,Ox->hide
 S=proj P,Oy->hide
@@ -66,13 +72,31 @@ c1=AC.->green,w=5
 s1=AS.->red,w=5
 T=inter p,t
 t1=P0T.->gold,w=5
-a=arc P0,A,P,2->tex=\\theta`
+a=arc P0,A,P,2->tex=\\theta` : '')
+})
 
 const parameters = `axis,x=-13:13,y=-18:18,ppu=20`
+
+const svgContainer = useTemplateRef<InstanceType<typeof PiDrawParser>>('svgContainer')
+
+
 </script>
 
 <template>
-	<Card class="max-w-xl mx-auto">
-		<pi-draw-parser :draw="{ code: code, parameters: parameters }" />
-	</Card>
+	<article class="max-w-2xl mx-auto">
+		<div class="flex justify-between mb-3">
+			<form-maker
+				type="switch"
+				sm
+				label="afficher l'interactivité"
+				v-model="isInteractive"
+			/>
+		</div>
+		<Card>
+			<pi-draw-parser
+				ref="svgContainer"
+				:draw="{ code: code, parameters: parameters }"
+			/>
+		</Card>
+	</article>
 </template>

@@ -32,6 +32,8 @@ function getComponentKeyboardName(value: string): string {
 			return "Type"
 		case "matrix":
 			return "Matrix"
+		case "draw":
+			return "Draw"
 		default:
 			return "Basic"
 	}
