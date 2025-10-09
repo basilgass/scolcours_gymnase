@@ -43,7 +43,7 @@ const pageTitle = computed(() => {
 		<MainHeader :theme="theme" />
 
 		<!-- Container for the "column design" -->
-		<main class="scolcours-container min-h-[75vh]">
+		<main class="min-h-[75vh] px-3">
 			<!-- Main content -->
 			<slot />
 		</main>

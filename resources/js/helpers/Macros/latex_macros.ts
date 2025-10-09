@@ -85,7 +85,7 @@ export const latex_macros: IMacroRecords = {
 	},
 	"BEQ": {
 		math: true,
-		template: "\\begin{array}{rl|l}\n\t@\n\\end{array}"
+		template: "\\begin{darray}{rl|l}\n\t@\n\\end{darray}"
 	},
 	"BFN": {
 		math: true,

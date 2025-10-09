@@ -13,6 +13,7 @@ import PiDrawDisplay from "@/Components/Pi/Parts/PiDrawDisplay.vue"
 import {dynamicText, replaceDoubleSigns} from "@/Composables/useHelpers.ts"
 import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
 import {usePage} from "@inertiajs/vue3"
+import katex from "katex"
 
 const editMode = useStoreEditMode()
 
@@ -216,23 +217,38 @@ const drawMouseUp = function (evt: { draw: PiDraw, mouse: MouseEvent }) {
 		<!-- slider(s) -->
 		<div
 			v-if="sliders.length > 0"
-			class="space-y-12 mt-6"
+			class="space-y-6 mt-6"
 		>
-			<vue-slider
+			<div
 				v-for="(slider, index) of sliders"
 				:key="`slider-${index}`"
-				v-model="slider.value"
-				v-bind="slider.options"
-				:process-style="{
-					backgroundColor: `var(--color-${theme})`
-				}"
-				:rail-style="{
-					backgroundColor: `var(--color-${theme}-light)`
-				}"
-				:dot-style="{
-					backgroundColor: `var(--color-${theme})`
-				}"
-			/>
+				class="flex"
+			>
+				<div
+					class="w-[120px] overflow-hidden"
+					v-katex.left.nomargin="`${slider.key.substring(1)}=${slider.value}`"
+				/>
+				<vue-slider
+					class="flex-1"
+					v-model="slider.value"
+					v-bind="slider.options"
+					:label-style="{'margin-top': `3px`}"
+					:tooltip="'always'"
+					:tooltip-style="{
+						backgroundColor: `var(--color-${theme})`
+					}"
+					:process-style="{
+						backgroundColor: `var(--color-${theme})`
+					}"
+					:rail-style="{
+						backgroundColor: `var(--color-${theme}-light)`
+					}"
+					:dot-style="{
+						backgroundColor: `var(--color-${theme})`
+					}"
+				/>
+			</div>
+
 			<div v-katex="texComputed" />
 		</div>
 

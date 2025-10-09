@@ -5,15 +5,11 @@ import {
 	KeyboardInputInterface,
 	KeyboardPropsInterface
 } from "@/Composables/useKeyboard.ts"
-import {PiDraw} from "pidraw/types"
+import {PiDraw, Point as PiDrawPoint} from "pidraw/types"
 import {Point} from "pimath"
 import {computed, onMounted, ref} from "vue"
 import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"
 
-interface PiDrawPoint {
-	x: number,
-	y: number
-}
 
 // props.keyboard
 const props = defineProps<KeyboardPropsInterface>()

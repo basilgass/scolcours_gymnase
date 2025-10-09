@@ -3,6 +3,7 @@ import FormMaker from "@/Components/Form/FormMaker.vue"
 import {router, usePage} from "@inertiajs/vue3"
 import {computed, ref, useTemplateRef} from "vue"
 import ScButton from "@/Components/Ui/scButton.vue"
+import {useMagicKeys} from "@vueuse/core"
 
 interface FilterItem {
 	title: string,
@@ -139,6 +140,16 @@ const emits = defineEmits<{
 const filterInput = useTemplateRef<InstanceType<typeof FormMaker>>('filterInput')
 defineExpose({
 	focus: ()=>filterInput.value.focus()
+})
+
+useMagicKeys({
+	passive: false,
+	onEventFired: (e) => {
+		if (e.ctrlKey && e.key === 'k' && e.type === 'keydown') {
+			e.preventDefault()
+			filterInput.value.focus()
+		}
+	}
 })
 
 </script>

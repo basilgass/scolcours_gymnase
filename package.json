@@ -56,7 +56,7 @@
 		"markdown-it-texmath": "^1.0.0",
 		"mermaid": "^11.12.0",
 		"mitt": "^3.0.1",
-		"pidraw": "^0.2.7",
+		"pidraw": "^0.2.8",
 		"piexpression": "^0.1.0",
 		"pigames": "^0.1.18",
 		"pimath": "^0.1.33",

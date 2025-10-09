@@ -3,7 +3,6 @@ import BlockShow from "@/Components/Blocks/BlockShow.vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import SplitView from "@/Components/SplitView.vue"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
-import LayoutMain from "@/Layouts/LayoutMain.vue"
 import {blockTypes} from "@/block.config.ts"
 import type {BlockInterface} from "@/types/modelInterfaces"
 import {router} from "@inertiajs/vue3"
@@ -11,6 +10,7 @@ import axios from "axios"
 import {computed, ref, unref} from "vue"
 import ScButton from "@/Components/Ui/scButton.vue"
 import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
+import LayoutMain from "@/Layouts/LayoutMain.vue"
 
 defineOptions({layout: LayoutMain})
 
@@ -111,7 +111,7 @@ function deleteIllustration(id: number) {
 </script>
 
 <template>
-	<article class="my-5 scolcours-container">
+	<article class="my-5">
 		<!-- split view system -->
 		<split-view v-model="displayStyle" />
 
