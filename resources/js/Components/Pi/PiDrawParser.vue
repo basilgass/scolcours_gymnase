@@ -233,7 +233,7 @@ const drawMouseUp = function (evt: { draw: PiDraw, mouse: MouseEvent }) {
 					v-model="slider.value"
 					v-bind="slider.options"
 					:label-style="{'margin-top': `3px`}"
-					:tooltip="'always'"
+					:tooltip="'focus'"
 					:tooltip-style="{
 						backgroundColor: `var(--color-${theme})`
 					}"

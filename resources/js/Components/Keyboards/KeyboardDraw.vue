@@ -7,9 +7,10 @@ import {
 } from "@/Composables/useKeyboard.ts"
 import {PiDraw, Point as PiDrawPoint} from "pidraw/types"
 import {Point} from "pimath"
-import {computed, onMounted, ref} from "vue"
+import {computed, nextTick, onMounted, ref, useTemplateRef} from "vue"
 import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"
 
+const svgContainer = useTemplateRef<InstanceType<typeof PiDrawParser>>('svgContainer')
 
 // props.keyboard
 const props = defineProps<KeyboardPropsInterface>()
@@ -21,14 +22,13 @@ const emits = defineEmits<KeyboardEmitsInterface>()
 let pidraw: PiDraw = null
 
 function onChange(value?: { draw: PiDraw, mouse: MouseEvent }): void {
-	pidraw = value.draw
+	// pidraw = value.draw
 	setInput().then((x) => emits("change", x))
 }
 
 async function setInput(value?: string): Promise<KeyboardInputInterface> {
 
 	// { draw: PiDraw, mouse: MouseEvent }
-
 	if (value !== undefined) {
 		// Il faut déplacer les points.
 		const coords = value.split(',').map(v => {
@@ -38,7 +38,7 @@ async function setInput(value?: string): Promise<KeyboardInputInterface> {
 
 		if (coords.length !== points.value.length) {
 			pidraw.refresh(code.value)
-			return {input: '', tex: "", raw: ""}
+			return {input: '', tex: "", raw: getSvg()}
 		}
 
 		points.value.forEach((key, index) => {
@@ -59,7 +59,7 @@ async function setInput(value?: string): Promise<KeyboardInputInterface> {
 		})
 
 		pidraw.update([], true)
-		return {input: value, tex: "", raw: value}
+		return {input: value, tex: "", raw: getSvg()}
 	}
 
 
@@ -70,12 +70,17 @@ async function setInput(value?: string): Promise<KeyboardInputInterface> {
 		return `(${x};${y})`
 	}).join(',')
 
-
 	return {
 		input,
 		tex: "",
-		raw: input
+		raw: getSvg()
 	}
+}
+
+function getSvg(){
+	// TODO: amélioration du keyboard pour afficher ou pas automatiquement le graphe
+	return ""
+	// return svgContainer.value?.getPiDraw().rootSVG.svg() ?? ""
 }
 
 defineExpose<KeyboardExposeInterface>({
@@ -105,12 +110,18 @@ onMounted(() => {
 
 function onComponentMounted(draw: PiDraw) {
 	pidraw = draw
+
+	nextTick(()=>{
+		onChange({draw, mouse: null})
+	})
+
 }
 </script>
 
 <template>
 	<div>
 		<pi-draw-parser
+			ref="svgContainer"
 			:draw
 			@draw-click="onChange"
 			@mounted="onComponentMounted"
