@@ -81,7 +81,7 @@ const matrix = computed<Fraction[][]>(() => {
 })
 
 const emits = defineEmits<{
-	drawClick: [{ draw: PiDraw, mouse: MouseEvent }],
+	drawClick: [{ draw: PiDraw, mouse: MouseEvent | TouchEvent }],
 	update: [draw: PiDraw],
 }>()
 

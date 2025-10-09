@@ -14,7 +14,7 @@ const props = defineProps<{
 let PiGraph: PiDraw
 
 const emits = defineEmits<{
-	drawClick: [{ draw: PiDraw, mouse: MouseEvent }],
+	drawClick: [{ draw: PiDraw, mouse: MouseEvent | TouchEvent }],
 	update: [draw: PiDraw],
 	mounted: [draw: PiDraw]
 }>()
@@ -58,6 +58,11 @@ watch(() => props.parameters, () => {
 
 
 const drawMouseUp = function (event: MouseEvent) {
+	console.log('DRAW EVENT')
+	emits("drawClick", {draw: PiGraph, mouse: event})
+}
+const drawTouchEnd = function(event: TouchEvent) {
+	console.log('TOUCH EVENT')
 	emits("drawClick", {draw: PiGraph, mouse: event})
 }
 
@@ -90,8 +95,9 @@ onMounted(() => {
 	<div>
 		<div
 			ref="drawWrapper"
-			class="katex-m-0 min-w-[50px] min-h-[50px]"
+			class="katex-m-0 min-w-[50px] min-h-[50px] touch-manipulation"
 			@mouseup="drawMouseUp"
+			@touchend="drawTouchEnd"
 		/>
 		<pi-draw-animation
 			v-if="showAnimation"

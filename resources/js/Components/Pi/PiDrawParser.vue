@@ -13,7 +13,6 @@ import PiDrawDisplay from "@/Components/Pi/Parts/PiDrawDisplay.vue"
 import {dynamicText, replaceDoubleSigns} from "@/Composables/useHelpers.ts"
 import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
 import {usePage} from "@inertiajs/vue3"
-import katex from "katex"
 
 const editMode = useStoreEditMode()
 
@@ -26,13 +25,15 @@ const props = withDefaults(defineProps<IPiDrawProps & { theme?: string | number 
 )
 
 const displayRef = useTemplateRef<InstanceType<typeof PiDrawDisplay>>('displayRef')
-function getPiDraw(): PiDraw{
+
+function getPiDraw(): PiDraw {
 	return displayRef.value?.getPiDraw() ?? null
 }
+
 defineExpose({getPiDraw})
 
 const emits = defineEmits<{
-	drawClick: [{ draw: PiDraw, mouse: MouseEvent }],
+	drawClick: [{ draw: PiDraw, mouse: MouseEvent | TouchEvent }],
 	update: [draw: PiDraw],
 	mounted: [draw: PiDraw]
 }>()
