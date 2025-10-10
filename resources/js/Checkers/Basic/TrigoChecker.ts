@@ -119,7 +119,9 @@ function parseAngle(value: string): Fraction {
 
 	const F = new Fraction()
 
-	F.numerator = num === 'pi' ? 1 : Number(num.replace('pi', ''))
+	F.numerator = num === 'pi' ? 1 :
+		num === '-pi' ? -1 :
+		Number(num.replace('pi', ''))
 
 	if (den && !isNaN(+den)) {
 		F.denominator = +den
