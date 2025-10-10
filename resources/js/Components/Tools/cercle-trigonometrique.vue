@@ -28,7 +28,7 @@ P4(0,10)->tex=\\frac{\\pi}{2}/tl/-0.5;0.2,fill=black,o=4
 P7(-8.67,5)->tex=\\frac{5\\pi}{6}/ml/-0.5;0,fill=black,o=4
 P6(-7.07,7.07)->tex=\\frac{3\\pi}{4}/ml/-0.5;0.4,fill=black,o=4
 P5(-5,8.67)->tex=\\frac{2\\pi}{3}/tl/-0.5;0,fill=black,o=4
-P8(-10,0)->tex=\\frac{3\\pi}{2}/tl/-0.5;0.3,fill=black,o=4
+P8(-10,0)->tex=\\pi/tl/-0.5;0.3,fill=black,o=4
 P9(8.67,-5)->tex=\\frac{11\\pi}{6}/mr/0.5;0,fill=black,o=4
 P10(7.07,-7.07)->tex=\\frac{7\\pi}{4}/br/0.5;0,fill=black,o=4
 P311(5,-8.67)->tex=\\frac{5\\pi}{3}/br/0.5;0,fill=black,o=4
