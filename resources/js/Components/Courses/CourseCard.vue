@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 
 import {CourseInterface} from "@/types/modelInterfaces.ts"
 import ScButton from "@/Components/Ui/scButton.vue"
@@ -22,28 +22,38 @@ const scheduledAt_formated = computed<string>(() => {
 
 <template>
 	<Card
-		class="transition-all"
 		:class="{
 			'opacity-40 hover:opacity-100': course.status==='not yet started'
 		}"
+		class="transition-all"
 	>
+		<template
+			v-if="editMode.enable"
+			#header
+		>
+			<div class="flex justify-between items-baseline">
+				<div class="font-code text-xs">
+					id: {{ course.id }}
+				</div>
+				<sc-button
+					v-admin="editMode.enable"
+					:href="route('admin.courses.edit', {course: course.slug})"
+					icon
+					type="edit"
+					xs
+				>
+					éditer le cours
+				</sc-button>
+			</div>
+		</template>
 		<div
-			class="flex justify-between py-4 cursor-pointer"
+			class="flex justify-between py-2 cursor-pointer"
 			@click="router.visit(route('students.courses.show', {course: course.slug}))"
 		>
 			<h1
-				class="text-lg md:text-xl lg:text-2xl"
 				v-katex.auto="course.title"
+				class="text-lg md:text-xl lg:text-2xl"
 			/>
-			<sc-button
-				v-admin="editMode.enable"
-				type="edit"
-				icon
-				xs
-				:href="route('admin.courses.edit', {course: course.slug})"
-			>
-				éditer le cours
-			</sc-button>
 		</div>
 
 		<template #footer>
@@ -59,17 +69,6 @@ const scheduledAt_formated = computed<string>(() => {
 				</div>
 				<div>{{ course.lessons.length }} leçons</div>
 			</div>
-
-			<!--			<div class="flex justify-end">-->
-			<!--				<sc-button-->
-			<!--					xs-->
-			<!--					type="primary"-->
-			<!--					class="my-3"-->
-			<!--					:href="route('students.courses.show', { course: course.slug })"-->
-			<!--				>-->
-			<!--					Commencer le cours <i class="bi bi-arrow-right" />-->
-			<!--				</sc-button>-->
-			<!--			</div>-->
 		</template>
 	</Card>
 </template>

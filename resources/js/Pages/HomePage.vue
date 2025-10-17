@@ -9,11 +9,15 @@ import {AxiosErrorMessage, AxiosResponseModel} from "@/types"
 import {CourseInterface, UserInterface} from "@/types/modelInterfaces.ts"
 import CourseCard from "@/Components/Courses/CourseCard.vue"
 import ScButton from "@/Components/Ui/scButton.vue"
+import dayjs from "dayjs"
 
 defineOptions({layout: LayoutFullpage})
 
 const connectedUser = ref<boolean>(usePage().props.auth.user !== null)
+const loadingCourses = ref<boolean>(connectedUser.value)
+
 const courses = ref<CourseInterface[]>([])
+const passedCourses = ref<CourseInterface[]>([])
 
 onMounted(() => {
 	if (usePage().props.auth.user) {
@@ -23,7 +27,15 @@ onMounted(() => {
 				user: UserInterface,
 				courses: CourseInterface[]
 			}>) => {
-				courses.value = res.data.courses.filter(course => course.lessons.length > 0)
+				loadingCourses.value = false
+				courses.value = res.data.courses
+					.filter(course => course.lessons.length > 0)
+					.filter(course => dayjs(course.scheduled_at).isAfter(dayjs()))
+
+				passedCourses.value = res.data.courses
+					.filter(course => course.lessons.length > 0)
+					.filter(course => dayjs(course.scheduled_at).isBefore(dayjs()))
+
 				connectedUser.value = true
 			})
 			.catch((err: AxiosErrorMessage) => {
@@ -40,9 +52,19 @@ onMounted(() => {
 		<ScolCoursLogo />
 
 		<div v-if="connectedUser">
-			<h3 class="text-lg md:text-xl">
-				Mes cours
-			</h3>
+			<div class="flex justify-between mb-2">
+				<h3 class="text-lg md:text-xl">
+					Mes cours en cours
+				</h3>
+
+				<sc-button
+					v-if="passedCourses.length"
+					:href="route('users.dashboard')"
+					xs
+				>
+					<i class="bi bi-eye" /> Tous mes cours
+				</sc-button>
+			</div>
 			<div
 				v-if="courses.length"
 				class="columns-1 md:columns-2 xl:columns-3 space-y-3"
@@ -54,7 +76,7 @@ onMounted(() => {
 				/>
 			</div>
 			<div
-				v-else
+				v-if="loadingCourses"
 				class="text-center text-lg lg:text-xl min-h-[200px] grid place-items-center"
 			>
 				<div>A la recherche de cours...</div>
@@ -65,9 +87,9 @@ onMounted(() => {
 			class="grid place-items-center h-[100px]"
 		>
 			<sc-button
+				href="/login"
 				type="primary"
 				xl
-				href="/login"
 			>
 				<i class="bi bi-person" />se connecter
 			</sc-button>
