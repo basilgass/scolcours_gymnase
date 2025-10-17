@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import {GeneratorInterface} from "@/types/modelInterfaces.ts"
 import {onMounted, ref} from "vue"
 import {useGenerator} from "@/Composables/useGenerator.ts"
@@ -74,7 +74,7 @@ onMounted(() => {
 				:key="`question-${idx}`"
 				class="border rounded-sm shadow-sm bg-content px-2 flex justify-between items-baseline py-2"
 			>
-				<div v-katex.auto="question.block.body.replaceAll('$a','\\ ?')" />
+				<div v-katex.auto="question.block.body.replaceAll(/\$[a-z]/g,'\\ ?')" />
 				<div
 					class="text-xs"
 					v-text="question.answer"
