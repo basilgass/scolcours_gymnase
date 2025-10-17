@@ -1,7 +1,7 @@
 import {CheckerAbstract, makeCheckerResult} from "../CheckerAbstract"
 import {CheckerResult, CHECKERS} from "../checker.config"
 import {FractionChecker} from "@/Checkers"
-import {Fraction} from "pimath"
+import {PiRadian} from "@/PiMathExtended/PiRadian.ts"
 
 // const name = "scientific"
 const description = `trigo,p[eriodic],[paramètres]
@@ -83,81 +83,45 @@ export class TrigoChecker extends CheckerAbstract {
 			: this.checkWithoutPeriodic(value)
 	}
 
-	checkWithoutPeriodic(value: string): CheckerResult {
-		const [angle] = value.split('+k')
-		const [answerAngle] = this.answer.split('+k')
+	checkWithPeriodic(value: string): CheckerResult {
+		const rad = new PiRadian(value)
+		const answerRad = new PiRadian(this.answer)
 
-		const angleF = parseAngle(angle)
-		const answerAngleF = parseAngle(answerAngle)
+
+		if (!rad.periodic.isEqual(answerRad.periodic)) {
+			return makeCheckerResult("La partie périodique n'est pas juste.")
+		}
+
+		if (!rad.periodic.isReduced()) {
+			return makeCheckerResult("La partie périodique n'est pas réduite.", true)
+		}
+
+		if (!rad.isSame(answerRad)) {
+			return makeCheckerResult("L'angle n'est pas juste.")
+		}
+
+		if (!rad.angle.isReduced()) {
+			return makeCheckerResult("L'angle n'est pas réduit.", true)
+		}
+
+		return makeCheckerResult()
+	}
+
+	checkWithoutPeriodic(value: string): CheckerResult {
+		const rad = new PiRadian(value)
+		const answerRad = new PiRadian(this.answer)
 
 		// Ce n'est pas le mëme angle
-		if (!angleF.isEqual(answerAngleF) && !this.isPeriodic) {
+		if (!rad.isEqual(answerRad)) {
 			return makeCheckerResult("L'angle n'est pas juste.")
 		}
 
 		// L'angle n'est pas réduit.
-		if (!angleF.isReduced()) {
+		if (!rad.angle.isReduced()) {
 			return makeCheckerResult("L'angle n'est pas réduit.", true)
 		}
 
 		return makeCheckerResult()
 	}
 
-	checkWithPeriodic(value: string): CheckerResult {
-		const [angle, periodic] = value.split('+k')
-		const [answerAngle, answerPeriodic] = this.answer.split('+k')
-
-		const angleF = parseAngle(angle)
-		const answerAngleF = parseAngle(answerAngle)
-
-		const periodicF = parseAngle(periodic)
-		const answerPeriodicF = parseAngle(answerPeriodic)
-
-		// Contrôle de la partie périodique.
-		if (!periodicF.isEqual(answerPeriodicF)) {
-			return makeCheckerResult("La partie périodique n'est pas juste.")
-		}
-		if (!periodicF.isReduced()) {
-			return makeCheckerResult("La partie périodique n'est pas réduite.", true)
-		}
-
-		// L'angle donné peut être k2pi
-		// A ce stade, la période est identique à la réponse
-		const diff = angleF.clone().subtract(answerAngleF).divide(periodicF)
-
-		if (!diff.isRelative()) {
-			return makeCheckerResult("L'angle n'est pas juste.")
-		}
-
-		if (!angleF.isReduced()) {
-			return makeCheckerResult("L'angle n'est pas réduit.", true)
-		}
-
-		return makeCheckerResult()
-	}
-
-}
-
-function parseAngle(value: string): Fraction {
-	// La valeur donnée est nulle.
-	if (value === '') {
-		return new Fraction(0)
-	}
-
-	const [num, den] = value.split('/')
-
-	const F = new Fraction()
-
-	F.numerator =
-		num === 'pi'
-			? 1
-			: num === '-pi'
-				? -1
-				: Number(num.replace('pi', ''))
-
-	if (den && !isNaN(+den)) {
-		F.denominator = +den
-	}
-
-	return F
 }
