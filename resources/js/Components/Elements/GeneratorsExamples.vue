@@ -56,9 +56,11 @@ onMounted(() => {
 
 <template>
 	<article>
-		<div class="flex justify-between">
+		<div class="flex justify-between mb-3">
 			<h3>Exemples</h3>
 			<sc-button
+				icon
+				type="generate"
 				xs
 				@click="generateQuestions()"
 			>

@@ -1,15 +1,16 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import LayoutMain from "@/Layouts/LayoutMain.vue"
-import {PropType, ref} from "vue"
+import {computed, PropType, ref} from "vue"
 import {GeneratorInterface} from "@/types/modelInterfaces.ts"
 import GeneratorItem from "@/Components/Elements/GeneratorItem.vue"
 import FilteredList from "@/Components/Ui/FilteredList.vue"
-import {useMenuScrollToData} from "@/Composables/useHelpers.ts"
 import ScButton from "@/Components/Ui/scButton.vue"
 import axios from "axios"
 import {router} from "@inertiajs/vue3"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
+import {slugify} from "@/scolcours.ts"
+import Card from "@/Components/Ui/Card.vue"
 
 defineOptions({layout: LayoutMain})
 defineProps({
@@ -17,18 +18,20 @@ defineProps({
 })
 const flash = useStoreFlashMessage()
 
-const slug = ref("")
+const title = ref("")
 const themeId = ref(1)
+const slug = computed<string>(() => {
+	return slugify(title.value)
+})
 
 function addGenerator() {
-	if (slug.value === "") return
-
 	axios.post(route("api.admin.generators.store"), {
+		title: title.value,
 		slug: slug.value,
 		theme_id: themeId.value
 	})
 		.then((res) => {
-			slug.value = ""
+			title.value = ""
 			flash.success("Générateur ajouté")
 			router.visit(route("admin.generators.edit", [res.data]))
 		})
@@ -42,33 +45,35 @@ function addGenerator() {
 	<main
 		class="scolcours-container"
 	>
-		<div class="bg-white max-w-lg mx-auto px-3 py-2 shadow-sm rounded-sm">
+		<card class="max-w-2xl mx-auto my-12">
 			<form-maker
-				v-model="slug"
-				label="nouveau générateur (slug)"
+				v-model="title"
+				label="nouveau générateur"
 			/>
+			<div class="font-code text-xs">
+				> {{ slug }}
+			</div>
 			<form-maker
+				v-model="themeId"
 				label="theme"
 				type="theme"
-				v-model="themeId"
 			/>
-			<div class="min-h-[2em] w-full text-right mt-2">
-				<button
-					v-show="slug!==''"
-					class="btn btn-add btn-xs"
-					@click="addGenerator"
-				>
-					Ajouter un générateur
-				</button>
-			</div>
-		</div>
 
-		<sc-button
-			type="danger"
-			@click="useMenuScrollToData('withErrors', true)"
-		>
-			Rechercher la première erreur
-		</sc-button>
+			<template #footer>
+				<div class="flex justify-end">
+					<sc-button
+						:class="slug==='' ? 'opacity-30' : ''"
+						:disabled="slug===''"
+						class="btn btn-add btn-xs"
+						type="add"
+						@click="addGenerator"
+					>
+						Ajouter un générateur
+					</sc-button>
+				</div>
+			</template>
+		</card>
+
 		<filtered-list
 			:list="generators"
 			list-class="flex flex-col gap-12"

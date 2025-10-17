@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 
 import {GeneratorInterface} from "@/types/modelInterfaces.ts"
 import GeneratorsExamples from "@/Components/Elements/GeneratorsExamples.vue"
@@ -15,49 +15,62 @@ const generated = ref<boolean>(false)
 
 <template>
 	<div
+		:class="hasErrors?'border-l-8 border-l-red-600':''"
+		:data-withErrors="hasErrors"
 		class="bg-content
 		rounded-lg
 		grid grid-cols-1 md:grid-cols-2 gap-3
 		p-5 "
-		:class="hasErrors?'border-l-8 border-l-red-600':''"
-		:data-withErrors="hasErrors"
 	>
 		<div>
-			<h3
-				class="font-semibold"
-				v-katex.auto="generator.title"
-			/>
+			<div class="flex justify-between">
+				<h3
+					v-katex.auto="generator.title"
+					class="font-semibold"
+				/>
+				<div
+					class="flex gap-3"
+				>
+					<sc-button
+						:href="route('admin.generators.edit', [generator.id])"
+						icon
+						type="edit"
+						xs
+					>
+						Editer
+					</sc-button>
+					<sc-button
+						:href="route('generators.show', [generator.id])"
+						type="default"
+						xs
+					>
+						<i class="bi bi-eye" /> Voir
+					</sc-button>
+				</div>
+			</div>
 			<markdown-it
 				:text="generator.body"
 			/>
-
-			<div>
-				<InertiaLink
-					:href="route('admin.generators.edit', [generator.id])"
-				>
-					Editer <i class="bi bi-pencil" />
-				</InertiaLink>
-				<InertiaLink
-					:href="route('generators.show', [generator.id])"
-				>
-					Voir <i class="bi bi-eye" />
-				</InertiaLink>
-			</div>
 		</div>
-		<generators-examples
-			v-if="generated"
-			:generator="generator"
-			generate-on-mounted
-			@generated-status="hasErrors = !$event"
-		/>
-		<div v-else>
-			<sc-button
-				type="edit"
-
-				@click="generated=true"
+		<div>
+			<generators-examples
+				v-if="generated"
+				:generator="generator"
+				generate-on-mounted
+				@generated-status="hasErrors = !$event"
+			/>
+			<div
+				v-else
+				class="flex justify-center my-8"
 			>
-				générer
-			</sc-button>
+				<sc-button
+					icon
+					type="generate"
+					@click="generated=true"
+				>
+					générer
+				</sc-button>
+			</div>
 		</div>
 	</div>
 </template>
