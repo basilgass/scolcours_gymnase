@@ -124,7 +124,7 @@ function circleAnchors(point: XY, n: number, anchors = 12): XY {
 	}
 }
 
-function drawPoint(point: Point, label: string, params?: string): string {
+function drawPoint(point: {x: number, y: number}, label: string, params?: string): string {
 	return `${label}(${point.x},${point.y})${params ? `->${params}` : ''}`
 }
 

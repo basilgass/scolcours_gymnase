@@ -14,7 +14,11 @@
 import {useWrongAnswerAnimation} from "@/Composables/useHelpers.ts"
 import {usePage} from "@inertiajs/vue3"
 import {computed, inject, ref, useTemplateRef} from "vue"
-import {questionDataInterface, questionResultInterface} from "@/Components/Questions/QuestionInterface.ts"
+import {
+	questionDataInterface,
+	questionResultInterface,
+	questionValidatorInterface
+} from "@/Components/Questions/QuestionInterface.ts"
 import type {CheckerResult, PiChecker} from "@/Checkers"
 import ScButton from "@/Components/Ui/scButton.vue"
 import {useStoreScore} from "@/stores/useStoreScore.ts"
@@ -23,6 +27,7 @@ import {ScoreQuestionDataInterface} from "@/types/scoreInterfaces.ts"
 interface CheckerResultWithIndex extends CheckerResult {
 	index: number
 }
+
 const emits = defineEmits<{
 	validate: [event: questionResultInterface]
 }>()
@@ -58,6 +63,81 @@ const scoreStore = useStoreScore()
 
 const score = questionData.user.score
 
+function getAnswerValidation(validator: questionValidatorInterface, index: number, mixedAnswer: string[]): CheckerResultWithIndex {
+	// La réponse de l'utilisateur
+	const userAnswer: string = questionData.user.answers.value[index].input
+	if (userAnswer === undefined) {
+		return {
+			result: false,
+			message: "Vous n'avez pas répondu à la question",
+			index
+		}
+	}
+
+
+	// Les résultats pour le check en cours.
+	const results: CheckerResultWithIndex[] = []
+
+	/** answer peut-être
+	 * 		<réponse>
+	 * 		<réponse>||<réponse>  (plusieurs réponses possibles - réponses non alignées)
+	 * 		@<réponse> autorise de donner les réponses qui commencent par @ dans n'importe quel ordre.
+	 */
+
+	const isMixedAnswer = mixedAnswer.length > 0 && validator.answer.startsWith('@')
+
+	// Toutes les réponses autorisées.
+	// Si c'est un mixed answer
+	const allowedAnswers: string[] = isMixedAnswer
+		? mixedAnswer
+		: validator.answer
+			.split(/\|\|/)
+			.map(a => a.trim())
+			.filter(a => a !== '')
+
+	// Le système de checker
+	const checker: PiChecker = validator.checker.checker
+
+	// On vérifie si la réponse de l'utilisateur est dans les réponses autorisées
+	allowedAnswers.forEach((answer, idx) => {
+
+		// On est dans un cas où il y a plusieurs réponses possibles
+		try {
+			const chk = checker.check(userAnswer, answer)
+
+			if (questionData.current.checker.value.checkerOverride[userAnswer]) {
+				chk.message = questionData.current.checker.value.checkerOverride[userAnswer]
+			}
+
+			results.push({
+				...chk,
+				index
+			})
+
+			if (chk.result) {
+				// On a trouvé une réponse.
+
+				// Si on est dans une réponse non ordonnée, on l'enlève de la liste disponible.
+				if (isMixedAnswer) {
+					mixedAnswer.splice(idx, 1)
+				}
+
+				// Pas besoin de continuer.
+				return
+			}
+		} catch (e) {
+			console.warn(e)
+			results.push({
+				result: false,
+				message: "Format de la réponse non reconnu.",
+				index
+			})
+		}
+	})
+
+	return results.find(r => r.result) || results[0]
+}
+
 function updateAnswersValidation(): CheckerResultWithIndex[] {
 	// Make the validation.
 	// validation = {result: Boolean, message: string, index: number}
@@ -67,75 +147,15 @@ function updateAnswersValidation(): CheckerResultWithIndex[] {
 	 * - questionData.answers: string[]
 	 * - questionData.user.answers: string[]
 	 */
-	let firstAnswerIndex = -1
+
+	const mixedAnswers = questionData.validators.value
+			.filter(validator => validator.answer.startsWith('@'))
+			.map(validator => validator.answer.substring(1))
 
 	questionData.validators.value.forEach((validator, index) => {
-		/** answer peut-être
-		 * 		<réponse>
-		 * 		<réponse>||<réponse>  (plusieurs réponses possibles - réponses non alignées)
-		 * 		<réponse>&&<réponse> (les réponses sont alignées (toutes index 1 ou 2)
-		 */
+		const result = getAnswerValidation(validator, index, mixedAnswers)
 
-			// Toutes les réponses autorisées.
-		const allowedAnswers: string[] = validator.answer
-				.split(/\|\||&&/)
-				.map(a => a.trim())
-
-		const isAnswerIndexConstrained = validator.answer.includes('&&')
-
-		// La réponse de l'utilisateur
-		const userAnswer: string = questionData.user.answers.value[index].input
-
-		// Le système de checker
-		const checker: PiChecker = validator.checker.checker
-
-		// On vérifie si la réponse de l'utilisateur est dans les réponses autorisées
-		const results: CheckerResultWithIndex[] = []
-		allowedAnswers.forEach((answer, index) => {
-
-			// On est dans un cas où il y a plusieurs réponses possibles, mais qui doivent être alignées.
-			if(isAnswerIndexConstrained && firstAnswerIndex>=0){
-				if(index!==firstAnswerIndex){
-					return
-				}
-			}
-
-			try {
-				if (userAnswer === undefined) {
-					results.push({
-						result: false,
-						message: "Vous n'avez pas répondu à la question",
-						index
-					})
-				} else {
-					const chk = checker.check(userAnswer, answer)
-
-					if (questionData.current.checker.value.checkerOverride[userAnswer]) {
-						chk.message = questionData.current.checker.value.checkerOverride[userAnswer]
-					}
-
-					results.push({
-						...chk,
-						index
-					})
-
-					if(chk.result && firstAnswerIndex===-1){
-						firstAnswerIndex = index
-					}
-				}
-
-			} catch (e) {
-				console.warn(e)
-				results.push({
-					result: false,
-					message: "Format de la réponse non reconnu.",
-					index
-				})
-			}
-		})
-
-		// On prend soit le résultat correct, soit le premier résultat faux
-		validation.push(results.find(r => r.result) || results[0])
+		validation.push(result)
 	})
 
 	return validation

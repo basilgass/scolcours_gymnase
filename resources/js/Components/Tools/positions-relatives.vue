@@ -291,31 +291,30 @@ const positionRelative = computed<string>(() => {
 
 	try {
 		if (obj1.dimension === 2) {
-			console.log(obj1)
 			// On est en deux dimensions
 			if (obj1.type === 'droite' && obj2.type === 'droite') {
-				return posRel_droite2d_droite2d(obj1.pi, obj2.pi)
+				return posRel_droite2d_droite2d(obj1.pi as Line, obj2.pi as Line)
 			}
 
 			if (obj1.type === 'droite' && obj2.type === 'cercle') {
-				return posRel_droite2d_cercle(obj1.pi, obj2.pi)
+				return posRel_droite2d_cercle(obj1.pi as Line, obj2.pi as Circle)
 			}
 
 			if (obj1.type === 'cercle' && obj2.type === 'cercle') {
-				return posRel_cercle_cercle(obj1.pi, obj2.pi)
+				return posRel_cercle_cercle(obj1.pi as Circle, obj2.pi as Circle)
 			}
 		}
 
 		if (objet1.value.type === 'plan' && objet2.value.type === 'plan') {
-			return posRel_plan_plan(obj1.pi, obj2.pi)
+			return posRel_plan_plan(obj1.pi as Plane3, obj2.pi as Plane3)
 		}
 
 		if (objet1.value.type === 'plan' && objet2.value.type === 'sphère') {
-			return posRel_plan_sphere(obj1.pi, obj2.pi)
+			return posRel_plan_sphere(obj1.pi as Plane3, obj2.pi as Sphere3)
 		}
 
 		if (objet1.value.type === 'sphère' && objet2.value.type === 'sphère') {
-			return posRel_sphere_sphere(obj1.pi, obj2.pi)
+			return posRel_sphere_sphere(obj1.pi as Sphere3, obj2.pi as Sphere3)
 		}
 	} catch (err) {
 		console.log(err)

@@ -36,22 +36,46 @@ export class TrigoChecker extends CheckerAbstract {
 
 
 	override checkValue(value: string): CheckerResult {
-		const [angle, periodic] = value.split('+k')
+		/**
+		 * Valeurs possibles:
+		 * api/b			sans période
+		 * api/b+kcpi/d		avec période
+		 */
 
-		if(this.radian && !angle.includes('pi')){
+		const [angle, kPeriodic, ...otherValues] = value.split('+')
+		// angle: api/b
+		// kPeriodic: kcpi/d
+
+		// On contrôle qu'il n'y a pas de + en extra
+		if (otherValues && otherValues.length > 0) {
+			return makeCheckerResult("Il n'y a qu'un seul signe \\(+\\) dans ce format de réponse.")
+		}
+
+		// L'angle doit être en radian
+		if (this.radian && !angle.includes('pi')) {
 			return makeCheckerResult("Un angle en radian doit contenir la valeur \\(\\pi\\)")
 		}
-
-		if(this.radian && periodic && !periodic.includes('pi')){
-			return makeCheckerResult("Une période en radian doit contenir la valeur \\(\\pi\\)")
+		if (!this.radian && angle.includes('pi')) {
+			return makeCheckerResult("Un angle en degrés ne doit pas contenir la valeur \\(\\pi\\)")
 		}
 
-		if (this.isPeriodic && !periodic) {
-			return makeCheckerResult("Il faut ajouter la périodicité")
-		}
+		// On contrôle la partie périodique.
+		if (this.isPeriodic) {
+			// Il faut une partie périodique
+			if (kPeriodic === undefined || kPeriodic === "") {
+				return makeCheckerResult("Il faut ajouter la périodicité")
+			}
 
-		if (!this.isPeriodic && periodic) {
-			return makeCheckerResult("Il ne faut pas ajouter la périodicité")
+			// On a bien une partie périodique.
+			// Il doit être de la forme k[0-9]*pi/[0-9]+
+			if (!kPeriodic.match(/k[0-9]*pi(?:\/[0-9]+)?/)) {
+				return makeCheckerResult("Le format de la partie périodique n'est pas reconnu.")
+			}
+		} else {
+			// Pas de périodicité
+			if (kPeriodic !== undefined) {
+				return makeCheckerResult("Il ne faut pas ajouter la périodicité")
+			}
 		}
 
 		return this.isPeriodic
@@ -101,7 +125,7 @@ export class TrigoChecker extends CheckerAbstract {
 		// A ce stade, la période est identique à la réponse
 		const diff = angleF.clone().subtract(answerAngleF).divide(periodicF)
 
-		if(!diff.isRelative()){
+		if (!diff.isRelative()) {
 			return makeCheckerResult("L'angle n'est pas juste.")
 		}
 
@@ -115,13 +139,21 @@ export class TrigoChecker extends CheckerAbstract {
 }
 
 function parseAngle(value: string): Fraction {
+	// La valeur donnée est nulle.
+	if (value === '') {
+		return new Fraction(0)
+	}
+
 	const [num, den] = value.split('/')
 
 	const F = new Fraction()
 
-	F.numerator = num === 'pi' ? 1 :
-		num === '-pi' ? -1 :
-		Number(num.replace('pi', ''))
+	F.numerator =
+		num === 'pi'
+			? 1
+			: num === '-pi'
+				? -1
+				: Number(num.replace('pi', ''))
 
 	if (den && !isNaN(+den)) {
 		F.denominator = +den

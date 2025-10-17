@@ -109,7 +109,13 @@ function getExtremes(fn: PolyFactor, tos: TABLE_OF_SIGNS) {
 		if (tos.signs[2 * index + 1] !== "z") {
 			return ""
 		}
-		return fn.evaluate(root.value).tex
+
+		const e = fn.evaluate(root.value)
+		if(typeof e === 'number'){
+			return e.toString()
+		}
+
+		return e.tex
 	})
 }
 

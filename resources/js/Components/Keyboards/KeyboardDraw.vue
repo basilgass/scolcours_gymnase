@@ -6,7 +6,6 @@ import {
 	KeyboardPropsInterface
 } from "@/Composables/useKeyboard.ts"
 import {PiDraw, Point as PiDrawPoint} from "pidraw/types"
-import {Point} from "pimath"
 import {computed, nextTick, onMounted, ref, useTemplateRef} from "vue"
 import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"
 
@@ -64,7 +63,10 @@ async function setInput(value?: string): Promise<KeyboardInputInterface> {
 
 
 	// Get all draggable points
-	const pts = points.value.map(key => (pidraw.figures[key] as Point) ?? null).filter(x => x !== null)
+	const pts: PiDrawPoint[] = points.value
+		.map(key => (pidraw.figures[key] as unknown as PiDrawPoint) ?? null)
+		.filter(x => x !== null)
+
 	const input = pts.map(pt => {
 		const {x, y} = pt.coordinates
 		return `(${x};${y})`
@@ -77,7 +79,7 @@ async function setInput(value?: string): Promise<KeyboardInputInterface> {
 	}
 }
 
-function getSvg(){
+function getSvg() {
 	// TODO: amélioration du keyboard pour afficher ou pas automatiquement le graphe
 	return ""
 	// return svgContainer.value?.getPiDraw().rootSVG.svg() ?? ""
@@ -111,7 +113,7 @@ onMounted(() => {
 function onComponentMounted(draw: PiDraw) {
 	pidraw = draw
 
-	nextTick(()=>{
+	nextTick(() => {
 		onChange({draw, mouse: null})
 	})
 

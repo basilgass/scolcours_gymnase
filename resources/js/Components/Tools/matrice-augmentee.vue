@@ -71,7 +71,7 @@ function genererMatrice() {
 			Array(dim).fill(0).map(() => Random.numberSym(9))
 		)
 
-	const M = new Matrix(...matrix.map((line) => new Vector(...line)))
+	const M = new Matrix().fromVectors(...matrix.map((line) => new Vector(...line)))
 
 	if (M.determinant().value === 0) {
 		return genererMatrice()

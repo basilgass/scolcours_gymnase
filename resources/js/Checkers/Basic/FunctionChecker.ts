@@ -44,7 +44,7 @@ export class FunctionChecker extends CheckerAbstract {
 				return makeCheckerResult("la fonction doit être développée (pas de parenthèses)")
 			}
 
-			if(A.monoms.length !== Q.monoms.lenght){
+			if(A.monoms.length !== Q.monoms.length){
 				return makeCheckerResult("la fonction doit être réduite.")
 			}
 		}

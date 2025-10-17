@@ -9,7 +9,7 @@ class updateScoreRequest extends FormRequest
 	public function rules(): array
 	{
 		return [
-			'score'       => ['required', 'integer'],
+			'score'       => ['required', 'numeric'],
 			'data'        => ['nullable', 'array'],
 			'attempts'    => ['nullable'],
 			'is_resolved' => ['nullable', 'boolean'],

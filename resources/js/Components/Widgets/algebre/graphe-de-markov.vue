@@ -54,7 +54,7 @@ const nodes = computed<number>(() => {
 	return n
 })
 
-const matrix = computed<Fraction[][]>(() => {
+const matrix = computed<string[][]>(() => {
 	if (!nodes.value) {
 		return null
 	}

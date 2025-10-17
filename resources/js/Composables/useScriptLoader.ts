@@ -1,6 +1,7 @@
-import { SCRIPT_TYPE } from "@/types"
+import {SCRIPT_TYPE} from "@/types"
 import PiMath from "pimath"
 import {computed, isRef, MaybeRef, ref, unref} from "vue"
+import {PiMathExt} from "@/PiMathExtended/PiMathExt.ts"
 
 
 export function useScriptLoader(script: string, config?: {
@@ -11,9 +12,9 @@ export function useScriptLoader(script: string, config?: {
 
 	const parentData = computed<SCRIPT_TYPE>(() => {
 		if (config && config.parent) {
-			if(isRef(config.parent)) {
-				return config.parent.value  as SCRIPT_TYPE
-			}else{
+			if (isRef(config.parent)) {
+				return config.parent.value as SCRIPT_TYPE
+			} else {
 				return config.parent as SCRIPT_TYPE
 			}
 		}
@@ -36,8 +37,8 @@ export function useScriptLoader(script: string, config?: {
 		iteration.value++
 		if (script) {
 			try {
-				const F = new Function("PiMath", "iteration", "parentData", script)
-				data.value = F(PiMath, iteration.value, parentData.value)
+				const F = new Function("PiMath", "PiMathExt", "iteration", "parentData", script)
+				data.value = F(PiMath, PiMathExt, iteration.value, parentData.value)
 			} catch (e) {
 				console.log("Script loader error", e)
 				data.value = {}
@@ -50,5 +51,5 @@ export function useScriptLoader(script: string, config?: {
 		run()
 	}
 
-	return { iteration, run, reset, data, merged, hasData }
+	return {iteration, run, reset, data, merged, hasData}
 }

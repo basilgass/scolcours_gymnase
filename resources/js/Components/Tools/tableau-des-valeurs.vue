@@ -128,7 +128,7 @@ const getTableOfValues = function (): ITableOfValue[] {
 
 	while (x.value <= vMax.value) {
 		let v = (exp instanceof Polynom)
-			? exp.evaluate(x)
+			? exp.evaluate(x) as Fraction
 			: {
 				value: exp.evaluate({x: x.value}),
 				tex: ""
