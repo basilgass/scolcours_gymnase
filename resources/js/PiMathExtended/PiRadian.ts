@@ -10,11 +10,10 @@ export class PiRadian {
 		180, 210, 225, 240,
 		270, 280, 315, 330
 	]
-	#angle: Fraction
-	#periodic: Fraction
+	#angle: Fraction = new Fraction(0)
+	#periodic: Fraction = new Fraction(0)
 
 	constructor(value?: string | PiRadian) {
-
 		if (value !== undefined) {
 			if (typeof value === "string") {
 				this.fromString(value)
