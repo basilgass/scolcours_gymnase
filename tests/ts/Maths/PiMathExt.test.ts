@@ -1,5 +1,6 @@
 import {describe, expect, test} from "vitest"
 import {PiRadian} from "@/PiMathExtended/PiRadian.ts"
+import {Fraction} from "pimath"
 
 describe('Trigo class', () => {
 	test('check if a string is a radian angle', () => {
@@ -216,5 +217,18 @@ describe('Trigo class', () => {
 		expect(new PiRadian('2pi/3').toRatio('tan').display).toBe('-sqrt3')
 		expect(new PiRadian('-2pi/3').toRatio('tan').display).toBe('sqrt3')
 
+	})
+
+	test('should multiply or divide by a fraction', () => {
+		const f = new Fraction('2/3')
+
+		const r = new PiRadian('3pi/2+k2pi')
+
+		expect(r.clone().multiply(f).display).toBe('pi+k4pi/3')
+		expect(r.clone().divide(f).display).toBe('9pi/4+k3pi')
+
+		const negativeF = new Fraction(-3)
+		expect(r.clone().multiply(negativeF).display).toBe('-9pi/2+k6pi')
+		expect(r.clone().divide(negativeF).display).toBe('-pi/2+k2pi/3')
 	})
 })

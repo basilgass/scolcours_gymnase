@@ -142,6 +142,15 @@ export class PiRadian {
 		return R
 	}
 
+	divide(value: InputValue<Fraction>): this {
+		const D = new Fraction(value)
+
+		this.#angle.divide(D).reduce()
+		this.#periodic.divide(D).abs().reduce()
+
+		return this
+	}
+
 	fromDegree(value: InputValue<Fraction>): this {
 		const F = new Fraction(value)
 
@@ -209,6 +218,15 @@ export class PiRadian {
 			.divide(this.#periodic)
 
 		return diff.isRelative()
+	}
+
+	multiply(value: InputValue<Fraction>): this {
+		const D = new Fraction(value)
+
+		this.#angle.multiply(D).reduce()
+		this.#periodic.multiply(D).abs().reduce()
+
+		return this
 	}
 
 	reduce(): this {
@@ -297,7 +315,6 @@ export class PiRadian {
 
 		return F
 	}
-
 }
 
 function cosRatioToRadian(value: number): PiRadian[] {
