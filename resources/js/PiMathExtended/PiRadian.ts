@@ -41,9 +41,13 @@ export class PiRadian {
 			? ''
 			: ('k' + this.#angleToDisplay(this.#periodic))
 
-		return [anglePart, periodicPart]
+		const output = [anglePart, periodicPart]
 			.filter(a => a !== '')
 			.join('+')
+
+
+		return output === '' ? '0' : output
+
 	}
 
 	get periodic(): Fraction {
@@ -63,9 +67,11 @@ export class PiRadian {
 			? ''
 			: ('k' + this.#angleToTeX(this.#periodic))
 
-		return [anglePart, periodicPart]
+		const output = [anglePart, periodicPart]
 			.filter(a => a !== '')
 			.join('+')
+
+		return output === '' ? '0' : output
 	}
 
 	/**
@@ -73,6 +79,10 @@ export class PiRadian {
 	 * @param value
 	 */
 	static checkString(value: string): boolean {
+		if (value === '0') {
+			return true
+		}
+
 		const angleRegExp = /^(-?\d*pi\/\d+|-?\d*pi)$/
 
 		if (value.includes('+')) {
@@ -141,6 +151,12 @@ export class PiRadian {
 	fromString(value: string): this {
 		if (!PiRadian.checkString(value)) {
 			throw new Error(`${value} is not recognized as an angle in radians`)
+		}
+
+		if (value === "0") {
+			this.#angle = new Fraction(0)
+			this.#periodic = new Fraction(0)
+			return this
 		}
 
 		if (value.startsWith('k')) {

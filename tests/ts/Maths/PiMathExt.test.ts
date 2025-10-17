@@ -23,7 +23,7 @@ describe('Trigo class', () => {
 		expect(PiRadian.checkString('pi+kpi+5')).toBe(false)
 	})
 
-	test('check if a string is a radian, with a zero angle', ()=>{
+	test('check if a string is a radian, with a zero angle', () => {
 		expect(PiRadian.checkString('kpi')).toBe(true)
 		expect(PiRadian.checkString('kpi/2')).toBe(true)
 		expect(PiRadian.checkString('k3pi/2')).toBe(true)
@@ -53,6 +53,7 @@ describe('Trigo class', () => {
 
 	test('should output in display mode', () => {
 		const values = [
+			'0',
 			'pi',
 			'-pi',
 			'2pi',
@@ -70,6 +71,7 @@ describe('Trigo class', () => {
 
 	test('should output in TeX mode', () => {
 		const values = [
+			'0',
 			'pi',
 			'-pi',
 			'2pi',
@@ -81,6 +83,7 @@ describe('Trigo class', () => {
 		]
 
 		const TeX = [
+			'0',
 			'\\pi',
 			'-\\pi',
 			'2\\pi',
@@ -203,7 +206,7 @@ describe('Trigo class', () => {
 		expect(new PiRadian('-7pi/3+k3pi/5').reduce().display).toBe('pi/15+k3pi/5')
 	})
 
-	test('should get the ratio of any angle', ()=>{
+	test('should get the ratio of any angle', () => {
 		expect(new PiRadian('2pi/3').toRatio('sin').display).toBe('sqrt3/2')
 		expect(new PiRadian('-2pi/3').toRatio('sin').display).toBe('-sqrt3/2')
 
