@@ -14,16 +14,16 @@ class UserApiController extends Controller
 
 	}
 
-	public function store(Request $request)
-	{
-	}
-
 	public function show(User $user)
 	{
 		return [
-			'user'=>UserResource::make($user),
-			'courses'=>CourseResource::collection($user->courses)
+			'user'    => UserResource::make($user),
+			'courses' => CourseResource::collection($user->courses)
 		];
+	}
+
+	public function store(Request $request)
+	{
 	}
 
 	public function update(Request $request, User $user)

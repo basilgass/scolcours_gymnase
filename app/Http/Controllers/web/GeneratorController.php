@@ -3,12 +3,9 @@
 namespace App\Http\Controllers\web;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreGeneratorRequest;
-use App\Http\Requests\UpdateGeneratorRequest;
 use App\Http\Resources\ChallengeResource;
 use App\Http\Resources\GeneratorResource;
 use App\Models\Generator;
-use Illuminate\Validation\Rules\In;
 use Inertia\Inertia;
 
 class GeneratorController extends Controller
@@ -19,16 +16,13 @@ class GeneratorController extends Controller
 		return Inertia::render("Admin/AdminGeneratorsPage", [
 			"generators" => GeneratorResource::collection(Generator::all())
 		]);
-//		return Inertia::render("Generators/GeneratorIndex", [
-//			"generators" => GeneratorResource::collection(Generator::all())
-//		]);
 	}
 
 	public function show(Generator $generator)
 	{
 		return Inertia::render("Generators/GeneratorShow",
 			[
-				"generator"  => GeneratorResource::make($generator),
+				"generator" => GeneratorResource::make($generator),
 			]
 		);
 	}

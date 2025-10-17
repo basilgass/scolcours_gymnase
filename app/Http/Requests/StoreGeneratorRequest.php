@@ -10,6 +10,7 @@ class StoreGeneratorRequest extends FormRequest
 	{
 		return [
 			'theme_id' => ['required', 'exists:themes,id'],
+			'title'    => ['required'],
 			'slug'     => ['required'],
 			'code'     => ['required'],
 			'template' => ['required'],
