@@ -8,15 +8,17 @@ export class PiRadian {
 		0, 30, 45, 60,
 		90, 120, 135, 150,
 		180, 210, 225, 240,
-		270, 280, 315, 330
+		270, 300, 315, 330
 	]
 	#angle: Fraction = new Fraction(0)
 	#periodic: Fraction = new Fraction(0)
 
-	constructor(value?: string | PiRadian) {
+	constructor(value?: string | Fraction | PiRadian) {
 		if (value !== undefined) {
 			if (typeof value === "string") {
 				this.fromString(value)
+			} else if (value instanceof Fraction) {
+				this.fromFraction(value)
 			} else if (value instanceof PiRadian) {
 				this.#angle = value.angle.clone()
 				this.#periodic = value.periodic.clone()
@@ -145,6 +147,13 @@ export class PiRadian {
 
 		this.#angle = F.divide(180).reduce()
 		this.#periodic = new Fraction(0)
+		return this
+	}
+
+	fromFraction(value: InputValue<Fraction>, periodic?: InputValue<Fraction>): this {
+		this.#angle = new Fraction(value)
+		this.#periodic = periodic === undefined ? new Fraction(0) : new Fraction(periodic)
+
 		return this
 	}
 
