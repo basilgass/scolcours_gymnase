@@ -8,6 +8,8 @@ Route::middleware('web')
 	     // Public routes.
 	     Route::resource('posts', PostController::class)
 	          ->only(['index', 'show']);
+	     Route::get('posts/{post}/blocks/{block}', [PostController::class, 'anchor'])
+	          ->name('posts.blocks.anchor');
 
 
 	     // Admin routes
@@ -36,11 +38,11 @@ Route::middleware('api')
 
 	     // Admin api
 	     Route::middleware('admin')
-		     ->prefix('admin')
-		     ->as('admin.')
+	          ->prefix('admin')
+	          ->as('admin.')
 	          ->group(function () {
 		          Route::apiResource('posts', PostApiController::class)
-		          ->only(['store', 'update', 'destroy']);
+		               ->only(['store', 'update', 'destroy']);
 
 		          Route::prefix('posts')
 		               ->as('posts.')

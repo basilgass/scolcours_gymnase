@@ -45,12 +45,12 @@ onMounted(() => {
 			<div class="flex-1">
 				<div class="flex gap-5 items-baseline">
 					<article-title
-						:title="post.title"
-						:return-link
 						:edit-link="{
 							label: post.id,
 							url: route('admin.posts.edit', {post: post.id})
 						}"
+						:return-link
+						:title="post.title"
 					/>
 				</div>
 			</div>

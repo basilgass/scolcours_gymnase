@@ -13,7 +13,6 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\URL;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * App\Models\Block
@@ -99,12 +98,12 @@ class Block extends Model
 			$clonedIllustration->block_id = $clonedBlock->id;
 			$clonedIllustration->save();
 
-//			$clonedBlock->illustrations()->create([
-//				'title'      => $illustration->title,
-//				'type'       => $illustration->type,
-//				'code'       => $illustration->code,
-//				'parameters' => $illustration->parameters
-//			]);
+			//			$clonedBlock->illustrations()->create([
+			//				'title'      => $illustration->title,
+			//				'type'       => $illustration->type,
+			//				'code'       => $illustration->code,
+			//				'parameters' => $illustration->parameters
+			//			]);
 		}
 
 		$clonedBlock->save();
@@ -118,50 +117,49 @@ class Block extends Model
 		return $this->hasMany(Illustration::class)->orderBy('order')->orderBy('id');
 	}
 
-	public function redirectUrl():string|null
-	{
-		if (!$this->blockable) {
-			return null;
-		}
-
-		$baseShow = strtolower(class_basename($this->blockable)) . 's.show';
-		$baseEdit = strtolower(class_basename($this->blockable)) . 's.edit';
-
-		//vérifier si la route existe
-		if (Route::has($baseShow)) {
-			return route($baseShow, $this->blockable);
-		}
-
-		if(Route::has('students.'.$baseShow)){
-			return route('students.'.$baseShow, $this->blockable);
-		}
-
-		if(Route::has('admin.'.$baseShow)){
-			return route('admin.'.$baseShow, $this->blockable);
-		}
-		if(Route::has('admin.'.$baseEdit)){
-			return route('admin.'.$baseEdit, $this->blockable);
-		}
-
-		return null;
-	}
-	public function redirectToBlockable():RedirectResponse
+	public function redirectToBlockable(): RedirectResponse
 	{
 		$url = $this->redirectUrl();
 
-		if(!$url){
+		if (!$url) {
 			abort(404);
 		}
 
 		return redirect($url);
 	}
 
-	protected function url(): Attribute
+	public function redirectUrl(): string|null
 	{
-		return Attribute::make(
-			get: fn() => URL::route('blocks.show', [$this->id], false)
-//			get: fn() => [$this->chapter->theme->slug, $this->chapter->slug, $this->order]
-		);
+		if (!$this->blockable) {
+			return null;
+		}
+
+		$baseAnchor = strtolower(class_basename($this->blockable)) . 's.blocks.anchor';
+		$baseShow = strtolower(class_basename($this->blockable)) . 's.show';
+		$baseEdit = strtolower(class_basename($this->blockable)) . 's.edit';
+
+		//vérifier si la route existe
+		if (Route::has($baseAnchor)) {
+			return route($baseAnchor, [$this->blockable, $this]);
+		}
+
+		if (Route::has($baseShow)) {
+			return route($baseShow, $this->blockable);
+		}
+
+		if (Route::has('students.' . $baseShow)) {
+			return route('students.' . $baseShow, $this->blockable);
+		}
+
+		if (Route::has('admin.' . $baseShow)) {
+			return route('admin.' . $baseShow, $this->blockable);
+		}
+
+		if (Route::has('admin.' . $baseEdit)) {
+			return route('admin.' . $baseEdit, $this->blockable);
+		}
+
+		return null;
 	}
 
 	/**
@@ -181,5 +179,13 @@ class Block extends Model
 		}
 
 		return $blocks;
+	}
+
+	protected function url(): Attribute
+	{
+		return Attribute::make(
+			get: fn() => URL::route('blocks.show', [$this->id], false)
+		//			get: fn() => [$this->chapter->theme->slug, $this->chapter->slug, $this->order]
+		);
 	}
 }

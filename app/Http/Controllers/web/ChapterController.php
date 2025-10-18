@@ -98,25 +98,6 @@ class ChapterController extends Controller
 
 	public function slide(Theme $theme, Chapter $chapter, int $order, string $type = null, int $id = null)
 	{
-		//		$chapter->load(
-		//			[
-		//				'posts' => function ($query) {
-		//					if (Auth::user()?->admin) {
-		//						$query->withCounts(); //->where('active', true);
-		//					} else {
-		//						$query->withCounts()->where('active', true);
-		//					}
-		//				},
-		//				'posts.blocks',
-		//				'posts.blocks.illustrations',
-		//				'posts.questions',
-		//				'posts.questions.blocks',
-		//				'posts.questions.blocks.illustrations',
-		//			]
-		//		);
-		//
-		//		$post = $chapter->posts->where('order', "=", $order)->first();
-
 		$post = Post::where('chapter_id', $chapter->id)
 		            ->where('order', $order)
 		            ->when(!Auth::user()?->admin, function ($query) {
@@ -144,7 +125,7 @@ class ChapterController extends Controller
 		}
 
 		$chapter->load([
-			"posts"=>function ($query) {
+			"posts" => function ($query) {
 				if (Auth::user()?->admin) {
 					$query->withCounts(); //->where('active', true);
 				} else {

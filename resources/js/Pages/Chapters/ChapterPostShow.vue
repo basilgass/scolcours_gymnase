@@ -25,6 +25,7 @@ useScore.getScores('Question', props.post.questions.map(q => q.id))
 
 <template>
 	<post-display
+		:anchor
 		:chapter
 		:post
 		:return-link="{
@@ -36,8 +37,8 @@ useScore.getScores('Question', props.post.questions.map(q => q.id))
 			<!-- navigation -->
 			<chapter-nav
 				:chapter
-				:posts
 				:current-post-id="post.id"
+				:posts
 			/>
 
 			<!-- table of contents -->

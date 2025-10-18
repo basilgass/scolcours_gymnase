@@ -2,8 +2,8 @@
 Affichage d'un texte en markdown.
 -->
 <script
-	setup
 	lang="ts"
+	setup
 >
 import {useKatexMacros, useMenuScrollTo} from "@/Composables/useHelpers"
 import {router, usePage} from "@inertiajs/vue3"
@@ -43,6 +43,19 @@ const mdit = computed(() => {
 
 	let output = props.text
 
+	// Remplace les liens vers les routes par des liens vers les pages
+	output = output.replaceAll(/\(@\S+\)/g, (match) => {
+		const [routeName, ...routeOptions] = match
+			.substring(2, match.length - 1)
+			.split(",")
+
+		try {
+			return `(${route(routeName, routeOptions)}){.@text}`
+		} catch {
+			return `(${match})`
+		}
+	})
+
 	// Remplace les class courtes en classes complètes.
 	// .@text = .text-<theme>
 	// .@bg = .bg-<theme>
@@ -52,19 +65,6 @@ const mdit = computed(() => {
 		const theme = usePage().props.theme.slug
 
 		return `.${prefix}-${theme}`
-	})
-
-	// Remplace les liens vers les routes par des liens vers les pages
-	output = output.replaceAll(/\(@\S+\)/g, (match) => {
-		const [routeName, ...routeOptions] = match
-			.substring(2, match.length - 1)
-			.split(",")
-
-		try {
-			return `(${route(routeName, routeOptions)})`
-		} catch {
-			return `(${match})`
-		}
 	})
 
 	// Remplace les caractères invisibles (pour les "placeholders" de macros)
@@ -98,10 +98,10 @@ const mdClick = function (event) {
 <template>
 	<div
 		ref="root"
-		class="prose dark:prose-invert lg:prose-lg max-w-full item"
 		:class="{
 			'katex-boxed': !customKatex,
 		}"
+		class="prose dark:prose-invert lg:prose-lg max-w-full item"
 		@click="mdClick"
 		v-html="mdit"
 		@touchmove.stop

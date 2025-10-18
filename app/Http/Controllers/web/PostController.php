@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\web;
 
 use App\Http\Controllers\Controller;
+use App\Models\Block;
 use App\Models\Post;
 use App\Traits\ResolvesTarget;
 use Inertia\Inertia;
@@ -30,6 +31,17 @@ class PostController extends Controller
 		return Inertia::render("Posts/PostEdit", [
 			'post' => $post
 		]);
+	}
+
+	public function anchor(Post $post, Block $block)
+	{
+		return redirect(route('themes.chapters.posts.anchor', [
+			$post->chapter->theme,
+			$post->chapter,
+			$post->order,
+			'block',
+			$block->id
+		]));
 	}
 
 }
