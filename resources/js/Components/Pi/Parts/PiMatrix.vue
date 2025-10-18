@@ -1,15 +1,17 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 
 import {Polynom} from "pimath"
 import {ref} from "vue"
 
 const props = withDefaults(defineProps<{
-		matrix: (Polynom|string)[][],
+		matrix: (Polynom | string)[][],
 		dimension: number | null,
 		selectionMode?: false | 'rows' | 'columns' | 'item',
+		augmented?: boolean,
 	}>(),
 	{
-		selectionMode: false
+		selectionMode: false,
+		augmented: false
 	})
 
 const target = defineModel<number>('target', {default: null})
@@ -59,7 +61,7 @@ function onItemSelection(rowIndex: number, colIndex: number) {
 		return onColumnSelection(colIndex)
 	}
 
-	if(aij.value!==null && aij.value.row===rowIndex && aij.value.column===colIndex) {
+	if (aij.value !== null && aij.value.row === rowIndex && aij.value.column === colIndex) {
 		aij.value = null
 		return
 	}
@@ -120,11 +122,12 @@ function onItemSelection(rowIndex: number, colIndex: number) {
 						'outline bg-green-300/50 outline-green-600 rounded-xl': (selectionMode==='item' && aij?.row===rowIndex && aij?.column===colIndex),
 						'bg-green-300/50 dark:bg-green-800': (selectionMode==='rows' && rowIndex===target) || (selectionMode==='columns' && colIndex===target),
 						'bg-blue-300/50 dark:bg-blue-800': (selectionMode==='rows' && rowIndex===reference) || (selectionMode==='columns' && colIndex===reference),
+						'border-l': colIndex === matrix[0].length-1,
 					}"
 					class="min-w-20 py-2 text-center cursor-pointer transition-all"
+					@click="onItemSelection(rowIndex, colIndex)"
 					@mouseenter="hoverItem=colIndex<dimension ? `a_{{${rowIndex+1}}{${colIndex+1}}}`: ''"
 					@mouseleave="hoverItem=''"
-					@click="onItemSelection(rowIndex, colIndex)"
 				/>
 			</tr>
 		</table>

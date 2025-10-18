@@ -83,6 +83,9 @@ defineExpose<KeyboardExposeInterface>({
 // Get the checker from above.
 const questionData = inject<questionDataInterface>('questionData')
 
+
+const augmented = computed(() => questionData.current.keyboard.value.parameters.includes('a'))
+
 // REFACTOR: Move all these (duplicate) function to a class or something better
 function matrixToTex(matrix: string[][], dim: { rows: number, columns: number }): string {
 
@@ -249,10 +252,10 @@ const pimatrixDisplay = computed(() => {
 })
 
 const matrixDimKeyboard: KeyboardObjectType = {
-	name :'dimMatrix',
+	name: 'dimMatrix',
 	grid: "grid-cols-3",
 	layout: [
-		["x",3],
+		["x", 3],
 		"1", "2", "3",
 		"4", "5", "6",
 		"7", "8", "9",
@@ -276,17 +279,18 @@ const matrixDimKeyboard: KeyboardObjectType = {
 		</div>
 		<sc-button
 			v-if="!hasFixedDimension"
-			@click="switchKeyboard"
 			v-show="dimension.columns && dimension.rows"
+			@click="switchKeyboard"
 		>
 			dim à valeurs
 		</sc-button>
 
 		<pi-matrix
-			:matrix="pimatrixDisplay"
-			:dimension="dimension.columns"
-			selection-mode="item"
 			v-model:aij="aij"
+			:augmented
+			:dimension="dimension.columns"
+			:matrix="pimatrixDisplay"
+			selection-mode="item"
 			@click="switchKeyboard(false)"
 		/>
 
@@ -301,9 +305,9 @@ const matrixDimKeyboard: KeyboardObjectType = {
 			<KeyboardDisplay
 				v-else
 				:key="`aij-${aij?.row}-${aij?.column}`"
-				:keyboard="valuesKeyboard"
-				:disabled="aij===null"
 				:class="aij===null?'cursor-not-allowed opacity-20':''"
+				:disabled="aij===null"
+				:keyboard="valuesKeyboard"
 				back
 				reset
 				@change="onKeyboardChange"

@@ -1,10 +1,11 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 
 import {onMounted, ref, useTemplateRef, watch} from "vue"
 import {PiDraw} from "pidraw"
 import {useResizeObserver} from "@vueuse/core"
 import katex from "katex"
 import PiDrawAnimation from "@/Components/Pi/Parts/PiDrawAnimation.vue"
+import {useKatexMacros} from "@/Composables/useHelpers.ts"
 
 const props = defineProps<{
 	code: string,
@@ -23,7 +24,7 @@ function getPiDraw(): PiDraw {
 	return PiGraph// méthode svg.js → contenu complet du <svg>
 }
 
-defineExpose({ getPiDraw })
+defineExpose({getPiDraw})
 
 
 const drawWrapper = useTemplateRef<HTMLElement>('drawWrapper')
@@ -58,11 +59,9 @@ watch(() => props.parameters, () => {
 
 
 const drawMouseUp = function (event: MouseEvent) {
-	console.log('DRAW EVENT')
 	emits("drawClick", {draw: PiGraph, mouse: event})
 }
-const drawTouchEnd = function(event: TouchEvent) {
-	console.log('TOUCH EVENT')
+const drawTouchEnd = function (event: TouchEvent) {
 	emits("drawClick", {draw: PiGraph, mouse: event})
 }
 
@@ -74,8 +73,11 @@ onMounted(() => {
 			parameters: props.parameters ?? "",
 			code: props.code ?? "",
 			tex: (value: string) => katex.renderToString(`${value}`, {
+				strict: false,
 				throwOnError: false,
-				displayMode: true
+				displayMode: true,
+				macros: useKatexMacros,
+				trust: (context) => context.command.startsWith("\\html"),
 			})
 		}
 	)

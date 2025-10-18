@@ -29,15 +29,17 @@ const showInteractivity = computed(() => {
 const showOutput = computed(() => {
 	return !params.value.includes('no-output')
 })
-
+const showAutoSolve = computed(() => {
+	return params.value.includes('auto')
+})
 type operationType = `+` | `-` | '*' | '/' | 'x'
 
 export interface matriceAugmenteeInterface {
-	target: number,
-	operation: operationType,
-	value: string, // can be a number or a fraction
-	reference: number | null,
 	description: string
+	operation: operationType,
+	reference: number | null,
+	target: number,
+	value: string, // can be a number or a fraction
 }
 
 const buttonsConfig: { label: string, value: operationType }[] = [
@@ -163,7 +165,6 @@ const operationDescription = computed(() => {
 function createPolynomMatrix() {
 	const number_of_lines = left.value.length
 
-
 	const right_is_id_matrix = right.value.length === 0 || (right.value.length === 1 && right.value[0][0] === 'id')
 
 	// Même nombre de lignes
@@ -180,11 +181,11 @@ function createPolynomMatrix() {
 			matrixLine.push(new Polynom(value))
 		})
 
-		if(right_is_id_matrix) {
+		if (right_is_id_matrix) {
 			left.value[i].forEach((_, index) => {
-				matrixLine.push(new Polynom(index===i ? '1': '0'))
+				matrixLine.push(new Polynom(index === i ? '1' : '0'))
 			})
-		}else{
+		} else {
 			right.value[i].forEach((value: string) => {
 				matrixLine.push(new Polynom(value))
 			})
@@ -235,15 +236,15 @@ function getShortDescription(operation: Partial<matriceAugmenteeInterface>): str
 	const F = new Fraction(operation.value)
 
 	if (operation.operation === '*') {
-		return `${F.tex} \\cdot L_${operation.target + 1}`
+		return `L_${operation.target + 1} \\longleftarrow L_${operation.target + 1}${F.tex} \\cdot L_${operation.target + 1}`
 	}
 
 	if (operation.operation === '/') {
-		return `\\frac{ L_${operation.target + 1} }{ ${F.tex} }`
+		F.inverse().reduce()
+		return `L_${operation.target + 1} \\longleftarrow ${F.tex} L_${operation.target + 1}`
 	}
 
-	// (operation.operation === '+' || operation.operation === '-')
-	return `L_${operation.target + 1} ${operation.operation} ${F.value < 0 ? `\\left(${F.tex}\\right)` : F.tex} \\cdot L_${operation.reference + 1}`
+	return `L_${operation.target + 1} \\longleftarrow L_${operation.target + 1} ${operation.operation} ${F.value < 0 ? `\\left(${F.tex}\\right)` : F.tex} \\cdot L_${operation.reference + 1}`
 
 }
 
@@ -425,9 +426,9 @@ const result = computed<{ tex: string, flatten: Polynom[], matrix: Polynom[][] }
 	return false
 })
 
-const matrixPerLine = computed<number>(()=>{
-	const n = params.value.filter(x=>x.startsWith('n='))
-	if(n.length>0){
+const matrixPerLine = computed<number>(() => {
+	const n = params.value.filter(x => x.startsWith('n='))
+	if (n.length > 0) {
 		return Number(n[0].split('=')[1]) ?? 3
 	}
 
@@ -447,9 +448,7 @@ const matrixTexToAligned = computed<string>(() => {
 	const arr: string[] = [`& && ${matrixTex.value[0].tex}`]
 
 	for (let i = 1; i < matrixTex.value.length; i++) {
-		arr.push(`& \\stackrel{ ${
-			matrixTex.value[i].description
-		} }{\\Longleftrightarrow} && ${
+		arr.push(`& \\xLeftrightarrow{${matrixTex.value[i].description}} && ${
 			matrixTex.value[i].tex
 		}`)
 	}
@@ -474,7 +473,7 @@ watch(() => props.illustration.code, () => {
 onMounted(() => {
 	initMatrix()
 
-	if(params.value.includes('auto') && !showInteractivity.value){
+	if (params.value.includes('auto') && !showInteractivity.value) {
 		autoSolve()
 	}
 })
@@ -490,10 +489,10 @@ onMounted(() => {
 			<div class="flex justify-center">
 				<pi-matrix
 					v-if="result!==false && result.matrix.length>0"
-					:matrix="result.matrix"
-					:dimension="matrix_dimension.m"
-					v-model:target="operationData.target"
 					v-model:reference="operationData.reference"
+					v-model:target="operationData.target"
+					:dimension="matrix_dimension.m"
+					:matrix="result.matrix"
 					selection-mode="rows"
 				/>
 			</div>
@@ -505,11 +504,11 @@ onMounted(() => {
 
 			<div>
 				<sc-button
-					type="primary"
-					class="mx-auto min-w-[100%] md:min-w-[350px]"
-					xl
-					:outline="!operationIsComplete"
 					:disabled="!operationIsComplete"
+					:outline="!operationIsComplete"
+					class="mx-auto min-w-[100%] md:min-w-[350px]"
+					type="primary"
+					xl
 					@click="updateMatrix(operationData)"
 				>
 					{{ operationIsComplete ? 'Valider' : "Compléter les instructions" }}
@@ -562,7 +561,7 @@ onMounted(() => {
 			</div>
 
 
-			<div>
+			<div v-if="showAutoSolve">
 				<sc-button
 					type="primary"
 					@click="autoSolve"

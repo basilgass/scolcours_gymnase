@@ -1,8 +1,9 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import EditLink from "@/Components/Ui/EditLink.vue"
 import {getModule, MODULE_TYPES} from "@/scolcours.ts"
 import type {IllustrationInterface} from "@/types/modelInterfaces.ts"
 import {watch} from "vue"
+import {onClick_answerIndex} from "@/Components/Questions/useQuestionHelpers.ts"
 
 const props = defineProps<{
 	illustration: IllustrationInterface
@@ -26,7 +27,13 @@ watch(() => props.illustration, (newValue, oldValue) => {
 	}
 })
 
+
 function click($event: MouseEvent) {
+	const answerIndex = onClick_answerIndex($event)
+	if (answerIndex !== null) {
+		return
+	}
+
 	if (props.clickThrough) {
 		return
 	}
@@ -38,14 +45,14 @@ function click($event: MouseEvent) {
 
 <template>
 	<figure
-		@click="click"
 		:id="`illustration-${illustration.id}`"
 		ref="root"
 		class="relative"
+		@click="click"
 	>
 		<edit-link
-			:label="`illustration ${illustration.id}`"
 			:href="route('admin.illustrations.edit', {illustration:illustration.id})"
+			:label="`illustration ${illustration.id}`"
 		/>
 
 		<component

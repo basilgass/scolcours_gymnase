@@ -1,8 +1,8 @@
 import katex from "katex/dist/katex.mjs"
 import AsciiMathParser from "@/asciimath2tex.ts"
-import { useKatexMacros } from "@/Composables/useHelpers"
+import {useKatexMacros} from "@/Composables/useHelpers"
 import renderMathInElement from "katex/contrib/auto-render"
-import { numberCorrection } from "@/helpers/helperFunctions"
+import {numberCorrection} from "@/helpers/helperFunctions"
 
 function katexAutoRender(el) {
 	if (el) {
@@ -12,8 +12,8 @@ function katexAutoRender(el) {
 			delimiters: [
 				// { left: "$$", right: "$$", display: true },
 				// { left: "$", right: "$", display: false },
-				{ left: "\\[", right: "\\]", display: true },
-				{ left: "\\(", right: "\\)", display: false }
+				{left: "\\[", right: "\\]", display: true},
+				{left: "\\(", right: "\\)", display: false}
 			],
 			// • rendering keys, e.g.:
 			throwOnError: false,

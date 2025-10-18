@@ -6,6 +6,7 @@ import IllustrationShow from "@/Components/Illustrations/IllustrationShow.vue"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 import {computed, inject} from "vue"
 import {keyboardEventInterface, questionDataInterface} from "@/Components/Questions/QuestionInterface.ts"
+import {onClick_answerIndex} from "@/Components/Questions/useQuestionHelpers.ts"
 
 const questionData = inject<questionDataInterface>('questionData')
 
@@ -47,21 +48,26 @@ const body = computed(() => {
 				: "border-red-600"
 
 		// Replace all lowercase keys by corresponding TeX value.
-		md = replace_abc_toTex(md, key, answer, texColor)
+		// $a, $b, $c, ....
+		md = replace_abc_toTex(md, i, key, answer, texColor)
 
+		// TODO: actualiser et vérifer toutes les options...
 		// Replace all uppercase, as block
-		md = replace_ABC_toBlock(md, key, answer, rawColor)
+		// $A, $B, $C, ....
+		md = replace_ABC_toBlock(md, i, key, answer, rawColor)
 
 		// Replace all uppercase, without default value
-		md = replace_ABC_without_placeholder(md, key, answer, rawColor)
+		// @$A, @$B, @$C, ...
+		md = replace_ABC_without_placeholder(md, i, key, answer, rawColor)
 
 		// Replace all uppercase inline (there must be a space character before)
-		md = replace_ABC_inline(md, key, answer, rawColor)
+		// $A, $B, $C
+		md = replace_ABC_inline(md, i, key, answer, rawColor)
 	}
 	return md
 })
 
-const illustration = computed(()=>{
+const illustration = computed(() => {
 	let code = questionData.block.value.illustration.code
 	for (let i = 0; i < questionData.answers.variables.value.length; i++) {
 		const key = makeKey(i)
@@ -73,7 +79,7 @@ const illustration = computed(()=>{
 				: "red"
 
 		// Replace all lowercase keys by corresponding TeX value.
-		code = replace_abc_toTex(code, key, answer, texColor)
+		code = replace_abc_toTex(code, i, key, answer, texColor)
 	}
 
 	return {
@@ -81,11 +87,12 @@ const illustration = computed(()=>{
 		code
 	}
 })
+
 function makeKey(i: number): string {
 	return `\\$${alphabet[i]}`
 }
 
-function replace_abc_toTex(md: string, key: string, answer: keyboardEventInterface, color: string): string {
+function replace_abc_toTex(md: string, index: number, key: string, answer: keyboardEventInterface, color: string): string {
 	// $a, $b, ...
 	// console.log(md)
 	// console.log(key)
@@ -97,18 +104,18 @@ function replace_abc_toTex(md: string, key: string, answer: keyboardEventInterfa
 	// console.log('MATCH', md.match(r))
 	return md.replaceAll(
 		new RegExp(`${key.toLowerCase()}`, "gm"),
-		`\\textcolor{${color}}{${
+		`\\htmlData{answer-index=${index}}{\\textcolor{${color}}{${
 			answer.tex ?
 				answer.tex :
 				"<\\;?>"
-		}}`)
+		}}}`)
 }
 
-function replace_ABC_toBlock(md: string, key: string, answer: keyboardEventInterface, color: string): string {
+function replace_ABC_toBlock(md: string, index: number, key: string, answer: keyboardEventInterface, color: string): string {
 	// $A, $B, ...
 	return md.replaceAll(
 		new RegExp(`\n(${key})`, "gm"),
-		`\n<div class="border p-3 ${color}">\n\n${
+		`\n<div data-answer-index="${index}" class="border p-3 ${color}">\n\n${
 			answer.raw ?
 				answer.raw :
 				"< ? >"
@@ -116,7 +123,7 @@ function replace_ABC_toBlock(md: string, key: string, answer: keyboardEventInter
 		}\n\n</div>`)
 }
 
-function replace_ABC_inline(md: string, key: string, answer: keyboardEventInterface, color: string): string {
+function replace_ABC_inline(md: string, index, key: string, answer: keyboardEventInterface, color: string): string {
 	// $A, $B, ... inline
 	return md.replaceAll(
 		new RegExp(`${key}`, "gm"),
@@ -125,21 +132,34 @@ function replace_ABC_inline(md: string, key: string, answer: keyboardEventInterf
 				answer.raw :
 				"< ? >"
 
-		}]{.border .px-3 .py-1 .${color}}`)
+		}]{.border .px-3 .py-1 .${color} data-answer-index=${index}}`)
 }
 
-function replace_ABC_without_placeholder(md: string, key: string, answer: keyboardEventInterface, color: string): string {
+function replace_ABC_without_placeholder(md: string, index, key: string, answer: keyboardEventInterface, color: string): string {
 	// @$A, @$B, ...
 	return md.replaceAll(
 		new RegExp(`@(${key})`, "gm"),
-		`\n<div class="border px-3 py-1 ${color}">${
+		`\n<div data-answer-index="${index}" class="border px-3 py-1 ${color}">${
 			answer.raw
 		}\n</div>`)
+}
+
+// Gestionnaire de clics par délégation
+function onAnswerClick(event: MouseEvent) {
+	const index = onClick_answerIndex(event)
+
+	// Mise à jour de la sélection courante.
+	if (questionData && index !== null) {
+		questionData.current.id.value = index
+	}
 }
 </script>
 
 <template>
-	<main class="flex-1 px-3 overflow-x-auto pb-3">
+	<main
+		class="flex-1 px-3 overflow-x-auto pb-3"
+		@click="onAnswerClick"
+	>
 		<!-- Illustration -->
 		<illustration-show
 			v-if="questionData.block.value.illustration"
@@ -148,10 +168,14 @@ function replace_ABC_without_placeholder(md: string, key: string, answer: keyboa
 		/>
 
 		<!-- displayed text -->
-		<markdown-it :text="body" />
+		<markdown-it
+			:text="body"
+		/>
 	</main>
 </template>
 
 <style scoped>
-
+::v-deep([data-answer-index]) {
+	cursor: pointer
+}
 </style>
