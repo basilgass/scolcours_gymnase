@@ -6,13 +6,13 @@ import ScButton from "@/Components/Ui/scButton.vue"
 import {useMagicKeys} from "@vueuse/core"
 
 interface FilterItem {
-	title: string,
-	slug: string,
 	active: boolean,
-	theme_id?: number
+	slug: string,
 	theme?: {
 		id: number
 	}
+	theme_id?: number
+	title: string,
 }
 
 const scolcoursThemes = computed(() => {
@@ -21,22 +21,22 @@ const scolcoursThemes = computed(() => {
 })
 
 interface FilteredListProps<T> {
-	title?: string;
-	search?: string | null;
-	searchFunction?: ((item: T, searchValue: string) => boolean);
-	list: T[];
-	routeName?: string;
-	routeData?: (item: T) => unknown[];
-	itemTitle?: (item: T) => string;
-	itemBackground?: (item: T) => string | number;
-	itemClass?: string;
 	collapsed?: boolean | null;
-	listClass?: string;
-	noFilterIfLessThan?: number;
-	noTitle?: boolean;
 	filterByTheme?: boolean | ((item: T) => number);
 	filterByThemeOnLoad?: number;
 	focus?: boolean;
+	itemBackground?: (item: T) => string | number;
+	itemClass?: string;
+	itemTitle?: (item: T) => string;
+	list: T[];
+	listClass?: string;
+	noFilterIfLessThan?: number;
+	noTitle?: boolean;
+	routeData?: (item: T) => unknown[];
+	routeName?: string;
+	search?: string | null;
+	searchFunction?: ((item: T, searchValue: string) => boolean);
+	title?: string;
 }
 
 const props = withDefaults(
@@ -139,7 +139,7 @@ const emits = defineEmits<{
 
 const filterInput = useTemplateRef<InstanceType<typeof FormMaker>>('filterInput')
 defineExpose({
-	focus: ()=>filterInput.value.focus()
+	focus: () => filterInput.value.focus()
 })
 
 useMagicKeys({
@@ -155,16 +155,17 @@ useMagicKeys({
 </script>
 <template>
 	<div>
-		<div class="flex justify-between">
-			<div>
-				<h3
-					v-if="!noTitle && $slots['title'] === undefined"
-					class="text-lg uppercase my-3"
-				>
+		<div
+			v-if="!noTitle && collapsed!==null"
+			class="flex justify-between"
+		>
+			<slot
+				name="title"
+			>
+				<h3 class="text-lg uppercase my-3">
 					{{ title }}
 				</h3>
-				<slot name="title" />
-			</div>
+			</slot>
 			<div class="flex gap-3 my-auto py-3">
 				<button
 					v-if="props.collapsed !== null"
