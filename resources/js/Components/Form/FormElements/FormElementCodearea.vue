@@ -12,11 +12,11 @@ import {javascript_macros} from "@/helpers/Macros/javascript_macros.ts"
 import {json_macros} from "@/helpers/Macros/json_macros.ts"
 
 interface FormElementCodeareaPropsInterface extends FormMakerPropsNewType {
-	rows?: number,
-	language?: "latex" | "json" | "javascript",
-	wrap?: boolean,
-	resizeable?: boolean,
 	autoSize?: boolean
+	language?: "latex" | "json" | "javascript",
+	resizeable?: boolean,
+	rows?: number,
+	wrap?: boolean,
 }
 
 // REFACTOR: reformater le code
@@ -123,7 +123,10 @@ const codeTriggers = computed(() => {
  * Update the height of the textarea to fit the content
  */
 const areaHeight = computed(() => {
-	const r = +props.rows > 0 ? +props.rows : (theValue.value ?? "").split("\n").length + 2
+	const r = (!props.autoSize && +props.rows > 0)
+		? +props.rows
+		: (theValue.value ?? "").split("\n").length + 2
+
 	return `${0.5 + Math.max(+currentRows.value, r) * 1.4 + 0.5}rem`
 })
 
@@ -142,9 +145,9 @@ const areaHeight = computed(() => {
 				:autofocus="focus"
 				class="w-full"
 				v-bind="$attrs"
-				@scroll="sync_scroll"
-				@focus="emits('focus')"
 				@blur="emits('blur')"
+				@focus="emits('focus')"
+				@scroll="sync_scroll"
 			/>
 			<pre ref="pre"><code
 				class="w-full"
@@ -167,11 +170,11 @@ const areaHeight = computed(() => {
 			<button
 				v-for="key in Object.keys(codeTriggers)"
 				:key="key"
-				class="border border-slate-200 rounded text-xs font-code px-2"
 				:class="{
 					'bg-blue-100': codeTriggers[key].math,
 					'bg-white': !codeTriggers[key].math
 				}"
+				class="border border-slate-200 rounded text-xs font-code px-2"
 			>
 				{{ key }}
 			</button>
@@ -179,7 +182,7 @@ const areaHeight = computed(() => {
 	</div>
 </template>
 
-<style scoped lang="postcss">
+<style lang="postcss" scoped>
 .code-input {
 	/* Allow other elems to be inside */
 	position: relative;

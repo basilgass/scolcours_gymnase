@@ -290,7 +290,9 @@ function updateLessonsOrder() {
 				<div class="grid grid-cols-1 gap-3 md:grid-cols-2">
 					<form-maker
 						v-model="theCourse.block.body"
+						auto-size
 						label="description du cours"
+						resizeable
 						type="codearea"
 					/>
 					<markdown-it :text="theCourse.block.body" />
