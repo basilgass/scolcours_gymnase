@@ -1,4 +1,4 @@
-<script setup lang="ts">/** Tools
+<script lang="ts" setup>/** Tools
  * title : matrice augmentée
  * body : échelonnage et réduction de matrice
  * parameters : values...
@@ -53,7 +53,7 @@ const result = computed(() => {
 
 		return {
 			code,
-			parameters: ""
+			parameters: "auto"
 		}
 	} catch (e) {
 		console.error(e)
@@ -97,8 +97,8 @@ const showInstruction = ref(false)
 	<article>
 		<tool-form
 			:forms="forms"
-			form-class="max-w-xl mx-auto grid grid-cols-2 gap-3"
 			:rows="6"
+			form-class="max-w-xl mx-auto grid grid-cols-2 gap-3"
 			generate-button
 			@generate="genererMatrice"
 		/>
@@ -110,8 +110,8 @@ const showInstruction = ref(false)
 
 			<div>
 				<sc-button
-					:icon="showInstruction ? 'bi bi-x-lg' : 'bi-eye'"
 					:active="showInstruction"
+					:icon="showInstruction ? 'bi bi-x-lg' : 'bi-eye'"
 					xs
 					@click="showInstruction=!showInstruction"
 				>
