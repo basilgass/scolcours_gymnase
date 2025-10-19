@@ -156,7 +156,7 @@ useMagicKeys({
 <template>
 	<div>
 		<div
-			v-if="!noTitle && collapsed!==null"
+			v-if="!noTitle || collapsed!==null"
 			class="flex justify-between"
 		>
 			<slot

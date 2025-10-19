@@ -1,5 +1,5 @@
-<script setup lang="ts">
-// TODO : faire un composant de chargement qui déchire.
+<script lang="ts" setup>
+// DESIGNS : faire un composant de chargement qui déchire.
 
 defineProps<{
 	text?: string

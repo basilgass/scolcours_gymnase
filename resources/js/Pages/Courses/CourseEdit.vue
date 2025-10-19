@@ -1,7 +1,4 @@
-<script setup lang="ts">
-// REFACTOR: retravailler l'édition d'un cours
-
-import LayoutMain from "@/Layouts/LayoutMain.vue"
+<script lang="ts" setup>
 import {
 	ChallengeInterface,
 	ChapterInterface,
@@ -27,6 +24,8 @@ import {useCourse} from "@/Pages/Courses/useCourse.ts"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
 import PostTypeIcon from "@/Components/Posts/PostTypeIcon.vue"
 import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
+import LayoutMain from "@/Layouts/LayoutMain.vue"
+import FilteredList from "@/Components/Ui/FilteredList.vue"
 
 defineOptions({layout: LayoutMain})
 
@@ -251,54 +250,52 @@ function updateLessonsOrder() {
 <template>
 	<main>
 		<article-title
-			prefix="édition"
-			:title="course.title"
 			:return-link="{
 				label: 'retour à la liste des cours',
 				url: route('admin.courses.index')
 			}"
+			:title="course.title"
+			prefix="édition"
 		/>
 
-		<Card
-			class="max-w-2xl mx-auto"
-		>
-			<div class="flex flex-col gap-3 mb-3">
+		<Card>
+			<div class="flex flex-col gap-3">
 				<form-maker v-model="theCourse.title" />
 				<form-maker
-					xs
 					v-model="theCourse.slug"
+					xs
 				/>
 				<form-maker
-					label="thème du cours"
-					type="theme"
-					theme-key="id"
 					v-model="theCourse.theme_id"
+					label="thème du cours"
+					theme-key="id"
+					type="theme"
 				/>
 
-				<div class="mt-5 mb-1 uppercase">
-					description du cours
+				<div class="flex justify-between">
+					<div class="mt-5 mb-1 uppercase">
+						description du cours
+					</div>
+
+					<div class="flex justify-end py-3">
+						<sc-button
+							type="save"
+							xs
+							@click="updateCourse"
+						>
+							enregistrer
+						</sc-button>
+					</div>
 				</div>
 				<div class="grid grid-cols-1 gap-3 md:grid-cols-2">
 					<form-maker
+						v-model="theCourse.block.body"
 						label="description du cours"
 						type="codearea"
-						v-model="theCourse.block.body"
 					/>
 					<markdown-it :text="theCourse.block.body" />
 				</div>
 			</div>
-
-			<template #footer>
-				<div class="flex justify-end py-3">
-					<sc-button
-						type="save"
-						@click="updateCourse"
-						xs
-					>
-						enregistrer
-					</sc-button>
-				</div>
-			</template>
 		</Card>
 
 		<Card class="my-10">
@@ -306,8 +303,8 @@ function updateLessonsOrder() {
 				<sc-button
 					v-for="t in lessonable"
 					:key="`tab-btn-${t}`"
-					xs
 					:active="showAddTab===t"
+					xs
 					@click="toggleTab(t)"
 				>
 					{{ t }}
@@ -317,7 +314,7 @@ function updateLessonsOrder() {
 
 		<div class="flex gap-3 my-10">
 			<div class="flex-1 py-3">
-				<div class="max-h-[80vh] overflow-y-scroll">
+				<div class="max-h-[80vh] overflow-y-auto">
 					<div v-show="!showAddTab">
 						Sélectionner une leçon à ajouter...
 					</div>
@@ -331,8 +328,8 @@ function updateLessonsOrder() {
 								<div>Choix du chapitre</div>
 
 								<form-maker
-									type="chapter"
 									v-model="chapter"
+									type="chapter"
 									@update="loadPosts"
 								/>
 							</div>
@@ -340,8 +337,8 @@ function updateLessonsOrder() {
 								<div class="flex justify-end py-1">
 									<sc-button
 										v-show="posts.length>0"
-										type="add"
 										icon
+										type="add"
 										xs
 										@click="addAllPosts"
 									>
@@ -366,8 +363,8 @@ function updateLessonsOrder() {
 										/>
 									</div>
 									<sc-button
-										type="add"
 										icon
+										type="add"
 										xs
 										@click="addLesson('Post', post.id)"
 									>
@@ -381,8 +378,8 @@ function updateLessonsOrder() {
 					<div v-show="showAddTab==='Deck'">
 						<div>Choix d'un deck</div>
 						<form-maker
-							type="deck"
 							v-model="deck"
+							type="deck"
 						/>
 
 						<Card v-if="deck">
@@ -392,8 +389,8 @@ function updateLessonsOrder() {
 
 							<div class="flex justify-end">
 								<sc-button
-									type="add"
 									icon
+									type="add"
 									xs
 									@click="addLesson('Deck', deck.id)"
 								>
@@ -403,56 +400,57 @@ function updateLessonsOrder() {
 						</Card>
 					</div>
 
-					<div v-show="showAddTab==='Challenge'">
-						<div>Choix d'un challenge</div>
-						<div class="flex flex-col gap-3">
-							<Card
-								v-for="challenge in availableChallenges"
-								:key="`challenge-${challenge.id}`"
-							>
+					<filtered-list
+						v-show="showAddTab==='Challenge'"
+						:list="availableChallenges"
+						list-class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3"
+						title="challenges"
+					>
+						<template #card="{item}: {item: ChallengeInterface}">
+							<Card>
 								<template #header>
-									<div v-katex.auto="challenge.title" />
+									<div v-katex.auto="item.title" />
 								</template>
 
 								<div class="flex justify-end">
 									<sc-button
-										type="add"
 										icon
+										type="add"
 										xs
-										@click="addLesson('Challenge', challenge.id)"
+										@click="addLesson('Challenge', item.id)"
 									>
 										ajouter
 									</sc-button>
 								</div>
 							</Card>
-						</div>
-					</div>
+						</template>
+					</filtered-list>
 
-					<div v-show="showAddTab==='Generator'">
-						<div>Choix d'un générateur</div>
-
-						<div class="flex flex-col gap-3">
-							<Card
-								v-for="generator in availableGenerators"
-								:key="`generator-${generator.id}`"
-							>
+					<filtered-list
+						v-show="showAddTab==='Generator'"
+						:list="availableGenerators"
+						list-class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3"
+						title="générateurs"
+					>
+						<template #card="{item}: {item: GeneratorInterface}">
+							<Card>
 								<template #header>
-									<div v-katex.auto="generator.title" />
+									<div v-katex.auto="item.title" />
 								</template>
 
 								<div class="flex justify-end">
 									<sc-button
-										type="add"
 										icon
+										type="add"
 										xs
-										@click="addLesson('Generator', generator.id)"
+										@click="addLesson('Generator', item.id)"
 									>
 										ajouter
 									</sc-button>
 								</div>
 							</Card>
-						</div>
-					</div>
+						</template>
+					</filtered-list>
 				</div>
 			</div>
 
@@ -463,9 +461,9 @@ function updateLessonsOrder() {
 
 				<form-maker
 					v-if="Object.keys(lessonJsonMap).length>0"
-					type="json"
-					:map="lessonJsonMap"
 					v-model="scoreRules"
+					:map="lessonJsonMap"
+					type="json"
 				/>
 			</Card>
 		</div>
@@ -503,8 +501,8 @@ function updateLessonsOrder() {
 									<lesson-type-icon :lesson="element" />
 
 									<div
-										class="text-lg font-[400]"
 										v-katex.auto="element.title"
+										class="text-lg font-[400]"
 									/>
 									<div class="font-code w-[16px] text-xs">
 										({{ element.id }})
@@ -516,8 +514,8 @@ function updateLessonsOrder() {
 								</div>
 								<i
 									v-else-if="itemSource"
-									@click="onClick(element)"
 									class="bi bi-link text-xl text-blue-600 cursor-pointer"
+									@click="onClick(element)"
 								/>
 							</div>
 						</template>

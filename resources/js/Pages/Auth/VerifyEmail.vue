@@ -1,6 +1,4 @@
-<script setup lang="ts">
-
-// TODO : changer le texte en français.
+<script lang="ts" setup>
 
 import {Head, useForm} from "@inertiajs/vue3"
 import ScButton from "@/Components/Ui/scButton.vue"
@@ -25,28 +23,28 @@ function submit() {
 </script>
 
 <template>
-	<Head title="Email Verification" />
+	<Head title="Vérification de l'email" />
 
 	<div class="mb-4 text-sm text-gray-600">
-		Thanks for signing up! Before getting started, could you verify your email address by clicking on the link we
-		just emailed to you? If you didn't receive the email, we will gladly send you another.
+		Merci de vous être inscrit. Il ne vous reste plus qu'à vérifier votre adresse email en cliquant sur le
+		lien de confirmation que vous devriez avoir reçu.
 	</div>
 
 	<div
 		v-if="verificationLinkSent"
 		class="mb-4 font-medium text-sm text-green-600"
 	>
-		A new verification link has been sent to the email address you provided during registration.
+		Un nouveau lien de vérification vient de vous être envoyé.
 	</div>
 
 	<form @submit.prevent="submit">
 		<div class="mt-4 flex items-center justify-between">
 			<sc-button
-				type="primary"
 				:class="{ 'opacity-25': form.processing }"
 				:disabled="form.processing"
+				type="primary"
 			>
-				Resend Verification Email
+				Renvoyer un email de vérification
 			</sc-button>
 
 			<InertiaLink
@@ -55,7 +53,7 @@ function submit() {
 				class="underline text-sm text-gray-600 hover:text-gray-900"
 				method="post"
 			>
-				Log Out
+				Déconnecter
 			</InertiaLink>
 		</div>
 	</form>

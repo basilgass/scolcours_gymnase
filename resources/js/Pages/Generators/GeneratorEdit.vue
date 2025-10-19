@@ -12,8 +12,6 @@ import ScButton from "@/Components/Ui/scButton.vue"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
 
-// REFACTOR: retravailler les générateurs.
-
 defineOptions({layout: LayoutMain})
 
 const flash = useStoreFlashMessage()
@@ -89,8 +87,8 @@ function historyBack() {
 					enregistrer
 				</sc-button>
 				<sc-button
-					type="add"
 					disabled
+					type="add"
 					xs
 					@click="duplicateGenerator"
 				>
@@ -167,10 +165,10 @@ function historyBack() {
 			/>
 
 			<generators-examples
+				:generator="generator"
+				:questions-number="5"
 				class="min-w-[250px]"
 				generate-on-mounted
-				:questions-number="5"
-				:generator="generator"
 			/>
 		</div>
 

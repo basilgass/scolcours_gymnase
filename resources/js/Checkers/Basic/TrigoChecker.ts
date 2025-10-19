@@ -11,8 +11,8 @@ const description = `trigo,p[eriodic],[paramètres]
 
 // TODO: on doit autoriser d'autres angles orientés (modulo) ou forcé dans un quadrant
 export class TrigoChecker extends CheckerAbstract {
-	private isPeriodic: boolean
-	private radian: boolean
+	private readonly isPeriodic: boolean
+	private readonly radian: boolean
 
 	constructor(config: string[] | string) {
 		super(config)

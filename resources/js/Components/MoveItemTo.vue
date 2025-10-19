@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import {watchDebounced} from "@vueuse/core"
 import axios from "axios"
@@ -61,7 +61,6 @@ function moveTo() {
 		return
 	}
 
-	// REFACTOR : route(`${props.source}s.move` - a mettre en explicite.
 	const urlData = {
 		id: props.sourceId,
 		target_id: moveToId.value,
@@ -92,8 +91,6 @@ function moveTo() {
 }
 
 function getTargetName() {
-
-	// REFACTOR : route(`${props.source}s.move` - a mettre en explicite.
 	axios
 		.get(route(`api.${props.target}s.info`, [moveToId.value]))
 		.then((res) => {
@@ -117,10 +114,10 @@ watchDebounced(
 	<div>
 		<div class="flex flex-col gap-3 items-center">
 			<sc-button
+				outline
+				type="edit"
 				xs
 				@click="enableMove"
-				type="edit"
-				outline
 			>
 				<i class="bi bi-upload" />move
 			</sc-button>
@@ -138,20 +135,20 @@ watchDebounced(
 			<div class="p-3">
 				<div class="flex items-end">
 					<form-maker
-						with-icon
-						type="id"
 						ref="moveInput"
 						v-model.number="moveToId"
-						class="rounded-r-none "
 						:label="`${source} vers ${target}`"
+						class="rounded-r-none "
 						font-code
+						type="id"
+						with-icon
 						@enter="moveTo"
 						@input="targetName = '???'"
 					/>
 				</div>
 				<div
-					class="text-gray-400 italic flex gap-3 text-xs"
 					v-if="showMoveTo"
+					class="text-gray-400 italic flex gap-3 text-xs"
 				>
 					<i class="bi bi-chevron-double-right" />
 					<div v-katex.auto="targetName" />
@@ -160,8 +157,8 @@ watchDebounced(
 			<template #footer>
 				<div class="flex justify-end p-3">
 					<sc-button
-						type="primary"
 						:disabled="!canMoveTo"
+						type="primary"
 						@click="moveTo"
 					>
 						déplacer
