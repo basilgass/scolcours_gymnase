@@ -174,7 +174,7 @@ function illustrationDelete() {
 }
 
 function selectWidget(list: WidgetInterface[]) {
-	if (!list.length === 1) return
+	if (list.length !== 1) return
 
 	toggleComponent(list[0])
 }
