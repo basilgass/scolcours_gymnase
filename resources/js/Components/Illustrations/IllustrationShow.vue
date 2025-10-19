@@ -21,10 +21,8 @@ function getWidget() {
 // Get the component to display
 let widgetComponent = getWidget()
 
-watch(() => props.illustration, (newValue, oldValue) => {
-	if (newValue.widget.slug !== oldValue.widget.slug) {
-		widgetComponent = getWidget()
-	}
+watch(() => props.illustration.widget_id, () => {
+	widgetComponent = getWidget()
 })
 
 

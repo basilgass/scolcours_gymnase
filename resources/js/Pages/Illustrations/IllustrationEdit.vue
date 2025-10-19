@@ -12,8 +12,7 @@ import {computed, onMounted, ref} from "vue"
 import ScButton from "@/Components/Ui/scButton.vue"
 import Card from "@/Components/Ui/Card.vue"
 import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
-
-// TODO: Remettre le copier/coller d'une illustration.
+import FilteredList from "@/Components/Ui/FilteredList.vue"
 
 // Define the layout
 defineOptions({layout: LayoutMain})
@@ -27,40 +26,38 @@ const props = defineProps<{
 	}
 }>()
 
-console.log(props.parent)
 // Flash message
 const flash = useStoreFlashMessage()
 
 // reactive illustration data.
 const theIllustration = ref<IllustrationInterface>(props.illustration)
 
+const unknownWidget = {
+	id: -1,
+	name: " ? ",
+	slug: null,
+	component: null,
+	theme_id: null,
+	description: "module inconnu",
+	control: false
+}
+
 // current component
 const currentComponent = computed<WidgetInterface>(() => {
-	return chapterComponents.value[theIllustration.value.widget.id] !== undefined ?
-		chapterComponents.value[theIllustration.value.widget.id]
-		: {
-			id: -1,
-			name: " ? ",
-			slug: null,
-			component: null,
-			theme_id: null,
-			description: "module inconnu",
-			control: false
-		}
+	const widget = chapterComponents.value
+		.find(w => w.id === theIllustration.value?.widget?.id)
+	return widget ?? unknownWidget
 })
 
 // available components.
-const chapterComponents = ref<Record<string, WidgetInterface>>({})
+const chapterComponents = ref<WidgetInterface[]>([])
 
 // Load the list of components
 function loadComponents() {
 	axios
 		.get(route("api.admin.widgets.index"))
 		.then((res) => {
-			(res.data as WidgetInterface[]).forEach(comp => {
-				chapterComponents.value[comp.id] = comp
-			})
-
+			chapterComponents.value = res.data
 		})
 		.catch((err) => console.warn(err))
 }
@@ -190,32 +187,32 @@ onMounted(() => {
 
 			<div>
 				<sc-button
+					class="outline-0"
 					xs
 					@click="copyIllustration"
-					class="outline-0"
 				>
 					<i class="bi bi-clipboard-plus" />
 				</sc-button>
 				<sc-button
 					v-if="hasClipboard"
+					class="outline-0"
 					xs
 					@click="pasteIllustration"
-					class="outline-0"
 				>
 					<i class="bi bi-clipboard-pulse" />
 				</sc-button>
 			</div>
 			<div class="self-start grid grid-cols-2 gap-2 items-center flex-wrap">
 				<sc-button
-					xs
 					type="primary"
+					xs
 					@click="illustrationSave"
 				>
 					enregistrer
 				</sc-button>
 				<sc-button
-					xs
 					type="primary"
+					xs
 					@click="illustrationSaveAndEdit"
 				>
 					<i class="bi bi-save" /> <i class="bi bi-arrow-right" /> <span>{{ parent.type ?? "Block" }}</span>
@@ -253,22 +250,21 @@ onMounted(() => {
 		<main class="flex flex-col h-full">
 			<!-- sélection du widget -->
 			<Card class="mb-3">
-				<h3 class="font-semibold mb-3">
-					Sélectionner le module: {{ currentComponent.name }}
-				</h3>
-
-				<div class="text-xs flex flex-wrap gap-2 w-full">
-					<sc-button
-						v-for="(data, comp) of chapterComponents"
-						:key="comp"
-						theme="data.theme?.id ?? 0"
-						:outline="theIllustration.widget.id !== data.id"
-						class="btn btn-xs transition-all"
-						@click="toggleComponent(data)"
-					>
-						{{ data.name }}
-					</sc-button>
-				</div>
+				<filtered-list
+					:list="chapterComponents"
+					no-title
+				>
+					<template #card="{item}: {item: WidgetInterface}">
+						<sc-button
+							:outline="theIllustration.widget.id !== item.id"
+							:theme="item.theme_id ?? 0"
+							xs
+							@click="toggleComponent(item)"
+						>
+							{{ item.name }}
+						</sc-button>
+					</template>
+				</filtered-list>
 			</Card>
 
 			<div class="flex-1">
@@ -359,8 +355,8 @@ onMounted(() => {
 					</div>
 
 					<illustration-show
-						class="bg-content p-5 border"
 						:illustration="theIllustration"
+						class="bg-content p-5 border"
 						preview
 					/>
 				</div>

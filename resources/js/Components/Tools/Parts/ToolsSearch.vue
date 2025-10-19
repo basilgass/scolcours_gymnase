@@ -1,9 +1,9 @@
 <script lang="ts" setup>
 
-import {ToolInterface} from "@/types/modelInterfaces.ts"
+import type {ToolInterface} from "@/types/modelInterfaces.ts"
 import FilteredList from "@/Components/Ui/FilteredList.vue"
 import {computed, onMounted, ref, useTemplateRef} from "vue"
-import type { ComponentExposed } from 'vue-component-type-helpers'
+import type {ComponentExposed} from 'vue-component-type-helpers'
 import axios from "axios"
 import {AxiosErrorMessage} from "@/types"
 import {router} from "@inertiajs/vue3"
@@ -51,7 +51,7 @@ onMounted(() => {
 
 const filterListRef = useTemplateRef<ComponentExposed<typeof FilteredList>>('filterListRef')
 defineExpose({
-	focus: ()=>filterListRef.value.focus()
+	focus: () => filterListRef.value.focus()
 })
 
 </script>

@@ -13,7 +13,7 @@ class WidgetApiController extends Controller
 {
 	public function index()
 	{
-		return WidgetResource::collection(Widget::all());
+		return WidgetResource::collection(Widget::orderBy('name')->get());
 	}
 
 	public function show(Widget $widget)

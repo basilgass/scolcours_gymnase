@@ -8,10 +8,12 @@ const props = withDefaults(defineProps<{
 		dimension: number | null,
 		selectionMode?: false | 'rows' | 'columns' | 'item',
 		augmented?: boolean,
+		hoverInfo?: boolean,
 	}>(),
 	{
 		selectionMode: false,
-		augmented: false
+		augmented: false,
+		hoverInfo: false,
 	})
 
 const target = defineModel<number>('target', {default: null})
@@ -71,7 +73,7 @@ function onItemSelection(rowIndex: number, colIndex: number) {
 </script>
 
 <template>
-	<div class="relative inline-block min-h-[6rem] min-w-[100px] mb-4">
+	<div class="relative inline-block min-h-[6rem] min-w-[100px]">
 		<svg
 			class="absolute left-[-30px] h-full"
 			preserveAspectRatio="none"
@@ -103,11 +105,11 @@ function onItemSelection(rowIndex: number, colIndex: number) {
 
 		<!-- info hover -->
 		<div
+			v-if="hoverInfo"
 			v-katex.inline="hoverItem"
 			class="absolute left-[50%] translate-x-[-50%] -bottom-4 text-xs"
 		/>
 
-		<!-- Version tableau -->
 		<table>
 			<tr
 				v-for="(row, rowIndex) in matrix"

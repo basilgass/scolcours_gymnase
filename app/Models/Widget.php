@@ -39,12 +39,12 @@ class Widget extends Model
 
 	protected $appends = ["control"];
 
-	public function theme()
+	public function theme(): \Illuminate\Database\Eloquent\Relations\BelongsTo
 	{
 		return $this->belongsTo(Theme::class);
 	}
 
-	public function illustration()
+	public function illustration(): Widget|\Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Relations\HasMany
 	{
 		return $this->hasMany(Illustration::class);
 	}

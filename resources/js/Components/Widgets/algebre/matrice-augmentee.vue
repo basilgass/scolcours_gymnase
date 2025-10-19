@@ -23,6 +23,7 @@ const props = defineProps<{
 }>()
 
 const params = computed(() => props.illustration.parameters.split(','))
+
 const showInteractivity = computed(() => {
 	return !params.value.includes('no-ui')
 })
