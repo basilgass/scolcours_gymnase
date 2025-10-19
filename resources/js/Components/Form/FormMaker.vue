@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 
 import {defineAsyncComponent, h, shallowRef, useTemplateRef, watch} from "vue"
 import FormMakeLoader from "@/Components/Form/FormMakeLoader.vue"
@@ -15,6 +15,7 @@ import FormMaker from "@/Components/Form/FormMaker.vue"
 // REFACTOR: rework FormMaker -> use provide / inject
 // REFACTOR: defineExpose must be explicitly defined everywher -> use provide / inject instead ?
 
+// TODO: Créer un FormMaker pour les models: Theme, Chapter, Posts, Challenges, Generators, Decks, etc... uniforme.
 defineOptions({inheritAttrs: false})
 
 const props = withDefaults(defineProps<FormMakerPropsNewType>(),
@@ -93,12 +94,12 @@ defineSlots<{ button: unknown }>()
 		ref="element"
 		v-model="value"
 		v-bind="{...$attrs,...props}"
-		@update="emits('update', $event)"
-		@enter="emits('enter', $event)"
-		@focus="emits('focus')"
 		@blur="emits('blur')"
-		@errors="emits('errors', $event)"
 		@button="emits('button')"
+		@enter="emits('enter', $event)"
+		@errors="emits('errors', $event)"
+		@focus="emits('focus')"
+		@update="emits('update', $event)"
 	>
 		<template #button>
 			<slot name="button" />

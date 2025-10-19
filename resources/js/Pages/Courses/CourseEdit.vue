@@ -475,7 +475,7 @@ function updateLessonsOrder() {
 			<draggable
 				v-if="lessons.length"
 				:list="lessons"
-				class="mt-10 grid grid-cols-1 gap-3"
+				class="mt-10 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3"
 				handle=".draggable-handle"
 				item-key="id"
 				v-bind="{
