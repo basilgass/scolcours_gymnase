@@ -173,6 +173,12 @@ function illustrationDelete() {
 		.catch((error) => console.error(error))
 }
 
+function selectWidget(list: WidgetInterface[]) {
+	if (!list.length === 1) return
+
+	toggleComponent(list[0])
+}
+
 onMounted(() => {
 	loadComponents()
 })
@@ -253,6 +259,7 @@ onMounted(() => {
 				<filtered-list
 					:list="chapterComponents"
 					no-title
+					@enter="selectWidget"
 				>
 					<template #card="{item}: {item: WidgetInterface}">
 						<sc-button
