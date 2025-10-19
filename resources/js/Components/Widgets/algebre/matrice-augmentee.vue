@@ -484,7 +484,7 @@ onMounted(() => {
 	<div class="augmented-matrix-wrapper">
 		<div
 			v-show="showInteractivity"
-			class="pt-10 pb-10 space-y-10 w-full"
+			class="pt-10 pb-10 space-y-4 w-full"
 		>
 			<div class="flex justify-center">
 				<pi-matrix
@@ -499,7 +499,7 @@ onMounted(() => {
 
 			<markdown-it
 				:text="operationDescription"
-				class="text-center border p-3"
+				class="text-center font-code text-sm"
 			/>
 
 			<div>
@@ -508,7 +508,6 @@ onMounted(() => {
 					:outline="!operationIsComplete"
 					class="mx-auto min-w-[100%] md:min-w-[350px]"
 					type="primary"
-					xl
 					@click="updateMatrix(operationData)"
 				>
 					{{ operationIsComplete ? 'Valider' : "Compléter les instructions" }}
@@ -520,6 +519,7 @@ onMounted(() => {
 					v-for="button in buttonsConfig"
 					:key="button.value"
 					:active="operationData.operation===button.value"
+					xs
 					@click="operationData.operation=button.value"
 				>
 					{{ button.label }}
@@ -534,29 +534,25 @@ onMounted(() => {
 					answer=""
 					@change="operationData.value = $event.input"
 				/>
-				<div
-					v-katex.ascii.boxed="operationData.value"
-					class="font-code h-[1.5rem] text-center"
-				/>
 			</div>
 
 			<div class="flex flex-col gap-1 w-full">
 				<div
 					v-for="(item, index) in list_of_operations"
 					:key="`description-${index}`"
-					class="flex justify-between w-full border p-3"
+					class="flex justify-between w-full border rounded shadow pl-3 pr-1 items-baseline"
 				>
 					<markdown-it
 						:text="`${index+1}. ${item.description}`"
-						class=""
+						class="text-xs font-code"
 					/>
-					<button
+					<div
 						v-show="index===list_of_operations.length-1"
-						class="text-red-500 px-3"
+						class="px-3 text-red-500 cursor-pointer"
 						@click="removeOperation(index)"
 					>
 						<i class="bi bi-trash" />
-					</button>
+					</div>
 				</div>
 			</div>
 

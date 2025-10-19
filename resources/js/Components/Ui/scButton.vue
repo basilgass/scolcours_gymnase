@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 
 import {computed} from "vue"
 import {getThemeChapter, getThemeClasses} from "@/directives/themeDirectives.ts"
@@ -54,7 +54,6 @@ const btnClass = computed<string>(() => {
 				themeModifiers.value
 			)
 		)
-
 	} else {
 		classes.push(buttonConfig[props.type][props.outline ? 'outline' : 'fill'])
 	}
@@ -73,10 +72,12 @@ const btnClass = computed<string>(() => {
 	return classes.filter(x => x !== '').join(' ')
 })
 
-const iconClass = computed<string>(()=>{
-	if(props.icon===false){return ''}
+const iconClass = computed<string>(() => {
+	if (props.icon === false) {
+		return ''
+	}
 
-	if(props.icon === true){
+	if (props.icon === true) {
 		return buttonConfig[props.type].icon
 	}
 
@@ -88,8 +89,8 @@ const iconClass = computed<string>(()=>{
 	<InertiaLink
 		v-if="href"
 		:class="btnClass"
-		class="flex gap-2 items-center justify-center btn cursor-pointer"
 		:href
+		class="flex gap-2 items-center justify-center btn cursor-pointer"
 	>
 		<i
 			v-if="iconClass"
