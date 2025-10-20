@@ -1,5 +1,6 @@
 import {computed, onMounted, ref, watch} from "vue"
 import {WidgetPropsInterface} from "@/types/modelInterfaces.ts"
+import {NumExp} from "piexpression"
 
 export interface IPiDrawProps {
 	draw: WidgetPropsInterface
@@ -30,7 +31,17 @@ export interface IDrawStep {
 	code: string[]
 }
 
+type IDrawComputedValuePostProcess = (value: number) => number
+
+export interface IDrawComputedValue {
+	expr: NumExp
+	key: string,
+	postProcess: null | IDrawComputedValuePostProcess
+	reference: string,
+}
+
 export interface IDrawCode {
+	computedValues: IDrawComputedValue[]
 	foreground: string[]
 	sliders: ISlider[],
 	steps: IDrawStep[],
@@ -74,7 +85,6 @@ function makeSlider(slider: string): ISlider | null {
 	// interval 	not given => interval = b-a
 	// b-a			marks separation... or maybe all given manually !
 	// default		value given at start
-
 	const [keyOpt, ...arr] = slider.split("=").map(x => x.trim())
 	const [keyLabel, factor] = keyOpt.split('*')
 	const label = keyLabel.startsWith('$$')
@@ -145,6 +155,7 @@ export function PiDraw_Parse_Code(drawCode: string): IDrawCode {
 	// From the first block, extract the sliders.
 	const sliders: ISlider[] = parseSliders(blocks)
 
+	const computedValues: IDrawComputedValue[] = parseComputedValued(blocks)
 
 	// Find the foreground block
 	const foreground = parseForeground(blocks)
@@ -156,7 +167,8 @@ export function PiDraw_Parse_Code(drawCode: string): IDrawCode {
 		tex,
 		sliders,
 		steps,
-		foreground
+		foreground,
+		computedValues
 	}
 }
 
@@ -165,6 +177,43 @@ function parseTexOutput(blocks: string[]): string | undefined {
 			.split("\n")
 			.find(line => line.startsWith("$tex="))?.split("$tex=")[1]
 		?? undefined
+}
+
+function parseComputedValued(blocks: string[]): IDrawComputedValue[] {
+	const block = blocks[0].split("\n")
+	const result: IDrawComputedValue[] = []
+
+	block
+		.filter((line: string) =>
+			/^\$[a-z]\(\$[a-z]\)/.test(line) &&
+			line.split('=').length === 2 &&
+			!line.includes(',') &&
+			line.includes('x'))
+		.forEach(line => {
+			const key = line.substring(0, 2)
+			const reference = line.substring(3, 5)
+			const [before, exprString] = line.split('=')
+			const [, post] = before.split(':')
+
+			let postProcess = null
+			console.log(post, /^\.[0-9]+$/.test(post))
+			if (/^\.[0-9]+$/.test(post)) {
+				postProcess = (value: number) => +value.toFixed(+post.substring(1))
+			}
+			try {
+				const expr = new NumExp(exprString)
+				result.push({
+					key,
+					reference,
+					expr,
+					postProcess
+				})
+			} catch {
+				// Do nothing
+			}
+		})
+
+	return result
 }
 
 function parseSliders(blocks: string[]): ISlider[] {

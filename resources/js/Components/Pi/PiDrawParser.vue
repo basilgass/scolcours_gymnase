@@ -7,7 +7,13 @@ import type {PiDraw} from "pidraw"
 import {computed, inject, onMounted, ref, useTemplateRef, watch} from "vue"
 import ScButton from "@/Components/Ui/scButton.vue"
 import VueSlider from "vue-3-slider-component"
-import {IDrawStep, type IPiDrawProps, ISlider, PiDraw_Parse_Code} from "@/Components/Pi/PiDrawHelper.ts"
+import {
+	IDrawComputedValue,
+	IDrawStep,
+	type IPiDrawProps,
+	ISlider,
+	PiDraw_Parse_Code
+} from "@/Components/Pi/PiDrawHelper.ts"
 import {useScriptLoader} from "@/Composables/useScriptLoader.ts"
 import PiDrawDisplay from "@/Components/Pi/Parts/PiDrawDisplay.vue"
 import {dynamicText, replaceDoubleSigns} from "@/Composables/useHelpers.ts"
@@ -51,6 +57,7 @@ const foreground = ref<string[]>([])
 
 // List of all sliders
 const sliders = ref<ISlider[]>([])
+const computedValues = ref<IDrawComputedValue[]>([])
 
 // Current block RAW value
 const currentStep = computed<IDrawStep>(() => {
@@ -87,6 +94,7 @@ function updateData() {
 	steps.value = data.steps
 	foreground.value = data.foreground
 	sliders.value = data.sliders
+	computedValues.value = data.computedValues
 }
 
 watch(() => props.draw.code, () => {
@@ -146,8 +154,19 @@ const dynamicValues = computed<Record<string, string | number>>(() => {
 	Object.keys(drawScript.merged.value).forEach(key => {
 		dict[`$${key}`] = drawScript.merged.value[key]
 	})
+
 	sliders.value.forEach((slider) => {
-		dict[slider.key] = slider.value * (slider.factor === 'pi' ? Math.PI : +slider.factor)
+		dict[slider.key] = slider.value *
+			(slider.factor === 'pi' ? Math.PI : +slider.factor)
+	})
+
+	computedValues.value.forEach((item) => {
+		if (Object.hasOwn(dict, item.reference)) {
+			dict[item.key] = item.expr.evaluate({x: +dict[item.reference]})
+			if (item.postProcess) {
+				dict[item.key] = item.postProcess(dict[item.key] as number)
+			}
+		}
 	})
 
 	return dict
