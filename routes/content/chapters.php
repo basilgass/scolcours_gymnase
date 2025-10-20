@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\AdminController;
 use App\Http\Controllers\api\ChapterApiController;
 use App\Http\Controllers\web\ChapterController;
 use App\Models\Chapter;
@@ -39,16 +38,16 @@ Route::middleware('web')
 	          ->where('type', 'block|illustration|question')
 	          ->name('themes.chapters.posts.anchor');
 
-		 Route::get('chaptersTest/{chapter}/edit', function($chapter){
-			 dd($chapter);
-		 });
+	     Route::get('chaptersTest/{chapter}/edit', function ($chapter) {
+		     dd($chapter);
+	     });
 
 
 	     // Admin routes
 	     // ROUTE: ajotuer ->prefix('admin') à toutes les routes web admin
 	     Route::middleware('admin')
 	          ->as('admin.')
-		     ->prefix('admin')
+	          ->prefix('admin')
 	          ->group(function () {
 		          Route::resource('chapters', ChapterController::class)
 		               ->only(['edit']);

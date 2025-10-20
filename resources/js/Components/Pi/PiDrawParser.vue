@@ -13,6 +13,7 @@ import PiDrawDisplay from "@/Components/Pi/Parts/PiDrawDisplay.vue"
 import {dynamicText, replaceDoubleSigns} from "@/Composables/useHelpers.ts"
 import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
 import {usePage} from "@inertiajs/vue3"
+import {Fraction} from "pimath"
 
 const editMode = useStoreEditMode()
 
@@ -104,12 +105,25 @@ const texComputed = computed(() => {
 
 	// Update the raw code with the sliders values.
 	sliders.value.forEach((slider) => {
-		t = t.replaceAll(slider.key, slider.value.toString())
+		t = t.replaceAll(
+			slider.key,
+			slider.factor === 'pi'
+				? toTexPi(slider.value)
+				: slider.value.toString()
+		)
 	})
 
 	// Return the tex code (reformatted)
 	return replaceDoubleSigns(t)
 })
+
+function toTexPi(value) {
+	const F = new Fraction(value)
+
+	return F.denominator === 1
+		? `${F.numerator < 0 ? '-' : ''} ${Math.abs(F.numerator)}\\pi `
+		: `${F.numerator < 0 ? '-' : ''}\\frac{ ${Math.abs(F.numerator)}\\pi }{ ${F.denominator} }`
+}
 
 const blockScript = inject('blockScript', useScriptLoader(""))
 const drawScript = useScriptLoader("", {parent: blockScript.data})
@@ -119,7 +133,7 @@ const dynamicValues = computed<Record<string, string | number>>(() => {
 		dict[`$${key}`] = drawScript.merged.value[key]
 	})
 	sliders.value.forEach((slider) => {
-		dict[slider.key] = slider.value
+		dict[slider.key] = slider.value * (slider.factor === 'pi' ? Math.PI : +slider.factor)
 	})
 
 	return dict
@@ -164,8 +178,8 @@ const drawMouseUp = function (evt: { draw: PiDraw, mouse: MouseEvent }) {
 				class="absolute bottom-1 right-2"
 			>
 				<i
-					@click="showCode=!showCode"
 					class="cursor-pointer bi bi-code"
+					@click="showCode=!showCode"
 				/>
 			</div>
 		</div>
@@ -205,9 +219,9 @@ const drawMouseUp = function (evt: { draw: PiDraw, mouse: MouseEvent }) {
 				class="w-full"
 			>
 				<sc-button
+					:class="`w-full tracking-wider d-block`"
 					theme
 					xs
-					:class="`w-full tracking-wider d-block`"
 					@click="stepIndex = 0"
 				>
 					Marche à suivre
@@ -226,28 +240,38 @@ const drawMouseUp = function (evt: { draw: PiDraw, mouse: MouseEvent }) {
 				class="flex"
 			>
 				<div
-					class="w-[120px] overflow-hidden"
 					v-katex.left.nomargin="`${slider.key.substring(1)}=${slider.value}`"
+					class="w-[120px] overflow-hidden"
 				/>
 				<vue-slider
-					class="flex-1"
 					v-model="slider.value"
-					v-bind="slider.options"
-					:label-style="{'margin-top': `3px`}"
-					:tooltip="'focus'"
-					:tooltip-style="{
+					:dot-style="{
 						backgroundColor: `var(--color-${theme})`
 					}"
+					:label-style="{'margin-top': `3px`}"
 					:process-style="{
 						backgroundColor: `var(--color-${theme})`
 					}"
 					:rail-style="{
 						backgroundColor: `var(--color-${theme}-light)`
 					}"
-					:dot-style="{
+					:tooltip="'focus'"
+					:tooltip-style="{
 						backgroundColor: `var(--color-${theme})`
 					}"
-				/>
+					class="flex-1"
+					v-bind="slider.options"
+				>
+					<template
+						v-if="slider.factor==='pi'"
+						#label="{ label }: {label: string}"
+					>
+						<span
+							v-katex="`${new Fraction(label).tex}\\pi`"
+							class="text-center vue-slider-mark-label custom-label"
+						/>
+					</template>
+				</vue-slider>
 			</div>
 
 			<div v-katex="texComputed" />

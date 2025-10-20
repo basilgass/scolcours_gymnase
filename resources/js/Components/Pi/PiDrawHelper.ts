@@ -2,24 +2,26 @@ import {computed, onMounted, ref, watch} from "vue"
 import {WidgetPropsInterface} from "@/types/modelInterfaces.ts"
 
 export interface IPiDrawProps {
-	width?: number,
-	height?: number,
 	draw: WidgetPropsInterface
+	height?: number,
+	width?: number,
 }
 
 interface ISliderOptions {
-	min: number;
-	max: number;
+	included?: boolean
 	interval: number;
 	marks: number[];
+	max: number;
+	min: number;
 	tooltip?: string;
 }
 
 export interface ISlider {
+	factor: string;
 	key: string;
-	value: number;
-	wrap: boolean;
 	options: ISliderOptions;
+	tex: boolean;
+	value: number;
 }
 
 export interface IDrawStep {
@@ -28,22 +30,52 @@ export interface IDrawStep {
 }
 
 export interface IDrawCode {
-	tex: string | undefined,
+	foreground: string[]
 	sliders: ISlider[],
 	steps: IDrawStep[],
-	foreground: string[]
+	tex: string | undefined,
+}
+
+interface ISliderValues {
+	default: number,
+	factor: string,
+	included: boolean,
+	interval: number,
+	key: string,
+	marks: (number | string)[]
+	max: number,
+	min: number,
+	tex: string
+}
+
+// REFACTOR: création du parseOneSlider pour être plus clair.
+function parseOneSlider(slider: string): ISliderValues {
+	// $[key]=a,b,c,d		// tous les points sont donnés
+	// $[key]=a,...,b		// intervalle par défaut: 1
+	// $[key]=a,b,...,c		// intervalle donné par b-a
+
+	// OPTIONS
+	// $[key]=a,...,b/interval/factor=default~->TeX
+
+	if (!slider.startsWith('$')) return null
+
+	const [code, tex] = slider.split('->')
+	const [key, values_Interval, dflt] = code.split('=')
+	const [values, interval] = values_Interval.split('/')
 }
 
 function makeSlider(slider: string): ISlider | null {
 
 	// A slider is
 	// $a=a,b,...,c/interval=default
-	// $a is the key
-	// interval not given => interval = b-a
-	// b-a: marks separation... or maybe all given manually !
-	// default value given at start
+	// $a 			is the key
+	// interval 	not given => interval = b-a
+	// b-a			marks separation... or maybe all given manually !
+	// default		value given at start
 
-	const [key, ...arr] = slider.split("=").map(x => x.trim())
+	const [keyOpt, ...arr] = slider.split("=").map(x => x.trim())
+	const [key, factor] = keyOpt.split('*')
+
 	const code = arr.join("=") // a,b,...,c/interval=default[~]
 
 	const values = code.split("/")[0].split(',')
@@ -57,7 +89,7 @@ function makeSlider(slider: string): ISlider | null {
 	const autoMarks = code.includes(",...,")
 	const intervalVal = code.includes("/") ? code.split("/")[1].split('=')[0] : undefined
 	const defaultVal = code.includes("=") ? +code.split("=")[1] : undefined
-	const wrap = code.endsWith("~")
+	const included = code.endsWith("~")
 
 	if (values.length < 2) {
 		return null
@@ -86,13 +118,15 @@ function makeSlider(slider: string): ISlider | null {
 	return {
 		key,
 		value: defaultVal ?? values[0],
-		wrap,
+		tex: true,
+		factor: factor === undefined ? "1" : factor,
 		options: {
 			min: values[0],
 			max: values[values.length - 1],
 			interval: intervalVal ? +intervalVal : marks.length > 1 ? marks[1] - marks[0] : 1,
 			marks,
-			tooltip: "none"
+			tooltip: "none",
+			included
 		}
 	}
 }
@@ -101,13 +135,35 @@ export function PiDraw_Parse_Code(drawCode: string): IDrawCode {
 	// Split the code in blocks
 	const blocks: string[] = drawCode.split("\n\n")
 
-	const tex: string = blocks[0]
+	const tex = parseTexOutput(blocks)
+
+	// From the first block, extract the sliders.
+	const sliders: ISlider[] = parseSliders(blocks)
+
+
+	// Find the foreground block
+	const foreground = parseForeground(blocks)
+
+	// Reformat all steps.
+	const steps = parseSteps(blocks)
+
+	return {
+		tex,
+		sliders,
+		steps,
+		foreground
+	}
+}
+
+function parseTexOutput(blocks: string[]): string | undefined {
+	return blocks[0]
 			.split("\n")
 			.find(line => line.startsWith("$tex="))?.split("$tex=")[1]
 		?? undefined
+}
 
-	// From the first block, extract the sliders.
-	const sliders: ISlider[] = blocks[0].split("\n")
+function parseSliders(blocks: string[]): ISlider[] {
+	return blocks[0].split("\n")
 		.filter((line: string) => {
 			return line.startsWith("$") && !line.startsWith("$tex")
 		})
@@ -120,19 +176,18 @@ export function PiDraw_Parse_Code(drawCode: string): IDrawCode {
 			}
 		})
 		.filter(slider => slider !== null)
+}
 
+function parseForeground(blocks: string[]): string[] {
+	const foregroundBlock = blocks.find((block: string) => block.startsWith("%-FG-")) ?? ""
 
-	// Find the foreground block
-	const foreground: string[] = (blocks
-		.find((block: string) => block.startsWith("%-FG-")) ?? "")
+	return foregroundBlock
 		.split('\n')
 		.filter((line: string) => !line.startsWith("%-FG-") && line.trim() !== "")
+}
 
-	// Reformat all steps.
-	const steps: {
-		body: string,
-		code: string[]
-	}[] = blocks
+function parseSteps(blocks: string[]): { body: string, code: string[] }[] {
+	return blocks
 		.filter((block: string) => !block.startsWith("%-FG-"))
 		.map((block: string) => {
 			// Remove all lines starting with $
@@ -151,14 +206,6 @@ export function PiDraw_Parse_Code(drawCode: string): IDrawCode {
 			}
 		})
 		.filter(block => block !== null)
-
-
-	return {
-		tex,
-		sliders,
-		steps,
-		foreground
-	}
 }
 
 export function piDrawHelper(props: IPiDrawProps) {
