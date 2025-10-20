@@ -19,6 +19,7 @@ interface ISliderOptions {
 export interface ISlider {
 	factor: string;
 	key: string;
+	label: boolean;
 	options: ISliderOptions;
 	tex: boolean;
 	value: number;
@@ -64,6 +65,7 @@ function parseOneSlider(slider: string): ISliderValues {
 	const [values, interval] = values_Interval.split('/')
 }
 
+// TODO: DOCUMENTER !!!!!!
 function makeSlider(slider: string): ISlider | null {
 
 	// A slider is
@@ -74,7 +76,9 @@ function makeSlider(slider: string): ISlider | null {
 	// default		value given at start
 
 	const [keyOpt, ...arr] = slider.split("=").map(x => x.trim())
-	const [key, factor] = keyOpt.split('*')
+	const [keyLabel, factor] = keyOpt.split('*')
+	const label = keyLabel.startsWith('$$')
+	const key = label ? keyLabel.substring(1) : keyLabel
 
 	const code = arr.join("=") // a,b,...,c/interval=default[~]
 
@@ -120,6 +124,7 @@ function makeSlider(slider: string): ISlider | null {
 		value: defaultVal ?? values[0],
 		tex: true,
 		factor: factor === undefined ? "1" : factor,
+		label,
 		options: {
 			min: values[0],
 			max: values[values.length - 1],

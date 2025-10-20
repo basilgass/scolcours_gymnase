@@ -107,9 +107,7 @@ const texComputed = computed(() => {
 	sliders.value.forEach((slider) => {
 		t = t.replaceAll(
 			slider.key,
-			slider.factor === 'pi'
-				? toTexPi(slider.value)
-				: slider.value.toString()
+			sliderValue(slider)
 		)
 	})
 
@@ -117,12 +115,28 @@ const texComputed = computed(() => {
 	return replaceDoubleSigns(t)
 })
 
-function toTexPi(value) {
+// REFACTOR: optimisation à faire en calculant toutes les valeurs une fois.
+function sliderValue(slider: ISlider): string {
+	return slider.factor === 'pi'
+		? toTexPi(slider.value)
+		: slider.value.toString()
+}
+
+function toTexPi(value): string {
 	const F = new Fraction(value)
 
-	return F.denominator === 1
-		? `${F.numerator < 0 ? '-' : ''} ${Math.abs(F.numerator)}\\pi `
-		: `${F.numerator < 0 ? '-' : ''}\\frac{ ${Math.abs(F.numerator)}\\pi }{ ${F.denominator} }`
+	if (F.value === 0) {
+		return '0'
+	}
+
+	const num = Math.abs(F.numerator) === 1 ? '' : Math.abs(F.numerator)
+
+	if (F.denominator === 1) {
+		return `${F.numerator < 0 ? '-' : ''} ${num}\\pi`
+	}
+
+
+	return `${F.numerator < 0 ? '-' : ''}\\frac{ ${num}\\pi }{ ${F.denominator} }`
 }
 
 const blockScript = inject('blockScript', useScriptLoader(""))
@@ -240,7 +254,8 @@ const drawMouseUp = function (evt: { draw: PiDraw, mouse: MouseEvent }) {
 				class="flex"
 			>
 				<div
-					v-katex.left.nomargin="`${slider.key.substring(1)}=${slider.value}`"
+					v-if="slider.label"
+					v-katex.left.nomargin="`${slider.key.substring(1)}=${sliderValue(slider)}`"
 					class="w-[120px] overflow-hidden"
 				/>
 				<vue-slider
@@ -267,7 +282,7 @@ const drawMouseUp = function (evt: { draw: PiDraw, mouse: MouseEvent }) {
 						#label="{ label }: {label: string}"
 					>
 						<span
-							v-katex="`${new Fraction(label).tex}\\pi`"
+							v-katex="toTexPi(label)"
 							class="text-center vue-slider-mark-label custom-label"
 						/>
 					</template>
