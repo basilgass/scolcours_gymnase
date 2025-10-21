@@ -12,6 +12,7 @@ const description = `trigo,p[eriodic],[paramètres]
 // TODO: on doit autoriser d'autres angles orientés (modulo) ou forcé dans un quadrant
 export class TrigoChecker extends CheckerAbstract {
 	private readonly isPeriodic: boolean
+	private readonly isPositive: boolean
 	private readonly radian: boolean
 
 	constructor(config: string[] | string) {
@@ -19,7 +20,8 @@ export class TrigoChecker extends CheckerAbstract {
 		this.type = CHECKERS.TRIGO
 		this.description = description
 
-		this.isPeriodic = this.config.includes('p') || this.config.includes('periodic')
+		this.isPeriodic = this.config.includes('p') || this.config.includes('periodic') || this.config.includes('p+')
+		this.isPositive = this.config.includes('p+')
 		this.radian = true
 
 		this.secondaryChecker = new FractionChecker('r')
@@ -28,7 +30,7 @@ export class TrigoChecker extends CheckerAbstract {
 
 	get format(): string {
 		if (this.isPeriodic) {
-			return "réponse en radians : \\( \\dfrac{5\\pi}{3}+k\\dfrac{2\\pi}{5}\\)"
+			return "réponse en radians : \\( \\dfrac{5\\pi}{3}+k\\dfrac{2\\pi}{5}\\)" + (this.isPositive ? "<br/>L'angle doit être positif et le plus petit possible." : '')
 		} else {
 			return "réponse en radians : \\(\\dfrac{5\\pi}{2}\\)"
 		}
@@ -102,6 +104,16 @@ export class TrigoChecker extends CheckerAbstract {
 
 		if (!rad.angle.isReduced()) {
 			return makeCheckerResult("L'angle n'est pas réduit.", true)
+		}
+
+		if (this.isPositive) {
+			// Contrôle que l'angle est le plus petit possible.
+			if (rad.angle.isNegative()) {
+				return makeCheckerResult("L'angle doit être positif.", true)
+			}
+			if (rad.angle.isGeq(rad.periodic)) {
+				return makeCheckerResult("L'angle n'est pas le plus petit possible.", true)
+			}
 		}
 
 		return makeCheckerResult()
