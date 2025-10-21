@@ -1,12 +1,12 @@
 import AsciiMathParser from "@/asciimath2tex"
 
 export interface keyboardKey {
-	type: string
 	display: string
-	key?: string
-	visible?: boolean
-	span?: number
 	fn?: (value: string) => string
+	key?: string
+	span?: number
+	type: string
+	visible?: boolean
 }
 
 /**
@@ -19,10 +19,10 @@ export interface keyboardKey {
  */
 export interface KeyboardObjectType {
 	grid: string
+	keys?: Record<string, keyboardKey>
 	layout: (string | [string, number] | { key: string, display: string, type: string })[]
 	name?: string
 	tex?: (value: string) => string // Type of the returned value can be changed according to actual function implementation
-	keys?: Record<string, keyboardKey>
 }
 
 
@@ -164,34 +164,10 @@ export const keyboards: Record<string, KeyboardObjectType> = {
 		name: "algebra",
 		grid: "grid-cols-7",
 		layout: [
-			"1",
-			"2",
-			"3",
-			"+",
-			"x",
-			"y",
-			"e",
-			"4",
-			"5",
-			"6",
-			"-",
-			"^2",
-			"^",
-			"ln",
-			"7",
-			"8",
-			"9",
-			"*",
-			"|",
-			"sqrt",
-			"root(",
-			".",
-			"0",
-			"=",
-			"/",
-			"(",
-			")",
-			";"
+			"1", "2", "3", "+", "x", "y", "e",
+			"4", "5", "6", "-", "^2", "^", "ln",
+			"7", "8", "9", "*", "|", "sqrt", "root(",
+			".", "0", "=", "/", "(", ")", ";"
 		],
 		tex(value) {
 			return asciiToTex(value)
@@ -201,31 +177,11 @@ export const keyboards: Record<string, KeyboardObjectType> = {
 		name: "coord",
 		grid: "grid-cols-5",
 		layout: [
-			"1",
-			"2",
-			"3",
-			"+",
-			"-",
-			"4",
-			"5",
-			"6",
-			"",
-			"/",
-			"7",
-			"8",
-			"9",
-			"^2",
-			"sqrt",
-			"",
-			"0",
-			".",
-			"^",
-			"root(",
-			"(",
-			";",
-			")",
-			"pi",
-			"e"
+			"1", "2", "3", "+", "-",
+			"4", "5", "6", "", "/",
+			"7", "8", "9", "^2", "sqrt",
+			"", "0", ".", "^", "root(",
+			"(", ";", ")", "pi", "e"
 		],
 		tex: function (value) {
 			return buildCoordinateTex(value)
@@ -235,29 +191,10 @@ export const keyboards: Record<string, KeyboardObjectType> = {
 		name: "equation",
 		grid: "grid-cols-6",
 		layout: [
-			"1",
-			"2",
-			"3",
-			"+",
-			"x",
-			"x^2",
-			"4",
-			"5",
-			"6",
-			"-",
-			"y",
-			"y^2",
-			"7",
-			"8",
-			"9",
-			"*",
-			"^2",
-			"^",
-			"(",
-			")",
-			"0",
-			"/",
-			["=", 2]
+			"1", "2", "3", "+", "x", "x^2",
+			"4", "5", "6", "-", "y", "y^2",
+			"7", "8", "9", "*", "^2", "^",
+			"(", ")", "0", "/", ["=", 2]
 		],
 		tex(value) {
 			return asciiToTex(value)
@@ -280,36 +217,12 @@ export const keyboards: Record<string, KeyboardObjectType> = {
 		name: "exact",
 		grid: "grid-cols-5",
 		layout: [
-			"1",
-			"2",
-			"3",
-			"+",
-			"-",
-			"4",
-			"5",
-			"6",
-			"",
-			"/",
-			"7",
-			"8",
-			"9",
-			"^2",
-			"^",
-			"0",
-			"(",
-			")",
-			"sqrt",
-			"root(",
-			"log",
-			"_",
-			"ln",
-			"pi",
-			"e",
-			"oo",
-			"",
-			"",
-			"RR",
-			"!!"
+			"1", "2", "3", "+", "-",
+			"4", "5", "6", "", "/",
+			"7", "8", "9", "^2", "^",
+			"0", "(", ")", "sqrt", "root(",
+			"log", "_", "ln", "pi", "e",
+			"oo", "", "", "RR", "!!"
 		],
 		tex: function (value) {
 			// Apply this for all splited.
@@ -335,28 +248,10 @@ export const keyboards: Record<string, KeyboardObjectType> = {
 		name: "function",
 		grid: "grid-cols-6",
 		layout: [
-			"1",
-			"2",
-			"3",
-			"+",
-			"x",
-			"x^2",
-			"4",
-			"5",
-			"6",
-			"-",
-			"y",
-			"y^2",
-			"7",
-			"8",
-			"9",
-			"*",
-			"^2",
-			"^",
-			"(",
-			")",
-			"0",
-			"/"
+			"1", "2", "3", "+", "x", "x^2",
+			"4", "5", "6", "-", "y", "y^2",
+			"7", "8", "9", "*", "^2", "^",
+			"(", ")", "0", "/"
 		],
 		tex(value) {
 			return asciiToTex(value)
@@ -366,26 +261,10 @@ export const keyboards: Record<string, KeyboardObjectType> = {
 		name: "limit",
 		grid: "grid-cols-5",
 		layout: [
-			"1",
-			"2",
-			"3",
-			"+",
-			"-",
-			"4",
-			"5",
-			"6",
-			"*",
-			"/",
-			"7",
-			"8",
-			"9",
-			"sqrt",
-			"root(",
-			"0",
-			"",
-			"+-",
-			"-+",
-			"oo"
+			"1", "2", "3", "+", "-",
+			"4", "5", "6", "*", "/",
+			"7", "8", "9", "sqrt", "root(",
+			"0", "", "+-", "-+", "oo"
 		],
 		tex: function (value) {
 			// Apply this for all values.
@@ -398,7 +277,12 @@ export const keyboards: Record<string, KeyboardObjectType> = {
 	number: {
 		name: "number",
 		grid: "grid-cols-3",
-		layout: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "-", "0", "."],
+		layout: [
+			"1", "2", "3",
+			"4", "5", "6",
+			"7", "8", "9",
+			"-", "0", "."
+		],
 		tex(value) {
 			return asciiToTex(value)
 		}
@@ -407,30 +291,10 @@ export const keyboards: Record<string, KeyboardObjectType> = {
 		name: "polynom",
 		grid: "grid-cols-6",
 		layout: [
-			"1",
-			"2",
-			"3",
-			"+",
-			"x",
-			"x^2",
-			"4",
-			"5",
-			"6",
-			"-",
-			"x^3",
-			"x^4",
-			"7",
-			"8",
-			"9",
-			"*",
-			"",
-			"",
-			"(",
-			")",
-			"0",
-			"/",
-			"^2",
-			"^"
+			"1", "2", "3", "+", "x", "x^2",
+			"4", "5", "6", "-", "x^3", "x^4",
+			"7", "8", "9", "*", "", "",
+			"(", ")", "0", "/", "^2", "^"
 		],
 		tex: function (value) {
 			return asciiToTex(value)
@@ -440,22 +304,10 @@ export const keyboards: Record<string, KeyboardObjectType> = {
 		name: "pow",
 		grid: "grid-cols-4",
 		layout: [
-			"1",
-			"2",
-			"3",
-			"-",
-			"4",
-			"5",
-			"6",
-			"^",
-			"7",
-			"8",
-			"9",
-			"/",
-			"",
-			"0",
-			"(",
-			")"
+			"1", "2", "3", "-",
+			"4", "5", "6", "^",
+			"7", "8", "9", "/",
+			"", "0", "(", ")"
 		],
 		tex(value) {
 			return asciiToTex(value)
@@ -465,33 +317,10 @@ export const keyboards: Record<string, KeyboardObjectType> = {
 		name: "primitive",
 		grid: "grid-cols-7",
 		layout: [
-			"1",
-			"2",
-			"3",
-			"+",
-			"x",
-			"y",
-			"e",
-			"4",
-			"5",
-			"6",
-			"-",
-			"^2",
-			"^",
-			"ln",
-			"7",
-			"8",
-			"9",
-			"*",
-			"sqrt",
-			"root(",
-			"|",
-			"0",
-			"=",
-			"/",
-			"(",
-			")",
-			["+c", 2]
+			"1", "2", "3", "+", "x", "y", "e",
+			"4", "5", "6", "-", "^2", "^", "ln",
+			"7", "8", "9", "*", "sqrt", "root(", "|",
+			"0", "=", "/", "(", ")", ["+c", 2]
 		],
 		tex(value) {
 			return asciiToTex(value)
@@ -501,30 +330,10 @@ export const keyboards: Record<string, KeyboardObjectType> = {
 		name: "rational",
 		grid: "grid-cols-6",
 		layout: [
-			"1",
-			"2",
-			"3",
-			"+",
-			"x",
-			"x^2",
-			"4",
-			"5",
-			"6",
-			"-",
-			"x^3",
-			"x^4",
-			"7",
-			"8",
-			"9",
-			"/",
-			"^2",
-			"^",
-			"(",
-			")",
-			"0",
-			"",
-			"",
-			""
+			"1", "2", "3", "+", "x", "x^2",
+			"4", "5", "6", "-", "x^3", "x^4",
+			"7", "8", "9", "/", "^2", "^",
+			"(", ")", "0", "", "", ""
 		],
 		tex: function (value) {
 			const [Pnum, Pden] = value.split("/")
@@ -537,22 +346,10 @@ export const keyboards: Record<string, KeyboardObjectType> = {
 		name: "scientific",
 		grid: "grid-cols-4",
 		layout: [
-			"1",
-			"2",
-			"3",
-			"-",
-			"4",
-			"5",
-			"6",
-			"*",
-			"7",
-			"8",
-			"9",
-			"10^",
-			"",
-			"0",
-			".",
-			""
+			"1", "2", "3", "-",
+			"4", "5", "6", "*",
+			"7", "8", "9", "10^",
+			"", "0", ".", ""
 		],
 		tex(value) {
 			return asciiToTex(value)
@@ -562,22 +359,10 @@ export const keyboards: Record<string, KeyboardObjectType> = {
 		name: "simple",
 		grid: "grid-cols-4",
 		layout: [
-			"1",
-			"2",
-			"3",
-			"+",
-			"4",
-			"5",
-			"6",
-			"-",
-			"7",
-			"8",
-			"9",
-			"*",
-			"",
-			"0",
-			".",
-			"/"
+			"1", "2", "3", "+",
+			"4", "5", "6", "-",
+			"7", "8", "9", "*",
+			"", "0", ".", "/"
 		],
 		tex(value) {
 			return asciiToTex(value)
@@ -587,50 +372,25 @@ export const keyboards: Record<string, KeyboardObjectType> = {
 		name: "solution",
 		grid: "grid-cols-5",
 		layout: [
-			"1",
-			"2",
-			"3",
-			"+",
-			"-",
-			"4",
-			"5",
-			"6",
-			"",
-			"/",
-			"7",
-			"8",
-			"9",
-			"^2",
-			"^",
-			"0",
-			"(",
-			")",
-			"sqrt",
-			"root(",
-			"log",
-			"_",
-			"ln",
-			"pi",
-			"e",
-			"{",
-			";",
-			"}",
-			"[",
-			"]",
-			"RR",
-			"RR_+",
-			"RR_-",
-			"^**",
-			"!!",
-			"\\\\",
-			"uu",
-			"oo"
+			"1", "2", "3", "+", "-",
+			"4", "5", "6", "", "/",
+			"7", "8", "9", "^2", "^",
+			"0", "(", ")", "sqrt", "root(",
+			"log", "_", "ln", "pi", "e",
+			"{", ";", "}", "[", "]",
+			"RR", "RR_+", "RR_-", "^**", "!!",
+			"\\\\", "uu", "oo", "k"
 		],
 		tex: function (value) {
+
 			let tex = asciiToTex(
-				value.replace("RR_+", "RR_(+)").replace("RR_-", "RR_(-)")
+				value
+					.replace(/([0-9]*pi)\/([0-9]*)/g, (match, num, den) => `(${num})/${den}`)
+					.replace("RR_+", "RR_(+)")
+					.replace("RR_-", "RR_(-)")
 			)
 
+			// REFACTOR: comprendre ce qui se passe ici...
 			let isOpened = false
 			tex = tex
 				.replaceAll("\\left [", "[")
@@ -676,16 +436,16 @@ export const keyboards: Record<string, KeyboardObjectType> = {
 			const [, p] = periodic ? periodic.split('k') : ''
 			const [pnum, pden] = p ? p.split('/') : ''
 
-			let result = den!==undefined ? `(${num})/${den}` : num
-			if (periodic!==undefined) {
+			let result = den !== undefined ? `(${num})/${den}` : num
+			if (periodic !== undefined) {
 				result += `+`
 			}
-			if (p!==undefined) {
+			if (p !== undefined) {
 				result += 'k'
 			}
 
 			if (pnum) {
-				result += pden!==undefined ? `(${pnum})/${pden}` : pnum
+				result += pden !== undefined ? `(${pnum})/${pden}` : pnum
 			}
 
 			return asciiToTex(result)
@@ -695,31 +455,11 @@ export const keyboards: Record<string, KeyboardObjectType> = {
 		name: "vector",
 		grid: "grid-cols-5",
 		layout: [
-			"1",
-			"2",
-			"3",
-			"+",
-			"-",
-			"4",
-			"5",
-			"6",
-			"",
-			"/",
-			"7",
-			"8",
-			"9",
-			"^2",
-			"sqrt",
-			"",
-			"0",
-			".",
-			"^",
-			"root(",
-			"(",
-			";",
-			")",
-			"pi",
-			"e"
+			"1", "2", "3", "+", "-",
+			"4", "5", "6", "", "/",
+			"7", "8", "9", "^2", "sqrt",
+			"", "0", ".", "^", "root(",
+			"(", ";", ")", "pi", "e"
 		],
 		tex: function (value) {
 			return buildVectorialTex(value)
