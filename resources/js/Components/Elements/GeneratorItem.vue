@@ -24,10 +24,15 @@ const generated = ref<boolean>(false)
 	>
 		<div>
 			<div class="flex justify-between">
-				<h3
-					v-katex.auto="generator.title"
-					class="font-semibold"
-				/>
+				<div class="flex gap-1 items-baseline">
+					<div class="font-code text-xs">
+						({{ generator.id }})
+					</div>
+					<h3
+						v-katex.auto="generator.title"
+						class="font-semibold"
+					/>
+				</div>
 				<div
 					class="flex gap-3"
 				>

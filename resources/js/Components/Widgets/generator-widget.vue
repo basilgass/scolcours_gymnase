@@ -11,6 +11,11 @@ const props = defineProps<{
 	illustration: WidgetPropsInterface
 }>()
 
+const params = computed<string[]>(() => props.illustration.parameters?.split(',') ?? [])
+const showInput = computed<boolean>(() => {
+	return !params.value.includes('input:close')
+})
+
 const generator = ref<GeneratorInterface | false>(false)
 const counter = ref(0)
 
@@ -38,8 +43,8 @@ function nextQuestion(checkerResult: questionResultInterface): void {
 
 
 onMounted(() => {
-	if (+props.illustration.parameters > 0) {
-		axios.get(route('api.generators.show', {generator: props.illustration.parameters}))
+	if (+props.illustration.code > 0) {
+		axios.get(route('api.generators.show', {generator: props.illustration.code}))
 			.then(res => {
 				generator.value = res.data
 			})
@@ -54,9 +59,9 @@ onMounted(() => {
 		v-if="generator!==false"
 		:key="`question-${counter}`"
 		:question="theQuestion as QuestionInterface"
+		:show-input="showInput"
 		class="max-w-[40em] mx-auto min-h-[500px] border border-gray-400"
 		is-dynamic
-		show-input
 		@validate="nextQuestion"
 	/>
 </template>
