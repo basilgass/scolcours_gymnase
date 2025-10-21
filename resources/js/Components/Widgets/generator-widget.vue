@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 
 import type {GeneratorInterface, QuestionInterface, WidgetPropsInterface} from "@/types/modelInterfaces.ts"
 import QuestionShow from "@/Components/Questions/QuestionShow.vue"
@@ -39,7 +39,7 @@ function nextQuestion(checkerResult: questionResultInterface): void {
 
 onMounted(() => {
 	if (+props.illustration.parameters > 0) {
-		axios.get(route('api.admin.generators.fetch', [props.illustration.parameters]))
+		axios.get(route('api.generators.show', {generator: props.illustration.parameters}))
 			.then(res => {
 				generator.value = res.data
 			})
