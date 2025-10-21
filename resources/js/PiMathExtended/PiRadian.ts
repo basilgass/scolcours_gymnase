@@ -281,7 +281,7 @@ export class PiRadian {
 			rad.numerator === 1 ? ''
 				: rad.numerator === -1
 					? '-'
-					: rad.numerator
+					: Math.abs(rad.numerator)
 		const num = `${value}pi`
 
 		return rad.isRational() ? `${num}/${rad.denominator}` : num
@@ -291,7 +291,7 @@ export class PiRadian {
 		const value =
 			Math.abs(rad.numerator) === 1
 				? ''
-				: rad.numerator.toString()
+				: Math.abs(rad.numerator).toString()
 
 		const sign = rad.numerator < 0 ? '-' : ''
 		const num = `${value}\\pi`
