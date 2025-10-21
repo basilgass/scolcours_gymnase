@@ -1,15 +1,15 @@
 <script lang="ts" setup>
 
 import {useWrongAnswerAnimation} from "@/Composables/useHelpers"
-import {
-	KeyboardEmitsInterface,
-	KeyboardExposeInterface,
-	KeyboardInputInterface,
-	KeyboardPropsInterface,
-} from "@/Composables/useKeyboard.ts"
 import {Random} from "pimath"
 
 import {onMounted, ref} from "vue"
+import type {
+	KeyboardEmitsInterface,
+	KeyboardExposeInterface,
+	KeyboardInputInterface,
+	KeyboardPropsInterface
+} from "@/types/keyboardInterfaces.ts"
 
 // props.keyboard
 const props = defineProps<KeyboardPropsInterface>()
@@ -19,7 +19,7 @@ const emits = defineEmits<KeyboardEmitsInterface>()
 
 // emit change event
 function onChange(): void {
-	if(answerLetters.value.every(letter=>letter.used)){
+	if (answerLetters.value.every(letter => letter.used)) {
 		// TOOD: should trigger the validation button automatically.
 
 	}
@@ -59,8 +59,8 @@ defineExpose<KeyboardExposeInterface>({
 /* ------------------*/
 const typoButtons = ref(null)
 const excludeLetters = ref([" ", ",", "'", ".", "!", "?", "(", ")", "-"])
-const answerLetters = ref<{key: string, used: boolean}[]>([])
-const resultLetters = ref<{index: number, key: string, visible: boolean}[]>([])
+const answerLetters = ref<{ key: string, used: boolean }[]>([])
+const resultLetters = ref<{ index: number, key: string, visible: boolean }[]>([])
 
 const currentIndex = ref(-1)
 

@@ -15,7 +15,7 @@ import {
 	questionValidatorInterface
 } from "@/Components/Questions/QuestionInterface.ts"
 import QuestionAnswerToggleKeyboard from "@/Components/Questions/Parts/QuestionAnswerToggleKeyboard.vue"
-import type {KeyboardInputInterface} from "@/Composables/useKeyboard.ts"
+import type {KeyboardInputInterface} from "@/types/keyboardInterfaces.ts"
 
 const questionData = inject<questionDataInterface>("questionData")
 
@@ -111,15 +111,15 @@ const keyboardParameters = computed(() => {
 
 			<!-- keyboard component -->
 			<component
-				v-for="(validator, index) in questionData.validators.value"
 				:is="validator.keyboard.component"
+				v-for="(validator, index) in questionData.validators.value"
+				v-show="questionData.current.id.value === index"
 				:key="`keyboard-id-${index}`"
 				ref="keyboardComponent"
-				v-show="questionData.current.id.value === index"
-				:reference="validator.answer"
 				:keyboard="validator.keyboard"
-				@change="updateQuestion($event, index)"
+				:reference="validator.answer"
 				class="touch-manipulation"
+				@change="updateQuestion($event, index)"
 			/>
 
 			<div

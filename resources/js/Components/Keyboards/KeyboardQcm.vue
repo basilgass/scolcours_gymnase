@@ -1,13 +1,13 @@
 <script lang="ts" setup>
 import {asciiToTex} from "@/Composables/keyboardConfig"
-import {
+import {computed, onMounted, ref} from "vue"
+import ScButton from "@/Components/Ui/scButton.vue"
+import type {
 	KeyboardEmitsInterface,
 	KeyboardExposeInterface,
 	KeyboardInputInterface,
 	KeyboardPropsInterface
-} from "@/Composables/useKeyboard.ts"
-import {computed, onMounted, ref} from "vue"
-import ScButton from "@/Components/Ui/scButton.vue"
+} from "@/types/keyboardInterfaces.ts"
 
 // props.keyboard
 const props = defineProps<KeyboardPropsInterface>()
@@ -44,7 +44,7 @@ async function setInput(value?: string): Promise<KeyboardInputInterface> {
 }
 
 defineExpose<KeyboardExposeInterface>({
-	reset: ()=>{
+	reset: () => {
 		// reset function
 	},
 	setInput,
@@ -53,7 +53,7 @@ defineExpose<KeyboardExposeInterface>({
 
 /* ------------------*/
 // Options du QCM
-const inRandomOrder = computed(()=>{
+const inRandomOrder = computed(() => {
 	return props.keyboard.parameters.includes("random")
 })
 const isFullWidth = computed(() => {
@@ -71,12 +71,12 @@ const multiAnswers = computed(() => {
 const asList = computed(() => {
 	return props.keyboard.parameters.includes("list")
 })
-const joinCharacter = computed(()=>{
+const joinCharacter = computed(() => {
 	const key = 'join:'
 
-	const join = props.keyboard.parameters.find(p=>p.startsWith(key))
+	const join = props.keyboard.parameters.find(p => p.startsWith(key))
 
-	return join? join.substring(key.length) : ", "
+	return join ? join.substring(key.length) : ", "
 })
 
 /* ---------------- */
@@ -144,7 +144,7 @@ onMounted(() => {
 			}
 		})
 
-	if(inRandomOrder.value) {
+	if (inRandomOrder.value) {
 		items.sort(() => Math.random() - 0.5)
 	}
 

@@ -1,11 +1,4 @@
 <script lang="ts" setup>
-import {
-	getOneKeyboard,
-	KeyboardEmitsInterface,
-	KeyboardExposeInterface,
-	KeyboardInputInterface,
-	KeyboardPropsInterface,
-} from "@/Composables/useKeyboard.ts"
 import {computed, inject, onMounted, ref} from "vue"
 import KeyboardDisplay from "@/Components/Keyboards/KeyboardDisplay.vue"
 import PiMatrix from "@/Components/Pi/Parts/PiMatrix.vue"
@@ -13,6 +6,13 @@ import {Polynom} from "pimath"
 import {questionDataInterface} from "@/Components/Questions/QuestionInterface.ts"
 import ScButton from "@/Components/Ui/scButton.vue"
 import {KeyboardObjectType} from "@/Composables/keyboardConfig.ts"
+import type {
+	KeyboardEmitsInterface,
+	KeyboardExposeInterface,
+	KeyboardInputInterface,
+	KeyboardPropsInterface
+} from "@/types/keyboardInterfaces.ts"
+import {getOneKeyboard} from "@/Composables/useKeyboard.ts"
 
 // config: decimal
 

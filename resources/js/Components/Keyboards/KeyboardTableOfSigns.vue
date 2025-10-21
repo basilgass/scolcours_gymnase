@@ -1,15 +1,15 @@
 <script lang="ts" setup>
 import KeyboardDisplay from "@/Components/Keyboards/KeyboardDisplay.vue"
 import TableOfSigns from "@/Components/Pi/TableOfSigns.vue"
-import {
-	KeyboardEmitsInterface,
-	KeyboardExposeInterface,
-	type KeyboardInputInterface,
-	KeyboardPropsInterface
-} from "@/Composables/useKeyboard.ts"
 import {TABLE_OF_SIGNS_VALUES} from "pimath"
 import {computed, nextTick, onMounted, ref} from "vue"
 import ScButton from "@/Components/Ui/scButton.vue"
+import type {
+	KeyboardEmitsInterface,
+	KeyboardExposeInterface,
+	KeyboardInputInterface,
+	KeyboardPropsInterface
+} from "@/types/keyboardInterfaces.ts"
 
 const props = defineProps<KeyboardPropsInterface>()
 
@@ -44,7 +44,7 @@ async function setInput(value?: string): Promise<KeyboardInputInterface> {
 }
 
 defineExpose<KeyboardExposeInterface>({
-	reset: ()=>{
+	reset: () => {
 		// reset function
 	},
 	setInput,
@@ -145,12 +145,12 @@ onMounted(() => {
 		>
 			<table-of-signs
 				ref="tosUI"
+				:extremes="withExtremes ? coords.input.split(','): null"
 				:label="tosName"
 				:mode="tosMode"
+				:result-line="grows.input.split('') as TABLE_OF_SIGNS_VALUES[]"
 				:roots="zeroes.input.split(',')"
 				:signs="signs.input.split('') as TABLE_OF_SIGNS_VALUES[]"
-				:result-line="grows.input.split('') as TABLE_OF_SIGNS_VALUES[]"
-				:extremes="withExtremes ? coords.input.split(','): null"
 			/>
 		</div>
 
@@ -162,43 +162,43 @@ onMounted(() => {
 			>
 				<sc-button
 					:outline="showKeyboard!=='zeroes'"
-					theme
 					class="py-0 px-5"
+					theme
 					@click="showKeyboard='zeroes'"
 				>
 					zéros
 				</sc-button>
 				<sc-button
 					:outline="showKeyboard!=='signs'"
-					theme
 					class="py-0 px-5"
+					theme
 					@click="showKeyboard='signs'"
 				>
 					signes
 				</sc-button>
 				<sc-button
 					v-if="withGrows"
-					theme
 					:outline="showKeyboard!=='grows'"
 					class="py-0 px-5"
+					theme
 					@click="showKeyboard='grows'"
 				>
 					croissance
 				</sc-button>
 				<sc-button
 					v-if="withCurves"
-					theme
 					:outline="showKeyboard!=='curves'"
 					class="py-0 px-5"
+					theme
 					@click="showKeyboard='curves'"
 				>
 					courbure
 				</sc-button>
 				<sc-button
 					v-if="withExtremes"
-					theme
 					:outline="showKeyboard!=='coords'"
 					class="py-0 px-5"
+					theme
 					@click="showKeyboard='coords'"
 				>
 					coordonnées

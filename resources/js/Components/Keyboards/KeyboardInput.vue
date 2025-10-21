@@ -1,14 +1,14 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 // parameters: tex
 import AsciiMathParser from "@/asciimath2tex"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import {computed, ref} from "vue"
-import {
+import type {
 	KeyboardEmitsInterface,
 	KeyboardExposeInterface,
 	KeyboardInputInterface,
-	KeyboardPropsInterface,
-} from "@/Composables/useKeyboard.js"
+	KeyboardPropsInterface
+} from "@/types/keyboardInterfaces.ts"
 
 // props.keyboard
 const props = defineProps<KeyboardPropsInterface>()
@@ -54,8 +54,8 @@ const isTex = computed(() => {
 	<div>
 		<form-maker
 			v-model="inputValue"
-			name="kbrd-input"
 			label="réponse"
+			name="kbrd-input"
 			@input="onChange"
 		/>
 		<div

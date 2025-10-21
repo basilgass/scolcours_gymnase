@@ -1,28 +1,34 @@
 import {ComputedRef, Ref} from "vue"
 import {BlockMinInterface, QuestionInterface, ScoreInterface} from "@/types/modelInterfaces.ts"
 import type KeyboardBasic from "@/Components/Keyboards/KeyboardBasic.vue"
-import type {KeyboardCheckerInterface, KeyboardInputInterface, KeyboardInterface} from "@/Composables/useKeyboard.ts"
+import {KeyboardCheckerInterface, KeyboardInputInterface, KeyboardInterface} from "@/types/keyboardInterfaces.ts"
 
 export type keyboardComponentType = InstanceType<typeof KeyboardBasic>
 export type questionUserInputDisplayType = "hide" | "show" | "force"
 
 export interface questionConfigInterface {
 	animation: boolean,
-	showInput: Ref<questionUserInputDisplayType>,
+	editorMode: boolean,
 	isDynamic: boolean,
 	raw: string,
-	editorMode: boolean,
+	showInput: Ref<questionUserInputDisplayType>,
 }
 
 export interface questionDataInterface {
-	question: {
-		id: number
+	answers: {
+		values: ComputedRef<string[]>,
+		variables: ComputedRef<string[]>,
+		coherences: ComputedRef<boolean>
 	},
 	block: ComputedRef<BlockMinInterface>,
+	config: questionConfigInterface
 	current: {
 		id: Ref<number>,
 		keyboard: ComputedRef<KeyboardInterface>,
 		checker: ComputedRef<KeyboardCheckerInterface>
+	},
+	question: {
+		id: number
 	},
 	user: {
 		answer: Ref<string>
@@ -30,37 +36,19 @@ export interface questionDataInterface {
 		score: Ref<ScoreInterface>,
 		errors: Ref<string[]>
 	},
-	answers: {
-		values: ComputedRef<string[]>,
-		variables: ComputedRef<string[]>,
-		coherences: ComputedRef<boolean>
-	},
 	validators: ComputedRef<questionValidatorInterface[]>,
-	config: questionConfigInterface
 }
 
 export interface questionDataInterfaceOLD {
-	// Question data from database
-	question: Ref<QuestionInterface>,
-	// updated body string, with the answers inserted.
-	body: Ref<string>
 	// current answer id, if the question has more than one answer
 	answerId: Ref<number>,
+	answers: ComputedRef<string[]>,
+	answersCoherences: ComputedRef<boolean>,
 	// Score
 	// list of all answers
 	answersVariables: ComputedRef<string[]>,
-	answersCoherences: ComputedRef<boolean>,
-	answers: ComputedRef<string[]>,
-	// user data
-	// - answers: given by the user
-	// - errors: list of errors once validated
-	user: {
-		answers: Ref<KeyboardInputInterface[]>,
-		errors: Ref<string[]>,
-		score: Ref<ScoreInterface>,
-	},
-	// config of the current question
-	// - animation: enables or disable animation (use for "single answer" (quizz)
+	// updated body string, with the answers inserted.
+	body: Ref<string>
 	// - dynamic: determines if the question is dynamically built or is from DB.
 	config: {
 		animation: boolean,
@@ -68,16 +56,28 @@ export interface questionDataInterfaceOLD {
 		isDynamic: boolean,
 		raw: string
 	},
+	// user data
+	// - answers: given by the user
+	currentChecker: ComputedRef<KeyboardCheckerInterface>,
+	// config of the current question
+	// - animation: enables or disable animation (use for "single answer" (quizz)
+	currentKeyboard: ComputedRef<KeyboardInterface>,
+	// Question data from database
+	question: Ref<QuestionInterface>,
+	// - errors: list of errors once validated
+	user: {
+		answers: Ref<KeyboardInputInterface[]>,
+		errors: Ref<string[]>,
+		score: Ref<ScoreInterface>,
+	},
 	// Get the keyboard component, for access everywhere.
 	validators: ComputedRef<questionValidatorInterface[]>,
-	currentKeyboard: ComputedRef<KeyboardInterface>,
-	currentChecker: ComputedRef<KeyboardCheckerInterface>,
 }
 
 export interface keyboardEventInterface {
 	input: string,
-	tex: string,
 	raw: string
+	tex: string,
 }
 
 /**
@@ -88,16 +88,16 @@ export interface keyboardEventInterface {
  */
 
 export interface questionValidatorInterface {
-	key: string,
 	answer: string,
-	keyboard: KeyboardInterface,
 	checker: KeyboardCheckerInterface,
+	key: string,
+	keyboard: KeyboardInterface,
 }
 
 export interface checkAnswerInterface {
-	key: string,
-	checker: KeyboardCheckerInterface,
 	answer: string
+	checker: KeyboardCheckerInterface,
+	key: string,
 }
 
 export interface questionResultInterface {

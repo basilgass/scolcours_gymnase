@@ -1,13 +1,13 @@
 <script lang="ts" setup>
-import {
+import {PiDraw, Point as PiDrawPoint} from "pidraw/types"
+import {computed, nextTick, onMounted, ref, useTemplateRef} from "vue"
+import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"
+import type {
 	KeyboardEmitsInterface,
 	KeyboardExposeInterface,
 	KeyboardInputInterface,
 	KeyboardPropsInterface
-} from "@/Composables/useKeyboard.ts"
-import {PiDraw, Point as PiDrawPoint} from "pidraw/types"
-import {computed, nextTick, onMounted, ref, useTemplateRef} from "vue"
-import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"
+} from "@/types/keyboardInterfaces.ts"
 
 const svgContainer = useTemplateRef<InstanceType<typeof PiDrawParser>>('svgContainer')
 
@@ -125,8 +125,8 @@ function onComponentMounted(draw: PiDraw) {
 		<pi-draw-parser
 			ref="svgContainer"
 			:draw
-			@draw-click="onChange"
 			@mounted="onComponentMounted"
+			@draw-click="onChange"
 		/>
 	</div>
 </template>

@@ -1,8 +1,9 @@
 import {getModule, MODULE_TYPES} from "@/scolcours.js"
-import {Component, ref, unref} from "vue"
+import {ref, unref} from "vue"
 import {keyboardKeys, keyboardMaps, KeyboardObjectType, keyboards} from "@/Composables/keyboardConfig.ts"
 import {questionValidatorInterface} from "@/Components/Questions/QuestionInterface.ts"
 import {PiChecker} from "@/Checkers"
+import {KeyboardInputInterface} from "@/types/keyboardInterfaces.ts"
 
 /**
  * Get the keyboard name for a given component value.
@@ -41,41 +42,6 @@ function getComponentKeyboardName(value: string): string {
 
 function getComponent(kbrd: string) {
 	return getModule(`Keyboard${kbrd}`, MODULE_TYPES.KEYBOARD)
-}
-
-export interface KeyboardPropsInterface {
-	keyboard: KeyboardInterface,
-	reference?: string
-}
-
-export interface KeyboardEmitsInterface {
-	change: [value: KeyboardInputInterface]
-}
-
-export interface KeyboardInputInterface {
-	input: string,
-	tex: string,
-	raw: string
-}
-
-export interface KeyboardExposeInterface {
-	reset: () => void,
-	setInput: (value?: string) => Promise<KeyboardInputInterface>,
-	parameters: string
-}
-
-export interface KeyboardInterface {
-	name: string;
-	parameters: string[];
-	values: string[];
-	config: KeyboardObjectType;
-	component: Component | null;
-}
-
-export interface KeyboardCheckerInterface {
-	name: string,
-	checker: PiChecker;
-	checkerOverride?: Record<string, string>;
 }
 
 export function getOneKeyboard(kbrd: string): Partial<questionValidatorInterface> {
@@ -188,47 +154,12 @@ export function useKeyboard() {
 		keyboardInput.value = {input: "", tex: "", raw: ""}
 	}
 
-	// function loadAnswer(value: string, config?: {
-	// 	reset?: () => void,
-	// 	callback?: (value?: string) => void
-	// }) {
-	// 	// Reset the current value
-	// 	// if (config?.reset) {
-	// 	// 	config.reset()
-	// 	// } else {
-	// 	// 	reset()
-	// 	// }
-	// 	//
-	// 	// // if value is null, reset the display
-	// 	// if (value === null) {
-	// 	// 	onKeyboardChange(null)
-	// 	// 	return
-	// 	// }
-	// 	//
-	// 	// // if value is undefined, set the value to the answer.
-	// 	// if (value === undefined && props) {
-	// 	// 	value = props.answer
-	// 	// }
-	// 	//
-	// 	// // show always only the first value
-	// 	// const first_value = value.split("||")[0]
-	// 	// if (config?.callback) {
-	// 	// 	config.callback(first_value)
-	// 	// }
-	// 	//
-	// 	// // Emit change
-	// 	// onKeyboardChange(first_value)
-	// }
-
-
 	// Return the available functions
 	return {
 		keyboardInput, 			// contains the values exposed by the keyboard.
 		getKeyboards, 			// Main function to recover a keyboard with all it's functionality
 		keyboardKeys, 			// Keyboard keys configuration
 		keyboards,				// List of all available "basic" keyboards with their configuration
-		// getComponent,			// Get the component of the keyboard given by name
-		// loadAnswer,				// load the answer to the keyboard
 		reset
 	}
 }

@@ -5,7 +5,8 @@ import type {
 	questionDataInterface,
 	questionValidatorInterface
 } from "@/Components/Questions/QuestionInterface.ts"
-import {type KeyboardInputInterface, useKeyboard} from "@/Composables/useKeyboard.ts"
+import {useKeyboard} from "@/Composables/useKeyboard.ts"
+import {KeyboardInputInterface} from "@/types/keyboardInterfaces.ts"
 
 const {getKeyboards} = useKeyboard()
 

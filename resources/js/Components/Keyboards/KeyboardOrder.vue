@@ -1,13 +1,13 @@
 <script lang="ts" setup>
+import {Random} from "pimath"
+import {computed, ref} from "vue"
+import ScButton from "@/Components/Ui/scButton.vue"
 import type {
 	KeyboardEmitsInterface,
 	KeyboardExposeInterface,
 	KeyboardInputInterface,
-	KeyboardPropsInterface,
-} from "@/Composables/useKeyboard.ts"
-import {Random} from "pimath"
-import {computed, ref} from "vue"
-import ScButton from "@/Components/Ui/scButton.vue"
+	KeyboardPropsInterface
+} from "@/types/keyboardInterfaces.ts"
 
 // props.keyboard
 const props = defineProps<KeyboardPropsInterface>()
@@ -25,7 +25,7 @@ async function setInput(value: string): Promise<KeyboardInputInterface> {
 		if (value === '-') {
 			// Automatic list
 			sortableItems.value = items.value
-		}else if (value===''){
+		} else if (value === '') {
 			// Random order
 			sortableItems.value = Random.shuffle(items.value)
 		}
@@ -41,7 +41,7 @@ async function setInput(value: string): Promise<KeyboardInputInterface> {
 }
 
 defineExpose<KeyboardExposeInterface>({
-	reset: ()=>{
+	reset: () => {
 		// reset function
 	},
 	setInput,
@@ -63,7 +63,7 @@ const isList = computed(() => {
 	return props.keyboard.parameters.includes("list")
 })
 
-const items = computed(()=>{
+const items = computed(() => {
 	return props.keyboard.values.map((element, index) => {
 		return {
 			id: index + 1,
