@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 import BlockShow from "@/Components/Blocks/BlockShow.vue"
@@ -75,28 +75,11 @@ const orderedDate = computed(() => {
 })
 
 const UNPLANNED = 'non planifié'
-const futurDate = computed(() => {
-	return orderedDate.value.filter(day => day !== UNPLANNED && dayjs(day).isAfter(dayjs(), 'day'))
-})
-const thisDate = computed(() => {
-	const today = dayjs().format("YYYY-MM-DD")
-
-	return orderedDate.value.includes(today) ? today : null
-})
-const pastDate = computed(() => {
-	return orderedDate.value.filter(day => day !== UNPLANNED && dayjs(day).isBefore(dayjs(), 'day'))
-})
-
-function afficherDate(day: string, short?: boolean): string {
-	return day === UNPLANNED
-		? day
-		: dayjs(day).format(short ? 'dd DD.MM.YYYY' : 'DD MMMM YYYY')
-}
 
 export interface ILessonStats {
 	lesson_id: number,
-	total_scores: number,
 	resolved_scores: number,
+	total_scores: number,
 	users_id: number[]
 }
 
@@ -155,14 +138,14 @@ onMounted(() => {
 <template>
 	<section>
 		<article-title
-			:title="course.title"
-			subtitle="dashboard"
-			theme
 			:return-link="{
 				label: 'Retour à mes cours',
 				url: route('admin.courses.index')
 			}"
+			:title="course.title"
 			class="mb-3"
+			subtitle="dashboard"
+			theme
 		/>
 
 		<block-show
@@ -180,20 +163,20 @@ onMounted(() => {
 				class="flex gap-3 flex-wrap"
 			>
 				<sc-button
-					theme
 					:outline="selected_user_id!==0"
-					@click="selected_user_id=0"
+					theme
 					xs
+					@click="selected_user_id=0"
 				>
 					Tous
 				</sc-button>
 				<sc-button
 					v-for="user in users"
 					:key="`user-${user.id}`"
-					theme
 					:outline="selected_user_id!==user.id"
-					@click="selected_user_id=user.id"
+					theme
 					xs
+					@click="selected_user_id=user.id"
 				>
 					{{ user.fullname }}
 				</sc-button>
@@ -205,10 +188,10 @@ onMounted(() => {
 					{{ selected_user_id === 0 ? team.name : users.find(user => user.id === selected_user_id).fullname }}
 				</h3>
 				<sc-button
-					type="primary"
 					outline
-					@click="loadStats"
+					type="primary"
 					xs
+					@click="loadStats"
 				>
 					<i class="bi bi-arrow-clockwise" /> rafraîchir
 				</sc-button>
@@ -224,14 +207,14 @@ onMounted(() => {
 						xs
 					/>
 					<div
-						class="text-xs w-[300px] whitespace-nowrap overflow-hidden"
 						v-katex.auto="lesson.title"
+						class="text-xs w-[300px] whitespace-nowrap overflow-hidden"
 					/>
 				</div>
 				<stat-bar
-					class="text-[0.6rem]"
 					:max="100"
 					:value="selected_user_stats[lesson.id]?.total_scores === 0 ? 0 : (selected_user_stats[lesson.id]?.resolved_scores)/(selected_user_stats[lesson.id]?.total_scores)*100"
+					class="text-[0.6rem]"
 				>
 					<template #bar>
 						{{ selected_user_stats[lesson.id]?.resolved_scores }} /
@@ -246,12 +229,12 @@ onMounted(() => {
 			class="space-y-12 mt-12"
 		>
 			<lesson-by-dates
-				v-for="(dates, day) in lessonsByDate"
+				v-for="day in orderedDate"
 				:key="`lesson-${day}`"
 				:course
-				:team
 				:day
 				:lessons="lessonsByDate"
+				:team
 			/>
 		</div>
 	</section>
