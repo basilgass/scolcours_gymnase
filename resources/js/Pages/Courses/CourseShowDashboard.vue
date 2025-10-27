@@ -133,6 +133,8 @@ function loadStats() {
 onMounted(() => {
 	loadStats()
 })
+
+const showBlock = ref<boolean>(false)
 </script>
 
 <template>
@@ -146,9 +148,20 @@ onMounted(() => {
 			class="mb-3"
 			subtitle="dashboard"
 			theme
-		/>
+		>
+			<template #right>
+				<sc-button
+					xs
+					@click="showBlock=!showBlock"
+				>
+					Afficher la description du cours
+				</sc-button>
+			</template>
+		</article-title>
+
 
 		<block-show
+			v-show="showBlock"
 			:block="course.block"
 			class="mb-10"
 		/>
