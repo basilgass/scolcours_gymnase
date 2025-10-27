@@ -39,9 +39,9 @@ class CourseController extends Controller
 		return $this->renderCourseWithTeam($course, "Courses/CourseShow");
 	}
 
-	private function renderCourseWithTeam(Course $course, $view, $matchingTeam=null)
+	private function renderCourseWithTeam(Course $course, $view, $matchingTeam = null)
 	{
-		if(!$matchingTeam) {
+		if (!$matchingTeam) {
 			$user = Auth::user();
 
 			if (
@@ -52,18 +52,18 @@ class CourseController extends Controller
 			}
 
 			$matchingTeam = $course->teams->intersect($user->teams)->first();
-
-			$course->load([
-				'lessons.lessonable',
-				'lessons.calendars' => function ($query) use ($matchingTeam) {
-					$query->where('team_id', $matchingTeam->id);
-				}
-			]);
 		}
+
+		$course->load([
+			'lessons.lessonable',
+			'lessons.calendars' => function ($query) use ($matchingTeam) {
+				$query->where('team_id', $matchingTeam->id);
+			}
+		]);
 
 		return Inertia::render($view, [
 			"team"   => UserTeamResource::make($matchingTeam),
-			"course" => CourseResource::make($course),
+			"course" => CourseResource::make($course, $matchingTeam),
 		]);
 	}
 

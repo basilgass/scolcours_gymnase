@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use App\Models\Course;
+use App\Models\Team;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -11,12 +12,18 @@ use Illuminate\Support\Collection;
 /** @mixin Course */
 class CourseResource extends JsonResource
 {
+	protected ?Team $matchingTeam = null;
+
 	public function toArray(Request $request): array
 	{
 		$lessons = $this->whenLoaded('lessons');
 		$scheduledAt = null;
 
-		$userTeamIds = \Auth::user()->teams->pluck('id');
+		$user = \Auth::user();
+		// Si une équipe est passée, l'utiliser ; sinon, prendre les équipes de l'utilisateur connecté
+		$userTeamIds = $this->matchingTeam
+			? collect([$this->matchingTeam->id])
+			: ($user ? $user->teams->pluck('id') : collect());
 
 		if ($lessons instanceof Collection && $lessons->count() > 0) {
 			$scheduledDates = collect($lessons)
@@ -40,7 +47,6 @@ class CourseResource extends JsonResource
 			$status = 'not yet started';
 		}
 
-
 		return [
 			'id'           => $this->id,
 			'title'        => $this->title,
@@ -54,5 +60,15 @@ class CourseResource extends JsonResource
 			'created_at'   => $this->created_at,
 			'updated_at'   => $this->updated_at,
 		];
+	}
+
+	public static function make(...$parameters): static
+	{
+		$resource = $parameters[0] ?? null;
+		$matchingTeam = $parameters[1] ?? null;
+
+		$instance = new static($resource);
+		$instance->matchingTeam = $matchingTeam;
+		return $instance;
 	}
 }
