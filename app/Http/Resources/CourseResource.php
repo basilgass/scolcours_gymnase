@@ -25,10 +25,17 @@ class CourseResource extends JsonResource
 			? collect([$this->matchingTeam->id])
 			: ($user ? $user->teams->pluck('id') : collect());
 
+		$scheduledDates = [];
 		if ($lessons instanceof Collection && $lessons->count() > 0) {
+
 			$scheduledDates = collect($lessons)
-				->flatMap(fn($lesson) => $lesson->calendars->whereIn('team_id', $userTeamIds)->pluck('scheduled_at')
+				->flatMap(
+					fn($lesson) => $lesson
+						->calendars
+						->whereIn('team_id', $userTeamIds)
+						->pluck('scheduled_at')
 				);
+
 			$now = now();
 
 			if ($scheduledDates->isEmpty() || $scheduledDates->min()->gt($now->copy()->addWeek())) {
@@ -52,13 +59,14 @@ class CourseResource extends JsonResource
 			'title'        => $this->title,
 			'slug'         => $this->slug,
 			'block'        => BlockResource::make($this->blocks[0]),
-			'lessons'      => LessonResource::collection($lessons),
+			'lessons'      => LessonResource::collection($lessons, $this->matchingTeam),
 			'status'       => $status,
 			'scheduled_at' => $scheduledAt ? $scheduledAt->format('Y-m-d H:i:s') : '',
 			'theme_id'     => $this->theme_id,
 			'teams'        => $this->whenLoaded('teams'),
 			'created_at'   => $this->created_at,
 			'updated_at'   => $this->updated_at,
+			'dates'        => $scheduledDates
 		];
 	}
 

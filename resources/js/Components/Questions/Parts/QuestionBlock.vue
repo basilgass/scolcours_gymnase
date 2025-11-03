@@ -46,19 +46,28 @@ const body = computed(() => {
 			i === questionData.current.id.value
 				? "border-blue-600"
 				: "border-red-600"
+		const rawTextColor =
+			i === questionData.current.id.value
+				? "text-blue-600"
+				: "text-red-600"
 
 		// Replace all lowercase keys by corresponding TeX value.
 		// $a, $b, $c, ....
 		md = replace_abc_toTex(md, i, key, answer, texColor)
 
 		// TODO: actualiser et vérifer toutes les options...
-		// Replace all uppercase, as block
+		// Replace all uppercase starting a line, as block
 		// $A, $B, $C, ....
 		md = replace_ABC_toBlock(md, i, key, answer, rawColor)
 
 		// Replace all uppercase, without default value
 		// @$A, @$B, @$C, ...
 		md = replace_ABC_without_placeholder(md, i, key, answer, rawColor)
+
+		// Replace all uppercase inline (there must be a space character before)
+		// WITHOUT SURROUNDING DIV !
+		// _$A, _$B, _$C
+		md = replace_ABC_inline_no_div(md, i, key, answer, rawTextColor)
 
 		// Replace all uppercase inline (there must be a space character before)
 		// $A, $B, $C
@@ -114,7 +123,7 @@ function replace_abc_toTex(md: string, index: number, key: string, answer: keybo
 function replace_ABC_toBlock(md: string, index: number, key: string, answer: keyboardEventInterface, color: string): string {
 	// $A, $B, ...
 	return md.replaceAll(
-		new RegExp(`\n(${key})`, "gm"),
+		new RegExp(`\n${key}`, "gm"),
 		`\n<div data-answer-index="${index}" class="border p-3 ${color}">\n\n${
 			answer.raw ?
 				answer.raw :
@@ -127,12 +136,21 @@ function replace_ABC_inline(md: string, index, key: string, answer: keyboardEven
 	// $A, $B, ... inline
 	return md.replaceAll(
 		new RegExp(`${key}`, "gm"),
-		`[${
+		`<div data-answer-index="${index}" class="border px-3 py-1 inline-block ${color}">${
 			answer.raw ?
 				answer.raw :
 				"< ? >"
+		}</div>`)
+}
 
-		}]{.border .px-3 .py-1 .${color} data-answer-index=${index}}`)
+function replace_ABC_inline_no_div(md: string, index, key: string, answer: keyboardEventInterface, color: string): string {
+	// $A, $B, ... inline
+	return md.replaceAll(
+		new RegExp(`_${key}`, "gm"),
+		answer.raw ?
+			answer.raw :
+			`<span data-answer-index="${index}" class="px-3 ${color}">< ? ></span>`
+	)
 }
 
 function replace_ABC_without_placeholder(md: string, index, key: string, answer: keyboardEventInterface, color: string): string {

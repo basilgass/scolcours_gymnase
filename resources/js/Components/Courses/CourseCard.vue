@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 
-import {CourseInterface} from "@/types/modelInterfaces.ts"
+import {CourseInterface, TeamInterface} from "@/types/modelInterfaces.ts"
 import ScButton from "@/Components/Ui/scButton.vue"
 import Card from "@/Components/Ui/Card.vue"
 import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
@@ -9,7 +9,8 @@ import {computed} from "vue"
 import {router} from "@inertiajs/vue3"
 
 const props = defineProps<{
-	course: CourseInterface
+	course: CourseInterface,
+	team?: TeamInterface
 }>()
 
 const editMode = useStoreEditMode()
@@ -35,15 +36,27 @@ const scheduledAt_formated = computed<string>(() => {
 				<div class="font-code text-xs">
 					id: {{ course.id }}
 				</div>
-				<sc-button
+				<div
 					v-admin="editMode.enable"
-					:href="route('admin.courses.edit', {course: course.slug})"
-					icon
-					type="edit"
-					xs
+					class="flex gap-3"
 				>
-					éditer le cours
-				</sc-button>
+					<sc-button
+						v-if="team"
+						:href="route('admin.courses.dashboard', {course: course.slug, team: team.name})"
+						type="primary"
+						xs
+					>
+						voir la leçon
+					</sc-button>
+					<sc-button
+						:href="route('admin.courses.edit', {course: course.slug})"
+						icon
+						type="edit"
+						xs
+					>
+						éditer le cours
+					</sc-button>
+				</div>
 			</div>
 		</template>
 		<div

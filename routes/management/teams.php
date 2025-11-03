@@ -8,10 +8,10 @@ Route::middleware('web')
 
 	     // Admin routes
 	     Route::middleware('admin')
-		     ->as('admin.')
+	          ->as('admin.')
 	          ->group(function () {
 		          Route::prefix('teams')
-			          ->as('teams.')
+		               ->as('teams.')
 		               ->group(function () {
 
 			               Route::get('/', [TeamController::class, "index"])
@@ -25,14 +25,14 @@ Route::middleware('web')
 			               Route::get('{team:name}/stats/{chapter:slug}', [TeamController::class, "stats"])
 			                    ->withoutScopedBindings()
 			                    ->name('chapters.stats');
-				   });
+		               });
 	          });
      });
 
 
 Route::middleware('api')
      ->prefix('api')
-	->as('api.')
+     ->as('api.')
      ->group(function () {
 	     // Public api.
 
@@ -45,12 +45,11 @@ Route::middleware('api')
 
 	     // Admin api
 	     Route::middleware('admin')
-		     ->prefix('admin')
-		     ->as('admin.')
+	          ->prefix('admin')
+	          ->as('admin.')
 	          ->group(function () {
 
-		          Route::apiResource('teams', TeamApiController::class)
-		               ->only('index', 'show', 'store', 'destroy');
+		          Route::apiResource('teams', TeamApiController::class);
 
 		          Route::prefix('teams')
 		               ->as('teams.')
@@ -59,8 +58,8 @@ Route::middleware('api')
 			               Route::patch('/{team}/toggle/{user}', [TeamApiController::class, "toggle"])
 			                    ->name('toggleUser');
 
-						   Route::get('/{team}/users', [TeamApiController::class, 'users'])
-							   ->name('users');
+			               Route::get('/{team}/users', [TeamApiController::class, 'users'])
+			                    ->name('users');
 		               });
 	          });
 

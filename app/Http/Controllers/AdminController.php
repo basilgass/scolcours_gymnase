@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\ChallengeResource;
 use App\Http\Resources\ChapterResource;
 use App\Http\Resources\CourseResource;
+use App\Http\Resources\TeamResource;
 use App\Http\Resources\ToolResource;
 use App\Http\Resources\UserResource;
 use App\Http\Resources\UserTeamResource;
@@ -42,7 +42,7 @@ class AdminController extends Controller
 		return Inertia::render(
 			'Admin/AdminConfigPage',
 			[
-				"title" => $scolcours->title,
+				"title"     => $scolcours->title,
 				"allThemes" => Theme::orderBy('order')->get()
 			]
 		);
@@ -52,9 +52,9 @@ class AdminController extends Controller
 	{
 		// Validation
 		$validated = $request->validate([
-			'title' => ['string', 'min:2'],
-			'themes' => ['array'],
-			'themes.*.slug' => ['string', 'exists:App\Models\Theme,slug'],
+			'title'            => ['string', 'min:2'],
+			'themes'           => ['array'],
+			'themes.*.slug'    => ['string', 'exists:App\Models\Theme,slug'],
 			'themes.*.enabled' => ['boolean'],
 		]);
 
@@ -76,8 +76,8 @@ class AdminController extends Controller
 	public function configUpdateOrder(Request $request)
 	{
 		$validated = $request->validate([
-			'order' => ['array'],
-			'order.*.id' => ['exists:App\Models\Theme'],
+			'order'         => ['array'],
+			'order.*.id'    => ['exists:App\Models\Theme'],
 			'order.*.order' => ['int', 'min:1'],
 		]);
 
@@ -112,33 +112,6 @@ class AdminController extends Controller
 			'Admin/AdminToolsPage',
 			[
 				'tools' => ToolResource::collection(Tool::all())
-			]
-		);
-	}
-
-	public function challenges()
-	{
-		return Inertia::render(
-			'Admin/AdminChallengesPage',
-			[
-				'challenges' => Challenge::all()->map(function (Challenge $tool, $key) {
-					return [
-						'slug' => $tool->slug,
-						'title' => $tool->title,
-						'theme_id' => $tool->chapter->theme_id,
-						'updated_at' => $tool->updated_at->format('d.m.Y H:m'),
-					];
-				})
-			]
-		);
-	}
-
-	public function generators()
-	{
-		return Inertia::render(
-			'Admin/AdminGeneratorsPage',
-			[
-				'generators' => Generator::all()
 			]
 		);
 	}
@@ -197,12 +170,39 @@ class AdminController extends Controller
 					"slug" => $slug
 				],
 				[
-					"title" => $title,
-					"body" => $body,
+					"title"      => $title,
+					"body"       => $body,
 					"parameters" => $parameters
 				]
 			);
 		}
+	}
+
+	public function challenges()
+	{
+		return Inertia::render(
+			'Admin/AdminChallengesPage',
+			[
+				'challenges' => Challenge::all()->map(function (Challenge $tool, $key) {
+					return [
+						'slug'       => $tool->slug,
+						'title'      => $tool->title,
+						'theme_id'   => $tool->chapter->theme_id,
+						'updated_at' => $tool->updated_at->format('d.m.Y H:m'),
+					];
+				})
+			]
+		);
+	}
+
+	public function generators()
+	{
+		return Inertia::render(
+			'Admin/AdminGeneratorsPage',
+			[
+				'generators' => Generator::all()
+			]
+		);
 	}
 
 	public function widgets()
@@ -230,8 +230,8 @@ class AdminController extends Controller
 	public function createUsers(Request $request)
 	{
 		$validated = $request->validate([
-			"users" => ['required'],
-			"users.*" => ['email'],
+			"users"    => ['required'],
+			"users.*"  => ['email'],
 			'password' => ['required', 'string', 'min:6']
 		]);
 
@@ -247,10 +247,10 @@ class AdminController extends Controller
 			}
 
 			User::create([
-				'name' => ucwords($name),
+				'name'      => ucwords($name),
 				'firstname' => ucwords($firstname ?? ""),
-				'email' => $email,
-				'password' => Hash::make($validated['password']),
+				'email'     => $email,
+				'password'  => Hash::make($validated['password']),
 			]);
 		}
 
@@ -260,7 +260,7 @@ class AdminController extends Controller
 	public function updateUser(User $user, Request $request)
 	{
 		$request->validate([
-			'name' => 'required',
+			'name'      => 'required',
 			'firstname' => 'required'
 		]);
 
@@ -298,7 +298,21 @@ class AdminController extends Controller
 			'Admin/AdminCoursesPage',
 			[
 				'courses' => CourseResource::collection($courses),
-				'teams'=>UserTeamResource::collection(Team::all())
+				'teams'   => TeamResource::collection(Team::all())
+			]
+		);
+	}
+
+	public function agenda()
+	{
+		$courses = Course::with('teams')
+		                 ->without('lessons')->get();
+
+		return Inertia::render(
+			'Admin/AdminAgendaPage',
+			[
+				'courses' => CourseResource::collection($courses),
+				'teams'   => UserTeamResource::collection(Team::all())
 			]
 		);
 	}

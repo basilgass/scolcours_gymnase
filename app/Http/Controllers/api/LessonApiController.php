@@ -8,7 +8,6 @@ use App\Http\Resources\LessonResource;
 use App\Models\Course;
 use App\Models\Lesson;
 use App\Models\Post;
-use App\Models\Score;
 use App\Models\Team;
 use App\Traits\ResolvesTarget;
 use Illuminate\Http\Request;
@@ -41,7 +40,7 @@ class LessonApiController extends Controller
 			$lessonData['scoreRules'] = $request->get('scoreRules');
 		}
 
-		$lessonData['order'] = $course->lessons->count()+1;
+		$lessonData['order'] = $course->lessons->count() + 1;
 
 		$lesson = $course->lessons()->create($lessonData);
 
@@ -111,7 +110,8 @@ class LessonApiController extends Controller
 	{
 
 		$validated = $request->validate([
-			'scheduled_at' => ['required', 'date_format:Y-m-d\TH:i']
+			'scheduled_at' => ['required', 'date_format:Y-m-d\TH:i'],
+			'homework'     => ['required', 'boolean'],
 		]);
 
 		$calendar = $lesson

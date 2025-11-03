@@ -11,28 +11,28 @@ import {
 } from "@/types/scoreInterfaces.ts"
 
 export interface UserInterface {
-	id: number;
-	name: string;
+	email: string;
 	firstname: string;
 	fullname: string;
-	email: string;
+	id: number;
+	name: string;
 	teams?: { id: number, name: string }[];
 }
 
 export interface ChapterInterface {
-	id: number;
-	slug: string;
-	title: string;
-	meta_title: string;
-	theme_id: number;
+	active: boolean;
 	block: {
 		id: number,
 		body: string
 	},
-	active: boolean;
-	url: string;
-	updated_at: string;
+	id: number;
+	meta_title: string;
 	modified: string;
+	slug: string;
+	theme_id: number;
+	title: string;
+	updated_at: string;
+	url: string;
 }
 
 export interface ChapterShowInterface extends ChapterInterface {
@@ -40,46 +40,44 @@ export interface ChapterShowInterface extends ChapterInterface {
 }
 
 export interface BlockMinInterface {
-	id: number
-	title: string
 	body: string
+	id: number
 	illustration: IllustrationInterface
+	title: string
 }
 
 export interface BlockInterface {
-	id: number;
 	active: boolean;
-	order: number;
-	merge: boolean;
-	switch: string | boolean;
-	type: string;
-	title: string;
 	body: string;
-	template: string;
-	illustrationsGrid: string;
+	id: number;
 	illustrations: IllustrationInterface[];
-	script: string;
+	illustrationsGrid: string;
 	json: string;
+	merge: boolean;
+	order: number;
+	script: string;
+	switch: string | boolean;
+	template: string;
+	title: string;
+	type: string;
 }
 
 export interface IllustrationInterface {
-	id: number;
 	block_id: number;
-	order: number;
-	title: string;
-	css: string;
-
-	widget_id: number;
-	widget: WidgetInterface;
-
-	parameters: string;
 	code: string;
+	css: string;
+	id: number;
 	isNew?: boolean;
+	order: number;
+	parameters: string;
+	title: string;
+	widget: WidgetInterface;
+	widget_id: number;
 }
 
 export interface QuestionDynamicInterface {
-	block: BlockMinInterface;
 	answer: string;
+	block: BlockMinInterface;
 	keyboard: string;
 	user: {
 		is_resolved: boolean
@@ -87,44 +85,44 @@ export interface QuestionDynamicInterface {
 }
 
 export interface QuestionInterface extends QuestionDynamicInterface {
+	css: string;
+	displayIf: null | string;
 	id: number;
 	order: number;
-	displayIf: null | string;
-	css: string;
 	user: ScoreInterface<ScoreQuestionDataInterface>;
 }
 
 
 export interface PostInterface {
-	id: number;
-	chapter_id: number;
-	type: string;
-	title: string;
-	order: number;
 	active: number;
-	updated_at: string;
+	chapter_id: number;
+	id: number;
+	order: number;
 	questionsInfo: {
 		count: number,
 		answered: number
 	};
+	title: string;
+	type: string;
+	updated_at: string;
 }
 
 export interface PostShowInterface extends PostInterface {
 	blockAnchor: number;
-	script: string;
-	switch: string;
 	blocks: BlockInterface[];
 	questions: QuestionInterface[];
 	questionsGrid: string;
+	script: string;
+	switch: string;
 }
 
 export interface User {
-	id: number
-	name: string
-	firstname: string
-	fullname: string
 	email: string
 	email_verified_at: string
+	firstname: string
+	fullname: string
+	id: number
+	name: string
 	role: string
 }
 
@@ -134,62 +132,62 @@ export interface ThemeNameInterface {
 }
 
 export interface ThemeInterface {
+	color: string
+	enabled: boolean
+	icon: string
 	id: number
+	order: number
 	slug: string
 	title: string
-	order: number
-	color: string
-	icon: string
-	enabled: boolean
 }
 
 export interface ToolInterface {
-	id: number
-	slug: string
-	title: string
 	body: string
+	id: number
 	parameters: string
+	slug: string
 	theme_id: number
+	title: string
 	updated_at: string
 }
 
 export interface EvaluationInterface {
-	id: number;
-	slug: string;
-	title: string;
 	body: string;
-	randomOrder: boolean;
+	id: number;
 	owner: User;
 	questions: QuestionInterface[];
+	randomOrder: boolean;
+	slug: string;
+	title: string;
 }
 
 export interface GeneratorInterface {
-	id: number;
-	slug: string;
-	title: string;
-	theme_id: number;
 	body: string;
-	template: string;
-	keyboard: string;
 	code: string;
+	id: number;
+	keyboard: string;
 	order: number;
+	slug: string;
+	template: string;
+	theme_id: number;
+	title: string;
 	user?: ScoreInterface<ScoreGeneratorDataInterface>
 }
 
 export interface ChallengeScoreInterface {
-	score: number,
 	level: number
+	score: number,
 }
 
 export type ChallengeGameState = "intro" | "running" | "finished"
 
 export interface ChallengeMinInterface {
+	active: boolean;
+	block: BlockInterface;
+	chapter: ChapterInterface;
 	id: number;
 	slug: string;
-	active: boolean;
 	title: string;
-	chapter: ChapterInterface;
-	block: BlockInterface;
 }
 
 export interface ChallengeMinInterface {
@@ -199,37 +197,37 @@ export interface ChallengeMinInterface {
 }
 
 export interface ChallengeInterface {
-	id: number;
-	slug: string;
 	active: boolean;
-	title: string;
-	maxLevel: number;
-	nextLevelAfter: number;
-	duration: number;
-	lives: number;
-	bonusScoreTrigger: number;
-	bonusScoreLife: number;
-	bonusScoreTime: number;
+	best: ChallengeScoreInterface;
+	block: BlockInterface;
 	bonusLevelLife: number;
 	bonusLevelTime: number;
-	updated_at: string;
+	bonusScoreLife: number;
+	bonusScoreTime: number;
+	bonusScoreTrigger: number;
 	chapter: ChapterInterface;
-	theme_id: number;
-	block: BlockInterface;
-	best: ChallengeScoreInterface;
-	user: ChallengeScoreInterface;
+	duration: number;
 	generators: GeneratorInterface[];
+	id: number;
+	lives: number;
+	maxLevel: number;
+	nextLevelAfter: number;
+	slug: string;
+	theme_id: number;
+	title: string;
+	updated_at: string;
+	user: ChallengeScoreInterface;
 }
 
 export interface CardInterface {
 	id: number,
 	recto: null | BlockInterface,
-	verso: null | BlockInterface,
 	reference?: null | {
 		block: BlockInterface,
 		splitter: undefined | null | 'title' | string
 	}
 	user?: Partial<ScoreInterface<ScoreCardDataInterface>>
+	verso: null | BlockInterface,
 }
 
 export interface CardInterfaceExtended extends CardInterface {
@@ -239,107 +237,111 @@ export interface CardInterfaceExtended extends CardInterface {
 }
 
 export interface DeckInterface {
-	id: number,
-	title: string,
-	slug: string,
-	chapter: ChapterInterface,
-	cards_count: number,
 	cards: CardInterface[],
+	cards_count: number,
+	chapter: ChapterInterface,
+	id: number,
+	slug: string,
+	title: string,
 	user: ScoreInterface<ScoreDeckDataInterface>
 }
 
 export interface provideDeckData {
-	currentCardId: Ref<number>,
 	cards: Ref<CardInterfaceExtended[]>,
-	intro: Ref<boolean>,
-	running: ComputedRef<boolean>,
-	loggedIn: ComputedRef<boolean>,
+	currentCardId: Ref<number>,
 	done: () => void,
+	intro: Ref<boolean>,
+	loggedIn: ComputedRef<boolean>,
 	reset: () => void
+	running: ComputedRef<boolean>,
 }
 
 export interface WidgetInterface {
+	component: string,
+	control: boolean
+	description: string,
 	id: number,
 	name: string,
 	slug: string,
-	component: string,
-	description: string,
 	theme_id: number,
-	control: boolean
 }
 
 export interface WidgetPropsInterface {
-	parameters: string;
 	code: string;
+	parameters: string;
 }
 
 export interface TeamInterface {
+	active: boolean,
+	calendar: TeamCalendarInterface[]
 	id: number,
 	name: string,
-	users: UserInterface[]
+	users: UserInterface[],
+}
+
+export interface TeamCalendarInterface {
+	day: number,// 0, 1, 2, 3, 4, 5, 6, 7
+	id: number,
+	time: string// hh:mm:ss
 }
 
 export interface UserTeamInterface {
+	calendar: TeamCalendarInterface[]
 	id: number,
 	name: string,
-	calendar: {
-		id: number,
-		day: number,	// 0, 1, 2, 3, 4, 5, 6, 7
-		time: string,    // hh:mm:ss
-	}[]
 }
 
 export interface PostQuestionsStatsInterface {
 	id: number;
-	title: string;
-	type: string;
 	questions: {
 		id: number;
 		users: Record<string, number>[];
 	}[];
+	title: string;
+	type: string;
 }
 
 export interface PostQuestionsForOneUserStatsInterface {
 	id: number;
-	title: string;
 	questions: {
 		id: number;
 		result: number;
 	}[];
 	sum: number;
+	title: string;
 	total: number;
 }
 
 export interface QuizzInterface {
+	chapter: ChapterInterface,
 	id: number
-	title: string
 	intro: BlockInterface,
 	outro: BlockInterface,
 	questions_count: number,
-	chapter: ChapterInterface,
 	sessions: QuizzSessionInterface[]
+	title: string
 }
 
 export interface QuizzSessionInterface {
-	id : number,
-	shortcode: string
+	current: number,
+	enable: boolean,
+	id: number,
+	projection: string, // TODO: define projection value.
+	questions: QuestionInterface[],
 	quizz: {
 		id: number
 		title: string
 	},
-	enable: boolean,
-	current: number,
-	status: 'intro' | 'outro' | 'question' | 'error',
+	shortcode: string
 	showAnswer: boolean,
-	projection: string, // TODO: define projection value.
+	status: 'intro' | 'outro' | 'question' | 'error',
 	total: number,
-	questions: QuestionInterface[],
 	users: UserInterface[]
 }
 
 export interface TranslationLanguageInterface {
-	slug: string
 	name: string
+	slug: string
 }
 
 export interface TranslationUnitInterface {
@@ -348,11 +350,11 @@ export interface TranslationUnitInterface {
 }
 
 export interface TranslationWord {
-	id: number,
-	fr: string,
-	foreign: string,
-	result?: boolean,
 	errors?: number
+	foreign: string,
+	fr: string,
+	id: number,
+	result?: boolean,
 }
 
 export interface TranslationUnitInterfaceExtended extends TranslationUnitInterface {
@@ -361,63 +363,66 @@ export interface TranslationUnitInterfaceExtended extends TranslationUnitInterfa
 }
 
 export interface FormulaInterface {
-	id: number
-	theme_id: number
+	block: BlockInterface
 	chapter: {
 		id: number,
 		slug: string,
 		title: string
 	}
+	id: number
 	order: number
-	block: BlockInterface
+	theme_id: number
 }
 
 export interface BookInterface {
+	cover: string
 	id: number,
 	slug: string,
 	title: string,
-	cover: string
 }
 
-
-export interface CourseInterface {
-	id: number,
-	title: string,
-	slug: string,
-	status: 'not yet started' | 'active' | 'finished',
-	scheduled_at: string,
-	theme_id: number,
+export interface CourseMinInterface {
 	block: BlockInterface,
-	lessons: LessonInterface[],
-	teams?: UserTeamInterface[],
 	created_at: string,
+	id: number,
+	slug: string,
+	theme_id: number,
+	title: string,
 	updated_at: string,
+}
+
+export interface CourseInterface extends CourseMinInterface {
+	lessons: LessonInterface[],
+	scheduled_at: string,
+	status: 'not yet started' | 'active' | 'finished',
+	teams?: UserTeamInterface[],
 }
 
 export interface LessonInterface<T extends LessonScoreRulesInterface = LessonScoreRulesInterface> {
-	id: number,
-	title: string,
 	course_id: number,
-	requires: number[],
-	lessonable_id: number | null,
-	lessonable_type: lessonableClassName | null,
-	lessonable_tag: 'exercise' | 'howto' | null,
-	scoreRules: T,
-	user: ScoreInterface<ScoreLessonDataInterface>,
-	scheduled_at: string,
-	remaining_time: string,
 	created_at: string,
+	homework: boolean,
+	id: number,
+	lessonable_id: number | null,
+	lessonable_tag: 'exercise' | 'howto' | null,
+	lessonable_type: lessonableClassName | null,
+	remaining_time: string,
+	requires: number[],
+	scheduled_at: string,
+	scoreRules: T,
+	title: string,
 	updated_at: string,
+	user: ScoreInterface<ScoreLessonDataInterface>,
 }
 
 export interface ScoreInterface<T extends ScoreDataInterface = ScoreDataInterface> {
+	attempts: number,
+	data: T,
 	id: number,
-	user_id: number,
+	is_resolved: boolean,
 	score: number,
 	scoreable_id: number,
 	scoreable_type: scoreableClassName,
-	is_resolved: boolean,
-	attempts: number,
-	data: T,
 	updated_at: string
+	user_id: number,
 }

@@ -12,12 +12,14 @@ class LessonCalendar extends Model
 		'team_id',
 		'lesson_id',
 		'scheduled_at',
+		'homework'
 	];
 
 	protected function casts(): array
 	{
 		return [
 			'scheduled_at' => 'datetime',
+			'homework'     => 'boolean'
 		];
 	}
 

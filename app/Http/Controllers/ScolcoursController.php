@@ -7,6 +7,7 @@ use App\Http\Resources\TeamResource;
 use App\Models\Block;
 use App\Models\Chapter;
 use App\Models\Post;
+use App\Models\SchoolTimetable;
 use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -181,5 +182,10 @@ class ScolcoursController extends Controller
 	public function qrcode()
 	{
 		return Inertia::render('QRCode', []);
+	}
+
+	public function timetable()
+	{
+		return SchoolTimetable::all();
 	}
 }

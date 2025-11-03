@@ -1,0 +1,46 @@
+<script lang="ts" setup>
+import type {EvaluationInterface} from "@/types/modelInterfaces"
+import LayoutMain from "@/Layouts/LayoutMain.vue"
+import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
+import FilteredList from "@/Components/Ui/FilteredList.vue"
+import {ref} from "vue"
+import Card from "@/Components/Ui/Card.vue"
+import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
+
+defineOptions({layout: LayoutMain})
+
+let props = defineProps<{
+	evaluations: EvaluationInterface[]
+}>()
+
+const theEvaluations = ref<EvaluationInterface[]>(props.evaluations)
+</script>
+
+<template>
+	<article>
+		<article-title title="évaluations" />
+
+		<filtered-list
+			:list="theEvaluations"
+			list-class="grid grid-cols-1 gap-3"
+		>
+			<template #card="{item}: {item: EvaluationInterface}">
+				<Card>
+					<template #header>
+						<div class="flex justify-between">
+							<h3 v-katex.auto="item.title" />
+							<div class="font-code text-xs">
+								{{ item.slug }}
+							</div>
+						</div>
+					</template>
+					<markdown-it :text="item.body" />
+				</Card>
+			</template>
+		</filtered-list>
+		<div>liste des évaluations disponibles.</div>
+		{{ evaluations }}
+	</article>
+</template>
+
+

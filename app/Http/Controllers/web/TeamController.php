@@ -5,6 +5,7 @@ namespace App\Http\Controllers\web;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ChallengeResource;
 use App\Http\Resources\ChapterResource;
+use App\Http\Resources\CourseResource;
 use App\Http\Resources\TeamResource;
 use App\Http\Resources\UserResource;
 use App\Models\Challenge;
@@ -21,6 +22,7 @@ class TeamController extends Controller
 				return [
 					'id'          => $team->id,
 					'name'        => $team->name,
+					'active'      => $team->active,
 					'users_count' => $team->users->count(),
 				];
 			})
@@ -31,10 +33,11 @@ class TeamController extends Controller
 	{
 		return Inertia::render("Teams/TeamShow",
 			[
-				'team'       => $team,
-				'students'   => UserResource::collection($team->users),
-				'chapters'   => ChapterResource::collection(Chapter::where('active', true)->get()),
-				'challenges' => ChallengeResource::collection(Challenge::all()),
+				'team'     => $team,
+				'students' => UserResource::collection($team->users),
+				'courses'  => CourseResource::collection($team->courses)
+				//				'chapters'   => ChapterResource::collection(Chapter::where('active', true)->get()),
+				//				'challenges' => ChallengeResource::collection(Challenge::all())
 			]
 		);
 	}

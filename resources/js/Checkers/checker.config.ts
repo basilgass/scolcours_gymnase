@@ -1,8 +1,8 @@
 export interface CheckerResult {
-	result: boolean,
+	index?: number
 	message: string,
 	partial?: boolean
-	index?: number
+	result: boolean,
 }
 
 export enum CHECKERS {
@@ -29,6 +29,7 @@ export enum CHECKERS {
 	// Custom checkers
 	ORDER = "order",
 	QCM = "qcm",
+	SENTENCE = "sentence",
 	STUDY = "study",
 	TABLE_OF_SIGNS = "tos",
 	TYPE = "type",

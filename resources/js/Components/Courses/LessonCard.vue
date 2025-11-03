@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 
 import Card from "@/Components/Ui/Card.vue"
 import {CourseInterface, LessonInterface, ScoreInterface, UserTeamInterface} from "@/types/modelInterfaces.ts"
@@ -50,6 +50,7 @@ function updateLesson(value?: string) {
 			team: props.team.id,
 		}), {
 			scheduled_at: scheduled_at.value,
+			homework: false // TODO : résoudre le homework dans LessonCard.
 		})
 		.then(() => {
 			flash.success('La leçon a bien été mise à jour.')
@@ -84,10 +85,10 @@ onMounted(() => {
 <template>
 	<div class="flex gap-5 w-full">
 		<Card
-			class="hover:shadow hover:scale-101 transition-all"
 			:class="editMode.enable ? 'flex-1/3': 'flex-1'"
-			:success="isDone"
 			:error="isPast"
+			:success="isDone"
+			class="hover:shadow hover:scale-101 transition-all"
 		>
 			<div
 				class="flex justify-between cursor-pointer"
@@ -105,9 +106,9 @@ onMounted(() => {
 				</div>
 				<div>
 					<sc-button
-						xs
-						type="primary"
 						outline
+						type="primary"
+						xs
 					>
 						<i class="px-4 text-lg -my-1 bi bi-arrow-right" />
 					</sc-button>
@@ -119,24 +120,24 @@ onMounted(() => {
 			class="flex-2/3 flex flex-col gap-3"
 		>
 			<Card
+				v-admin="editMode.enable"
 				v-theme.admin
 				class="flex-2/3"
-				v-admin="editMode.enable"
 			>
 				<div class="flex gap-3 items-top py-3">
 					<form-maker
-						class="max-w-[250px] "
-						type="datetime-local"
 						v-model="scheduled_at"
 						btn
+						class="max-w-[250px] "
+						type="datetime-local"
 						@button="updateLesson"
 					/>
 
 					<lesson-team-calendar
-						class="flex-1"
 						:calendar="team.calendar"
-						@button-click="updateLesson($event)"
 						:n="4"
+						class="flex-1"
+						@button-click="updateLesson($event)"
 					/>
 				</div>
 			</Card>

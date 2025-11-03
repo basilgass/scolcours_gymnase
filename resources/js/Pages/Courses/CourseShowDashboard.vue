@@ -22,6 +22,7 @@ import LessonTypeIcon from "@/Components/Courses/LessonTypeIcon.vue"
 import {ScoreLessonDataInterface} from "@/types/scoreInterfaces.ts"
 import LessonByDates from "@/Components/Courses/LessonByDates.vue"
 import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
+import {router} from "@inertiajs/vue3"
 
 defineOptions({layout: LayoutMain})
 
@@ -159,7 +160,6 @@ const showBlock = ref<boolean>(false)
 			</template>
 		</article-title>
 
-
 		<block-show
 			v-show="showBlock"
 			:block="course.block"
@@ -214,7 +214,10 @@ const showBlock = ref<boolean>(false)
 				:key="`stats-${lesson.id}`"
 				class="flex gap-3"
 			>
-				<div class="flex gap-2">
+				<div
+					class="flex gap-2 cursor-pointer hover:font-semibold"
+					@click="router.visit(route('students.lessons.show', {course: course.slug, lesson: lesson.id }))"
+				>
 					<lesson-type-icon
 						:lesson
 						xs

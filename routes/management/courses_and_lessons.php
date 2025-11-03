@@ -47,6 +47,7 @@ Route::middleware('api')
      ->as('api.')
      ->group(function () {
 
+
 	     // Admin api
 	     Route::middleware('admin')
 	          ->prefix('admin')
@@ -60,8 +61,8 @@ Route::middleware('api')
 		          Route::patch('lesson_calendar/{team}/{lesson}/update', [LessonApiController::class, 'updateLessonCalendar'])
 		               ->name('teams.lessons.update');
 
-				  Route::patch('courses/{course}/toggleTeam/{team}', [CourseApiController::class, 'toggleTeam'])
-					  ->name('courses.toggle-team');
+		          Route::patch('courses/{course}/toggleTeam/{team}', [CourseApiController::class, 'toggleTeam'])
+		               ->name('courses.toggle-team');
 		          Route::patch('courses/{course}/lessons/order', [LessonApiController::class, 'updateLessonsOrder'])
 		               ->name('courses.lessons.updateOrder');
 
@@ -71,8 +72,7 @@ Route::middleware('api')
 		          Route::get('courses/lessonables', [CourseApiController::class, 'fetchLessonables'])
 		               ->name('courses.lessonables');
 
-				  Route::get('course/{course}/team/{team}/stats', [CourseApiController::class, 'teamStats'])
-					  ->name('courses.teams.stats');
+		          Route::get('course/{course}/team/{team}/stats', [CourseApiController::class, 'teamStats'])
+		               ->name('courses.teams.stats');
 	          });
-
      });

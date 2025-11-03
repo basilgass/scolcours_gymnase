@@ -28,6 +28,10 @@ class Team extends Model
 	protected $with = [];
 	protected $guarded = [];
 
+	protected $casts = [
+		'active' => "boolean",
+	];
+
 	public function users()
 	{
 		return $this->belongsToMany(User::class)->orderBy('name')->orderBy('firstname');

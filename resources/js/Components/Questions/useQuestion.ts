@@ -62,11 +62,26 @@ export function useQuestion(mayBeRefOrGetter: QuestionInterface, config: questio
 
 		// Get the keyboards
 		const arr: questionValidatorInterface[] = []
-		const keyboard_and_checker_arr = getKeyboards(question.value.keyboard)
+
+		const loop = question.value.keyboard.toLowerCase().endsWith('\n\nloop')
+
+		const questionKeyboards = loop
+			? question.value.keyboard.substring(0, question.value.keyboard.length - 6)
+			: question.value.keyboard
+
+		const keyboard_and_checker_arr = getKeyboards(questionKeyboards)
+
+		const keyboardCount = keyboard_and_checker_arr.length
 
 		// Loop over each answer.
 		correctAnswers.value.forEach((answer: string, index: number) => {
-			const {keyboard, checker} = keyboard_and_checker_arr[Math.min(keyboard_and_checker_arr.length - 1, index)]
+			// Mode 1 : le dernier "keyboard" est le clavier de référene.
+			// Mode 2 : les claviers sont sous forme de "loop"
+
+			const {keyboard, checker} = loop
+				? keyboard_and_checker_arr[index % keyboardCount]
+				: keyboard_and_checker_arr[Math.min(keyboardCount - 1, index)]
+
 			arr.push({
 				key: "$" + ("abcdefghijklmnopqrstuvwxyz"[index]), // may be undefined !
 				answer: answer,

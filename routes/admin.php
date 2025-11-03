@@ -70,12 +70,15 @@ Route::middleware('admin')
 		               ->name('destroy');
 	          });
 
-		 Route::prefix('courses')
-			 ->as('courses.')
-			 ->group(function(){
-				 Route::get('/', [AdminController::class, 'courses'])
-				      ->name('index');
-			 });
+	     Route::prefix('courses')
+	          ->as('courses.')
+	          ->group(function () {
+		          Route::get('/', [AdminController::class, 'courses'])
+		               ->name('index');
+	          });
+
+	     Route::get('agenda', [AdminController::class, 'agenda'])
+	          ->name('agenda');
 
 	     Route::prefix('illustrations')
 	          ->as('illustrations.')
@@ -99,14 +102,14 @@ Route::middleware('admin')
 
 
 Route::middleware('api')
-	->prefix('api')
-	->as('api')
-	->group(function(){
-		Route::middleware('admin')
-			->prefix('admin')
-			->as('admin')
-			->group(function(){
+     ->prefix('api')
+     ->as('api')
+     ->group(function () {
+	     Route::middleware('admin')
+	          ->prefix('admin')
+	          ->as('admin')
+	          ->group(function () {
 
 
-			});
-	});
+	          });
+     });

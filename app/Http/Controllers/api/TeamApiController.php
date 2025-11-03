@@ -3,19 +3,11 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\ChallengeResource;
-use App\Http\Resources\ChapterResource;
 use App\Http\Resources\TeamResource;
 use App\Http\Resources\UserResource;
-use App\Http\Resources\UserTeamResource;
-use App\Models\Challenge;
-use App\Models\Chapter;
 use App\Models\Team;
-use App\Models\Theme;
 use App\Models\User;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
 
 class TeamApiController extends Controller
 {
@@ -39,6 +31,17 @@ class TeamApiController extends Controller
 		return TeamResource::make($team);
 	}
 
+	public function update(Request $request, Team $team)
+	{
+		$validated = $request->validate([
+			'active' => ['boolean'],
+			'name'   => ['string']
+		]);
+
+		$team->update($validated);
+		return response()->noContent();
+	}
+
 	public function destroy(Team $team)
 	{
 		$id = $team->id;
@@ -58,7 +61,7 @@ class TeamApiController extends Controller
 		$user->refresh();
 
 		return [
-			"user" => $user->id,
+			"user"  => $user->id,
 			"teams" => $user->teams,
 		];
 	}

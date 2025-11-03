@@ -27,6 +27,11 @@ function getComponentKeyboardName(value: string): string {
 			return "Order"
 		case "qcm":
 			return "Qcm"
+		case "sentence":
+		case "phrase":
+		case "words":
+		case "mots":
+			return "Sentence"
 		case "input":
 			return "Input"
 		case "type":

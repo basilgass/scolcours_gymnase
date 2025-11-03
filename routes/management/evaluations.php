@@ -5,16 +5,29 @@ use App\Http\Controllers\web\EvaluationController;
 Route::middleware('web')
      ->group(function () {
 	     // Public routes.
-	     Route::get('evaluations/{evaluation}', [EvaluationController::class, 'show'])
-	          ->name('evaluations.show');
 
+	     // Students routes
+	     Route::middleware('students')
+	          ->group(function () {
+		          Route::resource('evaluations', EvaluationController::class)
+		               ->only(['index', 'show']);
+	          });
+
+	     // Admin routes
+	     Route::middleware('admin')
+	          ->prefix('admin')
+	          ->as('admin.')
+	          ->group(function () {
+		          Route::resource('evaluations', EvaluationController::class)
+		               ->only(['index', 'show', 'edit']);
+	          });
      });
 
 
 Route::middleware('api')
      ->prefix('api')
-	->as('api.')
-	->group(function () {
+     ->as('api.')
+     ->group(function () {
 	     // Public api.
 
 

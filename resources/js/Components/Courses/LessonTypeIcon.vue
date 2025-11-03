@@ -1,9 +1,9 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 
 import {lessonableClassName} from "@/types/lessonInterfaces.ts"
 
 withDefaults(defineProps<{
-	lesson: { lessonable_type: lessonableClassName, lessonable_tag?: 'exercise' | 'howto' | null },
+	lesson: { lessonable_type: lessonableClassName, lessonable_tag?: 'exercise' | 'howto' | null } | null,
 	xl?: boolean
 	xs?: boolean
 }>(), {
@@ -14,6 +14,7 @@ withDefaults(defineProps<{
 
 <template>
 	<i
+		v-if="lesson"
 		:class="{
 			'bi bi-book': lesson.lessonable_type==='Post' && !lesson.lessonable_tag,
 			'bi bi-journal': lesson.lessonable_type==='Post' && lesson.lessonable_tag==='exercise',
