@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 
 import {CourseInterface, LessonInterface, UserTeamInterface} from "@/types/modelInterfaces.ts"
 import LessonDrop from "@/Components/Courses/LessonDrop.vue"
@@ -39,6 +39,14 @@ const firstTimeOfTheDayInMinutes = computed(() => {
 	return Math.min(...times)
 })
 
+const homeworkLessons = computed(() => {
+	return props.lessons.filter(lesson => lesson.homework)
+})
+
+const courseLessons = computed(() => {
+	return props.lessons.filter(lesson => !lesson.homework)
+})
+
 
 const beforeLessons = computed(() => {
 	if (firstTimeOfTheDayInMinutes.value === null) {
@@ -67,14 +75,14 @@ const duringLessons = computed(() => {
 <template>
 	<div class="space-y-4">
 		<div
-			v-if="beforeLessons.length"
+			v-if="homeworkLessons.length"
+			v-theme.bg.light
 			class="flex gap-1 flex-col
 			-mx-3 -mt-3 p-3 mb-3
 			"
-			v-theme.bg.light
 		>
 			<lesson-drop
-				v-for="lesson in beforeLessons"
+				v-for="lesson in homeworkLessons"
 				:key="`lesson-tag-${lesson.id}`"
 				:course
 				:lesson
@@ -82,11 +90,11 @@ const duringLessons = computed(() => {
 		</div>
 
 		<div
-			v-if="duringLessons.length"
+			v-if="courseLessons.length"
 			class="flex gap-1 flex-col"
 		>
 			<lesson-drop
-				v-for="lesson in duringLessons"
+				v-for="lesson in courseLessons"
 				:key="`lesson-tag-${lesson.id}`"
 				:course
 				:lesson

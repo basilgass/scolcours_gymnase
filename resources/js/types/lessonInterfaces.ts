@@ -56,3 +56,11 @@ export interface weekCalendarInterface {
 	lesson: LessonInterface
 	team: TeamInterface
 }
+
+export type itemInTimetableInterface = Record<number, weekCalendarInterface[]>
+
+export interface weekCalendarDagTransferInterface {
+	day: Dayjs,
+	lesson_id: number,
+	team_id: number
+}

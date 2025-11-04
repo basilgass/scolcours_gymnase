@@ -2,7 +2,11 @@
 
 import {computed, ref} from "vue"
 import {Dayjs} from "dayjs"
-import {weekCalendarInterface} from "@/types/lessonInterfaces.ts"
+import {
+	itemInTimetableInterface,
+	weekCalendarDagTransferInterface,
+	weekCalendarInterface
+} from "@/types/lessonInterfaces.ts"
 import Card from "@/Components/Ui/Card.vue"
 import {TeamInterface} from "@/types/modelInterfaces.ts"
 import LessonTypeIcon from "@/Components/Courses/LessonTypeIcon.vue"
@@ -17,22 +21,15 @@ const props = defineProps<{
 }>()
 
 const courseByDay = computed(() => {
-	const arr: Record<string, number[]> = {}
+	const arr: Record<number, number[]> = {}
 
 	props.teams.forEach(team => {
-		arr[team.name] = [...new Set(team.calendar.map(cal => cal.day))]
+		arr[team.id] = [...new Set(team.calendar.map(cal => cal.day))]
 	})
 
 	return arr
 })
 
-interface dragTransferInterface {
-	day: Dayjs,
-	lesson_id: number,
-	team_id: number
-}
-
-type itemInTimetableInterface = Record<number, weekCalendarInterface[]>
 
 const itemsInTimetable = computed<Record<string, itemInTimetableInterface>>(() => {
 	const arr: Record<string, itemInTimetableInterface> = {}
@@ -83,7 +80,7 @@ function onDragStart(e: DragEvent, sourceDay: number, item: weekCalendarInterfac
 
 	currentTeamDragItem.value = item.team.name
 
-	const payload: dragTransferInterface = {
+	const payload: weekCalendarDagTransferInterface = {
 		day: props.from.add(sourceDay - 1, 'days'),
 		lesson_id: item.lesson.id,
 		team_id: item.team.id
@@ -115,12 +112,15 @@ function onDragOver(e: DragEvent) {
 	if (e.dataTransfer) e.dataTransfer.dropEffect = "move"
 }
 
-function onDrop(e: DragEvent, targetDay: number) {
+function onDrop(e: DragEvent, tday: number) {
 	e.preventDefault()
+
+	const targetDay = (tday - 1) % 5 + 1
+
 	if (!e.dataTransfer) return
 	const dataJson = e.dataTransfer.getData("application/json")
 
-	let source: dragTransferInterface = null
+	let source: weekCalendarDagTransferInterface = null
 
 	try {
 		source = JSON.parse(dataJson)
@@ -130,13 +130,19 @@ function onDrop(e: DragEvent, targetDay: number) {
 
 	if (!source) return
 
+	// On vérifie que le cours exist à cette date.
+	if (!courseByDay.value[source.team_id].includes(targetDay)) {
+		alert("Le cours n'existe pas ce jour.")
+		return
+	}
+
 	// Sauvegarde des informations (axios)
-	const target = props.from.add((targetDay - 1) % 5, 'days')
-	// Emettre l'information au parents pour la mise à jour du calendrier.
+	const target = props.from.add(targetDay - 1, 'days')
+	// Emettre l'information aux parents pour la mise à jour du calendrier.
 	emit('drop', {
 		...source,
 		target,
-		homework: targetDay <= 5
+		homework: tday <= 5
 	})
 }
 
@@ -172,7 +178,7 @@ const emit = defineEmits<{
 			<div
 				v-for="team in teams"
 				:key="`team-${team.name}`"
-				class="grid grid-cols-5 gap-x-3"
+				class="grid grid-cols-5 gap-x-3 gap-y-1"
 			>
 				<div
 					v-for="day in 10"
@@ -180,10 +186,11 @@ const emit = defineEmits<{
 					:class="[
 						'px-3 min-h-[2em] rounded-lg border border-dashed transition-colors duration-150',
 						{
-							'border-orange-400 bg-orange-100': courseByDay[team.name].includes(day) && day<=5,
-							'bg-orange-200': courseByDay[team.name].includes(day) && day<=5 && isHovered(team, day),
-							'border-blue-400 bg-blue-100': courseByDay[team.name].includes((day-1)%5+1) && day > 5,
-							'bg-blue-200': courseByDay[team.name].includes((day-1)%5+1) && day > 5 && isHovered(team, day)
+							'border-orange-400 bg-orange-100': courseByDay[team.id].includes(day) && day<=5,
+							'bg-orange-200': courseByDay[team.id].includes(day) && day<=5 && isHovered(team, day),
+							'border-blue-400 bg-blue-100': courseByDay[team.id].includes((day-1)%5+1) && day > 5,
+							'bg-blue-200': courseByDay[team.id].includes((day-1)%5+1) && day > 5 && isHovered(team, day),
+							'opacity-20 cursor-not-allowed': !courseByDay[team.id].includes((day-1)%5+1)
 						}
 					]"
 					@dragenter="event => onDragEnter(event, team, day)"

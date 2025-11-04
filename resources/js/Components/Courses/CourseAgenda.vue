@@ -8,12 +8,13 @@ import dayjs, {Dayjs} from "dayjs"
 import CourseWeekTimetable from "@/Components/Courses/CourseWeekTimetable.vue"
 import {weekCalendarInterface} from "@/types/lessonInterfaces.ts"
 import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
+import CourseLessonsWithoutWeek from "@/Components/Courses/CourseLessonsWithoutWeek.vue"
 
 const flash = useStoreFlashMessage()
 
 const props = defineProps<{
 	teams?: TeamInterface[],
-	course?: CourseMinInterface
+	course?: CourseInterface
 }>()
 
 const teamLessons = ref<{
@@ -117,60 +118,85 @@ interface weekInterface {
 const weeks = computed<weekInterface[]>(() => {
 	if (isLoading.value) return []
 
+	if (between.value === null) {
+		const today = dayjs()
+		const currentWeek: number = yearCalendar.value
+			.find(d => d.day.isSame(today) || d.day.isAfter(today))?.week ?? null
+
+		if (currentWeek === null) return []
+
+		return getWeeks(
+			currentWeek,
+			currentWeek
+		)
+	}
+
+	// Nouvelle version
+	// Le premier lundi qui a un cours
+	const startMonday = between.value.min.subtract((between.value.min.day() + 6) % 7, 'day')
+	// Le numéro de la semaine du cours cours
+	const startWeek = yearCalendar.value
+		.find(d => d.day.isSame(startMonday) || d.day.isAfter(startMonday))?.week ?? null
+	// Pas une semaine valide.
+	if (startWeek === null) return
+
+	// Le dernier lundui qui a un cours.
+	const endMonday = between.value.max.subtract((between.value.max.day() + 6) % 7, 'day')
+	// Le numéro de la semaine précédant ce cours
+	const endWeek = yearCalendar.value.find(d => d.day.isSame(endMonday) || d.day.isAfter(endMonday))?.week ?? null
+	// Pas une semaine valide.
+	if (endWeek === null) return
+
+	return getWeeks(startWeek, endWeek)
+})
+
+function getWeeks(startWeek: number, endWeek: number): weekInterface[] {
 	const arr: weekInterface[] = []
 
-	if (between.value === null) return []
+	// Premier jour de la semaine
+	let firstCourseDayOfTheWeek = yearCalendar.value
+		.find(d => d.week === startWeek - 1)
+		.day
 
-	// Le premier lundi de l'intervalle à analyser
-	let monday = between.value.min.subtract((between.value.min.day() + 6) % 7, 'day')
-		.subtract(7, 'days')
 
-	const maxMonday = between.value.max.add(7, 'days')
-	// Le numéro de la semaine.
-	let weekNumber = yearCalendar.value.find(d => d.day.isSame(monday) || d.day.isAfter(monday))?.week ?? null
+	// Maybe monday is not monday.
+	let monday = firstCourseDayOfTheWeek.subtract((firstCourseDayOfTheWeek.day() + 6) % 7, 'day')
 
-	if (weekNumber === null) return []
+	for (let week = startWeek - 1; week <= endWeek + 1; week++) {
 
-	while (monday.isSame(maxMonday, 'day') || monday.isBefore(maxMonday)) {
-		if (weekNumber > 52) return []
-
-		// Récupère la première dans le yearCalendar qui est égal ou dépasse monday.
-		const day = yearCalendar.value.find(d => d.day.isSame(monday) || d.day.isAfter(monday))
-
-		// Si la semaine existe déjà, c'est qu'on est passé sur des vacances.
-		// Il faut remettre à jour les dates avec les nouvelles !
-		const week = (arr.length > 0 && arr[arr.length - 1].week === day.week)
-			? arr.pop()
-			: {
-				week: day.week,
-				days: []
-			}
-
-		// Reset the days.
-		week.days = []
-
-		for (let i = 0; i <= 5; i++) {
-			const day = monday.add(i, 'days')
-			week.days.push({
-				day,
-				active: yearCalendar.value.find(d => d.active && d.day.isSame(day)) !== null
-			})
+		// On contrôle si le lundi est dans une semaine de vacances.
+		// Danc ce cas, on ajoute une semaine tant que c'est des vacances.
+		while (mondayIsInHolidays(monday)) {
+			monday = monday.add(7, 'days')
 		}
 
-		arr.push(week)
+		arr.push({
+			week,
+			days: [0, 1, 2, 3, 4, 5].map(d => {
+				const day = monday.add(d, 'days')
+				return {
+					day,
+					active: yearCalendar.value.find(d => d.active && d.day.isSame(day)) !== null
+				}
+			})
+		})
 
-		weekNumber = week.week
-		monday = monday.add(1, "weeks")
+		monday = monday.add(1, 'week')
 	}
 
 	return arr
-})
+}
 
+function mondayIsInHolidays(monday: Dayjs): boolean {
+	const firstDayInCalendar = yearCalendar.value
+		.find(d => d.day.isSame(monday) || d.day.isAfter(monday))
+
+	return firstDayInCalendar.day.diff(monday, 'day') > 5
+}
 
 onMounted(() => {
 	getYearCalendar()
-
-	// getTeamsCourseCalendar()
+	getTeamsCourseCalendar()
 })
 
 watch(() => props.course, () => {
@@ -179,25 +205,18 @@ watch(() => props.course, () => {
 })
 
 function updateLesson(event: { lesson_id: number, team_id: number, target: Dayjs, homework: boolean }) {
+
 	// On récupère la "teamLesson" concernée.
 	const index = teamLessons.value.findIndex(cal => cal.lesson.id === event.lesson_id && cal.team.id === event.team_id)
 	if (index === null) return
 
 	const teamLesson = teamLessons.value[index]
+
+	// On recherche s'il fait partie du calendrier
 	const eventDay = event.target.day()
 	const calEvents = teamLesson.team.calendar
 		.filter(cal => cal.day === eventDay)
 
-	if (calEvents.length === 0) {
-		flash.error(`La ${teamLesson.team.name} n'a pas de calendrier de cours.`,
-			{
-				link: {
-					label: 'Créer un calendrier des cours',
-					url: route('admin.teams.show', {team: teamLesson.team.name})
-				}
-			})
-		return
-	}
 
 	let calEvent = event.homework
 		? calEvents.reduce((a, b) => a.time < b.time ? a : b, calEvents[0]) // premier de la journée
@@ -211,8 +230,11 @@ function updateLesson(event: { lesson_id: number, team_id: number, target: Dayjs
 
 	teamLesson.lesson.homework = event.homework
 
+	// Mise à jour de teamLessons
 	teamLessons.value.splice(index, 1)
 	teamLessons.value.push(teamLesson)
+
+	// Force course
 
 	axios
 		.patch(route('api.admin.teams.lessons.update', {
@@ -230,6 +252,9 @@ function updateLesson(event: { lesson_id: number, team_id: number, target: Dayjs
 		})
 }
 
+const lessonsToPlace = computed(() => {
+	return teamLessons.value.filter(teamLesson => teamLesson.lesson.scheduled_at === null)
+})
 </script>
 
 <template>
@@ -247,6 +272,14 @@ function updateLesson(event: { lesson_id: number, team_id: number, target: Dayjs
 				:teams
 				:to="week.days[4].day"
 				:week="week.week"
+				@drop="updateLesson"
+			/>
+
+			<course-lessons-without-week
+				v-if="lessonsToPlace.length>0"
+				:key="`week-not-defined`"
+				:team-lessons="lessonsToPlace"
+				:teams
 				@drop="updateLesson"
 			/>
 		</div>

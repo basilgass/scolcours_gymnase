@@ -80,6 +80,7 @@ class CourseController extends Controller
 
 	public function dashboard(Course $course, Team $team)
 	{
+
 		return $this->renderCourseWithTeam($course, "Courses/CourseShowDashboard", $team);
 	}
 
