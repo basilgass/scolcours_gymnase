@@ -90,7 +90,7 @@ export class PiRadian {
 		if (value.includes('+')) {
 			const [a, p, ...other] = value.split('+k')
 			if (other && other.length > 0) {
-				// There should not be a thrid argument
+				// There should not be a third argument
 				return false
 			}
 
@@ -196,6 +196,10 @@ export class PiRadian {
 
 	isEqual(value: PiRadian): boolean {
 		return this.isSame(value) && this.#periodic.isEqual(value.periodic)
+	}
+
+	isPeriodic(): boolean {
+		return this.#periodic.isZero()
 	}
 
 	isSame(value: PiRadian): boolean {

@@ -16,7 +16,7 @@ describe('Trigo class', () => {
 		expect(PiRadian.checkString('-2pi/5')).toBe(true)
 	})
 
-	test('check if a string is a raidn angle with periodic part', () => {
+	test('check if a string is a radian angle with periodic part', () => {
 		expect(PiRadian.checkString('pi+kpi')).toBe(true)
 		expect(PiRadian.checkString('2pi/3+k3pi')).toBe(true)
 		expect(PiRadian.checkString('2pi/3+k3pi/8')).toBe(true)

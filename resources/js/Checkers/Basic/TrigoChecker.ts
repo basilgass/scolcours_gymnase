@@ -36,17 +36,32 @@ export class TrigoChecker extends CheckerAbstract {
 		}
 	}
 
-
 	override checkValue(value: string): CheckerResult {
 		/**
 		 * Valeurs possibles:
 		 * api/b			sans période
 		 * api/b+kcpi/d		avec période
+		 * kcpi/d			c'est zéro plus la partie périodique !
+		 * 0				zéro, sans la période
 		 */
 
-		const [angle, kPeriodic, ...otherValues] = value.split('+')
+
+		if (!this.radian) {
+			// comparaison en degré
+			return
+		}
+
+		// BUG: Il faut revoir ce système pour gérer des valeurs particulières
+		// BUG: le clavier n'affiche pas l'input de l'utilisateur, mais une version formatée "trompeuse".
+
+		// La partie périodique est après le 'k'
+		const [A, B, ...otherValues] = value.split('+')
+		// A + kB => [A,kB] => A kB
+		// kB => [kB] => 0 kB
 		// angle: api/b
 		// kPeriodic: kcpi/d
+		const angle = B === undefined ? '0' : A
+		const kPeriodic = B === undefined ? A : B
 
 		// On contrôle qu'il n'y a pas de + en extra
 		if (otherValues && otherValues.length > 0) {
@@ -54,9 +69,10 @@ export class TrigoChecker extends CheckerAbstract {
 		}
 
 		// L'angle doit être en radian
-		if (this.radian && !angle.includes('pi')) {
+		if (this.radian && (angle !== '0' && !angle.includes('pi'))) {
 			return makeCheckerResult("Un angle en radian doit contenir la valeur \\(\\pi\\)")
 		}
+
 		if (!this.radian && angle.includes('pi')) {
 			return makeCheckerResult("Un angle en degrés ne doit pas contenir la valeur \\(\\pi\\)")
 		}
@@ -88,7 +104,6 @@ export class TrigoChecker extends CheckerAbstract {
 	checkWithPeriodic(value: string): CheckerResult {
 		const rad = new PiRadian(value)
 		const answerRad = new PiRadian(this.answer)
-
 
 		if (!rad.periodic.isEqual(answerRad.periodic)) {
 			return makeCheckerResult("La partie périodique n'est pas juste.")

@@ -430,25 +430,10 @@ export const keyboards: Record<string, KeyboardObjectType> = {
 		],
 		tex(value) {
 			// the trigo input should be 2pi/3+k2pi/2
-			// convert to: (2pi)/3+k*2pi
-			const [angle, periodic] = value.split('+')
-			const [num, den] = angle.split('/')
-			const [, p] = periodic ? periodic.split('k') : ''
-			const [pnum, pden] = p ? p.split('/') : ''
+			// convert to: (2pi)/3+k(2pi)/3
 
-			let result = den !== undefined ? `(${num})/${den}` : num
-			if (periodic !== undefined) {
-				result += `+`
-			}
-			if (p !== undefined) {
-				result += 'k'
-			}
-
-			if (pnum) {
-				result += pden !== undefined ? `(${pnum})/${pden}` : pnum
-			}
-
-			return asciiToTex(result)
+			const converted = value.replaceAll(/([0-9]*pi)\//g, '($1)/')
+			return asciiToTex(converted)
 		}
 	},
 	vector: {
