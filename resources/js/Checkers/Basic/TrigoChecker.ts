@@ -122,10 +122,22 @@ export class TrigoChecker extends CheckerAbstract {
 			// TODO: formatter pour afficher une info supplémentaire sur l'élément en cours
 			let result = this.secondaryChecker.check(givenAngle, answerAngle)
 			if (result.result === false) {
-				return result
+				return makeCheckerResult([
+					"L'angle n'est pas juste",
+					result.message
+				])
 			}
 
-			return this.secondaryChecker.check(givenPeriodic.replace('k', ''), answerPeriodic.replace('k', ''))
+			result = this.secondaryChecker.check(givenPeriodic.replace('k', ''), answerPeriodic.replace('k', ''))
+
+			if (result.result === false) {
+				return makeCheckerResult([
+					"La période n'est pas juste",
+					result.message
+				])
+			}
+
+			return makeCheckerResult()
 
 		}
 

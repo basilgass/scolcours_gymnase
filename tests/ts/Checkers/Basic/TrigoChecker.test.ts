@@ -48,6 +48,7 @@ describe('degree with periodic', () => {
 
 		const r1 = chk.checkValue('1.23+k4.57')
 		expect(r1.result).toBe(false)
-		expect(r1.message).toBe('Peut être un problème d\'arrondi ?')
+		expect(r1.message).toContain("La période n'est pas juste",)
+		expect(r1.message).toContain('Peut être un problème d\'arrondi ?')
 	})
 })

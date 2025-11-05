@@ -1,12 +1,22 @@
 import {type CheckerResult, CHECKERS} from "./checker.config"
 
-export function makeCheckerResult(message?: string, partial?: boolean): CheckerResult {
+
+export function makeCheckerResult(value?: string | string[], partial?: boolean): CheckerResult {
+	const result = value === undefined || value.length === 0
+
+	const message = result
+		? ""
+		: typeof value === "string"
+			? value
+			: value.join('<br/>')
+	
 	return {
 		message,
-		result: message===undefined || message === '',
-		partial: partial===true
+		result,
+		partial: partial === true
 	}
 }
+
 export abstract class CheckerAbstract {
 	protected constructor(config?: string[] | string) {
 		this._description = ""
@@ -23,14 +33,14 @@ export abstract class CheckerAbstract {
 		this._secondaryChecker = null
 	}
 
-	protected _secondaryChecker: CheckerAbstract | null
+	protected _answer: string
 
-	get secondaryChecker(): CheckerAbstract | null {
-		return this._secondaryChecker
+	get answer(): string {
+		return this._answer
 	}
 
-	set secondaryChecker(value: CheckerAbstract | null) {
-		this._secondaryChecker = value
+	set answer(value: string) {
+		this._answer = value
 	}
 
 	protected _config: string[]
@@ -43,16 +53,6 @@ export abstract class CheckerAbstract {
 		this._config = value
 	}
 
-	protected _type: CHECKERS | undefined
-
-	get type(): CHECKERS | undefined {
-		return this._type
-	}
-
-	set type(value: CHECKERS) {
-		this._type = value
-	}
-
 	protected _description: string
 
 	get description(): string {
@@ -63,14 +63,24 @@ export abstract class CheckerAbstract {
 		this._description = value
 	}
 
-	protected _answer: string
+	protected _secondaryChecker: CheckerAbstract | null
 
-	get answer(): string {
-		return this._answer
+	get secondaryChecker(): CheckerAbstract | null {
+		return this._secondaryChecker
 	}
 
-	set answer(value: string) {
-		this._answer = value
+	set secondaryChecker(value: CheckerAbstract | null) {
+		this._secondaryChecker = value
+	}
+
+	protected _type: CHECKERS | undefined
+
+	get type(): CHECKERS | undefined {
+		return this._type
+	}
+
+	set type(value: CHECKERS) {
+		this._type = value
 	}
 
 	abstract get format(): string
@@ -115,7 +125,7 @@ export abstract class CheckerAbstract {
 
 	abstract checkValue(value: string): CheckerResult
 
-	secondaryCheckValues(values: string[], expectedValues: string[], callback: (index: number, message: string)=>string): CheckerResult{
+	secondaryCheckValues(values: string[], expectedValues: string[], callback: (index: number, message: string) => string): CheckerResult {
 		const errors: string[] = []
 		let partialOnly = true
 
