@@ -18,7 +18,6 @@ import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
 import {onMounted, provide, ref, useTemplateRef, watch} from "vue"
 import type {QuestionInterface} from "@/types/modelInterfaces.ts"
 import {
-	keyboardComponentType,
 	questionDataInterface,
 	questionResultInterface,
 	questionUserInputDisplayType
@@ -94,8 +93,12 @@ const questionData = useQuestion(props.question, {
 provide<questionDataInterface>("questionData", questionData)
 
 async function loadAnswers(event: { show: boolean, value?: string }) {
+	const kbrds = questionAnswerWrapper.value.getKeyboards()
+	const nb = Object.keys(kbrds).length
 
-	questionAnswerWrapper.value.getKeyboards().forEach((keyboard: keyboardComponentType, index: number) => {
+	for (let index = 0; index < nb; index++) {
+		const keyboard = kbrds[index]
+
 		// Default value - on ne prend que la première si c'est une multi-valeur
 		const value = questionData.answers.values.value[index].split('||')[0]
 		keyboard.setInput(
@@ -106,7 +109,7 @@ async function loadAnswers(event: { show: boolean, value?: string }) {
 			.then((x) => {
 				questionData.user.answers.value[index] = x
 			})
-	})
+	}
 }
 
 // Used to load the answers dynamically
@@ -156,8 +159,8 @@ watch(() => props.autoAnswer, () => {
 
 		<!-- Header: number, title -->
 		<question-header
-			:show-number="!blockOnly"
 			:question
+			:show-number="!blockOnly"
 		/>
 
 		<!-- the body and illustration of question (as block) -->

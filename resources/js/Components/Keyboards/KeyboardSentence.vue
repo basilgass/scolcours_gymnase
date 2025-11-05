@@ -29,7 +29,14 @@ function onChange(): void {
 
 async function setInput(value?: string): Promise<KeyboardInputInterface> {
 	if (value !== undefined) {
-		// TODO: default value to set
+		reset()
+
+		value.split(',').forEach(key => {
+			const item = addItemByKey(key)
+			if (item) {
+				items.value.push(item)
+			}
+		})
 	}
 
 
@@ -46,11 +53,13 @@ async function setInput(value?: string): Promise<KeyboardInputInterface> {
 	}
 }
 
+function reset() {
+	items.value = []
+	availableItems.value.forEach(item => item.available = true)
+}
+
 defineExpose<KeyboardExposeInterface>({
-	reset: () => {
-		// reset function
-		availableItems.value.forEach(item => item.available = true)
-	},
+	reset,
 	setInput,
 	parameters: "full (pleine largeur)\nflex (utilisation de flex)\ntex (converti en TeX)\nlist (affichage d'une liste)"
 })
@@ -77,6 +86,10 @@ const isConditional = computed(() => {
 const items = ref<wordItem[]>([])
 const availableItems = ref<wordItem[]>([])
 
+
+function addItemByKey(key: string) {
+	return availableItems.value.find(available => available.id === key)
+}
 
 function addItem(item: wordItem) {
 	if (!item.available) return

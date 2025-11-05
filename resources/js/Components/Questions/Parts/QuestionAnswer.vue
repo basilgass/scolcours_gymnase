@@ -27,8 +27,16 @@ defineEmits<{
 // Cette partie est utilisée pour afficher la réponse depuis l'extérieur.
 const keyboardComponentsRefs = useTemplateRef<keyboardComponentType[]>('keyboardComponent')
 defineExpose({
-	getKeyboards(): keyboardComponentType[] {
-		return keyboardComponentsRefs.value
+	getKeyboards(): Record<number, keyboardComponentType> {
+
+		const obj: Record<number, keyboardComponentType> = {}
+		keyboardComponentsRefs.value.forEach(kbrd => {
+			const index = +kbrd.$el.getAttribute('data-index')
+
+			obj[index] = kbrd
+		})
+
+		return obj
 	}
 })
 
@@ -116,6 +124,7 @@ const keyboardParameters = computed(() => {
 				v-show="questionData.current.id.value === index"
 				:key="`keyboard-id-${index}`"
 				ref="keyboardComponent"
+				:data-index="index"
 				:keyboard="validator.keyboard"
 				:reference="validator.answer"
 				class="touch-manipulation"
