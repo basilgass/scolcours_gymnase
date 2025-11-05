@@ -1,6 +1,6 @@
 import {CheckerAbstract, makeCheckerResult} from "../CheckerAbstract"
 import {CheckerResult, CHECKERS} from "../checker.config"
-import {FractionChecker} from "@/Checkers"
+import {FractionChecker, NumberChecker} from "@/Checkers"
 import {PiRadian} from "@/PiMathExtended/PiRadian.ts"
 
 // const name = "scientific"
@@ -22,17 +22,29 @@ export class TrigoChecker extends CheckerAbstract {
 
 		this.isPeriodic = this.config.includes('p') || this.config.includes('periodic') || this.config.includes('p+')
 		this.isPositive = this.config.includes('p+')
-		this.radian = true
+		this.radian = !this.config.includes('d') && !this.config.includes('degres')
 
-		this.secondaryChecker = new FractionChecker('r')
+		this.secondaryChecker = this.radian
+			? new FractionChecker('r')
+			: new NumberChecker('2')
 	}
 
 
 	get format(): string {
+		if (this.radian) {
+			if (this.isPeriodic) {
+				return "réponse en radians : \\( \\dfrac{5\\pi}{3}+k\\dfrac{2\\pi}{5}\\)" + (this.isPositive ? "<br/>L'angle doit être positif et le plus petit possible." : '')
+			} else {
+				return "réponse en radians : \\(\\dfrac{5\\pi}{2}\\)"
+			}
+		}
+
 		if (this.isPeriodic) {
-			return "réponse en radians : \\( \\dfrac{5\\pi}{3}+k\\dfrac{2\\pi}{5}\\)" + (this.isPositive ? "<br/>L'angle doit être positif et le plus petit possible." : '')
+			return "réponse en degrés : \\( 2.34+k11.25\\)" + (this.isPositive ? "<br/>L'angle doit être positif et le plus petit possible." : '')
+				+ "<br/>" + this.secondaryChecker.format
 		} else {
-			return "réponse en radians : \\(\\dfrac{5\\pi}{2}\\)"
+			return "réponse en degrés : \\( 2.34\\)"
+				+ "<br/>" + this.secondaryChecker.format
 		}
 	}
 
@@ -45,16 +57,7 @@ export class TrigoChecker extends CheckerAbstract {
 		 * 0				zéro, sans la période
 		 */
 
-
-		if (!this.radian) {
-			// comparaison en degré
-			return
-		}
-
-		// BUG: Il faut revoir ce système pour gérer des valeurs particulières
-		// BUG: le clavier n'affiche pas l'input de l'utilisateur, mais une version formatée "trompeuse".
-
-		// La partie périodique est après le 'k'
+			// La partie périodique est après le 'k'
 		const [A, B, ...otherValues] = value.split('+')
 		// A + kB => [A,kB] => A kB
 		// kB => [kB] => 0 kB
@@ -85,8 +88,12 @@ export class TrigoChecker extends CheckerAbstract {
 			}
 
 			// On a bien une partie périodique.
+			if (!kPeriodic.includes('k')) {
+				return makeCheckerResult("La partie périodique doit contenir la valeur \(k\).")
+			}
+
 			// Il doit être de la forme k[0-9]*pi/[0-9]+
-			if (!kPeriodic.match(/k[0-9]*pi(?:\/[0-9]+)?/)) {
+			if (this.radian && !kPeriodic.match(/k[0-9]*pi(?:\/[0-9]+)?/)) {
 				return makeCheckerResult("Le format de la partie périodique n'est pas reconnu.")
 			}
 		} else {
@@ -96,9 +103,33 @@ export class TrigoChecker extends CheckerAbstract {
 			}
 		}
 
-		return this.isPeriodic
-			? this.checkWithPeriodic(value)
-			: this.checkWithoutPeriodic(value)
+
+		if (this.radian) {
+			return this.isPeriodic
+				? this.checkWithPeriodic(value)
+				: this.checkWithoutPeriodic(value)
+		}
+
+		if (this.isPeriodic) {
+			// on doit couper à k et récupérer les 4 valeurs (2 given, 2 answer).
+			const [A, B] = value.split('+')
+			const givenAngle = B === undefined ? '0' : A
+			const givenPeriodic = B === undefined ? A : B
+			const [C, D] = this.answer.split('+')
+			const answerAngle = B === undefined ? '0' : C
+			const answerPeriodic = B === undefined ? C : D
+
+			// TODO: formatter pour afficher une info supplémentaire sur l'élément en cours
+			let result = this.secondaryChecker.check(givenAngle, answerAngle)
+			if (result.result === false) {
+				return result
+			}
+
+			return this.secondaryChecker.check(givenPeriodic.replace('k', ''), answerPeriodic.replace('k', ''))
+
+		}
+
+		return this.secondaryChecker.check(value, this.answer)
 	}
 
 	checkWithPeriodic(value: string): CheckerResult {

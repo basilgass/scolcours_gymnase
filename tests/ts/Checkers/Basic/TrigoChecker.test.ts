@@ -35,3 +35,19 @@ describe('radian with periodic', () => {
 		expect(result0.result).toBe(true)
 	})
 })
+
+
+describe('degree with periodic', () => {
+	test('basic', () => {
+		const chk = new TrigoChecker('p,d,@check:nb,2')
+
+		chk.answer = '1.23+k4.56'
+
+		const r0 = chk.checkValue('1.23+k4.56')
+		expect(r0.result).toBe(true)
+
+		const r1 = chk.checkValue('1.23+k4.57')
+		expect(r1.result).toBe(false)
+		expect(r1.message).toBe('Peut être un problème d\'arrondi ?')
+	})
+})

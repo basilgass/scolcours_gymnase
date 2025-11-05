@@ -426,7 +426,7 @@ export const keyboards: Record<string, KeyboardObjectType> = {
 			"1", "2", "3", "-",
 			"4", "5", "6", "/",
 			"7", "8", "9", "+",
-			"0", "", "pi", "k",
+			".", "0", "k", "pi",
 		],
 		tex(value) {
 			// the trigo input should be 2pi/3+k2pi/2

@@ -70,11 +70,15 @@ export class PiChecker {
 
 		if (subCheckerConfig !== undefined) {
 			this.#checker.secondaryChecker = this.#loadCheckerTo(subCheckerConfig)
-		}else{
+		} else {
 			this.#checker.secondaryChecker = this.#loadCheckerTo('exact')
 		}
 
 		return this
+	}
+
+	get answer(): string {
+		return this.#checker.answer
 	}
 
 	get checker(): CheckerAbstract {
@@ -85,16 +89,12 @@ export class PiChecker {
 		this.#checker = value
 	}
 
-	get answer(): string {
-		return this.#checker.answer
+	get description(): string {
+		return this.#checker.description
 	}
 
 	get format(): string {
 		return this.#checker.format
-	}
-
-	get description(): string {
-		return this.#checker.description
 	}
 
 	get secondaryChecker(): CheckerAbstract | null {
@@ -109,11 +109,10 @@ export class PiChecker {
 		return this.#checker.check(givenValue, expectedAnswer)
 	}
 
-	#parseConfig(config: string): { checker: CHECKERS, options: string[] } {
-		const [checker, ...options] = config.split(',')
-		return {checker: checkerNameToEnum(checker), options: options.filter(o => o !== "")}
+	#loadChecker(checker: CHECKERS): (new (...args: any[]) => CheckerAbstract) | null {
+		const list = checkersList()
+		return list[checker] ?? null
 	}
-
 
 	#loadCheckerTo(config: string): CheckerAbstract {
 		const {checker, options} = this.#parseConfig(config)
@@ -126,8 +125,8 @@ export class PiChecker {
 		return new checkerClass(options)
 	}
 
-	#loadChecker(checker: CHECKERS): (new (...args: any[]) => CheckerAbstract) | null {
-		const list = checkersList()
-		return list[checker] ?? null
+	#parseConfig(config: string): { checker: CHECKERS, options: string[] } {
+		const [checker, ...options] = config.split(',')
+		return {checker: checkerNameToEnum(checker), options: options.filter(o => o !== "")}
 	}
 }
