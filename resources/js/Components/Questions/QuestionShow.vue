@@ -92,6 +92,16 @@ const questionData = useQuestion(props.question, {
  */
 provide<questionDataInterface>("questionData", questionData)
 
+function cleanAnswer(value: string): string {
+	const answer = value.split('||')[0]
+
+	if (answer.startsWith('@')) {
+		return answer.substring(1)
+	}
+
+	return answer
+}
+
 async function loadAnswers(event: { show: boolean, value?: string }) {
 	const kbrds = questionAnswerWrapper.value.getKeyboards()
 	const nb = Object.keys(kbrds).length
@@ -100,7 +110,8 @@ async function loadAnswers(event: { show: boolean, value?: string }) {
 		const keyboard = kbrds[index]
 
 		// Default value - on ne prend que la première si c'est une multi-valeur
-		const value = questionData.answers.values.value[index].split('||')[0]
+		const value = cleanAnswer(questionData.answers.values.value[index])
+
 		keyboard.setInput(
 			event.show
 				? (event.value ?? value)

@@ -2,15 +2,20 @@ import {CheckerAbstract, makeCheckerResult} from "../CheckerAbstract"
 import {CheckerResult, CHECKERS} from "../checker.config"
 import {FractionChecker, NumberChecker} from "@/Checkers"
 import {PiRadian} from "@/PiMathExtended/PiRadian.ts"
+import {Fraction} from "pimath"
 
 // const name = "scientific"
-const description = `trigo,p[eriodic],[paramètres]
+const description = `trigo,p[eriodic],d[igits],deg[rees],[paramètres]
 
 **paramètres**
 `
 
 // TODO: on doit autoriser d'autres angles orientés (modulo) ou forcé dans un quadrant
+
 export class TrigoChecker extends CheckerAbstract {
+	private readonly digits: boolean
+	private readonly digitsP: boolean
+	private fractionChecker: FractionChecker
 	private readonly isPeriodic: boolean
 	private readonly isPositive: boolean
 	private readonly radian: boolean
@@ -22,15 +27,43 @@ export class TrigoChecker extends CheckerAbstract {
 
 		this.isPeriodic = this.config.includes('p') || this.config.includes('periodic') || this.config.includes('p+')
 		this.isPositive = this.config.includes('p+')
-		this.radian = !this.config.includes('d') && !this.config.includes('degres')
+		this.radian = !this.config.includes('deg')
+		this.digits = this.config.includes('d') ||
+			this.config.includes('d+') || // force la partie périodique à être en décimal aussi
+			this.config.includes('digits')
+		this.digitsP = this.config.includes('d+')
 
-		this.secondaryChecker = this.radian
+		this.secondaryChecker = this.digits
 			? new FractionChecker('r')
 			: new NumberChecker('2')
+
+		this.fractionChecker = new FractionChecker('r')
 	}
 
 
 	get format(): string {
+		// radian / degree
+		// exact / digits
+
+		const angle = `réponse en ${this.radian ? 'radians' : 'degrès'}`
+		const example = this.radian
+			? this.digits
+				? `1.23 + k ${this.digitsP ? '6.28' : '\\dfrac{2\\pi}{3}'}`
+				: `\\dfrac{5\\pi}{3}+k\\dfrac{2\\pi}{5}`
+			: `42.12+k360`
+
+		const constraint = this.isPositive
+			? "L'angle doit être positif et le plus petit possible."
+			: ""
+
+		return [
+			`${angle} : \\(${example}\\)`,
+			constraint,
+			this.digits ? this.secondaryChecker.format : ""
+		]
+			.filter(x => x.trim() !== "")
+			.join('<br/>')
+
 		if (this.radian) {
 			if (this.isPeriodic) {
 				return "réponse en radians : \\( \\dfrac{5\\pi}{3}+k\\dfrac{2\\pi}{5}\\)" + (this.isPositive ? "<br/>L'angle doit être positif et le plus petit possible." : '')
@@ -48,100 +81,123 @@ export class TrigoChecker extends CheckerAbstract {
 		}
 	}
 
-	override checkValue(value: string): CheckerResult {
+	checkAsDegreeWithPeriodic(value: string): CheckerResult {
+		const {angle, kPeriodic} = this.parseValue(value)
+		const {angle: answer_angle, kPeriodic: answer_kPeriodic} = this.parseValue(this.answer)
+
+		const angleNb = new Fraction(angle)
+		const kPeriodicNb = new Fraction(kPeriodic.replace('k', ''))
+
+		const answer_angleNb = new Fraction(answer_angle)
+
+		const diff = angleNb.clone().subtract(answer_angleNb).divide(kPeriodicNb)
+
+		if (!diff.isRelative()) {
+			return makeCheckerResult("L'angle n'est pas juste")
+		}
+
+		if (this.isPositive) {
+			// Contrôle que l'angle est le plus petit possible.
+			if (angleNb.isNegative()) {
+				return makeCheckerResult("L'angle doit être positif.", true)
+			}
+			if (angleNb.isGeq(kPeriodicNb)) {
+				return makeCheckerResult("L'angle n'est pas le plus petit possible.", true)
+			}
+		}
+
+		return makeCheckerResult()
+	}
+
+	checkAsDegreeWithoutPeriodic(value: string): CheckerResult {
+		return this.secondaryChecker.check(value, this.answer)
+	}
+
+	override checkFormat(value: string): string {
 		/**
-		 * Valeurs possibles:
+		 * Valeurs possibles :
 		 * api/b			sans période
 		 * api/b+kcpi/d		avec période
-		 * kcpi/d			c'est zéro plus la partie périodique !
+		 * kcpi/d			c'est zéro plus la partie périodique
 		 * 0				zéro, sans la période
 		 */
 
-			// La partie périodique est après le 'k'
-		const [A, B, ...otherValues] = value.split('+')
-		// A + kB => [A,kB] => A kB
-		// kB => [kB] => 0 kB
-		// angle: api/b
-		// kPeriodic: kcpi/d
-		const angle = B === undefined ? '0' : A
-		const kPeriodic = B === undefined ? A : B
+		const {angle, kPeriodic, nb_of_values} = this.parseValue(value)
+
 
 		// On contrôle qu'il n'y a pas de + en extra
-		if (otherValues && otherValues.length > 0) {
-			return makeCheckerResult("Il n'y a qu'un seul signe \\(+\\) dans ce format de réponse.")
+		if (nb_of_values > 2) {
+			return "Il n'y a qu'un seul signe \\(+\\) dans ce format de réponse."
 		}
 
-		// L'angle doit être en radian
-		if (this.radian && (angle !== '0' && !angle.includes('pi'))) {
-			return makeCheckerResult("Un angle en radian doit contenir la valeur \\(\\pi\\)")
+		// On contrôle qu'il y a la partie périodique ou pas.
+		if (this.isPeriodic && kPeriodic === undefined) {
+			return nb_of_values === 1
+				? "Il faut ajouter la périodicité"
+				: "La partie périodique doit contenir la valeur \\(k\\)."
 		}
 
-		if (!this.radian && angle.includes('pi')) {
-			return makeCheckerResult("Un angle en degrés ne doit pas contenir la valeur \\(\\pi\\)")
+		if (!this.isPeriodic && kPeriodic) {
+			// pas périodique, mais donné quand même
+			return "Il ne faut pas ajouter la périodicité"
 		}
 
-		// On contrôle la partie périodique.
-		if (this.isPeriodic) {
-			// Il faut une partie périodique
-			if (kPeriodic === undefined || kPeriodic === "") {
-				return makeCheckerResult("Il faut ajouter la périodicité")
+
+		if (this.digits || !this.radian) {
+			if (isNaN(Number(angle))) {
+				return "La valeur de l'angle n'est pas au format décimal"
 			}
+		}
 
-			// On a bien une partie périodique.
-			if (!kPeriodic.includes('k')) {
-				return makeCheckerResult("La partie périodique doit contenir la valeur \(k\).")
-			}
 
-			// Il doit être de la forme k[0-9]*pi/[0-9]+
-			if (this.radian && !kPeriodic.match(/k[0-9]*pi(?:\/[0-9]+)?/)) {
-				return makeCheckerResult("Le format de la partie périodique n'est pas reconnu.")
+		// on regarde ANGLE
+		if (this.radian) {
+			// les valeurs sont en RADIANS mais pas en décimal, pas zéro
+			if (
+				!this.digits && angle !== '0' &&
+				!angle.includes('pi')
+			) {
+				return "Un angle en radian doit contenir la valeur \\(\\pi\\)"
 			}
 		} else {
-			// Pas de périodicité
-			if (kPeriodic !== undefined) {
-				return makeCheckerResult("Il ne faut pas ajouter la périodicité")
+			// les valeurs sont en DEGRES
+			if (angle.includes('pi')) {
+				return "Un angle en degrés ne doit pas contenir la valeur \\(\\pi\\)"
 			}
 		}
 
 
-		if (this.radian) {
+		if (this.isPeriodic) {
+			if (this.digitsP || !this.radian) {
+				if (isNaN(Number(kPeriodic.replace('k', '')))) {
+					return "La valeur de la partie périodique n'est pas au format décimal"
+				}
+			}
+		}
+
+		return ""
+	}
+
+	override checkValue(value: string): CheckerResult {
+
+		// On contrôle le format de la réponse.
+		const formatError = this.checkFormat(value)
+		if (formatError) {
+			return makeCheckerResult(formatError)
+		}
+
+
+		if (this.radian && !this.digits) {
 			return this.isPeriodic
 				? this.checkWithPeriodic(value)
 				: this.checkWithoutPeriodic(value)
 		}
 
-		if (this.isPeriodic) {
-			// on doit couper à k et récupérer les 4 valeurs (2 given, 2 answer).
-			const [A, B] = value.split('+')
-			const givenAngle = B === undefined ? '0' : A
-			const givenPeriodic = B === undefined ? A : B
-			const [C, D] = this.answer.split('+')
-			const answerAngle = B === undefined ? '0' : C
-			const answerPeriodic = B === undefined ? C : D
-
-			// TODO: formatter pour afficher une info supplémentaire sur l'élément en cours
-			let result = this.secondaryChecker.check(givenAngle, answerAngle)
-			if (result.result === false) {
-				return makeCheckerResult([
-					"L'angle n'est pas juste",
-					result.message
-				])
-			}
-
-			result = this.secondaryChecker.check(givenPeriodic.replace('k', ''), answerPeriodic.replace('k', ''))
-
-			if (result.result === false) {
-				return makeCheckerResult([
-					"La période n'est pas juste",
-					result.message
-				])
-			}
-
-			return makeCheckerResult()
-
+		if (!this.radian) {
+			return this.isPeriodic
+				? this.checkAsDegreeWithPeriodic(value)
+				: this.checkAsDegreeWithoutPeriodic(value)
 		}
-
-		return this.secondaryChecker.check(value, this.answer)
 	}
 
 	checkWithPeriodic(value: string): CheckerResult {
@@ -192,6 +248,27 @@ export class TrigoChecker extends CheckerAbstract {
 		}
 
 		return makeCheckerResult()
+	}
+
+	parseValue(value: string): {
+		angle: string, kPeriodic: string, nb_of_values: number
+	} {
+		const values = value.split('+')
+		// const [A, B, ...otherValues] = value.split('+')
+		// A => [A] => A undefined
+		// A + kB => [A,kB] => A kB
+		// kB => [kB] => 0 kB
+		// angle: api/b
+		// kPeriodic: kcpi/d
+
+		const angle = values.find(v => !v.includes('k')) ?? '0'
+		const kPeriodic = values.find(v => v.includes('k'))
+
+		return {
+			angle,
+			kPeriodic,
+			nb_of_values: values.length
+		}
 	}
 
 }
