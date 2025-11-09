@@ -9,7 +9,7 @@ export function makeCheckerResult(value?: string | string[], partial?: boolean):
 		: typeof value === "string"
 			? value
 			: value.join('<br/>')
-	
+
 	return {
 		message,
 		result,
@@ -143,6 +143,14 @@ export abstract class CheckerAbstract {
 		}
 
 		return makeCheckerResult()
+	}
+
+	protected _extractSecondaryChecker(config: string) {
+		const [_, secondary] = config.split('checker:')
+
+		if (secondary === undefined) return
+
+
 	}
 }
 

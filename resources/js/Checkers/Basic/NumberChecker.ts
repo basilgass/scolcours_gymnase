@@ -56,17 +56,17 @@ export class NumberChecker extends CheckerAbstract {
 			}
 		}
 
-		if(givenValue === -answerValue){
+		if (givenValue === -answerValue) {
 			return makeCheckerResult("Peut être un problème de signe...")
 		}
 
 		const [unit, digits] = value.split(".")
 		if (+unit !== +expectedUnit) {
-			if(+unit === -expectedUnit){
+			if (+unit === -expectedUnit) {
 				return makeCheckerResult("Problème de signe sur la partie entière.")
 			}
 
-			if(+digits===+expectedDigits) {
+			if (+digits === +expectedDigits) {
 				return makeCheckerResult("la partie entière n'est pas juste.")
 			}
 
@@ -82,8 +82,9 @@ export class NumberChecker extends CheckerAbstract {
 		}
 
 		// Le dernier chiffre n'est pas juste - il s'agit peut être d'un problème d'arrondi ?
-		const lastDigit = +digits[digits.length - 1],
-			lastExpectedDigit = +this.answer[this.answer.length - 1]
+		const lastDigit = +digits[digits.length - 1]
+		const lastExpectedDigit = +this.answer[this.answer.length - 1]
+
 		if (Math.abs(lastDigit - lastExpectedDigit) === 1) {
 			return makeCheckerResult(
 				"Peut être un problème d'arrondi ?",

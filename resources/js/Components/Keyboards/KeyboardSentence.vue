@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import {computed, onMounted, onUnmounted, ref} from "vue"
+import {computed, onMounted, ref} from "vue"
 import ScButton from "@/Components/Ui/scButton.vue"
 import type {
 	KeyboardEmitsInterface,
@@ -8,6 +8,7 @@ import type {
 	KeyboardPropsInterface
 } from "@/types/keyboardInterfaces.ts"
 import PiMath from "pimath"
+import {useGlobalClick} from "@/Composables/useGlobalClick.ts"
 
 interface wordItem {
 	available: boolean
@@ -43,7 +44,7 @@ async function setInput(value?: string): Promise<KeyboardInputInterface> {
 	const input = items.value.map(x => x.id).join(',')
 	const tex = items.value.map(x => x.word).join(' ')
 	const btns = items.value
-		.map(x => `<span data-id="${x.id}" class="cursor-pointer mr-1 sentence-button hover:bg-blue-100 transition-colors">${x.word}</span>`)
+		.map(x => `<span data-id="${x.id}" data-uid="${uid}" class="cursor-pointer mr-1 sentence-button hover:bg-blue-100 transition-colors">${x.word}</span>`)
 
 
 	return {
@@ -133,40 +134,40 @@ function makeItem(word: string): wordItem {
 	}
 }
 
-let sentenceClickHandler: ((event: MouseEvent) => void) | null = null
+const sentenceClickHandler = (event: MouseEvent) => {
+	const target = event.target as HTMLElement | null
+	if (!target) return
+
+	// on vérifie que le target fait partie de ce composant vue.
+	const btn = target.closest('.sentence-button') as HTMLElement | null
+	if (!btn) return
+
+	const target_uid = btn.dataset.uid
+	if (!target_uid) return
+	if (target_uid !== uid) return
+
+	const id = btn.dataset.id
+	if (!id) return
+
+	const found = availableItems.value.find(available => available.id === id)
+	found.available = true
+
+	const id_to_remove = items.value.findIndex(out => out.id === id)
+	if (id_to_remove === null) return
+
+	items.value.splice(id_to_remove, isConditional.value ? Infinity : 1)
+
+	onChange()
+}
+
+const uid = `comp-${crypto.randomUUID()}`
+useGlobalClick(uid, sentenceClickHandler)
 onMounted(() => {
 	// Load the available words.
 	availableItems.value = isRandom.value
 		? PiMath.Random.shuffle(words.value)
 		: words.value
-
-	// Listen to btn click on .sentence-button
-	sentenceClickHandler = (event: MouseEvent) => {
-		const target = event.target as HTMLElement | null
-		if (!target) return
-		const btn = target.closest('.sentence-button') as HTMLElement | null
-		if (!btn) return
-		const id = btn.dataset.id
-		if (!id) return
-
-		const found = availableItems.value.find(available => available.id === id)
-		found.available = true
-		const id_to_remove = items.value.findIndex(out => out.id === id)
-		if (id_to_remove === null) return
-
-		items.value.splice(id_to_remove, isConditional.value ? Infinity : 1)
-
-		onChange()
-	}
-
-	window.addEventListener('click', sentenceClickHandler)
-
 })
-
-onUnmounted(() => {
-	if (sentenceClickHandler) window.removeEventListener('click', sentenceClickHandler)
-})
-
 
 const currentAvailableWords = computed<wordItem[]>(() => {
 	if (!isConditional.value) return availableItems.value

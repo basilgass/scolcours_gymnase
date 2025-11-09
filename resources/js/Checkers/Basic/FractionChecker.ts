@@ -40,7 +40,6 @@ export class FractionChecker extends CheckerAbstract {
 	}
 
 	override checkValue(value: string): CheckerResult {
-
 		const FAnswer = new Fraction(value)
 		const FExpected = new Fraction(this.answer)
 

@@ -1,5 +1,5 @@
 import {describe, expect, test} from "vitest"
-import {SolutionChecker} from "@/Checkers"
+import {PiChecker, SolutionChecker} from "@/Checkers"
 import AsciiMathParser from "@/asciimath2tex.ts"
 
 describe("solution checker", () => {
@@ -222,7 +222,7 @@ describe("solution checker", () => {
 		const chk = new SolutionChecker()
 		chk.answer = "]-3;2[uu]5;+oo["
 
-		test("pas le bon nombre d'intervalles", ()=>{
+		test("pas le bon nombre d'intervalles", () => {
 			const result = chk.check_intervals('[-3;2]')
 			expect(result.result).toBe(false)
 			expect(result.message).toBe('Il manque un ou plusieurs intervalle(s)')
@@ -232,13 +232,13 @@ describe("solution checker", () => {
 			expect(result1.message).toBe('Il y a un ou plusieurs intervalle(s) en trop')
 		})
 
-		test("un intervalle ok, un intervalle ko", ()=>{
+		test("un intervalle ok, un intervalle ko", () => {
 			const result0 = chk.check_intervals(']-3;2[uu[5;8]')
 			expect(result0.result).toBe(false)
 			expect(result0.message).toContain("(2) :")
 			expect(result0.message).toContain(" n'est pas dans les solutions")
 		})
-		test("un intervalle ok, un intervalle partiel", ()=>{
+		test("un intervalle ok, un intervalle partiel", () => {
 			const result0 = chk.check_intervals(']-3;2[uu[10/2;+oo[')
 			expect(result0.result).toBe(false)
 			expect(result0.partial).toBe(true)
@@ -289,7 +289,7 @@ describe("solution checker", () => {
 			expect(result.message).toBe("Pourquoi avoir soustrait un ensemble ?")
 		})
 
-		test("comparaison de la partie à soustraire", ()=>{
+		test("comparaison de la partie à soustraire", () => {
 			chk.answer = 'RR_+^**\\\\{3;7}'
 			const result = chk.check_realSets('RR_+^**\\\\{3;7}')
 			expect(result.result).toBe(true)
@@ -304,5 +304,20 @@ describe("solution checker", () => {
 			expect(result2.message).toContain("La réponse donnée est juste, mais pas sous la forme attendue.")
 		})
 
+	})
+})
+
+describe('Exercice specific checking (debug)', () => {
+	test('exercice équation trigonométrique élémentaire du premier degré (i) => 1', () => {
+		const solChk = new PiChecker('sol,checker:trigo,p')
+
+		const chk1 = solChk.check('{13pi/18+k2pi/3;pi/2+k2pi/3}', '{pi/2+k2pi/3;13pi/18+k2pi/3}')
+		expect(chk1.result).toBe(true)
+
+		const chk2 = solChk.check('{-5pi/6+k2pi/3;13pi/18+k2pi/3}', '{pi/2+k2pi/3;13pi/18+k2pi/3}')
+		expect(chk2.result).toBe(true)
+
+		const chk3 = solChk.check('{13pi/18+k2pi/3;-5pi/6+k2pi/3}', '{pi/2+k2pi/3;13pi/18+k2pi/3}')
+		expect(chk3.result).toBe(true)
 	})
 })

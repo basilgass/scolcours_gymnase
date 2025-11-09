@@ -1,18 +1,19 @@
 <script lang="ts" setup>
 // TODO: permettre l'affichage de la réponse.
 // TODO: retravailler pour être plus facile à modifier / debogguer
-import { onMounted, PropType, ref } from "vue"
+import {onMounted, PropType, ref} from "vue"
 import katex from "katex"
 import KeyboardDisplay from "@/Components/Keyboards/KeyboardDisplay.vue"
-import { customCheck } from "@/Composables/checkersConfig"
-import { KeyboardInterface, useKeyboard } from "@/Composables/useKeyboard"
-import { Point } from "pidraw/dist/figures/Point"
-import PiDraw from "pidraw"
+import {useKeyboard} from "@/Composables/useKeyboard"
+import {KeyboardInterface} from "@/types/keyboardInterfaces.ts"
+import {NumExp, Point} from "pimath"
+import {Bezier, PiDraw} from "pidraw"
+import {StudyChecker} from "@/Checkers"
 
 
 const props = defineProps({
-	keyboard: { type: Object as PropType<KeyboardInterface>, required: true },
-	answer: { type: String, default: "" }
+	keyboard: {type: Object as PropType<KeyboardInterface>, required: true},
+	answer: {type: String, default: ""}
 })
 
 enum ITEMTYPES {
@@ -36,10 +37,6 @@ enum BEZIERCONTROL {
 }
 
 interface itemGraphInterface {
-	type: ITEMTYPES
-	kind?: POINTTYPES
-	element: Point
-	controls: Record<string, Point>
 	bezier?: {
 		LT: Point[],
 		LB: Point[],
@@ -47,14 +44,18 @@ interface itemGraphInterface {
 		RB: Point[]
 	}
 	beziercontrol?: BEZIERCONTROL
+	controls: Record<string, Point>
+	element: Point
+	kind?: POINTTYPES
+	type: ITEMTYPES
 }
 
 const emits = defineEmits(["change", "validate"]),
-	changeEvent = function() {
+	changeEvent = function () {
 		// On récupère la mise en forme de la réponse
 		const output = validateOutput()
 		// On valide la réponse
-		const validation = customCheck("study", props.answer, output)
+		const validation = new StudyChecker([]).check(props.answer, output)
 
 		emits("change", {
 			value: {
@@ -68,7 +69,7 @@ const emits = defineEmits(["change", "validate"]),
 
 
 // Mise en forme de la réponse pour comparaison
-const validateOutput = function(): string {
+const validateOutput = function (): string {
 	let output = ""
 
 	if (enablePlot.value) {
@@ -91,14 +92,13 @@ const validateOutput = function(): string {
 // Code specific to Study.
 //TODO: KeyboardStudy : more rubstness for theOptions (parameters vs values), which are actually concatenated.
 let PiGraph: PiDraw,
-	// @ts-expect-error : Bezier does not exist in pidraw actually
 	plot: Bezier,
 	plotResult = ref(null),
 	draw = ref(null),
 	keyboardUI = ref(null),
 	theOptions = ref(props.keyboard.parameters.concat(props.keyboard.values)),
 	addButtons = ref([]),
-	display = ref({ input: "", tex: "", raw: "" }),
+	display = ref({input: "", tex: "", raw: ""}),
 	message = ref(""),
 	showGraph = ref(false),
 	enablePlot = ref(false),
@@ -207,18 +207,18 @@ onMounted(() => {
 	PiGraph = new PiDraw(draw.value)
 
 
-	PiGraph.updateLayout(cfg, false)
-	PiGraph.pixelsPerUnit = {
-		x: PiGraph.pixelsPerUnit.x / cfg.xUnit,
-		y: PiGraph.pixelsPerUnit.y / cfg.yUnit
-	}
-	PiGraph.axis()
-	PiGraph.texConverter = {
-		toTex: katex.renderToString,
-		options: {
-			throwOnError: false
-		}
-	}
+	PiGraph.updateLayout()
+	// PiGraph.pixelsPerUnit = {
+	// 	x: PiGraph.pixelsPerUnit.x / cfg.xUnit,
+	// 	y: PiGraph.pixelsPerUnit.y / cfg.yUnit
+	// }
+	// PiGraph.axis()
+	// PiGraph.texConverter = {
+	// 	toTex: katex.renderToString,
+	// 	options: {
+	// 		throwOnError: false
+	// 	}
+	// }
 	if (fx !== null) {
 		const fxs = fx.split("|")
 		for (const f of fxs) {
@@ -253,7 +253,7 @@ function initPlot(fx) {
 			samples = +d
 		} else if (d.includes(":")) {
 			const [min, max] = d.split(":").map(x => +x)
-			domain = { min, max }
+			domain = {min, max}
 		} else {
 			color = d
 		}
@@ -556,7 +556,7 @@ function addAO(value): itemGraphInterface {
 		y = y < PiGraph.unitYDomain.min ? PiGraph.unitYDomain.min : PiGraph.unitYDomain.max
 		x = line.getValueAtY(y).value
 	}
-	const pt1 = { x: +x, y: +y }
+	const pt1 = {x: +x, y: +y}
 
 	x = PiGraph.unitXDomain.max
 	y = line.getValueAtX(x).value
@@ -564,14 +564,14 @@ function addAO(value): itemGraphInterface {
 		y = y < PiGraph.unitYDomain.min ? PiGraph.unitYDomain.min : PiGraph.unitYDomain.max
 		x = line.getValueAtY(y).value
 	}
-	const pt2 = { x: +x, y: +y }
+	const pt2 = {x: +x, y: +y}
 
 	if (pt1.x < pt2.x) {
-		A = { x: +pt1.x, y: +pt1.y }
-		B = { x: +pt2.x, y: +pt2.y }
+		A = {x: +pt1.x, y: +pt1.y}
+		B = {x: +pt2.x, y: +pt2.y}
 	} else {
-		A = { x: +pt2.x, y: +pt2.y }
-		B = { x: +pt1.x, y: +pt1.y }
+		A = {x: +pt2.x, y: +pt2.y}
+		B = {x: +pt1.x, y: +pt1.y}
 	}
 
 	Apixels = PiGraph.unitsToPixels(A)
@@ -599,19 +599,19 @@ function addAO(value): itemGraphInterface {
 			"LT": btnClickEvent(PiGraph.point(
 				A.x + dxy.x + pxy.x,
 				A.y + dxy.y + pxy.y
-			).asSquare(size).fill({ color: "white", opacity: 0.5 }).hideLabel()),
+			).asSquare(size).fill({color: "white", opacity: 0.5}).hideLabel()),
 			"LB": btnClickEvent(PiGraph.point(
 				A.x + dxy.x - pxy.x,
 				A.y + dxy.y - pxy.y
-			).asSquare(size).fill({ color: "white", opacity: 0.5 }).hideLabel()),
+			).asSquare(size).fill({color: "white", opacity: 0.5}).hideLabel()),
 			"RT": btnClickEvent(PiGraph.point(
 				B.x - dxy.x + pxy.x,
 				B.y - dxy.y + pxy.y
-			).asSquare(size).fill({ color: "white", opacity: 0.5 }).hideLabel()),
+			).asSquare(size).fill({color: "white", opacity: 0.5}).hideLabel()),
 			"RB": btnClickEvent(PiGraph.point(
 				B.x - dxy.x - pxy.x,
 				B.y - dxy.y - pxy.y
-			).asSquare(size).fill({ color: "white", opacity: 0.5 }).hideLabel())
+			).asSquare(size).fill({color: "white", opacity: 0.5}).hideLabel())
 		},
 		bezier: {
 			"LT": [
@@ -691,7 +691,7 @@ function addPoint(type, xValue, yValue): itemGraphInterface {
 	// let x = new Fraction(xValue).value,
 	// 	y = new Fraction(yValue).value
 	let P = PiGraph.point(x, y),
-		pixels = PiGraph.unitsToPixels({ x, y }),
+		pixels = PiGraph.unitsToPixels({x, y}),
 		bar, text, beziercontrol = BEZIERCONTROL.SMOOTH
 
 	if (type === "trou" || type === "t") {
@@ -772,8 +772,8 @@ function plotGraph() {
 }
 
 
-const { loadAnswerToKeyboard } = useKeyboard(props)
-const reset = function() {
+const {loadAnswerToKeyboard} = useKeyboard(props)
+const reset = function () {
 	removeAllItems()
 }
 defineExpose({

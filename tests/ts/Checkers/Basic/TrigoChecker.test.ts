@@ -48,7 +48,19 @@ describe('degree with periodic', () => {
 
 		const r1 = chk.checkValue('1.23+k4.57')
 		expect(r1.result).toBe(false)
-		expect(r1.message).toContain("La période n'est pas juste",)
+		expect(r1.message).toContain("La partie périodique n'est pas juste",)
 		expect(r1.message).toContain('Peut être un problème d\'arrondi ?')
+	})
+})
+
+describe('single tests', () => {
+	test('exercice équation trigonométrique élémentaire du premier degré (i) => 1', () => {
+		const trigoChk = new TrigoChecker('checker:trigo,p')
+
+		const chk1 = trigoChk.check('-5pi/6+k2pi/3', 'pi/2+k2pi/3')
+		const chk2 = trigoChk.check('pi/2+k2pi/3', 'pi/2+k2pi/3')
+
+		expect(chk1.result).toBe(true)
+		expect(chk2.result).toBe(true)
 	})
 })

@@ -34,9 +34,10 @@ export class TrigoChecker extends CheckerAbstract {
 		this.digitsP = this.config.includes('d+')
 
 		this.secondaryChecker = this.digits
-			? new FractionChecker('r')
-			: new NumberChecker('2')
+			? new NumberChecker('2')
+			: new FractionChecker('r')
 
+		// TODO: Il faut utiliser le fraction checker pour les degrés ?
 		this.fractionChecker = new FractionChecker('r')
 	}
 
@@ -81,14 +82,24 @@ export class TrigoChecker extends CheckerAbstract {
 		}
 	}
 
-	checkAsDegreeWithPeriodic(value: string): CheckerResult {
+	checkAsDigitsWithPeriodic(value: string): CheckerResult {
 		const {angle, kPeriodic} = this.parseValue(value)
 		const {angle: answer_angle, kPeriodic: answer_kPeriodic} = this.parseValue(this.answer)
 
 		const angleNb = new Fraction(angle)
 		const kPeriodicNb = new Fraction(kPeriodic.replace('k', ''))
-
 		const answer_angleNb = new Fraction(answer_angle)
+		const answer_kPeriodicNb = new Fraction(answer_kPeriodic.replace('k', ''))
+
+		if (!kPeriodicNb.isEqual(answer_kPeriodicNb)) {
+			const result = this.secondaryChecker
+				.check(kPeriodic.replace('k', ''), answer_kPeriodic.replace('k', ''))
+
+			return makeCheckerResult([
+				"La partie périodique n'est pas juste.",
+				result.message
+			])
+		}
 
 		const diff = angleNb.clone().subtract(answer_angleNb).divide(kPeriodicNb)
 
@@ -109,7 +120,7 @@ export class TrigoChecker extends CheckerAbstract {
 		return makeCheckerResult()
 	}
 
-	checkAsDegreeWithoutPeriodic(value: string): CheckerResult {
+	checkAsDigitsWithoutPeriodic(value: string): CheckerResult {
 		return this.secondaryChecker.check(value, this.answer)
 	}
 
@@ -188,16 +199,19 @@ export class TrigoChecker extends CheckerAbstract {
 
 
 		if (this.radian && !this.digits) {
+			// Radian pur, en valeur exact.
 			return this.isPeriodic
 				? this.checkWithPeriodic(value)
 				: this.checkWithoutPeriodic(value)
 		}
 
-		if (!this.radian) {
-			return this.isPeriodic
-				? this.checkAsDegreeWithPeriodic(value)
-				: this.checkAsDegreeWithoutPeriodic(value)
-		}
+		// Angle en décimal, période en radian
+		// TODO: check Angle en décimal, période en radian
+
+		// tout en numérique.
+		return this.isPeriodic
+			? this.checkAsDigitsWithPeriodic(value)
+			: this.checkAsDigitsWithoutPeriodic(value)
 	}
 
 	checkWithPeriodic(value: string): CheckerResult {

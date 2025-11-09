@@ -23,86 +23,30 @@ export class SolutionChecker extends CheckerAbstract {
 	}
 
 	get format(): string {
-		return `Solution de la forme \\(\\mathcal{S}=\\{3;5\\}\\)<br/>${this.secondaryChecker?.format}`
+		return [
+			`Solution de la forme \\(\\mathcal{S}=\\{3;5\\}\\)`,
+			this.secondaryChecker?.format ?? ''
+		]
+			.filter(x => x.trim() !== '')
+			.join('<br/>')
 	}
 
 
 	override checkValue(value: string): CheckerResult {
+		// On contrôle que c'est la bonne mise en forme.
+		// TODO: regarder comment pour déplacer la quality dans le override CheckForamt
 		let result = this.check_quality(value)
+		if (!result.result) return result
 
-		if (!result.result) {
-			return result
-		}
-
+		// Contrôle la cohérence de la réponse Real, ensemble, intervalle
 		result = this.check_coherences(value)
+		if (!result.result) return result
 
-		if (!result.result) {
-			return result
-		}
+		if (isInterval(this.answer)) return this.check_intervals(value)
 
-		if (isInterval(this.answer)) {
-			return this.check_intervals(value)
-		}
-
-		if (isSimpleSet(this.answer)) {
-			return this.check_sets(value)
-		}
+		if (isSimpleSet(this.answer)) return this.check_sets(value)
 
 		return this.check_realSets(value)
-	}
-
-	check_quality(value: string): CheckerResult {
-		// C'est un ensemble particulier, sans accolade => OK
-		if (isEmptyOrReal(value)) {
-			return makeCheckerResult()
-		}
-
-		// Un ensemble type IR ou emptyset est entouré d'accolades => faux
-		if (isEmptyOrReal(value, true)) {
-			return makeCheckerResult(
-				`${new AsciiMathParser().parse(
-					value.slice(1, -1), // enlever le premier et le dernier caractère
-				)} est déjà un ensemble.`,
-				value === `{${this.answer}} `
-			)
-		}
-
-		// A partir de là, c'est forcément un ensemble ou un intervalle
-		const estIntervalle = isInterval(value)
-
-		// Le nombre d'accolades ouvrantes = nombre d'accolades fermantes
-		const openBracesCount = value.split('{').length - 1
-		const closeBracesCount = value.split('}').length - 1
-
-		// Pas le même nombre d'accolades.
-		if (openBracesCount !== closeBracesCount) {
-			return makeCheckerResult(
-				`il n'y a pas le même nombre d'accolade ouvrante que fermante.`
-			)
-		}
-
-		if (!estIntervalle && openBracesCount === 0) {
-			return makeCheckerResult(
-				"il faut au moins des accolades dans un intervalle."
-			)
-		}
-
-		// Dans le cas d'intervalle, chaque morceau doit commencer et se terminer par un crochet.
-		if (estIntervalle) {
-			const intervalles = value.split('uu')
-			if (
-				intervalles.some(intervalle => {
-					const first = intervalle[0]
-					const last = intervalle[intervalle.length - 1]
-					return !['[', ']'].includes(first) || !['[', ']'].includes(last)
-				})
-			) {
-				return makeCheckerResult(`Un intervalle commence par un \\( [ \\) ou un \\( ] \\)`)
-			}
-		}
-
-
-		return makeCheckerResult()
 	}
 
 	check_coherences(value: string): CheckerResult {
@@ -123,160 +67,6 @@ export class SolutionChecker extends CheckerAbstract {
 
 		return makeCheckerResult()
 	}
-
-	check_realSets(value: string): CheckerResult {
-		// <real set>\{substract set}
-		const [real, subtractSet] = value.split('\\\\')
-		const [answerReal, answerSubtractSet] = this.answer.split('\\\\')
-
-		if (!realSets.includes(real)) {
-			return makeCheckerResult("Les solutions avec une soustraction commencent par des ensembles rééels")
-		}
-
-		if (real !== answerReal) {
-			// on suppose que, par défaut answerReal utilise l'étoile.
-			// Si l'ensemble de base donné n'a pas l'étoile, mais que l'on soustrait le zéro...
-			// réponse fausse, mais partiel ok.
-			if (
-				answerReal.includes('^**') &&
-				!real.includes('^**') && subtractSet
-			) {
-				const hasZeroInSubtractSet = extractSetValues(subtractSet).includes('0')
-
-				if (hasZeroInSubtractSet) {
-					return makeCheckerResult("Il ne faut pas soustraire zéro, mais mettre une étoile à l'ensemble réel", true)
-				}
-			}
-
-			return makeCheckerResult("L'ensemble réel de base est faux.")
-		}
-
-		if (subtractSet === undefined && answerSubtractSet) {
-			return makeCheckerResult("Il faut soustraire quelques éléments")
-		}
-
-		if (subtractSet && answerSubtractSet === undefined) {
-			return makeCheckerResult("Pourquoi avoir soustrait un ensemble ?")
-		}
-
-		// Il ne reste plus qu'à comparer la partie soustraite.
-		if (answerSubtractSet) {
-			const answer = '' + this.answer
-			this.answer = answerSubtractSet
-			const subtractResult = this.check_sets(subtractSet)
-			this.answer = answer
-
-			if (subtractResult.result === false) {
-				return makeCheckerResult(`La partie soustraite est fausse<br>${subtractResult.message}`, subtractResult.partial)
-			}
-		}
-
-		return makeCheckerResult()
-	}
-
-	check_sets(value: string): CheckerResult {
-		const expectedValues = extractSetValues(this.answer)
-		const givenValues = extractSetValues(value)
-
-		// différence sur le nombre de réponses
-		const diff = expectedValues.length - givenValues.length
-
-		const errors: string[] = []
-		let partialOnly = true
-
-		if (diff !== 0) {
-			errors.push(diff > 0
-				? `Il manque ${diff} réponse${diff > 1 ? 's' : ''}.`
-				: `Il y a ${-diff} réponse${diff < -1 ? 's' : ''} en trop.`
-			)
-			partialOnly = false
-		}
-
-		givenValues.forEach((given: string, count: number) => {
-			const results = expectedValues
-				.map(checkValue => this.secondaryChecker.check(given, checkValue))
-
-			// Une réponse correcte existe.
-			const index = results
-				.findIndex((value) => value.result)
-
-			if (index !== -1) {
-				// Un résultat correspondant a été trouvé :
-				// on l'enlève de la liste des réponses possibles.
-				expectedValues.splice(index, 1)
-				return
-			}
-
-			// On recherche une réponse partielle
-			const partial = results
-				.findIndex(value => value.partial)
-
-			if (partial !== -1) {
-				// Une réponse partielle a été trouvée.
-				// on l'enlève de la liste des réponses possibles.
-				expectedValues.splice(partial, 1)
-				// On rajoute l'erreur.
-				errors.push(`(${count + 1}) ${results[partial].message}`)
-				return
-			}
-
-			// Aucune réponse ne correspond - c'est vraiment faux
-			partialOnly = false
-			errors.push(`(${count + 1}) aucune réponse ne correspond dans les solutions.`)
-		})
-
-		return makeCheckerResult(
-			errors.length > 0
-				? errors.join('<br/>')
-				: "",
-			partialOnly
-		)
-
-	}
-
-	check_intervals(value: string): CheckerResult {
-		const intervals = value.split('uu')
-		const answerIntervals = this.answer.split('uu')
-
-		if (intervals.length !== answerIntervals.length) {
-			return makeCheckerResult(
-				answerIntervals.length > intervals.length
-					? "Il manque un ou plusieurs intervalle(s)"
-					: "Il y a un ou plusieurs intervalle(s) en trop")
-		}
-
-
-		const results: string[] = []
-		let isPartial = true
-		intervals.forEach((interval, count) => {
-			const checks = answerIntervals.map(answer => this.check_interval(interval, answer))
-			const index = checks.findIndex(check => check.result)
-
-			if (index !== -1) {
-				answerIntervals.splice(index, 1)
-				return
-			}
-
-			const partialIndex = checks.findIndex(check => check.partial)
-			if (partialIndex !== -1) {
-				answerIntervals.splice(partialIndex, 1)
-				results.push(`(${count + 1}) : ${checks[partialIndex].message}`)
-				return
-			}
-
-			isPartial = false
-			results.push(`(${count + 1}) : \\(${new AsciiMathParser().parse(interval)}\\) n'est pas dans les solutions`)
-		})
-
-		return makeCheckerResult(
-			results.length > 0
-				? results.join('<br/>')
-				: ""
-			,
-			isPartial
-		)
-	}
-
 
 	check_interval(value: string, answer: string): CheckerResult {
 		const expectedValues = answer
@@ -355,6 +145,212 @@ export class SolutionChecker extends CheckerAbstract {
 		}
 
 		return makeCheckerResult()
+	}
+
+	check_intervals(value: string): CheckerResult {
+		const intervals = value.split('uu')
+		const answerIntervals = this.answer.split('uu')
+
+		if (intervals.length !== answerIntervals.length) {
+			return makeCheckerResult(
+				answerIntervals.length > intervals.length
+					? "Il manque un ou plusieurs intervalle(s)"
+					: "Il y a un ou plusieurs intervalle(s) en trop")
+		}
+
+
+		const results: string[] = []
+		let isPartial = true
+		intervals.forEach((interval, count) => {
+			const checks = answerIntervals.map(answer => this.check_interval(interval, answer))
+			const index = checks.findIndex(check => check.result)
+
+			if (index !== -1) {
+				answerIntervals.splice(index, 1)
+				return
+			}
+
+			const partialIndex = checks.findIndex(check => check.partial)
+			if (partialIndex !== -1) {
+				answerIntervals.splice(partialIndex, 1)
+				results.push(`(${count + 1}) : ${checks[partialIndex].message}`)
+				return
+			}
+
+			isPartial = false
+			results.push(`(${count + 1}) : \\(${new AsciiMathParser().parse(interval)}\\) n'est pas dans les solutions`)
+		})
+
+		return makeCheckerResult(
+			results.length > 0
+				? results.join('<br/>')
+				: ""
+			,
+			isPartial
+		)
+	}
+
+	check_quality(value: string): CheckerResult {
+		// C'est un ensemble particulier, sans accolade => OK
+		if (isEmptyOrReal(value)) {
+			return makeCheckerResult()
+		}
+
+		// Un ensemble type IR ou emptyset est entouré d'accolades => faux
+		if (isEmptyOrReal(value, true)) {
+			return makeCheckerResult(
+				`${new AsciiMathParser().parse(
+					value.slice(1, -1), // enlever le premier et le dernier caractère
+				)} est déjà un ensemble.`,
+				value === `{${this.answer}} `
+			)
+		}
+
+		// A partir de là, c'est forcément un ensemble ou un intervalle
+		const estIntervalle = isInterval(value)
+
+		// Le nombre d'accolades ouvrantes = nombre d'accolades fermantes
+		const openBracesCount = value.split('{').length - 1
+		const closeBracesCount = value.split('}').length - 1
+
+		// Pas le même nombre d'accolades.
+		if (openBracesCount !== closeBracesCount) {
+			return makeCheckerResult(
+				`il n'y a pas le même nombre d'accolade ouvrante que fermante.`
+			)
+		}
+
+		if (!estIntervalle && openBracesCount === 0) {
+			return makeCheckerResult(
+				"il faut au moins des accolades dans un intervalle."
+			)
+		}
+
+		// Dans le cas d'intervalle, chaque morceau doit commencer et se terminer par un crochet.
+		if (estIntervalle) {
+			const intervalles = value.split('uu')
+			if (
+				intervalles.some(intervalle => {
+					const first = intervalle[0]
+					const last = intervalle[intervalle.length - 1]
+					return !['[', ']'].includes(first) || !['[', ']'].includes(last)
+				})
+			) {
+				return makeCheckerResult(`Un intervalle commence par un \\( [ \\) ou un \\( ] \\)`)
+			}
+		}
+
+
+		return makeCheckerResult()
+	}
+
+	check_realSets(value: string): CheckerResult {
+		// <real set>\{substract set}
+		const [real, subtractSet] = value.split('\\\\')
+		const [answerReal, answerSubtractSet] = this.answer.split('\\\\')
+
+		if (!realSets.includes(real)) {
+			return makeCheckerResult("Les solutions avec une soustraction commencent par des ensembles rééels")
+		}
+
+		if (real !== answerReal) {
+			// on suppose que, par défaut answerReal utilise l'étoile.
+			// Si l'ensemble de base donné n'a pas l'étoile, mais que l'on soustrait le zéro...
+			// réponse fausse, mais partiel ok.
+			if (
+				answerReal.includes('^**') &&
+				!real.includes('^**') && subtractSet
+			) {
+				const hasZeroInSubtractSet = extractSetValues(subtractSet).includes('0')
+
+				if (hasZeroInSubtractSet) {
+					return makeCheckerResult("Il ne faut pas soustraire zéro, mais mettre une étoile à l'ensemble réel", true)
+				}
+			}
+
+			return makeCheckerResult("L'ensemble réel de base est faux.")
+		}
+
+		if (subtractSet === undefined && answerSubtractSet) {
+			return makeCheckerResult("Il faut soustraire quelques éléments")
+		}
+
+		if (subtractSet && answerSubtractSet === undefined) {
+			return makeCheckerResult("Pourquoi avoir soustrait un ensemble ?")
+		}
+
+		// Il ne reste plus qu'à comparer la partie soustraite.
+		if (answerSubtractSet) {
+			const answer = '' + this.answer
+			this.answer = answerSubtractSet
+			const subtractResult = this.check_sets(subtractSet)
+			this.answer = answer
+
+			if (subtractResult.result === false) {
+				return makeCheckerResult(`La partie soustraite est fausse<br>${subtractResult.message}`, subtractResult.partial)
+			}
+		}
+
+		return makeCheckerResult()
+	}
+
+	check_sets(value: string): CheckerResult {
+		const expectedValues = extractSetValues(this.answer)
+		const givenValues = extractSetValues(value)
+
+		// différence sur le nombre de réponses
+		const diff = expectedValues.length - givenValues.length
+
+		const errors: string[] = []
+		let partialOnly = true
+
+		if (diff !== 0) {
+			errors.push(diff > 0
+				? `Il manque ${diff} réponse${diff > 1 ? 's' : ''}.`
+				: `Il y a ${-diff} réponse${diff < -1 ? 's' : ''} en trop.`
+			)
+			partialOnly = false
+		}
+		givenValues.forEach((given: string, count: number) => {
+			const results = expectedValues
+				.map(checkValue => this.secondaryChecker.check(given, checkValue))
+
+			// Une réponse correcte existe.
+			const index = results
+				.findIndex((value) => value.result)
+
+			if (index !== -1) {
+				// Un résultat correspondant a été trouvé :
+				// on l'enlève de la liste des réponses possibles.
+				expectedValues.splice(index, 1)
+				return
+			}
+
+			// On recherche une réponse partielle
+			const partial = results
+				.findIndex(value => value.partial)
+
+			if (partial !== -1) {
+				// Une réponse partielle a été trouvée.
+				// on l'enlève de la liste des réponses possibles.
+				expectedValues.splice(partial, 1)
+				// On rajoute l'erreur.
+				errors.push(`(${count + 1}) ${results[partial].message}`)
+				return
+			}
+
+			// Aucune réponse ne correspond - c'est vraiment faux
+			partialOnly = false
+			errors.push(`(${count + 1}) aucune réponse ne correspond dans les solutions.`)
+		})
+
+		return makeCheckerResult(
+			errors.length > 0
+				? errors.join('<br/>')
+				: "",
+			partialOnly
+		)
+
 	}
 
 }

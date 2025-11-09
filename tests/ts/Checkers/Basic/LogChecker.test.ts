@@ -1,4 +1,4 @@
-import {describe, test, expect} from "vitest"
+import {describe, expect, test} from "vitest"
 import {LogChecker} from "@/Checkers/Basic/LogChecker.ts"
 
 describe("LogChecker - gestion des fractions", () => {
@@ -32,11 +32,11 @@ describe("LogChecker - gestion des fractions", () => {
 
 	test("valeur correcte", () => {
 		const result = checker.checkValue("10/4")
-		expect(result).toBe("") // 10/4 == 5/2
+		expect(result.result).toBe(true) // 10/4 == 5/2
 	})
 
 	test("valeur incorrecte", () => {
 		const result = checker.checkValue("7/2")
-		expect(result).toBe("La réponse sous forme exacte ne donne pas la bonne valeur.")
+		expect(result.message).toBe("La réponse sous forme exacte ne donne pas la bonne valeur.")
 	})
 })
