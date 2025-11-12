@@ -13,7 +13,7 @@ const description = `trigo,p[eriodic],d[igits],deg[rees],[paramètres]
 // TODO: on doit autoriser d'autres angles orientés (modulo) ou forcé dans un quadrant
 
 export class TrigoChecker extends CheckerAbstract {
-	private readonly decimals: number = 2
+	private readonly decimals: number
 	private readonly digits: boolean
 	private readonly digitsP: boolean
 	private fractionChecker: FractionChecker
@@ -33,9 +33,10 @@ export class TrigoChecker extends CheckerAbstract {
 			this.config.includes('d+') || // force la partie périodique à être en décimal aussi
 			this.config.includes('digits')
 		this.digitsP = this.config.includes('d+')
+		this.decimals = this.config.map(Number).find(x => !isNaN(+x)) || 2
 
 		this.secondaryChecker = this.digits
-			? new NumberChecker('2')
+			? new NumberChecker(this.decimals.toString())
 			: new FractionChecker('r')
 
 		// TODO: Il faut utiliser le fraction checker pour les degrés ?
