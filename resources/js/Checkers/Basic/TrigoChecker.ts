@@ -13,6 +13,7 @@ const description = `trigo,p[eriodic],d[igits],deg[rees],[paramètres]
 // TODO: on doit autoriser d'autres angles orientés (modulo) ou forcé dans un quadrant
 
 export class TrigoChecker extends CheckerAbstract {
+	private readonly decimals: number = 2
 	private readonly digits: boolean
 	private readonly digitsP: boolean
 	private fractionChecker: FractionChecker
@@ -65,21 +66,6 @@ export class TrigoChecker extends CheckerAbstract {
 			.filter(x => x.trim() !== "")
 			.join('<br/>')
 
-		if (this.radian) {
-			if (this.isPeriodic) {
-				return "réponse en radians : \\( \\dfrac{5\\pi}{3}+k\\dfrac{2\\pi}{5}\\)" + (this.isPositive ? "<br/>L'angle doit être positif et le plus petit possible." : '')
-			} else {
-				return "réponse en radians : \\(\\dfrac{5\\pi}{2}\\)"
-			}
-		}
-
-		if (this.isPeriodic) {
-			return "réponse en degrés : \\( 2.34+k11.25\\)" + (this.isPositive ? "<br/>L'angle doit être positif et le plus petit possible." : '')
-				+ "<br/>" + this.secondaryChecker.format
-		} else {
-			return "réponse en degrés : \\( 2.34\\)"
-				+ "<br/>" + this.secondaryChecker.format
-		}
 	}
 
 	checkAsDigitsWithPeriodic(value: string): CheckerResult {
@@ -87,9 +73,17 @@ export class TrigoChecker extends CheckerAbstract {
 		const {angle: answer_angle, kPeriodic: answer_kPeriodic} = this.parseValue(this.answer)
 
 		const angleNb = new Fraction(angle)
-		const kPeriodicNb = new Fraction(kPeriodic.replace('k', ''))
+		const kPeriodicNb =
+			this.digitsP
+				? new Fraction(kPeriodic.replace('k', ''))
+				: new Fraction(kPeriodic.replace('k', '').replace('pi', ''))
+					.multiply(+Math.PI.toFixed(this.decimals))
+
 		const answer_angleNb = new Fraction(answer_angle)
-		const answer_kPeriodicNb = new Fraction(answer_kPeriodic.replace('k', ''))
+		const answer_kPeriodicNb = this.digitsP
+			? new Fraction(answer_kPeriodic.replace('k', ''))
+			: new Fraction(answer_kPeriodic.replace('k', '').replace('pi', ''))
+				.multiply(+Math.PI.toFixed(this.decimals))
 
 		if (!kPeriodicNb.isEqual(answer_kPeriodicNb)) {
 			const result = this.secondaryChecker
@@ -206,12 +200,12 @@ export class TrigoChecker extends CheckerAbstract {
 		}
 
 		// Angle en décimal, période en radian
-		// TODO: check Angle en décimal, période en radian
-
 		// tout en numérique.
 		return this.isPeriodic
 			? this.checkAsDigitsWithPeriodic(value)
 			: this.checkAsDigitsWithoutPeriodic(value)
+
+
 	}
 
 	checkWithPeriodic(value: string): CheckerResult {

@@ -30,7 +30,7 @@ class PostController extends Controller
 				})
 			                ->first();
 
-			// TODO: actuellemnt, la redirection vers le lesson ne gère que le dernier
+			// TODO: actuellemnt, la redirection vers le lesson ne gère que le dernier - on doit aller dans le même cours que le cours en cours !!!!
 			return redirect(route('students.lessons.show', [
 				"course" => $lesson->course,
 				"lesson" => $lesson

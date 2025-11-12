@@ -372,14 +372,14 @@ export const keyboards: Record<string, KeyboardObjectType> = {
 		name: "solution",
 		grid: "grid-cols-5",
 		layout: [
-			"1", "2", "3", "+", "-",
-			"4", "5", "6", "", "/",
-			"7", "8", "9", "^2", "^",
-			"0", "(", ")", "sqrt", "root(",
-			"log", "_", "ln", "pi", "e",
+			"1", "2", "3", "+", "^2",
+			"4", "5", "6", "-", "^",
+			"7", "8", "9", "/", "sqrt",
+			".", "0", "(", ")", "root(",
+			"log", "_", "ln", "e", "pi",
 			"{", ";", "}", "[", "]",
 			"RR", "RR_+", "RR_-", "^**", "!!",
-			"\\\\", "uu", "oo", "k"
+			"\\\\", "uu", "oo", "", "k"
 		],
 		tex: function (value) {
 
