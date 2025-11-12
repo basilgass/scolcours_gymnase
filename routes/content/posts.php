@@ -8,6 +8,7 @@ Route::middleware('web')
 	     // Public routes.
 	     Route::resource('posts', PostController::class)
 	          ->only(['index', 'show']);
+
 	     Route::get('posts/{post}/blocks/{block}', [PostController::class, 'anchor'])
 	          ->name('posts.blocks.anchor');
 
@@ -49,6 +50,9 @@ Route::middleware('api')
 		               ->group(function () {
 			               Route::patch('{post}/move', [PostApiController::class, 'move'])
 			                    ->name('move');
+
+			               Route::patch('{post}/revised', [PostApiController::class, 'revised'])
+			                    ->name('revised');
 
 			               Route::patch('{post}/blocks/order', [PostApiController::class, 'reorderBlocks'])
 			                    ->name('blocks.order');

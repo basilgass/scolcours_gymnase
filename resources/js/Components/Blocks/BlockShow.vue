@@ -113,12 +113,12 @@ function addIllustration() {
 		<slot name="header">
 			<div
 				v-show="blockTitle || blockScript.hasData.value"
+				:class="(props.block.merge ? ' pt-10' : '') + ' ' +
+					blockConfig.style.header"
 				class="flex justify-between
 					w-full
 					px-2 md:px-5 py-2 md:py-3
 					mb-3"
-				:class="(props.block.merge ? ' pt-10' : '') + ' ' +
-					blockConfig.style.header"
 			>
 				<!-- header left: (generic) icon and title -->
 				<div
@@ -159,20 +159,22 @@ function addIllustration() {
 			</div>
 		</slot>
 
-		<!-- admin footer to add illustrations -->
-		<div
-			v-if="!noAdmin"
-			v-admin="editMode.enable"
-			v-theme.admin
-			class="text-xs px-5 py-2 flex justify-between border-t"
-		>
-			<sc-button
-				xs
-				type="add"
-				@click="addIllustration"
+		<slot name="footer">
+			<!-- admin footer to add illustrations -->
+			<div
+				v-if="!noAdmin"
+				v-admin="editMode.enable"
+				v-theme.admin
+				class="text-xs px-5 py-2 flex justify-between border-t"
 			>
-				<i class="bi bi-plus-lg mr-2" /> illustration
-			</sc-button>
-		</div>
+				<sc-button
+					type="add"
+					xs
+					@click="addIllustration"
+				>
+					<i class="bi bi-plus-lg mr-2" /> illustration
+				</sc-button>
+			</div>
+		</slot>
 	</article>
 </template>

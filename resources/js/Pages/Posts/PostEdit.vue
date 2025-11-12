@@ -58,6 +58,8 @@ const deletePost = function () {
 			router.visit(route('chapters.show', chapter_id))
 		})
 }
+
+
 </script>
 <template>
 	<article class="scolcours-container my-5">
@@ -71,24 +73,12 @@ const deletePost = function () {
 						(id: {{ props.post.id }})
 					</span>
 				</h1>
-				<move-item-to
-					:source-id="props.post.id"
-					source="post"
-					target="chapter"
-				/>
 			</div>
 
 			<div class="flex gap-3 justify-end items-baseline">
-				<form-maker
-					sm
-					v-model="thePost.active"
-					type="switch"
-					label="publié,brouillon"
-				/>
-
 				<sc-button
-					xs
 					type="primary"
+					xs
 					@click="savePost"
 				>
 					enregistrer
@@ -108,6 +98,29 @@ const deletePost = function () {
 			</div>
 		</header>
 
+		<div class="w-full flex justify-between">
+			<move-item-to
+				:source-id="props.post.id"
+				source="post"
+				target="chapter"
+			/>
+
+			<div class="flex flex-col gap-2">
+				<form-maker
+					v-model="thePost.active"
+					label="publié,brouillon"
+					sm
+					type="switch"
+				/>
+
+				<form-maker
+					v-model="thePost.revise"
+					label="à réviser,en ordre"
+					sm
+					type="switch"
+				/>
+			</div>
+		</div>
 		<div>
 			<form-maker
 				v-model="thePost.title"
@@ -121,9 +134,9 @@ const deletePost = function () {
 				<sc-button
 					v-for="(key, name) of typeList"
 					:key="'btn-' + name"
+					:outline="thePost.type!==key"
 					theme
 					xs
-					:outline="thePost.type!==key"
 					@click="thePost.type = key"
 				>
 					{{ name }}

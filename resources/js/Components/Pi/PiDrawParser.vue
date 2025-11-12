@@ -191,6 +191,7 @@ const drawMouseUp = function (evt: { draw: PiDraw, mouse: MouseEvent }) {
 	emits("drawClick", evt)
 }
 
+
 </script>
 
 <template>
@@ -317,7 +318,7 @@ const drawMouseUp = function (evt: { draw: PiDraw, mouse: MouseEvent }) {
 			class="grid grid-cols-2 gap-3 mt-3"
 		>
 			<pre class="border border-slate-200 p-2">{{ dynamicValues }}</pre>
-			<pre class="border border-slate-200 p-2">{{ drawCode }}</pre>
+			<pre class="border border-slate-200 p-2 overflow-scroll">{{ drawCode }}</pre>
 		</div>
 	</article>
 </template>

@@ -29,13 +29,16 @@ Route::middleware('api')
      ->as('api.')
      ->group(function () {
 	     // Public api.
+	     Route::apiResource('blocks', BlockApiController::class)
+	          ->only(['index', 'show']);
 
 	     // Admin api
 	     Route::middleware('admin')
-		     ->prefix('admin')
-		     ->as('admin.')
+	          ->prefix('admin')
+	          ->as('admin.')
 	          ->group(function () {
-		          Route::apiResource('blocks', BlockApiController::class);
+		          Route::apiResource('blocks', BlockApiController::class)
+		               ->only(['store', 'update', 'destroy']);
 
 		          Route::apiResource('blocks.illustrations', IllustrationApiController::class)
 		               ->shallow()
@@ -70,7 +73,7 @@ Route::middleware('api')
 			               Route::post('image/upload', [IllustrationApiController::class, "upload"])
 			                    ->name('images.upload');
 
-						   // TOOD: add move the illustration
+			               // TOOD: add move the illustration
 
 		               });
 

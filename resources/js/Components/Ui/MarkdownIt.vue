@@ -22,7 +22,6 @@ const props = defineProps({
 	customKatex: {type: Boolean, default: false},
 })
 
-
 const md = markdownIt({html: true})
 	.use(bracketed)
 	.use(attr)
@@ -43,6 +42,8 @@ const mdit = computed(() => {
 
 	let output = props.text
 
+	// Current location: course vs other.
+	const context = window.location.pathname.startsWith('/cours')
 	// Remplace les liens vers les routes par des liens vers les pages
 	output = output.replaceAll(/\(@\S+\)/g, (match) => {
 		const [routeName, ...routeOptions] = match
@@ -50,7 +51,7 @@ const mdit = computed(() => {
 			.split(",")
 
 		try {
-			return `(${route(routeName, routeOptions)}){.@text}`
+			return `(${route(routeName, {post: routeOptions[0], context: context ? 'course' : null})}){.@text}`
 		} catch {
 			return `(${match})`
 		}

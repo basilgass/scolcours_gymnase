@@ -102,6 +102,7 @@ export interface PostInterface {
 		count: number,
 		answered: number
 	};
+	revise: boolean;
 	title: string;
 	type: string;
 	updated_at: string;

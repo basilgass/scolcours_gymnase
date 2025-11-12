@@ -7,9 +7,9 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
 	public function up(): void
 	{
-				Schema::table('lesson_calendars', function (Blueprint $table) {
-					$table->dropForeign('calendars_lesson_id_foreign');
-				});
+		Schema::table('lesson_calendars', function (Blueprint $table) {
+			$table->dropForeign('calendars_lesson_id_foreign');
+		});
 
 		Schema::table('lesson_calendars', function (Blueprint $table) {
 			$table

@@ -1,7 +1,5 @@
 <?php
 
-use App\Http\Controllers\AdminController;
-use App\Http\Controllers\DevController;
 use App\Http\Controllers\ScolcoursController;
 use Illuminate\Support\Facades\Route;
 
@@ -41,6 +39,8 @@ Route::get('/dico/{language}/{number?}/{size?}/{common?}/{withoutDuplicateLetter
 Route::get('/qr/', [ScolcoursController::class, 'qrcode'])
      ->name('qrcode.show');
 
+Route::get('/fullscreen', [ScolcoursController::class, 'fullscreen'])
+     ->name('widget.fullscreen');
 
 require __DIR__ . '/auth.php'; // REFACTOR: Routes with API: auth.php
 require __DIR__ . '/latexRoutes.php'; // REFACTOR: Routes with API: auth.php
