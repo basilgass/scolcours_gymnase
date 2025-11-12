@@ -83,6 +83,7 @@ class PostApiController extends Controller
 		$validated = $request->validate([
 			'title'         => ['max:255'],
 			'active'        => ['boolean'],
+			'revise'        => ['boolean'],
 			'script'        => ['string', 'nullable'],
 			'switch'        => ['string', 'nullable'],
 			'type'          => ['string', 'nullable'],
@@ -91,6 +92,7 @@ class PostApiController extends Controller
 
 		$post->title = $validated['title'];
 		$post->active = $validated['active'];
+		$post->revise = $validated['revise'];
 		$post->script = $validated['script'] ?? '';
 		$post->switch = $validated['switch'];
 		$post->type = $validated['type'] ?? null;
@@ -141,17 +143,17 @@ class PostApiController extends Controller
 		return $this->moveToTarget(
 			$post, 'posts', $target, 'chapter'
 		);
-//
-//		$maxOrder = $chapter->posts()->max('order') ?? 0;
-//
-//		$post->chapter()->associate($chapter);
-//		$post->order = $maxOrder + 1;
-//		$post->save();
-//
-//		return [
-//			'url'   => $chapter->url,
-//			'label' => $chapter->title,
-//		];
+		//
+		//		$maxOrder = $chapter->posts()->max('order') ?? 0;
+		//
+		//		$post->chapter()->associate($chapter);
+		//		$post->order = $maxOrder + 1;
+		//		$post->save();
+		//
+		//		return [
+		//			'url'   => $chapter->url,
+		//			'label' => $chapter->title,
+		//		];
 	}
 
 	// Get basic info about a post
@@ -162,5 +164,15 @@ class PostApiController extends Controller
 		];
 	}
 
+	public function revised(Post $post, Request $request)
+	{
+		$validated = $request->validate([
+			'revise' => ["required", "boolean"]
+		]);
 
+		$post->revise = $validated['revise'];
+		$post->save();
+
+		return $post->refresh();
+	}
 }

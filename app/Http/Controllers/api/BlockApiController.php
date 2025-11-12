@@ -9,18 +9,39 @@ use App\Http\Requests\TargetClassRequest;
 use App\Http\Requests\UpdateBlockRequest;
 use App\Http\Resources\BlockResource;
 use App\Models\Block;
+use App\Models\Chapter;
 use App\Traits\CanMoveToTarget;
 use App\Traits\ResolvesTarget;
+use Illuminate\Http\Request;
 
 class BlockApiController extends Controller
 {
 	use ResolvesTarget;
 	use CanMoveToTarget;
 
-	public function index()
+	public function index(Request $request)
 	{
-		// TODO: API Block index ?
+		if ($request->input('ids')) {
+			return $this->fetch($request->input('ids'));
+		}
+
+		if ($request->input('chapter_id')) {
+			$chapter = Chapter::find($request->input('chapter_id'));
+			return BlockResource::collection($chapter->blocks);
+		}
+
+		// TODO: If no data given, must use pagination, as there are two many blocks ?
 		return response()->noContent();
+		//		return BlockResource::collection($blocks);
+	}
+
+	public function fetch($values)
+	{
+		$blocks = Block::whereIn('id', $values)
+		               ->orderByRaw('FIELD(id,' . implode(",", $values) . ')')
+		               ->get();
+
+		return BlockResource::collection($blocks);
 	}
 
 	public function show(Block $block)
@@ -105,7 +126,7 @@ class BlockApiController extends Controller
 		$maxOrder = $blockable->blocks()->max('order') ?? 0;
 
 		$block->blockable()->associate($blockable);
-		$block->order = $maxOrder+1;
+		$block->order = $maxOrder + 1;
 		$block->save();
 
 		return [

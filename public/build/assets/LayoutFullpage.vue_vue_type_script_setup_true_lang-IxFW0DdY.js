@@ -1,0 +1,1 @@
+import{a}from"./MainFooter.vue_vue_type_script_setup_true_lang-C5gQ7rLS.js";import{d as s,F as o,H as t,Q as n,L as c,G as r}from"./@vue-cVK4q5mm.js";const l={class:"min-h-screen flex flex-col"},_={class:"container mx-auto flex-1"},p=s({__name:"LayoutFullpage",setup(m){return(e,i)=>(r(),o("div",l,[t("main",_,[c(e.$slots,"default")]),n(a)]))}});export{p as _};

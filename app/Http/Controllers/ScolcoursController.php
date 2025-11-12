@@ -188,4 +188,9 @@ class ScolcoursController extends Controller
 	{
 		return SchoolTimetable::all();
 	}
+
+	public function fullscreen()
+	{
+		return Inertia::render('WidgetFullscreen');
+	}
 }

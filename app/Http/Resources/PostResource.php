@@ -37,6 +37,7 @@ class PostResource extends JsonResource
 			'title'         => $this->title,
 			'order'         => $this->order,
 			'active'        => $this->active,
+			'revise'        => $this->revise,
 			'calculator'    => $this->calculator,
 			'updated_at'    => $this->updated_at,
 			'questionsInfo' => [
