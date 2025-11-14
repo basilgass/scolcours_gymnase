@@ -148,7 +148,7 @@ const deletePost = function () {
 					v-model="thePost.script"
 					label="script"
 					name="script"
-					type="textarea"
+					type="codearea"
 				/>
 				<form-maker
 					v-model="thePost.switch"

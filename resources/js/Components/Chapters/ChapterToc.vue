@@ -184,8 +184,8 @@ const availablePostTypes = computed(() => {
 					type="switch"
 				/>
 				<sc-button
-					xs
 					type="add"
+					xs
 					@click="addPost"
 				>
 					Ajouter un article {{ posts.length + 1 }}
@@ -196,8 +196,8 @@ const availablePostTypes = computed(() => {
 		<draggable
 			v-if="posts.length"
 			v-model="posts"
-			class="columns-1 column-toc gap-8 space-y-4"
 			:class="vertical?'':'md:columns-2 lg:columns-3'"
+			class="columns-1 column-toc gap-8 space-y-4"
 			handle=".draggable-handle"
 			item-key="id"
 			v-bind="{
@@ -216,9 +216,12 @@ const availablePostTypes = computed(() => {
 					</button>
 
 					<InertiaLink
-						:class="props.active === element.id
-							? `font-semibold text-${$page.props.theme.slug}-500`
-							: ''
+						:class="[
+							props.active === element.id
+								? `font-semibold text-${$page.props.theme.slug}-500`
+								: '',
+							'text-left hover:pl-1 transition-all duration flex gap-1'
+						]
 						"
 						:href="route('themes.chapters.posts.show', [
 							$page.props.theme.slug,
@@ -226,7 +229,6 @@ const availablePostTypes = computed(() => {
 							element.order,
 						])
 						"
-						class="text-left hover:pl-1 transition-all duration flex gap-1"
 					>
 						<post-type-icon
 							:post="element"
