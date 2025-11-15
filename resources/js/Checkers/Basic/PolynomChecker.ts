@@ -89,11 +89,16 @@ export class PolynomChecker extends CheckerAbstract {
 
 		// Forme du sommet
 		if (this.config.includes("s") || this.config.includes("sommet")) {
+			// Doit être au format
+			// a(x+b)^2+c
+			// (x+b)^2+c
+			// x^2+c
+			// (x+b)^2
 			if (
 				value.match(
-					/(-?[\d]+(\/\d+)?)?\(x([+-](\d+(\/\d+)?)?)?\)\^2([+-]\d+(\/\d+)?)?/,
+					/^(-?[\d]+(\/\d+)?)?\(x([+-](\d+(\/\d+)?)?)?\)\^2([+-]\d+(\/\d+)?)?$/,
 				) ||
-				value.match(/(-?[\d]+(\/\d+)?)?x\^2([+-]\d+(\/\d+)?)?/)
+				value.match(/^(-?[\d]+(\/\d+)?)?x\^2([+-]\d+(\/\d+)?)?$/)
 			) {
 				return makeCheckerResult()
 			} else {

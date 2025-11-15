@@ -21,12 +21,13 @@ const config = computed<Partial<MermaidConfig>>(() => {
 	return {
 		theme,
 		look,
+		legacyMathML: true
 	} as MermaidConfig
 })
 
 const emits = defineEmits<MermaidEmits>()
 
-function onNodeClick(node: string, event: MouseEvent){
+function onNodeClick(node: string, event: MouseEvent) {
 	emits('nodeClick', node, event)
 }
 
@@ -34,8 +35,8 @@ function onNodeClick(node: string, event: MouseEvent){
 
 <template>
 	<mermaid-diagram
-		:content="props.illustration.code"
 		:config
+		:content="props.illustration.code"
 		@node-click="onNodeClick"
 	/>
 </template>

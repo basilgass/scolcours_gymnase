@@ -54,6 +54,7 @@ const tex = ref<string | undefined>(undefined)
 // List of all block steps
 const steps = ref<IDrawStep[]>([])
 const foreground = ref<string[]>([])
+const addMode = ref<boolean>([])
 
 // List of all sliders
 const sliders = ref<ISlider[]>([])
@@ -68,11 +69,21 @@ const currentStep = computed<IDrawStep>(() => {
 		}
 	}
 
+
 	const step = steps.value[Math.max(stepIndex.value, 0)] ?? {
 		body: "",
 		code: []
 	}
 
+	if (addMode.value && stepIndex.value > 0) {
+		for (let i = 0; i < stepIndex.value; i++) {
+			const prevStep = steps.value[i]
+			step.code = [...prevStep.code, ...step.code]
+		}
+	}
+
+	console.log(addMode.value)
+	
 	return {
 		body: step.body,
 		code: [
@@ -93,6 +104,7 @@ function updateData() {
 	tex.value = data.tex
 	steps.value = data.steps
 	foreground.value = data.foreground
+	addMode.value = data.addMode
 	sliders.value = data.sliders
 	computedValues.value = data.computedValues
 }

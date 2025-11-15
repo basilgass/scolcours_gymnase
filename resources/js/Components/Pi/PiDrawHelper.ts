@@ -41,6 +41,7 @@ export interface IDrawComputedValue {
 }
 
 export interface IDrawCode {
+	addMode: boolean
 	computedValues: IDrawComputedValue[]
 	foreground: string[]
 	sliders: ISlider[],
@@ -168,7 +169,8 @@ export function PiDraw_Parse_Code(drawCode: string): IDrawCode {
 		sliders,
 		steps,
 		foreground,
-		computedValues
+		computedValues,
+		addMode: parseAddMode(blocks)
 	}
 }
 
@@ -232,6 +234,10 @@ function parseSliders(blocks: string[]): ISlider[] {
 		.filter(slider => slider !== null)
 }
 
+function parseAddMode(blocks: string[]): boolean {
+	return blocks.some((block: string) => block.startsWith('%-FG-+'))
+}
+
 function parseForeground(blocks: string[]): string[] {
 	const foregroundBlock = blocks.find((block: string) => block.startsWith("%-FG-")) ?? ""
 
@@ -245,7 +251,9 @@ function parseSteps(blocks: string[]): { body: string, code: string[] }[] {
 		.filter((block: string) => !block.startsWith("%-FG-"))
 		.map((block: string) => {
 			// Remove all lines starting with $
-			const code: string[] = block.split("\n").filter((line: string) => !line.startsWith("$") && line.trim() !== "")
+			const code: string[] = block
+				.split("\n")
+				.filter((line: string) => !line.startsWith("$") && line.trim() !== "")
 
 			if (code.length === 0) {
 				return null

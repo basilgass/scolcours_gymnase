@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 
 import {onMounted, ref, useTemplateRef, watch} from "vue"
-import {PiDraw} from "pidraw"
+import {PiDraw, Point} from "pidraw"
 import {useResizeObserver} from "@vueuse/core"
 import katex from "katex"
 import PiDrawAnimation from "@/Components/Pi/Parts/PiDrawAnimation.vue"
@@ -40,6 +40,10 @@ function PiParserUpdate(from?: string) {
 		emits("update", PiGraph)
 		PiParserHasErrors.value = false
 		showAnimation.value = PiGraph?.animation.canBeAnimated() ?? false
+
+		hasDraggable.value = Object.values(PiGraph.figures)
+			.some(fig => fig.isDraggable)
+
 	} catch {
 		console.log(from)
 		PiParserHasErrors.value = true
@@ -91,14 +95,17 @@ onMounted(() => {
 	emits("mounted", PiGraph)
 })
 
-const toggleDraggableSize = ref(20)
+const toggleDraggableSize = ref(1)
+const hasDraggable = ref(false)
 
 function toggleDragHandler() {
-	toggleDraggableSize.value = toggleDraggableSize.value === 30 ? 60 : 30
+	toggleDraggableSize.value = (toggleDraggableSize.value) % 2 + 1
 	Object.values(PiGraph.figures)
 		.filter(fig => fig.isDraggable)
-		.forEach(fig => {
-			fig.shape.size(toggleDraggableSize.value)
+		.forEach((fig: Point) => {
+			fig.shape.animate(400, 0, 'now')
+				.ease(">")
+				.size(fig.config.size * toggleDraggableSize.value, fig.config.size * toggleDraggableSize.value)
 		})
 }
 
@@ -113,19 +120,6 @@ function displayFullscreen() {
 	}
 }
 
-function flattenTransforms(svg: SVGSVGElement) {
-	const allElements = svg.querySelectorAll('*')
-	allElements.forEach(el => {
-		const transform = (el as SVGGraphicsElement).getAttribute('transform')
-		if (transform) {
-			const bbox = (el as SVGGraphicsElement).getBBox()
-			// applique transform sur x/y ou sur style si nécessaire
-			el.removeAttribute('transform')
-			// ici tu peux recalculer x/y pour chaque élément si tu veux un SVG “plat”
-			// simple solution: laisse transform si tu clones la racine entière
-		}
-	})
-}
 
 function print() {
 	// TODO: il y a un problème avec les déplacement.
@@ -149,6 +143,7 @@ function print() {
 		/>
 		<div class="absolute left-2 bottom-1 flex gap-3">
 			<div
+				v-if="hasDraggable"
 				class="cursor-pointer"
 				@click="toggleDragHandler"
 			>
