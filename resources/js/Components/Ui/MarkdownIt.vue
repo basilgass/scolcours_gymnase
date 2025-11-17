@@ -58,6 +58,13 @@ const mdit = computed(() => {
 	})
 
 	// Remplace les class courtes en classes complètes.
+
+	// classes génériques (raccourci)
+	output = output.replaceAll('.@info', '.text-xs .text-right .-mt-1')
+	output = output.replaceAll('.@alert', '.text-red-500 .bg-red-50 .border .border-red-500 .rounded .px-2')
+	output = output.replaceAll('.@bi-!', 'bi bi-exclamation-triangle mr-2')
+
+	// classes avec themes
 	// .@text = .text-<theme>
 	// .@bg = .bg-<theme>
 	// .@def = .def-<theme>
@@ -67,6 +74,7 @@ const mdit = computed(() => {
 
 		return `.${prefix}-${theme}`
 	})
+
 
 	// Remplace les caractères invisibles (pour les "placeholders" de macros)
 	output = output.replaceAll('‎', '')
@@ -102,7 +110,12 @@ const mdClick = function (event) {
 		:class="{
 			'katex-boxed': !customKatex,
 		}"
-		class="prose dark:prose-invert lg:prose-lg max-w-full item"
+		class="prose
+		prose-strong:text-inherit
+		dark:prose-invert
+		lg:prose-lg
+		max-w-full
+		item"
 		@click="mdClick"
 		v-html="mdit"
 		@touchmove.stop
