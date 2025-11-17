@@ -41,7 +41,7 @@ const latex_macros_suffix: IMacroRecords = {
 		math: true,
 		template: '\\left( @ \\right)'
 	},
-	'.{': {
+	'.br': {
 		suffix: true,
 		math: true,
 		template: '\\left\\lbrace @ \\right\\rbrace'
@@ -58,7 +58,7 @@ const md_macros: IMacroRecords = {
 		math: false,
 		template: "\\[\n\t@\n\\]"
 	},
-	".m": {
+	".l": {
 		suffix: true,
 		math: false,
 		template: "\\( @ \\)",
@@ -89,7 +89,7 @@ export const latex_macros: IMacroRecords = {
 	},
 	"BFN": {
 		math: true,
-		template: "\\begin{array}{rcll}\n@ : & @ & \\longrightarrow & @ \\\\\n & @ & \\longmapsto & @ \n\\end{array}"
+		template: "\\begin{darray}{rcll}\n@ : & @ & \\longrightarrow & @ \\\\\n & @ & \\longmapsto & @ \n\\end{darray}"
 	},
 	"LIM": {
 		math: true,
