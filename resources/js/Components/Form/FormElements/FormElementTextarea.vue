@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import {FormElementEmits, FormElementExpose, FormMakerPropsNewType} from "@/Components/Form/FormMakerInterface.ts"
 import FormMakerWrapper from "@/Components/Form/FormMakerWrapper.vue"
 import {useTextEditor} from "@/Composables/useTextEditor.ts"
@@ -22,6 +22,7 @@ defineExpose<FormElementExpose>({
 const emits = defineEmits<FormElementEmits>()
 
 const {textareaValue, textareaRef} = useTextEditor('input', {
+	language: "raw",
 	model
 })
 

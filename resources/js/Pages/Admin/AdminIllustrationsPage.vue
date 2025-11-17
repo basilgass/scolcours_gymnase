@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 
 // TODO: Permettre la modification des illustrations directement.
 // TODO: pagination des illustrations
@@ -12,7 +12,7 @@ import LayoutMain from "@/Layouts/LayoutMain.vue"
 import type {IllustrationInterface} from "@/types/modelInterfaces"
 import ErrorBoundary from "@/Components/errorBoundary.vue"
 
-const asyncComponent = defineAsyncComponent(()=>{
+const asyncComponent = defineAsyncComponent(() => {
 	return import('@/Components/Pi/PiDrawParser.vue')
 })
 defineOptions({layout: LayoutMain})
@@ -53,8 +53,8 @@ const showErrorsOnly = ref<boolean>(false)
 	<div>
 		<form-maker
 			v-model="search"
-			name="filtrer"
 			:label="`filtrer (${listOfIllustrations.length} / ${props.illustrations.length})`"
+			name="filtrer"
 		/>
 	</div>
 
@@ -83,11 +83,12 @@ const showErrorsOnly = ref<boolean>(false)
 					/>
 					<form-maker
 						v-model="illustration.code"
-						font-code
-						type="textarea"
-						:wrap="false"
 						:rows="illustration.code.split('\n').length"
+						:wrap="false"
+						font-code
+						language="json"
 						sm
+						type="codearea"
 					/>
 				</div>
 

@@ -63,14 +63,15 @@ const isModified = computed(() => {
 			<form-maker
 				v-model="theWidget.description"
 				label="description"
+				language="latex"
 				rows="5"
-				type="textarea"
+				type="codearea"
 			/>
 
 			<sc-button
 				v-show="isModified"
-				type="primary"
 				class="mt-3 float-right"
+				type="primary"
 				@click="update"
 			>
 				mise à jour

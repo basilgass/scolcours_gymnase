@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
@@ -71,9 +71,9 @@ function deleteChapter() {
 					enregistrer
 				</sc-button>
 				<sc-button
+					:href="route('chapters.show', [props.chapter.id])"
 					type="cancel"
 					xs
-					:href="route('chapters.show', [props.chapter.id])"
 				>
 					retour
 				</sc-button>
@@ -89,8 +89,8 @@ function deleteChapter() {
 		<div class="pb-5">
 			<form-maker
 				v-model="theChapter.title"
-				label="titre"
 				focus
+				label="titre"
 			/>
 			<form-maker
 				v-model="theChapter.meta_title"
@@ -105,9 +105,10 @@ function deleteChapter() {
 			<div class="grid grid-cols-1 md:grid-cols-2 gap-3">
 				<form-maker
 					v-model="theChapter.block.body"
-					type="textarea"
-					name="body"
 					label="body"
+					language="latex"
+					name="body"
+					type="codearea"
 				/>
 				<markdown-it
 					:text="theChapter.block.body"

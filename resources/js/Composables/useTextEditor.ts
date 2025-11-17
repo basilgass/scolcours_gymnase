@@ -6,7 +6,7 @@ import {json_macros} from "@/helpers/Macros/json_macros.ts"
 import {useMagicKeys, whenever} from "@vueuse/core"
 import {greekLaTeX} from "@/helpers/greekLaTeX.ts"
 
-type availableLanguageType = "latex" | "javascript" | "json"
+type availableLanguageType = "latex" | "javascript" | "json" | "raw"
 const indentUnit = '\t' // 2 espaces
 const invisibleCharacter = "‎"
 
@@ -24,6 +24,8 @@ function isModifierKey(e: KeyboardEvent): boolean {
 }
 
 function getMacros(language: availableLanguageType): IMacroRecords {
+	if (language === 'raw') return {}
+
 	return language === 'javascript' ? javascript_macros :
 		language === 'json' ? json_macros :
 			latex_macros

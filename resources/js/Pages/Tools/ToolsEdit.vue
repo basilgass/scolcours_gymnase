@@ -1,6 +1,6 @@
 <script
-	setup
 	lang="ts"
+	setup
 >
 
 import FormMaker from "@/Components/Form/FormMaker.vue"
@@ -52,8 +52,8 @@ function saveTool() {
 					enregistrer
 				</button>
 				<InertiaLink
-					class="btn btn-cancel btn-xs"
 					:href="route('tools.show', [tool.slug])"
+					class="btn btn-cancel btn-xs"
 				>
 					retour
 				</InertiaLink>
@@ -63,14 +63,15 @@ function saveTool() {
 		<div>
 			<form-maker
 				v-model="form.title"
-				label="titre"
 				focus
+				label="titre"
 			/>
 
 			<form-maker
 				v-model="form.body"
 				label="body"
-				type="textarea"
+				language="latex"
+				type="codearea"
 			/>
 		</div>
 	</section>

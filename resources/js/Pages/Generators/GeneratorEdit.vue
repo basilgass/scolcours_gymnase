@@ -126,8 +126,9 @@ function historyBack() {
 					inline-label
 					label="description"
 					label-class="w-[110px]"
+					language="latex"
 					name="generatorBody"
-					type="textarea"
+					type="codearea"
 				/>
 
 				<markdown-it
