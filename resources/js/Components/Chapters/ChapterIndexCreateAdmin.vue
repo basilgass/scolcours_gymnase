@@ -9,7 +9,7 @@ import ScButton from "@/Components/Ui/scButton.vue"
 const createChapterModal = ref(false)
 const createChapterTitle = ref("")
 
-const input =useTemplateRef<InstanceType<typeof FormMaker>>('input')
+const input = useTemplateRef<InstanceType<typeof FormMaker>>('input')
 
 async function onShowModal() {
 	createChapterModal.value = true

@@ -52,5 +52,8 @@ const iconValue = computed(() => {
 		<template #button>
 			<slot name="button" />
 		</template>
+		<template #message>
+			<slot name="message" />
+		</template>
 	</form-maker-wrapper>
 </template>

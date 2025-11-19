@@ -84,7 +84,7 @@ watch(() => props.type, (newType) => {
 	currentComponent.value = loadComponent(newType)
 })
 
-defineSlots<{ button: unknown }>()
+defineSlots<{ button: unknown, message: unknown }>()
 
 </script>
 
@@ -103,6 +103,9 @@ defineSlots<{ button: unknown }>()
 	>
 		<template #button>
 			<slot name="button" />
+		</template>
+		<template #message>
+			<slot name="message" />
 		</template>
 	</component>
 </template>

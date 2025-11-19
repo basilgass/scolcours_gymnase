@@ -293,6 +293,8 @@ export class StudyGraph extends PiGraph {
 			} else if (type === 'mm') {
 				p.addLabel('MAX').position('tc')
 			}
+		} else {
+			p.asCircle(this._size / 3).fill("black")
 		}
 
 		return {

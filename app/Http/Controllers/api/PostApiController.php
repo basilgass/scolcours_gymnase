@@ -143,17 +143,6 @@ class PostApiController extends Controller
 		return $this->moveToTarget(
 			$post, 'posts', $target, 'chapter'
 		);
-		//
-		//		$maxOrder = $chapter->posts()->max('order') ?? 0;
-		//
-		//		$post->chapter()->associate($chapter);
-		//		$post->order = $maxOrder + 1;
-		//		$post->save();
-		//
-		//		return [
-		//			'url'   => $chapter->url,
-		//			'label' => $chapter->title,
-		//		];
 	}
 
 	// Get basic info about a post

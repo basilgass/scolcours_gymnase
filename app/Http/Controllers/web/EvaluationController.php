@@ -28,4 +28,13 @@ class EvaluationController extends Controller
 			]
 		);
 	}
+
+	public function edit(Evaluation $evaluation)
+	{
+		return Inertia::render('Evaluations/EvaluationEdit',
+			[
+				'evaluation' => EvaluationRessource::make($evaluation),
+			]
+		);
+	}
 }

@@ -22,7 +22,7 @@ class ScoreApiController extends Controller
 
 		$ids = $request->input('ids');
 
-		if(!$request->has('type')){
+		if (!$request->has('type')) {
 			// On retourne les scores par leur ids directement.
 			$scores = Score::whereIn('id', $ids)->get();
 			return ScoreResource::collection($scores);
@@ -95,16 +95,25 @@ class ScoreApiController extends Controller
 	public function update(updateScoreRequest $request, Score $score)
 	{
 		$validated = $request->validated();
+
+		// persist the incoming data
 		$score->update($validated);
 
 		// Le $validated n'a pas d'attempts, on l'incrémente.
-		if (!isset($validated['attempts'])) {
-			$score->increment('attempts');
+		if (!$request->has('attempts')) {
+			if ($score->attempts === null) {
+				$score->attempts = 1;
+			} else {
+				$score->increment('attempts');
+			}
+
+			$score->refresh();
 		}
 
 		// Recreate the cache for this element.
 		$score->scoreable->updateCache($score);
 
+		// Ensure fresh model is returned
 		$score->refresh();
 
 		return ScoreResource::make($score);

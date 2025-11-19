@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\TeamCalendarApiController;
+use App\Http\Controllers\api\TeamCalendarApiController;
 
 Route::middleware('web')
      ->group(function () {

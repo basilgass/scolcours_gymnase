@@ -554,19 +554,52 @@ function plotGraph() {
 
 		<!-- keyboard -->
 		<div class="keyboard keyboard-study-keyboard flex flex-col gap-3">
+			<div class="min-h-[3.4em] grid place-items-center">
+				<!-- Keyboard inputs -->
+				<div
+					v-katex.boxed.nomargin="display.input ? display.tex : '\\color{#999}\\text{entrer une valeur...}'"
+					class="w-full"
+				/>
+			</div>
+			<!-- Keyboard selection -->
+			<div class="keyboard flex flex-wrap gap-3 justify-center">
+				<button
+					v-for="key of addButtons"
+					:key="key"
+					:title="kbrdStudyButtons[key].description"
+					class="key bg-action border rounded px-2 py-1 transition-colors flex-1"
+					@click="addItemToGraph(key)"
+				>
+					{{ kbrdStudyButtons[key].label }}
+				</button>
+			</div>
+
+			<KeyboardDisplay
+				ref="keyboardUI"
+				back
+				keyboard="algebra"
+				reset
+				@change="display = $event"
+				@clear="message=''"
+			/>
+
 			<!-- currently loaded elements (point, max, min, av, ...) -->
-			<div class="keyboard-study-items my-3">
+			<div class="keyboard-study-items my-3 border-t">
+				<h3 class="text-center mt-1 mb-3">
+					{{
+						items.length === 0 ? "aucun élément créé" : items.length === 1 ? "élément créé" : "éléments créés"
+					}}
+				</h3>
 				<div class="flex gap-1 lg:gap-2 items-baseline justify-center keyboard min-h-[3em]">
 					<button
 						v-for="item in items"
 						:key="item"
 						v-katex.ascii.nomargin="displayItem(item)"
-						class="key-touch bg-white hover:bg-amber-300 transition-colors"
+						class="key-touch
+						bg-action border rounded px-3 py-1
+						hover:bg-amber-300 transition-colors"
 						@dblclick="removeItem(item)"
 					/>
-
-					<!-- Keyboard inputs -->
-					<div v-katex="display.tex" />
 				</div>
 				<div
 					class="text-center text-red-500 text-sm"
@@ -578,36 +611,13 @@ function plotGraph() {
 				>
 					double-cliquer pour supprimer ou
 					<button
-						class="btn btn-xs bg-white"
+						class="bg-content border-content px-3 py-1"
 						@click="removeAllItems()"
 					>
 						<i class="bi bi-trash mr-3 text-red-800" />tout supprimer
 					</button>
 				</div>
 			</div>
-
-			<!-- Keyboard selection -->
-			<div class="keyboard flex flex-wrap gap-3 justify-center">
-				<button
-					v-for="key of addButtons"
-					:key="key"
-					:title="kbrdStudyButtons[key].description"
-					class="key bg-white flex-1"
-					@click="addItemToGraph(key)"
-				>
-					{{ kbrdStudyButtons[key].label }}
-				</button>
-			</div>
-
-			<KeyboardDisplay
-				ref="keyboardUI"
-				back
-				key-class="bg-white"
-				keyboard="algebra"
-				reset
-				@change="display = $event"
-				@clear="message=''"
-			/>
 		</div>
 	</article>
 </template>

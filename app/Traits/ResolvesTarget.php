@@ -7,6 +7,7 @@ use App\Models\Challenge;
 use App\Models\Chapter;
 use App\Models\Course;
 use App\Models\Deck;
+use App\Models\Evaluation;
 use App\Models\Formula;
 use App\Models\Generator;
 use App\Models\Lesson;
@@ -17,17 +18,18 @@ use App\Models\Quizz;
 trait ResolvesTarget
 {
 	protected array $allowedTargets = [
-		'block'     => Block::class,
-		'post'      => Post::class,
-		'question'  => Question::class,
-		'formula'   => Formula::class,
-		'chapter'   => Chapter::class,
-		'lesson'    => Lesson::class,
-		'course'    => Course::class,
-		'deck'      => Deck::class,
-		'challenge' => Challenge::class,
-		'generator' => Generator::class,
-		'quizz'     => Quizz::class,
+		'block'      => Block::class,
+		'post'       => Post::class,
+		'question'   => Question::class,
+		'evaluation' => Evaluation::class,
+		'formula'    => Formula::class,
+		'chapter'    => Chapter::class,
+		'lesson'     => Lesson::class,
+		'course'     => Course::class,
+		'deck'       => Deck::class,
+		'challenge'  => Challenge::class,
+		'generator'  => Generator::class,
+		'quizz'      => Quizz::class,
 	];
 
 	protected array $allowedWiths = [

@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Traits\HasQuestionsTrait;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -38,13 +37,27 @@ class Evaluation extends Model
 {
 	use HasQuestionsTrait;
 
-    protected $with = ['generators', 'questions'];
+	protected $with = ['generators', 'questions'];
 
-    public function generators()
-    {
-        return $this->morphToMany(Generator::class, 'generatorable')
-            ->withPivot('order')
-            ->orderByPivot('order');
-    }
+	protected $fillable = [
+		"slug",
+		"title",
+		"body",
+		"randomOrder",
+		"auto_control"
+	];
+
+	protected $casts = [
+		"randomOrder"  => "boolean",
+		"auto_control" => "boolean"
+	];
+
+	public function generators()
+	{
+		return $this
+			->morphToMany(Generator::class, 'generatorable')
+			->withPivot('order')
+			->orderByPivot('order');
+	}
 
 }

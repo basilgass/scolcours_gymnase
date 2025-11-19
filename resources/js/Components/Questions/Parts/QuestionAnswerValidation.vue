@@ -13,7 +13,7 @@
 
 import {useWrongAnswerAnimation} from "@/Composables/useHelpers.ts"
 import {usePage} from "@inertiajs/vue3"
-import {computed, inject, ref, useTemplateRef} from "vue"
+import {computed, inject, Ref, ref, useTemplateRef} from "vue"
 import {
 	questionDataInterface,
 	questionResultInterface,
@@ -23,6 +23,7 @@ import type {CheckerResult, PiChecker} from "@/Checkers"
 import ScButton from "@/Components/Ui/scButton.vue"
 import {useStoreScore} from "@/stores/useStoreScore.ts"
 import {ScoreQuestionDataInterface} from "@/types/scoreInterfaces.ts"
+import {ScoreInterface} from "@/types/modelInterfaces.ts"
 
 interface CheckerResultWithIndex extends CheckerResult {
 	index: number
@@ -35,7 +36,11 @@ const emits = defineEmits<{
 const questionData = inject<questionDataInterface>("questionData")
 
 const lockValidationButton = ref(false)
+const lockValidationButtonLabel = computed<string>(() => {
+	if (questionData.config.silent) return "Réponse sauvegardée..."
 
+	return questionResult.value.result ? "Bonne réponse !" : "Réponse incorrecte"
+})
 const validateButton = useTemplateRef<InstanceType<typeof ScButton>>('validateButton')
 
 const userAnswers = computed(() => {
@@ -50,6 +55,7 @@ const userAnswersCount = computed(() => {
 	return questionData.user.answers.value.filter(x => x.input.trim() !== '').length
 })
 
+
 const errorMessages = ref<string[]>([])
 
 const questionResult = ref<questionResultInterface>({
@@ -61,7 +67,7 @@ const questionResult = ref<questionResultInterface>({
 const scoreStore = useStoreScore()
 // const score = await scoreStore.getScore('Question', questionData.question.id)
 
-const score = questionData.user.score
+const score = questionData.user.score as Ref<ScoreInterface<ScoreQuestionDataInterface>>
 
 function getAnswerValidation(validator: questionValidatorInterface, index: number, mixedAnswer: string[]): CheckerResultWithIndex {
 	// La réponse de l'utilisateur
@@ -149,8 +155,8 @@ function updateAnswersValidation(): CheckerResultWithIndex[] {
 	 */
 
 	const mixedAnswers = questionData.validators.value
-			.filter(validator => validator.answer.startsWith('@'))
-			.map(validator => validator.answer.substring(1))
+		.filter(validator => validator.answer.startsWith('@'))
+		.map(validator => validator.answer.substring(1))
 
 	questionData.validators.value.forEach((validator, index) => {
 		const result = getAnswerValidation(validator, index, mixedAnswers)
@@ -186,19 +192,26 @@ async function saveToDB(validations: CheckerResult[]) {
 
 	// data = list of answers and previous answers.
 	// only update if it's a new answer, not already in the list.
-	const previousAnswers: string[] = (score.value.data as ScoreQuestionDataInterface)?.answers ?? []
 	const currentAnswers: string = questionData.user.answers.value.map(answer => answer.input).join('\n')
+	const previousAnswers: string[] = score.value.data.answers.filter(x => x !== currentAnswers)
 
-	if (!previousAnswers.includes(currentAnswers)) {
-		score.value.data = {
-			'answers': [
-				currentAnswers,
-				...previousAnswers
-			]
+	if (previousAnswers[0] !== currentAnswers) {
+		score.value.data.answers = [
+			currentAnswers,
+			...previousAnswers
+		]
+
+		// On ne garde qu'au maximum dix valeurs.
+		if (score.value.data.answers.length > 10) {
+			score.value.data.answers = score.value.data.answers.slice(0, 10)
 		}
 	}
 
+
 	scoreStore.updateScore(score.value)
+		.then(() => {
+			// do nothing
+		})
 }
 
 function emitToParent(result: boolean): questionResultInterface {
@@ -227,20 +240,26 @@ function validateQuestion() {
 	questionResult.value = emitToParent(result)
 
 	// La réponse est fausse -> effet visuel
-	if (!result && questionData.config.animation) {
+	if (
+		!result &&
+		questionData.config.animation &&
+		!questionData.config.silent
+	) {
 		useWrongAnswerAnimation(validateButton.value.$el)
 	}
 
 	// Afficher les messages d'erreurs
-	errorMessages.value = validations
-		.map((v, index) => {
-			if (questionData.answers.variables.value.length === 1) {
-				return v.result ? "" : `${v.message}`
-			} else {
-				return v.result ? "" : `${index + 1}. ${v.message}`
-			}
-		})
-		.filter(msg => msg !== "")
+	errorMessages.value = questionData.config.silent
+		? []
+		: validations
+			.map((v, index) => {
+				if (questionData.answers.variables.value.length === 1) {
+					return v.result ? "" : `${v.message}`
+				} else {
+					return v.result ? "" : `${index + 1}. ${v.message}`
+				}
+			})
+			.filter(msg => msg !== "")
 
 	// Sauvegarde dans la base de donnée
 	saveToDB(validations)
@@ -257,16 +276,16 @@ function validateQuestion() {
 		<div class="max-w-xl mx-auto keyboard mb-5">
 			<sc-button
 				ref="validateButton"
-				theme
 				:class="{
 					'cursor-not-allowed': lockValidationButton,
 				}"
 				:disabled=" lockValidationButton || userAnswersCount===0"
 				class="key-cmd w-full"
+				theme
 				@click="validateQuestion"
 			>
 				<p v-if="lockValidationButton">
-					{{ questionResult.result ? "Bonne réponse !" : "Réponse incorrecte" }}
+					{{ lockValidationButtonLabel }}
 				</p>
 				<p
 					v-else-if="userAnswersCount===0"

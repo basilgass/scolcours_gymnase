@@ -34,7 +34,8 @@ const props = withDefaults(
 		isDynamic?: boolean,
 		editorMode?: boolean,
 		blockOnly?: boolean,
-		autoAnswer?: boolean
+		autoAnswer?: boolean,
+		hideSuccess?: boolean,
 	}>(),
 	{
 		locked: false,
@@ -42,7 +43,8 @@ const props = withDefaults(
 		isDynamic: false,
 		editorMode: false,
 		display: false,
-		autoAnswer: false
+		autoAnswer: false,
+		hideSuccess: false
 	}
 )
 
@@ -77,7 +79,8 @@ const questionData = useQuestion(props.question, {
 	showInput: showUserInput,
 	isDynamic: props.isDynamic,
 	raw: props.question.keyboard,
-	editorMode: props.editorMode
+	editorMode: props.editorMode,
+	silent: props.hideSuccess,
 })
 /**
  * QuestionAnswer: .validators, .user.answers, .config, .answerId
@@ -147,9 +150,9 @@ watch(() => props.autoAnswer, () => {
 		:id="`question-${question.id}`"
 		:class="{
 			'bg-gray-50 border-gray-200 dark:bg-gray-800 dark:border-gray-700':
-				!questionData.user?.score.value?.is_resolved,
+				!questionData.hasSuccess.value,
 			'bg-green-50 dark:bg-green-950 border-green-600/60':
-				questionData.user?.score.value?.is_resolved,
+				questionData.hasSuccess.value,
 		}"
 		class="flex flex-col rounded border h-full relative"
 	>
@@ -182,9 +185,9 @@ watch(() => props.autoAnswer, () => {
 			v-show="!blockOnly"
 			:class="{
 				'bg-content':
-					!questionData.user.score.value?.is_resolved,
+					!questionData.hasSuccess.value,
 				'border-green-600/60':
-					questionData.user.score.value?.is_resolved,
+					questionData.hasSuccess.value,
 			}"
 		>
 

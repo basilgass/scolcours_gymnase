@@ -12,6 +12,7 @@ export interface questionConfigInterface {
 	isDynamic: boolean,
 	raw: string,
 	showInput: Ref<questionUserInputDisplayType>,
+	silent: boolean,
 }
 
 export interface questionDataInterface {
@@ -27,6 +28,7 @@ export interface questionDataInterface {
 		keyboard: ComputedRef<KeyboardInterface>,
 		checker: ComputedRef<KeyboardCheckerInterface>
 	},
+	hasSuccess: ComputedRef<boolean>
 	question: {
 		id: number
 	},
@@ -54,7 +56,8 @@ export interface questionDataInterfaceOLD {
 		animation: boolean,
 		showInput: Ref<questionUserInputDisplayType>,
 		isDynamic: boolean,
-		raw: string
+		raw: string,
+		silent: boolean,
 	},
 	// user data
 	// - answers: given by the user

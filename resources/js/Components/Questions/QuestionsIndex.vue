@@ -15,7 +15,7 @@ const editMode = useStoreEditMode()
 const props = defineProps<{
 	container: {
 		id: number,
-		type: 'Post' | 'Quizz',// TODO: move this to an interface.
+		type: 'Post' | 'Quizz' | 'Evaluation',// TODO: move this to an interface.
 		questionsGrid?: string
 	}
 	questions: Partial<QuestionInterface>[],
@@ -40,7 +40,7 @@ onMounted(() => {
 
 const questionsGrid = ref<string>(props.container.questionsGrid ?? "")
 const questionsGridClass = computed(() => {
-	if(questionsGrid.value) {
+	if (questionsGrid.value) {
 		return questionsGrid.value
 	}
 

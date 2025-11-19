@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\api\EvaluationApiController;
 use App\Http\Controllers\web\EvaluationController;
 
 Route::middleware('web')
@@ -39,8 +40,11 @@ Route::middleware('api')
 
 	     // Admin api
 	     Route::middleware('admin')
+	          ->prefix('admin')
+	          ->as('admin.')
 	          ->group(function () {
-
+		          Route::apiResource('evaluations', EvaluationApiController::class)
+		               ->only(['index', 'show', 'store', 'update', 'destroy']);
 	          });
 
      });

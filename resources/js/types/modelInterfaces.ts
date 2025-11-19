@@ -153,9 +153,9 @@ export interface ToolInterface {
 }
 
 export interface EvaluationInterface {
+	auto_control: boolean;
 	body: string;
 	id: number;
-	owner: User;
 	questions: QuestionInterface[];
 	randomOrder: boolean;
 	slug: string;
@@ -400,10 +400,10 @@ export interface CourseInterface extends CourseMinInterface {
 }
 
 export interface LessonInterface<T extends LessonScoreRulesInterface = LessonScoreRulesInterface> {
+	id: number,
 	course_id: number,
 	created_at: string,
 	homework: boolean,
-	id: number,
 	lessonable_id: number | null,
 	lessonable_tag: 'exercise' | 'howto' | null,
 	lessonable_type: lessonableClassName | null,

@@ -2,7 +2,7 @@ import {defineStore} from "pinia"
 import {computed, ref} from "vue"
 import {ScoreInterface} from "@/types/modelInterfaces.ts"
 import {usePage} from "@inertiajs/vue3"
-import {AxiosResponseModel} from "@/types"
+import {AxiosErrorMessage, AxiosResponseModel} from "@/types"
 import axios from "axios"
 import {scoreableClassName, ScoreDataInterface} from "@/types/scoreInterfaces.ts"
 
@@ -326,6 +326,8 @@ export const useStoreScore = defineStore(
 						bumpLastUpdated(updated)
 					}
 				}
+			}).catch((err: AxiosErrorMessage) => {
+				console.log(err.response.data.message)
 			})
 		}
 

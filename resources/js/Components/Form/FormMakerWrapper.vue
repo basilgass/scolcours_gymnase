@@ -23,7 +23,7 @@ const props = withDefaults(defineProps<FormMakerWrapperInterface>(),
 		sm: false,
 		xs: false,
 		inputClass: false,
-		errors: ()=>[]
+		errors: () => []
 	})
 
 const value = defineModel<string | boolean | number | Record<string, string>>()
@@ -80,51 +80,57 @@ const inputClassComputed = computed(() => {
 					@click="emits('focus')"
 				/>
 			</div>
-			<div
-				class="w-full
-				flex items-baseline
-				appearance-none transition
-				focus:outline-hidden focus:ring-0"
-				:class="inputClassComputed"
-			>
+
+			<div class="w-full flex items-baseline">
 				<div
-					v-if="icon || prepend"
-					class="px-2
-					border-r border-slate-300
-					cursor-pointer
-					flex items-center"
-					@click="emits('focus')"
+					class="flex-1 flex
+							appearance-none transition
+							focus:outline-hidden focus:ring-0"
+					:class="inputClassComputed"
 				>
-					<span
-						v-if="prepend"
-						v-katex.auto="prepend"
-					/>
-					<i
-						v-else
-						:class="icon"
-					/>
-				</div>
-				<div class="relative flex-1">
-					<span
-						v-if="clearable"
-						class="absolute right-1 top-1/2 -translate-y-1/2
-						text-slate-400 hover:text-red-600 transition-colors
-						cursor-pointer"
-						@click="value=''"
-					><i class="bi bi-x-lg" />
-					</span>
-					<div class="w-full">
-						<slot />
+					<!-- ajout de l'icône -->
+					<div
+						v-if="icon || prepend"
+						class="px-2
+								border-r border-slate-300
+								cursor-pointer
+								flex items-center"
+						@click="emits('focus')"
+					>
+						<span
+							v-if="prepend"
+							v-katex.auto="prepend"
+						/>
+						<i
+							v-else
+							:class="icon"
+						/>
+					</div>
+
+					<!-- ajout du input prinipal -->
+					<div class="relative flex-1">
+						<span
+							v-if="clearable"
+							class="absolute right-1 top-1/2 -translate-y-1/2
+									text-slate-400 hover:text-red-600 transition-colors
+									cursor-pointer"
+							@click="value=''"
+						><i class="bi bi-x-lg" />
+						</span>
+						<div class="w-full">
+							<slot />
+						</div>
 					</div>
 				</div>
+
 				<div v-if="btn">
 					<button
 						class="h-full px-2
-						bg-slate-200 dark:bg-slate-700
-					hover:bg-slate-300 dark:bg-slate-600
-					rounded-r
-					transition-colors
-					cursor-pointer"
+									bg-slate-200 dark:bg-slate-700
+								hover:bg-slate-300 dark:bg-slate-600
+								rounded-r
+								transition-colors
+								cursor-pointer"
 						@click="emits('buttonClick', $event)"
 					>
 						<slot name="button">

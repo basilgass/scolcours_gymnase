@@ -19,7 +19,7 @@ class QuestionController extends Controller
 		// Go to the question.
 		$target = $question->questionable;
 
-		if(class_basename($target)==='Post') {
+		if (class_basename($target) === 'Post') {
 			return redirect()->route(
 				'themes.chapters.posts.anchor',
 				[
@@ -32,11 +32,20 @@ class QuestionController extends Controller
 			);
 		}
 
-		if(class_basename($target)==='Quizz') {
+		if (class_basename($target) === 'Quizz') {
 			return redirect()->route(
 				'admin.quizzs.edit',
 				[
 					"quizz" => $target->id
+				]
+			);
+		}
+
+		if (class_basename($target) === 'Evaluation') {
+			return redirect()->route(
+				'admin.evaluations.edit',
+				[
+					"evaluation" => $target->id
 				]
 			);
 		}
@@ -45,7 +54,7 @@ class QuestionController extends Controller
 	public function edit(Question $question): Response
 	{
 		return Inertia::render("Questions/QuestionEdit", [
-			'theme'    => $question->questionable->chapter->theme,
+			'theme'    => $question->questionable->chapter?->theme ?? null,
 			'question' => QuestionResource::make($question)
 		]);
 	}

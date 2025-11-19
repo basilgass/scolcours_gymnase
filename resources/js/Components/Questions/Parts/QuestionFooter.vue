@@ -4,13 +4,15 @@
  * Pour l'admin, permet de modifier la réponse.
  */
 import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
-import {computed, inject, ref} from "vue"
+import {computed, inject, Ref, ref} from "vue"
 import type {questionDataInterface} from "@/Components/Questions/QuestionInterface.ts"
 import {ScoreQuestionDataInterface} from "@/types/scoreInterfaces.ts"
+import {ScoreInterface} from "@/types/modelInterfaces.ts"
 
 const editMode = useStoreEditMode()
 
 const questionData = inject<questionDataInterface>("questionData")
+const score = questionData.user.score as Ref<ScoreInterface<ScoreQuestionDataInterface>>
 
 const showAnswer = ref(false)
 
@@ -41,7 +43,10 @@ const previousAnswers = computed<string[]>(() => {
 				<div
 					v-for="a in previousAnswers"
 					:key="a"
-					class="cursor-pointer hover:font-semibold"
+					:class="[
+						'cursor-pointer hover:font-semibold',
+						a === score.data.answers[0] ? 'border px-1': ''
+					]"
 					@click="toggleAnswer(a)"
 				>
 					{{ a }}
@@ -67,7 +72,7 @@ const previousAnswers = computed<string[]>(() => {
 				/>
 			</button>
 		</div>
-		<div v-if="questionData.user.score.value?.is_resolved">
+		<div v-if="questionData.hasSuccess.value">
 			<button
 				v-if="!showAnswer"
 				class="text-xs text-gray-400 w-full"

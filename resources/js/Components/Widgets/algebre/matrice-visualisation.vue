@@ -7,6 +7,8 @@ d e f|y
 </info>-->
 <script lang="ts" setup>
 
+// TODO: a quoi que ça sert ?
+
 import {WidgetPropsInterface} from "@/types/modelInterfaces.ts"
 import {computed, ref} from "vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
@@ -28,6 +30,37 @@ class Matrix {
 
 	constructor(values?: number[][]) {
 		this.#array = values ? values : []
+	}
+
+	get array(): number[][] {
+		return this.#array
+	}
+
+	aij(i: number, j: number, value?: number): number {
+		if (value !== undefined) {
+			this.#array[i][j] = value
+		}
+
+		return this.#array[i][j]
+	}
+
+	col(idx: number): number[] {
+		return [...this.#array.map(row => row[idx])]
+	}
+
+	dimensions(): { rows: number, cols: number } {
+		return {
+			rows: this.#array.length,
+			cols: this.#array[0].length
+		}
+	}
+
+	forEach(callback: (aij: number, row: number, column: number) => void): void {
+		this.#array.forEach((row, i) => {
+			row.forEach((aij, j) => {
+				callback(aij, i, j)
+			})
+		})
 	}
 
 	fromDimension(rows: number, cols: number): Matrix {
@@ -65,39 +98,8 @@ class Matrix {
 		return result as T
 	}
 
-	get array(): number[][] {
-		return this.#array
-	}
-
-	dimensions(): { rows: number, cols: number } {
-		return {
-			rows: this.#array.length,
-			cols: this.#array[0].length
-		}
-	}
-
 	row(idx: number): number[] {
 		return [...this.#array[idx]]
-	}
-
-	col(idx: number): number[] {
-		return [...this.#array.map(row => row[idx])]
-	}
-
-	aij(i: number, j: number, value?: number): number {
-		if (value !== undefined) {
-			this.#array[i][j] = value
-		}
-
-		return this.#array[i][j]
-	}
-
-	forEach(callback: (aij: number, row: number, column: number) => void): void {
-		this.#array.forEach((row, i) => {
-			row.forEach((aij, j) => {
-				callback(aij, i, j)
-			})
-		})
 	}
 }
 
@@ -105,7 +107,7 @@ class Matrix {
 function generateFigure(p) {
 	const letter = currentLetter.value
 
-	currentLetter.value = letters[letters.split('').indexOf(letter)+1]
+	currentLetter.value = letters[letters.split('').indexOf(letter) + 1]
 
 	return p
 			.map((pt, idx) => `${letter}${idx}(${pt[0]},${pt[1]})`)
@@ -197,9 +199,9 @@ function appTransform(type: TRANSFORMATION) {
 	<article class="grid grid-cols-1 md:grid-cols-2 gap-3">
 		<div class="order-2 md:order-1">
 			<form-maker
-				type="codearea"
-				language="pidraw"
 				v-model="draw"
+				language="pidraw"
+				type="codearea"
 			/>
 
 

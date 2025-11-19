@@ -99,6 +99,11 @@ export function useQuestion(mayBeRefOrGetter: QuestionInterface, config: questio
 	const currentKeyboard = computed(() => validators.value[answerId.value].keyboard)
 	const currentChecker = computed(() => validators.value[answerId.value].checker)
 
+	const hasSuccess = computed(() => {
+		if (config.silent) return false
+
+		return question.value.user?.is_resolved ?? false
+	})
 	return {
 		question: {id: question.value.id},
 		block: computed(() => question.value.block),
@@ -119,6 +124,7 @@ export function useQuestion(mayBeRefOrGetter: QuestionInterface, config: questio
 			coherences: answersCoherences
 		},
 		validators,
-		config
+		config,
+		hasSuccess
 	}
 }

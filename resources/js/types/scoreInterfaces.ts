@@ -50,17 +50,17 @@ export interface ScoreDeckDataInterface {
  * }
  */
 export interface ScoreCardDataInterface {
-	current_score: number
-	current_appearances: number
-	current_time_spent: number
 	appearances: number
+	current_appearances: number
+	current_score: number
+	current_time_spent: number
 	success: number
 	time_spent: number
 }
 
 export interface ScoreChallengeDataInterface {
-	current_score: number,
 	current_level: number,
+	current_score: number,
 	level: number,
 }
 
