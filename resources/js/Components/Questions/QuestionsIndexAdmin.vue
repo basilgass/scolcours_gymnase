@@ -5,16 +5,12 @@ import QuestionShow from "@/Components/Questions/QuestionShow.vue"
 import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
 import type {QuestionInterface} from "@/types/modelInterfaces.ts"
 import ScButton from "@/Components/Ui/scButton.vue"
-import {useQuestionAdmin} from "@/Components/Questions/useQuestionAdmin.ts"
+import {questionsContainerInterface, useQuestionAdmin} from "@/Components/Questions/useQuestionAdmin.ts"
 
 const editMode = useStoreEditMode()
 
 const props = defineProps<{
-	container: {
-		id: number,
-		type: 'Post' | 'Quizz',// TODO: move this to an interface.
-		questionsGrid?: string
-	},
+	container: questionsContainerInterface,
 	components: InstanceType<typeof QuestionShow>[]
 }>()
 

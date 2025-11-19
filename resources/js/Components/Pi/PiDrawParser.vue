@@ -54,7 +54,7 @@ const tex = ref<string | undefined>(undefined)
 // List of all block steps
 const steps = ref<IDrawStep[]>([])
 const foreground = ref<string[]>([])
-const addMode = ref<boolean>([])
+const addMode = ref<boolean>(false)
 
 // List of all sliders
 const sliders = ref<ISlider[]>([])
@@ -82,8 +82,6 @@ const currentStep = computed<IDrawStep>(() => {
 		}
 	}
 
-	console.log(addMode.value)
-	
 	return {
 		body: step.body,
 		code: [

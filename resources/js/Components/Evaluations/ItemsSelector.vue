@@ -12,7 +12,7 @@ const props = withDefaults(
 	defineProps<{
 		items: T[],
 		status?: (item: T) => ITEM_STATUS	// -1, 0, 1,
-		maxItems: number
+		maxItems?: number
 	}>(),
 	{
 		status: () => ITEM_STATUS.NEW,

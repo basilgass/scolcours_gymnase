@@ -9,15 +9,12 @@ import type {questionResultInterface} from "@/Components/Questions/QuestionInter
 import {useStoreScore} from "@/stores/useStoreScore.ts"
 import {ScoreQuestionDataInterface} from "@/types/scoreInterfaces.ts"
 import PleaseWait from "@/Components/Ui/PleaseWait.vue"
+import {questionsContainerInterface} from "@/Components/Questions/useQuestionAdmin.ts"
 
 const editMode = useStoreEditMode()
 
 const props = defineProps<{
-	container: {
-		id: number,
-		type: 'Post' | 'Quizz' | 'Evaluation',// TODO: move this to an interface.
-		questionsGrid?: string
-	}
+	container: questionsContainerInterface,
 	questions: Partial<QuestionInterface>[],
 }>()
 

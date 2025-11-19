@@ -7,9 +7,11 @@ import QuestionShow from "@/Components/Questions/QuestionShow.vue"
 import {router} from "@inertiajs/vue3"
 import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
 
+export type questionContainerType = 'Post' | 'Quizz' | 'Evaluation'
+
 export interface questionsContainerInterface {
 	id: number,
-	type: 'Post' | 'Quizz',// TODO: move this to an interface.
+	type: questionContainerType,
 	questionsGrid?: string
 }
 
