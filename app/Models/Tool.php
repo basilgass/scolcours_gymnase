@@ -1,13 +1,13 @@
 <?php
 
-	namespace App\Models;
+namespace App\Models;
 
-	use Eloquent;
-	use Illuminate\Database\Eloquent\Builder;
-	use Illuminate\Database\Eloquent\Model;
-	use Illuminate\Support\Carbon;
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 
-	/**
+/**
  * App\Models\Tool
  *
  * @property int $id
@@ -32,6 +32,14 @@
  * @mixin Eloquent
  */
 class Tool extends Model
+{
+	protected $guarded = [];
+
+	public function resolveRouteBinding($value, $field = null)
 	{
-		protected $guarded=[];
+		return $this
+			->where('id', $value)
+			->orWhere('slug', $value)
+			->firstOrFail();
 	}
+}

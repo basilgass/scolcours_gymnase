@@ -19,6 +19,7 @@ export class TrigoChecker extends CheckerAbstract {
 	private fractionChecker: FractionChecker
 	private readonly isPeriodic: boolean
 	private readonly isPositive: boolean
+	private readonly isMinimal: boolean
 	private readonly radian: boolean
 
 	constructor(config: string[] | string) {
@@ -26,8 +27,13 @@ export class TrigoChecker extends CheckerAbstract {
 		this.type = CHECKERS.TRIGO
 		this.description = description
 
-		this.isPeriodic = this.config.includes('p') || this.config.includes('periodic') || this.config.includes('p+')
+		this.isPeriodic = this.config.includes('p')
+			|| this.config.includes('periodic')
+			|| this.config.includes('p+')
+			|| this.config.includes('p-')
+
 		this.isPositive = this.config.includes('p+')
+		this.isMinimal = this.config.includes('p-')
 		this.radian = !this.config.includes('deg')
 		this.digits = this.config.includes('d') ||
 			this.config.includes('d+') || // force la partie périodique à être en décimal aussi
@@ -49,15 +55,23 @@ export class TrigoChecker extends CheckerAbstract {
 		// exact / digits
 
 		const angle = `réponse en ${this.radian ? 'radians' : 'degrès'}`
+		const exampleP = this.isPeriodic ?
+			this.radian
+				? ` + k ${this.digitsP ? '6.28' : '\\dfrac{2\\pi}{3}'}`
+				: '+ k 360'
+			: ''
+
 		const example = this.radian
 			? this.digits
-				? `1.23 + k ${this.digitsP ? '6.28' : '\\dfrac{2\\pi}{3}'}`
-				: `\\dfrac{5\\pi}{3}+k\\dfrac{2\\pi}{5}`
-			: `42.12+k360`
+				? `1.23${exampleP}`
+				: `\\dfrac{5\\pi}{3}${exampleP}`
+			: `42.12${exampleP}`
 
 		const constraint = this.isPositive
 			? "L'angle doit être positif et le plus petit possible."
-			: ""
+			: this.isMinimal
+				? "L'angle doit être le plus proche de zéro possible."
+				: ""
 
 		return [
 			`${angle} : \\(${example}\\)`,
@@ -110,6 +124,21 @@ export class TrigoChecker extends CheckerAbstract {
 			if (angleNb.isGeq(kPeriodicNb)) {
 				return makeCheckerResult("L'angle n'est pas le plus petit possible.", true)
 			}
+		}
+
+		if (this.isMinimal) {
+			// contrôle que c'est le plus petit possible.
+			// En valeur absolue, angleNb doit être le plus petit possible
+			// TODO: en théorie, la réponse donnée doit être la bonne.
+			const angleAdd = angleNb.clone().add(kPeriodicNb)
+			const angleSub = angleNb.clone().subtract(kPeriodicNb)
+
+			const angleAbs = angleNb.clone().abs()
+
+			if (angleAbs.isGeq(angleAdd) || angleAbs.isGeq(angleSub)) {
+				return makeCheckerResult("L'angle n'est pas le plus proche de zéro.", true)
+			}
+
 		}
 
 		return makeCheckerResult()
@@ -237,6 +266,21 @@ export class TrigoChecker extends CheckerAbstract {
 			if (rad.angle.isGeq(rad.periodic)) {
 				return makeCheckerResult("L'angle n'est pas le plus petit possible.", true)
 			}
+		}
+
+		if (this.isMinimal) {
+			// contrôle que c'est le plus petit possible.
+			// En valeur absolue, angleNb doit être le plus petit possible
+			// TODO: en théorie, la réponse donnée doit être la bonne.
+			const angleAdd = rad.angle.clone().add(rad.periodic)
+			const angleSub = rad.angle.clone().subtract(rad.periodic)
+
+			const angleAbs = rad.angle.clone().abs()
+
+			if (angleAbs.isGeq(angleAdd) || angleAbs.isGeq(angleSub)) {
+				return makeCheckerResult("L'angle n'est pas le plus proche de zéro.", true)
+			}
+
 		}
 
 		return makeCheckerResult()

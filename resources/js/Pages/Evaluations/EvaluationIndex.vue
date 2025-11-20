@@ -27,7 +27,7 @@ const theEvaluations = ref<EvaluationInterface[]>(props.evaluations)
 			v-theme.admin
 			class="p-3 border rounded flex justify-between items-baseline"
 		>
-			<div>GAUCHE</div>
+			<div />
 			<div>
 				<evaluation-create />
 			</div>
@@ -52,6 +52,7 @@ const theEvaluations = ref<EvaluationInterface[]>(props.evaluations)
 					<template #footer>
 						<div class="flex w-full justify-end gap-3">
 							<sc-button
+								v-admin
 								type="edit"
 								icon
 								xs
@@ -62,9 +63,9 @@ const theEvaluations = ref<EvaluationInterface[]>(props.evaluations)
 							<sc-button
 								type="default"
 								xs
-								:href="route('evaluations.show', {evaluation: item.id})"
+								:href="route('students.evaluations.show', {evaluation: item.id})"
 							>
-								voir
+								faire l'évaluation
 							</sc-button>
 						</div>
 					</template>

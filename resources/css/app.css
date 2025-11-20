@@ -74,7 +74,7 @@
 }
 
 @utility border-content {
-	@apply border-gray-200 dark:border-gray-500;
+	@apply border-gray-200 dark:border-gray-500 divide-gray-200 dark:divide-gray-500;
 }
 @utility font-code {
 	font-family: 'Source Code Pro', monospace;

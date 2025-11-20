@@ -97,6 +97,12 @@ import DarkModeSwitch from "@/Components/Ui/DarkModeSwitch.vue"
 						<i class="mr-2 bi bi-book" />cours
 					</InertiaLink>
 					<InertiaLink
+						:href="route('students.evaluations.index')"
+						class="block transition duration-300 hover:translate-x-2 px-0 md:px-4 py-1"
+					>
+						<i class="mr-2 bi bi-question" />évaluations
+					</InertiaLink>
+					<InertiaLink
 						:href="route('students.quizzs.sessions.index')"
 						class="block transition duration-300 hover:translate-x-2 px-0 md:px-4 py-1"
 					>

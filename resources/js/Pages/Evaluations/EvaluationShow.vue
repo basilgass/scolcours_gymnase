@@ -1,14 +1,14 @@
 <script lang="ts" setup>
-import QuestionShow from "@/Components/Questions/QuestionShow.vue"
-import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 import LayoutProjection from "@/Layouts/LayoutProjection.vue"
 import type {EvaluationInterface, QuestionInterface} from "@/types/modelInterfaces"
 import {onMounted, ref} from "vue"
 import {useStoreScore} from "@/stores/useStoreScore.ts"
 import {ScoreQuestionDataInterface} from "@/types/scoreInterfaces.ts"
-import {questionResultInterface} from "@/Components/Questions/QuestionInterface.ts"
-import ItemsSelector from "@/Components/Evaluations/ItemsSelector.vue"
-import {ITEM_STATUS} from "@/types/evaluationInterfaces.ts"
+import EvaluationIntro from "@/Components/Evaluations/EvaluationIntro.vue"
+import EvaluationQuestions from "@/Components/Evaluations/EvaluationQuestions.vue"
+import EvaluationResults from "@/Components/Evaluations/EvaluationResults.vue"
+import {EVAL_STATUS} from "@/types/evaluationInterfaces.ts"
+import {Link as InertiaLink} from "@inertiajs/vue3"
 
 defineOptions({layout: LayoutProjection})
 
@@ -18,19 +18,10 @@ let props = defineProps<{
 
 
 const theQuestions = ref<QuestionInterface[]>(props.evaluation.questions)
-const questionIndex = ref(0)
-const loading = ref(true)
 
-function status(question: QuestionInterface): ITEM_STATUS {
-	if (question.user === null ||
-		question.user.data.answers.length === 0) return ITEM_STATUS.NEW
-
-	if (question.user.is_resolved && props.evaluation.auto_control) return ITEM_STATUS.SUCCESS
-
-	return ITEM_STATUS.PARTIAL
-}
-
+const currentStatus = ref<EVAL_STATUS>(EVAL_STATUS.LOADING)
 const storeScore = useStoreScore()
+
 onMounted(() => {
 	// Charger les scores des questions
 	const ids = theQuestions.value
@@ -45,64 +36,75 @@ onMounted(() => {
 			})
 		})
 		.finally(() => {
-			loading.value = false
+			currentStatus.value = EVAL_STATUS.INTRO
 		})
 })
 
-function validateQuestion(event: questionResultInterface) {
-	console.log(event)
-}
 
 </script>
 
 <template>
 	<article
-		class="my-8 py-5 mx-auto max-w-xl bg-white rounded-lg border border-slate-300 min-h-screen"
+		class="my-8 p-3 mx-auto max-w-xl bg-content border-content border rounded-lg min-h-screen"
 	>
-		<header class="px-5">
-			<h2
-				v-katex.auto="props.evaluation.title"
-				class="text-3xl"
-			/>
-			<div class="font-extralight">
-				{{ props.evaluation.slug }}
+		<header class="flex justify-between">
+			<div>
+				<h2
+					v-katex.auto="props.evaluation.title"
+					class="text-3xl"
+				/>
+				<div class="font-extralight text-xs font-code">
+					{{ props.evaluation.slug }}
+				</div>
+			</div>
+			<div class="text-right">
+				<InertiaLink
+					:href="route('scolcours.index')"
+					class="hover:font-semibold transition-all"
+				>
+					<i class="bi bi-house mr-2" />page d'accueil
+				</InertiaLink>
+
+				<div
+					v-if="evaluation.auto_control"
+					class="text-green-600"
+				>
+					<i class="bi bi-check mr-2" />validation
+				</div>
+				<div
+					v-else
+					class="text-red-500"
+				>
+					<i class="bi bi-exclamation-triangle mr-2" />aucune validation
+				</div>
 			</div>
 		</header>
 
-		<markdown-it
-			:text="props.evaluation.body"
-			class="px-5"
-		/>
 
 		<div
-			v-if="theQuestions.length > 0 && !loading"
-			class="px-5"
-		>
-			<items-selector
-				v-model="questionIndex"
-				:items="theQuestions"
-				:status
-			/>
-
-			<div class="overflow-hidden">
-				<question-show
-					v-for="(question, index) in theQuestions"
-					v-show="index===questionIndex"
-					:key="`question-${question.id}`"
-					:question
-					class="mt-5"
-					hide-success
-					show-input
-					@validate="validateQuestion"
-				/>
-			</div>
-		</div>
-		<div
-			v-else
+			v-if="currentStatus===EVAL_STATUS.LOADING"
 			class="font-code grid place-items-center min-h-[8em]"
 		>
-			En attente des questions
+			Chargement de l'évaluation
 		</div>
+		<evaluation-intro
+			v-else-if="currentStatus===EVAL_STATUS.INTRO"
+			:evaluation
+			:questions="theQuestions"
+			v-model="currentStatus"
+		/>
+		<evaluation-questions
+			v-else-if="currentStatus===EVAL_STATUS.RUNNING"
+			:evaluation
+			:questions="theQuestions"
+			v-model="currentStatus"
+		/>
+		<evaluation-results
+			v-else-if="currentStatus===EVAL_STATUS.FINISHED"
+			:evaluation
+			:questions="theQuestions"
+			v-model="currentStatus"
+		/>
 	</article>
 </template>
 

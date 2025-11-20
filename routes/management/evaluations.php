@@ -9,6 +9,7 @@ Route::middleware('web')
 
 	     // Students routes
 	     Route::middleware('students')
+	          ->as('students.')
 	          ->group(function () {
 		          Route::resource('evaluations', EvaluationController::class)
 		               ->only(['index', 'show']);

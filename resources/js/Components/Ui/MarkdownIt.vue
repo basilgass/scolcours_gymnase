@@ -47,12 +47,12 @@ const mdit = computed(() => {
 
 	// Remplace les liens vers les tools par des liens
 	output = output.replaceAll(/\(@tools.show\S+\)/g, (match) => {
-		const [routeName, ...routeOptions] = match
+		const [, ...routeOptions] = match
 			.substring(2, match.length - 1)
 			.split(",")
 
 		try {
-			return `(${route('tools.showById', {tool: routeOptions[0]})}){.@text}`
+			return `(${route('tools.show', {tool: routeOptions[0]})}){.@text}`
 		} catch {
 			return `(${match})`
 		}

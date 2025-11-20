@@ -11,8 +11,8 @@ export type questionContainerType = 'Post' | 'Quizz' | 'Evaluation'
 
 export interface questionsContainerInterface {
 	id: number,
-	type: questionContainerType,
 	questionsGrid?: string
+	type: questionContainerType,
 }
 
 export function useQuestionAdmin(
@@ -115,14 +115,14 @@ export function useQuestionAdmin(
 	}
 
 	function updateQuestionsOrder() {
+
 		axios
-			.post(
-				route("api.admin.questions.updateOrder", [
-					container.type,
-					container.id
-				]),
+			.patch(
+				route("api.admin.questions.updateOrder", {
+					type: container.type,
+					id: container.id
+				}),
 				{
-					_method: "PATCH",
 					order: questions.value.map((x, index) => {
 						return {id: x.id, order: index + 1}
 					})

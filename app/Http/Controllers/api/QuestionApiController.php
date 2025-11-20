@@ -7,6 +7,7 @@ use App\Http\Requests\StoreQuestionRequest;
 use App\Http\Requests\TargetClassRequest;
 use App\Http\Requests\UpdateQuestionRequest;
 use App\Http\Resources\QuestionResource;
+use App\Models\Evaluation;
 use App\Models\Post;
 use App\Models\Question;
 use App\Models\Quizz;
@@ -41,14 +42,14 @@ class QuestionApiController extends Controller
 
 		// Add the new order.
 		$nb_questions = $questionable->questions->count();
-		$validated['order'] = $nb_questions+1;
+		$validated['order'] = $nb_questions + 1;
 
 		// Create the question new way.
 		$question = $questionable->questions()->create($validated);
 
 		// Create the question's block
 		$question->blocks()->create([
-			"body"=>"sans contenu"
+			"body" => "sans contenu"
 		]);
 
 		return QuestionResource::make($question);
@@ -97,7 +98,7 @@ class QuestionApiController extends Controller
 		return QuestionResource::collection($target->questions()->orderBy('order')->get());
 	}
 
-	public function getQuestionable(string $type, int $id): Post|Quizz
+	public function getQuestionable(string $type, int $id): Post|Quizz|Evaluation
 	{
 		$target = null;
 		if (ucfirst($type) === 'Post') {
@@ -106,6 +107,10 @@ class QuestionApiController extends Controller
 
 		if (ucfirst($type) === 'Quizz') {
 			return Quizz::findOrFail($id);
+		}
+
+		if (ucfirst($type) === 'Evaluation') {
+			return Evaluation::findOrFail($id);
 		}
 
 		abort(404);
@@ -189,8 +194,8 @@ class QuestionApiController extends Controller
 	public function updateBatchDisplayIf(Request $request)
 	{
 		$validated = $request->validate([
-			"updates"=> ["required", "array"],
-			'updates.*.id' => ['required', 'integer', 'exists:questions,id'],
+			"updates"              => ["required", "array"],
+			'updates.*.id'         => ['required', 'integer', 'exists:questions,id'],
 			'updates.*.display_if' => ['nullable', 'integer']
 		]);
 
@@ -229,16 +234,16 @@ class QuestionApiController extends Controller
 			$question, 'questions', $target, 'questionable'
 		);
 
-//		$maxOrder = $questionable->questions()->max('order') ?? 0;
-//
-//		$question->questionable()->associate($questionable);
-//		$question->order = $maxOrder+1;
-//		$question->save();
-//
-//		return [
-//			'url'   => $questionable->url,
-//			'label' => $questionable->title,
-//		];
+		//		$maxOrder = $questionable->questions()->max('order') ?? 0;
+		//
+		//		$question->questionable()->associate($questionable);
+		//		$question->order = $maxOrder+1;
+		//		$question->save();
+		//
+		//		return [
+		//			'url'   => $questionable->url,
+		//			'label' => $questionable->title,
+		//		];
 	}
 
 	/**

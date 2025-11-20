@@ -3,3 +3,10 @@ export enum ITEM_STATUS {
 	'PARTIAL',
 	'SUCCESS',
 }
+
+export enum EVAL_STATUS {
+	LOADING,
+	INTRO,
+	RUNNING,
+	FINISHED
+}
