@@ -7,10 +7,13 @@ use App\Http\Controllers\web\ToolController;
 Route::middleware('web')
      ->group(function () {
 	     // Public routes.
+	     Route::get('tools/byId/{tool}', [ToolController::class, 'showById'])
+	          ->name('tools.showById');
+
 	     Route::resource('tools', ToolController::class)
-		     ->parameters([
-				 "tools"=>"tool:slug",
-		     ])
+	          ->parameters([
+		          "tools" => "tool:slug",
+	          ])
 	          ->only(['index', 'show']);
 
 	     // Admin routes
@@ -44,8 +47,8 @@ Route::middleware('api')
 
 	     // Admin api
 	     Route::middleware('admin')
-		     ->prefix('admin')
-		     ->as('admin.')
+	          ->prefix('admin')
+	          ->as('admin.')
 	          ->group(function () {
 
 		          Route::apiResource('tools', ToolApiController::class);

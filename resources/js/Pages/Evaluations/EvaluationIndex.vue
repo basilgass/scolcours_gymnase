@@ -7,6 +7,7 @@ import {ref} from "vue"
 import Card from "@/Components/Ui/Card.vue"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 import EvaluationCreate from "@/Components/Evaluations/EvaluationCreate.vue"
+import ScButton from "@/Components/Ui/scButton.vue"
 
 defineOptions({layout: LayoutMain})
 
@@ -47,6 +48,26 @@ const theEvaluations = ref<EvaluationInterface[]>(props.evaluations)
 						</div>
 					</template>
 					<markdown-it :text="item.body" />
+
+					<template #footer>
+						<div class="flex w-full justify-end gap-3">
+							<sc-button
+								type="edit"
+								icon
+								xs
+								:href="route('admin.evaluations.edit', {evaluation: item.id})"
+							>
+								éditer
+							</sc-button>
+							<sc-button
+								type="default"
+								xs
+								:href="route('evaluations.show', {evaluation: item.id})"
+							>
+								voir
+							</sc-button>
+						</div>
+					</template>
 				</Card>
 			</template>
 		</filtered-list>

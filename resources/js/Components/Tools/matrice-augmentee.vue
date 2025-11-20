@@ -36,6 +36,9 @@ const forms: IToolForm[] = restoreTool([
 	}
 ])
 
+const numeric = computed(() => {
+	return (forms[0].value.value as string).includes('.') || (forms[1].value.value as string).includes('.')
+})
 
 const result = computed(() => {
 	try {

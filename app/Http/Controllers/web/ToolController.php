@@ -30,6 +30,13 @@ class ToolController extends Controller
 		return Inertia::render("Tools/ToolsShow", $data);
 	}
 
+	public function showById(Tool $tool)
+	{
+		return redirect()->route("tools.show", [
+			"tool" => $tool->slug
+		]);
+	}
+
 	public function edit(Tool $tool)
 	{
 		return Inertia::render("Tools/ToolsEdit", [

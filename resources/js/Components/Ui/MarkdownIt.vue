@@ -44,6 +44,19 @@ const mdit = computed(() => {
 
 	// Current location: course vs other.
 	const context = window.location.pathname.startsWith('/cours')
+
+	// Remplace les liens vers les tools par des liens
+	output = output.replaceAll(/\(@tools.show\S+\)/g, (match) => {
+		const [routeName, ...routeOptions] = match
+			.substring(2, match.length - 1)
+			.split(",")
+
+		try {
+			return `(${route('tools.showById', {tool: routeOptions[0]})}){.@text}`
+		} catch {
+			return `(${match})`
+		}
+	})
 	// Remplace les liens vers les routes par des liens vers les pages
 	output = output.replaceAll(/\(@\S+\)/g, (match) => {
 		const [routeName, ...routeOptions] = match

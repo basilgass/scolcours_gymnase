@@ -78,8 +78,8 @@ function updateTool() {
 					<h3 class="text-lg leading-6 font-medium">
 						{{ tool.title }}
 					</h3>
-					<p class="mt-1 max-w-2xl text-sm opacity-60">
-						{{ tool.slug }}
+					<p class="mt-1 max-w-2xl text-sm opacity-60 font-code">
+						{{ tool.id }} : {{ tool.slug }}
 					</p>
 				</InertiaLink>
 				<div class="text-xs text-right">
