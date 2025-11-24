@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"
-import ToolForm, { IToolForm } from "@/Components/Tools/Parts/ToolForm.vue"
-import { useToolsStorage } from "@/Composables/useToolsStorage.ts"
+import ToolForm, {IToolForm} from "@/Components/Tools/Parts/ToolForm.vue"
+import {useToolsStorage} from "@/Composables/useToolsStorage.ts"
 
 /** Tools
  * title: graphe
@@ -9,16 +9,16 @@ import { useToolsStorage } from "@/Composables/useToolsStorage.ts"
  * parameters: fonction à tracer.
  * tags: algebre,1M
  */
-import { computed, ref } from "vue"
+import {computed, ref} from "vue"
 import Card from "@/Components/Ui/Card.vue"
 
-const { restoreTool } = useToolsStorage()
-const forms: IToolForm[] = restoreTool( [
+const {restoreTool} = useToolsStorage()
+const forms: IToolForm[] = restoreTool([
 	{
 		label: "paramètres",
 		type: "text",
 		value: ref("axis,grid,x=-10:10,y=-10:10"),
-		fromUrl: "fonction",
+		fromUrl: "params",
 	},
 	{
 		label: "code",
@@ -33,11 +33,12 @@ T2(6,5)
 t=T1T2
 a=arc A,O,B,2->tex=\\theta
 X=inter t,d->w=10`),
+		fromUrl: "code"
 	}
-] )
+])
 
-const params = computed(()=>  forms[0].value.value as string)
-const code = computed(()=>  forms[1].value.value as string)
+const params = computed(() => forms[0].value.value as string)
+const code = computed(() => forms[1].value.value as string)
 
 // REFACTOR: use ToolBody
 </script>
@@ -46,7 +47,7 @@ const code = computed(()=>  forms[1].value.value as string)
 	<article class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
 		<tool-form
 			form-class="space-y-3"
-			:forms="forms"
+			:forms
 			:rows="15"
 		/>
 

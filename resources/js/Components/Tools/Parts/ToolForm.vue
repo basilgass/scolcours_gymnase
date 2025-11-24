@@ -4,7 +4,7 @@ import FormMaker from "@/Components/Form/FormMaker.vue"
 import {FormElementType} from "@/Components/Form/FormMakerInterface"
 import {useToolsStorage} from "@/Composables/useToolsStorage.ts"
 import {useClipboard} from "@vueuse/core"
-import {computed, ComputedRef, inject, ref, Ref, watch} from "vue"
+import {computed, ComputedRef, inject, onMounted, ref, Ref, watch} from "vue"
 import ScButton from "@/Components/Ui/scButton.vue"
 import {router} from "@inertiajs/vue3"
 import Card from "@/Components/Ui/Card.vue"
@@ -43,8 +43,10 @@ const {storeTool, resetTool} = useToolsStorage()
 const link = computed(() => {
 	const url = `https://g.scolcours.ch/tools/${toolSlug}`
 
+	console.log(props.forms)
 	const items = props.forms.filter(f => f.fromUrl)
 
+	console.log(items)
 	if (items.length === 0) return url
 
 	const query = new URLSearchParams()
@@ -87,6 +89,26 @@ function resetFormTool() {
 		route('tools.show', {tool: toolSlug})
 	)
 }
+
+function restoreFromUri() {
+	// On récupère les données de l'URL si elles existent.
+	const urlParams = new URLSearchParams(window.location.search)
+
+	for (const [key, value] of urlParams) {
+		const form = props.forms.find(f => f.fromUrl === key)
+
+		if (form) {
+			form.value.value = value
+		}
+	}
+
+	emits('updateForm')
+}
+
+
+onMounted(() => {
+	restoreFromUri()
+})
 
 
 </script>

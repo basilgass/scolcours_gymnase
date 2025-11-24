@@ -10,6 +10,7 @@ export function useToolsStorage() {
 
 	function storeTool(forms: IToolForm[]) {
 		const data = forms.map(x => x.value.value)
+
 		sessionStorage.setItem(storeKey, JSON.stringify(data))
 	}
 
