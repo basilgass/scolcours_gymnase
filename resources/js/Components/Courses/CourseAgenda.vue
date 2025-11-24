@@ -258,10 +258,12 @@ const lessonsToPlace = computed(() => {
 </script>
 
 <template>
-	<section>
-		LES CALENDRIERS du <span v-if="between!==null">{{
-			between.min.format('YYYY.MM.DD')
-		}} au {{ between.max.format('YYYY.MM.DD') }}</span>
+	<section class="space-y-3">
+		<h3 class="text-lg uppercase">
+			calendrier du <span v-if="between!==null">{{
+				between.min.format('YYYY.MM.DD')
+			}} au {{ between.max.format('YYYY.MM.DD') }}</span>
+		</h3>
 
 		<div class="flex flex-col gap-8">
 			<course-week-timetable

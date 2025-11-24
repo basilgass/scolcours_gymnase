@@ -39,6 +39,7 @@ const toBeRevised = ref<boolean>(props.post.revise)
 
 function postRevised() {
 	toBeRevised.value = !toBeRevised.value
+	
 	axios.patch(
 		route("api.admin.posts.revised",
 			{post: props.post.id, revise: toBeRevised.value}

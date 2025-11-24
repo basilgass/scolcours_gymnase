@@ -50,6 +50,7 @@ const showBlock = ref<boolean>(false)
 		<course-stats
 			:course
 			:team
+			class="mb-10"
 		/>
 
 		<course-agenda
