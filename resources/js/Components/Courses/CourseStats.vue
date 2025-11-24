@@ -4,7 +4,7 @@ import StatBar from "@/Components/Ui/StatBar.vue"
 import ScButton from "@/Components/Ui/scButton.vue"
 import LessonTypeIcon from "@/Components/Courses/LessonTypeIcon.vue"
 import {useStoreScore} from "@/stores/useStoreScore.ts"
-import {computed, onMounted, ref} from "vue"
+import {computed, onMounted, onUnmounted, ref} from "vue"
 import {CourseInterface, ScoreInterface, TeamInterface, UserInterface} from "@/types/modelInterfaces.ts"
 import {ScoreLessonDataInterface} from "@/types/scoreInterfaces.ts"
 import {router} from "@inertiajs/vue3"
@@ -12,6 +12,7 @@ import axios from "axios"
 import {AxiosErrorMessage, AxiosResponseModel} from "@/types"
 import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
 import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
+import dayjs from "dayjs"
 
 const editMode = useStoreEditMode()
 const flash = useStoreFlashMessage()
@@ -69,38 +70,69 @@ const selected_user_stats = computed<Record<string, ILessonStats>>(() => {
 })
 
 function loadStats() {
-	axios.get(route('api.admin.teams.users', {team: props.team.id}))
-		.then((res: AxiosResponseModel<UserInterface[]>) => {
-			users.value = res.data
-		})
-
 	axios.get(route('api.admin.courses.teams.stats', {
 		team: props.team.id,
 		course: props.course.id
 	}))
 		.then((res: AxiosResponseModel<Record<string, ILessonStats>>) => {
 			lesson_stats.value = res.data
-
-			flash.success('Les statistiques ont été mise à jour.')
+			// flash.success('Les statistiques ont été mise à jour.')
 		})
 		.catch((err: AxiosErrorMessage) => {
 			console.warn(err.response.data.message)
 		})
+		.finally(() => {
+			lastUpdate.value = `mise à jour à ${dayjs().format('HH:mm:ss')}`
+		})
 }
 
+let intervalID: number
+const interval = 1 * 60 * 1000
+const lastUpdate = ref<string>('en attente de mise à jour.')
 onMounted(() => {
-	loadStats()
+	axios.get(route('api.admin.teams.users', {team: props.team.id}))
+		.then((res: AxiosResponseModel<UserInterface[]>) => {
+			users.value = res.data
+
+			loadStats()
+		}).finally(() => {
+		intervalID = setInterval(loadStats, interval)
+	})
+
+
+})
+
+onUnmounted(() => {
+	clearInterval(intervalID)
 })
 </script>
 
 <template>
 	<div
 		v-if="lesson_stats && users.length"
-		class="my-6"
+		class="space-y-3"
 	>
+		<!-- en-tête et titres -->
+		<div class="flex justify-between items-baseline">
+			<h3 class="text-lg uppercase">
+				statistiques de
+				{{ selected_user_id === 0 ? team.name : users.find(user => user.id === selected_user_id).fullname }}
+			</h3>
+
+
+			<sc-button
+				outline
+				type="primary"
+				xs
+				@click="loadStats"
+			>
+				<i class="bi bi-arrow-clockwise" /> {{ lastUpdate }}
+			</sc-button>
+		</div>
+
 		<!-- Liste des étudiants -->
 		<div
-			v-if="editMode.enable && users.length"
+			v-if="users.length"
 			class="flex gap-3 flex-wrap"
 		>
 			<sc-button
@@ -123,48 +155,37 @@ onMounted(() => {
 			</sc-button>
 		</div>
 
-		<div class="flex justify-between items-baseline">
-			<h3 class="text-lg uppercase mb-3">
-				statistiques de
-				{{ selected_user_id === 0 ? team.name : users.find(user => user.id === selected_user_id).fullname }}
-			</h3>
-			<sc-button
-				outline
-				type="primary"
-				xs
-				@click="loadStats"
-			>
-				<i class="bi bi-arrow-clockwise" /> rafraîchir
-			</sc-button>
-		</div>
-		<div
-			v-for="lesson in course.lessons"
-			:key="`stats-${lesson.id}`"
-			class="flex gap-3"
-		>
+		<!-- barres  -->
+		<div>
 			<div
-				class="flex gap-2 cursor-pointer hover:font-semibold"
-				@click="router.visit(route('students.lessons.show', {course: course.slug, lesson: lesson.id }))"
+				v-for="lesson in course.lessons"
+				:key="`stats-${lesson.id}`"
+				class="flex gap-3"
 			>
-				<lesson-type-icon
-					:lesson
-					xs
-				/>
 				<div
-					v-katex.auto="lesson.title"
-					class="text-xs w-[300px] whitespace-nowrap overflow-hidden"
-				/>
+					class="flex gap-2 cursor-pointer hover:font-semibold"
+					@click="router.visit(route('students.lessons.show', {course: course.slug, lesson: lesson.id }))"
+				>
+					<lesson-type-icon
+						:lesson
+						xs
+					/>
+					<div
+						v-katex.auto="lesson.title"
+						class="text-xs w-[300px] whitespace-nowrap overflow-hidden"
+					/>
+				</div>
+				<stat-bar
+					:max="100"
+					:value="selected_user_stats[lesson.id]?.total_scores === 0 ? 0 : (selected_user_stats[lesson.id]?.resolved_scores)/(selected_user_stats[lesson.id]?.total_scores)*100"
+					class="text-[0.6rem]"
+				>
+					<template #bar>
+						{{ selected_user_stats[lesson.id]?.resolved_scores }} /
+						{{ selected_user_stats[lesson.id]?.total_scores }}
+					</template>
+				</stat-bar>
 			</div>
-			<stat-bar
-				:max="100"
-				:value="selected_user_stats[lesson.id]?.total_scores === 0 ? 0 : (selected_user_stats[lesson.id]?.resolved_scores)/(selected_user_stats[lesson.id]?.total_scores)*100"
-				class="text-[0.6rem]"
-			>
-				<template #bar>
-					{{ selected_user_stats[lesson.id]?.resolved_scores }} /
-					{{ selected_user_stats[lesson.id]?.total_scores }}
-				</template>
-			</stat-bar>
 		</div>
 	</div>
 </template>
