@@ -9,6 +9,7 @@
 	"license": "MIT",
 	"require": {
 		"php": "^8.2",
+		"dragon-code/pretty-routes": "^3.0",
 		"guzzlehttp/guzzle": "^7",
 		"inertiajs/inertia-laravel": "^v2",
 		"laravel/framework": "^v12",
@@ -60,8 +61,8 @@
 	"extra": {
 		"laravel": {
 			"dont-discover": [
-              "laravel/telescope"
-            ]
+				"laravel/telescope"
+			]
 		}
 	},
 	"config": {
