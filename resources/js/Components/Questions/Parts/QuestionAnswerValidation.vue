@@ -209,8 +209,9 @@ async function saveToDB(validations: CheckerResult[]) {
 
 
 	scoreStore.updateScore(score.value)
-		.then(() => {
-			// do nothing
+		.then((res: ScoreInterface<ScoreQuestionDataInterface>) => {
+			// update the score
+			score.value = res
 		})
 }
 

@@ -3,7 +3,7 @@ import QuestionShow from "@/Components/Questions/QuestionShow.vue"
 import QuestionShowAdmin from "@/Components/Questions/QuestionShowAdmin.vue"
 import QuestionsIndexAdmin from "@/Components/Questions/QuestionsIndexAdmin.vue"
 import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
-import type {QuestionInterface} from "@/types/modelInterfaces.ts"
+import type {QuestionInterface, ScoreInterface} from "@/types/modelInterfaces.ts"
 import {computed, onMounted, ref} from "vue"
 import type {questionResultInterface} from "@/Components/Questions/QuestionInterface.ts"
 import {useStoreScore} from "@/stores/useStoreScore.ts"
@@ -18,7 +18,7 @@ const props = defineProps<{
 	questions: Partial<QuestionInterface>[],
 }>()
 
-const theQuestions = ref<Partial<QuestionInterface>[]>([])
+const theQuestions = ref<Partial<QuestionInterface>[]>(props.questions)
 const storeScore = useStoreScore()
 onMounted(() => {
 	// Charger les scores des questions
@@ -27,11 +27,15 @@ onMounted(() => {
 		.map(question => question.id)
 
 	storeScore.getScores<ScoreQuestionDataInterface>('Question', ids)
-		.then(scores => {
-			theQuestions.value = props.questions.map((question) => {
-				question.user = scores.find(score => score.scoreable_id === question.id)
-				return question
+		.then((scores: ScoreInterface<ScoreQuestionDataInterface>[]) => {
+			scores.forEach(score => {
+				const index = theQuestions.value.findIndex(q => q.id === score.scoreable_id)
+				theQuestions.value[index].user = score
 			})
+			// theQuestions.value = props.questions.map((question) => {
+			// 	question.user = scores.find(score => score.scoreable_id === question.id)
+			// 	return question
+			// })
 		})
 })
 

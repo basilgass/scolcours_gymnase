@@ -312,11 +312,11 @@ export const useStoreScore = defineStore(
 				return
 			}
 
-			axios.patch(
+			await axios.patch(
 				route('api.students.scores.update', {score: score.id}),
 				score
 			).then((response: AxiosResponseModel<ScoreInterface>) => {
-				// Remplacer dans scores: Ref<ScoreInterface> par le nouveau score
+				// Remplacer dans scores : Ref<ScoreInterface> par le nouveau score
 				const updated = response.data as ScoreInterface
 
 				if (index !== -1) {
@@ -329,6 +329,9 @@ export const useStoreScore = defineStore(
 			}).catch((err: AxiosErrorMessage) => {
 				console.log(err.response.data.message)
 			})
+
+
+			return index >= 0 ? scores.value[index] : null
 		}
 
 
