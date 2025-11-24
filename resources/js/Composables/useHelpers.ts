@@ -32,14 +32,18 @@ export function useMenuScrollToData(dataName: string, dataValue: unknown) {
  *
  * @return {void}
  */
-export function useMenuScrollTo(id?: string) {
+export function useMenuScrollTo(id?: string): void {
 	const el = id === undefined ? document.body : document.getElementById(id)
 
-	el.scrollIntoView({
-		block: "start",
-		behavior: "smooth",
-		inline: "start"
-	})
+	// TODO : Attendre qu'il apparaisse (selon le type de l'id)
+	setTimeout(() => {
+		el?.scrollIntoView({
+			block: "start",
+			behavior: "smooth",
+			inline: "start"
+		})
+	}, 500)
+
 }
 
 /**
@@ -108,7 +112,7 @@ export function replaceDoubleSigns(text: string): string {
 }
 
 export function dynamicText(rawText: string, keys: Record<string, string | number>): string {
-	let result = ''+rawText
+	let result = '' + rawText
 
 	Object.keys(keys).forEach(key => {
 		result = result.replaceAll(key, `${keys[key]}`)
