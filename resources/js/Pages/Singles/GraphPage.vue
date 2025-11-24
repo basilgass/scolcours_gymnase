@@ -102,7 +102,7 @@ const code = computed(() => {
 				style.push(`${f.style}`)
 			}
 
-			if(f.width){
+			if (f.width) {
 				style.push(`w=${f.width}`)
 			}
 
@@ -145,12 +145,14 @@ function addFunction(type: "x" | "t" = "x") {
 
 					<div class="grid grid-cols-2 gap-4 place-items-center">
 						<sc-button
-							v-katex="`f(x)`"
+							v-katex.inline="`f(x)`"
+							xs
 							class="w-full"
 							@click=" addFunction('x')"
 						/>
 						<sc-button
-							v-katex="`f(t)`"
+							v-katex.inline="`f(t)`"
+							xs
 							class="w-full"
 							@click=" addFunction('t')"
 						/>
@@ -196,7 +198,9 @@ function addFunction(type: "x" | "t" = "x") {
 
 				<div class="text-xs">
 					<h2>code généré</h2>
-					<pre class="font-code mt-1 border border-slate-300 dark:border-slate-600 rounded-sm p-2">{{ code }}</pre>
+					<pre class="font-code mt-1 border border-slate-300 dark:border-slate-600 rounded-sm p-2">{{
+							code
+					}}</pre>
 				</div>
 			</div>
 		</div>

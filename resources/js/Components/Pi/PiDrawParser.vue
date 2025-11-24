@@ -27,7 +27,7 @@ const props = withDefaults(defineProps<IPiDrawProps & { theme?: string | number 
 	{
 		width: 400,
 		height: 320,
-		theme: usePage().props.theme?.slug ?? 'scolcours'
+		theme: usePage().props?.theme?.slug ?? 'scolcours'
 	}
 )
 
