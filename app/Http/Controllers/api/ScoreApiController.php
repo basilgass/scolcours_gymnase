@@ -100,15 +100,14 @@ class ScoreApiController extends Controller
 		$score->update($validated);
 
 		// Le $validated n'a pas d'attempts, on l'incrémente.
-		if (!$request->has('attempts')) {
-			if ($score->attempts === null) {
-				$score->attempts = 1;
-			} else {
-				$score->increment('attempts');
-			}
-
-			$score->refresh();
+		if ($score->attempts === null) {
+			$score->attempts = 1;
+		} else {
+			$score->attempts = $validated['attempts'] + 1;
 		}
+		$score->save();
+		$score->refresh();
+
 
 		// Recreate the cache for this element.
 		$score->scoreable->updateCache($score);
