@@ -9,6 +9,7 @@ export interface IPiDrawProps {
 }
 
 export interface ISliderOptions {
+	direction: 'rtl' | 'ltr'
 	included?: boolean
 	interval: number;
 	marks: number[];
@@ -18,7 +19,6 @@ export interface ISliderOptions {
 }
 
 export interface ISlider {
-	direction: 'ltr' | 'rtl'
 	factor: string;
 	key: string;
 	label: boolean;
