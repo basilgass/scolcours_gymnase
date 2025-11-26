@@ -65,7 +65,6 @@ const questionResult = ref<questionResultInterface>({
 })
 
 const scoreStore = useStoreScore()
-// const score = await scoreStore.getScore('Question', questionData.question.id)
 
 const score = questionData.user.score as Ref<ScoreInterface<ScoreQuestionDataInterface>>
 
@@ -172,10 +171,16 @@ function reduceAnswersValidation(validations: CheckerResultWithIndex[]): boolean
 }
 
 async function saveToDB(validations: CheckerResult[]) {
+	// On vérifie que le score existe vraiment.
+	if (!score.value) {
+		score.value = await scoreStore.getScore('Question', questionData.question.id)
+	}
+
 	if (
-		!(questionData.question.id > 0) || questionData.config.isDynamic || // It's a dynamic question
-		!usePage().props.auth.user ||	// user is not connected
-		score.value.is_resolved // question is already resolved.
+		!(questionData.question.id > 0)
+		|| questionData.config.isDynamic  // It's a dynamic question
+		|| !usePage().props.auth.user	// user is not connected
+		|| score.value.is_resolved // question is already resolved.
 	) {
 		return
 	}

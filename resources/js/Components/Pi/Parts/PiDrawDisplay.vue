@@ -45,7 +45,6 @@ function PiParserUpdate(from?: string) {
 			.some(fig => fig.isDraggable)
 
 	} catch {
-		console.log(from)
 		PiParserHasErrors.value = true
 	}
 }
