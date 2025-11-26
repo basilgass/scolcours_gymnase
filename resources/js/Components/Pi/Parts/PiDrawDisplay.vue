@@ -46,6 +46,8 @@ function PiParserUpdate(from?: string) {
 
 	} catch {
 		PiParserHasErrors.value = true
+
+		console.log(from)
 	}
 }
 
@@ -60,7 +62,6 @@ watch(() => props.parameters, () => {
 		console.error(props.parameters)
 	}
 })
-
 
 const drawMouseUp = function (event: MouseEvent) {
 	emits("drawClick", {draw: PiGraph, mouse: event})

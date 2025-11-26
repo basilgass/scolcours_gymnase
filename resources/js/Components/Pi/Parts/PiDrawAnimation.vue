@@ -36,7 +36,7 @@ function animation(trigger: AnimationEvent) {
 </script>
 
 <template>
-	<div class="flex mt-1 w-full justify-end">
+	<div class="flex mt-1 w-full justify-center">
 		<sc-button
 			theme
 			:outline="currentAnimation==='stop' || currentAnimation==='pause'"

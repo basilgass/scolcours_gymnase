@@ -18,6 +18,7 @@ export interface ISliderOptions {
 }
 
 export interface ISlider {
+	direction: 'ltr' | 'rtl'
 	factor: string;
 	key: string;
 	label: boolean;
@@ -99,6 +100,8 @@ function makeSlider(slider: string): ISlider | null {
 		.filter(x => !isNaN(x))
 
 	// values.sort() // make sure the values are sorted.
+	const direction = values[0] < values[1] ? 'ltr' : 'rtl'
+
 	values.sort((a, b) => a - b)
 
 	const autoMarks = code.includes(",...,")
@@ -142,7 +145,8 @@ function makeSlider(slider: string): ISlider | null {
 			interval: intervalVal ? +intervalVal : marks.length > 1 ? marks[1] - marks[0] : 1,
 			marks,
 			tooltip: "none",
-			included
+			included,
+			direction
 		}
 	}
 }

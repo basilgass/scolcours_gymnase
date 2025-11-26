@@ -172,9 +172,7 @@ function reduceAnswersValidation(validations: CheckerResultWithIndex[]): boolean
 
 async function saveToDB(validations: CheckerResult[]) {
 	// On vérifie que le score existe vraiment.
-	if (!score.value) {
-		score.value = await scoreStore.getScore('Question', questionData.question.id)
-	}
+
 
 	if (
 		!(questionData.question.id > 0)
@@ -275,6 +273,7 @@ function validateQuestion() {
 			}, 500)
 		})
 }
+
 </script>
 
 <template>

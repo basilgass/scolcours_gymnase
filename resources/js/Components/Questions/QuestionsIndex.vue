@@ -20,7 +20,11 @@ const props = defineProps<{
 
 const theQuestions = ref<Partial<QuestionInterface>[]>(props.questions)
 const storeScore = useStoreScore()
+
+const loading = ref(true)
+
 onMounted(() => {
+
 	// Charger les scores des questions
 	const ids = props.questions
 		.filter((question) => question.user === undefined)
@@ -32,11 +36,8 @@ onMounted(() => {
 				const index = theQuestions.value.findIndex(q => q.id === score.scoreable_id)
 				theQuestions.value[index].user = score
 			})
-			// theQuestions.value = props.questions.map((question) => {
-			// 	question.user = scores.find(score => score.scoreable_id === question.id)
-			// 	return question
-			// })
 		})
+		.finally(() => loading.value = false)
 })
 
 const questionsGrid = ref<string>(props.container.questionsGrid ?? "")
@@ -123,7 +124,7 @@ function removeQuestion(id: number) {
 		<!-- questions list -->
 		<div>
 			<draggable
-				v-if="theQuestions.length"
+				v-if="!loading"
 				:class="questionsGridClass"
 				v-model="theQuestions"
 				class="mt-10"
