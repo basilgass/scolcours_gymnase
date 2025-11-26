@@ -8,7 +8,7 @@ export interface IPiDrawProps {
 	width?: number,
 }
 
-interface ISliderOptions {
+export interface ISliderOptions {
 	included?: boolean
 	interval: number;
 	marks: number[];

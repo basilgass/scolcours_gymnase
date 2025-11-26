@@ -122,7 +122,6 @@ function displayFullscreen() {
 
 
 function print() {
-	// TODO: il y a un problème avec les déplacement.
 	const html = '<div class="katex-m-0">' + PiGraph.rootSVG.svg() + '</div>'
 
 	const key = 'scolcours.widgetFS'
