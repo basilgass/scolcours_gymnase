@@ -1,17 +1,15 @@
 /* useGenerators
  * Récupération, création de question à partir d'un générateur donné.
  */
-import { generatedQuestionInterface, generatorResultInterface } from "@/types"
-import type { GeneratorInterface, QuestionDynamicInterface } from "@/types/modelInterfaces"
+import {generatedQuestionInterface, generatorResultInterface} from "@/types"
+import type {GeneratorInterface, QuestionDynamicInterface} from "@/types/modelInterfaces"
 import PiMath from "pimath"
-import { ComputedRef, Ref, unref } from "vue"
-import AsciiMathParser from "@/asciimath2tex.ts"
+import {ComputedRef, Ref, unref} from "vue"
 import {PiMathExt} from "@/PiMathExtended/PiMathExt.ts"
 
 export function useGenerator(generator: GeneratorInterface | ComputedRef<GeneratorInterface>): generatorResultInterface {
 	function question(
 		value?: Ref<generatedQuestionInterface> | generatedQuestionInterface,
-
 	): QuestionDynamicInterface {
 		if (value === undefined) value = randomQuestion()
 
