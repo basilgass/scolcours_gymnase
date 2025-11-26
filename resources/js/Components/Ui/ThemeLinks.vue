@@ -6,8 +6,8 @@ Génération des liens pour les themes.
 	lang="ts"
 >
 
-import { usePage } from "@inertiajs/vue3"
-import { computed } from "vue"
+import {usePage} from "@inertiajs/vue3"
+import {computed} from "vue"
 
 interface ThemeLinks {
 	slug: string
@@ -31,7 +31,7 @@ const enabledThemes = computed<ThemeLinks[]>(() => {
 		v-for="theme of enabledThemes"
 		:key="`anchor-${theme.slug}`"
 		:href="route('theme', theme.slug)"
-		class="block transition duration-300 hover:translate-x-2 px-0 md:px-4 py-1"
+		class="block transition duration-300 hover:translate-x-2"
 		@click="emit('ClickNavigationLinks')"
 	>
 		<i
@@ -43,7 +43,7 @@ const enabledThemes = computed<ThemeLinks[]>(() => {
 		v-for="theme of links"
 		:key="`anchor-${theme.slug}`"
 		:href="route(theme.route??'404')"
-		class="block transition duration-300 hover:translate-x-2 px-0 md:px-4 py-1"
+		class="block transition duration-300 hover:translate-x-2"
 		@click="emit('ClickNavigationLinks')"
 	>
 		<i

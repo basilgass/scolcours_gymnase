@@ -14,11 +14,13 @@ import ScButton from "@/Components/Ui/scButton.vue"
 import {ThemeInterface} from "@/types/modelInterfaces.ts"
 
 const props = withDefaults(defineProps<{
-	theme?: Partial<ThemeInterface>
+	theme?: Partial<ThemeInterface>,
+	hideAdmin?: boolean
 }>(), {
 	theme: () => {
 		return {title: "Scolcours", slug: "main"}
-	}
+	},
+	hideAdmin: false
 })
 
 
@@ -84,7 +86,7 @@ const editMode = useStoreEditMode()
 							profil
 						</InertiaLink>
 
-						<LogoutButton class="hover:bg-gray-100" />
+						<LogoutButton class="hover:bg-gray-100 px-3 py-2" />
 					</dropdown-menu>
 				</div>
 				<div v-else>
@@ -102,6 +104,7 @@ const editMode = useStoreEditMode()
 		</div>
 		<!-- ligne administration -->
 		<div
+			v-if="!hideAdmin"
 			v-admin
 			class="admin-content py-3"
 		>

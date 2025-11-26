@@ -1,9 +1,9 @@
 <script lang="ts" setup>
 
-import LayoutFullpage from "@/Layouts/LayoutFullpage.vue"
 import {onMounted, useTemplateRef} from "vue"
+import LayoutFullscreen from "@/Layouts/LayoutFullscreen.vue"
 
-defineOptions({layout: LayoutFullpage})
+defineOptions({layout: LayoutFullscreen})
 const root = useTemplateRef<HTMLElement>('root')
 
 const key = 'scolcours.widgetFS'

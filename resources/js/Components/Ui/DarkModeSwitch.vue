@@ -17,7 +17,7 @@ toggleDark(false)
 	>
 		<div
 
-			class="hover:-rotate-[120deg] duration-500 cursor-pointer p-3"
+			class="hover:-rotate-[120deg] duration-500 cursor-pointer pr-3"
 		>
 			<i :class="isDark ? 'bi bi-moon-fill' : 'bi bi-sun-fill'" />
 		</div>

@@ -23,14 +23,16 @@ import DarkModeSwitch from "@/Components/Ui/DarkModeSwitch.vue"
 				<h3 class="text-lg font-semibold">
 					Plan du site
 				</h3>
-				<ThemeLinks
-					:links="[{
-						title: 'formulaire',
-						slug: 'formulaire',
-						icon: 'bi bi-table',
-						route: 'formulas.index'
-					}]"
-				/>
+				<div class="mt-10 space-y-3">
+					<ThemeLinks
+						:links="[{
+							title: 'formulaire',
+							slug: 'formulaire',
+							icon: 'bi bi-table',
+							route: 'formulas.index'
+						}]"
+					/>
+				</div>
 			</div>
 
 			<div class="md:mx-auto">
@@ -38,44 +40,46 @@ import DarkModeSwitch from "@/Components/Ui/DarkModeSwitch.vue"
 					Liens
 				</h3>
 
-				<InertiaLink
-					:href="route('decks.index')"
-					class="block transition duration-300 hover:translate-x-2 px-0 md:px-4 py-1"
-				>
-					<i class="mr-2 bi bi-wrench" /> decks
-				</InertiaLink>
+				<div class="mt-10 space-y-3">
+					<InertiaLink
+						:href="route('decks.index')"
+						class="block transition duration-300 hover:translate-x-2"
+					>
+						<i class="mr-2 bi bi-wrench" /> decks
+					</InertiaLink>
 
-				<InertiaLink
-					:href="route('theme', {theme: 'tools'})"
-					class="block transition duration-300 hover:translate-x-2 px-0 md:px-4 py-1"
-				>
-					<i class="mr-2 bi bi-wrench" /> boîte à outils
-				</InertiaLink>
+					<InertiaLink
+						:href="route('theme', {theme: 'tools'})"
+						class="block transition duration-300 hover:translate-x-2"
+					>
+						<i class="mr-2 bi bi-wrench" /> boîte à outils
+					</InertiaLink>
 
-				<InertiaLink
-					:href="route('bareme.show')"
-					class="block transition duration-300 hover:translate-x-2 px-0 md:px-4 py-1"
-				>
-					<i class="mr-2 bi bi-bar-chart" /> barème
-				</InertiaLink>
-				<InertiaLink
-					:href="route('grapheur.show')"
-					class="block transition duration-300 hover:translate-x-2 px-0 md:px-4 py-1"
-				>
-					<i class="mr-2 bi bi-graph-up" /> grapheur
-				</InertiaLink>
-				<!--				<h3 class="text-lg mt-5 font-semibold">-->
-				<!--					Langues-->
-				<!--				</h3>-->
-				<!--				<div class="space-x-4">-->
-				<!--					<InertiaLink-->
-				<!--						v-for="(name,langue) in langues"-->
-				<!--						:href="route('voc.index', [langue])"-->
-				<!--						class="inline-block transition duration-300 hover:translate-x-1"-->
-				<!--					>-->
-				<!--						<i class="mr-1 bi bi-translate" /> {{ langues[langue] }}-->
-				<!--					</InertiaLink>-->
-				<!--				</div>-->
+					<InertiaLink
+						:href="route('bareme.show')"
+						class="block transition duration-300 hover:translate-x-2"
+					>
+						<i class="mr-2 bi bi-bar-chart" /> barème
+					</InertiaLink>
+					<InertiaLink
+						:href="route('grapheur.show')"
+						class="block transition duration-300 hover:translate-x-2"
+					>
+						<i class="mr-2 bi bi-graph-up" /> grapheur
+					</InertiaLink>
+					<!--				<h3 class="text-lg mt-5 font-semibold">-->
+					<!--					Langues-->
+					<!--				</h3>-->
+					<!--				<div class="space-x-4">-->
+					<!--					<InertiaLink-->
+					<!--						v-for="(name,langue) in langues"-->
+					<!--						:href="route('voc.index', [langue])"-->
+					<!--						class="inline-block transition duration-300 hover:translate-x-1"-->
+					<!--					>-->
+					<!--						<i class="mr-1 bi bi-translate" /> {{ langues[langue] }}-->
+					<!--					</InertiaLink>-->
+					<!--				</div>-->
+				</div>
 			</div>
 
 			<div class="md:mx-auto">
@@ -83,28 +87,31 @@ import DarkModeSwitch from "@/Components/Ui/DarkModeSwitch.vue"
 					Utilisateur
 				</h3>
 
-				<div v-if="$page.props.auth.user">
+				<div
+					class="mt-10 space-y-3"
+					v-if="$page.props.auth.user"
+				>
 					<InertiaLink
 						:href="route('users.dashboard')"
-						class="block transition duration-300 hover:translate-x-2 px-0 md:px-4 py-1"
+						class="block transition duration-300 hover:translate-x-2"
 					>
 						<i class="mr-2 bi bi-person-fill" />{{ $page.props.auth.user.name }}
 					</InertiaLink>
 					<InertiaLink
 						:href="route('courses.index')"
-						class="block transition duration-300 hover:translate-x-2 px-0 md:px-4 py-1"
+						class="block transition duration-300 hover:translate-x-2"
 					>
 						<i class="mr-2 bi bi-book" />cours
 					</InertiaLink>
 					<InertiaLink
 						:href="route('students.evaluations.index')"
-						class="block transition duration-300 hover:translate-x-2 px-0 md:px-4 py-1"
+						class="block transition duration-300 hover:translate-x-2"
 					>
 						<i class="mr-2 bi bi-question" />évaluations
 					</InertiaLink>
 					<InertiaLink
 						:href="route('students.quizzs.sessions.index')"
-						class="block transition duration-300 hover:translate-x-2 px-0 md:px-4 py-1"
+						class="block transition duration-300 hover:translate-x-2"
 					>
 						<i class="mr-2 bi bi-question" />quizz
 					</InertiaLink>
@@ -112,32 +119,23 @@ import DarkModeSwitch from "@/Components/Ui/DarkModeSwitch.vue"
 					<InertiaLink
 						v-if="$page.props.auth.can.admin"
 						:href="route('admin.index')"
-						class="block transition duration-300 hover:translate-x-2 px-0 md:px-4 py-1"
+						class="block transition duration-300 hover:translate-x-2"
 					>
 						<i class="mr-2 bi bi-person-workspace" />administration
 					</InertiaLink>
 
-					<LogoutButton class="block transition duration-300 hover:translate-x-2 px-0 md:px-4 py-1 mt-4" />
+					<LogoutButton class="block transition duration-300 hover:translate-x-2 mt-10" />
 				</div>
 				<div v-else>
 					<InertiaLink href="/login">
-						Se connecter
+						<i class="mr-2 bi bi-box-arrow-in-right" /> se connecter
 					</InertiaLink>
-				</div>
-
-				<div
-					class="mt-5"
-					v-admin
-				>
-					<h3 class="text-lg font-semibold">
-						Interface
-					</h3>
-					<dark-mode-switch />
 				</div>
 			</div>
 		</div>
 
 		<div class="pb-5 text-center text-sm text-slate-400 font-extralight">
+			<dark-mode-switch class="py-3 justify-center" />
 			<span>Ce site est à usage mathématiques uniquement</span>
 		</div>
 	</div>
