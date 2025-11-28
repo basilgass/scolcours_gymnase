@@ -40,6 +40,22 @@ const numeric = computed(() => {
 	return (forms[0].value.value as string).includes('.') || (forms[1].value.value as string).includes('.')
 })
 
+const digits = computed(() => {
+	const digitsValues = (
+		(forms[0].value.value as string) + '\n'
+		+ (forms[1].value.value as string)
+	)
+		.split(/[\s\n]/g)
+		.filter(x => !isNaN(Number(x)) && x.includes('.'))
+		.map(x => x.split('.')[1].length)
+
+
+	return digitsValues.length > 0
+		? Math.max(...digitsValues)
+		: 0
+})
+
+
 const result = computed(() => {
 	try {
 		const matrix = (forms[0].value.value as string)
@@ -56,8 +72,9 @@ const result = computed(() => {
 
 		return {
 			code,
-			parameters: "auto"
+			parameters: `auto${digits.value ? `,fixed=${digits.value}` : ''}`
 		}
+
 	} catch (e) {
 		console.error(e)
 		return false

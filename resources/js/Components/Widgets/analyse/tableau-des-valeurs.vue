@@ -1,7 +1,7 @@
 <!--<info>
 parameters:
 min:max:step ou 3,5,8,9
-options: [rounded:2],[col:width],[table:class]
+options: [digits:2],[col:width],[table:class]
 
 code: [f(x)=]function (multiple line possible)
 </info>-->
@@ -9,19 +9,19 @@ code: [f(x)=]function (multiple line possible)
 	lang="ts"
 	setup
 >
-import { WidgetPropsInterface } from "@/types/modelInterfaces.ts"
-import { Fraction, NumExp, Polynom } from "pimath"
-import { computed } from "vue"
+import {WidgetPropsInterface} from "@/types/modelInterfaces.ts"
+import {Fraction, NumExp, Polynom} from "pimath"
+import {computed} from "vue"
 
 const props = defineProps<{
 	illustration: WidgetPropsInterface
 }>()
 
-const	params = computed(() => props.illustration.parameters.split(",")),
+const params = computed(() => props.illustration.parameters.split(",")),
 	code = computed(() => props.illustration.code),
 	roundedTo = computed(() => {
 		for (let param of params.value) {
-			if (param.startsWith("rounded-sm:")) {
+			if (param.startsWith("digits:")) {
 				let [, rounded] = param.split(":")
 				return +rounded
 			}
@@ -89,21 +89,25 @@ const	params = computed(() => props.illustration.parameters.split(",")),
 
 			let values = []
 			for (let x in tableX.value) {
-				if (Object.hasOwn(numExp, "_monoms")) {
+				if (numExp instanceof Polynom) {
 					let v: Fraction = (numExp as Polynom).evaluate(+x) as Fraction
 					values.push({
 						x,
 						fx: v.tex
 					})
 				} else {
-					let v = (numExp as NumExp).evaluate({ x: +x })
+					let v = (numExp as NumExp).evaluate({x: +x})
 					values.push({
 						x,
-						fx: +v.toFixed(roundedTo.value)
+						fx: isNaN(v)
+							? '\\varnothing'
+							: Number.isFinite(v)
+								? v.toFixed(roundedTo.value)
+								: v < 0 ? '-\\infty' : '+\\infty'
 					})
 				}
 			}
-			return { name, values }
+			return {name, values}
 		})
 	})
 

@@ -13,7 +13,7 @@
 
 import {useWrongAnswerAnimation} from "@/Composables/useHelpers.ts"
 import {usePage} from "@inertiajs/vue3"
-import {computed, inject, Ref, ref, useTemplateRef} from "vue"
+import {computed, inject, ref, useTemplateRef} from "vue"
 import {
 	questionDataInterface,
 	questionResultInterface,
@@ -66,7 +66,7 @@ const questionResult = ref<questionResultInterface>({
 
 const scoreStore = useStoreScore()
 
-const score = questionData.user.score as Ref<ScoreInterface<ScoreQuestionDataInterface>>
+// const score = questionData.user.score as Ref<ScoreInterface<ScoreQuestionDataInterface>>
 
 function getAnswerValidation(validator: questionValidatorInterface, index: number, mixedAnswer: string[]): CheckerResultWithIndex {
 	// La réponse de l'utilisateur
@@ -171,50 +171,49 @@ function reduceAnswersValidation(validations: CheckerResultWithIndex[]): boolean
 }
 
 async function saveToDB(validations: CheckerResult[]) {
-	// On vérifie que le score existe vraiment.
 
-
+	const score = questionData.user.score.value as ScoreInterface<ScoreQuestionDataInterface>
 	if (
 		!(questionData.question.id > 0)
 		|| questionData.config.isDynamic  // It's a dynamic question
 		|| !usePage().props.auth.user	// user is not connected
-		|| score.value.is_resolved // question is already resolved.
+		|| score.is_resolved // question is already resolved.
 	) {
 		return
 	}
 
 	// score value
-	score.value.score = validations
+	score.score = validations
 		.filter(v => v.result)
 		.length / validations.length
 
 	// score resolved.
-	score.value.is_resolved =
-		score.value.is_resolved ||
-		score.value.score === 1
+	score.is_resolved =
+		score.is_resolved ||
+		score.score === 1
 
 	// data = list of answers and previous answers.
 	// only update if it's a new answer, not already in the list.
 	const currentAnswers: string = questionData.user.answers.value.map(answer => answer.input).join('\n')
-	const previousAnswers: string[] = score.value.data.answers.filter(x => x !== currentAnswers)
+	const previousAnswers: string[] = score.data.answers.filter(x => x !== currentAnswers)
 
 	if (previousAnswers[0] !== currentAnswers) {
-		score.value.data.answers = [
+		score.data.answers = [
 			currentAnswers,
 			...previousAnswers
 		]
 
 		// On ne garde qu'au maximum dix valeurs.
-		if (score.value.data.answers.length > 10) {
-			score.value.data.answers = score.value.data.answers.slice(0, 10)
+		if (score.data.answers.length > 10) {
+			score.data.answers = score.data.answers.slice(0, 10)
 		}
 	}
 
 
-	scoreStore.updateScore(score.value)
+	scoreStore.updateScore(score)
 		.then((res: ScoreInterface<ScoreQuestionDataInterface>) => {
 			// update the score
-			score.value = res
+			questionData.user.score.value = res
 		})
 }
 

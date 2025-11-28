@@ -33,6 +33,17 @@ const showOutput = computed(() => {
 const showAutoSolve = computed(() => {
 	return params.value.includes('auto')
 })
+
+const outputAsDecimal = computed(() => {
+	return params.value.includes('decimal')
+		|| params.value.find(x => x.startsWith('fixed='))
+})
+const digits = computed(() => {
+	const [, n] = params.value.find(x => x.startsWith('fixed='))?.split('=') ?? []
+
+	return isNaN(Number(n)) ? 3 : +n
+})
+
 type operationType = `+` | `-` | '*' | '/' | 'x'
 
 export interface matriceAugmenteeInterface {
@@ -197,9 +208,11 @@ function createPolynomMatrix() {
 	return output
 }
 
-function convertPolynomToTex(matrix: Polynom[][]): string[][] {
+function convertPolynomToTex(matrix: Polynom[][]): (string | number)[][] {
 	return matrix.map(line => {
-		return line.map(item => item.tex)
+		return line.map(item => {
+			return outputAsDecimal.value ? +item.value.toFixed(digits.value) : item.tex
+		})
 	})
 }
 
@@ -493,7 +506,7 @@ onMounted(() => {
 					v-model:reference="operationData.reference"
 					v-model:target="operationData.target"
 					:dimension="matrix_dimension.m"
-					:matrix="result.matrix"
+					:matrix="convertPolynomToTex(result.matrix)"
 					selection-mode="rows"
 				/>
 			</div>

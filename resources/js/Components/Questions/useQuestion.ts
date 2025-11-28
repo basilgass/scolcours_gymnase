@@ -102,7 +102,7 @@ export function useQuestion(mayBeRefOrGetter: QuestionInterface, config: questio
 	const hasSuccess = computed(() => {
 		if (config.silent) return false
 
-		return question.value.user?.is_resolved ?? false
+		return userScore.value?.is_resolved ?? false
 	})
 	return {
 		question: {id: question.value.id},
