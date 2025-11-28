@@ -110,6 +110,7 @@ onMounted(() => {
 	restoreFromUri()
 })
 
+// TODO: v-bind="$attrs" ne doit pas trasnmettre la class.
 
 </script>
 
@@ -185,7 +186,6 @@ onMounted(() => {
 				font-code
 				message-class="text-xs!"
 				:inline-label="f.inline"
-				v-bind="$attrs"
 				@change="onChange(f)"
 			/>
 		</div>

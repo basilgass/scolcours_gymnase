@@ -87,8 +87,6 @@ const params = computed(() => props.illustration.parameters.split(",")),
 				numExp = new Polynom(exp)
 			}
 
-			console.log(tableX.value)
-
 			let values = []
 			for (let x of tableX.value) {
 				if (numExp instanceof Polynom) {
