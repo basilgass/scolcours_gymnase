@@ -87,8 +87,10 @@ const params = computed(() => props.illustration.parameters.split(",")),
 				numExp = new Polynom(exp)
 			}
 
+			console.log(tableX.value)
+
 			let values = []
-			for (let x in tableX.value) {
+			for (let x of tableX.value) {
 				if (numExp instanceof Polynom) {
 					let v: Fraction = (numExp as Polynom).evaluate(+x) as Fraction
 					values.push({
