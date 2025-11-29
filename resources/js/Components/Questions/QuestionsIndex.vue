@@ -66,13 +66,17 @@ const answeredIds = computed(() => {
 })
 
 const isQuestionLocked = function (question: QuestionInterface) {
-	return !(
-		question.displayIf === null ||
-		question.displayIf === undefined ||
-		question.displayIf.split(",")
-			.map((id) => +id)
-			.every((id) => answeredIds.value.indexOf(id) !== -1)
-	)
+	if (question.displayIf === null) return false
+
+	if (question.displayIf === undefined) return false
+
+	if (answeredIds.value.length === 0) return true
+
+	const dependantQuestionIds = question
+		.displayIf.split(",")
+		.map((id) => +id)
+
+	return dependantQuestionIds.some((id) => answeredIds.value.indexOf(id) === -1)
 }
 
 const questionsComponents = ref<InstanceType<typeof QuestionShow>[]>([])

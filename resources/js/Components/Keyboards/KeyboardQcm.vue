@@ -48,7 +48,7 @@ defineExpose<KeyboardExposeInterface>({
 		// reset function
 	},
 	setInput,
-	parameters: "full (pleine largeur)\nflex (utilisation de flex)\ntex (converti en TeX)\nlist (affichage sous forme de liste)\njoin:<caractère>\n\n<key>||<label?>||<TeX?>"
+	parameters: "full (pleine largeur)\nflex (utilisation de flex)\ntex (converti en TeX)\nlist (affichage sous forme de liste)\njoin:<caractère>\nmulti (force le multi réponse)\n\n<key>||<label?>||<TeX?>"
 })
 
 /* ------------------*/
@@ -66,7 +66,8 @@ const isTex = computed(() => {
 	return props.keyboard.parameters.includes("tex")
 })
 const multiAnswers = computed(() => {
-	return props.reference.split(",").length > 1
+	return props.reference.split(",").length > 1 ||
+		props.keyboard.parameters.includes("multi")
 })
 const asList = computed(() => {
 	return props.keyboard.parameters.includes("list")

@@ -284,8 +284,8 @@ export const useStoreScore = defineStore(
 		}
 
 		// Supprime les scores d'un utilisateur.
-		async function reset(scoreIds: number[]) {
-			const affectedScores = await axios
+		async function reset(scoreIds: number[]): Promise<ScoreInterface[]> {
+			const affectedScores: AxiosResponseModel<ScoreInterface[]> = await axios
 				.get(route('api.students.scores.index', {ids: scoreIds}))
 
 			affectedScores.data.forEach((score: ScoreInterface) => {
@@ -296,6 +296,8 @@ export const useStoreScore = defineStore(
 			})
 
 			bumpVersion()
+
+			return affectedScores.data
 			// return axios.delete(route('api.admin.scores.destroy.multiple', {ids: scoreIds}))
 		}
 

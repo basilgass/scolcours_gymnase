@@ -1,4 +1,4 @@
-import type {QuestionInterface} from "@/types/modelInterfaces.ts"
+import type {QuestionInterface, ScoreInterface} from "@/types/modelInterfaces.ts"
 import axios from "axios"
 import {AxiosErrorMessage, AxiosResponseModel} from "@/types"
 import {ref, Ref, watch} from "vue"
@@ -6,6 +6,7 @@ import {useStoreScore} from "@/stores/useStoreScore.ts"
 import QuestionShow from "@/Components/Questions/QuestionShow.vue"
 import {router} from "@inertiajs/vue3"
 import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
+import {ScoreQuestionDataInterface} from "@/types/scoreInterfaces.ts"
 
 export type questionContainerType = 'Post' | 'Quizz' | 'Evaluation'
 
@@ -94,8 +95,10 @@ export function useQuestionAdmin(
 	function answers_reset() {
 		const storeScore = useStoreScore()
 		storeScore.reset(questions.value.map(q => q.user.id))
-			.then(() => {
-				// TODO: Reload the page.
+			.then((scores: ScoreInterface<ScoreQuestionDataInterface>[]) => {
+				// questions.value.forEach(q => {
+				// 	q.user = scores.find(s => s.scoreable_id === q.id)
+				// })
 			})
 	}
 
