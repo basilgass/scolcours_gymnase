@@ -96,6 +96,15 @@ export function useQuestionAdmin(
 		const storeScore = useStoreScore()
 		storeScore.reset(questions.value.map(q => q.user.id))
 			.then((scores: ScoreInterface<ScoreQuestionDataInterface>[]) => {
+				scores.forEach(s => {
+					const index = questions.value
+						.findIndex(q => s.scoreable_id === q.id)
+
+					const q = questions.value[index]
+					q.user = s
+
+					questions.value.splice(index, 1, q)
+				})
 				// questions.value.forEach(q => {
 				// 	q.user = scores.find(s => s.scoreable_id === q.id)
 				// })

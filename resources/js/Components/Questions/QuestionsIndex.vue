@@ -25,7 +25,7 @@ const loading = ref(true)
 
 onMounted(() => {
 
-	// Charger les scores des questions
+	// Charger les scores des questions en une fois = optimisation
 	const ids = props.questions
 		.filter((question) => question.user === undefined)
 		.map(question => question.id)
@@ -40,6 +40,7 @@ onMounted(() => {
 		.finally(() => loading.value = false)
 })
 
+// Grille des questions
 const questionsGrid = ref<string>(props.container.questionsGrid ?? "")
 const questionsGridClass = computed(() => {
 	if (questionsGrid.value) {
@@ -59,6 +60,7 @@ const questionsGridClass = computed(() => {
 	return grid + " gap-x-3 gap-y-6"
 })
 
+// Liste des questions qui ont été répondues correctement.
 const answeredIds = computed(() => {
 	return theQuestions.value
 		.filter((question) => question.user?.is_resolved)
