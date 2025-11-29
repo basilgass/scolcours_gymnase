@@ -71,7 +71,7 @@ test('near answer detection', () => {
 	expect(result2.message).to.not.equal('Peut être un problème d\'arrondi ?')
 })
 
-test('la réponse est de signe opposé', ()=>{
+test('la réponse est de signe opposé', () => {
 	const config = '3'
 	const expected = '1.234'
 	const given = '-1.234'
@@ -83,7 +83,7 @@ test('la réponse est de signe opposé', ()=>{
 	expect(result.message).toBe("Peut être un problème de signe...")
 })
 
-test('la réponse est de signe opposé', ()=>{
+test('la réponse est de signe opposé', () => {
 	const config = '3'
 	const expected = '1.234'
 	const given = '-1.654'
@@ -103,4 +103,11 @@ test('la réponse est de signe opposé', ()=>{
 
 	expect(result2.result).toBe(false)
 	expect(result2.message).toBe("La réponse n'est pas juste.")
+})
+
+test("d'autres erreurs", () => {
+	const checker = new NumberChecker()
+	const result = checker.check('3', "3.12")
+	expect(result.result).toBe(false)
+	expect(result.message).toBe("La réponse n'est pas juste.")
 })

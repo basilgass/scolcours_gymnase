@@ -141,7 +141,8 @@ export class SolutionChecker extends CheckerAbstract {
 
 		// La réponse voulue n'a pas les crochets correspondants.
 		if (leftOpen !== answerLeftOpen || rightOpen !== answerRightOpen) {
-			return makeCheckerResult("Il y a une erreur avec les crochets")
+			return makeCheckerResult(
+				"Il y a une erreur avec les crochets")
 		}
 
 		return makeCheckerResult()
@@ -158,6 +159,9 @@ export class SolutionChecker extends CheckerAbstract {
 					: "Il y a un ou plusieurs intervalle(s) en trop")
 		}
 
+		if (intervals.length === 1) {
+			return this.check_interval(intervals[0], answerIntervals[0])
+		}
 
 		const results: string[] = []
 		let isPartial = true

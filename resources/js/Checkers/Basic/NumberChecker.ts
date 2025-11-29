@@ -61,6 +61,7 @@ export class NumberChecker extends CheckerAbstract {
 		}
 
 		const [unit, digits] = value.split(".")
+
 		if (+unit !== +expectedUnit) {
 			if (+unit === -expectedUnit) {
 				return makeCheckerResult("Problème de signe sur la partie entière.")
@@ -74,22 +75,27 @@ export class NumberChecker extends CheckerAbstract {
 		}
 
 		// Le nombre de chiffres après la virgule n'est pas juste
-		if (digits.length !== nbDigits) {
+		const givenDigitsLength = digits?.length ?? 0
+
+		if (givenDigitsLength !== nbDigits) {
 			return makeCheckerResult(
 				`Il faut ${nbDigits} chiffre(s) après la virgule.`,
 				(+digits).toFixed(nbDigits) === expectedDigits
 			)
 		}
 
+		// S'il y a des décmales :
 		// Le dernier chiffre n'est pas juste - il s'agit peut être d'un problème d'arrondi ?
-		const lastDigit = +digits[digits.length - 1]
-		const lastExpectedDigit = +this.answer[this.answer.length - 1]
+		if (givenDigitsLength) {
+			const lastDigit = +digits[digits.length - 1]
+			const lastExpectedDigit = +this.answer[this.answer.length - 1]
 
-		if (Math.abs(lastDigit - lastExpectedDigit) === 1) {
-			return makeCheckerResult(
-				"Peut être un problème d'arrondi ?",
-				true
-			)
+			if (Math.abs(lastDigit - lastExpectedDigit) === 1) {
+				return makeCheckerResult(
+					"Peut être un problème d'arrondi ?",
+					true
+				)
+			}
 		}
 
 		return makeCheckerResult("La réponse n'est pas juste.")
