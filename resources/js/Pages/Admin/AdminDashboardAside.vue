@@ -27,7 +27,7 @@ const links3 = [
 
 <template>
 	<aside class="min-w-[200px] bg-slate-200 dark:bg-slate-800 dark:text-white shadow pl-6 pr-3 py-10">
-		<div class="flex flex-row md:flex-col space-y-10">
+		<div class="flex flex-col space-y-10">
 			<div class="flex flex-col gap-2">
 				<h2 class="font-semibold mb-3">
 					cours

@@ -32,7 +32,37 @@ class AdminController extends Controller
 {
 	public function show()
 	{
-		return Inertia::render('Admin/AdminDashboard');
+
+		return Inertia::render('Admin/AdminDashboard', [
+			"courses" => $this->currentCourses(),
+			"teams"   => TeamResource::collection(Team::all()),
+		]);
+	}
+
+	public function currentCourses()
+	{
+		$now = Carbon::now()->startOfDay();
+
+		$courses = Course::whereHas('lessons.calendars', function ($query) use ($now) {
+			$query->where('scheduled_at', ">=", $now);
+		})->with([
+			'lessons' => function ($q) use ($now) {
+				$q->whereHas('calendars', function ($qc) use ($now) {
+					$qc->where('scheduled_at', '>=', $now);
+				})->with([
+					'calendars' => function ($c) use ($now) {
+						$c
+							->where('scheduled_at', '>=', $now)
+							->orderBy('scheduled_at', 'asc')
+							->orderBy('id', 'asc');;
+					}
+				])->orderBy('order')->orderBy('id');
+			},
+			'teams'
+		])
+		                 ->get();
+
+		return $courses;
 	}
 
 	public function config()
@@ -277,7 +307,6 @@ class AdminController extends Controller
 		$user->delete();
 		return true;
 	}
-
 
 	public function illustrations()
 	{
