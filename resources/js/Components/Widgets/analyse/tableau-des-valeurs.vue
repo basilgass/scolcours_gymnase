@@ -92,13 +92,13 @@ const params = computed(() => props.illustration.parameters.split(",")),
 				if (numExp instanceof Polynom) {
 					let v: Fraction = (numExp as Polynom).evaluate(+x) as Fraction
 					values.push({
-						x,
+						x: nbToString(x),
 						fx: v.tex
 					})
 				} else {
 					let v = (numExp as NumExp).evaluate({x: +x})
 					values.push({
-						x,
+						x: nbToString(x),
 						fx: isNaN(v)
 							? '\\varnothing'
 							: Number.isFinite(v)
@@ -107,9 +107,28 @@ const params = computed(() => props.illustration.parameters.split(",")),
 					})
 				}
 			}
+
 			return {name, values}
 		})
 	})
+
+function nbToString(value: number, digits?: number, separator = {thousands: '\\ ', digits: '\\ '}): string {
+	// transforme un nombre 12345678.123456 en texte "12 345 678.123 45"
+	if (!isFinite(value)) return String(value)
+
+	const sign = value < 0 ? '-' : ''
+	const abs = Math.abs(value)
+
+	// Détermine le nombre à afficher (nombre de décimales)
+	const raw = digits === undefined ? String(abs) : abs.toFixed(digits)
+	const [intPartRaw, fracRaw = ''] = raw.split('.')
+
+	const intPart = intPartRaw.replace(/\B(?=(\d{3})+(?!\d))/g, separator.thousands)
+	const fracGroups = fracRaw.match(/.{1,3}/g) || []
+	const fracPart = fracGroups.join(separator.digits)
+
+	return fracPart ? `${sign}${intPart}.${fracPart}` : `${sign}${intPart}`
+}
 
 function parseMinMaxStep(value: string): number[] {
 	// Output array.
@@ -158,9 +177,9 @@ function parseMinMaxStep(value: string): number[] {
 					class="border-r border-slate-300 px-4"
 				/>
 				<td
-					v-for="(x, index) in tableX"
+					v-for="(value, index) in tableFunctions[0].values"
 					:key="`x-${index}`"
-					v-katex="x"
+					v-katex="value.x"
 					:style="`width: ${colWidth}`"
 					class="border-r border-slate-300"
 				/>
