@@ -152,9 +152,19 @@ class User extends Authenticatable
 
 	public function courses(): Attribute
 	{
-		return Attribute::get(function(){
+		return Attribute::get(function () {
 			return $this->teams->flatMap->courses->unique('id');
 		});
+	}
+
+	public function teamEvaluationsQuery()
+	{
+		$teamIds = $this->teams()->pluck('teams.id');
+
+		return Evaluation::query()
+		                 ->whereHas('teams', function (Builder $q) use ($teamIds) {
+			                 $q->whereIn('teams.id', $teamIds);
+		                 });
 	}
 
 }

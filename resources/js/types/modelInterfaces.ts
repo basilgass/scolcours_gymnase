@@ -162,6 +162,10 @@ export interface EvaluationInterface {
 	title: string;
 }
 
+export interface EvaluationAdminInterface extends EvaluationInterface {
+	teams: TeamInterface[]
+}
+
 export interface GeneratorInterface {
 	body: string;
 	code: string;

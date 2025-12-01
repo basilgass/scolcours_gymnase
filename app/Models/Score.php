@@ -53,7 +53,8 @@ class Score extends Model
 	];
 
 	protected $casts = [
-		'data' => 'array',
+		'data'        => 'array',
+		'is_resolved' => 'boolean'
 	];
 
 	/**

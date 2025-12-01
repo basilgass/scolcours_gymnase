@@ -1,5 +1,5 @@
 <?php
-// TODO: Evalaution doit être travailler de A-Z, avec les resources, etc...
+
 namespace App\Http\Controllers\web;
 
 use App\Http\Controllers\Controller;
@@ -11,8 +11,12 @@ class EvaluationController extends Controller
 {
 	public function index()
 	{
-		//TODO: les évaluations doivnet être liée à un cours + team
-		$evaluations = Evaluation::all();
+		$user = \Auth::user();
+
+		$evaluations = $user
+			? $user->teamEvaluationsQuery()->get()
+			: [];
+
 		return Inertia::render('Evaluations/EvaluationIndex',
 			[
 				'evaluations' => EvaluationRessource::collection($evaluations),
@@ -23,15 +27,6 @@ class EvaluationController extends Controller
 	public function show(Evaluation $evaluation)
 	{
 		return Inertia::render('Evaluations/EvaluationShow',
-			[
-				'evaluation' => EvaluationRessource::make($evaluation),
-			]
-		);
-	}
-
-	public function edit(Evaluation $evaluation)
-	{
-		return Inertia::render('Evaluations/EvaluationEdit',
 			[
 				'evaluation' => EvaluationRessource::make($evaluation),
 			]

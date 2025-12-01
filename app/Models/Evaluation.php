@@ -4,6 +4,8 @@ namespace App\Models;
 
 use App\Traits\HasQuestionsTrait;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 /**
  * App\Models\Evaluation
@@ -52,7 +54,7 @@ class Evaluation extends Model
 		"auto_control" => "boolean"
 	];
 
-	public function generators()
+	public function generators(): MorphToMany
 	{
 		return $this
 			->morphToMany(Generator::class, 'generatorable')
@@ -60,4 +62,8 @@ class Evaluation extends Model
 			->orderByPivot('order');
 	}
 
+	public function teams(): BelongsToMany
+	{
+		return $this->belongsToMany(Team::class);
+	}
 }

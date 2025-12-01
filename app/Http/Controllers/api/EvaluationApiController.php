@@ -4,7 +4,10 @@ namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\EvaluationRessource;
+use App\Http\Resources\ScoreResource;
+use App\Http\Resources\UserResource;
 use App\Models\Evaluation;
+use App\Models\Team;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
@@ -50,5 +53,37 @@ class EvaluationApiController extends Controller
 
 	public function destroy($id)
 	{
+	}
+
+	public function scores(Evaluation $evaluation, Team $team)
+	{
+		$questionIds = $evaluation->questions->pluck('id');
+		$users = $team->users;
+
+		$scoresByUser = [];
+		foreach ($users as $user) {
+			$scoresByUser[] = [
+				"user"   => UserResource::make($user),
+				"scores" => ScoreResource::collection($user->scores
+					->whereIn('scoreable_id', $questionIds))
+			];
+		}
+
+
+		return $scoresByUser;
+	}
+
+	public function toggleTeam(Evaluation $evaluation, Team $team)
+	{
+		$attached = $evaluation->teams()->where('teams.id', $team->id)->exists();
+
+		if ($attached) {
+			$status = false;
+			$evaluation->teams()->detach($team->id);
+		} else {
+			$status = true;
+			$evaluation->teams()->attach($team->id);
+		}
+		return $status;
 	}
 }

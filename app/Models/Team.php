@@ -4,6 +4,8 @@ namespace App\Models;
 
 use App\Models\Calendars\TeamCalendar;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * App\Models\Team
@@ -32,22 +34,27 @@ class Team extends Model
 		'active' => "boolean",
 	];
 
-	public function users()
+	public function users(): BelongsToMany
 	{
 		return $this->belongsToMany(User::class)->orderBy('name')->orderBy('firstname');
 	}
 
-	public function courses()
+	public function courses(): BelongsToMany
 	{
 		return $this->belongsToMany(Course::class);
 	}
 
-	public function calendars()
+	public function evaluation(): BelongsToMany
+	{
+		return $this->belongsToMany(Evaluation::class);
+	}
+
+	public function calendars(): HasMany
 	{
 		return $this->hasMany(TeamCalendar::class);
 	}
 
-	public function lesson_calendars()
+	public function lesson_calendars(): HasMany
 	{
 		return $this
 			->hasMany(LessonCalendar::class)

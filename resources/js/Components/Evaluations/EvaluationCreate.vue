@@ -5,7 +5,9 @@ import {computed, nextTick, ref, useTemplateRef} from "vue"
 import axios from "axios"
 import ScButton from "@/Components/Ui/scButton.vue"
 import {slugify} from "@/scolcours.ts"
-import {AxiosErrorMessage} from "@/types"
+import {AxiosErrorMessage, AxiosResponseModel} from "@/types"
+import {router} from "@inertiajs/vue3"
+import {EvaluationInterface} from "@/types/modelInterfaces.ts"
 
 const showModal = ref(false)
 const title = ref("")
@@ -29,8 +31,8 @@ function create() {
 			slug: slug.value,
 			title: title.value,
 		})
-		.then((res) => {
-			console.log(res)
+		.then((res: AxiosResponseModel<EvaluationInterface>) => {
+			router.visit(route("admin.evaluations.edit", {evaluation: res.data.id}))
 		})
 		.catch((err: AxiosErrorMessage) => console.log(err.response.data.message))
 }

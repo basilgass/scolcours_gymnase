@@ -6,7 +6,6 @@ import FilteredList from "@/Components/Ui/FilteredList.vue"
 import {ref} from "vue"
 import Card from "@/Components/Ui/Card.vue"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
-import EvaluationCreate from "@/Components/Evaluations/EvaluationCreate.vue"
 import ScButton from "@/Components/Ui/scButton.vue"
 
 defineOptions({layout: LayoutMain})
@@ -21,17 +20,6 @@ const theEvaluations = ref<EvaluationInterface[]>(props.evaluations)
 <template>
 	<article>
 		<article-title title="évaluations" />
-
-		<div
-			v-admin
-			v-theme.admin
-			class="p-3 border rounded flex justify-between items-baseline"
-		>
-			<div />
-			<div>
-				<evaluation-create />
-			</div>
-		</div>
 
 		<filtered-list
 			:list="theEvaluations"
@@ -51,15 +39,6 @@ const theEvaluations = ref<EvaluationInterface[]>(props.evaluations)
 
 					<template #footer>
 						<div class="flex w-full justify-end gap-3">
-							<sc-button
-								v-admin
-								type="edit"
-								icon
-								xs
-								:href="route('admin.evaluations.edit', {evaluation: item.id})"
-							>
-								éditer
-							</sc-button>
 							<sc-button
 								type="default"
 								xs

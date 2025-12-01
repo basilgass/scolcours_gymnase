@@ -50,8 +50,8 @@ function update() {
 		<article-title
 			title="édition d'une évalution"
 			:return-link="{
-				url: route('admin.index'),
-				label: 'retour à l\'administration'
+				url: route('admin.evaluations.index'),
+				label: 'retour aux cours'
 			}"
 		/>
 
