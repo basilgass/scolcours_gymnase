@@ -1,13 +1,13 @@
 <script lang="ts" setup>
 
 import {CourseInterface, TeamInterface} from "@/types/modelInterfaces.ts"
-import LayoutMain from "@/Layouts/LayoutMain.vue"
 import {computed, ref} from "vue"
 import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
 import ScButton from "@/Components/Ui/scButton.vue"
 import CourseAgenda from "@/Components/Courses/CourseAgenda.vue"
+import LayoutAdmin from "@/Layouts/LayoutAdmin.vue"
 
-defineOptions({layout: LayoutMain})
+defineOptions({layout: LayoutAdmin})
 
 const props = defineProps<{
 	courses: CourseInterface[],

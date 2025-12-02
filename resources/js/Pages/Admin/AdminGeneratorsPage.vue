@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import LayoutMain from "@/Layouts/LayoutMain.vue"
 import {computed, PropType, ref} from "vue"
 import {GeneratorInterface} from "@/types/modelInterfaces.ts"
 import GeneratorItem from "@/Components/Elements/GeneratorItem.vue"
@@ -11,8 +10,9 @@ import FormMaker from "@/Components/Form/FormMaker.vue"
 import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
 import {slugify} from "@/scolcours.ts"
 import Card from "@/Components/Ui/Card.vue"
+import LayoutAdmin from "@/Layouts/LayoutAdmin.vue"
 
-defineOptions({layout: LayoutMain})
+defineOptions({layout: LayoutAdmin})
 defineProps({
 	generators: {type: Object as PropType<GeneratorInterface[]>, required: true}
 })

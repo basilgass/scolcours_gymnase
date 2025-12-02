@@ -16,6 +16,7 @@ const editMode = useStoreEditMode()
 const props = defineProps<{
 	container: questionsContainerInterface,
 	questions: Partial<QuestionInterface>[],
+	userId?: number
 }>()
 
 const theQuestions = ref<Partial<QuestionInterface>[]>(props.questions)
@@ -30,14 +31,31 @@ onMounted(() => {
 		.filter((question) => question.user === undefined)
 		.map(question => question.id)
 
-	storeScore.getScores<ScoreQuestionDataInterface>('Question', ids)
-		.then((scores: ScoreInterface<ScoreQuestionDataInterface>[]) => {
+	// supprime les scores actuels si user_id n'est pas vide
+	if (props.userId !== undefined) {
+		storeScore.getUserScores(
+			props.userId,
+			'Question',
+			props.questions.map(q => q.id)
+		).then((scores: ScoreInterface<ScoreQuestionDataInterface>[]) => {
 			scores.forEach(score => {
 				const index = theQuestions.value.findIndex(q => q.id === score.scoreable_id)
 				theQuestions.value[index].user = score
 			})
 		})
-		.finally(() => loading.value = false)
+			.catch(res => console.log(res))
+			.finally(() => loading.value = false)
+
+	} else {
+		storeScore.getScores<ScoreQuestionDataInterface>('Question', ids)
+			.then((scores: ScoreInterface<ScoreQuestionDataInterface>[]) => {
+				scores.forEach(score => {
+					const index = theQuestions.value.findIndex(q => q.id === score.scoreable_id)
+					theQuestions.value[index].user = score
+				})
+			})
+			.finally(() => loading.value = false)
+	}
 })
 
 // Grille des questions

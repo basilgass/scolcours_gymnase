@@ -48,7 +48,7 @@ class ChallengeController extends Controller
 
 		return Inertia::render('Challenges/ChallengeShow', [
 			"challenge" => ChallengeResource::make($challenge),
-			"teams"     => Team::all()
+			"teams"     => Team::active()->get()
 		]);
 	}
 

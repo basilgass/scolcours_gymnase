@@ -7,13 +7,8 @@ use App\Http\Resources\QuestionResource;
 use App\Http\Resources\QuizzResource;
 use App\Http\Resources\QuizzSessionRessource;
 use App\Http\Resources\ThemeResource;
-use App\Models\Chapter;
 use App\Models\Quizz;
-use App\Models\QuizzSession;
 use App\Models\Team;
-use Auth;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -25,9 +20,11 @@ class QuizzController extends Controller
 
 		$quizz = Quizz::all();
 
-		$quizz->load(['questions', 'sessions' => function ($query) {
-		    $query->where('index', 0);
-		}]);
+		$quizz->load([
+			'questions', 'sessions' => function ($query) {
+				$query->where('index', 0);
+			}
+		]);
 
 		return Inertia::render('Quizzs/QuizzAdmin',
 			[
@@ -42,10 +39,10 @@ class QuizzController extends Controller
 		$quizz->load('chapter', 'blocks');
 
 		$data = [
-            "quizz" => QuizzResource::make($quizz),
-            "questions" => QuestionResource::collection($quizz->questions),
-            "sessions" => QuizzSessionRessource::collection($quizz->sessions),
-            "teams" => Team::all(),
+			"quizz"     => QuizzResource::make($quizz),
+			"questions" => QuestionResource::collection($quizz->questions),
+			"sessions"  => QuizzSessionRessource::collection($quizz->sessions),
+			"teams"     => Team::active()->get(),
 		];
 
 		// Add the theme to the main layout page
@@ -58,7 +55,6 @@ class QuizzController extends Controller
 		);
 
 	}
-
 
 
 }

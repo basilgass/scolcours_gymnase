@@ -37,7 +37,10 @@ export const useStoreScore = defineStore(
 		const userId = computed(() => usePage().props.auth.user?.id ?? null)
 
 		// Charge (et créé si nécessaire) les scores pour un modèle / utilisateur
-		async function loadModelScores(type: scoreableClassName, ids: number[]) {
+		async function loadModelScores(
+			type: scoreableClassName,
+			ids: number[]
+		) {
 			const existing = new Set(scores.value
 				.filter(s => s.scoreable_type === type)
 				.map(s => s.scoreable_id)
@@ -336,6 +339,29 @@ export const useStoreScore = defineStore(
 			return index >= 0 ? scores.value[index] : null
 		}
 
+		async function getUserScores<T extends ScoreDataInterface>(
+			userId: number,
+			type: scoreableClassName,
+			ids: number[]
+		): Promise<ScoreInterface<T>[]> {
+			const res: AxiosResponseModel<ScoreInterface<T>[]> = await axios
+				.get(route('api.students.scores.index', {
+					ids,
+					type,
+					user_id: userId
+				}))
+
+
+			// Keep the scores live
+			res.data.forEach(score => {
+				// On vérifie que le score contient bien les valeurs par défaut du data.
+				if (!score.data) {
+					score.data = defaultScoreData(type)
+				}
+			})
+
+			return res.data
+		}
 
 		return {
 			version,
@@ -343,10 +369,11 @@ export const useStoreScore = defineStore(
 			scores,
 			getScore,
 			getScores,
+			getUserScores,
 			reset,
 			updateScore,
 			resetScore,
-			resetData
+			resetData,
 		}
 	}
 )

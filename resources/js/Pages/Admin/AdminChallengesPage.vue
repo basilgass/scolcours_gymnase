@@ -3,11 +3,11 @@
 	setup
 >
 import {PropType} from "vue"
-import LayoutMain from "@/Layouts/LayoutMain.vue"
 import type {ChallengeInterface} from "@/types/modelInterfaces"
 import Card from "@/Components/Ui/Card.vue"
+import LayoutAdmin from "@/Layouts/LayoutAdmin.vue"
 
-defineOptions({layout: LayoutMain})
+defineOptions({layout: LayoutAdmin})
 defineProps({
 	challenges: {type: Object as PropType<ChallengeInterface[]>, required: true}
 })

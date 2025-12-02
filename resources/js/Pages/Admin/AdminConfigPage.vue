@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import FormMaker from "@/Components/Form/FormMaker.vue"
-import LayoutMain from "@/Layouts/LayoutMain.vue"
 import {ThemeInterface} from "@/types/modelInterfaces.ts"
 import axios from "axios"
 import {PropType, ref} from "vue"
 import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
+import LayoutAdmin from "@/Layouts/LayoutAdmin.vue"
 
-defineOptions({layout: LayoutMain})
+defineOptions({layout: LayoutAdmin})
 const flash = useStoreFlashMessage()
 const props = defineProps({
 	allThemes: {type: Object as PropType<ThemeInterface[]>, required: true},

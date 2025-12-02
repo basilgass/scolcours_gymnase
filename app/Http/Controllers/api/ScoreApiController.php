@@ -8,6 +8,7 @@ use App\Http\Resources\ScoreResource;
 use App\Models\Challenge;
 use App\Models\Post;
 use App\Models\Score;
+use App\Models\User;
 use Auth;
 use Illuminate\Http\Request;
 
@@ -28,12 +29,20 @@ class ScoreApiController extends Controller
 			return ScoreResource::collection($scores);
 		}
 
-
 		// Post | Question | Deck | Card | Challenge | Generator | Lesson
 
 		$type = 'App\\Models\\' . ucfirst($request->input('type')); // ou directement passé en FQCN
 
 		$userId = Auth::id();
+		if ($request->has('user_id') && Auth::user()?->admin) {
+			$id = $request->input('user_id');
+
+			$user = User::find($id);
+			if ($user->exists()) {
+				$userId = $id;
+			}
+		}
+
 		// récupérer les scores existants
 		$existingScores = Score::where('user_id', $userId)
 		                       ->where('scoreable_type', $type)

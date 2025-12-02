@@ -35,7 +35,7 @@ class AdminController extends Controller
 
 		return Inertia::render('Admin/AdminDashboard', [
 			"courses" => $this->currentCourses(),
-			"teams"   => TeamResource::collection(Team::all()),
+			"teams"   => TeamResource::collection(Team::active()->get()),
 		]);
 	}
 
@@ -252,7 +252,7 @@ class AdminController extends Controller
 			'Admin/AdminUsersPage',
 			[
 				"users" => UserResource::collection($users),
-				"teams" => Team::all()
+				"teams" => Team::active()->get()
 			]
 		);
 	}
@@ -284,7 +284,7 @@ class AdminController extends Controller
 			]);
 		}
 
-		return redirect(route('admin.users'));
+		return redirect(route('admin.users.index'));
 	}
 
 	public function updateUser(User $user, Request $request)
@@ -320,14 +320,16 @@ class AdminController extends Controller
 
 	public function courses()
 	{
-
-		$courses = Course::with('teams')->get();
+		// TODO : par défaut, Team::active() au lien de Team::all() ??
+		$courses = Course::with([
+			'teams' => fn($q) => $q->active()
+		])->get();
 
 		return Inertia::render(
 			'Admin/AdminCoursesPage',
 			[
 				'courses' => CourseResource::collection($courses),
-				'teams'   => TeamResource::collection(Team::all())
+				'teams'   => TeamResource::collection(Team::active()->get())
 			]
 		);
 	}
@@ -341,7 +343,7 @@ class AdminController extends Controller
 			'Admin/AdminAgendaPage',
 			[
 				'courses' => CourseResource::collection($courses),
-				'teams'   => UserTeamResource::collection(Team::all())
+				'teams'   => UserTeamResource::collection(Team::active()->get())
 			]
 		);
 	}

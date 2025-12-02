@@ -3,13 +3,13 @@
 	setup
 >
 import FilteredList from "@/Components/Ui/FilteredList.vue"
-import LayoutMain from "@/Layouts/LayoutMain.vue"
-import { ChapterShowInterface } from "@/types/modelInterfaces"
-import { useForm } from "@inertiajs/vue3"
-import { PropType } from "vue"
+import {ChapterShowInterface} from "@/types/modelInterfaces"
+import {useForm} from "@inertiajs/vue3"
+import {PropType} from "vue"
 import ScButton from "@/Components/Ui/scButton.vue"
+import LayoutAdmin from "@/Layouts/LayoutAdmin.vue"
 
-defineOptions({ layout: LayoutMain })
+defineOptions({layout: LayoutAdmin})
 const props = defineProps({
 	chapters: {
 		type: Object as PropType<ChapterShowInterface[]>, required: true

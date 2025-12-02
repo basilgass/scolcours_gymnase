@@ -1,7 +1,6 @@
 <script setup lang="ts">
 
 import {CourseInterface, UserTeamInterface} from "@/types/modelInterfaces.ts"
-import LayoutMain from "@/Layouts/LayoutMain.vue"
 import {computed, ref} from "vue"
 import {AxiosErrorMessage, AxiosResponseModel} from "@/types"
 import Card from "@/Components/Ui/Card.vue"
@@ -14,8 +13,9 @@ import {slugify} from "@/scolcours.ts"
 import {router} from "@inertiajs/vue3"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
 import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
+import LayoutAdmin from "@/Layouts/LayoutAdmin.vue"
 
-defineOptions({layout: LayoutMain})
+defineOptions({layout: LayoutAdmin})
 const flash = useStoreFlashMessage()
 const props = defineProps<{
 	courses: CourseInterface[],

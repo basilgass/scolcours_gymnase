@@ -7,14 +7,14 @@ import axios from "axios"
 import type {TeamInterface, UserInterface} from "@/types/modelInterfaces"
 import type {AxiosErrorMessage, AxiosResponseModel} from "@/types"
 import DialogModal from "@/Components/Ui/DialogModal.vue"
-import LayoutMain from "@/Layouts/LayoutMain.vue"
 import ScButton from "@/Components/Ui/scButton.vue"
 import AdminTeamManager from "@/Components/Admin/Parts/AdminTeamManager.vue"
 import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
+import LayoutAdmin from "@/Layouts/LayoutAdmin.vue"
 
 // TODO: créer un composant pour chaque utilisateur - plus propre ?
 
-defineOptions({layout: LayoutMain})
+defineOptions({layout: LayoutAdmin})
 
 const props = defineProps<{
 	users: UserInterface[],

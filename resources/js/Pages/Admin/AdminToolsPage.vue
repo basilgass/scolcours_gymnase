@@ -4,12 +4,12 @@ AdminChaptersPage.vue
 	setup
 >
 import FilteredList from "@/Components/Ui/FilteredList.vue"
-import LayoutMain from "@/Layouts/LayoutMain.vue"
 import {ToolInterface} from "@/types/modelInterfaces.ts"
 import {PropType} from "vue"
 import ToolEditItem from "@/Components/Elements/ToolEditItem.vue"
+import LayoutAdmin from "@/Layouts/LayoutAdmin.vue"
 
-defineOptions({layout: LayoutMain})
+defineOptions({layout: LayoutAdmin})
 defineProps({
 	tools: {type: Object as PropType<ToolInterface[]>, required: true}
 })

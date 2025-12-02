@@ -3,9 +3,9 @@
 	lang="ts"
 >
 import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
-import LayoutMain from "@/Layouts/LayoutMain.vue"
+import LayoutAdmin from "@/Layouts/LayoutAdmin.vue"
 
-defineOptions({layout: LayoutMain})
+defineOptions({layout: LayoutAdmin})
 
 defineProps<{
 	pages: string[]

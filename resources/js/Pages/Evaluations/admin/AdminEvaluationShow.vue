@@ -7,6 +7,7 @@ import axios from "axios"
 import {AxiosResponseModel} from "@/types"
 import QuestionShow from "@/Components/Questions/QuestionShow.vue"
 import ScButton from "@/Components/Ui/scButton.vue"
+import QuestionsIndex from "@/Components/Questions/QuestionsIndex.vue"
 
 defineOptions({layout: LayoutAdmin})
 const props = defineProps<{
@@ -34,8 +35,9 @@ function result(scores: ScoreInterface[]) {
 	return scores.filter(score => score.is_resolved).length
 }
 
-const selectedQuestion = ref<QuestionInterface>(null)
 const selectedTeam = ref<string>('')
+const selectedUser = ref<UserInterface>(null)
+const selectedQuestion = ref<QuestionInterface>(null)
 onMounted(() => {
 	const params = new URLSearchParams(window.location.search)
 	const team = params.get('team')
@@ -61,7 +63,7 @@ onMounted(() => {
 				v-for="team in evaluation.teams"
 				:key="team.name"
 				@click="loadScores(team.name)"
-				xs
+				xs1
 				:type="team.name===selectedTeam ? 'primary' : 'default'"
 			>
 				{{ team.name }}
@@ -82,7 +84,10 @@ onMounted(() => {
 					class="flex flex-col md:gap-3 md:flex-row md:items-center"
 				>
 					<div class="flex">
-						<div class="w-[200px] gap-3 overflow-auto">
+						<div
+							class="w-[200px] gap-3 overflow-auto"
+							@click="selectedUser = score.user"
+						>
 							{{ score.user.fullname }}
 						</div>
 						<div>
@@ -119,6 +124,23 @@ onMounted(() => {
 			<question-show
 				:question="selectedQuestion"
 				:key="`question-${selectedQuestion.id}`"
+			/>
+		</div>
+
+		<div
+			v-if="selectedUser"
+			class="mt-10"
+			:key="`user-${selectedUser.id}`"
+		>
+			<h3 class="text-xl font-semibold">
+				{{ selectedUser.fullname }}
+			</h3>
+			<div> charger les questions avec le score des utilisateurs.</div>
+			<pre>{{ selectedUser }}</pre>
+			<questions-index
+				:container="{id: evaluation.id, type: 'Evaluation' }"
+				:questions="evaluation.questions"
+				:user-id="selectedUser.id"
 			/>
 		</div>
 	</main>

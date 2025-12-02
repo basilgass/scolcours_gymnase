@@ -5,7 +5,7 @@ import {ThemeInterface} from "@/types/modelInterfaces.ts"
 import {Head, usePage} from "@inertiajs/vue3"
 import {computed, ref, watch} from "vue"
 import FlashContainer from "@/Components/Ui/FlashContainer.vue"
-import AdminDashboardAside from "@/Pages/Admin/AdminDashboardAside.vue"
+import AdminDashboardAside from "@/Components/Admin/AdminDashboardAside.vue"
 
 const props = withDefaults(defineProps<{
 	theme?: Partial<ThemeInterface>
@@ -47,7 +47,7 @@ const pageTitle = computed(() => {
 		/>
 
 		<!-- Container for the "column design" -->
-		<main class="min-h-[75vh] flex w-full">
+		<main class="min-h-[75vh] flex flex-col md:flex-row w-full">
 			<admin-dashboard-aside />
 			<section class="flex-1 p-10">
 				<!-- Main content -->

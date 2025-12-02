@@ -60,4 +60,9 @@ class Team extends Model
 			->hasMany(LessonCalendar::class)
 			->where('team_id', $this->id);
 	}
+
+	public function scopeActive($query)
+	{
+		return $query->where('active', true);
+	}
 }

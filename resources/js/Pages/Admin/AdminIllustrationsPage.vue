@@ -8,14 +8,14 @@
 
 import {computed, defineAsyncComponent, PropType, ref} from "vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
-import LayoutMain from "@/Layouts/LayoutMain.vue"
 import type {IllustrationInterface} from "@/types/modelInterfaces"
 import ErrorBoundary from "@/Components/errorBoundary.vue"
+import LayoutAdmin from "@/Layouts/LayoutAdmin.vue"
 
 const asyncComponent = defineAsyncComponent(() => {
 	return import('@/Components/Pi/PiDrawParser.vue')
 })
-defineOptions({layout: LayoutMain})
+defineOptions({layout: LayoutAdmin})
 
 const props = defineProps({
 	illustrations: {type: Object as PropType<IllustrationInterface[]>, required: true}

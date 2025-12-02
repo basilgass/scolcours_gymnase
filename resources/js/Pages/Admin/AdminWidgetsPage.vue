@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import WidgetForm from "@/Components/WidgetForm.vue"
-import LayoutMain from "@/Layouts/LayoutMain.vue"
 import {PropType} from "vue"
 import type {WidgetInterface} from "@/types/modelInterfaces"
 import axios from "axios"
@@ -8,8 +7,9 @@ import {router} from "@inertiajs/vue3"
 import FilteredList from "@/Components/Ui/FilteredList.vue"
 import ScButton from "@/Components/Ui/scButton.vue"
 import {AxiosErrorMessage} from "@/types"
+import LayoutAdmin from "@/Layouts/LayoutAdmin.vue"
 
-defineOptions({layout: LayoutMain})
+defineOptions({layout: LayoutAdmin})
 
 defineProps({
 	widgets: {type: Object as PropType<WidgetInterface[]>, required: true}
