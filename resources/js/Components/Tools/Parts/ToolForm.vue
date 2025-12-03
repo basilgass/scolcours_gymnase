@@ -17,7 +17,8 @@ export interface IToolForm {
 	message?: string,
 	itemClass?: string,
 	inline?: boolean,
-	emit?: boolean
+	emit?: boolean,
+	attributes?: Record<string, unknown>
 }
 
 const toolSlug = inject("toolSlug")
@@ -34,7 +35,7 @@ const props = withDefaults(defineProps<{
 		formClass: "",
 		active: null,
 		store: true,
-		generateButton: false
+		generateButton: false,
 	}
 )
 
@@ -43,10 +44,8 @@ const {storeTool, resetTool} = useToolsStorage()
 const link = computed(() => {
 	const url = `https://g.scolcours.ch/tools/${toolSlug}`
 
-	console.log(props.forms)
 	const items = props.forms.filter(f => f.fromUrl)
 
-	console.log(items)
 	if (items.length === 0) return url
 
 	const query = new URLSearchParams()
@@ -187,6 +186,7 @@ onMounted(() => {
 				message-class="text-xs!"
 				:inline-label="f.inline"
 				@change="onChange(f)"
+				v-bind.attr="f.attributes"
 			/>
 		</div>
 

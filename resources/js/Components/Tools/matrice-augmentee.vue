@@ -25,6 +25,7 @@ const forms: IToolForm[] = restoreTool([
 1 2 1
 3 -1 2`),
 		fromUrl: "matrix",
+		attributes: {rows: 5}
 	},
 	{
 		label: "droite",
@@ -32,27 +33,21 @@ const forms: IToolForm[] = restoreTool([
 		value: ref(`1
 8
 7`),
-		fromUrl: "droite"
+		fromUrl: "droite",
+		attributes: {rows: 5}
+	},
+	{
+		label: 'nombre de décimales',
+		type: 'number',
+		value: ref(''),
+		attributes: {min: 0, max: 4},
+		message: "laisser vide pour le mode fraction"
 	}
 ])
 
-const numeric = computed(() => {
-	return (forms[0].value.value as string).includes('.') || (forms[1].value.value as string).includes('.')
-})
-
 const digits = computed(() => {
-	const digitsValues = (
-		(forms[0].value.value as string) + '\n'
-		+ (forms[1].value.value as string)
-	)
-		.split(/[\s\n]/g)
-		.filter(x => !isNaN(Number(x)) && x.includes('.'))
-		.map(x => x.split('.')[1].length)
-
-
-	return digitsValues.length > 0
-		? Math.max(...digitsValues)
-		: 0
+	const d = forms[2].value.value
+	return d === "" || d === undefined ? 0 : +d
 })
 
 
