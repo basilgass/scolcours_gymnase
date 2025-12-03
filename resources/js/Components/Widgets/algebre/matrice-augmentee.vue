@@ -151,7 +151,9 @@ function getOperationDescription(operation: Partial<matriceAugmenteeInterface>):
 	const verb = op === '+' ? "ajouter à" : op === '-' ? "soustraire à" : op === '*' ? "multiplier" : op === "/" ? "diviser" : "permuter"
 
 	console.log(verb)
-	let value = ""
+	console.log(operation)
+
+	console.log('CHECK SCALAR')
 
 	let scalar: string
 	if (operation.value === null || operation.value === "" || operation.value === undefined) {
@@ -172,6 +174,8 @@ function getOperationDescription(operation: Partial<matriceAugmenteeInterface>):
 	}
 
 	console.log('op not null')
+
+	let value = ""
 
 	if (op === '+' || op === '-') {
 		value = `\\(${scalar}\\) fois la <code>ligne ${operation.reference === null ? "..." : operation.reference + 1}</code>`
