@@ -139,14 +139,18 @@ function getOperationDescription(operation: Partial<matriceAugmenteeInterface>):
 	if (operation.target === null) {
 		return "Sélectionner une ligne..."
 	}
+	console.log('ligne')
 
 	if (operation.operation === null) {
 		return `Que faire pour la <code>ligne ${operation.target + 1}</code> ?`
 	}
 
+	console.log('que faire')
+
 	const op = operation.operation
 	const verb = op === '+' ? "ajouter à" : op === '-' ? "soustraire à" : op === '*' ? "multiplier" : op === "/" ? "diviser" : "permuter"
 
+	console.log(verb)
 	let value = ""
 
 	let scalar: string
@@ -160,6 +164,8 @@ function getOperationDescription(operation: Partial<matriceAugmenteeInterface>):
 		}
 	}
 
+	console.log('op not null')
+
 	if (op === '+' || op === '-') {
 		value = `\\(${scalar}\\) fois la <code>ligne ${operation.reference === null ? "..." : operation.reference + 1}</code>`
 	} else if (op === '*' || op === '/') {
@@ -168,6 +174,7 @@ function getOperationDescription(operation: Partial<matriceAugmenteeInterface>):
 		value = `avec la <code>ligne ${operation.reference + 1}</code>`
 	}
 
+	console.log('ALL IS DONE DESCRIPTION')
 	return `${verb} la <code>ligne ${operation.target + 1}</code> ${value}`
 }
 
