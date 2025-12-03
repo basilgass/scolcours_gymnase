@@ -17,6 +17,7 @@ import TexCode from "@/Components/Ui/TexCode.vue"
 import ScButton from "@/Components/Ui/scButton.vue"
 import {matrixSolver} from "@/Components/Widgets/algebre/matrixSolver.ts"
 import PiMatrix from "@/Components/Pi/Parts/PiMatrix.vue"
+import {KeyboardInputInterface} from "@/types/keyboardInterfaces.ts"
 
 const props = defineProps<{
 	illustration: WidgetPropsInterface
@@ -171,6 +172,7 @@ function getOperationDescription(operation: Partial<matriceAugmenteeInterface>):
 }
 
 const operationDescription = computed(() => {
+	console.log('op description')
 	return getOperationDescription(operationData)
 })
 
@@ -247,7 +249,13 @@ function getShortDescription(operation: Partial<matriceAugmenteeInterface>): str
 		return `L_${operation.target + 1} \\longleftrightarrow L_${operation.reference + 1}`
 	}
 
-	const F = new Fraction(operation.value)
+	let F: Fraction
+	try {
+		F = new Fraction(operation.value)
+	} catch {
+		return "\\ \\textcolor{red}{\\langle\\text{ ? }\\rangle}\\ "
+	}
+
 
 	if (operation.operation === '*') {
 		return `L_${operation.target + 1} \\longleftarrow L_${operation.target + 1}${F.tex} \\cdot L_${operation.target + 1}`
@@ -268,8 +276,10 @@ function updateMatrix(operation: Partial<matriceAugmenteeInterface>, refreshOnly
 	}
 
 	const matrixLine = matrix[operation.target]
+
 	const value = new Fraction(operation.value)
 
+	console.log('update matrix', operation.value, value.display)
 	switch (operation.operation) {
 		case "+":
 		case "-": {
@@ -363,6 +373,7 @@ function removeOperation(index: number) {
 }
 
 const operationIsComplete = computed<boolean>(() => {
+	console.log('op is complete')
 	const operation = operationData
 
 	if (operation.target === null) {
@@ -492,6 +503,11 @@ onMounted(() => {
 	}
 })
 
+function onValueChange(event: KeyboardInputInterface) {
+	console.log('KEYBOARD CHANGE', event)
+	operationData.value = event.input
+}
+
 
 </script>
 <template>
@@ -546,7 +562,7 @@ onMounted(() => {
 					ref="valueKeyboard"
 					:keyboard="getKeyboards('fraction')[0].keyboard"
 					answer=""
-					@change="operationData.value = $event.input"
+					@change="onValueChange"
 				/>
 			</div>
 
