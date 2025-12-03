@@ -139,41 +139,25 @@ function getOperationDescription(operation: Partial<matriceAugmenteeInterface>):
 	if (operation.target === null) {
 		return "Sélectionner une ligne..."
 	}
-	console.log('ligne')
-
 	if (operation.operation === null) {
 		return `Que faire pour la <code>ligne ${operation.target + 1}</code> ?`
 	}
 
-	console.log('que faire')
-
 	const op = operation.operation
 	const verb = op === '+' ? "ajouter à" : op === '-' ? "soustraire à" : op === '*' ? "multiplier" : op === "/" ? "diviser" : "permuter"
-
-	console.log(verb)
-	console.log(operation)
-
-	console.log('CHECK SCALAR')
 
 	let scalar: string
 	if (operation.value === null || operation.value === "" || operation.value === undefined) {
 		scalar = "\\ \\textcolor{red}{\\langle\\text{entrer une valeur}\\rangle}\\ "
+	} else if (operation.value === "-") {
+		scalar = "\\ \\textcolor{red}{-}\\ "
 	} else {
 		try {
-			console.log('SCALARE GET', operation.value)
-			console.log('GET FRACTION')
-			const F = new Fraction(operation.value)
-			console.log(F)
-			console.log('FRACTION OK - GET TEX')
-			console.log(F.tex)
-			console.log('TEX OK')
 			scalar = new Fraction(operation.value).tex
 		} catch {
 			scalar = "\\ \\textcolor{red}{\\langle\\text{valeur non reconnue}\\rangle}\\ "
 		}
 	}
-
-	console.log('op not null')
 
 	let value = ""
 
@@ -185,12 +169,10 @@ function getOperationDescription(operation: Partial<matriceAugmenteeInterface>):
 		value = `avec la <code>ligne ${operation.reference + 1}</code>`
 	}
 
-	console.log('ALL IS DONE DESCRIPTION')
 	return `${verb} la <code>ligne ${operation.target + 1}</code> ${value}`
 }
 
 const operationDescription = computed(() => {
-	console.log('op description')
 	return getOperationDescription(operationData)
 })
 
@@ -267,13 +249,7 @@ function getShortDescription(operation: Partial<matriceAugmenteeInterface>): str
 		return `L_${operation.target + 1} \\longleftrightarrow L_${operation.reference + 1}`
 	}
 
-	let F: Fraction
-	try {
-		F = new Fraction(operation.value)
-	} catch {
-		return "\\ \\textcolor{red}{\\langle\\text{ ? }\\rangle}\\ "
-	}
-
+	const F = new Fraction(operation.value)
 
 	if (operation.operation === '*') {
 		return `L_${operation.target + 1} \\longleftarrow L_${operation.target + 1}${F.tex} \\cdot L_${operation.target + 1}`
@@ -297,7 +273,6 @@ function updateMatrix(operation: Partial<matriceAugmenteeInterface>, refreshOnly
 
 	const value = new Fraction(operation.value)
 
-	console.log('update matrix', operation.value, value.display)
 	switch (operation.operation) {
 		case "+":
 		case "-": {
@@ -391,7 +366,6 @@ function removeOperation(index: number) {
 }
 
 const operationIsComplete = computed<boolean>(() => {
-	console.log('op is complete')
 	const operation = operationData
 
 	if (operation.target === null) {
@@ -406,12 +380,12 @@ const operationIsComplete = computed<boolean>(() => {
 		return !(operation.reference === null || operation.target === operation.reference)
 	}
 
-	if (operation.value === null || operation.value === '') {
+	if (operation.value === null || operation.value === '' || operation.value === '-') {
 		return false
 	}
 
 	try {
-		const F = new Fraction(operation?.value)
+		const F = new Fraction(operation.value)
 		if (F.isNaN() || F.isZero()) {
 			return false
 		}
@@ -522,7 +496,6 @@ onMounted(() => {
 })
 
 function onValueChange(event: KeyboardInputInterface) {
-	console.log('KEYBOARD CHANGE', event)
 	operationData.value = event.input
 }
 
