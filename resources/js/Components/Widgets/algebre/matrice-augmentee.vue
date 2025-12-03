@@ -158,7 +158,14 @@ function getOperationDescription(operation: Partial<matriceAugmenteeInterface>):
 		scalar = "\\ \\textcolor{red}{\\langle\\text{entrer une valeur}\\rangle}\\ "
 	} else {
 		try {
-			scalar = new Fraction(operation?.value).tex
+			console.log('SCALARE GET', operation.value)
+			console.log('GET FRACTION')
+			const F = new Fraction(operation.value)
+			console.log(F)
+			console.log('FRACTION OK - GET TEX')
+			console.log(F.tex)
+			console.log('TEX OK')
+			scalar = new Fraction(operation.value).tex
 		} catch {
 			scalar = "\\ \\textcolor{red}{\\langle\\text{valeur non reconnue}\\rangle}\\ "
 		}
