@@ -115,7 +115,7 @@ function toggleTeam(course: CourseInterface, team: UserTeamInterface) {
 								xs
 								v-for="team in course.teams"
 								:key="`course-${course.id}-${team.name}`"
-								:href="route('admin.courses.show-team', {course: course.slug, team: team.name})"
+								:href="route('admin.courses.dashboard', {course: course.slug, team: team.name})"
 							>
 								{{ team.name }}
 							</sc-button>

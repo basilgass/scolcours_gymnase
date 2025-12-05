@@ -31,9 +31,6 @@ const showInteractivity = computed(() => {
 const showOutput = computed(() => {
 	return !params.value.includes('no-output')
 })
-const showAutoSolve = computed(() => {
-	return params.value.includes('auto')
-})
 
 const outputAsDecimal = computed(() => {
 	return params.value.includes('decimal')
@@ -577,8 +574,7 @@ function onValueChange(event: KeyboardInputInterface) {
 				</div>
 			</div>
 
-
-			<div v-if="showAutoSolve">
+			<div v-admin>
 				<sc-button
 					type="primary"
 					@click="autoSolve"

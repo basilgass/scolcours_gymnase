@@ -131,7 +131,7 @@ describe("solution checker", () => {
 
 			const result0 = chk.check_sets('{2;6/2}')
 			expect(result0.result).toBe(false)
-			expect(result0.partial).toBe(true)
+			expect(result0.score > 0).toBe(true)
 			expect(result0.message).toContain("La réponse donnée est juste, mais pas sous la forme attendue.")
 			expect(result0.message).toContain("Il faut réduire la fraction.")
 		})
@@ -191,13 +191,13 @@ describe("solution checker", () => {
 
 			const result1 = chk.check_interval("]2;8/2[", chk.answer)
 			expect(result1.result).toBe(false)
-			expect(result1.partial).toBe(true)
+			expect(result1.score > 0).toBe(true)
 			expect(result1.message).toContain("La borne supérieure est fausse.")
 			expect(result1.message).toContain("La réponse donnée est juste, mais pas sous la forme attendue.")
 
 			const result2 = chk.check_interval("]20/10;4[", chk.answer)
 			expect(result2.result).toBe(false)
-			expect(result2.partial).toBe(true)
+			expect(result2.score > 0).toBe(true)
 			expect(result2.message).toContain("La borne inférieure est fausse.")
 			expect(result2.message).toContain("La réponse donnée est juste, mais pas sous la forme attendue.")
 		})
@@ -241,7 +241,7 @@ describe("solution checker", () => {
 		test("un intervalle ok, un intervalle partiel", () => {
 			const result0 = chk.check_intervals(']-3;2[uu[10/2;+oo[')
 			expect(result0.result).toBe(false)
-			expect(result0.partial).toBe(true)
+			expect(result0.score > 0).toBe(true)
 			expect(result0.message).toContain("(2) :")
 			expect(result0.message).toContain("La borne inférieure est fausse")
 			expect(result0.message).toContain("La réponse donnée est juste, mais pas sous la forme attendue")
@@ -271,7 +271,7 @@ describe("solution checker", () => {
 
 			const result0 = chk.check_realSets('RR_+\\\\{0;3;7}')
 			expect(result0.result).toBe(false)
-			expect(result0.partial).toBe(true)
+			expect(result0.score > 0).toBe(true)
 			expect(result0.message).toBe("Il ne faut pas soustraire zéro, mais mettre une étoile à l'ensemble réel")
 		})
 
@@ -299,7 +299,7 @@ describe("solution checker", () => {
 
 			const result2 = chk.check_realSets('RR_+^**\\\\{6/2;7}')
 			expect(result2.result).toBe(false)
-			expect(result2.partial).toBe(true)
+			expect(result2.score > 0).toBe(true)
 			expect(result2.message).toContain("La partie soustraite est fausse")
 			expect(result2.message).toContain("La réponse donnée est juste, mais pas sous la forme attendue.")
 		})

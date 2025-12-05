@@ -22,7 +22,9 @@ export class PrimitiveChecker extends CheckerAbstract {
 
 
 	override checkValue(value: string): CheckerResult {
-		let subchk
+		let subchk: CheckerAbstract
+
+		// TODO: contrôle des primitive avec exp et log... à revoir.
 		if (value.includes("e")) {
 			subchk = new ExpChecker(this._config)
 		} else if (value.includes('ln')) {
@@ -38,12 +40,11 @@ export class PrimitiveChecker extends CheckerAbstract {
 		)
 
 		if (!result.result) {
-			return makeCheckerResult(result.message)
+			return result
 		}
 
-		const s = value.split('+c').length
-		if (s !== 2) {
-			return makeCheckerResult(s === 1 ? "il manque la constante." : `il y a ${s - 1} constantes...`)
+		if (!value.endsWith('+c')) {
+			return makeCheckerResult("il manque la constante...", 0.8)
 		}
 
 		return makeCheckerResult()

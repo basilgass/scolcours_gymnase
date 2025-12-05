@@ -1,7 +1,6 @@
-import {CheckerAbstract, makeCheckerResult} from "../CheckerAbstract"
+import {CheckerAbstract, CheckerResult, CHECKERS, makeCheckerResult} from "@/Checkers"
 import {ExactChecker} from "../Basic"
-import {CheckerResult, CHECKERS} from "../checker.config"
-import {NumExp} from "piexpression"
+import {NumExp} from "pimath"
 
 // const name = "tos"
 const description = `tos,[paramètres]
@@ -11,26 +10,31 @@ aucun
 `
 
 export class TableofsignChecker extends CheckerAbstract {
-	private grows: boolean
 	private coords: boolean
+	private grows: boolean
 
 	constructor(config: string[] | string) {
 		super(config)
 		this.type = CHECKERS.TABLE_OF_SIGNS
 		this.description = description
 
+		// Configuration
 		this.grows = this.config.includes('g') || this.config.includes('grows')
 		this.coords = this.config.includes('c') || this.config.includes('coords')
 
+		// Le secondary checker par défaut.
 		this.secondaryChecker = new ExactChecker()
 	}
 
 	get format(): string {
 		if (this.coords) {
 			return `Tableau de croissance avec min / max<br/>Coordonnées au format ${this.secondaryChecker?.format}`
-		} else if (this.grows) {
+		}
+
+		if (this.grows) {
 			return "Tableau de croissance"
 		}
+
 		return "Tableau de signes"
 	}
 
@@ -40,64 +44,45 @@ export class TableofsignChecker extends CheckerAbstract {
 				expected: this.answer.split("@")[0].split(','),
 				provided: value.split("@")[0].split(',')
 			}
+
 			const signs = {
 				expected: this.answer.split("@")[1],
 				provided: value.split("@")[1] ?? ""
 			}
+
 			const grows = {
 				expected: this.answer.split("@")[2] ?? "",
 				provided: value.split("@")[2] ?? ""
 			}
+
 			const coords = {
 				expected: this.answer.split("@")[3] ?? "",
 				provided: value.split("@")[3] ?? ""
 			}
 
-			if (zeroes.expected.length !== zeroes.provided.length) {
-				const diff = zeroes.expected.length - zeroes.provided.length
 
-				return makeCheckerResult(
-					diff < 0
-						? "il y a trop de zéros"
-						: "il manque des zéros")
-			}
+			let check: CheckerResult
 
-			// Les zéros doivent être dans l'ordre croissant
-			const zeroesValues = zeroes.provided.map(z => new NumExp(z).evaluate())
-			const isSorted = zeroesValues.every((val, i, arr) => i === 0 || arr[i - 1] <= val)
-			if (!isSorted) {
-				return makeCheckerResult("les zéros ne sont pas dans l'ordre croissant")
-			}
-
-			const expectedValues = zeroes.expected.map(z => new NumExp(z).evaluate())
-			const diffIndexes = expectedValues.reduce<number[]>((acc, val, idx) => {
-				if (val !== zeroesValues[idx]) acc.push(idx)
-				return acc
-			}, [])
-
-			if (diffIndexes.length > 0) {
-				const positions = diffIndexes.map(i => `${i + 1}${i === 0 ? "er" : "ème"}`).join(", ")
-				return makeCheckerResult(
-					diffIndexes.length === 1
-						? `le ${positions} zéro est faux`
-						: `les ${positions} zéros sont faux`
-				)
-			}
+			// contrôle des zéros
+			check = this.checkZeroes(zeroes)
+			if (!check.result) return check
 
 
+			// contrôle des signs
 			if (signs.expected !== signs.provided) {
 				return makeCheckerResult(
 					"les signes ne sont pas justes"
 				)
 			}
 
+			// contrôle de la croissance
 			if (grows.expected !== grows.provided) {
 				return makeCheckerResult(
 					"la croissance n'est pas juste"
 				)
 			}
 
-			// Check the coordinates
+			// contrôle des coordonnées
 			if (coords.expected.length > 0) {
 				const expectedCoordinates = coords.expected.split(","),
 					providedCoordinates = coords.provided.split(",")
@@ -112,7 +97,7 @@ export class TableofsignChecker extends CheckerAbstract {
 
 				return this.secondaryCheckValues(
 					providedCoordinates, expectedCoordinates,
-					(i: number, message: string)=>`il y a une erreur avec ${i === 0 ? "la 1ère" : "la " + (i + 1) + "ème"} coordonnée: ${message}`
+					(i: number, message: string) => `il y a une erreur avec ${i === 0 ? "la 1ère" : "la " + (i + 1) + "ème"} coordonnée: ${message}`
 				)
 
 			}
@@ -124,5 +109,27 @@ export class TableofsignChecker extends CheckerAbstract {
 		return makeCheckerResult()
 	}
 
+
+	checkZeroes(zeroes: { expected: string[], provided: string[] }): CheckerResult {
+
+		// Pas le bon nombre de zéro
+		if (zeroes.expected.length !== zeroes.provided.length) {
+			const diff = zeroes.expected.length - zeroes.provided.length
+
+			return makeCheckerResult(
+				diff < 0
+					? "il y a trop de zéros"
+					: "il manque des zéros")
+		}
+
+		// Les zéros doivent être dans l'ordre croissant
+		const zeroesValues = zeroes.provided.map(z => new NumExp(z).evaluate())
+		const isSorted = zeroesValues.every((val, i, arr) => i === 0 || arr[i - 1] <= val)
+		if (!isSorted) {
+			return makeCheckerResult("les zéros ne sont pas dans l'ordre croissant")
+		}
+
+		return this.secondaryCheckValues(zeroes.provided, zeroes.expected)
+	}
 
 }

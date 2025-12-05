@@ -1,6 +1,4 @@
-import {CheckerAbstract, makeCheckerResult} from "../CheckerAbstract"
-import {CheckerResult, CHECKERS} from "../checker.config"
-import {FractionChecker, NumberChecker} from "@/Checkers"
+import {CheckerAbstract, CheckerResult, CHECKERS, FractionChecker, makeCheckerResult, NumberChecker} from "@/Checkers"
 import {PiRadian} from "@/PiMathExtended/PiRadian.ts"
 import {Fraction} from "pimath"
 
@@ -119,10 +117,10 @@ export class TrigoChecker extends CheckerAbstract {
 		if (this.isPositive) {
 			// Contrôle que l'angle est le plus petit possible.
 			if (angleNb.isNegative()) {
-				return makeCheckerResult("L'angle doit être positif.", true)
+				return makeCheckerResult("L'angle doit être positif.", 0.5)
 			}
 			if (angleNb.isGeq(kPeriodicNb)) {
-				return makeCheckerResult("L'angle n'est pas le plus petit possible.", true)
+				return makeCheckerResult("L'angle n'est pas le plus petit possible.", 0.5)
 			}
 		}
 
@@ -136,7 +134,7 @@ export class TrigoChecker extends CheckerAbstract {
 			const angleAbs = angleNb.clone().abs()
 
 			if (angleAbs.isGeq(angleAdd) || angleAbs.isGeq(angleSub)) {
-				return makeCheckerResult("L'angle n'est pas le plus proche de zéro.", true)
+				return makeCheckerResult("L'angle n'est pas le plus proche de zéro.", 0.5)
 			}
 
 		}
@@ -247,7 +245,7 @@ export class TrigoChecker extends CheckerAbstract {
 		}
 
 		if (!rad.periodic.isReduced()) {
-			return makeCheckerResult("La partie périodique n'est pas réduite.", true)
+			return makeCheckerResult("La partie périodique n'est pas réduite.", 0.9)
 		}
 
 		if (!rad.isSame(answerRad)) {
@@ -255,16 +253,16 @@ export class TrigoChecker extends CheckerAbstract {
 		}
 
 		if (!rad.angle.isReduced()) {
-			return makeCheckerResult("L'angle n'est pas réduit.", true)
+			return makeCheckerResult("L'angle n'est pas réduit.", 0.9)
 		}
 
 		if (this.isPositive) {
 			// Contrôle que l'angle est le plus petit possible.
 			if (rad.angle.isNegative()) {
-				return makeCheckerResult("L'angle doit être positif.", true)
+				return makeCheckerResult("L'angle doit être positif.", 0.5)
 			}
 			if (rad.angle.isGeq(rad.periodic)) {
-				return makeCheckerResult("L'angle n'est pas le plus petit possible.", true)
+				return makeCheckerResult("L'angle n'est pas le plus petit possible.", 0.5)
 			}
 		}
 
@@ -278,7 +276,7 @@ export class TrigoChecker extends CheckerAbstract {
 			const angleAbs = rad.angle.clone().abs()
 
 			if (angleAbs.isGeq(angleAdd) || angleAbs.isGeq(angleSub)) {
-				return makeCheckerResult("L'angle n'est pas le plus proche de zéro.", true)
+				return makeCheckerResult("L'angle n'est pas le plus proche de zéro.", 0.5)
 			}
 
 		}
@@ -297,7 +295,7 @@ export class TrigoChecker extends CheckerAbstract {
 
 		// L'angle n'est pas réduit.
 		if (!rad.angle.isReduced()) {
-			return makeCheckerResult("L'angle n'est pas réduit.", true)
+			return makeCheckerResult("L'angle n'est pas réduit.", 0.9)
 		}
 
 		return makeCheckerResult()

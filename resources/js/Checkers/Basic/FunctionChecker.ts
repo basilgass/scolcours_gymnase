@@ -1,6 +1,5 @@
-import {CheckerAbstract, makeCheckerResult} from "../CheckerAbstract"
+import {CheckerAbstract, CheckerResult, CHECKERS, makeCheckerResult} from "@/Checkers"
 import {Polynom} from "pimath"
-import {CheckerResult, CHECKERS} from "../checker.config"
 
 // const name = "function"
 const description = `function|fn,[paramètres]
@@ -10,41 +9,42 @@ const description = `function|fn,[paramètres]
 `
 
 export class FunctionChecker extends CheckerAbstract {
-    private developed: boolean
-    constructor(config:string[]|string) {
-        super(config)
-        this.type = CHECKERS.FUNCTION
-        this.description = description
+	private developed: boolean
 
-        this.developed = (this.config.includes("d") || this.config.includes("developed") || this.config.includes("dev"))
-    }
+	constructor(config: string[] | string) {
+		super(config)
+		this.type = CHECKERS.FUNCTION
+		this.description = description
 
-    get format(): string {
-        const opts = []
+		this.developed = (this.config.includes("d") || this.config.includes("developed") || this.config.includes("dev"))
+	}
 
-        if (this.developed) {
-            opts.push("développée réduite")
-        }
+	get format(): string {
+		const opts = []
 
-        return `fonction ${opts.join(", ")}`
-    }
+		if (this.developed) {
+			opts.push("développée réduite")
+		}
 
-    override checkValue(value: string): CheckerResult {
+		return `fonction ${opts.join(", ")}`
+	}
+
+	override checkValue(value: string): CheckerResult {
 		const A = new Polynom(value),
 			Q = new Polynom(this.answer)
 
 		// Must be the same equation.
-		if(!A.isEqual(Q)){
-			return  makeCheckerResult("la fonction n'est pas juste.")
+		if (!A.isEqual(Q)) {
+			return makeCheckerResult("la fonction n'est pas juste.")
 		}
 
-		if(this.developed){
+		if (this.developed) {
 			// La fonction ne doit pas avoir de parenthèses.
-			if(value.includes('(')||value.includes(')')){
+			if (value.includes('(') || value.includes(')')) {
 				return makeCheckerResult("la fonction doit être développée (pas de parenthèses)")
 			}
 
-			if(A.monoms.length !== Q.monoms.length){
+			if (A.monoms.length !== Q.monoms.length) {
 				return makeCheckerResult("la fonction doit être réduite.")
 			}
 		}

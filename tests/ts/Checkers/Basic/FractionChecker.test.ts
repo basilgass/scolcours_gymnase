@@ -7,7 +7,7 @@ test('detect exact value', () => {
 	const given = '2/3'
 
 	const checker = new FractionChecker(config)
-	const result = checker.check(expected, given)
+	const result = checker.check(given, expected)
 
 	expect(result.result).toBeTruthy()
 })
@@ -18,7 +18,7 @@ test('similar fraction, not reduced', () => {
 	const given = '4/6'
 
 	const checker = new FractionChecker(config)
-	const result = checker.check(expected, given)
+	const result = checker.check(given, expected)
 
 	expect(result.result).toBeTruthy()
 })

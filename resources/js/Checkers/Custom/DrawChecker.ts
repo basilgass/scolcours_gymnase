@@ -1,24 +1,32 @@
-import {CheckerAbstract, makeCheckerResult} from "../CheckerAbstract"
-import {CheckerResult, CHECKERS} from "../checker.config"
+import {CheckerAbstract, CheckerResult, CHECKERS, makeCheckerResult} from "@/Checkers"
 
 const description = `draw
+@sort
 @input=A,B,C
 @p=<pidraw parameters>
 pidraw code`
 
 export class DrawChecker extends CheckerAbstract {
+	#sort: boolean
 	readonly format = "déplacer les points"
 
 	constructor(config: string[] | string) {
 		super(config)
 		this.type = CHECKERS.DRAW
 		this.description = description
+
+		this.#sort = this.config.includes('sort')
 	}
 
 	checkValue(value: string): CheckerResult {
-		// On peut vérifier point par point
+		// On vérifie point par point
 		const points = value.split(',')
 		const answerPoints = this.answer.split(',')
+
+		if (this.#sort) {
+			points.sort()
+			answerPoints.sort()
+		}
 
 		const errors: string[] = []
 		points.forEach((pt, index) => {
@@ -27,8 +35,10 @@ export class DrawChecker extends CheckerAbstract {
 			}
 		})
 
+		if (errors.length > 0) {
+			return makeCheckerResult(errors, points.length / errors.length)
+		}
 
-		return makeCheckerResult(errors.join('<br>'))
+		return makeCheckerResult()
 	}
-
 }

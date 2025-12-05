@@ -1,8 +1,12 @@
 import {type CheckerResult, CHECKERS} from "./checker.config"
 
-
-export function makeCheckerResult(value?: string | string[], partial?: boolean): CheckerResult {
-	const result = value === undefined || value.length === 0
+/**
+ * Formatter le résultat d'un checker, en fonction de sa valeur et de son score.
+ * @param value
+ * @param score
+ */
+export function makeCheckerResult(value?: string | string[], score?: number): CheckerResult {
+	const result = value === undefined || value.length === 0 || score === 1
 
 	const message = result
 		? ""
@@ -13,7 +17,7 @@ export function makeCheckerResult(value?: string | string[], partial?: boolean):
 	return {
 		message,
 		result,
-		partial: partial === true
+		score: result ? 1 : score === undefined ? 0 : Number(score)
 	}
 }
 
@@ -91,27 +95,18 @@ export abstract class CheckerAbstract {
 
 		// No value given
 		if (given === "") {
-			return {
-				result: false,
-				message: "Veuillez entrer une valeur"
-			}
+			return makeCheckerResult("Veuillez entrer une valeur")
 		}
 
 		// The result is exactly what is expected
 		if (expected === given) {
-			return {
-				result: true,
-				message: ''
-			}
+			return makeCheckerResult()
 		}
 
 		// The format is wrong
 		const message = this.checkFormat(given)
 		if (message !== "") {
-			return {
-				result: false,
-				message,
-			}
+			return makeCheckerResult(message)
 		}
 
 		// The value given is a usual error, handled by an @error:<value> <description>
@@ -125,32 +120,38 @@ export abstract class CheckerAbstract {
 
 	abstract checkValue(value: string): CheckerResult
 
-	secondaryCheckValues(values: string[], expectedValues: string[], callback: (index: number, message: string) => string): CheckerResult {
-		const errors: string[] = []
-		let partialOnly = true
+	secondaryCheckValues(values: string[], expectedValues: string[], callback?: (index: number, message: string) => string): CheckerResult {
+		const checks: CheckerResult[] = []
 
+		const cb = callback === undefined
+			? (index: number, message: string) => `(${index}): ${message}`
+			: callback
+
+		if (values.length !== expectedValues.length) {
+			return makeCheckerResult("Il n'y a pas le bon nombre de réponses.")
+		}
+
+		// Fabrication de tous les résultats
 		for (let i = 0; i < values.length; i++) {
-			const result = this.secondaryChecker.check(values[i], expectedValues[i])
-
-			if (!result.result) {
-				errors.push(callback(i, result.message))
-				partialOnly = partialOnly && result.partial
-			}
+			checks.push({
+				...this.secondaryChecker.check(values[i], expectedValues[i]),
+				index: i
+			})
 		}
 
+		// Extraction des erreurs
+		const errors = checks.filter(check => !check.result)
+
+		// S'il y a des erreurs:
 		if (errors.length) {
-			return makeCheckerResult(errors.join('<br/>'), partialOnly)
+			return makeCheckerResult(
+				errors.map(chk => cb(chk.index, chk.message)).join('<br/>'),
+				errors.reduce((a, b) => a < b.score ? a : b.score, 1)
+			)
 		}
 
+		// Aucune erreur trouvée.
 		return makeCheckerResult()
-	}
-
-	protected _extractSecondaryChecker(config: string) {
-		const [_, secondary] = config.split('checker:')
-
-		if (secondary === undefined) return
-
-
 	}
 }
 

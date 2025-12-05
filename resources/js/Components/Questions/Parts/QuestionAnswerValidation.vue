@@ -19,7 +19,7 @@ import {
 	questionResultInterface,
 	questionValidatorInterface
 } from "@/Components/Questions/QuestionInterface.ts"
-import type {CheckerResult, PiChecker} from "@/Checkers"
+import {CheckerResult, makeCheckerResult, PiChecker} from "@/Checkers"
 import ScButton from "@/Components/Ui/scButton.vue"
 import {useStoreScore} from "@/stores/useStoreScore.ts"
 import {ScoreQuestionDataInterface} from "@/types/scoreInterfaces.ts"
@@ -73,8 +73,7 @@ function getAnswerValidation(validator: questionValidatorInterface, index: numbe
 	const userAnswer: string = questionData.user.answers.value[index].input
 	if (userAnswer === undefined) {
 		return {
-			result: false,
-			message: "Vous n'avez pas répondu à la question",
+			...makeCheckerResult("Vous n'avez pas répondu à la question"),
 			index
 		}
 	}
@@ -133,8 +132,7 @@ function getAnswerValidation(validator: questionValidatorInterface, index: numbe
 		} catch (e) {
 			console.warn(e)
 			results.push({
-				result: false,
-				message: "Format de la réponse non reconnu.",
+				...makeCheckerResult("Format de la réponse non reconnu."),
 				index
 			})
 		}

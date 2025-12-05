@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 
-import LayoutMain from "@/Layouts/LayoutMain.vue"
 import BlockShow from "@/Components/Blocks/BlockShow.vue"
 import {CourseInterface, TeamInterface} from "@/types/modelInterfaces.ts"
 import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
@@ -8,8 +7,9 @@ import ScButton from "@/Components/Ui/scButton.vue"
 import {ref} from "vue"
 import CourseAgenda from "@/Components/Courses/CourseAgenda.vue"
 import CourseStats from "@/Components/Courses/CourseStats.vue"
+import LayoutAdmin from "@/Layouts/LayoutAdmin.vue"
 
-defineOptions({layout: LayoutMain})
+defineOptions({layout: LayoutAdmin})
 
 const props = defineProps<{
 	course: CourseInterface,

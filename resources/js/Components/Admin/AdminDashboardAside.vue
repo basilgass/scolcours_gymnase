@@ -1,5 +1,7 @@
 <script setup lang="ts">
 
+import {ref} from "vue"
+
 const links1 = [
 	{title: "utilisateurs", route: "admin.users.index", icon: 'bi bi-person'},
 	{title: "équipes", route: "admin.teams.index", icon: 'bi-person-lines-fill'},
@@ -23,10 +25,21 @@ const links3 = [
 	// { title: "import des langues", route: "admin.voc.import", icon: 'bi bi-translate' },
 ]
 
+const show = ref(false)
+
 </script>
 
 <template>
-	<aside class="min-w-[200px] bg-slate-200 dark:bg-slate-800 dark:text-white shadow pl-6 pr-3 py-10">
+	<aside
+		class="bg-slate-200 dark:bg-slate-800 dark:text-white shadow pr-3 transition-all duration-300 overflow-hidden"
+		:class="show ? 'w-[200px] pl-6' : 'w-[30px] pl-2'"
+	>
+		<div
+			@click="show=!show"
+			class="cursor-pointer mb-10"
+		>
+			<i class="bi bi-three-dots" />
+		</div>
 		<div class="flex flex-col space-y-10">
 			<div class="flex flex-col gap-2">
 				<h2 class="font-semibold mb-3">
@@ -36,6 +49,7 @@ const links3 = [
 					v-for="link in links1"
 					:key="link.title"
 					:href="route(link.route)"
+					class="whitespace-nowrap"
 				>
 					<i
 						:class="link.icon"
@@ -51,6 +65,7 @@ const links3 = [
 					v-for="link in links2"
 					:key="link.title"
 					:href="route(link.route)"
+					class="whitespace-nowrap"
 				>
 					<i
 						:class="link.icon"
@@ -66,6 +81,7 @@ const links3 = [
 					v-for="link in links3"
 					:key="link.title"
 					:href="route(link.route)"
+					class="whitespace-nowrap"
 				>
 					<i
 						:class="link.icon"

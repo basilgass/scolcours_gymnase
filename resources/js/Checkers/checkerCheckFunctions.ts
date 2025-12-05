@@ -1,6 +1,20 @@
 import {Equation, Numeric, Polynom} from "pimath"
 import type {CheckerAbstract} from "@/Checkers/CheckerAbstract.ts"
 
+export function checkFormatEquation(value: string) {
+	if (!value.includes("=")) {
+		return "il manque un signe d'égalité."
+	}
+
+	try {
+		new Equation(value)
+
+		return ""
+	} catch {
+		return "l'équation n'est pas correctement formée."
+	}
+}
+
 export function checkMinMaxEquation(value: string, answer: string, secondaryChecker: CheckerAbstract): string {
 	// Come from Polynom checker.
 	// Left or right part must be correctly formed.

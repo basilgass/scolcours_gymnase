@@ -21,6 +21,10 @@ export function splitIfOutsideParentheses(
 	return arr
 }
 
+/**
+ * Découpe un texte (string1)+(string2)-(string3) en [string1, string2, string3]
+ * @param value
+ */
 export function splitAtSigns(value: string): string[] {
 	return splitIfOutsideParentheses(value, "-")
 		.map((element, index) => (index > 0 ? "-" + element : element))

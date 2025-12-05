@@ -4,8 +4,10 @@ import {
 	CheckerAbstract,
 	CheckerResult,
 	CHECKERS,
+	checkFormatEquation,
 	checkMinMaxEquation,
-	checkReducedEquation, makeCheckerResult,
+	checkReducedEquation,
+	makeCheckerResult,
 	PolynomChecker
 } from "@/Checkers"
 
@@ -22,12 +24,12 @@ const description = `equation,[paramètres]
 `
 
 export class CartesianChecker extends CheckerAbstract {
-	#reduced = false
 	#circle = false
 	#line2d = false
-	#slope = false
-	#minmax = false
 	#line3d = false
+	#minmax = false
+	#reduced = false
+	#slope = false
 
 	constructor(config: string[] | string) {
 		super(config)
@@ -81,17 +83,7 @@ export class CartesianChecker extends CheckerAbstract {
 
 
 	override checkFormat(value: string): string {
-		if (!value.includes("=")) {
-			return "il manque un signe d'égalité."
-		}
-
-		try {
-			new Equation(value)
-		} catch {
-			return "l'équation n'est pas correctement formée."
-		}
-
-		return ""
+		return checkFormatEquation(value)
 	}
 
 	override checkValue(value: string): CheckerResult {
@@ -101,10 +93,8 @@ export class CartesianChecker extends CheckerAbstract {
 		const Q = new Equation(this.answer)
 
 		// Must be the same equation.
-		const A2 = A.clone().moveLeft(),
-			Q2 = Q.clone().moveLeft()
-		A2.simplify()
-		Q2.simplify()
+		const A2 = A.clone().moveLeft().simplify()
+		const Q2 = Q.clone().moveLeft().simplify()
 
 		// L'expression de gauche est soit égale, soit opposée.
 		if (!A2.isLinearTo(Q2)) {

@@ -1,7 +1,6 @@
-import {CheckerAbstract, makeCheckerResult} from "../CheckerAbstract"
-import {CheckerResult, CHECKERS} from "../checker.config"
+import {CheckerAbstract, CheckerResult, CHECKERS, makeCheckerResult} from "@/Checkers"
 
-// const name = "number",
+// const name = "number"
 const description = `number|nb,[paramètres]
 
 **paramètres**
@@ -17,17 +16,19 @@ export class NumberChecker extends CheckerAbstract {
 		this.type = CHECKERS.NUMBER
 		this.description = description
 
+		// Nombre de décimales (le premier élément est le nombre de décimales)
 		if (isNaN(+this.config[0])) {
 			this.config = ["0", ...this.config]
 		}
 
+		// Valeur strict (donc en given===answer)
 		this._isStrict = this.config.includes("s")
 	}
 
 	get format(): string {
 		return +this.config[0] === 0
 			? "réponse numérique"
-			: `réponse avec ${this.config[0]} chiffre(s) après la virgule`
+			: `réponse avec ${this._isStrict ? 'exactement ' : ''}${this.config[0]} chiffre(s) après la virgule`
 	}
 
 	override checkFormat(value: string): string {
@@ -40,31 +41,32 @@ export class NumberChecker extends CheckerAbstract {
 
 	override checkValue(value: string): CheckerResult {
 		const nbDigits = +this.config[0]
-		const [expectedUnit, expectedDigits] = this.answer.split(".")
-		const nbExpectedDigits = expectedDigits?.length ?? 0
 
+		// REFACTOR: a besoin dans rendre les choses plus propre.
+		// Les valeurs (version numérique)
 		const answerValue = +this.answer
 		const givenValue = +value
 
-		if (nbExpectedDigits !== nbDigits && this._isStrict) {
-			return makeCheckerResult("Problème dans la configuration du checker ou de la réponse")
-		}
-
 		if (!this._isStrict) {
 			if (givenValue === answerValue) {
+				// les valeurs sont les mêmes (possibilité d'enlever des zéros en trop)
 				return makeCheckerResult()
 			}
 		}
 
 		if (givenValue === -answerValue) {
-			return makeCheckerResult("Peut être un problème de signe...")
+			return makeCheckerResult("Peut être un problème de signe...", 0.5)
 		}
 
+		// on sépare l'unité et la partie décimale
+		const [expectedUnit, expectedDigits] = this.answer.split(".")
 		const [unit, digits] = value.split(".")
 
+
+		// On contrôle la partie entière.
 		if (+unit !== +expectedUnit) {
 			if (+unit === -expectedUnit) {
-				return makeCheckerResult("Problème de signe sur la partie entière.")
+				return makeCheckerResult("Problème de signe sur la partie entière.", 0.2)
 			}
 
 			if (+digits === +expectedDigits) {
@@ -74,17 +76,19 @@ export class NumberChecker extends CheckerAbstract {
 			return makeCheckerResult("La réponse n'est pas juste.")
 		}
 
+		// On contrôle la partie décimale
+
 		// Le nombre de chiffres après la virgule n'est pas juste
 		const givenDigitsLength = digits?.length ?? 0
 
 		if (givenDigitsLength !== nbDigits) {
 			return makeCheckerResult(
 				`Il faut ${nbDigits} chiffre(s) après la virgule.`,
-				(+digits).toFixed(nbDigits) === expectedDigits
+				+(+digits).toFixed(nbDigits) === +expectedDigits ? 0.7 : 0
 			)
 		}
 
-		// S'il y a des décmales :
+		// S'il y a des décimales :
 		// Le dernier chiffre n'est pas juste - il s'agit peut être d'un problème d'arrondi ?
 		if (givenDigitsLength) {
 			const lastDigit = +digits[digits.length - 1]
@@ -93,11 +97,12 @@ export class NumberChecker extends CheckerAbstract {
 			if (Math.abs(lastDigit - lastExpectedDigit) === 1) {
 				return makeCheckerResult(
 					"Peut être un problème d'arrondi ?",
-					true
+					0.7
 				)
 			}
 		}
 
+		// Tous les autres cas non gérés.
 		return makeCheckerResult("La réponse n'est pas juste.")
 	}
 }

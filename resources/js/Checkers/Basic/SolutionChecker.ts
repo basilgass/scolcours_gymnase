@@ -24,7 +24,7 @@ export class SolutionChecker extends CheckerAbstract {
 
 	get format(): string {
 		return [
-			`Solution de la forme \\(\\mathcal{S}=\\{3;5\\}\\)`,
+			`Solution de la forme \\(\\mathcal{S}=\\{ ... \\}\\) ou \\(S=[...[\\)`,
 			this.secondaryChecker?.format ?? ''
 		]
 			.filter(x => x.trim() !== '')
@@ -133,10 +133,10 @@ export class SolutionChecker extends CheckerAbstract {
 		const check1 = this.secondaryChecker.check(givenValues[1], expectedValues[1])
 
 		if (check0.result === false) {
-			return makeCheckerResult(`La borne inférieure est fausse.<br/>${check0.message}`, check0.partial)
+			return makeCheckerResult(`La borne inférieure est fausse.<br/>${check0.message}`, check0.score)
 		}
 		if (check1.result === false) {
-			return makeCheckerResult(`La borne supérieure est fausse.<br/>${check1.message}`, check1.partial)
+			return makeCheckerResult(`La borne supérieure est fausse.<br/>${check1.message}`, check1.score)
 		}
 
 		// La réponse voulue n'a pas les crochets correspondants.
@@ -164,7 +164,7 @@ export class SolutionChecker extends CheckerAbstract {
 		}
 
 		const results: string[] = []
-		let isPartial = true
+		let score = 1
 		intervals.forEach((interval, count) => {
 			const checks = answerIntervals.map(answer => this.check_interval(interval, answer))
 			const index = checks.findIndex(check => check.result)
@@ -174,15 +174,15 @@ export class SolutionChecker extends CheckerAbstract {
 				return
 			}
 
-			const partialIndex = checks.findIndex(check => check.partial)
+			const partialIndex = getMaxScoreIndex(checks)
 			if (partialIndex !== -1) {
 				answerIntervals.splice(partialIndex, 1)
+				score = Math.min(score, checks[partialIndex].score)
 				results.push(`(${count + 1}) : ${checks[partialIndex].message}`)
-				return
+			} else {
+				score = 0
+				results.push(`(${count + 1}) : \\(${new AsciiMathParser().parse(interval)}\\) n'est pas dans les solutions`)
 			}
-
-			isPartial = false
-			results.push(`(${count + 1}) : \\(${new AsciiMathParser().parse(interval)}\\) n'est pas dans les solutions`)
 		})
 
 		return makeCheckerResult(
@@ -190,7 +190,7 @@ export class SolutionChecker extends CheckerAbstract {
 				? results.join('<br/>')
 				: ""
 			,
-			isPartial
+			score
 		)
 	}
 
@@ -206,7 +206,7 @@ export class SolutionChecker extends CheckerAbstract {
 				`${new AsciiMathParser().parse(
 					value.slice(1, -1), // enlever le premier et le dernier caractère
 				)} est déjà un ensemble.`,
-				value === `{${this.answer}} `
+				value === `{${this.answer}}` ? 0.5 : 0
 			)
 		}
 
@@ -268,7 +268,7 @@ export class SolutionChecker extends CheckerAbstract {
 				const hasZeroInSubtractSet = extractSetValues(subtractSet).includes('0')
 
 				if (hasZeroInSubtractSet) {
-					return makeCheckerResult("Il ne faut pas soustraire zéro, mais mettre une étoile à l'ensemble réel", true)
+					return makeCheckerResult("Il ne faut pas soustraire zéro, mais mettre une étoile à l'ensemble réel", 0.9)
 				}
 			}
 
@@ -291,7 +291,7 @@ export class SolutionChecker extends CheckerAbstract {
 			this.answer = answer
 
 			if (subtractResult.result === false) {
-				return makeCheckerResult(`La partie soustraite est fausse<br>${subtractResult.message}`, subtractResult.partial)
+				return makeCheckerResult(`La partie soustraite est fausse<br>${subtractResult.message}`, subtractResult.score)
 			}
 		}
 
@@ -306,15 +306,17 @@ export class SolutionChecker extends CheckerAbstract {
 		const diff = expectedValues.length - givenValues.length
 
 		const errors: string[] = []
-		let partialOnly = true
+		let score = 1
 
 		if (diff !== 0) {
 			errors.push(diff > 0
 				? `Il manque ${diff} réponse${diff > 1 ? 's' : ''}.`
 				: `Il y a ${-diff} réponse${diff < -1 ? 's' : ''} en trop.`
 			)
-			partialOnly = false
+
+			score = 0
 		}
+
 		givenValues.forEach((given: string, count: number) => {
 			const results = expectedValues
 				.map(checkValue => this.secondaryChecker.check(given, checkValue))
@@ -331,20 +333,21 @@ export class SolutionChecker extends CheckerAbstract {
 			}
 
 			// On recherche une réponse partielle
-			const partial = results
-				.findIndex(value => value.partial)
+			const partialIndex = getMaxScoreIndex(results)
 
-			if (partial !== -1) {
+			if (partialIndex !== -1) {
 				// Une réponse partielle a été trouvée.
 				// on l'enlève de la liste des réponses possibles.
-				expectedValues.splice(partial, 1)
+				expectedValues.splice(partialIndex, 1)
 				// On rajoute l'erreur.
-				errors.push(`(${count + 1}) ${results[partial].message}`)
+				errors.push(`(${count + 1}) ${results[partialIndex].message}`)
+
+				score = Math.min(score, results[partialIndex].score)
 				return
 			}
 
 			// Aucune réponse ne correspond - c'est vraiment faux
-			partialOnly = false
+			score = 0
 			errors.push(`(${count + 1}) aucune réponse ne correspond dans les solutions.`)
 		})
 
@@ -352,7 +355,7 @@ export class SolutionChecker extends CheckerAbstract {
 			errors.length > 0
 				? errors.join('<br/>')
 				: "",
-			partialOnly
+			score
 		)
 
 	}
@@ -395,3 +398,8 @@ function extractSetValues(value: string): string[] {
 // 		a. ordre des éléments (croisant)
 // 		b. sens des crochets
 // 		c. contrôle des valeurs (infini) et avec checker secondaire
+
+function getMaxScoreIndex(checks: CheckerResult[]): number {
+	const maxScore = Math.max(...checks.map(check => check.score))
+	return checks.findIndex(check => check.score === maxScore)
+}

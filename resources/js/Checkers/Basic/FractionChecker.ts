@@ -1,6 +1,5 @@
-import {CheckerAbstract, makeCheckerResult} from "../CheckerAbstract"
+import {CheckerAbstract, CheckerResult, CHECKERS, makeCheckerResult} from "@/Checkers"
 import {Fraction} from "pimath"
-import {CheckerResult, CHECKERS} from "../checker.config"
 
 // const name = "fraction"
 
@@ -11,19 +10,19 @@ const description = `fraction,[paramètres]
 `
 
 export class FractionChecker extends CheckerAbstract {
-	private expectReduced: boolean
+	#reduced: boolean
 
 	constructor(config?: string[] | string) {
 		super(config)
 		this.type = CHECKERS.FRACTION
 		this.description = description
 
-		this.expectReduced = this.config.includes("r") || this.config.includes("reduced")
+		this.#reduced = this.config.includes("r") || this.config.includes("reduced")
 	}
 
 	get format(): string {
 		const opts = []
-		if (this.expectReduced) {
+		if (this.#reduced) {
 			opts.push("réduite")
 		}
 
@@ -32,6 +31,10 @@ export class FractionChecker extends CheckerAbstract {
 
 	override checkFormat(value: string): string {
 		try {
+			if (value === '' || value === '-') {
+				return "merci de donner une fraction..."
+			}
+
 			new Fraction(value)
 			return ""
 		} catch {
@@ -40,19 +43,19 @@ export class FractionChecker extends CheckerAbstract {
 	}
 
 	override checkValue(value: string): CheckerResult {
-		const FAnswer = new Fraction(value)
+		const FGiven = new Fraction(value)
 		const FExpected = new Fraction(this.answer)
 
-		if (FAnswer.isNotEqual(FExpected)) {
+		if (FGiven.isNotEqual(FExpected)) {
 			return makeCheckerResult("La réponse donnée n'est pas juste.")
 		}
 
-		if (FAnswer.denominator < 0) {
-			return makeCheckerResult("Le dénominateur doit être positif.", true)
+		if (FGiven.denominator < 0) {
+			return makeCheckerResult("Le dénominateur doit être positif.", 0.8)
 		}
 
-		if (!FAnswer.isReduced() && this.expectReduced) {
-			return makeCheckerResult("La fraction n'est pas réduite.", true)
+		if (!FGiven.isReduced() && this.#reduced) {
+			return makeCheckerResult("La fraction n'est pas réduite.", 0.5)
 		}
 
 		return makeCheckerResult()

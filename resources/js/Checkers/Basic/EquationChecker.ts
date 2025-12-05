@@ -1,5 +1,12 @@
 import {Equation} from "pimath"
-import {CheckerResult, CHECKERS, checkMinMaxEquation, checkReducedEquation, makeCheckerResult} from "@/Checkers"
+import {
+	CheckerResult,
+	CHECKERS,
+	checkFormatEquation,
+	checkMinMaxEquation,
+	checkReducedEquation,
+	makeCheckerResult
+} from "@/Checkers"
 import {CheckerAbstract} from "@/Checkers/CheckerAbstract"
 import {checkCircle} from "@/Checkers/checkerCheckFunctions.ts"
 
@@ -57,17 +64,7 @@ export class EquationChecker extends CheckerAbstract {
 	}
 
 	override checkFormat(value: string): string {
-		if (!value.includes("=")) {
-			return "il manque un signe d'égalité."
-		}
-
-		try {
-			new Equation(value)
-
-			return ""
-		} catch {
-			return "l'équation n'est pas correctement formée."
-		}
+		return checkFormatEquation(value)
 
 	}
 
@@ -89,7 +86,7 @@ export class EquationChecker extends CheckerAbstract {
 
 		if (this.isCanonical) {
 			if (!A.right.isZero() && !A.left.isZero()) {
-				return makeCheckerResult("l'équation n'est pas sous sa forme canonique.", true)
+				return makeCheckerResult("l'équation n'est pas sous sa forme canonique.", 0.5)
 			}
 		}
 

@@ -282,10 +282,11 @@ export class PiRadian {
 
 	#angleToDisplay(rad: Fraction): string {
 		const value =
-			rad.numerator === 1 ? ''
+			rad.numerator === 1
+				? ''
 				: rad.numerator === -1
 					? '-'
-					: Math.abs(rad.numerator)
+					: rad.numerator
 		const num = `${value}pi`
 
 		return rad.isRational() ? `${num}/${rad.denominator}` : num
@@ -352,10 +353,9 @@ function cosRatioToRadian(value: number): PiRadian[] {
 		R.angle = new Fraction(1).subtract(R.angle)
 	}
 
-	if (R.angle.isZero()) {
+	if (Math.abs(value) === 1) {
 		return [R]
 	}
-
 
 	const R2 = new PiRadian()
 	R2.periodic = new Fraction(2)

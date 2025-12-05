@@ -67,7 +67,7 @@ const result = computed(() => {
 
 		return {
 			code,
-			parameters: `auto${digits.value ? `,fixed=${digits.value}` : ''}`
+			parameters: `${digits.value ? `,fixed=${digits.value}` : ''}`
 		}
 
 	} catch (e) {

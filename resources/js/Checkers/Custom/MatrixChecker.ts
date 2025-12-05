@@ -1,5 +1,4 @@
-import {CheckerAbstract, makeCheckerResult} from "../CheckerAbstract"
-import {CheckerResult, CHECKERS} from "../checker.config"
+import {CheckerAbstract, CheckerResult, CHECKERS, makeCheckerResult} from "@/Checkers"
 
 // const name = "matrix"
 const description = `matrix,[paramètres]
@@ -43,7 +42,6 @@ export class MatrixChecker extends CheckerAbstract {
 	override checkValue(value: string): CheckerResult {
 		const answerData = this.parse(this.answer)
 		const givenData = this.parse(value)
-
 
 		// Check sur les dimensions
 		if (givenData.dimension.rows === 0 ||

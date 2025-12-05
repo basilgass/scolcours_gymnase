@@ -1,8 +1,8 @@
 export interface CheckerResult {
-	index?: number
 	message: string,
-	partial?: boolean
 	result: boolean,
+	score: number,
+	index?: number
 }
 
 export enum CHECKERS {

@@ -1,7 +1,5 @@
-import {CheckerAbstract, makeCheckerResult} from "../CheckerAbstract"
+import {CheckerAbstract, CheckerResult, CHECKERS, checkPolynomIsFactorized, makeCheckerResult} from "@/Checkers"
 import {Polynom} from "pimath"
-import {CheckerResult, CHECKERS} from "../checker.config"
-import {checkPolynomIsFactorized} from "@/Checkers"
 
 // const name = "polynom"
 const description = `polynom,[paramètres]

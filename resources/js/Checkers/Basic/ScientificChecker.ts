@@ -11,30 +11,32 @@ const description = `scientific|scn,[paramètres]
 `
 
 export class ScientificChecker extends CheckerAbstract {
-    private digits: number
-    constructor(config:string[]|string) {
-        super(config)
-        this.type = CHECKERS.SCIENTIFIC
-        this.description = description
-        this.digits = isNaN(+this.config[0])?0:+this.config[0]
+	private digits: number
+
+	constructor(config: string[] | string) {
+		super(config)
+		this.type = CHECKERS.SCIENTIFIC
+		this.description = description
+
+		this.digits = isNaN(+this.config[0]) ? 0 : +this.config[0]
 
 		this.secondaryChecker = new NumberChecker([this.digits.toString()])
-    }
+	}
 
 
-    get format(): string {
-        return this.digits ?
-			`réponse en notation scientifique à ${this.digits} chiffre(s) significatif(s)`:
+	get format(): string {
+		return this.digits ?
+			`réponse en notation scientifique à ${this.digits} chiffre(s) significatif(s)` :
 			"réponse en notation scientifique"
-    }
+	}
 
 
 	override checkValue(value: string): CheckerResult {
 		// On vérifie que le format est bien de type scientifique.
-		const PS = +(value.split("*")[0]),
-			OG = +(value.split("10^")[1] || 0),
-			ePS = +(this.answer.split("*")[0]),
-			eOG = +(this.answer.split("10^")[1] || 0)
+		const PS = +(value.split("*")[0])
+		const OG = +(value.split("10^")[1] || 0)
+		const ePS = +(this.answer.split("*")[0])
+		const eOG = +(this.answer.split("10^")[1] || 0)
 
 		// On vérifie la partie significative
 		if (Math.abs(PS) < 1 || Math.abs(PS) >= 10) {
@@ -45,11 +47,7 @@ export class ScientificChecker extends CheckerAbstract {
 			return makeCheckerResult("erreur dans la partie significative: " +
 				this.secondaryChecker?.check(ePS.toString(), PS.toString()).message)
 		}
-
-		if (!value.includes("*10^")) {
-			return makeCheckerResult("le format de réponse n'est pas une notation scientifique.")
-		}
-
+		
 		// On vérifie l'ordre de grandeur.
 		if (OG !== eOG) {
 			return makeCheckerResult("l'ordre de grandeur n'est pas juste...")

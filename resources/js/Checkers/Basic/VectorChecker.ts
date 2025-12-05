@@ -1,8 +1,6 @@
-import {CheckerAbstract, makeCheckerResult} from "../CheckerAbstract"
+import {CheckerAbstract, CheckerResult, CHECKERS, ExactChecker, makeCheckerResult} from "@/Checkers"
 import {stripFirstCharacter, stripLastCharacter} from "../checkerHelperFunctions.ts"
 import {Fraction} from "pimath"
-import {ExactChecker} from "./ExactChecker"
-import {CheckerResult, CHECKERS} from "../checker.config"
 
 // const name = "vector"
 const description = `vector,[paramètres]
@@ -44,8 +42,8 @@ export class VectorChecker extends CheckerAbstract {
 
 	override checkValue(value: string): CheckerResult {
 		// On récupère les valeurs
-		const values = value.split(";"),
-			expectedValues = this.answer.split(";")
+		const values = value.split(";")
+		const expectedValues = this.answer.split(";")
 
 
 		if (values.length === 1) {
@@ -60,16 +58,11 @@ export class VectorChecker extends CheckerAbstract {
 		values[0] = stripFirstCharacter(values[0])
 		values[values.length - 1] = stripLastCharacter(values[values.length - 1])
 
-		if (expectedValues[0].startsWith("(")) {
-			expectedValues[0] = stripFirstCharacter(expectedValues[0])
-		}
-
-		if (expectedValues[expectedValues.length - 1].endsWith(")")) {
-			expectedValues[expectedValues.length - 1] = stripLastCharacter(expectedValues[expectedValues.length - 1])
-		}
+		expectedValues[0] = stripFirstCharacter(expectedValues[0])
+		expectedValues[expectedValues.length - 1] = stripLastCharacter(expectedValues[expectedValues.length - 1])
 
 		if (this.config.includes("co")) {
-			// suppose that each values are fraction
+			// des valeurs colinéaires impliquent des fractions
 			let a, b, k
 
 			for (let i = 0; i < values.length; i++) {
