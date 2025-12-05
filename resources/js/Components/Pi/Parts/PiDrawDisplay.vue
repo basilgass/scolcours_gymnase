@@ -32,7 +32,7 @@ const drawWrapper = useTemplateRef<HTMLElement>('drawWrapper')
 const PiParserHasErrors = ref(false)
 const showAnimation = ref(false)
 
-function updateLayout() {
+function updateLayout(from?: string) {
 	try {
 		PiGraph.refreshLayout(props.parameters)
 	} catch {
