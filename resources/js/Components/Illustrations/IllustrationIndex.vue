@@ -3,7 +3,7 @@
 import IllustrationShow from "@/Components/Illustrations/IllustrationShow.vue"
 import {BlockInterface, IllustrationInterface} from "@/types/modelInterfaces.ts"
 import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
-import {ref} from "vue"
+import {computed, ref} from "vue"
 import axios from "axios"
 import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
 
@@ -15,6 +15,14 @@ const illustrations = ref<IllustrationInterface[]>(props.block.illustrations)
 const editMode = useStoreEditMode()
 
 const flash = useStoreFlashMessage()
+
+const grid = computed(() => {
+	if (props.block.illustrationsGrid === null || props.block.illustrationsGrid || undefined || props.block.illustrationsGrid === '') {
+		return "flex flex-col gap-3"
+	}
+
+	return props.block.illustrationsGrid
+})
 
 function updateIllustrationsOrder() {
 	axios.patch(route("api.admin.blocks.illustrations.order", {block: props.block.id}), {
@@ -38,7 +46,7 @@ function updateIllustrationsOrder() {
 <template>
 	<draggable
 		:list="illustrations"
-		:class="block.illustrationsGrid"
+		:class="grid"
 		item-key="id"
 		handle=".draggable-handle"
 		v-bind="{

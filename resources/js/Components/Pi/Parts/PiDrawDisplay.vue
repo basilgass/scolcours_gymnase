@@ -32,12 +32,20 @@ const drawWrapper = useTemplateRef<HTMLElement>('drawWrapper')
 const PiParserHasErrors = ref(false)
 const showAnimation = ref(false)
 
-function PiParserUpdate(from?: string) {
+function updateLayout() {
+	try {
+		PiGraph.refreshLayout(props.parameters)
+	} catch {
+		// console.error(props.parameters)
+	}
+}
+
+function updateCode(from?: string) {
 	// Update the drawing
-	// TODO: PiGraph.refresh should be more smart: if it's the same code, but just the label changing, just update the labels.
 	try {
 		PiGraph.refresh(props.code)
 		emits("update", PiGraph)
+
 		PiParserHasErrors.value = false
 		showAnimation.value = PiGraph?.animation.canBeAnimated() ?? false
 
@@ -46,21 +54,16 @@ function PiParserUpdate(from?: string) {
 
 	} catch {
 		PiParserHasErrors.value = true
-
-		console.log(from)
+		// console.log(from)
 	}
 }
 
 watch(() => props.code, () => {
-	PiParserUpdate("drawCode watcher")
+	updateCode("drawCode watcher")
 })
 
 watch(() => props.parameters, () => {
-	try {
-		PiGraph.refreshLayout(props.parameters)
-	} catch {
-		console.error(props.parameters)
-	}
+	updateLayout()
 })
 
 const drawMouseUp = function (event: MouseEvent) {
@@ -75,8 +78,8 @@ onMounted(() => {
 	PiGraph = new PiDraw(
 		drawWrapper.value,
 		{
-			parameters: props.parameters ?? "",
-			code: props.code ?? "",
+			parameters: "",
+			code: "",
 			tex: (value: string) => katex.renderToString(`${value}`, {
 				strict: false,
 				throwOnError: false,
@@ -87,9 +90,13 @@ onMounted(() => {
 		}
 	)
 
+	// Refresh the layout with the parameters (handles errors)
+	updateLayout()
+	updateCode()
+
 // Add a resizeObserver on the draw container
 	useResizeObserver(drawWrapper.value, () => {
-		PiParserUpdate("onResize")
+		updateLayout("onResize")
 	})
 
 	emits("mounted", PiGraph)

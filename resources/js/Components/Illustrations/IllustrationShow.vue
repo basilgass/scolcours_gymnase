@@ -4,6 +4,7 @@ import {getModule, MODULE_TYPES} from "@/scolcours.ts"
 import type {IllustrationInterface} from "@/types/modelInterfaces.ts"
 import {watch} from "vue"
 import {onClick_answerIndex} from "@/Components/Questions/useQuestionHelpers.ts"
+import Card from "@/Components/Ui/Card.vue"
 
 const props = defineProps<{
 	illustration: IllustrationInterface
@@ -42,28 +43,32 @@ function click($event: MouseEvent) {
 </script>
 
 <template>
-	<figure
-		:id="`illustration-${illustration.id}`"
-		ref="root"
-		class="relative"
-		@click="click"
-	>
-		<edit-link
-			:href="route('admin.illustrations.edit', {illustration:illustration.id})"
-			:label="`illustration ${illustration.id}`"
-		/>
+	<Card>
+		<figure
+			:id="`illustration-${illustration.id}`"
+			ref="root"
+			class="relative"
+			:class="illustration.css"
+			@click="click"
+		>
+			<edit-link
+				:href="route('admin.illustrations.edit', {illustration:illustration.id})"
+				:label="`illustration ${illustration.id}`"
+			/>
 
-		<component
-			:is="widgetComponent"
-			:illustration="props.illustration"
-		/>
-
-		<figcaption
+			<component
+				:is="widgetComponent"
+				:illustration="props.illustration"
+			/>
+		</figure>
+		<template
+			#footer
 			v-if="props.illustration.title"
-			v-katex.auto="props.illustration.title"
-			class="text-center text-xs
-			py-1 mt-3
-			bg-content border"
-		/>
-	</figure>
+		>
+			<div
+				v-katex.auto="props.illustration.title"
+				class="text-center text-xs"
+			/>
+		</template>
+	</Card>
 </template>

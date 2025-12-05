@@ -65,6 +65,8 @@ export function checkerNameToEnum(name: string): CHECKERS {
 			return CHECKERS.SCIENTIFIC
 		case "tos":
 			return CHECKERS.TABLE_OF_SIGNS
+		case "qcm":
+			return CHECKERS.QCM
 		case "study":
 			return CHECKERS.STUDY
 		case "sol":
