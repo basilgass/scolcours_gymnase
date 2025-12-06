@@ -51,3 +51,13 @@ export function stripFirstCharacter(value: string): string {
 export function stripLastCharacter(value: string): string {
 	return value.substring(0, value.length - 1)
 }
+
+
+export function parseCoordinates(value: string): string[] {
+	// les valeurs commencent et se termine par des parenthèses (obligatoire).
+	return value.substring(1, value.length - 1).split(';')
+}
+
+export function checkParentheses(value: string): boolean {
+	return !(value[0] !== "(" || value[value.length - 1] !== ")")
+}

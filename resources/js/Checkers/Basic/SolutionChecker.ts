@@ -9,6 +9,7 @@ const description = `solution|sol,[paramètres]
 checker = par défaut, c'est le "exact"
 `
 
+// REFACTOR : à retrvailler pour plus de robustesse !!!!
 export class SolutionChecker extends CheckerAbstract {
 
 	constructor(config?: string[] | string) {

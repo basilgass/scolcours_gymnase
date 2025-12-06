@@ -1,5 +1,5 @@
 import {CheckerAbstract, CheckerResult, CHECKERS, ExactChecker, makeCheckerResult} from "@/Checkers"
-import {stripFirstCharacter, stripLastCharacter} from "../checkerHelperFunctions.ts"
+import {checkParentheses, parseCoordinates} from "@/Checkers/checkerHelperFunctions.ts"
 
 // const name = "coord"
 const description = `coord,[paramètres]
@@ -11,8 +11,6 @@ const description = `coord,[paramètres]
 
 export class CoordChecker extends CheckerAbstract {
 
-	readonly format = "Coordonnées d'un point sous la forme \\((a;b)\\)"
-
 	constructor(config?: string[] | string) {
 		super(config)
 		this.type = CHECKERS.COORDINATES
@@ -21,20 +19,20 @@ export class CoordChecker extends CheckerAbstract {
 		this.secondaryChecker = new ExactChecker()
 	}
 
+	get format(): string {
+		return `coordonnées d'un point sous la forme \\((a;b)\\)`
+	}
+
 	override checkFormat(value: string): string {
 		// Manque les parenthèses
-		if (value[0] !== "(" || value[value.length - 1] !== ")") {
-			return "des coordonnées commencent et se terminent par des parenthèses"
-		}
-
-		return ""
+		return checkParentheses(value)
+			? ""
+			: "des coordonnées commencent et se terminent par des parenthèses"
 	}
 
 	override checkValue(value: string): CheckerResult {
-
-		// On récupère les valeurs
-		const values = value.split(";")
-		const expectedValues = this.answer.split(";")
+		const values = parseCoordinates(value)
+		const expectedValues = parseCoordinates(this.answer)
 
 		if (values.length === 1) {
 			return makeCheckerResult("des coordonnées ont au moins deux valeurs, séparées par un \\(;\\)")
@@ -44,18 +42,13 @@ export class CoordChecker extends CheckerAbstract {
 			return makeCheckerResult("la dimension de la coordonnée ne correspond pas")
 		}
 
-		// remove the parentese from the first and last value.
-		values[0] = stripFirstCharacter(values[0])
-		values[values.length - 1] = stripLastCharacter(values[values.length - 1])
-
-		expectedValues[0] = stripFirstCharacter(expectedValues[0])
-		expectedValues[expectedValues.length - 1] = stripLastCharacter(expectedValues[expectedValues.length - 1])
-		
-
-		// let eChecker = ExactChecker(config)
-		return this.secondaryCheckValues(values, expectedValues, (i: number, message: string) =>
-			`la ${i === 0 ? "1ère" : (i + 1) + "ème"} coordonnée n'est pas juste.<br>\\(\\rightarrow\\) ${message}`
+		return this.secondaryCheckValues(
+			values,
+			expectedValues,
+			(i: number, message: string) =>
+				`la ${i === 0 ? "1ère" : (i + 1) + "ème"} coordonnée n'est pas juste.<br>\\(\\rightarrow\\) ${message}`
 		)
 	}
+
 
 }

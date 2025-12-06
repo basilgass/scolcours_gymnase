@@ -1,6 +1,6 @@
 import {CheckerAbstract, CheckerResult, CHECKERS, ExactChecker, makeCheckerResult} from "@/Checkers"
-import {stripFirstCharacter, stripLastCharacter} from "../checkerHelperFunctions.ts"
 import {Fraction} from "pimath"
+import {checkParentheses, parseCoordinates} from "@/Checkers/checkerHelperFunctions.ts"
 
 // const name = "vector"
 const description = `vector,[paramètres]
@@ -15,6 +15,7 @@ export class VectorChecker extends CheckerAbstract {
 
 	private _colinear = false
 
+
 	constructor(config?: string[] | string) {
 		super(config)
 		this.type = CHECKERS.VECTOR
@@ -27,24 +28,46 @@ export class VectorChecker extends CheckerAbstract {
 		this.secondaryChecker = new ExactChecker()
 	}
 
-	get format(): string {
+	override get format(): string {
 		return `Vecteur ${this._colinear ? 'colinéaire ' : ''}sous la forme \\(\\begin{pmatrix}a\\\\b\\end{pmatrix}\\)<br>${this.secondaryChecker?.format}`
+	}
+
+	checkCollinearity(values: string[], expectedValues: string): CheckerResult {
+		// des valeurs colinéaires impliquent des fractions
+		let a, b, k
+
+		for (let i = 0; i < values.length; i++) {
+			a = new Fraction(values[i])
+			b = new Fraction(expectedValues[i])
+
+			if ((a.isZero() && b.isNotZero()) || a.isNotZero() && b.isZero()) {
+				return makeCheckerResult(`la ${i + 1}e composante est fausse.`)
+			}
+
+			if (a.isNotZero() && b.isNotZero()) {
+				if (k === undefined) {
+					k = new Fraction(a.clone().divide(b))
+				} else {
+					if (a.isNotEqual(b.clone().multiply(k))) {
+						return makeCheckerResult(`la ${i + 1}e composante n'est pas proportionnelle`)
+					}
+				}
+			}
+		}
+
+		return makeCheckerResult()
 	}
 
 	override checkFormat(value: string): string {
 
-		if (value[0] !== "(" || value[value.length - 1] !== ")") {
-			return "des vecteurs commencent et se terminent par des parenthèses"
-		}
-
-		return ""
+		return checkParentheses(value)
+			? ""
+			: "des vecteurs commencent et se terminent par des parenthèses"
 	}
 
 	override checkValue(value: string): CheckerResult {
-		// On récupère les valeurs
-		const values = value.split(";")
-		const expectedValues = this.answer.split(";")
-
+		const values = parseCoordinates(value)
+		const expectedValues = parseCoordinates(this.answer)
 
 		if (values.length === 1) {
 			return makeCheckerResult("des vecteurs ont au moins deux valeurs")
@@ -54,40 +77,19 @@ export class VectorChecker extends CheckerAbstract {
 			return makeCheckerResult("la dimension du vecteur ne correspond pas")
 		}
 
-		// remove the parentese from the first and last value.
-		values[0] = stripFirstCharacter(values[0])
-		values[values.length - 1] = stripLastCharacter(values[values.length - 1])
-
-		expectedValues[0] = stripFirstCharacter(expectedValues[0])
-		expectedValues[expectedValues.length - 1] = stripLastCharacter(expectedValues[expectedValues.length - 1])
 
 		if (this.config.includes("co")) {
-			// des valeurs colinéaires impliquent des fractions
-			let a, b, k
-
-			for (let i = 0; i < values.length; i++) {
-				a = new Fraction(values[i])
-				b = new Fraction(expectedValues[i])
-
-				if ((a.isZero() && b.isNotZero()) || a.isNotZero() && b.isZero()) {
-					return makeCheckerResult(`la ${i + 1}e composante est fausse.`)
-				}
-
-				if (a.isNotZero() && b.isNotZero()) {
-					if (k === undefined) {
-						k = new Fraction(a.clone().divide(b))
-					} else {
-						if (a.isNotEqual(b.clone().multiply(k))) {
-							return makeCheckerResult(`la ${i + 1}e composante n'est pas proportionnelle`)
-						}
-					}
-				}
+			const colinearCheck = this.checkCollinearity(values, expectedValues)
+			if (!colinearCheck.result) {
+				return colinearCheck
 			}
 		}
 
 		return this.secondaryCheckValues(
-			values, expectedValues,
-			(i: number, message: string) => `la ${i === 0 ? "1ère" : (i + 1) + "ème"} composante n'est pas juste.<br>${message}`
+			values,
+			expectedValues,
+			(i: number, message: string) =>
+				`la ${i === 0 ? "1ère" : (i + 1) + "ème"} composante n'est pas juste.<br>${message}`
 		)
 
 	}

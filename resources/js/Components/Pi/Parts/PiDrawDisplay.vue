@@ -47,7 +47,8 @@ function updateCode(from?: string) {
 		emits("update", PiGraph)
 
 		PiParserHasErrors.value = false
-		showAnimation.value = PiGraph?.animation.canBeAnimated() ?? false
+		console.log('update code')
+		showAnimation.value = PiGraph.animation.canBeAnimated() ?? false
 
 		hasDraggable.value = Object.values(PiGraph.figures)
 			.some(fig => fig.isDraggable)
@@ -75,24 +76,48 @@ const drawTouchEnd = function (event: TouchEvent) {
 
 // Default settings
 onMounted(() => {
-	PiGraph = new PiDraw(
-		drawWrapper.value,
-		{
-			parameters: "",
-			code: "",
-			tex: (value: string) => katex.renderToString(`${value}`, {
-				strict: false,
-				throwOnError: false,
-				displayMode: true,
-				macros: useKatexMacros,
-				trust: (context) => context.command.startsWith("\\html"),
-			})
-		}
-	)
+	// TODO: rework the PiDrawDisplay to be more robust and more fast.
+	try {
+		PiGraph = new PiDraw(
+			drawWrapper.value,
+			{
+				parameters: props.parameters ?? "",
+				code: props.code ?? "",
+				tex: (value: string) => katex.renderToString(`${value}`, {
+					strict: false,
+					throwOnError: false,
+					displayMode: true,
+					macros: useKatexMacros,
+					trust: (context) => context.command.startsWith("\\html"),
+				})
+			}
+		)
+	} catch {
+		console.warn('PiDrawDisplay error',
+			{parameters: props.parameters, code: props.code}
+		)
+		PiGraph = new PiDraw(
+			drawWrapper.value,
+			{
+				parameters: "",
+				code: "",
+				tex: (value: string) => katex.renderToString(`${value}`, {
+					strict: false,
+					throwOnError: false,
+					displayMode: true,
+					macros: useKatexMacros,
+					trust: (context) => context.command.startsWith("\\html"),
+				})
+			}
+		)
+	}
 
 	// Refresh the layout with the parameters (handles errors)
-	updateLayout()
-	updateCode()
+	// nextTick(() => {
+	// 	updateLayout()
+	// 	updateCode()
+	// })
+
 
 // Add a resizeObserver on the draw container
 	useResizeObserver(drawWrapper.value, () => {

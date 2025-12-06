@@ -48,8 +48,8 @@ const pageTitle = computed(() => {
 
 		<!-- Container for the "column design" -->
 		<main class="min-h-[75vh] flex flex-col md:flex-row w-full">
-			<admin-dashboard-aside />
-			<section class="flex-1 p-10">
+			<admin-dashboard-aside class="order-2 md:order-1" />
+			<section class="flex-1 p-10 order-1 md:order-2">
 				<!-- Main content -->
 				<slot />
 			</section>

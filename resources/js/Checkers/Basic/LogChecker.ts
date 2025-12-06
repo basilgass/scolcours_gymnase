@@ -1,6 +1,5 @@
-import {CheckerAbstract, makeCheckerResult} from "../CheckerAbstract"
+import {CheckerAbstract, CheckerResult, CHECKERS, makeCheckerResult} from "@/Checkers"
 import {NumExp} from "pimath"
-import {CheckerResult, CHECKERS} from "../checker.config"
 
 // const name = "log"
 const description = `log,[paramètres]
@@ -8,6 +7,7 @@ const description = `log,[paramètres]
 **paramètres**
 `
 
+// REFACTOR : à retravailler, pour plus de compréhension et améliorer la détection
 export class LogChecker extends CheckerAbstract {
 	constructor(config?: string[] | string) {
 		super(config)
@@ -38,6 +38,7 @@ export class LogChecker extends CheckerAbstract {
 
 	override checkValue(value: string): CheckerResult {
 		const ND: string[] = value.split("/")
+
 		// Il ne doit y avoir qu'une fraction.
 		let userN, userD
 		try {

@@ -8,6 +8,7 @@ const description = `trigo,p[eriodic],d[igits],deg[rees],[paramètres]
 **paramètres**
 `
 
+// REFACTOR : à retrvailler et à mettre sous forme "de petits morceaux" pour plus de lisibilité. Déplacer des fonctions dans un autre système, voir dans CheckerAbstract ?
 // TODO: on doit autoriser d'autres angles orientés (modulo) ou forcé dans un quadrant
 
 export class TrigoChecker extends CheckerAbstract {

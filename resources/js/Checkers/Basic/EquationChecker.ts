@@ -20,6 +20,7 @@ const description = `equation,[paramètres]
 - circle=forme centre rayon
 `
 
+// REFACTOR : EquationChecker, CartesianChecker, PolynomChecker, RationalChecker et FunctionChecker : probablement un moyen d'améliorer le code et de faire des fonctions "atomiques"
 export class EquationChecker extends CheckerAbstract {
 	private isCentreRayon: boolean
 	private isReduced: boolean
