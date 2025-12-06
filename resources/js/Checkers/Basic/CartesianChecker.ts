@@ -3,13 +3,16 @@ import {
 	checkCircle,
 	CheckerAbstract,
 	CheckerResult,
-	CHECKERS,
-	checkFormatEquation,
 	checkMinMaxEquation,
 	checkReducedEquation,
 	makeCheckerResult,
 	PolynomChecker
 } from "@/Checkers"
+import {isEquation} from "@/Checkers/checkMathString.ts"
+
+// TODO: Cartesian est une équation particlière -
+//  aucune raison de l'avoir séparé de EquationChecker -
+//  n'est en fait jamais utilisé!
 
 // const name = "equation"
 const description = `equation,[paramètres]
@@ -33,7 +36,7 @@ export class CartesianChecker extends CheckerAbstract {
 
 	constructor(config: string[] | string) {
 		super(config)
-		this.type = CHECKERS.CARTESIAN
+		// this.type = CHECKERS.CARTESIAN
 		this.description = description
 
 		this.#reduced =
@@ -83,7 +86,7 @@ export class CartesianChecker extends CheckerAbstract {
 
 
 	override checkFormat(value: string): string {
-		return checkFormatEquation(value)
+		return isEquation(value) ? "" : "ce n'est pas une équation."
 	}
 
 	override checkValue(value: string): CheckerResult {

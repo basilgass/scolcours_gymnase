@@ -1,5 +1,4 @@
-import {CheckerAbstract, CheckerResult, CHECKERS, makeCheckerResult} from "@/Checkers"
-import {Polynom} from "pimath"
+import {CheckerResult, CHECKERS, PolynomChecker} from "@/Checkers"
 
 // const name = "function"
 const description = `function|fn,[paramètres]
@@ -8,7 +7,10 @@ const description = `function|fn,[paramètres]
 - d=développé
 `
 
-export class FunctionChecker extends CheckerAbstract {
+// TODO : contrôler que cela fonctionne bien d'étendre PolynomChecker
+//  et de juste changer le message.
+
+export class FunctionChecker extends PolynomChecker {
 	private developed: boolean
 
 	constructor(config: string[] | string) {
@@ -30,7 +32,13 @@ export class FunctionChecker extends CheckerAbstract {
 	}
 
 	override checkValue(value: string): CheckerResult {
-		const A = new Polynom(value),
+		const check = super.checkValue(value)
+
+		if (check.result) return check
+
+		check.message = check.message.replace('le polynôme', 'la fonction')
+
+		/**const A = new Polynom(value),
 			Q = new Polynom(this.answer)
 
 		// Must be the same equation.
@@ -49,7 +57,7 @@ export class FunctionChecker extends CheckerAbstract {
 			}
 		}
 
-		return makeCheckerResult()
+		return makeCheckerResult()*/
 	}
 
 }

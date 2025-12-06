@@ -1,7 +1,6 @@
 import type {CheckerAbstract} from "./CheckerAbstract"
 import {checkerNameToEnum, type CheckerResult, CHECKERS} from "./checker.config"
 import {
-	CartesianChecker,
 	CoordChecker,
 	EquationChecker,
 	ExactChecker,
@@ -28,7 +27,7 @@ type CheckerClass = (new (...args: any[]) => CheckerAbstract)
 export function checkersList(): Record<CHECKERS, CheckerClass> {
 	let list: Partial<Record<CHECKERS, CheckerClass>> = {}
 
-	list[CHECKERS.CARTESIAN] = CartesianChecker
+	// list[CHECKERS.CARTESIAN] = CartesianChecker
 	list[CHECKERS.COORDINATES] = CoordChecker
 	list[CHECKERS.EQUATION] = EquationChecker
 	list[CHECKERS.EXACT] = ExactChecker

@@ -32,7 +32,7 @@ export class VectorChecker extends CheckerAbstract {
 		return `Vecteur ${this._colinear ? 'colinéaire ' : ''}sous la forme \\(\\begin{pmatrix}a\\\\b\\end{pmatrix}\\)<br>${this.secondaryChecker?.format}`
 	}
 
-	checkCollinearity(values: string[], expectedValues: string): CheckerResult {
+	checkCollinearity(values: string[], expectedValues: string[]): CheckerResult {
 		// des valeurs colinéaires impliquent des fractions
 		let a, b, k
 

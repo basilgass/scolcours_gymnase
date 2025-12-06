@@ -7,7 +7,7 @@ export interface CheckerResult {
 
 export enum CHECKERS {
 	// Basic checkers
-	CARTESIAN = "cartesian",
+	// CARTESIAN = "cartesian",
 	COORDINATES = "coord",
 	EQUATION = "equation",
 	EXACT = "exact",
@@ -48,9 +48,9 @@ export function checkerNameToEnum(name: string): CHECKERS {
 		case "equ":
 		case "equation":
 			return CHECKERS.EQUATION
-		case "cart":
-		case "cartesian":
-			return CHECKERS.CARTESIAN
+		// case "cart":
+		// case "cartesian":
+		// 	return CHECKERS.CARTESIAN
 		case "fn":
 		case "function":
 			return CHECKERS.FUNCTION

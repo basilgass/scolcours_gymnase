@@ -1,14 +1,6 @@
-import {Equation} from "pimath"
-import {
-	CheckerResult,
-	CHECKERS,
-	checkFormatEquation,
-	checkMinMaxEquation,
-	checkReducedEquation,
-	makeCheckerResult
-} from "@/Checkers"
+import {CheckerResult, CHECKERS, makeCheckerResult} from "@/Checkers"
 import {CheckerAbstract} from "@/Checkers/CheckerAbstract"
-import {checkCircle} from "@/Checkers/checkerCheckFunctions.ts"
+import {isEquation, isEquationCircle, isEquationPeak, isEquationReduced} from "@/Checkers/checkMathString.ts"
 
 // const name = "equation"
 const description = `equation,[paramètres]
@@ -20,44 +12,52 @@ const description = `equation,[paramètres]
 - circle=forme centre rayon
 `
 
-// REFACTOR : EquationChecker, CartesianChecker, PolynomChecker, RationalChecker et FunctionChecker : probablement un moyen d'améliorer le code et de faire des fonctions "atomiques"
+/** TODO: ajouter les contrôles des formats droites et plans.
+ * - 2d=équation de la droite en 2D (ax+by+c=0) ou (ax+by=c)
+ * - mx+h=droite du plan, sous la forme y=mx+h
+ * - 3d=équation du plan en 3D (ax+by+cz+d=0) ou (ax+by+cz=d)
+ */
+
 export class EquationChecker extends CheckerAbstract {
-	private isCentreRayon: boolean
-	private isReduced: boolean
-	private isCanonical: boolean
-	private isSommet: boolean
+	#isCanonical: boolean
+	#isCentreRayon: boolean
+	#isPeak: boolean
+	#isReduced: boolean
 
 	constructor(config: string[] | string) {
 		super(config)
 		this.type = CHECKERS.EQUATION
 		this.description = description
 
-		this.isReduced =
+		this.#isReduced =
 			this.config.includes("r") ||
 			this.config.includes("reduced") ||
 			this.config.includes("re")
-		this.isCanonical =
+
+		this.#isCanonical =
 			this.config.includes("c") ||
 			this.config.includes("canonical") ||
 			this.config.includes("ca")
-		this.isSommet =
+
+		this.#isPeak =
 			this.config.includes("s") || this.config.includes("sommet")
-		this.isCentreRayon =
+
+		this.#isCentreRayon =
 			this.config.includes("cercle") || this.config.includes("circle")
 	}
 
 	get format(): string {
 		const opts = []
 
-		if (this.isCanonical) {
+		if (this.#isCanonical) {
 			opts.push("canonique")
-		} else if (this.isCentreRayon) {
+		} else if (this.#isCentreRayon) {
 			opts.push(" (forme centre - rayon)")
-		} else if (this.isSommet) {
+		} else if (this.#isPeak) {
 			opts.push(" (forme du sommet)")
 		}
 
-		if (this.isReduced) {
+		if (this.#isReduced) {
 			opts.push("réduite")
 		}
 
@@ -65,48 +65,52 @@ export class EquationChecker extends CheckerAbstract {
 	}
 
 	override checkFormat(value: string): string {
-		return checkFormatEquation(value)
+		return isEquation(value)
+			? ""
+			: "ce n'est pas une équation reconnue."
 
 	}
 
 	override checkValue(value: string): CheckerResult {
 
-		const A = new Equation(value)
-		const Q = new Equation(this.answer)
+		const A = isEquation(value)
+		const Q = isEquation(this.answer)
+
+		if (A === false) return makeCheckerResult("ce n'est pas une équation reconnue.")
+		if (Q === false) return makeCheckerResult("la réponse n'est pas une équation reconnue.")
 
 		// Must be the same equation.
-		const A2 = A.clone().moveLeft(),
-			Q2 = Q.clone().moveLeft()
-		A2.simplify()
-		Q2.simplify()
+		const A2 = A.clone().moveLeft().simplify()
+		const Q2 = Q.clone().moveLeft().simplify()
 
 		// L'expression de gauche est soit égale, soit opposée.
 		if (!A2.isLinearTo(Q2)) {
 			return makeCheckerResult("l'équation n'est pas juste.")
 		}
 
-		if (this.isCanonical) {
+		// à ce stade, la fonction correspond au résultat. On doit juste contrôler le format.
+		if (this.#isCanonical) {
 			if (!A.right.isZero() && !A.left.isZero()) {
-				return makeCheckerResult("l'équation n'est pas sous sa forme canonique.", 0.5)
+				return makeCheckerResult("l'équation n'est pas sous sa forme canonique \\(\\ldots=0\\)", 0.5)
 			}
 		}
 
-		if (this.isCentreRayon) {
-			return makeCheckerResult(
-				checkCircle(value, A)
-			)
+		if (this.#isPeak) {
+			return isEquationPeak
+				? makeCheckerResult()
+				: makeCheckerResult("l'équation n'est pas sous la forme du sommet")
 		}
 
-		if (this.isSommet) {
-			return makeCheckerResult(
-				checkMinMaxEquation(value, this.answer, this.secondaryChecker)
-			)
+		if (this.#isCentreRayon) {
+			return isEquationCircle(value)
+				? makeCheckerResult()
+				: makeCheckerResult("l'équation n'est pas sous la forme centre-rayon")
 		}
 
-		if (this.isReduced) {
-			return makeCheckerResult(
-				checkReducedEquation(A)
-			)
+		if (this.#isReduced) {
+			return isEquationReduced(value)
+				? makeCheckerResult()
+				: makeCheckerResult("l'équation n'est pas réduite.")
 		}
 
 		// If all tests passes, it is correct !

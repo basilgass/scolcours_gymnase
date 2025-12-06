@@ -1,5 +1,5 @@
 import {CheckerAbstract, CheckerResult, CHECKERS, checkPolynomIsFactorized, makeCheckerResult} from "@/Checkers"
-import {Polynom} from "pimath"
+import {isPolynom, isPolynomPeak} from "@/Checkers/checkMathString.ts"
 
 // const name = "polynom"
 const description = `polynom,[paramètres]
@@ -12,25 +12,35 @@ const description = `polynom,[paramètres]
 `
 
 export class PolynomChecker extends CheckerAbstract {
+	#factorised: false | 'f' | 'F' // f = factorisé, F = entièrement factorisé.
+	#developed: boolean
+	#peak: boolean
+
 	constructor(config: string[] | string) {
 		super(config)
 		this.type = CHECKERS.POLYNOMIAL
 		this.description = description
+
+		this.#factorised = false
+		if (this.config.includes("f") || this.config.includes("factors")) this.#factorised = 'f'
+		if (this.config.includes("F") || this.config.includes("FACTORS")) this.#factorised = 'F'
+
+		this.#developed = this.config.includes("d") || this.config.includes("develop")
+
+		this.#peak = this.config.includes("s") || this.config.includes("sommet")
 	}
 
 	get format(): string {
 		const opts = []
 
-		if (this.config.includes("f") || this.config.includes("factors")) {
+		if (this.#factorised === 'f') {
 			opts.push("factorisé")
 		} else if (
-			this.config.includes("F") ||
-			this.config.includes("FACTORS")
+			this.#factorised === 'F'
 		) {
 			opts.push("entièrement factorisé")
 		} else if (
-			this.config.includes("d") ||
-			this.config.includes("develop")
+			this.#developed
 		) {
 			opts.push("développé")
 		}
@@ -39,69 +49,56 @@ export class PolynomChecker extends CheckerAbstract {
 	}
 
 	override checkFormat(value: string): string {
-		try {
-			new Polynom(value)
-			return ""
-		} catch {
-			return "Le polynôme n'est pas formé correctement."
-		}
+		return isPolynom(value)
+			? ""
+			: "le polynôme n'est pas formé correctement."
 	}
 
 	override checkValue(value: string): CheckerResult {
-		// Make sur the polynom is constructable
-		const A = new Polynom(value)
-		const Q = new Polynom(this.answer)
+		const A = isPolynom(value)
+		const Q = isPolynom(this.answer)
+
+		if (A === false) {
+			return makeCheckerResult("le polynôme n'est pas formé correctement.")
+		}
+		if (Q === false) {
+			return makeCheckerResult("le polynôme de réponse n'est pas formé correctement.")
+		}
+
 
 		// Polynom must be equals.
 		if (!Q.isEqual(A)) {
-			return makeCheckerResult("Le polynôme n'est pas le même.")
+			return makeCheckerResult("le polynôme n'est pas le même.")
 		}
 
 		/** Polynom checker config */
 		// Factorized
-		if (
-			this.config.includes("f") ||
-			this.config.includes("factor") ||
-			this.config.includes("F") ||
-			this.config.includes("FACTORS")
-		) {
+		if (this.#factorised !== null) {
 			try {
 				return makeCheckerResult(
 					checkPolynomIsFactorized(value)
 						? ""
-						: "Le polynôme n'est pas (entièrement) factorisé."
+						: "le polynôme n'est pas (entièrement) factorisé."
 				)
 			} catch {
 				return makeCheckerResult(
-					"Le polynôme n'est pas (entièrement) factorisé."
+					"le polynôme n'est pas (entièrement) factorisé."
 				)
 			}
 		}
 
 		// Developed
-		if (this.config.includes("d") || this.config.includes("develop")) {
+		if (this.#developed) {
 			if (!A.isDeveloped(value)) {
-				return makeCheckerResult("Le polynôme n'est pas (entièrement) développé.")
+				return makeCheckerResult("le polynôme n'est pas (entièrement) développé.")
 			}
 		}
 
 		// Forme du sommet
-		if (this.config.includes("s") || this.config.includes("sommet")) {
-			// Doit être au format
-			// a(x+b)^2+c
-			// (x+b)^2+c
-			// x^2+c
-			// (x+b)^2
-			if (
-				value.match(
-					/^(-?[\d]+(\/\d+)?)?\(x([+-](\d+(\/\d+)?)?)?\)\^2([+-]\d+(\/\d+)?)?$/,
-				) ||
-				value.match(/^(-?[\d]+(\/\d+)?)?x\^2([+-]\d+(\/\d+)?)?$/)
-			) {
-				return makeCheckerResult()
-			} else {
-				return makeCheckerResult("L'équation n'est pas dans le bon format.")
-			}
+		if (this.#peak) {
+			return isPolynomPeak(value)
+				? makeCheckerResult()
+				: makeCheckerResult("le polynôme n'est pas dans le bon format.")
 		}
 
 		// If all tests passes, it is correct !
