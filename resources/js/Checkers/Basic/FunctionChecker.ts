@@ -1,4 +1,4 @@
-import {CheckerResult, CHECKERS, PolynomChecker} from "@/Checkers"
+import {CheckerAbstract, CheckerResult, CHECKERS, PolynomChecker} from "@/Checkers"
 
 // const name = "function"
 const description = `function|fn,[paramètres]
@@ -10,7 +10,7 @@ const description = `function|fn,[paramètres]
 // TODO : contrôler que cela fonctionne bien d'étendre PolynomChecker
 //  et de juste changer le message.
 
-export class FunctionChecker extends PolynomChecker {
+export class FunctionChecker extends CheckerAbstract {
 	private developed: boolean
 
 	constructor(config: string[] | string) {
@@ -19,6 +19,8 @@ export class FunctionChecker extends PolynomChecker {
 		this.description = description
 
 		this.developed = (this.config.includes("d") || this.config.includes("developed") || this.config.includes("dev"))
+
+		this.secondaryChecker = new PolynomChecker(this.config)
 	}
 
 	get format(): string {
@@ -32,7 +34,7 @@ export class FunctionChecker extends PolynomChecker {
 	}
 
 	override checkValue(value: string): CheckerResult {
-		const check = super.checkValue(value)
+		const check = this.secondaryChecker.check(value, this.answer)
 
 		if (check.result) return check
 

@@ -1,8 +1,7 @@
 <!--<info>
 parameters:
 min:max:step ou 3,5,8,9
-options: [digits:2],[col:width],[table:class]
-
+options: [digits:2],[col:width],[table:class],[oo<detection infini>]
 code: [f(x)=]function (multiple line possible)
 </info>-->
 <script
@@ -27,6 +26,9 @@ const params = computed(() => props.illustration.parameters.split(",")),
 			}
 		}
 		return 0
+	}),
+	detectInfinite = computed(() => {
+		return params.value.includes('oo')
 	}),
 	tableClass = computed(() => {
 		for (let param of params.value) {
@@ -96,14 +98,31 @@ const params = computed(() => props.illustration.parameters.split(",")),
 						fx: v.tex
 					})
 				} else {
-					let v = (numExp as NumExp).evaluate({x: +x})
+					const ev: number = (numExp as NumExp).evaluate({x: +x})
+					let v: string
+					if (isNaN(ev)) {
+						v = `\\varnothing`
+					} else if (!Number.isFinite(ev)) {
+						// On recherche juste avant et juste après pour déterminer le signe de l'infini.
+						const evBefore = (numExp as NumExp).evaluate({x: +x - 0.01})
+						const evAfter = (numExp as NumExp).evaluate({x: +x + 0.01})
+
+						if (detectInfinite.value) {
+							if (evAfter > 0) {
+								v = evBefore > 0 ? '+\\infty' : '\\pm\\infty'
+							} else {
+								v = evBefore > 0 ? '\\mp\\infty' : '-\\infty'
+							}
+						} else {
+							v = '\\varnothing'
+						}
+						// v = detectInfinite.value ? (ev < 0 ? '-\\infty' : '+\\infty') : '\\varnothing'
+					} else {
+						v = ev.toFixed(roundedTo.value)
+					}
 					values.push({
 						x: nbToString(x),
-						fx: isNaN(v)
-							? '\\varnothing'
-							: Number.isFinite(v)
-								? v.toFixed(roundedTo.value)
-								: v < 0 ? '-\\infty' : '+\\infty'
+						fx: v
 					})
 				}
 			}

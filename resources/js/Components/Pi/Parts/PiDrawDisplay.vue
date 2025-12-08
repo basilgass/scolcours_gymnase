@@ -47,7 +47,6 @@ function updateCode(from?: string) {
 		emits("update", PiGraph)
 
 		PiParserHasErrors.value = false
-		console.log('update code')
 		showAnimation.value = PiGraph.animation.canBeAnimated() ?? false
 
 		hasDraggable.value = Object.values(PiGraph.figures)
