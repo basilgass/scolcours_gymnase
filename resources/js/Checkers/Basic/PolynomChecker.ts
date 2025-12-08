@@ -73,7 +73,7 @@ export class PolynomChecker extends CheckerAbstract {
 
 		/** Polynom checker config */
 		// Factorized
-		if (this.#factorised !== null) {
+		if (this.#factorised) {
 			try {
 				return makeCheckerResult(
 					checkPolynomIsFactorized(value)

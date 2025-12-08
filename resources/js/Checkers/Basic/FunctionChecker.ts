@@ -40,26 +40,7 @@ export class FunctionChecker extends CheckerAbstract {
 
 		check.message = check.message.replace('le polynôme', 'la fonction')
 
-		/**const A = new Polynom(value),
-			Q = new Polynom(this.answer)
-
-		// Must be the same equation.
-		if (!A.isEqual(Q)) {
-			return makeCheckerResult("la fonction n'est pas juste.")
-		}
-
-		if (this.developed) {
-			// La fonction ne doit pas avoir de parenthèses.
-			if (value.includes('(') || value.includes(')')) {
-				return makeCheckerResult("la fonction doit être développée (pas de parenthèses)")
-			}
-
-			if (A.monoms.length !== Q.monoms.length) {
-				return makeCheckerResult("la fonction doit être réduite.")
-			}
-		}
-
-		return makeCheckerResult()*/
+		return check
 	}
 
 }
