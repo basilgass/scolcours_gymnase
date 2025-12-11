@@ -35,7 +35,6 @@ export function useMenuScrollToData(dataName: string, dataValue: unknown) {
 export function useMenuScrollTo(id?: string): void {
 	const el = id === undefined ? document.body : document.getElementById(id)
 
-	// TODO : Attendre qu'il apparaisse (selon le type de l'id)
 	setTimeout(() => {
 		el?.scrollIntoView({
 			block: "start",

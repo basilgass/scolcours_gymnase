@@ -11,10 +11,10 @@ import {
 } from "@/types/keyboardInterfaces.ts"
 import {Bezier, BEZIERCONTROL, IBezierPointInterface, Point} from "pidraw"
 import {
+	ITEM_TYPES,
 	itemGraphInterface,
-	ITEMTYPES,
 	kbrdStudyButtons,
-	POINTTYPES,
+	POINT_TYPES,
 	StudyGraph
 } from "@/Components/Keyboards/KeayboardHelpers/KeyboardStudyHelpers.ts"
 
@@ -39,10 +39,12 @@ async function setInput(value?: string): Promise<KeyboardInputInterface> {
 		// Load the answer
 	}
 
+	const output = validateOutput()
+
 	return {
-		input: "",
+		input: output,
 		tex: "",
-		raw: ""
+		raw: showRawOutput.value ? graph.rootSVG.svg() : ""
 	}
 }
 
@@ -54,28 +56,6 @@ defineExpose<KeyboardExposeInterface>({
 	parameters: ""
 })
 
-/**
- * Keyboards custom configuration
- */
-
-
-/*
-		const output = validateOutput()
-		// On valide la réponse
-		const validation = new StudyChecker([]).check(props.answer, output)
-
-		emits("change", {
-			value: {
-				input: output,
-				tex: "",
-				raw: showRawOutput.value ? graph.rootSVG.svg() : ""
-			},
-			validation
-		})
- */
-
-
-// Mise en forme de la réponse pour comparaison
 const validateOutput = function (): string {
 	let output = ""
 
@@ -97,7 +77,6 @@ const validateOutput = function (): string {
 }
 
 // Code specific to Study.
-//TODO: KeyboardStudy : more rubstness for theOptions (parameters vs values), which are actually concatenated.
 let graph: StudyGraph
 
 let plot: Bezier,
@@ -218,8 +197,6 @@ function initPlot(fx) {
 		}
 	}
 
-	console.log(plot, samples, domain)
-
 	try {
 		const p = graph.create.plot({
 			expression: plot,
@@ -320,17 +297,17 @@ function displayItem(value): string {
 		return "?"
 	}
 
-	if (item.type !== ITEMTYPES.POINT) {
+	if (item.type !== ITEM_TYPES.POINT) {
 		return value
 	}
 
-	if (item.kind === POINTTYPES.MIN) {
+	if (item.kind === POINT_TYPES.MIN) {
 		return `\\text{min}${value}`
-	} else if (item.kind === POINTTYPES.MAX) {
+	} else if (item.kind === POINT_TYPES.MAX) {
 		return `\\text{max}${value}`
-	} else if (item.kind === POINTTYPES.REPLAT) {
+	} else if (item.kind === POINT_TYPES.REPLAT) {
 		return `\\text{replat}${value}`
-	} else if (item.kind === POINTTYPES.TROU) {
+	} else if (item.kind === POINT_TYPES.TROU) {
 		return `\\text{trou}${value}`
 	}
 
@@ -380,15 +357,17 @@ function removeItem(item: string) {
 function removeControlsAndBezier(item: string) {
 	// Remove the control maxPoints.
 	Object.values(itemsGraph.value[item].controls || [])
+		.filter(item => item !== null && item !== undefined)
 		.forEach(el => el.clear(true))
 
 	// Remove the bezier maxPoints.
 	Object.values(itemsGraph.value[item].bezier || [])
+		.filter(item => item !== null && item !== undefined)
 		.forEach(group => group.forEach(el => el.clear(true)))
 
 }
 
-function asymptoteToAnswer(item) {
+function asymptoteToAnswer(item: string) {
 	// il n'y a rien à montrer...
 	if (itemsGraph.value[item] === undefined) {
 		return ""
@@ -442,7 +421,7 @@ function plotGraph() {
 	let ctrlPoints: IBezierPointInterface[] = []
 
 	for (const item of Object.values(itemsGraph.value)) {
-		if (item.type === ITEMTYPES.POINT) {
+		if (item.type === ITEM_TYPES.POINT) {
 			ctrlPoints.push({
 				point: item.element as Point,
 				controls: {
@@ -541,10 +520,10 @@ function plotGraph() {
 			<!-- Trace button -->
 			<div
 				v-if="enablePlot"
-				class="text-center"
+				class="text-center mt-2"
 			>
 				<button
-					class="btn btn-primary btn-xs px-10"
+					class="btn btn-primary btn-xs px-10 py-2"
 					@click="plotGraph"
 				>
 					tracer le graphe
@@ -561,13 +540,14 @@ function plotGraph() {
 					class="w-full"
 				/>
 			</div>
-			<!-- Keyboard selection -->
+
+			<!-- types d'objet à insérer -->
 			<div class="keyboard flex flex-wrap gap-3 justify-center">
 				<button
 					v-for="key of addButtons"
 					:key="key"
 					:title="kbrdStudyButtons[key].description"
-					class="key bg-action border rounded px-2 py-1 transition-colors flex-1"
+					class="key bg-action border rounded px-2 py-1 transition-colors flex-1 cursor-pointer"
 					@click="addItemToGraph(key)"
 				>
 					{{ kbrdStudyButtons[key].label }}
@@ -595,15 +575,15 @@ function plotGraph() {
 						v-for="item in items"
 						:key="item"
 						v-katex.ascii.nomargin="displayItem(item)"
-						class="key-touch
+						class="key-touch cursor-pointer
 						bg-action border rounded px-3 py-1
 						hover:bg-amber-300 transition-colors"
 						@dblclick="removeItem(item)"
 					/>
 				</div>
 				<div
+					v-katex.auto="message"
 					class="text-center text-red-500 text-sm"
-					v-html="message"
 				/>
 				<div
 					v-show="items.length>0"
@@ -611,7 +591,7 @@ function plotGraph() {
 				>
 					double-cliquer pour supprimer ou
 					<button
-						class="bg-content border-content px-3 py-1"
+						class="bg-content border border-content px-3 py-1 cursor-pointer"
 						@click="removeAllItems()"
 					>
 						<i class="bi bi-trash mr-3 text-red-800" />tout supprimer

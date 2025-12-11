@@ -4,15 +4,15 @@ Uniquement utilisée dans Posts/Illustrations/Elements/IllustrationEuclidian
 -->
 <script lang="ts" setup>
 
-import { Polynom } from "pimath"
-import { computed } from "vue"
+import {Polynom} from "pimath"
+import {computed} from "vue"
 
 const props = defineProps({
-	fx: { type: String, default: null },
-	name: { type: String, default: "f(x)" },
-	fundamental: { type: Boolean, default: false },
-	asymptote: { type: Boolean, default: false },
-	atBottom: { type: Boolean, default: false }
+	fx: {type: String, default: null},
+	name: {type: String, default: "f(x)"},
+	fundamental: {type: Boolean, default: false},
+	asymptote: {type: Boolean, default: false},
+	atBottom: {type: Boolean, default: false}
 })
 
 const emits = defineEmits(["update"])
@@ -140,7 +140,7 @@ const result = computed(() => {
 			}
 
 		} catch (e) {
-			console.error(e)
+			console.warn(e)
 
 			return false
 		}

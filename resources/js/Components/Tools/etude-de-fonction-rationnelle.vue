@@ -8,23 +8,21 @@ import TableOfSigns from "@/Components/Pi/TableOfSigns.vue"
 
 // TODO: reformat code, in particular the generateFX function
 // TODO: rework UI to make it more user friendly.
-
-
 /** Chapter
  * title: étude de fonction rationnelle
  * body: étude de signe d'une fonction rationnelle.
  */
-import ToolForm, { IToolForm } from "@/Components/Tools/Parts/ToolForm.vue"
+import ToolForm, {IToolForm} from "@/Components/Tools/Parts/ToolForm.vue"
 import TableOfContents from "@/Components/Ui/TableOfContents.vue"
 import TexCode from "@/Components/Ui/TexCode.vue"
-import { useToolsStorage } from "@/Composables/useToolsStorage.ts"
-import { type ETUDE_DE_FONCTION_RATIONNELLE, makeStudyFromPolynoms } from "@/Composables/useTos.ts"
-import { Numeric, Random } from "pimath"
-import { computed, ref } from "vue"
+import {useToolsStorage} from "@/Composables/useToolsStorage.ts"
+import {type ETUDE_DE_FONCTION_RATIONNELLE, makeStudyFromPolynoms} from "@/Composables/useTos.ts"
+import {Numeric, Random} from "pimath"
+import {computed, ref} from "vue"
 import ScButton from "@/Components/Ui/scButton.vue"
 import Card from "@/Components/Ui/Card.vue"
 
-const { restoreTool } = useToolsStorage()
+const {restoreTool} = useToolsStorage()
 const forms: IToolForm[] = restoreTool([
 	{
 		label: "numérateur",
@@ -42,9 +40,9 @@ const forms: IToolForm[] = restoreTool([
 
 // Value from the form.
 const fx = computed(() => {
-	if(forms[1].value.value) {
+	if (forms[1].value.value) {
 		return `(${forms[0].value.value})/(${forms[1].value.value})`
-	}else{
+	} else {
 		return forms[0].value.value
 	}
 })
@@ -56,7 +54,7 @@ const autoUpdate = ref(false)
 
 const generate_attempts = ref(0)
 const study = computed<ETUDE_DE_FONCTION_RATIONNELLE | false>(() => {
-	if(!autoUpdate.value){
+	if (!autoUpdate.value) {
 		return false
 	}
 
@@ -64,14 +62,17 @@ const study = computed<ETUDE_DE_FONCTION_RATIONNELLE | false>(() => {
 })
 
 const drawParametersOverride = ref("")
-const draw = computed<{ parameters: string, code: string }>(()=>{
-	if(study.value===false){return null}
+const draw = computed<{ parameters: string, code: string }>(() => {
+	if (study.value === false) {
+		return null
+	}
 
 	return {
-		parameters: drawParametersOverride.value===''? study.value.draw.parameters : drawParametersOverride.value,
+		parameters: drawParametersOverride.value === '' ? study.value.draw.parameters : drawParametersOverride.value,
 		code: study.value.draw.code
 	}
 })
+
 function generate_fx() {
 	let n = 1,
 		genFx
@@ -137,6 +138,38 @@ function getFxWithControls(maxValue: number) {
 		}
 	}
 }
+
+const keyboardstudyAnswer = computed(() => {
+	if (!study.value) {
+		return ""
+	}
+
+	const arr: string[] = []
+
+	arr.push(study.value.YIntercept.answer)
+
+	study.value.roots.answers
+		.forEach(zero => arr.push(zero))
+
+	Object.values(study.value.asymptotes)
+		.forEach(asymptotes => {
+			asymptotes.map(asymptote => asymptote.answer).forEach(value => arr.push(value))
+		})
+
+	study.value.extremes
+		.filter(extreme => extreme.answer)
+		.forEach(extreme => arr.push(extreme.answer))
+
+	if (study.value.environnement.answer) arr.push(study.value.environnement.answer)
+
+	return [
+		'Study',
+		'trace',
+		study.value.fxKeyboard,
+		'',
+		arr.join(',')
+	].join('\n')
+})
 
 </script>
 
@@ -205,7 +238,7 @@ function getFxWithControls(maxValue: number) {
 						</h2>
 
 						<div
-							v-katex.boxed="study.roots"
+							v-katex.boxed="study.roots.ed"
 						/>
 					</div>
 
@@ -310,13 +343,17 @@ function getFxWithControls(maxValue: number) {
 							/>
 
 							<form-maker
-								sm
 								v-model="drawParametersOverride"
+								sm
 								code
 							/>
 
 							<tex-code :tex="study.draw.parameters" />
 							<tex-code :tex="study.draw.code" />
+							<div>
+								KeyboardStudy answer code
+								<pre>{{ keyboardstudyAnswer }}</pre>
+							</div>
 						</div>
 					</div>
 				</div>

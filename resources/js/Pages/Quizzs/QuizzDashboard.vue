@@ -43,7 +43,6 @@ const toc = computed(() => {
 	]
 })
 
-// REFACTOR: changer le QuizzDashboard pour être plus efficient et facile à utiliser.
 </script>
 
 <template>
@@ -55,7 +54,8 @@ const toc = computed(() => {
 				@click="updateCurrent(liveQuizz.current-1)"
 			>
 				<i class="bi bi-chevron-left" /> précédant
-			</div><div v-else />
+			</div>
+			<div v-else />
 			<sc-button
 				type="primary"
 				:outline="!liveQuizz.showAnswer"
@@ -71,7 +71,8 @@ const toc = computed(() => {
 				@click="updateCurrent(liveQuizz.current+1)"
 			>
 				suivant <i class="bi bi-chevron-right" />
-			</div><div v-else />
+			</div>
+			<div v-else />
 		</div>
 		<card>
 			<template #header>

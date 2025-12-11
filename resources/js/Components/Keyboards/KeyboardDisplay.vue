@@ -454,3 +454,9 @@ defineExpose({resetKeyStrokes})
 		</div>
 	</div>
 </template>
+
+<style scoped>
+button {
+	@apply cursor-pointer;
+}
+</style>

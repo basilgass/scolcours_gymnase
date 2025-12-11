@@ -12,6 +12,9 @@ import {ScoreInterface} from "@/types/modelInterfaces.ts"
 const editMode = useStoreEditMode()
 
 const questionData = inject<questionDataInterface>("questionData")
+
+
+// on placec score dans une variable pour indiquer que c'est un score d'une question.
 const score = questionData.user.score as Ref<ScoreInterface<ScoreQuestionDataInterface>>
 
 const showAnswer = ref(false)
@@ -27,7 +30,7 @@ function toggleAnswer(value?: string) {
 
 
 const previousAnswers = computed<string[]>(() => {
-	return (questionData.user.score.value?.data as ScoreQuestionDataInterface)?.answers ?? []
+	return (score.value?.data as ScoreQuestionDataInterface)?.answers ?? []
 })
 
 </script>

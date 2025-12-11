@@ -145,16 +145,16 @@ function deleteIllustration() {
 				<div class="flex gap-3 justify-end items-baseline">
 					<sc-button
 						xs
-						@click="copyQuestion"
 						class="outline-0"
+						@click="copyQuestion"
 					>
 						<i class="bi bi-clipboard-plus" />
 					</sc-button>
 					<sc-button
 						v-if="hasClipboard"
 						xs
-						@click="pasteQuestion"
 						class="outline-0"
+						@click="pasteQuestion"
 					>
 						<i class="bi bi-clipboard-pulse" />
 					</sc-button>
@@ -268,9 +268,9 @@ function deleteIllustration() {
 			</form>
 
 			<question-show
+				ref="questionRef"
 				:class="theQuestion.css"
 				:question="theQuestion"
-				ref="questionRef"
 				class="min-w-[350px] md:max-w-[40vw]"
 				is-dynamic
 				show-input

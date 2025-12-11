@@ -25,7 +25,16 @@ import {
 import QuestionHeader from "@/Components/Questions/Parts/QuestionHeader.vue"
 import {useQuestion} from "@/Components/Questions/useQuestion.ts"
 
-// Props
+/**
+ * question: QuestionInterface
+ * locked: boolean - if true, the question cannot be answered (cover displayed)
+ * showInput: questionUserInputDisplayType | '' | boolean - determine the keyboard visibility
+ * isDynamic: boolean - if true, the question is generated dynamically, not from a database entry
+ * editorMode: boolean - if true, the question is in editor mode (for preview)
+ * blockOnly: boolean - if true, only the question block is displayed (no answer, no footer)
+ * autoAnswer: boolean - if true, the question is automatically answered with default values
+ * hideSuccess: boolean - if true, the success message and class is hidden
+ */
 const props = withDefaults(
 	defineProps<{
 		question: QuestionInterface,
@@ -70,10 +79,11 @@ const showUserInput = ref<questionUserInputDisplayType>(
 				props.showInput
 )
 
+/**
+ * component reference to the QuestionAnswer component
+ */
 const questionAnswerWrapper = useTemplateRef<typeof QuestionAnswer>('questionAnswerWrapper')
 
-
-// REFACTOR: Duplicata entre questionData.question.user = questionData.user.score
 const questionData = useQuestion(props.question, {
 	animation: true,
 	showInput: showUserInput,
@@ -173,7 +183,6 @@ watch(() => props.autoAnswer, () => {
 
 		<!-- Header: number, title -->
 		<question-header
-			:question
 			:show-number="!blockOnly"
 		/>
 

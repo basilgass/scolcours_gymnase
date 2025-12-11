@@ -3,7 +3,7 @@ import BlockBodyButtons from "@/Components/Blocks/BlockBodyButtons.vue"
 import BlockShowAdmin from "@/Components/Blocks/BlockShowAdmin.vue"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 import {useFormattedBody} from "@/Composables/useHelpers.ts"
-import {useScriptLoader} from "@/Composables/useScriptLoader.ts"
+import {useScriptLoader, UseScriptLoaderReturn} from "@/Composables/useScriptLoader.ts"
 import {blockTypes} from "@/block.config.ts"
 import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
 import type {BlockInterface} from "@/types/modelInterfaces.ts"
@@ -64,12 +64,12 @@ const elementsClasses = computed(() => {
 
 
 const postScript = inject("postScript", useScriptLoader(""))
-const blockScript = useScriptLoader(props.block.script, {parent: postScript.data})
+const blockScript: UseScriptLoaderReturn = useScriptLoader(props.block.script, {parent: postScript.data})
 blockScript.run()
 provide("blockScript", blockScript)
 
-const blockBody = computed(() => useFormattedBody(props.block.body, blockScript.merged))
 
+const blockBody = computed(() => useFormattedBody(props.block.body, blockScript.merged))
 
 function addIllustration() {
 	axios
@@ -154,7 +154,9 @@ function addIllustration() {
 					v-if="block.illustrations?.length > 0"
 					:class="elementsClasses.illustration"
 				>
-					<illustration-index :block />
+					<illustration-index
+						:block
+					/>
 				</div>
 			</div>
 		</slot>

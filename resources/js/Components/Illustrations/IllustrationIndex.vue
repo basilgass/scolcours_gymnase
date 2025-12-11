@@ -8,7 +8,7 @@ import axios from "axios"
 import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
 
 const props = defineProps<{
-	block: BlockInterface
+	block: BlockInterface,
 }>()
 const illustrations = ref<IllustrationInterface[]>(props.block.illustrations)
 
@@ -57,8 +57,8 @@ function updateIllustrationsOrder() {
 	>
 		<template #item="{ element } : {element: IllustrationInterface, index: number}">
 			<div
-				class="relative"
 				:key="`illustration-${element.id}`"
+				class="relative"
 			>
 				<div
 					v-admin="editMode.enable"

@@ -22,7 +22,6 @@ onErrorCaptured((msg: string) => {
 
 // Watch resetKey to reset error state
 watch(() => props.resetKey, () => {
-	console.log('KEY RESET')
 	hasError.value = false
 	errorMessage.value = ""
 })

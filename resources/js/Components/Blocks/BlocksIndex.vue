@@ -1,10 +1,8 @@
 <script lang="ts" setup>
 import BlockShow from "@/Components/Blocks/BlockShow.vue"
 import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
-import type {flashInterface} from "@/types"
 import type {BlockInterface} from "@/types/modelInterfaces.ts"
 import axios from "axios"
-import {defineModel, inject} from "vue"
 import {router} from "@inertiajs/vue3"
 import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
 
@@ -24,7 +22,7 @@ function addBlock(after = -1) {
 		{
 			target_id: props.postId,
 			target_type: 'post',
-			order: after === undefined ? null : after+1
+			order: after === undefined ? null : after + 1
 		}
 	).then((res) => {
 		flash.success("Block ajouté avec succès.")
@@ -56,8 +54,8 @@ function updateBlockOrder() {
 	})
 }
 
-function removeBlock(block: {id: number, target_type: string, target_id: number}) {
-	blocks.value = blocks.value.filter(b=>b.id!==block.id)
+function removeBlock(block: { id: number, target_type: string, target_id: number }) {
+	blocks.value = blocks.value.filter(b => b.id !== block.id)
 }
 
 </script>

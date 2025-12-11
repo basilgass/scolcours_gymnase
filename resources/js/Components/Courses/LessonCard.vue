@@ -50,7 +50,7 @@ function updateLesson(value?: string) {
 			team: props.team.id,
 		}), {
 			scheduled_at: scheduled_at.value,
-			homework: false // TODO : résoudre le homework dans LessonCard.
+			homework: false
 		})
 		.then(() => {
 			flash.success('La leçon a bien été mise à jour.')

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import {PiDraw, Point as PiDrawPoint} from "pidraw/types"
+import {PiDraw, Point as PiDrawPoint} from "pidraw"
 import {computed, nextTick, onMounted, ref, useTemplateRef} from "vue"
 import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"
 import type {

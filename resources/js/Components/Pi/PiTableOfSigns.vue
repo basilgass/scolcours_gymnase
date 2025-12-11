@@ -47,7 +47,6 @@ const tos = computed(() => {
 	const dfn = props.mode !== 'signs' ? fn.clone().derivative() : null
 	const ddfn = props.mode === 'curves' && dfn !== undefined ? dfn.clone().derivative() : null
 
-
 	emits('update', {
 		fx: fn.asRoot.tex,
 		dx: dfn ? dfn.asRoot.tex : "",
@@ -111,7 +110,7 @@ function getExtremes(fn: PolyFactor, tos: TABLE_OF_SIGNS) {
 		}
 
 		const e = fn.evaluate(root.value)
-		if(typeof e === 'number'){
+		if (typeof e === 'number') {
 			return e.toString()
 		}
 

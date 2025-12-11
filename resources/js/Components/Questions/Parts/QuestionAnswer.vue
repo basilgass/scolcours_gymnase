@@ -2,8 +2,8 @@
 /**
  * Affichage du clavier en fonction de la question:
  *    - choix du clavier en fonction du paramètre
- *    - TODO: checking de la réponse
- *    - TODO: emission des résultats, validation
+ *    - checking de la réponse
+ *    - emission des résultats, validation
  */
 import QuestionAnswerSelector from "@/Components/Questions/Parts/QuestionAnswerSelector.vue"
 import QuestionAnswerValidation from "@/Components/Questions/Parts/QuestionAnswerValidation.vue"
@@ -11,8 +11,7 @@ import {computed, inject, useTemplateRef} from "vue"
 import {
 	keyboardComponentType,
 	questionDataInterface,
-	questionResultInterface,
-	questionValidatorInterface
+	questionResultInterface
 } from "@/Components/Questions/QuestionInterface.ts"
 import QuestionAnswerToggleKeyboard from "@/Components/Questions/Parts/QuestionAnswerToggleKeyboard.vue"
 import type {KeyboardInputInterface} from "@/types/keyboardInterfaces.ts"
@@ -26,6 +25,7 @@ defineEmits<{
 
 // Cette partie est utilisée pour afficher la réponse depuis l'extérieur.
 const keyboardComponentsRefs = useTemplateRef<keyboardComponentType[]>('keyboardComponent')
+
 defineExpose({
 	getKeyboards(): Record<number, keyboardComponentType> {
 
@@ -41,40 +41,34 @@ defineExpose({
 })
 
 
-// Current validator, keyboard and checker
-const currentValidator = computed<questionValidatorInterface>(() => {
-	return questionData.validators.value[questionData.current.id.value]
-})
-
 /**
  * Get then format of the answer
  */
 const answerFormat = computed(() => {
 
 	// No keyboard for this answer...
-	if (!currentValidator.value) return ""
+	if (!questionData.current.keyboard) return ""
 
 	// The keyboard is a "basic" keyboard.
-	if (currentValidator.value.keyboard.name === "Basic") {
+	if (questionData.current.keyboard.value.name === "Basic") {
 
-		const customOutput = currentValidator.value.keyboard.parameters
+		const customOutput = questionData.current.keyboard.value.parameters
 			.filter((x) => x.startsWith("format:"))
 			.map((x) => x.split("format:")[1])[0]
 
 		return (
 			customOutput ??
-			currentValidator.value.checker.checker.format
+			questionData.current.checker.value.checker.format
 		)
 	}
 
-	return currentValidator.value.checker.checker.format
+	return questionData.current.checker.value.checker.format
 })
 
 function updateQuestion(event: KeyboardInputInterface, index: number) {
 	questionData.user.answers.value[index] = event
 }
 
-// REFACTOR: actuellement, c'est pourri. Il faut lier les paramètres du keyboard avec les paramètres du checker, via un store ?
 const keyboardParameters = computed(() => {
 	if (!questionData.config.editorMode) {
 		return ""
@@ -112,7 +106,7 @@ const keyboardParameters = computed(() => {
 
 			<suspense>
 				<question-answer-validation
-					:checker="currentValidator.checker"
+					:checker="questionData.current.checker.value"
 					@validate="$emit('validate', $event )"
 				/>
 			</suspense>

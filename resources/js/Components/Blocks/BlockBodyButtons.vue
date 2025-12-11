@@ -1,11 +1,11 @@
 <script lang="ts" setup>
-import { useScriptLoader } from "@/Composables/useScriptLoader.ts"
-import { buttonInterface } from "@/types"
-import { computed, inject } from "vue"
+import {useScriptLoader, UseScriptLoaderReturn} from "@/Composables/useScriptLoader.ts"
+import {buttonInterface} from "@/types"
+import {computed, inject} from "vue"
 import ScButton from "@/Components/Ui/scButton.vue"
 
 // Récupération des scripts de block
-const blockScript = inject('blockScript', useScriptLoader(''))
+const blockScript = inject<UseScriptLoaderReturn>('blockScript', useScriptLoader(''))
 
 // Détermine si le block a des boutons pour gérer les scripts
 const hasButtons = computed(() => {
@@ -47,12 +47,13 @@ const resetButton = computed<buttonInterface>(() => {
 			...blockScript.merged.value.btn.reset
 		}
 	}
-	if (blockScript.merged.value.reset) return { ...btn }
+	if (blockScript.merged.value.reset) return {...btn}
 
 	return null
 })
 
 </script>
+
 <template>
 	<div
 		v-if="hasButtons"

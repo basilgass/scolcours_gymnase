@@ -14,7 +14,7 @@ import {
 	ISlider,
 	PiDraw_Parse_Code
 } from "@/Components/Pi/PiDrawHelper.ts"
-import {useScriptLoader} from "@/Composables/useScriptLoader.ts"
+import {useScriptLoader, UseScriptLoaderReturn} from "@/Composables/useScriptLoader.ts"
 import PiDrawDisplay from "@/Components/Pi/Parts/PiDrawDisplay.vue"
 import {dynamicText, replaceDoubleSigns} from "@/Composables/useHelpers.ts"
 import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
@@ -157,8 +157,11 @@ function toTexPi(value): string {
 	return `${F.numerator < 0 ? '-' : ''}\\frac{ ${num}\\pi }{ ${F.denominator} }`
 }
 
-const blockScript = inject('blockScript', useScriptLoader(""))
+
+// REFACTOR : est-ce que cette partie est maintenant utile ici aussi, vu que c'est égaleemtn mis dans IllustrationShow ?
+const blockScript = inject<UseScriptLoaderReturn>('blockScript', useScriptLoader(""))
 const drawScript = useScriptLoader("", {parent: blockScript.data})
+
 const dynamicValues = computed<Record<string, string | number>>(() => {
 	const dict: Record<string, string | number> = {}
 	Object.keys(drawScript.merged.value).forEach(key => {

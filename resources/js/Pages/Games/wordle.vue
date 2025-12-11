@@ -78,7 +78,7 @@ const guess = computed<string>(() => {
 })
 
 function prepareNextWord() {
-	axios.get(route('api.admin.dico.fetch', {
+	axios.get(route('api.dico.fetch', {
 			language: WORD_LANGUAGE.value,
 			number: 1,
 			size: WORD_LENGTH.value
@@ -158,7 +158,7 @@ function letterClass(row: number, index: number) {
 }
 
 async function validate() {
-	const wordExists = await axios.get(route('api.admin.dico.exists', {
+	const wordExists = await axios.get(route('api.dico.exists', {
 		language: WORD_LANGUAGE.value,
 		word: guess.value
 	}))
@@ -286,16 +286,16 @@ const keyboard = computed<Record<string, string>>(() => {
 })
 
 onMounted(() => {
-	prepareNextWord()
-
-	nextWord.value = "PATOU"
-
-	startGame()
-
-	"CAPOT".split("").forEach(letter => {
-		setLetter(letter)
-	})
-	validate()
+	// prepareNextWord()
+	//
+	// nextWord.value = "PATOU"
+	//
+	// startGame()
+	//
+	// "CAPOT".split("").forEach(letter => {
+	// 	setLetter(letter)
+	// })
+	// validate()
 })
 
 </script>
@@ -311,17 +311,11 @@ onMounted(() => {
 			</h2>
 			<div class="grid grid-cols-3 gap-5">
 				<form-maker
-					v-model="WORD_LANGUAGE"
 					label="langue"
 					type="select"
-				>
-					<option
-						selected
-						value="fr"
-					>
-						français
-					</option>
-				</form-maker>
+					v-model="WORD_LANGUAGE"
+					:choices="{fr: 'français'}"
+				/>
 				<form-maker
 					v-model="WORD_LENGTH"
 					label="nombre de lettres"

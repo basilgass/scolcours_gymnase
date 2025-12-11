@@ -1,20 +1,23 @@
 import eslint from '@eslint/js'
-import pluginVue from 'eslint-plugin-vue'
-import tseslint from "typescript-eslint"
+import eslintPluginVue from 'eslint-plugin-vue'
+import typescriptEslint from "typescript-eslint"
+import globals from 'globals'
 
-export default tseslint.config(
-	eslint.configs.recommended,
-	...tseslint.configs.recommended,
-	...tseslint.configs.stylistic,
-	...pluginVue.configs['flat/strongly-recommended'],
+export default typescriptEslint.config(
+	{ignores: ['*.d.ts', '**/coverage', '**/dist']},
 	{
+		extends: [
+			eslint.configs.recommended,
+			...typescriptEslint.configs.stylistic,
+			...eslintPluginVue.configs['flat/recommended']
+		],
+		files: ['**/*.{ts,vue}'],
 		languageOptions: {
+			ecmaVersion: 'latest',
+			sourceType: 'module',
+			globals: globals.browser,
 			parserOptions: {
-				parser: tseslint.parser,
-				project: true,
-				tsconfigRootDir: 'C:/websites/scolcours_gymnase',
-				extraFileExtensions: ['.vue'],
-				sourceType: 'module',
+				parser: typescriptEslint.parser,
 				"allowImportExportEverywhere": true,
 			},
 		},

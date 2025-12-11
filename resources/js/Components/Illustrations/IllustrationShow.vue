@@ -2,15 +2,26 @@
 import EditLink from "@/Components/Ui/EditLink.vue"
 import {getModule, MODULE_TYPES} from "@/scolcours.ts"
 import type {IllustrationInterface} from "@/types/modelInterfaces.ts"
-import {watch} from "vue"
+import {computed, inject, watch} from "vue"
 import {onClick_answerIndex} from "@/Components/Questions/useQuestionHelpers.ts"
 import Card from "@/Components/Ui/Card.vue"
+import {useFormattedBody} from "@/Composables/useHelpers.ts"
+import {useScriptLoader, UseScriptLoaderReturn} from "@/Composables/useScriptLoader.ts"
 
 const props = defineProps<{
 	illustration: IllustrationInterface
 	clickThrough?: boolean
 }>()
 
+const blockSsript = inject<UseScriptLoaderReturn>('blockScript', useScriptLoader(""))
+
+const illustrationWithScript = computed(() => {
+
+	return {
+		parameters: useFormattedBody(props.illustration.parameters ?? "", blockSsript.merged),
+		code: useFormattedBody(props.illustration.code ?? "", blockSsript.merged)
+	}
+})
 
 function getWidget() {
 	return getModule(
@@ -58,12 +69,12 @@ function click($event: MouseEvent) {
 
 			<component
 				:is="widgetComponent"
-				:illustration="props.illustration"
+				:illustration="illustrationWithScript"
 			/>
 		</figure>
 		<template
-			#footer
 			v-if="props.illustration.title"
+			#footer
 		>
 			<div
 				v-katex.auto="props.illustration.title"

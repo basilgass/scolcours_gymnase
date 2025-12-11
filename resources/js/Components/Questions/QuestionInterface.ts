@@ -29,9 +29,7 @@ export interface questionDataInterface {
 		checker: ComputedRef<KeyboardCheckerInterface>
 	},
 	hasSuccess: ComputedRef<boolean>
-	question: {
-		id: number
-	},
+	question: Ref<QuestionInterface>,
 	user: {
 		answer: Ref<string>
 		answers: Ref<KeyboardInputInterface[]>,

@@ -1,12 +1,15 @@
-import { asciiToTex } from "@/Composables/keyboardConfig"
-import { useKeyboard } from "@/Composables/useKeyboard.ts"
-import { Fraction, ISolution, PolyFactor, TABLE_OF_SIGNS } from "pimath"
+import {asciiToTex} from "@/Composables/keyboardConfig"
+import {useKeyboard} from "@/Composables/useKeyboard.ts"
+import {Fraction, ISolution, PolyFactor, TABLE_OF_SIGNS} from "pimath"
 
-const { keyboards } = useKeyboard()
+const {keyboards} = useKeyboard()
+
+const DIGITS = 2
 
 interface ASYMPTOTE {
 	tex: string,
 	draw: string,
+	answer: string,
 	delta?: {
 		tex: string,
 		table_of_signs: TABLE_OF_SIGNS
@@ -16,19 +19,33 @@ interface ASYMPTOTE {
 interface EXTREMA {
 	value: number,
 	tex: string,
+	answer: string,
 	type: "min" | "max" | "flat" | "undefined",
 	x: { tex: string, value: number }
 }
 
 export interface ETUDE_DE_FONCTION_RATIONNELLE {
 	fx: string
+	fxKeyboard: string
 	domain: string
-	roots: string,
+	roots: {
+		values: ISolution[],
+		answers: string[],
+		ed: string
+	},
+	YIntercept: {
+		tex: string,
+		draw: string,
+		answer: string
+	},
 	table_of_signs: TABLE_OF_SIGNS,
 	asymptotes: {
 		vertical: ASYMPTOTE[],
 		horizontal: ASYMPTOTE[],
 		slope: ASYMPTOTE[]
+	},
+	environnement: {
+		answer: string
 	},
 	derivative: {
 		fx: string,
@@ -62,6 +79,7 @@ export function makeStudyFromPolyFactor(value: PolyFactor): ETUDE_DE_FONCTION_RA
 
 	// Display function as TeX
 	const fx = `f(x) = ${value.asRoot.tex} = ${factorized.asRoot.tex}`
+	const fxKeyboard = `p=${value.display}`
 
 	// Domain of the function
 	const domain = PolyFactor_getDomain(denominatorsRoots)
@@ -69,15 +87,28 @@ export function makeStudyFromPolyFactor(value: PolyFactor): ETUDE_DE_FONCTION_RA
 	// Table of sign
 	const table_of_signs = factorized.tableOfSigns()
 
-	// Roots
-	const rootsValues = factorized.getZeroes().map((x, index) => {
-		if (table_of_signs.signs[2 * index + 1] === "z") {
-			return x.exact ? x.tex : x.value.toFixed(2)
-		}
+	const Yevaluate = value.evaluate(0) as Fraction
 
-		return null
-	}).filter(x => x !== null)
-	const roots = rootsValues.length === 0 ? "\\varnothing" : `S=\\left\\{ ${rootsValues.join(";")} \\right\\}`
+	const YIntercept = Yevaluate.isInfinity()
+		? null
+		: {
+			tex: `H=(${0};${Yevaluate.tex})`,
+			draw: `H(${0},${Yevaluate.value.toFixed(DIGITS)})`,
+			answer: `o(0;${Yevaluate.display})`
+		}
+	// Roots
+	const zeroes = factorized.getZeroes()
+		.filter((x, index) => table_of_signs.signs[2 * index + 1] === "z")
+
+	const rootsValues = zeroes
+		.map((x) => x.exact ? x.tex : x.value.toFixed(DIGITS))
+		.filter(x => x !== null)
+
+	const roots = {
+		ed: rootsValues.length === 0 ? "\\varnothing" : `S=\\left\\{ ${rootsValues.join(";")} \\right\\}`,
+		values: zeroes,
+		answers: zeroes.map(z => `z(${z.display};0)`)
+	}
 
 	// Asymptotes
 	const vertical = PolyFactor_getAsymptotes_Vertical(reduced, denominatorsRoots)
@@ -94,13 +125,13 @@ export function makeStudyFromPolyFactor(value: PolyFactor): ETUDE_DE_FONCTION_RA
 	// TODO: Etude de fonction rationnelle : Curves
 	const BBox = getBBox(
 		...factorized.getZeroes().map(item => {
-			return { x: item.value, y: 0 }
+			return {x: item.value, y: 0}
 		}),
 		...dfx.getZeroes().map(item => {
-			return { x: item.value, y: 0 }
+			return {x: item.value, y: 0}
 		}),
 		...extremes.filter(item => item.type !== 'undefined').map(item => {
-			return { x: item.x.value, y: item.value }
+			return {x: item.x.value, y: item.value}
 		})
 	)
 
@@ -113,24 +144,36 @@ export function makeStudyFromPolyFactor(value: PolyFactor): ETUDE_DE_FONCTION_RA
 	slope.forEach(av => code += `\n${av.draw}`)
 
 	// Draw particular points.
-	// TODO: Filter if some point are the same !
+	if (YIntercept) code += `\n${YIntercept.draw}->tex=@/mr`
 
 	// roots
-	// TODO: root is in TeX : there can be a conflict as it could also be in ascii math.
 	rootsValues.forEach((root, index) => code += `\nZ${index}(${root},0)->tex=@`)
 
 	// Extremes
-	extremes.filter(x => x.type!=='undefined').forEach((extreme, index) => {
+	extremes.filter(x => x.type !== 'undefined').forEach((extreme, index) => {
 		code += `\nE${index}(${extreme.x.value},${extreme.value})->tex=\\left(${extreme.x.tex};${extreme.tex}\\right)/${extreme.type === "max" ? "t" : "b"}c`
 	})
 
 	// Add asymptote's delta roots.
 
+	// Environnment
+	const environnement: string[] = []
+	if (horizontal.length + slope.length === 0) {
+		environnement.push('env')
+		environnement.push(table_of_signs.signs[0] === '+' ? 'LT' : 'LB')
+		environnement.push(table_of_signs.signs[table_of_signs.signs.length - 1] === '+' ? 'RT' : 'RB')
+	}
+
 	return {
 		fx,
+		fxKeyboard,
 		domain,
 		table_of_signs,
 		roots,
+		YIntercept,
+		environnement: {
+			answer: environnement.join('&')
+		},
 		asymptotes: {
 			vertical,
 			horizontal,
@@ -167,15 +210,24 @@ function PolyFactor_getAsymptotes_Vertical(reduced: PolyFactor, roots: ISolution
 		const evaluatedValue = reduced.evaluate(value.value) as Fraction
 		const valueAsTex = value.tex
 
+		const evaluateBefore = reduced.evaluate(value.value - 0.001, true) as number
+		const evaluateAfter = reduced.evaluate(value.value + 0.001, true) as number
+
 		if (Number.isFinite(evaluatedValue.value)) {
 			return {
 				tex: `\\lim_{x\\to ${valueAsTex} } f(x) = ${evaluatedValue.tex} \\implies \\text{point limite}: \\left(${valueAsTex};${evaluatedValue.tex}\\right)`,
-				draw: `P${index + 1}(${value.value},${evaluatedValue.value})->o=10,color=red,fill=white,tex=\\left(${value.tex};${evaluatedValue.tex}\\right)/bc`
+				draw: `P${index + 1}(${value.value},${evaluatedValue.value})->o=10,color=red,fill=white,tex=\\left(${value.tex};${evaluatedValue.tex}\\right)/bc`,
+				answer: `t(${value.display, evaluatedValue.display})`
 			}
 		} else {
+			const anchors = [
+				evaluateBefore > 0 ? 'LT' : 'LB',
+				evaluateAfter > 0 ? 'RT' : 'RB'
+			]
 			return {
 				tex: `\\lim_{x\\to ${valueAsTex} } f(x) = \\infty \\implies x=${valueAsTex}`,
-				draw: `a${index + 1}=line x=${value.value}->red`
+				draw: `a${index + 1}=line x=${value.value}->red`,
+				answer: [`x=${value.display}`, ...anchors].join('&')
 				// draw: `A${index + 1}(${value.value},0)->hide\nB${index + 1}(${value.value},1)->hide\na${index + 1}=A${index + 1}B${index + 1}->red`
 			}
 		}
@@ -195,14 +247,23 @@ function PolyFactor_getAsymptotes_Horizontal_or_Slope(factorized: PolyFactor, de
 	const numeratorPolynom = factorized.numerator.develop().factors[0].polynom
 	const denominatorPolynom = factorized.denominator.develop().factors[0].polynom
 
-	const { quotient, reminder } = numeratorPolynom.euclidean(denominatorPolynom)
+	const {quotient, reminder} = numeratorPolynom.euclidean(denominatorPolynom)
 	const delta_PolyFactor = new PolyFactor().fromPolynom(reminder)
 		.divide(denominator)
+
+	const tos_delta = delta_PolyFactor.tableOfSigns()
+
+	// TODO: meilleur estimation pour déterminer la position de la courbe.
+	const anchors = [
+		tos_delta.signs[0] === '+' ? 'LT' : 'LB',
+		tos_delta.signs[tos_delta.signs.length - 1] === '+' ? 'RT' : 'RB'
+	]
 
 	return [
 		{
 			tex: `y = ${quotient.tex}`,
 			draw: `a=line y=${quotient.display}->green`,
+			answer: [`y=${quotient.display}`, ...anchors].join('&'),
 			delta: {
 				tex: `\\delta(x) = \\frac{${reminder.tex}}{${denominator.asRoot.tex}}`,
 				table_of_signs: delta_PolyFactor.tableOfSigns()
@@ -211,9 +272,10 @@ function PolyFactor_getAsymptotes_Horizontal_or_Slope(factorized: PolyFactor, de
 	]
 }
 
-function PolyFactor_getExtremes(fx: PolyFactor, dfx: PolyFactor, dfx_table_of_signs:TABLE_OF_SIGNS): EXTREMA[] {
+function PolyFactor_getExtremes(fx: PolyFactor, dfx: PolyFactor, dfx_table_of_signs: TABLE_OF_SIGNS): EXTREMA[] {
 
 	return dfx.getZeroes().map((x, index) => {
+
 		// Evaluate the extremes if needed.
 		if (dfx_table_of_signs.signs[2 * index + 1] === "d") {
 			return {
@@ -223,6 +285,7 @@ function PolyFactor_getExtremes(fx: PolyFactor, dfx: PolyFactor, dfx_table_of_si
 				},
 				tex: '',
 				value: NaN,
+				answer: null,
 				type: 'undefined'
 			}
 		}
@@ -232,6 +295,9 @@ function PolyFactor_getExtremes(fx: PolyFactor, dfx: PolyFactor, dfx_table_of_si
 
 		const type = previousSign === nextSign ? "flat" :
 			previousSign === "+" ? "max" : "min"
+		const atype = previousSign === nextSign ? "_" :
+			previousSign === "+" ? "mm" : "m"
+
 		if (x.exact) {
 			const value = fx.evaluate(x.exact as Fraction) as Fraction
 
@@ -242,6 +308,7 @@ function PolyFactor_getExtremes(fx: PolyFactor, dfx: PolyFactor, dfx_table_of_si
 				},
 				tex: value.tex,
 				value: value.value,
+				answer: `${atype}(${x.display};${value.display})`,
 				type
 			}
 		}
@@ -255,6 +322,7 @@ function PolyFactor_getExtremes(fx: PolyFactor, dfx: PolyFactor, dfx_table_of_si
 			},
 			tex: value.toFixed(2),
 			value: value,
+			answer: `${atype}(${x.value.toFixed(DIGITS)};${value.toFixed(DIGITS)})`,
 			type
 		}
 	})
@@ -330,9 +398,9 @@ export function makeStudyFromCode(code: string, showCoords: boolean, displayMode
 				}
 
 				extremes[keyboards.exact.tex(z)] = {
-					tex: { x: 1, y: 2 },
+					tex: {x: 1, y: 2},
 					type: t,
-					value: { x: 1, y: 2 },
+					value: {x: 1, y: 2},
 					label
 				}
 			}
@@ -340,7 +408,7 @@ export function makeStudyFromCode(code: string, showCoords: boolean, displayMode
 
 		return {
 			zeroes: zeroes.split(",").map(x => {
-				return { tex: keyboards.exact.tex(x) }
+				return {tex: keyboards.exact.tex(x)}
 			}).filter(x => x.tex !== ""),
 			factors: [],
 			extremes,
@@ -355,7 +423,7 @@ export function makeStudyFromCode(code: string, showCoords: boolean, displayMode
 
 	return {
 		zeroes: zeroes.split(",").map(x => {
-			return { tex: keyboards.exact.tex(x) }
+			return {tex: keyboards.exact.tex(x)}
 		}).filter(x => x.tex !== ""),
 		factors: [],
 		signs: [["", ...signs.split(""), ""]]

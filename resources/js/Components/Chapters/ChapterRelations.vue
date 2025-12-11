@@ -34,10 +34,8 @@ const getAllChapters = function () {
 		return
 	}
 
-	// REFACTOR : à quoi sert chapters.index.min ?
 	axios.get(route("api.admin.chapters.index"))
 		.then(res => {
-			console.log(res.data)
 			searchChapters.value = res.data.filter(ch => ch.slug !== props.chapter.slug)
 			modifyRelations.value = true
 		})

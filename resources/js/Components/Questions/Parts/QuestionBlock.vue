@@ -7,10 +7,16 @@ import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 import {computed, inject} from "vue"
 import {keyboardEventInterface, questionDataInterface} from "@/Components/Questions/QuestionInterface.ts"
 import {onClick_answerIndex} from "@/Components/Questions/useQuestionHelpers.ts"
+import {
+	makeKey,
+	replace_ABC_inline,
+	replace_ABC_inline_no_div,
+	replace_ABC_toBlock,
+	replace_abc_toTex,
+	replace_ABC_without_placeholder
+} from "@/Components/Questions/computeQuestionBlock.ts"
 
 const questionData = inject<questionDataInterface>('questionData')
-
-const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 /**
  * Generate the body based on the answers
@@ -20,11 +26,9 @@ const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
  * The letter must be in alphabetic order!
  */
 
-// TODO: Rework computed body based on answers : more efficient ?
 const body = computed(() => {
 	// Coherence control:
 	// number of answers is the same as the number of variables
-	// TODO: answersCoherences n'est utilisé qu'ici !!!
 	if (!questionData.answers.coherences.value) {
 		return questionData.block.value.body +
 			"\n\n Il manque des réponses {.text-xs .text-center .text-red-500 .bg-red-100 .py-2 .font-code}"
@@ -55,7 +59,6 @@ const body = computed(() => {
 		// $a, $b, $c, ....
 		md = replace_abc_toTex(md, i, key, answer, texColor)
 
-		// TODO: actualiser et vérifer toutes les options...
 		// Replace all uppercase starting a line, as block
 		// $A, $B, $C, ....
 		md = replace_ABC_toBlock(md, i, key, answer, rawColor)
@@ -97,70 +100,6 @@ const illustration = computed(() => {
 	}
 })
 
-function makeKey(i: number): string {
-	return `\\$${alphabet[i]}`
-}
-
-function replace_abc_toTex(md: string, index: number, key: string, answer: keyboardEventInterface, color: string): string {
-	// $a, $b, ...
-	// console.log(md)
-	// console.log(key)
-	// console.log(answer)
-	// console.log(color)
-	// const r = new RegExp(`${key.toLowerCase()}`, "gm")
-	// console.log(r)
-	//
-	// console.log('MATCH', md.match(r))
-	return md.replaceAll(
-		new RegExp(`${key.toLowerCase()}`, "gm"),
-		`\\htmlData{answer-index=${index}}{\\textcolor{${color}}{${
-			answer.tex ?
-				answer.tex :
-				"<\\;?>"
-		}}}`)
-}
-
-function replace_ABC_toBlock(md: string, index: number, key: string, answer: keyboardEventInterface, color: string): string {
-	// $A, $B, ...
-	return md.replaceAll(
-		new RegExp(`\n${key}`, "gm"),
-		`\n<div data-answer-index="${index}" class="border p-3 ${color}">\n\n${
-			answer.raw ?
-				answer.raw :
-				"< ? >"
-
-		}\n\n</div>`)
-}
-
-function replace_ABC_inline(md: string, index, key: string, answer: keyboardEventInterface, color: string): string {
-	// $A, $B, ... inline
-	return md.replaceAll(
-		new RegExp(`${key}`, "gm"),
-		`<div data-answer-index="${index}" class="border px-3 py-1 inline-block ${color}">${
-			answer.raw ?
-				answer.raw :
-				"< ? >"
-		}</div>`)
-}
-
-function replace_ABC_inline_no_div(md: string, index, key: string, answer: keyboardEventInterface, color: string): string {
-	// $A, $B, ... inline
-	return md.replaceAll(
-		new RegExp(`_${key}`, "gm"),
-		answer.raw ?
-			answer.raw :
-			`<span data-answer-index="${index}" class="px-3 ${color}">< ? ></span>`
-	)
-}
-
-function replace_ABC_without_placeholder(md: string, index, key: string, answer: keyboardEventInterface, color: string): string {
-	// @$A, @$B, ...
-	return md.replaceAll(
-		new RegExp(`@(${key})`, "gm"),
-		`\n<div data-answer-index="${index}" class="border px-3 py-1 ${color}">${
-			answer.raw
-		}\n</div>`)
-}
 
 // Gestionnaire de clics par délégation
 function onAnswerClick(event: MouseEvent) {
@@ -171,6 +110,7 @@ function onAnswerClick(event: MouseEvent) {
 		questionData.current.id.value = index
 	}
 }
+
 </script>
 
 <template>

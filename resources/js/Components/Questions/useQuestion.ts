@@ -11,7 +11,13 @@ import {KeyboardInputInterface} from "@/types/keyboardInterfaces.ts"
 const {getKeyboards} = useKeyboard()
 
 
-export function useQuestion(mayBeRefOrGetter: QuestionInterface, config: questionConfigInterface): questionDataInterface {
+export function useQuestion(
+	mayBeRefOrGetter: QuestionInterface,
+	config: questionConfigInterface
+): questionDataInterface {
+	/**
+	 * Initializes an empty answer object.
+	 */
 	function initAnswer() {
 		return {input: "", tex: "", raw: ""}
 	}
@@ -95,17 +101,19 @@ export function useQuestion(mayBeRefOrGetter: QuestionInterface, config: questio
 
 	// Current answer ID
 	const answerId = ref<number>(0)
+
 	// Current keyboard and checker for the answerID
 	const currentKeyboard = computed(() => validators.value[answerId.value].keyboard)
 	const currentChecker = computed(() => validators.value[answerId.value].checker)
 
+	// Determine is the question has been successfully answered.
 	const hasSuccess = computed(() => {
 		if (config.silent) return false
 
-		return question.value.user?.is_resolved ?? false
+		return userScore.value?.is_resolved ?? false
 	})
 	return {
-		question: {id: question.value.id},
+		question,
 		block: computed(() => question.value.block),
 		current: {
 			id: answerId,
@@ -128,3 +136,5 @@ export function useQuestion(mayBeRefOrGetter: QuestionInterface, config: questio
 		hasSuccess
 	}
 }
+
+

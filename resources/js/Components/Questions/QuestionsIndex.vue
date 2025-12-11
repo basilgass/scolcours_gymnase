@@ -107,7 +107,7 @@ function addQuestionRef(element: InstanceType<typeof QuestionShow>) {
 	}
 }
 
-defineEmits<{
+const emit = defineEmits<{
 	validate: [event: questionResultInterface]
 }>()
 
@@ -173,7 +173,7 @@ function removeQuestion(id: number) {
 							:class="element.css ?? ''"
 							:locked="isQuestionLocked(element)"
 							:question="element"
-							@validate="$emit('validate', $event)"
+							@validate="emit('validate', $event)"
 						/>
 					</div>
 				</template>

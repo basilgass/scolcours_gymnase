@@ -13,6 +13,7 @@ import ScButton from "@/Components/Ui/scButton.vue"
 import Card from "@/Components/Ui/Card.vue"
 import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
 import FilteredList from "@/Components/Ui/FilteredList.vue"
+import ErrorBoundary from "@/Components/errorBoundary.vue"
 
 // Define the layout
 defineOptions({layout: LayoutMain})
@@ -361,11 +362,21 @@ onMounted(() => {
 						</div>
 					</div>
 
-					<illustration-show
-						:illustration="theIllustration"
-						class="bg-content p-5 border"
-						preview
-					/>
+					<error-boundary
+						:reset-key="`${theIllustration.widget_id} ${illustration.parameters} ${illustration.code}`"
+					>
+						<illustration-show
+							:key="`widget-${theIllustration.widget_id}`"
+							:illustration="theIllustration"
+							class="bg-content p-5 border"
+							preview
+						/>
+						<template #error>
+							<div class="font-code">
+								Erreur dans l'illustration
+							</div>
+						</template>
+					</error-boundary>
 				</div>
 			</div>
 

@@ -2,7 +2,7 @@ import {Bezier, BEZIERCONTROL, COORDINATE_SYSTEM, DOMAIN, IBezierConfig, Line, P
 import katex from "katex"
 import {Line as mLine, NumExp} from "pimath"
 
-export enum ITEMTYPES {
+export enum ITEM_TYPES {
 	POINT = "point",
 	AO = "ao",
 	AV = "av",
@@ -19,7 +19,6 @@ export interface ASYMPTOTES_CONTROLS {
 	"RT": Point
 }
 
-
 export interface BEZIER_CONTROLS {
 	"LB": Point[]
 	"LT": Point[]
@@ -27,7 +26,7 @@ export interface BEZIER_CONTROLS {
 	"RT": Point[]
 }
 
-export enum POINTTYPES {
+export enum POINT_TYPES {
 	MIN = "m",
 	MAX = "mm",
 	REPLAT = "_",
@@ -39,44 +38,44 @@ export interface itemGraphInterface {
 	beziercontrol?: BEZIERCONTROL
 	controls: ASYMPTOTES_CONTROLS | { bar: Path } // Record<string, Point>
 	element: Point | Path | Line
-	kind?: POINTTYPES
-	type: ITEMTYPES
+	kind?: POINT_TYPES
+	type: ITEM_TYPES
 }
 
 
 export const kbrdStudyButtons = {
 	"ah": {
-		label: "AH", description: "asymptote verticale"
+		label: "AH", description: "asymptote verticale", group: 'asymptotes'
 	},
 	"av": {
-		label: "AV", description: "asymptote horizontale"
+		label: "AV", description: "asymptote horizontale", group: 'asymptotes'
 	},
 	"ao": {
-		label: "AO", description: "asymptote oblique"
+		label: "AO", description: "asymptote oblique", group: 'asymptotes'
 	},
 	"!": {
-		label: "rien", description: "aucune asymptote"
+		label: "rien", description: "aucune asymptote", group: 'asymptotes'
 	},
 	"p": {
-		label: "point", description: "point quelconque"
+		label: "point", description: "point quelconque", group: 'points'
 	},
 	"z": {
-		label: "zéro", description: "zéro"
+		label: "zéro", description: "zéro", group: 'points'
 	},
 	"o": {
-		label: "ordonnée", description: "ordonnée à l'origine"
+		label: "ordonnée", description: "ordonnée à l'origine", group: 'points'
 	},
 	"t": {
-		label: "trou", description: "trou"
+		label: "trou", description: "trou", group: 'points'
 	},
 	"m": {
-		label: "min", description: "minimum"
+		label: "min", description: "minimum", group: 'dérivées'
 	},
 	"mm": {
-		label: "max", description: "maximum"
+		label: "max", description: "maximum", group: 'dérivées'
 	},
 	"_": {
-		label: "replat", description: "replat"
+		label: "replat", description: "replat", group: 'dérivées'
 	}
 }
 
@@ -119,7 +118,7 @@ export class StudyGraph extends PiGraph {
 		p.stroke('green')
 
 		return {
-			type: ITEMTYPES.AV,
+			type: ITEM_TYPES.AV,
 			element: p,
 			controls: this.addControls([
 				[x.min + 0.5, y + 0.5],
@@ -152,7 +151,7 @@ export class StudyGraph extends PiGraph {
 		const b1ratio = 5, b2ratio = 10
 
 		return {
-			type: ITEMTYPES.AO,
+			type: ITEM_TYPES.AO,
 			element: p,
 			controls: this.addControls([
 				[A.x + dxy.x + pxy.x, A.y + dxy.y + pxy.y],
@@ -178,7 +177,7 @@ export class StudyGraph extends PiGraph {
 		p.stroke('red')
 
 		return {
-			type: ITEMTYPES.AV,
+			type: ITEM_TYPES.AV,
 			element: p,
 			controls: this.addControls([
 				[x - 0.5, y.max - 0.5],
@@ -251,7 +250,7 @@ export class StudyGraph extends PiGraph {
 		const bbox = this.BBox
 
 		return {
-			type: ITEMTYPES.TRACE,
+			type: ITEM_TYPES.TRACE,
 			element: null,
 			controls: this.addControls([
 				[bbox.x.min + 0.5, bbox.y.max - 0.5],
@@ -268,7 +267,7 @@ export class StudyGraph extends PiGraph {
 		}
 	}
 
-	addPoint(type: POINTTYPES, value: { x: string, y: string }): itemGraphInterface {
+	addPoint(type: POINT_TYPES, value: { x: string, y: string }): itemGraphInterface {
 		const x = value.x === "" ? 0 : +(new NumExp(value.x)).evaluate()
 		const y = value.y === "" ? 0 : +(new NumExp(value.y)).evaluate()
 
@@ -279,18 +278,18 @@ export class StudyGraph extends PiGraph {
 		let bar: Path = null
 		let beziercontrol = BEZIERCONTROL.SMOOTH
 
-		if (type === POINTTYPES.TROU) {
+		if (type === POINT_TYPES.TROU) {
 			p.asCircle(this._size / 3).fill("white")
-		} else if (type === POINTTYPES.MAX || type === POINTTYPES.MIN || type === POINTTYPES.REPLAT) {
+		} else if (type === POINT_TYPES.MAX || type === POINT_TYPES.MIN || type === POINT_TYPES.REPLAT) {
 			p.asCircle(this._size / 3).fill("red")
 			bar = this.makePath(`M${pixels.x - 50},${pixels.y} L${pixels.x + 50},${pixels.y}`)
 			bar.stroke("red")
 
 			beziercontrol = BEZIERCONTROL.HORIZONTAL
 
-			if (type === POINTTYPES.MIN) {
+			if (type === POINT_TYPES.MIN) {
 				p.addLabel('MIN').position('bc')
-			} else if (type === 'mm') {
+			} else if (type === POINT_TYPES.MAX) {
 				p.addLabel('MAX').position('tc')
 			}
 		} else {
@@ -298,7 +297,7 @@ export class StudyGraph extends PiGraph {
 		}
 
 		return {
-			type: ITEMTYPES.POINT,
+			type: ITEM_TYPES.POINT,
 			kind: type,
 			beziercontrol,
 			element: p,

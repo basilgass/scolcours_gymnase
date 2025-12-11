@@ -1,11 +1,9 @@
 <script setup lang="ts">
-import {QuestionInterface} from "@/types/modelInterfaces.ts"
 import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
 import {inject} from "vue"
 import {questionDataInterface} from "@/Components/Questions/QuestionInterface.ts"
 
 withDefaults(defineProps<{
-	question: QuestionInterface,
 	showNumber?: boolean
 }>(), {
 	showNumber: true
@@ -21,14 +19,14 @@ const questionData = inject<questionDataInterface>("questionData")
 	<header class="flex flex-col relative w-full">
 		<!-- QUESTION NUMBER -->
 		<div
-			v-if="question.order>0 && showNumber"
+			v-if="questionData.question.value.order>0 && showNumber"
 			v-theme.bg.text
 			:class="{
 				'draggable-handle cursor-move': editMode.enable,
 			}"
 			class="z-10 font-semibold font-code absolute left-1 -top-4 rounded-full border w-8 h-8 grid place-items-center draggable-handle"
 		>
-			{{ question.order }}
+			{{ questionData.question.value.order }}
 		</div>
 
 		<div class="absolute top-0 right-0 text-right text-xs p-1">
@@ -44,7 +42,7 @@ const questionData = inject<questionDataInterface>("questionData")
 
 		<!-- QUESTION TITLE -->
 		<div
-			v-katex.auto="question.block.title"
+			v-katex.auto="questionData.question.value.block.title"
 			class="px-3 py-3 font-semibold text-lg"
 		/>
 	</header>

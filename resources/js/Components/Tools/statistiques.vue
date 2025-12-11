@@ -12,13 +12,14 @@ import BoxPlotChart from "@/Components/Charts/boxPlotChart.vue"
 import LineChart from "@/Components/Charts/lineChart.vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
-import { Chart } from "chart.js"
+import {Chart} from "chart.js"
 import annotationPlugin from "chartjs-plugin-annotation"
+
 // TODO: apparemment, l'output TeX ne correspond pas à ce qui se trouve dans le tableau (pied du tableau)
-import { computed, reactive, ref } from "vue"
+import {computed, reactive, ref} from "vue"
 import Card from "@/Components/Ui/Card.vue"
 
-defineOptions({ layout: LayoutMain })
+defineOptions({layout: LayoutMain})
 
 const showTex = ref(false)
 
@@ -98,7 +99,7 @@ const statSum = computed<{
 			acc.fixii += value.fixii
 			return acc
 		},
-		{ ni: 0, fi: 0, fixi: 0, fixii: 0 }
+		{ni: 0, fi: 0, fixi: 0, fixii: 0}
 	)
 })
 
@@ -467,7 +468,7 @@ function statRoundValue(value) {
  */
 function stats_mode(table): { classe: string; mode: number } {
 	if (statTable.value.length === 0) {
-		return { classe: "", mode: 0 }
+		return {classe: "", mode: 0}
 	}
 
 	// xm = b(i-1) + (D1)/(D1+D2)*Li

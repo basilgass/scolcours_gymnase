@@ -2,7 +2,7 @@ import {Equation, Polynom} from "pimath"
 import {splitIfOutsideParentheses} from "@/Checkers/checkerHelperFunctions.ts"
 
 export function isPolynom(value: string): false | Polynom {
-	// TODO : Maybe find a better way to check if a value is a polynom.
+	// REFACTOR : Maybe find a better way to check if a value is a polynom.
 	try {
 		return new Polynom(value)
 	} catch {

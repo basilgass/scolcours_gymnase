@@ -1,7 +1,5 @@
 <script lang="ts" setup>
 
-// REFACTOR: reprendre la carte de CourseEdit et tout intégrer ici
-// profiter pour enlever la notion de "require" ?
 import {LessonInterface} from "@/types/modelInterfaces.ts"
 import {computed, ref} from "vue"
 import ScButton from "@/Components/Ui/scButton.vue"

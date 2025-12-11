@@ -10,17 +10,33 @@ import {ScoreLessonDataInterface} from "@/types/scoreInterfaces.ts"
 import {router} from "@inertiajs/vue3"
 import axios from "axios"
 import {AxiosErrorMessage, AxiosResponseModel} from "@/types"
-import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
-import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
 import dayjs from "dayjs"
-
-const editMode = useStoreEditMode()
-const flash = useStoreFlashMessage()
+import {lessonableClassName} from "@/types/lessonInterfaces.ts"
 
 const props = defineProps<{
 	course: CourseInterface,
 	team: TeamInterface
 }>()
+
+const availableFilters = computed(() => {
+	const filterValues: lessonableClassName[] = ['Post', 'Generator', 'Challenge', 'Deck']
+
+	const arr = []
+
+	filterValues.forEach((f) => {
+		if (props.course.lessons.some(lesson => lesson.lessonable_type === f)) {
+			arr.push(f)
+		}
+	})
+
+	return arr
+})
+const filter = ref<lessonableClassName | null>(null)
+const lessons = computed(() => {
+	if (filter.value === null) return props.course.lessons
+
+	return props.course.lessons.filter(lesson => lesson.lessonable_type === filter.value)
+})
 
 const scoreStore = useStoreScore()
 const scores = ref<Record<number, ScoreInterface<ScoreLessonDataInterface>>>({})
@@ -114,10 +130,23 @@ onUnmounted(() => {
 	>
 		<!-- en-tête et titres -->
 		<div class="flex justify-between items-baseline">
-			<h3 class="text-lg uppercase">
-				statistiques de
-				{{ selected_user_id === 0 ? team.name : users.find(user => user.id === selected_user_id).fullname }}
-			</h3>
+			<div class="flex items-baseline gap-3">
+				<h3 class="text-lg uppercase">
+					statistiques de
+					{{ selected_user_id === 0 ? team.name : users.find(user => user.id === selected_user_id).fullname }}
+				</h3>
+				<div class="flex gap-2 text-xs">
+					<lesson-type-icon
+						v-for="t in availableFilters"
+						:key="`filter-${t}`"
+						@click="filter=filter === t ? null : t"
+						:class="{
+							'opacity-30': filter!==null && filter!==t
+						}"
+						:lesson="t"
+					/>
+				</div>
+			</div>
 
 
 			<sc-button
@@ -158,7 +187,7 @@ onUnmounted(() => {
 		<!-- barres  -->
 		<div>
 			<div
-				v-for="lesson in course.lessons"
+				v-for="lesson in lessons"
 				:key="`stats-${lesson.id}`"
 				class="flex gap-3"
 			>

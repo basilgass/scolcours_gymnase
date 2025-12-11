@@ -1,8 +1,16 @@
 import {SCRIPT_TYPE} from "@/types"
 import PiMath from "pimath"
-import {computed, isRef, MaybeRef, ref, unref} from "vue"
+import {computed, ComputedRef, isRef, MaybeRef, Ref, ref, unref} from "vue"
 import {PiMathExt} from "@/PiMathExtended/PiMathExt.ts"
 
+export interface UseScriptLoaderReturn {
+	iteration: Ref<number>
+	run: () => void
+	reset: () => void
+	data: Ref<SCRIPT_TYPE>
+	merged: ComputedRef<SCRIPT_TYPE>
+	hasData: ComputedRef<boolean>
+}
 
 export function useScriptLoader(script: string, config?: {
 	parent?: MaybeRef<SCRIPT_TYPE>

@@ -42,17 +42,18 @@ export class NumberChecker extends CheckerAbstract {
 	override checkValue(value: string): CheckerResult {
 		const nbDigits = +this.config[0]
 
-		// REFACTOR: a besoin dans rendre les choses plus propre.
 		// Les valeurs (version numérique)
 		const answerValue = +this.answer
 		const givenValue = +value
 
 		if (!this._isStrict) {
 			if (givenValue === answerValue) {
-				// les valeurs sont les mêmes (possibilité d'enlever des zéros en trop)
+				// les valeurs (numériques) sont les mêmes  avec la possibilité d'enlever des zéros en trop
 				return makeCheckerResult()
 			}
 		}
+
+		// A partir de là, il ne s'agit plus que d'erreurs.
 
 		if (givenValue === -answerValue) {
 			return makeCheckerResult("Peut être un problème de signe...", 0.5)
@@ -64,17 +65,7 @@ export class NumberChecker extends CheckerAbstract {
 
 
 		// On contrôle la partie entière.
-		if (+unit !== +expectedUnit) {
-			if (+unit === -expectedUnit) {
-				return makeCheckerResult("Problème de signe sur la partie entière.", 0.2)
-			}
-
-			if (+digits === +expectedDigits) {
-				return makeCheckerResult("la partie entière n'est pas juste.")
-			}
-
-			return makeCheckerResult("La réponse n'est pas juste.")
-		}
+		if (+unit !== +expectedUnit) return makeCheckerResult("La réponse n'est pas juste.")
 
 		// On contrôle la partie décimale
 

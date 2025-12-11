@@ -390,7 +390,6 @@ export const keyboards: Record<string, KeyboardObjectType> = {
 					.replace("RR_-", "RR_(-)")
 			)
 
-			// REFACTOR: comprendre ce qui se passe ici...
 			let isOpened = false
 			tex = tex
 				.replaceAll("\\left [", "[")

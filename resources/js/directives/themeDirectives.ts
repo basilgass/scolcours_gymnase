@@ -1,6 +1,5 @@
 import {usePage} from "@inertiajs/vue3"
 
-// REFACTOR: reformat this file
 function getThemes(): string[] {
 	return Object.values(usePage().props.themes).map((theme) => theme.slug)
 }
@@ -73,9 +72,9 @@ export function getThemeClasses(chapter: string, modifiers: Record<string, boole
 	}
 
 	const intensity = modifiers.light
-	? '-light'
+		? '-light'
 		: modifiers.dark
-	? '-dark'
+			? '-dark'
 			: ''
 
 	Object.keys(modifiers)
@@ -98,7 +97,7 @@ export function getThemeClasses(chapter: string, modifiers: Record<string, boole
 					if (key === 'border') {
 						classesList.push(`border`)
 					}
-					if(key==='outline'){
+					if (key === 'outline') {
 						classesList.push('outline-2')
 					}
 				}

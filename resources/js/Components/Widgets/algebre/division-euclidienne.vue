@@ -6,22 +6,22 @@ code: rational fraction
 <script setup lang="ts">
 
 import PiEuclidian from "@/Components/Pi/PiEuclidian.vue"
-import { WidgetPropsInterface } from "@/types/modelInterfaces.ts"
-import { computed } from "vue"
+import {WidgetPropsInterface} from "@/types/modelInterfaces.ts"
+import {computed} from "vue"
 
 
 const props = defineProps<{
 	illustration: WidgetPropsInterface
 }>()
 
-const euclidian = computed(()=>{
-	const config = props.illustration.parameters.split(",")??[]
+const euclidian = computed(() => {
+	const config = props.illustration.parameters.split(",") ?? []
 	return {
 		fx: props.illustration.code,
-		name: config.filter(x=>x.includes("(x)"))[0]||"f(x)",
-		fundamental: config.indexOf("f")!==-1 || config.indexOf("fundamental")!==-1,
-		asymptote: config.indexOf("a")!==-1 || config.indexOf("asymptote")!==-1,
-		atBottom: config.indexOf("b")!==-1 || config.indexOf("bottom")!==-1
+		name: config.filter(x => x.includes("(x)"))[0] || "f(x)",
+		fundamental: config.indexOf("f") !== -1 || config.indexOf("fundamental") !== -1,
+		asymptote: config.indexOf("a") !== -1 || config.indexOf("asymptote") !== -1,
+		atBottom: config.indexOf("b") !== -1 || config.indexOf("bottom") !== -1
 	}
 })
 </script>

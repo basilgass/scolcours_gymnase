@@ -46,9 +46,9 @@ const show = ref(true)
 			>
 				<h2
 					class="font-semibold
-					bg-slate-300 dark:bg-slate:700
+					bg-slate-300 dark:bg-slate-700
 					mt-5 mb-2 -ml-2 p-2
-					border rounded
+					border border-content rounded
 					whitespace-nowrap"
 					v-if="link.route===null"
 				>
