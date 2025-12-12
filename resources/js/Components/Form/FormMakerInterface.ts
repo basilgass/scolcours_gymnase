@@ -54,6 +54,7 @@ export interface FormMakerPropsNewType {
 	btn?: boolean | string
 	clearable?: boolean
 	message?: string
+	messageClass?: string
 	xs?: boolean
 	sm?: boolean
 	xl?: boolean

@@ -37,7 +37,10 @@ export function useQuestion(
 	const answersVariables = computed<string[]>(() => {
 		// Get every "$<key> " values from block.body.
 		const bodyText = question.value.block.body.toLowerCase()
-		const regex = /\$[a-zA-Z](?=\\|\s|$)/g
+
+		// repèrese les $a ou $A seulement s'ils sont suivi par
+		// un espace, ou un des caractères \()[]{}=
+		const regex = /\$[a-zA-Z](?=[\\\s()\[\]{}=]|$)/g
 		const matches = [...new Set([
 			...bodyText.matchAll(regex)]
 			.map(match => match[0][1])

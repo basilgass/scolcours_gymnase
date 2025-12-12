@@ -41,11 +41,11 @@ export function replace_ABC_inline(md: string, index, key: string, answer: keybo
 	// $A, $B, ... inline
 	return md.replaceAll(
 		new RegExp(`${key}`, "gm"),
-		`<div data-answer-index="${index}" class="border px-3 py-1 inline-block ${color}">${
+		`<span data-answer-index="${index}" class="border px-3 py-1 inline-block ${color}">${
 			answer.raw ?
 				answer.raw :
 				"< ? >"
-		}</div>`)
+		}</span>`)
 }
 
 export function replace_ABC_inline_no_div(md: string, index, key: string, answer: keyboardEventInterface, color: string): string {

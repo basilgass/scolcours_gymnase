@@ -166,6 +166,10 @@ const areaHeight = computed(() => {
 				<i class="bi bi-textarea-resize mr-2" /> agrandir
 			</button>
 		</div>
+		<div
+			v-katex.auto="message"
+			:class="messageClass"
+		/>
 		<div class="flex flex-wrap gap-1 mt-2">
 			<button
 				v-for="key in Object.keys(codeTriggers)"

@@ -244,7 +244,7 @@ function deleteIllustration() {
 					:label="`body (id: ${theQuestion.block.id})`"
 					:rows="10"
 					language="latex"
-					message="\$a = TeX, \$A = texte, @$A = format spéciaux"
+					message="$a = TeX, $A = texte (block ou inline), _$A=no placeholder, @$A = format spéciaux"
 					message-class="text-[12px]"
 					type="codearea"
 				/>
