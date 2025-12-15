@@ -113,3 +113,7 @@
 		background: color-mix(in oklch, --value(--color-*) 20%, transparent);
 	}
 }
+
+@utility list-inline {
+	@apply flex flex-wrap gap-3 list-none
+}

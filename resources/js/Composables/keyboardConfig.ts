@@ -134,6 +134,7 @@ export const keyboardKeys = {
 	not: {type: "math", display: "\\neg"},
 	nn: {type: "math", display: "\\cap"},
 	oo: {type: "math", display: "\\infty"},
+	mod: {type: "math", display: "\\mod{}"},
 	"+-": {type: "math", display: "\\pm"},
 	"-+": {type: "math", display: "\\mp"},
 	"!!": {type: "math", display: "\\varnothing"},
@@ -447,6 +448,19 @@ export const keyboards: Record<string, KeyboardObjectType> = {
 		],
 		tex: function (value) {
 			return buildVectorialTex(value)
+		}
+	},
+	mod: {
+		name: "modulo",
+		grid: "grid grid-cols-3",
+		layout: [
+			"1", "2", "3",
+			"4", "5", "6",
+			"7", "8", "9",
+			"-", "0", "mod",
+		],
+		tex: function (value) {
+			return asciiToTex(value)
 		}
 	}
 }

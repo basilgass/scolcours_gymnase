@@ -10,8 +10,8 @@ import {makeBlock} from "@/helpers/makeModel.ts"
 
 defineOptions({layout: LayoutMain})
 
-type groupsUiType = 'theme' | 'buttons' | 'blocks' | 'forms' | 'definition'
-const detailsOpen = ref<groupsUiType[]>(['buttons'])
+type groupsUiType = 'theme' | 'buttons' | 'blocks' | 'forms' | 'definition' | 'various'
+const detailsOpen = ref<groupsUiType[]>(['various'])
 
 const loremIpsum = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium id molestiae nam nobis recusandae sapiente, voluptas! Amet autem exercitationem nulla odit ratione suscipit ut. Cupiditate et magnam quibusdam saepe tempore?'
 const btnTypes: buttonTypes[] = Object.keys(buttonConfig) as buttonTypes[]
@@ -179,10 +179,6 @@ const value = ref(false)
 
 <template>
 	<div class="space-y-4">
-		<div class="cancel-red-800 h-[150px] w-[120px] bg-blue-100">
-			Hello world
-		</div>
-
 		<details :open="detailsOpen.includes('definition')">
 			<summary class="text-lg cursor-pointer">
 				Définition (mise en évidence)
@@ -192,7 +188,8 @@ const value = ref(false)
 					v-for="key in Object.keys(definitionClasses)"
 					:key="`def-${key}`"
 				>
-					Mise en évidence de la défition du <span :class="definitionClasses[key]">{{ key }}</span> dans une phrase.
+					Mise en évidence de la défition du <span :class="definitionClasses[key]">{{ key }}</span> dans une
+					phrase.
 				</div>
 			</div>
 		</details>
@@ -225,9 +222,9 @@ const value = ref(false)
 			</summary>
 			<div class="flex flex-col gap-3">
 				<div
-					class="flex flex-col gap-3 p-3 bg-content"
 					v-for="(outline) in [false, true]"
 					:key="`button-style-${outline ? 'outline': 'regular'}`"
+					class="flex flex-col gap-3 p-3 bg-content"
 				>
 					<h3 class="text-lg">
 						boutons {{ outline ? 'contours (outline)' : 'réguliers' }}
@@ -236,8 +233,8 @@ const value = ref(false)
 						<!-- boutons themes -->
 						<sc-button
 							v-for="theme in Object.keys(themes)"
-							:theme="theme"
 							:key="`btn-${theme}`"
+							:theme="theme"
 							class="h-[60px] w-[180px]"
 							:outline
 						>
@@ -252,11 +249,11 @@ const value = ref(false)
 						<!-- boutons types petits -->
 						<sc-button
 							v-for="type in btnTypes"
+							:key="`btn-${type}-xs`"
 							:type="type"
 							xs
 							:outline
 							icon
-							:key="`btn-${type}-xs`"
 						/>
 					</div>
 
@@ -264,10 +261,10 @@ const value = ref(false)
 						<!-- boutons types normaux -->
 						<sc-button
 							v-for="type in btnTypes"
+							:key="`btn-${type}`"
 							:type="type"
 							:outline
 							icon
-							:key="`btn-${type}`"
 						/>
 					</div>
 
@@ -275,11 +272,11 @@ const value = ref(false)
 						<!-- boutons types larges -->
 						<sc-button
 							v-for="type in btnTypes"
+							:key="`btn-${type}-xl`"
 							:type="type"
 							xl
 							:outline
 							icon
-							:key="`btn-${type}-xl`"
 						/>
 					</div>
 				</div>
@@ -322,24 +319,43 @@ const value = ref(false)
 
 				<div class="flex gap-3 justify-between items-center mt-3">
 					<form-maker
+						v-model="value"
 						type="switch"
 						sm
-						v-model="value"
 						label="active,not active"
 					/>
 					<form-maker
+						v-model="value"
 						type="switch"
-						v-model="value"
 						label="active,not active"
 					/>
 					<form-maker
+						v-model="value"
 						type="switch"
 						xl
-						v-model="value"
 						label="active,not active"
 					/>
 				</div>
 			</div>
+		</details>
+
+		<details :open="detailsOpen.includes('various')">
+			<summary class="text-lg cursor-pointer">
+				Various
+			</summary>
+			<div class="cancel-red-800 h-[150px] w-[120px] bg-blue-100">
+				Hello world
+			</div>
+
+			<ul class="list-inline">
+				<li
+					v-for="i in 50"
+					:key="`block-${i}`"
+					class="w-10 h-10 bg-red-200 border rounded"
+				>
+					{{ i }}
+				</li>
+			</ul>
 		</details>
 	</div>
 </template>
