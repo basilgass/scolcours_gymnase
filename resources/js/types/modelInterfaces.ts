@@ -77,6 +77,7 @@ export interface IllustrationInterface {
 
 export interface QuestionDynamicInterface {
 	answer: string;
+	equationControl: string;
 	block: BlockMinInterface;
 	keyboard: string;
 	user: {

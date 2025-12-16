@@ -7,7 +7,6 @@ use App\Traits\HasUrlTrait;
 use Auth;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
@@ -60,6 +59,7 @@ class Question extends Model
 		'displayif',
 		'css',
 		'answer',
+		'equationControl',
 		'keyboard',
 	];
 	protected $appends = ['url'];
@@ -79,9 +79,10 @@ class Question extends Model
 	 */
 	public function blocks(): MorphMany
 	{
-		return $this->morphMany(Block::class, 'blockable')
-		            ->orderBy('order')
-		            ->orderBy('id');
+		return $this
+			->morphMany(Block::class, 'blockable')
+			->orderBy('order')
+			->orderBy('id');
 	}
 
 	public function resetAnswer(): void

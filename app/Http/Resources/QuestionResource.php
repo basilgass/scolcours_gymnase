@@ -39,18 +39,19 @@ class QuestionResource extends JsonResource
 		}
 
 		return [
-			"id"        => $this->id,
-			"order"     => $this->order,
-			"displayIf" => $this->display_if,
-			"css"       => $this->css,
-			"block"     => [
+			"id"              => $this->id,
+			"order"           => $this->order,
+			"displayIf"       => $this->display_if,
+			"css"             => $this->css,
+			"block"           => [
 				'id'           => $blocks[0]->id,
 				'title'        => $blocks[0]->title,
 				'body'         => $blocks[0]->body ?? "",
 				'illustration' => $blocks[0]->illustrations[0] ?? null
 			],
-			"answer"    => $this->answer,
-			"keyboard"  => $this->keyboard,
+			"answer"          => $this->answer,
+			"equationControl" => $this->equationControl,
+			"keyboard"        => $this->keyboard,
 		];
 	}
 }

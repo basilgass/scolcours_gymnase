@@ -10,6 +10,7 @@ import {CourseInterface, UserInterface} from "@/types/modelInterfaces.ts"
 import CourseCard from "@/Components/Courses/CourseCard.vue"
 import ScButton from "@/Components/Ui/scButton.vue"
 import dayjs from "dayjs"
+import Card from "@/Components/Ui/Card.vue"
 
 defineOptions({layout: LayoutFullpage})
 
@@ -51,22 +52,33 @@ onMounted(() => {
 	<div class="space-y-10">
 		<ScolCoursLogo />
 
-		<div v-if="connectedUser">
-			<div class="flex justify-between mb-2">
-				<h3 class="text-lg md:text-xl">
-					Mes cours en cours
-				</h3>
+		<Card
+			v-if="connectedUser"
+			class="min-h-20"
+		>
+			<template #header>
+				<div class="flex justify-between mb-2">
+					<h3 class="text-lg md:text-xl">
+						Mes cours en cours
+					</h3>
 
-				<sc-button
-					v-if="passedCourses.length"
-					:href="route('users.dashboard')"
-					xs
-				>
-					<i class="bi bi-eye" /> Tous mes cours
-				</sc-button>
+					<sc-button
+						v-if="passedCourses.length"
+						:href="route('users.dashboard')"
+						xs
+					>
+						<i class="bi bi-eye" /> Tous mes cours
+					</sc-button>
+				</div>
+			</template>
+			<div
+				v-if="loadingCourses"
+				class="text-center text-lg lg:text-xl grid place-items-center"
+			>
+				<div>A la recherche de cours...</div>
 			</div>
 			<div
-				v-if="courses.length"
+				v-else-if="courses.length"
 				class="columns-1 md:columns-2 xl:columns-3 space-y-3"
 			>
 				<course-card
@@ -76,12 +88,12 @@ onMounted(() => {
 				/>
 			</div>
 			<div
-				v-if="loadingCourses"
-				class="text-center text-lg lg:text-xl min-h-[200px] grid place-items-center"
+				v-else
+				class="text-center text-lg lg:text-xl grid place-items-center"
 			>
-				<div>A la recherche de cours...</div>
+				<div>Apparemment, il n'y a pas de cours pour l'instant...</div>
 			</div>
-		</div>
+		</Card>
 		<div
 			v-else
 			class="grid place-items-center h-[100px]"

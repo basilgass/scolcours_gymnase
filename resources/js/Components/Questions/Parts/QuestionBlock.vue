@@ -39,7 +39,6 @@ const body = computed(() => {
 
 	for (let i = 0; i < questionData.answers.variables.value.length; i++) {
 		const key = makeKey(i)
-		console.log(key)
 		const answer: keyboardEventInterface = questionData.user.answers.value[i]
 
 		// Determiner the color to display...

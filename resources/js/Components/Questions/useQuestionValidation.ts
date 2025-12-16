@@ -10,14 +10,15 @@ import {
 import {useStoreScore} from "@/stores/useStoreScore.ts"
 import {computed, ref, useTemplateRef} from "vue"
 import ScButton from "@/Components/Ui/scButton.vue"
+import {Equation, Fraction, literalType} from "pimath"
+
+const alphabet = "abcdefghijklmnopqrstuvwxyz"
 
 interface CheckerResultWithIndex extends CheckerResult {
 	index: number
 }
 
 export function useQuestionValidation(questionData: questionDataInterface) {
-
-
 	/**
 	 * Sur une validation, il faut
 	 * - bloquer le bouton pour ne pas exécuter plusieurs fois la validation
@@ -28,7 +29,6 @@ export function useQuestionValidation(questionData: questionDataInterface) {
 	 * - modifier le statut de la question.
 	 */
 
-	
 	const errorMessages = ref<string[]>([])
 	const lock = ref(false)
 
@@ -162,20 +162,34 @@ export function useQuestionValidation(questionData: questionDataInterface) {
 		const validations = update()
 
 		// Défini le résultat final
-		const result = reduce(validations)
+		let result = reduce(validations)
 
-		// Afficher les messages d'erreurs
-		errorMessages.value = questionData.config.silent
-			? []
-			: validations
-				.map((v, index) => {
-					if (questionData.answers.variables.value.length === 1) {
-						return v.result ? "" : `${v.message}`
-					} else {
-						return v.result ? "" : `${index + 1}. ${v.message}`
-					}
-				})
-				.filter(msg => msg !== "")
+		// contrôle des réponses de maninère globales (override).
+		// TODO: réfléchir a une manière plus propre de scinder le check global du check itératif.
+		if (questionData.question.value.equationControl) {
+			result = useQuestionValidationEquation(
+				questionData.question.value.equationControl,
+				questionData.user.answers.value.map(x => x.input)
+			)
+
+			if (!result) {
+				errorMessages.value = ["les réponses ne concordent pas."]
+			}
+		} else {
+			// Afficher les messages d'erreurs
+			errorMessages.value = questionData.config.silent
+				? []
+				: validations
+					.map((v, index) => {
+						if (questionData.answers.variables.value.length === 1) {
+							return v.result ? "" : `${v.message}`
+						} else {
+							return v.result ? "" : `${index + 1}. ${v.message}`
+						}
+					})
+					.filter(msg => msg !== "")
+		}
+
 
 		// Sauvegarde dans la base de donnée
 		save(validations)
@@ -184,7 +198,6 @@ export function useQuestionValidation(questionData: questionDataInterface) {
 					lock.value = false
 				}, 500)
 			})
-
 
 		questionResult.value = {
 			result,
@@ -250,9 +263,34 @@ export function useQuestionValidation(questionData: questionDataInterface) {
 		validate,
 		errors: errorMessages,
 		answersCount,
-		count: questionData.answers.values.value.length,
+		count: questionData.answers.values.value.length || 0,
 		button,
 		buttonLabel,
 		result: questionResult
+	}
+}
+
+
+function mappedValues(values: string[]): literalType<number | Fraction> {
+	// TODO: check ce qu'il se passe avec des valeurs exacts.
+	if (values.length === 0) return {}
+
+	const dict: literalType<number | Fraction> = {}
+	values.forEach((a, i) => {
+		dict[alphabet[i]] = new Fraction(a)
+	})
+
+	return dict
+}
+
+export function useQuestionValidationEquation(equationControl: string, values: string[]): boolean {
+	if (!equationControl) return true
+
+	try {
+		const equ = new Equation(equationControl)
+		const mapped = mappedValues(values)
+		return equ.evaluate(mapped)
+	} catch {
+		return false
 	}
 }

@@ -10,7 +10,7 @@ export enum ITEM_TYPES {
 	TRACE = "trace"
 }
 
-export const STUDY_CONTROLS_KEYS = ["LB", "LT", "RB", "RT"]
+export const STUDY_CONTROLS_KEYS = ["LT", "RT", "LB", "RB"]
 
 export interface ASYMPTOTES_CONTROLS {
 	"LB": Point
@@ -121,16 +121,16 @@ export class StudyGraph extends PiGraph {
 			type: ITEM_TYPES.AV,
 			element: p,
 			controls: this.addControls([
-				[x.min + 0.5, y + 0.5],
-				[x.min + 0.5, y - 0.5],
-				[x.max - 0.5, y + 0.5],
-				[x.max - 0.5, y - 0.5]
+				[x.min + 0.5, y + 0.5],//LT
+				[x.max - 0.5, y + 0.5],//RT
+				[x.min + 0.5, y - 0.5],//LB
+				[x.max - 0.5, y - 0.5]//RB
 			]),
 			bezier: this.addBezierControls([
-				[x.min, y + 0.1, x.min - 5, y + 0.05],
-				[x.min, y - 0.1, x.min - 5, y - 0.05],
-				[x.max, y + 0.1, x.max + 5, y + 0.05],
-				[x.max, y - 0.1, x.max + 5, y - 0.05]
+				[x.min, y + 0.1, x.min - 5, y + 0.05],//LT
+				[x.max, y + 0.1, x.max + 5, y + 0.05],//RT
+				[x.min, y - 0.1, x.min - 5, y - 0.05],//LB
+				[x.max, y - 0.1, x.max + 5, y - 0.05]//RB
 			])
 		}
 	}
@@ -154,16 +154,16 @@ export class StudyGraph extends PiGraph {
 			type: ITEM_TYPES.AO,
 			element: p,
 			controls: this.addControls([
-				[A.x + dxy.x + pxy.x, A.y + dxy.y + pxy.y],
-				[A.x + dxy.x - pxy.x, A.y + dxy.y - pxy.y],
-				[B.x - dxy.x + pxy.x, B.y - dxy.y + pxy.y],
-				[B.x - dxy.x - pxy.x, B.y - dxy.y - pxy.y]
+				[A.x + dxy.x + pxy.x, A.y + dxy.y + pxy.y],//LT
+				[B.x - dxy.x + pxy.x, B.y - dxy.y + pxy.y],//RT
+				[A.x + dxy.x - pxy.x, A.y + dxy.y - pxy.y],//LB
+				[B.x - dxy.x - pxy.x, B.y - dxy.y - pxy.y]//RB
 			]),
 			bezier: this.addBezierControls([
-				[A.x - dxy.x + pxy.x / b1ratio, A.y - dxy.y + pxy.y / b1ratio, A.x - dxy.x * 5 + pxy.x / b2ratio, A.y - dxy.y * 5 + pxy.y / b2ratio],
-				[A.x - dxy.x - pxy.x / b1ratio, A.y - dxy.y - pxy.y / b1ratio, A.x - dxy.x * 5 - pxy.x / b2ratio, A.y - dxy.y * 5 - pxy.y / b2ratio],
-				[B.x + dxy.x + pxy.x / b1ratio, B.y + dxy.y + pxy.y / b1ratio, B.x + dxy.x * 5 + pxy.x / b2ratio, B.y + dxy.y * 5 + pxy.y / b2ratio],
-				[B.x + dxy.x - pxy.x / b1ratio, B.y + dxy.y - pxy.y / b1ratio, B.x + dxy.x * 5 - pxy.x / b2ratio, B.y + dxy.y * 5 - pxy.y / b2ratio]
+				[A.x - dxy.x + pxy.x / b1ratio, A.y - dxy.y + pxy.y / b1ratio, A.x - dxy.x * 5 + pxy.x / b2ratio, A.y - dxy.y * 5 + pxy.y / b2ratio],//LT
+				[B.x + dxy.x + pxy.x / b1ratio, B.y + dxy.y + pxy.y / b1ratio, B.x + dxy.x * 5 + pxy.x / b2ratio, B.y + dxy.y * 5 + pxy.y / b2ratio],//RT
+				[A.x - dxy.x - pxy.x / b1ratio, A.y - dxy.y - pxy.y / b1ratio, A.x - dxy.x * 5 - pxy.x / b2ratio, A.y - dxy.y * 5 - pxy.y / b2ratio],//LB
+				[B.x + dxy.x - pxy.x / b1ratio, B.y + dxy.y - pxy.y / b1ratio, B.x + dxy.x * 5 - pxy.x / b2ratio, B.y + dxy.y * 5 - pxy.y / b2ratio]//RB
 			])
 		}
 	}
@@ -176,26 +176,29 @@ export class StudyGraph extends PiGraph {
 		const p = this.makeLine({x: posX, y: 0}, {x: 0, y: 1})
 		p.stroke('red')
 
+		// LT, LB, RT, RB
 		return {
 			type: ITEM_TYPES.AV,
 			element: p,
 			controls: this.addControls([
-				[x - 0.5, y.max - 0.5],
-				[x + 0.5, y.max - 0.5],
-				[x - 0.5, y.min + 0.5],
-				[x + 0.5, y.min + 0.5]
+				[x - 0.5, y.max - 0.5],//LT
+				[x + 0.5, y.max - 0.5],//RT
+				[x - 0.5, y.min + 0.5],//LB
+				[x + 0.5, y.min + 0.5] //RB
 			]),
 			bezier: this.addBezierControls([
-				[x - 0.1, y.max, x - 0.05, y.max + 5],
-				[x + 0.1, y.max, x + 0.05, y.max + 5],
-				[x - 0.1, y.min, x - 0.05, y.min - 5],
-				[x + 0.1, y.min, x + 0.05, y.min - 5]
+				[x - 0.1, y.max, x - 0.05, y.max + 5],//LT
+				[x - 0.1, y.min, x - 0.05, y.min - 5],//RT
+				[x + 0.1, y.max, x + 0.05, y.max + 5],//LB
+				[x + 0.1, y.min, x + 0.05, y.min - 5] //RB
 			])
 		}
 	}
 
 	addBezier(value: IBezierConfig): Bezier {
+		// TODO: handle breakable bezier
 		return this.create.bezier(value, this.makeName())
+			.stroke('blue', 3)
 	}
 
 	addBezierControls(values: number[][]): BEZIER_CONTROLS {
@@ -231,17 +234,19 @@ export class StudyGraph extends PiGraph {
 				.stroke('black')
 				.fill('white/0.5')
 
-			pt.shape.on('click', () => {
-				if (pt.shape.fill() === "white") {
-					pt.shape.fill("green")
-				} else {
-					pt.shape.fill("white")
-				}
-			})
+			pt.shape.on('click', () => this.onClick(pt))
 			controls[key] = pt
 		})
 
 		return controls
+	}
+
+	onClick(pt: Point) {
+		if (pt.shape.fill() === "white") {
+			pt.shape.fill("green")
+		} else {
+			pt.shape.fill("white")
+		}
 	}
 
 	addEnvTracePoints(): itemGraphInterface {
@@ -253,16 +258,16 @@ export class StudyGraph extends PiGraph {
 			type: ITEM_TYPES.TRACE,
 			element: null,
 			controls: this.addControls([
-				[bbox.x.min + 0.5, bbox.y.max - 0.5],
-				[bbox.x.min + 0.5, bbox.y.min + 0.5],
-				[bbox.x.max - 0.5, bbox.y.max - 0.5],
-				[bbox.x.max - 0.5, bbox.y.min + 0.5],
+				[bbox.x.min + 0.5, bbox.y.max - 0.5],//LT
+				[bbox.x.max - 0.5, bbox.y.max - 0.5],//RT
+				[bbox.x.min + 0.5, bbox.y.min + 0.5],//LB
+				[bbox.x.max - 0.5, bbox.y.min + 0.5],//RB
 			]),
 			bezier: this.addBezierControls([
-				[bbox.x.min, bbox.y.max],
-				[bbox.x.min, bbox.y.min],
-				[bbox.x.max, bbox.y.max],
-				[bbox.x.max, bbox.y.min]
+				[bbox.x.min, bbox.y.max],//LT
+				[bbox.x.max, bbox.y.max],//RT
+				[bbox.x.min, bbox.y.min],//LB
+				[bbox.x.max, bbox.y.min]//RB
 			])
 		}
 	}

@@ -36,7 +36,7 @@ function onChange(): void {
 
 async function setInput(value?: string): Promise<KeyboardInputInterface> {
 	if (value !== undefined) {
-		// Load the answer
+		parseStringToKeyboard(value)
 	}
 
 	const output = validateOutput()
@@ -461,51 +461,79 @@ function plotGraph() {
 	onChange()
 }
 
+function getCoordinates(item: string): [string | undefined, string | undefined] {
+	const [a, b] = item.split(';')
 
-// defineExpose({
-// 	reset,
-// 	loadAnswer: (value) => {
-// 		loadAnswerToKeyboard(value, reset, changeEvent, (value) => {
-// 			value.split(",").forEach((item) => {
-//
-// 				// Adding points.
-// 				const [x, y] = getCoordinates(item)
-//
-// 				if (x !== undefined && y !== undefined) {
-// 					let type = item.split("(")[0]
-//
-// 					if (type === "M") {
-// 						type = "mm"
-// 					}
-//
-// 					display.value.input = `(${x};${y})`
-// 					addItemToGraph(type === "" ? "p" : type)
-// 				} else {
-// 					// Plotting asymptotes
-// 					// Adding asymptotes.
-// 					const [equ, ...ctrls] = item.split("&")
-//
-// 					display.value.input = equ
-//
-// 					if (equ.substring(0, 2) === "x=") {
-// 						addItemToGraph("av")
-// 					} else if (equ.match(/x/) && equ.match(/y/)) {
-// 						addItemToGraph("ao")
-// 					} else if (equ.substring(0, 2) === "y=") {
-// 						addItemToGraph("ah")
-// 					}
-//
-// 					ctrls.forEach((key) => {
-// 						itemsGraph.value[equ].controls[key].svg.fill("green")
-// 					})
-// 				}
-// 			})
-//
-// 			plotGraph()
-// 		})
-// 	},
-// 	parameters: "pleins de paramètres à donner..."
-// })
+	if (b === undefined) return [undefined, undefined]
+
+	const x = a.split('(')
+	x.shift()
+	const y = b.split(')')
+	y.pop()
+	return [
+		x.join('('),
+		y.join(')')
+	]
+}
+
+function parseStringToKeyboard(value: string) {
+	value.split(",").forEach((item) => {
+
+		// Adding points.
+		const [x, y] = getCoordinates(item)
+
+		if (x !== undefined && y !== undefined) {
+			let type = item.split("(")[0]
+
+			if (type === "M") {
+				type = "mm"
+			}
+
+			display.value.input = `(${x};${y})`
+			addItemToGraph(type === "" ? "p" : type)
+		} else {
+			// Plotting asymptotes
+			// Adding asymptotes.
+			const [equ, ...ctrls] = item.split("&")
+
+			display.value.input = equ
+
+			if (equ.substring(0, 2) === "x=") {
+				addItemToGraph("av")
+			} else if (equ.match(/x/) && equ.match(/y/)) {
+				addItemToGraph("ao")
+			} else if (equ.substring(0, 2) === "y=") {
+				addItemToGraph("ah")
+			}
+
+			ctrls.forEach((key) => {
+				const pt = itemsGraph.value[equ].controls[key]
+				graph.onClick(pt)
+			})
+		}
+	})
+
+	plotGraph()
+}
+
+const showControls = ref(true)
+
+function toggleControls() {
+	showControls.value = !showControls.value
+
+	Object.values(itemsGraph.value)
+		.filter(obj => obj.controls)
+		.forEach(obj => {
+			Object.values(obj.controls).forEach(pt => {
+				if (showControls.value) {
+					pt.show()
+				} else {
+					pt.hide()
+				}
+			})
+		})
+
+}
 </script>
 
 <template>
@@ -516,6 +544,12 @@ function plotGraph() {
 				ref="draw"
 				class="min-w-[1em]"
 			/>
+			<div
+				class="text-xs cursor-pointer"
+				@click="toggleControls"
+			>
+				<i :class="['bi mr-1', showControls?'bi-eye':'bi-eye-slash']" /> contrôles
+			</div>
 
 			<!-- Trace button -->
 			<div
@@ -570,7 +604,12 @@ function plotGraph() {
 						items.length === 0 ? "aucun élément créé" : items.length === 1 ? "élément créé" : "éléments créés"
 					}}
 				</h3>
-				<div class="flex gap-1 lg:gap-2 items-baseline justify-center keyboard min-h-[3em]">
+				<div
+					class="flex gap-1 lg:gap-2
+				items-baseline justify-center
+				flex-wrap
+				keyboard min-h-[3em]"
+				>
 					<button
 						v-for="item in items"
 						:key="item"

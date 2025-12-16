@@ -13,6 +13,7 @@ import axios from "axios"
 import {computed, PropType, ref} from "vue"
 import ScButton from "@/Components/Ui/scButton.vue"
 import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
+import {useQuestionValidationEquation} from "@/Components/Questions/useQuestionValidation.ts"
 
 defineOptions({layout: LayoutMain})
 
@@ -36,6 +37,7 @@ function saveQuestion() {
 				.post(route("api.admin.questions.update", [theQuestion.value.id]), {
 					_method: "PATCH",
 					answer: theQuestion.value.answer,
+					equationControl: theQuestion.value.equationControl,
 					keyboard: theQuestion.value.keyboard,
 					css: theQuestion.value.css
 				})
@@ -128,6 +130,12 @@ function deleteIllustration() {
 	})
 }
 
+const equationCheck = computed(() => {
+	return useQuestionValidationEquation(
+		theQuestion.value.equationControl,
+		theQuestion.value.answer.split('\n')
+	)
+})
 
 </script>
 <template>
@@ -258,6 +266,16 @@ function deleteIllustration() {
 					name="answer"
 					type="textarea"
 				/>
+
+				<form-maker
+					v-model="theQuestion.equationControl"
+					:rows="1"
+					label="global check"
+					name="globalCheck"
+					type="textarea"
+				/>
+
+				{{ equationCheck ? 'OK' : 'erreur' }}
 
 				<form-maker
 					v-model="theQuestion.keyboard"

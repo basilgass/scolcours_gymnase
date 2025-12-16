@@ -9,11 +9,12 @@ class UpdateQuestionRequest extends FormRequest
 	public function rules(): array
 	{
 		return [
-			'keyboard'   => ['nullable', 'string'],
-			'answer'     => ['nullable', 'string'],
-			'order'      => ['nullable', 'integer'],
-			'display_if' => ['nullable', 'string'],
-			'css'        => ['nullable', 'string'],
+			'keyboard'        => ['nullable', 'string'],
+			'answer'          => ['nullable', 'string'],
+			'equationControl' => ['nullable', 'string'],
+			'order'           => ['nullable', 'integer'],
+			'display_if'      => ['nullable', 'string'],
+			'css'             => ['nullable', 'string'],
 		];
 	}
 
