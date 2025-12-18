@@ -175,6 +175,14 @@ export function useQuestionValidation(questionData: questionDataInterface) {
 			if (!result) {
 				errorMessages.value = ["les réponses ne concordent pas."]
 			}
+
+			// modifications des réponses car elles sont en fait valides.
+			validations.forEach(validation => {
+				validation.result = true
+				validation.score = 1
+				validation.message = ""
+			})
+
 		} else {
 			// Afficher les messages d'erreurs
 			errorMessages.value = questionData.config.silent
