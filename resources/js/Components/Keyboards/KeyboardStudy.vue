@@ -76,9 +76,6 @@ function validateOutput(): string {
 			arr.push(graph.itemToAnswer(item))
 		}
 
-		const envCtrls = graph.itemToAnswer(graph.getItem('env'))
-		if (envCtrls !== "env") arr.push(envCtrls)
-
 		output = arr.sort().join(",")
 	} else {
 		output = [...graph.items.map(el => el.id)].sort().join(",")
@@ -252,9 +249,6 @@ onMounted(() => {
 		})
 	}
 
-	// Création des points de contrôle de l'environnement
-	graph.addEnvTracePoints()
-
 	// Add resize observer
 	const resizeObserver = new ResizeObserver(() => {
 		graph.update()
@@ -349,7 +343,7 @@ function addItemToGraph(btn: string): undefined | itemGraphInterface {
 }
 
 function removeAllItems() {
-	graph.removeAllItems(config.value.plot.enable)
+	graph.removeAllItems()
 	loadedItems.value = []
 	onChange()
 }

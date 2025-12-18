@@ -148,8 +148,10 @@ export class StudyGraph extends PiGraph {
 			tex: (value: string) => katex.renderToString(value, {throwOnError: false})
 		})
 
-		this._loadControls = loadControls
 		this._size = 2 * this.toPixels(1) / 3
+
+		this._loadControls = loadControls
+		this.addEnvTracePoints()
 	}
 
 	get BBox(): { x: DOMAIN, y: DOMAIN } {
@@ -369,6 +371,9 @@ export class StudyGraph extends PiGraph {
 	addEnvTracePoints(): itemGraphInterface {
 		if (!this._loadControls) return null
 
+		const existingEnv = this.getItem('env')
+		if (existingEnv) return existingEnv
+
 		const bbox = this.BBox
 
 		const env = {
@@ -575,16 +580,14 @@ export class StudyGraph extends PiGraph {
 
 	}
 
-	removeAllItems(withPlotEnabled?: boolean): void {
+	removeAllItems(): void {
 		while (this._items.length > 0) {
 			this.removeItem(this._items[0])
 		}
 
 		this.removePlots()
 
-		if (withPlotEnabled) {
-			this.addEnvTracePoints()
-		}
+		this.addEnvTracePoints()
 	}
 
 	removeControlsAndBezier(item: itemGraphInterface) {
@@ -629,7 +632,7 @@ export class StudyGraph extends PiGraph {
 		const ctrls = []
 
 		if (item.type === "point") {
-			return `${item.kind}${item}`
+			return `${item.kind}${item.id}`
 		}
 
 		for (const key in item.controls) {
@@ -638,7 +641,7 @@ export class StudyGraph extends PiGraph {
 			}
 		}
 
-		return ctrls.length > 0 ? `${item}&${ctrls.sort().join("&")}` : item
+		return ctrls.length > 0 ? `${item.id}&${ctrls.sort().join("&")}` : item.id
 	}
 }
 
