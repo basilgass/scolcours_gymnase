@@ -14,6 +14,7 @@ import {
 import {lessonableModel, LessonChallengeScoreRules, LessonGeneratorScoreRules} from "@/types/lessonInterfaces.ts"
 import {
 	ScoreChallengeDataInterface,
+	ScoreDataInterface,
 	ScoreGeneratorDataInterface,
 	ScoreLessonDataInterface
 } from "@/types/scoreInterfaces.ts"
@@ -30,6 +31,7 @@ const flash = useStoreFlashMessage()
 const storeScore = useStoreScore()
 const lessonScore = ref<ScoreInterface<ScoreLessonDataInterface>>()
 const refScore = ref<number>(undefined)
+const refData = ref<ScoreDataInterface>()
 
 async function post_scores(post: PostShowInterface) {
 	const model = 'Question'
@@ -63,6 +65,7 @@ async function challenge_scores(challenge: ChallengeInterface) {
 	// Le score d'un challenge est de la forme:
 	// niveau.points
 	refScore.value = score.data.current_score
+	refData.value = score.data
 
 	if (score.data.current_score < rules.target) {
 		// score non atteint.
@@ -87,7 +90,9 @@ async function challenge_scores(challenge: ChallengeInterface) {
 		return
 	}
 
+	// lessonScore.value.score est de la forme
 	lessonScore.value.score++
+
 
 	if (!rules.occurrences || lessonScore.value.score === rules.occurrences) {
 		lessonScore.value.is_resolved = true
@@ -145,10 +150,10 @@ const displayLessonResult = computed(() => {
 		}
 		case "Challenge": {
 			const rules = props.lesson.scoreRules as LessonChallengeScoreRules
-			console.log(lessonScore.value.current_level)
+			const data = refData.value as ScoreChallengeDataInterface
 			return lessonScore.value.is_resolved ?
 				`100 %` :
-				`${refScore.value} / ${rules.target} & ${lessonScore.value?.current_level ?? 0} / ${rules.level} x ${lessonScore.value.score} / ${rules.occurrences ?? 1}`
+				`${refScore.value} / ${rules.target} & ${data?.current_level ?? 0} / ${rules.level} x ${lessonScore.value.score} / ${rules.occurrences ?? 1}`
 		}
 		default:
 			return "???"
@@ -191,19 +196,10 @@ async function resetScore() {
 	await storeScore.updateScore(lessonScore.value, true)
 }
 
-async function init_refScore(model: lessonableModel) {
-	switch (props.lesson.lessonable_type) {
-		case "Post":
-		case "Deck":
-			return undefined
-		case "Generator":
-		case "Challenge": {
-			const score = await storeScore.getScore<ScoreGeneratorDataInterface>(
-				'Generator',
-				model.id
-			)
-			refScore.value = score.data.current_score
-		}
+async function init_refScore() {
+	refScore.value = 0
+	refData.value = {
+		level: 0
 	}
 }
 
