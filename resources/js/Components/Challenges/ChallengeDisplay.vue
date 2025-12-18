@@ -21,8 +21,8 @@ defineProps<{
 			</suspense>
 			<suspense v-else>
 				<challenge-training
-					:generator="challenge.generators[selector-1]"
 					:key="challenge.generators[selector-1].slug"
+					:generator="challenge.generators[selector-1]"
 				/>
 			</suspense>
 		</div>

@@ -57,19 +57,33 @@ async function challenge_scores(challenge: ChallengeInterface) {
 		'Challenge',
 		challenge.id
 	)
+
 	const rules = props.lesson.scoreRules as LessonChallengeScoreRules
 
+	// Le score d'un challenge est de la forme:
+	// niveau.points
 	refScore.value = score.data.current_score
 
-	if (score.data.current_score > 0 &&
-		score.data.current_score < rules.target) {
+	if (score.data.current_score < rules.target) {
 		// score non atteint.
+		flash.info(
+			`${score.data.current_score} points sur ${rules.target}`,
+			{
+				title: 'Score non atteint',
+				duration: 4000
+			})
 		return
 	}
 
 	if (rules.level &&
 		score.data.current_level < rules.level) {
 		// niveau non atteint.
+		flash.info(
+			`niveau demandé non atteint: ${score.data.current_level} sur ${rules.level}`,
+			{
+				title: 'Niveau non atteint',
+			}
+		)
 		return
 	}
 
@@ -131,9 +145,10 @@ const displayLessonResult = computed(() => {
 		}
 		case "Challenge": {
 			const rules = props.lesson.scoreRules as LessonChallengeScoreRules
+			console.log(lessonScore.value.current_level)
 			return lessonScore.value.is_resolved ?
 				`100 %` :
-				`${refScore.value} / ${rules.target} x ${lessonScore.value.score} / ${rules.occurrences ?? 1}`
+				`${refScore.value} / ${rules.target} & ${lessonScore.value?.current_level ?? 0} / ${rules.level} x ${lessonScore.value.score} / ${rules.occurrences ?? 1}`
 		}
 		default:
 			return "???"
@@ -239,8 +254,8 @@ watch(() => storeScore.version, () => {
 		</template>
 		<div />
 		<template
-			#footer
 			v-if="lessonScore?.is_resolved"
+			#footer
 		>
 			<div
 				class="text-xs text-right cursor-pointer"

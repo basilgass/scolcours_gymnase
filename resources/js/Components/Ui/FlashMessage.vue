@@ -7,80 +7,64 @@ const flash = inject('flash')
 	lang="ts"
 	setup
 >
-import {onMounted, ref} from "vue"
+import {computed} from "vue"
+import {flashMessageInterface} from "@/types"
 
-const emits = defineEmits(["open", "close"])
-const props = withDefaults(defineProps<{
-		message: string
-		timeout?: number
-		link?: {
-			label: string,
-			url: string,
-			external?: boolean,
-		},
-		tex?: boolean
-	}>()
-	, {
-		timeout: 1000 * 5,
-		link: null,
-		tex: false
-	})
+const emits = defineEmits<{
+	close: [message: flashMessageInterface]
+}>()
 
-const show = ref(true)
-
-let timeoutId: number
+const props = defineProps<{
+	message: flashMessageInterface
+}>()
 
 function closeFlashMessage() {
-	show.value = false
-	emits("close", timeoutId)
+	emits("close", props.message)
 }
 
-
-onMounted(() => {
-	timeoutId = setTimeout(() => closeFlashMessage(), props.timeout)
-	emits("open", timeoutId)
-})
+const link = computed(() => props.message.config.link)
 </script>
 
 <template>
-	<transition name="flash-message">
+	<div
+		class="rounded-sm px-10 py-5 flex flex-col gap-6 relative"
+		v-bind="$attrs"
+	>
+		<!--title to display if any-->
+		<div v-if="message.config.title">
+			{{ message.config.title }}
+		</div>
+		<!-- Message to display -->
+		<div v-katex.auto="message.message" />
+
+		<!-- add link if there is one -->
 		<div
-			v-if="show"
-			class="rounded-sm px-10 py-5 flex flex-col gap-6 relative"
-			v-bind="$attrs"
+			v-if="link"
+			class="flex gap-4 hover:underline"
 		>
-			<!-- Message to display -->
-			<div v-katex.auto="message" />
-
-			<!-- add link if there is one -->
-			<div
-				v-if="props.link"
-				class="flex gap-4 hover:underline"
-			>
-				<i class="bi bi-link" />
-				<a
-					v-if="props.link.external"
-					:href="props.link.url"
-					@click="closeFlashMessage"
-				>
-					{{ props.link.url }}
-				</a>
-				<InertiaLink
-					v-else
-					:href="props.link.url"
-					@click="closeFlashMessage"
-				>
-					{{ props.link.label }}
-				</InertiaLink>
-			</div>
-
-			<!-- close button -->
-			<button
-				class="absolute right-1 top-0"
+			<i class="bi bi-link" />
+			<a
+				v-if="link.external"
+				:href="link.url"
 				@click="closeFlashMessage"
 			>
-				<i class="bi bi-x-lg text-xl hover:rotate-180" />
-			</button>
+				{{ link.url }}
+			</a>
+			<InertiaLink
+				v-else
+				:href="link.url"
+				@click="closeFlashMessage"
+			>
+				{{ link.label }}
+			</InertiaLink>
 		</div>
-	</transition>
+
+		<!-- close button -->
+		<button
+			class="absolute right-1 top-0"
+			@click="closeFlashMessage"
+		>
+			<i class="bi bi-x-lg text-xl hover:rotate-180" />
+		</button>
+	</div>
 </template>

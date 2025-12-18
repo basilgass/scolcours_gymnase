@@ -13,16 +13,28 @@ export const useStoreFlashMessage = defineStore(
 			type: flashType,
 			config: flashConfig = {}
 		) {
-			messages.value.push({
-					id: null,
-					message,
-					type,
-					config: {
-						timeout: 1000 * 2,
-						...config
-					}
+
+			const msg = {
+				id: crypto.randomUUID(),
+				message,
+				type,
+				config: {
+					duration: 1000 * 2,
+					...config
 				}
-			)
+			}
+
+			messages.value.push(msg)
+			
+			setTimeout(() => close(msg), msg.config.duration)
+		}
+
+		function close(message: flashMessageInterface) {
+			const index = messages.value.findIndex(msg => msg.id === message.id)
+
+			if (index === -1) return
+
+			messages.value.splice(index, 1)
 		}
 
 		return {
@@ -33,7 +45,8 @@ export const useStoreFlashMessage = defineStore(
 			info: (message: string, config?: flashConfig) =>
 				addFlashMessage(message, "info", config),
 			error: (message: string, config?: flashConfig) =>
-				addFlashMessage(message, "error", config)
+				addFlashMessage(message, "error", config),
+			close
 		}
 	}
 )

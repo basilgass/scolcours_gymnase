@@ -138,23 +138,6 @@ export const useStoreScore = defineStore(
 			return arr as T
 		}
 
-		// function oldVersionOfScoreData(typeName: string): ScoreDataInterface {
-		// 	const type = typeName.split('\\').pop() as scoreableClassName
-		//
-		// 	if (type === "Card") {
-		// 		return {
-		// 			success: 0,
-		// 			appearances: 0,
-		// 			time_spent: 0,
-		// 			current_score: 0,
-		// 			current_appearances: 0,
-		// 			current_time_spent: 0
-		// 		}
-		// 	}
-		//
-		// 	return null
-		// }
-
 		function updateScoreData<T extends ScoreDataInterface>(score: ScoreInterface): ScoreInterface<T> {
 			if (score.data === null) {
 				// MAYBE REDUNDANT AS BY DEFAULT
@@ -308,7 +291,7 @@ export const useStoreScore = defineStore(
 			return scores.value.findIndex(s => s.id === id)
 		}
 
-// Mise à jour d'un score.
+		// Mise à jour d'un score.
 		async function updateScore(score: ScoreInterface, silent?: boolean) {
 			const index = getIndexFromScoreId(score.id)
 

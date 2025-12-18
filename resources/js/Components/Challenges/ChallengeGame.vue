@@ -26,7 +26,6 @@ const props = defineProps<{
 	challenge: ChallengeInterface,
 }>()
 
-
 const state = ref<ChallengeGameState>("intro")
 const game = reactive<ChallengeGameInterface>({
 	score: 0,
@@ -117,6 +116,7 @@ const score = await scoreStore.getScore<ScoreChallengeDataInterface>('Challenge'
 function store() {
 	// Résultat du challenge
 	const delta = game.score - score.score
+	const deltaLevel = game.level - score.data.level
 
 	// Mise à jour des scores globaux.
 	score.score = Math.max(game.score, score.score)
@@ -125,6 +125,7 @@ function store() {
 	// Mise à jour des scores courants
 	score.data.current_score = game.score
 	score.data.current_level = game.level
+
 	scoreStore.updateScore(score)
 		.then(() => {
 			if (delta > 0) {
@@ -133,6 +134,11 @@ function store() {
 						delta > 1 ? "s" : ""
 					}`
 				)
+			} else if (deltaLevel > 0) {
+				flash.success(
+					`Bravo, vous avez amélioré votre niveau de ${deltaLevel} niveau${
+						delta > 1 ? "x" : ""
+					}`)
 			} else {
 				flash.info(
 					"Vous n'avez pas amélioré votre score... dommage !"

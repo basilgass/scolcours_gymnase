@@ -10,23 +10,22 @@ const flash = useStoreFlashMessage()
 <template>
 	<div
 		v-if="flash.messages.length"
-		class="fixed bottom-2 right-2 grid grid-cols-1 gap-3 max-w-[20em]"
+		class="fixed bottom-2 right-2 grid grid-cols-1 gap-3 max-w-[20em] z-50"
 	>
-		<flash-message
-			v-for="(message, idx) in flash.messages"
-			:key="`flash-${idx}`"
-			:class="{
-				'bg-red-600/80 text-white': message.type === 'error',
-				'bg-green-600/80 text-white': message.type === 'success',
-				'bg-amber-400/80 text-black': message.type === 'info',
-				'bg-white text-black': message.type === undefined,
-			}"
-			:link="message.config?.link"
-			:timeout="message.config.timeout"
-			@close=" flash.messages = flash.messages.filter((x) => x.id !== $event)"
-			@open="message.id = $event"
-			:message="message.message"
-		/>
+		<transition-group name="slide-up">
+			<flash-message
+				v-for="(message, idx) in flash.messages"
+				:key="`flash-${idx}`"
+				:class="{
+					'bg-red-600/80 text-white': message.type === 'error',
+					'bg-green-600/80 text-white': message.type === 'success',
+					'bg-amber-400/80 text-black': message.type === 'info',
+					'bg-white text-black': message.type === undefined,
+				}"
+				:message
+				@close="flash.close(message)"
+			/>
+		</transition-group>
 	</div>
 </template>
 

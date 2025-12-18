@@ -18,6 +18,7 @@ const props = defineProps<{
 	challenge: ChallengeInterface
 }>()
 
+
 const flash = useStoreFlashMessage()
 const theChallenge = ref(props.challenge)
 
@@ -98,7 +99,6 @@ const detachGenerator = function (id, destroy) {
 		})
 }
 
-console.log(props.challenge)
 const theIllustration = ref<IllustrationInterface>(
 	props.challenge.block.illustrations.length > 0
 		? props.challenge.block.illustrations[0]
@@ -310,8 +310,8 @@ const deleteChallenge = function () {
 					Générateurs
 				</h3>
 				<draggable
-					item-key="id"
 					v-model="theChallenge.generators"
+					item-key="id"
 					class="grid grid-cols-1 gap-4 items-baseline"
 					handle=".drag-handler"
 					v-bind="{ animation: 500, }"
@@ -326,8 +326,8 @@ const deleteChallenge = function () {
 								<i class="text-xl bi bi-list" />
 							</div>
 							<div
-								class="flex-1"
 								v-katex.auto.inline="element.title"
+								class="flex-1"
 							/>
 							<a
 								:href="route('admin.generators.edit', [element.id])"

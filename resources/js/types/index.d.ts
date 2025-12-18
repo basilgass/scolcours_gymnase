@@ -26,16 +26,19 @@ export interface flashLink {
 
 type flashType = "success" | "info" | "error"
 
-interface flashMessageInterface {
-	id: number
+export interface flashMessageInterface {
+	id: string
 	message: string
 	type: flashType
 	config: flashConfig
 }
 
 interface flashConfig {
+	title?: string
 	link?: { label: string, external?: boolean, url: string }
-	timeout?: number
+	duration?: number,
+	tex?: boolean,
+	show?: boolean
 }
 
 export interface flashInterface {
@@ -43,7 +46,7 @@ export interface flashInterface {
 		message: string,
 		link?: flashLink,
 		type?: string,
-		timeout?: number
+		duration?: number
 	) => void
 	success: (message: string, config?: flashConfig) => void
 	info: (message: string, config?: flashConfig) => void
