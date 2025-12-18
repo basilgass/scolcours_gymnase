@@ -118,7 +118,10 @@ export class PiChecker {
 		const checkerClass = this.#loadChecker(checker)
 
 		if (checkerClass === null) {
-			throw new Error(`Checker ${checker} not found`)
+			console.warn(`Checker ${checker} not found`)
+			const cls = this.#loadChecker(CHECKERS.EXACT)
+			return new cls(options)
+			// throw new Error(`Checker ${checker} not found`)
 		}
 
 		return new checkerClass(options)

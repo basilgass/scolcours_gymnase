@@ -217,7 +217,7 @@ function PolyFactor_getAsymptotes_Vertical(reduced: PolyFactor, roots: ISolution
 			return {
 				tex: `\\lim_{x\\to ${valueAsTex} } f(x) = ${evaluatedValue.tex} \\implies \\text{point limite}: \\left(${valueAsTex};${evaluatedValue.tex}\\right)`,
 				draw: `P${index + 1}(${value.value},${evaluatedValue.value})->o=10,color=red,fill=white,tex=\\left(${value.tex};${evaluatedValue.tex}\\right)/bc`,
-				answer: `t(${value.display, evaluatedValue.display})`
+				answer: `t(${value.display};${evaluatedValue.display})`
 			}
 		} else {
 			const anchors = [
@@ -296,7 +296,7 @@ function PolyFactor_getExtremes(fx: PolyFactor, dfx: PolyFactor, dfx_table_of_si
 		const type = previousSign === nextSign ? "flat" :
 			previousSign === "+" ? "max" : "min"
 		const atype = previousSign === nextSign ? "_" :
-			previousSign === "+" ? "mm" : "m"
+			previousSign === "+" ? "M" : "m"
 
 		if (x.exact) {
 			const value = fx.evaluate(x.exact as Fraction) as Fraction

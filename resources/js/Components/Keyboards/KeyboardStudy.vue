@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 // TODO: permettre l'affichage de la réponse.
 // TODO: retravailler pour être plus facile à modifier / debogguer
-import {onMounted, ref} from "vue"
+import {computed, onMounted, ref, useTemplateRef} from "vue"
 import KeyboardDisplay from "@/Components/Keyboards/KeyboardDisplay.vue"
 import {
 	KeyboardEmitsInterface,
@@ -9,14 +9,18 @@ import {
 	KeyboardInputInterface,
 	KeyboardPropsInterface
 } from "@/types/keyboardInterfaces.ts"
-import {Bezier, BEZIERCONTROL, IBezierPointInterface, Point} from "pidraw"
 import {
-	ITEM_TYPES,
 	itemGraphInterface,
 	kbrdStudyButtons,
 	POINT_TYPES,
+	studyButtonKeys,
+	studyButtonsKeysType,
+	studyConfigInterface,
+	studyDrawConfigInterface,
 	StudyGraph
 } from "@/Components/Keyboards/KeayboardHelpers/KeyboardStudyHelpers.ts"
+import KeyboardStudyButton from "@/Components/Keyboards/KeayboardHelpers/KeyboardStudyButton.vue"
+import KeyboardStudyCreatedList from "@/Components/Keyboards/KeayboardHelpers/KeyboardStudyCreatedList.vue"
 
 // props.keyboard
 const props = defineProps<KeyboardPropsInterface>()
@@ -44,7 +48,7 @@ async function setInput(value?: string): Promise<KeyboardInputInterface> {
 	return {
 		input: output,
 		tex: "",
-		raw: showRawOutput.value ? graph.rootSVG.svg() : ""
+		raw: config.value.show.raw ? graph.rootSVG.svg() : ""
 	}
 }
 
@@ -56,162 +60,216 @@ defineExpose<KeyboardExposeInterface>({
 	parameters: ""
 })
 
-const validateOutput = function (): string {
+/**
+ * Conversion des réponses en un texte utilisé pour comparer (checker)
+ */
+function validateOutput(): string {
 	let output = ""
 
-	if (enablePlot.value) {
+	// cas où la fonction est appelée avant la création du graphe.
+	if (!graph) return ""
+
+	if (config.value.plot.enable) {
 		const arr = []
-		for (const item of items.value) {
-			arr.push(asymptoteToAnswer(item))
+
+		for (const item of graph.items) {
+			arr.push(graph.itemToAnswer(item))
 		}
-		const envCtrls = asymptoteToAnswer("env")
-		if (envCtrls !== "env") {
-			arr.push(envCtrls)
-		}
+
+		const envCtrls = graph.itemToAnswer(graph.getItem('env'))
+		if (envCtrls !== "env") arr.push(envCtrls)
+
 		output = arr.sort().join(",")
 	} else {
-		output = [...items.value].sort().join(",")
+		output = [...graph.items.map(el => el.id)].sort().join(",")
 	}
 
 	return output
 }
 
 // Code specific to Study.
+// le graph principal, créé lors du montage du composant.
 let graph: StudyGraph
 
-let plot: Bezier,
-	plotResult = ref(null),
-	draw = ref(null),
-	keyboardUI = ref(null),
-	theOptions = ref(props.keyboard.parameters.concat(props.keyboard.values)),
-	addButtons = ref([]),
-	display = ref({input: "", tex: "", raw: ""}),
-	message = ref(""),
-	showGraph = ref(false),
-	enablePlot = ref(false),
-	showRawOutput = ref(false),
-	items = ref([]),
-	itemsGraph = ref<Record<string, itemGraphInterface>>({})
+// utilisé pour la réactivité dans les sous-composants
+let loadedItems = ref<itemGraphInterface[]>([])
 
+// Objet de référence pour le SVG
+const draw = useTemplateRef<HTMLDivElement>('draw')
 
-onMounted(() => {
-	let fx = null,
-		cfg = {
-			xMin: -10,
-			xMax: 10,
-			yMin: -10,
-			yMax: 10,
-			xUnit: 1,
-			yUnit: 1,
-			pixelsPerUnit: 40
+// Composant du clavier, utilisé pour remettre à zéro
+const keyboardUI = useTemplateRef<InstanceType<typeof KeyboardDisplay>>('keyboardUI')
+
+// paramètres du graphe.
+const config = computed<studyConfigInterface>(() => {
+	const cfg = props.keyboard.parameters.concat(props.keyboard.values)
+
+	// Valeurs par défaut
+	const dict: studyConfigInterface = {
+		show: {
+			fx: [],
+			graph: false,
+			raw: false
 		},
-		cfgRaw: string = null
+		plot: {
+			enable: false,
+			fx: null
+		},
+		buttons: {
+			available: [...studyButtonKeys],
+			auto: false,
+			live: false
+		},
+		draw: {
+			config: makeConfig()
+		}
+	}
 
-	const withButtons = []
-
-	if (theOptions.value.length > 0) {
-		for (const opt of theOptions.value) {
-			if (opt.includes(",")) {
-				const btns = opt.split(",")
-				for (const btn of btns) {
-					if (kbrdStudyButtons[btn] !== undefined) {
-						withButtons.push(btn)
-					}
-				}
-
+	if (cfg.length > 0) {
+		for (const opt of cfg) {
+			if (opt.startsWith('btns=')) {
+				dict.buttons.available = opt.substring(5)
+					.split(",")
+					.filter(x => Object.hasOwn(kbrdStudyButtons, x)) as studyButtonsKeysType[]
 			} else if (opt === "g") {
-				showGraph.value = true
+				dict.show.graph = true
+			} else if (opt === "auto") {
+				dict.buttons.auto = true
+				dict.buttons.live = false
+			} else if (opt === "hint") {
+				dict.buttons.auto = true
+				dict.buttons.live = true
 			} else if (opt === "trace") {
-				showGraph.value = true
-				enablePlot.value = true
+				dict.show.graph = true
+				dict.plot.enable = true
 			} else if (opt === "raw") {
-				showRawOutput.value = true
+				dict.show.raw = true
 			} else if (opt.startsWith("f=")) {
-				fx = opt.split("f=")[1]
+				dict.show.fx.push(opt.split("f=")[1])
 			} else if (opt.startsWith("p=")) {
-				plotResult.value = opt.split("p=")[1]
+				dict.plot.enable = true
+				dict.plot.fx = opt.split("p=")[1]
 			} else if (opt.startsWith("cfg=")) {
-				cfgRaw = opt.split("=")[1]
+				const cfgValues = opt.split("=")
+				cfgValues.shift()
+				dict.draw.config = makeConfig(cfgValues.join('='))
 			}
 		}
 	}
+	return dict
+})
 
-	if (withButtons.length === 0) {
-		addButtons.value = ["av", "ah", "ao", "!", "p", "z", "o", "t", "m", "mm", "_"]
-	} else {
-		addButtons.value = [...withButtons]
+// configration de l'objet PiDraw.
+function makeConfig(value?: string): studyDrawConfigInterface {
+	// value= cfg=x=-3:3,y=-3:3,unit=3;4
+	const output = {
+		xMin: -10,
+		xMax: 10,
+		yMin: -10,
+		yMax: 10,
+		xUnit: 1,
+		yUnit: 1,
+		ppu: 40
 	}
 
-	if (cfgRaw !== null) {
-		const d = cfgRaw.split("&")
-		if (d.length >= 2) {
-			cfg.xMin = +d[0].split(":")[0]
-			cfg.xMax = +d[0].split(":")[1]
-			cfg.yMin = +d[1].split(":")[0]
-			cfg.yMax = +d[1].split(":")[1]
-			cfg.xUnit = d[2] ? +d[2].split(":")[0] : 1
-			cfg.yUnit = d[2] ? +d[2].split(":")[1] : 1
-			// let res = d[3] ? +d[3] : 800
-			// cfg.pixelsPerUnit = res / (cfg.xMax - cfg.xMin)
+	if (value === undefined || value === '') return output
+
+	value.split(',')
+		.forEach(item => {
+			if (item.startsWith('x=')) {
+				const [min, max] = item.substring(2).split(':').map(Number)
+				output.xMin = min
+				output.xMax = max
+			} else if (item.startsWith('y=')) {
+				const [min, max] = item.substring(2).split(':').map(Number)
+				output.yMin = min
+				output.yMax = max
+			} else if (item.startsWith('unit=')) {
+				const [x, y] = item.substring(5).split(';').map(Number)
+				output.xUnit = x
+				output.yUnit = y
+			} else if (item.startsWith('ppu=')) {
+				output.ppu = +item.substring(4)
+			}
+		})
+
+	return output
+}
+
+const display = ref({input: "", tex: "", raw: ""})
+const message = ref("")
+
+// const items = ref<studyItemType[]>([])
+// const itemsGraph = ref<Record<string, itemGraphInterface>>({})
+
+const availableButtons = computed<studyButtonsKeysType[]>(() => {
+	if (config.value.buttons.auto === false) return config.value.buttons.available
+
+	// on filtre les boutons en fonction de la réponse attendue
+	// live===true ? et de ce qui est déjà donné.
+	const arr: string[] = parseAnswerToKeys(props.reference)
+	if (config.value.buttons.live) {
+		const given: string[] = parseAnswerToKeys(validateOutput())
+
+		given.forEach(item => {
+			const index = arr.findIndex(x => x === item)
+			if (index !== -1) {
+				arr.splice(index, 1)
+			}
+		})
+	}
+
+	return [...new Set(arr)] as studyButtonsKeysType[]
+})
+
+function parseAnswerToKeys(value: string): studyButtonsKeysType[] {
+	const arr: studyButtonsKeysType[] = []
+
+	value.split(',').forEach(item => {
+		if (item.startsWith('y=')) {
+			// AO ou AH
+			arr.push(item.includes('x') ? 'ao' : 'ah')
+		} else if (item.startsWith('x=')) {
+			// AV
+			arr.push('av')
+		} else if (item.startsWith('env')) {
+			// pas de bouton environnement
+		} else {
+			arr.push(item.split('(')[0] as studyButtonsKeysType)
 		}
+	})
+
+	return arr
+}
+
+onMounted(() => {
+	graph = new StudyGraph(draw.value, config.value.plot.enable)
+
+	// Création des plots de départ
+	if (config.value.show.fx.length > 0) {
+		config.value.show.fx.forEach((f, index) => {
+			graph.addInitialPlot(f, index)
+		})
 	}
 
-	graph = new StudyGraph(draw.value, enablePlot.value)
-
-	if (fx !== null) {
-		const fxs = fx.split("|")
-		for (const f of fxs) {
-			initPlot(f)
-		}
-	}
-
-	itemsGraph.value["env"] = graph.addEnvTracePoints()
-
+	// Création des points de contrôle de l'environnement
+	graph.addEnvTracePoints()
 
 	// Add resize observer
 	const resizeObserver = new ResizeObserver(() => {
 		graph.update()
 	})
-
 	resizeObserver.observe(draw.value)
 
-	// Update the value
-	// nextTick().then(()=>changeEvent())
+	// debug
+	// parseStringToKeyboard('o(0;3),z(-4;0),x=-3&LT&RT,_(3;4),env&LB&RT')
 })
 
-function initPlot(fx) {
-	let plotData: string[] = fx.split("&"),
-		plot: string = plotData.shift(),
-		domain: { min: number, max: number } = {min: -8, max: 8}, // TODO: il faut gérer les domain,
-		samples = 20,
-		color = "blue"
-
-	for (const d of plotData) {
-		if (!isNaN(+d)) {
-			samples = +d
-		} else if (d.includes(":")) {
-			const [min, max] = d.split(":").map(x => +x)
-			domain = {min, max}
-		} else {
-			color = d
-		}
-	}
-
-	try {
-		const p = graph.create.plot({
-			expression: plot,
-			samples,
-			domain
-		}, "f")
-		p.stroke(color)
-	} catch {
-		console.warn("Error parsing", fx)
-	}
-}
-
-function addItemToGraph(btn): void {
+function addItemToGraph(btn: string): undefined | itemGraphInterface {
 	// Checker.
 	message.value = ""
+
+	let item: itemGraphInterface
 
 	if (btn.startsWith("a")) {
 		const value = display.value.input
@@ -232,25 +290,25 @@ function addItemToGraph(btn): void {
 				message.value = "Ce n'est pas une asymptote oblique"
 				return
 			}
-			itemsGraph.value[display.value.input] = graph.addAO(display.value.input)
+			item = graph.addAO(display.value.input)
 
 		} else if (btn === "av") {
 			if (equ[0] !== "x") {
 				message.value = "Ce n'est pas une asymptote verticale"
 				return
 			}
-			itemsGraph.value[display.value.input] = graph.addAV(equ[1])
+			item = graph.addAV(equ[1])
 
 		} else if (btn === "ah") {
 			if (equ[0] !== "y") {
 				message.value = "Ce n'est pas une asymptote horizontale"
 				return
 			}
-			itemsGraph.value[display.value.input] = graph.addAH(equ[1])
+			item = graph.addAH(equ[1])
 		}
 	} else if (btn === "!") {
 		display.value.input = "!!"
-		itemsGraph.value["!!"] = null
+		// TODO: le cas où il n'y a rien à mettre ?
 	} else {
 		if (!(display.value.input.startsWith("(") && display.value.input.endsWith(")") && display.value.input.split(";").length === 2)) {
 			message.value = "Ce n'est pas un point"
@@ -270,194 +328,41 @@ function addItemToGraph(btn): void {
 			return
 		}
 
-		itemsGraph.value[display.value.input] = graph.addPoint(btn, {x, y})
+		item = graph.addPoint(btn as POINT_TYPES, {x, y})
 	}
 
 	// Hide controls if necessary
-	if (!enablePlot.value) {
+	if (!config.value.plot.enable) {
 		// TODO: handle much better the enablePlot system
 		// basically: do not create them if not needed!
 		// removeControlsAndBezier(display.value.input)
 	}
-
-	// Add the element to the list of object created...
-	items.value.push(display.value.input)
 
 	// Reset the keyboard
 	keyboardUI.value.resetKeyStrokes()
 
 	// Update the graph
 	onChange()
-}
 
-function displayItem(value): string {
-	const item: itemGraphInterface = itemsGraph.value[value]
-
-	if (item === undefined) {
-		return "?"
-	}
-
-	if (item.type !== ITEM_TYPES.POINT) {
-		return value
-	}
-
-	if (item.kind === POINT_TYPES.MIN) {
-		return `\\text{min}${value}`
-	} else if (item.kind === POINT_TYPES.MAX) {
-		return `\\text{max}${value}`
-	} else if (item.kind === POINT_TYPES.REPLAT) {
-		return `\\text{replat}${value}`
-	} else if (item.kind === POINT_TYPES.TROU) {
-		return `\\text{trou}${value}`
-	}
-
-	return value
+	loadedItems.value.push(item)
+	return item
 }
 
 function removeAllItems() {
-	const keys = [...items.value]
-	for (const item of keys) {
-		removeItem(item)
-	}
-
-	if (showGraph.value) {
-		if (plot) {
-			plot.clear(true)
-			plot = null
-		}
-
-		if (enablePlot.value) {
-			removeControlsAndBezier("env")
-			itemsGraph.value["env"] = graph.addEnvTracePoints()
-		}
-	}
-}
-
-function removeItem(item: string) {
-
-	// On supprime l'élément dans la liste des éléments
-	items.value.splice(items.value.indexOf(item), 1)
-
-	// On supprime les contrôles et les bezier
-	removeControlsAndBezier(item)
-
-	// On supprime l'objet principal
-	if (itemsGraph.value[item].element !== null) {
-		itemsGraph.value[item].element.clear(true)
-	}
-
-	// On supprime l'élément de itemsGraph
-	delete itemsGraph.value[item]
-
-
-	// Update the graph
+	graph.removeAllItems(config.value.plot.enable)
+	loadedItems.value = []
 	onChange()
 }
 
-function removeControlsAndBezier(item: string) {
-	// Remove the control maxPoints.
-	Object.values(itemsGraph.value[item].controls || [])
-		.filter(item => item !== null && item !== undefined)
-		.forEach(el => el.clear(true))
 
-	// Remove the bezier maxPoints.
-	Object.values(itemsGraph.value[item].bezier || [])
-		.filter(item => item !== null && item !== undefined)
-		.forEach(group => group.forEach(el => el.clear(true)))
-
-}
-
-function asymptoteToAnswer(item: string) {
-	// il n'y a rien à montrer...
-	if (itemsGraph.value[item] === undefined) {
-		return ""
-	}
-
-	const ctrls = []
-	if (itemsGraph.value[item].type === "point") {
-		switch (itemsGraph.value[item].kind) {
-			case "m":
-				return `m${item}`
-			case "mm":
-				return `M${item}`
-			case "_":
-				return `_${item}`
-			case "t":
-				return `t${item}`
-			default:
-				return item
-		}
-	}
-
-
-	for (const key in itemsGraph.value[item].controls) {
-		if (itemsGraph.value[item].controls[key].element.fill() === "green") {
-			ctrls.push(key)
-		}
-	}
-
-	return ctrls.length > 0 ? `${item}&${ctrls.sort().join("&")}` : item
+function removeItem(item: itemGraphInterface) {
+	graph.removeItem(item)
+	loadedItems.value = [...graph.items.filter(el => el.id !== 'env')]
+	onChange()
 }
 
 function plotGraph() {
-	// Remove existing plot.
-	if (plot) {
-		plot.clear(true)
-	}
-	// Check the validation -
-
-	// if the result is TRUE, trace the existing value (if it exists).
-	// TODO: checking directly.
-	// const check = new StudyChecker().check(validateOutput(), props.answer)
-	// if (check.result && plotResult.value) {
-	// 	initPlot(plotResult.value)
-	// 	return
-	// }
-
-	// Get all maxPoints
-
-	// TODO: the ratio should be dynamique - do a second pass by checking the distance between two control points ?
-	const ratio = 0.2
-	let ctrlPoints: IBezierPointInterface[] = []
-
-	for (const item of Object.values(itemsGraph.value)) {
-		if (item.type === ITEM_TYPES.POINT) {
-			ctrlPoints.push({
-				point: item.element as Point,
-				controls: {
-					type: item.beziercontrol,
-					ratio,
-					left: null,
-					right: null
-				}
-			})
-		} else if (item.controls && item.bezier) {
-			// Check the selected buttons
-			for (const key in item.controls) {
-				if (item.controls[key]?.shape?.fill() === "green" && item.bezier[key]) {
-					ctrlPoints = ctrlPoints.concat(
-						...item.bezier[key]
-							.map(pt => {
-								return {
-									point: pt,
-									controls: {
-										type: BEZIERCONTROL.SMOOTH,
-										ratio,
-										left: null,
-										right: null
-									}
-								}
-							})
-					)
-				}
-			}
-		}
-	}
-
-	// Sort the maxPoints.
-	ctrlPoints.sort((a, b) => a.point.x - b.point.x)
-	plot = graph.addBezier({points: ctrlPoints})
-
+	graph.plotGraph()
 	onChange()
 }
 
@@ -477,51 +382,53 @@ function getCoordinates(item: string): [string | undefined, string | undefined] 
 }
 
 function parseStringToKeyboard(value: string) {
-	value.split(",").forEach((item) => {
 
-		// Adding points.
-		const [x, y] = getCoordinates(item)
+	value.split(",")
+		.forEach((item) => {
+			// Adding points.
+			const [x, y] = getCoordinates(item)
 
-		if (x !== undefined && y !== undefined) {
-			let type = item.split("(")[0]
+			if (x !== undefined && y !== undefined) {
+				let type = item.split("(")[0]
 
-			if (type === "M") {
-				type = "mm"
+				display.value.input = `(${x};${y})`
+				addItemToGraph(type === "" ? "p" : type)
+			} else {
+				// Plotting asymptotes
+				// Adding asymptotes.
+				const [equ, ...ctrls] = item.split("&")
+
+				display.value.input = equ
+
+				let el: itemGraphInterface
+				if (equ.substring(0, 2) === "x=") {
+					el = addItemToGraph("av")
+				} else if (equ.match(/x/) && equ.match(/y/)) {
+					el = addItemToGraph("ao")
+				} else if (equ.substring(0, 2) === "y=") {
+					el = addItemToGraph("ah")
+				} else if (equ === 'env') {
+					el = graph.getItem('env')
+				}
+
+				if (el) {
+					ctrls.forEach((key) => {
+						graph.onClick(el.controls[key])
+					})
+				}
 			}
-
-			display.value.input = `(${x};${y})`
-			addItemToGraph(type === "" ? "p" : type)
-		} else {
-			// Plotting asymptotes
-			// Adding asymptotes.
-			const [equ, ...ctrls] = item.split("&")
-
-			display.value.input = equ
-
-			if (equ.substring(0, 2) === "x=") {
-				addItemToGraph("av")
-			} else if (equ.match(/x/) && equ.match(/y/)) {
-				addItemToGraph("ao")
-			} else if (equ.substring(0, 2) === "y=") {
-				addItemToGraph("ah")
-			}
-
-			ctrls.forEach((key) => {
-				const pt = itemsGraph.value[equ].controls[key]
-				graph.onClick(pt)
-			})
-		}
-	})
+		})
 
 	plotGraph()
 }
+
 
 const showControls = ref(true)
 
 function toggleControls() {
 	showControls.value = !showControls.value
 
-	Object.values(itemsGraph.value)
+	graph.items
 		.filter(obj => obj.controls)
 		.forEach(obj => {
 			Object.values(obj.controls).forEach(pt => {
@@ -553,7 +460,7 @@ function toggleControls() {
 
 			<!-- Trace button -->
 			<div
-				v-if="enablePlot"
+				v-if="config.plot.enable"
 				class="text-center mt-2"
 			>
 				<button
@@ -566,7 +473,9 @@ function toggleControls() {
 		</div>
 
 		<!-- keyboard -->
-		<div class="keyboard keyboard-study-keyboard flex flex-col gap-3">
+		<div
+			class="keyboard keyboard-study-keyboard flex flex-col gap-3"
+		>
 			<div class="min-h-[3.4em] grid place-items-center">
 				<!-- Keyboard inputs -->
 				<div
@@ -577,16 +486,20 @@ function toggleControls() {
 
 			<!-- types d'objet à insérer -->
 			<div class="keyboard flex flex-wrap gap-3 justify-center">
-				<button
-					v-for="key of addButtons"
+				<keyboard-study-button
+					v-for="key of availableButtons"
 					:key="key"
-					:title="kbrdStudyButtons[key].description"
-					class="key bg-action border rounded px-2 py-1 transition-colors flex-1 cursor-pointer"
+					:button="key"
 					@click="addItemToGraph(key)"
-				>
-					{{ kbrdStudyButtons[key].label }}
-				</button>
+				/>
 			</div>
+			<transition name="slide-down">
+				<div
+					v-if="message"
+					v-katex.auto="message"
+					class="text-center text-red-500 text-sm bg-red-50 rounded border border-red-200"
+				/>
+			</transition>
 
 			<KeyboardDisplay
 				ref="keyboardUI"
@@ -598,45 +511,11 @@ function toggleControls() {
 			/>
 
 			<!-- currently loaded elements (point, max, min, av, ...) -->
-			<div class="keyboard-study-items my-3 border-t">
-				<h3 class="text-center mt-1 mb-3">
-					{{
-						items.length === 0 ? "aucun élément créé" : items.length === 1 ? "élément créé" : "éléments créés"
-					}}
-				</h3>
-				<div
-					class="flex gap-1 lg:gap-2
-				items-baseline justify-center
-				flex-wrap
-				keyboard min-h-[3em]"
-				>
-					<button
-						v-for="item in items"
-						:key="item"
-						v-katex.ascii.nomargin="displayItem(item)"
-						class="key-touch cursor-pointer
-						bg-action border rounded px-3 py-1
-						hover:bg-amber-300 transition-colors"
-						@dblclick="removeItem(item)"
-					/>
-				</div>
-				<div
-					v-katex.auto="message"
-					class="text-center text-red-500 text-sm"
-				/>
-				<div
-					v-show="items.length>0"
-					class="text-xs text-gray-700 text-center"
-				>
-					double-cliquer pour supprimer ou
-					<button
-						class="bg-content border border-content px-3 py-1 cursor-pointer"
-						@click="removeAllItems()"
-					>
-						<i class="bi bi-trash mr-3 text-red-800" />tout supprimer
-					</button>
-				</div>
-			</div>
+			<keyboard-study-created-list
+				:items="loadedItems"
+				@remove-item="removeItem"
+				@remove-all="removeAllItems"
+			/>
 		</div>
 	</article>
 </template>

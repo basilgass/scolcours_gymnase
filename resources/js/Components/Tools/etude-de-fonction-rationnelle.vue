@@ -146,20 +146,29 @@ const keyboardstudyAnswer = computed(() => {
 
 	const arr: string[] = []
 
+	console.log(study.value)
+	// ordonnée
 	arr.push(study.value.YIntercept.answer)
 
+	// zéros
 	study.value.roots.answers
 		.forEach(zero => arr.push(zero))
 
+	// asymptote
 	Object.values(study.value.asymptotes)
 		.forEach(asymptotes => {
-			asymptotes.map(asymptote => asymptote.answer).forEach(value => arr.push(value))
+			asymptotes
+				.map(asymptote => asymptote.answer)
+				.forEach(value => arr.push(value)
+				)
 		})
 
+	// min / max / replat
 	study.value.extremes
 		.filter(extreme => extreme.answer)
 		.forEach(extreme => arr.push(extreme.answer))
 
+	// environnement
 	if (study.value.environnement.answer) arr.push(study.value.environnement.answer)
 
 	return [
