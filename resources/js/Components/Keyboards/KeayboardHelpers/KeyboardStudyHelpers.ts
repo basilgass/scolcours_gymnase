@@ -87,13 +87,13 @@ export enum POINT_TYPES {
 }
 
 export interface itemGraphInterface {
+	id: string,
+	element: Point | Path | Line
+	type: ITEM_TYPES
+	kind?: POINT_TYPES
+	controls: ASYMPTOTES_CONTROLS | { bar: Path } // Record<string, Point>
 	bezier?: BEZIER_CONTROLS
 	beziercontrol?: BEZIERCONTROL
-	controls: ASYMPTOTES_CONTROLS | { bar: Path } // Record<string, Point>
-	element: Point | Path | Line
-	id: string,
-	kind?: POINT_TYPES
-	type: ITEM_TYPES
 }
 
 
@@ -534,7 +534,7 @@ export class StudyGraph extends PiGraph {
 					if (item.controls[key]?.shape?.fill() === "green" && item.bezier[key]) {
 						ctrlPoints = ctrlPoints.concat(
 							...item.bezier[key]
-								.map(pt => {
+								.map((pt: Point) => {
 									return {
 										point: pt,
 										controls: {

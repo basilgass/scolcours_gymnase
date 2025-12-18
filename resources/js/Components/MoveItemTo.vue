@@ -81,7 +81,7 @@ function moveTo() {
 						url: res.data.url,
 						label: res.data.label,
 					},
-					timeout: 10000
+					duration: 10000
 				}
 			)
 		})

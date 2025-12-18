@@ -92,7 +92,7 @@ function validateOutput(): string {
 let graph: StudyGraph
 
 // utilisé pour la réactivité dans les sous-composants
-let loadedItems = ref<itemGraphInterface[]>([])
+const loadedItems = ref<itemGraphInterface[]>([])
 
 // Objet de référence pour le SVG
 const draw = useTemplateRef<HTMLDivElement>('draw')
@@ -512,7 +512,7 @@ function toggleControls() {
 
 			<!-- currently loaded elements (point, max, min, av, ...) -->
 			<keyboard-study-created-list
-				:items="loadedItems"
+				:items="loadedItems as itemGraphInterface[]"
 				@remove-item="removeItem"
 				@remove-all="removeAllItems"
 			/>

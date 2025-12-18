@@ -217,7 +217,7 @@ onMounted(() => {
 			if (props.lesson.lessonable_type === 'Post') {
 				update_lesson_score(props.lessonable)
 			} else {
-				init_refScore(props.lessonable)
+				init_refScore()
 			}
 		})
 })

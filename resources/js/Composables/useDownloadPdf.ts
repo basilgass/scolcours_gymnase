@@ -37,7 +37,7 @@ export function usePdf() {
 							url: route("latex.download", [res.data.slug]),
 							external: true
 						},
-						timeout: 5000
+						duration: 5000
 					}
 				)
 

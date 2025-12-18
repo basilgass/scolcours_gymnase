@@ -1,1 +1,0 @@
-import{d as t}from"./pinia-BCFysWSa.js";import{r as n}from"./@vue-DrJuslU9.js";const i=t("flashMessage",()=>{const o=n([]);function r(s,e,a={}){o.value.push({id:null,message:s,type:e,config:{timeout:1e3*2,...a}})}return{messages:o,add:r,success:(s,e)=>r(s,"success",e),info:(s,e)=>r(s,"info",e),error:(s,e)=>r(s,"error",e)}});export{i as u};

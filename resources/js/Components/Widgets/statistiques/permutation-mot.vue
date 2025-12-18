@@ -147,7 +147,7 @@ function applyDivision(index: number, value: number, letter: string) {
 	// Flash a message
 	flash.success(
 		`Il y a \\(${value}! = ${factoriel(value)}\\) façons de réarranger les lettres ${letter}`,
-		{timeout: 5 * 1000}
+		{duration: 5 * 1000}
 	)
 }
 
@@ -306,8 +306,8 @@ onMounted(() => {
 
 		<!-- Available letters -->
 		<div
-			class="p-3"
 			v-show="!isFinished"
+			class="p-3"
 		>
 			<h2 class="font-extralight">
 				Choisir une lettre parmi {{ availableLetters.length }}
