@@ -115,7 +115,10 @@ function onAnswerClick(event: MouseEvent) {
 
 <template>
 	<main
-		class="flex-1 px-3 overflow-x-auto pb-3"
+		:class="[
+			'flex-1 px-3 overflow-x-auto pb-3 flex',
+			questionData.question.value.css?.includes('i-bottom') ? 'flex-col-reverse' : 'flex-col'
+		]"
 		@click="onAnswerClick"
 	>
 		<!-- Illustration -->
