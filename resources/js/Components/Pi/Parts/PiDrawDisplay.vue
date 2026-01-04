@@ -69,9 +69,6 @@ watch(() => props.parameters, () => {
 const drawMouseUp = function (event: MouseEvent) {
 	emits("drawClick", {draw: PiGraph, mouse: event})
 }
-const drawTouchEnd = function (event: TouchEvent) {
-	emits("drawClick", {draw: PiGraph, mouse: event})
-}
 
 // Default settings
 onMounted(() => {
@@ -167,9 +164,7 @@ function print() {
 		<div
 			ref="drawWrapper"
 			class="katex-m-0 min-w-[50px] min-h-[50px] touch-manipulation"
-
-			@mouseup="drawMouseUp"
-			@touchend="drawTouchEnd"
+			@pointerup="drawMouseUp"
 		/>
 		<div class="absolute left-2 bottom-1 flex gap-3">
 			<div

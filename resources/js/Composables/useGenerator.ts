@@ -6,6 +6,7 @@ import type {GeneratorInterface, QuestionDynamicInterface} from "@/types/modelIn
 import PiMath from "pimath"
 import {ComputedRef, Ref, unref} from "vue"
 import {PiMathExt} from "@/PiMathExtended/PiMathExt.ts"
+import {makeIllustration} from "@/helpers/makeModel.ts"
 
 export function useGenerator(generator: GeneratorInterface | ComputedRef<GeneratorInterface>): generatorResultInterface {
 	function question(
@@ -23,7 +24,7 @@ export function useGenerator(generator: GeneratorInterface | ComputedRef<Generat
 				body: generatorUnref.template
 					.replace("question", questionUnref.question)
 					.replace("answer", "$a"),
-				illustration: null
+				illustration: questionUnref.illustration ? makeIllustration(questionUnref.illustration) : null
 			},
 			keyboard: questionUnref.keyboard ?? generatorUnref.keyboard,
 			answer: "" + questionUnref.answer,

@@ -1,4 +1,10 @@
-import {BlockInterface, CardInterface, DeckInterface} from "@/types/modelInterfaces.ts"
+import {
+	BlockInterface,
+	CardInterface,
+	DeckInterface,
+	IllustrationInterface,
+	IllustrationMinInterface
+} from "@/types/modelInterfaces.ts"
 
 export function makeBlock(body: string, title?: string, type?: string): BlockInterface {
 	return {
@@ -15,6 +21,29 @@ export function makeBlock(body: string, title?: string, type?: string): BlockInt
 		illustrations: [],
 		script: '',
 		json: ''
+	}
+}
+
+export function makeIllustration(config: IllustrationMinInterface): IllustrationInterface {
+	return {
+		id: -1,
+		block_id: -1,
+		code: config.code,
+		parameters: config.parameters,
+		css: '',
+		order: 0,
+		title: '',
+		widget_id: -1,
+		widget: {
+			id: -1,
+			component: 'draw-parser-widget.vue',
+			slug: 'dynamic-widget',
+			name: 'dynamic-widget',
+			theme_id: null,
+			description: '',
+			control: false,
+			...config.widget
+		}
 	}
 }
 

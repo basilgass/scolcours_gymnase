@@ -1,12 +1,12 @@
 <script lang="ts" setup>
 import EditLink from "@/Components/Ui/EditLink.vue"
 import {getModule, MODULE_TYPES} from "@/scolcours.ts"
-import type {IllustrationInterface} from "@/types/modelInterfaces.ts"
 import {computed, inject, watch} from "vue"
 import {onClick_answerIndex} from "@/Components/Questions/useQuestionHelpers.ts"
 import Card from "@/Components/Ui/Card.vue"
 import {useFormattedBody} from "@/Composables/useHelpers.ts"
 import {useScriptLoader, UseScriptLoaderReturn} from "@/Composables/useScriptLoader.ts"
+import {IllustrationInterface} from "@/types/modelInterfaces.ts"
 
 const props = defineProps<{
 	illustration: IllustrationInterface

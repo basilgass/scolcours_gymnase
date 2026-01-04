@@ -42,7 +42,7 @@ export interface ChapterShowInterface extends ChapterInterface {
 export interface BlockMinInterface {
 	body: string
 	id: number
-	illustration: IllustrationInterface
+	illustration: IllustrationInterface | null | undefined
 	title: string
 }
 
@@ -60,6 +60,14 @@ export interface BlockInterface {
 	template: string;
 	title: string;
 	type: string;
+}
+
+export interface IllustrationMinInterface {
+	widget: {
+		component: string
+	},
+	parameters: string
+	code: string,
 }
 
 export interface IllustrationInterface {
@@ -80,6 +88,7 @@ export interface QuestionDynamicInterface {
 	equationControl: string;
 	block: BlockMinInterface;
 	keyboard: string;
+	illustration?: IllustrationMinInterface
 	user: {
 		is_resolved: boolean
 	};
@@ -263,13 +272,13 @@ export interface provideDeckData {
 }
 
 export interface WidgetInterface {
-	component: string,
-	control: boolean
-	description: string,
 	id: number,
-	name: string,
+	component: string,
 	slug: string,
+	name: string,
 	theme_id: number,
+	description: string,
+	control: boolean
 }
 
 export interface WidgetPropsInterface {

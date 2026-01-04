@@ -1,4 +1,10 @@
-import {ChapterInterface, type QuestionDynamicInterface, ThemeInterface, User} from "@/types/modelInterfaces"
+import {
+	ChapterInterface,
+	IllustrationMinInterface,
+	type QuestionDynamicInterface,
+	ThemeInterface,
+	User
+} from "@/types/modelInterfaces"
 import {AxiosError, AxiosResponse} from "axios"
 import {ComputedRef} from "vue"
 
@@ -78,6 +84,7 @@ export interface generatedQuestionInterface {
 	answer: string
 	title?: string
 	keyboard?: string
+	illustration?: IllustrationMinInterface
 	button?: object
 	reset?: boolean
 }
