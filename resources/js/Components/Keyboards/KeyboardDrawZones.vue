@@ -8,6 +8,7 @@ import type {
 	KeyboardInputInterface,
 	KeyboardPropsInterface
 } from "@/types/keyboardInterfaces.ts"
+import {NumExp} from "pimath"
 
 const svgContainer = useTemplateRef<InstanceType<typeof PiDrawParser>>('svgContainer')
 
@@ -36,9 +37,14 @@ async function setInput(value?: string): Promise<KeyboardInputInterface> {
 
 	// { draw: PiDraw, mouse: MouseEvent }
 	if (value !== undefined) {
+		// pidraw.update([], true)
+		reset()
 
-		pidraw.update([], true)
-		return {input: value, tex: "", raw: getSvg()}
+		value.split(',').forEach(zone => {
+			if (Object.hasOwn(zones, zone)) {
+				zones[zone] = true
+			}
+		})
 	}
 
 	const inputs: string[] = []
@@ -63,15 +69,17 @@ async function setInput(value?: string): Promise<KeyboardInputInterface> {
 }
 
 function getSvg() {
-	// TODO: amélioration du keyboard pour afficher ou pas automatiquement le graphe
-	return ""
-	// return svgContainer.value?.getPiDraw().rootSVG.svg() ?? ""
+	return pidraw.rootSVG.svg()
+}
+
+function reset() {
+	for (const zone in zones) {
+		zones[zone] = false
+	}
 }
 
 defineExpose<KeyboardExposeInterface>({
-	reset: () => {
-		// reset function
-	},
+	reset,
 	setInput,
 	parameters: ""
 })
@@ -89,14 +97,85 @@ const draw = computed(() => {
 	}
 })
 
-onMounted(() => {
+function makeColumnPoints(expression: NumExp, x: number, index: number, visibility: boolean): string[] {
+	const y = expression.evaluate({x})
+
+	const dy = 20
+
+	return [
+		`P${index}(${x},${y + dy})`,
+		`L${index}(${x},${y})->o,fill=black${visibility ? '' : ',!'}`,
+		`N${index}(${x},${y - dy})`,
+	]
+}
+
+function makePolygons(index: number): string[] {
+	zones[`p${index + 1}`] = false
+	zones[`n${index + 1}`] = false
+
+	return [
+		`p${index + 1}=poly L${index},L${index + 1},P${index + 1},P${index}->w=0`,
+		`n${index + 1}=poly L${index},L${index + 1},N${index + 1},N${index}->w=0`
+	]
+
+}
+
+function makeInput() {
 	const inputs = props.keyboard.parameters.find(p => p.startsWith('input='))?.split('input=')[1].split(',') ?? []
-	inputs.forEach(inp => {
-		zones[inp] = false
-	})
+	if (inputs.length > 0) {
+		inputs.forEach(inp => {
+			zones[inp] = false
+		})
+		code.value = props.keyboard.values.join('\n')
+		return
+	}
+
+	const ao = props.keyboard.parameters.find(p => p.startsWith('ao='))?.split('ao=')[1]
+	const tos = props.keyboard.parameters.find(p => p.startsWith('tos='))?.split('tos=')[1]
+
+	if (ao && tos) {
+		const codeLines: string[] = []
+		const codeZones: string[] = []
+		codeLines.push(`a=line ${ao}->green,w=2`)
+
+		const [zeroesStr, signsStr] = tos.split('@')
+		const zeroes = zeroesStr.split(",")
+		const signs = signsStr.split("")
+		const expression = new NumExp(ao.split('=')[1])
+
+		codeLines.push(...makeColumnPoints(expression, -20, 0, false))
+
+
+		zeroes.forEach((zero, index) => {
+			const sign = signs[2 * index + 1]
+			if (sign === 'z') {
+				// codeLines.push(`Z${index}(${zero},${expression.evaluate({x: +zero})})`)
+				codeLines.push(`z${index}=line x=${zero}->dot,gray,w=2`)
+			} else if (sign === 'd') {
+				codeLines.push(`v${index}=line x=${zero}->red`)
+			}
+
+			codeLines.push(...makeColumnPoints(expression, +zero, index + 1, sign === 'z'))
+			codeZones.push(...makePolygons(index))
+		})
+
+		codeLines.push(...makeColumnPoints(expression, 20, zeroes.length + 1, false))
+		codeZones.push(...makePolygons(zeroes.length))
+
+		codeLines.push(...codeZones)
+
+		code.value = codeLines.join('\n')
+		return
+	}
+
+	console.warn('Aucune valeur de génération reconnue pour les zones.')
+}
+
+onMounted(() => {
 	parameters.value = props.keyboard.parameters.find(p => p.startsWith('p='))?.substring(2) ?? "axis,grid,x=-5:5,y=-5:5"
-	code.value = props.keyboard.values.join('\n')
 	color.value = props.keyboard.parameters.find(p => p.startsWith('color='))?.substring(6) ?? 'yellow/0.4'
+
+	makeInput()
 
 	// Pour toutes les zones clickable, on ajoute un "data-zone" après le dessin
 	nextTick(() => {
