@@ -35,7 +35,8 @@ export enum CHECKERS {
 	TABLE_OF_SIGNS = "tos",
 	TYPE = "type",
 	MATRIX = "matrix",
-	DRAW = "draw"
+	DRAW = "draw",
+	ZONES = "zones"
 }
 
 export function checkerNameToEnum(name: string): CHECKERS {
@@ -91,6 +92,8 @@ export function checkerNameToEnum(name: string): CHECKERS {
 			return CHECKERS.TYPE
 		case "draw":
 			return CHECKERS.DRAW
+		case "zones":
+			return CHECKERS.ZONES
 		case "trigo":
 			return CHECKERS.TRIGO
 		default:

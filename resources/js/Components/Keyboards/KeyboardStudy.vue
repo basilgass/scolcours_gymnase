@@ -196,9 +196,6 @@ function makeConfig(value?: string): studyDrawConfigInterface {
 const display = ref({input: "", tex: "", raw: ""})
 const message = ref("")
 
-// const items = ref<studyItemType[]>([])
-// const itemsGraph = ref<Record<string, itemGraphInterface>>({})
-
 const availableButtons = computed<studyButtonsKeysType[]>(() => {
 	if (config.value.buttons.auto === false) return config.value.buttons.available
 
@@ -245,7 +242,7 @@ onMounted(() => {
 	// Création des plots de départ
 	if (config.value.show.fx.length > 0) {
 		config.value.show.fx.forEach((f, index) => {
-			graph.addInitialPlot(f, index)
+			graph.addPlot(f, 'f', index)
 		})
 	}
 
@@ -355,8 +352,16 @@ function removeItem(item: itemGraphInterface) {
 	onChange()
 }
 
+const reference = computed<string>(() => props.reference.split(",").sort().join(','))
+
 function plotGraph() {
-	graph.plotGraph()
+	const givenAnswer = validateOutput()
+	if (config.value.plot.fx && givenAnswer === reference.value) {
+		graph.plotGraph(config.value.plot.fx)
+	} else {
+		graph.plotGraph()
+	}
+
 	onChange()
 }
 
@@ -425,13 +430,15 @@ function toggleControls() {
 	graph.items
 		.filter(obj => obj.controls)
 		.forEach(obj => {
-			Object.values(obj.controls).forEach(pt => {
-				if (showControls.value) {
-					pt.show()
-				} else {
-					pt.hide()
-				}
-			})
+			Object.values(obj.controls)
+				.filter(pt => pt !== null)
+				.forEach(pt => {
+					if (showControls.value) {
+						pt.show()
+					} else {
+						pt.hide()
+					}
+				})
 		})
 
 }
