@@ -71,6 +71,7 @@ function euclideTex(row: euclideType): string {
 }
 
 const bezout = computed(() => {
+	if (euclide.value.length === 0) return false
 	const arr: euclideType[] = [...euclide.value].reverse()
 	const tex = []
 
@@ -133,7 +134,7 @@ const TeX = computed(() => {
 
 <template>
 	<div>
-		<div v-if="isOK">
+		<div v-if="isOK && bezout">
 			<div
 				v-if="withEuclide"
 				v-katex.boxed="TeX"

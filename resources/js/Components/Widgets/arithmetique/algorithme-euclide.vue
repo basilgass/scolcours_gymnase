@@ -74,8 +74,6 @@ const PGCD = computed(() => {
 <template>
 	<div>
 		<div v-if="isOK">
-			afficher l'algo pour {{ values }}
-
 			<div v-katex.boxed="TeX" />
 
 			<div
