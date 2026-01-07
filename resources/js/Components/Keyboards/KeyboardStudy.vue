@@ -64,7 +64,7 @@ defineExpose<KeyboardExposeInterface>({
  * Conversion des réponses en un texte utilisé pour comparer (checker)
  */
 function validateOutput(): string {
-	let output = ""
+	let output: string[] = []
 
 	// cas où la fonction est appelée avant la création du graphe.
 	if (!graph) return ""
@@ -76,12 +76,12 @@ function validateOutput(): string {
 			arr.push(graph.itemToAnswer(item))
 		}
 
-		output = arr.sort().join(",")
+		output = arr.sort()
 	} else {
-		output = [...graph.items.map(el => el.id)].sort().join(",")
+		output = [...graph.items.map(el => el.id)].sort()
 	}
 
-	return output
+	return output.filter(x => x !== null).join(",")
 }
 
 // Code specific to Study.

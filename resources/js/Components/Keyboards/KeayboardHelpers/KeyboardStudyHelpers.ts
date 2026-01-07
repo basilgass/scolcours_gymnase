@@ -71,8 +71,8 @@ export interface ASYMPTOTES_CONTROLS {
 }
 
 interface BEZIER_CONTROL_POINT {
-	point: Point,
 	control: BEZIERCONTROL
+	point: Point,
 }
 
 export interface BEZIER_CONTROLS {
@@ -93,13 +93,13 @@ export enum POINT_TYPES {
 }
 
 export interface itemGraphInterface {
-	id: string,
-	element: Point | Path | Line
-	type: ITEM_TYPES
-	kind?: POINT_TYPES
-	controls: ASYMPTOTES_CONTROLS | { bar: Path } // Record<string, Point>
 	bezier?: BEZIER_CONTROLS
 	beziercontrol?: BEZIERCONTROL
+	controls: ASYMPTOTES_CONTROLS | { bar: Path } // Record<string, Point>
+	element: Point | Path | Line
+	id: string,
+	kind?: POINT_TYPES
+	type: ITEM_TYPES
 }
 
 
@@ -189,53 +189,6 @@ export class StudyGraph extends PiGraph {
 		return this._plots
 	}
 
-	parsePlot(fx: string): { plot: string, samples: number, domain: { min: number, max: number }, color: string } {
-		// une fonction a traceer est de la forme
-		// 2x+3,a:b,@samples,color
-		const plotData: string[] = fx.split(",")
-		const plot: string = plotData.shift()
-
-		let domain: { min: number, max: number } = {min: -8, max: 8}
-		const domainIndex = plotData.findIndex(x => x.includes(':'))
-		if (domainIndex !== -1) {
-			const searchDomain = plotData.splice(domainIndex, 1)[0]
-			const [min, max] = searchDomain.split(':').map(Number)
-			domain.min = min
-			domain.max = max
-		}
-
-		let samples = 20
-		const sampleIndex = plotData.findIndex(x => x.startsWith('@'))
-		if (sampleIndex !== -1) {
-			samples = +plotData
-				.splice(sampleIndex, 1)[0]
-				.substring(1)
-		}
-
-		let color = plotData.length === 1 ? plotData[0] : "blue"
-
-		return {plot, samples, domain, color}
-
-	}
-
-	addPlot(fx: string, name: string, index?: number) {
-		const {plot, samples, domain, color} = this.parsePlot(fx)
-		try {
-			const p = this.create.plot({
-				expression: plot,
-				samples,
-				domain
-			}, `${name}${index ?? ''}`)
-			p.stroke(color)
-			return p
-		} catch {
-			console.warn("Error parsing", fx)
-		}
-
-		return null
-
-	}
-
 	addAH(value: string): itemGraphInterface {
 		const y = (new NumExp(value)).evaluate({})
 		const x = this.BBox.x
@@ -245,7 +198,7 @@ export class StudyGraph extends PiGraph {
 		p.stroke('green')
 
 		const el = {
-			id: value,
+			id: `y=${value}`,
 			type: ITEM_TYPES.AH,
 			kind: null,
 			element: p,
@@ -328,7 +281,7 @@ export class StudyGraph extends PiGraph {
 
 		// LT, LB, RT, RB
 		const el = {
-			id: value,
+			id: `x=${value}`,
 			type: ITEM_TYPES.AV,
 			kind: null,
 			element: p,
@@ -433,9 +386,33 @@ export class StudyGraph extends PiGraph {
 			])
 		}
 
+		Object.values(env.controls).forEach(pt => {
+			pt.asCircle(this._size)
+				.stroke('black')
+				.fill('white/0.5')
+		})
+
 		this._items.push(env)
 
 		return env
+	}
+
+	addPlot(fx: string, name: string, index?: number) {
+		const {plot, samples, domain, color} = this.parsePlot(fx)
+		try {
+			const p = this.create.plot({
+				expression: plot,
+				samples,
+				domain
+			}, `${name}${index ?? ''}`)
+			p.stroke(color)
+			return p
+		} catch {
+			console.warn("Error parsing", fx)
+		}
+
+		return null
+
 	}
 
 	addPoint(type: POINT_TYPES, value: { x: string, y: string }): itemGraphInterface {
@@ -513,6 +490,33 @@ export class StudyGraph extends PiGraph {
 		return A
 	}
 
+	itemToAnswer(item: itemGraphInterface): string | null {
+		const ctrls = []
+
+		if (item.type === "point") {
+			return `${item.kind}${item.id}`
+		}
+
+		for (const key in item.controls) {
+			if (item.controls[key].shape.fill() === "green") {
+				ctrls.push(key)
+			}
+		}
+
+		return ctrls.length > 0
+			? `${item.id}&${ctrls.sort().join("&")}`
+			: item.id === 'env'
+				? null
+				: item.id
+	}
+
+	makeBezierPoint(x: number, y: number, control?: BEZIERCONTROL): BEZIER_CONTROL_POINT {
+		return {
+			point: this.makePoint(x, y),
+			control: control ?? BEZIERCONTROL.SMOOTH
+		}
+	}
+
 	makeLine(A: XY, d: XY) {
 		// IN PIXELS
 		return this.create.line({
@@ -539,13 +543,6 @@ export class StudyGraph extends PiGraph {
 		return this.create.point({x, y}, this.makeName())
 	}
 
-	makeBezierPoint(x: number, y: number, control?: BEZIERCONTROL): BEZIER_CONTROL_POINT {
-		return {
-			point: this.makePoint(x, y),
-			control: control ?? BEZIERCONTROL.SMOOTH
-		}
-	}
-
 	onClick(pt: Point) {
 		if (pt.shape.fill() === "white") {
 			pt.shape.fill("green")
@@ -554,14 +551,43 @@ export class StudyGraph extends PiGraph {
 		}
 	}
 
+	parsePlot(fx: string): { plot: string, samples: number, domain: { min: number, max: number }, color: string } {
+		// une fonction a traceer est de la forme
+		// 2x+3,a:b,@samples,color
+		const plotData: string[] = fx.split(",")
+		const plot: string = plotData.shift()
+
+		let domain: { min: number, max: number } = {min: -8, max: 8}
+		const domainIndex = plotData.findIndex(x => x.includes(':'))
+		if (domainIndex !== -1) {
+			const searchDomain = plotData.splice(domainIndex, 1)[0]
+			const [min, max] = searchDomain.split(':').map(Number)
+			domain.min = min
+			domain.max = max
+		}
+
+		let samples = 20
+		const sampleIndex = plotData.findIndex(x => x.startsWith('@'))
+		if (sampleIndex !== -1) {
+			samples = +plotData
+				.splice(sampleIndex, 1)[0]
+				.substring(1)
+		}
+
+		let color = plotData.length === 1 ? plotData[0] : "blue"
+
+		return {plot, samples, domain, color}
+
+	}
+
 	plotGraph(fx?: string) {
 		// Remove existing plot.
 		this.removePlots()
 
-		// if (fx) {
-		// 	this.plots.push(this.addPlot(fx, 'p'))
-		// 	return
-		// }
+		if (fx) {
+			this.plots.push(this.addPlot(fx, 'p'))
+			return
+		}
 
 		// TODO: the ratio should be dynamique - do a second pass by checking the distance between two control points ?
 		let ratio = 0.2
@@ -684,22 +710,6 @@ export class StudyGraph extends PiGraph {
 		this._plots = []
 
 		return this
-	}
-
-	itemToAnswer(item: itemGraphInterface) {
-		const ctrls = []
-
-		if (item.type === "point") {
-			return `${item.kind}${item.id}`
-		}
-
-		for (const key in item.controls) {
-			if (item.controls[key].shape.fill() === "green") {
-				ctrls.push(key)
-			}
-		}
-
-		return ctrls.length > 0 ? `${item.id}&${ctrls.sort().join("&")}` : item.id
 	}
 }
 
