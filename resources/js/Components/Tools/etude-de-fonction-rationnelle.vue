@@ -144,9 +144,10 @@ const keyboardstudyAnswer = computed(() => {
 		return ""
 	}
 
+	// TODO: manque l'intersection avec l'AO / AH
+	
 	const arr: string[] = []
 
-	console.log(study.value)
 	// ordonnée
 	arr.push(study.value.YIntercept.answer)
 

@@ -347,7 +347,7 @@ export class StudyGraph extends PiGraph {
 		STUDY_CONTROLS_KEYS.forEach((key, index) => {
 			const [x, y] = values[index]
 			const pt = this.makePoint(x, y)
-			
+
 			if (asCircle) {
 				pt.asCircle(this._size)
 			} else {
@@ -493,7 +493,13 @@ export class StudyGraph extends PiGraph {
 		const ctrls = []
 
 		if (item.type === "point") {
-			return `${item.kind}${item.id}`
+			return (
+				item.kind === POINT_TYPES.QUELCONQUE ||
+				item.kind === POINT_TYPES.ORDONNEE ||
+				item.kind === POINT_TYPES.ZERO
+			)
+				? `${item.id}`
+				: `${item.kind}${item.id}`
 		}
 
 		for (const key in item.controls) {

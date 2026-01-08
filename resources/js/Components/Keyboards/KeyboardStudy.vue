@@ -390,8 +390,19 @@ function parseStringToKeyboard(value: string) {
 			if (x !== undefined && y !== undefined) {
 				let type = item.split("(")[0]
 
+				if (type === '') {
+					if (y === '0') {
+						type = 'z'
+					} else if (x === '0') {
+						type = 'o'
+					} else {
+						type = 'p'
+					}
+				}
+
 				display.value.input = `(${x};${y})`
-				addItemToGraph(type === "" ? "p" : type)
+
+				addItemToGraph(type)
 			} else {
 				// Plotting asymptotes
 				// Adding asymptotes.
