@@ -313,7 +313,7 @@ class AdminController extends Controller
 		return Inertia::render(
 			'Admin/AdminIllustrationsPage',
 			[
-				'illustrations' => Illustration::where('type', "=", "draw")->get()
+				'illustrations' => Illustration::all()
 			]
 		);
 	}

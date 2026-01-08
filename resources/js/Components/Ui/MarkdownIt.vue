@@ -130,7 +130,7 @@ const mdClick = function (event) {
 		max-w-full
 		item"
 		@click="mdClick"
-		v-html="mdit"
 		@touchmove.stop
+		v-html="mdit"
 	/>
 </template>

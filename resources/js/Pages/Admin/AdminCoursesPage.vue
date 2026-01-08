@@ -111,10 +111,10 @@ function toggleTeam(course: CourseInterface, team: UserTeamInterface) {
 						<h2 v-katex.auto="course.title" />
 						<div class="flex gap-3">
 							<sc-button
-								type="primary"
-								xs
 								v-for="team in course.teams"
 								:key="`course-${course.id}-${team.name}`"
+								type="primary"
+								xs
 								:href="route('admin.courses.dashboard', {course: course.slug, team: team.name})"
 							>
 								{{ team.name }}
@@ -137,9 +137,9 @@ function toggleTeam(course: CourseInterface, team: UserTeamInterface) {
 				</template>
 				<div class="flex gap-3">
 					<sc-button
-						xs
 						v-for="team in teams"
 						:key="`team-${team.name}`"
+						xs
 						outline
 						type="primary"
 						@click="toggleTeam(course, team)"

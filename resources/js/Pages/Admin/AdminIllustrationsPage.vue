@@ -43,6 +43,7 @@ const listOfIllustrations = computed<IllustrationInterface[]>(() => {
 
 const illustrationsWithErrors = ref<number[]>([])
 const showErrorsOnly = ref<boolean>(false)
+const showIllustration = ref<boolean>(false)
 </script>
 <template>
 	<h1 class="text-3xl pt-5">
@@ -93,6 +94,7 @@ const showErrorsOnly = ref<boolean>(false)
 				</div>
 
 				<error-boundary
+					v-if="showIllustration"
 					:reset-key="illustration.parameters + illustration.code"
 					@error="illustrationsWithErrors.push(illustration.id)"
 				>
