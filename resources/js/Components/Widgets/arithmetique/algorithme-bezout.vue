@@ -12,6 +12,16 @@ const props = defineProps<{
 	illustration: WidgetPropsInterface
 }>()
 
+export interface BezoutType {
+	bezout: { a: number, b: number, u: number, v: number },
+	pgcd: number,
+	euclide: { a: number, b: number, q: number, r: number }[]
+}
+
+const emits = defineEmits<{
+	'updated': [e: BezoutType]
+}>()
+
 const details = computed(() => {
 	return props.illustration.parameters.includes('details')
 })
@@ -113,6 +123,11 @@ const bezout = computed(() => {
 
 	const r = euclide.value[euclide.value.length - 1].r
 
+	emits('updated', {
+		bezout: {a, u, b, v: -v},
+		pgcd: r,
+		euclide: euclide.value
+	})
 	return {
 		tex: `\\def\\arraystretch{1.5}\\begin{aligned}${tex.map(x => `${x} &= ${r}`).join('\\\\')}\\end{aligned}`,
 		a, b, u, v,

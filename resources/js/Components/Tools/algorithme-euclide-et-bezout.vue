@@ -11,7 +11,7 @@ import {computed, ref} from "vue"
 import Card from "@/Components/Ui/Card.vue"
 import ToolError from "@/Components/Tools/Parts/ToolError.vue"
 import AlgorithmeEuclide from "@/Components/Widgets/arithmetique/algorithme-euclide.vue"
-import AlgorithmeBezout from "@/Components/Widgets/arithmetique/algorithme-bezout.vue"
+import AlgorithmeBezout, {BezoutType} from "@/Components/Widgets/arithmetique/algorithme-bezout.vue"
 
 const {restoreTool} = useToolsStorage()
 const forms: IToolForm[] = restoreTool([
@@ -22,7 +22,7 @@ const forms: IToolForm[] = restoreTool([
 		fromUrl: "a"
 	},
 	{
-		label: "b",
+		label: "b ou modulo n",
 		type: "text",
 		value: ref(23),
 		fromUrl: "b"
@@ -33,13 +33,29 @@ const A = computed(() => +forms[0].value.value as number)
 const B = computed(() => +forms[1].value.value as number)
 
 const result = computed<boolean>(() => {
-
 	if (A.value <= 1 || B.value <= 1) return false
 	if (!Number.isSafeInteger(A.value)) return false
 	if (!Number.isSafeInteger(B.value)) return false
 
 	return true
-	
+})
+
+const calculatedValues = ref<BezoutType>()
+const modularInvert = computed(() => {
+	if (!calculatedValues.value || !calculatedValues.value.pgcd) {
+		return false
+	}
+
+	if (calculatedValues.value.pgcd > 1) {
+		return `\\(${A.value} \\mod ${B.value}\\) n'est pas inversible`
+	}
+
+	const ba = calculatedValues.value.bezout.a
+	let u = A.value === ba ? calculatedValues.value.bezout.u : calculatedValues.value.bezout.v
+	if (u < 0) {
+		u = u + B.value
+	}
+	return `\\[ ${A.value} \\cdot ${u} \\equiv 1 \\mod ${B.value} \\]`
 })
 </script>
 
@@ -50,7 +66,10 @@ const result = computed<boolean>(() => {
 			form-class="grid grid-cols-1 md:grid-cols-3 gap-3"
 		/>
 
-		<Card v-if="result">
+		<Card
+			v-if="result"
+			class="mt-10"
+		>
 			<div class="grid grid-cols-1 md:grid-cols-2 gap-3">
 				<div>
 					<h3 class="font-semibold text-lg">
@@ -67,8 +86,22 @@ const result = computed<boolean>(() => {
 					</h3>
 					<algorithme-bezout
 						:illustration="{parameters: '', code: `${A},${B}`}"
+						@updated="calculatedValues=$event"
 					/>
 				</div>
+			</div>
+
+			<div
+				v-if="modularInvert"
+				class="mx-auto max-w-lg mt-10"
+			>
+				<h3 class="font-semibold text-lg text-center">
+					inverse modulaire
+				</h3>
+				<div
+					v-katex.auto="modularInvert"
+					class="text-center mt-5 katex-boxed"
+				/>
 			</div>
 		</Card>
 		<tool-error v-else />

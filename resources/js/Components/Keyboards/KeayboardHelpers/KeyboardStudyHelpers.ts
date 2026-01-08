@@ -339,7 +339,7 @@ export class StudyGraph extends PiGraph {
 		return controls
 	}
 
-	addControls(values: number[][]): ASYMPTOTES_CONTROLS {
+	addControls(values: number[][], asCircle = false): ASYMPTOTES_CONTROLS {
 		if (!this._loadControls) return null
 
 		const controls: ASYMPTOTES_CONTROLS = {} as ASYMPTOTES_CONTROLS
@@ -347,12 +347,17 @@ export class StudyGraph extends PiGraph {
 		STUDY_CONTROLS_KEYS.forEach((key, index) => {
 			const [x, y] = values[index]
 			const pt = this.makePoint(x, y)
+			
+			if (asCircle) {
+				pt.asCircle(this._size)
+			} else {
+				pt.asSquare(this._size)
+			}
 
-			pt.asSquare(this._size)
-				.stroke('black')
+			pt.stroke('black')
 				.fill('white/0.5')
-
-			pt.shape.on('click', () => this.onClick(pt))
+				.shape
+				.on('click', () => this.onClick(pt))
 			controls[key] = pt
 		})
 
@@ -377,7 +382,7 @@ export class StudyGraph extends PiGraph {
 				[bbox.x.max - 0.5, bbox.y.max - 0.5],//RT
 				[bbox.x.min + 0.5, bbox.y.min + 0.5],//LB
 				[bbox.x.max - 0.5, bbox.y.min + 0.5],//RB
-			]),
+			], true),
 			bezier: this.addBezierControls([
 				[bbox.x.min - 2, bbox.y.max + 2],//LT
 				[bbox.x.max + 2, bbox.y.max + 2],//RT
@@ -385,12 +390,6 @@ export class StudyGraph extends PiGraph {
 				[bbox.x.max + 2, bbox.y.min - 2]//RB
 			])
 		}
-
-		Object.values(env.controls).forEach(pt => {
-			pt.asCircle(this._size)
-				.stroke('black')
-				.fill('white/0.5')
-		})
 
 		this._items.push(env)
 
