@@ -22,6 +22,7 @@ import {MatrixChecker, OrderChecker, QcmChecker, StudyChecker, TableofsignChecke
 import {TrigoChecker} from "@/Checkers/Basic/TrigoChecker.ts"
 import {DrawChecker} from "@/Checkers/Custom/DrawChecker.ts"
 import {ZonesChecker} from "@/Checkers/Custom/ZonesChecker.ts"
+import {ModuloChecker} from "@/Checkers/Basic/ModuloChecker.ts"
 
 type CheckerClass = (new (...args: any[]) => CheckerAbstract)
 
@@ -37,6 +38,7 @@ export function checkersList(): Record<CHECKERS, CheckerClass> {
 	list[CHECKERS.FUNCTION] = FunctionChecker
 	list[CHECKERS.INPUT] = InputChecker
 	list[CHECKERS.LOGARITHM] = LogChecker
+	list[CHECKERS.MODULO] = ModuloChecker
 	list[CHECKERS.NUMBER] = NumberChecker
 	list[CHECKERS.POLYNOMIAL] = PolynomChecker
 	list[CHECKERS.PRIMITIVE] = PrimitiveChecker
