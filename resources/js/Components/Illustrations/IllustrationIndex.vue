@@ -17,7 +17,7 @@ const editMode = useStoreEditMode()
 const flash = useStoreFlashMessage()
 
 const grid = computed(() => {
-	if (props.block.illustrationsGrid === null || props.block.illustrationsGrid || undefined || props.block.illustrationsGrid === '') {
+	if (props.block.illustrationsGrid === null || props.block.illustrationsGrid === undefined || props.block.illustrationsGrid === '') {
 		return "flex flex-col gap-3"
 	}
 

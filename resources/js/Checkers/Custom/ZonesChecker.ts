@@ -7,15 +7,12 @@ const description = `draw
 pidraw code`
 
 export class ZonesChecker extends CheckerAbstract {
-	#sort: boolean
-	readonly format = "déplacer les points"
+	readonly format = "sélectionner les zones"
 
 	constructor(config: string[] | string) {
 		super(config)
 		this.type = CHECKERS.DRAW
 		this.description = description
-
-		this.#sort = this.config.includes('sort')
 	}
 
 	checkValue(value: string): CheckerResult {
