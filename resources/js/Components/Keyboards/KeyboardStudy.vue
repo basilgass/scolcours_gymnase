@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-// TODO: permettre l'affichage de la réponse.
-// TODO: retravailler pour être plus facile à modifier / debogguer
 import {computed, onMounted, ref, useTemplateRef} from "vue"
 import KeyboardDisplay from "@/Components/Keyboards/KeyboardDisplay.vue"
 import {
@@ -30,11 +28,6 @@ const emits = defineEmits<KeyboardEmitsInterface>()
 
 // emit change event
 function onChange(): void {
-	// if (check something) {
-	// 	// TOOD: should trigger the validation button automatically.
-	//
-	// }
-
 	setInput().then((x) => emits("change", x))
 }
 
@@ -60,6 +53,8 @@ defineExpose<KeyboardExposeInterface>({
 	parameters: ""
 })
 
+const validateId = ref<number>(0)
+
 /**
  * Conversion des réponses en un texte utilisé pour comparer (checker)
  */
@@ -81,6 +76,8 @@ function validateOutput(): string {
 		output = [...graph.items.map(el => el.id)].sort()
 	}
 
+
+	validateId.value++
 	return output.filter(x => x !== null).join(",")
 }
 
@@ -197,6 +194,8 @@ const display = ref({input: "", tex: "", raw: ""})
 const message = ref("")
 
 const availableButtons = computed<studyButtonsKeysType[]>(() => {
+	if (validateId.value < 0) return
+
 	if (config.value.buttons.auto === false) return config.value.buttons.available
 
 	// on filtre les boutons en fonction de la réponse attendue
@@ -219,6 +218,8 @@ const availableButtons = computed<studyButtonsKeysType[]>(() => {
 function parseAnswerToKeys(value: string): studyButtonsKeysType[] {
 	const arr: studyButtonsKeysType[] = []
 
+	if (value === '') return []
+
 	value.split(',').forEach(item => {
 		if (item.startsWith('y=')) {
 			// AO ou AH
@@ -229,7 +230,13 @@ function parseAnswerToKeys(value: string): studyButtonsKeysType[] {
 		} else if (item.startsWith('env')) {
 			// pas de bouton environnement
 		} else {
-			arr.push(item.split('(')[0] as studyButtonsKeysType)
+			if (item.endsWith(';0)')) {
+				arr.push('z')
+			} else if (item.includes('(0;')) {
+				arr.push('o')
+			} else {
+				arr.push('p')
+			}
 		}
 	})
 
