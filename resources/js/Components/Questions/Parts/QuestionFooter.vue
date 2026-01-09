@@ -25,6 +25,7 @@ const emits = defineEmits<{
 
 function toggleAnswer(value?: string) {
 	showAnswer.value = value === undefined ? !showAnswer.value : true
+
 	emits('loadAnswers', {show: showAnswer.value, value})
 }
 

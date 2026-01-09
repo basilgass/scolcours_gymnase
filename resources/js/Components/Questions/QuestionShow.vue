@@ -123,11 +123,13 @@ async function loadAnswers(event: { show: boolean, value?: string }) {
 		const keyboard = kbrds[index]
 
 		// Default value - on ne prend que la première si c'est une multi-valeur
-		const value = cleanAnswer(questionData.answers.values.value[index])
+		const value = cleanAnswer(
+			event.value ? event.value.split('\n')[index] : questionData.answers.values.value[index]
+		)
 
 		keyboard.setInput(
 			event.show
-				? (event.value ?? value)
+				? value
 				: ''
 		)
 			.then((x) => {
