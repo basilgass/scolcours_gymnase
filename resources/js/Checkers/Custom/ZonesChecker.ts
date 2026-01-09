@@ -20,14 +20,22 @@ export class ZonesChecker extends CheckerAbstract {
 		const zonesG = value.split(',')
 		const zonesA = this.answer.split(',')
 
-		zonesG.sort()
-		zonesA.sort()
+		// zonesG.sort()
+		// zonesA.sort()
+
+		// S'il y a deux zones dans la même colonne...
+		const columns = zonesG.map(x => x.substring(1))
+		columns.sort()
+		if (columns.some((col, index) => col === columns[index + 1])) {
+			return makeCheckerResult("Il ne peut pas y avoir deux zones dans la même colonne")
+		}
 
 		if (zonesG.length < zonesA.length) {
 			return makeCheckerResult("Il manque une ou plusieurs zones.")
 		} else if (zonesG.length > zonesA.length) {
 			return makeCheckerResult("Il y a une ou plusieurs zones en trop.")
 		}
+
 
 		const diff = new Set(zonesG).difference(new Set(zonesA))
 		const n = diff.size
