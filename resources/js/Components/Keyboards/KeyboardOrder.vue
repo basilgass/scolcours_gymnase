@@ -30,8 +30,9 @@ async function setInput(value: string): Promise<KeyboardInputInterface> {
 			sortableItems.value = Random.shuffle(items.value)
 		}
 	}
+
 	return {
-		input: "",
+		input: answerReference.value === sortableItems.value.map((el) => el.label).join('\n') ? '1' : '0',
 		tex: "",
 		raw: isList.value ?
 			sortableItems.value.map(el => `- ${el.label}`).join("\n") :
@@ -70,6 +71,10 @@ const items = computed(() => {
 			label: element
 		}
 	})
+})
+
+const answerReference = computed(() => {
+	return props.keyboard.values.join('\n')
 })
 
 const sortableItems = ref<{ id: number, label: string }[]>(Random.shuffle(items.value))
