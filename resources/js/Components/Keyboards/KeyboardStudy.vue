@@ -50,7 +50,13 @@ defineExpose<KeyboardExposeInterface>({
 		// no reset.
 	},
 	setInput,
-	parameters: ""
+	parameters: "btn=ao,av,ah,z,o,p,m,M,_\n" +
+		"auto (ne donne que les boutons nécessaires)\n" +
+		"hint (que les boutons qui restent)\n" +
+		"trace (affiche le bouton 'tracer')\n" +
+		"p=... (graphe à tracer lorsque juste)\n" +
+		"f=... (fonctions en fond)\n" +
+		"cfg=... (pidraw config)"
 })
 
 const validateId = ref<number>(0)

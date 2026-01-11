@@ -144,8 +144,6 @@ const keyboardstudyAnswer = computed(() => {
 		return ""
 	}
 
-	// TODO: manque l'intersection avec l'AO / AH
-	
 	const arr: string[] = []
 
 	// ordonnée
@@ -155,13 +153,14 @@ const keyboardstudyAnswer = computed(() => {
 	study.value.roots.answers
 		.forEach(zero => arr.push(zero))
 
-	// asymptote
 	Object.values(study.value.asymptotes)
 		.forEach(asymptotes => {
-			asymptotes
-				.map(asymptote => asymptote.answer)
-				.forEach(value => arr.push(value)
-				)
+			asymptotes.forEach(a => {
+				arr.push(a.answer)
+				if (a.delta) {
+					arr.push(...a.delta.roots.map(root => root.answer))
+				}
+			})
 		})
 
 	// min / max / replat

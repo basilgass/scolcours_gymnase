@@ -7,55 +7,59 @@ const {keyboards} = useKeyboard()
 const DIGITS = 2
 
 interface ASYMPTOTE {
-	tex: string,
-	draw: string,
 	answer: string,
 	delta?: {
 		tex: string,
-		table_of_signs: TABLE_OF_SIGNS
+		table_of_signs: TABLE_OF_SIGNS,
+		roots: {
+			x: { value: number, display: string }, y: { value: number, display: string },
+			answer: string	// les intersections avec l'asymptote
+		}[]
 	},
+	draw: string,
+	tex: string,
 }
 
 interface EXTREMA {
-	value: number,
-	tex: string,
 	answer: string,
+	tex: string,
 	type: "min" | "max" | "flat" | "undefined",
+	value: number,
 	x: { tex: string, value: number }
 }
 
 export interface ETUDE_DE_FONCTION_RATIONNELLE {
-	fx: string
-	fxKeyboard: string
-	domain: string
-	roots: {
-		values: ISolution[],
-		answers: string[],
-		ed: string
-	},
 	YIntercept: {
 		tex: string,
 		draw: string,
 		answer: string
 	},
-	table_of_signs: TABLE_OF_SIGNS,
 	asymptotes: {
 		vertical: ASYMPTOTE[],
 		horizontal: ASYMPTOTE[],
 		slope: ASYMPTOTE[]
 	},
-	environnement: {
-		answer: string
-	},
 	derivative: {
 		fx: string,
 		table_of_signs: TABLE_OF_SIGNS
 	},
-	extremes: EXTREMA[],
+	domain: string
 	draw: {
 		code: string,
 		parameters: string
 	}
+	environnement: {
+		answer: string
+	},
+	extremes: EXTREMA[],
+	fx: string
+	fxKeyboard: string
+	roots: {
+		values: ISolution[],
+		answers: string[],
+		ed: string
+	},
+	table_of_signs: TABLE_OF_SIGNS,
 
 }
 
@@ -94,7 +98,7 @@ export function makeStudyFromPolyFactor(value: PolyFactor): ETUDE_DE_FONCTION_RA
 		: {
 			tex: `H=(${0};${Yevaluate.tex})`,
 			draw: `H(${0},${Yevaluate.value.toFixed(DIGITS)})`,
-			answer: `o(0;${Yevaluate.display})`
+			answer: `(0;${Yevaluate.display})`
 		}
 	// Roots
 	const zeroes = factorized.getZeroes()
@@ -107,7 +111,7 @@ export function makeStudyFromPolyFactor(value: PolyFactor): ETUDE_DE_FONCTION_RA
 	const roots = {
 		ed: rootsValues.length === 0 ? "\\varnothing" : `S=\\left\\{ ${rootsValues.join(";")} \\right\\}`,
 		values: zeroes,
-		answers: zeroes.map(z => `z(${z.display};0)`)
+		answers: zeroes.map(z => `(${z.display};0)`)
 	}
 
 	// Asymptotes
@@ -139,9 +143,15 @@ export function makeStudyFromPolyFactor(value: PolyFactor): ETUDE_DE_FONCTION_RA
 	let code = `f(x)=${factorized.asRoot.display}->thick,blue`
 
 	// Draw the asymptotes
-	vertical.forEach(av => code += `\n${av.draw}`)
-	horizontal.forEach(av => code += `\n${av.draw}`)
-	slope.forEach(av => code += `\n${av.draw}`)
+	const asymptotes = [...vertical, ...horizontal, ...slope]
+
+	asymptotes.forEach(a => {
+		code += `\n${a.draw}`
+		if (a.delta) {
+			a.delta.roots.forEach(
+				(root, index) => code += `\nA${index}(${+root.x.value.toFixed(2)},${+root.y.value.toFixed(2)})->tex=@`)
+		}
+	})
 
 	// Draw particular points.
 	if (YIntercept) code += `\n${YIntercept.draw}->tex=@/mr`
@@ -253,11 +263,41 @@ function PolyFactor_getAsymptotes_Horizontal_or_Slope(factorized: PolyFactor, de
 
 	const tos_delta = delta_PolyFactor.tableOfSigns()
 
-	// TODO: meilleur estimation pour déterminer la position de la courbe.
 	const anchors = [
 		tos_delta.signs[0] === '+' ? 'LT' : 'LB',
 		tos_delta.signs[tos_delta.signs.length - 1] === '+' ? 'RT' : 'RB'
 	]
+
+	// recherche des points d'intersections avec l'asymptote.
+	const roots: {
+		x: { value: number, display: string },
+		y: { value: number, display: string },
+		answer: string
+	}[] = []
+
+	tos_delta.signs.forEach((sign, index) => {
+		if (sign === 'z') {
+			const root = tos_delta.roots[(index - 1) / 2]
+
+			const x = root.exact instanceof Fraction
+				? {value: root.exact.value, display: root.exact.display}
+				: {value: root.value, display: root.value.toFixed(2)}
+
+			const evaluatedY = root.exact instanceof Fraction
+				? (quotient.evaluate({x: root.exact}) as Fraction)
+				: quotient.evaluate({x: x.value}) as number
+
+			const y = typeof evaluatedY === 'number'
+				? {value: evaluatedY, display: evaluatedY.toFixed(2)}
+				: {value: evaluatedY.value, display: evaluatedY.display}
+
+			roots.push({
+				x,
+				y,
+				answer: `(${x.display};${y.display})`
+			})
+		}
+	})
 
 	return [
 		{
@@ -266,7 +306,8 @@ function PolyFactor_getAsymptotes_Horizontal_or_Slope(factorized: PolyFactor, de
 			answer: [`y=${quotient.display}`, ...anchors].join('&'),
 			delta: {
 				tex: `\\delta(x) = \\frac{${reminder.tex}}{${denominator.asRoot.tex}}`,
-				table_of_signs: delta_PolyFactor.tableOfSigns()
+				table_of_signs: delta_PolyFactor.tableOfSigns(),
+				roots
 			}
 		}
 	]
