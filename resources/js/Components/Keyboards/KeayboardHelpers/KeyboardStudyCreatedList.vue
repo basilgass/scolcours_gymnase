@@ -85,15 +85,20 @@ const groups = computed(() => {
 				flex-wrap
 				keyboard min-h-[3em]"
 			>
-				<button
+				<div
 					v-for="item in items.filter(item=>getGroup(item)===group)"
 					:key="item.id"
-					v-katex.ascii.nomargin="displayItem(item)"
-					class="key-touch cursor-pointer
-						bg-action border rounded px-3 py-1
-						hover:bg-amber-300 transition-colors"
-					@dblclick="emit('removeItem', item)"
-				/>
+					class="flex gap-3 items-baseline
+					bg-action border rounded pl-3 pr-1 py-1"
+				>
+					<div
+						v-katex.ascii.nomargin="displayItem(item)"
+					/>
+					<i
+						class="bi bi-trash text-red-500 cursor-pointer"
+						@click="emit('removeItem', item)"
+					/>
+				</div>
 			</div>
 		</div>
 
