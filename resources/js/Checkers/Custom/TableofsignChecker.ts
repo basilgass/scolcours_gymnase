@@ -38,6 +38,23 @@ export class TableofsignChecker extends CheckerAbstract {
 		return "Tableau de signes"
 	}
 
+	override checkFormat(value: string): string {
+		const [zeroes, signs, grows, curves] = value.split('@')
+
+		if (!zeroes) return super.checkFormat(value)
+
+		const columns = 2 * zeroes.split(',').length + 1
+		
+		if (signs === undefined) return "il faut entrer des signes."
+		if (signs.length !== columns) return "il manque des éléments dans la ligne des signes."
+		if (signs.replaceAll(/[+\-zd!]/g, '').length > 0) return "il y a des signes non compatibles."
+
+		if (grows && grows.length !== columns) return "il manque des éléments dans la ligne de croissance."
+		if (curves && curves.length !== columns) return "il manque des éléments dans la ligne de courbure."
+
+		return super.checkFormat(value)
+	}
+
 	override checkValue(value: string): CheckerResult {
 		if (this.answer !== value) {
 			const zeroes = {

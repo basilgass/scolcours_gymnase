@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 
-import {inject} from "vue"
+import {computed, inject} from "vue"
 import {questionDataInterface, questionResultInterface} from "@/Components/Questions/QuestionInterface.ts"
 import ScButton from "@/Components/Ui/scButton.vue"
 import {useQuestionValidation} from "@/Components/Questions/useQuestionValidation.ts"
@@ -29,6 +29,16 @@ function onValidate() {
 		useWrongAnswerAnimation(useValidation.button.value.$el)
 	}
 }
+
+const answerIntegrityCheck = computed(() => {
+	const id = questionData.current.id.value
+	const checker = questionData.validators.value[id].checker.checker.checker
+	const answer = questionData.validators.value[id].answer
+
+	const integrity = checker.checkFormat(answer)
+
+	return integrity === '' ? true : integrity
+})
 
 
 </script>
@@ -81,6 +91,16 @@ function onValidate() {
 				class="text-xs"
 			/>
 		</div>
+
+		<div
+			v-if="answerIntegrityCheck!==true"
+			v-katex.auto="answerIntegrityCheck"
+			class="p-3  my-2
+			border rounded
+			text-red-600 dark:text-red-100
+			bg-red-100 dark:bg-red-900
+			border-red-600 dark:border-red-700"
+		/>
 	</div>
 </template>
 

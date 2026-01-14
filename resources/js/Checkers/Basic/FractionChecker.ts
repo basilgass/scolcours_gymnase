@@ -35,6 +35,21 @@ export class FractionChecker extends CheckerAbstract {
 				return "merci de donner une fraction..."
 			}
 
+			const [num, den] = value.split('/')
+			if (isNaN(+num)) {
+				return "Le numérateur n'est pas un nombre."
+			}
+
+			if (den === undefined) return ""
+
+			if (den.startsWith('-')) {
+				return "Une fraction n'a pas de dénominateur négatif."
+			}
+
+			if (isNaN(+den)) {
+				return "Le dénominateur n'est pas un nombre."
+			}
+
 			new Fraction(value)
 			return ""
 		} catch {

@@ -29,6 +29,14 @@ export class ModuloChecker extends CheckerAbstract {
 			return "une congruence a forcément le signe \\(\\mod{}\\)"
 		}
 
+		const [a, n] = value.split('mod')
+		if (a === '') {
+			return "il faut donner un nombre avant le modulo"
+		}
+		if (n === undefined) {
+			return "il faut donner le modulo !"
+		}
+
 		return ""
 	}
 

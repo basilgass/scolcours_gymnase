@@ -307,6 +307,7 @@ const keyboardstudyAnswer = computed(() => {
 							<table-of-signs
 								:roots="item.delta.table_of_signs.roots.map(x=>x.tex)"
 								:signs="item.delta.table_of_signs.signs"
+								tex-output
 							/>
 						</div>
 					</div>
