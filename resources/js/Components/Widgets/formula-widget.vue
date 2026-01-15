@@ -5,7 +5,7 @@
 import BlockShow from "@/Components/Blocks/BlockShow.vue"
 import {FormulaInterface, WidgetPropsInterface} from "@/types/modelInterfaces"
 import axios from "axios"
-import {onMounted, ref} from "vue"
+import {computed, onMounted, ref} from "vue"
 import {AxiosErrorMessage} from "@/types"
 
 const props = defineProps<{
@@ -13,6 +13,12 @@ const props = defineProps<{
 }>()
 
 const formulas = ref<FormulaInterface[]>([])
+
+const grid = computed(() => {
+	if (formulas.value.length <= 1) return 'grid gap-3 grid-cols-1'
+
+	return 'grid gap-3 grid-cols-1 lg:grid-cols-2 xl:grid-cols-3'
+})
 
 onMounted(() => {
 	// props.illustrations.code is like:
@@ -40,16 +46,17 @@ onMounted(() => {
 
 <template>
 	<div
-		class="flex flex-wrap
-	gap-5
-	place-items-center"
+		:class="[
+			grid,
+			'gap-5 place-items-center'
+		]"
 	>
 		<block-show
 			v-for="formula in formulas"
 			:key="formula.id"
 			v-theme.border
 			:block="formula.block"
-			class="max-w-[400px] w-full h-full
+			class="w-full h-full
 			shadow
 			border border-l-4"
 			no-admin

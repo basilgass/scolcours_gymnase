@@ -43,14 +43,20 @@ export class CartesianChecker extends CheckerAbstract {
 			this.config.includes("r") ||
 			this.config.includes("reduced") ||
 			this.config.includes("re")
+
 		this.#circle =
 			this.config.includes("circle")
+
 		this.#line2d =
 			this.config.includes("2d")
+
 		this.#slope =
-			this.config.includes("mx+h")
+			this.config.includes("mx+h") ||
+			this.config.includes("mxh")
+
 		this.#minmax =
 			this.config.includes("minmax")
+
 		this.#line3d =
 			this.config.includes("3d")
 

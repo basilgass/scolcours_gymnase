@@ -1,6 +1,7 @@
 import {CheckerResult, CHECKERS, makeCheckerResult} from "@/Checkers"
 import {CheckerAbstract} from "@/Checkers/CheckerAbstract"
 import {isEquation, isEquationCircle, isEquationPeak, isEquationReduced} from "@/Checkers/checkMathString.ts"
+import {Fraction} from "pimath"
 
 // const name = "equation"
 const description = `equation,[paramètres]
@@ -8,6 +9,7 @@ const description = `equation,[paramètres]
 **paramètres**
 - r=réduit
 - c=canonique
+- mxh=forme où y est isolé, de type y=mx+h
 - sommet=forme du sommet
 - circle=forme centre rayon
 `
@@ -21,6 +23,7 @@ const description = `equation,[paramètres]
 export class EquationChecker extends CheckerAbstract {
 	#isCanonical: boolean
 	#isCentreRayon: boolean
+	#isMxh: boolean
 	#isPeak: boolean
 	#isReduced: boolean
 
@@ -39,6 +42,9 @@ export class EquationChecker extends CheckerAbstract {
 			this.config.includes("canonical") ||
 			this.config.includes("ca")
 
+		this.#isMxh = this.config.includes('mxh') ||
+			this.config.includes('mx+h')
+
 		this.#isPeak =
 			this.config.includes("s") || this.config.includes("sommet")
 
@@ -55,6 +61,8 @@ export class EquationChecker extends CheckerAbstract {
 			opts.push(" (forme centre - rayon)")
 		} else if (this.#isPeak) {
 			opts.push(" (forme du sommet)")
+		} else if (this.#isMxh) {
+			opts.push(" (forme pente + ordonnée)")
 		}
 
 		if (this.#isReduced) {
@@ -88,13 +96,72 @@ export class EquationChecker extends CheckerAbstract {
 			return makeCheckerResult("l'équation n'est pas juste.")
 		}
 
+		if (this.#isReduced && isEquationReduced(value)) {
+			return makeCheckerResult("l'équation n'est pas réduite.")
+		}
+
 		// à ce stade, la fonction correspond au résultat. On doit juste contrôler le format.
 		if (this.#isCanonical) {
 			if (!A.right.isZero() && !A.left.isZero()) {
 				return makeCheckerResult("l'équation n'est pas sous sa forme canonique \\(\\ldots=0\\)", 0.5)
 			}
+
+			// Convention d'écriture
+			if (value.startsWith('-')) {
+				return makeCheckerResult("on évite de commencer par un nombre négatif", 0.9)
+			}
+
+			if (
+				value.includes('x') && value.includes('y') &&
+				value.indexOf('x') > value.indexOf('y')
+			) {
+				return makeCheckerResult("de manière conventionnelle, on écrit le monôme en \\(x\\) en premier", 0.9)
+			}
+
+			const parts = value.split('=').map(part => part.split(/[+-]/)).flat().filter(m => m !== '')
+			const xIndex = parts.findIndex(m => m.includes('x'))	// -1 or 0
+			if (xIndex > 0) return makeCheckerResult("le monôme en \\(x\\) est conventionnellement placé en première position.", 0.9)
+			const yIndex = parts.findIndex(m => m.includes('y'))	// -1 or 0 or 1 si xIndex=0
+			if (yIndex > xIndex + 1) return makeCheckerResult("le monôme en \\(y\\) est conventionnellement placé avant la constante.", 0.9)
+
 		}
 
+		if (this.#isMxh) {
+			// on cherche la forme y = mx+h
+			if (!value.startsWith('y=')) {
+				return makeCheckerResult("l'équation commence par \\(y=\\ldots\\)")
+			}
+
+			const mxh = value.substring(2)
+
+			if (!isNaN(+mxh)) {
+				// cas de type y = 5
+				const H = new Fraction(mxh)
+				if (!H.isReduced()) return makeCheckerResult("on peut réduire l'ordonnée à l'origine...", 0.5)
+
+				// Pas d'autres contrôles dans ce cas.
+				return makeCheckerResult()
+			}
+
+			// TODO: possibilité d'améliorer contre les réponses "débiles"s
+
+			try {
+				const [m, h] = mxh.split('x').map(v => new Fraction(v.startsWith('+') ? v.substring(1) : v))
+
+				if (!m.isReduced()) {
+					return makeCheckerResult("on peut réduire la pente...", 0.5)
+				}
+
+				if (!h.isReduced()) {
+					return makeCheckerResult("on peut réduire l'ordonnée à l'origine...", 0.5)
+				}
+
+			} catch {
+				return makeCheckerResult("la pente ou l'ordonnée n'est pas reconnue.")
+			}
+
+
+		}
 		if (this.#isPeak) {
 			return isEquationPeak
 				? makeCheckerResult()
@@ -107,11 +174,6 @@ export class EquationChecker extends CheckerAbstract {
 				: makeCheckerResult("l'équation n'est pas sous la forme centre-rayon")
 		}
 
-		if (this.#isReduced) {
-			return isEquationReduced(value)
-				? makeCheckerResult()
-				: makeCheckerResult("l'équation n'est pas réduite.")
-		}
 
 		// If all tests passes, it is correct !
 		return makeCheckerResult()
