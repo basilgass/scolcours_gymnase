@@ -14,7 +14,7 @@
 @import './scolcours/effects.css';
 @import './scolcours/katexBase.css';
 /*@import './scolcours/x_inputs.css.backup';*/
-/*@import './scolcours/x_typo.css.backup' layer(base);*/
+@import './scolcours/typo.css' layer(base);
 @import './scolcours/tableossigns.css' layer(components);
 @import './scolcours/button.css';
 

@@ -10,7 +10,7 @@ import {makeBlock} from "@/helpers/makeModel.ts"
 
 defineOptions({layout: LayoutMain})
 
-type groupsUiType = 'theme' | 'buttons' | 'blocks' | 'forms' | 'definition' | 'various'
+type groupsUiType = 'theme' | 'buttons' | 'blocks' | 'forms' | 'definition' | 'various' | 'dimensions'
 const detailsOpen = ref<groupsUiType[]>(['various'])
 
 const loremIpsum = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium id molestiae nam nobis recusandae sapiente, voluptas! Amet autem exercitationem nulla odit ratione suscipit ut. Cupiditate et magnam quibusdam saepe tempore?'
@@ -27,6 +27,11 @@ const definitionClasses = {
 	'arithmetique': 'def-arithmetique',
 	'admin': 'def-admin',
 }
+
+const dimensions = [
+	'max-w-3xs', 'max-w-2xs', 'max-w-xs', 'max-w-sm', 'max-w-md', 'max-w-lg', 'max-w-xl', 'max-w-2xl',
+	'min-w-xs', 'min-w-sm', 'min-w-md', 'min-w-lg', 'min-w-xl'
+]
 const themes = {
 	'scolcours': [
 		'bg-scolcours-light dark:bg-scolcours-light',
@@ -354,6 +359,28 @@ const value = ref(false)
 					class="w-10 h-10 bg-red-200 border rounded"
 				>
 					{{ i }}
+				</li>
+			</ul>
+		</details>
+
+		<details :open="detailsOpen.includes('dimensions')">
+			<summary class="text-lg cursor-pointer">
+				Dimensions
+			</summary>
+			<div class="cancel-red-800 h-[150px] w-[120px] bg-blue-100">
+				Hello world
+			</div>
+
+			<ul class="flex flex-col gap-3">
+				<li
+					v-for="(dim, i) in dimensions"
+					:key="`dim-block-${i}`"
+					:class="[
+						'h-10 bg-red-200 border rounded grid place-items-center',
+						dim
+					]"
+				>
+					{{ dim }}
 				</li>
 			</ul>
 		</details>

@@ -1,0 +1,46 @@
+@layer base {
+	/*.typo h1 {*/
+	/*    @apply text-2xl font-semibold;*/
+	/*}*/
+	/*.typo h2 {*/
+	/*    @apply text-xl font-semibold;*/
+	/*}*/
+	/*.typo h3 {*/
+	/*    @apply text-lg font-semibold;*/
+	/*}*/
+	/*.typo ol {*/
+	/*    @apply list-inside list-decimal*/
+	/*}*/
+	/*.typo ul {*/
+	/*    @apply list-inside list-disc*/
+	/*}*/
+	.prose {
+		table {
+			&.table-center {
+				th,
+				td {
+					@apply text-center!;
+				}
+			}
+
+			&.table-hl-1 {
+				th:first-child,
+				td:first-child {
+					@apply font-bold;
+				}
+			}
+
+			&.table-center-1 {
+				th,
+				td {
+					@apply text-center!;
+				}
+
+				th:first-child,
+				td:first-child {
+					@apply text-left! font-bold;
+				}
+			}
+		}
+	}
+}

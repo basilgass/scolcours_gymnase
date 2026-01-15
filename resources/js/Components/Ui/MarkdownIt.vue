@@ -35,6 +35,23 @@ const md = markdownIt({html: true})
 		},
 	})
 
+const defaultTableOpen =
+	md.renderer.rules.table_open ||
+	((tokens, idx, options, env, self) => self.renderToken(tokens, idx, options))
+
+const defaultTableClose =
+	md.renderer.rules.table_close ||
+	((tokens, idx, options, env, self) => self.renderToken(tokens, idx, options))
+
+md.renderer.rules.table_open = (tokens, idx, options, env, self) => {
+	// console.log(tokens[idx])
+	return `<div class="overflow-x-auto">` + defaultTableOpen(tokens, idx, options, env, self)
+}
+
+md.renderer.rules.table_close = (tokens, idx, options, env, self) => {
+	return defaultTableClose(tokens, idx, options, env, self) + `</div>`
+}
+
 const mdit = computed(() => {
 	if (!props.text) {
 		return ""
@@ -57,6 +74,7 @@ const mdit = computed(() => {
 			return `(${match})`
 		}
 	})
+
 	// Remplace les liens vers les routes par des liens vers les pages
 	output = output.replaceAll(/\(@\S+\)/g, (match) => {
 		const [routeName, ...routeOptions] = match
@@ -115,6 +133,8 @@ const mdClick = function (event) {
 		}
 	}
 }
+
+// BUG : enlevé @touchemove.stop du div
 </script>
 
 <template>
@@ -125,12 +145,12 @@ const mdClick = function (event) {
 		}"
 		class="prose
 		prose-strong:text-inherit
+		prose-table:my-0
 		dark:prose-invert
 		lg:prose-lg
 		max-w-full
 		item"
 		@click="mdClick"
-		@touchmove.stop
 		v-html="mdit"
 	/>
 </template>
