@@ -1,10 +1,10 @@
 <script setup lang="ts">
 
-import {TOS_TABLE_OF_SIGNS} from "@/Components/Pi/TableOfSigns.vue"
+import {TABLE_OF_SIGNS_COLUMNS_SIZES} from "@/Components/Pi/TableOfSigns.vue"
 
 defineProps<{
 	roots: string[],
-	sizes: TOS_TABLE_OF_SIGNS
+	sizes: TABLE_OF_SIGNS_COLUMNS_SIZES
 }>()
 
 </script>
@@ -14,13 +14,14 @@ defineProps<{
 			<th class="border-r border-gray-400" />
 			<th>
 				<div
-					class="flex flex-row items-center"
+					class="flex flex-row items-center relative"
 				>
 					<div
 						v-katex.inline="`-\\infty`"
 						:class="[
 							'text-tiny pl-1 text-left',
-							sizes.infty,
+							sizes.infty.width,
+							sizes.name==='xs' ? 'invisible' : ''
 						]"
 					/>
 					<div
@@ -38,9 +39,8 @@ defineProps<{
 					<div
 						v-katex.inline="`+\\infty`"
 						:class="[
-							'text-tiny text-right',
-							sizes.infty,
-							sizes.ml
+							'text-tiny absolute right-0 pr-1 text-right whitespace-nowrap',
+							sizes.name==='xs' ? 'invisible' : ''
 						]"
 					/>
 				</div>

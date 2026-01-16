@@ -47,6 +47,7 @@ const minimal = computed(() => {
 const size = computed(() => {
 	if (config.value.includes('xs')) return 'xs'
 	if (config.value.includes('sm')) return 'sm'
+	if (config.value.includes('base')) return 'base'
 
 	return null
 })

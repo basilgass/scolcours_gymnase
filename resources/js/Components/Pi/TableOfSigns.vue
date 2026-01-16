@@ -20,7 +20,7 @@ interface TableOfSignsType {
 	extremes?: string[],
 	resultLine?: TABLE_OF_SIGNS_VALUES_WITH_EXTREMES[],
 	texOutput?: boolean,
-	size?: 'xs' | 'sm'
+	size?: 'xs' | 'sm' | 'base'
 }
 
 const props = withDefaults(defineProps<TableOfSignsType>(), {
@@ -121,10 +121,14 @@ ${props.factors.length > 0 ? "\\tkzTabLine{}" : ""}
 	return `le mode n'a pas pu être détecté correctement: ${tosMode.value}`
 })
 
-export interface TOS_TABLE_OF_SIGNS {
+export interface TABLE_OF_SIGNS_COLUMNS_SIZES {
 	name: string,
 	text: string,
-	infty: string,
+	infty: {
+		width: string,
+		mr: string,
+		ml: string
+	},
 	root: string,
 	row: {
 		first: string, // middle + infty et -ml-<infty>
@@ -132,19 +136,29 @@ export interface TOS_TABLE_OF_SIGNS {
 		last: string
 	},
 	header: string,
-	mr: string,
-	ml: string
+
 }
 
-const columnSizes = computed<TOS_TABLE_OF_SIGNS>(() => {
-	if (props.size === 'xs') {
+const calculatedSize = computed(() => {
+	if (props.size) return props.size
+
+	// auto calcul de la taille
+	if (props.roots.length <= 2) return 'base'
+	if (props.roots.length <= 3) return 'sm'
+
+	return 'xs'
+})
+const columnSizes = computed<TABLE_OF_SIGNS_COLUMNS_SIZES>(() => {
+	if (calculatedSize.value === 'xs') {
 		return {
 			name: 'xs',
 			text: 'text-sm',
-			infty: 'w-3',
+			infty: {
+				width: 'w-3',
+				mr: '-mr-3',
+				ml: '-ml-3',
+			},
 			root: 'w-12',
-			mr: '-mr-3',
-			ml: '-ml-3',
 			row: {
 				first: 'w-9 -mr-3',
 				middle: 'w-12 -ml-3 -mr-3',
@@ -154,14 +168,16 @@ const columnSizes = computed<TOS_TABLE_OF_SIGNS>(() => {
 		}
 	}
 
-	if (props.size === 'sm') {
+	if (calculatedSize.value === 'sm') {
 		return {
 			name: 'sm',
 			text: 'text-sm',
-			infty: 'w-4',
+			infty: {
+				width: 'w-4',
+				mr: '-mr-3',
+				ml: '-ml-3',
+			},
 			root: 'w-16',
-			mr: '-mr-3',
-			ml: '-ml-3',
 			row: {
 				first: 'w-12 -mr-4',
 				middle: 'w-16 -ml-4 -mr-4',
@@ -171,17 +187,27 @@ const columnSizes = computed<TOS_TABLE_OF_SIGNS>(() => {
 		}
 	}
 
+	// x = infty
+	// root = 4x
+	// mr = variable, utilisé pour infty => déplacer dans sous catégorie.
+	// row.first = 3x, mr/ml = x
+	// row.middle = 4x
+	// row.last = 3x
+	// header = 25, not used ?
+
 	return {
 		name: 'base',
 		text: 'text-base',
-		infty: 'w-6',
-		root: 'w-24',
-		mr: '-mr-3',
-		ml: '-ml-3',
+		infty: {
+			width: 'w-5',
+			mr: '-mr-1',
+			ml: '-ml-1',
+		},
+		root: 'w-20',
 		row: {
-			first: 'w-18 -mr-6',
-			middle: 'w-24 -ml-6 -mr-6',
-			last: 'w-18 -ml-6'
+			first: 'w-15 -mr-5',
+			middle: 'w-20 -ml-5 -mr-5',
+			last: 'w-15 -ml-5'
 		},
 		header: 'w-25'
 	}
@@ -191,7 +217,7 @@ const columnSizes = computed<TOS_TABLE_OF_SIGNS>(() => {
 <template>
 	<div class="table-of-sign-wrapper">
 		<div class="not-prose overflow-x-auto pb-3">
-			<table class="border-r tos border-gray-400">
+			<table class="border-r tos border-gray-400 mx-auto">
 				<table-of-signs-header
 					:roots="roots"
 					:sizes="columnSizes"

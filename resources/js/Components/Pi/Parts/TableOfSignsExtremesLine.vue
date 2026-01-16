@@ -1,12 +1,12 @@
 <script lang="ts" setup>
 
 import {computed} from "vue"
-import {TOS_TABLE_OF_SIGNS} from "@/Components/Pi/TableOfSigns.vue"
+import {TABLE_OF_SIGNS_COLUMNS_SIZES} from "@/Components/Pi/TableOfSigns.vue"
 
 const props = defineProps<{
 	roots: string[],
 	extremes: string[],
-	sizes: TOS_TABLE_OF_SIGNS
+	sizes: TABLE_OF_SIGNS_COLUMNS_SIZES
 }>()
 
 const formattedExtremes = computed<string[]>(() => {

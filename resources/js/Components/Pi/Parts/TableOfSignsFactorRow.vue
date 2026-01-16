@@ -1,7 +1,7 @@
 <script setup lang="ts">
 
 import {type TABLE_OF_SIGNS_VALUES} from "pimath"
-import {TOS_TABLE_OF_SIGNS} from "@/Components/Pi/TableOfSigns.vue"
+import {TABLE_OF_SIGNS_COLUMNS_SIZES} from "@/Components/Pi/TableOfSigns.vue"
 
 type TABLE_OF_SIGNS_VALUES_WITH_EXTREMES = TABLE_OF_SIGNS_VALUES | 'm' | 'M' | '_' | 'I'
 
@@ -9,7 +9,7 @@ const props = defineProps<{
 	label: string,
 	signs: TABLE_OF_SIGNS_VALUES_WITH_EXTREMES[],
 	roots: string[],
-	sizes: TOS_TABLE_OF_SIGNS
+	sizes: TABLE_OF_SIGNS_COLUMNS_SIZES
 }>()
 
 function getCellClass(sign: string, n: number): string {
