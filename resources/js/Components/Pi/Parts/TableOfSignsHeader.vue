@@ -1,6 +1,11 @@
 <script setup lang="ts">
 
-defineProps<{roots: string[]}>()
+import {TOS_TABLE_OF_SIGNS} from "@/Components/Pi/TableOfSigns.vue"
+
+defineProps<{
+	roots: string[],
+	sizes: TOS_TABLE_OF_SIGNS
+}>()
 
 </script>
 <template>
@@ -13,21 +18,30 @@ defineProps<{roots: string[]}>()
 				>
 					<div
 						v-katex.inline="`-\\infty`"
-						:class="roots.length===0?'w-12':'w-6'"
-						class="text-xs pl-1 text-left"
+						:class="[
+							'text-tiny pl-1 text-left',
+							sizes.infty,
+						]"
 					/>
 					<div
 						v-for="(zero, n) in roots"
 						:key="n"
 						v-katex.inline.ascii="zero"
-						class="w-24 text-center hover:bg-white py-2"
+						:class="[
+							sizes.text,
+							'text-center hover:bg-white py-2',
+							sizes.root
+						]"
 					>
 						/>
 					</div>
 					<div
 						v-katex.inline="`+\\infty`"
-						:class="roots.length===0?'w-12':'w-6'"
-						class="text-xs mr-1 text-right"
+						:class="[
+							'text-tiny text-right',
+							sizes.infty,
+							sizes.ml
+						]"
 					/>
 				</div>
 			</th>

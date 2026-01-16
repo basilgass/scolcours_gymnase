@@ -1,10 +1,12 @@
 <script lang="ts" setup>
 
-import { computed } from "vue"
+import {computed} from "vue"
+import {TOS_TABLE_OF_SIGNS} from "@/Components/Pi/TableOfSigns.vue"
 
 const props = defineProps<{
 	roots: string[],
-	extremes: string[]
+	extremes: string[],
+	sizes: TOS_TABLE_OF_SIGNS
 }>()
 
 const formattedExtremes = computed<string[]>(() => {
@@ -19,6 +21,7 @@ const formattedExtremes = computed<string[]>(() => {
 	return arr
 
 })
+
 </script>
 
 <template>
@@ -26,7 +29,7 @@ const formattedExtremes = computed<string[]>(() => {
 		class="border-t-2 border-gray-400"
 	>
 		<td
-			class="min-w-[100px] border-r border-gray-400"
+			class="min-w-25 border-r border-gray-400"
 		/>
 		<td>
 			<div class="flex flex-row">

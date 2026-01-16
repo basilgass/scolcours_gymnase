@@ -1,57 +1,69 @@
 .tos {
-  & .cell-v-line:after {
-    content: '';
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 50%;
-    border-left: 1px dashed #bbb;
-    transform: translate(-50%);
-    pointer-events: none;
-  }
+	& .cell-v-line:after {
+		content: '';
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		left: 50%;
+		border-left: 1px dashed #bbb;
+		transform: translate(-50%);
+		pointer-events: none;
+	}
 
-  & .cell-v-line-d:after {
-    content: '';
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 50%;
-    border-left: 1px double #e00c0c;
-    transform: translate(-50%);
-    pointer-events: none;
-  }
+	& .cell-v-line-d:after {
+		content: '';
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		left: 50%;
+		border-left: 1px double #e00c0c;
+		transform: translate(-50%);
+		pointer-events: none;
+	}
 
-  & .cell-v-line {
-    position: relative;
-  }
+	& .cell-v-line {
+		position: relative;
+	}
 }
 
 .cell-v-line {
-  .tos &:after {
-    content: '';
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 50%;
-    border-left: 1px dashed #bbb;
-    transform: translate(-50%);
-    pointer-events: none;
-  }
+	.tos &:after {
+		content: '';
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		left: 50%;
+		border-left: 1px dashed #bbb;
+		transform: translate(-50%);
+		pointer-events: none;
+	}
 
-  .tos & {
-    position: relative;
-  }
+	.tos & {
+		position: relative;
+	}
 }
 
 .cell-v-line-d {
-  .tos &:after {
-    content: '';
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 50%;
-    border-left: 1px double #e00c0c;
-    transform: translate(-50%);
-    pointer-events: none;
-  }
+	.tos &:after {
+		content: '';
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		left: 50%;
+		border-left: 1px double #e00c0c;
+		transform: translate(-50%);
+		pointer-events: none;
+	}
+}
+
+.striped-background {
+	background-image: repeating-linear-gradient(
+		-45deg,
+		oklch(88.5% 0.062 18.334) 0,
+		oklch(88.5% 0.062 18.334) 1px,
+		transparent 0,
+		transparent 50%
+	);
+	background-size: 10px 10px;
+	background-attachment: fixed;
 }

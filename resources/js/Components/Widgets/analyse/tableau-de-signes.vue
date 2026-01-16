@@ -5,9 +5,9 @@ code: rational fraction ou <zero>@<signs>@<croissance>@<extremes>
 <script lang="ts" setup>
 import PiTableOfSigns from "@/Components/Pi/PiTableOfSigns.vue"
 import TableOfSigns, {TABLE_OF_SIGNS_VALUES_WITH_EXTREMES} from "@/Components/Pi/TableOfSigns.vue"
-import { WidgetPropsInterface } from "@/types/modelInterfaces.ts"
-import { TABLE_OF_SIGNS_VALUES } from "pimath"
-import { computed } from "vue"
+import {WidgetPropsInterface} from "@/types/modelInterfaces.ts"
+import {TABLE_OF_SIGNS_VALUES} from "pimath"
+import {computed} from "vue"
 // Paramètres
 //      - name=<nom>(x)          permet de déterminer le nom de la fonction
 //      - min[imal]         n'afficher que la dernière ligne
@@ -44,6 +44,12 @@ const minimal = computed(() => {
 	return !!(config.value.includes("minimal") || config.value.includes("min"))
 })
 
+const size = computed(() => {
+	if (config.value.includes('xs')) return 'xs'
+	if (config.value.includes('sm')) return 'sm'
+
+	return null
+})
 // Define the way the table of signs is generated.
 const use_Pi_table_of_signs = computed(() => {
 	return !code.value.includes("@")
@@ -82,5 +88,6 @@ const custom_table_of_signs = computed<{
 		:signs="custom_table_of_signs.signs"
 		:result-line="custom_table_of_signs.result"
 		:extremes="custom_table_of_signs.extremes"
+		:size
 	/>
 </template>

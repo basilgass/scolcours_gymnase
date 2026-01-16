@@ -1,9 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 /* eslint @typescript-eslint/no-var-requires: 0 */
 import defaultTheme from "tailwindcss/defaultTheme"
-
 // const colors = require("tailwindcss/colors")
-
 const toRgba = (hexCode, opacity = 50) => {
 	let hex = hexCode.replace("#", "")
 
@@ -134,41 +132,5 @@ export default {
 		fontWeight: ["hover", "focus"],
 		borderRadius: ["responsive", "hover"],
 	},
-	plugins: [
-		function ({addUtilities, theme}) {
-			const utilities = {
-				".bg-stripes": {
-					backgroundImage:
-						"linear-gradient(45deg, var(--stripes-color) 12.50%, transparent 12.50%, transparent 50%, var(--stripes-color) 50%, var(--stripes-color) 62.50%, transparent 62.50%, transparent 100%)",
-					backgroundSize: "5.66px 5.66px",
-				}
-			}
-
-			const addColor = (name, color) =>
-				(utilities[`.bg-stripes-${name}`] = {
-					"--stripes-color": color,
-				})
-
-			const colors = flattenColorPalette(theme("backgroundColor"))
-			for (let name in colors) {
-				try {
-					const [r, g, b, a] = toRgba(colors[name])
-					if (a !== undefined) {
-						addColor(name, colors[name])
-					} else {
-						addColor(name, `rgba(${r}, ${g}, ${b}, 0.4)`)
-					}
-				} catch (_) {
-					addColor(name, colors[name])
-				}
-			}
-
-			addUtilities(utilities)
-		},
-
-		// require("@tailwindcss/typography"),
-		// require("@tailwindcss/container-queries"),
-		// require("tailwind-scrollbar")({nocompatible: true}),
-		// require('@formkit/themes/tailwindcss'),
-	],
+	plugins: [],
 }

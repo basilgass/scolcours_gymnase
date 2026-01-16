@@ -19,7 +19,8 @@ interface TableOfSignsType {
 	factors?: { label: string, signs: TABLE_OF_SIGNS_VALUES_WITH_EXTREMES[] }[],
 	extremes?: string[],
 	resultLine?: TABLE_OF_SIGNS_VALUES_WITH_EXTREMES[],
-	texOutput?: boolean
+	texOutput?: boolean,
+	size?: 'xs' | 'sm'
 }
 
 const props = withDefaults(defineProps<TableOfSignsType>(), {
@@ -29,9 +30,9 @@ const props = withDefaults(defineProps<TableOfSignsType>(), {
 	factors: () => [],
 	extremes: null,
 	texOutput: false,
-	resultLine: null
+	resultLine: null,
+	size: null
 })
-
 
 const tosMode = computed<'signs' | 'grows' | 'curves'>(() => {
 	if (props.mode !== 'auto') {
@@ -68,7 +69,6 @@ const computedPreviousLabel = computed(() => {
 
 	return `${functionName}(x)`
 })
-
 
 const computedGrows = computed(() => {
 	if (props.resultLine !== null) {
@@ -109,23 +109,93 @@ ${props.factors.length > 0 ? "\\tkzTabLine{}" : ""}
 \\end{tikzpicture}`
 	}
 
-	if(tosMode.value==='grows'){
+	if (tosMode.value === 'grows') {
 		return ""
 	}
 
-	if(tosMode.value === 'curves'){
+	if (tosMode.value === 'curves') {
 		return ""
 	}
 
 	// Never !
 	return `le mode n'a pas pu être détecté correctement: ${tosMode.value}`
 })
+
+export interface TOS_TABLE_OF_SIGNS {
+	name: string,
+	text: string,
+	infty: string,
+	root: string,
+	row: {
+		first: string, // middle + infty et -ml-<infty>
+		middle: string,
+		last: string
+	},
+	header: string,
+	mr: string,
+	ml: string
+}
+
+const columnSizes = computed<TOS_TABLE_OF_SIGNS>(() => {
+	if (props.size === 'xs') {
+		return {
+			name: 'xs',
+			text: 'text-sm',
+			infty: 'w-3',
+			root: 'w-12',
+			mr: '-mr-3',
+			ml: '-ml-3',
+			row: {
+				first: 'w-9 -mr-3',
+				middle: 'w-12 -ml-3 -mr-3',
+				last: 'w-9 -ml-3'
+			},
+			header: 'w-25',
+		}
+	}
+
+	if (props.size === 'sm') {
+		return {
+			name: 'sm',
+			text: 'text-sm',
+			infty: 'w-4',
+			root: 'w-16',
+			mr: '-mr-3',
+			ml: '-ml-3',
+			row: {
+				first: 'w-12 -mr-4',
+				middle: 'w-16 -ml-4 -mr-4',
+				last: 'w-12 -ml-4'
+			},
+			header: 'w-25'
+		}
+	}
+
+	return {
+		name: 'base',
+		text: 'text-base',
+		infty: 'w-6',
+		root: 'w-24',
+		mr: '-mr-3',
+		ml: '-ml-3',
+		row: {
+			first: 'w-18 -mr-6',
+			middle: 'w-24 -ml-6 -mr-6',
+			last: 'w-18 -ml-6'
+		},
+		header: 'w-25'
+	}
+})
+
 </script>
 <template>
 	<div class="table-of-sign-wrapper">
-		<div class="not-prose overflow-x-auto overflow-y-auto pb-3">
-			<table class="border-r tos border-gray-400 mx-auto">
-				<table-of-signs-header :roots="roots" />
+		<div class="not-prose overflow-x-auto pb-3">
+			<table class="border-r tos border-gray-400">
+				<table-of-signs-header
+					:roots="roots"
+					:sizes="columnSizes"
+				/>
 
 				<tbody v-if="factors.length>0">
 					<table-of-signs-factor-row
@@ -134,6 +204,7 @@ ${props.factors.length > 0 ? "\\tkzTabLine{}" : ""}
 						:label="factor.label"
 						:roots="roots"
 						:signs="factor.signs"
+						:sizes="columnSizes"
 					/>
 				</tbody>
 
@@ -143,6 +214,7 @@ ${props.factors.length > 0 ? "\\tkzTabLine{}" : ""}
 						:label="computedPreviousLabel"
 						:roots="roots"
 						:signs="signs"
+						:sizes="columnSizes"
 					/>
 
 					<table-of-signs-result-line
@@ -151,12 +223,14 @@ ${props.factors.length > 0 ? "\\tkzTabLine{}" : ""}
 						:mode="tosMode"
 						:roots="roots"
 						:signs="computedGrows"
+						:sizes="columnSizes"
 					/>
 
 					<table-of-signs-extremes-line
 						v-if="tosMode!=='signs' && extremes!==null"
 						:extremes="extremes"
 						:roots="roots"
+						:sizes="columnSizes"
 					/>
 
 					<table-of-signs-factor-row
@@ -164,6 +238,7 @@ ${props.factors.length > 0 ? "\\tkzTabLine{}" : ""}
 						:label="label"
 						:roots="roots"
 						:signs="signs"
+						:sizes="columnSizes"
 					/>
 				</tfoot>
 			</table>

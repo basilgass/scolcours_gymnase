@@ -1,24 +1,54 @@
 <script setup lang="ts">
 
-import { type TABLE_OF_SIGNS_VALUES } from "pimath"
+import {type TABLE_OF_SIGNS_VALUES} from "pimath"
+import {TOS_TABLE_OF_SIGNS} from "@/Components/Pi/TableOfSigns.vue"
 
 type TABLE_OF_SIGNS_VALUES_WITH_EXTREMES = TABLE_OF_SIGNS_VALUES | 'm' | 'M' | '_' | 'I'
-defineProps<{
+const props = defineProps<{
 	label: string,
 	signs: TABLE_OF_SIGNS_VALUES_WITH_EXTREMES[],
 	roots: string[],
-	mode: 'grows'|'curves'
+	mode: 'grows' | 'curves',
+	sizes: TOS_TABLE_OF_SIGNS
 }>()
 
-function extremeLabel(value: TABLE_OF_SIGNS_VALUES_WITH_EXTREMES): string{
-	switch (value){
-		case "m": return 'min'
-		case 'M': return 'max'
-		case '_': return 'replat'
-		case "I": return "infl."
+function extremeLabel(value: TABLE_OF_SIGNS_VALUES_WITH_EXTREMES): string {
+	switch (value) {
+		case "m":
+			return 'min'
+		case 'M':
+			return 'max'
+		case '_':
+			return 'replat'
+		case "I":
+			return "infl."
 	}
 
 	return ''
+}
+
+/**
+ * Génère les classes dynamiques d'une cellule
+ */
+const getCellClass = (sign: string, n: number) => {
+	const classes: string[] = []
+
+	// Traits verticaux
+	if (sign === 'd') classes.push('cell-v-line-d')
+	else if (n % 2 === 1) classes.push('cell-v-line')
+
+	// Largeur selon roots
+	// Cas "h" avec bandes rouges
+	if (sign === 'h') {
+		classes.push('striped-background')
+	}
+
+	if (n === 0) classes.push(props.sizes.row.first)
+	else if (n === 2 * props.roots.length) classes.push(props.sizes.row.last)
+	else classes.push(props.sizes.row.middle)
+
+	classes.push("text-center py-2 relative")
+	return classes.join(' ')
 }
 </script>
 
@@ -28,24 +58,14 @@ function extremeLabel(value: TABLE_OF_SIGNS_VALUES_WITH_EXTREMES): string{
 	>
 		<td
 			v-katex.inline="`${label}`"
-			class="min-w-[100px] border-r text-center border-gray-400"
+			class="min-w-25 border-r text-center border-gray-400"
 		/>
 		<td>
 			<div class="flex flex-row h-16">
 				<div
 					v-for="(sign, n) in signs"
 					:key="`tos-foot-cell-${n}`"
-					:class="{
-						'cell-v-line-d':sign==='d',
-						'cell-v-line': n%2===1,
-						'w-24': roots.length===0,
-						'w-12': roots.length>0,
-						'bg-stripes bg-stripes-red-100 w-18 -mr-6': sign==='h' && n===0,
-						'bg-stripes bg-stripes-red-100 w-18 -ml-6': sign==='h' && n===2*roots.length,
-						'bg-stripes bg-stripes-red-100 w-24 -mr-6 -ml-6': sign==='h' && (n!==0 && n!==2*roots.length),
-					}"
-
-					class="w-12 text-center py-2 relative"
+					:class="getCellClass(sign, n)"
 				>
 					<div
 						v-if="n%2===1"
