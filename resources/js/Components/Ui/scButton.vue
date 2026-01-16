@@ -14,7 +14,9 @@ const props = withDefaults(defineProps<{
 	xs?: boolean
 	xl?: boolean
 	p0?: boolean
-	noLabel?: boolean
+	noLabel?: boolean,
+	append?: boolean,
+	prepend?: boolean
 }>(), {
 	active: false,
 	theme: false,
@@ -25,7 +27,9 @@ const props = withDefaults(defineProps<{
 	p0: false,
 	xs: false,
 	xl: false,
-	noLabel: false
+	noLabel: false,
+	append: false,
+	prepend: false
 })
 
 defineEmits<{
@@ -68,6 +72,13 @@ const btnClass = computed<string>(() => {
 			props.xl ? "px-6 py-3" :
 				props.p0 ? "p-0" :
 					"px-5 py-2")
+
+	if (props.append) {
+		classes.push('rounded-l-none rounded-r')
+	}
+	if (props.prepend) {
+		classes.push('rounded-r-none rounded-l')
+	}
 
 	return classes.filter(x => x !== '').join(' ')
 })

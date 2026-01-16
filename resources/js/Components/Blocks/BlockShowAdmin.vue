@@ -7,9 +7,9 @@ import {BlockInterface} from "@/types/modelInterfaces.ts"
 import axios from "axios"
 import {ref} from "vue"
 import MoveItemTo from "@/Components/MoveItemTo.vue"
-import {router} from "@inertiajs/vue3"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
 import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
+import {router} from "@inertiajs/vue3"
 
 const editMode = useStoreEditMode()
 const flash = useStoreFlashMessage()
@@ -51,25 +51,18 @@ function updateTemplate() {
 }
 
 function deleteBlock() {
-	const block_id = theBlock.value.id
-
-	axios.get(route("api.admin.blocks.blockable.url", {block: block_id}))
-		.then((res) => {
-			console.log(res.data)
-			axios
-				.post(route("api.admin.blocks.destroy", [theBlock.value.id]), {
-					_method: "delete"
-				})
-				.then(() => {
-					flash.success("Le block a été supprimé")
-
-					// Go to the blockable item.
-					router.visit(res.data)
-
-				})
-				.catch((error) => console.error(error))
+	axios
+		.post(route("api.admin.blocks.destroy", [theBlock.value.id]), {
+			_method: "delete"
 		})
+		.then((res) => {
+			flash.success("Le block a été supprimé")
 
+			// Go to the blockable item.
+			// TODO: regarder pour éviter de recharger la page ?
+			router.visit(res.data)
+		})
+		.catch((error) => console.error(error))
 }
 
 </script>
@@ -99,9 +92,9 @@ function deleteBlock() {
 				/>
 
 				<confirm-button
-					@confirm="deleteBlock"
 					xs
 					icon
+					@confirm="deleteBlock"
 				>
 					supprimer
 				</confirm-button>
@@ -117,8 +110,8 @@ function deleteBlock() {
 					inline-label
 					placeholder="[b|i],[md|lg|xl]:[#]b+[#]i"
 					sm
-					@enter="updateTemplate"
 					btn="bi bi-save"
+					@enter="updateTemplate"
 					@button="updateTemplate"
 				/>
 

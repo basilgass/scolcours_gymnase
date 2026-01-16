@@ -37,7 +37,7 @@ const isLast = computed(() => currentId.value === totalAnswers.value - 1)
 		</div>
 		<div
 			class="text-center text-xs text-gray-400 flex-1"
-			v-text="`Réponse ${currentId} / ${totalAnswers}`"
+			v-text="`Réponse ${currentId+1} / ${totalAnswers}`"
 		/>
 		<div class="w-[60px]">
 			<transition name="btn-pop">

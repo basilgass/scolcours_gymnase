@@ -28,7 +28,7 @@ const questionsAdmin = useQuestionAdmin(
 <template>
 	<div
 		v-admin="editMode.enable"
-		class="admin-content py-2 px-3 flex gap-6"
+		class="admin-content py-2 px-3 flex flex-col md:flex-row gap-6"
 	>
 		<sc-button
 			type="add"
@@ -37,6 +37,7 @@ const questionsAdmin = useQuestionAdmin(
 		>
 			<i class="bi bi-plus-lg" />
 		</sc-button>
+
 		<div class="flex-1 flex gap-2">
 			<form-maker
 				v-model="grid"
@@ -45,59 +46,70 @@ const questionsAdmin = useQuestionAdmin(
 				label="grille"
 				sm
 				@enter="questionsAdmin.updateGrid(grid)"
-			/>
+			>
+				<template #button>
+					<sc-button
+						type="primary"
+						xs
+						append
+						@click="questionsAdmin.updateGrid(grid)"
+					>
+						<i class="bi bi-save" />
+					</sc-button>
+				</template>
+			</form-maker>
 		</div>
 
-		<div class="flex gap-2 items-center">
-			<div class="text-sm">
-				apparitions
+		<div class="flex gap-3 justify-between">
+			<div class="flex gap-2 items-center">
+				<div class="text-sm">
+					apparitions
+				</div>
+				<sc-button
+					xs
+					outline
+					type="admin"
+					@click="questionsAdmin.displayIf.auto"
+				>
+					<i class="bi bi-bar-chart" />
+				</sc-button>
+				<sc-button
+					xs
+					outline
+					type="admin"
+					@click="questionsAdmin.displayIf.remove"
+				>
+					<i class="bi bi-trash" />
+				</sc-button>
 			</div>
-			<sc-button
-				xs
-				outline
-				type="admin"
-				@click="questionsAdmin.displayIf.auto"
-			>
-				<i class="bi bi-bar-chart" />
-			</sc-button>
-			<sc-button
-				xs
-				outline
-				type="admin"
-				@click="questionsAdmin.displayIf.remove"
-			>
-				<i class="bi bi-trash" />
-			</sc-button>
-		</div>
-
-
-		<div class="flex gap-2 items-center">
-			<div class="text-sm">
-				réponses
+			<div class="flex gap-2 items-center">
+				<div class="text-sm">
+					réponses
+				</div>
+				<sc-button
+					xs
+					outline
+					type="admin"
+					@click="questionsAdmin.answers.show"
+				>
+					<i
+						v-if="questionsAdmin.answers.isShown"
+						class="bi bi-eye"
+					/>
+					<i
+						v-else
+						class="bi bi-eye-slash"
+					/>
+				</sc-button>
+				<sc-button
+					xs
+					outline
+					type="admin"
+					@click="questionsAdmin.answers.reset"
+				>
+					<i class="bi bi-trash" />
+				</sc-button>
 			</div>
-			<sc-button
-				xs
-				outline
-				type="admin"
-				@click="questionsAdmin.answers.show"
-			>
-				<i
-					v-if="questionsAdmin.answers.isShown"
-					class="bi bi-eye"
-				/>
-				<i
-					v-else
-					class="bi bi-eye-slash"
-				/>
-			</sc-button>
-			<sc-button
-				xs
-				outline
-				type="admin"
-				@click="questionsAdmin.answers.reset"
-			>
-				<i class="bi bi-trash" />
-			</sc-button>
 		</div>
 	</div>
 </template>

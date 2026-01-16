@@ -170,6 +170,7 @@ export function useQuestionAdmin(
 			}
 		).then(() => {
 			// do nothing
+			flash.success("La classe de la grille a bien été mise à jour !")
 		})
 	}
 

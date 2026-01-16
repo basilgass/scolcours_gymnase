@@ -64,7 +64,7 @@ class BlockApiController extends Controller
 
 		$block->delete();
 
-		if (property_exists($parent, 'url')) {
+		if (method_exists($parent, 'url')) {
 			return $parent->url;
 		}
 
