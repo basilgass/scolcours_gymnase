@@ -23,12 +23,12 @@ const isLast = computed(() => currentId.value === totalAnswers.value - 1)
 		v-if="totalAnswers>1"
 		class="question-answer-selector flex justify-between items-center my-5"
 	>
-		<div class="w-[60px]">
+		<div class="w-15">
 			<transition name="btn-pop">
 				<button
 					v-if="!isFirst"
 					v-theme.bg.text
-					class="w-[60px] px-3 py-1 grid place-items-center text-xl rounded-full cursor-pointer"
+					class="w-15 px-3 py-1 grid place-items-center text-xl rounded-full cursor-pointer"
 					@click="currentId--"
 				>
 					<i class="bi-chevron-left" />
@@ -39,12 +39,12 @@ const isLast = computed(() => currentId.value === totalAnswers.value - 1)
 			class="text-center text-xs text-gray-400 flex-1"
 			v-text="`Réponse ${currentId+1} / ${totalAnswers}`"
 		/>
-		<div class="w-[60px]">
+		<div class="w-15">
 			<transition name="btn-pop">
 				<button
 					v-if="!isLast"
 					v-theme.bg.text
-					class="w-[60px] px-3 py-1 grid place-items-center text-xl rounded-full cursor-pointer"
+					class="w-15 px-3 py-1 grid place-items-center text-xl rounded-full cursor-pointer"
 					@click="currentId++"
 				>
 					<i class="bi-chevron-right" />

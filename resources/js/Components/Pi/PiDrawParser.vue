@@ -214,6 +214,7 @@ const drawMouseUp = function (evt: { draw: PiDraw, mouse: MouseEvent }) {
 		<!-- draw graph-->
 		<div class="relative">
 			<pi-draw-display
+				v-if="drawCode"
 				ref="displayRef"
 				:code="drawCode"
 				:parameters="drawParameter"
