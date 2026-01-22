@@ -15,7 +15,6 @@ export class VectorChecker extends CheckerAbstract {
 
 	private _colinear = false
 
-
 	constructor(config?: string[] | string) {
 		super(config)
 		this.type = CHECKERS.VECTOR
@@ -77,12 +76,10 @@ export class VectorChecker extends CheckerAbstract {
 			return makeCheckerResult("la dimension du vecteur ne correspond pas")
 		}
 
-
-		if (this.config.includes("co")) {
+		if (this._colinear) {
 			const colinearCheck = this.checkCollinearity(values, expectedValues)
-			if (!colinearCheck.result) {
-				return colinearCheck
-			}
+
+			return colinearCheck
 		}
 
 		return this.secondaryCheckValues(
