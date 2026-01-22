@@ -53,7 +53,6 @@ function updateDecksOrder() {
 			})
 		})
 		.then((res: AxiosResponseModel<string>) => {
-			console.log(res.data)
 			flash.success(
 				"L'ordre des cartes à bien été enregistré !"
 			)
@@ -127,6 +126,7 @@ function addBlock(blockId: number, splitter: string) {
 			</sc-button>
 		</div>
 
+		<!-- affichage des cartes créées automatiquement (formules, ...) -->
 		<deck-cards-edit-dynamics
 			v-if="dynamicsBlocks.length>0"
 			:blocks="dynamicsBlocks"

@@ -262,6 +262,7 @@ export interface DeckInterface {
 }
 
 export interface provideDeckData {
+	title: string,
 	cards: Ref<CardInterfaceExtended[]>,
 	currentCardId: Ref<number>,
 	done: () => void,

@@ -1,11 +1,14 @@
 <script setup lang="ts">
 import {CardInterface} from "@/types/modelInterfaces.ts"
 import DeckCardItemSide from "@/Components/Decks/Parts/DeckCardItemSide.vue"
+import {computed} from "vue"
+import {computedCard} from "@/Components/Decks/Parts/DeckCardMaker.ts"
 
-defineProps<{
+const props = defineProps<{
 	card: CardInterface
 }>()
 
+const theCard = computed(() => computedCard(props.card))
 </script>
 
 <template>
@@ -14,12 +17,12 @@ defineProps<{
 	>
 		<DeckCardItemSide
 			class="bg-content border shadow aspect-[4/3]"
-			:block="card.recto"
+			:block="theCard.recto"
 			xs
 		/>
 		<DeckCardItemSide
 			class="bg-content border shadow aspect-[4/3]"
-			:block="card.verso"
+			:block="theCard.verso"
 			xs
 		/>
 	</div>

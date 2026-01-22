@@ -9,15 +9,18 @@ const deckData = inject<provideDeckData>('deckData')
 </script>
 
 <template>
-	<div>
-		Commencer ou redémarrer le deck ?
+	<div class="flex flex-col gap-5 items-center">
+		<h1
+			v-katex.auto="deckData.title"
+			class="text-4xl font-code"
+		/>
 
 		<sc-button
-			@click="deckData.reset()"
 			class="py-5"
 			type="primary"
+			@click="deckData.reset()"
 		>
-			Recommencer
+			Commencer le deck
 		</sc-button>
 	</div>
 </template>

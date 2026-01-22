@@ -32,11 +32,11 @@ class CardResource extends JsonResource
 			"verso" => $this->hasBlocks() ? BlockResource::make($blocks[1]) : null,
 
 			"reference" => $this->hasReference() ? [
-				"block"       => $this->reference_block,
-				"block_splitter" => $this->reference_block_splitter
+				"block"    => $this->reference_block,
+				"splitter" => $this->reference_block_splitter
 			] : null,
 
-//			"user" => $this->userScores(),
+			//			"user" => $this->userScores(),
 		];
 	}
 }

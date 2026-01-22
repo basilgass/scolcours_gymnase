@@ -52,14 +52,31 @@ class CardApiController extends Controller
 
 	public function update(updateCardRequest $request, Card $card)
 	{
-		$blocks = $request->input('blocks');
+		$data = $request->validated();
 
-		foreach (['recto', 'verso'] as $side) {
-			$card->blocks()->where('id', $blocks[$side]['id'])->update([
-				'body' => $blocks[$side]['body'],
-			]);
+		// It's a dynamic card
+		if ($card->reference_block and !empty($data['splitter'])) {
+			$card->reference_block_splitter = $data['splitter'];
+			$card->save();
+		} elseif (!empty($data['blocks'])) {
+			$blocks = $data['blocks'];
+
+			foreach (['recto', 'verso'] as $side) {
+				if (!isset($blocks[$side]['id'], $blocks[$side]['body'])) {
+					continue;
+				}
+
+				$card
+					->blocks()
+					->where('id', $blocks[$side]['id'])
+					->update([
+						'body' => $blocks[$side]['body'],
+					]);
+			}
+
 		}
 
+		$card->refresh();
 		return CardResource::make($card);
 	}
 

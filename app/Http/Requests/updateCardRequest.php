@@ -9,14 +9,16 @@ class updateCardRequest extends FormRequest
 	public function rules(): array
 	{
 		return [
-			'blocks' => ['required', 'array'],
-			'blocks.recto' => ['required', 'array'],
-			'blocks.recto.id' => ['required', 'integer', 'exists:blocks,id'],
-			'blocks.recto.body' => ['required', 'string'],
-			'blocks.verso' => ['required', 'array'],
-			'blocks.verso.id' => ['required', 'integer', 'exists:blocks,id'],
-			'blocks.verso.body' => ['required', 'string'],
-		];	}
+			'blocks'            => ['nullable', 'array'],
+			'blocks.recto'      => ['required_without:splitter', 'array'],
+			'blocks.recto.id'   => ['required_without:splitter', 'integer', 'exists:blocks,id'],
+			'blocks.recto.body' => ['required_without:splitter', 'string'],
+			'blocks.verso'      => ['required_without:splitter', 'array'],
+			'blocks.verso.id'   => ['required_without:splitter', 'integer', 'exists:blocks,id'],
+			'blocks.verso.body' => ['required_without:splitter', 'string'],
+			'splitter'          => ['nullable', 'string'],
+		];
+	}
 
 	public function authorize(): bool
 	{

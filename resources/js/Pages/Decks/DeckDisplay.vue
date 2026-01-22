@@ -42,6 +42,7 @@ const loggedIn = computed(() => usePage().props.auth.user !== undefined)
 const running = computed(() => currentCardId.value === null)
 
 provide<provideDeckData>('deckData', {
+	title: props.deck.title,
 	currentCardId,
 	cards,
 	running,
@@ -98,17 +99,18 @@ const flipcards = useTemplateRef<InstanceType<typeof DeckCards>>('flipcards')
 </script>
 
 <template>
-	<section>
+	<section class="grid place-items-center min-h-screen">
 		<!-- card mode -->
 		<deck-intro v-show="intro" />
+
 		<div v-show="!intro">
 			<deck-restart
 				v-show="!intro && running"
 			/>
 			<suspense>
 				<deck-cards
-					ref="flipcards"
 					v-show="!intro && !running"
+					ref="flipcards"
 					@deck-done="updateDeck"
 				/>
 			</suspense>

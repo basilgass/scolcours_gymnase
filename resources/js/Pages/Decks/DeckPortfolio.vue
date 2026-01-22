@@ -6,10 +6,9 @@ import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
 
 defineOptions({layout: LayoutMain})
 
-defineProps<{
+const props = defineProps<{
 	deck: DeckInterface,
 }>()
-
 
 </script>
 
@@ -25,9 +24,9 @@ defineProps<{
 
 		<main class="flex flex-col gap-10 mt-10">
 			<deck-potfolio-item
-				class="grid grid-cols-2 gap-2"
 				v-for="card in deck.cards"
 				:key="card.id"
+				class="grid grid-cols-2 gap-2"
 				:card="card"
 			/>
 		</main>

@@ -192,10 +192,11 @@ defineExpose({restartDeck})
 	<article
 		v-if="currentCard"
 		class="cursor-pointer
-		relative
-		lg:max-w-3xl
-			xl:max-w-4xl
+			relative
 			mx-auto
+			min-w-screen
+			md:min-w-[75vw]
+			xl:min-w-[50vw]
 		flex flex-col gap-5
 		p-5"
 	>
@@ -245,8 +246,8 @@ defineExpose({restartDeck})
 
 		<!-- afficher de la carte -->
 		<DeckCardItem
-			v-model="cardSide"
 			:key="`card-${currentCard.id}`"
+			v-model="cardSide"
 			:card="currentCard"
 			@flip="flipCard"
 		/>

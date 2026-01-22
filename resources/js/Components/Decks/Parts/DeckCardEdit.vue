@@ -5,10 +5,10 @@ import FormMaker from "@/Components/Form/FormMaker.vue"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
 import DeckCardItemSide from "@/Components/Decks/Parts/DeckCardItemSide.vue"
 import {CardInterface} from "@/types/modelInterfaces.ts"
-import {computed, ref} from "vue"
+import {computed, ref, watch} from "vue"
 import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
 import ScButton from "@/Components/Ui/scButton.vue"
-import {AxiosErrorMessage} from "@/types"
+import {AxiosErrorMessage, AxiosResponseModel} from "@/types"
 import axios from "axios"
 import {computedCard} from "@/Components/Decks/Parts/DeckCardMaker.ts"
 import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
@@ -18,11 +18,11 @@ const flash = useStoreFlashMessage()
 const props = defineProps<{ card: CardInterface }>()
 const editableCard = ref<CardInterface>(computedCard(props.card))
 
-console.log(editableCard.value)
-
 const isDynamic = computed<boolean>(() => props.card.reference !== null)
 
-const originalCard = isDynamic.value ? null : {
+const originalCard = isDynamic.value ? {
+	splitter: props.card.reference.splitter
+} : {
 	recto: props.card.recto.body,
 	verso: props.card.verso.body
 }
@@ -35,30 +35,37 @@ const emits = defineEmits<{
 
 const showSaveButton = computed(() => {
 	if (isDynamic.value) {
-		return false
+		return editableCard.value.reference?.splitter !== originalCard.splitter
 	}
 
 	return (editableCard.value.recto.body !== originalCard.recto) ||
 		(editableCard.value.verso.body !== originalCard.verso)
+
 })
 
 function updateCard() {
-	if (isDynamic.value) {
-		return
-	}
-	axios.patch(route('api.admin.cards.update', {card: props.card.id}), {
-		blocks: {
-			recto: {
-				id: editableCard.value.recto.id,
-				body: editableCard.value.recto.body
-			},
-			verso: {
-				id: editableCard.value.verso.id,
-				body: editableCard.value.verso.body
-			},
-		}
-	})
-		.then(() => {
+	// if (isDynamic.value) {
+	// 	return
+	// }
+	//
+	axios.patch(route('api.admin.cards.update', {card: props.card.id}),
+		isDynamic.value
+			? {
+				splitter: editableCard.value.reference.splitter
+			}
+			: {
+				blocks: {
+					recto: {
+						id: editableCard.value.recto.id,
+						body: editableCard.value.recto.body
+					},
+					verso: {
+						id: editableCard.value.verso.id,
+						body: editableCard.value.verso.body
+					},
+				}
+			})
+		.then((res: AxiosResponseModel<CardInterface>) => {
 			originalCard.recto = editableCard.value.recto.body
 			originalCard.verso = editableCard.value.verso.body
 
@@ -70,37 +77,48 @@ function updateCard() {
 			flash.error('Problème dans la sauvegarde de la carte.')
 		})
 }
+
+watch(editableCard.value, () => {
+	if (isDynamic.value) {
+		// TODO: améliorer la réactivité pour éviter le "watch"
+		editableCard.value.recto = null
+		editableCard.value.verso = null
+		editableCard.value = computedCard(editableCard.value)
+	}
+})
 </script>
 
 <template>
 	<div class="bg-content p-2">
+		<!-- edit card header -->
 		<div class="flex justify-between px-2 pb-2 items-center">
 			<div class="draggable-handle cursor-move text-xs">
 				<i class="bi bi-arrows-move mr-2" />id: {{ card.id }}
 			</div>
 			<div class="flex gap-3">
 				<sc-button
+					v-show="showSaveButton"
 					type="save"
 					icon
 					xs
-					v-show="showSaveButton"
 					@click="updateCard"
 				>
 					Enregistrer
 				</sc-button>
 				<confirm-button
 					xs
-					@confirm="emits('delete', card.id)"
 					icon
+					@confirm="emits('delete', card.id)"
 				>
 					supprimer
 				</confirm-button>
 			</div>
 		</div>
 
+		<!-- editable card -->
 		<div
-			class="grid grid-cols-2 gap-5"
 			v-if="!isDynamic"
+			class="grid grid-cols-2 gap-5"
 		>
 			<div class="relative">
 				<form-maker
@@ -137,6 +155,29 @@ function updateCard() {
 				</div>
 			</div>
 		</div>
+		<div v-else>
+			<h3 class="text-lg">
+				carte dynamique
+			</h3>
+			<div class="text-sm font-code">
+				block id: {{ card.reference.block.id }}
+			</div>
+			<div class="flex gap-3">
+				<form-maker
+					v-model="editableCard.reference.splitter"
+					class="flex-1"
+					type="text"
+					inline-label
+					label="splitter"
+					xs
+				/>
+				<button @click="editableCard.reference.splitter='title'">
+					title
+				</button>
+			</div>
+		</div>
+
+		<!-- preview -->
 		<div v-if="showMarkdown || !editMode.enable || isDynamic">
 			<div
 				class="text-lg flex justify-between mt-3"
