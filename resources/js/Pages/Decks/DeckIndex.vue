@@ -96,7 +96,7 @@ const deckIsRunning = ref(false)
 
 		<dialog-modal
 			v-model="showCreate"
-			class="w-[400px]"
+			class="w-100"
 		>
 			<template #header>
 				<div class="p-3 font-semibold border-content border-b">
@@ -106,19 +106,19 @@ const deckIsRunning = ref(false)
 
 			<div class="p-3">
 				<form-maker
-					label="titre du deck"
 					v-model="form.title"
+					label="titre du deck"
 				/>
 
 				<form-maker
+					v-model="slug"
 					label="slug"
 					xs
-					v-model="slug"
 				/>
 
 				<form-maker
-					type="chapter"
 					v-model="form.chapter"
+					type="chapter"
 					class="flex-1"
 				/>
 			</div>
@@ -155,11 +155,12 @@ const deckIsRunning = ref(false)
 		>
 			<template #card="{ item }: { item: DeckInterface }">
 				<div
+					v-theme.border="item.chapter?.theme_id ?? false"
 					class="bg-content p-3 flex justify-between h-full"
 					:class="{
-						'border-l-8':item.chapter?.theme_id
+						'border-l-8':item.chapter?.theme_id,
+						'opacity-20': !item.active
 					}"
-					v-theme.border="item.chapter?.theme_id ?? false"
 				>
 					<div>
 						<h3
@@ -183,14 +184,14 @@ const deckIsRunning = ref(false)
 							<sc-button
 								xs
 								:type="deckIsRunning ? 'primary' : 'success'"
-								:href="route('decks.show', item.id)"
+								:href="route('decks.show', item.slug)"
 							>
 								{{ deckIsRunning ? 'continuer' : 'commencer' }}
 							</sc-button>
 
 							<sc-button
 								xs
-								:href="route('decks.portfolio', {deck: item.id})"
+								:href="route('decks.portfolio', {deck: item.slug})"
 							>
 								portfolio
 							</sc-button>

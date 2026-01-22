@@ -12,7 +12,11 @@ class DeckController extends Controller
 
 	public function index()
 	{
-		$decks = Deck::withCount('cards')->get();
+		if (\Auth::user()?->admin) {
+			$decks = Deck::withCount('cards')->get();
+		} else {
+			$decks = Deck::withCount('cards')->where('active', 1)->get();
+		}
 
 		return Inertia::render("Decks/DeckIndex",
 			[

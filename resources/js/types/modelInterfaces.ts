@@ -257,6 +257,7 @@ export interface DeckInterface {
 	chapter: ChapterInterface,
 	id: number,
 	slug: string,
+	active: boolean,
 	title: string,
 	user: ScoreInterface<ScoreDeckDataInterface>
 }

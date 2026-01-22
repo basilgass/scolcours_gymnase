@@ -42,6 +42,10 @@ class Deck extends Model
 	protected $guarded = [];
 	protected $with = [];
 
+	protected $casts = [
+		'active' => 'boolean',
+	];
+
 	public function chapter(): BelongsTo
 	{
 		return $this->belongsTo(Chapter::class);

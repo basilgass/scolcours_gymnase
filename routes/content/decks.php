@@ -7,19 +7,19 @@ Route::middleware('web')
      ->group(function () {
 	     // Public routes.
 	     Route::resource('decks', DeckController::class)
-	          ->only(['index', 'show']);
+	          ->only(['index', 'show'])
+	          ->scoped(['deck' => 'slug']);
 
-	     Route::get('decks/{deck}/portfolio', [DeckController::class, 'portfolio'])
+	     Route::get('decks/{deck:slug}/portfolio', [DeckController::class, 'portfolio'])
 	          ->name('decks.portfolio');
-
 
 
 	     // Admin routes
 	     Route::middleware('admin')
-		     ->as('admin.')
-		     ->group(function () {
-			     Route::resource('decks', DeckController::class)
-			          ->only(['edit']);
+	          ->as('admin.')
+	          ->group(function () {
+		          Route::resource('decks', DeckController::class)
+		               ->only(['edit']);
 	          });
      });
 
@@ -35,8 +35,8 @@ Route::middleware('api')
 
 	     // Admin api
 	     Route::middleware('admin')
-		     ->prefix('admin')
-		     ->as('admin.')
+	          ->prefix('admin')
+	          ->as('admin.')
 	          ->group(function () {
 
 		          Route::apiResource('decks', DeckApiController::class);

@@ -55,6 +55,7 @@ export function makeDeck(
 	return {
 		id: -1,
 		title,
+		active: true,
 		slug: title,
 		cards_count: cards.length,
 		cards,

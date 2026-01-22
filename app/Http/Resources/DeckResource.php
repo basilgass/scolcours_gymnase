@@ -26,6 +26,7 @@ class DeckResource extends JsonResource
 			"user_id"     => $this->user_id,
 			"title"       => $this->title,
 			"slug"        => $this->slug,
+			"active"      => $this->active,
 			'chapter'     => ChapterResource::make($this->chapter),
 			"created_at"  => $this->created_at,
 			"updated_at"  => $this->updated_at,
@@ -34,7 +35,7 @@ class DeckResource extends JsonResource
 				$this->relationLoaded('cards'),
 				fn() => $this->cards
 			) ?? []),
-//			"user"        => $this->userScores(),
+			//			"user"        => $this->userScores(),
 		];
 	}
 }
