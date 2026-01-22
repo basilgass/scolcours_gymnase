@@ -265,25 +265,30 @@ const lessonsToPlace = computed(() => {
 			}} au {{ between.max.format('YYYY.MM.DD') }}</span>
 		</h3>
 
-		<div class="flex flex-col gap-8">
-			<course-week-timetable
-				v-for="week in weeks"
-				:key="`week-${week.week}`"
-				:calendar
-				:from="week.days[0].day"
-				:teams
-				:to="week.days[4].day"
-				:week="week.week"
-				@drop="updateLesson"
-			/>
+		<div class="flex gap-3 relative">
+			<div class="flex-1">
+				<course-week-timetable
+					v-for="week in weeks"
+					:key="`week-${week.week}`"
+					:calendar
+					:from="week.days[0].day"
+					:teams
+					:to="week.days[4].day"
+					:week="week.week"
+					@drop="updateLesson"
+				/>
+			</div>
 
-			<course-lessons-without-week
-				v-if="lessonsToPlace.length>0"
-				:key="`week-not-defined`"
-				:team-lessons="lessonsToPlace"
-				:teams
-				@drop="updateLesson"
-			/>
+			<div class="relative">
+				<course-lessons-without-week
+					v-if="lessonsToPlace.length>0"
+					:key="`week-not-defined`"
+					class="sticky top-0"
+					:team-lessons="lessonsToPlace"
+					:teams
+					@drop="updateLesson"
+				/>
+			</div>
 		</div>
 	</section>
 </template>

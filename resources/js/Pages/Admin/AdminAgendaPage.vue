@@ -77,14 +77,7 @@ function toggleCourse(course: CourseInterface) {
 				<i class="bi bi-book" /> {{ course.title }}
 			</sc-button>
 		</div>
-
-		<div>
-			Le but: afficher un calendrier du début à la fin du cours sélectionner, pour les équipes sélectionnées:
-
-			1. charger en async le calendirer pour chaque équipe.
-			2. afficher les "n" semaines.
-		</div>
-
+		
 		<course-agenda
 			:course="selectedCourse"
 			:teams="selectedTeams"

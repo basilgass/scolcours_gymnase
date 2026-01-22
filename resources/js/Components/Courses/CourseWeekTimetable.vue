@@ -201,7 +201,7 @@ const emit = defineEmits<{
 					<div
 						v-for="item in itemsInTimetable[team.name][(day-1)%5+1].filter(item=>item.lesson.homework === (day<=5) )"
 						:key="`team-${item.team.id}-lesson-${item.lesson.id}`"
-						class="bg-content border rounded item-draggable text-xs flex gap-2 items-top p-1"
+						class="bg-content border rounded item-draggable text-xs flex gap-2 items-top p-1 overflow-hidden cursor-move"
 						draggable="true"
 						@dragend="onDragEnd"
 						@dragstart="event => onDragStart(event, day, item)"

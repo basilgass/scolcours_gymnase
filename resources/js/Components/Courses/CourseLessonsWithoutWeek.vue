@@ -46,10 +46,10 @@ function onDragEnd() {
 </script>
 
 <template>
-	<Card>
+	<Card class="min-w-40 max-w-50">
 		<template #header>
 			<div class="font-semibold text-xl">
-				Leçons sans cours
+				sans date
 			</div>
 		</template>
 
@@ -57,12 +57,12 @@ function onDragEnd() {
 			<div
 				v-for="team in teams"
 				:key="`team-${team.name}`"
-				class="grid grid-cols-5 gap-x-3 gap-y-1"
+				class="flex flex-col gap-2"
 			>
 				<div
-					v-for="item in teamLessons"
+					v-for="item in teamLessons.filter(tl=>tl.team.id===team.id)"
 					:key="`team-${item.team.id}-lesson-${item.lesson.id}-to-be-placed`"
-					class="bg-content border rounded item-draggable text-xs flex gap-2 items-top p-1"
+					class="bg-content border rounded item-draggable text-xs flex gap-2 items-top p-1 overflow-hidden cursor-move"
 					draggable="true"
 					@dragend="onDragEnd"
 					@dragstart="event => onDragStart(event, item)"
