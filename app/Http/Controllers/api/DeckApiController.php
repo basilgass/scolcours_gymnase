@@ -8,7 +8,6 @@ use App\Http\Requests\ReorderRequest;
 use App\Http\Resources\DeckResource;
 use App\Models\Chapter;
 use App\Models\Deck;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -200,6 +199,19 @@ class DeckApiController extends Controller
 
 
 		return true;
+	}
+
+	public function toggleActive(Request $request, Deck $deck)
+	{
+		$validated = $request->validate([
+			'active' => ['required', 'boolean']
+		]);
+
+		$deck->active = $validated['active'];
+		$deck->save();
+
+		return response()->noContent();
+
 	}
 
 }

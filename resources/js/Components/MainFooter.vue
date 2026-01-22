@@ -45,7 +45,7 @@ import DarkModeSwitch from "@/Components/Ui/DarkModeSwitch.vue"
 						:href="route('decks.index')"
 						class="block transition duration-300 hover:translate-x-2"
 					>
-						<i class="mr-2 bi bi-wrench" /> decks
+						<i class="mr-2 bi bi-collection" /> decks
 					</InertiaLink>
 
 					<InertiaLink
@@ -88,8 +88,8 @@ import DarkModeSwitch from "@/Components/Ui/DarkModeSwitch.vue"
 				</h3>
 
 				<div
-					class="mt-10 space-y-3"
 					v-if="$page.props.auth.user"
+					class="mt-10 space-y-3"
 				>
 					<InertiaLink
 						:href="route('users.dashboard')"

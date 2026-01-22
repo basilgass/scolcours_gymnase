@@ -9,6 +9,7 @@ const links = [
 	{title: "cours", route: "admin.courses.index", icon: 'bi-book'},
 	{title: "quizz", route: "admin.quizzs.index", icon: 'bi bi-person-raised-hand'},
 	{title: "évaluations", route: "admin.evaluations.index", icon: 'bi bi-journal-check'},
+	{title: "decks", route: "admin.decks.index", icon: 'bi bi-collection'},
 	{title: "agenda", route: "admin.agenda", icon: 'bi bi-calendar'},
 	{title: "composants", route: null, icon: "bi bi-gear-wide-connected"},
 	{title: "chapitres", route: "admin.chapters.index", icon: 'bi bi-paragraph'},
@@ -34,8 +35,8 @@ const show = ref(true)
 		:class="show ? 'px-6' : 'px-3'"
 	>
 		<div
-			@click="show=!show"
 			class="cursor-pointer mt-2 mb-5"
+			@click="show=!show"
 		>
 			<i class="bi bi-three-dots" />
 		</div>
@@ -45,12 +46,12 @@ const show = ref(true)
 				:key="link.title"
 			>
 				<h2
+					v-if="link.route===null"
 					class="font-semibold
 					bg-slate-300 dark:bg-slate-700
 					mt-5 mb-2 -ml-2 p-2
 					border border-content rounded
 					whitespace-nowrap"
-					v-if="link.route===null"
 				>
 					<i :class="link.icon" /> <span
 						v-show="show"

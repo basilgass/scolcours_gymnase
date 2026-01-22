@@ -4,16 +4,35 @@
 >
 import "@/Layouts/LayoutProjection.vue"
 import DarkModeSwitch from "@/Components/Ui/DarkModeSwitch.vue"
+import {Link as InertiaLink, usePage} from "@inertiajs/vue3"
+import {computed} from "vue"
+
+const user = computed(() => {
+	if (usePage().props.auth?.user) {
+		return usePage().props.auth.user
+	}
+
+	return null
+})
 </script>
 
 <template>
 	<div class="min-h-screen relative">
+		<header class="fixed top-0 left-0 w-full py-1 px-4 flex justify-between items-baseline">
+			<InertiaLink :href="route('scolcours.index')">
+				<i class="bi bi-house" /> Scolcours
+			</InertiaLink>
+
+			<div v-if="user">
+				{{ user.fullname }}
+			</div>
+		</header>
 		<footer
+			v-admin
 			class="bg-content
 			w-full py-1 px-4
 			flex justify-between items-baseline
-			fixed bottom-0 left-0 "
-			v-admin
+			fixed bottom-0 left-0"
 		>
 			<InertiaLink
 				class="uppercase"

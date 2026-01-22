@@ -16,10 +16,14 @@ Route::middleware('web')
 
 	     // Admin routes
 	     Route::middleware('admin')
+	          ->prefix('admin')
 	          ->as('admin.')
 	          ->group(function () {
 		          Route::resource('decks', DeckController::class)
 		               ->only(['edit']);
+
+		          Route::get('decks', [DeckController::class, 'dashboard'])
+		               ->name('decks.index');
 	          });
      });
 
@@ -48,6 +52,8 @@ Route::middleware('api')
 			                    ->name('cards.order');
 			               Route::patch('{deck}/updateChapter', [DeckApiController::class, 'updateChapter'])
 			                    ->name('updateChapter');
+			               Route::patch('{deck}/toggleActive', [DeckApiController::class, 'toggleActive'])
+			                    ->name('toggleActive');
 		               });;
 	          });
 
