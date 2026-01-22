@@ -8,8 +8,10 @@ return new class extends Migration {
 	public function up(): void
 	{
 		Schema::table('decks', function (Blueprint $table) {
-			$table->boolean('active')->after('title')->nullable();
+			$table->boolean('active')->after('title')->default(1);
 		});
+
+
 	}
 
 	public function down(): void
