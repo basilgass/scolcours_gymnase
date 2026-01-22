@@ -30,12 +30,15 @@ function downloadPdf() {
 <template>
 	<div>
 		<div class="text-xs opacity-50 flex justify-between">
-			<div>code TeX</div>
+			<div
+				v-if="title!==''"
+				v-katex.auto="title"
+			/>
 
 			<div class="flex gap-3">
 				<button
-					@click="copy(props.tex)"
 					class="cursor-pointer hover:underline"
+					@click="copy(props.tex)"
 				>
 					<i
 						class="bi"
@@ -45,16 +48,16 @@ function downloadPdf() {
 				</button>
 
 				<button
-					@click="downloadPdf"
 					class="cursor-pointer  hover:underline"
+					@click="downloadPdf"
 				>
 					<i class="bi bi-download" />
 					<span class="hidden md:inline md:ml-2">télécharger</span>
 				</button>
 
 				<button
-					@click="showTexCode = !showTexCode"
 					class="cursor-pointer hover:underline"
+					@click="showTexCode = !showTexCode"
 				>
 					<i
 						:class="{

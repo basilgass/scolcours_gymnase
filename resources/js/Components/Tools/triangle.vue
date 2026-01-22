@@ -54,7 +54,7 @@ let result = computed(() => {
 				C: new Line(triangle.C, triangle.remarquables.bisectors.C.d, "perpendicular")
 			}
 		}
-	} catch  {
+	} catch {
 		// console.error(e)
 		return false
 	}

@@ -21,6 +21,7 @@ import {Numeric, Random} from "pimath"
 import {computed, ref} from "vue"
 import ScButton from "@/Components/Ui/scButton.vue"
 import Card from "@/Components/Ui/Card.vue"
+import PiEuclidian from "@/Components/Pi/PiEuclidian.vue"
 
 const {restoreTool} = useToolsStorage()
 const forms: IToolForm[] = restoreTool([
@@ -39,12 +40,11 @@ const forms: IToolForm[] = restoreTool([
 ])
 
 // Value from the form.
-const fx = computed(() => {
+const fx = computed<string>(() => {
 	if (forms[1].value.value) {
 		return `(${forms[0].value.value})/(${forms[1].value.value})`
-	} else {
-		return forms[0].value.value
 	}
+	return forms[0].value.value as string
 })
 
 // const autoUpdate = computed(()=>{
@@ -139,7 +139,7 @@ function getFxWithControls(maxValue: number) {
 	}
 }
 
-const keyboardstudyAnswer = computed(() => {
+const keyboardStudyAnswer = computed(() => {
 	if (!study.value) {
 		return ""
 	}
@@ -226,6 +226,36 @@ const keyboardstudyAnswer = computed(() => {
 						<div v-katex.boxed="`ED_f=${study.domain}`" />
 					</div>
 
+					<!-- Points caractéristiques -->
+					<div class="bg-white rounded-sm border-gray-400 p-4">
+						<h2 class="chapter-menu text-lg mb-10">
+							Points caractéristiques
+						</h2>
+
+						<div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+							<div>
+								<h3>ordonnée à l'origine</h3>
+								<div
+									v-katex.boxed="study.YIntercept.tex"
+								/>
+							</div>
+
+							<div>
+								<h3>zéros ou racines</h3>
+								<div v-if="study.roots.ed.length===0">
+									Aucun zéro. Le graphe ne coupe pas l'axe des abscisses.
+								</div>
+								<div v-else>
+									<div
+										v-for="zero in study.roots.ed"
+										:key="`${zero}`"
+										v-katex.boxed="zero"
+									/>
+								</div>
+							</div>
+						</div>
+					</div>
+
 					<!-- Tableau de signes -->
 					<div class="bg-white rounded-sm border-gray-400 p-4">
 						<h2 class="chapter-menu text-lg mb-10">
@@ -237,17 +267,7 @@ const keyboardstudyAnswer = computed(() => {
 							:signs="study.table_of_signs.signs"
 							class="px-10"
 							mode="signs"
-						/>
-					</div>
-
-					<!-- Racines -->
-					<div class="bg-white rounded-sm border-gray-400 p-4">
-						<h2 class="chapter-menu text-lg mb-10">
-							Racines de la fonction
-						</h2>
-
-						<div
-							v-katex.boxed="study.roots.ed"
+							tex-output
 						/>
 					</div>
 
@@ -275,16 +295,25 @@ const keyboardstudyAnswer = computed(() => {
 							Asymptotes horizontales
 						</h2>
 
-						<div
-							v-for="(item, index) in study.asymptotes.horizontal"
-							:key="`etude-ah-${index}`"
-						>
-							<div v-katex.boxed="`${item.tex}`" />
-							<div v-katex.boxed="`${item.delta.tex}`" />
-							<table-of-signs
-								:roots="item.delta.table_of_signs.roots.map(x=>x.tex)"
-								:signs="item.delta.table_of_signs.signs"
+						<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+							<pi-euclidian
+								:fx="fx"
+								asymptote
 							/>
+							<div>
+								<div
+									v-for="(item, index) in study.asymptotes.horizontal"
+									:key="`etude-ah-${index}`"
+								>
+									<div v-katex.boxed="`${item.tex}`" />
+									<div v-katex.boxed="`${item.delta.tex}`" />
+									<table-of-signs
+										:roots="item.delta.table_of_signs.roots.map(x=>x.tex)"
+										:signs="item.delta.table_of_signs.signs"
+										tex-output
+									/>
+								</div>
+							</div>
 						</div>
 					</div>
 
@@ -298,17 +327,26 @@ const keyboardstudyAnswer = computed(() => {
 							Asymptotes obliques
 						</h2>
 
-						<div
-							v-for="(item, index) in study.asymptotes.slope"
-							:key="`etude-ao-${index}`"
-						>
-							<div v-katex.boxed="`${item.tex}`" />
-							<div v-katex.boxed="`${item.delta.tex}`" />
-							<table-of-signs
-								:roots="item.delta.table_of_signs.roots.map(x=>x.tex)"
-								:signs="item.delta.table_of_signs.signs"
-								tex-output
+						<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+							<pi-euclidian
+								:fx="fx"
+								asymptote
 							/>
+
+							<div>
+								<div
+									v-for="(item, index) in study.asymptotes.slope"
+									:key="`etude-ao-${index}`"
+								>
+									<div v-katex.boxed="`${item.tex}`" />
+									<div v-katex.boxed="`${item.delta.tex}`" />
+									<table-of-signs
+										:roots="item.delta.table_of_signs.roots.map(x=>x.tex)"
+										:signs="item.delta.table_of_signs.signs"
+										tex-output
+									/>
+								</div>
+							</div>
 						</div>
 					</div>
 
@@ -323,17 +361,24 @@ const keyboardstudyAnswer = computed(() => {
 							:roots="study.derivative.table_of_signs.roots.map(x=>x.tex)"
 							:signs="study.derivative.table_of_signs.signs"
 							mode="grows"
+							tex-output
 						/>
 
 						<h3 class="my-5">
 							Coordonnées des points à tangentes horizontales
 						</h3>
-						<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-5">
+						<div
+							v-if="study.extremes.filter(x=>x.type!==undefined).length===0"
+							class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-5"
+						>
 							<div
-								v-for="(zero, index) in study.extremes.filter(x=>x.type!=='undefined')"
+								v-for="(zero, index) in study.extremes.filter(x=>x.type!==undefined)"
 								:key="`zero-${index}`"
 								v-katex.boxed="`\\text{${zero.type}}: \\left(${zero.x.tex};${zero.tex}\\right)`"
 							/>
+						</div>
+						<div v-else>
+							Pas de minimum ou maximum.
 						</div>
 					</div>
 
@@ -362,7 +407,7 @@ const keyboardstudyAnswer = computed(() => {
 							<tex-code :tex="study.draw.code" />
 							<div>
 								KeyboardStudy answer code
-								<pre>{{ keyboardstudyAnswer }}</pre>
+								<pre>{{ keyboardStudyAnswer }}</pre>
 							</div>
 						</div>
 					</div>

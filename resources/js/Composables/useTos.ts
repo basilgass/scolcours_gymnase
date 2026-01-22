@@ -8,6 +8,7 @@ const DIGITS = 2
 
 interface ASYMPTOTE {
 	answer: string,
+	x?: Fraction,
 	delta?: {
 		tex: string,
 		table_of_signs: TABLE_OF_SIGNS,
@@ -57,7 +58,7 @@ export interface ETUDE_DE_FONCTION_RATIONNELLE {
 	roots: {
 		values: ISolution[],
 		answers: string[],
-		ed: string
+		ed: string[]
 	},
 	table_of_signs: TABLE_OF_SIGNS,
 
@@ -109,7 +110,7 @@ export function makeStudyFromPolyFactor(value: PolyFactor): ETUDE_DE_FONCTION_RA
 		.filter(x => x !== null)
 
 	const roots = {
-		ed: rootsValues.length === 0 ? "\\varnothing" : `S=\\left\\{ ${rootsValues.join(";")} \\right\\}`,
+		ed: rootsValues.length === 0 ? [] : rootsValues.map((x, index) => `Z_${index + 1}=\\left(${x};0\\right)`),
 		values: zeroes,
 		answers: zeroes.map(z => `(${z.display};0)`)
 	}
@@ -140,28 +141,47 @@ export function makeStudyFromPolyFactor(value: PolyFactor): ETUDE_DE_FONCTION_RA
 	)
 
 	const parameters = `grid,axis,x=${BBox.x.min}:${BBox.x.max},y=${BBox.y.min}:${BBox.y.max}`
-	let code = `f(x)=${factorized.asRoot.display}->thick,blue`
+
+	let code: string[] = []
+
+	// Il faut couper le graphe s'il y a des trous.
+	if (vertical.some(AV => AV.draw.startsWith('P'))) {
+		const delta = 0.0001
+		let x = BBox.x.min - 1
+
+		const trous = vertical.filter(AV => AV.draw.startsWith('P'))
+
+		trous.forEach((trou) => {
+			code.push(`f(x)=${factorized.asRoot.display},${x + delta}:${trou.x.value - delta}->thick,blue`)
+			x = trou.x.value
+		})
+
+		code.push(`f(x)=${factorized.asRoot.display},${x + delta}:${BBox.x.max + 1}->thick,blue`)
+
+	} else {
+		code.push(`f(x)=${factorized.asRoot.display}->thick,blue`)
+	}
 
 	// Draw the asymptotes
 	const asymptotes = [...vertical, ...horizontal, ...slope]
 
 	asymptotes.forEach(a => {
-		code += `\n${a.draw}`
+		code.push(`${a.draw}`)
 		if (a.delta) {
 			a.delta.roots.forEach(
-				(root, index) => code += `\nA${index}(${+root.x.value.toFixed(2)},${+root.y.value.toFixed(2)})->tex=@`)
+				(root, index) => code.push(`A${index}(${+root.x.value.toFixed(2)},${+root.y.value.toFixed(2)})->tex=@`))
 		}
 	})
 
 	// Draw particular points.
-	if (YIntercept) code += `\n${YIntercept.draw}->tex=@/mr`
+	if (YIntercept) code.push(`${YIntercept.draw}->tex=@/mr`)
 
 	// roots
-	rootsValues.forEach((root, index) => code += `\nZ${index}(${root},0)->tex=@`)
+	rootsValues.forEach((root, index) => code.push(`Z${index}(${root},0)->tex=@`))
 
 	// Extremes
 	extremes.filter(x => x.type !== 'undefined').forEach((extreme, index) => {
-		code += `\nE${index}(${extreme.x.value},${extreme.value})->tex=\\left(${extreme.x.tex};${extreme.tex}\\right)/${extreme.type === "max" ? "t" : "b"}c`
+		code.push(`E${index}(${extreme.x.value},${extreme.value})->tex=\\left(${extreme.x.tex};${extreme.tex}\\right)/${extreme.type === "max" ? "t" : "b"}c`)
 	})
 
 	// Add asymptote's delta roots.
@@ -196,7 +216,7 @@ export function makeStudyFromPolyFactor(value: PolyFactor): ETUDE_DE_FONCTION_RA
 		extremes,
 		draw: {
 			parameters,
-			code
+			code: code.join('\n')
 		}
 	}
 }
@@ -225,6 +245,7 @@ function PolyFactor_getAsymptotes_Vertical(reduced: PolyFactor, roots: ISolution
 
 		if (Number.isFinite(evaluatedValue.value)) {
 			return {
+				x: value.exact as Fraction,
 				tex: `\\lim_{x\\to ${valueAsTex} } f(x) = ${evaluatedValue.tex} \\implies \\text{point limite}: \\left(${valueAsTex};${evaluatedValue.tex}\\right)`,
 				draw: `P${index + 1}(${value.value},${evaluatedValue.value})->o=10,color=red,fill=white,tex=\\left(${value.tex};${evaluatedValue.tex}\\right)/bc`,
 				answer: `t(${value.display};${evaluatedValue.display})`
@@ -235,7 +256,8 @@ function PolyFactor_getAsymptotes_Vertical(reduced: PolyFactor, roots: ISolution
 				evaluateAfter > 0 ? 'RT' : 'RB'
 			]
 			return {
-				tex: `\\lim_{x\\to ${valueAsTex} } f(x) = \\infty \\implies x=${valueAsTex}`,
+				x: value.exact as Fraction,
+				tex: `\\lim_{x\\to ${valueAsTex} } f(x) = \\infty \\implies \\text{AV: } x=${valueAsTex}`,
 				draw: `a${index + 1}=line x=${value.value}->red`,
 				answer: [`x=${value.display}`, ...anchors].join('&')
 				// draw: `A${index + 1}(${value.value},0)->hide\nB${index + 1}(${value.value},1)->hide\na${index + 1}=A${index + 1}B${index + 1}->red`
@@ -301,7 +323,7 @@ function PolyFactor_getAsymptotes_Horizontal_or_Slope(factorized: PolyFactor, de
 
 	return [
 		{
-			tex: `y = ${quotient.tex}`,
+			tex: `\\text{${delta_degrees === 0 ? 'AH' : 'AO'}: } y = ${quotient.tex}`,
 			draw: `a=line y=${quotient.display}->green`,
 			answer: [`y=${quotient.display}`, ...anchors].join('&'),
 			delta: {

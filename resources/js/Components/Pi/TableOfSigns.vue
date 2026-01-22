@@ -216,7 +216,7 @@ const columnSizes = computed<TABLE_OF_SIGNS_COLUMNS_SIZES>(() => {
 </script>
 <template>
 	<div class="table-of-sign-wrapper">
-		<div class="not-prose overflow-x-auto pb-3">
+		<div class="not-prose overflow-x-auto pb-3 ">
 			<table class="border-r tos border-gray-400 mx-auto">
 				<table-of-signs-header
 					:roots="roots"
@@ -268,10 +268,12 @@ const columnSizes = computed<TABLE_OF_SIGNS_COLUMNS_SIZES>(() => {
 					/>
 				</tfoot>
 			</table>
+
+			<tex-code
+				v-if="texOutput"
+				class="max-w-sm mx-auto mt-3"
+				:tex="LaTeX_output"
+			/>
 		</div>
-		<tex-code
-			v-if="texOutput"
-			:tex="LaTeX_output"
-		/>
 	</div>
 </template>

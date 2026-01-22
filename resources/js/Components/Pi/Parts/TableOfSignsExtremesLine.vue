@@ -36,7 +36,10 @@ const formattedExtremes = computed<string[]>(() => {
 				<div
 					v-for="(extreme, index) in formattedExtremes"
 					:key="`tos-foot-cell-extreme-${index}`"
-					class="w-12 text-center py-2 relative"
+					:class="[
+						'text-center py-2 relative min-h-[1.4rem]',
+						sizes.row.middle
+					]"
 				>
 					<div
 						v-if="index%2===1"
