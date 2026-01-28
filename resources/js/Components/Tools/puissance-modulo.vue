@@ -86,7 +86,7 @@ function calculate() {
 		a,
 		pow,
 		pow2: pow2.filter(x => x !== 0),
-		pow2Tex: pow2.filter(x => x !== 0).map(value => `${result.value.a}^{${value}}`).join('\\cdot '),
+		pow2Tex: pow2.filter(x => x !== 0).map(value => `${a}^{${value}}`).join('\\cdot '),
 		mod,
 		x: (decompose.reduce((a, b) => a * b, 1)) % mod,
 		pmod: '\\begin{array}{llll}' + pmod
