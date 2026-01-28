@@ -33,6 +33,7 @@ export function makeIllustration(config: IllustrationMinInterface): Illustration
 		css: '',
 		order: 0,
 		title: '',
+		footer: '',
 		widget_id: -1,
 		widget: {
 			id: -1,

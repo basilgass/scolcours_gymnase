@@ -91,7 +91,7 @@ function addIllustration() {
 	<article
 		:id="`block-${block.id}`"
 		:class="blockConfig.style.body"
-		class="bg-content"
+		class="bg-content "
 	>
 		<BlockShowAdmin
 			v-if="!noAdmin"
@@ -140,8 +140,9 @@ function addIllustration() {
 		<!-- body -->
 		<slot name="body">
 			<div
+				v-if="blockBody!==null || block.illustrations.length>1"
 				:class="elementsClasses.grid + ((!block.title && !block.type) ? ' pt-3' : '')"
-				class="px-5 pb-2"
+				class="px-5 pb-2 "
 			>
 				<markdown-it
 					v-if="blockBody !== null"
@@ -158,6 +159,12 @@ function addIllustration() {
 						:block
 					/>
 				</div>
+			</div>
+			<div v-else>
+				<!-- seulement une illustration : plein bloc -->
+				<illustration-index
+					:block
+				/>
 			</div>
 		</slot>
 

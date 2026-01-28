@@ -170,7 +170,7 @@ export class ProbabilityTree {
 
 		// Get the optional root name
 		let root: string
-		if (!lines[0].includes(",")) root = lines.shift()
+		if (!lines[0].includes(",")) root = lines._shift()
 
 		return {
 			probability: null,

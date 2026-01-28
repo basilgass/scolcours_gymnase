@@ -106,6 +106,7 @@ function copyIllustration() {
 			parameters: theIllustration.value.parameters,
 			code: theIllustration.value.code,
 			title: theIllustration.value.title,
+			footer: theIllustration.value.footer,
 			css: theIllustration.value.css,
 			widget_id: theIllustration.value.widget_id,
 			widget: theIllustration.value.widget
@@ -121,6 +122,7 @@ function pasteIllustration() {
 		theIllustration.value.parameters = paste.parameters
 		theIllustration.value.code = paste.code
 		theIllustration.value.title = paste.title
+		theIllustration.value.footer = paste.footer
 		theIllustration.value.css = paste.css
 		theIllustration.value.widget_id = paste.widget_id
 		theIllustration.value.widget = paste.widget
@@ -384,7 +386,14 @@ onMounted(() => {
 				<form-maker
 					v-model="theIllustration.title"
 					inline
-					label="nom de la figure"
+					label="titre de la figure"
+					sm
+				/>
+
+				<form-maker
+					v-model="theIllustration.footer"
+					inline
+					label="commentaire de la figure"
 					sm
 				/>
 

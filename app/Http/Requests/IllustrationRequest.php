@@ -11,6 +11,7 @@ class IllustrationRequest extends FormRequest
 		return [
 			'code'       => ['string', 'nullable'],
 			'title'      => ['string', 'nullable'],
+			'footer'     => ['string', 'nullable'],
 			'widget_id'  => ['exists:widgets,id', 'nullable'],
 			'parameters' => ['string', 'nullable'],
 			'order'      => ['integer', 'nullable'],
@@ -25,9 +26,9 @@ class IllustrationRequest extends FormRequest
 
 	protected function prepareForValidation(): void
 	{
-		if(!$this->has('code')){
+		if (!$this->has('code')) {
 			$this->merge([
-				"code"=>""
+				"code" => ""
 			]);
 		}
 

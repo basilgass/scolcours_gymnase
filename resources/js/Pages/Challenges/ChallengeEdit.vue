@@ -107,6 +107,7 @@ const theIllustration = ref<IllustrationInterface>(
 			order: 1,
 			css: "",
 			title: "",
+			footer: "",
 			code: "",
 			parameters: "",
 			block_id: null,

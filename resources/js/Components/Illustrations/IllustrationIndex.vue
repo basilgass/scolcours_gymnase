@@ -67,6 +67,7 @@ function updateIllustrationsOrder() {
 					<i class=" bi bi-arrows-move" />
 				</div>
 				<illustration-show
+					class="shadow-lg"
 					:illustration="element"
 				/>
 			</div>

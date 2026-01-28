@@ -79,6 +79,7 @@ export interface IllustrationInterface {
 	order: number;
 	parameters: string;
 	title: string;
+	footer: string;
 	widget: WidgetInterface;
 	widget_id: number;
 }

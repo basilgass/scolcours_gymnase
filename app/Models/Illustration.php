@@ -50,6 +50,7 @@ class Illustration extends Model
 		"widget_id",
 		"css",
 		"title",
+		"footer",
 		"order",
 		"block_id",
 		"value",

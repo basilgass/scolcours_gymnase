@@ -55,6 +55,17 @@ function click($event: MouseEvent) {
 
 <template>
 	<Card>
+		<template
+			v-if="props.illustration.title"
+			#header
+		>
+			<div
+				v-katex.auto="props.illustration.title"
+				class="text-center text-lg
+				bg-slate-50 dark:bg-slate-700
+				-mx-3 -my-2 py-2 px-3 rounded-t"
+			/>
+		</template>
 		<figure
 			:id="`illustration-${illustration.id}`"
 			ref="root"
@@ -73,11 +84,11 @@ function click($event: MouseEvent) {
 			/>
 		</figure>
 		<template
-			v-if="props.illustration.title"
+			v-if="props.illustration.footer"
 			#footer
 		>
 			<div
-				v-katex.auto="props.illustration.title"
+				v-katex.auto="props.illustration.footer"
 				class="text-center text-xs"
 			/>
 		</template>

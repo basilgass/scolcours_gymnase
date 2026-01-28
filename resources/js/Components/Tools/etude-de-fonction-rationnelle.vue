@@ -21,7 +21,6 @@ import {Numeric, Random} from "pimath"
 import {computed, ref} from "vue"
 import ScButton from "@/Components/Ui/scButton.vue"
 import Card from "@/Components/Ui/Card.vue"
-import PiEuclidian from "@/Components/Pi/PiEuclidian.vue"
 
 const {restoreTool} = useToolsStorage()
 const forms: IToolForm[] = restoreTool([
@@ -74,10 +73,23 @@ const draw = computed<{ parameters: string, code: string }>(() => {
 })
 
 function generate_fx() {
+	// TODO: améliorer la génération de fonction rationnel.
+	// TODO: retravailler complètement l'étude de fonction (PiMath) pour le mettre "à part".
+	// // génération de la fonction.
+	// const diff = Random.number(-1, 2)
+	// const denDegree = Random.number(1, 2)
+	// const num = Random.polynom({factorable: true, degree: denDegree + diff})
+	// const den = Random.polynom({factorable: true, degree: denDegree})
+	//
+	// forms[0].value.value = num.display
+	// forms[1].value.value = den.display
+	// return
+
 	let n = 1,
 		genFx
 	while (n <= 500) {
 		genFx = getFxWithControls(n < 250 ? 10 : 5)
+
 		if (Math.abs(genFx.control.oao) < 10 &&
 			Math.abs(genFx.control.slope) <= 3 &&
 			Math.abs(genFx.control.ordonnee) <= 10 &&
@@ -295,25 +307,17 @@ const keyboardStudyAnswer = computed(() => {
 							Asymptotes horizontales
 						</h2>
 
-						<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-							<pi-euclidian
-								:fx="fx"
-								asymptote
+						<div
+							v-for="(item, index) in study.asymptotes.horizontal"
+							:key="`etude-ah-${index}`"
+						>
+							<div v-katex.boxed="`${item.tex}`" />
+							<div v-katex.boxed="`${item.delta.tex}`" />
+							<table-of-signs
+								:roots="item.delta.table_of_signs.roots.map(x=>x.tex)"
+								:signs="item.delta.table_of_signs.signs"
+								tex-output
 							/>
-							<div>
-								<div
-									v-for="(item, index) in study.asymptotes.horizontal"
-									:key="`etude-ah-${index}`"
-								>
-									<div v-katex.boxed="`${item.tex}`" />
-									<div v-katex.boxed="`${item.delta.tex}`" />
-									<table-of-signs
-										:roots="item.delta.table_of_signs.roots.map(x=>x.tex)"
-										:signs="item.delta.table_of_signs.signs"
-										tex-output
-									/>
-								</div>
-							</div>
 						</div>
 					</div>
 
@@ -327,26 +331,17 @@ const keyboardStudyAnswer = computed(() => {
 							Asymptotes obliques
 						</h2>
 
-						<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-							<pi-euclidian
-								:fx="fx"
-								asymptote
+						<div
+							v-for="(item, index) in study.asymptotes.slope"
+							:key="`etude-ao-${index}`"
+						>
+							<div v-katex.boxed="`${item.tex}`" />
+							<div v-katex.boxed="`${item.delta.tex}`" />
+							<table-of-signs
+								:roots="item.delta.table_of_signs.roots.map(x=>x.tex)"
+								:signs="item.delta.table_of_signs.signs"
+								tex-output
 							/>
-
-							<div>
-								<div
-									v-for="(item, index) in study.asymptotes.slope"
-									:key="`etude-ao-${index}`"
-								>
-									<div v-katex.boxed="`${item.tex}`" />
-									<div v-katex.boxed="`${item.delta.tex}`" />
-									<table-of-signs
-										:roots="item.delta.table_of_signs.roots.map(x=>x.tex)"
-										:signs="item.delta.table_of_signs.signs"
-										tex-output
-									/>
-								</div>
-							</div>
 						</div>
 					</div>
 
