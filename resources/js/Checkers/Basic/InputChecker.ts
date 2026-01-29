@@ -1,5 +1,4 @@
-import {CheckerAbstract, makeCheckerResult} from "../CheckerAbstract"
-import {CheckerResult, CHECKERS} from "../checker.config"
+import {CheckerAbstract, CheckerResult, CHECKERS, makeCheckerResult} from "@/Checkers"
 
 // const name = "input"
 const description = `input,[paramètres]
@@ -9,14 +8,15 @@ const description = `input,[paramètres]
 `
 
 export class InputChecker extends CheckerAbstract {
+	readonly format = "Réponse textuelle"
+
 	constructor(config?: string[] | string) {
 		super(config)
 		this.type = CHECKERS.INPUT
 		this.description = description
+
+		// TODO: gérer les paramètres comme normalisation du texte ?
 	}
-
-
-	readonly format = "Réponse textuelle"
 
 	checkValue(value: string): CheckerResult {
 		return makeCheckerResult("La réponse n'est pas correcte")

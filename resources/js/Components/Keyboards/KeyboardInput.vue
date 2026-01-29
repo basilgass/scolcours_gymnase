@@ -9,6 +9,7 @@ import type {
 	KeyboardInputInterface,
 	KeyboardPropsInterface
 } from "@/types/keyboardInterfaces.ts"
+import {Cipher} from "@/helpers/cipher.ts"
 
 // props.keyboard
 const props = defineProps<KeyboardPropsInterface>()
@@ -22,7 +23,12 @@ function onChange(): void {
 }
 
 async function setInput(value?: string): Promise<KeyboardInputInterface> {
-	const valueToUpdate = value ? value : inputValue.value
+	let valueToUpdate = value ? value : inputValue.value
+
+	if (isNormalized.value) {
+		valueToUpdate = Cipher._normalize(valueToUpdate)
+	}
+
 	return {
 		input: valueToUpdate,
 		tex: isTex.value ? valueToUpdate : new AsciiMathParser().parse(valueToUpdate),
@@ -48,6 +54,17 @@ const isTex = computed(() => {
 	return props.keyboard.parameters.includes("tex")
 })
 
+const isNormalized = computed(() => {
+	return props.keyboard.parameters.includes("norm")
+})
+
+const format = computed(() => {
+	if (isTex.value) return 'texte au format LaTeX'
+
+	if (isNormalized.value) return 'text en majuscule, sans accent, sans espace (auto)'
+
+	return 'texte'
+})
 </script>
 
 <template>
@@ -61,7 +78,7 @@ const isTex = computed(() => {
 		<div
 			class="text-center text-xs text-gray-400"
 		>
-			FORMAT ?
+			{{ format }}
 		</div>
 	</div>
 </template>
