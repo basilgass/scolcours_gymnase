@@ -29,13 +29,14 @@ function onHover(value: { index: number, clear: string, cipher: string, key: str
 	if (value === null) return
 	highlight.value = alphabet.indexOf(value.clear)
 }
+
 </script>
 
 <template>
 	<article class="space-y-6">
 		<crypto-header
 			v-model="cipherKey"
-			key-label="fonction affine"
+			key-label="clé affine"
 			key-type="text"
 			:text="{
 				clear: clearText,

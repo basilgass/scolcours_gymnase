@@ -3,6 +3,44 @@ import {Polynom} from "pimath"
 export class Cipher {
 	static readonly alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('')
 
+	static _affineAlphabet(key: string): string[] {
+		// allowed letters: x, y
+		// allowed format: polynom or (m;h)
+		const fx = Cipher._affineFx(key)
+
+		if (fx === null) return Cipher.alphabet
+		return Cipher.alphabet.map((_, index) => {
+			const cipherIdx = fx.evaluate(index, true) as number
+			return Cipher.alphabet[((cipherIdx % 26) + 26) % 26]
+		})
+
+	}
+
+	static _affineFx(key: string): Polynom | null {
+		if (
+			!key.includes('x') &&
+			!key.includes('y') &&
+			!key.match(/\(-?\d+;-?\d+\)/)
+		) return null
+
+		if (key.includes('x')) {
+			try {
+				return new Polynom(key)
+			} catch (e) {
+				console.warn(e)
+				return null
+			}
+		}
+
+		if (key.includes('y')) {
+			return Cipher._affineFx(key.replaceAll('y', 'x'))
+		}
+
+		// cas (m;h)
+		const [m, h] = key.substring(1, key.length - 1).split(';').map(Number)
+		return new Polynom().fromCoefficients(m, h)
+	}
+
 	static _expandKey(key: string, text: string, unique = false): string {
 		if (!key.length) return ''
 
@@ -30,6 +68,21 @@ export class Cipher {
 		return Cipher.alphabet[(row + col) % Cipher.alphabet.length]
 	}
 
+	static affine(key: string, text: string): string {
+		const alphabet = Cipher.alphabet
+		const normText = Cipher._normalize(text)
+		const cipherAlphabet = Cipher._affineAlphabet(key)
+
+		try {
+			return [...normText].map(char => {
+				return cipherAlphabet[alphabet.indexOf(char)]
+			}).join('')
+		} catch (e) {
+			console.warn(e)
+			return ""
+		}
+	}
+
 	static cesar(key: number, text: string): string {
 		if (!Number.isSafeInteger(key) && key < 1) return ''
 
@@ -41,41 +94,6 @@ export class Cipher {
 			const row = ((key % 26) + 26) % 26	// chiffre de César
 			return Cipher._shift(row, col)
 		}).join('')
-	}
-
-	static affine(key: string, text: string): string {
-		if (!key.includes('x')) return ''
-
-		const alphabet = Cipher.alphabet
-		const normText = Cipher._normalize(text)
-
-		const cipherAlphabet = Cipher._affineAlphabet(key)
-		try {
-			return [...normText].map(char => {
-				return cipherAlphabet[alphabet.indexOf(char)]
-			}).join('')
-		} catch (e) {
-			console.warn(e)
-			return ""
-		}
-	}
-
-	static _affineAlphabet(key: string): string[] {
-		if (!key.includes('x')) return Cipher.alphabet
-
-		try {
-			const fx = new Polynom(key)
-
-			return Cipher.alphabet.map((_, index) => {
-				const cipherIdx = fx.evaluate(index, true) as number
-				return Cipher.alphabet[((cipherIdx % 26) + 26) % 26]
-			})
-
-		} catch (e) {
-			console.warn(e)
-			return Cipher.alphabet
-		}
-
 	}
 
 	static vigenere(key: string, text: string): string {

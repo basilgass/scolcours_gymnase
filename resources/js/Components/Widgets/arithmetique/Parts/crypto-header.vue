@@ -9,6 +9,7 @@ const props = withDefaults(
 	defineProps<{
 		keyLabel?: string,
 		keyType?: 'number' | 'text'
+		keyTex?: boolean
 		text: {
 			clear: string,
 			cipher: string
@@ -18,7 +19,8 @@ const props = withDefaults(
 	}>(),
 	{
 		keyLabel: "clé de cryptage",
-		keyType: 'text'
+		keyType: 'text',
+		keyTex: true
 	}
 )
 const emits = defineEmits<{
@@ -52,7 +54,12 @@ const isInverted = computed(() => props.parameters.inv)
 			/>
 		</div>
 		<div v-else>
-			{{ keyLabel }}: {{ cipherKey }}
+			<span class="font-semibold">{{ keyLabel }}</span> :
+			<span
+				v-if="keyTex"
+				v-katex="cipherKey"
+			/>
+			<span v-else>{{ cipherKey }}</span>
 		</div>
 
 		<div class="overflow-x-auto whitespace-nowrap">
