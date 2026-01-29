@@ -1,4 +1,4 @@
-import {computed, ref, toRefs} from "vue"
+import {computed, ref, toRefs, watch} from "vue"
 import {WidgetPropsInterface} from "@/types/modelInterfaces.ts"
 import {Random} from "pimath"
 
@@ -36,6 +36,10 @@ export function useWidget<T extends number | string>(
 	})
 
 	const cipherKey = ref<T>(setCipherKey())
+
+	watch(() => props.illustration.parameters, () => {
+		cipherKey.value = setCipherKey()
+	})
 
 
 	return {parameters, cipherKey}

@@ -32,6 +32,7 @@ const showClearText = computed(() => props.parameters.clear || props.parameters.
 const showCipherText = computed(() => props.parameters.code || props.parameters.text)
 const showExpandedKey = computed(() => props.parameters.expanded || props.parameters.text)
 const showForm = computed(() => !(props.parameters.key && props.parameters['!form']))
+const isInverted = computed(() => props.parameters.inv)
 </script>
 
 <template>
@@ -44,6 +45,7 @@ const showForm = computed(() => !(props.parameters.key && props.parameters['!for
 				v-model="cipherKey"
 				inline-label
 				:label="keyLabel"
+				label-class="font-semibold"
 				:type="keyType"
 				class="max-w-sm "
 				icon="bi bi-key"
@@ -59,7 +61,7 @@ const showForm = computed(() => !(props.parameters.key && props.parameters['!for
 					<span
 						v-if="showClearText"
 						class="py-1"
-					>texte claire</span>
+					>{{ !isInverted ? 'texte claire' : 'texte crypté' }}</span>
 					<span
 						v-if="showExpandedKey && text.expanded"
 						class="py-1"
@@ -67,7 +69,7 @@ const showForm = computed(() => !(props.parameters.key && props.parameters['!for
 					<span
 						v-if="showCipherText"
 						class="py-1"
-					>texte crypté</span>
+					>{{ !isInverted ? 'texte crypté' : 'texte clair' }}</span>
 				</div>
 
 				<div
