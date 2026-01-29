@@ -5,7 +5,6 @@ code: la phrase à coder
 <script setup lang="ts">
 import {computed, ref} from 'vue'
 import {WidgetPropsInterface} from "@/types/modelInterfaces.ts"
-import FormMaker from "@/Components/Form/FormMaker.vue"
 import {useWidget} from "@/Components/Widgets/useWidget.ts"
 import CryptoHeader from "@/Components/Widgets/arithmetique/Parts/crypto-header.vue"
 import {Cipher} from "@/helpers/cipher.ts"
@@ -17,19 +16,13 @@ const props = defineProps<{
 	illustration: WidgetPropsInterface
 }>()
 
-const {parameters} = useWidget(props)
-
-/* =======================
-   Reactive
-======================= */
-const cipherKey = ref<string>('HELLO WORLD')
+const {parameters, cipherKey} = useWidget<string>(props, "string")
 
 /* =======================
    Show booleans
 ======================= */
-const showTable = computed(() => {
-	return true
-})
+const showTable = computed(() => !parameters.value['!form'])
+
 
 /* =======================
    Alphabet
@@ -71,13 +64,7 @@ function clickInside(col: number, row: number) {
    Normalisation
 ======================= */
 const normText = computed(() => Cipher._normalize(props.illustration.code))
-const normKey = computed(() => {
-	if (!parameters.value.key) {
-		return Cipher._normalize(cipherKey.value)
-	}
-
-	return Cipher._normalize(parameters.value.key as string)
-})
+const normKey = computed(() => Cipher._normalize(cipherKey.value))
 
 /* =======================
    Clé étendue
@@ -89,31 +76,25 @@ const expandedKey = computed(() => Cipher._expandKey(normKey.value, normText.val
 ======================= */
 const cipherText = computed(() => Cipher.vigenere(normKey.value, normText.value))
 
+
+function onHover(value: { index: number, clear: string, cipher: string, key: string }) {
+	if (value === null) return
+	clickCol(alphabet.indexOf(value.clear))
+	clickRow(alphabet.indexOf(value.key))
+}
 </script>
 
 <template>
 	<article class="space-y-6">
-		<div v-if="parameters.key">
-			clé de cryptage : {{ parameters.key }}
-		</div>
-		<div v-else>
-			<form-maker
-				v-model="cipherKey"
-				type="text"
-				inline-label
-				label="clé de cryptage"
-				icon="bi bi-key"
-			/>
-		</div>
-
 		<crypto-header
+			v-model="cipherKey"
 			:text="{
 				clear: normText,
 				cipher: cipherText,
-				key: cipherKey,
 				expanded: expandedKey
 			}"
 			:parameters
+			@hover="onHover"
 		/>
 		<!-- Tableau de Vigenère -->
 		<div
@@ -140,7 +121,7 @@ const cipherText = computed(() => Cipher.vigenere(normKey.value, normText.value)
 				/>
 			</div>
 			<div
-				class="overflow-auto aspect-square"
+				class="overflow-auto"
 			>
 				<div class="inline-block">
 					<div

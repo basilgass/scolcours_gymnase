@@ -5,80 +5,50 @@ code: la phrase à coder
 <script setup lang="ts">
 import {WidgetPropsInterface} from "@/types/modelInterfaces.ts"
 import {computed, ref} from "vue"
-import FormMaker from "@/Components/Form/FormMaker.vue"
 import {useWidget} from "@/Components/Widgets/useWidget.ts"
 import CryptoHeader from "@/Components/Widgets/arithmetique/Parts/crypto-header.vue"
 import {Cipher} from "@/helpers/cipher.ts"
-import {Random} from "pimath"
 
 const props = defineProps<{
 	illustration: WidgetPropsInterface
 }>()
 
-const {parameters} = useWidget(props)
-
+const {parameters, cipherKey} = useWidget<number>(props, "number")
 const alphabet = Cipher.alphabet.join('')
 
 const clearText = computed(() => Cipher._normalize(props.illustration.code))
-const cesarKey = computed(() => {
-	if (parameters.value.key) {
-		if (parameters.value.key === true) return 0
-		if (Number.isSafeInteger(+parameters.value.key)) return +parameters.value.key
-	}
-
-	if (Number.isSafeInteger(+userCesarKey.value)) {
-		return +userCesarKey.value
-	}
-	return 0
-})
-const userCesarKey = ref<number>(Random.number(5, 20))
-const cesarCoded = computed(() => Cipher.cesar(cesarKey.value, clearText.value))
+const cesarCoded = computed(() => Cipher.cesar(cipherKey.value, clearText.value))
 
 const showTable = computed(() => !parameters.value['!table'])
+// const showForm = computed(() => !(parameters.value.key && parameters.value['!form']))
 
 const shift = computed(() => {
-	return ((cesarKey.value % 26) + 26) % 26
+	return ((cipherKey.value % 26) + 26) % 26
 })
 
 const cipherAlphabet = alphabet + alphabet
 const highlight = ref<number>(-1)
 const cellSize = ref<number>(32) // 32–40 OK mobile
+
+
+function onHover(value: { index: number, clear: string, cipher: string, key: string }) {
+	if (value === null) return
+	highlight.value = alphabet.indexOf(value.clear)
+}
 </script>
 
 <template>
 	<article class="space-y-6">
-		<div v-if="parameters.key">
-			chiffre de César: {{ cesarKey }}
-		</div>
-		<div
-			v-else
-			class="flex gap-3 items-baseline"
-		>
-			<form-maker
-				v-model="userCesarKey"
-				inline-label
-				label="chiffre de César"
-				type="number"
-				class="max-w-sm "
-				icon="bi bi-key"
-			/>
-			<i
-				class="bi bi-chevron-left"
-				@click="userCesarKey = (+userCesarKey)-1"
-			/>
-			<i
-				class="bi bi-chevron-right"
-				@click="userCesarKey = (+userCesarKey)+1"
-			/>
-		</div>
-
 		<crypto-header
+			v-model="cipherKey"
+			key-label="chiffre de César"
+			key-type="number"
 			:text="{
 				clear: clearText,
-				cipher: cesarCoded,
-				key: cesarKey.toString(),
+				cipher: cesarCoded
 			}"
 			:parameters
+			@hover="onHover"
 		/>
 
 		<div v-if="showTable">
@@ -123,14 +93,14 @@ const cellSize = ref<number>(32) // 32–40 OK mobile
 							{{ index }}
 						</div>
 					</div>
-					<div class="flex row font-semibold">
+					<div class="flex row">
 						<div
 							v-for="(alpha, index) in alphabet"
 							:key="`clear-${alpha}`"
 							:class="[
 								'transition-colors',
 								'cell grid place-items-center',
-								highlight===index ? 'bg-green-200' : ''
+								highlight===index ? 'bg-green-100' : ''
 							]"
 							@mouseenter="highlight=index"
 							@mouseleave="highlight=-1"
@@ -155,7 +125,7 @@ const cellSize = ref<number>(32) // 32–40 OK mobile
 									'transition-colors',
 									'cell grid place-items-center',
 									`letter-${alpha}`,
-									(highlight===index-shift ) ? 'bg-green-100' : ''
+									(highlight===index-shift ) ? 'bg-red-300 font-semibold' : ''
 								]"
 								@mouseenter="highlight=index-shift"
 								@mouseleave="highlight=-1"

@@ -1,74 +1,103 @@
-<script setup lang="ts">
+<script setup lang="ts" generic="T">
 
 import {computed} from "vue"
+import FormMaker from "@/Components/Form/FormMaker.vue"
 
-const props = defineProps<{
-	text: {
-		clear: string,
-		cipher: string,
-		key: string,
-		expanded?: string
-	},
-	parameters: Record<string, string | boolean>,
+const cipherKey = defineModel<T>()
+
+const props = withDefaults(
+	defineProps<{
+		keyLabel?: string,
+		keyType?: 'number' | 'text'
+		text: {
+			clear: string,
+			cipher: string
+			expanded?: string
+		},
+		parameters: Record<string, string | boolean>,
+	}>(),
+	{
+		keyLabel: "clé de cryptage",
+		keyType: 'text'
+	}
+)
+const emits = defineEmits<{
+	hover: [e: { clear: string, cipher: string, key: string, index: number }]
 }>()
 
 /* =======================
    Show booleans
 ======================= */
-const showClearText = computed(() => {
-	return props.parameters.clear || props.parameters.text
-})
-const showCipherText = computed(() => {
-	return props.parameters.code || props.parameters.text
-})
-const showExpandedKey = computed(() => {
-	return props.parameters.expanded || props.parameters.text
-})
-
+const showClearText = computed(() => props.parameters.clear || props.parameters.text)
+const showCipherText = computed(() => props.parameters.code || props.parameters.text)
+const showExpandedKey = computed(() => props.parameters.expanded || props.parameters.text)
+const showForm = computed(() => !(props.parameters.key && props.parameters['!form']))
 </script>
 
 <template>
-	<div class="overflow-x-auto whitespace-nowrap">
-		<table>
-			<tbody>
-				<tr
-					v-if="showClearText"
-					class="h-8"
+	<div>
+		<div
+			v-if="showForm"
+			class="flex gap-3 items-baseline"
+		>
+			<form-maker
+				v-model="cipherKey"
+				inline-label
+				:label="keyLabel"
+				:type="keyType"
+				class="max-w-sm "
+				icon="bi bi-key"
+			/>
+		</div>
+		<div v-else>
+			{{ keyLabel }}: {{ cipherKey }}
+		</div>
+
+		<div class="overflow-x-auto whitespace-nowrap">
+			<div class="flex my-3 cursor-pointer">
+				<div class="flex flex-col font-semibold pr-3">
+					<span
+						v-if="showClearText"
+						class="py-1"
+					>texte claire</span>
+					<span
+						v-if="showExpandedKey && text.expanded"
+						class="py-1"
+					>clé</span>
+					<span
+						v-if="showCipherText"
+						class="py-1"
+					>texte crypté</span>
+				</div>
+
+				<div
+					v-for="(c, i) in text.clear"
+					:key="i"
+					class="flex flex-col items-center group  font-code"
+					@mouseenter="emits('hover', {
+						index: i,
+						clear: text.clear[i],
+						cipher: text.cipher[i],
+						key: text.expanded?.[i] ?? null
+					})"
+					@mouseleave="emits('hover', null)"
 				>
-					<td class="font-semibold pr-5">
-						texte claire
-					</td>
-					<td class="font-code tracking-[0.65rem]">
-						{{ text.clear }}
-					</td>
-				</tr>
-				<tr
-					v-if="showExpandedKey && text.expanded"
-					class="h-8"
-				>
-					<td class="font-semibold pr-5">
-						clé
-					</td>
-					<td class="font-code tracking-[0.65rem]">
-						{{ text.expanded }}
-					</td>
-				</tr>
-				<tr
-					v-if="showCipherText"
-					class="h-8"
-				>
-					<td class="font-semibold pr-5">
-						texte codé
-					</td>
-					<td class="font-code tracking-[0.65rem]">
-						{{ text.cipher }}
-					</td>
-				</tr>
-			</tbody>
-		</table>
+					<span
+						v-if="showClearText"
+						class="group-hover:bg-green-100 px-2 py-1 transition-colors"
+					>{{ text.clear[i] }}</span>
+					<span
+						v-if="showExpandedKey && text.expanded"
+						class="group-hover:bg-blue-100 px-2 py-1 transition-colors"
+					>{{
+						text.expanded[i]
+					}}</span>
+					<span
+						v-if="showCipherText"
+						class="group-hover:bg-red-300 group-hover:font-bold px-2 py-1 transition-colors"
+					>{{ text.cipher[i] }}</span>
+				</div>
+			</div>
+		</div>
 	</div>
 </template>
-
-<style scoped>
-
-</style>

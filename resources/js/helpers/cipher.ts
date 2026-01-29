@@ -1,3 +1,5 @@
+import {Polynom} from "pimath"
+
 export class Cipher {
 	static readonly alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('')
 
@@ -18,6 +20,8 @@ export class Cipher {
 
 	static _normalize(s: string): string {
 		return s
+			.normalize('NFD')              // sépare lettre + accent
+			.replace(/[\u0300-\u036f]/g, '') // supprime les accents
 			.toUpperCase()
 			.replace(/[^A-Z]/g, '')
 	}
@@ -37,6 +41,41 @@ export class Cipher {
 			const row = ((key % 26) + 26) % 26	// chiffre de César
 			return Cipher._shift(row, col)
 		}).join('')
+	}
+
+	static affine(key: string, text: string): string {
+		if (!key.includes('x')) return ''
+
+		const alphabet = Cipher.alphabet
+		const normText = Cipher._normalize(text)
+
+		const cipherAlphabet = Cipher._affineAlphabet(key)
+		try {
+			return [...normText].map(char => {
+				return cipherAlphabet[alphabet.indexOf(char)]
+			}).join('')
+		} catch (e) {
+			console.warn(e)
+			return ""
+		}
+	}
+
+	static _affineAlphabet(key: string): string[] {
+		if (!key.includes('x')) return Cipher.alphabet
+
+		try {
+			const fx = new Polynom(key)
+
+			return Cipher.alphabet.map((_, index) => {
+				const cipherIdx = fx.evaluate(index, true) as number
+				return Cipher.alphabet[((cipherIdx % 26) + 26) % 26]
+			})
+
+		} catch (e) {
+			console.warn(e)
+			return Cipher.alphabet
+		}
+
 	}
 
 	static vigenere(key: string, text: string): string {
