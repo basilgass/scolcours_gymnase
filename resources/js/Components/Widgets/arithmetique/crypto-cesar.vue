@@ -18,9 +18,7 @@ const alphabet = Cipher.alphabet.join('')
 
 const clearText = computed(() => Cipher._normalize(props.illustration.code))
 const cesarCoded = computed(() => Cipher.cesar(cipherKey.value, clearText.value))
-
 const showTable = computed(() => !parameters.value['!table'])
-// const showForm = computed(() => !(parameters.value.key && parameters.value['!form']))
 
 const shift = computed(() => {
 	return ((cipherKey.value % 26) + 26) % 26

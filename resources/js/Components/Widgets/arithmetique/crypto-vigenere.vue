@@ -21,7 +21,7 @@ const {parameters, cipherKey} = useWidget<string>(props, "string")
 /* =======================
    Show booleans
 ======================= */
-const showTable = computed(() => !parameters.value['!form'])
+const showTable = computed(() => !parameters.value['!table'])
 
 
 /* =======================
@@ -88,6 +88,7 @@ function onHover(value: { index: number, clear: string, cipher: string, key: str
 	<article class="space-y-6">
 		<crypto-header
 			v-model="cipherKey"
+			:key-tex="false"
 			:text="{
 				clear: normText,
 				cipher: cipherText,
