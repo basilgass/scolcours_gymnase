@@ -84,9 +84,12 @@ const mdit = computed(() => {
 		try {
 			return `(${route(routeName, {post: routeOptions[0], context: context ? 'course' : null})}){.@text}`
 		} catch {
-			return `(${match})`
+			return `(${match}){.@text}`
 		}
 	})
+
+	// Ajoute à tous les liens internes la bonne couleur
+	output = output.replaceAll(/\(#\S+\)/g, (match) => `(${match}){.@text}`)
 
 	// Remplace les class courtes en classes complètes.
 
@@ -134,7 +137,6 @@ const mdClick = function (event) {
 	}
 }
 
-// BUG : enlevé @touchemove.stop du div
 </script>
 
 <template>

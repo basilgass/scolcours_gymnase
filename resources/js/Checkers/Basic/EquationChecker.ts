@@ -80,7 +80,6 @@ export class EquationChecker extends CheckerAbstract {
 	}
 
 	override checkValue(value: string): CheckerResult {
-
 		const A = isEquation(value)
 		const Q = isEquation(this.answer)
 

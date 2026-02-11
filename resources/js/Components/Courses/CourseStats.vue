@@ -139,11 +139,11 @@ onUnmounted(() => {
 					<lesson-type-icon
 						v-for="t in availableFilters"
 						:key="`filter-${t}`"
-						@click="filter=filter === t ? null : t"
 						:class="{
 							'opacity-30': filter!==null && filter!==t
 						}"
 						:lesson="t"
+						@click="filter=filter === t ? null : t"
 					/>
 				</div>
 			</div>
@@ -189,10 +189,10 @@ onUnmounted(() => {
 			<div
 				v-for="lesson in lessons"
 				:key="`stats-${lesson.id}`"
-				class="flex gap-3"
+				class="grid auto-cols-min grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3"
 			>
 				<div
-					class="flex gap-2 cursor-pointer hover:font-semibold"
+					class="flex gap-2 cursor-pointer hover:font-semibold min-w-75"
 					@click="router.visit(route('students.lessons.show', {course: course.slug, lesson: lesson.id }))"
 				>
 					<lesson-type-icon
@@ -201,13 +201,13 @@ onUnmounted(() => {
 					/>
 					<div
 						v-katex.auto="lesson.title"
-						class="text-xs w-[300px] whitespace-nowrap overflow-hidden"
+						class="text-xs whitespace-nowrap overflow-hidden"
 					/>
 				</div>
 				<stat-bar
 					:max="100"
 					:value="selected_user_stats[lesson.id]?.total_scores === 0 ? 0 : (selected_user_stats[lesson.id]?.resolved_scores)/(selected_user_stats[lesson.id]?.total_scores)*100"
-					class="text-[0.6rem]"
+					class="text-[0.6rem] col-span-1 lg:col-span-2"
 				>
 					<template #bar>
 						{{ selected_user_stats[lesson.id]?.resolved_scores }} /

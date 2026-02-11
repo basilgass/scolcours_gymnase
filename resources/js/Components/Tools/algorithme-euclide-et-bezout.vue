@@ -12,6 +12,7 @@ import Card from "@/Components/Ui/Card.vue"
 import ToolError from "@/Components/Tools/Parts/ToolError.vue"
 import AlgorithmeEuclide from "@/Components/Widgets/arithmetique/algorithme-euclide.vue"
 import AlgorithmeBezout, {BezoutType} from "@/Components/Widgets/arithmetique/algorithme-bezout.vue"
+import AlgorithmeBezoutTable from "@/Components/Widgets/arithmetique/algorithme-bezout-table.vue"
 
 const {restoreTool} = useToolsStorage()
 const forms: IToolForm[] = restoreTool([
@@ -80,13 +81,20 @@ const modularInvert = computed(() => {
 					/>
 				</div>
 
-				<div>
+				<div class="flex flex-col gap-3">
 					<h3 class="font-semibold text-lg">
 						algorithme de Bézout
 					</h3>
 					<algorithme-bezout
 						:illustration="{parameters: '', code: `${A},${B}`}"
 						@updated="calculatedValues=$event"
+					/>
+
+					<h3 class="font-semibold text-lg">
+						version tableau
+					</h3>
+					<algorithme-bezout-table
+						:illustration="{parameters: '', code: `${A},${B}`}"
 					/>
 				</div>
 			</div>
