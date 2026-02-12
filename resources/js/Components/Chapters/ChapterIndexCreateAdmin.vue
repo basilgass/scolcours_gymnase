@@ -5,11 +5,14 @@ import {nextTick, ref, useTemplateRef} from "vue"
 import axios from "axios"
 import {router, usePage} from "@inertiajs/vue3"
 import ScButton from "@/Components/Ui/scButton.vue"
+import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
 
 const createChapterModal = ref(false)
 const createChapterTitle = ref("")
 
 const input = useTemplateRef<InstanceType<typeof FormMaker>>('input')
+
+const editMode = useStoreEditMode()
 
 async function onShowModal() {
 	createChapterModal.value = true
@@ -30,7 +33,7 @@ function createChapter() {
 }
 </script>
 <template>
-	<div>
+	<div v-admin="editMode.enable">
 		<sc-button
 			type="add"
 			@click="onShowModal"
@@ -54,8 +57,8 @@ function createChapter() {
 					class="flex-1"
 					inline-label
 					label="titre"
-					@enter="createChapter"
 					font-code
+					@enter="createChapter"
 				/>
 				<sc-button
 					v-admin

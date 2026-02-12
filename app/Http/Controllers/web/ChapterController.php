@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\web;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ChallengeResource;
 use App\Http\Resources\ChapterResource;
 use App\Http\Resources\ChapterShowResource;
 use App\Http\Resources\PostResource;
@@ -26,6 +27,7 @@ class ChapterController extends Controller
 			$chapters = $theme
 				->chapters()
 				->with('blocks', 'blocks.illustrations')
+				->with('challenges', 'challenges.blocks')
 				->orderBy('active', 'DESC')
 				->orderBy('title', 'ASC')
 				->get();
@@ -33,15 +35,21 @@ class ChapterController extends Controller
 			$chapters = $theme
 				->chapters()
 				->with('blocks', 'blocks.illustrations')
-				//				->with('challenges')
+				->with('challenges', 'challenges.blocks')
 				->where('active', true)
 				->get();
 		}
 
+		$challenges = $chapters->map(function ($chapter) {
+			return $chapter->challenges;
+		})->flatten();
+
+
 		// Filter output.
 		$data = [
-			"theme"    => ThemeResource::make($theme),
-			"chapters" => ChapterShowResource::collection($chapters)
+			"theme"      => ThemeResource::make($theme),
+			"chapters"   => ChapterShowResource::collection($chapters),
+			"challenges" => ChallengeResource::collection($challenges)
 		];
 
 		return Inertia::render("Chapters/ChapterIndex", $data);

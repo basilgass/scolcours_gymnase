@@ -62,55 +62,68 @@ const state = ref<ChallengeGameState>("intro")
 			</div>
 		</div>
 
-		<div>
-			<block-show :block="challenge.block" />
+		<div class="space-y-10">
+			<block-show
+				v-show="state==='intro'"
+				:block="challenge.block"
+			/>
+
+			<div class="flex">
+				<challenge-display
+					class="flex-1"
+					:challenge
+					:selector
+					@state-change="state=$event"
+				/>
+
+				<div
+					v-show="state==='intro'"
+					class="w-60"
+				>
+					<div class="flex flex-col gap-1">
+						<sc-button
+							:outline="selector !== 0"
+							theme
+							class="w-full cursor-pointer transition-all"
+							@click="selector = 0"
+						>
+							<div class="flex gap-3 items-center w-full">
+								<i class="bi bi-controller text-2xl" />
+								<h2>
+									Challenge
+								</h2>
+							</div>
+						</sc-button>
+						<sc-button
+							v-for="(gen, index) of challenge.generators"
+							:key="`generator-selector-${gen.slug}`"
+							theme
+							:outline="selector !== index + 1"
+							class="w-full cursor-pointer transition-all"
+							xs
+							@click="selector = index + 1"
+						>
+							<div class="flex gap-3 items-center w-full">
+								<i class="bi bi-calculator" />
+								<h2 v-katex.auto="gen.title" />
+							</div>
+						</sc-button>
+					</div>
+				</div>
+			</div>
 
 			<!-- Création du menu - permet de faire le choix entre le challenge ou l'entraînement -->
 			<div
 				v-if="state==='intro'"
-				class="my-10"
-			>
-				<div class="flex flex-col md:flex-row flex-wrap gap-1 md:gap-5">
-					<sc-button
-						:outline="selector !== 0"
-						theme
-						class="px-3 md:px-10 py-1 md:py-5 rounded-sm min-w-[150px] cursor-pointer transition-all"
-						@click="selector = 0"
-					>
-						<div class="flex gap-3 items-center md:justify-center">
-							<i class="bi bi-controller text-2xl" />
-							<h2 class="text-lg">
-								Challenge
-							</h2>
-						</div>
-					</sc-button>
-					<sc-button
-						v-for="(gen, index) of challenge.generators"
-						:key="`generator-selector-${gen.slug}`"
-						theme
-						:outline="selector !== index + 1"
-						class="px-3 py-1 md:py-5 rounded-sm min-w-[150px] cursor-pointer transition-all"
-						@click="selector = index + 1"
-					>
-						<div class="flex gap-3 items-center md:justify-center">
-							<i class="bi bi-calculator text-xl" />
-							<h2
-								v-katex.auto="gen.title"
-								class="text-lg"
-							/>
-						</div>
-					</sc-button>
-				</div>
-			</div>
-
-			<challenge-display
-				:challenge
-				:selector
-				@state-change="state=$event"
+				class="my-10 space-y-10"
 			/>
 
+
 			<!-- export to pdf - admin only ! -->
-			<challenge-export :challenge="challenge" />
+			<challenge-export
+				v-if="state==='intro'"
+				:challenge="challenge"
+			/>
 		</div>
 	</section>
 </template>

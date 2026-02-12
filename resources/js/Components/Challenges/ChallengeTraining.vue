@@ -52,7 +52,6 @@ function nextQuestion(checkerResult: questionResultInterface): void {
  */
 const theQuestion = computed(() => {
 	if (counter.value >= 0) {
-
 		return useGenerator(props.generator).question()
 	}
 	return false
@@ -70,7 +69,7 @@ onMounted(() => {
 		<question-show
 			:key="`question-${counter}`"
 			:question="theQuestion as QuestionInterface"
-			class="max-w-[40em] mx-auto min-h-[500px] border border-gray-400"
+			class="max-w-[40em] mx-auto min-h-125 border border-gray-400"
 			is-dynamic
 			show-input
 			@validate="nextQuestion"

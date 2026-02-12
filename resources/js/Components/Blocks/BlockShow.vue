@@ -9,7 +9,7 @@ import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
 import type {BlockInterface} from "@/types/modelInterfaces.ts"
 import {router} from "@inertiajs/vue3"
 import axios from "axios"
-import {computed, inject, provide} from "vue"
+import {computed, inject, onMounted, provide} from "vue"
 import {blockTemplate} from "@/helpers/blockTemplate.ts"
 import ScButton from "@/Components/Ui/scButton.vue"
 import IllustrationIndex from "@/Components/Illustrations/IllustrationIndex.vue"
@@ -29,6 +29,7 @@ const props = defineProps<{
 const emits = defineEmits<{
 	destroy: [],
 	moved: [target: { id: number, target_type: string, target_id: number }]
+	success: [success: boolean]
 }>()
 
 
@@ -68,7 +69,6 @@ const blockScript: UseScriptLoaderReturn = useScriptLoader(props.block.script, {
 blockScript.run()
 provide("blockScript", blockScript)
 
-
 const blockBody = computed(() => useFormattedBody(props.block.body, blockScript.merged))
 
 function addIllustration() {
@@ -85,6 +85,11 @@ function addIllustration() {
 		}
 	)
 }
+
+onMounted(() => {
+	emits('success', !blockScript.hasErrors.value)
+
+})
 </script>
 
 <template>

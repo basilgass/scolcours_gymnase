@@ -11,6 +11,22 @@ const generator = defineModel<GeneratorInterface>('generator')
 const hasErrors = ref<boolean>(false)
 
 const generated = ref<boolean>(false)
+
+const emits = defineEmits<{
+	generatorHasErrors: [value: boolean]
+}>()
+
+function generate() {
+	generated.value = true
+}
+
+defineExpose({generate})
+
+function updateStatus(event: boolean) {
+	hasErrors.value = event
+	emits('generatorHasErrors', event)
+}
+
 </script>
 
 <template>
@@ -62,7 +78,7 @@ const generated = ref<boolean>(false)
 				v-if="generated"
 				:generator="generator"
 				generate-on-mounted
-				@generated-status="hasErrors = !$event"
+				@generator-has-errors="updateStatus"
 			/>
 			<div
 				v-else
@@ -71,7 +87,7 @@ const generated = ref<boolean>(false)
 				<sc-button
 					icon
 					type="generate"
-					@click="generated=true"
+					@click="generate"
 				>
 					générer
 				</sc-button>

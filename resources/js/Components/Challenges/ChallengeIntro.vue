@@ -1,13 +1,4 @@
-<!--
-Composant d'introduction du challenge, avec la configuration actuelle
-nombre de vies, niveaux de difficultés, temps et les résultats courants
-
-Pour l'admin, contient également les liens vers les résultats par teams.
--->
-<script
-	setup
-	lang="ts"
->
+<script setup lang="ts">
 
 import ScButton from "@/Components/Ui/scButton.vue"
 import {ChallengeInterface, ScoreInterface} from "@/types/modelInterfaces.ts"
@@ -15,7 +6,8 @@ import {ScoreChallengeDataInterface} from "@/types/scoreInterfaces.ts"
 
 defineProps<{
 	challenge: ChallengeInterface,
-	score: ScoreInterface<ScoreChallengeDataInterface>
+	maxLevels: number,
+	score?: ScoreInterface<ScoreChallengeDataInterface>
 }>()
 
 const emits = defineEmits(["start"])
@@ -46,7 +38,7 @@ const emits = defineEmits(["start"])
 				<div class="text-center flex flex-col justify-between h-full">
 					<i class="text-5xl bi bi-chevron-double-up" />
 					<div class="text-3xl">
-						{{ challenge.maxLevel }}
+						{{ maxLevels }}
 					</div>
 					<div class="text-sm text-gray-400">
 						niveaux
@@ -93,10 +85,10 @@ const emits = defineEmits(["start"])
 							score
 						</h4>
 						<div class="text-3xl">
-							{{ score.data.current_score }}
+							{{ score?.data.current_score }}
 						</div>
 						<div class="text-sm">
-							meilleur: {{ score.score }}
+							meilleur: {{ score?.score }}
 						</div>
 					</div>
 				</div>
@@ -108,10 +100,10 @@ const emits = defineEmits(["start"])
 							niveau
 						</h4>
 						<div class="text-3xl">
-							{{ score.data.current_level }}
+							{{ score?.data.current_level }}
 						</div>
 						<div class="text-sm">
-							meilleur: {{ score.data.level }}
+							meilleur: {{ score?.data.level }}
 						</div>
 					</div>
 				</div>

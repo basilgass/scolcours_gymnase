@@ -10,25 +10,22 @@ describe("solution checker", () => {
 			const chk = new SolutionChecker()
 			chk.answer = '{2;3}'
 
-			const check = chk.check_quality('2;3')
-			expect(check.result).toBe(false)
-			expect(check.message).toBe("il faut au moins des accolades dans un intervalle.")
+			const check = chk.checkFormat('2;3')
+			expect(check).toBe("il faut au moins des accolades dans un intervalle.")
 		})
 
 		test('un intervalle contient le même nombre d\'accolade', () => {
 			const chk = new SolutionChecker()
 			chk.answer = '{2;3}'
 
-			const check = chk.check_quality('{2;3}')
-			expect(check.result).toBe(true)
+			const check = chk.checkFormat('{2;3}')
+			expect(check).toBe("")
 
-			const checkErr1 = chk.check_quality('{2;3')
-			expect(checkErr1.result).toBe(false)
-			expect(checkErr1.message).toBe(`il n'y a pas le même nombre d'accolade ouvrante que fermante.`)
+			const checkErr1 = chk.checkFormat('{2;3')
+			expect(checkErr1).toBe(`il n'y a pas le même nombre d'accolade ouvrante que fermante.`)
 
-			const checkErr2 = chk.check_quality('2;3}')
-			expect(checkErr2.result).toBe(false)
-			expect(checkErr2.message).toBe(`il n'y a pas le même nombre d'accolade ouvrante que fermante.`)
+			const checkErr2 = chk.checkFormat('2;3}')
+			expect(checkErr2).toBe(`il n'y a pas le même nombre d'accolade ouvrante que fermante.`)
 		})
 
 		test(`pas d'accolade pour les ensembles généraux`, () => {
@@ -36,27 +33,24 @@ describe("solution checker", () => {
 			const empty = "!!"
 			chk.answer = empty
 
-			const checkCorrect = chk.check_quality(empty)
-			expect(checkCorrect.result).toBe(true)
-			const checkBraces = chk.check_quality(`{${empty}}`)
-			expect(checkBraces.result).toBe(false)
-			expect(checkBraces.message).toBe(`${new AsciiMathParser().parse(empty)} est déjà un ensemble.`)
+			const checkCorrect = chk.checkFormat(empty)
+			expect(checkCorrect).toBe("")
+			const checkBraces = chk.checkFormat(`{${empty}}`)
+			expect(checkBraces).toBe(`${new AsciiMathParser().parse(empty)} est déjà un ensemble.`)
 		})
 
 		test(`un intervalle commence et se termine par un crochet`, () => {
 			const chk = new SolutionChecker()
 			chk.answer = "]2;3]"
 
-			const checkCorrect = chk.check_quality(']2;3]')
-			expect(checkCorrect.result).toBe(true)
+			const checkCorrect = chk.checkFormat(']2;3]')
+			expect(checkCorrect).toBe("")
 
-			const checkErr1 = chk.check_quality('[2;3')
-			expect(checkErr1.result).toBe(false)
-			expect(checkErr1.message).toBe(`Un intervalle commence par un \\( [ \\) ou un \\( ] \\)`)
+			const checkErr1 = chk.checkFormat('[2;3')
+			expect(checkErr1).toBe(`Un intervalle commence par un \\( [ \\) ou un \\( ] \\)`)
 
-			const checkErr2 = chk.check_quality('2;3]')
-			expect(checkErr2.result).toBe(false)
-			expect(checkErr2.message).toBe(`Un intervalle commence par un \\( [ \\) ou un \\( ] \\)`)
+			const checkErr2 = chk.checkFormat('2;3]')
+			expect(checkErr2).toBe(`Un intervalle commence par un \\( [ \\) ou un \\( ] \\)`)
 		})
 
 	})

@@ -1,29 +1,67 @@
 <!--<info>
-parameters: auto,no-ui,solve,n=<number>
+WIP : Visualisation des transformations géométriques à l'aide de matrice
+parameters:
 
 code:
-a b c|x
-d e f|y
+2,3
+4,5
+a,b
+... coordonnées des points de la figure
 </info>-->
 <script lang="ts" setup>
 
-// TODO: a quoi que ça sert ?
+// WIP: visualisation des transformations par des matrices.
 
 import {WidgetPropsInterface} from "@/types/modelInterfaces.ts"
-import {computed, ref} from "vue"
+import {computed, onMounted, ref} from "vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import PiDrawDisplay from "@/Components/Pi/Parts/PiDrawDisplay.vue"
+import ScButton from "@/Components/Ui/scButton.vue"
 
 const props = defineProps<{
 	illustration: WidgetPropsInterface
 }>()
 
-const params = computed(() => props.illustration.parameters.split(','))
-const draw = ref<string>(props.illustration.code ?? "")
+// const params = computed(() => props.illustration.parameters.split(','))
+
 const transformValue = ref<string>("2")
-const points = [
-	[3, 4], [7, -1], [-1, 3]
-]
+const initPoints = computed<[number, number][]>(() => {
+	if (props.illustration.code === '') {
+		return [[3, 4], [7, -1], [-1, 3]]
+	}
+
+	const pts: [number, number][] = []
+
+	props.illustration.code.split('\n')
+		.forEach(line => {
+			pts.push(line.split(',')
+				.map(Number) as [number, number])
+		})
+
+	return pts
+})
+
+const figuresId = ref<number>(-1)
+const figures = ref<{
+	id: number,
+	refId: number,
+	transform: {
+		type: TRANSFORMATION,
+		value: string
+	},
+	points: [number, number][]
+}[]>([])
+
+const refPoints = computed<[number, number][]>(() => {
+	return figures.value[figuresId.value]?.points ?? initPoints.value
+})
+
+onMounted(() => {
+	createFigure(null)
+	figuresId.value = 0
+})
+
+type matrixCB = (aij: number, i: number, j: number) => void
 
 class Matrix {
 	#array: number[][]
@@ -55,10 +93,10 @@ class Matrix {
 		}
 	}
 
-	forEach(callback: (aij: number, row: number, column: number) => void): void {
-		this.#array.forEach((row, i) => {
-			row.forEach((aij, j) => {
-				callback(aij, i, j)
+	forEach(cb: matrixCB): void {
+		this.#array.forEach((row: number[], i: number) => {
+			row.forEach((aij: number, j: number) => {
+				cb(aij, i, j)
 			})
 		})
 	}
@@ -104,25 +142,59 @@ class Matrix {
 }
 
 
-function generateFigure(p) {
-	const letter = currentLetter.value
+function createFigure(type: TRANSFORMATION | null) {
+	const id = figures.value.length > 0
+		? Math.max(...figures.value.map(x => x.id)) + 1
+		: 0
 
-	currentLetter.value = letters[letters.split('').indexOf(letter) + 1]
+	const refId = figuresId.value >= 0
+		? figuresId.value
+		: 0
 
-	return p
-			.map((pt, idx) => `${letter}${idx}(${pt[0]},${pt[1]})`)
-			.join('\n') +
-		`\np=poly ${p.map((_, idx) => `${letter}${idx}`).join(',')}`
-	//'A(3,4)\nB(7,-1)\nC(-1,3)\np=poly A,B,C'
+	const points = type === null
+		? initPoints.value
+		: appTransform(type, transformValue.value)
+
+	// Keep the cache.
+	figures.value.push({
+			id,
+			refId,
+			transform: {type, value: transformValue.value},
+			points
+		}
+	)
 }
 
+const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+
+const draw = computed<string>(() => {
+	if (figures.value.length === 0) return ""
+
+	const d: string[] = []
+
+	figures.value.forEach(fig => {
+		const id = fig.id === 0 ? '' : fig.id
+		const names: string[] = []
+		// création des points
+		fig.points.forEach((pt, index) => {
+			const name = `${letters[index]}${id}`
+			names.push(name)
+			d.push(`${name}(${pt[0]},${pt[1]})`)
+		})
+		// création du polygone.
+		d.push(`p${id}=poly ${names.join(',')}${fig.id === figuresId.value ? '->fill=blue/0.2' : ''}`)
+	})
+
+	return d.join('\n')
+})
+
 enum TRANSFORMATION {
-	translation,
-	scale,
-	mirrorX,
-	mirrorY,
-	mirrorXY,
-	rotate
+	translation = "translation",
+	scale = "scale",
+	mirrorX = "mirrorX",
+	mirrorY = "mirrorY",
+	mirrorXY = "mirrorXY",
+	rotate = "rotate"
 }
 
 function transformMatrix(type: TRANSFORMATION, value?: string) {
@@ -178,19 +250,16 @@ function transformMatrix(type: TRANSFORMATION, value?: string) {
 	}
 }
 
-const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-const currentLetter = ref<string>('A')
-
-function appTransform(type: TRANSFORMATION) {
-	const M = transformMatrix(type, transformValue.value)
+function appTransform(type: TRANSFORMATION, value: string): [number, number][] {
+	const M = transformMatrix(type, value)
 	const Q = []
-	points.forEach(pt => {
+
+	refPoints.value.forEach(pt => {
 		const v = [...pt, 1]
 		Q.push(M.multiply<number[]>(v))
 	})
 
-	draw.value = draw.value + '\n' +
-		generateFigure(Q)
+	return Q
 }
 
 
@@ -198,35 +267,56 @@ function appTransform(type: TRANSFORMATION) {
 <template>
 	<article class="grid grid-cols-1 md:grid-cols-2 gap-3">
 		<div class="order-2 md:order-1">
-			<form-maker
-				v-model="draw"
-				language="pidraw"
-				type="codearea"
-			/>
+			<!--			<form-maker-->
+			<!--				v-model="draw"-->
+			<!--				language="pidraw"-->
+			<!--				type="codearea"-->
+			<!--			/>-->
 
 
-			<div class="flex gap-3">
-				<button @click="draw = generateFigure(points)">
+			<div class="flex flex-wrap gap-3">
+				<sc-button
+					xs
+					@click="createFigure(null)"
+				>
 					figure
-				</button>
-				<button @click="appTransform(TRANSFORMATION.translation)">
+				</sc-button>
+				<sc-button
+					xs
+					@click="createFigure(TRANSFORMATION.translation)"
+				>
 					translate
-				</button>
-				<button @click="appTransform(TRANSFORMATION.scale)">
+				</sc-button>
+				<sc-button
+					xs
+					@click="createFigure(TRANSFORMATION.scale)"
+				>
 					scale
-				</button>
-				<button @click="appTransform(TRANSFORMATION.mirrorX)">
+				</sc-button>
+				<sc-button
+					xs
+					@click="createFigure(TRANSFORMATION.mirrorX)"
+				>
 					mirrorX
-				</button>
-				<button @click="appTransform(TRANSFORMATION.mirrorY)">
+				</sc-button>
+				<sc-button
+					xs
+					@click="createFigure(TRANSFORMATION.mirrorY)"
+				>
 					mirrorY
-				</button>
-				<button @click="appTransform(TRANSFORMATION.mirrorXY)">
+				</sc-button>
+				<sc-button
+					xs
+					@click="createFigure(TRANSFORMATION.mirrorXY)"
+				>
 					mirrorXY
-				</button>
-				<button @click="appTransform(TRANSFORMATION.rotate)">
+				</sc-button>
+				<sc-button
+					xs
+					@click="createFigure(TRANSFORMATION.rotate)"
+				>
 					rotate
-				</button>
+				</sc-button>
 			</div>
 			<form-maker
 				v-model="transformValue"
@@ -238,6 +328,20 @@ function appTransform(type: TRANSFORMATION) {
 				:code="draw"
 				:parameters="illustration.parameters"
 			/>
+		</div>
+
+		<div>
+			<div
+				v-for="fig in figures"
+				:key="fig.id"
+				class="cursor-pointer"
+				:class="{
+					'bg-blue-200 border border-blue-500 text-blue-800': figuresId===fig.id
+				}"
+				@click="figuresId=fig.id"
+			>
+				{{ fig.id }} : {{ fig.transform }}
+			</div>
 		</div>
 	</article>
 </template>

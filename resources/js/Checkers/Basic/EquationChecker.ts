@@ -14,15 +14,10 @@ const description = `equation,[paramètres]
 - circle=forme centre rayon
 `
 
-/** TODO: ajouter les contrôles des formats droites et plans.
- * - 2d=équation de la droite en 2D (ax+by+c=0) ou (ax+by=c)
- * - mx+h=droite du plan, sous la forme y=mx+h
- * - 3d=équation du plan en 3D (ax+by+cz+d=0) ou (ax+by+cz=d)
- */
 
 export class EquationChecker extends CheckerAbstract {
 	#isCanonical: boolean
-	#isCentreRayon: boolean
+	#isCenterRadius: boolean
 	#isMxh: boolean
 	#isPeak: boolean
 	#isReduced: boolean
@@ -48,8 +43,8 @@ export class EquationChecker extends CheckerAbstract {
 		this.#isPeak =
 			this.config.includes("s") || this.config.includes("sommet")
 
-		this.#isCentreRayon =
-			this.config.includes("cercle") || this.config.includes("circle")
+		this.#isCenterRadius =
+			this.config.includes("cercle") || this.config.includes("circle") || this.config.includes("circ")
 	}
 
 	get format(): string {
@@ -57,7 +52,7 @@ export class EquationChecker extends CheckerAbstract {
 
 		if (this.#isCanonical) {
 			opts.push("canonique")
-		} else if (this.#isCentreRayon) {
+		} else if (this.#isCenterRadius) {
 			opts.push(" (forme centre - rayon)")
 		} else if (this.#isPeak) {
 			opts.push(" (forme du sommet)")
@@ -110,19 +105,27 @@ export class EquationChecker extends CheckerAbstract {
 				return makeCheckerResult("on évite de commencer par un nombre négatif", 0.9)
 			}
 
-			if (
-				value.includes('x') && value.includes('y') &&
-				value.indexOf('x') > value.indexOf('y')
-			) {
-				return makeCheckerResult("de manière conventionnelle, on écrit le monôme en \\(x\\) en premier", 0.9)
+			// Les monômes doivent être dans l'ordre x, y, z
+			//
+			//
+			// if (
+			// 	value.includes('x') && value.includes('y') &&
+			// 	value.indexOf('x') > value.indexOf('y')
+			// ) {
+			// 	return makeCheckerResult("de manière conventionnelle, on écrit le monôme en \\(x\\) en premier", 0.9)
+			// }
+
+			const [left, right] = value.split('=')
+			const canonical = left === '0' ? right : left
+
+			const parts = canonical.split(/[+-]/)
+				.filter(m => m !== '') // [3x,2y,5] ou [3x^2,2x,4y^2,5y,8]
+				.map(getRank)
+
+			// Les parties doivent être dans l'ordre: x^2, x, y^2, y, z^2, z
+			if (parts.some((r, i) => i > 0 && r < parts[i - 1])) {
+				return makeCheckerResult("conventionnellement, on écrit les variables dans l'ordre alphabétique.")
 			}
-
-			const parts = value.split('=').map(part => part.split(/[+-]/)).flat().filter(m => m !== '')
-			const xIndex = parts.findIndex(m => m.includes('x'))	// -1 or 0
-			if (xIndex > 0) return makeCheckerResult("le monôme en \\(x\\) est conventionnellement placé en première position.", 0.9)
-			const yIndex = parts.findIndex(m => m.includes('y'))	// -1 or 0 or 1 si xIndex=0
-			if (yIndex > xIndex + 1) return makeCheckerResult("le monôme en \\(y\\) est conventionnellement placé avant la constante.", 0.9)
-
 		}
 
 		if (this.#isMxh) {
@@ -142,8 +145,6 @@ export class EquationChecker extends CheckerAbstract {
 				return makeCheckerResult()
 			}
 
-			// TODO: possibilité d'améliorer contre les réponses "débiles"s
-
 			try {
 				const [m, h] = mxh.split('x').map(v => new Fraction(v.startsWith('+') ? v.substring(1) : v))
 
@@ -161,14 +162,15 @@ export class EquationChecker extends CheckerAbstract {
 
 
 		}
+
 		if (this.#isPeak) {
 			return isEquationPeak
 				? makeCheckerResult()
 				: makeCheckerResult("l'équation n'est pas sous la forme du sommet")
 		}
 
-		if (this.#isCentreRayon) {
-			return isEquationCircle(value)
+		if (this.#isCenterRadius) {
+			return isEquationCircle(value, this.answer.includes('z'))
 				? makeCheckerResult()
 				: makeCheckerResult("l'équation n'est pas sous la forme centre-rayon")
 		}
@@ -177,4 +179,30 @@ export class EquationChecker extends CheckerAbstract {
 		// If all tests passes, it is correct !
 		return makeCheckerResult()
 	}
+}
+
+function getRank(monom: string) {
+	const letters = ['x', 'y', 'z']
+
+	// pas de lettre : c'est la constante, qui doit avoir le plus grand rang.
+	if (!/[xyz]/.test(monom)) {
+		return letters.length * 2
+	}
+
+	// si ce n'est pas de la forme x ou x^2 ou x^3 ou ... , retourne infini (donc dernier rang)
+	const match = monom.match(/^(\d+)?([xyz])(\^(\d+))?$/)
+	if (!match) return Infinity
+
+	// on récupère la lettre
+	const letter = match[2]
+	// on récupère la puissance
+	const power = match[4] ? parseInt(match[4]) : 1
+	// on récupère l'index de la lettre: x=0, y=1, z=2
+	const letterIndex = letters.indexOf(letter)
+
+	// x^2 -> 0
+	// x   -> 1
+	// y^2 -> 2
+	// y   -> 3
+	return letterIndex * 2 + (power === 2 ? 0 : 1)
 }

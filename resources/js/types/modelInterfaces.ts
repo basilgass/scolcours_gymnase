@@ -224,9 +224,9 @@ export interface ChallengeInterface {
 	chapter: ChapterInterface;
 	duration: number;
 	generators: GeneratorInterface[];
+	generatorsGrouping: number;
 	id: number;
 	lives: number;
-	maxLevel: number;
 	nextLevelAfter: number;
 	slug: string;
 	theme_id: number;

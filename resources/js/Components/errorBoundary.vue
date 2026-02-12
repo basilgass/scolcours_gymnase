@@ -17,6 +17,8 @@ onErrorCaptured((msg: string) => {
 	errorMessage.value = msg
 
 	emits('error', msg)
+
+	console.warn(msg)
 	return false
 })
 
@@ -31,8 +33,8 @@ watch(() => props.resetKey, () => {
 <template>
 	<div>
 		<slot
-			name="error"
 			v-if="hasError"
+			name="error"
 		>
 			Apparemment, il y a une erreur...
 		</slot>

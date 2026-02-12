@@ -1,4 +1,4 @@
-import {Equation, Polynom} from "pimath"
+import {Equation, Fraction, Polynom} from "pimath"
 import {splitIfOutsideParentheses} from "@/Checkers/checkerHelperFunctions.ts"
 
 export function isPolynom(value: string): false | Polynom {
@@ -8,18 +8,6 @@ export function isPolynom(value: string): false | Polynom {
 	} catch {
 		return false
 	}
-}
-
-export function isFraction(value: string): boolean {
-	const [n, d, ...x] = value.split('/')
-
-	if (x.length > 0) return false
-
-	if (isNaN(+n)) return false
-
-	if (d !== undefined && isNaN(+d)) return false
-
-	return true
 }
 
 /**
@@ -60,11 +48,11 @@ export function isEquationReduced(value: string): boolean {
 	return equ.left.commonMonom().coefficient.value === 1
 }
 
-export function isEquationCircle(value: string): boolean {
+export function isEquationCircle(value: string, asSphere = false): boolean {
 	const [a, b] = value.split("=")
 
-	const aF = isFraction(a)
-	const bF = isFraction(b)
+	const aF = Fraction.isFraction(a)
+	const bF = Fraction.isFraction(b)
 
 	if (!aF && !bF) return false
 
@@ -73,7 +61,7 @@ export function isEquationCircle(value: string): boolean {
 	// (x+a)^2+y^2
 	// x^2+(y+b)^2
 	// x^2+y^2
-	const [x, y] = splitIfOutsideParentheses(aF ? b : a, '+')
+	const [x, y, z] = splitIfOutsideParentheses(aF ? b : a, '+')
 		.sort(sortPartsByVariable)
 
 	if (y === undefined) return false
@@ -81,6 +69,14 @@ export function isEquationCircle(value: string): boolean {
 	if (!(x === 'x^2' || x.match(/\(x([+-](\d+(\/\d+)?)?)?\)\^2/))) return false
 
 	if (!(y === 'y^2' || y.match(/\(y([+-](\d+(\/\d+)?)?)?\)\^2/))) return false
+
+	if (asSphere) {
+		// contrôle de la sphère.
+		// z doit être défini
+		// z doit être au format z^2 ou (z+-a)
+		if (z === undefined || !(z === 'z^2' || z.match(/\(z([+-](\d+(\/\d+)?)?)?\)\^2/))) return false
+	}
+
 
 	return true
 }

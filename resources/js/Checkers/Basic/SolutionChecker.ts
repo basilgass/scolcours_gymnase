@@ -9,7 +9,6 @@ const description = `solution|sol,[paramètres]
 checker = par défaut, c'est le "exact"
 `
 
-// REFACTOR : à retrvailler pour plus de robustesse !!!!
 export class SolutionChecker extends CheckerAbstract {
 
 	constructor(config?: string[] | string) {
@@ -32,15 +31,55 @@ export class SolutionChecker extends CheckerAbstract {
 			.join('<br/>')
 	}
 
+	override checkFormat(value: string): string {
+		// C'est un ensemble particulier, sans accolade => OK
+		if (isEmptyOrReal(value)) {
+			return ""
+		}
+
+		// Un ensemble type IR ou emptyset est entouré d'accolades => faux
+		if (isEmptyOrReal(value, true)) {
+			return `${new AsciiMathParser().parse(
+				value.slice(1, -1), // enlever le premier et le dernier caractère
+			)} est déjà un ensemble.`
+		}
+
+		// A partir de là, c'est forcément un ensemble ou un intervalle
+		const estIntervalle = isInterval(value)
+
+		// Le nombre d'accolades ouvrantes = nombre d'accolades fermantes
+		const openBracesCount = value.split('{').length - 1
+		const closeBracesCount = value.split('}').length - 1
+
+		// Pas le même nombre d'accolades.
+		if (openBracesCount !== closeBracesCount) {
+			return `il n'y a pas le même nombre d'accolade ouvrante que fermante.`
+		}
+
+		if (!estIntervalle && openBracesCount === 0) {
+			return "il faut au moins des accolades dans un intervalle."
+		}
+
+		// Dans le cas d'intervalle, chaque morceau doit commencer et se terminer par un crochet.
+		if (estIntervalle) {
+			const intervalles = value.split('uu')
+			if (
+				intervalles.some(intervalle => {
+					const first = intervalle[0]
+					const last = intervalle[intervalle.length - 1]
+					return !['[', ']'].includes(first) || !['[', ']'].includes(last)
+				})
+			) {
+				return `Un intervalle commence par un \\( [ \\) ou un \\( ] \\)`
+			}
+		}
+
+		return ""
+	}
 
 	override checkValue(value: string): CheckerResult {
-		// On contrôle que c'est la bonne mise en forme.
-		// TODO: regarder comment pour déplacer la quality dans le override CheckForamt
-		let result = this.check_quality(value)
-		if (!result.result) return result
-
 		// Contrôle la cohérence de la réponse Real, ensemble, intervalle
-		result = this.check_coherences(value)
+		const result = this.check_coherences(value)
 		if (!result.result) return result
 
 		if (isInterval(this.answer)) return this.check_intervals(value)
@@ -195,60 +234,6 @@ export class SolutionChecker extends CheckerAbstract {
 		)
 	}
 
-	check_quality(value: string): CheckerResult {
-		// C'est un ensemble particulier, sans accolade => OK
-		if (isEmptyOrReal(value)) {
-			return makeCheckerResult()
-		}
-
-		// Un ensemble type IR ou emptyset est entouré d'accolades => faux
-		if (isEmptyOrReal(value, true)) {
-			return makeCheckerResult(
-				`${new AsciiMathParser().parse(
-					value.slice(1, -1), // enlever le premier et le dernier caractère
-				)} est déjà un ensemble.`,
-				value === `{${this.answer}}` ? 0.5 : 0
-			)
-		}
-
-		// A partir de là, c'est forcément un ensemble ou un intervalle
-		const estIntervalle = isInterval(value)
-
-		// Le nombre d'accolades ouvrantes = nombre d'accolades fermantes
-		const openBracesCount = value.split('{').length - 1
-		const closeBracesCount = value.split('}').length - 1
-
-		// Pas le même nombre d'accolades.
-		if (openBracesCount !== closeBracesCount) {
-			return makeCheckerResult(
-				`il n'y a pas le même nombre d'accolade ouvrante que fermante.`
-			)
-		}
-
-		if (!estIntervalle && openBracesCount === 0) {
-			return makeCheckerResult(
-				"il faut au moins des accolades dans un intervalle."
-			)
-		}
-
-		// Dans le cas d'intervalle, chaque morceau doit commencer et se terminer par un crochet.
-		if (estIntervalle) {
-			const intervalles = value.split('uu')
-			if (
-				intervalles.some(intervalle => {
-					const first = intervalle[0]
-					const last = intervalle[intervalle.length - 1]
-					return !['[', ']'].includes(first) || !['[', ']'].includes(last)
-				})
-			) {
-				return makeCheckerResult(`Un intervalle commence par un \\( [ \\) ou un \\( ] \\)`)
-			}
-		}
-
-
-		return makeCheckerResult()
-	}
-
 	check_realSets(value: string): CheckerResult {
 		// <real set>\{substract set}
 		const [real, subtractSet] = value.split('\\\\')
@@ -387,18 +372,6 @@ function extractSetValues(value: string): string[] {
 		.substring(1, value.length - 1)
 		.split(";")
 }
-
-
-// TODO: SolutionChecker a revoir pour plus de cohérence.
-// 1. cohérence de la réponse (le format)
-// 2. correspondance format answer - value (les deux des intervalles, les deux des ensembles, ...)
-// 3a. si c'est des ensembles :
-//		a. nombre d'éléments
-//		b. correspondance des valeurs avec checker secondaire.
-// 3b. si c'est des intervalles :
-// 		a. ordre des éléments (croisant)
-// 		b. sens des crochets
-// 		c. contrôle des valeurs (infini) et avec checker secondaire
 
 function getMaxScoreIndex(checks: CheckerResult[]): number {
 	const maxScore = Math.max(...checks.map(check => check.score))

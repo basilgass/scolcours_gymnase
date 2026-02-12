@@ -6,7 +6,7 @@ import {
 	User
 } from "@/types/modelInterfaces"
 import {AxiosError, AxiosResponse} from "axios"
-import {ComputedRef} from "vue"
+import {ComputedRef, Ref} from "vue"
 
 
 export type PageProps<
@@ -80,8 +80,8 @@ export interface editModeInterface {
 }
 
 export interface generatedQuestionInterface {
-	question: string
 	answer: string
+	question: string
 	title?: string
 	keyboard?: string
 	illustration?: IllustrationMinInterface
@@ -92,8 +92,9 @@ export interface generatedQuestionInterface {
 export interface generatorResultInterface {
 	code: string
 	question: (value?: generatedQuestionInterface) => QuestionDynamicInterface
-	list: (n: number) => generatedQuestionInterface[]
-	random: () => generatedQuestionInterface
+	list: (n: number) => QuestionDynamicInterface[]
+	random: () => generatedQuestionInterface,
+	level: Ref<number>
 }
 
 

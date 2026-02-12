@@ -14,9 +14,10 @@ Route::middleware('web')
 	     // Admin routes
 	     Route::middleware('admin')
 	          ->as('admin.')
+	          ->prefix('admin')
 	          ->group(function () {
 		          Route::resource('blocks', BlockController::class)
-		               ->only(['edit']);
+		               ->only(['index', 'edit']);
 
 		          Route::resource('illustrations', IllustrationController::class)
 		               ->only(['edit']);

@@ -235,6 +235,7 @@ class AdminController extends Controller
 		);
 	}
 
+
 	public function widgets()
 	{
 		return Inertia::render(

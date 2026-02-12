@@ -4,13 +4,16 @@
 import {generatedQuestionInterface, generatorResultInterface} from "@/types"
 import type {GeneratorInterface, QuestionDynamicInterface} from "@/types/modelInterfaces"
 import PiMath from "pimath"
-import {ComputedRef, Ref, unref} from "vue"
+import {ComputedRef, ref, Ref, unref} from "vue"
 import {PiMathExt} from "@/PiMathExtended/PiMathExt.ts"
 import {makeIllustration} from "@/helpers/makeModel.ts"
 
 export function useGenerator(generator: GeneratorInterface | ComputedRef<GeneratorInterface>): generatorResultInterface {
+
+	const level = ref<number>(1)
+
 	function question(
-		value?: Ref<generatedQuestionInterface> | generatedQuestionInterface,
+		value?: Ref<generatedQuestionInterface> | generatedQuestionInterface
 	): QuestionDynamicInterface {
 		if (value === undefined) value = randomQuestion()
 
@@ -35,7 +38,7 @@ export function useGenerator(generator: GeneratorInterface | ComputedRef<Generat
 		}
 	}
 
-	function list(n: number): generatedQuestionInterface[] {
+	function list(n: number): QuestionDynamicInterface[] {
 		if (n < 1) {
 			return []
 		}
@@ -49,15 +52,19 @@ export function useGenerator(generator: GeneratorInterface | ComputedRef<Generat
 
 			result.push(randomQuestion())
 		}
-		return result
+		return result.map(rnd => question(rnd))
 	}
 
 	function randomQuestion(): generatedQuestionInterface {
 		const g = unref(generator)
-		const F = new Function("PiMath", "PiMathExt", g.code)
+
+		const F = new Function("PiMath", "PiMathExt", "params", g.code)
 
 		try {
-			const result = F(PiMath, PiMathExt)
+			const result = F(PiMath, PiMathExt, {
+				level: level.value
+			})
+
 			if (!result.keyboard) {
 				result.keyboard = g.keyboard
 			}
@@ -82,6 +89,7 @@ export function useGenerator(generator: GeneratorInterface | ComputedRef<Generat
 		code: unref(generator).code ?? dftCode,
 		question: (value?: generatedQuestionInterface) => question(value),
 		list,
-		random: () => randomQuestion()
+		random: () => randomQuestion(),
+		level
 	}
 }

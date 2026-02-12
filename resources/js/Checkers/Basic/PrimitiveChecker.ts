@@ -24,7 +24,6 @@ export class PrimitiveChecker extends CheckerAbstract {
 	override checkValue(value: string): CheckerResult {
 		let subchk: CheckerAbstract
 
-		// TODO: contrôle des primitive avec exp et log... à revoir.
 		if (value.includes("e")) {
 			subchk = new ExpChecker(this._config)
 		} else if (value.includes('ln')) {

@@ -12,7 +12,6 @@ use App\Models\Theme;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
-use Inertia\Inertia;
 use function redirect;
 
 class ChallengeApiController extends Controller
@@ -61,21 +60,18 @@ class ChallengeApiController extends Controller
 
 		// Save the challenge configuration
 		$validated = $request->validate([
-			'slug'              => ['required', 'min:2'],
-			'title'             => ['required', 'min:2'],
-			'active'            => ['boolean'],
-			//			'generator' => ['string', 'min:2'],
-			//			'output' => ['string', 'min:2'],
-			'nextLevelAfter'    => ['numeric', 'min:0'],
-			//			'parameters' => ['nullable', 'string'],
-			//			'keyboard' => ['nullable', 'string'],
-			'duration'          => ['numeric', 'min:0'],
-			'lives'             => ['numeric', 'min:0'],
-			'bonusScoreTrigger' => ['numeric', 'min:0', 'nullable'],
-			'bonusScoreLife'    => ['numeric', 'min:0'],
-			'bonusScoreTime'    => ['numeric', 'min:0'],
-			'bonusLevelLife'    => ['numeric', 'min:0'],
-			'bonusLevelTime'    => ['numeric', 'min:0'],
+			'slug'               => ['required', 'min:2'],
+			'title'              => ['required', 'min:2'],
+			'active'             => ['boolean'],
+			'nextLevelAfter'     => ['numeric', 'min:0'],
+			'duration'           => ['numeric', 'min:0'],
+			'lives'              => ['numeric', 'min:0'],
+			'generatorsGrouping' => ['numeric', 'nullable'],
+			'bonusScoreTrigger'  => ['numeric', 'min:0', 'nullable'],
+			'bonusScoreLife'     => ['numeric', 'min:0'],
+			'bonusScoreTime'     => ['numeric', 'min:0'],
+			'bonusLevelLife'     => ['numeric', 'min:0'],
+			'bonusLevelTime'     => ['numeric', 'min:0'],
 		]);
 
 		$challenge->update($validated);
@@ -116,7 +112,7 @@ class ChallengeApiController extends Controller
 			'theme_id' => $challenge->chapter->theme->id,
 			'slug'     => $challenge->chapter->slug . '-' . $challenge->slug . '-' . $order,
 			'title'    => '',
-			'template'=> '\\[question = answer\\]',
+			'template' => '\\[question = answer\\]',
 			'code'     => 'return {question: "", answer: ""}',
 		]);
 

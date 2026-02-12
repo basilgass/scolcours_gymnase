@@ -25,18 +25,16 @@ class ChallengeResource extends JsonResource
 	 */
 	public function toArray($request)
 	{
-		// TODO: Challenge resource must be reworked.
 		if (count($this->blocks) === 0) {
 			$this->blocks()->create();
 		}
 
-		// TODO: challenge generators -> on doit pouvoir récupérer l'id du generatorable, pour supprimer une valeur défnie.
 		return [
 			...parent::toArray($request),
-			'maxLevel'   => $this->generators->count(),
-			'block'      => $this->blocks[0],
-			'chapter'    => ChapterResource::make($this->chapter),
-			"generators" => GeneratorResource::collection($this->generators)
+			'generatorsGrouping' => $this->generatorsGrouping ?? 1,
+			'block'              => $this->blocks[0],
+			'chapter'            => ChapterResource::make($this->chapter),
+			"generators"         => GeneratorResource::collection($this->generators)
 		];
 	}
 }

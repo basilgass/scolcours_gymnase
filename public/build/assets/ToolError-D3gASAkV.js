@@ -1,0 +1,1 @@
+import{_ as e}from"./_plugin-vue_export-helper-DlAUqK2U.js";import{F as r,G as t}from"./@vue-Blx1AnSH.js";const o={},c={class:"text-red-700 text-lg border-red-500 bg-red-50 text-center min-h-[5em] grid place-items-center font-code"};function n(s,d){return t(),r("div",c," Une erreur s'est produite avec les données ")}const i=e(o,[["render",n]]);export{i as T};

@@ -9,7 +9,8 @@ export interface UseScriptLoaderReturn {
 	reset: () => void
 	data: Ref<SCRIPT_TYPE>
 	merged: ComputedRef<SCRIPT_TYPE>
-	hasData: ComputedRef<boolean>
+	hasData: ComputedRef<boolean>,
+	hasErrors: Ref<boolean>
 }
 
 export function useScriptLoader(script: string, config?: {
@@ -17,6 +18,7 @@ export function useScriptLoader(script: string, config?: {
 }) {
 	const iteration = ref(0)
 	const data = ref<SCRIPT_TYPE>({})
+	const hasErrors = ref<boolean>(false)
 
 	const parentData = computed<SCRIPT_TYPE>(() => {
 		if (config && config.parent) {
@@ -47,9 +49,11 @@ export function useScriptLoader(script: string, config?: {
 			try {
 				const F = new Function("PiMath", "PiMathExt", "iteration", "parentData", script)
 				data.value = F(PiMath, PiMathExt, iteration.value, parentData.value)
+				hasErrors.value = false
 			} catch (e) {
 				console.log("Script loader error", e)
 				data.value = {}
+				hasErrors.value = true
 			}
 		}
 	}
@@ -59,5 +63,5 @@ export function useScriptLoader(script: string, config?: {
 		run()
 	}
 
-	return {iteration, run, reset, data, merged, hasData}
+	return {iteration, run, reset, data, merged, hasData, hasErrors}
 }

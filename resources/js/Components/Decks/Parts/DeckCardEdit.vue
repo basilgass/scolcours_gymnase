@@ -80,7 +80,6 @@ function updateCard() {
 
 watch(editableCard.value, () => {
 	if (isDynamic.value) {
-		// TODO: améliorer la réactivité pour éviter le "watch"
 		editableCard.value.recto = null
 		editableCard.value.verso = null
 		editableCard.value = computedCard(editableCard.value)

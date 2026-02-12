@@ -20,7 +20,7 @@ const generatedErrors = ref('')
 const generatedQuestions = ref([])
 
 const emits = defineEmits<{
-	generatedStatus: [value: boolean]
+	generatorHasErrors: [value: boolean]
 }>()
 
 function generateQuestions() {
@@ -39,10 +39,10 @@ function generateQuestions() {
 		}
 
 		generatedErrors.value = ''
-		emits('generatedStatus', true)
+		emits('generatorHasErrors', false)
 	} catch (err) {
 		generatedErrors.value = err
-		emits('generatedStatus', false)
+		emits('generatorHasErrors', true)
 	}
 }
 

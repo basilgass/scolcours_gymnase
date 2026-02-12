@@ -44,11 +44,12 @@ const pdfGenereate = () => {
 
 	if (pdfQuestionWrapper.value !== "") {
 		questions = questions.map((q) => {
+			console.log(q.answer)
 			// Wrap the question in a custom wrapper
 			q.question = pdfQuestionWrapper.value.replace("@", q.question)
 
 			// Convert asciimath to latex
-			q.answer = asciiToTex(q.answer)
+			q.answer = asciiToTex(q.answer.toString())
 			return q
 		})
 	}
@@ -73,8 +74,8 @@ const pdfGenereate = () => {
 		<sc-button
 			class="mx-auto my-10"
 			theme
-			@click="pdfGenereate"
 			xl
+			@click="pdfGenereate"
 		>
 			générer un pdf
 		</sc-button>

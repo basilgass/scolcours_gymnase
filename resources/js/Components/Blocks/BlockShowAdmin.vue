@@ -59,7 +59,6 @@ function deleteBlock() {
 			flash.success("Le block a été supprimé")
 
 			// Go to the blockable item.
-			// TODO: regarder pour éviter de recharger la page ?
 			router.visit(res.data)
 		})
 		.catch((error) => console.error(error))

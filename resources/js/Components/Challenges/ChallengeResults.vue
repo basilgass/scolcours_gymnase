@@ -8,7 +8,6 @@ import {ChallengeInterface, ScoreInterface} from "@/types/modelInterfaces"
 import ScButton from "@/Components/Ui/scButton.vue"
 import {ChallengeAnswerInterface, ChallengeGameInterface} from "@/types/challengeInterface.ts"
 import {ScoreChallengeDataInterface} from "@/types/scoreInterfaces.ts"
-import {onMounted} from "vue"
 
 const emits = defineEmits(["start", "cancel"])
 
@@ -19,10 +18,6 @@ defineProps<{
 	score: ScoreInterface<ScoreChallengeDataInterface>
 }>()
 
-
-onMounted(()=>{
-	console.log('challenge resulte mounted')
-})
 </script>
 
 <template>
@@ -77,8 +72,8 @@ onMounted(()=>{
 			<sc-button
 				xl
 				class="hover:scale-110 transition-all"
-				@click="emits('cancel')"
 				theme
+				@click="emits('cancel')"
 			>
 				Fermer
 			</sc-button>
@@ -97,8 +92,8 @@ onMounted(()=>{
 				>
 					<div v-katex.auto.left="answer.question" />
 					<div
-						v-text="answer.answer"
 						class="absolute top-0 right-1 text-gray-600 text-sm font-code"
+						v-text="answer.answer"
 					/>
 				</div>
 			</div>

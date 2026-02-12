@@ -13,6 +13,7 @@ const links = [
 	{title: "agenda", route: "admin.agenda", icon: 'bi bi-calendar'},
 	{title: "composants", route: null, icon: "bi bi-gear-wide-connected"},
 	{title: "chapitres", route: "admin.chapters.index", icon: 'bi bi-paragraph'},
+	{title: "blocks scripts", route: "admin.blocks.index", icon: 'bi bi-body-text'},
 	{title: "outils", route: "admin.tools.index", icon: 'bi bi-wrench'},
 	{title: "challenges", route: "admin.challenges.index", icon: 'bi bi-patch-question'},
 	{title: "générateurs", route: "admin.generators.index", icon: 'bi bi-shuffle'},

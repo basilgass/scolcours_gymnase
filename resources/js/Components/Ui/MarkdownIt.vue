@@ -104,7 +104,7 @@ const mdit = computed(() => {
 	// .@def = .def-<theme>
 	output = output.replaceAll(/\.(@[a-z]+)/g, (match) => {
 		const prefix = match.substring(2)
-		const theme = usePage().props.theme.slug
+		const theme = usePage().props.theme?.slug
 
 		return `.${prefix}-${theme}`
 	})

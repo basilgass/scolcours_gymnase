@@ -4,7 +4,6 @@ import {
 	ChapterInterface,
 	CourseInterface,
 	DeckInterface,
-	GeneratorInterface,
 	LessonInterface,
 	PostShowInterface
 } from "@/types/modelInterfaces.ts"
@@ -25,7 +24,7 @@ import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
 import PostTypeIcon from "@/Components/Posts/PostTypeIcon.vue"
 import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
-import FilteredList from "@/Components/Ui/FilteredList.vue"
+import FormSearchModel from "@/Components/Form/FormSearchModel/FormSearchModel.vue"
 
 defineOptions({layout: LayoutMain})
 
@@ -99,14 +98,6 @@ function toggleTab(tab: lessonableClassName) {
 		return
 	}
 
-	if (tab === 'Challenge' && availableChallenges.value.length === 0) {
-		loadChallenges()
-	}
-
-	if (tab === 'Generator' && availableGenerators.value.length === 0) {
-		loadGenerators()
-	}
-
 	switch (tab) {
 		case "Post":
 		case "Deck":
@@ -146,7 +137,6 @@ function addAllPosts() {
 
 const deck = ref<DeckInterface>()
 const availableChallenges = ref<ChallengeInterface[]>([])
-const availableGenerators = ref<GeneratorInterface[]>([])
 const scoreRules = ref<LessonScoreRulesInterface>(undefined)
 
 function deleteLesson(lesson: LessonInterface) {
@@ -195,29 +185,6 @@ function toggleIdInPlace(array: (string | number)[], id: string | number): void 
 	} else {
 		array.splice(index, 1)
 	}
-}
-
-function loadChallenges() {
-	axios
-		.get(route('api.challenges.index'))
-		.then((res: AxiosResponseModel<ChallengeInterface[]>) => {
-			availableChallenges.value = res.data
-		})
-		.catch((err: AxiosErrorMessage) => {
-			console.warn(err.response.data.message)
-		})
-}
-
-function loadGenerators() {
-	axios
-		.get(route('api.generators.index'))
-		.then((res: AxiosResponseModel<GeneratorInterface[]>) => {
-			availableGenerators.value = res.data
-		})
-		.catch((err: AxiosErrorMessage) => {
-			console.warn(err.response.data.message)
-		})
-
 }
 
 const lessonJsonMap = computed<Record<string, FormElementType>>(() => {
@@ -350,109 +317,46 @@ function updateLessonsOrder() {
 							</template>
 						</Card>
 
-						<div class="grid grid-cols-1 gap-1">
-							<Card
-								v-for="post in posts"
-								:key="`post-${post.id}`"
-							>
-								<div class="flex justify-between">
-									<div class="flex gap-2">
-										<post-type-icon
-											:post
-										/>
-										<div
-											v-katex.auto="post.title"
-										/>
-									</div>
-									<sc-button
-										icon
-										type="add"
-										xs
-										@click="addLesson('Post', post.id)"
-									>
-										ajouter {{ post.id }}
-									</sc-button>
+						<form-search-model
+							v-show="showAddTab==='Post'"
+							:api-route="chapter ? route('api.chapters.posts', {chapter}) : null"
+							title="posts"
+							@selected="addLesson('Post', $event.id)"
+							@on-loaded="posts = $event as PostShowInterface[]"
+						>
+							<template #title="{item}: {item: PostShowInterface}">
+								<div class="flex gap-2">
+									<post-type-icon
+										:post="item"
+									/>
+									<div
+										v-katex.auto="item.title"
+									/>
 								</div>
-							</Card>
-						</div>
-					</div>
-
-					<div v-show="showAddTab==='Deck'">
-						<div>Choix d'un deck</div>
-						<form-maker
-							v-model="deck"
-							type="deck"
-						/>
-
-						<Card v-if="deck">
-							<template #header>
-								<div v-katex.auto="deck.title" />
 							</template>
-
-							<div class="flex justify-end">
-								<sc-button
-									icon
-									type="add"
-									xs
-									@click="addLesson('Deck', deck.id)"
-								>
-									ajouter
-								</sc-button>
-							</div>
-						</Card>
+						</form-search-model>
 					</div>
 
-					<filtered-list
+					<form-search-model
+						v-show="showAddTab==='Deck'"
+						:api-route="route('api.decks.index')"
+						title="decks"
+						@selected="addLesson('Deck', $event.id)"
+					/>
+
+					<form-search-model
 						v-show="showAddTab==='Challenge'"
-						:list="availableChallenges"
-						list-class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3"
+						:api-route="route('api.challenges.index')"
 						title="challenges"
-					>
-						<template #card="{item}: {item: ChallengeInterface}">
-							<Card>
-								<template #header>
-									<div v-katex.auto="item.title" />
-								</template>
+						@selected="addLesson('Challenge', $event.id)"
+					/>
 
-								<div class="flex justify-end">
-									<sc-button
-										icon
-										type="add"
-										xs
-										@click="addLesson('Challenge', item.id)"
-									>
-										ajouter
-									</sc-button>
-								</div>
-							</Card>
-						</template>
-					</filtered-list>
-
-					<filtered-list
+					<form-search-model
 						v-show="showAddTab==='Generator'"
-						:list="availableGenerators"
-						list-class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3"
+						:api-route="route('api.generators.index')"
 						title="générateurs"
-					>
-						<template #card="{item}: {item: GeneratorInterface}">
-							<Card>
-								<template #header>
-									<div v-katex.auto="item.title" />
-								</template>
-
-								<div class="flex justify-end">
-									<sc-button
-										icon
-										type="add"
-										xs
-										@click="addLesson('Generator', item.id)"
-									>
-										ajouter
-									</sc-button>
-								</div>
-							</Card>
-						</template>
-					</filtered-list>
+						@selected="addLesson('Generator', $event.id)"
+					/>
 				</div>
 			</div>
 

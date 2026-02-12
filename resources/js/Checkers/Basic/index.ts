@@ -1,4 +1,3 @@
-export * from './CartesianChecker'
 export * from './CoordChecker'
 export * from './EquationChecker'
 export * from './ExactChecker'

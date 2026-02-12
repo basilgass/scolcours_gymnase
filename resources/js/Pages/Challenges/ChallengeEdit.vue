@@ -12,6 +12,8 @@ import axios from "axios"
 import {ref} from "vue"
 import ScButton from "@/Components/Ui/scButton.vue"
 import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
+import {useChallenge} from "@/Composables/useChallenge.ts"
+import FormSearchModel from "@/Components/Form/FormSearchModel/FormSearchModel.vue"
 
 defineOptions({layout: LayoutMain})
 const props = defineProps<{
@@ -20,7 +22,10 @@ const props = defineProps<{
 
 
 const flash = useStoreFlashMessage()
-const theChallenge = ref(props.challenge)
+
+// TODO: utiliser plus le useChallenge
+const data = useChallenge(props.challenge)
+const theChallenge = data.challenge
 
 const updateGeneratorsOrder = function () {
 	// Update the pivot value according to the order
@@ -67,21 +72,21 @@ const addGenerator = function () {
 		})
 }
 const attachGeneratorId = ref("")
-const attachGenerator = function () {
-	if (attachGeneratorId.value !== "") {
-		axios
-			.post(
-				route("api.admin.challenges.generators.attach", [
-					theChallenge.value.id,
-					attachGeneratorId.value
-				])
-			)
-			.then((res) => {
-				theChallenge.value.generators = res.data
-				attachGeneratorId.value = ""
+
+function attachGenerator(id: number) {
+	axios
+		.post(
+			route("api.admin.challenges.generators.attach", {
+				challenge: theChallenge.value.id,
+				generator: id
 			})
-	}
+		)
+		.then((res) => {
+			theChallenge.value.generators = res.data
+			attachGeneratorId.value = ""
+		})
 }
+
 const detachGenerator = function (id, destroy) {
 	axios
 		.post(
@@ -115,6 +120,7 @@ const theIllustration = ref<IllustrationInterface>(
 			widget: null
 		}
 )
+
 
 const saveChallenge = function () {
 	// 1- Save the description block
@@ -251,6 +257,18 @@ const deleteChallenge = function () {
 							type="number"
 							sm
 						/>
+
+						<form-maker
+							v-model="theChallenge.generatorsGrouping"
+							label="grouper générateurs"
+							name="generatorsGrouping"
+							type="number"
+							min="1"
+							:max="theChallenge.generators.length"
+							sm
+						/>
+
+						<div>nombre de niveaux: {{ data.maxLevels }}</div>
 					</div>
 
 					<h3 class="uppercase mt-10 col-span-3">
@@ -313,15 +331,16 @@ const deleteChallenge = function () {
 				<draggable
 					v-model="theChallenge.generators"
 					item-key="id"
-					class="grid grid-cols-1 gap-4 items-baseline"
+					class="grid grid-cols-1 gap-2 items-baseline"
 					handle=".drag-handler"
 					v-bind="{ animation: 500, }"
 					@end="updateGeneratorsOrder"
 				>
-					<template #item="{ element }">
+					<template #item="{ element, index }">
 						<div
 							:key="`${element.id}`"
 							class="flex gap-3 items-baseline bg-white py-2 pl-2 pr-3 rounded-sm hover:shadow-sm transition"
+							:class="data.challenge.value.generatorsGrouping === 1 ? '' : (index> 0 && index%data.challenge.value.generatorsGrouping ===0) ? 'mt-5':''"
 						>
 							<div class="drag-handler cursor-move">
 								<i class="text-xl bi bi-list" />
@@ -344,48 +363,24 @@ const deleteChallenge = function () {
 							</button>
 						</div>
 					</template>
-					<template #footer>
-						<div class="flex gap-3 justify-between items-end">
-							<sc-button
-								type="add"
-								@click="addGenerator"
-							>
-								<i class="bi bi-plus-sign" /> créer un générateur
-							</sc-button>
 
-							<div class="min-w-[500px] flex items-end">
-								<form-maker
-									v-model="attachGeneratorId"
-									label="attacher un générateur existant"
-									type="search"
-									:fetch="route('api.admin.generators.index')"
-								/>
+					<template #footer>
+						<form-search-model
+							:api-route="route('api.generators.index')"
+							@selected="attachGenerator($event.id)"
+						>
+							<template #button>
 								<sc-button
-									:disabled="attachGeneratorId === ''"
 									type="add"
-									@click="attachGenerator"
+									@click="addGenerator"
 								>
-									<i class="bi bi-file-arrow-up" />
+									<i class="bi bi-plus-sign" /> créer un générateur
 								</sc-button>
-							</div>
-						</div>
+							</template>
+						</form-search-model>
 					</template>
 				</draggable>
 			</div>
 		</div>
 	</div>
 </template>
-
-<style scoped lang="postcss">
-.draggable-handle {
-	cursor: move;
-}
-
-.ghost {
-	@apply opacity-40;
-}
-
-.flip-list-move {
-	transition: transform 0.5s;
-}
-</style>
