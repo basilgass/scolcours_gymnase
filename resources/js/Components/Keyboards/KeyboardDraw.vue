@@ -119,11 +119,11 @@ async function setInput(value?: string): Promise<KeyboardInputInterface> {
 		const line = getLineEquation()
 
 		if (helper.value) {
-			helperTeX.value = `${line.mxh.tex}`
+			helperTeX.value = `${line.asMxh.tex}`
 		}
 
 		return {
-			input: line.mxh.display,
+			input: line.asMxh.display,
 			tex: "",
 			raw: getSvg()
 		}

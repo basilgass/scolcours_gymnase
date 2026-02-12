@@ -1,6 +1,6 @@
 import {asciiToTex} from "@/Composables/keyboardConfig"
 import {useKeyboard} from "@/Composables/useKeyboard.ts"
-import {Fraction, ISolution, PolyFactor, TABLE_OF_SIGNS} from "pimath"
+import {Fraction, PolyFactor, Solution, TABLE_OF_SIGNS} from "pimath"
 
 const {keyboards} = useKeyboard()
 
@@ -8,7 +8,6 @@ const DIGITS = 2
 
 interface ASYMPTOTE {
 	answer: string,
-	x?: Fraction,
 	delta?: {
 		tex: string,
 		table_of_signs: TABLE_OF_SIGNS,
@@ -19,6 +18,7 @@ interface ASYMPTOTE {
 	},
 	draw: string,
 	tex: string,
+	x?: Fraction,
 }
 
 interface EXTREMA {
@@ -56,7 +56,7 @@ export interface ETUDE_DE_FONCTION_RATIONNELLE {
 	fx: string
 	fxKeyboard: string
 	roots: {
-		values: ISolution[],
+		values: Solution[],
 		answers: string[],
 		ed: string[]
 	},
@@ -222,7 +222,7 @@ export function makeStudyFromPolyFactor(value: PolyFactor): ETUDE_DE_FONCTION_RA
 }
 
 
-function PolyFactor_getDomain(roots: ISolution[]): string {
+function PolyFactor_getDomain(roots: Solution[]): string {
 	let domain = "\\mathbb{R}"
 	if (roots.length > 0) {
 		if (roots.filter(x => x.value === 0).length > 0) {
@@ -235,7 +235,7 @@ function PolyFactor_getDomain(roots: ISolution[]): string {
 	return domain
 }
 
-function PolyFactor_getAsymptotes_Vertical(reduced: PolyFactor, roots: ISolution[]): ASYMPTOTE[] {
+function PolyFactor_getAsymptotes_Vertical(reduced: PolyFactor, roots: Solution[]): ASYMPTOTE[] {
 	return roots.map((value, index) => {
 		const evaluatedValue = reduced.evaluate(value.value) as Fraction
 		const valueAsTex = value.tex
@@ -245,7 +245,7 @@ function PolyFactor_getAsymptotes_Vertical(reduced: PolyFactor, roots: ISolution
 
 		if (Number.isFinite(evaluatedValue.value)) {
 			return {
-				x: value.exact as Fraction,
+				x: value.fraction,
 				tex: `\\lim_{x\\to ${valueAsTex} } f(x) = ${evaluatedValue.tex} \\implies \\text{point limite}: \\left(${valueAsTex};${evaluatedValue.tex}\\right)`,
 				draw: `P${index + 1}(${value.value},${evaluatedValue.value})->o=10,color=red,fill=white,tex=\\left(${value.tex};${evaluatedValue.tex}\\right)/bc`,
 				answer: `t(${value.display};${evaluatedValue.display})`
@@ -256,7 +256,7 @@ function PolyFactor_getAsymptotes_Vertical(reduced: PolyFactor, roots: ISolution
 				evaluateAfter > 0 ? 'RT' : 'RB'
 			]
 			return {
-				x: value.exact as Fraction,
+				x: value.fraction,
 				tex: `\\lim_{x\\to ${valueAsTex} } f(x) = \\infty \\implies \\text{AV: } x=${valueAsTex}`,
 				draw: `a${index + 1}=line x=${value.value}->red`,
 				answer: [`x=${value.display}`, ...anchors].join('&')
@@ -301,12 +301,12 @@ function PolyFactor_getAsymptotes_Horizontal_or_Slope(factorized: PolyFactor, de
 		if (sign === 'z') {
 			const root = tos_delta.roots[(index - 1) / 2]
 
-			const x = root.exact instanceof Fraction
-				? {value: root.exact.value, display: root.exact.display}
+			const x = root.exact
+				? {value: root.fraction.value, display: root.display}
 				: {value: root.value, display: root.value.toFixed(2)}
 
-			const evaluatedY = root.exact instanceof Fraction
-				? (quotient.evaluate({x: root.exact}) as Fraction)
+			const evaluatedY = root.exact
+				? (quotient.evaluate({x: root.fraction}) as Fraction)
 				: quotient.evaluate({x: x.value}) as number
 
 			const y = typeof evaluatedY === 'number'
@@ -362,7 +362,7 @@ function PolyFactor_getExtremes(fx: PolyFactor, dfx: PolyFactor, dfx_table_of_si
 			previousSign === "+" ? "M" : "m"
 
 		if (x.exact) {
-			const value = fx.evaluate(x.exact as Fraction) as Fraction
+			const value = fx.evaluate(x.fraction) as Fraction
 
 			return {
 				x: {

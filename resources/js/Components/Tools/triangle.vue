@@ -98,9 +98,9 @@ let result = computed(() => {
 				médiatrices
 			</h2>
 			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 items-baseline">
-				<div v-katex.boxed="`(m_{AB}): ${result.triangle.remarquables.mediators.AB.tex}`" />
-				<div v-katex.boxed="`(m_{AC}): ${result.triangle.remarquables.mediators.AC.tex}`" />
-				<div v-katex.boxed="`(m_{BC}): ${result.triangle.remarquables.mediators.BC.tex}`" />
+				<div v-katex.boxed="`(m_{AB}): ${result.triangle.remarquables.mediators.c.tex}`" />
+				<div v-katex.boxed="`(m_{AC}): ${result.triangle.remarquables.mediators.b.tex}`" />
+				<div v-katex.boxed="`(m_{BC}): ${result.triangle.remarquables.mediators.a.tex}`" />
 				<div v-katex.boxed="`P=${result.triangle.remarquables.mediators.intersection.tex}`" />
 			</div>
 			<h2 class="font-lg">

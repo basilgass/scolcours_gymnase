@@ -114,7 +114,7 @@ const result = computed(() => {
 
 		// Forme du sommet
 		// a(x-sx)^2+sy
-		const sommet = `${a.isOne() ? "" : a.isNegativeOne() ? "-" : a.tex}${sx.isZero() ? "x^2" : `\\left( x ${sx.clone().opposite().texWithSign} \\right)^2`}${sy.texWithSign}`
+		const sommet = `${a.isOne() ? "" : a.value === -1 ? "-" : a.tex}${sx.isZero() ? "x^2" : `\\left( x ${sx.clone().opposite().texWithSign} \\right)^2`}${sy.texWithSign}`
 
 		return {
 			tex: poly.tex,

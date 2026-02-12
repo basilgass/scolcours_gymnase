@@ -29,9 +29,9 @@ function updateValue() {
 		const tg = C.tangents(pt)[0]
 		tangents.push(tg)
 		code.value += `\nT${index + 1}(${pt.x.value},${pt.y.value})->tex:T_${index + 1}=@`
-		code.value += `\nt${index + 1}=line ${tg.canonical.tex}`
+		code.value += `\nt${index + 1}=line ${tg.asCanonical.tex}`
 
-		tangentPerPoints.value.push(`T_${index + 1}(${pt.x.tex};${pt.y.tex})\\implies ${tg.canonical.tex}`)
+		tangentPerPoints.value.push(`T_${index + 1}(${pt.x.tex};${pt.y.tex})\\implies ${tg.asCanonical.tex}`)
 	})
 
 	for (let i = 0; i < tangents.length; i++) {

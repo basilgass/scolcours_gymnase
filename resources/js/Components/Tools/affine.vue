@@ -37,24 +37,21 @@ const B = computed<string>(() => forms[1].value.value as string)
 function affine() {
 	const ptA = new Point(...A.value.split(','))
 
-	const ptB = (B.value[0] === 'v' || B.value[0] === 'n') ?
-		new Vector(...B.value.substring(1).split(',')) :
-		new Point(...B.value.split(','))
 
 	let line: Line
 	if (B.value[0] === 'v') {
-		line = new Line().fromPointAndDirection(ptA, ptB)
+		line = new Line().fromPointAndDirection(ptA, new Vector(...B.value.substring(1).split(',')))
 	} else if (B.value[0] === 'n') {
-		line = new Line().fromPointAndNormal(ptA, ptB)
+		line = new Line().fromPointAndNormal(ptA, new Vector(...B.value.substring(1).split(',')))
 	} else {
-		line = new Line().fromPoints(ptA, ptB)
+		line = new Line().fromPoints(ptA, new Point(...B.value.split(',')))
 	}
 
 	return {
-		equation: line.equation.tex,
-		mxh: line.mxh.tex,
-		canonical: line.canonical.tex,
-		parametric: line.parametric.tex
+		equation: line.asCartesian.tex,
+		mxh: line.asMxh.tex,
+		canonical: line.asCanonical.tex,
+		parametric: line.asParametric.tex
 	}
 }
 

@@ -4,7 +4,7 @@ import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"
 import {IToolForm} from "@/Components/Tools/Parts/ToolForm.vue"
 import TexCode from "@/Components/Ui/TexCode.vue"
 import {useToolsStorage} from "@/Composables/useToolsStorage.ts"
-import {Equation, Fraction, ISolution, Polynom, Random} from "pimath"
+import {Equation, Fraction, Polynom, Random, Solution} from "pimath"
 import {computed, ref} from "vue"
 import ScButton from "@/Components/Ui/scButton.vue"
 import Card from "@/Components/Ui/Card.vue"
@@ -114,7 +114,7 @@ const root = ref(null),
 					const zeroes = []
 					for (const e of expr) {
 						const equ = new Equation(e.polynom, v)
-						const solutions: ISolution[] = equ.solve()
+						const solutions: Solution[] = equ.solve()
 						for (const z of solutions) {
 							if (checkValue(z.value, e.borders.min, e.borders.max)) {
 								zeroes.push(z)

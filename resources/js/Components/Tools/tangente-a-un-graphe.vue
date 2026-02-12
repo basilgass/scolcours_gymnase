@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import ToolForm, {IToolForm} from "@/Components/Tools/Parts/ToolForm.vue"
 import {useToolsStorage} from "@/Composables/useToolsStorage.ts"
-import {Equation, Fraction, ISolution, Line, Monom, Point, Polynom} from "pimath"
+import {Equation, Fraction, Line, Monom, Point, Polynom, Solution} from "pimath"
 /** Tools
  * title: tangente à un graphe (fonction polynomiale)
  * body: permet de calculer l'équation cartésienne d'une tangente à un graphe à un point d'abscisse donné.
@@ -50,9 +50,9 @@ const affine = computed<{ tex: { canonical: string, mxh: string } } | false>(() 
 			const solutions = equ.solve()
 
 			let sols: Line[] = solutions
-				.filter((sol: ISolution) => sol.exact !== false)
-				.map((sol: ISolution) => {
-					const x: Fraction = sol.exact as Fraction,
+				.filter((sol: Solution) => sol.exact !== false)
+				.map((sol: Solution) => {
+					const x: Fraction = sol.fraction as Fraction,
 						y: Fraction = P.evaluate(x) as Fraction
 
 					return new Line(
@@ -65,7 +65,7 @@ const affine = computed<{ tex: { canonical: string, mxh: string } } | false>(() 
 
 			return {
 				tex: {
-					mxh: sols.map(sol => sol.mxh.tex).join("\\text{ ou }"),
+					mxh: sols.map(sol => sol.asMxh.tex).join("\\text{ ou }"),
 					canonical: sols.map(sol => sol.tex).join("\\text{ ou }")
 				}
 			}
@@ -82,7 +82,7 @@ const affine = computed<{ tex: { canonical: string, mxh: string } } | false>(() 
 		const L = new Line(`y=${m.display}x+(${h.display})`)
 		return {
 			tex: {
-				mxh: L.mxh.tex,
+				mxh: L.asMxh.tex,
 				canonical: L.tex
 			}
 		}
