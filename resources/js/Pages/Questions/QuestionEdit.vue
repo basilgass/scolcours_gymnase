@@ -190,9 +190,10 @@ const equationCheck = computed(() => {
 				</div>
 			</div>
 		</div>
+
 		<div class="flex flex-col md:flex-row gap-3 px-5 pb-5">
 			<form
-				class="space-y-3 font-code"
+				class="space-y-3 font-code "
 				@submit.prevent
 			>
 				<form-maker
@@ -212,7 +213,6 @@ const equationCheck = computed(() => {
 					type="text"
 					sm
 				/>
-
 
 				<div class="grid grid-cols-3 gap-5">
 					<sc-button
@@ -289,7 +289,7 @@ const equationCheck = computed(() => {
 				ref="questionRef"
 				:class="theQuestion.css"
 				:question="theQuestion"
-				class="min-w-[350px] md:max-w-[40vw]"
+				class="md:max-w-[40vw]"
 				is-dynamic
 				show-input
 				show-title

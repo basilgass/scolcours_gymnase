@@ -42,6 +42,9 @@ function getComponentKeyboardName(value: string): string {
 			return "Draw"
 		case "zones":
 			return "DrawZones"
+		case "resol":
+		case "resolution":
+			return "Resolution"
 		default:
 			return "Basic"
 	}

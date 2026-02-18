@@ -21,19 +21,18 @@ class ToolController extends Controller
 		return Inertia::render("Tools/ToolsIndex", $data);
 	}
 
-	public function show(Tool $tool)
+	public function show($value)
 	{
-		$data = ["theme" => Theme::where('slug', 'tools')->first()];
-		$data['tools'] = Tool::all();
-		$data['tool'] = $tool;
+		$tool = is_numeric($value)
+			? Tool::findOrFail($value)
+			: Tool::where('slug', $value)->firstOrFail();
 
-		return Inertia::render("Tools/ToolsShow", $data);
-	}
-
-	public function showById(Tool $tool)
-	{
-		return redirect()->route("tools.show", [
-			"tool" => $tool->slug
+		if ($value !== $tool->slug) {
+			return redirect()->route('tools.show', $tool, 301);
+		}
+		return Inertia::render("Tools/ToolsShow", [
+			"tools" => Tool::all(),
+			"tool"  => $tool
 		]);
 	}
 

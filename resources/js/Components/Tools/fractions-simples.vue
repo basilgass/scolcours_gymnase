@@ -131,13 +131,13 @@ function simpleFractions(polyfactor: PolyFactor): PolyFactor[] {
 
 	const linear = new LinearSystem(...equations)
 
-	const solutions = linear.solveMatrix()
+	const solutions = linear.solve()
 	solutions.forEach((value, index) => {
 		const letter = letters[index]
 
 		// Replace in all numerator_polynom the letter by the value.
 		numerator_polynoms.forEach(polynom => {
-			polynom.replaceBy(letter, new Polynom(value)).reduce()
+			polynom.replaceBy(letter, new Polynom(value.fraction)).reduce()
 		})
 	})
 

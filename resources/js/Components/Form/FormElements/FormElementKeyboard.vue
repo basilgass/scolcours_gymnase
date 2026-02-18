@@ -29,6 +29,7 @@ const availableKeyboards = [
 	"type",
 	"matrix"
 ]
+
 function focusFn(select: boolean) {
 	inp.value.focus()
 	if (select === true) {
@@ -126,11 +127,11 @@ const currentRows = computed(() => {
 					<li>@if &lt;réponse&gt;?&lt;message&gt;<br></li>
 					<li>touche supplémentaire: [valeur] ou [asciiMath]||[label]</li>
 				</ul>
-				<div class="flex gap-3">
+				<div class="flex flex-wrap gap-3">
 					<div
-						class="font-code cursor-pointer text-xs hover:font-semibold"
 						v-for="k in availableKeyboards"
 						:key="`available-${k}`"
+						class="font-code cursor-pointer text-xs hover:font-semibold"
 						@click="inp.value=k"
 					>
 						{{ k }}

@@ -62,29 +62,21 @@ const mdit = computed(() => {
 	// Current location: course vs other.
 	const context = window.location.pathname.startsWith('/cours')
 
-	// Remplace les liens vers les tools par des liens
-	output = output.replaceAll(/\(@tools.show\S+\)/g, (match) => {
-		const [, ...routeOptions] = match
-			.substring(2, match.length - 1)
-			.split(",")
-
-		try {
-			return `(${route('tools.show', {tool: routeOptions[0]})}){.@text}`
-		} catch {
-			return `(${match})`
-		}
-	})
-
 	// Remplace les liens vers les routes par des liens vers les pages
 	output = output.replaceAll(/\(@\S+\)/g, (match) => {
 		const [routeName, ...routeOptions] = match
 			.substring(2, match.length - 1)
 			.split(",")
 
-		try {
-			return `(${route(routeName, {post: routeOptions[0], context: context ? 'course' : null})}){.@text}`
-		} catch {
-			return `(${match}){.@text}`
+		switch (routeName) {
+			case 'posts.show':
+				return `(${route(routeName, {post: routeOptions[0], context: context ? 'course' : null})}){.@text}`
+			case 'blocks.show':
+				return `(${route(routeName, {block: routeOptions[0], context: context ? 'course' : null})}){.@text}`
+			case 'tools.show':
+				return `(${route('tools.show', {tool: routeOptions[0]})}){.@text}`
+			default:
+				return `(${match}){.@text}`
 		}
 	})
 

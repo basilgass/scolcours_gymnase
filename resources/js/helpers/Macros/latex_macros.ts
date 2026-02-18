@@ -29,7 +29,7 @@ const latex_macros_suffix: IMacroRecords = {
 	'.,': {
 		suffix: true,
 		math: true,
-		template: '\\overrightarrow{ @ }'
+		template: '\\vect{ @ }'
 	},
 	'..': {
 		suffix: true,
@@ -45,6 +45,11 @@ const latex_macros_suffix: IMacroRecords = {
 		suffix: true,
 		math: true,
 		template: '\\left\\lbrace @ \\right\\rbrace'
+	},
+	'.col': {
+		suffix: true,
+		math: true,
+		template: '\\color{ @ }'
 	}
 
 }
@@ -94,6 +99,10 @@ export const latex_macros: IMacroRecords = {
 	"LIM": {
 		math: true,
 		template: "\\lim_{x\\to @}\\ @"
+	},
+	"DAS": {
+		math: true,
+		template: "\\def\\arraystretch{ @ }"
 	},
 	"==": {
 		math: true,

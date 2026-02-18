@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 
-import {computed, inject} from "vue"
+import {computed, inject, nextTick, ref} from "vue"
 import {questionDataInterface, questionResultInterface} from "@/Components/Questions/QuestionInterface.ts"
 import ScButton from "@/Components/Ui/scButton.vue"
 import {useQuestionValidation} from "@/Components/Questions/useQuestionValidation.ts"
@@ -40,6 +40,19 @@ const answerIntegrityCheck = computed(() => {
 	return integrity === '' ? true : integrity
 })
 
+const closeErrors = ref(false)
+const showErrors = computed(() => {
+	return !closeErrors.value && useValidation.errors.value.length > 0
+})
+
+function closingErrors() {
+	closeErrors.value = true
+
+	nextTick(() => {
+		useValidation.errors.value = []
+		closeErrors.value = false
+	})
+}
 
 </script>
 
@@ -75,22 +88,34 @@ const answerIntegrityCheck = computed(() => {
 		</div>
 
 		<!-- Error messages -->
-		<div
-			v-if="useValidation.errors.value.length > 0"
-			class="max-w-xl mx-auto
+		<transition
+			name="fade"
+			@after-leave="closingErrors()"
+		>
+			<div
+				v-if="showErrors"
+				class="max-w-xl mx-auto
 			 p-3  my-2
-			border rounded
+			border rounded relative
 			text-red-600 dark:text-red-100
 			bg-red-100 dark:bg-red-900
 			border-red-600 dark:border-red-700"
-		>
-			<div
-				v-for="(msg, index) in useValidation.errors.value"
-				:key="`error-${index}`"
-				v-katex.auto="msg"
-				class="text-xs"
-			/>
-		</div>
+			>
+				<button
+					class="absolute top-1 right-1 text-xs"
+					@click="closeErrors = true"
+				>
+					<i class="bi bi-x-lg" />
+				</button>
+
+				<div
+					v-for="(msg, index) in useValidation.errors.value"
+					:key="`error-${index}`"
+					v-katex.auto="msg"
+					class="text-xs"
+				/>
+			</div>
+		</transition>
 
 		<div
 			v-if="answerIntegrityCheck!==true"

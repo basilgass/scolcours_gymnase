@@ -35,11 +35,8 @@ class Tool extends Model
 {
 	protected $guarded = [];
 
-	public function resolveRouteBinding($value, $field = null)
+	public function getRouteKeyName(): string
 	{
-		return $this
-			->where('id', $value)
-			->orWhere('slug', $value)
-			->firstOrFail();
+		return 'slug';
 	}
 }
