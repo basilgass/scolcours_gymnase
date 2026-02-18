@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import ToolForm, {IToolForm} from "@/Components/Tools/Parts/ToolForm.vue"
 import {useToolsStorage} from "@/Composables/useToolsStorage.ts"
-import {Line, Triangle} from "pimath"
+import {Equation, Line, Point, Triangle} from "pimath"
 /** Tools
  * title: droites remarquables d'un triangle
  * body: calcul des droites remarquables d'un triangle
@@ -39,20 +39,41 @@ const B = computed(() => forms[1].value.value as string)
 const C = computed(() => forms[2].value.value as string)
 
 let result = computed(() => {
+
 	try {
-		let triangle = new Triangle(
-			...A.value.split(","),
-			...B.value.split(","),
-			...C.value.split(",")
-		)
+		let triangle = new Triangle()
+
+		if (
+			A.value.includes(',') &&
+			B.value.includes(',') &&
+			C.value.includes(',')
+		) {
+			triangle.fromPoints(
+				new Point(...A.value.split(",")),
+				new Point(...B.value.split(",")),
+				new Point(...C.value.split(",")),
+			)
+		} else if (
+			A.value.includes('=') &&
+			B.value.includes('=') &&
+			C.value.includes('=')
+		) {
+			triangle.fromLines(
+				new Line().fromEquation(new Equation(A.value)),
+				new Line().fromEquation(new Equation(B.value)),
+				new Line().fromEquation(new Equation(C.value)),
+			)
+		} else {
+			return false
+		}
 
 		return {
 			triangle: triangle,
-			extBissectors: {
-				A: new Line(triangle.A, triangle.remarquables.bisectors.A.d, "perpendicular"),
-				B: new Line(triangle.B, triangle.remarquables.bisectors.B.d, "perpendicular"),
-				C: new Line(triangle.C, triangle.remarquables.bisectors.C.d, "perpendicular")
-			}
+			heights: triangle.getHeights(),
+			medians: triangle.getMedians(),
+			mediators: triangle.getMediators(),
+			bisectors: triangle.getBisectors(),
+			extBisectors: triangle.getBisectors(false),
 		}
 	} catch {
 		// console.error(e)
@@ -89,45 +110,45 @@ let result = computed(() => {
 				médianes
 			</h2>
 			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 items-baseline">
-				<div v-katex.boxed="`(m_A): ${result.triangle.remarquables.medians.A.tex}`" />
-				<div v-katex.boxed="`(m_B): ${result.triangle.remarquables.medians.B.tex}`" />
-				<div v-katex.boxed="`(m_C): ${result.triangle.remarquables.medians.C.tex}`" />
-				<div v-katex.boxed="`G=${result.triangle.remarquables.medians.intersection.tex}`" />
+				<div v-katex.boxed="`(m_A): ${result.medians.A.tex}`" />
+				<div v-katex.boxed="`(m_B): ${result.medians.B.tex}`" />
+				<div v-katex.boxed="`(m_C): ${result.medians.C.tex}`" />
+				<div v-katex.boxed="`G=${result.medians.intersection.tex}`" />
 			</div>
 			<h2 class="font-lg">
 				médiatrices
 			</h2>
 			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 items-baseline">
-				<div v-katex.boxed="`(m_{AB}): ${result.triangle.remarquables.mediators.c.tex}`" />
-				<div v-katex.boxed="`(m_{AC}): ${result.triangle.remarquables.mediators.b.tex}`" />
-				<div v-katex.boxed="`(m_{BC}): ${result.triangle.remarquables.mediators.a.tex}`" />
-				<div v-katex.boxed="`P=${result.triangle.remarquables.mediators.intersection.tex}`" />
+				<div v-katex.boxed="`(m_{AB}): ${result.mediators.c.tex}`" />
+				<div v-katex.boxed="`(m_{AC}): ${result.mediators.b.tex}`" />
+				<div v-katex.boxed="`(m_{BC}): ${result.mediators.a.tex}`" />
+				<div v-katex.boxed="`P=${result.mediators.intersection.tex}`" />
 			</div>
 			<h2 class="font-lg">
 				hauteurs
 			</h2>
 			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 items-baseline">
-				<div v-katex.boxed="`(h_A): ${result.triangle.remarquables.heights.A.tex}`" />
-				<div v-katex.boxed="`(h_B): ${result.triangle.remarquables.heights.B.tex}`" />
-				<div v-katex.boxed="`(h_C): ${result.triangle.remarquables.heights.C.tex}`" />
-				<div v-katex.boxed="`D=${result.triangle.remarquables.heights.intersection.tex}`" />
+				<div v-katex.boxed="`(h_A): ${result.heights.A.tex}`" />
+				<div v-katex.boxed="`(h_B): ${result.heights.B.tex}`" />
+				<div v-katex.boxed="`(h_C): ${result.heights.C.tex}`" />
+				<div v-katex.boxed="`D=${result.heights.intersection.tex}`" />
 			</div>
 			<h2 class="font-lg">
 				bissectrices
 			</h2>
 			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 items-baseline">
-				<div v-katex.boxed="`(b_A): ${result.triangle.remarquables.bisectors.A.tex}`" />
-				<div v-katex.boxed="`(b_B): ${result.triangle.remarquables.bisectors.B.tex}`" />
-				<div v-katex.boxed="`(b_C): ${result.triangle.remarquables.bisectors.C.tex}`" />
-				<div v-katex.boxed="`D=${result.triangle.remarquables.bisectors.intersection.tex}`" />
+				<div v-katex.boxed="`(b_A): ${result.bisectors.A.tex}`" />
+				<div v-katex.boxed="`(b_B): ${result.bisectors.B.tex}`" />
+				<div v-katex.boxed="`(b_C): ${result.bisectors.C.tex}`" />
+				<div v-katex.boxed="`D=${result.bisectors.intersection.tex}`" />
 			</div>
 			<h2 class="font-lg">
 				bissectrices extérieures
 			</h2>
 			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 items-baseline">
-				<div v-katex.boxed="`(b_A'): ${result.extBissectors.A.tex}`" />
-				<div v-katex.boxed="`(b_B'): ${result.extBissectors.B.tex}`" />
-				<div v-katex.boxed="`(b_C'): ${result.extBissectors.C.tex}`" />
+				<div v-katex.boxed="`(b_A'): ${result.extBisectors.A.tex}`" />
+				<div v-katex.boxed="`(b_B'): ${result.extBisectors.B.tex}`" />
+				<div v-katex.boxed="`(b_C'): ${result.extBisectors.C.tex}`" />
 			</div>
 		</Card>
 		<tool-error v-else />

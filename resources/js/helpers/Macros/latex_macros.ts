@@ -49,7 +49,7 @@ const latex_macros_suffix: IMacroRecords = {
 	'.col': {
 		suffix: true,
 		math: true,
-		template: '\\color{ @ }'
+		template: '\\color{@}'
 	}
 
 }
