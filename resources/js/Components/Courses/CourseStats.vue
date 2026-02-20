@@ -61,6 +61,7 @@ export interface ILessonStats {
 const lesson_stats = ref<Record<string, ILessonStats>>({})
 const users = ref<UserInterface[]>([])
 const selected_user_id = ref(0)
+const showUserStats = ref<boolean>(false)
 
 const selected_user_stats = computed<Record<string, ILessonStats>>(() => {
 	if (!lesson_stats.value) {
@@ -101,6 +102,20 @@ function loadStats() {
 			lastUpdate.value = `mise à jour à ${dayjs().format('HH:mm:ss')}`
 		})
 }
+
+const stats_per_user = computed<Record<number, number>>(() => {
+	const dict: Record<number, number> = {}
+	users.value.forEach(user => {
+		if (!dict[user.id]) dict[user.id] = 0
+
+		Object.values(lesson_stats.value).forEach(stat => {
+			dict[user.id] += stat.users_id.includes(user.id) ? 1 : 0
+		})
+
+	})
+
+	return dict
+})
 
 let intervalID: number
 const interval = 1 * 60 * 1000
@@ -149,14 +164,20 @@ onUnmounted(() => {
 			</div>
 
 
-			<sc-button
-				outline
-				type="primary"
-				xs
-				@click="loadStats"
-			>
-				<i class="bi bi-arrow-clockwise" /> {{ lastUpdate }}
-			</sc-button>
+			<div class="flex gap-3">
+				<div @click="showUserStats=!showUserStats">
+					<i class="bi bi-bar-chart"></i>
+				</div>
+				<sc-button
+					outline
+					type="primary"
+					xs
+					@click="loadStats"
+				>
+					<i class="bi bi-arrow-clockwise" /> {{ lastUpdate }}
+				</sc-button>
+
+			</div>
 		</div>
 
 		<!-- Liste des étudiants -->
@@ -170,7 +191,7 @@ onUnmounted(() => {
 				xs
 				@click="selected_user_id=0"
 			>
-				Tous
+				Tous <span v-if="showUserStats">{{ Object.keys(lesson_stats).length }}</span>
 			</sc-button>
 			<sc-button
 				v-for="user in users"
@@ -180,7 +201,7 @@ onUnmounted(() => {
 				xs
 				@click="selected_user_id=user.id"
 			>
-				{{ user.fullname }}
+				{{ user.fullname }} <span v-if="showUserStats">{{ stats_per_user[user.id] }}</span>
 			</sc-button>
 		</div>
 
