@@ -4,16 +4,17 @@ import BlockShowAdmin from "@/Components/Blocks/BlockShowAdmin.vue"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 import {useFormattedBody} from "@/Composables/useHelpers.ts"
 import {useScriptLoader, UseScriptLoaderReturn} from "@/Composables/useScriptLoader.ts"
-import {blockTypes} from "@/block.config.ts"
+import {blockTypes, IblockType} from "@/block.config.ts"
 import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
 import type {BlockInterface} from "@/types/modelInterfaces.ts"
 import {router} from "@inertiajs/vue3"
 import axios from "axios"
-import {computed, inject, onMounted, provide} from "vue"
+import {computed, inject, onMounted, provide, ref} from "vue"
 import {blockTemplate} from "@/helpers/blockTemplate.ts"
 import ScButton from "@/Components/Ui/scButton.vue"
 import IllustrationIndex from "@/Components/Illustrations/IllustrationIndex.vue"
 import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
+import AccordionBody from "@/Components/Ui/AccordionBody.vue";
 
 const editMode = useStoreEditMode()
 const flash = useStoreFlashMessage()
@@ -32,9 +33,14 @@ const emits = defineEmits<{
 	success: [success: boolean]
 }>()
 
+// Script randomization
+const postScript = inject("postScript", useScriptLoader(""))
+const blockScript: UseScriptLoaderReturn = useScriptLoader(props.block.script, {parent: postScript.data})
+blockScript.run()
+provide("blockScript", blockScript)
 
 // Block display style computed properties
-const blockConfig = computed(() => {
+const blockConfig = computed<IblockType>(() => {
 	return blockTypes[props.block.type] === undefined
 		? {
 			style: {
@@ -58,18 +64,27 @@ const blockTitle = computed(() => {
 		: props.block.title
 })
 
-
 const elementsClasses = computed(() => {
 	return blockTemplate(props.block.template)
 })
 
+// Block computed content.
+const blockBody = computed(() => {
+	let body = useFormattedBody(props.block.body, blockScript.merged)
 
-const postScript = inject("postScript", useScriptLoader(""))
-const blockScript: UseScriptLoaderReturn = useScriptLoader(props.block.script, {parent: postScript.data})
-blockScript.run()
-provide("blockScript", blockScript)
+	if (blockConfig.value.content?.prepend) {
+		body += `${blockConfig.value.content.prepend}\n\n${body}`
+	}
 
-const blockBody = computed(() => useFormattedBody(props.block.body, blockScript.merged))
+	if (blockConfig.value.content?.append) {
+		body += `${body}\n\n${blockConfig.value.content.append}`
+	}
+
+	return useFormattedBody(body, blockScript.merged)
+})
+
+const canCollapse = computed(() => blockConfig.value.collapse !== undefined)
+const isOpen = ref(blockConfig.value.collapse !== true)
 
 function addIllustration() {
 	axios
@@ -96,7 +111,7 @@ onMounted(() => {
 	<article
 		:id="`block-${block.id}`"
 		:class="blockConfig.style.body"
-		class="bg-content "
+		class="bg-content"
 	>
 		<BlockShowAdmin
 			v-if="!noAdmin"
@@ -122,13 +137,13 @@ onMounted(() => {
 					blockConfig.style.header"
 				class="flex justify-between
 					w-full
-					px-2 md:px-5 py-2 md:py-3
-					mb-3"
+					px-2 md:px-5 py-2 md:py-3"
 			>
 				<!-- header left: (generic) icon and title -->
 				<div
 					v-theme.text="!block.type"
-					class="flex gap-3 items-baseline text-lg md:text-xl lg:text-2xl font-semibold"
+					class="flex gap-3 items-baseline text-lg md:text-xl lg:text-2xl font-semibold cursor-pointer"
+					@click="isOpen=!isOpen"
 				>
 					<i
 						v-if="blockIcon"
@@ -137,41 +152,61 @@ onMounted(() => {
 					<h3 v-katex.auto="blockTitle" />
 				</div>
 
-				<!-- buttons for randomize and more... -->
-				<block-body-buttons />
+				<!-- header right -->
+				<div class="flex gap-3">
+					<!-- buttons for randomize and more... -->
+					<block-body-buttons />
+
+					<i v-if="canCollapse"
+					   :class="[
+						   	'bi bi-chevron-right inline-block',
+							 'transition-all cursor-pointer ease-in-out',
+							 isOpen ? 'rotate-90' : ''
+						 ]"
+					   @click="isOpen=!isOpen"
+					>
+					</i>
+				</div>
 			</div>
 		</slot>
 
 		<!-- body -->
-		<slot name="body">
-			<div
-				v-if="blockBody!==null || block.illustrations.length>1"
-				:class="elementsClasses.grid + ((!block.title && !block.type) ? ' pt-3' : '')"
-				class="px-5 pb-2 "
-			>
-				<markdown-it
-					v-if="blockBody !== null"
-					:class="elementsClasses.block"
-					:text="blockBody"
-				/>
-
-				<!-- Block illustrations -->
+		<accordion-body v-model="isOpen">
+			<slot name="body">
 				<div
-					v-if="block.illustrations?.length > 0"
-					:class="elementsClasses.illustration"
+					v-if="blockBody!==null || block.illustrations.length>1"
+					:class="[
+						'p-3',
+						elementsClasses.grid + ((!block.title && !block.type) ? ' pt-3' : ''),
+				]"
 				>
+					<markdown-it
+						v-if="blockBody !== null"
+						:class="elementsClasses.block"
+						:text="blockBody"
+					/>
+
+					<!-- Block illustrations -->
+					<div
+						v-if="block.illustrations?.length > 0"
+						:class="elementsClasses.illustration"
+					>
+						<illustration-index
+							:block
+						/>
+					</div>
+				</div>
+				<div v-else-if="block.illustrations.length===1">
+					<!-- seulement une illustration : plein bloc -->
 					<illustration-index
 						:block
 					/>
 				</div>
-			</div>
-			<div v-else>
-				<!-- seulement une illustration : plein bloc -->
-				<illustration-index
-					:block
-				/>
-			</div>
-		</slot>
+				<div v-else class="font-code text-xl min-h-[10em] grid place-items-center">
+					Aucun contenu
+				</div>
+			</slot>
+		</accordion-body>
 
 		<slot name="footer">
 			<!-- admin footer to add illustrations -->

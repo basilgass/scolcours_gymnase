@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import {inject, nextTick, onMounted, ref, watch} from 'vue'
+import AccordionBody from "@/Components/Ui/AccordionBody.vue";
 
 const props = defineProps<{
 	id: number
@@ -59,16 +60,14 @@ onMounted(updateHeight)
 			</span>
 		</button>
 
-		<div
-			class="overflow-hidden transition-all duration-300 ease-in-out"
-			:style="{ height }"
-		>
+		<accordion-body v-model="accordion.isOpen">
 			<div
 				ref="contentRef"
 				class="pb-5 text-sm text-slate-500"
 			>
 				<slot />
 			</div>
-		</div>
+
+		</accordion-body>
 	</div>
 </template>

@@ -1,4 +1,18 @@
-export const blockTypes = {
+export interface IblockType {
+	title: string,
+	icon: string,
+	style: {
+		header: string,
+		body: string
+	},
+	collapse?: boolean,
+	content?: {
+		prepend?: string,
+		append?: string
+	}
+}
+
+export const blockTypes: Record<string, IblockType> = {
 	definition: {
 		title: "définition",
 		icon: "bi bi-book",
@@ -22,6 +36,10 @@ export const blockTypes = {
 			header: "bg-emerald-600 text-emerald-50",
 			body: "border border-l-8 border-emerald-600",
 		},
+		collapse: true,
+		content: {
+			append: "<i class='bi bi-square-fill'></i> {.text-right}"
+		}
 	},
 	property: {
 		title: "propriété",
