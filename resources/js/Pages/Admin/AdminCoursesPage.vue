@@ -20,8 +20,6 @@ const props = defineProps<{
 	teams: UserTeamInterface[]
 }>()
 
-console.log(props.courses)
-console.log(props.teams)
 const showCreate = ref(false)
 const newCourseTitle = ref("")
 const newCourseSlug = computed(() => {
@@ -65,25 +63,23 @@ function searchFunction(item: CourseInterface, search: string): boolean {
 
 <template>
 	<section>
-		<div>
-			<article-title
-				title="gestion des cours"
-				:return-link="{
+		<article-title
+			title="gestion des cours"
+			:return-link="{
 					url: route('admin.index'),
 					label: 'retour à l\'administration'
 				}"
-			>
-				<template #right>
-					<sc-button
-						type="add"
-						xs
-						@click="showCreate = true"
-					>
-						<i class="bi bi-plus-circle mr-2" />Créer un nouveau cours
-					</sc-button>
-				</template>
-			</article-title>
-		</div>
+		>
+			<template #right>
+				<sc-button
+					type="add"
+					xs
+					@click="showCreate = true"
+				>
+					<i class="bi bi-plus-circle mr-2" />Créer un nouveau cours
+				</sc-button>
+			</template>
+		</article-title>
 
 		<filtered-list
 			:list="theCourses"
@@ -105,20 +101,19 @@ function searchFunction(item: CourseInterface, search: string): boolean {
 			v-model="showCreate"
 			class="w-75 h-auto p-3"
 		>
-			<div>
-				<h2 class="text-lg font-extralight">
-					Créer un nouveau cours
-				</h2>
-				<form-maker
-					v-model="newCourseTitle"
-					label="titre"
-				/>
-				<form-maker
-					v-model="newCourseSlug"
-					disabled
-					label="slug"
-				/>
-			</div>
+			<h2 class="text-lg font-extralight">
+				Créer un nouveau cours
+			</h2>
+			<form-maker
+				v-model="newCourseTitle"
+				label="titre"
+			/>
+			<form-maker
+				v-model="newCourseSlug"
+				disabled
+				label="slug"
+			/>
+			
 			<template #footer>
 				<sc-button
 					type="add"

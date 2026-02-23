@@ -37,9 +37,7 @@ function doCancel() {
 		>
 			<div
 				class="bg-content border rounded-lg
-				w-[90%] h-[90%]
-				max-w-[95vw] max-h-[95vh]
-				overflow-auto"
+				overflow-auto overscroll-contain"
 				v-bind="$attrs"
 			>
 				<div class="w-full h-full flex flex-col">

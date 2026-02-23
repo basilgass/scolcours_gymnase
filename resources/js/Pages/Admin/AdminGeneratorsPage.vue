@@ -9,8 +9,9 @@ import {router} from "@inertiajs/vue3"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
 import {slugify} from "@/scolcours.ts"
-import Card from "@/Components/Ui/Card.vue"
 import LayoutAdmin from "@/Layouts/LayoutAdmin.vue"
+import ArticleTitle from "@/Components/Ui/ArticleTitle.vue";
+import DialogModal from "@/Components/Ui/DialogModal.vue";
 
 defineOptions({layout: LayoutAdmin})
 
@@ -34,6 +35,8 @@ const filteredGenerators = computed<GeneratorInterface[]>(() => {
 		? props.generators.filter(el => withErrors.includes(el.id))
 		: props.generators
 })
+
+const showCreate = ref(false)
 
 function addGenerator() {
 	axios.post(route("api.admin.generators.store"), {
@@ -75,10 +78,53 @@ function addToRef(el: InstanceType<typeof GeneratorItem>) {
 </script>
 
 <template>
-	<main
-		class="scolcours-container"
-	>
-		<card class="max-w-2xl mx-auto my-12">
+	<section>
+		<article-title
+			title="gestion des générateurs"
+			:return-link="{
+					url: route('admin.index'),
+					label: 'retour à l\'administration'
+				}"
+		>
+			<template #right>
+				<sc-button
+					type="add"
+					xs
+					@click="showCreate = true"
+				>
+					<i class="bi bi-plus-circle mr-2" />créer un générateur
+				</sc-button>
+			</template>
+		</article-title>
+
+
+		<sc-button
+			type="primary"
+			:outline="!filterErrorsOnly"
+			@click="generateAll"
+		>
+			Vérifier les erreurs
+			<span v-show="filterErrorsOnly">{{ filteredGenerators.length }} / {{ generators.length }}</span>
+		</sc-button>
+
+		<filtered-list
+			:list="filteredGenerators"
+			list-class="flex flex-col gap-12"
+			filter-by-theme
+		>
+			<template #card="{ item }: { item: GeneratorInterface }">
+				<generator-item
+					:ref="addToRef"
+					:generator="item"
+					@generator-has-errors="hasErrors(item.id, $event)"
+				/>
+			</template>
+		</filtered-list>
+
+		<dialog-modal
+			v-model="showCreate"
+			class="h-auto px-5 py-2"
+		>
 			<form-maker
 				v-model="title"
 				label="nouveau générateur"
@@ -94,42 +140,21 @@ function addToRef(el: InstanceType<typeof GeneratorItem>) {
 			/>
 
 			<template #footer>
-				<div class="flex justify-end">
+				<div class="flex justify-center mt-10 mb-3">
 					<sc-button
 						:class="slug==='' ? 'opacity-30' : ''"
 						:disabled="slug===''"
 						class="btn btn-add btn-xs"
 						type="add"
+						icon
 						@click="addGenerator"
 					>
 						Ajouter un générateur
 					</sc-button>
 				</div>
 			</template>
-		</card>
-
-		<sc-button
-			type="primary"
-			:outline="!filterErrorsOnly"
-			@click="generateAll"
-		>
-			Vérifier les erreurs
-			<span v-show="filterErrorsOnly">{{ filteredGenerators.length }} / {{ generators.length }}</span>
-		</sc-button>
-
-		<filtered-list
-			:list="filteredGenerators"
-			list-class="flex flex-col gap-12"
-		>
-			<template #card="{ item }: { item: GeneratorInterface }">
-				<generator-item
-					:ref="addToRef"
-					:generator="item"
-					@generator-has-errors="hasErrors(item.id, $event)"
-				/>
-			</template>
-		</filtered-list>
-	</main>
+		</dialog-modal>
+	</section>
 </template>
 
 

@@ -31,15 +31,17 @@ function updateStatus(event: boolean) {
 
 <template>
 	<div
+		v-theme.border="generator.theme_id"
 		:class="hasErrors?'border-l-8 border-l-red-600':''"
 		:data-withErrors="hasErrors"
 		class="bg-content
 		rounded-lg
 		grid grid-cols-1 md:grid-cols-2 gap-3
-		p-5 "
+		border-l-8
+		p-5"
 	>
 		<div>
-			<div class="flex justify-between">
+			<div class="flex justify-between md:flex-col flex-row ">
 				<div class="flex gap-1 items-baseline">
 					<div class="font-code text-xs">
 						({{ generator.id }})

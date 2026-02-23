@@ -200,7 +200,9 @@ const nextCounter = computed(() => {
 			/>
 		</div>
 
-		<dialog-modal v-model="showFormularDialog">
+		<dialog-modal v-model="showFormularDialog"
+		              class="min-w-[95%] min-h-[95%] max-w-[95%] max-h-[95%]"
+		>
 			<template #header>
 				<div class="p-3 flex justify-between">
 					<h3

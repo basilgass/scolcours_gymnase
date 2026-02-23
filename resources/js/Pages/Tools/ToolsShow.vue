@@ -79,7 +79,7 @@ watch(showDialog, (newVal) => {
 
 	<dialog-modal
 		v-model="showDialog"
-		class="px-5 pb-5"
+		class="px-5 pb-5 max-w-[95%] h-[95%]"
 	>
 		<keep-alive>
 			<tools-search ref="toolsSearchRef" />

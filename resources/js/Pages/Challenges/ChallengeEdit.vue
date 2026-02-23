@@ -177,9 +177,6 @@ const deleteChallenge = function () {
 
 <template>
 	<div class="my-5 scolcours-container">
-		<!-- <dialog-modal v-model="show"> -->
-		<!-- Header -->
-		<!-- <template #header> -->
 		<div
 			class="sticky top-0 z-10 bg-white flex justify-between items-baseline border-b border-gray-200 px-5 py-3 mb-5"
 		>
