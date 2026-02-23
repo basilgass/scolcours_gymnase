@@ -157,15 +157,16 @@ onMounted(() => {
 					<!-- buttons for randomize and more... -->
 					<block-body-buttons />
 
-					<i v-if="canCollapse"
-					   :class="[
-						   	'bi bi-chevron-right inline-block',
-							 'transition-all cursor-pointer ease-in-out',
+					<div v-if="canCollapse"
+					     :class="[
+						   	'aspect-square text-center cursor-pointer',
+							 'transition-all ease-in-out duration-300',
 							 isOpen ? 'rotate-90' : ''
 						 ]"
-					   @click="isOpen=!isOpen"
+					     @click="isOpen=!isOpen"
 					>
-					</i>
+						<i class="bi bi-chevron-right" />
+					</div>
 				</div>
 			</div>
 		</slot>
