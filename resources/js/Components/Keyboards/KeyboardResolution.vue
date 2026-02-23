@@ -305,7 +305,6 @@ onMounted(() => {
 
 			<accordion
 				v-if="factorPolynom"
-				multiple
 			>
 				<accordion-item :id="1">
 					<template #title>

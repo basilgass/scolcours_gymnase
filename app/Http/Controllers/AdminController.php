@@ -321,10 +321,9 @@ class AdminController extends Controller
 
 	public function courses()
 	{
-		// TODO : par défaut, Team::active() au lien de Team::all() ??
 		$courses = Course::with([
 			'teams' => fn($q) => $q->active()
-		])->get();
+		])->orderBy('created_at', 'desc')->get();
 
 		return Inertia::render(
 			'Admin/AdminCoursesPage',

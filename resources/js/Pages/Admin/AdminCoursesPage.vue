@@ -2,8 +2,7 @@
 
 import {CourseInterface, UserTeamInterface} from "@/types/modelInterfaces.ts"
 import {computed, ref} from "vue"
-import {AxiosErrorMessage, AxiosResponseModel} from "@/types"
-import Card from "@/Components/Ui/Card.vue"
+import {AxiosErrorMessage} from "@/types"
 import ScButton from "@/Components/Ui/scButton.vue"
 import axios from "axios"
 import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
@@ -11,17 +10,18 @@ import FormMaker from "@/Components/Form/FormMaker.vue"
 import DialogModal from "@/Components/Ui/DialogModal.vue"
 import {slugify} from "@/scolcours.ts"
 import {router} from "@inertiajs/vue3"
-import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
-import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
 import LayoutAdmin from "@/Layouts/LayoutAdmin.vue"
+import AdminCourseItem from "@/Components/Courses/AdminCourseItem.vue";
+import FilteredList from "@/Components/Ui/FilteredList.vue";
 
 defineOptions({layout: LayoutAdmin})
-const flash = useStoreFlashMessage()
 const props = defineProps<{
 	courses: CourseInterface[],
 	teams: UserTeamInterface[]
 }>()
 
+console.log(props.courses)
+console.log(props.teams)
 const showCreate = ref(false)
 const newCourseTitle = ref("")
 const newCourseSlug = computed(() => {
@@ -41,40 +41,25 @@ function addCourse() {
 		})
 }
 
-function deleteCourse(id: number) {
-	axios.delete(route('api.admin.courses.destroy', {id}))
-		.then(() => {
-			const index = theCourses.value.findIndex(course => course.id === id)
-			theCourses.value.splice(index, 1)
-		})
-		.catch((err: AxiosErrorMessage) => {
-			console.warn(err.response.data.message)
-		})
-}
 
 const theCourses = ref<CourseInterface[]>(props.courses)
 
-function toggleTeam(course: CourseInterface, team: UserTeamInterface) {
-	axios
-		.patch(route('api.admin.courses.toggle-team', {course: course.id, team: team.id}))
-		.then((res: AxiosResponseModel<boolean>) => {
-			if (res.data) {
-				// On ajoute la team
-				theCourses.value
-					.find(c => course.id === c.id)
-					.teams.push(team)
-			} else {
-				// On supprime la team
-				const c = theCourses.value.findIndex(c => course.id === c.id)
-				const t = theCourses.value[c].teams.findIndex(t => t.id === team.id)
-				theCourses.value[c].teams.splice(t, 1)
-			}
-			flash.success('édition effectuée')
-		})
-		.catch((err: AxiosErrorMessage) => {
-			console.warn(err.response.data.message)
-			flash.error('problème')
-		})
+function onDelete(id: number) {
+	const index = theCourses.value.findIndex(course => course.id === id)
+	theCourses.value.splice(index, 1)
+}
+
+function searchFunction(item: CourseInterface, search: string): boolean {
+	if (item.title.toLowerCase().includes(search)) {
+		return true
+	}
+
+	console.log(item.teams.map(t => t.name))
+	if (item.teams.some(team => team.name.toLowerCase().includes(search))) {
+		return true
+	}
+
+	return false
 }
 </script>
 
@@ -98,61 +83,27 @@ function toggleTeam(course: CourseInterface, team: UserTeamInterface) {
 					</sc-button>
 				</template>
 			</article-title>
+		</div>
 
-			<div>Droite</div>
-		</div>
-		<div class="grid grid-cols-1 gap-3 mt-10">
-			<Card
-				v-for="course in theCourses"
-				:key="course.id"
-			>
-				<template #header>
-					<div class="flex justify-between">
-						<h2 v-katex.auto="course.title" />
-						<div class="flex gap-3">
-							<sc-button
-								v-for="team in course.teams"
-								:key="`course-${course.id}-${team.name}`"
-								type="primary"
-								xs
-								:href="route('admin.courses.dashboard', {course: course.slug, team: team.name})"
-							>
-								{{ team.name }}
-							</sc-button>
-							<sc-button
-								type="edit"
-								xs
-								icon
-								:href="route('admin.courses.edit', {course: course.slug})"
-							/>
-							<confirm-button
-								icon
-								xs
-								@confirm="deleteCourse(course.id)"
-							>
-								supprimer
-							</confirm-button>
-						</div>
-					</div>
-				</template>
-				<div class="flex gap-3">
-					<sc-button
-						v-for="team in teams"
-						:key="`team-${team.name}`"
-						xs
-						outline
-						type="primary"
-						@click="toggleTeam(course, team)"
-					>
-						{{ team.name }}
-					</sc-button>
-				</div>
-			</Card>
-		</div>
+		<filtered-list
+			:list="theCourses"
+			search="rechercher un cours"
+			:no-filter-if-less-than="3"
+			list-class="grid grid-cols-1 gap-3"
+			:search-function
+		>
+			<template #card="{item} : {item: CourseInterface }">
+				<admin-course-item
+					:course="item" :teams
+					@delete="onDelete"
+				/>
+			</template>
+		</filtered-list>
+
 
 		<dialog-modal
 			v-model="showCreate"
-			class="w-[300px] h-auto p-3"
+			class="w-75 h-auto p-3"
 		>
 			<div>
 				<h2 class="text-lg font-extralight">

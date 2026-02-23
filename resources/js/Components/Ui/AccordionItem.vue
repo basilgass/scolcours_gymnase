@@ -13,11 +13,14 @@ const accordion = inject<{
 
 const contentRef = ref<HTMLElement | null>(null)
 const height = ref('0px')
+const show = ref<boolean>(accordion.isOpen(props.id))
 
 function updateHeight() {
 	if (!contentRef.value) return
 
-	if (accordion.isOpen(props.id)) {
+	show.value = accordion.isOpen(props.id)
+
+	if (show.value) {
 		height.value = contentRef.value.scrollHeight + 'px'
 		setTimeout(() => {
 			height.value = 'auto'
@@ -60,7 +63,7 @@ onMounted(updateHeight)
 			</span>
 		</button>
 
-		<accordion-body v-model="accordion.isOpen">
+		<accordion-body v-model="show">
 			<div
 				ref="contentRef"
 				class="pb-5 text-sm text-slate-500"
