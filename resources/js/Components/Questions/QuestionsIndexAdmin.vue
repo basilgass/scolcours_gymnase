@@ -4,7 +4,7 @@ import FormMaker from "@/Components/Form/FormMaker.vue"
 import QuestionShow from "@/Components/Questions/QuestionShow.vue"
 import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
 import type {QuestionInterface} from "@/types/modelInterfaces.ts"
-import ScButton from "@/Components/Ui/scButton.vue"
+import ScButton from "@/Components/Ui/Button/scButton.vue"
 import {questionsContainerInterface, useQuestionAdmin} from "@/Components/Questions/useQuestionAdmin.ts"
 
 const editMode = useStoreEditMode()

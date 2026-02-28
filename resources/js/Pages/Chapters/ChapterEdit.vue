@@ -8,7 +8,7 @@ import type {ChapterShowInterface} from "@/types/modelInterfaces"
 import axios from "axios"
 import {ref} from "vue"
 import {router, usePage} from "@inertiajs/vue3"
-import ScButton from "@/Components/Ui/scButton.vue"
+import ScButton from "@/Components/Ui/Button/scButton.vue"
 import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
 
 defineOptions({layout: LayoutMain})

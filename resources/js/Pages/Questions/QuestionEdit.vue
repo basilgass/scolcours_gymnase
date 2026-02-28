@@ -11,7 +11,7 @@ import type {IllustrationInterface, QuestionInterface} from "@/types/modelInterf
 import {router} from "@inertiajs/vue3"
 import axios from "axios"
 import {computed, PropType, ref} from "vue"
-import ScButton from "@/Components/Ui/scButton.vue"
+import ScButton from "@/Components/Ui/Button/scButton.vue"
 import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
 import {useQuestionValidationEquation} from "@/Components/Questions/useQuestionValidation.ts"
 

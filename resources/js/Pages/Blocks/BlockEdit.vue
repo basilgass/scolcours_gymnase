@@ -8,7 +8,7 @@ import type {BlockInterface} from "@/types/modelInterfaces"
 import {router} from "@inertiajs/vue3"
 import axios from "axios"
 import {computed, ref, unref} from "vue"
-import ScButton from "@/Components/Ui/scButton.vue"
+import ScButton from "@/Components/Ui/Button/scButton.vue"
 import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 

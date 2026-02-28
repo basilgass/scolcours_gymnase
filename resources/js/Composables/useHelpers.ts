@@ -1,48 +1,50 @@
 import {usePage} from "@inertiajs/vue3"
 import {Ref, unref} from "vue"
 
-/**
- * Scrolls the page to the element with the specified class.
- *
- * @param {string} className - The class name of the element to scroll to.
- */
-export function useMenuScrollToClass(className: string) {
-	const el = document.getElementsByClassName(className)[0]
-	el.scrollIntoView({
-		block: "start",
-		behavior: "smooth",
-		inline: "start"
-	})
+type KeyValue = {
+	key: string
+	value: string
 }
 
-export function useMenuScrollToData(dataName: string, dataValue: unknown) {
-	const el = document.querySelector(`[data-${dataName}="${dataValue}"]`)
-	el.scrollIntoView({
-		block: "start",
-		behavior: "smooth",
-		inline: "start"
-	})
+function isKeyValue(obj: unknown): obj is KeyValue {
+	return (
+		typeof obj === 'object' &&
+		obj !== null &&
+		'key' in obj &&
+		'value' in obj &&
+		typeof (obj as any).key === 'string' &&
+		typeof (obj as any).value === 'string'
+	)
 }
 
-/**
- * Scrolls the page to a specified element with smooth behavior.
- * If no element is specified, scrolls to the top of the page.
- *
- * @param {string} id - The id of the element to scroll to. If not provided, it scrolls to the top of the page.
- *
- * @return {void}
- */
-export function useMenuScrollTo(id?: string): void {
-	const el = id === undefined ? document.body : document.getElementById(id)
+export function useScrollTo(target?: string | HTMLElement | KeyValue, offset?: number) {
+	let el: HTMLElement | null = null
+
+	console.log(target)
+
+	// to the top
+	if (!target) target = 'body'
+
+	if (typeof target === "string") {
+		el = document.querySelector(target)
+	} else if (target instanceof HTMLElement) {
+		el = target
+	} else if (isKeyValue(target)) {
+		el = document.querySelector(`[data-${target.key}="${target.value}"]`)
+	}
+
+	if (!el) return
 
 	setTimeout(() => {
-		el?.scrollIntoView({
-			block: "start",
-			behavior: "smooth",
-			inline: "start"
+		const top = el.getBoundingClientRect().top +
+			window.scrollY -
+			(offset === undefined ? 0 : offset)
+
+		window.scrollTo({
+			top,
+			behavior: 'smooth'
 		})
 	}, 500)
-
 }
 
 /**

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 
 import Card from "@/Components/Ui/Card.vue";
-import ScButton from "@/Components/Ui/scButton.vue";
+import ScButton from "@/Components/Ui/Button/scButton.vue";
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue";
 import {CourseInterface, UserTeamInterface} from "@/types/modelInterfaces.ts";
 import {ref} from "vue";

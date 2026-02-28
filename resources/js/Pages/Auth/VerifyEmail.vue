@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 
 import {Head, useForm} from "@inertiajs/vue3"
-import ScButton from "@/Components/Ui/scButton.vue"
+import ScButton from "@/Components/Ui/Button/scButton.vue"
 import LayoutGuest from "@/Layouts/LayoutGuest.vue"
 import {computed} from "vue"
 

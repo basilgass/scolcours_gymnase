@@ -5,7 +5,7 @@ Affichage d'un texte en markdown.
 	lang="ts"
 	setup
 >
-import {useKatexMacros, useMenuScrollTo} from "@/Composables/useHelpers"
+import {useKatexMacros, useScrollTo} from "@/Composables/useHelpers"
 import {router, usePage} from "@inertiajs/vue3"
 import katex from "katex"
 import markdownIt from "markdown-it"
@@ -119,7 +119,7 @@ const mdClick = function (event) {
 
 		if (anchor) {
 			if (url === document.URL) {
-				useMenuScrollTo(anchor)
+				useScrollTo('#' + anchor)
 			} else {
 				router.visit(event.target.href)
 			}

@@ -6,7 +6,7 @@ import QuestionShow from "@/Components/Questions/QuestionShow.vue"
 import {computed, ref} from "vue"
 import {EVAL_STATUS, ITEM_STATUS} from "@/types/evaluationInterfaces.ts"
 import {questionResultInterface} from "@/Components/Questions/QuestionInterface.ts"
-import ScButton from "@/Components/Ui/scButton.vue"
+import ScButton from "@/Components/Ui/Button/scButton.vue"
 
 const props = defineProps<{
 	evaluation: EvaluationInterface,

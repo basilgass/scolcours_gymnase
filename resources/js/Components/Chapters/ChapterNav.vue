@@ -5,7 +5,7 @@
 import type {ChapterShowInterface, PostInterface} from "@/types/modelInterfaces"
 import {usePage} from "@inertiajs/vue3"
 import {computed} from "vue"
-import ScButton from "@/Components/Ui/scButton.vue"
+import ScButton from "@/Components/Ui/Button/scButton.vue"
 
 const props = defineProps<{
 	chapter: ChapterShowInterface, // slug, title, posts.length
@@ -31,7 +31,7 @@ const nav = computed<{
 
 	// On récupère la page précédant.
 	const previous = props.posts[currentPostIndex].order > 1 ?
-		route("posts.show", [props.posts[currentPostIndex-1].id]) : false
+		route("posts.show", [props.posts[currentPostIndex - 1].id]) : false
 
 	const home = route("themes.chapters.show", [
 		themeSlug,
@@ -39,7 +39,7 @@ const nav = computed<{
 	])
 
 	const next = props.posts[currentPostIndex].order < props.posts.length ?
-		route("posts.show", [props.posts[currentPostIndex+1].id]) : false
+		route("posts.show", [props.posts[currentPostIndex + 1].id]) : false
 
 	return {previous, home, next}
 })

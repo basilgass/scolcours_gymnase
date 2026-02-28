@@ -9,7 +9,7 @@ import {computed, nextTick, ref} from "vue"
 import MoveItemTo from "@/Components/MoveItemTo.vue"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
 import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
-import ScButton from "@/Components/Ui/scButton.vue"
+import ScButton from "@/Components/Ui/Button/scButton.vue"
 
 const flash = useStoreFlashMessage()
 const props = defineProps<{

@@ -5,7 +5,7 @@ Permet de recommencer le challenge.
 <script lang="ts" setup>
 
 import {ChallengeInterface, ScoreInterface} from "@/types/modelInterfaces"
-import ScButton from "@/Components/Ui/scButton.vue"
+import ScButton from "@/Components/Ui/Button/scButton.vue"
 import {ChallengeAnswerInterface, ChallengeGameInterface} from "@/types/challengeInterface.ts"
 import {ScoreChallengeDataInterface} from "@/types/scoreInterfaces.ts"
 

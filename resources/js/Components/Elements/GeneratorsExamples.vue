@@ -2,7 +2,7 @@
 import {GeneratorInterface} from "@/types/modelInterfaces.ts"
 import {onMounted, ref} from "vue"
 import {useGenerator} from "@/Composables/useGenerator.ts"
-import ScButton from "@/Components/Ui/scButton.vue"
+import ScButton from "@/Components/Ui/Button/scButton.vue"
 
 const props = withDefaults(
 	defineProps<{

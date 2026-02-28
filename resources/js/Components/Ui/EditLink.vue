@@ -4,7 +4,7 @@
 >
 
 import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
-import ScButton from "@/Components/Ui/scButton.vue"
+import ScButton from "@/Components/Ui/Button/scButton.vue"
 
 withDefaults(defineProps<{
 	label: string | number,

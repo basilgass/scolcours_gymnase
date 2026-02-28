@@ -3,7 +3,7 @@
 	lang="ts"
 >
 import LayoutMain from "@/Layouts/LayoutMain.vue"
-import ScButton from "@/Components/Ui/scButton.vue"
+import ScButton from "@/Components/Ui/Button/scButton.vue"
 import {CourseInterface, TeamInterface} from "@/types/modelInterfaces.ts"
 import {computed} from "vue"
 import CourseCard from "@/Components/Courses/CourseCard.vue"

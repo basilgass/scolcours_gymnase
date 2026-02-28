@@ -8,7 +8,7 @@ import {router} from "@inertiajs/vue3"
 import axios from "axios"
 import {ref} from "vue"
 import GeneratorsExamples from "@/Components/Elements/GeneratorsExamples.vue"
-import ScButton from "@/Components/Ui/scButton.vue"
+import ScButton from "@/Components/Ui/Button/scButton.vue"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
 

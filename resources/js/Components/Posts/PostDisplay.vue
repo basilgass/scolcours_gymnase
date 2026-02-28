@@ -5,11 +5,11 @@ import QuestionsIndex from "@/Components/Questions/QuestionsIndex.vue"
 import {useScriptLoader} from "@/Composables/useScriptLoader.ts"
 import type {BlockInterface, PostShowInterface} from "@/types/modelInterfaces"
 import {nextTick, onMounted, provide, ref} from "vue"
-import {useMenuScrollTo} from "@/Composables/useHelpers.ts"
+import {useScrollTo} from "@/Composables/useHelpers.ts"
 import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
 import ContentSeparator from "@/Components/Ui/ContentSeparator.vue"
 import dayjs from "dayjs"
-import ScButton from "@/Components/Ui/scButton.vue"
+import ScButton from "@/Components/Ui/Button/scButton.vue"
 import axios from "axios"
 import {AxiosErrorMessage} from "@/types"
 
@@ -31,7 +31,7 @@ provide("postScript", postScript)
 
 onMounted(() => {
 	if (props.anchor) {
-		nextTick(() => useMenuScrollTo(props.anchor))
+		nextTick(() => useScrollTo('#' + props.anchor))
 	}
 })
 
@@ -39,7 +39,7 @@ const toBeRevised = ref<boolean>(props.post.revise)
 
 function postRevised() {
 	toBeRevised.value = !toBeRevised.value
-	
+
 	axios.patch(
 		route("api.admin.posts.revised",
 			{post: props.post.id, revise: toBeRevised.value}

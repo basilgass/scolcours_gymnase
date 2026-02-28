@@ -4,7 +4,7 @@ import {ToolInterface} from "@/types/modelInterfaces.ts"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import ThemeSelector from "@/Components/Ui/ThemeSelector.vue"
 import axios from "axios"
-import ScButton from "@/Components/Ui/scButton.vue"
+import ScButton from "@/Components/Ui/Button/scButton.vue"
 import {AxiosErrorMessage} from "@/types"
 import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
 

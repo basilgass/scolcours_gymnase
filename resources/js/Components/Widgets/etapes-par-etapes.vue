@@ -2,7 +2,7 @@
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 import {WidgetPropsInterface} from "@/types/modelInterfaces.ts"
 import {computed, ref} from "vue"
-import ScButton from "@/Components/Ui/scButton.vue"
+import ScButton from "@/Components/Ui/Button/scButton.vue"
 
 const props = defineProps<{
 	illustration: WidgetPropsInterface

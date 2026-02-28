@@ -3,19 +3,19 @@ Affichage d'un formulaire, avec la possibilité de passer d'un formulaire du th�
 -->
 <script lang="ts" setup>
 import BlockShow from "@/Components/Blocks/BlockShow.vue"
-import { useIntersectionObserver } from "@vueuse/core"
+import {useIntersectionObserver} from "@vueuse/core"
 import axios from "axios"
 import {computed, ref, useTemplateRef} from "vue"
-import ScButton from "@/Components/Ui/scButton.vue"
+import ScButton from "@/Components/Ui/Button/scButton.vue"
 
 const props = defineProps({
-	chapterSlug: { type: String, required: true },
-	responsive: { type: Boolean, default: false }
+	chapterSlug: {type: String, required: true},
+	responsive: {type: Boolean, default: false}
 })
 
 const theoremsList = useTemplateRef<HTMLElement>('theoremsList')
 
-useIntersectionObserver(theoremsList, ([{ isIntersecting }]) => {
+useIntersectionObserver(theoremsList, ([{isIntersecting}]) => {
 	if (isIntersecting && theTheorems.value.length === 0) {
 		loadTheorems()
 	}
@@ -30,7 +30,7 @@ const theTheorems = ref([]),
 // showProperties = ref(true),
 // showDefinitions = ref(true)
 
-const loadTheorems = function() {
+const loadTheorems = function () {
 	return axios
 		.get(route("api.chapters.theorems.index", [theSlug.value]))
 		.then((res) => {
@@ -53,7 +53,7 @@ const theTheoremsFiltered = computed(() => {
 		.slice(0, 5)
 })
 
-const groups:Record<string, 'theorem'|'property'|'definition'> = {
+const groups: Record<string, 'theorem' | 'property' | 'definition'> = {
 	"théorèmes": "theorem",
 	"propriétés": "property",
 	"définitions": "definition"

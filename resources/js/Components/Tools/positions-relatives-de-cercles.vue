@@ -11,7 +11,7 @@ import ToolForm, {IToolForm} from "@/Components/Tools/Parts/ToolForm.vue"
 import {useToolsStorage} from "@/Composables/useToolsStorage.ts"
 import {Circle, Numeric, Point, Random} from "pimath"
 import {computed, onMounted, ref} from "vue"
-import ScButton from "@/Components/Ui/scButton.vue"
+import ScButton from "@/Components/Ui/Button/scButton.vue"
 import Card from "@/Components/Ui/Card.vue"
 import ToolError from "@/Components/Tools/Parts/ToolError.vue"
 

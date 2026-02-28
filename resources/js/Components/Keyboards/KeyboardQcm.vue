@@ -1,13 +1,21 @@
 <script lang="ts" setup>
 import {asciiToTex} from "@/Composables/keyboardConfig"
 import {computed, onMounted, ref} from "vue"
-import ScButton from "@/Components/Ui/scButton.vue"
+import ScButton from "@/Components/Ui/Button/scButton.vue"
 import type {
 	KeyboardEmitsInterface,
 	KeyboardExposeInterface,
 	KeyboardInputInterface,
 	KeyboardPropsInterface
 } from "@/types/keyboardInterfaces.ts"
+
+interface QCMItem {
+	key: string,
+	label: string,
+	tex: string,
+	ascii: boolean,
+	selected: boolean
+}
 
 // props.keyboard
 const props = defineProps<KeyboardPropsInterface>()
@@ -53,6 +61,7 @@ defineExpose<KeyboardExposeInterface>({
 
 /* ------------------*/
 // Options du QCM
+// TODO: ajouter un "@sort" et "@sort:desc"
 const inRandomOrder = computed(() => {
 	return props.keyboard.parameters.includes("random")
 })
@@ -79,20 +88,56 @@ const joinCharacter = computed(() => {
 
 	return join ? join.substring(key.length) : ", "
 })
+const sortValues = computed(() => {
+	const sort = props.keyboard.parameters.find(p => p.startsWith('sort'))
+
+	if (!sort) return null
+
+	const [_, direction] = sort.split(':')
+
+	return direction === 'desc' ? 'desc' : 'asc'
+})
 
 /* ---------------- */
 // Gestion du QCM
-let qcmItems = ref([])
+let qcmItems = ref<QCMItem[]>([])
 
-function qcmSelections() {
+function qcmSelections(): QCMItem[] {
 	// Retourne la ou les valeur(s) sélectionnée(s).
-	let values = [
+	let values: QCMItem[] = [
 		...qcmItems.value
 			.filter((x) => x.selected)
 	]
 
-	values.sort((a, b) => a.key < b.key ? -1 : 1)
+	if (sortValues.value) {
+		values = sortSmart(values, sortValues.value)
+	}
+
 	return values
+}
+
+function sortSmart(values: QCMItem[], order: 'asc' | 'desc' = 'asc'): QCMItem[] {
+	const isNumeric = values.every(v => {
+		const t = v.key.trim()
+		return t !== '' && !Number.isNaN(Number(t))
+	})
+
+	return [...values].sort((keyA, keyB) => {
+		const a = keyA.key
+		const b = keyB.key
+		if (isNumeric) {
+			const diff = Number(a) - Number(b)
+			return order === 'asc' ? diff : -diff
+		}
+
+		// tri alphabétique naturel (ex: 2 < 10)
+		const diff = a.localeCompare(b, undefined, {
+			numeric: true,
+			sensitivity: 'base'
+		})
+
+		return order === 'asc' ? diff : -diff
+	})
 }
 
 function qcmButtonClick(element) {
@@ -112,7 +157,7 @@ onMounted(() => {
 	// TeX
 
 	// REFACTOR: Reformat conversion code <key>|<label>|<TeX>
-	const items = props.keyboard.values
+	const items: QCMItem[] = props.keyboard.values
 		.map((x) => {
 			let [key, label, tex] = x.split("|")
 

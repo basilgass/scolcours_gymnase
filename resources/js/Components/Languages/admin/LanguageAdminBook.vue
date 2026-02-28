@@ -4,7 +4,7 @@ import FormMaker from "@/Components/Form/FormMaker.vue"
 import {BookInterface} from "@/types/modelInterfaces.ts"
 import axios from "axios"
 import {ref, watch} from "vue"
-import ScButton from "@/Components/Ui/scButton.vue"
+import ScButton from "@/Components/Ui/Button/scButton.vue"
 
 const props = defineProps<{
 	language: string,
@@ -26,7 +26,8 @@ const bookTitle = ref<string>("")
 const bookSlug = ref<string>("")
 
 function createBook() {
-	axios.post(route('api.admin.voc.languages.books.store', {language: props.language}), {slug: bookSlug.value,
+	axios.post(route('api.admin.voc.languages.books.store', {language: props.language}), {
+		slug: bookSlug.value,
 		title: bookTitle.value
 	}).then(res => {
 		books.value.push(res.data)

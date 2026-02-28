@@ -2,7 +2,7 @@
 
 import {EvaluationInterface, QuestionInterface} from "@/types/modelInterfaces.ts"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
-import ScButton from "@/Components/Ui/scButton.vue"
+import ScButton from "@/Components/Ui/Button/scButton.vue"
 import {computed} from "vue"
 import {EVAL_STATUS} from "@/types/evaluationInterfaces.ts"
 

@@ -11,7 +11,7 @@ import {router} from "@inertiajs/vue3"
 import axios from "axios"
 import {computed, inject, onMounted, provide, ref} from "vue"
 import {blockTemplate} from "@/helpers/blockTemplate.ts"
-import ScButton from "@/Components/Ui/scButton.vue"
+import ScButton from "@/Components/Ui/Button/scButton.vue"
 import IllustrationIndex from "@/Components/Illustrations/IllustrationIndex.vue"
 import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
 import AccordionBody from "@/Components/Ui/AccordionBody.vue";

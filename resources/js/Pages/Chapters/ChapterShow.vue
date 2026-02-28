@@ -9,7 +9,7 @@ import ChapterToc from "@/Components/Chapters/ChapterToc.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 import {ChallengeMinInterface, ChapterInterface, ChapterShowInterface, PostInterface} from "@/types/modelInterfaces"
 import {computed, ref} from "vue"
-import ScButton from "@/Components/Ui/scButton.vue"
+import ScButton from "@/Components/Ui/Button/scButton.vue"
 import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
 import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
 import {usePage} from "@inertiajs/vue3"
@@ -23,7 +23,7 @@ const props = defineProps<{
 	relations: ChapterInterface[]
 }>()
 
-const theme = computed(()=> usePage().props.themes[props.chapter.theme_id] )
+const theme = computed(() => usePage().props.themes[props.chapter.theme_id])
 const editMode = useStoreEditMode()
 
 const currentTab = ref<"requires" | "formulas" | "challenges" | "theorems" | undefined>(undefined)

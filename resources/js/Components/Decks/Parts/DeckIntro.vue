@@ -2,7 +2,7 @@
 
 import {inject} from "vue"
 import {provideDeckData} from "@/types/modelInterfaces.ts"
-import ScButton from "@/Components/Ui/scButton.vue"
+import ScButton from "@/Components/Ui/Button/scButton.vue"
 
 const deckData = inject<provideDeckData>('deckData')
 

@@ -2,7 +2,7 @@
 import {useScriptLoader, UseScriptLoaderReturn} from "@/Composables/useScriptLoader.ts"
 import {buttonInterface} from "@/types"
 import {computed, inject} from "vue"
-import ScButton from "@/Components/Ui/scButton.vue"
+import ScButton from "@/Components/Ui/Button/scButton.vue"
 
 // Récupération des scripts de block
 const blockScript = inject<UseScriptLoaderReturn>('blockScript', useScriptLoader(''))

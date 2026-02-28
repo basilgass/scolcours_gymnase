@@ -5,11 +5,11 @@ code: function
 
 <script lang="ts" setup>
 import FormMaker from "@/Components/Form/FormMaker.vue"
-import { WidgetPropsInterface } from "@/types/modelInterfaces.ts"
+import {WidgetPropsInterface} from "@/types/modelInterfaces.ts"
 
-import { NumExp } from "pimath"
-import { computed, onMounted, ref } from "vue"
-import ScButton from "@/Components/Ui/scButton.vue"
+import {NumExp} from "pimath"
+import {computed, onMounted, ref} from "vue"
+import ScButton from "@/Components/Ui/Button/scButton.vue"
 
 const props = defineProps<{
 	illustration: WidgetPropsInterface
@@ -39,7 +39,7 @@ const fxExp = computed<NumExp>(() => {
 function fx(value: number): number {
 	if (isNaN(value)) return NaN
 
-	return fxExp.value.evaluate({ x: value })
+	return fxExp.value.evaluate({x: value})
 }
 
 function rnd(value: number): number {
@@ -199,89 +199,89 @@ onMounted(() => {
 				class="table-fixed border-collapse border bg-white w-full lg:max-w-[xl] mx-auto text-center"
 			>
 				<thead class="bg-amber-100 font-semibold">
-					<td
-						v-katex="'a'"
-						class="border"
-					/>
-					<td
-						v-katex="'b'"
-						class="border"
-					/>
-					<td
-						v-katex="'f(a)'"
-						class="border"
-					/>
-					<td
-						v-katex="'f(b)'"
-						class="border"
-					/>
-					<td
-						v-katex="'\\frac{a+b}{2}'"
-						class="border"
-					/>
-					<td
-						v-katex="'f\\left(\\frac{a+b}{2}\\right)'"
-						class="border"
-					/>
+				<td
+					v-katex="'a'"
+					class="border"
+				/>
+				<td
+					v-katex="'b'"
+					class="border"
+				/>
+				<td
+					v-katex="'f(a)'"
+					class="border"
+				/>
+				<td
+					v-katex="'f(b)'"
+					class="border"
+				/>
+				<td
+					v-katex="'\\frac{a+b}{2}'"
+					class="border"
+				/>
+				<td
+					v-katex="'f\\left(\\frac{a+b}{2}\\right)'"
+					class="border"
+				/>
 				</thead>
 				<tbody>
-					<tr
-						v-for="(row,index) in table"
-						:key="`ligne-${index}`"
+				<tr
+					v-for="(row,index) in table"
+					:key="`ligne-${index}`"
+				>
+					<td
+						:class="row.choix==='b'?'bg-gray-300 text-gray-500':''"
+						class="border p-3"
 					>
-						<td
-							:class="row.choix==='b'?'bg-gray-300 text-gray-500':''"
-							class="border p-3"
-						>
-							<div
-								v-if="index<table.length-1"
-								v-katex="rnd(row.a)"
-							/>
-							<sc-button
-								v-else
-								v-katex.nomargin="rnd(row.a)"
-								type="delete"
-								class="w-full"
-								@click="garderLaBorne('b')"
-							/>
-						</td>
+						<div
+							v-if="index<table.length-1"
+							v-katex="rnd(row.a)"
+						/>
+						<sc-button
+							v-else
+							v-katex.nomargin="rnd(row.a)"
+							type="delete"
+							class="w-full"
+							@click="garderLaBorne('b')"
+						/>
+					</td>
 
-						<td
-							:class="row.choix==='a'?'bg-gray-300 text-gray-500':''"
-							class="border p-3"
-						>
-							<div
-								v-if="index<table.length-1"
-								v-katex="rnd(row.b)"
-							/>
-							<sc-button
-								v-else
-								v-katex.nomargin="rnd(row.b)"
-								type="delete"
-								class="w-full"
-								@click="garderLaBorne('a')"
-							/>
-						</td>
+					<td
+						:class="row.choix==='a'?'bg-gray-300 text-gray-500':''"
+						class="border p-3"
+					>
+						<div
+							v-if="index<table.length-1"
+							v-katex="rnd(row.b)"
+						/>
+						<sc-button
+							v-else
+							v-katex.nomargin="rnd(row.b)"
+							type="delete"
+							class="w-full"
+							@click="garderLaBorne('a')"
+						/>
+					</td>
 
-						<td
-							v-katex="rnd(row.fa)"
-							:class="row.choix==='b'?'bg-gray-300 text-gray-500':''"
-							class="border"
-						/>
-						<td
-							v-katex="rnd(row.fb)"
-							:class="row.choix==='a'?'bg-gray-300 text-gray-500':''"
-							class="border"
-						/>
-						<td
-							v-katex="rnd(row.m)"
-							class="border"
-						/>
-						<td
-							v-katex="rnd(row.fm)"
-							class="border"
-						/>
-					</tr>
+					<td
+						v-katex="rnd(row.fa)"
+						:class="row.choix==='b'?'bg-gray-300 text-gray-500':''"
+						class="border"
+					/>
+					<td
+						v-katex="rnd(row.fb)"
+						:class="row.choix==='a'?'bg-gray-300 text-gray-500':''"
+						class="border"
+					/>
+					<td
+						v-katex="rnd(row.m)"
+						class="border"
+					/>
+					<td
+						v-katex="rnd(row.fm)"
+						class="border"
+					/>
+				</tr>
 				</tbody>
 			</table>
 

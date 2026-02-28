@@ -8,7 +8,7 @@ import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
 import {ChallengeMinInterface, ChapterShowInterface} from "@/types/modelInterfaces.ts"
 import {useForm} from "@inertiajs/vue3"
 import {ref} from "vue"
-import ScButton from "@/Components/Ui/scButton.vue"
+import ScButton from "@/Components/Ui/Button/scButton.vue"
 
 let props = defineProps<{
 	chapter: ChapterShowInterface,

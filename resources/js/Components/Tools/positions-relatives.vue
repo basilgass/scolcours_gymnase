@@ -14,7 +14,7 @@ import {
 	SPHERE3_RELATIVE_POSITION,
 	Vector
 } from "pimath"
-import ScButton from "@/Components/Ui/scButton.vue"
+import ScButton from "@/Components/Ui/Button/scButton.vue"
 import Card from "@/Components/Ui/Card.vue"
 
 const ObjectTypeSortOrder: objectType[] = ['point', 'droite', 'cercle', 'plan', 'sphère', "indéterminé"]

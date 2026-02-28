@@ -4,7 +4,7 @@ import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
 import FilteredList from "@/Components/Ui/FilteredList.vue"
 import Card from "@/Components/Ui/Card.vue"
 import EvaluationCreate from "@/Components/Evaluations/EvaluationCreate.vue"
-import ScButton from "@/Components/Ui/scButton.vue"
+import ScButton from "@/Components/Ui/Button/scButton.vue"
 import LayoutAdmin from "@/Layouts/LayoutAdmin.vue"
 import {Link as InertiaLink} from "@inertiajs/vue3"
 import axios from "axios"
@@ -81,7 +81,6 @@ function toggleTeam(evaluation: EvaluationInterface, team: TeamInterface) {
 									éditer
 								</sc-button>
 								<sc-button
-									type="default"
 									xs
 									:href="route('students.evaluations.show', {evaluation: item.id})"
 								>
@@ -107,7 +106,7 @@ function toggleTeam(evaluation: EvaluationInterface, team: TeamInterface) {
 							<sc-button
 								v-for="team in teams"
 								:key="`toggle-${team.id}`"
-								:type="item.teams.filter(t=>team.id===t.id).length ? 'primary' : 'default'"
+								:type="item.teams.filter(t=>team.id===t.id).length ? 'primary' : null"
 								xs
 								@click="toggleTeam(item, team)"
 							>

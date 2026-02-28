@@ -3,12 +3,13 @@
 import ChallengeExport from "@/Components/Challenges/ChallengeExport.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 import {ChallengeGameState, ChallengeInterface, TeamInterface} from "@/types/modelInterfaces"
-import {ref} from "vue"
-import ScButton from "@/Components/Ui/scButton.vue"
+import {ref, useTemplateRef} from "vue"
+import ScButton from "@/Components/Ui/Button/scButton.vue"
 import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
 import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
 import ChallengeDisplay from "@/Components/Challenges/ChallengeDisplay.vue"
 import BlockShow from "@/Components/Blocks/BlockShow.vue"
+import {useScrollTo} from "@/Composables/useHelpers.ts";
 
 defineOptions({layout: LayoutMain})
 
@@ -23,6 +24,13 @@ const selector = ref(0)
 
 const state = ref<ChallengeGameState>("intro")
 
+const challengeRef = useTemplateRef<InstanceType<typeof ChallengeDisplay>>('main')
+
+function onSelect(index: number) {
+	selector.value = index
+
+	useScrollTo(challengeRef.value.$el, 32)
+}
 </script>
 
 <template>
@@ -68,9 +76,10 @@ const state = ref<ChallengeGameState>("intro")
 				:block="challenge.block"
 			/>
 
-			<div class="flex">
+			<div class="flex flex-col md:flex-row gap-3 min-h-screen">
 				<challenge-display
-					class="flex-1"
+					ref="main"
+					class="flex-1 order-2 md:order-1"
 					:challenge
 					:selector
 					@state-change="state=$event"
@@ -78,14 +87,14 @@ const state = ref<ChallengeGameState>("intro")
 
 				<div
 					v-show="state==='intro'"
-					class="w-60"
+					class="w-full order-1 md:w-40 md:order-2"
 				>
 					<div class="flex flex-col gap-1">
 						<sc-button
 							:outline="selector !== 0"
 							theme
 							class="w-full cursor-pointer transition-all"
-							@click="selector = 0"
+							@click="onSelect(0)"
 						>
 							<div class="flex gap-3 items-center w-full">
 								<i class="bi bi-controller text-2xl" />
@@ -101,9 +110,9 @@ const state = ref<ChallengeGameState>("intro")
 							:outline="selector !== index + 1"
 							class="w-full cursor-pointer transition-all"
 							xs
-							@click="selector = index + 1"
+							@click="onSelect(index+1)"
 						>
-							<div class="flex gap-3 items-center w-full">
+							<div class="flex gap-1 items-center w-full overflow-hidden whitespace-nowrap">
 								<i class="bi bi-calculator" />
 								<h2 v-katex.auto="gen.title" />
 							</div>
@@ -111,13 +120,6 @@ const state = ref<ChallengeGameState>("intro")
 					</div>
 				</div>
 			</div>
-
-			<!-- Création du menu - permet de faire le choix entre le challenge ou l'entraînement -->
-			<div
-				v-if="state==='intro'"
-				class="my-10 space-y-10"
-			/>
-
 
 			<!-- export to pdf - admin only ! -->
 			<challenge-export

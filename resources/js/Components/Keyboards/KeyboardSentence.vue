@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import {computed, onMounted, ref} from "vue"
-import ScButton from "@/Components/Ui/scButton.vue"
+import ScButton from "@/Components/Ui/Button/scButton.vue"
 import type {
 	KeyboardEmitsInterface,
 	KeyboardExposeInterface,

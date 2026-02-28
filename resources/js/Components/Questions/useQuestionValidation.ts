@@ -9,7 +9,7 @@ import {
 } from "@/Components/Questions/QuestionInterface.ts"
 import {useStoreScore} from "@/stores/useStoreScore.ts"
 import {computed, ref, useTemplateRef} from "vue"
-import ScButton from "@/Components/Ui/scButton.vue"
+import ScButton from "@/Components/Ui/Button/scButton.vue"
 import {Equation, Fraction, literalType} from "pimath"
 
 const alphabet = "abcdefghijklmnopqrstuvwxyz"

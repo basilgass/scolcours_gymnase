@@ -2,7 +2,7 @@
 
 import {inject} from "vue"
 import {questionDataInterface, questionUserInputDisplayType} from "@/Components/Questions/QuestionInterface.ts"
-import ScButton from "@/Components/Ui/scButton.vue"
+import ScButton from "@/Components/Ui/Button/scButton.vue"
 
 const questionData = inject<questionDataInterface>('questionData')
 

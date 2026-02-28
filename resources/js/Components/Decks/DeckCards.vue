@@ -6,7 +6,7 @@
 import type {CardInterfaceExtended, provideDeckData} from "@/types/modelInterfaces"
 import {computed, inject, onMounted, reactive, ref} from "vue"
 import DeckCardItem from "@/Components/Decks/Parts/DeckCardItem.vue"
-import ScButton from "@/Components/Ui/scButton.vue"
+import ScButton from "@/Components/Ui/Button/scButton.vue"
 import {useStoreScore} from "@/stores/useStoreScore.ts"
 import {ScoreCardDataInterface} from "@/types/scoreInterfaces.ts"
 
@@ -235,7 +235,8 @@ defineExpose({restartDeck})
 		<div class="w-full flex justify-between">
 			<div>
 				score: {{
-					currentCard.current_score === null ? 'nouvelle carte' : `${Math.round(currentCard.current_score * 100)}%`
+				currentCard.current_score === null ? 'nouvelle carte' : `${Math.round(currentCard.current_score *
+				100)}%`
 				}}
 			</div>
 			<div>{{ deckData.cards.value.length }} cartes</div>

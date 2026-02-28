@@ -10,7 +10,7 @@ code:
 import {WidgetPropsInterface} from "@/types/modelInterfaces.ts"
 import {computed, onMounted, ref} from "vue"
 import axios from "axios"
-import ScButton from "@/Components/Ui/scButton.vue"
+import ScButton from "@/Components/Ui/Button/scButton.vue"
 import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
 
 const flash = useStoreFlashMessage()

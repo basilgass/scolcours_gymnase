@@ -1,7 +1,7 @@
 <script setup lang="ts" generic="T extends { id: number, title: string }">
 
 import Card from "@/Components/Ui/Card.vue"
-import ScButton from "@/Components/Ui/scButton.vue"
+import ScButton from "@/Components/Ui/Button/scButton.vue"
 import FilteredList from "@/Components/Ui/FilteredList.vue"
 import {onMounted, ref, watch} from "vue"
 import axios from "axios"

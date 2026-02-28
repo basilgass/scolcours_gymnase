@@ -11,7 +11,7 @@ import {AxiosErrorMessage} from "@/types"
 import LessonTeamCalendar from "@/Pages/Courses/LessonTeamCalendar.vue"
 import {router} from "@inertiajs/vue3"
 import LessonTypeIcon from "@/Components/Courses/LessonTypeIcon.vue"
-import ScButton from "@/Components/Ui/scButton.vue"
+import ScButton from "@/Components/Ui/Button/scButton.vue"
 import {useStoreScore} from "@/stores/useStoreScore.ts"
 import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
 

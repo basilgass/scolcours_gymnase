@@ -5,7 +5,7 @@ import type {WidgetInterface} from "@/types/modelInterfaces"
 import {computed, PropType, ref} from "vue"
 import axios from "axios"
 import {router} from "@inertiajs/vue3"
-import ScButton from "@/Components/Ui/scButton.vue"
+import ScButton from "@/Components/Ui/Button/scButton.vue"
 import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
 
 const props = defineProps({

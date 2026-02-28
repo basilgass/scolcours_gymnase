@@ -5,7 +5,7 @@
 
 import type {PiDraw} from "pidraw"
 import {computed, inject, onMounted, ref, useTemplateRef, watch} from "vue"
-import ScButton from "@/Components/Ui/scButton.vue"
+import ScButton from "@/Components/Ui/Button/scButton.vue"
 import VueSlider from "vue-3-slider-component"
 import {
 	IDrawComputedValue,

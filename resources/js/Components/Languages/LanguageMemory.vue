@@ -4,7 +4,7 @@ import {LanguageDataInterface} from "@/Pages/languages/LanguageShow.vue"
 import {Random} from "pimath"
 import {inject, ref, watch} from "vue"
 import {useLanguage} from "@/Components/Languages/useLanguage.ts"
-import ScButton from "@/Components/Ui/scButton.vue"
+import ScButton from "@/Components/Ui/Button/scButton.vue"
 
 const languageData = inject<LanguageDataInterface>("LanguageData")
 
@@ -75,7 +75,7 @@ const selectCard = function (card) {
 				// On vérifie si tout est terminé
 				if (cards.value.every((x) => x.found)) {
 					// TODO: make an animation to remove all cards
-					setTimeout(()=>{
+					setTimeout(() => {
 						// Make next group of items.
 						continueGame()
 					}, 1000)

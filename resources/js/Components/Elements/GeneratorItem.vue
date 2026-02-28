@@ -4,7 +4,7 @@ import {GeneratorInterface} from "@/types/modelInterfaces.ts"
 import GeneratorsExamples from "@/Components/Elements/GeneratorsExamples.vue"
 import {ref} from "vue"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
-import ScButton from "@/Components/Ui/scButton.vue"
+import ScButton from "@/Components/Ui/Button/scButton.vue"
 
 const generator = defineModel<GeneratorInterface>('generator')
 
@@ -64,7 +64,6 @@ function updateStatus(event: boolean) {
 					</sc-button>
 					<sc-button
 						:href="route('generators.show', [generator.id])"
-						type="default"
 						xs
 					>
 						<i class="bi bi-eye" /> Voir

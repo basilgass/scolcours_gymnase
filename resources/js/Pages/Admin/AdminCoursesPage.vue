@@ -3,7 +3,7 @@
 import {CourseInterface, UserTeamInterface} from "@/types/modelInterfaces.ts"
 import {computed, ref} from "vue"
 import {AxiosErrorMessage} from "@/types"
-import ScButton from "@/Components/Ui/scButton.vue"
+import ScButton from "@/Components/Ui/Button/scButton.vue"
 import axios from "axios"
 import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
@@ -113,7 +113,7 @@ function searchFunction(item: CourseInterface, search: string): boolean {
 				disabled
 				label="slug"
 			/>
-			
+
 			<template #footer>
 				<sc-button
 					type="add"

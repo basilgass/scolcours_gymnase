@@ -12,7 +12,7 @@
 /*@import './scolcours/x_inputs.css.backup';*/
 @import './scolcours/typo.css' layer(base);
 @import './scolcours/tableossigns.css' layer(components);
-@import './scolcours/button.css';
+@import '../js/Components/UI/Button/button.css';
 
 
 /* safe list */

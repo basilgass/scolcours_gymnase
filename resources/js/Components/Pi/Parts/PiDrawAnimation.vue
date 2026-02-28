@@ -2,7 +2,7 @@
 
 import {PiDraw} from "pidraw"
 import {ref} from "vue"
-import ScButton from "@/Components/Ui/scButton.vue"
+import ScButton from "@/Components/Ui/Button/scButton.vue"
 
 const props = defineProps<{
 	draw: PiDraw

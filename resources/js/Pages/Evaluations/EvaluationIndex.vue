@@ -6,7 +6,7 @@ import FilteredList from "@/Components/Ui/FilteredList.vue"
 import {ref} from "vue"
 import Card from "@/Components/Ui/Card.vue"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
-import ScButton from "@/Components/Ui/scButton.vue"
+import ScButton from "@/Components/Ui/Button/scButton.vue"
 
 defineOptions({layout: LayoutMain})
 
@@ -40,7 +40,6 @@ const theEvaluations = ref<EvaluationInterface[]>(props.evaluations)
 					<template #footer>
 						<div class="flex w-full justify-end gap-3">
 							<sc-button
-								type="default"
 								xs
 								:href="route('students.evaluations.show', {evaluation: item.id})"
 							>

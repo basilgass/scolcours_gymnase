@@ -11,7 +11,7 @@ import {AxiosResponseModel} from "@/types"
 import {ChapterInterface, FormulaInterface} from "@/types/modelInterfaces.ts"
 import axios from "axios"
 import {onMounted, ref, useTemplateRef} from "vue"
-import ScButton from "@/Components/Ui/scButton.vue"
+import ScButton from "@/Components/Ui/Button/scButton.vue"
 import {router} from "@inertiajs/vue3"
 import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
 

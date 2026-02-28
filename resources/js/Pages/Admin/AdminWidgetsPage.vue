@@ -5,7 +5,7 @@ import type {WidgetInterface} from "@/types/modelInterfaces"
 import axios from "axios"
 import {router} from "@inertiajs/vue3"
 import FilteredList from "@/Components/Ui/FilteredList.vue"
-import ScButton from "@/Components/Ui/scButton.vue"
+import ScButton from "@/Components/Ui/Button/scButton.vue"
 import {AxiosErrorMessage} from "@/types"
 import LayoutAdmin from "@/Layouts/LayoutAdmin.vue"
 

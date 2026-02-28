@@ -3,7 +3,7 @@
 import BlockShow from "@/Components/Blocks/BlockShow.vue"
 import {CourseInterface, TeamInterface} from "@/types/modelInterfaces.ts"
 import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
-import ScButton from "@/Components/Ui/scButton.vue"
+import ScButton from "@/Components/Ui/Button/scButton.vue"
 import {ref} from "vue"
 import CourseAgenda from "@/Components/Courses/CourseAgenda.vue"
 import CourseStats from "@/Components/Courses/CourseStats.vue"

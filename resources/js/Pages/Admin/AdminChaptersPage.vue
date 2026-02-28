@@ -6,7 +6,7 @@ import FilteredList from "@/Components/Ui/FilteredList.vue"
 import {ChapterShowInterface} from "@/types/modelInterfaces"
 import {useForm} from "@inertiajs/vue3"
 import {PropType} from "vue"
-import ScButton from "@/Components/Ui/scButton.vue"
+import ScButton from "@/Components/Ui/Button/scButton.vue"
 import LayoutAdmin from "@/Layouts/LayoutAdmin.vue"
 
 defineOptions({layout: LayoutAdmin})

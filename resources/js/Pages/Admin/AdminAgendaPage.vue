@@ -3,7 +3,7 @@
 import {CourseInterface, TeamInterface} from "@/types/modelInterfaces.ts"
 import {computed, ref} from "vue"
 import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
-import ScButton from "@/Components/Ui/scButton.vue"
+import ScButton from "@/Components/Ui/Button/scButton.vue"
 import CourseAgenda from "@/Components/Courses/CourseAgenda.vue"
 import LayoutAdmin from "@/Layouts/LayoutAdmin.vue"
 
@@ -60,7 +60,6 @@ function toggleCourse(course: CourseInterface) {
 				v-for="team in teams"
 				:key="`team-${team.id}`"
 				:active="selectedTeams.some(t=> t.name===team.name)"
-				type="default"
 				@click="toggleTeam(team)"
 			>
 				<i class="bi bi-people" />{{ team.name }}
@@ -77,7 +76,7 @@ function toggleCourse(course: CourseInterface) {
 				<i class="bi bi-book" /> {{ course.title }}
 			</sc-button>
 		</div>
-		
+
 		<course-agenda
 			:course="selectedCourse"
 			:teams="selectedTeams"

@@ -8,7 +8,7 @@ import {onMounted, ref} from "vue"
 import {AxiosErrorMessage, AxiosResponseModel} from "@/types"
 import {CourseInterface, UserInterface} from "@/types/modelInterfaces.ts"
 import CourseCard from "@/Components/Courses/CourseCard.vue"
-import ScButton from "@/Components/Ui/scButton.vue"
+import ScButton from "@/Components/Ui/Button/scButton.vue"
 import dayjs from "dayjs"
 import Card from "@/Components/Ui/Card.vue"
 

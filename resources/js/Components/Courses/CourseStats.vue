@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 
 import StatBar from "@/Components/Ui/StatBar.vue"
-import ScButton from "@/Components/Ui/scButton.vue"
+import ScButton from "@/Components/Ui/Button/scButton.vue"
 import LessonTypeIcon from "@/Components/Courses/LessonTypeIcon.vue"
 import {useStoreScore} from "@/stores/useStoreScore.ts"
 import {computed, onMounted, onUnmounted, ref} from "vue"

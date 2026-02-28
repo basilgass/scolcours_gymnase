@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import {onMounted, ref} from "vue"
-import ScButton from "@/Components/Ui/scButton.vue"
+import ScButton from "@/Components/Ui/Button/scButton.vue"
 import {TeamInterface} from "@/types/modelInterfaces.ts"
 import FormMakerWrapper from "@/Components/Form/FormMakerWrapper.vue"
 import axios from "axios"

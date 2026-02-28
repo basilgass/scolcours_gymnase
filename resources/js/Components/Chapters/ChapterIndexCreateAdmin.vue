@@ -4,7 +4,7 @@ import FormMaker from "@/Components/Form/FormMaker.vue"
 import {nextTick, ref, useTemplateRef} from "vue"
 import axios from "axios"
 import {router, usePage} from "@inertiajs/vue3"
-import ScButton from "@/Components/Ui/scButton.vue"
+import ScButton from "@/Components/Ui/Button/scButton.vue"
 import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
 
 const createChapterModal = ref(false)

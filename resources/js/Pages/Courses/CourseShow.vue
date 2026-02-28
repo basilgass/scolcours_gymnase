@@ -5,12 +5,12 @@ import BlockShow from "@/Components/Blocks/BlockShow.vue"
 import {CourseInterface, LessonInterface, ScoreInterface, UserTeamInterface} from "@/types/modelInterfaces.ts"
 import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
 import AdminHeader from "@/Components/Admin/AdminHeader.vue"
-import ScButton from "@/Components/Ui/scButton.vue"
+import ScButton from "@/Components/Ui/Button/scButton.vue"
 import {computed, ref} from "vue"
 import LessonIconLegend from "@/Components/Courses/LessonIconLegend.vue"
 import {useStoreScore} from "@/stores/useStoreScore.ts"
 import dayjs from "dayjs"
-import {useMenuScrollToData} from "@/Composables/useHelpers.ts"
+import {useScrollTo} from "@/Composables/useHelpers.ts"
 import {ScoreLessonDataInterface} from "@/types/scoreInterfaces.ts"
 import Card from "@/Components/Ui/Card.vue"
 import LessonDrops from "@/Components/Courses/LessonDrops.vue"
@@ -127,7 +127,7 @@ function afficherDate(day: string, short?: boolean): string {
 				<template #header>
 					<h3
 						class="font-semibold cursor-pointer"
-						@click="useMenuScrollToData('key', `lesson-day-${day}`)"
+						@click="useScrollTo({key: 'key', value: `lesson-day-${day}`})"
 					>
 						{{ afficherDate(day, true) }}
 					</h3>

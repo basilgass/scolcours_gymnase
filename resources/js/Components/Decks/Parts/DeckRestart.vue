@@ -2,7 +2,7 @@
 
 import DeckPotfolioItem from "@/Components/Decks/Parts/DeckPotfolioItem.vue"
 import {computed, inject} from "vue"
-import ScButton from "@/Components/Ui/scButton.vue"
+import ScButton from "@/Components/Ui/Button/scButton.vue"
 import {CardInterfaceExtended, provideDeckData} from "@/types/modelInterfaces.ts"
 
 const deckData = inject<provideDeckData>('deckData')
@@ -15,11 +15,11 @@ const summaryList = computed<CardInterfaceExtended[]>(() => {
 		})
 })
 
-const deckResult = computed<number>(()=>{
+const deckResult = computed<number>(() => {
 	return 100 - Math.round(summaryList.value.length / deckData.cards.value.length * 100)
 })
 
-function resetDeck(){
+function resetDeck() {
 	console.log('RESET DECK')
 	deckData.reset()
 }

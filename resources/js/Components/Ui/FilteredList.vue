@@ -2,7 +2,7 @@
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import {router, usePage} from "@inertiajs/vue3"
 import {computed, ref, useTemplateRef} from "vue"
-import ScButton from "@/Components/Ui/scButton.vue"
+import ScButton from "@/Components/Ui/Button/scButton.vue"
 import {useMagicKeys} from "@vueuse/core"
 
 interface FilterItem {
@@ -115,7 +115,7 @@ const filteredList = computed<(T & { id: number })[]>(() => {
 )
 
 const selectedList = ref("")
-const selectedTheme = ref<number>(props.filterByThemeOnLoad)
+const selectedTheme = ref<number>(props.filterByThemeOnLoad ?? 0)
 const showList = ref(props.collapsed !== true)
 
 function itemClicked(item) {

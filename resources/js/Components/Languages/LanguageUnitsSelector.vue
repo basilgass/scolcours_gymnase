@@ -3,7 +3,7 @@
 import {BookInterface, TranslationUnitInterface, TranslationUnitInterfaceExtended} from "@/types/modelInterfaces"
 import axios from "axios"
 import {computed, ref} from "vue"
-import ScButton from "@/Components/Ui/scButton.vue"
+import ScButton from "@/Components/Ui/Button/scButton.vue"
 
 const units = defineModel<TranslationUnitInterfaceExtended[]>()
 

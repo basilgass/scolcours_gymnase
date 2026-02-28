@@ -8,7 +8,7 @@ import {usePage} from "@inertiajs/vue3"
 import axios from "axios"
 import {computed, inject, ref} from "vue"
 import {useLanguage} from "@/Components/Languages/useLanguage.ts"
-import ScButton from "@/Components/Ui/scButton.vue"
+import ScButton from "@/Components/Ui/Button/scButton.vue"
 
 const languageData = inject<LanguageDataInterface>('LanguageData')
 const {getListOfWordsFromUnits} = useLanguage(languageData)

@@ -8,6 +8,15 @@ import {
 import {AxiosError, AxiosResponse} from "axios"
 import {ComputedRef, Ref} from "vue"
 
+export type ThemesSlug =
+	"algebre" |
+	"analyse" |
+	"geometrie" |
+	"statistiques" |
+	"jeux" |
+	"tools" |
+	"arithmetique"
+
 
 export type PageProps<
 	T extends Record<string, unknown> = Record<string, unknown>,
@@ -25,26 +34,26 @@ export type PageProps<
 }
 
 export interface flashLink {
-	url: string
-	label: string
 	external?: boolean
+	label: string
+	url: string
 }
 
 type flashType = "success" | "info" | "error"
 
 export interface flashMessageInterface {
+	config: flashConfig
 	id: string
 	message: string
 	type: flashType
-	config: flashConfig
 }
 
 interface flashConfig {
-	title?: string
-	link?: { label: string, external?: boolean, url: string }
 	duration?: number,
-	tex?: boolean,
+	link?: { label: string, external?: boolean, url: string }
 	show?: boolean
+	tex?: boolean,
+	title?: string
 }
 
 export interface flashInterface {
@@ -54,24 +63,24 @@ export interface flashInterface {
 		type?: string,
 		duration?: number
 	) => void
-	success: (message: string, config?: flashConfig) => void
-	info: (message: string, config?: flashConfig) => void
 	error: (message: string, config?: flashConfig) => void
+	info: (message: string, config?: flashConfig) => void
+	success: (message: string, config?: flashConfig) => void
 }
 
 export interface KbrdEvent {
 	input: string,
-	tex: string,
 	raw: string
+	tex: string,
 }
 
 export interface userAnswerInterface {
-	value: keyboardEvent,
 	validation: {
 		index: number,
 		result: boolean,
 		message: string
 	}
+	value: keyboardEvent,
 }
 
 export interface editModeInterface {
@@ -81,20 +90,20 @@ export interface editModeInterface {
 
 export interface generatedQuestionInterface {
 	answer: string
-	question: string
-	title?: string
-	keyboard?: string
-	illustration?: IllustrationMinInterface
 	button?: object
+	illustration?: IllustrationMinInterface
+	keyboard?: string
+	question: string
 	reset?: boolean
+	title?: string
 }
 
 export interface generatorResultInterface {
 	code: string
-	question: (value?: generatedQuestionInterface) => QuestionDynamicInterface
-	list: (n: number) => QuestionDynamicInterface[]
-	random: () => generatedQuestionInterface,
 	level: Ref<number>
+	list: (n: number) => QuestionDynamicInterface[]
+	question: (value?: generatedQuestionInterface) => QuestionDynamicInterface
+	random: () => generatedQuestionInterface,
 }
 
 
@@ -106,22 +115,22 @@ export interface resultInterface {
 }
 
 export interface ClipboardKeyboardInterface {
-	title: string
+	answer: string
 	body: string
 	css: string
-	answer: string
 	keyboard: string
+	title: string
 }
 
 export interface buttonInterface {
-	show: boolean
 	icon: string
+	show: boolean
 	text: string
 }
 
 export interface buttonsInterface {
-	reset?: buttonInterface
 	random?: buttonInterface
+	reset?: buttonInterface
 }
 
 export interface BlockScriptType {

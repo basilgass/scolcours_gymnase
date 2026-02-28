@@ -6,7 +6,7 @@
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 import {ChapterInterface, DeckInterface} from "@/types/modelInterfaces"
 import {computed, PropType, reactive, ref} from "vue"
-import ScButton from "@/Components/Ui/scButton.vue"
+import ScButton from "@/Components/Ui/Button/scButton.vue"
 import axios from "axios"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
 import DialogModal from "@/Components/Ui/DialogModal.vue"

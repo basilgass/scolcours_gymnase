@@ -2,13 +2,13 @@
 import BarChart from "@/Components/Charts/barChart.vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
-import { numberCorrection } from "@/helpers/helperFunctions.ts"
+import {numberCorrection} from "@/helpers/helperFunctions.ts"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
-import { graduateBackgroundColor, graduateBorderColor } from "@/scolcours.ts"
-import { computed, ref } from "vue"
-import ScButton from "@/Components/Ui/scButton.vue"
+import {graduateBackgroundColor, graduateBorderColor} from "@/scolcours.ts"
+import {computed, ref} from "vue"
+import ScButton from "@/Components/Ui/Button/scButton.vue"
 
-defineOptions({ layout: LayoutMain })
+defineOptions({layout: LayoutMain})
 const pointsData = ref(""),
 	maxPoints = ref(20),
 	pourcentage = ref(""),
@@ -58,7 +58,7 @@ const pointsParNote = computed<{ note: number, pointsMin: number, pointsMax: num
 			.filter(x => x.note === i)
 			.map(x => x.pt)
 
-		const points = values.sort((a,b)=>a-b)
+		const points = values.sort((a, b) => a - b)
 		arr.push({
 			note: i,
 			points,
@@ -212,36 +212,36 @@ const listeDesPoints = computed<number[]>(() => {
 			>
 				<table class="table tab w-full text-center font-code text-xl">
 					<thead>
-						<tr class="font-semibold">
-							<td>de</td>
-							<td>à</td>
-							<td class="">
-								éval.
-							</td>
-						</tr>
+					<tr class="font-semibold">
+						<td>de</td>
+						<td>à</td>
+						<td class="">
+							éval.
+						</td>
+					</tr>
 					</thead>
 					<tbody v-if="Object.keys(bareme).length > 0">
-						<tr
-							v-for="item in pointsParNote"
-							:key="`range-${item.note}`"
-							class="odd:bg-amber-100 dark:odd:bg-sky-900"
-						>
-							<td>{{ item.pointsMin }}</td>
-							<td>{{ item.pointsMax }}</td>
-							<td class="font-semibold">
-								{{ item.note }}
-							</td>
-						</tr>
+					<tr
+						v-for="item in pointsParNote"
+						:key="`range-${item.note}`"
+						class="odd:bg-amber-100 dark:odd:bg-sky-900"
+					>
+						<td>{{ item.pointsMin }}</td>
+						<td>{{ item.pointsMax }}</td>
+						<td class="font-semibold">
+							{{ item.note }}
+						</td>
+					</tr>
 					</tbody>
 					<tbody v-else>
-						<tr class="text-center text-sm text-red-600">
-							<td
-								class="py-5"
-								colspan="3"
-							>
-								Le barème n'a pas pu être créé... merci de vérifier la configuration
-							</td>
-						</tr>
+					<tr class="text-center text-sm text-red-600">
+						<td
+							class="py-5"
+							colspan="3"
+						>
+							Le barème n'a pas pu être créé... merci de vérifier la configuration
+						</td>
+					</tr>
 					</tbody>
 				</table>
 			</div>

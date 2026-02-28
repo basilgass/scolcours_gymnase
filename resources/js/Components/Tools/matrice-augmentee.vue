@@ -12,7 +12,7 @@ import MatriceAugmentee from "@/Components/Widgets/algebre/matrice-augmentee.vue
 import {Matrix, Random, Vector} from "pimath"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 import instructions from "./Parts/matrice-augmentee-instructions.md?raw"
-import ScButton from "@/Components/Ui/scButton.vue"
+import ScButton from "@/Components/Ui/Button/scButton.vue"
 import Card from "@/Components/Ui/Card.vue"
 import ToolError from "@/Components/Tools/Parts/ToolError.vue"
 

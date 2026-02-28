@@ -6,7 +6,7 @@ import TexCode from "@/Components/Ui/TexCode.vue"
 import {useToolsStorage} from "@/Composables/useToolsStorage.ts"
 import {Equation, Fraction, Polynom, Random, Solution} from "pimath"
 import {computed, ref} from "vue"
-import ScButton from "@/Components/Ui/scButton.vue"
+import ScButton from "@/Components/Ui/Button/scButton.vue"
 import Card from "@/Components/Ui/Card.vue"
 
 // TODO: .solutions dowes not work

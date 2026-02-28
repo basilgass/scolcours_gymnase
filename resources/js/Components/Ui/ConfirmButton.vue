@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import {ref} from "vue"
-import ScButton from "@/Components/Ui/scButton.vue"
+import ScButton from "@/Components/Ui/Button/scButton.vue"
 
 const props = defineProps({
 	confirmText: {type: String, default: "vraiment ?"},

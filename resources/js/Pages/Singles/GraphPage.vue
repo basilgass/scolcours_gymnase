@@ -5,7 +5,7 @@ import {computed, ref, watch} from "vue"
 
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 import GrapheurFunction from "@/Components/Grapheur/GrapheurFunction.vue"
-import ScButton from "@/Components/Ui/scButton.vue"
+import ScButton from "@/Components/Ui/Button/scButton.vue"
 
 defineOptions({layout: LayoutMain})
 

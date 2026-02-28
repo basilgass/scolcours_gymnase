@@ -2,7 +2,7 @@
 
 import {computed, inject, nextTick, ref} from "vue"
 import {questionDataInterface, questionResultInterface} from "@/Components/Questions/QuestionInterface.ts"
-import ScButton from "@/Components/Ui/scButton.vue"
+import ScButton from "@/Components/Ui/Button/scButton.vue"
 import {useQuestionValidation} from "@/Components/Questions/useQuestionValidation.ts"
 import {useWrongAnswerAnimation} from "@/Composables/useHelpers.ts"
 

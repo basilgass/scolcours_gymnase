@@ -1,20 +1,27 @@
 <script setup lang="ts">
 import LayoutMain from "@/Layouts/LayoutMain.vue"
-import ScButton from "@/Components/Ui/scButton.vue"
 import {ref} from "vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
-import {buttonConfig, buttonTypes} from "@/button.config.ts"
 import {blockTypes} from "@/block.config.ts"
 import BlockShow from "@/Components/Blocks/BlockShow.vue"
 import {makeBlock} from "@/helpers/makeModel.ts"
+import {
+	type ButtonAction,
+	buttonActionMap,
+	buttonColorMap,
+	ButtonSize,
+	ButtonVariant
+} from "@/Components/Ui/Button/button.config.ts";
+import ScButton from "@/Components/Ui/Button/scButton.vue";
 
 defineOptions({layout: LayoutMain})
 
 type groupsUiType = 'theme' | 'buttons' | 'blocks' | 'forms' | 'definition' | 'various' | 'dimensions'
-const detailsOpen = ref<groupsUiType[]>(['dimensions'])
+const detailsOpen = ref<groupsUiType[]>(['buttons'])
 
 const loremIpsum = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium id molestiae nam nobis recusandae sapiente, voluptas! Amet autem exercitationem nulla odit ratione suscipit ut. Cupiditate et magnam quibusdam saepe tempore?'
-const btnTypes: buttonTypes[] = Object.keys(buttonConfig) as buttonTypes[]
+const btnTypes: ButtonAction[] = Object.keys(buttonActionMap) as ButtonAction[]
+const btnColors: ButtonAction[] = Object.keys(buttonColorMap) as ButtonAction[]
 
 const definitionClasses = {
 	'scolcours': 'def-scolcours',
@@ -50,9 +57,9 @@ const themes = {
 		'bg-linear-to-t from-scolcours to-scolcours-dark dark:to-scolcours-light',
 	],
 	'algebre': [
-		'bg-algebre-light dark:bg-algebre-light',
-		'bg-algebre dark:bg-algebre',
-		'bg-algebre-dark dark:bg-algebre-dark',
+		'bg-algebre-light hover:bg-algebre-light dark:bg-algebre-light',
+		'bg-algebre hover:bg-algebre dark:bg-algebre',
+		'bg-algebre-dark hover:bg-algebre-dark dark:bg-algebre-dark',
 
 		'text-algebre-light border border-algebre-light dark:text-algebre-light dark:border-algebre-light',
 		'text-algebre border border-algebre dark:text-algebre dark:border-algebre',
@@ -209,7 +216,7 @@ const value = ref(false)
 			>
 				<div>{{ theme }}</div>
 
-				<div class="flex gap-3 *:w-[200px] *:h-[60px] *:grid *:place-items-center">
+				<div class="flex gap-3 *:w-50 *:h-15 *:grid *:place-items-center">
 					<div
 						v-for="(color, index) in themes[theme]"
 						:key="index"
@@ -227,63 +234,60 @@ const value = ref(false)
 			</summary>
 			<div class="flex flex-col gap-3">
 				<div
-					v-for="(outline) in [false, true]"
-					:key="`button-style-${outline ? 'outline': 'regular'}`"
+					v-for="(variant) in ['solid', 'outline', 'ghost']"
+					:key="`button-style-${variant ? 'outline': 'solid'}`"
 					class="flex flex-col gap-3 p-3 bg-content"
 				>
-					<h3 class="text-lg">
-						boutons {{ outline ? 'contours (outline)' : 'réguliers' }}
-					</h3>
-					<div class="flex flex-wrap gap-3">
+
+					<div v-for="(size) in ['xs', 'sm', 'md', 'lg', 'xl']"
+					     :key="`button-size-${size}`" class="flex flex-col gap-3 p-3 bg-content"
+					>
+						<h3 class="text-lg">
+							{{ size.toUpperCase() }} boutons {{ variant }}
+						</h3>
+
 						<!-- boutons themes -->
-						<sc-button
-							v-for="theme in Object.keys(themes)"
-							:key="`btn-${theme}`"
-							:theme="theme"
-							class="h-[60px] w-[180px]"
-							:outline
-						>
-							<div class="flex gap-3">
-								<i class="bi bi-brush" />
-								{{ theme }}
-							</div>
-						</sc-button>
+						<div class="flex flex-wrap gap-3">
+							<sc-button
+								v-for="theme in Object.keys(themes)"
+								:key="`btn-${theme}-${variant}-${size}`"
+								:theme="theme"
+								:variant="variant as ButtonVariant"
+								:size="size as ButtonSize"
+								:href="route('theme', {theme:theme})"
+							>
+								<div class="flex gap-3">
+									<i class="bi bi-brush" />
+									{{ theme }}
+								</div>
+							</sc-button>
+						</div>
+
+						<div class="flex flex-wrap gap-3">
+							<sc-button
+								v-for="type in btnTypes"
+								:key="`btn-${type}-${variant}-${size}`"
+								:type="type"
+								:variant="variant as ButtonVariant"
+								:size="size as ButtonSize"
+								icon
+							></sc-button>
+						</div>
+
+						<div class="flex flex-wrap gap-3">
+							<sc-button
+								v-for="type in btnColors"
+								:key="`btn-color-${type}-${variant}-${size}`"
+								:type="type"
+								:variant="variant as ButtonVariant"
+								:size="size as ButtonSize"
+								icon
+							>{{ type }}
+							</sc-button>
+						</div>
 					</div>
 
-					<div class="flex flex-wrap gap-3">
-						<!-- boutons types petits -->
-						<sc-button
-							v-for="type in btnTypes"
-							:key="`btn-${type}-xs`"
-							:type="type"
-							xs
-							:outline
-							icon
-						/>
-					</div>
 
-					<div class="flex flex-wrap gap-3">
-						<!-- boutons types normaux -->
-						<sc-button
-							v-for="type in btnTypes"
-							:key="`btn-${type}`"
-							:type="type"
-							:outline
-							icon
-						/>
-					</div>
-
-					<div class="flex flex-wrap gap-3">
-						<!-- boutons types larges -->
-						<sc-button
-							v-for="type in btnTypes"
-							:key="`btn-${type}-xl`"
-							:type="type"
-							xl
-							:outline
-							icon
-						/>
-					</div>
 				</div>
 			</div>
 		</details>
@@ -348,7 +352,7 @@ const value = ref(false)
 			<summary class="text-lg cursor-pointer">
 				Various
 			</summary>
-			<div class="cancel-red-800 h-[150px] w-[120px] bg-blue-100">
+			<div class="cancel-red-800 h-37.5 w-30 bg-blue-100">
 				Hello world
 			</div>
 

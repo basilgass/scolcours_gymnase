@@ -5,7 +5,7 @@ import {QuizzSessionInterface} from "@/types/modelInterfaces.ts"
 import axios from "axios"
 import Card from "@/Components/Ui/Card.vue"
 import {AxiosResponseModel} from "@/types"
-import ScButton from "@/Components/Ui/scButton.vue"
+import ScButton from "@/Components/Ui/Button/scButton.vue"
 
 defineOptions({layout: LayoutMain})
 

@@ -2,7 +2,7 @@
 
 import {LessonInterface} from "@/types/modelInterfaces.ts"
 import {computed, ref} from "vue"
-import ScButton from "@/Components/Ui/scButton.vue"
+import ScButton from "@/Components/Ui/Button/scButton.vue"
 import {AxiosErrorMessage} from "@/types"
 import axios from "axios"
 import FormMaker from "@/Components/Form/FormMaker.vue"

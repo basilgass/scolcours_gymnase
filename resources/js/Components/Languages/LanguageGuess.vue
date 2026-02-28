@@ -6,7 +6,7 @@ import type {TranslationWord} from "@/types/modelInterfaces"
 import {computed, inject, nextTick, ref} from "vue"
 import {useLanguage} from "@/Components/Languages/useLanguage.ts"
 import {shake} from "@/helpers/helperFunctions.ts"
-import ScButton from "@/Components/Ui/scButton.vue"
+import ScButton from "@/Components/Ui/Button/scButton.vue"
 
 // Game configuration
 const numberOfLetters = ref(2)
@@ -19,7 +19,7 @@ const {startGame, continueGame, selectedWords, selectedWordsIndex} = useLanguage
 	}
 })
 
-function nextWord(){
+function nextWord() {
 	// Reset the input (user guess)
 	userGuess.value = ""
 

@@ -2,7 +2,7 @@
 
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 import {CourseInterface, UserTeamInterface} from "@/types/modelInterfaces.ts"
-import ScButton from "@/Components/Ui/scButton.vue"
+import ScButton from "@/Components/Ui/Button/scButton.vue"
 import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
 import CourseCard from "@/Components/Courses/CourseCard.vue"
 

@@ -10,8 +10,8 @@ import DropdownMenu from "@/Components/Ui/DropdownMenu.vue"
 import LogoutButton from "@/Components/Ui/LogoutButton.vue"
 import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
 import {computed, provide, ref} from "vue"
-import ScButton from "@/Components/Ui/scButton.vue"
 import {ThemeInterface} from "@/types/modelInterfaces.ts"
+import ScButton from "@/Components/Ui/Button/scButton.vue";
 
 const props = withDefaults(defineProps<{
 	theme?: Partial<ThemeInterface>,

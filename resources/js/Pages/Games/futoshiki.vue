@@ -1,16 +1,16 @@
 <script setup lang="ts">
 import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
-import { Futoshiki } from "pigames/build/module/lib/futoshiki"
-import { nextTick, reactive, ref } from "vue"
+import {Futoshiki} from "pigames/build/module/lib/futoshiki"
+import {nextTick, reactive, ref} from "vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
-import ScButton from "@/Components/Ui/scButton.vue"
+import ScButton from "@/Components/Ui/Button/scButton.vue"
 
-defineOptions({ layout: LayoutMain })
+defineOptions({layout: LayoutMain})
 
 const gameStarted = ref(false),
-	start = function(){
-		gameStarted.value  = true
+	start = function () {
+		gameStarted.value = true
 
 		futo.generate(size.value)
 	}
@@ -89,9 +89,9 @@ const setValue = function (col, row) {
 				if (solution.result) {
 					alert("bravo")
 				} else {
-					if(futoshiki.cells.every(cell => cell.value)) {
+					if (futoshiki.cells.every(cell => cell.value)) {
 						contradictions.value = solution.contradictions
-					}else{
+					} else {
 						contradictions.value = []
 					}
 				}

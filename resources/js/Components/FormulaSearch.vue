@@ -7,7 +7,7 @@ import type {FormulaInterface} from "@/types/modelInterfaces.ts"
 import axios from "axios"
 import FilteredList from "@/Components/Ui/FilteredList.vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
-import ScButton from "@/Components/Ui/scButton.vue"
+import ScButton from "@/Components/Ui/Button/scButton.vue"
 import FormulaShow from "@/Components/Blocks/FormulaShow.vue"
 import PleaseWait from "@/Components/Ui/PleaseWait.vue"
 import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
@@ -53,13 +53,14 @@ onMounted(() => {
 	<article>
 		<div
 			v-if="formulas.length===0"
-			class="grid place-items-center min-h-[200px]"
+			class="grid place-items-center min-h-50"
 		>
 			<div class="flex flex-col gap-5">
 				<div>Chargement du formulaire...</div>
 				<please-wait />
 			</div>
 		</div>
+
 		<filtered-list
 			v-else
 			:class="editMode.enable?'': ''"
@@ -104,6 +105,11 @@ onMounted(() => {
 					</div>
 					<formula-show :formula="item" />
 				</div>
+			</template>
+			<template #noItemMessage v-if="themeId!==undefined">
+				<sc-button type="primary" @click="">
+					Charger tout le formulaire
+				</sc-button>
 			</template>
 		</filtered-list>
 	</article>

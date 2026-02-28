@@ -3,7 +3,7 @@ import KeyboardDisplay from "@/Components/Keyboards/KeyboardDisplay.vue"
 import TableOfSigns from "@/Components/Pi/TableOfSigns.vue"
 import {TABLE_OF_SIGNS_VALUES} from "pimath"
 import {computed, nextTick, onMounted, ref} from "vue"
-import ScButton from "@/Components/Ui/scButton.vue"
+import ScButton from "@/Components/Ui/Button/scButton.vue"
 import type {
 	KeyboardEmitsInterface,
 	KeyboardExposeInterface,

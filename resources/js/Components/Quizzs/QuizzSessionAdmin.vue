@@ -6,7 +6,7 @@ import {computed, ref} from "vue"
 import axios from "axios"
 import DialogModal from "@/Components/Ui/DialogModal.vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
-import ScButton from "@/Components/Ui/scButton.vue"
+import ScButton from "@/Components/Ui/Button/scButton.vue"
 import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
 
 const flash = useStoreFlashMessage()
@@ -84,73 +84,73 @@ const sessionCreateEnable = computed(() => {
 			class="table table-auto w-full"
 		>
 			<thead>
-				<tr>
-					<th>Shortcode</th>
-					<th>Is alive</th>
-					<th>Enabled</th>
-					<th>Current slide</th>
-					<th>Current status</th>
-					<th>Total slides</th>
-					<th>Users</th>
-					<th>Admin</th>
-					<th>Suppr.</th>
-				</tr>
+			<tr>
+				<th>Shortcode</th>
+				<th>Is alive</th>
+				<th>Enabled</th>
+				<th>Current slide</th>
+				<th>Current status</th>
+				<th>Total slides</th>
+				<th>Users</th>
+				<th>Admin</th>
+				<th>Suppr.</th>
+			</tr>
 			</thead>
 			<tbody>
-				<tr
-					v-for="(session, index) in props.sessions"
-					:key="`session-${session.id}`"
-					class="hover:bg-yellow-200"
-				>
-					<td>{{ session.shortcode }}</td>
-					<td>{{ ongoing(session) }}</td>
-					<td>{{ session.enable }}</td>
-					<td>{{ session.current }}</td>
-					<td>{{ session.status }}</td>
-					<td>{{ session.total }}</td>
-					<td class="relative">
-						<button
-							@click="
+			<tr
+				v-for="(session, index) in props.sessions"
+				:key="`session-${session.id}`"
+				class="hover:bg-yellow-200"
+			>
+				<td>{{ session.shortcode }}</td>
+				<td>{{ ongoing(session) }}</td>
+				<td>{{ session.enable }}</td>
+				<td>{{ session.current }}</td>
+				<td>{{ session.status }}</td>
+				<td>{{ session.total }}</td>
+				<td class="relative">
+					<button
+						@click="
 								showUsersIndex =
 									showUsersIndex === index ? -1 : index
 							"
+					>
+						{{ session.users.length }} étudiants
+					</button>
+					<div
+						v-show="index === showUsersIndex"
+						class="absolute right-0 w-[250px] max-h-[30em] overflow-y-auto bg-white shadow-sm p-3 flex flex-col gap-3 z-10"
+					>
+						<button
+							class="text-right text-slate-300"
+							@click="showUsersIndex = -1"
 						>
-							{{ session.users.length }} étudiants
+							fermer <i class="bi bi-x-lg" />
 						</button>
 						<div
-							v-show="index === showUsersIndex"
-							class="absolute right-0 w-[250px] max-h-[30em] overflow-y-auto bg-white shadow-sm p-3 flex flex-col gap-3 z-10"
+							v-for="user in session.users"
+							:key="`session-${session.id}-user-${user.id}`"
 						>
-							<button
-								class="text-right text-slate-300"
-								@click="showUsersIndex = -1"
-							>
-								fermer <i class="bi bi-x-lg" />
-							</button>
-							<div
-								v-for="user in session.users"
-								:key="`session-${session.id}-user-${user.id}`"
-							>
-								{{ user.name }}
-							</div>
+							{{ user.name }}
 						</div>
-					</td>
-					<td>
-						<InertiaLink
-							:href="route('admin.quizzs.sessions.dashboard', [
+					</div>
+				</td>
+				<td>
+					<InertiaLink
+						:href="route('admin.quizzs.sessions.dashboard', [
 								session.shortcode,
 							])
 							"
-						>
-							dashboard
-						</InertiaLink>
-					</td>
-					<td>
-						<confirm-button @confirm="sessionDestroy(session.id)">
-							supprimer
-						</confirm-button>
-					</td>
-				</tr>
+					>
+						dashboard
+					</InertiaLink>
+				</td>
+				<td>
+					<confirm-button @confirm="sessionDestroy(session.id)">
+						supprimer
+					</confirm-button>
+				</td>
+			</tr>
 			</tbody>
 		</table>
 	</article>

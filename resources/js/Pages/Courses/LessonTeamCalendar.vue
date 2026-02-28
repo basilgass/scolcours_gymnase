@@ -2,7 +2,7 @@
 
 import {computed} from "vue"
 import dayjs from "dayjs"
-import ScButton from "@/Components/Ui/scButton.vue"
+import ScButton from "@/Components/Ui/Button/scButton.vue"
 
 const props = defineProps<{
 	calendar: { id: number, day: number, time: string }[],

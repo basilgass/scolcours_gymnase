@@ -5,7 +5,7 @@
 import LayoutAdmin from "@/Layouts/LayoutAdmin.vue"
 import {CourseInterface, LessonInterface, TeamInterface} from "@/types/modelInterfaces.ts"
 import Card from "@/Components/Ui/Card.vue"
-import ScButton from "@/Components/Ui/scButton.vue"
+import ScButton from "@/Components/Ui/Button/scButton.vue"
 import dayjs from "dayjs"
 
 defineOptions({layout: LayoutAdmin})

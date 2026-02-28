@@ -8,7 +8,7 @@ import {ChapterShowInterface, PostInterface} from "@/types/modelInterfaces.ts"
 import {router} from "@inertiajs/vue3"
 import axios from "axios"
 import {computed, ref} from "vue"
-import ScButton from "@/Components/Ui/scButton.vue"
+import ScButton from "@/Components/Ui/Button/scButton.vue"
 import PostTypeIcon from "@/Components/Posts/PostTypeIcon.vue"
 import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
 

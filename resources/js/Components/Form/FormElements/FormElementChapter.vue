@@ -5,7 +5,7 @@ import axios from "axios"
 import {AxiosErrorMessage, AxiosResponseModel} from "@/types"
 import {FormElementEmits} from "@/Components/Form/FormMakerInterface.ts"
 import FormMaker from "@/Components/Form/FormMaker.vue"
-import ScButton from "@/Components/Ui/scButton.vue"
+import ScButton from "@/Components/Ui/Button/scButton.vue"
 
 // REFACTOR: transformer en un "suggestion list"
 const theValue = defineModel<ChapterInterface>()

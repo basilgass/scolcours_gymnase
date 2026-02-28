@@ -1,4 +1,4 @@
-import eslint from '@eslint/js'
+import eslint from "eslint"
 import eslintPluginVue from 'eslint-plugin-vue'
 import typescriptEslint from "typescript-eslint"
 import globals from 'globals'

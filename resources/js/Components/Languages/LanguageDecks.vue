@@ -4,7 +4,7 @@ import {computed, inject} from "vue"
 import type {CardInterface, DeckInterface} from "@/types/modelInterfaces.ts"
 import {useLanguage} from "@/Components/Languages/useLanguage.ts"
 import {makeCard, makeDeck} from "@/helpers/makeModel.ts"
-import ScButton from "@/Components/Ui/scButton.vue"
+import ScButton from "@/Components/Ui/Button/scButton.vue"
 import DeckDisplay from "@/Pages/Decks/DeckDisplay.vue"
 
 const languageData = inject<LanguageDataInterface>("LanguageData")

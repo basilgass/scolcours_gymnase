@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import {Random} from "pimath"
 import {computed, ref} from "vue"
-import ScButton from "@/Components/Ui/scButton.vue"
+import ScButton from "@/Components/Ui/Button/scButton.vue"
 import type {
 	KeyboardEmitsInterface,
 	KeyboardExposeInterface,

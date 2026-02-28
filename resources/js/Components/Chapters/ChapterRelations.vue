@@ -7,7 +7,7 @@ import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
 import type {ChapterInterface} from "@/types/modelInterfaces"
 import axios from "axios"
 import {ref} from "vue"
-import ScButton from "@/Components/Ui/scButton.vue"
+import ScButton from "@/Components/Ui/Button/scButton.vue"
 import FilteredList from "@/Components/Ui/FilteredList.vue"
 import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
 

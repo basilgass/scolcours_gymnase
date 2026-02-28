@@ -4,7 +4,7 @@ import KeyboardDisplay from "@/Components/Keyboards/KeyboardDisplay.vue"
 import PiMatrix from "@/Components/Pi/Parts/PiMatrix.vue"
 import {Polynom} from "pimath"
 import {questionDataInterface} from "@/Components/Questions/QuestionInterface.ts"
-import ScButton from "@/Components/Ui/scButton.vue"
+import ScButton from "@/Components/Ui/Button/scButton.vue"
 import {KeyboardObjectType} from "@/Composables/keyboardConfig.ts"
 import type {
 	KeyboardEmitsInterface,
@@ -274,8 +274,8 @@ const matrixDimKeyboard: KeyboardObjectType = {
 	<div class="flex flex-col gap-3 items-center">
 		<div v-if="!hasFixedDimension">
 			Dimension de la matrice: <span
-				v-katex.inline="`${ dimension.rows ?? 'm' } \\times ${dimension.columns ?? 'n'}`"
-			/>
+			v-katex.inline="`${ dimension.rows ?? 'm' } \\times ${dimension.columns ?? 'n'}`"
+		/>
 		</div>
 		<sc-button
 			v-if="!hasFixedDimension"

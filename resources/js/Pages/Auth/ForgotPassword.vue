@@ -2,7 +2,7 @@
 import {Head, useForm} from "@inertiajs/vue3"
 import LayoutGuest from "@/Layouts/LayoutGuest.vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
-import ScButton from "@/Components/Ui/scButton.vue"
+import ScButton from "@/Components/Ui/Button/scButton.vue"
 
 defineOptions({layout: LayoutGuest})
 defineProps<{

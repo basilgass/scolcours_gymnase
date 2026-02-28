@@ -2,7 +2,7 @@
 import {onMounted, ref} from "vue"
 import axios from "axios"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
-import ScButton from "@/Components/Ui/scButton.vue"
+import ScButton from "@/Components/Ui/Button/scButton.vue"
 import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
 
 defineOptions({layout: LayoutMain})
@@ -77,8 +77,8 @@ onMounted(() => {
 				:key="pdf.slug"
 			>
 				<a :href="route('latex.download', [pdf.slug])">{{
-					pdf.slug
-				}}</a>
+						pdf.slug
+					}}</a>
 			</div>
 		</div>
 	</div>

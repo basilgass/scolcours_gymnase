@@ -16,7 +16,7 @@ import {WidgetPropsInterface} from "@/types/modelInterfaces.ts"
 import {computed, onMounted, ref} from "vue"
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import PiDrawDisplay from "@/Components/Pi/Parts/PiDrawDisplay.vue"
-import ScButton from "@/Components/Ui/scButton.vue"
+import ScButton from "@/Components/Ui/Button/scButton.vue"
 
 const props = defineProps<{
 	illustration: WidgetPropsInterface

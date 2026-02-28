@@ -11,7 +11,7 @@ import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
 import {onKeyStroke} from "@vueuse/core"
 import {computed, onMounted, ref} from "vue"
 import axios from "axios"
-import ScButton from "@/Components/Ui/scButton.vue"
+import ScButton from "@/Components/Ui/Button/scButton.vue"
 
 defineOptions({layout: LayoutMain})
 

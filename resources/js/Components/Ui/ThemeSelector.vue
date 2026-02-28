@@ -1,11 +1,11 @@
 <script setup lang="ts">
 
 import {usePage} from "@inertiajs/vue3"
-import ScButton from "@/Components/Ui/scButton.vue"
+import ScButton from "@/Components/Ui/Button/scButton.vue"
 
 withDefaults(defineProps<{
 	xs?: boolean
-}>(),{
+}>(), {
 	xs: false
 })
 const themes = usePage().props.themes

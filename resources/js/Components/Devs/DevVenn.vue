@@ -5,10 +5,10 @@
 
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import KeyboardDisplay from "@/Components/Keyboards/KeyboardDisplay.vue"
-import { PiGraph as PiDraw } from "pidraw"
-import { LogicalSet } from "pimath"
-import { computed, onMounted, ref } from "vue"
-import ScButton from "@/Components/Ui/scButton.vue"
+import {PiGraph as PiDraw} from "pidraw"
+import {LogicalSet} from "pimath"
+import {computed, onMounted, ref} from "vue"
+import ScButton from "@/Components/Ui/Button/scButton.vue"
 
 let draw = ref(null),
 	geom,
@@ -32,6 +32,7 @@ function updateVenn(P) {
 		venn[key].shape.svg.fill(venn[key].selected ? "#cfc" : "#fff")
 	}
 }
+
 // function generate() {
 // 	let P = new PiMath.Logicalset("(A&B)|C")
 // 	tex.value = P.tex
@@ -69,14 +70,14 @@ function generateSVG() {
 	})
 
 	venn = {
-		E: { shape: E, selected: false },
-		A: { shape: A, selected: false },
-		B: { shape: B, selected: false },
-		C: { shape: C, selected: false },
-		AB: { shape: AB, selected: false },
-		AC: { shape: AC, selected: false },
-		BC: { shape: BC, selected: false },
-		ABC: { shape: ABC, selected: false }
+		E: {shape: E, selected: false},
+		A: {shape: A, selected: false},
+		B: {shape: B, selected: false},
+		C: {shape: C, selected: false},
+		AB: {shape: AB, selected: false},
+		AC: {shape: AC, selected: false},
+		BC: {shape: BC, selected: false},
+		ABC: {shape: ABC, selected: false}
 	}
 
 	for (const key in venn) {

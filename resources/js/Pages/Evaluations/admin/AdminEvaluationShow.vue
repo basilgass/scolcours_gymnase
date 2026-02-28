@@ -6,7 +6,7 @@ import {computed, onMounted, ref} from "vue"
 import axios from "axios"
 import {AxiosResponseModel} from "@/types"
 import QuestionShow from "@/Components/Questions/QuestionShow.vue"
-import ScButton from "@/Components/Ui/scButton.vue"
+import ScButton from "@/Components/Ui/Button/scButton.vue"
 import QuestionsIndex from "@/Components/Questions/QuestionsIndex.vue"
 
 defineOptions({layout: LayoutAdmin})
@@ -64,7 +64,7 @@ onMounted(() => {
 				:key="team.name"
 				@click="loadScores(team.name)"
 				xs1
-				:type="team.name===selectedTeam ? 'primary' : 'default'"
+				:type="team.name===selectedTeam ? 'primary' : null"
 			>
 				{{ team.name }}
 			</sc-button>
