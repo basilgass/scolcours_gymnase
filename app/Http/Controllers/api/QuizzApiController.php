@@ -6,8 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\QuizzSessionRessource;
 use App\Models\Quizz;
 use App\Models\QuizzSession;
-use App\Models\Team;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 class QuizzApiController extends Controller
@@ -20,10 +18,10 @@ class QuizzApiController extends Controller
 		]);
 
 		$quizz->blocks()->create([
-			'title'=>'intro'
+			'title' => 'intro'
 		]);
 		$quizz->blocks()->create([
-			'title'=>'outro'
+			'title' => 'outro'
 		]);
 
 		return $quizz->id;

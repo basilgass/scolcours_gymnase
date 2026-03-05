@@ -13,11 +13,14 @@ const props = defineProps<{
 const scoreStore = useStoreScore()
 const score = ref<ScoreInterface<ScoreQuestionDataInterface>>(null)
 
+const theQuestion = ref<QuestionInterface>(props.question)
 onMounted(() => {
 	scoreStore.getScore('Question', props.question.id)
 		.then((res: ScoreInterface<ScoreQuestionDataInterface>) => {
 			score.value = res
+			theQuestion.value.user = res
 		})
+
 })
 </script>
 
@@ -25,20 +28,21 @@ onMounted(() => {
 	<div>
 		<div
 			v-if="score===null"
-			class="grid place-items-center min-h-[200px] font-code text-xl p-10"
+			class="grid place-items-center min-h-50 font-code text-xl p-10"
 		>
 			<div>chargement de la question...</div>
 		</div>
 		<question-show
 			v-else-if="score.data.answers.length===0"
 			class="max-w-xl mx-auto bg-white border rounded-sm"
-			:question
+			:question="theQuestion"
 			show-input
+			hide-success
 			@validate="$emit('validate')"
 		/>
 		<div
 			v-else
-			class="grid place-items-center min-h-[200px] font-code text-xl p-10"
+			class="grid place-items-center min-h-50 font-code text-xl p-10"
 		>
 			<div class="space-y-5">
 				<p>Vous avez déjà répondu à cette question.</p>

@@ -89,7 +89,7 @@ class QuizzSessionController extends Controller
 			[
 				"quizz"        => QuizzResource::make($quizzSession->quizz),
 				"quizzSession" => QuizzSessionRessource::make($quizzSession),
-				"scores"      => ScoreResource::collection($scores),
+				"scores"       => ScoreResource::collection($scores),
 				"usersCount"   => $quizzSession->users->count(),
 			]
 		);

@@ -219,6 +219,7 @@ export function useQuestionValidation(questionData: questionDataInterface) {
 	async function save(validations: CheckerResult[]) {
 
 		const score = questionData.user.score.value as ScoreInterface<ScoreQuestionDataInterface>
+
 		if (
 			!(questionData.question.value.id > 0)
 			|| questionData.config.isDynamic  // It's a dynamic question

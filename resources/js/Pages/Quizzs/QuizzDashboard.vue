@@ -47,7 +47,7 @@ const toc = computed(() => {
 
 <template>
 	<section class="py-10 relative">
-		<div class="fixed w-full bottom-0 h-[8rem] bg-content grid grid-cols-3 items-center">
+		<div class="fixed w-full bottom-0 h-32 bg-content grid grid-cols-3 items-center">
 			<div
 				v-if="liveQuizz.current>0"
 				class="p-3 cursor-pointer"
@@ -99,7 +99,7 @@ const toc = computed(() => {
 						@click="updateCurrent(index)"
 						v-katex.auto="title"
 					/>
-					<div class="pl-3 w-[80px] flex justify-around items-center">
+					<div class="pl-3 w-20 flex justify-around items-center">
 						templates
 					</div>
 				</div>

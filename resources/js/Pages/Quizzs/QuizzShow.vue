@@ -69,7 +69,7 @@ onBeforeUnmount(() => {
 	</section>
 	<section
 		v-else
-		class="w-full min-h-[100vh] grid place-items-center"
+		class="w-full min-h-screen grid place-items-center"
 	>
 		<div class="flex flex-col gap-4">
 			<div>Le quizz n'est pas activé.</div>
