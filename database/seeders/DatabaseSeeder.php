@@ -8,23 +8,17 @@ use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
-    /**
-     * Seed the application's database.
-     *
-     * @return void
-     */
-    public function run()
-    {
-        User::create([
-            'name' => 'Basil',
-            'email' => 'basil@scolcours.ch',
-            'password' => Hash::make('semidieu'),
-        ]);
-
+	/**
+	 * Seed the application's database.
+	 *
+	 * @return void
+	 */
+	public function run()
+	{
 		User::create([
-			'name' => 'etudiant',
-			'email' => 'etudiant@scolcours.ch',
-			'password' => Hash::make('etudiant'),
+			'name'     => 'admin',
+			'email'    => 'admin@example.com',
+			'password' => Hash::make('password'),
 		]);
-    }
+	}
 }

@@ -1,12 +1,12 @@
 @isset($standalone)
-    \documentclass[10pt]{standalone}
+	\documentclass[10pt]{standalone}
 @else
-    \documentclass[10pt]{article}
-    \usepackage{geometry}
-    \geometry{ a4paper, total={190mm,270mm}, left=10mm, top=10mm}
-    \usepackage[frenchb]{babel}
-    \usepackage{titling}
-    \usepackage{fancyhdr}
+	\documentclass[10pt]{article}
+	\usepackage{geometry}
+	\geometry{ a4paper, total={190mm,270mm}, left=10mm, top=10mm}
+	\usepackage[frenchb]{babel}
+	\usepackage{titling}
+	\usepackage{fancyhdr}
 
 @endif
 
@@ -65,19 +65,19 @@
 \date{\today}
 
 @isset($standalone)
-    @else
-\pagestyle{fancy}
-\fancyhf{}
-\renewcommand{\footrule}{ {\color{lightgray}\hrulefill\color{black}} }
-\renewcommand{\headrulewidth}{0pt}
-\renewcommand{\footrulewidth}{0.1pt}
-\fancyfoot[L]{\scriptsize \thedate}
-\fancyfoot[R]{\scriptsize https://g.scolcours.ch<?= isset($slug) ? $slug : "";?>}
+@else
+	\pagestyle{fancy}
+	\fancyhf{}
+	\renewcommand{\footrule}{ {\color{lightgray}\hrulefill\color{black}} }
+	\renewcommand{\headrulewidth}{0pt}
+	\renewcommand{\footrulewidth}{0.1pt}
+	\fancyfoot[L]{\scriptsize \thedate}
+	\fancyfoot[R]{\scriptsize <?= config('app.url') . (isset($slug) ? $slug : ""); ?>}
 
-\newenvironment{showtitle}{
-\begin{center}\LARGE
-}{
-\end{center}\vspace{-1em}
-{\color{lightgray}\hrulefill\color{black}}\vspace{0.7em}
-}
+	\newenvironment{showtitle}{
+	\begin{center}\LARGE
+	}{
+	\end{center}\vspace{-1em}
+	{\color{lightgray}\hrulefill\color{black}}\vspace{0.7em}
+	}
 @endisset

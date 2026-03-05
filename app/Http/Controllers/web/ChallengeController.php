@@ -15,14 +15,13 @@ class ChallengeController extends Controller
 {
 	public function index()
 	{
-		dd('challenge congrolle');
 		// TODO: get all challenges with the "opened" sessions only...
-		$challenges = Challenge::orderBy('title')
-		                       ->get();
-
-		return Inertia::render('Challenges/ChallengesIndex', [
-			'challenges' => $challenges
-		]);
+		//		$challenges = Challenge::orderBy('title')
+		//		                       ->get();
+		//
+		//		return Inertia::render('Challenges/ChallengesIndex', [
+		//			'challenges' => $challenges
+		//		]);
 	}
 
 	public function quick(Challenge $challenge)

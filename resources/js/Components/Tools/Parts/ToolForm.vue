@@ -42,7 +42,7 @@ const props = withDefaults(defineProps<{
 const {storeTool, resetTool} = useToolsStorage()
 
 const link = computed(() => {
-	const url = `https://g.scolcours.ch/tools/${toolSlug}`
+	const url = `${import.meta.env.VITE_APP_URL}/tools/${toolSlug}`
 
 	const items = props.forms.filter(f => f.fromUrl)
 
