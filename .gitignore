@@ -17,6 +17,8 @@ _ide_helper.php
 /.vscode
 /public/js/dev/
 /.ai
+.mcp.json
+AGENTS.md
 CLAUDE.md
 ROUTES.md
 STRUCTURE.md
@@ -25,3 +27,4 @@ boost.json
 /.junie
 /.github
 /.tinker
+/bootstrap/.claude
