@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\EvaluationRessource;
+use App\Http\Resources\EvaluationResource;
 use App\Http\Resources\ScoreResource;
 use App\Http\Resources\UserResource;
 use App\Models\Evaluation;
@@ -32,7 +32,7 @@ class EvaluationApiController extends Controller
 		$validated['body'] = "";
 		$evaluation = Evaluation::create($validated);
 
-		return EvaluationRessource::make($evaluation);
+		return EvaluationResource::make($evaluation);
 	}
 
 	public function update(Request $request, Evaluation $evaluation)

@@ -21,25 +21,18 @@ Route::middleware('api')
 		               ->only(['index', 'show', 'update']);
 
 		          Route::prefix('scores')
-			          ->group(function () {
+		               ->group(function () {
 			               Route::patch('reset', [ScoreApiController::class, "reset"])
 			                    ->name('reset');
-
-			               // ROUTE: These two routes must be removed.
-			               Route::post('/post/{post}/update', [ScoreApiController::class, 'updatePostScore'])
-			                    ->name('post');
-			               Route::post('/challenge/{challenge}/update', [ScoreApiController::class, 'updateChallengeScore'])
-			                    ->name('challenge');
 		               });
-
 	          });
 
 	     // Admin api
 	     Route::middleware('admin')
-		     ->as('admin.')
+	          ->as('admin.')
 	          ->group(function () {
 		          Route::delete('/scores', [ScoreApiController::class, 'destroyMultiple'])
-			          ->name('scores.destroy.multiple');
+		               ->name('scores.destroy.multiple');
 	          });
 
      });

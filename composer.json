@@ -24,6 +24,7 @@
 		"fakerphp/faker": "^v1",
 		"fruitcake/laravel-telescope-toolbar": "^v1",
 		"ismaelw/laratex": "dev-main",
+		"laravel/boost": "^2.2",
 		"laravel/breeze": "^v2",
 		"laravel/sail": "^v1",
 		"mockery/mockery": "^1",

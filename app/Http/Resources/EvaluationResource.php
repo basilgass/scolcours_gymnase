@@ -9,7 +9,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 /**
  * @mixin Evaluation
  */
-class EvaluationRessource extends JsonResource
+class EvaluationResource extends JsonResource
 {
 	// No wrap around the data.
 	public static $wrap = null;

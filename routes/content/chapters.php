@@ -38,10 +38,6 @@ Route::middleware('web')
 	          ->where('type', 'block|illustration|question')
 	          ->name('themes.chapters.posts.anchor');
 
-	     Route::get('chaptersTest/{chapter}/edit', function ($chapter) {
-		     dd($chapter);
-	     });
-
 
 	     // Admin routes
 	     // ROUTE: ajotuer ->prefix('admin') à toutes les routes web admin

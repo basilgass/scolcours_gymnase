@@ -18,7 +18,7 @@ class QuizzResource extends JsonResource
 			'outro'           => $this->blocks[1],
 			'questions_count' => $this->questions->count(),
 			'chapter'         => new ChapterResource($this->whenLoaded('chapter')),
-			'sessions'        => $this->whenLoaded('sessions', fn() => QuizzSessionRessource::collection($this->sessions)),
+			'sessions'        => $this->whenLoaded('sessions', fn() => QuizzSessionResource::collection($this->sessions)),
 		];
 	}
 }

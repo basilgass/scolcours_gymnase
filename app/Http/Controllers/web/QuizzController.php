@@ -5,7 +5,7 @@ namespace App\Http\Controllers\web;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\QuestionResource;
 use App\Http\Resources\QuizzResource;
-use App\Http\Resources\QuizzSessionRessource;
+use App\Http\Resources\QuizzSessionResource;
 use App\Http\Resources\ThemeResource;
 use App\Models\Quizz;
 use App\Models\Team;
@@ -41,7 +41,7 @@ class QuizzController extends Controller
 		$data = [
 			"quizz"     => QuizzResource::make($quizz),
 			"questions" => QuestionResource::collection($quizz->questions),
-			"sessions"  => QuizzSessionRessource::collection($quizz->sessions),
+			"sessions"  => QuizzSessionResource::collection($quizz->sessions),
 			"teams"     => Team::active()->get(),
 		];
 

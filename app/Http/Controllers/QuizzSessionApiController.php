@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\QuizzSessionRessource;
+use App\Http\Resources\QuizzSessionResource;
 use App\Models\Quizz;
 use App\Models\QuizzSession;
 use App\Models\Team;
@@ -14,7 +14,7 @@ class QuizzSessionApiController extends Controller
 	public function index(Quizz $quizz)
 	{
 
-		return QuizzSessionRessource::collection(
+		return QuizzSessionResource::collection(
 			$quizz->sessions
 				->sortBy('created_at', SORT_REGULAR, SORT_DESC)
 		);
@@ -46,7 +46,7 @@ class QuizzSessionApiController extends Controller
 
 		$session->refresh();
 
-		return QuizzSessionRessource::make($session);
+		return QuizzSessionResource::make($session);
 	}
 
 	public function update(Request $request, QuizzSession $session)

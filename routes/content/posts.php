@@ -16,6 +16,7 @@ Route::middleware('web')
 	     // Admin routes
 	     Route::middleware('admin')
 	          ->as('admin.')
+	          ->prefix('admin')
 	          ->group(function () {
 		          Route::resource('posts', PostController::class)
 		               ->only(['edit']);

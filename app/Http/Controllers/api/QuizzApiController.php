@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\QuizzSessionRessource;
+use App\Http\Resources\QuizzSessionResource;
 use App\Models\Quizz;
 use App\Models\QuizzSession;
 use Illuminate\Http\Request;
@@ -42,7 +42,7 @@ class QuizzApiController extends Controller
 		$quizzSession->show_answer = false;
 		$quizzSession->save();
 
-		return QuizzSessionRessource::make($quizzSession);
+		return QuizzSessionResource::make($quizzSession);
 	}
 
 	public function updateShowAnswer(QuizzSession $quizzSession)
@@ -50,7 +50,7 @@ class QuizzApiController extends Controller
 		$quizzSession->show_answer = !$quizzSession->show_answer;
 		$quizzSession->save();
 
-		return QuizzSessionRessource::make($quizzSession);
+		return QuizzSessionResource::make($quizzSession);
 	}
 
 	public function updateEnable(QuizzSession $quizzSession, Request $request)

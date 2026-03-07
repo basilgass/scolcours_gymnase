@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\web\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\EvaluationAdminRessource;
-use App\Http\Resources\EvaluationRessource;
+use App\Http\Resources\EvaluationAdminResource;
+use App\Http\Resources\EvaluationResource;
 use App\Http\Resources\TeamResource;
 use App\Models\Evaluation;
 use App\Models\Team;
@@ -18,7 +18,7 @@ class EvaluationAdminController extends Controller
 
 		return Inertia::render('Evaluations/admin/AdminEvaluationPage',
 			[
-				'evaluations' => EvaluationAdminRessource::collection($evaluations),
+				'evaluations' => EvaluationAdminResource::collection($evaluations),
 				'teams'       => TeamResource::collection(Team::active()->get()),
 			]
 		);
@@ -28,7 +28,7 @@ class EvaluationAdminController extends Controller
 	{
 		return Inertia::render('Evaluations/admin/AdminEvaluationShow',
 			[
-				'evaluation' => EvaluationAdminRessource::make($evaluation),
+				'evaluation' => EvaluationAdminResource::make($evaluation),
 			]
 		);
 	}
@@ -37,7 +37,7 @@ class EvaluationAdminController extends Controller
 	{
 		return Inertia::render('Evaluations/EvaluationEdit',
 			[
-				'evaluation' => EvaluationRessource::make($evaluation),
+				'evaluation' => EvaluationResource::make($evaluation),
 			]
 		);
 	}

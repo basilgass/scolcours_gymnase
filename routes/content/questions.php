@@ -35,10 +35,6 @@ Route::middleware('api')
 	          ->as('students.')
 	          ->group(function () {
 
-		          // ROUTE: this route does not exist
-		          Route::post('questions/{question}/validate', [QuestionApiController::class, 'storeAnswer'])
-		               ->name('questions.validate');
-
 	          });
 
 	     // Admin api

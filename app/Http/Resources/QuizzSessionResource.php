@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class QuizzSessionRessource extends JsonResource
+class QuizzSessionResource extends JsonResource
 {
 	// No wrap around the data.
 	public static $wrap = null;

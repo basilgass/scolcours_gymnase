@@ -43,7 +43,7 @@ class LessonController extends Controller
 			Generator::class => GeneratorResource::class,
 			Deck::class      => DeckResource::class,
 			// TODO: vérifier que les resources quizz et deck fonctionnent.
-			//			Quizz::class     => QuizzSessionRessource::class,
+			//			Quizz::class     => QuizzSessionResource::class,
 		];
 
 		$class = get_class($lesson->lessonable);

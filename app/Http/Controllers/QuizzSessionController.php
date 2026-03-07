@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\QuestionResource;
 use App\Http\Resources\QuizzResource;
-use App\Http\Resources\QuizzSessionRessource;
+use App\Http\Resources\QuizzSessionResource;
 use App\Http\Resources\ScoreResource;
 use App\Models\QuizzSession;
 use Illuminate\Http\RedirectResponse;
@@ -35,7 +35,7 @@ class QuizzSessionController extends Controller
 
 		return Inertia::render("Quizzs/QuizzIndex",
 			[
-				"quizzSessions" => QuizzSessionRessource::collection($quizzSessions)
+				"quizzSessions" => QuizzSessionResource::collection($quizzSessions)
 			],
 
 		);
@@ -54,7 +54,7 @@ class QuizzSessionController extends Controller
 		return Inertia::render('Quizzs/QuizzShow',
 			[
 				"quizz"        => QuizzResource::make($quizzSession->quizz),
-				"quizzSession" => QuizzSessionRessource::make($quizzSession),
+				"quizzSession" => QuizzSessionResource::make($quizzSession),
 				"question"     => $question === null ? null : QuestionResource::make($question),
 			]
 		);
@@ -64,7 +64,7 @@ class QuizzSessionController extends Controller
 	{
 		return Inertia::render('Quizzs/QuizzDashboard',
 			[
-				"quizzSession" => QuizzSessionRessource::make($quizzSession),
+				"quizzSession" => QuizzSessionResource::make($quizzSession),
 			]
 		);
 	}
@@ -88,7 +88,7 @@ class QuizzSessionController extends Controller
 		return Inertia::render('Quizzs/QuizzProjection',
 			[
 				"quizz"        => QuizzResource::make($quizzSession->quizz),
-				"quizzSession" => QuizzSessionRessource::make($quizzSession),
+				"quizzSession" => QuizzSessionResource::make($quizzSession),
 				"scores"       => ScoreResource::collection($scores),
 				"usersCount"   => $quizzSession->users->count(),
 			]

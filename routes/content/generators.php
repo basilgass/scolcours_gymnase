@@ -29,11 +29,6 @@ Route::middleware('api')
 	     Route::apiResource('generators', GeneratorApiController::class)
 		     ->only(['index', 'show']);
 
-		 // ROUTE: cette route est a supprimer.
-	     Route::get('generators/{generator}/fetch', [GeneratorApiController::class, 'fetch'])
-	          ->name('generators.fetch');
-
-
 	     // Admin api
 	     Route::middleware('admin')
 		     ->prefix('admin')

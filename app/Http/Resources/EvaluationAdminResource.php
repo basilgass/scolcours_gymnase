@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 /**
  * @mixin Evaluation
  */
-class EvaluationAdminRessource extends EvaluationRessource
+class EvaluationAdminResource extends EvaluationResource
 {
 	public function toArray(Request $request): array
 	{
