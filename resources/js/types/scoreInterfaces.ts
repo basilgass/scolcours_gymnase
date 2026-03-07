@@ -86,3 +86,15 @@ export type ScoreDataInterface =
 	ScoreChallengeDataInterface |
 	ScoreGeneratorDataInterface |
 	ScoreLessonDataInterface
+
+export interface ScoreInterface<T extends ScoreDataInterface = ScoreDataInterface> {
+	attempts: number,
+	data: T,
+	id: number,
+	is_resolved: boolean,
+	score: number,
+	scoreable_id: number,
+	scoreable_type: scoreableClassName,
+	updated_at: string
+	user_id: number,
+}
