@@ -74,7 +74,7 @@ function postRevised() {
 		<header
 			v-if="!noTitle"
 			v-theme.text
-			class="min-h-[80px] w-full py-2"
+			class="min-h-20 w-full py-2"
 		>
 			<!-- title -->
 			<article-title
