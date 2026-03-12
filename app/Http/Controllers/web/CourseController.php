@@ -36,6 +36,21 @@ class CourseController extends Controller
 
 	public function show(Course $course)
 	{
+		if (Auth::user()?->isAdmin) {
+			return redirect()->route('admin.courses.index');
+
+			// TODO: dois gérer un système pour savoir dans quel Team on se trouve.
+			// get the query team.
+			//			$teamSlug = $request->query('team');
+			//			$team = Team::where('slug', $teamSlug)->first();
+
+			//			return $team ?
+			//				redirect()->route('admin.courses.dashboard', [
+			//					'course' => $course->slug,
+			//					'team'   => $team->slug
+			//				]) :
+			//				redirect()->route('admin.courses.index');
+		}
 		return $this->renderCourseWithTeam($course, "Courses/CourseShow");
 	}
 

@@ -32,7 +32,7 @@ interface FilteredListProps<T> {
 	listClass?: string;
 	noFilterIfLessThan?: number;
 	noTitle?: boolean;
-	routeData?: (item: T) => unknown[];
+	routeData?: (item: T) => Record<string, string>;
 	routeName?: string;
 	search?: string | null;
 	searchFunction?: ((item: T, searchValue: string) => boolean);
@@ -120,6 +120,7 @@ const showList = ref(props.collapsed !== true)
 
 function itemClicked(item) {
 	if (props.routeName) {
+		console.log(route(props.routeName, props.routeData(item)))
 		router.visit(route(props.routeName, props.routeData(item)))
 	}
 }

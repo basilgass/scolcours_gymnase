@@ -49,7 +49,7 @@ import DarkModeSwitch from "@/Components/Ui/DarkModeSwitch.vue"
 					</InertiaLink>
 
 					<InertiaLink
-						:href="route('theme', {theme: 'tools'})"
+						:href="route('themes.show', {theme: 'tools'})"
 						class="block transition duration-300 hover:translate-x-2"
 					>
 						<i class="mr-2 bi bi-wrench" /> boîte à outils

@@ -26,21 +26,12 @@ Route::get('/dashboard', [ScolcoursController::class, 'dashboard'])
      ->name('users.dashboard');
 
 
-// Check if a word is in the dictionary
-Route::get('/dico/check/{language}/{word}', [ScolcoursController::class, 'wordExistsInDictionary'])
-     ->name('api.dico.exists');
-
-// Get a word from the dictionary
-// TODO: merge size,number and common to a comma separate string
-// TODO: add a no-duplicate letter option
-Route::get('/dico/{language}/{number?}/{size?}/{common?}/{withoutDuplicateLetters?}', [ScolcoursController::class, 'dico'])
-     ->name('api.dico.fetch');
 
 Route::get('/qr/', [ScolcoursController::class, 'qrcode'])
      ->name('qrcode.show');
 
 Route::get('/fullscreen', [ScolcoursController::class, 'fullscreen'])
-     ->name('widget.fullscreen');
+     ->name('widgets.fullscreen');
 
 require __DIR__ . '/auth.php'; // REFACTOR: Routes with API: auth.php
 require __DIR__ . '/latexRoutes.php'; // REFACTOR: Routes with API: auth.php

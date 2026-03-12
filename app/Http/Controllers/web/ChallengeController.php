@@ -33,7 +33,7 @@ class ChallengeController extends Controller
 			return redirect()->back();
 		}
 
-		return redirect()->route('chapters.challenges.show', [$theme, $challenge->chapter, $challenge]);
+		return redirect()->route('themes.chapters.challenges.show', [$theme, $challenge->chapter, $challenge]);
 	}
 
 	public function show(Theme $theme, Chapter $chapter, Challenge $challenge)
@@ -58,8 +58,8 @@ class ChallengeController extends Controller
 		]);
 	}
 
-	public function teams(Theme $theme, Chapter $chapter, Challenge $challenge, Team $team)
+	public function teams(Challenge $challenge, Team $team)
 	{
-		return redirect()->route('teams.challenge', [$team, $challenge]);
+		return redirect()->route('admin.teams.challenges.show', ["team" => $team, "challenge" => $challenge]);
 	}
 }

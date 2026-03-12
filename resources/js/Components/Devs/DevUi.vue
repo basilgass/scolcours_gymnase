@@ -254,7 +254,7 @@ const value = ref(false)
 								:theme="theme"
 								:variant="variant as ButtonVariant"
 								:size="size as ButtonSize"
-								:href="route('theme', {theme:theme})"
+								:href="route('themes.show', {theme:theme})"
 							>
 								<div class="flex gap-3">
 									<i class="bi bi-brush" />

@@ -2,18 +2,18 @@
 	setup
 	lang="ts"
 >
-import { computed } from "vue"
+import {computed} from "vue"
 
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 import StatBar from "@/Components/Ui/StatBar.vue"
 
-defineOptions({ layout: LayoutMain })
+defineOptions({layout: LayoutMain})
 
 const props = defineProps({
-	team: { type: Object, required: true },
-	challenge: { type: Object, required: true },
-	scores: { type: Object, required: true }
-}),
+		team: {type: Object, required: true},
+		challenge: {type: Object, required: true},
+		scores: {type: Object, required: true}
+	}),
 	showStars = computed(() => {
 		return usersScores.value.filter(item => item.score.stars !== "?").length > 0
 	}),
@@ -28,7 +28,7 @@ const props = defineProps({
 					score: result.score,
 					level: result.level,
 					stars: result.stars ?? 0
-				} : { score: "?", level: "?", stars: "?" }
+				} : {score: "?", level: "?", stars: "?"}
 			})
 		}
 
@@ -56,7 +56,7 @@ const props = defineProps({
 			<i class="bi bi-arrow-left" /> Retour à l'équipe
 		</InertiaLink>
 		<h3 class="text-2xl">
-			{{ props.challenge.data.title }}
+			{{ props.challenge.title }}
 		</h3>
 
 		<div class="my-5">

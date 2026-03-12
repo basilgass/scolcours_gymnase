@@ -218,7 +218,7 @@ function onDrop(e: DragEvent, targetDay: number, targetItem: timetableInterface)
 		</tbody>
 	</table>
 
-	<div>
+	<div class="mt-3">
 		<sc-button
 			id="new-calendar-item"
 			class="item-draggable"

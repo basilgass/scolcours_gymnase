@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\AdminController;
 use App\Http\Controllers\api\ChallengeApiController;
 use App\Http\Controllers\web\ChallengeController;
 
@@ -9,14 +8,12 @@ Route::middleware('web')
 	     // Public routes.
 	     // Redirect routes to challenge.
 	     Route::get('q/{challenge:slug}', [ChallengeController::class, 'quick'])
-	          ->name("challenges.show");
+	          ->name("challenges.quick");
 
 	     // Challenge route show.
-	     // REFACTOR : use resource
-
 	     Route::get('{theme:slug}/{chapter:slug}/challenges/{challenge:slug}', [ChallengeController::class, 'show'])
 	          ->withoutScopedBindings()
-	          ->name('chapters.challenges.show');
+	          ->name('themes.chapters.challenges.show');
 
 	     // Admin routes
 	     Route::middleware('admin')
@@ -24,18 +21,14 @@ Route::middleware('web')
 	          ->prefix('admin')
 	          ->group(function () {
 
-		          // ROUTE: Ces routes sont elles utiles ?
 		          Route::resource('challenges', ChallengeController::class)
 		               ->only(['edit']);
 
-		          // ROUTE: Refactor this path.
-		          Route::get('{theme:slug}/{chapter:slug}/challenges/{challenge:slug}/team/{team:name}', [ChallengeApiController::class, 'teams'])
+		          Route::get('challenges/{challenge:slug}/team/{team:name}', [ChallengeController::class, 'teams'])
 		               ->withoutScopedBindings()
 		               ->name('challenges.team');
 	          });
      });
-
-
 
 
 Route::middleware('api')
@@ -44,7 +37,7 @@ Route::middleware('api')
      ->group(function () {
 	     // Public api.
 	     Route::apiResource('challenges', ChallengeApiController::class)
-		     ->only(['index', 'show']);
+	          ->only(['index', 'show']);
 
 
 	     // Admin api
@@ -54,7 +47,7 @@ Route::middleware('api')
 	          ->group(function () {
 
 		          Route::apiResource('chapters.challenges', ChallengeApiController::class)
-			          ->only(['store', 'update', 'destroy'])
+		               ->only(['store', 'update', 'destroy'])
 		               ->shallow();
 
 		          Route::prefix('challenges')

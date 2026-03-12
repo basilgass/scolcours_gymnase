@@ -44,7 +44,7 @@ function deleteChapter() {
 	axios.delete(route("api.admin.chapters.destroy", [props.chapter.id]))
 		.then(() => {
 			flash.success("Le chapitre a été supprimé")
-			router.visit(route('theme', {slug}))
+			router.visit(route('themes.show', {slug}))
 		})
 		.catch((res) => {
 			flash.error(

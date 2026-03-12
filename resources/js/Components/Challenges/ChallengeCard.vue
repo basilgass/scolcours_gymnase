@@ -23,7 +23,7 @@ useStoreScore().getScore("Challenge", props.challenge.id)
 		<InertiaLink
 			class="grid place-items-center cursor-pointer"
 			as="div"
-			:href="route('challenges.show', {slug: challenge.slug})"
+			:href="route('challenges.quick', {slug: challenge.slug})"
 		>
 			<div
 				v-katex.auto="challenge.title"

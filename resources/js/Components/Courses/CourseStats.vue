@@ -214,7 +214,7 @@ onUnmounted(() => {
 			>
 				<div
 					class="flex gap-2 cursor-pointer hover:font-semibold min-w-75"
-					@click="router.visit(route('students.lessons.show', {course: course.slug, lesson: lesson.id }))"
+					@click="router.visit(route('admin.courses.lessons.show', {course: course.slug, team: team.name, lesson: lesson.id }))"
 				>
 					<lesson-type-icon
 						:lesson

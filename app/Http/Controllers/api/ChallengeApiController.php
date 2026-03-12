@@ -50,7 +50,7 @@ class ChallengeApiController extends Controller
 
 		$challenge->blocks()->create();
 
-		return redirect()->route('challenges.show', [$challenge->slug]);
+		return redirect()->route('challenges.quick', [$challenge->slug]);
 	}
 
 
@@ -182,6 +182,6 @@ class ChallengeApiController extends Controller
 
 	public function teams(Theme $theme, Chapter $chapter, Challenge $challenge, Team $team)
 	{
-		return redirect()->route('teams.challenge', [$team, $challenge]);
+		return redirect()->route('admin.challenges.team', ["team" => $team, "challenge" => $challenge]);
 	}
 }

@@ -21,7 +21,7 @@ Route::middleware('web')
 
 	     // Public routes
 	     Route::get('{theme:slug}/', [ChapterController::class, 'index'])
-	          ->name('theme');
+	          ->name('themes.show');
 
 	     Route::get('{theme:slug}/{chapter:slug}', [ChapterController::class, 'show'])
 	          ->name('themes.chapters.show');

@@ -154,7 +154,7 @@ function print() {
 
 	const key = 'scolcours.widgetFS'
 	window.sessionStorage.setItem(key, html)
-	router.visit(route('widget.fullscreen'))
+	router.visit(route('widgets.fullscreen'))
 }
 </script>
 

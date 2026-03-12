@@ -186,7 +186,7 @@ function historyBack() {
 					<div>{{ challenge.title }}</div>
 					<div class="flex gap-3">
 						<InertiaLink
-							:href="route('challenges.show', [challenge.slug])"
+							:href="route('challenges.quick', [challenge.slug])"
 						>
 							<i class="bi bi-eye" />
 						</InertiaLink>

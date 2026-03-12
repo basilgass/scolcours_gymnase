@@ -42,7 +42,7 @@ function storeChallenge() {
 				:key="`challenge-${challenge.id}`"
 				v-katex.auto="challenge.title"
 				theme
-				:href="route('chapters.challenges.show', {
+				:href="route('themes.chapters.challenges.show', {
 					theme: $page.props.theme.slug,
 					chapter: chapter.slug,
 					challenge: challenge.slug

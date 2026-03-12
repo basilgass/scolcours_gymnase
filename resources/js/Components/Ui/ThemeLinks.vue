@@ -30,7 +30,7 @@ const enabledThemes = computed<ThemeLinks[]>(() => {
 	<InertiaLink
 		v-for="theme of enabledThemes"
 		:key="`anchor-${theme.slug}`"
-		:href="route('theme', theme.slug)"
+		:href="route('themes.show', theme.slug)"
 		class="block transition duration-300 hover:translate-x-2"
 		@click="emit('ClickNavigationLinks')"
 	>

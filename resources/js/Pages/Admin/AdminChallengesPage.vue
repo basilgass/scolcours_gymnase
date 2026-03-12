@@ -27,7 +27,7 @@ defineProps({
 			>
 				<div>
 					<InertiaLink
-						:href="route('challenges.show', [challenge.slug])"
+						:href="route('challenges.quick', [challenge.slug])"
 						class="text-lg leading-6 font-medium"
 						v-katex.auto="challenge.title"
 					/>

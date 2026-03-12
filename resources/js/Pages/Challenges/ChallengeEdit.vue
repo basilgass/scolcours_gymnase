@@ -195,7 +195,7 @@ const deleteChallenge = function () {
 					enregistrer
 				</sc-button>
 				<sc-button
-					:href="route('challenges.show', [theChallenge.slug])"
+					:href="route('challenges.quick', [theChallenge.slug])"
 					type="success"
 					xs
 				>
