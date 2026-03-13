@@ -25,7 +25,7 @@ const theEvaluations = ref<EvaluationAdminInterface[]>(props.evaluations)
 
 function toggleTeam(evaluation: EvaluationInterface, team: TeamInterface) {
 	axios
-		.patch(route('api.admin.evaluations.toggle-team', {evaluation: evaluation.id, team: team.id}))
+		.patch(route('api.admin.evaluations.teams.toggle', {evaluation: evaluation.id, team: team.id}))
 		.then((res: AxiosResponseModel<boolean>) => {
 			if (res.data) {
 				// On ajoute la team

@@ -48,7 +48,7 @@ function addFormula() {
 
 function updateFormulasOrder() {
 	axios
-		.post(route("api.admin.formulas.updateOrder"), {
+		.post(route("api.admin.formulas.order"), {
 			order: theFormular.value.map((x, index) => {
 				return {id: x.id, order: index}
 			})

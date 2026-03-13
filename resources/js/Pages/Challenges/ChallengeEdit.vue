@@ -35,7 +35,7 @@ const updateGeneratorsOrder = function () {
 
 	axios
 		.post(
-			route("api.admin.challenges.generators.updateOrder", [
+			route("api.admin.challenges.generators.order", [
 				theChallenge.value.id
 			]),
 			{

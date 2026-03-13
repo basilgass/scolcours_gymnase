@@ -17,11 +17,11 @@ const timetable = ref<timetableInterface[]>(null)
 
 onMounted(() => {
 	// Get the timetable
-	axios.get(route('api.school.timetable'))
+	axios.get(route('api.school.timetables.index'))
 		.then((res: AxiosResponseModel<timetableInterface[]>) => {
 			timetable.value = res.data
 
-			axios.get(route('api.teams.calendar', {team: props.team.id}))
+			axios.get(route('api.teams.calendars.index', {team: props.team.id}))
 				.then((res: AxiosResponseModel<TeamCalendarInterface[]>) => {
 					theItems.value = res.data
 				})

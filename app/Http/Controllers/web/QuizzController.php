@@ -26,7 +26,7 @@ class QuizzController extends Controller
 			}
 		]);
 
-		return Inertia::render('Quizzs/QuizzAdmin',
+		return Inertia::render('Quizzs/admin/AdminQuizz',
 			[
 				"quizzs" => QuizzResource::collection($quizz)
 			]

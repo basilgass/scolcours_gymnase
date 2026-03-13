@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type {LanguageDataInterface} from "@/Pages/languages/LanguageShow.vue"
+import type {LanguageDataInterface} from "@/Pages/Languages/LanguageShow.vue"
 import {Random} from "pimath"
 import {inject, ref, watch} from "vue"
 import {useLanguage} from "@/Components/Languages/useLanguage.ts"

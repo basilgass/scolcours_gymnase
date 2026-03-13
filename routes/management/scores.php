@@ -23,7 +23,7 @@ Route::middleware('api')
 		          Route::prefix('scores')
 		               ->group(function () {
 			               Route::patch('reset', [ScoreApiController::class, "reset"])
-			                    ->name('reset');
+			                    ->name('scores.reset');
 		               });
 	          });
 
@@ -32,7 +32,7 @@ Route::middleware('api')
 	          ->as('admin.')
 	          ->group(function () {
 		          Route::delete('/scores', [ScoreApiController::class, 'destroyMultiple'])
-		               ->name('scores.destroy.multiple');
+		               ->name('scores.bulk');
 	          });
 
      });

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import {LanguageDataInterface} from "@/Pages/languages/LanguageShow.vue"
+import {LanguageDataInterface} from "@/Pages/Languages/LanguageShow.vue"
 import {computed, inject} from "vue"
 import type {CardInterface, DeckInterface} from "@/types/modelInterfaces.ts"
 import {useLanguage} from "@/Components/Languages/useLanguage.ts"

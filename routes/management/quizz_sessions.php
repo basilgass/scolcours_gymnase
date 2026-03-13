@@ -13,10 +13,10 @@ Route::middleware('web')
 	          ->group(function () {
 
 		          Route::get('quizz', [QuizzSessionController::class, "index"])
-		               ->name('quizzs.sessions.index');
+		               ->name('quizzes.sessions.index');
 
 		          Route::get('quizz/{quizzSession:shortcode}', [QuizzSessionController::class, "show"])
-		               ->name('quizzs.sessions.show');
+		               ->name('quizzes.sessions.show');
 
 	          });
 
@@ -27,10 +27,10 @@ Route::middleware('web')
 		     ->group(function () {
 
 		          Route::get('quizz/{quizzSession:shortcode}/dashboard', [QuizzSessionController::class, "dashboard"])
-		               ->name('quizzs.sessions.dashboard');
+		               ->name('quizzes.sessions.dashboard');
 
 		          Route::get('quizz/{quizzSession:shortcode}/projection', [QuizzSessionController::class, "projection"])
-		               ->name('quizzs.sessions.projection');
+		               ->name('quizzes.sessions.projection');
 
 	          });
      });
@@ -47,17 +47,18 @@ Route::middleware('api')
 		     ->as('admin.')
 	          ->group(function () {
 
-			     Route::apiResource('quizzs.sessions', QuizzSessionApiController::class)
-				     ->shallow();
+			     Route::apiResource('quizzes.sessions', QuizzSessionApiController::class)
+				     ->shallow()
+				     ->parameters(['quizzes' => 'quizz']);
 
 		          Route::patch('quizz/{quizzSession}/updateCurrent', [QuizzApiController::class, "updateCurrent"])
-		               ->name('quizzs.sessions.updateCurrent');
+		               ->name('quizzes.sessions.current');
 
 		          Route::patch('quizz/{quizzSession}/updateShowAnswer', [QuizzApiController::class, "updateShowAnswer"])
-		               ->name('quizzs.sessions.updateShowAnswer');
+		               ->name('quizzes.sessions.answer');
 
 		          Route::patch('quizz/{quizzSession}/updateEnable', [QuizzApiController::class, "updateEnable"])
-		               ->name('quizzs.sessions.updateEnable');
+		               ->name('quizzes.sessions.enable');
 
 	          });
      });

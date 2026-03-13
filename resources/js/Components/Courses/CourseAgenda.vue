@@ -46,7 +46,7 @@ interface yearDay {
 const yearCalendar = ref<yearDay[]>([])
 
 function getYearCalendar() {
-	axios.get(route('api.school.calendar'))
+	axios.get(route('api.school.calendars.index'))
 		.then((res: AxiosResponseModel<{ week: number, school: boolean, day: string }[]>) => {
 			yearCalendar.value = res.data.map(d => {
 				return {
@@ -74,7 +74,7 @@ function getTeamsCourseCalendar() {
 }
 
 function getTeamCourseCalendar(course: CourseMinInterface, team: TeamInterface) {
-	axios.get(route('api.teams.course.calendar', {team: team.id, course: course.id}))
+	axios.get(route('api.teams.courses.calendars.index', {team: team.id, course: course.id}))
 		.then((res: AxiosResponseModel<CourseInterface>) => {
 			res.data.lessons.forEach(lesson => {
 				teamLessons.value.push({
@@ -237,7 +237,7 @@ function updateLesson(event: { lesson_id: number, team_id: number, target: Dayjs
 	// Force course
 
 	axios
-		.patch(route('api.admin.teams.lessons.update', {
+		.patch(route('api.admin.teams.lessons.calendars.update', {
 			lesson: teamLesson.lesson.id,
 			team: teamLesson.team.id,
 		}), {

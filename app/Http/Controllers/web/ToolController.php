@@ -18,7 +18,7 @@ class ToolController extends Controller
 			"tool"  => null,
 		];
 
-		return Inertia::render("Tools/ToolsIndex", $data);
+		return Inertia::render("Tools/ToolIndex", $data);
 	}
 
 	public function show($value)
@@ -30,7 +30,7 @@ class ToolController extends Controller
 		if ($value !== $tool->slug) {
 			return redirect()->route('tools.show', $tool, 301);
 		}
-		return Inertia::render("Tools/ToolsShow", [
+		return Inertia::render("Tools/ToolShow", [
 			"tools" => Tool::all(),
 			"tool"  => $tool
 		]);
@@ -38,7 +38,7 @@ class ToolController extends Controller
 
 	public function edit(Tool $tool)
 	{
-		return Inertia::render("Tools/ToolsEdit", [
+		return Inertia::render("Tools/ToolEdit", [
 			'tool' => ToolResource::make($tool),
 		]);
 	}

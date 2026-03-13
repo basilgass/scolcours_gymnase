@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\Challenges\ChallengeSession;
 use App\Traits\HasLessonTrait;
 use App\Traits\HasScoresTrait;
 use App\Traits\HasUrlTrait;
@@ -40,8 +39,6 @@ use Znck\Eloquent\Traits\BelongsToThrough;
  * @property-read mixed $running
  * @property-read Collection<int, \App\Models\Score> $scores
  * @property-read int|null $scores_count
- * @property-read Collection<int, ChallengeSession> $sessions
- * @property-read int|null $sessions_count
  * @property-read mixed $url
  * @method static Builder<static>|Challenge newModelQuery()
  * @method static Builder<static>|Challenge newQuery()
@@ -86,11 +83,6 @@ class Challenge extends Model
 		return $this->belongsToThrough(Theme::class, Chapter::class);
 	}
 
-	public function sessions()
-	{
-		return $this->hasMany(ChallengeSession::class);
-	}
-
 	public function blocks()
 	{
 		return $this->morphMany(Block::class, 'blockable');
@@ -104,8 +96,5 @@ class Challenge extends Model
 			->orderByPivot('order');
 	}
 
-	public function getRunningAttribute()
-	{
-		return $this->sessions->where('open', 'is', true);
-	}
+
 }

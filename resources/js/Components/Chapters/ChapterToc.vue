@@ -69,7 +69,7 @@ const postsFilter = function (filter: string) {
 const moveMode = ref(false)
 const updatePostsOrder = function () {
 	axios
-		.post(route("api.admin.chapters.updatePostsOrder", [props.chapter.id]), {
+		.post(route("api.admin.chapters.posts.order", [props.chapter.id]), {
 			posts: posts.value.map((post, index) => {
 				return {
 					id: post.id,

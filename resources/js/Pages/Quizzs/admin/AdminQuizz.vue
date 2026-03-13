@@ -22,9 +22,9 @@ const props = defineProps<{
 }>()
 
 function createQuizz() {
-	axios.post(route("api.admin.quizzs.store"))
+	axios.post(route("api.admin.quizzes.store"))
 		.then(res => {
-			router.visit(route("admin.quizzs.edit", {quizz: res.data}))
+			router.visit(route("admin.quizzes.edit", {quizz: res.data}))
 		})
 }
 
@@ -55,7 +55,7 @@ const pastSessions = computed<QuizzSessionsType>(() => {
 function loadSessions(id: number) {
 
 	axios
-		.get(route('api.admin.quizzs.sessions.index', {quizz: id}))
+		.get(route('api.admin.quizzes.sessions.index', {quizz: id}))
 		.then((res: AxiosResponseModel<QuizzSessionInterface[]>) => {
 			sessions[id] = res.data.filter(session => session.current !== 0)
 		})
@@ -66,7 +66,7 @@ function loadSessions(id: number) {
 
 function createSession(id: number) {
 	axios.post(
-		route('api.admin.quizzs.sessions.store', {quizz: id}),
+		route('api.admin.quizzes.sessions.store', {quizz: id}),
 		{
 			team: team.value.id
 		}
@@ -140,7 +140,7 @@ onMounted(() => {
 							<sc-button
 								type="edit"
 								xs
-								:href="route('admin.quizzs.edit', {quizz: quizz.id})"
+								:href="route('admin.quizzes.edit', {quizz: quizz.id})"
 								icon
 							>
 								éditer

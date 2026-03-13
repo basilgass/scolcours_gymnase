@@ -46,7 +46,7 @@ function addUsers() {
 	form.transform((data) => ({
 		users: usersEmailsList.value,
 		password: data.password
-	})).post(route("admin.users.create"), {
+	})).post(route("admin.users.store"), {
 		preserveScroll: true,
 		onSuccess: () => {
 			flash.success("Utilisateurs ajoutés")
@@ -131,7 +131,7 @@ function editUserStore() {
 
 function updateUserTeam(userId: number, teamId: number) {
 	axios
-		.patch(route("api.admin.teams.toggleUser", {
+		.patch(route("api.admin.teams.users.toggle", {
 			user: userId,
 			team: teamId
 		}))

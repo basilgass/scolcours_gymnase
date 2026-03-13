@@ -70,7 +70,7 @@ class AdminController extends Controller
 		$scolcours = Cache::get('scolcours');
 
 		return Inertia::render(
-			'Admin/AdminConfigPage',
+			'Admin/AdminConfig',
 			[
 				"title"     => $scolcours->title,
 				"allThemes" => Theme::orderBy('order')->get()
@@ -127,7 +127,7 @@ class AdminController extends Controller
 	public function chapters()
 	{
 		return Inertia::render(
-			'Admin/AdminChaptersPage',
+			'Chapters/admin/AdminChapter',
 			[
 				'chapters' => ChapterResource::collection(Chapter::all())
 			]
@@ -139,7 +139,7 @@ class AdminController extends Controller
 		$this->loadTools();
 
 		return Inertia::render(
-			'Admin/AdminToolsPage',
+			'Tools/admin/AdminTool',
 			[
 				'tools' => ToolResource::collection(Tool::all())
 			]
@@ -211,7 +211,7 @@ class AdminController extends Controller
 	public function challenges()
 	{
 		return Inertia::render(
-			'Admin/AdminChallengesPage',
+			'Challenges/admin/AdminChallenge',
 			[
 				'challenges' => Challenge::all()->map(function (Challenge $tool, $key) {
 					return [
@@ -228,7 +228,7 @@ class AdminController extends Controller
 	public function generators()
 	{
 		return Inertia::render(
-			'Admin/AdminGeneratorsPage',
+			'Generators/admin/AdminGenerator',
 			[
 				'generators' => Generator::all()
 			]
@@ -239,7 +239,7 @@ class AdminController extends Controller
 	public function widgets()
 	{
 		return Inertia::render(
-			'Admin/AdminWidgetsPage',
+			'Admin/AdminWidget',
 			[
 				"widgets" => WidgetResource::collection(Widget::all())
 			]
@@ -250,7 +250,7 @@ class AdminController extends Controller
 	{
 		$users = User::with('teams')->get();
 		return Inertia::render(
-			'Admin/AdminUsersPage',
+			'Admin/AdminUser',
 			[
 				"users" => UserResource::collection($users),
 				"teams" => Team::active()->get()
@@ -312,7 +312,7 @@ class AdminController extends Controller
 	public function illustrations()
 	{
 		return Inertia::render(
-			'Admin/AdminIllustrationsPage',
+			'Illustrations/admin/AdminIllustration',
 			[
 				'illustrations' => Illustration::all()
 			]
@@ -326,7 +326,7 @@ class AdminController extends Controller
 		])->orderBy('created_at', 'desc')->get();
 
 		return Inertia::render(
-			'Admin/AdminCoursesPage',
+			'Courses/admin/AdminCourse',
 			[
 				'courses' => CourseResource::collection($courses),
 				'teams'   => TeamResource::collection(Team::active()->get())
@@ -340,7 +340,7 @@ class AdminController extends Controller
 		                 ->without('lessons')->get();
 
 		return Inertia::render(
-			'Admin/AdminAgendaPage',
+			'Courses/admin/AdminAgenda',
 			[
 				'courses' => CourseResource::collection($courses),
 				'teams'   => UserTeamResource::collection(Team::active()->get())

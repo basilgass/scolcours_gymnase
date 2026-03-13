@@ -34,7 +34,7 @@ Route::middleware('api')
 			               Route::post('store/to/blocks/{block}', [IllustrationApiController::class, 'store'])
 			                    ->name('store');
 			               Route::post('image/upload', [IllustrationApiController::class, "upload"])
-			                    ->name('images.upload');
+			                    ->name('upload');
 		               });
 
 	          });

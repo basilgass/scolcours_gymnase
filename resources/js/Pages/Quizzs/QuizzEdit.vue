@@ -32,7 +32,7 @@ const theQuizz = ref(props.quizz)
 function quizzUpdate() {
 	axios
 		.patch(
-			route("api.admin.quizzs.update", [theQuizz.value.id]),
+			route("api.admin.quizzes.update", [theQuizz.value.id]),
 			{
 				title: theQuizz.value.title,
 				chapter_id: theQuizz.value.chapter.id,
@@ -47,11 +47,11 @@ function quizzUpdate() {
 
 // function quizzDestroy() {
 // 	axios
-// 		.post(route("api.admin.quizzs.destroy", [theQuizz.value.id]), {
+// 		.post(route("api.admin.quizzes.destroy", [theQuizz.value.id]), {
 // 			_method: "DELETE",
 // 		})
 // 		.then(() => {
-// 			router.visit(route("admin.quizzs.index"))
+// 			router.visit(route("admin.quizzes.index"))
 // 		})
 // }
 
@@ -62,7 +62,7 @@ function quizzUpdate() {
 			<article-title
 				title="éditer un quizz"
 				:return-link="{
-					url: route('admin.quizzs.index'),
+					url: route('admin.quizzes.index'),
 					label: 'tous les quizz'
 				}"
 			/>

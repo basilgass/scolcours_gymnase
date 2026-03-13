@@ -7,7 +7,7 @@ const links = [
 	{title: "utilisateurs", route: "admin.users.index", icon: 'bi bi-person'},
 	{title: "équipes", route: "admin.teams.index", icon: 'bi-person-lines-fill'},
 	{title: "cours", route: "admin.courses.index", icon: 'bi-book'},
-	{title: "quizz", route: "admin.quizzs.index", icon: 'bi bi-person-raised-hand'},
+	{title: "quizz", route: "admin.quizzes.index", icon: 'bi bi-person-raised-hand'},
 	{title: "évaluations", route: "admin.evaluations.index", icon: 'bi bi-journal-check'},
 	{title: "decks", route: "admin.decks.index", icon: 'bi bi-collection'},
 	{title: "agenda", route: "admin.agenda", icon: 'bi bi-calendar'},

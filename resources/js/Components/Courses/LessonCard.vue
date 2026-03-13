@@ -45,7 +45,7 @@ function updateLesson(value?: string) {
 	}
 
 	axios
-		.patch(route('api.admin.teams.lessons.update', {
+		.patch(route('api.admin.teams.lessons.calendars.update', {
 			lesson: props.lesson.id,
 			team: props.team.id,
 		}), {

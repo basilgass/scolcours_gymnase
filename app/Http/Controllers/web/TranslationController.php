@@ -10,7 +10,7 @@ class TranslationController extends Controller
 {
     public function index(TranslationLanguage $language)
     {
-        return Inertia::render("languages/LanguageIndex", [
+        return Inertia::render("Languages/LanguageIndex", [
             "language" => $language
         ]);
     }
@@ -19,7 +19,7 @@ class TranslationController extends Controller
     {
 //		$units = TranslationUnit::where('language', $code)->get();
 
-        return Inertia::render("languages/LanguageShow", [
+        return Inertia::render("Languages/LanguageShow", [
             "language" => $language,
             "books"    => $language->books,
             "game"     => $game
@@ -28,7 +28,7 @@ class TranslationController extends Controller
 
     public function import()
     {
-        return Inertia::render("languages/LanguageImport");
+        return Inertia::render("Languages/LanguageImport");
     }
 
 }

@@ -1,7 +1,7 @@
 import {TranslationWord} from "@/types/modelInterfaces"
 import {Random} from "pimath"
 import {MaybeRef, ref, unref} from "vue"
-import {LanguageDataInterface} from "@/Pages/languages/LanguageShow.vue"
+import {LanguageDataInterface} from "@/Pages/Languages/LanguageShow.vue"
 
 
 export function useLanguage(languageData: LanguageDataInterface, options?: {

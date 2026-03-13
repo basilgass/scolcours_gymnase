@@ -27,7 +27,7 @@ function ongoing(session: QuizzSessionInterface) {
 
 function sessionCreate() {
 	axios
-		.post(route("api.admin.quizzs.sessions.create", [props.quizzId]), {
+		.post(route("api.admin.quizzes.sessions.create", [props.quizzId]), {
 			name: sessionName.value,
 			team: sessionTeam.value,
 		})
@@ -49,7 +49,7 @@ function sessionCreate() {
 
 function sessionDestroy(id) {
 	axios
-		.post(route("api.admin.quizzs.sessions.destroy", [id]), {
+		.post(route("api.admin.quizzes.sessions.destroy", [id]), {
 			_method: "DELETE",
 		})
 		.then(() => {
@@ -137,7 +137,7 @@ const sessionCreateEnable = computed(() => {
 				</td>
 				<td>
 					<InertiaLink
-						:href="route('admin.quizzs.sessions.dashboard', [
+						:href="route('admin.quizzes.sessions.dashboard', [
 								session.shortcode,
 							])
 							"

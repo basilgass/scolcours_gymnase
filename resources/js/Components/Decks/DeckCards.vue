@@ -1,14 +1,12 @@
-<script
-	lang="ts"
-	setup
->
+<script lang="ts" setup>
 
-import type {CardInterfaceExtended, provideDeckData} from "@/types/modelInterfaces"
-import {computed, inject, onMounted, reactive, ref} from "vue"
+import type { CardInterfaceExtended, provideDeckData } from "@/types/modelInterfaces"
+import { computed, inject, onMounted, reactive, ref } from "vue"
 import DeckCardItem from "@/Components/Decks/Parts/DeckCardItem.vue"
 import ScButton from "@/Components/Ui/Button/scButton.vue"
-import {useStoreScore} from "@/stores/useStoreScore.ts"
-import {ScoreCardDataInterface} from "@/types/scoreInterfaces.ts"
+import { useStoreScore } from "@/stores/useStoreScore.ts"
+import { ScoreCardDataInterface } from "@/types/scoreInterfaces.ts"
+import PostDisplay from "../Posts/PostDisplay.vue"
 
 const deckData = inject<provideDeckData>('deckData')
 const currentCard = ref<CardInterfaceExtended | null>(null)
@@ -184,7 +182,7 @@ function updateCard_currentScore(result: boolean): number {
 	return Math.max(0.125, currentCard.value.current_score / 2)
 }
 
-defineExpose({restartDeck})
+defineExpose({ restartDeck })
 
 </script>
 
@@ -208,7 +206,7 @@ defineExpose({restartDeck})
 				class="absolute z-10
 				bottom-7 left-7
 				flex justify-between
-				w-[80px] h-[60px]
+				w-20 h-15
 				transition-all duration-200 ease-in-out"
 				@click="cardResult(false)"
 			>
@@ -223,7 +221,7 @@ defineExpose({restartDeck})
 				class="absolute z-10
 				bottom-7 right-7
 				flex justify-between
-				w-[80px] h-[60px]
+				w-20 h-15
 				transition-all duration-1000 ease-in-out"
 				@click="cardResult(true)"
 			>
@@ -235,8 +233,8 @@ defineExpose({restartDeck})
 		<div class="w-full flex justify-between">
 			<div>
 				score: {{
-				currentCard.current_score === null ? 'nouvelle carte' : `${Math.round(currentCard.current_score *
-				100)}%`
+					currentCard.current_score === null ? 'nouvelle carte' : `${Math.round(currentCard.current_score *
+						100)}%`
 				}}
 			</div>
 			<div>{{ deckData.cards.value.length }} cartes</div>
@@ -254,4 +252,3 @@ defineExpose({restartDeck})
 		/>
 	</article>
 </template>
-

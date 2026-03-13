@@ -23,7 +23,7 @@ Route::middleware('web')
 	          ->group(function () {
 
 		          Route::get('cours/{course:slug}/{team:name}/leçon/{lesson}', [LessonController::class, 'adminShow'])
-		               ->name('courses.lessons.show');
+		               ->name('courses.teams.lessons.show');
 
 	          });
      });
@@ -44,10 +44,10 @@ Route::middleware('api')
 		               ->shallow();
 
 		          Route::patch('lesson_calendar/{team}/{lesson}/update', [LessonApiController::class, 'updateLessonCalendar'])
-		               ->name('teams.lessons.update');
+		               ->name('teams.lessons.calendars.update');
 
 		          Route::patch('courses/{course}/lessons/order', [LessonApiController::class, 'updateLessonsOrder'])
-		               ->name('courses.lessons.updateOrder');
+		               ->name('courses.lessons.order');
 
 		          Route::post('courses/{course}/lessons/posts', [LessonApiController::class, "storePosts"])
 		               ->name('courses.lessons.posts.store');

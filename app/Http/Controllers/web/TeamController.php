@@ -17,7 +17,7 @@ class TeamController extends Controller
 {
 	public function index()
 	{
-		return Inertia::render("Teams/admin/TeamAdminIndex", [
+		return Inertia::render("Teams/admin/AdminTeamIndex", [
 			'teams' => Team::with('users')->get()->map(function ($team) {
 				return [
 					'id'          => $team->id,
@@ -31,7 +31,7 @@ class TeamController extends Controller
 
 	public function show(Team $team)
 	{
-		return Inertia::render("Teams/admin/TeamAdminShow",
+		return Inertia::render("Teams/admin/AdminTeamShow",
 			[
 				'team'       => $team,
 				'students'   => UserResource::collection($team->users),

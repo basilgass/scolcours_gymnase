@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import DialogModal from "@/Components/Ui/DialogModal.vue"
-import {LanguageDataInterface} from "@/Pages/languages/LanguageShow.vue"
+import {LanguageDataInterface} from "@/Pages/Languages/LanguageShow.vue"
 import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
 import type {TranslationWord} from "@/types/modelInterfaces"
 import {usePage} from "@inertiajs/vue3"

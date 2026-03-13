@@ -38,7 +38,7 @@ function saveConfig() {
 
 function sortEvent() {
 	axios
-		.post(route("admin.config.updateOrder"), {
+		.post(route("admin.config.order"), {
 			_method: "PATCH",
 			order: themes.value.map((x, index) => {
 				return {id: x.id, order: index + 1}

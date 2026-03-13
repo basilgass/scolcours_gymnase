@@ -182,6 +182,6 @@ class ChallengeApiController extends Controller
 
 	public function teams(Theme $theme, Chapter $chapter, Challenge $challenge, Team $team)
 	{
-		return redirect()->route('admin.challenges.team', ["team" => $team, "challenge" => $challenge]);
+		return redirect()->route('admin.teams.challenges.show', ["team" => $team, "challenge" => $challenge]);
 	}
 }

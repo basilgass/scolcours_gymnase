@@ -15,7 +15,7 @@ class BlockController extends Controller
 	public function index()
 	{
 		return Inertia::render(
-			'Admin/AdminBlocksPage',
+			'Blocks/admin/AdminBlock',
 			[
 				'blocks' => BlockResource::collection(Block::whereNotNull('script')->get())
 			]

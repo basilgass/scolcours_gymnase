@@ -54,7 +54,7 @@ const toggleDisplayId = async function (id) {
 	// Update to DB
 	axios
 		.post(
-			route("api.admin.questions.updateDisplayIf", {
+			route("api.admin.questions.displayIf", {
 				question: theQuestion.value.id
 			}),
 			{

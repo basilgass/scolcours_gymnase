@@ -84,7 +84,7 @@ function afficherDate(day: string, short?: boolean): string {
 			<sc-button
 				type="edit"
 				xs
-				:href="route('admin.courses.dashboard', {
+				:href="route('admin.courses.teams.dashboard', {
 					course: props.course.slug,
 					team: props.team.name
 				})"

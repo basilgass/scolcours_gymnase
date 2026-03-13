@@ -16,7 +16,7 @@ class EvaluationAdminController extends Controller
 	{
 		$evaluations = Evaluation::all();
 
-		return Inertia::render('Evaluations/admin/AdminEvaluationPage',
+		return Inertia::render('Evaluations/admin/AdminEvaluation',
 			[
 				'evaluations' => EvaluationAdminResource::collection($evaluations),
 				'teams'       => TeamResource::collection(Team::active()->get()),

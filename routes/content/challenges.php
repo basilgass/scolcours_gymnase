@@ -24,9 +24,6 @@ Route::middleware('web')
 		          Route::resource('challenges', ChallengeController::class)
 		               ->only(['edit']);
 
-		          Route::get('challenges/{challenge:slug}/team/{team:name}', [ChallengeController::class, 'teams'])
-		               ->withoutScopedBindings()
-		               ->name('challenges.team');
 	          });
      });
 
@@ -56,7 +53,7 @@ Route::middleware('api')
 			               Route::get('{challenge}/generators', [ChallengeApiController::class, 'indexGenerator'])
 			                    ->name('generators.index');
 			               Route::patch('{challenge}/generators/order', [ChallengeApiController::class, "updateGeneratorsOrder"])
-			                    ->name('generators.updateOrder');
+			                    ->name('generators.order');
 			               Route::post("{challenge}/generators", [ChallengeApiController::class, "storeGenerator"])
 			                    ->name('generators.store');
 			               Route::post("{challenge}/generators/{generator}/attach", [ChallengeApiController::class, "attachGenerator"])

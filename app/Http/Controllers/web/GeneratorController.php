@@ -13,7 +13,7 @@ class GeneratorController extends Controller
 	public function index()
 	{
 		// Affichage de tous les générateurs, utilisé dans l'admin.
-		return Inertia::render("Admin/AdminGeneratorsPage", [
+		return Inertia::render("Generators/admin/AdminGenerator", [
 			"generators" => GeneratorResource::collection(Generator::all())
 		]);
 	}

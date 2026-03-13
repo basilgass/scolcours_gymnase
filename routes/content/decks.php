@@ -51,9 +51,9 @@ Route::middleware('api')
 			               Route::patch('{deck}/cards/order', [DeckApiController::class, 'reorderCards'])
 			                    ->name('cards.order');
 			               Route::patch('{deck}/updateChapter', [DeckApiController::class, 'updateChapter'])
-			                    ->name('updateChapter');
+			                    ->name('chapter');
 			               Route::patch('{deck}/toggleActive', [DeckApiController::class, 'toggleActive'])
-			                    ->name('toggleActive');
+			                    ->name('active');
 		               });;
 	          });
 

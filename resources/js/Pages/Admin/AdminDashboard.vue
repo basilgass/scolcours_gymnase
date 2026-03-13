@@ -82,7 +82,7 @@ function nextLessonByTeam(course: CourseAdminInterface): Record<string, string> 
 							<sc-button
 								type="primary"
 								xs
-								:href="route('admin.courses.dashboard', { course: course.slug, team: name })"
+								:href="route('admin.courses.teams.dashboard', { course: course.slug, team: name })"
 								class="w-[80px]"
 							>
 								{{ name }}

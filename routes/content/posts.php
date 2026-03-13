@@ -59,7 +59,7 @@ Route::middleware('api')
 			                    ->name('blocks.order');
 
 			               Route::patch('{post}/questionsGrid/update', [PostApiController::class, 'updateQuestionsGrid'])
-			                    ->name('updateQuestionsGrid');
+			                    ->name('questions.grid');
 
 			               Route::patch('{post}/questions/answers/reset', [PostApiController::class, 'resetAnswers'])
 			                    ->name('answers.reset');

@@ -57,10 +57,10 @@ Route::middleware('api')
 		               ->group(function () {
 
 			               Route::patch('/{team}/toggle/{user}', [TeamApiController::class, "toggle"])
-			                    ->name('toggleUser');
+			                    ->name('users.toggle');
 
 			               Route::get('/{team}/users', [TeamApiController::class, 'users'])
-			                    ->name('users');
+			                    ->name('users.index');
 		               });
 	          });
 

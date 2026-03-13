@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\Challenges\ChallengeSession;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -31,8 +30,6 @@ use Laravel\Sanctum\PersonalAccessToken;
  * @property Carbon|null $updated_at
  * @property-read Collection<int, \App\Models\Card> $cards
  * @property-read int|null $cards_count
- * @property-read Collection<int, ChallengeSession> $challenges
- * @property-read int|null $challenges_count
  * @property-read Collection<int, \App\Models\Chapter> $chapters
  * @property-read int|null $chapters_count
  * @property-read Collection<int, \App\Models\UserDeck> $decks
@@ -107,11 +104,6 @@ class User extends Authenticatable
 	public function teams(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
 	{
 		return $this->belongsToMany(Team::class);
-	}
-
-	public function challenges(): User|Builder|\Illuminate\Database\Eloquent\Relations\HasMany
-	{
-		return $this->hasMany(ChallengeSession::class);
 	}
 
 	public function questions(): \Illuminate\Database\Eloquent\Relations\BelongsToMany

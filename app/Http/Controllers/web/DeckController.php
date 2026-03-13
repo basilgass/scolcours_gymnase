@@ -23,7 +23,7 @@ class DeckController extends Controller
 	public function dashboard()
 	{
 		$decks = Deck::withCount('cards')->get();
-		return Inertia::render("Admin/AdminDecksPage",
+		return Inertia::render("Decks/admin/AdminDeck",
 			[
 				'decks' => DeckResource::collection($decks)
 			]

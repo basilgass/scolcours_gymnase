@@ -12,47 +12,50 @@ use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
-    /**
-     * Register any application services.
-     *
-     * @return void
-     */
-    public function register()
-    {
-        if ($this->app->environment('local')) {
-            $this->app->register(\Laravel\Telescope\TelescopeServiceProvider::class);
-            $this->app->register(TelescopeServiceProvider::class);
-        }
+	/**
+	 * Register any application services.
+	 *
+	 * @return void
+	 */
+	public function register()
+	{
+		if ($this->app->environment('local')) {
+			$this->app->register(\Laravel\Telescope\TelescopeServiceProvider::class);
+			$this->app->register(TelescopeServiceProvider::class);
+		}
 
-        //
-//		$this->app->singleton('Scolcours', function($app){
-//			try {
-//				return Scolcours::all()->first();
-//			}catch(\Exception $exception){
-//				return [];
-//			}
-//		});
-    }
+		//
+		//		$this->app->singleton('Scolcours', function($app){
+		//			try {
+		//				return Scolcours::all()->first();
+		//			}catch(\Exception $exception){
+		//				return [];
+		//			}
+		//		});
+	}
 
-    /**
-     * Bootstrap any application services.
-     *
-     * @return void
-     */
-    public function boot()
-    {
-	    if(App::environment('production')){
-		    URL::forceScheme('https');
-	    }
+	/**
+	 * Bootstrap any application services.
+	 *
+	 * @return void
+	 */
+	public function boot()
+	{
+		if (App::environment('production')) {
+			URL::forceScheme('https');
+		}
 
-		Cache::rememberForever('scolcours', function (){
+		Cache::rememberForever('scolcours', function () {
 			try {
 				return Scolcours::all()->first();
-			}catch (Exception $exception) {
+			} catch (Exception $exception) {
 				return [];
 			}
 		});
 
 		JsonResource::withoutWrapping();
-    }
+
+		// TODO: consider automatically eager load relationships
+		// Model::automaticallyEagerLoadRelationships();
+	}
 }

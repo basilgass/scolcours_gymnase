@@ -29,18 +29,18 @@ Route::middleware('api')
      ->group(function () {
 	     // Public api.
 	     Route::get('school/timetable', [TeamCalendarApiController::class, 'timetable'])
-	          ->name('school.timetable');
+	          ->name('school.timetables.index');
 	     Route::get('school/calendar', [TeamCalendarApiController::class, 'school_calendar'])
-	          ->name('school.calendar');
+	          ->name('school.calendars.index');
 
 	     Route::get('teams/{team}/calendar', [TeamCalendarApiController::class, "index"])
-	          ->name('teams.calendar');
+	          ->name('teams.calendars.index');
 
 	     // Students api
 	     Route::middleware('students')
 	          ->group(function () {
 		          Route::get('teams/{team}/course/{course}/calendar', [TeamCalendarApiController::class, "course_calendar"])
-		               ->name('teams.course.calendar');
+		               ->name('teams.courses.calendars.index');
 	          });
 
 	     // Admin api

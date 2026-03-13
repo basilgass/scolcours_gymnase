@@ -68,7 +68,7 @@ Route::middleware('api')
 	          ->name('chapters.theorems.index');
 
 	     Route::get("chapters/{chapter:slug}/posts", [ChapterApiController::class, 'getPosts'])
-	          ->name('chapters.posts');
+	          ->name('chapters.posts.index');
 
 	     // Admin api
 	     Route::middleware('admin')
@@ -87,11 +87,11 @@ Route::middleware('api')
 		               ->as('chapters.')
 		               ->group(function () {
 			               Route::patch('/{chapter:slug}/toggleActiveState', [ChapterApiController::class, 'activate'])
-			                    ->name('toggleActive');
+			                    ->name('active');
 			               Route::post('{chapter}/currentPost', [ChapterApiController::class, 'updateCurrentPost'])
-			                    ->name('currentPost');
+			                    ->name('current');
 			               Route::patch('{chapter}/ordering', [ChapterApiController::class, 'updatePostsOrder'])
-			                    ->name('updatePostsOrder');
+			                    ->name('posts.order');
 			               Route::post('{chapter}/relations/{related}', [ChapterApiController::class, 'toggleRelated'])
 			                    ->name('relations.toggle');
 		               });

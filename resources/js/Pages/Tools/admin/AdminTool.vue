@@ -1,4 +1,3 @@
-AdminChaptersPage.vue
 <script
 	lang="ts"
 	setup

@@ -20,7 +20,7 @@ function updateCurrent(index: number) {
 	}
 
 	axios.patch(
-		route("api.admin.quizzs.sessions.updateCurrent", {quizzSession: liveQuizz.value.id}),
+		route("api.admin.quizzes.sessions.current", {quizzSession: liveQuizz.value.id}),
 		{index},
 	).then((res: AxiosResponseModel<QuizzSessionInterface>) => {
 		liveQuizz.value = res.data
@@ -29,7 +29,7 @@ function updateCurrent(index: number) {
 
 function updateShowAnswer() {
 	axios.patch(
-		route('api.admin.quizzs.sessions.updateShowAnswer', {quizzSession: liveQuizz.value.id})
+		route('api.admin.quizzes.sessions.answer', {quizzSession: liveQuizz.value.id})
 	).then((res: AxiosResponseModel<QuizzSessionInterface>) => {
 		liveQuizz.value = res.data
 	})

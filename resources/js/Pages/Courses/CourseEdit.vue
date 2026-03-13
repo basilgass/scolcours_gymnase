@@ -64,7 +64,7 @@ function loadPosts() {
 		return
 	}
 
-	axios.get(route("api.chapters.posts", {chapter: chapter.value}))
+	axios.get(route("api.chapters.posts.index", {chapter: chapter.value}))
 		.then((res: AxiosResponseModel<PostShowInterface[]>) => {
 			posts.value = res.data
 		})
@@ -194,7 +194,7 @@ const lessonJsonMap = computed<Record<string, FormElementType>>(() => {
 function updateLessonsOrder() {
 	axios
 		.post(
-			route("api.admin.courses.lessons.updateOrder", {course: props.course.id}),
+			route("api.admin.courses.lessons.order", {course: props.course.id}),
 			{
 				_method: "PATCH",
 				order: lessons.value.map((x, index) => {
@@ -319,7 +319,7 @@ function updateLessonsOrder() {
 
 						<form-search-model
 							v-show="showAddTab==='Post'"
-							:api-route="chapter ? route('api.chapters.posts', {chapter}) : null"
+							:api-route="chapter ? route('api.chapters.posts.index', {chapter}) : null"
 							title="posts"
 							@selected="addLesson('Post', $event.id)"
 							@on-loaded="posts = $event as PostShowInterface[]"

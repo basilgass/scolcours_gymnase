@@ -42,7 +42,7 @@ const scheduledAt_formated = computed<string>(() => {
 				>
 					<sc-button
 						v-if="team"
-						:href="route('admin.courses.dashboard', {course: course.slug, team: team.name})"
+						:href="route('admin.courses.teams.dashboard', {course: course.slug, team: team.name})"
 						type="primary"
 						xs
 					>

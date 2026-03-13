@@ -14,14 +14,14 @@ class DevController extends Controller
 			return pathinfo($p)['filename'];
 		});
 
-		return Inertia::render("Devs/DevsIndex", [
+		return Inertia::render("Devs/DevIndex", [
 			'pages' => $devPages
 		]);
 	}
 
 	public function show(string $page)
 	{
-		return Inertia::render('Devs/DevsShow', [
+		return Inertia::render('Devs/DevShow', [
 			"dev" => $page
 		]);
 	}

@@ -21,7 +21,7 @@ const returnLink = computed(() => {
 	if (props.team && usePage().props.auth?.can.admin) {
 		return {
 			label: 'retour au dashboard',
-			url: route('admin.courses.dashboard', {course: props.course.slug, team: props.team.name}),
+			url: route('admin.courses.teams.dashboard', {course: props.course.slug, team: props.team.name}),
 		}
 	}
 	return {

@@ -49,7 +49,7 @@ onUnmounted(() => {
 					grid place-items-center"
 				>
 					<InertiaLink
-						:href="route('students.quizzs.sessions.show', {
+						:href="route('students.quizzes.sessions.show', {
 							quizzSession: quizzSession.shortcode
 						})"
 						as="div"

@@ -284,7 +284,7 @@ export const useStoreScore = defineStore(
 			bumpVersion()
 
 			return affectedScores.data
-			// return axios.delete(route('api.admin.scores.destroy.multiple', {ids: scoreIds}))
+			// return axios.delete(route('api.admin.scores.bulk', {ids: scoreIds}))
 		}
 
 		function getIndexFromScoreId(id: number): number {

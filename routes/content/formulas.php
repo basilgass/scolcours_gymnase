@@ -39,7 +39,7 @@ Route::middleware('api')
 		               ->as('formulas.')
 		               ->group(function () {
 			               Route::post('updateOrder', [FormulaApiController::class, 'updateOrder'])
-			                    ->name('updateOrder');
+			                    ->name('order');
 
 			               Route::post('{formula}/duplicate', [FormulaApiController::class, 'duplicate'])
 			                    ->name('duplicate');

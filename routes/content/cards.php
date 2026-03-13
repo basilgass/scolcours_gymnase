@@ -18,7 +18,7 @@ Route::middleware('api')
 	          ->group(function () {
 
 		          Route::get('cards/{card}', [CardApiController::class, 'fetch'])
-		               ->name('cards.fetch');
+		               ->name('cards.show');
 	          });
 
 	     // Admin api

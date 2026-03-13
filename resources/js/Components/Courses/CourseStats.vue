@@ -121,7 +121,7 @@ let intervalID: number
 const interval = 1 * 60 * 1000
 const lastUpdate = ref<string>('en attente de mise à jour.')
 onMounted(() => {
-	axios.get(route('api.admin.teams.users', {team: props.team.id}))
+	axios.get(route('api.admin.teams.users.index', {team: props.team.id}))
 		.then((res: AxiosResponseModel<UserInterface[]>) => {
 			users.value = res.data
 
@@ -214,7 +214,7 @@ onUnmounted(() => {
 			>
 				<div
 					class="flex gap-2 cursor-pointer hover:font-semibold min-w-75"
-					@click="router.visit(route('admin.courses.lessons.show', {course: course.slug, team: team.name, lesson: lesson.id }))"
+					@click="router.visit(route('admin.courses.teams.lessons.show', {course: course.slug, team: team.name, lesson: lesson.id }))"
 				>
 					<lesson-type-icon
 						:lesson

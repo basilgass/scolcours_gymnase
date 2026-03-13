@@ -24,7 +24,7 @@ withDefaults(defineProps<{
 	<section>
 		<header
 			v-if="!hideTitle"
-			class="h-[6rem] p-3 bg-content"
+			class="h-24 p-3 bg-content"
 		>
 			<h3 class="text-3xl">
 				{{ deck.title }}

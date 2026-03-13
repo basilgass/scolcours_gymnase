@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 
-import {computed} from "vue"
+import {computed, useAttrs} from "vue"
 import {
 	ButtonAction,
 	buttonActionMap,
@@ -11,6 +11,16 @@ import {
 	ButtonVariant
 } from "@/Components/Ui/Button/button.config.ts";
 import {getThemeChapter} from "@/directives/themeDirectives.ts";
+
+const attrs = useAttrs()
+
+const isAbsolute = computed(() => {
+	const cls = attrs.class
+	if (!cls) return false
+	if (typeof cls === 'string') return cls.split(/\s+/).includes('absolute')
+	if (Array.isArray(cls)) return cls.some(c => typeof c === 'string' && c.split(/\s+/).includes('absolute'))
+	return false
+})
 
 const props = withDefaults(defineProps<{
 	active?: boolean
@@ -81,6 +91,9 @@ const resolveVariant = computed<ButtonVariant>(() => {
 })
 
 const resolveColor = computed<Record<ButtonVariant, string> | null>(() => {
+	
+	if (resolveTheme.value) return resolveTheme.value
+
 	if (Object.hasOwn(buttonColorMap, props.type)) {
 		return buttonColorMap[props.type]
 	}
@@ -89,7 +102,6 @@ const resolveColor = computed<Record<ButtonVariant, string> | null>(() => {
 		return buttonColorMap[resolveAction.value.color]
 	}
 
-	if (resolveTheme.value) return resolveTheme.value
 
 	return buttonColorMap["default"]
 })
@@ -141,9 +153,10 @@ function btnClick() {
 			rounded-lg
 			cursor-pointer
 			disabled:cursor-not-allowed disabled:shadow-none
-			relative group
+			group
 			overflow-hidden"
 		:class="[
+			isAbsolute ? 'absolute' : 'relative',
 			buttonSizeMap[resolveSize],
 			resolveColor?.[resolveVariant]
 		]"

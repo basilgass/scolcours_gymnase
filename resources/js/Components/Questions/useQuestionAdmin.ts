@@ -68,7 +68,7 @@ export function useQuestionAdmin(
 
 	function displayIf_store() {
 		axios
-			.post(route("api.admin.questions.batch.updateDisplayIf"), {
+			.post(route("api.admin.questions.batch.displayIf"), {
 				_method: "PATCH",
 				updates: questions.value.map((question) => {
 					return {
@@ -130,7 +130,7 @@ export function useQuestionAdmin(
 
 		axios
 			.patch(
-				route("api.admin.questions.updateOrder", {
+				route("api.admin.questions.order", {
 					type: container.type,
 					id: container.id
 				}),
@@ -162,7 +162,7 @@ export function useQuestionAdmin(
 
 	function updateGrid(grid: string) {
 		axios.patch(
-			route('api.admin.posts.updateQuestionsGrid', {
+			route('api.admin.posts.questions.grid', {
 				post: container.id
 			}),
 			{

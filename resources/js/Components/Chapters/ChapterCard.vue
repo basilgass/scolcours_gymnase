@@ -27,7 +27,7 @@ function activate() {
 	isActive.value = !isActive.value
 
 	axios.patch(
-		route('api.admin.chapters.toggleActive', {
+		route('api.admin.chapters.active', {
 			chapter: props.chapter.slug
 		}),
 		{active: isActive.value}

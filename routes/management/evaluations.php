@@ -51,7 +51,7 @@ Route::middleware('api')
 		               ->name('evaluations.teams.scores');
 
 		          Route::patch('evaluations/{evaluation}/toggleTeam/{team}', [EvaluationApiController::class, 'toggleTeam'])
-		               ->name('evaluations.toggle-team');
+		               ->name('evaluations.teams.toggle');
 	          });
 
      });

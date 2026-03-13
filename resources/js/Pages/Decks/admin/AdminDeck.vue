@@ -55,7 +55,7 @@ function createDeck() {
 }
 
 function toggleActive(value: DeckInterface) {
-	axios.patch(route('api.admin.decks.toggleActive', {id: value.id}),
+	axios.patch(route('api.admin.decks.active', {id: value.id}),
 		{
 			active: value.active
 		})

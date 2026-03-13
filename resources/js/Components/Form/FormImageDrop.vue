@@ -9,7 +9,7 @@ const active = ref(false)
 function onDrop(e) {
 	active.value = false
 
-	axios.post(route("api.admin.illustrations.images.upload"),
+	axios.post(route("api.admin.illustrations.upload"),
 		{
 			image: [...e.dataTransfer.files][0],
 		},

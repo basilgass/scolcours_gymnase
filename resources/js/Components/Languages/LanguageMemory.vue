@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import FormMaker from "@/Components/Form/FormMaker.vue"
-import {LanguageDataInterface} from "@/Pages/languages/LanguageShow.vue"
+import {LanguageDataInterface} from "@/Pages/Languages/LanguageShow.vue"
 import {Random} from "pimath"
 import {inject, ref, watch} from "vue"
 import {useLanguage} from "@/Components/Languages/useLanguage.ts"

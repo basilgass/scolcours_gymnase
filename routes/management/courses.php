@@ -28,9 +28,9 @@ Route::middleware('web')
 		          Route::get('cours/{course:slug}/edit', [CourseController::class, 'edit'])
 		               ->name('courses.edit');
 		          Route::get('cours/{course:slug}/{team:name}/dashboard', [CourseController::class, 'dashboard'])
-		               ->name('courses.dashboard');
+		               ->name('courses.teams.dashboard');
 		          Route::get('cours/{course:slug}/{team:name}', [CourseController::class, 'showTeam'])
-		               ->name('courses.show-team');
+		               ->name('courses.teams.show');
 
 	          });
      });
@@ -50,10 +50,10 @@ Route::middleware('api')
 		          Route::apiResource('courses', CourseApiController::class);
 
 		          Route::patch('courses/{course}/toggleTeam/{team}', [CourseApiController::class, 'toggleTeam'])
-		               ->name('courses.toggle-team');
+		               ->name('courses.teams.toggle');
 
 		          Route::get('courses/lessonables', [CourseApiController::class, 'fetchLessonables'])
-		               ->name('courses.lessonables');
+		               ->name('courses.lessonables.index');
 
 		          Route::get('course/{course}/team/{team}/stats', [CourseApiController::class, 'teamStats'])
 		               ->name('courses.teams.stats');

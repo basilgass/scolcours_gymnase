@@ -52,7 +52,7 @@ Route::middleware('api')
 			                    ->name('move');
 
 			               Route::patch('{block}/illustrationsGrid/update', [BlockApiController::class, 'updatePartial'])
-			                    ->name('updateIllustrationsGrid');
+			                    ->name('illustrations.grid');
 
 			               Route::patch('{block}/illustrations/order', [BlockApiController::class, 'reorderIllustrations'])
 			                    ->name('illustrations.order');

@@ -19,7 +19,7 @@ class ChallengeController extends Controller
 		//		$challenges = Challenge::orderBy('title')
 		//		                       ->get();
 		//
-		//		return Inertia::render('Challenges/ChallengesIndex', [
+		//		return Inertia::render('Challenges/ChallengeIndex', [
 		//			'challenges' => $challenges
 		//		]);
 	}

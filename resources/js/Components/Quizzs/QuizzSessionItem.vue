@@ -20,7 +20,7 @@ const enable = ref(props.session.enable)
 function updateEnable() {
 	axios
 		.patch(
-			route('api.admin.quizzs.sessions.updateEnable', {quizzSession: props.session.id}),
+			route('api.admin.quizzes.sessions.enable', {quizzSession: props.session.id}),
 			{
 				enable: enable.value
 			}
@@ -39,11 +39,11 @@ function updateEnable() {
 			<div class="font-code">
 				<div>({{ session.id }}): {{ session.shortcode }}</div>
 				<div>
-					<InertiaLink :href="route('admin.quizzs.sessions.projection', {quizzSession: session.shortcode})">
+					<InertiaLink :href="route('admin.quizzes.sessions.projection', {quizzSession: session.shortcode})">
 						projection
 					</InertiaLink>
 
-					<InertiaLink :href="route('admin.quizzs.sessions.dashboard', {quizzSession: session.shortcode})">
+					<InertiaLink :href="route('admin.quizzes.sessions.dashboard', {quizzSession: session.shortcode})">
 						dashboard
 					</InertiaLink>
 				</div>

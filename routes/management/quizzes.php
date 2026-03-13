@@ -12,8 +12,9 @@ Route::middleware('web')
 		     ->prefix('admin')
 		     ->group(function () {
 
-			     Route::resource('quizzs', QuizzController::class)
-				     ->only('index', 'edit');
+			     Route::resource('quizzes', QuizzController::class)
+				     ->only('index', 'edit')
+				     ->parameters(['quizzes' => 'quizz']);
 
 	          });
      });
@@ -30,8 +31,9 @@ Route::middleware('api')
 		     ->as('admin.')
 	          ->group(function () {
 
-		          Route::apiResource('quizzs', QuizzApiController::class)
-		               ->only(['store', 'update', 'destroy']);
+		          Route::apiResource('quizzes', QuizzApiController::class)
+		               ->only(['store', 'update', 'destroy'])
+		               ->parameters(['quizzes' => 'quizz']);
 
 	          });
      });

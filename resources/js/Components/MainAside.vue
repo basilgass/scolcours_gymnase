@@ -7,7 +7,7 @@ Menu latéral, avec les thèmes
 >
 import LogoutButton from "@/Components/Ui/LogoutButton.vue"
 import ThemeLinks from "@/Components/Ui/ThemeLinks.vue"
-import { inject } from "vue"
+import {inject} from "vue"
 
 const showAside = inject('showAside', false)
 </script>

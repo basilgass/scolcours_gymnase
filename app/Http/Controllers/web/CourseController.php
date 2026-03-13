@@ -96,7 +96,7 @@ class CourseController extends Controller
 	public function dashboard(Course $course, Team $team)
 	{
 
-		return $this->renderCourseWithTeam($course, "Courses/CourseShowDashboard", $team);
+		return $this->renderCourseWithTeam($course, "Courses/admin/AdminCourseShow", $team);
 	}
 
 	public function showTeam(Course $course, Team $team)

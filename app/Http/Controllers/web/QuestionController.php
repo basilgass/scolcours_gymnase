@@ -34,7 +34,7 @@ class QuestionController extends Controller
 
 		if (class_basename($target) === 'Quizz') {
 			return redirect()->route(
-				'admin.quizzs.edit',
+				'admin.quizzes.edit',
 				[
 					"quizz" => $target->id
 				]

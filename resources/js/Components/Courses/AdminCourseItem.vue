@@ -25,7 +25,7 @@ const currentTeams = ref<UserTeamInterface[]>(props.course.teams)
 
 function toggleTeam(course: CourseInterface, team: UserTeamInterface) {
 	axios
-		.patch(route('api.admin.courses.toggle-team', {course: course.id, team: team.id}))
+		.patch(route('api.admin.courses.teams.toggle', {course: course.id, team: team.id}))
 		.then((res: AxiosResponseModel<boolean>) => {
 			if (res.data) {
 				// On ajoute la team
@@ -85,7 +85,7 @@ function deleteCourse(id: number) {
 				:key="`course-${course.id}-${team.name}`"
 				type="primary"
 				xs
-				:href="route('admin.courses.dashboard', {course: course.slug, team: team.name})"
+				:href="route('admin.courses.teams.dashboard', {course: course.slug, team: team.name})"
 			>
 				{{ team.name }}
 			</sc-button>

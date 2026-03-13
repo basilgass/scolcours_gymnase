@@ -51,13 +51,13 @@ Route::middleware('api')
 			                    ->name('duplicate');
 
 			               Route::patch('update/order/for/{type}/{id}', [QuestionApiController::class, 'updateQuestionsOrder'])
-			                    ->name('updateOrder');
+			                    ->name('order');
 
 			               Route::patch('batch/displayIf', [QuestionApiController::class, 'updateBatchDisplayIf'])
-			                    ->name('batch.updateDisplayIf');
+			                    ->name('batch.displayIf');
 
 			               Route::patch('{question}/update/displayIf', [QuestionApiController::class, 'updateQuestionDisplayIf'])
-			                    ->name('updateDisplayIf');
+			                    ->name('displayIf');
 
 			               Route::patch('{question}/move', [QuestionApiController::class, 'move'])
 			                    ->name('move');

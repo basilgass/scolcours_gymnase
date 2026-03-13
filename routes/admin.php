@@ -30,7 +30,7 @@ Route::middleware('admin')
 		          Route::patch('/update', [AdminController::class, 'configUpdate'])
 		               ->name('update');
 		          Route::patch('/updateOrder', [AdminController::class, 'configUpdateOrder'])
-		               ->name('updateOrder');
+		               ->name('order');
 	          });
 
 	     Route::prefix('chapters')
@@ -63,7 +63,7 @@ Route::middleware('admin')
 		          Route::get('/', [AdminController::class, 'users'])
 		               ->name('index');
 		          Route::post('/create', [AdminController::class, 'createUsers'])
-		               ->name('create');
+		               ->name('store');
 		          Route::patch('/{user}/update', [AdminController::class, 'updateUser'])
 		               ->name('update');
 		          Route::delete('/{user}/destroy', [AdminController::class, 'destroyUser'])
