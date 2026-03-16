@@ -53,7 +53,7 @@ const showFormular = ref(false)
 				v-if="posts.length > 0"
 			>
 				<sc-button
-					class="min-w-[200px] md:px-20 rounded-xl mx-auto"
+					class="min-w-50 md:px-20 rounded-xl mx-auto"
 					theme
 					:href="route('themes.chapters.posts.show', {
 						theme: theme.slug,

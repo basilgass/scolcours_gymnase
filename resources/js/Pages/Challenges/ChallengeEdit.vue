@@ -14,6 +14,7 @@ import ScButton from "@/Components/Ui/Button/scButton.vue"
 import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
 import {useChallenge} from "@/Composables/useChallenge.ts"
 import FormSearchModel from "@/Components/Form/FormSearchModel/FormSearchModel.vue"
+import Card from "@/Components/Ui/Card.vue";
 
 defineOptions({layout: LayoutMain})
 const props = defineProps<{
@@ -229,94 +230,124 @@ const deleteChallenge = function () {
 						sm
 					/>
 
-					<h3 class="uppercase mt-10 col-span-3">
-						Paramètres
-					</h3>
-					<div class="grid grid-cols-3 gap-3">
-						<form-maker
-							v-model="theChallenge.duration"
-							label="durée"
-							name="questionsDuration"
-							type="number"
-							sm
-						/>
-						<form-maker
-							v-model="theChallenge.lives"
-							label="nombre de vie"
-							name="questionsLives"
-							type="number"
-							sm
-						/>
-						<form-maker
-							v-model="theChallenge.nextLevelAfter"
-							label="maxPoints / niveau"
-							name="questionsLevelTrigger"
-							type="number"
-							sm
-						/>
+					<div class="grid grid-cols-2 gap-8">
+						<card>
+							<template #header>
+								<h3 class="uppercase">
+									Paramètres
+								</h3>
+							</template>
 
-						<form-maker
-							v-model="theChallenge.generatorsGrouping"
-							label="grouper générateurs"
-							name="generatorsGrouping"
-							type="number"
-							min="1"
-							:max="theChallenge.generators.length"
-							sm
-						/>
+							<div class="flex flex-col gap-3">
+								<form-maker
+									v-model="theChallenge.duration"
+									label="durée"
+									name="questionsDuration"
+									type="number"
+									sm
+								/>
 
-						<div>nombre de niveaux: {{ data.maxLevels }}</div>
+								<form-maker
+									v-model="theChallenge.durationByQuestion"
+									label="durée par question"
+									name="questionsDuration"
+									type="number"
+									sm
+								/>
+
+								<form-maker
+									v-model="theChallenge.lives"
+									label="nombre de vie"
+									name="questionsLives"
+									type="number"
+									sm
+								/>
+
+								<form-maker
+									v-model="theChallenge.nextLevelAfter"
+									label="maxPoints / niveau"
+									name="questionsLevelTrigger"
+									type="number"
+									sm
+								/>
+
+								<form-maker
+									v-model="theChallenge.generatorsGrouping"
+									label="grouper générateurs"
+									name="generatorsGrouping"
+									type="number"
+									min="1"
+									:max="theChallenge.generators.length"
+									sm
+								/>
+
+								<div>nombre de niveaux: {{ data.maxLevels }}</div>
+							</div>
+						</card>
+
+						<card>
+							<template #header>
+								<h3 class="uppercase">
+									Bonus
+								</h3>
+							</template>
+
+							<div class="flex flex-col gap-3">
+								<form-maker
+									v-model="theChallenge.bonusScoreTrigger"
+									label="score trigger (x)"
+									name="questionsBonuses0"
+									type="number"
+									sm
+								/>
+
+								<form-maker
+									v-model="theChallenge.bonusScoreLife"
+									:label="`vie / ${theChallenge.bonusScoreTrigger > 0
+																				? theChallenge.bonusScoreTrigger
+																				: 'x'
+																			} points`"
+									name="questionsBonuses1"
+									type="number"
+									sm
+								/>
+
+								<form-maker
+									v-model="theChallenge.bonusScoreTime"
+									:label="`temps / ${theChallenge.bonusScoreTrigger > 0
+																				? theChallenge.bonusScoreTrigger
+																				: 'x'
+																			} points`"
+									name="questionsBonuses2"
+									type="number"
+									sm
+								/>
+
+								<form-maker
+									v-model="theChallenge.bonusLevelLife"
+									label="vie / niveau"
+									name="questionsBonuses3"
+									type="number"
+									sm
+								/>
+
+								<form-maker
+									v-model="theChallenge.bonusLevelTime"
+									label="temps / niveau"
+									name="questionsBonuses4"
+									type="number"
+									sm
+								/>
+							</div>
+						</card>
 					</div>
 
-					<h3 class="uppercase mt-10 col-span-3">
-						Bonus
-					</h3>
 
-					<div class="grid grid-cols-3 gap-3">
-						<form-maker
-							v-model="theChallenge.bonusScoreTrigger"
-							label="score trigger (x)"
-							name="questionsBonuses0"
-							type="number"
-							sm
-						/>
-						<form-maker
-							v-model="theChallenge.bonusScoreLife"
-							:label="`vie / ${theChallenge.bonusScoreTrigger > 0
-								? theChallenge.bonusScoreTrigger
-								: 'x'
-							} points`"
-							name="questionsBonuses1"
-							type="number"
-							sm
-						/>
-						<form-maker
-							v-model="theChallenge.bonusScoreTime"
-							:label="`temps / ${theChallenge.bonusScoreTrigger > 0
-								? theChallenge.bonusScoreTrigger
-								: 'x'
-							} points`"
-							name="questionsBonuses2"
-							type="number"
-							sm
-						/>
-						<form-maker
-							v-model="theChallenge.bonusLevelLife"
-							label="vie / niveau"
-							name="questionsBonuses3"
-							type="number"
-							sm
-						/>
-						<form-maker
-							v-model="theChallenge.bonusLevelTime"
-							label="temps / niveau"
-							name="questionsBonuses4"
-							type="number"
-							sm
-						/>
-					</div>
 				</div>
-				<block-show :block="theChallenge.block" />
+				<block-show
+					:block="theChallenge.block"
+					indestructible
+				/>
 			</div>
 
 
@@ -337,7 +368,7 @@ const deleteChallenge = function () {
 						<div
 							:key="`${element.id}`"
 							class="flex gap-3 items-baseline bg-white py-2 pl-2 pr-3 rounded-sm hover:shadow-sm transition"
-							:class="data.challenge.value.generatorsGrouping === 1 ? '' : (index> 0 && index%data.challenge.value.generatorsGrouping ===0) ? 'mt-5':''"
+							:class="data.challenge.value.generatorsGrouping && data.challenge.value.generatorsGrouping> 1 && index> 0 && index%data.challenge.value.generatorsGrouping ===0 ? 'mt-5':''"
 						>
 							<div class="drag-handler cursor-move">
 								<i class="text-xl bi bi-list" />

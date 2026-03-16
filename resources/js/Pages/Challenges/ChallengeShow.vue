@@ -85,7 +85,8 @@ function onSelect(index: number) {
 					@state-change="state=$event"
 				/>
 
-				<div
+				<!-- Challenge side menu -->
+				<aside
 					v-show="state==='intro'"
 					class="w-full order-1 md:w-40 md:order-2"
 				>
@@ -118,7 +119,7 @@ function onSelect(index: number) {
 							</div>
 						</sc-button>
 					</div>
-				</div>
+				</aside>
 			</div>
 
 			<!-- export to pdf - admin only ! -->

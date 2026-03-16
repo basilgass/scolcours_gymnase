@@ -1,7 +1,6 @@
 <script lang="ts" setup>
-import {LanguageDataInterface} from "@/Pages/Languages/LanguageShow.vue"
 import {computed, inject} from "vue"
-import type {CardInterface, DeckInterface} from "@/types/modelInterfaces.ts"
+import type {CardInterface, DeckInterface, LanguageDataInterface} from "@/types/modelInterfaces.ts"
 import {useLanguage} from "@/Components/Languages/useLanguage.ts"
 import {makeCard, makeDeck} from "@/helpers/makeModel.ts"
 import ScButton from "@/Components/Ui/Button/scButton.vue"

@@ -2,7 +2,7 @@
 
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 import BlockShow from "@/Components/Blocks/BlockShow.vue"
-import {CourseInterface, LessonInterface, ScoreInterface, UserTeamInterface} from "@/types/modelInterfaces.ts"
+import {CourseInterface, LessonInterface, ScoreInterface, TeamInterface} from "@/types/modelInterfaces.ts"
 import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
 import AdminHeader from "@/Components/Admin/AdminHeader.vue"
 import ScButton from "@/Components/Ui/Button/scButton.vue"
@@ -19,7 +19,7 @@ defineOptions({layout: LayoutMain})
 
 const props = defineProps<{
 	course: CourseInterface,
-	team: UserTeamInterface
+	team: TeamInterface
 }>()
 
 // Load all scores for these lessons.
@@ -85,8 +85,8 @@ function afficherDate(day: string, short?: boolean): string {
 				type="edit"
 				xs
 				:href="route('admin.courses.teams.dashboard', {
-					course: props.course.slug,
-					team: props.team.name
+					course: course.slug,
+					team: team.name
 				})"
 			>
 				administration des leçons
@@ -96,7 +96,7 @@ function afficherDate(day: string, short?: boolean): string {
 				type="edit"
 				icon
 				xs
-				:href="route('admin.courses.edit', {course: props.course.slug})"
+				:href="route('admin.courses.edit', {course: course.slug})"
 			>
 				éditer le cours
 			</sc-button>

@@ -22,10 +22,11 @@ class TeamResource extends JsonResource
 	public function toArray(Request $request): array
 	{
 		return [
-			'id'     => $this->id,
-			'name'   => $this->name,
-			'users'  => UserResource::collection($this->users),
-			'active' => $this->active,
+			'id'       => $this->id,
+			'name'     => $this->name,
+			'active'   => $this->active,
+			'users'    => UserResource::collection($this->users),
+			'calendar' => TeamCalendarResource::collection($this->whenLoaded('calendars')),
 		];
 	}
 }

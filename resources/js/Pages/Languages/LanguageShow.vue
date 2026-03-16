@@ -11,28 +11,18 @@ import LanguageMemory from "@/Components/Languages/LanguageMemory.vue"
 import LanguageType from "@/Components/Languages/LanguageType.vue"
 import LanguageUnitsSelector from "@/Components/Languages/LanguageUnitsSelector.vue"
 import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
-import type {BookInterface, TranslationUnitInterfaceExtended, TranslationWord} from "@/types/modelInterfaces"
-import {computed, provide, Ref, ref} from "vue"
+import type {
+	LanguageDataInterface,
+	LanguageInterface,
+	TranslationUnitInterfaceExtended,
+	TranslationWord
+} from "@/types/modelInterfaces"
+import {computed, provide, ref} from "vue"
 import LanguageDecks from "@/Components/Languages/LanguageDecks.vue"
 import LanguageMatch from "@/Components/Languages/LanguageMatch.vue"
 
 defineOptions({layout: LayoutMain})
 
-interface LanguageInterface {
-	game: "list" | "type" | "memory" | "guess" | "deck" | "match",
-	language: {
-		slug: string,
-		name: string,
-		determinants: string,
-		books: BookInterface[]
-	},
-}
-
-export interface LanguageDataInterface extends LanguageInterface {
-	units: Ref<TranslationUnitInterfaceExtended[]>,
-	state: Ref<"intro" | "running" | "finished">,
-	words: Ref<TranslationWord[]>
-}
 
 // Degine the props coming in (save for all)
 const props = defineProps<LanguageInterface>()
@@ -136,19 +126,19 @@ const wrongWords = computed(() => {
 
 				<table class="text-xs">
 					<thead>
-						<tr>
-							<th>français</th>
-							<th>{{ props.language.name }}</th>
-						</tr>
+					<tr>
+						<th>français</th>
+						<th>{{ props.language.name }}</th>
+					</tr>
 					</thead>
 					<tbody>
-						<tr
-							v-for="w in wrongWords"
-							:key="`${w.foreign}`"
-						>
-							<td>{{ w.fr }}</td>
-							<td>{{ w.foreign }}</td>
-						</tr>
+					<tr
+						v-for="w in wrongWords"
+						:key="`${w.foreign}`"
+					>
+						<td>{{ w.fr }}</td>
+						<td>{{ w.foreign }}</td>
+					</tr>
 					</tbody>
 				</table>
 			</div>

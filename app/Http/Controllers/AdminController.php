@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\ChapterResource;
 use App\Http\Resources\CourseResource;
+use App\Http\Resources\GeneratorResource;
 use App\Http\Resources\TeamResource;
 use App\Http\Resources\ToolResource;
 use App\Http\Resources\UserResource;
@@ -32,7 +33,6 @@ class AdminController extends Controller
 {
 	public function show()
 	{
-
 		return Inertia::render('Admin/AdminDashboard', [
 			"courses" => $this->currentCourses(),
 			"teams"   => TeamResource::collection(Team::active()->get()),
@@ -230,7 +230,7 @@ class AdminController extends Controller
 		return Inertia::render(
 			'Generators/admin/AdminGenerator',
 			[
-				'generators' => Generator::all()
+				'generators' => GeneratorResource::collection(Generator::all())
 			]
 		);
 	}
@@ -343,7 +343,7 @@ class AdminController extends Controller
 			'Courses/admin/AdminAgenda',
 			[
 				'courses' => CourseResource::collection($courses),
-				'teams'   => UserTeamResource::collection(Team::active()->get())
+				'teams'   => TeamResource::collection(Team::active()->get())
 			]
 		);
 	}

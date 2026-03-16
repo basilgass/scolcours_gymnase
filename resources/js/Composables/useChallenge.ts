@@ -5,7 +5,7 @@ import {
 	QuestionDynamicInterface,
 	ScoreInterface
 } from "@/types/modelInterfaces.ts"
-import {computed, ComputedRef, reactive, ref, toRef} from "vue"
+import {computed, ComputedRef, onUnmounted, reactive, ref, toRef} from "vue"
 import {useGenerator} from "@/Composables/useGenerator.ts"
 import {Random} from "pimath"
 import {ChallengeAnswerInterface, ChallengeGameInterface} from "@/types/challengeInterface.ts"
@@ -30,7 +30,8 @@ export function useChallenge(challengeMaybeRef: ChallengeInterface | ComputedRef
 		lives: 10,
 		death: 0,
 		elapsedTime: 0,
-		remainingTime: 0
+		remainingTime: 0,
+		questionElapsedTime: 0,
 	})
 	const generatedId = ref(0)
 	const generatedQuestions = ref<QuestionDynamicInterface[]>([])
@@ -46,6 +47,7 @@ export function useChallenge(challengeMaybeRef: ChallengeInterface | ComputedRef
 		game.death = 0
 		game.elapsedTime = 0
 		game.remainingTime = challenge.value.duration * 60
+		game.questionElapsedTime = 0
 		game.lives = challenge.value.lives
 		game.death = 0
 
@@ -58,7 +60,7 @@ export function useChallenge(challengeMaybeRef: ChallengeInterface | ComputedRef
 	const levelGenerators = computed(() => getGenerators(game.level))
 
 	function getGenerators(level: number) {
-		const delta = challenge.value.generatorsGrouping
+		const delta = challenge.value.generatorsGrouping ?? 1
 		const length = generators.value.length
 
 		const totalGroups = Math.ceil(length / delta)
@@ -122,8 +124,10 @@ export function useChallenge(challengeMaybeRef: ChallengeInterface | ComputedRef
 	}
 
 
-	let timerInterval: ReturnType<typeof setInterval> = null,
-		timerIntervalSpeed = ref(1000)
+	let timerInterval: ReturnType<typeof setInterval> = null
+	let questionTimerInterval: ReturnType<typeof setInterval> = null
+
+	const timerIntervalSpeed = 1000
 
 	function start() {
 		// Reset the game
@@ -136,17 +140,15 @@ export function useChallenge(challengeMaybeRef: ChallengeInterface | ComputedRef
 		state.value = "running"
 
 		// Interval -> move it to specific place !
-		timerInterval = setInterval(() => {
-			game.elapsedTime += timerIntervalSpeed.value / 1000
-			if (game.elapsedTime > game.remainingTime) {
-				stop()
-			}
-		}, timerIntervalSpeed.value)
+		startTimer()
+
+		startQuestionTimer()
 	}
 
 	function stop() {
 		// Stop the timer
 		stopTimer()
+		stopQuestionTimer()
 
 		// Store the new values
 		store()
@@ -155,9 +157,40 @@ export function useChallenge(challengeMaybeRef: ChallengeInterface | ComputedRef
 		state.value = 'finished'
 	}
 
+	function startTimer() {
+		game.elapsedTime = 0
+		timerInterval = setInterval(() => {
+			game.elapsedTime += timerIntervalSpeed / 1000
+
+			if (game.elapsedTime > game.remainingTime) {
+				stop()
+			}
+
+		}, timerIntervalSpeed)
+	}
+
 	function stopTimer() {
 		clearInterval(timerInterval)
 		timerInterval = null
+	}
+
+	function startQuestionTimer() {
+		// Reset previous interval
+		if (questionTimerInterval) clearInterval(questionTimerInterval)
+
+		// Reset elapsed time
+		game.questionElapsedTime = 0
+
+		// Set the new interval
+		questionTimerInterval = setInterval(() => {
+			game.questionElapsedTime += timerIntervalSpeed / 1000 / 1000
+			// TODO: implement question end, with one second penality.
+		})
+	}
+
+	function stopQuestionTimer() {
+		clearInterval(questionTimerInterval)
+		questionTimerInterval = null
 	}
 
 	function validate(answer: questionResultInterface) {
@@ -183,6 +216,9 @@ export function useChallenge(challengeMaybeRef: ChallengeInterface | ComputedRef
 		// Increase both score and levelScore
 		game.score += game.level
 		game.levelScore++
+
+		// Reset current question elapsed time.
+		startQuestionTimer()
 
 		// if the score reaches some bonuses...
 		checkBonusScore()
@@ -276,6 +312,10 @@ export function useChallenge(challengeMaybeRef: ChallengeInterface | ComputedRef
 			})
 	}
 
+	onUnmounted(() => {
+		stopTimer()
+		stopQuestionTimer()
+	})
 	return {
 		state,
 		challenge,
@@ -285,7 +325,6 @@ export function useChallenge(challengeMaybeRef: ChallengeInterface | ComputedRef
 		controls: {
 			start,
 			stop,
-			stopTimer,
 			reset: gameReset,
 			validate
 		},

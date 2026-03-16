@@ -18,21 +18,15 @@ export interface User {
 }
 
 export interface TeamCalendarInterface {
-	day: number, // 0, 1, 2, 3, 4, 5, 6, 7
 	id: number,
+	day: number, // 0, 1, 2, 3, 4, 5, 6, 7
 	time: string // hh:mm:ss
 }
 
 export interface TeamInterface {
+	id: number,
+	name: string,
 	active: boolean,
-	calendar: TeamCalendarInterface[]
-	id: number,
-	name: string,
-	users: UserInterface[],
-}
-
-export interface UserTeamInterface {
-	calendar: TeamCalendarInterface[]
-	id: number,
-	name: string,
+	users?: UserInterface[],
+	calendar?: TeamCalendarInterface[]
 }

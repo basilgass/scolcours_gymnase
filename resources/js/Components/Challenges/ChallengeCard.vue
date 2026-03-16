@@ -4,7 +4,7 @@ import Card from "@/Components/Ui/Card.vue"
 import {useStoreScore} from "@/stores/useStoreScore.ts"
 import {ScoreChallengeDataInterface} from "@/types/scoreInterfaces.ts"
 import {ref} from "vue"
-import {Link as InertiaLink} from "@inertiajs/vue3"
+import {router} from "@inertiajs/vue3";
 
 const props = defineProps<{
 	challenge: ChallengeInterface
@@ -13,23 +13,27 @@ const props = defineProps<{
 const score = ref<ScoreInterface<ScoreChallengeDataInterface>>()
 useStoreScore().getScore("Challenge", props.challenge.id)
 	.then((sc: ScoreInterface<ScoreChallengeDataInterface>) => score.value = sc)
+
+function onChallengeCardClick() {
+	router.visit(route('challenges.quick', {slug: props.challenge.slug}))
+}
 </script>
 
 <template>
 	<card
-		theme
-		class="transition hover:shadow"
+		header-theme
+		class="transition hover:shadow-lg cursor-pointer"
+		@click="onChallengeCardClick"
 	>
-		<InertiaLink
-			class="grid place-items-center cursor-pointer"
-			as="div"
-			:href="route('challenges.quick', {slug: challenge.slug})"
-		>
+		<template #header>
 			<div
 				v-katex.auto="challenge.title"
-				class="font-lg font-semibold mb-5"
+				class="font-lg font-semibold"
 			/>
 
+		</template>
+
+		<div class="grid place-items-center">
 			<div
 				v-if="score && score.attempts"
 				class="w-full max-w-50 mx-3"
@@ -64,7 +68,7 @@ useStoreScore().getScore("Challenge", props.challenge.id)
 			<div v-else>
 				pas encore fait...
 			</div>
-		</InertiaLink>
+		</div>
 	</card>
 </template>
 

@@ -3,7 +3,7 @@
 import Card from "@/Components/Ui/Card.vue";
 import ScButton from "@/Components/Ui/Button/scButton.vue";
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue";
-import {CourseInterface, UserTeamInterface} from "@/types/modelInterfaces.ts";
+import {CourseInterface, TeamInterface} from "@/types/modelInterfaces.ts";
 import {ref} from "vue";
 import axios from "axios";
 import {AxiosErrorMessage, AxiosResponseModel} from "@/types";
@@ -13,7 +13,7 @@ const flash = useStoreFlashMessage()
 
 const props = defineProps<{
 	course: CourseInterface,
-	teams: UserTeamInterface[]
+	teams: TeamInterface[]
 }>()
 
 const emits = defineEmits<{
@@ -21,9 +21,9 @@ const emits = defineEmits<{
 }>()
 
 const assignTeams = ref(false)
-const currentTeams = ref<UserTeamInterface[]>(props.course.teams)
+const currentTeams = ref<TeamInterface[]>(props.course.teams)
 
-function toggleTeam(course: CourseInterface, team: UserTeamInterface) {
+function toggleTeam(course: CourseInterface, team: TeamInterface) {
 	axios
 		.patch(route('api.admin.courses.teams.toggle', {course: course.id, team: team.id}))
 		.then((res: AxiosResponseModel<boolean>) => {

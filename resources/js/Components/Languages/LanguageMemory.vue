@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 import FormMaker from "@/Components/Form/FormMaker.vue"
-import {LanguageDataInterface} from "@/Pages/Languages/LanguageShow.vue"
 import {Random} from "pimath"
 import {inject, ref, watch} from "vue"
 import {useLanguage} from "@/Components/Languages/useLanguage.ts"
 import ScButton from "@/Components/Ui/Button/scButton.vue"
+import {LanguageDataInterface} from "@/types/modelInterfaces.ts";
 
 const languageData = inject<LanguageDataInterface>("LanguageData")
 

@@ -11,7 +11,7 @@ import LayoutAdmin from "@/Layouts/LayoutAdmin.vue"
 
 defineOptions({layout: LayoutAdmin})
 
-const props = defineProps<{
+defineProps<{
 	course: CourseInterface,
 	team: TeamInterface
 }>()

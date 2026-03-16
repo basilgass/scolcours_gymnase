@@ -20,10 +20,15 @@ const editMode = useStoreEditMode()
 const flash = useStoreFlashMessage()
 
 // Props
-const props = defineProps<{
-	block: BlockInterface,
-	noAdmin?: boolean
-}>()
+const props = withDefaults(defineProps<{
+		block: BlockInterface,
+		noAdmin?: boolean,
+		indestructible?: boolean
+	}>(),
+	{
+		noAdmin: false,
+		indestructible: false
+	})
 
 
 // emits
@@ -116,6 +121,7 @@ onMounted(() => {
 		<BlockShowAdmin
 			v-if="!noAdmin"
 			:block="block"
+			:indestructible
 			@moved="emits('moved', $event)"
 		>
 			<template #adminLeft>

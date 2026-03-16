@@ -14,9 +14,14 @@ import {router} from "@inertiajs/vue3"
 const editMode = useStoreEditMode()
 const flash = useStoreFlashMessage()
 
-const props = defineProps<{
-	block: BlockInterface
-}>()
+const props = withDefaults(defineProps<{
+		block: BlockInterface,
+		indestructible?: boolean
+	}>()
+	,
+	{
+		indestructible: false
+	})
 
 const emits = defineEmits<{
 	moved: [target: { id: number, target_type: string, target_id: number }]
@@ -51,6 +56,8 @@ function updateTemplate() {
 }
 
 function deleteBlock() {
+	if (props.indestructible) return
+
 	axios
 		.post(route("api.admin.blocks.destroy", [theBlock.value.id]), {
 			_method: "delete"
@@ -91,6 +98,7 @@ function deleteBlock() {
 				/>
 
 				<confirm-button
+					v-if="!indestructible"
 					xs
 					icon
 					@confirm="deleteBlock"

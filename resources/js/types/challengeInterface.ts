@@ -22,6 +22,7 @@ export interface ChallengeGameInterface {
 	death: number,
 	elapsedTime: number,
 	remainingTime: number,
+	questionElapsedTime: number,
 }
 
 export interface challengeDataProvideType {

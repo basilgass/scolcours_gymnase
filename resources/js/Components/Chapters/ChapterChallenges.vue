@@ -55,7 +55,7 @@ function storeChallenge() {
 		<div
 			v-show="editMode.enable"
 			v-admin
-			class="min-h-[100px] grid place-items-center"
+			class="min-h-25 grid place-items-center"
 		>
 			<sc-button
 				type="add"

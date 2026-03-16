@@ -4,6 +4,7 @@ namespace App\Http\Controllers\web;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CourseResource;
+use App\Http\Resources\TeamResource;
 use App\Http\Resources\UserTeamResource;
 use App\Models\Course;
 use App\Models\Team;
@@ -20,7 +21,6 @@ class CourseController extends Controller
 		if (!$user) {
 			return Inertia::render("Courses/CourseIndex", [
 				"teamCourses" => [],
-				"userCourses" => []
 			]);
 		}
 
@@ -29,7 +29,6 @@ class CourseController extends Controller
 		$teamCourses = $user->courses;
 
 		return Inertia::render("Courses/CourseIndex", [
-			"teams"       => UserTeamResource::collection($user->teams),
 			"teamCourses" => CourseResource::collection($teamCourses),
 		]);
 	}
@@ -77,8 +76,8 @@ class CourseController extends Controller
 		]);
 
 		return Inertia::render($view, [
-			"team"   => UserTeamResource::make($matchingTeam),
 			"course" => CourseResource::make($course, $matchingTeam),
+			"team"   => TeamResource::make($matchingTeam),
 		]);
 	}
 

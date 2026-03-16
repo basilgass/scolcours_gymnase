@@ -4,6 +4,7 @@ namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CourseResource;
+use App\Http\Resources\TeamCalendarResource;
 use App\Models\Calendars\SchoolCalendar;
 use App\Models\Calendars\TeamCalendar;
 use App\Models\Course;
@@ -15,12 +16,12 @@ class TeamCalendarApiController extends Controller
 {
 	public function index(Team $team)
 	{
-		return $team->calendars;
+		return TeamCalendarResource::collection($team->calendars);
 	}
 
 	public function show(Team $team, TeamCalendar $calendar)
 	{
-		return $calendar;
+		return TeamCalendarResource::make($calendar);
 	}
 
 	public function store(Request $request, Team $team)
@@ -30,7 +31,7 @@ class TeamCalendarApiController extends Controller
 			"time" => ['required', 'date_format:H:i:s']
 		]);
 
-		return $team->calendars()->create($validated);
+		return TeamCalendarResource::make($team->calendars()->create($validated));
 	}
 
 	public function update(Request $request, Team $team, TeamCalendar $calendar)
@@ -46,7 +47,7 @@ class TeamCalendarApiController extends Controller
 
 		$calendar->refresh();
 
-		return $calendar;
+		return TeamCalendarResource::make($calendar);
 	}
 
 	public function destroy(TeamCalendar $calendar)

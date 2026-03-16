@@ -36,7 +36,6 @@ class TeamController extends Controller
 				'team'       => $team,
 				'students'   => UserResource::collection($team->users),
 				'courses'    => CourseResource::collection($team->courses),
-				'chapters'   => ChapterResource::collection(Chapter::where('active', true)->get()),
 				'challenges' => ChallengeResource::collection(Challenge::all())
 			]
 		);

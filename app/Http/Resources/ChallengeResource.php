@@ -25,16 +25,11 @@ class ChallengeResource extends JsonResource
 	 */
 	public function toArray($request)
 	{
-		if (count($this->blocks) === 0) {
-			$this->blocks()->create();
-		}
-
 		return [
 			...parent::toArray($request),
-			'generatorsGrouping' => $this->generatorsGrouping ?? 1,
-			'block'              => $this->blocks[0],
-			'chapter'            => ChapterResource::make($this->chapter),
-			"generators"         => GeneratorResource::collection($this->generators)
+			'block'      => $this->blocks[0],
+			'chapter'    => ChapterResource::make($this->chapter),
+			"generators" => GeneratorResource::collection($this->generators)
 		];
 	}
 }

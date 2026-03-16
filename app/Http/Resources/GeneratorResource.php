@@ -21,7 +21,6 @@ class GeneratorResource extends JsonResource
 			'keyboard' => $this->keyboard,
 			'code'     => $this->code,
 			'order'    => $this->pivot?->order,
-//			'user'     => $this->userScores()
 		];
 	}
 }

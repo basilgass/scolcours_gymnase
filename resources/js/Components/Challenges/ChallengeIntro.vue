@@ -49,7 +49,20 @@ const emits = defineEmits(["start"])
 			<div
 				class="bg-content aspect-square p-4 rounded-xl border border-gray-200 grid place-items-center shadow-sm"
 			>
-				<div class="text-center flex flex-col justify-between h-full">
+				<div v-if="challenge.durationByQuestion" class="text-center flex flex-col justify-between h-full">
+					<i class="text-5xl bi bi-clock" />
+					<div class="text-3xl">
+						{{ challenge.durationByQuestion }}<span class="text-xs">sec</span> / {{
+							challenge.duration
+						}}<span
+						class="text-xs"
+					>min</span>
+					</div>
+					<div class="text-sm text-gray-400">
+						question / total
+					</div>
+				</div>
+				<div v-else class="text-center flex flex-col justify-between h-full">
 					<i class="text-5xl bi bi-clock" />
 					<div class="text-3xl">
 						{{ challenge.duration }}

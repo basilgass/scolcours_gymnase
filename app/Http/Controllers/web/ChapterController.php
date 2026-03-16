@@ -5,7 +5,6 @@ namespace App\Http\Controllers\web;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ChallengeResource;
 use App\Http\Resources\ChapterResource;
-use App\Http\Resources\ChapterShowResource;
 use App\Http\Resources\PostResource;
 use App\Http\Resources\PostShowResource;
 use App\Http\Resources\ThemeResource;
@@ -48,7 +47,7 @@ class ChapterController extends Controller
 		// Filter output.
 		$data = [
 			"theme"      => ThemeResource::make($theme),
-			"chapters"   => ChapterShowResource::collection($chapters),
+			"chapters"   => ChapterResource::collection($chapters),
 			"challenges" => ChallengeResource::collection($challenges)
 		];
 
@@ -74,7 +73,7 @@ class ChapterController extends Controller
 
 		return Inertia::render('Chapters/ChapterShow', [
 			// Get the chapter (for next / precvious / ...)
-			"chapter"    => fn() => ChapterShowResource::make($chapter),
+			"chapter"    => fn() => ChapterResource::make($chapter),
 			// Get the posts.
 			"posts"      => fn() => PostResource::collection($chapter->posts),
 			// Get the challenges.

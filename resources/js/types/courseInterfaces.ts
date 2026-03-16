@@ -1,6 +1,6 @@
-import type { BlockInterface } from "@/types/blockInterfaces.ts"
-import type { UserTeamInterface } from "@/types/userInterfaces.ts"
-import type { LessonInterface } from "@/types/modelInterfaces.ts"
+import type {BlockInterface} from "@/types/blockInterfaces.ts"
+import type {TeamInterface} from "@/types/userInterfaces.ts"
+import type {LessonInterface} from "@/types/modelInterfaces.ts"
 
 export interface CourseMinInterface {
 	block: BlockInterface,
@@ -16,5 +16,5 @@ export interface CourseInterface extends CourseMinInterface {
 	lessons: LessonInterface[],
 	scheduled_at: string,
 	status: 'not yet started' | 'active' | 'finished',
-	teams?: UserTeamInterface[],
+	teams?: TeamInterface[],
 }

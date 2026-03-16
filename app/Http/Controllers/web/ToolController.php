@@ -15,7 +15,6 @@ class ToolController extends Controller
 		$data = [
 			"theme" => Theme::where('slug', 'tools')->first(),
 			"tools" => Tool::orderBy('title')->get(),
-			"tool"  => null,
 		];
 
 		return Inertia::render("Tools/ToolIndex", $data);
@@ -31,8 +30,7 @@ class ToolController extends Controller
 			return redirect()->route('tools.show', $tool, 301);
 		}
 		return Inertia::render("Tools/ToolShow", [
-			"tools" => Tool::all(),
-			"tool"  => $tool
+			"tool" => $tool
 		]);
 	}
 

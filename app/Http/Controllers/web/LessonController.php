@@ -9,8 +9,8 @@ use App\Http\Resources\DeckResource;
 use App\Http\Resources\GeneratorResource;
 use App\Http\Resources\LessonResource;
 use App\Http\Resources\PostShowResource;
+use App\Http\Resources\TeamResource;
 use App\Http\Resources\UserTeamResource;
-use Illuminate\Support\Facades\Auth;
 use App\Models\Challenge;
 use App\Models\Course;
 use App\Models\Deck;
@@ -19,6 +19,7 @@ use App\Models\Lesson;
 use App\Models\Post;
 use App\Models\Team;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class LessonController extends Controller
@@ -36,7 +37,7 @@ class LessonController extends Controller
 			"course"     => CourseResource::make($course),
 			"lesson"     => LessonResource::make($lesson),
 			"lessonable" => $this->resolveLessonableResource($lesson),
-			"team"       => $team ? UserTeamResource::make($team) : null,
+			"team"       => $team ? TeamResource::make($team) : null,
 		]);
 	}
 
@@ -46,7 +47,7 @@ class LessonController extends Controller
 			"course"     => CourseResource::make($course),
 			"lesson"     => LessonResource::make($lesson),
 			"lessonable" => $this->resolveLessonableResource($lesson),
-			"team"       => UserTeamResource::make($team),
+			"team"       => TeamResource::make($team),
 		]);
 	}
 

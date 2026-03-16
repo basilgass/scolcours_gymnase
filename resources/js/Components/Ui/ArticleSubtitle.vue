@@ -5,9 +5,11 @@
 	<h2
 		v-theme.text
 		class="w-full
-		text-lg md:text-xl xl:text-2xl
+		text-2xl md:text-3xl xl:text-4xl
 		font-semibold"
 	>
+		[
 		<slot />
+		]
 	</h2>
 </template>

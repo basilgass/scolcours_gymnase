@@ -1,12 +1,11 @@
-import {TranslationWord} from "@/types/modelInterfaces"
+import {LanguageDataInterface, TranslationWord} from "@/types/modelInterfaces"
 import {Random} from "pimath"
 import {MaybeRef, ref, unref} from "vue"
-import {LanguageDataInterface} from "@/Pages/Languages/LanguageShow.vue"
 
 
 export function useLanguage(languageData: LanguageDataInterface, options?: {
 	numberOfWords?: MaybeRef<number>,
-	startGameCallback?: ()=>void,
+	startGameCallback?: () => void,
 }) {
 
 	const selectedWords = ref<TranslationWord[]>([])
@@ -26,7 +25,7 @@ export function useLanguage(languageData: LanguageDataInterface, options?: {
 		const n = unref(options?.numberOfWords) || 1
 		const words = []
 		for (let i = 0; i < n; i++) {
-			words.push(selectedWords.value[selectedWordsIndex.value+i])
+			words.push(selectedWords.value[selectedWordsIndex.value + i])
 		}
 		return words
 	}
@@ -61,7 +60,7 @@ export function useLanguage(languageData: LanguageDataInterface, options?: {
 		languageData.words.value = getListOfWordsFromUnits(false)
 
 		// Get the selected words
-		selectedWords.value = getListOfWordsFromUnits().map(x=>{
+		selectedWords.value = getListOfWordsFromUnits().map(x => {
 			return {
 				...x,
 				result: undefined,

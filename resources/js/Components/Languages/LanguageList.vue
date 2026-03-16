@@ -1,9 +1,8 @@
 <script lang="ts" setup>
 import FormMaker from "@/Components/Form/FormMaker.vue"
 import DialogModal from "@/Components/Ui/DialogModal.vue"
-import {LanguageDataInterface} from "@/Pages/Languages/LanguageShow.vue"
 import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
-import type {TranslationWord} from "@/types/modelInterfaces"
+import type {LanguageDataInterface, TranslationWord} from "@/types/modelInterfaces"
 import {usePage} from "@inertiajs/vue3"
 import axios from "axios"
 import {computed, inject, ref} from "vue"

@@ -31,7 +31,7 @@ useScore.getScores('Challenge', props.challenges.map(x => x.id))
 </script>
 
 <template>
-	<section class="scolcours-container space-y-12">
+	<section class="scolcours-container space-y-12 py-8">
 		<article>
 			<article-subtitle>Chapitres</article-subtitle>
 
@@ -54,7 +54,10 @@ useScore.getScores('Challenge', props.challenges.map(x => x.id))
 		<article>
 			<article-subtitle>Challenges</article-subtitle>
 
-			<filtered-list :list="challenges">
+			<filtered-list
+				:list="challenges"
+				list-class="grid grid-cols-3 gap-3"
+			>
 				<template #card="{ item }: { item: ChallengeInterface }">
 					<challenge-card :challenge="item" />
 				</template>

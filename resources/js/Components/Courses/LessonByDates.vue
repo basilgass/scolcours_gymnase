@@ -1,7 +1,7 @@
 <script setup lang="ts">
 
 import LessonCard from "@/Components/Courses/LessonCard.vue"
-import {CourseInterface, LessonInterface, UserTeamInterface} from "@/types/modelInterfaces.ts"
+import {CourseInterface, LessonInterface, TeamInterface} from "@/types/modelInterfaces.ts"
 import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
 import dayjs from "dayjs"
 import {LessonScoreRulesInterface} from "@/types/lessonInterfaces.ts"
@@ -12,7 +12,7 @@ const editMode = useStoreEditMode()
 
 const props = defineProps<{
 	course: CourseInterface
-	team: UserTeamInterface
+	team: TeamInterface
 	day: string,
 	lessons: Record<string, LessonInterface<LessonScoreRulesInterface>[]>
 }>()

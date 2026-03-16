@@ -5,45 +5,64 @@ import {computed} from "vue"
 
 const props = withDefaults(defineProps<{
 	theme?: boolean | number | string
+	headerTheme?: boolean | number | string
 	borderTheme?: boolean | number | string
 	noInsideBorder?: boolean
 	success?: boolean
 	error?: boolean
 }>(), {
 	theme: false,
+	headerTheme: false,
 	borderTheme: false,
 	noInsideBorder: false,
 	success: false,
 	error: false
 })
 
+const chapter = computed<string>(() => {
+	const themeId = props.theme
+		? props.theme
+		: props.borderTheme
+			? props.borderTheme
+			: props.headerTheme
+				? props.headerTheme : false
+
+	return getThemeChapter(themeId)
+})
+
 const cardClass = computed<string>(() => {
 	if (props.theme) {
-		const chapter = getThemeChapter(props.theme)
-
 		return getThemeClasses(
-			chapter,
+			chapter.value,
 			{bg: true, text: true}
 		).join(' ')
 	}
 
 	if (props.borderTheme) {
-		const chapter = getThemeChapter(props.borderTheme)
-
 		return getThemeClasses(
-			chapter,
+			chapter.value,
 			{border: true}
 		).join(' ')
 	}
 
-	if(props.success){
+	if (props.success) {
 		return 'bg-green-100 border-green-400'
 	}
 
-	if(props.error){
+	if (props.error) {
 		return 'bg-red-100 border-red-400'
 	}
 
+	return ''
+})
+
+const headerClass = computed(() => {
+	if (props.headerTheme) {
+		return getThemeClasses(
+			chapter.value,
+			{bg: true, text: true}
+		).join(' ')
+	}
 
 	return ''
 })
@@ -56,10 +75,11 @@ const cardClass = computed<string>(() => {
 	>
 		<header
 			v-if="$slots['header']"
-			class="px-3 py-2"
-			:class="{
-				'border-b border-b-inherit': !noInsideBorder
-			}"
+			:class="[
+				'px-3 py-2',
+				noInsideBorder ? '': 'border-b border-b-inherit',
+				headerClass
+			]"
 		>
 			<slot name="header" />
 		</header>

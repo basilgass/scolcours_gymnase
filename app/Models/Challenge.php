@@ -72,6 +72,14 @@ class Challenge extends Model
 	protected $with = ['blocks'];
 	protected $appends = ['url'];
 
+	protected static function booted()
+	{
+		static::created(function (Challenge $challenge) {
+			$challenge->blocks()->create();
+		});
+
+		parent::booted();
+	}
 
 	public function chapter()
 	{

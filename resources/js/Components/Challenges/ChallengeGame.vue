@@ -6,7 +6,7 @@ import ChallengeResults from "@/Components/Challenges/ChallengeResults.vue"
 import QuestionShow from "@/Components/Questions/QuestionShow.vue"
 import StatBar from "@/Components/Ui/StatBar.vue"
 import {ChallengeGameState, ChallengeInterface, QuestionInterface} from "@/types/modelInterfaces"
-import {onUnmounted, watch} from "vue"
+import {watch} from "vue"
 import {useChallenge} from "@/Composables/useChallenge.ts"
 
 const props = defineProps<{
@@ -21,10 +21,6 @@ const emits = defineEmits<{
 
 watch(challengeData.state, () => {
 	emits('stateChange', challengeData.state.value)
-})
-
-onUnmounted(() => {
-	challengeData.controls.stopTimer()
 })
 
 </script>
@@ -58,6 +54,17 @@ onUnmounted(() => {
 				:value="challengeData.game.elapsedTime"
 				inverted
 				:bar-label="`${(challengeData.game.remainingTime-challengeData.game.elapsedTime)}s`"
+				bar-label-class="text-gray-500"
+			/>
+
+			{{ challengeData.game.questionElapsedTime }} - {{ challenge.durationByQuestion }}
+			<stat-bar
+				v-if="challenge.durationByQuestion"
+				class="my-2"
+				:max="challenge.durationByQuestion"
+				:value="challengeData.game.questionElapsedTime"
+				inverted
+				:bar-label="`${Math.round(challenge.durationByQuestion-challengeData.game.questionElapsedTime)/10}s`"
 				bar-label-class="text-gray-500"
 			/>
 

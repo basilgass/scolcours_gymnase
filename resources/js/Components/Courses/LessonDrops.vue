@@ -1,13 +1,13 @@
 <script lang="ts" setup>
 
-import {CourseInterface, LessonInterface, UserTeamInterface} from "@/types/modelInterfaces.ts"
+import {CourseInterface, LessonInterface, TeamInterface} from "@/types/modelInterfaces.ts"
 import LessonDrop from "@/Components/Courses/LessonDrop.vue"
 import {computed} from "vue"
 import dayjs from "dayjs"
 
 const props = defineProps<{
 	course: CourseInterface,
-	team: UserTeamInterface,
+	team: TeamInterface,
 	lessons: LessonInterface[]
 }>()
 

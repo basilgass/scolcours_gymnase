@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import {CourseInterface, UserTeamInterface} from "@/types/modelInterfaces.ts"
+import {CourseInterface, TeamInterface} from "@/types/modelInterfaces.ts"
 import {computed, ref} from "vue"
 import {AxiosErrorMessage} from "@/types"
 import ScButton from "@/Components/Ui/Button/scButton.vue"
@@ -17,7 +17,7 @@ import FilteredList from "@/Components/Ui/FilteredList.vue";
 defineOptions({layout: LayoutAdmin})
 const props = defineProps<{
 	courses: CourseInterface[],
-	teams: UserTeamInterface[]
+	teams: TeamInterface[]
 }>()
 
 const showCreate = ref(false)

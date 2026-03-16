@@ -1,6 +1,6 @@
-import type { BlockInterface } from "@/types/blockInterfaces.ts"
-import type { ChapterInterface } from "@/types/chapterInterfaces.ts"
-import type { ScoreInterface, ScoreGeneratorDataInterface } from "@/types/scoreInterfaces.ts"
+import type {BlockInterface} from "@/types/blockInterfaces.ts"
+import type {ChapterInterface} from "@/types/chapterInterfaces.ts"
+import type {ScoreGeneratorDataInterface, ScoreInterface} from "@/types/scoreInterfaces.ts"
 
 export interface GeneratorInterface {
 	body: string;
@@ -42,6 +42,7 @@ export interface ChallengeInterface {
 	bonusScoreTrigger: number;
 	chapter: ChapterInterface;
 	duration: number;
+	durationByQuestion: number;
 	generators: GeneratorInterface[];
 	generatorsGrouping: number;
 	id: number;

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import {UserTeamInterface} from "@/types/modelInterfaces.ts"
+import {TeamInterface} from "@/types/modelInterfaces.ts"
 import dayjs from "dayjs"
 import localeData from "dayjs/plugin/localeData"
 import "dayjs/locale/fr"
@@ -9,7 +9,7 @@ dayjs.extend(localeData)
 dayjs.locale("fr")
 
 const props = defineProps<{
-	team: UserTeamInterface
+	team: TeamInterface
 }>()
 
 const dayNames = dayjs.localeData().weekdays()

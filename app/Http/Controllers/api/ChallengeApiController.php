@@ -16,13 +16,6 @@ use function redirect;
 
 class ChallengeApiController extends Controller
 {
-	public function index()
-	{
-		$challenges = Challenge::orderBy('title')
-		                       ->get();
-		return ChallengeResource::collection($challenges);
-	}
-
 	public function show(Challenge $challenge)
 	{
 		if (count($challenge->blocks) === 0) {
@@ -53,7 +46,6 @@ class ChallengeApiController extends Controller
 		return redirect()->route('challenges.quick', [$challenge->slug]);
 	}
 
-
 	public function update(Challenge $challenge, Request $request)
 	{
 		unset($request['block']);
@@ -65,6 +57,7 @@ class ChallengeApiController extends Controller
 			'active'             => ['boolean'],
 			'nextLevelAfter'     => ['numeric', 'min:0'],
 			'duration'           => ['numeric', 'min:0'],
+			'durationByQuestion' => ['numeric', 'min:0', 'nullable'],
 			'lives'              => ['numeric', 'min:0'],
 			'generatorsGrouping' => ['numeric', 'nullable'],
 			'bonusScoreTrigger'  => ['numeric', 'min:0', 'nullable'],
@@ -92,14 +85,15 @@ class ChallengeApiController extends Controller
 		return true;
 	}
 
-
-	// REFACTOR: move all generator to it's controller
 	public function indexGenerator(Challenge $challenge)
 	{
 		return Generator::where('theme_id', $challenge->chapter->theme->id)
 		                ->whereNotIn('id', $challenge->generators->pluck('id'))
 		                ->get();
 	}
+
+
+	// REFACTOR: move all generator to it's controller
 
 	public function storeGenerator(Request $request, Challenge $challenge)
 	{
@@ -179,6 +173,12 @@ class ChallengeApiController extends Controller
 		$this->index();
 	}
 
+	public function index()
+	{
+		$challenges = Challenge::orderBy('title')
+		                       ->get();
+		return ChallengeResource::collection($challenges);
+	}
 
 	public function teams(Theme $theme, Chapter $chapter, Challenge $challenge, Team $team)
 	{
