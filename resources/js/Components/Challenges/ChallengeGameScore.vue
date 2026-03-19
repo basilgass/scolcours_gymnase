@@ -8,12 +8,31 @@ defineProps<{
 	maxLevels: number,
 	gameScore: number,
 	gameLevelScore: number,
-	nextLevelAfter: number
+	nextLevelAfter: number,
+	challengeType: string,
+	targetScore?: number,
 }>()
 
 </script>
 <template>
-	<div class="grid grid-cols-3">
+	<!-- Mode streak : grand compteur central unique -->
+	<div
+		v-if="challengeType === 'streak'"
+		class="text-center py-2"
+	>
+		<div class="text-6xl font-bold">
+			{{ gameScore }}
+		</div>
+		<div class="text-sm text-gray-400 mt-1">
+			streak en cours
+		</div>
+	</div>
+
+	<!-- Autres modes : affichage tricolonne -->
+	<div
+		v-else
+		class="grid grid-cols-3"
+	>
 		<div
 			class="text-xl text-left flex flex-col"
 		>
@@ -44,9 +63,16 @@ defineProps<{
 			</div>
 		</div>
 		<div class="text-lg text-right flex flex-col">
-			<div><i class="bi bi-chevron-double-up" /> {{ gameLevelScore }} / {{ nextLevelAfter }}</div>
+			<!-- Chrono : progression vers l'objectif -->
+			<div v-if="challengeType === 'chrono'">
+				<i class="bi bi-chevron-double-up" /> {{ gameScore }} / {{ targetScore }}
+			</div>
+			<!-- Autres : progression vers le niveau suivant -->
+			<div v-else>
+				<i class="bi bi-chevron-double-up" /> {{ gameLevelScore }} / {{ nextLevelAfter }}
+			</div>
 			<div class="text-xs">
-				{{ gameLevel === maxLevels ? 'niveau max' : 'prochain niveau' }}
+				{{ gameLevel === maxLevels ? 'niveau max' : (challengeType === 'chrono' ? 'objectif' : 'prochain niveau') }}
 			</div>
 		</div>
 	</div>

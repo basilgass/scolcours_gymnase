@@ -21,6 +21,7 @@ class GeneratorResource extends JsonResource
 			'keyboard' => $this->keyboard,
 			'code'     => $this->code,
 			'order'    => $this->pivot?->order,
+			'config'   => $this->pivot?->config ? json_decode($this->pivot->config, true) : null,
 		];
 	}
 }

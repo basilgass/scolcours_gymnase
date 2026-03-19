@@ -43,7 +43,7 @@ class ChallengeApiController extends Controller
 
 		$challenge->blocks()->create();
 
-		return redirect()->route('challenges.quick', [$challenge->slug]);
+		return redirect()->route('challenges.show', $challenge);
 	}
 
 	public function update(Challenge $challenge, Request $request)
@@ -52,19 +52,12 @@ class ChallengeApiController extends Controller
 
 		// Save the challenge configuration
 		$validated = $request->validate([
-			'slug'               => ['required', 'min:2'],
-			'title'              => ['required', 'min:2'],
-			'active'             => ['boolean'],
-			'nextLevelAfter'     => ['numeric', 'min:0'],
-			'duration'           => ['numeric', 'min:0'],
-			'durationByQuestion' => ['numeric', 'min:0', 'nullable'],
-			'lives'              => ['numeric', 'min:0'],
-			'generatorsGrouping' => ['numeric', 'nullable'],
-			'bonusScoreTrigger'  => ['numeric', 'min:0', 'nullable'],
-			'bonusScoreLife'     => ['numeric', 'min:0'],
-			'bonusScoreTime'     => ['numeric', 'min:0'],
-			'bonusLevelLife'     => ['numeric', 'min:0'],
-			'bonusLevelTime'     => ['numeric', 'min:0'],
+			'slug'       => ['required', 'min:2'],
+			'title'      => ['required', 'min:2'],
+			'active'     => ['boolean'],
+			'time_limit' => ['numeric', 'min:0'],
+			'lives'      => ['numeric', 'min:0'],
+			'type'       => ['string', 'in:classic'],
 		]);
 
 		$challenge->update($validated);

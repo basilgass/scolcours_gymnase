@@ -1,4 +1,3 @@
-import eslint from "eslint"
 import eslintPluginVue from 'eslint-plugin-vue'
 import typescriptEslint from "typescript-eslint"
 import globals from 'globals'
@@ -7,7 +6,7 @@ export default typescriptEslint.config(
 	{ignores: ['*.d.ts', '**/coverage', '**/dist']},
 	{
 		extends: [
-			eslint.configs.recommended,
+			// eslint.configs.recommended,
 			...typescriptEslint.configs.stylistic,
 			...eslintPluginVue.configs['flat/recommended']
 		],

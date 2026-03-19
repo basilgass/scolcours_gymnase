@@ -39,32 +39,35 @@ watch(challengeData.state, () => {
 		/>
 
 		<div v-if="challengeData.state.value==='running'">
-			<!-- score display and timer -->
+			<!-- score display -->
 			<ChallengeGameScore
 				:game-level="challengeData.game.level"
 				:game-level-score="challengeData.game.levelScore"
 				:max-levels="challengeData.maxLevels.value"
 				:game-score="challengeData.game.score"
-				:next-level-after="challengeData.challenge.value.nextLevelAfter"
+				:next-level-after="challengeData.currentLevel.value.points_to_pass"
+				:challenge-type="props.challenge.type"
+				:target-score="challengeData.targetScore.value"
 			/>
 
+			<!-- Barre de temps descendante (classic, blitz, streak avec limite, precision avec limite) -->
 			<stat-bar
+				v-if="!['endurance', 'chrono'].includes(props.challenge.type) && challengeData.game.remainingTime > 0"
 				class="my-2"
 				:max="challengeData.game.remainingTime"
 				:value="challengeData.game.elapsedTime"
 				inverted
-				:bar-label="`${(challengeData.game.remainingTime-challengeData.game.elapsedTime)}s`"
+				:bar-label="`${Math.max(0, Math.round(challengeData.game.remainingTime - challengeData.game.elapsedTime))}s`"
 				bar-label-class="text-gray-500"
 			/>
 
-			{{ challengeData.game.questionElapsedTime }} - {{ challenge.durationByQuestion }}
+			<!-- Barre ascendante pour chrono (progression vers la cible) -->
 			<stat-bar
-				v-if="challenge.durationByQuestion"
+				v-else-if="props.challenge.type === 'chrono'"
 				class="my-2"
-				:max="challenge.durationByQuestion"
-				:value="challengeData.game.questionElapsedTime"
-				inverted
-				:bar-label="`${Math.round(challenge.durationByQuestion-challengeData.game.questionElapsedTime)/10}s`"
+				:max="challengeData.targetScore.value"
+				:value="challengeData.game.score"
+				:bar-label="`${Math.round(challengeData.game.elapsedTime)}s — ${challengeData.game.score}/${challengeData.targetScore.value}`"
 				bar-label-class="text-gray-500"
 			/>
 
@@ -84,9 +87,11 @@ watch(challengeData.state, () => {
 			:answers="challengeData.result.value"
 			:challenge="challengeData.challenge.value"
 			:score="challengeData.score.value"
+			:challenge-type="props.challenge.type"
 			@cancel="challengeData.state.value='intro'"
 			@start="challengeData.controls.start"
 		/>
 	</section>
 </template>
+
 

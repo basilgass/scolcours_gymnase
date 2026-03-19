@@ -4,68 +4,30 @@
 >
 
 import LayoutMain from "@/Layouts/LayoutMain.vue"
+import {ChallengeInterface} from "@/types/challengeInterfaces.ts"
+import ChallengeCard from "@/Components/Challenges/ChallengeCard.vue"
+import {useStoreScore} from "@/stores/useStoreScore.ts"
 
-defineOptions({ layout: LayoutMain })
+defineOptions({layout: LayoutMain})
 
-defineProps({
-	challenges: { type: Object, required: true }
-})
+const props = defineProps<{
+	challenges: ChallengeInterface[]
+}>()
 
+useStoreScore().getScores("Challenge", props.challenges.map(x => x.id))
 </script>
 <template>
 	<div>
 		<h1 class="text-xl font-semibold">
 			Challenges
 		</h1>
-		<!--		<form-maker-->
-		<!--			class="mb-5"-->
-		<!--			label="rechercher"-->
-		<!--			name="search"-->
-		<!--		/>-->
 
-		<div class="space-y-2 py-2">
-			<div
+		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
+			<challenge-card
 				v-for="challenge in challenges"
-				:key="challenge"
-				class="border-b last:border-b-0 pb-2 last:pb-0 flex justify-between items-center"
-			>
-				<InertiaLink
-					:href="`/challenge/${challenge.slug}`"
-					class="hover:underline"
-				>
-					{{ challenge.title }}
-				</InertiaLink>
-
-				<div
-					v-admin
-					class="flex items-center"
-				>
-					<div v-if="challenge.sessions.length > 0">
-						<div
-							v-for="(qsession) in challenge.sessions"
-							:key="`challenge-session-${qsession.id}`"
-						>
-							<InertiaLink :href="qsession.token">
-								{{ qsession.token }}
-							</InertiaLink>
-							<i
-								v-admin
-								class="bi bi-stop-fill cursor-pointer px-2"
-							/>
-						</div>
-					</div>
-
-					<div v-admin>
-						<InertiaLink
-							:href="`/challenge/${challenge.slug}/start`"
-							as="div"
-							method="post"
-						>
-							<i class="bi bi-play-fill px-2" />
-						</InertiaLink>
-					</div>
-				</div>
-			</div>
+				:key="`challenge-${challenge.id}`"
+				:challenge
+			/>
 		</div>
 	</div>
 </template>

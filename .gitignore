@@ -19,11 +19,9 @@ _ide_helper.php
 /.ai
 .mcp.json
 AGENTS.md
-CLAUDE.md
 ROUTES.md
 STRUCTURE.md
 boost.json
-/.claude
 /.junie
 /.github
 /.tinker

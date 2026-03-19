@@ -9,7 +9,8 @@ import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
 import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
 import ChallengeDisplay from "@/Components/Challenges/ChallengeDisplay.vue"
 import BlockShow from "@/Components/Blocks/BlockShow.vue"
-import {useScrollTo} from "@/Composables/useHelpers.ts";
+import {useScrollTo} from "@/Composables/useHelpers.ts"
+import {GeneratorInterface} from "@/types/challengeInterfaces.ts"
 
 defineOptions({layout: LayoutMain})
 
@@ -20,14 +21,14 @@ const props = defineProps<{
 	teams: TeamInterface[]
 }>()
 
-const selector = ref(0)
+const selectedGenerator = ref<GeneratorInterface | null>(null)
 
 const state = ref<ChallengeGameState>("intro")
 
 const challengeRef = useTemplateRef<InstanceType<typeof ChallengeDisplay>>('main')
 
-function onSelect(index: number) {
-	selector.value = index
+function onSelect(generator: GeneratorInterface | null) {
+	selectedGenerator.value = generator
 
 	useScrollTo(challengeRef.value.$el, 32)
 }
@@ -39,9 +40,12 @@ function onSelect(index: number) {
 		<article-title
 			v-theme.text
 			:title="challenge.title"
-			:return-link="{
+			:return-link="challenge.chapter ? {
 				label: challenge.chapter.title,
 				url: route('chapters.show', {id: challenge.chapter.id})
+			} : {
+				label: 'challenges',
+				url: route('challenges.index')
 			}"
 			:edit-link="{
 				label: challenge.id,
@@ -81,7 +85,7 @@ function onSelect(index: number) {
 					ref="main"
 					class="flex-1 order-2 md:order-1"
 					:challenge
-					:selector
+					:selected-generator="selectedGenerator"
 					@state-change="state=$event"
 				/>
 
@@ -91,11 +95,12 @@ function onSelect(index: number) {
 					class="w-full order-1 md:w-40 md:order-2"
 				>
 					<div class="flex flex-col gap-1">
+						<!-- Bouton mode jeu -->
 						<sc-button
-							:outline="selector !== 0"
+							:outline="selectedGenerator !== null"
 							theme
 							class="w-full cursor-pointer transition-all"
-							@click="onSelect(0)"
+							@click="onSelect(null)"
 						>
 							<div class="flex gap-3 items-center w-full">
 								<i class="bi bi-controller text-2xl" />
@@ -104,20 +109,32 @@ function onSelect(index: number) {
 								</h2>
 							</div>
 						</sc-button>
-						<sc-button
-							v-for="(gen, index) of challenge.generators"
-							:key="`generator-selector-${gen.slug}`"
-							theme
-							:outline="selector !== index + 1"
-							class="w-full cursor-pointer transition-all"
-							xs
-							@click="onSelect(index+1)"
+
+						<!-- Générateurs groupés par niveau -->
+						<template
+							v-for="level of challenge.levels"
+							:key="`level-${level.id}`"
 						>
-							<div class="flex gap-1 items-center w-full overflow-hidden whitespace-nowrap">
-								<i class="bi bi-calculator" />
-								<h2 v-katex.auto="gen.title" />
-							</div>
-						</sc-button>
+							<template v-if="level.generators.length > 0">
+								<div class="text-xs text-gray-400 uppercase pl-1 mt-2">
+									Niveau {{ level.level_number }}
+								</div>
+								<sc-button
+									v-for="gen of level.generators"
+									:key="`gen-selector-${gen.slug}`"
+									theme
+									:outline="selectedGenerator?.id !== gen.id"
+									class="w-full cursor-pointer transition-all"
+									xs
+									@click="onSelect(gen)"
+								>
+									<div class="flex gap-1 items-center w-full overflow-hidden whitespace-nowrap">
+										<i class="bi bi-calculator" />
+										<h2 v-katex.auto="gen.title" />
+									</div>
+								</sc-button>
+							</template>
+						</template>
 					</div>
 				</aside>
 			</div>

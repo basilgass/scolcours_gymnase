@@ -6,7 +6,7 @@ Permet de recommencer le challenge.
 
 import {ChallengeInterface, ScoreInterface} from "@/types/modelInterfaces"
 import ScButton from "@/Components/Ui/Button/scButton.vue"
-import {ChallengeAnswerInterface, ChallengeGameInterface} from "@/types/challengeInterface.ts"
+import {ChallengeAnswerInterface, ChallengeGameInterface} from "@/types/challengeInterfaces.ts"
 import {ScoreChallengeDataInterface} from "@/types/scoreInterfaces.ts"
 
 const emits = defineEmits(["start", "cancel"])
@@ -15,7 +15,8 @@ defineProps<{
 	challenge: ChallengeInterface,
 	answers: ChallengeAnswerInterface[],	// utiliser par afficher la liste des réponses
 	results: ChallengeGameInterface,
-	score: ScoreInterface<ScoreChallengeDataInterface>
+	score: ScoreInterface<ScoreChallengeDataInterface>,
+	challengeType: string,
 }>()
 
 </script>
@@ -23,39 +24,79 @@ defineProps<{
 <template>
 	<footer>
 		<div class="grid grid-cols-3 gap-6">
+			<!-- Score principal -->
 			<div
 				class="col-span-2 rounded-xl border border-gray-200 bg-white shadow-sm text-xl md:text-2xl text-center p-2 md:p-10 flex flex-col justify-between gap-4"
 			>
-				<div>Score</div>
-				<div>{{ results.score }}</div>
+				<div>{{ challengeType === 'chrono' ? 'Temps' : (challengeType === 'streak' ? 'Streak' : 'Score') }}</div>
+				<div>
+					<template v-if="challengeType === 'chrono'">
+						{{ Math.round(results.elapsedTime) }}s
+					</template>
+					<template v-else>
+						{{ results.score }}
+					</template>
+				</div>
 			</div>
 
+			<!-- Meilleur résultat -->
 			<div
 				class="rounded-xl border border-gray-200 bg-white shadow-sm text-xl md:text-2xl text-center p-2 md:p-10 flex flex-col justify-between gap-4"
 			>
-				<div>Meilleures score</div>
-				<div>{{ Math.max(score.data.current_score, results.score) }} / {{ score.score }}</div>
+				<div>{{ challengeType === 'chrono' ? 'Meilleur temps' : 'Meilleur score' }}</div>
+				<div>
+					<template v-if="challengeType === 'chrono'">
+						{{ score.score > 0 ? Math.round(score.score) + 's' : '—' }}
+					</template>
+					<template v-else>
+						{{ Math.max(score.data.current_score, results.score) }} / {{ score.score }}
+					</template>
+				</div>
 			</div>
 
+			<!-- Vies : masqué pour chrono et streak -->
 			<div
+				v-if="!['chrono', 'streak'].includes(challengeType)"
 				class="rounded-xl border border-gray-200 bg-white shadow-sm text-xl md:text-2xl text-center p-2 md:p-10 flex flex-col justify-between gap-4"
 			>
 				<div>Vie(s)</div>
 				<div>{{ results.lives - results.death }}</div>
 			</div>
 
+			<!-- Erreurs : masqué pour chrono et streak -->
 			<div
+				v-if="!['chrono', 'streak'].includes(challengeType)"
 				class="rounded-xl border border-gray-200 bg-white shadow-sm text-xl md:text-2xl text-center p-2 md:p-10 flex flex-col justify-between gap-4"
 			>
 				<div>Erreur(s)</div>
 				<div>{{ results.death }}</div>
 			</div>
 
+			<!-- Temps restant : classic, blitz, streak (si time_limit) -->
 			<div
+				v-if="!['endurance', 'chrono', 'streak'].includes(challengeType) && results.remainingTime > 0"
 				class="rounded-xl border border-gray-200 bg-white shadow-sm text-xl md:text-2xl text-center p-2 md:p-10 flex flex-col justify-between gap-4"
 			>
 				<div>Temps restant</div>
-				<div>{{ Math.max(results.remainingTime - results.elapsedTime, 0) }} s</div>
+				<div>{{ Math.max(Math.round(results.remainingTime - results.elapsedTime), 0) }} s</div>
+			</div>
+
+			<!-- Niveau atteint : endurance uniquement -->
+			<div
+				v-if="challengeType === 'endurance'"
+				class="rounded-xl border border-gray-200 bg-white shadow-sm text-xl md:text-2xl text-center p-2 md:p-10 flex flex-col justify-between gap-4"
+			>
+				<div>Niveau atteint</div>
+				<div>{{ results.level }}</div>
+			</div>
+
+			<!-- Reprises utilisées (dernier niveau) : precision -->
+			<div
+				v-if="challengeType === 'precision'"
+				class="rounded-xl border border-gray-200 bg-white shadow-sm text-xl md:text-2xl text-center p-2 md:p-10 flex flex-col justify-between gap-4"
+			>
+				<div>Reprises (dernier niveau)</div>
+				<div>{{ results.levelDeaths }}</div>
 			</div>
 		</div>
 

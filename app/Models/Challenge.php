@@ -9,6 +9,7 @@ use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 use Znck\Eloquent\Traits\BelongsToThrough;
 
@@ -20,22 +21,16 @@ use Znck\Eloquent\Traits\BelongsToThrough;
  * @property string $slug
  * @property string $title
  * @property int $active
- * @property int $maxLevel
- * @property int $nextLevelAfter
- * @property int $duration
+ * @property string $type
  * @property int $lives
- * @property int|null $bonusScoreTrigger
- * @property int $bonusScoreLife
- * @property int $bonusScoreTime
- * @property int $bonusLevelLife
- * @property int $bonusLevelTime
+ * @property int $time_limit
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property-read Collection<int, \App\Models\Block> $blocks
  * @property-read int|null $blocks_count
  * @property-read \App\Models\Chapter|null $chapter
- * @property-read Collection<int, \App\Models\Generator> $generators
- * @property-read int|null $generators_count
+ * @property-read Collection<int, \App\Models\ChallengeLevel> $levels
+ * @property-read int|null $levels_count
  * @property-read mixed $running
  * @property-read Collection<int, \App\Models\Score> $scores
  * @property-read int|null $scores_count
@@ -44,20 +39,14 @@ use Znck\Eloquent\Traits\BelongsToThrough;
  * @method static Builder<static>|Challenge newQuery()
  * @method static Builder<static>|Challenge query()
  * @method static Builder<static>|Challenge whereActive($value)
- * @method static Builder<static>|Challenge whereBonusLevelLife($value)
- * @method static Builder<static>|Challenge whereBonusLevelTime($value)
- * @method static Builder<static>|Challenge whereBonusScoreLife($value)
- * @method static Builder<static>|Challenge whereBonusScoreTime($value)
- * @method static Builder<static>|Challenge whereBonusScoreTrigger($value)
  * @method static Builder<static>|Challenge whereChapterId($value)
  * @method static Builder<static>|Challenge whereCreatedAt($value)
- * @method static Builder<static>|Challenge whereDuration($value)
  * @method static Builder<static>|Challenge whereId($value)
  * @method static Builder<static>|Challenge whereLives($value)
- * @method static Builder<static>|Challenge whereMaxLevel($value)
- * @method static Builder<static>|Challenge whereNextLevelAfter($value)
  * @method static Builder<static>|Challenge whereSlug($value)
+ * @method static Builder<static>|Challenge whereTimeLimit($value)
  * @method static Builder<static>|Challenge whereTitle($value)
+ * @method static Builder<static>|Challenge whereType($value)
  * @method static Builder<static>|Challenge whereUpdatedAt($value)
  * @mixin Eloquent
  */
@@ -69,7 +58,7 @@ class Challenge extends Model
 	use HasLessonTrait;
 
 	protected $guarded = [];
-	protected $with = ['blocks'];
+	protected $with = ['blocks', 'levels.generators'];
 	protected $appends = ['url'];
 
 	protected static function booted()
@@ -96,13 +85,9 @@ class Challenge extends Model
 		return $this->morphMany(Block::class, 'blockable');
 	}
 
-	public function generators()
+	public function levels(): HasMany
 	{
-		return $this
-			->morphToMany(Generator::class, 'generatorable')
-			->withPivot('order')
-			->orderByPivot('order');
+		return $this->hasMany(ChallengeLevel::class)->orderBy('level_number');
 	}
-
 
 }

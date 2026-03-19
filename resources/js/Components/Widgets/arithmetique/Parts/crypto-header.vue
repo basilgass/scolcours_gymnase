@@ -27,6 +27,7 @@ const emits = defineEmits<{
 	hover: [e: { clear: string, cipher: string, key: string, index: number }]
 }>()
 
+console.log(props.text.cipher)
 /* =======================
    Show booleans
 ======================= */

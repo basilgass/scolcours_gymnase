@@ -1,0 +1,34 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__laravel-boost__list-routes",
+      "Bash(ls \"C:\\\\websites\\\\scolcours_gymnase\\\\routes\\\\management\\\\\" && echo \"---\" && ls \"C:\\\\websites\\\\scolcours_gymnase\\\\routes\\\\content\\\\\")",
+      "Bash(cd \"C:\\\\websites\\\\scolcours_gymnase\" && php artisan test --compact tests/Feature/Routes/WebRoutesRenameTest.php 2>&1)",
+      "Bash(cd \"C:\\\\websites\\\\scolcours_gymnase\" && ./vendor/bin/phpunit --testdox tests/Feature/Routes/WebRoutesRenameTest.php 2>&1)",
+      "Bash(cd \"C:\\\\websites\\\\scolcours_gymnase\" && php artisan make:test --no-interaction Routes/ApiPublicRoutesRenameTest)",
+      "Bash(cd \"C:\\\\websites\\\\scolcours_gymnase\" && ./vendor/bin/phpunit --testdox tests/Feature/Routes/ApiPublicRoutesRenameTest.php 2>&1)",
+      "Bash(cd \"C:\\\\websites\\\\scolcours_gymnase\" && php artisan make:test --no-interaction Routes/ApiStudentsRoutesRenameTest)",
+      "Bash(cd \"C:\\\\websites\\\\scolcours_gymnase\" && ./vendor/bin/phpunit --testdox tests/Feature/Routes/ApiStudentsRoutesRenameTest.php 2>&1)",
+      "Bash(grep -r \"include\\\\|require\" /c/websites/scolcours_gymnase/routes/*.php)",
+      "Bash(cd \"C:\\\\websites\\\\scolcours_gymnase\" && php artisan make:test --no-interaction Routes/ApiAdminRoutesRenameTest)",
+      "Bash(cd \"C:\\\\websites\\\\scolcours_gymnase\" && ./vendor/bin/phpunit --testdox tests/Feature/Routes/ApiAdminRoutesRenameTest.php 2>&1)",
+      "Bash(rm \"C:\\\\websites\\\\scolcours_gymnase\\\\app\\\\Models\\\\Challenges\\\\ChallengeSession.php\" \"C:\\\\websites\\\\scolcours_gymnase\\\\app\\\\Models\\\\Challenges\\\\ChallengeUser.php\" && rmdir \"C:\\\\websites\\\\scolcours_gymnase\\\\app\\\\Models\\\\Challenges\")",
+      "mcp__laravel-boost__search-docs",
+      "Read(//mnt/c/websites/**)",
+      "Bash(mkdir -p resources/js/Pages/Blocks/admin resources/js/Pages/Challenges/admin resources/js/Pages/Chapters/admin resources/js/Pages/Courses/admin resources/js/Pages/Decks/admin resources/js/Pages/Generators/admin resources/js/Pages/Illustrations/admin resources/js/Pages/Quizzs/admin resources/js/Pages/Tools/admin)",
+      "Bash(cd \"C:/websites/scolcours_gymnase\" && mkdir -p resources/js/Pages/Blocks/admin resources/js/Pages/Challenges/admin resources/js/Pages/Chapters/admin resources/js/Pages/Courses/admin resources/js/Pages/Decks/admin resources/js/Pages/Generators/admin resources/js/Pages/Illustrations/admin resources/js/Pages/Quizzs/admin resources/js/Pages/Tools/admin)",
+      "Bash(cd \"C:/websites/scolcours_gymnase\" && sed -i 's|@/Pages/languages/|@/Pages/Languages/|g' resources/js/Components/Languages/LanguageDecks.vue resources/js/Components/Languages/LanguageGuess.vue resources/js/Components/Languages/LanguageList.vue resources/js/Components/Languages/LanguageMatch.vue resources/js/Components/Languages/LanguageMemory.vue resources/js/Components/Languages/LanguageType.vue resources/js/Components/Languages/useLanguage.ts)",
+      "mcp__laravel-boost__database-schema",
+      "Bash(cd /mnt/c/websites/scolcours_gymnase && php artisan make:migration create_challenge_levels_table --no-interaction)",
+      "mcp__laravel-boost__database-query",
+      "mcp__ide__getDiagnostics",
+      "mcp__laravel-boost__tinker"
+    ]
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "laravel-boost"
+  ],
+  "outputStyle": "Explanatory",
+  "prefersReducedMotion": true
+}

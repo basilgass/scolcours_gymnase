@@ -23,7 +23,8 @@ export type {
 	PostQuestionsForOneUserStatsInterface
 } from "@/types/postInterfaces.ts"
 export type {
-	GeneratorInterface, ChallengeScoreInterface, ChallengeGameState, ChallengeMinInterface, ChallengeInterface
+	GeneratorInterface, ChallengeScoreInterface, ChallengeGameState, ChallengeMinInterface, ChallengeInterface, ChallengeLevelInterface,
+	ChallengeAnswerInterface, ChallengeGameInterface
 } from "@/types/challengeInterfaces.ts"
 export type {CardInterface, CardInterfaceExtended, DeckInterface, provideDeckData} from "@/types/deckInterfaces.ts"
 export type {EvaluationInterface, EvaluationAdminInterface} from "@/types/evaluationInterfaces.ts"

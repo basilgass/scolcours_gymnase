@@ -8,6 +8,7 @@ import Card from "@/Components/Ui/Card.vue"
 import LayoutAdmin from "@/Layouts/LayoutAdmin.vue"
 
 defineOptions({layout: LayoutAdmin})
+
 defineProps({
 	challenges: {type: Object as PropType<ChallengeInterface[]>, required: true}
 })
@@ -22,14 +23,14 @@ defineProps({
 			<card
 				v-for="challenge in challenges"
 				:key="challenge.slug"
-				v-theme.bg.text="challenge.theme_id"
+				v-theme.bg.text="challenge.chapter.theme_id"
 				with-themes
 			>
 				<div>
 					<InertiaLink
-						:href="route('challenges.quick', [challenge.slug])"
-						class="text-lg leading-6 font-medium"
 						v-katex.auto="challenge.title"
+						:href="route('challenges.show', { challenge: challenge.slug })"
+						class="text-lg leading-6 font-medium"
 					/>
 					<p class="max-w-2xl text-sm font-code">
 						{{ challenge.slug }}

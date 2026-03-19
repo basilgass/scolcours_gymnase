@@ -3,10 +3,11 @@
 import ChallengeGame from "@/Components/Challenges/ChallengeGame.vue"
 import ChallengeTraining from "@/Components/Challenges/ChallengeTraining.vue"
 import {ChallengeGameState, ChallengeInterface} from "@/types/modelInterfaces"
+import {GeneratorInterface} from "@/types/challengeInterfaces.ts"
 
 defineProps<{
 	challenge: ChallengeInterface,
-	selector: number,
+	selectedGenerator: GeneratorInterface | null,
 }>()
 
 const emits = defineEmits<{
@@ -18,7 +19,7 @@ const emits = defineEmits<{
 <template>
 	<section>
 		<div class="scolcours-container">
-			<suspense v-if="selector===0">
+			<suspense v-if="selectedGenerator === null">
 				<challenge-game
 					:challenge="challenge"
 					@state-change="emits('stateChange', $event)"
@@ -26,8 +27,8 @@ const emits = defineEmits<{
 			</suspense>
 			<suspense v-else>
 				<challenge-training
-					:key="challenge.generators[selector-1].slug"
-					:generator="challenge.generators[selector-1]"
+					:key="selectedGenerator.slug"
+					:generator="selectedGenerator"
 				/>
 			</suspense>
 		</div>

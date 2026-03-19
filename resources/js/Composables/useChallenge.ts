@@ -1,14 +1,13 @@
 import {
 	ChallengeGameState,
 	ChallengeInterface,
-	GeneratorInterface,
 	QuestionDynamicInterface,
 	ScoreInterface
 } from "@/types/modelInterfaces.ts"
 import {computed, ComputedRef, onUnmounted, reactive, ref, toRef} from "vue"
 import {useGenerator} from "@/Composables/useGenerator.ts"
 import {Random} from "pimath"
-import {ChallengeAnswerInterface, ChallengeGameInterface} from "@/types/challengeInterface.ts"
+import {ChallengeAnswerInterface, ChallengeGameInterface} from "@/types/challengeInterfaces.ts"
 import {useStoreScore} from "@/stores/useStoreScore.ts"
 import {ScoreChallengeDataInterface} from "@/types/scoreInterfaces.ts"
 import {questionResultInterface} from "@/Components/Questions/QuestionInterface.ts"
@@ -21,7 +20,6 @@ export function useChallenge(challengeMaybeRef: ChallengeInterface | ComputedRef
 
 	const state = ref<ChallengeGameState>("intro")
 	const challenge = toRef(challengeMaybeRef)
-	const generators = toRef<GeneratorInterface[]>(challenge.value.generators)
 
 	const game = reactive<ChallengeGameInterface>({
 		score: 0,
@@ -32,13 +30,28 @@ export function useChallenge(challengeMaybeRef: ChallengeInterface | ComputedRef
 		elapsedTime: 0,
 		remainingTime: 0,
 		questionElapsedTime: 0,
+		streak: 0,
+		levelDeaths: 0,
 	})
 	const generatedId = ref(0)
 	const generatedQuestions = ref<QuestionDynamicInterface[]>([])
+	const generatedTimeLimits = ref<(number | null)[]>([])
 	const currrentQuestion = computed(() => {
 		return generatedQuestions.value[generatedId.value] ?? null
 	})
 	const answers = ref<ChallengeAnswerInterface[]>([])
+
+	const currentLevel = computed(() => {
+		return challenge.value.levels[game.level - 1] ?? challenge.value.levels[0]
+	})
+
+	const levelGenerators = computed(() => currentLevel.value?.generators ?? [])
+
+	const maxLevels = computed(() => challenge.value.levels.length)
+
+	const targetScore = computed(() =>
+		challenge.value.levels[challenge.value.levels.length - 1]?.points_to_pass ?? 10
+	)
 
 	function gameReset() {
 		game.score = 0
@@ -46,83 +59,67 @@ export function useChallenge(challengeMaybeRef: ChallengeInterface | ComputedRef
 		game.levelScore = 0
 		game.death = 0
 		game.elapsedTime = 0
-		game.remainingTime = challenge.value.duration * 60
+		game.streak = 0
+		game.levelDeaths = 0
 		game.questionElapsedTime = 0
 		game.lives = challenge.value.lives
-		game.death = 0
+
+		const type = challenge.value.type
+		if (type === 'endurance') {
+			game.remainingTime = Infinity
+		} else if (type === 'chrono') {
+			game.remainingTime = 0
+		} else {
+			game.remainingTime = challenge.value.time_limit * 60
+		}
 
 		generatedQuestions.value = []
 		generatedId.value = 0
 		answers.value = []
 	}
 
-
-	const levelGenerators = computed(() => getGenerators(game.level))
-
-	function getGenerators(level: number) {
-		const delta = challenge.value.generatorsGrouping ?? 1
-		const length = generators.value.length
-
-		const totalGroups = Math.ceil(length / delta)
-
-		// clamp du level
-		const safeLevel = Math.min(level - 1, totalGroups)
-
-		const start = safeLevel * delta
-		const end = start + delta
-
-		return generators.value.slice(start, end)
-	}
-
 	function updateLevel(): number {
 		if (game.level >= maxLevels.value) return maxLevels.value
 
-		if (game.levelScore >= challenge.value.nextLevelAfter) {
-			// Reset the score level
+		if (game.levelScore >= currentLevel.value.points_to_pass) {
 			game.levelScore = 0
-
-			// Increase the level
 			game.level++
-
-			// Trigger the new level bonuses
 			checkBonusLevel()
 
-			// The level has changed, so has the generator.
+			if (challenge.value.type === 'precision') {
+				game.levelDeaths = 0
+			}
+
 			generate()
 		}
 	}
 
 	/**
-	 * Informations calculées
-	 */
-	const maxLevels = computed(() => {
-		if (!challenge.value.generatorsGrouping) return challenge.value.generators.length
-
-		return Math.ceil(challenge.value.generators.length / challenge.value.generatorsGrouping)
-	})
-
-	/**
-	 * Création des questions
-	 * @param nb
+	 * Création des questions avec tableau parallèle des limites de temps par question.
+	 * Les deux tableaux (questions + timeLimits) sont toujours synchronisés.
 	 */
 	function generate(nb?: number): QuestionDynamicInterface[] {
 		nb = nb === undefined || nb <= 0 ? 20 : nb
 
 		generatedId.value = 0
 
-		const questions: QuestionDynamicInterface[] = []
+		const pairs: Array<[QuestionDynamicInterface, number | null]> = []
 		levelGenerators.value.forEach(gen => {
-			questions.push(...useGenerator(gen).list(nb))
+			const timeLimit = gen.config?.time_per_question ?? null
+			useGenerator(gen).list(nb).forEach(q => {
+				pairs.push([q, timeLimit])
+			})
 		})
 
-		generatedQuestions.value = levelGenerators.value.length > 1
-			? Random.shuffle(questions)
-			: questions
+		const shuffled = levelGenerators.value.length > 1
+			? Random.shuffle(pairs)
+			: pairs
 
-		// on mélange toutes les questions si nécessaires.
+		generatedQuestions.value = shuffled.map(([q]) => q)
+		generatedTimeLimits.value = shuffled.map(([, t]) => t)
+
 		return generatedQuestions.value
 	}
-
 
 	let timerInterval: ReturnType<typeof setInterval> = null
 	let questionTimerInterval: ReturnType<typeof setInterval> = null
@@ -130,42 +127,39 @@ export function useChallenge(challengeMaybeRef: ChallengeInterface | ComputedRef
 	const timerIntervalSpeed = 1000
 
 	function start() {
-		// Reset the game
 		gameReset()
-
-		// Generate the questions
 		generate()
-
-		// Start the game
 		state.value = "running"
-
-		// Interval -> move it to specific place !
 		startTimer()
-
 		startQuestionTimer()
 	}
 
 	function stop() {
-		// Stop the timer
 		stopTimer()
 		stopQuestionTimer()
-
-		// Store the new values
 		store()
-
-		// Change state
 		state.value = 'finished'
 	}
 
 	function startTimer() {
 		game.elapsedTime = 0
+		const type = challenge.value.type
+
+		if (type === 'endurance') {
+			return
+		}
+
+		// Pas de timer si pas de limite de temps (streak/precision avec time_limit = 0)
+		if (type !== 'chrono' && game.remainingTime <= 0) {
+			return
+		}
+
 		timerInterval = setInterval(() => {
 			game.elapsedTime += timerIntervalSpeed / 1000
 
-			if (game.elapsedTime > game.remainingTime) {
+			if (type !== 'chrono' && game.elapsedTime > game.remainingTime) {
 				stop()
 			}
-
 		}, timerIntervalSpeed)
 	}
 
@@ -175,17 +169,29 @@ export function useChallenge(challengeMaybeRef: ChallengeInterface | ComputedRef
 	}
 
 	function startQuestionTimer() {
-		// Reset previous interval
 		if (questionTimerInterval) clearInterval(questionTimerInterval)
-
-		// Reset elapsed time
 		game.questionElapsedTime = 0
 
-		// Set the new interval
+		if (challenge.value.type !== 'blitz') {
+			questionTimerInterval = setInterval(() => {
+				game.questionElapsedTime += timerIntervalSpeed / 1000
+			}, timerIntervalSpeed)
+			return
+		}
+
+		// blitz : countdown par question — déclenche _failedAnswer() à 0
+		const timeLimit = generatedTimeLimits.value[generatedId.value]
+		if (timeLimit === null || timeLimit === undefined) {
+			return
+		}
+
 		questionTimerInterval = setInterval(() => {
-			game.questionElapsedTime += timerIntervalSpeed / 1000 / 1000
-			// TODO: implement question end, with one second penality.
-		})
+			game.questionElapsedTime += timerIntervalSpeed / 1000
+			if (game.questionElapsedTime >= timeLimit) {
+				stopQuestionTimer()
+				_failedAnswer()
+			}
+		}, timerIntervalSpeed)
 	}
 
 	function stopQuestionTimer() {
@@ -194,7 +200,6 @@ export function useChallenge(challengeMaybeRef: ChallengeInterface | ComputedRef
 	}
 
 	function validate(answer: questionResultInterface) {
-		// store the answer
 		const question = generatedQuestions.value[generatedId.value].block.body
 			.replace("$a", answer.tex)
 
@@ -203,74 +208,77 @@ export function useChallenge(challengeMaybeRef: ChallengeInterface | ComputedRef
 			...answer
 		})
 
-		// Continue or stop the game
 		if (answer.result) {
 			_successAnswer()
 		} else {
 			_failedAnswer()
 		}
-
 	}
 
 	function _successAnswer() {
-		// Increase both score and levelScore
-		game.score += game.level
+		const type = challenge.value.type
+
+		if (type === 'streak') {
+			game.score++
+		} else {
+			game.score += game.level
+		}
 		game.levelScore++
 
-		// Reset current question elapsed time.
-		startQuestionTimer()
+		// Chrono : victoire dès que le score cible est atteint
+		if (type === 'chrono' && game.score >= targetScore.value) {
+			stop()
+			return
+		}
 
-		// if the score reaches some bonuses...
-		checkBonusScore()
-
-		// Go to the next question
 		generatedId.value++
-
-		// Maybe we reached a new level ? this resets everything!
 		updateLevel()
 
-		// Check if we have still enough question
 		if (generatedId.value >= levelGenerators.value.length) {
 			generate()
 		}
+
+		startQuestionTimer()
 	}
 
 	function _failedAnswer() {
-		// Increase the number of error
-		game.death++
+		const type = challenge.value.type
 
-		// Reset the actual level progression
+		if (type === 'streak') {
+			stop()
+			return
+		}
+
+		if (type === 'precision') {
+			game.death++
+			game.levelDeaths++
+			game.levelScore = 0
+			if (game.levelDeaths >= challenge.value.lives) {
+				stop()
+			}
+			return
+		}
+
+		game.death++
 		game.levelScore = 0
 
-		// Stop the game if necessary
 		if (challenge.value.lives && (game.lives - game.death <= 0)) {
 			stop()
 		}
 	}
 
-	// BONUS SCORES
-	function checkBonusScore() {
-		if (challenge.value.bonusScoreTrigger) {
-			if (challenge.value.bonusScoreLife) {
-				game.lives += challenge.value.bonusScoreLife
-			}
-
-			if (challenge.value.bonusScoreTime) {
-				game.remainingTime += challenge.value.bonusScoreTime
-			}
-		}
-	}
-
 	function checkBonusLevel() {
-		if (challenge.value.bonusLevelTime) {
-			game.remainingTime += challenge.value.bonusLevelTime
+		const bonus = currentLevel.value?.bonus
+		if (!bonus) return
+
+		if (bonus.time) {
+			game.remainingTime += bonus.time
 		}
 
-		if (challenge.value.bonusLevelLife) {
-			game.lives += challenge.value.bonusLevelLife
+		if (bonus.lives) {
+			game.lives += bonus.lives
 		}
 	}
-
 
 	const scoreStore = useStoreScore()
 	const score = ref<ScoreInterface<ScoreChallengeDataInterface>>()
@@ -279,15 +287,43 @@ export function useChallenge(challengeMaybeRef: ChallengeInterface | ComputedRef
 		.then(sc => score.value = sc)
 
 	function store() {
-		// Résultat du challenge
+		const type = challenge.value.type
+
+		// Chrono : meilleur temps = plus petit. On ne stocke que si objectif atteint.
+		if (type === 'chrono') {
+			if (game.score < targetScore.value) {
+				flash.info("Objectif non atteint !")
+				return
+			}
+
+			const isFirstScore = score.value.score === 0
+			const bestTime = isFirstScore
+				? game.elapsedTime
+				: Math.min(game.elapsedTime, score.value.score)
+			const improved = isFirstScore || game.elapsedTime < score.value.score
+
+			score.value.score = bestTime
+			score.value.data.level = Math.max(game.level, score.value.data.level)
+			score.value.data.current_score = game.elapsedTime
+			score.value.data.current_level = game.level
+
+			scoreStore.updateScore(score.value)
+				.then(() => {
+					if (improved) {
+						flash.success(`Bravo, nouveau meilleur temps : ${Math.round(game.elapsedTime)}s`)
+					} else {
+						flash.info("Vous n'avez pas amélioré votre temps... dommage !")
+					}
+				})
+			return
+		}
+
 		const delta = game.score - score.value.score
 		const deltaLevel = game.level - score.value.data.level
 
-		// Mise à jour des scores globaux.
 		score.value.score = Math.max(game.score, score.value.score)
 		score.value.data.level = Math.max(game.level, score.value.data.level)
 
-		// Mise à jour des scores courants
 		score.value.data.current_score = game.score
 		score.value.data.current_level = game.level
 
@@ -316,11 +352,13 @@ export function useChallenge(challengeMaybeRef: ChallengeInterface | ComputedRef
 		stopTimer()
 		stopQuestionTimer()
 	})
+
 	return {
 		state,
 		challenge,
-		generators,
+		currentLevel,
 		maxLevels,
+		targetScore,
 		generate,
 		controls: {
 			start,

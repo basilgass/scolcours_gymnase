@@ -42,12 +42,7 @@ function storeChallenge() {
 				:key="`challenge-${challenge.id}`"
 				v-katex.auto="challenge.title"
 				theme
-				:href="route('themes.chapters.challenges.show', {
-					theme: $page.props.theme.slug,
-					chapter: chapter.slug,
-					challenge: challenge.slug
-				})
-				"
+				:href="route('challenges.show', { challenge: challenge.slug })"
 				class="py-5"
 			/>
 		</div>

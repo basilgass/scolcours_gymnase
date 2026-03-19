@@ -5,6 +5,7 @@ import type {ScoreGeneratorDataInterface, ScoreInterface} from "@/types/scoreInt
 export interface GeneratorInterface {
 	body: string;
 	code: string;
+	config?: { time_per_question?: number | null } | null;
 	id: number;
 	keyboard: string;
 	order: number;
@@ -31,26 +32,45 @@ export interface ChallengeMinInterface {
 	title: string;
 }
 
-export interface ChallengeInterface {
-	active: boolean;
-	best: ChallengeScoreInterface;
-	block: BlockInterface;
-	bonusLevelLife: number;
-	bonusLevelTime: number;
-	bonusScoreLife: number;
-	bonusScoreTime: number;
-	bonusScoreTrigger: number;
-	chapter: ChapterInterface;
-	duration: number;
-	durationByQuestion: number;
-	generators: GeneratorInterface[];
-	generatorsGrouping: number;
+export interface ChallengeLevelInterface {
 	id: number;
-	lives: number;
-	nextLevelAfter: number;
+	challenge_id: number;
+	level_number: number;
+	points_to_pass: number;
+	bonus: { lives?: number; time?: number } | null;
+	generators: GeneratorInterface[];
+}
+
+export interface ChallengeAnswerInterface {
+	question: string
+	answer: string
+	result: boolean,
+}
+
+export interface ChallengeGameInterface {
+	score: number,
+	level: number,
+	levelScore: number,
+	lives: number,
+	death: number,
+	elapsedTime: number,
+	remainingTime: number,
+	questionElapsedTime: number,
+	streak: number,
+	levelDeaths: number,
+}
+
+export interface ChallengeInterface {
+	id: number;
 	slug: string;
-	theme_id: number;
 	title: string;
+	active: boolean;
+	chapter: ChapterInterface;
+	type: 'classic' | 'chrono' | 'streak' | 'blitz' | 'endurance' | 'precision';
+	block: BlockInterface;
+	best: ChallengeScoreInterface;
+	levels: ChallengeLevelInterface[];
+	lives: number;
+	time_limit: number;
 	updated_at: string;
-	user: ChallengeScoreInterface;
 }

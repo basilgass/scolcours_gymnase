@@ -86,25 +86,25 @@ onUnmounted(() => {
 			class="relative"
 		>
 			<div
+				v-katex.auto="labelMap(currentValue)"
 				class="px-2 py-1 w-full focus:outline-hidden focus:ring-0"
 				@click="open = !open"
 				@blur="open = false"
-				v-katex.auto="labelMap(currentValue)"
 			/>
 			<div
 				v-show="open"
 				class="select-menu
 				absolute right-0 left-0 top-full
 				mt-1
-				max-h-[300px] overflow-y-scroll
-				shadow bg-content border rounded"
+				max-h-75 overflow-y-scroll
+				shadow bg-content border rounded z-10"
 			>
 				<div
 					v-for="(choice, key) in choices"
 					:key="`choice-${key}`"
+					v-katex.auto="labelMap(choice)"
 					class="hover:bg-slate-100 px-2 py-3 cursor-pointer transition-all"
 					@click="onSelect(key, choice as string)"
-					v-katex.auto="labelMap(choice)"
 				/>
 			</div>
 		</div>

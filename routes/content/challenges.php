@@ -1,19 +1,18 @@
 <?php
 
 use App\Http\Controllers\api\ChallengeApiController;
+use App\Http\Controllers\api\ChallengeLevelApiController;
 use App\Http\Controllers\web\ChallengeController;
 
 Route::middleware('web')
      ->group(function () {
 	     // Public routes.
-	     // Redirect routes to challenge.
-	     Route::get('q/{challenge:slug}', [ChallengeController::class, 'quick'])
-	          ->name("challenges.quick");
-
+	     Route::resource('challenges', ChallengeController::class)
+	          ->only(['index', 'show']);
+		 
 	     // Challenge route show.
-	     Route::get('{theme:slug}/{chapter:slug}/challenges/{challenge:slug}', [ChallengeController::class, 'show'])
-	          ->withoutScopedBindings()
-	          ->name('themes.chapters.challenges.show');
+	     Route::get('challenges/{challenge:slug}', [ChallengeController::class, 'show'])
+	          ->name('challenges.show');
 
 	     // Admin routes
 	     Route::middleware('admin')
@@ -46,6 +45,23 @@ Route::middleware('api')
 		          Route::apiResource('chapters.challenges', ChallengeApiController::class)
 		               ->only(['store', 'update', 'destroy'])
 		               ->shallow();
+
+		          Route::prefix('challengelevels')
+		               ->as('challengelevels.')
+		               ->group(function () {
+			               Route::post('{challenge}/levels', [ChallengeLevelApiController::class, 'store'])
+			                    ->name('store');
+			               Route::patch('levels/{challengeLevel}', [ChallengeLevelApiController::class, 'update'])
+			                    ->name('update');
+			               Route::delete('levels/{challengeLevel}', [ChallengeLevelApiController::class, 'destroy'])
+			                    ->name('destroy');
+			               Route::post('levels/{challengeLevel}/generators/{generator}/attach', [ChallengeLevelApiController::class, 'attachGenerator'])
+			                    ->name('generators.attach');
+			               Route::post('levels/{challengeLevel}/generators/{generator}/detach', [ChallengeLevelApiController::class, 'detachGenerator'])
+			                    ->name('generators.detach');
+			               Route::patch('levels/{challengeLevel}/generators/{generator}', [ChallengeLevelApiController::class, 'updateGeneratorConfig'])
+			                    ->name('generators.update');
+		               });
 
 		          Route::prefix('challenges')
 		               ->as('challenges.')

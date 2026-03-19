@@ -34,7 +34,7 @@ defineProps<{
 		<challenge-display
 			v-else-if="lesson.lessonable_type==='Challenge'"
 			:challenge="lessonable as ChallengeInterface"
-			:selector="0"
+			:selected-generator="null"
 		/>
 		<suspense v-else-if="lesson.lessonable_type==='Generator'">
 			<challenge-training

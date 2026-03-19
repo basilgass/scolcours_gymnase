@@ -5,7 +5,7 @@ import {useGenerator} from "@/Composables/useGenerator"
 import {generatedQuestionInterface} from "@/types"
 import {ChallengeInterface} from "@/types/modelInterfaces"
 import {usePage} from "@inertiajs/vue3"
-import {PropType, ref} from "vue"
+import {computed, PropType, ref} from "vue"
 import ScButton from "@/Components/Ui/Button/scButton.vue"
 import TexCode from "@/Components/Ui/TexCode.vue"
 import Card from "@/Components/Ui/Card.vue"
@@ -23,7 +23,8 @@ const props = defineProps({
 	}
 })
 
-const pdfGeneratorNb = ref<number[]>(Array(props.challenge.generators.length).fill(10))
+const allGenerators = computed(() => props.challenge.levels.flatMap(level => level.generators))
+const pdfGeneratorNb = ref<number[]>(Array(allGenerators.value.length).fill(10))
 const pdfQuestionWrapper = ref("\\( @ \\)")
 const pdfError = ref("")
 const pdfLaTeX = ref("")
@@ -37,7 +38,7 @@ const pdfGenereate = () => {
 	maxQuestions.forEach((nb, index) => {
 		for (let i = 0; i < nb; i++) {
 			questions.push(
-				useGenerator(props.challenge.generators[index]).random()
+				useGenerator(allGenerators.value[index]).random()
 			)
 		}
 	})
@@ -97,7 +98,7 @@ const pdfGenereate = () => {
 		</h4>
 		<div class="flex gap-3">
 			<Card
-				v-for="(gen, index) of props.challenge.generators"
+				v-for="(gen, index) of allGenerators"
 				:key="`pdf-${gen.slug}`"
 				class="overflow-hidden"
 			>

@@ -3,6 +3,7 @@
 import ScButton from "@/Components/Ui/Button/scButton.vue"
 import {ChallengeInterface, ScoreInterface} from "@/types/modelInterfaces.ts"
 import {ScoreChallengeDataInterface} from "@/types/scoreInterfaces.ts"
+import ChallengeDescription from "@/Components/Challenges/ChallengeDescription.vue"
 
 defineProps<{
 	challenge: ChallengeInterface,
@@ -17,62 +18,8 @@ const emits = defineEmits(["start"])
 <template>
 	<article class="flex flex-col gap-3">
 		<!-- Description du challenge -->
-		<div class="grid grid-cols-3 gap-3 w-[30em] mx-auto">
-			<div
-				class="bg-content aspect-square p-4 rounded-xl border border-gray-200 grid place-items-center shadow-sm"
-			>
-				<div class="text-center flex flex-col justify-between h-full">
-					<i class="text-5xl bi bi-heart" />
-					<div class="text-3xl">
-						{{ challenge.lives }}
-					</div>
-					<div class="text-sm text-gray-400">
-						vies
-					</div>
-				</div>
-			</div>
 
-			<div
-				class="bg-content aspect-square p-4 rounded-xl border border-gray-200 grid place-items-center shadow-sm"
-			>
-				<div class="text-center flex flex-col justify-between h-full">
-					<i class="text-5xl bi bi-chevron-double-up" />
-					<div class="text-3xl">
-						{{ maxLevels }}
-					</div>
-					<div class="text-sm text-gray-400">
-						niveaux
-					</div>
-				</div>
-			</div>
-
-			<div
-				class="bg-content aspect-square p-4 rounded-xl border border-gray-200 grid place-items-center shadow-sm"
-			>
-				<div v-if="challenge.durationByQuestion" class="text-center flex flex-col justify-between h-full">
-					<i class="text-5xl bi bi-clock" />
-					<div class="text-3xl">
-						{{ challenge.durationByQuestion }}<span class="text-xs">sec</span> / {{
-							challenge.duration
-						}}<span
-						class="text-xs"
-					>min</span>
-					</div>
-					<div class="text-sm text-gray-400">
-						question / total
-					</div>
-				</div>
-				<div v-else class="text-center flex flex-col justify-between h-full">
-					<i class="text-5xl bi bi-clock" />
-					<div class="text-3xl">
-						{{ challenge.duration }}
-					</div>
-					<div class="text-sm text-gray-400">
-						durée (min)
-					</div>
-				</div>
-			</div>
-		</div>
+		<challenge-description :challenge />
 
 		<!-- Bouton pour commencer -->
 		<sc-button
@@ -84,10 +31,16 @@ const emits = defineEmits(["start"])
 		</sc-button>
 
 		<!-- Résultat du challenge pour l'utilisateur -->
-		<div class="min-w-[20em] mx-auto">
-			<h3 class="uppercase text-xl font-extralight text-center mt-5 my-2">
-				résultats
+		<div class="min-w-[20em] mx-auto flex flex-col gap-3 mt-5">
+			<h3 class="uppercase text-xl font-extralight text-center">
+				Dernière tentative
 			</h3>
+			<div
+				v-if="score?.attempts>0"
+				class="text-center text-sm"
+			>
+				{{ score.updated_at }}
+			</div>
 
 			<div class="grid w-full gap-4 grid-cols-2">
 				<div
@@ -95,13 +48,21 @@ const emits = defineEmits(["start"])
 				>
 					<div class="text-center flex flex-col justify-between h-full">
 						<h4 class="text-xl uppercase ">
-							score
+							{{ challenge.type === 'chrono' ? 'temps' : 'score' }}
 						</h4>
 						<div class="text-3xl">
-							{{ score?.data.current_score }}
+							{{
+								challenge.type === 'chrono' && score?.data.current_score
+									? Math.round(score.data.current_score) + 's'
+									: score?.data.current_score
+							}}
 						</div>
 						<div class="text-sm">
-							meilleur: {{ score?.score }}
+							meilleur: {{
+								challenge.type === 'chrono' && score?.score
+									? Math.round(score.score) + 's'
+									: score?.score
+							}}
 						</div>
 					</div>
 				</div>

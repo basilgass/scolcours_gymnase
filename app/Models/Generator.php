@@ -21,8 +21,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $code
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Challenge> $challenges
- * @property-read int|null $challenges_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\ChallengeLevel> $challengeLevels
+ * @property-read int|null $challenge_levels_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Evaluation> $evaluations
  * @property-read int|null $evaluations_count
  * @property-read \App\Models\Theme $theme
@@ -61,11 +61,11 @@ class Generator extends Model
 		return $this->belongsTo(Theme::class);
 	}
 
-	public function challenges(): \Illuminate\Database\Eloquent\Relations\MorphToMany
+	public function challengeLevels(): \Illuminate\Database\Eloquent\Relations\MorphToMany
 	{
 		return $this
-			->morphedByMany(Challenge::class, 'generatorable')
-			->withPivot('order');
+			->morphedByMany(ChallengeLevel::class, 'generatorable')
+			->withPivot('order', 'config');
 	}
 
 	public function evaluations(): \Illuminate\Database\Eloquent\Relations\MorphToMany

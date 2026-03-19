@@ -28,8 +28,8 @@ class ChallengeResource extends JsonResource
 		return [
 			...parent::toArray($request),
 			'block'      => $this->blocks[0],
-			'chapter'    => ChapterResource::make($this->chapter),
-			"generators" => GeneratorResource::collection($this->generators)
+			'chapter'    => $this->chapter ? ChapterResource::make($this->chapter) : null,
+			"levels" => ChallengeLevelResource::collection($this->levels)
 		];
 	}
 }

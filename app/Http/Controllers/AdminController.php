@@ -217,7 +217,7 @@ class AdminController extends Controller
 					return [
 						'slug'       => $tool->slug,
 						'title'      => $tool->title,
-						'theme_id'   => $tool->chapter->theme_id,
+						'theme_id'   => $tool->chapter?->theme_id,
 						'updated_at' => $tool->updated_at->format('d.m.Y H:m'),
 					];
 				})
