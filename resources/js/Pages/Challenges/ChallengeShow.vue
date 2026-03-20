@@ -11,6 +11,7 @@ import ChallengeDisplay from "@/Components/Challenges/ChallengeDisplay.vue"
 import BlockShow from "@/Components/Blocks/BlockShow.vue"
 import {useScrollTo} from "@/Composables/useHelpers.ts"
 import {GeneratorInterface} from "@/types/challengeInterfaces.ts"
+import Card from "@/Components/Ui/Card.vue"
 
 defineOptions({layout: LayoutMain})
 
@@ -74,39 +75,39 @@ function onSelect(generator: GeneratorInterface | null) {
 			</div>
 		</div>
 
-		<div class="space-y-10">
-			<block-show
-				v-show="state==='intro'"
-				:block="challenge.block"
-			/>
-
-			<div class="flex flex-col md:flex-row gap-3 min-h-screen">
+		<div class="flex flex-col md:flex-row gap-6 min-h-screen">
+			<!-- Colonne principale -->
+			<div class="flex-1 flex flex-col gap-6 order-2 md:order-1 min-w-0">
+				<block-show
+					v-show="state === 'intro'"
+					:block="challenge.block"
+				/>
 				<challenge-display
 					ref="main"
-					class="flex-1 order-2 md:order-1"
 					:challenge
 					:selected-generator="selectedGenerator"
-					@state-change="state=$event"
+					@state-change="state = $event"
 				/>
+			</div>
 
-				<!-- Challenge side menu -->
-				<aside
-					v-show="state==='intro'"
-					class="w-full order-1 md:w-40 md:order-2"
-				>
+			<!-- Menu latéral -->
+			<aside
+				v-show="state === 'intro'"
+				class="w-full md:w-64 order-1 md:order-2 shrink-0"
+			>
+				<Card class="md:sticky md:top-4">
 					<div class="flex flex-col gap-1">
 						<!-- Bouton mode jeu -->
 						<sc-button
-							:outline="selectedGenerator !== null"
 							theme
-							class="w-full cursor-pointer transition-all"
+							class="w-full text-lg transition-colors"
+							:outline="selectedGenerator !== null"
+							sm
 							@click="onSelect(null)"
 						>
-							<div class="flex gap-3 items-center w-full">
+							<div class="flex gap-3 items-center justify-center">
 								<i class="bi bi-controller text-2xl" />
-								<h2>
-									Challenge
-								</h2>
+								<span>Challenge</span>
 							</div>
 						</sc-button>
 
@@ -116,34 +117,35 @@ function onSelect(generator: GeneratorInterface | null) {
 							:key="`level-${level.id}`"
 						>
 							<template v-if="level.generators.length > 0">
-								<div class="text-xs text-gray-400 uppercase pl-1 mt-2">
+								<div class="text-xs text-gray-400 uppercase pl-2 mt-4 mb-1">
 									Niveau {{ level.level_number }}
 								</div>
-								<sc-button
+
+								<div
 									v-for="gen of level.generators"
 									:key="`gen-selector-${gen.slug}`"
-									theme
-									:outline="selectedGenerator?.id !== gen.id"
-									class="w-full cursor-pointer transition-all"
-									xs
+									v-theme.text="selectedGenerator?.id === gen.id"
+									class="flex gap-2 items-center px-3 py-1 rounded-lg cursor-pointer
+								       transition-colors"
 									@click="onSelect(gen)"
 								>
-									<div class="flex gap-1 items-center w-full overflow-hidden whitespace-nowrap">
-										<i class="bi bi-calculator" />
-										<h2 v-katex.auto="gen.title" />
-									</div>
-								</sc-button>
+									<i class="bi bi-calculator text-sm shrink-0" />
+									<span
+										v-katex.auto="gen.title"
+										class="text-sm truncate"
+									/>
+								</div>
 							</template>
 						</template>
 					</div>
-				</aside>
-			</div>
-
-			<!-- export to pdf - admin only ! -->
-			<challenge-export
-				v-if="state==='intro'"
-				:challenge="challenge"
-			/>
+				</Card>
+			</aside>
 		</div>
+
+		<!-- export to pdf - admin only ! -->
+		<challenge-export
+			v-if="state === 'intro'"
+			:challenge="challenge"
+		/>
 	</section>
 </template>

@@ -1,7 +1,7 @@
 import {usePage} from "@inertiajs/vue3"
 import {Ref, unref} from "vue"
 
-type KeyValue = {
+interface KeyValue {
 	key: string
 	value: string
 }
@@ -19,8 +19,6 @@ function isKeyValue(obj: unknown): obj is KeyValue {
 
 export function useScrollTo(target?: string | HTMLElement | KeyValue, offset?: number) {
 	let el: HTMLElement | null = null
-
-	console.log(target)
 
 	// to the top
 	if (!target) target = 'body'
