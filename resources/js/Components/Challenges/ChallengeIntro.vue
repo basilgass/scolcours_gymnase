@@ -5,20 +5,25 @@ import {ChallengeInterface, ScoreInterface} from "@/types/modelInterfaces.ts"
 import {ScoreChallengeDataInterface} from "@/types/scoreInterfaces.ts"
 import ChallengeDescription from "@/Components/Challenges/ChallengeDescription.vue"
 
-defineProps<{
+const props = defineProps<{
 	challenge: ChallengeInterface,
 	maxLevels: number,
-	score?: ScoreInterface<ScoreChallengeDataInterface>
+	score?: ScoreInterface<ScoreChallengeDataInterface>,
+	scoreLabel?: string,
+	formatScore?: (v: number) => string,
 }>()
 
 const emits = defineEmits(["start"])
 
+function display(v: number | undefined): string {
+	if (v === undefined || v === null) return '—'
+	return props.formatScore ? props.formatScore(v) : String(v)
+}
 </script>
 
 <template>
 	<article class="flex flex-col gap-3">
 		<!-- Description du challenge -->
-
 		<challenge-description :challenge />
 
 		<!-- Bouton pour commencer -->
@@ -36,7 +41,7 @@ const emits = defineEmits(["start"])
 				Dernière tentative
 			</h3>
 			<div
-				v-if="score?.attempts>0"
+				v-if="score?.attempts > 0"
 				class="text-center text-sm"
 			>
 				{{ score.updated_at }}
@@ -47,22 +52,14 @@ const emits = defineEmits(["start"])
 					class="bg-content aspect-square p-4 rounded-xl border border-gray-200 grid place-items-center shadow-sm"
 				>
 					<div class="text-center flex flex-col justify-between h-full">
-						<h4 class="text-xl uppercase ">
-							{{ challenge.type === 'chrono' ? 'temps' : 'score' }}
+						<h4 class="text-xl uppercase">
+							{{ scoreLabel ?? 'score' }}
 						</h4>
 						<div class="text-3xl">
-							{{
-								challenge.type === 'chrono' && score?.data.current_score
-									? Math.round(score.data.current_score) + 's'
-									: score?.data.current_score
-							}}
+							{{ display(score?.data.current_score) }}
 						</div>
 						<div class="text-sm">
-							meilleur: {{
-								challenge.type === 'chrono' && score?.score
-									? Math.round(score.score) + 's'
-									: score?.score
-							}}
+							meilleur: {{ display(score?.score) }}
 						</div>
 					</div>
 				</div>

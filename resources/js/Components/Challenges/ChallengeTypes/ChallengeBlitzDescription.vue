@@ -9,6 +9,12 @@ const props = defineProps<{
 }>()
 
 const timeLabel = computed(() => humanTime(props.challenge.time_limit))
+
+const hasMissingConfig = computed(() =>
+	props.challenge.levels.some(level =>
+		level.generators.some(gen => !gen.config?.time_per_question)
+	)
+)
 </script>
 
 <template>
@@ -56,6 +62,17 @@ const timeLabel = computed(() => humanTime(props.challenge.time_limit))
 				</li>
 			</div>
 		</div>
+	</div>
+
+	<div
+		v-if="hasMissingConfig"
+		class="mt-4 flex gap-2 items-start rounded-lg border border-orange-200 bg-orange-50 px-4 py-3 text-sm text-orange-700"
+	>
+		<i class="bi bi-exclamation-triangle-fill shrink-0 mt-0.5" />
+		<span>
+			Ce challenge est mal configuré : certains générateurs n'ont pas de durée par question définie.
+			Le timer blitz ne se déclenchera pas.
+		</span>
 	</div>
 </template>
 

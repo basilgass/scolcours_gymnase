@@ -38,7 +38,7 @@ const timeLabel = computed(() => humanTime(props.challenge.time_limit))
 						{{ challenge.time_limit }}
 					</div>
 					<div class="text-sm text-gray-400">
-						durée (min)
+						durée (sec)
 					</div>
 				</div>
 			</div>

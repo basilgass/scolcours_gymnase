@@ -103,7 +103,9 @@ function addLevel() {
 
 function deleteLevel(levelId: number) {
 	const level = theChallenge.value.levels.find(l => l.id === levelId)
-	if (!level) { return }
+	if (!level) {
+		return
+	}
 	const deletedNumber = level.level_number
 	theChallenge.value.levels = theChallenge.value.levels
 		.filter(l => l.id !== levelId)
@@ -186,7 +188,7 @@ function deleteLevel(levelId: number) {
 							<form-maker
 								v-if="theChallenge.type !== 'endurance'"
 								v-model="theChallenge.time_limit"
-								label="durée (min)"
+								label="durée (sec)"
 								name="time_limit"
 								type="number"
 								sm
@@ -204,7 +206,8 @@ function deleteLevel(levelId: number) {
 								v-if="blitzWarning"
 								class="text-amber-600 text-sm border border-amber-300 bg-amber-50 rounded px-3 py-2"
 							>
-								Certains générateurs n'ont pas de temps par question configuré (config.time_per_question).
+								Certains générateurs n'ont pas de temps par question configuré
+								(config.time_per_question).
 							</div>
 						</div>
 					</card>

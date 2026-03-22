@@ -23,7 +23,7 @@ defineProps({
 			<card
 				v-for="challenge in challenges"
 				:key="challenge.slug"
-				v-theme.bg.text="challenge.chapter.theme_id"
+				v-theme.bg.text="challenge.chapter?.theme_id"
 				with-themes
 			>
 				<div>

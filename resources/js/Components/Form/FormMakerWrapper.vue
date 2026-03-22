@@ -56,13 +56,13 @@ const inputClassComputed = computed(() => {
 		}"
 	>
 		<div
+			v-show="inlineLabel"
 			class="pr-3 py-1"
 			:class="labelClass"
-			v-show="inlineLabel"
 		>
 			<label
-				:class="xl ? 'text-base': 'text-sm'"
 				v-katex.auto="label"
+				:class="xl ? 'text-base': 'text-sm'"
 				@click="emits('focus')"
 			/>
 		</div>
@@ -75,8 +75,8 @@ const inputClassComputed = computed(() => {
 			>
 				<label
 					v-show="!inlineLabel"
-					:class="labelClass"
 					v-katex.auto="label"
+					:class="labelClass"
 					@click="emits('focus')"
 				/>
 			</div>
@@ -103,7 +103,7 @@ const inputClassComputed = computed(() => {
 						/>
 						<i
 							v-else
-							:class="icon"
+							:class="typeof icon==='string'? icon : ''"
 						/>
 					</div>
 
@@ -157,8 +157,8 @@ const inputClassComputed = computed(() => {
 			<slot name="message">
 				<div
 					v-show="message"
-					class="text-slate-700 dark:text-slate-200 text-sm"
 					v-katex.auto="message"
+					class="text-slate-700 dark:text-slate-200 text-sm"
 				/>
 			</slot>
 		</div>
