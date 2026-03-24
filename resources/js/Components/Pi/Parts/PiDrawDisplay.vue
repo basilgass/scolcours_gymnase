@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 
-import {onMounted, ref, useTemplateRef, watch} from "vue"
+import {computed, onMounted, ref, useTemplateRef, watch} from "vue"
 import {PiDraw, Point} from "pidraw"
 import {useResizeObserver} from "@vueuse/core"
 import katex from "katex"
@@ -124,10 +124,12 @@ onMounted(() => {
 })
 
 const toggleDraggableSize = ref(1)
-const hasDraggable = ref(false)
+const hasDraggable = computed(() => props.code.includes('drag'))
 
 function toggleDragHandler() {
-	toggleDraggableSize.value = (toggleDraggableSize.value) % 2 + 1
+	toggleDraggableSize.value++
+	toggleDraggableSize.value = toggleDraggableSize.value % 3
+
 	Object.values(PiGraph.figures)
 		.filter(fig => fig.isDraggable)
 		.forEach((fig: Point) => {
@@ -172,7 +174,13 @@ function print() {
 				class="cursor-pointer"
 				@click="toggleDragHandler"
 			>
-				<i class="bi bi-hand-index" />
+				<span class="relative inline-flex items-center justify-center">
+					<i class="bi bi-hand-index" />
+					<i
+						v-if="toggleDraggableSize === 0"
+						class="bi bi-slash absolute text-[2em] text-red-600"
+					/>
+				</span>
 			</div>
 
 			<div
