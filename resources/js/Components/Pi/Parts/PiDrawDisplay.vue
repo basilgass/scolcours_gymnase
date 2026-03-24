@@ -48,13 +48,8 @@ function updateCode(from?: string) {
 
 		PiParserHasErrors.value = false
 		showAnimation.value = PiGraph.animation.canBeAnimated() ?? false
-
-		hasDraggable.value = Object.values(PiGraph.figures)
-			.some(fig => fig.isDraggable)
-
 	} catch {
 		PiParserHasErrors.value = true
-		// console.log(from)
 	}
 }
 
@@ -165,7 +160,7 @@ function print() {
 	<div class="relative">
 		<div
 			ref="drawWrapper"
-			class="katex-m-0 min-w-[50px] min-h-[50px] touch-manipulation"
+			class="katex-m-0 min-w-12.5 min-h-12.5 touch-manipulation"
 			@pointerup="drawMouseUp"
 		/>
 		<div class="absolute left-2 bottom-1 flex gap-3">
