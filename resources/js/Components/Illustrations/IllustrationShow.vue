@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import EditLink from "@/Components/Ui/EditLink.vue"
 import {getModule, MODULE_TYPES} from "@/scolcours.ts"
-import {computed, inject, watch} from "vue"
+import {computed, inject} from "vue"
 import {onClick_answerIndex} from "@/Components/Questions/useQuestionHelpers.ts"
 import Card from "@/Components/Ui/Card.vue"
 import {useFormattedBody} from "@/Composables/useHelpers.ts"
@@ -31,12 +31,7 @@ function getWidget() {
 }
 
 // Get the component to display
-let widgetComponent = getWidget()
-
-watch(() => props.illustration.widget_id, () => {
-	widgetComponent = getWidget()
-})
-
+const widgetComponent = computed(() => getWidget())
 
 function click($event: MouseEvent) {
 	const answerIndex = onClick_answerIndex($event)
