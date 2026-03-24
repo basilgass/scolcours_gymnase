@@ -14,7 +14,7 @@ import {blockTemplate} from "@/helpers/blockTemplate.ts"
 import ScButton from "@/Components/Ui/Button/scButton.vue"
 import IllustrationIndex from "@/Components/Illustrations/IllustrationIndex.vue"
 import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
-import AccordionBody from "@/Components/Ui/AccordionBody.vue";
+import AccordionBody from "@/Components/Ui/AccordionBody.vue"
 
 const editMode = useStoreEditMode()
 const flash = useStoreFlashMessage()
@@ -78,11 +78,11 @@ const blockBody = computed(() => {
 	let body = useFormattedBody(props.block.body, blockScript.merged)
 
 	if (blockConfig.value.content?.prepend) {
-		body += `${blockConfig.value.content.prepend}\n\n${body}`
+		body = `${blockConfig.value.content.prepend}\n\n${body}`
 	}
 
 	if (blockConfig.value.content?.append) {
-		body += `${body}\n\n${blockConfig.value.content.append}`
+		body = `${body}\n\n${blockConfig.value.content.append}`
 	}
 
 	return useFormattedBody(body, blockScript.merged)
@@ -90,6 +90,12 @@ const blockBody = computed(() => {
 
 const canCollapse = computed(() => blockConfig.value.collapse !== undefined)
 const isOpen = ref(blockConfig.value.collapse !== true)
+
+function toggleCollapse() {
+	if (!canCollapse.value) return
+
+	isOpen.value = !isOpen.value
+}
 
 function addIllustration() {
 	axios
@@ -110,6 +116,7 @@ onMounted(() => {
 	emits('success', !blockScript.hasErrors.value)
 
 })
+
 </script>
 
 <template>
@@ -148,8 +155,9 @@ onMounted(() => {
 				<!-- header left: (generic) icon and title -->
 				<div
 					v-theme.text="!block.type"
-					class="flex gap-3 items-baseline text-lg md:text-xl lg:text-2xl font-semibold cursor-pointer"
-					@click="isOpen=!isOpen"
+					class="flex gap-3 items-baseline text-lg md:text-xl lg:text-2xl font-semibold"
+					:class="canCollapse ? 'cursor-pointer' : ''"
+					@click="toggleCollapse"
 				>
 					<i
 						v-if="blockIcon"
@@ -163,13 +171,14 @@ onMounted(() => {
 					<!-- buttons for randomize and more... -->
 					<block-body-buttons />
 
-					<div v-if="canCollapse"
-					     :class="[
-						   	'aspect-square text-center cursor-pointer',
-							 'transition-all ease-in-out duration-300',
-							 isOpen ? 'rotate-90' : ''
-						 ]"
-					     @click="isOpen=!isOpen"
+					<div
+						v-if="canCollapse"
+						:class="[
+							'aspect-square text-center cursor-pointer',
+							'transition-all ease-in-out duration-300',
+							isOpen ? 'rotate-90' : ''
+						]"
+						@click="toggleCollapse"
 					>
 						<i class="bi bi-chevron-right" />
 					</div>
@@ -185,7 +194,7 @@ onMounted(() => {
 					:class="[
 						'p-3',
 						elementsClasses.grid + ((!block.title && !block.type) ? ' pt-3' : ''),
-				]"
+					]"
 				>
 					<markdown-it
 						v-if="blockBody !== null"
@@ -209,7 +218,10 @@ onMounted(() => {
 						:block
 					/>
 				</div>
-				<div v-else class="font-code text-xl min-h-[10em] grid place-items-center">
+				<div
+					v-else
+					class="font-code text-xl min-h-[10em] grid place-items-center"
+				>
 					Aucun contenu
 				</div>
 			</slot>
