@@ -9,8 +9,8 @@ import {
 	buttonColorMap,
 	ButtonSize,
 	ButtonVariant
-} from "@/Components/Ui/Button/button.config.ts";
-import {getThemeChapter} from "@/directives/themeDirectives.ts";
+} from "@/Components/Ui/Button/button.config.ts"
+import {getThemeChapter} from "@/directives/themeDirectives.ts"
 
 const attrs = useAttrs()
 
@@ -91,7 +91,7 @@ const resolveVariant = computed<ButtonVariant>(() => {
 })
 
 const resolveColor = computed<Record<ButtonVariant, string> | null>(() => {
-	
+
 	if (resolveTheme.value) return resolveTheme.value
 
 	if (Object.hasOwn(buttonColorMap, props.type)) {
@@ -131,6 +131,8 @@ const resolveLabel = computed(() => {
 })
 
 const resolveIcon = computed(() => {
+	if (props.icon === false) return ""
+	
 	return resolveAction.value?.icon
 })
 
@@ -170,12 +172,14 @@ function btnClick() {
 			:class="[
 				variant === 'solid' ? 'bg-white' : resolveColor?.solid
 			]"
-		></span>
-		<i v-if="resolveIcon" :class="resolveIcon" />
+		/>
+		<i
+			v-if="resolveIcon"
+			:class="resolveIcon"
+		/>
 		<slot>
 			<span v-if="!noLabel">{{ resolveLabel }}</span>
 		</slot>
 	</component>
-
 </template>
 

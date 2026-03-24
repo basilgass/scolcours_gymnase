@@ -126,19 +126,19 @@ function deleteIllustration(id: number) {
 				<sc-button
 					type="save"
 					:class="wasEdited ? '' : 'invisible'"
-					@click="saveBlock"
 					xs
-				>
-					<i class="bi bi-save" />
-				</sc-button>
+					icon
+					@click="saveBlock"
+				/>
 
 				<sc-button
 					:class="wasEdited ? '' : 'invisible'"
 					type="save"
+					icon
 					xs
 					@click="blockSaveAndVisit"
 				>
-					<i class="bi bi-save mr-1" /> et visiter
+					et visiter
 				</sc-button>
 
 				<sc-button
