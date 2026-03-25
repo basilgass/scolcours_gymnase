@@ -24,7 +24,7 @@ const courseByDay = computed(() => {
 	const arr: Record<number, number[]> = {}
 
 	props.teams.forEach(team => {
-		arr[team.id] = [...new Set(team.calendar.map(cal => cal.day))]
+		arr[team.id] = [...new Set((team.calendar ?? []).map(cal => cal.day))]
 	})
 
 	return arr
