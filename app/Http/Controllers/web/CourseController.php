@@ -77,7 +77,7 @@ class CourseController extends Controller
 
 		return Inertia::render($view, [
 			"course" => CourseResource::make($course, $matchingTeam),
-			"team"   => TeamResource::make($matchingTeam),
+			"team"   => TeamResource::make($matchingTeam->loadMissing('calendars')),
 		]);
 	}
 

@@ -35,7 +35,7 @@ class AdminController extends Controller
 	{
 		return Inertia::render('Admin/AdminDashboard', [
 			"courses" => $this->currentCourses(),
-			"teams"   => TeamResource::collection(Team::active()->get()),
+			"teams"   => TeamResource::collection(Team::active()->with('calendars')->get()),
 		]);
 	}
 
@@ -253,7 +253,7 @@ class AdminController extends Controller
 			'Admin/AdminUser',
 			[
 				"users" => UserResource::collection($users),
-				"teams" => Team::active()->get()
+				"teams" => Team::active()->with('calendars')->get()
 			]
 		);
 	}
@@ -329,7 +329,7 @@ class AdminController extends Controller
 			'Courses/admin/AdminCourse',
 			[
 				'courses' => CourseResource::collection($courses),
-				'teams'   => TeamResource::collection(Team::active()->get())
+				'teams'   => TeamResource::collection(Team::active()->with('calendars')->get())
 			]
 		);
 	}
@@ -343,7 +343,7 @@ class AdminController extends Controller
 			'Courses/admin/AdminAgenda',
 			[
 				'courses' => CourseResource::collection($courses),
-				'teams'   => TeamResource::collection(Team::active()->get())
+				'teams'   => TeamResource::collection(Team::active()->with('calendars')->get())
 			]
 		);
 	}
