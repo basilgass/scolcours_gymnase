@@ -32,8 +32,9 @@ class GeneratorController extends Controller
 		return Inertia::render("Generators/GeneratorEdit",
 			[
 				"generator"  => $generator,
-				// TODO: Challenges is just used to grab the links : change it to be more generic => (id, title, slug, (route)) !
-				"challenges" => ChallengeResource::collection($generator->challenges),
+				"challenges" => ChallengeResource::collection(
+				$generator->challengeLevels()->with('challenge')->get()->pluck('challenge')->unique('id')->values()
+			),
 			]
 		);
 	}

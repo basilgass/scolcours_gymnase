@@ -55,15 +55,15 @@ function updateStatus(event: boolean) {
 					class="flex gap-3"
 				>
 					<sc-button
-						:href="route('admin.generators.edit', [generator.id])"
+						:href="route('admin.generators.edit', {generator: generator.id})"
 						icon
 						type="edit"
 						xs
 					>
-						Editer
+						Editer {{ generator.id }}
 					</sc-button>
 					<sc-button
-						:href="route('generators.show', [generator.id])"
+						:href="route('generators.show', {generator: generator.id})"
 						xs
 					>
 						<i class="bi bi-eye" /> Voir
