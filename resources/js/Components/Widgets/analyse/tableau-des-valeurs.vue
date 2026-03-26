@@ -1,7 +1,7 @@
 <!--<info>
 parameters:
 min:max:step ou 3,5,8,9
-options: [digits:2],[col:width],[table:class],[oo<detection infini>]
+options: [digits:2],[col:width],[table:class],[oo<detection infini>],x|y|n\... (one letter only
 code: [f(x)=]function (multiple line possible)
 </info>-->
 <script
@@ -28,6 +28,7 @@ const params = computed(() => props.illustration.parameters.split(",")),
 		}
 		return 0
 	}),
+	variable = computed(() => params.value.filter(p => p.length === 1) ?? 'x'),
 	detectInfinite = computed(() => {
 		return params.value.includes('oo')
 	}),
@@ -193,7 +194,7 @@ function parseMinMaxStep(value: string): number[] {
 		>
 			<tr class="bg-gray-100 font-semibold border-b border-slate-300">
 				<td
-					v-katex="'x'"
+					v-katex="variable"
 					class="border-r border-slate-300 px-4"
 				/>
 				<td
