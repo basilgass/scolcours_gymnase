@@ -1,8 +1,18 @@
 import {PiRadian} from "@/PiMathExtended/PiRadian.ts"
-import {rndPoints} from "@/PiMathExtended/RandomExt.ts";
+import {rndPoints} from "@/PiMathExtended/RandomExt.ts"
 
 
 export const PiMathExt = {
+	wrap: (v: string | number) => {
+		if (
+			(typeof v === "string" && v.startsWith('-')) ||
+			(typeof v === "number" && v < 0)
+		) {
+			return `\\left( ${v} \\right)`
+		}
+
+		return v
+	},
 	Radian: PiRadian,
 	tripletTarget: [
 		5, 10, 13, 15, 17, 20, 25, 26, 29, 30, 34, 35, 37, 39, 40,
