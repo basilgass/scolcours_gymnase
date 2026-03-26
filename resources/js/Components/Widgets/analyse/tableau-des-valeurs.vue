@@ -18,6 +18,7 @@ const props = defineProps<{
 
 const params = computed(() => props.illustration.parameters.split(",")),
 	code = computed(() => props.illustration.code),
+	asNumeric = computed(() => params.value.some(x => x.startsWith('digits'))),
 	roundedTo = computed(() => {
 		for (let param of params.value) {
 			if (param.startsWith("digits:")) {
@@ -83,7 +84,7 @@ const params = computed(() => props.illustration.parameters.split(",")),
 			}
 
 			let numExp: NumExp | Polynom
-			if (roundedTo.value > 0) {
+			if (asNumeric.value) {
 				numExp = new NumExp(exp)
 			} else {
 				numExp = new Polynom(exp)
