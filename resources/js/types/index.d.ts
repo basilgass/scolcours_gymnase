@@ -31,6 +31,7 @@ export type PageProps<
 	theme: ThemeInterface
 	themes: ThemeInterface[]
 	chapter: ChapterInterface
+	meta: { title: string | null }
 }
 
 export interface flashLink {

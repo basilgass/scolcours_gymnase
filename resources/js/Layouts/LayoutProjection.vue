@@ -4,8 +4,11 @@
 >
 import "@/Layouts/LayoutProjection.vue"
 import DarkModeSwitch from "@/Components/Ui/DarkModeSwitch.vue"
-import {Link as InertiaLink, usePage} from "@inertiajs/vue3"
+import {Head, Link as InertiaLink, usePage} from "@inertiajs/vue3"
 import {computed} from "vue"
+import {usePageTitle} from "@/Composables/usePageTitle"
+
+const {title: pageTitle} = usePageTitle()
 
 const user = computed(() => {
 	if (usePage().props.auth?.user) {
@@ -17,6 +20,7 @@ const user = computed(() => {
 </script>
 
 <template>
+	<Head :title="pageTitle" />
 	<div class="min-h-screen relative">
 		<header class="fixed top-0 left-0 w-full py-1 px-4 flex justify-between items-baseline">
 			<InertiaLink :href="route('scolcours.index')">

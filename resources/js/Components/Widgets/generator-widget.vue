@@ -2,10 +2,11 @@
 
 import type {GeneratorInterface, QuestionInterface, WidgetPropsInterface} from "@/types/modelInterfaces.ts"
 import QuestionShow from "@/Components/Questions/QuestionShow.vue"
-import {computed, onMounted, ref} from "vue"
+import {computed, onMounted, ref, watch} from "vue"
 import {useGenerator} from "@/Composables/useGenerator.ts"
 import axios from "axios"
 import {questionResultInterface} from "@/Components/Questions/QuestionInterface.ts"
+import {useDebounceFn} from "@vueuse/core"
 
 const props = defineProps<{
 	illustration: WidgetPropsInterface
@@ -42,7 +43,7 @@ function nextQuestion(checkerResult: questionResultInterface): void {
 }
 
 
-onMounted(() => {
+function loadGenerator() {
 	if (+props.illustration.code > 0) {
 		axios.get(route('api.generators.show', {generator: props.illustration.code}))
 			.then(res => {
@@ -50,6 +51,14 @@ onMounted(() => {
 			})
 			.catch(err => console.error(err))
 	}
+}
+
+const debouncedLoad = useDebounceFn(loadGenerator, 400)
+
+watch(() => props.illustration.code, () => debouncedLoad())
+
+onMounted(() => {
+	loadGenerator()
 })
 
 </script>
@@ -60,7 +69,7 @@ onMounted(() => {
 		:key="`question-${counter}`"
 		:question="theQuestion as QuestionInterface"
 		:show-input="showInput"
-		class="max-w-[40em] mx-auto min-h-[500px] border border-gray-400"
+		class="max-w-[40em] mx-auto min-h-125 border border-gray-400"
 		is-dynamic
 		@validate="nextQuestion"
 	/>

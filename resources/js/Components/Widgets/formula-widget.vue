@@ -5,8 +5,9 @@
 import BlockShow from "@/Components/Blocks/BlockShow.vue"
 import {FormulaInterface, WidgetPropsInterface} from "@/types/modelInterfaces"
 import axios from "axios"
-import {computed, onMounted, ref} from "vue"
+import {computed, onMounted, ref, watch} from "vue"
 import {AxiosErrorMessage} from "@/types"
+import {useDebounceFn} from "@vueuse/core"
 
 const props = defineProps<{
 	illustration: WidgetPropsInterface
@@ -20,11 +21,7 @@ const grid = computed(() => {
 	return 'grid gap-3 grid-cols-1 lg:grid-cols-2 xl:grid-cols-3'
 })
 
-onMounted(() => {
-	// props.illustrations.code is like:
-	// <id1>[,some parameters]
-	// <id2>[,some parameters]
-	// <id3>[,some parameters]
+function loadFormulas() {
 	const ids = props.illustration.code
 		.split('\n')
 		.map(line => line.split(',')[0])
@@ -40,6 +37,18 @@ onMounted(() => {
 		.catch((err: AxiosErrorMessage) => {
 			console.warn(err.response.data.message)
 		})
+}
+
+const debouncedLoad = useDebounceFn(loadFormulas, 400)
+
+watch(() => props.illustration.code, () => debouncedLoad())
+
+onMounted(() => {
+	// props.illustrations.code is like:
+	// <id1>[,some parameters]
+	// <id2>[,some parameters]
+	// <id3>[,some parameters]
+	loadFormulas()
 })
 
 </script>

@@ -63,7 +63,26 @@ class HandleInertiaRequests extends Middleware
 						                    'enabled' => $item->enabled
 					                    ]
 				                    ];
-			                    })
+			                    }),
+			'meta'      => $this->resolvePageMeta($request),
 		]);
+	}
+
+	private function resolvePageMeta(Request $request): array
+	{
+		$parameters = $request->route()?->parameters() ?? [];
+		$priority = ['chapter', 'challenge', 'generator', 'deck', 'evaluation', 'post', 'quizz', 'tool', 'course'];
+
+		foreach ($priority as $key) {
+			$model = $parameters[$key] ?? null;
+			if ($model && method_exists($model, 'getAttribute')) {
+				$title = $model->meta_title ?? $model->title ?? null;
+				if ($title) {
+					return ['title' => $title];
+				}
+			}
+		}
+
+		return ['title' => null];
 	}
 }

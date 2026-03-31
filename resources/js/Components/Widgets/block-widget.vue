@@ -5,9 +5,10 @@
 import BlockShow from "@/Components/Blocks/BlockShow.vue"
 import {BlockInterface, WidgetPropsInterface} from "@/types/modelInterfaces"
 import axios from "axios"
-import {onMounted, ref} from "vue"
+import {onMounted, ref, watch} from "vue"
 import {AxiosErrorMessage, AxiosResponseModel} from "@/types"
 import {Link} from "@inertiajs/vue3"
+import {useDebounceFn} from "@vueuse/core"
 
 const props = defineProps<{
 	illustration: WidgetPropsInterface
@@ -15,11 +16,7 @@ const props = defineProps<{
 
 const blocks = ref<BlockInterface[]>([])
 
-onMounted(() => {
-	// props.illustrations.code is like:
-	// <id1>[,some parameters]
-	// <id2>[,some parameters]
-	// <id3>[,some parameters]
+function loadBlocks() {
 	const ids = props.illustration.code
 		.split('\n')
 		.map(line => line.split(',')[0])
@@ -35,6 +32,18 @@ onMounted(() => {
 		.catch((err: AxiosErrorMessage) => {
 			console.warn(err.response.data.message)
 		})
+}
+
+const debouncedLoad = useDebounceFn(loadBlocks, 400)
+
+watch(() => props.illustration.code, () => debouncedLoad())
+
+onMounted(() => {
+	// props.illustrations.code is like:
+	// <id1>[,some parameters]
+	// <id2>[,some parameters]
+	// <id3>[,some parameters]
+	loadBlocks()
 })
 
 </script>
