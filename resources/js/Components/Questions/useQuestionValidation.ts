@@ -8,15 +8,162 @@ import {
 	questionValidatorInterface
 } from "@/Components/Questions/QuestionInterface.ts"
 import {useStoreScore} from "@/stores/useStoreScore.ts"
-import {computed, ref, useTemplateRef} from "vue"
-import ScButton from "@/Components/Ui/Button/scButton.vue"
+import {computed, ref} from "vue"
 import {Equation, Fraction, literalType} from "pimath"
 
 const alphabet = "abcdefghijklmnopqrstuvwxyz"
 
-interface CheckerResultWithIndex extends CheckerResult {
-	index: number
+// ─── Détection du type de validation ────────────────────────────────────────
+
+type ValidationType = 'single' | 'multiple' | 'mixed'
+
+function detectValidationType(answer: string): ValidationType {
+	if (answer.startsWith('@')) return 'mixed'
+	if (answer.includes('||')) return 'multiple'
+	return 'single'
 }
+
+// ─── Stratégies de validation ────────────────────────────────────────────────
+
+/**
+ * Valide une réponse unique contre une valeur attendue fixe.
+ */
+function validateSingle(
+	userAnswer: string,
+	expectedAnswer: string,
+	checker: PiChecker,
+	override: Record<string, string>
+): CheckerResult {
+	try {
+		const chk = checker.check(userAnswer, expectedAnswer)
+		if (override[userAnswer]) {
+			chk.message = override[userAnswer]
+		}
+		return chk
+	} catch (e) {
+		console.warn(e)
+		return makeCheckerResult("Format de la réponse non reconnu.")
+	}
+}
+
+/**
+ * Valide une réponse contre plusieurs valeurs possibles séparées par ||.
+ * Retourne le premier succès, ou le premier résultat si aucun ne correspond.
+ */
+function validateMultiple(
+	userAnswer: string,
+	allowedAnswers: string[],
+	checker: PiChecker,
+	override: Record<string, string>
+): CheckerResult {
+	let firstResult: CheckerResult | null = null
+
+	for (const answer of allowedAnswers) {
+		try {
+			const chk = checker.check(userAnswer, answer)
+			if (override[userAnswer]) {
+				chk.message = override[userAnswer]
+			}
+			if (chk.result) {
+				return chk
+			}
+			firstResult ??= chk
+		} catch (e) {
+			console.warn(e)
+			firstResult ??= makeCheckerResult("Format de la réponse non reconnu.")
+		}
+	}
+
+	return firstResult ?? makeCheckerResult("Réponse incorrecte.")
+}
+
+/**
+ * Valide un groupe de réponses non ordonnées (préfixe @).
+ * Chaque réponse utilisateur est comparée au pool des réponses attendues restantes.
+ * Le pool se vide au fur et à mesure des correspondances.
+ */
+function validateMixed(
+	validators: questionValidatorInterface[],
+	userAnswers: string[],
+	override: Record<string, string>
+): CheckerResult[] {
+	const pool: string[] = validators.map(v => v.answer.substring(1))
+	const results: CheckerResult[] = []
+
+	for (let i = 0; i < validators.length; i++) {
+		const userAnswer = userAnswers[i]
+		const checker: PiChecker = validators[i].checker.checker
+		let matched = false
+
+		for (let j = 0; j < pool.length; j++) {
+			try {
+				const chk = checker.check(userAnswer, pool[j])
+				if (override[userAnswer]) {
+					chk.message = override[userAnswer]
+				}
+				if (chk.result) {
+					pool.splice(j, 1)
+					results.push(chk)
+					matched = true
+					break
+				}
+			} catch (e) {
+				console.warn(e)
+			}
+		}
+
+		if (!matched) {
+			results.push(makeCheckerResult("Réponse non trouvée parmi les réponses attendues."))
+		}
+	}
+
+	return results
+}
+
+// ─── Validation par équation (variables liées) ───────────────────────────────
+
+/**
+ * Construit le dictionnaire {lettre → Fraction} pour les variables
+ * effectivement utilisées dans l'équation. Les variables sont toujours
+ * les lettres a, b, c, ... dans l'ordre alphabétique.
+ */
+function buildVariableMap(equationControl: string, userAnswers: string[]): literalType<number | Fraction> {
+	// Capture les lettres isolées (pas entourées d'autres lettres) : "2a+3b" → ["a","b"]
+	const usedLetters = [...new Set(equationControl.match(/(?<![a-zA-Z])([a-z])(?![a-zA-Z])/g) ?? [])]
+	const dict: literalType<number | Fraction> = {}
+
+	for (const letter of usedLetters) {
+		const i = alphabet.indexOf(letter)
+		if (i >= 0 && i < userAnswers.length) {
+			try {
+				dict[letter] = new Fraction(userAnswers[i])
+			} catch {
+				// réponse non numérique, ignorée
+			}
+		}
+	}
+
+	return dict
+}
+
+/**
+ * Vérifie la cohérence globale des réponses via une équation.
+ * Exemple : "a + b = c" vérifie que la somme des deux premières réponses
+ * égale la troisième.
+ */
+export function validateBoundedVariables(equationControl: string, userAnswers: string[]): boolean {
+	if (!equationControl) return true
+
+	try {
+		const equ = new Equation(equationControl)
+		const mapped = buildVariableMap(equationControl, userAnswers)
+		return equ.evaluate(mapped)
+	} catch {
+		return false
+	}
+}
+
+// ─── Composable principal ────────────────────────────────────────────────────
 
 export function useQuestionValidation(questionData: questionDataInterface) {
 	/**
@@ -37,154 +184,97 @@ export function useQuestionValidation(questionData: questionDataInterface) {
 		answer: "",
 		tex: ""
 	})
+
 	const answersCount = computed(() => {
 		return questionData.user.answers.value.filter(x => x.input.trim() !== '').length
 	})
+
 	const userAnswers = computed(() => {
 		return questionData.user.answers.value.map((a) => a.input).join(",")
 	})
-	const UserTexAnswers = computed(() => {
+
+	const userTexAnswers = computed(() => {
 		return questionData.user.answers.value.map((a) => a.tex).join(",")
 	})
 
-	const button = useTemplateRef<InstanceType<typeof ScButton>>('validateButton')
 	const buttonLabel = computed<string>(() => {
 		if (questionData.config.silent) return "Réponse sauvegardée..."
 
 		return questionResult.value.result ? "Bonne réponse !" : "Réponse incorrecte"
 	})
 
-	function validateAnswer(validator: questionValidatorInterface, index: number, mixedAnswer: string[]): CheckerResultWithIndex {
-		// La réponse de l'utilisateur
-		const userAnswer: string = questionData.user.answers.value[index].input
-		if (userAnswer === undefined) {
-			return {
-				...makeCheckerResult("Vous n'avez pas répondu à la question"),
-				index
+	/**
+	 * Résout toutes les validations en délégant à la stratégie appropriée
+	 * selon le type de chaque réponse attendue.
+	 */
+	function resolveValidators(): CheckerResult[] {
+		const validators = questionData.validators.value
+		const override = questionData.current.checker.value.checkerOverride ?? {}
+		const results: CheckerResult[] = new Array(validators.length)
+
+		const mixedIndices: number[] = []
+
+		validators.forEach((validator, index) => {
+			const type = detectValidationType(validator.answer)
+
+			if (type === 'mixed') {
+				mixedIndices.push(index)
+				return
 			}
+
+			const userAnswer = questionData.user.answers.value[index]?.input ?? ''
+
+			if (type === 'multiple') {
+				const allowedAnswers = validator.answer
+					.split(/\|\|/)
+					.map(a => a.trim())
+					.filter(a => a !== '')
+				results[index] = validateMultiple(userAnswer, allowedAnswers, validator.checker.checker, override)
+			} else {
+				results[index] = validateSingle(userAnswer, validator.answer, validator.checker.checker, override)
+			}
+		})
+
+		if (mixedIndices.length > 0) {
+			const mixedValidators = mixedIndices.map(i => validators[i])
+			const mixedUserAnswers = mixedIndices.map(i => questionData.user.answers.value[i]?.input ?? '')
+			const mixedResults = validateMixed(mixedValidators, mixedUserAnswers, override)
+			mixedIndices.forEach((validatorIndex, i) => {
+				results[validatorIndex] = mixedResults[i]
+			})
 		}
 
-
-		// Les résultats pour le check en cours.
-		const results: CheckerResultWithIndex[] = []
-
-		/** answer peut-être
-		 * 		<réponse>
-		 * 		<réponse>||<réponse>  (plusieurs réponses possibles - réponses non alignées)
-		 * 		@<réponse> autorise de donner les réponses qui commencent par @ dans n'importe quel ordre.
-		 */
-
-		const isMixedAnswer = mixedAnswer.length > 0 && validator.answer.startsWith('@')
-
-		// Toutes les réponses autorisées.
-		// Si c'est un mixed answer
-		const allowedAnswers: string[] = isMixedAnswer
-			? mixedAnswer
-			: validator.answer
-				.split(/\|\|/)
-				.map(a => a.trim())
-				.filter(a => a !== '')
-
-		// Le système de checker
-		const checker: PiChecker = validator.checker.checker
-
-		// On vérifie si la réponse de l'utilisateur est dans les réponses autorisées
-		allowedAnswers.forEach((answer, idx) => {
-
-			// On est dans un cas où il y a plusieurs réponses possibles
-			try {
-				const chk = checker.check(userAnswer, answer)
-
-				if (questionData.current.checker.value.checkerOverride[userAnswer]) {
-					chk.message = questionData.current.checker.value.checkerOverride[userAnswer]
-				}
-
-				results.push({
-					...chk,
-					index
-				})
-
-				if (chk.result) {
-					// On a trouvé une réponse.
-
-					// Si on est dans une réponse non ordonnée, on l'enlève de la liste disponible.
-					if (isMixedAnswer) {
-						mixedAnswer.splice(idx, 1)
-					}
-
-					// Pas besoin de continuer.
-					return
-				}
-			} catch (e) {
-				console.warn(e)
-				results.push({
-					...makeCheckerResult("Format de la réponse non reconnu."),
-					index
-				})
-			}
-		})
-
-		return results.find(r => r.result) || results[0]
+		return results
 	}
 
-	function update(): CheckerResultWithIndex[] {
-		// Make the validation.
-		// validation = {result: Boolean, message: string, index: number}
-		let validation: CheckerResultWithIndex[] = []
-
-		/** Il faut comparer
-		 * - questionData.answers: string[]
-		 * - questionData.user.answers: string[]
-		 */
-
-		const mixedAnswers = questionData.validators.value
-			.filter(validator => validator.answer.startsWith('@'))
-			.map(validator => validator.answer.substring(1))
-
-		questionData.validators.value.forEach((validator, index) => {
-			const result = validateAnswer(validator, index, mixedAnswers)
-
-			validation.push(result)
-		})
-
-		return validation
-	}
-
-	function reduce(validations: CheckerResultWithIndex[]): boolean {
+	function reduce(validations: CheckerResult[]): boolean {
 		return validations.every(validation => validation.result)
 	}
 
-	function validate() {
-		// Disable the button
+	function validate(buttonEl?: HTMLElement | null) {
 		lock.value = true
 
-		// Liste brute des réponses et succès
-		const validations = update()
-
-		// Défini le résultat final
+		const validations = resolveValidators()
 		let result = reduce(validations)
 
-		// contrôle des réponses de maninère globales (override).
-		// TODO: réfléchir a une manière plus propre de scinder le check global du check itératif.
 		if (questionData.question.value.equationControl) {
-			result = useQuestionValidationEquation(
+			const equationResult = validateBoundedVariables(
 				questionData.question.value.equationControl,
 				questionData.user.answers.value.map(x => x.input)
 			)
 
-			if (!result) {
+			result = equationResult
+
+			if (equationResult) {
+				validations.forEach(validation => {
+					validation.result = true
+					validation.score = 1
+					validation.message = ""
+				})
+			} else {
 				errorMessages.value = ["les réponses ne concordent pas."]
 			}
-
-			// modifications des réponses car elles sont en fait valides.
-			validations.forEach(validation => {
-				validation.result = true
-				validation.score = 1
-				validation.message = ""
-			})
-
 		} else {
-			// Afficher les messages d'erreurs
 			errorMessages.value = questionData.config.silent
 				? []
 				: validations
@@ -198,49 +288,45 @@ export function useQuestionValidation(questionData: questionDataInterface) {
 					.filter(msg => msg !== "")
 		}
 
-
-		// Sauvegarde dans la base de donnée
 		save(validations)
 			.then(() => {
 				setTimeout(() => {
 					lock.value = false
 				}, 500)
 			})
+			.catch(() => {
+				lock.value = false
+			})
 
 		questionResult.value = {
 			result,
 			answer: userAnswers.value,
-			tex: UserTexAnswers.value
+			tex: userTexAnswers.value
 		}
 
 		return result
 	}
 
 	async function save(validations: CheckerResult[]) {
-
 		const score = questionData.user.score.value as ScoreInterface<ScoreQuestionDataInterface>
 
 		if (
 			!(questionData.question.value.id > 0)
-			|| questionData.config.isDynamic  // It's a dynamic question
-			|| !usePage().props.auth.user	// user is not connected
-			|| score.is_resolved // question is already resolved.
+			|| questionData.config.isDynamic
+			|| !usePage().props.auth.user
+			|| score.is_resolved
 		) {
 			return
 		}
 
-		// score value
 		score.score = validations
 			.filter(v => v.result)
 			.length / validations.length
 
-		// score resolved.
 		score.is_resolved =
 			score.is_resolved ||
 			score.score === 1
 
-		// data = list of answers and previous answers.
-		// only update if it's a new answer, not already in the list.
 		const currentAnswers: string = questionData.user.answers.value.map(answer => answer.input).join('\n')
 		const previousAnswers: string[] = score.data.answers.filter(x => x !== currentAnswers)
 
@@ -250,7 +336,6 @@ export function useQuestionValidation(questionData: questionDataInterface) {
 				...previousAnswers
 			]
 
-			// On ne garde qu'au maximum dix valeurs.
 			if (score.data.answers.length > 10) {
 				score.data.answers = score.data.answers.slice(0, 10)
 			}
@@ -258,48 +343,20 @@ export function useQuestionValidation(questionData: questionDataInterface) {
 
 		useStoreScore().updateScore(score)
 			.then((res: ScoreInterface<ScoreQuestionDataInterface>) => {
-				// update the score
 				questionData.user.score.value = res
 			})
 	}
 
-
 	return {
 		lock,
 		save,
-		update,
+		resolveValidators,
 		reduce,
 		validate,
 		errors: errorMessages,
 		answersCount,
 		count: questionData.answers.values.value.length || 0,
-		button,
 		buttonLabel,
 		result: questionResult
-	}
-}
-
-
-function mappedValues(values: string[]): literalType<number | Fraction> {
-	// TODO: check ce qu'il se passe avec des valeurs exacts.
-	if (values.length === 0) return {}
-
-	const dict: literalType<number | Fraction> = {}
-	values.forEach((a, i) => {
-		dict[alphabet[i]] = new Fraction(a)
-	})
-
-	return dict
-}
-
-export function useQuestionValidationEquation(equationControl: string, values: string[]): boolean {
-	if (!equationControl) return true
-
-	try {
-		const equ = new Equation(equationControl)
-		const mapped = mappedValues(values)
-		return equ.evaluate(mapped)
-	} catch {
-		return false
 	}
 }

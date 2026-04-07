@@ -1,24 +1,20 @@
 <script lang="ts" setup>
 /**
  * QuestionShow
- * 1. QuestionHeader -> question number, admin bar (edit link, show/hide constraint
- * 2. QuestionBlock -> display the text / illustration and incorporate the answers
- * 3. QuestionAnswer ->
- *      3.a answer format
- *      3.b btn to open / close the keyboard.
- *      3.c. question selector
- *      3.c question validation
- *      3.d keyboard display
+ * 1. QuestionHeader -> question number, title, success icon
+ * 2. QuestionBlock  -> body (markdown + answer placeholders), illustration
+ * 3. QuestionAnswer -> toggle, selector, validation, dynamic keyboard
  * 4. QuestionFooter -> show answer, admin answer quick edition
+ *
+ * État partagé via provide(questionDataKey) — voir QuestionInterface.ts
  */
 import QuestionFooter from "@/Components/Questions/Parts/QuestionFooter.vue"
 import QuestionBlock from "@/Components/Questions/Parts/QuestionBlock.vue"
 import QuestionAnswer from "@/Components/Questions/Parts/QuestionAnswer.vue"
-import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
 import {onMounted, provide, ref, useTemplateRef, watch} from "vue"
 import type {QuestionInterface} from "@/types/modelInterfaces.ts"
 import {
-	questionDataInterface,
+	questionDataKey,
 	questionResultInterface,
 	questionUserInputDisplayType
 } from "@/Components/Questions/QuestionInterface.ts"
@@ -27,7 +23,6 @@ import {useQuestion} from "@/Components/Questions/useQuestion.ts"
 
 /**
  * question: QuestionInterface
- * locked: boolean - if true, the question cannot be answered (cover displayed)
  * showInput: questionUserInputDisplayType | '' | boolean - determine the keyboard visibility
  * isDynamic: boolean - if true, the question is generated dynamically, not from a database entry
  * editorMode: boolean - if true, the question is in editor mode (for preview)
@@ -38,7 +33,6 @@ import {useQuestion} from "@/Components/Questions/useQuestion.ts"
 const props = withDefaults(
 	defineProps<{
 		question: QuestionInterface,
-		locked?: boolean,
 		showInput?: questionUserInputDisplayType | '' | boolean,
 		isDynamic?: boolean,
 		editorMode?: boolean,
@@ -47,7 +41,6 @@ const props = withDefaults(
 		hideSuccess?: boolean,
 	}>(),
 	{
-		locked: false,
 		showInput: false,
 		isDynamic: false,
 		editorMode: false,
@@ -56,9 +49,6 @@ const props = withDefaults(
 		hideSuccess: false
 	}
 )
-
-// EditMode is used to determine the locked status
-const editMode = useStoreEditMode()
 
 // Emits validate
 defineEmits<{
@@ -104,7 +94,7 @@ const questionData = useQuestion(props.question, {
  *
  * Valeurs utiles:
  */
-provide<questionDataInterface>("questionData", questionData)
+provide(questionDataKey, questionData)
 
 function cleanAnswer(value: string): string {
 	const answer = value.split('||')[0]
@@ -169,21 +159,6 @@ watch(() => props.autoAnswer, () => {
 		}"
 		class="flex flex-col rounded border h-full relative"
 	>
-		<!-- Cover if question cannot yet be answered -->
-		<transition name="fade">
-			<div
-				v-if="locked && !editMode.enable"
-				v-theme.gradient
-				class="w-full h-full
-				font-extralight text-lg
-				min-h-[5em] px-5 absolute inset-0
-				z-10 grid
-				text-center place-items-center"
-			>
-				<i class="bi bi-question-lg text-8xl text-gray-300" />
-			</div>
-		</transition>
-
 		<!-- Header: number, title -->
 		<question-header
 			:show-number="!blockOnly"

@@ -261,6 +261,7 @@ onMounted(() => {
 			<Card class="mb-3">
 				<filtered-list
 					:list="chapterComponents"
+					title="widgets"
 					no-title
 					@enter="selectWidget"
 				>
@@ -268,7 +269,7 @@ onMounted(() => {
 						<sc-button
 							:outline="theIllustration.widget.id !== item.id"
 							:theme="item.theme_id ?? 0"
-							xs
+							sm
 							@click="toggleComponent(item)"
 						>
 							{{ item.name }}
@@ -348,7 +349,7 @@ onMounted(() => {
 						>
 							<form-maker
 								v-model="theIllustration.parameters"
-								label="parametres"
+								label="paramètres"
 							/>
 							<form-maker
 								v-model="theIllustration.code"
@@ -359,7 +360,7 @@ onMounted(() => {
 							<markdown-it
 								v-if="currentComponent"
 								:text="currentComponent.description"
-								class="font-code !text-xs min-h-[3em]"
+								class="font-code text-xs! min-h-[3em]"
 							/>
 						</div>
 					</div>

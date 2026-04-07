@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
 import {inject} from "vue"
-import {questionDataInterface} from "@/Components/Questions/QuestionInterface.ts"
+import {questionDataKey} from "@/Components/Questions/QuestionInterface.ts"
 
 withDefaults(defineProps<{
 	showNumber?: boolean
@@ -11,7 +11,7 @@ withDefaults(defineProps<{
 
 const editMode = useStoreEditMode()
 
-const questionData = inject<questionDataInterface>("questionData")
+const questionData = inject(questionDataKey)!
 
 </script>
 

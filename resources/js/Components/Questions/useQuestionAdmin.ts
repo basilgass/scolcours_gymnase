@@ -1,4 +1,4 @@
-import type {QuestionInterface, ScoreInterface} from "@/types/modelInterfaces.ts"
+import type {QuestionInterface} from "@/types/modelInterfaces.ts"
 import axios from "axios"
 import {AxiosErrorMessage, AxiosResponseModel} from "@/types"
 import {ref, Ref, watch} from "vue"
@@ -6,7 +6,6 @@ import {useStoreScore} from "@/stores/useStoreScore.ts"
 import QuestionShow from "@/Components/Questions/QuestionShow.vue"
 import {router} from "@inertiajs/vue3"
 import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
-import {ScoreQuestionDataInterface} from "@/types/scoreInterfaces.ts"
 
 export type questionContainerType = 'Post' | 'Quizz' | 'Evaluation'
 
@@ -19,7 +18,6 @@ export interface questionsContainerInterface {
 export function useQuestionAdmin(
 	container: questionsContainerInterface,
 	questions: Ref<Partial<QuestionInterface>[]>,
-	components: InstanceType<typeof QuestionShow>[]
 ) {
 	const flash = useStoreFlashMessage()
 
@@ -94,24 +92,13 @@ export function useQuestionAdmin(
 
 	function answers_reset() {
 		const storeScore = useStoreScore()
-		storeScore.reset(questions.value.map(q => q.user.id))
-			.then((scores: ScoreInterface<ScoreQuestionDataInterface>[]) => {
-				scores.forEach(s => {
-					const index = questions.value
-						.findIndex(q => s.scoreable_id === q.id)
-
-					const q = questions.value[index]
-					q.user = s
-
-					questions.value.splice(index, 1, q)
-				})
-				// questions.value.forEach(q => {
-				// 	q.user = scores.find(s => s.scoreable_id === q.id)
-				// })
-			})
+		const scoreIds = questions.value
+			.map(q => storeScore.scores.find(s => s.scoreable_type === 'Question' && s.scoreable_id === q.id)?.id)
+			.filter((id): id is number => id !== undefined)
+		storeScore.reset(scoreIds)
 	}
 
-	function answers_show() {
+	function answers_show(components: InstanceType<typeof QuestionShow>[]) {
 		components.forEach((component) => {
 			if (component) {
 				if (isAnswersShown.value) {

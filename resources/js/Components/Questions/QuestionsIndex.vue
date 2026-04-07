@@ -3,11 +3,10 @@ import QuestionShow from "@/Components/Questions/QuestionShow.vue"
 import QuestionShowAdmin from "@/Components/Questions/QuestionShowAdmin.vue"
 import QuestionsIndexAdmin from "@/Components/Questions/QuestionsIndexAdmin.vue"
 import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
-import type {QuestionInterface, ScoreInterface} from "@/types/modelInterfaces.ts"
+import type {QuestionInterface} from "@/types/modelInterfaces.ts"
 import {computed, onMounted, ref} from "vue"
 import type {questionResultInterface} from "@/Components/Questions/QuestionInterface.ts"
 import {useStoreScore} from "@/stores/useStoreScore.ts"
-import {ScoreQuestionDataInterface} from "@/types/scoreInterfaces.ts"
 import PleaseWait from "@/Components/Ui/PleaseWait.vue"
 import {questionsContainerInterface} from "@/Components/Questions/useQuestionAdmin.ts"
 
@@ -22,39 +21,23 @@ const props = defineProps<{
 const theQuestions = ref<Partial<QuestionInterface>[]>(props.questions)
 const storeScore = useStoreScore()
 
-const loading = ref(true)
-
 onMounted(() => {
+	const ids = props.questions.map(q => q.id)
 
-	// Charger les scores des questions en une fois = optimisation
-	const ids = props.questions
-		.filter((question) => question.user === undefined)
-		.map(question => question.id)
-
-	// supprime les scores actuels si user_id n'est pas vide
 	if (props.userId !== undefined) {
-		storeScore.getUserScores(
-			props.userId,
-			'Question',
-			props.questions.map(q => q.id)
-		).then((scores: ScoreInterface<ScoreQuestionDataInterface>[]) => {
-			scores.forEach(score => {
-				const index = theQuestions.value.findIndex(q => q.id === score.scoreable_id)
-				theQuestions.value[index].user = score
-			})
-		})
-			.catch(res => console.log(res))
-			.finally(() => loading.value = false)
-
-	} else {
-		storeScore.getScores<ScoreQuestionDataInterface>('Question', ids)
-			.then((scores: ScoreInterface<ScoreQuestionDataInterface>[]) => {
+		// Vue admin : scores d'un utilisateur spécifique, à pousser manuellement dans le store
+		storeScore.getUserScores(props.userId, 'Question', ids)
+			.then((scores) => {
 				scores.forEach(score => {
-					const index = theQuestions.value.findIndex(q => q.id === score.scoreable_id)
-					theQuestions.value[index].user = score
+					const exists = storeScore.scores.find(
+						s => s.scoreable_type === 'Question' && s.scoreable_id === score.scoreable_id
+					)
+					if (!exists) storeScore.scores.push(score)
 				})
 			})
-			.finally(() => loading.value = false)
+			.catch(res => console.log(res))
+	} else {
+		storeScore.getScores('Question', ids)
 	}
 })
 
@@ -78,12 +61,16 @@ const questionsGridClass = computed(() => {
 	return grid + " gap-x-3 gap-y-6"
 })
 
-// Liste des questions qui ont été répondues correctement.
-const answeredIds = computed(() => {
-	return theQuestions.value
-		.filter((question) => question.user?.is_resolved)
-		.map((question) => +question.id)
-})
+const questionIds = computed(() => theQuestions.value.map(q => +q.id))
+
+// Liste des questions répondues correctement — lue directement depuis le store.
+const answeredIds = computed(() =>
+	storeScore.scores
+		.filter(s => s.scoreable_type === 'Question'
+			&& questionIds.value.includes(s.scoreable_id)
+			&& s.is_resolved)
+		.map(s => s.scoreable_id)
+)
 
 const isQuestionLocked = function (question: QuestionInterface) {
 	if (question.displayIf === null) return false
@@ -99,11 +86,15 @@ const isQuestionLocked = function (question: QuestionInterface) {
 	return dependantQuestionIds.some((id) => answeredIds.value.indexOf(id) === -1)
 }
 
-const questionsComponents = ref<InstanceType<typeof QuestionShow>[]>([])
+const questionsComponentsMap = ref<Record<number, InstanceType<typeof QuestionShow>>>({})
+const questionsComponents = computed(() => Object.values(questionsComponentsMap.value))
 
-function addQuestionRef(element: InstanceType<typeof QuestionShow>) {
-	if (questionsComponents.value.indexOf(element) === -1) {
-		questionsComponents.value.push(element)
+function setQuestionRef(id: number, el: InstanceType<typeof QuestionShow> | null) {
+	if (!questionsComponentsMap.value) return
+	if (el) {
+		questionsComponentsMap.value[id] = el
+	} else {
+		delete questionsComponentsMap.value[id]
 	}
 }
 
@@ -111,10 +102,11 @@ const emit = defineEmits<{
 	validate: [event: questionResultInterface]
 }>()
 
+
 function removeQuestion(id: number) {
 	const pos = theQuestions.value.findIndex(q => q.id === id)
 
-	if (pos === undefined) {
+	if (pos === -1) {
 		return
 	}
 
@@ -138,51 +130,60 @@ function removeQuestion(id: number) {
 		</div>
 
 		<questions-index-admin
+			v-model:questions="theQuestions"
+			v-model:grid="questionsGrid"
 			v-admin="editMode.enable"
 			:components="questionsComponents"
 			:container
-			v-model:questions="theQuestions"
-			v-model:grid="questionsGrid"
 		/>
 
 		<!-- questions list -->
 		<div>
-			<draggable
-				v-if="!loading"
-				:class="questionsGridClass"
-				v-model="theQuestions"
-				class="mt-10"
-				handle=".draggable-handle"
-				item-key="id"
-				v-bind="{
-					animation: 200,
-					disabled: !editMode.enable,
-				}"
-			>
-				<template #item="{ element }: {element: QuestionInterface}">
-					<div class="question-wrapper h-fit">
-						<question-show-admin
-							v-admin="editMode.enable"
-							:question="element"
-							:questions="theQuestions"
-							@removed="removeQuestion(element.id)"
-						/>
-						<question-show
-							:key="element.id"
-							:ref="addQuestionRef"
-							:class="element.css ?? ''"
-							:locked="isQuestionLocked(element)"
-							:question="element"
-							@validate="emit('validate', $event)"
-						/>
-					</div>
-				</template>
-			</draggable>
 			<please-wait
-				v-else
-				class="min-h-[300px] grid place-items-center text-xl"
-				text="Actuellement, aucune question..."
+				v-if="theQuestions.length === 0"
+				class="min-h-75 grid place-items-center text-xl"
+				text="Aucune question à l'horizon."
 			/>
+			<div v-else>
+				<draggable
+					v-model="theQuestions"
+					:class="questionsGridClass"
+					class="mt-10"
+					handle=".draggable-handle"
+					item-key="id"
+					v-bind="{
+						animation: 200,
+						disabled: !editMode.enable,
+					}"
+				>
+					<template #item="{ element }: {element: QuestionInterface}">
+						<div class="question-wrapper relative h-fit">
+							<transition name="fade">
+								<div
+									v-if="isQuestionLocked(element) && !editMode.enable"
+									v-theme.gradient
+									class="w-full h-full font-extralight text-lg min-h-[5em] px-5 absolute inset-0 z-10 grid text-center place-items-center"
+								>
+									<i class="bi bi-question-lg text-8xl text-gray-300" />
+								</div>
+							</transition>
+							<question-show-admin
+								v-admin="editMode.enable"
+								:question="element"
+								:questions="theQuestions"
+								@removed="removeQuestion(element.id)"
+							/>
+							<question-show
+								:key="element.id"
+								:ref="(el: any) => setQuestionRef(element.id, el)"
+								:class="element.css ?? ''"
+								:question="element"
+								@validate="emit('validate', $event)"
+							/>
+						</div>
+					</template>
+				</draggable>
+			</div>
 		</div>
 	</article>
 </template>

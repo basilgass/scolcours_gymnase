@@ -1,121 +1,76 @@
 /***
  * KaTeX base styles
- * TODO: reformat katex styles
  */
 
-@utility katex-display {
-	@apply dark:border-amber-400/20 dark:border-1 select-none;
+/** ── Utilities réutilisables ─────────────────────────────────────────────── */
 
-	.katex-boxed & {
-		@apply bg-amber-700/5 px-5 py-4 my-2 rounded-sm overflow-x-auto katex-scrollbar;
-	}
-
-	.katex-boxed.katex-boxed-lg & {
-		@apply py-10;
-	}
-
-	.katex-left & > .katex > .katex-html {
-		@apply text-left;
-	}
-
-	.katex-right & > .katex > .katex-html {
-		@apply text-right;
-	}
-
-	.katex-m-0 & {
-		margin-top: 0;
-		margin-bottom: 0;
-	}
-
-	.katex-m-1 & {
-		margin-top: 0.3em;
-		margin-bottom: 0.3em;
-	}
-}
-
-@utility katex-boxed {
-	& .katex-display {
-		@apply bg-amber-700/5 px-5 py-4 my-2 rounded-sm overflow-x-auto katex-scrollbar;
-	}
-
-	&.katex-boxed-lg .katex-display {
-		@apply py-10;
-	}
-}
-
-@utility katex-boxed-lg {
-	&.katex-boxed .katex-display {
-		@apply py-10;
-	}
-}
-
-@utility katex-inline-boxed {
-	& span:not(.katex-display) > .katex {
-		@apply bg-amber-700/5 px-3 inline-block align-middle max-w-full py-1 rounded-sm;
-	}
-}
-
-@utility katex {
-	.katex-inline-boxed span:not(.katex-display) > & {
-		@apply bg-amber-700/5 px-3 inline-block align-middle max-w-full py-1 rounded-sm;
-	}
-
-	.katex-left .katex-display > & > .katex-html {
-		@apply text-left;
-	}
-
-	.katex-right .katex-display > & > .katex-html {
-		@apply text-right;
-	}
-}
-
-@utility katex-left {
-	& .katex-display > .katex > .katex-html {
-		@apply text-left;
-	}
-}
-
-@utility katex-html {
-	.katex-left .katex-display > .katex > & {
-		@apply text-left;
-	}
-
-	.katex-right .katex-display > .katex > & {
-		@apply text-right;
-	}
-}
-
-@utility katex-right {
-	& .katex-display > .katex > .katex-html {
-		@apply text-right;
-	}
-}
-
-@utility katex-m-0 {
-	& .katex-display {
-		margin-top: 0;
-		margin-bottom: 0;
-	}
-}
-
-@utility katex-m-1 {
-	& .katex-display {
-		margin-top: 0.3em;
-		margin-bottom: 0.3em;
-	}
+@utility katex-scrollbar {
+	@apply scrollbar-thin scrollbar-thumb-amber-700/50 dark:scrollbar-track-slate-900 scrollbar-track-slate-100;
 }
 
 @utility katex-output {
 	@apply font-code w-full bg-gray-100 p-2 appearance-none focus:border-slate-400 focus:outline-hidden focus:ring-0;
 }
 
-@utility katex-scrollbar {
-	@apply scrollbar-thin scrollbar-thumb-amber-700/50 dark:scrollbar-track-slate-900 scrollbar-track-slate-100;
+
+/** ── Classes de mise en forme (wrappers) ─────────────────────────────────── */
+
+.katex-display {
+	@apply dark:border-amber-400/20 dark:border select-none;
+}
+
+/** katex-boxed-lg doit être utilisé conjointement avec katex-boxed */
+.katex-boxed .katex-display {
+	@apply bg-amber-700/5 px-5 py-4 my-2 rounded-sm overflow-x-auto katex-scrollbar;
+}
+
+.katex-boxed.katex-boxed-lg .katex-display {
+	@apply py-10;
+}
+
+.katex-inline-boxed span:not(.katex-display) > .katex {
+	@apply bg-amber-700/5 px-3 inline-block align-middle max-w-full py-1 rounded-sm;
+}
+
+.katex-left .katex-display > .katex > .katex-html {
+	@apply text-left;
+}
+
+.katex-right .katex-display > .katex > .katex-html {
+	@apply text-right;
+}
+
+.katex-m-0 .katex-display {
+	margin-top: 0;
+	margin-bottom: 0;
+}
+
+.katex-m-1 .katex-display {
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
 }
 
 
+/** ── Overrides structure interne KaTeX ───────────────────────────────────── */
+
 .katex-html * {
 	pointer-events: none;
+}
+
+/** Formules numérotées (span.base + span.tag) : layout flex centré */
+.katex-display > .katex > .katex-html:has(span.base):has(span.tag) {
+	display: flex;
+	gap: 3rem;
+	justify-content: safe center;
+}
+
+.katex-display > .katex > .katex-html:has(span.base):has(span.tag) > span.tag {
+	position: static;
+	flex-shrink: 0;
+}
+
+.katex-display > .katex > .katex-html:has(span.base):has(span.tag) > span.base {
+	flex-shrink: 0;
 }
 
 .katex-html [data-answer-index] {

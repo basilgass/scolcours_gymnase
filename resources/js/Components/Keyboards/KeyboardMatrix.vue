@@ -3,7 +3,7 @@ import {computed, inject, onMounted, ref} from "vue"
 import KeyboardDisplay from "@/Components/Keyboards/KeyboardDisplay.vue"
 import PiMatrix from "@/Components/Pi/Parts/PiMatrix.vue"
 import {Polynom} from "pimath"
-import {questionDataInterface} from "@/Components/Questions/QuestionInterface.ts"
+import {questionDataKey} from "@/Components/Questions/QuestionInterface.ts"
 import ScButton from "@/Components/Ui/Button/scButton.vue"
 import {KeyboardObjectType} from "@/Composables/keyboardConfig.ts"
 import type {
@@ -81,7 +81,7 @@ defineExpose<KeyboardExposeInterface>({
  */
 
 // Get the checker from above.
-const questionData = inject<questionDataInterface>('questionData')
+const questionData = inject(questionDataKey)!
 
 
 const augmented = computed(() => questionData.current.keyboard.value.parameters.includes('a'))

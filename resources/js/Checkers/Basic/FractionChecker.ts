@@ -26,7 +26,9 @@ export class FractionChecker extends CheckerAbstract {
 			opts.push("réduite")
 		}
 
-		return `réponse sous forme de fraction ${opts.join(",")}`
+		return opts.length
+			? `réponse sous forme de fraction ${opts.join(", ")}`
+			: "réponse sous forme de fraction"
 	}
 
 	override checkFormat(value: string): string {
@@ -43,11 +45,15 @@ export class FractionChecker extends CheckerAbstract {
 			if (den === undefined) return ""
 
 			if (den.startsWith('-')) {
-				return "Une fraction n'a pas de dénominateur négatif."
+				return "Le dénominateur doit être positif."
 			}
 
 			if (isNaN(+den)) {
 				return "Le dénominateur n'est pas un nombre."
+			}
+
+			if (+den === 0) {
+				return "Le dénominateur ne peut pas être zéro."
 			}
 
 			new Fraction(value)
@@ -65,12 +71,13 @@ export class FractionChecker extends CheckerAbstract {
 			return makeCheckerResult("La réponse donnée n'est pas juste.")
 		}
 
-		if (FGiven.denominator < 0) {
-			return makeCheckerResult("Le dénominateur doit être positif.", 0.8)
-		}
-
 		if (!FGiven.isReduced() && this.#reduced) {
 			return makeCheckerResult("La fraction n'est pas réduite.", 0.5)
+		}
+
+		const [, den] = value.split('/')
+		if (den !== undefined && +den === 1) {
+			return makeCheckerResult("Une fraction avec `1` au dénominateur peut être simplifiée.", 0.9)
 		}
 
 		return makeCheckerResult()

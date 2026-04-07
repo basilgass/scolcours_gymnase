@@ -18,7 +18,7 @@ test('missing parenthesis', () => {
 
 	const expected = '(2;3)'
 	const wrongValues = ['(2;3', '2;3', '2;3)']
-	for (const given in wrongValues) {
+	for (const given of wrongValues) {
 		const result = checker.check(given, expected)
 
 		expect(result.result).toBeFalsy()
@@ -38,7 +38,7 @@ test('wrong number of values', () => {
 		expect(result.result).toBeFalsy()
 		expect([
 			"des coordonnées ont au moins deux valeurs, séparées par un \\(;\\)",
-			"la dimension de la coordonnées ne correspond pas"]
+			"la dimension ne correspond pas"]
 		).toContain(result.message)
 	}
 })

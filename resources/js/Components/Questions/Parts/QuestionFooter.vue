@@ -5,13 +5,13 @@
  */
 import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
 import {computed, inject, Ref, ref} from "vue"
-import type {questionDataInterface} from "@/Components/Questions/QuestionInterface.ts"
+import {questionDataKey} from "@/Components/Questions/QuestionInterface.ts"
 import {ScoreQuestionDataInterface} from "@/types/scoreInterfaces.ts"
 import {ScoreInterface} from "@/types/modelInterfaces.ts"
 
 const editMode = useStoreEditMode()
 
-const questionData = inject<questionDataInterface>("questionData")
+const questionData = inject(questionDataKey)!
 
 
 // on placec score dans une variable pour indiquer que c'est un score d'une question.
@@ -92,7 +92,7 @@ const previousAnswers = computed<string[]>(() => {
 			>
 				<div
 					class="text-xs text-center ml-3 font-code"
-					v-text="questionData.answers.values"
+					v-text="questionData.answers.values.value.join(', ')"
 				/>
 			</div>
 		</div>

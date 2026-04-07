@@ -135,7 +135,7 @@ function addFunction(type: "x" | "t" = "x") {
 
 		<div class="flex gap-3 items-start">
 			<div>
-				<div class="w-[300px] flex flex-col gap-3">
+				<div class="w-75 flex flex-col gap-3">
 					<GrapheurFunction
 						v-for="(_, index) in fonctions"
 						:key="`fx-${index}`"

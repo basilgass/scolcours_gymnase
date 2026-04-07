@@ -1,4 +1,4 @@
-import {ComputedRef, Ref} from "vue"
+import {ComputedRef, InjectionKey, Ref} from "vue"
 import {BlockMinInterface, QuestionInterface, ScoreInterface} from "@/types/modelInterfaces.ts"
 import type KeyboardBasic from "@/Components/Keyboards/KeyboardBasic.vue"
 import {KeyboardCheckerInterface, KeyboardInputInterface, KeyboardInterface} from "@/types/keyboardInterfaces.ts"
@@ -33,11 +33,13 @@ export interface questionDataInterface {
 	user: {
 		answer: Ref<string>
 		answers: Ref<KeyboardInputInterface[]>,
-		score: Ref<ScoreInterface>,
+		score: Ref<ScoreInterface | undefined>,
 		errors: Ref<string[]>
 	},
 	validators: ComputedRef<questionValidatorInterface[]>,
 }
+
+export const questionDataKey: InjectionKey<questionDataInterface> = Symbol('questionData')
 
 export interface questionDataInterfaceOLD {
 	// current answer id, if the question has more than one answer

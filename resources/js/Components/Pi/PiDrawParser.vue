@@ -290,7 +290,7 @@ const drawMouseUp = function (evt: { draw: PiDraw, mouse: MouseEvent }) {
 				<div
 					v-if="slider.label"
 					v-katex.left.nomargin="`${slider.key.substring(1)}=${sliderValue(slider)}`"
-					class="w-[120px] overflow-hidden"
+					class="w-30 overflow-hidden"
 				/>
 				<vue-slider
 					v-model="slider.value"

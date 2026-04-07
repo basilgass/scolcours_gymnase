@@ -90,8 +90,28 @@ export abstract class CheckerAbstract {
 	abstract get format(): string
 
 	check(given: string, expected: string): CheckerResult {
+		// Strip @ prefix used for unordered multi-answer questions
+		const normalizedExpected = expected.startsWith('@')
+			? expected.substring(1)
+			: expected
+
+		// Handle || alternatives: try each one, return the first success
+		if (normalizedExpected.includes('||')) {
+			const alternatives = normalizedExpected
+				.split(/\|\|/)
+				.map(a => a.trim())
+				.filter(a => a !== '')
+			let firstResult: CheckerResult | null = null
+			for (const alt of alternatives) {
+				const result = this.check(given, alt)
+				if (result.result) return result
+				firstResult ??= result
+			}
+			return firstResult ?? makeCheckerResult("Réponse incorrecte.")
+		}
+
 		// Define the answer
-		this.answer = expected
+		this.answer = normalizedExpected
 
 		// No value given
 		if (given === "") {
@@ -99,7 +119,7 @@ export abstract class CheckerAbstract {
 		}
 
 		// The result is exactly what is expected
-		if (expected === given) {
+		if (normalizedExpected === given) {
 			return makeCheckerResult()
 		}
 
@@ -109,7 +129,6 @@ export abstract class CheckerAbstract {
 			return makeCheckerResult(message)
 		}
 
-		// The value given is a usual error, handled by an @error:<value> <description>
 		// The value is not correct
 		return this.checkValue(given)
 	}

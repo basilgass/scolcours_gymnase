@@ -1,5 +1,6 @@
 import {QuestionInterface} from "@/types/modelInterfaces.ts"
 import {computed, ref} from "vue"
+import {useStoreScore} from "@/stores/useStoreScore.ts"
 import type {
 	questionConfigInterface,
 	questionDataInterface,
@@ -22,11 +23,26 @@ export function useQuestion(
 		return {input: "", tex: "", raw: ""}
 	}
 
+	const storeScore = useStoreScore()
+
 	// Raw question
 	const question = ref(mayBeRefOrGetter)
 
-	// Score object
-	const userScore = ref(question.value.user)
+	// Score object — source unique de vérité : le store Pinia
+	const userScore = computed({
+		get: () => storeScore.scores.find(
+			s => s.scoreable_type === 'Question' && s.scoreable_id === question.value.id
+		),
+		set: (value) => {
+			if (!value) return
+			const index = storeScore.scores.findIndex(
+				s => s.scoreable_type === 'Question' && s.scoreable_id === question.value.id
+			)
+			index !== -1
+				? storeScore.scores.splice(index, 1, value)
+				: storeScore.scores.push(value)
+		}
+	})
 
 	// List of all answers
 	const correctAnswers = computed<string[]>(() => {

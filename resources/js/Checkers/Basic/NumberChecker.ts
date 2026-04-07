@@ -32,6 +32,22 @@ export class NumberChecker extends CheckerAbstract {
 	}
 
 	override checkFormat(value: string): string {
+		const minusCount = (value.match(/-/g) ?? []).length
+		if (minusCount > 1) {
+			return "Le signe `-` ne peut apparaître qu'une seule fois."
+		}
+		if (minusCount === 1 && value[0] !== '-') {
+			return "Le signe `-` doit être en première position."
+		}
+
+		const dotCount = (value.match(/\./g) ?? []).length
+		if (dotCount > 1) {
+			return "Le point décimal ne peut apparaître qu'une seule fois."
+		}
+		if (dotCount === 1 && !/\d\./.test(value)) {
+			return "Un chiffre doit précéder le point décimal."
+		}
+
 		if (isNaN(+value)) {
 			return "Veuillez entrer un nombre"
 		}
@@ -73,17 +89,27 @@ export class NumberChecker extends CheckerAbstract {
 		const givenDigitsLength = digits?.length ?? 0
 
 		if (givenDigitsLength !== nbDigits) {
+			if (nbDigits === 0) {
+				return makeCheckerResult("La réponse ne doit pas avoir de décimales.", 0)
+			}
+
+			// Crédit partiel : l'utilisateur a donné moins de décimales mais la valeur arrondie est correcte
+			const isRoundedCorrectly = givenDigitsLength < nbDigits &&
+				givenValue === +(answerValue).toFixed(givenDigitsLength)
+
 			return makeCheckerResult(
-				`Il faut ${nbDigits} chiffre(s) après la virgule.`,
-				+(+digits).toFixed(nbDigits) === +expectedDigits ? 0.7 : 0
+				isRoundedCorrectly
+					? `Il faut ${nbDigits} chiffre(s) après la virgule.`
+					: "La réponse n'est pas juste.",
+				isRoundedCorrectly ? 0.7 : 0
 			)
 		}
 
 		// S'il y a des décimales :
-		// Le dernier chiffre n'est pas juste - il s'agit peut être d'un problème d'arrondi ?
+		// Le dernier chiffre n'est pas juste - il s'agit peut-être d'un problème d'arrondi ?
 		if (givenDigitsLength) {
 			const lastDigit = +digits[digits.length - 1]
-			const lastExpectedDigit = +this.answer[this.answer.length - 1]
+			const lastExpectedDigit = +expectedDigits[expectedDigits.length - 1]
 
 			if (Math.abs(lastDigit - lastExpectedDigit) === 1) {
 				return makeCheckerResult(

@@ -13,7 +13,7 @@ import axios from "axios"
 import {computed, PropType, ref} from "vue"
 import ScButton from "@/Components/Ui/Button/scButton.vue"
 import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
-import {useQuestionValidationEquation} from "@/Components/Questions/useQuestionValidation.ts"
+import {validateBoundedVariables} from "@/Components/Questions/useQuestionValidation.ts"
 
 defineOptions({layout: LayoutMain})
 
@@ -131,7 +131,7 @@ function deleteIllustration() {
 }
 
 const equationCheck = computed(() => {
-	return useQuestionValidationEquation(
+	return validateBoundedVariables(
 		theQuestion.value.equationControl,
 		theQuestion.value.answer.split('\n')
 	)

@@ -16,6 +16,7 @@ import axios from "axios"
 import {PropType, ref} from "vue"
 import ScButton from "@/Components/Ui/Button/scButton.vue"
 import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
+import {PostType} from "@/types/postInterfaces.ts"
 
 defineOptions({layout: LayoutMain})
 
@@ -28,13 +29,21 @@ const flash = useStoreFlashMessage()
 const thePost = ref(props.post)
 if (thePost.value.type === null) thePost.value.type = ""
 
-const typeList = ref({
-	article: "",
-	exercice: "exercise",
-	"savoir faire": "howto",
-	"quizz": "quizz",
-	"évaluation": "test"
-})
+// const typeList = ref({
+// 	article: "",
+// 	exercice: "exercise",
+// 	"savoir faire": "howto",
+// 	"quizz": "quizz",
+// 	"évaluation": "test"
+// })
+
+const typeList: { key: PostType, label: string }[] = [
+	{key: '', label: "article"},
+	{key: "exercise", label: "exercice"},
+	{key: "howto", label: "savoir faire"},
+	{key: "quizz", label: "questionnaire"},
+	{key: "test", label: "évaluation"}
+]
 
 
 const savePost = function () {
@@ -115,7 +124,8 @@ const deletePost = function () {
 
 				<form-maker
 					v-model="thePost.revise"
-					label="à réviser,en ordre"
+					label="en ordre,à réviser"
+					invert
 					sm
 					type="switch"
 				/>
@@ -132,14 +142,14 @@ const deletePost = function () {
 
 			<div class="flex gap-3 my-3">
 				<sc-button
-					v-for="(key, name) of typeList"
-					:key="'btn-' + name"
-					:outline="thePost.type!==key"
+					v-for="item of typeList"
+					:key="'btn-' + item.key"
+					:outline="thePost.type!==item.key"
 					theme
 					xs
-					@click="thePost.type = key"
+					@click="thePost.type = item.key"
 				>
-					{{ name }}
+					{{ item.label }}
 				</sc-button>
 			</div>
 

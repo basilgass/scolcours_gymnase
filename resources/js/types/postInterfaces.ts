@@ -1,5 +1,5 @@
-import type { BlockMinInterface, BlockInterface, IllustrationMinInterface } from "@/types/blockInterfaces.ts"
-import type { ScoreInterface, ScoreQuestionDataInterface } from "@/types/scoreInterfaces.ts"
+import type {BlockInterface, BlockMinInterface, IllustrationMinInterface} from "@/types/blockInterfaces.ts"
+import type {ScoreInterface, ScoreQuestionDataInterface} from "@/types/scoreInterfaces.ts"
 
 export interface QuestionDynamicInterface {
 	answer: string;
@@ -20,6 +20,8 @@ export interface QuestionInterface extends QuestionDynamicInterface {
 	user: ScoreInterface<ScoreQuestionDataInterface>;
 }
 
+export type PostType = '' | 'exercise' | 'howto' | 'quizz' | 'test'
+
 export interface PostInterface {
 	active: number;
 	chapter_id: number;
@@ -31,7 +33,7 @@ export interface PostInterface {
 	};
 	revise: boolean;
 	title: string;
-	type: string;
+	type: PostType;
 	updated_at: string;
 }
 

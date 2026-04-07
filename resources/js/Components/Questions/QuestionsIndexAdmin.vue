@@ -21,7 +21,6 @@ const grid = defineModel<string>('grid')
 const questionsAdmin = useQuestionAdmin(
 	props.container,
 	questions,
-	props.components
 )
 
 </script>
@@ -90,7 +89,7 @@ const questionsAdmin = useQuestionAdmin(
 					xs
 					outline
 					type="admin"
-					@click="questionsAdmin.answers.show"
+					@click="questionsAdmin.answers.show(components)"
 				>
 					<i
 						v-if="questionsAdmin.answers.isShown"
