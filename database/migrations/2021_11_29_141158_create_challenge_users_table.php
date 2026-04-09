@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\Challenges\ChallengeSession;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -11,7 +10,7 @@ class CreateChallengeUsersTable extends Migration
 		{
 			Schema::create('challenge_users', function (Blueprint $table) {
 				$table->bigIncrements('id');
-				$table->foreignIdFor(ChallengeSession::class)->constrained()->cascadeOnDelete();
+				$table->foreignId('challenge_session_id')->constrained('challenge_sessions')->cascadeOnDelete();
 				$table->string('token');
 				$table->integer('score');
 				//

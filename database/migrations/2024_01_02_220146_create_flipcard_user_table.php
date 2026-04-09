@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\Card;
 use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -15,7 +14,7 @@ return new class extends Migration
     {
         Schema::create('flipcard_user', function (Blueprint $table) {
             $table->id();
-			$table->foreignIdFor(Card::class)->constrained()->cascadeOnDelete();
+			$table->foreignId('card_id')->constrained('flipcards')->cascadeOnDelete();
 			$table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
 			$table->boolean('success')->nullable();
             $table->timestamps();

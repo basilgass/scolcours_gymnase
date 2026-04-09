@@ -11,22 +11,13 @@ return new class extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
-        Schema::table('illustrations', function (Blueprint $table) {
-	        $table->renameColumn('current_status', 'current_score');
-        });
+        // Migration was invalid: current_status never existed in illustrations table
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
+    public function down(): void
     {
-        Schema::table('illustrations', function (Blueprint $table) {
-			$table->string('code')->change();
-        });
+        //
     }
 };

@@ -12,10 +12,10 @@
 		"dragon-code/pretty-routes": "^3.0",
 		"guzzlehttp/guzzle": "^7",
 		"inertiajs/inertia-laravel": "^v2",
-		"laravel/framework": "^v12",
+		"laravel/framework": "^13.0",
 		"laravel/sanctum": "^v4",
 		"laravel/telescope": "^v5.7.0",
-		"laravel/tinker": "^v2",
+		"laravel/tinker": "^3.0",
 		"staudenmeir/belongs-to-through": "^2.17",
 		"tightenco/ziggy": "^v2"
 	},
@@ -28,7 +28,7 @@
 		"laravel/breeze": "^v2",
 		"laravel/sail": "^v1",
 		"mockery/mockery": "^1",
-		"phpunit/phpunit": "^11",
+		"phpunit/phpunit": "^12.0",
 		"roave/security-advisories": "dev-latest",
 		"spatie/laravel-ignition": "^2"
 	},

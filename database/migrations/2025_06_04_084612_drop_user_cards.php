@@ -14,7 +14,7 @@ return new class extends Migration {
 	{
 		Schema::create('user_cards', function (Blueprint $table) {
 			$table->id();
-			$table->foreignIdFor(UserDeck::class)->constrained()->cascadeOnDelete();
+			$table->foreignId('user_deck_id')->constrained('user_decks')->cascadeOnDelete();
 			$table->morphs('cardable');
 			// Current "run status":
 			// null => not yet started

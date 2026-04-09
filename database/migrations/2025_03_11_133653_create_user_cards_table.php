@@ -1,7 +1,5 @@
 <?php
 
-use App\Models\Card;
-use App\Models\UserDeck;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -11,7 +9,7 @@ return new class extends Migration {
     {
         Schema::create('user_cards', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(UserDeck::class)->constrained()->cascadeOnDelete();
+            $table->foreignId('user_deck_id')->constrained('user_decks')->cascadeOnDelete();
 			$table->morphs('cardable');
 			// Current "run status":
 			// null => not yet started

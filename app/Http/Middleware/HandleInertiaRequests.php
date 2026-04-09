@@ -50,7 +50,7 @@ class HandleInertiaRequests extends Middleware
 					'admin' => $request->user()?->admin
 				]
 			],
-			'scolcours' => Cache::get('scolcours')->toArray(),
+			'scolcours' => collect(Cache::get('scolcours'))->toArray(),
 			'theme'     => ThemeResolver::resolve(),
 			'themes'    => Theme::getThemesFromCache()
 			                    ->mapWithKeys(function ($item, $key) {
