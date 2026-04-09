@@ -3,7 +3,9 @@ import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 import type {EvaluationInterface, QuestionInterface} from "@/types/modelInterfaces"
 import {ref} from "vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
-import FormMaker from "@/Components/Form/FormMaker.vue"
+import FormSwitch from "@/Components/Form/FormSwitch.vue"
+import FormCodearea from "@/Components/Form/FormCodearea.vue"
+import FormInput from "@/Components/Form/FormInput.vue"
 import QuestionsIndex from "@/Components/Questions/QuestionsIndex.vue"
 import Card from "@/Components/Ui/Card.vue"
 import ScButton from "@/Components/Ui/Button/scButton.vue"
@@ -80,20 +82,19 @@ function update() {
 				</template>
 				<div class="space-y-5">
 					<div>
-						<form-maker
-							type="switch"
+						<FormSwitch
 							label="auto contrôle"
 							v-model="autoControl"
 						/>
 					</div>
 					<div class="space-y-1">
-						<form-maker
+						<FormInput
 							v-model="theTitle"
 							type="text"
 							label="titre"
 						/>
 
-						<form-maker
+						<FormInput
 							v-model="theSlug"
 							type="text"
 							xs
@@ -101,8 +102,7 @@ function update() {
 					</div>
 
 					<div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-						<form-maker
-							type="codearea"
+						<FormCodearea
 							language="latex"
 							v-model="theBody"
 						/>

@@ -25,11 +25,11 @@ Route::middleware('web')
 	          ->prefix('admin')
 	          ->group(function () {
 
-		          Route::get('cours/{course:slug}/edit', [CourseController::class, 'edit'])
+		          Route::get('courses/{course}/edit', [CourseController::class, 'edit'])
 		               ->name('courses.edit');
-		          Route::get('cours/{course:slug}/{team:name}/dashboard', [CourseController::class, 'dashboard'])
+		          Route::get('courses/{course}/{team:name}/dashboard', [CourseController::class, 'dashboard'])
 		               ->name('courses.teams.dashboard');
-		          Route::get('cours/{course:slug}/{team:name}', [CourseController::class, 'showTeam'])
+		          Route::get('courses/{course}/{team:name}', [CourseController::class, 'showTeam'])
 		               ->name('courses.teams.show');
 
 	          });

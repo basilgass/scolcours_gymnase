@@ -7,7 +7,8 @@
 
 
 import {computed, defineAsyncComponent, PropType, ref} from "vue"
-import FormMaker from "@/Components/Form/FormMaker.vue"
+import FormCodearea from "@/Components/Form/FormCodearea.vue"
+import FormInput from "@/Components/Form/FormInput.vue"
 import type {IllustrationInterface} from "@/types/modelInterfaces"
 import ErrorBoundary from "@/Components/errorBoundary.vue"
 import LayoutAdmin from "@/Layouts/LayoutAdmin.vue"
@@ -52,7 +53,7 @@ const showIllustration = ref<boolean>(false)
 
 
 	<div>
-		<form-maker
+		<FormInput
 			v-model="search"
 			:label="`filtrer (${listOfIllustrations.length} / ${props.illustrations.length})`"
 			name="filtrer"
@@ -77,19 +78,18 @@ const showIllustration = ref<boolean>(false)
 			</h2>
 			<div class="p-2 grid grid-cols-1 md:grid-cols-2 gap-3 font-code">
 				<div class="flex flex-col gap-3">
-					<form-maker
+					<FormInput
 						v-model="illustration.parameters"
 						font-code
 						sm
 					/>
-					<form-maker
+					<FormCodearea
 						v-model="illustration.code"
 						:rows="illustration.code.split('\n').length"
 						:wrap="false"
 						font-code
 						language="json"
 						sm
-						type="codearea"
 					/>
 				</div>
 

@@ -10,7 +10,8 @@
 import BarChart from "@/Components/Charts/barChart.vue"
 import BoxPlotChart from "@/Components/Charts/boxPlotChart.vue"
 import LineChart from "@/Components/Charts/lineChart.vue"
-import FormMaker from "@/Components/Form/FormMaker.vue"
+import FormSwitch from "@/Components/Form/FormSwitch.vue"
+import FormInput from "@/Components/Form/FormInput.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 import {Chart} from "chart.js"
 import annotationPlugin from "chartjs-plugin-annotation"
@@ -660,39 +661,38 @@ const tableToTexOutput = computed(() => {
 	<article>
 		<Card class="my-6">
 			<div class="grid grid-cols-1 md:grid-cols-6">
-				<form-maker
+				<FormInput
 					v-model.number="statConfig.samples"
 					label="samples"
 				/>
-				<form-maker
+				<FormInput
 					v-model.number="statConfig.min"
 					label="valeur modale minmale"
 				/>
-				<form-maker
+				<FormInput
 					v-model.number="statConfig.max"
 					label="valeur modale maximale"
 				/>
-				<form-maker
+				<FormInput
 					v-model.number="statConfig.length"
 					label="amplitude de la classe"
 				/>
-				<form-maker
+				<FormInput
 					v-model.number="statConfig.skew"
 					label="biais de la distribution"
 				/>
-				<form-maker
+				<FormInput
 					v-model.number="statConfig.flatten"
 					label="applatissement de la distribution"
 				/>
 
-				<form-maker
+				<FormSwitch
 					v-model="statConfig.percent"
 					label="en pourcent"
 					name="percent"
-					type="switch"
 				/>
 
-				<form-maker
+				<FormInput
 					v-model="statConfig.round"
 					label="précision"
 					max="5"
@@ -702,7 +702,7 @@ const tableToTexOutput = computed(() => {
 			</div>
 
 			<div>
-				<form-maker
+				<FormInput
 					v-model="statCustomNi"
 					label="valeurs custom pour ni"
 				/>

@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import DialogModal from "@/Components/Ui/DialogModal.vue"
-import FormMaker from "@/Components/Form/FormMaker.vue"
+import FormInput from "@/Components/Form/FormInput.vue"
 import {nextTick, ref, useTemplateRef} from "vue"
 import axios from "axios"
 import {router, usePage} from "@inertiajs/vue3"
@@ -10,7 +10,7 @@ import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
 const createChapterModal = ref(false)
 const createChapterTitle = ref("")
 
-const input = useTemplateRef<InstanceType<typeof FormMaker>>('input')
+const input = useTemplateRef<InstanceType<typeof FormInput>>('input')
 
 const editMode = useStoreEditMode()
 
@@ -51,7 +51,7 @@ function createChapter() {
 				</h2>
 			</template>
 			<div class="p-5 flex items-end gap-3">
-				<form-maker
+				<FormInput
 					ref="input"
 					v-model="createChapterTitle"
 					class="flex-1"

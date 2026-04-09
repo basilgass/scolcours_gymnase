@@ -3,7 +3,8 @@
 import {QuizzSessionInterface} from "@/types/modelInterfaces.ts"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
 import {ref} from "vue"
-import FormMaker from "@/Components/Form/FormMaker.vue"
+import FormSwitch from "@/Components/Form/FormSwitch.vue"
+import FormInput from "@/Components/Form/FormInput.vue"
 import axios from "axios"
 import {Link as InertiaLink} from "@inertiajs/vue3"
 
@@ -55,9 +56,8 @@ function updateEnable() {
 				<div>current</div>
 				<div>users</div>
 				<div>{{ session.status }}</div>
-				<form-maker
+				<FormSwitch
 					label=""
-					type="switch"
 					v-model="enable"
 					@update="updateEnable"
 				/>

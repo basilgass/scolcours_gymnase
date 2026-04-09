@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import FormMaker from "@/Components/Form/FormMaker.vue"
+import FormInput from "@/Components/Form/FormInput.vue"
 import {Random} from "pimath"
 import {inject, ref, watch} from "vue"
 import {useLanguage} from "@/Components/Languages/useLanguage.ts"
@@ -136,7 +136,7 @@ const selectCard = function (card) {
 					configuration du memory
 				</h2>
 				<div class="flex gap-3">
-					<form-maker
+					<FormInput
 						v-model="numberOfCards"
 						label="nombre de cartes"
 						max="20"

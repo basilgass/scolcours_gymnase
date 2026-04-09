@@ -1,7 +1,8 @@
 <script lang="ts" setup>
 import BlockShow from "@/Components/Blocks/BlockShow.vue"
 import ChallengeLevelEdit from "@/Components/Challenges/ChallengeLevelEdit.vue"
-import FormMaker from "@/Components/Form/FormMaker.vue"
+import FormSelect from "@/Components/Form/FormSelect.vue"
+import FormInput from "@/Components/Form/FormInput.vue"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 import {ChallengeInterface, IllustrationInterface} from "@/types/modelInterfaces"
@@ -156,12 +157,12 @@ function deleteLevel(levelId: number) {
 			<!-- Identité et description -->
 			<div class="grid grid-cols-1 md:grid-cols-2 gap-3">
 				<div class="flex flex-col gap-3 h-full">
-					<form-maker
+					<FormInput
 						v-model="theChallenge.title"
 						label="titre du challenge"
 						name="titre"
 					/>
-					<form-maker
+					<FormInput
 						v-model="theChallenge.slug"
 						label="slug"
 						name="slug"
@@ -176,16 +177,15 @@ function deleteLevel(levelId: number) {
 							</h3>
 						</template>
 						<div class="flex flex-col gap-3">
-							<form-maker
+							<FormSelect
 								v-model="theChallenge.type"
 								label="type"
 								name="type"
-								type="select"
 								:choices="['classic', 'chrono', 'streak', 'blitz', 'endurance', 'precision']"
 								sm
 							/>
 
-							<form-maker
+							<FormInput
 								v-if="theChallenge.type !== 'endurance'"
 								v-model="theChallenge.time_limit"
 								label="durée (sec)"
@@ -193,7 +193,7 @@ function deleteLevel(levelId: number) {
 								type="number"
 								sm
 							/>
-							<form-maker
+							<FormInput
 								v-if="!['chrono', 'streak'].includes(theChallenge.type)"
 								v-model="theChallenge.lives"
 								:label="theChallenge.type === 'precision' ? 'reprises par niveau' : 'nombre de vies'"

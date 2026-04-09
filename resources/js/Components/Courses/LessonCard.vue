@@ -5,7 +5,7 @@ import {CourseInterface, LessonInterface, ScoreInterface, TeamInterface} from "@
 import {computed, onMounted, ref} from "vue"
 import dayjs from "dayjs"
 import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
-import FormMaker from "@/Components/Form/FormMaker.vue"
+import FormInput from "@/Components/Form/FormInput.vue"
 import axios from "axios"
 import {AxiosErrorMessage} from "@/types"
 import LessonTeamCalendar from "@/Pages/Courses/LessonTeamCalendar.vue"
@@ -125,7 +125,7 @@ onMounted(() => {
 				class="flex-2/3"
 			>
 				<div class="flex gap-3 items-top py-3">
-					<form-maker
+					<FormInput
 						v-model="scheduled_at"
 						btn
 						class="max-w-[250px] "

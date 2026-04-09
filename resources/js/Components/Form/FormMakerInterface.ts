@@ -3,8 +3,6 @@ export interface FormElementExpose {
 	validate: () => string[]
 }
 
-// REFACTOR: FormElementEmits doit exporter des "ModelInterface"
-//string | boolean | number | Record<string, string>  | undefined
 export interface FormElementEmits {
 	update: [value: unknown],
 	enter: [value: unknown],
@@ -14,45 +12,23 @@ export interface FormElementEmits {
 	button: []
 }
 
-export type FormMakerInputsType =
-	"id" |
-	"text" |
-	"email" |
-	"password" |
-	"number" |
-	"color" |
-	"textarea" |
-	"select" |
-	"checkbox" |
-	"code" |
-	"keyboard" |
-	"switch" |
-	"fraction" |
-	"vector"
-	;
+export type TextInputType =
+	'text' | 'id' | 'email' | 'password' | 'number' | 'color' | 'range' | 'date' | 'datetime-local'
 
-export type FormElementType =
-	"text" | "number" | "password" | "email" | "color" | "range" | // Basic elements
-	"date" | "datetime-local" |
-	"id" |
-	"textarea" |
-	"select" | "search" |
-	"fraction" |
-	"vector" |
-	"switch" |
-	"codearea" |
-	"keyboard" |
-	"json" |
-	"theme" | "chapter" | "deck" | 'team'
+export type FormJsonFieldType =
+	TextInputType | 'textarea' | 'select' | 'switch' | 'codearea' | 'fraction' | 'vector' | 'keyboard'
 
-export interface FormMakerPropsNewType {
-	type?: FormElementType,
+export type FormComponentType =
+	FormJsonFieldType | 'search' | 'json' | 'theme' | 'chapter' | 'team' | 'deck'
+
+export interface FormMakerBaseProps {
 	label?: string
 	icon?: boolean | string
 	prepend?: boolean | string
 	inlineLabel?: boolean
 	btn?: boolean | string
 	clearable?: boolean
+	disabled?: boolean
 	message?: string
 	messageClass?: string
 	xs?: boolean

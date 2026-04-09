@@ -2,7 +2,7 @@
 Affichage de la liste des challenges pour un chapitre donné.
 -->
 <script lang="ts" setup>
-import FormMaker from "@/Components/Form/FormMaker.vue"
+import FormInput from "@/Components/Form/FormInput.vue"
 import DialogModal from "@/Components/Ui/DialogModal.vue"
 import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
 import {ChallengeMinInterface, ChapterShowInterface} from "@/types/modelInterfaces.ts"
@@ -84,7 +84,7 @@ function storeChallenge() {
 					</div>
 				</template>
 				<div class="px-5">
-					<form-maker
+					<FormInput
 						v-model="form.title"
 						:focus="true"
 						label="Nouveau challenge"

@@ -1,17 +1,34 @@
 <script lang="ts" setup>
 
-import FormMaker from "@/Components/Form/FormMaker.vue"
-import {FormElementType} from "@/Components/Form/FormMakerInterface"
+import FormInput from "@/Components/Form/FormInput.vue"
+import FormSwitch from "@/Components/Form/FormSwitch.vue"
+import FormCodearea from "@/Components/Form/FormCodearea.vue"
+import FormTextarea from "@/Components/Form/FormTextarea.vue"
+import FormFraction from "@/Components/Form/FormFraction.vue"
+import FormVector from "@/Components/Form/FormVector.vue"
+import {FormComponentType} from "@/Components/Form/FormMakerInterface"
 import {useToolsStorage} from "@/Composables/useToolsStorage.ts"
 import {useClipboard} from "@vueuse/core"
-import {computed, ComputedRef, inject, onMounted, ref, Ref, watch} from "vue"
+import {type Component, computed, ComputedRef, inject, onMounted, ref, Ref, watch} from "vue"
 import ScButton from "@/Components/Ui/Button/scButton.vue"
 import {router} from "@inertiajs/vue3"
 import Card from "@/Components/Ui/Card.vue"
 
+const componentMap: Partial<Record<FormComponentType, Component>> = {
+	switch: FormSwitch,
+	codearea: FormCodearea,
+	textarea: FormTextarea,
+	fraction: FormFraction,
+	vector: FormVector,
+}
+
+function resolveFormComponent(type?: FormComponentType): Component {
+	return componentMap[type] ?? FormInput
+}
+
 export interface IToolForm {
 	label: string | ComputedRef<string>
-	type?: FormElementType
+	type?: FormComponentType
 	value: Ref<string | boolean | number>
 	fromUrl?: string,
 	message?: string,
@@ -54,9 +71,9 @@ const link = computed(() => {
 	return url + `?${query.toString()}`
 })
 
-const formComponents = ref<InstanceType<typeof FormMaker>[]>([])
+const formComponents = ref<{ focus?: () => void }[]>([])
 
-function addFormRef(element: InstanceType<typeof FormMaker>) {
+function addFormRef(element: { focus?: () => void }) {
 	if (formComponents.value.indexOf(element) === -1) {
 		formComponents.value.push(element)
 	}
@@ -171,7 +188,8 @@ onMounted(() => {
 			:class="formClass"
 			v-show="showForm"
 		>
-			<form-maker
+			<component
+				:is="resolveFormComponent(f.type)"
 				v-for="(f, index) in forms"
 				:key="`form-${index}`"
 				:ref="addFormRef"
@@ -181,7 +199,7 @@ onMounted(() => {
 				:from-url="f.fromUrl ?? null"
 				:label="(typeof f.label==='string') ? f.label : f.label.value"
 				:message="f.message"
-				:type="f.type? f.type : 'text'"
+				:type="f.type"
 				font-code
 				message-class="text-xs!"
 				:inline-label="f.inline"

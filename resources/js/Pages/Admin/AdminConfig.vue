@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import FormMaker from "@/Components/Form/FormMaker.vue"
+import FormSwitch from "@/Components/Form/FormSwitch.vue"
+import FormInput from "@/Components/Form/FormInput.vue"
 import {ThemeInterface} from "@/types/modelInterfaces.ts"
 import axios from "axios"
 import {PropType, ref} from "vue"
@@ -59,7 +60,7 @@ function sortEvent() {
 				Configuration du site web
 			</h1>
 
-			<form-maker
+			<FormInput
 				v-model="title"
 				label="titre du site web"
 				name="title"
@@ -89,8 +90,7 @@ function sortEvent() {
 								<i :class="`${element.icon}`" />
 							</div>
 
-							<form-maker
-								type="switch"
+							<FormSwitch
 								v-model="element.enabled"
 								:name="`${element}-enabled`"
 								label="activé,désactivé"

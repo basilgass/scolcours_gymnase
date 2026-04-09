@@ -2,7 +2,10 @@
 	lang="ts"
 	setup
 >
-import FormMaker from "@/Components/Form/FormMaker.vue"
+import FormCodearea from "@/Components/Form/FormCodearea.vue"
+import FormTextarea from "@/Components/Form/FormTextarea.vue"
+import FormKeyboard from "@/Components/Form/FormKeyboard.vue"
+import FormInput from "@/Components/Form/FormInput.vue"
 import QuestionShow from "@/Components/Questions/QuestionShow.vue"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
@@ -196,7 +199,7 @@ const equationCheck = computed(() => {
 				class="space-y-3 font-code "
 				@submit.prevent
 			>
-				<form-maker
+				<FormInput
 					v-model="theQuestion.block.title"
 					inline-label
 					label="titre"
@@ -205,7 +208,7 @@ const equationCheck = computed(() => {
 					sm
 				/>
 
-				<form-maker
+				<FormInput
 					v-model="theQuestion.css"
 					inline-label
 					label="CSS"
@@ -246,7 +249,7 @@ const equationCheck = computed(() => {
 					</sc-button>
 				</div>
 
-				<form-maker
+				<FormCodearea
 					ref="formBody"
 					v-model="theQuestion.block.body"
 					:label="`body (id: ${theQuestion.block.id})`"
@@ -254,34 +257,30 @@ const equationCheck = computed(() => {
 					language="latex"
 					message="$a = TeX, $A = texte (block ou inline), _$A=no placeholder, @$A = format spéciaux"
 					message-class="text-[12px]"
-					type="codearea"
 				/>
 
-				<form-maker
+				<FormTextarea
 					v-model="theQuestion.answer"
 					:rows="3"
 					label="answer"
 					message="multi-réponse: ||"
 					message-class="text-[12px]"
 					name="answer"
-					type="textarea"
 				/>
 
-				<form-maker
+				<FormTextarea
 					v-model="theQuestion.equationControl"
 					:rows="1"
 					label="global check"
 					name="globalCheck"
-					type="textarea"
 				/>
 
 				{{ equationCheck ? 'OK' : 'erreur' }}
 
-				<form-maker
+				<FormKeyboard
 					v-model="theQuestion.keyboard"
 					:rows="8"
 					label="clavier"
-					type="keyboard"
 				/>
 			</form>
 

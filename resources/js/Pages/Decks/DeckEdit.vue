@@ -3,7 +3,8 @@
 	setup
 >
 
-import FormMaker from "@/Components/Form/FormMaker.vue"
+import FormChapter from "@/Components/Form/FormChapter.vue"
+import FormInput from "@/Components/Form/FormInput.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 import type {ChapterInterface, DeckInterface} from "@/types/modelInterfaces"
 import {computed, ref} from "vue"
@@ -69,10 +70,9 @@ function updateDeck() {
 					</sc-button>
 				</div>
 			</template>
-			<form-maker v-model="theTitle" />
-			<form-maker
+			<FormInput v-model="theTitle" />
+			<FormChapter
 				v-model="chapter"
-				type="chapter"
 				label="Chapitre"
 				class="mt-6 bg-content p-3"
 				sm

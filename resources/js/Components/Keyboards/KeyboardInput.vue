@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 // parameters: tex
 import AsciiMathParser from "@/asciimath2tex"
-import FormMaker from "@/Components/Form/FormMaker.vue"
+import FormInput from "@/Components/Form/FormInput.vue"
 import {computed, ref} from "vue"
 import type {
 	KeyboardEmitsInterface,
@@ -69,7 +69,7 @@ const format = computed(() => {
 
 <template>
 	<div>
-		<form-maker
+		<FormInput
 			v-model="inputValue"
 			label="réponse"
 			name="kbrd-input"

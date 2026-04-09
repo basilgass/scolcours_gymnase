@@ -1,6 +1,7 @@
 {
 	"private": true,
 	"type": "module",
+	"web-types": "./web-types.json",
 	"scripts": {
 		"dev": "vite serve",
 		"deps": "vite serve --force",

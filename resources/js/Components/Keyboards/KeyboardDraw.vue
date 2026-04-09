@@ -124,7 +124,7 @@ async function setInput(value?: string): Promise<KeyboardInputInterface> {
 
 		return {
 			input: line.asMxh.display,
-			tex: "",
+			tex: line.asMxh.tex,
 			raw: getSvg()
 		}
 	}

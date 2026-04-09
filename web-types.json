@@ -1,0 +1,48 @@
+{
+	"$schema": "https://raw.githubusercontent.com/JetBrains/web-types/master/schema/web-types.json",
+	"name": "scolcours",
+	"version": "1.0.0",
+	"contributions": {
+		"html": {
+			"vue-directives": [
+				{
+					"name": "katex",
+					"description": "Renders a LaTeX/AsciiMath expression using KaTeX.",
+					"modifiers": [
+						{"name": "auto",     "description": "Parses mixed text/math content via KaTeX auto-render (delimiters \\( \\) and \\[ \\])."},
+						{"name": "clear",    "description": "Skips adding the `katex-container` wrapper class."},
+						{"name": "boxed",    "description": "Adds the `katex-boxed` class (framed box)."},
+						{"name": "lg",       "description": "Adds the `katex-boxed-lg` class (large framed box)."},
+						{"name": "left",     "description": "Adds the `katex-left` class (left-aligned)."},
+						{"name": "nomargin", "description": "Adds `katex-m-0` (removes margin)."},
+						{"name": "dense",    "description": "Adds `katex-m-1` (reduced margin)."},
+						{"name": "ascii",    "description": "Converts AsciiMath to TeX before rendering."},
+						{"name": "inline",   "description": "Forces inline display mode (overrides block detection)."},
+						{"name": "display",  "description": "Prepends \\displaystyle to the expression."},
+						{"name": "output",   "description": "Shows the raw TeX source below the rendered output."}
+					]
+				},
+				{
+					"name": "theme",
+					"description": "Applies theme-based Tailwind CSS classes to the element.",
+					"modifiers": [
+						{"name": "bg",       "description": "Applies the theme background color class."},
+						{"name": "text",     "description": "Applies the theme text color class."},
+						{"name": "border",   "description": "Applies the theme border color class (also adds `border`)."},
+						{"name": "outline",  "description": "Applies the theme outline color class (also adds `outline-2`)."},
+						{"name": "gradient", "description": "Applies a vertical linear gradient using the theme colors."},
+						{"name": "from",     "description": "Sets the gradient `from-*` color stop."},
+						{"name": "to",       "description": "Sets the gradient `to-*` color stop."},
+						{"name": "admin",    "description": "Applies admin styling (equivalent to .bg + .text with admin theme)."},
+						{"name": "light",    "description": "Uses the light intensity variant of the theme color."},
+						{"name": "dark",     "description": "Uses the dark intensity variant of the theme color."}
+					]
+				},
+				{
+					"name": "admin",
+					"description": "Shows the element only if the current user has admin rights. Accepts an optional boolean binding to toggle visibility."
+				}
+			]
+		}
+	}
+}

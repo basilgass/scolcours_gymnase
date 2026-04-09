@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 import {ref} from "vue"
-import FormMaker from "@/Components/Form/FormMaker.vue"
+import FormSwitch from "@/Components/Form/FormSwitch.vue"
+import FormInput from "@/Components/Form/FormInput.vue"
 import {blockTypes} from "@/block.config.ts"
 import BlockShow from "@/Components/Blocks/BlockShow.vue"
 import {makeBlock} from "@/helpers/makeModel.ts"
@@ -310,16 +311,16 @@ const value = ref(false)
 				Forms
 			</summary>
 			<div class="bg-content p-3">
-				<form-maker
+				<FormInput
 					label="demande d'un texte"
 					placeholder="placeholder"
 				/>
-				<form-maker
+				<FormInput
 					sm
 					label="demande d'un texte"
 					placeholder="placeholder"
 				/>
-				<form-maker
+				<FormInput
 					label="demande d'un texte"
 					placeholder="placeholder"
 					with-icon
@@ -327,20 +328,17 @@ const value = ref(false)
 
 
 				<div class="flex gap-3 justify-between items-center mt-3">
-					<form-maker
+					<FormSwitch
 						v-model="value"
-						type="switch"
 						sm
 						label="active,not active"
 					/>
-					<form-maker
+					<FormSwitch
 						v-model="value"
-						type="switch"
 						label="active,not active"
 					/>
-					<form-maker
+					<FormSwitch
 						v-model="value"
-						type="switch"
 						xl
 						label="active,not active"
 					/>

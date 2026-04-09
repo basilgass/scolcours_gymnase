@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {Head, useForm} from "@inertiajs/vue3"
 import LayoutGuest from "@/Layouts/LayoutGuest.vue"
-import FormMaker from "@/Components/Form/FormMaker.vue"
+import FormInput from "@/Components/Form/FormInput.vue"
 import ScButton from "@/Components/Ui/Button/scButton.vue"
 
 defineOptions({layout: LayoutGuest})
@@ -33,7 +33,7 @@ function submit() {
 	</div>
 
 	<form @submit.prevent="submit">
-		<form-maker
+		<FormInput
 			label="Email"
 			autocomplete="username"
 			focus

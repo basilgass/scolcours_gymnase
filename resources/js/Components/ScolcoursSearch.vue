@@ -1,7 +1,7 @@
 <script setup lang="ts">
 
 import {ref} from "vue"
-import FormMaker from "@/Components/Form/FormMaker.vue"
+import FormInput from "@/Components/Form/FormInput.vue"
 import axios from "axios"
 import {watchDebounced} from "@vueuse/core"
 
@@ -51,7 +51,7 @@ watchDebounced(
 
 <template>
 	<div id="search-everywhere">
-		<form-maker
+		<FormInput
 			v-model="terms"
 			placeholder="rechercher..."
 		/>

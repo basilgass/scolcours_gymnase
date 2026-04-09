@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 
-import FormMaker from "@/Components/Form/FormMaker.vue"
+import FormInput from "@/Components/Form/FormInput.vue"
 import {BookInterface} from "@/types/modelInterfaces.ts"
 import axios from "axios"
 import {ref, watch} from "vue"
@@ -57,12 +57,12 @@ function createBook() {
 			class="flex flex-col items-end border rounded-sm p-3 bg-content"
 			v-if="book===-1"
 		>
-			<form-maker
+			<FormInput
 				v-model="bookTitle"
 				label="nouveau livre"
 				class="flex-1 w-full"
 			/>
-			<form-maker
+			<FormInput
 				v-model="bookSlug"
 				label="code du livre"
 				class="flex-1 w-full"

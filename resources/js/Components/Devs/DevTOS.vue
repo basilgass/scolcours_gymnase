@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import FormMaker from "@/Components/Form/FormMaker.vue"
+import FormInput from "@/Components/Form/FormInput.vue"
 import TableOfSigns from "@/Components/Pi/TableOfSigns.vue"
 import { TABLE_OF_SIGNS_VALUES } from "pimath"
 import { computed, ref } from "vue"
@@ -20,21 +20,21 @@ const extremes = computed(()=> extremesStr.value.split(',') as TABLE_OF_SIGNS_VA
 
 <template>
 	<div class="grid grid-cols-2 gap-5 mb-10 p-5 md:p-0">
-		<form-maker
+		<FormInput
 			label="root"
 			v-model="rootsStr"
 		/>
-		<form-maker
+		<FormInput
 			label="signs"
 			v-model="signsStr"
 		/>
 
-		<form-maker
+		<FormInput
 			label="result"
 			v-model="resultStr"
 		/>
 
-		<form-maker
+		<FormInput
 			label="extremes"
 			v-model="extremesStr"
 		/>

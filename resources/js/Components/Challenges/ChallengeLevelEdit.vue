@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import FormMaker from "@/Components/Form/FormMaker.vue"
+import FormInput from "@/Components/Form/FormInput.vue"
 import FormSearchModel from "@/Components/Form/FormSearchModel/FormSearchModel.vue"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
 import Card from "@/Components/Ui/Card.vue"
@@ -146,7 +146,7 @@ function clearTimePerQuestion(gen: GeneratorInterface) {
 				<!-- Time per question -->
 				<div class="flex items-center gap-1">
 					<template v-if="timeEditVisible.has(gen.id)">
-						<form-maker
+						<FormInput
 							v-model="gen.config!.time_per_question"
 							label="sec"
 							name="time_per_question"
@@ -197,7 +197,7 @@ function clearTimePerQuestion(gen: GeneratorInterface) {
 		<template #footer>
 			<div class="flex justify-between items-center">
 				<!-- Points pour passer -->
-				<form-maker
+				<FormInput
 					v-model="localLevel.points_to_pass"
 					label="prochain niveau"
 					name="points_to_pass"

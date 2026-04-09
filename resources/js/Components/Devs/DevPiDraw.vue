@@ -1,7 +1,8 @@
 <script setup lang="ts">
 
 import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"
-import FormMaker from "@/Components/Form/FormMaker.vue"
+import FormTextarea from "@/Components/Form/FormTextarea.vue"
+import FormInput from "@/Components/Form/FormInput.vue"
 import {computed, provide, ref} from "vue"
 import Card from "@/Components/Ui/Card.vue"
 import {PiDraw} from "pidraw"
@@ -37,16 +38,15 @@ const draw = computed(()=>{
 	<article>
 		<div class="grid grid-cols-1 md:grid-cols-3 gap-3">
 			<Card>
-				<form-maker
+				<FormInput
 					xs
 					type="text"
 					label="paramètres"
 					v-model="parameters"
 				/>
 
-				<form-maker
+				<FormTextarea
 					xs
-					type="textarea"
 					label="code"
 					v-model="code"
 					rows="15"

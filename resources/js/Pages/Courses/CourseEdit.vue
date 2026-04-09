@@ -1,14 +1,10 @@
 <script lang="ts" setup>
-import {
-	ChallengeInterface,
-	ChapterInterface,
-	CourseInterface,
-	DeckInterface,
-	LessonInterface,
-	PostShowInterface
-} from "@/types/modelInterfaces.ts"
+import {ChapterInterface, CourseInterface, LessonInterface, PostShowInterface} from "@/types/modelInterfaces.ts"
 import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
-import FormMaker from "@/Components/Form/FormMaker.vue"
+import FormTheme from "@/Components/Form/FormTheme.vue"
+import FormCodearea from "@/Components/Form/FormCodearea.vue"
+import FormChapter from "@/Components/Form/FormChapter.vue"
+import FormInput from "@/Components/Form/FormInput.vue"
 import {computed, ref} from "vue"
 import Card from "@/Components/Ui/Card.vue"
 import CourseLessonEdit from "@/Components/Courses/CourseLessonEdit.vue"
@@ -17,7 +13,8 @@ import LessonTypeIcon from "@/Components/Courses/LessonTypeIcon.vue"
 import ScButton from "@/Components/Ui/Button/scButton.vue"
 import {lessonableClassName, LessonScoreRulesInterface} from "@/types/lessonInterfaces.ts"
 import axios from "axios"
-import {FormElementType} from "@/Components/Form/FormMakerInterface.ts"
+import {FormJsonFieldType} from "@/Components/Form/FormMakerInterface.ts"
+import FormJson from "@/Components/Form/FormJson.vue"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 import {useCourse} from "@/Pages/Courses/useCourse.ts"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
@@ -135,8 +132,6 @@ function addAllPosts() {
 		})
 }
 
-const deck = ref<DeckInterface>()
-const availableChallenges = ref<ChallengeInterface[]>([])
 const scoreRules = ref<LessonScoreRulesInterface>(undefined)
 
 function deleteLesson(lesson: LessonInterface) {
@@ -187,7 +182,7 @@ function toggleIdInPlace(array: (string | number)[], id: string | number): void 
 	}
 }
 
-const lessonJsonMap = computed<Record<string, FormElementType>>(() => {
+const lessonJsonMap = computed<Record<string, FormJsonFieldType>>(() => {
 	return useCourse().lessonScoreRulesMap(showAddTab.value)
 })
 
@@ -227,16 +222,15 @@ function updateLessonsOrder() {
 
 		<Card>
 			<div class="flex flex-col gap-3">
-				<form-maker v-model="theCourse.title" />
-				<form-maker
+				<FormInput v-model="theCourse.title" />
+				<FormInput
 					v-model="theCourse.slug"
 					xs
 				/>
-				<form-maker
+				<FormTheme
 					v-model="theCourse.theme_id"
 					label="thème du cours"
 					theme-key="id"
-					type="theme"
 				/>
 
 				<div class="flex justify-between">
@@ -255,12 +249,11 @@ function updateLessonsOrder() {
 					</div>
 				</div>
 				<div class="grid grid-cols-1 gap-3 md:grid-cols-2">
-					<form-maker
+					<FormCodearea
 						v-model="theCourse.block.body"
 						auto-size
 						label="description du cours"
 						resizeable
-						type="codearea"
 					/>
 					<markdown-it :text="theCourse.block.body" />
 				</div>
@@ -296,9 +289,8 @@ function updateLessonsOrder() {
 							<div class="py-3">
 								<div>Choix du chapitre</div>
 
-								<form-maker
+								<FormChapter
 									v-model="chapter"
-									type="chapter"
 									@update="loadPosts"
 								/>
 							</div>
@@ -360,16 +352,15 @@ function updateLessonsOrder() {
 				</div>
 			</div>
 
-			<Card class="min-w-[300px]">
+			<Card class="min-w-75">
 				<template #header>
 					Score rules
 				</template>
 
-				<form-maker
+				<FormJson
 					v-if="Object.keys(lessonJsonMap).length>0"
 					v-model="scoreRules"
 					:map="lessonJsonMap"
-					type="json"
 				/>
 			</Card>
 		</div>
@@ -381,7 +372,7 @@ function updateLessonsOrder() {
 			<draggable
 				v-if="lessons.length"
 				:list="lessons"
-				class="mt-10 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3"
+				class="mt-10 flex flex-col gap-3"
 				handle=".draggable-handle"
 				item-key="id"
 				v-bind="{
@@ -391,38 +382,48 @@ function updateLessonsOrder() {
 			>
 				<template #item="{ element }: {element: LessonInterface}">
 					<Card
+						class="max-w-2xl"
 						:class="{
 							' bg-blue-100 border-blue-600 text-blue-600': itemSource?.id===element.id
 						}"
 					>
 						<template #header>
 							<div
-								class="flex justify-between"
+								class="flex justify-between items-baseline"
 							>
-								<div
-									class="flex gap-3 items-baseline cursor-pointer"
-									@click="setItemSource(element)"
-								>
-									<i class="bi bi-arrows-move draggable-handle" />
+								<div class="flex gap-3 items-baseline">
+									<div class="draggable-handle flex gap-3 items-baseline cursor-move">
+										<i class="bi bi-arrows-move" />
+
+										<div class="font-code text-xs">
+											({{ element.id }})
+										</div>
+									</div>
+
 									<lesson-type-icon :lesson="element" />
 
 									<div
 										v-katex.auto="element.title"
-										class="text-lg font-[400]"
+										class="text-lg font-normal cursor-pointer"
+										@click="setItemSource(element)"
 									/>
-									<div class="font-code w-[16px] text-xs">
-										({{ element.id }})
-									</div>
 								</div>
 
-								<div v-if="itemSource?.id===element.id">
-									{{ element.requires }}
+								<div class="flex gap-2">
+									<sc-button
+										xs
+										type="primary"
+										:href="route('students.lessons.show', {course: course.slug, lesson: element.id})"
+									>
+										visiter
+									</sc-button>
+									<confirm-button
+										xs
+										@confirm="deleteLesson(element)"
+									>
+										supprimer
+									</confirm-button>
 								</div>
-								<i
-									v-else-if="itemSource"
-									class="bi bi-link text-xl text-blue-600 cursor-pointer"
-									@click="onClick(element)"
-								/>
 							</div>
 						</template>
 
@@ -430,16 +431,18 @@ function updateLessonsOrder() {
 							:lesson="element"
 						/>
 
-						<template #footer>
-							<div class="flex justify-between">
-								<div />
-								<confirm-button
-									xs
-									@confirm="deleteLesson(element)"
-								>
-									supprimer
-								</confirm-button>
+						<template
+							v-if="itemSource?.id===element.id"
+							#footer
+						>
+							<div v-if="itemSource?.id===element.id">
+								{{ element.requires }}
 							</div>
+							<i
+								v-else-if="itemSource"
+								class="bi bi-link text-xl text-blue-600 cursor-pointer"
+								@click="onClick(element)"
+							/>
 						</template>
 					</Card>
 				</template>

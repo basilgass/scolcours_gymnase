@@ -14,6 +14,7 @@ import {onMounted, ref, useTemplateRef} from "vue"
 import ScButton from "@/Components/Ui/Button/scButton.vue"
 import {router} from "@inertiajs/vue3"
 import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
+import {useStoreFormular} from "@/stores/useStoreFormular.ts"
 
 const props = withDefaults(defineProps<{
 		chapter: ChapterInterface,
@@ -33,6 +34,7 @@ const theFormular = ref([]),
 
 const flash = useStoreFlashMessage()
 const editMode = useStoreEditMode()
+const storeFormular = useStoreFormular()
 
 function addFormula() {
 	axios
@@ -40,6 +42,8 @@ function addFormula() {
 		.then((res: AxiosResponseModel<FormulaInterface>) => {
 			flash.success("formule créée")
 			theFormular.value.push(res.data)
+
+			storeFormular.invalidateChapter(props.chapter.id)
 
 			// Go and edit the new formula
 			router.visit(route('admin.blocks.edit', {id: res.data.block.id}))
@@ -67,13 +71,11 @@ function updateFormulasOrder() {
 function loadFormular() {
 	loadingState.value = true
 
-	axios.get(route("api.chapters.formulas.index", {
-		chapter: props.chapter.id
-	}))
-		.then((res) => {
-			theFormular.value = res.data.formular
+	storeFormular.getChapterData(currentChapterId.value)
+		.then((data) => {
+			theFormular.value = data.formular
 			// Add the new chapters to the list
-			res.data.chapters.forEach((chapter) => {
+			data.chapters.forEach((chapter) => {
 				if (
 					!themeChapters.value.find(
 						(x) => x.id === chapter.id
@@ -82,7 +84,6 @@ function loadFormular() {
 					themeChapters.value.push(chapter)
 				}
 			})
-			// themeChapters.value = res.data.chapters
 		})
 		.catch((err) => {
 			theFormularErrors.value = err.toJSON()
@@ -100,6 +101,7 @@ function updateFormular(value: ChapterInterface) {
 
 function destroyFormula(id: number) {
 	theFormular.value = theFormular.value.filter(x => x.id !== id)
+	storeFormular.removeFormula(id)
 }
 
 onMounted(() => {

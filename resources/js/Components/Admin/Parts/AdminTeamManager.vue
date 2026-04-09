@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import FormMaker from "@/Components/Form/FormMaker.vue"
+import FormInput from "@/Components/Form/FormInput.vue"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
 import {TeamInterface} from "@/types/modelInterfaces.ts"
 import axios from "axios"
@@ -56,7 +56,7 @@ function destroyTeam(teamId: number) {
 		</template>
 
 		<div>
-			<form-maker
+			<FormInput
 				v-model="newTeam"
 				label="nouvelle équipe"
 				name="newTeam"
@@ -66,7 +66,7 @@ function destroyTeam(teamId: number) {
 				<template #button>
 					créer
 				</template>
-			</form-maker>
+			</FormInput>
 		</div>
 		<template #footer>
 			<div>

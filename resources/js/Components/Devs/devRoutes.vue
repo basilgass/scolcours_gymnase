@@ -1,6 +1,7 @@
 <script setup lang="ts">
 
-import FormMaker from "@/Components/Form/FormMaker.vue"
+import FormSearch from "@/Components/Form/FormSearch.vue"
+import FormInput from "@/Components/Form/FormInput.vue"
 import {watchDebounced} from "@vueuse/core"
 import {AxiosErrorMessage} from "@/types"
 import {ref} from "vue"
@@ -26,8 +27,7 @@ function getRoute(value: { id: number, title: string } | string) {
 
 <template>
 	<div>
-		<form-maker
-			type="search"
+		<FormSearch
 			:fetch="route('routes.index')"
 			v-model="name"
 			@enter="getRoute($event as string)"

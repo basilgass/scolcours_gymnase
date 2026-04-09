@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import FormImageDrop from "@/Components/Form/FormImageDrop.vue"
-import FormMaker from "@/Components/Form/FormMaker.vue"
+import FormCodearea from "@/Components/Form/FormCodearea.vue"
+import FormInput from "@/Components/Form/FormInput.vue"
 import IllustrationShow from "@/Components/Illustrations/IllustrationShow.vue"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
@@ -296,7 +297,7 @@ onMounted(() => {
 							class="col-span-2 w-full"
 						>
 							<div class="mb-3">
-								<form-maker
+								<FormInput
 									v-model="theIllustration.parameters"
 									class="font-code mt-3 text-xs"
 									inline
@@ -306,16 +307,15 @@ onMounted(() => {
 									<template #message>
 										grid, axis, x=-5:5, y=-5:5, unit=1:2, tex, nolabel, nopoint
 									</template>
-								</form-maker>
+								</FormInput>
 							</div>
 
-							<form-maker
+							<FormCodearea
 								v-model="theIllustration.code"
 								:hide-label="true"
 								:rows="10"
 								input-class="font-code"
 								name="drawData"
-								type="codearea"
 								@current-line="currentLine = $event"
 							/>
 
@@ -347,15 +347,14 @@ onMounted(() => {
 							v-else
 							class="col-span-2 h-full w-full flex flex-col gap-3"
 						>
-							<form-maker
+							<FormInput
 								v-model="theIllustration.parameters"
 								label="paramètres"
 							/>
-							<form-maker
+							<FormCodearea
 								v-model="theIllustration.code"
 								:rows="10"
 								language="latex"
-								type="codearea"
 							/>
 							<markdown-it
 								v-if="currentComponent"
@@ -384,21 +383,21 @@ onMounted(() => {
 			</div>
 
 			<div class="grid grid-cols-1 md:grid-cols-2 gap-3 w-full p-5">
-				<form-maker
+				<FormInput
 					v-model="theIllustration.title"
 					inline
 					label="titre de la figure"
 					sm
 				/>
 
-				<form-maker
+				<FormInput
 					v-model="theIllustration.footer"
 					inline
 					label="commentaire de la figure"
 					sm
 				/>
 
-				<form-maker
+				<FormInput
 					v-model="theIllustration.css"
 					class="font-code"
 					inline

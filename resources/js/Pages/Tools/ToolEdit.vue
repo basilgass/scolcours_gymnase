@@ -3,7 +3,8 @@
 	setup
 >
 
-import FormMaker from "@/Components/Form/FormMaker.vue"
+import FormCodearea from "@/Components/Form/FormCodearea.vue"
+import FormInput from "@/Components/Form/FormInput.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 import {ToolInterface} from "@/types/modelInterfaces.ts"
 import {useForm} from "@inertiajs/vue3"
@@ -61,17 +62,16 @@ function saveTool() {
 		</div>
 
 		<div>
-			<form-maker
+			<FormInput
 				v-model="form.title"
 				focus
 				label="titre"
 			/>
 
-			<form-maker
+			<FormCodearea
 				v-model="form.body"
 				label="body"
 				language="latex"
-				type="codearea"
 			/>
 		</div>
 	</section>

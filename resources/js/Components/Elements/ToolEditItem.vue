@@ -1,7 +1,8 @@
 <script setup lang="ts">
 
 import {ToolInterface} from "@/types/modelInterfaces.ts"
-import FormMaker from "@/Components/Form/FormMaker.vue"
+import FormTextarea from "@/Components/Form/FormTextarea.vue"
+import FormInput from "@/Components/Form/FormInput.vue"
 import ThemeSelector from "@/Components/Ui/ThemeSelector.vue"
 import axios from "axios"
 import ScButton from "@/Components/Ui/Button/scButton.vue"
@@ -36,16 +37,15 @@ function updateTool() {
 		class="grid grid-cols-2 gap-3"
 	>
 		<div class="flex flex-col gap-3">
-			<form-maker
+			<FormInput
 				v-model="tool.title"
 				label="titre"
 				focus
 			/>
 
-			<form-maker
+			<FormTextarea
 				v-model="tool.body"
 				label="body"
-				type="textarea"
 			/>
 
 

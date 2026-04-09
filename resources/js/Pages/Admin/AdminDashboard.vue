@@ -68,8 +68,8 @@ function nextLessonByTeam(course: CourseAdminInterface): Record<string, string> 
 				>
 					<template #header>
 						<h3
-							class="font-lg md:font-xl font-semibold"
 							v-katex.auto="course.title"
+							class="font-lg md:font-xl font-semibold"
 						/>
 					</template>
 
@@ -82,7 +82,7 @@ function nextLessonByTeam(course: CourseAdminInterface): Record<string, string> 
 							<sc-button
 								type="primary"
 								xs
-								:href="route('admin.courses.teams.dashboard', { course: course.slug, team: name })"
+								:href="route('admin.courses.teams.dashboard', { course: course.id, team: name })"
 								class="w-[80px]"
 							>
 								{{ name }}

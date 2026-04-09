@@ -2,7 +2,8 @@
 
 import Card from "@/Components/Ui/Card.vue"
 import {ref} from "vue"
-import FormMaker from "@/Components/Form/FormMaker.vue"
+import FormSelect from "@/Components/Form/FormSelect.vue"
+import FormInput from "@/Components/Form/FormInput.vue"
 
 
 const value = ref("")
@@ -16,10 +17,9 @@ const choices = {
 <template>
 	<article class="scolcours-container grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
 		<Card>
-			<form-maker
+			<FormSelect
 				v-model="value"
 				label="selection input"
-				type="select"
 				:choices
 			/>
 		</Card>

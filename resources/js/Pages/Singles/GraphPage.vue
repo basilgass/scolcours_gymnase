@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"
-import FormMaker from "@/Components/Form/FormMaker.vue"
+import FormInput from "@/Components/Form/FormInput.vue"
 import {computed, ref, watch} from "vue"
 
 import LayoutMain from "@/Layouts/LayoutMain.vue"
@@ -170,7 +170,7 @@ function addFunction(type: "x" | "t" = "x") {
 								a,a+1,...,b/pas=par défaut
 							</div>
 						</div>
-						<form-maker
+						<FormInput
 							v-for="(param, index) in paramsValues"
 							:key="`parameter-${index}`"
 							v-model="param.value"
@@ -190,7 +190,7 @@ function addFunction(type: "x" | "t" = "x") {
 					class="bg-white dark:bg-slate-600 p-3 rounded-lg border"
 				/>
 
-				<form-maker
+				<FormInput
 					v-model="drawParams"
 					font-code
 					label="paramètres"

@@ -5,7 +5,7 @@ import {makeBlock} from "@/helpers/makeModel.ts"
 import DeckCardItemSide from "@/Components/Decks/Parts/DeckCardItemSide.vue"
 import {computed, ref} from "vue"
 import ScButton from "@/Components/Ui/Button/scButton.vue"
-import FormMaker from "@/Components/Form/FormMaker.vue"
+import FormInput from "@/Components/Form/FormInput.vue"
 
 const props = defineProps<{
 	blocks: BlockInterface[]
@@ -66,7 +66,7 @@ defineEmits<{
 			class="flex flex-col gap-2"
 		>
 			<div class="flex justify-end">
-				<form-maker
+				<FormInput
 					v-model="splitters[index]"
 					xs
 					inline-label

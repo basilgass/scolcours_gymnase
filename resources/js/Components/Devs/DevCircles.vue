@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import FormMaker from "@/Components/Form/FormMaker.vue"
+import FormInput from "@/Components/Form/FormInput.vue"
 import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 import {Circle} from "pimath"
@@ -62,7 +62,7 @@ onMounted(() => {
 <template>
 	<!-- Title -->
 	<div ref="root">
-		<form-maker
+		<FormInput
 			v-model="circle"
 			label="Cercle"
 			name="circle"

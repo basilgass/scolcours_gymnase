@@ -20,13 +20,6 @@ const iconType = computed(() => {
 	return props.post.type
 })
 
-const revise = computed(() => {
-	if (props.post === null) return false
-	if (typeof props.post === "string") return false
-
-	return props.post.revise
-
-})
 </script>
 
 <template>
@@ -37,7 +30,6 @@ const revise = computed(() => {
 			'bi bi-card-checklist': iconType==='howto',
 			'text-xl': xl,
 			'text-xs': xs,
-			'text-red-500' : revise && $page.props.auth.can.admin
 		}"
 	/>
 </template>

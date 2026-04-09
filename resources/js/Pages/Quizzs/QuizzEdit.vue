@@ -2,7 +2,8 @@
 	setup
 	lang="ts"
 >
-import FormMaker from "@/Components/Form/FormMaker.vue"
+import FormChapter from "@/Components/Form/FormChapter.vue"
+import FormInput from "@/Components/Form/FormInput.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 import type {QuestionInterface, QuizzInterface, QuizzSessionInterface, TeamInterface} from "@/types/modelInterfaces"
 import {router} from "@inertiajs/vue3"
@@ -89,13 +90,12 @@ function quizzUpdate() {
 			class="mt-10"
 		>
 			<div class="flex flex-col gap-3">
-				<form-maker
+				<FormInput
 					v-model="theQuizz.title"
 					name="quizz-title"
 					label="title"
 				/>
-				<form-maker
-					type="chapter"
+				<FormChapter
 					v-model="theQuizz.chapter"
 					label="chapitre"
 				/>

@@ -3,7 +3,7 @@
 	lang="ts"
 >
 
-import FormMaker from "@/Components/Form/FormMaker.vue"
+import FormInput from "@/Components/Form/FormInput.vue"
 import KeyboardDisplay from "@/Components/Keyboards/KeyboardDisplay.vue"
 import {PiGraph as PiDraw} from "pidraw"
 import {LogicalSet} from "pimath"
@@ -122,7 +122,7 @@ onMounted(() => {
 <template>
 	<div>
 		<div>
-			<form-maker
+			<FormInput
 				v-model="input"
 				name="Réponse"
 				label="réponse"

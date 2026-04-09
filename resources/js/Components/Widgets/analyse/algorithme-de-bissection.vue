@@ -4,7 +4,7 @@ code: function
 </info>-->
 
 <script lang="ts" setup>
-import FormMaker from "@/Components/Form/FormMaker.vue"
+import FormInput from "@/Components/Form/FormInput.vue"
 import {WidgetPropsInterface} from "@/types/modelInterfaces.ts"
 
 import {NumExp} from "pimath"
@@ -140,7 +140,7 @@ onMounted(() => {
 			class=" bg-white border p-4 mx-auto max-w-xl"
 		>
 			<div class="flex gap-3 mb-4">
-				<form-maker
+				<FormInput
 					v-model="f"
 					focus
 					inline-label
@@ -150,7 +150,7 @@ onMounted(() => {
 			</div>
 
 			<div class="flex">
-				<form-maker
+				<FormInput
 					v-model="a"
 					class="max-w-[150px]"
 					focus
@@ -162,7 +162,7 @@ onMounted(() => {
 			</div>
 
 			<div class="flex">
-				<form-maker
+				<FormInput
 					v-model="b"
 					class="max-w-[150px]"
 					focus

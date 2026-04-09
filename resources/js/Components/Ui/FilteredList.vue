@@ -1,5 +1,5 @@
 <script generic="T extends {id:number}" lang="ts" setup>
-import FormMaker from "@/Components/Form/FormMaker.vue"
+import FormInput from "@/Components/Form/FormInput.vue"
 import {router, usePage} from "@inertiajs/vue3"
 import {computed, ref, useTemplateRef} from "vue"
 import ScButton from "@/Components/Ui/Button/scButton.vue"
@@ -56,7 +56,7 @@ const props = withDefaults(
 		filterByTheme: false,
 		searchFunction: null,
 		filterByThemeOnLoad: 0,
-		focus: false
+		focus: false,
 	})
 
 const filteredList = computed<(T & { id: number })[]>(() => {
@@ -114,6 +114,8 @@ const filteredList = computed<(T & { id: number })[]>(() => {
 	}
 )
 
+const filteredIds = computed<Set<number>>(() => new Set(filteredList.value.map(item => item.id)))
+
 const selectedList = ref("")
 const selectedTheme = ref<number>(props.filterByThemeOnLoad ?? 0)
 const showList = ref(props.collapsed !== true)
@@ -138,7 +140,7 @@ const emits = defineEmits<{
 	empty: [value: boolean],
 }>()
 
-const filterInput = useTemplateRef<InstanceType<typeof FormMaker>>('filterInput')
+const filterInput = useTemplateRef<InstanceType<typeof FormInput>>('filterInput')
 defineExpose({
 	focus: () => filterInput.value.focus()
 })
@@ -181,7 +183,7 @@ useMagicKeys({
 			v-show="showList"
 			class="flex flex-col w-full"
 		>
-			<form-maker
+			<FormInput
 				v-show="props.list.length >= noFilterIfLessThan"
 				ref="filterInput"
 				v-model="selectedList"
@@ -214,31 +216,30 @@ useMagicKeys({
 			</div>
 
 			<div
-				v-if="filteredList.length>0"
 				:class="props.listClass"
 			>
-				<transition-group name="list">
+				<div
+					v-for="(item) in props.list"
+					v-show="filteredIds.has(item.id)"
+					:key="`id-${item.id}`"
+					class="filtered-list-hide-item"
+				>
+					<slot
+						v-if="$slots['card']"
+						:item="item"
+						name="card"
+					/>
 					<div
-						v-for="(item) in filteredList"
-						:key="`id-${item.id}`"
-					>
-						<slot
-							v-if="$slots['card']"
-							:item="item"
-							name="card"
-						/>
-						<div
-							v-else
-							v-katex.auto="props.itemTitle(item)"
-							v-theme.bg.text="props.itemBackground(item)"
-							:class="props.itemClass + (props.routeName ? ' cursor-pointer' : '')"
-							class="p-4 border border-gray-200 rounded-sm hover:scale-105 hover:shadow-sm transition-all h-full"
-							@click="itemClicked(item)"
-						/>
-					</div>
-				</transition-group>
+						v-else
+						v-katex.auto="props.itemTitle(item)"
+						v-theme.bg.text="props.itemBackground(item)"
+						:class="props.itemClass + (props.routeName ? ' cursor-pointer' : '')"
+						class="p-4 border border-gray-200 rounded-sm hover:scale-105 hover:shadow-sm transition-all h-full"
+						@click="itemClicked(item)"
+					/>
+				</div>
 			</div>
-			<div v-else>
+			<div v-if="filteredList.length === 0">
 				<slot name="noItemMessage">
 					Aucun {{ title.endsWith("s") ? title.slice(0, -1) : title }} trouvé
 				</slot>
@@ -246,3 +247,20 @@ useMagicKeys({
 		</div>
 	</div>
 </template>
+
+<style scoped>
+@keyframes fadeInCard {
+	from {
+		opacity: 0;
+		transform: translateY(6px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+.filtered-list-hide-item {
+	animation: fadeInCard 0.2s ease;
+}
+</style>

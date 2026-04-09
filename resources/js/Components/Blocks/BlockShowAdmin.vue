@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 
-import FormMaker from "@/Components/Form/FormMaker.vue"
+import FormInput from "@/Components/Form/FormInput.vue"
 import EditLink from "@/Components/Ui/EditLink.vue"
 import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
 import {BlockInterface} from "@/types/modelInterfaces.ts"
@@ -112,7 +112,7 @@ function deleteBlock() {
 
 		<slot name="adminRight">
 			<div class="gap-2 hidden @md:flex">
-				<form-maker
+				<FormInput
 					v-model="theBlock.template"
 					inline-label
 					placeholder="[b|i],[md|lg|xl]:[#]b+[#]i"

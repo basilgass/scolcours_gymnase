@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import LayoutGuest from "@/Layouts/LayoutGuest.vue"
 import {Head, useForm} from "@inertiajs/vue3"
-import FormMaker from "@/Components/Form/FormMaker.vue"
+import FormInput from "@/Components/Form/FormInput.vue"
 import ScButton from "@/Components/Ui/Button/scButton.vue"
 
 defineOptions({layout: LayoutGuest})
@@ -30,7 +30,7 @@ function submit() {
 	<Head title="Reset Password" />
 
 	<form @submit.prevent="submit">
-		<form-maker
+		<FormInput
 			type="email"
 			label="email"
 			v-model="form.email"
@@ -39,7 +39,7 @@ function submit() {
 			required
 		/>
 
-		<form-maker
+		<FormInput
 			class="mt-4"
 			type="password"
 			label="nouveau mot de passe"
@@ -48,7 +48,7 @@ function submit() {
 			required
 		/>
 
-		<form-maker
+		<FormInput
 			class="mt-4"
 			type="password"
 			label="confirmer le mot de passe"

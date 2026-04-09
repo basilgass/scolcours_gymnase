@@ -2,7 +2,8 @@
 
 import { ref } from "vue"
 import PiProbabilityTree from "@/Components/Pi/PiProbabilityTree.vue"
-import FormMaker from "@/Components/Form/FormMaker.vue"
+import FormTextarea from "@/Components/Form/FormTextarea.vue"
+import FormInput from "@/Components/Form/FormInput.vue"
 
 const treeData = ref("A,3,P,5,3"),
 	treeParams = ref("")
@@ -10,14 +11,13 @@ const treeData = ref("A,3,P,5,3"),
 </script>
 <template>
 	<article>
-		<form-maker
+		<FormInput
 			v-model="treeParams"
 			class="font-code"
 			label="paramètres"
 			message="R=[p|f|v]/[digits],B=[p|f|v]/[digits]"
 		/>
-		<form-maker
-			type="textarea"
+		<FormTextarea
 			v-model="treeData"
 			:rows="10"
 			class="font-code"

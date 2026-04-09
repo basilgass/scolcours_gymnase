@@ -5,8 +5,8 @@ import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
 import LessonMain from "@/Components/Courses/LessonMain.vue"
 import LessonAside from "@/Components/Courses/LessonAside.vue"
 import {lessonableModel} from "@/types/lessonInterfaces.ts"
-import {usePage} from "@inertiajs/vue3";
-import {computed} from "vue";
+import {usePage} from "@inertiajs/vue3"
+import {computed} from "vue"
 
 defineOptions({layout: LayoutMain})
 
@@ -21,7 +21,7 @@ const returnLink = computed(() => {
 	if (props.team && usePage().props.auth?.can.admin) {
 		return {
 			label: 'retour au dashboard',
-			url: route('admin.courses.teams.dashboard', {course: props.course.slug, team: props.team.name}),
+			url: route('admin.courses.teams.dashboard', {course: props.course.id, team: props.team.name}),
 		}
 	}
 	return {

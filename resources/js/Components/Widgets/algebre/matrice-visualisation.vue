@@ -14,7 +14,7 @@ a,b
 
 import {WidgetPropsInterface} from "@/types/modelInterfaces.ts"
 import {computed, onMounted, ref} from "vue"
-import FormMaker from "@/Components/Form/FormMaker.vue"
+import FormInput from "@/Components/Form/FormInput.vue"
 import PiDrawDisplay from "@/Components/Pi/Parts/PiDrawDisplay.vue"
 import ScButton from "@/Components/Ui/Button/scButton.vue"
 
@@ -267,7 +267,7 @@ function appTransform(type: TRANSFORMATION, value: string): [number, number][] {
 <template>
 	<article class="grid grid-cols-1 md:grid-cols-2 gap-3">
 		<div class="order-2 md:order-1">
-			<!--			<form-maker-->
+			<!--			<FormInput-->
 			<!--				v-model="draw"-->
 			<!--				language="pidraw"-->
 			<!--				type="codearea"-->
@@ -318,7 +318,7 @@ function appTransform(type: TRANSFORMATION, value: string): [number, number][] {
 					rotate
 				</sc-button>
 			</div>
-			<form-maker
+			<FormInput
 				v-model="transformValue"
 				label="valeur de transformation"
 			/>

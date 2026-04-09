@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import FormMaker from "@/Components/Form/FormMaker.vue"
+import FormInput from "@/Components/Form/FormInput.vue"
 import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"
 import {IToolForm} from "@/Components/Tools/Parts/ToolForm.vue"
 import TexCode from "@/Components/Ui/TexCode.vue"
@@ -198,7 +198,7 @@ const root = ref(null),
 					<div
 						class="md:col-span-2"
 					>
-						<form-maker
+						<FormInput
 							v-model="fx"
 							label="fonction"
 							form-url="fx"
@@ -222,7 +222,7 @@ const root = ref(null),
 				<div class="grid grid-cols-1 gap-4 md:grid-cols-2 katex-boxed">
 					<div>
 						<h3>évaluer la fonction <span v-katex="`f(${xAsTex})`" /></h3>
-						<form-maker
+						<FormInput
 							v-model="x"
 							inline
 							from-url="x"
@@ -232,7 +232,7 @@ const root = ref(null),
 					</div>
 					<div>
 						<h3>résoudre l'équation <span v-katex="`f(x)=${yAsTex}`" /></h3>
-						<form-maker
+						<FormInput
 							v-model="y"
 							inline
 							from-url="y"

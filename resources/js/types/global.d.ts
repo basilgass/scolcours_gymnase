@@ -16,6 +16,7 @@ declare module "vue" {
 	interface ComponentCustomProperties {
 		route: typeof ZiggyRoute;
 	}
+
 }
 
 declare module "@inertiajs/core" {

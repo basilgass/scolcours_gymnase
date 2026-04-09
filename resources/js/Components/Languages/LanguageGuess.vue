@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 
-import FormMaker from "@/Components/Form/FormMaker.vue"
+import FormInput from "@/Components/Form/FormInput.vue"
 import type {LanguageDataInterface, TranslationWord} from "@/types/modelInterfaces"
 import {computed, inject, nextTick, ref} from "vue"
 import {useLanguage} from "@/Components/Languages/useLanguage.ts"
@@ -223,7 +223,7 @@ const selectedSuggestion = ref<number>(undefined)
 				</div>
 			</div>
 
-			<form-maker
+			<FormInput
 				ref="suggestInput"
 				v-model="userGuess"
 				:disabled="unknownWordAnswer !== ''"
@@ -306,7 +306,7 @@ const selectedSuggestion = ref<number>(undefined)
 					configuration des suggestions
 				</h2>
 				<div class="flex gap-3">
-					<form-maker
+					<FormInput
 						v-model="numberOfLetters"
 						label="nombre de lettres min."
 						name="nombre de lettres"

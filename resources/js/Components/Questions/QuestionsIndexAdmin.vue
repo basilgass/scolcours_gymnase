@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 
-import FormMaker from "@/Components/Form/FormMaker.vue"
+import FormInput from "@/Components/Form/FormInput.vue"
 import QuestionShow from "@/Components/Questions/QuestionShow.vue"
 import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
 import type {QuestionInterface} from "@/types/modelInterfaces.ts"
@@ -38,7 +38,7 @@ const questionsAdmin = useQuestionAdmin(
 		</sc-button>
 
 		<div class="flex-1 flex gap-2">
-			<form-maker
+			<FormInput
 				v-model="grid"
 				class="flex-1"
 				inline-label
@@ -56,7 +56,7 @@ const questionsAdmin = useQuestionAdmin(
 						<i class="bi bi-save" />
 					</sc-button>
 				</template>
-			</form-maker>
+			</FormInput>
 		</div>
 
 		<div class="flex gap-3 justify-between">

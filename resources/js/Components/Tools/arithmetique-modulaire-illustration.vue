@@ -2,7 +2,8 @@
 
 import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"
 import {computed, ref} from "vue"
-import FormMaker from "@/Components/Form/FormMaker.vue"
+import FormSwitch from "@/Components/Form/FormSwitch.vue"
+import FormInput from "@/Components/Form/FormInput.vue"
 import {useToolsStorage} from "@/Composables/useToolsStorage.ts"
 import ToolForm, {IToolForm} from "@/Components/Tools/Parts/ToolForm.vue"
 
@@ -122,8 +123,7 @@ function getGradientColor(colors: string[], index: number, maxIndex: number) {
 		/>
 
 		<div class="flex justify-end mt-1">
-			<form-maker
-				type="switch"
+			<FormSwitch
 				v-model="empty"
 				label="vide,généré"
 				sm

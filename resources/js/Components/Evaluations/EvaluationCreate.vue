@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import DialogModal from "@/Components/Ui/DialogModal.vue"
-import FormMaker from "@/Components/Form/FormMaker.vue"
+import FormInput from "@/Components/Form/FormInput.vue"
 import {computed, nextTick, ref, useTemplateRef} from "vue"
 import axios from "axios"
 import ScButton from "@/Components/Ui/Button/scButton.vue"
@@ -12,7 +12,7 @@ import {EvaluationInterface} from "@/types/modelInterfaces.ts"
 const showModal = ref(false)
 const title = ref("")
 
-const input = useTemplateRef<InstanceType<typeof FormMaker>>('input')
+const input = useTemplateRef<InstanceType<typeof FormInput>>('input')
 
 async function onShowModal() {
 	showModal.value = true
@@ -56,19 +56,19 @@ function create() {
 				</h2>
 			</template>
 			<div class="p-5 flex items-end gap-3">
-				<form-maker
+				<FormInput
 					ref="input"
 					v-model="title"
 					label="titre"
-					@enter="create"
 					placeholder="entrer un titre"
+					@enter="create"
 				>
 					<template #message>
 						<div class="font-code text-xs text-gray-400 min-h-[1.6em] pt-1">
 							{{ slug }}
 						</div>
 					</template>
-				</form-maker>
+				</FormInput>
 			</div>
 
 			<template #footer>

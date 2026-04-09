@@ -1,5 +1,7 @@
 <script lang="ts" setup>
-import FormMaker from "@/Components/Form/FormMaker.vue"
+import FormTextarea from "@/Components/Form/FormTextarea.vue"
+import FormSwitch from "@/Components/Form/FormSwitch.vue"
+import FormInput from "@/Components/Form/FormInput.vue"
 import LanguageAdminBook from "@/Components/Languages/admin/LanguageAdminBook.vue"
 import LanguageAdminSelector from "@/Components/Languages/admin/LanguageAdminSelector.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
@@ -138,19 +140,18 @@ function importerLesTraductions() {
 
 
 		<div v-show="form.book!==-1">
-			<form-maker
+			<FormInput
 				v-model="form.title"
 				label="titre"
 				name="titre"
 			/>
 
-			<form-maker
+			<FormTextarea
 				v-model="traduction"
 				catch-tab
 				label="traduction"
 				message="français \t langue étrangère \t description \t exemples"
 				name="traduction"
-				type="textarea"
 			/>
 
 			<div class="flex gap-3">
@@ -161,18 +162,16 @@ function importerLesTraductions() {
 					Importer
 				</button>
 
-				<form-maker
+				<FormSwitch
 					v-model="swapFrForeign"
 					:label="`inverser français et ${form.language}`"
 					name="swapLanguage"
-					type="switch"
 				/>
 
-				<form-maker
+				<FormSwitch
 					v-model="quizletMode"
 					:label="`mode quizlet`"
 					name="quizletMode"
-					type="switch"
 				/>
 			</div>
 

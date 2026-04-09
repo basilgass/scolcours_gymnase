@@ -2,7 +2,8 @@
 
 import {computed, ref} from "vue"
 import {router, useForm} from "@inertiajs/vue3"
-import FormMaker from "@/Components/Form/FormMaker.vue"
+import FormSwitch from "@/Components/Form/FormSwitch.vue"
+import FormInput from "@/Components/Form/FormInput.vue"
 import axios from "axios"
 import type {TeamInterface, UserInterface} from "@/types/modelInterfaces"
 import type {AxiosErrorMessage, AxiosResponseModel} from "@/types"
@@ -188,7 +189,7 @@ function updateUserTeam(userId: number, teamId: number) {
 				</div>
 			</div>
 
-			<form-maker
+			<FormInput
 				v-model="form.password"
 				label="mot de passe"
 				name="password"
@@ -215,19 +216,17 @@ function updateUserTeam(userId: number, teamId: number) {
 					Utilisateurs
 				</h2>
 
-				<form-maker
+				<FormSwitch
 					v-model="deleteMode"
 					label="mode suppression"
 					name="deleteSwitch"
 					sm
-					type="switch"
 				/>
-				<form-maker
+				<FormSwitch
 					v-model="teamsMode"
 					label="assignation des équipes"
 					name="teamsSwitch"
 					sm
-					type="switch"
 				/>
 			</div>
 
@@ -369,11 +368,11 @@ function updateUserTeam(userId: number, teamId: number) {
 		</template>
 
 		<div class="px-5 pb-5">
-			<form-maker
+			<FormInput
 				v-model="editUserForm.firstname"
 				label="prénom"
 			/>
-			<form-maker
+			<FormInput
 				v-model="editUserForm.name"
 				label="nom"
 			/>

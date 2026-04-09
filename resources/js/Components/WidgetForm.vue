@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 
-import FormMaker from "@/Components/Form/FormMaker.vue"
+import FormCodearea from "@/Components/Form/FormCodearea.vue"
+import FormInput from "@/Components/Form/FormInput.vue"
 import type {WidgetInterface} from "@/types/modelInterfaces"
 import {computed, PropType, ref} from "vue"
 import axios from "axios"
@@ -46,26 +47,25 @@ const isModified = computed(() => {
 <template>
 	<article class="grid grid-cols-1 md:grid-cols-2 gap-4">
 		<div>
-			<form-maker
+			<FormInput
 				v-model="theWidget.name"
 				label="name"
 			/>
-			<form-maker
+			<FormInput
 				v-model="theWidget.slug"
 				label="slug"
 			/>
-			<form-maker
+			<FormInput
 				v-model="theWidget.component"
 				label="path"
 			/>
 		</div>
 		<div>
-			<form-maker
+			<FormCodearea
 				v-model="theWidget.description"
 				label="description"
 				language="latex"
-				rows="5"
-				type="codearea"
+				:rows="5"
 			/>
 
 			<sc-button

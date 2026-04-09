@@ -2,7 +2,7 @@
 import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
 import {Futoshiki} from "pigames/build/module/lib/futoshiki"
 import {nextTick, reactive, ref} from "vue"
-import FormMaker from "@/Components/Form/FormMaker.vue"
+import FormInput from "@/Components/Form/FormInput.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 import ScButton from "@/Components/Ui/Button/scButton.vue"
 
@@ -106,7 +106,7 @@ const setValue = function (col, row) {
 		<ArticleTitle title="Futoshiki" />
 
 		<div v-show="!gameStarted">
-			<form-maker
+			<FormInput
 				type="number"
 				v-model="size"
 				name="nombre de colonnes"

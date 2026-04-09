@@ -85,7 +85,7 @@ function afficherDate(day: string, short?: boolean): string {
 				type="edit"
 				xs
 				:href="route('admin.courses.teams.dashboard', {
-					course: course.slug,
+					course: course.id,
 					team: team.name
 				})"
 			>
@@ -96,7 +96,7 @@ function afficherDate(day: string, short?: boolean): string {
 				type="edit"
 				icon
 				xs
-				:href="route('admin.courses.edit', {course: course.slug})"
+				:href="route('admin.courses.edit', {course: course.id})"
 			>
 				éditer le cours
 			</sc-button>
@@ -120,8 +120,8 @@ function afficherDate(day: string, short?: boolean): string {
 		<div class="columns-1 md:columns-2 xl:columns-4 space-y-5">
 			<card
 				v-for="day in orderedDate"
-				:key="`lesson-day-tag-${day}`"
 				v-show="day!==UNPLANNED"
+				:key="`lesson-day-tag-${day}`"
 				:theme="day===thisDate"
 			>
 				<template #header>

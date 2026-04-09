@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 
-import FormMaker from "@/Components/Form/FormMaker.vue"
+import FormCodearea from "@/Components/Form/FormCodearea.vue"
+import FormInput from "@/Components/Form/FormInput.vue"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
@@ -87,28 +88,27 @@ function deleteChapter() {
 		</div>
 
 		<div class="pb-5">
-			<form-maker
+			<FormInput
 				v-model="theChapter.title"
 				focus
 				label="titre"
 			/>
-			<form-maker
+			<FormInput
 				v-model="theChapter.meta_title"
 				label="meta-titre"
 			/>
 
-			<form-maker
+			<FormInput
 				v-model="theChapter.slug"
 				label="slug"
 			/>
 
 			<div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-				<form-maker
+				<FormCodearea
 					v-model="theChapter.block.body"
 					label="body"
 					language="latex"
 					name="body"
-					type="codearea"
 				/>
 				<markdown-it
 					:text="theChapter.block.body"

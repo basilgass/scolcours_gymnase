@@ -1,7 +1,7 @@
-<script setup lang="ts" generic="T">
+<script setup lang="ts" generic="T extends string | number">
 
 import {computed} from "vue"
-import FormMaker from "@/Components/Form/FormMaker.vue"
+import FormInput from "@/Components/Form/FormInput.vue"
 
 const cipherKey = defineModel<T>()
 
@@ -27,7 +27,6 @@ const emits = defineEmits<{
 	hover: [e: { clear: string, cipher: string, key: string, index: number }]
 }>()
 
-console.log(props.text.cipher)
 /* =======================
    Show booleans
 ======================= */
@@ -44,7 +43,7 @@ const isInverted = computed(() => props.parameters.inv)
 			v-if="showForm"
 			class="flex gap-3 items-baseline"
 		>
-			<form-maker
+			<FormInput
 				v-model="cipherKey"
 				inline-label
 				:label="keyLabel"

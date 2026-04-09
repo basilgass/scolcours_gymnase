@@ -14,7 +14,7 @@ import {computed, onMounted, ref, watch} from "vue"
 import Card from "@/Components/Ui/Card.vue"
 import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"
 import {WidgetPropsInterface} from "@/types/modelInterfaces.ts"
-import FormMaker from "@/Components/Form/FormMaker.vue"
+import FormInput from "@/Components/Form/FormInput.vue"
 import ToolError from "@/Components/Tools/Parts/ToolError.vue"
 
 const {restoreTool} = useToolsStorage()
@@ -334,7 +334,7 @@ const draw = computed<WidgetPropsInterface>(() => {
 		<tool-error v-else />
 
 		<Card if="draw">
-			<form-maker
+			<FormInput
 				type="text"
 				v-model="drawParams"
 				label="paramètres du graphe"

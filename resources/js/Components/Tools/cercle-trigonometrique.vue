@@ -11,7 +11,8 @@
 import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"
 import Card from "@/Components/Ui/Card.vue"
 import {computed, ref, useTemplateRef} from "vue"
-import FormMaker from "@/Components/Form/FormMaker.vue"
+import FormSwitch from "@/Components/Form/FormSwitch.vue"
+import FormInput from "@/Components/Form/FormInput.vue"
 
 const isInteractive = ref(true)
 const isPositive = ref(true)
@@ -86,17 +87,15 @@ const svgContainer = useTemplateRef<InstanceType<typeof PiDrawParser>>('svgConta
 <template>
 	<article class="max-w-2xl mx-auto">
 		<div class="flex justify-between mb-3">
-			<form-maker
+			<FormSwitch
 				v-model="isInteractive"
 				label="afficher l'interactivité"
 				sm
-				type="switch"
 			/>
-			<form-maker
+			<FormSwitch
 				v-model="isPositive"
 				label="angles positifs,angles entre \(-\pi\) et \(\pi\)"
 				sm
-				type="switch"
 			/>
 		</div>
 		<Card>

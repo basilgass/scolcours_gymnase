@@ -12,7 +12,8 @@ import {AxiosErrorMessage, AxiosResponseModel} from "@/types"
 import {computed, onMounted, reactive, ref} from "vue"
 import QuizzSessionItem from "@/Components/Quizzs/QuizzSessionItem.vue"
 import Card from "@/Components/Ui/Card.vue"
-import FormMaker from "@/Components/Form/FormMaker.vue"
+import FormTeam from "@/Components/Form/FormTeam.vue"
+import FormInput from "@/Components/Form/FormInput.vue"
 
 type QuizzSessionsType = Record<number, QuizzSessionInterface[]>
 defineOptions({layout: LayoutMain})
@@ -151,8 +152,7 @@ onMounted(() => {
 
 
 				<div class="flex justify-between">
-					<form-maker
-						type="team"
+					<FormTeam
 						label="classes"
 						v-model="team"
 					/>

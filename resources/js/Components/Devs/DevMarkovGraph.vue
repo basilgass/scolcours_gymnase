@@ -1,6 +1,7 @@
 <script setup lang="ts">
 
-import FormMaker from "@/Components/Form/FormMaker.vue"
+import FormTextarea from "@/Components/Form/FormTextarea.vue"
+import FormInput from "@/Components/Form/FormInput.vue"
 import {computed, ref} from "vue"
 import GrapheDeMarkov from "@/Components/Widgets/algebre/graphe-de-markov.vue"
 
@@ -32,14 +33,13 @@ console.log(illustration.value)
 <template>
 	<div>
 		<div>
-			<form-maker
+			<FormInput
 				type="text"
 				class="font-code"
 				label="étiquettes"
 				v-model="labelInput"
 			/>
-			<form-maker
-				type="textarea"
+			<FormTextarea
 				class="font-code"
 				label="matrice"
 				v-model="matrixInput"

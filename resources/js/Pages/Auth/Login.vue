@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {Head, useForm} from "@inertiajs/vue3"
-import FormMaker from "@/Components/Form/FormMaker.vue"
+import FormInput from "@/Components/Form/FormInput.vue"
 import ScButton from "@/Components/Ui/Button/scButton.vue"
 import LayoutGuest from "@/Layouts/LayoutGuest.vue"
 
@@ -40,7 +40,7 @@ function submit() {
 		@submit.prevent="submit"
 	>
 		<div>
-			<form-maker
+			<FormInput
 				id="email"
 				v-model="form.email"
 				label="email"
@@ -54,7 +54,7 @@ function submit() {
 		</div>
 
 		<div class="mt-4">
-			<form-maker
+			<FormInput
 				id="password"
 				v-model="form.password"
 				name="password"

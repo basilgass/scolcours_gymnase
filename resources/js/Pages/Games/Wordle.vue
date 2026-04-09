@@ -5,7 +5,8 @@
 
 //REFACTOR: Refactor pour le rendre plus propre et structuré.
 
-import FormMaker from "@/Components/Form/FormMaker.vue"
+import FormSelect from "@/Components/Form/FormSelect.vue"
+import FormInput from "@/Components/Form/FormInput.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
 import {onKeyStroke} from "@vueuse/core"
@@ -310,18 +311,17 @@ onMounted(() => {
 				Wordle
 			</h2>
 			<div class="grid grid-cols-3 gap-5">
-				<form-maker
+				<FormSelect
 					label="langue"
-					type="select"
 					v-model="WORD_LANGUAGE"
 					:choices="{fr: 'français'}"
 				/>
-				<form-maker
+				<FormInput
 					v-model="WORD_LENGTH"
 					label="nombre de lettres"
 					type="number"
 				/>
-				<form-maker
+				<FormInput
 					v-model="GUESSES_LIMIT"
 					label="nombre d'essais"
 					type="number"

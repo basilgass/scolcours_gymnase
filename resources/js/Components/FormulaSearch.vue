@@ -1,19 +1,21 @@
 <script setup lang="ts">
 
 import {onMounted, ref} from "vue"
-import {AxiosResponseModel} from "@/types"
 import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
 import type {FormulaInterface} from "@/types/modelInterfaces.ts"
 import axios from "axios"
 import FilteredList from "@/Components/Ui/FilteredList.vue"
-import FormMaker from "@/Components/Form/FormMaker.vue"
+import FormCodearea from "@/Components/Form/FormCodearea.vue"
+import FormInput from "@/Components/Form/FormInput.vue"
 import ScButton from "@/Components/Ui/Button/scButton.vue"
 import FormulaShow from "@/Components/Blocks/FormulaShow.vue"
 import PleaseWait from "@/Components/Ui/PleaseWait.vue"
 import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
+import {useStoreFormular} from "@/stores/useStoreFormular.ts"
 
 const flash = useStoreFlashMessage()
 const editMode = useStoreEditMode()
+const storeFormular = useStoreFormular()
 
 const formulas = ref<FormulaInterface[]>([])
 
@@ -41,11 +43,8 @@ function searchFormula(item: FormulaInterface, value: string): boolean {
 		item.block.body?.includes(value)
 }
 
-onMounted(() => {
-	axios.get(route('api.formulas.index'))
-		.then((res: AxiosResponseModel<FormulaInterface[]>) => {
-			formulas.value = res.data
-		})
+onMounted(async () => {
+	formulas.value = await storeFormular.getAll()
 })
 
 </script>
@@ -63,7 +62,6 @@ onMounted(() => {
 
 		<filtered-list
 			v-else
-			:class="editMode.enable?'': ''"
 			:filter-by-theme="(item:FormulaInterface)=>item.theme_id"
 			:filter-by-theme-on-load="themeId"
 			:list="formulas"
@@ -74,7 +72,7 @@ onMounted(() => {
 				<div :class="editMode.enable?'grid grid-cols-2 gap-3': ''">
 					<div v-admin="editMode.enable">
 						<div class="flex">
-							<form-maker
+							<FormInput
 								v-model="item.block.title"
 								class="flex-1"
 								inline-label
@@ -94,22 +92,16 @@ onMounted(() => {
 								<i class="bi bi-save" />
 							</sc-button>
 						</div>
-						<form-maker
+						<FormCodearea
 							v-model="item.block.body"
 							inline-label
 							label="body"
 							label-class="w-[50px]"
 							sm
-							type="codearea"
 						/>
 					</div>
 					<formula-show :formula="item" />
 				</div>
-			</template>
-			<template #noItemMessage v-if="themeId!==undefined">
-				<sc-button type="primary" @click="">
-					Charger tout le formulaire
-				</sc-button>
 			</template>
 		</filtered-list>
 	</article>

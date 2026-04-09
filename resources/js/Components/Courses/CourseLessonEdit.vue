@@ -5,7 +5,7 @@ import {computed, ref} from "vue"
 import ScButton from "@/Components/Ui/Button/scButton.vue"
 import {AxiosErrorMessage} from "@/types"
 import axios from "axios"
-import FormMaker from "@/Components/Form/FormMaker.vue"
+import FormJson from "@/Components/Form/FormJson.vue"
 import {useCourse} from "@/Pages/Courses/useCourse.ts"
 import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
 
@@ -41,32 +41,28 @@ const jsonMap = computed(() => {
 <template>
 	<div>
 		<div
-			v-if="!showScoreRules"
-			class="cursor-pointer text-xs font-code -mt-2 -my-3"
-			@click="showScoreRules=true"
+			class="cursor-pointer text-xs font-code"
+			@click="showScoreRules=!showScoreRules"
 		>
 			afficher les règles
 		</div>
 		<div
-			v-else
-			class="flex max-w-sm gap-3"
+			v-show="showScoreRules"
+			class="flex flex-col max-w-sm gap-3"
 		>
-			<div>
-				<sc-button
-					icon
-					type="save"
-					xs
-					@click="updateLesson"
-				/>
-			</div>
-			<div class="font-code">
-				<form-maker
-					v-model="scoreRules"
-					:map="jsonMap"
-					label="configuration"
-					type="json"
-				/>
-			</div>
+			<FormJson
+				v-model="scoreRules"
+				:map="jsonMap"
+				label="configuration"
+				clearable
+			/>
+
+			<sc-button
+				icon
+				type="save"
+				xs
+				@click="updateLesson"
+			/>
 		</div>
 	</div>
 </template>

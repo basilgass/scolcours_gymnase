@@ -1,6 +1,8 @@
 <script lang="ts" setup>
 
-import FormMaker from "@/Components/Form/FormMaker.vue"
+import FormCodearea from "@/Components/Form/FormCodearea.vue"
+import FormKeyboard from "@/Components/Form/FormKeyboard.vue"
+import FormInput from "@/Components/Form/FormInput.vue"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 import {ChallengeInterface, GeneratorInterface} from "@/types/modelInterfaces"
@@ -105,14 +107,14 @@ function historyBack() {
 
 		<div class="grid grid-cols-2 gap-3">
 			<div class="flex flex-col gap-1">
-				<form-maker
+				<FormInput
 					v-model="theGenerator.title"
 					inline-label
 					label="titre"
 					label-class="w-[110px]"
 					name="generatorTitle"
 				/>
-				<form-maker
+				<FormInput
 					v-model="theGenerator.slug"
 					inline-label
 					label="slug"
@@ -120,7 +122,7 @@ function historyBack() {
 					name="generatorTitle"
 					sm
 				/>
-				<form-maker
+				<FormCodearea
 					v-model="theGenerator.body"
 					:rows="5"
 					inline-label
@@ -128,7 +130,6 @@ function historyBack() {
 					label-class="w-[110px]"
 					language="latex"
 					name="generatorBody"
-					type="codearea"
 				/>
 
 				<markdown-it
@@ -138,23 +139,21 @@ function historyBack() {
 			</div>
 
 			<div>
-				<form-maker
+				<FormCodearea
 					v-model="theGenerator.template"
 					label="template"
-					type="codearea"
 				/>
 
-				<form-maker
+				<FormKeyboard
 					v-model="theGenerator.keyboard"
 					label="clavier"
-					type="keyboard"
 				/>
 			</div>
 		</div>
 
 
 		<div class="flex gap-5 mt-5">
-			<form-maker
+			<FormCodearea
 				v-model="theGenerator.code"
 				:rows="20"
 				auto-size
@@ -162,7 +161,6 @@ function historyBack() {
 				label="générateur de questions"
 				language="javascript"
 				resizable
-				type="codearea"
 			/>
 
 			<generators-examples

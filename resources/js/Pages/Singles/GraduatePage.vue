@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import BarChart from "@/Components/Charts/barChart.vue"
-import FormMaker from "@/Components/Form/FormMaker.vue"
+import FormTextarea from "@/Components/Form/FormTextarea.vue"
+import FormInput from "@/Components/Form/FormInput.vue"
 import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
 import {numberCorrection} from "@/helpers/helperFunctions.ts"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
@@ -145,7 +146,7 @@ const listeDesPoints = computed<number[]>(() => {
 
 		<div class="grid grid-cols-1 md:grid-cols-2 gap-5 items-start">
 			<div class="space-y-5">
-				<form-maker
+				<FormInput
 					v-model="maxPoints"
 					focus
 					font-code
@@ -157,7 +158,7 @@ const listeDesPoints = computed<number[]>(() => {
 				/>
 
 				<div class="flex items-end align-bottom gap-3 grow">
-					<form-maker
+					<FormInput
 						v-model.number="precision"
 						class="w-[100px]"
 						font-code
@@ -196,7 +197,7 @@ const listeDesPoints = computed<number[]>(() => {
 					</sc-button>
 				</div>
 
-				<form-maker
+				<FormInput
 					v-model.number="pourcentage"
 					font-code
 					helper-text="vide pour échelle fédérale"
@@ -277,14 +278,13 @@ const listeDesPoints = computed<number[]>(() => {
 
 			<div class="grid grid-cols-1 md:grid-cols-2 gap-5">
 				<div>
-					<form-maker
+					<FormTextarea
 						v-model="pointsData"
 						:rows="5"
 						font-code
 						helper-text="notes séparées par des espaces, des virgules ou à la ligne."
 						label="liste des points"
 						name="points"
-						type="textarea"
 					/>
 					<div
 						v-show="listeDesPointsAvecErreurs.length>0"

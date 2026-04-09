@@ -8,7 +8,8 @@ import Card from "@/Components/Ui/Card.vue"
 import {router} from "@inertiajs/vue3"
 import {computed, ref} from "vue"
 import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
-import FormMaker from "@/Components/Form/FormMaker.vue"
+import FormSwitch from "@/Components/Form/FormSwitch.vue"
+import FormInput from "@/Components/Form/FormInput.vue"
 import LayoutAdmin from "@/Layouts/LayoutAdmin.vue"
 
 defineOptions({layout: LayoutAdmin})
@@ -43,10 +44,9 @@ const inactiveTeams = computed(() => {
 			title="équipes"
 		>
 			<template #right>
-				<form-maker
+				<FormSwitch
 					v-model="showInactiveTeams"
 					label="afficher les équipes inactives"
-					type="switch"
 				/>
 			</template>
 		</article-title>

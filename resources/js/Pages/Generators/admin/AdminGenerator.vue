@@ -6,7 +6,8 @@ import FilteredList from "@/Components/Ui/FilteredList.vue"
 import ScButton from "@/Components/Ui/Button/scButton.vue"
 import axios from "axios"
 import {router} from "@inertiajs/vue3"
-import FormMaker from "@/Components/Form/FormMaker.vue"
+import FormTheme from "@/Components/Form/FormTheme.vue"
+import FormInput from "@/Components/Form/FormInput.vue"
 import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
 import {slugify} from "@/scolcours.ts"
 import LayoutAdmin from "@/Layouts/LayoutAdmin.vue"
@@ -125,7 +126,7 @@ function addToRef(el: InstanceType<typeof GeneratorItem>) {
 			v-model="showCreate"
 			class="h-auto px-5 py-2"
 		>
-			<form-maker
+			<FormInput
 				v-model="title"
 				label="nouveau générateur"
 			/>
@@ -133,10 +134,9 @@ function addToRef(el: InstanceType<typeof GeneratorItem>) {
 				> {{ slug }}
 			</div>
 
-			<form-maker
+			<FormTheme
 				v-model="themeId"
 				label="theme"
-				type="theme"
 			/>
 
 			<template #footer>

@@ -7,7 +7,8 @@ import type {ChallengeInterface, CourseInterface, TeamInterface, UserInterface} 
 import SchoolTimetable from "@/Components/Courses/SchoolTimetable.vue"
 import CourseCard from "@/Components/Courses/CourseCard.vue"
 import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
-import FormMaker from "@/Components/Form/FormMaker.vue"
+import FormSwitch from "@/Components/Form/FormSwitch.vue"
+import FormInput from "@/Components/Form/FormInput.vue"
 import {ref} from "vue"
 import axios from "axios"
 import {AxiosErrorMessage} from "@/types"
@@ -50,14 +51,13 @@ function updateActiveState() {
 			:title="team.name"
 		>
 			<template #right>
-				<form-maker
+				<FormSwitch
 					v-model="active"
 					label="actif"
-					type="switch"
 					@update="updateActiveState"
 				>
 					actif
-				</form-maker>
+				</FormSwitch>
 			</template>
 		</article-title>
 

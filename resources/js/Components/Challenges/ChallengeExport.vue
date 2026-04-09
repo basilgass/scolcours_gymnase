@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import FormMaker from "@/Components/Form/FormMaker.vue"
+import FormInput from "@/Components/Form/FormInput.vue"
 import {asciiToTex} from "@/Composables/keyboardConfig"
 import {useGenerator} from "@/Composables/useGenerator"
 import {generatedQuestionInterface} from "@/types"
@@ -85,7 +85,7 @@ const pdfGenereate = () => {
 			<template #header>
 				configuration
 			</template>
-			<form-maker
+			<FormInput
 				v-model="pdfQuestionWrapper"
 				inline-label
 				label="wrapper"
@@ -102,7 +102,7 @@ const pdfGenereate = () => {
 				:key="`pdf-${gen.slug}`"
 				class="overflow-hidden"
 			>
-				<form-maker
+				<FormInput
 					v-model="pdfGeneratorNb[index]"
 					class="max-w-[150px]"
 					type="number"

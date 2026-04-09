@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import FormMaker from "@/Components/Form/FormMaker.vue"
+import FormSwitch from "@/Components/Form/FormSwitch.vue"
+import FormInput from "@/Components/Form/FormInput.vue"
 import DialogModal from "@/Components/Ui/DialogModal.vue"
 import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
 import type {LanguageDataInterface, TranslationWord} from "@/types/modelInterfaces"
@@ -81,23 +82,21 @@ const exportList = function () {
 		<div
 			class="mt-10 flex items-end justify-between"
 		>
-			<form-maker
+			<FormSwitch
 				v-model="fr_foreign"
 				:label="`français,${languageData.language.name}`"
-				type="switch"
 			/>
 
-			<form-maker
+			<FormSwitch
 				v-model="random"
 				label="ordre aléatoire"
 				name="randomwords"
-				type="switch"
 			/>
 		</div>
 
 		<div class="mt-5 flex items-end w-full gap-3">
 			<div class="flex-1 ">
-				<form-maker
+				<FormInput
 					v-model="filterValue"
 					label="filtrer"
 					name="filtrer"
@@ -152,12 +151,12 @@ const exportList = function () {
 				</div>
 			</template>
 			<div class="px-3">
-				<form-maker
+				<FormInput
 					v-model="editWord.fr"
 					label="français"
 					name="edit-fr"
 				/>
-				<form-maker
+				<FormInput
 					v-model="editWord.foreign"
 					label="translation"
 					name="edit-foreign"

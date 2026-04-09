@@ -2,7 +2,7 @@
 	lang="ts"
 	setup
 >
-import FormMaker from "@/Components/Form/FormMaker.vue"
+import FormSwitch from "@/Components/Form/FormSwitch.vue"
 import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
 import {ChapterShowInterface, PostInterface} from "@/types/modelInterfaces.ts"
 import {router} from "@inertiajs/vue3"
@@ -114,7 +114,12 @@ const questionStatus = computed<Record<number, number | null>>(() => {
 	return result
 })
 
-const postTypes: Record<string, { label: string, icon: string, title: string, active: boolean }> = {
+const postTypes: Record<string, {
+	label: string,
+	icon: string,
+	title: string,
+	active: boolean
+}> = {
 	theory: {
 		label: 'théorie',
 		icon: 'bi bi-book',
@@ -143,7 +148,7 @@ const postTypes: Record<string, { label: string, icon: string, title: string, ac
 
 const availablePostTypes = computed(() => {
 	return Object.fromEntries(
-		Object.entries(postTypes).filter(([_, v]) => v.active)
+		Object.entries(postTypes).filter(([, v]) => v.active)
 	)
 })
 </script>
@@ -170,18 +175,18 @@ const availablePostTypes = computed(() => {
 					{{ postsFilterCurrentMessage }}
 				</div>
 			</div>
+
 			<div
 				v-if="$page.props.auth.can.admin"
 				v-show="editMode.enable"
 				class="flex gap-3 items-baseline"
 			>
-				<form-maker
-					v-if="postsFilterCurrent === ''"
+				<FormSwitch
 					v-model="moveMode"
+					:disabled="postsFilterCurrent !== ''"
 					label="mode déplacement"
 					name="move"
 					sm
-					type="switch"
 				/>
 				<sc-button
 					type="add"
@@ -207,7 +212,13 @@ const availablePostTypes = computed(() => {
 			@end="updatePostsOrder"
 		>
 			<template #item="{ element }: { element: PostInterface }">
-				<div class="flex gap-3">
+				<div
+					class="flex gap-3"
+					:class="{
+						'opacity-30': !element.active,
+						'text-red-500' : element.revise && $page.props.auth.can.admin
+					}"
+				>
 					<button
 						v-if="$page.props.auth.can.admin && moveMode"
 						class="draggable-handle text-xs px-1"

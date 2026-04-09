@@ -41,7 +41,7 @@ class WebRoutesRenameTest extends TestCase
 	public function test_admin_courses_teams_dashboard_route_exists(): void
 	{
 		$this
-			->get(route('admin.courses.teams.dashboard', ['course' => 'fake-slug', 'team' => 'fake-team']))
+			->get(route('admin.courses.teams.dashboard', ['course' => 'fake-id', 'team' => 'fake-team']))
 			->assertRedirect();
 	}
 
@@ -55,7 +55,7 @@ class WebRoutesRenameTest extends TestCase
 	public function test_admin_courses_teams_show_route_exists(): void
 	{
 		$this
-			->get(route('admin.courses.teams.show', ['course' => 'fake-slug', 'team' => 'fake-team']))
+			->get(route('admin.courses.teams.show', ['course' => 'fake-id', 'team' => 'fake-team']))
 			->assertRedirect();
 	}
 

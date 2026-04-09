@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import FormMaker from "@/Components/Form/FormMaker.vue"
+import FormInput from "@/Components/Form/FormInput.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 import {ref} from "vue"
 import axios from "axios"
@@ -29,7 +29,7 @@ function getWords() {
 <template>
 	<!-- Title -->
 	<div ref="root">
-		<form-maker
+		<FormInput
 			v-model="nbCar"
 			type="number"
 		/>

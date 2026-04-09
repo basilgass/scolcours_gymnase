@@ -6,7 +6,9 @@ Utilisé dans PoseShow et PostEditPage (pour l'édition mode développement ?)
 	lang="ts"
 	setup
 >
-import FormMaker from "@/Components/Form/FormMaker.vue"
+import FormSwitch from "@/Components/Form/FormSwitch.vue"
+import FormCodearea from "@/Components/Form/FormCodearea.vue"
+import FormInput from "@/Components/Form/FormInput.vue"
 import MoveItemTo from "@/Components/MoveItemTo.vue"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
@@ -115,24 +117,22 @@ const deletePost = function () {
 			/>
 
 			<div class="flex flex-col gap-2">
-				<form-maker
+				<FormSwitch
 					v-model="thePost.active"
 					label="publié,brouillon"
 					sm
-					type="switch"
 				/>
 
-				<form-maker
+				<FormSwitch
 					v-model="thePost.revise"
 					label="en ordre,à réviser"
 					invert
 					sm
-					type="switch"
 				/>
 			</div>
 		</div>
 		<div>
-			<form-maker
+			<FormInput
 				v-model="thePost.title"
 				focus
 				label="Titre"
@@ -154,13 +154,12 @@ const deletePost = function () {
 			</div>
 
 			<div class="flex flex-col">
-				<form-maker
+				<FormCodearea
 					v-model="thePost.script"
 					label="script"
 					name="script"
-					type="codearea"
 				/>
-				<form-maker
+				<FormInput
 					v-model="thePost.switch"
 					label="switch"
 					name="switch"

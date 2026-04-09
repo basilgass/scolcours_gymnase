@@ -1,7 +1,8 @@
 <script setup lang="ts">
 
 import {router} from "@inertiajs/vue3"
-import FormMaker from "@/Components/Form/FormMaker.vue"
+import FormCodearea from "@/Components/Form/FormCodearea.vue"
+import FormInput from "@/Components/Form/FormInput.vue"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
 import DeckCardItemSide from "@/Components/Decks/Parts/DeckCardItemSide.vue"
 import {CardInterface} from "@/types/modelInterfaces.ts"
@@ -120,10 +121,9 @@ watch(editableCard.value, () => {
 			class="grid grid-cols-2 gap-5"
 		>
 			<div class="relative">
-				<form-maker
+				<FormCodearea
 					v-if="editMode.enable"
 					v-model="editableCard.recto.body"
-					type="codearea"
 					class="w-full rounded-xl min-h-[200px]"
 					:rows="10"
 					@focus="showMarkdown = true"
@@ -137,10 +137,9 @@ watch(editableCard.value, () => {
 				</div>
 			</div>
 			<div class="relative">
-				<form-maker
+				<FormCodearea
 					v-if="editMode.enable"
 					v-model="editableCard.verso.body"
-					type="codearea"
 					class="w-full"
 					:rows="10"
 					@focus="showMarkdown = true"
@@ -162,7 +161,7 @@ watch(editableCard.value, () => {
 				block id: {{ card.reference.block.id }}
 			</div>
 			<div class="flex gap-3">
-				<form-maker
+				<FormInput
 					v-model="editableCard.reference.splitter"
 					class="flex-1"
 					type="text"

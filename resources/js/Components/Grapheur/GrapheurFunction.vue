@@ -2,7 +2,7 @@
 
 import {fnInterface, fnStyle} from "@/Pages/Singles/GraphPage.vue"
 import {computed, nextTick, onMounted, ref, watch} from "vue"
-import FormMaker from "@/Components/Form/FormMaker.vue"
+import FormInput from "@/Components/Form/FormInput.vue"
 import DropdownMenu from "@/Components/Ui/DropdownMenu.vue"
 
 const fx = defineModel<fnInterface>()
@@ -66,7 +66,7 @@ defineEmits<{
 			:style="`border-color: ${fx.color}`"
 			class="border-t-8 rounded-t px-3 pt-3"
 		>
-			<form-maker
+			<FormInput
 				v-if="isEditing"
 				ref="editor"
 				v-model="fx.fx"
@@ -84,7 +84,7 @@ defineEmits<{
 			/>
 		</div>
 		<div class="grid grid-cols-3 gap-3 px-3 align-top">
-			<form-maker
+			<FormInput
 				v-model="fx.color"
 				label="couleur"
 				type="color"
@@ -136,14 +136,14 @@ defineEmits<{
 			v-show="showAdvanced"
 			class="grid grid-cols-3 gap-3 px-3 align-top"
 		>
-			<form-maker
+			<FormInput
 				v-model="fx.width"
 				label="épaisseur"
 				type="number"
 				sm
 			/>
 
-			<form-maker
+			<FormInput
 				v-model="fx.samples"
 				label="qualité"
 				max="2000"
@@ -153,7 +153,7 @@ defineEmits<{
 				type="number"
 			/>
 
-			<form-maker
+			<FormInput
 				v-model="fx.domain"
 				label="domaine"
 				sm

@@ -2,7 +2,7 @@
 	lang="ts"
 	setup
 >
-import FormMaker from "@/Components/Form/FormMaker.vue"
+import FormInput from "@/Components/Form/FormInput.vue"
 import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"
 import TableOfSigns from "@/Components/Pi/TableOfSigns.vue"
 
@@ -392,7 +392,7 @@ const keyboardStudyAnswer = computed(() => {
 								class="max-w-3xl mx-auto"
 							/>
 
-							<form-maker
+							<FormInput
 								v-model="drawParametersOverride"
 								sm
 								code

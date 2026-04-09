@@ -2,7 +2,8 @@
 
 import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"
 import {computed, ref} from "vue"
-import FormMaker from "@/Components/Form/FormMaker.vue"
+import FormSwitch from "@/Components/Form/FormSwitch.vue"
+import FormInput from "@/Components/Form/FormInput.vue"
 
 const modulo = ref(60)
 const factor = ref(2)
@@ -93,14 +94,14 @@ function getGradientColor(colors: string[], index: number, maxIndex: number) {
 <template>
 	<article class="max-w-xl mx-auto">
 		<div class="flex gap-3 mb-3">
-			<form-maker
+			<FormInput
 				type="number"
 				min="10"
 				max="1000"
 				label="modulo"
 				v-model="modulo"
 			/>
-			<form-maker
+			<FormInput
 				type="number"
 				min="2"
 				max="500"
@@ -116,8 +117,7 @@ function getGradientColor(colors: string[], index: number, maxIndex: number) {
 		/>
 
 		<div class="flex justify-end mt-1">
-			<form-maker
-				type="switch"
+			<FormSwitch
 				v-model="empty"
 				label="vide,généré"
 				sm

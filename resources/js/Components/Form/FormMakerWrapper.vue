@@ -1,9 +1,9 @@
 <script setup lang="ts">
 
-import {type FormMakerPropsNewType} from "@/Components/Form/FormMakerInterface.ts"
+import {type FormMakerBaseProps} from "@/Components/Form/FormMakerInterface.ts"
 import {computed} from "vue"
 
-interface FormMakerWrapperInterface extends FormMakerPropsNewType {
+interface FormMakerWrapperInterface extends FormMakerBaseProps {
 	errors?: string[]
 	labelClass?: string
 }
@@ -11,7 +11,6 @@ interface FormMakerWrapperInterface extends FormMakerPropsNewType {
 const props = withDefaults(defineProps<FormMakerWrapperInterface>(),
 	{
 		label: "",
-		type: 'text',
 		icon: false,
 		prepend: false,
 		inlineLabel: false,
@@ -52,7 +51,8 @@ const inputClassComputed = computed(() => {
 			'mt-[1.5rem]': !inlineLabel && label,
 			'text-xs': xs,
 			'text-sm': sm,
-			'text-xl': xl
+			'text-xl': xl,
+			'opacity-50 pointer-events-none select-none': disabled,
 		}"
 	>
 		<div

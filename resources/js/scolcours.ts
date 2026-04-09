@@ -15,17 +15,6 @@ export const WidgetsModules = import.meta.glob([
 	"./Components/Widgets/*/*.vue",
 ])
 
-export const FormElementComponents = Object.fromEntries(
-	Object.entries(
-		import.meta.glob(
-			"./Components/Form/FormElements/*.vue"
-		)
-	).map(([path, loader])=>{
-		const name = path
-			.split('/Components/Form/FormElements/FormElement')[1].split('.vue')[0].toLowerCase()
-		return [name, loader]
-	})
-)
 export const DevsModules = import.meta.glob("./Components/Devs/*.vue")
 
 const dynamicModules = {

@@ -2,7 +2,7 @@
 import LayoutGuest from "@/Layouts/LayoutGuest.vue"
 import {Head, useForm} from "@inertiajs/vue3"
 import ScButton from "@/Components/Ui/Button/scButton.vue"
-import FormMaker from "@/Components/Form/FormMaker.vue"
+import FormInput from "@/Components/Form/FormInput.vue"
 
 defineOptions({layout: LayoutGuest})
 
@@ -26,7 +26,7 @@ function submit() {
 
 
 	<form @submit.prevent="submit">
-		<form-maker
+		<FormInput
 			label="nom"
 			v-model="form.name"
 			autocomplete="name"
@@ -34,7 +34,7 @@ function submit() {
 			required
 		/>
 
-		<form-maker
+		<FormInput
 			class="mt-4"
 			label="e-mail"
 			autocomplete="username"
@@ -43,7 +43,7 @@ function submit() {
 			type="email"
 		/>
 
-		<form-maker
+		<FormInput
 			label="mot de passe"
 			type="password"
 			v-model="form.password"
@@ -51,7 +51,7 @@ function submit() {
 			required
 		/>
 
-		<form-maker
+		<FormInput
 			label="confirmer le mot de passe"
 			type="password"
 			autocomplete="new-password"

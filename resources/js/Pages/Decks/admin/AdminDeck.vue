@@ -13,7 +13,9 @@ import DialogModal from "@/Components/Ui/DialogModal.vue"
 import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
 import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
 import {AxiosErrorMessage, AxiosResponseModel} from "@/types"
-import FormMaker from "@/Components/Form/FormMaker.vue"
+import FormChapter from "@/Components/Form/FormChapter.vue"
+import FormSwitch from "@/Components/Form/FormSwitch.vue"
+import FormInput from "@/Components/Form/FormInput.vue"
 import {slugify} from "@/scolcours.ts"
 import FilteredList from "@/Components/Ui/FilteredList.vue"
 import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
@@ -115,20 +117,19 @@ const deckIsRunning = ref(false)
 			</template>
 
 			<div class="p-3">
-				<form-maker
+				<FormInput
 					v-model="form.title"
 					label="titre du deck"
 				/>
 
-				<form-maker
+				<FormInput
 					v-model="slug"
 					label="slug"
 					xs
 				/>
 
-				<form-maker
+				<FormChapter
 					v-model="form.chapter"
-					type="chapter"
 					class="flex-1"
 				/>
 			</div>
@@ -211,9 +212,8 @@ const deckIsRunning = ref(false)
 							v-admin="editMode.enable"
 							class="flex gap-3 items-baseline"
 						>
-							<form-maker
+							<FormSwitch
 								v-model="item.active"
-								type="switch"
 								label="actif"
 								sm
 								@update="toggleActive(item)"

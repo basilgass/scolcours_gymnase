@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import FormMaker from "@/Components/Form/FormMaker.vue"
+import FormInput from "@/Components/Form/FormInput.vue"
 import {watchDebounced} from "@vueuse/core"
 import axios from "axios"
 import {computed, nextTick, ref} from "vue"
@@ -134,7 +134,7 @@ watchDebounced(
 			</template>
 			<div class="p-3">
 				<div class="flex items-end">
-					<form-maker
+					<FormInput
 						ref="moveInput"
 						v-model.number="moveToId"
 						:label="`${source} vers ${target}`"

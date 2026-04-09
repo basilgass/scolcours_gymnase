@@ -1,13 +1,13 @@
 <script setup lang="ts">
 
-import Card from "@/Components/Ui/Card.vue";
-import ScButton from "@/Components/Ui/Button/scButton.vue";
-import ConfirmButton from "@/Components/Ui/ConfirmButton.vue";
-import {CourseInterface, TeamInterface} from "@/types/modelInterfaces.ts";
-import {ref} from "vue";
-import axios from "axios";
-import {AxiosErrorMessage, AxiosResponseModel} from "@/types";
-import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts";
+import Card from "@/Components/Ui/Card.vue"
+import ScButton from "@/Components/Ui/Button/scButton.vue"
+import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
+import {CourseInterface, TeamInterface} from "@/types/modelInterfaces.ts"
+import {ref} from "vue"
+import axios from "axios"
+import {AxiosErrorMessage, AxiosResponseModel} from "@/types"
+import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
 
 const flash = useStoreFlashMessage()
 
@@ -59,14 +59,17 @@ function deleteCourse(id: number) {
 	<Card>
 		<template #header>
 			<div class="text-lg flex flex-col md:flex-row gap-1 md:gap-5 ">
-				<h2 v-katex.auto="course.title" class="flex-1" />
+				<h2
+					v-katex.auto="course.title"
+					class="flex-1"
+				/>
 
 				<div class="flex gap-2">
 					<sc-button
 						type="edit"
 						xs
 						icon
-						:href="route('admin.courses.edit', {course: course.slug})"
+						:href="route('admin.courses.edit', {course: course.id})"
 					/>
 					<confirm-button
 						icon
@@ -79,13 +82,16 @@ function deleteCourse(id: number) {
 			</div>
 		</template>
 
-		<div class="flex gap-2" v-if="currentTeams.length">
+		<div
+			v-if="currentTeams.length"
+			class="flex gap-2"
+		>
 			<sc-button
 				v-for="team in currentTeams"
 				:key="`course-${course.id}-${team.name}`"
 				type="primary"
 				xs
-				:href="route('admin.courses.teams.dashboard', {course: course.slug, team: team.name})"
+				:href="route('admin.courses.teams.dashboard', {course: course.id, team: team.name})"
 			>
 				{{ team.name }}
 			</sc-button>
@@ -97,15 +103,28 @@ function deleteCourse(id: number) {
 				type="edit"
 				icon
 				@click="assignTeams=!assignTeams"
-			></sc-button>
-
+			/>
 		</div>
 		<div v-else>
-			<sc-button type="edit" icon xs outline @click="assignTeams=!assignTeams">ajouter une équipe</sc-button>
+			<sc-button
+				type="edit"
+				icon
+				xs
+				outline
+				@click="assignTeams=!assignTeams"
+			>
+				ajouter une équipe
+			</sc-button>
 		</div>
 
-		<template #footer v-if="assignTeams">
-			<div class="flex gap-3 -my-1 -mx-3 py-1 px-3" v-theme.admin>
+		<template
+			v-if="assignTeams"
+			#footer
+		>
+			<div
+				v-theme.admin
+				class="flex gap-3 -my-1 -mx-3 py-1 px-3"
+			>
 				<sc-button
 					v-for="team in teams"
 					:key="`team-${team.name}`"

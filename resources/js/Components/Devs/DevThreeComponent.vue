@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import PiThreeParser from '../Pi/PiThreeParser.vue'
-import FormMaker from '../Form/FormMaker.vue'
+import FormCodearea from "@/Components/Form/FormCodearea.vue"
+import FormInput from "@/Components/Form/FormInput.vue"
 
 const parameters = ref('grid,axis')
 const code = ref(`A(6,2,2)
@@ -38,13 +39,12 @@ z=plane v,C->color=green/0.4`
 
 		<div class="grid grid-cols-1 md:grid-cols-2 gap-3">
 			<div class="flex flex-col gap-2">
-				<FormMaker
+				<FormInput
 					font-code
 					sm
 					v-model="parameters"
 				/>
-				<FormMaker
-					type="codearea"
+				<FormCodearea
 					font-code
 					sm
 					v-model="code"

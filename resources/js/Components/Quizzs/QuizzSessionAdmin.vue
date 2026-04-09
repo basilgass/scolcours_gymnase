@@ -5,7 +5,7 @@ import type {QuizzSessionInterface, TeamInterface} from "@/types/modelInterfaces
 import {computed, ref} from "vue"
 import axios from "axios"
 import DialogModal from "@/Components/Ui/DialogModal.vue"
-import FormMaker from "@/Components/Form/FormMaker.vue"
+import FormInput from "@/Components/Form/FormInput.vue"
 import ScButton from "@/Components/Ui/Button/scButton.vue"
 import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
 
@@ -187,7 +187,7 @@ const sessionCreateEnable = computed(() => {
 					v-text="team.name"
 				/>
 			</div>
-			<form-maker
+			<FormInput
 				v-model="sessionName"
 				name="id session"
 				label="id session"

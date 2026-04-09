@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import BlockShow from "@/Components/Blocks/BlockShow.vue"
-import FormMaker from "@/Components/Form/FormMaker.vue"
+import FormCodearea from "@/Components/Form/FormCodearea.vue"
+import FormInput from "@/Components/Form/FormInput.vue"
 import SplitView from "@/Components/SplitView.vue"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
 import {blockTypes} from "@/block.config.ts"
@@ -160,7 +161,7 @@ function deleteIllustration(id: number) {
 					v-if="displayStyle === 'side-by-side' || displayStyle === 'editor'"
 					class="flex-1"
 				>
-					<form-maker
+					<FormInput
 						v-model="theBlock.title"
 						inline-label
 						label="titre"
@@ -196,7 +197,7 @@ function deleteIllustration(id: number) {
 					<h3 class="font-extralight">
 						illustrations
 					</h3>
-					<form-maker
+					<FormInput
 						v-model="theBlock.illustrationsGrid"
 						class="flex-1"
 						input-class="rounded-r-none"
@@ -211,7 +212,7 @@ function deleteIllustration(id: number) {
 								gère la grille englobant la ou les illustrations du block
 							</div>
 						</template>
-					</form-maker>
+					</FormInput>
 					<div v-if="theBlock.illustrations.length>0">
 						<ul class="list list-inside list-disc space-y-1">
 							<li
@@ -278,22 +279,20 @@ function deleteIllustration(id: number) {
 								</button>
 							</div>
 
-							<form-maker
+							<FormCodearea
 								v-show="tab === 'markdown'"
 								ref="formBody"
 								v-model="theBlock.body"
 								:rows="20"
 								label="corps"
 								language="latex"
-								type="codearea"
 							/>
 							<div v-show="tab === 'script'">
-								<form-maker
+								<FormCodearea
 									v-model="theBlock.script"
 									:rows="20"
 									label="script"
 									language="javascript"
-									type="codearea"
 								/>
 								<div class="flex">
 									<button @click="addScriptsButtons">
@@ -301,12 +300,11 @@ function deleteIllustration(id: number) {
 									</button>
 								</div>
 							</div>
-							<form-maker
+							<FormCodearea
 								v-show="tab === 'data'"
 								v-model="theBlock.json"
 								:rows="20"
 								language="json"
-								type="codearea"
 							/>
 						</div>
 					</div>
