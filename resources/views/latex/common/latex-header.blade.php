@@ -4,10 +4,9 @@
 	\documentclass[10pt]{article}
 	\usepackage{geometry}
 	\geometry{ a4paper, total={190mm,270mm}, left=10mm, top=10mm}
-	\usepackage[frenchb]{babel}
+	\usepackage[french]{babel}
 	\usepackage{titling}
 	\usepackage{fancyhdr}
-
 @endif
 
 \usepackage[dvipsnames]{xcolor}
