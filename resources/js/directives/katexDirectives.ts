@@ -47,6 +47,9 @@ function katexUpdate(el, binding) {
 	if (binding.modifiers.left) {
 		el.classList.add("katex-left")
 	}
+	if (binding.modifiers.right) {
+		el.classList.add("katex-right")
+	}
 	if (binding.modifiers.nomargin) {
 		el.classList.add("katex-m-0")
 	}
