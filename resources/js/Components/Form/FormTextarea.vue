@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import {useTemplateRef} from "vue"
 import {FormElementEmits, FormElementExpose, FormMakerBaseProps} from "@/Components/Form/FormMakerInterface.ts"
 import FormMakerWrapper from "@/Components/Form/FormMakerWrapper.vue"
 import {useTextEditor} from "@/Composables/useTextEditor.ts"
@@ -15,11 +14,11 @@ const props = defineProps<Props>()
 const model = defineModel<string>()
 const emits = defineEmits<FormElementEmits>()
 
-const inputRef = useTemplateRef<HTMLTextAreaElement>('input')
-const {expose} = useFormMaker(inputRef)
+const {textareaValue, textareaRef} = useTextEditor('input', {language: "raw", model})
+// const inputRef = useTemplateRef<HTMLTextAreaElement>('input')
+const {expose} = useFormMaker(textareaRef)
 defineExpose<FormElementExpose>(expose)
 
-const {textareaValue, textareaRef} = useTextEditor('input', {language: "raw", model})
 </script>
 
 <template>

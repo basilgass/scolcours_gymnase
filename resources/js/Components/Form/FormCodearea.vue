@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import {computed, ref, useTemplateRef} from "vue"
+import {computed, ref} from "vue"
 import {FormElementEmits, FormElementExpose, FormMakerBaseProps} from "@/Components/Form/FormMakerInterface.ts"
 import {useTextEditor} from "@/Composables/useTextEditor.ts"
 import {useFormMaker} from "@/Composables/useFormMaker.ts"
@@ -36,8 +36,9 @@ const emits = defineEmits<FormElementEmits & {
 	mathMode: [e: boolean]
 }>()
 
-const inputRef = useTemplateRef<HTMLTextAreaElement>('input')
-const {expose} = useFormMaker(inputRef)
+const {textareaRef} = useTextEditor('input', {language: props.language, model: theValue})
+// const inputRef = useTemplateRef<HTMLTextAreaElement>('input')
+const {expose} = useFormMaker(textareaRef)
 defineExpose<FormElementExpose>(expose)
 
 const currentRows = ref(0)
@@ -59,7 +60,6 @@ const highlighted = computed(() => {
 	}
 })
 
-const {textareaRef} = useTextEditor('input', {language: props.language, model: theValue})
 
 function sync_scroll() {
 	pre.value.scrollTop = textareaRef.value.scrollTop
