@@ -384,6 +384,7 @@ export function useTextEditor(AreaRefName: string, options?: {
 			) {
 				// On récupère le mot avant la macro suffixe
 				const word = getWordBefore(el.value.slice(0, el.selectionStart - key.length)) ?? ''
+				console.log('BEFORE:', word, ':END')
 				return {key, ...macro, word}
 			}
 		}
@@ -402,6 +403,9 @@ export function useTextEditor(AreaRefName: string, options?: {
 	}
 
 	function getWordBefore(text: string) {
+		// Si le dernier caractère est un espace, retourne le texte vide.
+		if (text[text.length - 1] === " ") return ""
+
 		const wordDelimiters = [
 			'\\+', '-', '\\\\cdot', '\\\\\\(', '\\\\\\[', '\\s'
 		]

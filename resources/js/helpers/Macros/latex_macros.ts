@@ -31,10 +31,15 @@ const latex_macros_suffix: IMacroRecords = {
 		math: true,
 		template: '\\vect{ @ }'
 	},
-	'..': {
+	'.-': {
 		suffix: true,
 		math: true,
 		template: '\\overline{ @ }'
+	},
+	'._': {
+		suffix: true,
+		math: true,
+		template: '\\underbrace{ @ }_{ @ }'
 	},
 	'.(': {
 		suffix: true,
@@ -77,6 +82,11 @@ const md_macros: IMacroRecords = {
 		suffix: false,
 		math: false,
 		template: "[@](@@blocks.show,@)"
+	},
+	"DNG": {
+		suffix: false,
+		math: false,
+		template: "<i class='.@bi-!'></i> @ {.@alert}"
 	}
 }
 export const latex_macros: IMacroRecords = {
