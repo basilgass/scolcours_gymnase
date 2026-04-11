@@ -94,11 +94,13 @@ const mdit = computed(() => {
 	// .@text = .text-<theme>
 	// .@bg = .bg-<theme>
 	// .@def = .def-<theme>
-	output = output.replaceAll(/\.(@[a-z]+)/g, (match) => {
+	output = output.replaceAll(/\.(@[a-zA-Z]+)/g, (match) => {
 		const prefix = match.substring(2)
 		const theme = usePage().props.theme?.slug
 
-		return `.${prefix}-${theme}`
+		return prefix[0].toUpperCase() === prefix[0]
+			? `.${prefix.toLowerCase()}-${theme} .font-semibold`
+			: `.${prefix.toLowerCase()}-${theme}`
 	})
 
 

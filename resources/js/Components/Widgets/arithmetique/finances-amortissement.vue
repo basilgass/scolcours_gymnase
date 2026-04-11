@@ -8,7 +8,9 @@ p=DECOUPAGE (optionnel): A, S, T, M, H, nombre
 <script setup lang="ts">
 import {WidgetPropsInterface} from "@/types/modelInterfaces.ts"
 import {computed} from "vue"
+import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
 
+const editMode = useStoreEditMode()
 const props = defineProps<{
 	illustration: WidgetPropsInterface
 }>()
@@ -89,7 +91,7 @@ const amortissements = computed<[number, number, number, number, number][]>(() =
 		an++
 		solde = +(solde - amortissement).toFixed(DIGITS)
 		interets = +(solde * TVM.value.i).toFixed(DIGITS)
-		
+
 		if (an < TVM.value.n) {
 			amortissement = +(annuites - interets).toFixed(DIGITS)
 		} else {
@@ -125,6 +127,53 @@ const isValid = computed(() => {
 		TVM.value.n &&
 		TVM.value.p &&
 		TVM.value.R
+})
+
+const toMarkdown = computed(() => {
+	if (!isValid.value) return ''
+
+	const header = '| an | solde | intérets | annuités | amortissement |'
+	const separator = '|:---:|---:|---:|---:|---:|'
+
+	const rows = amortissements.value.map(row =>
+		`| \\(${row[0]}\\) | \\(${row[1].toFixed(DIGITS)}\\) | \\(${row[2].toFixed(DIGITS)}\\) | \\(${row[3].toFixed(DIGITS)}\\) | \\(${row[4].toFixed(DIGITS)}\\) |`
+	)
+
+	const footer = `| \\(\\sum\\) | | \\(${sums.value.interets}\\) | \\(${sums.value.annuites}\\) | \\(${sums.value.amortissement}\\) |`
+
+	return [header, separator, ...rows, footer].join('\n')
+})
+
+const toTex = computed(() => {
+	if (!isValid.value) return ''
+
+	const header =
+		'\\(' +
+		['n', '\\text{solde}', '\\text{intérêts}', '\\text{annuités}', '\\text{amortissement}'].join('\\)&\\(') +
+		'\\)\\\\ \n'
+
+	const rows = amortissements.value.map(row =>
+		[
+			row[0],
+			row[1].toFixed(DIGITS),
+			row[2].toFixed(DIGITS),
+			row[3].toFixed(DIGITS),
+			row[4].toFixed(DIGITS),
+		].join(' & ')
+	)
+
+	const footer =
+		['\\(\\sum\\)', '', sums.value.interets, sums.value.annuites, sums.value.amortissement].join(' & ') + ' \n'
+
+	return (
+		'\\begin{tblr}{ colspec={| c | *{4}{X[r]|} }, hlines, row{1}={lightgray}, row{Z}={lightgray} }\n' +
+		header +
+		'\\hline\n' +
+		rows.join('\\\\ \n') +
+		'\\\\ \\hline \n' +
+		footer +
+		'\\end{tblr}'
+	)
 })
 
 </script>
@@ -168,25 +217,25 @@ const isValid = computed(() => {
 						</div>
 					</template>
 					<div
-						class="cell tf center text-sm bg-gray-200 dark:bg-gray-700 border-t-2 border-gray-500 dark:border-gray-400"
+						class="cell tf center bg-gray-200 dark:bg-gray-700 border-t-2 border-gray-500 dark:border-gray-400"
 					>
 						<span v-katex.inline="'\\scriptsize\\sum'" />
 					</div>
 					<div
-						class="cell tf text-sm bg-gray-200 dark:bg-gray-700 border-t-2 border-gray-500 dark:border-gray-400"
+						class="cell tf text-gray-400 dark:text-gray-500 bg-gray-200 dark:bg-gray-700 border-t-2 border-gray-500 dark:border-gray-400"
 					/>
 					<div
-						class="cell tf text-sm bg-gray-200 dark:bg-gray-700 border-t-2 border-gray-500 dark:border-gray-400"
+						class="cell tf text-gray-400 dark:text-gray-500 bg-gray-200 dark:bg-gray-700 border-t-2 border-gray-500 dark:border-gray-400"
 					>
 						<span v-katex.inline="sums.interets" />
 					</div>
 					<div
-						class="cell tf text-sm bg-gray-200 dark:bg-gray-700 border-t-2 border-gray-500 dark:border-gray-400"
+						class="cell tf text-gray-400 dark:text-gray-500 bg-gray-200 dark:bg-gray-700 border-t-2 border-gray-500 dark:border-gray-400"
 					>
 						<span v-katex.inline="sums.annuites" />
 					</div>
 					<div
-						class="cell tf text-sm bg-gray-200 dark:bg-gray-700 border-t-2 border-gray-500 dark:border-gray-400"
+						class="cell tf text-gray-400 dark:text-gray-500 bg-gray-200 dark:bg-gray-700 border-t-2 border-gray-500 dark:border-gray-400"
 					>
 						<span v-katex.inline="sums.amortissement" />
 					</div>
@@ -198,6 +247,15 @@ const isValid = computed(() => {
 			class="font-code text-red-500 bg-red-50 border border-red-500 rounded p-2"
 		>
 			{{ TVM }}
+		</div>
+
+		<div
+			v-admin="editMode.enable"
+			class="flex flex-col gap-5"
+		>
+			<pre class="border rounded bg-gray-200">{{ toTex }}</pre>
+
+			<pre class="border rounded bg-gray-200">{{ toMarkdown }}</pre>
 		</div>
 	</article>
 </template>
