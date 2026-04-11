@@ -84,12 +84,18 @@ const amortissements = computed<[number, number, number, number, number][]>(() =
 	let annuites = TVM.value.R
 	let amortissement = +(annuites - interets).toFixed(DIGITS)
 
-	while (solde > 0) {
+	while (an <= TVM.value.n) {
 		arr.push([an, solde, interets, annuites, amortissement])
 		an++
 		solde = +(solde - amortissement).toFixed(DIGITS)
 		interets = +(solde * TVM.value.i).toFixed(DIGITS)
-		amortissement = +(annuites - interets).toFixed(DIGITS)
+		
+		if (an < TVM.value.n) {
+			amortissement = +(annuites - interets).toFixed(DIGITS)
+		} else {
+			annuites = solde + interets
+			amortissement = solde
+		}
 	}
 
 
