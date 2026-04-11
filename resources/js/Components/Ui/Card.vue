@@ -2,6 +2,9 @@
 
 import {getThemeChapter, getThemeClasses} from "@/directives/themeDirectives.ts"
 import {computed} from "vue"
+import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
+
+const editMode = useStoreEditMode()
 
 const props = withDefaults(defineProps<{
 	theme?: boolean | number | string
@@ -73,6 +76,13 @@ const headerClass = computed(() => {
 		class="rounded bg-content border flex flex-col break-inside-avoid"
 		:class="cardClass"
 	>
+		<header
+			v-admin="editMode.enable"
+			v-theme.admin
+			class="px-3 py-1"
+		>
+			<slot name="admin" />
+		</header>
 		<header
 			v-if="$slots['header']"
 			:class="[

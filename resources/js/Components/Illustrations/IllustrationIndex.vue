@@ -60,12 +60,6 @@ function updateIllustrationsOrder() {
 				:key="`illustration-${element.id}`"
 				class="relative"
 			>
-				<div
-					v-admin="editMode.enable"
-					class="draggable-handle cursor-move absolute -top-2 -left-2 z-10 bg-content"
-				>
-					<i class=" bi bi-arrows-move" />
-				</div>
 				<illustration-show
 					class="shadow-lg"
 					:illustration="element"

@@ -7,7 +7,7 @@ p=DECOUPAGE (optionnel): A, S, T, M, H, nombre
 </info>-->
 <script setup lang="ts">
 import {WidgetPropsInterface} from "@/types/modelInterfaces.ts"
-import {computed} from "vue"
+import {computed, ref} from "vue"
 import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
 
 const editMode = useStoreEditMode()
@@ -129,10 +129,11 @@ const isValid = computed(() => {
 		TVM.value.R
 })
 
+const showMarkdown = ref<boolean>(false)
 const toMarkdown = computed(() => {
 	if (!isValid.value) return ''
 
-	const header = '| an | solde | intérets | annuités | amortissement |'
+	const header = `| an | solde | intérets \\( \\scriptsize ${TVM.value.i * 100} \\% \\) | annuités | amortissement |`
 	const separator = '|:---:|---:|---:|---:|---:|'
 
 	const rows = amortissements.value.map(row =>
@@ -144,12 +145,13 @@ const toMarkdown = computed(() => {
 	return [header, separator, ...rows, footer].join('\n')
 })
 
+const showTex = ref<boolean>(false)
 const toTex = computed(() => {
 	if (!isValid.value) return ''
 
 	const header =
 		'\\(' +
-		['n', '\\text{solde}', '\\text{intérêts}', '\\text{annuités}', '\\text{amortissement}'].join('\\)&\\(') +
+		['n', '\\text{solde}', `\\text{intérêts} ( \\( \\scriptsize ${TVM.value.i * 100} \\% \\) )`, '\\text{annuités}', '\\text{amortissement}'].join('\\)&\\(') +
 		'\\)\\\\ \n'
 
 	const rows = amortissements.value.map(row =>
@@ -179,69 +181,83 @@ const toTex = computed(() => {
 </script>
 
 <template>
-	<article
-		class="prose
+	<article>
+		<div v-if="isValid">
+			<div
+				class="prose
 		prose-strong:text-inherit
 		prose-table:my-0
 		dark:prose-invert
 		lg:prose-lg
 		max-w-full
-		item"
-	>
-		<div v-if="isValid">
-			<div class="overflow-x-auto">
-				<table class="amort-grid block">
-					<div class="cell th center border-b-2 border-gray-500 dark:border-gray-400">
-						an
-					</div>
-					<div class="cell th border-b-2 border-gray-500 dark:border-gray-400">
-						solde
-					</div>
-					<div class="cell th border-b-2 border-gray-500 dark:border-gray-400">
-						intérets
-					</div>
-					<div class="cell th border-b-2 border-gray-500 dark:border-gray-400">
-						annuités
-					</div>
-					<div class="cell th border-b-2 border-gray-500 dark:border-gray-400">
-						amortissement
-					</div>
-					<template
-						v-for="row in amortissements"
-						:key="row[0]"
-					>
-						<div
-							v-for="(item, index) in row"
-							:key="`${row[0]}-${index}`"
-							class="cell"
-							:class="{ 'center': index === 0 }"
+		item overflow-x-auto"
+			>
+				<table>
+					<colgroup>
+						<col class="w-10">
+						<col>
+						<col>
+						<col>
+						<col>
+					</colgroup>
+					<thead>
+						<tr>
+							<th class="cell center">
+								an
+							</th>
+							<th class="cell">
+								solde
+							</th>
+							<th class="cell">
+								intérets <span v-katex="`\\scriptsize(${TVM.i*100} \\%)`" />
+							</th>
+							<th class="cell">
+								annuités
+							</th>
+							<th class="cell">
+								amortissement
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr
+							v-for="row in amortissements"
+							:key="row[0]"
 						>
-							<span v-katex="index===0 ? item : item.toFixed(DIGITS)" />
-						</div>
-					</template>
-					<div
-						class="cell tf center bg-gray-200 dark:bg-gray-700 border-t-2 border-gray-500 dark:border-gray-400"
-					>
-						<span v-katex.inline="'\\scriptsize\\sum'" />
-					</div>
-					<div
-						class="cell tf text-gray-400 dark:text-gray-500 bg-gray-200 dark:bg-gray-700 border-t-2 border-gray-500 dark:border-gray-400"
-					/>
-					<div
-						class="cell tf text-gray-400 dark:text-gray-500 bg-gray-200 dark:bg-gray-700 border-t-2 border-gray-500 dark:border-gray-400"
-					>
-						<span v-katex.inline="sums.interets" />
-					</div>
-					<div
-						class="cell tf text-gray-400 dark:text-gray-500 bg-gray-200 dark:bg-gray-700 border-t-2 border-gray-500 dark:border-gray-400"
-					>
-						<span v-katex.inline="sums.annuites" />
-					</div>
-					<div
-						class="cell tf text-gray-400 dark:text-gray-500 bg-gray-200 dark:bg-gray-700 border-t-2 border-gray-500 dark:border-gray-400"
-					>
-						<span v-katex.inline="sums.amortissement" />
-					</div>
+							<td class="cell center">
+								<span v-katex="row[0]" />
+							</td>
+							<td class="cell">
+								<span v-katex="row[1].toFixed(DIGITS)" />
+							</td>
+							<td class="cell">
+								<span v-katex="row[2].toFixed(DIGITS)" />
+							</td>
+							<td class="cell">
+								<span v-katex="row[3].toFixed(DIGITS)" />
+							</td>
+							<td class="cell">
+								<span v-katex="row[4].toFixed(DIGITS)" />
+							</td>
+						</tr>
+					</tbody>
+					<tfoot>
+						<tr class="text-gray-400 dark:text-gray-500 bg-gray-200 dark:bg-gray-700">
+							<td class="cell py-1! center">
+								<span v-katex.inline="'\\scriptsize\\sum'" />
+							</td>
+							<td class="cell py-1!" />
+							<td class="cell py-1!">
+								<span v-katex.inline="sums.interets" />
+							</td>
+							<td class="cell py-1!">
+								<span v-katex.inline="sums.annuites" />
+							</td>
+							<td class="cell py-1!">
+								<span v-katex.inline="sums.amortissement" />
+							</td>
+						</tr>
+					</tfoot>
 				</table>
 			</div>
 		</div>
@@ -253,40 +269,39 @@ const toTex = computed(() => {
 		</div>
 
 		<div
-			v-admin="editMode.enable"
+			v-admin="editMode.enable && isValid"
 			class="flex flex-col gap-5"
 		>
-			<pre class="border rounded bg-gray-200">{{ toTex }}</pre>
+			<div class="flex gap-3 justify-end font-code text-xs">
+				<span
+					class="cursor-pointer"
+					@click="showTex=!showTex"
+				>TeX</span>
+				<span
+					class="cursor-pointer"
+					@click="showMarkdown=!showMarkdown"
+				>md</span>
+			</div>
+			<pre
+				v-if="showTex"
+				class="border rounded bg-gray-200 text-gray-600 text-xs p-2"
+			>{{ toTex }}</pre>
 
-			<pre class="border rounded bg-gray-200">{{ toMarkdown }}</pre>
+			<pre
+				v-if="showMarkdown"
+				class="border rounded bg-gray-200 text-gray-600 text-xs p-2"
+			>{{ toMarkdown }}</pre>
 		</div>
 	</article>
 </template>
 
 <style scoped>
-.amort-grid {
-	display: grid;
-	grid-template-columns: 2.5rem repeat(4, minmax(min-content, 1fr));
-}
-
 .cell {
 	text-align: right;
-	border-bottom: 1px solid #e5e7eb;
-	padding: 0.5rem 0.75rem;
 	white-space: nowrap;
 }
 
 .center {
 	text-align: center;
-}
-
-.cell.th {
-	font-weight: bold;
-}
-
-@media (min-width: 1024px) {
-	.cell {
-		padding: 0.75rem 1.5rem;
-	}
 }
 </style>

@@ -21,7 +21,6 @@ const editMode = useStoreEditMode()
 	<sc-button
 		v-if="label && href"
 		v-admin="editMode.enable"
-		outline
 		type="edit"
 		xs
 		:href

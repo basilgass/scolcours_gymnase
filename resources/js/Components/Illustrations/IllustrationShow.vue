@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import EditLink from "@/Components/Ui/EditLink.vue"
 import {getModule, MODULE_TYPES} from "@/scolcours.ts"
 import {computed, inject} from "vue"
 import {onClick_answerIndex} from "@/Components/Questions/useQuestionHelpers.ts"
@@ -7,6 +6,7 @@ import Card from "@/Components/Ui/Card.vue"
 import {useFormattedBody} from "@/Composables/useHelpers.ts"
 import {useScriptLoader, UseScriptLoaderReturn} from "@/Composables/useScriptLoader.ts"
 import {IllustrationInterface} from "@/types/modelInterfaces.ts"
+import EditLink from "@/Components/Ui/EditLink.vue"
 
 const props = defineProps<{
 	illustration: IllustrationInterface
@@ -49,7 +49,17 @@ function click($event: MouseEvent) {
 </script>
 
 <template>
-	<Card>
+	<Card :class="illustration.css">
+		<template #admin>
+			<div class="flex justify-between">
+				<i class="draggable-handle cursor-move bi bi-arrows-move" />
+				<edit-link
+					:href="route('admin.illustrations.edit', {illustration:illustration.id})"
+					:label="`illustration (id : ${illustration.id})`"
+					inline
+				/>
+			</div>
+		</template>
 		<template
 			v-if="props.illustration.title"
 			#header
@@ -61,18 +71,13 @@ function click($event: MouseEvent) {
 				-mx-3 -my-2 py-2 px-3 rounded-t"
 			/>
 		</template>
+
 		<figure
 			:id="`illustration-${illustration.id}`"
 			ref="root"
 			class="relative"
-			:class="illustration.css"
 			@click="click"
 		>
-			<edit-link
-				:href="route('admin.illustrations.edit', {illustration:illustration.id})"
-				:label="`illustration ${illustration.id}`"
-			/>
-
 			<component
 				:is="widgetComponent"
 				:illustration="illustrationWithScript"
