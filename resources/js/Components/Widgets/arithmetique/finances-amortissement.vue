@@ -179,10 +179,18 @@ const toTex = computed(() => {
 </script>
 
 <template>
-	<article>
+	<article
+		class="prose
+		prose-strong:text-inherit
+		prose-table:my-0
+		dark:prose-invert
+		lg:prose-lg
+		max-w-full
+		item"
+	>
 		<div v-if="isValid">
 			<div class="overflow-x-auto">
-				<div class="amort-grid">
+				<table class="amort-grid block">
 					<div class="cell th center border-b-2 border-gray-500 dark:border-gray-400">
 						an
 					</div>
@@ -199,19 +207,14 @@ const toTex = computed(() => {
 						amortissement
 					</div>
 					<template
-						v-for="(row, rowIndex) in amortissements"
+						v-for="row in amortissements"
 						:key="row[0]"
 					>
 						<div
 							v-for="(item, index) in row"
 							:key="`${row[0]}-${index}`"
 							class="cell"
-							:class="{
-								'center': index === 0,
-								'border-t-2': rowIndex === 0,
-								'border-gray-500': rowIndex === 0,
-								'dark:border-gray-400': rowIndex === 0,
-							}"
+							:class="{ 'center': index === 0 }"
 						>
 							<span v-katex="index===0 ? item : item.toFixed(DIGITS)" />
 						</div>
@@ -239,7 +242,7 @@ const toTex = computed(() => {
 					>
 						<span v-katex.inline="sums.amortissement" />
 					</div>
-				</div>
+				</table>
 			</div>
 		</div>
 		<div
@@ -268,8 +271,8 @@ const toTex = computed(() => {
 
 .cell {
 	text-align: right;
-	border: 1px solid #ccc;
-	padding: 2px 6px;
+	border-bottom: 1px solid #e5e7eb;
+	padding: 0.5rem 0.75rem;
 	white-space: nowrap;
 }
 
@@ -281,4 +284,9 @@ const toTex = computed(() => {
 	font-weight: bold;
 }
 
+@media (min-width: 1024px) {
+	.cell {
+		padding: 0.75rem 1.5rem;
+	}
+}
 </style>
