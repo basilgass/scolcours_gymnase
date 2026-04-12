@@ -1,5 +1,6 @@
 import {PiRadian} from "@/PiMathExtended/PiRadian.ts"
 import {rndPoints} from "@/PiMathExtended/RandomExt.ts"
+import {TVM} from "@/PiMathExtended/TVM.ts"
 
 
 export const PiMathExt = {
@@ -21,5 +22,6 @@ export const PiMathExt = {
 	],
 	Random: {
 		points: rndPoints
-	}
+	},
+	TVM: TVM
 }
