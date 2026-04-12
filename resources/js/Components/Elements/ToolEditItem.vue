@@ -15,12 +15,12 @@ const flash = useStoreFlashMessage()
 
 // save the tool
 function updateTool() {
-	axios.post(route('api.admin.tools.update', {tool: tool.value.id}), {
-		title: tool.value.title,
-		body: tool.value.body,
-		theme_id: tool.value.theme_id,
-		_method: "PATCH"
-	})
+	axios
+		.patch(route('api.admin.tools.update', {tool: tool.value.id}), {
+			title: tool.value.title,
+			body: tool.value.body,
+			theme_id: tool.value.theme_id
+		})
 		.then(() => {
 			flash.success("L'outils à bien été enregistré.")
 		})
@@ -50,14 +50,14 @@ function updateTool() {
 
 
 			<theme-selector
-				xs
 				v-model="tool.theme_id"
+				xs
 				@change="updateTool"
 			/>
 
 			<sc-button
-				@click="updateTool"
 				:theme="tool.theme_id"
+				@click="updateTool"
 			>
 				Enregistrer
 			</sc-button>
@@ -67,8 +67,8 @@ function updateTool() {
 			class="bg-content border rounded-sm"
 		>
 			<header
-				class="flex justify-between border-b px-3 py-2"
 				v-theme.bg.text="tool.theme_id ?? 0"
+				class="flex justify-between border-b px-3 py-2"
 			>
 				<InertiaLink
 					as="div"

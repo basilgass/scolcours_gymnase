@@ -35,8 +35,4 @@ class Tool extends Model
 {
 	protected $guarded = [];
 
-	public function getRouteKeyName(): string
-	{
-		return 'slug';
-	}
 }

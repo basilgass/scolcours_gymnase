@@ -13,6 +13,7 @@ import GeneratorsExamples from "@/Components/Elements/GeneratorsExamples.vue"
 import ScButton from "@/Components/Ui/Button/scButton.vue"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
+import FormTheme from "@/Components/Form/FormTheme.vue"
 
 defineOptions({layout: LayoutMain})
 
@@ -122,6 +123,16 @@ function historyBack() {
 					name="generatorTitle"
 					sm
 				/>
+
+				<FormTheme
+					v-model="theGenerator.theme_id"
+					inline-label
+					label="thème"
+					label-class="w-[100px]"
+					name="generatorThemeId"
+					sm
+				/>
+
 				<FormCodearea
 					v-model="theGenerator.body"
 					:rows="5"

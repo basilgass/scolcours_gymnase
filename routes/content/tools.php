@@ -47,9 +47,6 @@ Route::middleware('api')
 	          ->prefix('admin')
 	          ->as('admin.')
 	          ->group(function () {
-
 		          Route::apiResource('tools', ToolApiController::class);
-
 	          });
-
      });
