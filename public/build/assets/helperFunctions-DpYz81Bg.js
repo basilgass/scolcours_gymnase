@@ -1,0 +1,1 @@
+function e(e,t=2){return(+e).toFixed(t)}function t(e){e.style.setProperty(`animation-name`,`v-shake-horizontal`),e.style.setProperty(`animation-duration`,`500ms`),setTimeout(()=>{e.style.setProperty(`animation-name`,``)},500)}export{t as n,e as t};

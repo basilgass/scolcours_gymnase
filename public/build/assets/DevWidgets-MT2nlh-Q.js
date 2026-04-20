@@ -1,0 +1,1 @@
+import{A as e,O as t,T as n,U as r}from"./@inertiajs-C0oRnCTy.js";import{t as i}from"./algorithme-de-bissection-BqapPM1w.js";var a=e({__name:`DevWidgets`,setup(e){return(e,a)=>(r(),n(`div`,null,[t(i,{illustration:{code:``,parameters:``}})]))}});export{a as default};

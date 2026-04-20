@@ -58,7 +58,7 @@ async function replaceForeignObjectsWithMathJax(draw: Svg) {
 	const foreignObjects = draw.find("foreignObject")
 
 	for (const fo of foreignObjects) {
-		const tex = fo.attr("data-tex")  // suppose que tu stockes le TeX ici
+		const tex = fo.attr("data-tex")
 		if (!tex) continue
 
 		const svgEl = await texToSvgSVG4(tex)

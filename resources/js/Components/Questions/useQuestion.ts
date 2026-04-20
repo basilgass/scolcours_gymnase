@@ -30,9 +30,11 @@ export function useQuestion(
 
 	// Score object — source unique de vérité : le store Pinia
 	const userScore = computed({
-		get: () => storeScore.scores.find(
-			s => s.scoreable_type === 'Question' && s.scoreable_id === question.value.id
-		),
+		get: () =>
+			storeScore
+				.scores
+				.find(s => s.scoreable_type === 'Question' && s.scoreable_id === question.value.id
+				),
 		set: (value) => {
 			if (!value) return
 			const index = storeScore.scores.findIndex(

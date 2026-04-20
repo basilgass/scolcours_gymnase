@@ -2,6 +2,8 @@ import {defineConfig} from "vite"
 import laravel from "laravel-vite-plugin"
 import vue from "@vitejs/plugin-vue"
 import tailwindcss from "@tailwindcss/vite"
+import { resolve } from "path"
+import inertia from '@inertiajs/vite'
 
 export default defineConfig({
 	build: {
@@ -32,11 +34,12 @@ export default defineConfig({
 				},
 			},
 		}),
+		inertia(),
 		tailwindcss()
 	],
 	resolve: {
 		alias: {
-			"@/*": ["./resources/js/*"]
+			"@": resolve("resources/js")
 		},
 	},
 	test: {

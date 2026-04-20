@@ -17,7 +17,7 @@ import {useWrongAnswerAnimation} from "@/Composables/useHelpers.ts"
 
 const questionData = inject(questionDataKey)!
 
-defineEmits<{
+const emit = defineEmits<{
 	validate: [event: questionResultInterface]
 }>()
 
@@ -47,7 +47,9 @@ function toggleKeyboard(value: questionUserInputDisplayType) {
 const totalAnswers = computed(() => questionData.answers.values.value.length ?? 0)
 const currentId = computed({
 	get: () => questionData.current.id.value ?? 0,
-	set: (v: number) => { questionData.current.id.value = v }
+	set: (v: number) => {
+		questionData.current.id.value = v
+	}
 })
 const isFirst = computed(() => currentId.value === 0)
 const isLast = computed(() => currentId.value === totalAnswers.value - 1)
@@ -87,6 +89,9 @@ const useValidation = useQuestionValidation(questionData)
 
 function onValidate() {
 	useValidation.validate(validateButtonRef.value?.$el)
+
+	// émettre le résultat lors de la validation.
+	emit('validate', useValidation.result.value)
 
 	if (
 		!useValidation.result.value.result &&
@@ -211,7 +216,8 @@ function closingErrors() {
 								Entrer une réponse...
 							</p>
 							<p v-else-if="useValidation.answersCount.value<useValidation.count">
-								{{ useValidation.answersCount.value }} réponse(s) sur {{ questionData.answers.values.value.length }}
+								{{ useValidation.answersCount.value }} réponse(s) sur
+								{{ questionData.answers.values.value.length }}
 							</p>
 							<p v-else>
 								<i class="bi bi-check" /> <span class="hidden md:inline md:ml-2">Valider</span>

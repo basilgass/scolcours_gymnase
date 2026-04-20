@@ -16,11 +16,18 @@ import {computed, ref} from "vue"
 
 const root = ref(null)
 
-const props = defineProps({
-	text: {type: String, default: ""},
-	delimiters: {type: Array, default: null},
-	customKatex: {type: Boolean, default: false},
-})
+const props = withDefaults(
+	defineProps<{
+		text?: string,
+		delimiters?: string[],
+		customKatex?: boolean
+	}>(),
+	{
+		text: "",
+		delimiters: () => ["brackets", "dollars"],
+		customKatex: false
+	}
+)
 
 const md = markdownIt({html: true})
 	.use(bracketed)
@@ -136,9 +143,7 @@ const mdClick = function (event) {
 <template>
 	<div
 		ref="root"
-		:class="{
-			'katex-boxed': !customKatex,
-		}"
+		:class="{ 'katex-boxed': !customKatex, }"
 		class="prose
 		prose-strong:text-inherit
 		prose-table:my-0

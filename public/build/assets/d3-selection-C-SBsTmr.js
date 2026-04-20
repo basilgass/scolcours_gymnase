@@ -1,0 +1,1 @@
+import{h as e,m as t,p as n}from"./d3-CG_dHczl.js";function r(e){return typeof e==`string`?new n([[document.querySelector(e)]],[document.documentElement]):new n([[e]],t)}function i(r){return typeof r==`string`?new n([document.querySelectorAll(r)],[document.documentElement]):new n([e(r)],t)}export{r as n,i as t};

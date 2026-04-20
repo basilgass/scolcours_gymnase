@@ -21,7 +21,14 @@ const cardHide = ref<boolean>(false)
 		class="relative card transition duration-1000 w-full aspect-4/3"
 		@click="cardSide=cardSide==='verso'?'recto':'verso'"
 	>
-		<div class="card-face front ">
+		<div
+			class="card-face front
+			absolute w-full h-full
+			transition-transform duration-500
+			shadow-xl
+			border rounded-xl
+			grid place-items-center"
+		>
 			<div
 				class="bg-white w-full h-full rounded-xl px-5 py-3 grid place-items-center"
 			>
@@ -34,12 +41,19 @@ const cardHide = ref<boolean>(false)
 				<illustration-show
 					v-if="recto.illustrations.length > 0"
 					:illustration="recto.illustrations[0]"
-					class="h-full w-full max-w-[600px]"
+					class="h-full w-full max-w-150"
 					click-through
 				/>
 			</div>
 		</div>
-		<div class="card-face back ">
+		<div
+			class="card-face back
+				absolute w-full h-full
+				transition-transform duration-500
+				shadow-xl
+				border rounded-xl
+				grid place-items-center"
+		>
 			<div
 				class="bg-white w-full h-full rounded-xl px-5 py-3 grid place-items-center"
 				:class="cardHide?'invisible':''"
@@ -53,7 +67,7 @@ const cardHide = ref<boolean>(false)
 				<illustration-show
 					v-if="verso.illustrations.length > 0"
 					:illustration="verso.illustrations[0]"
-					class="h-full w-full max-w-[600px]"
+					class="h-full w-full max-w-150"
 					click-through
 				/>
 			</div>
@@ -64,7 +78,6 @@ const cardHide = ref<boolean>(false)
 <style scoped lang="postcss">
 
 .card-face {
-	@apply absolute w-full h-full transition-transform duration-500 shadow-xl border rounded-xl grid place-items-center;
 	backface-visibility: hidden;
 }
 

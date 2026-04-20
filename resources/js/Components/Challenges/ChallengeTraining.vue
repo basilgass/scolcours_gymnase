@@ -25,6 +25,8 @@ const scoreStore = useStoreScore()
 const score = await scoreStore.getScore<ScoreGeneratorDataInterface>('Generator', props.generator.id)
 
 function nextQuestion(checkerResult: questionResultInterface): void {
+	console.log(checkerResult)
+	console.log(score)
 	if (checkerResult.result) {
 		// Mise à jour du score.
 		score.data.current_score++

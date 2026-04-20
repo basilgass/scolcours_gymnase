@@ -4,7 +4,7 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 
-	<title inertia>{{ config('app.name', 'Scolcours') }}</title>
+	<title data-inertia>{{ config('app.name', 'Scolcours') }}</title>
 
 	<!-- Fonts -->
 	<link rel="preconnect" href="https://fonts.googleapis.com">
@@ -25,11 +25,11 @@
 	<!-- Scripts -->
 	@routes
 	@vite(['resources/js/app.ts', "resources/js/Pages/{$page['component']}.vue"])
-	@inertiaHead
+	<x-inertia::head />
 
 </head>
 <body class="bg-main">
-@inertia
+<x-inertia::app />
 <div id="modal-dialog"></div>
 </body>
 </html>

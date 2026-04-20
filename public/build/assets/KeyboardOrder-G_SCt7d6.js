@@ -1,0 +1,7 @@
+import{A as e,Ct as t,J as n,L as r,O as i,T as a,U as o,ht as s,it as c,q as l,rt as u,x as d}from"./@inertiajs-C0oRnCTy.js";import{t as f}from"./scButton-BxODzkv4.js";import{s as p}from"./pimath-NcUKaRJ_.js";var m=e({__name:`KeyboardOrder`,props:{keyboard:{},reference:{}},emits:[`change`],setup(e,{expose:m,emit:h}){let g=e,_=h;function v(e){y(e.input).then(e=>_(`change`,e))}async function y(e){return e!==void 0&&(e===`-`?T.value=C.value:e===``&&(T.value=p.shuffle(C.value))),{input:w.value===T.value.map(e=>e.label).join(`
+`)?`1`:`0`,tex:``,raw:S.value?T.value.map(e=>`- ${e.label}`).join(`
+`):T.value.map(e=>e.label).join(` `)}}m({reset:()=>{},setInput:y,parameters:`full (pleine largeur)
+flex (utilisation de flex)
+tex (converti en TeX)
+list (affichage d'une liste)`});let b=d(()=>g.keyboard.parameters.includes(`full`)),x=d(()=>g.keyboard.parameters.includes(`flex`)),S=d(()=>g.keyboard.parameters.includes(`list`)),C=d(()=>g.keyboard.values.map((e,t)=>({id:t+1,label:e}))),w=d(()=>g.keyboard.values.join(`
+`)),T=s(p.shuffle(C.value));return(e,s)=>{let d=l(`draggable`),p=n(`katex`);return o(),a(`div`,null,[i(d,r({modelValue:T.value,"onUpdate:modelValue":s[0]||=e=>T.value=e,class:`flex flex-wrap gap-3 my-5`,"item-key":`id`},{animation:200},{onUpdate:v}),{item:u(({element:e})=>[c(i(f,{class:t({"w-full":b.value,"flex-1":x.value})},null,8,[`class`]),[[p,e.label,void 0,{auto:!0}]])]),_:1},16,[`modelValue`])])}}});export{m as default};
