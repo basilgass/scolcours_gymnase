@@ -11,7 +11,7 @@ Route::middleware('web')
 	          ->as('students.')
 	          ->group(function () {
 
-		          Route::get('cours/{course:slug}/leçon/{lesson}', [LessonController::class, 'show'])
+		          Route::get('cours/{course:slug}/{lesson}', [LessonController::class, 'show'])
 		               ->name('lessons.show');
 
 	          });

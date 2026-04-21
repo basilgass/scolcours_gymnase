@@ -47,29 +47,6 @@ const courseLessons = computed(() => {
 	return props.lessons.filter(lesson => !lesson.homework)
 })
 
-
-const beforeLessons = computed(() => {
-	if (firstTimeOfTheDayInMinutes.value === null) {
-		return []
-	}
-
-	return props.lessons.filter(lesson => {
-		const minute = toMinutes(dayjs(lesson.scheduled_at).format("HH:mm"))
-
-		return minute <= firstTimeOfTheDayInMinutes.value
-	})
-})
-const duringLessons = computed(() => {
-	if (firstTimeOfTheDayInMinutes.value === null) {
-		return props.lessons
-	}
-
-	return props.lessons.filter(lesson => {
-		const minute = toMinutes(dayjs(lesson.scheduled_at).format("HH:mm"))
-
-		return minute > firstTimeOfTheDayInMinutes.value
-	})
-})
 </script>
 
 <template>

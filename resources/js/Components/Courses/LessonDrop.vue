@@ -24,10 +24,14 @@ const isDone = computed(() => {
 	return !!score.value?.is_resolved
 })
 
-const dropColorClass = computed(()=>{
-	if(isDone.value){return lessonIconsColors.done}
+const dropColorClass = computed(() => {
+	if (isDone.value) {
+		return lessonIconsColors.done
+	}
 
-	if(isPast.value){return lessonIconsColors.past}
+	if (isPast.value) {
+		return lessonIconsColors.past
+	}
 
 	return lessonIconsColors.empty
 })
@@ -42,7 +46,6 @@ onMounted(() => {
 
 <template>
 	<InertiaLink
-		as="div"
 		:href="route('students.lessons.show', {course: course.slug, lesson: lesson.id})"
 		class="cursor-pointer hover:pl-1 transition-all"
 	>
