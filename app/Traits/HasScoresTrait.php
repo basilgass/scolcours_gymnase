@@ -15,20 +15,20 @@ trait HasScoresTrait
 {
 	private int|float $cacheTime = 15 * 60; // 15 minutes
 
-		public function users(): HasManyThrough
-		{
-			// En théorie, permet de retrouver tous les utilisateurs ayant un score donné.
-			return $this
-				->hasManyThrough(
-					User::class,
-					Score::class,
-					'scoreable_id', // Foreign key on scores table
-					'id', // Foreign key on user table
-					'id', // Local key on current model
-					'user_id' // Local key on scores table
-				)
-				->where('scoreable_type', self::class); // Permet de récupérer seulement les scores du modèle en cours.
-		}
+	public function users(): HasManyThrough
+	{
+		// En théorie, permet de retrouver tous les utilisateurs ayant un score donné.
+		return $this
+			->hasManyThrough(
+				User::class,
+				Score::class,
+				'scoreable_id', // Foreign key on scores table
+				'id', // Foreign key on user table
+				'id', // Local key on current model
+				'user_id' // Local key on scores table
+			)
+			->where('scoreable_type', self::class); // Permet de récupérer seulement les scores du modèle en cours.
+	}
 
 	public function userScores()
 	{
@@ -63,22 +63,6 @@ trait HasScoresTrait
 		};
 
 		return ScoreResource::make($score);
-//
-//		return Cache::remember($cacheKey, $this->cacheTime,
-//			function () use ($user) {
-//				$score = $this->scoreFor($user);
-//
-//				// Le score n'existe pas ? On le créé.
-//				if (!$score) {
-//					// The score does not exist and the user is connected.
-//					$score = $this->scores()->create([
-//						"user_id" => $user->id,
-//						"score"   => 0,
-//					]);
-//				};
-//
-//				return ScoreResource::make($score);
-//			});
 	}
 
 	public function getCacheKey(User $user): string
@@ -116,6 +100,6 @@ trait HasScoresTrait
 			function () use ($score) {
 				return ScoreResource::make($score);
 			});
-
 	}
+
 }

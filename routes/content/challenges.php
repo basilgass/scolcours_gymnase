@@ -9,10 +9,14 @@ Route::middleware('web')
 	     // Public routes.
 	     Route::resource('challenges', ChallengeController::class)
 	          ->only(['index', 'show']);
-		 
+
 	     // Challenge route show.
 	     Route::get('challenges/{challenge:slug}', [ChallengeController::class, 'show'])
 	          ->name('challenges.show');
+
+	     // Show hall of fame.
+	     Route::get('challenges/{challenge:slug}/hall-of-fame', [ChallengeController::class, 'hallOfFame'])
+	          ->name('challenges.hallOfFame');
 
 	     // Admin routes
 	     Route::middleware('admin')
