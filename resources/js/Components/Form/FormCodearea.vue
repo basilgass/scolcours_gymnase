@@ -3,11 +3,11 @@ import {computed, ref} from "vue"
 import {FormElementEmits, FormElementExpose, FormMakerBaseProps} from "@/Components/Form/FormMakerInterface.ts"
 import {useTextEditor} from "@/Composables/useTextEditor.ts"
 import {useFormMaker} from "@/Composables/useFormMaker.ts"
-import Prism from "prismjs"
-import "prismjs/components/prism-javascript"
-import "prismjs/components/prism-json"
-import "prismjs/components/prism-latex"
-import "prismjs/themes/prism.css"
+// import Prism from "prismjs"
+// import "prismjs/components/prism-javascript"
+// import "prismjs/components/prism-json"
+// import "prismjs/components/prism-latex"
+// import "prismjs/themes/prism.css"
 import {latex_macros} from "@/helpers/Macros/latex_macros.ts"
 import {javascript_macros} from "@/helpers/Macros/javascript_macros.ts"
 import {json_macros} from "@/helpers/Macros/json_macros.ts"
@@ -44,20 +44,22 @@ defineExpose<FormElementExpose>(expose)
 const currentRows = ref(0)
 const pre = ref(null)
 
-Prism.manual = true
+// Prism.manual = true
 const highlighted = computed(() => {
 	if (!theValue.value) return ""
-	try {
-		if (props.language.toLowerCase() === "latex") {
-			return Prism.highlight(theValue.value, Prism.languages.latex, "latex")
-		}
-		if (props.language.toLowerCase() === "json") {
-			return Prism.highlight(theValue.value, Prism.languages.json, "json")
-		}
-		return Prism.highlight(theValue.value, Prism.languages.javascript, "javascript")
-	} catch {
-		return theValue.value
-	}
+
+	return ""
+	// try {
+	// 	if (props.language.toLowerCase() === "latex") {
+	// 		return Prism.highlight(theValue.value, Prism.languages.latex, "latex")
+	// 	}
+	// 	if (props.language.toLowerCase() === "json") {
+	// 		return Prism.highlight(theValue.value, Prism.languages.json, "json")
+	// 	}
+	// 	return Prism.highlight(theValue.value, Prism.languages.javascript, "javascript")
+	// } catch {
+	// 	return theValue.value
+	// }
 })
 
 

@@ -1,4 +1,0 @@
-import{A as e,O as t,S as n,T as r,U as i,ht as a,x as o}from"./@inertiajs-C0oRnCTy.js";import{t as s}from"./FormInput-CSu1lcDE.js";import{t as c}from"./FormTextarea-DmyYKCYU.js";import{t as l}from"./graphe-de-markov-DQZsxROb.js";var u=e({__name:`DevMarkovGraph`,setup(e){let u=a(`A,B,C`),d=a(`0.1 0.2 0.3
-1.1 1.2 1.3
-2.1 2.2 2.3`);o(()=>{let e=u.value.split(`
-`).length;return e<2||e>4?null:e});let f=o(()=>({parameters:``,code:`${u.value}\n${d.value}`}));return console.log(f.value),(e,a)=>(i(),r(`div`,null,[n(`div`,null,[t(s,{type:`text`,class:`font-code`,label:`étiquettes`,modelValue:u.value,"onUpdate:modelValue":a[0]||=e=>u.value=e},null,8,[`modelValue`]),t(c,{class:`font-code`,label:`matrice`,modelValue:d.value,"onUpdate:modelValue":a[1]||=e=>d.value=e,rows:`4`},null,8,[`modelValue`])]),t(l,{illustration:{parameters:``,code:`${u.value}\n${d.value}`}},null,8,[`illustration`])]))}});export{u as default};
