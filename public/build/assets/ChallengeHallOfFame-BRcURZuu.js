@@ -1,4 +1,0 @@
-import{A as e,D as t,Et as n,S as r,T as i,U as a,w as o}from"./@inertiajs-C0oRnCTy.js";var s={key:0},c={key:0},l=e({__name:`ChallengeHallOfFame`,props:{challenge:{},teams:{},global:{},teamStats:{}},setup(e){return(l,u)=>(a(),i(`section`,null,[u[0]||=r(`h1`,null,`Hall of fame`,-1),r(`h2`,null,`challenge id `+n(e.challenge.id),1),r(`div`,null,n(e.global.scores.map(e=>e.score))+` / `+n(e.global.average)+` / `+n(e.global.median)+` / `+n(e.global.rank)+` / `+n(e.global.total),1),e.teams?(a(),i(`div`,s,[t(` equipes : `+n(e.teams.map(e=>e.name).join(`, `))+` `,1),e.teamStats?(a(),i(`pre`,c,n(e.teamStats.scores.map(e=>e.score))+` /
-			`+n(e.teamStats.average)+` /
-			`+n(e.teamStats.median)+` / `+n(e.teamStats.rank)+` / `+n(e.teamStats.total)+`
-		`,1)):o(``,!0)])):o(``,!0)]))}});export{l as default};

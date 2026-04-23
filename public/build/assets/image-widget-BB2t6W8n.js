@@ -1,1 +1,0 @@
-import{A as e,T as t,U as n,x as r}from"./@inertiajs-C0oRnCTy.js";var i=[`src`],a=e({__name:`image-widget`,props:{illustration:{}},setup(e){let a=e,o=r(()=>{let e=a.illustration.code;return e.startsWith(`data:image/`)?e:e.startsWith(`@`)?e.substring(1):`\\storage\\`+e});return(e,r)=>(n(),t(`img`,{src:o.value,alt:`image non disponible`},null,8,i))}});export{a as default};

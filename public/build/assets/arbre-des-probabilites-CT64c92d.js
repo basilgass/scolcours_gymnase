@@ -1,1 +1,0 @@
-import{A as e,O as t,T as n,U as r}from"./@inertiajs-C0oRnCTy.js";import{t as i}from"./PiProbabilityTree-CW_Fmjyp.js";var a=e({__name:`arbre-des-probabilites`,props:{illustration:{}},setup(e){return(a,o)=>(r(),n(`div`,null,[t(i,{"tree-params":e.illustration.parameters,"tree-data":e.illustration.code},null,8,[`tree-params`,`tree-data`])]))}});export{a as default};

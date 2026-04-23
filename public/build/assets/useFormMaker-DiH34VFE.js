@@ -1,1 +1,0 @@
-import{ht as e}from"./@inertiajs-C0oRnCTy.js";function t(t){let n=e([]);return{errors:n,expose:{focus:()=>t.value?.focus?.(),validate:()=>n.value}}}export{t};

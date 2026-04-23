@@ -1,0 +1,1 @@
+import{H as e,b as t,k as n,w as r}from"./@inertiajs-DcPzCMHT.js";var i=[`src`],a=n({__name:`image-widget`,props:{illustration:{}},setup(n){let a=n,o=t(()=>{let e=a.illustration.code;return e.startsWith(`data:image/`)?e:e.startsWith(`@`)?e.substring(1):`\\storage\\`+e});return(t,n)=>(e(),r(`img`,{src:o.value,alt:`image non disponible`},null,8,i))}});export{a as default};

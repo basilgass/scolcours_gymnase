@@ -1,1 +1,0 @@
-import{a as e,x as t}from"./@inertiajs-C0oRnCTy.js";function n(){let n=e();return{title:t(()=>n.props.meta?.title??n.props.theme?.title??null)}}export{n as t};

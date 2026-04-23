@@ -1,1 +1,0 @@
-import{T as e,U as t}from"./@inertiajs-C0oRnCTy.js";import{t as n}from"./_plugin-vue_export-helper-D2qcPrUb.js";var r={},i={class:`text-red-700 text-lg border-red-500 bg-red-50 text-center min-h-[5em] grid place-items-center font-code`};function a(n,r){return t(),e(`div`,i,` Une erreur s'est produite avec les données `)}var o=n(r,[[`render`,a]]);export{o as t};

@@ -1,1 +1,0 @@
-import{A as e,C as t,U as n}from"./@inertiajs-C0oRnCTy.js";import{t as r}from"./PiDrawParser-B4gCNu18.js";var i=e({__name:`draw-parser-widget`,props:{illustration:{}},setup(e){return(i,a)=>(n(),t(r,{draw:e.illustration},null,8,[`draw`]))}});export{i as default};
