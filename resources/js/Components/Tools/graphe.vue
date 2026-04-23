@@ -16,13 +16,15 @@ const {restoreTool} = useToolsStorage()
 const forms: IToolForm[] = restoreTool([
 	{
 		label: "paramètres",
-		type: "text",
+		type: "codearea",
+		attributes: {language: 'pidraw-params'},
 		value: ref("axis,grid,x=-10:10,y=-10:10"),
 		fromUrl: "params",
 	},
 	{
 		label: "code",
 		type: "codearea",
+		attributes: {language: 'pidraw'},
 		value: ref(`O(0,0)
 A(5,1)
 B(3,8)->drag=grid
@@ -36,6 +38,18 @@ X=inter t,d->w=10`),
 		fromUrl: "code"
 	}
 ])
+/**
+ * A(-1,2)
+ * B(3,-6)
+ * C(6,3)
+ * O(3,-1)
+ * c=circ O,A
+ * p=poly A,B,C
+ * K(-5,-5)
+ * p1=KB
+ * p2=KA
+ * b=bis p1,p2
+ */
 
 const params = computed(() => forms[0].value.value as string)
 const code = computed(() => forms[1].value.value as string)

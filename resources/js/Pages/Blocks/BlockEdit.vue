@@ -246,67 +246,65 @@ function deleteIllustration(id: number) {
 			</div>
 
 			<div
-				class="flex gap-3 mt-4"
+				class="grid gap-3 mt-4"
+				:class="displayStyle==='side-by-side' ? 'grid-cols-2' : 'grid-cols-1'"
 			>
 				<div
 					v-if="displayStyle === 'side-by-side' || displayStyle === 'editor'"
-					class="w-full h-full flex-1"
 				>
-					<div>
-						<!-- corps et preview -->
-						<div class="relative">
-							<div class="absolute right-0 top-[-1.3em] flex text-xs z-10">
-								<button
-									:class="{ 'bg-blue-600 text-white': tab === 'markdown' }"
-									class="border-x border-t px-2 py-0 rounded-t transition-all duration-500"
-									@click="tab = 'markdown'"
-								>
-									markdown
-								</button>
-								<button
-									:class="{ 'bg-blue-600 text-white': tab === 'script' }"
-									class="border-x border-t px-2 py-0 rounded-t transition-all duration-500"
-									@click="tab = 'script'"
-								>
-									script
-								</button>
-								<button
-									:class="{ 'bg-blue-600 text-white': tab === 'data' }"
-									class="border-x border-t px-2 py-0 rounded-t transition-all duration-500"
-									@click="tab = 'data'"
-								>
-									data
-								</button>
-							</div>
-
-							<FormCodearea
-								v-show="tab === 'markdown'"
-								ref="formBody"
-								v-model="theBlock.body"
-								:rows="20"
-								label="corps"
-								language="latex"
-							/>
-							<div v-show="tab === 'script'">
-								<FormCodearea
-									v-model="theBlock.script"
-									:rows="20"
-									label="script"
-									language="javascript"
-								/>
-								<div class="flex">
-									<button @click="addScriptsButtons">
-										ajouter des boutons
-									</button>
-								</div>
-							</div>
-							<FormCodearea
-								v-show="tab === 'data'"
-								v-model="theBlock.json"
-								:rows="20"
-								language="json"
-							/>
+					<!-- corps et preview -->
+					<div class="relative">
+						<div class="absolute right-0 top-[-1.3em] flex text-xs z-10">
+							<button
+								:class="{ 'bg-blue-600 text-white': tab === 'markdown' }"
+								class="border-x border-t px-2 py-0 rounded-t transition-all duration-500"
+								@click="tab = 'markdown'"
+							>
+								markdown
+							</button>
+							<button
+								:class="{ 'bg-blue-600 text-white': tab === 'script' }"
+								class="border-x border-t px-2 py-0 rounded-t transition-all duration-500"
+								@click="tab = 'script'"
+							>
+								script
+							</button>
+							<button
+								:class="{ 'bg-blue-600 text-white': tab === 'data' }"
+								class="border-x border-t px-2 py-0 rounded-t transition-all duration-500"
+								@click="tab = 'data'"
+							>
+								data
+							</button>
 						</div>
+
+						<FormCodearea
+							v-show="tab === 'markdown'"
+							ref="formBody"
+							v-model="theBlock.body"
+							:rows="20"
+							label="corps"
+							language="latex"
+						/>
+						<div v-show="tab === 'script'">
+							<FormCodearea
+								v-model="theBlock.script"
+								:rows="20"
+								label="script"
+								language="javascript"
+							/>
+							<div class="flex">
+								<button @click="addScriptsButtons">
+									ajouter des boutons
+								</button>
+							</div>
+						</div>
+						<FormCodearea
+							v-show="tab === 'data'"
+							v-model="theBlock.json"
+							:rows="20"
+							language="json"
+						/>
 					</div>
 
 					<div class="h-[3.2em] font-code text-xs px-3">
@@ -321,7 +319,6 @@ function deleteIllustration(id: number) {
 				<block-show
 					v-if="displayStyle === 'side-by-side' || displayStyle === 'preview'"
 					:block="theBlock"
-					class="flex-1"
 					no-admin
 				/>
 			</div>

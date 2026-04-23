@@ -1,24 +1,33 @@
 <script lang="ts" setup>
-import {computed, ref} from "vue"
+import {computed, ref, useTemplateRef} from "vue"
+import {useMagicKeys, whenever} from "@vueuse/core"
+import {formatMarkdownTables} from "@/helpers/markdownTableFormatter.ts"
 import {FormElementEmits, FormElementExpose, FormMakerBaseProps} from "@/Components/Form/FormMakerInterface.ts"
-import {useTextEditor} from "@/Composables/useTextEditor.ts"
 import {useFormMaker} from "@/Composables/useFormMaker.ts"
-// import Prism from "prismjs"
-// import "prismjs/components/prism-javascript"
-// import "prismjs/components/prism-json"
-// import "prismjs/components/prism-latex"
-// import "prismjs/themes/prism.css"
+import {useCodeMirrorExtensions} from "@/Composables/useCodeMirrorEditor.ts"
+import {pidrawExtensions, pidrawParamsLanguage} from "@/helpers/pidrawLanguage.ts"
 import {latex_macros} from "@/helpers/Macros/latex_macros.ts"
 import {javascript_macros} from "@/helpers/Macros/javascript_macros.ts"
 import {json_macros} from "@/helpers/Macros/json_macros.ts"
+import {Codemirror} from "vue-codemirror"
+import {markdown} from "@codemirror/lang-markdown"
+import {json} from "@codemirror/lang-json"
+import {javascript} from "@codemirror/lang-javascript"
+import {basicSetup} from "codemirror"
+import {latexLanguage} from "codemirror-lang-latex"
+import {parseMathMarkdown} from "@/helpers/codemirrorLatexMarkdown.ts"
+import type {EditorView} from "@codemirror/view"
+import {keymap} from "@codemirror/view"
+import {Prec} from "@codemirror/state"
 
 defineOptions({inheritAttrs: false})
 
 interface Props extends FormMakerBaseProps {
 	autoSize?: boolean
-	language?: "latex" | "json" | "javascript"
+	language?: "latex" | "json" | "javascript" | "pidraw" | "pidraw-params"
 	resizeable?: boolean
 	rows?: number
+	singleLine?: boolean
 	wrap?: boolean
 }
 
@@ -30,56 +39,50 @@ const props = withDefaults(defineProps<Props>(), {
 	autoSize: false
 })
 
+const cmExtensions = computed(() => useCodeMirrorExtensions(props.language))
+
+const singleLineExt = computed(() =>
+	props.singleLine
+		? [Prec.highest(keymap.of([
+			{key: 'Enter', run: () => true},
+			{key: 'Shift-Enter', run: () => true},
+		]))]
+		: []
+)
+
+const extensions = computed(() => {
+	if (props.language === 'json') return [basicSetup, json(), ...singleLineExt.value, ...cmExtensions.value]
+	if (props.language === 'javascript') return [basicSetup, javascript(), ...singleLineExt.value, ...cmExtensions.value]
+	if (props.language === 'pidraw') return [basicSetup, ...pidrawExtensions, ...singleLineExt.value, ...cmExtensions.value]
+	if (props.language === 'pidraw-params') return [basicSetup, pidrawParamsLanguage, ...singleLineExt.value, ...cmExtensions.value]
+	return [basicSetup, markdown({extensions: [parseMathMarkdown(latexLanguage.parser)]}), ...singleLineExt.value, ...cmExtensions.value]
+})
+
 const theValue = defineModel<string>()
+
+const {ctrl_shift_f} = useMagicKeys()
+whenever(ctrl_shift_f, () => {
+	if (theValue.value) theValue.value = formatMarkdownTables(theValue.value)
+})
+
 const emits = defineEmits<FormElementEmits & {
 	currentLine: [e: string],
 	mathMode: [e: boolean]
 }>()
 
-const {textareaRef} = useTextEditor('input', {language: props.language, model: theValue})
-// const inputRef = useTemplateRef<HTMLTextAreaElement>('input')
-const {expose} = useFormMaker(textareaRef)
+const cmRef = useTemplateRef<{ view: EditorView }>('cmEditor')
+const {expose} = useFormMaker(computed(() => cmRef.value?.view ?? null))
 defineExpose<FormElementExpose>(expose)
 
 const currentRows = ref(0)
-const pre = ref(null)
-
-// Prism.manual = true
-const highlighted = computed(() => {
-	if (!theValue.value) return ""
-
-	return ""
-	// try {
-	// 	if (props.language.toLowerCase() === "latex") {
-	// 		return Prism.highlight(theValue.value, Prism.languages.latex, "latex")
-	// 	}
-	// 	if (props.language.toLowerCase() === "json") {
-	// 		return Prism.highlight(theValue.value, Prism.languages.json, "json")
-	// 	}
-	// 	return Prism.highlight(theValue.value, Prism.languages.javascript, "javascript")
-	// } catch {
-	// 	return theValue.value
-	// }
-})
-
-
-function sync_scroll() {
-	pre.value.scrollTop = textareaRef.value.scrollTop
-	pre.value.scrollLeft = textareaRef.value.scrollLeft
-}
 
 const codeTriggers = computed(() => {
 	if (props.language === 'javascript') return javascript_macros
 	if (props.language === 'json') return json_macros
-	return latex_macros
+	if (props.language === 'latex') return latex_macros
+	return {}
 })
 
-const areaHeight = computed(() => {
-	const r = (!props.autoSize && +props.rows > 0)
-		? +props.rows
-		: (theValue.value ?? "").split("\n").length + 2
-	return `${0.5 + Math.max(+currentRows.value, r) * 1.4 + 0.5}rem`
-})
 </script>
 
 <template>
@@ -88,24 +91,14 @@ const areaHeight = computed(() => {
 		:class="{ 'opacity-50 pointer-events-none select-none': props.disabled }"
 	>
 		<div
-			:class="props.wrap ? 'whitespace-pre-wrap' : 'whitespace-pre'"
-			class="tracking-normal font-normal code-input bg-content border language-javascript text-[1.1em] transition-all"
+			class="tracking-normal font-normal bg-content border language-javascript text-[1.1em] transition-all"
 		>
-			<textarea
-				ref="input"
+			<codemirror
+				ref="cmEditor"
 				v-model="theValue"
-				:autofocus="focus"
-				:disabled="props.disabled"
-				class="w-full"
-				v-bind="$attrs"
-				@blur="emits('blur')"
-				@focus="emits('focus')"
-				@scroll="sync_scroll"
+				lang="markdown"
+				:extensions
 			/>
-			<pre ref="pre"><code
-				class="w-full"
-				v-html="highlighted"
-			/></pre>
 		</div>
 
 		<div
@@ -138,75 +131,3 @@ const areaHeight = computed(() => {
 		</div>
 	</div>
 </template>
-
-<style lang="postcss" scoped>
-.code-input {
-	position: relative;
-	top: 0;
-	left: 0;
-	display: block;
-	overflow: hidden;
-	padding: 0;
-	margin: 0;
-	width: 100%;
-	min-height: v-bind(areaHeight);
-	font-family: monospace;
-	line-height: inherit;
-	tab-size: 2;
-	caret-color: darkgrey;
-}
-
-.code-input textarea,
-.code-input pre {
-	margin: 0 !important;
-	padding: 0.6rem !important;
-	border: 0;
-	width: 100%;
-	height: 100%;
-	white-space: inherit;
-}
-
-.code-input textarea,
-.code-input pre,
-.code-input pre * {
-	font-size: inherit !important;
-	font-family: inherit !important;
-	line-height: inherit !important;
-	tab-size: inherit !important;
-}
-
-.code-input textarea,
-.code-input pre {
-	position: absolute;
-	top: 0;
-	left: 0;
-}
-
-.code-input textarea {
-	z-index: 1;
-}
-
-.code-input pre {
-	z-index: 0;
-}
-
-.code-input textarea {
-	color: transparent;
-	background: transparent;
-	caret-color: inherit !important;
-}
-
-.code-input textarea,
-.code-input pre {
-	overflow: auto !important;
-	white-space: inherit;
-	word-spacing: normal;
-	word-break: normal;
-	word-wrap: normal;
-}
-
-.code-input textarea {
-	resize: none;
-	outline: none !important;
-}
-</style>

@@ -297,17 +297,14 @@ onMounted(() => {
 							class="col-span-2 w-full"
 						>
 							<div class="mb-3">
-								<FormInput
+								<FormCodearea
 									v-model="theIllustration.parameters"
-									class="font-code mt-3 text-xs"
-									inline
+									input-class="font-code text-xs"
 									label="paramètres"
-									sm
-								>
-									<template #message>
-										grid, axis, x=-5:5, y=-5:5, unit=1:2, tex, nolabel, nopoint
-									</template>
-								</FormInput>
+									language="pidraw-params"
+									name="drawParameters"
+									single-line
+								/>
 							</div>
 
 							<FormCodearea
@@ -315,6 +312,7 @@ onMounted(() => {
 								:hide-label="true"
 								:rows="10"
 								input-class="font-code"
+								language="pidraw"
 								name="drawData"
 								@current-line="currentLine = $event"
 							/>

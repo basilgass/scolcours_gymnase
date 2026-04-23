@@ -77,6 +77,7 @@ const headerClass = computed(() => {
 		:class="cardClass"
 	>
 		<header
+			v-if="$slots['admin']"
 			v-admin="editMode.enable"
 			v-theme.admin
 			class="px-3 py-1"
