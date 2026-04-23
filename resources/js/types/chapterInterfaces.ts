@@ -1,4 +1,4 @@
-import type { BlockInterface } from "@/types/blockInterfaces.ts"
+import type {BlockInterface} from "@/types/blockInterfaces.ts"
 
 export interface ThemeNameInterface {
 	id: number,

@@ -86,12 +86,9 @@ class FormulaApiController extends Controller
 				->get()
 				->map(function ($chapter) {
 					return [
-						'id'    => $chapter->id,
-						//						'slug'  => $chapter->slug,
-						'title' => $chapter->title,
-						'theme' => [
-							'id' => $chapter->theme_id
-						]
+						'id'       => $chapter->id,
+						'title'    => $chapter->title,
+						'theme_id' => $chapter->theme_id
 					];
 				})
 				->concat(

@@ -4,7 +4,6 @@ import vue from "@vitejs/plugin-vue"
 import tailwindcss from "@tailwindcss/vite"
 import {resolve} from "path"
 import inertia from '@inertiajs/vite'
-import prismjsPlugin from "vite-plugin-prismjs"
 
 export default defineConfig({
 	build: {
@@ -37,9 +36,6 @@ export default defineConfig({
 		}),
 		inertia(),
 		tailwindcss(),
-		prismjsPlugin({
-			languages: ['css', 'latex', 'json', 'javascript']
-		})
 	],
 	resolve: {
 		alias: {

@@ -1,41 +1,24 @@
 <script setup lang="ts">
 
-import {onMounted, ref} from "vue"
+import {onMounted} from "vue"
 import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
 import type {FormulaInterface} from "@/types/modelInterfaces.ts"
-import axios from "axios"
 import FilteredList from "@/Components/Ui/FilteredList.vue"
 import FormCodearea from "@/Components/Form/FormCodearea.vue"
 import FormInput from "@/Components/Form/FormInput.vue"
 import ScButton from "@/Components/Ui/Button/scButton.vue"
 import FormulaShow from "@/Components/Blocks/FormulaShow.vue"
 import PleaseWait from "@/Components/Ui/PleaseWait.vue"
-import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
-import {useStoreFormular} from "@/stores/useStoreFormular.ts"
+import {useFormular} from "@/Composables/useFormular.ts"
 
-const flash = useStoreFlashMessage()
 const editMode = useStoreEditMode()
-const storeFormular = useStoreFormular()
 
-const formulas = ref<FormulaInterface[]>([])
+const book = useFormular()
 
 defineProps<{
 	themeId?: number
 }>()
 
-function updateFormula(formula: FormulaInterface) {
-	axios.patch(route("api.admin.blocks.update", formula.block.id), {
-		_method: "patch",
-		...formula.block
-	})
-		.then(() => {
-			flash.success("formulaire mis à jour")
-		})
-		.catch((error) => {
-			console.log(error)
-			flash.error("erreur lors de la mise à jour du formulaire")
-		})
-}
 
 function searchFormula(item: FormulaInterface, value: string): boolean {
 	// value is already toLowerString
@@ -44,14 +27,14 @@ function searchFormula(item: FormulaInterface, value: string): boolean {
 }
 
 onMounted(async () => {
-	formulas.value = await storeFormular.getAll()
+	book.load()
 })
 
 </script>
 <template>
 	<article>
 		<div
-			v-if="formulas.length===0"
+			v-if="book.formular.value.length===0"
 			class="grid place-items-center min-h-50"
 		>
 			<div class="flex flex-col gap-5">
@@ -64,7 +47,7 @@ onMounted(async () => {
 			v-else
 			:filter-by-theme="(item:FormulaInterface)=>item.theme_id"
 			:filter-by-theme-on-load="themeId"
-			:list="formulas"
+			:list="book.formular.value"
 			:list-class="editMode.enable? 'grid grid-cols-1 gap-2': 'columns-xs space-y-4'"
 			:search-function="searchFormula"
 		>
@@ -81,13 +64,13 @@ onMounted(async () => {
 								label-class="w-[50px]"
 								sm
 								type="text"
-								@enter="updateFormula(item)"
+								@enter="book.formula.update(item)"
 							/>
 							<sc-button
 								type="success"
 								xs
 								class="rounded-l-none"
-								@click="updateFormula(item)"
+								@click="book.formula.update(item)"
 							>
 								<i class="bi bi-save" />
 							</sc-button>

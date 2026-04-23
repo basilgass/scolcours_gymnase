@@ -10,7 +10,7 @@ const flash = useStoreFlashMessage()
 <template>
 	<div
 		v-if="flash.messages.length"
-		class="fixed bottom-2 right-2 grid grid-cols-1 gap-3 max-w-[20em] z-50"
+		class="fixed bottom-2 right-2 grid grid-cols-1 gap-3 max-w-[20em] z-100"
 	>
 		<transition-group name="slide-up">
 			<flash-message

@@ -13,6 +13,7 @@ import ScButton from "@/Components/Ui/Button/scButton.vue"
 import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
 import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
 import {usePage} from "@inertiajs/vue3"
+import {vIntersectionObserver} from '@vueuse/components'
 
 defineOptions({layout: LayoutMain})
 
@@ -29,6 +30,12 @@ const editMode = useStoreEditMode()
 const currentTab = ref<"requires" | "formulas" | "challenges" | "theorems" | undefined>(undefined)
 const showTheorem = ref(false)
 const showFormular = ref(false)
+
+function onIntersectionObserver([entry]: IntersectionObserverEntry[]) {
+	if (showFormular.value) return
+
+	showFormular.value = entry?.isIntersecting ?? false
+}
 
 </script>
 <template>
@@ -84,21 +91,15 @@ const showFormular = ref(false)
 				:chapter
 			/>
 
-			<!--Liste d'icône design pour afficher les éléments -->
-			<div class="w-full flex justify-center gap-4 mb-5">
-				<sc-button
-					theme
-					class="aspect-square w-[120px]
-						grid place-items-center
-						hover:rounded-[20px]"
-					@click="showFormular = true; currentTab = 'formulas'"
-				>
-					<div class="text-center space-y-2">
-						<i class="bi bi-table text-3xl" />
-						<p>formulaire</p>
-					</div>
-				</sc-button>
+			<!-- liste des formules -->
+			<div v-intersection-observer="onIntersectionObserver">
+				<chapter-formulas
+					v-if="showFormular"
+					:chapter="chapter"
+				/>
+			</div>
 
+			<div>
 				<sc-button
 					theme
 					class="aspect-square w-[120px]
@@ -111,18 +112,6 @@ const showFormular = ref(false)
 						<p>théorie</p>
 					</div>
 				</sc-button>
-			</div>
-
-
-			<!-- liste des formules -->
-			<div>
-				<chapter-formulas
-					v-if="showFormular"
-					v-show="currentTab==='formulas'"
-					:chapter="chapter"
-				/>
-
-
 				<!-- liste des théorèmes -->
 				<chapter-theorems
 					v-if="showTheorem"

@@ -15,8 +15,8 @@ Route::middleware('web')
 	          ->name('challenges.show');
 
 	     // Show hall of fame.
-	     Route::get('challenges/{challenge:slug}/hall-of-fame', [ChallengeController::class, 'hallOfFame'])
-	          ->name('challenges.hallOfFame');
+	     Route::get('challenges/{challenge:slug}/classement', [ChallengeController::class, 'leaderboard'])
+	          ->name('challenges.leaderboard');
 
 	     // Admin routes
 	     Route::middleware('admin')

@@ -62,19 +62,20 @@ const nextCounter = computed(() => {
 
 <template>
 	<aside
-		class="w-full text-sm relative"
 		:class="{
-			'sm:w-[200px] md:w-[250px]': menuToggle,
-			'sm:max-w-[40px]':!menuToggle
+			'sm:w-50 md:w-62.5': menuToggle,
+			'sm:max-w-10':!menuToggle
 		}"
+		class="w-full text-sm relative"
 	>
 		<div class="sticky top-3 space-y-3">
+			<!-- table des matières -->
 			<Card>
 				<template #header>
 					<div
-						@click="menuToggle = !menuToggle"
 						class="flex justify-between cursor-pointer"
 						:title="menuToggle?'':'menu'"
+						@click="menuToggle = !menuToggle"
 					>
 						<div v-show="menuToggle">
 							menu
@@ -102,22 +103,22 @@ const nextCounter = computed(() => {
 						>
 							<lesson-type-icon :lesson="prevLesson" />
 							<InertiaLink
+								v-katex.auto="prevLesson.title"
 								class="flex-1 whitespace-nowrap overflow-hidden overflow-ellipsis"
 								:href="route('students.lessons.show', {course: course.slug, lesson: prevLesson.id})"
-								v-katex.auto="prevLesson.title"
 								:title="prevLesson.title"
 							/>
 						</div>
 
 						<div
-							class="flex gap-2 hover:pl-1 transition-all font-semibold"
 							v-theme.text
+							class="flex gap-2 hover:pl-1 transition-all font-semibold"
 						>
 							<lesson-type-icon :lesson="lesson" />
 							<InertiaLink
+								v-katex.auto="lesson.title"
 								class="flex-1 whitespace-nowrap overflow-hidden overflow-ellipsis"
 								:href="route('students.lessons.show', {course: course.slug, lesson: lesson.id})"
-								v-katex.auto="lesson.title"
 								:title="lesson.title"
 							/>
 						</div>
@@ -128,9 +129,9 @@ const nextCounter = computed(() => {
 						>
 							<lesson-type-icon :lesson="nextLesson" />
 							<InertiaLink
+								v-katex.auto="nextLesson.title"
 								class="flex-1 whitespace-nowrap overflow-hidden overflow-ellipsis"
 								:href="route('students.lessons.show', {course: course.slug, lesson: nextLesson.id})"
-								v-katex.auto="nextLesson.title"
 								:title="nextLesson.title"
 							/>
 						</div>
@@ -158,17 +159,17 @@ const nextCounter = computed(() => {
 
 							v-for="l in course.lessons"
 							:key="`goto-${l.id}`"
-							class="flex gap-2 hover:pl-1 transition-all"
 							v-theme.text="l.id===lesson.id"
+							class="flex gap-2 hover:pl-1 transition-all"
 							:class="{
 								'font-semibold': l.id===lesson.id,
 							}"
 						>
 							<lesson-type-icon :lesson="l" />
 							<InertiaLink
+								v-katex.auto="l.title"
 								class="flex-1 whitespace-nowrap overflow-hidden overflow-ellipsis"
 								:href="route('students.lessons.show', {course: course.slug, lesson: l.id})"
-								v-katex.auto="l.title"
 								:title="l.title"
 							/>
 						</div>
@@ -176,21 +177,20 @@ const nextCounter = computed(() => {
 				</div>
 			</Card>
 
+			<!-- formulaire -->
 			<Card>
-				<template #header>
-					<div
-						class="flex justify-between cursor-pointer"
-						:title="menuToggle?'':'formulaire'"
-						@click="showFormularDialog=true"
-					>
-						<div v-show="menuToggle">
-							formulaire
-						</div>
-						<i
-							class="bi bi-book-half"
-						/>
+				<div
+					class="flex justify-between cursor-pointer"
+					:title="menuToggle?'':'formulaire'"
+					@click="showFormularDialog=true"
+				>
+					<div v-show="menuToggle">
+						formulaire
 					</div>
-				</template>
+					<i
+						class="bi bi-book-half"
+					/>
+				</div>
 			</Card>
 
 			<lesson-aside-score
@@ -200,15 +200,18 @@ const nextCounter = computed(() => {
 			/>
 		</div>
 
-		<dialog-modal v-model="showFormularDialog"
-		              class="min-w-[95%] min-h-[95%] max-w-[95%] max-h-[95%]"
+		<dialog-modal
+			v-model="showFormularDialog"
+			class="min-w-[95%] min-h-[95%] max-w-[95%] max-h-[95%]"
 		>
 			<template #header>
-				<div class="p-3 flex justify-between">
-					<h3
-						class="text-2xl font-semibold"
-					>
-						Formulaire
+				<div
+					v-theme.bg.text
+					class="p-3 text-xl flex justify-between"
+				>
+					<h3 class="uppercase font-extralight flex gap-3 items-baseline">
+						<i class="bi bi-table text-xl" />
+						<p>formulaire</p>
 					</h3>
 					<i
 						class="bi bi-x-lg cursor-pointer"
@@ -228,9 +231,12 @@ const nextCounter = computed(() => {
 				grid grid-cols-3 items-center p-3
 				bg-content text-sm border-content border-t-2 z-20"
 		>
-			<div @click="showFormularDialog=true">
+			<div
+				class="cursor-pointer"
+				@click="showFormularDialog=true"
+			>
 				<i
-					class="bi bi-book-half mr-1"
+					class="bi bi-table mr-1"
 				/> formulaire
 			</div>
 

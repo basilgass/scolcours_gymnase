@@ -46,7 +46,7 @@ class ChallengeController extends Controller
 		return redirect()->route('admin.teams.challenges.show', ["team" => $team, "challenge" => $challenge]);
 	}
 
-	public function hallOfFame(Challenge $challenge, Request $request)
+	public function leaderboard(Challenge $challenge, Request $request)
 	{
 		// Teams optionnelles passées via ?teams[]=1&teams[]=2
 		$teams = Team::with('users')
@@ -58,7 +58,7 @@ class ChallengeController extends Controller
 		                               ->withUser($request->user())
 		                               ->withTeams($teams);
 
-		return Inertia::render("Challenges/ChallengeHallOfFame", [
+		return Inertia::render("Challenges/ChallengeLeaderboard", [
 			'challenge' => ChallengeResource::make($challenge),
 			'teams'     => TeamResource::collection($teams),
 			'global'    => $leaderboard->topStats(10),

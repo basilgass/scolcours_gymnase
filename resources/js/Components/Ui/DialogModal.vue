@@ -36,7 +36,7 @@ function doCancel() {
 			@mousedown.self="doCancel"
 		>
 			<div
-				class="bg-content border rounded-lg
+				class="bg-content rounded-lg
 				overflow-auto overscroll-contain"
 				v-bind="$attrs"
 			>

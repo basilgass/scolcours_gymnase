@@ -184,16 +184,26 @@ async function update_lesson_score(model: lessonableModel, updatedScore?: ScoreI
 }
 
 async function resetScore() {
-
 	if (props.lesson.lessonable_type === 'Post') {
 		const post = props.lessonable as PostShowInterface
-		await storeScore.reset(post.questions.map(q => q.user.id))
+
+		storeScore
+			.getScores('Question', post.questions.map(q => q.id))
+			.then(scores => {
+				storeScore
+					.reset(scores.map(s => s.id))
+					.then(() => {
+						lessonScore.value.score = 0
+						lessonScore.value.is_resolved = false
+						storeScore.updateScore(lessonScore.value, true)
+					})
+			})
+		return
 	}
 
 	lessonScore.value.score = 0
 	lessonScore.value.is_resolved = false
-
-	await storeScore.updateScore(lessonScore.value, true)
+	storeScore.updateScore(lessonScore.value, true)
 }
 
 async function init_refScore() {
@@ -235,20 +245,17 @@ watch(() => storeScore.version, () => {
 	<Card
 		:class="lessonScore?.is_resolved ? 'bg-green-100 border-green-600 text-green-600':''"
 	>
-		<template #header>
-			<div
-				class="flex justify-between"
-				:title="menuToggle?'':'score'"
-			>
-				<div v-show="menuToggle">
-					score
-				</div>
-				<div class="whitespace-nowrap">
-					{{ displayLessonResult }}
-				</div>
+		<div
+			class="flex justify-between"
+			:title="menuToggle?'':'score'"
+		>
+			<div v-show="menuToggle">
+				score
 			</div>
-		</template>
-		<div />
+			<div class="whitespace-nowrap">
+				{{ displayLessonResult }}
+			</div>
+		</div>
 		<template
 			v-if="lessonScore?.is_resolved"
 			#footer

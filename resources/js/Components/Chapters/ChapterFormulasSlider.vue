@@ -3,7 +3,7 @@ Affichage du formulaire en menu "slide-in" depuis la gauche.
 -->
 <script lang="ts" setup>
 import ChapterFormulas from "@/Components/Chapters/ChapterFormulas.vue"
-import { ref } from "vue"
+import {ref} from "vue"
 import {ChapterInterface} from "@/types/modelInterfaces.ts"
 
 defineProps<{
@@ -40,24 +40,28 @@ const afficherFormulaires = ref(false)
 		<transition name="slide-fade">
 			<div
 				v-if="afficherFormulaires"
-				class="fixed z-20
-				bottom-0 left-0
-				w-full md:w-[400px] h-full
-				py-3
+				class="fixed z-20 inset-0
+				w-full md:w-100
 				bg-white dark:bg-gray-700
 				overflow-y-scroll scrollbar-scolcours"
 			>
-				<div>
-					<button
-						class="absolute top-0 right-0 p-3 text-gray-500 transition-colors hover:text-gray-900 dark:hover:text-gray-200"
-						@click="afficherFormulaires=false"
-					>
-						<i class="bi bi-x-circle" />
-					</button>
-					<chapter-formulas
-						:chapter
+				<button
+					class="absolute z-25
+					top-3 right-3
+						font-semibold scale-125
+						text-white
+						 dark:hover:text-gray-200 cursor-pointer"
+					@click="afficherFormulaires=false"
+				>
+					<i
+						class="bi bi-x-circle inline-block
+					transition-transform duration-600
+					hover:rotate-180"
 					/>
-				</div>
+				</button>
+				<chapter-formulas
+					:chapter
+				/>
 			</div>
 		</transition>
 	</div>
