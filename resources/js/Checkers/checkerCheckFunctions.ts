@@ -86,6 +86,7 @@ function getFactors(value: string): string[] {
 	return matches.map(m => m.slice(1, -1))
 }
 
+// REFACTOR : modify this using PolyFactor
 export function checkPolynomIsFactorized(value: string) {
 	const factors = getFactors(value)
 

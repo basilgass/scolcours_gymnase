@@ -1,18 +1,30 @@
 <script lang="ts" setup>
 
-import { computed } from "vue"
+import {computed} from "vue"
 
-const props = defineProps({
-	label: { type: String, default: "" },
-	value: { type: Number, required: true },
-	max: { type: Number, required: true },
-	labelClass: { type: String, default: "" },
-	barLabel: { type: String, default: "" },
-	barClass: { type: String, default: "h-[2em]" },
-	barLabelClass: { type: String, default: "" },
-	bgClass: {type: String, default: "bg-white"},
-	inverted: { type: Boolean, default: false }
-})
+const props = withDefaults(
+	defineProps<{
+		label?: string,
+		value: number,
+		max: number,
+		labelClass?: string,
+		barLabel?: string,
+		barClass?: string,
+		barLabelClass?: string,
+		bgClass?: string,
+		inverted?: boolean,
+		smooth?: boolean
+	}>(), {
+		label: "",
+		labelClass: "",
+		barLabel: "",
+		barClass: "h-[2em]",
+		barLabelClass: "",
+		bgClass: "bg-white",
+		inverted: false,
+		smooth: true
+	}
+)
 
 const percent = computed(() => {
 	return props.value / props.max
@@ -24,6 +36,10 @@ const statLabelComputed = computed(() => {
 
 const bgClassComputed = computed(() => {
 	const barClass = [props.barClass]
+
+	if (props.smooth) barClass.push(
+		"transition-all duration-300 ease-in-out"
+	)
 
 	if (props.inverted) {
 		if (percent.value > 0.75) {
@@ -46,7 +62,7 @@ const bgClassComputed = computed(() => {
 	return barClass.join(" ")
 })
 
-const boxClassComputed = computed(()=>{
+const boxClassComputed = computed(() => {
 	const barClass = [props.bgClass]
 
 	if (props.inverted) {
@@ -95,7 +111,7 @@ const boxClassComputed = computed(()=>{
 			<div
 				:class="bgClassComputed"
 				:style="`width:${percent*100}%`"
-				class="flex bar transition-all duration-500 ease-in-out"
+				class="flex bar ease-in-out"
 			/>
 		</div>
 	</div>

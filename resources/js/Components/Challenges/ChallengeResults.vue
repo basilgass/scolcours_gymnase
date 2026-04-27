@@ -8,6 +8,8 @@ import ScButton from "@/Components/Ui/Button/scButton.vue"
 import {ChallengeAnswerInterface, ChallengeGameInterface} from "@/types/challengeInterfaces.ts"
 import {ScoreInterface} from "@/types/modelInterfaces"
 import {ScoreChallengeDataInterface} from "@/types/scoreInterfaces.ts"
+import {IChallengeConfig} from "@/Composables/useChallenge.ts"
+import {computed} from "vue"
 
 export interface ResultStat {
 	label: string
@@ -16,18 +18,21 @@ export interface ResultStat {
 
 const emits = defineEmits(["start", "cancel"])
 
-defineProps<{
+const props = defineProps<{
 	answers: ChallengeAnswerInterface[],
 	results: ChallengeGameInterface,
 	score: ScoreInterface<ScoreChallengeDataInterface>,
-	scoreLabel: string,
-	currentScoreDisplay: string,
-	bestScoreLabel: string,
-	bestScoreDisplay: string,
-	showLivesAndDeaths?: boolean,
-	showTimer?: boolean,
-	extraStats?: ResultStat[],
+	config: IChallengeConfig
 }>()
+
+const scoreLabel = computed(() => props.config.label)
+const currentScoreDisplay = computed(() => props.config.labelFormat(props.score.data.current_score))
+const bestScoreDisplay = computed(() => props.config.labelFormat(props.score.score))
+
+// TODO: endurance et precision ont des extra-stats
+// PRECISION : :extra-stats="[{label: 'Reprises (dernier niveau)', value: game.levelDeaths}]"
+// ENDURANCE : :extra-stats="[{label: 'Niveau atteint', value: game.level}]"
+const extraStats = computed<{ label: string, value: number }[]>(() => [])
 </script>
 
 <template>
@@ -45,12 +50,12 @@ defineProps<{
 			<div
 				class="rounded-xl border border-gray-200 bg-white shadow-sm text-xl md:text-2xl text-center p-2 md:p-10 flex flex-col justify-between gap-4"
 			>
-				<div>{{ bestScoreLabel }}</div>
+				<div>Meilleur {{ scoreLabel }}</div>
 				<div>{{ bestScoreDisplay }}</div>
 			</div>
 
-			<!-- Vies + Erreurs -->
-			<template v-if="showLivesAndDeaths">
+			<!-- Vies + Erreurs : ne s'affiche que si c'est configuré avec des vies -->
+			<template v-if="config.lives>0">
 				<div
 					class="rounded-xl border border-gray-200 bg-white shadow-sm text-xl md:text-2xl text-center p-2 md:p-10 flex flex-col justify-between gap-4"
 				>
@@ -67,7 +72,7 @@ defineProps<{
 
 			<!-- Temps restant -->
 			<div
-				v-if="showTimer"
+				v-if="config.globalTimer"
 				class="rounded-xl border border-gray-200 bg-white shadow-sm text-xl md:text-2xl text-center p-2 md:p-10 flex flex-col justify-between gap-4"
 			>
 				<div>Temps restant</div>

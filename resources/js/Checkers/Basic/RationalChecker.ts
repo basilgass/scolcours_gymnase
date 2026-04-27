@@ -14,6 +14,7 @@ export class RationalChecker extends CheckerAbstract {
 	#reduced: boolean
 	#factorized: boolean
 	#developed: boolean
+
 	constructor(config: string[] | string) {
 		super(config)
 		this.type = CHECKERS.RATIONAL
@@ -45,42 +46,59 @@ export class RationalChecker extends CheckerAbstract {
 			return makeCheckerResult("Il semble qu'il y ait une erreur quelque part...")
 		}
 
-		let [num, den] = value.split("/")
-		if (den === undefined) den = "1"
-		let [expectedNum, expectedDen] = this.answer.split("/")
-		if (expectedDen === undefined) expectedDen = "1"
+		// Données de la réponse
+		const expectedRationnalReduced = new PolyFactor().fromString(this.answer).reduce()
 
-		const givenRationnal = new PolyFactor().fromPolynom(num, den),
-			givenRationnalReduced = new PolyFactor().fromPolynom(num, den).reduce(),
-			expectedRationnal = new PolyFactor().fromPolynom(expectedNum, expectedDen).reduce()
+		// Données des étudiants
+		const givenRationnal = new PolyFactor().fromString(value)
+		const givenRationnalReduced = givenRationnal.clone().reduce()
 
-		if (!givenRationnalReduced.numerator.isEqual(expectedRationnal.numerator)) {
+		// Les versions réduites partagent le même dénominateur.
+		if (!givenRationnalReduced.numerator.isEqual(expectedRationnalReduced.numerator)) {
 			return makeCheckerResult("le numérateur ne correspond pas à la réponse")
 		}
-		if (!givenRationnalReduced.denominator.isEqual(expectedRationnal.denominator)) {
+
+		// Les versions réduites partagent le même numérateur.
+		if (!givenRationnalReduced.denominator.isEqual(expectedRationnalReduced.denominator)) {
 			return makeCheckerResult("le dénominateur ne correspond pas à la réponse")
 		}
 
 		if (this.#factorized) {
-			const Nfactorized = givenRationnal.numerator.factorize()
-		    if (Nfactorized.factors.length!==givenRationnal.numerator.factors.length) {
-		       return makeCheckerResult("le numérateur n'est pas factorisé")
-		    }
-			const Dfactorized = givenRationnal.denominator.factorize()
-			if (Dfactorized.factors.length!==givenRationnal.denominator.factors.length) {
-		        return makeCheckerResult("le dénominateur n'est pas factorisé")
-		    }
+			let isFactorized = true
+			givenRationnal.numerator.factors.forEach(factor => {
+				if (isFactorized) {
+					const polynom = factor.polynom
+					if (polynom.factorize().length > 1) isFactorized = false
+				}
+			})
+
+			if (!isFactorized) {
+				return makeCheckerResult("le numérateur n'est pas factorisé")
+			}
+
+			isFactorized = true
+			givenRationnal.numerator.factors.forEach(factor => {
+				if (isFactorized) {
+					const polynom = factor.polynom
+					if (polynom.factorize().length > 1) isFactorized = false
+				}
+			})
+
+			if (!isFactorized) {
+				return makeCheckerResult("le dénominateur n'est pas factorisé")
+			}
 		}
 
 
 		if (this.#developed) {
 			const num = givenRationnal.numerator
-			if (num.factors.length > 1 || !num.factors[1].power.isOne()) {
+			// il y a plus d'un facteur ou la puissance de l'unique facteur n'est pas un.
+			if (num.factors.length > 1 || !num.factors[0].power.isOne()) {
 				return makeCheckerResult("le numérateur n'est pas développé")
 			}
 
 			const den = givenRationnal.denominator
-			if (den.factors.length > 1 || !den.factors[1].power.isOne()) {
+			if (den.factors.length > 1 || !den.factors[0].power.isOne()) {
 				return makeCheckerResult("le dénominateur n'est pas développé")
 			}
 		}

@@ -21,6 +21,7 @@ export interface ChallengeScoreInterface {
 	score: number,
 }
 
+export type ChallengeGameType = 'classic' | 'chrono' | 'streak' | 'blitz' | 'endurance' | 'precision'
 export type ChallengeGameState = "intro" | "running" | "finished"
 
 export interface ChallengeMinInterface {
@@ -66,7 +67,7 @@ export interface ChallengeInterface {
 	title: string;
 	active: boolean;
 	chapter: ChapterInterface;
-	type: 'classic' | 'chrono' | 'streak' | 'blitz' | 'endurance' | 'precision';
+	type: ChallengeGameType;
 	block: BlockInterface;
 	best: ChallengeScoreInterface;
 	levels: ChallengeLevelInterface[];

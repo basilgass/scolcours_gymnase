@@ -18,19 +18,17 @@ const emits = defineEmits<{
 
 <template>
 	<section>
-		<div class="scolcours-container">
-			<suspense v-if="selectedGenerator === null">
-				<challenge-game
-					:challenge="challenge"
-					@state-change="emits('stateChange', $event)"
-				/>
-			</suspense>
-			<suspense v-else>
-				<challenge-training
-					:key="selectedGenerator.slug"
-					:generator="selectedGenerator"
-				/>
-			</suspense>
-		</div>
+		<suspense v-if="selectedGenerator === null">
+			<challenge-game
+				:challenge="challenge"
+				@state-change="emits('stateChange', $event)"
+			/>
+		</suspense>
+		<suspense v-else>
+			<challenge-training
+				:key="selectedGenerator.slug"
+				:generator="selectedGenerator"
+			/>
+		</suspense>
 	</section>
 </template>

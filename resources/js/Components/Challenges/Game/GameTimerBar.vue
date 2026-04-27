@@ -4,9 +4,9 @@ import StatBar from "@/Components/Ui/StatBar.vue"
 import {computed} from "vue"
 
 const props = defineProps<{
+	inverted?: boolean
 	max: number
 	value: number
-	inverted?: boolean
 }>()
 
 const label = computed(() => {
@@ -22,5 +22,6 @@ const label = computed(() => {
 		:inverted
 		:bar-label="label"
 		bar-label-class="text-gray-500"
+		:smooth="false"
 	/>
 </template>

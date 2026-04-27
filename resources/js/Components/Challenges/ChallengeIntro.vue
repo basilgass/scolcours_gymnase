@@ -9,15 +9,16 @@ const props = defineProps<{
 	challenge: ChallengeInterface,
 	maxLevels: number,
 	score?: ScoreInterface<ScoreChallengeDataInterface>,
-	scoreLabel?: string,
-	formatScore?: (v: number) => string,
+	scoreLabel: string,
+	formatScore: (v: number) => string,
 }>()
 
 const emits = defineEmits(["start"])
 
 function display(v: number | undefined): string {
 	if (v === undefined || v === null) return '—'
-	return props.formatScore ? props.formatScore(v) : String(v)
+
+	return props.formatScore(v)
 }
 </script>
 
@@ -36,12 +37,15 @@ function display(v: number | undefined): string {
 		</sc-button>
 
 		<!-- Résultat du challenge pour l'utilisateur -->
-		<div class="min-w-[20em] mx-auto flex flex-col gap-3 mt-5">
+		<div
+			v-if="score"
+			class="min-w-[20em] mx-auto flex flex-col gap-3 mt-5"
+		>
 			<h3 class="uppercase text-xl font-extralight text-center">
 				Dernière tentative
 			</h3>
 			<div
-				v-if="score?.attempts > 0"
+				v-if="score.attempts > 0"
 				class="text-center text-sm"
 			>
 				{{ score.updated_at }}
@@ -53,13 +57,13 @@ function display(v: number | undefined): string {
 				>
 					<div class="text-center flex flex-col justify-between h-full">
 						<h4 class="text-xl uppercase">
-							{{ scoreLabel ?? 'score' }}
+							{{ scoreLabel }}
 						</h4>
 						<div class="text-3xl">
-							{{ display(score?.data.current_score) }}
+							{{ display(score.data.current_score) }}
 						</div>
 						<div class="text-sm">
-							meilleur: {{ display(score?.score) }}
+							meilleur: {{ display(score.score) }}
 						</div>
 					</div>
 				</div>
@@ -71,10 +75,10 @@ function display(v: number | undefined): string {
 							niveau
 						</h4>
 						<div class="text-3xl">
-							{{ score?.data.current_level }}
+							{{ score.data.current_level }}
 						</div>
 						<div class="text-sm">
-							meilleur: {{ score?.data.level }}
+							meilleur: {{ score.data.level }}
 						</div>
 					</div>
 				</div>

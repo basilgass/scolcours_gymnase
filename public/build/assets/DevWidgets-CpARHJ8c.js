@@ -1,1 +1,0 @@
-import{D as e,H as t,k as n,w as r}from"./@inertiajs-DcPzCMHT.js";import{t as i}from"./algorithme-de-bissection-BhdbUsz2.js";var a=n({__name:`DevWidgets`,setup(n){return(n,a)=>(t(),r(`div`,null,[e(i,{illustration:{code:``,parameters:``}})]))}});export{a as default};

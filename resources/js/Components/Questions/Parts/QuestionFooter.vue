@@ -75,6 +75,8 @@ const previousAnswers = computed<string[]>(() => {
 					class="bi bi-eye-slash"
 				/>
 			</button>
+
+			<pre>{{ questionData.question.value.answer }}</pre>
 		</div>
 		<div v-if="questionData.hasSuccess.value">
 			<button

@@ -1,22 +1,16 @@
 <script lang="ts" setup>
-
-import {useChallenge} from "@/Composables/useChallenge.ts"
-import {ChallengeInterface, QuestionInterface} from "@/types/modelInterfaces"
+// @ts-nocheck
+import {ChallengeInterface} from "@/types/modelInterfaces"
 import {ChallengeGameState} from "@/types/challengeInterfaces.ts"
-import {computed, watch} from "vue"
-import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
-import {questionResultInterface} from "@/Components/Questions/QuestionInterface.ts"
-import ChallengeIntro from "@/Components/Challenges/ChallengeIntro.vue"
-import ChallengeResults from "@/Components/Challenges/ChallengeResults.vue"
 import GameScoreHeader from "@/Components/Challenges/Game/GameScoreHeader.vue"
-import GameTimerBar from "@/Components/Challenges/Game/GameTimerBar.vue"
-import QuestionShow from "@/Components/Questions/QuestionShow.vue"
 import StatBar from "@/Components/Ui/StatBar.vue"
 
 const props = defineProps<{ challenge: ChallengeInterface }>()
 const emits = defineEmits<{ stateChange: [value: ChallengeGameState] }>()
 
-const flash = useStoreFlashMessage()
+
+/**
+ const flash = useStoreFlashMessage()
 
 const {
 	state, game, score, currentQuestion, answers,
@@ -74,6 +68,7 @@ function validate(answer: questionResultInterface) {
 
 	if (answer.result) {
 		game.score += game.level
+
 		game.levelScore++
 
 		if (game.score >= targetScore.value) {
@@ -90,61 +85,28 @@ function validate(answer: questionResultInterface) {
 		// Pas de game over sur erreur pour chrono
 	}
 }
+
+ */
 </script>
 
 <template>
 	<section class="p-3 max-w-[40em] mx-auto">
-		<challenge-intro
-			v-if="state === 'intro'"
-			:challenge
-			:score="score"
+		<game-score-header
+			:score="`${game.score} / ${targetScore}`"
+			score-label="objectif"
+			:right-value="`${Math.round(game.elapsedTime)}s`"
+			right-label="temps écoulé"
 			:max-levels="maxLevels"
-			score-label="temps"
-			:format-score="formatTime"
-			class="mt-4"
-			@start="start"
+			:game-level="game.level"
+			:game-level-score="game.levelScore"
+			:next-level-after="currentLevel?.points_to_pass"
 		/>
-
-		<div v-if="state === 'running'">
-			<game-score-header
-				:score="`${game.score} / ${targetScore}`"
-				score-label="objectif"
-				:right-value="`${Math.round(game.elapsedTime)}s`"
-				right-label="temps écoulé"
-				:max-levels="maxLevels"
-				:game-level="game.level"
-				:game-level-score="game.levelScore"
-				:next-level-after="currentLevel?.points_to_pass"
-			/>
-			<stat-bar
-				class="my-2"
-				:max="targetScore"
-				:value="game.score"
-				:bar-label="`${game.score} / ${targetScore}`"
-				bar-label-class="text-gray-500"
-			/>
-			<question-show
-				:key="`q-${game.level}-${answers.length}`"
-				:question="currentQuestion as QuestionInterface"
-				show-input
-				@validate="validate"
-			/>
-		</div>
-
-		<challenge-results
-			v-if="state === 'finished'"
-			class="flex flex-col gap-2"
-			:results="game"
-			:answers
-			:score
-			score-label="Temps"
-			:current-score-display="formatTime(game.elapsedTime)"
-			best-score-label="Meilleur temps"
-			:best-score-display="formatTime(score?.score ?? 0)"
-			:show-lives-and-deaths="false"
-			:show-timer="false"
-			@start="start"
-			@cancel="state = 'intro'"
+		<stat-bar
+			class="my-2"
+			:max="targetScore"
+			:value="game.score"
+			:bar-label="`${game.score} / ${targetScore}`"
+			bar-label-class="text-gray-500"
 		/>
 	</section>
 </template>

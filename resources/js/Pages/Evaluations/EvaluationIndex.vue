@@ -1,12 +1,11 @@
 <script lang="ts" setup>
-import type {EvaluationInterface} from "@/types/modelInterfaces"
+import {EvaluationInterface} from "@/types/modelInterfaces"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
 import FilteredList from "@/Components/Ui/FilteredList.vue"
 import {ref} from "vue"
-import Card from "@/Components/Ui/Card.vue"
-import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
-import ScButton from "@/Components/Ui/Button/scButton.vue"
+import {useStoreScore} from "@/stores/useStoreScore.ts"
+import EvaluationCard from "@/Pages/Evaluations/EvaluationCard.vue"
 
 defineOptions({layout: LayoutMain})
 
@@ -15,6 +14,19 @@ let props = defineProps<{
 }>()
 
 const theEvaluations = ref<EvaluationInterface[]>(props.evaluations)
+
+// Les cartes sont cachées, le temps de charder, en une fois, tous les scores
+const loading = ref(true)
+
+const scoreStore = useStoreScore()
+const questionIds: number[] = props.evaluations
+	.map(evaluation => evaluation.questions.map(question => question.id))
+	.flat()
+
+// Preload each question score
+scoreStore.getScores("Question", questionIds)
+	.finally(() => setTimeout(() => loading.value = false, 400))
+
 </script>
 
 <template>
@@ -22,35 +34,23 @@ const theEvaluations = ref<EvaluationInterface[]>(props.evaluations)
 		<article-title title="évaluations" />
 
 		<filtered-list
+			v-if="!loading"
 			:list="theEvaluations"
-			list-class="grid grid-cols-1 gap-3"
+			list-class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3"
 		>
 			<template #card="{item}: {item: EvaluationInterface}">
-				<Card>
-					<template #header>
-						<div class="flex justify-between">
-							<h3 v-katex.auto="item.title" />
-							<div class="font-code text-xs">
-								{{ item.slug }}
-							</div>
-						</div>
-					</template>
-					<markdown-it :text="item.body" />
-
-					<template #footer>
-						<div class="flex w-full justify-end gap-3">
-							<sc-button
-								xs
-								:href="route('students.evaluations.show', {evaluation: item.id})"
-							>
-								faire l'évaluation
-							</sc-button>
-						</div>
-					</template>
-				</Card>
+				<evaluation-card :evaluation="item" />
 			</template>
 		</filtered-list>
-		<div>liste des évaluations disponibles.</div>
+		<div
+			v-else
+			class="grid place-items-center h-[60vh] font-code text-2xl text-center"
+		>
+			<div class="flex flex-col gap-6">
+				<div>Chargement des évaluations</div>
+				<div>Merci de patienter</div>
+			</div>
+		</div>
 	</article>
 </template>
 
