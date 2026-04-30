@@ -18,6 +18,7 @@ export enum CHECKERS {
 	LOGARITHM = "log",
 	NUMBER = "number",
 	MODULO = "mod",
+	ALGEBRA = "algebra",
 	POLYNOMIAL = "polynom",
 	PRIMITIVE = "primitive",
 	RATIONAL = "rational",
@@ -47,6 +48,8 @@ export function checkerNameToEnum(name: string): CHECKERS {
 			return CHECKERS.POLYNOMIAL
 		case "rational":
 			return CHECKERS.RATIONAL
+		case "algebra":
+			return CHECKERS.ALGEBRA
 		case "equ":
 		case "equation":
 			return CHECKERS.EQUATION

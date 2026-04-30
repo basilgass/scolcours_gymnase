@@ -181,12 +181,11 @@ function deleteLevel(levelId: number) {
 								v-model="theChallenge.type"
 								label="type"
 								name="type"
-								:choices="['classic', 'chrono', 'streak', 'blitz', 'endurance', 'precision']"
+								:choices="['classic', 'chrono', 'blitz']"
 								sm
 							/>
 
 							<FormInput
-								v-if="theChallenge.type !== 'endurance'"
 								v-model="theChallenge.time_limit"
 								label="durée (sec)"
 								name="time_limit"
@@ -194,9 +193,9 @@ function deleteLevel(levelId: number) {
 								sm
 							/>
 							<FormInput
-								v-if="!['chrono', 'streak'].includes(theChallenge.type)"
+								v-if="theChallenge.type !== 'chrono'"
 								v-model="theChallenge.lives"
-								:label="theChallenge.type === 'precision' ? 'reprises par niveau' : 'nombre de vies'"
+								label="nombre de vies"
 								name="lives"
 								type="number"
 								sm

@@ -154,14 +154,11 @@ Fichier : `resources/js/types/challengeInterfaces.ts`
 
 Le type détermine les règles de la partie. Géré dans `useChallenge.ts`.
 
-| Type        | Logique principale                                                           | `time_limit` | `lives`    |
-|-------------|------------------------------------------------------------------------------|--------------|------------|
-| `classic`   | Score max en temps limité, vies disponibles                                  | utilisé      | utilisé    |
-| `chrono`    | Atteindre le score cible le plus vite possible                               | ignoré       | ignoré     |
-| `streak`    | 1 erreur = fin de partie, score = nombre de bonnes réponses consécutives     | 0 ou ignoré  | ignoré     |
-| `blitz`     | Countdown par question (via `config.time_per_question`), erreur = vie        | utilisé      | utilisé    |
-| `endurance` | Pas de timer global, pas de fin de temps                                     | ignoré       | utilisé    |
-| `precision` | `lives` = reprises par niveau (pas global) ; erreur reset le score du niveau | 0 ou ignoré  | par niveau |
+| Type      | Logique principale                                                    | `time_limit` | `lives` |
+|-----------|-----------------------------------------------------------------------|--------------|---------|
+| `classic` | Score max en temps limité, vies disponibles                           | utilisé      | utilisé |
+| `chrono`  | Atteindre le score cible le plus vite possible                        | ignoré       | ignoré  |
+| `blitz`   | Countdown par question (via `config.time_per_question`), erreur = vie | utilisé      | utilisé |
 
 > **Point d'attention** : Pour `blitz`, chaque générateur **doit** avoir `config.time_per_question` défini.
 > L'éditeur affiche un avertissement si ce n'est pas le cas. Sans cette valeur, le timer question ne se

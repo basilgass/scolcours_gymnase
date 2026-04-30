@@ -2,6 +2,7 @@ import {ComputedRef, InjectionKey, Ref} from "vue"
 import {BlockMinInterface, QuestionInterface, ScoreInterface} from "@/types/modelInterfaces.ts"
 import type KeyboardBasic from "@/Components/Keyboards/KeyboardBasic.vue"
 import {KeyboardCheckerInterface, KeyboardInputInterface, KeyboardInterface} from "@/types/keyboardInterfaces.ts"
+import {CheckerResult} from "@/Checkers"
 
 export type keyboardComponentType = InstanceType<typeof KeyboardBasic>
 export type questionUserInputDisplayType = "hide" | "show" | "force"
@@ -106,5 +107,6 @@ export interface checkAnswerInterface {
 export interface questionResultInterface {
 	answer: string,
 	result: boolean,
-	tex: string
+	tex: string,
+	validations: CheckerResult[]
 }

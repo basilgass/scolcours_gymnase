@@ -11,11 +11,6 @@ import {ScoreChallengeDataInterface} from "@/types/scoreInterfaces.ts"
 import {IChallengeConfig} from "@/Composables/useChallenge.ts"
 import {computed} from "vue"
 
-export interface ResultStat {
-	label: string
-	value: string | number
-}
-
 const emits = defineEmits(["start", "cancel"])
 
 const props = defineProps<{
@@ -25,9 +20,9 @@ const props = defineProps<{
 	config: IChallengeConfig
 }>()
 
-const scoreLabel = computed(() => props.config.label)
-const currentScoreDisplay = computed(() => props.config.labelFormat(props.score.data.current_score))
-const bestScoreDisplay = computed(() => props.config.labelFormat(props.score.score))
+const scoreLabel = computed(() => props.config.description.label)
+const currentScoreDisplay = computed(() => props.config.description.labelFormat(props.score.data.current_score))
+const bestScoreDisplay = computed(() => props.config.description.labelFormat(props.score.score))
 
 // TODO: endurance et precision ont des extra-stats
 // PRECISION : :extra-stats="[{label: 'Reprises (dernier niveau)', value: game.levelDeaths}]"
@@ -55,7 +50,7 @@ const extraStats = computed<{ label: string, value: number }[]>(() => [])
 			</div>
 
 			<!-- Vies + Erreurs : ne s'affiche que si c'est configuré avec des vies -->
-			<template v-if="config.lives>0">
+			<template v-if="config.game.lives>0">
 				<div
 					class="rounded-xl border border-gray-200 bg-white shadow-sm text-xl md:text-2xl text-center p-2 md:p-10 flex flex-col justify-between gap-4"
 				>
@@ -72,7 +67,7 @@ const extraStats = computed<{ label: string, value: number }[]>(() => [])
 
 			<!-- Temps restant -->
 			<div
-				v-if="config.globalTimer"
+				v-if="config.timers.global"
 				class="rounded-xl border border-gray-200 bg-white shadow-sm text-xl md:text-2xl text-center p-2 md:p-10 flex flex-col justify-between gap-4"
 			>
 				<div>Temps restant</div>

@@ -1,5 +1,4 @@
-import {CheckerAbstract, makeCheckerResult} from "../CheckerAbstract"
-import {CheckerResult, CHECKERS} from "../checker.config"
+import {CheckerAbstract, CheckerResult, CHECKERS, makeCheckerResult} from "@/Checkers"
 
 // const name = "string"
 const description = "string"

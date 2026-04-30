@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import QuestionShow from "@/Components/Questions/QuestionShow.vue"
-import {useGenerator} from "@/Composables/useGenerator"
+import {answerIsWrong, useGenerator} from "@/Composables/useGenerator"
 import type {GeneratorInterface, QuestionInterface} from "@/types/modelInterfaces"
 import {computed, onMounted, ref} from "vue"
 import {useStoreScore} from "@/stores/useStoreScore.ts"
@@ -25,8 +25,6 @@ const scoreStore = useStoreScore()
 const score = await scoreStore.getScore<ScoreGeneratorDataInterface>('Generator', props.generator.id)
 
 function nextQuestion(checkerResult: questionResultInterface): void {
-	console.log(checkerResult)
-	console.log(score)
 	if (checkerResult.result) {
 		// Mise à jour du score.
 		score.data.current_score++
@@ -41,8 +39,11 @@ function nextQuestion(checkerResult: questionResultInterface): void {
 		// Sélection de la question suivante.
 		counter.value++
 	} else {
-		// Le score retombe à zéro.
-		score.data.current_score = 0
+		// Si l'erreur est une broutille, ne pas pénaliser.
+		if (answerIsWrong(checkerResult)) {
+			// Le score retombe à zéro.
+			score.data.current_score = 0
+		}
 
 		// Update score value
 		scoreStore.updateScore(score)

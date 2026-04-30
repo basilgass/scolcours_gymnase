@@ -21,7 +21,7 @@ export interface ChallengeScoreInterface {
 	score: number,
 }
 
-export type ChallengeGameType = 'classic' | 'chrono' | 'streak' | 'blitz' | 'endurance' | 'precision'
+export type ChallengeGameType = 'classic' | 'chrono' | 'blitz'
 export type ChallengeGameState = "intro" | "running" | "finished"
 
 export interface ChallengeMinInterface {

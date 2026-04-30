@@ -340,7 +340,7 @@ export const keyboards: Record<string, KeyboardObjectType> = {
 			const [Pnum, Pden] = value.split("/")
 			return Pden === undefined
 				? asciiToTex(Pnum)
-				: `\\frac{ ${asciiToTex(Pnum)} }{ ${Pden} }`
+				: `\\frac{ ${asciiToTex(Pnum)} }{ ${asciiToTex(Pden)} }`
 		}
 	},
 	scientific: {
@@ -531,6 +531,12 @@ function buildVectorialTex(value: string) {
 export function asciiToTex(value: string): string {
 	const parser = new AsciiMathParser()
 
+	// if value ends with '^', add a box
+	if (value.endsWith('^')) {
+		// asciimath boxed
+		value += 'square'
+	}
+
 	// Force display style
 	return parser.parse(value)
 }
@@ -542,6 +548,7 @@ export function asciiToTex(value: string): string {
  * @return {string} - The converted exact string.
  */
 function makeExactFromAscii(value: string): string {
+	// REFACTOR : could be refactored using checker helper functions ?
 	if (value === undefined || value === "") {
 		return ""
 	}
@@ -552,8 +559,8 @@ function makeExactFromAscii(value: string): string {
 	}
 
 	const numden = value.split("/")
-	let stack = [],
-		parentheses = 0
+	let stack = []
+	let parentheses = 0
 	const result: string[] = []
 
 	for (const item of numden) {
@@ -566,6 +573,7 @@ function makeExactFromAscii(value: string): string {
 			stack = []
 		}
 	}
+
 	if (stack.length > 0) {
 		result.push(stack.join("/"))
 	}

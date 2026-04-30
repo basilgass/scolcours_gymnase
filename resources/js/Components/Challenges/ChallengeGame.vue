@@ -7,6 +7,7 @@ import ChallengeResults from "@/Components/Challenges/ChallengeResults.vue"
 import QuestionShow from "@/Components/Questions/QuestionShow.vue"
 import GameScoreHeader from "@/Components/Challenges/Game/GameScoreHeader.vue"
 import GameTimerBar from "@/Components/Challenges/Game/GameTimerBar.vue"
+import StatBar from "@/Components/Ui/StatBar.vue"
 
 const props = defineProps<{ challenge: ChallengeInterface }>()
 defineEmits<{ stateChange: [value: ChallengeGameState] }>()
@@ -17,16 +18,12 @@ const data = useChallenge(props.challenge)
 </script>
 
 <template>
-	<article
-		class="max-w-lg mx-auto "
-	>
+	<article>
 		<challenge-intro
 			v-if="data.state.value === 'intro'"
 			:challenge
 			:score="data.store.score.value"
-			:max-levels="data.config.value.maxLevels"
-			:score-label="data.config.value.label"
-			:format-score="data.config.value.labelFormat"
+			:config="data.config"
 			@start="data.controls.start"
 		/>
 		<div v-else-if="data.state.value === 'running'">
@@ -34,28 +31,38 @@ const data = useChallenge(props.challenge)
 			<game-score-header
 				:current="data.current"
 				:results="data.store.results"
-				:config="data.config.value"
+				:config="data.config"
 			/>
 
 			<!-- global timer -->
 			<game-timer-bar
-				v-if="data.config.value.globalTimer"
-				:max="data.config.value.remainingTime"
+				v-if="data.config.timers.global && data.config.description.display!=='elapsedTime'"
+				:max="data.config.timers.remainingTime"
 				:value="data.store.results.elapsedTime"
-				:inverted="data.config.value.invertedTimer"
+				:inverted="data.config.timers.inverted"
 			/>
 
 			<!-- question timer -->
 			<game-timer-bar
-				v-if="data.config.value.questionTimer"
+				v-if="data.config.timers.question"
 				:max="data.current.timeLimit.value"
 				:value="data.store.results.questionElapsedTime"
-				:inverted="data.config.value.invertedTimer"
+				:inverted="data.config.timers.inverted"
+			/>
+
+			<!-- simple stat bar -->
+			<stat-bar
+				v-if="data.config.game.targetScore"
+				class="my-2"
+				:max="data.config.game.targetScore"
+				:value="data.store.results.score"
+				:bar-label="`${data.store.results.score} / ${data.config.game.targetScore}`"
+				bar-label-class="text-gray-500"
 			/>
 
 			<!-- question component -->
 			<question-show
-				:key="`q-${data.store.results.level}-${data.store.answers.value.length}`"
+				:key="`q-${data.store.results.level}-${data.store.results.score}`"
 				:question="data.current.question.value as QuestionInterface"
 				show-input
 				@validate="data.current.validate"
@@ -66,7 +73,7 @@ const data = useChallenge(props.challenge)
 			:answers="data.store.answers.value"
 			:results="data.store.results"
 			:score="data.store.score.value"
-			:config="data.config.value"
+			:config="data.config"
 			@start="data.controls.start"
 			@cancel="data.state.value = 'intro'"
 		/>

@@ -1,0 +1,1 @@
+import{H as e,S as t,k as n}from"./@inertiajs-DcPzCMHT.js";import{t as r}from"./PiDrawParser-CLkvGLT5.js";var i=n({__name:`draw-parser-widget`,props:{illustration:{}},setup(n){return(i,a)=>(e(),t(r,{draw:n.illustration},null,8,[`draw`]))}});export{i as default};

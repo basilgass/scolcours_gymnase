@@ -8,7 +8,6 @@ import ScButton from "@/Components/Ui/Button/scButton.vue"
 import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
 import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
 import ChallengeDisplay from "@/Components/Challenges/ChallengeDisplay.vue"
-import BlockShow from "@/Components/Blocks/BlockShow.vue"
 import {useScrollTo} from "@/Composables/useHelpers.ts"
 import {GeneratorInterface} from "@/types/challengeInterfaces.ts"
 import Card from "@/Components/Ui/Card.vue"
@@ -77,21 +76,14 @@ function onSelect(generator: GeneratorInterface | null) {
 
 		<div class="flex flex-col md:flex-row gap-6 min-h-screen">
 			<!-- Colonne principale -->
-			<div class="flex-1 flex flex-col gap-6 order-2 md:order-1 min-w-0">
-				<!-- description du challenge -->
-				<block-show
-					v-show="state === 'intro'"
-					:block="challenge.block"
-				/>
-
-				<!-- affichage du challenge -->
-				<challenge-display
-					ref="main"
-					:challenge
-					:selected-generator="selectedGenerator"
-					@state-change="state = $event"
-				/>
-			</div>
+			<!-- affichage du challenge -->
+			<challenge-display
+				ref="main"
+				class="flex-1"
+				:challenge
+				:selected-generator="selectedGenerator"
+				@state-change="state = $event"
+			/>
 
 			<!-- Menu latéral -->
 			<aside

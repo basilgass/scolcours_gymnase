@@ -3,7 +3,7 @@
  * Zone clavier : format de réponse, toggle, sélecteur de réponse, validation, clavier dynamique.
  * Absorbe : QuestionAnswerToggleKeyboard, QuestionAnswerSelector, QuestionAnswerValidation.
  */
-import {computed, inject, nextTick, ref, useTemplateRef} from "vue"
+import {computed, inject, useTemplateRef} from "vue"
 import {
 	keyboardComponentType,
 	questionDataKey,
@@ -110,15 +110,8 @@ const answerIntegrityCheck = computed(() => {
 	return integrity === '' ? true : integrity
 })
 
-const closeErrors = ref(false)
-const showErrors = computed(() => !closeErrors.value && useValidation.errors.value.length > 0)
-
-function closingErrors() {
-	closeErrors.value = true
-	nextTick(() => {
-		useValidation.errors.value = []
-		closeErrors.value = false
-	})
+function onErrorClosing(index: number) {
+	useValidation.errors.value.splice(index, 1)
 }
 </script>
 
@@ -226,31 +219,32 @@ function closingErrors() {
 					</div>
 
 					<!-- Error messages -->
-					<transition
-						name="fade"
-						@after-leave="closingErrors()"
+					<div
+						class="max-w-xl mx-auto relative flex flex-col gap-2 mb-3"
 					>
-						<div
-							v-if="showErrors"
-							class="max-w-xl mx-auto p-3 my-2 border rounded relative
-							text-red-600 dark:text-red-100
-							bg-red-100 dark:bg-red-900
-							border-red-600 dark:border-red-700"
-						>
-							<button
-								class="absolute top-1 right-1 text-xs"
-								@click="closeErrors = true"
-							>
-								<i class="bi bi-x-lg" />
-							</button>
+						<transition-group name="fade">
 							<div
-								v-for="(msg, index) in useValidation.errors.value"
+								v-for="(error, index) in useValidation.errors.value"
 								:key="`error-${index}`"
-								v-katex.auto="msg"
-								class="text-xs"
-							/>
-						</div>
-					</transition>
+								class="text-xs relative"
+								:class="{
+									'text-red-600 dark:text-red-100 bg-red-100 dark:bg-red-900 border-red-600 dark:border-red-700': error.score<= 0.5,
+									'text-yellow-600 dark:text-yellow-100 bg-orange-100 dark:bg-yellow-900 border-yellow-600 dark:border-yellow-700': error.score> 0.5,
+								}"
+							>
+								<div
+									v-katex.auto="error.message"
+									class="px-3 py-2 rounded border"
+								/>
+								<button
+									class="absolute top-1 right-1 text-xs"
+									@click="onErrorClosing(index)"
+								>
+									<i class="bi bi-x-lg" />
+								</button>
+							</div>
+						</transition-group>
+					</div>
 
 					<div
 						v-if="answerIntegrityCheck!==true"

@@ -17,7 +17,7 @@ const props = defineProps<{
 	results: ChallengeGameInterface
 }>()
 
-const maxLevels = computed(() => props.config.maxLevels)
+const maxLevels = computed(() => props.config.game.maxLevels)
 const gameLevel = computed(() => props.results.level)
 const gameLevelScore = computed(() => props.results.levelScore)
 const nextLevelAfter = computed(() => props.current.level.value.points_to_pass)

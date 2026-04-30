@@ -5,7 +5,7 @@ import {
 	ScoreInterface
 } from "@/types/modelInterfaces.ts"
 import {computed, ComputedRef, onUnmounted, reactive, ref, toRef} from "vue"
-import {useGenerator} from "@/Composables/useGenerator.ts"
+import {answerIsWrong, useGenerator} from "@/Composables/useGenerator.ts"
 import {Random} from "pimath"
 import {ChallengeAnswerInterface, ChallengeGameInterface} from "@/types/challengeInterfaces.ts"
 import {useStoreScore} from "@/stores/useStoreScore.ts"
@@ -14,18 +14,27 @@ import {questionResultInterface} from "@/Components/Questions/QuestionInterface.
 import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
 
 export interface IChallengeConfig {
-	globalTimer: boolean,
-	invertedTimer: boolean,
-	questionTimer: boolean,
-	lives: number
-	remainingTime: number,
-	scoreIncrement?: number,
-	targetScore?: number,
+	timers: {
+		global: boolean,
+		question: boolean,
+		inverted: boolean,
+		remainingTime: number,
+	},
+	description: {
+		display: 'score' | 'elapsedTime',
+		label: string,
+		labelFormat: (value: number) => string,
+		cards: { icon: string, label: string, value: number | string }[]
+	},
+	game: {
+		lives: number,
+		scoreIncrement?: number,
+		targetScore?: number,
+		maxLevels: number,
+	}
 	checkEndGame: () => boolean,
 	updateScore: () => void,
-	label: string,
-	labelFormat: (value: number) => string,
-	maxLevels: number
+
 }
 
 export function useChallenge(challengeMaybeRef: ChallengeInterface | ComputedRef<ChallengeInterface>) {
@@ -49,20 +58,21 @@ export function useChallenge(challengeMaybeRef: ChallengeInterface | ComputedRef
 	})
 
 
-	const challengeConfig = computed<IChallengeConfig>(() => {
-		const defaultCheckEndGame = () => {
-			return (results.lives - results.death) <= 0
-		}
+	// ─── Challenge configuration ────────────────────────────────────────────────────────────
+	const defaultCheckEndGame = () => {
+		return (results.lives - results.death) <= 0
+	}
 
-		const defaultUpdateScore = () => {
-			const delta = results.score - (score.value?.score ?? 0)
-			const deltaLevel = results.level - (score.value?.data?.level ?? 0)
+	const defaultUpdateScore = () => {
+		const delta = results.score - (score.value?.score ?? 0)
+		const deltaLevel = results.level - (score.value?.data?.level ?? 0)
 
-			score.value.score = Math.max(results.score, score.value?.score ?? 0)
-			score.value.data.level = Math.max(results.level, score.value?.data?.level ?? 0)
-			score.value.data.current_score = results.score
-			score.value.data.current_level = results.level
+		score.value.score = Math.max(results.score, score.value?.score ?? 0)
+		score.value.data.level = Math.max(results.level, score.value?.data?.level ?? 0)
+		score.value.data.current_score = results.score
+		score.value.data.current_level = results.level
 
+		persistScore().then(() => {
 			if (delta > 0) {
 				flash.success(`Bravo, vous avez amélioré votre score de ${delta} point${delta > 1 ? 's' : ''}`)
 			} else if (deltaLevel > 0) {
@@ -70,79 +80,78 @@ export function useChallenge(challengeMaybeRef: ChallengeInterface | ComputedRef
 			} else {
 				flash.info("Vous n'avez pas amélioré votre score... dommage !")
 			}
-		}
+		})
+	}
 
-		const cfg: IChallengeConfig = {
-			lives: challenge.value.lives,
-			maxLevels: challenge.value.levels.length,
+	const challengeConfig: IChallengeConfig = {
+		timers: {
+			global: true,
+			inverted: true,
+			question: false,
 			remainingTime: challenge.value.time_limit,
-			globalTimer: true,
-			invertedTimer: true,
-			questionTimer: false,
-			checkEndGame: defaultCheckEndGame,
-			updateScore: defaultUpdateScore,
+		},
+		description: {
+			display: 'score',
 			label: 'score',
 			labelFormat: (value: number) => String(value),
+			cards: [
+				{label: 'vies', icon: 'bi bi-heart', value: challenge.value.lives},
+				{label: 'durée (sec)', icon: 'bi bi-clock', value: challenge.value.time_limit},
+			]
+		},
+		game: {
+			lives: challenge.value.lives,
+			maxLevels: challenge.value.levels.length,
+		},
+		checkEndGame: defaultCheckEndGame,
+		updateScore: defaultUpdateScore,
+	}
+	if (challenge.value.type === 'blitz') {
+		challengeConfig.timers.question = true
+		challengeConfig.description.cards.push({
+			label: 'par question', value: '?', icon: 'bi bi-stopwatch'
+		})
+	}
+	if (challenge.value.type === 'chrono') {
+		challengeConfig.description.display = 'elapsedTime'
+		challengeConfig.game.lives = 0
+		challengeConfig.timers.remainingTime = 0
+		challengeConfig.timers.inverted = false
+
+		challengeConfig.game.targetScore = 0
+		challenge.value.levels.forEach((level, index) => {
+			// [challenge.value.levels.length - 1]?.points_to_pass ?? 10
+			challengeConfig.game.targetScore += (level.points_to_pass ?? 10) * (index + 1)
+		})
+
+		challengeConfig.checkEndGame = () => false
+		challengeConfig.updateScore = () => {
+			// REFACTOR : maybe automatically set the score.value.score to Infinity on creation ?
+			const isFirst = (score.value?.score ?? 0) === 0
+			const improved = isFirst || results.elapsedTime < (score.value?.score ?? Infinity)
+
+			score.value.score = improved ? results.elapsedTime : score.value.score
+			score.value.data.level = Math.max(results.level, score.value?.data?.level ?? 0)
+			score.value.data.current_score = results.elapsedTime
+			score.value.data.current_level = results.level
+
+			persistScore().then(() => {
+				if (improved) {
+					flash.success(`Bravo, nouveau meilleur temps : ${Math.round(results.elapsedTime)}s`)
+				} else {
+					flash.info("Vous n'avez pas amélioré votre temps... dommage !")
+				}
+			})
 		}
 
-		if (challenge.value.type === 'blitz') {
-			cfg.questionTimer = true
-			return cfg
-		}
+		challengeConfig.description.label = "temps"
+		challengeConfig.description.labelFormat = (value: number) => value > 0 ? `${Math.round(value)}s` : '—'
 
-		if (challenge.value.type === 'chrono') {
-			cfg.lives = 0
-			cfg.remainingTime = 0
-			cfg.invertedTimer = false
+		challengeConfig.description.cards = [
+			{label: 'score cible', icon: 'bi bi-trophy', value: challengeConfig.game.targetScore}
+		]
+	}
 
-			cfg.targetScore = challenge.value.levels[challenge.value.levels.length - 1]?.points_to_pass ?? 10
-			cfg.checkEndGame = () => false
-			cfg.updateScore = () => {
-				// REFACTOR : maybe automatically set the score.value.score to Infinity on creation ?
-				const isFirst = (score.value?.score ?? 0) === 0
-				const improved = isFirst || results.elapsedTime < (score.value?.score ?? Infinity)
-
-				score.value.score = improved ? results.elapsedTime : score.value.score
-				score.value.data.level = Math.max(results.level, score.value?.data?.level ?? 0)
-				score.value.data.current_score = results.elapsedTime
-				score.value.data.current_level = results.level
-
-				persistScore().then(() => {
-					if (improved) {
-						flash.success(`Bravo, nouveau meilleur temps : ${Math.round(results.elapsedTime)}s`)
-					} else {
-						flash.info("Vous n'avez pas amélioré votre temps... dommage !")
-					}
-				})
-			}
-
-			cfg.label = "temps"
-			cfg.labelFormat = (value: number) => value > 0 ? `${Math.round(value)}s` : '—'
-
-			return cfg
-		}
-
-		if (challenge.value.type === 'endurance') {
-			cfg.remainingTime = 0
-			cfg.globalTimer = false
-			return cfg
-		}
-
-		if (challenge.value.type === 'precision') {
-			cfg.remainingTime = 0
-			cfg.checkEndGame = () => results.levelDeaths >= results.lives
-			return cfg
-		}
-
-		if (challenge.value.type === 'streak') {
-			cfg.lives = 0
-			cfg.remainingTime = 0
-			cfg.scoreIncrement = 1
-			cfg.checkEndGame = () => true
-		}
-
-		return cfg
-	})
 	// ─── Questions ────────────────────────────────────────────────────────────
 
 	const generatedId = ref(0)
@@ -181,15 +190,18 @@ export function useChallenge(challengeMaybeRef: ChallengeInterface | ComputedRef
 	}
 
 	function validateQuestion(answer: questionResultInterface) {
+
 		// BUG : recordAnswer only replace $a answers... but there may be more ! This is only used to show final answer.
 		recordAnswer(answer) // uses only answer.tex, to replace body $a by it's response.
 
 		if (answer.result) {
 			// increment score
-			results.score += challengeConfig.value.scoreIncrement ? challengeConfig.value.scoreIncrement : results.level
+			results.score += challengeConfig.game.scoreIncrement
+				? challengeConfig.game.scoreIncrement
+				: results.level
 
 			// is there a targetScore ?
-			if (challengeConfig.value.targetScore && results.score >= challengeConfig.value.targetScore) {
+			if (challengeConfig.game.targetScore && results.score >= challengeConfig.game.targetScore) {
 				endGame()
 				return
 			}
@@ -199,19 +211,22 @@ export function useChallenge(challengeMaybeRef: ChallengeInterface | ComputedRef
 			const leveled = checkAndAdvanceLevel()
 			if (!leveled) nextQuestion()
 
-			if (challengeConfig.value.questionTimer) startQuestionTimer()
 		} else {
-			// on failure.
-			results.death++
-			results.levelDeaths++
-			results.levelScore = 0
+			// on controle si l'erreur est un détail => donc ne pas pénaliser !
+			if (answerIsWrong(answer)) {
+				// on failure.
+				results.death++
+				results.levelDeaths++
+				results.levelScore = 0
+			}
 
-			// PRECISION: if (results.levelDeaths >= props.challenge.lives) end()
-			// ENDURANCE: if (props.challenge.lives && (results.lives - results.death <= 0)) end()
-			// CLASSIC  : if (props.challenge.lives && (results.lives - results.death <= 0)) end()
-			// STREAK	: end()
-			if (challengeConfig.value.checkEndGame()) endGame()
+			if (challengeConfig.checkEndGame()) {
+				endGame()
+				return	// stop le jeu - on ne recommence plus le timer des questions.
+			}
 		}
+
+		if (challengeConfig.timers.question) startQuestionTimer()
 	}
 
 	function nextQuestion() {
@@ -237,7 +252,7 @@ export function useChallenge(challengeMaybeRef: ChallengeInterface | ComputedRef
 	 * Le callback onAdvanced permet à chaque type d'y injecter sa propre logique (ex: precision reset levelDeaths).
 	 */
 	function checkAndAdvanceLevel(): boolean {
-		if (results.level >= challengeConfig.value.maxLevels) return false
+		if (results.level >= challengeConfig.game.maxLevels) return false
 		if (results.levelScore < currentLevel.value.points_to_pass) return false
 
 		results.levelScore = 0
@@ -273,7 +288,7 @@ export function useChallenge(challengeMaybeRef: ChallengeInterface | ComputedRef
 
 		globalTimerInterval = setInterval(() => {
 			results.elapsedTime += timerIntervalSpeed / 1000
-			results.remainingTime = challengeConfig.value.remainingTime - results.elapsedTime
+			results.remainingTime = challengeConfig.timers.remainingTime - results.elapsedTime
 
 			onTick?.(results.elapsedTime)
 		}, timerIntervalSpeed)
@@ -310,11 +325,14 @@ export function useChallenge(challengeMaybeRef: ChallengeInterface | ComputedRef
 				results.questionElapsedTime = 0
 
 				// On génère une erreur
-				validateQuestion({tex: " TIME ", result: false, answer: " TIME "}) // TODO: bes
+				validateQuestion({tex: " TIME ", result: false, answer: " TIME ", validations: []})
 
-				// Start next question
-				nextQuestion()
-				startQuestionTimer()
+				// Restart a new question.
+				if (state.value === 'running') {
+					// Start next question
+					nextQuestion()
+					startQuestionTimer()
+				}
 
 			}
 		}, timerIntervalSpeed)
@@ -336,8 +354,8 @@ export function useChallenge(challengeMaybeRef: ChallengeInterface | ComputedRef
 		results.streak = 0
 		results.levelDeaths = 0
 		results.questionElapsedTime = 0
-		results.lives = challengeConfig.value.lives
-		results.remainingTime = challengeConfig.value.remainingTime
+		results.lives = challengeConfig.game.lives
+		results.remainingTime = challengeConfig.timers.remainingTime
 
 		generatedQuestions.value = []
 		generatedId.value = 0
@@ -355,15 +373,15 @@ export function useChallenge(challengeMaybeRef: ChallengeInterface | ComputedRef
 		state.value = 'running'
 
 		// start timers, depending on config.
-		if (challengeConfig.value.globalTimer) {
+		if (challengeConfig.timers.global) {
 			startGlobalTimer(elapsed => {
-				if (challengeConfig.value.remainingTime > 0) {
-					if (elapsed >= challengeConfig.value.remainingTime) endGame()
+				if (challengeConfig.timers.remainingTime > 0) {
+					if (elapsed >= challengeConfig.timers.remainingTime) endGame()
 				}
 			})
 		}
 
-		if (challengeConfig.value.questionTimer) {
+		if (challengeConfig.timers.question) {
 			startQuestionTimer()
 		}
 
@@ -373,12 +391,11 @@ export function useChallenge(challengeMaybeRef: ChallengeInterface | ComputedRef
 		state.value = 'finished'
 
 		// stop timers
-		console.log('STOP TIMERS')
 		stopGlobalTimer()
 		stopQuestionTimer()
 
 		// update score and display the result as flash message
-		challengeConfig.value.updateScore()
+		challengeConfig.updateScore()
 	}
 
 	// ─── Score persistence ────────────────────────────────────────────────────
@@ -411,12 +428,12 @@ export function useChallenge(challengeMaybeRef: ChallengeInterface | ComputedRef
 		},
 		timers: {
 			global: {
-				show: challengeConfig.value.globalTimer,
+				show: challengeConfig.timers.global,
 				start: startGlobalTimer,
 				end: stopGlobalTimer,
 			},
 			question: {
-				show: challengeConfig.value.questionTimer,
+				show: challengeConfig.timers.question,
 				start: startQuestionTimer,
 				end: stopQuestionTimer,
 			}

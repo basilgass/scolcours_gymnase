@@ -25,10 +25,10 @@ defineProps<{
 	<div class="grid grid-cols-3">
 		<div class="text-xl text-left flex flex-col">
 			<div>
-				{{ results.score }}
+				{{ +results[config.description.display].toFixed(1) }}
 			</div>
 			<div class="text-xs">
-				{{ config.label }}
+				{{ config.description.label }}
 			</div>
 		</div>
 
@@ -48,11 +48,11 @@ defineProps<{
 
 		<div class="text-lg text-right flex flex-col">
 			<div
-				v-if="config.lives>0"
+				v-if="config.game.lives>0"
 				class="flex gap-1 justify-end"
 			>
 				<template
-					v-for="i of config.lives"
+					v-for="i of config.game.lives"
 					:key="`heart-${i}`"
 				>
 					<i

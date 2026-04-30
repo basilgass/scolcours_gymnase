@@ -21,6 +21,19 @@ export function splitIfOutsideParentheses(
 	return arr
 }
 
+export function stripParenthesis(str: string): string {
+	if (!str.startsWith('(') || !str.endsWith(')')) return str
+
+	let depth = 0
+	for (let i = 0; i < str.length - 1; i++) {
+		if (str[i] === '(') depth++
+		else if (str[i] === ')') depth--
+		if (depth === 0) return str
+	}
+
+	return str.slice(1, -1)
+}
+
 /**
  * Découpe un texte (string1)+(string2)-(string3) en [string1, string2, string3]
  * @param value

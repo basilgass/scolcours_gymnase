@@ -7,6 +7,17 @@ import PiMath from "pimath"
 import {ComputedRef, ref, Ref, unref} from "vue"
 import {PiMathExt} from "@/PiMathExtended/PiMathExt.ts"
 import {makeIllustration} from "@/helpers/makeModel.ts"
+import {questionResultInterface} from "@/Components/Questions/QuestionInterface.ts"
+
+const ERROR_CAP = 0.75
+
+export function answerIsWrong(answer: questionResultInterface, cap?: number): boolean {
+	if (cap === undefined) cap = ERROR_CAP
+	return (
+		answer.validations.length > 0 &&
+		answer.validations.some(v => v.score < cap)
+	)
+}
 
 export function useGenerator(generator: GeneratorInterface | ComputedRef<GeneratorInterface>): generatorResultInterface {
 

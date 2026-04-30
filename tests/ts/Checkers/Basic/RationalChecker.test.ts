@@ -1,4 +1,4 @@
-import {describe, test} from "vitest"
+import {describe, expect, test} from "vitest"
 import {RationalChecker} from "@/Checkers"
 import {Fraction, Polynom} from "pimath"
 import {splitIfOutsideParentheses} from "@/Checkers/checkerHelperFunctions.ts"
@@ -97,4 +97,30 @@ describe("rational checker", () => {
 			console.log(isFactors)
 		}
 	)
+
+	test('compare rational fraction with opposite polynom', () => {
+		chk.answer = '(-3(3x-5)^4(2x-25))/(x+4)^4'
+		const given = '3(3x-5)^4(-2x+25)/(x+4)^4'
+
+		const result = chk.checkValue(given)
+
+		expect(result.score).toBe(1)
+	})
+
+	test('compare rational fraction with partial factorisation (number factor)', () => {
+		chk.answer = '(6(3x-5)^4(x+20))/(x+4)^4'
+		const given = '3(3x-5)^4(2x+40)/(x+4)^4'
+
+		const result = chk.checkValue(given)
+
+		expect(result.score).toBe(0.9)
+	})
+
+	test('compare rational fraction with partial factorisation (monom factor)', () => {
+		chk.answer = '(6x(3x-5)^4(x+20))/(x+4)^4'
+		const given = '3(3x-5)^4(2x^2+40x)/(x+4)^4'
+
+		const result = chk.checkValue(given)
+		expect(result.score).toBe(0.5)
+	})
 })

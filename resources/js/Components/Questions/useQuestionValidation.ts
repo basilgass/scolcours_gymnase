@@ -176,13 +176,14 @@ export function useQuestionValidation(questionData: questionDataInterface) {
 	 * - modifier le statut de la question.
 	 */
 
-	const errorMessages = ref<string[]>([])
+	const errorMessages = ref<CheckerResult[]>([])
 	const lock = ref(false)
 
 	const questionResult = ref<questionResultInterface>({
 		result: false,
 		answer: "",
-		tex: ""
+		tex: "",
+		validations: []
 	})
 
 	const answersCount = computed(() => {
@@ -272,20 +273,16 @@ export function useQuestionValidation(questionData: questionDataInterface) {
 					validation.message = ""
 				})
 			} else {
-				errorMessages.value = ["les réponses ne concordent pas."]
+				errorMessages.value = [{
+					result: false,
+					score: 0,
+					message: "les réponses ne concordent pas."
+				}]
 			}
 		} else {
 			errorMessages.value = questionData.config.silent
 				? []
-				: validations
-					.map((v, index) => {
-						if (questionData.answers.variables.value.length === 1) {
-							return v.result ? "" : `${v.message}`
-						} else {
-							return v.result ? "" : `${index + 1}. ${v.message}`
-						}
-					})
-					.filter(msg => msg !== "")
+				: validations.filter(v => !v.result)
 		}
 
 		save(validations)
@@ -301,7 +298,8 @@ export function useQuestionValidation(questionData: questionDataInterface) {
 		questionResult.value = {
 			result,
 			answer: userAnswers.value,
-			tex: userTexAnswers.value
+			tex: userTexAnswers.value,
+			validations
 		}
 
 		return result
