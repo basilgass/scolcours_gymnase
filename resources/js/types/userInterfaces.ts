@@ -1,21 +1,27 @@
 export interface UserInterface {
-	email: string;
-	firstname: string;
-	fullname: string;
 	id: number;
 	name: string;
+	firstname: string;
+	fullname: string;
+	email: string;
+	pseudo: string;
+	public_name: string;
+	showRealName: boolean;
 	teams?: { id: number, name: string }[];
 }
 
-export interface User {
-	email: string
-	email_verified_at: string
-	firstname: string
-	fullname: string
-	id: number
-	name: string
-	role: string
-}
+// export interface User {
+// 	id: number
+// 	name: string
+// 	firstname: string
+// 	fullname: string
+// 	email: string
+// 	pseudo: string
+// 	public_name: string
+// 	showRealName: boolean
+// 	email_verified_at: string
+// 	role: string
+// }
 
 export interface TeamCalendarInterface {
 	id: number,

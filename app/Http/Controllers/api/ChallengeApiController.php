@@ -4,11 +4,13 @@ namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ChallengeResource;
+use App\Http\Resources\ScoreResource;
 use App\Models\Challenge;
 use App\Models\Chapter;
 use App\Models\Generator;
 use App\Models\Team;
 use App\Models\Theme;
+use App\Support\ScoreLeaderboard;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -176,5 +178,33 @@ class ChallengeApiController extends Controller
 	public function teams(Theme $theme, Chapter $chapter, Challenge $challenge, Team $team)
 	{
 		return redirect()->route('admin.teams.challenges.show', ["team" => $team, "challenge" => $challenge]);
+	}
+
+	public function leaderboard(Challenge $challenge, Request $request)
+	{
+		// Teams optionnelles passées via ?teams[]=1&teams[]=2
+		$teams = Team::with('users')
+		             ->whereIn('name', $request->input('teams', []))
+		             ->get()
+		             ->all();
+
+		$leaderboard = ScoreLeaderboard::for($challenge)
+		                               ->withUser($request->user())
+		                               ->withTeams($teams);
+
+		$global = $leaderboard->topStats(10);
+		$global->scores = ScoreResource::collection($global->scores);
+
+		$teamStats = $leaderboard->teamStats();
+		if ($teamStats) {
+			$teamStats->scores = ScoreResource::collection($teamStats->scores);
+		}
+
+		return [
+			'global'    => $global,
+			'teamStats' => $teamStats ?? null,
+			'teams'     => $teams ?? []
+
+		];
 	}
 }

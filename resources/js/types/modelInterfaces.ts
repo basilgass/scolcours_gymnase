@@ -1,11 +1,11 @@
 import type {lessonableClassName, LessonScoreRulesInterface} from "@/types/lessonInterfaces.ts"
 import type {ScoreInterface, ScoreLessonDataInterface} from "@/types/scoreInterfaces.ts"
 import type {BlockInterface} from "@/types/blockInterfaces.ts"
-import {Ref} from "vue";
+import {Ref} from "vue"
 
 // Re-exports depuis les fichiers domaine (rétrocompatibilité)
 export type {
-	UserInterface, User, TeamInterface, TeamCalendarInterface
+	UserInterface, TeamInterface, TeamCalendarInterface
 } from "@/types/userInterfaces.ts"
 export type {WidgetInterface, WidgetPropsInterface} from "@/types/widgetInterfaces.ts"
 export type {
@@ -23,8 +23,14 @@ export type {
 	PostQuestionsForOneUserStatsInterface
 } from "@/types/postInterfaces.ts"
 export type {
-	GeneratorInterface, ChallengeScoreInterface, ChallengeGameState, ChallengeMinInterface, ChallengeInterface, ChallengeLevelInterface,
-	ChallengeAnswerInterface, ChallengeGameInterface
+	GeneratorInterface,
+	ChallengeScoreInterface,
+	ChallengeGameState,
+	ChallengeMinInterface,
+	ChallengeInterface,
+	ChallengeLevelInterface,
+	ChallengeAnswerInterface,
+	ChallengeGameInterface
 } from "@/types/challengeInterfaces.ts"
 export type {CardInterface, CardInterfaceExtended, DeckInterface, provideDeckData} from "@/types/deckInterfaces.ts"
 export type {EvaluationInterface, EvaluationAdminInterface} from "@/types/evaluationInterfaces.ts"

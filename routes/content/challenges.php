@@ -16,7 +16,7 @@ Route::middleware('web')
 
 	     // Show hall of fame.
 	     Route::get('challenges/{challenge:slug}/classement', [ChallengeController::class, 'leaderboard'])
-	          ->name('challenges.leaderboard');
+	          ->name('challenges.leaderboard.show');
 
 	     // Admin routes
 	     Route::middleware('admin')
@@ -39,6 +39,8 @@ Route::middleware('api')
 	     Route::apiResource('challenges', ChallengeApiController::class)
 	          ->only(['index', 'show']);
 
+	     Route::get('challenges/{challenge}/leaderboard', [ChallengeApiController::class, 'leaderboard'])
+	          ->name('challenges.leaderboard');
 
 	     // Admin api
 	     Route::middleware('admin')

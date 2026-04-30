@@ -25,6 +25,13 @@ Route::get('/dashboard', [ScolcoursController::class, 'dashboard'])
      ->middleware(['auth', 'verified'])
      ->name('users.dashboard');
 
+Route::middleware(['auth'])->group(function () {
+    Route::patch('/profile/pseudo', [ScolcoursController::class, 'regeneratePseudo'])
+         ->name('profile.pseudo.regenerate');
+    Route::patch('/profile/show-real-name', [ScolcoursController::class, 'updateShowRealName'])
+         ->name('profile.showRealName.update');
+});
+
 
 
 Route::get('/qr/', [ScolcoursController::class, 'qrcode'])

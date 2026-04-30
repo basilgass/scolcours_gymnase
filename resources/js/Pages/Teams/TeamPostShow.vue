@@ -1,5 +1,3 @@
-
-
 <script lang="ts" setup>
 
 import TeamStatsPerUser from "@/Components/Teams/TeamStatsPerUser.vue"
@@ -8,42 +6,48 @@ import type {
 	ChapterInterface,
 	PostQuestionsForOneUserStatsInterface,
 	PostQuestionsStatsInterface,
-	TeamInterface
+	TeamInterface,
+	UserInterface
 } from "@/types/modelInterfaces"
-import { computed, PropType } from "vue"
+import {computed, PropType} from "vue"
 
-defineOptions({ layout: LayoutMain })
+defineOptions({layout: LayoutMain})
 
 let props = defineProps({
-	team: { type: Object as PropType<TeamInterface>, required: true },
-	chapter: { type: Object as PropType<ChapterInterface>, required: true },
-	stats: { type: Object as PropType<PostQuestionsStatsInterface[]>, required: true }
+	team: {type: Object as PropType<TeamInterface>, required: true},
+	chapter: {type: Object as PropType<ChapterInterface>, required: true},
+	stats: {type: Object as PropType<PostQuestionsStatsInterface[]>, required: true}
 })
 
-const users = computed(()=>{
+const users = computed(() => {
 	return props.team.users.toSorted((a, b) => {
 		return a.name.localeCompare(b.name)
 	})
 })
-const teamUser = computed(()=>{
+const teamUser = computed<UserInterface>(() => {
 	return {
 		id: -1,
 		name: props.team.name,
 		firstname: "Toute l'équipe",
 		fullname: props.team.name,
 		email: "",
-		teams: []
+		teams: [],
+		public_name: props.team.name,
+		pseudo: props.team.name,
+		showRealName: false,
+
 	}
 })
+
 function getUserStats(user_id: number): PostQuestionsForOneUserStatsInterface[] {
 	return props.stats.map(post => {
-		const questions= post.questions.map(question => {
+		const questions = post.questions.map(question => {
 			return {
 				id: question.id,
 				result: question.users[user_id] || null,
 				total: 1
 			}
-		}) as unknown as {id: number, result: number, total: number}[]
+		}) as unknown as { id: number, result: number, total: number }[]
 
 		return {
 			id: post.id,
@@ -59,7 +63,7 @@ function getUserStats(user_id: number): PostQuestionsForOneUserStatsInterface[] 
 
 function getTeamStats() {
 	return props.stats.map(post => {
-		const questions= post.questions.map(question => {
+		const questions = post.questions.map(question => {
 			return {
 				id: question.id,
 				result: Object.values(question.users).reduce((acc, result) => {
@@ -67,7 +71,7 @@ function getTeamStats() {
 				}, 0),
 				total: Object.values(question.users).length
 			}
-		}) as unknown as {id: number, result: number, total: number}[]
+		}) as unknown as { id: number, result: number, total: number }[]
 
 		return {
 			id: post.id,

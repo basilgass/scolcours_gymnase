@@ -1,4 +1,0 @@
-import{C as e,E as t,H as n,Tt as r,k as i,w as a,x as o}from"./@inertiajs-DcPzCMHT.js";var s={key:0},c={key:0},l=i({__name:`ChallengeLeaderboard`,props:{challenge:{},teams:{},global:{},teamStats:{}},setup(i){return(l,u)=>(n(),a(`section`,null,[u[0]||=o(`h1`,null,`Hall of fame`,-1),o(`h2`,null,`challenge id `+r(i.challenge.id),1),o(`div`,null,r(i.global.scores.map(e=>e.score))+` / `+r(i.global.average)+` / `+r(i.global.median)+` / `+r(i.global.rank)+` / `+r(i.global.total),1),i.teams?(n(),a(`div`,s,[t(` equipes : `+r(i.teams.map(e=>e.name).join(`, `))+` `,1),i.teamStats?(n(),a(`pre`,c,r(i.teamStats.scores.map(e=>e.score))+` /
-			`+r(i.teamStats.average)+` /
-			`+r(i.teamStats.median)+` / `+r(i.teamStats.rank)+` / `+r(i.teamStats.total)+`
-		`,1)):e(``,!0)])):e(``,!0)]))}});export{l as default};

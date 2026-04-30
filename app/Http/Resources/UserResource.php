@@ -21,12 +21,17 @@ class UserResource extends JsonResource
 	public function toArray($request)
 	{
 		return [
-			"id"        => $this->id,
-			"name"      => $this->name,
-			"firstname" => $this->firstname,
-			"fullname"  => $this->firstname . " " . $this->name,
-			"email"     => $this->email,
-			"teams"     => $this->whenLoaded('teams'),
+			"id"           => $this->id,
+			"name"         => $this->name,
+			"firstname"    => $this->firstname,
+			"fullname"     => $this->firstname . " " . $this->name,
+			"email"        => $this->email,
+			"teams"        => $this->whenLoaded('teams'),
+			"pseudo"       => $this->pseudo,
+			"showRealName" => $this->show_real_name,
+			"public_name"  => $this->show_real_name
+				? $this->firstname . " " . $this->name
+				: $this->pseudo,
 		];
 	}
 }

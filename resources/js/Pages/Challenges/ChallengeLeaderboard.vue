@@ -1,36 +1,42 @@
 <script setup lang="ts">
 
 import {ChallengeInterface} from "@/types/challengeInterfaces.ts"
-import {TeamInterface} from "@/types/userInterfaces.ts"
-import {LeaderboardStatsInterface} from "@/types/leaderboardInterfaces.ts"
+import LayoutMain from "@/Layouts/LayoutMain.vue"
+import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
+import Leaderboard from "@/Components/Challenges/Leaderboard.vue"
 
-const props = defineProps<{
+defineOptions({layout: LayoutMain})
+
+defineProps<{
 	challenge: ChallengeInterface,
-	teams: TeamInterface[],
-	global: LeaderboardStatsInterface,
-	teamStats?: LeaderboardStatsInterface,
+	teams: number[]
 }>()
 
 </script>
 
 <template>
 	<section>
-		<h1>Hall of fame</h1>
-		<h2>challenge id {{ challenge.id }}</h2>
+		<article-title
+			title="classement"
+			:return-link="{
+				label: 'retour au challenge',
+				url: route('challenges.show', challenge.slug)
+			}"
+		>
+			<template #right>
+				<div
+					v-admin
+					class="font-code text-xs"
+				>
+					id {{ challenge.id }}
+				</div>
+			</template>
+		</article-title>
 
-		<div>
-			{{ global.scores.map(x => x.score) }} /
-			{{ global.average }} /
-			{{ global.median }} / {{ global.rank }} / {{ global.total }}
-		</div>
-		<div v-if="teams">
-			equipes : {{ teams.map(t => t.name).join(', ') }}
-
-			<pre v-if="teamStats">{{ teamStats.scores.map(x => x.score) }} /
-			{{ teamStats.average }} /
-			{{ teamStats.median }} / {{ teamStats.rank }} / {{ teamStats.total }}
-		</pre>
-		</div>
+		<Leaderboard
+			:challenge-id="challenge.id"
+			:teams
+		/>
 	</section>
 </template>
 

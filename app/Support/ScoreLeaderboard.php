@@ -12,10 +12,12 @@ use Illuminate\Support\Collection;
 
 class ScoreLeaderboard
 {
-	private ?User $user  = null;
+	private ?User $user = null;
 	private array $teams = [];
 
-	private function __construct(private readonly Model $model) {}
+	private function __construct(private readonly Model $model)
+	{
+	}
 
 	public static function for(Model $model): static
 	{
@@ -43,16 +45,16 @@ class ScoreLeaderboard
 	 */
 	public function topStats(int $limit): object
 	{
-		$base    = $this->rankedQuery();
-		$scores  = (clone $base)->limit($limit)->get();
+		$base = $this->rankedQuery();
+		$scores = (clone $base)->limit($limit)->get();
 		$average = $this->model->scores()->whereNotNull('attempts')->avg('score');
-		$median  = $this->calculateMedian(
+		$median = $this->calculateMedian(
 			$this->model->scores()->whereNotNull('attempts')->pluck('score')
 		);
 		$total = (clone $base)->count();
-		$rank  = $this->calculateUserRank($base);
+		$rank = $this->calculateUserRank($base);
 
-		return (object) compact('scores', 'average', 'median', 'rank', 'total');
+		return (object)compact('scores', 'average', 'median', 'rank', 'total');
 	}
 
 	/**
@@ -67,15 +69,15 @@ class ScoreLeaderboard
 		}
 
 		$userIds = $this->teamUserIds();
-		$base    = $this->rankedQuery();
+		$base = $this->rankedQuery();
 		$base->whereIn('user_id', $userIds);
-		$scores  = (clone $base)->get();
+		$scores = (clone $base)->get();
 		$average = $scores->avg('score');
-		$median  = $this->calculateMedian($scores->pluck('score'));
-		$total   = $scores->count();
-		$rank    = $this->calculateUserRank($base);
+		$median = $this->calculateMedian($scores->pluck('score'));
+		$total = $scores->count();
+		$rank = $this->calculateUserRank($base);
 
-		return (object) compact('scores', 'average', 'median', 'rank', 'total');
+		return (object)compact('scores', 'average', 'median', 'rank', 'total');
 	}
 
 	private function calculateUserRank(MorphMany $base): ?int
@@ -112,7 +114,9 @@ class ScoreLeaderboard
 	{
 		$direction = $this->isChronoRanking() ? 'asc' : 'desc';
 
-		return $this->model->scores()
+		return $this->model
+			->scores()
+			->with('user')
 			->whereNotNull('attempts')
 			->orderBy('score', $direction)
 			->orderBy('attempts', 'asc')
@@ -127,7 +131,7 @@ class ScoreLeaderboard
 	private function calculateMedian(Collection $values): ?float
 	{
 		$sorted = $values->sort()->values();
-		$count  = $sorted->count();
+		$count = $sorted->count();
 
 		if ($count === 0) {
 			return null;
@@ -137,7 +141,7 @@ class ScoreLeaderboard
 
 		return $count % 2 === 0
 			? ($sorted[$mid - 1] + $sorted[$mid]) / 2
-			: (float) $sorted[$mid];
+			: (float)$sorted[$mid];
 	}
 
 	private function teamUserIds(): Collection

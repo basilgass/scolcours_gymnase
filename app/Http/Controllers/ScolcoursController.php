@@ -8,6 +8,7 @@ use App\Models\Block;
 use App\Models\Chapter;
 use App\Models\Post;
 use App\Models\SchoolTimetable;
+use App\Services\PseudoGenerator;
 use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -47,6 +48,23 @@ class ScolcoursController extends Controller
 			'teams'   => TeamResource::collection($teams),
 			'courses' => CourseResource::collection($user->courses),
 		]);
+	}
+
+	public function regeneratePseudo(): \Illuminate\Http\JsonResponse
+	{
+		$user = Auth::user();
+		$user->update(['pseudo' => PseudoGenerator::generateUnique()]);
+
+		return response()->json(['pseudo' => $user->pseudo]);
+	}
+
+	public function updateShowRealName(Request $request): \Illuminate\Http\JsonResponse
+	{
+		$validated = $request->validate(['show_real_name' => ['required', 'boolean']]);
+		Auth::user()->update($validated);
+
+		return $validated;
+		return response()->json();
 	}
 
 	public function download(Request $request)

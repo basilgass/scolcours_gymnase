@@ -77,6 +77,8 @@ class User extends Authenticatable
 		'firstname',
 		'email',
 		'password',
+		'pseudo',
+		'show_real_name',
 	];
 
 	/**
@@ -96,6 +98,7 @@ class User extends Authenticatable
 	 */
 	protected $casts = [
 		'email_verified_at' => 'datetime',
+		'show_real_name'    => 'boolean',
 	];
 
 

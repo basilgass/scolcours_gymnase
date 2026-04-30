@@ -8,6 +8,7 @@
  * - scoreable_type	<scoreableClassName>
  * - scoreable_id	int
  */
+import {UserInterface} from "@/types/userInterfaces.ts"
 
 export type scoreableClassName =
 	'Question' |
@@ -97,4 +98,5 @@ export interface ScoreInterface<T extends ScoreDataInterface = ScoreDataInterfac
 	scoreable_type: scoreableClassName,
 	updated_at: string
 	user_id: number,
+	user?: UserInterface
 }

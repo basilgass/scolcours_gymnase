@@ -15,11 +15,12 @@ class ScoreResource extends JsonResource
 		return [
 			'id'             => $this->id,
 			'user_id'        => $this->user_id,
+			'user'           => UserResource::make($this->whenLoaded('user')),
 			'score'          => $this->score,
 			'is_resolved'    => $this->is_resolved,
 			'attempts'       => $this->attempts,
 			'data'           => $this->data,
-			'scoreable_id'   => (int) $this->scoreable_id,
+			'scoreable_id'   => (int)$this->scoreable_id,
 			'scoreable_type' => class_basename($this->scoreable_type),
 			'updated_at'     => Carbon::parse($this->updated_at)->diffForHumans()
 		];
