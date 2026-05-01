@@ -3336,7 +3336,7 @@
     ]
   },
   "resources/js/Pages/Challenges/ChallengeLeaderboard.vue": {
-    "file": "assets/ChallengeLeaderboard-BGmB__KV.js",
+    "file": "assets/ChallengeLeaderboard-DWrdfs_M.js",
     "name": "ChallengeLeaderboard",
     "src": "resources/js/Pages/Challenges/ChallengeLeaderboard.vue",
     "isDynamicEntry": true,
@@ -4329,7 +4329,7 @@
     ]
   },
   "resources/js/app.ts": {
-    "file": "assets/app-KlzzP0qr.js",
+    "file": "assets/app-BvHsihBi.js",
     "name": "app",
     "src": "resources/js/app.ts",
     "isEntry": true,

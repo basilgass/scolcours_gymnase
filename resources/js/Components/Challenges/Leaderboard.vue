@@ -49,53 +49,53 @@ onUnmounted(() => {
 	<article v-if="loading">
 		Chargement en cours...
 	</article>
-	<article v-else>
-		<div
-			v-if="teamsList.length>0"
-			class="space-y-12 my-12"
-		>
-			<div class="flex gap-3 justify-center">
-				<div
-					v-theme.bg.text
-					class="w-40 aspect-square p-4 rounded-xl
+	<article
+		v-else
+		class="space-y-12 my-12"
+	>
+		<div class="flex gap-3 justify-center">
+			<div
+				v-theme.bg.text
+				class="w-40 aspect-square p-4 rounded-xl
 							border border-gray-200
 							shadow-sm
 							grid place-items-center"
-				>
-					<div class="text-center flex flex-col justify-between h-full">
-						<i
-							class="text-5xl bi bi-trophy"
-						/>
-						<div class="text-3xl">
-							{{ Math.max(...global.scores.map(x => x.score)) }} / {{ global.total }}
-						</div>
-						<div class="text-sm ">
-							meilleure / total
-						</div>
+			>
+				<div class="text-center flex flex-col justify-between h-full">
+					<i
+						class="text-5xl bi bi-trophy"
+					/>
+					<div class="text-3xl">
+						{{ Math.max(...global.scores.map(x => x.score)) }} / {{ global.total }}
 					</div>
-				</div>
-
-				<div
-					v-theme.bg.text
-					class="w-40 aspect-square p-4 rounded-xl
-							border border-gray-200
-							shadow-sm
-							grid place-items-center"
-				>
-					<div class="text-center flex flex-col justify-between h-full">
-						<i
-							class="text-5xl bi bi-align-middle"
-						/>
-						<div class="text-3xl">
-							{{ teamStats.average.toFixed(1) }} / {{ teamStats.median }}
-						</div>
-						<div class="text-sm ">
-							moyenne / médiane
-						</div>
+					<div class="text-sm ">
+						meilleure / total
 					</div>
 				</div>
 			</div>
 
+			<div
+				v-theme.bg.text
+				class="w-40 aspect-square p-4 rounded-xl
+							border border-gray-200
+							shadow-sm
+							grid place-items-center"
+			>
+				<div class="text-center flex flex-col justify-between h-full">
+					<i
+						class="text-5xl bi bi-align-middle"
+					/>
+					<div class="text-3xl">
+						{{ teamStats.average.toFixed(1) }} / {{ teamStats.median }}
+					</div>
+					<div class="text-sm ">
+						moyenne / médiane
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div v-if="teamsList.length>0">
 			<div class="text-3xl text-center">
 				<div>Classement pour {{ teamsList.map(team => team.name).join(',') }}</div>
 			</div>
