@@ -3336,7 +3336,7 @@
     ]
   },
   "resources/js/Pages/Challenges/ChallengeLeaderboard.vue": {
-    "file": "assets/ChallengeLeaderboard-CJFleZHg.js",
+    "file": "assets/ChallengeLeaderboard-BFhjizHH.js",
     "name": "ChallengeLeaderboard",
     "src": "resources/js/Pages/Challenges/ChallengeLeaderboard.vue",
     "isDynamicEntry": true,
@@ -3609,7 +3609,7 @@
     ]
   },
   "resources/js/Pages/DashboardPage.vue": {
-    "file": "assets/DashboardPage-CF-drKln.js",
+    "file": "assets/DashboardPage-Jlv7oY6Y.js",
     "name": "DashboardPage",
     "src": "resources/js/Pages/DashboardPage.vue",
     "isDynamicEntry": true,
@@ -4329,7 +4329,7 @@
     ]
   },
   "resources/js/app.ts": {
-    "file": "assets/app-Bw7b6gYU.js",
+    "file": "assets/app-CNqwWv1b.js",
     "name": "app",
     "src": "resources/js/app.ts",
     "isEntry": true,
@@ -4429,7 +4429,7 @@
       "resources/js/Pages/languages/LanguageShow.vue"
     ],
     "css": [
-      "assets/app-BkRdvWT0.css"
+      "assets/app-4J1lQbTs.css"
     ],
     "assets": [
       "assets/bootstrap-icons-mSm7cUeB.woff2",

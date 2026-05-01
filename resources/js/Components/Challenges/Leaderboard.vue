@@ -24,7 +24,6 @@ function loadStats() {
 		})
 	)
 		.then(res => {
-			console.log(res.data)
 			global.value = res.data.global
 			teamsList.value = res.data.teams
 			teamStats.value = res.data.teamStats
@@ -38,7 +37,7 @@ function loadStats() {
 let interval = null
 onMounted(() => {
 	loadStats()
-	interval = setInterval(() => loadStats(), 1000)
+	interval = setInterval(() => loadStats(), 5000)
 })
 onUnmounted(() => {
 	if (interval) clearInterval(interval)
@@ -100,7 +99,7 @@ onUnmounted(() => {
 				<div>Classement pour {{ teamsList.map(team => team.name).join(',') }}</div>
 			</div>
 
-			<div class="flex flex-col gap-3 max-w-xl mx-auto">
+			<div class="columns-md gap-8">
 				<transition-group
 					name="list"
 				>
@@ -108,7 +107,7 @@ onUnmounted(() => {
 						v-for="(score, index) in teamStats.scores"
 						:key="`team-${score.user_id}`"
 					>
-						<div class="bg-content rounded-lg border text-2xl flex gap-12">
+						<div class="bg-content rounded-lg border text-xl flex gap-12 mb-3">
 							<div
 								class="font-code font-semibold p-5 bg-gray-100 border rounded-l-lg border-gray-300"
 							>
