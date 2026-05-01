@@ -86,7 +86,7 @@ onUnmounted(() => {
 						class="text-5xl bi bi-align-middle"
 					/>
 					<div class="text-3xl">
-						{{ teamStats.average.toFixed(1) }} / {{ teamStats.median }}
+						{{ global.average.toFixed(1) }} / {{ global.median }}
 					</div>
 					<div class="text-sm ">
 						moyenne / médiane
