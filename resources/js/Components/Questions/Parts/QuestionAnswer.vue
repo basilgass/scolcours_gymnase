@@ -233,11 +233,11 @@ function onErrorClosing(index: number) {
 								}"
 							>
 								<div
-									v-katex.auto="error.message"
+									v-katex.auto="`${totalAnswers>1 ? (index+1) + '. ' : '' }${error.message}`"
 									class="px-3 py-2 rounded border"
 								/>
 								<button
-									class="absolute top-1 right-1 text-xs"
+									class="absolute top-1 right-1 text-xs cursor-pointer"
 									@click="onErrorClosing(index)"
 								>
 									<i class="bi bi-x-lg" />
