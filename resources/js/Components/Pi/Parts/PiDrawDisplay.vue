@@ -112,7 +112,9 @@ onMounted(() => {
 
 // Add a resizeObserver on the draw container
 	useResizeObserver(drawWrapper.value, () => {
+		// BUG : on doit pouvoir mieux gérer l'update.
 		updateLayout("onResize")
+		updateCode('onResize')
 	})
 
 	emits("mounted", PiGraph)
