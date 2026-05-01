@@ -24,11 +24,11 @@ function loadStats() {
 		})
 	)
 		.then(res => {
+			console.log(res.data)
 			global.value = res.data.global
 			teamsList.value = res.data.teams
 			teamStats.value = res.data.teamStats
 			loading.value = false
-
 		})
 		.catch(err => {
 			console.log(err)
@@ -125,6 +125,12 @@ onUnmounted(() => {
 					</template>
 				</transition-group>
 			</div>
+		</div>
+		<div
+			v-else
+			class="font-code"
+		>
+			Aucune équipe sélectionnée.
 		</div>
 	</article>
 </template>
