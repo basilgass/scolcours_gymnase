@@ -234,6 +234,8 @@ export function useQuestionValidation(questionData: questionDataInterface) {
 			} else {
 				results[index] = validateSingle(userAnswer, validator.answer, validator.checker.checker, override)
 			}
+
+			results[index].index = index + 1
 		})
 
 		if (mixedIndices.length > 0) {
@@ -274,6 +276,7 @@ export function useQuestionValidation(questionData: questionDataInterface) {
 				})
 			} else {
 				errorMessages.value = [{
+					index: 1,
 					result: false,
 					score: 0,
 					message: "les réponses ne concordent pas."

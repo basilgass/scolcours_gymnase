@@ -3,6 +3,7 @@
 import {GeneratorInterface} from "@/types/modelInterfaces.ts"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 import ChallengeTraining from "@/Components/Challenges/ChallengeTraining.vue"
+import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
 
 defineOptions({layout: LayoutMain})
 defineProps<{
@@ -11,11 +12,19 @@ defineProps<{
 </script>
 
 <template>
-	<article>
+	<section>
+		<article-title
+			:title="generator.title"
+			:return-link="{
+				url: route('generators.index'),
+				label: 'liste de tous les générateurs'
+			}"
+		/>
+		
 		<suspense>
 			<challenge-training :generator />
 		</suspense>
-	</article>
+	</section>
 </template>
 
 <style scoped>

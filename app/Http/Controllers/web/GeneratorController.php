@@ -13,7 +13,7 @@ class GeneratorController extends Controller
 	public function index()
 	{
 		// Affichage de tous les générateurs, utilisé dans l'admin.
-		return Inertia::render("Generators/admin/AdminGenerator", [
+		return Inertia::render("Generators/GeneratorIndex", [
 			"generators" => GeneratorResource::collection(Generator::all())
 		]);
 	}
@@ -33,10 +33,17 @@ class GeneratorController extends Controller
 			[
 				"generator"  => $generator,
 				"challenges" => ChallengeResource::collection(
-				$generator->challengeLevels()->with('challenge')->get()->pluck('challenge')->unique('id')->values()
-			),
+					$generator->challengeLevels()->with('challenge')->get()->pluck('challenge')->unique('id')->values()
+				),
 			]
 		);
 	}
 
+	public function admin()
+	{
+		// Affichage de tous les générateurs, utilisé dans l'admin.
+		return Inertia::render("Generators/admin/AdminGenerator", [
+			"generators" => GeneratorResource::collection(Generator::all())
+		]);
+	}
 }
