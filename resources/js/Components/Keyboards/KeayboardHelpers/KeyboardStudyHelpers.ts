@@ -5,6 +5,7 @@ import {
 	DOMAIN,
 	IBezierConfig,
 	IBezierPointInterface,
+	IGraphConstructorConfig,
 	Line,
 	Path,
 	PiGraph,
@@ -22,7 +23,7 @@ export interface studyConfigInterface {
 		live: boolean
 	}
 	draw: {
-		config: studyDrawConfigInterface
+		config: IGraphConstructorConfig
 	},
 	plot: {
 		enable: boolean,
@@ -33,16 +34,6 @@ export interface studyConfigInterface {
 		graph: boolean,
 		raw: boolean
 	},
-}
-
-export interface studyDrawConfigInterface {
-	ppu: number
-	xMax: number,
-	xMin: number,
-	xUnit: number,
-	yMax: number,
-	yMin: number,
-	yUnit: number,
 }
 
 export const studyButtonKeys = ["av", "ah", "ao", "!", "p", "z", "o", "t", "m", "M", "_"] as const
@@ -149,14 +140,18 @@ export class StudyGraph extends PiGraph {
 	protected _loadControls: boolean
 	protected _size: number
 
-	constructor(el: HTMLElement, loadControls: boolean) {
-		super(el, {
-			tex: (value: string) => katex.renderToString(value, {throwOnError: false})
-		})
+	constructor(el: HTMLElement, config: studyConfigInterface) {
+		super(el,
+			Object.assign(
+				{},
+				config.draw.config,
+				{tex: (value: string) => katex.renderToString(value, {throwOnError: false})}
+			)
+		)
 
 		this._size = 2 * this.toPixels(1) / 3
 
-		this._loadControls = loadControls
+		this._loadControls = config.plot.enable
 		this.addEnvTracePoints()
 	}
 
@@ -562,7 +557,11 @@ export class StudyGraph extends PiGraph {
 		const plotData: string[] = fx.split(",")
 		const plot: string = plotData.shift()
 
-		let domain: { min: number, max: number } = {min: -8, max: 8}
+		let domain: { min: number, max: number } = {
+			min: -this.config.origin.x / this.config.axis.x.x,
+			max: (this.config.width - this.config.origin.x) / this.config.axis.x.x
+		}
+
 		const domainIndex = plotData.findIndex(x => x.includes(':'))
 		if (domainIndex !== -1) {
 			const searchDomain = plotData.splice(domainIndex, 1)[0]

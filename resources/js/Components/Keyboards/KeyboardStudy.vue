@@ -14,11 +14,11 @@ import {
 	studyButtonKeys,
 	studyButtonsKeysType,
 	studyConfigInterface,
-	studyDrawConfigInterface,
 	StudyGraph
 } from "@/Components/Keyboards/KeayboardHelpers/KeyboardStudyHelpers.ts"
 import KeyboardStudyButton from "@/Components/Keyboards/KeayboardHelpers/KeyboardStudyButton.vue"
 import KeyboardStudyCreatedList from "@/Components/Keyboards/KeayboardHelpers/KeyboardStudyCreatedList.vue"
+import {COORDINATE_SYSTEM, IGraphConstructorConfig} from "pidraw"
 
 // props.keyboard
 const props = defineProps<KeyboardPropsInterface>()
@@ -160,38 +160,52 @@ const config = computed<studyConfigInterface>(() => {
 })
 
 // configration de l'objet PiDraw.
-function makeConfig(value?: string): studyDrawConfigInterface {
+function makeConfig(value?: string): IGraphConstructorConfig {
 	// value= cfg=x=-3:3,y=-3:3,unit=3;4
-	const output = {
-		xMin: -10,
-		xMax: 10,
-		yMin: -10,
-		yMax: 10,
-		xUnit: 1,
-		yUnit: 1,
-		ppu: 40
+	const ppu = 40
+	const output: IGraphConstructorConfig = {
+		ppu: ppu,
+		width: 800,
+		height: 800,
+		origin: {x: 400, y: 400},
+		axis: {
+			x: {x: ppu, y: 0},
+			y: {x: 0, y: -ppu}
+		},
+		system: COORDINATE_SYSTEM.CARTESIAN_2D
 	}
 
 	if (value === undefined || value === '') return output
 
-	value.split(',')
-		.forEach(item => {
-			if (item.startsWith('x=')) {
-				const [min, max] = item.substring(2).split(':').map(Number)
-				output.xMin = min
-				output.xMax = max
-			} else if (item.startsWith('y=')) {
-				const [min, max] = item.substring(2).split(':').map(Number)
-				output.yMin = min
-				output.yMax = max
-			} else if (item.startsWith('unit=')) {
-				const [x, y] = item.substring(5).split(';').map(Number)
-				output.xUnit = x
-				output.yUnit = y
-			} else if (item.startsWith('ppu=')) {
-				output.ppu = +item.substring(4)
-			}
-		})
+	const unit = value.split(',')
+		.filter(u => u.startsWith('unit='))?.[0]
+		?.substring(5)
+		?.split(';').map(Number) ?? [1, 1]
+	if (unit.length === 2) {
+		unit[0] = isNaN(unit[0]) || unit[0] <= 0 ? 1 : unit[0]
+		unit[1] = isNaN(unit[1]) || unit[1] <= 0 ? 1 : unit[1]
+
+		output.axis.x.x = unit[0] * ppu
+		output.axis.y.y = -unit[1] * ppu
+	}
+
+	const xMinMax = value.split(',')
+		.filter(x => x.startsWith('x='))?.[0]
+		.substring(2)
+		.split(':').map(Number).sort() ?? []
+	if (xMinMax.length === 2 && xMinMax[0] !== xMinMax[1] && !isNaN(xMinMax[0]) && !isNaN(xMinMax[1])) {
+		output.width = Math.abs((xMinMax[1] - xMinMax[0])) * ppu
+		output.origin.x = -xMinMax[0] * ppu
+	}
+
+	const yMinMax = value.split(',')
+		?.filter(x => x.startsWith('y='))?.[0]
+		?.substring(2)
+		?.split(':').map(Number).sort() ?? []
+	if (yMinMax.length === 2 && yMinMax[0] !== yMinMax[1] && !isNaN(yMinMax[0]) && !isNaN(yMinMax[1])) {
+		output.height = Math.abs((yMinMax[1] - yMinMax[0])) * ppu
+		output.origin.y = yMinMax[1] * ppu
+	}
 
 	return output
 }
@@ -250,7 +264,7 @@ function parseAnswerToKeys(value: string): studyButtonsKeysType[] {
 }
 
 onMounted(() => {
-	graph = new StudyGraph(draw.value, config.value.plot.enable)
+	graph = new StudyGraph(draw.value, config.value)
 
 	// Création des plots de départ
 	if (config.value.show.fx.length > 0) {
