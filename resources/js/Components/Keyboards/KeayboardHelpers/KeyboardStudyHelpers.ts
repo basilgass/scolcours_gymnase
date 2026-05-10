@@ -268,7 +268,7 @@ export class StudyGraph extends PiGraph {
 
 	addAV(value: string): itemGraphInterface {
 		const x = (new NumExp(value)).evaluate({})
-		const y = {min: -6, max: 6}
+		const y = this.BBox.y
 		const posX = this.toPixels({x, y: 0}).x
 
 		const p = this.makeLine({x: posX, y: 0}, {x: 0, y: 1})
