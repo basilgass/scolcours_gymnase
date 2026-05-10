@@ -39,18 +39,28 @@ export class TableofsignChecker extends CheckerAbstract {
 	}
 
 	override checkFormat(value: string): string {
-		const [zeroes, signs, grows, curves] = value.split('@')
+		const [zeroes, signs, grows_or_curves, coordinates] = value.split('@')
 
 		if (!zeroes) return super.checkFormat(value)
 
 		const columns = 2 * zeroes.split(',').length + 1
-		
+
+		// Ligne de signes
 		if (signs === undefined) return "il faut entrer des signes."
 		if (signs.length !== columns) return "il manque des éléments dans la ligne des signes."
 		if (signs.replaceAll(/[+\-zd!]/g, '').length > 0) return "il y a des signes non compatibles."
 
-		if (grows && grows.length !== columns) return "il manque des éléments dans la ligne de croissance."
-		if (curves && curves.length !== columns) return "il manque des éléments dans la ligne de courbure."
+		// Ligne de croissance ou de courbure
+		if (grows_or_curves && grows_or_curves.length !== columns) {
+			return "il manque des éléments dans la dernière ligne."
+		}
+
+		// Coordonnées - chaque coordonnées doit être complète !
+		// coordinates.split(',').forEach(coord => {
+		// 	if (!coord.startsWith('(') || !coord.endsWith(')') || coord.split(';').length !== 2) {
+		// 		return "il y a une coordonnées qui n'est pas formatée correctement."
+		// 	}
+		// })
 
 		return super.checkFormat(value)
 	}

@@ -2,7 +2,7 @@
 import KeyboardDisplay from "@/Components/Keyboards/KeyboardDisplay.vue"
 import TableOfSigns from "@/Components/Pi/TableOfSigns.vue"
 import {TABLE_OF_SIGNS_VALUES} from "pimath"
-import {computed, nextTick, onMounted, ref} from "vue"
+import {computed, nextTick, onMounted, ref, watch} from "vue"
 import ScButton from "@/Components/Ui/Button/scButton.vue"
 import type {
 	KeyboardEmitsInterface,
@@ -90,7 +90,6 @@ const showKeyboard = ref("zeroes")
 
 const changeKeyboard = function (event) {
 	// event = {input, raw, tex}
-
 	// mise à jour du tableau de signes
 	switch (showKeyboard.value) {
 		case "zeroes":
@@ -109,6 +108,7 @@ const changeKeyboard = function (event) {
 	}
 
 	onChange()
+
 }
 
 // Génération de la réponse pour comparaison et de l'affichage.
@@ -120,15 +120,31 @@ const zeroes = ref({input: "", tex: "", raw: ""}),
 	tosUI = ref(null),
 	answerValue = computed(() => {
 		let r = `${zeroes.value.input}@${signs.value.input}`
+
 		if (withGrows.value) {
 			r += `@${grows.value.input}`
 		}
+
 		if (withExtremes.value) {
 			r += `@${coords.value.input}`
 		}
 
 		return r
 	})
+
+watch(showKeyboard, () => {
+	onChange()
+})
+const coordsForTos = computed(() => {
+	if (!withExtremes.value) return null
+
+	const c = coords.value.input.split(',')
+	if (showKeyboard.value === 'coords' && c[c.length - 1] === '') {
+		c[c.length - 1] = '?'
+	}
+
+	return c
+})
 
 // Initialisation au démarrage.
 onMounted(() => {
@@ -145,12 +161,12 @@ onMounted(() => {
 		>
 			<table-of-signs
 				ref="tosUI"
-				:extremes="withExtremes ? coords.input.split(','): null"
-				:label="tosName"
 				:mode="tosMode"
-				:result-line="grows.input.split('') as TABLE_OF_SIGNS_VALUES[]"
+				:label="tosName"
 				:roots="zeroes.input.split(',')"
 				:signs="signs.input.split('') as TABLE_OF_SIGNS_VALUES[]"
+				:result-line="grows.input.split('') as TABLE_OF_SIGNS_VALUES[]"
+				:extremes="coordsForTos"
 			/>
 		</div>
 

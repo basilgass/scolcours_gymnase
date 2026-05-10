@@ -11,6 +11,7 @@ const props = defineProps<{
 
 const formattedExtremes = computed<string[]>(() => {
 	const arr = []
+
 	for (let i = 0; i < 2 * props.roots.length + 1; i++) {
 		const extreme = props.extremes[(i - 1) / 2] ?? ""
 		const root = extreme === "" ? "" : `(${props.roots[(i - 1) / 2]};${extreme})`
@@ -26,7 +27,7 @@ const formattedExtremes = computed<string[]>(() => {
 
 <template>
 	<tr
-		class="border-t-2 border-gray-400"
+		class="border-t-2 border-gray-400 text-xs"
 	>
 		<td
 			class="min-w-25 border-r border-gray-400"
