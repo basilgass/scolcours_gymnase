@@ -2,7 +2,7 @@
 import KeyboardDisplay from "@/Components/Keyboards/KeyboardDisplay.vue"
 import TableOfSigns from "@/Components/Pi/TableOfSigns.vue"
 import {TABLE_OF_SIGNS_VALUES} from "pimath"
-import {computed, nextTick, onMounted, ref, watch} from "vue"
+import {computed, nextTick, onMounted, ref, useTemplateRef, watch} from "vue"
 import ScButton from "@/Components/Ui/Button/scButton.vue"
 import type {
 	KeyboardEmitsInterface,
@@ -11,6 +11,7 @@ import type {
 	KeyboardPropsInterface
 } from "@/types/keyboardInterfaces.ts"
 
+// TODO: ajouter la possibilité de n'avoir qu'une ligne à remplir (donc pré-construire le tableau et cacher les boutons inutiles.
 const props = defineProps<KeyboardPropsInterface>()
 
 const emits = defineEmits<KeyboardEmitsInterface>()
@@ -33,6 +34,14 @@ async function setInput(value?: string): Promise<KeyboardInputInterface> {
 			coords.value = {input: c, tex: "", raw: ""}
 		}
 	}
+
+	if (growsOnly.value) {
+		const [z, s, g, c] = props.reference.split("@")
+
+		zeroes.value = {input: z, tex: "", raw: ""}
+		signs.value = {input: s ?? "", tex: "", raw: ""}
+	}
+
 	// Wait for the DOM to be updated.
 	await nextTick()
 
@@ -61,6 +70,11 @@ const tosName = computed(() => {
 	// le nom de la fonction
 	const names = props.keyboard.parameters.filter(x => x.includes("(") && x.includes(")"))
 	return names.length === 0 ? "f(x)" : names[0]
+})
+
+const growsOnly = computed(() => {
+	console.log(props.keyboard.parameters)
+	return props.keyboard.parameters.includes('grows')
 })
 
 const withGrows = computed(() => {
@@ -112,25 +126,28 @@ const changeKeyboard = function (event) {
 }
 
 // Génération de la réponse pour comparaison et de l'affichage.
-const zeroes = ref({input: "", tex: "", raw: ""}),
-	zeroesKeyboard = ref(props.keyboard.parameters.includes("float") ? "algebra" : "exact"),
-	signs = ref({input: "", tex: "", raw: ""}),
-	grows = ref({input: "", tex: "", raw: ""}),
-	coords = ref({input: "", tex: "", raw: ""}),
-	tosUI = ref(null),
-	answerValue = computed(() => {
-		let r = `${zeroes.value.input}@${signs.value.input}`
+const zeroesKeyboard = ref(props.keyboard.parameters.includes("float") ? "algebra" : "exact")
 
-		if (withGrows.value) {
-			r += `@${grows.value.input}`
-		}
+const zeroes = ref({input: "", tex: "", raw: ""})
+const signs = ref({input: "", tex: "", raw: ""})
+const grows = ref({input: "", tex: "", raw: ""})
+const coords = ref({input: "", tex: "", raw: ""})
 
-		if (withExtremes.value) {
-			r += `@${coords.value.input}`
-		}
+const tosUI = useTemplateRef<InstanceType<typeof TableOfSigns>>('tosUI')
 
-		return r
-	})
+const answerValue = computed(() => {
+	let r = `${zeroes.value.input}@${signs.value.input}`
+
+	if (withGrows.value) {
+		r += `@${grows.value.input}`
+	}
+
+	if (withExtremes.value) {
+		r += `@${coords.value.input}`
+	}
+
+	return r
+})
 
 watch(showKeyboard, () => {
 	onChange()
@@ -149,6 +166,10 @@ const coordsForTos = computed(() => {
 // Initialisation au démarrage.
 onMounted(() => {
 	onChange()
+
+	if (growsOnly.value) {
+		showKeyboard.value = "grows"
+	}
 })
 
 
@@ -173,6 +194,7 @@ onMounted(() => {
 
 		<div class="max-w-xl mx-auto flex flex-col gap-3 keyboard">
 			<div
+				v-if="!growsOnly"
 				:class="(withGrows && !withExtremes)?'grid-cols-3':'grid-cols-2'"
 				class="grid gap-3"
 			>

@@ -16,6 +16,7 @@ import {computed} from "vue"
 // 1.   PiMath.Rational
 // 2.   <zero>@<signs>@<croissance>@<extremes>
 
+// TODO: améliorer avec les options : croissance (dx) ou courbure (ddx)
 
 const props = defineProps<{
 	illustration: WidgetPropsInterface
