@@ -1,0 +1,13 @@
+{
+  "ignorePatterns": [
+    "public/build/**",
+    "public/vendor/**",
+    "storage/framework/**",
+    "storage/logs/**",
+    "storage/app/public/**",
+    "bootstrap/cache/**",
+    ".phpunit.cache/**",
+    "_ide_helper.php",
+    "*.log"
+  ]
+}

@@ -18,6 +18,7 @@ import FormCodearea from "@/Components/Form/FormCodearea.vue"
 import FormFraction from "@/Components/Form/FormFraction.vue"
 import FormVector from "@/Components/Form/FormVector.vue"
 import FormKeyboard from "@/Components/Form/FormKeyboard.vue"
+import FormNumberSet from "@/Components/Form/FormNumberSet.vue"
 import {useFormMaker} from "@/Composables/useFormMaker.ts"
 
 defineOptions({inheritAttrs: false})
@@ -39,6 +40,7 @@ const componentMap: Record<FormJsonFieldType, Component> = {
 	fraction: FormFraction,
 	vector: FormVector,
 	keyboard: FormKeyboard,
+	numberset: FormNumberSet,
 }
 
 interface Props extends FormMakerBaseProps {

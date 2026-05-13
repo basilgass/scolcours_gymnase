@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 // Affiche un challenge, avec la "selection" (game, training)
 import ChallengeGame from "@/Components/Challenges/ChallengeGame.vue"
-import ChallengeTraining from "@/Components/Challenges/ChallengeTraining.vue"
+import GeneratorDisplay from "@/Components/Challenges/GeneratorDisplay.vue"
 import {ChallengeGameState, ChallengeInterface} from "@/types/modelInterfaces"
 import {GeneratorInterface} from "@/types/challengeInterfaces.ts"
 
@@ -25,7 +25,7 @@ const emits = defineEmits<{
 			/>
 		</suspense>
 		<suspense v-else>
-			<challenge-training
+			<generator-display
 				:key="selectedGenerator.slug"
 				:generator="selectedGenerator"
 			/>

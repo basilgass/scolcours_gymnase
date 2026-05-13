@@ -107,7 +107,7 @@ type TextInputType =
 
 type FormJsonFieldType =
   TextInputType | 'textarea' | 'select' | 'switch' |
-  'codearea' | 'fraction' | 'vector' | 'keyboard'
+  'codearea' | 'fraction' | 'vector' | 'keyboard' | 'numberset'
 
 type FormComponentType =
   FormJsonFieldType | 'search' | 'json' | 'theme' | 'chapter' | 'team' | 'deck'
@@ -241,7 +241,7 @@ Formulaire dynamique construit depuis un schéma clé→type. Générique `T ext
 
 Les champs vides sont **exclus** de l'objet résultant. Appuyer sur Entrée passe au champ suivant (boucle).
 
-**Composants supportés dans `map`** : tous les types de `FormJsonFieldType` (text, id, email, password, number, color, range, date, datetime-local, textarea, select, switch, codearea, fraction, vector, keyboard).
+**Composants supportés dans `map`** : tous les types de `FormJsonFieldType` (text, id, email, password, number, color, range, date, datetime-local, textarea, select, switch, codearea, fraction, vector, keyboard, numberset).
 
 ---
 
@@ -249,27 +249,85 @@ Les champs vides sont **exclus** de l'objet résultant. Appuyer sur Entrée pass
 
 Input pour fractions mathématiques. Utilise `FormMakerWrapper` + pimath.
 
-**Model** : `string`
+**Model** : `string` (saisie brute, ex: `"3/4"`)
 
-Aucune prop spécifique. `validate()` retourne une erreur si la valeur n'est pas reconnue par `new Fraction(value)` ou si le dénominateur est zéro.
+**Événement `@update`** : émet une instance `Fraction` de pimath (ou `null` si invalide / division par zéro). Contrairement au pattern par défaut, `@update` ne renvoie pas la string brute mais la version structurée :
+
+```vue
+<FormFraction v-model="raw" @update="frac = $event" />
+```
+
+Aucune prop spécifique. `validate()` retourne `["la fraction n'est pas reconnue"]` si le computed interne `parseFraction` est `null` avec une saisie non vide.
 
 Prepend fixe : `\(a/b=\)`.
+
+**Note technique — réactivité Vue + classes pimath** : l'instance émise est passée dans `markRaw()` avant émission. Les classes pimath utilisent des champs privés ES2022 (`#numerator`, `#denominator`...) qui sont incompatibles avec le `Proxy` créé par `reactive()`/`ref()` de Vue 3 — sans `markRaw`, accéder à `.tex` sur une `Fraction` stockée dans un `ref` côté consommateur lève `TypeError: Cannot read private field`. Avec `markRaw`, le consommateur peut utiliser un `ref` standard sans précaution.
 
 ---
 
 ### FormVector
 
-Input pour vecteurs. Utilise `FormMakerWrapper` + pimath.
+Input pour vecteurs. Utilise `FormMakerWrapper` + pimath `Vector`.
 
-**Model** : `string`
+**Model** : `string` (saisie brute, ex: `"(2/3;5)"`)
+
+**Événement `@update`** : émet une instance `Vector` de pimath (ou `null` si invalide). Comme `FormFraction`, `@update` ne renvoie pas la string brute :
+
+```vue
+<FormVector v-model="raw" @update="vec = $event" />
+```
 
 Aucune prop spécifique en dehors des communes (notamment `output`).
 
-Format attendu : `(a,b)` ou `(a,b,c)` — parenthèses obligatoires, composantes séparées par des virgules. Chaque composante est validée via `new Fraction(comp)`.
+Format attendu : `(a;b)` ou `(a;b;c)` — parenthèses obligatoires, composantes séparées par `,` ou `;` (les deux acceptés via le parser interne de pimath). Chaque composante peut être un entier ou une fraction (`2/3`).
+
+Validation : un vecteur est considéré invalide si son `display` est `(())` (vide) ou si son `tex` contient `NaN`.
 
 `output` : affiche le vecteur rendu en LaTeX (`\begin{pmatrix}...\end{pmatrix}`) sous l'input. Supporte `$VALUE$` comme placeholder dans une string template.
 
-Prepend fixe : `\((a,b)=\)`.
+Prepend fixe : `\((a;b)=\)`.
+
+**Note technique — réactivité Vue + classes pimath** : l'instance émise est passée dans `markRaw()` avant émission (même raison que `FormFraction` : les champs privés `#field` des classes pimath sont incompatibles avec le `Proxy` Vue).
+
+---
+
+### FormNumberSet
+
+Input pour saisir un ensemble de nombres entiers via une syntaxe type "pages d'impression". Utilise `FormMakerWrapper`.
+
+**Model** : `string` (chaîne brute saisie, ex: `"1,3-5,9"`)
+
+**Événement `@update`** : émet le `number[]` résolu (trié, dédupliqué). Contrairement aux autres Form*, `@update` ne renvoie **pas** la valeur du model mais la version structurée. Utilisation typique :
+
+```vue
+<FormNumberSet v-model="raw" @update="values = $event" />
+```
+
+Aucune prop spécifique. La valeur stockée reste la chaîne ; pour obtenir le `number[]` sans passer par l'événement, utiliser le helper `parseNumberSet` (voir ci-dessous).
+
+**Syntaxe acceptée** :
+
+| Forme | Exemple | Résultat |
+|---|---|---|
+| Entier seul | `5` | `[5]` |
+| Liste | `1,3,9` | `[1,3,9]` |
+| Range avec `-` (positifs) | `3-5` | `[3,4,5]` |
+| Range avec `..` (toute valeur) | `-5..-2` | `[-5,-4,-3,-2]` |
+| Combinaison | `1,3-5,9` | `[1,3,4,5,9]` |
+
+**Règles** :
+- Le `-` n'est utilisable comme séparateur de range que si **les deux bornes sont positives**. Pour un range avec négatifs, utiliser `..` (sinon erreur de validation).
+- L'ordre croissant est exigé : un input désordonné produit une erreur, mais le tableau résultant est trié et dédupliqué.
+- Un range inversé (`5..3`) produit une erreur et est néanmoins expansé/réordonné.
+
+**Output** (prop `output`) : affiche l'ensemble en LaTeX (`\big\{ 3;4;5;6;7 \big\}`). Au-delà de 12 éléments, l'affichage est tronqué avec le cardinal (`\big\{ 1;2;3;\ldots;99;100 \big\} \implies \# = 100`). Supporte `$VALUE$` comme placeholder.
+
+**Helper réutilisable** : `import {parseNumberSet, formatNumberSetKatex, NUMBERSET_TRUNCATE_THRESHOLD} from "@/Composables/useNumberSet.ts"`
+
+```typescript
+const {values, errors, sorted} = parseNumberSet("1,3-5,9")
+// values: [1,3,4,5,9], errors: [], sorted: true
+```
 
 ---
 
@@ -346,3 +404,61 @@ Les composants suivants gèrent leur propre affichage et leur état `disabled` i
 6. Si non compatible : gérer manuellement `opacity-50 pointer-events-none select-none` sur la div racine quand `disabled`
 7. Ajouter le type dans `FormJsonFieldType` (si utilisable dans `FormJson`) ou `FormComponentType`
 8. Ajouter l'entrée dans le `componentMap` de `FormJson.vue` si applicable
+9. **Créer l'exemple de démonstration** dans `resources/js/Components/Devs/FormExamples/ExampleForm[Nom].vue` (voir section ci-dessous)
+10. **L'enregistrer** dans `resources/js/Components/Devs/DevFormMaker.vue` (import + entrée dans le template)
+11. **Si `@update` émet une instance de classe pimath** (`Fraction`, `Vector`, `Polynom`, etc.) : envelopper l'instance dans `markRaw()` avant `emits('update', ...)`. Les champs privés `#field` de pimath cassent la réactivité Vue lorsque l'instance est stockée dans un `ref` consommateur. Voir la note technique dans `FormFraction` / `FormVector`.
+
+---
+
+## Galerie de démonstration (`Devs/FormExamples`)
+
+Chaque composant Form possède un exemple de démonstration vivant dans `resources/js/Components/Devs/FormExamples/`. Ces exemples servent de :
+- documentation interactive pour développeurs
+- terrain de test visuel (les options globales injectées via `provide('formBaseProps')` s'appliquent à tous les exemples)
+- vérification rapide qu'un composant fonctionne après modification
+
+### Règle de maintenance
+
+À chaque fois qu'un composant `Form*.vue` est **créé** ou **modifié** (nouvelle prop, changement de comportement, nouveau type de model) :
+
+1. **Création d'un composant Form** → créer un nouveau `ExampleForm[Nom].vue` ET l'ajouter à `DevFormMaker.vue` (import + balise dans le template).
+2. **Modification d'un composant Form existant** → vérifier que l'exemple correspondant couvre la nouvelle fonctionnalité ; le mettre à jour sinon (ajouter une option dans `<template #options>`, ajuster la valeur initiale, etc.).
+
+### Pattern d'un exemple
+
+```vue
+<script setup lang="ts">
+import {inject, ref} from "vue"
+import FormExampleWrapper from "./FormExampleWrapper.vue"
+import FormXxx from "@/Components/Form/FormXxx.vue"
+import type {FormMakerBaseProps} from "@/Components/Form/FormMakerInterface.ts"
+
+const baseProps = inject<FormMakerBaseProps>('formBaseProps', {})
+const value = ref(/* valeur initiale représentative */)
+// refs supplémentaires pour les options spécifiques au composant
+</script>
+
+<template>
+  <FormExampleWrapper title="FormXxx">
+    <template #options>
+      <!-- contrôles pour les props spécifiques (checkboxes, inputs...) -->
+      <p class="text-xs text-gray-500">Brève explication de la syntaxe / format attendu.</p>
+    </template>
+
+    <template #default="{ baseProps: bp }">
+      <FormXxx v-bind="bp" v-model="value" /* props spécifiques */ />
+    </template>
+
+    <template #value>
+      <code class="text-xs font-code">{{ JSON.stringify(value) }}</code>
+    </template>
+  </FormExampleWrapper>
+</template>
+```
+
+### Conventions
+
+- **Titre** : exact nom du composant (`FormVector`, `FormNumberSet`...).
+- **Slot `#default`** : reçoit `baseProps` via le scope du wrapper et le binde sur le composant. Ne pas re-binder manuellement `baseProps` injecté.
+- **Slot `#options`** : checkboxes / inputs pour les props **spécifiques** au composant (les props communes sont gérées par le panneau global). Inclure une `<p class="text-xs text-gray-500">` avec la doc rapide de la syntaxe.
+- **Slot `#value`** : affiche la valeur courante (généralement `JSON.stringify(value)`), pour observation et débogage.

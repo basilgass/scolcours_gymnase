@@ -51,6 +51,11 @@ class Generator extends Model
 		"title",
 		"slug",
 		"theme_id",
+		"config",
+	];
+
+	protected $casts = [
+		"config" => "array"
 	];
 
 	use HasScoresTrait;

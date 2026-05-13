@@ -16,7 +16,7 @@ export type TextInputType =
 	'text' | 'id' | 'email' | 'password' | 'number' | 'color' | 'range' | 'date' | 'datetime-local'
 
 export type FormJsonFieldType =
-	TextInputType | 'textarea' | 'select' | 'switch' | 'codearea' | 'fraction' | 'vector' | 'keyboard'
+	TextInputType | 'textarea' | 'select' | 'switch' | 'codearea' | 'fraction' | 'vector' | 'keyboard' | 'numberset'
 
 export type FormComponentType =
 	FormJsonFieldType | 'search' | 'json' | 'theme' | 'chapter' | 'team' | 'deck'

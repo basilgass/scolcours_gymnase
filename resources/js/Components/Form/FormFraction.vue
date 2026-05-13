@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {ref, useTemplateRef} from "vue"
+import {computed, markRaw, useTemplateRef} from "vue"
 import {FormElementEmits, FormElementExpose, FormMakerBaseProps} from "@/Components/Form/FormMakerInterface.ts"
 import {Fraction} from "pimath"
 import FormMakerWrapper from "@/Components/Form/FormMakerWrapper.vue"
@@ -19,27 +19,35 @@ defineExpose<FormElementExpose>({
 	validate
 })
 
-function validate(): string[] {
-	if (!value.value) return []
+const parseFraction = computed<Fraction | null>(() => {
+	if (!value.value) return null
+
 	try {
 		const F = new Fraction(value.value)
-		if (F.isNaN()) return ["la fraction n'est pas reconnue"]
+		if (F.isNaN()) return null
+
+		const [, den] = value.value.split('/')
+		if (den && Number(den) === 0) return null
+
+		return markRaw(F)
 	} catch {
-		return ["la fraction n'est pas reconnue"]
+		return null
 	}
-	return []
+})
+
+function validate(): string[] {
+	return parseFraction.value === null
+		? ["la fraction n'est pas reconnue"]
+		: parseFraction.value.isInfinity()
+			? ['division par zéro !']
+			: []
 }
 
 function onChange() {
-	errors.value = []
-	const [, den] = value.value.split('/')
-	if (den && Number(den) === 0) {
-		errors.value = ['Division par zéro!']
-	} else {
-		errors.value = validate()
-	}
+	errors.value = validate()
+
 	emits('errors', errors.value)
-	emits('update', value.value)
+	emits('update', parseFraction.value)
 }
 </script>
 
@@ -52,8 +60,8 @@ function onChange() {
 	>
 		<input
 			ref="input"
-			type="text"
 			v-model="value"
+			type="text"
 			:disabled="props.disabled"
 			class="px-2 py-1 w-full focus:outline-hidden focus:ring-0"
 			v-bind="$attrs"

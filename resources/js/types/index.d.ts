@@ -7,6 +7,7 @@ import {
 } from "@/types/modelInterfaces"
 import {AxiosError, AxiosResponse} from "axios"
 import {ComputedRef, Ref} from "vue"
+import {GeneratorParams} from "@/Composables/useGenerator.ts"
 
 export type ThemesSlug =
 	"algebre" |
@@ -103,7 +104,7 @@ export interface generatorResultInterface {
 	code: string
 	level: Ref<number>
 	list: (n: number) => QuestionDynamicInterface[]
-	question: (value?: generatedQuestionInterface) => QuestionDynamicInterface
+	question: (value?: generatedQuestionInterface, params?: GeneratorParams) => QuestionDynamicInterface
 	random: () => generatedQuestionInterface,
 }
 

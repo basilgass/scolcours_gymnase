@@ -285,6 +285,7 @@ function deleteIllustration(id: number) {
 							:rows="20"
 							label="corps"
 							language="latex"
+							wrap
 						/>
 						<div v-show="tab === 'script'">
 							<FormCodearea
@@ -292,6 +293,7 @@ function deleteIllustration(id: number) {
 								:rows="20"
 								label="script"
 								language="javascript"
+								wrap
 							/>
 							<div class="flex">
 								<button @click="addScriptsButtons">
@@ -304,6 +306,7 @@ function deleteIllustration(id: number) {
 							v-model="theBlock.json"
 							:rows="20"
 							language="json"
+							wrap
 						/>
 					</div>
 

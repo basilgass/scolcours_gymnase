@@ -2,7 +2,7 @@
 
 import {GeneratorInterface} from "@/types/modelInterfaces.ts"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
-import ChallengeTraining from "@/Components/Challenges/ChallengeTraining.vue"
+import GeneratorDisplay from "@/Components/Challenges/GeneratorDisplay.vue"
 import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
 
 defineOptions({layout: LayoutMain})
@@ -20,9 +20,9 @@ defineProps<{
 				label: 'liste de tous les générateurs'
 			}"
 		/>
-		
+
 		<suspense>
-			<challenge-training :generator />
+			<generator-display :generator />
 		</suspense>
 	</section>
 </template>

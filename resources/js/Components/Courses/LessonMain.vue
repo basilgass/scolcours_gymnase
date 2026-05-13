@@ -3,7 +3,7 @@
 import ChallengeDisplay from "@/Components/Challenges/ChallengeDisplay.vue"
 import LessonIsUnknwon from "@/Components/Courses/LessonIsUnknwon.vue"
 import PostDisplay from "@/Components/Posts/PostDisplay.vue"
-import ChallengeTraining from "@/Components/Challenges/ChallengeTraining.vue"
+import GeneratorDisplay from "@/Components/Challenges/GeneratorDisplay.vue"
 import DeckDisplay from "@/Pages/Decks/DeckDisplay.vue"
 import {
 	ChallengeInterface,
@@ -37,7 +37,7 @@ defineProps<{
 			:selected-generator="null"
 		/>
 		<suspense v-else-if="lesson.lessonable_type==='Generator'">
-			<challenge-training
+			<generator-display
 				:generator="lessonable as GeneratorInterface"
 			/>
 		</suspense>

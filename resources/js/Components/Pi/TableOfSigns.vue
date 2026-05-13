@@ -23,6 +23,25 @@ interface TableOfSignsType {
 	size?: 'xs' | 'sm' | 'base'
 }
 
+
+export interface TABLE_OF_SIGNS_COLUMNS_SIZES {
+	name: string,
+	text: string,
+	infty: {
+		width: string,
+		mr: string,
+		ml: string
+	},
+	root: string,
+	row: {
+		first: string, // middle + infty et -ml-<infty>
+		middle: string,
+		last: string
+	},
+	header: string,
+
+}
+
 const props = withDefaults(defineProps<TableOfSignsType>(), {
 	mode: "signs",
 	label: "f(x)",
@@ -120,24 +139,6 @@ ${props.factors.length > 0 ? "\\tkzTabLine{}" : ""}
 	// Never !
 	return `le mode n'a pas pu être détecté correctement: ${tosMode.value}`
 })
-
-export interface TABLE_OF_SIGNS_COLUMNS_SIZES {
-	name: string,
-	text: string,
-	infty: {
-		width: string,
-		mr: string,
-		ml: string
-	},
-	root: string,
-	row: {
-		first: string, // middle + infty et -ml-<infty>
-		middle: string,
-		last: string
-	},
-	header: string,
-
-}
 
 const calculatedSize = computed(() => {
 	if (props.size) return props.size

@@ -2,20 +2,11 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
-
-class StoreGeneratorRequest extends FormRequest
+class StoreGeneratorRequest extends GeneratorRequest
 {
 	public function rules(): array
 	{
-		return [
-			'theme_id' => ['required', 'exists:themes,id'],
-			'title'    => ['required'],
-			'slug'     => ['required'],
-			'code'     => ['required'],
-			'template' => ['required'],
-			'keyboard' => ['required'],
-		];
+		return $this->commonRules();
 	}
 
 	public function prepareForValidation(): void
@@ -23,12 +14,8 @@ class StoreGeneratorRequest extends FormRequest
 		$this->merge([
 			'template' => $this->input('template', '\[question = answer\]'),
 			'keyboard' => $this->input('keyboard', 'algebra'),
-			'code'     => $this->input('code', "let question = '';\nlet answer = '';\n\nreturn {question, answer}"),
+			'code'     => $this->input('code', "let question = ''\nlet answer = ''\n\nreturn {question, answer}"),
+			'body'     => $this->input('body', 'description du générateur.'),
 		]);
-	}
-
-	public function authorize(): bool
-	{
-		return true;
 	}
 }

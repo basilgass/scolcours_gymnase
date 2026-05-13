@@ -12,6 +12,7 @@ import ExampleFormSearch from "./FormExamples/ExampleFormSearch.vue"
 import ExampleFormJson from "./FormExamples/ExampleFormJson.vue"
 import ExampleFormFraction from "./FormExamples/ExampleFormFraction.vue"
 import ExampleFormVector from "./FormExamples/ExampleFormVector.vue"
+import ExampleFormNumberSet from "./FormExamples/ExampleFormNumberSet.vue"
 import ExampleFormTheme from "./FormExamples/ExampleFormTheme.vue"
 import ExampleFormChapter from "./FormExamples/ExampleFormChapter.vue"
 import ExampleFormTeam from "./FormExamples/ExampleFormTeam.vue"
@@ -137,6 +138,7 @@ provide('formBaseProps', baseProps)
 			<ExampleFormJson />
 			<ExampleFormFraction />
 			<ExampleFormVector />
+			<ExampleFormNumberSet />
 			<ExampleFormTheme />
 			<ExampleFormChapter />
 			<ExampleFormTeam />
