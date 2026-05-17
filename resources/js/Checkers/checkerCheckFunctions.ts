@@ -87,11 +87,27 @@ function getFactors(value: string): string[] {
 }
 
 // REFACTOR : modify this using PolyFactor
-export function checkPolynomIsFactorized(value: string) {
+export function checkPolynomIsFactorized(value: string, strict: boolean) {
 	const factors = getFactors(value)
 
 	// On vérifie que chaque polynôme est entièrement factorisé
 	return factors.every(factor => {
-		return new Polynom(factor).factorize().length === 1
+		const items = new Polynom(factor).factorize()
+
+		// Il n'y a qu'un seul élément => OK
+		if (items.length === 1) return true
+
+		// Trops de facteur.
+		if (items.length > 2) return false
+
+		const k = items.find(f => f.degree().isZero())
+
+		// Il n'y a pas de facteur de degré zéro => pas factorisé
+		if (!k) return false
+
+		// Dans le cas strict, on ne laisse pas passer, sauf si un facteur est -1
+		if (strict) return k.display === '-1'
+
+		return true
 	})
 }

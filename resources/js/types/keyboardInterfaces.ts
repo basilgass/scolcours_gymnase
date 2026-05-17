@@ -9,7 +9,8 @@ export interface KeyboardPropsInterface {
 }
 
 export interface KeyboardEmitsInterface {
-	change: [value: KeyboardInputInterface]
+	change: [value: KeyboardInputInterface],
+	validate: [],
 }
 
 export interface KeyboardInputInterface {

@@ -269,6 +269,7 @@ function onErrorClosing(index: number) {
 				:reference="validator.answer"
 				class="touch-manipulation"
 				@change="updateQuestion($event, index)"
+				@validate="onValidate"
 			/>
 
 			<div

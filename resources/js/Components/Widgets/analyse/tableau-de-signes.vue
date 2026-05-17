@@ -45,6 +45,13 @@ const minimal = computed(() => {
 	return !!(config.value.includes("minimal") || config.value.includes("min"))
 })
 
+const mode = computed<"signs" | "grows" | "curves">(() => {
+	if (config.value.some(x => x === 'dx')) return 'grows'
+	if (config.value.some(x => x === 'ddx')) return 'curves'
+
+	return 'signs'
+})
+
 const size = computed(() => {
 	if (config.value.includes('xs')) return 'xs'
 	if (config.value.includes('sm')) return 'sm'
@@ -52,6 +59,7 @@ const size = computed(() => {
 
 	return null
 })
+
 // Define the way the table of signs is generated.
 const use_Pi_table_of_signs = computed(() => {
 	return !code.value.includes("@")
@@ -81,6 +89,7 @@ const custom_table_of_signs = computed<{
 		:fx="code"
 		:label="fnName"
 		:minimal="minimal"
+		:mode
 	/>
 	<table-of-signs
 		v-else

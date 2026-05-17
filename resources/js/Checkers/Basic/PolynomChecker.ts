@@ -76,7 +76,7 @@ export class PolynomChecker extends CheckerAbstract {
 		if (this.#factorised) {
 			try {
 				return makeCheckerResult(
-					checkPolynomIsFactorized(value)
+					checkPolynomIsFactorized(value, this.#factorised === 'F')
 						? ""
 						: "le polynôme n'est pas (entièrement) factorisé."
 				)

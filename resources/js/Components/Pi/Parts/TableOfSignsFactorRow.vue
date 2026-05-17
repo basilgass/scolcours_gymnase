@@ -2,8 +2,9 @@
 
 import {type TABLE_OF_SIGNS_VALUES} from "pimath"
 import {TABLE_OF_SIGNS_COLUMNS_SIZES} from "@/Components/Pi/TableOfSigns.vue"
+import {computed} from "vue"
 
-type TABLE_OF_SIGNS_VALUES_WITH_EXTREMES = TABLE_OF_SIGNS_VALUES | 'm' | 'M' | '_' | 'I'
+type TABLE_OF_SIGNS_VALUES_WITH_EXTREMES = TABLE_OF_SIGNS_VALUES | 'm' | 'M' | '_' | 'I' | 't'
 
 const props = defineProps<{
 	label: string,
@@ -26,29 +27,48 @@ function getCellClass(sign: string, n: number): string {
 
 	if (n === 0) classes.push(props.sizes.row.first)
 	else if (n === 2 * props.roots.length) classes.push(props.sizes.row.last)
-	else classes.push(props.sizes.row.middle)
+	else if (n % 2 === 0) classes.push(props.sizes.row.even)
+	else classes.push(props.sizes.row.odd)
 
 	classes.push('text-center py-2')
 
 	return classes.join(' ')
 }
+
+const cellText = computed(() => {
+	return props.signs.map((sign, n) => getCellText(sign, n))
+})
+
+function getCellText(sign, n) {
+	if (sign === 't') return ''
+
+	if (n % 2 === 0) return sign === 'h' ? '' : sign
+
+	return sign === 'z' ? '0' : ''
+}
+
+const cellClasses = computed(() => {
+	return props.signs.map((sign, n) => getCellClass(sign, n))
+})
 </script>
 
 <template>
 	<tr
-		class="border-t-2 border-gray-400 "
+		class="border-t-2 border-gray-400"
 	>
 		<td
 			v-katex.inline="`${label}`"
 			class="min-w-25 border-r text-center border-gray-400"
 		/>
 		<td>
-			<div class="flex flex-row">
+			<div class="flex flex-row min-h-10">
 				<div
-					v-for="(sign, n) in signs"
+					v-for="(sign, n) in cellText"
 					:key="`tos-foot-cell-${n}`"
-					v-katex.inline="n%2===0?(sign==='h'?'':sign):(sign==='z'?'0':'')"
-					:class="getCellClass(sign, n)"
+					v-katex.inline="sign"
+					:data-tos="`sign-${n}`"
+					:class="cellClasses[n]"
+					class="self-stretch"
 				/>
 			</div>
 		</td>

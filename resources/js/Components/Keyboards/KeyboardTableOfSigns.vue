@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import KeyboardDisplay from "@/Components/Keyboards/KeyboardDisplay.vue"
-import TableOfSigns from "@/Components/Pi/TableOfSigns.vue"
-import {TABLE_OF_SIGNS_VALUES} from "pimath"
+import TableOfSigns, {TABLE_OF_SIGNS_VALUES_WITH_EXTREMES} from "@/Components/Pi/TableOfSigns.vue"
 import {computed, nextTick, onMounted, ref, useTemplateRef, watch} from "vue"
 import ScButton from "@/Components/Ui/Button/scButton.vue"
 import type {
@@ -44,6 +43,8 @@ async function setInput(value?: string): Promise<KeyboardInputInterface> {
 
 	// Wait for the DOM to be updated.
 	await nextTick()
+
+	updateKeyboardActiveCell()
 
 	return {
 		input: answerValue.value,
@@ -122,7 +123,44 @@ const changeKeyboard = function (event) {
 	}
 
 	onChange()
+}
 
+function updateKeyboardActiveCell() {
+	let cell: HTMLElement | null = null
+
+	const activeClassName = 'active-cell'
+
+	// Remove all active cells
+	tosUI.value.$el.querySelectorAll(`.${activeClassName}`).forEach(x => x.classList.remove(activeClassName))
+
+	switch (showKeyboard.value) {
+		case "zeroes": {
+			const i = zeroes.value.input.split(',').length - 1
+			cell = tosUI.value.$el.querySelector(`[data-tos="zero-${i}"]`)
+			break
+		}
+		
+		case "signs": {
+			const i = signs.value.input.length
+			cell = tosUI.value.$el.querySelector(`[data-tos="sign-${i}"]`)
+			break
+		}
+
+		case "grows":
+		case "curves": {
+			const i = grows.value.input.length
+			cell = tosUI.value.$el.querySelector(`[data-tos="result-${i}"]`)
+			break
+		}
+
+		case "coords": {
+			const i = coordsForTos.value.length * 2 - 1
+			cell = tosUI.value.$el.querySelector(`[data-tos="extreme-${i}"]`)
+			break
+		}
+	}
+
+	if (cell) cell.classList.add(activeClassName)
 }
 
 // Génération de la réponse pour comparaison et de l'affichage.
@@ -152,6 +190,7 @@ const answerValue = computed(() => {
 watch(showKeyboard, () => {
 	onChange()
 })
+
 const coordsForTos = computed(() => {
 	if (!withExtremes.value) return null
 
@@ -173,6 +212,27 @@ onMounted(() => {
 })
 
 
+function fillLine(values: TABLE_OF_SIGNS_VALUES_WITH_EXTREMES[], length: number) {
+	const line: TABLE_OF_SIGNS_VALUES_WITH_EXTREMES[] = []
+
+	for (let i = 0; i < length; i++) {
+		line.push(values[i] ?? "t")
+	}
+
+	return line
+}
+
+const tos_data = computed(() => {
+	const roots = zeroes.value.input.split(',').filter(x => x !== '')
+	const n = roots.length * 2 + 1
+
+	return {
+		roots: zeroes.value.input.split(','),
+		signs: fillLine(signs.value.input.split('') as TABLE_OF_SIGNS_VALUES_WITH_EXTREMES[], n),
+		result: fillLine(grows.value.input.split('') as TABLE_OF_SIGNS_VALUES_WITH_EXTREMES[], n),
+	}
+})
+
 </script>
 
 <template>
@@ -184,9 +244,9 @@ onMounted(() => {
 				ref="tosUI"
 				:mode="tosMode"
 				:label="tosName"
-				:roots="zeroes.input.split(',')"
-				:signs="signs.input.split('') as TABLE_OF_SIGNS_VALUES[]"
-				:result-line="grows.input.split('') as TABLE_OF_SIGNS_VALUES[]"
+				:roots="tos_data.roots"
+				:signs="tos_data.signs"
+				:result-line="tos_data.result"
 				:extremes="coordsForTos"
 			/>
 		</div>
@@ -244,7 +304,6 @@ onMounted(() => {
 			</div>
 
 			<!-- Add keyboard to input the zeros -->
-
 			<KeyboardDisplay
 				v-show="showKeyboard==='zeroes'"
 				:keyboard="zeroesKeyboard"
@@ -259,11 +318,12 @@ onMounted(() => {
 				:custom-keys="{
 					'd': {type: 'math', display: '\\textcolor{red}{\\Vert}'},
 					'z': {type: 'math', display: '0'},
-					'h': {type: 'bg', display: 'bg-stripes bg-stripes-red-100'}
+					'h': {type: 'bg', display: 'striped-background'},
+					't': {type: 'math', display: '|'}
 				}"
 				:keyboard="{
 					grid: 'grid-cols-6',
-					layout: [['+', 2], ['-', 2], ['h', 2], ['z', 3], ['d', 3], ['@back', 3], ['@reset', 3]]
+					layout: [['+', 2], ['-', 2], ['h', 2], ['z', 2], ['d', 2], ['t', 2], ['@back', 3], ['@reset', 3]]
 				}"
 				@change="changeKeyboard"
 			/>
@@ -277,7 +337,7 @@ onMounted(() => {
 					'M': {type: 'text', display: 'max'},
 					'm': {type: 'text', display: 'min'},
 					'_': {type: 'text', display: 'replat'},
-					'h': {type: 'bg', display: 'bg-stripes bg-stripes-red-100'}
+					'h': {type: 'bg', display: 'striped-background'}
 				}"
 				:keyboard="{
 					grid: 'grid-cols-3',
@@ -293,7 +353,7 @@ onMounted(() => {
 					'n': {type: 'math', display: '\\cap'},
 					'd': {type: 'math', display: '\\textcolor{red}{\\Vert}'},
 					'I': {type: 'text', display: 'infl.'},
-					'h': {type: 'bg', display: 'bg-stripes bg-stripes-red-100'}
+					'h': {type: 'bg', display: 'striped-background'}
 				}"
 				:keyboard="{
 					grid: 'grid-cols-4',

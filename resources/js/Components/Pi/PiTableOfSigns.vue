@@ -26,14 +26,13 @@ const props = withDefaults(defineProps<PiTableOfSignsPropsType>(), {
 
 const emits = defineEmits(['update'])
 
-const computedPreviousLabel = computed(() => {
-	if (props.previousLabel !== "") {
-		return props.previousLabel
-	}
-
-	const [name, ...items] = props.label.split("(")
-	return `${name}${items.join("(")}`
-})
+// const computedPreviousLabel = computed(() => {
+// 	if (props.previousLabel !== "") {
+// 		return props.previousLabel
+// 	}
+//
+// 	return props.label
+// })
 
 const tos = computed(() => {
 	let fn: PolyFactor
@@ -125,7 +124,7 @@ function getExtremes(fn: PolyFactor, tos: TABLE_OF_SIGNS) {
 		:factors="tos.factors"
 		:label="label"
 		:mode="mode"
-		:previous-label="computedPreviousLabel"
+		:previous-label="previousLabel"
 		:roots="tos.roots"
 		:signs="tos.signs"
 		:extremes="tos.extremes"

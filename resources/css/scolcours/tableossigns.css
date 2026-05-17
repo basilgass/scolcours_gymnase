@@ -1,31 +1,3 @@
-.tos {
-	& .cell-v-line:after {
-		content: '';
-		position: absolute;
-		top: 0;
-		bottom: 0;
-		left: 50%;
-		border-left: 1px dashed #bbb;
-		transform: translate(-50%);
-		pointer-events: none;
-	}
-
-	& .cell-v-line-d:after {
-		content: '';
-		position: absolute;
-		top: 0;
-		bottom: 0;
-		left: 50%;
-		border-left: 1px double #e00c0c;
-		transform: translate(-50%);
-		pointer-events: none;
-	}
-
-	& .cell-v-line {
-		position: relative;
-	}
-}
-
 .cell-v-line {
 	.tos &:after {
 		content: '';
@@ -66,4 +38,8 @@
 	);
 	background-size: 10px 10px;
 	background-attachment: fixed;
+}
+
+.active-cell {
+	@apply bg-sky-100 dark:bg-sky-600 border border-sky-500;
 }

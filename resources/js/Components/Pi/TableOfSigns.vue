@@ -35,7 +35,8 @@ export interface TABLE_OF_SIGNS_COLUMNS_SIZES {
 	root: string,
 	row: {
 		first: string, // middle + infty et -ml-<infty>
-		middle: string,
+		odd: string,
+		even: string,
 		last: string
 	},
 	header: string,
@@ -77,16 +78,17 @@ const computedPreviousLabel = computed(() => {
 	}
 
 	const functionName = props.label.split("(")[0]
+	const variableName = props.label.split("(")[1].split(")")[0]
 
 	if (tosMode.value === 'grows') {
-		return `${functionName}'(x)`
+		return `${functionName}'(${variableName})`
 	}
 
 	if (tosMode.value === 'curves') {
-		return `${functionName}''(x)`
+		return `${functionName}''(${variableName})`
 	}
 
-	return `${functionName}(x)`
+	return `${functionName}(${variableName})`
 })
 
 const computedGrows = computed(() => {
@@ -96,6 +98,7 @@ const computedGrows = computed(() => {
 
 
 	const signs = [...props.signs]
+
 	for (let i = 1; i < signs.length - 1; i++) {
 		if (signs[i] === "z") {
 			if (signs[i - 1] === "-" && signs[i + 1] === "+") {
@@ -149,7 +152,9 @@ const calculatedSize = computed(() => {
 
 	return 'xs'
 })
+
 const columnSizes = computed<TABLE_OF_SIGNS_COLUMNS_SIZES>(() => {
+	// TODO: ColumnSizes - a revoir complétement - semble abéerrant d'avoir des marge négative.
 	if (calculatedSize.value === 'xs') {
 		return {
 			name: 'xs',
@@ -162,7 +167,8 @@ const columnSizes = computed<TABLE_OF_SIGNS_COLUMNS_SIZES>(() => {
 			root: 'w-12',
 			row: {
 				first: 'w-9 -mr-3',
-				middle: 'w-12 -ml-3 -mr-3',
+				even: 'w-12 -ml-3 -mr-3',
+				odd: 'w-6',
 				last: 'w-9 -ml-3'
 			},
 			header: 'w-25',
@@ -181,7 +187,8 @@ const columnSizes = computed<TABLE_OF_SIGNS_COLUMNS_SIZES>(() => {
 			root: 'w-16',
 			row: {
 				first: 'w-12 -mr-4',
-				middle: 'w-16 -ml-4 -mr-4',
+				even: 'w-16 -ml-4 -mr-4',
+				odd: 'w-8',
 				last: 'w-12 -ml-4'
 			},
 			header: 'w-25'
@@ -207,7 +214,8 @@ const columnSizes = computed<TABLE_OF_SIGNS_COLUMNS_SIZES>(() => {
 		root: 'w-20',
 		row: {
 			first: 'w-15 -mr-5',
-			middle: 'w-20 -ml-5 -mr-5',
+			even: 'w-20 -ml-5 -mr-5',
+			odd: 'w-10',
 			last: 'w-15 -ml-5'
 		},
 		header: 'w-25'

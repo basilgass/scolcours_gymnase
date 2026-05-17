@@ -14,7 +14,7 @@ defineProps<{
 			<th class="border-r border-gray-400" />
 			<th>
 				<div
-					class="flex flex-row items-center relative"
+					class="flex flex-row items-center relative min-h-10"
 				>
 					<div
 						v-katex.inline="`-\\infty`"
@@ -28,8 +28,10 @@ defineProps<{
 						v-for="(zero, n) in roots"
 						:key="n"
 						v-katex.inline.ascii="zero"
+						:data-tos="`zero-${n}`"
 						:class="[
 							sizes.text,
+							'self-stretch',
 							'text-center hover:bg-white py-2',
 							sizes.root
 						]"

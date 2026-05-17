@@ -45,7 +45,8 @@ const getCellClass = (sign: string, n: number) => {
 
 	if (n === 0) classes.push(props.sizes.row.first)
 	else if (n === 2 * props.roots.length) classes.push(props.sizes.row.last)
-	else classes.push(props.sizes.row.middle)
+	else if (n % 2 === 0) classes.push(props.sizes.row.even)
+	else classes.push(props.sizes.row.odd)
 
 	classes.push("text-center py-2 relative")
 	return classes.join(' ')
@@ -66,6 +67,7 @@ const getCellClass = (sign: string, n: number) => {
 					v-for="(sign, n) in signs"
 					:key="`tos-foot-cell-${n}`"
 					:class="getCellClass(sign, n)"
+					:data-tos="`result-${n}`"
 				>
 					<div
 						v-if="n%2===1"

@@ -19,6 +19,7 @@ import {
 import KeyboardStudyButton from "@/Components/Keyboards/KeayboardHelpers/KeyboardStudyButton.vue"
 import KeyboardStudyCreatedList from "@/Components/Keyboards/KeayboardHelpers/KeyboardStudyCreatedList.vue"
 import {COORDINATE_SYSTEM, IGraphConstructorConfig} from "pidraw"
+import ScButton from "@/Components/Ui/Button/scButton.vue"
 
 // props.keyboard
 const props = defineProps<KeyboardPropsInterface>()
@@ -385,6 +386,9 @@ function plotGraph() {
 	const givenAnswer = validateOutput()
 	if (config.value.plot.fx && givenAnswer === reference.value) {
 		graph.plotGraph(config.value.plot.fx)
+
+		// Validation automatique.
+		emits('validate')
 	} else {
 		graph.plotGraph()
 	}
@@ -502,12 +506,14 @@ function toggleControls() {
 				v-if="config.plot.enable"
 				class="text-center mt-2"
 			>
-				<button
-					class="btn btn-primary btn-xs px-10 py-2"
+				<sc-button
+					outline
+					theme
+					class="w-full"
 					@click="plotGraph"
 				>
 					tracer le graphe
-				</button>
+				</sc-button>
 			</div>
 		</div>
 
