@@ -3961,7 +3961,7 @@
     ]
   },
   "resources/js/Pages/Generators/admin/AdminGenerator.vue": {
-    "file": "assets/AdminGenerator-Cy35MWo8.js",
+    "file": "assets/AdminGenerator-CshpyNzA.js",
     "name": "AdminGenerator",
     "src": "resources/js/Pages/Generators/admin/AdminGenerator.vue",
     "isDynamicEntry": true,
@@ -4385,7 +4385,7 @@
     ]
   },
   "resources/js/app.ts": {
-    "file": "assets/app-DTJgvrbd.js",
+    "file": "assets/app-BPY9yL3K.js",
     "name": "app",
     "src": "resources/js/app.ts",
     "isEntry": true,

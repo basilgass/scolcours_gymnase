@@ -63,7 +63,7 @@ function updateStatus(event: boolean) {
 						Editer {{ generator.id }}
 					</sc-button>
 					<sc-button
-						:href="route('generators.show', {generator: generator.id})"
+						:href="route('generators.show', {generator: generator.slug})"
 						xs
 					>
 						<i class="bi bi-eye" /> Voir
