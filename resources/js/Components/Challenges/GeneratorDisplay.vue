@@ -6,7 +6,6 @@ import {computed, onMounted, ref} from "vue"
 import {useStoreScore} from "@/stores/useStoreScore.ts"
 import {ScoreGeneratorDataInterface} from "@/types/scoreInterfaces.ts"
 import {questionResultInterface} from "@/Components/Questions/QuestionInterface.ts"
-import {resolveParameters} from "@/Composables/useGeneratorParameters.ts"
 
 const props = defineProps<{
 	generator: GeneratorInterface,
@@ -14,7 +13,7 @@ const props = defineProps<{
 }>()
 
 /**
- * The current question counter, used to updated correctly the question
+ * The current question counter, used to update the question
  */
 const counter = ref(0)
 
@@ -59,17 +58,15 @@ const theQuestion = computed(() => {
 	const query = new URLSearchParams(window.location.search)
 	const queryParams = Object.fromEntries(query.entries()) as Record<string, string>
 
-	// Priorité : props.parameters > querystring. Les valeurs sont brutes (strings),
-	// resolveParameters applique les defaults du schéma et caste selon le format.
-	const overrides: Record<string, string> = {
+	// Priorité : props.parameters > querystring. Overrides bruts (strings) ;
+	// useGenerator applique les defaults du schéma et caste selon le format.
+	const overrides: GeneratorParams = {
 		...queryParams,
-		...(props.parameters as Record<string, string> ?? {})
+		...(props.parameters ?? {})
 	}
 
-	const params = resolveParameters(props.generator.parameters_schema, overrides)
-
 	if (counter.value >= 0) {
-		return useGenerator(props.generator).question(undefined, params)
+		return useGenerator(props.generator).question(undefined, overrides)
 	}
 	return false
 })

@@ -131,11 +131,15 @@ Stocké sur `generators`. Format JSON :
 
 Si `schema` est `null`/absent → les overrides sont passés bruts (strings) sans casting. Comportement de fallback pour les générateurs legacy.
 
+**Où se fait la résolution** : **à l'intérieur de `useGenerator.randomQuestion()`**, automatiquement. Tous les callers (`GeneratorDisplay`, `GeneratorsExamples`, futurs) bénéficient des defaults sans rien faire. Un caller qui appelle `gen.question()` sans argument obtient déjà les defaults du schéma castés.
+
 ### Source des overrides (`GeneratorDisplay.vue`)
 
 Deux sources, fusionnées avec priorité :
 1. Querystring `?domain=-3..3` (priorité basse)
 2. Props `:parameters="..."` passées par le parent (priorité haute) — typiquement `gen.parameters` (valeur du pivot)
+
+Le composant ne fait QUE collecter ces overrides et les passer à `useGenerator(generator).question(undefined, overrides)`. La résolution est déléguée au composable.
 
 ---
 

@@ -31,7 +31,7 @@ const theGenerator = ref(props.generator)
 const completionGroups = computed<CompletionGroup[]>(() => [
 	{
 		prefix: 'params',
-		items:  () => schemaToCompletionItems(theGenerator.value.parameters_schema)
+		items: () => schemaToCompletionItems(theGenerator.value.parameters_schema)
 	}
 ])
 
@@ -188,7 +188,7 @@ function historyBack() {
 			</div>
 
 			<generators-examples
-				:generator="generator"
+				:generator="theGenerator"
 				:questions-number="5"
 				class="min-w-[250px]"
 				generate-on-mounted

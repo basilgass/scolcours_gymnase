@@ -8,6 +8,7 @@ import {ComputedRef, ref, Ref, unref} from "vue"
 import {PiMathExt} from "@/PiMathExtended/PiMathExt.ts"
 import {makeIllustration} from "@/helpers/makeModel.ts"
 import {questionResultInterface} from "@/Components/Questions/QuestionInterface.ts"
+import {resolveParameters} from "@/Composables/useGeneratorParameters.ts"
 
 const ERROR_CAP = 0.75
 
@@ -76,13 +77,18 @@ export function useGenerator(generator: GeneratorInterface | ComputedRef<Generat
 
 		const F = new Function("PiMath", "PiMathExt", "params", g.code)
 
+		const resolved = resolveParameters(
+			g.parameters_schema,
+			params as Record<string, string> | undefined
+		)
+
 		try {
 			const result = F(PiMath, PiMathExt, Object.assign(
 				{},
 				{
 					level: level.value
 				},
-				params
+				resolved
 			))
 
 			if (!result.keyboard) {
