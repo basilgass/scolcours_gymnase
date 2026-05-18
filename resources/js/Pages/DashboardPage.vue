@@ -11,6 +11,7 @@ import FormSwitch from "@/Components/Form/FormSwitch.vue"
 import {usePage} from "@inertiajs/vue3"
 import axios from "axios"
 import Card from "@/Components/Ui/Card.vue"
+import {useStoreScore} from "@/stores/useStoreScore.ts"
 
 defineOptions({layout: LayoutMain})
 
@@ -47,6 +48,11 @@ function updateShowRealName(value: boolean) {
 		})
 }
 
+// Chargement des scores en une fois (stockeé dans le store
+const useScores = useStoreScore()
+const showCourses = ref(false)
+useScores.getScores("Lesson", props.courses.flatMap(course => course.lessons.map(lesson => lesson.id))).then(() => showCourses.value = true)
+
 </script>
 <template>
 	<section class=" space-y-10">
@@ -67,53 +73,58 @@ function updateShowRealName(value: boolean) {
 		</div>
 
 
-		<card>
-			<div class="flex flex-col gap-2 mt-3">
-				<div class="text-3xl">
-					{{ $page.props.auth.user.fullname }}
-				</div>
-				<div class="text-sm font-code">
-					{{ $page.props.auth.user.email }}
-				</div>
+		<section class="grid grid-cols-1 md:grid-cols-2 gap-3">
+			<card>
+				<div class="flex flex-col gap-2 mt-3">
+					<div class="text-3xl">
+						{{ $page.props.auth.user.fullname }}
+					</div>
+					<div class="text-sm font-code">
+						{{ $page.props.auth.user.email }}
+					</div>
 
-				<div class="flex items-center gap-2">
-					<span class="font-code">{{ pseudo }}</span>
-					<sc-button
-						type="generate"
-						icon
-						xs
-						@click="regeneratePseudo"
-					>
-						Nouveau pseudo
-					</sc-button>
+					<div class="flex items-center gap-2">
+						<span class="font-code">{{ pseudo }}</span>
+						<sc-button
+							type="generate"
+							icon
+							xs
+							@click="regeneratePseudo"
+						>
+							Nouveau pseudo
+						</sc-button>
+					</div>
 				</div>
-			</div>
-			<template #footer>
-				<div class="flex gap-4 items-center">
-					affichage du nom :
-					<form-switch
-						v-model="showRealName"
-						sm
-						label="nom réel,pseudo"
-						@update="updateShowRealName"
-					/>
-				</div>
-			</template>
-		</card>
-		<card class="flex gap-3">
-			<template #header>
-				<h3 class="font-semibold">
-					équipes
-				</h3>
-			</template>
-			<div>{{ teamsName }}</div>
-		</card>
+				<template #footer>
+					<div class="flex gap-4 items-center">
+						affichage du nom :
+						<form-switch
+							v-model="showRealName"
+							sm
+							label="nom réel,pseudo"
+							@update="updateShowRealName"
+						/>
+					</div>
+				</template>
+			</card>
+			<card class="flex gap-3">
+				<template #header>
+					<h3 class="font-semibold">
+						équipes
+					</h3>
+				</template>
+				<div>{{ teamsName }}</div>
+			</card>
+		</section>
 
 		<div class="mt-24">
 			<h3 class="text-xl uppercase font-extralight">
 				Liste des cours
 			</h3>
-			<div class="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
+			<div
+				v-if="showCourses"
+				class="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3"
+			>
 				<course-card
 					v-for="course in courses"
 					:key="`course-${course.id}`"
