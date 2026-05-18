@@ -25,10 +25,12 @@ const usersScores = computed(() => {
 
 		scoresPerUser.push({
 			user,
-			score: result ? {
-				score: result.score,
-				level: result.data.level,
-			} : {score: "?", level: "?"}
+			score: result
+				? {
+					score: result.score,
+					level: result.data.level,
+				}
+				: {score: "?", level: "?"}
 		})
 	}
 
@@ -43,6 +45,7 @@ const usersHallOfFame = computed(() => {
 		}
 	})
 })
+
 const maxScore = computed(() => {
 	return Math.max(...props.scores.map(score => score.score))
 })
@@ -83,7 +86,7 @@ const maxScore = computed(() => {
 							</div>
 							<div class="flex gap-1 ">
 								<i
-									v-for="i in score.score.level"
+									v-for="i in score.score.data.level"
 									:key="`star-${i}`"
 									class="bi bi-star-fill text-amber-400"
 								/>

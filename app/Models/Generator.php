@@ -51,11 +51,11 @@ class Generator extends Model
 		"title",
 		"slug",
 		"theme_id",
-		"config",
+		"parameters_schema",
 	];
 
 	protected $casts = [
-		"config" => "array"
+		"parameters_schema" => "array"
 	];
 
 	use HasScoresTrait;
@@ -70,7 +70,7 @@ class Generator extends Model
 	{
 		return $this
 			->morphedByMany(ChallengeLevel::class, 'generatorable')
-			->withPivot('order', 'config');
+			->withPivot('order', 'config', 'parameters');
 	}
 
 	public function evaluations(): \Illuminate\Database\Eloquent\Relations\MorphToMany

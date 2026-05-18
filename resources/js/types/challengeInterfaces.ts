@@ -2,6 +2,14 @@ import type {BlockInterface} from "@/types/blockInterfaces.ts"
 import type {ChapterInterface} from "@/types/chapterInterfaces.ts"
 import type {ScoreGeneratorDataInterface, ScoreInterface} from "@/types/scoreInterfaces.ts"
 
+export type GeneratorParameterFormat = 'number' | 'string' | 'set'
+
+export interface GeneratorParameterSchemaEntry {
+	format: GeneratorParameterFormat;
+	default: string;
+	description?: string;
+}
+
 export interface GeneratorInterface {
 	body: string;
 	code: string;
@@ -9,6 +17,8 @@ export interface GeneratorInterface {
 	id: number;
 	keyboard: string;
 	order: number;
+	parameters?: Record<string, string> | null;
+	parameters_schema?: Record<string, GeneratorParameterSchemaEntry> | null;
 	slug: string;
 	template: string;
 	theme_id: number;

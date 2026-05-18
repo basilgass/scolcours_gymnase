@@ -8,12 +8,14 @@ import LayoutMain from "@/Layouts/LayoutMain.vue"
 import {ChallengeInterface, GeneratorInterface} from "@/types/modelInterfaces"
 import {router} from "@inertiajs/vue3"
 import axios from "axios"
-import {ref} from "vue"
+import {computed, ref} from "vue"
+import {type CompletionGroup, schemaToCompletionItems} from "@/helpers/codemirror_completion.ts"
 import GeneratorsExamples from "@/Components/Elements/GeneratorsExamples.vue"
 import ScButton from "@/Components/Ui/Button/scButton.vue"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
 import FormTheme from "@/Components/Form/FormTheme.vue"
+import ParametersSchemaEditor from "@/Components/Generators/ParametersSchemaEditor.vue"
 
 defineOptions({layout: LayoutMain})
 
@@ -25,6 +27,13 @@ const props = defineProps<{
 }>()
 
 const theGenerator = ref(props.generator)
+
+const completionGroups = computed<CompletionGroup[]>(() => [
+	{
+		prefix: 'params',
+		items:  () => schemaToCompletionItems(theGenerator.value.parameters_schema)
+	}
+])
 
 function saveGenerator() {
 	axios.post(route("api.admin.generators.update", [props.generator.id]), {
@@ -164,15 +173,19 @@ function historyBack() {
 
 
 		<div class="flex gap-5 mt-5">
-			<FormCodearea
-				v-model="theGenerator.code"
-				:rows="20"
-				auto-size
-				class="flex-1"
-				label="générateur de questions"
-				language="javascript"
-				resizable
-			/>
+			<div class="flex-1 flex flex-col gap-3">
+				<ParametersSchemaEditor v-model="theGenerator.parameters_schema" />
+
+				<FormCodearea
+					v-model="theGenerator.code"
+					:completion-groups="completionGroups"
+					:rows="20"
+					auto-size
+					label="générateur de questions"
+					language="javascript"
+					resizable
+				/>
+			</div>
 
 			<generators-examples
 				:generator="generator"

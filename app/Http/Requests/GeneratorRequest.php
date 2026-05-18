@@ -15,9 +15,12 @@ abstract class GeneratorRequest extends FormRequest
 			'code'     => ['required', 'string'],
 			'template' => ['required', 'string'],
 			'keyboard' => ['required', 'string'],
-			'body'     => ['nullable', 'string'],
-			'config'   => ['nullable', 'array'],
-			'config.*' => ['nullable', 'string'],
+			'body'                            => ['nullable', 'string'],
+			'parameters_schema'               => ['nullable', 'array'],
+			'parameters_schema.*'             => ['array:format,default,description'],
+			'parameters_schema.*.format'      => ['required', 'string', 'in:number,string,set'],
+			'parameters_schema.*.default'     => ['required', 'string'],
+			'parameters_schema.*.description' => ['nullable', 'string'],
 		];
 	}
 

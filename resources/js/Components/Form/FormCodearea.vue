@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import {computed, ref, useTemplateRef} from "vue"
+import {computed, onMounted, useTemplateRef} from "vue"
 import {useMagicKeys, whenever} from "@vueuse/core"
 import {formatMarkdownTables} from "@/helpers/markdownTableFormatter.ts"
 import {FormElementEmits, FormElementExpose, FormMakerBaseProps} from "@/Components/Form/FormMakerInterface.ts"
@@ -19,11 +19,13 @@ import {parseMathMarkdown} from "@/helpers/codemirrorLatexMarkdown.ts"
 import type {EditorView} from "@codemirror/view"
 import {keymap} from "@codemirror/view"
 import {Prec} from "@codemirror/state"
+import type {CompletionGroup} from "@/helpers/codemirror_completion.ts"
 
 defineOptions({inheritAttrs: false})
 
 interface Props extends FormMakerBaseProps {
 	autoSize?: boolean
+	completionGroups?: CompletionGroup[]
 	language?: "latex" | "json" | "javascript" | "pidraw" | "pidraw-params"
 	resizeable?: boolean
 	rows?: number
@@ -39,7 +41,7 @@ const props = withDefaults(defineProps<Props>(), {
 	autoSize: false
 })
 
-const cmExtensions = computed(() => useCodeMirrorExtensions(props.language))
+const cmExtensions = computed(() => useCodeMirrorExtensions(props.language, props.completionGroups))
 
 const singleLineExt = computed(() =>
 	props.singleLine
@@ -74,8 +76,6 @@ const cmRef = useTemplateRef<{ view: EditorView }>('cmEditor')
 const {expose} = useFormMaker(computed(() => cmRef.value?.view ?? null))
 defineExpose<FormElementExpose>(expose)
 
-const currentRows = ref(0)
-
 const codeTriggers = computed(() => {
 	if (props.language === 'javascript') return javascript_macros
 	if (props.language === 'json') return json_macros
@@ -83,6 +83,14 @@ const codeTriggers = computed(() => {
 	return {}
 })
 
+onMounted(() => {
+	if (!props.rows) return
+	const current = theValue.value ?? ''
+	const numberOfRows = current.split("\n").length
+	if (numberOfRows < props.rows) {
+		theValue.value = current + '\n'.repeat(props.rows - numberOfRows)
+	}
+})
 </script>
 
 <template>
@@ -101,17 +109,6 @@ const codeTriggers = computed(() => {
 			/>
 		</div>
 
-		<div
-			v-if="resizeable"
-			class="flex justify-center w-full mt-2"
-		>
-			<button
-				class="text-xs"
-				@click="currentRows += 10"
-			>
-				<i class="bi bi-textarea-resize mr-2" /> agrandir
-			</button>
-		</div>
 		<div
 			v-katex.auto="message"
 			:class="messageClass"

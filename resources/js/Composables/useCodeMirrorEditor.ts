@@ -8,6 +8,7 @@ import {javascript_macros} from "@/helpers/Macros/javascript_macros.ts"
 import {json_macros} from "@/helpers/Macros/json_macros.ts"
 import {greekLaTeX} from "@/helpers/greekLaTeX.ts"
 import {getSignatureTooltip, pimathCompletionSource} from "@/helpers/pimath_completions.ts"
+import {type CompletionGroup, makeCompletionSource} from "@/helpers/codemirror_completion.ts"
 
 const signatureHelpField = StateField.define({
 	create: (state) => getSignatureTooltip(state),
@@ -84,7 +85,10 @@ function macroCharInfo(macros: IMacroRecords) {
 
 // ── Extension factory ──
 
-export function useCodeMirrorExtensions(language: 'latex' | 'json' | 'javascript' | 'pidraw' | 'pidraw-params'): Extension[] {
+export function useCodeMirrorExtensions(
+	language: 'latex' | 'json' | 'javascript' | 'pidraw' | 'pidraw-params',
+	completionGroups?: CompletionGroup[]
+): Extension[] {
 	const macros = getMacros(language)
 	const {chars: macroChars} = macroCharInfo(macros)
 
@@ -286,11 +290,16 @@ export function useCodeMirrorExtensions(language: 'latex' | 'json' | 'javascript
 		]
 		: []
 
+	const customCompletionExtension = (language === 'javascript' && completionGroups && completionGroups.length > 0)
+		? [javascriptLanguage.data.of({autocomplete: makeCompletionSource(completionGroups)})]
+		: []
+
 	return [
 		greekModeField,
 		greekHandler,
 		macroHandler,
 		...pimathExtension,
+		...customCompletionExtension,
 		Prec.highest(keymap.of([
 			{key: "Tab", run: (v) => jumpToTabStop(v) || insertTab(v)},
 			{key: "Enter", run: enterIndent},

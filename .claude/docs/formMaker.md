@@ -182,21 +182,59 @@ Menu déroulant custom. Utilise `FormMakerWrapper`. Fermeture automatique au cli
 
 ### FormCodearea
 
-Éditeur de code avec coloration syntaxique (Prism.js). N'utilise **pas** `FormMakerWrapper`.
+Éditeur de code basé sur CodeMirror 6. N'utilise **pas** `FormMakerWrapper`.
 
 **Model** : `string`
 
 | Prop spécifique | Type | Défaut | Description |
 |---|---|---|---|
-| `language` | `"latex" \| "json" \| "javascript"` | `"latex"` | Langage pour la coloration et les macros clavier |
+| `language` | `"latex" \| "json" \| "javascript" \| "pidraw" \| "pidraw-params"` | `"latex"` | Langage pour la coloration, les macros clavier et l'autocomplétion |
 | `rows` | `number` | `4` | Hauteur minimale en lignes |
 | `autoSize` | `boolean` | `false` | Ajuste la hauteur automatiquement au contenu |
 | `resizeable` | `boolean` | `false` | Affiche un bouton "agrandir" (+10 lignes) |
-| `wrap` | `boolean` | `true` | Retour à la ligne automatique (`whitespace-pre-wrap` vs `whitespace-pre`) |
+| `wrap` | `boolean` | `true` | Retour à la ligne automatique |
+| `singleLine` | `boolean` | `false` | Bloque les retours à la ligne (Enter / Shift-Enter ignorés) |
+| `completionGroups` | `CompletionGroup[]` | `undefined` | Sources d'autocomplétion personnalisées (langage `javascript` uniquement). Voir §Autocomplétion personnalisée |
 
 **Événements supplémentaires** : `@currentLine` (string), `@mathMode` (boolean).
 
 Affiche des boutons de macros en bas selon le langage (`latex_macros`, `javascript_macros`, `json_macros`).
+
+#### Autocomplétion personnalisée
+
+Pour ajouter une autocomplétion dynamique de type `<prefix>.<key>` (ex: `params.domain`) au code JavaScript, passer une liste de `CompletionGroup`. Framework dans `resources/js/helpers/codemirror_completion.ts`.
+
+```ts
+import {type CompletionGroup, schemaToCompletionItems} from "@/helpers/codemirror_completion.ts"
+
+// Getter pour la réactivité : items() est appelé à chaque déclenchement de l'autocomplétion.
+const completionGroups = computed<CompletionGroup[]>(() => [
+    {
+        prefix: 'params',
+        items:  () => schemaToCompletionItems(theGenerator.value.parameters_schema)
+    }
+])
+```
+
+```html
+<FormCodearea v-model="code" :completion-groups="completionGroups" language="javascript" />
+```
+
+**Interface** :
+
+```ts
+interface CompletionItem { label: string; detail?: string; info?: string }
+interface CompletionGroup { prefix: string; items: () => CompletionItem[] }
+```
+
+- `prefix` : match strict (préfixe avant le dernier point). `params.x` matche `prefix: 'params'` ; `myParams.x` ne matche pas.
+- `items: () => ...` : getter, **pas** valeur — appelé à chaque autocompletion pour lire l'état actuel. Évite de reconfigurer CodeMirror à chaque mutation.
+- Coexiste sans interférence avec l'autocomplétion `PiMath.*` (sources multiples sur la même langue).
+
+**Adaptateurs disponibles** :
+- `schemaToCompletionItems(schema)` — convertit un `parameters_schema` (générateurs) en `CompletionItem[]`
+
+**Ajouter un nouveau domaine** : voir la commande `/add-completion-group` qui produit un adaptateur dédié pour un autre cas d'usage (challenge variables, vocabulaire, keyboard, etc.).
 
 ---
 

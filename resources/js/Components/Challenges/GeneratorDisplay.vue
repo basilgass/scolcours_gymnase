@@ -1,14 +1,16 @@
 <script lang="ts" setup>
 import QuestionShow from "@/Components/Questions/QuestionShow.vue"
-import {answerIsWrong, useGenerator} from "@/Composables/useGenerator"
+import {answerIsWrong, GeneratorParams, useGenerator} from "@/Composables/useGenerator"
 import type {GeneratorInterface, QuestionInterface} from "@/types/modelInterfaces"
 import {computed, onMounted, ref} from "vue"
 import {useStoreScore} from "@/stores/useStoreScore.ts"
 import {ScoreGeneratorDataInterface} from "@/types/scoreInterfaces.ts"
 import {questionResultInterface} from "@/Components/Questions/QuestionInterface.ts"
+import {resolveParameters} from "@/Composables/useGeneratorParameters.ts"
 
 const props = defineProps<{
-	generator: GeneratorInterface
+	generator: GeneratorInterface,
+	parameters?: GeneratorParams
 }>()
 
 /**
@@ -54,9 +56,17 @@ function nextQuestion(checkerResult: questionResultInterface): void {
  * The current question generated
  */
 const theQuestion = computed(() => {
-	// TODO: get / read the parameters if there are any (queryString ? other values ? given by props ?)
 	const query = new URLSearchParams(window.location.search)
-	const params = Object.fromEntries(query.entries())
+	const queryParams = Object.fromEntries(query.entries()) as Record<string, string>
+
+	// Priorité : props.parameters > querystring. Les valeurs sont brutes (strings),
+	// resolveParameters applique les defaults du schéma et caste selon le format.
+	const overrides: Record<string, string> = {
+		...queryParams,
+		...(props.parameters as Record<string, string> ?? {})
+	}
+
+	const params = resolveParameters(props.generator.parameters_schema, overrides)
 
 	if (counter.value >= 0) {
 		return useGenerator(props.generator).question(undefined, params)

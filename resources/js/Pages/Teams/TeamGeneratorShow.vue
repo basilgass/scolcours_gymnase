@@ -8,14 +8,14 @@ import LayoutMain from "@/Layouts/LayoutMain.vue"
 import StatBar from "@/Components/Ui/StatBar.vue"
 import {TeamInterface} from "@/types/userInterfaces.ts"
 import {GeneratorInterface} from "@/types/challengeInterfaces.ts"
-import {ScoreInterface} from "@/types/scoreInterfaces.ts"
+import {ScoreGeneratorDataInterface, ScoreInterface} from "@/types/scoreInterfaces.ts"
 
 defineOptions({layout: LayoutMain})
 
 const props = defineProps<{
 	team: TeamInterface,
 	generator: GeneratorInterface,
-	scores: ScoreInterface[]
+	scores: ScoreInterface<ScoreGeneratorDataInterface>[]
 }>()
 const usersScores = computed(() => {
 	let scoresPerUser = []
@@ -26,7 +26,7 @@ const usersScores = computed(() => {
 			user,
 			score: result ? {
 				score: result.score,
-			} : {score: "?", level: "?"}
+			} : {score: "?"}
 		})
 	}
 
@@ -78,13 +78,6 @@ const maxScore = computed(() => {
 						<div class="grid grid-cols-2 gap-3">
 							<div>
 								{{ score.score.score }} points
-							</div>
-							<div class="flex gap-1 ">
-								<i
-									v-for="i in score.score.level"
-									:key="`star-${i}`"
-									class="bi bi-star-fill text-amber-400"
-								/>
 							</div>
 						</div>
 					</stat-bar>

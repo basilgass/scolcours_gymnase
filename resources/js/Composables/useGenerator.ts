@@ -19,7 +19,7 @@ export function answerIsWrong(answer: questionResultInterface, cap?: number): bo
 	)
 }
 
-export type GeneratorParams = Record<string, string | number>
+export type GeneratorParams = Record<string, string | number | number[]>
 
 export function useGenerator(generator: GeneratorInterface | ComputedRef<GeneratorInterface>): generatorResultInterface {
 

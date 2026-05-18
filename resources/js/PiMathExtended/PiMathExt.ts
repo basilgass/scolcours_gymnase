@@ -1,6 +1,7 @@
 import {PiRadian} from "@/PiMathExtended/PiRadian.ts"
 import {rndPoints} from "@/PiMathExtended/RandomExt.ts"
 import {TVM} from "@/PiMathExtended/TVM.ts"
+import {parseNumberSet} from "@/Composables/useNumberSet.ts"
 
 
 export const PiMathExt = {
@@ -23,5 +24,6 @@ export const PiMathExt = {
 	Random: {
 		points: rndPoints
 	},
-	TVM: TVM
+	TVM: TVM,
+	parseNumberSet: parseNumberSet,
 }

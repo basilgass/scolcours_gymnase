@@ -1,6 +1,8 @@
-# Mise à jour des autocomplétions CodeMirror
+# Mise à jour des autocomplétions CodeMirror (PiMath / PiDraw)
 
-Met à jour les fichiers de complétion/langage CodeMirror pour PiMath et PiDraw si leurs versions ont changé.
+Met à jour les fichiers de complétion/langage CodeMirror **statiques** pour PiMath et PiDraw si leurs versions npm ont changé.
+
+> Pour **ajouter une autocomplétion dynamique** liée à un domaine applicatif (paramètres d'un générateur, variables d'un challenge, vocabulaire, etc.), utiliser `/add-completion-group` à la place. Cette commande-ci ne traite que la synchronisation avec les versions de paquets externes.
 
 ---
 
