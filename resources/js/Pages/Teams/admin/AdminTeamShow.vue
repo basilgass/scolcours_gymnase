@@ -3,12 +3,17 @@
 	setup
 >
 import FilteredList from "@/Components/Ui/FilteredList.vue"
-import type {ChallengeInterface, CourseInterface, TeamInterface, UserInterface} from "@/types/modelInterfaces.ts"
+import type {
+	ChallengeInterface,
+	CourseInterface,
+	GeneratorInterface,
+	TeamInterface,
+	UserInterface
+} from "@/types/modelInterfaces.ts"
 import SchoolTimetable from "@/Components/Courses/SchoolTimetable.vue"
 import CourseCard from "@/Components/Courses/CourseCard.vue"
 import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
 import FormSwitch from "@/Components/Form/FormSwitch.vue"
-import FormInput from "@/Components/Form/FormInput.vue"
 import {ref} from "vue"
 import axios from "axios"
 import {AxiosErrorMessage} from "@/types"
@@ -23,6 +28,7 @@ const props = defineProps<{
 	students: UserInterface[],
 	courses: CourseInterface[],
 	challenges: ChallengeInterface[],
+	generators: GeneratorInterface[],
 }>()
 
 const active = ref(props.team.active)
@@ -109,12 +115,21 @@ function updateActiveState() {
 		Utile : pour les challenges uniquement.
 		<div class="grid grid-cols-1 md:grid-cols-2 gap-5">
 			<filtered-list
-				:item-background="(item) => item.chapter.theme_id"
+				:item-background="(item) => item.chapter?.theme_id ?? null"
 				:list="props.challenges"
 				:route-data="(item) => {return {team: props.team.name, challenge: item.slug}}"
 				:route-name="'admin.teams.challenges.show'"
 				list-class="grid grid-cols-1 gap-3 xl:grid-cols-2"
 				title="challenges"
+			/>
+
+			<filtered-list
+				:item-background="(item) => item.theme_id ?? null"
+				:list="props.generators"
+				:route-data="(item) => {return {team: props.team.name, generator: item.slug}}"
+				:route-name="'admin.teams.generators.show'"
+				list-class="grid grid-cols-1 gap-3 xl:grid-cols-2"
+				title="générateurs"
 			/>
 		</div>
 	</article>

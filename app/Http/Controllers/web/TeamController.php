@@ -6,10 +6,12 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\ChallengeResource;
 use App\Http\Resources\ChapterResource;
 use App\Http\Resources\CourseResource;
+use App\Http\Resources\GeneratorResource;
 use App\Http\Resources\TeamResource;
 use App\Http\Resources\UserResource;
 use App\Models\Challenge;
 use App\Models\Chapter;
+use App\Models\Generator;
 use App\Models\Team;
 use Inertia\Inertia;
 
@@ -31,12 +33,29 @@ class TeamController extends Controller
 
 	public function show(Team $team)
 	{
+		$users = $team->users;
+
+		// Récupérer les challenges de tous les cours de la team
+		// team -> courses -> lessons -> lessonable -> lessonableType = App\Models\Challenge
+		$challenges = $team->courses
+			->flatMap(fn($course) => $course->lessons
+				->where('lessonable_type', 'App\Models\Challenge')
+				->map(fn($lesson) => $lesson->lessonable)
+			);
+
+		$generators = $team->courses
+			->flatMap(fn($course) => $course->lessons
+				->where('lessonable_type', 'App\Models\Generator')
+				->map(fn($lesson) => $lesson->lessonable)
+			);
+
 		return Inertia::render("Teams/admin/AdminTeamShow",
 			[
 				'team'       => $team,
-				'students'   => UserResource::collection($team->users),
+				'students'   => UserResource::collection($users),
 				'courses'    => CourseResource::collection($team->courses),
-				'challenges' => ChallengeResource::collection(Challenge::all())
+				'challenges' => ChallengeResource::collection($challenges),
+				'generators' => $generators,
 			]
 		);
 	}
@@ -52,6 +71,21 @@ class TeamController extends Controller
 		return Inertia::render("Teams/TeamChallengeShow", [
 			'team'      => $team,
 			'challenge' => ChallengeResource::make($challenge),
+			'scores'    => $scores
+		]);
+	}
+
+	public function generator(Team $team, Generator $generator)
+	{
+		$user_ids = $team->users->pluck('id');
+		$scores = $generator->scores
+			->sortBy('score', SORT_REGULAR, true)
+			->whereIn('user_id', $user_ids)
+			->values()->all();
+
+		return Inertia::render("Teams/TeamGeneratorShow", [
+			'team'      => $team,
+			'generator' => GeneratorResource::make($generator),
 			'scores'    => $scores
 		]);
 	}

@@ -7,17 +7,16 @@ import {computed} from "vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 import StatBar from "@/Components/Ui/StatBar.vue"
 import {TeamInterface} from "@/types/userInterfaces.ts"
-import {ChallengeInterface} from "@/types/challengeInterfaces.ts"
-import {ScoreChallengeDataInterface, ScoreInterface} from "@/types/scoreInterfaces.ts"
+import {GeneratorInterface} from "@/types/challengeInterfaces.ts"
+import {ScoreInterface} from "@/types/scoreInterfaces.ts"
 
 defineOptions({layout: LayoutMain})
 
 const props = defineProps<{
 	team: TeamInterface,
-	challenge: ChallengeInterface,
-	scores: ScoreInterface<ScoreChallengeDataInterface>[]
+	generator: GeneratorInterface,
+	scores: ScoreInterface[]
 }>()
-
 const usersScores = computed(() => {
 	let scoresPerUser = []
 	for (let user of props.team.users) {
@@ -27,7 +26,6 @@ const usersScores = computed(() => {
 			user,
 			score: result ? {
 				score: result.score,
-				level: result.data.level,
 			} : {score: "?", level: "?"}
 		})
 	}
@@ -57,7 +55,7 @@ const maxScore = computed(() => {
 			<i class="bi bi-arrow-left" /> Retour à l'équipe
 		</InertiaLink>
 		<h3 class="text-2xl">
-			{{ props.challenge.title }}
+			{{ props.generator.title }}
 		</h3>
 
 		<div class="my-5">

@@ -15,19 +15,19 @@ import ToolError from "@/Components/Tools/Parts/ToolError.vue"
 const {restoreTool} = useToolsStorage()
 const forms: IToolForm[] = restoreTool([
 	{
-		label: "A ou équation BC",
+		label: "A ou équation AB",
 		type: "text",
 		value: ref("15x-8y+16=0"),
 		fromUrl: "a"
 	},
 	{
-		label: "B ou équation AC",
+		label: "B ou équation BC",
 		type: "text",
 		value: ref("3x-4y-6=0"),
 		fromUrl: "b"
 	},
 	{
-		label: "C ou équation AB",
+		label: "C ou équation AC",
 		type: "text",
 		value: ref("5x+12y-24=0"),
 		fromUrl: "c"
@@ -39,7 +39,6 @@ const B = computed(() => forms[1].value.value as string)
 const C = computed(() => forms[2].value.value as string)
 
 let result = computed(() => {
-
 	try {
 		let triangle = new Triangle()
 
@@ -48,6 +47,7 @@ let result = computed(() => {
 			B.value.includes(',') &&
 			C.value.includes(',')
 		) {
+			// TODO : plus robuste, avec ou sans parenthèses, avec ou sans , ou ;
 			triangle.fromPoints(
 				new Point(...A.value.split(",")),
 				new Point(...B.value.split(",")),

@@ -19,9 +19,14 @@ Route::middleware('web')
 			                    ->name('index');
 			               Route::get('{team:name}', [TeamController::class, 'show'])
 			                    ->name('show');
+
 			               Route::get('{team:name}/challenge/{challenge:slug}', [TeamController::class, 'challenge'])
 			                    ->withoutScopedBindings()
 			                    ->name('challenges.show');
+
+			               Route::get('{team:name}/generators/{generator:slug}', [TeamController::class, 'generator'])
+			                    ->withoutScopedBindings()
+			                    ->name('generators.show');
 
 			               Route::get('{team:name}/stats/{chapter:slug}', [TeamController::class, "stats"])
 			                    ->withoutScopedBindings()
