@@ -9,7 +9,8 @@ import {
 } from "@/Components/Questions/QuestionInterface.ts"
 import {useStoreScore} from "@/stores/useStoreScore.ts"
 import {computed, ref} from "vue"
-import {Equation, Fraction, literalType} from "pimath"
+import PiMath from "pimath"
+import {PiMathExt} from "@/PiMathExtended/PiMathExt.ts"
 
 const alphabet = "abcdefghijklmnopqrstuvwxyz"
 
@@ -120,49 +121,6 @@ function validateMixed(
 	return results
 }
 
-// ─── Validation par équation (variables liées) ───────────────────────────────
-
-/**
- * Construit le dictionnaire {lettre → Fraction} pour les variables
- * effectivement utilisées dans l'équation. Les variables sont toujours
- * les lettres a, b, c, ... dans l'ordre alphabétique.
- */
-function buildVariableMap(equationControl: string, userAnswers: string[]): literalType<number | Fraction> {
-	// Capture les lettres isolées (pas entourées d'autres lettres) : "2a+3b" → ["a","b"]
-	const usedLetters = [...new Set(equationControl.match(/(?<![a-zA-Z])([a-z])(?![a-zA-Z])/g) ?? [])]
-	const dict: literalType<number | Fraction> = {}
-
-	for (const letter of usedLetters) {
-		const i = alphabet.indexOf(letter)
-		if (i >= 0 && i < userAnswers.length) {
-			try {
-				dict[letter] = new Fraction(userAnswers[i])
-			} catch {
-				// réponse non numérique, ignorée
-			}
-		}
-	}
-
-	return dict
-}
-
-/**
- * Vérifie la cohérence globale des réponses via une équation.
- * Exemple : "a + b = c" vérifie que la somme des deux premières réponses
- * égale la troisième.
- */
-export function validateBoundedVariables(equationControl: string, userAnswers: string[]): boolean {
-	if (!equationControl) return true
-
-	try {
-		const equ = new Equation(equationControl)
-		const mapped = buildVariableMap(equationControl, userAnswers)
-		return equ.evaluate(mapped)
-	} catch {
-		return false
-	}
-}
-
 // ─── Composable principal ────────────────────────────────────────────────────
 
 export function useQuestionValidation(questionData: questionDataInterface) {
@@ -254,39 +212,39 @@ export function useQuestionValidation(questionData: questionDataInterface) {
 		return validations.every(validation => validation.result)
 	}
 
-	function validate(buttonEl?: HTMLElement | null) {
+	function validate() {
 		lock.value = true
 
+		// Valide toutes les variables selon leur type: multiple, mixed ou "simple"
 		const validations = resolveValidators()
+
+		// Vérifie que toutes les réponses sont corrects.
 		let result = reduce(validations)
 
-		if (questionData.question.value.equationControl) {
-			const equationResult = validateBoundedVariables(
-				questionData.question.value.equationControl,
-				questionData.user.answers.value.map(x => x.input)
-			)
+		// On doit vérifier la validation interne si result===false
+		if (result === false && questionData.question.value.validation) {
+			const code = questionData.question.value.validation
+			try {
+				const F = new Function("PiMath", "PiMathExt", "answers", code)
+				const internalResult = F(PiMath, PiMathExt, questionData.user.answers.value, code)
 
-			result = equationResult
-
-			if (equationResult) {
-				validations.forEach(validation => {
-					validation.result = true
-					validation.score = 1
-					validation.message = ""
-				})
-			} else {
-				errorMessages.value = [{
-					index: 1,
-					result: false,
-					score: 0,
-					message: "les réponses ne concordent pas."
-				}]
+				if (internalResult) {
+					result = true
+					validations.forEach(validation => {
+						validation.result = true
+						validation.score = 1
+						validation.message = ""
+					})
+				}
+			} catch (e) {
+				console.warn('La validation a échoué.')
+				console.error(e)
 			}
-		} else {
-			errorMessages.value = questionData.config.silent
-				? []
-				: validations.filter(v => !v.result)
 		}
+
+		errorMessages.value = questionData.config.silent
+			? []
+			: validations.filter(v => !v.result)
 
 		save(validations)
 			.then(() => {

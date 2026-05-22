@@ -91,6 +91,15 @@ function historyBack() {
 				>
 					retour
 				</sc-button>
+
+				<sc-button
+					type="primary"
+					xs
+					:href="route('generators.show', {generator: props.generator.slug})"
+				>
+					voir
+				</sc-button>
+
 				<sc-button
 					type="save"
 					xs

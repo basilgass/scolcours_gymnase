@@ -88,7 +88,7 @@ const validateButtonRef = useTemplateRef<InstanceType<typeof ScButton>>('validat
 const useValidation = useQuestionValidation(questionData)
 
 function onValidate() {
-	useValidation.validate(validateButtonRef.value?.$el)
+	useValidation.validate()
 
 	// émettre le résultat lors de la validation.
 	emit('validate', useValidation.result.value)
@@ -190,7 +190,7 @@ function onErrorClosing(index: number) {
 			<!-- Validation button -->
 			<suspense>
 				<div class="question-validation-wrapper">
-					<div class="max-w-xl mx-auto keyboard mb-5">
+					<div class="keyboard mb-5">
 						<sc-button
 							ref="validateButton"
 							:class="{ 'cursor-not-allowed': useValidation.lock.value }"
@@ -220,7 +220,7 @@ function onErrorClosing(index: number) {
 
 					<!-- Error messages -->
 					<div
-						class="max-w-xl mx-auto relative flex flex-col gap-2 mb-3"
+						class="relative flex flex-col gap-2 mb-3"
 					>
 						<transition-group name="fade">
 							<div

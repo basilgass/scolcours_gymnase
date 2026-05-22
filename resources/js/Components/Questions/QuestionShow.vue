@@ -20,6 +20,7 @@ import {
 } from "@/Components/Questions/QuestionInterface.ts"
 import QuestionHeader from "@/Components/Questions/Parts/QuestionHeader.vue"
 import {useQuestion} from "@/Components/Questions/useQuestion.ts"
+import Card from "@/Components/Ui/Card.vue"
 
 /**
  * question: QuestionInterface
@@ -146,49 +147,46 @@ onMounted(() => {
 watch(() => props.autoAnswer, () => {
 	loadAnswers({show: props.autoAnswer})
 })
+
 </script>
 
 <template>
-	<article
+	<Card
 		:id="`question-${question.id}`"
-		:class="{
-			'bg-gray-50 border-gray-200 dark:bg-gray-800 dark:border-gray-700':
-				!questionData.hasSuccess.value,
-			'bg-green-50 dark:bg-green-950 border-green-600/60':
-				questionData.hasSuccess.value,
-		}"
-		class="flex flex-col rounded border h-full relative"
+		:success="questionData.hasSuccess.value"
 	>
-		<!-- Header: number, title -->
-		<question-header
-			:show-number="!blockOnly"
-		/>
+		<div class="flex flex-col h-full relative -m-3">
+			<!-- Header: number, title -->
+			<question-header
+				:show-number="!blockOnly"
+			/>
 
-		<!-- the body and illustration of question (as block) -->
-		<question-block />
+			<!-- the body and illustration of question (as block) -->
+			<question-block />
 
-		<!-- user input (format, answer selector, keyboard) -->
-		<hr
-			v-show="!blockOnly"
-			:class="{
-				'bg-content':
-					!questionData.hasSuccess.value,
-				'border-green-600/60':
-					questionData.hasSuccess.value,
-			}"
-		>
+			<!-- user input (format, answer selector, keyboard) -->
+			<hr
+				v-show="!blockOnly"
+				:class="{
+					'bg-content':
+						!questionData.hasSuccess.value,
+					'border-green-600/60':
+						questionData.hasSuccess.value,
+				}"
+			>
 
-		<question-answer
-			v-show="!blockOnly"
-			ref="questionAnswerWrapper"
-			v-model:show-input="showUserInput"
-			@validate="$emit('validate', $event)"
-		/>
+			<question-answer
+				v-show="!blockOnly"
+				ref="questionAnswerWrapper"
+				v-model:show-input="showUserInput"
+				@validate="$emit('validate', $event)"
+			/>
 
-		<!-- Footer: show answer, admin answer quick edition -->
-		<question-footer
-			v-show="!blockOnly"
-			@load-answers="loadAnswers"
-		/>
-	</article>
+			<!-- Footer: show answer, admin answer quick edition -->
+			<question-footer
+				v-show="!blockOnly"
+				@load-answers="loadAnswers"
+			/>
+		</div>
+	</Card>
 </template>

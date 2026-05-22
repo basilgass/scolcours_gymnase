@@ -59,8 +59,8 @@ class Question extends Model
 		'displayif',
 		'css',
 		'answer',
-		'equationControl',
 		'keyboard',
+		'validation',
 	];
 	protected $appends = ['url'];
 

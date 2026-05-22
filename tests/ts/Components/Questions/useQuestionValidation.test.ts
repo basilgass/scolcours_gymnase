@@ -2,7 +2,7 @@ import {computed, ref} from "vue"
 import {describe, expect, test} from "vitest"
 import {PiChecker} from "@/Checkers"
 import {questionDataInterface, questionValidatorInterface} from "@/Components/Questions/QuestionInterface.ts"
-import {useQuestionValidation, validateBoundedVariables} from "@/Components/Questions/useQuestionValidation.ts"
+import {useQuestionValidation} from "@/Components/Questions/useQuestionValidation.ts"
 import {KeyboardInputInterface} from "@/types/keyboardInterfaces.ts"
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -36,7 +36,6 @@ function makeUserAnswers(inputs: string[]): ReturnType<typeof ref<KeyboardInputI
 function makeQuestionData(
 	validators: questionValidatorInterface[],
 	userInputs: string[],
-	equationControl = ''
 ): questionDataInterface {
 	return {
 		answers: {
@@ -63,7 +62,7 @@ function makeQuestionData(
 			}))
 		},
 		hasSuccess: computed(() => false),
-		question: ref({id: 0, equationControl, answer: ''} as any),
+		question: ref({id: 0, answer: ''} as any),
 		user: {
 			answer: ref(''),
 			answers: makeUserAnswers(userInputs),
@@ -245,85 +244,6 @@ describe('validateMixed — réponses non ordonnées (@)', () => {
 		// le deuxième "10" ne trouve plus de correspondance (pool épuisé).
 		const validators = [makeValidator('@10'), makeValidator('@20')]
 		const data = makeQuestionData(validators, ['10', '10'])
-		const {validate, result} = useQuestionValidation(data)
-
-		validate()
-
-		expect(result.value.result).toBe(false)
-	})
-})
-
-// ─── validateBoundedVariables — équation liant les réponses ──────────────────
-
-describe('validateBoundedVariables — équation entre les réponses', () => {
-	// Note : pimath n'accepte pas les espaces dans les équations.
-	// Le format attendu est "2a+3b=1" (comme en base de données), pas "2a + 3b = 1".
-
-	test('équation satisfaite : a+b=c', () => {
-		expect(validateBoundedVariables('a+b=c', ['3', '7', '10'])).toBe(true)
-	})
-
-	test('équation non satisfaite : a+b=c', () => {
-		expect(validateBoundedVariables('a+b=c', ['3', '7', '11'])).toBe(false)
-	})
-
-	test('équation vide → toujours vrai', () => {
-		expect(validateBoundedVariables('', ['3', '7'])).toBe(true)
-	})
-
-	test('format DB réel : 2a+3b=1', () => {
-		expect(validateBoundedVariables('2a+3b=1', ['-4', '3'])).toBe(true)
-		expect(validateBoundedVariables('2a+3b=1', ['0', '0'])).toBe(false)
-	})
-
-	test('équation avec soustraction : a-b=c', () => {
-		expect(validateBoundedVariables('a-b=c', ['10', '4', '6'])).toBe(true)
-		expect(validateBoundedVariables('a-b=c', ['10', '4', '5'])).toBe(false)
-	})
-
-	test('seules les variables utilisées sont mappées : a=c (b ignoré)', () => {
-		// L\'équation n\'utilise que a et c (pas b).
-		// answers[0]→a, answers[2]→c
-		expect(validateBoundedVariables('a=c', ['5', '999', '5'])).toBe(true)
-		expect(validateBoundedVariables('a=c', ['5', '999', '6'])).toBe(false)
-	})
-
-	test('équation malformée → false sans exception', () => {
-		expect(validateBoundedVariables('???', ['3', '7'])).toBe(false)
-	})
-})
-
-// ─── validate() avec equationControl ─────────────────────────────────────────
-
-describe('validate() avec equationControl', () => {
-	test('équation satisfaite → résultat vrai, pas d\'erreur', () => {
-		const validators = [makeValidator('3'), makeValidator('7'), makeValidator('10')]
-		const data = makeQuestionData(validators, ['3', '7', '10'], 'a+b=c')
-		const {validate, result, errors} = useQuestionValidation(data)
-
-		validate()
-
-		expect(result.value.result).toBe(true)
-		expect(errors.value).toHaveLength(0)
-	})
-
-	test('équation non satisfaite → résultat faux, message d\'erreur', () => {
-		const validators = [makeValidator('3'), makeValidator('7'), makeValidator('10')]
-		const data = makeQuestionData(validators, ['3', '7', '11'], 'a+b=c')
-		const {validate, result, errors} = useQuestionValidation(data)
-
-		validate()
-
-		expect(result.value.result).toBe(false)
-		expect(errors.value[0]).toContain('concordent pas')
-	})
-
-	test('équation non satisfaite → les validations individuelles ne sont pas forcées à true', () => {
-		// Régression : avant le fix, validations étaient forcées true même si équation échouait.
-		// Ceci se vérifie en observant que save() calculerait score=1 si validations étaient true.
-		// On teste indirectement via le résultat global.
-		const validators = [makeValidator('3'), makeValidator('7')]
-		const data = makeQuestionData(validators, ['99', '99'], 'a+b=c')
 		const {validate, result} = useQuestionValidation(data)
 
 		validate()

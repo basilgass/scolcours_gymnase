@@ -639,7 +639,7 @@ export class StudyGraph extends PiGraph {
 		// Sort the maxPoints.
 		ctrlPoints.sort((a, b) => a.point.x - b.point.x)
 
-		// redéfinir les ratio en fonction de la distance entre les deux points de controles avant et après
+		// redéfinir les ratios en fonction de la distance entre les deux points de controles avant et après
 		const modifier = 0.002
 		for (let i = 0; i < ctrlPoints.length; i++) {
 			const deltaBefore = i === 0 ? 200 : ctrlPoints[i].point.x - ctrlPoints[i - 1].point.x

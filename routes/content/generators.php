@@ -16,7 +16,7 @@ Route::middleware('web')
 	          ->prefix('admin')
 	          ->group(function () {
 		          Route::resource('generators', GeneratorController::class)
-		               ->only(['show', 'edit']);
+		               ->only(['edit']);
 
 		          Route::get('generators', [GeneratorController::class, 'admin'])
 		               ->name('generators.index');

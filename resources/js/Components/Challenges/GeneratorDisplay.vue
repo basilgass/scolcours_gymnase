@@ -16,6 +16,9 @@ const props = defineProps<{
  * The current question counter, used to update the question
  */
 const counter = ref(0)
+defineExpose({
+	reload: () => counter.value++
+})
 
 /**
  * Display the next question
@@ -76,6 +79,8 @@ onMounted(() => {
 	scoreStore.resetScore(score)
 })
 
+
+// TODO : (P1) éviter de recharger le composant `QuestionShow` et faire un refresh propre. Problème de réactivité
 </script>
 
 <template>

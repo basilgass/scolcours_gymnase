@@ -3,9 +3,9 @@ import type {ScoreInterface, ScoreQuestionDataInterface} from "@/types/scoreInte
 
 export interface QuestionDynamicInterface {
 	answer: string;
-	equationControl: string;
 	block: BlockMinInterface;
 	keyboard: string;
+	validation?: string,
 	illustration?: IllustrationMinInterface
 	user: {
 		is_resolved: boolean

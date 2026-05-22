@@ -32,8 +32,11 @@ export function useGenerator(generator: GeneratorInterface | ComputedRef<Generat
 	): QuestionDynamicInterface {
 		if (value === undefined) value = randomQuestion(params)
 
-		const questionUnref = unref(value)
+		// Les données globales du générateur
 		const generatorUnref = unref(generator)
+
+		// La question générée
+		const questionUnref = unref(value)
 
 		return {
 			block: {
@@ -46,10 +49,10 @@ export function useGenerator(generator: GeneratorInterface | ComputedRef<Generat
 			},
 			keyboard: questionUnref.keyboard ?? generatorUnref.keyboard,
 			answer: "" + questionUnref.answer,
-			equationControl: null,
 			user: {
 				is_resolved: false
-			}
+			},
+			validation: questionUnref.validation ?? null
 		}
 	}
 

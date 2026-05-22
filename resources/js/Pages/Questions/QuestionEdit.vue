@@ -16,7 +16,6 @@ import axios from "axios"
 import {computed, PropType, ref} from "vue"
 import ScButton from "@/Components/Ui/Button/scButton.vue"
 import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
-import {validateBoundedVariables} from "@/Components/Questions/useQuestionValidation.ts"
 
 defineOptions({layout: LayoutMain})
 
@@ -40,9 +39,9 @@ function saveQuestion() {
 				.post(route("api.admin.questions.update", [theQuestion.value.id]), {
 					_method: "PATCH",
 					answer: theQuestion.value.answer,
-					equationControl: theQuestion.value.equationControl,
 					keyboard: theQuestion.value.keyboard,
-					css: theQuestion.value.css
+					css: theQuestion.value.css,
+					validation: theQuestion.value.validation,
 				})
 				.then(() => {
 					flash.success("La question a été sauvegardée.")
@@ -132,13 +131,6 @@ function deleteIllustration() {
 		flash.success("L'illustration a bien été supprimée.")
 	})
 }
-
-const equationCheck = computed(() => {
-	return validateBoundedVariables(
-		theQuestion.value.equationControl,
-		theQuestion.value.answer.split('\n')
-	)
-})
 
 </script>
 <template>
@@ -268,20 +260,24 @@ const equationCheck = computed(() => {
 					name="answer"
 				/>
 
-				<FormTextarea
-					v-model="theQuestion.equationControl"
-					:rows="1"
-					label="global check"
-					name="globalCheck"
-				/>
-
-				{{ equationCheck ? 'OK' : 'erreur' }}
-
 				<FormKeyboard
 					v-model="theQuestion.keyboard"
 					:rows="8"
 					label="clavier"
 				/>
+
+				<div>
+					<h3>Validation</h3>
+					<p class="text-xs">
+						(answers: {input:string, tex: string, raw: string}[]) => boolean
+					</p>
+					<FormCodearea
+						v-model="theQuestion.validation"
+						label="validation custom"
+						:rows="3"
+						language="javascript"
+					/>
+				</div>
 			</form>
 
 			<question-show

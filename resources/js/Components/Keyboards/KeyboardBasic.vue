@@ -86,7 +86,6 @@ const kbrdConfig = computed(() => {
 		:extra-letters="extraLetters"
 		:keyboard="kbrdConfig"
 		back
-		class="max-w-xl mx-auto"
 		reset
 		@change="onChange"
 	/>

@@ -17,14 +17,14 @@ const forms: IToolForm[] = restoreTool([
 	{
 		label: "paramètres",
 		type: "codearea",
-		attributes: {language: 'pidraw-params'},
+		attributes: {language: 'pidraw-params', rows: 1},
 		value: ref("axis,grid,x=-10:10,y=-10:10"),
 		fromUrl: "params",
 	},
 	{
 		label: "code",
 		type: "codearea",
-		attributes: {language: 'pidraw'},
+		attributes: {language: 'pidraw', rows: 10},
 		value: ref(`O(0,0)
 A(5,1)
 B(3,8)->drag=grid

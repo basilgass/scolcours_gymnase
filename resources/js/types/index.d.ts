@@ -91,11 +91,12 @@ export interface editModeInterface {
 }
 
 export interface generatedQuestionInterface {
+	question: string
 	answer: string
 	button?: object
 	illustration?: IllustrationMinInterface
 	keyboard?: string
-	question: string
+	validation?: string
 	reset?: boolean
 	title?: string
 }

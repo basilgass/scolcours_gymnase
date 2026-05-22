@@ -123,4 +123,26 @@ describe("rational checker", () => {
 		const result = chk.checkValue(given)
 		expect(result.score).toBe(0.5)
 	})
+
+	test('check if factorized', () => {
+		const chk_f = new RationalChecker('f')
+		chk_f.answer = '6(x+3)(x-5)/(x+2)^2'
+
+		const given = '(6x+18)(x-5)/(x+2)^2'
+		const result_f = chk_f.checkValue(given)
+		expect(result_f.score).toBe(1)
+
+		const given_d = '(6x+18)(x-5)/x^2+4x+4'
+		const result_d = chk_f.checkValue(given_d)
+		expect(result_d.score).toBe(0)
+
+		const chk_F = new RationalChecker('F')
+		chk_F.answer = chk_f.answer
+		const result_F = chk_F.checkValue(given)
+		expect(result_F.score).toBe(0)
+
+		const given_err = '6x(x+3)-30(x+3)/(x+2)^2'
+		const result_err = chk_f.checkValue(given_err)
+		expect(result_err.score).toBe(0)
+	})
 })

@@ -1,4 +1,4 @@
-import {CheckerAbstract, CheckerResult, CHECKERS, makeCheckerResult} from "@/Checkers"
+import {CheckerAbstract, CheckerResult, CHECKERS, checkPolynomIsFactorized, makeCheckerResult} from "@/Checkers"
 import {PolyFactor} from "pimath"
 
 // const name = "rational"
@@ -12,7 +12,7 @@ const description = `rational,[paramètres]
 
 export class RationalChecker extends CheckerAbstract {
 	#reduced: boolean
-	#factorized: boolean
+	#factorized: false | 'f' | 'F' // f = factorisé, F = entièrement factorisé.
 	#developed: boolean
 
 	constructor(config: string[] | string) {
@@ -20,7 +20,9 @@ export class RationalChecker extends CheckerAbstract {
 		this.type = CHECKERS.RATIONAL
 		this.description = description
 
-		this.#factorized = this.config.includes("f") || this.config.includes("factors")
+		if (this.config.includes("f") || this.config.includes("factors")) this.#factorized = 'f'
+		if (this.config.includes("F") || this.config.includes("FACTORS")) this.#factorized = 'F'
+
 		this.#developed = this.config.includes("d") || this.config.includes("develop")
 		this.#reduced = this.config.includes("r") || this.config.includes("reduced")
 	}
@@ -28,12 +30,13 @@ export class RationalChecker extends CheckerAbstract {
 	get format(): string {
 		const opts = []
 
-		if (this.config.includes("f") || this.config.includes("factors")) {
-			opts.push("factorisée")
-		} else if (this.config.includes("d") || this.config.includes("develop")) {
+		if (this.#factorized) {
+			opts.push(`${this.#factorized === 'F' ? 'entièrement ' : ''}factorisée`)
+		} else if (this.#developed) {
 			opts.push("développée")
 		}
-		if (this.config.includes("r") || this.config.includes("reduced")) {
+
+		if (this.#reduced) {
 			opts.push("réduite")
 		}
 
@@ -52,33 +55,37 @@ export class RationalChecker extends CheckerAbstract {
 
 		// Données des étudiants
 		const givenRationnal = new PolyFactor().fromString(value)
-		const givenRationnalReduced = givenRationnal.factorize().reduce()
 
-		// Les versions réduites partagent le même dénominateur.
+		const givenRationnalReduced = givenRationnal.factorize().reduce()
+		// Les versions réduites des numérateurs sont différentes.
 		if (!givenRationnalReduced.numerator.isEqual(expectedRationalReduced.numerator)) {
 			return makeCheckerResult("le numérateur ne correspond pas à la réponse")
 		}
 
-		// Les versions réduites partagent le même numérateur.
+		// Les versions réduites des dénominateurs sont différentes.
 		if (!givenRationnalReduced.denominator.isEqual(expectedRationalReduced.denominator)) {
 			return makeCheckerResult("le dénominateur ne correspond pas à la réponse")
 		}
 
+		// Si la factorisation est demandée, on peut encore réduire.
+		// On part du principe que la division n'est possible que pour la fraction rationnelle, pas pour les coefficient
 		if (this.#factorized) {
-			let result = _checkFactorisation(givenRationnal.numerator)
+			const [num, den] = value.split('/')
 
-			if (result.score === 0) {
-				return makeCheckerResult("le numérateur n'est pas factorisé.")
-			} else if (result.score < 1) {
-				return makeCheckerResult(`au numérateur, le facteur \\(${result.display}\\) peut encore être factorisé`, result.score)
+			const numFactorized = checkPolynomIsFactorized(num, this.#factorized === 'F')
+
+			// contrôle du numérateur
+			if (!numFactorized) {
+				return makeCheckerResult(`Le numérateur n'est pas ${this.#factorized === 'F' ? 'entièrement ' : ''}factorisé`)
 			}
 
-			result = _checkFactorisation(givenRationnal.denominator)
+			// contrôle du dénominateur
+			if (den) {
+				const denFactorized = checkPolynomIsFactorized(den, this.#factorized === 'F')
 
-			if (result.score === 0) {
-				return makeCheckerResult("le dénominateur n'est pas factorisé.")
-			} else if (result.score < 1) {
-				return makeCheckerResult(`au dénominateur, le facteur \\(${result.display}\\) peut encore être factorisé`, result.score)
+				if (!denFactorized) {
+					return makeCheckerResult(`Le dénominateur n'est pas ${this.#factorized === 'F' ? 'entièrement ' : ''}factorisé`)
+				}
 			}
 		}
 
@@ -110,44 +117,44 @@ export class RationalChecker extends CheckerAbstract {
 }
 
 
-function _checkFactorisation(value: PolyFactor): { score: number, display: string } {
-	const result = {
-		score: 1,
-		display: ''
-	}
-
-	value.factors.forEach(factor => {
-
-		if (result.score > 0) {
-			const polynom = factor.polynom
-			const factors = polynom.factorize()
-			result.display = polynom.display
-
-			// C'est factorisé - rien à faire
-			if (factors.length === 1) {
-				return
-			}
-
-			// Il y a deux facteurs - regarde si l'un des deux est une mise en évidence.
-			if (factors.length === 2) {
-				// On regarde s'il y a un facteur de mise en évidence.
-				const k = factors.find(f => f.monoms.length === 1)
-
-				if (k) {
-					// On laisse passer une mise en évidence de -1
-					if (k.value === -1) {
-						return
-					}
-
-					// Le score dépend si ce n'est qu'un nombre ou un monome de type 2x, 2x^3,...
-					result.score = Math.min(result.score, k.degree().isZero() ? 0.9 : 0.5)
-					return
-				}
-			}
-
-			result.score = 0
-		}
-	})
-
-	return result
-}
+// function _checkFactorisation(value: PolyFactor): { score: number, display: string } {
+// 	const result = {
+// 		score: 1,
+// 		display: ''
+// 	}
+//
+// 	value.factors.forEach(factor => {
+//
+// 		if (result.score > 0) {
+// 			const polynom = factor.polynom
+// 			const factors = polynom.factorize()
+// 			result.display = polynom.display
+//
+// 			// C'est factorisé - rien à faire
+// 			if (factors.length === 1) {
+// 				return
+// 			}
+//
+// 			// Il y a deux facteurs - regarde si l'un des deux est une mise en évidence.
+// 			if (factors.length === 2) {
+// 				// On regarde s'il y a un facteur de mise en évidence.
+// 				const k = factors.find(f => f.monoms.length === 1)
+//
+// 				if (k) {
+// 					// On laisse passer une mise en évidence de -1
+// 					if (k.value === -1) {
+// 						return
+// 					}
+//
+// 					// Le score dépend si ce n'est qu'un nombre ou un monome de type 2x, 2x^3,...
+// 					result.score = Math.min(result.score, k.degree().isZero() ? 0.9 : 0.5)
+// 					return
+// 				}
+// 			}
+//
+// 			result.score = 0
+// 		}
+// 	})
+//
+// 	return result
+// }
