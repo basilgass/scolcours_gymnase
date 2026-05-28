@@ -16,8 +16,7 @@ import {javascript} from "@codemirror/lang-javascript"
 import {basicSetup} from "codemirror"
 import {latexLanguage} from "codemirror-lang-latex"
 import {parseMathMarkdown} from "@/helpers/codemirrorLatexMarkdown.ts"
-import type {EditorView} from "@codemirror/view"
-import {keymap} from "@codemirror/view"
+import {EditorView, keymap} from "@codemirror/view"
 import {Prec} from "@codemirror/state"
 import type {CompletionGroup} from "@/helpers/codemirror_completion.ts"
 
@@ -34,7 +33,7 @@ interface Props extends FormMakerBaseProps {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-	rows: 4,
+	rows: 1,
 	language: 'latex',
 	wrap: true,
 	resizeable: false,
@@ -52,12 +51,16 @@ const singleLineExt = computed(() =>
 		: []
 )
 
+const lineWrapExt = computed(() =>
+	props.wrap && !props.singleLine ? [EditorView.lineWrapping] : []
+)
+
 const extensions = computed(() => {
-	if (props.language === 'json') return [basicSetup, json(), ...singleLineExt.value, ...cmExtensions.value]
-	if (props.language === 'javascript') return [basicSetup, javascript(), ...singleLineExt.value, ...cmExtensions.value]
-	if (props.language === 'pidraw') return [basicSetup, ...pidrawExtensions, ...singleLineExt.value, ...cmExtensions.value]
-	if (props.language === 'pidraw-params') return [basicSetup, pidrawParamsLanguage, ...singleLineExt.value, ...cmExtensions.value]
-	return [basicSetup, markdown({extensions: [parseMathMarkdown(latexLanguage.parser)]}), ...singleLineExt.value, ...cmExtensions.value]
+	if (props.language === 'json') return [basicSetup, json(), ...singleLineExt.value, ...lineWrapExt.value, ...cmExtensions.value]
+	if (props.language === 'javascript') return [basicSetup, javascript(), ...singleLineExt.value, ...lineWrapExt.value, ...cmExtensions.value]
+	if (props.language === 'pidraw') return [basicSetup, ...pidrawExtensions, ...singleLineExt.value, ...lineWrapExt.value, ...cmExtensions.value]
+	if (props.language === 'pidraw-params') return [basicSetup, pidrawParamsLanguage, ...singleLineExt.value, ...lineWrapExt.value, ...cmExtensions.value]
+	return [basicSetup, markdown({extensions: [parseMathMarkdown(latexLanguage.parser)]}), ...singleLineExt.value, ...lineWrapExt.value, ...cmExtensions.value]
 })
 
 const theValue = defineModel<string>()
@@ -85,6 +88,8 @@ const codeTriggers = computed(() => {
 
 onMounted(() => {
 	if (!props.rows) return
+	if (props.singleLine) return
+	
 	const current = theValue.value ?? ''
 	const numberOfRows = current.split("\n").length
 	if (numberOfRows < props.rows) {

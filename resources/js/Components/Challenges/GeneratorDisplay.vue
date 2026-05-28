@@ -79,8 +79,6 @@ onMounted(() => {
 	scoreStore.resetScore(score)
 })
 
-
-// TODO : (P1) éviter de recharger le composant `QuestionShow` et faire un refresh propre. Problème de réactivité
 </script>
 
 <template>

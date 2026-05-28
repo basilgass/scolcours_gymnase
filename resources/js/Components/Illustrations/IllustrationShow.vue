@@ -18,8 +18,8 @@ const blockSsript = inject<UseScriptLoaderReturn>('blockScript', useScriptLoader
 const illustrationWithScript = computed(() => {
 
 	return {
-		parameters: useFormattedBody(props.illustration.parameters ?? "", blockSsript.merged),
-		code: useFormattedBody(props.illustration.code ?? "", blockSsript.merged)
+		parameters: useFormattedBody(props.illustration.parameters ?? "", blockSsript.merged, false),
+		code: useFormattedBody(props.illustration.code ?? "", blockSsript.merged, false)
 	}
 })
 

@@ -90,6 +90,10 @@ const md_macros: IMacroRecords = {
 	}
 }
 export const latex_macros: IMacroRecords = {
+	"\\(": {
+		math: false,
+		template: "\\( @ \\)"
+	},
 	"BPM": {
 		math: true,
 		template: '\\begin{pmatrix}\n\t@\n\\end{pmatrix}'

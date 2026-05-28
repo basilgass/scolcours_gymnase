@@ -47,10 +47,15 @@ function saveQuestion() {
 					flash.success("La question a été sauvegardée.")
 				})
 				.catch((error) => {
-					flash.error(
-						"Une erreur est survenue - voir la console"
-					)
-					console.warn(error)
+					const errors = error.response?.data?.errors
+					if (error.response?.status === 422 && errors) {
+						flash.error(Object.values(errors).flat().join(" "))
+					} else {
+						flash.error(
+							"Une erreur est survenue - voir la console"
+						)
+						console.warn(error)
+					}
 				})
 		})
 		.catch((error) => {

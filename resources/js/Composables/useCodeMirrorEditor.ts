@@ -296,8 +296,8 @@ export function useCodeMirrorExtensions(
 
 	return [
 		greekModeField,
-		greekHandler,
-		macroHandler,
+		Prec.high(greekHandler),
+		Prec.high(macroHandler),
 		...pimathExtension,
 		...customCompletionExtension,
 		Prec.highest(keymap.of([
