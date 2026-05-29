@@ -45,10 +45,10 @@ export class TableofsignChecker extends CheckerAbstract {
 
 		const columns = 2 * zeroes.split(',').length + 1
 
-		// Ligne de signes
+		// Ligne de signesb
 		if (signs === undefined) return "il faut entrer des signes."
 		if (signs.length !== columns) return "il manque des éléments dans la ligne des signes."
-		if (signs.replaceAll(/[+\-zd!]/g, '').length > 0) return "il y a des signes non compatibles."
+		if (signs.replaceAll(/[+\-zd!th]/g, '').length > 0) return "il y a des signes non compatibles."
 
 		// Ligne de croissance ou de courbure
 		if (grows_or_curves && grows_or_curves.length !== columns) {

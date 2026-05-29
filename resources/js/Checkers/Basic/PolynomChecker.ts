@@ -61,6 +61,7 @@ export class PolynomChecker extends CheckerAbstract {
 		if (A === false) {
 			return makeCheckerResult("le polynôme n'est pas formé correctement.")
 		}
+
 		if (Q === false) {
 			return makeCheckerResult("le polynôme de réponse n'est pas formé correctement.")
 		}

@@ -1,2 +1,57 @@
+# ============================================================
+# Scolcours Gymnase — robots.txt
+# https://g.scolcours.ch
+# ============================================================
+
 User-agent: *
-Disallow:
+
+# --- Authentification & espace utilisateur ---
+Disallow: /login
+Disallow: /register
+Disallow: /forgot-password
+Disallow: /reset-password/
+Disallow: /verify-email
+Disallow: /confirm-password
+Disallow: /dashboard
+
+# --- Back-office & dev ---
+Disallow: /admin/
+Disallow: /dev/
+Disallow: /telescope/
+Disallow: /api/
+
+# --- Espace classes / élèves ---
+Disallow: /cours/
+Disallow: /evaluations/
+Disallow: /quizz
+Disallow: /quizz/
+
+# --- Contenus interactifs sans valeur SEO ---
+Disallow: /jeux/
+Disallow: /questions/
+
+# --- Endpoints fonctionnels (pas des pages) ---
+Disallow: /dico/
+Disallow: /qr
+Disallow: /search/
+Disallow: /download/
+
+# --- Outils internes / debug ---
+Disallow: /b$
+Disallow: /g
+Disallow: /fullscreen
+Disallow: /latex/
+
+# --- Zones publiques indexables (autorisées par défaut) ---
+# /                       page d'accueil
+# /{theme}                index par thème
+# /{theme}/{chapter}      page de chapitre
+# /formulaire/...         formulaire / formules
+# /tools/...              outils publics
+# /decks/...              decks publics
+# /challenges/...         challenges
+# /generators/...         générateurs
+# /posts, /chapters       index généraux
+# /grapheur, /bareme      outils publics
+
+Sitemap: https://g.scolcours.ch/sitemap.xml

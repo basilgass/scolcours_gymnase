@@ -12,11 +12,13 @@ export class FunctionChecker extends CheckerAbstract {
 
 	constructor(config: string[] | string) {
 		super(config)
+
 		this.type = CHECKERS.FUNCTION
 		this.description = description
 
 		this.#developed = (this.config.includes("d") || this.config.includes("developed") || this.config.includes("dev"))
 
+		// Load the polynom checker AFTER
 		this.secondaryChecker = new PolynomChecker(this.config)
 	}
 

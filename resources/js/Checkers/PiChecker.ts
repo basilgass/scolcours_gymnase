@@ -71,11 +71,14 @@ export class PiChecker {
 		// name,a,b,c,[checker:name,d,e,f,g]
 		const [mainCheckerConfig, subCheckerConfig] = config?.split("checker:") ?? []
 
+		// Création du checker
 		this.#checker = this.#loadCheckerTo(mainCheckerConfig ?? '')
 
 		if (subCheckerConfig !== undefined) {
+			// Si on définit un subchecker, on le crée ici.
 			this.#checker.secondaryChecker = this.#loadCheckerTo(subCheckerConfig)
-		} else {
+		} else if (this.#checker.secondaryChecker === null) {
+			// Si le subchecker n'est pas défini, on crée la version par défaut.
 			this.#checker.secondaryChecker = this.#loadCheckerTo('exact')
 		}
 

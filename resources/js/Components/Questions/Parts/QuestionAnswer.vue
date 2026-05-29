@@ -14,6 +14,7 @@ import type {KeyboardInputInterface} from "@/types/keyboardInterfaces.ts"
 import ScButton from "@/Components/Ui/Button/scButton.vue"
 import {useQuestionValidation} from "@/Components/Questions/useQuestionValidation.ts"
 import {useWrongAnswerAnimation} from "@/Composables/useHelpers.ts"
+import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
 
 const questionData = inject(questionDataKey)!
 
@@ -110,9 +111,18 @@ const answerIntegrityCheck = computed(() => {
 	return integrity === '' ? true : integrity
 })
 
+const editMode = useStoreEditMode()
+const adminCheckerDetails = computed(() => {
+	const chkName = questionData.validators.value[questionData.current.id.value].checker.checker.checker.type
+	const subChkName = questionData.validators.value[questionData.current.id.value].checker.checker.secondaryChecker.type
+
+	return chkName + (subChkName ? ` (${subChkName})` : '')
+})
+
 function onErrorClosing(index: number) {
 	useValidation.errors.value.splice(index, 1)
 }
+
 </script>
 
 <template>
@@ -122,6 +132,13 @@ function onErrorClosing(index: number) {
 			v-katex.auto="answerFormat"
 			class="text-center text-xs text-gray-500 my-2"
 		/>
+
+		<div
+			v-admin="editMode.enable"
+			class="font-code text-xs text-center text-gray-500"
+		>
+			checker : {{ adminCheckerDetails }}
+		</div>
 
 		<!-- Toggle keyboard -->
 		<div

@@ -1,5 +1,5 @@
 import {describe, expect, test} from "vitest"
-import {checkPolynomIsFactorized} from "@/Checkers"
+import {checkPolynomIsFactorized, PolynomChecker} from "@/Checkers"
 
 describe("PolynomChecker", () => {
 	test("contrôle qu'un polynome du premier degré est entièrement factorisé", () => {
@@ -47,5 +47,14 @@ describe("PolynomChecker", () => {
 		const result = checkPolynomIsFactorized(value, false)
 
 		expect(result).toBe(true)
+	})
+
+	test('polynome désordré', () => {
+		const chk = new PolynomChecker('')
+		chk.answer = 'xyz'
+
+		console.log(chk.checkValue('xyz'))
+		console.log(chk.checkValue('yzx'))
+		console.log(chk.checkValue('zyx'))
 	})
 })

@@ -6,5 +6,6 @@ Powered by Scolcours
 </div>
 
 ## Introduction
-This is my *private* repo for my mathematical website, designed for the Switzerland gymnasium.
+
+This is my repo for my mathematical website, designed for the Switzerland gymnasium.
 
