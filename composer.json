@@ -9,12 +9,11 @@
 	"license": "MIT",
 	"require": {
 		"php": "^8.5",
-		"dragon-code/pretty-routes": "^3.0",
 		"guzzlehttp/guzzle": "^7",
 		"inertiajs/inertia-laravel": "^v3.0.6",
+		"ismaelw/laratex": "dev-main",
 		"laravel/framework": "^v13.5.0",
 		"laravel/sanctum": "^v4",
-		"laravel/telescope": "^v5.7.0",
 		"laravel/tinker": "^v3.0.2",
 		"spatie/laravel-sitemap": "^8.1",
 		"staudenmeir/belongs-to-through": "^2.17",
@@ -22,14 +21,15 @@
 	},
 	"require-dev": {
 		"barryvdh/laravel-ide-helper": "^v3",
+		"dragon-code/pretty-routes": "^3.0",
 		"fakerphp/faker": "^v1",
 		"fruitcake/laravel-telescope-toolbar": "^v1",
-		"ismaelw/laratex": "dev-main",
 		"laravel/boost": "^2.2",
 		"laravel/breeze": "^v2",
 		"laravel/sail": "^v1",
+		"laravel/telescope": "^v5.7.0",
 		"mockery/mockery": "^1",
-		"phpunit/phpunit": "^12.0",
+		"phpunit/phpunit": "^13",
 		"roave/security-advisories": "dev-latest",
 		"spatie/laravel-ignition": "^2"
 	},
@@ -75,6 +75,6 @@
 			"php-http/discovery": true
 		}
 	},
-	"minimum-stability": "dev",
+	"minimum-stability": "stable",
 	"prefer-stable": true
 }
