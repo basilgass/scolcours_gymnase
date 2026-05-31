@@ -1,1 +1,0 @@
-import{mt as e}from"./@inertiajs-DPgfgE8-.js";function t(t){let n=e([]);return{errors:n,expose:{focus:()=>t.value?.focus?.(),validate:()=>n.value}}}export{t};

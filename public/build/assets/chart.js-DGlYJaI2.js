@@ -1,0 +1,1 @@
+import{a as e,l as t}from"./@sgratzl-DSVzbcsl.js";e.register(...t);

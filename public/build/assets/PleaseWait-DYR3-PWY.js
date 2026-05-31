@@ -1,1 +1,0 @@
-import{E as e,H as t,Tt as n,k as r,w as i,x as a}from"./@inertiajs-DPgfgE8-.js";var o=r({__name:`PleaseWait`,props:{text:{}},setup(r){return(o,s)=>(t(),i(`div`,null,[a(`p`,null,[s[0]||=a(`i`,{class:`bi bi-watch`},null,-1),e(` `+n(r.text??`merci de patienter...`),1)])]))}});export{o as t};

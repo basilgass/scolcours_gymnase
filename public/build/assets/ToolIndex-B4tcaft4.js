@@ -1,1 +1,0 @@
-import{D as e,H as t,k as n,w as r}from"./@inertiajs-DPgfgE8-.js";import{t as i}from"./LayoutMain-CDp-JmDQ.js";import{t as a}from"./ToolsSearch-CuhhtTY9.js";var o={class:`scolcours-container`},s=n({layout:i,__name:`ToolIndex`,setup(n){return(n,i)=>(t(),r(`section`,o,[e(a)]))}});export{s as default};
