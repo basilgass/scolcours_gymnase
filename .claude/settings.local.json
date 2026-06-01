@@ -26,7 +26,8 @@
       "Bash(node:*)",
       "Bash(npx vitest:*)",
       "Bash(find:*)",
-      "Bash(grep -l \"v-katex\" /c/websites/scolcours_gymnase/resources/js/Pages/**/*.vue)"
+      "Bash(grep -l \"v-katex\" /c/websites/scolcours_gymnase/resources/js/Pages/**/*.vue)",
+      "PowerShell(npm view *)"
     ]
   },
   "enableAllProjectMcpServers": true,

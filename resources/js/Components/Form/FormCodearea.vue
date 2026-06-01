@@ -60,6 +60,7 @@ const extensions = computed(() => {
 	if (props.language === 'javascript') return [basicSetup, javascript(), ...singleLineExt.value, ...lineWrapExt.value, ...cmExtensions.value]
 	if (props.language === 'pidraw') return [basicSetup, ...pidrawExtensions, ...singleLineExt.value, ...lineWrapExt.value, ...cmExtensions.value]
 	if (props.language === 'pidraw-params') return [basicSetup, pidrawParamsLanguage, ...singleLineExt.value, ...lineWrapExt.value, ...cmExtensions.value]
+
 	return [basicSetup, markdown({extensions: [parseMathMarkdown(latexLanguage.parser)]}), ...singleLineExt.value, ...lineWrapExt.value, ...cmExtensions.value]
 })
 
@@ -89,7 +90,7 @@ const codeTriggers = computed(() => {
 onMounted(() => {
 	if (!props.rows) return
 	if (props.singleLine) return
-	
+
 	const current = theValue.value ?? ''
 	const numberOfRows = current.split("\n").length
 	if (numberOfRows < props.rows) {
