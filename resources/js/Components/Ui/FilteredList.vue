@@ -77,8 +77,10 @@ const filteredList = computed<(T & { id: number })[]>(() => {
 				if (props.filterByTheme === true) {
 					// return item.theme_id === selectedTheme.value
 					const filter = item as unknown as FilterItem // destructure for typescript
+
 					return filter.theme_id === selectedTheme.value ||
 						filter.theme?.id === selectedTheme.value
+
 				} else if (!(typeof props.filterByTheme === "boolean")) {
 					return props.filterByTheme(item) === selectedTheme.value
 				}

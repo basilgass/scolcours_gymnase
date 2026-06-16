@@ -3,7 +3,6 @@
 	lang="ts"
 >
 import {router} from "@inertiajs/vue3"
-import LayoutMain from "@/Layouts/LayoutMain.vue"
 import axios from "axios"
 import type {QuizzInterface, QuizzSessionInterface, TeamInterface} from "@/types/modelInterfaces"
 import ScButton from "@/Components/Ui/Button/scButton.vue"
@@ -13,10 +12,10 @@ import {computed, onMounted, reactive, ref} from "vue"
 import QuizzSessionItem from "@/Components/Quizzs/QuizzSessionItem.vue"
 import Card from "@/Components/Ui/Card.vue"
 import FormTeam from "@/Components/Form/FormTeam.vue"
-import FormInput from "@/Components/Form/FormInput.vue"
+import LayoutAdmin from "@/Layouts/LayoutAdmin.vue"
 
 type QuizzSessionsType = Record<number, QuizzSessionInterface[]>
-defineOptions({layout: LayoutMain})
+defineOptions({layout: LayoutAdmin})
 
 const props = defineProps<{
 	quizzs: QuizzInterface[]
@@ -153,15 +152,15 @@ onMounted(() => {
 
 				<div class="flex justify-between">
 					<FormTeam
-						label="classes"
 						v-model="team"
+						label="classes"
 					/>
 
 					<sc-button
+						v-if="quizz.questions_count && team!==null"
 						type="add"
 						xs
 						@click="createSession(quizz.id)"
-						v-if="quizz.questions_count && team!==null"
 					>
 						créer une session
 					</sc-button>
@@ -193,9 +192,9 @@ onMounted(() => {
 							class="space-y-3"
 						>
 							<quizz-session-item
-								:session
 								v-for="session in pastSessions[quizz.id]"
 								:key="`session-${session.id}`"
+								:session
 								@destroy="destroySession(quizz.id, session.id)"
 							/>
 						</div>

@@ -3,9 +3,10 @@
 	setup
 >
 import {PropType} from "vue"
-import type {ChallengeInterface} from "@/types/modelInterfaces"
+import {ChallengeInterface} from "@/types/modelInterfaces"
 import Card from "@/Components/Ui/Card.vue"
 import LayoutAdmin from "@/Layouts/LayoutAdmin.vue"
+import FilteredList from "@/Components/Ui/FilteredList.vue"
 
 defineOptions({layout: LayoutAdmin})
 
@@ -19,29 +20,34 @@ defineProps({
 		<h1 class="text-3xl pt-5 mb-10">
 			administration des challenges
 		</h1>
-		<div class="w-full grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
-			<card
-				v-for="challenge in challenges"
-				:key="challenge.slug"
-				v-theme.bg.text="challenge.chapter?.theme_id"
-				with-themes
-			>
-				<div>
-					<InertiaLink
-						v-katex.auto="challenge.title"
-						:href="route('challenges.show', { challenge: challenge.slug })"
-						class="text-lg leading-6 font-medium"
-					/>
-					<p class="max-w-2xl text-sm font-code">
-						{{ challenge.slug }}
-					</p>
-					<div class=" mt-3 flex justify-between text-xs font-code">
-						<div>{{ challenge.updated_at }}</div>
-						<div>Is activated</div>
+
+		<filtered-list
+			:list="challenges"
+			list-class="grid grid-cols-1 lg:grid-cols-2 gap-x-12 gap-y-4"
+			filter-by-theme
+		>
+			<template #card="{ item }: { item: ChallengeInterface }">
+				<card
+					v-theme.bg.text="item.theme_id"
+					with-themes
+				>
+					<div>
+						<InertiaLink
+							v-katex.auto="item.title"
+							:href="route('challenges.show', { challenge: item.slug })"
+							class="text-lg leading-6 font-medium"
+						/>
+						<p class="max-w-2xl text-sm font-code">
+							{{ item.slug }}
+						</p>
+						<div class=" mt-3 flex justify-between text-xs font-code">
+							<div>{{ item.updated_at }}</div>
+							<div>Is activated</div>
+						</div>
 					</div>
-				</div>
-			</card>
-		</div>
+				</card>
+			</template>
+		</filtered-list>
 	</section>
 </template>
 

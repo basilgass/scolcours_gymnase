@@ -210,11 +210,13 @@ class AdminController extends Controller
 
 	public function challenges()
 	{
+		// TODO : passer par un ChallengeResource ?
 		return Inertia::render(
 			'Challenges/admin/AdminChallenge',
 			[
 				'challenges' => Challenge::all()->map(function (Challenge $tool, $key) {
 					return [
+						'id'         => $tool->id,
 						'slug'       => $tool->slug,
 						'title'      => $tool->title,
 						'theme_id'   => $tool->chapter?->theme_id,

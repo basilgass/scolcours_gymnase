@@ -3,7 +3,6 @@
 	setup
 >
 
-import LayoutMain from "@/Layouts/LayoutMain.vue"
 import {ChapterInterface, DeckInterface} from "@/types/modelInterfaces"
 import {computed, PropType, reactive, ref} from "vue"
 import ScButton from "@/Components/Ui/Button/scButton.vue"
@@ -19,8 +18,9 @@ import FormInput from "@/Components/Form/FormInput.vue"
 import {slugify} from "@/scolcours.ts"
 import FilteredList from "@/Components/Ui/FilteredList.vue"
 import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
+import LayoutAdmin from "@/Layouts/LayoutAdmin.vue"
 
-defineOptions({layout: LayoutMain})
+defineOptions({layout: LayoutAdmin})
 const editMode = useStoreEditMode()
 
 const flash = useStoreFlashMessage()
