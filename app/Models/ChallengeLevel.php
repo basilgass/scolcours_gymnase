@@ -41,7 +41,7 @@ class ChallengeLevel extends Model
     {
         return $this
             ->morphToMany(Generator::class, 'generatorable')
-            ->withPivot('order', 'config')
+            ->withPivot('id', 'order', 'config', 'parameters')
             ->orderByPivot('order');
     }
 }

@@ -7,7 +7,6 @@ use App\Http\Resources\ChallengeResource;
 use App\Http\Resources\ScoreResource;
 use App\Models\Challenge;
 use App\Models\Chapter;
-use App\Models\Generator;
 use App\Models\Team;
 use App\Models\Theme;
 use App\Support\ScoreLeaderboard;
@@ -77,78 +76,6 @@ class ChallengeApiController extends Controller
 
 		// Redirect to ...
 		//		return redirect(route('theme.chapter', [$theme, $chapter]));
-		return true;
-	}
-
-	public function indexGenerator(Challenge $challenge)
-	{
-		return Generator::where('theme_id', $challenge->chapter->theme->id)
-		                ->whereNotIn('id', $challenge->generators->pluck('id'))
-		                ->get();
-	}
-
-
-	// REFACTOR: move all generator to it's controller
-
-	public function storeGenerator(Request $request, Challenge $challenge)
-	{
-		// REFACTOR: Must be moved to GeneratorApiController and the corresponding route removed.
-		// Get the order
-		$order = count($challenge->generators) + 1;
-
-		// Create the generator
-		$generator = Generator::create([
-			'theme_id' => $challenge->chapter->theme->id,
-			'slug'     => $challenge->chapter->slug . '-' . $challenge->slug . '-' . $order,
-			'title'    => '',
-			'template' => '\\[question = answer\\]',
-			'code'     => 'return {question: "", answer: ""}',
-		]);
-
-		return $this->attachGenerator($challenge, $generator);
-	}
-
-	public function attachGenerator(Challenge $challenge, Generator $generator)
-	{
-		$order = count($challenge->generators) + 1;
-
-		// Attach the generator with the order
-		$challenge->generators()->attach(
-			$generator,
-			['order' => $order]
-		);
-
-		// Refresh the challenge
-		$challenge->refresh();
-
-		// Return all the generators
-		return $challenge->generators;
-	}
-
-	public function detachGenerator(Challenge $challenge, Generator $generator, Request $request)
-	{
-		$challenge->generators()->detach($generator);
-
-		if ($request['destroy']) {
-			$generator->delete();
-		}
-	}
-
-	public function updateGeneratorsOrder(Request $request, Challenge $challenge)
-	{
-		$validated = $request->validate([
-			'order'         => ['array'],
-			'order.*.id'    => ['exists:App\Models\Generator'],
-			'order.*.order' => ['int', 'min:1']
-		]);
-
-		// Update the order
-		foreach ($request['order'] as $value) {
-			$challenge->generators()->updateExistingPivot($value['id'], [
-				"order" => $value['order']
-			]);
-		}
-
 		return true;
 	}
 

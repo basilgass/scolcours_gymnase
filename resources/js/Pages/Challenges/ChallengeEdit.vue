@@ -239,6 +239,7 @@ function deleteLevel(levelId: number) {
 					:level="level"
 					:is-last="theChallenge.levels.length <= 1"
 					@deleted="deleteLevel(level.id)"
+					@generators-updated="level.generators = $event"
 				/>
 			</div>
 		</div>

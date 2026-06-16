@@ -11,8 +11,8 @@ import FormInput from "@/Components/Form/FormInput.vue"
 import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
 import {slugify} from "@/scolcours.ts"
 import LayoutAdmin from "@/Layouts/LayoutAdmin.vue"
-import ArticleTitle from "@/Components/Ui/ArticleTitle.vue";
-import DialogModal from "@/Components/Ui/DialogModal.vue";
+import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
+import DialogModal from "@/Components/Ui/DialogModal.vue"
 
 defineOptions({layout: LayoutAdmin})
 
@@ -83,9 +83,9 @@ function addToRef(el: InstanceType<typeof GeneratorItem>) {
 		<article-title
 			title="gestion des générateurs"
 			:return-link="{
-					url: route('admin.index'),
-					label: 'retour à l\'administration'
-				}"
+				url: route('admin.index'),
+				label: 'retour à l\'administration'
+			}"
 		>
 			<template #right>
 				<sc-button
@@ -110,7 +110,7 @@ function addToRef(el: InstanceType<typeof GeneratorItem>) {
 
 		<filtered-list
 			:list="filteredGenerators"
-			list-class="flex flex-col gap-12"
+			list-class="grid grid-cols-1 lg:grid-cols-2 gap-12"
 			filter-by-theme
 		>
 			<template #card="{ item }: { item: GeneratorInterface }">

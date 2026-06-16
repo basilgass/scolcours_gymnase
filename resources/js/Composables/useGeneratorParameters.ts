@@ -1,8 +1,5 @@
 import {parseNumberSet} from "@/Composables/useNumberSet.ts"
-import type {
-	GeneratorParameterFormat,
-	GeneratorParameterSchemaEntry
-} from "@/types/challengeInterfaces.ts"
+import type {GeneratorParameterFormat, GeneratorParameterSchemaEntry} from "@/types/challengeInterfaces.ts"
 import type {GeneratorParams} from "@/Composables/useGenerator.ts"
 
 export type GeneratorParameterRawValue = string
@@ -16,6 +13,7 @@ export function castParameterValue(
 			return Number(raw)
 		case 'set':
 			return parseNumberSet(raw).values
+		case 'choices':
 		case 'string':
 		default:
 			return raw

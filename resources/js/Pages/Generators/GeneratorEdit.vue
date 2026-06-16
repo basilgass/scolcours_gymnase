@@ -163,7 +163,7 @@ function historyBack() {
 
 				<markdown-it
 					:text="theGenerator.body"
-					class="bg-content ml-[110px]"
+					class="bg-content ml-27.5"
 				/>
 			</div>
 
@@ -199,7 +199,7 @@ function historyBack() {
 			<generators-examples
 				:generator="theGenerator"
 				:questions-number="5"
-				class="min-w-[250px]"
+				class="min-w-62.5"
 				generate-on-mounted
 			/>
 		</div>

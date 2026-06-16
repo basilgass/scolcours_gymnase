@@ -71,7 +71,7 @@ const inputClassComputed = computed(() => {
 		>
 			<div
 				class="absolute left-0 right-0 whitespace-nowrap"
-				:class="xs ? 'text-tiny top-[-1rem]': 'text-sm top-[-1.2rem]'"
+				:class="xs ? 'text-tiny -top-4': 'text-sm top-[-1.2rem]'"
 			>
 				<label
 					v-show="!inlineLabel"
@@ -123,7 +123,10 @@ const inputClassComputed = computed(() => {
 					</div>
 				</div>
 
-				<div v-if="btn">
+				<div
+					v-if="btn"
+					class="flex self-stretch"
+				>
 					<button
 						class="h-full px-2
 									bg-slate-200 dark:bg-slate-700
@@ -138,7 +141,10 @@ const inputClassComputed = computed(() => {
 						</slot>
 					</button>
 				</div>
-				<div v-else-if="$slots['button']">
+				<div
+					v-else-if="$slots['button']"
+					class="flex self-stretch"
+				>
 					<slot name="button" />
 				</div>
 			</div>

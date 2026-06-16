@@ -7,16 +7,23 @@ import FormNumberSet from "@/Components/Form/FormNumberSet.vue"
 import FormInput from "@/Components/Form/FormInput.vue"
 import Card from "@/Components/Ui/Card.vue"
 import ScButton from "@/Components/Ui/Button/scButton.vue"
+import FormSelect from "@/Components/Form/FormSelect.vue"
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
 	generator: GeneratorInterface
-}>()
+	readQuery?: boolean
+	showReload?: boolean
+}>(), {
+	readQuery: true,
+	showReload: true
+})
 const parameters = defineModel<Record<string, GeneratorParameterRawValue>>()
 
 onMounted(() => {
-	// On récupère les données dans le query si nécessaire.
-	const query = new URLSearchParams(window.location.search)
-	const queryParams = Object.fromEntries(query.entries()) as Record<string, GeneratorParameterRawValue>
+	// On récupère les données dans le query si nécessaire (contexte joueur uniquement).
+	const queryParams: Record<string, GeneratorParameterRawValue> = props.readQuery
+		? Object.fromEntries(new URLSearchParams(window.location.search).entries()) as Record<string, GeneratorParameterRawValue>
+		: {}
 
 	// convert Record<string, GeneratorParameterSchemaEntry> to Record<string, GeneratorParametersRawValue>
 	const defaults: Record<string, GeneratorParameterRawValue> = Object.fromEntries(
@@ -32,6 +39,7 @@ onMounted(() => {
 
 const emit = defineEmits<{
 	reload: [];
+	change: [];
 }>()
 </script>
 
@@ -57,21 +65,34 @@ const emit = defineEmits<{
 					v-model="parameters[key]"
 					:label="value.description"
 					type="number"
+					@update="emit('change')"
 				/>
 				<form-input
 					v-else-if="value.format==='string'"
 					v-model="parameters[key]"
 					:label="value.description"
 					type="text"
+					@update="emit('change')"
 				/>
 				<form-number-set
 					v-else-if="value.format==='set'"
 					v-model="parameters[key]"
 					:label="value.description"
+					@update="emit('change')"
+				/>
+				<form-select
+					v-else-if="value.format === 'choices'"
+					v-model="parameters[key]"
+					:choices="(value.choices ?? '').split(',').map(s => s.trim()).filter(Boolean)"
+					:label="value.description"
+					@update="emit('change')"
 				/>
 			</div>
 		</div>
-		<template #footer>
+		<template
+			v-if="showReload"
+			#footer
+		>
 			<div class="flex justify-end py-1">
 				<sc-button
 					type="primary"

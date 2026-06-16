@@ -15,7 +15,11 @@ const emits = defineEmits<{
 useMagicKeys({
 	passive: false,
 	onEventFired: (e) => {
-		if (e.key === 'Escape') {
+		// keydown uniquement : useMagicKeys déclenche onEventFired sur keydown ET keyup.
+		// Sans ce filtre, doCancel() serait appelé deux fois par Échap, et un composant
+		// enfant qui stoppe la propagation du keydown verrait quand même le keyup fermer
+		// le dialogue.
+		if (e.type === 'keydown' && e.key === 'Escape') {
 			doCancel()
 		}
 	}

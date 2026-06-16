@@ -31,8 +31,10 @@ export class FractionChecker extends CheckerAbstract {
 			: "réponse sous forme de fraction"
 	}
 
-	override checkFormat(value: string): string {
-		try {
+	override checkFormat(values: string): string {
+		const fractions: string[] = values.split('=')
+
+		for (let value of fractions) {
 			if (value === '' || value === '-') {
 				return "merci de donner une fraction..."
 			}
@@ -56,14 +58,32 @@ export class FractionChecker extends CheckerAbstract {
 				return "Le dénominateur ne peut pas être zéro."
 			}
 
-			new Fraction(value)
-			return ""
-		} catch {
-			return "La fraction n'est pas formatée correctement."
+			if (!Fraction.isFraction(value)) {
+				return "La fraction n'est pas formatée correctement."
+			}
 		}
+
+		return ""
 	}
 
-	override checkValue(value: string): CheckerResult {
+	override checkValue(values: string): CheckerResult {
+		// On ne prend en compte que la dernière fraction
+		const fractions = values.split('=')
+
+		// Toutes les fractions doivent être similaires.
+		if (fractions.length > 1) {
+			const fracs: Fraction[] = fractions.map(f => new Fraction(f))
+			const first = fracs.shift()
+			for (let f of fracs) {
+				if (!f.isEqual(first)) {
+					return makeCheckerResult(`\\(\\displaystyle${first.tex}\\) et \\(\\displaystyle ${f.tex}\\) ne sont pas équivalents`)
+				}
+			}
+		}
+
+		const value = fractions[fractions.length - 1]
+
+		// On contrôle la valeur finale.
 		const FGiven = new Fraction(value)
 		const FExpected = new Fraction(this.answer)
 

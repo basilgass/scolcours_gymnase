@@ -1,9 +1,10 @@
 <script lang="ts" setup>
 import FormInput from "@/Components/Form/FormInput.vue"
 import FormSearchModel from "@/Components/Form/FormSearchModel/FormSearchModel.vue"
+import ChallengeGeneratorEdit from "@/Components/Challenges/ChallengeGeneratorEdit.vue"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
 import Card from "@/Components/Ui/Card.vue"
-import {ChallengeLevelInterface, GeneratorInterface} from "@/types/modelInterfaces"
+import {ChallengeLevelInterface} from "@/types/modelInterfaces"
 import axios from "axios"
 import {ref} from "vue"
 
@@ -14,6 +15,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
 	deleted: []
+	generatorsUpdated: [generators: ChallengeLevelInterface["generators"]]
 }>()
 
 // ── Local reactive copy ────────────────────────────────────────────────────
@@ -49,65 +51,15 @@ function attachGenerator(generatorId: number) {
 			generator: generatorId
 		}))
 		.then((res) => {
-			localLevel.value.generators = res.data
+			applyGenerators(res.data)
 		})
 }
 
-function detachGenerator(generatorId: number) {
-	axios
-		.post(route("api.admin.challengelevels.generators.detach", {
-			challengeLevel: localLevel.value.id,
-			generator: generatorId
-		}))
-		.then((res) => {
-			localLevel.value.generators = res.data
-		})
-}
-
-// ── Time per question ─────────────────────────────────────────────────────
-
-// Tracks which generator's time_per_question input is visible (by generator id)
-const timeEditVisible = ref<Set<number>>(new Set(
-	props.level.generators
-		.filter(g => g.config?.time_per_question != null)
-		.map(g => g.id)
-))
-
-function showTimeEdit(gen: GeneratorInterface) {
-	if (!gen.config) {
-		gen.config = {time_per_question: null}
-	}
-	timeEditVisible.value = new Set([...timeEditVisible.value, gen.id])
-}
-
-function saveTimePerQuestion(gen: GeneratorInterface) {
-	const timePerQuestion = gen.config?.time_per_question ?? null
-
-	axios.patch(
-		route("api.admin.challengelevels.generators.update", {
-			challengeLevel: localLevel.value.id,
-			generator: gen.id
-		}),
-		{time_per_question: timePerQuestion}
-	).then((res) => {
-		localLevel.value.generators = res.data
-	})
-}
-
-function clearTimePerQuestion(gen: GeneratorInterface) {
-	gen.config = null
-	timeEditVisible.value.delete(gen.id)
-	timeEditVisible.value = new Set(timeEditVisible.value)
-
-	axios.patch(
-		route("api.admin.challengelevels.generators.update", {
-			challengeLevel: localLevel.value.id,
-			generator: gen.id
-		}),
-		{time_per_question: null}
-	).then((res) => {
-		localLevel.value.generators = res.data
-	})
+// Met à jour la liste locale ET propage au parent (ChallengeEdit) pour que le
+// blitzWarning, calculé sur theChallenge, reste réactif.
+function applyGenerators(generators: ChallengeLevelInterface["generators"]) {
+	localLevel.value.generators = generators
+	emit("generatorsUpdated", generators)
 }
 </script>
 
@@ -133,59 +85,13 @@ function clearTimePerQuestion(gen: GeneratorInterface) {
 			v-if="localLevel.generators.length > 0"
 			class="flex flex-col gap-1"
 		>
-			<div
+			<challenge-generator-edit
 				v-for="gen of localLevel.generators"
-				:key="`gen-${gen.id}`"
-				class="flex items-center justify-between bg-gray-50 py-2 px-3 rounded text-sm gap-2"
-			>
-				<span
-					v-katex.auto.inline="gen.title"
-					class="flex-1"
-				/>
-
-				<!-- Time per question -->
-				<div class="flex items-center gap-1">
-					<template v-if="timeEditVisible.has(gen.id)">
-						<FormInput
-							v-model="gen.config!.time_per_question"
-							label="sec"
-							name="time_per_question"
-							type="number"
-							inline-label
-							sm
-							class="max-w-28"
-							@change="saveTimePerQuestion(gen)"
-						/>
-						<button
-							class="text-gray-400 hover:text-red-400 px-1 text-xs"
-							title="supprimer la limite"
-							@click="clearTimePerQuestion(gen)"
-						>
-							<i class="bi bi-x-circle" />
-						</button>
-					</template>
-					<button
-						v-else
-						class="text-gray-400 hover:text-gray-600 text-xs whitespace-nowrap"
-						@click="showTimeEdit(gen)"
-					>
-						sans limite
-					</button>
-				</div>
-
-				<a
-					:href="route('admin.generators.edit', [gen.id])"
-					class="text-gray-400 hover:text-gray-600 px-2"
-				>
-					id: {{ gen.id }} <i class="bi bi-pencil" />
-				</a>
-				<button
-					class="text-red-300 hover:text-red-500 px-2"
-					@click="detachGenerator(gen.id)"
-				>
-					<i class="bi bi-trash" />
-				</button>
-			</div>
+				:key="`gen-${gen.pivot_id}`"
+				:level-id="localLevel.id"
+				:generator="gen"
+				@update="applyGenerators"
+			/>
 		</div>
 		<div
 			v-else

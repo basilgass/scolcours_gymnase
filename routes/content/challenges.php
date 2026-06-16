@@ -63,25 +63,10 @@ Route::middleware('api')
 			                    ->name('destroy');
 			               Route::post('levels/{challengeLevel}/generators/{generator}/attach', [ChallengeLevelApiController::class, 'attachGenerator'])
 			                    ->name('generators.attach');
-			               Route::post('levels/{challengeLevel}/generators/{generator}/detach', [ChallengeLevelApiController::class, 'detachGenerator'])
+			               Route::post('levels/{challengeLevel}/generatorables/{generatorable}/detach', [ChallengeLevelApiController::class, 'detachGenerator'])
 			                    ->name('generators.detach');
-			               Route::patch('levels/{challengeLevel}/generators/{generator}', [ChallengeLevelApiController::class, 'updateGeneratorConfig'])
+			               Route::patch('levels/{challengeLevel}/generatorables/{generatorable}', [ChallengeLevelApiController::class, 'updateGeneratorConfig'])
 			                    ->name('generators.update');
-		               });
-
-		          Route::prefix('challenges')
-		               ->as('challenges.')
-		               ->group(function () {
-			               Route::get('{challenge}/generators', [ChallengeApiController::class, 'indexGenerator'])
-			                    ->name('generators.index');
-			               Route::patch('{challenge}/generators/order', [ChallengeApiController::class, "updateGeneratorsOrder"])
-			                    ->name('generators.order');
-			               Route::post("{challenge}/generators", [ChallengeApiController::class, "storeGenerator"])
-			                    ->name('generators.store');
-			               Route::post("{challenge}/generators/{generator}/attach", [ChallengeApiController::class, "attachGenerator"])
-			                    ->name('generators.attach');
-			               Route::post("{challenge}/generators/{generator}/detach", [ChallengeApiController::class, "detachGenerator"])
-			                    ->name('generators.detach');
 		               });
 	          });
 

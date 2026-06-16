@@ -8,8 +8,10 @@ use App\Http\Resources\GeneratorResource;
 use App\Models\Challenge;
 use App\Models\ChallengeLevel;
 use App\Models\Generator;
+use App\Models\Generatorable;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class ChallengeLevelApiController extends Controller
 {
@@ -59,40 +61,63 @@ class ChallengeLevelApiController extends Controller
         return true;
     }
 
-    public function attachGenerator(ChallengeLevel $challengeLevel, Generator $generator): mixed
+    public function attachGenerator(ChallengeLevel $challengeLevel, Generator $generator): AnonymousResourceCollection
     {
         $order = $challengeLevel->generators()->count() + 1;
 
         $challengeLevel->generators()->attach($generator, ['order' => $order]);
 
-        $challengeLevel->refresh();
-
-        return $challengeLevel->generators;
+        return GeneratorResource::collection($challengeLevel->load('generators')->generators);
     }
 
-    public function detachGenerator(ChallengeLevel $challengeLevel, Generator $generator): mixed
+    public function detachGenerator(ChallengeLevel $challengeLevel, Generatorable $generatorable): AnonymousResourceCollection
     {
-        $challengeLevel->generators()->detach($generator);
+        $this->ensurePivotBelongsToLevel($challengeLevel, $generatorable);
 
-        $challengeLevel->refresh();
+        $generatorable->delete();
 
-        return $challengeLevel->generators;
+        return GeneratorResource::collection($challengeLevel->load('generators')->generators);
     }
 
-    public function updateGeneratorConfig(ChallengeLevel $challengeLevel, Generator $generator, Request $request): mixed
+    public function updateGeneratorConfig(ChallengeLevel $challengeLevel, Generatorable $generatorable, Request $request): AnonymousResourceCollection
     {
+        $this->ensurePivotBelongsToLevel($challengeLevel, $generatorable);
+
         $validated = $request->validate([
-            'time_per_question' => ['nullable', 'numeric', 'min:1'],
+            'time_per_question' => ['sometimes', 'nullable', 'numeric', 'min:1'],
+            'parameters'        => ['sometimes', 'nullable', 'array'],
         ]);
 
-        $config = $validated['time_per_question'] !== null
-            ? json_encode(['time_per_question' => $validated['time_per_question']])
-            : null;
+        $pivotUpdate = [];
 
-        $challengeLevel->generators()->updateExistingPivot($generator->id, ['config' => $config]);
+        if ($request->has('time_per_question')) {
+            $pivotUpdate['config'] = $validated['time_per_question'] !== null
+                ? json_encode(['time_per_question' => $validated['time_per_question']])
+                : null;
+        }
 
-        $challengeLevel->refresh();
+        if ($request->has('parameters')) {
+            $pivotUpdate['parameters'] = ! empty($validated['parameters'])
+                ? json_encode($validated['parameters'])
+                : null;
+        }
 
-        return $challengeLevel->generators;
+        $generatorable->update($pivotUpdate);
+
+        return GeneratorResource::collection($challengeLevel->load('generators')->generators);
+    }
+
+    /**
+     * Garantit que la ligne de pivot appartient bien au niveau ciblé : le binding
+     * par id seul n'est pas scopé au parent, un id forgé pointant vers un autre
+     * generatorable doit être rejeté.
+     */
+    private function ensurePivotBelongsToLevel(ChallengeLevel $challengeLevel, Generatorable $generatorable): void
+    {
+        abort_unless(
+            $generatorable->generatorable_type === ChallengeLevel::class
+            && $generatorable->generatorable_id === $challengeLevel->id,
+            404
+        );
     }
 }

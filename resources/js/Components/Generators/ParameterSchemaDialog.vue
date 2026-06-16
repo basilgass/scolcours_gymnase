@@ -22,7 +22,8 @@ const emits = defineEmits<{
 const FORMAT_CHOICES: Record<GeneratorParameterFormat, string> = {
 	number: 'number',
 	string: 'string',
-	set: 'set'
+	set: 'set',
+	choices: 'choices'
 }
 
 const KEY_REGEX = /^[a-zA-Z_][a-zA-Z0-9_]*$/
@@ -31,6 +32,7 @@ const keyInput = ref('')
 const formatInput = ref<GeneratorParameterFormat>('number')
 const defaultInput = ref('')
 const descriptionInput = ref('')
+const choicesInput = ref('')
 
 const isEdit = computed(() => props.paramKey !== undefined)
 
@@ -40,9 +42,14 @@ watch(isOpen, (open) => {
 		formatInput.value = props.entry?.format ?? 'number'
 		defaultInput.value = props.entry?.default ?? ''
 		descriptionInput.value = props.entry?.description ?? ''
+		choicesInput.value = props.entry?.choices ?? ''
 		nextTick(() => keyRef.value?.focus?.())
 	}
 })
+
+const parsedChoices = computed(() =>
+	choicesInput.value.split(',').map(s => s.trim()).filter(Boolean)
+)
 
 const keyError = computed(() => {
 	const k = keyInput.value.trim()
@@ -57,7 +64,13 @@ const defaultError = computed(() => {
 	return ''
 })
 
-const canSave = computed(() => !keyError.value && !defaultError.value)
+const choicesError = computed(() => {
+	if (formatInput.value !== 'choices') return ''
+	if (parsedChoices.value.length < 2) return 'au moins deux choix séparés par une virgule'
+	return ''
+})
+
+const canSave = computed(() => !keyError.value && !defaultError.value && !choicesError.value)
 
 const keyRef = useTemplateRef<{ focus?: () => void }>('keyRef')
 const defaultRef = useTemplateRef<{ focus?: () => void }>('defaultRef')
@@ -71,7 +84,8 @@ function save() {
 		{
 			format: formatInput.value,
 			default: defaultInput.value,
-			description: descriptionInput.value.trim() || undefined
+			description: descriptionInput.value.trim() || undefined,
+			choices: formatInput.value === 'choices' ? choicesInput.value.trim() : undefined
 		},
 		isEdit.value && newKey !== props.paramKey ? props.paramKey : undefined
 	)
@@ -86,7 +100,7 @@ function cancel() {
 <template>
 	<dialog-modal
 		v-model="isOpen"
-		class="w-[500px] max-w-[90vw] p-4"
+		class="w-125 max-w-[90vw] p-4"
 	>
 		<template #header>
 			<h3 class="font-semibold text-lg p-3 border-b border-content">
@@ -107,7 +121,7 @@ function cancel() {
 				/>
 				<p
 					v-if="keyError"
-					class="text-red-600 text-xs ml-[100px] mt-1"
+					class="text-red-600 text-xs ml-25 mt-1"
 				>
 					{{ keyError }}
 				</p>
@@ -122,8 +136,35 @@ function cancel() {
 				name="paramFormat"
 			/>
 
-			<div>
+			<div v-if="formatInput === 'choices'">
 				<FormInput
+					v-model="choicesInput"
+					inline-label
+					label="choix"
+					label-class="w-[100px]"
+					name="paramChoices"
+					placeholder="a,b,c"
+				/>
+				<p
+					v-if="choicesError"
+					class="text-red-600 text-xs ml-25 mt-1"
+				>
+					{{ choicesError }}
+				</p>
+			</div>
+
+			<div>
+				<FormSelect
+					v-if="formatInput === 'choices'"
+					v-model="defaultInput"
+					:choices="parsedChoices"
+					inline-label
+					label="défaut"
+					label-class="w-[100px]"
+					name="paramDefault"
+				/>
+				<FormInput
+					v-else
 					ref="defaultRef"
 					v-model="defaultInput"
 					inline-label

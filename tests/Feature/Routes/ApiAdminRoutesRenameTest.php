@@ -68,12 +68,6 @@ class ApiAdminRoutesRenameTest extends TestCase
             ->assertRedirect();
     }
 
-    public function test_api_admin_challenges_generators_order_route_exists(): void
-    {
-        $this->patch(route('api.admin.challenges.generators.order', ['challenge' => 1]))
-            ->assertRedirect();
-    }
-
     public function test_api_admin_formulas_order_route_exists(): void
     {
         $this->post(route('api.admin.formulas.order'))

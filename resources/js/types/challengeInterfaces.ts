@@ -2,12 +2,13 @@ import type {BlockInterface} from "@/types/blockInterfaces.ts"
 import type {ChapterInterface} from "@/types/chapterInterfaces.ts"
 import type {ScoreGeneratorDataInterface, ScoreInterface} from "@/types/scoreInterfaces.ts"
 
-export type GeneratorParameterFormat = 'number' | 'string' | 'set'
+export type GeneratorParameterFormat = 'number' | 'string' | 'set' | 'choices'
 
 export interface GeneratorParameterSchemaEntry {
 	format: GeneratorParameterFormat;
 	default: string;
 	description?: string;
+	choices?: string; // liste séparée par des virgules, ex. "a,b,c"
 }
 
 export interface GeneratorInterface {
@@ -19,6 +20,7 @@ export interface GeneratorInterface {
 	order: number;
 	parameters?: Record<string, string> | null;
 	parameters_schema?: Record<string, GeneratorParameterSchemaEntry> | null;
+	pivot_id?: number | null;
 	slug: string;
 	template: string;
 	theme_id: number;
