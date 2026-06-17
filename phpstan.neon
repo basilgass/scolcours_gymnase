@@ -1,0 +1,12 @@
+includes:
+    - vendor/larastan/larastan/extension.neon
+
+parameters:
+    paths:
+        - app
+
+    # Niveau de départ modéré sur une base existante.
+    # À monter progressivement lors des phases ultérieures.
+    level: 4
+
+    ignoreErrors: []

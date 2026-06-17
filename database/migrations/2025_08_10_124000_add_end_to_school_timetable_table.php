@@ -11,9 +11,12 @@ return new class extends Migration {
 			$table->time('end')->nullable()->after('start');
 		});
 
-		DB::table('school_timetable')->update([
-			'end' => DB::raw('ADDTIME(start, "00:45:00")')
-		]);
+		// ADDTIME est spécifique MySQL : ignoré sur les autres moteurs (table vide en test).
+		if (DB::connection()->getDriverName() === 'mysql') {
+			DB::table('school_timetable')->update([
+				'end' => DB::raw('ADDTIME(start, "00:45:00")')
+			]);
+		}
 
 		Schema::table('school_timetable', function (Blueprint $table) {
 			$table->time('end')->nullable(false)->change();

@@ -3,6 +3,7 @@
 /public/storage
 /public/sitemap.xml
 /storage/*.key
+/storage/coverage
 /vendor
 .env
 .env.backup
