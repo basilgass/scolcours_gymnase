@@ -72,7 +72,7 @@ class AdminController extends Controller
 		return Inertia::render(
 			'Admin/AdminConfig',
 			[
-				"title"     => $scolcours->title,
+				"title"     => $scolcours?->title,
 				"allThemes" => Theme::orderBy('order')->get()
 			]
 		);

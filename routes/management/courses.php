@@ -52,9 +52,6 @@ Route::middleware('api')
 		          Route::patch('courses/{course}/toggleTeam/{team}', [CourseApiController::class, 'toggleTeam'])
 		               ->name('courses.teams.toggle');
 
-		          Route::get('courses/lessonables', [CourseApiController::class, 'fetchLessonables'])
-		               ->name('courses.lessonables.index');
-
 		          Route::get('course/{course}/team/{team}/stats', [CourseApiController::class, 'teamStats'])
 		               ->name('courses.teams.stats');
 

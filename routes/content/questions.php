@@ -16,7 +16,7 @@ Route::middleware('web')
 	          ->as('admin.')
 	          ->group(function () {
 		          Route::resource('questions', QuestionController::class)
-		               ->only(['index', 'edit']);
+		               ->only(['edit']);
 
 	          });
      });
