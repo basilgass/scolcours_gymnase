@@ -28,3 +28,5 @@ boost.json
 /.github
 /.tinker
 /bootstrap/.claude
+.claude/worktrees/
+.claude/specs/

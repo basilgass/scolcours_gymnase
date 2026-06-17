@@ -5,9 +5,10 @@ import FormTextarea from "@/Components/Form/FormTextarea.vue"
 import FormInput from "@/Components/Form/FormInput.vue"
 import ThemeSelector from "@/Components/Ui/ThemeSelector.vue"
 import axios from "axios"
-import ScButton from "@/Components/Ui/Button/scButton.vue"
 import {AxiosErrorMessage} from "@/types"
 import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
+import Card from "@/Components/Ui/Card.vue"
+import ScButton from "@/Components/Ui/Button/scButton.vue"
 
 const tool = defineModel<ToolInterface>('tool')
 
@@ -36,64 +37,69 @@ function updateTool() {
 		:key="tool.id"
 		class="grid grid-cols-2 gap-3"
 	>
-		<div class="flex flex-col gap-3">
-			<FormInput
-				v-model="tool.title"
-				label="titre"
-				focus
-			/>
+		<card>
+			<div class="flex flex-col gap-3">
+				<FormInput
+					v-model="tool.title"
+					label="titre"
+					focus
+				/>
 
-			<FormTextarea
-				v-model="tool.body"
-				label="body"
-			/>
+				<FormTextarea
+					v-model="tool.body"
+					label="body"
+				/>
 
 
-			<theme-selector
-				v-model="tool.theme_id"
-				xs
-				@change="updateTool"
-			/>
+				<theme-selector
+					v-model="tool.theme_id"
+					xs
+					@change="updateTool"
+				/>
+			</div>
 
-			<sc-button
-				:theme="tool.theme_id"
-				@click="updateTool"
-			>
-				Enregistrer
-			</sc-button>
-		</div>
+			<template #footer>
+				<div class="flex justify-end">
+					<sc-button
+						type="save"
+						icon
+						xs
+						@click="updateTool"
+					>
+						Enregistrer
+					</sc-button>
+				</div>
+			</template>
+		</card>
 
-		<div
+		<card
 			class="bg-content border rounded-sm"
+			:header-theme="tool.theme_id"
 		>
-			<header
-				v-theme.bg.text="tool.theme_id ?? 0"
-				class="flex justify-between border-b px-3 py-2"
-			>
-				<InertiaLink
-					as="div"
-					class="cursor-pointer"
-					:href="route('tools.show', {tool: tool.slug})"
-				>
-					<h3 class="text-lg leading-6 font-medium">
-						{{ tool.title }}
-					</h3>
-					<p class="mt-1 max-w-2xl text-sm opacity-60 font-code">
-						{{ tool.id }} : {{ tool.slug }}
-					</p>
-				</InertiaLink>
-				<div class="text-xs text-right">
-					<InertiaLink :href="route('admin.tools.edit', tool.id)">
-						<i class="bi bi-pencil" />
+			<template #header>
+				<div class="flex justify-between ">
+					<InertiaLink
+						as="div"
+						class="cursor-pointer"
+						:href="route('tools.show', {tool: tool.slug})"
+					>
+						<h3 class="text-lg leading-6 font-medium">
+							{{ tool.title }}
+						</h3>
+						<p class="mt-1 max-w-2xl text-sm opacity-60 font-code">
+							{{ tool.id }} : {{ tool.slug }}
+						</p>
 					</InertiaLink>
-					<div class="opacity-60">
-						{{ tool.updated_at }}
+					<div class="text-xs text-right">
+						<div class="opacity-60">
+							{{ tool.updated_at }}
+						</div>
 					</div>
 				</div>
-			</header>
-			<main class="px-3 py-3 font-extralight">
+			</template>
+			<div class="px-3 py-3 font-extralight">
 				{{ tool.body }}
-			</main>
-		</div>
+			</div>
+		</card>
 	</div>
 </template>

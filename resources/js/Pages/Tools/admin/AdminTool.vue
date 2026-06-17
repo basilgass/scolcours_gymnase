@@ -23,6 +23,7 @@ defineProps({
 		<filtered-list
 			:list="tools"
 			list-class="grid grid-cols-1 gap-16"
+			filter-by-theme
 		>
 			<template #card="{ item }: { item: ToolInterface }">
 				<tool-edit-item :tool="item" />
