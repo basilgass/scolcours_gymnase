@@ -21,7 +21,11 @@ return new class extends Migration
 			$table->text('parameters')->default(null)->nullable()->after('keyboard')->change();
         });
 
-		DB::statement("alter table challenges modify `parameters` text null after keyboard;");
+		// SQL brut spécifique MySQL (repositionnement physique de la colonne).
+		// Inutile sur SQLite : le ->change() ci-dessus a déjà rendu la colonne nullable.
+		if (DB::connection()->getDriverName() === 'mysql') {
+			DB::statement("alter table challenges modify `parameters` text null after keyboard;");
+		}
     }
 
     /**

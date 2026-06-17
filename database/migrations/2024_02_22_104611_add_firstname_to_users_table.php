@@ -16,8 +16,11 @@ return new class extends Migration
         });
 
 		// Split the name column into first name and last name at "."
-		DB::table('users')->update(['firstname' => DB::raw('SUBSTRING_INDEX(name, ".", 1)')]);
-		DB::table('users')->update(['name' => DB::raw('SUBSTRING_INDEX(name, ".", -1)')]);
+		// SUBSTRING_INDEX est spécifique MySQL : ignoré sur les autres moteurs (table vide en test).
+		if (DB::connection()->getDriverName() === 'mysql') {
+			DB::table('users')->update(['firstname' => DB::raw('SUBSTRING_INDEX(name, ".", 1)')]);
+			DB::table('users')->update(['name' => DB::raw('SUBSTRING_INDEX(name, ".", -1)')]);
+		}
 
 		\App\Models\User::all()->each(function ($user) {
 			$user->update([
@@ -34,7 +37,9 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             // Copy the username to name
-			DB::table('users')->update(['name' => DB::raw('CONCAT(firstname, ".", name)')]);
+			if (DB::connection()->getDriverName() === 'mysql') {
+				DB::table('users')->update(['name' => DB::raw('CONCAT(firstname, ".", name)')]);
+			}
 
 			// Drop the username column
 			$table->dropColumn('firstname');

@@ -13,7 +13,10 @@ return new class extends Migration {
             $table->dropUnique(['language', 'unit']);
 
             // Prepend every data from "unit" column to the "title" column
-            DB::statement('UPDATE translation_units SET title = CONCAT(title, " ", unit)');
+            // CONCAT est spécifique MySQL : ignoré sur les autres moteurs (table vide en test).
+            if (DB::connection()->getDriverName() === 'mysql') {
+                DB::statement("UPDATE translation_units SET title = CONCAT(title, ' ', unit)");
+            }
 
             // Delete the unit column
             $table->dropColumn('unit');
