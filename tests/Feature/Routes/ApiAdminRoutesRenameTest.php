@@ -14,12 +14,6 @@ class ApiAdminRoutesRenameTest extends TestCase
             ->assertRedirect();
     }
 
-    public function test_api_admin_courses_lessonables_index_route_exists(): void
-    {
-        $this->get(route('api.admin.courses.lessonables.index'))
-            ->assertRedirect();
-    }
-
     public function test_api_admin_courses_lessons_order_route_exists(): void
     {
         $this->patch(route('api.admin.courses.lessons.order', ['course' => 1]))

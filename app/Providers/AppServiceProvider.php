@@ -49,7 +49,9 @@ class AppServiceProvider extends ServiceProvider
 			try {
 				return Scolcours::all()->first();
 			} catch (Exception $exception) {
-				return [];
+				// Type cohérent : null (pas d'array) quand la table est absente
+				// (ex. premier boot avant migrations en test).
+				return null;
 			}
 		});
 
