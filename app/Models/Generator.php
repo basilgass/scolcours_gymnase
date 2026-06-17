@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Traits\HasLessonTrait;
 use App\Traits\HasScoresTrait;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 // A generator belongs to Challenge, Evaluation, and many more
@@ -58,6 +59,7 @@ class Generator extends Model
 		"parameters_schema" => "array"
 	];
 
+	use HasFactory;
 	use HasScoresTrait;
 	use HasLessonTrait;
 

@@ -19,6 +19,13 @@ return new class extends Migration {
 			$table->unique(['word', 'language']);
 		});
 
+		// En environnement de test, on évite de charger ~78 000 mots
+		// (lecture de fichiers + 78 000 INSERT) : long et inutile pour les tests.
+		// La table reste créée, vide.
+		if (app()->environment('testing')) {
+			return;
+		}
+
 		// Read liste-de-mots-français.js
 		// Add the following words to the dictionary table
 		$filePath = base_path('resources/js/helpers/liste-des-mots-francais-pli07.js');

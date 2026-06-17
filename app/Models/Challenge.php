@@ -8,6 +8,7 @@ use App\Traits\HasUrlTrait;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
@@ -52,6 +53,7 @@ use Znck\Eloquent\Traits\BelongsToThrough;
  */
 class Challenge extends Model
 {
+	use HasFactory;
 	use HasScoresTrait;
 	use HasUrlTrait;
 	use BelongsToThrough;
