@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Chapter;
+use App\Models\Theme;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class ChapterFactory extends Factory
@@ -22,10 +23,10 @@ class ChapterFactory extends Factory
 	public function definition()
 	{
 		return [
-			'theme_id' => 1,
-			'slug' => $this->faker->slug(),
+			'theme_id' => Theme::factory(),
+			'slug' => $this->faker->unique()->slug(),
 			'title' => $this->faker->sentence(),
-			'body' => $this->faker->text(),
+			'active' => true,
 		];
 	}
 
