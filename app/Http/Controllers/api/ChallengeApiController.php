@@ -19,8 +19,9 @@ class ChallengeApiController extends Controller
 {
 	public function show(Challenge $challenge)
 	{
-		if (count($challenge->blocks) === 0) {
+		if ($challenge->blocks->isEmpty()) {
 			$challenge->blocks()->create();
+			$challenge->load('blocks');
 		}
 
 		return ChallengeResource::make($challenge);
@@ -42,7 +43,7 @@ class ChallengeApiController extends Controller
 			'slug'  => $slug
 		]);
 
-		$challenge->blocks()->create();
+		// Le block par défaut est créé par Challenge::booted() (événement created).
 
 		return redirect()->route('challenges.show', $challenge);
 	}

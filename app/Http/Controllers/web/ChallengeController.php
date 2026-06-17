@@ -22,8 +22,9 @@ class ChallengeController extends Controller
 	public function show(Challenge $challenge): \Inertia\Response
 	{
 		// Make sure the default block description exists
-		if (count($challenge->blocks) === 0) {
+		if ($challenge->blocks->isEmpty()) {
 			$challenge->blocks()->create();
+			$challenge->load('blocks');
 		}
 
 		return Inertia::render('Challenges/ChallengeShow', [
