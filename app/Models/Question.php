@@ -8,6 +8,7 @@ use Auth;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
@@ -51,12 +52,13 @@ use Illuminate\Support\Facades\Cache;
  */
 class Question extends Model
 {
+	use HasFactory;
 	use HasUrlTrait;
 	use HasScoresTrait;
 
 	protected $fillable = [
 		'order',
-		'displayif',
+		'display_if',
 		'css',
 		'answer',
 		'keyboard',

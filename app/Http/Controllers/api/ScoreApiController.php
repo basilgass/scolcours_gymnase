@@ -108,11 +108,12 @@ class ScoreApiController extends Controller
 		// persist the incoming data
 		$score->update($validated);
 
-		// Le $validated n'a pas d'attempts, on l'incrémente.
+		// Le $validated n'a pas forcément d'attempts (règle nullable) : on incrémente
+		// la valeur courante du score plutôt que de lire une clé éventuellement absente.
 		if ($score->attempts === null) {
 			$score->attempts = 1;
 		} else {
-			$score->attempts = $validated['attempts'] + 1;
+			$score->attempts = $score->attempts + 1;
 		}
 		$score->save();
 		$score->refresh();

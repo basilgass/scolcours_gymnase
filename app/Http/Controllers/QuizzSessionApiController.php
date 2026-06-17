@@ -16,7 +16,7 @@ class QuizzSessionApiController extends Controller
 
 		return QuizzSessionResource::collection(
 			$quizz->sessions
-				->sortBy('created_at', SORT_REGULAR, SORT_DESC)
+				->sortByDesc('created_at')
 		);
 	}
 

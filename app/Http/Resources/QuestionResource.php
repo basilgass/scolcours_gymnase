@@ -33,9 +33,12 @@ class QuestionResource extends JsonResource
 		// Il n'y a pas de block pour cette question
 		$blocks = $this->blocks;
 		if (count($blocks) === 0) {
-			$blocks = $this->blocks()->create([
+			$this->blocks()->create([
 				"body" => "sans contenu"
 			]);
+			// create() renvoie un modèle unique : on recharge la relation pour
+			// récupérer une collection indexable ($blocks[0]).
+			$blocks = $this->load('blocks')->blocks;
 		}
 
 		return [

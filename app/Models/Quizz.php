@@ -37,6 +37,7 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
  */
 class Quizz extends Model
 {
+    use HasFactory;
     use HasQuestionsTrait;
 
 	protected $guarded=[];

@@ -14,8 +14,8 @@ class QuizzResource extends JsonResource
 		return [
 			'id'              => $this->id,
 			'title'           => $this->title,
-			'intro'           => $this->blocks[0],
-			'outro'           => $this->blocks[1],
+			'intro'           => $this->blocks->get(0),
+			'outro'           => $this->blocks->get(1),
 			'questions_count' => $this->questions->count(),
 			'chapter'         => new ChapterResource($this->whenLoaded('chapter')),
 			'sessions'        => $this->whenLoaded('sessions', fn() => QuizzSessionResource::collection($this->sessions)),
