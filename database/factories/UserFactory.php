@@ -45,4 +45,17 @@ class UserFactory extends Factory
             ];
         });
     }
+
+    /**
+     * Indique que l'utilisateur est administrateur (role = 'admin').
+     * Posé via afterMaking car 'role' n'est pas mass-assignable (sécurité).
+     *
+     * @return Factory
+     */
+    public function admin()
+    {
+        return $this->afterMaking(function (User $user) {
+            $user->role = 'admin';
+        });
+    }
 }
