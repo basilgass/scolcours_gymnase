@@ -20,10 +20,6 @@ class QuizzSessionApiController extends Controller
 		);
 	}
 
-	public function show(QuizzSession $session)
-	{
-	}
-
 	public function store(Request $request, Quizz $quizz)
 	{
 		$validated = $request->validate([
@@ -47,10 +43,6 @@ class QuizzSessionApiController extends Controller
 		$session->refresh();
 
 		return QuizzSessionResource::make($session);
-	}
-
-	public function update(Request $request, QuizzSession $session)
-	{
 	}
 
 	public function destroy(QuizzSession $session)

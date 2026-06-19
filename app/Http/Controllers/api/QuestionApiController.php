@@ -11,12 +11,9 @@ use App\Models\Evaluation;
 use App\Models\Post;
 use App\Models\Question;
 use App\Models\Quizz;
-use App\Models\Score;
 use App\Traits\CanMoveToTarget;
 use App\Traits\ResolvesTarget;
-use Auth;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 class QuestionApiController extends Controller
@@ -116,49 +113,6 @@ class QuestionApiController extends Controller
 		abort(404);
 	}
 
-	// ROUTE: Should be triggered in SCORE_CONTROLLER !
-	public function storeAnswer(Question $question, Request $request)
-	{
-		// On valide les données
-		$validate = $request->validate(
-			[
-				'result' => ['boolean'],
-				'answer' => ['string', 'min:1']
-			]
-		);
-
-		// User must be logged in.
-		$user = Auth::user();
-		if (!$user) {
-			return $validate;
-		}
-
-		// On récupère la fiche de score.
-		/** @var Score $score */
-		$score = $question
-			->scores()
-			->firstOrCreate(
-				[
-					'user_id' => $user->id
-				], [
-					'score'       => $validate['result'] ? 1 : 0,
-					'is_resolved' => $validate['result'],
-				]
-			);
-
-		$score->attempts += 1;
-		$result = max($score->score, (int)$validate["result"]);
-		$score->score = $result;
-		$score->is_resolved = $result;
-		$score->save();
-
-		// Reset the cache for this key.
-		// TODO : gestion du cache ?
-		Cache::forget(Question::getCacheKey($question, $user));
-
-		return $validate;
-	}
-
 	public function duplicate(Question $question)
 	{
 		// Duplicate a question
@@ -207,23 +161,6 @@ class QuestionApiController extends Controller
 			}
 		});
 
-	}
-
-	public function updateQuestionsDisplayIf(Request $request): bool
-	{
-		$validated = $request->validate([
-			'values'             => ['array'],
-			'values.*.id'        => ['exists:App\Models\Question,id'],
-			'values.*.displayIf' => ['string', 'nullable']
-		]);
-
-		foreach ($validated["values"] as $value) {
-			$question = Question::find($value['id']);
-			$question->displayIf = $value['displayIf'];
-			$question->save();
-		}
-
-		return true;
 	}
 
 	// Move the question to another Post.

@@ -139,9 +139,4 @@ class BlockApiController extends Controller
 	{
 		return $block->redirectUrl();
 	}
-
-	public function storeIllustration(Block $block)
-	{
-
-	}
 }

@@ -49,7 +49,8 @@ Route::middleware('api')
 
 			     Route::apiResource('quizzes.sessions', QuizzSessionApiController::class)
 				     ->shallow()
-				     ->parameters(['quizzes' => 'quizz']);
+				     ->parameters(['quizzes' => 'quizz'])
+				     ->only(['index', 'store', 'destroy']);
 
 		          Route::patch('quizz/{quizzSession}/updateCurrent', [QuizzApiController::class, "updateCurrent"])
 		               ->name('quizzes.sessions.current');

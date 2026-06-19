@@ -111,14 +111,4 @@ class QuizzSessionApiTest extends TestCase
         $this->assertModelExists($session);
     }
 
-    public function test_show_and_update_are_empty_no_ops(): void
-    {
-        // Méthodes routées mais à corps vide (dette B4 : code mort partiel).
-        // On fige le comportement actuel : réponse 200 sans contenu.
-        $this->actingAsAdmin();
-        $session = QuizzSession::factory()->create();
-
-        $this->getJson(route('api.admin.sessions.show', $session))->assertStatus(200);
-        $this->patchJson(route('api.admin.sessions.update', $session))->assertStatus(200);
-    }
 }

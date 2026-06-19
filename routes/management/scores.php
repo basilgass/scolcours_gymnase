@@ -19,12 +19,6 @@ Route::middleware('api')
 		          // Save a score - id of the score must be known
 		          Route::apiResource('scores', ScoreApiController::class)
 		               ->only(['index', 'show', 'update']);
-
-		          Route::prefix('scores')
-		               ->group(function () {
-			               Route::patch('reset', [ScoreApiController::class, "reset"])
-			                    ->name('scores.reset');
-		               });
 	          });
 
 	     // Admin api

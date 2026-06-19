@@ -8,7 +8,6 @@ use App\Http\Resources\CardResource;
 use App\Models\Card;
 use App\Models\Deck;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class CardApiController extends Controller
 {
@@ -86,26 +85,6 @@ class CardApiController extends Controller
 	{
 		$card->delete();
 		return response()->noContent();
-	}
-
-	public function updateCard(Request $request, Card $card)
-	{
-		$validated = $request->validate([
-			'current_score'       => ['numeric'],
-			'current_appearances' => ['integer'],
-			'current_time_spent'  => ['integer'],
-			'appearances'         => ['integer'],
-			'success'             => ['integer'],
-			'time_spent'          => ['integer'],
-		]);
-
-		$score = $card->scoreFor(Auth::user());
-		if ($score) {
-			$score->data = $validated;
-			$score->save();
-		}
-
-		return CardResource::make($card);
 	}
 
 	public function fetch(string $values)

@@ -102,18 +102,6 @@ class PostApiController extends Controller
 		return PostShowResource::make($post);
 	}
 
-	public function reorderQuestions(Post $post, ReorderRequest $request)
-	{
-		$request->setModelTable('questions');
-		$validated = $request->validated();
-
-		foreach ($validated['order'] as $value) {
-			$post->questions->find($value['id'])->update(['order' => $value['order']]);
-		}
-
-		return response()->noContent();
-	}
-
 	public function updateQuestionsGrid(Post $post, Request $request)
 	{
 		$validate = $request->validate([

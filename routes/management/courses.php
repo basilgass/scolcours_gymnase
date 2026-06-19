@@ -47,7 +47,8 @@ Route::middleware('api')
 	          ->as('admin.')
 	          ->group(function () {
 
-		          Route::apiResource('courses', CourseApiController::class);
+		          Route::apiResource('courses', CourseApiController::class)
+		               ->only(['store', 'update', 'destroy']);
 
 		          Route::patch('courses/{course}/toggleTeam/{team}', [CourseApiController::class, 'toggleTeam'])
 		               ->name('courses.teams.toggle');

@@ -46,7 +46,7 @@ Route::middleware('api')
 	          ->as('admin.')
 	          ->group(function () {
 		          Route::apiResource('evaluations', EvaluationApiController::class)
-		               ->only(['index', 'show', 'store', 'update', 'destroy']);
+		               ->only(['store', 'update']);
 		          Route::get('evaluations/{evaluation}/team/{team:name}/scores', [EvaluationApiController::class, 'scores'])
 		               ->name('evaluations.teams.scores');
 

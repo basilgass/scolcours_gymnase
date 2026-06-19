@@ -140,8 +140,7 @@ class ChallengeApiTest extends TestCase
     public function test_admin_can_delete_a_challenge(): void
     {
         $this->actingAsAdmin();
-        // forChapter() monte la chaîne Theme -> Chapter -> Challenge requise par
-        // destroy (qui lit $challenge->chapter->theme->slug).
+        // forChapter() monte une chaîne Theme -> Chapter -> Challenge valide.
         $challenge = Challenge::factory()->forChapter()->create();
 
         $this->deleteJson(route('api.admin.challenges.destroy', $challenge))

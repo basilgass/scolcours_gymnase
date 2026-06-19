@@ -8,10 +8,8 @@ use App\Http\Resources\ScoreResource;
 use App\Models\Challenge;
 use App\Models\Chapter;
 use App\Models\Team;
-use App\Models\Theme;
 use App\Support\ScoreLeaderboard;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use function redirect;
 
@@ -69,31 +67,9 @@ class ChallengeApiController extends Controller
 
 	public function destroy($id)
 	{
-		$challenge = Challenge::find($id);
-		$theme = $challenge->chapter->theme->slug;
-		$chapter = $challenge->chapter->slug;
-
 		Challenge::destroy($id);
 
-		// Redirect to ...
-		//		return redirect(route('theme.chapter', [$theme, $chapter]));
 		return true;
-	}
-
-	public function start(Challenge $challenge)
-	{
-		// Create new session with the user and redirect back.
-		if (Auth::User()?->admin) {
-			$challenge->sessions()->create(
-				[
-					"token"    => Str::random(4),
-					"open"     => true,
-					"user_id"  => Auth::User()->id,
-					"duration" => 5000
-				]
-			);
-		}
-		$this->index();
 	}
 
 	public function index()
@@ -101,11 +77,6 @@ class ChallengeApiController extends Controller
 		$challenges = Challenge::orderBy('title')
 		                       ->get();
 		return ChallengeResource::collection($challenges);
-	}
-
-	public function teams(Theme $theme, Chapter $chapter, Challenge $challenge, Team $team)
-	{
-		return redirect()->route('admin.teams.challenges.show', ["team" => $team, "challenge" => $challenge]);
 	}
 
 	public function leaderboard(Challenge $challenge, Request $request)

@@ -33,7 +33,8 @@
 		"nunomaduro/collision": "^8.9",
 		"phpunit/phpunit": "^13",
 		"roave/security-advisories": "dev-latest",
-		"spatie/laravel-ignition": "^2"
+		"spatie/laravel-ignition": "^2",
+		"tomasvotruba/class-leak": "^2.1"
 	},
 	"autoload": {
 		"psr-4": {

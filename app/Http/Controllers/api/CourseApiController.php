@@ -12,15 +12,6 @@ use App\Models\Team;
 
 class CourseApiController extends Controller
 {
-	public function index()
-	{
-
-	}
-
-	public function show(Course $course)
-	{
-	}
-
 	public function store(CourseStoreRequest $request)
 	{
 		$course = Course::create($request->validated());
@@ -60,17 +51,6 @@ class CourseApiController extends Controller
 			$course->teams()->attach($team->id);
 		}
 		return $status;
-	}
-
-	public function fetchLessonables(Course $course)
-	{
-		$arr = [];
-
-		// Get the posts
-		$arr = array_merge();
-		// Get the challenges
-		// Get the decks
-		// Get... ???
 	}
 
 	public function teamStats(Course $course, Team $team)

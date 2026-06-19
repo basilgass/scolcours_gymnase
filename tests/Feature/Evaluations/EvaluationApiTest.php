@@ -133,25 +133,4 @@ class EvaluationApiTest extends TestCase
         $this->assertSame('intact', $evaluation->fresh()->title);
     }
 
-    public function test_index_show_and_destroy_are_empty_no_ops(): void
-    {
-        // Méthodes routées (apiResource) mais à corps vide (dette B4 : code mort
-        // partiel). On fige le comportement : 200 sans contenu, destroy ne supprime pas.
-        $this->actingAsAdmin();
-        $evaluation = Evaluation::factory()->create();
-
-        $this->getJson(route('api.admin.evaluations.index'))->assertStatus(200);
-        $this->getJson(route('api.admin.evaluations.show', $evaluation))->assertStatus(200);
-        $this->deleteJson(route('api.admin.evaluations.destroy', $evaluation))->assertStatus(200);
-
-        $this->assertModelExists($evaluation);
-    }
-
-    public function test_index_requires_admin(): void
-    {
-        $this->getJson(route('api.admin.evaluations.index'))->assertStatus(401);
-
-        $this->actingAsUser();
-        $this->getJson(route('api.admin.evaluations.index'))->assertForbidden();
-    }
 }

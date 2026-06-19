@@ -168,24 +168,6 @@ class ScoreApiTest extends TestCase
             ->assertStatus(401);
     }
 
-    // --- reset -----------------------------------------------------------
-
-    public function test_reset_route_is_currently_unreachable(): void
-    {
-        // DETTE B4 : la route PATCH scores/reset est masquée par scores/{score}
-        // (update), donc {score}='reset' → 404 (ModelNotFound). De plus reset(Score)
-        // n'a aucun paramètre de route et le frontend ne l'appelle pas (resetScore
-        // passe par updateScore). Code mort + cassé : à supprimer en B4. On fige le 404.
-        $this->actingAsUser();
-        $score = Score::factory()->create(['score' => 90, 'attempts' => 4]);
-
-        $this->patchJson(route('api.students.scores.reset', ['score' => $score->id]))
-            ->assertStatus(404);
-
-        // Le score n'a pas été réinitialisé : la méthode reset() n'est jamais atteinte.
-        $this->assertEquals(90, $score->fresh()->score);
-    }
-
     // --- destroyMultiple (admin) -----------------------------------------
 
     public function test_destroy_multiple_deletes_listed_scores(): void

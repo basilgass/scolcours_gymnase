@@ -8,7 +8,6 @@ use App\Models\Challenge;
 use App\Models\Team;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use function redirect;
 
 class ChallengeController extends Controller
 {
@@ -38,11 +37,6 @@ class ChallengeController extends Controller
 		return Inertia::render("Challenges/ChallengeEdit", [
 			'challenge' => ChallengeResource::make($challenge)
 		]);
-	}
-
-	public function teams(Challenge $challenge, Team $team)
-	{
-		return redirect()->route('admin.teams.challenges.show', ["team" => $team, "challenge" => $challenge]);
 	}
 
 	public function leaderboard(Challenge $challenge, Request $request)

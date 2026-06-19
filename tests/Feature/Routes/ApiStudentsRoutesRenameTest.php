@@ -8,12 +8,6 @@ class ApiStudentsRoutesRenameTest extends TestCase
 {
     // Routes protégées par le middleware students → requête non-authentifiée → 302
 
-    public function test_api_students_scores_reset_route_exists(): void
-    {
-        $this->patch(route('api.students.scores.reset'))
-            ->assertRedirect();
-    }
-
     public function test_api_students_cards_show_route_exists(): void
     {
         $this->get(route('api.students.cards.show', ['card' => 1]))

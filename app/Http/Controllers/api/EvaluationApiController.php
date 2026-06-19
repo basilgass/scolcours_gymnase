@@ -13,15 +13,6 @@ use Illuminate\Validation\Rule;
 
 class EvaluationApiController extends Controller
 {
-	public function index()
-	{
-
-	}
-
-	public function show($id)
-	{
-	}
-
 	public function store(Request $request)
 	{
 		$validated = $request->validate([
@@ -49,10 +40,6 @@ class EvaluationApiController extends Controller
 		$evaluation->update($validated);
 
 		return response()->noContent();
-	}
-
-	public function destroy($id)
-	{
 	}
 
 	public function scores(Evaluation $evaluation, Team $team)
