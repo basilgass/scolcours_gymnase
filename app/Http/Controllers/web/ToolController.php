@@ -27,7 +27,7 @@ class ToolController extends Controller
 			: Tool::where('slug', $value)->firstOrFail();
 
 		if ($value !== $tool->slug) {
-			return redirect()->route('tools.show', $tool, 301);
+			return redirect()->route('tools.show', $tool->slug, 301);
 		}
 		return Inertia::render("Tools/ToolShow", [
 			"tool" => $tool

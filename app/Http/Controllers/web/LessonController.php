@@ -10,7 +10,6 @@ use App\Http\Resources\GeneratorResource;
 use App\Http\Resources\LessonResource;
 use App\Http\Resources\PostShowResource;
 use App\Http\Resources\TeamResource;
-use App\Http\Resources\UserTeamResource;
 use App\Models\Challenge;
 use App\Models\Course;
 use App\Models\Deck;

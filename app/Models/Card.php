@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Traits\HasScoresTrait;
 use App\Traits\HasUrlTrait;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -33,6 +34,7 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
  */
 class Card extends Model
 {
+	use HasFactory;
 	use HasScoresTrait;
 	use HasUrlTrait;
 

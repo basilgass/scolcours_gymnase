@@ -50,12 +50,6 @@ class ApiAdminRoutesRenameTest extends TestCase
             ->assertRedirect();
     }
 
-    public function test_api_admin_chapters_current_route_exists(): void
-    {
-        $this->post(route('api.admin.chapters.current', ['chapter' => 1]))
-            ->assertRedirect();
-    }
-
     public function test_api_admin_chapters_posts_order_route_exists(): void
     {
         $this->patch(route('api.admin.chapters.posts.order', ['chapter' => 1]))

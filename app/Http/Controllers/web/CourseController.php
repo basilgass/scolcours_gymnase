@@ -5,7 +5,6 @@ namespace App\Http\Controllers\web;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CourseResource;
 use App\Http\Resources\TeamResource;
-use App\Http\Resources\UserTeamResource;
 use App\Models\Course;
 use App\Models\Team;
 use Illuminate\Support\Facades\Auth;
@@ -35,7 +34,7 @@ class CourseController extends Controller
 
 	public function show(Course $course)
 	{
-		if (Auth::user()?->isAdmin) {
+		if (Auth::user()?->admin) {
 			return redirect()->route('admin.courses.index');
 		}
 		return $this->renderCourseWithTeam($course, "Courses/CourseShow");
@@ -96,7 +95,7 @@ class CourseController extends Controller
 		]);
 
 		return Inertia::render("Courses/CourseShow", [
-			"team"   => UserTeamResource::make($team),
+			"team"   => TeamResource::make($team),
 			"course" => CourseResource::make($course),
 		]);
 	}

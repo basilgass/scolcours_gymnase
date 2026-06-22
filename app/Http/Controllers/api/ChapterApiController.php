@@ -10,7 +10,6 @@ use App\Http\Resources\PostShowResource;
 use App\Models\Chapter;
 use App\Models\Theme;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 class ChapterApiController extends Controller
@@ -112,26 +111,6 @@ class ChapterApiController extends Controller
 
 		// Return the chapter
 		return ChapterResource::make($chapter);
-	}
-
-	public function updateCurrentPost(Chapter $chapter, Request $request)
-	{
-		$user = Auth::user();
-
-		if ($user?->exists) {
-
-			$validate = $request->validate(
-				[
-					'post_id' => ['required', 'exists:App\Models\Post,id'],
-				]
-			);
-
-			$user->chapters()->detach($chapter->id);
-			$user->chapters()->attach(
-				$chapter,
-				[...$validate]
-			);
-		}
 	}
 
 	public function toggleRelated(Chapter $chapter, Chapter $related)

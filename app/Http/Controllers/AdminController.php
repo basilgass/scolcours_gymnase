@@ -4,16 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\ChapterResource;
 use App\Http\Resources\CourseResource;
-use App\Http\Resources\GeneratorResource;
 use App\Http\Resources\TeamResource;
 use App\Http\Resources\ToolResource;
 use App\Http\Resources\UserResource;
-use App\Http\Resources\UserTeamResource;
 use App\Http\Resources\WidgetResource;
 use App\Models\Challenge;
 use App\Models\Chapter;
 use App\Models\Course;
-use App\Models\Generator;
 use App\Models\Illustration;
 use App\Models\Scolcours;
 use App\Models\Team;
@@ -226,17 +223,6 @@ class AdminController extends Controller
 			]
 		);
 	}
-
-	public function generators()
-	{
-		return Inertia::render(
-			'Generators/admin/AdminGenerator',
-			[
-				'generators' => GeneratorResource::collection(Generator::all())
-			]
-		);
-	}
-
 
 	public function widgets()
 	{

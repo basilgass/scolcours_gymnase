@@ -47,6 +47,7 @@ Route::middleware('api')
 	          ->prefix('admin')
 	          ->as('admin.')
 	          ->group(function () {
-		          Route::apiResource('tools', ToolApiController::class);
+		          Route::apiResource('tools', ToolApiController::class)
+			               ->only(['index', 'show', 'update']);
 	          });
      });

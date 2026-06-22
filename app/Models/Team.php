@@ -33,6 +33,10 @@ class Team extends Model
 	protected $with = [];
 	protected $guarded = [];
 
+	protected $attributes = [
+		'active' => false,
+	];
+
 	protected $casts = [
 		'active' => "boolean",
 	];

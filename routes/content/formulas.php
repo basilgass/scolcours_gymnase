@@ -33,7 +33,7 @@ Route::middleware('api')
 	          ->group(function () {
 		          Route::apiResource('chapters.formulas', FormulaApiController::class)
 		               ->shallow()
-		               ->only(['store', 'update', 'destroy']);
+		               ->only(['store', 'destroy']);
 
 		          Route::prefix('formulas')
 		               ->as('formulas.')

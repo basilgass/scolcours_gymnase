@@ -26,17 +26,6 @@
 			return ToolResource::collection(Tool::all());
 		}
 
-		public function create()
-		{
-			//
-		}
-
-		public function store(Request $request)
-		{
-			//
-		}
-
-
 		public function update(Request $request, Tool $tool)
 		{
 			$validated = $request->validate([
@@ -46,10 +35,5 @@
 			]);
 
 			$tool->update($validated);
-		}
-
-		public function destroy(Tool $tool)
-		{
-			//
 		}
 	}

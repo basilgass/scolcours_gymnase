@@ -34,9 +34,12 @@ class FormulaApiController extends Controller
 
 	public function fetch($values)
 	{
+		// Tri portable (FIELD() est spécifique à MySQL) : on respecte l'ordre
+		// des ids demandés en triant la collection en PHP.
 		$formulas = Formula::whereIn('id', $values)
-		                   ->orderByRaw('FIELD(id,' . implode(",", $values) . ')')
-		                   ->get();
+		                   ->get()
+		                   ->sortBy(fn ($formula) => array_search($formula->id, $values))
+		                   ->values();
 		return FormulaResource::collection($formulas);
 	}
 

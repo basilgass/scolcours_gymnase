@@ -90,11 +90,11 @@ class PostApiController extends Controller
 			'questionsGrid' => ['string', 'nullable'],
 		]);
 
-		$post->title = $validated['title'];
-		$post->active = $validated['active'];
-		$post->revise = $validated['revise'];
+		$post->title = $validated['title'] ?? $post->title;
+		$post->active = $validated['active'] ?? $post->active;
+		$post->revise = $validated['revise'] ?? $post->revise;
 		$post->script = $validated['script'] ?? '';
-		$post->switch = $validated['switch'];
+		$post->switch = $validated['switch'] ?? $post->switch;
 		$post->type = $validated['type'] ?? null;
 		$post->questionsGrid = $validated['questionsGrid'] ?? null;
 		$post->save();

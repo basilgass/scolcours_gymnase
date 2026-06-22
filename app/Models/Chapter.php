@@ -112,11 +112,6 @@ class Chapter extends Model
 		return $this->morphedByMany(Question::class, Post::class);
 	}
 
-	public function users(): BelongsToMany
-	{
-		return $this->belongsToMany(User::class);
-	}
-
 	public function quizzs(): Builder|HasMany|Chapter
 	{
 		return $this->hasMany(Quizz::class);

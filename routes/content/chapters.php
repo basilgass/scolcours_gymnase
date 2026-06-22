@@ -88,8 +88,6 @@ Route::middleware('api')
 		               ->group(function () {
 			               Route::patch('/{chapter:slug}/toggleActiveState', [ChapterApiController::class, 'activate'])
 			                    ->name('active');
-			               Route::post('{chapter}/currentPost', [ChapterApiController::class, 'updateCurrentPost'])
-			                    ->name('current');
 			               Route::patch('{chapter}/ordering', [ChapterApiController::class, 'updatePostsOrder'])
 			                    ->name('posts.order');
 			               Route::post('{chapter}/relations/{related}', [ChapterApiController::class, 'toggleRelated'])

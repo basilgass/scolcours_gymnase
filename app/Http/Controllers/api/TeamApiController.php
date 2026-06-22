@@ -24,7 +24,7 @@ class TeamApiController extends Controller
 	public function store(Request $request)
 	{
 		$validated = $request->validate([
-			'name' => ['string', 'min:2', 'max:100']
+			'name' => ['required', 'string', 'min:2', 'max:100']
 		]);
 
 		$team = Team::create(["name" => $validated['name']]);

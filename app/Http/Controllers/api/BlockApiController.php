@@ -37,9 +37,12 @@ class BlockApiController extends Controller
 
 	public function fetch($values)
 	{
+		// Tri portable selon l'ordre des ids demandés (FIELD() est MySQL-only et
+		// casse sur SQLite/PostgreSQL) : on récupère puis on réordonne en PHP.
 		$blocks = Block::whereIn('id', $values)
-		               ->orderByRaw('FIELD(id,' . implode(",", $values) . ')')
-		               ->get();
+		               ->get()
+		               ->sortBy(fn (Block $block) => array_search($block->id, $values))
+		               ->values();
 
 		return BlockResource::collection($blocks);
 	}

@@ -7,7 +7,6 @@ use App\Http\Resources\TeamResource;
 use App\Models\Block;
 use App\Models\Chapter;
 use App\Models\Post;
-use App\Models\SchoolTimetable;
 use App\Services\PseudoGenerator;
 use Auth;
 use Illuminate\Http\Request;
@@ -63,8 +62,7 @@ class ScolcoursController extends Controller
 		$validated = $request->validate(['show_real_name' => ['required', 'boolean']]);
 		Auth::user()->update($validated);
 
-		return $validated;
-		return response()->json();
+		return response()->json($validated);
 	}
 
 	public function download(Request $request)
@@ -168,15 +166,18 @@ class ScolcoursController extends Controller
 		           ->where('common', $common);
 
 		if ($withoutDuplicateLetters) {
-			// TODO: comme tous les mots sont en majuscule, c'est ok...
-			$query->whereRaw('word REGEXP ?', "^(?!.*([A-Z])\\1).*$");
+			// REGEXP est spécifique à MySQL : on ne l'applique que sur ce moteur.
+			// (Mots en majuscule sans accent : la classe [A-Z] suffit.)
+			if (DB::connection()->getDriverName() === 'mysql') {
+				$query->whereRaw('word REGEXP ?', "^(?!.*([A-Z])\\1).*$");
+			}
 		}
 
-		if (is_int(+$size) and $size > 0) {
-			$query->whereRaw('CHAR_LENGTH(word) = ?', [$size]);
+		// $size peut valoir 'infinity' (pas de filtre). On ne filtre que pour un entier positif.
+		// LENGTH() est portable et équivaut à CHAR_LENGTH pour des mots ASCII en majuscule.
+		if (is_numeric($size) and (int) $size > 0) {
+			$query->whereRaw('LENGTH(word) = ?', [(int) $size]);
 		}
-
-		//		return $query->toRawSql();
 
 		$words = $query
 			->inRandomOrder()
@@ -200,11 +201,6 @@ class ScolcoursController extends Controller
 	public function qrcode()
 	{
 		return Inertia::render('QRCode', []);
-	}
-
-	public function timetable()
-	{
-		return SchoolTimetable::all();
 	}
 
 	public function fullscreen()

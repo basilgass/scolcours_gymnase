@@ -23,7 +23,8 @@ Route::middleware('api')
 		          Route::get('widgets/refresh', [WidgetApiController::class, 'refresh'])
 		               ->name('widgets.refresh');
 
-		          Route::apiResource('widgets', WidgetApiController::class);
+		          Route::apiResource('widgets', WidgetApiController::class)
+		               ->except(['store']);
 	          });
 
      });
