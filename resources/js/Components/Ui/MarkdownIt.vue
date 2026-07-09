@@ -7,7 +7,7 @@ Affichage d'un texte en markdown.
 >
 import {useKatexMacros, useScrollTo} from "@/Composables/useHelpers"
 import {router, usePage} from "@inertiajs/vue3"
-import katex from "katex"
+import katex, {type TrustContext} from "katex"
 import markdownIt from "markdown-it"
 import attr from "markdown-it-attrs"
 import bracketed from "markdown-it-bracketed-spans"
@@ -38,15 +38,17 @@ const md = markdownIt({html: true})
 		katexOptions: {
 			strict: false,
 			macros: useKatexMacros,
-			trust: (context) => context.command.startsWith("\\html"),
+			trust: (context: TrustContext) => context.command.startsWith("\\html"),
 		},
 	})
 
-const defaultTableOpen =
+type RenderRule = NonNullable<typeof md.renderer.rules.table_open>
+
+const defaultTableOpen: RenderRule =
 	md.renderer.rules.table_open ||
 	((tokens, idx, options, env, self) => self.renderToken(tokens, idx, options))
 
-const defaultTableClose =
+const defaultTableClose: RenderRule =
 	md.renderer.rules.table_close ||
 	((tokens, idx, options, env, self) => self.renderToken(tokens, idx, options))
 
@@ -117,10 +119,12 @@ const mdit = computed(() => {
 	return md.render(output)
 })
 
-const mdClick = function (event) {
-	if (event.target.tagName === "A") {
+function mdClick(event: MouseEvent) {
+	const link = (event.target as HTMLElement).closest("a")
+
+	if (link) {
 		event.preventDefault()
-		const [url, anchor] = event.target.href.split("#")
+		const [url, anchor] = link.href.split("#")
 
 		// l'url peut être de deux formes.
 		// https://url
@@ -130,10 +134,10 @@ const mdClick = function (event) {
 			if (url === document.URL) {
 				useScrollTo('#' + anchor)
 			} else {
-				router.visit(event.target.href)
+				router.visit(link.href)
 			}
 		} else {
-			router.visit(event.target.href)
+			router.visit(link.href)
 		}
 	}
 }

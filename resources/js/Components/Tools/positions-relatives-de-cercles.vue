@@ -98,8 +98,8 @@ const result = computed(() => {
 
 // Generate two points at random distance
 function getTriple(allowZero = false): number[] {
-	let triple: number[][] = [],
-		d = 0
+	let triple: number[][] = []
+	let d = 0
 
 	while (triple.length === 0) {
 		// Distance between two points.
@@ -117,8 +117,8 @@ function getTriple(allowZero = false): number[] {
 }
 
 function generatePoints(allowZero = false) {
-	const P1 = Random.point(),
-		triple = getTriple(allowZero)
+	const P1 = Random.point()
+	const triple = getTriple(allowZero)
 
 	const P2 = new Point(P1.x.value + triple[0], P1.y.value + triple[1])
 
@@ -137,12 +137,12 @@ const POSITION_RELATIVE = [
 // Generate random circles
 function generateCircles() {
 	let {P1, P2, triple} = generatePoints()
-	const pos = Random.item(POSITION_RELATIVE),
-		d = triple[2] // distance between the two points
+	const pos = Random.item(POSITION_RELATIVE)
+	const d = triple[2] // distance between the two points
 
 	// Generate the distance depending on POSITION_RELATIVE
-	let r1 = 0,
-		r2 = 0
+	let r1 = 0
+	let r2 = 0
 	switch (pos) {
 		case "tangents internes":
 			r1 = Random.number(d + 1, d * 2)

@@ -45,6 +45,7 @@ class QuestionApiController extends Controller
 		$question = $questionable->questions()->create($validated);
 
 		// Create the question's block
+		// TODO : assurer que le block est créé automatiquement à la création de la question => booted ?
 		$question->blocks()->create([
 			"body" => "sans contenu"
 		]);

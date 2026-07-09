@@ -24,7 +24,7 @@ interface stepInterface {
 }
 
 function makeStepsFromCode(value: string): stepInterface[] {
-	const stepsResult = []
+	const stepsResult: stepInterface[] = []
 
 	const codeSteps = value.split(/%STEP/).filter((s) => s !== "")
 
@@ -58,12 +58,12 @@ function makeStepsFromEquation(value: string): stepInterface[] {
 	 */
 
 	let regex = /(\\begin{aligned}((.|\n|\r)*)\\end{aligned})/s
-	let match = value.match(regex),
-		content: stepInterface[],
-		before: string,
-		after: string,
-		prefix = "\\begin{aligned}",
-		sufix = "\\end{aligned}"
+	let match = value.match(regex)
+	let content: stepInterface[]
+	let before: string
+	let after: string
+	let prefix = "\\begin{aligned}"
+	let sufix = "\\end{aligned}"
 
 	if (match === null) {
 		regex = /(\\begin{array}{rl\|l}((.|\n|\r)*)\\end{array})/s
@@ -124,12 +124,12 @@ function makeStepsFromEquation(value: string): stepInterface[] {
 	return steps
 }
 
-function processContent(str) {
+function processContent(str: string) {
 	// let regex = /@<((\d+|-|,)*):([^>]*?)>((?:[^@]|@(?![<]))*?)/gs;
 	const regex = /@<((\d+|-|,)*):([^>]*?)>((?:[^@]|@(?!<))*)/gs
 
-	const initialString = str.substring(0, str.indexOf("@<")).trim(),
-		restOfString = str.substring(str.indexOf("@<"))
+	const initialString = str.substring(0, str.indexOf("@<")).trim()
+	const restOfString = str.substring(str.indexOf("@<"))
 
 	const maxNumber = str.split("@<").length - 1
 	let match
@@ -171,7 +171,7 @@ function processContent(str) {
 	return result
 }
 
-function generateSlidesNumber(start, end) {
+function generateSlidesNumber(start: number, end: number) {
 	return Array.from({length: end - start + 1}, (_, i) => start + i)
 }
 
@@ -189,31 +189,31 @@ function transformBody(str) {
 }
 
 const auto = computed(() => {
-		const values = props.illustration.parameters.split(",")
-		return values.includes("equ")
-	}),
-	steps = computed(() => {
-		if (auto.value) {
-			return makeStepsFromEquation(props.illustration.code)
-		}
-		return makeStepsFromCode(props.illustration.code)
-	}),
-	stepIndex = ref(0),
-	step = computed(() => {
-		return steps.value[stepIndex.value]
-	}),
-	// prevStep = computed(() => {
-	// 	if (stepIndex.value === 0) {
-	// 		return null
-	// 	}
-	// 	return steps.value[stepIndex.value - 1]
-	// }),
-	nextStep = computed(() => {
-		if (stepIndex.value === steps.value.length - 1) {
-			return null
-		}
-		return steps.value[stepIndex.value + 1]
-	})
+	const values = props.illustration.parameters.split(",")
+	return values.includes("equ")
+})
+const steps = computed(() => {
+	if (auto.value) {
+		return makeStepsFromEquation(props.illustration.code)
+	}
+	return makeStepsFromCode(props.illustration.code)
+})
+const stepIndex = ref(0)
+const step = computed(() => {
+	return steps.value[stepIndex.value]
+})
+// prevStep = computed(() => {
+// 	if (stepIndex.value === 0) {
+// 		return null
+// 	}
+// 	return steps.value[stepIndex.value - 1]
+// }),
+const nextStep = computed(() => {
+	if (stepIndex.value === steps.value.length - 1) {
+		return null
+	}
+	return steps.value[stepIndex.value + 1]
+})
 </script>
 <!--<info>
 parameters: ???

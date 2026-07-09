@@ -14,7 +14,7 @@ const editMode = useStoreEditMode()
 const questionData = inject(questionDataKey)!
 
 
-// on placec score dans une variable pour indiquer que c'est un score d'une question.
+// on place score dans une variable pour indiquer que c'est un score d'une question.
 const score = questionData.user.score as Ref<ScoreInterface<ScoreQuestionDataInterface>>
 
 const showAnswer = ref(false)
@@ -58,45 +58,19 @@ const previousAnswers = computed<string[]>(() => {
 			</div>
 		</div>
 
+		<!-- admin ou réponse correcte : affichage du bouton pour afficher / cacher la bonne réponse -->
 		<div
-			v-admin="editMode.enable"
-			class="flex"
+			v-if="editMode.enable || questionData.hasSuccess.value"
+			class="flex mt-2"
 		>
 			<button
-				class="text-xs text-gray-400 px-2"
+				class="text-xs text-gray-400 flex gap-2 border-t cursor-pointer"
 				@click="toggleAnswer()"
 			>
-				<i
-					v-if="showAnswer"
-					class="bi bi-eye"
-				/>
-				<i
-					v-else
-					class="bi bi-eye-slash"
-				/>
-			</button>
+				<i :class="showAnswer ? 'bi bi-eye' : 'bi bi-eye-slash'" />
 
-			<pre>{{ questionData.question.value.answer }}</pre>
-		</div>
-		<div v-if="questionData.hasSuccess.value">
-			<button
-				v-if="!showAnswer"
-				class="text-xs text-gray-400 w-full"
-				@click="toggleAnswer()"
-			>
-				<i class="bi bi-eye mr-2" />voir la réponse
+				<pre>{{ questionData.question.value.answer }}</pre>
 			</button>
-
-			<div
-				v-else
-				class="cursor-pointer overflow-x-auto scrollbar-scolcours"
-				@click="toggleAnswer()"
-			>
-				<div
-					class="text-xs text-center ml-3 font-code"
-					v-text="questionData.answers.values.value.join(', ')"
-				/>
-			</div>
 		</div>
 	</div>
 </template>

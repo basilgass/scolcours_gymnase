@@ -1,6 +1,7 @@
-import { Dom, ForeignObject, G, SVG, Svg } from "@svgdotjs/svg.js"
+import {Dom, ForeignObject, G, SVG, Svg} from "@svgdotjs/svg.js"
 import katex from "katex"
-import { Fraction } from "pimath"
+import {Fraction} from "pimath"
+
 /**
  * Process:
  * 1. Transform a string input to data
@@ -109,7 +110,7 @@ export class ProbabilityTree {
 
 	draw() {
 		// Draw the tree using the current this._tree data.
-		const { pathes } = this._consolidateTree()
+		const {pathes} = this._consolidateTree()
 		const pathesNumber = pathes.length
 
 		// Initialise the result leaf index, used to set the custom result value.
@@ -248,7 +249,7 @@ export class ProbabilityTree {
 			})
 		})
 
-		return { pathes }
+		return {pathes}
 	}
 
 	private _addNodeLabel(value: string, x: number, y: number, labelClass?: string): ForeignObject {
@@ -259,12 +260,12 @@ export class ProbabilityTree {
 			.attr("style", "overflow:visible")
 
 		// Add the label
-		const html = `<div class="fixed rounded-full katex-m-0 ${labelClass === undefined ? "" : labelClass}">${katex.renderToString(value, { displayMode: true })}</div>`
+		const html = `<div class="fixed rounded-full katex-m-0 ${labelClass === undefined ? "" : labelClass}">${katex.renderToString(value, {displayMode: true})}</div>`
 		fo.add(html as unknown as Dom)
 
 		// Getting the _width and _height of the HTML element
-		const w = fo.node.children[0].clientWidth,
-			h = fo.node.children[0].clientHeight
+		const w = fo.node.children[0].clientWidth
+		const h = fo.node.children[0].clientHeight
 
 		fo.width(w)
 		fo.height(h)
@@ -322,13 +323,13 @@ export class ProbabilityTree {
 			// Build the next node positions.
 
 			// it's the number of nodes by depth (in a column)
-			const pathes = this._nodesByDepth[depth],
+			const pathes = this._nodesByDepth[depth]
 				// number of leaves from this branch
-				n = branch.leaves.length,
+			const n = branch.leaves.length
 				// current x position
-				posX = x + deltaX,
+			const posX = x + deltaX
 				// vertical distance between two leaves.
-				currentDeltaY = this._height / pathes
+			const currentDeltaY = this._height / pathes
 			let posY: number
 
 			if (n % 2 === 0) {
@@ -342,7 +343,7 @@ export class ProbabilityTree {
 			for (const leaf of branch.leaves) {
 				// Draw the line.
 				this._svg.lines.add(
-					this._graph.line(x, y, posX, posY).stroke({ color: "black" })
+					this._graph.line(x, y, posX, posY).stroke({color: "black"})
 				)
 
 				// add the probability, on half way.
@@ -456,7 +457,7 @@ export class ProbabilityTree {
 			V: "",
 			S: ""
 		}
-		let key = null
+		let key: string = null
 		parameters.split(/,?([A-Z])=/g).filter(x => x !== "").forEach((value, index) => {
 			if (index % 2 === 0) {
 				key = value
@@ -542,7 +543,7 @@ export class ProbabilityTree {
 		for (const key in items) {
 			// Prepare items for the next throws
 			// if no repeat, remove one item from the list
-			const nextItems = { ...items }
+			const nextItems = {...items}
 			if (!repeat) nextItems[key] -= 1
 
 			// Add the leaf
@@ -571,20 +572,20 @@ export class ProbabilityTree {
 			number: 0,
 			probability: new Fraction(1),
 			branchProbability: []
-		},
-			crtLevel = 0
+		}
+		let crtLevel = 0
 
 		// Split the data into lines
-		const lines = value.split("\n"),
-			branchLeaves = []
+		const lines = value.split("\n")
+		const branchLeaves = []
 
 
 		for (const line of lines) {
-			const prefix = line.match(/^\s*/)[0] || "",
-				level = prefix.length / 3,
-				sline = line.split(","),
-				node = sline[0].trim(),
-				value = sline[1] || 0
+			const prefix = line.match(/^\s*/)[0] || ""
+			const level = prefix.length / 3
+			const sline = line.split(",")
+			const node = sline[0].trim()
+			const value = sline[1] || 0
 
 			if (level === crtLevel) {
 				// Same level -> adding to the current root leaf.

@@ -128,11 +128,11 @@ function toggleDragHandler() {
 	toggleDraggableSize.value = toggleDraggableSize.value % 3
 
 	Object.values(PiGraph.figures)
-		.filter(fig => fig.isDraggable)
-		.forEach((fig: Point) => {
-			fig.shape.animate(400, 0, 'now')
+		.filter((fig): fig is Point => fig.isDraggable)
+		.forEach(pt => {
+			pt.shape.animate(400, 0, 'now')
 				.ease(">")
-				.size(fig.config.size * toggleDraggableSize.value, fig.config.size * toggleDraggableSize.value)
+				.size(pt.config.size * toggleDraggableSize.value, pt.config.size * toggleDraggableSize.value)
 		})
 }
 

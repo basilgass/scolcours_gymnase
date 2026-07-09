@@ -1,74 +1,33 @@
 <script setup lang="ts">
-import {graduateBackgroundColor, graduateBorderColor} from "@/scolcours.ts"
 import {CategoryScale} from "chart.js"
 
 import {Chart as ChartJS} from "chart.js/auto"
 import {computed} from "vue"
 import {Bar} from "vue-chartjs"
 import _ from "lodash"
+import {buildChartData, type ChartComponentProps, chartPropDefaults} from "@/Components/Charts/chartHelpers.ts"
 
 ChartJS.register(CategoryScale)
 
-const props = defineProps({
-	chartLabels: {type: Array, default: () => []},
-	chartDataset: {type: [Object, Array], required: true},
-	chartOptions: {
-		type: Object, default: () => {
-		}
-	},
-	chartLegend: {type: Boolean, default: false},
-	chartColorset: {type: String, default: null}
-})
+const props = withDefaults(defineProps<ChartComponentProps>(), chartPropDefaults)
 
-const chartData = computed(() => {
-		const labels = []
-		if (props.chartLabels.length > 0) {
-			labels["labels"] = props.chartLabels
-		}
+const chartData = computed(() =>
+	buildChartData<"bar">(props.chartDataset, props.chartLabels, props.chartColorset),
+)
 
-		let datasets = []
-		if (Array.isArray(props.chartDataset)) {
-			if (Object.hasOwn(props.chartDataset[0], 'data')) {
-				datasets = props.chartDataset
-			} else {
-				datasets = [{
-					data: props.chartDataset,
-					...chartColors.value
-				}]
-			}
-		} else {
-			datasets = [props.chartDataset]
-		}
-
-		return {
-			...labels,
-			datasets
-		}
-	}),
-	chartOptionsMerged = computed(() => {
-		const opts = {
-			responsive: true,
-			maintainAspectRatio: true,
-			plugins: {
-				legend: {
-					display: props.chartLegend,
-				},
+const chartOptionsMerged = computed(() => {
+	const opts = {
+		responsive: true,
+		maintainAspectRatio: true,
+		plugins: {
+			legend: {
+				display: props.chartLegend,
 			},
-		}
+		},
+	}
 
-		return _.merge(opts, props.chartOptions)
-	}),
-	chartColors = computed(() => {
-		if (props.chartColorset === "graduate") {
-			return {
-				backgroundColor: graduateBackgroundColor,
-				borderColor: graduateBorderColor,
-				borderWidth: 1,
-			}
-		}
-
-		return {}
-	})
+	return _.merge(opts, props.chartOptions)
+})
 
 </script>
 

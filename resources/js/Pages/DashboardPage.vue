@@ -12,6 +12,7 @@ import {usePage} from "@inertiajs/vue3"
 import axios from "axios"
 import Card from "@/Components/Ui/Card.vue"
 import {useStoreScore} from "@/stores/useStoreScore.ts"
+import {ScoreLessonDataInterface} from "@/types/scoreInterfaces.ts"
 
 defineOptions({layout: LayoutMain})
 
@@ -37,7 +38,7 @@ function regeneratePseudo() {
 		})
 }
 
-function updateShowRealName(value: boolean) {
+function updateShowRealName() {
 	axios.patch(route('profile.showRealName.update'), {show_real_name: showRealName.value})
 		.then((res) => {
 			console.log(res)
@@ -51,7 +52,7 @@ function updateShowRealName(value: boolean) {
 // Chargement des scores en une fois (stockeé dans le store
 const useScores = useStoreScore()
 const showCourses = ref(false)
-useScores.getScores("Lesson", props.courses.flatMap(course => course.lessons.map(lesson => lesson.id))).then(() => showCourses.value = true)
+useScores.getScores<ScoreLessonDataInterface>("Lesson", props.courses.flatMap(course => course.lessons.map(lesson => lesson.id))).then(() => showCourses.value = true)
 
 </script>
 <template>

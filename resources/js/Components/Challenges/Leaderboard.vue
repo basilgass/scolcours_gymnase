@@ -34,7 +34,7 @@ function loadStats() {
 		})
 }
 
-let interval = null
+let interval: number = null
 onMounted(() => {
 	loadStats()
 	interval = setInterval(() => loadStats(), 5000)

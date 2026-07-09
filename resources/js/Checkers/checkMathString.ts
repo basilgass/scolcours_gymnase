@@ -34,7 +34,7 @@ export function isEquationPeak(value: string): boolean {
 	return false
 }
 
-export const sortPartsByVariable = ((s1, s2) => {
+export const sortPartsByVariable = ((s1: string, s2: string) => {
 	const s1HasX = s1.includes('x')
 	const s2HasX = s2.includes('x')
 	if (s1HasX && !s2HasX) return -1

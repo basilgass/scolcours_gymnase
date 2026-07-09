@@ -52,9 +52,9 @@ const extraLetters = computed(() => {
 const kbrdConfig = computed(() => {
 	if (props.keyboard.parameters.length > 0) {
 		let items = props.keyboard.parameters.filter((x) =>
-				x.startsWith("var:")
-			),
-			varName
+			x.startsWith("var:")
+		)
+		let varName: string
 
 		if (items.length === 1) {
 			varName = items[0].split(":")[1]

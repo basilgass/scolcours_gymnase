@@ -7,6 +7,7 @@ import LayoutMain from "@/Layouts/LayoutMain.vue"
 import {ChallengeInterface} from "@/types/challengeInterfaces.ts"
 import ChallengeCard from "@/Components/Challenges/ChallengeCard.vue"
 import {useStoreScore} from "@/stores/useStoreScore.ts"
+import {ScoreChallengeDataInterface} from "@/types/scoreInterfaces.ts"
 
 defineOptions({layout: LayoutMain})
 
@@ -14,7 +15,7 @@ const props = defineProps<{
 	challenges: ChallengeInterface[]
 }>()
 
-useStoreScore().getScores("Challenge", props.challenges.map(x => x.id))
+useStoreScore().getScores<ScoreChallengeDataInterface>("Challenge", props.challenges.map(x => x.id))
 </script>
 <template>
 	<div>

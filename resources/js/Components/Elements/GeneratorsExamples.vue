@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import {GeneratorInterface} from "@/types/modelInterfaces.ts"
+import {GeneratorInterface, QuestionDynamicInterface} from "@/types/modelInterfaces.ts"
 import {onMounted, ref} from "vue"
 import {useGenerator} from "@/Composables/useGenerator.ts"
 import ScButton from "@/Components/Ui/Button/scButton.vue"
@@ -16,17 +16,15 @@ const props = withDefaults(
 	}
 )
 
-const generatedErrors = ref('')
-const generatedQuestions = ref([])
+const generatedErrors = ref<string>('')
+const generatedQuestions = ref<QuestionDynamicInterface[]>([])
 
 const emits = defineEmits<{
 	generatorHasErrors: [value: boolean]
 }>()
 
-function generateQuestions() {
-	if (props.generator.code === '') {
-		return []
-	}
+function generateQuestions(): void {
+	if (props.generator.code === '') return
 
 	generatedQuestions.value = []
 
@@ -41,7 +39,7 @@ function generateQuestions() {
 		generatedErrors.value = ''
 		emits('generatorHasErrors', false)
 	} catch (err) {
-		generatedErrors.value = err
+		generatedErrors.value = err instanceof Error ? err.message : String(err)
 		emits('generatorHasErrors', true)
 	}
 }

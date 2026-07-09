@@ -11,6 +11,7 @@ import ScButton from "@/Components/Ui/Button/scButton.vue"
 import DeckCardEdit from "@/Components/Decks/Parts/DeckCardEdit.vue"
 import DeckCardsEditDynamics from "@/Components/Decks/Parts/DeckCardsEditDynamics.vue"
 import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
+import {useIsAdmin} from "@/Composables/useHelpers.ts"
 
 const props = defineProps<{
 	deck: DeckInterface
@@ -30,7 +31,7 @@ function addCard() {
 		})
 }
 
-function deleteCard(cardId) {
+function deleteCard(cardId: number) {
 	axios.delete(route("api.admin.cards.destroy", {card: cardId}))
 		.then(() => {
 			theCards.value = theCards.value.filter(card => card.id !== cardId)
@@ -96,7 +97,7 @@ function addBlock(blockId: number, splitter: string) {
 			item-key="id"
 			v-bind="{
 				animation: 200,
-				disabled: !$page.props.auth.can.admin,
+				disabled: !useIsAdmin(),
 			}"
 			class="grid grid-cols-1 gap-5"
 			@end="updateDecksOrder"

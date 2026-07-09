@@ -156,65 +156,65 @@ function onDrop(e: DragEvent, targetDay: number, targetItem: timetableInterface)
 <template>
 	<table class="w-full">
 		<thead>
-		<tr>
-			<th />
-			<th>
-				lundi
-			</th>
-			<th>
-				mardi
-			</th>
-			<th>
-				mercredi
-			</th>
-			<th>
-				jeudi
-			</th>
-			<th>
-				vendredi
-			</th>
-		</tr>
+			<tr>
+				<th />
+				<th>
+					lundi
+				</th>
+				<th>
+					mardi
+				</th>
+				<th>
+					mercredi
+				</th>
+				<th>
+					jeudi
+				</th>
+				<th>
+					vendredi
+				</th>
+			</tr>
 		</thead>
 		<tbody>
-		<tr
-			v-for="item in timetable"
-			:key="`p-${item.period}`"
-		>
-			<td>
-				<div class="flex justify-between items-center gap-1 px-2">
-					<div class="font-semibold">
-						P{{ item.period }}
+			<tr
+				v-for="item in timetable"
+				:key="`p-${item.period}`"
+			>
+				<td>
+					<div class="flex justify-between items-center gap-1 px-2">
+						<div class="font-semibold">
+							P{{ item.period }}
+						</div>
+						<div class="text-xs">
+							{{ item.start.substring(0, 5) }}<br>{{ item.end.substring(0, 5) }}
+						</div>
 					</div>
-					<div class="text-xs">
-						{{ item.start.substring(0, 5) }}<br>{{ item.end.substring(0, 5) }}
-					</div>
-				</div>
-			</td>
-			<td
-				v-for="day in 5"
-				:key="`day-${day}-p${item.period}`"
-				:class="[
+				</td>
+				<td
+					v-for="day in 5"
+					:key="`day-${day}-p${item.period}`"
+					:class="[
 						'px-3',
 						{
 							'bg-blue-100 transition-colors duration-150': isHovered(day, item)
 						}
 					]"
-				@dragenter="event => onDragEnter(event, day, item)"
-				@dragleave="event => onDragLeave(event, day, item)"
-				@drop="event => onDrop(event, day, item)"
-				@dragover.prevent="onDragOver"
-			>
-				<div
-					v-show="itemsInTimetable[day][item.start]"
-					class="text-center bg-content border rounded-full item-draggable"
-					draggable="true"
-					@dragend="onDragEnd"
-					@dragstart="event => onDragStart(event, day, item)"
+					@dragenter="event => onDragEnter(event, day, item)"
+					@dragleave="event => onDragLeave(event, day, item)"
+					@drop="event => onDrop(event, day, item)"
+					@dragover.prevent="onDragOver"
 				>
-					{{ itemsInTimetable[day][item.start] }}
-				</div>
-			</td>
-		</tr>
+					<div
+						v-show="itemsInTimetable[day][item.start]"
+						class="text-center bg-content border rounded-full item-draggable"
+						draggable="true"
+						@dragend="onDragEnd"
+						@dragstart="event => onDragStart(event, day, item)"
+					>
+						{{ itemsInTimetable[day][item.start] }}
+					</div>
+				</td>
+			</tr>
 		</tbody>
 	</table>
 
@@ -227,7 +227,7 @@ function onDrop(e: DragEvent, targetDay: number, targetItem: timetableInterface)
 			type="add"
 			xs
 			@dragend="onDragEnd"
-			@dragstart="event => onDragStart(event, null, null)"
+			@dragstart="(event: DragEvent) => onDragStart(event, null, null)"
 		>
 			ajouter une période
 		</sc-button>

@@ -8,6 +8,7 @@ import {router} from "@inertiajs/vue3"
 import ArticleSubtitle from "@/Components/Ui/ArticleSubtitle.vue"
 import ChallengeCard from "@/Components/Challenges/ChallengeCard.vue"
 import {useStoreScore} from "@/stores/useStoreScore.ts"
+import {ScoreChallengeDataInterface} from "@/types/scoreInterfaces.ts"
 
 defineOptions({layout: LayoutMain})
 
@@ -26,7 +27,7 @@ function triggerEnter(items: ChapterShowInterface[]) {
 
 // Load the scores for the challenges (do it once)
 const useScore = useStoreScore()
-useScore.getScores('Challenge', props.challenges.map(x => x.id))
+useScore.getScores<ScoreChallengeDataInterface>('Challenge', props.challenges.map(x => x.id))
 
 </script>
 

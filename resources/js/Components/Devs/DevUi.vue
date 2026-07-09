@@ -12,8 +12,9 @@ import {
 	buttonColorMap,
 	ButtonSize,
 	ButtonVariant
-} from "@/Components/Ui/Button/button.config.ts";
-import ScButton from "@/Components/Ui/Button/scButton.vue";
+} from "@/Components/Ui/Button/button.config.ts"
+import ScButton from "@/Components/Ui/Button/scButton.vue"
+import type {ThemesType} from "@/types"
 
 defineOptions({layout: LayoutMain})
 
@@ -24,7 +25,7 @@ const loremIpsum = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ac
 const btnTypes: ButtonAction[] = Object.keys(buttonActionMap) as ButtonAction[]
 const btnColors: ButtonAction[] = Object.keys(buttonColorMap) as ButtonAction[]
 
-const definitionClasses = {
+const definitionClasses: Record<ThemesType, string> = {
 	'scolcours': 'def-scolcours',
 	'algebre': 'def-algebre',
 	'analyse': 'def-analyse',
@@ -40,7 +41,7 @@ const dimensions = [
 	'max-w-3xs', 'max-w-2xs', 'max-w-xs', 'max-w-sm', 'max-w-md', 'max-w-lg', 'max-w-xl', 'max-w-2xl',
 	'min-w-xs', 'min-w-sm', 'min-w-md', 'min-w-lg', 'min-w-xl'
 ]
-const themes = {
+const themes: Record<ThemesType, string[]> = {
 	'scolcours': [
 		'bg-scolcours-light dark:bg-scolcours-light',
 		'bg-scolcours dark:bg-scolcours',
@@ -239,9 +240,10 @@ const value = ref(false)
 					:key="`button-style-${variant ? 'outline': 'solid'}`"
 					class="flex flex-col gap-3 p-3 bg-content"
 				>
-
-					<div v-for="(size) in ['xs', 'sm', 'md', 'lg', 'xl']"
-					     :key="`button-size-${size}`" class="flex flex-col gap-3 p-3 bg-content"
+					<div
+						v-for="(size) in ['xs', 'sm', 'md', 'lg', 'xl']"
+						:key="`button-size-${size}`"
+						class="flex flex-col gap-3 p-3 bg-content"
 					>
 						<h3 class="text-lg">
 							{{ size.toUpperCase() }} boutons {{ variant }}
@@ -272,7 +274,7 @@ const value = ref(false)
 								:variant="variant as ButtonVariant"
 								:size="size as ButtonSize"
 								icon
-							></sc-button>
+							/>
 						</div>
 
 						<div class="flex flex-wrap gap-3">
@@ -283,12 +285,11 @@ const value = ref(false)
 								:variant="variant as ButtonVariant"
 								:size="size as ButtonSize"
 								icon
-							>{{ type }}
+							>
+								{{ type }}
 							</sc-button>
 						</div>
 					</div>
-
-
 				</div>
 			</div>
 		</details>

@@ -8,22 +8,22 @@ import ScButton from "@/Components/Ui/Button/scButton.vue"
 
 defineOptions({layout: LayoutMain})
 
-const gameStarted = ref(false),
-	start = function () {
-		gameStarted.value = true
+const gameStarted = ref(false)
+const start = function () {
+	gameStarted.value = true
 
-		futo.generate(size.value)
-	}
+	futo.generate(size.value)
+}
 
-const size = ref(4),
-	futo = new Futoshiki(4)
+const size = ref(4)
+const futo = new Futoshiki(4)
 
 // futo.generate()
 
-const futoshiki = reactive(futo),
-	valueSelector = ref(1),
-	suggestionMode = ref(false),
-	contradictions = ref([])
+const futoshiki = reactive(futo)
+const valueSelector = ref(1)
+const suggestionMode = ref(false)
+const contradictions = ref([])
 
 // let rows = computed(() => {
 // 	let arr = []
@@ -39,11 +39,11 @@ const futoshiki = reactive(futo),
 // 	return arr
 // })
 
-const getConstrain = function (col, row) {
+const getConstrain = function (col: number, row: number) {
 	if (row % 2 === 1) {
 		// left / right constrain
-		const AKey = `${col / 2 - 1}:${(row - 1) / 2}`,
-			BKey = `${col / 2}:${(row - 1) / 2}`
+		const AKey = `${col / 2 - 1}:${(row - 1) / 2}`
+		const BKey = `${col / 2}:${(row - 1) / 2}`
 
 		if (futoshiki.futoshiki[AKey].isLesserThan(futoshiki.futoshiki[BKey])) {
 			return "bi bi-chevron-compact-left"
@@ -54,8 +54,8 @@ const getConstrain = function (col, row) {
 	}
 	if (row % 2 === 0) {
 		// greater / lesser constrain
-		const AKey = `${(col - 1) / 2}:${row / 2 - 1}`,
-			BKey = `${(col - 1) / 2}:${row / 2}`
+		const AKey = `${(col - 1) / 2}:${row / 2 - 1}`
+		const BKey = `${(col - 1) / 2}:${row / 2}`
 
 		if (futoshiki.futoshiki[AKey].isLesserThan(futoshiki.futoshiki[BKey])) {
 			return "bi bi-chevron-compact-up"
@@ -66,7 +66,7 @@ const getConstrain = function (col, row) {
 	}
 	return ""
 }
-const setValue = function (col, row) {
+const setValue = function (col: number, row: number) {
 	const cellKey = `${(col - 1) / 2}:${(row - 1) / 2}`
 	if (suggestionMode.value && valueSelector.value > 0) {
 		if (futoshiki.futoshiki[cellKey].value === null) {
@@ -107,8 +107,8 @@ const setValue = function (col, row) {
 
 		<div v-show="!gameStarted">
 			<FormInput
-				type="number"
 				v-model="size"
+				type="number"
 				name="nombre de colonnes"
 			/>
 			<sc-button

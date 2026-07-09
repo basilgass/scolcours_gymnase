@@ -1,120 +1,124 @@
-import katex from "katex/dist/katex.mjs"
 import AsciiMathParser from "@/asciimath2tex.ts"
 import {useKatexMacros} from "@/Composables/useHelpers"
 import renderMathInElement from "katex/contrib/auto-render"
 import {numberCorrection} from "@/helpers/helperFunctions"
+import type {Directive, DirectiveBinding} from "vue"
+import katex from "katex"
 
-function katexAutoRender(el) {
-	if (el) {
-		renderMathInElement(el, {
-			// customised config
-			// • auto-render specific keys, e.g.:
-			delimiters: [
-				// { left: "$$", right: "$$", display: true },
-				// { left: "$", right: "$", display: false },
-				{left: "\\[", right: "\\]", display: true},
-				{left: "\\(", right: "\\)", display: false}
-			],
-			// • rendering keys, e.g.:
-			throwOnError: false,
-			macros: useKatexMacros
-		})
-	}
+type KatexModifier =
+	| "clear" | "boxed" | "lg" | "left" | "right" | "nomargin"
+	| "inline" | "dense" | "auto" | "ascii" | "display" | "output" | "number" | `number:${number}`
+
+type KatexBinding = DirectiveBinding<string | null, KatexModifier>
+type KatexModifiers = KatexBinding["modifiers"]
+
+// Modifiers dont l'effet est simplement d'ajouter une classe.
+const MODIFIER_CLASSES: Partial<Record<KatexModifier, string>> = {
+	boxed: "katex-boxed",
+	lg: "katex-boxed-lg",
+	left: "katex-left",
+	right: "katex-right",
+	nomargin: "katex-m-0",
+	dense: "katex-m-1",
 }
 
-function katexUpdate(el, binding) {
-	el.innerHTML = ""
+function katexAutoRender(el: HTMLElement): void {
+	renderMathInElement(el, {
+		// $$ et $ sont volontairement désactivés :
+		delimiters: [
+			{left: "\\[", right: "\\]", display: true},
+			{left: "\\(", right: "\\)", display: false},
+		],
+		throwOnError: false,
+		macros: useKatexMacros,
+	})
+}
 
-	if (
-		binding.value === null ||
-		binding.value === undefined ||
-		binding.value.length === 0
-	) {
-		return
-	}
-
-	if (!binding.modifiers.clear) {
+function applyModifierClasses(el: HTMLElement, modifiers: KatexModifiers): void {
+	if (!modifiers.clear) {
 		el.classList.add("katex-container")
 	}
 
-	// Add boxed to the inline container
-	if (binding.modifiers.boxed) {
-		el.classList.add("katex-boxed")
-	}
-	if (binding.modifiers.lg) {
-		el.classList.add("katex-boxed-lg")
-	}
-	if (binding.modifiers.left) {
-		el.classList.add("katex-left")
-	}
-	if (binding.modifiers.right) {
-		el.classList.add("katex-right")
-	}
-	if (binding.modifiers.nomargin) {
-		el.classList.add("katex-m-0")
-	}
-	if (binding.modifiers.dense) {
-		el.classList.add("katex-m-1")
-	}
-
-	// Create the text to display.
-	let rawTex = binding.value
-
-	if (!isNaN(rawTex)) {
-		for (const key in binding.modifiers) {
-			if (key.startsWith("number")) {
-				const [, digits] = key.split(":")
-				rawTex = numberCorrection(
-					rawTex,
-					digits === undefined ? 2 : +digits
-				).toString()
-			}
+	for (const [modifier, className] of Object.entries(MODIFIER_CLASSES)) {
+		if (modifiers[modifier as KatexModifier]) {
+			el.classList.add(className)
 		}
-		rawTex = rawTex.toString()
-	}
-
-	// Make sure rawTex is a string
-	if (!rawTex) rawTex = ""
-
-	if (binding.modifiers.auto) {
-		el.innerHTML = rawTex
-		katexAutoRender(el)
-	} else {
-		const tex = binding.modifiers.ascii
-			? new AsciiMathParser().parse(rawTex)
-			: rawTex
-		const displayMode = !binding.modifiers.inline && el.tagName !== "SPAN"
-
-		if (tex !== undefined && tex.length > 0) {
-			el.innerHTML = katex.renderToString(
-				(binding.modifiers.display ? "\\displaystyle " : "") + tex,
-				{
-					throwOnError: false,
-					displayMode: displayMode,
-					macros: useKatexMacros
-				}
-			)
-		}
-	}
-
-	// Add TeX output to the element
-	if (binding.modifiers.output) {
-		const output = document.createElement("div")
-		output.classList.add("katex-output")
-		output.innerHTML = rawTex
-		output.addEventListener("click", () => {
-			// Select the whole text
-			const range = document.createRange()
-			range.selectNodeContents(output)
-			const sel = window.getSelection()
-			sel.removeAllRanges()
-			sel.addRange(range)
-		})
-		el.appendChild(output)
 	}
 }
 
-export const katexDirective = {
+// Si la valeur est numérique et qu'un modifier number(:n) est présent, arrondit à n décimales.
+function formatNumberValue(rawTex: string, modifiers: KatexModifiers): string {
+	if (isNaN(Number(rawTex))) {
+		return rawTex
+	}
+
+	const numberModifier = Object.keys(modifiers).find((key) => key.startsWith("number"))
+	if (numberModifier === undefined) {
+		return rawTex
+	}
+
+	const [, digits] = numberModifier.split(":")
+	return numberCorrection(rawTex, digits === undefined ? 2 : +digits)
+}
+
+function renderTex(el: HTMLElement, rawTex: string, modifiers: KatexModifiers): void {
+	if (modifiers.auto) {
+		el.innerHTML = rawTex
+		katexAutoRender(el)
+		return
+	}
+
+	const tex = modifiers.ascii ? new AsciiMathParser().parse(rawTex) : rawTex
+	if (tex.length === 0) {
+		return
+	}
+
+	const displayMode = !modifiers.inline && el.tagName !== "SPAN"
+	el.innerHTML = katex.renderToString(
+		(modifiers.display ? "\\displaystyle " : "") + tex,
+		{
+			throwOnError: false,
+			displayMode,
+			macros: useKatexMacros,
+		}
+	)
+}
+
+// Ajoute un bloc cliquable qui sélectionne tout le TeX source au clic.
+function appendCopyableOutput(el: HTMLElement, rawTex: string): void {
+	const output = document.createElement("div")
+	output.classList.add("katex-output")
+	output.innerHTML = rawTex
+	output.addEventListener("click", () => {
+		const range = document.createRange()
+		range.selectNodeContents(output)
+		const selection = window.getSelection()
+		selection?.removeAllRanges()
+		selection?.addRange(range)
+	})
+	el.appendChild(output)
+}
+
+function katexUpdate(el: HTMLElement, binding: KatexBinding): void {
+	el.innerHTML = ""
+
+	const value = binding.value
+	if (value === null || value === undefined || value.length === 0) {
+		return
+	}
+
+	applyModifierClasses(el, binding.modifiers)
+
+	const rawTex = formatNumberValue(value, binding.modifiers)
+
+	renderTex(el, rawTex, binding.modifiers)
+
+	if (binding.modifiers.output) {
+		appendCopyableOutput(el, rawTex)
+	}
+}
+
+export const katexDirective: Directive<HTMLElement, string | null, KatexModifier> = {
 	mounted(el, binding) {
 		katexUpdate(el, binding)
 	},
@@ -123,5 +127,5 @@ export const katexDirective = {
 	},
 	unmounted(el) {
 		el.innerHTML = ""
-	}
+	},
 }

@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 
-import {CourseInterface, ScoreInterface, TeamInterface} from "@/types/modelInterfaces.ts"
+import {CourseInterface, TeamInterface} from "@/types/modelInterfaces.ts"
 import ScButton from "@/Components/Ui/Button/scButton.vue"
 import Card from "@/Components/Ui/Card.vue"
 import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
@@ -25,8 +25,8 @@ const score = ref<number>(0)
 const useScores = useStoreScore()
 const total = computed(() => props.course.lessons.length)
 onMounted(() => {
-	useScores.getScores('Lesson', props.course.lessons.map(l => l.id))
-		.then((scores: ScoreInterface<ScoreLessonDataInterface>[]) => {
+	useScores.getScores<ScoreLessonDataInterface>('Lesson', props.course.lessons.map(l => l.id))
+		.then(scores => {
 			score.value = scores.filter(s => s.is_resolved).length
 		})
 })

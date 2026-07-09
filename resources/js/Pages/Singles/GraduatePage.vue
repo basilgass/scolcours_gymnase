@@ -8,13 +8,14 @@ import LayoutMain from "@/Layouts/LayoutMain.vue"
 import {graduateBackgroundColor, graduateBorderColor} from "@/scolcours.ts"
 import {computed, ref} from "vue"
 import ScButton from "@/Components/Ui/Button/scButton.vue"
+import Card from "@/Components/Ui/Card.vue"
 
 defineOptions({layout: LayoutMain})
-const pointsData = ref(""),
-	maxPoints = ref(20),
-	pourcentage = ref(""),
-	pourcentage4 = ref(false),
-	precision = ref(0.5)
+const pointsData = ref("")
+const maxPoints = ref(20)
+const pourcentage = ref("")
+const pourcentage4 = ref(false)
+const precision = ref(0.5)
 
 // Nouvelle version, plus logique et stable
 type baremeInterface = Record<string, {
@@ -31,13 +32,13 @@ const bareme = computed<baremeInterface>(() => {
 
 	if (precision.value <= 0) return {}
 
-	let pt = 0,
-		result = {}
+	let pt = 0
+	let result: baremeInterface = {}
 	while (pt <= maxPoints.value) {
-		const note = calculerLaNote(pt),
-			ptKey = numberCorrection(pt)
+		const note = calculerLaNote(pt)
+		const ptKey = +numberCorrection(pt)
 
-		result[pt] = {
+		result[pt.toString()] = {
 			pt: ptKey,
 			note: Math.round(note * 2) / 2,
 			centieme: note.toFixed(2)
@@ -84,7 +85,9 @@ function calculerLaNote(pt: number): number {
 	}
 
 	const seuil = maxPoints.value * (+pourcentage.value) / 100
-	const note1 = 1, note4 = pourcentage4.value ? 4 : 3.75, note6 = 6
+	const note1 = 1
+	const note4 = pourcentage4.value ? 4 : 3.75
+	const note6 = 6
 
 	if (pt < seuil) {
 		// note de 1 à 3.75 (ou 4)
@@ -100,42 +103,42 @@ function calculerLaNote(pt: number): number {
 }
 
 const listeDesPoints = computed<number[]>(() => {
-		return pointsData.value.split(/\s+/)
-			.filter(pt => pt.trim() !== "" && !isNaN(+pt))
-			.map(pt => Math.min(+pt, maxPoints.value))
-			.filter(pt => Object.hasOwn(bareme.value, pt))
-	}),
-	listeDesPointsAvecErreurs = computed<string[]>(() => {
-		return pointsData.value.split(/\s+/)
-			.filter(pt => pt !== "" && !Object.hasOwn(bareme.value, +pt.toString()))
-	}),
-	listeDesNotes = computed<number[]>(() => {
-		return listeDesPoints.value
-			.map(pt => bareme.value[pt].note)
-	}),
-	decompteDesNotes = computed<number[]>(() => {
-		const arr = []
+	return pointsData.value.split(/\s+/)
+		.filter(pt => pt.trim() !== "" && !isNaN(+pt))
+		.map(pt => Math.min(+pt, maxPoints.value))
+		.filter(pt => Object.hasOwn(bareme.value, pt))
+})
+const listeDesPointsAvecErreurs = computed<string[]>(() => {
+	return pointsData.value.split(/\s+/)
+		.filter(pt => pt !== "" && !Object.hasOwn(bareme.value, +pt.toString()))
+})
+const listeDesNotes = computed<number[]>(() => {
+	return listeDesPoints.value
+		.map(pt => bareme.value[pt].note)
+})
+const decompteDesNotes = computed<number[]>(() => {
+	const arr = []
 
-		for (let i = 1; i <= 6; i += 0.5) {
-			arr.push(listeDesNotes.value.filter(note => note === i).length)
-		}
+	for (let i = 1; i <= 6; i += 0.5) {
+		arr.push(listeDesNotes.value.filter(note => note === i).length)
+	}
 
-		return arr
-	}),
-	moyenneDesNotes = computed<number | string>(() => {
-		if (listeDesNotes.value.length === 0) return "-"
+	return arr
+})
+const moyenneDesNotes = computed<number | string>(() => {
+	if (listeDesNotes.value.length === 0) return "-"
 
-		return (listeDesNotes.value.reduce((a, b) => a + b) / listeDesNotes.value.length).toFixed(2)
-	}),
-	medianeDesNotes = computed<number | string>(() => {
-		if (listeDesNotes.value.length === 0) return "-"
+	return (listeDesNotes.value.reduce((a, b) => a + b) / listeDesNotes.value.length).toFixed(2)
+})
+const medianeDesNotes = computed<number | string>(() => {
+	if (listeDesNotes.value.length === 0) return "-"
 
-		// https://stackoverflow.com/questions/45309447/calculating-median-javascript
-		const s = [...listeDesNotes.value].sort((a, b) => a - b)
-		const mid = Math.floor(s.length / 2)
+	// https://stackoverflow.com/questions/45309447/calculating-median-javascript
+	const s = [...listeDesNotes.value].sort((a, b) => a - b)
+	const mid = Math.floor(s.length / 2)
 
-		return (s.length % 2 === 0 ? (s[mid - 1] + s[mid]) / 2 : s[mid]).toFixed(2)
-	})
+	return (s.length % 2 === 0 ? (s[mid - 1] + s[mid]) / 2 : s[mid]).toFixed(2)
+})
 
 
 </script>
@@ -174,24 +177,24 @@ const listeDesPoints = computed<number[]>(() => {
 					<sc-button
 						class="min-w-[50px]"
 						:active="+precision === 1"
-						@click="precision = 1"
 						xs
+						@click="precision = 1"
 					>
 						1
 					</sc-button>
 					<sc-button
 						class="min-w-[50px]"
 						:active="+precision === 0.5"
-						@click="precision = 0.5"
 						xs
+						@click="precision = 0.5"
 					>
 						0.5
 					</sc-button>
 					<sc-button
 						class="min-w-[50px]"
 						:active="+precision === 0.1"
-						@click="precision = 0.1"
 						xs
+						@click="precision = 0.1"
 					>
 						0.1
 					</sc-button>
@@ -213,36 +216,36 @@ const listeDesPoints = computed<number[]>(() => {
 			>
 				<table class="table tab w-full text-center font-code text-xl">
 					<thead>
-					<tr class="font-semibold">
-						<td>de</td>
-						<td>à</td>
-						<td class="">
-							éval.
-						</td>
-					</tr>
+						<tr class="font-semibold">
+							<td>de</td>
+							<td>à</td>
+							<td class="">
+								éval.
+							</td>
+						</tr>
 					</thead>
 					<tbody v-if="Object.keys(bareme).length > 0">
-					<tr
-						v-for="item in pointsParNote"
-						:key="`range-${item.note}`"
-						class="odd:bg-amber-100 dark:odd:bg-sky-900"
-					>
-						<td>{{ item.pointsMin }}</td>
-						<td>{{ item.pointsMax }}</td>
-						<td class="font-semibold">
-							{{ item.note }}
-						</td>
-					</tr>
+						<tr
+							v-for="item in pointsParNote"
+							:key="`range-${item.note}`"
+							class="odd:bg-amber-100 dark:odd:bg-sky-900"
+						>
+							<td>{{ item.pointsMin }}</td>
+							<td>{{ item.pointsMax }}</td>
+							<td class="font-semibold">
+								{{ item.note }}
+							</td>
+						</tr>
 					</tbody>
 					<tbody v-else>
-					<tr class="text-center text-sm text-red-600">
-						<td
-							class="py-5"
-							colspan="3"
-						>
-							Le barème n'a pas pu être créé... merci de vérifier la configuration
-						</td>
-					</tr>
+						<tr class="text-center text-sm text-red-600">
+							<td
+								class="py-5"
+								colspan="3"
+							>
+								Le barème n'a pas pu être créé... merci de vérifier la configuration
+							</td>
+						</tr>
 					</tbody>
 				</table>
 			</div>
@@ -254,8 +257,8 @@ const listeDesPoints = computed<number[]>(() => {
 			</h3>
 
 			<div
-				class="hidden md:grid grid-cols-1 gap-1"
 				v-if="Object.keys(bareme).length<150"
+				class="hidden md:grid grid-cols-1 gap-1"
 			>
 				<div
 					v-for="pointsNote in pointsParNote"
@@ -299,11 +302,9 @@ const listeDesPoints = computed<number[]>(() => {
 					class="mt-8 flex flex-col gap-4"
 				>
 					<div>
-						<div class="flex gap-2 md:gap-4 xl:gap-10 justify-between text-center">
-							<div
-								class="bg-main p-3 grid place-items-center text-lg border border-slate-100 rounded-xl shadow-sm aspect-square w-full py-8"
-							>
-								<div class="flex flex-col h-full justify-between">
+						<div class="grid grid-cols-3 gap-5">
+							<Card info-card>
+								<div class="flex flex-col gap-5">
 									<div class="font-extralight">
 										Nombre de notes
 									</div>
@@ -311,11 +312,9 @@ const listeDesPoints = computed<number[]>(() => {
 										{{ listeDesNotes.length }}
 									</div>
 								</div>
-							</div>
-							<div
-								class="bg-main p-3 grid place-items-center text-lg border border-slate-100 rounded-xl shadow-sm aspect-square w-full py-8"
-							>
-								<div class="flex flex-col h-full justify-between">
+							</Card>
+							<Card info-card>
+								<div class="flex flex-col gap-5">
 									<div class="font-extralight">
 										Moyenne
 									</div>
@@ -323,11 +322,9 @@ const listeDesPoints = computed<number[]>(() => {
 										{{ moyenneDesNotes }}
 									</div>
 								</div>
-							</div>
-							<div
-								class="bg-main p-3 grid place-items-center text-lg border border-slate-100 rounded-xl shadow-sm aspect-square w-full py-8"
-							>
-								<div class="flex flex-col h-full justify-between">
+							</Card>
+							<Card info-card>
+								<div class="flex flex-col gap-5">
 									<div class="font-extralight">
 										Médiane
 									</div>
@@ -335,20 +332,18 @@ const listeDesPoints = computed<number[]>(() => {
 										{{ medianeDesNotes }}
 									</div>
 								</div>
-							</div>
+							</Card>
 						</div>
 					</div>
 
-					<div
-						class="bg-main p-5 w-full border border-slate-100 rounded-xl shadow-sm"
-					>
+					<Card class="w-full">
 						<bar-chart
 							:chart-dataset="decompteDesNotes"
 							:chart-labels="[1, 1.5,2, 2.5,3, 3.5,4, 4.5,5, 5.5,6]"
 							:chart-options="{scales: { y: { ticks: { stepSize: 1, }, }, }, }"
 							chart-colorset="graduate"
 						/>
-					</div>
+					</Card>
 				</div>
 			</div>
 		</div>

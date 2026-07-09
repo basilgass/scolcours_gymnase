@@ -32,10 +32,11 @@ export function useLanguage(languageData: LanguageDataInterface, options?: {
 
 	const getListOfWordsFromUnits = function (random?: boolean): TranslationWord[] {
 		// All words available
-		let words = []
+		let words: TranslationWord[] = []
 		const selectedUnits = languageData.units.value.filter(x => x.selected)
 
-		for (const values of selectedUnits.map(x => x.words)) {
+		const unitsWords = selectedUnits.map(x => x.words)
+		for (const values of unitsWords) {
 			words = words.concat(values)
 		}
 

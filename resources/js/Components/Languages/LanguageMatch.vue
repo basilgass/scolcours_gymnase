@@ -4,12 +4,12 @@ import {Random} from "pimath"
 import {inject, ref, watch} from "vue"
 import {useLanguage} from "@/Components/Languages/useLanguage.ts"
 import ScButton from "@/Components/Ui/Button/scButton.vue"
-import {LanguageDataInterface} from "@/types/modelInterfaces.ts";
+import {LanguageDataInterface} from "@/types/modelInterfaces.ts"
 
 const languageData = inject<LanguageDataInterface>("LanguageData")
 
-const cardTimeout = ref(1),
-	numberOfCards = ref(4)
+const cardTimeout = ref(1)
+const numberOfCards = ref(4)
 
 const {startGame, continueGame, currentWords, selectedWordsIndex} = useLanguage(languageData, {
 	numberOfWords: numberOfCards

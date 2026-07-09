@@ -9,6 +9,7 @@ import type {questionResultInterface} from "@/Components/Questions/QuestionInter
 import {useStoreScore} from "@/stores/useStoreScore.ts"
 import PleaseWait from "@/Components/Ui/PleaseWait.vue"
 import {questionsContainerInterface} from "@/Components/Questions/useQuestionAdmin.ts"
+import {ScoreQuestionDataInterface} from "@/types/scoreInterfaces.ts"
 
 const editMode = useStoreEditMode()
 
@@ -37,7 +38,7 @@ onMounted(() => {
 			})
 			.catch(res => console.log(res))
 	} else {
-		storeScore.getScores('Question', ids)
+		storeScore.getScores<ScoreQuestionDataInterface>('Question', ids)
 	}
 })
 

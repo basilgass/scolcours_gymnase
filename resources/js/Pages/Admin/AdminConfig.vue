@@ -14,11 +14,11 @@ const props = defineProps({
 	title: {type: String, required: true},
 })
 
-const title = ref(props.title),
-	themes = ref(props.allThemes.map(theme => {
-		theme.enabled = !!theme.enabled
-		return theme
-	}))
+const title = ref(props.title)
+const themes = ref(props.allThemes.map(theme => {
+	theme.enabled = !!theme.enabled
+	return theme
+}))
 
 function saveConfig() {
 	axios

@@ -9,9 +9,10 @@ code:
 
 import {WidgetPropsInterface} from "@/types/modelInterfaces.ts"
 import {computed, onMounted, ref} from "vue"
-import axios from "axios"
+import axios, {AxiosResponse} from "axios"
 import ScButton from "@/Components/Ui/Button/scButton.vue"
 import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
+import {AxiosErrorMessage} from "@/types"
 
 const flash = useStoreFlashMessage()
 const props = defineProps<{
@@ -43,7 +44,7 @@ const duplicatedCharacters = computed<Record<string, number>>(() => {
 		.split("")
 		.filter(char => char !== " ")
 
-	const duplicates = characters.reduce((acc, char) => {
+	const duplicates: Record<string, number> = characters.reduce((acc, char) => {
 		if (acc[char] === undefined) {
 			acc[char] = 1
 		} else {
@@ -121,7 +122,7 @@ const possibilities = ref([])
 
 const divisions = ref([])
 
-function refreshDivisions(duplicates) {
+function refreshDivisions(duplicates: Record<string, number>) {
 	divisions.value = []
 
 	// No duplicates.
@@ -134,7 +135,7 @@ function refreshDivisions(duplicates) {
 	})
 }
 
-function addLetter(element) {
+function addLetter(element: string) {
 	possibilities.value.push(availableLetters.value.length)
 	currentWord.value += element
 	currentLetter.value++
@@ -151,7 +152,7 @@ function applyDivision(index: number, value: number, letter: string) {
 	)
 }
 
-function factoriel(n) {
+function factoriel(n: number) {
 	if (n === 0) {
 		return 1
 	}
@@ -172,10 +173,10 @@ function prepareNextWord() {
 				withoutDuplicateLetters: withoutDuplicateLetters.value ? 1 : 0
 			}
 		))
-		.then(response => {
+		.then((response: AxiosResponse) => {
 			return nextWord.value = response.data[0]
 		})
-		.catch(error => {
+		.catch((error: AxiosErrorMessage) => {
 			console.log(error.response.data.message)
 			return []
 		})

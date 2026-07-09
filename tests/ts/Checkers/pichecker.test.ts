@@ -1,6 +1,7 @@
 import {expect, test} from "vitest"
 import {CHECKERS} from "@/Checkers/checker.config.ts"
-import {checkersList, PiChecker} from "@/Checkers/PiChecker.ts"
+import {PiChecker} from "@/Checkers/PiChecker.ts"
+import {CHECKER_CLASSES} from "@/Checkers/checkerRegistry.ts"
 import {splitIfOutsideParentheses} from "@/Checkers/checkerHelperFunctions.ts"
 import {isEquationCircle, isEquationReduced, sortPartsByVariable} from "@/Checkers/checkMathString.ts"
 
@@ -26,13 +27,12 @@ test('PiChecker should parse a checker with a secondary checker', () => {
 
 test('Every checkers should match answer=given', () => {
 	const pichecker = new PiChecker()
-	const list = checkersList()
+	const list = CHECKER_CLASSES
 
 	const answer = 'hello'
 	const given = 'hello'
 
 	Object.values(list).forEach((checkerClass) => {
-		console.log(checkerClass)
 		pichecker.checker = new checkerClass()
 
 		expect(pichecker.check(given, answer).result).toBeTruthy()

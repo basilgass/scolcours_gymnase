@@ -637,7 +637,8 @@ export default class AsciiMathParser {
 		let tex = ''
 		let end = pos
 		const sub = this.exact('_', pos)
-		let sub_expr, sup_expr
+		let sub_expr
+		let sup_expr
 		if (sub) {
 			sub_expr = this.unbracket(this.simple(sub.end))
 			if (sub_expr) {

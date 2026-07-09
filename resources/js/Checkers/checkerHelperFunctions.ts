@@ -2,8 +2,8 @@ export function splitIfOutsideParentheses(
 	value: string,
 	splitCharacter: string,
 ): string[] {
-	let isInside = 0,
-		lastIndex = 0
+	let isInside = 0
+	let lastIndex = 0
 	const arr = []
 
 	for (let i = 0; i < value.length; i++) {

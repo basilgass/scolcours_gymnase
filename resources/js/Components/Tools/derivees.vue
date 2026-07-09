@@ -29,8 +29,8 @@ const forms: IToolForm[] = restoreTool([
 	}
 ])
 
-let numerator = computed(() => forms[0].value.value as string),
-	denominator = computed(() => forms[1].value.value as string)
+let numerator = computed(() => forms[0].value.value as string)
+let denominator = computed(() => forms[1].value.value as string)
 
 let result = computed(() => {
 	let P

@@ -1,34 +1,34 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from "vue"
+import {computed, onMounted, ref, watch} from "vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 import VueSlider from "vue-3-slider-component"
 
-defineOptions({ layout: LayoutMain })
-let vitesse = ref("0"),
-	diametre = ref(1),
-	roue = ref(null),
-	angle = ref(0),
-	imageParSecondes = ref(24),
-	angleAjout = computed(()=>{
-		// v = a/360*pi*d /t => a = v * t * 360 / pi / d
-		return (+vitesse.value) * (1/imageParSecondes.value) * 360 /(Math.PI*diametre.value) / 3.6
-	}),
-	timer
+defineOptions({layout: LayoutMain})
+let vitesse = ref("0")
+let diametre = ref(1)
+let roue = ref(null)
+let angle = ref(0)
+let imageParSecondes = ref(24)
+let angleAjout = computed(() => {
+	// v = a/360*pi*d /t => a = v * t * 360 / pi / d
+	return (+vitesse.value) * (1 / imageParSecondes.value) * 360 / (Math.PI * diametre.value) / 3.6
+})
+let timer: number
 
-watch(vitesse, ()=>{
+watch(vitesse, () => {
 	angle.value = 0
-	if(timer) {
+	if (timer) {
 		clearInterval(timer)
 	}
 
-	timer = setInterval(()=>{
+	timer = setInterval(() => {
 		roue.value.style.transform = `rotate(${angle.value}deg)`
 		angle.value += +angleAjout.value
-	}, (1/imageParSecondes.value)*1000)
+	}, (1 / imageParSecondes.value) * 1000)
 
 })
 
-onMounted(()=>{
+onMounted(() => {
 	vitesse.value = "0"
 })
 </script>

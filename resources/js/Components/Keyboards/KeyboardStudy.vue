@@ -15,9 +15,10 @@ import {
 	studyButtonsKeysType,
 	studyConfigInterface,
 	StudyGraph
-} from "@/Components/Keyboards/KeayboardHelpers/KeyboardStudyHelpers.ts"
-import KeyboardStudyButton from "@/Components/Keyboards/KeayboardHelpers/KeyboardStudyButton.vue"
-import KeyboardStudyCreatedList from "@/Components/Keyboards/KeayboardHelpers/KeyboardStudyCreatedList.vue"
+} from "@/Components/Keyboards/KeyboardHelpers/KeyboardStudyHelpers/KeyboardStudyHelpers.ts"
+import KeyboardStudyButton from "@/Components/Keyboards/KeyboardHelpers/KeyboardStudyHelpers/KeyboardStudyButton.vue"
+import KeyboardStudyCreatedList
+	from "@/Components/Keyboards/KeyboardHelpers/KeyboardStudyHelpers/KeyboardStudyCreatedList.vue"
 import {COORDINATE_SYSTEM, IGraphConstructorConfig} from "pidraw"
 import ScButton from "@/Components/Ui/Button/scButton.vue"
 

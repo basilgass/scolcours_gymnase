@@ -17,9 +17,12 @@ const draw = computed(() => {
 	}
 })
 
-function addElement(event: {draw: PiDraw, mouse: MouseEvent}) {
+function addElement(event: { draw: PiDraw, mouse: MouseEvent | TouchEvent }) {
 	const {draw, mouse} = event
-	console.log(mouse.offsetX, mouse.offsetY)
+
+	if (mouse instanceof MouseEvent) {
+		console.log(mouse.offsetX, mouse.offsetY)
+	}
 
 	console.log(draw.figures)
 	console.log(draw.rootSVG.viewbox())
@@ -32,16 +35,16 @@ function addElement(event: {draw: PiDraw, mouse: MouseEvent}) {
 		<div class="grid grid-cols-1 md:grid-cols-3 gap-3">
 			<Card>
 				<FormInput
+					v-model="parameters"
 					xs
 					type="text"
 					label="paramètres"
-					v-model="parameters"
 				/>
 
 				<FormTextarea
+					v-model="code"
 					xs
 					label="code"
-					v-model="code"
 					rows="15"
 				/>
 			</Card>

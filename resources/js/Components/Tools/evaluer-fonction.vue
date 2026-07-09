@@ -30,8 +30,8 @@ const forms: IToolForm[] = restoreTool([
 	}
 ])
 
-const f = computed(() => forms[0].value.value),
-	x = computed(() => forms[1].value.value)
+const f = computed(() => forms[0].value.value)
+const x = computed(() => forms[1].value.value)
 
 const activeInput = ref<number>(0)
 
@@ -41,13 +41,13 @@ function onKeyboardChange(value) {
 
 const fx = computed(() => {
 	try {
-		const FX = new Polynom(f.value as string),
-			data = {
-				x: "",
-				fx: "",
-				frac: null,
-				value: null
-			}
+		const FX = new Polynom(f.value as string)
+		const data = {
+			x: "",
+			fx: "",
+			frac: null,
+			value: null
+		}
 		if (x.value === "") {
 			data.x = "x"
 			data.fx = FX.tex

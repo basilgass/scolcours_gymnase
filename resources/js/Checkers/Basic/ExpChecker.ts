@@ -1,8 +1,7 @@
-import {CheckerAbstract, makeCheckerResult} from "../CheckerAbstract"
+import {CheckerAbstract, CheckerResult, CHECKERS, makeCheckerResult} from "@/Checkers"
+import {PolynomChecker} from "@/Checkers/Basic/PolynomChecker"
 import {splitAtSigns, splitIfOutsideParentheses} from "../checkerHelperFunctions.ts"
 import {Polynom} from "pimath"
-import {CheckerResult, CHECKERS} from "../checker.config"
-import {PolynomChecker} from "@/Checkers"
 
 // const name = "exp"
 const description = `exp,[paramètres]
@@ -148,7 +147,8 @@ function displayPolynomForSorting(element: string): { polynom: string, exponent:
 
 	// cas (poly1)e^(poly2)
 	// poly1 est optionnel
-	let poly1, poly2
+	let poly1
+	let poly2
 
 	if (match) {
 		try {

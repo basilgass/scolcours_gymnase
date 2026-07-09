@@ -39,7 +39,7 @@ const cellText = computed(() => {
 	return props.signs.map((sign, n) => getCellText(sign, n))
 })
 
-function getCellText(sign, n) {
+function getCellText(sign: TABLE_OF_SIGNS_VALUES_WITH_EXTREMES, n: number) {
 	if (sign === 't') return ''
 
 	if (n % 2 === 0) return sign === 'h' ? '' : sign

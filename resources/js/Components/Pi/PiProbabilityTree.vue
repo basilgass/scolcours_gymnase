@@ -3,15 +3,15 @@ Affichage d'un arbre de probabilité
 Utilisé avec ProbabilityTree.js
 -->
 <script setup lang="ts">
-import { ProbabilityTree } from "@/ProbabilityTree"
-import { onMounted, ref, watch } from "vue"
+import {ProbabilityTree} from "@/ProbabilityTree"
+import {onMounted, ref, watch} from "vue"
 
 const props = defineProps({
 	treeData: {type: String, required: true},
 	treeParams: {type: String, required: true}
 })
-const root = ref(null),
-	tree = ref(null)
+const root = ref(null)
+const tree = ref(null)
 
 let Tree
 
@@ -24,11 +24,11 @@ onMounted(() => {
 	Tree = new ProbabilityTree(tree.value, props.treeData, props.treeParams)
 })
 
-watch(()=>props.treeData, ()=>{
+watch(() => props.treeData, () => {
 	updateTree()
 })
 
-watch(()=>props.treeParams, ()=>{
+watch(() => props.treeParams, () => {
 	updateTree()
 })
 </script>

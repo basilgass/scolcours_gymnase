@@ -111,8 +111,8 @@ export class TableofsignChecker extends CheckerAbstract {
 
 			// contrôle des coordonnées
 			if (coords.expected.length > 0) {
-				const expectedCoordinates = coords.expected.split(","),
-					providedCoordinates = coords.provided.split(",")
+				const expectedCoordinates = coords.expected.split(",")
+				const providedCoordinates = coords.provided.split(",")
 
 				if (expectedCoordinates.length > providedCoordinates.length) {
 					return makeCheckerResult("toutes les valeurs des extrêmes n'ont pas été données...")

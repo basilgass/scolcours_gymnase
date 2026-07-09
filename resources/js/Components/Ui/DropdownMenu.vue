@@ -1,18 +1,18 @@
 <script lang="ts" setup>
 
-import { ref } from "vue"
+import {ref} from "vue"
 
 const props = defineProps({
-	preventClose: { type: Boolean, default: false }
+	preventClose: {type: Boolean, default: false}
 })
-const showMenu = ref(false),
-	onMenuClick = function() {
-		if (props.preventClose) {
-			return
-		}
-
-		showMenu.value = !showMenu.value
+const showMenu = ref(false)
+const onMenuClick = function () {
+	if (props.preventClose) {
+		return
 	}
+
+	showMenu.value = !showMenu.value
+}
 </script>
 <template>
 	<div

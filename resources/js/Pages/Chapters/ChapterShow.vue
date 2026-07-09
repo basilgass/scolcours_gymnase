@@ -14,6 +14,7 @@ import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
 import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
 import {usePage} from "@inertiajs/vue3"
 import {vIntersectionObserver} from '@vueuse/components'
+import {useIsAdmin} from "@/Composables/useHelpers.ts"
 
 defineOptions({layout: LayoutMain})
 
@@ -86,7 +87,7 @@ function onIntersectionObserver([entry]: IntersectionObserverEntry[]) {
 
 			<!-- liste des challenges -->
 			<chapter-challenges
-				v-if="challenges.length>0 || ($page.props.auth.can.admin && editMode.enable)"
+				v-if="challenges.length>0 || (useIsAdmin() && editMode.enable)"
 				:challenges
 				:chapter
 			/>

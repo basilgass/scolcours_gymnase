@@ -71,7 +71,7 @@ interface euclideType {
 	r: number
 }
 
-function rowTex(a, u, b, v): string {
+function rowTex(a: number, u: number, b: number, v: number): string {
 
 	return `${a}\\cdot ${u}-${b}\\cdot${v}`
 }

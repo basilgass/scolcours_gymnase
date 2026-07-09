@@ -1,103 +1,70 @@
 <script setup lang="ts">
-import { BoxPlotChart } from "@sgratzl/chartjs-chart-boxplot"
+import {BoxPlotChart} from "@sgratzl/chartjs-chart-boxplot"
 import _ from "lodash"
-import { computed, onMounted, ref, watch } from "vue"
+import {computed, onMounted, onUnmounted, ref, watch} from "vue"
+import {
+	type BoxPlotComponentProps,
+	type BoxPlotData,
+	type ChartLabel,
+	chartPropDefaults
+} from "@/Components/Charts/chartHelpers.ts"
 
-const props = defineProps({
-	chartLabels: {type: Array, default: () => []},
-	chartDataset: {type: [Object, Array], required: true},
-	chartOptions: {
-		type: Object, default: () => null
-	},
-	chartLegend: {type: Boolean, default: false},
-	chartColorset: {type: String, default: null}
-})
+const props = withDefaults(defineProps<BoxPlotComponentProps>(), chartPropDefaults)
 
 const chartData = computed(() => {
-		const labels = []
-		if (props.chartLabels.length>0) {
-			labels["labels"] = props.chartLabels
-		}
+	const labels: { labels?: (string | number)[] } = {}
+	if (props.chartLabels.length > 0) {
+		labels["labels"] = props.chartLabels
+	}
 
-		return {
-			...labels,
-			datasets: [
-				...props.chartDataset.map(d=>{
-					return {
-						label: d.label,
-						medianColor: "red",
-						borderWidth: 2,
-						data: [d.data]
-					}
-				}),
-			]
-		}
-	}),
-	chartOptionsMerged = computed(() => {
-		const opts:{responsive: boolean, maintainAspectRatio:boolean, indexAxis: 'x'|'y'} = {
-			responsive: true,
-			maintainAspectRatio: true,
-			// plugins: {
-			// 	legend: {
-			// 		display: props.chartLegend,
-			// 	},
-			// },
-			indexAxis: "y",
-		}
+	return {
+		...labels,
+		datasets: [
+			...props.chartDataset.map(d => {
+				return {
+					label: d.label,
+					medianColor: "red",
+					borderWidth: 2,
+					data: [d.data]
+				}
+			}),
+		]
+	}
+})
+const chartOptionsMerged = computed(() => {
+	const opts: { responsive: boolean, maintainAspectRatio: boolean, indexAxis: 'x' | 'y' } = {
+		responsive: true,
+		maintainAspectRatio: true,
+		indexAxis: "y",
+	}
 
-		return _.merge(opts, props.chartOptions)
-	})
-	// chartColors = computed(() => {
-	// 	if (props.chartColorset === "graduate") {
-	// 		return {
-	// 			backgroundColor: [
-	// 				"rgba(255, 99, 132, 0.2)",
-	// 				"rgba(255, 99, 132, 0.2)",
-	// 				"rgba(255, 99, 132, 0.2)",
-	// 				"rgba(255, 159, 64, 0.2)",
-	// 				"rgba(255, 159, 64, 0.2)",
-	// 				"rgba(255, 205, 86, 0.2)",
-	// 				"rgba(54, 162, 235, 0.2)",
-	// 				"rgba(54, 162, 235, 0.2)",
-	// 				"rgba(75, 192, 192, 0.2)",
-	// 				"rgba(75, 192, 192, 0.2)",
-	// 				"rgba(40,210,72,0.2)",
-	// 			],
-	// 			borderColor: [
-	// 				"rgb(255, 99, 132)",
-	// 				"rgb(255, 99, 132)",
-	// 				"rgb(255, 99, 132)",
-	// 				"rgb(255, 159, 64)",
-	// 				"rgb(255, 159, 64)",
-	// 				"rgb(255, 205, 86)",
-	// 				"rgb(54, 162, 235)",
-	// 				"rgb(54, 162, 235)",
-	// 				"rgb(75, 192, 192)",
-	// 				"rgb(75, 192, 192)",
-	// 				"rgb(201, 203, 207)",
-	// 			],
-	// 			borderWidth: 1,
-	// 		}
-	// 	}
-	//
-	// 	return {}
-	// })
+	return _.merge(opts, props.chartOptions)
+})
 
-
-const graph = ref(null)
-let chart
+const graph = ref<HTMLCanvasElement | null>(null)
+let chart: BoxPlotChart<BoxPlotData[], ChartLabel> | null = null
 onMounted(() => {
-	chart = new BoxPlotChart(graph.value, {
+	if (!graph.value) return
+
+	chart = new BoxPlotChart<BoxPlotData[], ChartLabel>(graph.value, {
 		data: chartData.value,
 		options: chartOptionsMerged.value
 	})
 })
 
-watch(() => props.chartDataset, () => {
+onUnmounted(() => {
+	chart?.destroy()
+	chart = null
+})
+
+watch(chartData, () => {
+	if (!chart) return
 	chart.data = chartData.value
 	chart.update()
 })
-watch(() => props.chartOptions, () => {
+
+watch(chartOptionsMerged, () => {
+	if (!chart) return
 	chart.options = chartOptionsMerged.value
 	chart.update()
 })

@@ -7,7 +7,8 @@
 		"deps": "vite serve --force",
 		"build": "vue-tsc && vite build",
 		"ide-helper": "php artisan ide-helper:generate && php artisan ide-helper:meta && php artisan ide-helper:models -R -W",
-		"test": "vitest"
+		"test": "vitest",
+		"typecheck:strict": "vue-tsc -p tsconfig.strict.json --noEmit"
 	},
 	"devDependencies": {
 		"@headlessui/vue": "^1.7.23",
@@ -21,9 +22,11 @@
 		"@types/file-saver": "^2.0.7",
 		"@types/katex": "^0.16.8",
 		"@types/lodash": "^4.17.24",
+		"@types/markdown-it": "^14.1.2",
 		"@types/tailwindcss": "^3.1.0",
 		"@types/three": "^0.184.1",
 		"@vitejs/plugin-vue": "^6.0.7",
+		"@vue/test-utils": "2.4.11",
 		"@vueuse/components": "^14.3.0",
 		"@vueuse/core": "^14.3.0",
 		"autoprefixer": "^10.5.0",

@@ -13,6 +13,7 @@ export enum CHECKERS {
 	EXACT = "exact",
 	EXPONENTIAL = "exp",
 	FRACTION = "fraction",
+	FRACTION_PLUS = "fraction+",
 	FUNCTION = "function",
 	INPUT = "input",
 	LOGARITHM = "log",
@@ -40,67 +41,11 @@ export enum CHECKERS {
 	ZONES = "zones"
 }
 
-export function checkerNameToEnum(name: string): CHECKERS {
-	switch (name.toLowerCase()) {
-		case "exact":
-			return CHECKERS.EXACT
-		case "polynom":
-			return CHECKERS.POLYNOMIAL
-		case "rational":
-			return CHECKERS.RATIONAL
-		case "algebra":
-			return CHECKERS.ALGEBRA
-		case "equ":
-		case "equation":
-			return CHECKERS.EQUATION
-		// case "cart":
-		// case "cartesian":
-		// 	return CHECKERS.CARTESIAN
-		case "fn":
-		case "function":
-			return CHECKERS.FUNCTION
-		case "nb":
-		case "number":
-			return CHECKERS.NUMBER
-		case "mod":
-			return CHECKERS.MODULO
-		case "fr":
-		case "frac":
-		case "fraction":
-			return CHECKERS.FRACTION
-		case "scn":
-			return CHECKERS.SCIENTIFIC
-		case "tos":
-			return CHECKERS.TABLE_OF_SIGNS
-		case "qcm":
-			return CHECKERS.QCM
-		case "study":
-			return CHECKERS.STUDY
-		case "sol":
-		case "solution":
-			return CHECKERS.SOLUTION
-		case "coord":
-			return CHECKERS.COORDINATES
-		case "vector":
-			return CHECKERS.VECTOR
-		case "log":
-			return CHECKERS.LOGARITHM
-		case "exp":
-			return CHECKERS.EXPONENTIAL
-		case "primitive":
-			return CHECKERS.PRIMITIVE
-		case "matrix":
-			return CHECKERS.MATRIX
-		case "type":
-			return CHECKERS.TYPE
-		case "draw":
-			return CHECKERS.DRAW
-		case "zones":
-			return CHECKERS.ZONES
-		case "trigo":
-			return CHECKERS.TRIGO
-		default:
-			return CHECKERS.STRING
-	}
-
-}
+/**
+ * checkerNameToEnum a été déplacé vers `@/Composables/keyboardRegistry.ts`
+ * (source unique de vérité alias → composant / layout / checker).
+ *
+ * Il n'est volontairement PAS ré-exporté ici : `checker.config.ts` doit rester
+ * une feuille sans dépendance pour éviter une dépendance circulaire avec l'enum
+ * CHECKERS. Les consommateurs importent `checkerNameToEnum` depuis le registre.
+ */

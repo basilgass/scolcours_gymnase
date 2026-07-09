@@ -19,7 +19,7 @@ let props = defineProps<{
 	quizzSession: QuizzSessionInterface,
 	question?: QuestionInterface
 }>()
-let interval = null
+let interval: number = null
 const updateCounter = ref(0)
 
 function updateQuizz() {

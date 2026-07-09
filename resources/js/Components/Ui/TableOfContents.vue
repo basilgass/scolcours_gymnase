@@ -2,42 +2,42 @@
 Création d'une table des matières dynamique
 -->
 <script setup lang="ts">
-	// Génère une table des matières en récupérant les titres ".chapter-menu"
-	import { onMounted, ref } from "vue"
+// Génère une table des matières en récupérant les titres ".chapter-menu"
+import {onMounted, ref} from "vue"
 
-	const props = defineProps({
-		query: { type: String, default: ".chapter-menu" },
-		menuId: { type: String, default: "menu-" },
+const props = defineProps({
+	query: {type: String, default: ".chapter-menu"},
+	menuId: {type: String, default: "menu-"},
+})
+
+const root = ref(null)
+const tableofcontents = ref(null)
+const menu = ref([])
+
+function buildMenu() {
+	menu.value = []
+	root.value.querySelectorAll(props.query).forEach((h2: HTMLElement) => {
+		h2.id = `${props.menuId}${menu.value.length}`
+		menu.value.push(h2.innerHTML)
 	})
+}
 
-	const root = ref(null),
-		tableofcontents = ref(null),
-		menu = ref([])
+function useMenuScrollTo(id: string) {
+	const el =
+		id === undefined
+			? document.body
+			: tableofcontents.value.querySelector(id)
 
-	function buildMenu() {
-		menu.value = []
-		root.value.querySelectorAll(props.query).forEach((h2) => {
-			h2.id = `${props.menuId}${menu.value.length}`
-			menu.value.push(h2.innerHTML)
-		})
-	}
-
-	function useMenuScrollTo(id) {
-		const el =
-			id === undefined
-				? document.body
-				: tableofcontents.value.querySelector(id)
-
-		el.scrollIntoView({
-			block: "start",
-			behavior: "smooth",
-			inline: "start",
-		})
-	}
-
-	onMounted(() => {
-		buildMenu()
+	el.scrollIntoView({
+		block: "start",
+		behavior: "smooth",
+		inline: "start",
 	})
+}
+
+onMounted(() => {
+	buildMenu()
+})
 </script>
 <template>
 	<div

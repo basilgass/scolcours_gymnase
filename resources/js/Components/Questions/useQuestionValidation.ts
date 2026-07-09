@@ -301,7 +301,7 @@ export function useQuestionValidation(questionData: questionDataInterface) {
 		}
 
 		useStoreScore().updateScore(score)
-			.then((res: ScoreInterface<ScoreQuestionDataInterface>) => {
+			.then(res => {
 				questionData.user.score.value = res
 			})
 	}

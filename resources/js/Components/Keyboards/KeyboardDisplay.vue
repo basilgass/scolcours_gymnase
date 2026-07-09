@@ -1,52 +1,47 @@
 <script lang="ts" setup>
 /**
  * KeyboardDisplay is just the display (keys)
- * emits: ["validate", "next", "change", "clear"]
+ * emits: ["next", "change", "clear"]
  */
 
 // TODO: Reformat to be more concise and clear !
-import {asciiToTex, keyboardKey, KeyboardObjectType} from "@/Composables/keyboardConfig"
+import {asciiToTex, keyboardKey, KeyboardObjectType, normalizeLayoutKey} from "@/Composables/keyboardConfig"
+import {
+	formatFractionShortcut,
+	formatKeyboardInput,
+	hasTooManyFractionShortcuts
+} from "@/Composables/keyboardFormatting.ts"
 import {useKeyboard} from "@/Composables/useKeyboard.ts"
-import {KbrdEvent} from "@/types"
 import {computed, ref} from "vue"
+import {KeyboardInputInterface} from "@/types/keyboardInterfaces.ts"
 
 const {keyboardKeys, keyboards} = useKeyboard()
 
 const emits = defineEmits<{
-	validate: [event: string],
 	next: [],
-	change: [event: KbrdEvent],
+	change: [event: KeyboardInputInterface],
 	clear: [event: string]
 }>()
 
-// TODO: Simplify using slots for above / below.
 const props = withDefaults(defineProps<{
 	keyboard: string | KeyboardObjectType,
 	tex?: string,
-	validate?: boolean,
-	validateAtBottom?: boolean,
 	erase?: boolean,
 	reset?: boolean,
 	back?: boolean,
 	next?: boolean,
 	multiple?: boolean,
-	mathOutput?: boolean,
-	textOutput?: boolean,
 	small?: boolean,
 	keyClass?: string,
 	extraLetters?: string[],
 	customKeys?: Record<string, keyboardKey>
 }>(), {
 	tex: "",
-	validate: null,
-	validateAtBottom: false,
 	erase: null,
 	reset: null,
 	back: null,
 	next: null,
 	multiple: null,
-	mathOutput: false,
-	textOutput: false,
 	small: false,
 	keyClass: "bg-action border rounded py-1 px-2 transition-colors",
 	extraLetters: () => [],
@@ -54,8 +49,18 @@ const props = withDefaults(defineProps<{
 })
 
 
+/**
+ * Frappe mémorisée : seuls son code (`key`) et sa fonction de réduction (`fn`) sont lus
+ * par le composant. Champs optionnels pour rester assignable depuis les deux sources —
+ * un item de layout complet (keyboardKey) et le raccourci `{key, fn}` de btnAddResponse.
+ */
+interface KeyStroke {
+	key?: string,
+	fn?: (value: string) => string
+}
+
 const root = ref(null)
-const keyStrokes = ref([])
+const keyStrokes = ref<KeyStroke[]>([])
 const keyboardGridDefault = ref("grid-cols-4")
 
 const theKeyboard = computed(() => {
@@ -145,60 +150,30 @@ const btnNext = {
 	fn: () => emits("next"),
 	atEnd: false
 }
-const btnValidate = {
-	label: "valider",
-	icon: "bi bi-check",
-	span: 3,
-	fn: () => emits("validate", answerOutput.value),
-	atEnd: false
+
+/** Layout ramené à sa forme canonique unique (voir normalizeLayoutKey). */
+const normalizedLayout = computed(() => keyboardData.value.layout.map(normalizeLayoutKey))
+
+/** Traduit un span numérique en classe Tailwind (col-span-N) pour 2..5 ; inchangé sinon. */
+function spanClass(span: number): number | string {
+	return span >= 2 && span <= 5 ? `col-span-${span}` : span
 }
 
 const keyboardComputed = computed(() => {
 	const data = []
-	// Loop through all keyboard keys in the layout.
-	for (const key of keyboardData.value.layout) {
-		let kkey, spankey, kdata: keyboardKey,
-			theKey
-
-		if (typeof key === "string") {
-			kkey = key
-			spankey = 0
-			theKey = keyboardKeys[kkey]
-			// }
-			// TODO: KeyboardDisplay: remove {key, span} ?
-			// else if(key.key !== undefined) {
-			// 	kkey = key.key
-			// 	spankey = key.span?key.span:0
-			// 	theKey = key
-		} else if (Array.isArray(key)) {
-			kkey = key[0]
-			spankey = key[1]
-			theKey = keyboardKeys[kkey]
-		} else {
-			// TODO: really not good...
-			kkey = Object.hasOwn(key, "key") ? key.key : ""
-			spankey = 0
-			theKey = key
-		}
-
-		// Span the buttons
-		if (spankey === 2) {
-			spankey = "col-span-2"
-		} else if (spankey === 3) {
-			spankey = "col-span-3"
-		} else if (spankey === 4) {
-			spankey = "col-span-4"
-		} else if (spankey === 5) {
-			spankey = "col-span-5"
-		}
+	// Loop through all keyboard keys in the (normalized) layout.
+	for (const entry of normalizedLayout.value) {
+		const kkey = entry.key
+		let kdata: keyboardKey
+		let theKey = entry.inlineKey ?? keyboardKeys[kkey]
 
 		// Default key code data.
 		kdata = {
 			key: kkey,
 			visible: kkey === "",
-			type: theKey === undefined ? false : theKey.type,
-			display: theKey === undefined ? false : theKey.display,
-			span: spankey,
+			type: theKey === undefined ? null : theKey.type,
+			display: theKey === undefined ? null : theKey.display,
+			span: spanClass(entry.span),
 			fn: null
 		}
 
@@ -212,7 +187,7 @@ const keyboardComputed = computed(() => {
 		}
 
 		if (theKey === undefined) {
-			kdata.fn = () => answerOutput.value + ""
+			kdata.fn = () => rawInput.value + ""
 		} else {
 			if (theKey.fn === undefined) {
 				kdata.fn = (value) => value + kkey
@@ -271,24 +246,24 @@ function backKeyStrokes() {
 	emits("clear", "")
 }
 
-function ButtonKeyClick(key) {
+function ButtonKeyClick(key: KeyStroke): void {
 	if (key.key === "@back") {
 		keyStrokes.value.pop()
 	} else if (key.key === "@reset") {
 		resetKeyStrokes()
 	} else {
 		keyStrokes.value.push(key)
+		if (fractionShortcutActive.value && hasTooManyFractionShortcuts(rawInput.value)) {
+			keyStrokes.value.pop() // frappe rejetée : formerait un second "//" (clavier à raccourci)
+			return                 // pas de changeEvent pour une frappe annulée
+		}
 	}
 
 	changeEvent()
 }
 
 const changeEvent = function () {
-	const output = ""
-
-	const result = keyStrokes.value
-		.map(k => k.fn(output))
-		.join("")
+	const result = formatKeyboardInput(rawInput.value, activeFormatters.value)
 
 	emits("change", {
 		input: result,
@@ -297,9 +272,8 @@ const changeEvent = function () {
 	})
 
 }
-const validateButton = ref(null)
 
-function getTex(value: string) {
+function getTex(value: string): string {
 	const output = []
 
 	for (const v of value.split(",")) {
@@ -308,7 +282,7 @@ function getTex(value: string) {
 	return output.join(",")
 }
 
-function getTexFromOneValue(value: string) {
+function getTexFromOneValue(value: string): string {
 	if (typeof theKeyboard.value === "string") {
 		return keyboards[theKeyboard.value].tex ? keyboards[theKeyboard.value].tex(value) : value
 	} else {
@@ -316,13 +290,14 @@ function getTexFromOneValue(value: string) {
 	}
 }
 
-const answerOutput = computed(() => {
-	const output = ""
+/** Source unique de la réduction des frappes (saisie brute, non formatée). */
+const rawInput = computed(() => keyStrokes.value.map(k => k.fn("")).join(""))
 
-	return keyStrokes.value
-		.map(k => k.fn(output))
-		.join("")
-})
+/** Règles de formatage déclarées par le clavier courant (vide = aucune). */
+const activeFormatters = computed(() => keyboardData.value?.formatters ?? [])
+
+/** Le raccourci fraction "//" est-il actif sur ce clavier ? Gouverne le blocage du 2e "//". */
+const fractionShortcutActive = computed(() => activeFormatters.value.includes(formatFractionShortcut))
 
 defineExpose({resetKeyStrokes})
 
@@ -333,41 +308,6 @@ defineExpose({resetKeyStrokes})
 		v-if="theKeyboard !== ''"
 		class="keyboard-wrapper"
 	>
-		<div class="keyboard-output">
-			<div
-				v-if="mathOutput"
-				class="grid grid-cols-1 min-h-[50px]"
-			>
-				<div
-					v-katex.ascii.left.nomargin="getTex(answerOutput)"
-					class="self-center"
-				/>
-			</div>
-			<div
-				v-if="textOutput"
-				class="grid grid-cols-1 min-h-[40px] italic"
-			>
-				<div
-					class="self-center"
-					v-text="answerOutput"
-				/>
-			</div>
-		</div>
-
-		<!-- keyboard validate (top version) -->
-		<div
-			v-if="validate && !validateAtBottom"
-			class="keyboard w-full my-3"
-		>
-			<button
-				ref="validateButton"
-				:class="`key-cmd ${keyClass} w-full border-green-700 text-green-600 hover:bg-green-100 hover:border-green-800`"
-				@click="btnValidate.fn()"
-			>
-				<i :class="btnValidate.icon" /> <span class="hidden md:inline md:ml-2">{{ btnValidate.label }}</span>
-			</button>
-		</div>
-
 		<!-- keyboard keys -->
 		<div
 			ref="root"
@@ -432,24 +372,10 @@ defineExpose({resetKeyStrokes})
 			<button
 				v-for="(item, index) of keyboardCommands"
 				:key="`keyboard-command-${index}`"
-				:class="`key ${keyClass} grow ${item.atEnd ? 'order-last' : ''}`"
+				:class="`key ${keyClass} grow flex-1 ${item.atEnd ? 'order-last' : ''}`"
 				@click="item.fn()"
 			>
 				<i :class="item.icon" /> <span class="hidden md:inline md:ml-2">{{ item.label }}</span>
-			</button>
-		</div>
-
-		<!-- keyboard validate (bottom version) -->
-		<div
-			v-if="validate && validateAtBottom"
-			class="keyboard w-full my-3"
-		>
-			<button
-				ref="validateButton"
-				:class="`key-cmd ${keyClass} w-full border-green-700 text-green-600 hover:bg-green-100 hover:border-green-800`"
-				@click="btnValidate.fn()"
-			>
-				<i :class="btnValidate.icon" /> <span class="hidden md:inline md:ml-2">{{ btnValidate.label }}</span>
 			</button>
 		</div>
 	</div>
@@ -457,6 +383,6 @@ defineExpose({resetKeyStrokes})
 
 <style scoped>
 button {
-	@apply cursor-pointer;
+	cursor: pointer;
 }
 </style>

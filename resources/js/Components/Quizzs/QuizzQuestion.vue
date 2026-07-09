@@ -15,8 +15,8 @@ const score = ref<ScoreInterface<ScoreQuestionDataInterface>>(null)
 
 const theQuestion = ref<QuestionInterface>(props.question)
 onMounted(() => {
-	scoreStore.getScore('Question', props.question.id)
-		.then((res: ScoreInterface<ScoreQuestionDataInterface>) => {
+	scoreStore.getScore <ScoreQuestionDataInterface>('Question', props.question.id)
+		.then(res => {
 			score.value = res
 			theQuestion.value.user = res
 		})

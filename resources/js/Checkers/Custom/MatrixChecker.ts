@@ -20,7 +20,7 @@ export class MatrixChecker extends CheckerAbstract {
 		this.type = CHECKERS.MATRIX
 		this.description = description
 
-		this.#fixedDimension = (config as string[])
+		this.#fixedDimension = this.config
 			.filter(x => x.startsWith('dim:'))[0]?.split('dim:')[1] ?? undefined
 	}
 

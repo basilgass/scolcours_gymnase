@@ -34,7 +34,7 @@ const flash = useStoreFlashMessage()
 // reactive illustration data.
 const theIllustration = ref<IllustrationInterface>(props.illustration)
 
-const unknownWidget = {
+const unknownWidget: WidgetInterface = {
 	id: -1,
 	name: " ? ",
 	slug: null,
@@ -71,7 +71,7 @@ function toggleComponent(component: WidgetInterface) {
 }
 
 // Specific components
-function imageFileDropped(e) {
+function imageFileDropped(e: string) {
 	theIllustration.value.code = e
 }
 

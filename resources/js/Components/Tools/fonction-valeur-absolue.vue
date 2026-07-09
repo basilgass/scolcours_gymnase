@@ -34,156 +34,168 @@ const result = computed(() => {
 })
 
 
-const root = ref(null),
-	x = ref("-4"),
-	y = ref("-10"),
-	xAsTex = computed(() => {
-		try {
-			return new Fraction(x.value).tex
-		} catch {
-			return ""
+const root = ref(null)
+const x = ref("-4")
+const y = ref("-10")
+const xAsTex = computed(() => {
+	try {
+		return new Fraction(x.value).tex
+	} catch {
+		return ""
+	}
+})
+const yAsTex = computed(() => {
+	try {
+		return new Fraction(y.value).tex
+	} catch {
+		return ""
+	}
+})
+const expression = computed(() => {
+	const abs: { polynom: Polynom, match: string }[] = []
+	const zeroes: Solution[] = []
+	const matches = [...fx.value.matchAll(/abs\(([^)]+)\)/g)]
+	const expr = []
+
+	for (const m of matches) {
+		const P = new Polynom(m[1])
+		for (const z of P.zeroes) {
+			zeroes.push(z)
 		}
-	}),
-	yAsTex = computed(() => {
-		try {
-			return new Fraction(y.value).tex
-		} catch {
-			return ""
-		}
-	}),
-	expression = computed(() => {
-		const abs = [],
-			zeroes = [],
-			matches = [...fx.value.matchAll(/abs\(([^)]+)\)/g)],
-			expr = []
+		abs.push({
+			polynom: P,
+			match: `abs(${m[1]})`
+		})
+	}
 
-		for (const m of matches) {
-			const P = new Polynom(m[1])
-			for (const z of P.zeroes) {
-				zeroes.push(z)
-			}
-			abs.push({
-				polynom: P,
-				match: `abs(${m[1]})`
-			})
-		}
+	zeroes.sort((a, b) => a.value - b.value)
 
-		zeroes.sort((a, b) => a.value - b.value)
-
-		let lessThan = zeroes[0],
-			greaterThan = null,
-			n = 0
+	let lessThan: Solution = zeroes[0]
+	let greaterThan: Solution = null
+	let n = 0
 
 
-		while (lessThan !== null) {
-			if (greaterThan === null ||
-				greaterThan.value !== lessThan.value) {
-				expr.push(getOneExpression(fx.value, abs, greaterThan, lessThan))
-			}
-
-
-			n++
-			lessThan = zeroes[n] || null
-			greaterThan = zeroes[n - 1]
-		}
-		expr.push(getOneExpression(fx.value, abs, greaterThan, lessThan))
-
-		function checkValue(v, min, max) {
-			if (min === null && v <= max.value) {
-				return true
-			} else if (max === null && v >= min.value) {
-				return true
-			} else if (
-				min !== null &&
-				max !== null &&
-				(v >= min.value && v <= max.value)
-			) {
-				return true
-			}
-
-			return false
+	while (lessThan !== null) {
+		if (greaterThan === null ||
+			greaterThan.value !== lessThan.value) {
+			expr.push(getOneExpression(fx.value, abs, greaterThan, lessThan))
 		}
 
-		const absTex = fx.value.replaceAll(/abs\(([^)]+)\)/g, "\\left\\vert $1 \\right\\vert")
-		return {
-			absTex,
-			tex: `f(x) = ${absTex} = \\begin{cases}${expr.map(x => `${x.polynom.display} &\\text{si}\\quad ${x.condition}`).join("\\\\")}\\end{cases}`,
-			drawCode: expr.map(x => `${x.polynom.display},${x.borders.min === null ? -20 : x.borders.min.value}:${x.borders.max === null ? 20 : x.borders.max.value}`),
-			solve: function (v) {
-				try {
-					const zeroes = []
-					for (const e of expr) {
-						const equ = new Equation(e.polynom, v)
-						const solutions: Solution[] = equ.solve()
-						for (const z of solutions) {
-							if (checkValue(z.value, e.borders.min, e.borders.max)) {
-								zeroes.push(z)
-							}
+
+		n++
+		lessThan = zeroes[n] || null
+		greaterThan = zeroes[n - 1]
+	}
+	expr.push(getOneExpression(fx.value, abs, greaterThan, lessThan))
+
+	function checkValue(v, min, max) {
+		if (min === null && v <= max.value) {
+			return true
+		} else if (max === null && v >= min.value) {
+			return true
+		} else if (
+			min !== null &&
+			max !== null &&
+			(v >= min.value && v <= max.value)
+		) {
+			return true
+		}
+
+		return false
+	}
+
+	const absTex = fx.value.replaceAll(/abs\(([^)]+)\)/g, "\\left\\vert $1 \\right\\vert")
+	return {
+		absTex,
+		tex: `f(x) = ${absTex} = \\begin{cases}${expr.map(x => `${x.polynom.display} &\\text{si}\\quad ${x.condition}`).join("\\\\")}\\end{cases}`,
+		drawCode: expr.map(x => `${x.polynom.display},${x.borders.min === null ? -20 : x.borders.min.value}:${x.borders.max === null ? 20 : x.borders.max.value}`),
+		solve: function (v) {
+			try {
+				const zeroes = []
+				for (const e of expr) {
+					const equ = new Equation(e.polynom, v)
+					const solutions: Solution[] = equ.solve()
+					for (const z of solutions) {
+						if (checkValue(z.value, e.borders.min, e.borders.max)) {
+							zeroes.push(z)
 						}
 					}
-
-					return {
-						tex: zeroes.length > 0 ? `\\left\\{${zeroes.map(z => z.exact.tex).join(";")}\\right\\}` : "\\varnothing"
-					}
-				} catch {
-					return {
-						tex: "\\text{ merci d'entrer un nombre}"
-					}
 				}
-			},
-			evaluate: function (v) {
-				try {
-					const Q = new Fraction(v)
 
-					return expr.filter(x => {
-						return checkValue(Q.value, x.borders.min, x.borders.max)
-					})[0].polynom.evaluate(Q)
-				} catch {
-					return "\\text{merci d'entrer un nombre}"
+				return {
+					tex: zeroes.length > 0 ? `\\left\\{${zeroes.map(z => z.exact.tex).join(";")}\\right\\}` : "\\varnothing"
+				}
+			} catch {
+				return {
+					tex: "\\text{ merci d'entrer un nombre}"
 				}
 			}
-		}
-	}),
-	getOneExpression = function (fn, abs, min, max) {
-		const v = min === null ? max.value - 1 : (max === null ? min.value + 1 : (max.value + min.value) / 2)
-		let fnx = "" + fn
+		},
+		evaluate: function (v: string) {
+			try {
+				const Q = new Fraction(v)
 
-		for (const p of abs) {
-			if (p.polynom.evaluate(v).isNegative()) {
-				fnx = fnx.replace(p.match, `(${p.polynom.clone().opposite().display})`)
-			} else {
-				fnx = fnx.replace(p.match, `(${p.polynom.clone().display})`)
+				return expr.filter(x => {
+					return checkValue(Q.value, x.borders.min, x.borders.max)
+				})[0].polynom.evaluate(Q)
+			} catch {
+				return "\\text{merci d'entrer un nombre}"
 			}
 		}
+	}
+})
+const getOneExpression = function (fn: string, abs: {
+	polynom: Polynom,
+	match: string
+}[], min: Solution, max: Solution): {
+	polynom: Polynom,
+	condition: string,
+	borders: { min: Solution, max: Solution }
+} {
+	const v = min === null ? max.value - 1 : (max === null ? min.value + 1 : (max.value + min.value) / 2)
+	let fnx = "" + fn
 
-		return {
-			polynom: new Polynom(fnx),
-			condition: min === null ? `x\\leq${max.tex}` : (max === null ? `x\\geq${min.tex}` : `${min.tex}\\leq x \\leq ${max.tex}`),
-			borders: {min, max}
+	for (const p of abs) {
+		if ((p.polynom.evaluate(v) as Fraction).isNegative()) {
+			fnx = fnx.replace(p.match, `(${p.polynom.clone().opposite().display})`)
+		} else {
+			fnx = fnx.replace(p.match, `(${p.polynom.clone().display})`)
 		}
-	},
-	randomAbs = function () {
-		const z1 = Random.numberSym(10, false),
-			z2 = Random.numberSym(10, false),
-			p1 = new Polynom(`x${(z1 > 0 ? "+" : "") + z1}`).multiply(Random.numberSym(3, false)),
-			p2 = new Polynom(`x${(z2 > 0 ? "+" : "") + z2}`).multiply(Random.numberSym(3, false)),
-			k1 = Random.numberSym(10, false),
-			k2 = Random.numberSym(10, false),
-			k3 = Random.numberSym(10)
+	}
 
-		// -7abs(x+1)-abs(2x+18)+3
+	return {
+		polynom: new Polynom(fnx),
+		condition: min === null
+			? `x\\leq${max.tex}`
+			: (max === null
+					? `x\\geq${min.tex}`
+					: `${min.tex}\\leq x \\leq ${max.tex}`
+			),
+		borders: {min, max}
+	}
+}
+const randomAbs = function () {
+	const z1 = Random.numberSym(10, false)
+	const z2 = Random.numberSym(10, false)
+	const p1 = new Polynom(`x${(z1 > 0 ? "+" : "") + z1}`).multiply(Random.numberSym(3, false))
+	const p2 = new Polynom(`x${(z2 > 0 ? "+" : "") + z2}`).multiply(Random.numberSym(3, false))
+	const k1 = Random.numberSym(10, false)
+	const k2 = Random.numberSym(10, false)
+	const k3 = Random.numberSym(10)
 
-		forms[0].value.value = `${k1}abs(${p1.display})${(k2 > 0 ? "+" : "") + k2}abs(${p2.display})${k3 === 0 ? "" : ((k3 > 0 ? "+" : "") + k3)}`
-	},
-	draw = computed(() => {
-		const alpha = "fghijklmn"
-		return {
-			code: expression.value.drawCode.map(
-				(f, index) => `${alpha[index]}(x)=${f.replace(/([0-9])x/, "$1*x")}`
-			).join("\n"),
-			parameters: "axis,grid,x=-20:20,y=-20:20"
-		}
-	})
+	// -7abs(x+1)-abs(2x+18)+3
+
+	forms[0].value.value = `${k1}abs(${p1.display})${(k2 > 0 ? "+" : "") + k2}abs(${p2.display})${k3 === 0 ? "" : ((k3 > 0 ? "+" : "") + k3)}`
+}
+const draw = computed(() => {
+	const alpha = "fghijklmn"
+	return {
+		code: expression.value.drawCode.map(
+			(f, index) => `${alpha[index]}(x)=${f.replace(/([0-9])x/, "$1*x")}`
+		).join("\n"),
+		parameters: "axis,grid,x=-20:20,y=-20:20"
+	}
+})
 </script>
 
 <template>

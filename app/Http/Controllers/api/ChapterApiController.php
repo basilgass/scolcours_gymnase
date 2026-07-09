@@ -118,7 +118,7 @@ class ChapterApiController extends Controller
 		if ($chapter->id === $related->id) {
 			return false;
 		}
-		// update it !
+		// update it!
 		if ($chapter->relations->contains($related)) {
 			$chapter->relations()->detach($related);
 		} else {

@@ -6,6 +6,7 @@ import dayjs from "dayjs"
 import {useStoreScore} from "@/stores/useStoreScore.ts"
 import LessonTypeIcon from "@/Components/Courses/LessonTypeIcon.vue"
 import {lessonIconsColors} from "@/types/lessonInterfaces.ts"
+import {ScoreLessonDataInterface} from "@/types/scoreInterfaces.ts"
 
 const props = defineProps<{
 	course: CourseInterface
@@ -38,7 +39,7 @@ const dropColorClass = computed(() => {
 
 onMounted(() => {
 	scoreStore
-		.getScore('Lesson', props.lesson.id)
+		.getScore<ScoreLessonDataInterface>('Lesson', props.lesson.id)
 		.then(res => score.value = res)
 })
 

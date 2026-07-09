@@ -7,6 +7,7 @@ import LayoutMain from "@/Layouts/LayoutMain.vue"
 import type {ChapterShowInterface, PostInterface, PostShowInterface} from "@/types/modelInterfaces"
 import PostDisplay from "@/Components/Posts/PostDisplay.vue"
 import {useStoreScore} from "@/stores/useStoreScore.ts"
+import {ScoreQuestionDataInterface} from "@/types/scoreInterfaces.ts"
 
 defineOptions({layout: LayoutMain})
 
@@ -19,7 +20,7 @@ const props = defineProps<{
 
 // Charge les scores des questions en une seule fois
 const useScore = useStoreScore()
-useScore.getScores('Question', props.post.questions.map(q => q.id))
+useScore.getScores<ScoreQuestionDataInterface>('Question', props.post.questions.map(q => q.id))
 
 </script>
 

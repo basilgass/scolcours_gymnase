@@ -26,12 +26,12 @@ const theUsers = ref(props.users)
 const theTeams = ref(props.teams)
 
 const flash = useStoreFlashMessage()
-const usersEmails = ref(""),
-	usersEmailsList = computed(() => {
-		const sep = usersEmails.value.includes(";") ? ";" : "\n"
+const usersEmails = ref("")
+const usersEmailsList = computed(() => {
+	const sep = usersEmails.value.includes(";") ? ";" : "\n"
 
-		return usersEmails.value.split(sep).filter(x => x !== "").map(x => x.trim().toLowerCase())
-	})
+	return usersEmails.value.split(sep).filter(x => x !== "").map(x => x.trim().toLowerCase())
+})
 
 
 const addMode = ref(false)
@@ -61,7 +61,7 @@ function addUsers() {
 
 const deleteMode = ref(false)
 
-function destroyUser(id) {
+function destroyUser(id: number) {
 	axios.post(route("api.admin.users.destroy", [id]), {_method: "delete"}).then((res) => {
 		if (res.data) {
 			// Reload the page.
@@ -101,7 +101,7 @@ const editUserForm = ref({
 	name: ""
 })
 
-function editUser(id) {
+function editUser(id: number) {
 	const user = theUsers.value.find(x => x.id === id)
 	editUserForm.value.id = user.id
 	editUserForm.value.name = user.name
@@ -275,12 +275,12 @@ function updateUserTeam(userId: number, teamId: number) {
 						<div class="flex gap-3 items-start">
 							<sc-button
 								xs
-								@click="editUser(user.id)"
 								type="edit"
 								class="inline"
 								icon
 								outline
 								no-label
+								@click="editUser(user.id)"
 							/>
 
 							<div>

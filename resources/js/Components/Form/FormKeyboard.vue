@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import {computed, onMounted, ref, useTemplateRef} from "vue"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
-import {type CHECKERS, checkersList, PiChecker} from "@/Checkers"
+import {CHECKER_CLASSES, PiChecker} from "@/Checkers"
 import FormMakerWrapper from "@/Components/Form/FormMakerWrapper.vue"
 import {FormElementExpose, FormMakerBaseProps} from "@/Components/Form/FormMakerInterface.ts"
 import {useFormMaker} from "@/Composables/useFormMaker.ts"
@@ -34,8 +34,8 @@ const currentLine = ref("")
 const currentLineKeyboardKey = computed(() => currentLine.value.split(",")[0])
 const currentLineKeyboardDescription = computed(() => new PiChecker(currentLineKeyboardKey.value).description)
 const currentLineKeyboards = computed(() =>
-	Object.keys(checkersList())
-		.map((x: CHECKERS) => x.toString())
+	Object.keys(CHECKER_CLASSES)
+		.map(x => x.toString())
 		.filter((x: string) => x.startsWith(currentLineKeyboardKey.value))
 )
 const keyboardHelper = computed(() => `${currentLineKeyboardDescription.value}\n- @format:custom format`)

@@ -21,7 +21,7 @@ const Form = useForm({
 	active: false
 })
 
-function toggleChapterVisibility(slug, active) {
+function toggleChapterVisibility(slug: string, active: boolean) {
 	Form.slug = slug
 	Form.active = active
 	Form.patch(`/admin/chapters/${slug}`, {

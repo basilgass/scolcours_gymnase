@@ -3,7 +3,6 @@
 
 import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"
 import {computed, ref} from "vue"
-import {Point} from "pimath"
 import type {PiDraw} from "pidraw/types"
 
 interface XY {
@@ -124,14 +123,14 @@ function circleAnchors(point: XY, n: number, anchors = 12): XY {
 	}
 }
 
-function drawPoint(point: {x: number, y: number}, label: string, params?: string): string {
+function drawPoint(point: { x: number, y: number }, label: string, params?: string): string {
 	return `${label}(${point.x},${point.y})${params ? `->${params}` : ''}`
 }
 
 function drawArrow(letter: string,
-				   anchor1: XY, anchor2: XY, point: XY,
-				   value: string | number, pos: string,
-				   smooth: number
+                   anchor1: XY, anchor2: XY, point: XY,
+                   value: string | number, pos: string,
+                   smooth: number
 ): string[] {
 	const n: string[] = []
 
@@ -217,11 +216,11 @@ function markovGraph4() {
 }
 
 const emits = defineEmits<{
-	drawClick: [{ draw: PiDraw, mouse: MouseEvent }],
+	drawClick: [{ draw: PiDraw, mouse: MouseEvent | TouchEvent }],
 	update: [draw: PiDraw],
 }>()
 
-const drawMouseUp = function (evt: { draw: PiDraw, mouse: MouseEvent }) {
+const drawMouseUp = function (evt: { draw: PiDraw, mouse: MouseEvent | TouchEvent }) {
 	emits("update", evt.draw)
 	emits("drawClick", evt)
 }
@@ -230,8 +229,8 @@ const drawMouseUp = function (evt: { draw: PiDraw, mouse: MouseEvent }) {
 <template>
 	<div>
 		<pi-draw-parser
-			v-bind="$attrs"
 			v-if="matrix"
+			v-bind="$attrs"
 			:draw="{
 				parameters:calculatedParameters,
 				code

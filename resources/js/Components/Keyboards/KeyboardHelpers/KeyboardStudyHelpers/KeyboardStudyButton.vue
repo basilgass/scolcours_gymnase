@@ -1,6 +1,9 @@
 <script setup lang="ts">
 
-import {kbrdStudyButtons, studyButtonsKeysType} from "@/Components/Keyboards/KeayboardHelpers/KeyboardStudyHelpers.ts"
+import {
+	kbrdStudyButtons,
+	studyButtonsKeysType
+} from "@/Components/Keyboards/KeyboardHelpers/KeyboardStudyHelpers/KeyboardStudyHelpers.ts"
 
 const props = withDefaults(defineProps<{
 	button: studyButtonsKeysType,

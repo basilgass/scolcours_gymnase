@@ -21,7 +21,7 @@ const emits = defineEmits<KeyboardEmitsInterface>()
 // emit change event
 let pidraw: PiDraw = null
 
-function onChange(value?: { draw: PiDraw, mouse: MouseEvent }): void {
+function onChange(value?: { draw: PiDraw, mouse: MouseEvent | TouchEvent }): void {
 	// pidraw = value.draw
 	setInput().then((x) => emits("change", x))
 }

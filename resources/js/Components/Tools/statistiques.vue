@@ -105,117 +105,117 @@ const statSum = computed<{
 })
 
 const graphLabels = computed(() => {
-		return ["", ...statTable.value.map((x) => `[${x.bi};${x.bii}[`), ""]
-	}),
-	graphBarValues = computed(() => {
-		return [0, ...statTable.value.map((x) => x.ni), 0]
-	}),
-	graphDataset = computed(() => {
-		return [
-			{
-				type: "line",
-				data: graphBarValues.value,
-				borderColor: "rgb(75, 192, 192)"
-			},
-			{
-				barPercentage: 1,
-				categoryPercentage: 1,
-				data: graphBarValues.value,
-				backgroundColor: "rgba(54, 162, 235, 0.2)",
-				borderColor: "rgb(54, 162, 235)"
+	return ["", ...statTable.value.map((x) => `[${x.bi};${x.bii}[`), ""]
+})
+const graphBarValues = computed(() => {
+	return [0, ...statTable.value.map((x) => x.ni), 0]
+})
+const graphDataset = computed(() => {
+	return [
+		{
+			type: "line",
+			data: graphBarValues.value,
+			borderColor: "rgb(75, 192, 192)"
+		},
+		{
+			barPercentage: 1,
+			categoryPercentage: 1,
+			data: graphBarValues.value,
+			backgroundColor: "rgba(54, 162, 235, 0.2)",
+			borderColor: "rgb(54, 162, 235)"
+		}
+	]
+})
+const graphAccumulatesLabel = computed(() => {
+	return [...statTable.value.map((x) => x.bi), statConfig.max]
+})
+const graphAccumulates = computed(() => {
+	return [
+		{
+			type: "line",
+			data: [0, ...statTable.value.map((x) => x.Fi), 1],
+			borderColor: "rgb(75, 192, 192)"
+		},
+		{
+			type: "line",
+			data: [1, ...statTable.value.map((x) => x.Fid), 0],
+			borderColor: "rgb(54, 162, 235)"
+		}
+	]
+})
+const graphAccumulatesOptions = computed(() => {
+	return {
+		scales: {
+			x: {
+				type: "linear",
+				min: statConfig.min,
+				max: statConfig.max
 			}
-		]
-	}),
-	graphAccumulatesLabel = computed(() => {
-		return [...statTable.value.map((x) => x.bi), statConfig.max]
-	}),
-	graphAccumulates = computed(() => {
-		return [
-			{
-				type: "line",
-				data: [0, ...statTable.value.map((x) => x.Fi), 1],
-				borderColor: "rgb(75, 192, 192)"
-			},
-			{
-				type: "line",
-				data: [1, ...statTable.value.map((x) => x.Fid), 0],
-				borderColor: "rgb(54, 162, 235)"
-			}
-		]
-	}),
-	graphAccumulatesOptions = computed(() => {
-		return {
-			scales: {
-				x: {
-					type: "linear",
-					min: statConfig.min,
-					max: statConfig.max
-				}
-			},
-			plugins: {
-				annotation: {
-					annotations: {
-						median: {
-							type: "line",
-							scaleID: "x",
-							value: statCentralValues.value.q2,
-							borderColor: "rgba(255, 99, 132, 0.75)",
-							borderWith: 2,
-							label: {
-								display: true,
-								content: "médiane",
-								position: "start"
-							}
+		},
+		plugins: {
+			annotation: {
+				annotations: {
+					median: {
+						type: "line",
+						scaleID: "x",
+						value: statCentralValues.value.q2,
+						borderColor: "rgba(255, 99, 132, 0.75)",
+						borderWith: 2,
+						label: {
+							display: true,
+							content: "médiane",
+							position: "start"
 						}
 					}
 				}
 			}
 		}
-	}),
-	graphBoxPlot = computed(() => {
-		return [
-			{
-				label: "min / max",
-				data: {
-					whiskerMin: statConfig.min,
-					q1: statCentralValues.value.q1,
-					median: statCentralValues.value.q2,
-					q3: statCentralValues.value.q3,
-					whiskerMax: statConfig.max
-					// items: [104, 106, 185, 192]
-				}
-			},
-			{
-				label: "1.5*IQ",
-				data: {
-					whiskerMin: Math.max(
-						statCentralValues.value.q1 -
-						1.5 * statCentralValues.value.iq,
-						statConfig.min
-					),
-					q1: statCentralValues.value.q1,
-					median: statCentralValues.value.q2,
-					q3: statCentralValues.value.q3,
-					whiskerMax: Math.min(
-						statCentralValues.value.q3 +
-						1.5 * statCentralValues.value.iq,
-						statConfig.max
-					)
-					// items: [104, 106, 185, 192]
-				}
+	}
+})
+const graphBoxPlot = computed(() => {
+	return [
+		{
+			label: "min / max",
+			data: {
+				whiskerMin: statConfig.min,
+				q1: statCentralValues.value.q1,
+				median: statCentralValues.value.q2,
+				q3: statCentralValues.value.q3,
+				whiskerMax: statConfig.max
+				// items: [104, 106, 185, 192]
 			}
-		]
-	}),
-	graphBoxPlotOptions = computed(() => {
-		return {
-			scales: {
-				x: {
-					min: statConfig.min - statConfig.length,
-					max: statConfig.max + statConfig.length
-				}
+		},
+		{
+			label: "1.5*IQ",
+			data: {
+				whiskerMin: Math.max(
+					statCentralValues.value.q1 -
+					1.5 * statCentralValues.value.iq,
+					statConfig.min
+				),
+				q1: statCentralValues.value.q1,
+				median: statCentralValues.value.q2,
+				q3: statCentralValues.value.q3,
+				whiskerMax: Math.min(
+					statCentralValues.value.q3 +
+					1.5 * statCentralValues.value.iq,
+					statConfig.max
+				)
+				// items: [104, 106, 185, 192]
 			}
 		}
-	})
+	]
+})
+const graphBoxPlotOptions = computed(() => {
+	return {
+		scales: {
+			x: {
+				min: statConfig.min - statConfig.length,
+				max: statConfig.max + statConfig.length
+			}
+		}
+	}
+})
 
 /**
  * Calculates various central values for a given statistical table.
@@ -245,16 +245,16 @@ const statCentralValues = computed<{
 	// statistics.mustaches.bp = statistics.middle.quartiles.last + 1.5 * statistics.mustaches.Q
 
 	const mean = statTable.value.reduce(
-			(previous, row) => previous + row.fi * row.xi,
-			0
-		),
-		sigma2 = statTable.value.reduce(
-			(previous, row) =>
-				previous + row.fi * Math.pow(+row.xi - mean, 2),
-			0
-		),
-		q1 = stats_median(statTable.value, 0.25),
-		q3 = stats_median(statTable.value, 0.75)
+		(previous, row) => previous + row.fi * row.xi,
+		0
+	)
+	const sigma2 = statTable.value.reduce(
+		(previous, row) =>
+			previous + row.fi * Math.pow(+row.xi - mean, 2),
+		0
+	)
+	const q1 = stats_median(statTable.value, 0.25)
+	const q3 = stats_median(statTable.value, 0.75)
 
 	return {
 		modal: stats_mode(statTable.value),
@@ -283,8 +283,8 @@ function randn_bm(
 	skew: number,
 	flatten?: number
 ) {
-	let u = 0,
-		v = 0
+	let u = 0
+	let v = 0
 	while (u === 0) u = Math.random() //Converting [0,1) to (0,1)
 	while (v === 0) v = Math.random()
 	let num =
@@ -307,8 +307,8 @@ function statsBuildData_customData() {
 	const raw = []
 
 	// TODO : Generate data with random ni values
-	let bi = +statConfig.min,
-		dataIndex = 0
+	let bi = +statConfig.min
+	let dataIndex = 0
 	while (bi < statConfig.max) {
 		const ni =
 			statConfig.customData[dataIndex] === undefined
@@ -393,17 +393,17 @@ function statsBuildTable_continuous(): {
 	//  }
 	const table = []
 
-	let bi = statConfig.min,
-		securityCount = 0,
-		customNi = statCustomNi.value
-			.split(" ")
-			.filter((x) => x !== "")
-			.map((x) => +x)
+	let bi = statConfig.min
+	let securityCount = 0
+	let customNi = statCustomNi.value
+		.split(" ")
+		.filter((x) => x !== "")
+		.map((x) => +x)
 
 	while (bi < statConfig.max) {
-		let bii = bi + statConfig.length,
-			xi = (bi + bii) / 2,
-			ni
+		let bii = bi + statConfig.length
+		let xi = (bi + bii) / 2
+		let ni
 
 		if (customNi.length === 0) {
 			ni = statRaw.value.filter((x) => x >= bi && x < bii).length
@@ -439,8 +439,8 @@ function statsBuildTable_continuous(): {
 	const sum = table.reduce((acc, value) => (acc += value.ni), 0)
 
 	// Build the accumulate frequencies
-	let Fi = 0.0,
-		Fid = 1.0
+	let Fi = 0.0
+	let Fid = 1.0
 	table.forEach((item) => {
 		item.fi = item.ni / sum
 		item.fixi = item.fi * item.xi
@@ -473,8 +473,8 @@ function stats_mode(table): { classe: string; mode: number } {
 	}
 
 	// xm = b(i-1) + (D1)/(D1+D2)*Li
-	let niMax = Math.max(...table.map((o) => o.ni)),
-		niMaxID
+	let niMax: number = Math.max(...table.map((o) => o.ni))
+	let niMaxID = 0
 
 	for (let i = 0; i < table.length; i++) {
 		if (table[i].ni === niMax) {
@@ -484,11 +484,11 @@ function stats_mode(table): { classe: string; mode: number } {
 	}
 
 	const D1 =
-			table[niMaxID].fi -
-			(niMaxID - 1 === -1 ? 0 : table[niMaxID - 1].fi),
-		D2 =
-			table[niMaxID].fi -
-			(niMaxID + 1 === table.length ? 0 : table[niMaxID + 1].fi)
+		table[niMaxID].fi -
+		(niMaxID - 1 === -1 ? 0 : table[niMaxID - 1].fi)
+	const D2 =
+		table[niMaxID].fi -
+		(niMaxID + 1 === table.length ? 0 : table[niMaxID + 1].fi)
 
 	return {
 		classe: `[${table[niMaxID].bi} - ${table[niMaxID].bii}[`,
@@ -548,31 +548,31 @@ const tableToTexOutput = computed(() => {
 	}
 
 	const header =
-			"\\(" +
-			[
-				"\\bigl[b_{i-1};b_i\\bigr[",
-				"c_i",
-				"n_i",
-				"L_i",
-				"f_i",
-				"F_i",
-				"F'_i",
-				"f_i\\cdot x_i",
-				"f_i\\cdot x_i^2"
-			].join("\\)&\\(") +
-			"\\)\\\\ \n",
-		footer =
-			[
-				"TOTAUX",
-				"",
-				statConfig.samples,
-				"",
-				"1",
-				"",
-				"",
-				statCentralValues.value.mean.toFixed(2),
-				""
-			].join(" & ") + " \n"
+		"\\(" +
+		[
+			"\\bigl[b_{i-1};b_i\\bigr[",
+			"c_i",
+			"n_i",
+			"L_i",
+			"f_i",
+			"F_i",
+			"F'_i",
+			"f_i\\cdot x_i",
+			"f_i\\cdot x_i^2"
+		].join("\\)&\\(") +
+		"\\)\\\\ \n"
+	const footer =
+		[
+			"TOTAUX",
+			"",
+			statConfig.samples,
+			"",
+			"1",
+			"",
+			"",
+			statCentralValues.value.mean.toFixed(2),
+			""
+		].join(" & ") + " \n"
 
 	return (
 		"\\begin{tblr}{ colspec={| X[c,2cm] | *{7}{X[c]|} X[c,2cm] |}, hlines, row{1}={lightgray}, row{Z}={lightgray} }\n" +
@@ -716,127 +716,127 @@ const tableToTexOutput = computed(() => {
 			</template>
 			<table class="w-full text-center table-fixed">
 				<thead class="bg-gray-600 text-white">
-					<tr>
-						<th
-							v-katex="`\\left[b_i; b_ii\\right[`"
-							class="w-[150px]"
-							title="classe modale"
-						/>
-						<th
-							v-katex="'c_i'"
-							title="valeur centrale"
-						/>
-						<th
-							v-katex="'n_i'"
-							title="effectif"
-						/>
-						<th
-							v-katex="'L_i'"
-							title="amplitude"
-						/>
-						<th
-							v-katex="'f_i'"
-							title="fréquence"
-						/>
-						<th
-							v-katex="'F_i'"
-							title="fréquence cumulée croissante"
-						/>
-						<th
-							v-katex="'F_i\''"
-							title="fréquence cumulée décroissante"
-						/>
-						<th
-							v-katex="'f_i\\cdot x_i'"
-							title="fixi"
-						/>
-						<th
-							v-katex="'f_i\\cdot x_i^2'"
-							title="fixi2"
-						/>
-					</tr>
+				<tr>
+					<th
+						v-katex="`\\left[b_i; b_ii\\right[`"
+						class="w-[150px]"
+						title="classe modale"
+					/>
+					<th
+						v-katex="'c_i'"
+						title="valeur centrale"
+					/>
+					<th
+						v-katex="'n_i'"
+						title="effectif"
+					/>
+					<th
+						v-katex="'L_i'"
+						title="amplitude"
+					/>
+					<th
+						v-katex="'f_i'"
+						title="fréquence"
+					/>
+					<th
+						v-katex="'F_i'"
+						title="fréquence cumulée croissante"
+					/>
+					<th
+						v-katex="'F_i\''"
+						title="fréquence cumulée décroissante"
+					/>
+					<th
+						v-katex="'f_i\\cdot x_i'"
+						title="fixi"
+					/>
+					<th
+						v-katex="'f_i\\cdot x_i^2'"
+						title="fixi2"
+					/>
+				</tr>
 				</thead>
 				<tbody class="font-code">
-					<tr
-						v-for="(item, index) in statTable"
-						:key="`stats-${index}`"
-						class="odd:bg-gray-200 border-t border-b border-gray-300"
-					>
-						<td class="border-x border-gray-300 py-2">
-							[{{ item.bi }} - {{ item.bii }}[
-						</td>
-						<td class="border-x border-gray-300 py-2">
-							{{ item.xi }}
-						</td>
-						<td class="border-x border-gray-300 py-2">
-							{{ item.ni }}
-						</td>
-						<td class="border-x border-gray-300 py-2">
-							{{ item.bii - item.bi }}
-						</td>
-						<td class="border-x border-gray-300 py-2">
-							{{
-								statConfig.percent
-									? statRoundValue(item.fi * 100) + `%`
-									: statRoundValue(item.fi)
-							}}
-						</td>
-						<td class="border-x border-gray-300 py-2">
-							{{
-								statConfig.percent
-									? statRoundValue(item.Fi * 100) + `%`
-									: statRoundValue(item.Fi)
-							}}
-						</td>
-						<td class="border-x border-gray-300 py-2">
-							{{
-								statConfig.percent
-									? statRoundValue(item.Fid * 100) + `%`
-									: statRoundValue(item.Fid)
-							}}
-						</td>
-						<td class="border-x border-gray-300 py-2">
-							{{ statRoundValue(item.fixi) }}
-						</td>
-						<td class="border-x border-gray-300 py-2">
-							{{ statRoundValue(item.fixii) }}
-						</td>
-					</tr>
+				<tr
+					v-for="(item, index) in statTable"
+					:key="`stats-${index}`"
+					class="odd:bg-gray-200 border-t border-b border-gray-300"
+				>
+					<td class="border-x border-gray-300 py-2">
+						[{{ item.bi }} - {{ item.bii }}[
+					</td>
+					<td class="border-x border-gray-300 py-2">
+						{{ item.xi }}
+					</td>
+					<td class="border-x border-gray-300 py-2">
+						{{ item.ni }}
+					</td>
+					<td class="border-x border-gray-300 py-2">
+						{{ item.bii - item.bi }}
+					</td>
+					<td class="border-x border-gray-300 py-2">
+						{{
+							statConfig.percent
+								? statRoundValue(item.fi * 100) + `%`
+								: statRoundValue(item.fi)
+						}}
+					</td>
+					<td class="border-x border-gray-300 py-2">
+						{{
+							statConfig.percent
+								? statRoundValue(item.Fi * 100) + `%`
+								: statRoundValue(item.Fi)
+						}}
+					</td>
+					<td class="border-x border-gray-300 py-2">
+						{{
+							statConfig.percent
+								? statRoundValue(item.Fid * 100) + `%`
+								: statRoundValue(item.Fid)
+						}}
+					</td>
+					<td class="border-x border-gray-300 py-2">
+						{{ statRoundValue(item.fixi) }}
+					</td>
+					<td class="border-x border-gray-300 py-2">
+						{{ statRoundValue(item.fixii) }}
+					</td>
+				</tr>
 				</tbody>
 				<tfoot class="font-code">
-					<tr>
-						<td />
-						<td />
-						<td class="bg-gray-300 border border-gray-300">
-							{{ statSum.ni }}
-						</td>
-						<td />
-						<td class="bg-gray-300 border border-gray-300">
-							{{ statRoundValue(statSum.fi) }}
-						</td>
-						<td />
-						<td />
-						<td class="bg-gray-300 border border-gray-300">
-							{{ statRoundValue(statSum.fixi) }}
-						</td>
-						<td class="bg-gray-300 border border-gray-300">
-							{{ statRoundValue(statSum.fixii) }}
-						</td>
-					</tr>
+				<tr>
+					<td />
+					<td />
+					<td class="bg-gray-300 border border-gray-300">
+						{{ statSum.ni }}
+					</td>
+					<td />
+					<td class="bg-gray-300 border border-gray-300">
+						{{ statRoundValue(statSum.fi) }}
+					</td>
+					<td />
+					<td />
+					<td class="bg-gray-300 border border-gray-300">
+						{{ statRoundValue(statSum.fixi) }}
+					</td>
+					<td class="bg-gray-300 border border-gray-300">
+						{{ statRoundValue(statSum.fixii) }}
+					</td>
+				</tr>
 				</tfoot>
 			</table>
 
 			<div>
 				<h4
-					@click="showTex=!showTex"
 					class="cursor-pointer"
+					@click="showTex=!showTex"
 				>
 					TeX output <i
-						:class="{
+					:class="{
 							'bi bi-eye-slash': !showTex,
 							'bi bi-eye': showTex,
 						}"
-					/>
+				/>
 				</h4>
 				<pre
 					v-show="showTex"

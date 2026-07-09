@@ -28,7 +28,7 @@ defineProps({
 		>
 			<template #card="{ item }: { item: ChallengeInterface }">
 				<card
-					v-theme.bg.text="item.theme_id"
+					v-theme.bg.text="item.chapter.theme_id"
 					with-themes
 				>
 					<div>

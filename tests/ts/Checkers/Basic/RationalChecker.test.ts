@@ -107,21 +107,32 @@ describe("rational checker", () => {
 		expect(result.score).toBe(1)
 	})
 
-	test('compare rational fraction with partial factorisation (number factor)', () => {
+	// Notation BINAIRE (checkPolynomIsFactorized, référence partagée avec PolynomChecker).
+	// L'ancien crédit partiel (0.9/0.5 via _checkFactorisation) a été retiré : le
+	// résultat est désormais accepté ou refusé, sans score intermédiaire.
+
+	test('facteur numérique non sorti : accepté en mode f (non strict)', () => {
+		// `2x+40` n'a pas le 2 mis en évidence. En mode `f`, un facteur commun
+		// NUMÉRIQUE est toléré (il serait refusé en mode `F` strict) → réponse acceptée.
 		chk.answer = '(6(3x-5)^4(x+20))/(x+4)^4'
 		const given = '3(3x-5)^4(2x+40)/(x+4)^4'
 
 		const result = chk.checkValue(given)
 
-		expect(result.score).toBe(0.9)
+		expect(result.result).toBe(true)
+		expect(result.score).toBe(1)
 	})
 
-	test('compare rational fraction with partial factorisation (monom factor)', () => {
+	test('facteur monomial non sorti : refusé (numérateur pas factorisé)', () => {
+		// `2x^2+40x` = 2x(x+20) écrit développé : réellement pas factorisé (le facteur
+		// commun est un monôme, pas un nombre) → réponse refusée.
 		chk.answer = '(6x(3x-5)^4(x+20))/(x+4)^4'
 		const given = '3(3x-5)^4(2x^2+40x)/(x+4)^4'
 
 		const result = chk.checkValue(given)
-		expect(result.score).toBe(0.5)
+
+		expect(result.result).toBe(false)
+		expect(result.message).toContain("n'est pas factorisé")
 	})
 
 	test('check if factorized', () => {

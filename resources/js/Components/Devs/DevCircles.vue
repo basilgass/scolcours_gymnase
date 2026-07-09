@@ -2,29 +2,29 @@
 import FormInput from "@/Components/Form/FormInput.vue"
 import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
-import {Circle} from "pimath"
+import {Circle, Line} from "pimath"
 import {onMounted, ref} from "vue"
 
 defineOptions({layout: LayoutMain})
 
-const root = ref(null),
-	code = ref(""),
-	intersectionPoints = ref([]),
-	tangentPerPoints = ref([]),
-	circle = ref("(x-3)^2+(y+1)^2=13")
+const root = ref(null)
+const code = ref("")
+const intersectionPoints = ref([])
+const tangentPerPoints = ref([])
+const circle = ref("(x-3)^2+(y+1)^2=13")
 
 function updateValue() {
 	intersectionPoints.value = []
 	tangentPerPoints.value = []
 
-	const C = new Circle(circle.value),
-		pts = C.getPointsOnCircle()
+	const C = new Circle(circle.value)
+	const pts = C.getPointsOnCircle()
 
 
 	code.value = `C(${C.center.x.value},${C.center.y.value})
 	c=circ C,${C.radius.value}`
 
-	const tangents = []
+	const tangents: Line[] = []
 	pts.forEach((pt, index) => {
 		const tg = C.tangents(pt)[0]
 		tangents.push(tg)
@@ -40,12 +40,10 @@ function updateValue() {
 
 			if (intersection.hasIntersection) {
 				// if (!intersection.point.isInListOfPoints(pts)) {
-				intersection.point.name = `I_{${i + 1}-${j + 1}}`
-				intersection.point.asPoint = true
 				intersectionPoints.value.push({
 					point: `I_{${i + 1}-${j + 1}}${intersection.point.tex}`,
-					tangent1: tangents[i].canonical.tex,
-					tangent2: tangents[j].canonical.tex
+					tangent1: tangents[i].asCanonical.tex,
+					tangent2: tangents[j].asCanonical.tex
 				})
 				code.value += `\nI_${i + 1}_${j + 1}(${intersection.point.x.value},${intersection.point.y.value})->tex:I_{${i + 1}-${i + 2}}=@`
 			}

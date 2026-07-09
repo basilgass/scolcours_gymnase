@@ -21,7 +21,7 @@ const props = defineProps<{
 const availableFilters = computed(() => {
 	const filterValues: lessonableClassName[] = ['Post', 'Generator', 'Challenge', 'Deck']
 
-	const arr = []
+	const arr: lessonableClassName[] = []
 
 	filterValues.forEach((f) => {
 		if (props.course.lessons.some(lesson => lesson.lessonable_type === f)) {
@@ -41,11 +41,11 @@ const lessons = computed(() => {
 const scoreStore = useStoreScore()
 const scores = ref<Record<number, ScoreInterface<ScoreLessonDataInterface>>>({})
 scoreStore
-	.getScores(
+	.getScores<ScoreLessonDataInterface>(
 		"Lesson",
 		props.course.lessons.map(lesson => lesson.id)
 	)
-	.then((res: ScoreInterface<ScoreLessonDataInterface>[]) => {
+	.then(res => {
 		res.forEach(score => {
 			scores.value[score.scoreable_id] = score
 		})
@@ -166,7 +166,7 @@ onUnmounted(() => {
 
 			<div class="flex gap-3">
 				<div @click="showUserStats=!showUserStats">
-					<i class="bi bi-bar-chart"></i>
+					<i class="bi bi-bar-chart" />
 				</div>
 				<sc-button
 					outline
@@ -176,7 +176,6 @@ onUnmounted(() => {
 				>
 					<i class="bi bi-arrow-clockwise" /> {{ lastUpdate }}
 				</sc-button>
-
 			</div>
 		</div>
 

@@ -26,11 +26,11 @@ const props = defineProps<{
 const scoreStore = useStoreScore()
 const scores = ref<Record<number, ScoreInterface<ScoreLessonDataInterface>>>({})
 scoreStore
-	.getScores(
+	.getScores<ScoreLessonDataInterface>(
 		"Lesson",
 		props.course.lessons.map(lesson => lesson.id)
 	)
-	.then((res: ScoreInterface<ScoreLessonDataInterface>[]) => {
+	.then(res => {
 		res.forEach(score => {
 			scores.value[score.scoreable_id] = score
 		})

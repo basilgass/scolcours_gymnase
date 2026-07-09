@@ -11,6 +11,7 @@ import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
 import FilteredList from "@/Components/Ui/FilteredList.vue"
 import Card from "@/Components/Ui/Card.vue"
 import {useStoreScore} from "@/stores/useStoreScore.ts"
+import {ScoreDeckDataInterface} from "@/types/scoreInterfaces.ts"
 
 defineOptions({layout: LayoutMain})
 
@@ -21,7 +22,7 @@ const props = defineProps({
 // Chargement des scores
 // TODO: récupérer l'info pour connaître le status d'un deck.
 const scores = useStoreScore()
-scores.getScores("Deck", props.decks.map(deck => deck.id))
+scores.getScores<ScoreDeckDataInterface>("Deck", props.decks.map(deck => deck.id))
 	.then(res => {
 		console.log(res)
 

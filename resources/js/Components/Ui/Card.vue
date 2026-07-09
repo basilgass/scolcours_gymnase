@@ -13,13 +13,15 @@ const props = withDefaults(defineProps<{
 	noInsideBorder?: boolean
 	success?: boolean
 	error?: boolean
+	infoCard?: boolean
 }>(), {
 	theme: false,
 	headerTheme: false,
 	borderTheme: false,
 	noInsideBorder: false,
 	success: false,
-	error: false
+	error: false,
+	infoCard: false
 })
 
 const chapter = computed<string>(() => {
@@ -94,7 +96,10 @@ const headerClass = computed(() => {
 		>
 			<slot name="header" />
 		</header>
-		<main class="flex-1 w-full p-3">
+		<main
+			class="flex-1 w-full p-3"
+			:class="infoCard ? 'grid place-items-center text-center text-lg' : ''"
+		>
 			<slot />
 		</main>
 		<footer

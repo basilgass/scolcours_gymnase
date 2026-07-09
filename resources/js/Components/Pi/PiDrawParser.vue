@@ -20,6 +20,7 @@ import {dynamicText, replaceDoubleSigns} from "@/Composables/useHelpers.ts"
 import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
 import {usePage} from "@inertiajs/vue3"
 import {Fraction} from "pimath"
+import {numberCorrection} from "@/helpers/helperFunctions.ts"
 
 const editMode = useStoreEditMode()
 
@@ -137,10 +138,10 @@ const texComputed = computed(() => {
 function sliderValue(slider: ISlider): string {
 	return slider.factor === 'pi'
 		? toTexPi(slider.value)
-		: slider.value.toString()
+		: numberCorrection(slider.value).toString()
 }
 
-function toTexPi(value): string {
+function toTexPi(value: string | number): string {
 	const F = new Fraction(value)
 
 	if (F.value === 0) {
@@ -199,7 +200,7 @@ const drawParameter = computed(() => {
 })
 
 // Grab the data when on mouse up for external modifications
-const drawMouseUp = function (evt: { draw: PiDraw, mouse: MouseEvent }) {
+const drawMouseUp = function (evt: { draw: PiDraw, mouse: MouseEvent | TouchEvent }) {
 	emits("update", evt.draw)
 	emits("drawClick", evt)
 }

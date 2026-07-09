@@ -40,7 +40,8 @@ export class LogChecker extends CheckerAbstract {
 		const ND: string[] = value.split("/")
 
 		// Il ne doit y avoir qu'une fraction.
-		let userN, userD
+		let userN
+		let userD
 		try {
 			userN = new NumExp(ND[0]).evaluate()
 		} catch {
@@ -58,7 +59,8 @@ export class LogChecker extends CheckerAbstract {
 
 
 		const [expN, expD] = this.answer.split("/")
-		let expNValue: number, expDValue: number
+		let expNValue: number
+		let expDValue: number
 
 		try {
 			expNValue = new NumExp(expN).evaluate()
@@ -78,8 +80,8 @@ export class LogChecker extends CheckerAbstract {
 		}
 
 
-		const answerDecimal = userN / userD,
-			expectedDecimal = expNValue / expDValue
+		const answerDecimal = userN / userD
+		const expectedDecimal = expNValue / expDValue
 
 		if (answerDecimal.toFixed(8) !== expectedDecimal.toFixed(8)) {
 			return makeCheckerResult("La réponse sous forme exacte ne donne pas la bonne valeur.")

@@ -11,9 +11,9 @@ export function checkMinMaxEquation(value: string, answer: string, secondaryChec
 	const [left, right] = value.split("=")
 	const [eLeft, eRight] = answer.split("=")
 
-	const polynomY = left === "y" ? left : right,
-		polynomSommet = left === "y" ? right : left,
-		expectedSommet = eLeft === "y" ? eRight : eLeft
+	const polynomY = left === "y" ? left : right
+	const polynomSommet = left === "y" ? right : left
+	const expectedSommet = eLeft === "y" ? eRight : eLeft
 
 	return polynomY !== "y"
 		? "Un côté de l'équation doit juste être (y)"
@@ -21,9 +21,9 @@ export function checkMinMaxEquation(value: string, answer: string, secondaryChec
 }
 
 export function checkReducedEquation(A: Equation): string {
-	const lcmL = A.left.commonMonom().coefficient.value,
-		lcmR = A.right.commonMonom().coefficient.value,
-		lcm = Numeric.lcm(lcmL, lcmR)
+	const lcmL = A.left.commonMonom().coefficient.value
+	const lcmR = A.right.commonMonom().coefficient.value
+	const lcm = Numeric.lcm(lcmL, lcmR)
 
 	return lcm !== 1 ? "l'équation n'est pas réduite." : ""
 }

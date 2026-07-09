@@ -52,8 +52,8 @@ const affine = computed<{ tex: { canonical: string, mxh: string } } | false>(() 
 			let sols: Line[] = solutions
 				.filter((sol: Solution) => sol.exact !== false)
 				.map((sol: Solution) => {
-					const x: Fraction = sol.fraction as Fraction,
-						y: Fraction = P.evaluate(x) as Fraction
+					const x: Fraction = sol.fraction as Fraction
+					const y: Fraction = P.evaluate(x) as Fraction
 
 					return new Line(
 						new Point(x, y),
@@ -72,12 +72,12 @@ const affine = computed<{ tex: { canonical: string, mxh: string } } | false>(() 
 		}
 
 		// The given x is an abscissa
-		const a = new Fraction(x.value),
-			fa = P.evaluate(a) as Fraction
+		const a = new Fraction(x.value)
+		const fa = P.evaluate(a) as Fraction
 
-		const dP = P.derivative(),
-			m: Fraction = dP.evaluate(a) as Fraction,
-			h = fa.clone().subtract(m.clone().multiply(a))
+		const dP = P.derivative()
+		const m: Fraction = dP.evaluate(a) as Fraction
+		const h = fa.clone().subtract(m.clone().multiply(a))
 
 		const L = new Line(`y=${m.display}x+(${h.display})`)
 		return {

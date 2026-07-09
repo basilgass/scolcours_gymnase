@@ -150,17 +150,17 @@ export const useStoreScore = defineStore(
 		}
 
 		// Réinitialise le score
-		async function resetScore(score) {
+		async function resetScore<T extends ScoreDataInterface>(score: ScoreInterface<T>) {
 			score.score = 0
 			score.is_resolved = null
 			score.attempts = 0
 			score.data = defaultScoreData(score.scoreable_type)
-			return updateScore(score)
+			return updateScore<T>(score)
 		}
 
-		async function resetData(score) {
+		async function resetData<T extends ScoreDataInterface>(score: ScoreInterface<T>) {
 			score.data = defaultScoreData(score.scoreable_type)
-			return updateScore(score)
+			return updateScore<T>(score)
 		}
 
 		// Vérifie si une promise est en attente pour une clé donnée dans les valeurs du Map
@@ -292,12 +292,12 @@ export const useStoreScore = defineStore(
 		}
 
 		// Mise à jour d'un score.
-		async function updateScore(score: ScoreInterface, silent?: boolean) {
+		async function updateScore<T extends ScoreDataInterface = ScoreDataInterface>(score: ScoreInterface<T>, silent?: boolean): Promise<ScoreInterface<T> | null> {
 			const index = getIndexFromScoreId(score.id)
 
 			if (!userId.value) {
 				scores.value.splice(index, 1, score)
-				return
+				return null
 			}
 
 			await axios.patch(
@@ -319,7 +319,9 @@ export const useStoreScore = defineStore(
 			})
 
 
-			return index >= 0 ? scores.value[index] : null
+			return index >= 0
+				? scores.value[index] as ScoreInterface<T>
+				: null
 		}
 
 		async function getUserScores<T extends ScoreDataInterface>(

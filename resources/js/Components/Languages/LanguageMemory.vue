@@ -4,22 +4,28 @@ import {Random} from "pimath"
 import {inject, ref, watch} from "vue"
 import {useLanguage} from "@/Components/Languages/useLanguage.ts"
 import ScButton from "@/Components/Ui/Button/scButton.vue"
-import {LanguageDataInterface} from "@/types/modelInterfaces.ts";
+import {LanguageDataInterface} from "@/types/modelInterfaces.ts"
 
 const languageData = inject<LanguageDataInterface>("LanguageData")
 
-const cardTimeout = ref(1),
-	showAllCards = ref(false),
-	numberOfCards = ref(12)
+const cardTimeout = ref(1)
+const showAllCards = ref(false)
+const numberOfCards = ref(12)
 
 const {startGame, continueGame, currentWords, selectedWordsIndex} = useLanguage(languageData, {
 	numberOfWords: numberOfCards
 })
 
-const cards = ref([])
+interface LanguageCardItem {
+	text: string,
+	selected: boolean,
+	found: boolean
+}
+
+const cards = ref<LanguageCardItem[]>([])
 
 watch(selectedWordsIndex, () => {
-	const cardsList = []
+	const cardsList: string[] = []
 	for (const word of currentWords.value) {
 		cardsList.push(word.foreign)
 		cardsList.push(word.fr)
@@ -35,7 +41,7 @@ watch(selectedWordsIndex, () => {
 
 })
 
-const selectCard = function (card) {
+const selectCard = function (card: LanguageCardItem) {
 	if (card.found) {
 		return
 	}

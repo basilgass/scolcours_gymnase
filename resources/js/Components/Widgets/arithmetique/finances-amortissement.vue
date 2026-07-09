@@ -30,11 +30,11 @@ const DIGITS = 2
 
 const parameters = computed(() => props.illustration.parameters)
 const TVM = computed<TVMType>(() => {
-	let A = undefined
-	let i = undefined
-	let n = undefined
+	let A: number = undefined
+	let i: number = undefined
+	let n: number = undefined
 	let p: periodsType = 'A'
-	let R = undefined
+	let R: number = undefined
 
 	props.illustration.code.split('\n').forEach((line => {
 		const [key, value] = line.split('=')

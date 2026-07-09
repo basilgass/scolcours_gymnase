@@ -1,23 +1,20 @@
-import { usePage } from "@inertiajs/vue3"
+import {useIsAdmin} from "@/Composables/useHelpers"
+import type {Directive, DirectiveBinding} from "vue"
 
-
-function adminUpdate(el, binding) {
-	if (!usePage().props.auth.can.admin) {
-		el.remove()
-	}
-
-	if (binding.value===false) {
-		el.classList.add("hidden")
-	} else {
-		el.classList.remove("hidden")
-	}
+function toggleHidden(el: HTMLElement, binding: DirectiveBinding<boolean>) {
+	el.classList.toggle("hidden", binding.value === false)
 }
 
-export const adminDirective = {
+export const adminDirective: Directive<HTMLElement, boolean> = {
 	mounted(el, binding) {
-		adminUpdate(el, binding)
+		if (!useIsAdmin()) {
+			el.remove()
+			return
+		}
+		toggleHidden(el, binding)
 	},
 	updated(el, binding) {
-		adminUpdate(el, binding)
+		if (!el.isConnected) return
+		toggleHidden(el, binding)
 	}
 }

@@ -2,7 +2,7 @@ import {describe, expect, test} from "vitest"
 import {PiChecker, SolutionChecker} from "@/Checkers"
 import AsciiMathParser from "@/asciimath2tex.ts"
 
-describe("solution checker", () => {
+describe("solutions checker", () => {
 
 	describe('contrôle qualité', () => {
 
@@ -116,7 +116,9 @@ describe("solution checker", () => {
 
 			const result3 = chk.check_sets('{2;5}')
 			expect(result3.result).toBe(false)
-			expect(result3.message).toContain("aucune réponse ne correspond dans les solutions.")
+			// Le code signale précisément l'élément fauté (le 2e, "5") plutôt qu'un
+			// générique "aucune réponse ne correspond" — message plus juste ici, car "2" matche.
+			expect(result3.message).toContain("La réponse donnée n'est pas juste")
 
 
 		})
@@ -230,7 +232,9 @@ describe("solution checker", () => {
 			const result0 = chk.check_intervals(']-3;2[uu[5;8]')
 			expect(result0.result).toBe(false)
 			expect(result0.message).toContain("(2) :")
-			expect(result0.message).toContain(" n'est pas dans les solutions")
+			// Le code donne un feedback plus précis (quelle borne est fausse) que
+			// l'ancien générique "n'est pas dans les solutions".
+			expect(result0.message).toContain("La borne supérieure est fausse")
 		})
 		test("un intervalle ok, un intervalle partiel", () => {
 			const result0 = chk.check_intervals(']-3;2[uu[10/2;+oo[')

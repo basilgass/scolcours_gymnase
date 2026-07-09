@@ -16,122 +16,122 @@ const props = defineProps<{
 	illustration: WidgetPropsInterface
 }>()
 
-const params = computed(() => props.illustration.parameters.split(",")),
-	code = computed(() => props.illustration.code),
-	asNumeric = computed(() => params.value.some(x => x.startsWith('digits'))),
-	roundedTo = computed(() => {
-		for (let param of params.value) {
-			if (param.startsWith("digits:")) {
-				let [, rounded] = param.split(":")
-				return +rounded
-			}
+const params = computed(() => props.illustration.parameters.split(","))
+const code = computed(() => props.illustration.code)
+const asNumeric = computed(() => params.value.some(x => x.startsWith('digits')))
+const roundedTo = computed(() => {
+	for (let param of params.value) {
+		if (param.startsWith("digits:")) {
+			let [, rounded] = param.split(":")
+			return +rounded
 		}
-		return 0
-	}),
-	variable = computed(() => params.value.filter(p => p.length === 1) ?? 'x'),
-	detectInfinite = computed(() => {
-		return params.value.includes('oo')
-	}),
-	tableClass = computed(() => {
-		for (let param of params.value) {
-			if (param.startsWith("table:")) {
-				let [, w] = param.split(":")
-				return w
-			}
+	}
+	return 0
+})
+const variable = computed(() => params.value.filter(p => p.length === 1) ?? 'x')
+const detectInfinite = computed(() => {
+	return params.value.includes('oo')
+})
+const tableClass = computed(() => {
+	for (let param of params.value) {
+		if (param.startsWith("table:")) {
+			let [, w] = param.split(":")
+			return w
 		}
-		return "auto"
-	}),
-	colWidth = computed(() => {
-		for (let param of params.value) {
-			if (param.startsWith("col:")) {
-				let [, w] = param.split(":")
-				return w
-			}
+	}
+	return "auto"
+})
+const colWidth = computed(() => {
+	for (let param of params.value) {
+		if (param.startsWith("col:")) {
+			let [, w] = param.split(":")
+			return w
 		}
-		return "auto"
-	}),
-	rowHeight = computed(() => {
-		for (let param of params.value) {
-			if (param.startsWith("row:")) {
-				let [, h] = param.split(":")
-				return h
-			}
+	}
+	return "auto"
+})
+const rowHeight = computed(() => {
+	for (let param of params.value) {
+		if (param.startsWith("row:")) {
+			let [, h] = param.split(":")
+			return h
 		}
-		return "auto"
-	}),
-	tableX = computed(() => {
-		const availableValues = params.value.filter(param => !param.match(/^[a-z]+:/))
+	}
+	return "auto"
+})
+const tableX = computed(() => {
+	const availableValues = params.value.filter(param => !param.match(/^[a-z]+:/))
 
-		if (availableValues[0].includes(":")) {
-			return parseMinMaxStep(params.value[0])
+	if (availableValues[0].includes(":")) {
+		return parseMinMaxStep(params.value[0])
+	}
+
+	return availableValues.map(x => +x)
+})
+const tableFunctions = computed(() => {
+	// return [
+	// 		{name=string, values=[]},
+	// 		{name=string, values=[]},
+	// ]
+	return code.value.split("\n").map((fx) => {
+		let f = fx.trim()
+		let name
+		let exp
+
+		if (f.includes("=")) {
+			[name, exp] = f.split("=")
+		} else {
+			name = exp = f
 		}
 
-		return availableValues.map(x => +x)
-	}),
-	tableFunctions = computed(() => {
-		// return [
-		// 		{name=string, values=[]},
-		// 		{name=string, values=[]},
-		// ]
-		return code.value.split("\n").map((fx) => {
-			let f = fx.trim(),
-				name,
-				exp
+		let numExp: NumExp | Polynom
+		if (asNumeric.value) {
+			numExp = new NumExp(exp)
+		} else {
+			numExp = new Polynom(exp)
+		}
 
-			if (f.includes("=")) {
-				[name, exp] = f.split("=")
+		let values = []
+		for (let x of tableX.value) {
+			if (numExp instanceof Polynom) {
+				let v: Fraction = (numExp as Polynom).evaluate(+x) as Fraction
+				values.push({
+					x: nbToString(x),
+					fx: v.tex
+				})
 			} else {
-				name = exp = f
-			}
+				const ev: number = (numExp as NumExp).evaluate({x: +x})
+				let v: string
+				if (isNaN(ev)) {
+					v = `\\varnothing`
+				} else if (!Number.isFinite(ev)) {
+					// On recherche juste avant et juste après pour déterminer le signe de l'infini.
+					const evBefore = (numExp as NumExp).evaluate({x: +x - 0.01})
+					const evAfter = (numExp as NumExp).evaluate({x: +x + 0.01})
 
-			let numExp: NumExp | Polynom
-			if (asNumeric.value) {
-				numExp = new NumExp(exp)
-			} else {
-				numExp = new Polynom(exp)
-			}
-
-			let values = []
-			for (let x of tableX.value) {
-				if (numExp instanceof Polynom) {
-					let v: Fraction = (numExp as Polynom).evaluate(+x) as Fraction
-					values.push({
-						x: nbToString(x),
-						fx: v.tex
-					})
-				} else {
-					const ev: number = (numExp as NumExp).evaluate({x: +x})
-					let v: string
-					if (isNaN(ev)) {
-						v = `\\varnothing`
-					} else if (!Number.isFinite(ev)) {
-						// On recherche juste avant et juste après pour déterminer le signe de l'infini.
-						const evBefore = (numExp as NumExp).evaluate({x: +x - 0.01})
-						const evAfter = (numExp as NumExp).evaluate({x: +x + 0.01})
-
-						if (detectInfinite.value) {
-							if (evAfter > 0) {
-								v = evBefore > 0 ? '+\\infty' : '\\pm\\infty'
-							} else {
-								v = evBefore > 0 ? '\\mp\\infty' : '-\\infty'
-							}
+					if (detectInfinite.value) {
+						if (evAfter > 0) {
+							v = evBefore > 0 ? '+\\infty' : '\\pm\\infty'
 						} else {
-							v = '\\varnothing'
+							v = evBefore > 0 ? '\\mp\\infty' : '-\\infty'
 						}
-						// v = detectInfinite.value ? (ev < 0 ? '-\\infty' : '+\\infty') : '\\varnothing'
 					} else {
-						v = ev.toFixed(roundedTo.value)
+						v = '\\varnothing'
 					}
-					values.push({
-						x: nbToString(x),
-						fx: v
-					})
+					// v = detectInfinite.value ? (ev < 0 ? '-\\infty' : '+\\infty') : '\\varnothing'
+				} else {
+					v = ev.toFixed(roundedTo.value)
 				}
+				values.push({
+					x: nbToString(x),
+					fx: v
+				})
 			}
+		}
 
-			return {name, values}
-		})
+		return {name, values}
 	})
+})
 
 function nbToString(value: number, digits?: number, separator = {thousands: '\\ ', digits: '\\ '}): string {
 	// transforme un nombre 12345678.123456 en texte "12 345 678.123 45"

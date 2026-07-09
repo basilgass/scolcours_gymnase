@@ -11,6 +11,7 @@ import {ChapterInterface, FormulaInterface} from "@/types/modelInterfaces.ts"
 import {onMounted} from "vue"
 import ScButton from "@/Components/Ui/Button/scButton.vue"
 import {useFormular} from "@/Composables/useFormular.ts"
+import {useIsAdmin} from "@/Composables/useHelpers.ts"
 
 const props = withDefaults(defineProps<{
 		chapter: ChapterInterface,
@@ -84,7 +85,7 @@ onMounted(() => {
 					item-key="id"
 					v-bind="{
 						animation: 200,
-						disabled: !$page.props.auth.can.admin,
+						disabled: !useIsAdmin(),
 					}"
 					@end="book.updateOrder()"
 				>

@@ -1,28 +1,68 @@
 import AsciiMathParser from "@/asciimath2tex"
+import {resolveLayoutKey} from "@/Composables/keyboardRegistry.ts"
+import {formatFractionShortcut, type KeyboardFormatter} from "@/Composables/keyboardFormatting.ts"
 
 export interface keyboardKey {
 	display: string
 	fn?: (value: string) => string
 	key?: string
-	span?: number
+	span?: number | string // numérique en config (tuple), traduit en classe Tailwind (col-span-N) à l'affichage
 	type: string
 	visible?: boolean
 }
 
 /**
- * Represents a keyboard object type.
- * @typedef {Object} KeyboardObjectType
- * @property {string} name - The name of the keyboard object type.
- * @property {string} grid - The grid information of the keyboard object type.
- * @property {string[]} layout - The layout of the keyboard object type.
- * @property {function} tex - The function that returns a value based on the given string value.
+ * Une entrée de layout peut s'écrire sous trois formes :
+ *  - chaîne `"1"` : touche simple ;
+ *  - tuple `["=", 2]` : touche + largeur (col-span) ;
+ *  - objet `{key, display, type}` : touche personnalisée inline.
+ * Elles sont ramenées à une forme unique par {@link normalizeLayoutKey}.
+ */
+export type LayoutKey = string | [string, number] | { key: string, display: string, type: string }
+
+/** Forme canonique unique d'une entrée de layout, consommée par le composant. */
+export interface NormalizedLayoutKey {
+	key: string
+	span: number
+	inlineKey?: keyboardKey
+}
+
+/**
+ * Convertit n'importe laquelle des trois formes d'écriture d'une entrée de layout
+ * en {@link NormalizedLayoutKey}. C'est l'étape « forme unique » : elle isole
+ * l'interprétation de la forme, pour que le composant n'ait plus à la deviner.
+ */
+export function normalizeLayoutKey(entry: LayoutKey): NormalizedLayoutKey {
+	if (typeof entry === "string") {
+		return {key: entry, span: 0}
+	}
+	if (Array.isArray(entry)) {
+		return {key: entry[0], span: entry[1]}
+	}
+	return {key: Object.hasOwn(entry, "key") ? entry.key : "", span: 0, inlineKey: entry}
+}
+
+/**
+ * Descripteur déclaratif d'un clavier, tel que stocké dans le registre {@link keyboards}.
+ *
+ * @property grid       Classe de grille CSS (ex. `"grid-cols-7"`).
+ * @property keys       Surcharges de touches par code (optionnel).
+ * @property layout     Disposition des touches, chaque entrée étant un {@link LayoutKey}
+ *                      (chaîne, tuple `[key, span]` ou objet inline), normalisé par
+ *                      {@link normalizeLayoutKey}.
+ * @property name       Nom du clavier (optionnel).
+ * @property tex        Traduit la saisie en TeX ; identité si absent.
+ * @property formatters Règles de formatage de la saisie brute appliquées par
+ *                      KeyboardDisplay (ex. raccourci fraction `//`) ; absent = aucune.
  */
 export interface KeyboardObjectType {
 	grid: string
 	keys?: Record<string, keyboardKey>
-	layout: (string | [string, number] | { key: string, display: string, type: string })[]
+	layout: LayoutKey[]
 	name?: string
 	tex?: (value: string) => string // Type of the returned value can be changed according to actual function implementation
+	// Réservé aux claviers où un numérateur composé a du sens (touche /, parenthèses et variable).
+	formatters?: KeyboardFormatter[]
 }
 
 
@@ -33,27 +73,9 @@ export interface KeyboardObjectType {
  * @return {string} The type of keyboard based on the input parameter. Returns the input parameter if no match is found.
  */
 export function keyboardMaps(kbrd: string): string {
-	switch (kbrd) {
-		case "nb":
-			return "number"
-		case "fr":
-		case "frac":
-			return "fraction"
-		case "sol":
-			return "solution"
-		case "scn":
-			return "scientific"
-		case "equ":
-			return "equation"
-		case "fn":
-			return "function"
-		case "log":
-			return "exact"
-		case "exp":
-			return "algebra"
-	}
-
-	return kbrd
+	// Délègue au registre (source unique de vérité). Retourne le token inchangé
+	// si aucun mapping — comportement identique à l'ancien switch.
+	return resolveLayoutKey(kbrd)
 }
 
 /**
@@ -170,6 +192,7 @@ export const keyboards: Record<string, KeyboardObjectType> = {
 			"7", "8", "9", "*", "|", "sqrt", "root(",
 			".", "0", "=", "/", "(", ")", ";"
 		],
+		formatters: [formatFractionShortcut],
 		tex(value) {
 			return asciiToTex(value)
 		}
@@ -197,6 +220,7 @@ export const keyboards: Record<string, KeyboardObjectType> = {
 			"7", "8", "9", "*", "^2", "^",
 			"(", ")", "0", "/", ["=", 2]
 		],
+		formatters: [formatFractionShortcut],
 		tex(value) {
 			return asciiToTex(value)
 		}
@@ -210,6 +234,7 @@ export const keyboards: Record<string, KeyboardObjectType> = {
 			"7", "8", "9", "(", ")", "^3",
 			"", "0", "", "x", "y", "z",
 		],
+		formatters: [formatFractionShortcut],
 		tex(value) {
 			return asciiToTex(value)
 		}
@@ -241,6 +266,19 @@ export const keyboards: Record<string, KeyboardObjectType> = {
 			"4", "5", "6",
 			"7", "8", "9",
 			"-", "0", "/",
+		],
+		tex(value) {
+			return asciiToTex(value)
+		}
+	},
+	'fraction+': {
+		name: "fraction",
+		grid: "grid-cols-3",
+		layout: [
+			"1", "2", "3",
+			"4", "5", "6",
+			"7", "8", "9",
+			"-", "0", "/",
 			["=", 3]],
 		tex(value) {
 			return asciiToTex(value)
@@ -255,6 +293,7 @@ export const keyboards: Record<string, KeyboardObjectType> = {
 			"7", "8", "9", "*", "^2", "^",
 			"(", ")", "0", "/"
 		],
+		formatters: [formatFractionShortcut],
 		tex(value) {
 			return asciiToTex(value)
 		}
@@ -298,6 +337,7 @@ export const keyboards: Record<string, KeyboardObjectType> = {
 			"7", "8", "9", "*", "", "",
 			"(", ")", "0", "/", "^2", "^"
 		],
+		formatters: [formatFractionShortcut],
 		tex: function (value) {
 			return asciiToTex(value)
 		}
@@ -324,6 +364,7 @@ export const keyboards: Record<string, KeyboardObjectType> = {
 			"7", "8", "9", "*", "sqrt", "root(", "|",
 			"0", "=", "/", "(", ")", ["+c", 2]
 		],
+		formatters: [formatFractionShortcut],
 		tex(value) {
 			return asciiToTex(value)
 		}
@@ -337,6 +378,7 @@ export const keyboards: Record<string, KeyboardObjectType> = {
 			"7", "8", "9", "/", "^2", "^",
 			"(", ")", "0", "", "", ""
 		],
+		formatters: [formatFractionShortcut],
 		tex: function (value) {
 			const [Pnum, Pden] = value.split("/")
 			return Pden === undefined
@@ -468,7 +510,8 @@ export const keyboards: Record<string, KeyboardObjectType> = {
 
 function buildCoordinateTex(value: string) {
 	const [...coords] = value.split(";")
-	let lp = "", rp = ""
+	let lp = ""
+	let rp = ""
 
 	if (coords[0].startsWith("(")) {
 		lp = "\\left("
@@ -497,7 +540,8 @@ function buildCoordinateTex(value: string) {
 
 function buildVectorialTex(value: string) {
 	const [...coords] = value.split(";")
-	let lp = "", rp = ""
+	let lp = ""
+	let rp = ""
 
 	if (coords[0].startsWith("(")) {
 		lp = "\\left("

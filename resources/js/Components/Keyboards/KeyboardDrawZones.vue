@@ -22,7 +22,7 @@ const emits = defineEmits<KeyboardEmitsInterface>()
 let pidraw: PiDraw = null
 type FigureType = typeof pidraw.figures[0]
 
-function onChange(value?: { draw: PiDraw, mouse: MouseEvent }): void {
+function onChange(value?: { draw: PiDraw, mouse: MouseEvent | TouchEvent }): void {
 	// pidraw = value.draw
 	const target = value.mouse?.target as SVGElement
 

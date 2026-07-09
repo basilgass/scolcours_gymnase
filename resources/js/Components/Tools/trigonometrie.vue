@@ -106,8 +106,21 @@ interface triangleRawInterface {
 }
 
 const result = computed(() => {
-		try {
-			let triangle = makeTriangle({
+	try {
+		let triangle = makeTriangle({
+			a: A.value !== "" ? +A.value : null,
+			b: B.value !== "" ? +B.value : null,
+			c: C.value !== "" ? +C.value : null,
+			alpha: alpha.value !== "" ? +alpha.value : null,
+			beta: beta.value !== "" ? +beta.value : null,
+			gamma: gamma.value !== "" ? +gamma.value : null,
+			resolvable: null
+		})
+		let triangle2: triangleRawInterface
+
+		if (triangle.hasAlternate) {
+			triangle2 = makeTriangle(
+				{
 					a: A.value !== "" ? +A.value : null,
 					b: B.value !== "" ? +B.value : null,
 					c: C.value !== "" ? +C.value : null,
@@ -115,89 +128,76 @@ const result = computed(() => {
 					beta: beta.value !== "" ? +beta.value : null,
 					gamma: gamma.value !== "" ? +gamma.value : null,
 					resolvable: null
-				}),
-				triangle2: triangleRawInterface
+				},
+				true
+			)
+		}
 
-			if (triangle.hasAlternate) {
-				triangle2 = makeTriangle(
-					{
-						a: A.value !== "" ? +A.value : null,
-						b: B.value !== "" ? +B.value : null,
-						c: C.value !== "" ? +C.value : null,
-						alpha: alpha.value !== "" ? +alpha.value : null,
-						beta: beta.value !== "" ? +beta.value : null,
-						gamma: gamma.value !== "" ? +gamma.value : null,
-						resolvable: null
-					},
-					true
-				)
-			}
-
-			if (triangle.resolvable !== true && triangle2.resolvable !== true) {
-				return {
-					triangle: null,
-					triangle2: null,
-					text: `le triangle n'est pas résolvable. ${triangle.resolvable}`
-				}
-			}
+		if (triangle.resolvable !== true && triangle2.resolvable !== true) {
 			return {
-				triangle: formatTriangle(triangle),
+				triangle: null,
+				triangle2: null,
+				text: `le triangle n'est pas résolvable. ${triangle.resolvable}`
+			}
+		}
+		return {
+			triangle: formatTriangle(triangle),
+			triangle2:
+				triangle.hasAlternate && triangle2.resolvable === true
+					? formatTriangle(triangle2)
+					: null,
+			text: null,
+			raw: {
+				triangle,
 				triangle2:
 					triangle.hasAlternate && triangle2.resolvable === true
-						? formatTriangle(triangle2)
-						: null,
-				text: null,
-				raw: {
-					triangle,
-					triangle2:
-						triangle.hasAlternate && triangle2.resolvable === true
-							? triangle2
-							: null
-				}
-			}
-		} catch (e) {
-			console.error(e)
-			return false
-		}
-	}),
-	triangleDrawCode = computed(() => {
-		if (result.value === false) {
-			return {
-				code: "",
-				parameters: ""
+						? triangle2
+						: null
 			}
 		}
-		return drawTriangle(result.value.raw.triangle)
-	}),
-	triangleAnswerCode = computed<string>(() => {
-		if (result.value === false) {
-			return ""
+	} catch (e) {
+		console.error(e)
+		return false
+	}
+})
+const triangleDrawCode = computed(() => {
+	if (result.value === false) {
+		return {
+			code: "",
+			parameters: ""
 		}
-		return `${result.value.triangle.a},${result.value.triangle.b},${result.value.triangle.c},${result.value.triangle.alpha.slice(0, -1)},${result.value.triangle.beta.slice(0, -1)},${result.value.triangle.gamma.slice(0, -1)},${result.value.triangle.area}`
-	}),
-	triangle2DrawCode = computed(() => {
-		if (result.value === false) {
-			return {
-				code: "",
-				parameters: ""
-			}
+	}
+	return drawTriangle(result.value.raw.triangle)
+})
+const triangleAnswerCode = computed<string>(() => {
+	if (result.value === false) {
+		return ""
+	}
+	return `${result.value.triangle.a},${result.value.triangle.b},${result.value.triangle.c},${result.value.triangle.alpha.slice(0, -1)},${result.value.triangle.beta.slice(0, -1)},${result.value.triangle.gamma.slice(0, -1)},${result.value.triangle.area}`
+})
+const triangle2DrawCode = computed(() => {
+	if (result.value === false) {
+		return {
+			code: "",
+			parameters: ""
 		}
-		return drawTriangle(result.value.raw.triangle2)
-	}),
-	triangle2AnswerCode = computed(() => {
-		if (result.value === false) {
-			return ""
-		}
-		if (result.value.triangle2 === undefined || result.value.triangle2 === null) {
-			return ""
-		}
+	}
+	return drawTriangle(result.value.raw.triangle2)
+})
+const triangle2AnswerCode = computed(() => {
+	if (result.value === false) {
+		return ""
+	}
+	if (result.value.triangle2 === undefined || result.value.triangle2 === null) {
+		return ""
+	}
 
-		if (result.value.triangle2.a === undefined) {
-			return ""
-		}
+	if (result.value.triangle2.a === undefined) {
+		return ""
+	}
 
-		return `${result.value.triangle2.a},${result.value.triangle2.b},${result.value.triangle2.c},${result.value.triangle2.alpha.slice(0, -1)},${result.value.triangle2.beta.slice(0, -1)},${result.value.triangle2.gamma.slice(0, -1)},${result.value.triangle2.area}`
-	})
+	return `${result.value.triangle2.a},${result.value.triangle2.b},${result.value.triangle2.c},${result.value.triangle2.alpha.slice(0, -1)},${result.value.triangle2.beta.slice(0, -1)},${result.value.triangle2.gamma.slice(0, -1)},${result.value.triangle2.area}`
+})
 
 function drawTriangle(value: triangleRawInterface) {
 	if (value === null) {
@@ -207,13 +207,13 @@ function drawTriangle(value: triangleRawInterface) {
 		}
 	}
 
-	const Cx = value.b * Math.cos((value.alpha * Math.PI) / 180),
-		Cy = value.b * Math.sin((value.alpha * Math.PI) / 180),
-		xMin = Math.round(Math.min(Cx, 0)) - 1,
-		xMax = Math.round(Math.max(value.c, Cx)) + 1,
-		yMin = -1,
-		yMax = Math.round(Cy) + 1,
-		scale = 10 / Math.max(xMax - xMin, yMax - yMin)
+	const Cx = value.b * Math.cos((value.alpha * Math.PI) / 180)
+	const Cy = value.b * Math.sin((value.alpha * Math.PI) / 180)
+	const xMin = Math.round(Math.min(Cx, 0)) - 1
+	const xMax = Math.round(Math.max(value.c, Cx)) + 1
+	const yMin = -1
+	const yMax = Math.round(Cy) + 1
+	const scale = 10 / Math.max(xMax - xMin, yMax - yMin)
 
 	return {
 		parameters: `x=-1:${xMax * scale},y=-1:${Math.round(yMax * scale)}`,

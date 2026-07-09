@@ -6,6 +6,7 @@ import FilteredList from "@/Components/Ui/FilteredList.vue"
 import {ref} from "vue"
 import {useStoreScore} from "@/stores/useStoreScore.ts"
 import EvaluationCard from "@/Pages/Evaluations/EvaluationCard.vue"
+import {ScoreQuestionDataInterface} from "@/types/scoreInterfaces.ts"
 
 defineOptions({layout: LayoutMain})
 
@@ -24,7 +25,7 @@ const questionIds: number[] = props.evaluations
 	.flat()
 
 // Preload each question score
-scoreStore.getScores("Question", questionIds)
+scoreStore.getScores<ScoreQuestionDataInterface>("Question", questionIds)
 	.finally(() => setTimeout(() => loading.value = false, 400))
 
 </script>

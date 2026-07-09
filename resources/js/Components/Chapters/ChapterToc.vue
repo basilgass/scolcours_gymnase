@@ -11,6 +11,7 @@ import {computed, ref} from "vue"
 import ScButton from "@/Components/Ui/Button/scButton.vue"
 import PostTypeIcon from "@/Components/Posts/PostTypeIcon.vue"
 import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
+import {useIsAdmin} from "@/Composables/useHelpers.ts"
 
 const props = defineProps<{
 	chapter: ChapterShowInterface,      // id, slug, posts
@@ -18,6 +19,8 @@ const props = defineProps<{
 	active?: number                 // Highlight the currently selected post.
 	vertical?: boolean
 }>()
+
+const isAdmin = computed(() => useIsAdmin())
 
 const flash = useStoreFlashMessage()
 const editMode = useStoreEditMode()
@@ -104,7 +107,7 @@ const addPost = function () {
 // null: pas de questions
 // number: pourcentage des questions répondues (0 à 1)
 const questionStatus = computed<Record<number, number | null>>(() => {
-	const result = {}
+	const result: Record<number, number> = {}
 	props.posts.forEach((p) => {
 		result[p.id] =
 			p.questionsInfo.count > 0
@@ -177,7 +180,7 @@ const availablePostTypes = computed(() => {
 			</div>
 
 			<div
-				v-if="$page.props.auth.can.admin"
+				v-if="isAdmin"
 				v-show="editMode.enable"
 				class="flex gap-3 items-baseline"
 			>
@@ -207,7 +210,7 @@ const availablePostTypes = computed(() => {
 			item-key="id"
 			v-bind="{
 				animation: 200,
-				disabled: !$page.props.auth.can.admin && moveMode,
+				disabled: !isAdmin && moveMode,
 			}"
 			@end="updatePostsOrder"
 		>
@@ -216,11 +219,11 @@ const availablePostTypes = computed(() => {
 					class="flex gap-3"
 					:class="{
 						'opacity-30': !element.active,
-						'text-red-500' : element.revise && $page.props.auth.can.admin
+						'text-red-500' : element.revise && isAdmin
 					}"
 				>
 					<button
-						v-if="$page.props.auth.can.admin && moveMode"
+						v-if="isAdmin && moveMode"
 						class="draggable-handle text-xs px-1"
 					>
 						<i class="bi bi-arrows-move" />

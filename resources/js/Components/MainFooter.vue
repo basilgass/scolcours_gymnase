@@ -8,6 +8,7 @@ Pied de page pour les pages principales.
 import LogoutButton from "@/Components/Ui/LogoutButton.vue"
 import ThemeLinks from "@/Components/Ui/ThemeLinks.vue"
 import DarkModeSwitch from "@/Components/Ui/DarkModeSwitch.vue"
+import {useIsAdmin} from "@/Composables/useHelpers.ts"
 
 // const langues = {
 // 	italiano: 'it',
@@ -117,7 +118,7 @@ import DarkModeSwitch from "@/Components/Ui/DarkModeSwitch.vue"
 					</InertiaLink>
 
 					<InertiaLink
-						v-if="$page.props.auth.can.admin"
+						v-if="useIsAdmin()"
 						:href="route('admin.index')"
 						class="block transition duration-300 hover:translate-x-2"
 					>

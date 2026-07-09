@@ -29,6 +29,8 @@ export default typescriptEslint.config(
 			],
 			"no-undef": "off",
 			"prefer-const": "off",
+			"func-style": ["error", "declaration", {"allowArrowFunctions": true}],
+			"one-var": ["error", "never"],
 			"vue/html-indent": [
 				"error",
 				"tab"

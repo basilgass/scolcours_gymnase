@@ -8,13 +8,21 @@ import type {
 	KeyboardInputInterface,
 	KeyboardPropsInterface
 } from "@/types/keyboardInterfaces.ts"
-import {computed, onMounted, ref, useTemplateRef} from "vue"
-import KeyboardDisplay from "@/Components/Keyboards/KeyboardDisplay.vue"
-import {Equation, Fraction, PolyFactor, Polynom} from "pimath"
-import KeyboadResolutionTrinome from "@/Components/Keyboards/KeayboardHelpers/KeyboadResolutionTrinome.vue"
-import KeyboadResolutionMiseEvidence from "@/Components/Keyboards/KeayboardHelpers/KeyboadResolutionMiseEvidence.vue"
-import Accordion from "@/Components/Ui/Accordion.vue"
-import AccordionItem from "@/Components/Ui/AccordionItem.vue"
+import {type Component, computed, ref, shallowRef, triggerRef} from "vue"
+import {Equation} from "pimath"
+import ScButton from "@/Components/Ui/Button/scButton.vue"
+import {
+	equationLineType,
+	KeyboardResolutionEvent,
+	operationIdType
+} from "@/Components/Keyboards/KeyboardHelpers/KeyboardResolutionHelpers/KeyboardResolutionHelpers.ts"
+import KeyboardResolutionEquivalence
+	from "@/Components/Keyboards/KeyboardHelpers/KeyboardResolutionHelpers/KeyboardResolutionEquivalence.vue"
+import KeyboardResolutionFactorisation
+	from "@/Components/Keyboards/KeyboardHelpers/KeyboardResolutionHelpers/KeyboardResolutionFactorisation.vue"
+import KeyboardResolutionSolution
+	from "@/Components/Keyboards/KeyboardHelpers/KeyboardResolutionHelpers/KeyboardResolutionSolution.vue"
+import {asciiToTex} from "@/Composables/keyboardConfig.ts"
 
 
 // props.keyboard
@@ -25,32 +33,32 @@ const emits = defineEmits<KeyboardEmitsInterface>()
 
 // emit change event
 function onChange(): void {
+	// Augmentation de l'opération id, pour la réactivité
+	triggerRef(equationLines)
+
 	setInput().then((x) => emits("change", x))
 }
 
 async function setInput(value?: string): Promise<KeyboardInputInterface> {
-	if (value === "") {
-		// Reset des réponses.
-
-	} else if (value !== undefined) {
-
+	if (value !== undefined) {
+		return {input: value, tex: asciiToTex(value), raw: ""}
 	}
 
-	equationID.value = resolutionOutput.length - 1
-	const lastLine = resolutionOutput[equationID.value]
-
-	canFactorize.value = lastLine.equ.right.isZero()
-	factors.value = lastLine.polyfactor?.factors.map(x => x.tex) ?? [lastLine.equ.left.tex]
-	return {
-		input: lastLine.equ.right.display ?? '',
-		tex: TeXoutput(),
-		raw: ""
-	}
+	return solution.value?.input
+		? solution.value
+		: {input: "", tex: "\\ldots", raw: ""}
 }
 
 defineExpose<KeyboardExposeInterface>({
 	reset: () => {
-		// reset function
+		equationLines.value = [{
+			equation: new Equation(props.keyboard.values[0]),
+			polyfactor: null,
+			operation: null
+		}]
+
+		solution.value = null
+		nextLine.value = null
 	},
 	setInput,
 	parameters: ""
@@ -59,39 +67,71 @@ defineExpose<KeyboardExposeInterface>({
 /**
  * Keyboards custom configuration
  */
-
-const systemMode = computed<boolean>(() => {
-	return props.keyboard.values.length > 1
-})
-
 const numericOutput = computed<boolean>(() => {
 	return props.keyboard.parameters.includes('decimal')
 })
 
-interface IRESOLLINE {
-	equ: Equation,
-	polyfactor: PolyFactor,
-	value: string
+// Nouvelle version
+const kbrds: Record<operationIdType, Component> = {
+	'equivalence': KeyboardResolutionEquivalence,
+	'factorisation': KeyboardResolutionFactorisation,
+	'solution': KeyboardResolutionSolution
 }
 
-const equationID = ref<number>(null)
-const resolutionOutput: IRESOLLINE[] = []
+const equationLines = shallowRef<equationLineType[]>([
+	{
+		equation: new Equation(props.keyboard.values[0]),
+		polyfactor: null,
+		operation: null
+	}
+])
+const lastLine = computed(() => equationLines.value?.[equationLines.value.length - 1] ?? null)
+const nextLine = shallowRef<equationLineType | null>(null)
 
-function TeXoutput(): string {
+const solution = ref<KeyboardInputInterface | null>(null)
+
+// display UI
+const showAllLines = ref(false)
+const canDelete = computed(() => {
+	return equationLines.value.length > 1
+})
+
+const availableOperations: operationIdType[] = ['equivalence', 'factorisation', 'solution']
+const selectedOperation = ref<operationIdType>('factorisation')
+
+const canFactorize = computed(() => {
+	return equationLines.value[equationLines.value.length - 1]
+		.equation.right
+		.isZero()
+})
+const canGiveSolution = computed(() => {
+	// Pas de données
+	if (equationLines.value.length === 0) return false
+
+	// Equation du premier degré, de la forme x=a
+	if (equationLines.value[0].equation.left.display === 'x' && equationLines.value[0].equation.right.degree().isZero()) return true
+
+	return equationLines.value.length > 1 // && availableFactors.value.length === 0
+})
+
+// display TeX
+const displayTex = computed(() => {
 	const lines: string[] = []
-	resolutionOutput.forEach(line => {
-		// S'il y a plusieurs éléments, c'est que tout est à gauche, à droite, c'est zéro
+
+	equationLines.value.forEach((line) => {
 		const equ = line.polyfactor
 			? `${line.polyfactor.asRoot.tex}&=0`
-			: `${line.equ.left.tex}&=${line.equ.right.tex}`
+			: `${line.equation.left.tex}&=${line.equation.right.tex}`
 
-		const op = formatValue(line.value)
+		const op = formatValue(line.operation)
 
 		lines.push(`${equ}\\quad&${op}`)
 	})
 
-	return `\\def\\arraystretch{1.5em}\\begin{darray}{rl|l}${lines.join('\\\\')}\\end{darray}`
-}
+	return showAllLines.value
+		? `\\def\\arraystretch{1.5em}\\begin{darray}{rl|l}${lines.join('\\\\')}\\end{darray}`
+		: `\\def\\arraystretch{1.5em}\\begin{darray}{rl|l}${lines[lines.length - 1]}\\end{darray}`
+})
 
 function formatValue(value: string | null): string {
 	if (value === null || value === "") return ' \\dots '
@@ -112,232 +152,142 @@ function formatValue(value: string | null): string {
 }
 
 
-const keyboardRef = useTemplateRef<InstanceType<typeof KeyboardDisplay>>('keyboard')
-
-function onKeyboardChange(event: KeyboardInputInterface): void {
-	const line = resolutionOutput.pop()
-	line.value = event.input
-	resolutionOutput.push(line)
-
-	onChange()
-}
-
+// Inversion de l'équation gauche - droite
 function revertEquation(): void {
-	const line = resolutionOutput.pop()
-	line.equ = new Equation(line.equ.right.clone(), line.equ.left.clone())
-	resolutionOutput.push(line)
+	const line = equationLines.value.pop()
+	if (!line) return
+
+	line.equation = new Equation(line.equation.right.clone(), line.equation.left.clone())
+	equationLines.value.push(line)
 
 	onChange()
 }
 
-function applyOperation() {
-	if (resolutionOutput.length === 0) {
-		resolutionOutput.push({
-			equ: new Equation(props.keyboard.values[0]),
-			polyfactor: null,
-			value: null
-		})
-		resolutionOutput.push({
-			equ: new Equation('4x^2-20x+24=0'),
-			polyfactor: null,
-			value: null
-		})
+const canApply = ref<boolean>(false)
 
-		onChange()
+function apply(): void {
+	if (nextLine.value === null) return
 
-		return
+	// création de la ligne suivante.
+	equationLines.value.push(nextLine.value)
+
+	onChange()
+}
+
+function onKeyboardChange(line: KeyboardResolutionEvent): void {
+	// modification de la ligne acutelle (affichage de l'opération
+	if (line.method === 'equivalence') {
+		equationLines.value[equationLines.value.length - 1].operation = line.value
 	}
 
-	const {equ: refEqu, value} = resolutionOutput[equationID.value]
-
-	if (!value) {
-		return
+	// préparation de la ligne suivante...
+	canApply.value = line.success
+	nextLine.value = {
+		operation: null,
+		polyfactor: line.polyfactor?.clone() ?? null,
+		equation: line.equation.clone()
 	}
 
-	const operation = value[0]
+	onChange()
+}
 
-	if (!['*', '/', '+', '-'].includes(operation)) {
-		return
-	}
+function onSolutionChange(ev: KeyboardInputInterface) {
+	solution.value = ev
 
-	const equ = refEqu.clone()
-	if (operation === '+' || operation === '-') {
-		const m = new Polynom(value)
-		equ.add(m)
-	}
-	if (operation === '*') {
-		const f = new Fraction(value.substring(1).replaceAll(/[()]/g, ''))
-		equ.multiply(f)
-	}
-	if (operation === '/') {
-		const f = new Fraction(value.substring(1).replaceAll(/[()]/g, ''))
-		equ.divide(f)
-	}
-
-	resolutionOutput.push({
-		equ,
-		value: null,
-		polyfactor: null
-	})
-
-	keyboardRef.value.resetKeyStrokes()
 	onChange()
 }
 
 function removeLastOperation() {
-	if (resolutionOutput.length === 1) return
+	if (equationLines.value.length === 1) return
 
-	keyboardRef.value.resetKeyStrokes()
-	resolutionOutput.pop()
-	resolutionOutput[resolutionOutput.length - 1].value = null
+	equationLines.value.pop()
+	equationLines.value[equationLines.value.length - 1].operation = null
 
 	onChange()
 }
 
-const canFactorize = ref(false)
-const factorize = ref(false)
-const factors = ref<string[]>([])
-const factorId = ref<number>(null)
-const factorPolynom = computed(() => {
-	if (factorId.value === null) return null
-
-	if (!resolutionOutput[equationID.value].polyfactor) return resolutionOutput[equationID.value].equ.left
-
-	return resolutionOutput[equationID.value].polyfactor.factors[factorId.value].polynom
-})
-
-function toggleFactorization() {
-	const {polyfactor} = resolutionOutput[equationID.value]
-
-	if (polyfactor) {
-		factorize.value = true
-		return
-	}
-
-	factorize.value = !factorize.value
-}
-
-function applyFactorization(polynoms: Polynom[]) {
-	const {equ, polyfactor} = resolutionOutput[equationID.value]
-
-	const updatedFactor = polyfactor?.factors[factorId.value].clone() ?? null
-
-	resolutionOutput.push({
-		equ: equ.clone(),
-		value: null,
-		polyfactor: polyfactor?.clone() ?? new PolyFactor()
-	})
-
-
-	equationID.value++
-	resolutionOutput[equationID.value].polyfactor
-		.multiply(...polynoms.map(x => new PolyFactor(x)))
-
-	if (updatedFactor) {
-		resolutionOutput[equationID.value].polyfactor
-			.divide(new PolyFactor(updatedFactor))
-			.reduce()
-	}
-
-	factorId.value = null
-	onChange()
-}
-
-onMounted(() => {
-	applyOperation()
-})
 </script>
 
 <template>
 	<div class="space-y-3">
-		<div class="flex gap-3 items-baseline">
-			<button
-				class="keyboard-key flex-1"
-				@click="applyOperation"
+		<!-- output TeX -->
+		<div>
+			<div v-katex.boxed.nomargin="displayTex" />
+			<div class="flex justify-between">
+				<sc-button
+					ghost
+					xs
+					@click="showAllLines=!showAllLines"
+				>
+					<i class="bi bi-eye" />{{ showAllLines ? 'toutes les lignes' : 'dernière ligne' }}
+				</sc-button>
+
+				<sc-button
+					xs
+					ghost
+					type="action"
+					@click="revertEquation"
+				>
+					<i class="bi bi-arrows-expand-vertical" />
+				</sc-button>
+
+				<sc-button
+					type="delete"
+					ghost
+					xs
+					class="transition-opacity"
+					:class="canDelete ? 'opacity-100' : 'opacity-30'"
+					:disabled="!canDelete"
+					@click="removeLastOperation"
+				>
+					<i class="bi bi-trash" /> supprimer
+				</sc-button>
+			</div>
+		</div>
+		<!-- fin de output TeX -->
+
+		<!-- operations possibles -->
+		<div
+			v-if="availableOperations.length"
+			class="flex gap-3 flex-wrap"
+		>
+			<sc-button
+				v-for="item in availableOperations"
+				:key="item"
+				type="action"
+				:outline="selectedOperation!==item"
+				xs
+				:title="item"
+				@click="selectedOperation = item"
 			>
-				<i class="bi bi-plus-circle mr-2" />appliquer
-			</button>
-			<button
-				class="keyboard-key bg-red-300"
-				@click="removeLastOperation"
-			>
-				<i class="bi bi-trash" />
-			</button>
+				{{ item }}
+			</sc-button>
 		</div>
 
-		<button
-			class="keyboard-key w-full"
-			@click="revertEquation"
-		>
-			<i class="bi bi-arrows-expand-vertical" />
-		</button>
-
-		<button
-			v-show="canFactorize"
-			class="keyboard-key w-full"
-			:class="factorize ? 'btn-active':''"
-			@click="toggleFactorization"
-		>
-			factoriser
-		</button>
-
-		<KeyboardDisplay
-			v-show="!factorize"
-			ref="keyboard"
-			keyboard="equation"
-			back
-			reset
-			@change="onKeyboardChange"
-		/>
-		<div v-if="factorize">
-			<div class="flex gap-3 flex-wrap">
-				<div
-					v-for="(factor, index) in factors"
-					:key="`factor-${index}`"
-					v-katex.nomargin="factor"
-					:class="[
-						'keyboard-key',
-						factorId===index ? 'btn-active' : ''
-					]"
-					@click="factorId = index"
-				/>
-			</div>
-
-			<accordion
-				v-if="factorPolynom"
+		<!-- appliquer les opérations d'équivalence -->
+		<div class="flex gap-3 items-baseline">
+			<sc-button
+				type="action"
+				:outline="!canApply"
+				sm
+				class="flex-1"
+				:disabled="!canApply"
+				@click="apply"
 			>
-				<accordion-item :id="1">
-					<template #title>
-						mise en évidence
-					</template>
+				<i class="bi bi-plus-circle mr-2" />appliquer
+			</sc-button>
+		</div>
 
-					<keyboad-resolution-mise-evidence
-						:polynom="factorPolynom"
-						@validate="applyFactorization"
-					/>
-				</accordion-item>
-
-
-				<accordion-item :id="2">
-					<template #title>
-						produit remarquable
-					</template>
-				</accordion-item>
-				<accordion-item :id="3">
-					<template #title>
-						décomposition du trinôme
-					</template>
-					<keyboad-resolution-trinome
-						:polynom="factorPolynom"
-						@validate="applyFactorization"
-					/>
-				</accordion-item>
-				<accordion-item :id="4">
-					<template #title>
-						formule du discriminant
-					</template>
-				</accordion-item>
-			</accordion>
+		<!-- le clavier en fonction de l'opération -->
+		<div
+			v-if="lastLine"
+		>
+			<component
+				:is="kbrds[selectedOperation]"
+				:equation-line="lastLine"
+				@update="onKeyboardChange"
+				@update-solution="onSolutionChange"
+			/>
 		</div>
 	</div>
 </template>

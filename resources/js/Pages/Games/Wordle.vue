@@ -106,10 +106,13 @@ async function startGame() {
 	// target.value = _.sample(availableWords.value)
 
 	// Reset guesses
-	guesses.value = Array.from({length: GUESSES_LIMIT.value}, () => ({
-		word: " ".repeat(WORD_LENGTH.value),
-		lettersClass: []
-	}))
+	guesses.value = Array.from({length: GUESSES_LIMIT.value},
+		() => (
+			{
+				word: " ".repeat(WORD_LENGTH.value),
+				lettersClass: [] as string[]
+			}
+		))
 	guessId.value = 0
 
 	letterId.value = 0
@@ -312,8 +315,8 @@ onMounted(() => {
 			</h2>
 			<div class="grid grid-cols-3 gap-5">
 				<FormSelect
-					label="langue"
 					v-model="WORD_LANGUAGE"
+					label="langue"
 					:choices="{fr: 'français'}"
 				/>
 				<FormInput
@@ -329,9 +332,9 @@ onMounted(() => {
 			</div>
 			<div class="text-center">
 				<sc-button
-					@click="startGame"
 					xl
 					type="primary"
+					@click="startGame"
 				>
 					commencer
 				</sc-button>

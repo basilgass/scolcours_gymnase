@@ -1,15 +1,18 @@
 import {getModule, MODULE_TYPES} from "@/scolcours.js"
 import {ref, unref} from "vue"
 import {keyboardKeys, keyboardMaps, KeyboardObjectType, keyboards} from "@/Composables/keyboardConfig.ts"
+import {resolveComponentName} from "@/Composables/keyboardRegistry.ts"
 import {questionValidatorInterface} from "@/Components/Questions/QuestionInterface.ts"
 import {PiChecker} from "@/Checkers"
 import {KeyboardInputInterface} from "@/types/keyboardInterfaces.ts"
 
 /**
- * Get the keyboard name for a given component value.
+ * Get the keyboard component name for a given code value.
  *
- * @param {string} value - The component value.
- * @return {string} The keyboard name for the component value.
+ * Délègue au registre (source unique de vérité). Défaut : "Basic".
+ *
+ * @param {string} value - The code value.
+ * @return {string} The component base name.
  *
  * @example
  * getComponentKeyboardName("tos"); // returns "TableOfSigns"
@@ -17,37 +20,7 @@ import {KeyboardInputInterface} from "@/types/keyboardInterfaces.ts"
  * getComponentKeyboardName("abc"); // returns "Basic"
  */
 function getComponentKeyboardName(value: string): string {
-	switch (value.toLowerCase()) {
-		case "tos":
-		case "tableofsigns":
-			return "TableOfSigns"
-		case "study":
-			return "Study"
-		case "order":
-			return "Order"
-		case "qcm":
-			return "Qcm"
-		case "sentence":
-		case "phrase":
-		case "words":
-		case "mots":
-			return "Sentence"
-		case "input":
-			return "Input"
-		case "type":
-			return "Type"
-		case "matrix":
-			return "Matrix"
-		case "draw":
-			return "Draw"
-		case "zones":
-			return "DrawZones"
-		case "resol":
-		case "resolution":
-			return "Resolution"
-		default:
-			return "Basic"
-	}
+	return resolveComponentName(value)
 }
 
 function getComponent(kbrd: string) {
@@ -70,9 +43,9 @@ export function getOneKeyboard(kbrd: string): Partial<questionValidatorInterface
 	// output values, with defaults
 	let config: KeyboardObjectType
 
-	const parameters: string[] = [],
-		values: string[] = [],
-		checkerOverride: Record<string, string> = {}
+	const parameters: string[] = []
+	const values: string[] = []
+	const checkerOverride: Record<string, string> = {}
 
 	// Split as each lines.
 	const kbrdValues = kbrd.split("\n")

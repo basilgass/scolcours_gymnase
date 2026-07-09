@@ -1,67 +1,7 @@
 import type {CheckerAbstract} from "./CheckerAbstract"
-import {checkerNameToEnum, type CheckerResult, CHECKERS} from "./checker.config"
-import {
-	CoordChecker,
-	EquationChecker,
-	ExactChecker,
-	ExpChecker,
-	FractionChecker,
-	FunctionChecker,
-	InputChecker,
-	LogChecker,
-	NumberChecker,
-	PolynomChecker,
-	PrimitiveChecker,
-	RationalChecker,
-	ScientificChecker,
-	SolutionChecker,
-	StringChecker,
-	VectorChecker
-} from "./Basic"
-import {MatrixChecker, OrderChecker, QcmChecker, StudyChecker, TableofsignChecker, TypeChecker} from "./Custom"
-import {TrigoChecker} from "@/Checkers/Basic/TrigoChecker.ts"
-import {DrawChecker} from "@/Checkers/Custom/DrawChecker.ts"
-import {ZonesChecker} from "@/Checkers/Custom/ZonesChecker.ts"
-import {ModuloChecker} from "@/Checkers/Basic/ModuloChecker.ts"
-import {AlgebraChecker} from "@/Checkers/Basic/AlgebraChecker.ts"
-
-type CheckerClass = (new (...args: any[]) => CheckerAbstract)
-
-export function checkersList(): Record<CHECKERS, CheckerClass> {
-	let list: Partial<Record<CHECKERS, CheckerClass>> = {}
-
-	// list[CHECKERS.CARTESIAN] = CartesianChecker
-	list[CHECKERS.COORDINATES] = CoordChecker
-	list[CHECKERS.EQUATION] = EquationChecker
-	list[CHECKERS.EXACT] = ExactChecker
-	list[CHECKERS.EXPONENTIAL] = ExpChecker
-	list[CHECKERS.FRACTION] = FractionChecker
-	list[CHECKERS.FUNCTION] = FunctionChecker
-	list[CHECKERS.INPUT] = InputChecker
-	list[CHECKERS.LOGARITHM] = LogChecker
-	list[CHECKERS.MODULO] = ModuloChecker
-	list[CHECKERS.NUMBER] = NumberChecker
-	list[CHECKERS.POLYNOMIAL] = PolynomChecker
-	list[CHECKERS.PRIMITIVE] = PrimitiveChecker
-	list[CHECKERS.RATIONAL] = RationalChecker
-	list[CHECKERS.ALGEBRA] = AlgebraChecker
-	list[CHECKERS.SCIENTIFIC] = ScientificChecker
-	list[CHECKERS.SOLUTION] = SolutionChecker
-	list[CHECKERS.STRING] = StringChecker
-	list[CHECKERS.TRIGO] = TrigoChecker
-	list[CHECKERS.VECTOR] = VectorChecker
-
-	list[CHECKERS.ORDER] = OrderChecker
-	list[CHECKERS.QCM] = QcmChecker
-	list[CHECKERS.STUDY] = StudyChecker
-	list[CHECKERS.TABLE_OF_SIGNS] = TableofsignChecker
-	list[CHECKERS.TYPE] = TypeChecker
-	list[CHECKERS.MATRIX] = MatrixChecker
-	list[CHECKERS.DRAW] = DrawChecker
-	list[CHECKERS.ZONES] = ZonesChecker
-
-	return list as Record<CHECKERS, CheckerClass>
-}
+import {type CheckerResult, CHECKERS} from "./checker.config"
+import {checkerNameToEnum} from "@/Composables/keyboardRegistry.ts"
+import {getCheckerClass} from "./checkerRegistry"
 
 export class PiChecker {
 	#checker: CheckerAbstract
@@ -118,8 +58,7 @@ export class PiChecker {
 	}
 
 	#loadChecker(checker: CHECKERS): (new (...args: any[]) => CheckerAbstract) | null {
-		const list = checkersList()
-		return list[checker] ?? null
+		return getCheckerClass(checker)
 	}
 
 	#loadCheckerTo(config: string): CheckerAbstract {

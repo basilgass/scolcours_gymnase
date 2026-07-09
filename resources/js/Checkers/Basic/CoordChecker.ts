@@ -1,4 +1,5 @@
-import {CheckerAbstract, CheckerResult, CHECKERS, ExactChecker, makeCheckerResult} from "@/Checkers"
+import {CheckerAbstract, CheckerResult, CHECKERS, makeCheckerResult} from "@/Checkers"
+import {ExactChecker} from "@/Checkers/Basic/ExactChecker"
 import {NumberChecker} from "@/Checkers/Basic/NumberChecker"
 import {FractionChecker} from "@/Checkers/Basic/FractionChecker"
 import {checkParentheses, parseCoordinates} from "@/Checkers/checkerHelperFunctions.ts"

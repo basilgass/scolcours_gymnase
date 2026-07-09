@@ -1,12 +1,12 @@
 <script setup lang="ts">
 
-import { ref } from "vue"
+import {ref} from "vue"
 import PiProbabilityTree from "@/Components/Pi/PiProbabilityTree.vue"
 import FormTextarea from "@/Components/Form/FormTextarea.vue"
 import FormInput from "@/Components/Form/FormInput.vue"
 
-const treeData = ref("A,3,P,5,3"),
-	treeParams = ref("")
+const treeData = ref("A,3,P,5,3")
+const treeParams = ref("")
 
 </script>
 <template>

@@ -21,11 +21,11 @@ useIntersectionObserver(theoremsList, ([{isIntersecting}]) => {
 	}
 })
 
-const theTheorems = ref([]),
-	theSlug = ref(props.chapterSlug),
-	loadingState = ref(true),
-	theTheoremsErrors = ref(""),
-	showGroup = ref("")
+const theTheorems = ref([])
+const theSlug = ref(props.chapterSlug)
+const loadingState = ref(true)
+const theTheoremsErrors = ref("")
+const showGroup = ref("")
 // showTheorems = ref(true),
 // showProperties = ref(true),
 // showDefinitions = ref(true)

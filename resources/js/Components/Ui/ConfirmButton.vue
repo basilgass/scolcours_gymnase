@@ -8,17 +8,17 @@ const props = defineProps({
 })
 const emits = defineEmits(["confirm"])
 
-const confirmClick = ref(false),
-	btnClick = function () {
-		if (!confirmClick.value) {
-			confirmClick.value = true
-			setTimeout(() => {
-				confirmClick.value = false
-			}, 2000)
-		} else {
-			emits("confirm")
-		}
+const confirmClick = ref(false)
+const btnClick = function () {
+	if (!confirmClick.value) {
+		confirmClick.value = true
+		setTimeout(() => {
+			confirmClick.value = false
+		}, 2000)
+	} else {
+		emits("confirm")
 	}
+}
 </script>
 
 <template>

@@ -1,0 +1,199 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`KeyboardDisplay — caractérisation du rendu/sortie > cas // (algebra) : 1//2 → (1)/2 1`] = `
+[
+  {
+    "event": "change",
+    "payload": {
+      "input": "1",
+      "raw": "",
+      "tex": "1",
+    },
+  },
+  {
+    "event": "change",
+    "payload": {
+      "input": "1/",
+      "raw": "",
+      "tex": "\\frac{1}{}",
+    },
+  },
+  {
+    "event": "change",
+    "payload": {
+      "input": "(1)/...",
+      "raw": "",
+      "tex": "\\frac{1}{\\ldots}",
+    },
+  },
+  {
+    "event": "change",
+    "payload": {
+      "input": "(1)/2",
+      "raw": "",
+      "tex": "\\frac{1}{2}",
+    },
+  },
+]
+`;
+
+exports[`KeyboardDisplay — caractérisation du rendu/sortie > cas // avec dénominateur vide : 1// → (1)/... 1`] = `
+[
+  {
+    "event": "change",
+    "payload": {
+      "input": "1",
+      "raw": "",
+      "tex": "1",
+    },
+  },
+  {
+    "event": "change",
+    "payload": {
+      "input": "1/",
+      "raw": "",
+      "tex": "\\frac{1}{}",
+    },
+  },
+  {
+    "event": "change",
+    "payload": {
+      "input": "(1)/...",
+      "raw": "",
+      "tex": "\\frac{1}{\\ldots}",
+    },
+  },
+]
+`;
+
+exports[`KeyboardDisplay — caractérisation du rendu/sortie > commande back : émet DEUX change + un clear 1`] = `
+[
+  {
+    "event": "change",
+    "payload": {
+      "input": "1",
+      "raw": "",
+      "tex": "1",
+    },
+  },
+  {
+    "event": "change",
+    "payload": {
+      "input": "12",
+      "raw": "",
+      "tex": "12",
+    },
+  },
+  {
+    "event": "change",
+    "payload": {
+      "input": "1",
+      "raw": "",
+      "tex": "1",
+    },
+  },
+  {
+    "event": "change",
+    "payload": {
+      "input": "1",
+      "raw": "",
+      "tex": "1",
+    },
+  },
+  {
+    "event": "clear",
+    "payload": "",
+  },
+]
+`;
+
+exports[`KeyboardDisplay — caractérisation du rendu/sortie > commande next : émet next seul, aucun change 1`] = `
+[
+  {
+    "event": "next",
+  },
+]
+`;
+
+exports[`KeyboardDisplay — caractérisation du rendu/sortie > commande reset : change{vide} + clear 1`] = `
+[
+  {
+    "event": "change",
+    "payload": {
+      "input": "1",
+      "raw": "",
+      "tex": "1",
+    },
+  },
+  {
+    "event": "change",
+    "payload": {
+      "input": "12",
+      "raw": "",
+      "tex": "12",
+    },
+  },
+  {
+    "event": "change",
+    "payload": {
+      "input": "",
+      "raw": "",
+      "tex": "",
+    },
+  },
+  {
+    "event": "clear",
+    "payload": "",
+  },
+]
+`;
+
+exports[`KeyboardDisplay — caractérisation du rendu/sortie > extraLetters : k puis #pi (préfixe # retiré → pi) 1`] = `
+[
+  {
+    "event": "change",
+    "payload": {
+      "input": "k",
+      "raw": "",
+      "tex": "k",
+    },
+  },
+  {
+    "event": "change",
+    "payload": {
+      "input": "kpi",
+      "raw": "",
+      "tex": "k \\pi",
+    },
+  },
+]
+`;
+
+exports[`KeyboardDisplay — caractérisation du rendu/sortie > saisie simple : 1 + 2 sur algebra 1`] = `
+[
+  {
+    "event": "change",
+    "payload": {
+      "input": "1",
+      "raw": "",
+      "tex": "1",
+    },
+  },
+  {
+    "event": "change",
+    "payload": {
+      "input": "1+",
+      "raw": "",
+      "tex": "1 +",
+    },
+  },
+  {
+    "event": "change",
+    "payload": {
+      "input": "1+2",
+      "raw": "",
+      "tex": "1 + 2",
+    },
+  },
+]
+`;

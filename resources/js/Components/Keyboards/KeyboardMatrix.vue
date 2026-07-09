@@ -50,7 +50,8 @@ async function setInput(value?: string): Promise<KeyboardInputInterface> {
 
 		values.value = Array.from({length: rows}, () => Array.from({length: columns}, () => ""))
 
-		let row = 0, column = 0
+		let row = 0
+		let column = 0
 		v.split(',').forEach((a) => {
 			values.value[row][column] = a
 			column++
@@ -274,8 +275,8 @@ const matrixDimKeyboard: KeyboardObjectType = {
 	<div class="flex flex-col gap-3 items-center">
 		<div v-if="!hasFixedDimension">
 			Dimension de la matrice: <span
-			v-katex.inline="`${ dimension.rows ?? 'm' } \\times ${dimension.columns ?? 'n'}`"
-		/>
+				v-katex.inline="`${ dimension.rows ?? 'm' } \\times ${dimension.columns ?? 'n'}`"
+			/>
 		</div>
 		<sc-button
 			v-if="!hasFixedDimension"

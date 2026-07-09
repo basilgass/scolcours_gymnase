@@ -14,6 +14,7 @@ import LessonTypeIcon from "@/Components/Courses/LessonTypeIcon.vue"
 import ScButton from "@/Components/Ui/Button/scButton.vue"
 import {useStoreScore} from "@/stores/useStoreScore.ts"
 import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
+import {ScoreLessonDataInterface} from "@/types/scoreInterfaces.ts"
 
 const props = defineProps<{
 	course: CourseInterface
@@ -77,7 +78,7 @@ const isDone = computed(() => {
 
 onMounted(() => {
 	scoreStore
-		.getScore('Lesson', props.lesson.id)
+		.getScore<ScoreLessonDataInterface>('Lesson', props.lesson.id)
 		.then(res => score.value = res)
 })
 </script>

@@ -3,7 +3,6 @@ import KeyboardDisplay from "@/Components/Keyboards/KeyboardDisplay.vue"
 import ToolForm, {IToolForm} from "@/Components/Tools/Parts/ToolForm.vue"
 import TexCode from "@/Components/Ui/TexCode.vue"
 import {useToolsStorage} from "@/Composables/useToolsStorage.ts"
-import {KbrdEvent} from "@/types"
 import {PolyFactor} from "pimath"
 /** Tools
  * title: factorisation d'un polynôme
@@ -14,6 +13,7 @@ import {PolyFactor} from "pimath"
 import {computed, ref} from "vue"
 import Card from "@/Components/Ui/Card.vue"
 import ToolError from "@/Components/Tools/Parts/ToolError.vue"
+import {KeyboardInputInterface} from "@/types/keyboardInterfaces.ts"
 
 const {restoreTool} = useToolsStorage()
 const forms: IToolForm[] = restoreTool([
@@ -43,7 +43,7 @@ let result = computed(() => {
 	}
 })
 
-function updateKbrd(event: KbrdEvent) {
+function updateKbrd(event: KeyboardInputInterface) {
 	forms[0].value.value = event.input
 }
 </script>

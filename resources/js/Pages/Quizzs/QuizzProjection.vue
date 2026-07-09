@@ -22,7 +22,7 @@ let props = defineProps<{
 	usersCount: number
 }>()
 
-let interval = null
+let interval: number = null
 const updateCounter = ref(0)
 
 function updateQuizz() {

@@ -38,23 +38,23 @@ const A = computed(() => forms[0].value.value as string)
 const B = computed(() => forms[1].value.value as string)
 const C = computed(() => forms[2].value.value as string)
 
-function getPolyFromThreePoints(A, B, C): Polynom {
-	const P = new Equation("y", "ax^2+bx+c"),
-		pA = new Point(A),
-		pB = new Point(B),
-		pC = new Point(C)
+function getPolyFromThreePoints(A, B, C): Polynom | null {
+	const P = new Equation("y", "ax^2+bx+c")
+	const pA = new Point(A)
+	const pB = new Point(B)
+	const pC = new Point(C)
 
 	// y=ax^2+bx+c
 	let Pc: Equation = P.clone()
-			.replaceBy("x", new Polynom(pA.x.display))
-			.replaceBy("y", new Polynom(pA.y.display))
-			.isolate("c") as Equation,
-		Pb: Equation = P.clone()
-			.replaceBy("x", new Polynom(pB.x.display))
-			.replaceBy("y", new Polynom(pB.y.display))
-			.replaceBy("c", Pc.right)
-			.isolate("b") as Equation,
-		Pa
+		.replaceBy("x", new Polynom(pA.x.display))
+		.replaceBy("y", new Polynom(pA.y.display))
+		.isolate("c") as Equation
+	let Pb: Equation = P.clone()
+		.replaceBy("x", new Polynom(pB.x.display))
+		.replaceBy("y", new Polynom(pB.y.display))
+		.replaceBy("c", Pc.right)
+		.isolate("b") as Equation
+	let Pa: Equation | boolean
 
 	if (C !== "") {
 		Pa = P.clone()
@@ -72,6 +72,8 @@ function getPolyFromThreePoints(A, B, C): Polynom {
 		Pa.left = Pb.right.clone()
 		Pa.isolate("a")
 	}
+
+	if (!(Pa instanceof Equation)) return null
 
 	Pb = Pb.replaceBy("a", Pa.right)
 	Pc = Pc.replaceBy("b", Pb.right).replaceBy("a", Pa.right)
@@ -101,16 +103,18 @@ const result = computed(() => {
 			poly = getPolyFromThreePoints(A.value, B.value, C.value)
 		}
 
-		const a = poly.monomByDegree(2).coefficient,
-			b = poly.monomByDegree(1).coefficient,
-			c = poly.monomByDegree(0).coefficient,
-			delta = b.clone().pow(2).subtract(a.clone().multiply(c).multiply(4))
+		if (!poly) return false
+
+		const a = poly.monomByDegree(2).coefficient
+		const b = poly.monomByDegree(1).coefficient
+		const c = poly.monomByDegree(0).coefficient
+		const delta = b.clone().pow(2).subtract(a.clone().multiply(c).multiply(4))
 
 		const equ = new Equation(poly, 0)
 		const solutions = equ.solve()
 
-		const sx = b.clone().opposite().divide(a.clone().multiply(2)),
-			sy = delta.clone().opposite().divide(a.clone().multiply(4))
+		const sx = b.clone().opposite().divide(a.clone().multiply(2))
+		const sy = delta.clone().opposite().divide(a.clone().multiply(4))
 
 		// Forme du sommet
 		// a(x-sx)^2+sy

@@ -2,11 +2,11 @@
 import {asciiToTex} from "@/Composables/keyboardConfig"
 import {computed, onMounted, ref} from "vue"
 import ScButton from "@/Components/Ui/Button/scButton.vue"
-import type {
+import {
+	KeyboardCustomPropsInterface,
 	KeyboardEmitsInterface,
 	KeyboardExposeInterface,
-	KeyboardInputInterface,
-	KeyboardPropsInterface
+	KeyboardInputInterface
 } from "@/types/keyboardInterfaces.ts"
 
 interface QCMItem {
@@ -18,7 +18,7 @@ interface QCMItem {
 }
 
 // props.keyboard
-const props = defineProps<KeyboardPropsInterface>()
+const props = defineProps<KeyboardCustomPropsInterface>()
 
 // emits change
 const emits = defineEmits<KeyboardEmitsInterface>()
@@ -75,6 +75,8 @@ const isTex = computed(() => {
 	return props.keyboard.parameters.includes("tex")
 })
 const multiAnswers = computed(() => {
+	if (!props.reference) return false
+
 	return props.reference.split(",").length > 1 ||
 		props.keyboard.parameters.includes("multi")
 })

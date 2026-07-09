@@ -17,6 +17,7 @@ export type ThemesSlug =
 	"jeux" |
 	"tools" |
 	"arithmetique"
+export type ThemesType = ThemesSlug | "scolcours" | "admin"
 
 
 export type PageProps<
@@ -25,7 +26,7 @@ export type PageProps<
 	auth: {
 		user: User
 		can: {
-			admin: boolean
+			admin: boolean | null
 		}
 	}
 	scolcours: { title: string }
@@ -68,12 +69,6 @@ export interface flashInterface {
 	error: (message: string, config?: flashConfig) => void
 	info: (message: string, config?: flashConfig) => void
 	success: (message: string, config?: flashConfig) => void
-}
-
-export interface KbrdEvent {
-	input: string,
-	raw: string
-	tex: string,
 }
 
 export interface userAnswerInterface {

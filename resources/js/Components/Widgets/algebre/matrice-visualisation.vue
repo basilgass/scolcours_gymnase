@@ -49,10 +49,10 @@ const figures = ref<{
 		type: TRANSFORMATION,
 		value: string
 	},
-	points: [number, number][]
+	points: number[][]
 }[]>([])
 
-const refPoints = computed<[number, number][]>(() => {
+const refPoints = computed<number[][]>(() => {
 	return figures.value[figuresId.value]?.points ?? initPoints.value
 })
 
@@ -111,7 +111,7 @@ class Matrix {
 
 	multiply<T extends number[] | Matrix>(value: T): T {
 		if (Array.isArray(value) && typeof value[0] === "number") {
-			const vector = []
+			const vector: number[][] = []
 			value.forEach(v => {
 				vector.push([v])
 			})
@@ -151,7 +151,7 @@ function createFigure(type: TRANSFORMATION | null) {
 		? figuresId.value
 		: 0
 
-	const points = type === null
+	const points: number[][] = type === null
 		? initPoints.value
 		: appTransform(type, transformValue.value)
 
@@ -250,9 +250,9 @@ function transformMatrix(type: TRANSFORMATION, value?: string) {
 	}
 }
 
-function appTransform(type: TRANSFORMATION, value: string): [number, number][] {
+function appTransform(type: TRANSFORMATION, value: string): number[][] {
 	const M = transformMatrix(type, value)
-	const Q = []
+	const Q: number[][] = []
 
 	refPoints.value.forEach(pt => {
 		const v = [...pt, 1]

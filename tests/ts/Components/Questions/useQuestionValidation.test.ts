@@ -102,7 +102,8 @@ describe('validateSingle — réponse standard unique', () => {
 		validate()
 
 		expect(result.value.result).toBe(false)
-		expect(errors.value[0]).toContain('entrer')
+		// errors contient des CheckerResult ; le message est sur `.message`.
+		expect(errors.value[0].message).toContain('entrer')
 	})
 
 	test('réponse avec 2 décimales — correcte', () => {
@@ -121,7 +122,7 @@ describe('validateSingle — réponse standard unique', () => {
 		validate()
 
 		expect(result.value.result).toBe(false)
-		expect(errors.value[0]).toContain('chiffre(s) après la virgule')
+		expect(errors.value[0].message).toContain('chiffre(s) après la virgule')
 	})
 
 	test('plusieurs réponses indépendantes — toutes correctes', () => {
@@ -142,8 +143,10 @@ describe('validateSingle — réponse standard unique', () => {
 		validate()
 
 		expect(result.value.result).toBe(false)
-		// Avec plusieurs variables, le message est préfixé par "2. ..."
-		expect(errors.value[0]).toMatch(/^2\./)
+		// errors[0] est le CheckerResult de la 2e variable. Le préfixe "2. " est
+		// ajouté par le template (QuestionAnswer.vue) à partir de `.index`, pas
+		// stocké dans le message.
+		expect(errors.value[0].index).toBe(2)
 	})
 })
 

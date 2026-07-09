@@ -45,7 +45,7 @@ const drawParams = ref("axis,grid,x=-10:10,y=-10:10")
 
 // Get the parameters from all functions.
 const params = computed(() => {
-	let arr = []
+	let arr: string[] = []
 	fonctions.value.forEach(f => {
 		arr = arr.concat([...f.fx.matchAll(/\$[a-z]/g)].map(e => e[0]))
 	})

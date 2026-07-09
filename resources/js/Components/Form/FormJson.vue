@@ -64,7 +64,7 @@ function buildValues() {
 }
 
 const json = computed(() => {
-	const arr = {}
+	const arr: Record<string, unknown> = {}
 	Object.keys(props.map).forEach(key => {
 		if (rValue[key].value !== '') {
 			arr[key] = rValue[key].value

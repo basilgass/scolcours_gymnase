@@ -10,6 +10,7 @@ import {ref} from "vue"
 import ScButton from "@/Components/Ui/Button/scButton.vue"
 import FilteredList from "@/Components/Ui/FilteredList.vue"
 import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
+import {AxiosResponseModel} from "@/types"
 
 const props = defineProps<{
 	chapter: ChapterInterface,
@@ -35,7 +36,7 @@ const getAllChapters = function () {
 	}
 
 	axios.get(route("api.admin.chapters.index"))
-		.then(res => {
+		.then((res: AxiosResponseModel<ChapterInterface[]>) => {
 			searchChapters.value = res.data.filter(ch => ch.slug !== props.chapter.slug)
 			modifyRelations.value = true
 		})
@@ -44,10 +45,9 @@ const getAllChapters = function () {
 		})
 }
 
-const toggleRelation = function (id) {
-	console.log('TOGGLE', formChapter.value)
+const toggleRelation = function (id: number) {
 	axios.post(route("api.admin.chapters.relations.toggle", [props.chapter.id, id]))
-		.then(res => {
+		.then((res: AxiosResponseModel<ChapterInterface[] | false>) => {
 			flash.success("relation correctement mis à jour...")
 			if (res.data !== false) {
 				chapterRelations.value = res.data
@@ -57,7 +57,6 @@ const toggleRelation = function (id) {
 	})
 }
 
-const formChapter = ref<ChapterInterface>()
 </script>
 <template>
 	<div>
@@ -115,8 +114,8 @@ const formChapter = ref<ChapterInterface>()
 						v-katex.auto="item.title"
 						:theme="item.theme_id"
 						:outline="!Object.values(chapterRelations).map(x => x.slug).includes(item.slug)"
-						@click="toggleRelation(item.id)"
 						xs
+						@click="toggleRelation(item.id)"
 					/>
 				</template>
 			</filtered-list>

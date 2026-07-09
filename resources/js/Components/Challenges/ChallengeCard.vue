@@ -11,8 +11,8 @@ const props = defineProps<{
 }>()
 
 const score = ref<ScoreInterface<ScoreChallengeDataInterface>>()
-useStoreScore().getScore("Challenge", props.challenge.id)
-	.then((sc: ScoreInterface<ScoreChallengeDataInterface>) => score.value = sc)
+useStoreScore().getScore<ScoreChallengeDataInterface>("Challenge", props.challenge.id)
+	.then(sc => score.value = sc)
 
 </script>
 

@@ -21,7 +21,8 @@ function addStep(P: Polynom, degree: number, withParenthesis?: boolean, isFirstS
 	withParenthesis = withParenthesis === undefined ? false : withParenthesis
 	isFirstStep = isFirstStep === undefined ? false : isFirstStep
 
-	let step = [], cntMonom = 0
+	let step: string[] = []
+	let cntMonom = 0
 
 	for (let i = degree; i >= 0; i--) {
 		const M = P.monomByDegree(i)
@@ -33,7 +34,7 @@ function addStep(P: Polynom, degree: number, withParenthesis?: boolean, isFirstS
 				step.push(`\\textcolor{lightgrey}{+0${litteral}}`)
 			} else {
 				// add 0 if it's the only value
-				if (i === 0 && step.every(e => e === "")) {
+				if (i === 0 && step.every(e => e.length === 0)) {
 					step.push("0")
 				} else {
 					step.push("")
@@ -75,85 +76,86 @@ function addStep(P: Polynom, degree: number, withParenthesis?: boolean, isFirstS
 }
 
 const result = computed(() => {
-		try {
-			const N = new Polynom(numerator.value),
-				D = new Polynom(denominator.value)
+	try {
+		const N = new Polynom(numerator.value)
+		const D = new Polynom(denominator.value)
 
-			const euclidian = N.euclidean(D)
+		const euclidian = N.euclidean(D)
 
-			// For the euclidian division display.
-			const steps = [],
-				degree = N.degree().value,
-				crtPolynom = N.clone(),
-				underline = []
+		// For the euclidian division display.
+		const steps = []
+		const degree = N.degree().value
+		const crtPolynom = N.clone()
+		const underline = []
 
-			// Première ligne
+		// Première ligne
+		steps.push([
+			[...addStep(crtPolynom, degree, false, true)],
+			[D.tex]
+		])
+
+		for (const m of euclidian.quotient.monoms) {
+			const DM = D.clone().multiply(m)
+
 			steps.push([
-				[...addStep(crtPolynom, degree, false, true)],
-				[D.tex]
+				[...addStep(DM, degree, true)],
+				[steps.length === 1 ? euclidian.quotient.tex : ""]
 			])
 
-			for (const m of euclidian.quotient.monoms) {
-				const DM = D.clone().multiply(m)
-
-				steps.push([
-					[...addStep(DM, degree, true)],
-					[steps.length === 1 ? euclidian.quotient.tex : ""]
-				])
-
-				// Create the underline.
-				let start, stop
-				for (let i = 0; i < steps[steps.length - 1][0].length; i++) {
-					if (steps[steps.length - 1][0][i] === "-\\big(") {
-						start = +i + 1
-					} else if (steps[steps.length - 1][0][i] === "\\big)") {
-						stop = +i - 1
-						break
-					}
+			// Create the underline.
+			let start
+			let stop
+			for (let i = 0; i < steps[steps.length - 1][0].length; i++) {
+				if (steps[steps.length - 1][0][i] === "-\\big(") {
+					start = +i + 1
+				} else if (steps[steps.length - 1][0][i] === "\\big)") {
+					stop = +i - 1
+					break
 				}
-				underline.push({
-					start,
-					stop
-				})
-
-				crtPolynom.subtract(DM)
-				steps.push([
-					[...addStep(crtPolynom, degree, false)],
-					[""]
-				])
 			}
-
-			emits("update", {
-				P: N.reorder().tex,
-				Q: D.reorder().tex,
-				R: crtPolynom.reorder().tex
+			underline.push({
+				start,
+				stop
 			})
 
-			return {
-				numerator: N,
-				denominator: D,
-				euclidian,
-				table: {
-					steps,
-					underline
-				}
-			}
-
-		} catch (e) {
-			console.warn(e)
-
-			return false
+			crtPolynom.subtract(DM)
+			steps.push([
+				[...addStep(crtPolynom, degree, false)],
+				[""]
+			])
 		}
-	}),
-	numerator = computed(() => {
-		return props.fx.split("/")[0]
-	}),
-	denominator = computed(() => {
-		return props.fx.split("/")[1] || "1"
-	}),
-	fxname = computed(() => {
-		return props.name ? `${props.name}=` : ""
-	})
+
+		emits("update", {
+			P: N.reorder().tex,
+			Q: D.reorder().tex,
+			R: crtPolynom.reorder().tex
+		})
+
+		return {
+			numerator: N,
+			denominator: D,
+			euclidian,
+			table: {
+				steps,
+				underline
+			}
+		}
+
+	} catch (e) {
+		console.warn(e)
+
+		return false
+	}
+})
+const numerator = computed(() => {
+	return props.fx.split("/")[0]
+})
+const denominator = computed(() => {
+	return props.fx.split("/")[1] || "1"
+})
+const fxname = computed(() => {
+	return props.name ? `${props.name}=` : ""
+})
 </script>
 <template>
 	<div class="pi-euclidian-wrapper">

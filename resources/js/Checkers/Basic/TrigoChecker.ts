@@ -1,4 +1,6 @@
-import {CheckerAbstract, CheckerResult, CHECKERS, FractionChecker, makeCheckerResult, NumberChecker} from "@/Checkers"
+import {CheckerAbstract, CheckerResult, CHECKERS, makeCheckerResult} from "@/Checkers"
+import {FractionChecker} from "@/Checkers/Basic/FractionChecker"
+import {NumberChecker} from "@/Checkers/Basic/NumberChecker"
 import {PiRadian} from "@/PiMathExtended/PiRadian.ts"
 import {Fraction} from "pimath"
 

@@ -282,7 +282,7 @@ describe("scientific checker", () => {
 		}
 	})
 })
-describe.todo("solution checker")
+describe.todo("solutions checker")
 describe("string checker", () => {
 	test('detect exact value', () => {
 		const config = ''

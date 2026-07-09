@@ -13,7 +13,7 @@ import {usePage} from "@inertiajs/vue3"
 import axios from "axios"
 import DeckIntro from "@/Components/Decks/Parts/DeckIntro.vue"
 import {useStoreScore} from "@/stores/useStoreScore.ts"
-import {ScoreCardDataInterface} from "@/types/scoreInterfaces.ts"
+import {ScoreCardDataInterface, ScoreDeckDataInterface} from "@/types/scoreInterfaces.ts"
 
 defineOptions({layout: LayoutProjection})
 
@@ -22,7 +22,7 @@ const props = defineProps<{
 }>()
 
 const scoreStore = useStoreScore()
-const score = await scoreStore.getScore('Deck', props.deck.id)
+const score = await scoreStore.getScore<ScoreDeckDataInterface>('Deck', props.deck.id)
 
 const cards = ref<CardInterfaceExtended[]>(props.deck.cards
 	.map((card) => {
@@ -67,7 +67,7 @@ provide<provideDeckData>('deckData', {
 	},
 	reset: async () => {
 		const ids = cards.value.map(card => card.id)
-		const scores = await scoreStore.getScores('Card', ids)
+		const scores = await scoreStore.getScores<ScoreCardDataInterface>('Card', ids)
 
 		scores.forEach(score => {
 			scoreStore.resetData(score)

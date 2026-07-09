@@ -423,8 +423,8 @@ export function makeStudyFromCode(code: string, showCoords: boolean, displayMode
 	const [zeroes, signs, grows, coords] = code.split("@")
 
 	if (grows !== undefined) {
-		const extremes = {},
-			zeroesValues = zeroes.split(",")
+		const extremes = {}
+		const zeroesValues = zeroes.split(",")
 		let extremesValues = coords ? coords.split(",") : []
 
 
@@ -433,8 +433,8 @@ export function makeStudyFromCode(code: string, showCoords: boolean, displayMode
 		}
 
 		for (const i in zeroesValues) {
-			const z = zeroesValues[i],
-				g = grows[2 * (+i) + 1]
+			const z = zeroesValues[i]
+			const g = grows[2 * (+i) + 1]
 
 			if (g !== undefined) {
 				let t = ""

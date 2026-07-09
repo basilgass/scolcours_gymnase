@@ -5,7 +5,7 @@ import {
 	itemGraphInterface,
 	kbrdStudyButtons,
 	POINT_TYPES
-} from "@/Components/Keyboards/KeayboardHelpers/KeyboardStudyHelpers.ts"
+} from "@/Components/Keyboards/KeyboardHelpers/KeyboardStudyHelpers/KeyboardStudyHelpers.ts"
 import {computed} from "vue"
 
 const props = defineProps<{

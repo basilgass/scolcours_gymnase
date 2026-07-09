@@ -4,11 +4,11 @@ import FormInput from "@/Components/Form/FormInput.vue"
 import DialogModal from "@/Components/Ui/DialogModal.vue"
 import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
 import type {LanguageDataInterface, TranslationWord} from "@/types/modelInterfaces"
-import {usePage} from "@inertiajs/vue3"
 import axios from "axios"
 import {computed, inject, ref} from "vue"
 import {useLanguage} from "@/Components/Languages/useLanguage.ts"
 import ScButton from "@/Components/Ui/Button/scButton.vue"
+import {useIsAdmin} from "@/Composables/useHelpers.ts"
 
 const languageData = inject<LanguageDataInterface>('LanguageData')
 const {getListOfWordsFromUnits} = useLanguage(languageData)
@@ -52,7 +52,7 @@ const editWord = ref<{ id: number, foreign: string, fr: string }>({
 })
 // before editing, store the word to edit.
 const editTranslation = function (word) {
-	if (editMode.enable && usePage().props.auth.can.admin) {
+	if (editMode.enable && useIsAdmin()) {
 		editWord.value = word
 		showEditForm.value = true
 	}

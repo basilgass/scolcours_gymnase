@@ -85,8 +85,8 @@ function generate_fx() {
 	// forms[1].value.value = den.display
 	// return
 
-	let n = 1,
-		genFx
+	let n = 1
+	let genFx
 	while (n <= 500) {
 		genFx = getFxWithControls(n < 250 ? 10 : 5)
 
@@ -110,7 +110,14 @@ function generate_fx() {
 }
 
 function getFxWithControls(maxValue: number) {
-	let a: number, b: number, c: number, d: number, e: number, k: number, kd: number, kd2: number
+	let a: number
+	let b: number
+	let c: number
+	let d: number
+	let e: number
+	let k: number
+	let kd: number
+	let kd2: number
 
 	d = Random.number(1, maxValue)
 	k = Random.numberSym(maxValue - d + 1, false)
@@ -126,17 +133,17 @@ function getFxWithControls(maxValue: number) {
 	b = Random.numberSym(maxValue, false)
 	c = kd_divider - b
 
-	const slope = a / d,
-		oao = a * d * (b + c) - a * e / d * d,
-		ordonnee = a * b * c / e,
-		trou = b === e / d || c === e / d,
-		reduceable = d % a === 0 && e % a === 0
+	const slope = a / d
+	const oao = a * d * (b + c) - a * e / d * d
+	const ordonnee = a * b * c / e
+	const trou = b === e / d || c === e / d
+	const reduceable = d % a === 0 && e % a === 0
 
-	const a2 = a === 1 ? "" : (a === -1 ? "-" : a),
-		b2 = (b > 0 ? "+" : "") + b,
-		c2 = (c > 0 ? "+" : "") + (c !== 0 ? c : ""),
-		d2 = d === 1 ? "" : (d === -1 ? "-" : d),
-		e2 = (e > 0 ? "+" : "") + e
+	const a2 = a === 1 ? "" : (a === -1 ? "-" : a)
+	const b2 = (b > 0 ? "+" : "") + b
+	const c2 = (c > 0 ? "+" : "") + (c !== 0 ? c : "")
+	const d2 = d === 1 ? "" : (d === -1 ? "-" : d)
+	const e2 = (e > 0 ? "+" : "") + e
 
 	return {
 		numerator: `${a2}(x${b2})(x${c2})`,

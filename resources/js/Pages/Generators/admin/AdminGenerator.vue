@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import {computed, ref} from "vue"
+import {ComponentPublicInstance, computed, ref} from "vue"
 import {GeneratorInterface} from "@/types/modelInterfaces.ts"
 import GeneratorItem from "@/Components/Elements/GeneratorItem.vue"
 import FilteredList from "@/Components/Ui/FilteredList.vue"
@@ -72,8 +72,10 @@ function hasErrors(id: number, errors: boolean) {
 
 const generatorRefs = ref<InstanceType<typeof GeneratorItem>[]>([])
 
-function addToRef(el: InstanceType<typeof GeneratorItem>) {
-	generatorRefs.value.push(el)
+function addToRef(el: Element | ComponentPublicInstance | null) {
+	if (el) {
+		generatorRefs.value.push(el as InstanceType<typeof GeneratorItem>)
+	}
 }
 
 </script>

@@ -15,8 +15,10 @@ import {lessonableModel, LessonChallengeScoreRules, LessonGeneratorScoreRules} f
 import {
 	ScoreChallengeDataInterface,
 	ScoreDataInterface,
+	ScoreDeckDataInterface,
 	ScoreGeneratorDataInterface,
-	ScoreLessonDataInterface
+	ScoreLessonDataInterface,
+	ScoreQuestionDataInterface
 } from "@/types/scoreInterfaces.ts"
 import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
 
@@ -37,7 +39,7 @@ async function post_scores(post: PostShowInterface) {
 	const model = 'Question'
 	const ids = post.questions.map(question => question.id)
 
-	await storeScore.getScores(model, ids)
+	await storeScore.getScores<ScoreQuestionDataInterface>(model, ids)
 		.then(
 			(scores) => {
 				if (scores.length === 0) {
@@ -128,7 +130,7 @@ async function deck_scores(deck: DeckInterface) {
 	const model = 'Deck'
 	const id = deck.id
 
-	const score = await storeScore.getScore(model, id)
+	const score = await storeScore.getScore<ScoreDeckDataInterface>(model, id)
 	lessonScore.value.score = Math.max(lessonScore.value.score, score.score)
 	lessonScore.value.is_resolved = score.is_resolved
 }
@@ -188,7 +190,7 @@ async function resetScore() {
 		const post = props.lessonable as PostShowInterface
 
 		storeScore
-			.getScores('Question', post.questions.map(q => q.id))
+			.getScores<ScoreQuestionDataInterface>('Question', post.questions.map(q => q.id))
 			.then(scores => {
 				storeScore
 					.reset(scores.map(s => s.id))
@@ -219,7 +221,7 @@ function matchingPivotModels(lesson: LessonInterface, score: ScoreInterface) {
 }
 
 onMounted(() => {
-	storeScore.getScore('Lesson', props.lesson.id)
+	storeScore.getScore<ScoreLessonDataInterface>('Lesson', props.lesson.id)
 		.then(score => {
 			lessonScore.value = score
 

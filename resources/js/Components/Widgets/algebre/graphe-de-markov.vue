@@ -11,7 +11,6 @@ c d
 import {WidgetPropsInterface} from "@/types/modelInterfaces.ts"
 import {computed} from "vue"
 import PiMarkovGraph from "@/Components/Pi/PiDrawComponents/PiMarkovGraph.vue"
-import {Fraction} from "pimath"
 import type {PiDraw} from "pidraw/types"
 
 const props = defineProps<{
@@ -85,7 +84,7 @@ const emits = defineEmits<{
 	update: [draw: PiDraw],
 }>()
 
-const drawMouseUp = function (evt: { draw: PiDraw, mouse: MouseEvent }) {
+const drawMouseUp = function (evt: { draw: PiDraw, mouse: MouseEvent | TouchEvent }) {
 	emits("update", evt.draw)
 	emits("drawClick", evt)
 }

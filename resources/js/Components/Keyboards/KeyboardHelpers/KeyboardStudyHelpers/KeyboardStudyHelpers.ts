@@ -241,7 +241,8 @@ export class StudyGraph extends PiGraph {
 		const vpxy = line.normal.clone().unit()
 		const dxy = {x: vdxy.x.value, y: vdxy.y.value}
 		const pxy = {x: vpxy.x.value, y: vpxy.y.value}
-		const b1ratio = 5, b2ratio = 10
+		const b1ratio = 5
+		const b2ratio = 10
 
 		const el = {
 			id: value,

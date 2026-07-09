@@ -38,8 +38,8 @@ const toggleDisplayId = async function (id) {
 		theQuestion.value.displayIf = null
 	} else {
 		await nextTick()
-		const ids = [...displayIfIds.value],
-			idx = ids.indexOf(id)
+		const ids = [...displayIfIds.value]
+		const idx = ids.indexOf(id)
 
 		if (idx === -1) {
 			ids.push(id)

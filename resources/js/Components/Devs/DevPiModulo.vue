@@ -66,8 +66,12 @@ function interpolateColor(c1: string, c2: string, t: number) {
 	const a = parseInt(c1.slice(1), 16)
 	const b = parseInt(c2.slice(1), 16)
 
-	const r1 = (a >> 16) & 255, g1 = (a >> 8) & 255, b1 = a & 255
-	const r2 = (b >> 16) & 255, g2 = (b >> 8) & 255, b2 = b & 255
+	const r1 = (a >> 16) & 255
+	const g1 = (a >> 8) & 255
+	const b1 = a & 255
+	const r2 = (b >> 16) & 255
+	const g2 = (b >> 8) & 255
+	const b2 = b & 255
 
 	const r = Math.round(r1 + (r2 - r1) * t)
 	const g = Math.round(g1 + (g2 - g1) * t)
@@ -95,18 +99,18 @@ function getGradientColor(colors: string[], index: number, maxIndex: number) {
 	<article class="max-w-xl mx-auto">
 		<div class="flex gap-3 mb-3">
 			<FormInput
+				v-model="modulo"
 				type="number"
 				min="10"
 				max="1000"
 				label="modulo"
-				v-model="modulo"
 			/>
 			<FormInput
+				v-model="factor"
 				type="number"
 				min="2"
 				max="500"
 				label="facteur"
-				v-model="factor"
 			/>
 		</div>
 

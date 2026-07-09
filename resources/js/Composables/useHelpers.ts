@@ -17,6 +17,10 @@ function isKeyValue(obj: unknown): obj is KeyValue {
 	)
 }
 
+export function useIsAdmin(): boolean {
+	return usePage().props.auth?.can?.admin === true
+}
+
 export function useScrollTo(target?: string | HTMLElement | KeyValue, offset?: number) {
 	let el: HTMLElement | null = null
 
@@ -113,10 +117,13 @@ export function useFormattedBody(
 		} else if (typeof raw === 'number') {
 			normalized[key] = String(raw)
 		} else {
-			console.warn(
-				`La valeur \`${key}\` n'a pas une valeur compatible (string ou number), mais elle est de type ${typeof raw}`,
-				raw
-			)
+			// TODO: some keys are "special keys": reset, btn should not trigger the error.
+			if (key !== 'btn' && key !== 'reset') {
+				console.warn(
+					`La valeur \`${key}\` n'a pas une valeur compatible (string ou number), mais elle est de type ${typeof raw}`,
+					raw
+				)
+			}
 			normalized[key] = ' ??? '
 		}
 	}

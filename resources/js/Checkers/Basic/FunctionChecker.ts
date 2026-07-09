@@ -1,4 +1,5 @@
-import {CheckerAbstract, CheckerResult, CHECKERS, PolynomChecker} from "@/Checkers"
+import {CheckerAbstract, CheckerResult, CHECKERS} from "@/Checkers"
+import {PolynomChecker} from "@/Checkers/Basic/PolynomChecker"
 
 // const name = "function"
 const description = `function|fn,[paramètres]

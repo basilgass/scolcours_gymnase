@@ -12,5 +12,8 @@ export * from './CheckerAbstract'
 export * from './Basic'
 export * from './Custom'
 
+// Export the checker registry (CHECKERS -> class)
+export * from './checkerRegistry'
+
 // Export the wrapper class
 export * from './PiChecker'

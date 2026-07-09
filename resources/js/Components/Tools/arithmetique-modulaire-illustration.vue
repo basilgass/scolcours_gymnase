@@ -3,7 +3,6 @@
 import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"
 import {computed, ref} from "vue"
 import FormSwitch from "@/Components/Form/FormSwitch.vue"
-import FormInput from "@/Components/Form/FormInput.vue"
 import {useToolsStorage} from "@/Composables/useToolsStorage.ts"
 import ToolForm, {IToolForm} from "@/Components/Tools/Parts/ToolForm.vue"
 
@@ -83,8 +82,12 @@ function interpolateColor(c1: string, c2: string, t: number) {
 	const a = parseInt(c1.slice(1), 16)
 	const b = parseInt(c2.slice(1), 16)
 
-	const r1 = (a >> 16) & 255, g1 = (a >> 8) & 255, b1 = a & 255
-	const r2 = (b >> 16) & 255, g2 = (b >> 8) & 255, b2 = b & 255
+	const r1 = (a >> 16) & 255
+	const g1 = (a >> 8) & 255
+	const b1 = a & 255
+	const r2 = (b >> 16) & 255
+	const g2 = (b >> 8) & 255
+	const b2 = b & 255
 
 	const r = Math.round(r1 + (r2 - r1) * t)
 	const g = Math.round(g1 + (g2 - g1) * t)

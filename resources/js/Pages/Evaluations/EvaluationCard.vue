@@ -5,7 +5,7 @@ import Card from "@/Components/Ui/Card.vue"
 import {EvaluationInterface} from "@/types/evaluationInterfaces.ts"
 import {useStoreScore} from "@/stores/useStoreScore.ts"
 import {ref} from "vue"
-import {ScoreInterface, ScoreQuestionDataInterface} from "@/types/scoreInterfaces.ts"
+import {ScoreQuestionDataInterface} from "@/types/scoreInterfaces.ts"
 
 interface IEvaluationStat {
 	total: number,
@@ -29,8 +29,8 @@ const scoreStore = useStoreScore()
 const questionIds: number[] = props.evaluation.questions.map(question => question.id)
 
 scoreStore
-	.getScores("Question", questionIds)
-	.then((scores: ScoreInterface<ScoreQuestionDataInterface>[]) => {
+	.getScores<ScoreQuestionDataInterface>("Question", questionIds)
+	.then(scores => {
 		scores.forEach(score => {
 			if (score.attempts > 0) {
 				if (score.is_resolved) evaluationStat.value.correct++

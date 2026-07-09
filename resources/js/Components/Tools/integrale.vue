@@ -45,10 +45,10 @@ const result = computed(() => {
 		if (fx.value === "") {
 			return "\\text{Aucune fonction...}"
 		}
-		const p = new Polynom(fx.value),
-			P = p.clone().primitive(),
-			Pa: Fraction = P.evaluate({x: a.value as unknown as Fraction}) as Fraction,
-			Pb: Fraction = P.evaluate({x: b.value as unknown as Fraction}) as Fraction
+		const p = new Polynom(fx.value)
+		const P = p.clone().primitive()
+		const Pa: Fraction = P.evaluate({x: a.value as unknown as Fraction}) as Fraction
+		const Pb: Fraction = P.evaluate({x: b.value as unknown as Fraction}) as Fraction
 
 		return `\\int_{${a.value}}^{${b.value}} ${p.tex} \\ dx
 		= \\left[ ${P.tex}\\right]_{${a.value}}^{${b.value}}
