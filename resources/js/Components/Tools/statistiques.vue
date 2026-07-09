@@ -716,113 +716,113 @@ const tableToTexOutput = computed(() => {
 			</template>
 			<table class="w-full text-center table-fixed">
 				<thead class="bg-gray-600 text-white">
-				<tr>
-					<th
-						v-katex="`\\left[b_i; b_ii\\right[`"
-						class="w-[150px]"
-						title="classe modale"
-					/>
-					<th
-						v-katex="'c_i'"
-						title="valeur centrale"
-					/>
-					<th
-						v-katex="'n_i'"
-						title="effectif"
-					/>
-					<th
-						v-katex="'L_i'"
-						title="amplitude"
-					/>
-					<th
-						v-katex="'f_i'"
-						title="fréquence"
-					/>
-					<th
-						v-katex="'F_i'"
-						title="fréquence cumulée croissante"
-					/>
-					<th
-						v-katex="'F_i\''"
-						title="fréquence cumulée décroissante"
-					/>
-					<th
-						v-katex="'f_i\\cdot x_i'"
-						title="fixi"
-					/>
-					<th
-						v-katex="'f_i\\cdot x_i^2'"
-						title="fixi2"
-					/>
-				</tr>
+					<tr>
+						<th
+							v-katex="`\\left[b_i; b_ii\\right[`"
+							class="w-[150px]"
+							title="classe modale"
+						/>
+						<th
+							v-katex="'c_i'"
+							title="valeur centrale"
+						/>
+						<th
+							v-katex="'n_i'"
+							title="effectif"
+						/>
+						<th
+							v-katex="'L_i'"
+							title="amplitude"
+						/>
+						<th
+							v-katex="'f_i'"
+							title="fréquence"
+						/>
+						<th
+							v-katex="'F_i'"
+							title="fréquence cumulée croissante"
+						/>
+						<th
+							v-katex="'F_i\''"
+							title="fréquence cumulée décroissante"
+						/>
+						<th
+							v-katex="'f_i\\cdot x_i'"
+							title="fixi"
+						/>
+						<th
+							v-katex="'f_i\\cdot x_i^2'"
+							title="fixi2"
+						/>
+					</tr>
 				</thead>
 				<tbody class="font-code">
-				<tr
-					v-for="(item, index) in statTable"
-					:key="`stats-${index}`"
-					class="odd:bg-gray-200 border-t border-b border-gray-300"
-				>
-					<td class="border-x border-gray-300 py-2">
-						[{{ item.bi }} - {{ item.bii }}[
-					</td>
-					<td class="border-x border-gray-300 py-2">
-						{{ item.xi }}
-					</td>
-					<td class="border-x border-gray-300 py-2">
-						{{ item.ni }}
-					</td>
-					<td class="border-x border-gray-300 py-2">
-						{{ item.bii - item.bi }}
-					</td>
-					<td class="border-x border-gray-300 py-2">
-						{{
-							statConfig.percent
-								? statRoundValue(item.fi * 100) + `%`
-								: statRoundValue(item.fi)
-						}}
-					</td>
-					<td class="border-x border-gray-300 py-2">
-						{{
-							statConfig.percent
-								? statRoundValue(item.Fi * 100) + `%`
-								: statRoundValue(item.Fi)
-						}}
-					</td>
-					<td class="border-x border-gray-300 py-2">
-						{{
-							statConfig.percent
-								? statRoundValue(item.Fid * 100) + `%`
-								: statRoundValue(item.Fid)
-						}}
-					</td>
-					<td class="border-x border-gray-300 py-2">
-						{{ statRoundValue(item.fixi) }}
-					</td>
-					<td class="border-x border-gray-300 py-2">
-						{{ statRoundValue(item.fixii) }}
-					</td>
-				</tr>
+					<tr
+						v-for="(item, index) in statTable"
+						:key="`stats-${index}`"
+						class="odd:bg-gray-200 border-t border-b border-gray-300"
+					>
+						<td class="border-x border-gray-300 py-2">
+							[{{ item.bi }} - {{ item.bii }}[
+						</td>
+						<td class="border-x border-gray-300 py-2">
+							{{ item.xi }}
+						</td>
+						<td class="border-x border-gray-300 py-2">
+							{{ item.ni }}
+						</td>
+						<td class="border-x border-gray-300 py-2">
+							{{ item.bii - item.bi }}
+						</td>
+						<td class="border-x border-gray-300 py-2">
+							{{
+								statConfig.percent
+									? statRoundValue(item.fi * 100) + `%`
+									: statRoundValue(item.fi)
+							}}
+						</td>
+						<td class="border-x border-gray-300 py-2">
+							{{
+								statConfig.percent
+									? statRoundValue(item.Fi * 100) + `%`
+									: statRoundValue(item.Fi)
+							}}
+						</td>
+						<td class="border-x border-gray-300 py-2">
+							{{
+								statConfig.percent
+									? statRoundValue(item.Fid * 100) + `%`
+									: statRoundValue(item.Fid)
+							}}
+						</td>
+						<td class="border-x border-gray-300 py-2">
+							{{ statRoundValue(item.fixi) }}
+						</td>
+						<td class="border-x border-gray-300 py-2">
+							{{ statRoundValue(item.fixii) }}
+						</td>
+					</tr>
 				</tbody>
 				<tfoot class="font-code">
-				<tr>
-					<td />
-					<td />
-					<td class="bg-gray-300 border border-gray-300">
-						{{ statSum.ni }}
-					</td>
-					<td />
-					<td class="bg-gray-300 border border-gray-300">
-						{{ statRoundValue(statSum.fi) }}
-					</td>
-					<td />
-					<td />
-					<td class="bg-gray-300 border border-gray-300">
-						{{ statRoundValue(statSum.fixi) }}
-					</td>
-					<td class="bg-gray-300 border border-gray-300">
-						{{ statRoundValue(statSum.fixii) }}
-					</td>
-				</tr>
+					<tr>
+						<td />
+						<td />
+						<td class="bg-gray-300 border border-gray-300">
+							{{ statSum.ni }}
+						</td>
+						<td />
+						<td class="bg-gray-300 border border-gray-300">
+							{{ statRoundValue(statSum.fi) }}
+						</td>
+						<td />
+						<td />
+						<td class="bg-gray-300 border border-gray-300">
+							{{ statRoundValue(statSum.fixi) }}
+						</td>
+						<td class="bg-gray-300 border border-gray-300">
+							{{ statRoundValue(statSum.fixii) }}
+						</td>
+					</tr>
 				</tfoot>
 			</table>
 
@@ -832,11 +832,11 @@ const tableToTexOutput = computed(() => {
 					@click="showTex=!showTex"
 				>
 					TeX output <i
-					:class="{
+						:class="{
 							'bi bi-eye-slash': !showTex,
 							'bi bi-eye': showTex,
 						}"
-				/>
+					/>
 				</h4>
 				<pre
 					v-show="showTex"

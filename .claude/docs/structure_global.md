@@ -237,9 +237,9 @@ resources/js/
 │   │   ├── KeyboardType.vue
 │   │   ├── KeyboardStudy.vue
 │   │   ├── KeyboardStudy.disabled  🗑️ (ou archiver hors du repo)
-│   │   └── KeayboardHelpers/       ⚠️ renommer → KeyboardHelpers/ (faute de frappe)
-│   │       ├── KeyboadResolutionMiseEvidence.vue  ⚠️ renommer → KeyboardResolutionMiseEvidence.vue
-│   │       ├── KeyboadResolutionTrinome.vue       ⚠️ renommer → KeyboardResolutionTrinome.vue
+│   │   └── KeyboardHelpers/
+│   │       ├── KeyboardResolutionMiseEvidence.vue
+│   │       ├── KeyboardResolutionTrinome.vue
 │   │       ├── KeyboardStudyButton.vue
 │   │       ├── KeyboardStudyCreatedList.vue
 │   │       └── KeyboardStudyHelpers.ts
@@ -444,8 +444,6 @@ resources/js/
 |---|---|---|
 | `types/resourseInterfaces.ts` | `types/resourceInterfaces.ts` | Faute d'orthographe |
 | `types/challengeInterface.ts` | `types/challengeInterfaces.ts` | Cohérence pluriel |
-| `Components/Keyboards/KeayboardHelpers/` | `Components/Keyboards/KeyboardHelpers/` | Faute de frappe |
-| `Components/Keyboards/KeayboardHelpers/KeyboadResolution*.vue` | `KeyboardResolution*.vue` | Faute de frappe |
 | `Components/Widgets/theee-parser-widget.vue` | `three-parser-widget.vue` | Faute de frappe |
 | `Components/Widgets/Card-widget.vue` | `card-widget.vue` | Convention kebab-case |
 | `Pages/languages/` | `Pages/Languages/` | Convention PascalCase |

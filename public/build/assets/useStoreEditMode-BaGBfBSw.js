@@ -1,1 +1,0 @@
-import{a as e}from"./@inertiajs-CYi4IIr1.js";import{n as t}from"./pinia-pC2qVOr7.js";import{c as n,m as r,u as i}from"./@vueuse-Dm8PWxHS.js";var a=`scolcours_gymnase_editmode`,o=t(`editMode`,()=>{let t=i(a,!1);function o(){t.value=!t.value}return r(n().ctrl_alt_a,()=>{e().props.auth.user&&e().props.auth.can.admin&&(t.value=!t.value)}),{enable:t,toggle:o}});export{o as t};

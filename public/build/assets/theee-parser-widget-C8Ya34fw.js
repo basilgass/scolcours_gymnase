@@ -1,1 +1,0 @@
-import{H as e,S as t,k as n}from"./@inertiajs-CYi4IIr1.js";import{t as r}from"./PiThreeParser-BZqq9js5.js";var i=n({__name:`theee-parser-widget`,props:{illustration:{}},setup(n){return(i,a)=>(e(),t(r,{draw:n.illustration},null,8,[`draw`]))}});export{i as default};

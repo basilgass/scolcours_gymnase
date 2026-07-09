@@ -1,0 +1,1 @@
+import{n as e}from"./pinia-e-Ddqcz3.js";import{c as t,m as n,u as r}from"./@vueuse-CmpzP2Kh.js";import{l as i}from"./app-BlPgCT7a.js";var a=`scolcours_gymnase_editmode`,o=e(`editMode`,()=>{let e=r(a,!1);function o(){e.value=!e.value}return n(t().ctrl_alt_a,()=>{i()&&(e.value=!e.value)}),{enable:e,toggle:o}});export{o as t};

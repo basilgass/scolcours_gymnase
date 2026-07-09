@@ -27,6 +27,10 @@ Ce document contient :
 2. La structure exacte de `questionData` (provide/inject)
 3. La liste des améliorations identifiées (TODO)
 
+Pour **ajouter un clavier** (disposition + checker), suivre le guide dédié
+`.claude/docs/keyboards.md` (deux familles : display-driven vs custom, registres
+`keyboardConfig` / `keyboardRegistry` / `checkerRegistry`).
+
 ## Règles à respecter
 
 ### Provide / Inject

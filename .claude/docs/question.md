@@ -2,6 +2,10 @@
 
 > Dernière mise à jour : 2026-04-20  
 > Périmètre : frontend uniquement (`resources/js/Components/Questions/`)
+>
+> Pour **créer un nouveau clavier** (disposition + checker), voir le guide dédié
+> `.claude/docs/keyboards.md`. Ce document-ci décrit la **consommation runtime** des
+> claviers côté question, pas leur ajout.
 
 ---
 
