@@ -175,8 +175,8 @@ function generateSlidesNumber(start: number, end: number) {
 	return Array.from({length: end - start + 1}, (_, i) => start + i)
 }
 
-function transformBody(str) {
-	const result = str.split(/(&|\\\\)/g).map((part) => {
+function transformBody(str: string) {
+	const result = str.split(/(&|\\\\)/g).map((part: string) => {
 		// replace the color from ...\colorbox{color}... to ...\colorbox{transparent}... with regexep
 		if (part.includes("\\colorbox")) {
 			part = part.replaceAll(/colorbox{[^}]*}/g, "colorbox{transparent}")

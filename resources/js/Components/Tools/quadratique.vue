@@ -38,7 +38,7 @@ const A = computed(() => forms[0].value.value as string)
 const B = computed(() => forms[1].value.value as string)
 const C = computed(() => forms[2].value.value as string)
 
-function getPolyFromThreePoints(A, B, C): Polynom | null {
+function getPolyFromThreePoints(A: string, B: string, C: string): Polynom | null {
 	const P = new Equation("y", "ax^2+bx+c")
 	const pA = new Point(A)
 	const pB = new Point(B)

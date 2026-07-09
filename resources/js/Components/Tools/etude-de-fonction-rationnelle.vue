@@ -105,7 +105,7 @@ function generate_fx() {
 		n++
 	}
 
-	forms[0].value.value = genFx.fx
+	forms[0].value.value = genFx.numerator
 	alert("Aucune fonction intéressante générée...")
 }
 

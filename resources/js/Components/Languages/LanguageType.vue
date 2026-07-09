@@ -68,7 +68,7 @@ function buildResult() {
 
 const currentIndex = ref(-1)
 
-function validateKey(index) {
+function validateKey(index: number) {
 	if (resultLetters.value[currentIndex.value].key === foreignLetters.value[index].key) {
 		resultLetters.value[currentIndex.value].visible = true
 		foreignLetters.value[index].used = true

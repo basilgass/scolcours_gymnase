@@ -47,7 +47,7 @@ function sessionCreate() {
 		})
 }
 
-function sessionDestroy(id) {
+function sessionDestroy(id: number) {
 	axios
 		.post(route("api.admin.quizzes.sessions.destroy", [id]), {
 			_method: "DELETE",

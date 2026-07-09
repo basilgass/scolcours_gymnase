@@ -4,6 +4,7 @@ import ToolForm, {IToolForm} from "@/Components/Tools/Parts/ToolForm.vue"
 import TexCode from "@/Components/Ui/TexCode.vue"
 import {useToolsStorage} from "@/Composables/useToolsStorage.ts"
 import {Polynom} from "pimath"
+import type {KeyboardInputInterface} from "@/types/keyboardInterfaces.ts"
 
 /** Tools
  * title: développement de polynôme
@@ -44,7 +45,7 @@ const result = computed(() => {
 	}
 })
 
-function updateKbrd(event) {
+function updateKbrd(event: KeyboardInputInterface) {
 	forms[0].value.value = event.input
 }
 </script>

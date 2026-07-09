@@ -202,7 +202,7 @@ const value = ref(false)
 					v-for="key in Object.keys(definitionClasses)"
 					:key="`def-${key}`"
 				>
-					Mise en évidence de la défition du <span :class="definitionClasses[key]">{{ key }}</span> dans une
+					Mise en évidence de la défition du <span :class="definitionClasses[key as ThemesType]">{{ key }}</span> dans une
 					phrase.
 				</div>
 			</div>
@@ -220,7 +220,7 @@ const value = ref(false)
 
 				<div class="flex gap-3 *:w-50 *:h-15 *:grid *:place-items-center">
 					<div
-						v-for="(color, index) in themes[theme]"
+						v-for="(color, index) in themes[theme as ThemesType]"
 						:key="index"
 						:class="color"
 					>

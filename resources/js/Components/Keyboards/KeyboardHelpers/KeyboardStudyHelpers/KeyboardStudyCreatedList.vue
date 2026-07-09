@@ -29,7 +29,7 @@ function displayItem(item: itemGraphInterface): string {
 		return `\\text{${item.type.toUpperCase()}} : ${item.id}`
 	}
 
-	const btnMap: Partial<Record<ITEM_TYPES, string>> = {}
+	const btnMap: Partial<Record<POINT_TYPES, string>> = {}
 	btnMap[POINT_TYPES.MIN] = 'min'
 	btnMap[POINT_TYPES.MAX] = 'max'
 	btnMap[POINT_TYPES.REPLAT] = 'replat'
@@ -38,13 +38,13 @@ function displayItem(item: itemGraphInterface): string {
 	btnMap[POINT_TYPES.ORDONNEE] = 'ordonnée'
 	btnMap[POINT_TYPES.QUELCONQUE] = ''
 
-	return `\\text{${btnMap[item.kind]}}${item.id}`
+	return `\\text{${btnMap[item.kind as POINT_TYPES]}}${item.id}`
 }
 
 function getGroup(item: itemGraphInterface): string {
 	return item.type === 'point'
 		? kbrdStudyButtons[item.kind].group
-		: kbrdStudyButtons[item.type]?.group ?? ''
+		: kbrdStudyButtons[item.type as keyof typeof kbrdStudyButtons]?.group ?? ''
 }
 
 const groups = computed(() => {

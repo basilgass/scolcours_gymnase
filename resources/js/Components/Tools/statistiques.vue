@@ -357,11 +357,7 @@ function statsBuildData_auto() {
 	return raw
 }
 
-function statsBuildTable_discrete() {
-	return []
-}
-
-function statsBuildTable_continuous(): {
+type StatTableRow = {
 	bi: number
 	bii: number
 	xi: number
@@ -372,7 +368,13 @@ function statsBuildTable_continuous(): {
 	Fid: number
 	fixi: number
 	fixii: number
-}[] {
+}
+
+function statsBuildTable_discrete(): StatTableRow[] {
+	return []
+}
+
+function statsBuildTable_continuous(): StatTableRow[] {
 	// The length must be greater than 1.
 	if (statConfig.length <= 1) {
 		return []
@@ -456,7 +458,7 @@ function statsBuildTable_continuous(): {
 	return table
 }
 
-function statRoundValue(value) {
+function statRoundValue(value: number) {
 	return statConfig.round > 0 ? +value.toFixed(statConfig.round) : value
 }
 
@@ -467,7 +469,7 @@ function statRoundValue(value) {
  * @param {Array} table - The table containing the data.
  * @returns {number} - The mode of the table.
  */
-function stats_mode(table): { classe: string; mode: number } {
+function stats_mode(table: StatTableRow[]): { classe: string; mode: number } {
 	if (statTable.value.length === 0) {
 		return {classe: "", mode: 0}
 	}
@@ -505,7 +507,7 @@ function stats_mode(table): { classe: string; mode: number } {
  * @param {number} [breakPoint=0.5] - The break point to calculate the median value.
  * @returns {number} - The calculated median value.
  */
-function stats_median(table, breakPoint = 0.5) {
+function stats_median(table: StatTableRow[], breakPoint = 0.5) {
 	for (let i = 0; i < table.length; i++) {
 		if (table[i].Fi >= breakPoint) {
 			return (

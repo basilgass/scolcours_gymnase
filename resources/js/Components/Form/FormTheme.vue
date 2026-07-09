@@ -24,7 +24,7 @@ onMounted(() => {
 })
 
 function buttonClicked(theme: ThemeInterface) {
-	theValue.value = Object.hasOwn(theme, props.themeKey) ? theme[props.themeKey] : theme.id
+	theValue.value = Object.hasOwn(theme, props.themeKey) ? theme[props.themeKey as keyof ThemeInterface] as string | number : theme.id
 }
 </script>
 
@@ -42,7 +42,7 @@ function buttonClicked(theme: ThemeInterface) {
 				v-for="theme in $page.props.themes"
 				:key="`theme-${theme.id}`"
 				:theme="theme.id"
-				:outline="theValue !== theme[themeKey]"
+				:outline="theValue !== theme[themeKey as keyof ThemeInterface]"
 				xs
 				@click="buttonClicked(theme)"
 			>

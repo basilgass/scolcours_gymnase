@@ -135,8 +135,8 @@ const result = computed(() => {
 
 		if (triangle.resolvable !== true && triangle2.resolvable !== true) {
 			return {
-				triangle: null,
-				triangle2: null,
+				triangle: null as triangleInterface | null,
+				triangle2: null as triangleInterface | null,
 				text: `le triangle n'est pas résolvable. ${triangle.resolvable}`
 			}
 		}
@@ -146,7 +146,7 @@ const result = computed(() => {
 				triangle.hasAlternate && triangle2.resolvable === true
 					? formatTriangle(triangle2)
 					: null,
-			text: null,
+			text: null as string | null,
 			raw: {
 				triangle,
 				triangle2:
@@ -488,7 +488,7 @@ function makeTriangle(value: triangleRawInterface, alternate?: boolean): triangl
 							:key="`triangle-${key}`"
 						>
 							<td
-								v-katex="`${labels[key]}=`"
+								v-katex="`${labels[key as keyof typeof labels]}=`"
 								class="w-[50px] text-right bg-gray-100 font-semibold px-4"
 							/>
 							<td
@@ -516,7 +516,7 @@ function makeTriangle(value: triangleRawInterface, alternate?: boolean): triangl
 							:key="`triangle-${key}`"
 						>
 							<td
-								v-katex="`${labels[key]}=`"
+								v-katex="`${labels[key as keyof typeof labels]}=`"
 								class="w-[50px] text-right bg-gray-100 font-semibold px-4"
 							/>
 							<td

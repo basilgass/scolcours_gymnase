@@ -70,9 +70,7 @@ export interface BoxPlotComponentProps {
  */
 export const chartPropDefaults = {
 	chartLabels: (): ChartLabel[] => [],
-	chartOptions: null,
 	chartLegend: false,
-	chartColorset: null,
 } as const
 
 /**

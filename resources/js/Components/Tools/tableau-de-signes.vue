@@ -32,7 +32,7 @@ const fxTex = ref('')
 const dxTex = ref('')
 const ddxTex = ref('')
 
-function TOS_update(value) {
+function TOS_update(value: { fx: string, dx: string, ddx: string }) {
 	fxTex.value = value.fx
 	dxTex.value = value.dx
 	ddxTex.value = value.ddx

@@ -52,7 +52,7 @@ export enum ITEM_TYPES {
 	TRACE = "trace"
 }
 
-export const STUDY_CONTROLS_KEYS = ["LT", "RT", "LB", "RB"]
+export const STUDY_CONTROLS_KEYS = ["LT", "RT", "LB", "RB"] as const
 
 export interface ASYMPTOTES_CONTROLS {
 	"LB": Point
@@ -192,7 +192,7 @@ export class StudyGraph extends PiGraph {
 		const p = this.makeLine({x: 0, y: posY}, {x: 1, y: 0})
 		p.stroke('green')
 
-		const el = {
+		const el: itemGraphInterface = {
 			id: `y=${value}`,
 			type: ITEM_TYPES.AH,
 			kind: null,
@@ -244,7 +244,7 @@ export class StudyGraph extends PiGraph {
 		const b1ratio = 5
 		const b2ratio = 10
 
-		const el = {
+		const el: itemGraphInterface = {
 			id: value,
 			type: ITEM_TYPES.AO,
 			kind: null,
@@ -276,7 +276,7 @@ export class StudyGraph extends PiGraph {
 		p.stroke('red')
 
 		// LT, LB, RT, RB
-		const el = {
+		const el: itemGraphInterface = {
 			id: `x=${value}`,
 			type: ITEM_TYPES.AV,
 			kind: null,
@@ -368,7 +368,7 @@ export class StudyGraph extends PiGraph {
 
 		const bbox = this.BBox
 
-		const env = {
+		const env: itemGraphInterface = {
 			id: 'env',
 			type: ITEM_TYPES.TRACE,
 			kind: null,
@@ -499,7 +499,7 @@ export class StudyGraph extends PiGraph {
 		}
 
 		for (const key in item.controls) {
-			if (item.controls[key].shape.fill() === "green") {
+			if ((item.controls as ASYMPTOTES_CONTROLS)[key as keyof ASYMPTOTES_CONTROLS].shape.fill() === "green") {
 				ctrls.push(key)
 			}
 		}
@@ -617,10 +617,10 @@ export class StudyGraph extends PiGraph {
 
 				// Check the selected buttons
 				for (const key in item.controls) {
-					if (item.controls[key]?.shape?.fill() === "green" && item.bezier[key]) {
+					if ((item.controls as ASYMPTOTES_CONTROLS)[key as keyof ASYMPTOTES_CONTROLS]?.shape?.fill() === "green" && item.bezier[key as keyof BEZIER_CONTROLS]) {
 						ctrlPoints = ctrlPoints.concat(
-							...item.bezier[key]
-								.map((pt: BEZIER_CONTROL_POINT) => {
+							...item.bezier[key as keyof BEZIER_CONTROLS]
+								.map((pt: BEZIER_CONTROL_POINT): IBezierPointInterface => {
 									return {
 										point: pt.point,
 										controls: {

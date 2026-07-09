@@ -55,7 +55,7 @@ const expression = computed(() => {
 	const abs: { polynom: Polynom, match: string }[] = []
 	const zeroes: Solution[] = []
 	const matches = [...fx.value.matchAll(/abs\(([^)]+)\)/g)]
-	const expr = []
+	const expr: ReturnType<typeof getOneExpression>[] = []
 
 	for (const m of matches) {
 		const P = new Polynom(m[1])
@@ -88,7 +88,7 @@ const expression = computed(() => {
 	}
 	expr.push(getOneExpression(fx.value, abs, greaterThan, lessThan))
 
-	function checkValue(v, min, max) {
+	function checkValue(v: number, min: Solution, max: Solution) {
 		if (min === null && v <= max.value) {
 			return true
 		} else if (max === null && v >= min.value) {
@@ -109,7 +109,7 @@ const expression = computed(() => {
 		absTex,
 		tex: `f(x) = ${absTex} = \\begin{cases}${expr.map(x => `${x.polynom.display} &\\text{si}\\quad ${x.condition}`).join("\\\\")}\\end{cases}`,
 		drawCode: expr.map(x => `${x.polynom.display},${x.borders.min === null ? -20 : x.borders.min.value}:${x.borders.max === null ? 20 : x.borders.max.value}`),
-		solve: function (v) {
+		solve: function (v: string) {
 			try {
 				const zeroes = []
 				for (const e of expr) {
@@ -123,7 +123,7 @@ const expression = computed(() => {
 				}
 
 				return {
-					tex: zeroes.length > 0 ? `\\left\\{${zeroes.map(z => z.exact.tex).join(";")}\\right\\}` : "\\varnothing"
+					tex: zeroes.length > 0 ? `\\left\\{${zeroes.map(z => z.tex).join(";")}\\right\\}` : "\\varnothing"
 				}
 			} catch {
 				return {
@@ -131,13 +131,13 @@ const expression = computed(() => {
 				}
 			}
 		},
-		evaluate: function (v: string) {
+		evaluate: function (v: string): string {
 			try {
 				const Q = new Fraction(v)
 
-				return expr.filter(x => {
+				return (expr.filter(x => {
 					return checkValue(Q.value, x.borders.min, x.borders.max)
-				})[0].polynom.evaluate(Q)
+				})[0].polynom.evaluate(Q) as Fraction).tex
 			} catch {
 				return "\\text{merci d'entrer un nombre}"
 			}
@@ -240,7 +240,7 @@ const draw = computed(() => {
 							from-url="x"
 							prepend="\(x=\)"
 						/>
-						<div v-katex="`f\\left(${xAsTex}\\right)=${expression.evaluate(x).tex}`" />
+						<div v-katex="`f\\left(${xAsTex}\\right)=${expression.evaluate(x)}`" />
 					</div>
 					<div>
 						<h3>résoudre l'équation <span v-katex="`f(x)=${yAsTex}`" /></h3>

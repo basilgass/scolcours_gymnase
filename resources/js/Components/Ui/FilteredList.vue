@@ -122,7 +122,7 @@ const selectedList = ref("")
 const selectedTheme = ref<number>(props.filterByThemeOnLoad ?? 0)
 const showList = ref(props.collapsed !== true)
 
-function itemClicked(item) {
+function itemClicked(item: T) {
 	if (props.routeName) {
 		console.log(route(props.routeName, props.routeData(item)))
 		router.visit(route(props.routeName, props.routeData(item)))
@@ -131,9 +131,9 @@ function itemClicked(item) {
 
 defineSlots<{
 	card(props: { item: T }): unknown,
-	button(),
-	title(),
-	noItemMessage(),
+	button(): unknown,
+	title(): unknown,
+	noItemMessage(): unknown,
 }>()
 
 const emits = defineEmits<{

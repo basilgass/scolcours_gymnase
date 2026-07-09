@@ -34,7 +34,7 @@ const activeSessions = computed<QuizzSessionsType>(() => {
 	const active: QuizzSessionsType = {}
 
 	Object.keys(sessions).forEach(key => {
-		active[key] = sessions[key]
+		active[Number(key)] = sessions[Number(key)]
 			.filter(session => session.status !== 'outro')
 	})
 
@@ -45,7 +45,7 @@ const pastSessions = computed<QuizzSessionsType>(() => {
 	const past: QuizzSessionsType = {}
 
 	Object.keys(sessions).forEach(key => {
-		past[key] = sessions[key]
+		past[Number(key)] = sessions[Number(key)]
 			.filter(session => session.status === 'outro')
 	})
 

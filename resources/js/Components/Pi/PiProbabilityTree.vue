@@ -13,7 +13,7 @@ const props = defineProps({
 const root = ref(null)
 const tree = ref(null)
 
-let Tree
+let Tree: ProbabilityTree
 
 function updateTree() {
 	Tree.update(props.treeData, props.treeParams)

@@ -27,7 +27,7 @@ const emits = defineEmits<{
 
 defineSlots<{
 	title(props: { item: T }): T,
-	button(),
+	button(): unknown,
 }>()
 
 const items = ref<T[]>([])

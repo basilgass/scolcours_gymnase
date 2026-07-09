@@ -64,7 +64,7 @@ export function useLanguage(languageData: LanguageDataInterface, options?: {
 		selectedWords.value = getListOfWordsFromUnits().map(x => {
 			return {
 				...x,
-				result: undefined,
+				result: undefined as boolean | undefined,
 				errors: 0
 			}
 		})

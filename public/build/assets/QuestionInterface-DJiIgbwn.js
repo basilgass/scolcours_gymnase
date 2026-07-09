@@ -1,1 +1,0 @@
-var e=Symbol(`questionData`);export{e as t};

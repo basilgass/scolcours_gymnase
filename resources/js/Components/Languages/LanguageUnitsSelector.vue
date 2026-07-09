@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 
-import {BookInterface, TranslationUnitInterface, TranslationUnitInterfaceExtended} from "@/types/modelInterfaces"
+import {BookInterface, TranslationUnitInterface, TranslationUnitInterfaceExtended, TranslationWord} from "@/types/modelInterfaces"
 import axios from "axios"
 import {computed, ref} from "vue"
 import ScButton from "@/Components/Ui/Button/scButton.vue"
@@ -49,7 +49,7 @@ function getUnits_from_Book(book_id: number) {
 				return {
 					...value,
 					selected: false,
-					words: []
+					words: [] as TranslationWord[]
 				}
 			})
 		})

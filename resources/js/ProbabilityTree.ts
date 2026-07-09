@@ -462,7 +462,7 @@ export class ProbabilityTree {
 			if (index % 2 === 0) {
 				key = value
 			} else {
-				parms[key] = value
+				parms[key as keyof typeof parms] = value
 			}
 		})
 

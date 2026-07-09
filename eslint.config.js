@@ -6,7 +6,7 @@ export default typescriptEslint.config(
 	{ignores: ['*.d.ts', '**/coverage', '**/dist']},
 	{
 		extends: [
-			// eslint.configs.recommended,
+			// eslint.configs.recommended, désactivé car utilise la version de `vue`
 			...typescriptEslint.configs.stylistic,
 			...eslintPluginVue.configs['flat/recommended']
 		],

@@ -165,7 +165,7 @@ const keyboardComputed = computed(() => {
 	for (const entry of normalizedLayout.value) {
 		const kkey = entry.key
 		let kdata: keyboardKey
-		let theKey = entry.inlineKey ?? keyboardKeys[kkey]
+		let theKey: keyboardKey | undefined = entry.inlineKey ?? keyboardKeys[kkey as keyof typeof keyboardKeys]
 
 		// Default key code data.
 		kdata = {

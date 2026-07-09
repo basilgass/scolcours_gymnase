@@ -77,7 +77,7 @@ const buttonSizeMap: Record<ButtonSize, string> = {
 
 const resolveAction = computed<ButtonActionValue | null>(() => {
 	if (Object.hasOwn(buttonActionMap, props.type)) {
-		return buttonActionMap[props.type]
+		return buttonActionMap[props.type as ButtonAction]
 	}
 
 	return null
@@ -95,7 +95,7 @@ const resolveColor = computed<Record<ButtonVariant, string> | null>(() => {
 	if (resolveTheme.value) return resolveTheme.value
 
 	if (Object.hasOwn(buttonColorMap, props.type)) {
-		return buttonColorMap[props.type]
+		return buttonColorMap[props.type as ButtonColor]
 	}
 
 	if (resolveAction.value) {
@@ -114,7 +114,7 @@ const resolveTheme = computed<Record<ButtonVariant, string> | null>(() => {
 
 	return slug === 'admin'
 		? buttonColorMap['console']
-		: buttonColorMap[slug]
+		: buttonColorMap[slug as ButtonColor]
 })
 
 const resolveSize = computed<ButtonSize>(() => {

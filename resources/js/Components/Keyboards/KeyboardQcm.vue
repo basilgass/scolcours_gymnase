@@ -142,7 +142,7 @@ function sortSmart(values: QCMItem[], order: 'asc' | 'desc' = 'asc'): QCMItem[] 
 	})
 }
 
-function qcmButtonClick(element) {
+function qcmButtonClick(element: QCMItem) {
 	if (!multiAnswers.value) {
 		// Si on n'est pas dans une "Multi-réponses", on désactive tout.
 		qcmItems.value.forEach((e) => (e.selected = false))

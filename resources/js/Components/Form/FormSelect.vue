@@ -35,7 +35,7 @@ const choiceValues = computed(() => Object.values(props.choices))
 
 const currentValue = computed(() => {
 	if (value.value === undefined) return 'choisir...'
-	return props.choices[value.value as string] ?? value.value
+	return (props.choices as Record<string, string>)[value.value as string] ?? value.value
 })
 
 function updatePosition() {

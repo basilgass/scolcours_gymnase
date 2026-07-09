@@ -14,6 +14,7 @@ import {computed, onMounted, ref, watch} from "vue"
 import Card from "@/Components/Ui/Card.vue"
 import PiDrawParser from "@/Components/Pi/PiDrawParser.vue"
 import {WidgetPropsInterface} from "@/types/modelInterfaces.ts"
+import type {KeyboardInputInterface} from "@/types/keyboardInterfaces.ts"
 import FormInput from "@/Components/Form/FormInput.vue"
 import ToolError from "@/Components/Tools/Parts/ToolError.vue"
 
@@ -81,8 +82,8 @@ const numericParse = computed(() => forms[6].value.value as boolean)
 const activeInput = ref<number>(0)
 
 interface ITableOfValue {
-	x: string,
-	fx: number,
+	x: number,
+	fx: string,
 	fxTex: string
 }
 
@@ -166,7 +167,7 @@ onMounted(() => {
 	checkIfNumeric()
 })
 
-function updateKbrd(event, index) {
+function updateKbrd(event: KeyboardInputInterface, index: number) {
 	forms[index].value.value = event.input
 }
 
@@ -176,8 +177,8 @@ const drawParamsAuto = computed(() => {
 		return ""
 	}
 
-	const yMin = Math.min(...fx.value.map(f => f.fx))
-	const yMax = Math.max(...fx.value.map(f => f.fx))
+	const yMin = Math.min(...fx.value.map(f => +f.fx))
+	const yMax = Math.max(...fx.value.map(f => +f.fx))
 
 	// On s'arraange pour que les unités y correspondent environ à l'horizontal.
 	const dy = yMax - yMin

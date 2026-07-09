@@ -74,7 +74,7 @@ function updateActiveState() {
 			:title="`${props.students.length} étudiants`"
 			item-class="bg-white"
 		>
-			<template #card="{ item }: { item: string | object }">
+			<template #card="{ item }: { item: string | { name: string } }">
 				<div class="bg-content rounded-lg border p-4 min-h-[3em]">
 					<i class="bi bi-person mr-3" />{{ (typeof item === "string") ? item : item['name'] }}
 				</div>

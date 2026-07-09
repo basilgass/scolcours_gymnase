@@ -13,6 +13,7 @@ import QuestionBlock from "@/Components/Questions/Parts/QuestionBlock.vue"
 import QuestionAnswer from "@/Components/Questions/Parts/QuestionAnswer.vue"
 import {onMounted, provide, ref, useTemplateRef, watch} from "vue"
 import type {QuestionInterface} from "@/types/modelInterfaces.ts"
+import type {KeyboardInputInterface} from "@/types/keyboardInterfaces.ts"
 import {
 	questionDataKey,
 	questionResultInterface,
@@ -124,7 +125,7 @@ async function loadAnswers(event: { show: boolean, value?: string }) {
 				? value
 				: ''
 		)
-			.then((x) => {
+			.then((x: KeyboardInputInterface) => {
 				questionData.user.answers.value[index] = x
 			})
 	}

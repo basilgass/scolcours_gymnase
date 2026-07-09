@@ -107,7 +107,7 @@ const words = computed<wordItem[]>(() => {
 				id: `${index + 1}`,
 				word: element,
 				available: true,
-				parent: null
+				parent: null as string | null
 			}
 		})
 	}

@@ -3,6 +3,7 @@ import KeyboardDisplay from "@/Components/Keyboards/KeyboardDisplay.vue"
 import ToolForm, {IToolForm} from "@/Components/Tools/Parts/ToolForm.vue"
 import {useToolsStorage} from "@/Composables/useToolsStorage.ts"
 import {Fraction, Polynom} from "pimath"
+import type {KeyboardInputInterface} from "@/types/keyboardInterfaces.ts"
 /** Tools
  * title: évaluation d'une fonction polynomiale
  * body: évaluation d'une fonction polynomiale
@@ -35,14 +36,14 @@ const x = computed(() => forms[1].value.value)
 
 const activeInput = ref<number>(0)
 
-function onKeyboardChange(value) {
+function onKeyboardChange(value: KeyboardInputInterface) {
 	forms[activeInput.value].value.value = value.input
 }
 
 const fx = computed(() => {
 	try {
 		const FX = new Polynom(f.value as string)
-		const data = {
+		const data: { x: string, fx: string, frac: string | null, value: number | null } = {
 			x: "",
 			fx: "",
 			frac: null,

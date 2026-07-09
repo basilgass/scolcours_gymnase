@@ -89,7 +89,7 @@ function generateQuestion() {
 	currentIndex.value = 0
 }
 
-const validateKey = function (index) {
+const validateKey = function (index: number) {
 	if (resultLetters.value[currentIndex.value].key === answerLetters.value[index].key) {
 		resultLetters.value[currentIndex.value].visible = true
 		answerLetters.value[index].used = true

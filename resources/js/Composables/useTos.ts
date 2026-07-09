@@ -348,7 +348,7 @@ function PolyFactor_getExtremes(fx: PolyFactor, dfx: PolyFactor, dfx_table_of_si
 				},
 				tex: '',
 				value: NaN,
-				answer: null,
+				answer: null as string | null,
 				type: 'undefined'
 			}
 		}
@@ -423,7 +423,7 @@ export function makeStudyFromCode(code: string, showCoords: boolean, displayMode
 	const [zeroes, signs, grows, coords] = code.split("@")
 
 	if (grows !== undefined) {
-		const extremes = {}
+		const extremes: Record<string, { tex: { x: number, y: number }, type: string, value: { x: number, y: number }, label: string }> = {}
 		const zeroesValues = zeroes.split(",")
 		let extremesValues = coords ? coords.split(",") : []
 
@@ -473,7 +473,7 @@ export function makeStudyFromCode(code: string, showCoords: boolean, displayMode
 			zeroes: zeroes.split(",").map(x => {
 				return {tex: keyboards.exact.tex(x)}
 			}).filter(x => x.tex !== ""),
-			factors: [],
+			factors: [] as { tex: string }[],
 			extremes,
 			type: "grows",
 			grows: [...grows.split("")],
@@ -488,7 +488,7 @@ export function makeStudyFromCode(code: string, showCoords: boolean, displayMode
 		zeroes: zeroes.split(",").map(x => {
 			return {tex: keyboards.exact.tex(x)}
 		}).filter(x => x.tex !== ""),
-		factors: [],
+		factors: [] as { tex: string }[],
 		signs: [["", ...signs.split(""), ""]]
 	}
 }

@@ -43,7 +43,7 @@ watch(selectedWordsIndex, () => {
 	}
 })
 
-const selectCard = function (card) {
+const selectCard = function (card: { text: string, selected: boolean, found: boolean }) {
 	if (card.found) {
 		return
 	}

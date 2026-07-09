@@ -33,7 +33,7 @@ const displayIfIds = computed(() => {
 		.map((id) => +id)
 })
 
-const toggleDisplayId = async function (id) {
+const toggleDisplayId = async function (id: number) {
 	if (id === -1) {
 		theQuestion.value.displayIf = null
 	} else {

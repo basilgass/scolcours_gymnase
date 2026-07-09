@@ -51,7 +51,7 @@ const duplicatedCharacters = computed<Record<string, number>>(() => {
 			acc[char]++
 		}
 		return acc
-	}, {})
+	}, {} as Record<string, number>)
 
 	// Remove the characters that are not duplicated
 	Object.keys(duplicates).forEach(key => {
@@ -152,7 +152,7 @@ function applyDivision(index: number, value: number, letter: string) {
 	)
 }
 
-function factoriel(n: number) {
+function factoriel(n: number): number {
 	if (n === 0) {
 		return 1
 	}
@@ -176,7 +176,7 @@ function prepareNextWord() {
 		.then((response: AxiosResponse) => {
 			return nextWord.value = response.data[0]
 		})
-		.catch((error: AxiosErrorMessage) => {
+		.catch((error: AxiosErrorMessage): string[] => {
 			console.log(error.response.data.message)
 			return []
 		})

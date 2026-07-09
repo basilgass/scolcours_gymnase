@@ -146,7 +146,7 @@ export class matrixSolver {
 	static linearCombination(arr: Fraction[][] | Polynom[][], target: number, scalar: InputValue<Fraction>, reference: number): void {
 		arr[target].forEach((aij, index) => {
 			aij.add(
-				arr[reference][index].clone()
+				(arr[reference][index] as Fraction).clone()
 					.multiply(new Fraction(scalar))
 			)
 		})

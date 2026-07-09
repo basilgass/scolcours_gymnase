@@ -8,6 +8,7 @@ import {
 	KeyboardPropsInterface
 } from "@/types/keyboardInterfaces.ts"
 import {
+	ASYMPTOTES_CONTROLS,
 	itemGraphInterface,
 	kbrdStudyButtons,
 	POINT_TYPES,
@@ -455,7 +456,7 @@ function parseStringToKeyboard(value: string) {
 
 				if (el) {
 					ctrls.forEach((key) => {
-						graph.onClick(el.controls[key])
+						graph.onClick((el.controls as ASYMPTOTES_CONTROLS)[key as keyof ASYMPTOTES_CONTROLS])
 					})
 				}
 			}

@@ -6,7 +6,7 @@ import axios from "axios"
 const emit = defineEmits(["file-dropped"])
 const active = ref(false)
 
-function onDrop(e) {
+function onDrop(e: DragEvent) {
 	active.value = false
 
 	axios.post(route("api.admin.illustrations.upload"),
@@ -27,7 +27,7 @@ function onDrop(e) {
 
 
 const events = ["dragenter", "dragover", "dragleave", "drop"]
-function preventDefaults(e) {
+function preventDefaults(e: Event) {
 	e.preventDefault()
 }
 onMounted(() => {

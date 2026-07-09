@@ -51,7 +51,7 @@ const editWord = ref<{ id: number, foreign: string, fr: string }>({
 	id: null, foreign: null, fr: null
 })
 // before editing, store the word to edit.
-const editTranslation = function (word) {
+const editTranslation = function (word: { id: number, foreign: string, fr: string }) {
 	if (editMode.enable && useIsAdmin()) {
 		editWord.value = word
 		showEditForm.value = true

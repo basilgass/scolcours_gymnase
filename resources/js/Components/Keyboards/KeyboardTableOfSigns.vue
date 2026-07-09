@@ -103,7 +103,7 @@ const tosMode = computed<"signs" | "grows" | "curves">(() => {
 // Le clavier a afficher
 const showKeyboard = ref("zeroes")
 
-const changeKeyboard = function (event) {
+const changeKeyboard = function (event: KeyboardInputInterface) {
 	// event = {input, raw, tex}
 	// mise à jour du tableau de signes
 	switch (showKeyboard.value) {
@@ -131,7 +131,7 @@ function updateKeyboardActiveCell() {
 	const activeClassName = 'active-cell'
 
 	// Remove all active cells
-	tosUI.value.$el.querySelectorAll(`.${activeClassName}`).forEach(x => x.classList.remove(activeClassName))
+	tosUI.value.$el.querySelectorAll(`.${activeClassName}`).forEach((x: Element) => x.classList.remove(activeClassName))
 
 	switch (showKeyboard.value) {
 		case "zeroes": {
