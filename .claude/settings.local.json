@@ -101,7 +101,8 @@
       "Bash(grep -v \"KeyboardStudyHelpers.ts$\")",
       "Bash(grep -v \"KeyboardDisplay.vue$\")",
       "Bash(grep -vE \"KeyboardResolution\\(Solution|Factorisation\\).vue$\")",
-      "Bash(grep -rnA6 \"director\" node_modules/pidraw/types/figures/Line.d.ts)"
+      "Bash(grep -rnA6 \"director\" node_modules/pidraw/types/figures/Line.d.ts)",
+      "Bash(grep -nA 20 \"matriceAugmenteeInterface\" resources/js/Components/Widgets/algebre/matrice-augmentee.vue)"
     ]
   },
   "enableAllProjectMcpServers": true,

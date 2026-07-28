@@ -16,8 +16,8 @@ const props = withDefaults(defineProps<{
 		hoverInfo: false,
 	})
 
-const target = defineModel<number>('target', {default: null})
-const reference = defineModel<number>('reference', {default: null})
+const target = defineModel<number | null>('target', {default: null})
+const reference = defineModel<number | null>('reference', {default: null})
 const aij = defineModel<{ row: number, column: number } | null>('aij', {default: null})
 
 const hoverItem = ref("")

@@ -46,7 +46,7 @@ const figures = ref<{
 	id: number,
 	refId: number,
 	transform: {
-		type: TRANSFORMATION,
+		type: TRANSFORMATION | null,
 		value: string
 	},
 	points: number[][]
@@ -197,7 +197,7 @@ enum TRANSFORMATION {
 	rotate = "rotate"
 }
 
-function transformMatrix(type: TRANSFORMATION, value?: string) {
+function transformMatrix(type: TRANSFORMATION, value: string): Matrix {
 	if (type === TRANSFORMATION.translation) {
 		const [x, y] = value.split(',')
 		return new Matrix(
@@ -248,6 +248,8 @@ function transformMatrix(type: TRANSFORMATION, value?: string) {
 			[0, 0, 1]
 		])
 	}
+
+	throw new Error(`Transformation inconnue: ${type}`)
 }
 
 function appTransform(type: TRANSFORMATION, value: string): number[][] {

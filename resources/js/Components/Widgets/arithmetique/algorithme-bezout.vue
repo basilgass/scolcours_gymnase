@@ -49,7 +49,7 @@ const euclide = computed(() => {
 	let r: number
 
 	const arr: { a: number, b: number, q: number, r: number }[] = []
-	while (r !== 0) {
+	do {
 		q = Math.floor(a / b)
 		r = a % b
 
@@ -58,7 +58,7 @@ const euclide = computed(() => {
 		// préparation de la ligne suivante
 		a = b
 		b = r
-	}
+	} while (r !== 0)
 
 	arr.pop()
 	return arr
@@ -87,6 +87,10 @@ const bezout = computed(() => {
 
 	const row = arr.shift()
 
+	if (row === undefined) {
+		return false
+	}
+
 	let a: number = row.a
 	let b: number = row.b
 	let u = 1
@@ -96,6 +100,10 @@ const bezout = computed(() => {
 
 	while (arr.length > 0) {
 		const row = arr.shift()
+
+		if (row === undefined) {
+			break
+		}
 
 		if (row.r === a) {
 			// si détails

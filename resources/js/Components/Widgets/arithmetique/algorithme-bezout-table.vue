@@ -49,7 +49,7 @@ const euclide = computed(() => {
 	let r: number
 
 	const arr: euclideType[] = []
-	while (r !== 0) {
+	do {
 		q = Math.floor(a / b)
 		r = a % b
 
@@ -58,7 +58,7 @@ const euclide = computed(() => {
 		// préparation de la ligne suivante
 		a = b
 		b = r
-	}
+	} while (r !== 0)
 
 	arr.pop()
 	return arr
@@ -80,6 +80,11 @@ const bezout = computed<(string | number)[][]>(() => {
 	const algo: euclideType[] = [...euclide.value].reverse()
 
 	const row = algo.shift()
+
+	if (row === undefined) {
+		return []
+	}
+
 	let u = 1
 	let v: number = -row.q
 
@@ -95,6 +100,10 @@ const bezout = computed<(string | number)[][]>(() => {
 
 	while (algo.length > 0) {
 		const row = algo.shift()
+
+		if (row === undefined) {
+			break
+		}
 
 		u = brow[posB]
 		v = brow[posA] - brow[posB] * row.q

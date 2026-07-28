@@ -220,21 +220,36 @@ export class matrixSolver {
 	}
 
 	updateMatrix(op: Partial<matriceAugmenteeInterface>): Partial<matriceAugmenteeInterface> {
+		const {target, value, reference} = op
+		if (target == null) {
+			return op
+		}
+
 		switch (op.operation) {
 			case 'x':
-				matrixSolver.swapLines(this.#matrix, op.target, op.reference)
+				if (reference != null) {
+					matrixSolver.swapLines(this.#matrix, target, reference)
+				}
 				break
 			case '+':
-				matrixSolver.linearCombination(this.#matrix, op.target, op.value, op.reference)
+				if (value != null && reference != null) {
+					matrixSolver.linearCombination(this.#matrix, target, value, reference)
+				}
 				break
 			case '-':
-				matrixSolver.linearCombination(this.#matrix, op.target, new Fraction(op.value).opposite(), op.reference)
+				if (value != null && reference != null) {
+					matrixSolver.linearCombination(this.#matrix, target, new Fraction(value).opposite(), reference)
+				}
 				break
 			case '*':
-				matrixSolver.multiplyByScalar(this.#matrix, op.target, op.value)
+				if (value != null) {
+					matrixSolver.multiplyByScalar(this.#matrix, target, value)
+				}
 				break
 			case '/':
-				matrixSolver.multiplyByScalar(this.#matrix, op.target, new Fraction(op.value).inverse())
+				if (value != null) {
+					matrixSolver.multiplyByScalar(this.#matrix, target, new Fraction(value).inverse())
+				}
 				break
 		}
 

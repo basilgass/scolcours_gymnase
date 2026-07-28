@@ -39,7 +39,7 @@ const euclide = computed(() => {
 	let r: number
 
 	const arr: { a: number, b: number, q: number, r: number }[] = []
-	while (r !== 0) {
+	do {
 		q = Math.floor(a / b)
 		r = a % b
 
@@ -48,7 +48,7 @@ const euclide = computed(() => {
 		// préparation de la ligne suivante
 		a = b
 		b = r
-	}
+	} while (r !== 0)
 
 	return arr
 })

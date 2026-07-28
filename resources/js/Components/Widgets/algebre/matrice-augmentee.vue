@@ -45,11 +45,11 @@ const digits = computed(() => {
 type operationType = `+` | `-` | '*' | '/' | 'x'
 
 export interface matriceAugmenteeInterface {
-	description: string
-	operation: operationType,
+	description: string | null
+	operation: operationType | null,
 	reference: number | null,
-	target: number,
-	value: string, // can be a number or a fraction
+	target: number | null,
+	value: string | null, // can be a number or a fraction
 }
 
 const buttonsConfig: { label: string, value: operationType }[] = [
@@ -132,11 +132,13 @@ const operationData = reactive<matriceAugmenteeInterface>({
 })
 const valueKeyboard = useTemplateRef('valueKeyboard')
 
+const fractionKeyboard = computed(() => getKeyboards('fraction')[0]?.keyboard)
+
 function getOperationDescription(operation: Partial<matriceAugmenteeInterface>): string {
-	if (operation.target === null) {
+	if (operation.target == null) {
 		return "Sélectionner une ligne..."
 	}
-	if (operation.operation === null) {
+	if (operation.operation == null) {
 		return `Que faire pour la <code>ligne ${operation.target + 1}</code> ?`
 	}
 
@@ -159,11 +161,11 @@ function getOperationDescription(operation: Partial<matriceAugmenteeInterface>):
 	let value = ""
 
 	if (op === '+' || op === '-') {
-		value = `\\(${scalar}\\) fois la <code>ligne ${operation.reference === null ? "..." : operation.reference + 1}</code>`
+		value = `\\(${scalar}\\) fois la <code>ligne ${operation.reference == null ? "..." : operation.reference + 1}</code>`
 	} else if (op === '*' || op === '/') {
 		value = `par \\(${scalar}\\)`
 	} else if (op === 'x') {
-		value = `avec la <code>ligne ${operation.reference + 1}</code>`
+		value = `avec la <code>ligne ${operation.reference == null ? "..." : operation.reference + 1}</code>`
 	}
 
 	return `${verb} la <code>ligne ${operation.target + 1}</code> ${value}`
@@ -210,7 +212,7 @@ function createPolynomMatrix() {
 function convertPolynomToTex(matrix: Polynom[][]): (string | number)[][] {
 	return matrix.map(line => {
 		return line.map(item => {
-			return outputAsDecimal.value ? +item.value.toFixed(digits.value) : item.tex
+			return outputAsDecimal.value && item.value !== undefined ? +item.value.toFixed(digits.value) : item.tex
 		})
 	})
 }
@@ -241,9 +243,19 @@ function initMatrix(refreshOnly?: boolean) {
 }
 
 function getShortDescription(operation: Partial<matriceAugmenteeInterface>): string {
+	if (operation.target == null) {
+		return ""
+	}
 
 	if (operation.operation === 'x') {
+		if (operation.reference == null) {
+			return ""
+		}
 		return `L_${operation.target + 1} \\longleftrightarrow L_${operation.reference + 1}`
+	}
+
+	if (operation.value == null) {
+		return ""
 	}
 
 	const F = new Fraction(operation.value)
@@ -257,6 +269,10 @@ function getShortDescription(operation: Partial<matriceAugmenteeInterface>): str
 		return `L_${operation.target + 1} \\longleftarrow ${F.tex} L_${operation.target + 1}`
 	}
 
+	if (operation.reference == null) {
+		return ""
+	}
+
 	return `L_${operation.target + 1} \\longleftarrow L_${operation.target + 1} ${operation.operation} ${F.value < 0 ? `\\left(${F.tex}\\right)` : F.tex} \\cdot L_${operation.reference + 1}`
 
 }
@@ -266,13 +282,21 @@ function updateMatrix(operation: Partial<matriceAugmenteeInterface>, refreshOnly
 		return
 	}
 
+	if (operation.target == null) {
+		return
+	}
+
 	const matrixLine = matrix[operation.target]
 
-	const value = new Fraction(operation.value)
+	const value = new Fraction(operation.value ?? 0)
 
 	switch (operation.operation) {
 		case "+":
 		case "-": {
+			if (operation.reference == null) {
+				break
+			}
+
 			const referenceLine = matrix[operation.reference]
 
 			matrixLine.forEach((polynom, index) => {
@@ -302,6 +326,9 @@ function updateMatrix(operation: Partial<matriceAugmenteeInterface>, refreshOnly
 			break
 		}
 		case "x":
+			if (operation.reference == null) {
+				break
+			}
 			swapLines(matrix, operation.target, operation.reference)
 	}
 
@@ -325,7 +352,7 @@ function updateMatrix(operation: Partial<matriceAugmenteeInterface>, refreshOnly
 	operationData.reference = null
 	operationData.target = null
 
-	valueKeyboard.value.reset()
+	valueKeyboard.value?.reset()
 
 }
 
@@ -547,8 +574,9 @@ function onValueChange(event: KeyboardInputInterface) {
 			<div v-show="operationData.operation!== null && operationData.operation!=='x'">
 				<!--demande d'un nombre-->
 				<keyboard-basic
+					v-if="fractionKeyboard"
 					ref="valueKeyboard"
-					:keyboard="getKeyboards('fraction')[0].keyboard"
+					:keyboard="fractionKeyboard"
 					answer=""
 					@change="onValueChange"
 				/>

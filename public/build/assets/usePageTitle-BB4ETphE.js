@@ -1,0 +1,1 @@
+import{a as e,b as t}from"./@inertiajs-DtbEXzlC.js";function n(){let n=e();return{title:t(()=>n.props.meta?.title??n.props.theme?.title??null)}}export{n as t};

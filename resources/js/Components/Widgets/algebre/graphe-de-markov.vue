@@ -37,13 +37,13 @@ const digits = computed<number>(() => {
 	return Number(d.split('d.')[1])
 })
 const labels = computed<string[]>(() => {
-	return props.illustration.code
-		.split('\n').shift()
+	return (props.illustration.code
+		.split('\n').shift() ?? '')
 		.split(',')
 		.filter(x => x.trim() !== '')
 })
 
-const nodes = computed<number>(() => {
+const nodes = computed<number | null>(() => {
 	const n = labels.value.length
 
 	if (n < 2 || n > 4) {
@@ -53,7 +53,7 @@ const nodes = computed<number>(() => {
 	return n
 })
 
-const matrix = computed<string[][]>(() => {
+const matrix = computed<string[][] | null>(() => {
 	if (!nodes.value) {
 		return null
 	}
@@ -92,6 +92,7 @@ const drawMouseUp = function (evt: { draw: PiDraw, mouse: MouseEvent | TouchEven
 </script>
 <template>
 	<pi-markov-graph
+		v-if="matrix"
 		:labels
 		:matrix
 		:digits

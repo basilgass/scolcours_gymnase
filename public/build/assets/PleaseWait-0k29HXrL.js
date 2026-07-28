@@ -1,0 +1,1 @@
+import{Dt as e,E as t,U as n,k as r,w as i,x as a}from"./@inertiajs-DtbEXzlC.js";var o=r({__name:`PleaseWait`,props:{text:{}},setup(r){return(o,s)=>(n(),i(`div`,null,[a(`p`,null,[s[0]||=a(`i`,{class:`bi bi-watch`},null,-1),t(` `+e(r.text??`merci de patienter...`),1)])]))}});export{o as t};
