@@ -24,27 +24,27 @@ use Illuminate\Database\Eloquent\Relations\MorphToMany;
  */
 class ChallengeLevel extends Model
 {
-    use HasFactory;
+	use HasFactory;
 
-    protected $guarded = [];
+	protected $guarded = [];
 
-    protected function casts(): array
-    {
-        return [
-            'bonus' => 'array',
-        ];
-    }
+	protected function casts(): array
+	{
+		return [
+			'bonus' => 'array',
+		];
+	}
 
-    public function challenge(): BelongsTo
-    {
-        return $this->belongsTo(Challenge::class);
-    }
+	public function challenge(): BelongsTo
+	{
+		return $this->belongsTo(Challenge::class);
+	}
 
-    public function generators(): MorphToMany
-    {
-        return $this
-            ->morphToMany(Generator::class, 'generatorable')
-            ->withPivot('id', 'order', 'config', 'parameters')
-            ->orderByPivot('order');
-    }
+	public function generators(): MorphToMany
+	{
+		return $this
+			->morphToMany(Generator::class, 'generatorable')
+			->withPivot('id', 'label', 'order', 'config', 'parameters')
+			->orderByPivot('order');
+	}
 }

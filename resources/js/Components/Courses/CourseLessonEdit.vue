@@ -8,6 +8,7 @@ import axios from "axios"
 import FormJson from "@/Components/Form/FormJson.vue"
 import {useCourse} from "@/Pages/Courses/useCourse.ts"
 import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
+import FormInput from "@/Components/Form/FormInput.vue"
 
 const props = defineProps<{
 	lesson: LessonInterface
@@ -17,11 +18,14 @@ const flash = useStoreFlashMessage()
 
 const showScoreRules = ref(false)
 
+const label = ref<string | null>(props.lesson.label)
+
 const scoreRules = ref(props.lesson.scoreRules ?? {})
 
 function updateLesson() {
 	axios
 		.patch(route('api.admin.lessons.update', {lesson: props.lesson.id}), {
+			label: label.value,
 			scoreRules: scoreRules.value
 		})
 		.then(() => {
@@ -40,6 +44,16 @@ const jsonMap = computed(() => {
 
 <template>
 	<div>
+		<form-input
+			v-model="label"
+			type="text"
+			label="label"
+			inline-label
+			xs
+			btn="bi bi-save"
+			@button-click="updateLesson"
+		/>
+
 		<div
 			class="cursor-pointer text-xs font-code"
 			@click="showScoreRules=!showScoreRules"

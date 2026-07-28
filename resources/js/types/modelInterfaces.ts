@@ -52,6 +52,7 @@ export interface LessonInterface<T extends LessonScoreRulesInterface = LessonSco
 	scheduled_at: string,
 	scoreRules: T,
 	title: string,
+	label?: string,
 	updated_at: string,
 	user: ScoreInterface<ScoreLessonDataInterface>,
 }

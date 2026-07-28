@@ -18,6 +18,7 @@ export interface GeneratorInterface {
 	id: number;
 	keyboard: string;
 	order: number;
+	label: string | null;
 	parameters?: Record<string, string> | null;
 	parameters_schema?: Record<string, GeneratorParameterSchemaEntry> | null;
 	pivot_id?: number | null;

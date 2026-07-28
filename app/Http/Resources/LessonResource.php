@@ -59,6 +59,7 @@ class LessonResource extends JsonResource
 			'course_id'       => $this->course_id,
 			'requires'        => $this->requires ? array_map('intval', explode(',', $this->requires)) : [],
 			'title'           => $this->lessonable->title,
+			'label'           => $this->label,
 			'lessonable_id'   => (int)$this->lessonable_id,
 			'lessonable_type' => class_basename($this->lessonable_type),
 			'lessonable_tag'  => $this->lessonable->type ?? null,

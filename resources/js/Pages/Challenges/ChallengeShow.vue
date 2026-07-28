@@ -126,7 +126,7 @@ function onSelect(generator: GeneratorInterface | null) {
 								>
 									<i class="bi bi-calculator text-sm shrink-0" />
 									<span
-										v-katex.auto="gen.title"
+										v-katex.auto="gen.label ? gen.label : gen.title"
 										class="text-sm"
 									/>
 								</div>

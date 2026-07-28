@@ -72,7 +72,7 @@ class Generator extends Model
 	{
 		return $this
 			->morphedByMany(ChallengeLevel::class, 'generatorable')
-			->withPivot('order', 'config', 'parameters');
+			->withPivot('label', 'order', 'config', 'parameters');
 	}
 
 	public function evaluations(): \Illuminate\Database\Eloquent\Relations\MorphToMany

@@ -207,7 +207,7 @@ const emit = defineEmits<{
 						@dragstart="event => onDragStart(event, day, item)"
 					>
 						<lesson-type-icon :lesson="item?.lesson??null" />
-						{{ item.lesson.title }} ({{ item.team.name }})
+						{{ item.lesson.label ?? item.lesson.title }} ({{ item.team.name }})
 					</div>
 				</div>
 			</div>

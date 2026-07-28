@@ -103,7 +103,7 @@ const nextCounter = computed(() => {
 						>
 							<lesson-type-icon :lesson="prevLesson" />
 							<InertiaLink
-								v-katex.auto="prevLesson.title"
+								v-katex.auto="prevLesson.label ?? prevLesson.title"
 								class="flex-1 whitespace-nowrap overflow-hidden overflow-ellipsis"
 								:href="route('students.lessons.show', {course: course.slug, lesson: prevLesson.id})"
 								:title="prevLesson.title"
@@ -116,7 +116,7 @@ const nextCounter = computed(() => {
 						>
 							<lesson-type-icon :lesson="lesson" />
 							<InertiaLink
-								v-katex.auto="lesson.title"
+								v-katex.auto="lesson.label ?? lesson.title"
 								class="flex-1 whitespace-nowrap overflow-hidden overflow-ellipsis"
 								:href="route('students.lessons.show', {course: course.slug, lesson: lesson.id})"
 								:title="lesson.title"
@@ -129,7 +129,7 @@ const nextCounter = computed(() => {
 						>
 							<lesson-type-icon :lesson="nextLesson" />
 							<InertiaLink
-								v-katex.auto="nextLesson.title"
+								v-katex.auto="nextLesson.label ?? nextLesson.title"
 								class="flex-1 whitespace-nowrap overflow-hidden overflow-ellipsis"
 								:href="route('students.lessons.show', {course: course.slug, lesson: nextLesson.id})"
 								:title="nextLesson.title"
@@ -167,7 +167,7 @@ const nextCounter = computed(() => {
 						>
 							<lesson-type-icon :lesson="l" />
 							<InertiaLink
-								v-katex.auto="l.title"
+								v-katex.auto="l.label ?? l.title"
 								class="flex-1 whitespace-nowrap overflow-hidden overflow-ellipsis"
 								:href="route('students.lessons.show', {course: course.slug, lesson: l.id})"
 								:title="l.title"

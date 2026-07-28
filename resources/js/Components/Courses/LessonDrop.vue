@@ -58,7 +58,7 @@ onMounted(() => {
 				<lesson-type-icon :lesson />
 			</div>
 			<div
-				v-katex.auto="lesson.title"
+				v-katex.auto="lesson.label ?? lesson.title"
 				class="whitespace-nowrap overflow-hidden"
 			/>
 		</div>

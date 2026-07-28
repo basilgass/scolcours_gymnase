@@ -18,6 +18,7 @@ class Lesson extends Model
 	use HasScoresTrait;
 
 	protected $fillable = [
+		"label",
 		"requires",
 		"order",
 		"scoreRules",

@@ -22,6 +22,17 @@ function updateRoute(): string {
 	})
 }
 
+// ── Label per generator ─────────────────────────────────────────────────────
+
+const label = ref<string | null>(props.generator.label)
+
+function saveLabelPerGenerator() {
+	if (label.value === props.generator.label) return
+
+	axios.patch(updateRoute(), {label: label.value})
+		.then((res) => emit("update", res.data))
+}
+
 // ── Time per question ───────────────────────────────────────────────────────
 
 const timePerQuestion = ref<number | null>(props.generator.config?.time_per_question ?? null)
@@ -75,11 +86,20 @@ function detach() {
 <template>
 	<div class="bg-gray-50 rounded">
 		<div class="flex items-center justify-between py-2 px-3 text-sm gap-2">
-			<span
-				v-katex.auto.inline="generator.title"
-				class="flex-1"
-			/>
+			<div class="flex-1 flex gap-3 items-center">
+				<div
+					v-katex.auto.inline="generator.title"
+					class="w-50"
+				/>
 
+				<form-input
+					v-model="label"
+					class="max-w-100"
+					xs
+					type="text"
+					@blur="saveLabelPerGenerator"
+				/>
+			</div>
 			<!-- Paramètres (panneau dépliable) -->
 			<button
 				v-if="generator.parameters_schema"

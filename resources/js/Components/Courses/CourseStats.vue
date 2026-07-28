@@ -220,7 +220,7 @@ onUnmounted(() => {
 						xs
 					/>
 					<div
-						v-katex.auto="lesson.title"
+						v-katex.auto="lesson.label ?? lesson.title"
 						class="text-xs whitespace-nowrap overflow-hidden"
 					/>
 				</div>

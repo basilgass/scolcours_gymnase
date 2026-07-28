@@ -96,8 +96,9 @@ class LessonApiController extends Controller
 	public function update(Request $request, Lesson $lesson)
 	{
 		$validated = $request->validate([
-			'requires'   => ['string', 'nullable'],
-			'scoreRules' => ['array', 'nullable'],
+			'requires'   => ['sometimes', 'string', 'nullable'],
+			'scoreRules' => ['sometimes', 'array', 'nullable'],
+			'label'      => ['sometimes', 'string', 'nullable']
 		]);
 
 		$lesson->update($validated);
