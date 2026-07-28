@@ -179,9 +179,11 @@ export function useChallenge(challengeMaybeRef: ChallengeInterface | ComputedRef
 		const pairs: [QuestionDynamicInterface, number | null][] = []
 		levelGenerators.value.forEach(gen => {
 			const timeLimit = gen.config?.time_per_question ?? null
-			useGenerator(gen).list(nb).forEach(q => {
-				pairs.push([q, timeLimit])
-			})
+			useGenerator(gen)
+				.list(nb)
+				.forEach(q => {
+					pairs.push([q, timeLimit])
+				})
 		})
 
 		const shuffled = levelGenerators.value.length > 1

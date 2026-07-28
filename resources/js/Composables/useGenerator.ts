@@ -4,7 +4,7 @@
 import {generatedQuestionInterface, generatorResultInterface} from "@/types"
 import type {GeneratorInterface, QuestionDynamicInterface} from "@/types/modelInterfaces"
 import PiMath from "pimath"
-import {ComputedRef, ref, Ref, unref} from "vue"
+import {ComputedRef, ref, unref} from "vue"
 import {PiMathExt} from "@/PiMathExtended/PiMathExt.ts"
 import {makeIllustration} from "@/helpers/makeModel.ts"
 import {questionResultInterface} from "@/Components/Questions/QuestionInterface.ts"
@@ -26,12 +26,7 @@ export function useGenerator(generator: GeneratorInterface | ComputedRef<Generat
 
 	const level = ref<number>(1)
 
-	function question(
-		value?: Ref<generatedQuestionInterface> | generatedQuestionInterface,
-		params?: GeneratorParams
-	): QuestionDynamicInterface {
-		if (value === undefined) value = randomQuestion(params)
-
+	function GeneratedToQuestion(value: generatedQuestionInterface): QuestionDynamicInterface {
 		// Les données globales du générateur
 		const generatorUnref = unref(generator)
 
@@ -56,12 +51,17 @@ export function useGenerator(generator: GeneratorInterface | ComputedRef<Generat
 		}
 	}
 
+	function question(
+		params?: GeneratorParams
+	): QuestionDynamicInterface {
+		return GeneratedToQuestion(randomQuestion(params))
+	}
+
 	function list(n: number, params?: GeneratorParams): QuestionDynamicInterface[] {
-		if (n < 1) {
-			return []
-		}
+		if (n < 1) return []
 
 		const result: generatedQuestionInterface[] = []
+
 		for (let i = 0; i < n; i++) {
 			// Create new random question
 			const value = randomQuestion(params)
@@ -72,7 +72,7 @@ export function useGenerator(generator: GeneratorInterface | ComputedRef<Generat
 			result.push(value)
 		}
 
-		return result.map(rnd => question(rnd))
+		return result.map(GeneratedToQuestion)
 	}
 
 	function randomQuestion(params?: GeneratorParams): generatedQuestionInterface {
@@ -80,19 +80,21 @@ export function useGenerator(generator: GeneratorInterface | ComputedRef<Generat
 
 		const F = new Function("PiMath", "PiMathExt", "params", g.code)
 
+		// on détermine	 les paramètres : soit il s'agit de la valeur donnée, soit c'est la valeur du générateur si elle existe.
 		const resolved = resolveParameters(
 			g.parameters_schema,
-			params as Record<string, string> | undefined
+			params ? (params as Record<string, string> | undefined) : g.parameters
 		)
 
 		try {
-			const result = F(PiMath, PiMathExt, Object.assign(
-				{},
-				{
-					level: level.value
-				},
-				resolved
-			))
+			const result = F(PiMath, PiMathExt,
+				Object.assign(
+					{},
+					{
+						level: level.value
+					},
+					resolved
+				))
 
 			if (!result.keyboard) {
 				result.keyboard = g.keyboard
@@ -116,7 +118,7 @@ export function useGenerator(generator: GeneratorInterface | ComputedRef<Generat
 
 	return {
 		code: unref(generator).code ?? dftCode,
-		question: (value?: generatedQuestionInterface, params?: GeneratorParams) => question(value, params),
+		question: (params?: GeneratorParams) => question(params),
 		list,
 		random: (params?: GeneratorParams) => randomQuestion(params),
 		level

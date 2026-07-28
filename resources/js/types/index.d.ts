@@ -99,9 +99,9 @@ export interface generatedQuestionInterface {
 export interface generatorResultInterface {
 	code: string
 	level: Ref<number>
-	list: (n: number) => QuestionDynamicInterface[]
-	question: (value?: generatedQuestionInterface, params?: GeneratorParams) => QuestionDynamicInterface
-	random: () => generatedQuestionInterface,
+	list: (n: number, params?: GeneratorParams) => QuestionDynamicInterface[]
+	question: (params?: GeneratorParams) => QuestionDynamicInterface
+	random: (params?: GeneratorParams) => generatedQuestionInterface,
 }
 
 

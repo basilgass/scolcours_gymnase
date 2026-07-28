@@ -19,29 +19,34 @@ const props = defineProps<KeyboardPropsInterface>()
 const emits = defineEmits<KeyboardEmitsInterface>()
 
 // emit change event
-let pidraw: PiDraw = null
+let pidraw: PiDraw | null = null
 
-function onChange(value?: { draw: PiDraw, mouse: MouseEvent | TouchEvent }): void {
+function onChange(value?: { draw: PiDraw, mouse: MouseEvent | TouchEvent | null }): void {
 	// pidraw = value.draw
 	setInput().then((x) => emits("change", x))
 }
 
-function getLineEquation(): Line {
-	if (!pidraw) return null
+function getLineEquation(): Line | null {
+	const draw = pidraw
+	if (draw === null) return null
 	if (points.value.length === 0) return null
 
 	const pts: PiDrawPoint[] = points.value
-		.map(key => (pidraw.figures[key] as unknown as PiDrawPoint) ?? null)
+		.map(key => (draw.figures[key] as unknown as PiDrawPoint) ?? null)
 		.filter(x => x !== null)
 
-	const pt1 = pidraw.toCoordinates(pts[0])
-	const pt2 = pidraw.toCoordinates(pts[1])
+	const pt1 = draw.toCoordinates(pts[0])
+	const pt2 = draw.toCoordinates(pts[1])
 	return new Line().fromPoints(
 		new Point(pt1.x, pt1.y),
 		new Point(pt2.x, pt2.y))
 }
 
 function updatePoint(key: string, value: { x: number, y: number }) {
+	if (pidraw === null) {
+		return
+	}
+
 	// coordonnées en pixels
 	const pixels = pidraw.toPixels(value)
 
@@ -63,6 +68,11 @@ function updatePoint(key: string, value: { x: number, y: number }) {
 
 async function setInput(value?: string): Promise<KeyboardInputInterface> {
 
+	const draw = pidraw
+	if (draw === null) {
+		return {input: "", tex: "", raw: getSvg()}
+	}
+
 	// { draw: PiDraw, mouse: MouseEvent }
 	if (value !== undefined) {
 		if (validate.value === 'line') {
@@ -73,7 +83,7 @@ async function setInput(value?: string): Promise<KeyboardInputInterface> {
 
 			updatePoint(points.value[0], H)
 			updatePoint(points.value[1], A)
-			pidraw.update([], true)
+			draw.update([], true)
 
 			return {input: value, tex: "", raw: getSvg()}
 		}
@@ -85,7 +95,7 @@ async function setInput(value?: string): Promise<KeyboardInputInterface> {
 		})
 
 		if (coords.length !== points.value.length) {
-			pidraw.refresh(code.value)
+			draw.refresh(code.value)
 			return {input: '', tex: "", raw: getSvg()}
 		}
 
@@ -93,14 +103,14 @@ async function setInput(value?: string): Promise<KeyboardInputInterface> {
 			updatePoint(key, coords[index])
 		})
 
-		pidraw.update([], true)
+		draw.update([], true)
 		return {input: value, tex: "", raw: getSvg()}
 	}
 
 	if (validate.value === null) {
 		// Get all draggable points
 		const pts: PiDrawPoint[] = points.value
-			.map(key => (pidraw.figures[key] as unknown as PiDrawPoint) ?? null)
+			.map(key => (draw.figures[key] as unknown as PiDrawPoint) ?? null)
 			.filter(x => x !== null)
 
 		const input = pts.map(pt => {
@@ -117,6 +127,10 @@ async function setInput(value?: string): Promise<KeyboardInputInterface> {
 
 	if (validate.value === 'line' && points.value.length === 2) {
 		const line = getLineEquation()
+
+		if (line === null) {
+			return {input: "", tex: "", raw: getSvg()}
+		}
 
 		if (helper.value) {
 			helperTeX.value = `${line.asMxh.tex}`
@@ -158,7 +172,7 @@ defineExpose<KeyboardExposeInterface>({
 const code = ref<string>("")
 const parameters = ref<string>("")
 const points = ref<string[]>([])
-const validate = ref<string>(null) // line, '????
+const validate = ref<string | null>(null) // line, '????
 const helper = ref<boolean>(false)
 const helperTeX = ref<string>("")
 const draw = computed(() => {

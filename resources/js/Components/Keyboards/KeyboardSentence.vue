@@ -96,7 +96,10 @@ function addItem(item: wordItem) {
 	if (!item.available) return
 
 	items.value.push(item)
-	availableItems.value.find(available => available.id === item.id).available = false
+	const available = availableItems.value.find(available => available.id === item.id)
+	if (available) {
+		available.available = false
+	}
 	onChange()
 }
 
@@ -150,6 +153,9 @@ const sentenceClickHandler = (event: MouseEvent) => {
 	if (!id) return
 
 	const found = availableItems.value.find(available => available.id === id)
+	if (found === undefined) {
+		return
+	}
 	found.available = true
 
 	const id_to_remove = items.value.findIndex(out => out.id === id)

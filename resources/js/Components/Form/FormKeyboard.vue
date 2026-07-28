@@ -42,13 +42,17 @@ const keyboardHelper = computed(() => `${currentLineKeyboardDescription.value}\n
 
 const currentRows = computed(() => {
 	try {
-		return Math.max(props.rows, theValue.value.split("\n").length + 1)
+		return Math.max(props.rows, (theValue.value ?? "").split("\n").length + 1)
 	} catch {
 		return props.rows
 	}
 })
 
 const onKeyup = () => {
+	if (inputRef.value === null || theValue.value === undefined) {
+		return
+	}
+
 	const pos = inputRef.value.selectionStart
 	const lines = theValue.value.split("\n")
 	const lineIndex = theValue.value.substring(0, pos).split("\n").length - 1
@@ -57,6 +61,10 @@ const onKeyup = () => {
 
 const tabber = () => {
 	if (currentLineKeyboards.value.length === 1) {
+		if (inputRef.value === null || theValue.value === undefined) {
+			return
+		}
+
 		const pos = inputRef.value.selectionStart
 		const lines = theValue.value.split("\n")
 		const lineIndex = theValue.value.substring(0, pos).split("\n").length - 1
@@ -94,7 +102,7 @@ const tabber = () => {
 						v-for="k in availableKeyboards"
 						:key="`available-${k}`"
 						class="font-code cursor-pointer text-xs hover:font-semibold"
-						@click="inputRef.value = k"
+						@click="inputRef && (inputRef.value = k)"
 					>
 						{{ k }}
 					</div>

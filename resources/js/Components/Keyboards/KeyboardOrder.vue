@@ -20,7 +20,7 @@ function onChange(event: KeyboardInputInterface): void {
 	setInput(event.input).then((x) => emits("change", x))
 }
 
-async function setInput(value: string): Promise<KeyboardInputInterface> {
+async function setInput(value?: string): Promise<KeyboardInputInterface> {
 	if (value !== undefined) {
 		if (value === '-') {
 			// Automatic list

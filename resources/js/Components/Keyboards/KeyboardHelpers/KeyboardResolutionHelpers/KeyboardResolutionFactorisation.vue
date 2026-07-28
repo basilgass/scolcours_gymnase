@@ -145,7 +145,7 @@ watch(() => props.equationLine, () => {
 
 			<div class="flex justify-between items-center">
 				<div class="font-semibold">
-					{{ selectedMethod.name }}
+					{{ selectedMethod?.name }}
 				</div>
 				<sc-button
 					type="delete"
@@ -160,7 +160,7 @@ watch(() => props.equationLine, () => {
 
 	<div v-if="factorId!==null && methodId!==null">
 		<component
-			:is="selectedMethod.component"
+			:is="selectedMethod?.component"
 			:polynom="selectedPolynom"
 			@update="update"
 		/>

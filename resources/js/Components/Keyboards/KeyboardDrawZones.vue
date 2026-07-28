@@ -19,10 +19,10 @@ const props = defineProps<KeyboardPropsInterface>()
 const emits = defineEmits<KeyboardEmitsInterface>()
 
 // emit change event
-let pidraw: PiDraw = null
-type FigureType = typeof pidraw.figures[0]
+let pidraw: PiDraw | null = null
+type FigureType = PiDraw['figures'][0]
 
-function onChange(value?: { draw: PiDraw, mouse: MouseEvent | TouchEvent }): void {
+function onChange(value: { draw: PiDraw, mouse: MouseEvent | TouchEvent | null }): void {
 	// pidraw = value.draw
 	const target = value.mouse?.target as SVGElement
 
@@ -34,6 +34,10 @@ function onChange(value?: { draw: PiDraw, mouse: MouseEvent | TouchEvent }): voi
 }
 
 async function setInput(value?: string): Promise<KeyboardInputInterface> {
+
+	if (pidraw === null) {
+		return {input: "", tex: "", raw: ""}
+	}
 
 	// { draw: PiDraw, mouse: MouseEvent }
 	if (value !== undefined) {
@@ -69,6 +73,10 @@ async function setInput(value?: string): Promise<KeyboardInputInterface> {
 }
 
 function getSvg() {
+	if (pidraw === null) {
+		return ""
+	}
+
 	return pidraw.rootSVG.svg()
 }
 
@@ -301,8 +309,13 @@ onMounted(() => {
 
 	// Pour toutes les zones clickable, on ajoute un "data-zone" après le dessin
 	nextTick(() => {
+		const draw = pidraw
+		if (draw === null) {
+			return
+		}
+
 		Object.keys(zones).forEach(name => {
-			const poly = pidraw.figures[name]
+			const poly = draw.figures[name]
 
 			if (poly) {
 				poly.shape.attr({'data-zone': name})

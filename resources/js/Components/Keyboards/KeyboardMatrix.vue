@@ -35,7 +35,7 @@ async function setInput(value?: string): Promise<KeyboardInputInterface> {
 			showDimensionKeyboard.value = true
 			values.value = []
 		} else {
-			values.value = Array.from({length: dimension.value.rows}, () => Array.from({length: dimension.value.columns}, () => ""))
+			values.value = Array.from({length: dimension.value.rows ?? 0}, () => Array.from({length: dimension.value.columns ?? 0}, () => ""))
 		}
 
 
@@ -55,7 +55,7 @@ async function setInput(value?: string): Promise<KeyboardInputInterface> {
 		v.split(',').forEach((a) => {
 			values.value[row][column] = a
 			column++
-			if (column % dimension.value.columns === 0) {
+			if (column % (dimension.value.columns ?? 1) === 0) {
 				column = 0
 				row++
 			}
@@ -88,9 +88,9 @@ const questionData = inject(questionDataKey)!
 const augmented = computed(() => questionData.current.keyboard.value.parameters.includes('a'))
 
 // REFACTOR: Move all these (duplicate) function to a class or something better
-function matrixToTex(matrix: string[][], dim: { rows: number, columns: number }): string {
+function matrixToTex(matrix: string[][], dim: { rows: number | null, columns: number | null }): string {
 
-	let tex = "\\left(\\begin{array}{" + "c".repeat(dim.columns) + "}"
+	let tex = "\\left(\\begin{array}{" + "c".repeat(dim.columns ?? 0) + "}"
 
 	tex += matrix.map(row => row.map(a => {
 		try {
@@ -114,7 +114,7 @@ const valuesKeyboard = computed<string>(() => {
 	const [_, kbrd] = questionData.config.raw.split('\n')[0].split('checker:')
 
 	return kbrd
-		? getOneKeyboard(kbrd).keyboard.config.name
+		? getOneKeyboard(kbrd).keyboard?.config.name ?? 'fraction'
 		: numericOutput.value
 			? 'number'
 			: 'fraction'
@@ -123,13 +123,13 @@ const valuesKeyboard = computed<string>(() => {
 
 // Dimension settings
 const showDimensionKeyboard = ref<boolean>(true)
-const dimension = ref<{ rows: number, columns: number }>({
+const dimension = ref<{ rows: number | null, columns: number | null }>({
 	rows: null,
 	columns: null,
 })
 const hasFixedDimension = computed<boolean>(() => fixedDimension.value[0] !== null)
-const fixedDimension = computed<[number, number]>(() => {
-	let dim: [number, number] = [null, null]
+const fixedDimension = computed<[number | null, number | null]>(() => {
+	let dim: [number | null, number | null] = [null, null]
 	props.keyboard.parameters.forEach(value => {
 		if (value.match(/dim=\d+x\d+/)) {
 			dim = value.split('dim=')[1].split('x').map(Number) as [number, number]
@@ -173,23 +173,16 @@ function onKeyboardChange(event: KeyboardInputInterface): void {
 }
 
 function updateDimension(value: string): void {
-	let [m, n] = value.split('x').map(Number)
+	const parsed = value.split('x').map(Number)
+	let m: number | null = parsed[0]
+	let n: number | null = parsed[1]
 
-	if (m < 1) {
+	// on rejette les dimensions hors bornes (< 1 ou trop grandes >= 10).
+	if (m < 1 || m >= 10) {
 		m = null
 	}
 
-	if (n < 1) {
-		n = null
-	}
-
-	if (m >= 10) {
-		// on évite les valeurs trop grandes.
-		m = null
-	}
-
-	if (n >= 10) {
-		// on évite les valeurs trop grandes.
+	if (n < 1 || n >= 10) {
 		n = null
 	}
 
@@ -198,12 +191,14 @@ function updateDimension(value: string): void {
 
 	// Build the values.
 	let arr: string[][] = []
-	for (let i = 0; i < m; i++) {
-		const row: string[] = []
-		for (let j = 0; j < n; j++) {
-			row.push('')
+	if (m !== null && n !== null) {
+		for (let i = 0; i < m; i++) {
+			const row: string[] = []
+			for (let j = 0; j < n; j++) {
+				row.push('')
+			}
+			arr.push(row)
 		}
-		arr.push(row)
 	}
 
 	values.value = arr

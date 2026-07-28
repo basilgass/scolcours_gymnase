@@ -58,18 +58,9 @@ function nextQuestion(checkerResult: questionResultInterface): void {
  * The current question generated
  */
 const theQuestion = computed(() => {
-	const query = new URLSearchParams(window.location.search)
-	const queryParams = Object.fromEntries(query.entries()) as Record<string, string>
-
-	// Priorité : props.parameters > querystring. Overrides bruts (strings) ;
 	// useGenerator applique les defaults du schéma et caste selon le format.
-	const overrides: GeneratorParams = {
-		...queryParams,
-		...(props.parameters ?? {})
-	}
-
 	if (counter.value >= 0) {
-		return useGenerator(props.generator).question(undefined, overrides)
+		return useGenerator(props.generator).question(props.parameters)
 	}
 	return false
 })

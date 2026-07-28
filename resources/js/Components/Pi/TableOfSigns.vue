@@ -17,7 +17,7 @@ interface TableOfSignsType {
 	label?: string,
 	previousLabel?: string,
 	factors?: { label: string, signs: TABLE_OF_SIGNS_VALUES_WITH_EXTREMES[] }[],
-	extremes?: string[],
+	extremes?: string[] | null,
 	resultLine?: TABLE_OF_SIGNS_VALUES_WITH_EXTREMES[],
 	texOutput?: boolean,
 	size?: 'xs' | 'sm' | 'base'

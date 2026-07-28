@@ -141,7 +141,7 @@ const parseDelta = computed(() => {
 
 		const sol: Solution[] = Solution.fromQuadratic(aF, bF, cF)
 		const [x1, x2] = sol.map(s => {
-			return {input: s.display, tex: s.tex, raw: ""}
+			return {input: s.display ?? "", tex: s.tex, raw: ""}
 		})
 
 		return {
@@ -157,8 +157,8 @@ const w = (value: string | number) => PiMathExt.wrap(value)
 const tex = computed(() => {
 	if (!useDelta.value) return ""
 
-	let delta: Fraction
-	let delta2: Fraction
+	let delta: Fraction | undefined
+	let delta2: Fraction | undefined
 	if (parseDelta.value) {
 		delta = parseDelta.value.delta
 		delta2 = parseDelta.value.delta2
@@ -282,7 +282,7 @@ watch(factorId, () => {
 		</div>
 		<keyboard-qcm
 			v-else
-			:key="factorId"
+			:key="factorId ?? undefined"
 			:keyboard="{
 				values: qcmValues,
 				parameters: ['flex','tex'],

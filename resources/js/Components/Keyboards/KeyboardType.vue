@@ -57,7 +57,7 @@ defineExpose<KeyboardExposeInterface>({
 
 
 /* ------------------*/
-const typoButtons = ref(null)
+const typoButtons = ref<HTMLElement | null>(null)
 const excludeLetters = ref([" ", ",", "'", ".", "!", "?", "(", ")", "-"])
 const answerLetters = ref<{ key: string, used: boolean }[]>([])
 const resultLetters = ref<{ index: number, key: string, visible: boolean }[]>([])
@@ -65,7 +65,7 @@ const resultLetters = ref<{ index: number, key: string, visible: boolean }[]>([]
 const currentIndex = ref(-1)
 
 function generateQuestion() {
-	const theWord = props.reference
+	const theWord = props.reference ?? ""
 
 	answerLetters.value = Random.shuffle(theWord.split("")
 		.filter(key => excludeLetters.value.indexOf(key) === -1)
@@ -108,7 +108,10 @@ const validateKey = function (index: number) {
 			}
 		}
 	} else {
-		useWrongAnswerAnimation(typoButtons.value.children[index])
+		const el = typoButtons.value?.children[index]
+		if (el instanceof HTMLElement) {
+			useWrongAnswerAnimation(el)
+		}
 	}
 
 	onChange()

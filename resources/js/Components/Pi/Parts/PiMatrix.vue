@@ -4,7 +4,7 @@ import {Polynom} from "pimath"
 import {ref} from "vue"
 
 const props = withDefaults(defineProps<{
-		matrix: (Polynom | string | number)[][],
+		matrix: (Polynom | string | number | null)[][],
 		dimension: number | null,
 		selectionMode?: false | 'rows' | 'columns' | 'item',
 		augmented?: boolean,
@@ -18,7 +18,7 @@ const props = withDefaults(defineProps<{
 
 const target = defineModel<number>('target', {default: null})
 const reference = defineModel<number>('reference', {default: null})
-const aij = defineModel<{ row: number, column: number }>('aij', {default: null})
+const aij = defineModel<{ row: number, column: number } | null>('aij', {default: null})
 
 const hoverItem = ref("")
 

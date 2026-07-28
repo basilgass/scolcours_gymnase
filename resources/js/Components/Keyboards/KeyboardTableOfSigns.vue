@@ -15,6 +15,9 @@ const props = defineProps<KeyboardPropsInterface>()
 
 const emits = defineEmits<KeyboardEmitsInterface>()
 
+/** Référence normalisée : absente → chaîne vide (aucun grows/curves/extremes). */
+const reference = computed(() => props.reference ?? "")
+
 function onChange(value?: string) {
 	setInput(value).then((x) => emits("change", x))
 }
@@ -35,7 +38,7 @@ async function setInput(value?: string): Promise<KeyboardInputInterface> {
 	}
 
 	if (growsOnly.value) {
-		const [z, s, g, c] = props.reference.split("@")
+		const [z, s, g, c] = reference.value.split("@")
 
 		zeroes.value = {input: z, tex: "", raw: ""}
 		signs.value = {input: s ?? "", tex: "", raw: ""}
@@ -49,7 +52,7 @@ async function setInput(value?: string): Promise<KeyboardInputInterface> {
 	return {
 		input: answerValue.value,
 		tex: "",
-		raw: tosUI.value.$el.innerHTML
+		raw: tosUI.value?.$el.innerHTML ?? ""
 	}
 }
 
@@ -79,18 +82,18 @@ const growsOnly = computed(() => {
 })
 
 const withGrows = computed(() => {
-	return props.reference.split("@").length > 2 &&
-		props.reference.split("@")[2].match(/[+-]/g)
+	return reference.value.split("@").length > 2 &&
+		reference.value.split("@")[2].match(/[+-]/g)
 })
 
 const withCurves = computed(() => {
-	return props.reference.split("@").length > 2 &&
-		props.reference.split("@")[2].match(/[un]/g)
+	return reference.value.split("@").length > 2 &&
+		reference.value.split("@")[2].match(/[un]/g)
 })
 
 const withExtremes = computed(() => {
 	// s'il faut donner les coordonnées
-	return props.reference.split("@").length > 3
+	return reference.value.split("@").length > 3
 })
 
 const tosMode = computed<"signs" | "grows" | "curves">(() => {
@@ -126,6 +129,10 @@ const changeKeyboard = function (event: KeyboardInputInterface) {
 }
 
 function updateKeyboardActiveCell() {
+	if (tosUI.value === null) {
+		return
+	}
+
 	let cell: HTMLElement | null = null
 
 	const activeClassName = 'active-cell'
@@ -154,7 +161,11 @@ function updateKeyboardActiveCell() {
 		}
 
 		case "coords": {
-			const i = coordsForTos.value.length * 2 - 1
+			const c = coordsForTos.value
+			if (c === null) {
+				break
+			}
+			const i = c.length * 2 - 1
 			cell = tosUI.value.$el.querySelector(`[data-tos="extreme-${i}"]`)
 			break
 		}

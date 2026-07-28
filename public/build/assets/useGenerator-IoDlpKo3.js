@@ -1,8 +1,0 @@
-import{Ct as e,ht as t}from"./@inertiajs-Be0zrJGt.js";import{f as n}from"./pimath-CIVVdUs-.js";import{t as r}from"./PiMathExt-e7eKUeCG.js";import{n as i}from"./useNumberSet-BirZS-w7.js";import{i as a}from"./makeModel-DtvkpMOP.js";function o(e,t){switch(t){case`number`:return Number(e);case`set`:return i(e).values;default:return e}}function s(e,t){let n={};if(!e){if(t)for(let[e,r]of Object.entries(t))n[e]=r;return n}for(let[r,i]of Object.entries(e))n[r]=o(t&&r in t?t[r]:i.default,i.format);return n}var c=.75;function l(e,t){return t===void 0&&(t=c),e.validations.length>0&&e.validations.some(e=>e.score<t)}function u(i){let o=t(1);function c(t,n){t===void 0&&(t=u(n));let r=e(i),o=e(t);return{block:{id:0,title:o.title??``,body:r.template.replace(`question`,o.question).replace(`answer`,`$a`),illustration:o.illustration?a(o.illustration):null},keyboard:o.keyboard??r.keyboard,answer:``+o.answer,user:{is_resolved:!1},validation:o.validation??null}}function l(e,t){if(e<1)return[];let n=[];for(let r=0;r<e;r++){let e=u(t);n.some(t=>t.question===e.question)||n.push(e)}return n.map(e=>c(e))}function u(t){let a=e(i),c=Function(`PiMath`,`PiMathExt`,`params`,a.code),l=s(a.parameters_schema,t);try{let e=c(n,r,Object.assign({},{level:o.value},l));return e.keyboard||=a.keyboard,e}catch(e){throw console.warn(e),Error(`Erreur dans la génération de la question (voir la console pour plus détails)`)}}return{code:e(i).code??`return {
-	question: "erreur dans la génération de question",
-	answer: "-",
-	keyboard: {
-		name: "",
-		parameters: "exact"
-	}
-}`,question:(e,t)=>c(e,t),list:l,random:e=>u(e),level:o}}export{u as n,l as t};

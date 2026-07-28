@@ -25,16 +25,18 @@ function onChange(event: KeyboardInputInterface): void {
 
 const keyboardUI = useTemplateRef('keyboardUI')
 
-async function setInput(value: string): Promise<KeyboardInputInterface> {
+async function setInput(value?: string): Promise<KeyboardInputInterface> {
+	const v = value ?? ""
+
 	return {
-		input: value,
-		tex: props.keyboard.config.tex(value),
+		input: v,
+		tex: props.keyboard.config.tex?.(v) ?? v,
 		raw: ""
 	}
 }
 
 defineExpose<KeyboardExposeInterface>({
-	reset: () => keyboardUI.value.resetKeyStrokes(),
+	reset: () => keyboardUI.value?.resetKeyStrokes(),
 	setInput,
 	parameters: ""
 })
