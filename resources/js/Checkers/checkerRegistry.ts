@@ -53,6 +53,7 @@ export const CHECKER_CLASSES: Partial<Record<CHECKERS, CheckerClass>> = {
 	[CHECKERS.EXACT]: ExactChecker,
 	[CHECKERS.EXPONENTIAL]: ExpChecker,
 	[CHECKERS.FRACTION]: FractionChecker,
+	[CHECKERS.FRACTION_PLUS]: FractionChecker,
 	[CHECKERS.FUNCTION]: FunctionChecker,
 	[CHECKERS.INPUT]: InputChecker,
 	[CHECKERS.LOGARITHM]: LogChecker,

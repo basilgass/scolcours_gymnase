@@ -4,10 +4,10 @@ import GameLevelStars from "@/Components/Challenges/Game/GameLevelStars.vue"
 import {IChallengeConfig} from "@/Composables/useChallenge.ts"
 import {ChallengeGameInterface, ChallengeLevelInterface} from "@/types/challengeInterfaces.ts"
 import {QuestionDynamicInterface} from "@/types/postInterfaces.ts"
-import {ComputedRef, Ref} from "vue"
+import {computed, ComputedRef, Ref} from "vue"
 import {questionResultInterface} from "@/Components/Questions/QuestionInterface.ts"
 
-defineProps<{
+const props = defineProps<{
 	current: {
 		id: Ref<number>,
 		question: ComputedRef<QuestionDynamicInterface>,
@@ -18,6 +18,16 @@ defineProps<{
 	config: IChallengeConfig
 }>()
 
+const remainingQuestionsLabel = computed<string>(() => {
+	if (props.current.level.value.level_number === props.config.game.maxLevels) return ""
+
+	const n = props.current.level.value.points_to_pass - props.results.levelScore
+
+	if (n === 0) return 'changement de niveau'
+	if (n === 1) return `encore une question`
+
+	return `encore ${n} questions`
+})
 
 </script>
 
@@ -38,11 +48,8 @@ defineProps<{
 				:config
 				:results
 			/>
-			<div
-				v-if="current.level.value.points_to_pass > results.levelScore"
-				class="text-xs"
-			>
-				encore {{ current.level.value.points_to_pass - results.levelScore }} questions
+			<div class="text-xs">
+				{{ remainingQuestionsLabel }}
 			</div>
 		</div>
 
