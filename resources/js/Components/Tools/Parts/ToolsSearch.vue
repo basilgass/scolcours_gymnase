@@ -51,7 +51,7 @@ onMounted(() => {
 
 const filterListRef = useTemplateRef<ComponentExposed<typeof FilteredList>>('filterListRef')
 defineExpose({
-	focus: () => filterListRef.value.focus()
+	focus: () => filterListRef.value?.focus()
 })
 
 </script>

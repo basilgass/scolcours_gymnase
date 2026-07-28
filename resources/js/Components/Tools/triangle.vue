@@ -113,7 +113,10 @@ let result = computed(() => {
 				<div v-katex.boxed="`(m_A): ${result.medians.A.tex}`" />
 				<div v-katex.boxed="`(m_B): ${result.medians.B.tex}`" />
 				<div v-katex.boxed="`(m_C): ${result.medians.C.tex}`" />
-				<div v-katex.boxed="`G=${result.medians.intersection.tex}`" />
+				<div
+					v-if="result.medians.intersection"
+					v-katex.boxed="`G=${result.medians.intersection.tex}`"
+				/>
 			</div>
 			<h2 class="font-lg">
 				médiatrices
@@ -122,7 +125,10 @@ let result = computed(() => {
 				<div v-katex.boxed="`(m_{AB}): ${result.mediators.c.tex}`" />
 				<div v-katex.boxed="`(m_{AC}): ${result.mediators.b.tex}`" />
 				<div v-katex.boxed="`(m_{BC}): ${result.mediators.a.tex}`" />
-				<div v-katex.boxed="`P=${result.mediators.intersection.tex}`" />
+				<div
+					v-if="result.mediators.intersection"
+					v-katex.boxed="`P=${result.mediators.intersection.tex}`"
+				/>
 			</div>
 			<h2 class="font-lg">
 				hauteurs
@@ -131,7 +137,10 @@ let result = computed(() => {
 				<div v-katex.boxed="`(h_A): ${result.heights.A.tex}`" />
 				<div v-katex.boxed="`(h_B): ${result.heights.B.tex}`" />
 				<div v-katex.boxed="`(h_C): ${result.heights.C.tex}`" />
-				<div v-katex.boxed="`D=${result.heights.intersection.tex}`" />
+				<div
+					v-if="result.heights.intersection"
+					v-katex.boxed="`D=${result.heights.intersection.tex}`"
+				/>
 			</div>
 			<h2 class="font-lg">
 				bissectrices
@@ -140,7 +149,10 @@ let result = computed(() => {
 				<div v-katex.boxed="`(b_A): ${result.bisectors.A.tex}`" />
 				<div v-katex.boxed="`(b_B): ${result.bisectors.B.tex}`" />
 				<div v-katex.boxed="`(b_C): ${result.bisectors.C.tex}`" />
-				<div v-katex.boxed="`D=${result.bisectors.intersection.tex}`" />
+				<div
+					v-if="result.bisectors.intersection"
+					v-katex.boxed="`D=${result.bisectors.intersection.tex}`"
+				/>
 			</div>
 			<h2 class="font-lg">
 				bissectrices extérieures

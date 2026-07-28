@@ -164,7 +164,7 @@ export class EquationChecker extends CheckerAbstract {
 		}
 
 		if (this.#isPeak) {
-			return isEquationPeak
+			return isEquationPeak(value)
 				? makeCheckerResult()
 				: makeCheckerResult("l'équation n'est pas sous la forme du sommet")
 		}

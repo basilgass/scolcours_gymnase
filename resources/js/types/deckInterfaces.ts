@@ -23,12 +23,12 @@ export interface CardInterfaceExtended extends CardInterface {
 export interface DeckInterface {
 	cards: CardInterface[],
 	cards_count: number,
-	chapter: ChapterInterface,
+	chapter: ChapterInterface | null,
 	id: number,
 	slug: string,
 	active: boolean,
 	title: string,
-	user: ScoreInterface<ScoreDeckDataInterface>
+	user: ScoreInterface<ScoreDeckDataInterface> | null
 }
 
 export interface provideDeckData {

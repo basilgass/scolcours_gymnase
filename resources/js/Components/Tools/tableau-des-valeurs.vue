@@ -155,7 +155,10 @@ const getTableOfValues = function (): ITableOfValue[] {
 function checkIfNumeric() {
 	if (fx.value && fx.value?.length > 0) {
 		if (!numericParse.value && fx.value[0].fxTex === '') {
-			forms.find(f => f.label === 'numérique').value.value = true
+			const numForm = forms.find(f => f.label === 'numérique')
+			if (numForm) {
+				numForm.value.value = true
+			}
 		}
 	}
 }
@@ -192,7 +195,7 @@ const drawParamsAuto = computed(() => {
 
 const draw = computed<WidgetPropsInterface>(() => {
 	if (fx.value === false) {
-		return null
+		return { parameters: '', code: '' }
 	}
 	const parameters = drawParams.value ? drawParams.value : drawParamsAuto.value
 

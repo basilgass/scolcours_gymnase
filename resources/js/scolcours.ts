@@ -1,4 +1,4 @@
-import { defineAsyncComponent } from "vue"
+import { defineAsyncComponent, type AsyncComponentLoader } from "vue"
 
 export const ToolsModules = import.meta.glob("./Components/Tools/*.vue", {
 	eager: false,
@@ -59,7 +59,7 @@ export function getModule(key: string, type: MODULE_TYPES) {
 	) {
 
 		return defineAsyncComponent(
-			dynamicModules[type].modules[path],
+			dynamicModules[type].modules[path] as AsyncComponentLoader,
 		)
 	}
 	return null

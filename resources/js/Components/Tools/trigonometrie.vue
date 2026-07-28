@@ -116,7 +116,7 @@ const result = computed(() => {
 			gamma: gamma.value !== "" ? +gamma.value : null,
 			resolvable: null
 		})
-		let triangle2: triangleRawInterface
+		let triangle2: triangleRawInterface | null = null
 
 		if (triangle.hasAlternate) {
 			triangle2 = makeTriangle(
@@ -133,7 +133,7 @@ const result = computed(() => {
 			)
 		}
 
-		if (triangle.resolvable !== true && triangle2.resolvable !== true) {
+		if (triangle.resolvable !== true && (triangle2 === null || triangle2.resolvable !== true)) {
 			return {
 				triangle: null as triangleInterface | null,
 				triangle2: null as triangleInterface | null,
@@ -143,14 +143,14 @@ const result = computed(() => {
 		return {
 			triangle: formatTriangle(triangle),
 			triangle2:
-				triangle.hasAlternate && triangle2.resolvable === true
+				triangle.hasAlternate && triangle2 !== null && triangle2.resolvable === true
 					? formatTriangle(triangle2)
 					: null,
 			text: null as string | null,
 			raw: {
 				triangle,
 				triangle2:
-					triangle.hasAlternate && triangle2.resolvable === true
+					triangle.hasAlternate && triangle2 !== null && triangle2.resolvable === true
 						? triangle2
 						: null
 			}
@@ -161,7 +161,7 @@ const result = computed(() => {
 	}
 })
 const triangleDrawCode = computed(() => {
-	if (result.value === false) {
+	if (result.value === false || !result.value.raw) {
 		return {
 			code: "",
 			parameters: ""
@@ -170,13 +170,13 @@ const triangleDrawCode = computed(() => {
 	return drawTriangle(result.value.raw.triangle)
 })
 const triangleAnswerCode = computed<string>(() => {
-	if (result.value === false) {
+	if (result.value === false || result.value.triangle === null) {
 		return ""
 	}
 	return `${result.value.triangle.a},${result.value.triangle.b},${result.value.triangle.c},${result.value.triangle.alpha.slice(0, -1)},${result.value.triangle.beta.slice(0, -1)},${result.value.triangle.gamma.slice(0, -1)},${result.value.triangle.area}`
 })
 const triangle2DrawCode = computed(() => {
-	if (result.value === false) {
+	if (result.value === false || !result.value.raw) {
 		return {
 			code: "",
 			parameters: ""
@@ -199,8 +199,15 @@ const triangle2AnswerCode = computed(() => {
 	return `${result.value.triangle2.a},${result.value.triangle2.b},${result.value.triangle2.c},${result.value.triangle2.alpha.slice(0, -1)},${result.value.triangle2.beta.slice(0, -1)},${result.value.triangle2.gamma.slice(0, -1)},${result.value.triangle2.area}`
 })
 
-function drawTriangle(value: triangleRawInterface) {
+function drawTriangle(value: triangleRawInterface | null) {
 	if (value === null) {
+		return {
+			code: "",
+			parameters: ""
+		}
+	}
+
+	if (value.b === null || value.alpha === null || value.c === null) {
 		return {
 			code: "",
 			parameters: ""
@@ -230,8 +237,18 @@ a3=arc A,C,B,0.5->$\\gamma${gamma.value === "" ? "" : "=" + gamma.value + "°"}
 	}
 }
 
-function formatTriangle(value: triangleRawInterface): triangleInterface {
+function formatTriangle(value: triangleRawInterface): triangleInterface | null {
 	if (value.resolvable) {
+		if (
+			value.a === null ||
+			value.b === null ||
+			value.c === null ||
+			value.alpha === null ||
+			value.beta === null ||
+			value.gamma === null
+		) {
+			return null
+		}
 		const area = thmArea(value.a, value.b, value.gamma)
 		return {
 			a: (+value.a.toFixed(fixed.value)).toString(),
@@ -296,7 +313,12 @@ function thmArea(a: number, b: number, gamma: number) {
 
 function isNotResvoled(value: triangleRawInterface) {
 	return (
-		value.a * value.b * value.c * value.alpha * value.beta * value.gamma ===
+		(value.a ?? 0) *
+		(value.b ?? 0) *
+		(value.c ?? 0) *
+		(value.alpha ?? 0) *
+		(value.beta ?? 0) *
+		(value.gamma ?? 0) ===
 		0
 	)
 }
@@ -311,11 +333,11 @@ function isResolvable(value: triangleRawInterface) {
 	}
 
 	// Les angles sont positifs.
-	if (value.alpha < 0 || value.beta < 0 || value.gamma < 0) {
+	if ((value.alpha ?? 0) < 0 || (value.beta ?? 0) < 0 || (value.gamma ?? 0) < 0) {
 		return "Il y a un ou plusieurs angles négatifs."
 	}
 	// la somme des angles est inférieures à 180
-	if (value.alpha + value.beta + value.gamma > 180) {
+	if ((value.alpha ?? 0) + (value.beta ?? 0) + (value.gamma ?? 0) > 180) {
 		return "La somme des angles dépassent 180°."
 	}
 	// il faut au moins un côté
@@ -341,6 +363,10 @@ function isResolvable(value: triangleRawInterface) {
 	return true
 }
 
+function isPositive(value: number | null): value is number {
+	return value !== null && value > 0
+}
+
 function makeTriangle(value: triangleRawInterface, alternate?: boolean): triangleRawInterface {
 	value.resolvable = isResolvable(value)
 	if (value.resolvable !== true) {
@@ -350,61 +376,61 @@ function makeTriangle(value: triangleRawInterface, alternate?: boolean): triangl
 	let securityLoop = 10
 	while (isNotResvoled(value) && securityLoop > 0) {
 		// Somme des angles
-		if (!value.gamma && value.alpha > 0 && value.beta > 0) {
+		if (!value.gamma && isPositive(value.alpha) && isPositive(value.beta)) {
 			value.gamma = thmTriangleSum(value.alpha, value.beta)
 		}
-		if (!value.beta && value.alpha > 0 && value.gamma > 0) {
+		if (!value.beta && isPositive(value.alpha) && isPositive(value.gamma)) {
 			value.beta = thmTriangleSum(value.alpha, value.gamma)
 		}
-		if (!value.alpha && value.gamma > 0 && value.beta > 0) {
+		if (!value.alpha && isPositive(value.gamma) && isPositive(value.beta)) {
 			value.alpha = thmTriangleSum(value.gamma, value.beta)
 		}
 
 		// Théorème du cosinus pour un côté
-		if (!value.c && value.a > 0 && value.b > 0 && value.gamma > 0) {
+		if (!value.c && isPositive(value.a) && isPositive(value.b) && isPositive(value.gamma)) {
 			value.c = thmCosinus(value.a, value.b, value.gamma)
 		}
-		if (!value.b && value.a > 0 && value.c > 0 && value.beta > 0) {
+		if (!value.b && isPositive(value.a) && isPositive(value.c) && isPositive(value.beta)) {
 			value.b = thmCosinus(value.a, value.c, value.beta)
 		}
-		if (!value.a && value.c > 0 && value.b > 0 && value.alpha > 0) {
+		if (!value.a && isPositive(value.c) && isPositive(value.b) && isPositive(value.alpha)) {
 			value.a = thmCosinus(value.c, value.b, value.alpha)
 		}
 
 		// Théorème du cosinus pour un angle
-		if (!value.alpha && value.b > 0 && value.c > 0 && value.a > 0) {
+		if (!value.alpha && isPositive(value.b) && isPositive(value.c) && isPositive(value.a)) {
 			value.alpha = thmCosinusAngle(value.a, value.b, value.c)
 		}
-		if (!value.beta && value.b > 0 && value.c > 0 && value.a > 0) {
+		if (!value.beta && isPositive(value.b) && isPositive(value.c) && isPositive(value.a)) {
 			value.beta = thmCosinusAngle(value.b, value.a, value.c)
 		}
-		if (!value.gamma && value.b > 0 && value.c > 0 && value.a > 0) {
+		if (!value.gamma && isPositive(value.b) && isPositive(value.c) && isPositive(value.a)) {
 			value.gamma = thmCosinusAngle(value.c, value.b, value.a)
 		}
 
 		// Théorème du sinus pour un côté
-		if (!value.a && value.alpha > 0 && value.b > 0 && value.beta > 0) {
+		if (!value.a && isPositive(value.alpha) && isPositive(value.b) && isPositive(value.beta)) {
 			value.a = thmSinus(value.alpha, value.b, value.beta)
 		}
-		if (!value.a && value.alpha > 0 && value.c > 0 && value.gamma > 0) {
+		if (!value.a && isPositive(value.alpha) && isPositive(value.c) && isPositive(value.gamma)) {
 			value.a = thmSinus(value.alpha, value.c, value.gamma)
 		}
-		if (!value.b && value.beta > 0 && value.a > 0 && value.alpha > 0) {
+		if (!value.b && isPositive(value.beta) && isPositive(value.a) && isPositive(value.alpha)) {
 			value.b = thmSinus(value.beta, value.a, value.alpha)
 		}
-		if (!value.b && value.beta > 0 && value.c > 0 && value.gamma > 0) {
+		if (!value.b && isPositive(value.beta) && isPositive(value.c) && isPositive(value.gamma)) {
 			value.b = thmSinus(value.beta, value.c, value.gamma)
 		}
-		if (!value.c && value.gamma > 0 && value.a > 0 && value.alpha > 0) {
+		if (!value.c && isPositive(value.gamma) && isPositive(value.a) && isPositive(value.alpha)) {
 			value.c = thmSinus(value.gamma, value.a, value.alpha)
 		}
-		if (!value.c && value.gamma > 0 && value.b > 0 && value.beta > 0) {
+		if (!value.c && isPositive(value.gamma) && isPositive(value.b) && isPositive(value.beta)) {
 			value.c = thmSinus(value.gamma, value.b, value.beta)
 		}
 
 		// Théorème du sinus pour un angle => 2 solutions !
-		if (!value.alpha && value.a > 0) {
-			if (value.b > 0 && value.beta > 0) {
+		if (!value.alpha && isPositive(value.a)) {
+			if (isPositive(value.b) && isPositive(value.beta)) {
 				value.alpha = thmSinusAngle(
 					value.a,
 					value.b,
@@ -412,7 +438,7 @@ function makeTriangle(value: triangleRawInterface, alternate?: boolean): triangl
 					alternate
 				)
 				value.hasAlternate = true
-			} else if (value.c > 0 && value.gamma > 0) {
+			} else if (isPositive(value.c) && isPositive(value.gamma)) {
 				value.alpha = thmSinusAngle(
 					value.a,
 					value.c,
@@ -423,8 +449,8 @@ function makeTriangle(value: triangleRawInterface, alternate?: boolean): triangl
 			}
 		}
 
-		if (!value.beta && value.b > 0) {
-			if (value.a > 0 && value.alpha > 0) {
+		if (!value.beta && isPositive(value.b)) {
+			if (isPositive(value.a) && isPositive(value.alpha)) {
 				value.beta = thmSinusAngle(
 					value.b,
 					value.a,
@@ -432,9 +458,9 @@ function makeTriangle(value: triangleRawInterface, alternate?: boolean): triangl
 					alternate
 				)
 				value.hasAlternate = true
-			} else if (value.c > 0 && value.gamma > 0) {
+			} else if (isPositive(value.c) && isPositive(value.gamma)) {
 				value.beta = thmSinusAngle(
-					value.a,
+					value.b,
 					value.c,
 					value.gamma,
 					alternate
@@ -443,8 +469,8 @@ function makeTriangle(value: triangleRawInterface, alternate?: boolean): triangl
 			}
 		}
 
-		if (!value.gamma && value.c > 0) {
-			if (value.a > 0 && value.alpha > 0) {
+		if (!value.gamma && isPositive(value.c)) {
+			if (isPositive(value.a) && isPositive(value.alpha)) {
 				value.gamma = thmSinusAngle(
 					value.c,
 					value.a,
@@ -452,7 +478,7 @@ function makeTriangle(value: triangleRawInterface, alternate?: boolean): triangl
 					alternate
 				)
 				value.hasAlternate = true
-			} else if (value.b > 0 && value.beta > 0) {
+			} else if (isPositive(value.b) && isPositive(value.beta)) {
 				value.gamma = thmSinusAngle(
 					value.c,
 					value.b,

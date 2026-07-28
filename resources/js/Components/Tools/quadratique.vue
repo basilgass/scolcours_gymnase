@@ -91,7 +91,7 @@ const result = computed(() => {
 	// A,B,C are given as numbers => ax^2+bx+c
 	// A only is given: it's the polynom !
 
-	let poly: Polynom
+	let poly: Polynom | null = null
 
 	try {
 		if (A.value.includes("^2")) {

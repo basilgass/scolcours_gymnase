@@ -71,7 +71,7 @@ const expression = computed(() => {
 	zeroes.sort((a, b) => a.value - b.value)
 
 	let lessThan: Solution = zeroes[0]
-	let greaterThan: Solution = null
+	let greaterThan: Solution | null = null
 	let n = 0
 
 
@@ -88,10 +88,10 @@ const expression = computed(() => {
 	}
 	expr.push(getOneExpression(fx.value, abs, greaterThan, lessThan))
 
-	function checkValue(v: number, min: Solution, max: Solution) {
-		if (min === null && v <= max.value) {
+	function checkValue(v: number, min: Solution | null, max: Solution | null) {
+		if (min === null && max !== null && v <= max.value) {
 			return true
-		} else if (max === null && v >= min.value) {
+		} else if (max === null && min !== null && v >= min.value) {
 			return true
 		} else if (
 			min !== null &&
@@ -147,12 +147,20 @@ const expression = computed(() => {
 const getOneExpression = function (fn: string, abs: {
 	polynom: Polynom,
 	match: string
-}[], min: Solution, max: Solution): {
+}[], min: Solution | null, max: Solution | null): {
 	polynom: Polynom,
 	condition: string,
-	borders: { min: Solution, max: Solution }
+	borders: { min: Solution | null, max: Solution | null }
 } {
-	const v = min === null ? max.value - 1 : (max === null ? min.value + 1 : (max.value + min.value) / 2)
+	let v = 0
+	if (min !== null && max !== null) {
+		v = (max.value + min.value) / 2
+	} else if (min !== null) {
+		v = min.value + 1
+	} else if (max !== null) {
+		v = max.value - 1
+	}
+
 	let fnx = "" + fn
 
 	for (const p of abs) {
@@ -163,14 +171,18 @@ const getOneExpression = function (fn: string, abs: {
 		}
 	}
 
+	let condition = ""
+	if (min !== null && max !== null) {
+		condition = `${min.tex}\\leq x \\leq ${max.tex}`
+	} else if (min !== null) {
+		condition = `x\\geq${min.tex}`
+	} else if (max !== null) {
+		condition = `x\\leq${max.tex}`
+	}
+
 	return {
 		polynom: new Polynom(fnx),
-		condition: min === null
-			? `x\\leq${max.tex}`
-			: (max === null
-					? `x\\geq${min.tex}`
-					: `${min.tex}\\leq x \\leq ${max.tex}`
-			),
+		condition,
 		borders: {min, max}
 	}
 }

@@ -1,0 +1,1 @@
+import{D as e,U as t,k as n,w as r}from"./@inertiajs-Be0zrJGt.js";import{t as i}from"./PiProbabilityTree-DGEU8BNF.js";var a=n({__name:`arbre-des-probabilites`,props:{illustration:{}},setup(n){return(a,o)=>(t(),r(`div`,null,[e(i,{"tree-params":n.illustration.parameters,"tree-data":n.illustration.code},null,8,[`tree-params`,`tree-data`])]))}});export{a as default};

@@ -35,7 +35,7 @@ export class FunctionChecker extends CheckerAbstract {
 
 	override checkValue(value: string): CheckerResult {
 		// on utilise le checker du polynome et on transforme juste le texte
-		const check = this.secondaryChecker.check(value, this.answer)
+		const check = this.requireSecondaryChecker().check(value, this.answer)
 
 		if (check.result) return check
 

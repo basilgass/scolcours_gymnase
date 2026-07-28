@@ -40,7 +40,7 @@ function applyModifierClasses(el: HTMLElement, modifiers: KatexModifiers): void 
 	}
 
 	for (const [modifier, className] of Object.entries(MODIFIER_CLASSES)) {
-		if (modifiers[modifier as KatexModifier]) {
+		if (modifiers[modifier as KatexModifier] && className !== undefined) {
 			el.classList.add(className)
 		}
 	}

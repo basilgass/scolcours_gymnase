@@ -77,7 +77,7 @@ export class TrigoChecker extends CheckerAbstract {
 		return [
 			`${angle} : \\(${example}\\)`,
 			constraint,
-			this.digits ? this.secondaryChecker.format : ""
+			this.digits ? this.requireSecondaryChecker().format : ""
 		]
 			.filter(x => x.trim() !== "")
 			.join('<br/>')
@@ -102,7 +102,7 @@ export class TrigoChecker extends CheckerAbstract {
 				.multiply(+Math.PI.toFixed(this.decimals))
 
 		if (!kPeriodicNb.isEqual(answer_kPeriodicNb)) {
-			const result = this.secondaryChecker
+			const result = this.requireSecondaryChecker()
 				.check(kPeriodic.replace('k', ''), answer_kPeriodic.replace('k', ''))
 
 			return makeCheckerResult([
@@ -146,7 +146,7 @@ export class TrigoChecker extends CheckerAbstract {
 	}
 
 	checkAsDigitsWithoutPeriodic(value: string): CheckerResult {
-		return this.secondaryChecker.check(value, this.answer)
+		return this.requireSecondaryChecker().check(value, this.answer)
 	}
 
 	override checkFormat(value: string): string {
@@ -316,7 +316,7 @@ export class TrigoChecker extends CheckerAbstract {
 		// kPeriodic: kcpi/d
 
 		const angle = values.find(v => !v.includes('k')) ?? '0'
-		const kPeriodic = values.find(v => v.includes('k'))
+		const kPeriodic = values.find(v => v.includes('k')) ?? ''
 
 		return {
 			angle,

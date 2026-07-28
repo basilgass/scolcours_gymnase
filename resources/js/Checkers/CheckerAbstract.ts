@@ -77,6 +77,13 @@ export abstract class CheckerAbstract {
 		this._secondaryChecker = value
 	}
 
+	protected requireSecondaryChecker(): CheckerAbstract {
+		if (this._secondaryChecker === null) {
+			throw new Error("secondaryChecker requis mais absent")
+		}
+		return this._secondaryChecker
+	}
+
 	protected _type: CHECKERS | undefined
 
 	get type(): CHECKERS | undefined {
@@ -153,7 +160,7 @@ export abstract class CheckerAbstract {
 		// Fabrication de tous les résultats
 		for (let i = 0; i < values.length; i++) {
 			checks.push({
-				...this.secondaryChecker.check(values[i], expectedValues[i]),
+				...this.requireSecondaryChecker().check(values[i], expectedValues[i]),
 				index: i
 			})
 		}
@@ -164,7 +171,7 @@ export abstract class CheckerAbstract {
 		// S'il y a des erreurs:
 		if (errors.length) {
 			return makeCheckerResult(
-				errors.map(chk => cb(chk.index, chk.message)).join('<br/>'),
+				errors.map(chk => cb(chk.index ?? 0, chk.message)).join('<br/>'),
 				errors.reduce((a, b) => a < b.score ? a : b.score, 1)
 			)
 		}

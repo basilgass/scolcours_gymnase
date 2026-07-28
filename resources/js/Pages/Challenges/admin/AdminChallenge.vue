@@ -3,47 +3,61 @@
 	setup
 >
 import {PropType} from "vue"
-import {ChallengeInterface} from "@/types/modelInterfaces"
 import Card from "@/Components/Ui/Card.vue"
 import LayoutAdmin from "@/Layouts/LayoutAdmin.vue"
 import FilteredList from "@/Components/Ui/FilteredList.vue"
+import ChallengeCreateButton from "@/Components/Challenges/ChallengeCreateButton.vue"
+import ScButton from "@/Components/Ui/Button/scButton.vue"
 
 defineOptions({layout: LayoutAdmin})
 
+interface IChallengeAdmin {
+	id: number,
+	title: string,
+	slug: string
+	theme_id: number,
+	updated_at: string
+}
+
 defineProps({
-	challenges: {type: Object as PropType<ChallengeInterface[]>, required: true}
+	challenges: {type: Object as PropType<IChallengeAdmin[]>, required: true}
 })
 
 </script>
 <template>
 	<section class="scolcours-container">
-		<h1 class="text-3xl pt-5 mb-10">
-			administration des challenges
-		</h1>
+		<div class="flex justify-between">
+			<h1 class="text-3xl pt-5 mb-10">
+				administration des challenges
+			</h1>
+			<div>
+				<challenge-create-button />
+			</div>
+		</div>
 
 		<filtered-list
 			:list="challenges"
-			list-class="grid grid-cols-1 lg:grid-cols-2 gap-x-12 gap-y-4"
+			list-class="grid grid-cols-1 gap-2"
 			filter-by-theme
 		>
-			<template #card="{ item }: { item: ChallengeInterface }">
+			<template #card="{ item }: { item: IChallengeAdmin }">
 				<card
-					v-theme.bg.text="item.chapter.theme_id"
-					with-themes
+					:mark-theme="item.theme_id"
+					no-inside-border
+					compact
 				>
-					<div>
+					<div class="flex justify-between">
 						<InertiaLink
 							v-katex.auto="item.title"
 							:href="route('challenges.show', { challenge: item.slug })"
-							class="text-lg leading-6 font-medium"
 						/>
-						<p class="max-w-2xl text-sm font-code">
-							{{ item.slug }}
-						</p>
-						<div class=" mt-3 flex justify-between text-xs font-code">
-							<div>{{ item.updated_at }}</div>
-							<div>Is activated</div>
-						</div>
+						<sc-button
+							type="edit"
+							icon
+							xs
+							ghost
+							:href="route('admin.challenges.edit', {challenge: item.id})"
+						/>
 					</div>
 				</card>
 			</template>

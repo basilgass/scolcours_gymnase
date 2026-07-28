@@ -1,5 +1,5 @@
 export function numberCorrection(value: unknown, corr = 2) {
-	return (+value as number).toFixed(corr)
+	return Number(value).toFixed(corr)
 }
 
 

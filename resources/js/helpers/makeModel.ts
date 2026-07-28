@@ -37,7 +37,6 @@ export function makeIllustration(config: IllustrationMinInterface): Illustration
 		widget_id: -1,
 		widget: {
 			id: -1,
-			component: 'draw-parser-widget.vue',
 			slug: 'dynamic-widget',
 			name: 'dynamic-widget',
 			theme_id: null,
@@ -77,7 +76,7 @@ export function makeCard(
 			id: -1,
 			score: 0,
 			attempts: 0,
-			data: null,
+			data: undefined,
 			is_resolved: false,
 		}
 	}

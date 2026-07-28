@@ -170,8 +170,8 @@ export class SolutionChecker extends CheckerAbstract {
 		}
 
 		// On a en théorie deux valeurs - elles doivent être juste avec le secondary checker.
-		const check0 = this.secondaryChecker.check(givenValues[0], expectedValues[0])
-		const check1 = this.secondaryChecker.check(givenValues[1], expectedValues[1])
+		const check0 = this.requireSecondaryChecker().check(givenValues[0], expectedValues[0])
+		const check1 = this.requireSecondaryChecker().check(givenValues[1], expectedValues[1])
 
 		if (check0.result === false) {
 			return makeCheckerResult(`La borne inférieure est fausse.<br/>${check0.message}`, check0.score)
@@ -306,7 +306,7 @@ export class SolutionChecker extends CheckerAbstract {
 
 		givenValues.forEach((given: string, count: number) => {
 			const results = expectedValues
-				.map(checkValue => this.secondaryChecker.check(given, checkValue))
+				.map(checkValue => this.requireSecondaryChecker().check(given, checkValue))
 
 			// Une réponse correcte existe.
 			const index = results

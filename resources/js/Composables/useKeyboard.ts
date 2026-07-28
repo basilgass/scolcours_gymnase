@@ -41,7 +41,7 @@ export function getOneKeyboard(kbrd: string): Partial<questionValidatorInterface
 	// Qcm or nb,2 for example
 
 	// output values, with defaults
-	let config: KeyboardObjectType
+	let config: KeyboardObjectType | undefined
 
 	const parameters: string[] = []
 	const values: string[] = []
@@ -52,7 +52,7 @@ export function getOneKeyboard(kbrd: string): Partial<questionValidatorInterface
 
 	// The first line is the keyboard name or checker
 	// Qcm or nb,2 for example
-	let [value, ...options] = kbrdValues.shift().split(",")
+	let [value, ...options] = (kbrdValues.shift() ?? "").split(",")
 
 	// Make sure the value does not contain extra spaces or hidden \r \n
 	value = value.trim()
@@ -111,7 +111,7 @@ export function getOneKeyboard(kbrd: string): Partial<questionValidatorInterface
 	}
 }
 
-function getKeyboardConfig(key: string): KeyboardObjectType {
+function getKeyboardConfig(key: string): KeyboardObjectType | undefined {
 
 	if (Object.hasOwn(keyboards, key)) {
 		return keyboards[key]
@@ -125,7 +125,7 @@ function getKeyboardConfig(key: string): KeyboardObjectType {
 function getKeyboards(kbrdCode: string): Partial<questionValidatorInterface>[] {
 	const unrefKbrd = unref(kbrdCode)
 
-	if (!unrefKbrd) return null
+	if (!unrefKbrd) return []
 	return unrefKbrd.split("\n\n").map(kbrd => getOneKeyboard(kbrd))
 }
 

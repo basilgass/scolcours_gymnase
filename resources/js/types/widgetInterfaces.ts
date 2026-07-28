@@ -3,7 +3,7 @@ export interface WidgetInterface {
 	component: string,
 	slug: string,
 	name: string,
-	theme_id: number,
+	theme_id: number | null,
 	description: string,
 	control: boolean
 }

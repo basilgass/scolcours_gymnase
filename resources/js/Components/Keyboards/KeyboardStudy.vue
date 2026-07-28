@@ -68,7 +68,7 @@ const validateId = ref<number>(0)
  * Conversion des réponses en un texte utilisé pour comparer (checker)
  */
 function validateOutput(): string {
-	let output: string[] = []
+	let output: (string | null)[] = []
 
 	// cas où la fonction est appelée avant la création du graphe.
 	if (!graph) return ""
@@ -116,7 +116,7 @@ const config = computed<studyConfigInterface>(() => {
 		},
 		plot: {
 			enable: false,
-			fx: null
+			fx: ""
 		},
 		buttons: {
 			available: [...studyButtonKeys],
@@ -166,7 +166,7 @@ const config = computed<studyConfigInterface>(() => {
 function makeConfig(value?: string): IGraphConstructorConfig {
 	// value= cfg=x=-3:3,y=-3:3,unit=3;4
 	const ppu = 40
-	const output: IGraphConstructorConfig = {
+	const output = {
 		ppu: ppu,
 		width: 800,
 		height: 800,
@@ -217,13 +217,13 @@ const display = ref({input: "", tex: "", raw: ""})
 const message = ref("")
 
 const availableButtons = computed<studyButtonsKeysType[]>(() => {
-	if (validateId.value < 0) return
+	if (validateId.value < 0) return []
 
 	if (config.value.buttons.auto === false) return config.value.buttons.available
 
 	// on filtre les boutons en fonction de la réponse attendue
 	// live===true ? et de ce qui est déjà donné.
-	const arr: string[] = parseAnswerToKeys(props.reference)
+	const arr: string[] = parseAnswerToKeys(props.reference ?? "")
 	if (config.value.buttons.live) {
 		const given: string[] = parseAnswerToKeys(validateOutput())
 
@@ -267,6 +267,7 @@ function parseAnswerToKeys(value: string): studyButtonsKeysType[] {
 }
 
 onMounted(() => {
+	if (draw.value === null) return
 	graph = new StudyGraph(draw.value, config.value)
 
 	// Création des plots de départ
@@ -290,7 +291,7 @@ function addItemToGraph(btn: string): undefined | itemGraphInterface {
 	// Checker.
 	message.value = ""
 
-	let item: itemGraphInterface
+	let item: itemGraphInterface | undefined = undefined
 
 	if (btn.startsWith("a")) {
 		const value = display.value.input
@@ -360,12 +361,14 @@ function addItemToGraph(btn: string): undefined | itemGraphInterface {
 	}
 
 	// Reset the keyboard
-	keyboardUI.value.resetKeyStrokes()
+	keyboardUI.value?.resetKeyStrokes()
 
 	// Update the graph
 	onChange()
 
-	loadedItems.value.push(item)
+	if (item !== undefined) {
+		loadedItems.value.push(item)
+	}
 	return item
 }
 
@@ -382,7 +385,7 @@ function removeItem(item: itemGraphInterface) {
 	onChange()
 }
 
-const reference = computed<string>(() => props.reference.split(",").sort().join(','))
+const reference = computed<string>(() => (props.reference ?? "").split(",").sort().join(','))
 
 function plotGraph() {
 	const givenAnswer = validateOutput()
@@ -443,7 +446,7 @@ function parseStringToKeyboard(value: string) {
 
 				display.value.input = equ
 
-				let el: itemGraphInterface
+				let el: itemGraphInterface | undefined = undefined
 				if (equ.substring(0, 2) === "x=") {
 					el = addItemToGraph("av")
 				} else if (equ.match(/x/) && equ.match(/y/)) {
@@ -474,7 +477,9 @@ function toggleControls() {
 	graph.items
 		.filter(obj => obj.controls)
 		.forEach(obj => {
-			Object.values(obj.controls)
+			const controls = obj.controls
+			if (controls === null) return
+			Object.values(controls)
 				.filter(pt => pt !== null)
 				.forEach(pt => {
 					if (showControls.value) {

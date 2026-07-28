@@ -63,7 +63,7 @@ const study = computed<ETUDE_DE_FONCTION_RATIONNELLE | false>(() => {
 const drawParametersOverride = ref("")
 const draw = computed<{ parameters: string, code: string }>(() => {
 	if (study.value === false) {
-		return null
+		return { parameters: '', code: '' }
 	}
 
 	return {
@@ -105,6 +105,7 @@ function generate_fx() {
 		n++
 	}
 
+	if (genFx === undefined) return
 	forms[0].value.value = genFx.numerator
 	alert("Aucune fonction intéressante générée...")
 }
@@ -166,7 +167,7 @@ const keyboardStudyAnswer = computed(() => {
 	const arr: string[] = []
 
 	// ordonnée
-	arr.push(study.value.YIntercept.answer)
+	if (study.value.YIntercept) arr.push(study.value.YIntercept.answer)
 
 	// zéros
 	study.value.roots.answers
@@ -184,8 +185,9 @@ const keyboardStudyAnswer = computed(() => {
 
 	// min / max / replat
 	study.value.extremes
-		.filter(extreme => extreme.answer)
-		.forEach(extreme => arr.push(extreme.answer))
+		.forEach(extreme => {
+			if (extreme.answer) arr.push(extreme.answer)
+		})
 
 	// environnement
 	if (study.value.environnement.answer) arr.push(study.value.environnement.answer)
@@ -255,8 +257,12 @@ const keyboardStudyAnswer = computed(() => {
 							<div>
 								<h3>ordonnée à l'origine</h3>
 								<div
+									v-if="study.YIntercept"
 									v-katex.boxed="study.YIntercept.tex"
 								/>
+								<div v-else>
+									Aucune ordonnée à l'origine (asymptote verticale en x=0).
+								</div>
 							</div>
 
 							<div>
@@ -319,12 +325,14 @@ const keyboardStudyAnswer = computed(() => {
 							:key="`etude-ah-${index}`"
 						>
 							<div v-katex.boxed="`${item.tex}`" />
-							<div v-katex.boxed="`${item.delta.tex}`" />
-							<table-of-signs
-								:roots="item.delta.table_of_signs.roots.map(x=>x.tex)"
-								:signs="item.delta.table_of_signs.signs"
-								tex-output
-							/>
+							<template v-if="item.delta">
+								<div v-katex.boxed="`${item.delta.tex}`" />
+								<table-of-signs
+									:roots="item.delta.table_of_signs.roots.map(x=>x.tex)"
+									:signs="item.delta.table_of_signs.signs"
+									tex-output
+								/>
+							</template>
 						</div>
 					</div>
 
@@ -343,12 +351,14 @@ const keyboardStudyAnswer = computed(() => {
 							:key="`etude-ao-${index}`"
 						>
 							<div v-katex.boxed="`${item.tex}`" />
-							<div v-katex.boxed="`${item.delta.tex}`" />
-							<table-of-signs
-								:roots="item.delta.table_of_signs.roots.map(x=>x.tex)"
-								:signs="item.delta.table_of_signs.signs"
-								tex-output
-							/>
+							<template v-if="item.delta">
+								<div v-katex.boxed="`${item.delta.tex}`" />
+								<table-of-signs
+									:roots="item.delta.table_of_signs.roots.map(x=>x.tex)"
+									:signs="item.delta.table_of_signs.signs"
+									tex-output
+								/>
+							</template>
 						</div>
 					</div>
 

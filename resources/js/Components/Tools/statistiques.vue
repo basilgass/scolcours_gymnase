@@ -281,7 +281,7 @@ function randn_bm(
 	min: number,
 	max: number,
 	skew: number,
-	flatten?: number
+	flatten: number
 ) {
 	let u = 0
 	let v = 0
@@ -291,7 +291,7 @@ function randn_bm(
 		Math.sqrt(-flatten * Math.log(u)) * Math.cos(flatten * Math.PI * v)
 
 	num = num / 10.0 + 0.5 // Translate to 0 -> 1
-	if (num > 1 || num < 0) num = randn_bm(min, max, skew) // resample between 0 and 1 if out of range
+	if (num > 1 || num < 0) num = randn_bm(min, max, skew, flatten) // resample between 0 and 1 if out of range
 	num = Math.pow(num, skew) // Skew
 	num *= max - min // Stretch to fill range
 	num += min // offset to min
@@ -333,7 +333,7 @@ function statsBuildData_auto() {
 	const raw = []
 	// Build the data randomly
 	for (let i = 0; i < statConfig.samples; i++) {
-		let rnd
+		let rnd = NaN
 		while (isNaN(rnd)) {
 			rnd = Math.round(
 				randn_bm(
@@ -408,9 +408,9 @@ function statsBuildTable_continuous(): StatTableRow[] {
 		let ni
 
 		if (customNi.length === 0) {
-			ni = statRaw.value.filter((x) => x >= bi && x < bii).length
+			ni = statRaw.value.filter((x) => x !== undefined && x >= bi && x < bii).length
 		} else {
-			ni = customNi.shift()
+			ni = customNi.shift() ?? 0
 		}
 
 		// Add item to the table

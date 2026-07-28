@@ -211,15 +211,17 @@ class AdminController extends Controller
 		return Inertia::render(
 			'Challenges/admin/AdminChallenge',
 			[
-				'challenges' => Challenge::all()->map(function (Challenge $tool, $key) {
-					return [
-						'id'         => $tool->id,
-						'slug'       => $tool->slug,
-						'title'      => $tool->title,
-						'theme_id'   => $tool->chapter?->theme_id,
-						'updated_at' => $tool->updated_at->format('d.m.Y H:m'),
-					];
-				})
+				'challenges' => Challenge::orderBy('title')
+				                         ->get()
+				                         ->map(function (Challenge $tool, $key) {
+					                         return [
+						                         'id'         => $tool->id,
+						                         'slug'       => $tool->slug,
+						                         'title'      => $tool->title,
+						                         'theme_id'   => $tool->chapter?->theme_id,
+						                         'updated_at' => $tool->updated_at->format('d.m.Y H:m'),
+					                         ];
+				                         })
 			]
 		);
 	}

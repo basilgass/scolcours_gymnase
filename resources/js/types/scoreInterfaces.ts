@@ -92,11 +92,11 @@ export interface ScoreInterface<T extends ScoreDataInterface = ScoreDataInterfac
 	attempts: number,
 	data: T,
 	id: number,
-	is_resolved: boolean,
+	is_resolved: boolean | null,
 	score: number,
 	scoreable_id: number,
 	scoreable_type: scoreableClassName,
 	updated_at: string
-	user_id: number,
+	user_id: number | null,
 	user?: UserInterface
 }

@@ -125,6 +125,8 @@ export function useTextEditor(AreaRefName: string, options?: {
 
 	function updateCurrentLine() {
 		const el = textareaRef.value
+		if (!el) return
+
 		const cursorPos = el.selectionStart
 		const value = el.value
 
@@ -150,6 +152,7 @@ export function useTextEditor(AreaRefName: string, options?: {
 	 */
 	function handleKeydown(e: KeyboardEvent) {
 		const el = textareaRef.value
+		if (!el) return
 
 		if (e.key === 'Tab' && el.value.includes(invisibleCharacter)) {
 			// Go to the next invisible character.
@@ -213,7 +216,7 @@ export function useTextEditor(AreaRefName: string, options?: {
 			// Reset greekmode.
 			greekMode.value = false
 
-			const greek = greekLaTeX[event.data]
+			const greek = greekLaTeX[event.data ?? '']
 
 			if (!greek) {
 				// Not a greek letter
@@ -287,9 +290,6 @@ export function useTextEditor(AreaRefName: string, options?: {
 	}
 
 	function applyTabStops(template: string, space?: boolean): string {
-		const el = textareaRef.value
-		if (!el) return
-
 		const spaceCharacter = space ? ' ' : ''
 		const templateWithEnd = template.endsWith('@')
 			? spaceCharacter + template + spaceCharacter
@@ -307,7 +307,7 @@ export function useTextEditor(AreaRefName: string, options?: {
 		return result
 	}
 
-	function removeTabStops(): string {
+	function removeTabStops(): void {
 		const el = textareaRef.value
 		if (!el) return
 
@@ -427,6 +427,7 @@ export function useTextEditor(AreaRefName: string, options?: {
 
 	function indenter() {
 		const el = textareaRef.value
+		if (!el) return
 
 		const cursor = el.selectionStart
 		let value = el.value
@@ -451,6 +452,7 @@ export function useTextEditor(AreaRefName: string, options?: {
 
 	function deindenter() {
 		const el = textareaRef.value
+		if (!el) return
 
 		const cursor = el.selectionStart
 		let value = el.value
@@ -475,7 +477,9 @@ export function useTextEditor(AreaRefName: string, options?: {
 
 	function updateValue(value: string) {
 		modelValue.value = value
-		textareaRef.value.value = value
+		if (textareaRef.value) {
+			textareaRef.value.value = value
+		}
 	}
 
 	const {Ctrl_G, Ctrl_ArrowUp, Ctrl_ArrowDown} = useMagicKeys({

@@ -35,7 +35,7 @@ const forms: IToolForm[] = restoreTool([
 
 const input = computed(() => forms[0].value.value as string)
 
-let draw = ref(null)
+let draw = ref<HTMLElement | null>(null)
 let geom
 let venn: Record<VennKey, VennCell>
 let tex = computed(() => {
@@ -52,7 +52,7 @@ let tex = computed(() => {
 		return "\\text{ expression non reconnue }"
 	}
 })
-let result = ref([])
+let result = ref<string[]>([])
 
 function updateVenn(P: LogicalSet) {
 	result.value = P.vennABC()
@@ -64,6 +64,7 @@ function updateVenn(P: LogicalSet) {
 }
 
 function generateSVG() {
+	if (draw.value === null) return
 	geom = new PiGraph(draw.value, {
 		width: 470,
 		height: 470,

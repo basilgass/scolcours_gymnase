@@ -39,7 +39,7 @@ export const buttonActionMap: Record<ButtonAction, ButtonActionValue> = {
 	},
 	add: {
 		label: "ajouter",
-		icon: "bi bi-plug-lg",
+		icon: "bi bi-plus-lg",
 		color: "primary"
 	},
 	cancel: {

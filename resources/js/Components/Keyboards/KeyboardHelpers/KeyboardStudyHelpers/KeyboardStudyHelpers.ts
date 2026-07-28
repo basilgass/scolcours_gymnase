@@ -86,8 +86,8 @@ export enum POINT_TYPES {
 export interface itemGraphInterface {
 	bezier?: BEZIER_CONTROLS
 	beziercontrol?: BEZIERCONTROL
-	controls: ASYMPTOTES_CONTROLS | { bar: Path } // Record<string, Point>
-	element: Point | Path | Line
+	controls: ASYMPTOTES_CONTROLS | { bar: Path | null } | null // Record<string, Point>
+	element: Point | Path | Line | null
 	id: string,
 	kind?: POINT_TYPES
 	type: ITEM_TYPES
@@ -157,7 +157,7 @@ export class StudyGraph extends PiGraph {
 
 	get BBox(): { x: DOMAIN, y: DOMAIN } {
 		if (this.config.system !== COORDINATE_SYSTEM.CARTESIAN_2D) {
-			return null
+			throw new Error("BBox requiert un repère cartésien 2D")
 		}
 
 		return {
@@ -192,10 +192,31 @@ export class StudyGraph extends PiGraph {
 		const p = this.makeLine({x: 0, y: posY}, {x: 1, y: 0})
 		p.stroke('green')
 
+		const bezier = this.addBezierControls([
+			[x.min, y + 0.1, x.min - 10, y + 0.05],//LT
+			[x.max, y + 0.1, x.max + 10, y + 0.05],//RT
+			[x.min, y - 0.1, x.min - 10, y - 0.05],//LB
+			[x.max, y - 0.1, x.max + 10, y - 0.05]//RB
+		])
+
+		// control à changer.
+		// TODO: controles à modifier
+		if (bezier !== null) {
+			bezier.LT[1].control = BEZIERCONTROL.RIGHT
+			bezier.LB[1].control = BEZIERCONTROL.RIGHT
+			bezier.RT[1].control = BEZIERCONTROL.RIGHT
+			bezier.RB[1].control = BEZIERCONTROL.RIGHT
+
+			bezier.LT[0].control = BEZIERCONTROL.RIGHT
+			bezier.LB[0].control = BEZIERCONTROL.RIGHT
+			bezier.RT[0].control = BEZIERCONTROL.RIGHT
+			bezier.RB[0].control = BEZIERCONTROL.RIGHT
+		}
+
 		const el: itemGraphInterface = {
 			id: `y=${value}`,
 			type: ITEM_TYPES.AH,
-			kind: null,
+			kind: undefined,
 			element: p,
 			controls: this.addControls([
 				[x.min + 0.5, y + 0.5],//LT
@@ -203,26 +224,8 @@ export class StudyGraph extends PiGraph {
 				[x.min + 0.5, y - 0.5],//LB
 				[x.max - 0.5, y - 0.5]//RB
 			]),
-			bezier: this.addBezierControls([
-				[x.min, y + 0.1, x.min - 10, y + 0.05],//LT
-				[x.max, y + 0.1, x.max + 10, y + 0.05],//RT
-				[x.min, y - 0.1, x.min - 10, y - 0.05],//LB
-				[x.max, y - 0.1, x.max + 10, y - 0.05]//RB
-			])
+			bezier: bezier ?? undefined
 		}
-
-		// control à changer.
-		// TODO: controles à modifier
-		el.bezier.LT[1].control = BEZIERCONTROL.RIGHT
-		el.bezier.LB[1].control = BEZIERCONTROL.RIGHT
-		el.bezier.RT[1].control = BEZIERCONTROL.RIGHT
-		el.bezier.RB[1].control = BEZIERCONTROL.RIGHT
-
-		el.bezier.LT[0].control = BEZIERCONTROL.RIGHT
-		el.bezier.LB[0].control = BEZIERCONTROL.RIGHT
-		el.bezier.RT[0].control = BEZIERCONTROL.RIGHT
-		el.bezier.RB[0].control = BEZIERCONTROL.RIGHT
-
 
 		this._items.push(el)
 		return el
@@ -247,7 +250,7 @@ export class StudyGraph extends PiGraph {
 		const el: itemGraphInterface = {
 			id: value,
 			type: ITEM_TYPES.AO,
-			kind: null,
+			kind: undefined,
 			element: p,
 			controls: this.addControls([
 				[A.x + dxy.x + pxy.x, A.y + dxy.y + pxy.y],//LT
@@ -260,7 +263,7 @@ export class StudyGraph extends PiGraph {
 				[B.x + dxy.x + pxy.x / b1ratio, B.y + dxy.y + pxy.y / b1ratio, B.x + dxy.x * 5 + pxy.x / b2ratio, B.y + dxy.y * 5 + pxy.y / b2ratio],//RT
 				[A.x - dxy.x - pxy.x / b1ratio, A.y - dxy.y - pxy.y / b1ratio, A.x - dxy.x * 5 - pxy.x / b2ratio, A.y - dxy.y * 5 - pxy.y / b2ratio],//LB
 				[B.x + dxy.x - pxy.x / b1ratio, B.y + dxy.y - pxy.y / b1ratio, B.x + dxy.x * 5 - pxy.x / b2ratio, B.y + dxy.y * 5 - pxy.y / b2ratio]//RB
-			])
+			]) ?? undefined
 		}
 
 		this._items.push(el)
@@ -275,11 +278,31 @@ export class StudyGraph extends PiGraph {
 		const p = this.makeLine({x: posX, y: 0}, {x: 0, y: 1})
 		p.stroke('red')
 
+		const bezier = this.addBezierControls([
+			[x - 0.1, y.max, x - 0.05, y.max + 2],//LT
+			[x + 0.1, y.max, x + 0.05, y.max + 2],//RT
+			[x - 0.1, y.min, x - 0.05, y.min - 2],//LB
+			[x + 0.1, y.min, x + 0.05, y.min - 2] //RB
+		])
+
+		// control à changer.
+		if (bezier !== null) {
+			bezier.LT[1].control = BEZIERCONTROL.UP
+			bezier.LB[1].control = BEZIERCONTROL.DOWN
+			bezier.RT[1].control = BEZIERCONTROL.DOWN
+			bezier.RB[1].control = BEZIERCONTROL.UP
+
+			bezier.LT[0].control = BEZIERCONTROL.UP
+			bezier.LB[0].control = BEZIERCONTROL.DOWN
+			bezier.RT[0].control = BEZIERCONTROL.DOWN
+			bezier.RB[0].control = BEZIERCONTROL.UP
+		}
+
 		// LT, LB, RT, RB
 		const el: itemGraphInterface = {
 			id: `x=${value}`,
 			type: ITEM_TYPES.AV,
-			kind: null,
+			kind: undefined,
 			element: p,
 			controls: this.addControls([
 				[x - 0.5, y.max - 0.5],//LT
@@ -287,24 +310,8 @@ export class StudyGraph extends PiGraph {
 				[x - 0.5, y.min + 0.5],//LB
 				[x + 0.5, y.min + 0.5] //RB
 			]),
-			bezier: this.addBezierControls([
-				[x - 0.1, y.max, x - 0.05, y.max + 2],//LT
-				[x + 0.1, y.max, x + 0.05, y.max + 2],//RT
-				[x - 0.1, y.min, x - 0.05, y.min - 2],//LB
-				[x + 0.1, y.min, x + 0.05, y.min - 2] //RB
-			])
+			bezier: bezier ?? undefined
 		}
-
-		// control à changer.
-		el.bezier.LT[1].control = BEZIERCONTROL.UP
-		el.bezier.LB[1].control = BEZIERCONTROL.DOWN
-		el.bezier.RT[1].control = BEZIERCONTROL.DOWN
-		el.bezier.RB[1].control = BEZIERCONTROL.UP
-
-		el.bezier.LT[0].control = BEZIERCONTROL.UP
-		el.bezier.LB[0].control = BEZIERCONTROL.DOWN
-		el.bezier.RT[0].control = BEZIERCONTROL.DOWN
-		el.bezier.RB[0].control = BEZIERCONTROL.UP
 
 		this._items.push(el)
 		return el
@@ -315,7 +322,7 @@ export class StudyGraph extends PiGraph {
 			.stroke('blue', 3)
 	}
 
-	addBezierControls(values: number[][]): BEZIER_CONTROLS {
+	addBezierControls(values: number[][]): BEZIER_CONTROLS | null {
 		if (!this._loadControls) return null
 		const controls: BEZIER_CONTROLS = {} as BEZIER_CONTROLS
 
@@ -335,7 +342,7 @@ export class StudyGraph extends PiGraph {
 		return controls
 	}
 
-	addControls(values: number[][], asCircle = false): ASYMPTOTES_CONTROLS {
+	addControls(values: number[][], asCircle = false): ASYMPTOTES_CONTROLS | null {
 		if (!this._loadControls) return null
 
 		const controls: ASYMPTOTES_CONTROLS = {} as ASYMPTOTES_CONTROLS
@@ -360,7 +367,7 @@ export class StudyGraph extends PiGraph {
 		return controls
 	}
 
-	addEnvTracePoints(): itemGraphInterface {
+	addEnvTracePoints(): itemGraphInterface | null {
 		if (!this._loadControls) return null
 
 		const existingEnv = this.getItem('env')
@@ -371,7 +378,7 @@ export class StudyGraph extends PiGraph {
 		const env: itemGraphInterface = {
 			id: 'env',
 			type: ITEM_TYPES.TRACE,
-			kind: null,
+			kind: undefined,
 			element: null,
 			controls: this.addControls([
 				[bbox.x.min + 0.5, bbox.y.max - 0.5],//LT
@@ -384,7 +391,7 @@ export class StudyGraph extends PiGraph {
 				[bbox.x.max + 2, bbox.y.max + 2],//RT
 				[bbox.x.min - 2, bbox.y.min - 2],//LB
 				[bbox.x.max + 2, bbox.y.min - 2]//RB
-			])
+			]) ?? undefined
 		}
 
 		this._items.push(env)
@@ -418,7 +425,7 @@ export class StudyGraph extends PiGraph {
 		p.size = this._size / 3
 
 		const pixels = this.toPixels({x, y})
-		let bar: Path = null
+		let bar: Path | null = null
 		let beziercontrol = BEZIERCONTROL.SMOOTH
 
 		if (type === POINT_TYPES.TROU) {
@@ -556,7 +563,7 @@ export class StudyGraph extends PiGraph {
 		// une fonction a traceer est de la forme
 		// 2x+3,a:b,@samples,color
 		const plotData: string[] = fx.split(",")
-		const plot: string = plotData.shift()
+		const plot: string = plotData.shift() ?? ""
 
 		let domain: { min: number, max: number } = {
 			min: -this.config.origin.x / this.config.axis.x.x,
@@ -590,7 +597,10 @@ export class StudyGraph extends PiGraph {
 		this.removePlots()
 
 		if (fx) {
-			this.plots.push(this.addPlot(fx, 'p'))
+			const p = this.addPlot(fx, 'p')
+			if (p !== null) {
+				this.plots.push(p)
+			}
 			return
 		}
 
@@ -604,7 +614,7 @@ export class StudyGraph extends PiGraph {
 				ctrlPoints.push({
 					point: item.element as Point,
 					controls: {
-						type: item.beziercontrol,
+						type: item.beziercontrol ?? BEZIERCONTROL.SMOOTH,
 						ratio,
 						left: null,
 						right: null
@@ -645,7 +655,10 @@ export class StudyGraph extends PiGraph {
 		for (let i = 0; i < ctrlPoints.length; i++) {
 			const deltaBefore = i === 0 ? 200 : ctrlPoints[i].point.x - ctrlPoints[i - 1].point.x
 			const deltaAfter = i === ctrlPoints.length - 1 ? 200 : ctrlPoints[i + 1].point.x - ctrlPoints[i].point.x
-			ctrlPoints[i].controls.ratio = Math.min(0.2, deltaBefore * modifier, deltaAfter * modifier)
+			const controls = ctrlPoints[i].controls
+			if (controls) {
+				controls.ratio = Math.min(0.2, deltaBefore * modifier, deltaAfter * modifier)
+			}
 		}
 
 
@@ -655,7 +668,9 @@ export class StudyGraph extends PiGraph {
 		} else {
 			let previous = -1000
 			AVs.forEach(AV => {
-				const x = (AV.element as Line).config.director.A.x
+				const director = (AV.element as Line).config.director
+				if (director === undefined) return
+				const x = director.A.x
 				this.plots.push(this.addBezier({
 					points: ctrlPoints.filter(pt => previous < pt.point.x && pt.point.x < x)
 				}))

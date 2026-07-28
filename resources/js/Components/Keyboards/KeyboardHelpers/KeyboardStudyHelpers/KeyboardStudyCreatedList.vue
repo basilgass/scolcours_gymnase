@@ -42,8 +42,8 @@ function displayItem(item: itemGraphInterface): string {
 }
 
 function getGroup(item: itemGraphInterface): string {
-	return item.type === 'point'
-		? kbrdStudyButtons[item.kind].group
+	return item.type === 'point' && item.kind !== undefined
+		? kbrdStudyButtons[item.kind as keyof typeof kbrdStudyButtons]?.group ?? ''
 		: kbrdStudyButtons[item.type as keyof typeof kbrdStudyButtons]?.group ?? ''
 }
 

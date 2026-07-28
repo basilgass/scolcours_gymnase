@@ -37,7 +37,7 @@ export function useToolsStorage() {
 		let n = sessionStorage.length
 		while (n--) {
 			const key = sessionStorage.key(n)
-			if (key.startsWith('ScolCours-Tools-')) {
+			if (key !== null && key.startsWith('ScolCours-Tools-')) {
 				sessionStorage.removeItem(key)
 			}
 		}

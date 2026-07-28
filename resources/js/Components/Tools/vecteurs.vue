@@ -42,21 +42,21 @@ const v1 = computed(() => forms[0].value.value as string)
 const v2 = computed(() => forms[1].value.value as string)
 const v3 = computed(() => forms[2].value.value as string)
 
-const pV1 = computed<Vector>(() => {
+const pV1 = computed<Vector | null>(() => {
 	try {
 		return new Vector(v1.value)
 	} catch {
 		return null
 	}
 })
-const pV2 = computed<Vector>(() => {
+const pV2 = computed<Vector | null>(() => {
 	try {
 		return new Vector(v2.value)
 	} catch {
 		return null
 	}
 })
-const pV3 = computed<Vector>(() => {
+const pV3 = computed<Vector | null>(() => {
 	try {
 		return new Vector(v3.value)
 	} catch {
@@ -66,7 +66,7 @@ const pV3 = computed<Vector>(() => {
 
 const vectors = computed(() => {
 	// Get the list of the vectors, remove the empty ones
-	return [pV1.value, pV2.value, pV3.value].filter(v => v !== null && v.isNull === false)
+	return [pV1.value, pV2.value, pV3.value].filter((v): v is Vector => v !== null && v.isNull === false)
 })
 
 let result = computed(() => {
@@ -107,7 +107,7 @@ const dimension = computed(() => {
 })
 const draw2D = computed<WidgetPropsInterface>(() => {
 	if (dimension.value !== 2) {
-		return null
+		return { parameters: '', code: '' }
 	}
 
 	const minX = Math.ceil(Math.min(0, ...vectors.value.map(v => v.x.value))) - 1
@@ -132,7 +132,7 @@ const draw2D = computed<WidgetPropsInterface>(() => {
 
 const draw3D = computed<WidgetPropsInterface>(() => {
 	if (dimension.value !== 3) {
-		return null
+		return { parameters: '', code: '' }
 	}
 
 	const alpha = 'ABC'

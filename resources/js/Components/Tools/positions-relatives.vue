@@ -195,23 +195,30 @@ const objet2Index = computed(() => {
 		return undefined
 	}
 
+	if (objets2.value === null) {
+		return undefined
+	}
+
 	const dim = objet1.value.dimension
 	return objets2.value.findIndex(obj => obj.dimension === dim)
 })
 
 const objet1 = computed(() => {
-	return objets1.value[objet1Index.value]
+	return objets1.value?.[objet1Index.value]
 })
 const objet2 = computed(() => {
-	return objets2.value[objet2Index.value]
+	if (objet2Index.value === undefined) {
+		return undefined
+	}
+	return objets2.value?.[objet2Index.value]
 })
 
 function autoSelect() {
-	if (objets2.value.length === 1) {
+	if (objets2.value !== null && objets2.value.length === 1) {
 		const dim = objets2.value[0].dimension
-		objet1Index.value = objets1.value.findIndex(obj => {
+		objet1Index.value = objets1.value?.findIndex(obj => {
 			return obj.dimension === dim
-		})
+		}) ?? -1
 	}
 }
 
@@ -283,6 +290,10 @@ function reconObjectFromEquation(equ: Equation): ObjectTypeInterface[] {
 }
 
 const positionRelative = computed<string>(() => {
+	if (objet1.value === undefined || objet2.value === undefined) {
+		return "indéterminée"
+	}
+
 	const [obj1, obj2] = [objet1.value, objet2.value].sort(sortObjects)
 
 	if (obj1.type === 'indéterminé' || obj2.type === 'indéterminé') {
@@ -524,7 +535,7 @@ function posRel_sphere_sphere(s1: Sphere3, s2: Sphere3): string {
 					class="cursor-pointer p-2"
 					:class="index===objet1Index?'bg-green-100':''"
 				>
-					<span v-katex="obj.pi.tex" /> - {{ obj.type }} {{ obj.dimension }}D
+					<span v-if="obj.pi" v-katex="obj.pi.tex" /> - {{ obj.type }} {{ obj.dimension }}D
 				</div>
 			</Card>
 			<Card>
@@ -539,7 +550,7 @@ function posRel_sphere_sphere(s1: Sphere3, s2: Sphere3): string {
 					class="p-2"
 					:class="index===objet2Index?'bg-green-100':''"
 				>
-					<span v-katex="obj.pi.tex" /> - {{ obj.type }} {{ obj.dimension }}D
+					<span v-if="obj.pi" v-katex="obj.pi.tex" /> - {{ obj.type }} {{ obj.dimension }}D
 				</div>
 			</Card>
 		</div>

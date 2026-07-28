@@ -132,7 +132,7 @@ const resolveLabel = computed(() => {
 
 const resolveIcon = computed(() => {
 	if (props.icon === false) return ""
-	
+
 	return resolveAction.value?.icon
 })
 

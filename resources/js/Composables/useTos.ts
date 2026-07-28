@@ -12,7 +12,7 @@ interface ASYMPTOTE {
 		tex: string,
 		table_of_signs: TABLE_OF_SIGNS,
 		roots: {
-			x: { value: number, display: string }, y: { value: number, display: string },
+			x: { value: number, display: string | null }, y: { value: number, display: string | null },
 			answer: string	// les intersections avec l'asymptote
 		}[]
 	},
@@ -22,7 +22,7 @@ interface ASYMPTOTE {
 }
 
 interface EXTREMA {
-	answer: string,
+	answer: string | null,
 	tex: string,
 	type: "min" | "max" | "flat" | "undefined",
 	value: number,
@@ -34,7 +34,7 @@ export interface ETUDE_DE_FONCTION_RATIONNELLE {
 		tex: string,
 		draw: string,
 		answer: string
-	},
+	} | null,
 	asymptotes: {
 		vertical: ASYMPTOTE[],
 		horizontal: ASYMPTOTE[],
@@ -152,6 +152,7 @@ export function makeStudyFromPolyFactor(value: PolyFactor): ETUDE_DE_FONCTION_RA
 		const trous = vertical.filter(AV => AV.draw.startsWith('P'))
 
 		trous.forEach((trou) => {
+			if (trou.x === undefined) return
 			code.push(`f(x)=${factorized.asRoot.display},${x + delta}:${trou.x.value - delta}->thick,blue`)
 			x = trou.x.value
 		})
@@ -292,8 +293,8 @@ function PolyFactor_getAsymptotes_Horizontal_or_Slope(factorized: PolyFactor, de
 
 	// recherche des points d'intersections avec l'asymptote.
 	const roots: {
-		x: { value: number, display: string },
-		y: { value: number, display: string },
+		x: { value: number, display: string | null },
+		y: { value: number, display: string | null },
 		answer: string
 	}[] = []
 
@@ -305,9 +306,9 @@ function PolyFactor_getAsymptotes_Horizontal_or_Slope(factorized: PolyFactor, de
 				? {value: root.fraction.value, display: root.display}
 				: {value: root.value, display: root.value.toFixed(2)}
 
-			const evaluatedY = root.exact
+			const evaluatedY: Fraction | number = root.exact
 				? (quotient.evaluate({x: root.fraction}) as Fraction)
-				: quotient.evaluate({x: x.value}) as number
+				: quotient.evaluate({x: x.value}) as Fraction | number
 
 			const y = typeof evaluatedY === 'number'
 				? {value: evaluatedY, display: evaluatedY.toFixed(2)}
@@ -420,6 +421,9 @@ function getBBox(...items: { x: number, y: number }[]): {
 }
 
 export function makeStudyFromCode(code: string, showCoords: boolean, displayMode?: boolean) {
+	const exactTex = keyboards.exact.tex
+	if (exactTex === undefined) throw new Error("Le clavier 'exact' doit définir tex")
+
 	const [zeroes, signs, grows, coords] = code.split("@")
 
 	if (grows !== undefined) {
@@ -460,7 +464,7 @@ export function makeStudyFromCode(code: string, showCoords: boolean, displayMode
 					}
 				}
 
-				extremes[keyboards.exact.tex(z)] = {
+				extremes[exactTex(z)] = {
 					tex: {x: 1, y: 2},
 					type: t,
 					value: {x: 1, y: 2},
@@ -471,7 +475,7 @@ export function makeStudyFromCode(code: string, showCoords: boolean, displayMode
 
 		return {
 			zeroes: zeroes.split(",").map(x => {
-				return {tex: keyboards.exact.tex(x)}
+				return {tex: exactTex(x)}
 			}).filter(x => x.tex !== ""),
 			factors: [] as { tex: string }[],
 			extremes,
@@ -486,7 +490,7 @@ export function makeStudyFromCode(code: string, showCoords: boolean, displayMode
 
 	return {
 		zeroes: zeroes.split(",").map(x => {
-			return {tex: keyboards.exact.tex(x)}
+			return {tex: exactTex(x)}
 		}).filter(x => x.tex !== ""),
 		factors: [] as { tex: string }[],
 		signs: [["", ...signs.split(""), ""]]

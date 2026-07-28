@@ -85,6 +85,7 @@ function wrapLastWord(
 	}
 
 	const item = txt.pop()
+	if (item === undefined) return text
 	return item.length > 0
 		? `${text.slice(0, -item.length)}${wrapperBefore}${item}${wrapperAfter}`
 		: `${text}${wrapperBefore}${item}${wrapperAfter}`

@@ -37,15 +37,14 @@ const props = withDefaults(defineProps<{
 	customKeys?: Record<string, keyboardKey>
 }>(), {
 	tex: "",
-	erase: null,
-	reset: null,
-	back: null,
-	next: null,
-	multiple: null,
+	erase: false,
+	reset: false,
+	back: false,
+	next: false,
+	multiple: false,
 	small: false,
 	keyClass: "bg-action border rounded py-1 px-2 transition-colors",
-	extraLetters: () => [],
-	customKeys: null
+	extraLetters: () => []
 })
 
 
@@ -171,10 +170,10 @@ const keyboardComputed = computed(() => {
 		kdata = {
 			key: kkey,
 			visible: kkey === "",
-			type: theKey === undefined ? null : theKey.type,
-			display: theKey === undefined ? null : theKey.display,
+			type: theKey === undefined ? "" : theKey.type,
+			display: theKey === undefined ? "" : theKey.display,
 			span: spanClass(entry.span),
-			fn: null
+			fn: undefined
 		}
 
 		// Maybe there is a custom keys
@@ -284,14 +283,15 @@ function getTex(value: string): string {
 
 function getTexFromOneValue(value: string): string {
 	if (typeof theKeyboard.value === "string") {
-		return keyboards[theKeyboard.value].tex ? keyboards[theKeyboard.value].tex(value) : value
+		const kb = keyboards[theKeyboard.value]
+		return kb.tex ? kb.tex(value) : value
 	} else {
 		return theKeyboard.value.tex ? theKeyboard.value.tex(value) : value
 	}
 }
 
 /** Source unique de la réduction des frappes (saisie brute, non formatée). */
-const rawInput = computed(() => keyStrokes.value.map(k => k.fn("")).join(""))
+const rawInput = computed(() => keyStrokes.value.map(k => k.fn?.("") ?? "").join(""))
 
 /** Règles de formatage déclarées par le clavier courant (vide = aucune). */
 const activeFormatters = computed(() => keyboardData.value?.formatters ?? [])

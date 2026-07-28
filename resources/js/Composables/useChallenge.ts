@@ -64,6 +64,8 @@ export function useChallenge(challengeMaybeRef: ChallengeInterface | ComputedRef
 	}
 
 	const defaultUpdateScore = () => {
+		if (!score.value) return
+
 		const delta = results.score - (score.value?.score ?? 0)
 		const deltaLevel = results.level - (score.value?.data?.level ?? 0)
 
@@ -118,14 +120,17 @@ export function useChallenge(challengeMaybeRef: ChallengeInterface | ComputedRef
 		challengeConfig.timers.remainingTime = 0
 		challengeConfig.timers.inverted = false
 
-		challengeConfig.game.targetScore = 0
+		let targetScore = 0
 		challenge.value.levels.forEach((level, index) => {
 			// [challenge.value.levels.length - 1]?.points_to_pass ?? 10
-			challengeConfig.game.targetScore += (level.points_to_pass ?? 10) * (index + 1)
+			targetScore += (level.points_to_pass ?? 10) * (index + 1)
 		})
+		challengeConfig.game.targetScore = targetScore
 
 		challengeConfig.checkEndGame = () => false
 		challengeConfig.updateScore = () => {
+			if (!score.value) return
+
 			// REFACTOR : maybe automatically set the score.value.score to Infinity on creation ?
 			const isFirst = (score.value?.score ?? 0) === 0
 			const improved = isFirst || results.elapsedTime < (score.value?.score ?? Infinity)
@@ -275,8 +280,8 @@ export function useChallenge(challengeMaybeRef: ChallengeInterface | ComputedRef
 	// ─── Timers ───────────────────────────────────────────────────────────────
 
 	const timerIntervalSpeed = 100
-	let globalTimerInterval: ReturnType<typeof setInterval> = null
-	let questionTimerInterval: ReturnType<typeof setInterval> = null
+	let globalTimerInterval: ReturnType<typeof setInterval> | undefined
+	let questionTimerInterval: ReturnType<typeof setInterval> | undefined
 
 	/**
 	 * Démarre le timer global. Le callback onTick est appelé à chaque seconde avec
@@ -296,7 +301,7 @@ export function useChallenge(challengeMaybeRef: ChallengeInterface | ComputedRef
 
 	function stopGlobalTimer() {
 		clearInterval(globalTimerInterval)
-		globalTimerInterval = null
+		globalTimerInterval = undefined
 	}
 
 	/**
@@ -317,7 +322,7 @@ export function useChallenge(challengeMaybeRef: ChallengeInterface | ComputedRef
 
 			results.questionElapsedTime += timerIntervalSpeed / 1000
 
-			if (results.questionElapsedTime >= currentTimeLimit.value) {
+			if (currentTimeLimit.value !== null && results.questionElapsedTime >= currentTimeLimit.value) {
 
 				stopQuestionTimer()
 
@@ -340,7 +345,7 @@ export function useChallenge(challengeMaybeRef: ChallengeInterface | ComputedRef
 
 	function stopQuestionTimer() {
 		clearInterval(questionTimerInterval)
-		questionTimerInterval = null
+		questionTimerInterval = undefined
 	}
 
 	// ─── Game state ───────────────────────────────────────────────────────────
@@ -411,6 +416,7 @@ export function useChallenge(challengeMaybeRef: ChallengeInterface | ComputedRef
 	 * Le type component est responsable de mettre à jour score.value avant d'appeler cette fonction.
 	 */
 	function persistScore() {
+		if (!score.value) return Promise.resolve(null)
 		return scoreStore.updateScore(score.value)
 	}
 

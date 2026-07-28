@@ -74,6 +74,7 @@ export class FractionChecker extends CheckerAbstract {
 		if (fractions.length > 1) {
 			const fracs: Fraction[] = fractions.map(f => new Fraction(f))
 			const first = fracs.shift()
+			if (first === undefined) return makeCheckerResult()
 			for (let f of fracs) {
 				if (!f.isEqual(first)) {
 					return makeCheckerResult(`\\(\\displaystyle${first.tex}\\) et \\(\\displaystyle ${f.tex}\\) ne sont pas équivalents`)

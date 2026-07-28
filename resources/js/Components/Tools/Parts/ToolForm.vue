@@ -23,7 +23,7 @@ const componentMap: Partial<Record<FormComponentType, Component>> = {
 }
 
 function resolveFormComponent(type?: FormComponentType): Component {
-	return componentMap[type] ?? FormInput
+	return (type !== undefined ? componentMap[type] : undefined) ?? FormInput
 }
 
 export interface IToolForm {
@@ -61,7 +61,7 @@ const {storeTool, resetTool} = useToolsStorage()
 const link = computed(() => {
 	const url = `${import.meta.env.VITE_APP_URL}/tools/${toolSlug}`
 
-	const items = props.forms.filter(f => f.fromUrl)
+	const items = props.forms.filter((f): f is IToolForm & { fromUrl: string } => Boolean(f.fromUrl))
 
 	if (items.length === 0) return url
 
@@ -84,7 +84,7 @@ const {copy, copied} = useClipboard()
 // Allow to change the focus based on the active state.
 watch(() => props.active, () => {
 	if (props.active !== null) {
-		formComponents.value[props.active].focus()
+		formComponents.value[props.active].focus?.()
 	}
 })
 

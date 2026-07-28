@@ -1,0 +1,1 @@
+.card-face[data-v-04c51a1d]{backface-visibility:hidden}.front[data-v-04c51a1d]{transform:rotateY(0)}.back[data-v-04c51a1d]{transform:rotateY(180deg)}.card.is-flipped .front[data-v-04c51a1d]{transform:rotateY(-180deg)}.card.is-flipped .back[data-v-04c51a1d]{transform:rotateY(0)}

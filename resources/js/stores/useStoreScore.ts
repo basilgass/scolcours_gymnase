@@ -95,7 +95,7 @@ export const useStoreScore = defineStore(
 
 		function defaultScoreData<T extends ScoreDataInterface>(type: scoreableClassName): T {
 
-			let arr: Partial<ScoreDataInterface>
+			let arr: Partial<ScoreDataInterface> | undefined
 			if (type === 'Question') {
 				arr = {
 					answers: []
