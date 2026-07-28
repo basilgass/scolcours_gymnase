@@ -118,9 +118,9 @@ const currentLetter = ref(0)
 
 const currentWord = ref("")
 
-const possibilities = ref([])
+const possibilities = ref<number[]>([])
 
-const divisions = ref([])
+const divisions = ref<boolean[]>([])
 
 function refreshDivisions(duplicates: Record<string, number>) {
 	divisions.value = []

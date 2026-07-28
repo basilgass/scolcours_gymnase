@@ -57,7 +57,7 @@ const size = computed(() => {
 	if (config.value.includes('sm')) return 'sm'
 	if (config.value.includes('base')) return 'base'
 
-	return null
+	return undefined
 })
 
 // Define the way the table of signs is generated.

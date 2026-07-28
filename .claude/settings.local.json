@@ -102,7 +102,11 @@
       "Bash(grep -v \"KeyboardDisplay.vue$\")",
       "Bash(grep -vE \"KeyboardResolution\\(Solution|Factorisation\\).vue$\")",
       "Bash(grep -rnA6 \"director\" node_modules/pidraw/types/figures/Line.d.ts)",
-      "Bash(grep -nA 20 \"matriceAugmenteeInterface\" resources/js/Components/Widgets/algebre/matrice-augmentee.vue)"
+      "Bash(grep -nA 20 \"matriceAugmenteeInterface\" resources/js/Components/Widgets/algebre/matrice-augmentee.vue)",
+      "PowerShell(git check-ignore *)",
+      "Bash(grep -nA8 \"defineEmits\" resources/js/Components/Widgets/arithmetique/Parts/crypto-header.vue)",
+      "Bash(sed -n '26,36p' resources/js/Components/Widgets/arithmetique/crypto-affine.vue)",
+      "Bash(sed -n '76,90p' resources/js/Components/Widgets/arithmetique/crypto-vigenere.vue)"
     ]
   },
   "enableAllProjectMcpServers": true,

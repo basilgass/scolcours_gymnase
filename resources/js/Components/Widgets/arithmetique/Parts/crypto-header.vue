@@ -24,7 +24,7 @@ const props = withDefaults(
 	}
 )
 const emits = defineEmits<{
-	hover: [e: { clear: string, cipher: string, key: string, index: number }]
+	hover: [e: { clear: string, cipher: string, key: string, index: number } | null]
 }>()
 
 /* =======================
@@ -87,7 +87,7 @@ const isInverted = computed(() => props.parameters.inv)
 						index: i,
 						clear: text.clear[i],
 						cipher: text.cipher[i],
-						key: text.expanded?.[i] ?? null
+						key: text.expanded?.[i] ?? ''
 					})"
 					@mouseleave="emits('hover', null)"
 				>

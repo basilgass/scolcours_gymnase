@@ -77,7 +77,7 @@ const expandedKey = computed(() => Cipher._expandKey(normKey.value, normText.val
 const cipherText = computed(() => Cipher.vigenere(normKey.value, normText.value))
 
 
-function onHover(value: { index: number, clear: string, cipher: string, key: string }) {
+function onHover(value: { index: number, clear: string, cipher: string, key: string } | null) {
 	if (value === null) return
 	clickCol(alphabet.indexOf(value.clear))
 	clickRow(alphabet.indexOf(value.key))

@@ -44,7 +44,7 @@ onMounted(() => {
 
 <template>
 	<card-item
-		v-if="recto"
+		v-if="recto && verso"
 		:recto="recto"
 		:verso="verso"
 	/>

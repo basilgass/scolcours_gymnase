@@ -34,7 +34,7 @@ function makeStepsFromCode(value: string): stepInterface[] {
 		if (body.startsWith(":")) {
 			// Il y a un titre
 			const lines = body.split("\n")
-			title = lines.shift().substring(1).trim()
+			title = (lines.shift() ?? "").substring(1).trim()
 			body = lines.join("\n")
 		} else {
 			title = `étape ${index} sur ${codeSteps.length}`

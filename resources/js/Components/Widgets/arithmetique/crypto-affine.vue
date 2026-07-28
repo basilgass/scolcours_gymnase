@@ -25,7 +25,7 @@ const highlight = ref<number>(-1)
 const cellSize = ref<number>(32) // 32–40 OK mobile
 
 
-function onHover(value: { index: number, clear: string, cipher: string, key: string }) {
+function onHover(value: { index: number, clear: string, cipher: string, key: string } | null) {
 	if (value === null) return
 	highlight.value = alphabet.indexOf(value.clear)
 }

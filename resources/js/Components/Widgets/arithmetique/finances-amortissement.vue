@@ -29,14 +29,14 @@ const periods = ['A', 'S', 'T', 'M', 'H']
 const DIGITS = 2
 
 const parameters = computed(() => props.illustration.parameters)
-const TVM = computed<TVMType>(() => {
-	let A: number = undefined
-	let i: number = undefined
-	let n: number = undefined
+const TVM = computed<TVMType | null>(() => {
+	let A: number | undefined = undefined
+	let i: number | undefined = undefined
+	let n: number | undefined = undefined
 	let p: periodsType = 'A'
-	let R: number = undefined
+	let R: number | undefined = undefined
 
-	props.illustration.code.split('\n').forEach((line => {
+	for (const line of props.illustration.code.split('\n')) {
 		const [key, value] = line.split('=')
 		if (key === 'A') {
 			if (!isNaN(+value) && +value > 0) A = +value
@@ -51,15 +51,17 @@ const TVM = computed<TVMType>(() => {
 				p = +value
 			}
 		}
-	}))
-
-	if (A && i && n && p) {
-		const periods = periodsCount(p)
-		i /= periods
-		n *= periods
-
-		R = +(A * i / (1 - Math.pow((1 + i), -n))).toFixed(DIGITS)
 	}
+
+	if (A === undefined || i === undefined || n === undefined) {
+		return null
+	}
+
+	const periodsN = periodsCount(p)
+	i /= periodsN
+	n *= periodsN
+
+	R = +(A * i / (1 - Math.pow((1 + i), -n))).toFixed(DIGITS)
 
 	return {A, i, n, p, R}
 })
@@ -77,22 +79,23 @@ function periodsCount(p: periodsType) {
 }
 
 const amortissements = computed<[number, number, number, number, number][]>(() => {
-	if (!isValid.value) return
+	const tvm = TVM.value
+	if (tvm === null) return []
 
 	const arr: [number, number, number, number, number][] = []
 	let an = 1
-	let solde = TVM.value.A
-	let interets = +(solde * TVM.value.i).toFixed(DIGITS)
-	let annuites = TVM.value.R
+	let solde = tvm.A
+	let interets = +(solde * tvm.i).toFixed(DIGITS)
+	let annuites = tvm.R
 	let amortissement = +(annuites - interets).toFixed(DIGITS)
 
-	while (an <= TVM.value.n) {
+	while (an <= tvm.n) {
 		arr.push([an, solde, interets, annuites, amortissement])
 		an++
 		solde = +(solde - amortissement).toFixed(DIGITS)
-		interets = +(solde * TVM.value.i).toFixed(DIGITS)
+		interets = +(solde * tvm.i).toFixed(DIGITS)
 
-		if (an < TVM.value.n) {
+		if (an < tvm.n) {
 			amortissement = +(annuites - interets).toFixed(DIGITS)
 		} else {
 			annuites = solde + interets
@@ -122,18 +125,15 @@ const sums = computed(() => {
 	}
 })
 const isValid = computed(() => {
-	return TVM.value.A &&
-		TVM.value.i &&
-		TVM.value.n &&
-		TVM.value.p &&
-		TVM.value.R
+	return TVM.value !== null
 })
 
 const showMarkdown = ref<boolean>(false)
 const toMarkdown = computed(() => {
-	if (!isValid.value) return ''
+	const tvm = TVM.value
+	if (tvm === null) return ''
 
-	const header = `| an | solde | intérets \\( \\scriptsize ${TVM.value.i * 100} \\% \\) | annuités | amortissement |`
+	const header = `| an | solde | intérets \\( \\scriptsize ${tvm.i * 100} \\% \\) | annuités | amortissement |`
 	const separator = '|:---:|---:|---:|---:|---:|'
 
 	const rows = amortissements.value.map(row =>
@@ -147,11 +147,12 @@ const toMarkdown = computed(() => {
 
 const showTex = ref<boolean>(false)
 const toTex = computed(() => {
-	if (!isValid.value) return ''
+	const tvm = TVM.value
+	if (tvm === null) return ''
 
 	const header =
 		'\\(' +
-		['n', '\\text{solde}', `\\text{intérêts} ( \\( \\scriptsize ${TVM.value.i * 100} \\% \\) )`, '\\text{annuités}', '\\text{amortissement}'].join('\\)&\\(') +
+		['n', '\\text{solde}', `\\text{intérêts} ( \\( \\scriptsize ${tvm.i * 100} \\% \\) )`, '\\text{annuités}', '\\text{amortissement}'].join('\\)&\\(') +
 		'\\)\\\\ \n'
 
 	const rows = amortissements.value.map(row =>
@@ -182,7 +183,7 @@ const toTex = computed(() => {
 
 <template>
 	<article>
-		<div v-if="isValid">
+		<div v-if="TVM">
 			<div
 				class="prose
 		prose-strong:text-inherit
