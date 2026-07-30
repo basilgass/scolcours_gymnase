@@ -24,7 +24,9 @@ const props = defineProps<{
 }>()
 
 function getTeam(id: number): TeamInterface {
-	return props.teams.find(team => team.id === id)
+	const team = props.teams.find(team => team.id === id)
+	if (!team) throw new Error(`Team ${id} introuvable dans props.teams`)
+	return team
 }
 
 function CourseTeams(course: CourseAdminInterface) {
@@ -57,7 +59,10 @@ function nextLessonByTeam(course: CourseAdminInterface): Record<string, string> 
 </script>
 <template>
 	<section class="flex w-full">
-		<article class="flex-1">
+		<article
+			v-if="courses.length>0"
+			class="flex-1"
+		>
 			<h2 class="uppercase text-3xl mb-10">
 				Cours en cours
 			</h2>
@@ -97,6 +102,10 @@ function nextLessonByTeam(course: CourseAdminInterface): Record<string, string> 
 					</template>
 				</card>
 			</div>
+		</article>
+
+		<article class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+			<div>HELLO</div>
 		</article>
 	</section>
 </template>

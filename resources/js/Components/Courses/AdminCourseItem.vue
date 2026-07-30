@@ -21,7 +21,7 @@ const emits = defineEmits<{
 }>()
 
 const assignTeams = ref(false)
-const currentTeams = ref<TeamInterface[]>(props.course.teams)
+const currentTeams = ref<TeamInterface[]>(props.course.teams ?? [])
 
 function toggleTeam(course: CourseInterface, team: TeamInterface) {
 	axios

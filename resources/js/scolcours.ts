@@ -1,4 +1,4 @@
-import { defineAsyncComponent, type AsyncComponentLoader } from "vue"
+import {type AsyncComponentLoader, defineAsyncComponent} from "vue"
 
 export const ToolsModules = import.meta.glob("./Components/Tools/*.vue", {
 	eager: false,
@@ -40,6 +40,9 @@ const dynamicModules = {
 	},
 }
 
+const moduleCache = new Map<string, ReturnType<typeof defineAsyncComponent>>()
+
+
 export enum MODULE_TYPES {
 	ILLUSTRATION = "illustrations",
 	WIDGET = "widgets",
@@ -58,10 +61,17 @@ export function getModule(key: string, type: MODULE_TYPES) {
 		Object.hasOwn(dynamicModules[type].modules, path)
 	) {
 
-		return defineAsyncComponent(
-			dynamicModules[type].modules[path] as AsyncComponentLoader,
-		)
+		if (!moduleCache.has(path)) {
+			moduleCache.set(
+				path,
+				defineAsyncComponent(
+					dynamicModules[type].modules[path] as AsyncComponentLoader,
+				)
+			)
+		}
+		return moduleCache.get(path)!
 	}
+
 	return null
 }
 

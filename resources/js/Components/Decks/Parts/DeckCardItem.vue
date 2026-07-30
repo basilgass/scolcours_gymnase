@@ -41,18 +41,20 @@ function flip() {
 		@click="flip"
 	>
 		<DeckCardItemSide
+			v-if="card.recto"
 			class="absolute inset-0
 			transition-transform duration-500
 			shadow-xl
 			front"
-			:block="card['recto']"
+			:block="card.recto"
 		/>
 		<DeckCardItemSide
+			v-if="card.verso"
 			class="absolute inset-0
 			transition-transform duration-500
 			shadow-xl
 			back"
-			:block="card['verso']"
+			:block="card.verso"
 		/>
 	</div>
 </template>

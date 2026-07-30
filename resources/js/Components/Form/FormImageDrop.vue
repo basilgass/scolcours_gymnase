@@ -9,6 +9,10 @@ const active = ref(false)
 function onDrop(e: DragEvent) {
 	active.value = false
 
+	if (!e.dataTransfer) {
+		return
+	}
+
 	axios.post(route("api.admin.illustrations.upload"),
 		{
 			image: [...e.dataTransfer.files][0],

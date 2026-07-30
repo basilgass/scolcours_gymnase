@@ -114,6 +114,9 @@ export const keyboardKeys = {
 	"root(": {type: "math", display: "\\sqrt[n]{\\phantom{x}}"},
 	log: {type: "math", display: "\\log"},
 	_: {type: "math", display: "\\textcolor{lightgray}{\\log}_a"},
+	sin: {type: "math", display: "\\sin"},
+	cos: {type: "math", display: "\\cos"},
+	tab: {type: "math", display: "\\tan"},
 	"|": {
 		type: "math",
 		display: "\\big\\vert \\textcolor{lightgray}{x} \\big\\vert"
@@ -464,12 +467,12 @@ export const keyboards: Record<string, KeyboardObjectType> = {
 	},
 	trigo: {
 		name: "trigo",
-		grid: "grid-cols-4",
+		grid: "grid-cols-5",
 		layout: [
-			"1", "2", "3", "-",
-			"4", "5", "6", "/",
-			"7", "8", "9", "+",
-			".", "0", "k", "pi",
+			"1", "2", "3", "-", "sin",
+			"4", "5", "6", "/", "cos",
+			"7", "8", "9", "+", "tan",
+			".", "0", "k", "pi"
 		],
 		tex(value) {
 			// the trigo input should be 2pi/3+k2pi/2

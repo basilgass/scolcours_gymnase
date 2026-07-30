@@ -6,7 +6,7 @@ import VueSlider from "vue-3-slider-component"
 defineOptions({layout: LayoutMain})
 let vitesse = ref("0")
 let diametre = ref(1)
-let roue = ref(null)
+let roue = ref<HTMLElement | null>(null)
 let angle = ref(0)
 let imageParSecondes = ref(24)
 let angleAjout = computed(() => {
@@ -22,7 +22,9 @@ watch(vitesse, () => {
 	}
 
 	timer = setInterval(() => {
-		roue.value.style.transform = `rotate(${angle.value}deg)`
+		if (roue.value) {
+			roue.value.style.transform = `rotate(${angle.value}deg)`
+		}
 		angle.value += +angleAjout.value
 	}, (1 / imageParSecondes.value) * 1000)
 

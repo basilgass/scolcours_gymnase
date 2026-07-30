@@ -13,6 +13,7 @@ const theCard = computed(() => computedCard(props.card))
 
 <template>
 	<div
+		v-if="theCard"
 		class="grid grid-cols-2 gap-2"
 	>
 		<DeckCardItemSide

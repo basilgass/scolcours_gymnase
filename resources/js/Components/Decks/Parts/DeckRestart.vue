@@ -5,7 +5,11 @@ import {computed, inject} from "vue"
 import ScButton from "@/Components/Ui/Button/scButton.vue"
 import {CardInterfaceExtended, provideDeckData} from "@/types/modelInterfaces.ts"
 
-const deckData = inject<provideDeckData>('deckData')
+const injected = inject<provideDeckData>('deckData')
+if (!injected) {
+	throw new Error("deckData doit être fourni (voir DeckDisplay.vue).")
+}
+const deckData = injected
 
 const summaryList = computed<CardInterfaceExtended[]>(() => {
 	return deckData.cards.value

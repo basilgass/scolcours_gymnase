@@ -23,7 +23,7 @@ const teamLessons = ref<{
 }[]>([])
 
 const isLoading = computed(() => {
-	return loadingCalendars.value !== props.teams.length || teamLessons.value.length === 0
+	return loadingCalendars.value !== (props.teams?.length ?? 0) || teamLessons.value.length === 0
 })
 
 const calendar = computed<weekCalendarInterface[]>(() => {
@@ -65,11 +65,13 @@ function getTeamsCourseCalendar() {
 	loadingCalendars.value = 0
 	teamLessons.value = []
 
-	if (props.teams.length === 0) return
-	if (!props.course) return
+	const teams = props.teams
+	const course = props.course
+	if (!teams || teams.length === 0) return
+	if (!course) return
 
-	props.teams.forEach(team => {
-		getTeamCourseCalendar(props.course, team)
+	teams.forEach(team => {
+		getTeamCourseCalendar(course, team)
 	})
 }
 
@@ -91,7 +93,7 @@ function getTeamCourseCalendar(course: CourseMinInterface, team: TeamInterface) 
 
 }
 
-const between = computed<{ min: Dayjs, max: Dayjs }>(() => {
+const between = computed<{ min: Dayjs, max: Dayjs } | null>(() => {
 	if (isLoading.value) return null
 
 	const days = teamLessons.value
@@ -120,7 +122,7 @@ const weeks = computed<weekInterface[]>(() => {
 
 	if (between.value === null) {
 		const today = dayjs()
-		const currentWeek: number = yearCalendar.value
+		const currentWeek: number | null = yearCalendar.value
 			.find(d => d.day.isSame(today) || d.day.isAfter(today))?.week ?? null
 
 		if (currentWeek === null) return []
@@ -138,14 +140,14 @@ const weeks = computed<weekInterface[]>(() => {
 	const startWeek = yearCalendar.value
 		.find(d => d.day.isSame(startMonday) || d.day.isAfter(startMonday))?.week ?? null
 	// Pas une semaine valide.
-	if (startWeek === null) return
+	if (startWeek === null) return []
 
 	// Le dernier lundui qui a un cours.
 	const endMonday = between.value.max.subtract((between.value.max.day() + 6) % 7, 'day')
 	// Le numéro de la semaine précédant ce cours
 	const endWeek = yearCalendar.value.find(d => d.day.isSame(endMonday) || d.day.isAfter(endMonday))?.week ?? null
 	// Pas une semaine valide.
-	if (endWeek === null) return
+	if (endWeek === null) return []
 
 	return getWeeks(startWeek, endWeek)
 })
@@ -154,9 +156,11 @@ function getWeeks(startWeek: number, endWeek: number): weekInterface[] {
 	const arr: weekInterface[] = []
 
 	// Premier jour de la semaine
-	let firstCourseDayOfTheWeek = yearCalendar.value
+	const firstCourseDay = yearCalendar.value
 		.find(d => d.week === startWeek - 1)
-		.day
+	if (firstCourseDay === undefined) return arr
+
+	let firstCourseDayOfTheWeek = firstCourseDay.day
 
 
 	// Maybe monday is not monday.
@@ -191,6 +195,8 @@ function mondayIsInHolidays(monday: Dayjs): boolean {
 	const firstDayInCalendar = yearCalendar.value
 		.find(d => d.day.isSame(monday) || d.day.isAfter(monday))
 
+	if (firstDayInCalendar === undefined) return false
+
 	return firstDayInCalendar.day.diff(monday, 'day') > 5
 }
 
@@ -214,7 +220,7 @@ function updateLesson(event: { lesson_id: number, team_id: number, target: Dayjs
 
 	// On recherche s'il fait partie du calendrier
 	const eventDay = event.target.day()
-	const calEvents = teamLesson.team.calendar
+	const calEvents = (teamLesson.team.calendar ?? [])
 		.filter(cal => cal.day === eventDay)
 
 
@@ -272,7 +278,7 @@ const lessonsToPlace = computed(() => {
 					:key="`week-${week.week}`"
 					:calendar
 					:from="week.days[0].day"
-					:teams
+					:teams="teams ?? []"
 					:to="week.days[4].day"
 					:week="week.week"
 					@drop="updateLesson"
@@ -285,7 +291,7 @@ const lessonsToPlace = computed(() => {
 					:key="`week-not-defined`"
 					class="sticky top-0"
 					:team-lessons="lessonsToPlace"
-					:teams
+					:teams="teams ?? []"
 					@drop="updateLesson"
 				/>
 			</div>

@@ -19,7 +19,7 @@ let props = defineProps<{
 	quizzSession: QuizzSessionInterface,
 	question?: QuestionInterface
 }>()
-let interval: number = null
+let interval: number | null = null
 const updateCounter = ref(0)
 
 function updateQuizz() {
@@ -31,7 +31,7 @@ onMounted(() => {
 	interval = setInterval(() => updateQuizz(), 2000)
 })
 onBeforeUnmount(() => {
-	clearInterval(interval)
+	clearInterval(interval ?? undefined)
 })
 
 </script>
@@ -57,7 +57,7 @@ onBeforeUnmount(() => {
 				:quizz-session
 			/>
 			<quizz-question
-				v-else-if="quizzSession.status === 'question'"
+				v-else-if="quizzSession.status === 'question' && props.question"
 				:key="props.question.id"
 				:question="props.question"
 				@validate="updateQuizz"

@@ -31,7 +31,7 @@ function toggleTeam(evaluation: EvaluationInterface, team: TeamInterface) {
 				// On ajoute la team
 				theEvaluations.value
 					.find(e => evaluation.id === e.id)
-					.teams.push(team)
+					?.teams.push(team)
 			} else {
 				// On supprime la team
 				const c = theEvaluations.value.findIndex(e => evaluation.id === e.id)
@@ -106,7 +106,7 @@ function toggleTeam(evaluation: EvaluationInterface, team: TeamInterface) {
 							<sc-button
 								v-for="team in teams"
 								:key="`toggle-${team.id}`"
-								:type="item.teams.filter(t=>team.id===t.id).length ? 'primary' : null"
+								:type="item.teams.filter(t=>team.id===t.id).length ? 'primary' : undefined"
 								xs
 								@click="toggleTeam(item, team)"
 							>

@@ -148,7 +148,7 @@ onUnmounted(() => {
 			<div class="flex items-baseline gap-3">
 				<h3 class="text-lg uppercase">
 					statistiques de
-					{{ selected_user_id === 0 ? team.name : users.find(user => user.id === selected_user_id).fullname }}
+					{{ selected_user_id === 0 ? team.name : users.find(user => user.id === selected_user_id)?.fullname }}
 				</h3>
 				<div class="flex gap-2 text-xs">
 					<lesson-type-icon

@@ -105,15 +105,19 @@ export function useQuestion(
 			// Mode 1 : le dernier "keyboard" est le clavier de référene.
 			// Mode 2 : les claviers sont sous forme de "loop"
 
-			const {keyboard, checker} = loop
+			const entry = loop
 				? keyboard_and_checker_arr[index % keyboardCount]
 				: keyboard_and_checker_arr[Math.min(keyboardCount - 1, index)]
+
+			if (entry === undefined || entry.keyboard === undefined || entry.checker === undefined) {
+				return
+			}
 
 			arr.push({
 				key: "$" + ("abcdefghijklmnopqrstuvwxyz"[index]), // may be undefined !
 				answer: answer,
-				keyboard,
-				checker
+				keyboard: entry.keyboard,
+				checker: entry.checker
 			})
 		})
 

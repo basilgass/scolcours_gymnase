@@ -17,7 +17,7 @@ const props = withDefaults(defineProps<{
 	readQuery: true,
 	showReload: true
 })
-const parameters = defineModel<Record<string, GeneratorParameterRawValue>>()
+const parameters = defineModel<Record<string, GeneratorParameterRawValue>>({default: () => ({})})
 
 onMounted(() => {
 	// On récupère les données dans le query si nécessaire (contexte joueur uniquement).

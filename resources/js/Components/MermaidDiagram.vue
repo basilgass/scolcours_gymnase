@@ -60,6 +60,9 @@ async function updateGraph(graphDefinition: string) {
 
 	// Render
 	const {svg, bindFunctions} = await mermaid.render(svgId.value, graphDefinition)
+	if (!el.value) {
+		return
+	}
 	el.value.innerHTML = svg
 	bindFunctions?.(el.value)
 }

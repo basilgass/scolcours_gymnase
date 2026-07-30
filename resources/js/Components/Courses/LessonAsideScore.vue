@@ -32,7 +32,7 @@ const flash = useStoreFlashMessage()
 
 const storeScore = useStoreScore()
 const lessonScore = ref<ScoreInterface<ScoreLessonDataInterface>>()
-const refScore = ref<number>(undefined)
+const refScore = ref<number>()
 const refData = ref<ScoreDataInterface>()
 
 async function post_scores(post: PostShowInterface) {
@@ -42,13 +42,16 @@ async function post_scores(post: PostShowInterface) {
 	await storeScore.getScores<ScoreQuestionDataInterface>(model, ids)
 		.then(
 			(scores) => {
+				const ls = lessonScore.value
+				if (!ls) return
+
 				if (scores.length === 0) {
 					// Il n'y a pas de questions
-					lessonScore.value.score = 100
+					ls.score = 100
 				} else {
-					lessonScore.value.score = Math.round(scores.filter(s => s.is_resolved).length / scores.length * 100)
+					ls.score = Math.round(scores.filter(s => s.is_resolved).length / scores.length * 100)
 				}
-				lessonScore.value.is_resolved = lessonScore.value.score === 100
+				ls.is_resolved = ls.score === 100
 
 			})
 		.catch((err) => {
@@ -93,11 +96,14 @@ async function challenge_scores(challenge: ChallengeInterface) {
 	}
 
 	// lessonScore.value.score est de la forme
-	lessonScore.value.score++
+	const ls = lessonScore.value
+	if (!ls) return
+
+	ls.score++
 
 
-	if (!rules.occurrences || lessonScore.value.score === rules.occurrences) {
-		lessonScore.value.is_resolved = true
+	if (!rules.occurrences || ls.score === rules.occurrences) {
+		ls.is_resolved = true
 
 		flash.success('Score demandé atteint')
 	}
@@ -116,10 +122,13 @@ async function generator_scores(generator: GeneratorInterface) {
 		score.data.current_score > 0 &&
 		score.data.current_score % rules.target === 0
 	) {
-		lessonScore.value.score++
+		const ls = lessonScore.value
+		if (!ls) return
 
-		if (!rules.occurrences || lessonScore.value.score === rules.occurrences) {
-			lessonScore.value.is_resolved = true
+		ls.score++
+
+		if (!rules.occurrences || ls.score === rules.occurrences) {
+			ls.is_resolved = true
 
 			flash.success('Score demandé atteint')
 		}
@@ -131,8 +140,11 @@ async function deck_scores(deck: DeckInterface) {
 	const id = deck.id
 
 	const score = await storeScore.getScore<ScoreDeckDataInterface>(model, id)
-	lessonScore.value.score = Math.max(lessonScore.value.score, score.score)
-	lessonScore.value.is_resolved = score.is_resolved
+	const ls = lessonScore.value
+	if (!ls) return
+
+	ls.score = Math.max(ls.score, score.score)
+	ls.is_resolved = score.is_resolved
 }
 
 const displayLessonResult = computed(() => {
@@ -182,7 +194,10 @@ async function update_lesson_score(model: lessonableModel, updatedScore?: ScoreI
 	}
 
 	// Fais la mise à jour de manière silencieuse (pas de bump, donc pas de watch)
-	await storeScore.updateScore(lessonScore.value, true)
+	const ls = lessonScore.value
+	if (!ls) return
+
+	await storeScore.updateScore(ls, true)
 }
 
 async function resetScore() {
@@ -195,17 +210,23 @@ async function resetScore() {
 				storeScore
 					.reset(scores.map(s => s.id))
 					.then(() => {
-						lessonScore.value.score = 0
-						lessonScore.value.is_resolved = false
-						storeScore.updateScore(lessonScore.value, true)
+						const ls = lessonScore.value
+						if (!ls) return
+
+						ls.score = 0
+						ls.is_resolved = false
+						storeScore.updateScore(ls, true)
 					})
 			})
 		return
 	}
 
-	lessonScore.value.score = 0
-	lessonScore.value.is_resolved = false
-	storeScore.updateScore(lessonScore.value, true)
+	const ls = lessonScore.value
+	if (!ls) return
+
+	ls.score = 0
+	ls.is_resolved = false
+	storeScore.updateScore(ls, true)
 }
 
 async function init_refScore() {
@@ -215,7 +236,9 @@ async function init_refScore() {
 	}
 }
 
-function matchingPivotModels(lesson: LessonInterface, score: ScoreInterface) {
+function matchingPivotModels(lesson: LessonInterface, score?: ScoreInterface) {
+	if (!score) return false
+
 	return (lesson.lessonable_type === score.scoreable_type) &&
 		(lesson.lessonable_id === score.scoreable_id)
 }
@@ -236,7 +259,7 @@ onMounted(() => {
 
 watch(() => storeScore.version, () => {
 	// Ne mettre à jour la leçon que si elle n'est pas résolue.
-	if (!lessonScore.value.is_resolved) {
+	if (!lessonScore.value?.is_resolved) {
 		update_lesson_score(props.lessonable, storeScore.lastUpdated)
 	}
 })

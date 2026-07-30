@@ -16,7 +16,7 @@ export interface CardInterface {
 
 export interface CardInterfaceExtended extends CardInterface {
 	current_appearances: number,
-	current_score: number,
+	current_score: number | null,
 	current_time_spent: number,
 }
 
@@ -34,7 +34,7 @@ export interface DeckInterface {
 export interface provideDeckData {
 	title: string,
 	cards: Ref<CardInterfaceExtended[]>,
-	currentCardId: Ref<number>,
+	currentCardId: Ref<number | null>,
 	done: () => void,
 	intro: Ref<boolean>,
 	loggedIn: ComputedRef<boolean>,

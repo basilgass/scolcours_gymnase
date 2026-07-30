@@ -44,8 +44,8 @@ const props = withDefaults(
 	{
 		title: "",
 		search: null,
-		routeName: null,
-		routeData: null,
+		routeName: undefined,
+		routeData: undefined,
 		itemTitle: (item: T) => (typeof item === "object" && item !== null && "title" in item) ? item.title as unknown as string : item as unknown as string,
 		itemBackground: () => "bg-white",
 		itemClass: "",
@@ -54,7 +54,7 @@ const props = withDefaults(
 		noFilterIfLessThan: 10,
 		noTitle: false,
 		filterByTheme: false,
-		searchFunction: null,
+		searchFunction: undefined,
 		filterByThemeOnLoad: 0,
 		focus: false,
 	})
@@ -123,7 +123,7 @@ const selectedTheme = ref<number>(props.filterByThemeOnLoad ?? 0)
 const showList = ref(props.collapsed !== true)
 
 function itemClicked(item: T) {
-	if (props.routeName) {
+	if (props.routeName && props.routeData) {
 		console.log(route(props.routeName, props.routeData(item)))
 		router.visit(route(props.routeName, props.routeData(item)))
 	}
@@ -144,7 +144,7 @@ const emits = defineEmits<{
 
 const filterInput = useTemplateRef<InstanceType<typeof FormInput>>('filterInput')
 defineExpose({
-	focus: () => filterInput.value.focus()
+	focus: () => filterInput.value?.focus()
 })
 
 useMagicKeys({
@@ -152,7 +152,7 @@ useMagicKeys({
 	onEventFired: (e) => {
 		if (e.ctrlKey && e.key === 'k' && e.type === 'keydown') {
 			e.preventDefault()
-			filterInput.value.focus()
+			filterInput.value?.focus()
 		}
 	}
 })

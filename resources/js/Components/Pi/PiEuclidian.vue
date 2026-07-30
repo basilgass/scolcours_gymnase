@@ -187,7 +187,7 @@ const fxname = computed(() => {
 						:class="{
 							'katex-left': item.includes('\\big)'),
 							'katex-right': !item.includes('\\big)'),
-							'border-b border-black': index%2===1 && index2>=result.table.underline[(index-1)/2].start && index2<=result.table.underline[(index-1)/2].stop
+							'border-b border-black': index%2===1 && index2>=(result.table.underline[(index-1)/2]?.start ?? 0) && index2<=(result.table.underline[(index-1)/2]?.stop ?? -1)
 						}"
 					/>
 					<td

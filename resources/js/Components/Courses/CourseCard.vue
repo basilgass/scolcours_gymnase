@@ -18,7 +18,7 @@ const props = defineProps<{
 const editMode = useStoreEditMode()
 
 const scheduledAt_formated = computed<string>(() => {
-	return props.course.scheduled_at ? dayjs(props.course.scheduled_at).format('dddd DD MMMM YYYY à HH:mm') : null
+	return props.course.scheduled_at ? dayjs(props.course.scheduled_at).format('dddd DD MMMM YYYY à HH:mm') : ''
 })
 
 const score = ref<number>(0)

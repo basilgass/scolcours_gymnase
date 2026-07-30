@@ -55,8 +55,10 @@ export function useQuestionAdmin(
 		// Add displayIf by increment.
 		questions.value.forEach((question, index) => {
 			if (index > 0) {
-				question.displayIf =
-					questions.value[index - 1].id.toString()
+				const prev = questions.value[index - 1]
+				if (prev?.id !== undefined) {
+					question.displayIf = prev.id.toString()
+				}
 			}
 		})
 

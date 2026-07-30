@@ -8,7 +8,7 @@ export interface QuestionDynamicInterface {
 	validation?: string,
 	illustration?: IllustrationMinInterface
 	user: {
-		is_resolved: boolean
+		is_resolved: boolean | null
 	};
 }
 

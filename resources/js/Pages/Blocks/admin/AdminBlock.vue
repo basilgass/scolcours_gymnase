@@ -14,21 +14,21 @@ const props = defineProps<{
 const blocksWithErrors = ref<BlockInterface[]>([])
 
 const loading = ref<boolean>(true)
-const blockId = ref<number>(0)
-const currentBlock = computed<BlockInterface>(() => {
+const blockId = ref<number | null>(0)
+const currentBlock = computed<BlockInterface | null>(() => {
 	if (blockId.value === null) return null
 
 	return props.blocks[blockId.value]
 })
 
 function nextBlock(success: boolean) {
-	if (!success) {
+	if (!success && blockId.value !== null) {
 		blocksWithErrors.value.push(props.blocks[blockId.value])
 	}
 
 	setTimeout(() => {
 		nextTick(() => {
-			if (blockId.value < props.blocks.length - 1) {
+			if (blockId.value !== null && blockId.value < props.blocks.length - 1) {
 				blockId.value++
 			} else {
 				blockId.value = null
@@ -51,6 +51,7 @@ function nextBlock(success: boolean) {
 			<div>analyse du {{ blockId }} sur {{ blocks.length }}</div>
 
 			<block-show
+				v-if="currentBlock"
 				:key="`block-${blockId}`"
 				:block="currentBlock"
 				@success="nextBlock"

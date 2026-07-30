@@ -30,7 +30,9 @@ const challengeRef = useTemplateRef<InstanceType<typeof ChallengeDisplay>>('main
 function onSelect(generator: GeneratorInterface | null) {
 	selectedGenerator.value = generator
 
-	useScrollTo(challengeRef.value.$el, 32)
+	if (challengeRef.value) {
+		useScrollTo(challengeRef.value.$el, 32)
+	}
 }
 </script>
 

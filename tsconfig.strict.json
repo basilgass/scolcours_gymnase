@@ -8,7 +8,7 @@
 		"strictFunctionTypes": true,
 		"noImplicitAny": true,
 		// --- le gros morceau, en dernier ---
-		"strictNullChecks": true
-		//		"strictPropertyInitialization": true
+		"strictNullChecks": true,
+		"strictPropertyInitialization": true
 	}
 }

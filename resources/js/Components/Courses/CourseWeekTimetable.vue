@@ -49,7 +49,7 @@ function teamItemsInTimetable(team: TeamInterface): itemInTimetableInterface {
 }
 
 function getItems(team: TeamInterface, day: number): weekCalendarInterface[] {
-	if (!props.calendar || props.calendar.length === 0) return null
+	if (!props.calendar || props.calendar.length === 0) return []
 
 	const dayDate = props.from.add(day - 1, 'days')
 
@@ -73,7 +73,7 @@ function isHovered(team: TeamInterface, day: number) {
 	return !!hoveredCells.value[cellKey(team, day)]
 }
 
-const currentTeamDragItem = ref<string>(null)
+const currentTeamDragItem = ref<string | null>(null)
 
 function onDragStart(e: DragEvent, sourceDay: number, item: weekCalendarInterface) {
 	if (!e.dataTransfer) return
@@ -120,7 +120,7 @@ function onDrop(e: DragEvent, tday: number) {
 	if (!e.dataTransfer) return
 	const dataJson = e.dataTransfer.getData("application/json")
 
-	let source: weekCalendarDagTransferInterface = null
+	let source: weekCalendarDagTransferInterface | null = null
 
 	try {
 		source = JSON.parse(dataJson)

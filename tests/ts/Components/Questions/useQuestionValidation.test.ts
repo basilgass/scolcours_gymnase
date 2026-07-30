@@ -1,4 +1,4 @@
-import {computed, ref} from "vue"
+import {computed, ref, type Ref} from "vue"
 import {describe, expect, test} from "vitest"
 import {PiChecker} from "@/Checkers"
 import {questionDataInterface, questionValidatorInterface} from "@/Components/Questions/QuestionInterface.ts"
@@ -24,7 +24,7 @@ function makeValidator(answer: string, checkerConfig = 'number'): questionValida
 	}
 }
 
-function makeUserAnswers(inputs: string[]): ReturnType<typeof ref<KeyboardInputInterface[]>> {
+function makeUserAnswers(inputs: string[]): Ref<KeyboardInputInterface[]> {
 	return ref(inputs.map(input => ({input, raw: input, tex: input})))
 }
 

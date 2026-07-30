@@ -4,12 +4,13 @@ import {fnInterface, fnStyle} from "@/Pages/Singles/GraphPage.vue"
 import {computed, nextTick, onMounted, ref, watch} from "vue"
 import FormInput from "@/Components/Form/FormInput.vue"
 import DropdownMenu from "@/Components/Ui/DropdownMenu.vue"
+import type {FormElementExpose} from "@/Components/Form/FormMakerInterface.ts"
 
-const fx = defineModel<fnInterface>()
+const fx = defineModel<fnInterface>({required: true})
 
 const availableStyles: fnStyle[] = ['plain', 'dash', 'dot']
 
-const editor = ref(null)
+const editor = ref<FormElementExpose | null>(null)
 
 const isEditing = ref(false)
 
@@ -23,7 +24,7 @@ const fxAsTex = computed(() => {
 watch(isEditing, (newVal) => {
 	if (newVal) {
 		nextTick(() => {
-			editor.value.focus()
+			editor.value?.focus()
 		})
 	}
 })

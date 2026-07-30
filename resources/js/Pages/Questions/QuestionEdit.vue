@@ -130,7 +130,7 @@ function addIllustration() {
 
 function deleteIllustration() {
 	axios.delete(
-		route('api.admin.illustrations.destroy', {illustration: theQuestion.value.block.illustration.id})
+		route('api.admin.illustrations.destroy', {illustration: theQuestion.value.block.illustration?.id})
 	).then(() => {
 		theQuestion.value.block.illustration = null
 		flash.success("L'illustration a bien été supprimée.")

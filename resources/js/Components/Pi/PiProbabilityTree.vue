@@ -11,7 +11,7 @@ const props = defineProps({
 	treeParams: {type: String, required: true}
 })
 const root = ref(null)
-const tree = ref(null)
+const tree = ref<HTMLElement | null>(null)
 
 let Tree: ProbabilityTree
 
@@ -21,7 +21,9 @@ function updateTree() {
 
 onMounted(() => {
 	// Tree = new ProbabilityTree(document.getElementById("tree"), props.treeData)
-	Tree = new ProbabilityTree(tree.value, props.treeData, props.treeParams)
+	if (tree.value) {
+		Tree = new ProbabilityTree(tree.value, props.treeData, props.treeParams)
+	}
 })
 
 watch(() => props.treeData, () => {

@@ -28,7 +28,7 @@ const horaire = [
 ]
 
 function hasCourse(day: number, time: string) {
-	return props.team.calendar.find(cal => cal.day == day && cal.time === time)
+	return (props.team.calendar ?? []).find(cal => cal.day == day && cal.time === time)
 }
 
 </script>

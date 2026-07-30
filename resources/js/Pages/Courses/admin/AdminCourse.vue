@@ -52,8 +52,8 @@ function searchFunction(item: CourseInterface, search: string): boolean {
 		return true
 	}
 
-	console.log(item.teams.map(t => t.name))
-	if (item.teams.some(team => team.name.toLowerCase().includes(search))) {
+	console.log((item.teams ?? []).map(t => t.name))
+	if ((item.teams ?? []).some(team => team.name.toLowerCase().includes(search))) {
 		return true
 	}
 

@@ -65,6 +65,9 @@ function loadSessions(id: number) {
 }
 
 function createSession(id: number) {
+	if (!team.value) {
+		return
+	}
 	axios.post(
 		route('api.admin.quizzes.sessions.store', {quizz: id}),
 		{
@@ -91,7 +94,7 @@ function destroySession(quizzId: number, sessionId: number) {
 	})
 }
 
-const team = ref<TeamInterface>(null)
+const team = ref<TeamInterface | undefined>(undefined)
 
 onMounted(() => {
 	props.quizzs.forEach(quizz => {

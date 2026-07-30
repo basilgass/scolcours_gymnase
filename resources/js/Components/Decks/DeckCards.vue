@@ -8,7 +8,11 @@ import { useStoreScore } from "@/stores/useStoreScore.ts"
 import { ScoreCardDataInterface } from "@/types/scoreInterfaces.ts"
 import PostDisplay from "../Posts/PostDisplay.vue"
 
-const deckData = inject<provideDeckData>('deckData')
+const injected = inject<provideDeckData>('deckData')
+if (!injected) {
+	throw new Error("deckData doit être fourni (voir DeckDisplay.vue).")
+}
+const deckData = injected
 const currentCard = ref<CardInterfaceExtended | null>(null)
 const cardSide = ref<"recto" | "verso">("recto")
 
@@ -31,7 +35,7 @@ function getNextCard() {
 
 	// Get the next item.
 	const weights = availableCards.map(card => {
-		return (1 - card.current_score) / (card.current_appearances + 1)
+		return (1 - (card.current_score ?? 0)) / (card.current_appearances + 1)
 	})
 
 	const totalWeights = weights.reduce((sum, weight) => sum + weight, 0)
@@ -47,7 +51,7 @@ function getNextCard() {
 		random -= weights[i]
 	}
 
-	currentCard.value = undefined
+	currentCard.value = null
 }
 
 onMounted(() => {
@@ -113,18 +117,19 @@ function flipCard() {
 }
 
 async function updateCard_toDB(result: boolean, durationInSeconds: number) {
+	const card = currentCard.value
 	// Si l'utilisateur n'est pas connecté ou s'il s'agit d'une carte virtuel.
-	if (!deckData.loggedIn.value || !(currentCard.value.id > 0)) {
+	if (!deckData.loggedIn.value || card === null || !(card.id > 0)) {
 		return
 	}
 
 	const scoreStore = useStoreScore()
-	const score = await scoreStore.getScore<ScoreCardDataInterface>('Card', currentCard.value.id)
+	const score = await scoreStore.getScore<ScoreCardDataInterface>('Card', card.id)
 
 	// Update the current score.
-	score.data.current_score = currentCard.value.current_score
-	score.data.current_appearances = currentCard.value.current_appearances
-	score.data.current_time_spent = currentCard.value.current_time_spent
+	score.data.current_score = card.current_score ?? 0
+	score.data.current_appearances = card.current_appearances
+	score.data.current_time_spent = card.current_time_spent
 
 	// Update the overall score attempts.
 	score.data.appearances++
@@ -137,49 +142,55 @@ async function updateCard_toDB(result: boolean, durationInSeconds: number) {
 			// Que faire après une mise à jour de la carte ?
 			const index = deckData.cards.value.findIndex(card => card.id === currentCard.value?.id)
 			if (index) {
-				deckData.cards.value[index] = currentCard.value
+				deckData.cards.value[index] = card
 			}
 		})
 }
 
 async function updateCard(result: boolean) {
+	const card = currentCard.value
+	if (!card) return
+
 	// La carte est apparue - incrément
-	currentCard.value.current_appearances++
+	card.current_appearances++
 
 	// Calcul du temps de réponse
 	currentCardStats.endTime = Date.now()
 	const durationInSeconds = Math.round((currentCardStats.endTime - currentCardStats.startTime) / 1000)
-	currentCard.value.current_time_spent += durationInSeconds
+	card.current_time_spent += durationInSeconds
 
 	// Calculs du score actuel.
-	currentCard.value.current_score = updateCard_currentScore(result)
+	card.current_score = updateCard_currentScore(result)
 
 	updateCard_toDB(result, durationInSeconds)
 }
 
 function updateCard_currentScore(result: boolean): number {
+	const card = currentCard.value
+	if (!card) return 0
+
 	if (result) {
 		// si c'est le premier : score = 1
-		if (currentCard.value.current_score === null) {
+		if (card.current_score === null) {
 			return 1
 		}
 
-		if (currentCard.value.current_score === 0) {
-			return Math.max(0.125, 1 / currentCard.value.current_appearances)
+		if (card.current_score === 0) {
+			return Math.max(0.125, 1 / card.current_appearances)
 		}
 
-		return Math.min(1, currentCard.value.current_score * 2)
+		return Math.min(1, card.current_score * 2)
 	}
 
 	// La réponse est mauvaise.
-	if (currentCard.value.current_score === null ||
-		currentCard.value.current_score === 0 ||
-		currentCard.value.current_score <= 0.125
+	if (card.current_score === null ||
+		card.current_score === 0 ||
+		card.current_score <= 0.125
 	) {
 		return 0
 	}
 
-	return Math.max(0.125, currentCard.value.current_score / 2)
+	return Math.max(0.125, card.current_score / 2)
 }
 
 defineExpose({ restartDeck })

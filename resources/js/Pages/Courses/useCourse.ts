@@ -4,7 +4,7 @@ import {FormJsonFieldType} from "@/Components/Form/FormMakerInterface.ts"
 
 export function useCourse() {
 
-	function lessonScoreRulesMap(lessonable: lessonableClassName): Record<string, FormJsonFieldType> {
+	function lessonScoreRulesMap(lessonable: lessonableClassName | undefined): Record<string, FormJsonFieldType> {
 		switch (lessonable) {
 			case "Post":
 				return {target: 'number', question_ids: 'text'} // TODO: FormMaker Json type cannot handle this.

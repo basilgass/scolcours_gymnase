@@ -34,7 +34,7 @@ interface Emission {
 function mountKeyboard(
 	props: { keyboard: string | KeyboardObjectType } & Record<string, unknown>
 ): {
-	wrapper: VueWrapper,
+	wrapper: VueWrapper<any>,
 	emissions: Emission[]
 } {
 	const emissions: Emission[] = []
@@ -57,12 +57,12 @@ function mountKeyboard(
 }
 
 /** Boutons de touches, dans l'ordre exact du `layout`. */
-function keyButtons(wrapper: VueWrapper) {
+function keyButtons(wrapper: VueWrapper<any>) {
 	return wrapper.find("div.keyboard.grid").findAll("button")
 }
 
 /** Presse des touches identifiées par leur index dans le layout. */
-async function pressKeys(wrapper: VueWrapper, indices: number[]): Promise<void> {
+async function pressKeys(wrapper: VueWrapper<any>, indices: number[]): Promise<void> {
 	const buttons = keyButtons(wrapper)
 	for (const index of indices) {
 		await buttons[index].trigger("click")
@@ -70,13 +70,13 @@ async function pressKeys(wrapper: VueWrapper, indices: number[]): Promise<void> 
 }
 
 /** Presse une commande identifiée par la classe d'icône (bi-backspace / bi-trash / bi-arrow-bar-right). */
-async function pressCommand(wrapper: VueWrapper, iconClass: string): Promise<void> {
+async function pressCommand(wrapper: VueWrapper<any>, iconClass: string): Promise<void> {
 	const button = wrapper.findAll("button").find(b => b.find(`i.${iconClass}`).exists())
 	await button!.trigger("click")
 }
 
 /** Presse des boutons d'options (extraLetters), par index. */
-async function pressOptions(wrapper: VueWrapper, indices: number[]): Promise<void> {
+async function pressOptions(wrapper: VueWrapper<any>, indices: number[]): Promise<void> {
 	const buttons = wrapper.find("div.keyboard.flex-wrap").findAll("button")
 	for (const index of indices) {
 		await buttons[index].trigger("click")

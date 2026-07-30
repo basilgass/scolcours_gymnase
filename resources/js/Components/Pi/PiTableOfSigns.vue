@@ -44,7 +44,7 @@ const tos = computed(() => {
 	}
 
 	const dfn = props.mode !== 'signs' ? fn.clone().derivative() : null
-	const ddfn = props.mode === 'curves' && dfn !== undefined ? dfn.clone().derivative() : null
+	const ddfn = props.mode === 'curves' && dfn !== null ? dfn.clone().derivative() : null
 
 	emits('update', {
 		fx: fn.asRoot.tex,
@@ -59,9 +59,11 @@ const tos = computed(() => {
 			table_of_signs = fn.tableOfSigns()
 			break
 		case 'grows':
+			if (dfn === null) throw new Error("La dérivée est requise en mode 'grows'.")
 			table_of_signs = dfn.tableOfSigns()
 			break
 		case 'curves':
+			if (ddfn === null) throw new Error("La dérivée seconde est requise en mode 'curves'.")
 			table_of_signs = ddfn.tableOfSigns()
 			break
 	}

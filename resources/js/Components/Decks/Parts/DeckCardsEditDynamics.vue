@@ -37,7 +37,7 @@ function blockToDeckCard(block: BlockInterface, splitter?: undefined | null | 't
 		// On utilise le titre comme carte recto.
 		return {
 			id: -1,
-			user: null,
+			user: undefined,
 			recto: makeBlock(title),
 			verso: block
 		}
@@ -46,7 +46,7 @@ function blockToDeckCard(block: BlockInterface, splitter?: undefined | null | 't
 	const splitterString = splitter ?? '='
 	return {
 		id: -1,
-		user: null,
+		user: undefined,
 		recto: makeBlock(truncateLatexMath(block.body, splitterString)),
 		verso: block
 	}
@@ -84,11 +84,13 @@ defineEmits<{
 			</div>
 			<div class="grid grid-cols-2 gap-5">
 				<deck-card-item-side
+					v-if="card.recto"
 					xs
 					class="bg-content border"
 					:block="card.recto"
 				/>
 				<deck-card-item-side
+					v-if="card.verso"
 					xs
 					class="bg-content border"
 					:block="card.verso"

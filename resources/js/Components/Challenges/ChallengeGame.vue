@@ -45,7 +45,7 @@ const data = useChallenge(props.challenge)
 			<!-- question timer -->
 			<game-timer-bar
 				v-if="data.config.timers.question"
-				:max="data.current.timeLimit.value"
+				:max="data.current.timeLimit.value ?? 0"
 				:value="data.store.results.questionElapsedTime"
 				:inverted="data.config.timers.inverted"
 			/>
@@ -69,7 +69,7 @@ const data = useChallenge(props.challenge)
 			/>
 		</div>
 		<challenge-results
-			v-else-if="data.state.value === 'finished'"
+			v-else-if="data.state.value === 'finished' && data.store.score.value"
 			:answers="data.store.answers.value"
 			:results="data.store.results"
 			:score="data.store.score.value"

@@ -6,15 +6,21 @@ import {computed, inject, nextTick, ref} from "vue"
 import {useLanguage} from "@/Components/Languages/useLanguage.ts"
 import {shake} from "@/helpers/helperFunctions.ts"
 import ScButton from "@/Components/Ui/Button/scButton.vue"
+import type {FormElementExpose} from "@/Components/Form/FormMakerInterface.ts"
 
 // Game configuration
 const numberOfLetters = ref(2)
 
 // Default gameplay
-const languageData = inject<LanguageDataInterface>("LanguageData")
+const injected = inject<LanguageDataInterface>("LanguageData")
+if (!injected) {
+	throw new Error("LanguageData doit être fourni (voir LanguageShow.vue).")
+}
+const languageData = injected
+
 const {startGame, continueGame, selectedWords, selectedWordsIndex} = useLanguage(languageData, {
 	startGameCallback: () => {
-		nextTick(() => suggestInput.value.focus())
+		nextTick(() => suggestInput.value?.focus())
 	}
 })
 
@@ -29,7 +35,7 @@ function nextWord() {
 	continueGame()
 
 	// if the game is not finished, select the input.
-	nextTick(() => suggestInput.value.focus())
+	nextTick(() => suggestInput.value?.focus())
 }
 
 // Specific gameplay
@@ -38,7 +44,7 @@ const userGuess = ref("")
 const determinants = computed<string[]>(() => {
 	return languageData.language.determinants.split(",")
 })
-const suggestionsWrapper = ref(null)
+const suggestionsWrapper = ref<HTMLElement | null>(null)
 const currentWordForeign = computed(() => {
 	return selectedWords.value[selectedWordsIndex.value].fr
 })
@@ -48,14 +54,14 @@ const unknownWordForeign = ref("")
 const unknownWordExamples = ref([])
 const unknownWordDefinition = ref("")
 const unknownCount = ref(0)
-const suggestInput = ref(null)
+const suggestInput = ref<FormElementExpose | null>(null)
 const suggestionEnter = function () {
 	if (suggestionsItems.value.length === 1) {
 		suggestionClick(0)
 	}
 }
 
-let suggestionTimeout: number = null
+let suggestionTimeout: number | undefined = undefined
 
 const suggestionClick = function (index: number) {
 	// Highlight the word
@@ -74,7 +80,12 @@ const suggestionClick = function (index: number) {
 		}, 800)
 	} else {
 		selectedWords.value[selectedWordsIndex.value].result = false
-		shake(suggestionsWrapper.value.children[index])
+		if (suggestionsWrapper.value !== null) {
+			const suggestion = suggestionsWrapper.value.children[index]
+			if (suggestion instanceof HTMLElement) {
+				shake(suggestion)
+			}
+		}
 
 		defineUnknowns(suggestionsItems.value[index])
 		window.clearTimeout(suggestionTimeout)
@@ -152,7 +163,7 @@ const suggestionsItems = computed<TranslationWord[]>(() => {
 	return selectedWords.value
 		.filter(x => {
 			// C'est un rajout qui vient de "Je ne sais pas".
-			if (x.errors > 0) {
+			if ((x.errors ?? 0) > 0) {
 				return false
 			}
 
@@ -170,7 +181,7 @@ const suggestionsItems = computed<TranslationWord[]>(() => {
 			return txt.length >= numberOfLetters.value && translation.startsWith(txt)
 		})
 })
-const selectedSuggestion = ref<number>(undefined)
+const selectedSuggestion = ref<number | undefined>(undefined)
 
 
 // TODO: Language system : restore the game from localStorage -> make something global

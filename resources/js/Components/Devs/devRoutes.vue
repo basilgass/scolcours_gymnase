@@ -8,14 +8,17 @@ import {ref} from "vue"
 import axios from "axios"
 
 const name = ref<{ id: number, title: string }>()
-const result = ref([])
+const result = ref<string[]>([])
 watchDebounced(name, getRoute, {debounce: 1000, maxWait: 2000})
 
-function getRoute(value: { id: number, title: string } | string) {
+function getRoute(value: { id: number, title: string } | string | undefined) {
+	if (value === undefined) {
+		return
+	}
 
 	const [n, params] = typeof value === 'string' ?
 		value.split('?') :
-		name.value.title.split('?')
+		value.title.split('?')
 
 	axios.get(route(n, params?.split('&')??[]))
 		.then((res) => {

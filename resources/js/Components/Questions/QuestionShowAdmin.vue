@@ -21,7 +21,7 @@ const emits = defineEmits<{
 	removed: []
 }>()
 
-const questionsIds = computed(() => props.questions.map((q) => q.id))
+const questionsIds = computed(() => props.questions.map((q) => q.id).filter((id): id is number => id !== undefined))
 
 const theQuestion = ref(props.question)
 

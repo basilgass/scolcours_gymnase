@@ -18,7 +18,7 @@ async function onShowModal() {
 	showModal.value = true
 	await nextTick()
 
-	input.value.focus()
+	input.value?.focus()
 }
 
 const slug = computed(() => {

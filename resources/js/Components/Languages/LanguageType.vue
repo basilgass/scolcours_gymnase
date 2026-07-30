@@ -6,7 +6,23 @@ import {shake} from "@/helpers/helperFunctions.ts"
 import ScButton from "@/Components/Ui/Button/scButton.vue"
 import {LanguageDataInterface} from "@/types/modelInterfaces.ts";
 
-const languageData = inject<LanguageDataInterface>('LanguageData')
+interface ForeignLetterInterface {
+	key: string
+	used: boolean
+}
+
+interface ResultLetterInterface {
+	index: number
+	key: string
+	visible: boolean
+}
+
+const injected = inject<LanguageDataInterface>('LanguageData')
+if (!injected) {
+	throw new Error("LanguageData doit être fourni (voir LanguageShow.vue).")
+}
+const languageData = injected
+
 const {startGame, continueGame, selectedWordsIndex, currentWords} = useLanguage(languageData)
 
 /**
@@ -17,10 +33,10 @@ watch(selectedWordsIndex, () => {
 	buildResult()
 })
 
-const typoButtons = ref(null)
+const typoButtons = ref<HTMLElement | null>(null)
 const excludeLetters = ref([" ", ",", "'", ".", "!", "?", "(", ")", "-"])
-const foreignLetters = ref([])
-const resultLetters = ref([])
+const foreignLetters = ref<ForeignLetterInterface[]>([])
+const resultLetters = ref<ResultLetterInterface[]>([])
 
 function buildResult() {
 	let theWord = currentWords.value[0].foreign
@@ -86,8 +102,11 @@ function validateKey(index: number) {
 				return
 			}
 		}
-	} else {
-		shake(typoButtons.value.children[index])
+	} else if (typoButtons.value !== null) {
+		const button = typoButtons.value.children[index]
+		if (button instanceof HTMLElement) {
+			shake(button)
+		}
 	}
 }
 

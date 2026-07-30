@@ -128,7 +128,7 @@ function onItemSelection(rowIndex: number, colIndex: number) {
 					}"
 					class="min-w-20 py-2 text-center cursor-pointer transition-all"
 					@click="onItemSelection(rowIndex, colIndex)"
-					@mouseenter="hoverItem=colIndex<dimension ? `a_{{${rowIndex+1}}{${colIndex+1}}}`: ''"
+					@mouseenter="hoverItem=colIndex<(dimension ?? 0) ? `a_{{${rowIndex+1}}{${colIndex+1}}}`: ''"
 					@mouseleave="hoverItem=''"
 				/>
 			</tr>

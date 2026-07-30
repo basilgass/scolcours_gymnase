@@ -103,7 +103,7 @@ onMounted(() => {
 							>
 								<sc-button
 									type="add"
-									@click="book.formula.add(book.currentChapterId.value)"
+									@click="book.formula.add(book.currentChapterId.value ?? 0)"
 								>
 									Ajouter une formule
 								</sc-button>

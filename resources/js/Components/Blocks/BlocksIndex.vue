@@ -10,7 +10,7 @@ const props = defineProps<{
 	postId: number,
 }>()
 
-const blocks = defineModel<BlockInterface[]>()
+const blocks = defineModel<BlockInterface[]>({default: () => []})
 
 const editMode = useStoreEditMode()
 

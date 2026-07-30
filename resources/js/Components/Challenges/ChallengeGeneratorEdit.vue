@@ -24,7 +24,7 @@ function updateRoute(): string {
 
 // ── Label per generator ─────────────────────────────────────────────────────
 
-const label = ref<string | null>(props.generator.label)
+const label = ref<string | undefined>(props.generator.label ?? undefined)
 
 function saveLabelPerGenerator() {
 	if (label.value === props.generator.label) return
@@ -35,7 +35,7 @@ function saveLabelPerGenerator() {
 
 // ── Time per question ───────────────────────────────────────────────────────
 
-const timePerQuestion = ref<number | null>(props.generator.config?.time_per_question ?? null)
+const timePerQuestion = ref<number | undefined>(props.generator.config?.time_per_question ?? undefined)
 const showTimeEdit = ref(props.generator.config?.time_per_question != null)
 
 function enableTimeEdit() {
@@ -48,7 +48,7 @@ function saveTimePerQuestion() {
 }
 
 function clearTimePerQuestion() {
-	timePerQuestion.value = null
+	timePerQuestion.value = undefined
 	showTimeEdit.value = false
 	axios.patch(updateRoute(), {time_per_question: null})
 		.then((res) => emit("update", res.data))

@@ -47,7 +47,7 @@ export function useGenerator(generator: GeneratorInterface | ComputedRef<Generat
 			user: {
 				is_resolved: false
 			},
-			validation: questionUnref.validation ?? null
+			validation: questionUnref.validation ?? undefined
 		}
 	}
 

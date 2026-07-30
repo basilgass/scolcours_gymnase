@@ -1,5 +1,6 @@
 import {computed} from "vue"
 import {keyboardEventInterface, questionDataInterface} from "@/Components/Questions/QuestionInterface.ts"
+import {IllustrationInterface} from "@/types/blockInterfaces.ts"
 
 const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
@@ -103,16 +104,30 @@ export function useQuestionBlock(questionData: questionDataInterface) {
 		return md
 	})
 
+	let lastIllustration: IllustrationInterface | null = null
+	let lastCode: string | null = null
 	const illustration = computed(() => {
-		let code = questionData.block.value.illustration.code
+		const baseIllustration = questionData.block.value.illustration
+		if (!baseIllustration) {
+			return null
+		}
+		let code = baseIllustration.code
 		for (let i = 0; i < questionData.answers.variables.value.length; i++) {
 			const key = makeKey(i)
 			const answer: keyboardEventInterface = questionData.user.answers.value[i]
 			const texColor = i === questionData.current.id.value ? "cornflowerblue" : "red"
 			code = replace_abc_toTex(code, i, key, answer, texColor)
 		}
-		return { ...questionData.block.value.illustration, code }
+
+		// référence stable si le code résolu n'a pas changé.
+		if (lastIllustration !== null && code === lastCode) {
+			return lastIllustration
+		}
+
+		lastCode = code
+		lastIllustration = {...baseIllustration, code}
+		return lastIllustration
 	})
 
-	return { body, illustration }
+	return {body, illustration}
 }

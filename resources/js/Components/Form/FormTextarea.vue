@@ -11,7 +11,7 @@ interface Props extends FormMakerBaseProps {
 }
 
 const props = defineProps<Props>()
-const model = defineModel<string>()
+const model = defineModel<string>({default: ""})
 const emits = defineEmits<FormElementEmits>()
 
 const {textareaValue, textareaRef} = useTextEditor('input', {language: "raw", model})

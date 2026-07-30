@@ -15,7 +15,7 @@ const props = defineProps<{
 
 const editMode = useStoreEditMode()
 
-const chapterModel = ref<ChapterInterface | null>(null)
+const chapterModel = ref<ChapterInterface | undefined>(undefined)
 
 let show = ref(false)
 const form = useForm({
@@ -25,7 +25,7 @@ const form = useForm({
 
 
 function storeChallenge() {
-	form.post(route("api.admin.chapters.challenges.store", {chapter: chapterModel.value.id}))
+	form.post(route("api.admin.chapters.challenges.store", {chapter: chapterModel.value?.id}))
 }
 </script>
 

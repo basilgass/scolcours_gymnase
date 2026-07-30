@@ -50,34 +50,6 @@ export interface IDrawCode {
 	tex: string | undefined,
 }
 
-interface ISliderValues {
-	default: number,
-	factor: string,
-	included: boolean,
-	interval: number,
-	key: string,
-	marks: (number | string)[]
-	max: number,
-	min: number,
-	tex: string
-}
-
-// REFACTOR: création du parseOneSlider pour être plus clair.
-function parseOneSlider(slider: string): ISliderValues {
-	// $[key]=a,b,c,d		// tous les points sont donnés
-	// $[key]=a,...,b		// intervalle par défaut: 1
-	// $[key]=a,b,...,c		// intervalle donné par b-a
-
-	// OPTIONS
-	// $[key]=a,...,b/interval/factor=default~->TeX
-
-	if (!slider.startsWith('$')) return null
-
-	const [code, tex] = slider.split('->')
-	const [key, values_Interval, dflt] = code.split('=')
-	const [values, interval] = values_Interval.split('/')
-}
-
 // TODO: DOCUMENTER !!!!!!
 function makeSlider(slider: string): ISlider | null {
 
@@ -264,7 +236,7 @@ function parseSteps(blocks: string[]): { body: string, code: string[] }[] {
 			}
 
 			// If the first line starts with %, remove it and store it as the body.
-			const body: string = code[0].startsWith("%") ? code.shift().substring(1) : ""
+			const body: string = code[0].startsWith("%") ? (code.shift() ?? "").substring(1) : ""
 
 			return {
 				body,

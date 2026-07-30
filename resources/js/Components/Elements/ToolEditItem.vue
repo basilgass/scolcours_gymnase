@@ -10,7 +10,7 @@ import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
 import Card from "@/Components/Ui/Card.vue"
 import ScButton from "@/Components/Ui/Button/scButton.vue"
 
-const tool = defineModel<ToolInterface>('tool')
+const tool = defineModel<ToolInterface>('tool', {required: true})
 
 const flash = useStoreFlashMessage()
 

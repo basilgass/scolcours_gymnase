@@ -36,7 +36,7 @@ const traductions = computed(() => {
 			.filter(x => x.trim() !== "")
 
 		while (arr.length > 1) {
-			const values = [arr.shift().trim(), arr.shift().trim()]
+			const values = [arr.shift()?.trim() ?? "", arr.shift()?.trim() ?? ""]
 
 			formatedTraduction.push(
 				{

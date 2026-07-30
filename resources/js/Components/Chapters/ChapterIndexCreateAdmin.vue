@@ -18,7 +18,7 @@ async function onShowModal() {
 	createChapterModal.value = true
 	await nextTick()
 
-	input.value.focus()
+	input.value?.focus()
 }
 
 function createChapter() {

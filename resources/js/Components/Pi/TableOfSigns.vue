@@ -15,12 +15,12 @@ interface TableOfSignsType {
 	signs: TABLE_OF_SIGNS_VALUES_WITH_EXTREMES[],
 	mode?: "auto" | "signs" | "grows" | "curves"
 	label?: string,
-	previousLabel?: string,
+	previousLabel?: string | null,
 	factors?: { label: string, signs: TABLE_OF_SIGNS_VALUES_WITH_EXTREMES[] }[],
 	extremes?: string[] | null,
-	resultLine?: TABLE_OF_SIGNS_VALUES_WITH_EXTREMES[],
+	resultLine?: TABLE_OF_SIGNS_VALUES_WITH_EXTREMES[] | null,
 	texOutput?: boolean,
-	size?: 'xs' | 'sm' | 'base'
+	size?: 'xs' | 'sm' | 'base' | null
 }
 
 

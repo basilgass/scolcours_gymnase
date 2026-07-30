@@ -23,7 +23,7 @@ const theQuestions = ref<Partial<QuestionInterface>[]>(props.questions)
 const storeScore = useStoreScore()
 
 onMounted(() => {
-	const ids = props.questions.map(q => q.id)
+	const ids = props.questions.map(q => q.id).filter((id): id is number => id !== undefined)
 
 	if (props.userId !== undefined) {
 		// Vue admin : scores d'un utilisateur spécifique, à pousser manuellement dans le store
@@ -62,7 +62,7 @@ const questionsGridClass = computed(() => {
 	return grid + " gap-x-3 gap-y-6"
 })
 
-const questionIds = computed(() => theQuestions.value.map(q => +q.id))
+const questionIds = computed(() => theQuestions.value.map(q => +(q.id ?? 0)))
 
 // Liste des questions répondues correctement — lue directement depuis le store.
 const answeredIds = computed(() =>

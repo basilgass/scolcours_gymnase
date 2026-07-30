@@ -8,7 +8,7 @@ describe('useFormattedBody — cas de base', () => {
 	})
 
 	test('retourne le body inchangé si values est null', () => {
-		expect(useFormattedBody('hello', ref(null))).toBe('hello')
+		expect(useFormattedBody('hello', ref<Record<string, string | number> | null>(null))).toBe('hello')
 	})
 
 	test('remplace une clé simple sans contexte', () => {

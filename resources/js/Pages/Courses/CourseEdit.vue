@@ -11,7 +11,7 @@ import CourseLessonEdit from "@/Components/Courses/CourseLessonEdit.vue"
 import {AxiosErrorMessage, AxiosResponseModel} from "@/types"
 import LessonTypeIcon from "@/Components/Courses/LessonTypeIcon.vue"
 import ScButton from "@/Components/Ui/Button/scButton.vue"
-import {lessonableClassName, LessonScoreRulesInterface} from "@/types/lessonInterfaces.ts"
+import {lessonableClassName} from "@/types/lessonInterfaces.ts"
 import axios from "axios"
 import {FormJsonFieldType} from "@/Components/Form/FormMakerInterface.ts"
 import FormJson from "@/Components/Form/FormJson.vue"
@@ -69,7 +69,7 @@ function loadPosts() {
 
 function addLesson(type: lessonableClassName, id: number) {
 
-	const rules = Object.keys(scoreRules.value).length > 0 ? scoreRules.value : undefined
+	const rules = scoreRules.value && Object.keys(scoreRules.value).length > 0 ? scoreRules.value : undefined
 
 	axios
 		.post(route('api.admin.courses.lessons.store', {course: props.course.id}), {
@@ -86,7 +86,7 @@ function addLesson(type: lessonableClassName, id: number) {
 		})
 }
 
-const showAddTab = ref<lessonableClassName>(undefined)
+const showAddTab = ref<lessonableClassName>()
 
 function toggleTab(tab: lessonableClassName) {
 	if (showAddTab.value === tab) {
@@ -115,6 +115,7 @@ function addAllPosts() {
 		.filter((lesson) => {
 			return lesson.lessonable_type === 'Post'
 		}).map(lesson => lesson.lessonable_id)
+			.filter((id): id is number => id !== null)
 
 	const newPostIds = posts.value.filter(post => !coursesPostIds.includes(post.id))
 		.map(post => post.id)
@@ -132,7 +133,7 @@ function addAllPosts() {
 		})
 }
 
-const scoreRules = ref<LessonScoreRulesInterface>(undefined)
+const scoreRules = ref<Record<string, unknown>>()
 
 function deleteLesson(lesson: LessonInterface) {
 	axios.delete(route("api.admin.lessons.destroy", {lesson: lesson.id}))
@@ -146,7 +147,7 @@ function deleteLesson(lesson: LessonInterface) {
 }
 
 // Gestion des leçons pour les relations
-const itemSource = ref<LessonInterface>(undefined)
+const itemSource = ref<LessonInterface>()
 const counter = ref(1)
 
 function onClick(lesson: LessonInterface) {

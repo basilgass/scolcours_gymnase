@@ -11,11 +11,11 @@ import {computed, onMounted, reactive, ref} from "vue"
 import ScButton from "@/Components/Ui/Button/scButton.vue"
 import {Shape} from "@svgdotjs/svg.js"
 
-const draw = ref(null)
+const draw = ref<HTMLElement | null>(null)
 let geom: PiDraw
 type ensembles = 'E' | 'A' | 'B' | 'C' | 'AC' | 'AB' | 'BC' | 'ABC'
 const venn = reactive<Record<ensembles, { shape: any, selected: boolean }>>({
-	E: null, A: null, B: null, C: null, AB: null, AC: null, BC: null, ABC: null
+	E: {shape: null, selected: false}, A: {shape: null, selected: false}, B: {shape: null, selected: false}, C: {shape: null, selected: false}, AB: {shape: null, selected: false}, AC: {shape: null, selected: false}, BC: {shape: null, selected: false}, ABC: {shape: null, selected: false}
 })
 
 const logical = computed<LogicalSet>(() => new LogicalSet(input.value.replaceAll("uu", "|").replaceAll("nn", "&").replaceAll("not", "!")))
@@ -26,7 +26,7 @@ const tex = computed(() => {
 		return "\\text{ réponse non reconnue }"
 	}
 })
-const result = ref([])
+const result = ref<string[]>([])
 const input = ref("A-B")
 
 function updateVenn() {
@@ -45,6 +45,9 @@ function updateVenn() {
 // }
 
 function generateSVG() {
+	if (!draw.value) {
+		return
+	}
 	geom = new PiDraw(draw.value, {
 		width: 470, height: 470,
 		origin: {
@@ -73,7 +76,7 @@ function generateSVG() {
 	]
 	labels.forEach(pt => {
 		pt.shape.hide()
-		pt.label.position("mc")
+		pt.label?.position("mc")
 	})
 
 	venn.E = {shape: E, selected: false}

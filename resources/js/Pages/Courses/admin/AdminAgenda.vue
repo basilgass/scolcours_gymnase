@@ -15,13 +15,13 @@ const props = defineProps<{
 }>()
 
 const selectedTeams = ref<TeamInterface[]>([])//(props.teams.filter(t => t.name === 'Gass'))
-const selectedCourse = ref<CourseInterface>(null)//(props.courses.find(c => c.id === 4))
+const selectedCourse = ref<CourseInterface | null>(null)//(props.courses.find(c => c.id === 4))
 
 const availableCourses = computed(() => {
 	if (selectedTeams.value.length === 0) return []
 
 	return props.courses.filter(course => {
-			return selectedTeams.value.every(team => course.teams.find(t => t.name === team.name))
+			return selectedTeams.value.every(team => (course.teams ?? []).find(t => t.name === team.name))
 		}
 	)
 })
@@ -78,7 +78,7 @@ function toggleCourse(course: CourseInterface) {
 		</div>
 
 		<course-agenda
-			:course="selectedCourse"
+			:course="selectedCourse ?? undefined"
 			:teams="selectedTeams"
 		/>
 	</section>

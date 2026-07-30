@@ -10,4 +10,5 @@ export function FormValidationNumber(
 	if (props.max !== null && +unref(value) > +props.max) {
 		return "La valeur doit être inférieure à " + props.max
 	}
+	return ""
 }

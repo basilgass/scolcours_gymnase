@@ -27,7 +27,7 @@ withDefaults(defineProps<{
 				v-if="suggestion"
 				:href="suggestion.url"
 				type="primary"
-				:theme="suggestion.theme_id ?? null"
+				:theme="suggestion.theme_id ?? undefined"
 			>
 				{{ suggestion.label }}
 			</sc-button>

@@ -40,7 +40,7 @@ watch(showDialog, (newVal) => {
 	if (newVal) {
 		// Focus
 		nextTick(() => {
-			toolsSearchRef.value.focus()
+			toolsSearchRef.value?.focus()
 		})
 
 	}

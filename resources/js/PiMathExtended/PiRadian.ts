@@ -277,7 +277,7 @@ export class PiRadian {
 		}
 
 
-		return undefined
+		return {display: '', tex: ''}
 	}
 
 	#angleToDisplay(rad: Fraction): string {
@@ -465,6 +465,8 @@ function toRatioDisplay(value: number): { display: string, tex: string } {
 	if (v === 1.732) {
 		return {display: `${sign}sqrt3`, tex: `${sign}\\sqrt{3}`}
 	}
+
+	return {display: `${sign}${v}`, tex: `${sign}${v}`}
 }
 
 

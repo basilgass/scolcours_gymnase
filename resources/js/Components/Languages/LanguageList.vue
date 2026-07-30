@@ -10,7 +10,12 @@ import {useLanguage} from "@/Components/Languages/useLanguage.ts"
 import ScButton from "@/Components/Ui/Button/scButton.vue"
 import {useIsAdmin} from "@/Composables/useHelpers.ts"
 
-const languageData = inject<LanguageDataInterface>('LanguageData')
+const injected = inject<LanguageDataInterface>('LanguageData')
+if (!injected) {
+	throw new Error("LanguageData doit être fourni (voir LanguageShow.vue).")
+}
+const languageData = injected
+
 const {getListOfWordsFromUnits} = useLanguage(languageData)
 
 const words = computed(() => {
@@ -48,7 +53,7 @@ const filteredWords = computed<TranslationWord[]>(() => {
 const showEditForm = ref(false)
 // editWord contains the word (id/fr/foreign) to be edited
 const editWord = ref<{ id: number, foreign: string, fr: string }>({
-	id: null, foreign: null, fr: null
+	id: 0, foreign: "", fr: ""
 })
 // before editing, store the word to edit.
 const editTranslation = function (word: { id: number, foreign: string, fr: string }) {

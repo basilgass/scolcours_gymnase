@@ -29,7 +29,7 @@ const keyboardComponentsRefs = useTemplateRef<keyboardComponentType[]>('keyboard
 defineExpose({
 	getKeyboards(): Record<number, keyboardComponentType> {
 		const obj: Record<number, keyboardComponentType> = {}
-		keyboardComponentsRefs.value.forEach(kbrd => {
+		keyboardComponentsRefs.value?.forEach(kbrd => {
 			const index = +kbrd.$el.getAttribute('data-index')
 			obj[index] = kbrd
 		})
@@ -113,8 +113,12 @@ const answerIntegrityCheck = computed(() => {
 
 const editMode = useStoreEditMode()
 const adminCheckerDetails = computed(() => {
-	const chkName = questionData.validators.value[questionData.current.id.value].checker.checker.checker.type
-	const subChkName = questionData.validators.value[questionData.current.id.value].checker.checker.secondaryChecker.type
+	const validator = questionData.validators.value[questionData.current.id.value]
+	if (!validator) {
+		return ''
+	}
+	const chkName = validator.checker.checker.checker.type
+	const subChkName = validator.checker.checker.secondaryChecker?.type
 
 	return chkName + (subChkName ? ` (${subChkName})` : '')
 })

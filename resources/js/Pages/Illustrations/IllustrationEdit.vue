@@ -37,8 +37,8 @@ const theIllustration = ref<IllustrationInterface>(props.illustration)
 const unknownWidget: WidgetInterface = {
 	id: -1,
 	name: " ? ",
-	slug: null,
-	component: null,
+	slug: "",
+	component: "",
 	theme_id: null,
 	description: "module inconnu",
 	control: false

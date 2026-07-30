@@ -24,7 +24,7 @@ const editMode = useStoreEditMode()
 
 const chapterRelations = ref(props.relations)
 const modifyRelations = ref(false)
-const searchChapters = ref([])
+const searchChapters = ref<ChapterInterface[]>([])
 
 const getAllChapters = function () {
 	if (modifyRelations.value) {

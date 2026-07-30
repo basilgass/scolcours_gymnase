@@ -84,6 +84,9 @@ const CODES: [string, string][] = [
 
 function summarize(code: string): Record<string, unknown> {
 	const {keyboard, checker} = getOneKeyboard(code)
+	if (!keyboard || !checker) {
+		throw new Error(`getOneKeyboard('${code}') n'a pas résolu keyboard/checker`)
+	}
 	const cfg = keyboard.config
 
 	let tex: string | null

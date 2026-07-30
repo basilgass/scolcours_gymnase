@@ -11,7 +11,7 @@ const props = defineProps<{
 }>()
 
 const scoreStore = useStoreScore()
-const score = ref<ScoreInterface<ScoreQuestionDataInterface>>(null)
+const score = ref<ScoreInterface<ScoreQuestionDataInterface> | null>(null)
 
 const theQuestion = ref<QuestionInterface>(props.question)
 onMounted(() => {

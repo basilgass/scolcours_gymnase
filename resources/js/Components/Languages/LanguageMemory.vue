@@ -6,7 +6,11 @@ import {useLanguage} from "@/Components/Languages/useLanguage.ts"
 import ScButton from "@/Components/Ui/Button/scButton.vue"
 import {LanguageDataInterface} from "@/types/modelInterfaces.ts"
 
-const languageData = inject<LanguageDataInterface>("LanguageData")
+const injected = inject<LanguageDataInterface>("LanguageData")
+if (!injected) {
+	throw new Error("LanguageData doit être fourni (voir LanguageShow.vue).")
+}
+const languageData = injected
 
 const cardTimeout = ref(1)
 const showAllCards = ref(false)

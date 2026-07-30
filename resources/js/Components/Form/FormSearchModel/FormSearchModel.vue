@@ -33,6 +33,9 @@ defineSlots<{
 const items = ref<T[]>([])
 
 function loadItems() {
+	if (!props.apiRoute) {
+		return
+	}
 	axios
 		.get(props.apiRoute)
 		.then((res: AxiosResponseModel<T[]>) => {

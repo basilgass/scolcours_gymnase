@@ -86,7 +86,7 @@ function focusNext(key: string) {
 	const index = keys.indexOf(key)
 	const newIndex = index === keys.length - 1 ? 0 : index + 1
 	nextTick(() => {
-		(rRefs.value[newIndex] as { focus?: () => void })?.focus?.()
+		(rRefs.value?.[newIndex] as { focus?: () => void })?.focus?.()
 	})
 }
 

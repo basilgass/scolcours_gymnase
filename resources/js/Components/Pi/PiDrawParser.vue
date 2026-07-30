@@ -34,7 +34,7 @@ const props = withDefaults(defineProps<IPiDrawProps & { theme?: string | number 
 
 const displayRef = useTemplateRef<InstanceType<typeof PiDrawDisplay>>('displayRef')
 
-function getPiDraw(): PiDraw {
+function getPiDraw(): PiDraw | null {
 	return displayRef.value?.getPiDraw() ?? null
 }
 

@@ -34,7 +34,7 @@ function onAnswerClick(event: MouseEvent) {
 	>
 		<!-- Illustration -->
 		<illustration-show
-			v-if="questionData.block.value.illustration"
+			v-if="illustration"
 			:illustration
 			class="bg-white"
 		/>

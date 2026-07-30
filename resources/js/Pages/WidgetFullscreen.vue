@@ -11,7 +11,7 @@ const key = 'scolcours.widgetFS'
 onMounted(() => {
 	const html = window.sessionStorage.getItem(key)
 
-	if (html) {
+	if (html && root.value) {
 		root.value.innerHTML = html
 	}
 })

@@ -10,6 +10,7 @@ const props = defineProps<{
 
 async function downloadSVG() {
 	const draw = props.PiDraw.getPiDraw()
+	if (!draw) return
 
 	// Remplacement des foreignObject
 	await replaceForeignObjectsWithMathJax(draw.rootSVG)

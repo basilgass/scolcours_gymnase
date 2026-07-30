@@ -109,6 +109,9 @@ function cleanAnswer(value: string): string {
 }
 
 async function loadAnswers(event: { show: boolean, value?: string }) {
+	if (!questionAnswerWrapper.value) {
+		return
+	}
 	const kbrds = questionAnswerWrapper.value.getKeyboards()
 	const nb = Object.keys(kbrds).length
 

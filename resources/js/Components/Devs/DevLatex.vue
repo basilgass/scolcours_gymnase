@@ -39,7 +39,7 @@ function makePDF() {
 		})
 }
 
-const pdfs = ref([])
+const pdfs = ref<{ slug: string }[]>([])
 
 function getPDF() {
 	axios

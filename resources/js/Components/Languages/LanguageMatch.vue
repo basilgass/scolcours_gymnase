@@ -6,7 +6,17 @@ import {useLanguage} from "@/Components/Languages/useLanguage.ts"
 import ScButton from "@/Components/Ui/Button/scButton.vue"
 import {LanguageDataInterface} from "@/types/modelInterfaces.ts"
 
-const languageData = inject<LanguageDataInterface>("LanguageData")
+interface MatchCardInterface {
+	text: string
+	selected: boolean
+	found: boolean
+}
+
+const injected = inject<LanguageDataInterface>("LanguageData")
+if (!injected) {
+	throw new Error("LanguageData doit être fourni (voir LanguageShow.vue).")
+}
+const languageData = injected
 
 const cardTimeout = ref(1)
 const numberOfCards = ref(4)
@@ -15,11 +25,11 @@ const {startGame, continueGame, currentWords, selectedWordsIndex} = useLanguage(
 	numberOfWords: numberOfCards
 })
 
-const cards = ref([])
+const cards = ref<MatchCardInterface[]>([])
 
 watch(selectedWordsIndex, () => {
-	let left = []
-	let right = []
+	let left: MatchCardInterface[] = []
+	let right: MatchCardInterface[] = []
 	for (const word of currentWords.value) {
 		right.push({
 			text: word.fr,
@@ -43,7 +53,7 @@ watch(selectedWordsIndex, () => {
 	}
 })
 
-const selectCard = function (card: { text: string, selected: boolean, found: boolean }) {
+const selectCard = function (card: MatchCardInterface) {
 	if (card.found) {
 		return
 	}

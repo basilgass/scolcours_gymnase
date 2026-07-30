@@ -6,7 +6,11 @@ import {makeCard, makeDeck} from "@/helpers/makeModel.ts"
 import ScButton from "@/Components/Ui/Button/scButton.vue"
 import DeckDisplay from "@/Pages/Decks/DeckDisplay.vue"
 
-const languageData = inject<LanguageDataInterface>("LanguageData")
+const injected = inject<LanguageDataInterface>("LanguageData")
+if (!injected) {
+	throw new Error("LanguageData doit être fourni (voir LanguageShow.vue).")
+}
+const languageData = injected
 
 // useLanguage is a composable function that returns the selected unit's words
 // and provide de methods to run the game.
@@ -35,6 +39,7 @@ const deck = computed<DeckInterface | null>(() => {
 		>
 			<suspense>
 				<deck-display
+					v-if="deck"
 					:deck
 					hide-title
 				/>

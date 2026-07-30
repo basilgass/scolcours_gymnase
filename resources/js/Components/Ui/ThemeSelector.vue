@@ -9,7 +9,7 @@ withDefaults(defineProps<{
 	xs: false
 })
 const themes = usePage().props.themes
-const theme = defineModel<number>()
+const theme = defineModel<number>({default: 0})
 
 const emits = defineEmits<{
 	change: [value: number]

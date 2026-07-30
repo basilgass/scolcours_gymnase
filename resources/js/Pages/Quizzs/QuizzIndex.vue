@@ -18,7 +18,7 @@ function updateQuizz() {
 	router.reload()
 }
 
-let checkForUpdate: number = null
+let checkForUpdate: number | null = null
 onMounted(() => {
 	checkForUpdate = setInterval(() => updateQuizz(), 2000)
 })

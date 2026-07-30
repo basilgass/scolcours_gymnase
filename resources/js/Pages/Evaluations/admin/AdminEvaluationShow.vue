@@ -36,8 +36,8 @@ function result(scores: ScoreInterface[]) {
 }
 
 const selectedTeam = ref<string>('')
-const selectedUser = ref<UserInterface>(null)
-const selectedQuestion = ref<QuestionInterface>(null)
+const selectedUser = ref<UserInterface | null>(null)
+const selectedQuestion = ref<QuestionInterface | null>(null)
 onMounted(() => {
 	const params = new URLSearchParams(window.location.search)
 	const team = params.get('team')
@@ -64,7 +64,7 @@ onMounted(() => {
 				:key="team.name"
 				@click="loadScores(team.name)"
 				xs1
-				:type="team.name===selectedTeam ? 'primary' : null"
+				:type="team.name===selectedTeam ? 'primary' : undefined"
 			>
 				{{ team.name }}
 			</sc-button>
@@ -100,7 +100,7 @@ onMounted(() => {
 							:key="`user-${score.user.id}-${q.id}`"
 							class="w-4 h-4 border border-content cursor-pointer"
 							:class="{
-								'bg-gray-300 border-gray-500': score.scores.find(s => s.scoreable_id === q.id)===undefined || score.scores.find(s => s.scoreable_id === q.id).is_resolved===null,
+								'bg-gray-300 border-gray-500': score.scores.find(s => s.scoreable_id === q.id)===undefined || score.scores.find(s => s.scoreable_id === q.id)?.is_resolved===null,
 								'bg-green-100 border-green-600': score.scores.find(s => s.scoreable_id === q.id)?.is_resolved,
 								'bg-red-100 border-red-600': score.scores.find(s => s.scoreable_id === q.id)?.is_resolved===false,
 							}"

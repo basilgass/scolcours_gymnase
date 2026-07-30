@@ -20,14 +20,14 @@ const emits = defineEmits<{
 
 
 let showMoveTo = ref(false)
-const moveToId = ref(null)
-const moveInput = ref(null)
+const moveToId = ref<number | undefined>(undefined)
+const moveInput = ref<{ focus: () => void } | null>(null)
 const targetName = ref("???")
 
 async function enableMove() {
 	showMoveTo.value = !showMoveTo.value
 	await nextTick(() => {
-		moveInput.value.focus()
+		moveInput.value?.focus()
 	})
 }
 
@@ -58,6 +58,10 @@ const canMoveTo = computed(() => {
 function moveTo() {
 	if (targetName.value === "???") {
 		flash.error(`Le ${props.target} n'existe pas.`)
+		return
+	}
+
+	if (moveToId.value === undefined) {
 		return
 	}
 

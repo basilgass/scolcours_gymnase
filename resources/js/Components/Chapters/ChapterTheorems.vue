@@ -7,6 +7,7 @@ import {useIntersectionObserver} from "@vueuse/core"
 import axios from "axios"
 import {computed, ref, useTemplateRef} from "vue"
 import ScButton from "@/Components/Ui/Button/scButton.vue"
+import type {BlockInterface} from "@/types/modelInterfaces.ts"
 
 const props = defineProps({
 	chapterSlug: {type: String, required: true},
@@ -21,7 +22,7 @@ useIntersectionObserver(theoremsList, ([{isIntersecting}]) => {
 	}
 })
 
-const theTheorems = ref([])
+const theTheorems = ref<BlockInterface[]>([])
 const theSlug = ref(props.chapterSlug)
 const loadingState = ref(true)
 const theTheoremsErrors = ref("")

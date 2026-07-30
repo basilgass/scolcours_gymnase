@@ -17,34 +17,34 @@ const hasCustomButtons = computed(() => {
 	return hasButtons.value && Object.hasOwn(blockScript.merged.value, "btn")
 })
 
-const randomButton = computed<buttonInterface>(() => {
+const randomButton = computed<buttonInterface | null>(() => {
 	let btn = {
 		icon: "bi bi-shuffle",
 		text: "aléatoire",
 		show: true
 	}
 
-	if (hasCustomButtons.value && blockScript.merged.value.btn.random) {
+	if (hasCustomButtons.value && blockScript.merged.value.btn?.random) {
 		return {
 			...btn,
-			...blockScript.merged.value.btn.random
+			...blockScript.merged.value.btn?.random
 		}
 	}
 
 	return btn
 })
 
-const resetButton = computed<buttonInterface>(() => {
+const resetButton = computed<buttonInterface | null>(() => {
 	let btn = {
 		icon: "bi bi-x-square",
 		text: "par défaut",
 		show: blockScript.iteration.value > 1
 	}
 
-	if (hasCustomButtons.value && blockScript.merged.value.btn.reset) {
+	if (hasCustomButtons.value && blockScript.merged.value.btn?.reset) {
 		return {
 			...btn,
-			...blockScript.merged.value.btn.reset
+			...blockScript.merged.value.btn?.reset
 		}
 	}
 	if (blockScript.merged.value.reset) return {...btn}

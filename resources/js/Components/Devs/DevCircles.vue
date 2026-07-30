@@ -9,8 +9,8 @@ defineOptions({layout: LayoutMain})
 
 const root = ref(null)
 const code = ref("")
-const intersectionPoints = ref([])
-const tangentPerPoints = ref([])
+const intersectionPoints = ref<{ point: string, tangent1: string, tangent2: string }[]>([])
+const tangentPerPoints = ref<string[]>([])
 const circle = ref("(x-3)^2+(y+1)^2=13")
 
 function updateValue() {

@@ -12,7 +12,7 @@ const description = `rational,[paramètres]
 
 export class RationalChecker extends CheckerAbstract {
 	#reduced: boolean
-	#factorized: false | 'f' | 'F' // f = factorisé, F = entièrement factorisé.
+	#factorized: false | 'f' | 'F' = false // f = factorisé, F = entièrement factorisé.
 	#developed: boolean
 
 	constructor(config: string[] | string) {

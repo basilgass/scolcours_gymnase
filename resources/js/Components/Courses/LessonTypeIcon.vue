@@ -4,7 +4,7 @@ import {lessonableClassName} from "@/types/lessonInterfaces.ts"
 import {computed} from "vue"
 
 const props = withDefaults(defineProps<{
-	lesson: { lessonable_type: lessonableClassName, lessonable_tag?: 'exercise' | 'howto' | null }
+	lesson: { lessonable_type: lessonableClassName | null, lessonable_tag?: 'exercise' | 'howto' | null }
 		| lessonableClassName
 		| null,
 	tag?: 'exercise' | 'howto' | null
@@ -29,7 +29,7 @@ const tag = computed(() => {
 
 	if (typeof props.lesson === 'string') return null
 
-	return props.lesson.lessonable_tag ?? null
+	return props.lesson?.lessonable_tag ?? null
 
 })
 </script>

@@ -36,21 +36,10 @@ const blitzWarning = computed(() =>
 	)
 )
 
-const theIllustration = ref<IllustrationInterface>(
+const theIllustration = ref<IllustrationInterface | null>(
 	props.challenge.block.illustrations.length > 0
 		? props.challenge.block.illustrations[0]
-		: {
-			id: 0,
-			order: 1,
-			css: "",
-			title: "",
-			footer: "",
-			code: "",
-			parameters: "",
-			block_id: null,
-			widget_id: null,
-			widget: null
-		}
+		: null
 )
 
 // ── Challenge global save ──────────────────────────────────────────────────
@@ -61,7 +50,7 @@ const saveChallenge = function () {
 			_method: "PATCH",
 			body: theChallenge.value.block.body,
 			illustrations:
-				theIllustration.value.parameters !== ""
+				theIllustration.value !== null && theIllustration.value.parameters !== ""
 					? [theIllustration.value]
 					: []
 		})

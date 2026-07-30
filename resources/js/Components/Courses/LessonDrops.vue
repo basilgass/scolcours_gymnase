@@ -11,7 +11,7 @@ const props = defineProps<{
 	lessons: LessonInterface[]
 }>()
 
-function toMinutes(time: string): number {
+function toMinutes(time: string): number | null {
 	const [hour, minute] = time.split(':').map(Number)
 
 	if (minute === undefined) {
@@ -27,10 +27,10 @@ const firstTimeOfTheDayInMinutes = computed(() => {
 	}
 
 	const day = dayjs(props.lessons[0].scheduled_at).day()
-	const times: number[] = props.team.calendar
+	const times: number[] = (props.team.calendar ?? [])
 		.filter((calendar) => calendar.day === day)
 		.map((calendar) => toMinutes(calendar.time))
-		.filter(time => time !== null)
+		.filter((time): time is number => time !== null)
 
 	if (times.length === 0) {
 		return null

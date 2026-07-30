@@ -46,9 +46,10 @@ const postsFilter = function (filter: string) {
 	moveMode.value = false
 	if (filter === "en_cours") {
 		posts.value = props.posts.filter(
-			(post) =>
-				questionStatus.value[post.id] !== null &&
-				questionStatus.value[post.id] < 1
+			(post) => {
+				const status = questionStatus.value[post.id]
+				return status !== null && status < 1
+			}
 		)
 		postsFilterCurrentMessage.value = "exercices non terminés"
 		return
@@ -107,7 +108,7 @@ const addPost = function () {
 // null: pas de questions
 // number: pourcentage des questions répondues (0 à 1)
 const questionStatus = computed<Record<number, number | null>>(() => {
-	const result: Record<number, number> = {}
+	const result: Record<number, number | null> = {}
 	props.posts.forEach((p) => {
 		result[p.id] =
 			p.questionsInfo.count > 0
@@ -254,7 +255,7 @@ const availablePostTypes = computed(() => {
 								'bi bi-check-circle-fill text-green-500':
 									questionStatus[element.id] === 1,
 								'bi bi-check-circle text-green-600':
-									questionStatus[element.id] < 1 && questionStatus[element.id] > 0,
+									(questionStatus[element.id] ?? 0) < 1 && (questionStatus[element.id] ?? 0) > 0,
 								'bi bi-check-circle text-orange-400 opacity-50':
 									questionStatus[element.id] === 0,
 								'invisible':

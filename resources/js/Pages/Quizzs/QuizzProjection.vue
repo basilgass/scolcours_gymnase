@@ -22,7 +22,7 @@ let props = defineProps<{
 	usersCount: number
 }>()
 
-let interval: number = null
+let interval: number | null = null
 const updateCounter = ref(0)
 
 function updateQuizz() {
@@ -36,7 +36,7 @@ onMounted(() => {
 	interval = setInterval(() => updateQuizz(), 2000)
 })
 onBeforeUnmount(() => {
-	clearInterval(interval)
+	clearInterval(interval ?? undefined)
 })
 
 </script>

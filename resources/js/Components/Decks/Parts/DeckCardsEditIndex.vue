@@ -67,7 +67,7 @@ function updateDecksOrder() {
 const dynamicsBlocks = ref<BlockInterface[]>([])
 
 function showChapterFormulas() {
-	if (!props.deck.chapter && props.deck.chapter.id <= 0) {
+	if (!props.deck.chapter || props.deck.chapter.id <= 0) {
 		return
 	}
 
@@ -77,7 +77,7 @@ function showChapterFormulas() {
 		})
 }
 
-function addBlock(blockId: number, splitter: string) {
+function addBlock(blockId: number, splitter?: string) {
 	// Save the blockId to database.
 	axios.post(route('api.admin.decks.cards.store', {deck: props.deck.id}), {
 		'reference_block_id': blockId,

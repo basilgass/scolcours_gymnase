@@ -6,7 +6,7 @@ import {ref} from "vue"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 import ScButton from "@/Components/Ui/Button/scButton.vue"
 
-const generator = defineModel<GeneratorInterface>('generator')
+const generator = defineModel<GeneratorInterface>('generator', {required: true})
 
 const hasErrors = ref<boolean>(false)
 

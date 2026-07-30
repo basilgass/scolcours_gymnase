@@ -13,7 +13,7 @@ const props = defineProps<{
 }>()
 const theItems = ref<TeamCalendarInterface[]>([])
 
-const timetable = ref<timetableInterface[]>(null)
+const timetable = ref<timetableInterface[]>([])
 
 onMounted(() => {
 	// Get the timetable
@@ -50,7 +50,7 @@ const itemsInTimetable = computed(() => {
 function getItem(day: number, start_time: string): string {
 	if (!theItems.value || theItems.value.length === 0) return ""
 
-	const calendar: TeamCalendarInterface = theItems.value.find(
+	const calendar = theItems.value.find(
 		item => item.day === day && item.time === start_time
 	)
 
@@ -70,10 +70,10 @@ function isHovered(day: number, item: timetableInterface) {
 	return !!hoveredCells.value[cellKey(day, item)]
 }
 
-function onDragStart(e: DragEvent, sourceDay: number, item: timetableInterface) {
+function onDragStart(e: DragEvent, sourceDay: number | null, item: timetableInterface | null) {
 	if (!e.dataTransfer) return
 
-	const payload = sourceDay === null
+	const payload = (sourceDay === null || item === null)
 		? {day: null, start: null, period: null}
 		: {day: sourceDay, start: item.start, period: item.period}
 

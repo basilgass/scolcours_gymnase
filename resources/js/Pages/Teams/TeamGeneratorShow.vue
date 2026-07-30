@@ -19,7 +19,7 @@ const props = defineProps<{
 }>()
 const usersScores = computed(() => {
 	let scoresPerUser = []
-	for (let user of props.team.users) {
+	for (let user of (props.team.users ?? [])) {
 		const result = Object.values(props.scores).filter(score => score.user_id === user.id)[0] || false
 
 		scoresPerUser.push({
@@ -36,7 +36,7 @@ const usersScores = computed(() => {
 const usersHallOfFame = computed(() => {
 	return props.scores.map(score => {
 		return {
-			user: props.team.users.filter(user => user.id === score.user_id)[0],
+			user: (props.team.users ?? []).filter(user => user.id === score.user_id)[0],
 			score: score
 		}
 	})

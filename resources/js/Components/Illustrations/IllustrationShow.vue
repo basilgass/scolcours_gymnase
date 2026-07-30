@@ -25,7 +25,7 @@ const illustrationWithScript = computed(() => {
 
 function getWidget() {
 	return getModule(
-		props.illustration.widget ? props.illustration.widget.component : null,
+		props.illustration.widget?.component ?? '',
 		MODULE_TYPES.WIDGET
 	)
 }

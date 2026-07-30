@@ -31,7 +31,10 @@ onMounted(() => {
 	storeScore.getScores<ScoreQuestionDataInterface>('Question', ids)
 		.then(scores => {
 			theQuestions.value = theQuestions.value.map((question) => {
-				question.user = scores.find(score => score.scoreable_id === question.id)
+				const found = scores.find(score => score.scoreable_id === question.id)
+				if (found) {
+					question.user = found
+				}
 				return question
 			})
 		})

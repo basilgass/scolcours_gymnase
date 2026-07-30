@@ -27,14 +27,14 @@ const flash = useStoreFlashMessage()
 
 const theTitle = ref<string>(props.deck.title)
 const theSlug = computed<string>(() => slugify(theTitle.value))
-const chapter = ref<ChapterInterface>(props.deck.chapter)
+const chapter = ref<ChapterInterface | undefined>(props.deck.chapter ?? undefined)
 
 function updateDeck() {
 	axios
 		.patch(route('api.admin.decks.update', {deck: props.deck.id}), {
 			title: theTitle.value,
 			slug: theSlug.value,
-			chapter_id: chapter.value.id
+			chapter_id: chapter.value?.id
 		})
 		.then(() => {
 			flash.success('Le deck a bien été enregistré')

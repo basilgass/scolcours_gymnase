@@ -18,7 +18,7 @@ const flash = useStoreFlashMessage()
 
 const showScoreRules = ref(false)
 
-const label = ref<string | null>(props.lesson.label)
+const label = ref<string | undefined>(props.lesson.label)
 
 const scoreRules = ref(props.lesson.scoreRules ?? {})
 
@@ -37,7 +37,7 @@ function updateLesson() {
 }
 
 const jsonMap = computed(() => {
-	return useCourse().lessonScoreRulesMap(props.lesson.lessonable_type)
+	return useCourse().lessonScoreRulesMap(props.lesson.lessonable_type ?? undefined)
 })
 
 </script>

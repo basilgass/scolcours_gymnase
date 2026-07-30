@@ -23,7 +23,7 @@ const futo = new Futoshiki(4)
 const futoshiki = reactive(futo)
 const valueSelector = ref(1)
 const suggestionMode = ref(false)
-const contradictions = ref([])
+const contradictions = ref<string[]>([])
 
 // let rows = computed(() => {
 // 	let arr = []
@@ -76,7 +76,10 @@ const setValue = function (col: number, row: number) {
 		if (futoshiki.futoshiki[cellKey].default === null) {
 			if (valueSelector.value === 0) {
 				// Erase mode
-				futoshiki.futoshiki[cellKey].value = null
+				// La lib externe pigames type `cell.value` en `number` strict, mais `null`
+				// est la valeur d'effacement réelle au runtime (cf. `.value === null` plus haut).
+				// Cast documenté en attendant le correctif de typage upstream dans pigames.
+				futoshiki.futoshiki[cellKey].value = null as unknown as number
 			} else {
 				futoshiki.futoshiki[cellKey].value = valueSelector.value
 			}

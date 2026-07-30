@@ -43,7 +43,7 @@ scores.getScores<ScoreDeckDataInterface>("Deck", props.decks.map(deck => deck.id
 			gap-2 md:gap-3 xl:gap-5"
 			title="decks"
 			no-title
-			:filter-by-theme="(deck)=>deck.chapter?.theme_id"
+			:filter-by-theme="(deck)=>deck.chapter?.theme_id ?? 0"
 		>
 			<template #card="{ item }: { item: DeckInterface }">
 				<Card

@@ -22,7 +22,7 @@ const props = withDefaults(
 const emits = defineEmits<{
 	change: [e: { value: T, index: number }]
 }>()
-const itemIndex = defineModel<number>()
+const itemIndex = defineModel<number>({default: 0})
 
 const itemsSelector = computed(() => {
 	if (props.items.length === 0) return []

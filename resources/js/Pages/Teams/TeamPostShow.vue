@@ -20,7 +20,7 @@ let props = defineProps({
 })
 
 const users = computed(() => {
-	return props.team.users.toSorted((a, b) => {
+	return (props.team.users ?? []).toSorted((a, b) => {
 		return a.name.localeCompare(b.name)
 	})
 })

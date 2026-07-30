@@ -23,7 +23,7 @@ const props = withDefaults(
 	defineProps<{
 		filter?: searchFilter
 	}>(), {
-		filter: null
+		filter: undefined
 	})
 
 const terms = defineModel<string>()

@@ -43,7 +43,7 @@ function createDeck() {
 	axios.post(route('api.admin.decks.store'), {
 		title: form.title,
 		slug: slug.value,
-		chapter_id: form.chapter.id,
+		chapter_id: form.chapter?.id,
 	})
 		.then((res: AxiosResponseModel<DeckInterface>) => {
 			loadedDecks.value.push(res.data)
@@ -162,7 +162,7 @@ const deckIsRunning = ref(false)
 			gap-2 md:gap-3 xl:gap-5"
 			title="decks"
 			no-title
-			:filter-by-theme="(deck)=>deck.chapter?.theme_id"
+			:filter-by-theme="(deck)=>deck.chapter?.theme_id ?? 0"
 		>
 			<template #card="{ item }: { item: DeckInterface }">
 				<div

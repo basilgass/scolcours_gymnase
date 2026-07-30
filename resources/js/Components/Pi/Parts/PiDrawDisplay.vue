@@ -68,9 +68,12 @@ const drawMouseUp = function (event: MouseEvent) {
 // Default settings
 onMounted(() => {
 	// TODO: rework the PiDrawDisplay to be more robust and more fast.
+	const wrapper = drawWrapper.value
+	if (!wrapper) return
+
 	try {
 		PiGraph = new PiDraw(
-			drawWrapper.value,
+			wrapper,
 			{
 				parameters: props.parameters ?? "",
 				code: props.code ?? "",
@@ -88,7 +91,7 @@ onMounted(() => {
 			{parameters: props.parameters, code: props.code}
 		)
 		PiGraph = new PiDraw(
-			drawWrapper.value,
+			wrapper,
 			{
 				parameters: "",
 				code: "",
@@ -111,7 +114,7 @@ onMounted(() => {
 
 
 // Add a resizeObserver on the draw container
-	useResizeObserver(drawWrapper.value, () => {
+	useResizeObserver(wrapper, () => {
 		// BUG : on doit pouvoir mieux gérer l'update.
 		updateLayout("onResize")
 		updateCode('onResize')
@@ -132,7 +135,7 @@ function toggleDragHandler() {
 		.forEach(pt => {
 			pt.shape.animate(400, 0, 'now')
 				.ease(">")
-				.size(pt.config.size * toggleDraggableSize.value, pt.config.size * toggleDraggableSize.value)
+				.size((pt.config.size ?? 0) * toggleDraggableSize.value, (pt.config.size ?? 0) * toggleDraggableSize.value)
 		})
 }
 

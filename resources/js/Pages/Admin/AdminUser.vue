@@ -75,7 +75,7 @@ const usersTeams = computed(() => {
 	return [
 		...new Set([...theUsers.value
 			.filter(user => user.teams)
-			.map(user => user.teams.flatMap(team => team.name))
+			.map(user => (user.teams ?? []).flatMap(team => team.name))
 			.flat()
 		])
 	]
@@ -87,9 +87,9 @@ const selectedUsers = computed(() => {
 	if (selectedTeam.value === "") {
 		return theUsers.value
 	} else if (selectedTeam.value === "_") {
-		return theUsers.value.filter(user => user.teams.length === 0)
+		return theUsers.value.filter(user => (user.teams ?? []).length === 0)
 	} else {
-		return theUsers.value.filter(user => user.teams.find(team => team.name === selectedTeam.value))
+		return theUsers.value.filter(user => (user.teams ?? []).find(team => team.name === selectedTeam.value))
 	}
 })
 
@@ -103,6 +103,9 @@ const editUserForm = ref({
 
 function editUser(id: number) {
 	const user = theUsers.value.find(x => x.id === id)
+	if (!user) {
+		return
+	}
 	editUserForm.value.id = user.id
 	editUserForm.value.name = user.name
 	editUserForm.value.firstname = user.firstname
@@ -326,7 +329,7 @@ function updateUserTeam(userId: number, teamId: number) {
 							<sc-button
 								v-for="team of theTeams"
 								:key="`team-${user.id}-${team.id}`"
-								:active="!!user.teams.find(search=>search.name===team.name)"
+								:active="!!(user.teams ?? []).find(search=>search.name===team.name)"
 								xs
 								@click="updateUserTeam(user.id, team.id)"
 							>

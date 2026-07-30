@@ -27,9 +27,9 @@ function blockToDeckCard(block: BlockInterface, splitter: undefined | null | 'ti
 }
 
 
-export function computedCard(card: CardInterface): CardInterface & { recto: BlockInterface, verso: BlockInterface } {
+export function computedCard(card: CardInterface): (CardInterface & { recto: BlockInterface, verso: BlockInterface }) | null {
 	if (card.recto && card.verso) {
-		return card
+		return {...card, recto: card.recto, verso: card.verso}
 	}
 
 	if (card.reference?.block) {

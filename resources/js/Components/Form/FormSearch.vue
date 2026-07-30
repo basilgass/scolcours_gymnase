@@ -40,7 +40,7 @@ const choices = ref<T[]>([])
 
 function onSelect(selection: T) {
 	theValue.value = selection
-	searchValue.value = labelCache.value.get(selection.id)
+	searchValue.value = labelCache.value.get(selection.id) ?? ""
 	errors.value = []
 	emits('errors', errors.value)
 	emits('update', theValue.value as unknown as Record<string, string>)

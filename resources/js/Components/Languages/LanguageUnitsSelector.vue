@@ -5,7 +5,7 @@ import axios from "axios"
 import {computed, ref} from "vue"
 import ScButton from "@/Components/Ui/Button/scButton.vue"
 
-const units = defineModel<TranslationUnitInterfaceExtended[]>()
+const units = defineModel<TranslationUnitInterfaceExtended[]>({default: () => []})
 
 defineProps<{
 	books: BookInterface[]

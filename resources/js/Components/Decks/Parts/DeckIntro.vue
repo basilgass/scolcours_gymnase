@@ -4,7 +4,11 @@ import {inject} from "vue"
 import {provideDeckData} from "@/types/modelInterfaces.ts"
 import ScButton from "@/Components/Ui/Button/scButton.vue"
 
-const deckData = inject<provideDeckData>('deckData')
+const injected = inject<provideDeckData>('deckData')
+if (!injected) {
+	throw new Error("deckData doit être fourni (voir DeckDisplay.vue).")
+}
+const deckData = injected
 
 </script>
 

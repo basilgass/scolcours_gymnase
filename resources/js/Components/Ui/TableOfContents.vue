@@ -10,13 +10,16 @@ const props = defineProps({
 	menuId: {type: String, default: "menu-"},
 })
 
-const root = ref(null)
-const tableofcontents = ref(null)
-const menu = ref([])
+const root = ref<HTMLElement | null>(null)
+const tableofcontents = ref<HTMLElement | null>(null)
+const menu = ref<string[]>([])
 
 function buildMenu() {
 	menu.value = []
-	root.value.querySelectorAll(props.query).forEach((h2: HTMLElement) => {
+	if (!root.value) {
+		return
+	}
+	root.value.querySelectorAll(props.query).forEach((h2: Element) => {
 		h2.id = `${props.menuId}${menu.value.length}`
 		menu.value.push(h2.innerHTML)
 	})
@@ -26,9 +29,9 @@ function useMenuScrollTo(id: string) {
 	const el =
 		id === undefined
 			? document.body
-			: tableofcontents.value.querySelector(id)
+			: tableofcontents.value?.querySelector(id)
 
-	el.scrollIntoView({
+	el?.scrollIntoView({
 		block: "start",
 		behavior: "smooth",
 		inline: "start",

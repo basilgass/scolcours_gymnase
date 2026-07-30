@@ -15,8 +15,8 @@ const props = defineProps<{
 }>()
 
 
-const questions = defineModel<Partial<QuestionInterface>[]>('questions')
-const grid = defineModel<string>('grid')
+const questions = defineModel<Partial<QuestionInterface>[]>('questions', {required: true})
+const grid = defineModel<string>('grid', {required: true})
 
 const questionsAdmin = useQuestionAdmin(
 	props.container,

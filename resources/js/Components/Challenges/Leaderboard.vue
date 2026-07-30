@@ -34,7 +34,7 @@ function loadStats() {
 		})
 }
 
-let interval: number = null
+let interval: number | null = null
 onMounted(() => {
 	loadStats()
 	interval = setInterval(() => loadStats(), 5000)
@@ -52,7 +52,10 @@ onUnmounted(() => {
 		v-else
 		class="space-y-12 my-12"
 	>
-		<div class="flex gap-3 justify-center">
+		<div
+			v-if="global"
+			class="flex gap-3 justify-center"
+		>
 			<div
 				v-theme.bg.text
 				class="w-40 aspect-square p-4 rounded-xl
@@ -85,7 +88,7 @@ onUnmounted(() => {
 						class="text-5xl bi bi-align-middle"
 					/>
 					<div class="text-3xl">
-						{{ global.average.toFixed(1) }} / {{ global.median }}
+						{{ (global.average ?? 0).toFixed(1) }} / {{ global.median }}
 					</div>
 					<div class="text-sm ">
 						moyenne / médiane
@@ -94,7 +97,7 @@ onUnmounted(() => {
 			</div>
 		</div>
 
-		<div v-if="teamsList.length>0">
+		<div v-if="teamsList.length>0 && teamStats">
 			<div class="text-3xl text-center">
 				<div>Classement pour {{ teamsList.map(team => team.name).join(',') }}</div>
 			</div>

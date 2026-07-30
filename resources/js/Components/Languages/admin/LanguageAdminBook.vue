@@ -12,7 +12,7 @@ const props = defineProps<{
 
 const book = defineModel<number>()
 
-const books = ref<BookInterface[]>()
+const books = ref<BookInterface[]>([])
 
 
 watch(() => props.language, () => {

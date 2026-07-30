@@ -43,7 +43,7 @@ const props = withDefaults(defineProps<{
 }>(), {
 	active: false,
 	theme: false,
-	type: null,
+	type: undefined,
 	icon: false,
 	variant: 'solid',
 	outline: false,
@@ -76,7 +76,7 @@ const buttonSizeMap: Record<ButtonSize, string> = {
 }
 
 const resolveAction = computed<ButtonActionValue | null>(() => {
-	if (Object.hasOwn(buttonActionMap, props.type)) {
+	if (props.type !== undefined && Object.hasOwn(buttonActionMap, props.type)) {
 		return buttonActionMap[props.type as ButtonAction]
 	}
 
@@ -94,7 +94,7 @@ const resolveColor = computed<Record<ButtonVariant, string> | null>(() => {
 
 	if (resolveTheme.value) return resolveTheme.value
 
-	if (Object.hasOwn(buttonColorMap, props.type)) {
+	if (props.type !== undefined && Object.hasOwn(buttonColorMap, props.type)) {
 		return buttonColorMap[props.type as ButtonColor]
 	}
 

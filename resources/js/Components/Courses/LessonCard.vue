@@ -26,7 +26,7 @@ const editMode = useStoreEditMode()
 const flash = useStoreFlashMessage()
 
 const scoreStore = useStoreScore()
-const score = ref<ScoreInterface>(null)
+const score = ref<ScoreInterface | null>(null)
 const isPast = computed(() => {
 	return score.value && !isDone.value && props.lesson.scheduled_at
 		? dayjs(props.lesson.scheduled_at).isBefore(dayjs())
@@ -135,7 +135,7 @@ onMounted(() => {
 					/>
 
 					<lesson-team-calendar
-						:calendar="team.calendar"
+						:calendar="team.calendar ?? []"
 						:n="4"
 						class="flex-1"
 						@button-click="updateLesson($event)"

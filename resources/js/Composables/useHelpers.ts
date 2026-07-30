@@ -96,18 +96,20 @@ export const defaultBodyTriggers: BodyTrigger[] = [
  * @param triggers - Contextual rules applied based on the text preceding each placeholder.
  * @returns The formatted body text, or null if body is null.
  */
+export function useFormattedBody(body: null, mabyeRefValues: Ref<Record<string, string | number> | null>, latexOutput?: boolean, triggers?: BodyTrigger[]): null
+export function useFormattedBody(body: string | Ref<string>, mabyeRefValues: Ref<Record<string, string | number> | null>, latexOutput?: boolean, triggers?: BodyTrigger[]): string
 export function useFormattedBody(
-	body: string | Ref<string>,
-	mabyeRefValues: Ref<Record<string, string | number>>,
+	body: string | Ref<string> | null,
+	mabyeRefValues: Ref<Record<string, string | number> | null>,
 	latexOutput = true,
 	triggers: BodyTrigger[] = defaultBodyTriggers
-): string {
+): string | null {
 	if (body === null) return null
 
 
 	const values = unref(mabyeRefValues)
 
-	if (!unref(values)) return unref(body)
+	if (!values) return unref(body)
 
 	const normalized: Record<string, string> = {}
 	for (const key in values) {

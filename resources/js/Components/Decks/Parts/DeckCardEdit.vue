@@ -17,16 +17,25 @@ import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
 const editMode = useStoreEditMode()
 const flash = useStoreFlashMessage()
 const props = defineProps<{ card: CardInterface }>()
-const editableCard = ref<CardInterface>(computedCard(props.card))
+const editableCard = ref<CardInterface>(computedCard(props.card) ?? props.card)
 
 const isDynamic = computed<boolean>(() => props.card.reference !== null)
 
 const originalCard = isDynamic.value ? {
-	splitter: props.card.reference.splitter
+	splitter: props.card.reference?.splitter
 } : {
-	recto: props.card.recto.body,
-	verso: props.card.verso.body
+	recto: props.card.recto?.body,
+	verso: props.card.verso?.body
 }
+
+const splitterModel = computed<string | undefined>({
+	get: () => editableCard.value.reference?.splitter ?? undefined,
+	set: (value) => {
+		if (editableCard.value.reference) {
+			editableCard.value.reference.splitter = value ?? null
+		}
+	}
+})
 
 const showMarkdown = ref<boolean>(false)
 
@@ -39,8 +48,8 @@ const showSaveButton = computed(() => {
 		return editableCard.value.reference?.splitter !== originalCard.splitter
 	}
 
-	return (editableCard.value.recto.body !== originalCard.recto) ||
-		(editableCard.value.verso.body !== originalCard.verso)
+	return (editableCard.value.recto?.body !== originalCard.recto) ||
+		(editableCard.value.verso?.body !== originalCard.verso)
 
 })
 
@@ -52,23 +61,23 @@ function updateCard() {
 	axios.patch(route('api.admin.cards.update', {card: props.card.id}),
 		isDynamic.value
 			? {
-				splitter: editableCard.value.reference.splitter
+				splitter: editableCard.value.reference?.splitter
 			}
 			: {
 				blocks: {
 					recto: {
-						id: editableCard.value.recto.id,
-						body: editableCard.value.recto.body
+						id: editableCard.value.recto?.id,
+						body: editableCard.value.recto?.body
 					},
 					verso: {
-						id: editableCard.value.verso.id,
-						body: editableCard.value.verso.body
+						id: editableCard.value.verso?.id,
+						body: editableCard.value.verso?.body
 					},
 				}
 			})
 		.then((res: AxiosResponseModel<CardInterface>) => {
-			originalCard.recto = editableCard.value.recto.body
-			originalCard.verso = editableCard.value.verso.body
+			originalCard.recto = editableCard.value.recto?.body
+			originalCard.verso = editableCard.value.verso?.body
 
 			flash.success('La carte a bien été mise à jour')
 
@@ -83,7 +92,7 @@ watch(editableCard.value, () => {
 	if (isDynamic.value) {
 		editableCard.value.recto = null
 		editableCard.value.verso = null
-		editableCard.value = computedCard(editableCard.value)
+		editableCard.value = computedCard(editableCard.value) ?? editableCard.value
 	}
 })
 </script>
@@ -120,7 +129,10 @@ watch(editableCard.value, () => {
 			v-if="!isDynamic"
 			class="grid grid-cols-2 gap-5"
 		>
-			<div class="relative">
+			<div
+				v-if="editableCard.recto"
+				class="relative"
+			>
 				<FormCodearea
 					v-if="editMode.enable"
 					v-model="editableCard.recto.body"
@@ -131,12 +143,15 @@ watch(editableCard.value, () => {
 				/>
 				<div
 					class="absolute right-0 bottom-0 p-2 cursor-pointer z-10"
-					@click="router.visit(route('admin.blocks.edit', card.recto.id))"
+					@click="router.visit(route('admin.blocks.edit', card.recto?.id))"
 				>
 					<i class="bi bi-pencil" />
 				</div>
 			</div>
-			<div class="relative">
+			<div
+				v-if="editableCard.verso"
+				class="relative"
+			>
 				<FormCodearea
 					v-if="editMode.enable"
 					v-model="editableCard.verso.body"
@@ -147,7 +162,7 @@ watch(editableCard.value, () => {
 				/>
 				<div
 					class="absolute right-0 bottom-0 p-2 cursor-pointer z-10"
-					@click="router.visit(route('admin.blocks.edit', card.verso.id))"
+					@click="router.visit(route('admin.blocks.edit', card.verso?.id))"
 				>
 					<i class="bi bi-pencil" />
 				</div>
@@ -158,18 +173,18 @@ watch(editableCard.value, () => {
 				carte dynamique
 			</h3>
 			<div class="text-sm font-code">
-				block id: {{ card.reference.block.id }}
+				block id: {{ card.reference?.block.id }}
 			</div>
 			<div class="flex gap-3">
 				<FormInput
-					v-model="editableCard.reference.splitter"
+					v-model="splitterModel"
 					class="flex-1"
 					type="text"
 					inline-label
 					label="splitter"
 					xs
 				/>
-				<button @click="editableCard.reference.splitter='title'">
+				<button @click="splitterModel='title'">
 					title
 				</button>
 			</div>
@@ -187,11 +202,13 @@ watch(editableCard.value, () => {
 			</div>
 			<div class="grid grid-cols-2 gap-5">
 				<deck-card-item-side
+					v-if="editableCard.recto"
 					xs
 					class="bg-content border"
 					:block="editableCard.recto"
 				/>
 				<deck-card-item-side
+					v-if="editableCard.verso"
 					xs
 					class="bg-content border"
 					:block="editableCard.verso"

@@ -19,7 +19,7 @@ interface dragTransferInterface {
 	team_id: number
 }
 
-const currentTeamDragItem = ref<string>(null)
+const currentTeamDragItem = ref<string | null>(null)
 
 function onDragStart(e: DragEvent, item: {
 	team: TeamInterface

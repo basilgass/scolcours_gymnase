@@ -28,7 +28,7 @@ const cards = ref<CardInterfaceExtended[]>(props.deck.cards
 	.map((card) => {
 		const data = card.user?.data as ScoreCardDataInterface
 		return {
-			...computedCard(card),
+			...(computedCard(card) ?? card),
 			// On ajoute les valeurs éphémères.
 			current_appearances: data?.current_appearances ?? 0,
 			current_score: data?.current_score ?? null,
@@ -36,7 +36,7 @@ const cards = ref<CardInterfaceExtended[]>(props.deck.cards
 		}
 	}))
 
-const currentCardId = ref<number>(Random.number(0, cards.value.length - 1))
+const currentCardId = ref<number | null>(Random.number(0, cards.value.length - 1))
 const intro = ref<boolean>(true)
 const loggedIn = computed(() => usePage().props.auth.user !== undefined)
 const running = computed(() => currentCardId.value === null)
@@ -81,13 +81,13 @@ provide<provideDeckData>('deckData', {
 			card.current_time_spent = 0
 		})
 
-		flipcards.value.restartDeck()
+		flipcards.value?.restartDeck()
 		intro.value = false
 	}
 })
 
 function updateDeck(score: number) {
-	if (loggedIn.value) {
+	if (loggedIn.value && props.deck.user) {
 		axios.patch(route('api.students.scores.update', {score: props.deck.user.id}), {
 			score
 		})

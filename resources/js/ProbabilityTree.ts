@@ -59,9 +59,10 @@ export class ProbabilityTree {
 	private _height: number
 	private _graph: Svg
 	private _config: ProbabilityTreeConfigInterface
-	private _tree: ProbabilityTreeLeafInterface
-	private _nodesByDepth: number[]
-	private _resultLeafIndex: number
+	// Placeholder écrasé par update()/parse() ; jamais lu avant parsing réussi (cf. Lot 8.A).
+	private _tree: ProbabilityTreeLeafInterface = {node: '', probability: new Fraction(0)}
+	private _nodesByDepth: number[] = []
+	private _resultLeafIndex: number = 0
 
 	constructor(root: HTMLElement, data: string, parameters?: string) {
 		// Create the wrapper
@@ -177,11 +178,11 @@ export class ProbabilityTree {
 		const lines = value.split("\n").filter(x => x.length > 0)
 
 		// Get the optional root name
-		let root: string
+		let root: string | undefined
 		if (!lines[0].includes(",")) root = lines.shift()
 
 		return {
-			probability: null,
+			probability: new Fraction(1),
 			node: root === undefined ? "" : root,
 			// 1. Simple format
 			// 2. Custom format
@@ -252,7 +253,7 @@ export class ProbabilityTree {
 		return {pathes}
 	}
 
-	private _addNodeLabel(value: string, x: number, y: number, labelClass?: string): ForeignObject {
+	private _addNodeLabel(value: string | undefined, x: number, y: number, labelClass?: string): ForeignObject | undefined {
 		if (value === undefined) return
 		// Create the foreign object
 		const fo = this._graph
@@ -308,7 +309,9 @@ export class ProbabilityTree {
 			const details = this._config.output.result.details === ProbabilityTreeBranchResult.details ? `${leaf.branchProbability.map(x => (+x.value * 100).toFixed(digit) + "\\%").join("\\cdot ")} = ` : ""
 			return `\\scriptsize ${details}${(Fraction.xMultiply(...leaf.branchProbability).value * 100).toFixed(digit)}\\% `
 		} else if (this._config.output.result.type === ProbabilityTreeValue.custom) {
-			const [v, asText] = this._config.output.result.values[this._resultLeafIndex].split("/T")
+			const values = this._config.output.result.values
+			if (values === undefined) return ""
+			const [v, asText] = values[this._resultLeafIndex].split("/T")
 			this._resultLeafIndex++
 			return v === undefined ? "" : asText !== undefined ? `\\text{ ${v} }` : v
 		}
@@ -374,7 +377,7 @@ export class ProbabilityTree {
 		} else {
 			// No more leaves, adding the result.
 			this._addNodeLabel(this._addResultLabel(branch), 0, y)
-				.move(x + 40, undefined)
+				?.x(x + 40)
 		}
 	}
 
@@ -423,14 +426,14 @@ export class ProbabilityTree {
 	private _getNumberOfPathes(depth: number): number {
 		let pathes = 0
 
-		for (const leaf of this._tree.leaves) {
+		for (const leaf of this._tree.leaves ?? []) {
 			pathes += this._getCurrentBranchNumberOfEndings(leaf, depth, 1)
 		}
 
 		return pathes
 	}
 
-	private parseParameters(parameters: string): ProbabilityTreeConfigInterface {
+	private parseParameters(parameters: string | undefined): ProbabilityTreeConfigInterface {
 		const cfg: ProbabilityTreeConfigInterface = {
 			output: {
 				result: {
@@ -457,7 +460,7 @@ export class ProbabilityTree {
 			V: "",
 			S: ""
 		}
-		let key: string = null
+		let key: string | null = null
 		parameters.split(/,?([A-Z])=/g).filter(x => x !== "").forEach((value, index) => {
 			if (index % 2 === 0) {
 				key = value
@@ -485,7 +488,7 @@ export class ProbabilityTree {
 		// Get all the pathes with all the leaves.
 		const pathes: ProbabilityTreeLeafInterface[][] = []
 
-		for (const leaf of this._tree.leaves) {
+		for (const leaf of this._tree.leaves ?? []) {
 			pathes.push(...this._getPathesFromRoot(leaf, []))
 		}
 		return pathes
@@ -518,7 +521,9 @@ export class ProbabilityTree {
 		}
 
 		// Get the number of throws
-		const throws = +data.pop()
+		const throwsStr = data.pop()
+		if (throwsStr === undefined) return []
+		const throws = +throwsStr
 
 		// Throws must be a number, greater than zero and the number of data items must be even
 		if (!Number.isSafeInteger(throws) || throws <= 0 || data.length % 2 === 1) return []
@@ -563,7 +568,7 @@ export class ProbabilityTree {
 	private _parseCustomInput(value: string): ProbabilityTreeLeafInterface[] {
 
 		// Not a correct string sequence..
-		if (!value.includes("\n")) return
+		if (!value.includes("\n")) return []
 
 		// Start root leaf
 		let rootLeaf: ProbabilityTreeLeafInterface = {
@@ -577,11 +582,11 @@ export class ProbabilityTree {
 
 		// Split the data into lines
 		const lines = value.split("\n")
-		const branchLeaves = []
+		const branchLeaves: ProbabilityTreeLeafInterface[] = []
 
 
 		for (const line of lines) {
-			const prefix = line.match(/^\s*/)[0] || ""
+			const prefix = line.match(/^\s*/)?.[0] || ""
 			const level = prefix.length / 3
 			const sline = line.split(",")
 			const node = sline[0].trim()
@@ -589,10 +594,10 @@ export class ProbabilityTree {
 
 			if (level === crtLevel) {
 				// Same level -> adding to the current root leaf.
-				rootLeaf.leaves.push({
+				rootLeaf.leaves?.push({
 					node, number: +value,
 					leaves: [],
-					probability: undefined,
+					probability: new Fraction(0),
 					branchProbability: []
 				})
 			} else if (level > crtLevel) {
@@ -601,49 +606,55 @@ export class ProbabilityTree {
 				// Add the current root to the list.
 				branchLeaves.push(rootLeaf)
 				// The new root leaf is the last child of the previous root.
-				rootLeaf = rootLeaf.leaves[rootLeaf.leaves.length - 1]
+				const currentLeaves = rootLeaf.leaves
+				if (currentLeaves === undefined || currentLeaves.length === 0) continue
+				rootLeaf = currentLeaves[currentLeaves.length - 1]
 				// Add the node
-				rootLeaf.leaves.push({
+				rootLeaf.leaves?.push({
 					node,
 					number: +value,
 					leaves: [],
-					probability: undefined,
+					probability: new Fraction(0),
 					branchProbability: []
 				})
 			} else if (level < crtLevel) {
 				// Select the new root.
 				for (let i = crtLevel - level; i > 0; i--) {
-					rootLeaf = branchLeaves.pop()
+					const popped = branchLeaves.pop()
+					if (popped === undefined) break
+					rootLeaf = popped
 				}
 
 				// Build the probabilities for all children
 
 				crtLevel = +level
-				rootLeaf.leaves.push({
+				rootLeaf.leaves?.push({
 					node,
 					number: +value,
 					leaves: [],
-					probability: undefined,
+					probability: new Fraction(0),
 					branchProbability: []
 				})
 			}
 		}
 
 		// Loop through all leaves and calculate the probability
-		this._setProbabilityForLeaves(branchLeaves[0])
+		const firstBranch = branchLeaves[0]
+		if (firstBranch === undefined) return []
+		this._setProbabilityForLeaves(firstBranch)
 
-		return branchLeaves[0].leaves
+		return firstBranch.leaves ?? []
 	}
 
 	private _setProbabilityForLeaves(root: ProbabilityTreeLeafInterface) {
-		if (root.leaves.length === 0) return
+		if (root.leaves === undefined || root.leaves.length === 0) return
 
 		const maxItems = Object.values(root.leaves)
-			.map(leaf => leaf.number)
+			.map(leaf => leaf.number ?? 0)
 			.reduce((a, b) => a + b)
 
 		root.leaves.forEach(leaf => {
-			leaf.probability = new Fraction(leaf.number, maxItems)
+			leaf.probability = new Fraction(leaf.number ?? 0, maxItems)
 			this._setProbabilityForLeaves(leaf)
 		})
 	}

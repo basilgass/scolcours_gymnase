@@ -14,7 +14,7 @@ export function useFormular(chapterId?: number) {
 
 
 	const formular = ref<FormulaInterface[]>([])
-	const currentChapterId = ref<number>(chapterId ?? null)
+	const currentChapterId = ref<number | null>(chapterId ?? null)
 	const relatedChapters = ref<ChapterInterface[]>([])
 
 	const loadingState = ref<boolean>(false)

@@ -83,7 +83,11 @@ const code = computed(() => {
 		return ""
 	}
 
-	const {points, anchors} = makeMarkovGraph()
+	const graph = makeMarkovGraph()
+	if (graph === undefined) {
+		return ""
+	}
+	const {points, anchors} = graph
 
 	let n = points.map((p, index) => drawPoint(p, `N${index + 1}`, `tex=${theLabels.value[index] ?? ''}/mc`))
 	n = [...n, ...points.map((_, index) => `c${index + 1}=circ N${index + 1},${props.radius}`)]
