@@ -19,7 +19,7 @@ import {
 	VectorChecker
 } from "./Basic"
 import {MatrixChecker, OrderChecker, QcmChecker, StudyChecker, TableofsignChecker, TypeChecker} from "./Custom"
-import {TrigoChecker} from "@/Checkers/Basic/TrigoChecker.ts"
+import {AngleChecker} from "@/Checkers/Basic/AngleChecker.ts"
 import {DrawChecker} from "@/Checkers/Custom/DrawChecker.ts"
 import {ZonesChecker} from "@/Checkers/Custom/ZonesChecker.ts"
 import {ModuloChecker} from "@/Checkers/Basic/ModuloChecker.ts"
@@ -66,7 +66,7 @@ export const CHECKER_CLASSES: Partial<Record<CHECKERS, CheckerClass>> = {
 	[CHECKERS.SCIENTIFIC]: ScientificChecker,
 	[CHECKERS.SOLUTION]: SolutionChecker,
 	[CHECKERS.STRING]: StringChecker,
-	[CHECKERS.TRIGO]: TrigoChecker,
+	[CHECKERS.ANGLE]: AngleChecker,
 	[CHECKERS.VECTOR]: VectorChecker,
 
 	// Custom checkers

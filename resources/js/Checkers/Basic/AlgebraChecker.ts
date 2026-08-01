@@ -1,5 +1,6 @@
 import {CheckerAbstract, CheckerResult, CHECKERS, makeCheckerResult} from "@/Checkers"
 import {NumExp} from "pimath"
+import {normalizeExpression} from "@/Checkers/normalizeExpression"
 
 // const name = "string"
 const description = "algebra checker (frac pour fraction automatique)"
@@ -39,7 +40,7 @@ export class AlgebraChecker extends CheckerAbstract {
 
 					// prochaine valeur de x
 					x = x > 0 ? -x : (-x + 5)
-					
+
 					if (isNaN(aValue) && isNaN(gValue)) {
 						// on vient de tester avec une valeur non tolérée.
 						continue
@@ -54,7 +55,8 @@ export class AlgebraChecker extends CheckerAbstract {
 					// On arrête si on a au moins trois valeurs justes
 					if (result >= 3) break
 				}
-			} catch {
+			} catch (e) {
+				console.log(e)
 				return makeCheckerResult("La réponse n'est pas une expression reconnue (valeurs)")
 			}
 
@@ -66,12 +68,4 @@ export class AlgebraChecker extends CheckerAbstract {
 		// Il s'agit donc just d'une différence de formatage - on l'accepte tel quel ?
 		return makeCheckerResult()
 	}
-}
-
-function normalizeExpression(value: string): string {
-	// Transform 'root([0-9])(...)' en 'nthroot([0-9],...)'
-
-	return value.replace(/(?<!\d)\*|\*(?!\d)/g, '')
-		.replaceAll(/root\(([0-9]+)\)\(/g, 'nthrt($1,')
-		.replaceAll(/\^\(([0-9]+)\)/g, '^$1')
 }

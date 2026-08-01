@@ -1,6 +1,7 @@
 import {CheckerAbstract, makeCheckerResult} from "../CheckerAbstract"
 import {Fraction, NumExp} from "pimath"
 import {CheckerResult, CHECKERS} from "../checker.config"
+import {normalizeExpression} from "@/Checkers/normalizeExpression"
 
 // const name = "exact"
 const description = `exact
@@ -28,28 +29,38 @@ export class ExactChecker extends CheckerAbstract {
 			? stringAnswer.substring(1)
 			: stringAnswer
 
-		// Parse the expected answer as a number
-		// Replace "sqrt" by "sqrt(" and ")" by ")", then evaluate
-		const expectedExpression = this.answer.replace(/sqrt([0-9]+)/g, "sqrt($1)")
-		const givenExpression = asciiAnswer.replace(/sqrt([0-9]+)/g, "sqrt($1)")
+		// Normalisation canonique (partagée avec les autres checkers) avant évaluation.
+		const expectedExpression = normalizeExpression(this.answer)
+		const givenExpression = normalizeExpression(asciiAnswer)
 
 		// Maybe with the reformating, the answers is exactly the same.
 		if (expectedExpression === givenExpression) {
 			return makeCheckerResult()
 		}
 
-		// Parse the formated answers as a number
-		const expectedNumber = new NumExp(expectedExpression)
-		const givenNumber = new NumExp(givenExpression)
+		// Parse et évalue une expression en valeur numérique.
+		// Renvoie null (au lieu de lever) si l'expression est invalide ou non évaluable :
+		// le constructeur NumExp comme evaluate() peuvent lancer sur une entrée malformée.
+		const toNumber = (expression: string): number | null => {
+			try {
+				const exp = new NumExp(expression)
+				return exp.isValid ? exp.evaluate() : null
+			} catch {
+				return null
+			}
+		}
 
-		if (!givenNumber.isValid) {
+		const givenValue = toNumber(givenExpression)
+		if (givenValue === null) {
 			return makeCheckerResult("La réponse n'est pas une valeur exacte reconnue.")
 		}
 
-		if (
-			expectedNumber.evaluate().toFixed(10) ===
-			givenNumber.evaluate().toFixed(10)
-		) {
+		const expectedValue = toNumber(expectedExpression)
+		if (expectedValue === null) {
+			return makeCheckerResult("La réponse attendue n'est pas une valeur exacte reconnue.")
+		}
+
+		if (givenValue.toFixed(10) === expectedValue.toFixed(10)) {
 			if (this.#isSoft) {
 				// Si les deux nombres sont les mêmes valeurs...
 				return makeCheckerResult()

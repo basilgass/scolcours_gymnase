@@ -116,7 +116,7 @@ export const keyboardKeys = {
 	_: {type: "math", display: "\\textcolor{lightgray}{\\log}_a"},
 	sin: {type: "math", display: "\\sin"},
 	cos: {type: "math", display: "\\cos"},
-	tab: {type: "math", display: "\\tan"},
+	tan: {type: "math", display: "\\tan"},
 	"|": {
 		type: "math",
 		display: "\\big\\vert \\textcolor{lightgray}{x} \\big\\vert"
@@ -190,10 +190,11 @@ export const keyboards: Record<string, KeyboardObjectType> = {
 		name: "algebra",
 		grid: "grid-cols-7",
 		layout: [
-			"1", "2", "3", "+", "x", "y", "e",
-			"4", "5", "6", "-", "^2", "^", "ln",
-			"7", "8", "9", "*", "|", "sqrt", "root(",
-			".", "0", "=", "/", "(", ")", ";"
+			"1", "2", "3", "+", "x", "y", "pi",
+			"4", "5", "6", "-", "^2", "^", "e",
+			"7", "8", "9", "*", "sqrt", "root(", "ln",
+			".", "0", "=", "/", "(", ")", "|",
+			["sin", 2], ["cos", 2], ["tan", 2], ";"
 		],
 		formatters: [formatFractionShortcut],
 		tex(value) {
@@ -465,17 +466,17 @@ export const keyboards: Record<string, KeyboardObjectType> = {
 			return tex
 		}
 	},
-	trigo: {
-		name: "trigo",
+	angle: {
+		name: "angle",
 		grid: "grid-cols-5",
 		layout: [
-			"1", "2", "3", "-", "sin",
-			"4", "5", "6", "/", "cos",
-			"7", "8", "9", "+", "tan",
+			"1", "2", "3", "-",
+			"4", "5", "6", "/",
+			"7", "8", "9", "+",
 			".", "0", "k", "pi"
 		],
 		tex(value) {
-			// the trigo input should be 2pi/3+k2pi/2
+			// the angle input should be 2pi/3+k2pi/2
 			// convert to: (2pi)/3+k(2pi)/3
 
 			const converted = value.replaceAll(/([0-9]*pi)\//g, '($1)/')

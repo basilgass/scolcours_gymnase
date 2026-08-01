@@ -8,7 +8,7 @@
 			"DOM.Iterable",
 			"ESNext"
 		],
-		"strict": false,
+		"strict": true,
 		"jsx": "preserve",
 		"resolveJsonModule": true,
 		"allowJs": true,

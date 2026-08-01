@@ -1,7 +1,7 @@
-import {TrigoChecker} from "@/Checkers/Basic/TrigoChecker.ts"
+import {AngleChecker} from "@/Checkers/Basic/AngleChecker.ts"
 import {describe, expect, test} from "vitest"
 
-const chk = new TrigoChecker('p')
+const chk = new AngleChecker('p')
 describe('radian with periodic', () => {
 	chk.answer = "5pi/4+k3pi/2"
 	test('with fractions', () => {
@@ -21,7 +21,7 @@ describe('radian with periodic', () => {
 	})
 
 	test('k2pi', () => {
-		const chk = new TrigoChecker('p')
+		const chk = new AngleChecker('p')
 		chk.answer = 'k2pi'
 		const result = chk.checkValue('k2pi')
 		expect(result.result).toBe(true)
@@ -39,7 +39,7 @@ describe('radian with periodic', () => {
 
 describe('degree with periodic', () => {
 	test('basic', () => {
-		const chk = new TrigoChecker('p,d,@check:nb,2')
+		const chk = new AngleChecker('p,d,@check:nb,2')
 
 		chk.answer = '1.23+k4.56'
 
@@ -55,7 +55,7 @@ describe('degree with periodic', () => {
 
 describe('single tests', () => {
 	test('exercice équation trigonométrique élémentaire du premier degré (i) => 1', () => {
-		const trigoChk = new TrigoChecker('checker:trigo,p')
+		const trigoChk = new AngleChecker('checker:trigo,p')
 
 		const chk1 = trigoChk.check('-5pi/6+k2pi/3', 'pi/2+k2pi/3')
 		const chk2 = trigoChk.check('pi/2+k2pi/3', 'pi/2+k2pi/3')

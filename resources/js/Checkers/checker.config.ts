@@ -25,7 +25,7 @@ export enum CHECKERS {
 	RATIONAL = "rational",
 	SCIENTIFIC = "scientific",
 	SOLUTION = "solution",
-	TRIGO = "trigo",
+	ANGLE = "angle",
 	STRING = "string",
 	VECTOR = "vector",
 

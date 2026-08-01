@@ -128,7 +128,8 @@
       "PowerShell(npx vitest run 2>&1 | Select-Object -Last 6)",
       "Bash(Select-String \"error TS\")",
       "Bash(git symbolic-ref *)",
-      "Bash(git switch *)"
+      "Bash(git switch *)",
+      "PowerShell(npx vitest run tests/ts/Checkers/Basic/AlgebraChecker.test.ts)"
     ]
   },
   "enableAllProjectMcpServers": true,

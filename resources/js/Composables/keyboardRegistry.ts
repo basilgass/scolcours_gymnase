@@ -70,7 +70,7 @@ const RAW_REGISTRY: RawKeyboardDescriptor[] = [
 	{aliases: ["primitive"], layout: "primitive", checker: CHECKERS.PRIMITIVE},
 	{aliases: ["coord"], layout: "coord", checker: CHECKERS.COORDINATES},
 	{aliases: ["vector"], layout: "vector", checker: CHECKERS.VECTOR},
-	{aliases: ["trigo"], layout: "trigo", checker: CHECKERS.TRIGO},
+	{aliases: ["angle"], layout: "angle", checker: CHECKERS.ANGLE},
 	{aliases: ["mod"], layout: "mod", checker: CHECKERS.MODULO},
 	// Layouts d'affichage sans checker dédié (retombent sur "string").
 	{aliases: ["cartesian"], layout: "cartesian", checker: CHECKERS.STRING},
