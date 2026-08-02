@@ -19,6 +19,7 @@ export type ButtonColor =
 	"warning" |
 	"danger" |
 	"console" |
+	"card" |
 	"scolcours" | & ThemesSlug
 
 export type ButtonVariant = 'solid' | 'outline' | 'ghost' | 'hover'
@@ -66,7 +67,7 @@ export const buttonActionMap: Record<ButtonAction, ButtonActionValue> = {
 		label: "enregistrer",
 		icon: "bi bi-save",
 		color: "primary"
-	},
+	}
 }
 
 export const buttonColorMap: Record<ButtonColor, Record<ButtonVariant, string>> = {
@@ -165,6 +166,12 @@ export const buttonColorMap: Record<ButtonColor, Record<ButtonVariant, string>> 
 		outline: "outline border-scolcours text-scolcours",
 		ghost: "text-scolcours bg-transparent border-transparent",
 		hover: "bg-scolcours-light"
+	},
+	card: {
+		solid: "bg-slate-200 text-slate-500",
+		outline: "outline border bg-slate-200 text-slate-600",
+		ghost: "text-slate-600 bg-transparent border-transparent",
+		hover: "bg-slate-300"
 	}
 }
 

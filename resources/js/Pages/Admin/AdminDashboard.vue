@@ -56,12 +56,27 @@ function nextLessonByTeam(course: CourseAdminInterface): Record<string, string> 
 	return arr
 }
 
+
+interface IAdminCard {
+	label: string,
+	href: string,
+}
+
+const cards: IAdminCard[] = [
+	{label: "utilisateurs", href: route('admin.users.index')},
+	{label: "équipes", href: route('admin.teams.index')},
+	{label: "agenda", href: route('admin.agenda')},
+	{label: "cours", href: route('admin.courses.index')},
+	{label: "générateurs", href: route('admin.generators.index')},
+	{label: "challenges", href: route('admin.challenges.index')},
+	{label: "quizz", href: route('admin.quizzes.index')},
+	{label: "évaluations", href: route('admin.evaluations.index')},
+]
 </script>
 <template>
-	<section class="flex w-full">
+	<section>
 		<article
 			v-if="courses.length>0"
-			class="flex-1"
 		>
 			<h2 class="uppercase text-3xl mb-10">
 				Cours en cours
@@ -88,7 +103,7 @@ function nextLessonByTeam(course: CourseAdminInterface): Record<string, string> 
 								type="primary"
 								xs
 								:href="route('admin.courses.teams.dashboard', { course: course.id, team: name })"
-								class="w-[80px]"
+								class="w-20"
 							>
 								{{ name }}
 							</sc-button>
@@ -104,8 +119,21 @@ function nextLessonByTeam(course: CourseAdminInterface): Record<string, string> 
 			</div>
 		</article>
 
-		<article class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-			<div>HELLO</div>
+		<article
+			class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 max-w-6xl mx-auto"
+		>
+			<template
+				v-for="card in cards"
+				:key="card.label"
+			>
+				<sc-button
+					class="w-full aspect-4/3 text-3xl!"
+					:href="card.href"
+					type="card"
+				>
+					{{ card.label }}
+				</sc-button>
+			</template>
 		</article>
 	</section>
 </template>
